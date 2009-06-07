@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project name="org.jacoco.agent.buildhook">
+
+	<path id="dependencies">
+		<path refid="bundle-org.jacoco.core"/>
+		<path refid="bundle-org.objectweb.asm"/>
+	</path>
+	
+	<property name="do.compile"       value="true"/>
+	<property name="do.custompackage" value="true"/>
+	<property name="do.doc"     value="true"/>
+	
+	<target name="custompackage">
+		<jar destfile="${result.dist.lib.dir}/jacocoagent.jar">
+			<manifest>
+				<attribute name="Premain-Class" value="org.jacoco.agent.JacocoAgent"/>
+				<attribute name="Implementation-Title" value="JaCoCo Java Agent"/>
+				<attribute name="Implementation-Vendor" value="Mountainminds GmbH &amp; Co. KG"/>
+				<attribute name="Implementation-Version" value="${qualified.bundle.version}"/>
+			</manifest>
+			<fileset dir="${result.tmp.bundle.classes.dir}"/>
+			<fileset dir="${toString:bundle-org.jacoco.core}"/>
+			<zipfileset includes="**/*.class">
+		        <fileset file="${toString:bundle-org.objectweb.asm}"/>
+		    </zipfileset>
+		</jar>
+	</target>
+	
+</project>
