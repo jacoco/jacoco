@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project name="org.jacoco.build.bundle" default="package">
+
+	<property name="source.bundle.dir" location="${basedir}"/>
+	
+	<import file="${source.bundle.dir}/buildhook.xml"/>
+	
+
+	<target name="compile" if="do.compile">
+		<property name="source.bundle.java.dir" location="${source.bundle.dir}/src"/>
+		<property name="result.tmp.bundle.classes.dir" location="${result.tmp.bundle.dir}/classes"/>
+		<mkdir dir="${result.tmp.bundle.classes.dir}"/>
+		<javac srcdir="${source.bundle.java.dir}" destdir="${result.tmp.bundle.classes.dir}"
+		       debug="true" source="1.5" target="1.5">
+			<classpath refid="dependencies"/>
+		</javac>
+	</target>
+	
+	
+	<target name="manifest">
+		<property name="source.bundle.manifest.file" location="${source.bundle.dir}/META-INF/MANIFEST.MF"/>
+		<property name="result.temp.bundle.manifest.file" location="${result.tmp.bundle.dir}/MANIFEST.MF"/>
+		<copy file="${source.bundle.manifest.file}" tofile="${result.temp.bundle.manifest.file}"/>
+		<replace file="${result.temp.bundle.manifest.file}" token="qualifier" value="${build.qualifier}"/>
+		<property prefix="manifest" file="${result.temp.bundle.manifest.file}"/>
+		<property name="qualified.bundle.version" value="${manifest.Bundle-Version}"/>
+	</target>
+
+	
+	<target name="runcustompackage" if="do.custompackage" depends="manifest">
+		<antcall target="custompackage" inheritall="true" inheritrefs="true"/>
+	</target>
+	
+	<target name="package" if="do.package" depends="compile,runcustompackage,manifest">
+		<property name="result.dist.bundle.jar.file" location="${result.dist.lib.dir}/${manifest.Bundle-SymbolicName}_${qualified.bundle.version}.jar"/>
+		<mkdir dir="${result.dist.lib.dir}"/>
+		<jar destfile="${result.dist.bundle.jar.file}" manifest="${result.temp.bundle.manifest.file}">
+			<fileset dir="${result.tmp.bundle.classes.dir}"/>
+			<fileset file="${source.bundle.dir}/about.html"/>
+		</jar>
+	</target>
+	
+	
+	<target name="runcustomverify" if="do.customverify">
+		<antcall target="customverify" inheritall="true" inheritrefs="true"/>
+	</target>
+	
+	<target name="verify" if="do.verify" depends="compile,runcustomverify">
+		<property name="result.tmp.bundle.test.dir" location="${result.tmp.bundle.dir}/test"/>
+		<mkdir dir="${result.tmp.bundle.test.dir}"/>
+		<junit haltonerror="true" haltonfailure="true">
+		    <batchtest todir="${result.tmp.bundle.test.dir}" >
+				<fileset dir="${result.tmp.bundle.classes.dir}">
+    				<include name="**/*Test.class"/>
+				</fileset>
+		    </batchtest>
+			<classpath>
+				<pathelement location="${result.tmp.bundle.classes.dir}"/>
+				<path refid="dependencies"/>
+			</classpath>
+			<formatter type="xml"/>
+		</junit>
+	</target>
+	
+
+	<target name="runcustomdoc" if="do.customdoc" depends="manifest">
+		<antcall target="customdoc" inheritall="true" inheritrefs="true"/>
+	</target>
+	
+	<target name="doc" if="do.doc" depends="compile,runcustomdoc,manifest">
+		<mkdir dir="${result.dist.doc.bundle.dir}"/>
+		<javadoc destdir="${result.dist.doc.bundle.dir}"
+			     overview="${source.bundle.java.dir}/overview.html"
+			windowtitle="${manifest.Bundle-SymbolicName} ${qualified.bundle.version}">
+			<sourcepath location="${source.bundle.java.dir}"/>
+			<classpath refid="dependencies"/>
+		</javadoc>
+    </target>
+				
+	<target name="all" depends="compile,package,verify,doc"/>
+	
+</project>

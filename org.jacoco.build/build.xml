@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project name="org.jacoco.build.all" default="rebuildall" basedir=".">
+	
+	<fail message="Please specify property 'target.plugins.dir'" unless="target.plugins.dir"/>
+	
+	<property name="target.plugins.dir" location="C:/devtools/eclipse3.4.1/plugins"/>
+	<property name="workspace.dir" location=".."/>
+	
+	<property name="result.dir" location="./result"/>
+	<property name="result.dist.dir" location="${result.dir}/dist"/>
+	<property name="result.dist.lib.dir" location="${result.dist.dir}/lib"/>
+	<property name="result.dist.doc.dir" location="${result.dist.dir}/doc"/>
+	<property name="result.dist.test.dir" location="${result.dist.dir}/test"/>
+
+	<property name="result.tmp.dir" location="${result.dir}/tmp"/>
+	
+	<tstamp>
+		<format property="build.qualifier" pattern="yyyyMMddHHmmss"/>
+	</tstamp>
+
+	<fail message="JaCoCo should only be compiled against Java 1.5">
+		<condition>
+			<not>
+				<equals arg1="${ant.java.version}" arg2="1.5"/>
+			</not>
+		</condition>
+	</fail>
+	
+	<path id="bundle-org.objectweb.asm">
+        <fileset dir="${target.plugins.dir}" includes="org.objectweb.asm_3.1.0.*.jar"/>
+	</path>
+
+	<path id="bundle-org.junit4">
+        <fileset dir="${target.plugins.dir}" includes="org.junit4_*/junit.jar"/>
+	</path>
+	
+	<macrodef name="runbundlebuild">
+		<attribute name="bundleid"/>
+		<attribute name="target"/>
+		<sequential>
+			<echo level="info">Building @{bundleid} (@{target})</echo>
+			<ant antfile="buildbundle.xml" target="@{target}" inheritall="true" inheritrefs="true">
+				<property name="source.bundle.dir" location="${workspace.dir}/@{bundleid}"/>
+				<property name="result.tmp.bundle.dir" location="${result.tmp.dir}/@{bundleid}"/>
+				<property name="result.dist.doc.bundle.dir" location="${result.dist.doc.dir}/@{bundleid}"/>
+			</ant>
+			<path id="bundle-@{bundleid}" location="${result.tmp.dir}/@{bundleid}/classes"/>
+		</sequential>
+	</macrodef>
+
+	<macrodef name="runallbundlebuilds">
+		<attribute name="target"/>
+		<sequential>
+			<runbundlebuild bundleid="org.jacoco.core" target="@{target}"/>
+			<runbundlebuild bundleid="org.jacoco.core.test" target="@{target}"/>
+			<runbundlebuild bundleid="org.jacoco.agent" target="@{target}"/>
+			<runbundlebuild bundleid="org.jacoco.doc" target="@{target}"/>
+			<runbundlebuild bundleid="org.jacoco.build" target="@{target}"/>
+		</sequential>
+	</macrodef>
+
+	
+	<target name="clean">
+		<delete dir="${result.dir}" quiet="true"/>
+    </target>
+
+	<target name="compile">
+		<runallbundlebuilds target="compile"/>
+	</target>
+	
+	<target name="package">
+		<runallbundlebuilds target="package"/>
+	</target>
+
+	<target name="verify">
+		<runallbundlebuilds target="verify"/>
+	</target>
+
+	<target name="doc">
+		<runallbundlebuilds target="doc"/>
+	</target>
+	
+	<target name="buildall">
+		<runallbundlebuilds target="all"/>
+	</target>
+
+	<target name="rebuildall" depends="clean,buildall"/>
+	
+</project>
