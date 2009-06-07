@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1" />
+  <link rel="stylesheet" href="book.css" charset="ISO-8859-1" type="text/css" />
+  <title>JaCoCo - Implementation Design</title>
+</head>
+<body>
+
+<h1>JaCoCo - Implementation Design</h1>
+
+<p>
+  This is a unordered list of implementation design decisions. Each topic tries
+  to follow this structure:
+</p>
+
+<ul>
+  <li>Problem statement</li>
+  <li>Proposed Solution</li>
+  <li>Alternatives and Discussion</li>
+</ul>
+
+
+<h2>Coverage Analysis Mechanism</h2>
+
+<p class="Note">
+  Coverage information has to be collected at runtime. For this purpose JaCoCo
+  creates instrumented versions of the original class definitions. The
+  instrumentation process happens on-the-fly during class loading using so
+  called Java agents.  
+</p>
+
+<p>
+  There are several different approaches to collect coverage information. For
+  each approach different implementation techniques are known. The following
+  diagram gives an overview with the techniques used by JaCoCo highlighted:
+</p>
+
+<ul>
+  <li>Runtime Profiling
+    <ul>
+      <li>Java Virtual Machine Profiler Interface (JVMPI), until Java 1.4</li>
+      <li>Java Virtual Machine Tool Interface (JVMTI), since Java 1.5</li> 
+    </ul>
+  </li>
+  <li><b>Instrumentation</b>
+    <ul>
+      <li>Java Source Instrumentation</li>
+      <li><b>Byte Code</b> Instrumentation
+        <ul>
+          <li>Offline
+            <ul>
+              <li>Replace Original Classes In-Place</li>
+              <li>Inject Instrumented Classes into the Class Path</li>
+            </ul>
+          </li>
+          <li><b>On-The-Fly</b>
+            <ul>
+              <li>Special Classloader Implementions or Framework Specific Hooks</li>
+              <li><b>Java Agent</b></li>
+            </ul>
+          </li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+</ul>
+ 
+<p>
+  Byte code instrumentation is very fast, can be implemented in pure Java and
+  works with every Java VM. On-the-fly instrumentation with the Java agent
+  hook can be added to the JVM without any modification of the target
+  application.
+</p>
+
+<p>
+  The Java agent hook requires at least 1.5 JVMs. For reporting class files
+  compiled with debug information (line numbers) allow a good mapping back to
+  source level. Although some Java language constructs are compiled in a way
+  that the the coverage highlighting leads to unexpected results, especially
+  in case of implicitly generated code like default constructors or control
+  structures for finally statements.
+</p>
+
+<h2>Instrumentation Approach</h2>
+
+<p class="Note">
+  Basic Block
+</p>
+
+<p>
+  Problem: Exceptions
+</p>
+
+<h2>Minimal Java Version</h2>
+
+<p class="Note">
+</p>
+
+
+<h2>Byte Code Manipulation</h2>
+
+<p class="Note">
+  ASM
+</p>
+
+
+<h2>Java Class Identity</h2>
+
+<p class="Note">
+  Each class loaded at runtime needs a unique identity to associate coverage data with.
+  JaCoCo creates such identities by a CRC64 hash code of the raw class definition.
+</p>
+
+<p>
+  In multi-classloader environments the plain name of a class does not
+  unambiguously identify a class. For example OSGi allows to use different
+  versions of the same class to be loaded within the same VM. In complex
+  deployment scenarios the actual version of the test target might be different
+  from current development version. A code coverage report should guarantee that
+  the presented figures have are extracted from a valid test target. A hash code
+  of the class definitions allows a differentiate between classes and versions
+  of a class. The CRC64 hash computation is simple and fast resulting in a small
+  64 bit identifier. 
+</p>
+
+<p>
+  The same class definition might be loaded by class loaders which will result
+  in different classes for the Java runtime system. For coverage analysis this
+  distinction should be irrelevant. Class definitions might be altered by other
+  instrumentation based technologies (e.g. AspectJ). In this case the hash code
+  will change and identity gets lost. On the other hand code coverage analysis
+  based on classes that have been somehow altered will produce unexpected
+  results. The CRC64 has code might produce so called <i>collisions</i>, i.e.
+  creating the same hash code for two different classes. Although CRC64 is not
+  cryptographically strong and collision examples can be easily computed, for
+  regular class files the collision probability is very low. 
+</p>
+
+<h2>Coverage Runtime Dependency</h2>
+
+<p class="Note">
+  Instrumented code typically gets a dependency to coverage runtime data
+  structure. Making a runtime library available to all instrumented classes
+  can be a painful or impossible task in frameworks that use there own
+  class loading mechanisms. JaCoCo uses JRE types and interfaces only in 
+  generated instrumentation code. 
+</p>
+
+
+<hr/>
+<div style="float:right">@VERSION@</div>
+<div>Copyright &copy; 2009 Mountainminds GmbH &amp; Co. KG, Marc R. Hoffmann</div>
+
+</body>
+</html>

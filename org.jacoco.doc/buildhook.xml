@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project name="org.jacoco.build.buildhook">
+	
+	<path id="dependencies">
+		<path refid="bundle-org.objectweb.asm"/>
+		<path refid="bundle-org.jacoco.core"/>
+		<path refid="bundle-org.jacoco.core.test"/>
+		<path refid="bundle-org.jacoco.agent"/>
+	</path>
+
+	<property name="do.customverify" value="true"/>
+	<property name="do.customdoc" value="true"/>
+	
+	<target name="customverify">
+		<mkdir dir="${result.dist.test.dir}"/>
+		<junitreport todir="${result.dist.test.dir}">
+			<fileset dir="${result.tmp.dir}" includes="*/test/*.xml"/>
+			<report format="noframes" todir="${result.dist.test.dir}"/>
+		</junitreport>
+		<move file="${result.dist.test.dir}/junit-noframes.html"  
+			  tofile="${result.dist.test.dir}/index.html"/>
+	</target>
+	
+	<target name="customdoc">
+		<copy todir="${result.dist.dir}">
+			<fileset dir="${source.bundle.dir}/docroot" includes="**/*"/>
+			<filterset>
+				<filter token="VERSION" value="${qualified.bundle.version}"/>
+			</filterset>
+		</copy>
+	</target>
+	
+</project>
