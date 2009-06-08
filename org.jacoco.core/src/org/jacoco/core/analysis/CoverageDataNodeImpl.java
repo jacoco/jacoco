@@ -15,7 +15,6 @@ package org.jacoco.core.analysis;
 import java.util.ArrayList;
 import java.util.Collection;
 
-
 /**
  * Base implementation for coverage data nodes.
  * 
@@ -107,7 +106,7 @@ public class CoverageDataNodeImpl implements ICoverageDataNode {
 		}
 	}
 
-	// === ICoverageData ===
+	// === ICoverageDataNode ===
 
 	public ElementType getElementType() {
 		return elementType;
