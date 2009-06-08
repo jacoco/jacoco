@@ -10,15 +10,20 @@
  *    
  * $Id: $
  *******************************************************************************/
-package org.jacoco.core.data;
+package org.jacoco.core.analysis;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.jacoco.core.data.ExecutionDataStore;
+import org.jacoco.core.data.IClassStructureOutput;
+import org.jacoco.core.data.IMethodStructureOutput;
+import org.jacoco.core.data.IStructureOutput;
+
 /**
- * Builder for hierarchical {@link ICoverageData} structures based on execution
+ * Builder for hierarchical {@link ICoverageDataNode} structures based on execution
  * and structure information. The builder is constructed for a given
  * {@link ExecutionDataStore} and then feed with class structure information
  * through its {@link IStructureOutput} interface.
@@ -30,7 +35,7 @@ public class CoverageDataBuilder implements IStructureOutput {
 
 	private final ExecutionDataStore executionData;
 
-	private final Map<Long, ClassCoverageData> classes;
+	private final Map<Long, ClassNode> classes;
 
 	/**
 	 * Create a new builder based on the given execution data.
@@ -40,13 +45,13 @@ public class CoverageDataBuilder implements IStructureOutput {
 	 */
 	public CoverageDataBuilder(final ExecutionDataStore executionData) {
 		this.executionData = executionData;
-		this.classes = new HashMap<Long, ClassCoverageData>();
+		this.classes = new HashMap<Long, ClassNode>();
 	}
 
 	public IClassStructureOutput classStructure(final long id,
 			final String name, final String bundle) {
 		final boolean[][] covered = executionData.getBlockdata(id);
-		final Collection<ICoverageData> methods = new ArrayList<ICoverageData>();
+		final Collection<ICoverageDataNode> methods = new ArrayList<ICoverageDataNode>();
 		final String[] sourcename = new String[1];
 		return new IClassStructureOutput() {
 			public void sourceFile(final String name) {
@@ -60,11 +65,11 @@ public class CoverageDataBuilder implements IStructureOutput {
 			}
 
 			public void end() {
-				final ClassCoverageData classData = new ClassCoverageData(name,
+				final ClassNode classData = new ClassNode(name,
 						bundle, methods);
 				classes.put(Long.valueOf(id), classData);
 				if (sourcename[0] != null) {
-					final SourceFileCoverageData sourceFile = getSourceFile(
+					final SourceFileNode sourceFile = getSourceFile(
 							sourcename[0], classData.getPackagename(), bundle);
 					sourceFile.add(classData);
 				}
@@ -74,27 +79,27 @@ public class CoverageDataBuilder implements IStructureOutput {
 
 	private IMethodStructureOutput createMethodOutput(final String name,
 			final String desc, final String signature,
-			final Collection<ICoverageData> container, final boolean[] covered) {
-		final Collection<ICoverageData> blocks = new ArrayList<ICoverageData>();
+			final Collection<ICoverageDataNode> container, final boolean[] covered) {
+		final Collection<ICoverageDataNode> blocks = new ArrayList<ICoverageDataNode>();
 		return new IMethodStructureOutput() {
 			public void block(final int id, final int instructionCount,
 					final int[] lineNumbers) {
 				final boolean c = covered == null ? false : covered[id];
-				blocks.add(new BlockCoverageData(instructionCount, lineNumbers,
+				blocks.add(new BlockNode(instructionCount, lineNumbers,
 						c));
 			}
 
 			public void end() {
-				container.add(new MethodCoverageData(name, desc, signature,
+				container.add(new MethodNode(name, desc, signature,
 						blocks));
 			}
 		};
 	}
 
-	private SourceFileCoverageData getSourceFile(final String filename,
+	private SourceFileNode getSourceFile(final String filename,
 			final String packagename, final String bundle) {
 		// TODO look for existing file.
-		return new SourceFileCoverageData(filename, packagename, bundle);
+		return new SourceFileNode(filename, packagename, bundle);
 	}
 
 }

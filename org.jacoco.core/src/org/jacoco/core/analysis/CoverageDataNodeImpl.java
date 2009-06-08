@@ -10,10 +10,11 @@
  *    
  * $Id: $
  *******************************************************************************/
-package org.jacoco.core.data;
+package org.jacoco.core.analysis;
 
 import java.util.ArrayList;
 import java.util.Collection;
+
 
 /**
  * Base implementation for coverage data nodes.
@@ -21,11 +22,11 @@ import java.util.Collection;
  * @author Marc R. Hoffmann
  * @version $Revision: $
  */
-public class CoverageDataImpl implements ICoverageData {
+public class CoverageDataNodeImpl implements ICoverageDataNode {
 
 	private final ElementType elementType;
 
-	private final Collection<ICoverageData> children;
+	private final Collection<ICoverageDataNode> children;
 
 	/** Counter for blocks. */
 	protected CounterImpl blockCounter;
@@ -53,10 +54,10 @@ public class CoverageDataImpl implements ICoverageData {
 	 * @param hasLines
 	 *            <code>true</code> id this element has source lines
 	 */
-	public CoverageDataImpl(final ElementType elementType,
+	public CoverageDataNodeImpl(final ElementType elementType,
 			final boolean hasLines) {
 		this.elementType = elementType;
-		children = new ArrayList<ICoverageData>();
+		children = new ArrayList<ICoverageDataNode>();
 		blockCounter = CounterImpl.COUNTER_0_0;
 		instructionCounter = CounterImpl.COUNTER_0_0;
 		if (hasLines) {
@@ -78,7 +79,7 @@ public class CoverageDataImpl implements ICoverageData {
 	 * @param child
 	 *            child element to add
 	 */
-	public void add(final ICoverageData child) {
+	public void add(final ICoverageDataNode child) {
 		children.add(child);
 		blockCounter = blockCounter.increment(child.getBlockCounter());
 		instructionCounter = instructionCounter.increment(child
@@ -100,8 +101,8 @@ public class CoverageDataImpl implements ICoverageData {
 	 * @param children
 	 *            child elements to add
 	 */
-	public void addAll(final Collection<ICoverageData> children) {
-		for (final ICoverageData child : children) {
+	public void addAll(final Collection<ICoverageDataNode> children) {
+		for (final ICoverageDataNode child : children) {
 			add(child);
 		}
 	}
@@ -112,7 +113,7 @@ public class CoverageDataImpl implements ICoverageData {
 		return elementType;
 	}
 
-	public Collection<ICoverageData> getChilden() {
+	public Collection<ICoverageDataNode> getChilden() {
 		return children;
 	}
 

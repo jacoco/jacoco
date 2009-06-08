@@ -10,14 +10,14 @@
  *    
  * $Id: $
  *******************************************************************************/
-package org.jacoco.core.data;
+package org.jacoco.core.analysis;
 
 import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
 
 /**
- * Unit test for {@link SourceFileCoverageData}.
+ * Unit test for {@link SourceFileNode}.
  * 
  * @author Marc R. Hoffmann
  * @version $Revision: $
@@ -26,9 +26,9 @@ public class SourceFileCoverageDataTest {
 
 	@Test
 	public void testProperties() {
-		SourceFileCoverageData data = new SourceFileCoverageData("Sample.java",
+		SourceFileNode data = new SourceFileNode("Sample.java",
 				"org/jacoco/examples", "samples");
-		assertEquals(ICoverageData.ElementType.SOURCEFILE, data
+		assertEquals(ICoverageDataNode.ElementType.SOURCEFILE, data
 				.getElementType());
 		assertEquals("Sample.java", data.getFilename());
 		assertEquals("org/jacoco/examples", data.getPackagename());

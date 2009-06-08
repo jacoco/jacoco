@@ -10,14 +10,14 @@
  *    
  * $Id: $
  *******************************************************************************/
-package org.jacoco.core.data;
+package org.jacoco.core.analysis;
 
 import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
 
 /**
- * Unit test for {@link BlockCoverageData}.
+ * Unit test for {@link BlockNode}.
  * 
  * @author Marc R. Hoffmann
  * @version $Revision: $
@@ -26,13 +26,13 @@ public class BlockCoverageDataTest {
 
 	@Test
 	public void testGetType() {
-		ICoverageData data = new BlockCoverageData(0, new int[0], false);
-		assertEquals(ICoverageData.ElementType.BLOCK, data.getElementType());
+		ICoverageDataNode data = new BlockNode(0, new int[0], false);
+		assertEquals(ICoverageDataNode.ElementType.BLOCK, data.getElementType());
 	}
 
 	@Test
 	public void testNotCovered() {
-		ICoverageData data = new BlockCoverageData(15, new int[0], false);
+		ICoverageDataNode data = new BlockNode(15, new int[0], false);
 		assertEquals(15, data.getInstructionCounter().getTotalCount(), 0.0);
 		assertEquals(0, data.getInstructionCounter().getCoveredCount(), 0.0);
 		assertEquals(1, data.getBlockCounter().getTotalCount(), 0.0);
@@ -45,7 +45,7 @@ public class BlockCoverageDataTest {
 
 	@Test
 	public void testCovered() {
-		ICoverageData data = new BlockCoverageData(15, new int[0], true);
+		ICoverageDataNode data = new BlockNode(15, new int[0], true);
 		assertEquals(15, data.getInstructionCounter().getTotalCount(), 0.0);
 		assertEquals(15, data.getInstructionCounter().getCoveredCount(), 0.0);
 		assertEquals(1, data.getBlockCounter().getTotalCount(), 0.0);

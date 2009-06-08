@@ -10,7 +10,7 @@
  *    
  * $Id: $
  *******************************************************************************/
-package org.jacoco.core.data;
+package org.jacoco.core.analysis;
 
 import java.util.Collection;
 
@@ -20,7 +20,7 @@ import java.util.Collection;
  * @author Marc R. Hoffmann
  * @version $Revision: $
  */
-public class ClassCoverageData extends CoverageDataImpl {
+public class ClassNode extends CoverageDataNodeImpl {
 
 	private final String name;
 
@@ -36,8 +36,8 @@ public class ClassCoverageData extends CoverageDataImpl {
 	 * @param methods
 	 *            contained methods
 	 */
-	public ClassCoverageData(final String name, final String bundle,
-			final Collection<ICoverageData> methods) {
+	public ClassNode(final String name, final String bundle,
+			final Collection<ICoverageDataNode> methods) {
 		super(ElementType.CLASS, true);
 		this.name = name;
 		this.bundle = bundle;

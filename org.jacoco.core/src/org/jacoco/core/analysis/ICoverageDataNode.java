@@ -10,20 +10,21 @@
  *    
  * $Id: $
  *******************************************************************************/
-package org.jacoco.core.data;
+package org.jacoco.core.analysis;
 
 import java.util.Collection;
 
 /**
- * Common interface for all data elements storing coverage data.
+ * Common interface for hierarchical data nodes storing coverage data.
  * 
  * @author Marc R. Hoffmann
  * @version $Revision: 174 $
  */
-public interface ICoverageData {
+public interface ICoverageDataNode {
 
 	/**
-	 * Type of a element represented by a {@link ICoverageData} instance.
+	 * Type of a Java element represented by a {@link ICoverageDataNode}
+	 * instance.
 	 */
 	public enum ElementType {
 
@@ -59,7 +60,7 @@ public interface ICoverageData {
 	 * 
 	 * @return child elements
 	 */
-	public Collection<ICoverageData> getChilden();
+	public Collection<ICoverageDataNode> getChilden();
 
 	/**
 	 * Returns the counter for byte code instructions.

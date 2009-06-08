@@ -10,7 +10,8 @@
  *    
  * $Id: $
  *******************************************************************************/
-package org.jacoco.core.data;
+package org.jacoco.core.analysis;
+
 
 /**
  * For all elements that are located in a source file and for source files

@@ -10,7 +10,8 @@
  *    
  * $Id: $
  *******************************************************************************/
-package org.jacoco.core.data;
+package org.jacoco.core.analysis;
+
 
 /**
  * {@link ILines} implementation.

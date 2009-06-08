@@ -10,7 +10,7 @@
  *    
  * $Id: $
  *******************************************************************************/
-package org.jacoco.core.data;
+package org.jacoco.core.analysis;
 
 import java.util.Collection;
 
@@ -20,7 +20,7 @@ import java.util.Collection;
  * @author Marc R. Hoffmann
  * @version $Revision: $
  */
-public class MethodCoverageData extends CoverageDataImpl {
+public class MethodNode extends CoverageDataNodeImpl {
 
 	private final String name;
 	private final String desc;
@@ -38,8 +38,8 @@ public class MethodCoverageData extends CoverageDataImpl {
 	 * @param blocks
 	 *            contained blocks
 	 */
-	public MethodCoverageData(final String name, final String desc,
-			final String signature, final Collection<ICoverageData> blocks) {
+	public MethodNode(final String name, final String desc,
+			final String signature, final Collection<ICoverageDataNode> blocks) {
 		super(ElementType.METHOD, true);
 		this.name = name;
 		this.desc = desc;

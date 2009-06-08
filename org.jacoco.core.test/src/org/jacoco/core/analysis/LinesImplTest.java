@@ -10,14 +10,15 @@
  *    
  * $Id: $
  *******************************************************************************/
-package org.jacoco.core.data;
+package org.jacoco.core.analysis;
 
-import static org.jacoco.core.data.ILines.FULLY_COVERED;
-import static org.jacoco.core.data.ILines.NOT_COVERED;
-import static org.jacoco.core.data.ILines.NO_CODE;
-import static org.jacoco.core.data.ILines.PARTLY_COVERED;
+import static org.jacoco.core.analysis.ILines.FULLY_COVERED;
+import static org.jacoco.core.analysis.ILines.NOT_COVERED;
+import static org.jacoco.core.analysis.ILines.NO_CODE;
+import static org.jacoco.core.analysis.ILines.PARTLY_COVERED;
 import static org.junit.Assert.assertEquals;
 
+import org.jacoco.core.analysis.LinesImpl;
 import org.junit.Test;
 
 /**

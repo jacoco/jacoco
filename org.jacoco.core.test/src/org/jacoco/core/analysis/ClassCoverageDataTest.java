@@ -10,7 +10,7 @@
  *    
  * $Id: $
  *******************************************************************************/
-package org.jacoco.core.data;
+package org.jacoco.core.analysis;
 
 import static org.junit.Assert.assertEquals;
 
@@ -19,7 +19,7 @@ import java.util.ArrayList;
 import org.junit.Test;
 
 /**
- * Unit test for {@link ClassCoverageData}.
+ * Unit test for {@link ClassNode}.
  * 
  * @author Marc R. Hoffmann
  * @version $Revision: $
@@ -28,32 +28,32 @@ public class ClassCoverageDataTest {
 
 	@Test
 	public void testProperties() {
-		ClassCoverageData data = new ClassCoverageData("Sample", "testbundle",
-				new ArrayList<ICoverageData>());
-		assertEquals(ICoverageData.ElementType.CLASS, data.getElementType());
+		ClassNode data = new ClassNode("Sample", "testbundle",
+				new ArrayList<ICoverageDataNode>());
+		assertEquals(ICoverageDataNode.ElementType.CLASS, data.getElementType());
 		assertEquals("Sample", data.getName());
 		assertEquals("testbundle", data.getBundle());
 	}
 
 	@Test
 	public void testGetPackageName1() {
-		ClassCoverageData data = new ClassCoverageData("ClassInDefaultPackage",
-				"testbundle", new ArrayList<ICoverageData>());
+		ClassNode data = new ClassNode("ClassInDefaultPackage",
+				"testbundle", new ArrayList<ICoverageDataNode>());
 		assertEquals("", data.getPackagename());
 	}
 
 	@Test
 	public void testGetPackageName2() {
-		ClassCoverageData data = new ClassCoverageData(
+		ClassNode data = new ClassNode(
 				"org/jacoco/examples/Sample", "testbundle",
-				new ArrayList<ICoverageData>());
+				new ArrayList<ICoverageDataNode>());
 		assertEquals("org/jacoco/examples", data.getPackagename());
 	}
 
 	@Test
 	public void testEmptyClass() {
-		ICoverageData data = new ClassCoverageData("Sample", null,
-				new ArrayList<ICoverageData>());
+		ICoverageDataNode data = new ClassNode("Sample", null,
+				new ArrayList<ICoverageDataNode>());
 		assertEquals(0, data.getInstructionCounter().getTotalCount(), 0.0);
 		assertEquals(0, data.getInstructionCounter().getCoveredCount(), 0.0);
 		assertEquals(0, data.getBlockCounter().getTotalCount(), 0.0);
@@ -66,10 +66,10 @@ public class ClassCoverageDataTest {
 
 	@Test
 	public void testNotCovered() {
-		final ArrayList<ICoverageData> methods = new ArrayList<ICoverageData>();
+		final ArrayList<ICoverageDataNode> methods = new ArrayList<ICoverageDataNode>();
 		methods.add(createMethod(false));
 		methods.add(createMethod(false));
-		ICoverageData data = new ClassCoverageData("Sample", null, methods);
+		ICoverageDataNode data = new ClassNode("Sample", null, methods);
 		assertEquals(10, data.getInstructionCounter().getTotalCount(), 0.0);
 		assertEquals(0, data.getInstructionCounter().getCoveredCount(), 0.0);
 		assertEquals(2, data.getBlockCounter().getTotalCount(), 0.0);
@@ -82,10 +82,10 @@ public class ClassCoverageDataTest {
 
 	@Test
 	public void testCovered() {
-		final ArrayList<ICoverageData> methods = new ArrayList<ICoverageData>();
+		final ArrayList<ICoverageDataNode> methods = new ArrayList<ICoverageDataNode>();
 		methods.add(createMethod(false));
 		methods.add(createMethod(true));
-		ICoverageData data = new ClassCoverageData("Sample", null, methods);
+		ICoverageDataNode data = new ClassNode("Sample", null, methods);
 		assertEquals(10, data.getInstructionCounter().getTotalCount(), 0.0);
 		assertEquals(5, data.getInstructionCounter().getCoveredCount(), 0.0);
 		assertEquals(2, data.getBlockCounter().getTotalCount(), 0.0);
@@ -96,10 +96,10 @@ public class ClassCoverageDataTest {
 		assertEquals(1, data.getClassCounter().getCoveredCount(), 0.0);
 	}
 
-	private ICoverageData createMethod(boolean covered) {
-		final ArrayList<ICoverageData> blocks = new ArrayList<ICoverageData>();
-		blocks.add(new BlockCoverageData(5, new int[0], covered));
-		return new MethodCoverageData("sample", "()V", null, blocks);
+	private ICoverageDataNode createMethod(boolean covered) {
+		final ArrayList<ICoverageDataNode> blocks = new ArrayList<ICoverageDataNode>();
+		blocks.add(new BlockNode(5, new int[0], covered));
+		return new MethodNode("sample", "()V", null, blocks);
 	}
 
 }

@@ -10,10 +10,12 @@
  *    
  * $Id: $
  *******************************************************************************/
-package org.jacoco.core.data;
+package org.jacoco.core.analysis;
 
 import static org.junit.Assert.assertEquals;
 
+import org.jacoco.core.analysis.AbstractCounter;
+import org.jacoco.core.analysis.CounterImpl;
 import org.junit.Test;
 
 /**

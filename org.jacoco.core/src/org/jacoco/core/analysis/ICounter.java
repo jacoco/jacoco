@@ -10,7 +10,7 @@
  *    
  * $Id: $
  *******************************************************************************/
-package org.jacoco.core.data;
+package org.jacoco.core.analysis;
 
 /**
  * A counter holds the total and the covered number of particular items like

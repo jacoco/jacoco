@@ -10,7 +10,7 @@
  *    
  * $Id: $
  *******************************************************************************/
-package org.jacoco.core.data;
+package org.jacoco.core.analysis;
 
 /**
  * Coverage data of a single source file. As source file contains one or more
@@ -19,7 +19,7 @@ package org.jacoco.core.data;
  * @author Marc R. Hoffmann
  * @version $Revision: $
  */
-public class SourceFileCoverageData extends CoverageDataImpl {
+public class SourceFileNode extends CoverageDataNodeImpl {
 
 	private final String bundle;
 
@@ -37,7 +37,7 @@ public class SourceFileCoverageData extends CoverageDataImpl {
 	 * @param bundle
 	 *            optional bundle name
 	 */
-	public SourceFileCoverageData(final String filename,
+	public SourceFileNode(final String filename,
 			final String packagename, final String bundle) {
 		super(ElementType.SOURCEFILE, true);
 		this.bundle = bundle;

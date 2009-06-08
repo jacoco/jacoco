@@ -10,7 +10,7 @@
  *    
  * $Id: $
  *******************************************************************************/
-package org.jacoco.core.data;
+package org.jacoco.core.analysis;
 
 /**
  * Coverage data of a single basic block.
@@ -18,7 +18,7 @@ package org.jacoco.core.data;
  * @author Marc R. Hoffmann
  * @version $Revision: $
  */
-public class BlockCoverageData extends CoverageDataImpl {
+public class BlockNode extends CoverageDataNodeImpl {
 
 	/**
 	 * Creates a new block data object with the given parameters.
@@ -30,7 +30,7 @@ public class BlockCoverageData extends CoverageDataImpl {
 	 * @param covered
 	 *            <code>true</code>, if this block is covered
 	 */
-	public BlockCoverageData(final int instructionCount,
+	public BlockNode(final int instructionCount,
 			final int[] lineNumbers, final boolean covered) {
 		super(ElementType.BLOCK, true);
 		blockCounter = CounterImpl.getInstance(covered);
