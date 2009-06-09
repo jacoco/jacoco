@@ -42,7 +42,7 @@ public class Analyzer {
 	 * @param structureOutput
 	 *            the output instance that will receive all structure data
 	 */
-	public Analyzer(IStructureOutput structureOutput) {
+	public Analyzer(final IStructureOutput structureOutput) {
 		this.structureOutput = structureOutput;
 	}
 
@@ -57,8 +57,8 @@ public class Analyzer {
 	 *            optional bundle this class belongs to
 	 * @return ASM visitor to write class definition to
 	 */
-	public ClassVisitor createAnalyzingVisitor(long classid, String classname,
-			String bundle) {
+	public ClassVisitor createAnalyzingVisitor(final long classid,
+			final String classname, final String bundle) {
 		final IClassStructureOutput classStructure = structureOutput
 				.classStructure(classid, classname, bundle);
 		return new ClassAnalyzer(classStructure);
@@ -72,7 +72,7 @@ public class Analyzer {
 	 * @param bundle
 	 *            optional bundle this class belongs to
 	 */
-	public void analyze(ClassReader reader, String bundle) {
+	public void analyze(final ClassReader reader, final String bundle) {
 		if ((reader.getAccess() & Opcodes.ACC_INTERFACE) != 0) {
 			return;
 		}
@@ -90,7 +90,7 @@ public class Analyzer {
 	 * @param bundle
 	 *            optional bundle this class belongs to
 	 */
-	public void analyze(byte[] buffer, String bundle) {
+	public void analyze(final byte[] buffer, final String bundle) {
 		analyze(new ClassReader(buffer), bundle);
 	}
 
@@ -103,7 +103,8 @@ public class Analyzer {
 	 *            optional bundle this class belongs to
 	 * @throws IOException
 	 */
-	public void analyze(InputStream input, String bundle) throws IOException {
+	public void analyze(final InputStream input, final String bundle)
+			throws IOException {
 		analyze(new ClassReader(input), bundle);
 	}
 
@@ -116,7 +117,8 @@ public class Analyzer {
 	 *            optional bundle this class belongs to
 	 * @throws IOException
 	 */
-	public void analyze(File file, String bundle) throws IOException {
+	public void analyze(final File file, final String bundle)
+			throws IOException {
 		final InputStream in = new FileInputStream(file);
 		analyze(new ClassReader(in), bundle);
 		in.close();
@@ -132,10 +134,11 @@ public class Analyzer {
 	 *            optional bundle all the classes belong to
 	 * @throws IOException
 	 */
-	public void analyzeAll(File directory, String bundle) throws IOException {
+	public void analyzeAll(final File directory, final String bundle)
+			throws IOException {
 		for (final File f : directory.listFiles()) {
 			if (f.isDirectory()) {
-				analyzeAll(directory, bundle);
+				analyzeAll(f, bundle);
 				continue;
 			}
 			if (f.getName().endsWith(".class")) {
@@ -153,7 +156,8 @@ public class Analyzer {
 	 *            optional bundle all the classes belong to
 	 * @throws IOException
 	 */
-	public void analyzeJAR(InputStream input, String bundle) throws IOException {
+	public void analyzeJAR(final InputStream input, final String bundle)
+			throws IOException {
 		final ZipInputStream zip = new ZipInputStream(input);
 		while (true) {
 			final ZipEntry entry = zip.getNextEntry();
@@ -175,7 +179,8 @@ public class Analyzer {
 	 *            optional bundle all the classes belong to
 	 * @throws IOException
 	 */
-	public void analyzeJAR(File jarfile, String bundle) throws IOException {
+	public void analyzeJAR(final File jarfile, final String bundle)
+			throws IOException {
 		final InputStream in = new FileInputStream(jarfile);
 		analyzeJAR(in, bundle);
 		in.close();
@@ -194,8 +199,8 @@ public class Analyzer {
 	 *            optional bundle all the classes belong to
 	 * @throws IOException
 	 */
-	public void analyzePath(String path, File basedir, String bundle)
-			throws IOException {
+	public void analyzePath(final String path, final File basedir,
+			final String bundle) throws IOException {
 		final StringTokenizer tokenizer = new StringTokenizer(path,
 				File.pathSeparator);
 		while (tokenizer.hasMoreTokens()) {
