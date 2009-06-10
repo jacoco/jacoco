@@ -70,8 +70,7 @@ public class CoverageBuilder implements IStructureOutput {
 		return Collections.unmodifiableCollection(sourcefiles.values());
 	}
 
-	public IClassStructureOutput classStructure(final long id,
-			final String name, final String bundle) {
+	public IClassStructureOutput classStructure(final long id, final String name) {
 		final boolean[][] covered = executionData.getBlockdata(id);
 		final Collection<ICoverageDataNode> methods = new ArrayList<ICoverageDataNode>();
 		final String[] sourcename = new String[1];
@@ -87,11 +86,11 @@ public class CoverageBuilder implements IStructureOutput {
 			}
 
 			public void end() {
-				final ClassNode classData = new ClassNode(name, bundle, methods);
+				final ClassNode classData = new ClassNode(name, methods);
 				classes.put(Long.valueOf(id), classData);
 				if (sourcename[0] != null) {
 					final SourceFileNode sourceFile = getSourceFile(
-							sourcename[0], classData.getPackagename(), bundle);
+							sourcename[0], classData.getPackagename());
 					sourceFile.add(classData);
 				}
 			}
@@ -102,26 +101,26 @@ public class CoverageBuilder implements IStructureOutput {
 			final String desc, final String signature,
 			final Collection<ICoverageDataNode> container,
 			final boolean[] covered) {
-		final Collection<ICoverageDataNode> blocks = new ArrayList<ICoverageDataNode>();
+		final MethodNode method = new MethodNode(name, desc, signature);
 		return new IMethodStructureOutput() {
-			public void block(final int id, final int instructionCount,
+			public void block(final int id, final int instructions,
 					final int[] lineNumbers) {
 				final boolean c = covered == null ? false : covered[id];
-				blocks.add(new BlockNode(instructionCount, lineNumbers, c));
+				method.addBlock(instructions, lineNumbers, c);
 			}
 
 			public void end() {
-				container.add(new MethodNode(name, desc, signature, blocks));
+				container.add(method);
 			}
 		};
 	}
 
 	private SourceFileNode getSourceFile(final String filename,
-			final String packagename, final String bundle) {
-		final String key = bundle + '#' + packagename + '#' + filename;
+			final String packagename) {
+		final String key = packagename + '/' + filename;
 		SourceFileNode sourcefile = sourcefiles.get(key);
 		if (sourcefile == null) {
-			sourcefile = new SourceFileNode(filename, packagename, bundle);
+			sourcefile = new SourceFileNode(filename, packagename);
 			sourcefiles.put(key, sourcefile);
 		}
 		return sourcefile;

@@ -12,8 +12,6 @@
  *******************************************************************************/
 package org.jacoco.core.analysis;
 
-import java.util.Collection;
-
 /**
  * Coverage data of a single method.
  * 
@@ -22,8 +20,8 @@ import java.util.Collection;
  */
 public class MethodNode extends CoverageDataNodeImpl {
 
-	private final String name;
 	private final String desc;
+
 	private final String signature;
 
 	/**
@@ -35,28 +33,35 @@ public class MethodNode extends CoverageDataNodeImpl {
 	 *            parameter description
 	 * @param signature
 	 *            generic signature or <code>null</code>
-	 * @param blocks
-	 *            contained blocks
 	 */
 	public MethodNode(final String name, final String desc,
-			final String signature, final Collection<ICoverageDataNode> blocks) {
-		super(ElementType.METHOD, true);
-		this.name = name;
+			final String signature) {
+		super(ElementType.METHOD, name, true);
 		this.desc = desc;
 		this.signature = signature;
-		addAll(blocks);
-		// A method is considered as covered when at least one block is covered:
-		final boolean covered = getBlockCounter().getCoveredCount() > 0;
-		methodCounter = CounterImpl.getInstance(covered);
+		this.methodCounter = CounterImpl.getInstance(false);
 	}
 
 	/**
-	 * Return the name of the method.
+	 * Adds the given block to this method.
 	 * 
-	 * @return name of the method
+	 * @param instructions
+	 *            number of instructions of this block
+	 * @param lines
+	 *            lines of this block
+	 * @param covered
+	 *            <code>true</code>, if this block is covered
 	 */
-	public String getName() {
-		return name;
+	public void addBlock(final int instructions, final int[] lines,
+			final boolean covered) {
+		this.lines.increment(lines, covered);
+		this.blockCounter = this.blockCounter.increment(CounterImpl
+				.getInstance(covered));
+		this.instructionCounter = this.instructionCounter.increment(CounterImpl
+				.getInstance(instructions, covered));
+		if (covered && this.methodCounter.getCoveredCount() == 0) {
+			this.methodCounter = CounterImpl.getInstance(true);
+		}
 	}
 
 	/**

@@ -53,14 +53,12 @@ public class Analyzer {
 	 *            id of the class calculated with {@link CRC64}
 	 * @param classname
 	 *            VM name of the class
-	 * @param bundle
-	 *            optional bundle this class belongs to
 	 * @return ASM visitor to write class definition to
 	 */
 	public ClassVisitor createAnalyzingVisitor(final long classid,
-			final String classname, final String bundle) {
+			final String classname) {
 		final IClassStructureOutput classStructure = structureOutput
-				.classStructure(classid, classname, bundle);
+				.classStructure(classid, classname);
 		return new ClassAnalyzer(classStructure);
 	}
 
@@ -69,16 +67,14 @@ public class Analyzer {
 	 * 
 	 * @param reader
 	 *            reader with class definitions
-	 * @param bundle
-	 *            optional bundle this class belongs to
 	 */
-	public void analyze(final ClassReader reader, final String bundle) {
+	public void analyze(final ClassReader reader) {
 		if ((reader.getAccess() & Opcodes.ACC_INTERFACE) != 0) {
 			return;
 		}
 
 		final ClassVisitor visitor = createAnalyzingVisitor(CRC64
-				.checksum(reader.b), reader.getClassName(), bundle);
+				.checksum(reader.b), reader.getClassName());
 		reader.accept(visitor, 0);
 	}
 
@@ -87,11 +83,9 @@ public class Analyzer {
 	 * 
 	 * @param buffer
 	 *            class definitions
-	 * @param bundle
-	 *            optional bundle this class belongs to
 	 */
-	public void analyze(final byte[] buffer, final String bundle) {
-		analyze(new ClassReader(buffer), bundle);
+	public void analyze(final byte[] buffer) {
+		analyze(new ClassReader(buffer));
 	}
 
 	/**
@@ -99,13 +93,10 @@ public class Analyzer {
 	 * 
 	 * @param input
 	 *            stream to read class definition from
-	 * @param bundle
-	 *            optional bundle this class belongs to
 	 * @throws IOException
 	 */
-	public void analyze(final InputStream input, final String bundle)
-			throws IOException {
-		analyze(new ClassReader(input), bundle);
+	public void analyze(final InputStream input) throws IOException {
+		analyze(new ClassReader(input));
 	}
 
 	/**
@@ -113,14 +104,11 @@ public class Analyzer {
 	 * 
 	 * @param file
 	 *            class file
-	 * @param bundle
-	 *            optional bundle this class belongs to
 	 * @throws IOException
 	 */
-	public void analyze(final File file, final String bundle)
-			throws IOException {
+	public void analyze(final File file) throws IOException {
 		final InputStream in = new FileInputStream(file);
-		analyze(new ClassReader(in), bundle);
+		analyze(new ClassReader(in));
 		in.close();
 	}
 
@@ -130,19 +118,16 @@ public class Analyzer {
 	 * 
 	 * @param directory
 	 *            folder to look for class files
-	 * @param bundle
-	 *            optional bundle all the classes belong to
 	 * @throws IOException
 	 */
-	public void analyzeAll(final File directory, final String bundle)
-			throws IOException {
+	public void analyzeAll(final File directory) throws IOException {
 		for (final File f : directory.listFiles()) {
 			if (f.isDirectory()) {
-				analyzeAll(f, bundle);
+				analyzeAll(f);
 				continue;
 			}
 			if (f.getName().endsWith(".class")) {
-				analyze(f, bundle);
+				analyze(f);
 			}
 		}
 	}
@@ -152,12 +137,9 @@ public class Analyzer {
 	 * 
 	 * @param input
 	 *            stream to read the JAR file from
-	 * @param bundle
-	 *            optional bundle all the classes belong to
 	 * @throws IOException
 	 */
-	public void analyzeJAR(final InputStream input, final String bundle)
-			throws IOException {
+	public void analyzeJAR(final InputStream input) throws IOException {
 		final ZipInputStream zip = new ZipInputStream(input);
 		while (true) {
 			final ZipEntry entry = zip.getNextEntry();
@@ -165,7 +147,7 @@ public class Analyzer {
 				break;
 			}
 			if (entry.getName().endsWith(".class")) {
-				analyze(zip, bundle);
+				analyze(zip);
 			}
 		}
 	}
@@ -175,14 +157,11 @@ public class Analyzer {
 	 * 
 	 * @param jarfile
 	 *            JAR file
-	 * @param bundle
-	 *            optional bundle all the classes belong to
 	 * @throws IOException
 	 */
-	public void analyzeJAR(final File jarfile, final String bundle)
-			throws IOException {
+	public void analyzeJAR(final File jarfile) throws IOException {
 		final InputStream in = new FileInputStream(jarfile);
-		analyzeJAR(in, bundle);
+		analyzeJAR(in);
 		in.close();
 	}
 
@@ -195,22 +174,20 @@ public class Analyzer {
 	 *            optional base directory, if <code>null</code> the current
 	 *            working directory is used as the base for relative path
 	 *            entries
-	 * @param bundle
-	 *            optional bundle all the classes belong to
 	 * @throws IOException
 	 */
-	public void analyzePath(final String path, final File basedir,
-			final String bundle) throws IOException {
+	public void analyzePath(final String path, final File basedir)
+			throws IOException {
 		final StringTokenizer tokenizer = new StringTokenizer(path,
 				File.pathSeparator);
 		while (tokenizer.hasMoreTokens()) {
 			final File entry = new File(basedir, tokenizer.nextToken());
 			if (entry.isDirectory()) {
-				analyzeAll(entry, bundle);
+				analyzeAll(entry);
 				continue;
 			}
 			if (entry.isFile() && entry.getName().endsWith(".jar")) {
-				analyzeJAR(entry, bundle);
+				analyzeJAR(entry);
 			}
 		}
 	}

@@ -34,8 +34,9 @@ public class CoverageDataNodeImplTest {
 	@Test
 	public void testInit1() {
 		ICoverageDataNode node = new CoverageDataNodeImpl(ElementType.CLASS,
-				false);
+				"myname", false);
 		assertEquals(ElementType.CLASS, node.getElementType());
+		assertEquals("myname", node.getName());
 		assertTrue(node.getChilden().isEmpty());
 		assertEquals(0, node.getBlockCounter().getTotalCount(), 0.0);
 		assertEquals(0, node.getBlockCounter().getCoveredCount(), 0.0);
@@ -53,8 +54,9 @@ public class CoverageDataNodeImplTest {
 	@Test
 	public void testInit2() {
 		ICoverageDataNode node = new CoverageDataNodeImpl(ElementType.CLASS,
-				true);
+				"myname", true);
 		assertEquals(ElementType.CLASS, node.getElementType());
+		assertEquals("myname", node.getName());
 		assertTrue(node.getChilden().isEmpty());
 		assertEquals(0, node.getBlockCounter().getTotalCount(), 0.0);
 		assertEquals(0, node.getBlockCounter().getCoveredCount(), 0.0);
@@ -73,9 +75,9 @@ public class CoverageDataNodeImplTest {
 	@Test
 	public void testAdd1() {
 		CoverageDataNodeImpl node = new CoverageDataNodeImpl(
-				ElementType.CUSTOM, false);
+				ElementType.CUSTOM, "myname", false);
 		ICoverageDataNode child = new CoverageDataNodeImpl(ElementType.CLASS,
-				true) {
+				"myname", true) {
 			{
 				instructionCounter = CounterImpl.getInstance(42, 41);
 				blockCounter = CounterImpl.getInstance(32, 31);
@@ -102,9 +104,9 @@ public class CoverageDataNodeImplTest {
 	@Test
 	public void testAdd() {
 		CoverageDataNodeImpl node = new CoverageDataNodeImpl(
-				ElementType.CUSTOM, true);
+				ElementType.CUSTOM, "myname", true);
 		ICoverageDataNode child = new CoverageDataNodeImpl(ElementType.CLASS,
-				true) {
+				"myname", true) {
 			{
 				instructionCounter = CounterImpl.getInstance(42, 41);
 				blockCounter = CounterImpl.getInstance(32, 31);
@@ -135,11 +137,11 @@ public class CoverageDataNodeImplTest {
 	@Test
 	public void testAddAll() {
 		CoverageDataNodeImpl node = new CoverageDataNodeImpl(
-				ElementType.CUSTOM, false);
+				ElementType.CUSTOM, "myname", false);
 		ICoverageDataNode child1 = new CoverageDataNodeImpl(ElementType.CLASS,
-				false);
+				"myname", false);
 		ICoverageDataNode child2 = new CoverageDataNodeImpl(ElementType.CLASS,
-				false);
+				"myname", false);
 		final List<ICoverageDataNode> chidren = Arrays
 				.asList(new ICoverageDataNode[] { child1, child2 });
 		node.addAll(chidren);

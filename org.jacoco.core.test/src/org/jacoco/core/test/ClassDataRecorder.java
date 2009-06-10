@@ -130,8 +130,7 @@ class ClassDataRecorder implements IExecutionDataOutput, IStructureOutput,
 
 	// === IStructureOutput ===
 
-	public IClassStructureOutput classStructure(long id, String name,
-			String bundle) {
+	public IClassStructureOutput classStructure(long id, String name) {
 		assertTrue("Recorder can be used for a single class only.", id != -1);
 		classid = id;
 		return this;

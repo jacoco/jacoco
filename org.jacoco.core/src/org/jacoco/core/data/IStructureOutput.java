@@ -30,12 +30,9 @@ public interface IStructureOutput {
 	 *            unique id for the class
 	 * @param name
 	 *            VM name of the class
-	 * @param bundle
-	 *            optional bundle identifier this class belongs to
 	 * @return call-back for structure details about the class
 	 * 
 	 */
-	public IClassStructureOutput classStructure(long id, String name,
-			String bundle);
+	public IClassStructureOutput classStructure(long id, String name);
 
 }

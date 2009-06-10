@@ -21,37 +21,19 @@ package org.jacoco.core.analysis;
  */
 public class SourceFileNode extends CoverageDataNodeImpl {
 
-	private final String bundle;
-
 	private final String packagename;
-
-	private final String filename;
 
 	/**
 	 * Creates a source file data object with the given parameters.
 	 * 
-	 * @param filename
+	 * @param name
 	 *            name of the source file
 	 * @param packagename
 	 *            vm name of the package the source file belongs to
-	 * @param bundle
-	 *            optional bundle name
 	 */
-	public SourceFileNode(final String filename,
-			final String packagename, final String bundle) {
-		super(ElementType.SOURCEFILE, true);
-		this.bundle = bundle;
+	public SourceFileNode(final String name, final String packagename) {
+		super(ElementType.SOURCEFILE, name, true);
 		this.packagename = packagename;
-		this.filename = filename;
-	}
-
-	/**
-	 * Returns the source file name.
-	 * 
-	 * @return source file name
-	 */
-	public String getFilename() {
-		return filename;
 	}
 
 	/**
@@ -61,15 +43,6 @@ public class SourceFileNode extends CoverageDataNodeImpl {
 	 */
 	public String getPackagename() {
 		return packagename;
-	}
-
-	/**
-	 * Returns an optional bundle identifier.
-	 * 
-	 * @return bundle identifier or <code>null</code>
-	 */
-	public String getBundle() {
-		return bundle;
 	}
 
 }

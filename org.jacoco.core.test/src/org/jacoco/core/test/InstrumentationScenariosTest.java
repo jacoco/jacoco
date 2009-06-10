@@ -110,7 +110,7 @@ public class InstrumentationScenariosTest {
 
 		final ClassDataRecorder rec = new ClassDataRecorder();
 		final Analyzer analyzer = new Analyzer(rec);
-		analyzer.analyze(reader, null);
+		analyzer.analyze(reader);
 
 		final Instrumenter instr = new Instrumenter(runtime);
 		final byte[] instrumentedBuffer = instr.instrument(reader);

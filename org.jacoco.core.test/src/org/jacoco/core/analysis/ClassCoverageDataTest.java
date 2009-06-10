@@ -28,31 +28,29 @@ public class ClassCoverageDataTest {
 
 	@Test
 	public void testProperties() {
-		ClassNode data = new ClassNode("Sample", "testbundle",
+		ClassNode data = new ClassNode("Sample",
 				new ArrayList<ICoverageDataNode>());
 		assertEquals(ICoverageDataNode.ElementType.CLASS, data.getElementType());
 		assertEquals("Sample", data.getName());
-		assertEquals("testbundle", data.getBundle());
 	}
 
 	@Test
 	public void testGetPackageName1() {
 		ClassNode data = new ClassNode("ClassInDefaultPackage",
-				"testbundle", new ArrayList<ICoverageDataNode>());
+				new ArrayList<ICoverageDataNode>());
 		assertEquals("", data.getPackagename());
 	}
 
 	@Test
 	public void testGetPackageName2() {
-		ClassNode data = new ClassNode(
-				"org/jacoco/examples/Sample", "testbundle",
+		ClassNode data = new ClassNode("org/jacoco/examples/Sample",
 				new ArrayList<ICoverageDataNode>());
 		assertEquals("org/jacoco/examples", data.getPackagename());
 	}
 
 	@Test
 	public void testEmptyClass() {
-		ICoverageDataNode data = new ClassNode("Sample", null,
+		ICoverageDataNode data = new ClassNode("Sample",
 				new ArrayList<ICoverageDataNode>());
 		assertEquals(0, data.getInstructionCounter().getTotalCount(), 0.0);
 		assertEquals(0, data.getInstructionCounter().getCoveredCount(), 0.0);
@@ -69,7 +67,7 @@ public class ClassCoverageDataTest {
 		final ArrayList<ICoverageDataNode> methods = new ArrayList<ICoverageDataNode>();
 		methods.add(createMethod(false));
 		methods.add(createMethod(false));
-		ICoverageDataNode data = new ClassNode("Sample", null, methods);
+		ICoverageDataNode data = new ClassNode("Sample", methods);
 		assertEquals(10, data.getInstructionCounter().getTotalCount(), 0.0);
 		assertEquals(0, data.getInstructionCounter().getCoveredCount(), 0.0);
 		assertEquals(2, data.getBlockCounter().getTotalCount(), 0.0);
@@ -85,7 +83,7 @@ public class ClassCoverageDataTest {
 		final ArrayList<ICoverageDataNode> methods = new ArrayList<ICoverageDataNode>();
 		methods.add(createMethod(false));
 		methods.add(createMethod(true));
-		ICoverageDataNode data = new ClassNode("Sample", null, methods);
+		ICoverageDataNode data = new ClassNode("Sample", methods);
 		assertEquals(10, data.getInstructionCounter().getTotalCount(), 0.0);
 		assertEquals(5, data.getInstructionCounter().getCoveredCount(), 0.0);
 		assertEquals(2, data.getBlockCounter().getTotalCount(), 0.0);
@@ -97,9 +95,9 @@ public class ClassCoverageDataTest {
 	}
 
 	private ICoverageDataNode createMethod(boolean covered) {
-		final ArrayList<ICoverageDataNode> blocks = new ArrayList<ICoverageDataNode>();
-		blocks.add(new BlockNode(5, new int[0], covered));
-		return new MethodNode("sample", "()V", null, blocks);
+		final MethodNode m = new MethodNode("sample", "()V", null);
+		m.addBlock(5, new int[0], covered);
+		return m;
 	}
 
 }

@@ -22,25 +22,17 @@ import java.util.Collection;
  */
 public class ClassNode extends CoverageDataNodeImpl {
 
-	private final String name;
-
-	private final String bundle;
-
 	/**
 	 * Creates a class coverage data object with the given parameters.
 	 * 
 	 * @param name
 	 *            vm name of the class
-	 * @param bundle
-	 *            optional bundle oder <code>null</code>
 	 * @param methods
 	 *            contained methods
 	 */
-	public ClassNode(final String name, final String bundle,
+	public ClassNode(final String name,
 			final Collection<ICoverageDataNode> methods) {
-		super(ElementType.CLASS, true);
-		this.name = name;
-		this.bundle = bundle;
+		super(ElementType.CLASS, name, true);
 		addAll(methods);
 		// As class is considered as covered when at least one method is
 		// covered:
@@ -49,31 +41,13 @@ public class ClassNode extends CoverageDataNodeImpl {
 	}
 
 	/**
-	 * Return the vm name of this class.
-	 * 
-	 * @return vm name
-	 */
-	public String getName() {
-		return name;
-	}
-
-	/**
 	 * Returns the vm name of the package this class belongs to.
 	 * 
 	 * @return vm name of the package
 	 */
 	public String getPackagename() {
-		final int pos = name.lastIndexOf('/');
-		return pos == -1 ? "" : name.substring(0, pos);
-	}
-
-	/**
-	 * Returns the optional bundle identifier for this class.
-	 * 
-	 * @return bundle or <code>null</code>
-	 */
-	public String getBundle() {
-		return bundle;
+		final int pos = getName().lastIndexOf('/');
+		return pos == -1 ? "" : getName().substring(0, pos);
 	}
 
 }

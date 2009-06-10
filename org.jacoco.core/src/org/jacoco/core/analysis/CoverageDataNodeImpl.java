@@ -25,6 +25,8 @@ public class CoverageDataNodeImpl implements ICoverageDataNode {
 
 	private final ElementType elementType;
 
+	private final String name;
+
 	private final Collection<ICoverageDataNode> children;
 
 	/** Counter for blocks. */
@@ -50,12 +52,15 @@ public class CoverageDataNodeImpl implements ICoverageDataNode {
 	 * 
 	 * @param elementType
 	 *            type of the element represented by this instance
+	 * @param name
+	 *            name of this node
 	 * @param hasLines
 	 *            <code>true</code> id this element has source lines
 	 */
 	public CoverageDataNodeImpl(final ElementType elementType,
-			final boolean hasLines) {
+			final String name, final boolean hasLines) {
 		this.elementType = elementType;
+		this.name = name;
 		children = new ArrayList<ICoverageDataNode>();
 		blockCounter = CounterImpl.COUNTER_0_0;
 		instructionCounter = CounterImpl.COUNTER_0_0;
@@ -100,7 +105,7 @@ public class CoverageDataNodeImpl implements ICoverageDataNode {
 	 * @param children
 	 *            child elements to add
 	 */
-	public void addAll(final Collection<ICoverageDataNode> children) {
+	public void addAll(final Collection<? extends ICoverageDataNode> children) {
 		for (final ICoverageDataNode child : children) {
 			add(child);
 		}
@@ -110,6 +115,10 @@ public class CoverageDataNodeImpl implements ICoverageDataNode {
 
 	public ElementType getElementType() {
 		return elementType;
+	}
+
+	public String getName() {
+		return name;
 	}
 
 	public Collection<ICoverageDataNode> getChilden() {

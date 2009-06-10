@@ -28,9 +28,6 @@ public interface ICoverageDataNode {
 	 */
 	public enum ElementType {
 
-		/** Basic Block */
-		BLOCK,
-
 		/** Method */
 		METHOD,
 
@@ -47,6 +44,14 @@ public interface ICoverageDataNode {
 		CUSTOM
 
 	}
+
+	/**
+	 * Returns the name of this node. Depending on the kind of node this might
+	 * be <code>null</code>.
+	 * 
+	 * @return name or <code>null</code>
+	 */
+	public String getName();
 
 	/**
 	 * Returns the type of element represented by this node.

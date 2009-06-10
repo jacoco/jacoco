@@ -27,12 +27,10 @@ public class SourceFileCoverageDataTest {
 	@Test
 	public void testProperties() {
 		SourceFileNode data = new SourceFileNode("Sample.java",
-				"org/jacoco/examples", "samples");
+				"org/jacoco/examples");
 		assertEquals(ICoverageDataNode.ElementType.SOURCEFILE, data
 				.getElementType());
-		assertEquals("Sample.java", data.getFilename());
 		assertEquals("org/jacoco/examples", data.getPackagename());
-		assertEquals("samples", data.getBundle());
 	}
 
 }
