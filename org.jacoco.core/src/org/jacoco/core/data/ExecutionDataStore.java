@@ -17,7 +17,7 @@ import java.util.Map;
 
 /**
  * In-memory data store for execution data. The data can be added through its
- * {@link IExecutionDataOutput} interface. If execution data is provided
+ * {@link IExecutionDataVisitor} interface. If execution data is provided
  * multiple times for the same class the data is merged, i.e. a block is marked
  * as executed if it is reported as executed at least once. This allows to merge
  * coverage date from multiple runs. This class is not thread safe.
@@ -25,12 +25,12 @@ import java.util.Map;
  * @author Marc R. Hoffmann
  * @version $Revision: $
  */
-public class ExecutionDataStore implements IExecutionDataOutput {
+public class ExecutionDataStore implements IExecutionDataVisitor {
 
 	private final Map<Long, boolean[][]> data = new HashMap<Long, boolean[][]>();
 
-	public void classExecution(long classid, boolean[][] blockdata) {
-		boolean[][] current = data.get(classid);
+	public void visitClassExecution(final long classid, boolean[][] blockdata) {
+		final boolean[][] current = data.get(classid);
 		if (current != null) {
 			merge(current, blockdata);
 			blockdata = current;
@@ -39,7 +39,10 @@ public class ExecutionDataStore implements IExecutionDataOutput {
 
 	}
 
-	private static void merge(boolean[][] target, boolean[][] data) {
+	public void visitEnd() {
+	}
+
+	private static void merge(final boolean[][] target, final boolean[][] data) {
 		if (target.length != data.length) {
 			throw new IllegalStateException("Incompatible execution data.");
 		}
@@ -48,7 +51,7 @@ public class ExecutionDataStore implements IExecutionDataOutput {
 		}
 	}
 
-	private static void merge(boolean[] target, boolean[] data) {
+	private static void merge(final boolean[] target, final boolean[] data) {
 		if (target.length != data.length) {
 			throw new IllegalStateException("Incompatible execution data.");
 		}
@@ -67,20 +70,21 @@ public class ExecutionDataStore implements IExecutionDataOutput {
 	 *            class identifier
 	 * @return coverage data or <code>null</code>
 	 */
-	public boolean[][] getBlockdata(long classid) {
+	public boolean[][] getBlockdata(final long classid) {
 		return data.get(classid);
 	}
 
 	/**
-	 * Writes the content of the store to the given output interface.
+	 * Writes the content of the store to the given visitor interface.
 	 * 
-	 * @param output
+	 * @param visitor
 	 *            interface to write content to
 	 */
-	public void writeTo(IExecutionDataOutput output) {
+	public void accept(final IExecutionDataVisitor visitor) {
 		for (final Map.Entry<Long, boolean[][]> entry : data.entrySet()) {
-			output.classExecution(entry.getKey(), entry.getValue());
+			visitor.visitClassExecution(entry.getKey(), entry.getValue());
 		}
+		visitor.visitEnd();
 	}
 
 }

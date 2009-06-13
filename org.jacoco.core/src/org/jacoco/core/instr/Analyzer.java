@@ -20,8 +20,8 @@ import java.util.StringTokenizer;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
-import org.jacoco.core.data.IClassStructureOutput;
-import org.jacoco.core.data.IStructureOutput;
+import org.jacoco.core.data.IClassStructureVisitor;
+import org.jacoco.core.data.IStructureVisitor;
 import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.ClassVisitor;
 import org.objectweb.asm.Opcodes;
@@ -34,16 +34,16 @@ import org.objectweb.asm.Opcodes;
  */
 public class Analyzer {
 
-	private final IStructureOutput structureOutput;
+	private final IStructureVisitor structureVisitor;
 
 	/**
 	 * Creates a new analyzer reporting to the given output.
 	 * 
-	 * @param structureOutput
+	 * @param structureVisitor
 	 *            the output instance that will receive all structure data
 	 */
-	public Analyzer(final IStructureOutput structureOutput) {
-		this.structureOutput = structureOutput;
+	public Analyzer(final IStructureVisitor structureVisitor) {
+		this.structureVisitor = structureVisitor;
 	}
 
 	/**
@@ -57,8 +57,8 @@ public class Analyzer {
 	 */
 	public ClassVisitor createAnalyzingVisitor(final long classid,
 			final String classname) {
-		final IClassStructureOutput classStructure = structureOutput
-				.classStructure(classid, classname);
+		final IClassStructureVisitor classStructure = structureVisitor
+				.visitClassStructure(classid, classname);
 		return new ClassAnalyzer(classStructure);
 	}
 

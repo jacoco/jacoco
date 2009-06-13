@@ -30,7 +30,7 @@ import org.junit.Test;
  * @author Marc R. Hoffmann
  * @version $Revision: $
  */
-public class ExecutionDataStoreTest implements IExecutionDataOutput {
+public class ExecutionDataStoreTest implements IExecutionDataVisitor {
 
 	private ExecutionDataStore store;
 
@@ -45,7 +45,7 @@ public class ExecutionDataStoreTest implements IExecutionDataOutput {
 	@Test
 	public void testEmpty() {
 		assertNull(store.getBlockdata(123));
-		store.writeTo(this);
+		store.accept(this);
 		assertEquals(Collections.emptyMap(), output);
 	}
 
@@ -53,9 +53,10 @@ public class ExecutionDataStoreTest implements IExecutionDataOutput {
 	public void testPut() {
 		boolean[][] data = new boolean[][] { new boolean[] { false },
 				new boolean[] { false, true } };
-		store.classExecution(1000, data);
+		store.visitClassExecution(1000, data);
+		store.visitEnd();
 		assertSame(data, store.getBlockdata(1000));
-		store.writeTo(this);
+		store.accept(this);
 		assertEquals(Collections.singletonMap(Long.valueOf(1000), data), output);
 	}
 
@@ -63,10 +64,11 @@ public class ExecutionDataStoreTest implements IExecutionDataOutput {
 	public void testMerge() {
 		boolean[][] data1 = new boolean[][] { new boolean[] { false, true },
 				new boolean[] { false, true } };
-		store.classExecution(1000, data1);
+		store.visitClassExecution(1000, data1);
 		boolean[][] data2 = new boolean[][] { new boolean[] { false, true },
 				new boolean[] { true, false } };
-		store.classExecution(1000, data2);
+		store.visitClassExecution(1000, data2);
+		store.visitEnd();
 
 		final boolean[][] result = store.getBlockdata(1000);
 		assertFalse(result[0][0]);
@@ -79,25 +81,28 @@ public class ExecutionDataStoreTest implements IExecutionDataOutput {
 	public void testNegative1() {
 		boolean[][] data1 = new boolean[][] { new boolean[] { false },
 				new boolean[] { false } };
-		store.classExecution(1000, data1);
+		store.visitClassExecution(1000, data1);
 		boolean[][] data2 = new boolean[][] { new boolean[] { false },
 				new boolean[] { false }, new boolean[] { false } };
-		store.classExecution(1000, data2);
+		store.visitClassExecution(1000, data2);
 	}
 
 	@Test(expected = IllegalStateException.class)
 	public void testNegative2() {
 		boolean[][] data1 = new boolean[][] { new boolean[] { false, false } };
-		store.classExecution(1000, data1);
+		store.visitClassExecution(1000, data1);
 		boolean[][] data2 = new boolean[][] { new boolean[] { false, false,
 				false } };
-		store.classExecution(1000, data2);
+		store.visitClassExecution(1000, data2);
 	}
 
 	// === IExecutionDataOutput ===
 
-	public void classExecution(long id, boolean[][] blockdata) {
+	public void visitClassExecution(long id, boolean[][] blockdata) {
 		output.put(Long.valueOf(id), blockdata);
+	}
+
+	public void visitEnd() {
 	}
 
 }

@@ -19,20 +19,20 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.jacoco.core.data.ExecutionDataStore;
-import org.jacoco.core.data.IClassStructureOutput;
-import org.jacoco.core.data.IMethodStructureOutput;
-import org.jacoco.core.data.IStructureOutput;
+import org.jacoco.core.data.IClassStructureVisitor;
+import org.jacoco.core.data.IMethodStructureVisitor;
+import org.jacoco.core.data.IStructureVisitor;
 
 /**
  * Builder for hierarchical {@link ICoverageDataNode} structures based on
  * execution and structure information. The builder is constructed for a given
  * {@link ExecutionDataStore} and then feed with class structure information
- * through its {@link IStructureOutput} interface.
+ * through its {@link IStructureVisitor} interface.
  * 
  * @author Marc R. Hoffmann
  * @version $Revision: $
  */
-public class CoverageBuilder implements IStructureOutput {
+public class CoverageBuilder implements IStructureVisitor {
 
 	private final ExecutionDataStore executionData;
 
@@ -70,22 +70,23 @@ public class CoverageBuilder implements IStructureOutput {
 		return Collections.unmodifiableCollection(sourcefiles.values());
 	}
 
-	public IClassStructureOutput classStructure(final long id, final String name) {
+	public IClassStructureVisitor visitClassStructure(final long id,
+			final String name) {
 		final boolean[][] covered = executionData.getBlockdata(id);
 		final Collection<ICoverageDataNode> methods = new ArrayList<ICoverageDataNode>();
 		final String[] sourcename = new String[1];
-		return new IClassStructureOutput() {
-			public void sourceFile(final String name) {
+		return new IClassStructureVisitor() {
+			public void visitSourceFile(final String name) {
 				sourcename[0] = name;
 			}
 
-			public IMethodStructureOutput methodStructure(final int id,
+			public IMethodStructureVisitor visitMethodStructure(final int id,
 					final String name, final String desc, final String signature) {
 				final boolean[] c = covered == null ? null : covered[id];
-				return createMethodOutput(name, desc, signature, methods, c);
+				return createMethodVisitor(name, desc, signature, methods, c);
 			}
 
-			public void end() {
+			public void visitEnd() {
 				final ClassNode classData = new ClassNode(name, methods);
 				classes.put(Long.valueOf(id), classData);
 				if (sourcename[0] != null) {
@@ -97,19 +98,19 @@ public class CoverageBuilder implements IStructureOutput {
 		};
 	}
 
-	private IMethodStructureOutput createMethodOutput(final String name,
+	private IMethodStructureVisitor createMethodVisitor(final String name,
 			final String desc, final String signature,
 			final Collection<ICoverageDataNode> container,
 			final boolean[] covered) {
 		final MethodNode method = new MethodNode(name, desc, signature);
-		return new IMethodStructureOutput() {
+		return new IMethodStructureVisitor() {
 			public void block(final int id, final int instructions,
 					final int[] lineNumbers) {
 				final boolean c = covered == null ? false : covered[id];
 				method.addBlock(instructions, lineNumbers, c);
 			}
 
-			public void end() {
+			public void visitEnd() {
 				container.add(method);
 			}
 		};
@@ -124,6 +125,9 @@ public class CoverageBuilder implements IStructureOutput {
 			sourcefiles.put(key, sourcefile);
 		}
 		return sourcefile;
+	}
+
+	public void visitEnd() {
 	}
 
 }

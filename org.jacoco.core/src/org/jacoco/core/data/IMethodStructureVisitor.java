@@ -20,7 +20,7 @@ package org.jacoco.core.data;
  * @author Marc R. Hoffmann
  * @version $Revision: $
  */
-public interface IMethodStructureOutput {
+public interface IMethodStructureVisitor {
 
 	/**
 	 * Called for every block within the method.
@@ -35,8 +35,8 @@ public interface IMethodStructureOutput {
 	public void block(int id, int instructionCount, int[] lineNumbers);
 
 	/**
-	 * Called after all information for this method has been emitted.
+	 * Signals the end of this method structure.
 	 */
-	public void end();
+	public void visitEnd();
 
 }

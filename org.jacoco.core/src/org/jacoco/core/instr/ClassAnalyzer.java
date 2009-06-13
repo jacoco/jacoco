@@ -12,8 +12,8 @@
  *******************************************************************************/
 package org.jacoco.core.instr;
 
-import org.jacoco.core.data.IClassStructureOutput;
-import org.jacoco.core.data.IMethodStructureOutput;
+import org.jacoco.core.data.IClassStructureVisitor;
+import org.jacoco.core.data.IMethodStructureVisitor;
 import org.objectweb.asm.ClassVisitor;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
@@ -27,47 +27,47 @@ import org.objectweb.asm.commons.EmptyVisitor;
  */
 public class ClassAnalyzer extends EmptyVisitor {
 
-	private final IClassStructureOutput structureOutput;
+	private final IClassStructureVisitor structureVisitor;
 
 	private int methodCount;
 
 	/**
 	 * Creates a new analyzer that reports to the given
-	 * {@link IClassStructureOutput} instance.
+	 * {@link IClassStructureVisitor} instance.
 	 * 
-	 * @param structureOutput
+	 * @param structureVisitor
 	 *            consumer for class structure output
 	 */
-	public ClassAnalyzer(IClassStructureOutput structureOutput) {
-		this.structureOutput = structureOutput;
+	public ClassAnalyzer(final IClassStructureVisitor structureVisitor) {
+		this.structureVisitor = structureVisitor;
 		methodCount = 0;
 	}
 
 	@Override
-	public void visitSource(String source, String debug) {
+	public void visitSource(final String source, final String debug) {
 		if (source != null) {
-			structureOutput.sourceFile(source);
+			structureVisitor.visitSourceFile(source);
 		}
 	}
 
 	@Override
-	public MethodVisitor visitMethod(int access, String name, String desc,
-			String signature, String[] exceptions) {
+	public MethodVisitor visitMethod(final int access, final String name,
+			final String desc, final String signature, final String[] exceptions) {
 
 		// Abstract methods do not have code to analyze
 		if ((access & Opcodes.ACC_ABSTRACT) != 0) {
 			return null;
 		}
 
-		final IMethodStructureOutput structure = structureOutput
-				.methodStructure(methodCount++, name, desc, signature);
+		final IMethodStructureVisitor structure = structureVisitor
+				.visitMethodStructure(methodCount++, name, desc, signature);
 		return new BlockMethodAdapter(new MethodAnalyzer(structure), access,
 				name, desc, signature, exceptions);
 	}
 
 	@Override
 	public void visitEnd() {
-		structureOutput.end();
+		structureVisitor.visitEnd();
 	}
 
 }

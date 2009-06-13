@@ -20,7 +20,7 @@ package org.jacoco.core.data;
  * @author Marc R. Hoffmann
  * @version $Revision: $
  */
-public interface IExecutionDataOutput {
+public interface IExecutionDataVisitor {
 
 	/**
 	 * Provides execution data for the class with the given id. The first
@@ -34,6 +34,11 @@ public interface IExecutionDataOutput {
 	 * @param blockdata
 	 *            coverage data for the class
 	 */
-	public void classExecution(long id, boolean[][] blockdata);
+	public void visitClassExecution(long id, boolean[][] blockdata);
+
+	/**
+	 * Signals the end of execution data output.
+	 */
+	public void visitEnd();
 
 }

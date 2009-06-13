@@ -20,7 +20,7 @@ package org.jacoco.core.data;
  * @author Marc R. Hoffmann
  * @version $Revision: $
  */
-public interface IStructureOutput {
+public interface IStructureVisitor {
 
 	/**
 	 * Provides structural information about a class as collected during
@@ -33,6 +33,11 @@ public interface IStructureOutput {
 	 * @return call-back for structure details about the class
 	 * 
 	 */
-	public IClassStructureOutput classStructure(long id, String name);
+	public IClassStructureVisitor visitClassStructure(long id, String name);
+
+	/**
+	 * Signals the end of structure data.
+	 */
+	public void visitEnd();
 
 }

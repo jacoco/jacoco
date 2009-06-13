@@ -15,13 +15,13 @@ package org.jacoco.core.data;
 import java.io.PrintStream;
 
 /**
- * {@link IExecutionDataOutput} implementation that dumps a textual
+ * {@link IExecutionDataVisitor} implementation that dumps a textual
  * representation of coverage data.
  * 
  * @author Marc R. Hoffmann
  * @version $Revision: $
  */
-public class ExecutionDataDumper implements IExecutionDataOutput {
+public class ExecutionDataDumper implements IExecutionDataVisitor {
 
 	private final PrintStream out;
 
@@ -42,10 +42,14 @@ public class ExecutionDataDumper implements IExecutionDataOutput {
 		this.out = out;
 	}
 
-	public void classExecution(final long id, final boolean[][] blockdata) {
+	public void visitClassExecution(final long id, final boolean[][] blockdata) {
 		out.print("class coverage ");
 		out.print(" id=");
 		out.println(Long.toHexString(id));
+	}
+
+	public void visitEnd() {
+		out.flush();
 	}
 
 }

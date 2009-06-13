@@ -17,8 +17,8 @@ import static org.junit.Assert.assertEquals;
 import java.util.Collection;
 
 import org.jacoco.core.data.ExecutionDataStore;
-import org.jacoco.core.data.IClassStructureOutput;
-import org.jacoco.core.data.IMethodStructureOutput;
+import org.jacoco.core.data.IClassStructureVisitor;
+import org.jacoco.core.data.IMethodStructureVisitor;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -42,13 +42,13 @@ public class CoverageBuilderTest {
 
 	@Test
 	public void testCreateClassNotCovered() {
-		final IClassStructureOutput classStructure = coverageBuilder
-				.classStructure(123L, "org/jacoco/examples/Sample");
-		final IMethodStructureOutput methodStructure = classStructure
-				.methodStructure(0, "doit", "()V", null);
+		final IClassStructureVisitor classStructure = coverageBuilder
+				.visitClassStructure(123L, "org/jacoco/examples/Sample");
+		final IMethodStructureVisitor methodStructure = classStructure
+				.visitMethodStructure(0, "doit", "()V", null);
 		methodStructure.block(0, 5, new int[] { 6, 7, 8 });
-		methodStructure.end();
-		classStructure.end();
+		methodStructure.visitEnd();
+		classStructure.visitEnd();
 
 		final Collection<ClassNode> classes = coverageBuilder.getClasses();
 		assertEquals(1, classes.size(), 1.0);
@@ -78,15 +78,16 @@ public class CoverageBuilderTest {
 
 	@Test
 	public void testCreateClassCovered() {
-		executionData.classExecution(123L,
+		executionData.visitClassExecution(123L,
 				new boolean[][] { new boolean[] { true } });
-		final IClassStructureOutput classStructure = coverageBuilder
-				.classStructure(123L, "org/jacoco/examples/Sample");
-		final IMethodStructureOutput methodStructure = classStructure
-				.methodStructure(0, "doit", "()V", null);
+		executionData.visitEnd();
+		final IClassStructureVisitor classStructure = coverageBuilder
+				.visitClassStructure(123L, "org/jacoco/examples/Sample");
+		final IMethodStructureVisitor methodStructure = classStructure
+				.visitMethodStructure(0, "doit", "()V", null);
 		methodStructure.block(0, 5, new int[] { 6, 7, 8 });
-		methodStructure.end();
-		classStructure.end();
+		methodStructure.visitEnd();
+		classStructure.visitEnd();
 
 		final Collection<ClassNode> classes = coverageBuilder.getClasses();
 		assertEquals(1, classes.size(), 1.0);
@@ -116,15 +117,15 @@ public class CoverageBuilderTest {
 
 	@Test
 	public void testCreateSourceFile() {
-		final IClassStructureOutput classStructure1 = coverageBuilder
-				.classStructure(123L, "org/jacoco/examples/Sample");
-		classStructure1.sourceFile("Sample.java");
-		classStructure1.end();
+		final IClassStructureVisitor classStructure1 = coverageBuilder
+				.visitClassStructure(123L, "org/jacoco/examples/Sample");
+		classStructure1.visitSourceFile("Sample.java");
+		classStructure1.visitEnd();
 
-		final IClassStructureOutput classStructure2 = coverageBuilder
-				.classStructure(123L, "org/jacoco/examples/Sample");
-		classStructure2.sourceFile("Sample.java");
-		classStructure2.end();
+		final IClassStructureVisitor classStructure2 = coverageBuilder
+				.visitClassStructure(123L, "org/jacoco/examples/Sample");
+		classStructure2.visitSourceFile("Sample.java");
+		classStructure2.visitEnd();
 
 		final Collection<SourceFileNode> sourcefiles = coverageBuilder
 				.getSourceFiles();

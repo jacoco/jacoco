@@ -12,7 +12,7 @@
  *******************************************************************************/
 package org.jacoco.core.runtime;
 
-import org.jacoco.core.data.IExecutionDataOutput;
+import org.jacoco.core.data.IExecutionDataVisitor;
 import org.objectweb.asm.commons.GeneratorAdapter;
 
 /**
@@ -57,16 +57,16 @@ public interface IRuntime {
 
 	/**
 	 * Collects the current execution data and writes it to the given
-	 * {@link IExecutionDataOutput} object. This method must only be called
+	 * {@link IExecutionDataVisitor} object. This method must only be called
 	 * between {@link #startup()} and {@link #shutdown()}.
 	 * 
-	 * @param output
+	 * @param visitor
 	 *            handler to write coverage data to
 	 * @param reset
 	 *            if <code>true</code> the current coverage information is also
 	 *            cleared
 	 */
-	public void collect(IExecutionDataOutput output, boolean reset);
+	public void collect(IExecutionDataVisitor visitor, boolean reset);
 
 	/**
 	 * Resets all coverage information. This method must only be called between

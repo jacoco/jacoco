@@ -5,7 +5,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.jacoco.core.data.IExecutionDataOutput;
+import org.jacoco.core.data.IExecutionDataVisitor;
 import org.jacoco.core.instr.GeneratorConstants;
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.commons.GeneratorAdapter;
@@ -38,7 +38,7 @@ public class SystemPropertiesRuntime implements IRuntime {
 	 * @param id
 	 *            Identifier for the runtime
 	 */
-	public SystemPropertiesRuntime(int id) {
+	public SystemPropertiesRuntime(final int id) {
 		this.key = KEYPREFIX + Integer.toHexString(id);
 	}
 
@@ -50,7 +50,8 @@ public class SystemPropertiesRuntime implements IRuntime {
 	}
 
 	// TODO: lokale Variable vermeiden (swap!)
-	public void generateRegistration(long classId, GeneratorAdapter gen) {
+	public void generateRegistration(final long classId,
+			final GeneratorAdapter gen) {
 
 		// boolean[][] data = pop()
 		final int data = gen.newLocal(GeneratorConstants.DATAFIELD_TYPE);
@@ -94,14 +95,15 @@ public class SystemPropertiesRuntime implements IRuntime {
 		return (Map<Long, boolean[][]>) object;
 	}
 
-	public void collect(IExecutionDataOutput output, boolean reset) {
+	public void collect(final IExecutionDataVisitor visitor, final boolean reset) {
 		final Map<Long, boolean[][]> dataMap = getDataMap();
 		synchronized (dataMap) {
-			for (Map.Entry<Long, boolean[][]> entry : dataMap.entrySet()) {
+			for (final Map.Entry<Long, boolean[][]> entry : dataMap.entrySet()) {
 				final long classId = entry.getKey().longValue();
 				final boolean[][] blockData = entry.getValue();
-				output.classExecution(classId, blockData);
+				visitor.visitClassExecution(classId, blockData);
 			}
+			visitor.visitEnd();
 			if (reset) {
 				reset();
 			}
@@ -111,8 +113,8 @@ public class SystemPropertiesRuntime implements IRuntime {
 	public void reset() {
 		final Map<Long, boolean[][]> dataMap = getDataMap();
 		synchronized (dataMap) {
-			for (boolean[][] data : dataMap.values()) {
-				for (boolean[] arr : data) {
+			for (final boolean[][] data : dataMap.values()) {
+				for (final boolean[] arr : data) {
 					Arrays.fill(arr, false);
 				}
 			}

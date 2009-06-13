@@ -17,7 +17,7 @@ package org.jacoco.core.data;
  * interface is meant to be implemented by parties that want to retrieve data
  * from the instrumentation process.
  */
-public interface IClassStructureOutput {
+public interface IClassStructureVisitor {
 
 	/**
 	 * The source file name might be reported through this method call.
@@ -25,7 +25,7 @@ public interface IClassStructureOutput {
 	 * @param name
 	 *            name of the corresponding source file
 	 */
-	public void sourceFile(String name);
+	public void visitSourceFile(String name);
 
 	/**
 	 * Called for every instrumented method.
@@ -40,12 +40,12 @@ public interface IClassStructureOutput {
 	 *            generic signature or <code>null</code>
 	 * @return call-back for structure details about the method
 	 */
-	public IMethodStructureOutput methodStructure(int id, String name,
+	public IMethodStructureVisitor visitMethodStructure(int id, String name,
 			String desc, String signature);
 
 	/**
-	 * Called after all information for this class has been emitted.
+	 * Signals the end of this class structure.
 	 */
-	public void end();
+	public void visitEnd();
 
 }

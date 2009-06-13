@@ -12,13 +12,13 @@
  *******************************************************************************/
 package org.jacoco.core.instr;
 
-import org.jacoco.core.data.IMethodStructureOutput;
+import org.jacoco.core.data.IMethodStructureVisitor;
 import org.objectweb.asm.Label;
 import org.objectweb.asm.commons.EmptyVisitor;
 
 /**
  * This {@link IBlockMethodVisitor} analyzes the block structure of a method and
- * reports it to a {@link IMethodStructureOutput} instance.
+ * reports it to a {@link IMethodStructureVisitor} instance.
  * 
  * @author Marc R. Hoffmann
  * @version $Revision: $
@@ -28,7 +28,7 @@ public final class MethodAnalyzer extends EmptyVisitor implements
 
 	private static final int NO_LINE_INFO = -1;
 
-	private final IMethodStructureOutput structureOutput;
+	private final IMethodStructureVisitor structureVisitor;
 
 	private int instructionCount;
 
@@ -38,13 +38,13 @@ public final class MethodAnalyzer extends EmptyVisitor implements
 
 	/**
 	 * Creates a new analyzer that reports to the given
-	 * {@link IMethodStructureOutput} instance.
+	 * {@link IMethodStructureVisitor} instance.
 	 * 
-	 * @param structureOutput
+	 * @param structureVisitor
 	 *            consumer for method structure events
 	 */
-	public MethodAnalyzer(IMethodStructureOutput structureOutput) {
-		this.structureOutput = structureOutput;
+	public MethodAnalyzer(final IMethodStructureVisitor structureVisitor) {
+		this.structureVisitor = structureVisitor;
 		this.instructionCount = 0;
 		this.currentLine = NO_LINE_INFO;
 		this.lineNumbers = new IntSet();
@@ -60,85 +60,86 @@ public final class MethodAnalyzer extends EmptyVisitor implements
 	// === MethodVisitor ===
 
 	@Override
-	public void visitLineNumber(int line, Label start) {
+	public void visitLineNumber(final int line, final Label start) {
 		currentLine = line;
 	}
 
 	@Override
-	public void visitJumpInsn(int opcode, Label label) {
+	public void visitJumpInsn(final int opcode, final Label label) {
 		addInstruction();
 	}
 
 	@Override
-	public void visitInsn(int opcode) {
+	public void visitInsn(final int opcode) {
 		addInstruction();
 	}
 
 	@Override
-	public void visitFieldInsn(int opcode, String owner, String name,
-			String desc) {
+	public void visitFieldInsn(final int opcode, final String owner,
+			final String name, final String desc) {
 		addInstruction();
 	}
 
 	@Override
-	public void visitIincInsn(int var, int increment) {
+	public void visitIincInsn(final int var, final int increment) {
 		addInstruction();
 	}
 
 	@Override
-	public void visitIntInsn(int opcode, int operand) {
+	public void visitIntInsn(final int opcode, final int operand) {
 		addInstruction();
 	}
 
 	@Override
-	public void visitLdcInsn(Object cst) {
+	public void visitLdcInsn(final Object cst) {
 		addInstruction();
 	}
 
 	@Override
-	public void visitLookupSwitchInsn(Label dflt, int[] keys, Label[] labels) {
+	public void visitLookupSwitchInsn(final Label dflt, final int[] keys,
+			final Label[] labels) {
 		addInstruction();
 	}
 
 	@Override
-	public void visitMethodInsn(int opcode, String owner, String name,
-			String desc) {
+	public void visitMethodInsn(final int opcode, final String owner,
+			final String name, final String desc) {
 		addInstruction();
 	}
 
 	@Override
-	public void visitMultiANewArrayInsn(String desc, int dims) {
+	public void visitMultiANewArrayInsn(final String desc, final int dims) {
 		addInstruction();
 	}
 
 	@Override
-	public void visitTableSwitchInsn(int min, int max, Label dflt,
-			Label[] labels) {
+	public void visitTableSwitchInsn(final int min, final int max,
+			final Label dflt, final Label[] labels) {
 		addInstruction();
 	}
 
 	@Override
-	public void visitTypeInsn(int opcode, String type) {
+	public void visitTypeInsn(final int opcode, final String type) {
 		addInstruction();
 	}
 
 	@Override
-	public void visitVarInsn(int opcode, int var) {
+	public void visitVarInsn(final int opcode, final int var) {
 		addInstruction();
 	}
 
 	@Override
 	public void visitEnd() {
-		structureOutput.end();
+		structureVisitor.visitEnd();
 	}
 
 	// === IBlockVisitor ===
 
-	public void visitBlockEndBeforeJump(int id) {
+	public void visitBlockEndBeforeJump(final int id) {
 	}
 
-	public void visitBlockEnd(int id) {
-		structureOutput.block(id, instructionCount, lineNumbers.toArray());
+	public void visitBlockEnd(final int id) {
+		structureVisitor.block(id, instructionCount, lineNumbers.toArray());
 		instructionCount = 0;
 		lineNumbers.clear();
 	}

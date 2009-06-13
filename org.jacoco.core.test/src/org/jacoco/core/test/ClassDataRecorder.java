@@ -21,10 +21,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.jacoco.core.data.IClassStructureOutput;
-import org.jacoco.core.data.IExecutionDataOutput;
-import org.jacoco.core.data.IMethodStructureOutput;
-import org.jacoco.core.data.IStructureOutput;
+import org.jacoco.core.data.IClassStructureVisitor;
+import org.jacoco.core.data.IExecutionDataVisitor;
+import org.jacoco.core.data.IMethodStructureVisitor;
+import org.jacoco.core.data.IStructureVisitor;
 
 /**
  * Recorder for structure as well as coverage data for a single class providing
@@ -33,10 +33,10 @@ import org.jacoco.core.data.IStructureOutput;
  * @author Marc R. Hoffmann
  * @version $Revision: $
  */
-class ClassDataRecorder implements IExecutionDataOutput, IStructureOutput,
-		IClassStructureOutput {
+class ClassDataRecorder implements IExecutionDataVisitor, IStructureVisitor,
+		IClassStructureVisitor {
 
-	public static class MethodDataRecorder implements IMethodStructureOutput {
+	public static class MethodDataRecorder implements IMethodStructureVisitor {
 
 		private final int id;
 
@@ -56,7 +56,7 @@ class ClassDataRecorder implements IExecutionDataOutput, IStructureOutput,
 			blocks.add(new BlockData(instructionCount, lineNumbers));
 		}
 
-		public void end() {
+		public void visitEnd() {
 		}
 
 		public BlockData getBlock(int id) {
@@ -113,9 +113,9 @@ class ClassDataRecorder implements IExecutionDataOutput, IStructureOutput,
 		return m;
 	}
 
-	// === ICoverageDataOutput ===
+	// === ICoverageDataVisitor ===
 
-	public void classExecution(long id, boolean[][] blockdata) {
+	public void visitClassExecution(long id, boolean[][] blockdata) {
 		assertTrue("Coverage and structure data for the same class only.",
 				classid == id);
 		assertTrue("Unexpected method count " + blockdata.length, methods
@@ -128,20 +128,20 @@ class ClassDataRecorder implements IExecutionDataOutput, IStructureOutput,
 		}
 	}
 
-	// === IStructureOutput ===
+	// === IStructureVisitor ===
 
-	public IClassStructureOutput classStructure(long id, String name) {
+	public IClassStructureVisitor visitClassStructure(long id, String name) {
 		assertTrue("Recorder can be used for a single class only.", id != -1);
 		classid = id;
 		return this;
 	}
 
-	// === IClassStructureOutput ===
+	// === IClassStructureVisitor ===
 
-	public void sourceFile(String name) {
+	public void visitSourceFile(String name) {
 	}
 
-	public IMethodStructureOutput methodStructure(int id, String name,
+	public IMethodStructureVisitor visitMethodStructure(int id, String name,
 			String desc, String signature) {
 		MethodDataRecorder m = new MethodDataRecorder(id, name, desc, signature);
 		methods.add(m);
@@ -149,7 +149,7 @@ class ClassDataRecorder implements IExecutionDataOutput, IStructureOutput,
 		return m;
 	}
 
-	public void end() {
+	public void visitEnd() {
 	}
 
 }

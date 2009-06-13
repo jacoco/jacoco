@@ -19,8 +19,7 @@ import static org.junit.Assert.assertSame;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.jacoco.core.data.IClassStructureOutput;
-import org.jacoco.core.data.IExecutionDataOutput;
+import org.jacoco.core.data.IExecutionDataVisitor;
 import org.jacoco.core.test.TargetLoader;
 import org.junit.After;
 import org.junit.Before;
@@ -175,7 +174,7 @@ public class SystemPropertiesRuntimeTest {
 
 	}
 
-	private static class TestStorage implements IExecutionDataOutput {
+	private static class TestStorage implements IExecutionDataVisitor {
 
 		private final Map<Long, boolean[][]> data = new HashMap<Long, boolean[][]>();
 
@@ -191,15 +190,13 @@ public class SystemPropertiesRuntimeTest {
 			assertSame(expected, getData(classId));
 		}
 
-		// === ICoverageDataOutput ===
+		// === ICoverageDataVisitor ===
 
-		public void classExecution(long id, boolean[][] blockdata) {
+		public void visitClassExecution(long id, boolean[][] blockdata) {
 			data.put(Long.valueOf(id), blockdata);
 		}
 
-		public IClassStructureOutput classStructure(long id, String name,
-				String bundle) {
-			throw new UnsupportedOperationException();
+		public void visitEnd() {
 		}
 
 	}
