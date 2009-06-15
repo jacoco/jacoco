@@ -1,3 +1,15 @@
+/*******************************************************************************
+ * Copyright (c) 2009 Mountainminds GmbH & Co. KG and others
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *    Marc R. Hoffmann - initial API and implementation
+ *    
+ * $Id: $
+ *******************************************************************************/
 package org.jacoco.core.instr;
 
 /**
@@ -40,7 +52,7 @@ public final class CRC64 {
 	 *            data to calculate checksum for
 	 * @return checksum value
 	 */
-	public static long checksum(byte[] data) {
+	public static long checksum(final byte[] data) {
 		long sum = 0;
 		for (int i = 0; i < data.length; i++) {
 			final int lookupidx = ((int) sum ^ data[i]) & 0xff;
