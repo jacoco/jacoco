@@ -33,7 +33,7 @@ public class ClassNode extends CoverageDataNodeImpl {
 	public ClassNode(final String name,
 			final Collection<ICoverageDataNode> methods) {
 		super(ElementType.CLASS, name, true);
-		addAll(methods);
+		addNodes(methods);
 		// As class is considered as covered when at least one method is
 		// covered:
 		final boolean covered = methodCounter.getCoveredCount() > 0;

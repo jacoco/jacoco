@@ -13,6 +13,7 @@
 package org.jacoco.core.analysis;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
@@ -32,44 +33,26 @@ import org.junit.Test;
 public class CoverageDataNodeImplTest {
 
 	@Test
-	public void testInit1() {
+	public void testProperties() {
 		ICoverageDataNode node = new CoverageDataNodeImpl(ElementType.CLASS,
 				"myname", false);
 		assertEquals(ElementType.CLASS, node.getElementType());
 		assertEquals("myname", node.getName());
 		assertTrue(node.getChilden().isEmpty());
-		assertEquals(0, node.getBlockCounter().getTotalCount(), 0.0);
-		assertEquals(0, node.getBlockCounter().getCoveredCount(), 0.0);
-		assertEquals(0, node.getInstructionCounter().getTotalCount(), 0.0);
-		assertEquals(0, node.getInstructionCounter().getCoveredCount(), 0.0);
-		assertEquals(0, node.getLineCounter().getTotalCount(), 0.0);
-		assertEquals(0, node.getLineCounter().getCoveredCount(), 0.0);
-		assertNull(node.getLines());
-		assertEquals(0, node.getMethodCounter().getTotalCount(), 0.0);
-		assertEquals(0, node.getMethodCounter().getCoveredCount(), 0.0);
-		assertEquals(0, node.getClassCounter().getTotalCount(), 0.0);
-		assertEquals(0, node.getClassCounter().getCoveredCount(), 0.0);
 	}
 
 	@Test
-	public void testInit2() {
+	public void testInitWithoutLines() {
+		ICoverageDataNode node = new CoverageDataNodeImpl(ElementType.CLASS,
+				"myname", false);
+		assertNull(node.getLines());
+	}
+
+	@Test
+	public void testInitWithLines() {
 		ICoverageDataNode node = new CoverageDataNodeImpl(ElementType.CLASS,
 				"myname", true);
-		assertEquals(ElementType.CLASS, node.getElementType());
-		assertEquals("myname", node.getName());
-		assertTrue(node.getChilden().isEmpty());
-		assertEquals(0, node.getBlockCounter().getTotalCount(), 0.0);
-		assertEquals(0, node.getBlockCounter().getCoveredCount(), 0.0);
-		assertEquals(0, node.getInstructionCounter().getTotalCount(), 0.0);
-		assertEquals(0, node.getInstructionCounter().getCoveredCount(), 0.0);
-		assertEquals(0, node.getLineCounter().getTotalCount(), 0.0);
-		assertEquals(0, node.getLineCounter().getCoveredCount(), 0.0);
-		assertEquals(-1, node.getLines().getFirstLine(), 0.0);
-		assertEquals(-1, node.getLines().getLastLine(), 0.0);
-		assertEquals(0, node.getMethodCounter().getTotalCount(), 0.0);
-		assertEquals(0, node.getMethodCounter().getCoveredCount(), 0.0);
-		assertEquals(0, node.getClassCounter().getTotalCount(), 0.0);
-		assertEquals(0, node.getClassCounter().getCoveredCount(), 0.0);
+		assertNotNull(node.getLines());
 	}
 
 	@Test
@@ -102,7 +85,7 @@ public class CoverageDataNodeImplTest {
 	}
 
 	@Test
-	public void testAdd() {
+	public void testAdd2() {
 		CoverageDataNodeImpl node = new CoverageDataNodeImpl(
 				ElementType.CUSTOM, "myname", true);
 		ICoverageDataNode child = new CoverageDataNodeImpl(ElementType.CLASS,
@@ -135,7 +118,7 @@ public class CoverageDataNodeImplTest {
 	}
 
 	@Test
-	public void testAddAll() {
+	public void testAddNodes() {
 		CoverageDataNodeImpl node = new CoverageDataNodeImpl(
 				ElementType.CUSTOM, "myname", false);
 		ICoverageDataNode child1 = new CoverageDataNodeImpl(ElementType.CLASS,
@@ -144,7 +127,7 @@ public class CoverageDataNodeImplTest {
 				"myname", false);
 		final List<ICoverageDataNode> chidren = Arrays
 				.asList(new ICoverageDataNode[] { child1, child2 });
-		node.addAll(chidren);
+		node.addNodes(chidren);
 		assertEquals(chidren, node.getChilden());
 	}
 

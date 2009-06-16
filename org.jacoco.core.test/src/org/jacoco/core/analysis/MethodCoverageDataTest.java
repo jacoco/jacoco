@@ -39,7 +39,7 @@ public class MethodCoverageDataTest {
 
 	@Test
 	public void testEmptyMethod() {
-		ICoverageDataNode data = new MethodNode("sample", "()V", null);
+		ICoverageDataSummary data = new MethodNode("sample", "()V", null);
 		assertEquals(0, data.getInstructionCounter().getTotalCount(), 0.0);
 		assertEquals(0, data.getInstructionCounter().getCoveredCount(), 0.0);
 		assertEquals(0, data.getBlockCounter().getTotalCount(), 0.0);

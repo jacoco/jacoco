@@ -50,7 +50,7 @@ public class ClassCoverageDataTest {
 
 	@Test
 	public void testEmptyClass() {
-		ICoverageDataNode data = new ClassNode("Sample",
+		ICoverageDataSummary data = new ClassNode("Sample",
 				new ArrayList<ICoverageDataNode>());
 		assertEquals(0, data.getInstructionCounter().getTotalCount(), 0.0);
 		assertEquals(0, data.getInstructionCounter().getCoveredCount(), 0.0);
@@ -67,7 +67,7 @@ public class ClassCoverageDataTest {
 		final ArrayList<ICoverageDataNode> methods = new ArrayList<ICoverageDataNode>();
 		methods.add(createMethod(false));
 		methods.add(createMethod(false));
-		ICoverageDataNode data = new ClassNode("Sample", methods);
+		ICoverageDataSummary data = new ClassNode("Sample", methods);
 		assertEquals(10, data.getInstructionCounter().getTotalCount(), 0.0);
 		assertEquals(0, data.getInstructionCounter().getCoveredCount(), 0.0);
 		assertEquals(2, data.getBlockCounter().getTotalCount(), 0.0);
@@ -83,7 +83,7 @@ public class ClassCoverageDataTest {
 		final ArrayList<ICoverageDataNode> methods = new ArrayList<ICoverageDataNode>();
 		methods.add(createMethod(false));
 		methods.add(createMethod(true));
-		ICoverageDataNode data = new ClassNode("Sample", methods);
+		ICoverageDataSummary data = new ClassNode("Sample", methods);
 		assertEquals(10, data.getInstructionCounter().getTotalCount(), 0.0);
 		assertEquals(5, data.getInstructionCounter().getCoveredCount(), 0.0);
 		assertEquals(2, data.getBlockCounter().getTotalCount(), 0.0);

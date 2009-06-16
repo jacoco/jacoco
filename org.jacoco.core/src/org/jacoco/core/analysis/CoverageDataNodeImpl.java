@@ -21,7 +21,8 @@ import java.util.Collection;
  * @author Marc R. Hoffmann
  * @version $Revision: $
  */
-public class CoverageDataNodeImpl implements ICoverageDataNode {
+public class CoverageDataNodeImpl extends CoverageDataSummaryImpl implements
+		ICoverageDataNode {
 
 	private final ElementType elementType;
 
@@ -29,23 +30,8 @@ public class CoverageDataNodeImpl implements ICoverageDataNode {
 
 	private final Collection<ICoverageDataNode> children;
 
-	/** Counter for blocks. */
-	protected CounterImpl blockCounter;
-
-	/** Counter for instructions. */
-	protected CounterImpl instructionCounter;
-
-	/** Counter for lines, if this element does not have lines. */
-	protected CounterImpl lineCounter;
-
 	/** Line information if this element has lines. */
 	protected final LinesImpl lines;
-
-	/** Counter for methods. */
-	protected CounterImpl methodCounter;
-
-	/** Counter for classes. */
-	protected CounterImpl classCounter;
 
 	/**
 	 * Creates a new coverage data instance of the given element type.
@@ -59,21 +45,11 @@ public class CoverageDataNodeImpl implements ICoverageDataNode {
 	 */
 	public CoverageDataNodeImpl(final ElementType elementType,
 			final String name, final boolean hasLines) {
+		super();
 		this.elementType = elementType;
 		this.name = name;
 		children = new ArrayList<ICoverageDataNode>();
-		blockCounter = CounterImpl.COUNTER_0_0;
-		instructionCounter = CounterImpl.COUNTER_0_0;
-		if (hasLines) {
-			lineCounter = null;
-			lines = new LinesImpl();
-		} else {
-			lineCounter = CounterImpl.COUNTER_0_0;
-			lines = null;
-		}
-		methodCounter = CounterImpl.COUNTER_0_0;
-		classCounter = CounterImpl.COUNTER_0_0;
-
+		lines = hasLines ? new LinesImpl() : null;
 	}
 
 	/**
@@ -84,28 +60,21 @@ public class CoverageDataNodeImpl implements ICoverageDataNode {
 	 *            child element to add
 	 */
 	public void add(final ICoverageDataNode child) {
+		super.add(child);
 		children.add(child);
-		blockCounter = blockCounter.increment(child.getBlockCounter());
-		instructionCounter = instructionCounter.increment(child
-				.getInstructionCounter());
-		if (lineCounter != null) {
-			lineCounter = lineCounter.increment(child.getLineCounter());
-		}
 		if (lines != null) {
 			lines.increment(child.getLines());
 		}
-		methodCounter = methodCounter.increment(child.getMethodCounter());
-		classCounter = classCounter.increment(child.getClassCounter());
 	}
 
 	/**
-	 * Adds the given collection of coverage data instances as child elements.
+	 * Adds the given collection of coverage data summaries as child elements.
 	 * All counters are incremented by the values of the given children.
 	 * 
 	 * @param children
 	 *            child elements to add
 	 */
-	public void addAll(final Collection<? extends ICoverageDataNode> children) {
+	public void addNodes(final Collection<? extends ICoverageDataNode> children) {
 		for (final ICoverageDataNode child : children) {
 			add(child);
 		}
@@ -125,28 +94,13 @@ public class CoverageDataNodeImpl implements ICoverageDataNode {
 		return children;
 	}
 
-	public ICounter getBlockCounter() {
-		return blockCounter;
-	}
-
-	public ICounter getInstructionCounter() {
-		return instructionCounter;
-	}
-
+	@Override
 	public ICounter getLineCounter() {
-		return lines == null ? lineCounter : lines;
+		return lines == null ? super.getLineCounter() : lines;
 	}
 
 	public ILines getLines() {
 		return lines;
-	}
-
-	public ICounter getMethodCounter() {
-		return methodCounter;
-	}
-
-	public ICounter getClassCounter() {
-		return classCounter;
 	}
 
 }
