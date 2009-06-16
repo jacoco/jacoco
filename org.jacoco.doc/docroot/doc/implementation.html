@@ -44,10 +44,10 @@
       <li>Java Virtual Machine Tool Interface (JVMTI), since Java 1.5</li> 
     </ul>
   </li>
-  <li><b>Instrumentation</b>
+  <li><span class="high">Instrumentation*</span>
     <ul>
       <li>Java Source Instrumentation</li>
-      <li><b>Byte Code</b> Instrumentation
+      <li><span class="high">Byte Code Instrumentation'</span>
         <ul>
           <li>Offline
             <ul>
@@ -55,10 +55,10 @@
               <li>Inject Instrumented Classes into the Class Path</li>
             </ul>
           </li>
-          <li><b>On-The-Fly</b>
+          <li><span class="high">On-The-Fly*</span>
             <ul>
               <li>Special Classloader Implementions or Framework Specific Hooks</li>
-              <li><b>Java Agent</b></li>
+              <li><span class="high">Java Agent*</span></li>
             </ul>
           </li>
         </ul>
@@ -96,15 +96,32 @@
 <h2>Minimal Java Version</h2>
 
 <p class="Note">
+  JaCoCo requires Java 1.5.
+</p>
+
+<p>
+  The Java agent mechanism used for on-the-fly instrumentation became available
+  with in Java 1.5 VMs. Coding and testing with Java 1.5 language level is more
+  efficient, less error-prone &ndash; and more fun. JaCoCo will still allow to
+  run against Java code compiled with older compiler.
 </p>
 
 
 <h2>Byte Code Manipulation</h2>
 
 <p class="Note">
-  ASM
+  Instrumentation requires mechanisms to modify and generate Java byte code.
+  JaCoCo uses the ASM library for this purpose.
 </p>
 
+<p>
+  Implementing the Java byte code specification would be a extensive and
+  error-prone task. Therefore an existing library should be used. The
+  <a href="http://asm.objectweb.org/">ASM</a> library is lightweight, easy to
+  use and very efficient in terms of memory and CPU usage. It is actively
+  maintained and includes as huge regression test suite. Its simplified BSD
+  license is approved by the Eclipse Foundation for usage with EPL products.
+</p>
 
 <h2>Java Class Identity</h2>
 
@@ -141,11 +158,16 @@
 <h2>Coverage Runtime Dependency</h2>
 
 <p class="Note">
-  Instrumented code typically gets a dependency to coverage runtime data
-  structure. Making a runtime library available to all instrumented classes
-  can be a painful or impossible task in frameworks that use there own
-  class loading mechanisms. JaCoCo uses JRE types and interfaces only in 
-  generated instrumentation code. 
+  Instrumented code typically gets a dependency to a coverage runtime which is
+  responsible for collecting and storing execution data. JaCoCo uses JRE types
+  and interfaces only in generated instrumentation code. 
+</p>
+
+<p>
+  Making a runtime library available to all instrumented classes can be a
+  painful or impossible task in frameworks that use there own class loading
+  mechanisms. Therefore JaCoCO decouples the instrumented classes and the
+  coverage runtime through official JRE API types. 
 </p>
 
 
