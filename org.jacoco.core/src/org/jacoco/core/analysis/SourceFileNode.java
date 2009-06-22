@@ -41,7 +41,7 @@ public class SourceFileNode extends CoverageDataNodeImpl {
 	 * 
 	 * @return package name
 	 */
-	public String getPackagename() {
+	public String getPackageName() {
 		return packagename;
 	}
 

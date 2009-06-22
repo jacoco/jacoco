@@ -18,6 +18,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.jacoco.core.analysis.ICoverageDataNode.ElementType;
 import org.jacoco.core.data.ExecutionDataStore;
 import org.jacoco.core.data.IClassStructureVisitor;
 import org.jacoco.core.data.IMethodStructureVisitor;
@@ -70,6 +71,25 @@ public class CoverageBuilder implements IStructureVisitor {
 		return Collections.unmodifiableCollection(sourcefiles.values());
 	}
 
+	/**
+	 * Groups and summarizes all classes into corresponding packages.
+	 * 
+	 * @return all classes grouped in packages
+	 */
+	public Collection<ICoverageDataNode> getPackages() {
+		final Map<String, CoverageDataNodeImpl> result = new HashMap<String, CoverageDataNodeImpl>();
+		for (final ClassNode c : classes.values()) {
+			final String name = c.getPackageName();
+			CoverageDataNodeImpl p = result.get(name);
+			if (p == null) {
+				p = new CoverageDataNodeImpl(ElementType.PACKAGE, name, false);
+				result.put(name, p);
+			}
+			p.add(c);
+		}
+		return new ArrayList<ICoverageDataNode>(result.values());
+	}
+
 	public IClassStructureVisitor visitClassStructure(final long id,
 			final String name) {
 		final boolean[][] covered = executionData.getBlockdata(id);
@@ -91,7 +111,7 @@ public class CoverageBuilder implements IStructureVisitor {
 				classes.put(Long.valueOf(id), classData);
 				if (sourcename[0] != null) {
 					final SourceFileNode sourceFile = getSourceFile(
-							sourcename[0], classData.getPackagename());
+							sourcename[0], classData.getPackageName());
 					sourceFile.add(classData);
 				}
 			}

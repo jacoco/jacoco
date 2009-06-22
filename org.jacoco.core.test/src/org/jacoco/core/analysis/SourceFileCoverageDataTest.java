@@ -30,7 +30,7 @@ public class SourceFileCoverageDataTest {
 				"org/jacoco/examples");
 		assertEquals(ICoverageDataNode.ElementType.SOURCEFILE, data
 				.getElementType());
-		assertEquals("org/jacoco/examples", data.getPackagename());
+		assertEquals("org/jacoco/examples", data.getPackageName());
 	}
 
 }

@@ -38,14 +38,14 @@ public class ClassCoverageDataTest {
 	public void testGetPackageName1() {
 		ClassNode data = new ClassNode("ClassInDefaultPackage",
 				new ArrayList<ICoverageDataNode>());
-		assertEquals("", data.getPackagename());
+		assertEquals("", data.getPackageName());
 	}
 
 	@Test
 	public void testGetPackageName2() {
 		ClassNode data = new ClassNode("org/jacoco/examples/Sample",
 				new ArrayList<ICoverageDataNode>());
-		assertEquals("org/jacoco/examples", data.getPackagename());
+		assertEquals("org/jacoco/examples", data.getPackageName());
 	}
 
 	@Test

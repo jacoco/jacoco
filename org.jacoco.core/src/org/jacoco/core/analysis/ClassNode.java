@@ -45,7 +45,7 @@ public class ClassNode extends CoverageDataNodeImpl {
 	 * 
 	 * @return vm name of the package
 	 */
-	public String getPackagename() {
+	public String getPackageName() {
 		final int pos = getName().lastIndexOf('/');
 		return pos == -1 ? "" : getName().substring(0, pos);
 	}
