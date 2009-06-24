@@ -1,13 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <project name="org.jacoco.build.buildhook">
-	
-	<path id="dependencies">
-		<path refid="bundle-org.objectweb.asm"/>
-		<path refid="bundle-org.jacoco.core"/>
-		<path refid="bundle-org.jacoco.core.test"/>
-		<path refid="bundle-org.jacoco.agent"/>
-	</path>
 
 	<property name="do.customverify" value="true"/>
 	<property name="do.customdoc" value="true"/>
