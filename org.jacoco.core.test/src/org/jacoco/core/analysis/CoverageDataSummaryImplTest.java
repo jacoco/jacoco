@@ -12,6 +12,11 @@
  *******************************************************************************/
 package org.jacoco.core.analysis;
 
+import static org.jacoco.core.analysis.ICoverageDataSummary.CounterEntity.BLOCK;
+import static org.jacoco.core.analysis.ICoverageDataSummary.CounterEntity.CLASS;
+import static org.jacoco.core.analysis.ICoverageDataSummary.CounterEntity.INSTRUCTION;
+import static org.jacoco.core.analysis.ICoverageDataSummary.CounterEntity.LINE;
+import static org.jacoco.core.analysis.ICoverageDataSummary.CounterEntity.METHOD;
 import static org.junit.Assert.assertEquals;
 
 import java.util.Arrays;
@@ -54,14 +59,19 @@ public class CoverageDataSummaryImplTest {
 			}
 		};
 		sum.add(child);
+		assertEquals(42, sum.getCounter(INSTRUCTION).getTotalCount(), 0.0);
 		assertEquals(42, sum.getInstructionCounter().getTotalCount(), 0.0);
 		assertEquals(41, sum.getInstructionCounter().getCoveredCount(), 0.0);
+		assertEquals(32, sum.getCounter(BLOCK).getTotalCount(), 0.0);
 		assertEquals(32, sum.getBlockCounter().getTotalCount(), 0.0);
 		assertEquals(31, sum.getBlockCounter().getCoveredCount(), 0.0);
+		assertEquals(8, sum.getCounter(LINE).getTotalCount(), 0.0);
 		assertEquals(8, sum.getLineCounter().getTotalCount(), 0.0);
 		assertEquals(3, sum.getLineCounter().getCoveredCount(), 0.0);
+		assertEquals(22, sum.getCounter(METHOD).getTotalCount(), 0.0);
 		assertEquals(22, sum.getMethodCounter().getTotalCount(), 0.0);
 		assertEquals(21, sum.getMethodCounter().getCoveredCount(), 0.0);
+		assertEquals(12, sum.getCounter(CLASS).getTotalCount(), 0.0);
 		assertEquals(12, sum.getClassCounter().getTotalCount(), 0.0);
 		assertEquals(11, sum.getClassCounter().getCoveredCount(), 0.0);
 	}

@@ -43,7 +43,6 @@ public interface ICoverageDataNode extends ICoverageDataSummary {
 
 		/** Custom Node */
 		CUSTOM
-
 	}
 
 	/**

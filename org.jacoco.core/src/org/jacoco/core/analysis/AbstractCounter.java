@@ -12,7 +12,6 @@
  *******************************************************************************/
 package org.jacoco.core.analysis;
 
-
 /**
  * Base class for {@link ICounter} implementations.
  * 
@@ -48,12 +47,16 @@ public abstract class AbstractCounter implements ICounter {
 		return covered;
 	}
 
-	public double getRatio() {
+	public int getNotCoveredCount() {
+		return total - covered;
+	}
+
+	public double getCoveredRatio() {
 		return (double) covered / total;
 	}
 
-	public int compareTo(final ICounter counter) {
-		return Double.compare(getRatio(), counter.getRatio());
+	public double getNotCoveredRatio() {
+		return (double) (total - covered) / total;
 	}
 
 	@Override

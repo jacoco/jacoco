@@ -81,12 +81,12 @@ public class CoverageDataSummaryImpl implements ICoverageDataSummary {
 
 	// === ICoverageDataSummary ===
 
-	public ICounter getBlockCounter() {
-		return blockCounter;
-	}
-
 	public ICounter getInstructionCounter() {
 		return instructionCounter;
+	}
+
+	public ICounter getBlockCounter() {
+		return blockCounter;
 	}
 
 	public ICounter getLineCounter() {
@@ -99,6 +99,22 @@ public class CoverageDataSummaryImpl implements ICoverageDataSummary {
 
 	public ICounter getClassCounter() {
 		return classCounter;
+	}
+
+	public ICounter getCounter(final CounterEntity entity) {
+		switch (entity) {
+		case INSTRUCTION:
+			return getInstructionCounter();
+		case BLOCK:
+			return getBlockCounter();
+		case LINE:
+			return getLineCounter();
+		case METHOD:
+			return getMethodCounter();
+		case CLASS:
+			return getClassCounter();
+		}
+		throw new IllegalArgumentException("Unknown entity " + entity);
 	}
 
 }

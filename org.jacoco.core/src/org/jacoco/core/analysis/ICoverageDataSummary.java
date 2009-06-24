@@ -21,6 +21,25 @@ package org.jacoco.core.analysis;
 public interface ICoverageDataSummary {
 
 	/**
+	 * Parameter type for generic counter access.
+	 */
+	public enum CounterEntity {
+		/** counter for instructions */
+		INSTRUCTION,
+
+		/** counter for basic blocks */
+		BLOCK,
+		/** counter for source lines */
+		LINE,
+
+		/** counter for methods */
+		METHOD,
+
+		/** counter for classes */
+		CLASS
+	}
+
+	/**
 	 * Returns the counter for byte code instructions.
 	 * 
 	 * @return counter for instructions
@@ -32,27 +51,36 @@ public interface ICoverageDataSummary {
 	 * 
 	 * @return counter for blocks
 	 */
-	public abstract ICounter getBlockCounter();
+	public ICounter getBlockCounter();
 
 	/**
 	 * Returns the counter for lines.
 	 * 
 	 * @return counter for lines
 	 */
-	public abstract ICounter getLineCounter();
+	public ICounter getLineCounter();
 
 	/**
 	 * Returns the counter for methods.
 	 * 
 	 * @return counter for methods
 	 */
-	public abstract ICounter getMethodCounter();
+	public ICounter getMethodCounter();
 
 	/**
 	 * Returns the counter for types.
 	 * 
 	 * @return counter for types
 	 */
-	public abstract ICounter getClassCounter();
+	public ICounter getClassCounter();
+
+	/**
+	 * Generic access to the the counters.
+	 * 
+	 * @param entity
+	 *            entity we're we want to have the counter for
+	 * @return counter for the given entity
+	 */
+	public ICounter getCounter(CounterEntity entity);
 
 }

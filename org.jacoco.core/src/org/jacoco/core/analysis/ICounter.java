@@ -20,21 +20,28 @@ package org.jacoco.core.analysis;
  * @author Marc R. Hoffmann
  * @version $Revision: 11 $
  */
-public interface ICounter extends Comparable<ICounter> {
+public interface ICounter {
 
 	/**
-	 * Returns the total count number of instrumented items.
+	 * Returns the total count of instrumented items.
 	 * 
 	 * @return total count of instrumented items
 	 */
 	public int getTotalCount();
 
 	/**
-	 * Returns the total count number of covered items.
+	 * Returns the total count of covered items.
 	 * 
 	 * @return total count of covered items
 	 */
 	public int getCoveredCount();
+
+	/**
+	 * Returns the total count of items not covered.
+	 * 
+	 * @return total count of items not covered
+	 */
+	public int getNotCoveredCount();
 
 	/**
 	 * Calculates the ratio of covered to total count items. If total count
@@ -42,6 +49,14 @@ public interface ICounter extends Comparable<ICounter> {
 	 * 
 	 * @return ratio of covered to total count items
 	 */
-	public double getRatio();
+	public double getCoveredRatio();
+
+	/**
+	 * Calculates the ratio of not covered to total count items. If total count
+	 * items is 0 this method returns NaN.
+	 * 
+	 * @return ratio of not covered to total count items
+	 */
+	public double getNotCoveredRatio();
 
 }

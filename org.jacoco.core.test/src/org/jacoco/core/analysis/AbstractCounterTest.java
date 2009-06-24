@@ -16,8 +16,6 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
-import org.jacoco.core.analysis.AbstractCounter;
-import org.jacoco.core.analysis.CounterImpl;
 import org.junit.Test;
 
 /**
@@ -34,48 +32,57 @@ public class AbstractCounterTest {
 	}
 
 	@Test
-	public void testGetTotalGetCovered() {
+	public void testGetTotal() {
 		AbstractCounter c = CounterImpl.getInstance(33, 12);
 		assertEquals(33, c.getTotalCount(), 0.0);
-		assertEquals(12, c.getCoveredCount(), 0.0);
 	}
 
 	@Test
-	public void testGetRatio1() {
+	public void testGetCovered() {
+		AbstractCounter c = CounterImpl.getInstance(33, 15);
+		assertEquals(15, c.getCoveredCount(), 0.0);
+	}
+
+	@Test
+	public void testGetNotCovered() {
+		AbstractCounter c = CounterImpl.getInstance(22, 15);
+		assertEquals(7, c.getNotCoveredCount(), 0.0);
+	}
+
+	@Test
+	public void testGetCoveredRatio1() {
 		AbstractCounter c = getInstance(20, 10);
-		assertEquals(0.5, c.getRatio(), 0.0);
+		assertEquals(0.5, c.getCoveredRatio(), 0.0);
 	}
 
 	@Test
-	public void testGetRatio2() {
+	public void testGetCoveredRatio2() {
 		AbstractCounter c = getInstance(20, 0);
-		assertEquals(0.0, c.getRatio(), 0.0);
+		assertEquals(0.0, c.getCoveredRatio(), 0.0);
 	}
 
 	@Test
-	public void testGetRatio3() {
-		AbstractCounter c = getInstance(0, 20);
-		assertEquals(Double.POSITIVE_INFINITY, c.getRatio(), 0.0);
-	}
-
-	@Test
-	public void testGetRatio4() {
+	public void testGetCoveredRatio3() {
 		AbstractCounter c = getInstance(0, 0);
-		assertTrue(Double.isNaN(c.getRatio()));
+		assertTrue(Double.isNaN(c.getCoveredRatio()));
 	}
 
 	@Test
-	public void testCompareTo1() {
-		AbstractCounter c1 = getInstance(20, 10);
-		AbstractCounter c2 = getInstance(30, 10);
-		assertTrue(c1.compareTo(c2) > 0);
+	public void testGetNotCoveredRatio1() {
+		AbstractCounter c = getInstance(20, 10);
+		assertEquals(0.5, c.getNotCoveredRatio(), 0.0);
 	}
 
 	@Test
-	public void testCompareTo2() {
-		AbstractCounter c1 = getInstance(20, 10);
-		AbstractCounter c2 = getInstance(30, 15);
-		assertEquals(0, c1.compareTo(c2), 0.0);
+	public void testGetNotCoveredRatio2() {
+		AbstractCounter c = getInstance(20, 20);
+		assertEquals(0.0, c.getNotCoveredRatio(), 0.0);
+	}
+
+	@Test
+	public void testGetNotCoveredRatio3() {
+		AbstractCounter c = getInstance(0, 0);
+		assertTrue(Double.isNaN(c.getNotCoveredRatio()));
 	}
 
 	@Test
