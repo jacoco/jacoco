@@ -12,6 +12,7 @@
  *******************************************************************************/
 package org.jacoco.core.analysis;
 
+import static org.jacoco.core.analysis.ICoverageDataNode.ElementType.CUSTOM;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
@@ -19,7 +20,7 @@ import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
 
-import org.jacoco.core.analysis.ICoverageDataSummary.CounterEntity;
+import org.jacoco.core.analysis.ICoverageDataNode.CounterEntity;
 import org.junit.Test;
 
 /**
@@ -81,30 +82,30 @@ public class CounterComparatorTest {
 
 	@Test
 	public void testDataComparator1() {
-		ICoverageDataSummary d1 = new MockBlockData(18);
-		ICoverageDataSummary d2 = new MockBlockData(15);
-		final Comparator<ICoverageDataSummary> cmp = CounterComparator.TOTALITEMS
+		ICoverageDataNode d1 = new MockBlockData(18);
+		ICoverageDataNode d2 = new MockBlockData(15);
+		final Comparator<ICoverageDataNode> cmp = CounterComparator.TOTALITEMS
 				.getDataComparator(CounterEntity.BLOCK);
 		assertTrue(cmp.compare(d1, d2) > 0);
 	}
 
 	@Test
 	public void testDataComparator2() {
-		ICoverageDataSummary d1 = new MockBlockData(18);
-		ICoverageDataSummary d2 = new MockBlockData(15);
-		final Comparator<ICoverageDataSummary> cmp = CounterComparator.TOTALITEMS
+		ICoverageDataNode d1 = new MockBlockData(18);
+		ICoverageDataNode d2 = new MockBlockData(15);
+		final Comparator<ICoverageDataNode> cmp = CounterComparator.TOTALITEMS
 				.getDataComparator(CounterEntity.LINE);
 		assertEquals(0, cmp.compare(d1, d2), 0.0);
 	}
 
 	@Test
 	public void testSort() {
-		ICoverageDataSummary d1 = new MockBlockData(18);
-		ICoverageDataSummary d2 = new MockBlockData(21);
-		ICoverageDataSummary d3 = new MockBlockData(30);
-		ICoverageDataSummary d4 = new MockBlockData(60);
-		ICoverageDataSummary d5 = new MockBlockData(99);
-		final List<ICoverageDataSummary> result = CounterComparator.TOTALITEMS
+		ICoverageDataNode d1 = new MockBlockData(18);
+		ICoverageDataNode d2 = new MockBlockData(21);
+		ICoverageDataNode d3 = new MockBlockData(30);
+		ICoverageDataNode d4 = new MockBlockData(60);
+		ICoverageDataNode d5 = new MockBlockData(99);
+		final List<ICoverageDataNode> result = CounterComparator.TOTALITEMS
 				.sort(Arrays.asList(d3, d5, d1, d4, d2), CounterEntity.BLOCK);
 		assertEquals(Arrays.asList(d1, d2, d3, d4, d5), result);
 	}
@@ -129,8 +130,9 @@ public class CounterComparatorTest {
 		return CounterImpl.getInstance(total, covered);
 	}
 
-	private static final class MockBlockData extends CoverageDataSummaryImpl {
+	private static final class MockBlockData extends CoverageDataNodeImpl {
 		MockBlockData(int total) {
+			super(CUSTOM, "mock", false);
 			blockCounter = CounterImpl.getInstance(total, false);
 		}
 	}

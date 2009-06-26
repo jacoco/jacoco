@@ -28,8 +28,7 @@ public class ClassCoverageDataTest {
 
 	@Test
 	public void testProperties() {
-		ClassNode data = new ClassNode("Sample",
-				new ArrayList<ICoverageDataNode>());
+		ClassNode data = new ClassNode("Sample", new ArrayList<MethodNode>());
 		assertEquals(ICoverageDataNode.ElementType.CLASS, data.getElementType());
 		assertEquals("Sample", data.getName());
 	}
@@ -37,21 +36,21 @@ public class ClassCoverageDataTest {
 	@Test
 	public void testGetPackageName1() {
 		ClassNode data = new ClassNode("ClassInDefaultPackage",
-				new ArrayList<ICoverageDataNode>());
+				new ArrayList<MethodNode>());
 		assertEquals("", data.getPackageName());
 	}
 
 	@Test
 	public void testGetPackageName2() {
 		ClassNode data = new ClassNode("org/jacoco/examples/Sample",
-				new ArrayList<ICoverageDataNode>());
+				new ArrayList<MethodNode>());
 		assertEquals("org/jacoco/examples", data.getPackageName());
 	}
 
 	@Test
 	public void testEmptyClass() {
-		ICoverageDataSummary data = new ClassNode("Sample",
-				new ArrayList<ICoverageDataNode>());
+		ICoverageDataNode data = new ClassNode("Sample",
+				new ArrayList<MethodNode>());
 		assertEquals(0, data.getInstructionCounter().getTotalCount(), 0.0);
 		assertEquals(0, data.getInstructionCounter().getCoveredCount(), 0.0);
 		assertEquals(0, data.getBlockCounter().getTotalCount(), 0.0);
@@ -64,10 +63,10 @@ public class ClassCoverageDataTest {
 
 	@Test
 	public void testNotCovered() {
-		final ArrayList<ICoverageDataNode> methods = new ArrayList<ICoverageDataNode>();
+		final ArrayList<MethodNode> methods = new ArrayList<MethodNode>();
 		methods.add(createMethod(false));
 		methods.add(createMethod(false));
-		ICoverageDataSummary data = new ClassNode("Sample", methods);
+		ICoverageDataNode data = new ClassNode("Sample", methods);
 		assertEquals(10, data.getInstructionCounter().getTotalCount(), 0.0);
 		assertEquals(0, data.getInstructionCounter().getCoveredCount(), 0.0);
 		assertEquals(2, data.getBlockCounter().getTotalCount(), 0.0);
@@ -80,10 +79,10 @@ public class ClassCoverageDataTest {
 
 	@Test
 	public void testCovered() {
-		final ArrayList<ICoverageDataNode> methods = new ArrayList<ICoverageDataNode>();
+		final ArrayList<MethodNode> methods = new ArrayList<MethodNode>();
 		methods.add(createMethod(false));
 		methods.add(createMethod(true));
-		ICoverageDataSummary data = new ClassNode("Sample", methods);
+		ICoverageDataNode data = new ClassNode("Sample", methods);
 		assertEquals(10, data.getInstructionCounter().getTotalCount(), 0.0);
 		assertEquals(5, data.getInstructionCounter().getCoveredCount(), 0.0);
 		assertEquals(2, data.getBlockCounter().getTotalCount(), 0.0);
@@ -94,7 +93,7 @@ public class ClassCoverageDataTest {
 		assertEquals(1, data.getClassCounter().getCoveredCount(), 0.0);
 	}
 
-	private ICoverageDataNode createMethod(boolean covered) {
+	private MethodNode createMethod(boolean covered) {
 		final MethodNode m = new MethodNode("sample", "()V", null);
 		m.addBlock(5, new int[0], covered);
 		return m;

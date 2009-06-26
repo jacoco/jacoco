@@ -22,6 +22,8 @@ import java.util.Collection;
  */
 public class ClassNode extends CoverageDataNodeImpl {
 
+	private final Collection<MethodNode> methods;
+
 	/**
 	 * Creates a class coverage data object with the given parameters.
 	 * 
@@ -30,10 +32,10 @@ public class ClassNode extends CoverageDataNodeImpl {
 	 * @param methods
 	 *            contained methods
 	 */
-	public ClassNode(final String name,
-			final Collection<ICoverageDataNode> methods) {
+	public ClassNode(final String name, final Collection<MethodNode> methods) {
 		super(ElementType.CLASS, name, true);
-		addNodes(methods);
+		this.methods = methods;
+		increment(methods);
 		// As class is considered as covered when at least one method is
 		// covered:
 		final boolean covered = methodCounter.getCoveredCount() > 0;
@@ -48,6 +50,15 @@ public class ClassNode extends CoverageDataNodeImpl {
 	public String getPackageName() {
 		final int pos = getName().lastIndexOf('/');
 		return pos == -1 ? "" : getName().substring(0, pos);
+	}
+
+	/**
+	 * Returns the methods included in this class.
+	 * 
+	 * @return methods of this class
+	 */
+	public Collection<MethodNode> getMethods() {
+		return methods;
 	}
 
 }

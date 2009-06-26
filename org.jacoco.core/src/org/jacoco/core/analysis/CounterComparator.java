@@ -18,11 +18,11 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
-import org.jacoco.core.analysis.ICoverageDataSummary.CounterEntity;
+import org.jacoco.core.analysis.ICoverageDataNode.CounterEntity;
 
 /**
  * Collection of comparators to compare {@link ICounter} and
- * {@link ICoverageDataSummary} objects by different criteria.
+ * {@link ICoverageDataNode} objects by different criteria.
  * 
  * @author Marc R. Hoffmann
  * @version $Revision: $
@@ -90,18 +90,18 @@ public abstract class CounterComparator implements Comparator<ICounter> {
 	}
 
 	/**
-	 * Creates a new comparator for {@link ICoverageDataSummary} counters of the
+	 * Creates a new comparator for {@link ICoverageDataNode} counters of the
 	 * given entity based on this counter sorting criteria.
 	 * 
 	 * @param entity
 	 *            counter entity to sort on
-	 * @return comparator for {@link ICoverageDataSummary} elements
+	 * @return comparator for {@link ICoverageDataNode} elements
 	 */
-	public Comparator<ICoverageDataSummary> getDataComparator(
+	public Comparator<ICoverageDataNode> getDataComparator(
 			final CounterEntity entity) {
-		return new Comparator<ICoverageDataSummary>() {
-			public int compare(final ICoverageDataSummary n1,
-					final ICoverageDataSummary n2) {
+		return new Comparator<ICoverageDataNode>() {
+			public int compare(final ICoverageDataNode n1,
+					final ICoverageDataNode n2) {
 				final ICounter c1 = n1.getCounter(entity);
 				final ICounter c2 = n2.getCounter(entity);
 				return CounterComparator.this.compare(c1, c2);
@@ -111,7 +111,7 @@ public abstract class CounterComparator implements Comparator<ICounter> {
 
 	/**
 	 * Returns a sorted copy of the given collection of
-	 * {@link ICoverageDataSummary} elements.
+	 * {@link ICoverageDataNode} elements.
 	 * 
 	 * @param <T>
 	 *            actual type of the elements
@@ -121,7 +121,7 @@ public abstract class CounterComparator implements Comparator<ICounter> {
 	 *            counter entity to sort
 	 * @return sorted copy
 	 */
-	public <T extends ICoverageDataSummary> List<T> sort(
+	public <T extends ICoverageDataNode> List<T> sort(
 			final Collection<T> summaries, final CounterEntity entity) {
 		final List<T> result = new ArrayList<T>(summaries);
 		Collections.sort(result, getDataComparator(entity));

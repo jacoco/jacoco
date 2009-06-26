@@ -12,16 +12,14 @@
  *******************************************************************************/
 package org.jacoco.core.analysis;
 
-import java.util.Collection;
-
 /**
- * Common interface for hierarchical data nodes that have a name, a type and
- * that hold a list of its children.
+ * Interface for hierarchical coverage data nodes with different coverage
+ * counters.
  * 
  * @author Marc R. Hoffmann
- * @version $Revision: 174 $
+ * @version $Revision: $
  */
-public interface ICoverageDataNode extends ICoverageDataSummary {
+public interface ICoverageDataNode {
 
 	/**
 	 * Type of a Java element represented by a {@link ICoverageDataNode}
@@ -41,8 +39,35 @@ public interface ICoverageDataNode extends ICoverageDataSummary {
 		/** Java Package */
 		PACKAGE,
 
+		/** Bundle of Packages */
+		BUNDLE,
+
+		/** Coverage Session */
+		SESSION,
+
 		/** Custom Node */
 		CUSTOM
+	}
+
+	/**
+	 * Parameter type for generic counter access.
+	 */
+	public enum CounterEntity {
+
+		/** Counter for instructions */
+		INSTRUCTION,
+
+		/** Counter for basic blocks */
+		BLOCK,
+
+		/** Counter for source lines */
+		LINE,
+
+		/** Counter for methods */
+		METHOD,
+
+		/** Counter for classes */
+		CLASS
 	}
 
 	/**
@@ -53,22 +78,59 @@ public interface ICoverageDataNode extends ICoverageDataSummary {
 	public abstract ElementType getElementType();
 
 	/**
-	 * Returns the name of this node. Depending on the kind of node this might
-	 * be <code>null</code>.
+	 * Returns the name of this node.
 	 * 
-	 * @return name or <code>null</code>
+	 * @return name of this node
 	 */
 	public String getName();
 
 	/**
-	 * Returns the child elements contained in this node.
+	 * Returns the counter for byte code instructions.
 	 * 
-	 * @return child elements
+	 * @return counter for instructions
 	 */
-	public Collection<ICoverageDataNode> getChilden();
+	public abstract ICounter getInstructionCounter();
 
 	/**
-	 * Returns the line coverage information if this element supports it.
+	 * Returns the counter for blocks.
+	 * 
+	 * @return counter for blocks
+	 */
+	public ICounter getBlockCounter();
+
+	/**
+	 * Returns the counter for lines.
+	 * 
+	 * @return counter for lines
+	 */
+	public ICounter getLineCounter();
+
+	/**
+	 * Returns the counter for methods.
+	 * 
+	 * @return counter for methods
+	 */
+	public ICounter getMethodCounter();
+
+	/**
+	 * Returns the counter for classes.
+	 * 
+	 * @return counter for classes
+	 */
+	public ICounter getClassCounter();
+
+	/**
+	 * Generic access to the the counters.
+	 * 
+	 * @param entity
+	 *            entity we're we want to have the counter for
+	 * @return counter for the given entity
+	 */
+	public ICounter getCounter(CounterEntity entity);
+
+	/**
+	 * Returns the line coverage information if this node represents a source
+	 * file or a part of a source file.
 	 * 
 	 * @return line coverage or <code>null</code>
 	 */

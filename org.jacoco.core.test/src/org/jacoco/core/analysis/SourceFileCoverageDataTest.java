@@ -12,6 +12,7 @@
  *******************************************************************************/
 package org.jacoco.core.analysis;
 
+import static org.jacoco.core.analysis.ICoverageDataNode.ElementType.SOURCEFILE;
 import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
@@ -28,8 +29,7 @@ public class SourceFileCoverageDataTest {
 	public void testProperties() {
 		SourceFileNode data = new SourceFileNode("Sample.java",
 				"org/jacoco/examples");
-		assertEquals(ICoverageDataNode.ElementType.SOURCEFILE, data
-				.getElementType());
+		assertEquals(SOURCEFILE, data.getElementType());
 		assertEquals("org/jacoco/examples", data.getPackageName());
 	}
 

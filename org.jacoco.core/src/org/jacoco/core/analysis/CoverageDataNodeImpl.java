@@ -12,7 +12,6 @@
  *******************************************************************************/
 package org.jacoco.core.analysis;
 
-import java.util.ArrayList;
 import java.util.Collection;
 
 /**
@@ -21,20 +20,32 @@ import java.util.Collection;
  * @author Marc R. Hoffmann
  * @version $Revision: $
  */
-public class CoverageDataNodeImpl extends CoverageDataSummaryImpl implements
-		ICoverageDataNode {
+public class CoverageDataNodeImpl implements ICoverageDataNode {
 
 	private final ElementType elementType;
 
 	private final String name;
 
-	private final Collection<ICoverageDataNode> children;
+	/** Counter for blocks. */
+	protected CounterImpl blockCounter;
+
+	/** Counter for instructions. */
+	protected CounterImpl instructionCounter;
+
+	/** Counter for lines, if this element does not have lines. */
+	protected CounterImpl lineCounter;
+
+	/** Counter for methods. */
+	protected CounterImpl methodCounter;
+
+	/** Counter for classes. */
+	protected CounterImpl classCounter;
 
 	/** Line information if this element has lines. */
 	protected final LinesImpl lines;
 
 	/**
-	 * Creates a new coverage data instance of the given element type.
+	 * Creates a new coverage data node.
 	 * 
 	 * @param elementType
 	 *            type of the element represented by this instance
@@ -45,38 +56,45 @@ public class CoverageDataNodeImpl extends CoverageDataSummaryImpl implements
 	 */
 	public CoverageDataNodeImpl(final ElementType elementType,
 			final String name, final boolean hasLines) {
-		super();
 		this.elementType = elementType;
 		this.name = name;
-		children = new ArrayList<ICoverageDataNode>();
-		lines = hasLines ? new LinesImpl() : null;
+		this.blockCounter = CounterImpl.COUNTER_0_0;
+		this.instructionCounter = CounterImpl.COUNTER_0_0;
+		this.methodCounter = CounterImpl.COUNTER_0_0;
+		this.classCounter = CounterImpl.COUNTER_0_0;
+		this.lineCounter = hasLines ? null : CounterImpl.COUNTER_0_0;
+		this.lines = hasLines ? new LinesImpl() : null;
 	}
 
 	/**
-	 * Adds the given coverage data instance as a child element. All counters
-	 * are incremented by the values of the given child.
+	 * Increments the counters by the values given by another element.
 	 * 
 	 * @param child
-	 *            child element to add
+	 *            counters to add
 	 */
-	public void add(final ICoverageDataNode child) {
-		super.add(child);
-		children.add(child);
-		if (lines != null) {
+	public void increment(final ICoverageDataNode child) {
+		blockCounter = blockCounter.increment(child.getBlockCounter());
+		instructionCounter = instructionCounter.increment(child
+				.getInstructionCounter());
+		methodCounter = methodCounter.increment(child.getMethodCounter());
+		classCounter = classCounter.increment(child.getClassCounter());
+		if (lines == null) {
+			lineCounter = lineCounter.increment(child.getLineCounter());
+		} else {
 			lines.increment(child.getLines());
 		}
 	}
 
 	/**
-	 * Adds the given collection of coverage data summaries as child elements.
-	 * All counters are incremented by the values of the given children.
+	 * Increments the counters by the values given by the collection of
+	 * elements.
 	 * 
 	 * @param children
-	 *            child elements to add
+	 *            list of nodes, which counters will be added to this node
 	 */
-	public void addNodes(final Collection<? extends ICoverageDataNode> children) {
+	public void increment(final Collection<? extends ICoverageDataNode> children) {
 		for (final ICoverageDataNode child : children) {
-			add(child);
+			increment(child);
 		}
 	}
 
@@ -90,13 +108,40 @@ public class CoverageDataNodeImpl extends CoverageDataSummaryImpl implements
 		return name;
 	}
 
-	public Collection<ICoverageDataNode> getChilden() {
-		return children;
+	public ICounter getInstructionCounter() {
+		return instructionCounter;
 	}
 
-	@Override
+	public ICounter getBlockCounter() {
+		return blockCounter;
+	}
+
 	public ICounter getLineCounter() {
-		return lines == null ? super.getLineCounter() : lines;
+		return lines != null ? lines : lineCounter;
+	}
+
+	public ICounter getMethodCounter() {
+		return methodCounter;
+	}
+
+	public ICounter getClassCounter() {
+		return classCounter;
+	}
+
+	public ICounter getCounter(final CounterEntity entity) {
+		switch (entity) {
+		case INSTRUCTION:
+			return getInstructionCounter();
+		case BLOCK:
+			return getBlockCounter();
+		case LINE:
+			return getLineCounter();
+		case METHOD:
+			return getMethodCounter();
+		case CLASS:
+			return getClassCounter();
+		}
+		throw new IllegalArgumentException("Unknown entity " + entity);
 	}
 
 	public ILines getLines() {

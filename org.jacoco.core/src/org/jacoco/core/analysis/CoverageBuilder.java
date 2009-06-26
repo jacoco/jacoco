@@ -85,7 +85,7 @@ public class CoverageBuilder implements IStructureVisitor {
 				p = new CoverageDataNodeImpl(ElementType.PACKAGE, name, false);
 				result.put(name, p);
 			}
-			p.add(c);
+			p.increment(c);
 		}
 		return new ArrayList<ICoverageDataNode>(result.values());
 	}
@@ -93,7 +93,7 @@ public class CoverageBuilder implements IStructureVisitor {
 	public IClassStructureVisitor visitClassStructure(final long id,
 			final String name) {
 		final boolean[][] covered = executionData.getBlockdata(id);
-		final Collection<ICoverageDataNode> methods = new ArrayList<ICoverageDataNode>();
+		final Collection<MethodNode> methods = new ArrayList<MethodNode>();
 		final String[] sourcename = new String[1];
 		return new IClassStructureVisitor() {
 			public void visitSourceFile(final String name) {
@@ -112,7 +112,7 @@ public class CoverageBuilder implements IStructureVisitor {
 				if (sourcename[0] != null) {
 					final SourceFileNode sourceFile = getSourceFile(
 							sourcename[0], classData.getPackageName());
-					sourceFile.add(classData);
+					sourceFile.increment(classData);
 				}
 			}
 		};
@@ -120,8 +120,7 @@ public class CoverageBuilder implements IStructureVisitor {
 
 	private IMethodStructureVisitor createMethodVisitor(final String name,
 			final String desc, final String signature,
-			final Collection<ICoverageDataNode> container,
-			final boolean[] covered) {
+			final Collection<MethodNode> container, final boolean[] covered) {
 		final MethodNode method = new MethodNode(name, desc, signature);
 		return new IMethodStructureVisitor() {
 			public void block(final int id, final int instructions,
