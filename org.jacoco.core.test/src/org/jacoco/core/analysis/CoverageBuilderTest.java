@@ -55,9 +55,9 @@ public class CoverageBuilderTest {
 		methodStructure.visitEnd();
 		classStructure.visitEnd();
 
-		final Collection<ClassNode> classes = coverageBuilder.getClasses();
+		final Collection<ClassCoverage> classes = coverageBuilder.getClasses();
 		assertEquals(1, classes.size(), 1.0);
-		ClassNode c = classes.iterator().next();
+		ClassCoverage c = classes.iterator().next();
 		assertEquals("org/jacoco/examples/Sample", c.getName());
 		assertEquals(1, c.getClassCounter().getTotalCount(), 0.0);
 		assertEquals(0, c.getClassCounter().getCoveredCount(), 0.0);
@@ -68,9 +68,9 @@ public class CoverageBuilderTest {
 		assertEquals(3, c.getLineCounter().getTotalCount(), 0.0);
 		assertEquals(0, c.getLineCounter().getCoveredCount(), 0.0);
 
-		final Collection<MethodNode> methods = c.getMethods();
+		final Collection<MethodCoverage> methods = c.getMethods();
 		assertEquals(1, methods.size(), 1.0);
-		MethodNode m = methods.iterator().next();
+		MethodCoverage m = methods.iterator().next();
 		assertEquals("doit", m.getName());
 		assertEquals("()V", m.getDesc());
 		assertEquals(1, m.getMethodCounter().getTotalCount(), 0.0);
@@ -94,9 +94,9 @@ public class CoverageBuilderTest {
 		methodStructure.visitEnd();
 		classStructure.visitEnd();
 
-		final Collection<ClassNode> classes = coverageBuilder.getClasses();
+		final Collection<ClassCoverage> classes = coverageBuilder.getClasses();
 		assertEquals(1, classes.size(), 1.0);
-		ClassNode c = classes.iterator().next();
+		ClassCoverage c = classes.iterator().next();
 		assertEquals("org/jacoco/examples/Sample", c.getName());
 		assertEquals(1, c.getClassCounter().getTotalCount(), 0.0);
 		assertEquals(1, c.getClassCounter().getCoveredCount(), 0.0);
@@ -107,9 +107,9 @@ public class CoverageBuilderTest {
 		assertEquals(3, c.getLineCounter().getTotalCount(), 0.0);
 		assertEquals(3, c.getLineCounter().getCoveredCount(), 0.0);
 
-		final Collection<MethodNode> methods = c.getMethods();
+		final Collection<MethodCoverage> methods = c.getMethods();
 		assertEquals(1, methods.size(), 1.0);
-		MethodNode m = methods.iterator().next();
+		MethodCoverage m = methods.iterator().next();
 		assertEquals("doit", m.getName());
 		assertEquals("()V", m.getDesc());
 		assertEquals(1, m.getMethodCounter().getTotalCount(), 0.0);
@@ -132,10 +132,10 @@ public class CoverageBuilderTest {
 		classStructure2.visitSourceFile("Sample.java");
 		classStructure2.visitEnd();
 
-		final Collection<SourceFileNode> sourcefiles = coverageBuilder
+		final Collection<SourceFileCoverage> sourcefiles = coverageBuilder
 				.getSourceFiles();
 		assertEquals(1, sourcefiles.size(), 1.0);
-		SourceFileNode s = sourcefiles.iterator().next();
+		SourceFileCoverage s = sourcefiles.iterator().next();
 
 		assertEquals(2, s.getClassCounter().getTotalCount(), 0.0);
 		assertEquals(0, s.getClassCounter().getCoveredCount(), 0.0);
@@ -148,15 +148,15 @@ public class CoverageBuilderTest {
 		coverageBuilder.visitClassStructure(2, "org/jacoco/examples/Sample2")
 				.visitEnd();
 		coverageBuilder.visitClassStructure(3, "Sample3").visitEnd();
-		final Collection<ICoverageDataNode> packages = coverageBuilder
+		final Collection<ICoverageNode> packages = coverageBuilder
 				.getPackages();
 		assertEquals(2, packages.size(), 0.0);
-		Map<String, ICoverageDataNode> packagesByName = new HashMap<String, ICoverageDataNode>();
-		for (ICoverageDataNode p : packages) {
+		Map<String, ICoverageNode> packagesByName = new HashMap<String, ICoverageNode>();
+		for (ICoverageNode p : packages) {
 			packagesByName.put(p.getName(), p);
 		}
 
-		ICoverageDataNode p1 = packagesByName.get("org/jacoco/examples");
+		ICoverageNode p1 = packagesByName.get("org/jacoco/examples");
 		assertNotNull(p1);
 		// TODO activate once PackageNode is defined
 		// assertEquals(new HashSet<String>(Arrays.asList(
@@ -169,9 +169,9 @@ public class CoverageBuilderTest {
 		// getNames(p2.getChilden()));
 	}
 
-	private Set<String> getNames(Collection<ICoverageDataNode> nodes) {
+	private Set<String> getNames(Collection<ICoverageNode> nodes) {
 		Set<String> result = new HashSet<String>();
-		for (ICoverageDataNode n : nodes) {
+		for (ICoverageNode n : nodes) {
 			result.add(n.getName());
 		}
 		return result;

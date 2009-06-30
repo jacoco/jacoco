@@ -12,41 +12,39 @@
  *******************************************************************************/
 package org.jacoco.core.analysis;
 
-import static org.jacoco.core.analysis.ICoverageDataNode.CounterEntity.BLOCK;
-import static org.jacoco.core.analysis.ICoverageDataNode.CounterEntity.CLASS;
-import static org.jacoco.core.analysis.ICoverageDataNode.CounterEntity.INSTRUCTION;
-import static org.jacoco.core.analysis.ICoverageDataNode.CounterEntity.LINE;
-import static org.jacoco.core.analysis.ICoverageDataNode.CounterEntity.METHOD;
-import static org.jacoco.core.analysis.ICoverageDataNode.ElementType.CUSTOM;
+import static org.jacoco.core.analysis.ICoverageNode.CounterEntity.BLOCK;
+import static org.jacoco.core.analysis.ICoverageNode.CounterEntity.CLASS;
+import static org.jacoco.core.analysis.ICoverageNode.CounterEntity.INSTRUCTION;
+import static org.jacoco.core.analysis.ICoverageNode.CounterEntity.LINE;
+import static org.jacoco.core.analysis.ICoverageNode.CounterEntity.METHOD;
+import static org.jacoco.core.analysis.ICoverageNode.ElementType.CUSTOM;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 
 import java.util.Arrays;
 
-import org.jacoco.core.analysis.ICoverageDataNode.ElementType;
+import org.jacoco.core.analysis.ICoverageNode.ElementType;
 import org.junit.Test;
 
 /**
- * Unit tests for {@link CoverageDataNodeImpl}.
+ * Unit tests for {@link CoverageNodeImpl}.
  * 
  * @author Marc R. Hoffmann
  * @version $Revision: $
  */
-public class CoverageDataNodeImplTest {
+public class CoverageNodeImplTest {
 
 	@Test
 	public void testProperties() {
-		ICoverageDataNode node = new CoverageDataNodeImpl(CUSTOM, "sample",
-				false);
+		ICoverageNode node = new CoverageNodeImpl(CUSTOM, "sample", false);
 		assertEquals(CUSTOM, node.getElementType());
 		assertEquals("sample", node.getName());
 	}
 
 	@Test
 	public void testInitWithoutLines() {
-		ICoverageDataNode node = new CoverageDataNodeImpl(CUSTOM, "sample",
-				false);
+		ICoverageNode node = new CoverageNodeImpl(CUSTOM, "sample", false);
 		assertEquals(CounterImpl.COUNTER_0_0, node.getBlockCounter());
 		assertEquals(CounterImpl.COUNTER_0_0, node.getInstructionCounter());
 		assertEquals(CounterImpl.COUNTER_0_0, node.getLineCounter());
@@ -57,8 +55,7 @@ public class CoverageDataNodeImplTest {
 
 	@Test
 	public void testInitWithLines() {
-		ICoverageDataNode node = new CoverageDataNodeImpl(CUSTOM, "sample",
-				true);
+		ICoverageNode node = new CoverageNodeImpl(CUSTOM, "sample", true);
 		assertEquals(CounterImpl.COUNTER_0_0, node.getBlockCounter());
 		assertEquals(CounterImpl.COUNTER_0_0, node.getInstructionCounter());
 		assertEquals(CounterImpl.COUNTER_0_0, node.getLineCounter());
@@ -69,10 +66,8 @@ public class CoverageDataNodeImplTest {
 
 	@Test
 	public void testIncrementWithoutLines() {
-		CoverageDataNodeImpl parent = new CoverageDataNodeImpl(CUSTOM,
-				"sample", false);
-		ICoverageDataNode child = new CoverageDataNodeImpl(CUSTOM, "sample",
-				false) {
+		CoverageNodeImpl parent = new CoverageNodeImpl(CUSTOM, "sample", false);
+		ICoverageNode child = new CoverageNodeImpl(CUSTOM, "sample", false) {
 			{
 				instructionCounter = CounterImpl.getInstance(42, 41);
 				blockCounter = CounterImpl.getInstance(32, 31);
@@ -98,9 +93,9 @@ public class CoverageDataNodeImplTest {
 
 	@Test
 	public void testIncrementWithLines() {
-		CoverageDataNodeImpl node = new CoverageDataNodeImpl(
-				ElementType.CUSTOM, "sample", true);
-		ICoverageDataNode child = new CoverageDataNodeImpl(ElementType.CUSTOM,
+		CoverageNodeImpl node = new CoverageNodeImpl(ElementType.CUSTOM,
+				"sample", true);
+		ICoverageNode child = new CoverageNodeImpl(ElementType.CUSTOM,
 				"sample", true) {
 			{
 				instructionCounter = CounterImpl.getInstance(42, 41);
@@ -126,16 +121,13 @@ public class CoverageDataNodeImplTest {
 
 	@Test
 	public void testIncrementCollection() {
-		CoverageDataNodeImpl parent = new CoverageDataNodeImpl(CUSTOM,
-				"sample", false);
-		ICoverageDataNode child1 = new CoverageDataNodeImpl(CUSTOM, "sample",
-				false) {
+		CoverageNodeImpl parent = new CoverageNodeImpl(CUSTOM, "sample", false);
+		ICoverageNode child1 = new CoverageNodeImpl(CUSTOM, "sample", false) {
 			{
 				blockCounter = CounterImpl.getInstance(5, 2);
 			}
 		};
-		ICoverageDataNode child2 = new CoverageDataNodeImpl(CUSTOM, "sample",
-				false) {
+		ICoverageNode child2 = new CoverageNodeImpl(CUSTOM, "sample", false) {
 			{
 				blockCounter = CounterImpl.getInstance(3, 3);
 			}

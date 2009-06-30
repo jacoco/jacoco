@@ -17,20 +17,20 @@ import static org.junit.Assert.assertEquals;
 import org.junit.Test;
 
 /**
- * Unit test for {@link MethodNode}.
+ * Unit test for {@link MethodCoverage}.
  * 
  * @author Marc R. Hoffmann
  * @version $Revision: $
  */
-public class MethodCoverageDataTest {
+public class MethodCoverageTest {
 
 	@Test
 	public void testProperties() {
 		// Example: java.util.Collections.emptySet()
-		MethodNode data = new MethodNode("emptySet", "()Ljava/util/Set;",
+		MethodCoverage data = new MethodCoverage("emptySet",
+				"()Ljava/util/Set;",
 				"<T:Ljava/lang/Object;>()Ljava/util/Set<TT;>;");
-		assertEquals(ICoverageDataNode.ElementType.METHOD, data
-				.getElementType());
+		assertEquals(ICoverageNode.ElementType.METHOD, data.getElementType());
 		assertEquals("emptySet", data.getName());
 		assertEquals("()Ljava/util/Set;", data.getDesc());
 		assertEquals("<T:Ljava/lang/Object;>()Ljava/util/Set<TT;>;", data
@@ -39,7 +39,7 @@ public class MethodCoverageDataTest {
 
 	@Test
 	public void testEmptyMethod() {
-		ICoverageDataNode data = new MethodNode("sample", "()V", null);
+		ICoverageNode data = new MethodCoverage("sample", "()V", null);
 		assertEquals(0, data.getInstructionCounter().getTotalCount(), 0.0);
 		assertEquals(0, data.getInstructionCounter().getCoveredCount(), 0.0);
 		assertEquals(0, data.getBlockCounter().getTotalCount(), 0.0);
@@ -52,7 +52,7 @@ public class MethodCoverageDataTest {
 
 	@Test
 	public void testNotCovered() {
-		MethodNode data = new MethodNode("sample", "()V", null);
+		MethodCoverage data = new MethodCoverage("sample", "()V", null);
 		data.addBlock(5, new int[0], false);
 		data.addBlock(8, new int[0], false);
 		assertEquals(13, data.getInstructionCounter().getTotalCount(), 0.0);
@@ -67,7 +67,7 @@ public class MethodCoverageDataTest {
 
 	@Test
 	public void testCovered() {
-		MethodNode data = new MethodNode("sample", "()V", null);
+		MethodCoverage data = new MethodCoverage("sample", "()V", null);
 		data.addBlock(5, new int[0], true);
 		data.addBlock(8, new int[0], false);
 		assertEquals(13, data.getInstructionCounter().getTotalCount(), 0.0);

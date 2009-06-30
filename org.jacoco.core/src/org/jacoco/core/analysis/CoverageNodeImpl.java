@@ -20,7 +20,7 @@ import java.util.Collection;
  * @author Marc R. Hoffmann
  * @version $Revision: $
  */
-public class CoverageDataNodeImpl implements ICoverageDataNode {
+public class CoverageNodeImpl implements ICoverageNode {
 
 	private final ElementType elementType;
 
@@ -54,7 +54,7 @@ public class CoverageDataNodeImpl implements ICoverageDataNode {
 	 * @param hasLines
 	 *            <code>true</code> id this element has source lines
 	 */
-	public CoverageDataNodeImpl(final ElementType elementType,
+	public CoverageNodeImpl(final ElementType elementType,
 			final String name, final boolean hasLines) {
 		this.elementType = elementType;
 		this.name = name;
@@ -72,7 +72,7 @@ public class CoverageDataNodeImpl implements ICoverageDataNode {
 	 * @param child
 	 *            counters to add
 	 */
-	public void increment(final ICoverageDataNode child) {
+	public void increment(final ICoverageNode child) {
 		blockCounter = blockCounter.increment(child.getBlockCounter());
 		instructionCounter = instructionCounter.increment(child
 				.getInstructionCounter());
@@ -92,8 +92,8 @@ public class CoverageDataNodeImpl implements ICoverageDataNode {
 	 * @param children
 	 *            list of nodes, which counters will be added to this node
 	 */
-	public void increment(final Collection<? extends ICoverageDataNode> children) {
-		for (final ICoverageDataNode child : children) {
+	public void increment(final Collection<? extends ICoverageNode> children) {
+		for (final ICoverageNode child : children) {
 			increment(child);
 		}
 	}

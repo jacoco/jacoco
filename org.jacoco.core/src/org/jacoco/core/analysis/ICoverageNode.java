@@ -19,10 +19,10 @@ package org.jacoco.core.analysis;
  * @author Marc R. Hoffmann
  * @version $Revision: $
  */
-public interface ICoverageDataNode {
+public interface ICoverageNode {
 
 	/**
-	 * Type of a Java element represented by a {@link ICoverageDataNode}
+	 * Type of a Java element represented by a {@link ICoverageNode}
 	 * instance.
 	 */
 	public enum ElementType {

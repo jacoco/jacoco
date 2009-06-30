@@ -18,14 +18,14 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.jacoco.core.analysis.ICoverageDataNode.ElementType;
+import org.jacoco.core.analysis.ICoverageNode.ElementType;
 import org.jacoco.core.data.ExecutionDataStore;
 import org.jacoco.core.data.IClassStructureVisitor;
 import org.jacoco.core.data.IMethodStructureVisitor;
 import org.jacoco.core.data.IStructureVisitor;
 
 /**
- * Builder for hierarchical {@link ICoverageDataNode} structures based on
+ * Builder for hierarchical {@link ICoverageNode} structures based on
  * execution and structure information. The builder is constructed for a given
  * {@link ExecutionDataStore} and then feed with class structure information
  * through its {@link IStructureVisitor} interface.
@@ -37,9 +37,9 @@ public class CoverageBuilder implements IStructureVisitor {
 
 	private final ExecutionDataStore executionData;
 
-	private final Map<Long, ClassNode> classes;
+	private final Map<Long, ClassCoverage> classes;
 
-	private final Map<String, SourceFileNode> sourcefiles;
+	private final Map<String, SourceFileCoverage> sourcefiles;
 
 	/**
 	 * Create a new builder based on the given execution data.
@@ -49,8 +49,8 @@ public class CoverageBuilder implements IStructureVisitor {
 	 */
 	public CoverageBuilder(final ExecutionDataStore executionData) {
 		this.executionData = executionData;
-		this.classes = new HashMap<Long, ClassNode>();
-		this.sourcefiles = new HashMap<String, SourceFileNode>();
+		this.classes = new HashMap<Long, ClassCoverage>();
+		this.sourcefiles = new HashMap<String, SourceFileCoverage>();
 	}
 
 	/**
@@ -58,7 +58,7 @@ public class CoverageBuilder implements IStructureVisitor {
 	 * 
 	 * @return all class nodes
 	 */
-	public Collection<ClassNode> getClasses() {
+	public Collection<ClassCoverage> getClasses() {
 		return Collections.unmodifiableCollection(classes.values());
 	}
 
@@ -67,7 +67,7 @@ public class CoverageBuilder implements IStructureVisitor {
 	 * 
 	 * @return all source file nodes
 	 */
-	public Collection<SourceFileNode> getSourceFiles() {
+	public Collection<SourceFileCoverage> getSourceFiles() {
 		return Collections.unmodifiableCollection(sourcefiles.values());
 	}
 
@@ -76,24 +76,24 @@ public class CoverageBuilder implements IStructureVisitor {
 	 * 
 	 * @return all classes grouped in packages
 	 */
-	public Collection<ICoverageDataNode> getPackages() {
-		final Map<String, CoverageDataNodeImpl> result = new HashMap<String, CoverageDataNodeImpl>();
-		for (final ClassNode c : classes.values()) {
+	public Collection<ICoverageNode> getPackages() {
+		final Map<String, CoverageNodeImpl> result = new HashMap<String, CoverageNodeImpl>();
+		for (final ClassCoverage c : classes.values()) {
 			final String name = c.getPackageName();
-			CoverageDataNodeImpl p = result.get(name);
+			CoverageNodeImpl p = result.get(name);
 			if (p == null) {
-				p = new CoverageDataNodeImpl(ElementType.PACKAGE, name, false);
+				p = new CoverageNodeImpl(ElementType.PACKAGE, name, false);
 				result.put(name, p);
 			}
 			p.increment(c);
 		}
-		return new ArrayList<ICoverageDataNode>(result.values());
+		return new ArrayList<ICoverageNode>(result.values());
 	}
 
 	public IClassStructureVisitor visitClassStructure(final long id,
 			final String name) {
 		final boolean[][] covered = executionData.getBlockdata(id);
-		final Collection<MethodNode> methods = new ArrayList<MethodNode>();
+		final Collection<MethodCoverage> methods = new ArrayList<MethodCoverage>();
 		final String[] sourcename = new String[1];
 		return new IClassStructureVisitor() {
 			public void visitSourceFile(final String name) {
@@ -107,10 +107,10 @@ public class CoverageBuilder implements IStructureVisitor {
 			}
 
 			public void visitEnd() {
-				final ClassNode classData = new ClassNode(name, methods);
+				final ClassCoverage classData = new ClassCoverage(name, methods);
 				classes.put(Long.valueOf(id), classData);
 				if (sourcename[0] != null) {
-					final SourceFileNode sourceFile = getSourceFile(
+					final SourceFileCoverage sourceFile = getSourceFile(
 							sourcename[0], classData.getPackageName());
 					sourceFile.increment(classData);
 				}
@@ -120,8 +120,8 @@ public class CoverageBuilder implements IStructureVisitor {
 
 	private IMethodStructureVisitor createMethodVisitor(final String name,
 			final String desc, final String signature,
-			final Collection<MethodNode> container, final boolean[] covered) {
-		final MethodNode method = new MethodNode(name, desc, signature);
+			final Collection<MethodCoverage> container, final boolean[] covered) {
+		final MethodCoverage method = new MethodCoverage(name, desc, signature);
 		return new IMethodStructureVisitor() {
 			public void block(final int id, final int instructions,
 					final int[] lineNumbers) {
@@ -135,12 +135,12 @@ public class CoverageBuilder implements IStructureVisitor {
 		};
 	}
 
-	private SourceFileNode getSourceFile(final String filename,
+	private SourceFileCoverage getSourceFile(final String filename,
 			final String packagename) {
 		final String key = packagename + '/' + filename;
-		SourceFileNode sourcefile = sourcefiles.get(key);
+		SourceFileCoverage sourcefile = sourcefiles.get(key);
 		if (sourcefile == null) {
-			sourcefile = new SourceFileNode(filename, packagename);
+			sourcefile = new SourceFileCoverage(filename, packagename);
 			sourcefiles.put(key, sourcefile);
 		}
 		return sourcefile;

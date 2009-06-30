@@ -19,7 +19,7 @@ package org.jacoco.core.analysis;
  * @author Marc R. Hoffmann
  * @version $Revision: $
  */
-public class SourceFileNode extends CoverageDataNodeImpl {
+public class SourceFileCoverage extends CoverageNodeImpl {
 
 	private final String packagename;
 
@@ -31,7 +31,7 @@ public class SourceFileNode extends CoverageDataNodeImpl {
 	 * @param packagename
 	 *            vm name of the package the source file belongs to
 	 */
-	public SourceFileNode(final String name, final String packagename) {
+	public SourceFileCoverage(final String name, final String packagename) {
 		super(ElementType.SOURCEFILE, name, true);
 		this.packagename = packagename;
 	}

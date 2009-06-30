@@ -18,7 +18,7 @@ package org.jacoco.core.analysis;
  * @author Marc R. Hoffmann
  * @version $Revision: $
  */
-public class MethodNode extends CoverageDataNodeImpl {
+public class MethodCoverage extends CoverageNodeImpl {
 
 	private final String desc;
 
@@ -34,7 +34,7 @@ public class MethodNode extends CoverageDataNodeImpl {
 	 * @param signature
 	 *            generic signature or <code>null</code>
 	 */
-	public MethodNode(final String name, final String desc,
+	public MethodCoverage(final String name, final String desc,
 			final String signature) {
 		super(ElementType.METHOD, name, true);
 		this.desc = desc;

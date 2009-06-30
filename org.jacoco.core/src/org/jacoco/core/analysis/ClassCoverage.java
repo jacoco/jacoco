@@ -20,9 +20,9 @@ import java.util.Collection;
  * @author Marc R. Hoffmann
  * @version $Revision: $
  */
-public class ClassNode extends CoverageDataNodeImpl {
+public class ClassCoverage extends CoverageNodeImpl {
 
-	private final Collection<MethodNode> methods;
+	private final Collection<MethodCoverage> methods;
 
 	/**
 	 * Creates a class coverage data object with the given parameters.
@@ -32,7 +32,7 @@ public class ClassNode extends CoverageDataNodeImpl {
 	 * @param methods
 	 *            contained methods
 	 */
-	public ClassNode(final String name, final Collection<MethodNode> methods) {
+	public ClassCoverage(final String name, final Collection<MethodCoverage> methods) {
 		super(ElementType.CLASS, name, true);
 		this.methods = methods;
 		increment(methods);
@@ -57,7 +57,7 @@ public class ClassNode extends CoverageDataNodeImpl {
 	 * 
 	 * @return methods of this class
 	 */
-	public Collection<MethodNode> getMethods() {
+	public Collection<MethodCoverage> getMethods() {
 		return methods;
 	}
 
