@@ -16,17 +16,18 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
-import org.jacoco.core.analysis.ICoverageNode.ElementType;
 import org.jacoco.core.data.ExecutionDataStore;
 import org.jacoco.core.data.IClassStructureVisitor;
 import org.jacoco.core.data.IMethodStructureVisitor;
 import org.jacoco.core.data.IStructureVisitor;
 
 /**
- * Builder for hierarchical {@link ICoverageNode} structures based on
- * execution and structure information. The builder is constructed for a given
+ * Builder for hierarchical {@link ICoverageNode} structures based on execution
+ * and structure information. The builder is constructed for a given
  * {@link ExecutionDataStore} and then feed with class structure information
  * through its {@link IStructureVisitor} interface.
  * 
@@ -76,18 +77,45 @@ public class CoverageBuilder implements IStructureVisitor {
 	 * 
 	 * @return all classes grouped in packages
 	 */
-	public Collection<ICoverageNode> getPackages() {
-		final Map<String, CoverageNodeImpl> result = new HashMap<String, CoverageNodeImpl>();
+	public Collection<PackageCoverage> getPackages() {
+		final Map<String, Collection<ClassCoverage>> classesByPackage = new HashMap<String, Collection<ClassCoverage>>();
 		for (final ClassCoverage c : classes.values()) {
-			final String name = c.getPackageName();
-			CoverageNodeImpl p = result.get(name);
-			if (p == null) {
-				p = new CoverageNodeImpl(ElementType.PACKAGE, name, false);
-				result.put(name, p);
-			}
-			p.increment(c);
+			addByName(classesByPackage, c.getPackageName(), c);
 		}
-		return new ArrayList<ICoverageNode>(result.values());
+
+		final Map<String, Collection<SourceFileCoverage>> sourceFilesByPackage = new HashMap<String, Collection<SourceFileCoverage>>();
+		for (final SourceFileCoverage s : sourcefiles.values()) {
+			addByName(sourceFilesByPackage, s.getPackageName(), s);
+		}
+
+		final Set<String> packageNames = new HashSet<String>();
+		packageNames.addAll(classesByPackage.keySet());
+		packageNames.addAll(sourceFilesByPackage.keySet());
+
+		final Collection<PackageCoverage> result = new ArrayList<PackageCoverage>();
+		for (final String name : packageNames) {
+			Collection<ClassCoverage> classes = classesByPackage.get(name);
+			if (classes == null) {
+				classes = Collections.emptyList();
+			}
+			Collection<SourceFileCoverage> sourceFiles = sourceFilesByPackage
+					.get(name);
+			if (sourceFiles == null) {
+				sourceFiles = Collections.emptyList();
+			}
+			result.add(new PackageCoverage(name, classes, sourceFiles));
+		}
+		return result;
+	}
+
+	private <T> void addByName(final Map<String, Collection<T>> map,
+			final String name, final T value) {
+		Collection<T> list = map.get(name);
+		if (list == null) {
+			list = new ArrayList<T>();
+			map.put(name, list);
+		}
+		list.add(value);
 	}
 
 	public IClassStructureVisitor visitClassStructure(final long id,
@@ -107,7 +135,8 @@ public class CoverageBuilder implements IStructureVisitor {
 			}
 
 			public void visitEnd() {
-				final ClassCoverage classData = new ClassCoverage(name, methods);
+				final ClassCoverage classData = new ClassCoverage(name,
+						sourcename[0], methods);
 				classes.put(Long.valueOf(id), classData);
 				if (sourcename[0] != null) {
 					final SourceFileCoverage sourceFile = getSourceFile(

@@ -23,17 +23,22 @@ import java.util.Collection;
 public class ClassCoverage extends CoverageNodeImpl {
 
 	private final Collection<MethodCoverage> methods;
+	private final String sourceFileName;
 
 	/**
 	 * Creates a class coverage data object with the given parameters.
 	 * 
 	 * @param name
 	 *            vm name of the class
+	 * @param sourceFileName
+	 *            optional name of the corresponding source file
 	 * @param methods
 	 *            contained methods
 	 */
-	public ClassCoverage(final String name, final Collection<MethodCoverage> methods) {
+	public ClassCoverage(final String name, final String sourceFileName,
+			final Collection<MethodCoverage> methods) {
 		super(ElementType.CLASS, name, true);
+		this.sourceFileName = sourceFileName;
 		this.methods = methods;
 		increment(methods);
 		// As class is considered as covered when at least one method is
@@ -50,6 +55,15 @@ public class ClassCoverage extends CoverageNodeImpl {
 	public String getPackageName() {
 		final int pos = getName().lastIndexOf('/');
 		return pos == -1 ? "" : getName().substring(0, pos);
+	}
+
+	/**
+	 * Returns the optional name of the corresponding source file.
+	 * 
+	 * @return
+	 */
+	public String getSourceFileName() {
+		return sourceFileName;
 	}
 
 	/**

@@ -15,7 +15,9 @@ package org.jacoco.core.analysis;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
+import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -148,32 +150,32 @@ public class CoverageBuilderTest {
 		coverageBuilder.visitClassStructure(2, "org/jacoco/examples/Sample2")
 				.visitEnd();
 		coverageBuilder.visitClassStructure(3, "Sample3").visitEnd();
-		final Collection<ICoverageNode> packages = coverageBuilder
+		final Collection<PackageCoverage> packages = coverageBuilder
 				.getPackages();
 		assertEquals(2, packages.size(), 0.0);
-		Map<String, ICoverageNode> packagesByName = new HashMap<String, ICoverageNode>();
-		for (ICoverageNode p : packages) {
+		Map<String, PackageCoverage> packagesByName = new HashMap<String, PackageCoverage>();
+		for (PackageCoverage p : packages) {
 			packagesByName.put(p.getName(), p);
 		}
 
-		ICoverageNode p1 = packagesByName.get("org/jacoco/examples");
+		PackageCoverage p1 = packagesByName.get("org/jacoco/examples");
 		assertNotNull(p1);
-		// TODO activate once PackageNode is defined
-		// assertEquals(new HashSet<String>(Arrays.asList(
-		// "org/jacoco/examples/Sample1", "org/jacoco/examples/Sample2")),
-		// getNames(p1.getChilden()));
-		//
-		// ICoverageDataNode p2 = packagesByName.get("");
-		// assertNotNull(p2);
-		// assertEquals(Collections.singleton("Sample3"),
-		// getNames(p2.getChilden()));
+		assertEquals(new HashSet<String>(Arrays.asList(
+				"org/jacoco/examples/Sample1", "org/jacoco/examples/Sample2")),
+				getNames(p1.getClasses()));
+
+		PackageCoverage p2 = packagesByName.get("");
+		assertNotNull(p2);
+		assertEquals(Collections.singleton("Sample3"),
+				getNames(p2.getClasses()));
 	}
 
-	private Set<String> getNames(Collection<ICoverageNode> nodes) {
+	private Set<String> getNames(Collection<? extends ICoverageNode> nodes) {
 		Set<String> result = new HashSet<String>();
 		for (ICoverageNode n : nodes) {
 			result.add(n.getName());
 		}
 		return result;
 	}
+
 }

@@ -13,6 +13,7 @@
 package org.jacoco.core.analysis;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 import java.util.ArrayList;
 
@@ -28,29 +29,31 @@ public class ClassCoverageTest {
 
 	@Test
 	public void testProperties() {
-		ClassCoverage data = new ClassCoverage("Sample",
+		ClassCoverage data = new ClassCoverage("Sample", "Sample.java",
 				new ArrayList<MethodCoverage>());
 		assertEquals(ICoverageNode.ElementType.CLASS, data.getElementType());
 		assertEquals("Sample", data.getName());
+		assertEquals("Sample.java", data.getSourceFileName());
+		assertNotNull(data.getLines());
 	}
 
 	@Test
 	public void testGetPackageName1() {
 		ClassCoverage data = new ClassCoverage("ClassInDefaultPackage",
-				new ArrayList<MethodCoverage>());
+				"Sample.java", new ArrayList<MethodCoverage>());
 		assertEquals("", data.getPackageName());
 	}
 
 	@Test
 	public void testGetPackageName2() {
 		ClassCoverage data = new ClassCoverage("org/jacoco/examples/Sample",
-				new ArrayList<MethodCoverage>());
+				"Sample.java", new ArrayList<MethodCoverage>());
 		assertEquals("org/jacoco/examples", data.getPackageName());
 	}
 
 	@Test
 	public void testEmptyClass() {
-		ICoverageNode data = new ClassCoverage("Sample",
+		ICoverageNode data = new ClassCoverage("Sample", "Sample.java",
 				new ArrayList<MethodCoverage>());
 		assertEquals(0, data.getInstructionCounter().getTotalCount(), 0.0);
 		assertEquals(0, data.getInstructionCounter().getCoveredCount(), 0.0);
@@ -67,7 +70,7 @@ public class ClassCoverageTest {
 		final ArrayList<MethodCoverage> methods = new ArrayList<MethodCoverage>();
 		methods.add(createMethod(false));
 		methods.add(createMethod(false));
-		ICoverageNode data = new ClassCoverage("Sample", methods);
+		ICoverageNode data = new ClassCoverage("Sample", "Sample.java", methods);
 		assertEquals(10, data.getInstructionCounter().getTotalCount(), 0.0);
 		assertEquals(0, data.getInstructionCounter().getCoveredCount(), 0.0);
 		assertEquals(2, data.getBlockCounter().getTotalCount(), 0.0);
@@ -83,7 +86,7 @@ public class ClassCoverageTest {
 		final ArrayList<MethodCoverage> methods = new ArrayList<MethodCoverage>();
 		methods.add(createMethod(false));
 		methods.add(createMethod(true));
-		ICoverageNode data = new ClassCoverage("Sample", methods);
+		ICoverageNode data = new ClassCoverage("Sample", "Sample.java", methods);
 		assertEquals(10, data.getInstructionCounter().getTotalCount(), 0.0);
 		assertEquals(5, data.getInstructionCounter().getCoveredCount(), 0.0);
 		assertEquals(2, data.getBlockCounter().getTotalCount(), 0.0);
