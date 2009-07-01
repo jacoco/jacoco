@@ -60,7 +60,7 @@ public class ClassCoverage extends CoverageNodeImpl {
 	/**
 	 * Returns the optional name of the corresponding source file.
 	 * 
-	 * @return
+	 * @return name of the corresponding source file
 	 */
 	public String getSourceFileName() {
 		return sourceFileName;
