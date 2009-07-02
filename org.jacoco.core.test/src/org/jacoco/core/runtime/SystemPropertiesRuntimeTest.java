@@ -196,9 +196,6 @@ public class SystemPropertiesRuntimeTest {
 			data.put(Long.valueOf(id), blockdata);
 		}
 
-		public void visitEnd() {
-		}
-
 	}
 
 }

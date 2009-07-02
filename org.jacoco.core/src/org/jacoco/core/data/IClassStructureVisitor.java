@@ -16,6 +16,9 @@ package org.jacoco.core.data;
  * Interface for data output of the internal structure of a single class. This
  * interface is meant to be implemented by parties that want to retrieve data
  * from the instrumentation process.
+ * 
+ * @author Marc R. Hoffmann
+ * @version $Revision: $
  */
 public interface IClassStructureVisitor {
 

@@ -36,9 +36,4 @@ public interface IExecutionDataVisitor {
 	 */
 	public void visitClassExecution(long id, boolean[][] blockdata);
 
-	/**
-	 * Signals the end of execution data output.
-	 */
-	public void visitEnd();
-
 }

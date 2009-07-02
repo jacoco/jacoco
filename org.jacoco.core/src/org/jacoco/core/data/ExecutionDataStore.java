@@ -39,9 +39,6 @@ public class ExecutionDataStore implements IExecutionDataVisitor {
 
 	}
 
-	public void visitEnd() {
-	}
-
 	private static void merge(final boolean[][] target, final boolean[][] data) {
 		if (target.length != data.length) {
 			throw new IllegalStateException("Incompatible execution data.");
@@ -84,7 +81,6 @@ public class ExecutionDataStore implements IExecutionDataVisitor {
 		for (final Map.Entry<Long, boolean[][]> entry : data.entrySet()) {
 			visitor.visitClassExecution(entry.getKey(), entry.getValue());
 		}
-		visitor.visitEnd();
 	}
 
 }

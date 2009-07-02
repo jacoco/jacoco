@@ -54,7 +54,6 @@ public class ExecutionDataStoreTest implements IExecutionDataVisitor {
 		boolean[][] data = new boolean[][] { new boolean[] { false },
 				new boolean[] { false, true } };
 		store.visitClassExecution(1000, data);
-		store.visitEnd();
 		assertSame(data, store.getBlockdata(1000));
 		store.accept(this);
 		assertEquals(Collections.singletonMap(Long.valueOf(1000), data), output);
@@ -68,7 +67,6 @@ public class ExecutionDataStoreTest implements IExecutionDataVisitor {
 		boolean[][] data2 = new boolean[][] { new boolean[] { false, true },
 				new boolean[] { true, false } };
 		store.visitClassExecution(1000, data2);
-		store.visitEnd();
 
 		final boolean[][] result = store.getBlockdata(1000);
 		assertFalse(result[0][0]);
@@ -100,9 +98,6 @@ public class ExecutionDataStoreTest implements IExecutionDataVisitor {
 
 	public void visitClassExecution(long id, boolean[][] blockdata) {
 		output.put(Long.valueOf(id), blockdata);
-	}
-
-	public void visitEnd() {
 	}
 
 }

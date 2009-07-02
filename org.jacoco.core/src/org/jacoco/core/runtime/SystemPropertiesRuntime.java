@@ -103,7 +103,6 @@ public class SystemPropertiesRuntime implements IRuntime {
 				final boolean[][] blockData = entry.getValue();
 				visitor.visitClassExecution(classId, blockData);
 			}
-			visitor.visitEnd();
 			if (reset) {
 				reset();
 			}

@@ -9,7 +9,6 @@
 	
 	<property name="do.compile"       value="true"/>
 	<property name="do.custompackage" value="true"/>
-	<property name="do.doc"     value="true"/>
 	
 	<target name="custompackage">
 		<jar destfile="${result.dist.lib.dir}/jacocoagent.jar">
