@@ -12,8 +12,12 @@
  *******************************************************************************/
 package org.jacoco.agent;
 
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
 import java.lang.instrument.Instrumentation;
 
+import org.jacoco.core.data.ExecutionDataWriter;
 import org.jacoco.core.runtime.AgentOptions;
 import org.jacoco.core.runtime.IRuntime;
 import org.jacoco.core.runtime.SystemPropertiesRuntime;
@@ -45,7 +49,14 @@ public class JacocoAgent {
 
 	private static void writeExecutionData(IRuntime runtime,
 			AgentOptions options) {
-		// TODO
+		try {
+			OutputStream output = new FileOutputStream(options.getFile(),
+					options.getMerge());
+			runtime.collect(new ExecutionDataWriter(output), false);
+			output.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 
 }
