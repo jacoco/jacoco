@@ -1,7 +1,7 @@
-#Mon May 18 07:50:42 CEST 2009
+#Thu Jul 02 08:45:19 CEST 2009
 eclipse.preferences.version=1
 editor_save_participant_org.eclipse.jdt.ui.postsavelistener.cleanup=true
-formatter_profile=_EclEmma
+formatter_profile=org.eclipse.jdt.ui.default.eclipse_profile
 formatter_settings_version=11
 sp_cleanup.add_default_serial_version_id=true
 sp_cleanup.add_generated_serial_version_id=false
