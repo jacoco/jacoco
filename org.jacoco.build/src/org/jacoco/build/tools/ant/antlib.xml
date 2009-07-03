@@ -3,4 +3,6 @@
 
 	<typedef name="deepclassfileset" classname="org.jacoco.build.tools.ant.DeepClassFileSet"/>
 
+	<typedef name="renamedclassfileset" classname="org.jacoco.build.tools.ant.RenamedClassFileSet"/>
+
 </antlib>

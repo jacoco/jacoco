@@ -13,6 +13,7 @@
 package org.jacoco.build.tools.ant;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -81,7 +82,7 @@ public class DeepClassFileSet implements ResourceCollection {
 	 * @param rootclass
 	 *            name of the root class in VM notation
 	 */
-	public void setRootclass(String rootclass) {
+	public void setRootclass(final String rootclass) {
 		this.rootclass = rootclass;
 	}
 
@@ -122,7 +123,7 @@ public class DeepClassFileSet implements ResourceCollection {
 	 */
 	private Map<String, Resource> createAllClassesMap() {
 		final Map<String, Resource> map = new HashMap<String, Resource>();
-		for (ResourceCollection c : delegates) {
+		for (final ResourceCollection c : delegates) {
 			final Iterator<?> i = c.iterator();
 			while (i.hasNext()) {
 				final Resource resource = (Resource) i.next();
@@ -146,21 +147,22 @@ public class DeepClassFileSet implements ResourceCollection {
 	 *            class file resource
 	 * @return VM names of all dependent classes
 	 */
-	private Collection<String> getDependencies(Resource resource) {
+	private Collection<String> getDependencies(final Resource resource) {
 		final Collection<String> dependencies = new HashSet<String>();
-		Remapper remapper = new Remapper() {
+		final Remapper remapper = new Remapper() {
 			@Override
-			public String map(String typeName) {
+			public String map(final String typeName) {
 				dependencies.add(typeName);
 				return typeName;
 			}
 		};
 		try {
-			final ClassReader reader = new ClassReader(resource
-					.getInputStream());
+			final InputStream stream = resource.getInputStream();
+			final ClassReader reader = new ClassReader(stream);
+			stream.close();
 			reader.accept(new RemappingClassAdapter(new EmptyVisitor(),
 					remapper), 0);
-		} catch (IOException e) {
+		} catch (final IOException e) {
 			throw new BuildException(e);
 		}
 		return dependencies;
