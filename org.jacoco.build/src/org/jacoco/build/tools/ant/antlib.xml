@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<antlib>
+
+	<typedef name="deepclassfileset" classname="org.jacoco.build.tools.ant.DeepClassFileSet"/>
+
+</antlib>

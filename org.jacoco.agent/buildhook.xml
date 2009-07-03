@@ -11,6 +11,15 @@
 	<property name="do.custompackage" value="true"/>
 	
 	<target name="custompackage">
+		
+		<taskdef resource="org/jacoco/build/tools/ant/antlib.xml">
+			<classpath>
+				<path refid="bundle-org.jacoco.build"/>
+				<path refid="bundle-org.objectweb.asm"/>
+		    </classpath>
+		</taskdef>
+		
+		<echo>The following warning is false (Ant 1.7.0 Bug #47470), the archive is created anyway.</echo>
 		<jar destfile="${result.dist.lib.dir}/jacocoagent.jar">
 			<manifest>
 				<attribute name="Premain-Class" value="org.jacoco.agent.JacocoAgent"/>
@@ -18,11 +27,16 @@
 				<attribute name="Implementation-Vendor" value="Mountainminds GmbH &amp; Co. KG"/>
 				<attribute name="Implementation-Version" value="${qualified.bundle.version}"/>
 			</manifest>
-			<fileset dir="${result.tmp.bundle.classes.dir}"/>
-			<fileset dir="${toString:bundle-org.jacoco.core}"/>
-			<zipfileset includes="**/*.class">
-		        <fileset file="${toString:bundle-org.objectweb.asm}"/>
-		    </zipfileset>
+			
+			<!-- Ship required classes only with the agent JAR -->
+			<deepclassfileset rootclass="org/jacoco/agent/JacocoAgent">
+				<fileset dir="${result.tmp.bundle.classes.dir}"/>
+				<fileset dir="${toString:bundle-org.jacoco.core}"/>
+				<zipfileset includes="**/*.class">
+			        <fileset file="${toString:bundle-org.objectweb.asm}"/>
+			    </zipfileset>
+			</deepclassfileset>
+			
 		</jar>
 	</target>
 	
