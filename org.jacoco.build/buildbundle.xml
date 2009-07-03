@@ -3,20 +3,36 @@
 <project name="org.jacoco.build.bundle" default="package">
 
 	<property name="source.bundle.dir" location="${basedir}"/>
+	<property name="source.bundle.java.dir" location="${source.bundle.dir}/src"/>
+
+	<!-- Additional resources to include with the compiled classes. By default
+	     none, can be overwritten by the build hook.                         -->
+	<fileset dir="${source.bundle.java.dir}" excludes="**/*" id="classpathresources"/>
+
 	
 	<import file="${source.bundle.dir}/buildhook.xml"/>
 	
+	
+	<!-- =================================================================== 
+         COMPILE 
+	     =================================================================== -->
 
 	<target name="compile" if="do.compile">
-		<property name="source.bundle.java.dir" location="${source.bundle.dir}/src"/>
 		<property name="result.tmp.bundle.classes.dir" location="${result.tmp.bundle.dir}/classes"/>
 		<mkdir dir="${result.tmp.bundle.classes.dir}"/>
 		<javac srcdir="${source.bundle.java.dir}" destdir="${result.tmp.bundle.classes.dir}"
 		       debug="true" source="1.5" target="1.5">
 			<classpath refid="dependencies"/>
 		</javac>
+		<copy todir="${result.tmp.bundle.classes.dir}">
+			<fileset refid="classpathresources"/>
+		</copy>
 	</target>
 	
+	
+	<!-- =================================================================== 
+	     PACKAGE 
+	     =================================================================== -->
 	
 	<target name="manifest">
 		<property name="source.bundle.manifest.file" location="${source.bundle.dir}/META-INF/MANIFEST.MF"/>
@@ -26,7 +42,6 @@
 		<property prefix="manifest" file="${result.temp.bundle.manifest.file}"/>
 		<property name="qualified.bundle.version" value="${manifest.Bundle-Version}"/>
 	</target>
-
 	
 	<target name="runcustompackage" if="do.custompackage" depends="manifest">
 		<antcall target="custompackage" inheritall="true" inheritrefs="true"/>
@@ -41,6 +56,10 @@
 		</jar>
 	</target>
 	
+	
+	<!-- =================================================================== 
+	     VERIFY 
+	     =================================================================== -->
 	
 	<target name="runcustomverify" if="do.customverify">
 		<antcall target="customverify" inheritall="true" inheritrefs="true"/>
@@ -63,7 +82,11 @@
 		</junit>
 	</target>
 	
-
+	
+	<!-- =================================================================== 
+	     DOC 
+	     =================================================================== -->
+	
 	<target name="runcustomdoc" if="do.customdoc" depends="manifest">
 		<antcall target="customdoc" inheritall="true" inheritrefs="true"/>
 	</target>
@@ -77,6 +100,7 @@
 			<classpath refid="dependencies"/>
 		</javadoc>
     </target>
+	
 				
 	<target name="all" depends="compile,package,verify,doc"/>
 	
