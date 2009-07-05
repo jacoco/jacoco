@@ -83,6 +83,7 @@
   structures for finally statements.
 </p>
 
+
 <h2>Instrumentation Approach</h2>
 
 <p class="Note">
@@ -90,8 +91,30 @@
 </p>
 
 <p>
+  source language independent
+  more detailed than pure line coverage in case of multi condition expressions
   Problem: Exceptions
 </p>
+
+<h2>Coverage Agent Isolation</h2>
+
+<p class="Note">
+  The Java agent is loaded by the application class loader. Therefore the
+  classes of the agent live in the same name space than the application classes
+  which can result in clashes especially with the third party library ASM. The
+  JoCoCo build therefore moves all agent classes into a unique package.  
+</p>
+
+<p>
+  The JaCoCo build renames all classes contained in the
+  <code>jacocoagent.jar</code> into classes with a 
+  <code>org.jacoco._&lt;hexid&gt;</code> prefix, including the required ASM
+  library classes. The identifier is created during the build from a hash sum,
+  but could also be a random identifier. As the agent does not provide any API,
+  no one should be affected by this renaming. This Trick also allows that
+  JaCoCo tests can be verified with JaCoCo itself.
+</p>
+
 
 <h2>Minimal Java Version</h2>
 
@@ -103,7 +126,7 @@
   The Java agent mechanism used for on-the-fly instrumentation became available
   with in Java 1.5 VMs. Coding and testing with Java 1.5 language level is more
   efficient, less error-prone &ndash; and more fun. JaCoCo will still allow to
-  run against Java code compiled with older compiler.
+  run against Java code compiled for older versions.
 </p>
 
 
@@ -136,10 +159,10 @@
   versions of the same class to be loaded within the same VM. In complex
   deployment scenarios the actual version of the test target might be different
   from current development version. A code coverage report should guarantee that
-  the presented figures have are extracted from a valid test target. A hash code
-  of the class definitions allows a differentiate between classes and versions
-  of a class. The CRC64 hash computation is simple and fast resulting in a small
-  64 bit identifier. 
+  the presented figures are extracted from a valid test target. A hash code of
+  the class definitions allows a differentiate between classes and versions of a
+  class. The CRC64 hash computation is simple and fast resulting in a small 64
+  bit identifier. 
 </p>
 
 <p>
@@ -166,8 +189,48 @@
 <p>
   Making a runtime library available to all instrumented classes can be a
   painful or impossible task in frameworks that use there own class loading
-  mechanisms. Therefore JaCoCO decouples the instrumented classes and the
+  mechanisms. Therefore JaCoCo decouples the instrumented classes and the
   coverage runtime through official JRE API types. 
+</p>
+
+<h2>Memory Usage</h2>
+
+<p class="Note">
+  
+</p>
+
+<p>
+  Streaming, Deep first
+</p>
+
+<h2>Java Element Identifiers</h2>
+
+<p class="Note">
+  The Java language and the Java VM use different String representation formats
+  for Java elements. For example while a type reference in Java reads like 
+  <code>java.lang.Object</code>, the VM references the same type as
+  <code>Ljava/lang/Object;</code>. The JaCoCo API is based on VM identifiers only.
+</p>
+
+<p>
+  Using VM identifiers directly does not cause any transformation overhead at
+  runtime. There are several programming languages based on the Java VM that
+  might use different notations. Specific transformations should therefore only
+  happen at the user interface level, for example while report generation.
+</p>
+
+<h2>Modularization of the JaCoCo implementation</h2>
+
+<p class="Note">
+  JaCoCo is implemented in several modules providing different functionality.
+  These modules are provided as OSGi bundles with proper manifest files. But
+  there is no dependencies on OSGi itself.
+</p>
+
+<p>
+  Using OSGi bundles allows well defines dependencies at development time and
+  at runtime in OSGi containers. As there are no dependencies on OSGi, the
+  bundles can also be used as regular JAR files.  
 </p>
 
 
