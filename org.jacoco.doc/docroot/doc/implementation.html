@@ -87,13 +87,40 @@
 <h2>Instrumentation Approach</h2>
 
 <p class="Note">
-  Basic Block
+  Instrumentation means inserting probes at certain check points in the Java
+  byte code. A probe generated piece of byte code that records the fact that it
+  has been executed. JaCoCo inserts probes at the end of every basic block.    
 </p>
 
 <p>
-  source language independent
-  more detailed than pure line coverage in case of multi condition expressions
-  Problem: Exceptions
+  A basic block is a piece of byte code that has a single entry point (the first
+  byte code instruction) and a single exit point (like <code>jump</code>,
+  <code>throw</code> or <code>return</code>). A basic code must not contain jump
+  targets except the entry point. One can think of basic blocks as the nodes in
+  a control flow graph of a method. Using basic block boundaries to insert code
+  coverage probes has been very successfully proven by 
+  <a href="http://emma.sourceforge.net/">EMMA</a>.
+</p>
+
+<p>
+  Basic block instrumentation works regardless whether the class files have been
+  compiled with debug information for source lines. Source code highlighting
+  will of course not be possible without this debug information, but percentages
+  on method level can still be calculated. Basic block probes result in
+  reasonable overhead regarding class file size and execution overhead. As e.g.
+  multi-condition statements form several basic blocks partial line coverage is
+  possible. Calculating basic block relies on the Java byte code only, therefore
+  JaCoCo is independent of the source language and should also work with other
+  Java VM based languages like <a href="http://www.scala-lang.org/">Scala</a>.
+</p>
+
+<p>
+  The huge drawback of this approach is that fact, that basic blocks are
+  actually much smaller in the Java VM: Nearly every byte code instruction
+  (especially method invocations) can result in an exception. In this case the
+  block is left somewhere in the middle without hitting the probe, which leads
+  to unexpected results for example in case of negative tests. A possible
+  solutions would be to add exception handlers that trigger special probes.     
 </p>
 
 <h2>Coverage Agent Isolation</h2>
@@ -199,7 +226,7 @@
 </p>
 
 <p>
-  Streaming, Deep first
+  TODO: Streaming, Deep first
 </p>
 
 <h2>Java Element Identifiers</h2>
