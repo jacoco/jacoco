@@ -19,27 +19,23 @@
 		    </classpath>
 		</taskdef>
 		
-		<!-- The purpose of the checksum is to create a unique package name --> 
-		<checksum totalproperty="checksum">
-			<fileset dir="${result.tmp.bundle.classes.dir}"/>
-			<fileset dir="${toString:bundle-org.jacoco.core}"/>
-		</checksum>
+		<!-- The random identifier will be used to create a unique package names --> 
+		<randomid name="randomid"/>
 		
 		<echo>The following warning is false (Ant 1.7.0 Bug #47470), the archive is created anyway.</echo>
 		<jar destfile="${result.dist.lib.dir}/jacocoagent.jar">
 			<manifest>
-				<attribute name="Premain-Class" value="org.jacoco._${checksum}.agent.JacocoAgent"/>
+				<attribute name="Premain-Class" value="org.jacoco.${randomid}.agent.JacocoAgent"/>
 				<attribute name="Implementation-Title" value="JaCoCo Java Agent"/>
 				<attribute name="Implementation-Vendor" value="Mountainminds GmbH &amp; Co. KG"/>
 				<attribute name="Implementation-Version" value="${qualified.bundle.version}"/>
 			</manifest>
 			
-			<!-- Move classes in own namespace to avoid clashes with application
-			     classes. This also allows JaCoCo selftests. -->
+			<!-- Move classes into unique packages -->
 			<renamedclassfileset>
 				
-				<mapping from="org/jacoco/(.*)" to="org/jacoco/_${checksum}/$1"/>
-				<mapping from="org/objectweb/asm/(.*)" to="org/jacoco/_${checksum}/asm/$1"/>
+				<mapping from="org/jacoco/(.*)" to="org/jacoco/${randomid}/$1"/>
+				<mapping from="org/objectweb/asm/(.*)" to="org/jacoco/${randomid}/asm/$1"/>
 				
 				<!-- Ship required classes only in the agent JAR -->
 				<deepclassfileset rootclass="org/jacoco/agent/JacocoAgent">
@@ -49,6 +45,7 @@
 			        	<fileset file="${toString:bundle-org.objectweb.asm}"/>
 			    	</zipfileset>
 				</deepclassfileset>
+				
 			</renamedclassfileset>
 			
 		</jar>

@@ -108,11 +108,10 @@
 <p>
   The JaCoCo build renames all classes contained in the
   <code>jacocoagent.jar</code> into classes with a 
-  <code>org.jacoco._&lt;hexid&gt;</code> prefix, including the required ASM
-  library classes. The identifier is created during the build from a hash sum,
-  but could also be a random identifier. As the agent does not provide any API,
-  no one should be affected by this renaming. This Trick also allows that
-  JaCoCo tests can be verified with JaCoCo itself.
+  <code>org.jacoco.&lt;randomid&gt;</code> prefix, including the required ASM
+  library classes. The identifier is created from a random number. As the agent
+  does not provide any API, no one should be affected by this renaming. This
+  trick also allows that JaCoCo tests can be verified with JaCoCo.
 </p>
 
 

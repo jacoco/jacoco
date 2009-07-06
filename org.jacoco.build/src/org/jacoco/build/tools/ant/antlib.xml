@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <antlib>
 
+	<typedef name="randomid" classname="org.jacoco.build.tools.ant.RandomIdTask"/>
 	<typedef name="deepclassfileset" classname="org.jacoco.build.tools.ant.DeepClassFileSet"/>
-
 	<typedef name="renamedclassfileset" classname="org.jacoco.build.tools.ant.RenamedClassFileSet"/>
 
 </antlib>
