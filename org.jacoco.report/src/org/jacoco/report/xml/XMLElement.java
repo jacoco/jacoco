@@ -57,16 +57,23 @@ public class XMLElement {
 	 *            all output will be written directly to this
 	 * @param name
 	 *            element name
-	 * @throws IOException
-	 *             in case of problems with the writer
 	 */
-	protected XMLElement(final Writer writer, final String name)
-			throws IOException {
+	protected XMLElement(final Writer writer, final String name) {
 		this.writer = writer;
 		this.name = name;
 		this.openTagDone = false;
 		this.closed = false;
 		this.lastchild = null;
+	}
+
+	/**
+	 * Emits the beginning of the open tag. This method has to be called before
+	 * other other methods are called on this element.
+	 * 
+	 * @throws IOException
+	 *             in case of problems with the writer
+	 */
+	protected void beginOpenTag() throws IOException {
 		writer.write(LT);
 		writer.write(name);
 	}
@@ -76,6 +83,27 @@ public class XMLElement {
 			writer.append(GT);
 			openTagDone = true;
 		}
+	}
+
+	/**
+	 * Adds the given child to this element. This will close all previous child
+	 * elements.
+	 * 
+	 * @param child
+	 *            child element to add
+	 * @throws IOException
+	 *             in case of invalid nesting or problems with the writer
+	 */
+	protected void addChildElement(final XMLElement child) throws IOException {
+		if (closed) {
+			throw new IOException("Element " + name + " already closed.");
+		}
+		finishOpenTag();
+		if (lastchild != null) {
+			lastchild.close();
+		}
+		child.beginOpenTag();
+		lastchild = child;
 	}
 
 	private void quote(final String text) throws IOException {
@@ -160,14 +188,9 @@ public class XMLElement {
 	 *             in case of problems with the writer
 	 */
 	public XMLElement element(final String name) throws IOException {
-		if (closed) {
-			throw new IOException("Element " + name + " already closed.");
-		}
-		finishOpenTag();
-		if (lastchild != null) {
-			lastchild.close();
-		}
-		return lastchild = new XMLElement(writer, name);
+		final XMLElement element = new XMLElement(writer, name);
+		addChildElement(element);
+		return element;
 	}
 
 	/**

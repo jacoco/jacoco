@@ -30,105 +30,98 @@ public class XMLElementTest {
 
 	private StringWriter buffer;
 
+	private XMLElement root;
+
 	@Before
-	public void setUp() {
+	public void setUp() throws IOException {
 		buffer = new StringWriter();
+		root = new XMLElement(buffer, "root");
+		root.beginOpenTag();
 	}
 
 	@Test
 	public void testEmptyNode() throws IOException {
-		final XMLElement n = new XMLElement(buffer, "hello_world1");
-		n.close();
+		root.close();
 		// Second close has no effect:
-		n.close();
-		assertEquals("<hello_world1/>", buffer.toString());
+		root.close();
+		assertEquals("<root/>", buffer.toString());
 	}
 
 	@Test(expected = IOException.class)
 	public void testAddAttributeToClosedNode() throws IOException {
-		final XMLElement n = new XMLElement(buffer, "hello");
-		n.close();
-		n.attr("attr", "value");
+		root.close();
+		root.attr("attr", "value");
 	}
 
 	@Test(expected = IOException.class)
 	public void testAddChildToClosedNode() throws IOException {
-		final XMLElement n = new XMLElement(buffer, "hello");
-		n.close();
-		n.element("child");
+		root.close();
+		root.element("child");
 	}
 
 	@Test(expected = IOException.class)
 	public void testAddTextToClosedNode() throws IOException {
-		final XMLElement n = new XMLElement(buffer, "hello");
-		n.close();
-		n.text("text");
+		root.close();
+		root.text("text");
 	}
 
 	@Test
 	public void testNestedElement() throws IOException {
-		final XMLElement n = new XMLElement(buffer, "hello");
-		n.element("world");
-		n.close();
-		assertEquals("<hello><world/></hello>", buffer.toString());
+		root.element("world");
+		root.close();
+		assertEquals("<root><world/></root>", buffer.toString());
 	}
 
 	@Test
 	public void test2NestedElements() throws IOException {
-		final XMLElement n = new XMLElement(buffer, "hello");
-		n.element("world");
-		n.element("universe");
-		n.close();
-		assertEquals("<hello><world/><universe/></hello>", buffer.toString());
+		root.element("world");
+		root.element("universe");
+		root.close();
+		assertEquals("<root><world/><universe/></root>", buffer.toString());
 	}
 
 	@Test
 	public void testText() throws IOException {
-		final XMLElement n = new XMLElement(buffer, "hello");
-		n.text("world");
-		n.close();
-		assertEquals("<hello>world</hello>", buffer.toString());
+		root.text("world");
+		root.close();
+		assertEquals("<root>world</root>", buffer.toString());
 	}
 
 	@Test
 	public void testMixedContent() throws IOException {
-		final XMLElement n = new XMLElement(buffer, "hello");
-		n.element("tag");
-		n.text("world");
-		n.close();
-		assertEquals("<hello><tag/>world</hello>", buffer.toString());
+		root.element("tag1");
+		root.text("world");
+		root.element("tag2");
+		root.close();
+		assertEquals("<root><tag1/>world<tag2/></root>", buffer.toString());
 	}
 
 	@Test
 	public void testQuotedText() throws IOException {
-		final XMLElement n = new XMLElement(buffer, "hello");
-		n.text("<black&white\">");
-		n.close();
-		assertEquals("<hello>&lt;black&amp;white&quot;&gt;</hello>", buffer
+		root.text("<black&white\">");
+		root.close();
+		assertEquals("<root>&lt;black&amp;white&quot;&gt;</root>", buffer
 				.toString());
 	}
 
 	@Test
 	public void testAttributes() throws IOException {
-		final XMLElement n = new XMLElement(buffer, "hello");
-		n.attr("id", "12345").attr("quote", "<>");
-		n.close();
-		assertEquals("<hello id=\"12345\" quote=\"&lt;&gt;\"/>", buffer
+		root.attr("id", "12345").attr("quote", "<\">");
+		root.close();
+		assertEquals("<root id=\"12345\" quote=\"&lt;&quot;&gt;\"/>", buffer
 				.toString());
 	}
 
 	@Test(expected = IOException.class)
 	public void testInvalidAttributeOutput1() throws IOException {
-		final XMLElement n = new XMLElement(buffer, "hello");
-		n.text("text");
-		n.attr("id", "12345");
+		root.text("text");
+		root.attr("id", "12345");
 	}
 
 	@Test(expected = IOException.class)
 	public void testInvalidAttributeOutput2() throws IOException {
-		final XMLElement n = new XMLElement(buffer, "hello");
-		n.element("child");
-		n.attr("id", "12345");
+		root.element("child");
+		root.attr("id", "12345");
 	}
 
 }

@@ -49,9 +49,11 @@ public class XMLDocument extends XMLElement {
 	 * @throws IOException
 	 *             in case of problems with the writer
 	 */
-	public XMLDocument(final String rootnode, String pubId, String system,
-			final Writer writer) throws IOException {
-		super(writeHeader(rootnode, pubId, system, writer), rootnode);
+	public XMLDocument(final String rootnode, final String pubId,
+			final String system, final Writer writer) throws IOException {
+		super(writer, rootnode);
+		writeHeader(rootnode, pubId, system, writer);
+		beginOpenTag();
 	}
 
 	/**
@@ -70,8 +72,8 @@ public class XMLDocument extends XMLElement {
 	 * @throws IOException
 	 *             in case of problems with the writer
 	 */
-	public XMLDocument(final String rootnode, String pubId, String system,
-			final OutputStream output) throws IOException {
+	public XMLDocument(final String rootnode, final String pubId,
+			final String system, final OutputStream output) throws IOException {
 		this(rootnode, pubId, system, new OutputStreamWriter(output, ENCODING));
 	}
 
@@ -81,9 +83,8 @@ public class XMLDocument extends XMLElement {
 		writer.close();
 	}
 
-	private static Writer writeHeader(final String rootnode,
-			final String pubId, final String system, final Writer writer)
-			throws IOException {
+	private static void writeHeader(final String rootnode, final String pubId,
+			final String system, final Writer writer) throws IOException {
 		writer.write(XMLHEADER);
 		if (pubId != null) {
 			writer.write("<!DOCTYPE ");
@@ -94,7 +95,6 @@ public class XMLDocument extends XMLElement {
 			writer.write(system);
 			writer.write("\">");
 		}
-		return writer;
 	}
 
 }
