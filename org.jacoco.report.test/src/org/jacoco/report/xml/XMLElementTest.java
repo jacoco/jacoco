@@ -21,7 +21,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 /**
- * Unit tests for {@link XMLElement}. *
+ * Unit tests for {@link XMLElement}.
  * 
  * @author Marc R. Hoffmann
  * @version $Revision: $
