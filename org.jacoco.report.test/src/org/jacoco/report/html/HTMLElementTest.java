@@ -49,4 +49,25 @@ public class HTMLElementTest {
 		assertEquals("<root><title/></root>", buffer.toString());
 	}
 
+	@Test
+	public void testSpan() throws IOException {
+		root.span("abc");
+		root.close();
+		assertEquals("<root><span class=\"abc\"/></root>", buffer.toString());
+	}
+
+	@Test
+	public void testPre() throws IOException {
+		root.pre("mystyle");
+		root.close();
+		assertEquals("<root><pre class=\"mystyle\"/></root>", buffer.toString());
+	}
+
+	@Test
+	public void testBr() throws IOException {
+		root.br();
+		root.close();
+		assertEquals("<root><br/></root>", buffer.toString());
+	}
+
 }

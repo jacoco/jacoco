@@ -8,6 +8,11 @@
 		<path refid="bundle-org.junit4"/>
     </path>
 
+	<fileset dir="${source.bundle.java.dir}" id="classpathresources">
+		<include name="**/*.dtd"/>
+		<include name="**/*.ent"/>
+	</fileset>	
+	
 	<property name="do.compile" value="true"/>
 	<property name="do.verify"  value="true"/>
 	

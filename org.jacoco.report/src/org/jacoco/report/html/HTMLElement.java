@@ -56,4 +56,44 @@ public class HTMLElement extends XMLElement {
 		return element("title");
 	}
 
+	/**
+	 * Creates a 'span' element.
+	 * 
+	 * @param classattr
+	 *            value for the class attribute
+	 * @return 'span' element
+	 * @throws IOException
+	 *             in case of problems with the writer
+	 */
+	public HTMLElement span(String classattr) throws IOException {
+		final HTMLElement pre = element("span");
+		pre.attr("class", classattr);
+		return pre;
+	}
+
+	/**
+	 * Creates a 'pre' element.
+	 * 
+	 * @param classattr
+	 *            value for the class attribute
+	 * @return 'pre' element
+	 * @throws IOException
+	 *             in case of problems with the writer
+	 */
+	public HTMLElement pre(String classattr) throws IOException {
+		final HTMLElement pre = element("pre");
+		pre.attr("class", classattr);
+		return pre;
+	}
+
+	/**
+	 * Creates a empty 'br' element.
+	 * 
+	 * @throws IOException
+	 *             in case of problems with the writer
+	 */
+	public void br() throws IOException {
+		element("br");
+	}
+
 }

@@ -68,4 +68,14 @@ public class HTMLDocumentTest {
 				buffer.toString());
 	}
 
+	@Test
+	public void testMinimalHTMLDocument() throws Exception {
+		StringWriter buffer = new StringWriter();
+		final HTMLDocument doc = new HTMLDocument(buffer);
+		doc.head().title();
+		doc.body();
+		doc.close();
+		new HTMLSupport().validate(buffer.toString());
+	}
+
 }
