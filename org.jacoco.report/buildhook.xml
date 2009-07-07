@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project name="org.jacoco.build.buildhook">
+	
+	<path id="dependencies">
+		<path refid="bundle-org.jacoco.core"/>
+	</path>
+			
+	<property name="do.compile" value="true"/>
+	<property name="do.package" value="true"/>
+	<property name="do.doc"     value="true"/>
+	
+</project>
