@@ -49,7 +49,7 @@ public class XMLDocumentTest {
 				.close();
 		assertEquals(
 				"<?xml version=\"1.0\" encoding=\"UTF-8\"?><test>\u00CD\u307e</test>",
-				new String(buffer.toByteArray(), "UTF-8"));
+				buffer.toString("UTF-8"));
 	}
 
 	@Test

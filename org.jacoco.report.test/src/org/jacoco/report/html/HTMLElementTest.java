@@ -43,24 +43,10 @@ public class HTMLElementTest {
 	}
 
 	@Test
-	public void testHead() throws IOException {
-		root.head();
-		root.close();
-		assertEquals("<root><head/></root>", buffer.toString());
-	}
-
-	@Test
 	public void testTitle() throws IOException {
 		root.title();
 		root.close();
 		assertEquals("<root><title/></root>", buffer.toString());
-	}
-
-	@Test
-	public void testBody() throws IOException {
-		root.body();
-		root.close();
-		assertEquals("<root><body/></root>", buffer.toString());
 	}
 
 }

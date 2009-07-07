@@ -46,17 +46,6 @@ public class HTMLElement extends XMLElement {
 	}
 
 	/**
-	 * Creates a 'head' element.
-	 * 
-	 * @return 'head' element
-	 * @throws IOException
-	 *             in case of problems with the writer
-	 */
-	public HTMLElement head() throws IOException {
-		return element("head");
-	}
-
-	/**
 	 * Creates a 'title' element.
 	 * 
 	 * @return 'head' element
@@ -65,17 +54,6 @@ public class HTMLElement extends XMLElement {
 	 */
 	public HTMLElement title() throws IOException {
 		return element("title");
-	}
-
-	/**
-	 * Creates a 'body' element.
-	 * 
-	 * @return 'body' element
-	 * @throws IOException
-	 *             in case of problems with the writer
-	 */
-	public HTMLElement body() throws IOException {
-		return element("body");
 	}
 
 }
