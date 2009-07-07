@@ -22,9 +22,6 @@ import java.io.Writer;
  * @see XMLDocument
  * @author Marc R. Hoffmann
  * @version $Revision: $
- * 
- * @param <E>
- *            Type of a subclass
  */
 public class XMLElement {
 
@@ -63,7 +60,8 @@ public class XMLElement {
 	 * @throws IOException
 	 *             in case of problems with the writer
 	 */
-	protected XMLElement(Writer writer, String name) throws IOException {
+	protected XMLElement(final Writer writer, final String name)
+			throws IOException {
 		this.writer = writer;
 		this.name = name;
 		this.openTagDone = false;
@@ -80,10 +78,10 @@ public class XMLElement {
 		}
 	}
 
-	private void quote(String text) throws IOException {
-		int len = text.length();
+	private void quote(final String text) throws IOException {
+		final int len = text.length();
 		for (int i = 0; i < len; i++) {
-			char c = text.charAt(i);
+			final char c = text.charAt(i);
 			switch (c) {
 			case LT:
 				writer.write("&lt;");
@@ -117,7 +115,8 @@ public class XMLElement {
 	 * @throws IOException
 	 *             in case of problems with the writer
 	 */
-	public XMLElement attr(String name, String value) throws IOException {
+	public XMLElement attr(final String name, final String value)
+			throws IOException {
 		if (closed || openTagDone) {
 			throw new IOException("Element " + this.name + " already closed.");
 		}
@@ -139,7 +138,7 @@ public class XMLElement {
 	 * @throws IOException
 	 *             in case of problems with the writer
 	 */
-	public XMLElement text(String text) throws IOException {
+	public XMLElement text(final String text) throws IOException {
 		if (closed) {
 			throw new IOException("Element " + name + " already closed.");
 		}
@@ -160,7 +159,7 @@ public class XMLElement {
 	 * @throws IOException
 	 *             in case of problems with the writer
 	 */
-	public XMLElement element(String name) throws IOException {
+	public XMLElement element(final String name) throws IOException {
 		if (closed) {
 			throw new IOException("Element " + name + " already closed.");
 		}

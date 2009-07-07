@@ -13,7 +13,9 @@
 package org.jacoco.report.xml;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.StringWriter;
 
@@ -29,15 +31,42 @@ public class XMLDocumentTest {
 
 	@Test
 	public void testNoDoctype() throws IOException {
-		StringWriter writer = new StringWriter();
-		new XMLDocument("test", null, null, writer).close();
-		assertEquals("<?xml version=\"1.0\" encoding=\"UTF-8\"?><test/>",
-				writer.toString());
 	}
 
 	@Test
-	public void testClose() {
+	public void testDoctype() throws IOException {
+		StringWriter writer = new StringWriter();
+		new XMLDocument("test", "sample", "sample.dtd", writer).close();
+		assertEquals("<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
+				+ "<!DOCTYPE test PUBLIC \"sample\" \"sample.dtd\">"
+				+ "<test/>", writer.toString());
+	}
 
+	@Test
+	public void testStream() throws IOException {
+		ByteArrayOutputStream buffer = new ByteArrayOutputStream();
+		new XMLDocument("test", null, null, buffer).text("\u00CD\u307e")
+				.close();
+		assertEquals(
+				"<?xml version=\"1.0\" encoding=\"UTF-8\"?><test>\u00CD\u307e</test>",
+				new String(buffer.toByteArray(), "UTF-8"));
+	}
+
+	@Test
+	public void testClose() throws IOException {
+		class CloseVerifier extends StringWriter {
+
+			boolean closed = false;
+
+			@Override
+			public void close() throws IOException {
+				closed = true;
+				super.close();
+			}
+		}
+		CloseVerifier verifier = new CloseVerifier();
+		new XMLDocument("test", null, null, verifier).close();
+		assertTrue(verifier.closed);
 	}
 
 }
