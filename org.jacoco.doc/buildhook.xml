@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<project name="org.jacoco.build.buildhook">
+<project name="org.jacoco.doc.buildhook">
 
 	<property name="do.customverify" value="true"/>
 	<property name="do.customdoc" value="true"/>

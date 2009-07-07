@@ -2,7 +2,11 @@
 
 <project name="org.jacoco.build.all" default="rebuildall" basedir=".">
 	
-	<fail message="Please specify property 'target.plugins.dir'" unless="target.plugins.dir"/>
+	<description>
+		This is the main build file for the JaCoCo build.
+	</description>
+	
+	<import file="target.xml"/>
 	
 	<property name="target.plugins.dir" location="C:/devtools/eclipse3.4.1/plugins"/>
 	<property name="workspace.dir" location=".."/>
@@ -19,32 +23,7 @@
 		<format property="build.qualifier" pattern="yyyyMMddHHmmss"/>
 	</tstamp>
 
-	<fail message="JaCoCo should only be compiled against Java 1.5">
-		<condition>
-			<not>
-				<equals arg1="${ant.java.version}" arg2="1.5"/>
-			</not>
-		</condition>
-	</fail>
-	
-	
-	<!-- ===================================================================
-	     External Target Dependencies 
-	     =================================================================== -->
-	
-	<path id="bundle-org.objectweb.asm">
-        <fileset dir="${target.plugins.dir}" includes="org.objectweb.asm_3.1.0.*.jar"/>
-	</path>
 
-	<path id="bundle-org.apache.ant">
-        <fileset dir="${target.plugins.dir}" includes="org.apache.ant_*/ant.jar"/>
-	</path>
-	
-	<path id="bundle-org.junit4">
-        <fileset dir="${target.plugins.dir}" includes="org.junit4_*/junit.jar"/>
-	</path>
-	
-	
 	<macrodef name="runbundlebuild">
 		<attribute name="bundleid"/>
 		<attribute name="target"/>
@@ -62,10 +41,19 @@
 	<macrodef name="runallbundlebuilds">
 		<attribute name="target"/>
 		<sequential>
+			<!-- Build tools -->
 			<runbundlebuild bundleid="org.jacoco.build" target="@{target}"/>
+			
+			<!-- Implementation -->
 			<runbundlebuild bundleid="org.jacoco.core" target="@{target}"/>
-			<runbundlebuild bundleid="org.jacoco.core.test" target="@{target}"/>
 			<runbundlebuild bundleid="org.jacoco.agent" target="@{target}"/>
+			<runbundlebuild bundleid="org.jacoco.report" target="@{target}"/>
+			
+			<!-- Tests -->
+			<runbundlebuild bundleid="org.jacoco.core.test" target="@{target}"/>
+			<runbundlebuild bundleid="org.jacoco.report.test" target="@{target}"/>
+			
+			<!-- Documentation -->
 			<runbundlebuild bundleid="org.jacoco.doc" target="@{target}"/>
 		</sequential>
 	</macrodef>

@@ -2,6 +2,12 @@
 
 <project name="org.jacoco.build.bundle" default="package">
 
+	<description>
+		This build file is executed for every JaCoCo bundle. Every bundle must
+		contain a buildhook.xml file that gets imported into this build file and
+		customizes the specific build actions for the bundle.
+	</description>
+	
 	<property name="source.bundle.dir" location="${basedir}"/>
 	<property name="source.bundle.java.dir" location="${source.bundle.dir}/src"/>
 

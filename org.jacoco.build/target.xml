@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project name="target">
+
+	<description>
+		This file specifies the build target dependencies.
+	</description>
+
+	<fail message="JaCoCo should only be compiled against Java 1.5">
+		<condition>
+			<not>
+				<equals arg1="${ant.java.version}" arg2="1.5"/>
+			</not>
+		</condition>
+	</fail>
+
+	
+	<!-- These following path declarations assume that all libraries are
+	     avaiable as standard Eclipse bundles. -->
+
+    <fail message="Please specify property 'target.plugins.dir'" unless="target.plugins.dir"/>
+		
+	<path id="bundle-org.objectweb.asm">
+        <fileset dir="${target.plugins.dir}" includes="org.objectweb.asm_3.1.0.*.jar"/>
+	</path>
+
+	<path id="bundle-org.apache.ant">
+        <fileset dir="${target.plugins.dir}" includes="org.apache.ant_*/ant.jar"/>
+	</path>
+	
+	<path id="bundle-org.junit4">
+        <fileset dir="${target.plugins.dir}" includes="org.junit4_*/junit.jar"/>
+	</path>
+	
+</project>

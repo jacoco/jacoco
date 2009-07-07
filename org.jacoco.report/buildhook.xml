@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<project name="org.jacoco.build.buildhook">
+<project name="org.jacoco.report.buildhook">
 	
 	<path id="dependencies">
 		<path refid="bundle-org.jacoco.core"/>
