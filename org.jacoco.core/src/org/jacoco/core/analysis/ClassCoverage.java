@@ -48,13 +48,23 @@ public class ClassCoverage extends CoverageNodeImpl {
 	}
 
 	/**
-	 * Returns the vm name of the package this class belongs to.
+	 * Returns the VM name of the package this class belongs to.
 	 * 
-	 * @return vm name of the package
+	 * @return VM name of the package
 	 */
 	public String getPackageName() {
 		final int pos = getName().lastIndexOf('/');
 		return pos == -1 ? "" : getName().substring(0, pos);
+	}
+
+	/**
+	 * Returns the VM name of the class without the package prefix.
+	 * 
+	 * @return VM name of the class without the package
+	 */
+	public String getSimpleName() {
+		final int pos = getName().lastIndexOf('/');
+		return pos == -1 ? getName() : getName().substring(pos + 1);
 	}
 
 	/**
