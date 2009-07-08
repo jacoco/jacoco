@@ -1,0 +1,112 @@
+/*******************************************************************************
+ * Copyright (c) 2009 Mountainminds GmbH & Co. KG and others
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *    Marc R. Hoffmann - initial API and implementation
+ *    
+ * $Id: $
+ *******************************************************************************/
+package org.jacoco.report;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertSame;
+
+import java.io.IOException;
+
+import org.junit.Before;
+import org.junit.Test;
+
+/**
+ * Unit tests for {@link ReportOutputFolder}.
+ * 
+ * @author Marc R. Hoffmann
+ * @version $Revision: $
+ */
+
+public class ReportOutputFolderTest {
+
+	private MemoryReportOutput output;
+
+	private ReportOutputFolder root;
+
+	@Before
+	public void setup() {
+		output = new MemoryReportOutput();
+		root = new ReportOutputFolder(output);
+	}
+
+	@Test
+	public void testFileInRoot() throws IOException {
+		root.createFile("test.html").close();
+		output.assertSingleFile("test.html");
+	}
+
+	@Test
+	public void testSubfolderInstance() throws IOException {
+		final ReportOutputFolder folder1 = root.subFolder("folder1");
+		final ReportOutputFolder folder2 = root.subFolder("folder1");
+		assertSame(folder1, folder2);
+	}
+
+	@Test
+	public void testLinkInRoot() throws IOException {
+		assertEquals("test.html", root.getLink("test.html"));
+	}
+
+	@Test
+	public void testFileInSubFolder() throws IOException {
+		root.subFolder("folderA").subFolder("folderB").createFile("test.html")
+				.close();
+		output.assertSingleFile("folderA/folderB/test.html");
+	}
+
+	@Test
+	public void testLinkInSubFolder() throws IOException {
+		assertEquals("test.html", root.subFolder("folderA")
+				.subFolder("folberB").getLink("test.html"));
+	}
+
+	@Test
+	public void testRelativeLinkInSameFolder() throws IOException {
+		final ReportOutputFolder base = root.subFolder("f1").subFolder("f2");
+		assertEquals("test.html", base.getLink(base, "test.html"));
+	}
+
+	@Test
+	public void testRelativeLinkInParentFolder() throws IOException {
+		final ReportOutputFolder base = root.subFolder("f1").subFolder("f2");
+		assertEquals("../../test.html", root.getLink(base, "test.html"));
+	}
+
+	@Test
+	public void testRelativeLinkInSubFolder() throws IOException {
+		final ReportOutputFolder folder = root.subFolder("f1").subFolder("f2");
+		assertEquals("f1/f2/test.html", folder.getLink(root, "test.html"));
+	}
+
+	@Test
+	public void testRelativeLinkInSibling1() throws IOException {
+		final ReportOutputFolder folder = root.subFolder("f1").subFolder("f2");
+		final ReportOutputFolder base = root.subFolder("g1").subFolder("g2");
+		assertEquals("../../f1/f2/test.html", folder.getLink(base, "test.html"));
+	}
+
+	@Test
+	public void testRelativeLinkInSibling2() throws IOException {
+		final ReportOutputFolder folder = root.subFolder("f1").subFolder("f2");
+		final ReportOutputFolder base = root.subFolder("f1").subFolder("g2");
+		assertEquals("../f2/test.html", folder.getLink(base, "test.html"));
+	}
+
+	@Test(expected = IllegalArgumentException.class)
+	public void testInvalidRelativeLink() throws IOException {
+		final ReportOutputFolder folder = root.subFolder("f1").subFolder("f2");
+		final ReportOutputFolder base = new ReportOutputFolder(
+				new MemoryReportOutput()).subFolder("g1");
+		folder.getLink(base, "test.html");
+	}
+}
