@@ -75,7 +75,7 @@ public class HTMLDocumentTest {
 		doc.head().title();
 		doc.body();
 		doc.close();
-		new HTMLSupport().validate(buffer.toString());
+		new HTMLSupport().parse(buffer.toString());
 	}
 
 }

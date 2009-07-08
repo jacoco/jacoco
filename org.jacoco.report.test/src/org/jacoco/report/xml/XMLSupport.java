@@ -20,7 +20,12 @@ import java.io.StringReader;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.xpath.XPath;
+import javax.xml.xpath.XPathConstants;
+import javax.xml.xpath.XPathExpressionException;
+import javax.xml.xpath.XPathFactory;
 
+import org.w3c.dom.Document;
 import org.xml.sax.ErrorHandler;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
@@ -35,6 +40,8 @@ import org.xml.sax.SAXParseException;
 public class XMLSupport {
 
 	private final DocumentBuilder builder;
+
+	private XPath xpath;
 
 	public XMLSupport(Class<?> resourceDelegate)
 			throws ParserConfigurationException {
@@ -60,9 +67,21 @@ public class XMLSupport {
 		});
 	}
 
-	public void validate(String document) throws SAXException, IOException,
+	private XPath getXPath() {
+		if (xpath == null) {
+			xpath = XPathFactory.newInstance().newXPath();
+		}
+		return xpath;
+	}
+
+	public Document parse(String document) throws SAXException, IOException,
 			ParserConfigurationException {
-		builder.parse(new InputSource(new StringReader(document)));
+		return builder.parse(new InputSource(new StringReader(document)));
+	}
+
+	public String findStr(final Document doc, final String query)
+			throws XPathExpressionException {
+		return (String) getXPath().evaluate(query, doc, XPathConstants.STRING);
 	}
 
 }
