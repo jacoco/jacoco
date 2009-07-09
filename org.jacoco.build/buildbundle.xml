@@ -93,21 +93,15 @@
 	     DOC 
 	     =================================================================== -->
 	
-	<target name="runcustomdoc" if="do.customdoc" depends="manifest">
+	<target name="doc" if="do.customdoc" depends="manifest">
 		<antcall target="customdoc" inheritall="true" inheritrefs="true"/>
-	</target>
-	
-	<target name="doc" if="do.doc" depends="compile,runcustomdoc,manifest">
-		<mkdir dir="${result.dist.doc.bundle.dir}"/>
-		<javadoc destdir="${result.dist.doc.bundle.dir}"
-			     overview="${source.bundle.java.dir}/overview.html"
-			windowtitle="${manifest.Bundle-SymbolicName} ${qualified.bundle.version}">
-			<sourcepath location="${source.bundle.java.dir}"/>
-			<classpath refid="dependencies"/>
-		</javadoc>
-    </target>
-	
+    </target>	
 				
+	
+	<!-- =================================================================== 
+	     ALL 
+	     =================================================================== -->
+	
 	<target name="all" depends="compile,package,verify,doc"/>
 	
 </project>

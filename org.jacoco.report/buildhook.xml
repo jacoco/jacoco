@@ -13,6 +13,5 @@
 			
 	<property name="do.compile" value="true"/>
 	<property name="do.package" value="true"/>
-	<property name="do.doc"     value="true"/>
 	
 </project>

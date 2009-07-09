@@ -16,12 +16,30 @@
 	</target>
 	
 	<target name="customdoc">
+		
+		<javadoc destdir="${result.dist.dir}/doc/api"
+			windowtitle="JaCoCo ${qualified.bundle.version}"
+			overview="${source.bundle.dir}/javadoc/overview.html">
+			<sourcefiles>
+				<fileset dir="${source.bundle.dir}/../org.jacoco.core/src" includes="**/*.java"/>
+				<fileset dir="${source.bundle.dir}/../org.jacoco.report/src" includes="**/*.java"/>
+			</sourcefiles>
+			<classpath>
+				<path refid="bundle-org.objectweb.asm"/>
+			</classpath>
+			<group title="Bundle org.jacoco.core" packages="org.jacoco.core*"/>
+			<group title="Bundle org.jacoco.report" packages="org.jacoco.report*"/>
+			<link href="http://java.sun.com/j2se/1.5.0/docs/api" offline="true" packagelistloc="${source.bundle.dir}/javadoc/java"/>
+			<link href="http://asm.ow2.org/asm31/javadoc/user" offline="true" packagelistloc="${source.bundle.dir}/javadoc/asm"/>
+		</javadoc>
+		
 		<copy todir="${result.dist.dir}">
 			<fileset dir="${source.bundle.dir}/docroot" includes="**/*"/>
 			<filterset>
 				<filter token="VERSION" value="${qualified.bundle.version}"/>
 			</filterset>
 		</copy>
+		
 	</target>
 	
 </project>
