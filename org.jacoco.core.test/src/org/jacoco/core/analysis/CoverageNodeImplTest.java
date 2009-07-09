@@ -36,15 +36,15 @@ public class CoverageNodeImplTest {
 
 	@Test
 	public void testProperties() {
-		ICoverageNode node = new CoverageNodeImpl(ElementType.CUSTOM, "sample",
+		ICoverageNode node = new CoverageNodeImpl(ElementType.GROUP, "sample",
 				false);
-		assertEquals(ElementType.CUSTOM, node.getElementType());
+		assertEquals(ElementType.GROUP, node.getElementType());
 		assertEquals("sample", node.getName());
 	}
 
 	@Test
 	public void testInitWithoutLines() {
-		ICoverageNode node = new CoverageNodeImpl(ElementType.CUSTOM, "sample",
+		ICoverageNode node = new CoverageNodeImpl(ElementType.GROUP, "sample",
 				false);
 		assertEquals(CounterImpl.COUNTER_0_0, node.getBlockCounter());
 		assertEquals(CounterImpl.COUNTER_0_0, node.getInstructionCounter());
@@ -56,7 +56,7 @@ public class CoverageNodeImplTest {
 
 	@Test
 	public void testInitWithLines() {
-		ICoverageNode node = new CoverageNodeImpl(ElementType.CUSTOM, "sample",
+		ICoverageNode node = new CoverageNodeImpl(ElementType.CLASS, "Sample",
 				true);
 		assertEquals(CounterImpl.COUNTER_0_0, node.getBlockCounter());
 		assertEquals(CounterImpl.COUNTER_0_0, node.getInstructionCounter());
@@ -68,10 +68,10 @@ public class CoverageNodeImplTest {
 
 	@Test
 	public void testIncrementWithoutLines() {
-		CoverageNodeImpl parent = new CoverageNodeImpl(ElementType.CUSTOM,
+		CoverageNodeImpl parent = new CoverageNodeImpl(ElementType.GROUP,
 				"sample", false);
-		ICoverageNode child = new CoverageNodeImpl(ElementType.CUSTOM,
-				"sample", false) {
+		ICoverageNode child = new CoverageNodeImpl(ElementType.GROUP, "sample",
+				false) {
 			{
 				instructionCounter = CounterImpl.getInstance(42, 41);
 				blockCounter = CounterImpl.getInstance(32, 31);
@@ -97,10 +97,10 @@ public class CoverageNodeImplTest {
 
 	@Test
 	public void testIncrementWithLines() {
-		CoverageNodeImpl node = new CoverageNodeImpl(ElementType.CUSTOM,
-				"sample", true);
-		ICoverageNode child = new CoverageNodeImpl(ElementType.CUSTOM,
-				"sample", true) {
+		CoverageNodeImpl node = new CoverageNodeImpl(ElementType.CLASS,
+				"Sample", true);
+		ICoverageNode child = new CoverageNodeImpl(ElementType.CLASS, "Sample",
+				true) {
 			{
 				instructionCounter = CounterImpl.getInstance(42, 41);
 				blockCounter = CounterImpl.getInstance(32, 31);
@@ -125,15 +125,15 @@ public class CoverageNodeImplTest {
 
 	@Test
 	public void testIncrementCollection() {
-		CoverageNodeImpl parent = new CoverageNodeImpl(ElementType.CUSTOM,
+		CoverageNodeImpl parent = new CoverageNodeImpl(ElementType.GROUP,
 				"sample", false);
-		ICoverageNode child1 = new CoverageNodeImpl(ElementType.CUSTOM,
+		ICoverageNode child1 = new CoverageNodeImpl(ElementType.GROUP,
 				"sample", false) {
 			{
 				blockCounter = CounterImpl.getInstance(5, 2);
 			}
 		};
-		ICoverageNode child2 = new CoverageNodeImpl(ElementType.CUSTOM,
+		ICoverageNode child2 = new CoverageNodeImpl(ElementType.GROUP,
 				"sample", false) {
 			{
 				blockCounter = CounterImpl.getInstance(3, 3);
@@ -145,7 +145,7 @@ public class CoverageNodeImplTest {
 
 	@Test
 	public void testGetPlainCopyWithLines() {
-		ICoverageNode node = new CoverageNodeImpl(ElementType.CUSTOM, "sample",
+		ICoverageNode node = new CoverageNodeImpl(ElementType.GROUP, "sample",
 				true) {
 			{
 				classCounter = CounterImpl.getInstance(1, 1);
@@ -156,7 +156,7 @@ public class CoverageNodeImplTest {
 			}
 		};
 		ICoverageNode copy = node.getPlainCopy();
-		assertEquals(ElementType.CUSTOM, copy.getElementType());
+		assertEquals(ElementType.GROUP, copy.getElementType());
 		assertEquals("sample", copy.getName());
 		assertEquals(CounterImpl.getInstance(1, 1), copy.getClassCounter());
 		assertEquals(CounterImpl.getInstance(2, 2), copy.getMethodCounter());
@@ -171,7 +171,7 @@ public class CoverageNodeImplTest {
 
 	@Test
 	public void testGetPlainCopyWithoutLines() {
-		ICoverageNode node = new CoverageNodeImpl(ElementType.CLASS, "Test",
+		ICoverageNode node = new CoverageNodeImpl(ElementType.CLASS, "Sample",
 				false) {
 			{
 				classCounter = CounterImpl.getInstance(1, 1);
@@ -183,7 +183,7 @@ public class CoverageNodeImplTest {
 		};
 		ICoverageNode copy = node.getPlainCopy();
 		assertEquals(ElementType.CLASS, copy.getElementType());
-		assertEquals("Test", copy.getName());
+		assertEquals("Sample", copy.getName());
 		assertEquals(CounterImpl.getInstance(1, 1), copy.getClassCounter());
 		assertEquals(CounterImpl.getInstance(2, 2), copy.getMethodCounter());
 		assertEquals(CounterImpl.getInstance(3, 3), copy.getBlockCounter());

@@ -41,11 +41,12 @@ public interface ICoverageNode {
 		/** Bundle of Packages */
 		BUNDLE,
 
-		/** Coverage Session */
-		SESSION,
+		/** Logical Group of Bundles */
+		GROUP,
 
-		/** Custom Node */
-		CUSTOM
+		/** Coverage Session */
+		SESSION
+
 	}
 
 	/**

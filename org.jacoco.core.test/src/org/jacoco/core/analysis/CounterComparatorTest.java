@@ -12,7 +12,7 @@
  *******************************************************************************/
 package org.jacoco.core.analysis;
 
-import static org.jacoco.core.analysis.ICoverageNode.ElementType.CUSTOM;
+import static org.jacoco.core.analysis.ICoverageNode.ElementType.GROUP;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
@@ -105,8 +105,8 @@ public class CounterComparatorTest {
 		ICoverageNode d3 = new MockBlockData(30);
 		ICoverageNode d4 = new MockBlockData(60);
 		ICoverageNode d5 = new MockBlockData(99);
-		final List<ICoverageNode> result = CounterComparator.TOTALITEMS
-				.sort(Arrays.asList(d3, d5, d1, d4, d2), CounterEntity.BLOCK);
+		final List<ICoverageNode> result = CounterComparator.TOTALITEMS.sort(
+				Arrays.asList(d3, d5, d1, d4, d2), CounterEntity.BLOCK);
 		assertEquals(Arrays.asList(d1, d2, d3, d4, d5), result);
 	}
 
@@ -132,7 +132,7 @@ public class CounterComparatorTest {
 
 	private static final class MockBlockData extends CoverageNodeImpl {
 		MockBlockData(int total) {
-			super(CUSTOM, "mock", false);
+			super(GROUP, "mock", false);
 			blockCounter = CounterImpl.getInstance(total, false);
 		}
 	}
