@@ -1,0 +1,65 @@
+body {
+  font-family:sans-serif;
+  font-size:10pt;
+}
+
+div.path {
+  padding:0.2em;
+  background-color:#e0e0e0;
+  margin-bottom:1em;
+}
+
+.el_bundle {
+  padding-left:18px;
+  background-image:url(bundle.gif);
+  background-repeat:no-repeat;
+}
+
+.el_package {
+  padding-left:18px;
+  background-image:url(package.gif);
+  background-repeat:no-repeat;
+}
+
+.el_class {
+  padding-left:18px;
+  background-image:url(class.gif);
+  background-repeat:no-repeat;
+}
+
+.el_source {
+  padding-left:18px;
+  background-image:url(source.gif);
+  background-repeat:no-repeat;
+}
+
+.el_method {
+  padding-left:18px;
+  background-image:url(method.gif);
+  background-repeat:no-repeat;
+}
+
+
+
+pre.source {
+  border:#e0e0e0 1px solid;
+  font-family:monospace;
+}
+
+pre.source span.nr {
+  color:#c0c0c0;
+  border-right:#e0e0e0 1px solid;
+  padding-right:2pt;
+}
+
+pre.source span.fc {
+  background-color:#ccffcc;
+}
+
+pre.source span.nc {
+  background-color:#ffcccc;
+}
+
+pre.source span.pc {
+  background-color:#ffffcc;
+}

@@ -14,6 +14,7 @@ package org.jacoco.report;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -37,6 +38,10 @@ public class MemoryReportOutput implements IReportOutput {
 		final ByteArrayOutputStream out = new ByteArrayOutputStream();
 		files.put(path, out);
 		return out;
+	}
+
+	public void assertFile(String path) {
+		assertNotNull(files.get(path));
 	}
 
 	public void assertSingleFile(String path) {

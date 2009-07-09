@@ -5,6 +5,11 @@
 	<path id="dependencies">
 		<path refid="bundle-org.jacoco.core"/>
 	</path>
+	
+	<fileset dir="${source.bundle.java.dir}" id="classpathresources">
+		<include name="org/jacoco/report/html/resources/*.css"/>
+		<include name="org/jacoco/report/html/resources/*.gif"/>
+	</fileset>	
 			
 	<property name="do.compile" value="true"/>
 	<property name="do.package" value="true"/>

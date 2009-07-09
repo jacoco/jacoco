@@ -74,7 +74,7 @@
 	<target name="verify" if="do.verify" depends="compile,runcustomverify">
 		<property name="result.tmp.bundle.test.dir" location="${result.tmp.bundle.dir}/test"/>
 		<mkdir dir="${result.tmp.bundle.test.dir}"/>
-		<junit haltonerror="true" haltonfailure="true">
+		<junit haltonfailure="true">
 		    <batchtest todir="${result.tmp.bundle.test.dir}" >
 				<fileset dir="${result.tmp.bundle.classes.dir}">
     				<include name="**/*Test.class"/>
