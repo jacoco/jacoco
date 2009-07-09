@@ -12,17 +12,13 @@
  *******************************************************************************/
 package org.jacoco.core.analysis;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
 import java.util.Comparator;
-import java.util.List;
 
 import org.jacoco.core.analysis.ICoverageNode.CounterEntity;
 
 /**
- * Collection of comparators to compare {@link ICounter} and
- * {@link ICoverageNode} objects by different criteria.
+ * Collection of comparators to compare {@link ICounter} objects by different
+ * criteria.
  * 
  * @author Marc R. Hoffmann
  * @version $Revision: $
@@ -90,42 +86,15 @@ public abstract class CounterComparator implements Comparator<ICounter> {
 	}
 
 	/**
-	 * Creates a new comparator for {@link ICoverageNode} counters of the
-	 * given entity based on this counter sorting criteria.
+	 * Creates a new comparator for {@link ICoverageNode} counters of the given
+	 * entity based on this counter sorting criteria.
 	 * 
 	 * @param entity
 	 *            counter entity to sort on
 	 * @return comparator for {@link ICoverageNode} elements
 	 */
-	public Comparator<ICoverageNode> getDataComparator(
-			final CounterEntity entity) {
-		return new Comparator<ICoverageNode>() {
-			public int compare(final ICoverageNode n1,
-					final ICoverageNode n2) {
-				final ICounter c1 = n1.getCounter(entity);
-				final ICounter c2 = n2.getCounter(entity);
-				return CounterComparator.this.compare(c1, c2);
-			}
-		};
-	}
-
-	/**
-	 * Returns a sorted copy of the given collection of
-	 * {@link ICoverageNode} elements.
-	 * 
-	 * @param <T>
-	 *            actual type of the elements
-	 * @param summaries
-	 *            collection to create a copy of
-	 * @param entity
-	 *            counter entity to sort
-	 * @return sorted copy
-	 */
-	public <T extends ICoverageNode> List<T> sort(
-			final Collection<T> summaries, final CounterEntity entity) {
-		final List<T> result = new ArrayList<T>(summaries);
-		Collections.sort(result, getDataComparator(entity));
-		return result;
+	public NodeComparator on(final CounterEntity entity) {
+		return new NodeComparator(this, entity);
 	}
 
 }
