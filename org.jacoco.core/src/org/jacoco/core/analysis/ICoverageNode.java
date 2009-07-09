@@ -22,8 +22,7 @@ package org.jacoco.core.analysis;
 public interface ICoverageNode {
 
 	/**
-	 * Type of a Java element represented by a {@link ICoverageNode}
-	 * instance.
+	 * Type of a Java element represented by a {@link ICoverageNode} instance.
 	 */
 	public enum ElementType {
 
@@ -135,5 +134,15 @@ public interface ICoverageNode {
 	 * @return line coverage or <code>null</code>
 	 */
 	public ILines getLines();
+
+	/**
+	 * Creates a plain copy of this node. While {@link ICoverageNode}
+	 * implementations may contain heavy data structures, the copy returned by
+	 * this method is reduced to the counters only. This helps tp save memory
+	 * while processing huge structures.
+	 * 
+	 * @return copy with counters only
+	 */
+	public ICoverageNode getPlainCopy();
 
 }

@@ -14,8 +14,6 @@ package org.jacoco.core.analysis;
 
 import static org.junit.Assert.assertEquals;
 
-import org.jacoco.core.analysis.AbstractCounter;
-import org.jacoco.core.analysis.CounterImpl;
 import org.junit.Test;
 
 /**
@@ -28,44 +26,52 @@ public class CounterImplTest {
 
 	@Test
 	public void testGetInstance1() {
-		AbstractCounter c = CounterImpl.getInstance(0, 0);
+		ICounter c = CounterImpl.getInstance(0, 0);
 		assertEquals(0, c.getTotalCount(), 0.0);
 		assertEquals(0, c.getCoveredCount(), 0.0);
 	}
 
 	@Test
 	public void testGetInstance2() {
-		AbstractCounter c = CounterImpl.getInstance(33, 15);
+		ICounter c = CounterImpl.getInstance(33, 15);
 		assertEquals(33, c.getTotalCount(), 0.0);
 		assertEquals(15, c.getCoveredCount(), 0.0);
 	}
 
 	@Test
 	public void testGetInstance3() {
-		AbstractCounter c = CounterImpl.getInstance(17, true);
+		ICounter c = CounterImpl.getInstance(17, true);
 		assertEquals(17, c.getTotalCount(), 0.0);
 		assertEquals(17, c.getCoveredCount(), 0.0);
 	}
 
 	@Test
 	public void testGetInstance4() {
-		AbstractCounter c = CounterImpl.getInstance(17, false);
+		ICounter c = CounterImpl.getInstance(17, false);
 		assertEquals(17, c.getTotalCount(), 0.0);
 		assertEquals(0, c.getCoveredCount(), 0.0);
 	}
 
 	@Test
 	public void testGetInstance5() {
-		AbstractCounter c = CounterImpl.getInstance(true);
+		ICounter c = CounterImpl.getInstance(true);
 		assertEquals(1, c.getTotalCount(), 0.0);
 		assertEquals(1, c.getCoveredCount(), 0.0);
 	}
 
 	@Test
 	public void testGetInstance6() {
-		AbstractCounter c = CounterImpl.getInstance(false);
+		ICounter c = CounterImpl.getInstance(false);
 		assertEquals(1, c.getTotalCount(), 0.0);
 		assertEquals(0, c.getCoveredCount(), 0.0);
+	}
+
+	@Test
+	public void testGetInstance7() {
+		ICounter c = CounterImpl.getInstance(15, 12);
+		ICounter copy = CounterImpl.getInstance(c);
+		assertEquals(15, copy.getTotalCount(), 0.0);
+		assertEquals(12, copy.getCoveredCount(), 0.0);
 	}
 
 	@Test

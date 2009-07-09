@@ -17,7 +17,6 @@ import static org.jacoco.core.analysis.ICoverageNode.CounterEntity.CLASS;
 import static org.jacoco.core.analysis.ICoverageNode.CounterEntity.INSTRUCTION;
 import static org.jacoco.core.analysis.ICoverageNode.CounterEntity.LINE;
 import static org.jacoco.core.analysis.ICoverageNode.CounterEntity.METHOD;
-import static org.jacoco.core.analysis.ICoverageNode.ElementType.CUSTOM;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
@@ -37,14 +36,16 @@ public class CoverageNodeImplTest {
 
 	@Test
 	public void testProperties() {
-		ICoverageNode node = new CoverageNodeImpl(CUSTOM, "sample", false);
-		assertEquals(CUSTOM, node.getElementType());
+		ICoverageNode node = new CoverageNodeImpl(ElementType.CUSTOM, "sample",
+				false);
+		assertEquals(ElementType.CUSTOM, node.getElementType());
 		assertEquals("sample", node.getName());
 	}
 
 	@Test
 	public void testInitWithoutLines() {
-		ICoverageNode node = new CoverageNodeImpl(CUSTOM, "sample", false);
+		ICoverageNode node = new CoverageNodeImpl(ElementType.CUSTOM, "sample",
+				false);
 		assertEquals(CounterImpl.COUNTER_0_0, node.getBlockCounter());
 		assertEquals(CounterImpl.COUNTER_0_0, node.getInstructionCounter());
 		assertEquals(CounterImpl.COUNTER_0_0, node.getLineCounter());
@@ -55,7 +56,8 @@ public class CoverageNodeImplTest {
 
 	@Test
 	public void testInitWithLines() {
-		ICoverageNode node = new CoverageNodeImpl(CUSTOM, "sample", true);
+		ICoverageNode node = new CoverageNodeImpl(ElementType.CUSTOM, "sample",
+				true);
 		assertEquals(CounterImpl.COUNTER_0_0, node.getBlockCounter());
 		assertEquals(CounterImpl.COUNTER_0_0, node.getInstructionCounter());
 		assertEquals(CounterImpl.COUNTER_0_0, node.getLineCounter());
@@ -66,8 +68,10 @@ public class CoverageNodeImplTest {
 
 	@Test
 	public void testIncrementWithoutLines() {
-		CoverageNodeImpl parent = new CoverageNodeImpl(CUSTOM, "sample", false);
-		ICoverageNode child = new CoverageNodeImpl(CUSTOM, "sample", false) {
+		CoverageNodeImpl parent = new CoverageNodeImpl(ElementType.CUSTOM,
+				"sample", false);
+		ICoverageNode child = new CoverageNodeImpl(ElementType.CUSTOM,
+				"sample", false) {
 			{
 				instructionCounter = CounterImpl.getInstance(42, 41);
 				blockCounter = CounterImpl.getInstance(32, 31);
@@ -121,19 +125,72 @@ public class CoverageNodeImplTest {
 
 	@Test
 	public void testIncrementCollection() {
-		CoverageNodeImpl parent = new CoverageNodeImpl(CUSTOM, "sample", false);
-		ICoverageNode child1 = new CoverageNodeImpl(CUSTOM, "sample", false) {
+		CoverageNodeImpl parent = new CoverageNodeImpl(ElementType.CUSTOM,
+				"sample", false);
+		ICoverageNode child1 = new CoverageNodeImpl(ElementType.CUSTOM,
+				"sample", false) {
 			{
 				blockCounter = CounterImpl.getInstance(5, 2);
 			}
 		};
-		ICoverageNode child2 = new CoverageNodeImpl(CUSTOM, "sample", false) {
+		ICoverageNode child2 = new CoverageNodeImpl(ElementType.CUSTOM,
+				"sample", false) {
 			{
 				blockCounter = CounterImpl.getInstance(3, 3);
 			}
 		};
 		parent.increment(Arrays.asList(child1, child2));
 		assertEquals(CounterImpl.getInstance(8, 5), parent.getBlockCounter());
+	}
+
+	@Test
+	public void testGetPlainCopyWithLines() {
+		ICoverageNode node = new CoverageNodeImpl(ElementType.CUSTOM, "sample",
+				true) {
+			{
+				classCounter = CounterImpl.getInstance(1, 1);
+				methodCounter = CounterImpl.getInstance(2, 2);
+				blockCounter = CounterImpl.getInstance(3, 3);
+				instructionCounter = CounterImpl.getInstance(4, 4);
+				lines.increment(new int[] { 1, 2, 3, 4, 5 }, true);
+			}
+		};
+		ICoverageNode copy = node.getPlainCopy();
+		assertEquals(ElementType.CUSTOM, copy.getElementType());
+		assertEquals("sample", copy.getName());
+		assertEquals(CounterImpl.getInstance(1, 1), copy.getClassCounter());
+		assertEquals(CounterImpl.getInstance(2, 2), copy.getMethodCounter());
+		assertEquals(CounterImpl.getInstance(3, 3), copy.getBlockCounter());
+		assertEquals(CounterImpl.getInstance(4, 4), copy
+				.getInstructionCounter());
+		assertEquals(CounterImpl.getInstance(5, 5), copy.getLineCounter());
+		assertEquals(1, copy.getLines().getFirstLine(), 0.0);
+		assertEquals(5, copy.getLines().getLastLine(), 0.0);
+		assertEquals(ILines.FULLY_COVERED, copy.getLines().getStatus(3), 0.0);
+	}
+
+	@Test
+	public void testGetPlainCopyWithoutLines() {
+		ICoverageNode node = new CoverageNodeImpl(ElementType.CLASS, "Test",
+				false) {
+			{
+				classCounter = CounterImpl.getInstance(1, 1);
+				methodCounter = CounterImpl.getInstance(2, 2);
+				blockCounter = CounterImpl.getInstance(3, 3);
+				instructionCounter = CounterImpl.getInstance(4, 4);
+				lineCounter = CounterImpl.getInstance(5, 5);
+			}
+		};
+		ICoverageNode copy = node.getPlainCopy();
+		assertEquals(ElementType.CLASS, copy.getElementType());
+		assertEquals("Test", copy.getName());
+		assertEquals(CounterImpl.getInstance(1, 1), copy.getClassCounter());
+		assertEquals(CounterImpl.getInstance(2, 2), copy.getMethodCounter());
+		assertEquals(CounterImpl.getInstance(3, 3), copy.getBlockCounter());
+		assertEquals(CounterImpl.getInstance(4, 4), copy
+				.getInstructionCounter());
+		assertEquals(CounterImpl.getInstance(5, 5), copy.getLineCounter());
+		assertNull(copy.getLines());
 	}
 
 }

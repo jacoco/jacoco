@@ -12,7 +12,6 @@
  *******************************************************************************/
 package org.jacoco.core.analysis;
 
-
 /**
  * {@link ICounter} implementations. Implementing a factory pattern allows to
  * share counter instances.
@@ -85,6 +84,17 @@ public abstract class CounterImpl extends AbstractCounter {
 		} else {
 			return new Var(total, covered);
 		}
+	}
+
+	/**
+	 * Factory method to retrieve a clone ot the given counter.
+	 * 
+	 * @param counter
+	 *            counter to copy
+	 * @return counter instance
+	 */
+	public static CounterImpl getInstance(final ICounter counter) {
+		return getInstance(counter.getTotalCount(), counter.getCoveredCount());
 	}
 
 	/**

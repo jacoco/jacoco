@@ -54,8 +54,8 @@ public class CoverageNodeImpl implements ICoverageNode {
 	 * @param hasLines
 	 *            <code>true</code> id this element has source lines
 	 */
-	public CoverageNodeImpl(final ElementType elementType,
-			final String name, final boolean hasLines) {
+	public CoverageNodeImpl(final ElementType elementType, final String name,
+			final boolean hasLines) {
 		this.elementType = elementType;
 		this.name = name;
 		this.blockCounter = CounterImpl.COUNTER_0_0;
@@ -148,4 +148,19 @@ public class CoverageNodeImpl implements ICoverageNode {
 		return lines;
 	}
 
+	public ICoverageNode getPlainCopy() {
+		final boolean hasLines = lines != null;
+		final CoverageNodeImpl copy = new CoverageNodeImpl(elementType, name,
+				hasLines);
+		copy.instructionCounter = CounterImpl.getInstance(instructionCounter);
+		copy.blockCounter = CounterImpl.getInstance(blockCounter);
+		copy.methodCounter = CounterImpl.getInstance(methodCounter);
+		copy.classCounter = CounterImpl.getInstance(classCounter);
+		if (hasLines) {
+			copy.lines.increment(lines);
+		} else {
+			copy.lineCounter = CounterImpl.getInstance(lineCounter);
+		}
+		return copy;
+	}
 }
