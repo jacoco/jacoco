@@ -41,7 +41,7 @@ public class MemoryReportOutput implements IReportOutput {
 	}
 
 	public void assertFile(String path) {
-		assertNotNull(files.get(path));
+		assertNotNull("Missing " + path, files.get(path));
 	}
 
 	public void assertSingleFile(String path) {

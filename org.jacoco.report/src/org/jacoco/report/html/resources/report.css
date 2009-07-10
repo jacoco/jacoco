@@ -9,6 +9,18 @@ div.path {
   margin-bottom:1em;
 }
 
+.el_session {
+  padding-left:18px;
+  background-image:url(session.gif);
+  background-repeat:no-repeat;
+}
+
+.el_group {
+  padding-left:18px;
+  background-image:url(group.gif);
+  background-repeat:no-repeat;
+}
+
 .el_bundle {
   padding-left:18px;
   background-image:url(bundle.gif);

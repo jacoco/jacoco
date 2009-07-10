@@ -55,6 +55,8 @@ public class ResourcesTest {
 	public void testCopyResources() throws IOException {
 		resources.copyResources();
 		output.assertFile(".resources/report.css");
+		output.assertFile(".resources/session.gif");
+		output.assertFile(".resources/group.gif");
 		output.assertFile(".resources/bundle.gif");
 		output.assertFile(".resources/package.gif");
 		output.assertFile(".resources/source.gif");
