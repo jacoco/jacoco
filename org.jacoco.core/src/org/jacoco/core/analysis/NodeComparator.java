@@ -24,7 +24,7 @@ import org.jacoco.core.analysis.ICoverageNode.CounterEntity;
  * Collection of comparators to compare {@link ICoverageNode} objects by
  * different criteria.
  * 
- * @see CounterComparator#on(CounterEntity)
+ * @see CounterComparator#on(ICoverageNode.CounterEntity)
  * @author Marc R. Hoffmann
  * @version $Revision: $
  */

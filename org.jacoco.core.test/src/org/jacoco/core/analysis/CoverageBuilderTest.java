@@ -143,14 +143,16 @@ public class CoverageBuilderTest {
 	}
 
 	@Test
-	public void testGetPackages() {
+	public void testGetBundle() {
 		coverageBuilder.visitClassStructure(1, "org/jacoco/examples/Sample1")
 				.visitEnd();
 		coverageBuilder.visitClassStructure(2, "org/jacoco/examples/Sample2")
 				.visitEnd();
 		coverageBuilder.visitClassStructure(3, "Sample3").visitEnd();
-		final Collection<PackageCoverage> packages = coverageBuilder
-				.getPackages();
+		BundleCoverage bundle = coverageBuilder.getBundle("testbundle");
+		assertEquals("testbundle", bundle.getName());
+
+		final Collection<PackageCoverage> packages = bundle.getPackages();
 		assertEquals(2, packages.size(), 0.0);
 		Map<String, PackageCoverage> packagesByName = new HashMap<String, PackageCoverage>();
 		for (PackageCoverage p : packages) {
