@@ -48,10 +48,15 @@
 			<runbundlebuild bundleid="org.jacoco.core" target="@{target}"/>
 			<runbundlebuild bundleid="org.jacoco.agent" target="@{target}"/>
 			<runbundlebuild bundleid="org.jacoco.report" target="@{target}"/>
+			<runbundlebuild bundleid="org.jacoco.ant" target="@{target}"/>
+			
+			<!-- JaCoCo Tasks to create code coverage for JaCoCo tests -->
+			<!-- TODO -->
 			
 			<!-- Tests -->
 			<runbundlebuild bundleid="org.jacoco.core.test" target="@{target}"/>
 			<runbundlebuild bundleid="org.jacoco.report.test" target="@{target}"/>
+			<runbundlebuild bundleid="org.jacoco.ant.test" target="@{target}"/>
 			
 			<!-- Documentation -->
 			<runbundlebuild bundleid="org.jacoco.doc" target="@{target}"/>
