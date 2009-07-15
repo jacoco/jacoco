@@ -64,10 +64,47 @@ public class HTMLElementTest {
 	}
 
 	@Test
+	public void testDiv() throws IOException {
+		root.div("mystyle");
+		root.close();
+		assertEquals("<root><div class=\"mystyle\"/></root>", buffer.toString());
+	}
+
+	@Test
 	public void testBr() throws IOException {
 		root.br();
 		root.close();
 		assertEquals("<root><br/></root>", buffer.toString());
 	}
 
+	@Test
+	public void testTd1() throws IOException {
+		root.td("mystyle");
+		root.close();
+		assertEquals("<root><td class=\"mystyle\"/></root>", buffer.toString());
+	}
+
+	@Test
+	public void testTd2() throws IOException {
+		root.td(5);
+		root.close();
+		assertEquals("<root><td colspan=\"5\"/></root>", buffer.toString());
+	}
+
+	@Test
+	public void testTd3() throws IOException {
+		root.td("mystyle", 3);
+		root.close();
+		assertEquals("<root><td class=\"mystyle\" colspan=\"3\"/></root>",
+				buffer.toString());
+	}
+
+	@Test
+	public void testImg() throws IOException {
+		root.img("sample.gif", 16, 32, "Hello");
+		root.close();
+		assertEquals(
+				"<root><img src=\"sample.gif\" width=\"16\" height=\"32\" alt=\"Hello\"/></root>",
+				buffer.toString());
+	}
 }

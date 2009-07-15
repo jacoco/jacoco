@@ -65,8 +65,23 @@ public class HTMLElement extends XMLElement {
 	 * @throws IOException
 	 *             in case of problems with the writer
 	 */
-	public HTMLElement span(String classattr) throws IOException {
+	public HTMLElement span(final String classattr) throws IOException {
 		final HTMLElement pre = element("span");
+		pre.attr("class", classattr);
+		return pre;
+	}
+
+	/**
+	 * Creates a 'div' element.
+	 * 
+	 * @param classattr
+	 *            value for the class attribute
+	 * @return 'div' element
+	 * @throws IOException
+	 *             in case of problems with the writer
+	 */
+	public HTMLElement div(final String classattr) throws IOException {
+		final HTMLElement pre = element("div");
 		pre.attr("class", classattr);
 		return pre;
 	}
@@ -80,7 +95,7 @@ public class HTMLElement extends XMLElement {
 	 * @throws IOException
 	 *             in case of problems with the writer
 	 */
-	public HTMLElement pre(String classattr) throws IOException {
+	public HTMLElement pre(final String classattr) throws IOException {
 		final HTMLElement pre = element("pre");
 		pre.attr("class", classattr);
 		return pre;
@@ -94,6 +109,78 @@ public class HTMLElement extends XMLElement {
 	 */
 	public void br() throws IOException {
 		element("br");
+	}
+
+	/**
+	 * Creates a 'td' element.
+	 * 
+	 * @param classattr
+	 *            value for the class attribute
+	 * @return 'td' element
+	 * @throws IOException
+	 *             in case of problems with the writer
+	 */
+	public HTMLElement td(final String classattr) throws IOException {
+		return td(classattr, 1);
+	}
+
+	/**
+	 * Creates a 'td' element.
+	 * 
+	 * @param colspanattr
+	 *            value of the colspan attribute
+	 * @return 'td' element
+	 * @throws IOException
+	 *             in case of problems with the writer
+	 */
+	public HTMLElement td(final int colspanattr) throws IOException {
+		return td(null, colspanattr);
+	}
+
+	/**
+	 * Creates a 'td' element.
+	 * 
+	 * @param classattr
+	 *            value for the class attribute
+	 * @param colspanattr
+	 *            value of the colspan attribute
+	 * @return 'td' element
+	 * @throws IOException
+	 *             in case of problems with the writer
+	 */
+	public HTMLElement td(final String classattr, final int colspanattr)
+			throws IOException {
+		final HTMLElement pre = element("td");
+		if (classattr != null) {
+			pre.attr("class", classattr);
+		}
+		if (colspanattr > 1) {
+			pre.attr("colspan", String.valueOf(colspanattr));
+		}
+		return pre;
+	}
+
+	/**
+	 * Creates a 'img' element.
+	 * 
+	 * @param srcattr
+	 *            value for the src attribute
+	 * @param widthattr
+	 *            value for the width attribute
+	 * @param heightattr
+	 *            value for the height attribute
+	 * @param altattr
+	 *            value for the alt attribute
+	 * @throws IOException
+	 *             in case of problems with the writer
+	 */
+	public void img(final String srcattr, final int widthattr,
+			final int heightattr, final String altattr) throws IOException {
+		final HTMLElement pre = element("img");
+		pre.attr("src", srcattr);
+		pre.attr("width", String.valueOf(widthattr));
+		pre.attr("height", String.valueOf(heightattr));
+		pre.attr("alt", String.valueOf(altattr));
 	}
 
 }
