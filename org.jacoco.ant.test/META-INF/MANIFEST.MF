@@ -6,3 +6,4 @@ Bundle-Version: 0.1.0.qualifier
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
 Bundle-Vendor: Mountainminds GmbH & Co. KG and Contributors
 Fragment-Host: org.jacoco.core
+Require-Bundle: org.junit4

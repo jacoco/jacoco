@@ -1,5 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <project name="org.jacoco.ant.buildhook">
+	<property name="do.compile" value="true"/>
+	<property name="do.custompackage" value="true"/>
+	
+	<path id="dependencies">
+		<path refid="bundle-org.apache.ant"/>
+	</path>
+	
+	<fileset dir="${source.bundle.java.dir}" id="classpathresources">
+		<include name="org/jacoco/ant/antlib.xml"/>
+	</fileset>	
+	
+	<target name="custompackage">
+		<property name="result.dist.bundle.jar.file" location="${result.dist.lib.dir}/${manifest.Bundle-SymbolicName}_${qualified.bundle.version}.jar"/>
+		<mkdir dir="${result.dist.lib.dir}"/>
+		<jar destfile="${result.dist.bundle.jar.file}" manifest="${result.temp.bundle.manifest.file}">
+			<fileset dir="${result.tmp.bundle.classes.dir}"/>
+			<fileset file="${source.bundle.dir}/about.html"/>
+			<fileset file="${result.dist.lib.dir}/jacocoagent.jar"/>
+		</jar>
+	</target>
 	
 </project>

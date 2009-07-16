@@ -1,0 +1,118 @@
+
+<project name="JaCoCo Ant test suite" xmlns="antlib:org.apache.tools.ant" xmlns:au="antlib:org.apache.ant.antunit" xmlns:co="uri:org.jacoco">
+
+	
+	<taskdef uri="uri:org.jacoco" resource="org/jacoco/ant/antlib.xml">
+		<classpath>
+			<fileset dir="${result.dist.lib.dir}" includes="org.jacoco.ant_*.jar"/>
+		</classpath>
+	</taskdef>
+
+	<path id="ant-test-classes">
+        <path path="${result.tmp.bundle.classes.dir}"/>
+	</path>
+	
+	<path id="bundle-org.junit4">
+        <fileset dir="${target.plugins.dir}" includes="org.junit4_*/junit.jar"/>
+        <fileset dir="${target.plugins.dir}" includes="org.hamcrest.core_*.jar"/>
+		<fileset dir="${target.plugins.dir}" includes="org.hamcrest.ui_*.jar"/>
+		<fileset dir="${target.plugins.dir}" includes="org.hamcrest.text_*.jar"/>
+		<fileset dir="${target.plugins.dir}" includes="org.hamcrest.library_*.jar"/>
+	</path>
+	
+	<target name="suiteSetUp">
+	</target>
+
+	<target name="testNoSubTasks">
+		<au:expectfailure expectedMessage="A child task must be supplied for the coverage task">
+			<co:cover/>
+		</au:expectfailure>
+	</target>
+
+	<target name="testMultipleSubTasks">
+		<au:expectfailure expectedMessage="Only one child task can be supplied to the coverge task">
+			<co:cover>
+				<java classname="org.jacoco.ant.test.EmptyMain">
+					<classpath>
+						<path refid="ant-test-classes"/>
+					</classpath>
+				</java>
+				<java classname="org.jacoco.ant.test.EmptyMain">
+					<classpath>
+						<path refid="ant-test-classes"/>
+					</classpath>
+				</java>
+			</co:cover>
+		</au:expectfailure>
+	</target>
+	
+	<target name="testInvalidSubTask">
+		<au:expectfailure expectedMessage="jar is not a valid child of the coverage task">
+			<co:cover>
+				<jar destfile="test.jar"/>
+			</co:cover>
+		</au:expectfailure>
+	</target>
+
+	<target name="testCoverageOfForkedJava">
+		<co:cover>
+			<java classname="org.jacoco.ant.test.EmptyMain" fork="true">
+				<classpath>
+					<path refid="ant-test-classes"/>
+				</classpath>
+			</java>
+		</co:cover>
+
+		<au:assertLogContains text="Enhancing java with coverage"/>
+		
+	</target>
+
+	<target name="testCoverageOfNonForkedJava">
+		<co:cover>
+			<java classname="org.jacoco.ant.test.EmptyMain" fork="false">
+				<classpath>
+					<path refid="ant-test-classes"/>
+				</classpath>
+			</java>
+		</co:cover>
+		<au:assertLogContains text="JVM args ignored when same JVM is used."/>
+	</target>
+
+
+	<target name="testCoverageOfForkedJUnit">
+		<co:cover>
+			<junit fork="true" >
+				<classpath>
+					<path refid="bundle-org.junit4"/>
+					<path refid="ant-test-classes"/>
+				</classpath>
+			    <batchtest todir="${result.tmp.bundle.test.dir}" >
+					<fileset dir="${result.tmp.bundle.classes.dir}">
+						<include name="org/jacoco/ant/test/EmptyTest.class"/>
+					</fileset>
+			    </batchtest>
+			</junit>
+		</co:cover>
+		
+		<au:assertLogContains text="Enhancing junit with coverage"/>
+	</target>
+
+	<target name="testCoverageOfNonForkedJUnit">
+		<co:cover>
+			<junit fork="false">
+				<classpath>
+					<path refid="bundle-org.junit4"/>
+					<path refid="ant-test-classes"/>
+				</classpath>
+			    <batchtest todir="${result.tmp.bundle.test.dir}" >
+					<fileset dir="${result.tmp.bundle.classes.dir}">
+						<include name="org/jacoco/ant/test/EmptyTest.class"/>
+					</fileset>
+			    </batchtest>
+			</junit>
+		</co:cover>
+		<!-- TODO this should either log a message or fail -->
+
+	</target>
+
+</project>
