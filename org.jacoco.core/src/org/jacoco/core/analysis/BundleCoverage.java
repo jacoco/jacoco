@@ -42,6 +42,7 @@ public class BundleCoverage extends CoverageNodeImpl {
 			final Collection<PackageCoverage> packages) {
 		super(ElementType.BUNDLE, name, false);
 		this.packages = packages;
+		increment(packages);
 	}
 
 	/**
@@ -53,7 +54,7 @@ public class BundleCoverage extends CoverageNodeImpl {
 	 * @param classes
 	 *            all classes in this bundle
 	 * @param sourcefiles
-	 *            all sourcefiles in this bundle
+	 *            all source files in this bundle
 	 */
 	public BundleCoverage(final String name,
 			final Collection<ClassCoverage> classes,

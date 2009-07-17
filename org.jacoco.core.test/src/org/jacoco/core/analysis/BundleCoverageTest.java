@@ -44,6 +44,40 @@ public class BundleCoverageTest {
 	}
 
 	@Test
+	public void testCounters() {
+		Collection<ClassCoverage> classes = Collections.emptySet();
+		Collection<SourceFileCoverage> sourcefiles = Collections.emptySet();
+		final PackageCoverage p1 = new PackageCoverage("p1", classes,
+				sourcefiles) {
+			{
+				classCounter = CounterImpl.getInstance(1, 0);
+				methodCounter = CounterImpl.getInstance(2, 0);
+				blockCounter = CounterImpl.getInstance(3, 0);
+				instructionCounter = CounterImpl.getInstance(4, 0);
+				lineCounter = CounterImpl.getInstance(5, 0);
+			}
+		};
+		final PackageCoverage p2 = new PackageCoverage("p1", classes,
+				sourcefiles) {
+			{
+				classCounter = CounterImpl.getInstance(1, 0);
+				methodCounter = CounterImpl.getInstance(2, 0);
+				blockCounter = CounterImpl.getInstance(3, 0);
+				instructionCounter = CounterImpl.getInstance(4, 0);
+				lineCounter = CounterImpl.getInstance(5, 0);
+			}
+		};
+		BundleCoverage bundle = new BundleCoverage("testbundle", Arrays.asList(
+				p1, p2));
+		assertEquals(CounterImpl.getInstance(2, 0), bundle.getClassCounter());
+		assertEquals(CounterImpl.getInstance(4, 0), bundle.getMethodCounter());
+		assertEquals(CounterImpl.getInstance(6, 0), bundle.getBlockCounter());
+		assertEquals(CounterImpl.getInstance(8, 0), bundle
+				.getInstructionCounter());
+		assertEquals(CounterImpl.getInstance(10, 0), bundle.getLineCounter());
+	}
+
+	@Test
 	public void testGroupByPackage() {
 		Set<MethodCoverage> noMethods = Collections.emptySet();
 		ClassCoverage ca = new ClassCoverage("p1/A", "A.java", noMethods);
