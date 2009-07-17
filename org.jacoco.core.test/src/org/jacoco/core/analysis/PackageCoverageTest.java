@@ -46,4 +46,65 @@ public class PackageCoverageTest {
 		assertNull(data.getLines());
 	}
 
+	@Test
+	public void testCountersWithSources() {
+		Collection<MethodCoverage> methods = Collections.emptySet();
+		// Classes with source reference will not considered for counters:
+		final ClassCoverage classnode = new ClassCoverage(
+				"org/jacoco/test/Sample", "Sample.java", methods) {
+			{
+				classCounter = CounterImpl.getInstance(9, 0);
+				methodCounter = CounterImpl.getInstance(9, 0);
+				blockCounter = CounterImpl.getInstance(9, 0);
+				instructionCounter = CounterImpl.getInstance(9, 0);
+				lines.increment(new int[] { 1, 2, 3, 4, 5, 6, 7, 8, 9 }, false);
+			}
+		};
+		// Only source files will be considered for counters:
+		final SourceFileCoverage sourceFile = new SourceFileCoverage(
+				"Sample.java", "org/jacoco/test/Sample") {
+			{
+				classCounter = CounterImpl.getInstance(1, 0);
+				methodCounter = CounterImpl.getInstance(2, 0);
+				blockCounter = CounterImpl.getInstance(3, 0);
+				instructionCounter = CounterImpl.getInstance(4, 0);
+				lines.increment(new int[] { 1, 2, 3, 4, 5 }, false);
+			}
+		};
+		PackageCoverage data = new PackageCoverage("org/jacoco/test",
+				Collections.singleton(classnode), Collections
+						.singleton(sourceFile));
+		assertEquals(CounterImpl.getInstance(1, 0), data.getClassCounter());
+		assertEquals(CounterImpl.getInstance(2, 0), data.getMethodCounter());
+		assertEquals(CounterImpl.getInstance(3, 0), data.getBlockCounter());
+		assertEquals(CounterImpl.getInstance(4, 0), data
+				.getInstructionCounter());
+		assertEquals(CounterImpl.getInstance(5, 0), data.getLineCounter());
+	}
+
+	@Test
+	public void testCountersWithoutSources() {
+		Collection<MethodCoverage> methods = Collections.emptySet();
+		// Classes without source reference will be considered for counters:
+		final ClassCoverage classnode = new ClassCoverage(
+				"org/jacoco/test/Sample", null, methods) {
+			{
+				classCounter = CounterImpl.getInstance(1, 0);
+				methodCounter = CounterImpl.getInstance(2, 0);
+				blockCounter = CounterImpl.getInstance(3, 0);
+				instructionCounter = CounterImpl.getInstance(4, 0);
+			}
+		};
+		final Collection<SourceFileCoverage> sourceFiles = Collections
+				.emptySet();
+		PackageCoverage data = new PackageCoverage("org/jacoco/test",
+				Collections.singleton(classnode), sourceFiles);
+		assertEquals(CounterImpl.getInstance(1, 0), data.getClassCounter());
+		assertEquals(CounterImpl.getInstance(2, 0), data.getMethodCounter());
+		assertEquals(CounterImpl.getInstance(3, 0), data.getBlockCounter());
+		assertEquals(CounterImpl.getInstance(4, 0), data
+				.getInstructionCounter());
+		assertEquals(CounterImpl.getInstance(0, 0), data.getLineCounter());
+	}
+
 }
