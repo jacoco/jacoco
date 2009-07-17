@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<project name="org.jacoco.ant.tests.buildhook" xmlns:au="uri:org.antunit" basedir=".">
+<project name="org.jacoco.ant.tests.buildhook" xmlns:au="antlib:org.apache.ant.antunit" basedir=".">
 	
 	<property name="do.compile" value="true"/>
 	<property name="do.customverify" value="true"/>
@@ -9,7 +9,7 @@
 		<path refid="bundle-org.junit4"/>
 	</path>
 		
-	<taskdef uri="uri:org.antunit" resource="org/apache/ant/antunit/antlib.xml">
+	<taskdef uri="antlib:org.apache.ant.antunit" resource="org/apache/ant/antunit/antlib.xml">
 		<classpath>
 			<fileset dir="${source.bundle.dir}/ant/lib" includes="*.jar"/>
 		</classpath>

@@ -1,6 +1,5 @@
 
-<project name="JaCoCo Ant test suite" xmlns="antlib:org.apache.tools.ant" xmlns:au="antlib:org.apache.ant.antunit" xmlns:co="uri:org.jacoco">
-
+<project name="JaCoCo Ant test suite" xmlns:au="antlib:org.apache.ant.antunit" xmlns:co="uri:org.jacoco">
 	
 	<taskdef uri="uri:org.jacoco" resource="org/jacoco/ant/antlib.xml">
 		<classpath>
