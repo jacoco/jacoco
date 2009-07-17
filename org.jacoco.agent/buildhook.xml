@@ -22,7 +22,6 @@
 		<!-- The random identifier will be used to create a unique package names --> 
 		<randomid name="randomid"/>
 		
-		<echo>The following warning is false (Ant 1.7.0 Bug #47470), the archive is created anyway.</echo>
 		<jar destfile="${result.dist.lib.dir}/jacocoagent.jar">
 			<manifest>
 				<attribute name="Premain-Class" value="org.jacoco.${randomid}.agent.JacocoAgent"/>
