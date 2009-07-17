@@ -59,8 +59,7 @@ public class BundleCoverage extends CoverageNodeImpl {
 	public BundleCoverage(final String name,
 			final Collection<ClassCoverage> classes,
 			final Collection<SourceFileCoverage> sourcefiles) {
-		super(ElementType.BUNDLE, name, false);
-		this.packages = groupByPackage(classes, sourcefiles);
+		this(name, groupByPackage(classes, sourcefiles));
 	}
 
 	/**
