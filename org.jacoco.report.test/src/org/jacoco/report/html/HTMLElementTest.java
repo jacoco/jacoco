@@ -68,6 +68,13 @@ public class HTMLElementTest {
 	}
 
 	@Test
+	public void testH1() throws IOException {
+		root.h1();
+		root.close();
+		assertEquals("<root><h1/></root>", buffer.toString());
+	}
+
+	@Test
 	public void testSpan() throws IOException {
 		root.span("abc");
 		root.close();

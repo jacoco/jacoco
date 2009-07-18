@@ -48,4 +48,9 @@ public class MemoryReportOutput implements IReportOutput {
 		assertEquals(Collections.singleton(path), files.keySet());
 	}
 
+	public byte[] getFile(String path) {
+		assertFile(path);
+		return files.get(path).toByteArray();
+	}
+
 }

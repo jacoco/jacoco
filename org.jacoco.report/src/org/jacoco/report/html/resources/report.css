@@ -3,10 +3,13 @@ body {
   font-size:10pt;
 }
 
-div.path {
-  padding:0.2em;
-  background-color:#e0e0e0;
-  margin-bottom:1em;
+.breadcrumb {
+  border:#d6d3ce 1px solid;
+  padding:2px 2px 2px 2px;
+}
+
+.number {
+  text-align:right;
 }
 
 .el_session {
@@ -24,43 +27,48 @@ div.path {
 .el_bundle {
   padding-left:18px;
   background-image:url(bundle.gif);
+  background-position:left center;
   background-repeat:no-repeat;
 }
 
 .el_package {
   padding-left:18px;
   background-image:url(package.gif);
+  background-position:left center;
   background-repeat:no-repeat;
 }
 
 .el_class {
   padding-left:18px;
   background-image:url(class.gif);
+  background-position:left center;
   background-repeat:no-repeat;
 }
 
 .el_source {
   padding-left:18px;
   background-image:url(source.gif);
+  background-position:left center;
   background-repeat:no-repeat;
 }
 
 .el_method {
   padding-left:18px;
   background-image:url(method.gif);
+  background-position:left center;
   background-repeat:no-repeat;
 }
 
 
 
 pre.source {
-  border:#e0e0e0 1px solid;
+  border:#d6d3ce 1px solid;
   font-family:monospace;
 }
 
 pre.source span.nr {
   color:#c0c0c0;
-  border-right:#e0e0e0 1px solid;
+  border-right:#d6d3ce 1px solid;
   padding-right:2pt;
 }
 

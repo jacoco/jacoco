@@ -98,6 +98,17 @@ public class HTMLElement extends XMLElement {
 	}
 
 	/**
+	 * Creates a 'h1' element.
+	 * 
+	 * @return 'h1' element
+	 * @throws IOException
+	 *             in case of problems with the writer
+	 */
+	public HTMLElement h1() throws IOException {
+		return element("h1");
+	}
+
+	/**
 	 * Creates a 'span' element.
 	 * 
 	 * @param classattr

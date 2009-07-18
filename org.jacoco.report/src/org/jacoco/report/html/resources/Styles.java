@@ -20,6 +20,12 @@ package org.jacoco.report.html.resources;
  */
 public class Styles {
 
+	/** Breadcrumb bar */
+	public static final String BREADCRUMB = "breadcrumb";
+
+	/** Table cells with numbers */
+	public static final String NUMBER = "number";
+
 	/** Block of source code */
 	public static final String SOURCE = "source";
 
