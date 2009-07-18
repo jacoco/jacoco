@@ -46,9 +46,50 @@ public class HTMLElement extends XMLElement {
 	}
 
 	/**
+	 * Creates a 'meta' element.
+	 * 
+	 * @param httpequivattr
+	 *            value of the http-equiv attribute
+	 * @param contentattr
+	 *            value for the content attribute
+	 * @return 'meta' element
+	 * @throws IOException
+	 *             in case of problems with the writer
+	 */
+	public HTMLElement meta(final String httpequivattr, final String contentattr)
+			throws IOException {
+		final HTMLElement meta = element("meta");
+		meta.attr("http-equiv", httpequivattr);
+		meta.attr("content", contentattr);
+		return meta;
+	}
+
+	/**
+	 * Creates a 'link' element.
+	 * 
+	 * @param relattr
+	 *            value of the rel attribute
+	 * @param hrefattr
+	 *            value for the href attribute
+	 * @param typeattr
+	 *            value for the type attribute
+	 * @return 'link' element
+	 * @throws IOException
+	 *             in case of problems with the writer
+	 */
+	public HTMLElement link(final String relattr, final String hrefattr,
+			final String typeattr) throws IOException {
+		final HTMLElement link = element("link");
+		link.attr("rel", relattr);
+		link.attr("href", hrefattr);
+		link.attr("type", typeattr);
+		return link;
+	}
+
+	/**
 	 * Creates a 'title' element.
 	 * 
-	 * @return 'head' element
+	 * @return 'title' element
 	 * @throws IOException
 	 *             in case of problems with the writer
 	 */
@@ -60,7 +101,7 @@ public class HTMLElement extends XMLElement {
 	 * Creates a 'span' element.
 	 * 
 	 * @param classattr
-	 *            value for the class attribute
+	 *            value of the class attribute
 	 * @return 'span' element
 	 * @throws IOException
 	 *             in case of problems with the writer
@@ -75,7 +116,7 @@ public class HTMLElement extends XMLElement {
 	 * Creates a 'div' element.
 	 * 
 	 * @param classattr
-	 *            value for the class attribute
+	 *            value of the class attribute
 	 * @return 'div' element
 	 * @throws IOException
 	 *             in case of problems with the writer
@@ -90,7 +131,7 @@ public class HTMLElement extends XMLElement {
 	 * Creates a 'pre' element.
 	 * 
 	 * @param classattr
-	 *            value for the class attribute
+	 *            value of the class attribute
 	 * @return 'pre' element
 	 * @throws IOException
 	 *             in case of problems with the writer
@@ -112,10 +153,29 @@ public class HTMLElement extends XMLElement {
 	}
 
 	/**
+	 * Creates a 'a' element.
+	 * 
+	 * @param hrefattr
+	 *            value of the href attribute
+	 * @param classattr
+	 *            value of the class attribute
+	 * @return 'a' element
+	 * @throws IOException
+	 *             in case of problems with the writer
+	 */
+	public HTMLElement a(final String hrefattr, final String classattr)
+			throws IOException {
+		final HTMLElement a = element("a");
+		a.attr("href", hrefattr);
+		a.attr("class", classattr);
+		return a;
+	}
+
+	/**
 	 * Creates a 'td' element.
 	 * 
 	 * @param classattr
-	 *            value for the class attribute
+	 *            value of the class attribute
 	 * @return 'td' element
 	 * @throws IOException
 	 *             in case of problems with the writer
@@ -141,7 +201,7 @@ public class HTMLElement extends XMLElement {
 	 * Creates a 'td' element.
 	 * 
 	 * @param classattr
-	 *            value for the class attribute
+	 *            value of the class attribute
 	 * @param colspanattr
 	 *            value of the colspan attribute
 	 * @return 'td' element
@@ -164,13 +224,13 @@ public class HTMLElement extends XMLElement {
 	 * Creates a 'img' element.
 	 * 
 	 * @param srcattr
-	 *            value for the src attribute
+	 *            value of the src attribute
 	 * @param widthattr
-	 *            value for the width attribute
+	 *            value of the width attribute
 	 * @param heightattr
-	 *            value for the height attribute
+	 *            value of the height attribute
 	 * @param altattr
-	 *            value for the alt attribute
+	 *            value of the alt attribute
 	 * @throws IOException
 	 *             in case of problems with the writer
 	 */

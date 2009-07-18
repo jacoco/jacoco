@@ -43,6 +43,24 @@ public class HTMLElementTest {
 	}
 
 	@Test
+	public void testMeta() throws IOException {
+		root.meta("key", "value");
+		root.close();
+		assertEquals(
+				"<root><meta http-equiv=\"key\" content=\"value\"/></root>",
+				buffer.toString());
+	}
+
+	@Test
+	public void testLink() throws IOException {
+		root.link("stylesheet", "style.css", "text/css");
+		root.close();
+		assertEquals(
+				"<root><link rel=\"stylesheet\" href=\"style.css\" type=\"text/css\"/></root>",
+				buffer.toString());
+	}
+
+	@Test
 	public void testTitle() throws IOException {
 		root.title();
 		root.close();
@@ -75,6 +93,15 @@ public class HTMLElementTest {
 		root.br();
 		root.close();
 		assertEquals("<root><br/></root>", buffer.toString());
+	}
+
+	@Test
+	public void testA() throws IOException {
+		root.a("http://www.jacoco.org/", "extern");
+		root.close();
+		assertEquals(
+				"<root><a href=\"http://www.jacoco.org/\" class=\"extern\"/></root>",
+				buffer.toString());
 	}
 
 	@Test
