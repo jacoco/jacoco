@@ -46,7 +46,7 @@ public class SourceHighlighter {
 	 * @param width
 	 *            spaces per tab
 	 */
-	public void setTabWidth(int width) {
+	public void setTabWidth(final int width) {
 		final char[] blanks = new char[width];
 		Arrays.fill(blanks, ' ');
 		tabReplacement = new String(blanks);
@@ -67,7 +67,7 @@ public class SourceHighlighter {
 	public void render(final HTMLElement parent, final ILines lines,
 			final Reader contents) throws IOException {
 		final HTMLElement pre = parent.pre(Styles.SOURCE);
-		BufferedReader lineBuffer = new BufferedReader(contents);
+		final BufferedReader lineBuffer = new BufferedReader(contents);
 		String line;
 		int nr = 0;
 		while ((line = lineBuffer.readLine()) != null) {
@@ -80,7 +80,7 @@ public class SourceHighlighter {
 	private void renderLineNr(final HTMLElement pre, final int nr)
 			throws IOException {
 		final String linestr = String.valueOf(nr);
-		final HTMLElement linespan = pre.span("nr");
+		final HTMLElement linespan = pre.span("nr", "L" + linestr);
 		for (int i = linestr.length(); i < LINENR_WIDTH; i++) {
 			linespan.text(" ");
 		}

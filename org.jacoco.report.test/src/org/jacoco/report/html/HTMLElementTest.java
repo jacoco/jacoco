@@ -75,10 +75,18 @@ public class HTMLElementTest {
 	}
 
 	@Test
-	public void testSpan() throws IOException {
+	public void testSpan1() throws IOException {
 		root.span("abc");
 		root.close();
 		assertEquals("<root><span class=\"abc\"/></root>", buffer.toString());
+	}
+
+	@Test
+	public void testSpan2() throws IOException {
+		root.span("abc", "xy");
+		root.close();
+		assertEquals("<root><span class=\"abc\" id=\"xy\"/></root>", buffer
+				.toString());
 	}
 
 	@Test

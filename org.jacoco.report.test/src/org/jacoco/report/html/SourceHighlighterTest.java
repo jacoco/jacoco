@@ -68,6 +68,18 @@ public class SourceHighlighterTest {
 	}
 
 	@Test
+	public void testLineIds() throws Exception {
+		final String src = "A\nB\nC\nD";
+		sourceHighlighter.render(parent, lines, new StringReader(src));
+		html.close();
+		final Document doc = htmlSupport.parse(buffer.toString());
+		assertEquals("L1", htmlSupport.findStr(doc, "//pre/span[1]/@id"));
+		assertEquals("L2", htmlSupport.findStr(doc, "//pre/span[2]/@id"));
+		assertEquals("L3", htmlSupport.findStr(doc, "//pre/span[3]/@id"));
+		assertEquals("L4", htmlSupport.findStr(doc, "//pre/span[4]/@id"));
+	}
+
+	@Test
 	public void testTabReplacement() throws Exception {
 		final String src = "\tA";
 		sourceHighlighter.setTabWidth(3);

@@ -124,6 +124,25 @@ public class HTMLElement extends XMLElement {
 	}
 
 	/**
+	 * Creates a 'span' element.
+	 * 
+	 * @param classattr
+	 *            value of the class attribute
+	 * @param idattr
+	 *            value of the id attribute
+	 * @return 'span' element
+	 * @throws IOException
+	 *             in case of problems with the writer
+	 */
+	public HTMLElement span(final String classattr, final String idattr)
+			throws IOException {
+		final HTMLElement pre = element("span");
+		pre.attr("class", classattr);
+		pre.attr("id", idattr);
+		return pre;
+	}
+
+	/**
 	 * Creates a 'div' element.
 	 * 
 	 * @param classattr
