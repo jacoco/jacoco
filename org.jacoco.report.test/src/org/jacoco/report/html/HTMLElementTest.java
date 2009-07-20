@@ -120,21 +120,64 @@ public class HTMLElementTest {
 	}
 
 	@Test
+	public void testTable() throws IOException {
+		root.table("tablestyle");
+		root.close();
+		assertEquals("<root><table class=\"tablestyle\"/></root>", buffer
+				.toString());
+	}
+
+	@Test
+	public void testThead() throws IOException {
+		root.thead();
+		root.close();
+		assertEquals("<root><thead/></root>", buffer.toString());
+	}
+
+	@Test
+	public void testTfoot() throws IOException {
+		root.tfoot();
+		root.close();
+		assertEquals("<root><tfoot/></root>", buffer.toString());
+	}
+
+	@Test
+	public void testTbody() throws IOException {
+		root.tbody();
+		root.close();
+		assertEquals("<root><tbody/></root>", buffer.toString());
+	}
+
+	@Test
+	public void testTr() throws IOException {
+		root.tr();
+		root.close();
+		assertEquals("<root><tr/></root>", buffer.toString());
+	}
+
+	@Test
 	public void testTd1() throws IOException {
+		root.td();
+		root.close();
+		assertEquals("<root><td/></root>", buffer.toString());
+	}
+
+	@Test
+	public void testTd2() throws IOException {
 		root.td("mystyle");
 		root.close();
 		assertEquals("<root><td class=\"mystyle\"/></root>", buffer.toString());
 	}
 
 	@Test
-	public void testTd2() throws IOException {
+	public void testTd3() throws IOException {
 		root.td(5);
 		root.close();
 		assertEquals("<root><td colspan=\"5\"/></root>", buffer.toString());
 	}
 
 	@Test
-	public void testTd3() throws IOException {
+	public void testTd4() throws IOException {
 		root.td("mystyle", 3);
 		root.close();
 		assertEquals("<root><td class=\"mystyle\" colspan=\"3\"/></root>",

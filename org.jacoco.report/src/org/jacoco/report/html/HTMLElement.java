@@ -202,6 +202,76 @@ public class HTMLElement extends XMLElement {
 	}
 
 	/**
+	 * Creates a 'table' element.
+	 * 
+	 * @param classattr
+	 *            value of the class attribute
+	 * @return 'table' element
+	 * @throws IOException
+	 *             in case of problems with the writer
+	 */
+	public HTMLElement table(final String classattr) throws IOException {
+		final HTMLElement table = element("table");
+		table.attr("class", classattr);
+		return table;
+	}
+
+	/**
+	 * Creates a 'thead' element.
+	 * 
+	 * @return 'thead' element
+	 * @throws IOException
+	 *             in case of problems with the writer
+	 */
+	public HTMLElement thead() throws IOException {
+		return element("thead");
+	}
+
+	/**
+	 * Creates a 'tfoot' element.
+	 * 
+	 * @return 'tfoot' element
+	 * @throws IOException
+	 *             in case of problems with the writer
+	 */
+	public HTMLElement tfoot() throws IOException {
+		return element("tfoot");
+	}
+
+	/**
+	 * Creates a 'tbody' element.
+	 * 
+	 * @return 'tbody' element
+	 * @throws IOException
+	 *             in case of problems with the writer
+	 */
+	public HTMLElement tbody() throws IOException {
+		return element("tbody");
+	}
+
+	/**
+	 * Creates a 'tr' element.
+	 * 
+	 * @return 'tr' element
+	 * @throws IOException
+	 *             in case of problems with the writer
+	 */
+	public HTMLElement tr() throws IOException {
+		return element("tr");
+	}
+
+	/**
+	 * Creates a 'td' element.
+	 * 
+	 * @return 'td' element
+	 * @throws IOException
+	 *             in case of problems with the writer
+	 */
+	public HTMLElement td() throws IOException {
+		return td(null, 1);
+	}
+
+	/**
 	 * Creates a 'td' element.
 	 * 
 	 * @param classattr

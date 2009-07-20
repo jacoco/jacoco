@@ -23,6 +23,9 @@ public class Styles {
 	/** Breadcrumb bar */
 	public static final String BREADCRUMB = "breadcrumb";
 
+	/** Coverage table */
+	public static final String COVERAGETABLE = "coverage";
+
 	/** Table cells with numbers */
 	public static final String NUMBER = "number";
 
