@@ -59,6 +59,11 @@ public class ClassAnalyzer extends EmptyVisitor {
 			return null;
 		}
 
+		// TODO: Use filter hook
+		if ((access & Opcodes.ACC_SYNTHETIC) != 0) {
+			return null;
+		}
+
 		final IMethodStructureVisitor structure = structureVisitor
 				.visitMethodStructure(methodCount++, name, desc, signature);
 		return new BlockMethodAdapter(new MethodAnalyzer(structure), access,
