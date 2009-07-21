@@ -26,8 +26,14 @@ public class Styles {
 	/** Coverage table */
 	public static final String COVERAGETABLE = "coverage";
 
-	/** Table cells with numbers */
-	public static final String NUMBER = "number";
+	/** Table cells for the first column of a counter */
+	public static final String CTR1 = "ctr1";
+
+	/** Table cells for the second column of a counter */
+	public static final String CTR2 = "ctr2";
+
+	/** Table cells for the third column of a counter */
+	public static final String CTR3 = "ctr3";
 
 	/** Block of source code */
 	public static final String SOURCE = "source";

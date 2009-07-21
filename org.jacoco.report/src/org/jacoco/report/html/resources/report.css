@@ -1,6 +1,11 @@
-body {
+body, td {
   font-family:sans-serif;
   font-size:10pt;
+}
+
+h1 {
+  font-weight:bold;
+  font-size:18pt;
 }
 
 .breadcrumb {
@@ -8,9 +13,6 @@ body {
   padding:2px 2px 2px 2px;
 }
 
-.number {
-  text-align:right;
-}
 
 .el_session {
   padding-left:18px;
@@ -60,7 +62,6 @@ body {
 }
 
 
-
 pre.source {
   border:#d6d3ce 1px solid;
   font-family:monospace;
@@ -83,3 +84,44 @@ pre.source span.nc {
 pre.source span.pc {
   background-color:#ffffcc;
 }
+
+
+table.coverage thead {
+  background-color:#e0e0e0;
+}
+
+table.coverage thead td {
+  border-bottom:#b0b0b0 1px solid;
+  padding:2px 12px 0px 6px;
+}
+
+table.coverage td {
+  white-space:nowrap;
+  padding:2px 12px 2px 6px;
+}
+
+table.coverage tbody tr:hover { 
+  background: #f0f0d0 !important;
+}
+
+table.coverage tbody td {
+  border-bottom:#d6d3ce 1px solid;
+}
+
+table.coverage td.ctr1 {
+  text-align:right;
+  padding:2px 0px 2px 12px;
+}
+
+table.coverage td.ctr2 {
+  text-align:right;
+  padding:2px 0px 2px 4px;
+}
+
+table.coverage td.ctr3 {
+  text-align:right;
+  padding:2px 12px 2px 4px;
+}
+
+
+
