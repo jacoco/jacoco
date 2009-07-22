@@ -123,8 +123,9 @@ public class HTMLElementTest {
 	public void testTable() throws IOException {
 		root.table("tablestyle");
 		root.close();
-		assertEquals("<root><table class=\"tablestyle\"/></root>", buffer
-				.toString());
+		assertEquals(
+				"<root><table class=\"tablestyle\" cellspacing=\"0\"/></root>",
+				buffer.toString());
 	}
 
 	@Test

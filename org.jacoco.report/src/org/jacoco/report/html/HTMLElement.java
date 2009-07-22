@@ -213,6 +213,7 @@ public class HTMLElement extends XMLElement {
 	public HTMLElement table(final String classattr) throws IOException {
 		final HTMLElement table = element("table");
 		table.attr("class", classattr);
+		table.attr("cellspacing", "0");
 		return table;
 	}
 
