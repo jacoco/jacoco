@@ -4,6 +4,7 @@
 	
 	<path id="dependencies">
 		<path refid="bundle-org.jacoco.core"/>
+		<path refid="bundle-org.objectweb.asm"/>
 	</path>
 	
 	<fileset dir="${source.bundle.java.dir}" id="classpathresources">
