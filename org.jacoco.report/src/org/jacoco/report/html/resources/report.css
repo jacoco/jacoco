@@ -86,6 +86,11 @@ pre.source span.pc {
 }
 
 
+table.coverage {
+  empty-cells:show;
+  border-collapse:collapse; 
+}
+
 table.coverage thead {
   background-color:#e0e0e0;
 }
