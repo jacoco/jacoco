@@ -22,6 +22,19 @@
 	<target name="suiteSetUp">
 	</target>
 
+	<target name="testCoverageAgent">
+		<co:jacoco-agent property="jacocoagent">
+			<agentOptions merge="false" file="${basedir}/test.exec" exclClassLoader="sun.reflect.DelegatingClassLoader"/>
+		</co:jacoco-agent>
+		<au:assertPropertySet name="jacocoagent"/>
+	</target>
+	
+	<target name="testCoverageAgentWithNoProperty">
+		<au:expectfailure expectedMessage="Property is mandatory">
+			<co:jacoco-agent/>
+		</au:expectfailure>
+	</target>
+	
 	<target name="testNoSubTasks">
 		<au:expectfailure expectedMessage="A child task must be supplied for the coverage task">
 			<co:cover/>

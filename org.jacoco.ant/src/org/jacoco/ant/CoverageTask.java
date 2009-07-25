@@ -12,11 +12,6 @@
  *******************************************************************************/
 package org.jacoco.ant;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
 import java.lang.reflect.Method;
 
 import org.apache.tools.ant.BuildException;
@@ -25,7 +20,6 @@ import org.apache.tools.ant.TaskContainer;
 import org.apache.tools.ant.UnknownElement;
 import org.apache.tools.ant.taskdefs.Java;
 import org.apache.tools.ant.types.CommandlineJava;
-import org.apache.tools.ant.util.FileUtils;
 
 /**
  * Container task to run Java/Junit tasks with the JaCoCo agent jar. Coverage
@@ -33,15 +27,14 @@ import org.apache.tools.ant.util.FileUtils;
  * <ul>
  * <li>Exactly one sub task may be present</li>
  * <li>Task must be either Java or JUnit</li>
- * <li>Task must be using a forked VM (so vm args can be passed</li>
+ * <li>Task must be using a forked VM (so vm args can be passed)</li>
  * </ul>
  * 
  * @author Brock Janiczak
  * @version $Revision: $
  */
-public class CoverageTask extends Task implements TaskContainer {
+public class CoverageTask extends AbstractCoverageTask implements TaskContainer {
 
-	private File agentJar;
 	private Task childTask;
 
 	/**
@@ -56,29 +49,19 @@ public class CoverageTask extends Task implements TaskContainer {
 	 * enabled
 	 */
 	public void addTask(final Task task) {
-		InputStream inputJarStream = null;
-
-		try {
-			if (childTask != null) {
-				throw new BuildException(
-						"Only one child task can be supplied to the coverge task");
-			}
-
-			this.childTask = realizeTask(task);
-			final boolean isValidChild = isValidChild(childTask);
-			if (!isValidChild) {
-				throw new BuildException(task.getTaskName()
-						+ " is not a valid child of the coverage task");
-			}
-
-			inputJarStream = this.getClass().getClassLoader()
-					.getResourceAsStream("jacocoagent.jar");
-			agentJar = extractAgentJar(inputJarStream);
-
-			addCoverageArguments(childTask);
-		} finally {
-			FileUtils.close(inputJarStream);
+		if (childTask != null) {
+			throw new BuildException(
+					"Only one child task can be supplied to the coverge task");
 		}
+
+		this.childTask = realizeTask(task);
+		final boolean isValidChild = isValidChild(childTask);
+		if (!isValidChild) {
+			throw new BuildException(task.getTaskName()
+					+ " is not a valid child of the coverage task");
+		}
+
+		addCoverageArguments(childTask);
 	}
 
 	/**
@@ -91,48 +74,7 @@ public class CoverageTask extends Task implements TaskContainer {
 					"A child task must be supplied for the coverage task");
 		}
 
-		try {
-			childTask.perform();
-		} finally {
-
-			FileUtils.delete(agentJar);
-		}
-	}
-
-	/**
-	 * Extract the JaCoCo agent jar from the classpath and put it into a
-	 * temporary location.
-	 * 
-	 * @param inputJarStream
-	 *            Open stream pointing to the JaCoCo jar
-	 * @return Local physical location of the JaCoCo agent jar. This file will
-	 *         be removed once the task has been executed
-	 */
-	private File extractAgentJar(final InputStream inputJarStream) {
-
-		if (inputJarStream == null) {
-			throw new BuildException("Unable to locate Agent Jar");
-		}
-
-		OutputStream outputJarStream = null;
-		try {
-			final File agentJar = File.createTempFile("jacocoagent", ".jar");
-
-			outputJarStream = new FileOutputStream(agentJar);
-
-			final byte[] buffer = new byte[8192];
-
-			int bytesRead;
-			while ((bytesRead = inputJarStream.read(buffer)) != -1) {
-				outputJarStream.write(buffer, 0, bytesRead);
-			}
-
-			return agentJar;
-		} catch (final IOException e) {
-			throw new BuildException("Unable to unpack Agent Jar", e);
-		} finally {
-			FileUtils.close(outputJarStream);
-		}
+		childTask.perform();
 	}
 
 	/**
@@ -144,22 +86,13 @@ public class CoverageTask extends Task implements TaskContainer {
 	private void addCoverageArguments(final Task task) {
 		final CommandlineJava commandline = getTaskCommandline(task);
 
-		commandline.createVmArgument().setValue(createJavaAgentParam());
+		final JvmArgumentHelper jvmArgumentHelper = new JvmArgumentHelper();
+		final String agentParam = jvmArgumentHelper
+				.createJavaAgentParam(getAgentOptions());
+
+		commandline.createVmArgument().setValue(agentParam);
+
 		log("Enhancing " + task.getTaskName() + " with coverage");
-	}
-
-	/**
-	 * Generate required JVM argument string based on current configuration and
-	 * agent jar location
-	 * 
-	 * @return Argument to pass to create new VM with coverage enabled
-	 */
-	private String createJavaAgentParam() {
-		final StringBuffer param = new StringBuffer();
-		param.append("-javaagent:");
-		param.append(agentJar.getAbsolutePath());
-
-		return param.toString();
 	}
 
 	/**

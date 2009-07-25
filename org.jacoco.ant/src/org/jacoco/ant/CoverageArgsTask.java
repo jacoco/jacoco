@@ -1,0 +1,62 @@
+/*******************************************************************************
+ * Copyright (c) 2009 Mountainminds GmbH & Co. KG and others
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *    Brock Janiczak - initial API and implementation
+ *    
+ * $Id: $
+ *******************************************************************************/
+package org.jacoco.ant;
+
+import org.apache.tools.ant.BuildException;
+
+/**
+ * Ant task that will unpack the coverage agent jar and generate the JVM options
+ * required to use it
+ * 
+ * @author Brock Janiczak
+ * @version $Revision: $
+ */
+public class CoverageArgsTask extends AbstractCoverageTask {
+
+	private String property;
+
+	/**
+	 * Sets the name of the property to hold the agent JVM options
+	 * 
+	 * @param property
+	 *            Name of the property to be populated
+	 */
+	public void setProperty(final String property) {
+		this.property = property;
+	}
+
+	/**
+	 * Gets the name of the property to hold the agent JVM options
+	 * 
+	 * @return Name of the property to be populated
+	 */
+	public String getProperty() {
+		return property;
+	}
+
+	/**
+	 * Unpacks a private copy of the JaCoCo agent and populates
+	 * <code>property</code> with the JVM arguments required to use it. The
+	 * value set into the property is only valid for the lifetime of the current
+	 * JVM. The agent jar will be removed on termination of the JVM.
+	 */
+	@Override
+	public void execute() throws BuildException {
+		if (property == null || property.length() == 0) {
+			throw new BuildException("Property is mandatory");
+		}
+		final JvmArgumentHelper jvmArgumentHelper = new JvmArgumentHelper();
+		getProject().setNewProperty(property,
+				jvmArgumentHelper.createJavaAgentParam(getAgentOptions()));
+	}
+}
