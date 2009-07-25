@@ -42,8 +42,19 @@ public class AgentOptions {
 	 */
 	public static final String MERGE = "merge";
 
+	/**
+	 * Wildcard expression for class loaders names for classes that should be
+	 * excluded from code coverage. This means all classes loaded by a class
+	 * loader which full qualified name matches this expression will be ignored
+	 * for code coverage regardless of all other filtering settings. Default is
+	 * <code>sun.reflect.DelegatingClassLoader</code>.
+	 * 
+	 * @see WildcardMatcher
+	 */
+	public static final String EXCLCLASSLOADER = "exclclassloader";
+
 	private static final Collection<String> VALID_OPTIONS = Arrays.asList(FILE,
-			MERGE);
+			MERGE, EXCLCLASSLOADER);
 
 	private final Map<String, String> options;
 
@@ -116,6 +127,26 @@ public class AgentOptions {
 	 */
 	public void setMerge(final boolean flag) {
 		options.put(MERGE, String.valueOf(flag));
+	}
+
+	/**
+	 * Returns the wildcard expression for excluded class loaders.
+	 * 
+	 * @return expression for excluded class loaders
+	 */
+	public String getExclClassloader() {
+		final String file = options.get(EXCLCLASSLOADER);
+		return file == null ? "sun.reflect.DelegatingClassLoader" : file;
+	}
+
+	/**
+	 * Sets the wildcard expression for excluded class loaders.
+	 * 
+	 * @param expression
+	 *            expression for excluded class loaders
+	 */
+	public void setExclClassloader(final String expression) {
+		options.put(EXCLCLASSLOADER, expression);
 	}
 
 	/**

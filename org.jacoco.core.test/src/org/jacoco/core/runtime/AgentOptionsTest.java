@@ -31,6 +31,8 @@ public class AgentOptionsTest {
 		AgentOptions options = new AgentOptions();
 		assertEquals("jacoco.exec", options.getFile());
 		assertTrue(options.getMerge());
+		assertEquals("sun.reflect.DelegatingClassLoader", options
+				.getExclClassloader());
 		assertEquals("", options.toString());
 	}
 
@@ -74,6 +76,22 @@ public class AgentOptionsTest {
 		options.setMerge(false);
 		assertFalse(options.getMerge());
 		assertEquals("merge=false", options.toString());
+	}
+
+	@Test
+	public void testGetExclClassloader() {
+		AgentOptions options = new AgentOptions(
+				"exclclassloader=org.jacoco.test.TestLoader");
+		assertEquals("org.jacoco.test.TestLoader", options.getExclClassloader());
+	}
+
+	@Test
+	public void testSetExclClassloader() {
+		AgentOptions options = new AgentOptions();
+		options.setExclClassloader("org.jacoco.test.TestLoader");
+		assertEquals("org.jacoco.test.TestLoader", options.getExclClassloader());
+		assertEquals("exclclassloader=org.jacoco.test.TestLoader", options
+				.toString());
 	}
 
 	@Test

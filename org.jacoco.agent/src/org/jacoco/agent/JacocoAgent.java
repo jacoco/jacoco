@@ -37,7 +37,7 @@ public class JacocoAgent {
 		final IRuntime runtime = new SystemPropertiesRuntime();
 		runtime.startup();
 
-		inst.addTransformer(new CoverageTransformer(runtime));
+		inst.addTransformer(new CoverageTransformer(runtime, options));
 
 		Runtime.getRuntime().addShutdownHook(new Thread() {
 			@Override

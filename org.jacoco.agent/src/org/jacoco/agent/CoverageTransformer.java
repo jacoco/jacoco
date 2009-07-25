@@ -15,12 +15,11 @@ package org.jacoco.agent;
 import java.lang.instrument.ClassFileTransformer;
 import java.lang.instrument.IllegalClassFormatException;
 import java.security.ProtectionDomain;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Set;
 
 import org.jacoco.core.instr.Instrumenter;
+import org.jacoco.core.runtime.AgentOptions;
 import org.jacoco.core.runtime.IRuntime;
+import org.jacoco.core.runtime.WildcardMatcher;
 
 /**
  * Class file transformer to instrument classes for code coverage analysis.
@@ -30,17 +29,13 @@ import org.jacoco.core.runtime.IRuntime;
  */
 public class CoverageTransformer implements ClassFileTransformer {
 
-	/**
-	 * Internal class loaders used by JVM implementations for dynamically
-	 * created classes. We must not instrument classes loaded by these loaders.
-	 */
-	private static final Set<String> EVIL_CLASSLOADERS = new HashSet<String>(
-			Arrays.asList("sun.reflect.DelegatingClassLoader"));
-
 	private final Instrumenter instrumenter;
 
-	public CoverageTransformer(IRuntime runtime) {
+	private final WildcardMatcher exclClassloader;
+
+	public CoverageTransformer(IRuntime runtime, AgentOptions options) {
 		this.instrumenter = new Instrumenter(runtime);
+		exclClassloader = new WildcardMatcher(options.getExclClassloader());
 	}
 
 	public byte[] transform(ClassLoader loader, String classname,
@@ -52,7 +47,7 @@ public class CoverageTransformer implements ClassFileTransformer {
 			return null;
 		}
 
-		if (EVIL_CLASSLOADERS.contains(loader.getClass().getName())) {
+		if (exclClassloader.matches(loader.getClass().getName())) {
 			return null;
 		}
 
