@@ -110,7 +110,7 @@ public class RuntimePerformancetest {
 		final byte[] instrumentedBuffer = instr.instrument(reader);
 		final TargetLoader loader = new TargetLoader(clazz, instrumentedBuffer);
 
-		return (Runnable) loader.newInstance();
+		return (Runnable) loader.newTargetInstance();
 	}
 
 	private void runPerformanceComparison(String description,

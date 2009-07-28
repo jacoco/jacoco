@@ -161,7 +161,7 @@ public class SystemPropertiesRuntimeTest {
 
 		final TargetLoader loader = new TargetLoader(className
 				.replace('/', '.'), writer.toByteArray());
-		((IWriteAccess) loader.newInstance()).set(data);
+		((IWriteAccess) loader.newTargetInstance()).set(data);
 	}
 
 	/**

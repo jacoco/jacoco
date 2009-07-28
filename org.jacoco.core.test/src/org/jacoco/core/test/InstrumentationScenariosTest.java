@@ -116,7 +116,7 @@ public class InstrumentationScenariosTest {
 		final byte[] instrumentedBuffer = instr.instrument(reader);
 		final TargetLoader loader = new TargetLoader(clazz, instrumentedBuffer);
 
-		final Object obj = loader.newInstance();
+		final Object obj = loader.newTargetInstance();
 		if (obj instanceof Runnable) {
 			((Runnable) obj).run();
 		}

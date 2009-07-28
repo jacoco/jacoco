@@ -20,47 +20,42 @@ import java.io.InputStream;
  * @author Marc R. Hoffmann
  * @version $Revision: $
  */
-public class TargetLoader {
+public class TargetLoader extends ClassLoader {
+
+	private final String sourcename;
+
+	private final byte[] bytes;
 
 	private final Class<?> clazz;
 
 	public TargetLoader(final String name, final byte[] bytes) {
+		super(TargetLoader.class.getClassLoader());
+		this.sourcename = name;
+		this.bytes = bytes;
 		clazz = load(name, bytes);
 	}
 
 	public TargetLoader(final Class<?> source, final byte[] bytes) {
+		super(TargetLoader.class.getClassLoader());
+		this.sourcename = source.getName();
+		this.bytes = bytes;
 		clazz = load(source.getName(), bytes);
 	}
 
 	private Class<?> load(final String sourcename, final byte[] bytes) {
-		final ClassLoader cl = new ClassLoader(this.getClass().getClassLoader()) {
-
-			@Override
-			protected synchronized Class<?> loadClass(String name,
-					boolean resolve) throws ClassNotFoundException {
-				if (sourcename.equals(name)) {
-					Class<?> c = defineClass(name, bytes, 0, bytes.length);
-					if (resolve) {
-						resolveClass(c);
-					}
-					return c;
-				}
-				return super.loadClass(name, resolve);
-			}
-		};
 		try {
-			return cl.loadClass(sourcename);
+			return loadClass(sourcename);
 		} catch (ClassNotFoundException e) {
 			// must not happen
 			throw new RuntimeException(e);
 		}
 	}
 
-	public Class<?> getClazz() {
+	public Class<?> getTargetClass() {
 		return clazz;
 	}
 
-	public Object newInstance() throws InstantiationException,
+	public Object newTargetInstance() throws InstantiationException,
 			IllegalAccessException {
 		return clazz.newInstance();
 	}
@@ -69,6 +64,19 @@ public class TargetLoader {
 		final String resource = "/" + clazz.getName().replace('.', '/')
 				+ ".class";
 		return clazz.getResourceAsStream(resource);
+	}
+
+	@Override
+	protected synchronized Class<?> loadClass(String name, boolean resolve)
+			throws ClassNotFoundException {
+		if (sourcename.equals(name)) {
+			Class<?> c = defineClass(name, bytes, 0, bytes.length);
+			if (resolve) {
+				resolveClass(c);
+			}
+			return c;
+		}
+		return super.loadClass(name, resolve);
 	}
 
 }
