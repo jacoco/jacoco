@@ -18,6 +18,7 @@
 	<property name="result.dist.test.dir" location="${result.dist.dir}/test"/>
 
 	<property name="result.tmp.dir" location="${result.dir}/tmp"/>
+	<property name="result.tmp.coverage.file" location="${result.tmp.dir}/jacoco.exec"/>
 	
 	<tstamp>
 		<format property="build.qualifier" pattern="yyyyMMddHHmmss"/>
@@ -49,9 +50,6 @@
 			<runbundlebuild bundleid="org.jacoco.agent" target="@{target}"/>
 			<runbundlebuild bundleid="org.jacoco.report" target="@{target}"/>
 			<runbundlebuild bundleid="org.jacoco.ant" target="@{target}"/>
-			
-			<!-- JaCoCo Tasks to create code coverage for JaCoCo tests -->
-			<!-- TODO -->
 			
 			<!-- Tests -->
 			<runbundlebuild bundleid="org.jacoco.core.test" target="@{target}"/>

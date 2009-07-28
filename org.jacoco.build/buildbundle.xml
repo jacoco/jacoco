@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<project name="org.jacoco.build.bundle" default="package">
+<project name="org.jacoco.build.bundle" default="package" xmlns:jacoco="antlib:org.jacoco.ant">
 
 	<description>
 		This build file is executed for every JaCoCo bundle. Every bundle must
@@ -71,21 +71,34 @@
 		<antcall target="customverify" inheritall="true" inheritrefs="true"/>
 	</target>
 	
-	<target name="verify" if="do.verify" depends="compile,runcustomverify">
+	<target name="verify" if="do.verify" depends="package,runcustomverify">
+		
+		<!-- of course we meassure code coverage for JaCoCo tests -->
+		<taskdef uri="antlib:org.jacoco.ant" resource="org/jacoco/ant/antlib.xml">
+			<classpath>
+				<fileset dir="${result.dist.lib.dir}" includes="org.jacoco.ant_*.jar"/>
+			</classpath>
+		</taskdef>
+		
 		<property name="result.tmp.bundle.test.dir" location="${result.tmp.bundle.dir}/test"/>
 		<mkdir dir="${result.tmp.bundle.test.dir}"/>
-		<junit haltonfailure="true" fork="true" forkmode="once">
-		    <batchtest todir="${result.tmp.bundle.test.dir}" >
-				<fileset dir="${result.tmp.bundle.classes.dir}">
-    				<include name="**/*Test.class"/>
-				</fileset>
-		    </batchtest>
-			<classpath>
-				<pathelement location="${result.tmp.bundle.classes.dir}"/>
-				<path refid="dependencies"/>
-			</classpath>
-			<formatter type="xml"/>
-		</junit>
+		<jacoco:cover>
+			<agentOptions merge="true"
+						  file="${result.tmp.coverage.file}"
+						  exclClassLoader="sun.reflect.DelegatingClassLoader org.jacoco.core.test.TargetLoader"/>
+			<junit haltonfailure="true" fork="true" forkmode="once">
+	    		<batchtest todir="${result.tmp.bundle.test.dir}" >
+					<fileset dir="${result.tmp.bundle.classes.dir}">
+   						<include name="**/*Test.class"/>
+					</fileset>
+	   			</batchtest>
+				<classpath>
+					<pathelement location="${result.tmp.bundle.classes.dir}"/>
+					<path refid="dependencies"/>
+				</classpath>
+				<formatter type="xml"/>
+			</junit>
+		</jacoco:cover>
 	</target>
 	
 	
