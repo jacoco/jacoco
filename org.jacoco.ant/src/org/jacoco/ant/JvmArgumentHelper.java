@@ -87,12 +87,9 @@ class JvmArgumentHelper {
 	String createJavaAgentParam(final AgentOptions agentOptions) {
 		final StringBuffer param = new StringBuffer();
 		param.append("-javaagent:");
-		param.append('"');
 		param.append(agentJar.getAbsolutePath());
-		param.append('"');
-		param.append("=\"");
+		param.append("=");
 		param.append(agentOptions.toString());
-		param.append('"');
 
 		return param.toString();
 	}
