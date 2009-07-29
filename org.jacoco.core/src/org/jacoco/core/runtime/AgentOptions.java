@@ -73,16 +73,18 @@ public class AgentOptions {
 	 */
 	public AgentOptions(final String optionstr) {
 		this();
-		if (optionstr != null) {
+		if (optionstr != null && optionstr.length() > 0) {
 			for (final String entry : optionstr.split(",")) {
 				final int pos = entry.indexOf('=');
 				if (pos == -1) {
 					throw new IllegalArgumentException(
-							"Invalid agent option syntax.");
+							"Invalid agent option syntax \"" + optionstr
+									+ "\".");
 				}
 				final String key = entry.substring(0, pos);
 				if (!VALID_OPTIONS.contains(key)) {
-					throw new IllegalArgumentException("Unknown agent option.");
+					throw new IllegalArgumentException(
+							"Unknown agent option \"" + key + "\".");
 				}
 				options.put(key, entry.substring(pos + 1));
 			}

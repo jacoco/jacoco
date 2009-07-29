@@ -37,6 +37,12 @@ public class AgentOptionsTest {
 	}
 
 	@Test
+	public void testEmptyOptions() {
+		AgentOptions options = new AgentOptions("");
+		assertEquals("", options.toString());
+	}
+
+	@Test
 	public void testGetFile() {
 		AgentOptions options = new AgentOptions("file=/var/test.exec");
 		assertEquals("/var/test.exec", options.getFile());
