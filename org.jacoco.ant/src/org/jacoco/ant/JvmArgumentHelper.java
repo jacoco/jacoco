@@ -20,6 +20,7 @@ import java.io.OutputStream;
 
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.util.FileUtils;
+import org.jacoco.core.runtime.AgentOptions;
 
 /**
  * Helper class to generate the JVM argument required to start a new JVM with a

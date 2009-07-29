@@ -1,49 +1,56 @@
 
-<project name="JaCoCo Ant test suite" xmlns:au="antlib:org.apache.ant.antunit" xmlns:co="uri:org.jacoco">
+<project name="JaCoCo Ant test suite" xmlns:au="antlib:org.apache.ant.antunit" xmlns:jacoco="antlib:org.jacoco.ant">
 	
-	<taskdef uri="uri:org.jacoco" resource="org/jacoco/ant/antlib.xml">
-		<classpath>
-			<fileset dir="${result.dist.lib.dir}" includes="org.jacoco.ant_*.jar"/>
-		</classpath>
-	</taskdef>
+	<path id="bundle-org.objectweb.asm">
+		<fileset dir="${target.plugins.dir}" includes="org.objectweb.asm_3.1.0.*.jar"/>
+	</path>
 
 	<path id="ant-test-classes">
-        <path path="${result.tmp.bundle.classes.dir}"/>
+		<path path="${result.tmp.bundle.classes.dir}"/>
 	</path>
 	
 	<path id="bundle-org.junit4">
-        <fileset dir="${target.plugins.dir}" includes="org.junit4_*/junit.jar"/>
-        <fileset dir="${target.plugins.dir}" includes="org.hamcrest.core_*.jar"/>
+		<fileset dir="${target.plugins.dir}" includes="org.junit4_*/junit.jar"/>
+		<fileset dir="${target.plugins.dir}" includes="org.hamcrest.core_*.jar"/>
 		<fileset dir="${target.plugins.dir}" includes="org.hamcrest.ui_*.jar"/>
 		<fileset dir="${target.plugins.dir}" includes="org.hamcrest.text_*.jar"/>
 		<fileset dir="${target.plugins.dir}" includes="org.hamcrest.library_*.jar"/>
 	</path>
+			
+	<taskdef uri="antlib:org.jacoco.ant" resource="org/jacoco/ant/antlib.xml">
+		<classpath>
+			<fileset dir="${result.dist.lib.dir}" includes="org.jacoco.ant_*.jar"/>
+			<fileset dir="${result.dist.lib.dir}" includes="org.jacoco.core_*.jar"/>
+			<fileset dir="${result.dist.lib.dir}" includes="org.jacoco.report_*.jar"/>
+			<path refid="bundle-org.objectweb.asm"/>
+		</classpath>
+	</taskdef>
+
+
 	
 	<target name="suiteSetUp">
 	</target>
 
 	<target name="testCoverageAgent">
-		<co:jacoco-agent property="jacocoagent">
-			<agentOptions merge="false" file="${basedir}/test.exec" exclClassLoader="sun.reflect.DelegatingClassLoader"/>
-		</co:jacoco-agent>
+		<jacoco:agent property="jacocoagent" merge="false" file="${basedir}/test.exec" exclClassLoader="sun.reflect.DelegatingClassLoader"/>
 		<au:assertPropertySet name="jacocoagent"/>
 	</target>
 	
 	<target name="testCoverageAgentWithNoProperty">
 		<au:expectfailure expectedMessage="Property is mandatory">
-			<co:jacoco-agent/>
+			<jacoco:agent/>
 		</au:expectfailure>
 	</target>
 	
 	<target name="testNoSubTasks">
 		<au:expectfailure expectedMessage="A child task must be supplied for the coverage task">
-			<co:cover/>
+			<jacoco:coverage/>
 		</au:expectfailure>
 	</target>
 
 	<target name="testMultipleSubTasks">
 		<au:expectfailure expectedMessage="Only one child task can be supplied to the coverge task">
-			<co:cover>
+			<jacoco:coverage>
 				<java classname="org.jacoco.ant.test.EmptyMain">
 					<classpath>
 						<path refid="ant-test-classes"/>
@@ -54,45 +61,45 @@
 						<path refid="ant-test-classes"/>
 					</classpath>
 				</java>
-			</co:cover>
+			</jacoco:coverage>
 		</au:expectfailure>
 	</target>
 	
 	<target name="testInvalidSubTask">
 		<au:expectfailure expectedMessage="jar is not a valid child of the coverage task">
-			<co:cover>
+			<jacoco:coverage>
 				<jar destfile="test.jar"/>
-			</co:cover>
+			</jacoco:coverage>
 		</au:expectfailure>
 	</target>
 
 	<target name="testCoverageOfForkedJava">
-		<co:cover>
+		<jacoco:coverage>
 			<java classname="org.jacoco.ant.test.EmptyMain" fork="true">
 				<classpath>
 					<path refid="ant-test-classes"/>
 				</classpath>
 			</java>
-		</co:cover>
+		</jacoco:coverage>
 
 		<au:assertLogContains text="Enhancing java with coverage"/>
 		
 	</target>
 
 	<target name="testCoverageOfNonForkedJava">
-		<co:cover>
+		<jacoco:coverage>
 			<java classname="org.jacoco.ant.test.EmptyMain" fork="false">
 				<classpath>
 					<path refid="ant-test-classes"/>
 				</classpath>
 			</java>
-		</co:cover>
+		</jacoco:coverage>
 		<au:assertLogContains text="JVM args ignored when same JVM is used."/>
 	</target>
 
 
 	<target name="testCoverageOfForkedJUnit">
-		<co:cover>
+		<jacoco:coverage>
 			<junit fork="true" >
 				<classpath>
 					<path refid="bundle-org.junit4"/>
@@ -104,13 +111,13 @@
 					</fileset>
 			    </batchtest>
 			</junit>
-		</co:cover>
+		</jacoco:coverage>
 		
 		<au:assertLogContains text="Enhancing junit with coverage"/>
 	</target>
 
 	<target name="testCoverageOfNonForkedJUnit">
-		<co:cover>
+		<jacoco:coverage>
 			<junit fork="false">
 				<classpath>
 					<path refid="bundle-org.junit4"/>
@@ -122,7 +129,7 @@
 					</fileset>
 			    </batchtest>
 			</junit>
-		</co:cover>
+		</jacoco:coverage>
 		<!-- TODO this should either log a message or fail -->
 
 	</target>

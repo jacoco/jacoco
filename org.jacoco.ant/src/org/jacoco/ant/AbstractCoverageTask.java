@@ -12,7 +12,10 @@
  *******************************************************************************/
 package org.jacoco.ant;
 
+import java.io.File;
+
 import org.apache.tools.ant.Task;
+import org.jacoco.core.runtime.AgentOptions;
 
 /**
  * Base class for all coverage tasks that require agent options
@@ -22,7 +25,7 @@ import org.apache.tools.ant.Task;
  */
 public class AbstractCoverageTask extends Task {
 
-	private AgentOptions agentOptions;
+	private final AgentOptions agentOptions;
 
 	/**
 	 * Create default agent options
@@ -32,31 +35,42 @@ public class AbstractCoverageTask extends Task {
 	}
 
 	/**
-	 * Gets the currently configured agent options
+	 * Gets the currently configured agent options for this task
 	 * 
-	 * @return Current agent options
+	 * @return Configured agent options
 	 */
 	public AgentOptions getAgentOptions() {
 		return agentOptions;
 	}
 
 	/**
-	 * Sets the agent options to use
+	 * Sets the location to write coverage execution data
 	 * 
-	 * @param agentOptions
-	 *            Agent Options
+	 * @param file
+	 *            Location to write coverage execution data
 	 */
-	public void setAgentOptions(final AgentOptions agentOptions) {
-		this.agentOptions = agentOptions;
+	public void setFile(final File file) {
+		agentOptions.setFile(file.getAbsolutePath());
 	}
 
 	/**
-	 * Creates a new default agent options for this task
+	 * Merge execution coverage data if a coverage file is already present
 	 * 
-	 * @return New agent options with default values
+	 * @param merge
+	 *            <code>true</code> to merge execution data
 	 */
-	public AgentOptions createAgentOptions() {
-		return agentOptions = new AgentOptions();
+	public void setMerge(final boolean merge) {
+		agentOptions.setMerge(merge);
+	}
+
+	/**
+	 * Sets the value of the Excluded Class Loaders pattern
+	 * 
+	 * @param exclClassLoader
+	 *            Wildcard pattern of class loaders to exclude
+	 */
+	public void setExclClassLoader(final String exclClassLoader) {
+		agentOptions.setExclClassloader(exclClassLoader);
 	}
 
 }

@@ -6,6 +6,7 @@
 	
 	<path id="dependencies">
 		<path refid="bundle-org.apache.ant"/>
+		<path refid="bundle-org.jacoco.core"/>
 	</path>
 	
 	<fileset dir="${source.bundle.java.dir}" id="classpathresources">

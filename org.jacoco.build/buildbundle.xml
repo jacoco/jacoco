@@ -85,10 +85,11 @@
 		
 		<property name="result.tmp.bundle.test.dir" location="${result.tmp.bundle.dir}/test"/>
 		<mkdir dir="${result.tmp.bundle.test.dir}"/>
-		<jacoco:cover>
-			<agentOptions merge="true"
-						  file="${result.tmp.coverage.file}"
-						  exclClassLoader="sun.reflect.DelegatingClassLoader org.jacoco.core.test.TargetLoader"/>
+		<jacoco:coverage
+				merge="true"
+				file="${result.tmp.coverage.file}"
+				exclClassLoader="sun.reflect.DelegatingClassLoader org.jacoco.core.test.TargetLoader">
+			
 			<junit haltonfailure="true" fork="true" forkmode="once">
 	    		<batchtest todir="${result.tmp.bundle.test.dir}" >
 					<fileset dir="${result.tmp.bundle.classes.dir}">
@@ -101,7 +102,7 @@
 				</classpath>
 				<formatter type="xml"/>
 			</junit>
-		</jacoco:cover>
+		</jacoco:coverage>
 	</target>
 	
 	

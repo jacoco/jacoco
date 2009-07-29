@@ -21,7 +21,7 @@ import org.apache.tools.ant.BuildException;
  * @author Brock Janiczak
  * @version $Revision: $
  */
-public class CoverageArgsTask extends AbstractCoverageTask {
+public class AgentTask extends AbstractCoverageTask {
 
 	private String property;
 

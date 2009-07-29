@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
 <antlib>
-   <taskdef name="cover" classname="org.jacoco.ant.CoverageTask"/>
-   <taskdef name="jacoco-agent" classname="org.jacoco.ant.CoverageArgsTask"/>
+   <taskdef name="coverage" classname="org.jacoco.ant.CoverageTask"/>
+   <taskdef name="agent" classname="org.jacoco.ant.AgentTask"/>
 </antlib>
