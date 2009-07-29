@@ -51,7 +51,7 @@ public class JavaNames implements ILanguageNames {
 		boolean colon = false;
 		for (final Type arg : arguments) {
 			if (colon) {
-				result.append(',');
+				result.append(", ");
 			}
 			result.append(getShortTypeName(arg));
 			colon = true;

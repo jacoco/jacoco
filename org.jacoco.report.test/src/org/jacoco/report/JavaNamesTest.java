@@ -77,7 +77,7 @@ public class JavaNamesTest {
 
 	@Test
 	public void testGetMethodName4() {
-		assertEquals("add(int,Object)", names.getMethodName("java/util/List",
+		assertEquals("add(int, Object)", names.getMethodName("java/util/List",
 				"add", "(ILjava/lang/Object;)V"));
 	}
 
