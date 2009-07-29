@@ -18,6 +18,7 @@ import java.util.List;
 import org.jacoco.core.runtime.IRuntime;
 import org.objectweb.asm.ClassAdapter;
 import org.objectweb.asm.ClassVisitor;
+import org.objectweb.asm.FieldVisitor;
 import org.objectweb.asm.Label;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
@@ -80,8 +81,17 @@ public class ClassInstrumenter extends ClassAdapter {
 	}
 
 	@Override
+	public FieldVisitor visitField(final int access, final String name,
+			final String desc, final String signature, final Object value) {
+		assertNotInstrumented(name, GeneratorConstants.DATAFIELD_NAME);
+		return super.visitField(access, name, desc, signature, value);
+	}
+
+	@Override
 	public MethodVisitor visitMethod(final int access, final String name,
 			final String desc, final String signature, final String[] exceptions) {
+
+		assertNotInstrumented(name, GeneratorConstants.INIT_METHOD.getName());
 
 		final MethodVisitor mv = super.visitMethod(access, name, desc,
 				signature, exceptions);
@@ -198,6 +208,27 @@ public class ClassInstrumenter extends ClassAdapter {
 			// .......................................... Stack: [[Z, [[Z, I, I
 			gen.newArray(Type.BOOLEAN_TYPE);// .......... Stack: [[Z, [[Z, I, [Z
 			gen.arrayStore(GeneratorConstants.BLOCK_ARR); // Stack: [[Z
+		}
+	}
+
+	/**
+	 * Ensures that the given member does not correspond to a internal member
+	 * created by the instrumentation process. This would mean that the class
+	 * has been instrumented twice.
+	 * 
+	 * @param member
+	 *            name of the member to check
+	 * @param instrMember
+	 *            name of a instrumentation member
+	 * @throws IllegalStateException
+	 *             thrown if the member has the same name than the
+	 *             instrumentation member
+	 */
+	private void assertNotInstrumented(final String member,
+			final String instrMember) throws IllegalStateException {
+		if (member.equals(instrMember)) {
+			throw new IllegalStateException("Class " + type.getClassName()
+					+ " is already instrumented.");
 		}
 	}
 
