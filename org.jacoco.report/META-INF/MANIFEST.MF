@@ -9,3 +9,7 @@ Import-Package: org.jacoco.core.analysis,
  org.jacoco.core.data,
  org.jacoco.core.instr,
  org.objectweb.asm
+Export-Package: org.jacoco.report,
+ org.jacoco.report.csv,
+ org.jacoco.report.html,
+ org.jacoco.report.xml
