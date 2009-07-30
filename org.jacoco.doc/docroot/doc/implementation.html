@@ -3,12 +3,18 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en">
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1" />
-  <link rel="stylesheet" href="book.css" charset="ISO-8859-1" type="text/css" />
+  <link rel="stylesheet" href=".resources/doc.css" charset="ISO-8859-1" type="text/css" />
   <title>JaCoCo - Implementation Design</title>
 </head>
 <body>
 
-<h1>JaCoCo - Implementation Design</h1>
+<div class="breadcrumb">
+  <a href="../index.html" class="el_session">JaCoCo</a> &gt;
+  <a href="index.html" class="el_group">Documentation</a> &gt;
+  <span class="el_source">Implementation Design</span>
+</div>
+
+<h1>Implementation Design</h1>
 
 <p>
   This is a unordered list of implementation design decisions. Each topic tries
@@ -24,7 +30,7 @@
 
 <h2>Coverage Analysis Mechanism</h2>
 
-<p class="Note">
+<p class="intro">
   Coverage information has to be collected at runtime. For this purpose JaCoCo
   creates instrumented versions of the original class definitions. The
   instrumentation process happens on-the-fly during class loading using so
@@ -86,7 +92,7 @@
 
 <h2>Instrumentation Approach</h2>
 
-<p class="Note">
+<p class="intro">
   Instrumentation means inserting probes at certain check points in the Java
   byte code. A probe generated piece of byte code that records the fact that it
   has been executed. JaCoCo inserts probes at the end of every basic block.    
@@ -125,7 +131,7 @@
 
 <h2>Coverage Agent Isolation</h2>
 
-<p class="Note">
+<p class="intro">
   The Java agent is loaded by the application class loader. Therefore the
   classes of the agent live in the same name space than the application classes
   which can result in clashes especially with the third party library ASM. The
@@ -144,7 +150,7 @@
 
 <h2>Minimal Java Version</h2>
 
-<p class="Note">
+<p class="intro">
   JaCoCo requires Java 1.5.
 </p>
 
@@ -158,7 +164,7 @@
 
 <h2>Byte Code Manipulation</h2>
 
-<p class="Note">
+<p class="intro">
   Instrumentation requires mechanisms to modify and generate Java byte code.
   JaCoCo uses the ASM library for this purpose.
 </p>
@@ -174,7 +180,7 @@
 
 <h2>Java Class Identity</h2>
 
-<p class="Note">
+<p class="intro">
   Each class loaded at runtime needs a unique identity to associate coverage data with.
   JaCoCo creates such identities by a CRC64 hash code of the raw class definition.
 </p>
@@ -206,7 +212,7 @@
 
 <h2>Coverage Runtime Dependency</h2>
 
-<p class="Note">
+<p class="intro">
   Instrumented code typically gets a dependency to a coverage runtime which is
   responsible for collecting and storing execution data. JaCoCo uses JRE types
   and interfaces only in generated instrumentation code. 
@@ -221,7 +227,7 @@
 
 <h2>Memory Usage</h2>
 
-<p class="Note">
+<p class="intro">
   
 </p>
 
@@ -231,7 +237,7 @@
 
 <h2>Java Element Identifiers</h2>
 
-<p class="Note">
+<p class="intro">
   The Java language and the Java VM use different String representation formats
   for Java elements. For example while a type reference in Java reads like 
   <code>java.lang.Object</code>, the VM references the same type as
@@ -247,7 +253,7 @@
 
 <h2>Modularization of the JaCoCo implementation</h2>
 
-<p class="Note">
+<p class="intro">
   JaCoCo is implemented in several modules providing different functionality.
   These modules are provided as OSGi bundles with proper manifest files. But
   there is no dependencies on OSGi itself.
@@ -259,10 +265,10 @@
   bundles can also be used as regular JAR files.  
 </p>
 
-
-<hr/>
-<div style="float:right">@VERSION@</div>
-<div>Copyright &copy; 2009 Mountainminds GmbH &amp; Co. KG, Marc R. Hoffmann</div>
+<div class="footer">
+  <div style="float:right">@VERSION@</div>
+  <a href="license.html">Copyright</a> &copy; 2009 Mountainminds GmbH &amp; Co. KG and Contributors
+</div>
 
 </body>
 </html>

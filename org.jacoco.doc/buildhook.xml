@@ -34,7 +34,11 @@
 		</javadoc>
 		
 		<copy todir="${result.dist.dir}">
-			<fileset dir="${source.bundle.dir}/docroot" includes="**/*"/>
+			<fileset dir="${source.bundle.dir}/docroot" includes="**/*" excludes="**/*.html"/>
+		</copy>
+
+		<copy todir="${result.dist.dir}">
+			<fileset dir="${source.bundle.dir}/docroot" includes="**/*.html"/>
 			<filterset>
 				<filter token="VERSION" value="${qualified.bundle.version}"/>
 			</filterset>
