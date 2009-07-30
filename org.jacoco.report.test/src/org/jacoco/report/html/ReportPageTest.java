@@ -13,12 +13,13 @@
 package org.jacoco.report.html;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertSame;
 
 import java.io.IOException;
 
 import org.jacoco.core.analysis.CoverageNodeImpl;
+import org.jacoco.core.analysis.ICoverageNode;
 import org.jacoco.core.analysis.ICoverageNode.ElementType;
+import org.jacoco.report.ILanguageNames;
 import org.jacoco.report.IReportVisitor;
 import org.jacoco.report.ISourceFileLocator;
 import org.jacoco.report.MemoryReportOutput;
@@ -40,7 +41,7 @@ public class ReportPageTest {
 
 	private ReportOutputFolder root;
 
-	private Resources resources;
+	private IHTMLReportContext context;
 
 	private CoverageNodeImpl node;
 
@@ -48,9 +49,8 @@ public class ReportPageTest {
 
 	private class TestReportPage extends ReportPage {
 
-		protected TestReportPage(String name, ReportPage parent) {
-			super(ElementType.GROUP, name, parent, root,
-					ReportPageTest.this.resources);
+		protected TestReportPage(ICoverageNode node, ReportPage parent) {
+			super(node, parent, root, ReportPageTest.this.context);
 		}
 
 		@Override
@@ -61,12 +61,16 @@ public class ReportPageTest {
 
 		@Override
 		protected String getFileName() {
-			return name + ".html";
+			return getNode().getName() + ".html";
 		}
 
-		public IReportVisitor visitChild(ElementType type, String name)
-				throws IOException {
+		public IReportVisitor visitChild(ICoverageNode node) {
 			throw new UnsupportedOperationException();
+		}
+
+		@Override
+		protected ReportOutputFolder getFolder(ReportOutputFolder base) {
+			return base;
 		}
 
 	}
@@ -75,16 +79,33 @@ public class ReportPageTest {
 	public void setup() {
 		output = new MemoryReportOutput();
 		root = new ReportOutputFolder(output);
-		resources = new Resources(root);
-		ReportPage parent = new TestReportPage("Parent", null);
+		final Resources resources = new Resources(root);
+		context = new IHTMLReportContext() {
+
+			public ILanguageNames getLanguageNames() {
+				throw new AssertionError("Unexpected method call.");
+			}
+
+			public Resources getResources() {
+				return resources;
+			}
+
+			public CoverageTable getTable(ElementType type) {
+				throw new AssertionError("Unexpected method call.");
+			}
+
+		};
+		ReportPage parent = new TestReportPage(new CoverageNodeImpl(
+				ElementType.SESSION, "Session", false), null);
 		node = new CoverageNodeImpl(ElementType.GROUP, "Test", false);
-		page = new TestReportPage(node.getName(), parent);
+		page = new TestReportPage(node, parent);
 	}
 
 	@Test
 	public void testGetNode() throws IOException {
-		page.visitEnd(node, null);
-		assertSame(node, page.getNode());
+		page.visitEnd(null);
+		assertEquals(node.getElementType(), page.getNode().getElementType());
+		assertEquals(node.getName(), page.getNode().getName());
 	}
 
 	@Test
@@ -95,7 +116,7 @@ public class ReportPageTest {
 
 	@Test
 	public void testPageContent() throws Exception {
-		page.visitEnd(node, null);
+		page.visitEnd(null);
 		final HTMLSupport support = new HTMLSupport();
 		final Document doc = support.parse(output.getFile("Test.html"));
 
@@ -104,11 +125,11 @@ public class ReportPageTest {
 				"/html/head/link[@rel='stylesheet']/@href"));
 
 		// bread crumb
-		assertEquals("Parent", support.findStr(doc,
+		assertEquals("Session", support.findStr(doc,
 				"/html/body/div[@class='breadcrumb']/a[1]/text()"));
-		assertEquals("Parent.html", support.findStr(doc,
+		assertEquals("Session.html", support.findStr(doc,
 				"/html/body/div[@class='breadcrumb']/a[1]/@href"));
-		assertEquals("el_group", support.findStr(doc,
+		assertEquals("el_session", support.findStr(doc,
 				"/html/body/div[@class='breadcrumb']/a[1]/@class"));
 		assertEquals("Test", support.findStr(doc,
 				"/html/body/div[@class='breadcrumb']/span[1]/text()"));

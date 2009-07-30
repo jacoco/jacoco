@@ -15,7 +15,6 @@ package org.jacoco.report.html;
 import java.io.IOException;
 
 import org.jacoco.core.analysis.ICoverageNode;
-import org.jacoco.core.analysis.ICoverageNode.ElementType;
 import org.jacoco.report.IReportVisitor;
 import org.jacoco.report.ISourceFileLocator;
 import org.jacoco.report.ReportOutputFolder;
@@ -29,46 +28,42 @@ import org.jacoco.report.html.resources.Styles;
  * @author Marc R. Hoffmann
  * @version $Revision: $
  */
-public abstract class ReportPage implements IReportVisitor {
+public abstract class ReportPage implements IReportVisitor, ICoverageTableItem {
 
 	private final ReportPage parent;
-
-	/** node type */
-	protected final ElementType type;
-
-	/** node name */
-	protected String name;
 
 	/** output folder for this node */
 	protected final ReportOutputFolder outputFolder;
 
-	/** static resources for the overall report */
-	protected final Resources resources;
+	/** context for this report */
+	protected final IHTMLReportContext context;
 
 	private ICoverageNode node;
 
 	/**
+	 * Creates a new report page.
 	 * 
-	 * @param type
-	 * @param name
+	 * @param node
+	 *            corresponding node
 	 * @param parent
-	 * @param outputFolder
-	 * @param resources
+	 *            optional hierarchical parent
+	 * @param baseFolder
+	 *            base folder to create this report page relative to
+	 * @param context
+	 *            settings context
 	 */
-	protected ReportPage(final ICoverageNode.ElementType type,
-			final String name, final ReportPage parent,
-			final ReportOutputFolder outputFolder, final Resources resources) {
-		this.type = type;
-		this.name = name;
+	protected ReportPage(final ICoverageNode node, final ReportPage parent,
+			final ReportOutputFolder baseFolder, final IHTMLReportContext context) {
+		this.node = node;
 		this.parent = parent;
-		this.outputFolder = outputFolder;
-		this.resources = resources;
+		this.context = context;
+		this.outputFolder = getFolder(baseFolder);
 	}
 
-	public void visitEnd(final ICoverageNode node,
-			final ISourceFileLocator sourceFileLocator) throws IOException {
-		this.node = node;
+	public void visitEnd(final ISourceFileLocator sourceFileLocator)
+			throws IOException {
 		renderDocument(sourceFileLocator);
+		this.node = node.getPlainCopy();
 	}
 
 	private void renderDocument(final ISourceFileLocator sourceFileLocator)
@@ -78,7 +73,7 @@ public abstract class ReportPage implements IReportVisitor {
 		head(doc.head());
 		final HTMLElement body = doc.body();
 		breadcrumb(body.div(Styles.BREADCRUMB), outputFolder, this);
-		body.h1().text(getNode().getName());
+		body.h1().text(getLabel());
 		content(body, sourceFileLocator);
 		footer(body);
 		doc.close();
@@ -86,11 +81,11 @@ public abstract class ReportPage implements IReportVisitor {
 
 	private void head(final HTMLElement head) throws IOException {
 		head.meta("Content-Type", "text/html;charset=UTF-8");
-		head.link("stylesheet", resources.getLink(outputFolder,
+		head.link("stylesheet", context.getResources().getLink(outputFolder,
 				Resources.STYLESHEET), "text/css");
-		head.link("shortcut icon", resources.getLink(outputFolder,
+		head.link("shortcut icon", context.getResources().getLink(outputFolder,
 				"session.gif"), "image/gif");
-		head.title().text(name);
+		head.title().text(getLabel());
 	}
 
 	private void breadcrumb(final HTMLElement body,
@@ -100,10 +95,11 @@ public abstract class ReportPage implements IReportVisitor {
 			parent.breadcrumb(body, base, current);
 			body.text(" > ");
 		}
+		final String style = Resources.getElementStyle(node.getElementType());
 		if (this == current) {
-			body.span(Resources.getElementStyle(type)).text(name);
+			body.span(style).text(getLabel());
 		} else {
-			body.a(getLink(base), Resources.getElementStyle(type)).text(name);
+			body.a(getLink(base), style).text(getLabel());
 		}
 	}
 
@@ -126,32 +122,34 @@ public abstract class ReportPage implements IReportVisitor {
 			final ISourceFileLocator sourceFileLocator) throws IOException;
 
 	/**
-	 * Returns the node that belong to this page. The value is not available
-	 * before {@link #visitEnd(ICoverageNode, ISourceFileLocator)} has been
-	 * called.
-	 * 
-	 * @return corresponding node or <code>null</code>
-	 */
-	public ICoverageNode getNode() {
-		return node;
-	}
-
-	/**
-	 * Calculates a relative link to this page from the given base.
-	 * 
-	 * @param base
-	 *            base folder from where the link is created
-	 * @return relative link to this page
-	 */
-	public final String getLink(final ReportOutputFolder base) {
-		return outputFolder.getLink(base, getFileName());
-	}
-
-	/**
 	 * Specifies the local file name of this page.
 	 * 
 	 * @return local file name
 	 */
 	protected abstract String getFileName();
+
+	/**
+	 * Creates the output folder relative to the given base for this report
+	 * page. The method may decide to simply return the base folder itself.
+	 * 
+	 * @param base
+	 *            base folder
+	 * @return folder to create this page in
+	 */
+	protected abstract ReportOutputFolder getFolder(ReportOutputFolder base);
+
+	// === ICoverageTableItem ===
+
+	public String getLabel() {
+		return node.getName();
+	}
+
+	public ICoverageNode getNode() {
+		return node;
+	}
+
+	public final String getLink(final ReportOutputFolder base) {
+		return outputFolder.getLink(base, getFileName());
+	}
 
 }

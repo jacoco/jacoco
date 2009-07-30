@@ -30,29 +30,26 @@ public interface IReportVisitor {
 	/**
 	 * Called for every direct child.
 	 * 
-	 * @param type
-	 *            type of the child node
-	 * @param name
-	 *            name of the child node
+	 * @param node
+	 *            Node for the child in the implementation class specific to
+	 *            this type. The counters are may yet be populated.
+	 * 
 	 * @return visitor instance for processing the child node
 	 * 
 	 * @throws IOException
 	 *             in case of IO problems with the report writer
 	 */
-	IReportVisitor visitChild(ICoverageNode.ElementType type, String name)
-			throws IOException;
+	IReportVisitor visitChild(ICoverageNode node) throws IOException;
 
 	/**
-	 * Called at the very end, when all child node have been processed.
+	 * Called at the very end, when all child node have been processed and the
+	 * counters for this node are properly populated.
 	 * 
-	 * @param node
-	 *            summary information for this node
 	 * @param sourceFileLocator
 	 *            source file locator valid for this node
 	 * @throws IOException
 	 *             in case of IO problems with the report writer
 	 */
-	void visitEnd(ICoverageNode node, ISourceFileLocator sourceFileLocator)
-			throws IOException;
+	void visitEnd(ISourceFileLocator sourceFileLocator) throws IOException;
 
 }

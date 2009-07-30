@@ -20,7 +20,8 @@ import org.jacoco.report.ReportOutputFolder;
 import org.jacoco.report.html.resources.Resources;
 
 /**
- * Column for the item label.
+ * Column for the item label. The implementation is stateless, instances might
+ * be used in parallel.
  * 
  * @see ICoverageTableItem#getLabel()
  * @see ICoverageTableItem#getLink(org.jacoco.report.ReportOutputFolder)

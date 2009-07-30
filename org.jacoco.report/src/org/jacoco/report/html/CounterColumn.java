@@ -26,7 +26,7 @@ import org.jacoco.report.html.resources.Styles;
 
 /**
  * Column that prints the coverage data for each item and a summary in the
- * footer.
+ * footer. The implementation is stateless, instances might be used in parallel.
  * 
  * @author Marc R. Hoffmann
  * @version $Revision: $

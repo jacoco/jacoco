@@ -21,9 +21,8 @@ import org.jacoco.report.html.resources.Resources;
 
 /**
  * Renderer for a single column of a coverage table. The methods are always
- * called in the sequence <code>init header footer item*</code>. A single
- * instance might be used for multiple tables but in a single thread only.
- * Therefore implementations are allowed to be stateful.
+ * called in the sequence <code>init header footer item*</code>. Implementations
+ * might be stateful.
  * 
  * @author Marc R. Hoffmann
  * @version $Revision: $
