@@ -119,9 +119,15 @@ public class Analyzer {
 	 * @param directory
 	 *            folder to look for class files
 	 * @throws IOException
+	 *             thrown if the given file object does not represent a readable
+	 *             directory
 	 */
 	public void analyzeAll(final File directory) throws IOException {
-		for (final File f : directory.listFiles()) {
+		final File[] files = directory.listFiles();
+		if (files == null) {
+			throw new IOException("Can't read directory " + directory);
+		}
+		for (final File f : files) {
 			if (f.isDirectory()) {
 				analyzeAll(f);
 				continue;
