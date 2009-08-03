@@ -80,9 +80,9 @@ public class LabelColumnTest {
 		doc.close();
 		final Document doc = support.parse(output.getFile("Test.html"));
 		assertEquals("Abc", support.findStr(doc,
-				"/html/body/table/tr/td/text()"));
+				"/html/body/table/tr/td/span/text()"));
 		assertEquals("el_group", support.findStr(doc,
-				"/html/body/table/tr/td/@class"));
+				"/html/body/table/tr/td/span/@class"));
 	}
 
 	@Test

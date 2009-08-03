@@ -53,7 +53,7 @@ public class LabelColumn implements ICoverageTableColumn {
 		final String link = item.getLink(base);
 		final String label = item.getLabel();
 		if (link == null) {
-			tr.td(style).text(label);
+			tr.td().span(style).text(label);
 		} else {
 			tr.td().a(link, style).text(label);
 		}
