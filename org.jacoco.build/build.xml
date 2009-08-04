@@ -16,6 +16,7 @@
 	<property name="result.dist.lib.dir" location="${result.dist.dir}/lib"/>
 	<property name="result.dist.doc.dir" location="${result.dist.dir}/doc"/>
 	<property name="result.dist.test.dir" location="${result.dist.dir}/test"/>
+	<property name="result.dist.coverage.dir" location="${result.dist.dir}/coverage"/>
 
 	<property name="result.tmp.dir" location="${result.dir}/tmp"/>
 	<property name="result.tmp.coverage.file" location="${result.tmp.dir}/jacoco.exec"/>

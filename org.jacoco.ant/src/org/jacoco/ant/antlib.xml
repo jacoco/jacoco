@@ -2,4 +2,5 @@
 <antlib>
    <taskdef name="coverage" classname="org.jacoco.ant.CoverageTask"/>
    <taskdef name="agent" classname="org.jacoco.ant.AgentTask"/>
+   <taskdef name="report" classname="org.jacoco.ant.ReportTask"/>
 </antlib>

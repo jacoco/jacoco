@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<project name="org.jacoco.doc.buildhook">
+<project name="org.jacoco.doc.buildhook" xmlns:jacoco="antlib:org.jacoco.ant">
 
 	<property name="do.customverify" value="true"/>
 	<property name="do.customdoc" value="true"/>
 	
 	<target name="customverify">
+		<!-- Test Report -->
 		<mkdir dir="${result.dist.test.dir}"/>
 		<junitreport todir="${result.dist.test.dir}">
 			<fileset dir="${result.tmp.dir}" includes="*/test/*.xml"/>
@@ -13,7 +14,60 @@
 		</junitreport>
 		<move file="${result.dist.test.dir}/junit-noframes.html"  
 			  tofile="${result.dist.test.dir}/index.html"/>
+		
+		<!-- Coverage Report -->
+		<taskdef uri="antlib:org.jacoco.ant" resource="org/jacoco/ant/antlib.xml">
+			<classpath>
+				<fileset dir="${result.dist.lib.dir}" includes="org.jacoco.ant_*.jar"/>
+				<fileset dir="${result.dist.lib.dir}" includes="org.jacoco.core_*.jar"/>
+				<fileset dir="${result.dist.lib.dir}" includes="org.jacoco.report_*.jar"/>
+				<path refid="bundle-org.objectweb.asm"/>
+			</classpath>
+		</taskdef>
+		
+		<mkdir dir="${result.dist.coverage.dir}"/>
+		<jacoco:report>
+			<executiondata>
+				<file file="${result.tmp.coverage.file}"/>
+			</executiondata>
+			<structure name="JaCoCo">
+				<group name="org.jacoco.agent">
+					<classfiles>
+						<path refid="bundle-org.jacoco.agent"/>
+					</classfiles>
+					<sourcefiles>
+						<fileset dir="${workspace.dir}/org.jacoco.agent/src" includes="**/*.java"/>
+					</sourcefiles>
+				</group>
+				<group name="org.jacoco.ant">
+					<classfiles>
+						<path refid="bundle-org.jacoco.ant"/>
+					</classfiles>
+					<sourcefiles>
+						<fileset dir="${workspace.dir}/org.jacoco.ant/src" includes="**/*.java"/>
+					</sourcefiles>
+				</group>
+				<group name="org.jacoco.core">
+					<classfiles>
+						<path refid="bundle-org.jacoco.core"/>
+					</classfiles>
+					<sourcefiles>
+						<fileset dir="${workspace.dir}/org.jacoco.core/src" includes="**/*.java"/>
+					</sourcefiles>
+				</group>
+				<group name="org.jacoco.report">
+					<classfiles>
+						<path refid="bundle-org.jacoco.report"/>
+					</classfiles>
+					<sourcefiles>
+						<fileset dir="${workspace.dir}/org.jacoco.report/src" includes="**/*.java"/>
+					</sourcefiles>
+				</group>
+			</structure>
+			<html todir="${result.dist.coverage.dir}"/>
+		</jacoco:report>
 	</target>
+	
 	
 	<target name="customdoc">
 		
