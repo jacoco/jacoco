@@ -187,6 +187,21 @@ public class HTMLElement extends XMLElement {
 	 * 
 	 * @param hrefattr
 	 *            value of the href attribute
+	 * @return 'a' element
+	 * @throws IOException
+	 *             in case of problems with the writer
+	 */
+	public HTMLElement a(final String hrefattr) throws IOException {
+		final HTMLElement a = element("a");
+		a.attr("href", hrefattr);
+		return a;
+	}
+
+	/**
+	 * Creates a 'a' element.
+	 * 
+	 * @param hrefattr
+	 *            value of the href attribute
 	 * @param classattr
 	 *            value of the class attribute
 	 * @return 'a' element

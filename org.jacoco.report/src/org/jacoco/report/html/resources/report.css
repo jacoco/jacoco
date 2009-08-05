@@ -128,5 +128,19 @@ table.coverage td.ctr3 {
   padding:2px 12px 2px 4px;
 }
 
+.footer {
+  margin-top:20px;
+  border-top:#d6d3ce 1px solid;
+  padding-top:2px;
+  font-size:8pt;
+  color:#a0a0a0;
+}
 
+.footer div.versioninfo {
+  float:right;
+}
+
+.footer a {
+  color:#a0a0a0;
+}
 

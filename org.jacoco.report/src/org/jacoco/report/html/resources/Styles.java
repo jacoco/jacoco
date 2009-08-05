@@ -23,6 +23,12 @@ public class Styles {
 	/** Breadcrumb bar */
 	public static final String BREADCRUMB = "breadcrumb";
 
+	/** Footer */
+	public static final String FOOTER = "footer";
+
+	/** Version Info in Footer */
+	public static final String VERSIONINFO = "versioninfo";
+
 	/** Coverage table */
 	public static final String COVERAGETABLE = "coverage";
 

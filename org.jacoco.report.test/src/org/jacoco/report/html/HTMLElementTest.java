@@ -111,7 +111,15 @@ public class HTMLElementTest {
 	}
 
 	@Test
-	public void testA() throws IOException {
+	public void testA1() throws IOException {
+		root.a("http://www.jacoco.org/");
+		root.close();
+		assertEquals("<root><a href=\"http://www.jacoco.org/\"/></root>",
+				buffer.toString());
+	}
+
+	@Test
+	public void testA2() throws IOException {
 		root.a("http://www.jacoco.org/", "extern");
 		root.close();
 		assertEquals(
