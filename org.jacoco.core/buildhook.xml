@@ -7,6 +7,25 @@
 	</path>
 	
 	<property name="do.compile" value="true"/>
+	<property name="do.custompackage" value="true"/>
 	<property name="do.package" value="true"/>
+	
+	<target name="custompackage">
+		<!-- Compile JaCoCo.java with version info included -->
+		
+		<property name="result.tmp.bundle.java.dir" location="${result.tmp.bundle.dir}/java"/>
+		<mkdir dir="${result.tmp.bundle.java.dir}"/>
+		<copy todir="${result.tmp.bundle.java.dir}">
+			<fileset dir="${source.bundle.java.dir}" includes="**/JaCoCo.java"/>
+			<filterset>
+				<filter token="VERSION" value="${qualified.bundle.version}"/>
+			</filterset>
+		</copy>
+		
+		<javac srcdir="${result.tmp.bundle.java.dir}"
+			   destdir="${result.tmp.bundle.classes.dir}"
+		       debug="true" source="1.5" target="1.5">
+		</javac>
+	</target>
 	
 </project>
