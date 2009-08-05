@@ -71,7 +71,7 @@ public class Instrumenter {
 				ClassWriter.COMPUTE_MAXS);
 		final ClassVisitor visitor = createInstrumentingVisitor(CRC64
 				.checksum(reader.b), writer);
-		reader.accept(visitor, 0);
+		reader.accept(visitor, ClassReader.EXPAND_FRAMES);
 		return writer.toByteArray();
 	}
 
