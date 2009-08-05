@@ -14,6 +14,7 @@ package org.jacoco.report.html;
 
 import java.io.IOException;
 
+import org.jacoco.core.JaCoCo;
 import org.jacoco.core.analysis.ICoverageNode;
 import org.jacoco.report.IReportVisitor;
 import org.jacoco.report.ISourceFileLocator;
@@ -53,7 +54,8 @@ public abstract class ReportPage implements IReportVisitor, ICoverageTableItem {
 	 *            settings context
 	 */
 	protected ReportPage(final ICoverageNode node, final ReportPage parent,
-			final ReportOutputFolder baseFolder, final IHTMLReportContext context) {
+			final ReportOutputFolder baseFolder,
+			final IHTMLReportContext context) {
 		this.node = node;
 		this.parent = parent;
 		this.context = context;
@@ -104,7 +106,13 @@ public abstract class ReportPage implements IReportVisitor, ICoverageTableItem {
 	}
 
 	private void footer(final HTMLElement body) throws IOException {
-		// TODO
+		final HTMLElement footer = body.div(Styles.FOOTER);
+		final HTMLElement versioninfo = footer.div(Styles.VERSIONINFO);
+		versioninfo.text("Created with ");
+		versioninfo.a("http://www.eclemma.org/devdoc/jacoco.html").text(
+				"JaCoCo");
+		versioninfo.text(" ").text(JaCoCo.VERSION);
+		footer.text(context.getFooterText());
 	}
 
 	/**

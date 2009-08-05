@@ -94,6 +94,10 @@ public class ReportPageTest {
 				throw new AssertionError("Unexpected method call.");
 			}
 
+			public String getFooterText() {
+				return "CustomFooter";
+			}
+
 		};
 		ReportPage parent = new TestReportPage(new CoverageNodeImpl(
 				ElementType.SESSION, "Session", false), null);
@@ -142,11 +146,10 @@ public class ReportPageTest {
 		// Content
 		assertEquals("Hello Test", support.findStr(doc,
 				"/html/body/div[@class='testcontent']/text()"));
-	}
 
-	@Test
-	public void testCreatedPage() {
-
+		// Footer
+		assertEquals("CustomFooter", support.findStr(doc,
+				"/html/body/div[@class='footer']/text()"));
 	}
 
 }

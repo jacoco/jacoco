@@ -42,6 +42,8 @@ public class HTMLFormatter implements IReportFormatter, IHTMLReportContext {
 
 	private ILanguageNames languageNames = new JavaNames();
 
+	private String footerText = "";
+
 	private Resources resources;
 
 	/**
@@ -120,6 +122,16 @@ public class HTMLFormatter implements IReportFormatter, IHTMLReportContext {
 		this.languageNames = languageNames;
 	}
 
+	/**
+	 * Sets the optional text that should be included in every footer page.
+	 * 
+	 * @param footerText
+	 *            footer text
+	 */
+	public void setFooterText(final String footerText) {
+		this.footerText = footerText;
+	}
+
 	// === IHTMLReportContext ===
 
 	public ILanguageNames getLanguageNames() {
@@ -133,6 +145,10 @@ public class HTMLFormatter implements IReportFormatter, IHTMLReportContext {
 	public CoverageTable getTable(final ElementType type) {
 		final CoverageTable table = tables.get(type);
 		return table == null ? defaultTable : table;
+	}
+
+	public String getFooterText() {
+		return footerText;
 	}
 
 	// === IReportFormatter ===

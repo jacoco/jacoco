@@ -47,4 +47,11 @@ public interface IHTMLReportContext {
 	 */
 	public CoverageTable getTable(final ElementType type);
 
+	/**
+	 * Returns a string of textual information to include in every page footer.
+	 * 
+	 * @return footer text or empty string
+	 */
+	public String getFooterText();
+
 }

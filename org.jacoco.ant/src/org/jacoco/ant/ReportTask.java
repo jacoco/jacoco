@@ -103,13 +103,20 @@ public class ReportTask extends Task {
 
 		private File todir;
 
+		private String footer = "";
+
 		public void setTodir(final File todir) {
 			this.todir = todir;
+		}
+
+		public void setFooter(final String text) {
+			this.footer = text;
 		}
 
 		public IReportFormatter createFormatter() {
 			final HTMLFormatter formatter = new HTMLFormatter();
 			formatter.setReportOutput(new FileReportOutput(todir));
+			formatter.setFooterText(footer);
 			return formatter;
 		}
 
