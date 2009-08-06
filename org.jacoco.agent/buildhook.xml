@@ -36,9 +36,13 @@
 				<mapping from="org/jacoco/(.*)" to="org/jacoco/${randomid}/$1"/>
 				<mapping from="org/objectweb/asm/(.*)" to="org/jacoco/${randomid}/asm/$1"/>
 				
+				<fileset dir="${result.tmp.bundle.classes.dir}"/>
+				
 				<!-- Ship required classes only in the agent JAR -->
-				<deepclassfileset rootclass="org/jacoco/agent/JacocoAgent">
-					<fileset dir="${result.tmp.bundle.classes.dir}"/>
+				<deepclassfileset>
+					<seed>
+						<fileset dir="${result.tmp.bundle.classes.dir}"/>
+					</seed>
 					<fileset dir="${toString:bundle-org.jacoco.core}"/>
 					<zipfileset includes="**/*.class">
 			        	<fileset file="${toString:bundle-org.objectweb.asm}"/>

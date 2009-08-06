@@ -25,6 +25,7 @@ import java.util.Map;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.types.Resource;
 import org.apache.tools.ant.types.ResourceCollection;
+import org.apache.tools.ant.types.resources.Union;
 import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.commons.EmptyVisitor;
 import org.objectweb.asm.commons.Remapper;
@@ -44,7 +45,7 @@ public class DeepClassFileSet implements ResourceCollection {
 
 	private final List<ResourceCollection> delegates = new ArrayList<ResourceCollection>();
 
-	private String rootclass;
+	private final Union seed = new Union();
 
 	private Collection<Resource> resourceSet;
 
@@ -76,14 +77,12 @@ public class DeepClassFileSet implements ResourceCollection {
 	}
 
 	/**
-	 * Sets the required name of the root class where dependency traversal
-	 * starts.
+	 * Sets the seed classes where dependency traversal starts.
 	 * 
-	 * @param rootclass
-	 *            name of the root class in VM notation
+	 * @return container for seed classes
 	 */
-	public void setRootclass(final String rootclass) {
-		this.rootclass = rootclass;
+	public Union createSeed() {
+		return seed;
 	}
 
 	// === Internal dependency calculation ===
@@ -94,7 +93,14 @@ public class DeepClassFileSet implements ResourceCollection {
 		}
 		final Map<String, Resource> allClasses = createAllClassesMap();
 		final Map<String, Resource> selectedClasses = new HashMap<String, Resource>();
-		addClass(rootclass, selectedClasses, allClasses);
+		for (final Iterator<?> i = seed.iterator(); i.hasNext();) {
+			final Resource resource = (Resource) i.next();
+			if (resource.getName().endsWith(CLASSEXTENSION)) {
+				for (final String dependency : getDependencies(resource)) {
+					addClass(dependency, selectedClasses, allClasses);
+				}
+			}
+		}
 		return resourceSet = selectedClasses.values();
 	}
 
@@ -124,20 +130,26 @@ public class DeepClassFileSet implements ResourceCollection {
 	private Map<String, Resource> createAllClassesMap() {
 		final Map<String, Resource> map = new HashMap<String, Resource>();
 		for (final ResourceCollection c : delegates) {
-			final Iterator<?> i = c.iterator();
-			while (i.hasNext()) {
+			for (final Iterator<?> i = c.iterator(); i.hasNext();) {
 				final Resource resource = (Resource) i.next();
-				final String name = resource.getName();
-				if (resource.isExists() && name.endsWith(CLASSEXTENSION)) {
-					String classname = name.substring(0, name.length()
-							- CLASSEXTENSION.length());
-					// On Windows we get back slashes:
-					classname = classname.replace('\\', '/');
+				final String classname = getClassName(resource);
+				if (classname != null) {
 					map.put(classname, resource);
 				}
 			}
 		}
 		return map;
+	}
+
+	private String getClassName(final Resource resource) {
+		final String name = resource.getName();
+		if (!resource.isExists() || !name.endsWith(CLASSEXTENSION)) {
+			return null;
+		}
+		final String classname = name.substring(0, name.length()
+				- CLASSEXTENSION.length());
+		// On Windows we get back slashes:
+		return classname.replace('\\', '/');
 	}
 
 	/**

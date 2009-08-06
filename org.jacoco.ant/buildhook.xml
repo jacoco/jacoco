@@ -23,6 +23,37 @@
 			<fileset file="${source.bundle.dir}/about.html"/>
 			<fileset file="${result.dist.lib.dir}/jacocoagent.jar"/>
 		</jar>
+
+		<!-- create the all-in-one Ant JAR -->
+		<taskdef resource="org/jacoco/build/tools/ant/antlib.xml">
+			<classpath>
+				<path refid="bundle-org.jacoco.build"/>
+				<path refid="bundle-org.objectweb.asm"/>
+		    </classpath>
+		</taskdef>
+		
+		<jar destfile="${result.dist.lib.dir}/jacocoant.jar">
+			<manifest>
+				<attribute name="Implementation-Title" value="JaCoCo Ant Tasks"/>
+				<attribute name="Implementation-Vendor" value="Mountainminds GmbH &amp; Co. KG"/>
+				<attribute name="Implementation-Version" value="${qualified.bundle.version}"/>
+			</manifest>		
+			<fileset dir="${result.tmp.bundle.classes.dir}"/>
+			<fileset file="${result.dist.lib.dir}/jacocoagent.jar"/>
+			<fileset dir="${toString:bundle-org.jacoco.report}" excludes="**/*.class"/>
+			
+			<!-- Just add those classes we really need -->
+			<deepclassfileset>
+				<seed>
+					<fileset dir="${result.tmp.bundle.classes.dir}"/>
+				</seed>
+				<fileset dir="${toString:bundle-org.jacoco.core}"/>
+				<fileset dir="${toString:bundle-org.jacoco.report}"/>
+				<zipfileset includes="**/*.class">
+		        	<fileset file="${toString:bundle-org.objectweb.asm}"/>
+		    	</zipfileset>
+			</deepclassfileset>
+		</jar>
 	</target>
 	
 </project>

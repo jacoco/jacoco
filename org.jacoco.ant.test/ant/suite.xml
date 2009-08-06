@@ -19,14 +19,9 @@
 			
 	<taskdef uri="antlib:org.jacoco.ant" resource="org/jacoco/ant/antlib.xml">
 		<classpath>
-			<fileset dir="${result.dist.lib.dir}" includes="org.jacoco.ant_*.jar"/>
-			<fileset dir="${result.dist.lib.dir}" includes="org.jacoco.core_*.jar"/>
-			<fileset dir="${result.dist.lib.dir}" includes="org.jacoco.report_*.jar"/>
-			<path refid="bundle-org.objectweb.asm"/>
+			<file file="${result.dist.lib.dir}/jacocoant.jar"/>
 		</classpath>
 	</taskdef>
-
-
 	
 	<target name="suiteSetUp">
 	</target>
