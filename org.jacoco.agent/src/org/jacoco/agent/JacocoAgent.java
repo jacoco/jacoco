@@ -12,6 +12,7 @@
  *******************************************************************************/
 package org.jacoco.agent;
 
+import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
@@ -50,13 +51,17 @@ public class JacocoAgent {
 	private static void writeExecutionData(IRuntime runtime,
 			AgentOptions options) {
 		try {
-			OutputStream output = new FileOutputStream(options.getFile(),
-					options.getMerge());
+			File execFile = new File(options.getFile()).getAbsoluteFile();
+			File folder = execFile.getParentFile();
+			if (folder != null) {
+				folder.mkdirs();
+			}
+			OutputStream output = new FileOutputStream(execFile, options
+					.getMerge());
 			runtime.collect(new ExecutionDataWriter(output), false);
 			output.close();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
-
 }
