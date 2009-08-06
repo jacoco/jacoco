@@ -109,8 +109,7 @@ public abstract class ReportPage implements IReportVisitor, ICoverageTableItem {
 		final HTMLElement footer = body.div(Styles.FOOTER);
 		final HTMLElement versioninfo = footer.div(Styles.VERSIONINFO);
 		versioninfo.text("Created with ");
-		versioninfo.a("http://www.eclemma.org/devdoc/jacoco.html").text(
-				"JaCoCo");
+		versioninfo.a(JaCoCo.HOMEURL).text("JaCoCo");
 		versioninfo.text(" ").text(JaCoCo.VERSION);
 		footer.text(context.getFooterText());
 	}

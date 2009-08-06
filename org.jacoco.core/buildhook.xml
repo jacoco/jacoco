@@ -19,6 +19,7 @@
 			<fileset dir="${source.bundle.java.dir}" includes="**/JaCoCo.java"/>
 			<filterset>
 				<filter token="VERSION" value="${qualified.bundle.version}"/>
+				<filter token="HOMEURL" value="${jacoco.home.url}"/>
 			</filterset>
 		</copy>
 		

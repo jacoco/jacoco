@@ -23,4 +23,7 @@ public class JaCoCo {
 	/** Qualified build version of the JaCoCo core library. */
 	public static final String VERSION = "@VERSION@";
 
+	/** Absolute URL of the current JaCoCo home page */
+	public static final String HOMEURL = "@HOMEURL@";
+
 }

@@ -21,6 +21,8 @@
 	<property name="result.tmp.dir" location="${result.dir}/tmp"/>
 	<property name="result.tmp.coverage.file" location="${result.tmp.dir}/jacoco.exec"/>
 	
+	<property name="jacoco.home.url" value="http://www.eclemma.org/jacoco"/>
+	
 	<tstamp>
 		<format property="build.qualifier" pattern="yyyyMMddHHmmss" timezone="GMT+0"/>
 	</tstamp>
@@ -35,6 +37,7 @@
 				<property name="source.bundle.dir" location="${workspace.dir}/@{bundleid}"/>
 				<property name="result.tmp.bundle.dir" location="${result.tmp.dir}/@{bundleid}"/>
 				<property name="result.dist.doc.bundle.dir" location="${result.dist.doc.dir}/@{bundleid}"/>
+				<property name="jacoco.home.url" value="${jacoco.home.url}"/>
 			</ant>
 			<path id="bundle-@{bundleid}" location="${result.tmp.dir}/@{bundleid}/classes"/>
 		</sequential>
