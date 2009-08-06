@@ -74,16 +74,16 @@
 	</target>
 
 	<target name="testCoverageOfForkedJava">
-		<jacoco:coverage>
+		<property name="testCoverageOfForkedJava.exec.file" location="${result.tmp.bundle.testdata.dir}/testCoverageOfForkedJava.exec"/>
+		<jacoco:coverage file="${testCoverageOfForkedJava.exec.file}">
 			<java classname="org.jacoco.ant.test.EmptyMain" fork="true">
 				<classpath>
 					<path refid="ant-test-classes"/>
 				</classpath>
 			</java>
 		</jacoco:coverage>
-
 		<au:assertLogContains text="Enhancing java with coverage"/>
-		
+		<au:assertFileExists file="${testCoverageOfForkedJava.exec.file}"/>
 	</target>
 
 	<target name="testCoverageOfNonForkedJava">
@@ -99,7 +99,8 @@
 
 
 	<target name="testCoverageOfForkedJUnit">
-		<jacoco:coverage>
+		<property name="testCoverageOfForkedJUnit.exec.file" location="${result.tmp.bundle.testdata.dir}/testCoverageOfForkedJUnit.exec"/>
+		<jacoco:coverage file="${testCoverageOfForkedJUnit.exec.file}">
 			<junit fork="true" >
 				<classpath>
 					<path refid="bundle-org.junit4"/>
@@ -112,8 +113,8 @@
 			    </batchtest>
 			</junit>
 		</jacoco:coverage>
-		
 		<au:assertLogContains text="Enhancing junit with coverage"/>
+		<au:assertFileExists file="${testCoverageOfForkedJUnit.exec.file}"/>
 	</target>
 
 	<target name="testCoverageOfNonForkedJUnit">

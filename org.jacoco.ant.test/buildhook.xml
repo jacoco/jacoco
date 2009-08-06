@@ -18,11 +18,14 @@
 	<target name="customverify">
 		<property name="result.dist.bundle.jar.file" location="${result.dist.lib.dir}/${manifest.Bundle-SymbolicName}_${qualified.bundle.version}.jar"/>
 		<property name="result.tmp.bundle.test.dir" location="${result.tmp.bundle.dir}/test"/>
+		<property name="result.tmp.bundle.testdata.dir" location="${result.tmp.bundle.dir}/testdata"/>
+		
 		<mkdir dir="${result.tmp.bundle.test.dir}"/>
 
 	    <au:antunit failonerror="true">
 	    	<propertyset>
 	    		<propertyref name="result.dist.lib.dir"/>
+	    		<propertyref name="result.tmp.bundle.testdata.dir"/>
 	    		<propertyref name="result.tmp.bundle.classes.dir"/>
 	    		<propertyref name="target.plugins.dir"/>
 	    	</propertyset>
