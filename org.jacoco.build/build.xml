@@ -22,7 +22,7 @@
 	<property name="result.tmp.coverage.file" location="${result.tmp.dir}/jacoco.exec"/>
 	
 	<tstamp>
-		<format property="build.qualifier" pattern="yyyyMMddHHmmss"/>
+		<format property="build.qualifier" pattern="yyyyMMddHHmmss" timezone="GMT+0"/>
 	</tstamp>
 
 
@@ -61,10 +61,9 @@
 			<runbundlebuild bundleid="org.jacoco.doc" target="@{target}"/>
 		</sequential>
 	</macrodef>
-
 	
 	<target name="clean">
-		<delete dir="${result.dir}" quiet="true"/>
+		<delete dir="${result.dir}" quiet="false" failonerror="true"/>
     </target>
 
 	<target name="compile">
@@ -86,7 +85,16 @@
 	<target name="buildall">
 		<runallbundlebuilds target="all"/>
 	</target>
+	
+	<target name="deliver" depends="buildall">
+		<property prefix="core.manifest." file="${result.tmp.dir}/org.jacoco.core/MANIFEST.MF"/>
+		<property name="result.zip.file" location="${result.dir}/jacoco-${core.manifest.Bundle-Version}.zip"/>
+		<zip destfile="${result.zip.file}" level="9">
+			<fileset dir="${result.dist.dir}" includes="**/*"/>
+		</zip>
+		<checksum file="${result.zip.file}" format="MD5SUM"/>
+	</target>
 
-	<target name="rebuildall" depends="clean,buildall"/>
+	<target name="rebuildall" depends="clean,buildall,deliver"/>
 	
 </project>
