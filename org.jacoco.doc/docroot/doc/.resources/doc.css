@@ -87,7 +87,7 @@ table.coverage thead td {
 }
 
 table.coverage td {
-  white-space:nowrap;
+  vertical-align:top;
   padding:2px 12px 2px 6px;
 }
 
@@ -115,6 +115,13 @@ table.coverage td.ctr3 {
 }
 
 p.intro {
+  margin-left:20px;
+  padding-left:4px;
+  border-left:#cccca0 4px solid;
+  font-style:italic
+}
+
+p.hint {
   margin-left:20px;
   padding-left:4px;
   border-left:#cccca0 4px solid;

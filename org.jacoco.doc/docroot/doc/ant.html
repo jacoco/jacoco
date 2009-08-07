@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1" />
+  <link rel="stylesheet" href=".resources/doc.css" charset="ISO-8859-1" type="text/css" />
+  <title>JaCoCo - Ant Tasks</title>
+</head>
+<body>
+
+<div class="breadcrumb">
+  <a href="../index.html" class="el_session">JaCoCo</a> &gt;
+  <a href="index.html" class="el_group">Documentation</a> &gt;
+  <span class="el_source">Ant Tasks</span>
+</div>
+
+<h1>Ant Tasks</h1>
+
+<p>
+  JaCoCo comes with Ant tasks to launch Java programs with execution recording
+  and for creating coverage reports from the recorded data. All tasks are
+  defined in <code>jacocoant.jar</code> and can be included in your Ant scripts
+  with the usual <code>taskdef</code> declaration:   
+</p>
+
+<pre class="source">
+<span class="nr">    1</span>&lt;project name="Example" xmlns:jacoco="antlib:org.jacoco.ant"&gt;
+<span class="nr">    2</span>
+<span class="nr">    3</span>    &lt;taskdef uri="antlib:org.jacoco.ant" resource="org/jacoco/ant/antlib.xml"&gt;
+<span class="nr">    4</span>        &lt;classpath&gt;
+<span class="nr">    5</span>            &lt;file file="<i>path_to_jacoco</i>/lib/jacocoant.jar"/&gt;
+<span class="nr">    6</span>        &lt;/classpath&gt;
+<span class="nr">    7</span>    &lt;/taskdef&gt;
+<span class="nr">    8</span>    
+<span class="nr">    9</span>    ...
+<span class="nr">   10</span>    
+<span class="nr">   11</span>&lt;/project&gt;
+</pre>
+
+<p>
+  Declaring a XML namespace for JaCoCo tasks is optional but always recommended
+  if you mix tasks from different libraries. All subsequent examples use the
+  <code>jacoco</code> prefix declared above.  
+</p>
+
+
+<h2>Task <code>coverage</code></h2>
+
+<p>
+  The standard Ant tasks to launch Java programs are <code>java</code> and
+  <code>junit</code>. To add code coverage recording to these tasks they can
+  simply be wrapped with the <code>coverage</code> task as shown in the
+  following examples:  
+</p>
+
+<pre class="source">
+<span class="nr">    1</span>&lt;jacoco:coverage>
+<span class="nr">    2</span>    &lt;java classname="org.jacoco.examples.HelloJaCoCo" fork="true"&gt;
+<span class="nr">    3</span>        &lt;classpath&gt;
+<span class="nr">    4</span>            &lt;pathelement location="./bin"/&gt;
+<span class="nr">    5</span>        &lt;/classpath&gt;
+<span class="nr">    6</span>    &lt;/java&gt;
+<span class="nr">    7</span>&lt;/jacoco:coverage&gt;
+<span class="nr">    8</span>
+<span class="nr">    9</span>
+<span class="nr">   10</span>&lt;jacoco:coverage>
+<span class="nr">   11</span>    &lt;junit fork="true" forkmode="once"&gt;
+<span class="nr">   12</span>        &lt;test name="org.jacoco.examples.HelloJaCoCoTest"/&gt;
+<span class="nr">   13</span>        &lt;classpath&gt;
+<span class="nr">   14</span>            &lt;pathelement location="./bin"/&gt;
+<span class="nr">   15</span>        &lt;/classpath&gt;
+<span class="nr">   16</span>    &lt;/junit&gt;
+<span class="nr">   17</span>&lt;/jacoco:coverage>
+</pre>
+
+<p>
+  As a result coverage information is collected during execution and written
+  to a file when the process terminates. Note the <code>fork</code> attribute in
+  wrapped <code>java</code> task. 
+</p>
+
+<p class="hint">
+  The nested task always has to declare <code>fork="true"</code>, otherwise the
+  <code>coverage</code> task can't record coverage information and will fail.
+  In addition the <code>junit</code> task should declare
+  <code>forkmode="once"</code> to avoid starting a new JVM for every single test
+  case and decreasing execution performance dramatically (unless this is
+  required by the nature of the test cases).
+</p>
+
+<p>
+  The coverage task must wrap exactly one task. While it typically works without
+  any configuration, the behavior can be adjusted with some optional attributes: 
+</p>
+
+<table class="coverage">
+  <thead>
+    <tr>
+      <td>Attribute</td>
+      <td>Description</td>
+      <td>Default</td>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>file</code></td>
+      <td>Path to the output file for execution data.</td>
+      <td><code>jacoco.exec</code></td>
+    </tr>
+    <tr>
+      <td><code>merge</code></td>
+      <td>If set to <code>true</code> and the execution data file already
+          exists, coverage data is merged to the existing file. If set to
+          <code>false</code>, an existing execution data file will be replaced.
+      </td>
+      <td><code>true</code></td>
+    </tr>    
+    <tr>
+      <td><code>exclclassloader</code></td>
+      <td>A whitespace separated list of class loader names, that should be
+          excluded from execution analysis. The list entries may use wildcard
+          characters. This option might be required in case of special
+          frameworks that conflict with JaCoCo code instrumentation, e.g. class
+          loaders that do not have access to the Java runtime classes. 
+      </td>
+      <td><code>sun.reflect.DelegatingClassLoader</code></td>
+    </tr>
+  </tbody>
+</table>
+
+
+<h2>Task <code>agent</code></h2>
+
+<h2>Task <code>report</code></h2>
+
+
+<div class="footer">
+  <div class="versioninfo"><a href="@HOMEURL@">JaCoCo</a> @VERSION@</div>
+  <a href="license.html">Copyright</a> &copy; 2009 Mountainminds GmbH &amp; Co. KG and Contributors
+</div>
+
+</body>
+</html>
