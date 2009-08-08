@@ -24,6 +24,7 @@
 	</taskdef>
 	
 	<target name="suiteSetUp">
+		<echo>classes dir is ${result.tmp.bundle.classes.dir}</echo>
 	</target>
 
 	<target name="testCoverageAgent">
@@ -46,12 +47,12 @@
 	<target name="testMultipleSubTasks">
 		<au:expectfailure expectedMessage="Only one child task can be supplied to the coverge task">
 			<jacoco:coverage>
-				<java classname="org.jacoco.ant.test.EmptyMain">
+				<java fork="true" classname="org.jacoco.ant.test.EmptyMain">
 					<classpath>
 						<path refid="ant-test-classes"/>
 					</classpath>
 				</java>
-				<java classname="org.jacoco.ant.test.EmptyMain">
+				<java fork="true" classname="org.jacoco.ant.test.EmptyMain">
 					<classpath>
 						<path refid="ant-test-classes"/>
 					</classpath>
@@ -82,16 +83,16 @@
 	</target>
 
 	<target name="testCoverageOfNonForkedJava">
-		<jacoco:coverage>
-			<java classname="org.jacoco.ant.test.EmptyMain" fork="false">
-				<classpath>
-					<path refid="ant-test-classes"/>
-				</classpath>
-			</java>
-		</jacoco:coverage>
-		<au:assertLogContains text="JVM args ignored when same JVM is used."/>
+		<au:expectfailure expectedMessage="Coverage can only be applied on a forked VM">
+			<jacoco:coverage>
+				<java classname="org.jacoco.ant.test.EmptyMain" fork="false">
+					<classpath>
+						<path refid="ant-test-classes"/>
+					</classpath>
+				</java>
+			</jacoco:coverage>
+		</au:expectfailure>
 	</target>
-
 
 	<target name="testCoverageOfForkedJUnit">
 		<property name="testCoverageOfForkedJUnit.exec.file" location="${result.tmp.bundle.testdata.dir}/testCoverageOfForkedJUnit.exec"/>
@@ -113,20 +114,21 @@
 	</target>
 
 	<target name="testCoverageOfNonForkedJUnit">
-		<jacoco:coverage>
-			<junit fork="false">
-				<classpath>
-					<path refid="bundle-org.junit4"/>
-					<path refid="ant-test-classes"/>
-				</classpath>
-			    <batchtest todir="${result.tmp.bundle.test.dir}" >
-					<fileset dir="${result.tmp.bundle.classes.dir}">
-						<include name="org/jacoco/ant/test/EmptyTest.class"/>
-					</fileset>
-			    </batchtest>
-			</junit>
-		</jacoco:coverage>
-		<!-- TODO this should either log a message or fail -->
+		<au:expectfailure expectedMessage="Coverage can only be applied on a forked VM">
+			<jacoco:coverage>
+				<junit fork="false">
+					<classpath>
+						<path refid="bundle-org.junit4"/>
+						<path refid="ant-test-classes"/>
+					</classpath>
+				    <batchtest todir="${result.tmp.bundle.test.dir}" >
+						<fileset dir="${result.tmp.bundle.classes.dir}">
+							<include name="org/jacoco/ant/test/EmptyTest.class"/>
+						</fileset>
+				    </batchtest>
+				</junit>
+			</jacoco:coverage>
+		</au:expectfailure>
 
 	</target>
 

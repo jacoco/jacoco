@@ -46,6 +46,7 @@ public class AbstractCoverageTask extends Task {
 	/**
 	 * Sets the location to write coverage execution data
 	 * 
+	 * @ant.not-required Default is current working directory
 	 * @param file
 	 *            Location to write coverage execution data
 	 */
@@ -56,6 +57,7 @@ public class AbstractCoverageTask extends Task {
 	/**
 	 * Merge execution coverage data if a coverage file is already present
 	 * 
+	 * @ant.not-required Default is true
 	 * @param merge
 	 *            <code>true</code> to merge execution data
 	 */
@@ -64,8 +66,10 @@ public class AbstractCoverageTask extends Task {
 	}
 
 	/**
-	 * Sets the value of the Excluded Class Loaders pattern
+	 * Space separated list of wildcard patterns for classloaders that JaCoCo
+	 * will not instrument classes from
 	 * 
+	 * @ant.not-required Default is sun.reflect.DelegatingClassLoader
 	 * @param exclClassLoader
 	 *            Wildcard pattern of class loaders to exclude
 	 */

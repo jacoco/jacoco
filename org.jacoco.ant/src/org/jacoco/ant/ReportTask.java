@@ -46,6 +46,7 @@ import org.jacoco.report.IReportFormatter;
 import org.jacoco.report.IReportVisitor;
 import org.jacoco.report.ISourceFileLocator;
 import org.jacoco.report.MultiFormatter;
+import org.jacoco.report.csv.CsvFormatter;
 import org.jacoco.report.html.HTMLFormatter;
 
 /**
@@ -122,6 +123,21 @@ public class ReportTask extends Task {
 
 	}
 
+	public static class CsvFormatterElement implements IFormatterElement {
+		private File todir;
+
+		public void setTodir(final File todir) {
+			this.todir = todir;
+		}
+
+		public IReportFormatter createFormatter() {
+			final CsvFormatter formatter = new CsvFormatter();
+			formatter.setReportOutput(new FileReportOutput(todir));
+
+			return formatter;
+		}
+	}
+
 	private final Union executiondataElement = new Union();
 
 	private final GroupElement structure = new GroupElement();
@@ -138,6 +154,12 @@ public class ReportTask extends Task {
 
 	public HTMLFormatterElement createHtml() {
 		final HTMLFormatterElement element = new HTMLFormatterElement();
+		formatters.add(element);
+		return element;
+	}
+
+	public CsvFormatterElement createCsv() {
+		final CsvFormatterElement element = new CsvFormatterElement();
 		formatters.add(element);
 		return element;
 	}

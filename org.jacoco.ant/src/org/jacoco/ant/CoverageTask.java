@@ -12,14 +12,15 @@
  *******************************************************************************/
 package org.jacoco.ant;
 
-import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.Collection;
 
 import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.Project;
+import org.apache.tools.ant.RuntimeConfigurable;
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.TaskContainer;
 import org.apache.tools.ant.UnknownElement;
-import org.apache.tools.ant.taskdefs.Java;
-import org.apache.tools.ant.types.CommandlineJava;
 
 /**
  * Container task to run Java/Junit tasks with the JaCoCo agent jar. Coverage
@@ -30,18 +31,21 @@ import org.apache.tools.ant.types.CommandlineJava;
  * <li>Task must be using a forked VM (so vm args can be passed)</li>
  * </ul>
  * 
+ * @ant.task category="java"
  * @author Brock Janiczak
  * @version $Revision: $
  */
 public class CoverageTask extends AbstractCoverageTask implements TaskContainer {
 
+	private final Collection<TaskEnhancer> taskEnhancers = new ArrayList<TaskEnhancer>();
 	private Task childTask;
 
 	/**
 	 * Creates a new default coverage task
 	 */
 	public CoverageTask() {
-
+		taskEnhancers.add(new JavaLikeTaskEnhancer("java"));
+		taskEnhancers.add(new JavaLikeTaskEnhancer("junit"));
 	}
 
 	/**
@@ -54,14 +58,22 @@ public class CoverageTask extends AbstractCoverageTask implements TaskContainer 
 					"Only one child task can be supplied to the coverge task");
 		}
 
-		this.childTask = realizeTask(task);
-		final boolean isValidChild = isValidChild(childTask);
-		if (!isValidChild) {
-			throw new BuildException(task.getTaskName()
-					+ " is not a valid child of the coverage task");
+		this.childTask = task;
+
+		final UnknownElement unknownElement = (UnknownElement) task;
+
+		final String subTaskTypeName = unknownElement.getTaskType();
+
+		for (final TaskEnhancer enhancer : taskEnhancers) {
+			if (enhancer.supportsTask(subTaskTypeName)) {
+				enhancer.enhanceTask(task);
+				return;
+			}
 		}
 
-		addCoverageArguments(childTask);
+		throw new BuildException(subTaskTypeName
+				+ " is not a valid child of the coverage task");
+
 	}
 
 	/**
@@ -73,98 +85,86 @@ public class CoverageTask extends AbstractCoverageTask implements TaskContainer 
 			throw new BuildException(
 					"A child task must be supplied for the coverage task");
 		}
-
-		childTask.perform();
+		log("Enhancing " + childTask.getTaskName() + " with coverage");
+		childTask.execute();
 	}
 
 	/**
-	 * Appends required JVM args to enable coverage with the JaCoCo agent jar
-	 * 
-	 * @param task
-	 *            Task to add coverage arguments to. Task must be fully realised
+	 * Basic task enhancer that can handle all 'java like' tasks. That is, tasks
+	 * that have a top level fork attribute and nested jvmargs elements
 	 */
-	private void addCoverageArguments(final Task task) {
-		final CommandlineJava commandline = getTaskCommandline(task);
+	private class JavaLikeTaskEnhancer implements TaskEnhancer {
 
-		final JvmArgumentHelper jvmArgumentHelper = new JvmArgumentHelper();
-		final String agentParam = jvmArgumentHelper
-				.createJavaAgentParam(getAgentOptions());
+		private final String supportedTaskName;
 
-		commandline.createVmArgument().setValue(agentParam);
-
-		log("Enhancing " + task.getTaskName() + " with coverage");
-	}
-
-	/**
-	 * Configure child task and return real task instead of UnknownElement to
-	 * make configuration easier
-	 * 
-	 * @param task
-	 *            Uninitialised sub task
-	 * @return Configured subtask
-	 */
-	private Task realizeTask(final Task task) {
-		task.maybeConfigure();
-
-		return ((UnknownElement) task).getTask();
-	}
-
-	/**
-	 * Determines if the sub task is a valid child of this task. Valid tasks are
-	 * those that expose a VM Arguments property in some way
-	 * 
-	 * @param task
-	 *            Task to check
-	 * @return <code>true</code> if the task can be executed with coverage
-	 *         enabled
-	 */
-	private boolean isValidChild(final Task task) {
-		return getTaskCommandline(task) != null;
-	}
-
-	/**
-	 * Retrieve the Java command line of the sub task
-	 * 
-	 * @param task
-	 *            Task to get command line for
-	 * @return Java command line or <code>null</code> if no property returning
-	 *         {@link CommandlineJava} can be found
-	 */
-	private CommandlineJava getTaskCommandline(final Task task) {
-		if (task instanceof Java) {
-			return ((Java) task).getCommandLine();
+		public JavaLikeTaskEnhancer(final String supportedTaskName) {
+			this.supportedTaskName = supportedTaskName;
 		}
 
-		return getCommandlineWithReflection(task);
-	}
+		public boolean supportsTask(final String taskname) {
+			return taskname.equals(supportedTaskName);
+		}
 
-	/**
-	 * Helper method for getting the {@link CommandlineJava} object from a task
-	 * where ir does not expose a public accessor
-	 * 
-	 * @param task
-	 *            Task to get command line for
-	 * @return Java command line or <code>null</code> if no property returning
-	 *         {@link CommandlineJava} can be found
-	 */
-	private CommandlineJava getCommandlineWithReflection(final Task task) {
-		final Method[] declaredMethods = task.getClass().getDeclaredMethods();
+		public void enhanceTask(final Task task) {
+			final RuntimeConfigurable configurableWrapper = task
+					.getRuntimeConfigurableWrapper();
 
-		for (final Method method : declaredMethods) {
-			try {
-				final boolean returnsCommandLine = (method.getReturnType() == CommandlineJava.class);
-				final boolean hasNoParams = (method.getParameterTypes().length == 0);
+			final String forkValue = (String) configurableWrapper
+					.getAttributeMap().get("fork");
 
-				if (returnsCommandLine && hasNoParams) {
-					method.setAccessible(true);
-
-					return (CommandlineJava) method.invoke(task);
-				}
-			} catch (final Exception e) {
+			if (forkValue == null || !Project.toBoolean(forkValue)) {
+				throw new BuildException(
+						"Coverage can only be applied on a forked VM");
 			}
+
+			addJvmArgs((UnknownElement) task);
+			task.maybeConfigure();
 		}
 
-		return null;
+		public void addJvmArgs(final UnknownElement task) {
+			final JvmArgumentHelper jvmArgumentHelper = new JvmArgumentHelper();
+			final String agentParam = jvmArgumentHelper
+					.createJavaAgentParam(getAgentOptions());
+
+			final UnknownElement el = new UnknownElement("jvmarg");
+			el.setTaskName("jvmarg");
+			el.setQName("jvmarg");
+
+			final RuntimeConfigurable runtimeConfigurableWrapper = el
+					.getRuntimeConfigurableWrapper();
+			runtimeConfigurableWrapper.setAttribute("value", agentParam);
+
+			task.getRuntimeConfigurableWrapper().addChild(
+					runtimeConfigurableWrapper);
+
+			task.addChild(el);
+		}
 	}
 
+	/**
+	 * The task enhancer is responsible for potentially reconfiguring a task to
+	 * support running with code coverage enabled
+	 */
+	private interface TaskEnhancer {
+		/**
+		 * @param taskname
+		 *            Task type to enhance
+		 * @return <code>true</code> iff this enhancer is capable of enhacing
+		 *         the requested task type
+		 */
+		public boolean supportsTask(String taskname);
+
+		/**
+		 * Attempt to enhance the supplied task with coverage information. This
+		 * operation may fail if the task is being executed in the current VM
+		 * 
+		 * @param task
+		 *            Task instance to enhance (usually an
+		 *            {@link UnknownElement})
+		 * @throws BuildException
+		 *             Thrown if this enhancer can handle this type of task, but
+		 *             this instance can not be enhanced for some reason.
+		 */
+		public void enhanceTask(Task task) throws BuildException;
+	}
 }
