@@ -46,60 +46,60 @@ public class DelimitedWriterTest {
 
 	@Test
 	public void testSingleField() throws IOException {
-		writer.writeField("test");
+		writer.write("test");
 		assertResult("test");
 	}
 
 	@Test
 	public void testFieldContainingDelimiter() throws IOException {
-		writer.writeField("value,1");
+		writer.write("value,1");
 		assertResult("\"value,1\"");
 	}
 
 	@Test
 	public void testFieldContainingDelimiterAndQuote() throws IOException {
-		writer.writeField("\",\"");
+		writer.write("\",\"");
 		assertResult("\"\"\",\"\"\"");
 	}
 
 	@Test
 	public void testWriteEmptyHeader() throws IOException {
-		writer.writeFields();
+		writer.write(new String[] {});
 		assertResult("");
 	}
 
 	@Test
 	public void testWriteHeader() throws IOException {
-		writer.writeFields("header1", "header2", "header3");
+		writer.write("header1", "header2", "header3");
 		assertResult("header1,header2,header3");
 	}
 
 	@Test
 	public void testMultipleFieldsOnOneLine() throws IOException {
-		writer.writeField("test1");
-		writer.writeField("test2");
+		writer.write("test1");
+		writer.write("test2");
 		assertResult("test1,test2");
 	}
 
 	@Test
 	public void testMultipleFieldsOnMultipleLines() throws IOException {
-		writer.writeField("test1");
-		writer.writeField("test2");
+		writer.write("test1");
+		writer.write("test2");
 		writer.nextLine();
-		writer.writeField("test3");
-		writer.writeField("test4");
+		writer.write("test3");
+		writer.write("test4");
 		assertResult("test1,test2" + NEW_LINE + "test3,test4");
 	}
 
 	@Test
 	public void testAutoEscapedField() throws IOException {
-		writer.writeField("\"\"");
+		writer.write("\"\"");
 		assertResult("\"\"\"\"\"\"");
 	}
 
 	@Test
 	public void testWordWithSpace() throws IOException {
-		writer.writeField("space test");
+		writer.write("space test");
 		assertResult("space test");
 	}
 

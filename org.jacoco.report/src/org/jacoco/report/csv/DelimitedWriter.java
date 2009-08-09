@@ -77,9 +77,9 @@ public class DelimitedWriter {
 	 * @throws IOException
 	 *             Error writing to the underlying writer object
 	 */
-	public void writeFields(final String... fields) throws IOException {
+	public void write(final String... fields) throws IOException {
 		for (final String field : fields) {
-			writeField(field);
+			write(field);
 		}
 	}
 
@@ -93,12 +93,38 @@ public class DelimitedWriter {
 	 * @throws IOException
 	 *             Error writing to the underlying writer object
 	 */
-	public void writeField(final String field) throws IOException {
+	public void write(final String field) throws IOException {
 		if (fieldPosition != 0) {
 			delegate.write(delimiter);
 		}
 		delegate.write(escape(field));
 		fieldPosition++;
+	}
+
+	/**
+	 * Write a single integer value.
+	 * 
+	 * @param value
+	 *            Value to write
+	 * @throws IOException
+	 *             Error writing to the underlying writer object
+	 */
+	public void write(final int value) throws IOException {
+		write(Integer.toString(value));
+	}
+
+	/**
+	 * Write muliple integer values
+	 * 
+	 * @param values
+	 *            values to write
+	 * @throws IOException
+	 *             Error writing to the underlying writer object
+	 */
+	public void write(final int... values) throws IOException {
+		for (final int value : values) {
+			write(Integer.toString(value));
+		}
 	}
 
 	/**
