@@ -47,7 +47,7 @@ public class WildcardMatcher {
 		pattern = Pattern.compile(regex.toString());
 	}
 
-	private static StringBuilder toRegex(final String expression) {
+	private static CharSequence toRegex(final String expression) {
 		final StringBuilder regex = new StringBuilder(expression.length() * 2);
 		final StringTokenizer st = new StringTokenizer(expression, "?*", true);
 		while (st.hasMoreTokens()) {
