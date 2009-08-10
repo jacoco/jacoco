@@ -19,7 +19,7 @@ import java.util.Locale;
 
 import org.jacoco.core.instr.Instrumenter;
 import org.jacoco.core.runtime.IRuntime;
-import org.jacoco.core.runtime.SystemPropertiesRuntime;
+import org.jacoco.core.runtime.LoggerRuntime;
 import org.jacoco.core.test.targets.Target_performance_01;
 import org.jacoco.core.test.targets.Target_performance_02;
 import org.junit.Before;
@@ -41,7 +41,7 @@ public class RuntimePerformancetest {
 
 	@Before
 	public void setup() {
-		runtime = new SystemPropertiesRuntime();
+		runtime = new LoggerRuntime();
 		runtime.startup();
 	}
 

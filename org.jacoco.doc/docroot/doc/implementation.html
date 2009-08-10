@@ -222,8 +222,20 @@
   Making a runtime library available to all instrumented classes can be a
   painful or impossible task in frameworks that use there own class loading
   mechanisms. Therefore JaCoCo decouples the instrumented classes and the
-  coverage runtime through official JRE API types. 
+  coverage runtime through official JRE API types. Currently two approaches has
+  been implemented:
 </p>
+
+<ul>
+  <li>Use a shared <code>java.util.logging.Logger</code> instance to report
+    coverage data to. The coverage runtime registers a custom
+    <code>Handler</code> to receive the data. (Default)</li> 
+  <li>Another approach was to store a <code>java.util.Map</code> instance
+    under a system property. This solution breaks the contract that system
+    properties must only contain <code>java.lang.String</code> values and has
+    therefore caused trouble in certain environments.</li> 
+</ul>
+
 
 <h2>Memory Usage</h2>
 

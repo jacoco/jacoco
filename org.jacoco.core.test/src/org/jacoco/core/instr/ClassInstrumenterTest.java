@@ -13,7 +13,7 @@
 package org.jacoco.core.instr;
 
 import org.jacoco.core.runtime.IRuntime;
-import org.jacoco.core.runtime.SystemPropertiesRuntime;
+import org.jacoco.core.runtime.LoggerRuntime;
 import org.jacoco.core.runtime.SystemPropertiesRuntimeTest.IWriteAccess;
 import org.junit.Before;
 import org.junit.Test;
@@ -38,7 +38,7 @@ public class ClassInstrumenterTest {
 
 	@Before
 	public void setup() {
-		runtime = new SystemPropertiesRuntime(0);
+		runtime = new LoggerRuntime();
 		instrumenter = new ClassInstrumenter(123, runtime, new EmptyVisitor());
 	}
 

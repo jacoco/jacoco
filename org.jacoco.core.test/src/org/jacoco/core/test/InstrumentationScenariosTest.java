@@ -17,7 +17,7 @@ import java.io.IOException;
 import org.jacoco.core.instr.Analyzer;
 import org.jacoco.core.instr.Instrumenter;
 import org.jacoco.core.runtime.IRuntime;
-import org.jacoco.core.runtime.SystemPropertiesRuntime;
+import org.jacoco.core.runtime.LoggerRuntime;
 import org.jacoco.core.test.ClassDataRecorder.BlockData;
 import org.jacoco.core.test.targets.Target_cinit_01;
 import org.jacoco.core.test.targets.Target_cinit_02;
@@ -45,7 +45,7 @@ public class InstrumentationScenariosTest {
 
 	@Before
 	public void setup() {
-		runtime = new SystemPropertiesRuntime();
+		runtime = new LoggerRuntime();
 		runtime.startup();
 	}
 

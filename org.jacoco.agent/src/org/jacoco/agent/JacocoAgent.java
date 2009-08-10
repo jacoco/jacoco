@@ -21,7 +21,7 @@ import java.lang.instrument.Instrumentation;
 import org.jacoco.core.data.ExecutionDataWriter;
 import org.jacoco.core.runtime.AgentOptions;
 import org.jacoco.core.runtime.IRuntime;
-import org.jacoco.core.runtime.SystemPropertiesRuntime;
+import org.jacoco.core.runtime.LoggerRuntime;
 
 /**
  * The agent which is referred as the <code>Premain-Class</code>.
@@ -35,7 +35,7 @@ public class JacocoAgent {
 			final Instrumentation inst) {
 
 		final AgentOptions options = new AgentOptions(agentArgs);
-		final IRuntime runtime = new SystemPropertiesRuntime();
+		final IRuntime runtime = new LoggerRuntime();
 		runtime.startup();
 
 		inst.addTransformer(new CoverageTransformer(runtime, options));

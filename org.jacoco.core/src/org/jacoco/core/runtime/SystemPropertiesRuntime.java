@@ -43,19 +43,7 @@ public class SystemPropertiesRuntime implements IRuntime {
 	private final String key;
 
 	/**
-	 * Creates a new runtime with the given id. The id helps to separate
-	 * different runtime instances. The instrumentation and the target VM must
-	 * be based on a runtime with the same id.
-	 * 
-	 * @param id
-	 *            Identifier for the runtime
-	 */
-	public SystemPropertiesRuntime(final int id) {
-		this.key = KEYPREFIX + Integer.toHexString(id);
-	}
-
-	/**
-	 * Creates a new runtime with a random identifier.
+	 * Creates a new runtime.
 	 */
 	public SystemPropertiesRuntime() {
 		this.key = KEYPREFIX + hashCode();
@@ -69,13 +57,11 @@ public class SystemPropertiesRuntime implements IRuntime {
 		final int data = gen.newLocal(GeneratorConstants.DATAFIELD_TYPE);
 		gen.storeLocal(data);
 
-		// Properties stack := System.getProperties()
+		// stack := System.getProperties()
 		gen.visitMethodInsn(Opcodes.INVOKESTATIC, "java/lang/System",
 				"getProperties", "()Ljava/util/Properties;");
 
-		// gen.swap();
-
-		// Map stack := stack.get(key)
+		// stack := stack.get(key)
 		gen.push(key);
 		gen.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "java/util/Properties",
 				"get", "(Ljava/lang/Object;)Ljava/lang/Object;");
@@ -85,7 +71,7 @@ public class SystemPropertiesRuntime implements IRuntime {
 		gen.push(classId);
 		gen.visitMethodInsn(Opcodes.INVOKESTATIC, "java/lang/Long", "valueOf",
 				"(J)Ljava/lang/Long;");
-		// gen.swap();
+
 		gen.loadLocal(data);
 		gen.visitMethodInsn(Opcodes.INVOKEINTERFACE, "java/util/Map", "put",
 				"(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;");
