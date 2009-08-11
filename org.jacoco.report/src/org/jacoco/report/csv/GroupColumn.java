@@ -35,10 +35,8 @@ public class GroupColumn implements IReportVisitor, ICsvColumn {
 	 * 
 	 * @param reportFile
 	 *            CSV Report context
-	 * @param parent
-	 *            parent element
 	 * @param node
-	 *            {@link ElementType#Group} coverage node
+	 *            {@link ElementType#GROUP} coverage node
 	 */
 	public GroupColumn(final CsvReportFile reportFile, final ICoverageNode node) {
 		this.reportFile = reportFile;

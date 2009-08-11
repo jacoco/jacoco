@@ -53,7 +53,7 @@ public class ClassColumn implements IReportVisitor, ICsvColumn {
 	 * @param parent
 	 *            parent element
 	 * @param node
-	 *            {@link ElementType#Class} coverage node
+	 *            {@link ElementType#CLASS} coverage node
 	 */
 	public ClassColumn(final CsvReportFile reportFile, final ICsvColumn parent,
 			final ICoverageNode node) {
