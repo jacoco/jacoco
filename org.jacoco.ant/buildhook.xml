@@ -18,7 +18,12 @@
 	<target name="custompackage">
 		<property name="result.dist.bundle.jar.file" location="${result.dist.lib.dir}/${manifest.Bundle-SymbolicName}_${qualified.bundle.version}.jar"/>
 		<mkdir dir="${result.dist.lib.dir}"/>
-		<jar destfile="${result.dist.bundle.jar.file}" manifest="${result.temp.bundle.manifest.file}">
+		<jar destfile="${result.dist.bundle.jar.file}" level="9">
+			<manifest>
+				<attribute name="Implementation-Title" value="JaCoCo Ant Tasks"/>
+				<attribute name="Implementation-Vendor" value="Mountainminds GmbH &amp; Co. KG"/>
+				<attribute name="Implementation-Version" value="${qualified.bundle.version}"/>
+			</manifest>
 			<fileset dir="${result.tmp.bundle.classes.dir}"/>
 			<fileset file="${source.bundle.dir}/about.html"/>
 			<fileset file="${result.dist.lib.dir}/jacocoagent.jar"/>

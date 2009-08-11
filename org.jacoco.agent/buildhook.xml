@@ -22,7 +22,7 @@
 		<!-- The random identifier will be used to create a unique package names --> 
 		<randomid name="randomid"/>
 		
-		<jar destfile="${result.dist.lib.dir}/jacocoagent.jar">
+		<jar destfile="${result.dist.lib.dir}/jacocoagent.jar" level="9">
 			<manifest>
 				<attribute name="Premain-Class" value="org.jacoco.${randomid}.agent.JacocoAgent"/>
 				<attribute name="Implementation-Title" value="JaCoCo Java Agent"/>

@@ -56,7 +56,7 @@
 	<target name="package" if="do.package" depends="compile,runcustompackage,manifest">
 		<property name="result.dist.bundle.jar.file" location="${result.dist.lib.dir}/${manifest.Bundle-SymbolicName}_${qualified.bundle.version}.jar"/>
 		<mkdir dir="${result.dist.lib.dir}"/>
-		<jar destfile="${result.dist.bundle.jar.file}" manifest="${result.temp.bundle.manifest.file}">
+		<jar destfile="${result.dist.bundle.jar.file}" manifest="${result.temp.bundle.manifest.file}" level="9">
 			<fileset dir="${result.tmp.bundle.classes.dir}"/>
 			<fileset file="${source.bundle.dir}/about.html"/>
 		</jar>
