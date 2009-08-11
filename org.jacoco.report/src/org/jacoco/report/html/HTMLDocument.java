@@ -56,6 +56,7 @@ public class HTMLDocument extends XMLDocument {
 	 */
 	public HTMLDocument(final OutputStream output) throws IOException {
 		super(ROOT, PUBID, SYSTEM, output);
+		attr("xmlns", "http://www.w3.org/1999/xhtml");
 	}
 
 	@Override
