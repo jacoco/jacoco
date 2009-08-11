@@ -99,4 +99,10 @@ public class JavaNamesTest {
 				"com/example/SomeClass", "<cinit>", "()V"));
 	}
 
+	@Test
+	public void testGetMethodName8() {
+		assertEquals("update(Map.Entry)", names.getMethodName(
+				"com/example/SomeClass", "update", "(Ljava/util/Map$Entry;)V"));
+	}
+
 }

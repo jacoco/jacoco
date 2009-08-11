@@ -63,7 +63,8 @@ public class JavaNames implements ILanguageNames {
 	private String getShortTypeName(final Type type) {
 		final String name = type.getClassName();
 		final int pos = name.lastIndexOf('.');
-		return pos == -1 ? name : name.substring(pos + 1);
+		final String shortName = pos == -1 ? name : name.substring(pos + 1);
+		return shortName.replace('$', '.');
 	}
 
 }
