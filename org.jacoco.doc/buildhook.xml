@@ -61,9 +61,9 @@
 					</sourcefiles>
 				</group>
 			</structure>
-			<html todir="${result.dist.coverage.dir}"
+			<html destdir="${result.dist.coverage.dir}"
 				  footer="Code Coverage Report for JaCoCo ${qualified.bundle.version}"/>
-			<csv todir="${result.dist.coverage.dir}"/>
+			<csv destdir="${result.dist.coverage.dir}"/>
 		</jacoco:report>
 	</target>
 	

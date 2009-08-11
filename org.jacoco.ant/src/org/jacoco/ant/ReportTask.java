@@ -102,12 +102,12 @@ public class ReportTask extends Task {
 
 	public static class HTMLFormatterElement implements IFormatterElement {
 
-		private File todir;
+		private File destdir;
 
 		private String footer = "";
 
-		public void setTodir(final File todir) {
-			this.todir = todir;
+		public void setDestdir(final File destdir) {
+			this.destdir = destdir;
 		}
 
 		public void setFooter(final String text) {
@@ -116,7 +116,7 @@ public class ReportTask extends Task {
 
 		public IReportFormatter createFormatter() {
 			final HTMLFormatter formatter = new HTMLFormatter();
-			formatter.setReportOutput(new FileReportOutput(todir));
+			formatter.setReportOutput(new FileReportOutput(destdir));
 			formatter.setFooterText(footer);
 			return formatter;
 		}
@@ -124,15 +124,16 @@ public class ReportTask extends Task {
 	}
 
 	public static class CsvFormatterElement implements IFormatterElement {
-		private File todir;
 
-		public void setTodir(final File todir) {
-			this.todir = todir;
+		private File destdir;
+
+		public void setDestdir(final File destdir) {
+			this.destdir = destdir;
 		}
 
 		public IReportFormatter createFormatter() {
 			final CsvFormatter formatter = new CsvFormatter();
-			formatter.setReportOutput(new FileReportOutput(todir));
+			formatter.setReportOutput(new FileReportOutput(destdir));
 
 			return formatter;
 		}
