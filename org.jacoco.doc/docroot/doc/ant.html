@@ -131,6 +131,39 @@
 
 <h2>Task <code>agent</code></h2>
 
+<p>
+  If the <code>coverage</code> task is not suitable for your launch target, you
+  might alternatively use the <code>agent</code> task to create the Java agent
+  parameter. The following example defines a Ant property with the name
+  <code>agentvmparam</code> that can be directly used as Java VM parameter:
+</p>
+
+<pre class="source">
+<span class="nr">    1</span>&lt;jacoco:agent property="agentvmparam"/>
+</pre>
+
+<p>
+  This task has the same attributes as the <code>coverage</code> task plus an
+  additional property to specify the target property name:
+</p>
+
+<table class="coverage">
+  <thead>
+    <tr>
+      <td>Attribute</td>
+      <td>Description</td>
+      <td>Default</td>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>property</code></td>
+      <td>Name of the Ant property to set.</td>
+      <td><i>none (required)</i></td>
+    </tr>
+  </tbody>
+</table>
+
 <h2>Task <code>report</code></h2>
 
 
