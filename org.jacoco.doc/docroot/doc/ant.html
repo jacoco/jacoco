@@ -117,9 +117,10 @@
     </tr>    
     <tr>
       <td><code>exclclassloader</code></td>
-      <td>A whitespace separated list of class loader names, that should be
-          excluded from execution analysis. The list entries may use wildcard
-          characters. This option might be required in case of special
+      <td>A list of class loader names, that should be excluded from execution
+          analysis. The list entries are separated by a vertical bar
+          (<code>|</code>) and may use wildcard characters (<code>*</code> and
+          <code>?</code>). This option might be required in case of special
           frameworks that conflict with JaCoCo code instrumentation, e.g. class
           loaders that do not have access to the Java runtime classes. 
       </td>

@@ -85,7 +85,7 @@
 		<jacoco:coverage
 				merge="true"
 				file="${result.tmp.coverage.file}"
-				exclClassLoader="sun.reflect.DelegatingClassLoader org.jacoco.core.test.TargetLoader">
+				exclClassLoader="sun.reflect.DelegatingClassLoader|org.jacoco.core.test.TargetLoader">
 			
 			<junit haltonfailure="true" fork="true" forkmode="once">
 	    		<batchtest todir="${result.tmp.bundle.test.dir}" >

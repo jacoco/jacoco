@@ -108,7 +108,7 @@ public class AgentOptions {
 	 *            output file location
 	 */
 	public void setFile(final String file) {
-		options.put(FILE, file);
+		setOption(FILE, file);
 	}
 
 	/**
@@ -128,7 +128,7 @@ public class AgentOptions {
 	 *            <code>true</code>, when the output should be merged
 	 */
 	public void setMerge(final boolean flag) {
-		options.put(MERGE, String.valueOf(flag));
+		setOption(MERGE, String.valueOf(flag));
 	}
 
 	/**
@@ -148,7 +148,15 @@ public class AgentOptions {
 	 *            expression for excluded class loaders
 	 */
 	public void setExclClassloader(final String expression) {
-		options.put(EXCLCLASSLOADER, expression);
+		setOption(EXCLCLASSLOADER, expression);
+	}
+
+	private void setOption(final String key, final String value) {
+		if (value.contains(",")) {
+			throw new IllegalArgumentException(
+					"Invalid character in option argument: " + value);
+		}
+		options.put(key, value);
 	}
 
 	/**

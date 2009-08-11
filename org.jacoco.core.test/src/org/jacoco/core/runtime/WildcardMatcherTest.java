@@ -58,10 +58,9 @@ public class WildcardMatcherTest {
 
 	@Test
 	public void testMultiExpression() {
-		assertTrue(new WildcardMatcher("Hello World").matches("World"));
-		assertTrue(new WildcardMatcher("Hello,World").matches("World"));
-		assertTrue(new WildcardMatcher("Hello, World").matches("World"));
-		assertTrue(new WildcardMatcher("*Test *Foo").matches("UnitTest"));
+		assertTrue(new WildcardMatcher("Hello|World").matches("World"));
+		assertTrue(new WildcardMatcher("Hello|World").matches("World"));
+		assertTrue(new WildcardMatcher("*Test|*Foo").matches("UnitTest"));
 	}
 
 }

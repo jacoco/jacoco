@@ -17,8 +17,8 @@ import java.util.regex.Pattern;
 
 /**
  * Matches strings against <code>?</code>/<code>*</code> wildcard expressions.
- * Multiple expressions can separated with commas or white spaces. In this case
- * the expression matches if at least one part matches.
+ * Multiple expressions can be separated with a vertical bar (|). In this case the
+ * expression matches if at least one part matches.
  * 
  * @author Marc R. Hoffmann
  * @version $Revision: $
@@ -34,7 +34,7 @@ public class WildcardMatcher {
 	 *            wildcard expressions
 	 */
 	public WildcardMatcher(final String expression) {
-		final String[] parts = expression.split("[\\s,]+");
+		final String[] parts = expression.split("\\|");
 		final StringBuilder regex = new StringBuilder(expression.length() * 2);
 		boolean next = false;
 		for (final String part : parts) {

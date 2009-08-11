@@ -118,4 +118,10 @@ public class AgentOptionsTest {
 		new AgentOptions("file=test.exec,something=true");
 	}
 
+	@Test(expected = IllegalArgumentException.class)
+	public void testInvalidOptionValue() {
+		AgentOptions options = new AgentOptions();
+		options.setFile("invalid,name.exec");
+	}
+
 }
