@@ -10,6 +10,7 @@
 
 <div class="breadcrumb">
   <a href="../index.html" class="el_session">JaCoCo</a> &gt;
+  <a href="index.html" class="el_group">Documentation</a> &gt;
   <span class="el_source">Mission</span>
 </div>
 
@@ -39,9 +40,37 @@
   JaCoCo should become the standard tool for instrumentation based code coverage
   in Java VM based environments. The focus is providing a lightweight, flexible
   and well documented library for integration with various build and development
-  tools. Ant tasks are provided as reference usage scenarios. Other tools like a
-  ready to use Eclipse plug-in (future version of EclEmma) might follow. 
+  tools. <a href="ant.html">Ant tasks</a> are provided as reference usage
+  scenarios. Other tools like a ready to use
+  <a href="http://www.eclipse.org/">Eclipse</a> plug-in (future version of
+  <a href="http://www.eclemma.org/">EclEmma</a>) or a
+  <a href="http://maven.apache.org/">Maven</a> plug-ins might follow. 
 </p>
+
+<h2>Product Definition</h2>
+
+<h3>Features</h3>
+<ul>
+  <li><i>Statement coverage</i> on Java byte code level, where instrumentation
+  and recording happens on 
+  <a class="extern" href="http://en.wikipedia.org/wiki/Basic_block"><i>basic block</i></a>
+  granularity. This is the same mechanism implemented by the
+  <a class="extern" href="http://emma.sourceforge.net/">EMMA</a> library.</li>
+  <li>Optional: Branch coverage based on basic block flow.</li>
+  <li>Optional: Invocation counting.</li>
+  <li>Optional: Better handling of Exception within blocks. (e.g. record exception on active counter)</li>
+  <li>Several report formats (HTML, XML, CSV).</li>
+</ul>
+
+<h3>Non-Functional Characteristics</h3>
+<ul>
+  <li>Lightweight implementation with minimal dependencies on external libraries
+  and system resources.</li>
+  <li>Fully documented API (JavaDoc) including descriptions of the basic
+  concepts.</li>
+  <li>Regression tests with full functional test coverage based on JUnit test
+  cases.</li>
+</ul>
 
 <div class="footer">
   <div class="versioninfo"><a href="@HOMEURL@">JaCoCo</a> @VERSION@</div>
