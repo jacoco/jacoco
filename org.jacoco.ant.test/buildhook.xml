@@ -30,8 +30,7 @@
 
 		<jacoco:coverage
 				merge="true"
-				file="${result.tmp.coverage.file}"
-				exclClassLoader="sun.reflect.DelegatingClassLoader org.jacoco.core.test.TargetLoader">
+				file="${result.tmp.coverage.file}">
 			<java fork="true" jar="${ant.library.dir}/ant-launcher.jar" failonerror="true">
 				<arg value="-f"/>
 				<arg value="${source.bundle.dir}/ant/stub.xml"/>
