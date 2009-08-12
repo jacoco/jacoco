@@ -25,7 +25,7 @@
 	</path>
 
 	<path id="bundle-org.apache.ant">
-        <fileset dir="${target.plugins.dir}" includes="org.apache.ant_*/ant.jar"/>
+        <fileset dir="${target.plugins.dir}" includes="org.apache.ant_*/lib/ant.jar"/>
 	</path>
 	
 	<path id="bundle-org.junit4">

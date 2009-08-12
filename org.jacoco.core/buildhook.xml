@@ -25,7 +25,7 @@
 		
 		<javac srcdir="${result.tmp.bundle.java.dir}"
 			   destdir="${result.tmp.bundle.classes.dir}"
-		       debug="true" source="1.5" target="1.5">
+		       debug="true" source="1.5" target="1.5" includeAntRuntime="no">
 		</javac>
 	</target>
 	
