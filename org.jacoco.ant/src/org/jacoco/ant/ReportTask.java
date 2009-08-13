@@ -71,20 +71,41 @@ public class ReportTask extends Task {
 
 		String name;
 
+		/**
+		 * Sets the name of the group.
+		 * 
+		 * @param name
+		 *            name of the group
+		 */
 		public void setName(final String name) {
 			this.name = name;
 		}
 
+		/**
+		 * Creates a new child group.
+		 * 
+		 * @return new child group
+		 */
 		public GroupElement createGroup() {
 			final GroupElement group = new GroupElement();
 			children.add(group);
 			return group;
 		}
 
+		/**
+		 * Returns the nested resource collection for class files.
+		 * 
+		 * @return resource collection for class files
+		 */
 		public Union createClassfiles() {
 			return classfiles;
 		}
 
+		/**
+		 * Returns the nested resource collection for source files.
+		 * 
+		 * @return resource collection for source files
+		 */
 		public Union createSourcefiles() {
 			return sourcefiles;
 		}
@@ -100,16 +121,32 @@ public class ReportTask extends Task {
 
 	}
 
+	/**
+	 * Formatter Element for HTML reports.
+	 */
 	public static class HTMLFormatterElement implements IFormatterElement {
 
 		private File destdir;
 
 		private String footer = "";
 
+		/**
+		 * Sets the output directory for the report.
+		 * 
+		 * @param destdir
+		 *            output directory
+		 */
 		public void setDestdir(final File destdir) {
 			this.destdir = destdir;
 		}
 
+		/**
+		 * Sets an optional footer text that will be displayed on every report
+		 * page.
+		 * 
+		 * @param text
+		 *            footer text
+		 */
 		public void setFooter(final String text) {
 			this.footer = text;
 		}
@@ -123,10 +160,19 @@ public class ReportTask extends Task {
 
 	}
 
+	/**
+	 * Formatter Element for HTML reports.
+	 */
 	public static class CsvFormatterElement implements IFormatterElement {
 
 		private File destdir;
 
+		/**
+		 * Sets the output directory for the report.
+		 * 
+		 * @param destdir
+		 *            output directory
+		 */
 		public void setDestdir(final File destdir) {
 			this.destdir = destdir;
 		}
@@ -145,20 +191,40 @@ public class ReportTask extends Task {
 
 	private final List<IFormatterElement> formatters = new ArrayList<IFormatterElement>();
 
+	/**
+	 * Returns the nested resource collection for execution data files.
+	 * 
+	 * @return resource collection for execution files
+	 */
 	public Union createExecutiondata() {
 		return executiondataElement;
 	}
 
+	/**
+	 * Returns the root group element that defines the report structure.
+	 * 
+	 * @return root group element
+	 */
 	public GroupElement createStructure() {
 		return structure;
 	}
 
+	/**
+	 * Creates a new HTML report element.
+	 * 
+	 * @return HTML report element
+	 */
 	public HTMLFormatterElement createHtml() {
 		final HTMLFormatterElement element = new HTMLFormatterElement();
 		formatters.add(element);
 		return element;
 	}
 
+	/**
+	 * Creates a new CSV report element.
+	 * 
+	 * @return CSV report element
+	 */
 	public CsvFormatterElement createCsv() {
 		final CsvFormatterElement element = new CsvFormatterElement();
 		formatters.add(element);
