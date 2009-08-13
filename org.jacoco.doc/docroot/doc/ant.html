@@ -169,10 +169,153 @@
       <td>Name of the Ant property to set.</td>
       <td><i>none (required)</i></td>
     </tr>
+    <tr>
+      <td colspan="3"><i>All attributes of the <code>coverage</code> task.</i></td>
+    </tr>
   </tbody>
 </table>
 
 <h2>Task <code>report</code></h2>
+
+<p>
+  Finally different reports can be created with the <code>report</code> task.
+  A report task declaration consists of different sections, two specify the
+  input data, additional ones specify the output formats:  
+</p>
+
+<pre class="source">
+<span class="nr">    1</span>&lt;jacoco:report&gt;
+<span class="nr">    2</span>			
+<span class="nr">    3</span>    &lt;executiondata&gt;
+<span class="nr">    4</span>        &lt;file file="jacoco.exec"/&gt;
+<span class="nr">    5</span>    &lt;/executiondata&gt;
+<span class="nr">    6</span>			
+<span class="nr">    7</span>    &lt;structure name="Example Project"&gt;
+<span class="nr">    8</span>        &lt;classfiles&gt;
+<span class="nr">    9</span>            &lt;fileset dir="bin"/&gt;
+<span class="nr">   10</span>        &lt;/classfiles&gt;
+<span class="nr">   11</span>        &lt;sourcefiles encoding="UTF-8"&gt;
+<span class="nr">   12</span>            &lt;fileset dir="src"/&gt;
+<span class="nr">   13</span>        &lt;/sourcefiles&gt;
+<span class="nr">   14</span>    &lt;/structure&gt;
+<span class="nr">   15</span>			
+<span class="nr">   16</span>    &lt;html destdir="report"/&gt;
+<span class="nr">   17</span>			
+<span class="nr">   18</span>&lt;/jacoco:report&gt;
+</pre>
+
+<p>
+  As you can see from the example above the <code>report</code> task is based
+  on several nested elements:
+</p>
+
+<h3>Element <code>executiondata</code></h3>
+
+<p>
+  Within this element Ant resources and resource collections can be specified,
+  that represent JaCoCo execution data files. If more than one execution data
+  file is specified, execution data is combined. A particular piece of code is
+  considered as executed, when it is marked as executed in any of the input
+  files.
+</p>
+
+<h3>Element <code>structure</code></h3>
+
+<p>
+  This element defines structure of the report. It might contain the following
+  nested elements:
+</p>
+
+<ul>
+  <li><code>classfiles</code>: Container element for Ant resources and resource
+    collections that can specify Java class files, JAR files or directories
+    containing class files.</li>
+  <li><code>sourcefiles</code>: Optional container element for Ant resources and
+    resource collections that specify corresponding source files. The element
+    has an optional attribute <code>encoding</code> to specify the character
+    encoding of the source files. If no encoding is given, the platform default
+    is used. If source files are specified, some report formats include
+    highlighted versions of the source code.</li>
+</ul>
+
+<p>
+  The structure can be refined with a hierarchy of <code>group</code> elements.
+  This way the coverage report can reflect different modules of an software
+  project. For each group element the corresponding class and source files can
+  be specified separately. For example the build script of JaCoCo itself
+  contains the following declaration to separate the different bundles in the
+  report (see the <a href="../coverage/index.html">resulting report</a>): 
+</p>
+
+<pre class="source">
+<span class="nr">    1</span>&lt;structure name="JaCoCo"&gt;
+<span class="nr">    2</span>    &lt;group name="org.jacoco.core"&gt;
+<span class="nr">    3</span>        &lt;classfiles&gt;
+<span class="nr">    4</span>            &lt;path refid="bundle-org.jacoco.core"/&gt;
+<span class="nr">    5</span>        &lt;/classfiles&gt;
+<span class="nr">    6</span>        &lt;sourcefiles&gt;
+<span class="nr">    7</span>            &lt;fileset dir="${workspace.dir}/org.jacoco.core/src"/&gt;
+<span class="nr">    8</span>        &lt;/sourcefiles&gt;
+<span class="nr">    9</span>    &lt;/group&gt;
+<span class="nr">   10</span>    &lt;group name="org.jacoco.report"&gt;
+<span class="nr">   11</span>        &lt;classfiles&gt;
+<span class="nr">   12</span>            &lt;path refid="bundle-org.jacoco.report"/&gt;
+<span class="nr">   13</span>        &lt;/classfiles&gt;
+<span class="nr">   14</span>        &lt;sourcefiles&gt;
+<span class="nr">   15</span>            &lt;fileset dir="${workspace.dir}/org.jacoco.report/src"/&gt;
+<span class="nr">   16</span>        &lt;/sourcefiles&gt;
+<span class="nr">   17</span>    &lt;/group&gt;
+<span class="nr">   18</span>    
+<span class="nr">   19</span>    ...
+<span class="nr">   20</span>    
+<span class="nr">   21</span>&lt;/structure&gt;
+</pre>
+
+<h3>Element <code>html</code></h3>
+
+<p>
+  Create a multi-page report in HTML format. 
+</p>
+
+<table class="coverage">
+  <thead>
+    <tr>
+      <td>Attribute</td>
+      <td>Description</td>
+      <td>Default</td>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>destdir</code></td>
+      <td>Directory to create the report in.</td>
+      <td><i>none (required)</i></td>
+    </tr>
+  </tbody>
+</table>
+
+<h3>Element <code>csv</code></h3>
+
+<p>
+  Create a multi-page report in CSV format. 
+</p>
+
+<table class="coverage">
+  <thead>
+    <tr>
+      <td>Attribute</td>
+      <td>Description</td>
+      <td>Default</td>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>destdir</code></td>
+      <td>Directory to create the report in.</td>
+      <td><i>none (required)</i></td>
+    </tr>
+  </tbody>
+</table>
 
 
 <div class="footer">

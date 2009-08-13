@@ -33,7 +33,7 @@
 						<path refid="bundle-org.jacoco.agent"/>
 					</classfiles>
 					<sourcefiles>
-						<fileset dir="${workspace.dir}/org.jacoco.agent/src" includes="**/*.java"/>
+						<fileset dir="${workspace.dir}/org.jacoco.agent/src"/>
 					</sourcefiles>
 				</group>
 				<group name="org.jacoco.ant">
@@ -41,7 +41,7 @@
 						<path refid="bundle-org.jacoco.ant"/>
 					</classfiles>
 					<sourcefiles>
-						<fileset dir="${workspace.dir}/org.jacoco.ant/src" includes="**/*.java"/>
+						<fileset dir="${workspace.dir}/org.jacoco.ant/src"/>
 					</sourcefiles>
 				</group>
 				<group name="org.jacoco.core">
@@ -49,7 +49,7 @@
 						<path refid="bundle-org.jacoco.core"/>
 					</classfiles>
 					<sourcefiles>
-						<fileset dir="${workspace.dir}/org.jacoco.core/src" includes="**/*.java"/>
+						<fileset dir="${workspace.dir}/org.jacoco.core/src"/>
 					</sourcefiles>
 				</group>
 				<group name="org.jacoco.report">
@@ -57,7 +57,7 @@
 						<path refid="bundle-org.jacoco.report"/>
 					</classfiles>
 					<sourcefiles>
-						<fileset dir="${workspace.dir}/org.jacoco.report/src" includes="**/*.java"/>
+						<fileset dir="${workspace.dir}/org.jacoco.report/src"/>
 					</sourcefiles>
 				</group>
 			</structure>
