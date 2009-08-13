@@ -27,7 +27,6 @@ import java.util.Map;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.types.Resource;
-import org.apache.tools.ant.types.ResourceCollection;
 import org.apache.tools.ant.types.resources.FileResource;
 import org.apache.tools.ant.types.resources.Union;
 import org.apache.tools.ant.util.FileUtils;
@@ -59,6 +58,27 @@ import org.jacoco.report.html.HTMLFormatter;
 public class ReportTask extends Task {
 
 	/**
+	 * The source files are specified in a resource collection with additional
+	 * attributes.
+	 */
+	public static class SourceFilesElement extends Union {
+
+		String encoding;
+
+		/**
+		 * Defines the optional source file encoding. If not set the platform
+		 * default is used.
+		 * 
+		 * @param encoding
+		 *            source file encoding
+		 */
+		public void setEncoding(final String encoding) {
+			this.encoding = encoding;
+		}
+
+	}
+
+	/**
 	 * Container element for class file groups.
 	 */
 	public static class GroupElement {
@@ -67,7 +87,7 @@ public class ReportTask extends Task {
 
 		final Union classfiles = new Union();
 
-		final Union sourcefiles = new Union();
+		final SourceFilesElement sourcefiles = new SourceFilesElement();
 
 		String name;
 
@@ -106,7 +126,7 @@ public class ReportTask extends Task {
 		 * 
 		 * @return resource collection for source files
 		 */
-		public Union createSourcefiles() {
+		public SourceFilesElement createSourcefiles() {
 			return sourcefiles;
 		}
 
@@ -336,10 +356,13 @@ public class ReportTask extends Task {
 
 	private static class SourceFileCollection implements ISourceFileLocator {
 
+		private final String encoding;
+
 		private final Map<String, Resource> resources = new HashMap<String, Resource>();
 
-		SourceFileCollection(final ResourceCollection collection) {
-			for (final Iterator<?> i = collection.iterator(); i.hasNext();) {
+		SourceFileCollection(final SourceFilesElement sourceFiles) {
+			encoding = sourceFiles.encoding;
+			for (final Iterator<?> i = sourceFiles.iterator(); i.hasNext();) {
 				final Resource r = (Resource) i.next();
 				resources.put(r.getName().replace(File.separatorChar, '/'), r);
 			}
@@ -351,8 +374,11 @@ public class ReportTask extends Task {
 			if (r == null) {
 				return null;
 			}
-			// TODO: specify encoding
-			return new InputStreamReader(r.getInputStream());
+			if (encoding == null) {
+				return new InputStreamReader(r.getInputStream());
+			} else {
+				return new InputStreamReader(r.getInputStream(), encoding);
+			}
 		}
 	}
 
