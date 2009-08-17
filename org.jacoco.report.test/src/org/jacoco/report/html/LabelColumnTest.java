@@ -14,7 +14,6 @@ package org.jacoco.report.html;
 
 import static org.junit.Assert.assertEquals;
 
-import org.jacoco.core.analysis.CounterImpl;
 import org.jacoco.core.analysis.CoverageNodeImpl;
 import org.jacoco.core.analysis.ICoverageNode;
 import org.jacoco.core.analysis.ICoverageNode.ElementType;
@@ -67,7 +66,8 @@ public class LabelColumnTest {
 
 	@Test
 	public void testFooter() throws Exception {
-		new LabelColumn().footer(tr, createTotal("test", 0), resources, root);
+		new LabelColumn().footer(tr, new CoverageNodeImpl(ElementType.GROUP,
+				"Foo", false), resources, root);
 		doc.close();
 		final Document doc = support.parse(output.getFile("Test.html"));
 		assertEquals("Total", support.findStr(doc,
@@ -113,14 +113,6 @@ public class LabelColumnTest {
 
 			public ICoverageNode getNode() {
 				return node;
-			}
-		};
-	}
-
-	private ICoverageNode createTotal(final String name, final int count) {
-		return new CoverageNodeImpl(ElementType.GROUP, name, false) {
-			{
-				this.classCounter = CounterImpl.getInstance(count, false);
 			}
 		};
 	}
