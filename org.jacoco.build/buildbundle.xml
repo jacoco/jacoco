@@ -98,6 +98,7 @@
 					<path refid="dependencies"/>
 				</classpath>
 				<formatter type="xml"/>
+				<formatter type="brief" usefile="false"/>
 			</junit>
 		</jacoco:coverage>
 	</target>
