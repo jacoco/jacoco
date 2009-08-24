@@ -28,9 +28,9 @@
 </ul>
 
    
-<p>All tasks are
-  defined in <code>jacocoant.jar</code> and can be included in your Ant scripts
-  with the usual <code>taskdef</code> declaration:   
+<p>All tasks are defined in <code>jacocoant.jar</code> (which is part of the
+  distribution) and can be included in your Ant scripts with the usual
+  <code>taskdef</code> declaration:   
 </p>
 
 <pre class="source">
@@ -138,8 +138,9 @@
           analysis. The list entries are separated by a vertical bar
           (<code>|</code>) and may use wildcard characters (<code>*</code> and
           <code>?</code>). This option might be required in case of special
-          frameworks that conflict with JaCoCo code instrumentation, e.g. class
-          loaders that do not have access to the Java runtime classes. 
+          frameworks that conflict with JaCoCo code instrumentation, in
+          particular class loaders that do not have access to the Java runtime
+          classes. 
       </td>
       <td><code>sun.reflect.DelegatingClassLoader</code></td>
     </tr>

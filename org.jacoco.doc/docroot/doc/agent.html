@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1" />
+  <link rel="stylesheet" href=".resources/doc.css" charset="ISO-8859-1" type="text/css" />
+  <title>JaCoCo - Java Agent</title>
+</head>
+<body>
+
+<div class="breadcrumb">
+  <a href="../index.html" class="el_session">JaCoCo</a> &gt;
+  <a href="index.html" class="el_group">Documentation</a> &gt;
+  <span class="el_source">Java Agent</span>
+</div>
+
+<h1>Java Agent</h1>
+
+<p>
+  JaCoCo uses class file instrumentation to record execution coverage data.
+  Class files are instrumented on-the-fly using a so called Java agent. This is
+  mechanism allows in-memory pre-processing of all class files during class
+  loading independent of the application framework.
+</p>
+
+<p class="hint">
+  If you use the <a href="ant.html">JaCoCo Ant tasks</a> you don't have to care
+  about the agent and its options directly. All set-up is transparently handled
+  by the Ant tasks implementation.
+</p>
+
+<p>
+  The agent <code>jacocoagent.jar</code> is part of the JaCoCo distribution and
+  includes all required dependencies. A Java agent can be activated with the
+  following JVM option: 
+</p>
+
+<pre>
+  -javaagent:<i>[yourpath/]</i>jacocoagent.jar=<i>[option1]</i>=<i>[value1]</i>,<i>[option2]</i>=<i>[value2]</i>
+</pre>
+
+<p>
+  The JaCoCo agent accepts the following options: 
+</p>
+
+<table class="coverage">
+  <thead>
+    <tr>
+      <td>Option</td>
+      <td>Description</td>
+      <td>Default</td>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>file</code></td>
+      <td>Path to the output file for execution data.</td>
+      <td><code>jacoco.exec</code></td>
+    </tr>
+    <tr>
+      <td><code>merge</code></td>
+      <td>If set to <code>true</code> and the execution data file already
+          exists, coverage data is merged to the existing file. If set to
+          <code>false</code>, an existing execution data file will be replaced.
+      </td>
+      <td><code>true</code></td>
+    </tr>    
+    <tr>
+      <td><code>exclclassloader</code></td>
+      <td>A list of class loader names, that should be excluded from execution
+          analysis. The list entries are separated by a vertical bar
+          (<code>|</code>) and may use wildcard characters (<code>*</code> and
+          <code>?</code>). This option might be required in case of special
+          frameworks that conflict with JaCoCo code instrumentation, in
+          particular class loaders that do not have access to the Java runtime
+          classes. 
+      </td>
+      <td><code>sun.reflect.DelegatingClassLoader</code></td>
+    </tr>
+  </tbody>
+</table>
+
+
+<div class="footer">
+  <div class="versioninfo"><a href="@HOMEURL@">JaCoCo</a> @VERSION@</div>
+  <a href="license.html">Copyright</a> &copy; 2009 Mountainminds GmbH &amp; Co. KG and Contributors
+</div>
+
+</body>
+</html>
