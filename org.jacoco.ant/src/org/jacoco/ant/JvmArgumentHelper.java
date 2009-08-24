@@ -86,7 +86,7 @@ class JvmArgumentHelper {
 	 * @return Argument to pass to create new VM with coverage enabled
 	 */
 	String createJavaAgentParam(final AgentOptions agentOptions) {
-		final StringBuffer param = new StringBuffer();
+		final StringBuilder param = new StringBuilder();
 		param.append("-javaagent:");
 		param.append(agentJar.getAbsolutePath());
 		param.append("=");

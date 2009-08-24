@@ -77,7 +77,7 @@ public abstract class AbstractCounter implements ICounter {
 
 	@Override
 	public String toString() {
-		final StringBuffer b = new StringBuffer("Counter["); //$NON-NLS-1$
+		final StringBuilder b = new StringBuilder("Counter["); //$NON-NLS-1$
 		b.append(getCoveredCount());
 		b.append('/').append(getTotalCount());
 		b.append(']');
