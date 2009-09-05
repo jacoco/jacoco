@@ -120,14 +120,15 @@ public class RuntimePerformancetest {
 		double factor = (double) subjectTime / (double) referenceTime;
 		System.out.printf(Locale.US,
 				"%s reference=%.2fms subject=%.2fms factor=%.2f\n",
-				description, (double) referenceTime / 1000000,
-				(double) subjectTime / 1000000, factor);
+				description, Double.valueOf((double) referenceTime / 1000000),
+				Double.valueOf((double) subjectTime / 1000000), Double
+						.valueOf(factor));
 	}
 
 	private void runPerformance(String description, Runnable subject) {
 		long subjectTime = timer(subject);
-		System.out.printf(Locale.US, "%s subject=%.2fms", description,
-				(double) subjectTime / 1000000);
+		System.out.printf(Locale.US, "%s subject=%.2fms", description, Double
+				.valueOf((double) subjectTime / 1000000));
 	}
 
 	private long timer(Runnable subject) {

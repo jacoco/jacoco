@@ -30,12 +30,13 @@ public class ExecutionDataStore implements IExecutionDataVisitor {
 	private final Map<Long, boolean[][]> data = new HashMap<Long, boolean[][]>();
 
 	public void visitClassExecution(final long classid, boolean[][] blockdata) {
-		final boolean[][] current = data.get(classid);
+		final Long id = Long.valueOf(classid);
+		final boolean[][] current = data.get(id);
 		if (current != null) {
 			merge(current, blockdata);
 			blockdata = current;
 		}
-		data.put(Long.valueOf(classid), blockdata);
+		data.put(id, blockdata);
 
 	}
 
@@ -68,7 +69,7 @@ public class ExecutionDataStore implements IExecutionDataVisitor {
 	 * @return coverage data or <code>null</code>
 	 */
 	public boolean[][] getBlockdata(final long classid) {
-		return data.get(classid);
+		return data.get(Long.valueOf(classid));
 	}
 
 	/**
@@ -79,7 +80,8 @@ public class ExecutionDataStore implements IExecutionDataVisitor {
 	 */
 	public void accept(final IExecutionDataVisitor visitor) {
 		for (final Map.Entry<Long, boolean[][]> entry : data.entrySet()) {
-			visitor.visitClassExecution(entry.getKey(), entry.getValue());
+			final long id = entry.getKey().longValue();
+			visitor.visitClassExecution(id, entry.getValue());
 		}
 	}
 

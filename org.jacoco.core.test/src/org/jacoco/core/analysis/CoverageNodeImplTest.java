@@ -117,10 +117,10 @@ public class CoverageNodeImplTest {
 		assertEquals(CounterImpl.getInstance(22, 21), node.getMethodCounter());
 		assertEquals(CounterImpl.getInstance(12, 11), node.getClassCounter());
 		assertEquals(CounterImpl.getInstance(4, 2), node.getLineCounter());
-		assertEquals(ILines.NOT_COVERED, node.getLines().getStatus(1));
-		assertEquals(ILines.NOT_COVERED, node.getLines().getStatus(2));
-		assertEquals(ILines.FULLY_COVERED, node.getLines().getStatus(3));
-		assertEquals(ILines.FULLY_COVERED, node.getLines().getStatus(4));
+		assertEquals(ILines.NOT_COVERED, node.getLines().getStatus(1), 0.0);
+		assertEquals(ILines.NOT_COVERED, node.getLines().getStatus(2), 0.0);
+		assertEquals(ILines.FULLY_COVERED, node.getLines().getStatus(3), 0.0);
+		assertEquals(ILines.FULLY_COVERED, node.getLines().getStatus(4), 0.0);
 	}
 
 	@Test
