@@ -14,7 +14,6 @@ package org.jacoco.core.instr;
 
 import org.jacoco.core.runtime.IRuntime;
 import org.jacoco.core.runtime.LoggerRuntime;
-import org.jacoco.core.runtime.SystemPropertiesRuntimeTest.IWriteAccess;
 import org.junit.Before;
 import org.junit.Test;
 import org.objectweb.asm.ClassVisitor;
@@ -51,8 +50,7 @@ public class ClassInstrumenterTest {
 
 		final String className = "org/jacoco/test/targets/ClassInstrumenterTestTarget";
 		visitor.visit(Opcodes.V1_5, Opcodes.ACC_PUBLIC, className, null,
-				"java/lang/Object", new String[] { Type
-						.getInternalName(IWriteAccess.class) });
+				"java/lang/Object", new String[] {});
 
 		// Constructor
 		GeneratorAdapter gen = new GeneratorAdapter(visitor.visitMethod(

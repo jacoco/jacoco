@@ -65,7 +65,7 @@ public class ExecutionDataReaderWriterTest {
 		boolean[][] blocks = createBlockdata(0, 0);
 		writer.visitClassExecution(Long.MIN_VALUE, blocks);
 		readIntoStore();
-		assertArrayEquals(blocks, store.getBlockdata(Long.MIN_VALUE));
+		assertArrayEquals(blocks, store.get(Long.MIN_VALUE));
 	}
 
 	@Test
@@ -73,7 +73,7 @@ public class ExecutionDataReaderWriterTest {
 		boolean[][] blocks = createBlockdata(0, 0);
 		writer.visitClassExecution(Long.MAX_VALUE, blocks);
 		readIntoStore();
-		assertArrayEquals(blocks, store.getBlockdata(Long.MAX_VALUE));
+		assertArrayEquals(blocks, store.get(Long.MAX_VALUE));
 	}
 
 	@Test
@@ -81,7 +81,7 @@ public class ExecutionDataReaderWriterTest {
 		boolean[][] blocks = createBlockdata(0, 0);
 		writer.visitClassExecution(3, blocks);
 		readIntoStore();
-		assertArrayEquals(blocks, store.getBlockdata(3));
+		assertArrayEquals(blocks, store.get(3));
 	}
 
 	@Test
@@ -89,7 +89,7 @@ public class ExecutionDataReaderWriterTest {
 		boolean[][] blocks = createBlockdata(5, 0);
 		writer.visitClassExecution(3, blocks);
 		readIntoStore();
-		assertArrayEquals(blocks, store.getBlockdata(3));
+		assertArrayEquals(blocks, store.get(3));
 	}
 
 	@Test
@@ -97,7 +97,7 @@ public class ExecutionDataReaderWriterTest {
 		boolean[][] blocks = createBlockdata(5, 10);
 		writer.visitClassExecution(3, blocks);
 		readIntoStore();
-		assertArrayEquals(blocks, store.getBlockdata(3));
+		assertArrayEquals(blocks, store.get(3));
 	}
 
 	@Test
@@ -107,8 +107,8 @@ public class ExecutionDataReaderWriterTest {
 		writer.visitClassExecution(333, blocks1);
 		writer.visitClassExecution(-45, blocks2);
 		readIntoStore();
-		assertArrayEquals(blocks1, store.getBlockdata(333));
-		assertArrayEquals(blocks2, store.getBlockdata(-45));
+		assertArrayEquals(blocks1, store.get(333));
+		assertArrayEquals(blocks2, store.get(-45));
 	}
 
 	@Test
@@ -116,7 +116,7 @@ public class ExecutionDataReaderWriterTest {
 		boolean[][] blocks = createBlockdata(43, 40);
 		writer.visitClassExecution(123, blocks);
 		readIntoStore();
-		assertArrayEquals(blocks, store.getBlockdata(123));
+		assertArrayEquals(blocks, store.get(123));
 	}
 
 	private boolean[][] createBlockdata(int methodCount, int maxBlockCount) {

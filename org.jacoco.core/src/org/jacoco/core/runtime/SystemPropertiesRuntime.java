@@ -12,18 +12,17 @@
  *******************************************************************************/
 package org.jacoco.core.runtime;
 
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashMap;
+import java.util.Collection;
 import java.util.Map;
+import java.util.Set;
 
-import org.jacoco.core.data.IExecutionDataVisitor;
 import org.jacoco.core.instr.GeneratorConstants;
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.commons.GeneratorAdapter;
 
 /**
- * This {@link IRuntime} implementation places the coverage data in the
+ * This {@link IRuntime} implementation makes the execution data available
+ * through a special entry of the type {@link Map} in the
  * {@link System#getProperties()} hash table. The advantage is, that the
  * instrumented classes do not get dependencies to other classes than the JRE
  * library itself.
@@ -36,11 +35,69 @@ import org.objectweb.asm.commons.GeneratorAdapter;
  * @author Marc R. Hoffmann
  * @version $Revision: $
  */
-public class SystemPropertiesRuntime implements IRuntime {
+public class SystemPropertiesRuntime extends AbstractRuntime {
 
 	private static final String KEYPREFIX = "jacoco-";
 
 	private final String key;
+
+	private final Map<Long, boolean[][]> dataAccess = new Map<Long, boolean[][]>() {
+
+		public boolean[][] get(final Object key) {
+			final Long id = (Long) key;
+			synchronized (store) {
+				final boolean[][] blockdata = store.get(id);
+				if (blockdata == null) {
+					throw new IllegalStateException("Unknown class ID: " + id);
+				}
+				return blockdata;
+			}
+		}
+
+		public void clear() {
+			throw new UnsupportedOperationException();
+		}
+
+		public boolean containsKey(final Object key) {
+			throw new UnsupportedOperationException();
+		}
+
+		public boolean containsValue(final Object value) {
+			throw new UnsupportedOperationException();
+		}
+
+		public Set<Entry<Long, boolean[][]>> entrySet() {
+			throw new UnsupportedOperationException();
+		}
+
+		public boolean isEmpty() {
+			throw new UnsupportedOperationException();
+		}
+
+		public Set<Long> keySet() {
+			throw new UnsupportedOperationException();
+		}
+
+		public boolean[][] put(final Long key, final boolean[][] value) {
+			throw new UnsupportedOperationException();
+		}
+
+		public void putAll(final Map<? extends Long, ? extends boolean[][]> t) {
+			throw new UnsupportedOperationException();
+		}
+
+		public boolean[][] remove(final Object key) {
+			throw new UnsupportedOperationException();
+		}
+
+		public Collection<boolean[][]> values() {
+			throw new UnsupportedOperationException();
+		}
+
+		public int size() {
+			throw new UnsupportedOperationException();
+		}
+	};
 
 	/**
 	 * Creates a new runtime.
@@ -49,13 +106,8 @@ public class SystemPropertiesRuntime implements IRuntime {
 		this.key = KEYPREFIX + hashCode();
 	}
 
-	// TODO: lokale Variable vermeiden (swap!)
-	public void generateRegistration(final long classId,
+	public void generateDataAccessor(final long classid,
 			final GeneratorAdapter gen) {
-
-		// boolean[][] data = pop()
-		final int data = gen.newLocal(GeneratorConstants.DATAFIELD_TYPE);
-		gen.storeLocal(data);
 
 		// stack := System.getProperties()
 		gen.visitMethodInsn(Opcodes.INVOKESTATIC, "java/lang/System",
@@ -67,55 +119,18 @@ public class SystemPropertiesRuntime implements IRuntime {
 				"get", "(Ljava/lang/Object;)Ljava/lang/Object;");
 		gen.visitTypeInsn(Opcodes.CHECKCAST, "java/util/Map");
 
-		// stack.put(classId, data)
-		gen.push(classId);
+		// stack := stack.get(classid)
+		gen.push(classid);
 		gen.visitMethodInsn(Opcodes.INVOKESTATIC, "java/lang/Long", "valueOf",
 				"(J)Ljava/lang/Long;");
 
-		gen.loadLocal(data);
-		gen.visitMethodInsn(Opcodes.INVOKEINTERFACE, "java/util/Map", "put",
-				"(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;");
-		gen.pop();
+		gen.visitMethodInsn(Opcodes.INVOKEINTERFACE, "java/util/Map", "get",
+				"(Ljava/lang/Object;)Ljava/lang/Object;");
+		gen.checkCast(GeneratorConstants.DATAFIELD_TYPE);
 	}
 
 	public void startup() {
-		final Map<Long, boolean[][]> dataMap = Collections
-				.synchronizedMap(new HashMap<Long, boolean[][]>());
-		System.getProperties().put(key, dataMap);
-	}
-
-	@SuppressWarnings("unchecked")
-	private Map<Long, boolean[][]> getDataMap() {
-		final Object object = System.getProperties().get(key);
-		if (object == null) {
-			throw new IllegalStateException("Runtime not started.");
-		}
-		return (Map<Long, boolean[][]>) object;
-	}
-
-	public void collect(final IExecutionDataVisitor visitor, final boolean reset) {
-		final Map<Long, boolean[][]> dataMap = getDataMap();
-		synchronized (dataMap) {
-			for (final Map.Entry<Long, boolean[][]> entry : dataMap.entrySet()) {
-				final long classId = entry.getKey().longValue();
-				final boolean[][] blockData = entry.getValue();
-				visitor.visitClassExecution(classId, blockData);
-			}
-			if (reset) {
-				reset();
-			}
-		}
-	}
-
-	public void reset() {
-		final Map<Long, boolean[][]> dataMap = getDataMap();
-		synchronized (dataMap) {
-			for (final boolean[][] data : dataMap.values()) {
-				for (final boolean[] arr : data) {
-					Arrays.fill(arr, false);
-				}
-			}
-		}
+		System.getProperties().put(key, dataAccess);
 	}
 
 	public void shutdown() {

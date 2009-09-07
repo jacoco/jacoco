@@ -14,6 +14,7 @@ package org.jacoco.core.data;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
@@ -44,7 +45,7 @@ public class ExecutionDataStoreTest implements IExecutionDataVisitor {
 
 	@Test
 	public void testEmpty() {
-		assertNull(store.getBlockdata(123));
+		assertNull(store.get(123));
 		store.accept(this);
 		assertEquals(Collections.emptyMap(), output);
 	}
@@ -53,8 +54,8 @@ public class ExecutionDataStoreTest implements IExecutionDataVisitor {
 	public void testPut() {
 		boolean[][] data = new boolean[][] { new boolean[] { false },
 				new boolean[] { false, true } };
-		store.visitClassExecution(1000, data);
-		assertSame(data, store.getBlockdata(1000));
+		store.put(1000, data);
+		assertSame(data, store.get(1000));
 		store.accept(this);
 		assertEquals(Collections.singletonMap(Long.valueOf(1000), data), output);
 	}
@@ -68,7 +69,7 @@ public class ExecutionDataStoreTest implements IExecutionDataVisitor {
 				new boolean[] { true, false } };
 		store.visitClassExecution(1000, data2);
 
-		final boolean[][] result = store.getBlockdata(1000);
+		final boolean[][] result = store.get(1000);
 		assertFalse(result[0][0]);
 		assertTrue(result[0][1]);
 		assertTrue(result[1][0]);
@@ -92,6 +93,20 @@ public class ExecutionDataStoreTest implements IExecutionDataVisitor {
 		boolean[][] data2 = new boolean[][] { new boolean[] { false, false,
 				false } };
 		store.visitClassExecution(1000, data2);
+	}
+
+	@Test
+	public void testReset() throws InstantiationException,
+			IllegalAccessException {
+		final boolean[][] data1 = new boolean[1][];
+		data1[0] = new boolean[] { true, true, true };
+		store.put(1000, data1);
+		store.reset();
+		boolean[][] data2 = store.get(1000);
+		assertNotNull(data2);
+		assertFalse(data2[0][0]);
+		assertFalse(data2[0][1]);
+		assertFalse(data2[0][2]);
 	}
 
 	// === IExecutionDataOutput ===

@@ -87,7 +87,7 @@ public class CoverageBuilder implements IStructureVisitor {
 
 	public IClassStructureVisitor visitClassStructure(final long id,
 			final String name) {
-		final boolean[][] covered = executionData.getBlockdata(id);
+		final boolean[][] covered = executionData.get(id);
 		final Collection<MethodCoverage> methods = new ArrayList<MethodCoverage>();
 		final String[] sourcename = new String[1];
 		return new IClassStructureVisitor() {

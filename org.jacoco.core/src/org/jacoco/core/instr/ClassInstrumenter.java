@@ -121,6 +121,7 @@ public class ClassInstrumenter extends ClassAdapter {
 	public void visitEnd() {
 		createDataField();
 		createInitMethod();
+		registerClass();
 		super.visitEnd();
 	}
 
@@ -173,42 +174,12 @@ public class ClassInstrumenter extends ClassAdapter {
 	 *            generator to emit code to
 	 */
 	private void genInitializeDataField(final GeneratorAdapter gen) {
-		genInstantiateDataArray(gen); // ................ Stack: [[Z
+		runtime.generateDataAccessor(id, gen);// ........ Stack: [[Z
 		gen.dup(); // ................................... Stack: [[Z [[Z
 		gen.putStatic(type, GeneratorConstants.DATAFIELD_NAME,
 				GeneratorConstants.DATAFIELD_TYPE);
 
 		// .............................................. Stack: [[Z
-
-		gen.dup(); // ................................... Stack: [[Z [[Z
-		runtime.generateRegistration(id, gen);
-
-		// .............................................. Stack: [[Z
-	}
-
-	/**
-	 * Generates the byte code to instantiate the 2-dimensional block data
-	 * array. Each boolean[] entry is created in a length equals to the number
-	 * of blocks in the corresponding method.
-	 * 
-	 * The code will push the [[Z data array on the operand stack.
-	 * 
-	 * TODO: Let the coverage runtime generate this structure
-	 * 
-	 * @param gen
-	 *            generator to emit code to
-	 */
-	private void genInstantiateDataArray(final GeneratorAdapter gen) {
-		gen.push(blockCounters.size()); // .............. Stack: I
-		gen.newArray(GeneratorConstants.BLOCK_ARR); // .. Stack: [[Z
-		for (int blockIdx = 0; blockIdx < blockCounters.size(); blockIdx++) {
-			gen.dup(); // ............................... Stack: [[Z, [[Z
-			gen.push(blockIdx); // ...................... Stack: [[Z, [[Z, I
-			gen.push(blockCounters.get(blockIdx).getBlockCount());
-			// .......................................... Stack: [[Z, [[Z, I, I
-			gen.newArray(Type.BOOLEAN_TYPE);// .......... Stack: [[Z, [[Z, I, [Z
-			gen.arrayStore(GeneratorConstants.BLOCK_ARR); // Stack: [[Z
-		}
 	}
 
 	/**
@@ -230,6 +201,19 @@ public class ClassInstrumenter extends ClassAdapter {
 			throw new IllegalStateException("Class " + type.getClassName()
 					+ " is already instrumented.");
 		}
+	}
+
+	/**
+	 * Create a execution data structure according to the structure of this
+	 * class and registers it with the runtime.
+	 */
+	private void registerClass() {
+		final boolean[][] data = new boolean[blockCounters.size()][];
+		for (int blockIdx = 0; blockIdx < blockCounters.size(); blockIdx++) {
+			data[blockIdx] = new boolean[blockCounters.get(blockIdx)
+					.getBlockCount()];
+		}
+		runtime.registerClass(id, data);
 	}
 
 }

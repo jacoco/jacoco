@@ -25,23 +25,22 @@ import org.objectweb.asm.commons.GeneratorAdapter;
 public interface IRuntime {
 
 	/**
-	 * This method generates the byte code required to register the coverage
-	 * data structure of the class with the given id. Typically the
-	 * instrumentation process will embed this code into a method that is called
-	 * on class initialization. This method can be called at any time even
-	 * outside the target VM.
+	 * This method generates the byte code required to obtain the coverage data
+	 * structure for the class with the given id. Typically the instrumentation
+	 * process will embed this code into a method that is called on class
+	 * initialization. This method can be called at any time even outside the
+	 * target VM.
 	 * 
-	 * The generated code must pop a <code>byte[][]</code> instance from the
-	 * operand stack. Except this object on the stack the generated code must
-	 * not make any assumptions about the structure of the embedding method or
-	 * class.
+	 * The generated code must push a <code>byte[][]</code> instance to the
+	 * operand stack. Except this result object the generated code must not make
+	 * any assumptions about the structure of the embedding method or class.
 	 * 
-	 * @param classId
+	 * @param classid
 	 *            identifier of the class
 	 * @param gen
 	 *            code output
 	 */
-	public void generateRegistration(long classId, GeneratorAdapter gen);
+	public void generateDataAccessor(long classid, GeneratorAdapter gen);
 
 	/**
 	 * Starts the coverage runtime. This method MUST be called before any class
@@ -54,6 +53,18 @@ public interface IRuntime {
 	 * called when classes instrumented for this runtime are not used any more.
 	 */
 	public void shutdown();
+
+	/**
+	 * Before a particular class gets loaded, its execution data structure must
+	 * be registered with the runtime through this method. This method must only
+	 * be called between {@link #startup()} and {@link #shutdown()}.
+	 * 
+	 * @param classid
+	 *            identifier of the class
+	 * @param blockdata
+	 *            execution data structure for this method
+	 */
+	public void registerClass(long classid, boolean[][] blockdata);
 
 	/**
 	 * Collects the current execution data and writes it to the given

@@ -12,16 +12,11 @@
  *******************************************************************************/
 package org.jacoco.core.runtime;
 
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.logging.Handler;
 import java.util.logging.Level;
 import java.util.logging.LogRecord;
 import java.util.logging.Logger;
 
-import org.jacoco.core.data.IExecutionDataVisitor;
 import org.jacoco.core.instr.GeneratorConstants;
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.Type;
@@ -31,11 +26,18 @@ import org.objectweb.asm.commons.GeneratorAdapter;
  * This {@link IRuntime} implementation uses the Java logging API to report
  * coverage data. The advantage is, that the instrumented classes do not get
  * dependencies to other classes than the JRE library itself.
+ * <p>
+ * 
+ * The implementation uses a dedicated log channel. Instrumented classes call
+ * {@link Logger#log(Level, String, Object[])} with the class identifier in the
+ * first slot of the parameter array. The runtime implements a {@link Handler}
+ * for this channel that puts the block data structure into the first slot of
+ * the parameter array.
  * 
  * @author Marc R. Hoffmann
  * @version $Revision: $
  */
-public class LoggerRuntime implements IRuntime {
+public class LoggerRuntime extends AbstractRuntime {
 
 	private static final String CHANNEL = "jacoco-runtime";
 
@@ -45,8 +47,6 @@ public class LoggerRuntime implements IRuntime {
 
 	private final Handler handler;
 
-	final Map<Long, boolean[][]> dataMap;
-
 	/**
 	 * Creates a new runtime.
 	 */
@@ -54,7 +54,6 @@ public class LoggerRuntime implements IRuntime {
 		this.key = Integer.toHexString(hashCode());
 		this.logger = configureLogger();
 		this.handler = new RuntimeHandler();
-		dataMap = Collections.synchronizedMap(new HashMap<Long, boolean[][]>());
 	}
 
 	private Logger configureLogger() {
@@ -64,12 +63,28 @@ public class LoggerRuntime implements IRuntime {
 		return l;
 	}
 
-	public void generateRegistration(final long classId,
+	public void generateDataAccessor(final long classid,
 			final GeneratorAdapter gen) {
 
-		// boolean[][] data = pop()
-		final int data = gen.newLocal(GeneratorConstants.DATAFIELD_TYPE);
-		gen.storeLocal(data);
+		// 1. Create parameter array:
+
+		final int param = gen.newLocal(Type.getObjectType("java/lang/Object"));
+
+		// stack := new Object[1]
+		gen.push(1);
+		gen.newArray(Type.getObjectType("java/lang/Object"));
+
+		// stack[0] = Long.valueOf(classId)
+		gen.dup();
+		gen.push(0);
+		gen.push(classid);
+		gen.visitMethodInsn(Opcodes.INVOKESTATIC, "java/lang/Long", "valueOf",
+				"(J)Ljava/lang/Long;");
+		gen.arrayStore(Type.getObjectType("java/lang/Object"));
+
+		gen.storeLocal(param);
+
+		// 2. Call Logger:
 
 		// stack := Logger.getLogger(CHANNEL)
 		gen.push(CHANNEL);
@@ -83,56 +98,25 @@ public class LoggerRuntime implements IRuntime {
 		// stack := key
 		gen.push(key);
 
-		// stack := new Object[2]
-		gen.push(2);
-		gen.newArray(Type.getObjectType("java/lang/Object"));
-
-		// stack[0] = Long.valueOf(classId)
-		gen.dup();
-		gen.push(0);
-		gen.push(classId);
-		gen.visitMethodInsn(Opcodes.INVOKESTATIC, "java/lang/Long", "valueOf",
-				"(J)Ljava/lang/Long;");
-		gen.arrayStore(Type.getObjectType("java/lang/Object"));
-
-		// stack[1] = data
-		gen.dup();
-		gen.push(1);
-		gen.loadLocal(data);
-		gen.arrayStore(Type.getObjectType("java/lang/Object"));
+		// stack := param
+		gen.loadLocal(param);
 
 		// stack.log(stack, stack, stack)
 		gen
 				.visitMethodInsn(Opcodes.INVOKEVIRTUAL,
 						"java/util/logging/Logger", "log",
 						"(Ljava/util/logging/Level;Ljava/lang/String;[Ljava/lang/Object;)V");
+
+		// 3. Load data structure from parameter array:
+
+		gen.loadLocal(param);
+		gen.push(0);
+		gen.arrayLoad(GeneratorConstants.DATAFIELD_TYPE);
+		gen.checkCast(GeneratorConstants.DATAFIELD_TYPE);
 	}
 
 	public void startup() {
 		this.logger.addHandler(handler);
-	}
-
-	public void collect(final IExecutionDataVisitor visitor, final boolean reset) {
-		synchronized (dataMap) {
-			for (final Map.Entry<Long, boolean[][]> entry : dataMap.entrySet()) {
-				final long classId = entry.getKey().longValue();
-				final boolean[][] blockData = entry.getValue();
-				visitor.visitClassExecution(classId, blockData);
-			}
-			if (reset) {
-				reset();
-			}
-		}
-	}
-
-	public void reset() {
-		synchronized (dataMap) {
-			for (final boolean[][] data : dataMap.values()) {
-				for (final boolean[] arr : data) {
-					Arrays.fill(arr, false);
-				}
-			}
-		}
 	}
 
 	public void shutdown() {
@@ -145,7 +129,15 @@ public class LoggerRuntime implements IRuntime {
 		public void publish(final LogRecord record) {
 			if (key.equals(record.getMessage())) {
 				final Object[] params = record.getParameters();
-				dataMap.put((Long) params[0], (boolean[][]) params[1]);
+				final Long id = (Long) params[0];
+				synchronized (store) {
+					final boolean[][] blockdata = store.get(id);
+					if (blockdata == null) {
+						throw new IllegalStateException("Unknown class ID: "
+								+ id);
+					}
+					params[0] = blockdata;
+				}
 			}
 		}
 
@@ -155,6 +147,14 @@ public class LoggerRuntime implements IRuntime {
 
 		@Override
 		public void close() throws SecurityException {
+			// The Java logging framework removes and closes all handlers on JVM
+			// shutdown. As soon as our handler has been removed, all classes
+			// that might get instrumented during shutdown (e.g. loaded by other
+			// shutdown hooks) will fail to initialize. Therefore we add ourself
+			// again here.
+			// This is a nasty hack that might fail in some Java
+			// implementations.
+			logger.addHandler(handler);
 		}
 	}
 
