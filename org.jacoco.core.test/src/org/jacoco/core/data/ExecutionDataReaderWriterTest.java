@@ -19,6 +19,7 @@ import static org.junit.Assert.fail;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.util.Random;
 
 import org.junit.Before;
@@ -117,6 +118,19 @@ public class ExecutionDataReaderWriterTest {
 		writer.visitClassExecution(123, blocks);
 		readIntoStore();
 		assertArrayEquals(blocks, store.get(123));
+	}
+
+	@Test(expected = RuntimeException.class)
+	public void testIOException() throws IOException {
+		ExecutionDataWriter writer = new ExecutionDataWriter(
+				new OutputStream() {
+					@Override
+					public void write(int b) throws IOException {
+						throw new IOException();
+					}
+				});
+		boolean[][] blocks = createBlockdata(1, 1);
+		writer.visitClassExecution(3, blocks);
 	}
 
 	private boolean[][] createBlockdata(int methodCount, int maxBlockCount) {

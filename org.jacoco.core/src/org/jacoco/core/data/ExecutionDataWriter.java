@@ -46,7 +46,7 @@ public class ExecutionDataWriter implements IExecutionDataVisitor {
 	 *            binary stream to write execution data to
 	 */
 	public ExecutionDataWriter(final OutputStream output) {
-		this.output = new DataOutputStream(output);
+		this((DataOutput) new DataOutputStream(output));
 	}
 
 	public void visitClassExecution(final long id, final boolean[][] blockdata) {

@@ -142,7 +142,4 @@ public class CoverageBuilder implements IStructureVisitor {
 		return sourcefile;
 	}
 
-	public void visitEnd() {
-	}
-
 }

@@ -45,7 +45,7 @@ public class ExecutionDataReader {
 	 *            input stream to read execution data from
 	 */
 	public ExecutionDataReader(final InputStream input) {
-		this.input = new DataInputStream(input);
+		this((DataInput) new DataInputStream(input));
 	}
 
 	/**

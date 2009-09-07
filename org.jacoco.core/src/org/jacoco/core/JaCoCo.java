@@ -20,6 +20,9 @@ package org.jacoco.core;
  */
 public class JaCoCo {
 
+	private JaCoCo() {
+	}
+
 	/** Qualified build version of the JaCoCo core library. */
 	public static final String VERSION = "@VERSION@";
 

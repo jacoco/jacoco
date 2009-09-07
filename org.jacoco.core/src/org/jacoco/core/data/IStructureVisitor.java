@@ -35,9 +35,4 @@ public interface IStructureVisitor {
 	 */
 	public IClassStructureVisitor visitClassStructure(long id, String name);
 
-	/**
-	 * Signals the end of structure data.
-	 */
-	public void visitEnd();
-
 }
