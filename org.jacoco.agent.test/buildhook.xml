@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project name="org.jacoco.core.test.buildhook">
+	
+	<path id="dependencies">
+		<path refid="bundle-org.jacoco.core"/>
+		<path refid="bundle-org.jacoco.agent"/>
+		<path refid="bundle-org.junit4"/>
+    </path>
+
+	<property name="do.compile" value="true"/>
+	<property name="do.verify"  value="true"/>
+	
+</project>
