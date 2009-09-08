@@ -5,6 +5,7 @@
 	<path id="dependencies">
 		<path refid="bundle-org.jacoco.core"/>
 		<path refid="bundle-org.jacoco.agent"/>
+		<path refid="bundle-org.objectweb.asm"/>
 		<path refid="bundle-org.junit4"/>
     </path>
 

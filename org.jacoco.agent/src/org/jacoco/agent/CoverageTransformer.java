@@ -42,12 +42,7 @@ public class CoverageTransformer implements ClassFileTransformer {
 			Class<?> classBeingRedefined, ProtectionDomain protectionDomain,
 			byte[] classfileBuffer) throws IllegalClassFormatException {
 
-		if (loader == null) {
-			// don't instrument classes of the bootstrap loader
-			return null;
-		}
-
-		if (exclClassloader.matches(loader.getClass().getName())) {
+		if (!filter(loader)) {
 			return null;
 		}
 
@@ -58,4 +53,23 @@ public class CoverageTransformer implements ClassFileTransformer {
 			return null;
 		}
 	}
+
+	/**
+	 * Checks whether this class should be instrumented.
+	 * 
+	 * @param loader
+	 *            loader for the class
+	 * @return <code>true</code> if the class should be instrumented
+	 */
+	protected boolean filter(ClassLoader loader) {
+		// Don't instrument classes of the bootstrap loader:
+		if (loader == null) {
+			return false;
+		}
+		if (exclClassloader.matches(loader.getClass().getName())) {
+			return false;
+		}
+		return true;
+	}
+
 }
