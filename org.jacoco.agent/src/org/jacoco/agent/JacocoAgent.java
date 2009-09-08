@@ -31,25 +31,65 @@ import org.jacoco.core.runtime.LoggerRuntime;
  */
 public class JacocoAgent {
 
-	public static void premain(final String agentArgs,
-			final Instrumentation inst) {
+	private final AgentOptions options;
 
-		final AgentOptions options = new AgentOptions(agentArgs);
-		final IRuntime runtime = new LoggerRuntime();
-		runtime.startup();
+	private IRuntime runtime;
 
-		inst.addTransformer(new CoverageTransformer(runtime, options));
-
-		Runtime.getRuntime().addShutdownHook(new Thread() {
-			@Override
-			public void run() {
-				writeExecutionData(runtime, options);
-			}
-		});
+	/**
+	 * Creates a new agent with the given agent options.
+	 * 
+	 * @param options
+	 *            agent options
+	 */
+	public JacocoAgent(AgentOptions options) {
+		this.options = options;
 	}
 
-	private static void writeExecutionData(IRuntime runtime,
-			AgentOptions options) {
+	/**
+	 * Creates a new agent with the given agent options string.
+	 * 
+	 * @param agentArgs
+	 *            agent options as text string
+	 */
+	public JacocoAgent(String options) {
+		this(new AgentOptions(options));
+	}
+
+	/**
+	 * Initializes this agent.
+	 * 
+	 * @param inst
+	 *            instrumentation callback
+	 */
+	public void init(final Instrumentation inst) {
+		runtime = createRuntime();
+		runtime.startup();
+		inst.addTransformer(new CoverageTransformer(runtime, options));
+	}
+
+	/**
+	 * Creates the specific coverage runtime implementation.
+	 * 
+	 * @return coverage runtime instance
+	 */
+	protected IRuntime createRuntime() {
+		return new LoggerRuntime();
+	}
+
+	/**
+	 * Shutdown the agent again.
+	 */
+	public void shutdown() {
+		writeExecutionData();
+	}
+
+	/**
+	 * Writes the collected execution data to the specified file.
+	 * 
+	 * @param runtime
+	 *            runtime containing the execution data
+	 */
+	protected void writeExecutionData() {
 		try {
 			File execFile = new File(options.getFile()).getAbsoluteFile();
 			File folder = execFile.getParentFile();
@@ -64,4 +104,25 @@ public class JacocoAgent {
 			e.printStackTrace();
 		}
 	}
+
+	/**
+	 * This method is called by the JVM to initialize Java agents.
+	 * 
+	 * @param options
+	 *            agent options
+	 * @param inst
+	 *            intrumentation callback provided by the JVM
+	 */
+	public static void premain(final String options, final Instrumentation inst) {
+		final JacocoAgent agent = new JacocoAgent(options);
+		agent.init(inst);
+
+		Runtime.getRuntime().addShutdownHook(new Thread() {
+			@Override
+			public void run() {
+				agent.shutdown();
+			}
+		});
+	}
+
 }
