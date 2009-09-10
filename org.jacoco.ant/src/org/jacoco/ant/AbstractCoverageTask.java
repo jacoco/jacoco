@@ -66,8 +66,30 @@ public class AbstractCoverageTask extends Task {
 	}
 
 	/**
-	 * Space separated list of wildcard patterns for classloaders that JaCoCo
-	 * will not instrument classes from
+	 * List of wildcard patterns classes to include for instrumentation.
+	 * 
+	 * @ant.not-required Default is *
+	 * @param includes
+	 *            Wildcard pattern of included classes
+	 */
+	public void setIncludes(final String includes) {
+		agentOptions.setIncludes(includes);
+	}
+
+	/**
+	 * List of wildcard patterns classes to exclude from instrumentation.
+	 * 
+	 * @ant.not-required Default is the empty string, no classes excluded
+	 * @param excludes
+	 *            Wildcard pattern of excluded classes
+	 */
+	public void setExcludes(final String excludes) {
+		agentOptions.setExcludes(excludes);
+	}
+
+	/**
+	 * List of wildcard patterns for classloaders that JaCoCo will not
+	 * instrument classes from.
 	 * 
 	 * @ant.not-required Default is sun.reflect.DelegatingClassLoader
 	 * @param exclClassLoader

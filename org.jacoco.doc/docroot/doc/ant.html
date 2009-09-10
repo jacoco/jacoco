@@ -133,6 +133,26 @@
       <td><code>true</code></td>
     </tr>    
     <tr>
+      <td><code>includes</code></td>
+      <td>A list of class names that should be included to execution analysis.
+          The list entries are separated by a vertical bar (<code>|</code>) and
+          may use wildcard characters (<code>*</code> and <code>?</code>).
+          Except for performance optimization or technical corner cases this
+          option is normally not required. 
+      </td>
+      <td><code>*</code> (all classes)</td>
+    </tr>
+    <tr>
+      <td><code>excludes</code></td>
+      <td>A list of class names that should be excluded from execution analysis.
+          The list entries are separated by a vertical bar (<code>|</code>) and
+          may use wildcard characters (<code>*</code> and <code>?</code>).
+          Except for performance optimization or technical corner cases this
+          option is normally not required. 
+      </td>
+      <td><i>empty</i> (no excluded classes)</td>
+    </tr>
+    <tr>
       <td><code>exclclassloader</code></td>
       <td>A list of class loader names, that should be excluded from execution
           analysis. The list entries are separated by a vertical bar

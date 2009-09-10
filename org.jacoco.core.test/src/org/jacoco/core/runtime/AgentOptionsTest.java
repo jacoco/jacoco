@@ -31,6 +31,8 @@ public class AgentOptionsTest {
 		AgentOptions options = new AgentOptions();
 		assertEquals("jacoco.exec", options.getFile());
 		assertTrue(options.getMerge());
+		assertEquals("*", options.getIncludes());
+		assertEquals("", options.getExcludes());
 		assertEquals("sun.reflect.DelegatingClassLoader", options
 				.getExclClassloader());
 		assertEquals("", options.toString());
@@ -98,6 +100,34 @@ public class AgentOptionsTest {
 		assertEquals("org.jacoco.test.TestLoader", options.getExclClassloader());
 		assertEquals("exclclassloader=org.jacoco.test.TestLoader", options
 				.toString());
+	}
+
+	@Test
+	public void testGetIncludes() {
+		AgentOptions options = new AgentOptions("includes=org.*|com.*");
+		assertEquals("org.*|com.*", options.getIncludes());
+	}
+
+	@Test
+	public void testSetIncludes() {
+		AgentOptions options = new AgentOptions();
+		options.setIncludes("org.jacoco.*");
+		assertEquals("org.jacoco.*", options.getIncludes());
+		assertEquals("includes=org.jacoco.*", options.toString());
+	}
+
+	@Test
+	public void testGetExcludes() {
+		AgentOptions options = new AgentOptions("excludes=*Test");
+		assertEquals("*Test", options.getExcludes());
+	}
+
+	@Test
+	public void testSetExcludes() {
+		AgentOptions options = new AgentOptions();
+		options.setExcludes("org.jacoco.test.*");
+		assertEquals("org.jacoco.test.*", options.getExcludes());
+		assertEquals("excludes=org.jacoco.test.*", options.toString());
 	}
 
 	@Test

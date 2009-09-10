@@ -31,10 +31,17 @@ public class CoverageTransformer implements ClassFileTransformer {
 
 	private final Instrumenter instrumenter;
 
+	private final WildcardMatcher includes;
+
+	private final WildcardMatcher excludes;
+
 	private final WildcardMatcher exclClassloader;
 
 	public CoverageTransformer(IRuntime runtime, AgentOptions options) {
 		this.instrumenter = new Instrumenter(runtime);
+		// Class names will be reported in VM notation:
+		includes = new WildcardMatcher(options.getIncludes().replace('.', '/'));
+		excludes = new WildcardMatcher(options.getExcludes().replace('.', '/'));
 		exclClassloader = new WildcardMatcher(options.getExclClassloader());
 	}
 
@@ -42,7 +49,7 @@ public class CoverageTransformer implements ClassFileTransformer {
 			Class<?> classBeingRedefined, ProtectionDomain protectionDomain,
 			byte[] classfileBuffer) throws IllegalClassFormatException {
 
-		if (!filter(loader)) {
+		if (!filter(loader, classname)) {
 			return null;
 		}
 
@@ -61,15 +68,14 @@ public class CoverageTransformer implements ClassFileTransformer {
 	 *            loader for the class
 	 * @return <code>true</code> if the class should be instrumented
 	 */
-	protected boolean filter(ClassLoader loader) {
+	protected boolean filter(ClassLoader loader, String classname) {
 		// Don't instrument classes of the bootstrap loader:
-		if (loader == null) {
-			return false;
-		}
-		if (exclClassloader.matches(loader.getClass().getName())) {
-			return false;
-		}
-		return true;
-	}
+		return loader != null &&
 
+		!exclClassloader.matches(loader.getClass().getName()) &&
+
+		includes.matches(classname) &&
+
+		!excludes.matches(classname);
+	}
 }

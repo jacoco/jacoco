@@ -91,10 +91,6 @@ table.coverage td {
   padding:2px 12px 2px 6px;
 }
 
-table.coverage tbody tr:hover { 
-  background: #f0f0d0 !important;
-}
-
 table.coverage tbody td {
   border-bottom:#d6d3ce 1px solid;
 }

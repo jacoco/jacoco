@@ -43,6 +43,22 @@ public class AgentOptions {
 	public static final String MERGE = "merge";
 
 	/**
+	 * Wildcard expression for class names that should be included for code
+	 * coverage. Default is <code>*</code> (all classes included).
+	 * 
+	 * @see WildcardMatcher
+	 */
+	public static final String INCLUDES = "includes";
+
+	/**
+	 * Wildcard expression for class names that should be excluded from code
+	 * coverage. Default is the empty string (no exclusions).
+	 * 
+	 * @see WildcardMatcher
+	 */
+	public static final String EXCLUDES = "excludes";
+
+	/**
 	 * Wildcard expression for class loaders names for classes that should be
 	 * excluded from code coverage. This means all classes loaded by a class
 	 * loader which full qualified name matches this expression will be ignored
@@ -54,7 +70,7 @@ public class AgentOptions {
 	public static final String EXCLCLASSLOADER = "exclclassloader";
 
 	private static final Collection<String> VALID_OPTIONS = Arrays.asList(FILE,
-			MERGE, EXCLCLASSLOADER);
+			MERGE, INCLUDES, EXCLUDES, EXCLCLASSLOADER);
 
 	private final Map<String, String> options;
 
@@ -117,8 +133,8 @@ public class AgentOptions {
 	 * @return <code>true</code>, when the output should be merged
 	 */
 	public boolean getMerge() {
-		final String merge = options.get(MERGE);
-		return merge == null ? true : Boolean.parseBoolean(merge);
+		final String value = options.get(MERGE);
+		return value == null ? true : Boolean.parseBoolean(value);
 	}
 
 	/**
@@ -132,13 +148,58 @@ public class AgentOptions {
 	}
 
 	/**
+	 * Returns the wildcard expression for classes to include.
+	 * 
+	 * @return wildcard expression for classes to include
+	 * @see WildcardMatcher
+	 */
+	public String getIncludes() {
+		final String value = options.get(INCLUDES);
+		return value == null ? "*" : value;
+	}
+
+	/**
+	 * Sets the wildcard expression for classes to include.
+	 * 
+	 * @param includes
+	 *            wildcard expression for classes to include
+	 * @see WildcardMatcher
+	 */
+	public void setIncludes(final String includes) {
+		setOption(INCLUDES, includes);
+	}
+
+	/**
+	 * Returns the wildcard expression for classes to exclude.
+	 * 
+	 * @return wildcard expression for classes to exclude
+	 * @see WildcardMatcher
+	 */
+	public String getExcludes() {
+		final String value = options.get(EXCLUDES);
+		return value == null ? "" : value;
+	}
+
+	/**
+	 * Sets the wildcard expression for classes to exclude.
+	 * 
+	 * @param excludes
+	 *            wildcard expression for classes to exclude
+	 * @see WildcardMatcher
+	 */
+	public void setExcludes(final String excludes) {
+		setOption(EXCLUDES, excludes);
+	}
+
+	/**
 	 * Returns the wildcard expression for excluded class loaders.
 	 * 
 	 * @return expression for excluded class loaders
+	 * @see WildcardMatcher
 	 */
 	public String getExclClassloader() {
-		final String file = options.get(EXCLCLASSLOADER);
-		return file == null ? "sun.reflect.DelegatingClassLoader" : file;
+		final String value = options.get(EXCLCLASSLOADER);
+		return value == null ? "sun.reflect.DelegatingClassLoader" : value;
 	}
 
 	/**
@@ -146,6 +207,7 @@ public class AgentOptions {
 	 * 
 	 * @param expression
 	 *            expression for excluded class loaders
+	 * @see WildcardMatcher
 	 */
 	public void setExclClassloader(final String expression) {
 		setOption(EXCLCLASSLOADER, expression);
