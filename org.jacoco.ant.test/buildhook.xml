@@ -33,7 +33,7 @@
 				file="${result.tmp.coverage.file}">
 			<java fork="true" jar="${ant.library.dir}/ant-launcher.jar" failonerror="true">
 				<arg value="-f"/>
-				<arg value="${source.bundle.dir}/ant/stub.xml"/>
+				<arg value="${source.bundle.dir}/ant/runtest.xml"/>
 				<arg value="-Dresult.dist.lib.dir=${result.dist.lib.dir}"/>
 				<arg value="-Dresult.tmp.bundle.testdata.dir=${result.tmp.bundle.testdata.dir}"/>
 				<arg value="-Dresult.tmp.bundle.classes.dir=${result.tmp.bundle.classes.dir}"/>
