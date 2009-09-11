@@ -98,7 +98,9 @@ public class JacocoAgent {
 			}
 			OutputStream output = new FileOutputStream(execFile, options
 					.getMerge());
-			runtime.collect(new ExecutionDataWriter(output), false);
+			ExecutionDataWriter writer = new ExecutionDataWriter(output);
+			writer.writeHeader();
+			runtime.collect(writer, false);
 			output.close();
 		} catch (IOException e) {
 			e.printStackTrace();

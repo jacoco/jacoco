@@ -37,7 +37,7 @@ public class ExecutionDataReaderWriterTest {
 
 	private ByteArrayOutputStream buffer;
 
-	private IExecutionDataVisitor writer;
+	private ExecutionDataWriter writer;
 
 	private ExecutionDataStore store;
 
@@ -64,9 +64,7 @@ public class ExecutionDataReaderWriterTest {
 
 	@Test
 	public void testValidHeader() throws IOException {
-		buffer.write(ExecutionDataWriter.BLOCK_HEADER);
-		buffer.write(ExecutionDataWriter.FORMAT_VERSION >> 8);
-		buffer.write(ExecutionDataWriter.FORMAT_VERSION & 0xFF);
+		writer.writeHeader();
 		ExecutionDataReader reader = createReader();
 		reader.read();
 	}
@@ -86,6 +84,42 @@ public class ExecutionDataReaderWriterTest {
 		buffer.write(0xff);
 		ExecutionDataReader reader = createReader();
 		reader.read();
+	}
+
+	@Test
+	public void testVarInt0x00000000() throws IOException {
+		testVarInt(0x00000000);
+	}
+
+	@Test
+	public void testVarInt0x0000007F() throws IOException {
+		testVarInt(0x0000007F);
+	}
+
+	@Test
+	public void testVarInt0x00000080() throws IOException {
+		testVarInt(0x00000080);
+	}
+
+	@Test
+	public void testVarInt0x00000100() throws IOException {
+		testVarInt(0x00000100);
+	}
+
+	@Test
+	public void testVarInt0x12345678() throws IOException {
+		testVarInt(0x12345678);
+	}
+
+	@Test
+	public void testVarIntminus1() throws IOException {
+		testVarInt(-1);
+	}
+
+	private void testVarInt(int value) throws IOException {
+		writer.writeVarInt(value);
+		ExecutionDataReader reader = createReader();
+		assertEquals(value, reader.readVarInt());
 	}
 
 	@Test

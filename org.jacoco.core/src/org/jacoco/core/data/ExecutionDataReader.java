@@ -96,9 +96,9 @@ public class ExecutionDataReader {
 
 	private void readExecutionData() throws IOException {
 		final long classid = input.readLong();
-		final boolean[][] blockdata = new boolean[input.readInt()][];
+		final boolean[][] blockdata = new boolean[readVarInt()][];
 		for (int i = 0; i < blockdata.length; i++) {
-			blockdata[i] = new boolean[input.readInt()];
+			blockdata[i] = new boolean[readVarInt()];
 			for (int j = 0; j < blockdata[i].length; j++) {
 				blockdata[i][j] = input.readBoolean();
 			}
@@ -108,4 +108,18 @@ public class ExecutionDataReader {
 		}
 	}
 
+	/**
+	 * Reads a variable length representation of an integer value.
+	 * 
+	 * @return read value
+	 * @throws IOException
+	 *             might be thrown by the underlying stream
+	 */
+	protected int readVarInt() throws IOException {
+		final int value = 0xFF & input.readByte();
+		if ((value & 0x80) == 0) {
+			return value;
+		}
+		return (value & 0x7F) | (readVarInt() << 7);
+	}
 }
