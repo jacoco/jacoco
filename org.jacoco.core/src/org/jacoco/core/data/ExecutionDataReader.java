@@ -28,6 +28,8 @@ public class ExecutionDataReader {
 
 	private final DataInput input;
 
+	private IExecutionDataVisitor executionDataVisitor;
+
 	/**
 	 * Creates a new reader based on the given data input.
 	 * 
@@ -49,29 +51,60 @@ public class ExecutionDataReader {
 	}
 
 	/**
-	 * Reads all execution data information to the end of the data stream and
-	 * reports them to the given visitor
+	 * Sets an listener for execution data.
 	 * 
 	 * @param visitor
-	 *            visitor to send execution data to
+	 */
+	public void setExecutionDataVisitor(final IExecutionDataVisitor visitor) {
+		this.executionDataVisitor = visitor;
+	}
+
+	/**
+	 * Reads all data and reports it to the corresponding visitors.
+	 * 
 	 * @throws IOException
 	 *             might be thrown by the underlying input stream
 	 */
-	public void accept(final IExecutionDataVisitor visitor) throws IOException {
+	public void read() throws IOException {
 		try {
 			while (true) {
-				final long classid = input.readLong();
-				final boolean[][] blockdata = new boolean[input.readInt()][];
-				for (int i = 0; i < blockdata.length; i++) {
-					blockdata[i] = new boolean[input.readInt()];
-					for (int j = 0; j < blockdata[i].length; j++) {
-						blockdata[i][j] = input.readBoolean();
-					}
+				final byte block = input.readByte();
+				switch (block) {
+				case ExecutionDataWriter.BLOCK_HEADER:
+					readHeader();
+					break;
+				case ExecutionDataWriter.BLOCK_EXECUTIONDATA:
+					readExecutionData();
+					break;
+				default:
+					throw new IOException("Unknown block type "
+							+ Integer.toHexString(block));
 				}
-				visitor.visitClassExecution(classid, blockdata);
 			}
 		} catch (final EOFException e) {
 			// expected at the end of the stream
+		}
+	}
+
+	private void readHeader() throws IOException {
+		final char version = input.readChar();
+		if (version != ExecutionDataWriter.FORMAT_VERSION) {
+			throw new IOException("Incompatible format version "
+					+ Integer.toHexString(version));
+		}
+	}
+
+	private void readExecutionData() throws IOException {
+		final long classid = input.readLong();
+		final boolean[][] blockdata = new boolean[input.readInt()][];
+		for (int i = 0; i < blockdata.length; i++) {
+			blockdata[i] = new boolean[input.readInt()];
+			for (int j = 0; j < blockdata[i].length; j++) {
+				blockdata[i][j] = input.readBoolean();
+			}
+		}
+		if (executionDataVisitor != null) {
+			executionDataVisitor.visitClassExecution(classid, blockdata);
 		}
 	}
 

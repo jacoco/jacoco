@@ -44,7 +44,7 @@ public class ExecutionDataReaderWriterTest {
 	private Random random;
 
 	@Before
-	public void setup() {
+	public void setup() throws IOException {
 		buffer = new ByteArrayOutputStream();
 		writer = new ExecutionDataWriter(buffer);
 		store = new ExecutionDataStore();
@@ -54,11 +54,38 @@ public class ExecutionDataReaderWriterTest {
 	@Test
 	public void testEmpty() throws IOException {
 		ExecutionDataReader reader = createReader();
-		reader.accept(new IExecutionDataVisitor() {
+		reader.setExecutionDataVisitor(new IExecutionDataVisitor() {
 			public void visitClassExecution(long id, boolean[][] blockdata) {
 				fail("No data expected.");
 			}
 		});
+		reader.read();
+	}
+
+	@Test
+	public void testValidHeader() throws IOException {
+		buffer.write(ExecutionDataWriter.BLOCK_HEADER);
+		buffer.write(ExecutionDataWriter.FORMAT_VERSION >> 8);
+		buffer.write(ExecutionDataWriter.FORMAT_VERSION & 0xFF);
+		ExecutionDataReader reader = createReader();
+		reader.read();
+	}
+
+	@Test(expected = IOException.class)
+	public void testInvalidHeaderVersion() throws IOException {
+		buffer.write(ExecutionDataWriter.BLOCK_HEADER);
+		char version = ExecutionDataWriter.FORMAT_VERSION - 1;
+		buffer.write(version >> 8);
+		buffer.write(version & 0xFF);
+		ExecutionDataReader reader = createReader();
+		reader.read();
+	}
+
+	@Test(expected = IOException.class)
+	public void testUnknownBlock() throws IOException {
+		buffer.write(0xff);
+		ExecutionDataReader reader = createReader();
+		reader.read();
 	}
 
 	@Test
@@ -122,13 +149,17 @@ public class ExecutionDataReaderWriterTest {
 
 	@Test(expected = RuntimeException.class)
 	public void testIOException() throws IOException {
+		final boolean[] broken = new boolean[1];
 		ExecutionDataWriter writer = new ExecutionDataWriter(
 				new OutputStream() {
 					@Override
 					public void write(int b) throws IOException {
-						throw new IOException();
+						if (broken[0]) {
+							throw new IOException();
+						}
 					}
 				});
+		broken[0] = true;
 		boolean[][] blocks = createBlockdata(1, 1);
 		writer.visitClassExecution(3, blocks);
 	}
@@ -159,7 +190,8 @@ public class ExecutionDataReaderWriterTest {
 
 	private void readIntoStore() throws IOException {
 		ExecutionDataReader reader = createReader();
-		reader.accept(store);
+		reader.setExecutionDataVisitor(store);
+		reader.read();
 	}
 
 	private ExecutionDataReader createReader() {

@@ -269,8 +269,9 @@ public class ReportTask extends Task {
 			InputStream in = null;
 			try {
 				in = resource.getInputStream();
-				new ExecutionDataReader(in).accept(data);
-				in.close();
+				final ExecutionDataReader reader = new ExecutionDataReader(in);
+				reader.setExecutionDataVisitor(data);
+				reader.read();
 			} catch (final IOException e) {
 				throw new BuildException("Unable to read execution data file "
 						+ resource.getName(), e);

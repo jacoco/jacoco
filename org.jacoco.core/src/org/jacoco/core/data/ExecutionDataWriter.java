@@ -27,6 +27,15 @@ import java.io.OutputStream;
  */
 public class ExecutionDataWriter implements IExecutionDataVisitor {
 
+	/** File format version, will be incremented for each incompatible change. */
+	public static final char FORMAT_VERSION = 0x1001;
+
+	/** Block identifier for file headers. */
+	public static final byte BLOCK_HEADER = 0x01;
+
+	/** Block identifier for execution data of a single class. */
+	public static final byte BLOCK_EXECUTIONDATA = 0x10;
+
 	private final DataOutput output;
 
 	/**
@@ -34,9 +43,11 @@ public class ExecutionDataWriter implements IExecutionDataVisitor {
 	 * 
 	 * @param output
 	 *            data output to write execution data to
+	 * @throws IOException
 	 */
-	public ExecutionDataWriter(final DataOutput output) {
+	public ExecutionDataWriter(final DataOutput output) throws IOException {
 		this.output = output;
+		writeHeader();
 	}
 
 	/**
@@ -44,13 +55,20 @@ public class ExecutionDataWriter implements IExecutionDataVisitor {
 	 * 
 	 * @param output
 	 *            binary stream to write execution data to
+	 * @throws IOException
 	 */
-	public ExecutionDataWriter(final OutputStream output) {
+	public ExecutionDataWriter(final OutputStream output) throws IOException {
 		this((DataOutput) new DataOutputStream(output));
+	}
+
+	private void writeHeader() throws IOException {
+		output.write(BLOCK_HEADER);
+		output.writeChar(FORMAT_VERSION);
 	}
 
 	public void visitClassExecution(final long id, final boolean[][] blockdata) {
 		try {
+			output.write(BLOCK_EXECUTIONDATA);
 			output.writeLong(id);
 			output.writeInt(blockdata.length);
 			for (final boolean[] m : blockdata) {
