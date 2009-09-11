@@ -1,0 +1,57 @@
+/*******************************************************************************
+ * Copyright (c) 2009 Mountainminds GmbH & Co. KG and others
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *    Marc R. Hoffmann - initial API and implementation
+ *    
+ * $Id: $
+ *******************************************************************************/
+package org.jacoco.core.data;
+
+import java.io.DataOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
+
+/**
+ * Additional data output methods for compact storage of data structures.
+ * 
+ * @see CompactDataOutput
+ * @author Marc R. Hoffmann
+ * @version $Revision: $
+ */
+public class CompactDataOutput extends DataOutputStream {
+
+	/**
+	 * Creates a new {@link CompactDataOutput} instance that writes data to the
+	 * specified underlying output stream
+	 * 
+	 * @param out
+	 *            underlying output stream
+	 */
+	public CompactDataOutput(final OutputStream out) {
+		super(out);
+	}
+
+	/**
+	 * Writes a variable length representation of an integer value that reduces
+	 * the number of written bytes for small positive values. Depends on the
+	 * given value 1 to 5 bytes will be written to the underlying stream.
+	 * 
+	 * @param value
+	 *            value to write
+	 * @throws IOException
+	 */
+	public void writeVarInt(final int value) throws IOException {
+		if ((value & 0xFFFFFF80) == 0) {
+			writeByte(value);
+		} else {
+			writeByte(0x80 | (value & 0x7F));
+			writeVarInt(value >>> 7);
+		}
+	}
+
+}

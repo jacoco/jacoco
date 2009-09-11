@@ -16,10 +16,10 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.io.PipedInputStream;
+import java.io.PipedOutputStream;
 import java.util.Random;
 
 import org.junit.Before;
@@ -35,9 +35,11 @@ import org.junit.Test;
  */
 public class ExecutionDataReaderWriterTest {
 
-	private ByteArrayOutputStream buffer;
+	private PipedOutputStream pipe;
 
 	private ExecutionDataWriter writer;
+
+	private ExecutionDataReader reader;
 
 	private ExecutionDataStore store;
 
@@ -45,15 +47,17 @@ public class ExecutionDataReaderWriterTest {
 
 	@Before
 	public void setup() throws IOException {
-		buffer = new ByteArrayOutputStream();
-		writer = new ExecutionDataWriter(buffer);
+		pipe = new PipedOutputStream();
+		writer = new ExecutionDataWriter(pipe);
+		reader = new ExecutionDataReader(new PipedInputStream(pipe));
 		store = new ExecutionDataStore();
+		reader.setExecutionDataVisitor(store);
 		random = new Random(5);
 	}
 
 	@Test
 	public void testEmpty() throws IOException {
-		ExecutionDataReader reader = createReader();
+		pipe.close();
 		reader.setExecutionDataVisitor(new IExecutionDataVisitor() {
 			public void visitClassExecution(long id, boolean[][] blockdata) {
 				fail("No data expected.");
@@ -65,68 +69,33 @@ public class ExecutionDataReaderWriterTest {
 	@Test
 	public void testValidHeader() throws IOException {
 		writer.writeHeader();
-		ExecutionDataReader reader = createReader();
+		pipe.close();
 		reader.read();
 	}
 
 	@Test(expected = IOException.class)
 	public void testInvalidHeaderVersion() throws IOException {
-		buffer.write(ExecutionDataWriter.BLOCK_HEADER);
+		pipe.write(ExecutionDataWriter.BLOCK_HEADER);
 		char version = ExecutionDataWriter.FORMAT_VERSION - 1;
-		buffer.write(version >> 8);
-		buffer.write(version & 0xFF);
-		ExecutionDataReader reader = createReader();
+		pipe.write(version >> 8);
+		pipe.write(version & 0xFF);
+		pipe.close();
 		reader.read();
 	}
 
 	@Test(expected = IOException.class)
 	public void testUnknownBlock() throws IOException {
-		buffer.write(0xff);
-		ExecutionDataReader reader = createReader();
+		pipe.write(0xff);
+		pipe.close();
 		reader.read();
-	}
-
-	@Test
-	public void testVarInt0x00000000() throws IOException {
-		testVarInt(0x00000000);
-	}
-
-	@Test
-	public void testVarInt0x0000007F() throws IOException {
-		testVarInt(0x0000007F);
-	}
-
-	@Test
-	public void testVarInt0x00000080() throws IOException {
-		testVarInt(0x00000080);
-	}
-
-	@Test
-	public void testVarInt0x00000100() throws IOException {
-		testVarInt(0x00000100);
-	}
-
-	@Test
-	public void testVarInt0x12345678() throws IOException {
-		testVarInt(0x12345678);
-	}
-
-	@Test
-	public void testVarIntminus1() throws IOException {
-		testVarInt(-1);
-	}
-
-	private void testVarInt(int value) throws IOException {
-		writer.writeVarInt(value);
-		ExecutionDataReader reader = createReader();
-		assertEquals(value, reader.readVarInt());
 	}
 
 	@Test
 	public void testMinClassId() throws IOException {
 		boolean[][] blocks = createBlockdata(0, 0);
 		writer.visitClassExecution(Long.MIN_VALUE, blocks);
-		readIntoStore();
+		pipe.close();
+		reader.read();
 		assertArrayEquals(blocks, store.get(Long.MIN_VALUE));
 	}
 
@@ -134,7 +103,8 @@ public class ExecutionDataReaderWriterTest {
 	public void testMaxClassId() throws IOException {
 		boolean[][] blocks = createBlockdata(0, 0);
 		writer.visitClassExecution(Long.MAX_VALUE, blocks);
-		readIntoStore();
+		pipe.close();
+		reader.read();
 		assertArrayEquals(blocks, store.get(Long.MAX_VALUE));
 	}
 
@@ -142,7 +112,8 @@ public class ExecutionDataReaderWriterTest {
 	public void testEmptyClass() throws IOException {
 		boolean[][] blocks = createBlockdata(0, 0);
 		writer.visitClassExecution(3, blocks);
-		readIntoStore();
+		pipe.close();
+		reader.read();
 		assertArrayEquals(blocks, store.get(3));
 	}
 
@@ -150,7 +121,8 @@ public class ExecutionDataReaderWriterTest {
 	public void testEmptyMethods() throws IOException {
 		boolean[][] blocks = createBlockdata(5, 0);
 		writer.visitClassExecution(3, blocks);
-		readIntoStore();
+		pipe.close();
+		reader.read();
 		assertArrayEquals(blocks, store.get(3));
 	}
 
@@ -158,7 +130,8 @@ public class ExecutionDataReaderWriterTest {
 	public void testOneClass() throws IOException {
 		boolean[][] blocks = createBlockdata(5, 10);
 		writer.visitClassExecution(3, blocks);
-		readIntoStore();
+		pipe.close();
+		reader.read();
 		assertArrayEquals(blocks, store.get(3));
 	}
 
@@ -168,7 +141,8 @@ public class ExecutionDataReaderWriterTest {
 		boolean[][] blocks2 = createBlockdata(7, 12);
 		writer.visitClassExecution(333, blocks1);
 		writer.visitClassExecution(-45, blocks2);
-		readIntoStore();
+		pipe.close();
+		reader.read();
 		assertArrayEquals(blocks1, store.get(333));
 		assertArrayEquals(blocks2, store.get(-45));
 	}
@@ -177,7 +151,8 @@ public class ExecutionDataReaderWriterTest {
 	public void testBigClass() throws IOException {
 		boolean[][] blocks = createBlockdata(43, 40);
 		writer.visitClassExecution(123, blocks);
-		readIntoStore();
+		pipe.close();
+		reader.read();
 		assertArrayEquals(blocks, store.get(123));
 	}
 
@@ -220,17 +195,6 @@ public class ExecutionDataReaderWriterTest {
 				assertTrue(b1[j] == b2[j]);
 			}
 		}
-	}
-
-	private void readIntoStore() throws IOException {
-		ExecutionDataReader reader = createReader();
-		reader.setExecutionDataVisitor(store);
-		reader.read();
-	}
-
-	private ExecutionDataReader createReader() {
-		return new ExecutionDataReader(new ByteArrayInputStream(buffer
-				.toByteArray()));
 	}
 
 }

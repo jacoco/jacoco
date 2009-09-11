@@ -12,15 +12,11 @@
  *******************************************************************************/
 package org.jacoco.core.data;
 
-import java.io.DataOutput;
-import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 
 /**
  * Serialization of execution data into binary streams.
- * 
- * TODO: Add "magic number" header protocol version, more efficient storage
  * 
  * @author Marc R. Hoffmann
  * @version $Revision: $
@@ -36,18 +32,7 @@ public class ExecutionDataWriter implements IExecutionDataVisitor {
 	/** Block identifier for execution data of a single class. */
 	public static final byte BLOCK_EXECUTIONDATA = 0x10;
 
-	private final DataOutput output;
-
-	/**
-	 * Creates a new writer based on the given data output.
-	 * 
-	 * @param output
-	 *            data output to write execution data to
-	 * @throws IOException
-	 */
-	public ExecutionDataWriter(final DataOutput output) throws IOException {
-		this.output = output;
-	}
+	private final CompactDataOutput out;
 
 	/**
 	 * Creates a new writer based on the given output stream.
@@ -57,7 +42,7 @@ public class ExecutionDataWriter implements IExecutionDataVisitor {
 	 * @throws IOException
 	 */
 	public ExecutionDataWriter(final OutputStream output) throws IOException {
-		this((DataOutput) new DataOutputStream(output));
+		this.out = new CompactDataOutput(output);
 	}
 
 	/**
@@ -66,40 +51,23 @@ public class ExecutionDataWriter implements IExecutionDataVisitor {
 	 * @throws IOException
 	 */
 	public void writeHeader() throws IOException {
-		output.write(BLOCK_HEADER);
-		output.writeChar(FORMAT_VERSION);
+		out.write(BLOCK_HEADER);
+		out.writeChar(FORMAT_VERSION);
 	}
 
 	public void visitClassExecution(final long id, final boolean[][] blockdata) {
 		try {
-			output.write(BLOCK_EXECUTIONDATA);
-			output.writeLong(id);
-			writeVarInt(blockdata.length);
+			out.write(BLOCK_EXECUTIONDATA);
+			out.writeLong(id);
+			out.writeVarInt(blockdata.length);
 			for (final boolean[] m : blockdata) {
-				writeVarInt(m.length);
+				out.writeVarInt(m.length);
 				for (final boolean b : m) {
-					output.writeBoolean(b);
+					out.writeBoolean(b);
 				}
 			}
 		} catch (final IOException e) {
 			throw new RuntimeException(e);
-		}
-	}
-
-	/**
-	 * Writes a variable length representation of an integer value that reduces
-	 * the number of written bytes for small positive values.
-	 * 
-	 * @param value
-	 *            value to write
-	 * @throws IOException
-	 */
-	protected void writeVarInt(final int value) throws IOException {
-		if ((value & 0xFFFFFF80) == 0) {
-			output.write(value);
-		} else {
-			output.write(0x80 | (value & 0x7F));
-			writeVarInt(value >>> 7);
 		}
 	}
 

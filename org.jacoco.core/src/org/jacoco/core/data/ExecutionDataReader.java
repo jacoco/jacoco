@@ -12,8 +12,6 @@
  *******************************************************************************/
 package org.jacoco.core.data;
 
-import java.io.DataInput;
-import java.io.DataInputStream;
 import java.io.EOFException;
 import java.io.IOException;
 import java.io.InputStream;
@@ -26,19 +24,9 @@ import java.io.InputStream;
  */
 public class ExecutionDataReader {
 
-	private final DataInput input;
+	private final CompactDataInput in;
 
 	private IExecutionDataVisitor executionDataVisitor;
-
-	/**
-	 * Creates a new reader based on the given data input.
-	 * 
-	 * @param input
-	 *            data input to read execution data from
-	 */
-	public ExecutionDataReader(final DataInput input) {
-		this.input = input;
-	}
 
 	/**
 	 * Creates a new reader based on the given input stream input.
@@ -47,7 +35,7 @@ public class ExecutionDataReader {
 	 *            input stream to read execution data from
 	 */
 	public ExecutionDataReader(final InputStream input) {
-		this((DataInput) new DataInputStream(input));
+		this.in = new CompactDataInput(input);
 	}
 
 	/**
@@ -68,7 +56,7 @@ public class ExecutionDataReader {
 	public void read() throws IOException {
 		try {
 			while (true) {
-				final byte block = input.readByte();
+				final byte block = in.readByte();
 				switch (block) {
 				case ExecutionDataWriter.BLOCK_HEADER:
 					readHeader();
@@ -87,7 +75,7 @@ public class ExecutionDataReader {
 	}
 
 	private void readHeader() throws IOException {
-		final char version = input.readChar();
+		final char version = in.readChar();
 		if (version != ExecutionDataWriter.FORMAT_VERSION) {
 			throw new IOException("Incompatible format version "
 					+ Integer.toHexString(version));
@@ -95,12 +83,12 @@ public class ExecutionDataReader {
 	}
 
 	private void readExecutionData() throws IOException {
-		final long classid = input.readLong();
-		final boolean[][] blockdata = new boolean[readVarInt()][];
+		final long classid = in.readLong();
+		final boolean[][] blockdata = new boolean[in.readVarInt()][];
 		for (int i = 0; i < blockdata.length; i++) {
-			blockdata[i] = new boolean[readVarInt()];
+			blockdata[i] = new boolean[in.readVarInt()];
 			for (int j = 0; j < blockdata[i].length; j++) {
-				blockdata[i][j] = input.readBoolean();
+				blockdata[i][j] = in.readBoolean();
 			}
 		}
 		if (executionDataVisitor != null) {
@@ -108,18 +96,4 @@ public class ExecutionDataReader {
 		}
 	}
 
-	/**
-	 * Reads a variable length representation of an integer value.
-	 * 
-	 * @return read value
-	 * @throws IOException
-	 *             might be thrown by the underlying stream
-	 */
-	protected int readVarInt() throws IOException {
-		final int value = 0xFF & input.readByte();
-		if ((value & 0x80) == 0) {
-			return value;
-		}
-		return (value & 0x7F) | (readVarInt() << 7);
-	}
 }
