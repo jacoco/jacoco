@@ -12,6 +12,7 @@
  *******************************************************************************/
 package org.jacoco.agent;
 
+import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -96,8 +97,8 @@ public class JacocoAgent {
 			if (folder != null) {
 				folder.mkdirs();
 			}
-			OutputStream output = new FileOutputStream(execFile, options
-					.getMerge());
+			OutputStream output = new BufferedOutputStream(
+					new FileOutputStream(execFile, options.getMerge()));
 			ExecutionDataWriter writer = new ExecutionDataWriter(output);
 			writer.writeHeader();
 			runtime.collect(writer, false);

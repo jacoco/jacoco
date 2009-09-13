@@ -12,6 +12,7 @@
  *******************************************************************************/
 package org.jacoco.ant;
 
+import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -268,7 +269,7 @@ public class ReportTask extends Task {
 			final Resource resource = (Resource) i.next();
 			InputStream in = null;
 			try {
-				in = resource.getInputStream();
+				in = new BufferedInputStream(resource.getInputStream());
 				final ExecutionDataReader reader = new ExecutionDataReader(in);
 				reader.setExecutionDataVisitor(data);
 				reader.read();

@@ -35,7 +35,9 @@ public class ExecutionDataWriter implements IExecutionDataVisitor {
 	private final CompactDataOutput out;
 
 	/**
-	 * Creates a new writer based on the given output stream.
+	 * Creates a new writer based on the given output stream. Depending on the
+	 * nature of the underlying stream output should be buffered as most data is
+	 * written in single bytes.
 	 * 
 	 * @param output
 	 *            binary stream to write execution data to

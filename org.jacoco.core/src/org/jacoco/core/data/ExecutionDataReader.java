@@ -29,7 +29,9 @@ public class ExecutionDataReader {
 	private IExecutionDataVisitor executionDataVisitor;
 
 	/**
-	 * Creates a new reader based on the given input stream input.
+	 * Creates a new reader based on the given input stream input. Depending on
+	 * the nature of the underlying stream input should be buffered as most data
+	 * is read in single bytes.
 	 * 
 	 * @param input
 	 *            input stream to read execution data from
