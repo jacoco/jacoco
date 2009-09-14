@@ -24,7 +24,7 @@ import java.io.OutputStream;
 public class ExecutionDataWriter implements IExecutionDataVisitor {
 
 	/** File format version, will be incremented for each incompatible change. */
-	public static final char FORMAT_VERSION = 0x1001;
+	public static final char FORMAT_VERSION = 0x1002;
 
 	/** Block identifier for file headers. */
 	public static final byte BLOCK_HEADER = 0x01;
