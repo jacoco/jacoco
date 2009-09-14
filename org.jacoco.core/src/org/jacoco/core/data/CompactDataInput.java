@@ -51,4 +51,36 @@ public class CompactDataInput extends DataInputStream {
 		return (value & 0x7F) | (readVarInt() << 7);
 	}
 
+	private int booleanBuffer = 0;
+
+	private int booleanBufferSize = 0;
+
+	/**
+	 * Reads a boolean value. Internally a sequence of boolean values is packed
+	 * into single bits. After the last boolean value has been read
+	 * {@link #finishPackedBoolean()} has to be called.
+	 * 
+	 * @return boolean value
+	 * @throws IOException
+	 */
+	public boolean readPackedBoolean() throws IOException {
+		if (booleanBufferSize == 0) {
+			booleanBuffer = readByte();
+			booleanBufferSize = 8;
+		}
+		final boolean value = (booleanBuffer & 0x01) != 0;
+		booleanBuffer >>>= 1;
+		booleanBufferSize--;
+		return value;
+	}
+
+	/**
+	 * Finalizes the input of a sequence of packed boolean values.
+	 * 
+	 * @throws IOException
+	 */
+	public void finishPackedBoolean() throws IOException {
+		booleanBufferSize = 0;
+	}
+
 }

@@ -88,4 +88,38 @@ public class CompactDataInputOutputTest {
 		assertEquals(Integer.valueOf(-1), Integer.valueOf(in.read()));
 	}
 
+	@Test
+	public void testPackedBooleanEmpty() throws IOException {
+		testPackedBoolean();
+	}
+
+	@Test
+	public void testPackedBoolean3() throws IOException {
+		testPackedBoolean(false, false, true);
+	}
+
+	@Test
+	public void testPackedBoolean8() throws IOException {
+		testPackedBoolean(true, false, true, false, false, true, false, true);
+	}
+
+	@Test
+	public void testPackedBoolean9() throws IOException {
+		testPackedBoolean(true, true, false, true, false, false, true, false,
+				true);
+	}
+
+	private void testPackedBoolean(boolean... values) throws IOException {
+		for (boolean v : values) {
+			out.writePackedBoolean(v);
+		}
+		out.finishPackedBoolean();
+		out.close();
+		for (boolean v : values) {
+			assertEquals(Boolean.valueOf(v), Boolean.valueOf(in
+					.readPackedBoolean()));
+		}
+		in.finishPackedBoolean();
+	}
+
 }

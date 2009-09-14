@@ -62,12 +62,17 @@ public class ExecutionDataWriter implements IExecutionDataVisitor {
 			out.write(BLOCK_EXECUTIONDATA);
 			out.writeLong(id);
 			out.writeVarInt(blockdata.length);
+			// 1. Write all block sizes
 			for (final boolean[] m : blockdata) {
 				out.writeVarInt(m.length);
+			}
+			// 2. Write block data in one sequence for better packing
+			for (final boolean[] m : blockdata) {
 				for (final boolean b : m) {
-					out.writeBoolean(b);
+					out.writePackedBoolean(b);
 				}
 			}
+			out.finishPackedBoolean();
 		} catch (final IOException e) {
 			throw new RuntimeException(e);
 		}

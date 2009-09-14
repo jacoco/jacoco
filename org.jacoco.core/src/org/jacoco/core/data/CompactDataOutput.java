@@ -54,4 +54,39 @@ public class CompactDataOutput extends DataOutputStream {
 		}
 	}
 
+	private int booleanBuffer = 0;
+
+	private int booleanBufferSize = 0;
+
+	/**
+	 * Writes a boolean value. Internally a sequence of boolean values is packed
+	 * into single bits. After the last boolean value has been written
+	 * {@link #finishPackedBoolean()} has to be called.
+	 * 
+	 * @param value
+	 *            boolean value
+	 * @throws IOException
+	 */
+	public void writePackedBoolean(final boolean value) throws IOException {
+		if (value) {
+			booleanBuffer |= 0x01 << booleanBufferSize;
+		}
+		if (++booleanBufferSize == 8) {
+			finishPackedBoolean();
+		}
+	}
+
+	/**
+	 * Finalizes the output of a sequence of packed boolean values.
+	 * 
+	 * @throws IOException
+	 */
+	public void finishPackedBoolean() throws IOException {
+		if (booleanBufferSize > 0) {
+			writeByte(booleanBuffer);
+			booleanBuffer = 0;
+			booleanBufferSize = 0;
+		}
+	}
+
 }
