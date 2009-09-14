@@ -10,7 +10,10 @@
 		<mkdir dir="${result.dist.test.dir}"/>
 		<junitreport todir="${result.dist.test.dir}">
 			<fileset dir="${result.tmp.dir}" includes="*/test/*.xml"/>
-			<report format="noframes" todir="${result.dist.test.dir}"/>
+			<report format="noframes" styledir="${source.bundle.dir}/junitstyle" todir="${result.dist.test.dir}">
+				<param name="VERSION" expression="${qualified.bundle.version}"/>
+				<param name="HOMEURL" expression="${jacoco.home.url}"/>
+			</report>
 		</junitreport>
 		<move file="${result.dist.test.dir}/junit-noframes.html"  
 			  tofile="${result.dist.test.dir}/index.html"/>
