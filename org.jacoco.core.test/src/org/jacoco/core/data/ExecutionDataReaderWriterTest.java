@@ -67,6 +67,17 @@ public class ExecutionDataReaderWriterTest {
 	}
 
 	@Test
+	public void testGetFileHeader() {
+		byte[] header = ExecutionDataWriter.getFileHeader();
+		assertEquals(0x01, 0xFF & header[0], 0.0);
+		assertEquals(0xC0, 0xFF & header[1], 0.0);
+		assertEquals(0xC0, 0xFF & header[2], 0.0);
+		final char version = ExecutionDataWriter.FORMAT_VERSION;
+		assertEquals(version >> 8, 0xFF & header[3], 0.0);
+		assertEquals(version & 0xFF, 0xFF & header[4], 0.0);
+	}
+
+	@Test
 	public void testValidHeader() throws IOException {
 		writer.writeHeader();
 		pipe.close();
@@ -74,9 +85,20 @@ public class ExecutionDataReaderWriterTest {
 	}
 
 	@Test(expected = IOException.class)
+	public void testInvalidMagicNumber() throws IOException {
+		pipe.write(ExecutionDataWriter.BLOCK_HEADER);
+		pipe.write(0x12);
+		pipe.write(0x34);
+		pipe.close();
+		reader.read();
+	}
+
+	@Test(expected = IOException.class)
 	public void testInvalidHeaderVersion() throws IOException {
 		pipe.write(ExecutionDataWriter.BLOCK_HEADER);
-		char version = ExecutionDataWriter.FORMAT_VERSION - 1;
+		pipe.write(0xC0);
+		pipe.write(0xC0);
+		final char version = ExecutionDataWriter.FORMAT_VERSION - 1;
 		pipe.write(version >> 8);
 		pipe.write(version & 0xFF);
 		pipe.close();

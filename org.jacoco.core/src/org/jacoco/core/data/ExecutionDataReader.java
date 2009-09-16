@@ -77,6 +77,9 @@ public class ExecutionDataReader {
 	}
 
 	private void readHeader() throws IOException {
+		if (in.readChar() != ExecutionDataWriter.MAGIC_NUMBER) {
+			throw new IOException("Invalid execution data file.");
+		}
 		final char version = in.readChar();
 		if (version != ExecutionDataWriter.FORMAT_VERSION) {
 			throw new IOException("Incompatible format version "
