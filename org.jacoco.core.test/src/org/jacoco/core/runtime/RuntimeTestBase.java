@@ -69,7 +69,7 @@ public abstract class RuntimeTestBase {
 			IllegalAccessException {
 		final boolean[][] data1 = new boolean[1][];
 		data1[0] = new boolean[] { true, true, true };
-		runtime.registerClass(1001, data1);
+		runtime.registerClass(1001, "Target", data1);
 		runtime.reset();
 		assertFalse(data1[0][0]);
 		assertFalse(data1[0][1]);
@@ -81,7 +81,7 @@ public abstract class RuntimeTestBase {
 			IllegalAccessException {
 		final boolean[][] data1 = new boolean[1][];
 		data1[0] = new boolean[] { true, true, true };
-		runtime.registerClass(1001, data1);
+		runtime.registerClass(1001, "Target", data1);
 		runtime.collect(storage, true);
 		storage.assertSize(1);
 		storage.assertData(1001, data1);
@@ -100,7 +100,7 @@ public abstract class RuntimeTestBase {
 	public void testDataAccessor() throws InstantiationException,
 			IllegalAccessException {
 		final boolean[][] data = newStructure();
-		runtime.registerClass(1001, data);
+		runtime.registerClass(1001, "Target", data);
 		ITarget t = generateAndInstantiateClass(1001);
 		assertSame(data, t.get());
 	}
@@ -109,7 +109,7 @@ public abstract class RuntimeTestBase {
 	public void testExecutionRecording() throws InstantiationException,
 			IllegalAccessException {
 		boolean[][] data1 = newStructure();
-		runtime.registerClass(1001, data1);
+		runtime.registerClass(1001, "Target", data1);
 		generateAndInstantiateClass(1001).a();
 		runtime.collect(storage, false);
 		storage.assertSize(1);
@@ -122,7 +122,7 @@ public abstract class RuntimeTestBase {
 	public void testLoadSameClassTwice() throws InstantiationException,
 			IllegalAccessException {
 		boolean[][] data1 = newStructure();
-		runtime.registerClass(1001, data1);
+		runtime.registerClass(1001, "Target", data1);
 		generateAndInstantiateClass(1001).a();
 		generateAndInstantiateClass(1001).b();
 		runtime.collect(storage, false);
@@ -259,7 +259,8 @@ public abstract class RuntimeTestBase {
 
 		// === ICoverageDataVisitor ===
 
-		public void visitClassExecution(long id, boolean[][] blockdata) {
+		public void visitClassExecution(long id, String name,
+				boolean[][] blockdata) {
 			data.put(Long.valueOf(id), blockdata);
 		}
 

@@ -30,10 +30,12 @@ public interface IExecutionDataVisitor {
 	 * instruction was called.
 	 * 
 	 * @param id
-	 *            id of the instrumented class
+	 *            id of the class
+	 * @param name
+	 *            VM name of the class
 	 * @param blockdata
 	 *            coverage data for the class
 	 */
-	public void visitClassExecution(long id, boolean[][] blockdata);
+	public void visitClassExecution(long id, String name, boolean[][] blockdata);
 
 }

@@ -213,7 +213,7 @@ public class ClassInstrumenter extends ClassAdapter {
 			data[blockIdx] = new boolean[blockCounters.get(blockIdx)
 					.getBlockCount()];
 		}
-		runtime.registerClass(id, data);
+		runtime.registerClass(id, type.getInternalName(), data);
 	}
 
 }

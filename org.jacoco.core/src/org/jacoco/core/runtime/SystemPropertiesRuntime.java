@@ -46,9 +46,10 @@ public class SystemPropertiesRuntime extends AbstractRuntime {
 		public boolean[][] get(final Object key) {
 			final Long id = (Long) key;
 			synchronized (store) {
-				final boolean[][] blockdata = store.get(id);
+				final boolean[][] blockdata = store.getData(id);
 				if (blockdata == null) {
-					throw new IllegalStateException("Unknown class ID: " + id);
+					throw new IllegalStateException(String.format(
+							"Unknown class id %x.", id));
 				}
 				return blockdata;
 			}

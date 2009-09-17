@@ -85,7 +85,7 @@ public class CoverageBuilderTest {
 
 	@Test
 	public void testCreateClassCovered() {
-		executionData.visitClassExecution(123L,
+		executionData.visitClassExecution(123L, "org/jacoco/examples/Sample",
 				new boolean[][] { new boolean[] { true } });
 		final IClassStructureVisitor classStructure = coverageBuilder
 				.visitClassStructure(123L, "org/jacoco/examples/Sample");

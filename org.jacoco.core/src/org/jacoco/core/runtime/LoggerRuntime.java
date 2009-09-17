@@ -131,10 +131,10 @@ public class LoggerRuntime extends AbstractRuntime {
 				final Object[] params = record.getParameters();
 				final Long id = (Long) params[0];
 				synchronized (store) {
-					final boolean[][] blockdata = store.get(id);
+					final boolean[][] blockdata = store.getData(id);
 					if (blockdata == null) {
-						throw new IllegalStateException("Unknown class ID: "
-								+ id);
+						throw new IllegalStateException(String.format(
+								"Unknown class id %x.", id));
 					}
 					params[0] = blockdata;
 				}

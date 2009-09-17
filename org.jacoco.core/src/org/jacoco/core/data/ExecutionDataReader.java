@@ -67,8 +67,8 @@ public class ExecutionDataReader {
 					readExecutionData();
 					break;
 				default:
-					throw new IOException("Unknown block type "
-							+ Integer.toHexString(block));
+					throw new IOException(String.format(
+							"Unknown block type %x.", Integer.valueOf(block)));
 				}
 			}
 		} catch (final EOFException e) {
@@ -82,13 +82,15 @@ public class ExecutionDataReader {
 		}
 		final char version = in.readChar();
 		if (version != ExecutionDataWriter.FORMAT_VERSION) {
-			throw new IOException("Incompatible format version "
-					+ Integer.toHexString(version));
+			throw new IOException(String
+					.format("Incompatible format version %x.", Integer
+							.valueOf(version)));
 		}
 	}
 
 	private void readExecutionData() throws IOException {
 		final long classid = in.readLong();
+		final String name = in.readUTF();
 		final boolean[][] blockdata = new boolean[in.readVarInt()][];
 		// 1. Read block sizes
 		for (int i = 0; i < blockdata.length; i++) {
@@ -102,7 +104,7 @@ public class ExecutionDataReader {
 		}
 		in.finishPackedBoolean();
 		if (executionDataVisitor != null) {
-			executionDataVisitor.visitClassExecution(classid, blockdata);
+			executionDataVisitor.visitClassExecution(classid, name, blockdata);
 		}
 	}
 

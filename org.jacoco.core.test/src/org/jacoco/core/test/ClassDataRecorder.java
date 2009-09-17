@@ -115,7 +115,7 @@ class ClassDataRecorder implements IExecutionDataVisitor, IStructureVisitor,
 
 	// === ICoverageDataVisitor ===
 
-	public void visitClassExecution(long id, boolean[][] blockdata) {
+	public void visitClassExecution(long id, String name, boolean[][] blockdata) {
 		assertTrue("Coverage and structure data for the same class only.",
 				classid == id);
 		assertTrue("Unexpected method count " + blockdata.length, methods

@@ -30,6 +30,8 @@ public class ExecutionDataStore implements IExecutionDataVisitor {
 
 	private final Map<Long, boolean[][]> data = new HashMap<Long, boolean[][]>();
 
+	private final Map<Long, String> names = new HashMap<Long, String>();
+
 	/**
 	 * Adds the given block data structure into the store. If there is already a
 	 * data structure for this class ID, this structure is merged with the given
@@ -38,15 +40,19 @@ public class ExecutionDataStore implements IExecutionDataVisitor {
 	 * 
 	 * @param classid
 	 *            unique class identifier
+	 * @param name
+	 *            VM name of the class
 	 * @param blockdata
 	 *            execution data
 	 */
-	public void put(final Long classid, boolean[][] blockdata) {
+	public void put(final Long classid, final String name, boolean[][] blockdata) {
 		final boolean[][] current = data.get(classid);
 		if (current != null) {
+			checkName(classid, name);
 			merge(current, blockdata);
 			blockdata = current;
 		}
+		names.put(classid, name);
 		data.put(classid, blockdata);
 	}
 
@@ -58,11 +64,23 @@ public class ExecutionDataStore implements IExecutionDataVisitor {
 	 * 
 	 * @param classid
 	 *            unique class identifier
+	 * @param name
+	 *            VM name of the class
 	 * @param blockdata
 	 *            execution data
 	 */
-	public void put(final long classid, final boolean[][] blockdata) {
-		put(Long.valueOf(classid), blockdata);
+	public void put(final long classid, final String name,
+			final boolean[][] blockdata) {
+		put(Long.valueOf(classid), name, blockdata);
+	}
+
+	private void checkName(final Long classid, final String name) {
+		final String oldName = names.get(classid);
+		if (!name.equals(oldName)) {
+			throw new IllegalArgumentException(String.format(
+					"Duplicate id %x for classes %s and %s.", classid, oldName,
+					name));
+		}
 	}
 
 	private static void merge(final boolean[][] target, final boolean[][] data) {
@@ -93,8 +111,8 @@ public class ExecutionDataStore implements IExecutionDataVisitor {
 	 *            class identifier
 	 * @return coverage data or <code>null</code>
 	 */
-	public boolean[][] get(final long classid) {
-		return get(Long.valueOf(classid));
+	public boolean[][] getData(final long classid) {
+		return getData(Long.valueOf(classid));
 	}
 
 	/**
@@ -105,8 +123,30 @@ public class ExecutionDataStore implements IExecutionDataVisitor {
 	 *            class identifier
 	 * @return coverage data or <code>null</code>
 	 */
-	public boolean[][] get(final Long classid) {
+	public boolean[][] getData(final Long classid) {
 		return data.get(classid);
+	}
+
+	/**
+	 * Returns the vm name of the class with the given id.
+	 * 
+	 * @param classid
+	 *            class identifier
+	 * @return vm name or <code>null</code>
+	 */
+	public String getName(final long classid) {
+		return getName(Long.valueOf(classid));
+	}
+
+	/**
+	 * Returns the vm name of the class with the given id.
+	 * 
+	 * @param classid
+	 *            class identifier
+	 * @return vm name or <code>null</code>
+	 */
+	public String getName(final Long classid) {
+		return names.get(classid);
 	}
 
 	/**
@@ -129,16 +169,17 @@ public class ExecutionDataStore implements IExecutionDataVisitor {
 	 */
 	public void accept(final IExecutionDataVisitor visitor) {
 		for (final Map.Entry<Long, boolean[][]> entry : data.entrySet()) {
-			final long id = entry.getKey().longValue();
-			visitor.visitClassExecution(id, entry.getValue());
+			final Long key = entry.getKey();
+			final long id = key.longValue();
+			visitor.visitClassExecution(id, names.get(key), entry.getValue());
 		}
 	}
 
 	// === IExecutionDataVisitor ===
 
-	public void visitClassExecution(final long classid,
+	public void visitClassExecution(final long classid, final String name,
 			final boolean[][] blockdata) {
-		put(classid, blockdata);
+		put(classid, name, blockdata);
 	}
 
 }

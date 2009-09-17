@@ -61,10 +61,13 @@ public interface IRuntime {
 	 * 
 	 * @param classid
 	 *            identifier of the class
+	 * @param name
+	 *            VM name of the class
 	 * @param blockdata
 	 *            execution data structure for this method
 	 */
-	public void registerClass(long classid, boolean[][] blockdata);
+	public void registerClass(long classid, final String name,
+			boolean[][] blockdata);
 
 	/**
 	 * Collects the current execution data and writes it to the given

@@ -59,7 +59,8 @@ public class ExecutionDataReaderWriterTest {
 	public void testEmpty() throws IOException {
 		pipe.close();
 		reader.setExecutionDataVisitor(new IExecutionDataVisitor() {
-			public void visitClassExecution(long id, boolean[][] blockdata) {
+			public void visitClassExecution(long id, String name,
+					boolean[][] blockdata) {
 				fail("No data expected.");
 			}
 		});
@@ -115,67 +116,67 @@ public class ExecutionDataReaderWriterTest {
 	@Test
 	public void testMinClassId() throws IOException {
 		boolean[][] blocks = createBlockdata(0, 0);
-		writer.visitClassExecution(Long.MIN_VALUE, blocks);
+		writer.visitClassExecution(Long.MIN_VALUE, "Sample", blocks);
 		pipe.close();
 		reader.read();
-		assertArrayEquals(blocks, store.get(Long.MIN_VALUE));
+		assertArrayEquals(blocks, store.getData(Long.MIN_VALUE));
 	}
 
 	@Test
 	public void testMaxClassId() throws IOException {
 		boolean[][] blocks = createBlockdata(0, 0);
-		writer.visitClassExecution(Long.MAX_VALUE, blocks);
+		writer.visitClassExecution(Long.MAX_VALUE, "Sample", blocks);
 		pipe.close();
 		reader.read();
-		assertArrayEquals(blocks, store.get(Long.MAX_VALUE));
+		assertArrayEquals(blocks, store.getData(Long.MAX_VALUE));
 	}
 
 	@Test
 	public void testEmptyClass() throws IOException {
 		boolean[][] blocks = createBlockdata(0, 0);
-		writer.visitClassExecution(3, blocks);
+		writer.visitClassExecution(3, "Sample", blocks);
 		pipe.close();
 		reader.read();
-		assertArrayEquals(blocks, store.get(3));
+		assertArrayEquals(blocks, store.getData(3));
 	}
 
 	@Test
 	public void testEmptyMethods() throws IOException {
 		boolean[][] blocks = createBlockdata(5, 0);
-		writer.visitClassExecution(3, blocks);
+		writer.visitClassExecution(3, "Sample", blocks);
 		pipe.close();
 		reader.read();
-		assertArrayEquals(blocks, store.get(3));
+		assertArrayEquals(blocks, store.getData(3));
 	}
 
 	@Test
 	public void testOneClass() throws IOException {
 		boolean[][] blocks = createBlockdata(5, 10);
-		writer.visitClassExecution(3, blocks);
+		writer.visitClassExecution(3, "Sample", blocks);
 		pipe.close();
 		reader.read();
-		assertArrayEquals(blocks, store.get(3));
+		assertArrayEquals(blocks, store.getData(3));
 	}
 
 	@Test
 	public void testTwoClasses() throws IOException {
 		boolean[][] blocks1 = createBlockdata(5, 15);
 		boolean[][] blocks2 = createBlockdata(7, 12);
-		writer.visitClassExecution(333, blocks1);
-		writer.visitClassExecution(-45, blocks2);
+		writer.visitClassExecution(333, "Sample", blocks1);
+		writer.visitClassExecution(-45, "Sample", blocks2);
 		pipe.close();
 		reader.read();
-		assertArrayEquals(blocks1, store.get(333));
-		assertArrayEquals(blocks2, store.get(-45));
+		assertArrayEquals(blocks1, store.getData(333));
+		assertArrayEquals(blocks2, store.getData(-45));
 	}
 
 	@Test
 	public void testBigClass() throws IOException {
 		boolean[][] blocks = createBlockdata(43, 40);
-		writer.visitClassExecution(123, blocks);
+		writer.visitClassExecution(123, "Sample", blocks);
 		pipe.close();
 		reader.read();
-		assertArrayEquals(blocks, store.get(123));
+		assertArrayEquals(blocks, store.getData(123));
 	}
 
 	@Test(expected = RuntimeException.class)
@@ -192,7 +193,7 @@ public class ExecutionDataReaderWriterTest {
 				});
 		broken[0] = true;
 		boolean[][] blocks = createBlockdata(1, 1);
-		writer.visitClassExecution(3, blocks);
+		writer.visitClassExecution(3, "Sample", blocks);
 	}
 
 	private boolean[][] createBlockdata(int methodCount, int maxBlockCount) {

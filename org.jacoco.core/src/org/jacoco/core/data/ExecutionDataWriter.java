@@ -25,7 +25,7 @@ import java.io.OutputStream;
 public class ExecutionDataWriter implements IExecutionDataVisitor {
 
 	/** File format version, will be incremented for each incompatible change. */
-	public static final char FORMAT_VERSION = 0x1002;
+	public static final char FORMAT_VERSION = 0x1003;
 
 	/** Magic number in header for file format identification. */
 	public static final char MAGIC_NUMBER = 0xC0C0;
@@ -61,10 +61,12 @@ public class ExecutionDataWriter implements IExecutionDataVisitor {
 		out.writeChar(FORMAT_VERSION);
 	}
 
-	public void visitClassExecution(final long id, final boolean[][] blockdata) {
+	public void visitClassExecution(final long id, final String name,
+			final boolean[][] blockdata) {
 		try {
 			out.writeByte(BLOCK_EXECUTIONDATA);
 			out.writeLong(id);
+			out.writeUTF(name);
 			out.writeVarInt(blockdata.length);
 			// 1. Write all block sizes
 			for (final boolean[] m : blockdata) {
