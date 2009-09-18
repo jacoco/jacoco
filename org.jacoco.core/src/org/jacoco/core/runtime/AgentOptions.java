@@ -12,6 +12,8 @@
  *******************************************************************************/
 package org.jacoco.core.runtime;
 
+import static java.lang.String.format;
+
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
@@ -93,14 +95,13 @@ public class AgentOptions {
 			for (final String entry : optionstr.split(",")) {
 				final int pos = entry.indexOf('=');
 				if (pos == -1) {
-					throw new IllegalArgumentException(
-							"Invalid agent option syntax \"" + optionstr
-									+ "\".");
+					throw new IllegalArgumentException(format(
+							"Invalid agent option syntax \"%s\".", optionstr));
 				}
 				final String key = entry.substring(0, pos);
 				if (!VALID_OPTIONS.contains(key)) {
-					throw new IllegalArgumentException(
-							"Unknown agent option \"" + key + "\".");
+					throw new IllegalArgumentException(format(
+							"Unknown agent option \"%s\".", key));
 				}
 				options.put(key, entry.substring(pos + 1));
 			}
@@ -215,8 +216,8 @@ public class AgentOptions {
 
 	private void setOption(final String key, final String value) {
 		if (value.contains(",")) {
-			throw new IllegalArgumentException(
-					"Invalid character in option argument: " + value);
+			throw new IllegalArgumentException(format(
+					"Invalid character in option argument \"%s\"", value));
 		}
 		options.put(key, value);
 	}

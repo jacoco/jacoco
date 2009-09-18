@@ -12,6 +12,8 @@
  *******************************************************************************/
 package org.jacoco.ant;
 
+import static java.lang.String.format;
+
 import java.util.ArrayList;
 import java.util.Collection;
 
@@ -71,8 +73,9 @@ public class CoverageTask extends AbstractCoverageTask implements TaskContainer 
 			}
 		}
 
-		throw new BuildException(subTaskTypeName
-				+ " is not a valid child of the coverage task");
+		throw new BuildException(format(
+				"%s is not a valid child of the coverage task.",
+				subTaskTypeName));
 
 	}
 
@@ -85,7 +88,7 @@ public class CoverageTask extends AbstractCoverageTask implements TaskContainer 
 			throw new BuildException(
 					"A child task must be supplied for the coverage task");
 		}
-		log("Enhancing " + childTask.getTaskName() + " with coverage");
+		log(format("Enhancing %s with coverage.", childTask.getTaskName()));
 		childTask.execute();
 	}
 

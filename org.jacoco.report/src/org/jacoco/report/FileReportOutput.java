@@ -12,6 +12,8 @@
  *******************************************************************************/
 package org.jacoco.report;
 
+import static java.lang.String.format;
+
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -33,16 +35,16 @@ public class FileReportOutput implements IReportOutput {
 	 * 
 	 * @param basedir
 	 */
-	public FileReportOutput(File basedir) {
+	public FileReportOutput(final File basedir) {
 		this.basedir = basedir;
 	}
 
-	public OutputStream createFile(String path) throws IOException {
+	public OutputStream createFile(final String path) throws IOException {
 		final File file = new File(basedir, path);
 		final File parent = file.getParentFile();
 		parent.mkdirs();
 		if (!parent.isDirectory()) {
-			throw new IOException("Can't create directory " + parent);
+			throw new IOException(format("Can't create directory %s.", parent));
 		}
 		return new FileOutputStream(file);
 	}

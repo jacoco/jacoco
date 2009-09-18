@@ -12,6 +12,8 @@
  *******************************************************************************/
 package org.jacoco.core.instr;
 
+import static java.lang.String.format;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -125,7 +127,7 @@ public class Analyzer {
 	public void analyzeAll(final File directory) throws IOException {
 		final File[] files = directory.listFiles();
 		if (files == null) {
-			throw new IOException("Can't read directory " + directory);
+			throw new IOException(format("Can't read directory %s.", directory));
 		}
 		for (final File f : files) {
 			if (f.isDirectory()) {

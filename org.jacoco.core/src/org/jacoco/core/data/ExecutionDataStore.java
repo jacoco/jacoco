@@ -12,6 +12,8 @@
  *******************************************************************************/
 package org.jacoco.core.data;
 
+import static java.lang.String.format;
+
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
@@ -77,7 +79,7 @@ public class ExecutionDataStore implements IExecutionDataVisitor {
 	private void checkName(final Long classid, final String name) {
 		final String oldName = names.get(classid);
 		if (!name.equals(oldName)) {
-			throw new IllegalArgumentException(String.format(
+			throw new IllegalArgumentException(format(
 					"Duplicate id %x for classes %s and %s.", classid, oldName,
 					name));
 		}

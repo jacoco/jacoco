@@ -12,6 +12,8 @@
  *******************************************************************************/
 package org.jacoco.core.data;
 
+import static java.lang.String.format;
+
 import java.io.EOFException;
 import java.io.IOException;
 import java.io.InputStream;
@@ -67,8 +69,8 @@ public class ExecutionDataReader {
 					readExecutionData();
 					break;
 				default:
-					throw new IOException(String.format(
-							"Unknown block type %x.", Integer.valueOf(block)));
+					throw new IOException(format("Unknown block type %x.",
+							Integer.valueOf(block)));
 				}
 			}
 		} catch (final EOFException e) {

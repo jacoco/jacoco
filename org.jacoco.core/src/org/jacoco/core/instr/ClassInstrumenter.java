@@ -12,6 +12,8 @@
  *******************************************************************************/
 package org.jacoco.core.instr;
 
+import static java.lang.String.format;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -198,8 +200,8 @@ public class ClassInstrumenter extends ClassAdapter {
 	private void assertNotInstrumented(final String member,
 			final String instrMember) throws IllegalStateException {
 		if (member.equals(instrMember)) {
-			throw new IllegalStateException("Class " + type.getClassName()
-					+ " is already instrumented.");
+			throw new IllegalStateException(format(
+					"Class %s is already instrumented.", type.getClassName()));
 		}
 	}
 

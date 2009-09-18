@@ -12,6 +12,8 @@
  *******************************************************************************/
 package org.jacoco.report.xml;
 
+import static java.lang.String.format;
+
 import java.io.IOException;
 import java.io.Writer;
 
@@ -96,7 +98,7 @@ public class XMLElement {
 	 */
 	protected void addChildElement(final XMLElement child) throws IOException {
 		if (closed) {
-			throw new IOException("Element " + name + " already closed.");
+			throw new IOException(format("Element %s already closed.", name));
 		}
 		finishOpenTag();
 		if (lastchild != null) {
@@ -146,7 +148,8 @@ public class XMLElement {
 	public XMLElement attr(final String name, final String value)
 			throws IOException {
 		if (closed || openTagDone) {
-			throw new IOException("Element " + this.name + " already closed.");
+			throw new IOException(format("Element %s already closed.",
+					this.name));
 		}
 		writer.write(SPACE);
 		writer.write(name);
@@ -168,7 +171,7 @@ public class XMLElement {
 	 */
 	public XMLElement text(final String text) throws IOException {
 		if (closed) {
-			throw new IOException("Element " + name + " already closed.");
+			throw new IOException(format("Element %s already closed.", name));
 		}
 		finishOpenTag();
 		if (lastchild != null) {
