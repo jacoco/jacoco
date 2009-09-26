@@ -48,6 +48,7 @@ import org.jacoco.report.ISourceFileLocator;
 import org.jacoco.report.MultiFormatter;
 import org.jacoco.report.csv.CsvFormatter;
 import org.jacoco.report.html.HTMLFormatter;
+import org.jacoco.report.xml.XMLFormatter;
 
 /**
  * Task for coverage report generation. Experimental implementation that needs
@@ -182,7 +183,7 @@ public class ReportTask extends Task {
 	}
 
 	/**
-	 * Formatter Element for HTML reports.
+	 * Formatter Element for CSV reports.
 	 */
 	public static class CsvFormatterElement implements IFormatterElement {
 
@@ -200,6 +201,31 @@ public class ReportTask extends Task {
 
 		public IReportFormatter createFormatter() {
 			final CsvFormatter formatter = new CsvFormatter();
+			formatter.setReportOutput(new FileReportOutput(destdir));
+
+			return formatter;
+		}
+	}
+
+	/**
+	 * Formatter Element for XML reports.
+	 */
+	public static class XMLFormatterElement implements IFormatterElement {
+
+		private File destdir;
+
+		/**
+		 * Sets the output directory for the report.
+		 * 
+		 * @param destdir
+		 *            output directory
+		 */
+		public void setDestdir(final File destdir) {
+			this.destdir = destdir;
+		}
+
+		public IReportFormatter createFormatter() {
+			final XMLFormatter formatter = new XMLFormatter();
 			formatter.setReportOutput(new FileReportOutput(destdir));
 
 			return formatter;
@@ -248,6 +274,17 @@ public class ReportTask extends Task {
 	 */
 	public CsvFormatterElement createCsv() {
 		final CsvFormatterElement element = new CsvFormatterElement();
+		formatters.add(element);
+		return element;
+	}
+
+	/**
+	 * Creates a new XML report element.
+	 * 
+	 * @return CSV report element
+	 */
+	public XMLFormatterElement createXml() {
+		final XMLFormatterElement element = new XMLFormatterElement();
 		formatters.add(element);
 		return element;
 	}
