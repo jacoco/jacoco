@@ -1,0 +1,25 @@
+<!ELEMENT report (group)>
+
+<!ELEMENT group ((group* , package*) , counter+)>
+<!ATTLIST group
+  name CDATA #REQUIRED>
+
+<!ELEMENT package ((class*) , counter+)>
+<!ATTLIST package
+  name CDATA #REQUIRED>
+
+<!ELEMENT class ((method*), counter+)>
+<!ATTLIST class
+  name CDATA #REQUIRED>
+
+<!ELEMENT method (counter+)>
+<!ATTLIST method
+  name CDATA #REQUIRED
+  desc CDATA #REQUIRED
+  signature CDATA #IMPLIED>
+
+<!ELEMENT counter EMPTY>
+<!ATTLIST counter
+  type CDATA #REQUIRED
+  covered CDATA #REQUIRED
+  notcovered CDATA #REQUIRED>
