@@ -107,27 +107,50 @@ public class SystemPropertiesRuntime extends AbstractRuntime {
 		this.key = KEYPREFIX + hashCode();
 	}
 
-	public void generateDataAccessor(final long classid,
+	public int generateDataAccessor(final long classid,
 			final GeneratorAdapter gen) {
 
-		// stack := System.getProperties()
 		gen.visitMethodInsn(Opcodes.INVOKESTATIC, "java/lang/System",
 				"getProperties", "()Ljava/util/Properties;");
 
-		// stack := stack.get(key)
+		// Stack[0]: Ljava/util/Properties;
+
 		gen.push(key);
+
+		// Stack[1]: Ljava/lang/String;
+		// Stack[0]: Ljava/util/Properties;
+
 		gen.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "java/util/Properties",
 				"get", "(Ljava/lang/Object;)Ljava/lang/Object;");
+
+		// Stack[0]: Ljava/lang/Object;
+
 		gen.visitTypeInsn(Opcodes.CHECKCAST, "java/util/Map");
 
-		// stack := stack.get(classid)
+		// Stack[0]: Ljava/util/Map;
+
 		gen.push(classid);
+
+		// Stack[2]: J
+		// Stack[1]: .
+		// Stack[0]: Ljava/util/Map;
+
 		gen.visitMethodInsn(Opcodes.INVOKESTATIC, "java/lang/Long", "valueOf",
 				"(J)Ljava/lang/Long;");
 
+		// Stack[1]: Ljava/lang/Long;
+		// Stack[0]: Ljava/util/Map;
+
 		gen.visitMethodInsn(Opcodes.INVOKEINTERFACE, "java/util/Map", "get",
 				"(Ljava/lang/Object;)Ljava/lang/Object;");
+
+		// Stack[0]: Ljava/lang/Object;
+
 		gen.checkCast(GeneratorConstants.DATAFIELD_TYPE);
+
+		// Stack[0]: [[Z
+
+		return 3; // Maximum local stack size is 3
 	}
 
 	public void startup() {

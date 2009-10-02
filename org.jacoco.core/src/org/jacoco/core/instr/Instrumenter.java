@@ -67,8 +67,7 @@ public class Instrumenter {
 			return null;
 		}
 
-		final ClassWriter writer = new ClassWriter(reader,
-				ClassWriter.COMPUTE_MAXS);
+		final ClassWriter writer = new ClassWriter(reader, 0);
 		final ClassVisitor visitor = createInstrumentingVisitor(CRC64
 				.checksum(reader.b), writer);
 		reader.accept(visitor, ClassReader.EXPAND_FRAMES);

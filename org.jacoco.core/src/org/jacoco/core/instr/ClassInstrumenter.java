@@ -145,25 +145,35 @@ public class ClassInstrumenter extends ClassAdapter {
 				GeneratorConstants.DATAFIELD_TYPE);
 		gen.dup();
 
-		// .............................................. Stack: [[Z, [[Z
+		// Stack[1]: [[Z
+		// Stack[0]: [[Z
 
 		// Skip initialization when we already have a data array:
 		final Label alreadyInitialized = new Label();
 		gen.ifNonNull(alreadyInitialized);
 
-		// .............................................. Stack: [[Z
+		// Stack[0]: [[Z
 
 		gen.pop();
-		genInitializeDataField(gen);
+		final int size = genInitializeDataField(gen);
 
-		// .............................................. Stack: [[Z
+		// Stack[0]: [[Z
 
 		// Return the method's block array:
 		gen.visitLabel(alreadyInitialized);
 		gen.loadArg(0);
+
+		// Stack[1]: I
+		// Stack[0]: [[Z
+
 		gen.arrayLoad(GeneratorConstants.BLOCK_ARR);
+
+		// Stack[0]: [Z
+
 		gen.returnValue();
-		gen.endMethod();
+
+		gen.visitMaxs(Math.max(size, 2), 0); // Maximum local stack size is 2
+		gen.visitEnd();
 	}
 
 	/**
@@ -175,13 +185,22 @@ public class ClassInstrumenter extends ClassAdapter {
 	 * @param gen
 	 *            generator to emit code to
 	 */
-	private void genInitializeDataField(final GeneratorAdapter gen) {
-		runtime.generateDataAccessor(id, gen);// ........ Stack: [[Z
-		gen.dup(); // ................................... Stack: [[Z [[Z
+	private int genInitializeDataField(final GeneratorAdapter gen) {
+		final int size = runtime.generateDataAccessor(id, gen);
+
+		// Stack[0]: [[Z
+
+		gen.dup();
+
+		// Stack[1]: [[Z
+		// Stack[0]: [[Z
+
 		gen.putStatic(type, GeneratorConstants.DATAFIELD_NAME,
 				GeneratorConstants.DATAFIELD_TYPE);
 
-		// .............................................. Stack: [[Z
+		// Stack[0]: [[Z
+
+		return Math.max(size, 2); // Maximum local stack size is 2
 	}
 
 	/**

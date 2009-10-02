@@ -21,11 +21,6 @@ import org.objectweb.asm.commons.GeneratorAdapter;
  * This method adapter instruments a method to record every block that gets
  * fully executed.
  * 
- * TODO The instrumented method may need a increased stack but this adapter will
- * *not* adjust the max stack size value. Therefore the ClassWriter needs to be
- * invoked with COMPUTE_MAXS. For performance optimization this adapter should
- * adjust the directly calculate the max stack size and report it properly.
- * 
  * @author Marc R. Hoffmann
  * @version $Revision: $
  */
@@ -54,8 +49,9 @@ public class MethodInstrumenter extends GeneratorAdapter implements
 	 * @param enclosingType
 	 *            type enclosing this method
 	 */
-	public MethodInstrumenter(MethodVisitor mv, int access, String name,
-			String desc, int methodId, Type enclosingType) {
+	public MethodInstrumenter(final MethodVisitor mv, final int access,
+			final String name, final String desc, final int methodId,
+			final Type enclosingType) {
 		super(mv, access, name, desc);
 		this.methodId = methodId;
 		this.enclosingType = enclosingType;
@@ -67,25 +63,49 @@ public class MethodInstrumenter extends GeneratorAdapter implements
 		// At the very beginning of the method we load the boolean[] array into
 		// a local variable that stores the block coverage of this method.
 
-		push(methodId); // ................................... Stack: I
-		invokeStatic(enclosingType, GeneratorConstants.INIT_METHOD); // ... Stack: [Z
+		push(methodId);
+
+		// Stack[0]: I
+
+		invokeStatic(enclosingType, GeneratorConstants.INIT_METHOD);
+
+		// Stack[0]: [Z
+
 		blockArray = newLocal(GeneratorConstants.BLOCK_ARR);
-		storeLocal(blockArray); // ........................... Stack: <empty>
+		storeLocal(blockArray);
+	}
+
+	@Override
+	public void visitMaxs(final int maxStack, final int maxLocals) {
+		// Max stack size of the probe code is 3
+		super.visitMaxs(maxStack + 3, maxLocals + 1);
 	}
 
 	// === IBlockMethodVisitor ===
 
-	public void visitBlockEndBeforeJump(int id) {
+	public void visitBlockEndBeforeJump(final int id) {
 		// At the end of every block we set the corresponding position in the
 		// boolean[] array to true.
 
-		loadLocal(blockArray); // ............................ Stack: [Z
-		push(id); // ......................................... Stack: [Z, I
-		push(1); // .......................................... Stack: [Z, I, I
-		visitInsn(Opcodes.BASTORE); // ....................... Stack: <empty>
+		loadLocal(blockArray);
+
+		// Stack[0]: [Z
+
+		push(id);
+
+		// Stack[1]: I
+		// Stack[0]: [Z
+
+		push(1);
+
+		// Stack[2]: I
+		// Stack[1]: I
+		// Stack[0]: [Z
+
+		visitInsn(Opcodes.BASTORE);
 	}
 
-	public void visitBlockEnd(int id) {
+	public void visitBlockEnd(final int id) {
 		// nothing to do here
 	}
 

@@ -39,8 +39,10 @@ public interface IRuntime {
 	 *            identifier of the class
 	 * @param gen
 	 *            code output
+	 * @return additional stack size required by the implementation, including
+	 *         the instance pushed to the stack
 	 */
-	public void generateDataAccessor(long classid, GeneratorAdapter gen);
+	public int generateDataAccessor(long classid, GeneratorAdapter gen);
 
 	/**
 	 * Starts the coverage runtime. This method MUST be called before any class

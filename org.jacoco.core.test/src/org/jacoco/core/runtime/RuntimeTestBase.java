@@ -149,7 +149,7 @@ public abstract class RuntimeTestBase {
 				+ classid;
 		Type classType = Type.getObjectType(className);
 
-		final ClassWriter writer = new ClassWriter(ClassWriter.COMPUTE_MAXS);
+		final ClassWriter writer = new ClassWriter(0);
 		writer.visit(Opcodes.V1_5, Opcodes.ACC_PUBLIC, className, null,
 				"java/lang/Object", new String[] { Type
 						.getInternalName(ITarget.class) });
@@ -166,10 +166,10 @@ public abstract class RuntimeTestBase {
 		gen.invokeConstructor(Type.getType(Object.class), new Method("<init>",
 				"()V"));
 		gen.loadThis();
-		runtime.generateDataAccessor(classid, gen);
+		final int size = runtime.generateDataAccessor(classid, gen);
 		gen.putField(classType, "data", GeneratorConstants.DATAFIELD_TYPE);
 		gen.returnValue();
-		gen.visitMaxs(0, 0);
+		gen.visitMaxs(size + 1, 0);
 		gen.visitEnd();
 
 		// get()
@@ -180,7 +180,7 @@ public abstract class RuntimeTestBase {
 		gen.loadThis();
 		gen.getField(classType, "data", GeneratorConstants.DATAFIELD_TYPE);
 		gen.returnValue();
-		gen.visitMaxs(0, 0);
+		gen.visitMaxs(1, 0);
 		gen.visitEnd();
 
 		// a()
@@ -195,10 +195,10 @@ public abstract class RuntimeTestBase {
 		gen.push(1);
 		gen.arrayStore(Type.BOOLEAN_TYPE);
 		gen.returnValue();
-		gen.visitMaxs(0, 0);
+		gen.visitMaxs(3, 0);
 		gen.visitEnd();
 
-		// a()
+		// b()
 		gen = new GeneratorAdapter(writer.visitMethod(Opcodes.ACC_PUBLIC, "b",
 				"()V", null, new String[0]), Opcodes.ACC_PUBLIC, "b", "()V");
 		gen.visitCode();
@@ -210,7 +210,7 @@ public abstract class RuntimeTestBase {
 		gen.push(1);
 		gen.arrayStore(Type.BOOLEAN_TYPE);
 		gen.returnValue();
-		gen.visitMaxs(0, 0);
+		gen.visitMaxs(3, 0);
 		gen.visitEnd();
 
 		writer.visitEnd();

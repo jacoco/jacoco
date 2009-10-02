@@ -63,45 +63,72 @@ public class LoggerRuntime extends AbstractRuntime {
 		return l;
 	}
 
-	public void generateDataAccessor(final long classid,
+	public int generateDataAccessor(final long classid,
 			final GeneratorAdapter gen) {
 
 		// 1. Create parameter array:
 
-		final int param = gen.newLocal(Type.getObjectType("java/lang/Object"));
-
-		// stack := new Object[1]
 		gen.push(1);
 		gen.newArray(Type.getObjectType("java/lang/Object"));
 
-		// stack[0] = Long.valueOf(classId)
+		// Stack[0]: [Ljava/lang/Object;
+
 		gen.dup();
+
+		// Stack[1]: [Ljava/lang/Object;
+		// Stack[0]: [Ljava/lang/Object;
+
 		gen.push(0);
 		gen.push(classid);
+
+		// Stack[4]: J
+		// Stack[3]: .
+		// Stack[2]: I
+		// Stack[1]: [Ljava/lang/Object;
+		// Stack[0]: [Ljava/lang/Object;
+
 		gen.visitMethodInsn(Opcodes.INVOKESTATIC, "java/lang/Long", "valueOf",
 				"(J)Ljava/lang/Long;");
+
+		// Stack[3]: Ljava/lang/Long;
+		// Stack[2]: I
+		// Stack[1]: [Ljava/lang/Object;
+		// Stack[0]: [Ljava/lang/Object;
+
 		gen.arrayStore(Type.getObjectType("java/lang/Object"));
 
+		// Stack[0]: [Ljava/lang/Object;
+
+		final int param = gen.newLocal(Type.getObjectType("java/lang/Object"));
 		gen.storeLocal(param);
 
 		// 2. Call Logger:
 
-		// stack := Logger.getLogger(CHANNEL)
 		gen.push(CHANNEL);
 		gen.visitMethodInsn(Opcodes.INVOKESTATIC, "java/util/logging/Logger",
 				"getLogger", "(Ljava/lang/String;)Ljava/util/logging/Logger;");
 
-		// stack = Level.INFO;
+		// Stack[0]: Ljava/util/logging/Logger;
+
 		gen.getStatic(Type.getObjectType("java/util/logging/Level"), "INFO",
 				Type.getObjectType("java/util/logging/Level"));
 
-		// stack := key
+		// Stack[1]: Ljava/util/logging/Level;
+		// Stack[0]: Ljava/util/logging/Logger;
+
 		gen.push(key);
 
-		// stack := param
+		// Stack[2]: Ljava/lang/String;
+		// Stack[1]: Ljava/util/logging/Level;
+		// Stack[0]: Ljava/util/logging/Logger;
+
 		gen.loadLocal(param);
 
-		// stack.log(stack, stack, stack)
+		// Stack[3]: [Ljava/lang/Object;
+		// Stack[2]: Ljava/lang/String;
+		// Stack[1]: Ljava/util/logging/Level;
+		// Stack[0]: Ljava/util/logging/Logger;
+
 		gen
 				.visitMethodInsn(Opcodes.INVOKEVIRTUAL,
 						"java/util/logging/Logger", "log",
@@ -111,8 +138,16 @@ public class LoggerRuntime extends AbstractRuntime {
 
 		gen.loadLocal(param);
 		gen.push(0);
+
+		// Stack[1]: I
+		// Stack[0]: [Ljava/lang/Object;
+
 		gen.arrayLoad(GeneratorConstants.DATAFIELD_TYPE);
 		gen.checkCast(GeneratorConstants.DATAFIELD_TYPE);
+
+		// Stack[0]: [[Z
+
+		return 5; // Maximum local stack size is 5
 	}
 
 	public void startup() {

@@ -96,7 +96,8 @@ public class CoverageTransformerTest {
 	}
 
 	private static class StubRuntime extends AbstractRuntime {
-		public void generateDataAccessor(long classid, GeneratorAdapter gen) {
+		public int generateDataAccessor(long classid, GeneratorAdapter gen) {
+			return 0;
 		}
 
 		public void startup() {

@@ -14,7 +14,6 @@ package org.jacoco.core.instr;
 
 import static org.junit.Assert.assertEquals;
 
-import org.jacoco.core.instr.MethodInstrumenter;
 import org.jacoco.core.test.MethodRecorder;
 import org.junit.Before;
 import org.junit.Test;
@@ -66,8 +65,7 @@ public class MethodInstrumenterTest {
 		expected.visitInsn(Opcodes.ICONST_1);
 		expected.visitInsn(Opcodes.BASTORE);
 		expected.visitInsn(Opcodes.RETURN);
-		// max stack size is not calculated by the MethodInstrumenter
-		expected.visitMaxs(0, 2);
+		expected.visitMaxs(3, 2);
 		expected.visitEnd();
 
 		assertEquals(expected, actual);
