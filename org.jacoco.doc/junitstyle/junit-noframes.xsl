@@ -139,9 +139,8 @@
                     <!-- match the testsuites of this package -->
                     <xsl:apply-templates select="/testsuites/testsuite[./@package = current()/@package]" mode="print.test"/>
                 </table>
+                <p/>
                 <a href="#top">Back to top</a>
-                <p/>
-                <p/>
         </xsl:for-each>
     </xsl:template>
 
@@ -166,7 +165,6 @@
                 <xsl:apply-templates select="./testcase" mode="print.test"/>
             </table>
             <p/>
-
             <a href="#top">Back to top</a>
         </xsl:for-each>
     </xsl:template>
