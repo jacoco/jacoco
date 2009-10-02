@@ -64,12 +64,12 @@ public final class MethodAnalyzer implements IBlockMethodVisitor {
 		return null;
 	}
 
-	public AnnotationVisitor visitParameterAnnotation(final int parameter,
-			final String desc, final boolean visible) {
+	public AnnotationVisitor visitAnnotationDefault() {
 		return null;
 	}
 
-	public AnnotationVisitor visitAnnotationDefault() {
+	public AnnotationVisitor visitParameterAnnotation(final int parameter,
+			final String desc, final boolean visible) {
 		return null;
 	}
 
@@ -95,15 +95,18 @@ public final class MethodAnalyzer implements IBlockMethodVisitor {
 			final Label handler, final String type) {
 	}
 
+	public void visitMaxs(final int maxStack, final int maxLocals) {
+	}
+
 	public void visitLineNumber(final int line, final Label start) {
 		currentLine = line;
 	}
 
-	public void visitJumpInsn(final int opcode, final Label label) {
+	public void visitInsn(final int opcode) {
 		addInstruction();
 	}
 
-	public void visitInsn(final int opcode) {
+	public void visitJumpInsn(final int opcode, final Label label) {
 		addInstruction();
 	}
 
@@ -149,9 +152,6 @@ public final class MethodAnalyzer implements IBlockMethodVisitor {
 
 	public void visitVarInsn(final int opcode, final int var) {
 		addInstruction();
-	}
-
-	public void visitMaxs(final int maxStack, final int maxLocals) {
 	}
 
 	public void visitEnd() {
