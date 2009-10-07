@@ -44,6 +44,8 @@ public class HTMLFormatter implements IReportFormatter, IHTMLReportContext {
 
 	private String footerText = "";
 
+	private String outputEncoding = "UTF-8";
+
 	private Resources resources;
 
 	/**
@@ -132,6 +134,16 @@ public class HTMLFormatter implements IReportFormatter, IHTMLReportContext {
 		this.footerText = footerText;
 	}
 
+	/**
+	 * Sets the encoding used for generated HTML pages. Default is UTF-8.
+	 * 
+	 * @param outputEncoding
+	 *            HTML output encoding
+	 */
+	public void setOutputEncoding(final String outputEncoding) {
+		this.outputEncoding = outputEncoding;
+	}
+
 	// === IHTMLReportContext ===
 
 	public ILanguageNames getLanguageNames() {
@@ -149,6 +161,10 @@ public class HTMLFormatter implements IReportFormatter, IHTMLReportContext {
 
 	public String getFooterText() {
 		return footerText;
+	}
+
+	public String getOutputEncoding() {
+		return outputEncoding;
 	}
 
 	// === IReportFormatter ===

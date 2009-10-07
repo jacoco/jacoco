@@ -53,7 +53,7 @@ public class XMLReportFileTest {
 	@Before
 	public void setUp() throws Exception {
 		output = new MemoryReportOutput();
-		report = new XMLReportFile(output, "test.xml");
+		report = new XMLReportFile(output, "test.xml", "UTF-8");
 
 	}
 

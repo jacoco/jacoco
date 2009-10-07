@@ -98,6 +98,9 @@ public class ReportPageTest {
 				return "CustomFooter";
 			}
 
+			public String getOutputEncoding() {
+				return "UTF-8";
+			}
 		};
 		ReportPage parent = new TestReportPage(new CoverageNodeImpl(
 				ElementType.SESSION, "Session", false), null);

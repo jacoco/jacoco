@@ -30,9 +30,11 @@ public class XMLDocument extends XMLElement {
 	/** All documents created by this API are created in UTF-8. */
 	public static final String ENCODING = "UTF-8";
 
-	/** XML header string */
-	public static final String XMLHEADER = "<?xml version=\"1.0\" encoding=\""
-			+ ENCODING + "\"?>";
+	/** XML header string, part before the encoding */
+	public static final String XMLHEADER1 = "<?xml version=\"1.0\" encoding=\"";
+
+	/** XML header string, part after the encoding */
+	public static final String XMLHEADER2 = "\"?>";
 
 	/**
 	 * Writes a new document to the given writer. The document might contain a
@@ -44,15 +46,18 @@ public class XMLDocument extends XMLElement {
 	 *            optional doctype identifier or <code>null</code>
 	 * @param system
 	 *            system reference, required if doctype is given
+	 * @param encoding
+	 *            encoding that will be specified in the header
 	 * @param writer
 	 *            writer for content output
 	 * @throws IOException
 	 *             in case of problems with the writer
 	 */
 	public XMLDocument(final String rootnode, final String pubId,
-			final String system, final Writer writer) throws IOException {
+			final String system, final String encoding, final Writer writer)
+			throws IOException {
 		super(writer, rootnode);
-		writeHeader(rootnode, pubId, system, writer);
+		writeHeader(rootnode, pubId, system, encoding, writer);
 		beginOpenTag();
 	}
 
@@ -67,14 +72,18 @@ public class XMLDocument extends XMLElement {
 	 *            optional doctype identifier or <code>null</code>
 	 * @param system
 	 *            system reference, required if doctype is given
+	 * @param encoding
+	 *            oncoding of the XML document
 	 * @param output
 	 *            output for content output
 	 * @throws IOException
 	 *             in case of problems with the writer
 	 */
 	public XMLDocument(final String rootnode, final String pubId,
-			final String system, final OutputStream output) throws IOException {
-		this(rootnode, pubId, system, new OutputStreamWriter(output, ENCODING));
+			final String system, final String encoding,
+			final OutputStream output) throws IOException {
+		this(rootnode, pubId, system, encoding, new OutputStreamWriter(output,
+				encoding));
 	}
 
 	@Override
@@ -84,8 +93,11 @@ public class XMLDocument extends XMLElement {
 	}
 
 	private static void writeHeader(final String rootnode, final String pubId,
-			final String system, final Writer writer) throws IOException {
-		writer.write(XMLHEADER);
+			final String system, final String encoding, final Writer writer)
+			throws IOException {
+		writer.write(XMLHEADER1);
+		writer.write(encoding);
+		writer.write(XMLHEADER2);
 		if (pubId != null) {
 			writer.write("<!DOCTYPE ");
 			writer.write(rootnode);

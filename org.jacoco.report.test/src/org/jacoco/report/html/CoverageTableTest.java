@@ -54,7 +54,7 @@ public class CoverageTableTest {
 		output = new MemoryReportOutput();
 		root = new ReportOutputFolder(output);
 		resources = new Resources(root);
-		doc = new HTMLDocument(root.createFile("Test.html"));
+		doc = new HTMLDocument(root.createFile("Test.html"), "UTF-8");
 		doc.head().title();
 		body = doc.body();
 	}

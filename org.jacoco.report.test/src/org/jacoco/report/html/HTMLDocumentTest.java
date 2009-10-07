@@ -31,18 +31,21 @@ public class HTMLDocumentTest {
 	@Test
 	public void testWriter() throws IOException {
 		StringWriter buffer = new StringWriter();
-		new HTMLDocument(buffer).close();
+		new HTMLDocument(buffer, "UTF-8").close();
 		assertEquals(
-				"<?xml version=\"1.0\" encoding=\"UTF-8\"?><!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Strict//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd\"><html/>",
+				"<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
+						+ "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Strict//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd\">"
+						+ "<html xmlns=\"http://www.w3.org/1999/xhtml\"/>",
 				buffer.toString());
 	}
 
 	@Test
 	public void testStream() throws IOException {
 		ByteArrayOutputStream buffer = new ByteArrayOutputStream();
-		new HTMLDocument(buffer).close();
+		new HTMLDocument(buffer, "UTF-8").close();
 		assertEquals(
-				"<?xml version=\"1.0\" encoding=\"UTF-8\"?><!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Strict//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd\">"
+				"<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
+						+ "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Strict//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd\">"
 						+ "<html xmlns=\"http://www.w3.org/1999/xhtml\"/>",
 				buffer.toString("UTF-8"));
 	}
@@ -50,29 +53,33 @@ public class HTMLDocumentTest {
 	@Test
 	public void testHead() throws IOException {
 		StringWriter buffer = new StringWriter();
-		final HTMLDocument doc = new HTMLDocument(buffer);
+		final HTMLDocument doc = new HTMLDocument(buffer, "UTF-8");
 		doc.head();
 		doc.close();
 		assertEquals(
-				"<?xml version=\"1.0\" encoding=\"UTF-8\"?><!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Strict//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd\"><html><head/></html>",
+				"<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
+						+ "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Strict//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd\">"
+						+ "<html xmlns=\"http://www.w3.org/1999/xhtml\"><head/></html>",
 				buffer.toString());
 	}
 
 	@Test
 	public void testBody() throws IOException {
 		StringWriter buffer = new StringWriter();
-		final HTMLDocument doc = new HTMLDocument(buffer);
+		final HTMLDocument doc = new HTMLDocument(buffer, "UTF-8");
 		doc.body();
 		doc.close();
 		assertEquals(
-				"<?xml version=\"1.0\" encoding=\"UTF-8\"?><!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Strict//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd\"><html><body/></html>",
+				"<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
+						+ "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Strict//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd\">"
+						+ "<html xmlns=\"http://www.w3.org/1999/xhtml\"><body/></html>",
 				buffer.toString());
 	}
 
 	@Test
 	public void testMinimalHTMLDocument() throws Exception {
 		StringWriter buffer = new StringWriter();
-		final HTMLDocument doc = new HTMLDocument(buffer);
+		final HTMLDocument doc = new HTMLDocument(buffer, "UTF-8");
 		doc.head().title();
 		doc.body();
 		doc.close();

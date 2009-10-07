@@ -54,4 +54,11 @@ public interface IHTMLReportContext {
 	 */
 	public String getFooterText();
 
+	/**
+	 * Returns the encoding of the generated HTML documents.
+	 * 
+	 * @return encoding for generated HTML documents
+	 */
+	public String getOutputEncoding();
+
 }

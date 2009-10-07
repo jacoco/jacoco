@@ -53,7 +53,7 @@ public class CounterColumnTest {
 		output = new MemoryReportOutput();
 		root = new ReportOutputFolder(output);
 		resources = new Resources(root);
-		doc = new HTMLDocument(root.createFile("Test.html"));
+		doc = new HTMLDocument(root.createFile("Test.html"), "UTF-8");
 		doc.head().title();
 		tr = doc.body().table("somestyle").tr();
 		support = new HTMLSupport();

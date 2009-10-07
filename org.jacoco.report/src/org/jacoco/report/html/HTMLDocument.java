@@ -34,16 +34,24 @@ public class HTMLDocument extends XMLDocument {
 
 	private static final String SYSTEM = "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd";
 
+	private static final String XMLNS = "xmlns";
+
+	private static final String XHTML_NAMESPACE_URL = "http://www.w3.org/1999/xhtml";
+
 	/**
 	 * Creates a new HTML document based on the given writer.
 	 * 
 	 * @param writer
 	 *            writer for content output
+	 * @param encoding
+	 *            document encoding
 	 * @throws IOException
 	 *             in case of problems with the writer
 	 */
-	public HTMLDocument(final Writer writer) throws IOException {
-		super(ROOT, PUBID, SYSTEM, writer);
+	public HTMLDocument(final Writer writer, final String encoding)
+			throws IOException {
+		super(ROOT, PUBID, SYSTEM, encoding, writer);
+		attr(XMLNS, XHTML_NAMESPACE_URL);
 	}
 
 	/**
@@ -51,12 +59,15 @@ public class HTMLDocument extends XMLDocument {
 	 * 
 	 * @param output
 	 *            stream for content output
+	 * @param encoding
+	 *            document encoding
 	 * @throws IOException
 	 *             in case of problems with the stream
 	 */
-	public HTMLDocument(final OutputStream output) throws IOException {
-		super(ROOT, PUBID, SYSTEM, output);
-		attr("xmlns", "http://www.w3.org/1999/xhtml");
+	public HTMLDocument(final OutputStream output, final String encoding)
+			throws IOException {
+		super(ROOT, PUBID, SYSTEM, encoding, output);
+		attr(XMLNS, XHTML_NAMESPACE_URL);
 	}
 
 	@Override

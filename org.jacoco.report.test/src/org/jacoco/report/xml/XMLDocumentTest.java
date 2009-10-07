@@ -36,7 +36,8 @@ public class XMLDocumentTest {
 	@Test
 	public void testDoctype() throws IOException {
 		StringWriter writer = new StringWriter();
-		new XMLDocument("test", "sample", "sample.dtd", writer).close();
+		new XMLDocument("test", "sample", "sample.dtd", "UTF-8", writer)
+				.close();
 		assertEquals("<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
 				+ "<!DOCTYPE test PUBLIC \"sample\" \"sample.dtd\">"
 				+ "<test/>", writer.toString());
@@ -45,8 +46,8 @@ public class XMLDocumentTest {
 	@Test
 	public void testStream() throws IOException {
 		ByteArrayOutputStream buffer = new ByteArrayOutputStream();
-		new XMLDocument("test", null, null, buffer).text("\u00CD\u307e")
-				.close();
+		new XMLDocument("test", null, null, "UTF-8", buffer).text(
+				"\u00CD\u307e").close();
 		assertEquals(
 				"<?xml version=\"1.0\" encoding=\"UTF-8\"?><test>\u00CD\u307e</test>",
 				buffer.toString("UTF-8"));
@@ -65,7 +66,7 @@ public class XMLDocumentTest {
 			}
 		}
 		CloseVerifier verifier = new CloseVerifier();
-		new XMLDocument("test", null, null, verifier).close();
+		new XMLDocument("test", null, null, "UTF-8", verifier).close();
 		assertTrue(verifier.closed);
 	}
 

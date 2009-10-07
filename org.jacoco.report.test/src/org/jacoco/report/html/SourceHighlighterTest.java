@@ -49,7 +49,7 @@ public class SourceHighlighterTest {
 		htmlSupport = new HTMLSupport();
 		lines = new LinesImpl();
 		buffer = new StringWriter();
-		html = new HTMLDocument(buffer);
+		html = new HTMLDocument(buffer, "UTF-8");
 		html.head().title();
 		parent = html.body();
 		sourceHighlighter = new SourceHighlighter();

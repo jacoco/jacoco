@@ -27,6 +27,12 @@ import org.jacoco.report.ISourceFileLocator;
  */
 public class XMLReportFile extends XMLDocument implements IReportVisitor {
 
+	private static final String ROOT = "report";
+
+	private static final String PUBID = "//JaCoCo//DTD Report 1.0//EN";
+
+	private static final String SYSTEM = "http://www.jacoco.org/report.dtd";
+
 	/**
 	 * Creates a new Report file
 	 * 
@@ -34,13 +40,14 @@ public class XMLReportFile extends XMLDocument implements IReportVisitor {
 	 *            Report output
 	 * @param filename
 	 *            Name of the XML file to create
+	 * @param encoding
+	 *            Encoding of the XML file
 	 * @throws IOException
 	 *             IO Error creating report file
 	 */
-	public XMLReportFile(final IReportOutput output, final String filename)
-			throws IOException {
-		super("report", "//JaCoCo//DTD Report 1.0//EN",
-				"http://www.jacoco.org/report.dtd", output.createFile(filename));
+	public XMLReportFile(final IReportOutput output, final String filename,
+			final String encoding) throws IOException {
+		super(ROOT, PUBID, SYSTEM, encoding, output.createFile(filename));
 
 	}
 

@@ -29,9 +29,12 @@ public class XMLFormatter implements IReportFormatter {
 
 	private FileReportOutput fileReportOutput;
 
+	private String outputEncoding = "UTF-8";
+
 	public IReportVisitor createReportVisitor(final ICoverageNode session)
 			throws IOException {
-		return new XMLReportFile(fileReportOutput, session.getName() + ".xml");
+		return new XMLReportFile(fileReportOutput, session.getName() + ".xml",
+				outputEncoding);
 	}
 
 	/**
@@ -42,6 +45,16 @@ public class XMLFormatter implements IReportFormatter {
 	 */
 	public void setReportOutput(final FileReportOutput fileReportOutput) {
 		this.fileReportOutput = fileReportOutput;
+	}
+
+	/**
+	 * Sets the encoding used for generated XML document. Default is UTF-8.
+	 * 
+	 * @param outputEncoding
+	 *            XML output encoding
+	 */
+	public void setOutputEncoding(final String outputEncoding) {
+		this.outputEncoding = outputEncoding;
 	}
 
 }

@@ -71,7 +71,7 @@ public abstract class ReportPage implements IReportVisitor, ICoverageTableItem {
 	private void renderDocument(final ISourceFileLocator sourceFileLocator)
 			throws IOException {
 		final HTMLDocument doc = new HTMLDocument(outputFolder
-				.createFile(getFileName()));
+				.createFile(getFileName()), context.getOutputEncoding());
 		head(doc.head());
 		final HTMLElement body = doc.body();
 		breadcrumb(body.div(Styles.BREADCRUMB), outputFolder, this);
