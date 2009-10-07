@@ -152,6 +152,8 @@ public class ReportTask extends Task {
 
 		private String footer = "";
 
+		private String encoding = "UTF-8";
+
 		/**
 		 * Sets the output directory for the report.
 		 * 
@@ -173,10 +175,21 @@ public class ReportTask extends Task {
 			this.footer = text;
 		}
 
+		/**
+		 * Sets the output encoding for generated HTML files. Default is UTF-8.
+		 * 
+		 * @param encoding
+		 *            output encoding
+		 */
+		public void setEncoding(final String encoding) {
+			this.encoding = encoding;
+		}
+
 		public IReportFormatter createFormatter() {
 			final HTMLFormatter formatter = new HTMLFormatter();
 			formatter.setReportOutput(new FileReportOutput(destdir));
 			formatter.setFooterText(footer);
+			formatter.setOutputEncoding(encoding);
 			return formatter;
 		}
 
@@ -214,6 +227,8 @@ public class ReportTask extends Task {
 
 		private File destdir;
 
+		private String encoding = "UTF-8";
+
 		/**
 		 * Sets the output directory for the report.
 		 * 
@@ -224,10 +239,20 @@ public class ReportTask extends Task {
 			this.destdir = destdir;
 		}
 
+		/**
+		 * Sets the output encoding for generated XML file. Default is UTF-8.
+		 * 
+		 * @param encoding
+		 *            output encoding
+		 */
+		public void setEncoding(final String encoding) {
+			this.encoding = encoding;
+		}
+
 		public IReportFormatter createFormatter() {
 			final XMLFormatter formatter = new XMLFormatter();
 			formatter.setReportOutput(new FileReportOutput(destdir));
-
+			formatter.setOutputEncoding(encoding);
 			return formatter;
 		}
 	}
