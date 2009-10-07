@@ -12,8 +12,7 @@
  *******************************************************************************/
 package org.jacoco.core.test.targets;
 
-import static org.jacoco.core.test.targets.Stubs.m1;
-import static org.jacoco.core.test.targets.Stubs.m2;
+import static org.jacoco.core.test.targets.Stubs.f;
 import static org.jacoco.core.test.targets.Stubs.t;
 
 /**
@@ -27,7 +26,7 @@ import static org.jacoco.core.test.targets.Stubs.t;
 public class Target_init_05 extends Stubs.Base {
 
 	public Target_init_05() {
-		super(t() ? m1(t()) : m2(t())); // ........ 30:
-	} // .......................................... 31:
+		super(t() ? t() : f()); // ........ 29:
+	} // .......................................... 30:
 
 }

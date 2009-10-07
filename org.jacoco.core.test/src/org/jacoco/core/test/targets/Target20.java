@@ -12,9 +12,7 @@
  *******************************************************************************/
 package org.jacoco.core.test.targets;
 
-import static org.jacoco.core.test.targets.Stubs.m1;
-import static org.jacoco.core.test.targets.Stubs.m2;
-import static org.jacoco.core.test.targets.Stubs.m3;
+import static org.jacoco.core.test.targets.Stubs.nop;
 import static org.jacoco.core.test.targets.Stubs.t;
 
 /**
@@ -28,10 +26,10 @@ import static org.jacoco.core.test.targets.Stubs.t;
 public class Target20 implements Runnable {
 
 	public void run() {
-		if (m1(t())) { // ........... 31
-			m2(); // ................ 32
+		if (t()) { // ........... 31
+			nop(); // ................ 32
 		} else {
-			m3(); // ................ 34
+			nop(); // ................ 34
 		}
 	} // ............................ 36
 

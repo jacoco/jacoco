@@ -85,7 +85,7 @@ public class InstrumentationScenariosTest {
 	public void init_05() throws Exception {
 		final ClassDataRecorder rec = runScenario(Target_init_05.class);
 		final BlockData block0 = rec.getMethod("<init>").getBlock(0);
-		block0.assertLines(30);
+		block0.assertLines(29);
 		block0.assertCovered();
 	}
 

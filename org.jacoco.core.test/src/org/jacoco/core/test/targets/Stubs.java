@@ -21,7 +21,7 @@ package org.jacoco.core.test.targets;
 public class Stubs {
 
 	/**
-	 * Does nothing.
+	 * Dummy method.
 	 */
 	public static void nop() {
 	}
@@ -38,45 +38,6 @@ public class Stubs {
 	 */
 	public static boolean f() {
 		return false;
-	}
-
-	/**
-	 * Marker method m1.
-	 */
-	public static void m1() {
-	}
-
-	/**
-	 * Marker method m1.
-	 */
-	public static boolean m1(boolean value) {
-		return value;
-	}
-
-	/**
-	 * Marker method m1.
-	 */
-	public static void m2() {
-	}
-
-	/**
-	 * Marker method m1.
-	 */
-	public static boolean m2(boolean value) {
-		return value;
-	}
-
-	/**
-	 * Marker method m1.
-	 */
-	public static void m3() {
-	}
-
-	/**
-	 * Marker method m1.
-	 */
-	public static boolean m3(boolean value) {
-		return value;
 	}
 
 	public static class Base {
