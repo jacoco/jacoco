@@ -243,12 +243,24 @@
 <h2>Memory Usage</h2>
 
 <p class="intro">
-  
+  Coverage analysis for huge projects with several thousand classes or hundred
+  thousand lines of code should be possible. To allow this with reasonable
+  memory usage the coverage analysis is based on streaming patterns and
+  "depth first" traversals.  
 </p>
 
 <p>
-  TODO: Streaming, Deep first
+  The complete data tree of a huge coverage report is too big to fit into a
+  reasonable heap memory configuration. Therefore the coverage analysis and
+  report generation is implemented as "depth first" traversals. Which means that
+  at any point in time only only the following data has to be held in main
+  memory:  
 </p>
+
+<ul>
+  <li>A single class which is currently processed.</li>
+  <li>The summary information of all parents of this class (package, groups).</li>
+</ul>
 
 <h2>Java Element Identifiers</h2>
 
