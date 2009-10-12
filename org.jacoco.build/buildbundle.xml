@@ -58,7 +58,7 @@
 		<mkdir dir="${result.dist.lib.dir}"/>
 		<jar destfile="${result.dist.bundle.jar.file}" manifest="${result.temp.bundle.manifest.file}" level="9">
 			<fileset dir="${result.tmp.bundle.classes.dir}"/>
-			<fileset file="${source.bundle.dir}/about.html"/>
+			<file file="${source.bundle.dir}/about.html"/>
 		</jar>
 	</target>
 	

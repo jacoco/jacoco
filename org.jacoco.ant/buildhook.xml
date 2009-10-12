@@ -18,15 +18,9 @@
 	<target name="custompackage">
 		<property name="result.dist.bundle.jar.file" location="${result.dist.lib.dir}/${manifest.Bundle-SymbolicName}_${qualified.bundle.version}.jar"/>
 		<mkdir dir="${result.dist.lib.dir}"/>
-		<jar destfile="${result.dist.bundle.jar.file}" level="9">
-			<manifest>
-				<attribute name="Implementation-Title" value="JaCoCo Ant Tasks"/>
-				<attribute name="Implementation-Vendor" value="Mountainminds GmbH &amp; Co. KG"/>
-				<attribute name="Implementation-Version" value="${qualified.bundle.version}"/>
-			</manifest>
+		<jar destfile="${result.dist.bundle.jar.file}" manifest="${result.temp.bundle.manifest.file}" level="9">
 			<fileset dir="${result.tmp.bundle.classes.dir}"/>
-			<fileset file="${source.bundle.dir}/about.html"/>
-			<fileset file="${result.dist.lib.dir}/jacocoagent.jar"/>
+			<file file="${source.bundle.dir}/about.html"/>
 		</jar>
 
 		<!-- create the all-in-one Ant JAR -->
@@ -43,8 +37,9 @@
 				<attribute name="Implementation-Vendor" value="Mountainminds GmbH &amp; Co. KG"/>
 				<attribute name="Implementation-Version" value="${qualified.bundle.version}"/>
 			</manifest>		
+			<file file="${source.bundle.dir}/about.html"/>
+			<file file="${result.dist.lib.dir}/jacocoagent.jar"/>
 			<fileset dir="${result.tmp.bundle.classes.dir}"/>
-			<fileset file="${result.dist.lib.dir}/jacocoagent.jar"/>
 			<fileset dir="${toString:bundle-org.jacoco.report}" excludes="**/*.class"/>
 			
 			<!-- Just add those classes we really need -->
