@@ -13,7 +13,7 @@
    $Id: $
 -->
 
-<project name="org.jacoco.build.bundle" default="package" xmlns:jacoco="antlib:org.jacoco.ant">
+<project name="org.jacoco.build.bundle" default="build" xmlns:jacoco="antlib:org.jacoco.ant">
 
 	<description>
 		This build file is executed for every JaCoCo bundle. Every bundle must
@@ -127,9 +127,9 @@
 				
 	
 	<!-- =================================================================== 
-	     ALL 
+	     BUILD 
 	     =================================================================== -->
 	
-	<target name="all" depends="compile,package,verify,doc"/>
+	<target name="build" depends="compile,package,verify,doc"/>
 	
 </project>

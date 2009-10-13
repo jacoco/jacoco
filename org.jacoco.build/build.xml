@@ -13,7 +13,7 @@
    $Id: $
 -->
 
-<project name="org.jacoco.build.all" default="rebuildall" basedir=".">
+<project name="org.jacoco.build.all" default="rebuild" basedir=".">
 	
 	<description>
 		This is the main build file for the JaCoCo build.
@@ -99,11 +99,11 @@
 		<runallbundlebuilds target="doc"/>
 	</target>
 	
-	<target name="buildall">
-		<runallbundlebuilds target="all"/>
+	<target name="build">
+		<runallbundlebuilds target="build"/>
 	</target>
 	
-	<target name="deliver" depends="buildall">
+	<target name="deliver" depends="build">
 		<property prefix="core.manifest." file="${result.tmp.dir}/org.jacoco.core/MANIFEST.MF"/>
 		<property name="result.zip.file" location="${result.dir}/jacoco-${core.manifest.Bundle-Version}.zip"/>
 		<zip destfile="${result.zip.file}" level="9">
@@ -112,6 +112,6 @@
 		<checksum file="${result.zip.file}" format="MD5SUM"/>
 	</target>
 
-	<target name="rebuildall" depends="clean,buildall,deliver"/>
+	<target name="rebuild" depends="clean,build,deliver"/>
 	
 </project>
