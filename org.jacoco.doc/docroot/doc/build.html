@@ -1,0 +1,260 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1" />
+  <link rel="stylesheet" href=".resources/doc.css" charset="ISO-8859-1" type="text/css" />
+  <title>JaCoCo - Build</title>
+</head>
+<body>
+
+<div class="breadcrumb">
+  <a href="../index.html" class="el_session">JaCoCo</a> &gt;
+  <a href="index.html" class="el_group">Documentation</a> &gt;
+  <span class="el_source">Build</span>
+</div>
+
+<h1>Build</h1>
+
+<p>
+  The JaCoCo build is fully based on
+  <a href="http://ant.apache.org/">Apache Ant</a>. The build can be locally
+  executed on every machine with a proper <a href="environment.html">environment
+  setup</a>. Basically the specified third party libraries and a proper JDK
+  version have to be available. Total build time is typically around 1 minute.
+  Developers are encouraged to run the build frequently to ensure consistency of
+  the source tree.
+</p>
+
+
+<h2>Running the Build</h2>
+
+<p>
+  The build can be started by executing the build file
+  <code>org.jacoco.build/build.xml</code> with <code>org.jacoco.build/</code> as
+  the working directory. From Eclipse simply right-click the
+  <code>build.xml</code> file and select <i>Run As &rarr; Ant Build...</i> 
+  The only mandatory property that has to be provided is
+  <code>target.plugins.dir</code>, the location of the folder that contains the
+  target bundles. 
+</p>
+
+<p>
+  The following build targets can be selected:
+</p>
+
+<table class="coverage">
+  <thead>
+    <tr>
+      <td>Target</td>
+      <td>Description</td>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>clean</code></td>
+      <td>Delete all build artifacts including temporary files.</td>
+    </tr>
+    <tr>
+      <td><code>compile</code></td>
+      <td>Compile all Java source files.</td>
+    </tr>
+    <tr>
+      <td><code>verify</code></td>
+      <td>Run all regression tests.</td>
+    </tr>
+    <tr>
+      <td><code>package</code></td>
+      <td>Create bundle JARs.</td>
+    </tr>
+    <tr>
+      <td><code>doc</code></td>
+      <td>Generate documentation.</td>
+    </tr>
+    <tr>
+      <td><code>build</code></td>
+      <td>Compile, verify, package and create documentation.</td>
+    </tr>
+    <tr>
+      <td><code><b>rebuild</b></code></td>
+      <td>Clean and build (default target).</td>
+    </tr>
+    <tr>
+      <td><code>deliver</code></td>
+      <td>Rebuild and create a ZIP archive with checksum.</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>
+  By default the build output is created directly in the build project folder
+  with the following structure. The <code>dist</code> folder contains all files
+  of the distribution which will be packed into a ZIP archive if the deliver
+  target was called.
+</p>
+
+<pre>
+  org.jacoco.build/
+     result/
+        dist/
+        tmp/
+        jacoco-&lt;version&gt;.zip
+        jacoco-&lt;version&gt;.zip.MD5
+</pre>
+
+<p class="hint">
+  If you edit the JaCoCo build files with the Eclipse Ant editor the file
+  <code>jacocoant.jar</code> might become locked until you exit Eclipse. In this
+  case subsequent builds will always fail as they can't write this file any
+  more. The reason is the code assist function for user defined tasks. Please
+  see the
+  <a href="http://help.eclipse.org/galileo/index.jsp?topic=/org.eclipse.platform.doc.user/reference/ref-antcodeassist.htm">Eclipse reference</a>
+  how to configure the Ant Editor to avoid these locks.
+</p>
+
+
+<h2>Customizing the Build</h2>
+
+<p>
+  The <code>build.xml</code> file defines default values for several properties
+  that can be overwritten from outside: 
+</p>
+
+<table class="coverage">
+  <thead>
+    <tr>
+      <td>Property</td>
+      <td>Description</td>
+      <td>Default Value</td>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>workspace.dir</code></td>
+      <td>Folder that contains the source of the JaCoCo bundles.</td>
+      <td><code>..</code></td>
+    </tr>
+    <tr>
+      <td><code>result.dir</code></td>
+      <td>Folder where all build results are written to.</td>
+      <td><code>./result</code></td>
+    </tr>
+    <tr>
+      <td><code>result.dist.dir</code></td>
+      <td>Folder where all build artifacts for distribution are written to.</td>
+      <td><code>${result.dir}/dist</code></td>
+    </tr>
+    <tr>
+      <td><code>result.tmp.dir</code></td>
+      <td>Folder for temporary build files.</td>
+      <td><code>${result.dir}/tmp</code></td>
+    </tr>
+    <tr>
+      <td><code>build.qualifier</code></td>
+      <td>Build qualifier that will be inserted into all bundle versions and documents.</td>
+      <td>Current timestamp.</td>
+    </tr>
+    <tr>
+      <td><code>jacoco.home.url</code></td>
+      <td>URL of the current home page for JaCoCo.</td>
+      <td><code>http://www.eclemma.org/jacoco</code></td>
+    </tr>
+
+  </tbody>
+</table>
+
+<p>
+  The layout of the target platform might be customized in the
+   <code>target.xml</code> file.
+</p>
+
+<p class="hint">
+  The file <code>build.properties</code> files are part of the Eclipse PDE
+  declarations and not (yet) used by the JaCoCo Ant build.
+</p>
+
+
+<h2>Internal Structure of the Build</h2>
+
+<p>
+  JaCoCo is build with a set of custom Ant scripts that can be easily executed
+  on different machines. While the modularization mechanism is based on OSGi
+  bundles, the build does not (yet) use a build system like PDE build or Maven.
+  The reason is that some JaCoCo artifacts like the <code>agent.jar</code> have
+  very specific packaging requirements.
+</p>
+
+<h3>Structure of the Build Files</h3>
+
+<p>
+  The main <code>build.xml</code> calls the <code>buildbundle.xml</code> script
+  for each bundle. The <code>target.xml</code> file is included in the main
+  build file and defines the structure of the target platform. Each bundle
+  defines its specific requirements in a local <code>buildhook.xml</code> file
+  which is included into the <code>buildbundle.xml</code> when the respective
+  bundle is build.
+</p>
+
+<div style="padding-left:2em"><code><b>org.jacoco.build/build.xml</b></code></div>
+<div style="padding-left:4em">include <code><b>org.jacoco.build/target.xml</b></code></div>
+<div style="padding-left:4em">for each bundle:</div>
+<div style="padding-left:6em">call <code><b>org.jacoco.build/buildbundle.xml</b></code>:</div>
+<div style="padding-left:8em">include <code><b>&lt;bundleid&gt;/buildhook.xml</b></code></div>
+
+<h3>Class Paths</h3>
+
+<p>
+  The class paths of all bundles are defined as <code>path</code> instances with
+  ids in the format <code>bundle-&lt;bundleid&gt;</code>. For the target
+  platform the paths are explicitly defined by the <code>target.xml</code> file.
+  For the JaCoCo bundles a respective path instance is automatically defined
+  after each bundle has been built.
+</p>
+
+<h3>Dependencies</h3>
+
+<p>
+  Dependencies are not automatically derived from declarations in the bundle
+  manifests. Instead the <code>buildhook.xml</code> files compose a new path
+  definition from the dependencies, for example: 
+</p>
+
+<pre class="source">
+<span class="nr">    1</span>&lt;path id="dependencies"&gt;
+<span class="nr">    2</span>    &lt;path refid="bundle-org.jacoco.core"/&gt;
+<span class="nr">    3</span>    &lt;path refid="bundle-org.objectweb.asm"/&gt;
+<span class="nr">    4</span>&lt;/path>
+</pre>
+
+<p>
+  A suitable build order for the JaCoCo bundles is hard coded in the
+  <code>build.xml</code> file.
+</p>
+
+<h3>Custom Build Tasks</h3>
+
+<p>
+  The <code>org.jacoco.build</code> bundle implements a set of custom Ant tasks
+  and types that primarily help to implement specific packaging requirements:  
+</p>
+
+<ul>
+  <li><b>Task <code>randomid</code>:</b> Creates a short random string which is
+      a valid Java identifier. This task is used to define unique package names
+      for all classes of the Java agent avoiding name clashes at runtime.</li>
+  <li><b>Type <code>deepclassfileset</code>:</b> Analyzes class file
+      dependencies recursively to select a subset of class files from a given
+      file set. This type is used to package small all-in JARs for the Java
+      agent and the JaCoCO Ant library.</li>
+  <li><b>Type <code>renamedclassfileset</code>:</b> Renames class files and
+      their dependencies to other class files based on a set of mapping rules.
+      This type is used to rename the classes for the Java agent.</li>
+</ul>
+
+<div class="footer">
+  <div class="versioninfo"><a href="@HOMEURL@">JaCoCo</a> @VERSION@</div>
+  <a href="license.html">Copyright</a> &copy; 2009 Mountainminds GmbH &amp; Co. KG and Contributors
+</div>
+
+</body>
+</html>
