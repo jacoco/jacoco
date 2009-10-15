@@ -21,7 +21,6 @@
 	
 	<import file="target.xml"/>
 	
-	<property name="target.plugins.dir" location="C:/devtools/eclipse3.4.1/plugins"/>
 	<property name="workspace.dir" location=".."/>
 	
 	<property name="result.dir" location="./result"/>
@@ -103,7 +102,9 @@
 		<runallbundlebuilds target="build"/>
 	</target>
 	
-	<target name="deliver" depends="build">
+	<target name="rebuild" depends="clean,build"/>
+	
+	<target name="deliver" depends="rebuild">
 		<property prefix="core.manifest." file="${result.tmp.dir}/org.jacoco.core/MANIFEST.MF"/>
 		<property name="result.zip.file" location="${result.dir}/jacoco-${core.manifest.Bundle-Version}.zip"/>
 		<zip destfile="${result.zip.file}" level="9">
@@ -111,7 +112,5 @@
 		</zip>
 		<checksum file="${result.zip.file}" format="MD5SUM"/>
 	</target>
-
-	<target name="rebuild" depends="clean,build,deliver"/>
 	
 </project>
