@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1" />
+  <link rel="stylesheet" href=".resources/doc.css" charset="ISO-8859-1" type="text/css" />
+  <title>JaCoCo - Development Conventions</title>
+</head>
+<body>
+
+<div class="breadcrumb">
+  <a href="../index.html" class="el_session">JaCoCo</a> &gt;
+  <a href="index.html" class="el_group">Documentation</a> &gt;
+  <span class="el_source">Development Conventions</span>
+</div>
+
+<h1>Development Conventions</h1>
+
+<p>
+  Efficient team work that produces high-quality software requires a common set
+  of rules.  
+</p>
+
+<h3>Consistent Source Tree</h3>
+
+<p>
+  Update your sources and run the build locally before every check-in. Commit
+  only if the build succeeds.  
+</p>
+
+<p>
+  Documentation is part of the product. Whenever you implement a new feature or
+  change existing behavior make sure to update all corresponding JavaDoc as well
+  as other documentation with the same change set. The product should always be
+  in a consistent state.    
+</p>
+
+<h3>Keep an Eye on License Issues</h3>
+
+<p>
+  All code included with JaCoCo must conform to the EPL license. 
+</p>
+
+<ul>
+  <li>Every third party content must be enlisted in the corresponding
+      <code>about.html</code> file along with its license.</li>
+  <li>Every third party content included with the JaCoCo distribution must be
+      enlisted in the <code>org.jacoco.doc/docroot/doc/license.html</code> file
+      along with its license.</li>
+  <li>Every source file (Java, Build Script, DTD) must have a
+      <a href="http://www.eclipse.org/legal/copyrightandlicensenotice.php">EPL
+      license notice</a>. The initial contributor should be listed. In case of
+      significant changes or additions additional contributors should also
+      be listed. 
+  </li>
+</ul>
+
+
+<div class="footer">
+  <div class="versioninfo"><a href="@HOMEURL@">JaCoCo</a> @VERSION@</div>
+  <a href="license.html">Copyright</a> &copy; 2009 Mountainminds GmbH &amp; Co. KG and Contributors
+</div>
+
+</body>
+</html>
