@@ -27,9 +27,6 @@ import java.io.Writer;
  */
 public class XMLDocument extends XMLElement {
 
-	/** All documents created by this API are created in UTF-8. */
-	public static final String ENCODING = "UTF-8";
-
 	/** XML header string, part before the encoding */
 	public static final String XMLHEADER1 = "<?xml version=\"1.0\" encoding=\"";
 
@@ -62,9 +59,8 @@ public class XMLDocument extends XMLElement {
 	}
 
 	/**
-	 * Writes a new document to the given binary stream, which will be encoded
-	 * in {@link #ENCODING}. The document might contain a document type
-	 * declaration.
+	 * Writes a new document to the given binary stream. The document might
+	 * contain a document type declaration.
 	 * 
 	 * @param rootnode
 	 *            name of the root node
