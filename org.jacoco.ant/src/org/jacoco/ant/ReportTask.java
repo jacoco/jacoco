@@ -202,6 +202,8 @@ public class ReportTask extends Task {
 
 		private File destdir;
 
+		private String encoding = "UTF-8";
+
 		/**
 		 * Sets the output directory for the report.
 		 * 
@@ -215,8 +217,18 @@ public class ReportTask extends Task {
 		public IReportFormatter createFormatter() {
 			final CsvFormatter formatter = new CsvFormatter();
 			formatter.setReportOutput(new FileReportOutput(destdir));
-
+			formatter.setOutputEncoding(encoding);
 			return formatter;
+		}
+
+		/**
+		 * Sets the output encoding for generated XML file. Default is UTF-8.
+		 * 
+		 * @param encoding
+		 *            output encoding
+		 */
+		public void setEncoding(final String encoding) {
+			this.encoding = encoding;
 		}
 	}
 

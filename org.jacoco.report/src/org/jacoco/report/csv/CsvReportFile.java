@@ -15,13 +15,13 @@ package org.jacoco.report.csv;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
+import java.io.Writer;
 
 import org.jacoco.core.analysis.CoverageNodeImpl;
 import org.jacoco.core.analysis.ICoverageNode;
 import org.jacoco.core.analysis.ICoverageNode.CounterEntity;
 import org.jacoco.core.analysis.ICoverageNode.ElementType;
 import org.jacoco.report.ILanguageNames;
-import org.jacoco.report.IReportOutput;
 import org.jacoco.report.IReportVisitor;
 import org.jacoco.report.ISourceFileLocator;
 
@@ -49,21 +49,37 @@ public class CsvReportFile implements IReportVisitor {
 	 *            Language name callback used for name translation
 	 * @param session
 	 *            Session coverage data
-	 * @param output
-	 *            Report output callback
+	 * @param writer
+	 *            {@link Writer} for CSV output
 	 * @throws IOException
 	 *             Thrown if there were problems creating the output CSV file
 	 */
 	public CsvReportFile(final ILanguageNames languageNames,
-			final ICoverageNode session, final IReportOutput output)
+			final ICoverageNode session, final Writer writer)
 			throws IOException {
-
 		this.languageNames = languageNames;
-		final OutputStream outputStream = output.createFile(session.getName()
-				+ ".csv");
+		this.writer = new DelimitedWriter(writer);
+		writeHeader(this.writer);
+	}
 
-		writer = new DelimitedWriter(new OutputStreamWriter(outputStream));
-		writeHeader(writer);
+	/**
+	 * Creates a new CSV report from the supplied configuration and session data
+	 * 
+	 * @param languageNames
+	 *            Language name callback used for name translation
+	 * @param session
+	 *            Session coverage data
+	 * @param output
+	 *            {@link OutputStream} to the CSV file to
+	 * @param encoding
+	 *            character encoding of the CSV file
+	 * @throws IOException
+	 *             Thrown if there were problems creating the output CSV file
+	 */
+	public CsvReportFile(final ILanguageNames languageNames,
+			final ICoverageNode session, final OutputStream output,
+			final String encoding) throws IOException {
+		this(languageNames, session, new OutputStreamWriter(output, encoding));
 	}
 
 	public IReportVisitor visitChild(final ICoverageNode node)

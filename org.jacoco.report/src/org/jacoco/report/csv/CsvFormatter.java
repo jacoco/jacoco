@@ -31,7 +31,10 @@ import org.jacoco.report.JavaNames;
 public class CsvFormatter implements IReportFormatter {
 
 	private IReportOutput output;
+
 	private ILanguageNames languageNames = new JavaNames();
+
+	private String outputEncoding = "UTF-8";
 
 	public IReportVisitor createReportVisitor(final ICoverageNode session)
 			throws IOException {
@@ -40,7 +43,8 @@ public class CsvFormatter implements IReportFormatter {
 			throw new IllegalStateException("No report output set.");
 		}
 
-		return new CsvReportFile(languageNames, session, output);
+		return new CsvReportFile(languageNames, session, output
+				.createFile(session.getName() + ".csv"), outputEncoding);
 	}
 
 	/**
@@ -72,6 +76,16 @@ public class CsvFormatter implements IReportFormatter {
 	 */
 	public ILanguageNames getLanguageNames() {
 		return languageNames;
+	}
+
+	/**
+	 * Sets the encoding used for generated CSV document. Default is UTF-8.
+	 * 
+	 * @param outputEncoding
+	 *            CSV output encoding
+	 */
+	public void setOutputEncoding(final String outputEncoding) {
+		this.outputEncoding = outputEncoding;
 	}
 
 }
