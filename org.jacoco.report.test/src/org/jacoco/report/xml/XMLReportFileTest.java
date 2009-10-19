@@ -26,7 +26,7 @@ import org.jacoco.core.analysis.PackageCoverage;
 import org.jacoco.core.analysis.SourceFileCoverage;
 import org.jacoco.report.IReportVisitor;
 import org.jacoco.report.ISourceFileLocator;
-import org.jacoco.report.MemoryReportOutput;
+import org.jacoco.report.MemorySingleReportOutput;
 import org.junit.Before;
 import org.junit.Test;
 import org.w3c.dom.Document;
@@ -40,8 +40,10 @@ import org.w3c.dom.Document;
  */
 public class XMLReportFileTest {
 
-	private MemoryReportOutput output;
+	private MemorySingleReportOutput output;
+
 	private XMLReportFile report;
+
 	private final ISourceFileLocator nullSourceLocator = new ISourceFileLocator() {
 
 		public Reader getSourceFile(String packageName, String fileName)
@@ -52,9 +54,8 @@ public class XMLReportFileTest {
 
 	@Before
 	public void setUp() throws Exception {
-		output = new MemoryReportOutput();
-		report = new XMLReportFile(output, "test.xml", "UTF-8");
-
+		output = new MemorySingleReportOutput();
+		report = new XMLReportFile("UTF-8", output.createFile());
 	}
 
 	@Test
@@ -98,7 +99,7 @@ public class XMLReportFileTest {
 	private void assertPathMatches(String expected, String path)
 			throws Exception {
 		XMLSupport support = new XMLSupport(XMLReportFile.class);
-		Document document = support.parse(output.getFile("test.xml"));
+		Document document = support.parse(output.getFile());
 		assertEquals(expected, support.findStr(document, path));
 
 	}

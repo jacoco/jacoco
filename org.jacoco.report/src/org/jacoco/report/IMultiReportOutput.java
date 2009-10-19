@@ -16,12 +16,12 @@ import java.io.IOException;
 import java.io.OutputStream;
 
 /**
- * Interface to emit binary files.
+ * Interface to emit multiple binary files.
  * 
  * @author Marc R. Hoffmann
  * @version $Revision: $
  */
-public interface IReportOutput {
+public interface IMultiReportOutput {
 
 	/**
 	 * Creates a file at the given local path. The returned {@link OutputStream}

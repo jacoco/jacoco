@@ -24,7 +24,7 @@ import org.jacoco.core.analysis.ICoverageNode.CounterEntity;
 import org.jacoco.core.analysis.ICoverageNode.ElementType;
 import org.jacoco.report.ILanguageNames;
 import org.jacoco.report.IReportFormatter;
-import org.jacoco.report.IReportOutput;
+import org.jacoco.report.IMultiReportOutput;
 import org.jacoco.report.IReportVisitor;
 import org.jacoco.report.JavaNames;
 import org.jacoco.report.ReportOutputFolder;
@@ -38,7 +38,7 @@ import org.jacoco.report.html.resources.Resources;
  */
 public class HTMLFormatter implements IReportFormatter, IHTMLReportContext {
 
-	private IReportOutput output;
+	private IMultiReportOutput output;
 
 	private ILanguageNames languageNames = new JavaNames();
 
@@ -109,7 +109,7 @@ public class HTMLFormatter implements IReportFormatter, IHTMLReportContext {
 	 * @param output
 	 *            file output
 	 */
-	public void setReportOutput(final IReportOutput output) {
+	public void setReportOutput(final IMultiReportOutput output) {
 		this.output = output;
 	}
 

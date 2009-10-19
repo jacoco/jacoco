@@ -19,7 +19,7 @@ import org.jacoco.core.analysis.CoverageNodeImpl;
 import org.jacoco.core.analysis.ICoverageNode;
 import org.jacoco.core.analysis.ICoverageNode.CounterEntity;
 import org.jacoco.core.analysis.ICoverageNode.ElementType;
-import org.jacoco.report.MemoryReportOutput;
+import org.jacoco.report.MemoryMultiReportOutput;
 import org.jacoco.report.ReportOutputFolder;
 import org.jacoco.report.html.resources.Resources;
 import org.junit.Before;
@@ -34,7 +34,7 @@ import org.w3c.dom.Document;
  */
 public class CounterColumnTest {
 
-	private MemoryReportOutput output;
+	private MemoryMultiReportOutput output;
 
 	private ReportOutputFolder root;
 
@@ -50,7 +50,7 @@ public class CounterColumnTest {
 
 	@Before
 	public void setup() throws Exception {
-		output = new MemoryReportOutput();
+		output = new MemoryMultiReportOutput();
 		root = new ReportOutputFolder(output);
 		resources = new Resources(root);
 		doc = new HTMLDocument(root.createFile("Test.html"), "UTF-8");

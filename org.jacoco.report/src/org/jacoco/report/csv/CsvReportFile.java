@@ -47,15 +47,12 @@ public class CsvReportFile implements IReportVisitor {
 	 * 
 	 * @param languageNames
 	 *            Language name callback used for name translation
-	 * @param session
-	 *            Session coverage data
 	 * @param writer
 	 *            {@link Writer} for CSV output
 	 * @throws IOException
 	 *             Thrown if there were problems creating the output CSV file
 	 */
-	public CsvReportFile(final ILanguageNames languageNames,
-			final ICoverageNode session, final Writer writer)
+	public CsvReportFile(final ILanguageNames languageNames, final Writer writer)
 			throws IOException {
 		this.languageNames = languageNames;
 		this.writer = new DelimitedWriter(writer);
@@ -67,8 +64,6 @@ public class CsvReportFile implements IReportVisitor {
 	 * 
 	 * @param languageNames
 	 *            Language name callback used for name translation
-	 * @param session
-	 *            Session coverage data
 	 * @param output
 	 *            {@link OutputStream} to the CSV file to
 	 * @param encoding
@@ -77,9 +72,9 @@ public class CsvReportFile implements IReportVisitor {
 	 *             Thrown if there were problems creating the output CSV file
 	 */
 	public CsvReportFile(final ILanguageNames languageNames,
-			final ICoverageNode session, final OutputStream output,
-			final String encoding) throws IOException {
-		this(languageNames, session, new OutputStreamWriter(output, encoding));
+			final OutputStream output, final String encoding)
+			throws IOException {
+		this(languageNames, new OutputStreamWriter(output, encoding));
 	}
 
 	public IReportVisitor visitChild(final ICoverageNode node)

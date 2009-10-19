@@ -79,8 +79,8 @@
 			</structure>
 			<html destdir="${result.dist.coverage.dir}"
 				  footer="Code Coverage Report for JaCoCo ${qualified.bundle.version}"/>
-			<csv destdir="${result.dist.coverage.dir}"/>
-			<xml destdir="${result.dist.coverage.dir}"/>
+			<csv destfile="${result.dist.coverage.dir}/coverage.csv"/>
+			<xml destfile="${result.dist.coverage.dir}/coverage.xml"/>
 		</jacoco:report>
 	</target>
 	

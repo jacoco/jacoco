@@ -20,27 +20,26 @@ import java.io.IOException;
 import java.io.OutputStream;
 
 /**
- * Implementation of {@link IReportOutput} that writes files directly to a given
- * directory.
+ * Implementation of {@link ISingleReportOutput} that writes the file directly
+ * to a given location.
  * 
  * @author Marc R. Hoffmann
  * @version $Revision: $
  */
-public class FileReportOutput implements IReportOutput {
+public class FileSingleReportOutput implements ISingleReportOutput {
 
-	private final File basedir;
+	private final File file;
 
 	/**
-	 * Creates a new instance for document output in the given base directory.
+	 * Creates a new instance for document output to the given location.
 	 * 
-	 * @param basedir
+	 * @param file
 	 */
-	public FileReportOutput(final File basedir) {
-		this.basedir = basedir;
+	public FileSingleReportOutput(final File file) {
+		this.file = file;
 	}
 
-	public OutputStream createFile(final String path) throws IOException {
-		final File file = new File(basedir, path);
+	public OutputStream createFile() throws IOException {
 		final File parent = file.getParentFile();
 		parent.mkdirs();
 		if (!parent.isDirectory()) {

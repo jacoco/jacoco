@@ -29,13 +29,13 @@ import org.junit.Test;
 
 public class ReportOutputFolderTest {
 
-	private MemoryReportOutput output;
+	private MemoryMultiReportOutput output;
 
 	private ReportOutputFolder root;
 
 	@Before
 	public void setup() {
-		output = new MemoryReportOutput();
+		output = new MemoryMultiReportOutput();
 		root = new ReportOutputFolder(output);
 	}
 
@@ -106,7 +106,7 @@ public class ReportOutputFolderTest {
 	public void testInvalidRelativeLink() throws IOException {
 		final ReportOutputFolder folder = root.subFolder("f1").subFolder("f2");
 		final ReportOutputFolder base = new ReportOutputFolder(
-				new MemoryReportOutput()).subFolder("g1");
+				new MemoryMultiReportOutput()).subFolder("g1");
 		folder.getLink(base, "test.html");
 	}
 }

@@ -17,7 +17,7 @@ import static org.junit.Assert.assertEquals;
 import java.io.IOException;
 
 import org.jacoco.core.analysis.ICoverageNode.ElementType;
-import org.jacoco.report.MemoryReportOutput;
+import org.jacoco.report.MemoryMultiReportOutput;
 import org.jacoco.report.ReportOutputFolder;
 import org.junit.Before;
 import org.junit.Test;
@@ -30,7 +30,7 @@ import org.junit.Test;
  */
 public class ResourcesTest {
 
-	private MemoryReportOutput output;
+	private MemoryMultiReportOutput output;
 
 	private ReportOutputFolder root;
 
@@ -38,7 +38,7 @@ public class ResourcesTest {
 
 	@Before
 	public void setup() {
-		output = new MemoryReportOutput();
+		output = new MemoryMultiReportOutput();
 		root = new ReportOutputFolder(output);
 		resources = new Resources(root);
 	}

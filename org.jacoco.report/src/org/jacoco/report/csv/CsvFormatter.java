@@ -17,8 +17,8 @@ import java.io.IOException;
 import org.jacoco.core.analysis.ICoverageNode;
 import org.jacoco.report.ILanguageNames;
 import org.jacoco.report.IReportFormatter;
-import org.jacoco.report.IReportOutput;
 import org.jacoco.report.IReportVisitor;
+import org.jacoco.report.ISingleReportOutput;
 import org.jacoco.report.JavaNames;
 
 /**
@@ -30,7 +30,7 @@ import org.jacoco.report.JavaNames;
  */
 public class CsvFormatter implements IReportFormatter {
 
-	private IReportOutput output;
+	private ISingleReportOutput output;
 
 	private ILanguageNames languageNames = new JavaNames();
 
@@ -43,18 +43,18 @@ public class CsvFormatter implements IReportFormatter {
 			throw new IllegalStateException("No report output set.");
 		}
 
-		return new CsvReportFile(languageNames, session, output
-				.createFile(session.getName() + ".csv"), outputEncoding);
+		return new CsvReportFile(languageNames, output.createFile(),
+				outputEncoding);
 	}
 
 	/**
-	 * Defines the output for files created by the formatter. This is a
+	 * Sets the report output callback for this report formatter. This is a
 	 * mandatory property.
 	 * 
 	 * @param output
 	 *            file output
 	 */
-	public void setReportOutput(final IReportOutput output) {
+	public void setReportOutput(final ISingleReportOutput output) {
 		this.output = output;
 	}
 

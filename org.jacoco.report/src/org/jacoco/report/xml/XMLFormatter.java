@@ -15,9 +15,9 @@ package org.jacoco.report.xml;
 import java.io.IOException;
 
 import org.jacoco.core.analysis.ICoverageNode;
-import org.jacoco.report.FileReportOutput;
 import org.jacoco.report.IReportFormatter;
 import org.jacoco.report.IReportVisitor;
+import org.jacoco.report.ISingleReportOutput;
 
 /**
  * Report formatter that creates a single XML file for a coverage session
@@ -27,24 +27,24 @@ import org.jacoco.report.IReportVisitor;
  */
 public class XMLFormatter implements IReportFormatter {
 
-	private FileReportOutput fileReportOutput;
+	private ISingleReportOutput output;
 
 	private String outputEncoding = "UTF-8";
 
 	public IReportVisitor createReportVisitor(final ICoverageNode session)
 			throws IOException {
-		return new XMLReportFile(fileReportOutput, session.getName() + ".xml",
-				outputEncoding);
+		return new XMLReportFile(outputEncoding, output.createFile());
 	}
 
 	/**
-	 * Set the report output helper for this report formatter
+	 * Sets the report output callback for this report formatter. This is a
+	 * mandatory property.
 	 * 
-	 * @param fileReportOutput
-	 *            Report output helper
+	 * @param output
+	 *            report output
 	 */
-	public void setReportOutput(final FileReportOutput fileReportOutput) {
-		this.fileReportOutput = fileReportOutput;
+	public void setReportOutput(final ISingleReportOutput output) {
+		this.output = output;
 	}
 
 	/**

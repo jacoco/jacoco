@@ -26,7 +26,7 @@ import java.util.Map;
  */
 public class ReportOutputFolder {
 
-	private final IReportOutput output;
+	private final IMultiReportOutput output;
 
 	private final ReportOutputFolder parent;
 
@@ -41,7 +41,7 @@ public class ReportOutputFolder {
 	 * @param output
 	 *            output for generated files
 	 */
-	public ReportOutputFolder(final IReportOutput output) {
+	public ReportOutputFolder(final IMultiReportOutput output) {
 		this(output, null, "");
 	}
 
@@ -51,7 +51,7 @@ public class ReportOutputFolder {
 	 * @param output
 	 *            output for generated files
 	 */
-	private ReportOutputFolder(final IReportOutput output,
+	private ReportOutputFolder(final IMultiReportOutput output,
 			final ReportOutputFolder parent, final String path) {
 		this.output = output;
 		this.parent = parent;

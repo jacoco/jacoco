@@ -41,7 +41,8 @@ import org.jacoco.core.analysis.ICoverageNode.ElementType;
 import org.jacoco.core.data.ExecutionDataReader;
 import org.jacoco.core.data.ExecutionDataStore;
 import org.jacoco.core.instr.Analyzer;
-import org.jacoco.report.FileReportOutput;
+import org.jacoco.report.FileMultiReportOutput;
+import org.jacoco.report.FileSingleReportOutput;
 import org.jacoco.report.IReportFormatter;
 import org.jacoco.report.IReportVisitor;
 import org.jacoco.report.ISourceFileLocator;
@@ -187,7 +188,7 @@ public class ReportTask extends Task {
 
 		public IReportFormatter createFormatter() {
 			final HTMLFormatter formatter = new HTMLFormatter();
-			formatter.setReportOutput(new FileReportOutput(destdir));
+			formatter.setReportOutput(new FileMultiReportOutput(destdir));
 			formatter.setFooterText(footer);
 			formatter.setOutputEncoding(encoding);
 			return formatter;
@@ -200,23 +201,23 @@ public class ReportTask extends Task {
 	 */
 	public static class CsvFormatterElement implements IFormatterElement {
 
-		private File destdir;
+		private File destfile;
 
 		private String encoding = "UTF-8";
 
 		/**
-		 * Sets the output directory for the report.
+		 * Sets the output file for the report.
 		 * 
-		 * @param destdir
-		 *            output directory
+		 * @param destfile
+		 *            output file
 		 */
-		public void setDestdir(final File destdir) {
-			this.destdir = destdir;
+		public void setDestfile(final File destfile) {
+			this.destfile = destfile;
 		}
 
 		public IReportFormatter createFormatter() {
 			final CsvFormatter formatter = new CsvFormatter();
-			formatter.setReportOutput(new FileReportOutput(destdir));
+			formatter.setReportOutput(new FileSingleReportOutput(destfile));
 			formatter.setOutputEncoding(encoding);
 			return formatter;
 		}
@@ -237,18 +238,18 @@ public class ReportTask extends Task {
 	 */
 	public static class XMLFormatterElement implements IFormatterElement {
 
-		private File destdir;
+		private File destfile;
 
 		private String encoding = "UTF-8";
 
 		/**
-		 * Sets the output directory for the report.
+		 * Sets the output file for the report.
 		 * 
-		 * @param destdir
-		 *            output directory
+		 * @param destfile
+		 *            output file
 		 */
-		public void setDestdir(final File destdir) {
-			this.destdir = destdir;
+		public void setDestfile(final File destfile) {
+			this.destfile = destfile;
 		}
 
 		/**
@@ -263,7 +264,7 @@ public class ReportTask extends Task {
 
 		public IReportFormatter createFormatter() {
 			final XMLFormatter formatter = new XMLFormatter();
-			formatter.setReportOutput(new FileReportOutput(destdir));
+			formatter.setReportOutput(new FileSingleReportOutput(destfile));
 			formatter.setOutputEncoding(encoding);
 			return formatter;
 		}

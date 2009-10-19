@@ -13,9 +13,9 @@
 package org.jacoco.report.xml;
 
 import java.io.IOException;
+import java.io.OutputStream;
 
 import org.jacoco.core.analysis.ICoverageNode;
-import org.jacoco.report.IReportOutput;
 import org.jacoco.report.IReportVisitor;
 import org.jacoco.report.ISourceFileLocator;
 
@@ -38,17 +38,14 @@ public class XMLReportFile extends XMLDocument implements IReportVisitor {
 	 * 
 	 * @param output
 	 *            Report output
-	 * @param filename
-	 *            Name of the XML file to create
 	 * @param encoding
 	 *            Encoding of the XML file
 	 * @throws IOException
 	 *             IO Error creating report file
 	 */
-	public XMLReportFile(final IReportOutput output, final String filename,
-			final String encoding) throws IOException {
-		super(ROOT, PUBID, SYSTEM, encoding, output.createFile(filename));
-
+	public XMLReportFile(final String encoding, final OutputStream output)
+			throws IOException {
+		super(ROOT, PUBID, SYSTEM, encoding, output);
 	}
 
 	public IReportVisitor visitChild(final ICoverageNode node)

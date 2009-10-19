@@ -29,7 +29,7 @@ import java.util.Map;
  * @author Marc R. Hoffmann
  * @version $Revision: $
  */
-public class MemoryReportOutput implements IReportOutput {
+public class MemoryMultiReportOutput implements IMultiReportOutput {
 
 	private final Map<String, ByteArrayOutputStream> files = new HashMap<String, ByteArrayOutputStream>();
 
