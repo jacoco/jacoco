@@ -20,6 +20,7 @@ import org.jacoco.core.analysis.SourceFileCoverage;
 import org.jacoco.report.IReportVisitor;
 import org.jacoco.report.ISourceFileLocator;
 import org.jacoco.report.ReportOutputFolder;
+import org.jacoco.report.html.resources.Resources;
 
 /**
  * Page showing the content of a source file with numbered and highlighted
@@ -67,6 +68,22 @@ public class SourceFilePage extends ReportPage {
 		final SourceFileCoverage s = (SourceFileCoverage) getNode();
 		new SourceHighlighter().render(body, s.getLines(), sourceReader);
 		sourceReader.close();
+	}
+
+	@Override
+	protected void head(final HTMLElement head) throws IOException {
+		super.head(head);
+		head.link("stylesheet", context.getResources().getLink(outputFolder,
+				Resources.PRETTIFY_STYLESHEET), "text/css");
+		head.script("text/javascript", context.getResources().getLink(
+				outputFolder, Resources.PRETTIFY_SCRIPT));
+	}
+
+	@Override
+	protected void body(final HTMLElement body,
+			final ISourceFileLocator sourceFileLocator) throws IOException {
+		body.attr("onload", "prettyPrint()");
+		super.body(body, sourceFileLocator);
 	}
 
 	@Override

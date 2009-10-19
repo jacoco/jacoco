@@ -73,21 +73,43 @@ public abstract class ReportPage implements IReportVisitor, ICoverageTableItem {
 		final HTMLDocument doc = new HTMLDocument(outputFolder
 				.createFile(getFileName()), context.getOutputEncoding());
 		head(doc.head());
-		final HTMLElement body = doc.body();
-		breadcrumb(body.div(Styles.BREADCRUMB), outputFolder, this);
-		body.h1().text(getLabel());
-		content(body, sourceFileLocator);
-		footer(body);
+		body(doc.body(), sourceFileLocator);
 		doc.close();
 	}
 
-	private void head(final HTMLElement head) throws IOException {
+	/**
+	 * Fills the content of the 'head' element.
+	 * 
+	 * @param head
+	 *            enclosing head element
+	 * @throws IOException
+	 *             in case of IO problems with the report writer
+	 */
+	protected void head(final HTMLElement head) throws IOException {
 		head.meta("Content-Type", "text/html;charset=UTF-8");
 		head.link("stylesheet", context.getResources().getLink(outputFolder,
 				Resources.STYLESHEET), "text/css");
 		head.link("shortcut icon", context.getResources().getLink(outputFolder,
 				"session.gif"), "image/gif");
 		head.title().text(getLabel());
+	}
+
+	/**
+	 * Renders the content of the body element.
+	 * 
+	 * @param body
+	 *            enclosing body element
+	 * @param sourceFileLocator
+	 *            locator for source file content in this context
+	 * @throws IOException
+	 *             in case of IO problems with the report writer
+	 */
+	protected void body(final HTMLElement body,
+			final ISourceFileLocator sourceFileLocator) throws IOException {
+		breadcrumb(body.div(Styles.BREADCRUMB), outputFolder, this);
+		body.h1().text(getLabel());
+		content(body, sourceFileLocator);
+		footer(body);
 	}
 
 	private void breadcrumb(final HTMLElement body,
@@ -105,15 +127,6 @@ public abstract class ReportPage implements IReportVisitor, ICoverageTableItem {
 		}
 	}
 
-	private void footer(final HTMLElement body) throws IOException {
-		final HTMLElement footer = body.div(Styles.FOOTER);
-		final HTMLElement versioninfo = footer.div(Styles.VERSIONINFO);
-		versioninfo.text("Created with ");
-		versioninfo.a(JaCoCo.HOMEURL).text("JaCoCo");
-		versioninfo.text(" ").text(JaCoCo.VERSION);
-		footer.text(context.getFooterText());
-	}
-
 	/**
 	 * Creates the actual content of the page.
 	 * 
@@ -121,12 +134,28 @@ public abstract class ReportPage implements IReportVisitor, ICoverageTableItem {
 	 *            body tag of the page
 	 * @param sourceFileLocator
 	 *            locator for source file content in this context
-	 * 
 	 * @throws IOException
 	 *             in case of IO problems with the report writer
 	 */
 	protected abstract void content(final HTMLElement body,
 			final ISourceFileLocator sourceFileLocator) throws IOException;
+
+	/**
+	 * Renders the page footer.
+	 * 
+	 * @param body
+	 *            enclosing body element
+	 * @throws IOException
+	 *             in case of IO problems with the report writer
+	 */
+	protected void footer(final HTMLElement body) throws IOException {
+		final HTMLElement footer = body.div(Styles.FOOTER);
+		final HTMLElement versioninfo = footer.div(Styles.VERSIONINFO);
+		versioninfo.text("Created with ");
+		versioninfo.a(JaCoCo.HOMEURL).text("JaCoCo");
+		versioninfo.text(" ").text(JaCoCo.VERSION);
+		footer.text(context.getFooterText());
+	}
 
 	/**
 	 * Specifies the local file name of this page.

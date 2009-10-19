@@ -61,10 +61,14 @@ public class SourceHighlighterTest {
 		sourceHighlighter.render(parent, lines, new StringReader(src));
 		html.close();
 		final Document doc = htmlSupport.parse(buffer.toString());
-		assertEquals("    1", htmlSupport.findStr(doc, "//pre/span[1]"));
-		assertEquals("    2", htmlSupport.findStr(doc, "//pre/span[2]"));
-		assertEquals("    3", htmlSupport.findStr(doc, "//pre/span[3]"));
-		assertEquals("    4", htmlSupport.findStr(doc, "//pre/span[4]"));
+		assertEquals("\u00A0\u00A0\u00A0\u00A01", htmlSupport.findStr(doc,
+				"//pre/span[1]"));
+		assertEquals("\u00A0\u00A0\u00A0\u00A02", htmlSupport.findStr(doc,
+				"//pre/span[2]"));
+		assertEquals("\u00A0\u00A0\u00A0\u00A03", htmlSupport.findStr(doc,
+				"//pre/span[3]"));
+		assertEquals("\u00A0\u00A0\u00A0\u00A04", htmlSupport.findStr(doc,
+				"//pre/span[4]"));
 	}
 
 	@Test

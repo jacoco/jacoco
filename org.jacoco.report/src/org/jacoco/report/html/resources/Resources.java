@@ -31,6 +31,12 @@ public class Resources {
 	/** The name of the style sheet */
 	public static final String STYLESHEET = "report.css";
 
+	/** The name of the prettify style sheet */
+	public static final String PRETTIFY_STYLESHEET = "prettify.css";
+
+	/** The name of the prettify script */
+	public static final String PRETTIFY_SCRIPT = "prettify.js";
+
 	/** The name of the red part of the coverage bar */
 	public static final String REDBAR = "redbar.gif";
 
@@ -106,6 +112,8 @@ public class Resources {
 		copyResource("method.gif");
 		copyResource(REDBAR);
 		copyResource(GREENBAR);
+		copyResource(PRETTIFY_STYLESHEET);
+		copyResource(PRETTIFY_SCRIPT);
 	}
 
 	private void copyResource(final String name) throws IOException {

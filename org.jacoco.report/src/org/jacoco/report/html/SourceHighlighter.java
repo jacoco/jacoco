@@ -33,6 +33,8 @@ public class SourceHighlighter {
 
 	private String tabReplacement;
 
+	private String lang = "java";
+
 	/**
 	 * Creates a new highlighter with default settings.
 	 */
@@ -42,6 +44,7 @@ public class SourceHighlighter {
 
 	/**
 	 * Specifies the number of spaces that are represented by a single tab.
+	 * Default is 4.
 	 * 
 	 * @param width
 	 *            spaces per tab
@@ -50,6 +53,17 @@ public class SourceHighlighter {
 		final char[] blanks = new char[width];
 		Arrays.fill(blanks, ' ');
 		tabReplacement = new String(blanks);
+	}
+
+	/**
+	 * Specifies the source language. This value might be used for syntax
+	 * highlighting. Default is "java".
+	 * 
+	 * @param lang
+	 *            source language identifier
+	 */
+	public void setLanguage(final String lang) {
+		this.lang = lang;
 	}
 
 	/**
@@ -66,7 +80,7 @@ public class SourceHighlighter {
 	 */
 	public void render(final HTMLElement parent, final ILines lines,
 			final Reader contents) throws IOException {
-		final HTMLElement pre = parent.pre(Styles.SOURCE);
+		final HTMLElement pre = parent.pre(Styles.SOURCE + " lang-" + lang);
 		final BufferedReader lineBuffer = new BufferedReader(contents);
 		String line;
 		int nr = 0;
@@ -80,9 +94,9 @@ public class SourceHighlighter {
 	private void renderLineNr(final HTMLElement pre, final int nr)
 			throws IOException {
 		final String linestr = String.valueOf(nr);
-		final HTMLElement linespan = pre.span("nr", "L" + linestr);
+		final HTMLElement linespan = pre.span(Styles.NR, "L" + linestr);
 		for (int i = linestr.length(); i < LINENR_WIDTH; i++) {
-			linespan.text(" ");
+			linespan.text("\u00A0"); // non-breaking space
 		}
 		linespan.text(linestr);
 	}

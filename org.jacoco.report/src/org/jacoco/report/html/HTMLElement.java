@@ -118,9 +118,9 @@ public class HTMLElement extends XMLElement {
 	 *             in case of problems with the writer
 	 */
 	public HTMLElement span(final String classattr) throws IOException {
-		final HTMLElement pre = element("span");
-		pre.attr("class", classattr);
-		return pre;
+		final HTMLElement span = element("span");
+		span.attr("class", classattr);
+		return span;
 	}
 
 	/**
@@ -136,10 +136,10 @@ public class HTMLElement extends XMLElement {
 	 */
 	public HTMLElement span(final String classattr, final String idattr)
 			throws IOException {
-		final HTMLElement pre = element("span");
-		pre.attr("class", classattr);
-		pre.attr("id", idattr);
-		return pre;
+		final HTMLElement span = element("span");
+		span.attr("class", classattr);
+		span.attr("id", idattr);
+		return span;
 	}
 
 	/**
@@ -152,9 +152,9 @@ public class HTMLElement extends XMLElement {
 	 *             in case of problems with the writer
 	 */
 	public HTMLElement div(final String classattr) throws IOException {
-		final HTMLElement pre = element("div");
-		pre.attr("class", classattr);
-		return pre;
+		final HTMLElement div = element("div");
+		div.attr("class", classattr);
+		return div;
 	}
 
 	/**
@@ -179,7 +179,7 @@ public class HTMLElement extends XMLElement {
 	 *             in case of problems with the writer
 	 */
 	public void br() throws IOException {
-		element("br");
+		element("br").close();
 	}
 
 	/**
@@ -326,14 +326,14 @@ public class HTMLElement extends XMLElement {
 	 */
 	public HTMLElement td(final String classattr, final int colspanattr)
 			throws IOException {
-		final HTMLElement pre = element("td");
+		final HTMLElement td = element("td");
 		if (classattr != null) {
-			pre.attr("class", classattr);
+			td.attr("class", classattr);
 		}
 		if (colspanattr > 1) {
-			pre.attr("colspan", String.valueOf(colspanattr));
+			td.attr("colspan", String.valueOf(colspanattr));
 		}
-		return pre;
+		return td;
 	}
 
 	/**
@@ -352,11 +352,32 @@ public class HTMLElement extends XMLElement {
 	 */
 	public void img(final String srcattr, final int widthattr,
 			final int heightattr, final String altattr) throws IOException {
-		final HTMLElement pre = element("img");
-		pre.attr("src", srcattr);
-		pre.attr("width", String.valueOf(widthattr));
-		pre.attr("height", String.valueOf(heightattr));
-		pre.attr("alt", String.valueOf(altattr));
+		final HTMLElement img = element("img");
+		img.attr("src", srcattr);
+		img.attr("width", String.valueOf(widthattr));
+		img.attr("height", String.valueOf(heightattr));
+		img.attr("alt", String.valueOf(altattr));
+		img.close();
+	}
+
+	/**
+	 * Creates a 'script' element.
+	 * 
+	 * @param typeattr
+	 *            value of the type attribute
+	 * @param srcattr
+	 *            value of the src attribute
+	 * @throws IOException
+	 *             in case of problems with the writer
+	 */
+	public void script(final String typeattr, final String srcattr)
+			throws IOException {
+		final HTMLElement script = element("script");
+		script.attr("type", typeattr);
+		script.attr("src", srcattr);
+		// Enforce open and closing tag otherwise it won't work in browsers:
+		script.text("");
+		script.close();
 	}
 
 }

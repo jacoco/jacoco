@@ -201,4 +201,14 @@ public class HTMLElementTest {
 				"<root><img src=\"sample.gif\" width=\"16\" height=\"32\" alt=\"Hello\"/></root>",
 				buffer.toString());
 	}
+
+	@Test
+	public void testScript() throws IOException {
+		root.script("text/javascript", "file.js");
+		root.close();
+		assertEquals(
+				"<root><script type=\"text/javascript\" src=\"file.js\"></script></root>",
+				buffer.toString());
+	}
+
 }

@@ -22,6 +22,7 @@
 	
 	<fileset dir="${source.bundle.java.dir}" id="classpathresources">
 		<include name="org/jacoco/report/html/resources/*.css"/>
+		<include name="org/jacoco/report/html/resources/*.js"/>
 		<include name="org/jacoco/report/html/resources/*.gif"/>
 		<include name="**/*.dtd"/>
 	</fileset>	
