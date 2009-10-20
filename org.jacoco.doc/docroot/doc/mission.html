@@ -52,25 +52,30 @@
 <h3>Features</h3>
 <ul>
   <li><i>Statement coverage</i> on Java byte code level, where instrumentation
-  and recording happens on 
+    and recording happens on 
   <a class="extern" href="http://en.wikipedia.org/wiki/Basic_block"><i>basic block</i></a>
-  granularity. This is the same mechanism implemented by the
+    granularity. This is the same mechanism implemented by the
   <a class="extern" href="http://emma.sourceforge.net/">EMMA</a> library.</li>
   <li>Simple integration through Java agent based on-the-fly instrumentation.</li>
+  <li>Support for different
+    <a href="http://en.wikipedia.org/wiki/List_of_JVM_languages">JVM languages</a>.</li>
+  <li>Several report formats (HTML, XML, CSV).</li>
   <li>Optional: Branch coverage based on basic block flow.</li>
   <li>Optional: Invocation counting.</li>
-  <li>Optional: Better handling of Exception within blocks. (e.g. record exception on active counter)</li>
-  <li>Several report formats (HTML, XML, CSV).</li>
+  <li>Optional: Better reporting of Exception within blocks.</li>
 </ul>
 
 <h3>Non-Functional Characteristics</h3>
 <ul>
+  <li>Simple usage and integration with existing build scripts and tools.</li>
+  <li>Good performance with minimal runtime overhead especially for large scale
+    projects.</li>
   <li>Lightweight implementation with minimal dependencies on external libraries
-  and system resources.</li>
+    and system resources.</li>
   <li>Fully documented API (JavaDoc) including descriptions of the basic
-  concepts.</li>
+    concepts.</li>
   <li>Regression tests with full functional test coverage based on JUnit test
-  cases.</li>
+    cases.</li>
 </ul>
 
 <div class="footer">
