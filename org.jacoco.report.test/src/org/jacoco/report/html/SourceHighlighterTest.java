@@ -90,7 +90,7 @@ public class SourceHighlighterTest {
 		sourceHighlighter.render(parent, lines, new StringReader(src));
 		html.close();
 		final Document doc = htmlSupport.parse(buffer.toString());
-		assertEquals("   A", htmlSupport.findStr(doc, "//pre/text()"));
+		assertEquals("   A\n", htmlSupport.findStr(doc, "//pre/text()"));
 	}
 
 	@Test

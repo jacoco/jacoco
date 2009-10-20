@@ -117,7 +117,7 @@ public class SourceHighlighter {
 		default:
 			pre.text(lineWithoutTabs);
 		}
-		pre.br();
+		pre.text("\n");
 	}
 
 }
