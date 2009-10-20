@@ -50,7 +50,7 @@ public class HTMLDocument extends XMLDocument {
 	 */
 	public HTMLDocument(final Writer writer, final String encoding)
 			throws IOException {
-		super(ROOT, PUBID, SYSTEM, encoding, writer);
+		super(ROOT, PUBID, SYSTEM, encoding, false, writer);
 		attr(XMLNS, XHTML_NAMESPACE_URL);
 	}
 
@@ -66,7 +66,7 @@ public class HTMLDocument extends XMLDocument {
 	 */
 	public HTMLDocument(final OutputStream output, final String encoding)
 			throws IOException {
-		super(ROOT, PUBID, SYSTEM, encoding, output);
+		super(ROOT, PUBID, SYSTEM, encoding, false, output);
 		attr(XMLNS, XHTML_NAMESPACE_URL);
 	}
 

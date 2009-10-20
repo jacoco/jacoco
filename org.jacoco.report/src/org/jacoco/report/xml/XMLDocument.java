@@ -12,6 +12,8 @@
  *******************************************************************************/
 package org.jacoco.report.xml;
 
+import static java.lang.String.format;
+
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
@@ -27,11 +29,14 @@ import java.io.Writer;
  */
 public class XMLDocument extends XMLElement {
 
-	/** XML header string, part before the encoding */
-	public static final String XMLHEADER1 = "<?xml version=\"1.0\" encoding=\"";
+	/** XML header template */
+	private static final String HEADER = "<?xml version=\"1.0\" encoding=\"%s\"?>";
 
-	/** XML header string, part after the encoding */
-	public static final String XMLHEADER2 = "\"?>";
+	/** XML header template for standalone documents */
+	private static final String HEADER_STANDALONE = "<?xml version=\"1.0\" encoding=\"%s\" standalone=\"yes\"?>";
+
+	/** DOCTYPE declaration template */
+	private static final String DOCTYPE = "<!DOCTYPE %s PUBLIC \"%s\" \"%s\">";
 
 	/**
 	 * Writes a new document to the given writer. The document might contain a
@@ -45,16 +50,18 @@ public class XMLDocument extends XMLElement {
 	 *            system reference, required if doctype is given
 	 * @param encoding
 	 *            encoding that will be specified in the header
+	 * @param standalone
+	 *            <code>true</code> if this is a standalone document
 	 * @param writer
 	 *            writer for content output
 	 * @throws IOException
 	 *             in case of problems with the writer
 	 */
 	public XMLDocument(final String rootnode, final String pubId,
-			final String system, final String encoding, final Writer writer)
-			throws IOException {
+			final String system, final String encoding,
+			final boolean standalone, final Writer writer) throws IOException {
 		super(writer, rootnode);
-		writeHeader(rootnode, pubId, system, encoding, writer);
+		writeHeader(rootnode, pubId, system, encoding, standalone, writer);
 		beginOpenTag();
 	}
 
@@ -69,7 +76,9 @@ public class XMLDocument extends XMLElement {
 	 * @param system
 	 *            system reference, required if doctype is given
 	 * @param encoding
-	 *            oncoding of the XML document
+	 *            encoding of the XML document
+	 * @param standalone
+	 *            <code>true</code> if this is a standalone document
 	 * @param output
 	 *            output for content output
 	 * @throws IOException
@@ -77,9 +86,10 @@ public class XMLDocument extends XMLElement {
 	 */
 	public XMLDocument(final String rootnode, final String pubId,
 			final String system, final String encoding,
-			final OutputStream output) throws IOException {
-		this(rootnode, pubId, system, encoding, new OutputStreamWriter(output,
-				encoding));
+			final boolean standalone, final OutputStream output)
+			throws IOException {
+		this(rootnode, pubId, system, encoding, standalone,
+				new OutputStreamWriter(output, encoding));
 	}
 
 	@Override
@@ -89,19 +99,15 @@ public class XMLDocument extends XMLElement {
 	}
 
 	private static void writeHeader(final String rootnode, final String pubId,
-			final String system, final String encoding, final Writer writer)
-			throws IOException {
-		writer.write(XMLHEADER1);
-		writer.write(encoding);
-		writer.write(XMLHEADER2);
+			final String system, final String encoding,
+			final boolean standalone, final Writer writer) throws IOException {
+		if (standalone) {
+			writer.write(format(HEADER_STANDALONE, encoding));
+		} else {
+			writer.write(format(HEADER, encoding));
+		}
 		if (pubId != null) {
-			writer.write("<!DOCTYPE ");
-			writer.write(rootnode);
-			writer.write(" PUBLIC \"");
-			writer.write(pubId);
-			writer.write("\" \"");
-			writer.write(system);
-			writer.write("\">");
+			writer.write(format(DOCTYPE, rootnode, pubId, system));
 		}
 	}
 

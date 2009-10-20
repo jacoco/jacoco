@@ -45,7 +45,7 @@ public class XMLReportFile extends XMLDocument implements IReportVisitor {
 	 */
 	public XMLReportFile(final String encoding, final OutputStream output)
 			throws IOException {
-		super(ROOT, PUBID, SYSTEM, encoding, output);
+		super(ROOT, PUBID, SYSTEM, encoding, true, output);
 	}
 
 	public IReportVisitor visitChild(final ICoverageNode node)
@@ -55,7 +55,6 @@ public class XMLReportFile extends XMLDocument implements IReportVisitor {
 
 	public void visitEnd(final ISourceFileLocator sourceFileLocator)
 			throws IOException {
-
 		this.close();
 	}
 
