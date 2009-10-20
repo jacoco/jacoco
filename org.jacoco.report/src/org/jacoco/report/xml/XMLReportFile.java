@@ -29,9 +29,9 @@ public class XMLReportFile extends XMLDocument implements IReportVisitor {
 
 	private static final String ROOT = "report";
 
-	private static final String PUBID = "//JaCoCo//DTD Report 1.0//EN";
+	private static final String PUBID = "-//JACOCO//DTD Report 1.0//EN";
 
-	private static final String SYSTEM = "http://www.jacoco.org/report.dtd";
+	private static final String SYSTEM = "report.dtd";
 
 	/**
 	 * Creates a new Report file
