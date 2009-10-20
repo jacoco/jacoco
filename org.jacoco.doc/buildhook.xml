@@ -91,8 +91,8 @@
 			windowtitle="JaCoCo ${qualified.bundle.version}"
 			overview="${source.bundle.dir}/javadoc/overview.html">
 			<sourcefiles>
-				<fileset dir="${source.bundle.dir}/../org.jacoco.core/src" includes="**/*.java"/>
-				<fileset dir="${source.bundle.dir}/../org.jacoco.report/src" includes="**/*.java"/>
+				<fileset dir="${source.org.jacoco.core.dir}/src" includes="**/*.java"/>
+				<fileset dir="${source.org.jacoco.report.dir}/src" includes="**/*.java"/>
 			</sourcefiles>
 			<classpath>
 				<path refid="bundle-org.objectweb.asm"/>
@@ -105,6 +105,10 @@
 		
 		<copy todir="${result.dist.dir}">
 			<fileset dir="${source.bundle.dir}/docroot" includes="**/*" excludes="**/*.html"/>
+		</copy>
+
+		<copy todir="${result.dist.dir}/doc">
+			<fileset dir="${source.org.jacoco.report.dir}/src/org/jacoco/report/xml" includes="report.dtd"/>
 		</copy>
 
 		<copy todir="${result.dist.dir}">

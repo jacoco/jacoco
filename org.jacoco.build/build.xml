@@ -52,6 +52,7 @@
 				<property name="jacoco.home.url" value="${jacoco.home.url}"/>
 			</ant>
 			<path id="bundle-@{bundleid}" location="${result.tmp.dir}/@{bundleid}/classes"/>
+			<property name="source.@{bundleid}.dir" location="${workspace.dir}/@{bundleid}"/>
 		</sequential>
 	</macrodef>
 
