@@ -84,9 +84,8 @@ public class ExecutionDataReader {
 		}
 		final char version = in.readChar();
 		if (version != ExecutionDataWriter.FORMAT_VERSION) {
-			throw new IOException(String
-					.format("Incompatible format version %x.", Integer
-							.valueOf(version)));
+			throw new IOException(format("Incompatible format version %x.",
+					Integer.valueOf(version)));
 		}
 	}
 
