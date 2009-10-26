@@ -81,12 +81,11 @@
 </p>
 
 <p>
-  The Java agent hook requires at least 1.5 JVMs. For reporting class files
-  compiled with debug information (line numbers) allow a good mapping back to
-  source level. Although some Java language constructs are compiled in a way
-  that the the coverage highlighting leads to unexpected results, especially
-  in case of implicitly generated code like default constructors or control
-  structures for finally statements.
+  The Java agent hook requires at least 1.5 JVMs. Class files compiled with
+  debug information (line numbers) allow for source code highlighting. Unluckily
+  some Java language constructs get compiled to byte code that produces
+  unexpected highlighting results, especially in case of implicitly generated
+  code like default constructors or control structures for finally statements.
 </p>
 
 
@@ -102,39 +101,40 @@
 <p>
   A basic block is a piece of byte code that has a single entry point (the first
   byte code instruction) and a single exit point (like <code>jump</code>,
-  <code>throw</code> or <code>return</code>). A basic code must not contain jump
+  <code>throw</code> or <code>return</code>). A basic block must not contain jump
   targets except the entry point. One can think of basic blocks as the nodes in
   a control flow graph of a method. Using basic block boundaries to insert code
-  coverage probes has been very successfully proven by 
+  coverage probes has been very successfully utilized by 
   <a href="http://emma.sourceforge.net/">EMMA</a>.
 </p>
 
 <p>
-  Basic block instrumentation works regardless whether the class files have been
+  Basic block instrumentation works regardless of whether the class files have been
   compiled with debug information for source lines. Source code highlighting
   will of course not be possible without this debug information, but percentages
   on method level can still be calculated. Basic block probes result in
-  reasonable overhead regarding class file size and execution overhead. As e.g.
-  multi-condition statements form several basic blocks partial line coverage is
-  possible. Calculating basic block relies on the Java byte code only, therefore
+  reasonable overhead regarding class file size and performance. Partial line
+  coverage can occur if a line contains more than one statement or a statement
+  gets compiled into byte code forming more than one basic block (e.g. boolean
+  assignments). Calculating basic block relies on the Java byte code only, therefore
   JaCoCo is independent of the source language and should also work with other
   Java VM based languages like <a href="http://www.scala-lang.org/">Scala</a>.
 </p>
 
 <p>
-  The huge drawback of this approach is that fact, that basic blocks are
+  The huge drawback of this approach is the fact that basic blocks are
   actually much smaller in the Java VM: Nearly every byte code instruction
   (especially method invocations) can result in an exception. In this case the
   block is left somewhere in the middle without hitting the probe, which leads
   to unexpected results for example in case of negative tests. A possible
-  solutions would be to add exception handlers that trigger special probes.     
+  solution would be to add exception handlers that trigger special probes.     
 </p>
 
 <h2>Coverage Agent Isolation</h2>
 
 <p class="intro">
   The Java agent is loaded by the application class loader. Therefore the
-  classes of the agent live in the same name space than the application classes
+  classes of the agent live in the same name space like the application classes
   which can result in clashes especially with the third party library ASM. The
   JoCoCo build therefore moves all agent classes into a unique package.  
 </p>
@@ -157,9 +157,9 @@
 
 <p>
   The Java agent mechanism used for on-the-fly instrumentation became available
-  with in Java 1.5 VMs. Coding and testing with Java 1.5 language level is more
-  efficient, less error-prone &ndash; and more fun. JaCoCo will still allow to
-  run against Java code compiled for older versions.
+  with Java 1.5 VMs. Coding and testing with Java 1.5 language level is more
+  efficient, less error-prone &ndash; and more fun than with older versions.
+  JaCoCo will still allow to run against Java code compiled for these.
 </p>
 
 
@@ -167,11 +167,11 @@
 
 <p class="intro">
   Instrumentation requires mechanisms to modify and generate Java byte code.
-  JaCoCo uses the ASM library for this purpose.
+  JaCoCo uses the ASM library for this purpose internally.
 </p>
 
 <p>
-  Implementing the Java byte code specification would be a extensive and
+  Implementing the Java byte code specification would be an extensive and
   error-prone task. Therefore an existing library should be used. The
   <a href="http://asm.objectweb.org/">ASM</a> library is lightweight, easy to
   use and very efficient in terms of memory and CPU usage. It is actively
@@ -193,8 +193,8 @@
   deployment scenarios the actual version of the test target might be different
   from current development version. A code coverage report should guarantee that
   the presented figures are extracted from a valid test target. A hash code of
-  the class definitions allows a differentiate between classes and versions of a
-  class. The CRC64 hash computation is simple and fast resulting in a small 64
+  the class definitions allows to differentiate between classes and versions of
+  classes. The CRC64 hash computation is simple and fast resulting in a small 64
   bit identifier. 
 </p>
 
@@ -205,7 +205,7 @@
   instrumentation based technologies (e.g. AspectJ). In this case the hash code
   will change and identity gets lost. On the other hand code coverage analysis
   based on classes that have been somehow altered will produce unexpected
-  results. The CRC64 has code might produce so called <i>collisions</i>, i.e.
+  results. The CRC64 code might produce so called <i>collisions</i>, i.e.
   creating the same hash code for two different classes. Although CRC64 is not
   cryptographically strong and collision examples can be easily computed, for
   regular class files the collision probability is very low. 
@@ -221,7 +221,7 @@
 
 <p>
   Making a runtime library available to all instrumented classes can be a
-  painful or impossible task in frameworks that use there own class loading
+  painful or impossible task in frameworks that use their own class loading
   mechanisms. Therefore JaCoCo decouples the instrumented classes and the
   coverage runtime through official JRE API types. Currently two approaches have
   been implemented:
@@ -253,8 +253,7 @@
   The complete data tree of a huge coverage report is too big to fit into a
   reasonable heap memory configuration. Therefore the coverage analysis and
   report generation is implemented as "depth first" traversals. Which means that
-  at any point in time only only the following data has to be held in main
-  memory:  
+  at any point in time only the following data has to be held in working memory:  
 </p>
 
 <ul>
@@ -275,7 +274,7 @@
   Using VM identifiers directly does not cause any transformation overhead at
   runtime. There are several programming languages based on the Java VM that
   might use different notations. Specific transformations should therefore only
-  happen at the user interface level, for example while report generation.
+  happen at the user interface level, for example during report generation.
 </p>
 
 <h2>Modularization of the JaCoCo implementation</h2>
@@ -283,13 +282,13 @@
 <p class="intro">
   JaCoCo is implemented in several modules providing different functionality.
   These modules are provided as OSGi bundles with proper manifest files. But
-  there is no dependencies on OSGi itself.
+  there are no dependencies on OSGi itself.
 </p>
 
 <p>
-  Using OSGi bundles allows well defines dependencies at development time and
+  Using OSGi bundles allows well defined dependencies at development time and
   at runtime in OSGi containers. As there are no dependencies on OSGi, the
-  bundles can also be used as regular JAR files.  
+  bundles can also be used like regular JAR files.  
 </p>
 
 <div class="footer">

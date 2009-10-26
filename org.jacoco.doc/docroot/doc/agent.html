@@ -18,7 +18,7 @@
 
 <p>
   JaCoCo uses class file instrumentation to record execution coverage data.
-  Class files are instrumented on-the-fly using a so called Java agent. This is
+  Class files are instrumented on-the-fly using a so called Java agent. This
   mechanism allows in-memory pre-processing of all class files during class
   loading independent of the application framework. The JaCoCo agent collects
   execution information and dumps it to a local file when the JVM exits.
@@ -26,8 +26,8 @@
 
 <p class="hint">
   If you use the <a href="ant.html">JaCoCo Ant tasks</a> you don't have to care
-  about the agent and its options directly. All set-up is transparently handled
-  by the Ant tasks implementation.
+  about the agent and its options directly. This is transparently handled by the
+  Ant tasks.
 </p>
 
 <p>
@@ -68,7 +68,7 @@
     </tr>    
     <tr>
       <td><code>includes</code></td>
-      <td>A list of class names that should be included to execution analysis.
+      <td>A list of class names that should be included in execution analysis.
           The list entries are separated by a vertical bar (<code>|</code>) and
           may use wildcard characters (<code>*</code> and <code>?</code>).
           Except for performance optimization or technical corner cases this

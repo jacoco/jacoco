@@ -29,9 +29,12 @@
 <h2>Basic Blocks</h2>
 
 <p>
-  Basic blocks &ndash; mostly just referred to as <i>blocks</i> in the APIs and
-  reports &ndash; are consecutive sequences of byte code instructions that will
-  normally only executed on-block. The boundaries between blocks are
+  A basic block &ndash; mostly just referred to as <i>block</i> in the APIs and
+  reports &ndash; represents a consecutive sequence of byte code instructions
+  and is a unit that will either execute completely or not all. The single
+  exception from this definition occurs when the java exception mechanism comes
+  to action (i.e. a java exception "flies"). This always interrupts the current
+  blocks execution. The boundaries between blocks are
 </p>
 
 <ul>
@@ -43,15 +46,15 @@
 
 <p>
   The JaCoCo instrumentation mechanism inserts a probe at the end of every
-  block. When the probe gets executes the block can be considered as executed.
-  Unfortunately the opposite does not hold true: Exceptions might interrupt a
-  block somewhere in the middle and the probe will not get executed. This
-  results in the major drawback of basic block based probes:
+  block. When the probe gets executed the block is considered executed.
+  This results in the major drawback of basic block based probes:
 </p>
 
 <p class="hint">
-  Blocks that encounter an exception somewhere in the middle will be considered
-  as not executed.  
+  Blocks that encounter an exception somewhere in the middle of their execution
+  will be considered as not executed. This is correct as the block actually
+  didn't get executed but JaCoCo won't be able to tell which lines of the block
+  executed and which didn't.  
 </p>
 
 <p>
@@ -71,8 +74,8 @@
 <p>
   For each block the number of included byte code instructions can be easily
   determined. The instruction counter summarizes the number of single byte code
-  instructions that belong to executed blocks. As blocks may have different
-  lengths instructions represent the size of the blocks and can serve as a
+  instructions that belong to executed blocks. As blocks may be of different
+  length, instructions give a good measure of block size and can serve as a
   replacement when no line information is available. 
 </p>
 
@@ -80,10 +83,10 @@
 
 <p>
   For all class files that have been compiled in debug mode with source line
-  information, coverage information for individual lines can be calculated from
+  information, coverage information for individual lines can be derived from
   basic blocks. Each block may span one ore multiple lines of source code. On
-  the other hand a single line of source my belong to multiple blocks. A source
-  line is considered as executed when at least one block that includes this line
+  the other hand a single line of source may belong to multiple blocks. A source
+  line is considered executed when at least one block that includes this line
   has been executed.
 </p>
 
@@ -91,7 +94,7 @@
   Due to the fact that a single line may belong to more that one block 
   <i>partial</i> coverage can happen if some of the blocks are executed while
   others are not. This is typically the case with boolean expressions. While
-  partially coverage lines are counted as executed due to the definition in the
+  partially covered lines are seen as executed due to the definition in the
   previous paragraph, they are highlighted in yellow color in the coverage
   reports. 
 </p>
@@ -103,14 +106,14 @@
   considered as executed when at least one block has been executed. As JaCoCo
   works on byte code level also constructors and static initializers are counted
   as methods. Some of these methods may not have a direct correspondence in Java
-  source code, like implicitly generated default constructors or initializers
+  source code, like implicit and thus generated default constructors or initializers
   for constants.
 </p>
 
 <h2>Classes</h2>
 
 <p>
-  A class is considered as executed when at least one of its method has been
+  A class is considered as executed when at least one of its methods has been
   executed. Note that JaCoCo considers constructors as well as static
   initializers as methods. As Java interface types may contain static
   initializers such interfaces are also considered as executable classes.

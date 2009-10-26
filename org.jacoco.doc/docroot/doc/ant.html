@@ -91,9 +91,9 @@
 </pre>
 
 <p>
-  As a result coverage information is collected during execution and written
-  to a file when the process terminates. Note the <code>fork</code> attribute in
-  wrapped <code>java</code> task. 
+  Resulting coverage information is collected during execution and written
+  to a file when the process terminates. Note the <code>fork</code> attribute
+  above in the wrapped <code>java</code> task. 
 </p>
 
 <p class="hint">
@@ -134,7 +134,7 @@
     </tr>    
     <tr>
       <td><code>includes</code></td>
-      <td>A list of class names that should be included to execution analysis.
+      <td>A list of class names that should be included in execution analysis.
           The list entries are separated by a vertical bar (<code>|</code>) and
           may use wildcard characters (<code>*</code> and <code>?</code>).
           Except for performance optimization or technical corner cases this
@@ -174,7 +174,7 @@
   If the <code>coverage</code> task is not suitable for your launch target, you
   might alternatively use the <code>agent</code> task to create the Java agent
   parameter. The following example defines a Ant property with the name
-  <code>agentvmparam</code> that can be directly used as Java VM parameter:
+  <code>agentvmparam</code> that can be directly used as a Java VM parameter:
 </p>
 
 <pre class="source">
@@ -246,14 +246,13 @@
   Within this element Ant resources and resource collections can be specified,
   that represent JaCoCo execution data files. If more than one execution data
   file is specified, execution data is combined. A particular piece of code is
-  considered as executed, when it is marked as executed in any of the input
-  files.
+  considered executed when it is marked as such in any of the input files.
 </p>
 
 <h3>Element <code>structure</code></h3>
 
 <p>
-  This element defines structure of the report. It might contain the following
+  This element defines the report structure. It might contain the following
   nested elements:
 </p>
 
@@ -266,14 +265,14 @@
     has an optional attribute <code>encoding</code> to specify the character
     encoding of the source files. If no encoding is given, the platform default
     is used. If source files are specified, some report formats include
-    highlighted versions of the source code.</li>
+    highlighted source code.</li>
 </ul>
 
 <p>
   The structure can be refined with a hierarchy of <code>group</code> elements.
-  This way the coverage report can reflect different modules of an software
+  This way the coverage report can reflect different modules of a software
   project. For each group element the corresponding class and source files can
-  be specified separately. For example the build script of JaCoCo itself
+  be specified separately. For example, the build script of JaCoCo itself
   contains the following declaration to separate the different bundles in the
   report (see the <a href="../coverage/index.html">resulting report</a>): 
 </p>
