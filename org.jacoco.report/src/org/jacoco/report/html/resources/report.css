@@ -138,6 +138,11 @@ table.coverage tbody td.ctr2 {
   padding:2px 12px 2px 4px;
 }
 
+table.coverage tfoot td {
+  white-space:nowrap;
+  padding:2px 12px 2px 6px;
+}
+
 table.coverage tfoot td.ctr1 {
   text-align:right;
   padding:2px 0px 2px 6px;
