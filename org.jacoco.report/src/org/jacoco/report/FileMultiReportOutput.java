@@ -14,6 +14,7 @@ package org.jacoco.report;
 
 import static java.lang.String.format;
 
+import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -46,7 +47,7 @@ public class FileMultiReportOutput implements IMultiReportOutput {
 		if (!parent.isDirectory()) {
 			throw new IOException(format("Can't create directory %s.", parent));
 		}
-		return new FileOutputStream(file);
+		return new BufferedOutputStream(new FileOutputStream(file));
 	}
 
 }
