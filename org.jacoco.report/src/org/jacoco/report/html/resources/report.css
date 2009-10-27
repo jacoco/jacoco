@@ -96,11 +96,16 @@ table.coverage thead {
 }
 
 table.coverage thead td {
-  border-bottom:#b0b0b0 1px solid;
+  white-space:nowrap;
   padding:2px 12px 0px 6px;
+  border-bottom:#b0b0b0 1px solid;
 }
 
-table.coverage td {
+table.coverage thead td.ctr2 {
+  text-align:right;
+}
+
+table.coverage tbody td {
   white-space:nowrap;
   padding:2px 12px 2px 6px;
 }
@@ -113,17 +118,32 @@ table.coverage tbody td {
   border-bottom:#d6d3ce 1px solid;
 }
 
-table.coverage td.ctr1 {
+table.coverage tbody td.ctr1 {
   text-align:right;
-  padding:2px 0px 2px 12px;
+  padding:2px 0px 2px 6px;
 }
 
-table.coverage td.ctr2 {
+table.coverage tbody td.ctr2 {
   text-align:right;
-  padding:2px 0px 2px 4px;
+  padding:2px 12px 2px 4px;
 }
 
-table.coverage td.ctr3 {
+table.coverage tbody td.ctr1 {
+  text-align:right;
+  padding:2px 0px 2px 6px;
+}
+
+table.coverage tbody td.ctr2 {
+  text-align:right;
+  padding:2px 12px 2px 4px;
+}
+
+table.coverage tfoot td.ctr1 {
+  text-align:right;
+  padding:2px 0px 2px 6px;
+}
+
+table.coverage tfoot td.ctr2 {
   text-align:right;
   padding:2px 12px 2px 4px;
 }

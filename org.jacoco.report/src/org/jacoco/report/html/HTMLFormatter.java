@@ -15,16 +15,14 @@ package org.jacoco.report.html;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.Comparator;
-import java.util.EnumMap;
-import java.util.Map;
 
 import org.jacoco.core.analysis.CounterComparator;
 import org.jacoco.core.analysis.ICoverageNode;
 import org.jacoco.core.analysis.ICoverageNode.CounterEntity;
 import org.jacoco.core.analysis.ICoverageNode.ElementType;
 import org.jacoco.report.ILanguageNames;
-import org.jacoco.report.IReportFormatter;
 import org.jacoco.report.IMultiReportOutput;
+import org.jacoco.report.IReportFormatter;
 import org.jacoco.report.IReportVisitor;
 import org.jacoco.report.JavaNames;
 import org.jacoco.report.ReportOutputFolder;
@@ -57,49 +55,31 @@ public class HTMLFormatter implements IReportFormatter, IHTMLReportContext {
 					CounterComparator.TOTALITEMS.reverse().on(
 							CounterEntity.INSTRUCTION));
 
-	/** Column that displays a linked label. */
-	public static final ICoverageTableColumn LABEL_COLUMN = new LabelColumn();
-
-	/** Column that displays the number of classes. */
-	public static final ICoverageTableColumn CLASS_COUNTER_COLUMN = new CounterColumn(
-			"Classes", CounterEntity.CLASS);
-
-	/** Column that displays the number of methods. */
-	public static final ICoverageTableColumn METHOD_COUNTER_COLUMN = new CounterColumn(
-			"Methods", CounterEntity.METHOD);
-
-	/** Column that displays the number of lines. */
-	public static final ICoverageTableColumn LINE_COUNTER_COLUMN = new CounterColumn(
-			"Lines", CounterEntity.LINE);
-
-	/** Column that displays the number of basic blocks. */
-	public static final ICoverageTableColumn BLOCK_COUNTER_COLUMN = new CounterColumn(
-			"Blocks", CounterEntity.BLOCK);
-
-	/** Column that displays the number of byte code instructions */
-	public static final ICoverageTableColumn INSTRUCTION_COUNTER_COLUMN = new CounterColumn(
-			"Instructions", CounterEntity.INSTRUCTION);
-
-	/** Column that displays the number of byte code instructions */
-	public final ICoverageTableColumn instructionBarColumn = new BarColumn("",
-			CounterEntity.INSTRUCTION);
-
-	private final CoverageTable defaultTable = new CoverageTable(Arrays.asList(
-			LABEL_COLUMN, CLASS_COUNTER_COLUMN, METHOD_COUNTER_COLUMN,
-			LINE_COUNTER_COLUMN, BLOCK_COUNTER_COLUMN,
-			INSTRUCTION_COUNTER_COLUMN, instructionBarColumn), DEFAULT_SORTING);
-
-	private final Map<ElementType, CoverageTable> tables = new EnumMap<ElementType, CoverageTable>(
-			ElementType.class);
+	private final CoverageTable defaultTable;
 
 	/**
 	 * New instance with default settings.
 	 */
 	public HTMLFormatter() {
-		tables.put(ElementType.CLASS, new CoverageTable(Arrays.asList(
-				LABEL_COLUMN, METHOD_COUNTER_COLUMN, LINE_COUNTER_COLUMN,
-				BLOCK_COUNTER_COLUMN, INSTRUCTION_COUNTER_COLUMN,
-				instructionBarColumn), DEFAULT_SORTING));
+		defaultTable = createDefaultTable();
+	}
+
+	private static CoverageTable createDefaultTable() {
+		return new CoverageTable(Arrays.asList(
+
+		new LabelColumn(),
+
+		new BarColumn("Instruction Coverage", CounterEntity.INSTRUCTION),
+
+		new PercentageColumn("", CounterEntity.INSTRUCTION),
+
+		new CounterColumn("Missed Classes", CounterEntity.CLASS),
+
+		new CounterColumn("Missed Methods", CounterEntity.METHOD),
+
+		new CounterColumn("Missed Blocks", CounterEntity.BLOCK),
+
+		new CounterColumn("Missed Lines", CounterEntity.LINE)), DEFAULT_SORTING);
 	}
 
 	/**
@@ -155,8 +135,7 @@ public class HTMLFormatter implements IReportFormatter, IHTMLReportContext {
 	}
 
 	public CoverageTable getTable(final ElementType type) {
-		final CoverageTable table = tables.get(type);
-		return table == null ? defaultTable : table;
+		return defaultTable;
 	}
 
 	public String getFooterText() {

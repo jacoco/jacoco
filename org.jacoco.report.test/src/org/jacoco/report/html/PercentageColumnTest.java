@@ -29,12 +29,12 @@ import org.junit.Test;
 import org.w3c.dom.Document;
 
 /**
- * Unit tests for {@link CounterColumn}.
+ * Unit tests for {@link PercentageColumn}.
  * 
  * @author Marc R. Hoffmann
  * @version $Revision: $
  */
-public class CounterColumnTest {
+public class PercentageColumnTest {
 
 	private MemoryMultiReportOutput output;
 
@@ -59,7 +59,7 @@ public class CounterColumnTest {
 		doc.head().title();
 		tr = doc.body().table("somestyle").tr();
 		support = new HTMLSupport();
-		column = new CounterColumn("TestHeader", CounterEntity.LINE);
+		column = new PercentageColumn("TestHeader", CounterEntity.LINE);
 	}
 
 	@Test
@@ -74,62 +74,45 @@ public class CounterColumnTest {
 	}
 
 	@Test
-	public void testItem() throws Exception {
+	public void testItem1() throws Exception {
 		final ICoverageTableItem item = createItem(150, 50);
 		column.init(Collections.singletonList(item), item.getNode());
 		column.item(tr, item, resources, root);
 		doc.close();
 		final Document doc = support.parse(output.getFile("Test.html"));
-		assertEquals("100 / ", support.findStr(doc,
-				"/html/body/table/tr/td[2]/text()"));
-		assertEquals("150", support.findStr(doc,
-				"/html/body/table/tr/td[3]/text()"));
+		assertEquals("33%", support.findStr(doc,
+				"/html/body/table/tr/td[1]/text()"));
 	}
 
 	@Test
-	public void testFooter() throws Exception {
+	public void testItem2() throws Exception {
+		final ICoverageTableItem item = createItem(0, 50);
+		column.init(Collections.singletonList(item), item.getNode());
+		column.item(tr, item, resources, root);
+		doc.close();
+		final Document doc = support.parse(output.getFile("Test.html"));
+		assertEquals("n/a", support.findStr(doc,
+				"/html/body/table/tr/td[1]/text()"));
+	}
+
+	@Test
+	public void testFooter1() throws Exception {
 		final ICoverageTableItem item = createItem(80, 60);
 		column.init(Collections.singletonList(item), item.getNode());
 		column.footer(tr, item.getNode(), resources, root);
 		doc.close();
 		final Document doc = support.parse(output.getFile("Test.html"));
-		assertEquals("20 / ", support.findStr(doc,
-				"/html/body/table/tr/td[2]/text()"));
-		assertEquals("80", support.findStr(doc,
-				"/html/body/table/tr/td[3]/text()"));
+		assertEquals("75%", support.findStr(doc, "/html/body/table/tr"));
 	}
 
 	@Test
-	public void testHiddenHeader() throws Exception {
-		final ICoverageTableItem item = createItem(0, 0);
+	public void testFooter2() throws Exception {
+		final ICoverageTableItem item = createItem(0, 60);
 		column.init(Collections.singletonList(item), item.getNode());
-		tr.td(); // ensure we still have valid xhtml
-		column.header(tr, resources, root);
-		doc.close();
-		final Document doc = support.parse(output.getFile("Test.html"));
-		assertEquals("", support.findStr(doc, "/html/body/table/tr"));
-	}
-
-	@Test
-	public void testHiddenItem() throws Exception {
-		final ICoverageTableItem item = createItem(0, 0);
-		column.init(Collections.singletonList(item), item.getNode());
-		tr.td(); // ensure we still have valid xhtml
-		column.item(tr, item, resources, root);
-		doc.close();
-		final Document doc = support.parse(output.getFile("Test.html"));
-		assertEquals("", support.findStr(doc, "/html/body/table/tr"));
-	}
-
-	@Test
-	public void testHiddenFooter() throws Exception {
-		final ICoverageTableItem item = createItem(0, 0);
-		column.init(Collections.singletonList(item), item.getNode());
-		tr.td(); // ensure we still have valid xhtml
 		column.footer(tr, item.getNode(), resources, root);
 		doc.close();
 		final Document doc = support.parse(output.getFile("Test.html"));
-		assertEquals("", support.findStr(doc, "/html/body/table/tr"));
+		assertEquals("n/a", support.findStr(doc, "/html/body/table/tr"));
 	}
 
 	private ICoverageTableItem createItem(final int total, final int covered) {

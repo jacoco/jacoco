@@ -38,9 +38,6 @@ public class Styles {
 	/** Table cells for the second column of a counter */
 	public static final String CTR2 = "ctr2";
 
-	/** Table cells for the third column of a counter */
-	public static final String CTR3 = "ctr3";
-
 	/** Block of source code */
 	public static final String SOURCE = "source";
 

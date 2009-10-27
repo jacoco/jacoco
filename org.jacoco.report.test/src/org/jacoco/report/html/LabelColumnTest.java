@@ -44,6 +44,8 @@ public class LabelColumnTest {
 
 	private HTMLSupport support;
 
+	private ICoverageTableColumn column;
+
 	@Before
 	public void setup() throws Exception {
 		output = new MemoryMultiReportOutput();
@@ -53,11 +55,12 @@ public class LabelColumnTest {
 		doc.head().title();
 		tr = doc.body().table("somestyle").tr();
 		support = new HTMLSupport();
+		column = new LabelColumn();
 	}
 
 	@Test
 	public void testHeader() throws Exception {
-		new LabelColumn().header(tr, resources, root);
+		column.header(tr, resources, root);
 		doc.close();
 		final Document doc = support.parse(output.getFile("Test.html"));
 		assertEquals("Element", support.findStr(doc,
@@ -66,8 +69,9 @@ public class LabelColumnTest {
 
 	@Test
 	public void testFooter() throws Exception {
-		new LabelColumn().footer(tr, new CoverageNodeImpl(ElementType.GROUP,
-				"Foo", false), resources, root);
+		column.footer(tr,
+				new CoverageNodeImpl(ElementType.GROUP, "Foo", false),
+				resources, root);
 		doc.close();
 		final Document doc = support.parse(output.getFile("Test.html"));
 		assertEquals("Total", support.findStr(doc,
@@ -76,7 +80,7 @@ public class LabelColumnTest {
 
 	@Test
 	public void testItemWithoutLink() throws Exception {
-		new LabelColumn().item(tr, createItem("Abc", null), resources, root);
+		column.item(tr, createItem("Abc", null), resources, root);
 		doc.close();
 		final Document doc = support.parse(output.getFile("Test.html"));
 		assertEquals("Abc", support.findStr(doc,
@@ -87,8 +91,7 @@ public class LabelColumnTest {
 
 	@Test
 	public void testItemWithLink() throws Exception {
-		new LabelColumn().item(tr, createItem("Def", "def.html"), resources,
-				root);
+		column.item(tr, createItem("Def", "def.html"), resources, root);
 		doc.close();
 		final Document doc = support.parse(output.getFile("Test.html"));
 		assertEquals("Def", support.findStr(doc,

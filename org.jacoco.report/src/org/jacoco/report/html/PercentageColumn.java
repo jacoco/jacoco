@@ -25,24 +25,21 @@ import org.jacoco.report.html.resources.Resources;
 import org.jacoco.report.html.resources.Styles;
 
 /**
- * Column that prints the number of missed entities and the total number for
- * each item and a summary in the footer. If the total number of items is zero,
- * no column is emitted at all. The implementation is stateful, instances must
- * not be used in parallel.
+ * Column that prints the coverage percentage for each item and the total
+ * percentage in the footer. The implementation is stateless, instances might be
+ * used in parallel.
  * 
  * @author Marc R. Hoffmann
  * @version $Revision: $
  */
-public class CounterColumn implements ICoverageTableColumn {
+public class PercentageColumn implements ICoverageTableColumn {
 
 	private final String header;
 
 	private final CounterEntity entity;
 
-	private boolean visible;
-
-	private final NumberFormat integerFormat = DecimalFormat
-			.getIntegerInstance();
+	private final NumberFormat percentageFormat = DecimalFormat
+			.getPercentInstance();
 
 	/**
 	 * Creates a new column that is based on the {@link ICounter} for the given
@@ -53,27 +50,18 @@ public class CounterColumn implements ICoverageTableColumn {
 	 * @param entity
 	 *            counter entity for this column
 	 */
-	public CounterColumn(final String header, final CounterEntity entity) {
+	public PercentageColumn(final String header, final CounterEntity entity) {
 		this.header = header;
 		this.entity = entity;
 	}
 
 	public void init(final List<ICoverageTableItem> items,
 			final ICoverageNode total) {
-		for (final ICoverageTableItem i : items) {
-			if (i.getNode().getCounter(entity).getTotalCount() > 0) {
-				visible = true;
-				return;
-			}
-		}
-		visible = false;
 	}
 
 	public void header(final HTMLElement tr, final Resources resources,
 			final ReportOutputFolder base) throws IOException {
-		if (visible) {
-			tr.td(Styles.CTR2, 3).text(header);
-		}
+		tr.td().text(header);
 	}
 
 	public void footer(final HTMLElement tr, final ICoverageNode total,
@@ -90,12 +78,13 @@ public class CounterColumn implements ICoverageTableColumn {
 
 	private void cell(final HTMLElement tr, final ICoverageNode node)
 			throws IOException {
-		if (visible) {
-			tr.td(); // extra column to allow alignment to the right
-			final ICounter c = node.getCounter(entity);
-			tr.td(Styles.CTR1).text(
-					integerFormat.format(c.getNotCoveredCount())).text(" / ");
-			tr.td(Styles.CTR2).text(integerFormat.format(c.getTotalCount()));
+		final ICounter counter = node.getCounter(entity);
+		final int total = counter.getTotalCount();
+		final HTMLElement td = tr.td(Styles.CTR2);
+		if (total == 0) {
+			td.text("n/a");
+		} else {
+			td.text(percentageFormat.format(counter.getCoveredRatio()));
 		}
 	}
 
