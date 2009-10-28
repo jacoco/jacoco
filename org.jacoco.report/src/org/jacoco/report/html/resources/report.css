@@ -162,7 +162,9 @@ table.coverage tfoot td.ctr2 {
 }
 
 .footer div.versioninfo {
+  width:40%;
   float:right;
+  text-align:right;
 }
 
 .footer a {

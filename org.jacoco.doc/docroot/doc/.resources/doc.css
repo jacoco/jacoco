@@ -22,7 +22,9 @@ h1 {
 }
 
 .footer div.versioninfo {
+  width:30%;
   float:right;
+  text-align:right;
 }
 
 .footer a {
