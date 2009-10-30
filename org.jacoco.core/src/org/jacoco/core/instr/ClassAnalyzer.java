@@ -27,11 +27,9 @@ import org.objectweb.asm.Opcodes;
  * @author Marc R. Hoffmann
  * @version $Revision: $
  */
-public class ClassAnalyzer implements ClassVisitor {
+public class ClassAnalyzer extends MethodEnumerator {
 
 	private final IClassStructureVisitor structureVisitor;
-
-	private int methodCount;
 
 	/**
 	 * Creates a new analyzer that reports to the given
@@ -42,12 +40,6 @@ public class ClassAnalyzer implements ClassVisitor {
 	 */
 	public ClassAnalyzer(final IClassStructureVisitor structureVisitor) {
 		this.structureVisitor = structureVisitor;
-		methodCount = 0;
-	}
-
-	public void visit(final int version, final int access, final String name,
-			final String signature, final String superName,
-			final String[] interfaces) {
 	}
 
 	public void visitSource(final String source, final String debug) {
@@ -56,8 +48,47 @@ public class ClassAnalyzer implements ClassVisitor {
 		}
 	}
 
+	@Override
+	protected MethodVisitor visitMethod(final int methodId, final int access,
+			final String name, final String desc, final String signature,
+			final String[] exceptions) {
+
+		// TODO: Use filter hook
+		if ((access & Opcodes.ACC_SYNTHETIC) != 0) {
+			return null;
+		}
+
+		final IMethodStructureVisitor structure = structureVisitor
+				.visitMethodStructure(methodId, name, desc, signature);
+		return new BlockMethodAdapter(new MethodAnalyzer(structure), access,
+				name, desc, signature, exceptions);
+	}
+
+	@Override
+	protected MethodVisitor visitAbstractMethod(final int access,
+			final String name, final String desc, final String signature,
+			final String[] exceptions) {
+		return null;
+	}
+
+	public void visitEnd() {
+		structureVisitor.visitEnd();
+	}
+
+	// Ignored methods:
+
+	public void visit(final int version, final int access, final String name,
+			final String signature, final String superName,
+			final String[] interfaces) {
+	}
+
 	public AnnotationVisitor visitAnnotation(final String desc,
 			final boolean visible) {
+		return null;
+	}
+
+	public FieldVisitor visitField(final int access, final String name,
+			final String desc, final String signature, final Object value) {
 		return null;
 	}
 
@@ -70,34 +101,6 @@ public class ClassAnalyzer implements ClassVisitor {
 	}
 
 	public void visitAttribute(final Attribute attr) {
-	}
-
-	public FieldVisitor visitField(final int access, final String name,
-			final String desc, final String signature, final Object value) {
-		return null;
-	}
-
-	public MethodVisitor visitMethod(final int access, final String name,
-			final String desc, final String signature, final String[] exceptions) {
-
-		// Abstract methods do not have code to analyze
-		if ((access & Opcodes.ACC_ABSTRACT) != 0) {
-			return null;
-		}
-
-		// TODO: Use filter hook
-		if ((access & Opcodes.ACC_SYNTHETIC) != 0) {
-			return null;
-		}
-
-		final IMethodStructureVisitor structure = structureVisitor
-				.visitMethodStructure(methodCount++, name, desc, signature);
-		return new BlockMethodAdapter(new MethodAnalyzer(structure), access,
-				name, desc, signature, exceptions);
-	}
-
-	public void visitEnd() {
-		structureVisitor.visitEnd();
 	}
 
 }

@@ -18,12 +18,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.jacoco.core.runtime.IRuntime;
-import org.objectweb.asm.ClassAdapter;
+import org.objectweb.asm.AnnotationVisitor;
+import org.objectweb.asm.Attribute;
 import org.objectweb.asm.ClassVisitor;
 import org.objectweb.asm.FieldVisitor;
 import org.objectweb.asm.Label;
 import org.objectweb.asm.MethodVisitor;
-import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.Type;
 import org.objectweb.asm.commons.EmptyVisitor;
 import org.objectweb.asm.commons.GeneratorAdapter;
@@ -34,7 +34,7 @@ import org.objectweb.asm.commons.GeneratorAdapter;
  * @author Marc R. Hoffmann
  * @version $Revision: $
  */
-public class ClassInstrumenter extends ClassAdapter {
+public class ClassInstrumenter extends MethodEnumerator {
 
 	private static class EmptyBlockMethodVisitor extends EmptyVisitor implements
 			IBlockMethodVisitor {
@@ -46,6 +46,8 @@ public class ClassInstrumenter extends ClassAdapter {
 		}
 
 	}
+
+	private final ClassVisitor delegate;
 
 	private final long id;
 
@@ -68,42 +70,34 @@ public class ClassInstrumenter extends ClassAdapter {
 	 */
 	public ClassInstrumenter(final long id, final IRuntime runtime,
 			final ClassVisitor cv) {
-		super(cv);
+		this.delegate = cv;
 		this.id = id;
 		this.runtime = runtime;
 		this.blockCounters = new ArrayList<BlockMethodAdapter>();
 	}
 
-	@Override
 	public void visit(final int version, final int access, final String name,
 			final String signature, final String superName,
 			final String[] interfaces) {
 		this.type = Type.getObjectType(name);
-		super.visit(version, access, name, signature, superName, interfaces);
+		delegate.visit(version, access, name, signature, superName, interfaces);
 	}
 
-	@Override
 	public FieldVisitor visitField(final int access, final String name,
 			final String desc, final String signature, final Object value) {
 		assertNotInstrumented(name, GeneratorConstants.DATAFIELD_NAME);
-		return super.visitField(access, name, desc, signature, value);
+		return delegate.visitField(access, name, desc, signature, value);
 	}
 
 	@Override
-	public MethodVisitor visitMethod(final int access, final String name,
-			final String desc, final String signature, final String[] exceptions) {
+	protected MethodVisitor visitMethod(final int methodId, final int access,
+			final String name, final String desc, final String signature,
+			final String[] exceptions) {
 
 		assertNotInstrumented(name, GeneratorConstants.INIT_METHOD.getName());
 
-		final MethodVisitor mv = super.visitMethod(access, name, desc,
+		final MethodVisitor mv = delegate.visitMethod(access, name, desc,
 				signature, exceptions);
-
-		// Abstract methods do not have code to analyze
-		if ((access & Opcodes.ACC_ABSTRACT) != 0) {
-			return mv;
-		}
-
-		final int methodId = blockCounters.size();
 
 		final IBlockMethodVisitor blockVisitor;
 		if (mv == null) {
@@ -115,20 +109,26 @@ public class ClassInstrumenter extends ClassAdapter {
 
 		final BlockMethodAdapter adapter = new BlockMethodAdapter(blockVisitor,
 				access, name, desc, signature, exceptions);
-		blockCounters.add(adapter);
+		blockCounters.add(methodId, adapter);
 		return adapter;
 	}
 
 	@Override
+	protected MethodVisitor visitAbstractMethod(final int access,
+			final String name, final String desc, final String signature,
+			final String[] exceptions) {
+		return delegate.visitMethod(access, name, desc, signature, exceptions);
+	}
+
 	public void visitEnd() {
 		createDataField();
 		createInitMethod();
 		registerClass();
-		super.visitEnd();
+		delegate.visitEnd();
 	}
 
 	private void createDataField() {
-		super.visitField(GeneratorConstants.DATAFIELD_ACC,
+		delegate.visitField(GeneratorConstants.DATAFIELD_ACC,
 				GeneratorConstants.DATAFIELD_NAME,
 				GeneratorConstants.DATAFIELD_TYPE.getDescriptor(), null, null);
 	}
@@ -137,7 +137,7 @@ public class ClassInstrumenter extends ClassAdapter {
 		final int access = GeneratorConstants.INIT_METHOD_ACC;
 		final String name = GeneratorConstants.INIT_METHOD.getName();
 		final String desc = GeneratorConstants.INIT_METHOD.getDescriptor();
-		final GeneratorAdapter gen = new GeneratorAdapter(super.visitMethod(
+		final GeneratorAdapter gen = new GeneratorAdapter(delegate.visitMethod(
 				access, name, desc, null, null), access, name, desc);
 
 		// Load the value of the static data field:
@@ -235,6 +235,31 @@ public class ClassInstrumenter extends ClassAdapter {
 					.getBlockCount()];
 		}
 		runtime.registerClass(id, type.getInternalName(), data);
+	}
+
+	// Methods we simply delegate:
+
+	public AnnotationVisitor visitAnnotation(final String desc,
+			final boolean visible) {
+		return delegate.visitAnnotation(desc, visible);
+	}
+
+	public void visitAttribute(final Attribute attr) {
+		delegate.visitAttribute(attr);
+	}
+
+	public void visitInnerClass(final String name, final String outerName,
+			final String innerName, final int access) {
+		delegate.visitInnerClass(name, outerName, innerName, access);
+	}
+
+	public void visitOuterClass(final String owner, final String name,
+			final String desc) {
+		delegate.visitOuterClass(owner, name, desc);
+	}
+
+	public void visitSource(final String source, final String debug) {
+		delegate.visitSource(source, debug);
 	}
 
 }
