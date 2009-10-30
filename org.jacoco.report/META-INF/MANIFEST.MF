@@ -7,9 +7,7 @@ Bundle-RequiredExecutionEnvironment: J2SE-1.5
 Bundle-Vendor: Mountainminds GmbH & Co. KG
 Import-Package: org.jacoco.core,
  org.jacoco.core.analysis,
- org.jacoco.core.data,
- org.jacoco.core.instr,
- org.objectweb.asm
+ org.objectweb.asm;version="[3.1.0,4.0.0)"
 Export-Package: org.jacoco.report,
  org.jacoco.report.csv,
  org.jacoco.report.html,
