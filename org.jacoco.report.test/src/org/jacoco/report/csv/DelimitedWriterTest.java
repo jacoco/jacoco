@@ -103,6 +103,18 @@ public class DelimitedWriterTest {
 		assertResult("space test");
 	}
 
+	@Test
+	public void testInt() throws IOException {
+		writer.write(-123000);
+		assertResult("-123000");
+	}
+
+	@Test
+	public void testInts() throws IOException {
+		writer.write(1, 20, 300);
+		assertResult("1,20,300");
+	}
+
 	private void assertResult(String expected) throws IOException {
 		writer.close();
 		assertEquals(expected, result.toString());
