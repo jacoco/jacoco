@@ -32,17 +32,17 @@ public class TargetLoader extends ClassLoader {
 		super(TargetLoader.class.getClassLoader());
 		this.sourcename = name;
 		this.bytes = bytes;
-		clazz = load(name, bytes);
+		clazz = load(name);
 	}
 
 	public TargetLoader(final Class<?> source, final byte[] bytes) {
 		super(TargetLoader.class.getClassLoader());
 		this.sourcename = source.getName();
 		this.bytes = bytes;
-		clazz = load(source.getName(), bytes);
+		clazz = load(source.getName());
 	}
 
-	private Class<?> load(final String sourcename, final byte[] bytes) {
+	private Class<?> load(final String sourcename) {
 		try {
 			return loadClass(sourcename);
 		} catch (ClassNotFoundException e) {
