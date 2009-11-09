@@ -10,27 +10,22 @@
  *    
  * $Id: $
  *******************************************************************************/
-package org.jacoco.core.test.targets;
-
-import static org.jacoco.core.test.targets.Stubs.nop;
-import static org.jacoco.core.test.targets.Stubs.t;
+package org.jacoco.core.test.perf;
 
 /**
- * Empty class.
- * 
- * CHANGING LINE NUMBERS WILL BREAK TESTS!
+ * Interface for a performance scenario.
  * 
  * @author Marc R. Hoffmann
  * @version $Revision: $
  */
-public class Target20 implements Runnable {
+public interface IPerfScenario {
 
-	public void run() {
-		if (t()) { // ........... 31
-			nop(); // ................ 32
-		} else {
-			nop(); // ................ 34
-		}
-	} // ............................ 36
+	/**
+	 * Runs the performance scenario and reports the result to the given
+	 * interface.
+	 * 
+	 * @param output
+	 */
+	public void run(IPerfOutput output) throws Exception;
 
 }

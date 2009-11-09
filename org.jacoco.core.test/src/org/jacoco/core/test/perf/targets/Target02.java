@@ -1,5 +1,3 @@
-package org.jacoco.core.test.targets;
-
 /*******************************************************************************
  * Copyright (c) 2009 Mountainminds GmbH & Co. KG and others All rights
  * reserved. This program and the accompanying materials are made available
@@ -10,25 +8,21 @@ package org.jacoco.core.test.targets;
  * 
  * $Id: $
  *******************************************************************************/
+package org.jacoco.core.test.perf.targets;
 
 /**
- * Loop within a method.
+ * Simple Loop.
  * 
  * @author Marc R. Hoffmann
  * @version $Revision: $
  */
-public class Target_performance_02 implements Runnable {
+public class Target02 implements Runnable {
 
 	public void run() {
 		int count = 0;
-		for (int i = 0; i < 2000000; i++) {
+		for (int i = 0; i < 10000000; i++) {
 			count++;
 		}
-	}
-
-	@Override
-	public String toString() {
-		return "loop";
 	}
 
 }
