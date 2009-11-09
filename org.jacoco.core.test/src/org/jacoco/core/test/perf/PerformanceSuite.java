@@ -16,6 +16,7 @@ import java.io.PrintWriter;
 
 import org.jacoco.core.test.perf.targets.Target01;
 import org.jacoco.core.test.perf.targets.Target02;
+import org.jacoco.core.test.perf.targets.Target03;
 
 /**
  * The main test suite.
@@ -30,8 +31,10 @@ public class PerformanceSuite implements IPerfScenario {
 				Target01.class).run(output);
 		new ExecuteInstrumentedCodeScenario("loop only", Target02.class)
 				.run(output);
-		new InstrumentationSizeSzenario(Target01.class).run(output);
-		new InstrumentationTimeScenario(Target01.class, 1000).run(output);
+		new ExecuteInstrumentedCodeScenario("game of life", Target03.class)
+				.run(output);
+		new InstrumentationSizeSzenario(Target03.class).run(output);
+		new InstrumentationTimeScenario(Target03.class, 1000).run(output);
 	}
 
 	public static void main(String[] args) throws Exception {
