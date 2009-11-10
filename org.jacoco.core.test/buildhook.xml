@@ -14,14 +14,26 @@
 -->
 
 <project name="org.jacoco.core.test.buildhook">
-	
+
 	<path id="dependencies">
 		<path refid="bundle-org.jacoco.core"/>
 		<path refid="bundle-org.objectweb.asm"/>
 		<path refid="bundle-org.junit4"/>
-    </path>
+	</path>
 
 	<property name="do.compile" value="true"/>
-	<property name="do.verify"  value="true"/>
-	
+	<property name="do.verify" value="true"/>
+	<property name="do.customverify" value="true"/>
+
+	<target name="customverify">
+		<mkdir dir="${result.dist.test.dir}"/>
+		<java fork="true" classname="org.jacoco.core.test.perf.PerformanceSuite">
+			<classpath>
+				<pathelement location="${result.tmp.bundle.classes.dir}" />
+				<path refid="dependencies" />
+			</classpath>
+			<arg file="${result.dist.test.dir}/performance.txt"/>
+		</java>
+	</target>
+
 </project>

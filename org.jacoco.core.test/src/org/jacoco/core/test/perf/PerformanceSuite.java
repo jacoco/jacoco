@@ -46,6 +46,7 @@ public class PerformanceSuite implements IPerfScenario {
 		}
 		IPerfOutput output = new PerfOutputWriter(writer);
 		new PerformanceSuite().run(output);
+		writer.close();
 	}
 
 }
