@@ -33,8 +33,6 @@ public interface IClassStructureVisitor {
 	/**
 	 * Called for every instrumented method.
 	 * 
-	 * @param id
-	 *            identifier of this method within the class
 	 * @param name
 	 *            name of the method
 	 * @param desc
@@ -43,7 +41,7 @@ public interface IClassStructureVisitor {
 	 *            generic signature or <code>null</code>
 	 * @return call-back for structure details about the method
 	 */
-	public IMethodStructureVisitor visitMethodStructure(int id, String name,
+	public IMethodStructureVisitor visitMethodStructure(String name,
 			String desc, String signature);
 
 	/**

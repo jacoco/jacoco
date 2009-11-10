@@ -67,27 +67,25 @@ public abstract class RuntimeTestBase {
 	@Test
 	public void testReset() throws InstantiationException,
 			IllegalAccessException {
-		final boolean[][] data1 = new boolean[1][];
-		data1[0] = new boolean[] { true, true, true };
+		final boolean[] data1 = new boolean[] { true, true, false };
 		runtime.registerClass(1001, "Target", data1);
 		runtime.reset();
-		assertFalse(data1[0][0]);
-		assertFalse(data1[0][1]);
-		assertFalse(data1[0][2]);
+		assertFalse(data1[0]);
+		assertFalse(data1[1]);
+		assertFalse(data1[2]);
 	}
 
 	@Test
 	public void testCollectAndReset() throws InstantiationException,
 			IllegalAccessException {
-		final boolean[][] data1 = new boolean[1][];
-		data1[0] = new boolean[] { true, true, true };
+		final boolean[] data1 = new boolean[] { true, true, true };
 		runtime.registerClass(1001, "Target", data1);
 		runtime.collect(storage, true);
 		storage.assertSize(1);
 		storage.assertData(1001, data1);
-		assertFalse(data1[0][0]);
-		assertFalse(data1[0][1]);
-		assertFalse(data1[0][2]);
+		assertFalse(data1[0]);
+		assertFalse(data1[1]);
+		assertFalse(data1[2]);
 	}
 
 	@Test(expected = IllegalStateException.class)
@@ -99,7 +97,7 @@ public abstract class RuntimeTestBase {
 	@Test
 	public void testDataAccessor() throws InstantiationException,
 			IllegalAccessException {
-		final boolean[][] data = newStructure();
+		final boolean[] data = newStructure();
 		runtime.registerClass(1001, "Target", data);
 		ITarget t = generateAndInstantiateClass(1001);
 		assertSame(data, t.get());
@@ -108,28 +106,28 @@ public abstract class RuntimeTestBase {
 	@Test
 	public void testExecutionRecording() throws InstantiationException,
 			IllegalAccessException {
-		boolean[][] data1 = newStructure();
+		boolean[] data1 = newStructure();
 		runtime.registerClass(1001, "Target", data1);
 		generateAndInstantiateClass(1001).a();
 		runtime.collect(storage, false);
 		storage.assertSize(1);
 		storage.assertData(1001, data1);
-		assertTrue(data1[0][0]);
-		assertFalse(data1[1][0]);
+		assertTrue(data1[0]);
+		assertFalse(data1[1]);
 	}
 
 	@Test
 	public void testLoadSameClassTwice() throws InstantiationException,
 			IllegalAccessException {
-		boolean[][] data1 = newStructure();
+		boolean[] data1 = newStructure();
 		runtime.registerClass(1001, "Target", data1);
 		generateAndInstantiateClass(1001).a();
 		generateAndInstantiateClass(1001).b();
 		runtime.collect(storage, false);
 		storage.assertSize(1);
 		storage.assertData(1001, data1);
-		assertTrue(data1[0][0]);
-		assertTrue(data1[1][0]);
+		assertTrue(data1[0]);
+		assertTrue(data1[0]);
 	}
 
 	/**
@@ -155,7 +153,7 @@ public abstract class RuntimeTestBase {
 						.getInternalName(ITarget.class) });
 
 		writer.visitField(Opcodes.ACC_PRIVATE | Opcodes.ACC_FINAL, "data",
-				"[[Z", null, null);
+				"[Z", null, null);
 
 		// Constructor
 		GeneratorAdapter gen = new GeneratorAdapter(writer.visitMethod(
@@ -167,18 +165,18 @@ public abstract class RuntimeTestBase {
 				"()V"));
 		gen.loadThis();
 		final int size = runtime.generateDataAccessor(classid, gen);
-		gen.putField(classType, "data", GeneratorConstants.DATAFIELD_TYPE);
+		gen.putField(classType, "data", GeneratorConstants.PROBEDATA_TYPE);
 		gen.returnValue();
 		gen.visitMaxs(size + 1, 0);
 		gen.visitEnd();
 
 		// get()
 		gen = new GeneratorAdapter(writer.visitMethod(Opcodes.ACC_PUBLIC,
-				"get", "()[[Z", null, new String[0]), Opcodes.ACC_PUBLIC,
-				"get", "()[[Z");
+				"get", "()[Z", null, new String[0]), Opcodes.ACC_PUBLIC, "get",
+				"()[Z");
 		gen.visitCode();
 		gen.loadThis();
-		gen.getField(classType, "data", GeneratorConstants.DATAFIELD_TYPE);
+		gen.getField(classType, "data", GeneratorConstants.PROBEDATA_TYPE);
 		gen.returnValue();
 		gen.visitMaxs(1, 0);
 		gen.visitEnd();
@@ -188,9 +186,7 @@ public abstract class RuntimeTestBase {
 				"()V", null, new String[0]), Opcodes.ACC_PUBLIC, "a", "()V");
 		gen.visitCode();
 		gen.loadThis();
-		gen.getField(classType, "data", GeneratorConstants.DATAFIELD_TYPE);
-		gen.push(0);
-		gen.arrayLoad(Type.getObjectType("[Z"));
+		gen.getField(classType, "data", GeneratorConstants.PROBEDATA_TYPE);
 		gen.push(0);
 		gen.push(1);
 		gen.arrayStore(Type.BOOLEAN_TYPE);
@@ -203,10 +199,8 @@ public abstract class RuntimeTestBase {
 				"()V", null, new String[0]), Opcodes.ACC_PUBLIC, "b", "()V");
 		gen.visitCode();
 		gen.loadThis();
-		gen.getField(classType, "data", GeneratorConstants.DATAFIELD_TYPE);
+		gen.getField(classType, "data", GeneratorConstants.PROBEDATA_TYPE);
 		gen.push(1);
-		gen.arrayLoad(Type.getObjectType("[Z"));
-		gen.push(0);
 		gen.push(1);
 		gen.arrayStore(Type.BOOLEAN_TYPE);
 		gen.returnValue();
@@ -226,7 +220,7 @@ public abstract class RuntimeTestBase {
 	 */
 	public interface ITarget {
 
-		boolean[][] get();
+		boolean[] get();
 
 		// implementations just mark method 0 as executed
 		void a();
@@ -236,31 +230,30 @@ public abstract class RuntimeTestBase {
 
 	}
 
-	private boolean[][] newStructure() {
-		return new boolean[][] { new boolean[] { false },
-				new boolean[] { false } };
+	private boolean[] newStructure() {
+		return new boolean[] { false, false };
 	}
 
 	private static class TestStorage implements IExecutionDataVisitor {
 
-		private final Map<Long, boolean[][]> data = new HashMap<Long, boolean[][]>();
+		private final Map<Long, boolean[]> data = new HashMap<Long, boolean[]>();
 
 		public void assertSize(int size) {
 			assertEquals(size, data.size(), 0.0);
 		}
 
-		public boolean[][] getData(long classId) {
+		public boolean[] getData(long classId) {
 			return data.get(Long.valueOf(classId));
 		}
 
-		public void assertData(long classId, boolean[][] expected) {
+		public void assertData(long classId, boolean[] expected) {
 			assertSame(expected, getData(classId));
 		}
 
 		// === ICoverageDataVisitor ===
 
 		public void visitClassExecution(long id, String name,
-				boolean[][] blockdata) {
+				boolean[] blockdata) {
 			data.put(Long.valueOf(id), blockdata);
 		}
 

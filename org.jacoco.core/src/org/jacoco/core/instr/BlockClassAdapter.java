@@ -16,24 +16,43 @@ import org.objectweb.asm.ClassVisitor;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.Type;
+import org.objectweb.asm.commons.EmptyVisitor;
 
 /**
- * A {@link ClassVisitor} that gives each non-abstract method a unique id that
- * corresponds to its index in the class file.
+ * A {@link ClassVisitor} that drives {@link IBlockMethodVisitor} for each
+ * non-abstract method.
  * 
  * @author Marc R. Hoffmann
  * @version $Revision: $
  */
 
-public abstract class MethodEnumerator implements ClassVisitor {
+public abstract class BlockClassAdapter implements ClassVisitor,
+		IProbeIdGenerator {
+
+	private static class EmptyBlockMethodVisitor extends EmptyVisitor implements
+			IBlockMethodVisitor {
+
+		public void visitBlockEndBeforeJump(final int id) {
+		}
+
+		public void visitBlockEnd(final int id) {
+		}
+	}
 
 	private int counter = 0;
 
 	public final MethodVisitor visitMethod(final int access, final String name,
 			final String desc, final String signature, final String[] exceptions) {
 		if ((access & Opcodes.ACC_ABSTRACT) == 0) {
-			return visitMethod(counter++, access, name, desc, signature,
-					exceptions);
+			IBlockMethodVisitor mv = visitNonAbstractMethod(access, name, desc,
+					signature, exceptions);
+			if (mv == null) {
+				// We need to visit the method in any case, otherwise probe ids
+				// are not reproducible
+				mv = new EmptyBlockMethodVisitor();
+			}
+			return new BlockMethodAdapter(mv, this, access, name, desc,
+					signature, exceptions);
 		} else {
 			return visitAbstractMethod(access, name, desc, signature,
 					exceptions);
@@ -43,8 +62,6 @@ public abstract class MethodEnumerator implements ClassVisitor {
 	/**
 	 * This method is called for every non-abstract method.
 	 * 
-	 * @param methodId
-	 *            unique id for this method
 	 * @param access
 	 *            the method's access flags (see {@link Opcodes}). This
 	 *            parameter also indicates if the method is synthetic and/or
@@ -65,7 +82,7 @@ public abstract class MethodEnumerator implements ClassVisitor {
 	 *         if this class visitor is not interested in visiting the code of
 	 *         this method.
 	 */
-	protected abstract MethodVisitor visitMethod(final int methodId,
+	protected abstract IBlockMethodVisitor visitNonAbstractMethod(
 			final int access, final String name, final String desc,
 			final String signature, final String[] exceptions);
 
@@ -97,12 +114,18 @@ public abstract class MethodEnumerator implements ClassVisitor {
 			final String[] exceptions);
 
 	/**
-	 * Returns the total number of non abstract methods of the processed class.
+	 * Returns the total number of probes of the processed class.
 	 * 
-	 * @return number of non-abstract methods
+	 * @return number of probes
 	 */
-	protected final int getMethodCount() {
+	protected final int getProbeCount() {
 		return counter;
+	}
+
+	// === IProbeIdGenerator ===
+
+	public int nextId() {
+		return counter++;
 	}
 
 }

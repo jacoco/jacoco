@@ -92,20 +92,13 @@ public class ExecutionDataReader {
 	private void readExecutionData() throws IOException {
 		final long classid = in.readLong();
 		final String name = in.readUTF();
-		final boolean[][] blockdata = new boolean[in.readVarInt()][];
-		// 1. Read block sizes
-		for (int i = 0; i < blockdata.length; i++) {
-			blockdata[i] = new boolean[in.readVarInt()];
-		}
-		// 2. Read block data
-		for (int i = 0; i < blockdata.length; i++) {
-			for (int j = 0; j < blockdata[i].length; j++) {
-				blockdata[i][j] = in.readPackedBoolean();
-			}
+		final boolean[] data = new boolean[in.readVarInt()];
+		for (int i = 0; i < data.length; i++) {
+			data[i] = in.readPackedBoolean();
 		}
 		in.finishPackedBoolean();
 		if (executionDataVisitor != null) {
-			executionDataVisitor.visitClassExecution(classid, name, blockdata);
+			executionDataVisitor.visitClassExecution(classid, name, data);
 		}
 	}
 

@@ -26,9 +26,9 @@ public final class GeneratorConstants {
 
 	/**
 	 * Type for array of primitive boolean values. This type is used to store
-	 * covered blocks of a single method.
+	 * executed probes of a class.
 	 */
-	public static final Type BLOCK_ARR = Type.getType("[Z");
+	public static final Type PROBEDATA_TYPE = Type.getType("[Z");
 
 	// === Data Field ===
 
@@ -44,18 +44,12 @@ public final class GeneratorConstants {
 	public static final int DATAFIELD_ACC = Opcodes.ACC_SYNTHETIC
 			| Opcodes.ACC_PRIVATE | Opcodes.ACC_STATIC | Opcodes.ACC_FINAL;
 
-	/**
-	 * The type of the field that stores coverage information of a class is a
-	 * 2-dimensional array of primitive boolean values.
-	 */
-	public static final Type DATAFIELD_TYPE = Type.getType("[[Z");
-
 	// === Init Method ===
 
 	/**
 	 * Initialization method that is added into every instrumented class.
 	 */
-	public static final Method INIT_METHOD = new Method("$jacocoInit", "(I)[Z");
+	public static final Method INIT_METHOD = new Method("$jacocoInit", "()[Z");
 
 	/**
 	 * Access modifiers of the initialization method.

@@ -27,11 +27,9 @@ import org.objectweb.asm.commons.GeneratorAdapter;
 public class MethodInstrumenter extends GeneratorAdapter implements
 		IBlockMethodVisitor {
 
-	private final int methodId;
-
 	private final Type enclosingType;
 
-	private int blockArray;
+	private int probeArray;
 
 	/**
 	 * Create a new instrumenter instance for the given method.
@@ -44,16 +42,12 @@ public class MethodInstrumenter extends GeneratorAdapter implements
 	 *            name of the method
 	 * @param desc
 	 *            description of the method
-	 * @param methodId
-	 *            unique id of the method within its enclosing type
 	 * @param enclosingType
 	 *            type enclosing this method
 	 */
 	public MethodInstrumenter(final MethodVisitor mv, final int access,
-			final String name, final String desc, final int methodId,
-			final Type enclosingType) {
+			final String name, final String desc, final Type enclosingType) {
 		super(mv, access, name, desc);
-		this.methodId = methodId;
 		this.enclosingType = enclosingType;
 	}
 
@@ -61,18 +55,13 @@ public class MethodInstrumenter extends GeneratorAdapter implements
 	public void visitCode() {
 		super.visitCode();
 		// At the very beginning of the method we load the boolean[] array into
-		// a local variable that stores the block coverage of this method.
-
-		push(methodId);
-
-		// Stack[0]: I
-
+		// a local variable that stores the probes for this class.
 		invokeStatic(enclosingType, GeneratorConstants.INIT_METHOD);
 
 		// Stack[0]: [Z
 
-		blockArray = newLocal(GeneratorConstants.BLOCK_ARR);
-		storeLocal(blockArray);
+		probeArray = newLocal(GeneratorConstants.PROBEDATA_TYPE);
+		storeLocal(probeArray);
 	}
 
 	@Override
@@ -87,7 +76,7 @@ public class MethodInstrumenter extends GeneratorAdapter implements
 		// At the end of every block we set the corresponding position in the
 		// boolean[] array to true.
 
-		loadLocal(blockArray);
+		loadLocal(probeArray);
 
 		// Stack[0]: [Z
 

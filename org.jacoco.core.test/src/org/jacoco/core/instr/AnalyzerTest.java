@@ -45,8 +45,8 @@ public class AnalyzerTest {
 		public void visitSourceFile(String name) {
 		}
 
-		public IMethodStructureVisitor visitMethodStructure(int id,
-				String name, String desc, String signature) {
+		public IMethodStructureVisitor visitMethodStructure(String name,
+				String desc, String signature) {
 			return this;
 		}
 

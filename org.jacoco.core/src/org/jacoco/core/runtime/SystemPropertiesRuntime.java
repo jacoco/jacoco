@@ -31,7 +31,6 @@ import org.objectweb.asm.commons.GeneratorAdapter;
  * in applications that replace the system properties or in applications that
  * fail if non-String values are placed in the system properties.
  * 
- * 
  * @author Marc R. Hoffmann
  * @version $Revision: $
  */
@@ -41,17 +40,17 @@ public class SystemPropertiesRuntime extends AbstractRuntime {
 
 	private final String key;
 
-	private final Map<Long, boolean[][]> dataAccess = new Map<Long, boolean[][]>() {
+	private final Map<Long, boolean[]> dataAccess = new Map<Long, boolean[]>() {
 
-		public boolean[][] get(final Object key) {
+		public boolean[] get(final Object key) {
 			final Long id = (Long) key;
 			synchronized (store) {
-				final boolean[][] blockdata = store.getData(id);
-				if (blockdata == null) {
+				final boolean[] data = store.getData(id);
+				if (data == null) {
 					throw new IllegalStateException(String.format(
 							"Unknown class id %x.", id));
 				}
-				return blockdata;
+				return data;
 			}
 		}
 
@@ -67,7 +66,7 @@ public class SystemPropertiesRuntime extends AbstractRuntime {
 			throw new UnsupportedOperationException();
 		}
 
-		public Set<Entry<Long, boolean[][]>> entrySet() {
+		public Set<Entry<Long, boolean[]>> entrySet() {
 			throw new UnsupportedOperationException();
 		}
 
@@ -79,19 +78,19 @@ public class SystemPropertiesRuntime extends AbstractRuntime {
 			throw new UnsupportedOperationException();
 		}
 
-		public boolean[][] put(final Long key, final boolean[][] value) {
+		public boolean[] put(final Long key, final boolean[] value) {
 			throw new UnsupportedOperationException();
 		}
 
-		public void putAll(final Map<? extends Long, ? extends boolean[][]> t) {
+		public void putAll(final Map<? extends Long, ? extends boolean[]> t) {
 			throw new UnsupportedOperationException();
 		}
 
-		public boolean[][] remove(final Object key) {
+		public boolean[] remove(final Object key) {
 			throw new UnsupportedOperationException();
 		}
 
-		public Collection<boolean[][]> values() {
+		public Collection<boolean[]> values() {
 			throw new UnsupportedOperationException();
 		}
 
@@ -146,9 +145,9 @@ public class SystemPropertiesRuntime extends AbstractRuntime {
 
 		// Stack[0]: Ljava/lang/Object;
 
-		gen.checkCast(GeneratorConstants.DATAFIELD_TYPE);
+		gen.checkCast(GeneratorConstants.PROBEDATA_TYPE);
 
-		// Stack[0]: [[Z
+		// Stack[0]: [Z
 
 		return 3; // Maximum local stack size is 3
 	}

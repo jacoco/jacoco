@@ -87,7 +87,7 @@ public class CoverageBuilder implements IStructureVisitor {
 
 	public IClassStructureVisitor visitClassStructure(final long id,
 			final String name) {
-		final boolean[][] covered = executionData.getData(id);
+		final boolean[] covered = executionData.getData(id);
 		final Collection<MethodCoverage> methods = new ArrayList<MethodCoverage>();
 		final String[] sourcename = new String[1];
 		return new IClassStructureVisitor() {
@@ -95,10 +95,10 @@ public class CoverageBuilder implements IStructureVisitor {
 				sourcename[0] = name;
 			}
 
-			public IMethodStructureVisitor visitMethodStructure(final int id,
+			public IMethodStructureVisitor visitMethodStructure(
 					final String name, final String desc, final String signature) {
-				final boolean[] c = covered == null ? null : covered[id];
-				return createMethodVisitor(name, desc, signature, methods, c);
+				return createMethodVisitor(name, desc, signature, methods,
+						covered);
 			}
 
 			public void visitEnd() {

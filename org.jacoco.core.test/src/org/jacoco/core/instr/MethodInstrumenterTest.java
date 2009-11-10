@@ -38,8 +38,8 @@ public class MethodInstrumenterTest {
 	public void setup() {
 		actual = new MethodRecorder();
 		expected = new MethodRecorder();
-		instrumenter = new MethodInstrumenter(actual, 0, "test", "()V", 333,
-				Type.getObjectType("Target"));
+		instrumenter = new MethodInstrumenter(actual, 0, "test", "()V", Type
+				.getObjectType("Target"));
 	}
 
 	void sampleReturn() {
@@ -56,9 +56,8 @@ public class MethodInstrumenterTest {
 		instrumenter.visitEnd();
 
 		expected.visitCode();
-		expected.visitIntInsn(Opcodes.SIPUSH, 333);
 		expected.visitMethodInsn(Opcodes.INVOKESTATIC, "Target", "$jacocoInit",
-				"(I)[Z");
+				"()[Z");
 		expected.visitVarInsn(Opcodes.ASTORE, 1);
 		expected.visitVarInsn(Opcodes.ALOAD, 1);
 		expected.visitInsn(Opcodes.ICONST_0);

@@ -14,7 +14,6 @@ package org.jacoco.core.instr;
 
 import static org.junit.Assert.assertEquals;
 
-import org.jacoco.core.instr.BlockMethodAdapter;
 import org.jacoco.core.test.MethodRecorder;
 import org.junit.Before;
 import org.junit.Test;
@@ -30,6 +29,15 @@ import org.objectweb.asm.Opcodes;
  */
 public class BlockMethodAdapterTest {
 
+	private static class MockIds implements IProbeIdGenerator {
+
+		private int c;
+
+		public int nextId() {
+			return c++;
+		}
+	}
+
 	private MethodVisitor adapter;
 
 	private MethodRecorder expected;
@@ -40,7 +48,8 @@ public class BlockMethodAdapterTest {
 	public void setup() {
 		actual = new MethodRecorder();
 		expected = new MethodRecorder();
-		adapter = new BlockMethodAdapter(actual, 0, "test", "()V", null, null);
+		adapter = new BlockMethodAdapter(actual, new MockIds(), 0, "test",
+				"()V", null, null);
 	}
 
 	void sampleReturn() {

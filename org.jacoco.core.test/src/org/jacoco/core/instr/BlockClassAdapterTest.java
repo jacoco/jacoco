@@ -25,31 +25,26 @@ import org.junit.Test;
 import org.objectweb.asm.AnnotationVisitor;
 import org.objectweb.asm.Attribute;
 import org.objectweb.asm.FieldVisitor;
-import org.objectweb.asm.MethodAdapter;
 import org.objectweb.asm.MethodVisitor;
 
 /**
- * Unit tests for {@link MethodEnumerator}.
+ * Unit tests for {@link BlockClassAdapter}.
  * 
  * @author Marc R. Hoffmann
  * @version $Revision: $
  */
-public class MethodEnumeratorTest {
+public class BlockClassAdapterTest {
 
-	private MockMethodEnumerator enumerator;
+	private MockAdapter adapter;
 
-	private static class MockMethodEnumerator extends MethodEnumerator {
+	private static class MockAdapter extends BlockClassAdapter {
 
-		private final List<Integer> ids = new ArrayList<Integer>();
+		private final List<String> nonAbstractMethods = new ArrayList<String>();
 
 		private final List<String> abstractMethods = new ArrayList<String>();
 
-		void assertIds(int... expected) {
-			List<Integer> expectedList = new ArrayList<Integer>();
-			for (int e : expected) {
-				expectedList.add(Integer.valueOf(e));
-			}
-			assertEquals(expectedList, ids);
+		void assertNonAbstractMethods(String... expected) {
+			assertEquals(Arrays.asList(expected), nonAbstractMethods);
 		}
 
 		void assertAbstractMethods(String... expected) {
@@ -57,17 +52,17 @@ public class MethodEnumeratorTest {
 		}
 
 		@Override
-		protected MethodVisitor visitMethod(int methodId, int access,
+		protected IBlockMethodVisitor visitNonAbstractMethod(int access,
 				String name, String desc, String signature, String[] exceptions) {
-			ids.add(Integer.valueOf(methodId));
-			return new MethodAdapter(null);
+			nonAbstractMethods.add(name);
+			return null;
 		}
 
 		@Override
 		protected MethodVisitor visitAbstractMethod(int access, String name,
 				String desc, String signature, String[] exceptions) {
 			abstractMethods.add(name);
-			return new MethodAdapter(null);
+			return null;
 		}
 
 		public void visit(int version, int access, String name,
@@ -103,43 +98,31 @@ public class MethodEnumeratorTest {
 
 	@Before
 	public void setup() {
-		enumerator = new MockMethodEnumerator();
+		adapter = new MockAdapter();
 	}
 
 	@Test
-	public void testGetMethodCount() {
-		enumerator.visitMethod(ACC_PUBLIC, "a", "()V", null, null);
-		enumerator.visitMethod(ACC_PUBLIC | ACC_ABSTRACT, "x", "()V", null,
+	public void testNonAbstractMethods() {
+		adapter.visitMethod(ACC_PUBLIC, "a", "()V", null, null);
+		adapter.visitMethod(ACC_PUBLIC | ACC_ABSTRACT, "x", "()V", null,
 				null);
-		enumerator.visitMethod(ACC_PUBLIC, "b", "()V", null, null);
-		enumerator.visitMethod(ACC_PUBLIC | ACC_ABSTRACT, "y", "()V", null,
+		adapter.visitMethod(ACC_PUBLIC, "b", "()V", null, null);
+		adapter.visitMethod(ACC_PUBLIC | ACC_ABSTRACT, "y", "()V", null,
 				null);
-		enumerator.visitMethod(ACC_PUBLIC, "c", "()V", null, null);
-		assertEquals(3, enumerator.getMethodCount());
-	}
-
-	@Test
-	public void testMethodIds() {
-		enumerator.visitMethod(ACC_PUBLIC, "a", "()V", null, null);
-		enumerator.visitMethod(ACC_PUBLIC | ACC_ABSTRACT, "x", "()V", null,
-				null);
-		enumerator.visitMethod(ACC_PUBLIC, "b", "()V", null, null);
-		enumerator.visitMethod(ACC_PUBLIC | ACC_ABSTRACT, "y", "()V", null,
-				null);
-		enumerator.visitMethod(ACC_PUBLIC, "c", "()V", null, null);
-		enumerator.assertIds(0, 1, 2);
+		adapter.visitMethod(ACC_PUBLIC, "c", "()V", null, null);
+		adapter.assertNonAbstractMethods("a", "b", "c");
 	}
 
 	@Test
 	public void testAbstractMethods() {
-		enumerator.visitMethod(ACC_PUBLIC, "a", "()V", null, null);
-		enumerator.visitMethod(ACC_PUBLIC | ACC_ABSTRACT, "x", "()V", null,
+		adapter.visitMethod(ACC_PUBLIC, "a", "()V", null, null);
+		adapter.visitMethod(ACC_PUBLIC | ACC_ABSTRACT, "x", "()V", null,
 				null);
-		enumerator.visitMethod(ACC_PUBLIC, "b", "()V", null, null);
-		enumerator.visitMethod(ACC_PUBLIC | ACC_ABSTRACT, "y", "()V", null,
+		adapter.visitMethod(ACC_PUBLIC, "b", "()V", null, null);
+		adapter.visitMethod(ACC_PUBLIC | ACC_ABSTRACT, "y", "()V", null,
 				null);
-		enumerator.visitMethod(ACC_PUBLIC, "c", "()V", null, null);
-		enumerator.assertAbstractMethods("x", "y");
+		adapter.visitMethod(ACC_PUBLIC, "c", "()V", null, null);
+		adapter.assertAbstractMethods("x", "y");
 	}
 
 }

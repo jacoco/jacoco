@@ -60,7 +60,7 @@ public class ExecutionDataReaderWriterTest {
 		pipe.close();
 		reader.setExecutionDataVisitor(new IExecutionDataVisitor() {
 			public void visitClassExecution(long id, String name,
-					boolean[][] blockdata) {
+					boolean[] blockdata) {
 				fail("No data expected.");
 			}
 		});
@@ -115,68 +115,59 @@ public class ExecutionDataReaderWriterTest {
 
 	@Test
 	public void testMinClassId() throws IOException {
-		boolean[][] blocks = createBlockdata(0, 0);
-		writer.visitClassExecution(Long.MIN_VALUE, "Sample", blocks);
+		boolean[] data = createData(0);
+		writer.visitClassExecution(Long.MIN_VALUE, "Sample", data);
 		pipe.close();
 		reader.read();
-		assertArrayEquals(blocks, store.getData(Long.MIN_VALUE));
+		assertArrayEquals(data, store.getData(Long.MIN_VALUE));
 	}
 
 	@Test
 	public void testMaxClassId() throws IOException {
-		boolean[][] blocks = createBlockdata(0, 0);
-		writer.visitClassExecution(Long.MAX_VALUE, "Sample", blocks);
+		boolean[] data = createData(0);
+		writer.visitClassExecution(Long.MAX_VALUE, "Sample", data);
 		pipe.close();
 		reader.read();
-		assertArrayEquals(blocks, store.getData(Long.MAX_VALUE));
+		assertArrayEquals(data, store.getData(Long.MAX_VALUE));
 	}
 
 	@Test
 	public void testEmptyClass() throws IOException {
-		boolean[][] blocks = createBlockdata(0, 0);
-		writer.visitClassExecution(3, "Sample", blocks);
+		boolean[] data = createData(0);
+		writer.visitClassExecution(3, "Sample", data);
 		pipe.close();
 		reader.read();
-		assertArrayEquals(blocks, store.getData(3));
-	}
-
-	@Test
-	public void testEmptyMethods() throws IOException {
-		boolean[][] blocks = createBlockdata(5, 0);
-		writer.visitClassExecution(3, "Sample", blocks);
-		pipe.close();
-		reader.read();
-		assertArrayEquals(blocks, store.getData(3));
+		assertArrayEquals(data, store.getData(3));
 	}
 
 	@Test
 	public void testOneClass() throws IOException {
-		boolean[][] blocks = createBlockdata(5, 10);
-		writer.visitClassExecution(3, "Sample", blocks);
+		boolean[] data = createData(5);
+		writer.visitClassExecution(3, "Sample", data);
 		pipe.close();
 		reader.read();
-		assertArrayEquals(blocks, store.getData(3));
+		assertArrayEquals(data, store.getData(3));
 	}
 
 	@Test
 	public void testTwoClasses() throws IOException {
-		boolean[][] blocks1 = createBlockdata(5, 15);
-		boolean[][] blocks2 = createBlockdata(7, 12);
-		writer.visitClassExecution(333, "Sample", blocks1);
-		writer.visitClassExecution(-45, "Sample", blocks2);
+		boolean[] data1 = createData(5);
+		boolean[] data2 = createData(7);
+		writer.visitClassExecution(333, "Sample", data1);
+		writer.visitClassExecution(-45, "Sample", data2);
 		pipe.close();
 		reader.read();
-		assertArrayEquals(blocks1, store.getData(333));
-		assertArrayEquals(blocks2, store.getData(-45));
+		assertArrayEquals(data1, store.getData(333));
+		assertArrayEquals(data2, store.getData(-45));
 	}
 
 	@Test
 	public void testBigClass() throws IOException {
-		boolean[][] blocks = createBlockdata(43, 40);
-		writer.visitClassExecution(123, "Sample", blocks);
+		boolean[] data = createData(117);
+		writer.visitClassExecution(123, "Sample", data);
 		pipe.close();
 		reader.read();
-		assertArrayEquals(blocks, store.getData(123));
+		assertArrayEquals(data, store.getData(123));
 	}
 
 	@Test(expected = RuntimeException.class)
@@ -192,31 +183,22 @@ public class ExecutionDataReaderWriterTest {
 					}
 				});
 		broken[0] = true;
-		boolean[][] blocks = createBlockdata(1, 1);
-		writer.visitClassExecution(3, "Sample", blocks);
+		boolean[] data = createData(1);
+		writer.visitClassExecution(3, "Sample", data);
 	}
 
-	private boolean[][] createBlockdata(int methodCount, int maxBlockCount) {
-		boolean[][] blocks = new boolean[methodCount][];
-		for (int i = 0; i < blocks.length; i++) {
-			boolean[] arr = new boolean[random.nextInt(maxBlockCount + 1)];
-			for (int j = 0; j < arr.length; j++) {
-				arr[j] = random.nextBoolean();
-			}
-			blocks[i] = arr;
+	private boolean[] createData(int probeCount) {
+		boolean[] data = new boolean[random.nextInt(probeCount + 1)];
+		for (int j = 0; j < data.length; j++) {
+			data[j] = random.nextBoolean();
 		}
-		return blocks;
+		return data;
 	}
 
-	private void assertArrayEquals(boolean[][] expected, boolean[][] actual) {
+	private void assertArrayEquals(boolean[] expected, boolean[] actual) {
 		assertEquals(expected.length, actual.length, 0.0);
 		for (int i = 0; i < expected.length; i++) {
-			boolean[] b1 = expected[i];
-			boolean[] b2 = actual[i];
-			assertEquals(b1.length, b2.length, 0.0);
-			for (int j = 0; j < b1.length; j++) {
-				assertTrue(b1[j] == b2[j]);
-			}
+			assertTrue(expected[i] == expected[i]);
 		}
 	}
 

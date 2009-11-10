@@ -44,8 +44,8 @@ public abstract class AbstractRuntime implements IRuntime {
 	}
 
 	public final void registerClass(final long classid, final String name,
-			final boolean[][] blockdata) {
-		store.put(classid, name, blockdata);
+			final boolean[] data) {
+		store.put(classid, name, data);
 	}
 
 	public final void reset() {

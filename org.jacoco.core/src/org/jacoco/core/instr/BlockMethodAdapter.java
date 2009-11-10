@@ -33,15 +33,17 @@ public final class BlockMethodAdapter extends MethodNode {
 
 	private final IBlockMethodVisitor blockVisitor;
 
-	private final Set<Label> targetLabels;
+	private final IProbeIdGenerator idGenerator;
 
-	private int blockCount;
+	private final Set<Label> targetLabels;
 
 	/**
 	 * Create a new adapter for the given block visitor.
 	 * 
 	 * @param blockVisitor
 	 *            visitor to report block boundaries to
+	 * @param idGenerator
+	 *            generator for probe ids
 	 * @param access
 	 *            the method's access flags
 	 * @param name
@@ -54,36 +56,27 @@ public final class BlockMethodAdapter extends MethodNode {
 	 *            the internal names of the method's exception classes. May be
 	 *            <tt>null</tt>.
 	 */
-	public BlockMethodAdapter(IBlockMethodVisitor blockVisitor,
-			final int access, final String name, final String desc,
-			final String signature, final String[] exceptions) {
+	public BlockMethodAdapter(final IBlockMethodVisitor blockVisitor,
+			final IProbeIdGenerator idGenerator, final int access,
+			final String name, final String desc, final String signature,
+			final String[] exceptions) {
 		super(access, name, desc, signature, exceptions);
 		this.blockVisitor = blockVisitor;
+		this.idGenerator = idGenerator;
 		this.targetLabels = new HashSet<Label>();
-		this.blockCount = 0;
-	}
-
-	/**
-	 * Returns the number of blocks found in the method. A valid return value
-	 * can only be expected after {@link #visitEnd()} has been called.
-	 * 
-	 * @return number of block in the method
-	 */
-	public int getBlockCount() {
-		return blockCount;
 	}
 
 	// === MethodVisitor ===
 
 	@Override
-	public void visitJumpInsn(int opcode, Label label) {
+	public void visitJumpInsn(final int opcode, final Label label) {
 		targetLabels.add(label);
 		super.visitJumpInsn(opcode, label);
 	}
 
 	@Override
-	public void visitTableSwitchInsn(int min, int max, Label dflt,
-			Label[] labels) {
+	public void visitTableSwitchInsn(final int min, final int max,
+			final Label dflt, final Label[] labels) {
 		targetLabels.add(dflt);
 		for (final Label l : labels) {
 			targetLabels.add(l);
@@ -92,7 +85,8 @@ public final class BlockMethodAdapter extends MethodNode {
 	}
 
 	@Override
-	public void visitLookupSwitchInsn(Label dflt, int[] keys, Label[] labels) {
+	public void visitLookupSwitchInsn(final Label dflt, final int[] keys,
+			final Label[] labels) {
 		targetLabels.add(dflt);
 		for (final Label l : labels) {
 			targetLabels.add(l);
@@ -101,8 +95,8 @@ public final class BlockMethodAdapter extends MethodNode {
 	}
 
 	@Override
-	public void visitTryCatchBlock(Label start, Label end, Label handler,
-			String type) {
+	public void visitTryCatchBlock(final Label start, final Label end,
+			final Label handler, final String type) {
 		targetLabels.add(start);
 		targetLabels.add(end);
 		targetLabels.add(handler);
@@ -118,6 +112,8 @@ public final class BlockMethodAdapter extends MethodNode {
 
 		private boolean blockStarted;
 
+		private int id;
+
 		public BlockFinder() {
 			super(blockVisitor);
 			blockStarted = false;
@@ -125,20 +121,20 @@ public final class BlockMethodAdapter extends MethodNode {
 
 		private void onBlockEndBeforeJump() {
 			if (blockStarted) {
-				blockVisitor.visitBlockEndBeforeJump(blockCount);
+				id = idGenerator.nextId();
+				blockVisitor.visitBlockEndBeforeJump(id);
 			}
 		}
 
 		private void onBlockEnd() {
 			if (blockStarted) {
-				blockVisitor.visitBlockEnd(blockCount);
-				blockCount++;
+				blockVisitor.visitBlockEnd(id);
 				blockStarted = false;
 			}
 		}
 
 		@Override
-		public void visitLabel(Label label) {
+		public void visitLabel(final Label label) {
 			if (targetLabels.contains(label)) {
 				onBlockEndBeforeJump();
 				onBlockEnd();
@@ -147,7 +143,7 @@ public final class BlockMethodAdapter extends MethodNode {
 		}
 
 		@Override
-		public void visitJumpInsn(int opcode, Label label) {
+		public void visitJumpInsn(final int opcode, final Label label) {
 			blockStarted = true;
 			onBlockEndBeforeJump();
 			super.visitJumpInsn(opcode, label);
@@ -155,7 +151,7 @@ public final class BlockMethodAdapter extends MethodNode {
 		}
 
 		@Override
-		public void visitInsn(int opcode) {
+		public void visitInsn(final int opcode) {
 			blockStarted = true;
 			switch (opcode) {
 			case Opcodes.RETURN:
@@ -176,8 +172,8 @@ public final class BlockMethodAdapter extends MethodNode {
 		}
 
 		@Override
-		public void visitTableSwitchInsn(int min, int max, Label dflt,
-				Label[] labels) {
+		public void visitTableSwitchInsn(final int min, final int max,
+				final Label dflt, final Label[] labels) {
 			blockStarted = true;
 			onBlockEndBeforeJump();
 			super.visitTableSwitchInsn(min, max, dflt, labels);
@@ -185,7 +181,8 @@ public final class BlockMethodAdapter extends MethodNode {
 		}
 
 		@Override
-		public void visitLookupSwitchInsn(Label dflt, int[] keys, Label[] labels) {
+		public void visitLookupSwitchInsn(final Label dflt, final int[] keys,
+				final Label[] labels) {
 			blockStarted = true;
 			onBlockEndBeforeJump();
 			super.visitLookupSwitchInsn(dflt, keys, labels);
@@ -193,51 +190,51 @@ public final class BlockMethodAdapter extends MethodNode {
 		}
 
 		@Override
-		public void visitFieldInsn(int opcode, String owner, String name,
-				String desc) {
+		public void visitFieldInsn(final int opcode, final String owner,
+				final String name, final String desc) {
 			blockStarted = true;
 			super.visitFieldInsn(opcode, owner, name, desc);
 		}
 
 		@Override
-		public void visitIincInsn(int var, int increment) {
+		public void visitIincInsn(final int var, final int increment) {
 			blockStarted = true;
 			super.visitIincInsn(var, increment);
 		}
 
 		@Override
-		public void visitIntInsn(int opcode, int operand) {
+		public void visitIntInsn(final int opcode, final int operand) {
 			blockStarted = true;
 			super.visitIntInsn(opcode, operand);
 		}
 
 		@Override
-		public void visitLdcInsn(Object cst) {
+		public void visitLdcInsn(final Object cst) {
 			blockStarted = true;
 			super.visitLdcInsn(cst);
 		}
 
 		@Override
-		public void visitMethodInsn(int opcode, String owner, String name,
-				String desc) {
+		public void visitMethodInsn(final int opcode, final String owner,
+				final String name, final String desc) {
 			blockStarted = true;
 			super.visitMethodInsn(opcode, owner, name, desc);
 		}
 
 		@Override
-		public void visitMultiANewArrayInsn(String desc, int dims) {
+		public void visitMultiANewArrayInsn(final String desc, final int dims) {
 			blockStarted = true;
 			super.visitMultiANewArrayInsn(desc, dims);
 		}
 
 		@Override
-		public void visitTypeInsn(int opcode, String type) {
+		public void visitTypeInsn(final int opcode, final String type) {
 			blockStarted = true;
 			super.visitTypeInsn(opcode, type);
 		}
 
 		@Override
-		public void visitVarInsn(int opcode, int var) {
+		public void visitVarInsn(final int opcode, final int var) {
 			blockStarted = true;
 			super.visitVarInsn(opcode, var);
 		}

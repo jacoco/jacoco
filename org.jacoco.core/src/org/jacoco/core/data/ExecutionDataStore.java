@@ -23,14 +23,15 @@ import java.util.Map;
  * {@link IExecutionDataVisitor} interface. If execution data is provided
  * multiple times for the same class the data is merged, i.e. a block is marked
  * as executed if it is reported as executed at least once. This allows to merge
- * coverage date from multiple runs. This class is not thread safe.
+ * coverage date from multiple runs. A instance of this class is not thread
+ * safe.
  * 
  * @author Marc R. Hoffmann
  * @version $Revision: $
  */
 public class ExecutionDataStore implements IExecutionDataVisitor {
 
-	private final Map<Long, boolean[][]> data = new HashMap<Long, boolean[][]>();
+	private final Map<Long, boolean[]> data = new HashMap<Long, boolean[]>();
 
 	private final Map<Long, String> names = new HashMap<Long, String>();
 
@@ -38,42 +39,43 @@ public class ExecutionDataStore implements IExecutionDataVisitor {
 	 * Adds the given block data structure into the store. If there is already a
 	 * data structure for this class ID, this structure is merged with the given
 	 * one. In this case a {@link IllegalStateException} is thrown, if both
-	 * executions data structure do have different bloc sizes.
+	 * executions data structure do have different sizes or the name is
+	 * different.
 	 * 
 	 * @param classid
 	 *            unique class identifier
 	 * @param name
 	 *            VM name of the class
-	 * @param blockdata
+	 * @param data
 	 *            execution data
 	 */
-	public void put(final Long classid, final String name, boolean[][] blockdata) {
-		final boolean[][] current = data.get(classid);
+	public void put(final Long classid, final String name, boolean[] data) {
+		final boolean[] current = this.data.get(classid);
 		if (current != null) {
 			checkName(classid, name);
-			merge(current, blockdata);
-			blockdata = current;
+			merge(current, data);
+			data = current;
 		}
-		names.put(classid, name);
-		data.put(classid, blockdata);
+		this.names.put(classid, name);
+		this.data.put(classid, data);
 	}
 
 	/**
 	 * Adds the given block data structure into the store. If there is already a
 	 * data structure for this class ID, this structure is merged with the given
 	 * one. In this case a {@link IllegalStateException} is thrown, if both
-	 * executions data structure do have different bloc sizes.
+	 * executions data structure do have different sizes or the name is
+	 * different.
 	 * 
 	 * @param classid
 	 *            unique class identifier
 	 * @param name
 	 *            VM name of the class
-	 * @param blockdata
+	 * @param data
 	 *            execution data
 	 */
-	public void put(final long classid, final String name,
-			final boolean[][] blockdata) {
-		put(Long.valueOf(classid), name, blockdata);
+	public void put(final long classid, final String name, final boolean[] data) {
+		put(Long.valueOf(classid), name, data);
 	}
 
 	private void checkName(final Long classid, final String name) {
@@ -82,15 +84,6 @@ public class ExecutionDataStore implements IExecutionDataVisitor {
 			throw new IllegalArgumentException(format(
 					"Duplicate id %x for classes %s and %s.", classid, oldName,
 					name));
-		}
-	}
-
-	private static void merge(final boolean[][] target, final boolean[][] data) {
-		if (target.length != data.length) {
-			throw new IllegalStateException("Incompatible execution data.");
-		}
-		for (int i = 0; i < target.length; i++) {
-			merge(target[i], data[i]);
 		}
 	}
 
@@ -113,7 +106,7 @@ public class ExecutionDataStore implements IExecutionDataVisitor {
 	 *            class identifier
 	 * @return coverage data or <code>null</code>
 	 */
-	public boolean[][] getData(final long classid) {
+	public boolean[] getData(final long classid) {
 		return getData(Long.valueOf(classid));
 	}
 
@@ -125,7 +118,7 @@ public class ExecutionDataStore implements IExecutionDataVisitor {
 	 *            class identifier
 	 * @return coverage data or <code>null</code>
 	 */
-	public boolean[][] getData(final Long classid) {
+	public boolean[] getData(final Long classid) {
 		return data.get(classid);
 	}
 
@@ -156,10 +149,8 @@ public class ExecutionDataStore implements IExecutionDataVisitor {
 	 * The data structures itself are not deleted.
 	 */
 	public void reset() {
-		for (final boolean[][] struct : data.values()) {
-			for (final boolean[] arr : struct) {
-				Arrays.fill(arr, false);
-			}
+		for (final boolean[] d : this.data.values()) {
+			Arrays.fill(d, false);
 		}
 	}
 
@@ -170,7 +161,7 @@ public class ExecutionDataStore implements IExecutionDataVisitor {
 	 *            interface to write content to
 	 */
 	public void accept(final IExecutionDataVisitor visitor) {
-		for (final Map.Entry<Long, boolean[][]> entry : data.entrySet()) {
+		for (final Map.Entry<Long, boolean[]> entry : data.entrySet()) {
 			final Long key = entry.getKey();
 			final long id = key.longValue();
 			visitor.visitClassExecution(id, names.get(key), entry.getValue());
@@ -180,8 +171,8 @@ public class ExecutionDataStore implements IExecutionDataVisitor {
 	// === IExecutionDataVisitor ===
 
 	public void visitClassExecution(final long classid, final String name,
-			final boolean[][] blockdata) {
-		put(classid, name, blockdata);
+			final boolean[] data) {
+		put(classid, name, data);
 	}
 
 }

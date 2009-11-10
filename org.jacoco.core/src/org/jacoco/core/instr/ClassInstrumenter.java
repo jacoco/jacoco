@@ -14,9 +14,6 @@ package org.jacoco.core.instr;
 
 import static java.lang.String.format;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.jacoco.core.runtime.IRuntime;
 import org.objectweb.asm.AnnotationVisitor;
 import org.objectweb.asm.Attribute;
@@ -25,7 +22,6 @@ import org.objectweb.asm.FieldVisitor;
 import org.objectweb.asm.Label;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Type;
-import org.objectweb.asm.commons.EmptyVisitor;
 import org.objectweb.asm.commons.GeneratorAdapter;
 
 /**
@@ -34,18 +30,7 @@ import org.objectweb.asm.commons.GeneratorAdapter;
  * @author Marc R. Hoffmann
  * @version $Revision: $
  */
-public class ClassInstrumenter extends MethodEnumerator {
-
-	private static class EmptyBlockMethodVisitor extends EmptyVisitor implements
-			IBlockMethodVisitor {
-
-		public void visitBlockEndBeforeJump(final int id) {
-		}
-
-		public void visitBlockEnd(final int id) {
-		}
-
-	}
+public class ClassInstrumenter extends BlockClassAdapter {
 
 	private final ClassVisitor delegate;
 
@@ -53,12 +38,10 @@ public class ClassInstrumenter extends MethodEnumerator {
 
 	private final IRuntime runtime;
 
-	private final List<BlockMethodAdapter> blockCounters;
-
 	private Type type;
 
 	/**
-	 * Emits a instrumented version of this class to the given class visitor
+	 * Emits a instrumented version of this class to the given class visitor.
 	 * 
 	 * @param id
 	 *            unique identifier given to this class
@@ -73,7 +56,6 @@ public class ClassInstrumenter extends MethodEnumerator {
 		this.delegate = cv;
 		this.id = id;
 		this.runtime = runtime;
-		this.blockCounters = new ArrayList<BlockMethodAdapter>();
 	}
 
 	public void visit(final int version, final int access, final String name,
@@ -90,7 +72,7 @@ public class ClassInstrumenter extends MethodEnumerator {
 	}
 
 	@Override
-	protected MethodVisitor visitMethod(final int methodId, final int access,
+	protected IBlockMethodVisitor visitNonAbstractMethod(final int access,
 			final String name, final String desc, final String signature,
 			final String[] exceptions) {
 
@@ -99,18 +81,10 @@ public class ClassInstrumenter extends MethodEnumerator {
 		final MethodVisitor mv = delegate.visitMethod(access, name, desc,
 				signature, exceptions);
 
-		final IBlockMethodVisitor blockVisitor;
 		if (mv == null) {
-			blockVisitor = new EmptyBlockMethodVisitor();
-		} else {
-			blockVisitor = new MethodInstrumenter(mv, access, name, desc,
-					methodId, type);
+			return null;
 		}
-
-		final BlockMethodAdapter adapter = new BlockMethodAdapter(blockVisitor,
-				access, name, desc, signature, exceptions);
-		blockCounters.add(methodId, adapter);
-		return adapter;
+		return new MethodInstrumenter(mv, access, name, desc, type);
 	}
 
 	@Override
@@ -130,7 +104,7 @@ public class ClassInstrumenter extends MethodEnumerator {
 	private void createDataField() {
 		delegate.visitField(GeneratorConstants.DATAFIELD_ACC,
 				GeneratorConstants.DATAFIELD_NAME,
-				GeneratorConstants.DATAFIELD_TYPE.getDescriptor(), null, null);
+				GeneratorConstants.PROBEDATA_TYPE.getDescriptor(), null, null);
 	}
 
 	private void createInitMethod() {
@@ -142,34 +116,25 @@ public class ClassInstrumenter extends MethodEnumerator {
 
 		// Load the value of the static data field:
 		gen.getStatic(type, GeneratorConstants.DATAFIELD_NAME,
-				GeneratorConstants.DATAFIELD_TYPE);
+				GeneratorConstants.PROBEDATA_TYPE);
 		gen.dup();
 
-		// Stack[1]: [[Z
-		// Stack[0]: [[Z
+		// Stack[1]: [Z
+		// Stack[0]: [Z
 
 		// Skip initialization when we already have a data array:
 		final Label alreadyInitialized = new Label();
 		gen.ifNonNull(alreadyInitialized);
 
-		// Stack[0]: [[Z
+		// Stack[0]: [Z
 
 		gen.pop();
 		final int size = genInitializeDataField(gen);
 
-		// Stack[0]: [[Z
+		// Stack[0]: [Z
 
 		// Return the method's block array:
 		gen.visitLabel(alreadyInitialized);
-		gen.loadArg(0);
-
-		// Stack[1]: I
-		// Stack[0]: [[Z
-
-		gen.arrayLoad(GeneratorConstants.BLOCK_ARR);
-
-		// Stack[0]: [Z
-
 		gen.returnValue();
 
 		gen.visitMaxs(Math.max(size, 2), 0); // Maximum local stack size is 2
@@ -188,17 +153,17 @@ public class ClassInstrumenter extends MethodEnumerator {
 	private int genInitializeDataField(final GeneratorAdapter gen) {
 		final int size = runtime.generateDataAccessor(id, gen);
 
-		// Stack[0]: [[Z
+		// Stack[0]: [Z
 
 		gen.dup();
 
-		// Stack[1]: [[Z
-		// Stack[0]: [[Z
+		// Stack[1]: [Z
+		// Stack[0]: [Z
 
 		gen.putStatic(type, GeneratorConstants.DATAFIELD_NAME,
-				GeneratorConstants.DATAFIELD_TYPE);
+				GeneratorConstants.PROBEDATA_TYPE);
 
-		// Stack[0]: [[Z
+		// Stack[0]: [Z
 
 		return Math.max(size, 2); // Maximum local stack size is 2
 	}
@@ -229,11 +194,7 @@ public class ClassInstrumenter extends MethodEnumerator {
 	 * class and registers it with the runtime.
 	 */
 	private void registerClass() {
-		final boolean[][] data = new boolean[blockCounters.size()][];
-		for (int blockIdx = 0; blockIdx < blockCounters.size(); blockIdx++) {
-			data[blockIdx] = new boolean[blockCounters.get(blockIdx)
-					.getBlockCount()];
-		}
+		final boolean[] data = new boolean[getProbeCount()];
 		runtime.registerClass(id, type.getInternalName(), data);
 	}
 

@@ -36,24 +36,20 @@ import org.jacoco.core.data.IStructureVisitor;
 class ClassDataRecorder implements IExecutionDataVisitor, IStructureVisitor,
 		IClassStructureVisitor {
 
-	public static class MethodDataRecorder implements IMethodStructureVisitor {
-
-		private final int id;
+	public class MethodDataRecorder implements IMethodStructureVisitor {
 
 		private final String name, desc, signature;
 
 		private final List<BlockData> blocks = new ArrayList<BlockData>();
 
-		MethodDataRecorder(int id, String name, String desc, String signature) {
-			this.id = id;
+		MethodDataRecorder(String name, String desc, String signature) {
 			this.name = name;
 			this.desc = desc;
 			this.signature = signature;
 		}
 
 		public void block(int id, int instructionCount, int[] lineNumbers) {
-			assertTrue("Unexpected block id " + id, blocks.size() == id);
-			blocks.add(new BlockData(instructionCount, lineNumbers));
+			blocks.add(new BlockData(id, instructionCount, lineNumbers));
 		}
 
 		public void visitEnd() {
@@ -64,29 +60,30 @@ class ClassDataRecorder implements IExecutionDataVisitor, IStructureVisitor,
 		}
 	}
 
-	public static class BlockData {
+	public class BlockData {
+
+		private final int id;
 
 		private final int instructionCount;
 
 		private final int[] lineNumbers;
 
-		private boolean covered;
-
-		BlockData(int instructionCount, int[] lineNumbers) {
+		BlockData(int id, int instructionCount, int[] lineNumbers) {
+			this.id = id;
 			this.instructionCount = instructionCount;
 			this.lineNumbers = lineNumbers;
 		}
 
-		void setCovered(boolean covered) {
-			this.covered = covered;
+		public boolean isCovered() {
+			return data[id];
 		}
 
 		public void assertCovered() {
-			assertTrue(covered);
+			assertTrue(isCovered());
 		}
 
 		public void assertNotCovered() {
-			assertFalse(covered);
+			assertFalse(isCovered());
 		}
 
 		public void assertLines(int... expected) {
@@ -107,25 +104,20 @@ class ClassDataRecorder implements IExecutionDataVisitor, IStructureVisitor,
 
 	private final Map<String, MethodDataRecorder> methodsByName = new HashMap<String, MethodDataRecorder>();
 
+	private boolean[] data;
+
 	public MethodDataRecorder getMethod(String name) {
 		MethodDataRecorder m = methodsByName.get(name);
 		assertNotNull("Unkown method " + name, m);
 		return m;
 	}
 
-	// === ICoverageDataVisitor ===
+	// === IExecutionDataVisitor ===
 
-	public void visitClassExecution(long id, String name, boolean[][] blockdata) {
+	public void visitClassExecution(long id, String name, boolean[] data) {
 		assertTrue("Coverage and structure data for the same class only.",
 				classid == id);
-		assertTrue("Unexpected method count " + blockdata.length, methods
-				.size() == blockdata.length);
-		for (int i = 0; i < blockdata.length; i++) {
-			final MethodDataRecorder m = methods.get(i);
-			for (int j = 0; j < blockdata[i].length; j++) {
-				m.getBlock(j).setCovered(blockdata[i][j]);
-			}
-		}
+		this.data = data;
 	}
 
 	// === IStructureVisitor ===
@@ -141,9 +133,9 @@ class ClassDataRecorder implements IExecutionDataVisitor, IStructureVisitor,
 	public void visitSourceFile(String name) {
 	}
 
-	public IMethodStructureVisitor visitMethodStructure(int id, String name,
+	public IMethodStructureVisitor visitMethodStructure(String name,
 			String desc, String signature) {
-		MethodDataRecorder m = new MethodDataRecorder(id, name, desc, signature);
+		MethodDataRecorder m = new MethodDataRecorder(name, desc, signature);
 		methods.add(m);
 		methodsByName.put(name, m);
 		return m;

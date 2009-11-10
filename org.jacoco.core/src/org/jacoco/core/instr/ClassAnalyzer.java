@@ -22,12 +22,12 @@ import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
 
 /**
- * A {@link ClassVisitor} that analyzes the executable blocks of a class.
+ * A {@link ClassVisitor} that analyzes the structure of a class.
  * 
  * @author Marc R. Hoffmann
  * @version $Revision: $
  */
-public class ClassAnalyzer extends MethodEnumerator {
+public class ClassAnalyzer extends BlockClassAdapter {
 
 	private final IClassStructureVisitor structureVisitor;
 
@@ -49,7 +49,7 @@ public class ClassAnalyzer extends MethodEnumerator {
 	}
 
 	@Override
-	protected MethodVisitor visitMethod(final int methodId, final int access,
+	protected IBlockMethodVisitor visitNonAbstractMethod(final int access,
 			final String name, final String desc, final String signature,
 			final String[] exceptions) {
 
@@ -59,9 +59,8 @@ public class ClassAnalyzer extends MethodEnumerator {
 		}
 
 		final IMethodStructureVisitor structure = structureVisitor
-				.visitMethodStructure(methodId, name, desc, signature);
-		return new BlockMethodAdapter(new MethodAnalyzer(structure), access,
-				name, desc, signature, exceptions);
+				.visitMethodStructure(name, desc, signature);
+		return new MethodAnalyzer(structure);
 	}
 
 	@Override

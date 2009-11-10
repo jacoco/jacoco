@@ -52,7 +52,7 @@ public class CoverageBuilderTest {
 		final IClassStructureVisitor classStructure = coverageBuilder
 				.visitClassStructure(123L, "org/jacoco/examples/Sample");
 		final IMethodStructureVisitor methodStructure = classStructure
-				.visitMethodStructure(0, "doit", "()V", null);
+				.visitMethodStructure("doit", "()V", null);
 		methodStructure.block(0, 5, new int[] { 6, 7, 8 });
 		methodStructure.visitEnd();
 		classStructure.visitEnd();
@@ -86,11 +86,11 @@ public class CoverageBuilderTest {
 	@Test
 	public void testCreateClassCovered() {
 		executionData.visitClassExecution(123L, "org/jacoco/examples/Sample",
-				new boolean[][] { new boolean[] { true } });
+				new boolean[] { true });
 		final IClassStructureVisitor classStructure = coverageBuilder
 				.visitClassStructure(123L, "org/jacoco/examples/Sample");
 		final IMethodStructureVisitor methodStructure = classStructure
-				.visitMethodStructure(0, "doit", "()V", null);
+				.visitMethodStructure("doit", "()V", null);
 		methodStructure.block(0, 5, new int[] { 6, 7, 8 });
 		methodStructure.visitEnd();
 		classStructure.visitEnd();

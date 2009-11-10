@@ -31,7 +31,7 @@ import org.objectweb.asm.commons.GeneratorAdapter;
  * The implementation uses a dedicated log channel. Instrumented classes call
  * {@link Logger#log(Level, String, Object[])} with the class identifier in the
  * first slot of the parameter array. The runtime implements a {@link Handler}
- * for this channel that puts the block data structure into the first slot of
+ * for this channel that puts the probe data structure into the first slot of
  * the parameter array.
  * 
  * @author Marc R. Hoffmann
@@ -142,10 +142,10 @@ public class LoggerRuntime extends AbstractRuntime {
 		// Stack[1]: I
 		// Stack[0]: [Ljava/lang/Object;
 
-		gen.arrayLoad(GeneratorConstants.DATAFIELD_TYPE);
-		gen.checkCast(GeneratorConstants.DATAFIELD_TYPE);
+		gen.arrayLoad(GeneratorConstants.PROBEDATA_TYPE);
+		gen.checkCast(GeneratorConstants.PROBEDATA_TYPE);
 
-		// Stack[0]: [[Z
+		// Stack[0]: [Z
 
 		return 5; // Maximum local stack size is 5
 	}
@@ -166,12 +166,12 @@ public class LoggerRuntime extends AbstractRuntime {
 				final Object[] params = record.getParameters();
 				final Long id = (Long) params[0];
 				synchronized (store) {
-					final boolean[][] blockdata = store.getData(id);
-					if (blockdata == null) {
+					final boolean[] data = store.getData(id);
+					if (data == null) {
 						throw new IllegalStateException(String.format(
 								"Unknown class id %x.", id));
 					}
-					params[0] = blockdata;
+					params[0] = data;
 				}
 			}
 		}
