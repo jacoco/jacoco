@@ -15,8 +15,6 @@
 -->
 
 <project name="org.jacoco.ant.buildhook">
-	<property name="do.compile" value="true"/>
-	<property name="do.custompackage" value="true"/>
 	
 	<path id="dependencies">
 		<path refid="bundle-org.apache.ant"/>
@@ -24,18 +22,16 @@
 		<path refid="bundle-org.jacoco.report"/>
 		<path refid="bundle-org.objectweb.asm"/>
 	</path>
+
+	<property name="do.compile" value="true"/>
+	<property name="do.custompackage" value="true"/>
+	<property name="do.package" value="true"/>
 	
 	<fileset dir="${source.bundle.java.dir}" id="classpathresources">
 		<include name="org/jacoco/ant/antlib.xml"/>
 	</fileset>	
 	
 	<target name="custompackage">
-		<property name="result.dist.bundle.jar.file" location="${result.dist.lib.dir}/${manifest.Bundle-SymbolicName}_${qualified.bundle.version}.jar"/>
-		<mkdir dir="${result.dist.lib.dir}"/>
-		<jar destfile="${result.dist.bundle.jar.file}" manifest="${result.temp.bundle.manifest.file}" level="9">
-			<fileset dir="${result.tmp.bundle.classes.dir}"/>
-			<file file="${source.bundle.dir}/about.html"/>
-		</jar>
 
 		<!-- create the all-in-one Ant JAR -->
 		<taskdef resource="org/jacoco/build/tools/ant/antlib.xml">
