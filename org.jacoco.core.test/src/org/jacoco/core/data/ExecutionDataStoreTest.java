@@ -50,6 +50,7 @@ public class ExecutionDataStoreTest implements IExecutionDataVisitor {
 	@Test
 	public void testEmpty() {
 		assertNull(store.getData(123));
+		assertNull(store.getName(123));
 		store.accept(this);
 		assertEquals(Collections.emptyMap(), dataOutput);
 	}

@@ -31,9 +31,7 @@ import java.util.Map;
  */
 public class ExecutionDataStore implements IExecutionDataVisitor {
 
-	private final Map<Long, boolean[]> data = new HashMap<Long, boolean[]>();
-
-	private final Map<Long, String> names = new HashMap<Long, String>();
+	private final Map<Long, Entry> entries = new HashMap<Long, Entry>();
 
 	/**
 	 * Adds the given block data structure into the store. If there is already a
@@ -49,15 +47,13 @@ public class ExecutionDataStore implements IExecutionDataVisitor {
 	 * @param data
 	 *            execution data
 	 */
-	public void put(final Long classid, final String name, boolean[] data) {
-		final boolean[] current = this.data.get(classid);
-		if (current != null) {
-			checkName(classid, name);
-			merge(current, data);
-			data = current;
+	public void put(final Long classid, final String name, final boolean[] data) {
+		final Entry entry = entries.get(classid);
+		if (entry == null) {
+			entries.put(classid, new Entry(name, data));
+		} else {
+			entry.merge(classid, name, data);
 		}
-		this.names.put(classid, name);
-		this.data.put(classid, data);
 	}
 
 	/**
@@ -78,24 +74,17 @@ public class ExecutionDataStore implements IExecutionDataVisitor {
 		put(Long.valueOf(classid), name, data);
 	}
 
-	private void checkName(final Long classid, final String name) {
-		final String oldName = names.get(classid);
-		if (!name.equals(oldName)) {
-			throw new IllegalArgumentException(format(
-					"Duplicate id %x for classes %s and %s.", classid, oldName,
-					name));
-		}
-	}
-
-	private static void merge(final boolean[] target, final boolean[] data) {
-		if (target.length != data.length) {
-			throw new IllegalStateException("Incompatible execution data.");
-		}
-		for (int i = 0; i < target.length; i++) {
-			if (!target[i]) {
-				target[i] = data[i];
-			}
-		}
+	/**
+	 * Returns the coverage data for the class with the given identifier if
+	 * available.
+	 * 
+	 * @param classid
+	 *            class identifier
+	 * @return coverage data or <code>null</code>
+	 */
+	public boolean[] getData(final Long classid) {
+		final Entry entry = entries.get(classid);
+		return entry == null ? null : entry.data;
 	}
 
 	/**
@@ -111,15 +100,15 @@ public class ExecutionDataStore implements IExecutionDataVisitor {
 	}
 
 	/**
-	 * Returns the coverage data for the class with the given identifier if
-	 * available.
+	 * Returns the vm name of the class with the given id.
 	 * 
 	 * @param classid
 	 *            class identifier
-	 * @return coverage data or <code>null</code>
+	 * @return vm name or <code>null</code>
 	 */
-	public boolean[] getData(final Long classid) {
-		return data.get(classid);
+	public String getName(final Long classid) {
+		final Entry entry = entries.get(classid);
+		return entry == null ? null : entry.name;
 	}
 
 	/**
@@ -134,23 +123,12 @@ public class ExecutionDataStore implements IExecutionDataVisitor {
 	}
 
 	/**
-	 * Returns the vm name of the class with the given id.
-	 * 
-	 * @param classid
-	 *            class identifier
-	 * @return vm name or <code>null</code>
-	 */
-	public String getName(final Long classid) {
-		return names.get(classid);
-	}
-
-	/**
 	 * Resets all execution data structures, i.e. marks them as not executed.
 	 * The data structures itself are not deleted.
 	 */
 	public void reset() {
-		for (final boolean[] d : this.data.values()) {
-			Arrays.fill(d, false);
+		for (final Entry executionData : this.entries.values()) {
+			Arrays.fill(executionData.data, false);
 		}
 	}
 
@@ -161,10 +139,10 @@ public class ExecutionDataStore implements IExecutionDataVisitor {
 	 *            interface to write content to
 	 */
 	public void accept(final IExecutionDataVisitor visitor) {
-		for (final Map.Entry<Long, boolean[]> entry : data.entrySet()) {
-			final Long key = entry.getKey();
-			final long id = key.longValue();
-			visitor.visitClassExecution(id, names.get(key), entry.getValue());
+		for (final Map.Entry<Long, Entry> i : entries.entrySet()) {
+			final long id = i.getKey().longValue();
+			final Entry entry = i.getValue();
+			visitor.visitClassExecution(id, entry.name, entry.data);
 		}
 	}
 
@@ -173,6 +151,36 @@ public class ExecutionDataStore implements IExecutionDataVisitor {
 	public void visitClassExecution(final long classid, final String name,
 			final boolean[] data) {
 		put(classid, name, data);
+	}
+
+	private static class Entry {
+
+		final String name;
+		final boolean[] data;
+
+		Entry(final String name, final boolean[] data) {
+			this.name = name;
+			this.data = data;
+		}
+
+		void merge(final Long classid, final String newName,
+				final boolean[] newData) {
+			if (!newName.equals(name)) {
+				throw new IllegalArgumentException(format(
+						"Duplicate id %x for classes %s and %s.", classid,
+						name, newName));
+			}
+			if (data.length != newData.length) {
+				throw new IllegalStateException(format(
+						"Incompatible execution data for class %s (id %s).",
+						name, classid));
+			}
+			for (int i = 0; i < data.length; i++) {
+				if (!data[i]) {
+					data[i] = newData[i];
+				}
+			}
+		}
 	}
 
 }
