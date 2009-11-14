@@ -100,7 +100,7 @@
 				file="${result.tmp.coverage.file}"
 				exclClassLoader="sun.reflect.DelegatingClassLoader|org.jacoco.core.test.TargetLoader">
 			
-			<junit haltonfailure="true" fork="true" forkmode="once">
+			<junit haltonfailure="true" fork="true" forkmode="once" dir="${source.bundle.dir}">
 	    		<batchtest todir="${result.tmp.bundle.test.dir}" >
 					<fileset dir="${result.tmp.bundle.classes.dir}">
    						<include name="**/*Test.class"/>

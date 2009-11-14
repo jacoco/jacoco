@@ -10,9 +10,10 @@
  *    
  * $Id: $
  *******************************************************************************/
-package org.jacoco.core.test;
+package org.jacoco.core.test.validation;
 
 import java.io.BufferedReader;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.Reader;
 import java.util.ArrayList;
@@ -33,6 +34,20 @@ import java.util.regex.Pattern;
  */
 public class Source {
 
+	/**
+	 * Reads the source for the given type from the <code>./src/</code> folder
+	 * relative to the working directory.
+	 * 
+	 * @param type
+	 *            type to load the source file for
+	 * @throws IOException
+	 * @throws
+	 */
+	public static Source getSourceFor(final Class<?> type) throws IOException {
+		String file = "src/" + type.getName().replace('.', '/') + ".java";
+		return new Source(new FileReader(file));
+	}
+
 	private static final Pattern TAG_PATTERN = Pattern
 			.compile("\\$line-(.*)\\$");
 
@@ -51,6 +66,7 @@ public class Source {
 		for (String l = buffer.readLine(); l != null; l = buffer.readLine()) {
 			addLine(l);
 		}
+		buffer.close();
 	}
 
 	private void addLine(final String l) {
