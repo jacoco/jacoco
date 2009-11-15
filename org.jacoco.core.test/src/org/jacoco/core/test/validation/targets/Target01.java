@@ -186,6 +186,12 @@ public class Target01 implements Runnable {
 			nop(); // $line-missedaftercontinue$
 		}
 
+		// 19. Return statement
+		if (t()) {
+			return; // $line-return$
+		}
+		nop(); // $line-afterreturn$
+
 	}
 
 	public static void main(String[] args) {

@@ -114,5 +114,10 @@ public class ControlStructuresTest extends ValidationTestBase {
 		assertLine("executedcontinue", FULLY_COVERED);
 		assertLine("missedaftercontinue", NOT_COVERED);
 
+		// 19. Return statement
+		assertLine("return", FULLY_COVERED);
+		assertLine("afterreturn", NOT_COVERED);
+
 	}
+
 }
