@@ -180,8 +180,8 @@
   JaCoCo is built by a set of custom Ant scripts that can be easily executed
   on different machines. While the modularization mechanism is based on OSGi
   bundles, the build does not (yet) use a build system like PDE build or Maven.
-  The reason is that some JaCoCo artifacts like the <code>agent.jar</code> have
-  very specific packaging requirements.
+  The reason is that some JaCoCo artifacts like the <code>jacocoagent.jar</code>
+  have very specific packaging requirements.
 </p>
 
 <h3>Structure of the Build Files</h3>
@@ -247,7 +247,7 @@
   <li><b>Type <code>deepclassfileset</code>:</b> Analyzes class file
       dependencies recursively to select a subset of class files from a given
       file set. This type is used to package small all-in JARs for the Java
-      agent and the JaCoCO Ant library.</li>
+      agent and the JaCoCo Ant library.</li>
   <li><b>Type <code>renamedclassfileset</code>:</b> Renames class files and
       their dependencies to other class files based on a set of mapping rules.
       This type is used to rename the classes for the Java agent.</li>
