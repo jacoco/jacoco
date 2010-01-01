@@ -10,7 +10,7 @@
  *    
  * $Id: $
  *******************************************************************************/
-package org.jacoco.agent;
+package org.jacoco.agent.rt;
 
 import java.io.BufferedOutputStream;
 import java.io.File;

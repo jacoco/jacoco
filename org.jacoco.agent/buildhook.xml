@@ -13,7 +13,7 @@
    $Id: $
 -->
 
-<project name="org.jacoco.agent.buildhook">
+<project name="org.jacoco.agent.rt.buildhook">
 
 	<path id="dependencies">
 		<path refid="bundle-org.jacoco.core"/>
@@ -37,7 +37,7 @@
 		
 		<jar destfile="${result.dist.lib.dir}/jacocoagent.jar" level="9">
 			<manifest>
-				<attribute name="Premain-Class" value="org.jacoco.${randomid}.agent.JacocoAgent"/>
+				<attribute name="Premain-Class" value="org.jacoco.${randomid}.agent.rt.JacocoAgent"/>
 				<attribute name="Implementation-Title" value="JaCoCo Java Agent"/>
 				<attribute name="Implementation-Vendor" value="Mountainminds GmbH &amp; Co. KG"/>
 				<attribute name="Implementation-Version" value="${qualified.bundle.version}"/>

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <projectDescription>
-	<name>org.jacoco.agent.test</name>
+	<name>org.jacoco.agent.rt.test</name>
 	<comment></comment>
 	<projects>
 	</projects>
