@@ -37,7 +37,11 @@ public class AgentJar {
 	 * @return URL of the JAR file
 	 */
 	public static URL getResource() {
-		return AgentJar.class.getResource(RESOURCE);
+		final URL url = AgentJar.class.getResource(RESOURCE);
+		if (url == null) {
+			throw new RuntimeException("Resource not found: " + RESOURCE);
+		}
+		return url;
 	}
 
 	/**
@@ -46,7 +50,11 @@ public class AgentJar {
 	 * @return content of the JAR file
 	 */
 	public static InputStream getResourceAsStream() {
-		return AgentJar.class.getResourceAsStream(RESOURCE);
+		final InputStream stream = AgentJar.class.getResourceAsStream(RESOURCE);
+		if (stream == null) {
+			throw new RuntimeException("Resource not found: " + RESOURCE);
+		}
+		return stream;
 	}
 
 }
