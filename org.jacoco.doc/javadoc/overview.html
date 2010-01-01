@@ -16,19 +16,17 @@
 </p>
 
 <ul>  
-  <li>class file analysis and instrumentation</li>
+  <li>class file analysis and instrumentation,</li>
   <li>collecting execution data at runtime and</li> 
   <li>calculating and storing coverage data.</li> 
 </ul>
 
-<pre>
-  |  Class files    |  Runtime        |  Output              |  Coverage Report   
+<h2>org.jacoco.agent</h2>
 
+<p>
+  Provides the runtime Java agent (JAR file) as a resource.
+</p>
 
-  Analysis ----------------------------- IStructureVisitor  \
-                                                             +--- Coverage Data
-  Instrumentation --- ExecutionData ---- IExecutionVisitor  /
-</pre>
 
 <h2>org.jacoco.report</h2>
 

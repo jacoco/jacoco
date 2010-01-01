@@ -19,6 +19,7 @@
 	<path id="dependencies">
 		<path refid="bundle-org.apache.ant"/>
 		<path refid="bundle-org.jacoco.core"/>
+		<path refid="bundle-org.jacoco.agent"/>
 		<path refid="bundle-org.jacoco.report"/>
 		<path refid="bundle-org.objectweb.asm"/>
 	</path>
@@ -58,6 +59,7 @@
 					<fileset dir="${result.tmp.bundle.classes.dir}"/>
 				</seed>
 				<fileset dir="${toString:bundle-org.jacoco.core}"/>
+				<fileset dir="${toString:bundle-org.jacoco.agent}"/>
 				<fileset dir="${toString:bundle-org.jacoco.report}"/>
 				<zipfileset includes="**/*.class">
 		        	<fileset file="${toString:bundle-org.objectweb.asm}"/>

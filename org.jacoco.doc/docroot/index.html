@@ -49,6 +49,7 @@
   <li><a href="coverage/index.html">Code Coverage Report</a>
       (<a href="coverage/coverage.csv">CSV</a>, 
        <a href="coverage/coverage.xml">XML</a>)</li>
+  <li><a href="doc/changes.html">Change History</a></li>
   <li><a href="doc/license.html">License</a></li>
 </ul>
 
@@ -61,6 +62,7 @@
   <thead>
     <tr>
       <td>File</td>
+      <td>OSGi Bundle</td>
       <td>Description</td>
       <td>Dependencies</td>
     </tr>
@@ -68,28 +70,39 @@
   <tbody>
     <tr>
       <td>jacocoagent.jar</td>
+      <td>no</td>
       <td>Java agent for execution data recording</td>
       <td>None, all dependencies included</td>
     </tr>
     <tr>
       <td>jacocoant.jar</td>
+      <td>no</td>
       <td>JaCoCo Ant tasks</td>
       <td>Ant 1.7.x, all other dependencies included</td>
     </tr>
     <tr>
+      <td>org.jacoco.agent_@VERSION@.jar</td>
+      <td>yes</td>
+      <td>JaCoCo agent</td>
+      <td>None</td>
+    </tr>
+    <tr>
       <td>org.jacoco.core_@VERSION@.jar</td>
-      <td>JaCoCo core bundle</td>
+      <td>yes</td>
+      <td>JaCoCo core</td>
       <td>ASM 3.x</td>
     </tr>
     <tr>
       <td>org.jacoco.report_@VERSION@.jar</td>
-      <td>JaCoCo report bundle</td>
-      <td>JaCoCo core, ASM 3.x</td>
+      <td>yes</td>
+      <td>JaCoCo reporting</td>
+      <td>org.jacoco.core, ASM 3.x</td>
     </tr>
     <tr>
       <td>org.jacoco.ant_@VERSION@.jar</td>
-      <td>JaCoCo Ant bundle</td>
-      <td>JaCoCo core, JaCoCo report, ASM 3.x, Ant 1.7.x</td>
+      <td>yes</td>
+      <td>JaCoCo Ant integration</td>
+      <td>org.jacoco.core, org.jacoco.agent, org.jacoco.report, ASM 3.x, Ant 1.7.x</td>
     </tr>
   </tbody>
 </table>

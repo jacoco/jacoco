@@ -52,6 +52,14 @@
 						<fileset dir="${workspace.dir}/org.jacoco.agent/src"/>
 					</sourcefiles>
 				</group>
+				<group name="org.jacoco.agent.rt">
+					<classfiles>
+						<path refid="bundle-org.jacoco.agent.rt"/>
+					</classfiles>
+					<sourcefiles>
+						<fileset dir="${workspace.dir}/org.jacoco.agent.rt/src"/>
+					</sourcefiles>
+				</group>
 				<group name="org.jacoco.ant">
 					<classfiles>
 						<path refid="bundle-org.jacoco.ant"/>
@@ -91,6 +99,7 @@
 			windowtitle="JaCoCo ${qualified.bundle.version}"
 			overview="${source.bundle.dir}/javadoc/overview.html">
 			<sourcefiles>
+				<fileset dir="${source.org.jacoco.agent.dir}/src" includes="**/*.java"/>
 				<fileset dir="${source.org.jacoco.core.dir}/src" includes="**/*.java"/>
 				<fileset dir="${source.org.jacoco.report.dir}/src" includes="**/*.java"/>
 			</sourcefiles>
@@ -98,6 +107,7 @@
 				<path refid="bundle-org.objectweb.asm"/>
 			</classpath>
 			<group title="Bundle org.jacoco.core" packages="org.jacoco.core*"/>
+			<group title="Bundle org.jacoco.agent" packages="org.jacoco.agent*"/>
 			<group title="Bundle org.jacoco.report" packages="org.jacoco.report*"/>
 			<link href="http://java.sun.com/j2se/1.5.0/docs/api" offline="true" packagelistloc="${source.bundle.dir}/javadoc/java"/>
 			<link href="http://asm.ow2.org/asm31/javadoc/user" offline="true" packagelistloc="${source.bundle.dir}/javadoc/asm"/>

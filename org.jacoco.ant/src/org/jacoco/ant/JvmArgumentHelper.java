@@ -20,6 +20,7 @@ import java.io.OutputStream;
 
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.util.FileUtils;
+import org.jacoco.agent.AgentJar;
 import org.jacoco.core.runtime.AgentOptions;
 
 /**
@@ -33,8 +34,7 @@ class JvmArgumentHelper {
 	private final File agentJar;
 
 	JvmArgumentHelper() {
-		final InputStream inputStream = this.getClass().getClassLoader()
-				.getResourceAsStream("jacocoagent.jar");
+		final InputStream inputStream = AgentJar.getResourceAsStream();
 		try {
 			agentJar = extractAgentJar(inputStream);
 		} finally {
