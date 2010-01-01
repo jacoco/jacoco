@@ -21,6 +21,15 @@ package org.jacoco.core.test.validation.targets;
 public class Stubs {
 
 	/**
+	 * Exception Stub.
+	 */
+	public static class StubException extends RuntimeException {
+
+		static final long serialVersionUID = 0L;
+
+	}
+
+	/**
 	 * Dummy method.
 	 */
 	public static void nop() {
@@ -35,7 +44,13 @@ public class Stubs {
 	/**
 	 * Dummy method.
 	 */
-	public static void nop(Object i) {
+	public static void nop(boolean b) {
+	}
+
+	/**
+	 * Dummy method.
+	 */
+	public static void nop(Object o) {
 	}
 
 	/**
@@ -71,6 +86,16 @@ public class Stubs {
 	 */
 	public static int i3() {
 		return 3;
+	}
+
+	/**
+	 * Always throws a {@link RuntimeException}.
+	 * 
+	 * @throws StubException
+	 *             always thrown
+	 */
+	public static void ex() throws StubException {
+		throw new StubException();
 	}
 
 }
