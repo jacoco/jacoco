@@ -85,12 +85,24 @@ public class CoverageBuilder implements IStructureVisitor {
 
 	// === IStructureVisitor ===
 
-	public IClassStructureVisitor visitClassStructure(final long id,
-			final String name) {
+	public IClassStructureVisitor visitClassStructure(final long id) {
 		final boolean[] covered = executionData.getData(id);
 		final Collection<MethodCoverage> methods = new ArrayList<MethodCoverage>();
 		final String[] sourcename = new String[1];
 		return new IClassStructureVisitor() {
+			String name;
+			String signature;
+			String superName;
+			String[] interfaces;
+
+			public void visit(final String name, final String signature,
+					final String superName, final String[] interfaces) {
+				this.name = name;
+				this.signature = signature;
+				this.superName = superName;
+				this.interfaces = interfaces;
+			}
+
 			public void visitSourceFile(final String name) {
 				sourcename[0] = name;
 			}
@@ -103,7 +115,8 @@ public class CoverageBuilder implements IStructureVisitor {
 
 			public void visitEnd() {
 				final ClassCoverage classData = new ClassCoverage(name,
-						sourcename[0], methods);
+						signature, superName, interfaces, sourcename[0],
+						methods);
 				classes.put(Long.valueOf(id), classData);
 				if (sourcename[0] != null) {
 					final SourceFileCoverage sourceFile = getSourceFile(

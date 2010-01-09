@@ -38,8 +38,12 @@ public class AnalyzerTest {
 	private static class EmptyStructureVisitor implements IStructureVisitor,
 			IClassStructureVisitor, IMethodStructureVisitor {
 
-		public IClassStructureVisitor visitClassStructure(long id, String name) {
+		public IClassStructureVisitor visitClassStructure(long id) {
 			return this;
+		}
+
+		public void visit(String name, String signature, String superName,
+				String[] interfaces) {
 		}
 
 		public void visitSourceFile(String name) {

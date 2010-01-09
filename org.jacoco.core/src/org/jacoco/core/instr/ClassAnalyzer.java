@@ -42,6 +42,12 @@ public class ClassAnalyzer extends BlockClassAdapter {
 		this.structureVisitor = structureVisitor;
 	}
 
+	public void visit(final int version, final int access, final String name,
+			final String signature, final String superName,
+			final String[] interfaces) {
+		structureVisitor.visit(name, signature, superName, interfaces);
+	}
+
 	public void visitSource(final String source, final String debug) {
 		if (source != null) {
 			structureVisitor.visitSourceFile(source);
@@ -75,11 +81,6 @@ public class ClassAnalyzer extends BlockClassAdapter {
 	}
 
 	// Ignored methods:
-
-	public void visit(final int version, final int access, final String name,
-			final String signature, final String superName,
-			final String[] interfaces) {
-	}
 
 	public AnnotationVisitor visitAnnotation(final String desc,
 			final boolean visible) {

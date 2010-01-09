@@ -22,6 +22,9 @@ import java.util.Collection;
  */
 public class ClassCoverage extends CoverageNodeImpl {
 
+	private final String signature;
+	private final String superName;
+	private final String[] interfaces;
 	private final Collection<MethodCoverage> methods;
 	private final String sourceFileName;
 
@@ -30,14 +33,25 @@ public class ClassCoverage extends CoverageNodeImpl {
 	 * 
 	 * @param name
 	 *            vm name of the class
+	 * @param signature
+	 *            vm signature of the class
+	 * @param superName
+	 *            vm name of the superclass of this class
+	 * @param interfaces
+	 *            vm names of interfaces of this class
 	 * @param sourceFileName
 	 *            optional name of the corresponding source file
 	 * @param methods
 	 *            contained methods
 	 */
-	public ClassCoverage(final String name, final String sourceFileName,
+	public ClassCoverage(final String name, final String signature,
+			final String superName, final String[] interfaces,
+			final String sourceFileName,
 			final Collection<MethodCoverage> methods) {
 		super(ElementType.CLASS, name, true);
+		this.signature = signature;
+		this.superName = superName;
+		this.interfaces = interfaces;
 		this.sourceFileName = sourceFileName;
 		this.methods = methods;
 		increment(methods);
@@ -45,6 +59,34 @@ public class ClassCoverage extends CoverageNodeImpl {
 		// covered:
 		final boolean covered = methodCounter.getCoveredCount() > 0;
 		this.classCounter = CounterImpl.getInstance(covered);
+	}
+
+	/**
+	 * Returns the VM signature of the class.
+	 * 
+	 * @return VM signature of the class (may be <code>null</code>)
+	 */
+	public String getSignature() {
+		return signature;
+	}
+
+	/**
+	 * Returns the VM name of the superclass.
+	 * 
+	 * @return VM name of the super class (may be <code>null</code>, i.e.
+	 *         <code>java/lang/Object</code>)
+	 */
+	public String getSuperName() {
+		return superName;
+	}
+
+	/**
+	 * Returns the VM names of implemented/extended interfaces
+	 * 
+	 * @return VM names of implemented/extended interfaces
+	 */
+	public String[] getInterfaceNames() {
+		return interfaces;
 	}
 
 	/**

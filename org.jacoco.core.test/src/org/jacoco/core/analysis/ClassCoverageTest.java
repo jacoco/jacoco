@@ -29,45 +29,54 @@ public class ClassCoverageTest {
 
 	@Test
 	public void testProperties() {
-		ClassCoverage data = new ClassCoverage("Sample", "Sample.java",
+		ClassCoverage data = new ClassCoverage("Sample", "LSample;",
+				"java/lang/Object", new String[0], "Sample.java",
 				new ArrayList<MethodCoverage>());
 		assertEquals(ICoverageNode.ElementType.CLASS, data.getElementType());
 		assertEquals("Sample", data.getName());
+		assertEquals("LSample;", data.getSignature());
+		assertEquals("java/lang/Object", data.getSuperName());
+		assertEquals(0, data.getInterfaceNames().length);
 		assertEquals("Sample.java", data.getSourceFileName());
 		assertNotNull(data.getLines());
 	}
 
 	@Test
 	public void testGetPackageName1() {
-		ClassCoverage data = new ClassCoverage("ClassInDefaultPackage",
-				"Sample.java", new ArrayList<MethodCoverage>());
+		ClassCoverage data = new ClassCoverage("ClassInDefaultPackage", null,
+				"java/lang/Object", new String[0], "Sample.java",
+				new ArrayList<MethodCoverage>());
 		assertEquals("", data.getPackageName());
 	}
 
 	@Test
 	public void testGetPackageName2() {
 		ClassCoverage data = new ClassCoverage("org/jacoco/examples/Sample",
-				"Sample.java", new ArrayList<MethodCoverage>());
+				null, "java/lang/Object", new String[0], "Sample.java",
+				new ArrayList<MethodCoverage>());
 		assertEquals("org/jacoco/examples", data.getPackageName());
 	}
 
 	@Test
 	public void testGetSimpleName1() {
-		ClassCoverage data = new ClassCoverage("ClassInDefaultPackage",
-				"Sample.java", new ArrayList<MethodCoverage>());
+		ClassCoverage data = new ClassCoverage("ClassInDefaultPackage", null,
+				"java/lang/Object", new String[0], "Sample.java",
+				new ArrayList<MethodCoverage>());
 		assertEquals("ClassInDefaultPackage", data.getSimpleName());
 	}
 
 	@Test
 	public void testGetSimpleName2() {
 		ClassCoverage data = new ClassCoverage("org/jacoco/examples/Sample",
-				"Sample.java", new ArrayList<MethodCoverage>());
+				null, "java/lang/Object", new String[0], "Sample.java",
+				new ArrayList<MethodCoverage>());
 		assertEquals("Sample", data.getSimpleName());
 	}
 
 	@Test
 	public void testEmptyClass() {
-		ICoverageNode data = new ClassCoverage("Sample", "Sample.java",
+		ICoverageNode data = new ClassCoverage("Sample", null,
+				"java/lang/Object", new String[0], "Sample.java",
 				new ArrayList<MethodCoverage>());
 		assertEquals(0, data.getInstructionCounter().getTotalCount(), 0.0);
 		assertEquals(0, data.getInstructionCounter().getCoveredCount(), 0.0);
@@ -84,7 +93,8 @@ public class ClassCoverageTest {
 		final ArrayList<MethodCoverage> methods = new ArrayList<MethodCoverage>();
 		methods.add(createMethod(false));
 		methods.add(createMethod(false));
-		ICoverageNode data = new ClassCoverage("Sample", "Sample.java", methods);
+		ICoverageNode data = new ClassCoverage("Sample", null,
+				"java/lang/Object", new String[0], "Sample.java", methods);
 		assertEquals(10, data.getInstructionCounter().getTotalCount(), 0.0);
 		assertEquals(0, data.getInstructionCounter().getCoveredCount(), 0.0);
 		assertEquals(2, data.getBlockCounter().getTotalCount(), 0.0);
@@ -100,7 +110,8 @@ public class ClassCoverageTest {
 		final ArrayList<MethodCoverage> methods = new ArrayList<MethodCoverage>();
 		methods.add(createMethod(false));
 		methods.add(createMethod(true));
-		ICoverageNode data = new ClassCoverage("Sample", "Sample.java", methods);
+		ICoverageNode data = new ClassCoverage("Sample", null,
+				"java/lang/Object", new String[0], "Sample.java", methods);
 		assertEquals(10, data.getInstructionCounter().getTotalCount(), 0.0);
 		assertEquals(5, data.getInstructionCounter().getCoveredCount(), 0.0);
 		assertEquals(2, data.getBlockCounter().getTotalCount(), 0.0);

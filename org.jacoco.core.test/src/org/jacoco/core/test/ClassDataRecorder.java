@@ -122,13 +122,17 @@ class ClassDataRecorder implements IExecutionDataVisitor, IStructureVisitor,
 
 	// === IStructureVisitor ===
 
-	public IClassStructureVisitor visitClassStructure(long id, String name) {
+	public IClassStructureVisitor visitClassStructure(long id) {
 		assertTrue("Recorder can be used for a single class only.", id != -1);
 		classid = id;
 		return this;
 	}
 
 	// === IClassStructureVisitor ===
+
+	public void visit(String name, String signature, String superName,
+			String[] interfaces) {
+	}
 
 	public void visitSourceFile(String name) {
 	}

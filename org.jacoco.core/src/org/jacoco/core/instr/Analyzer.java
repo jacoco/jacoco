@@ -53,14 +53,11 @@ public class Analyzer {
 	 * 
 	 * @param classid
 	 *            id of the class calculated with {@link CRC64}
-	 * @param classname
-	 *            VM name of the class
 	 * @return ASM visitor to write class definition to
 	 */
-	public ClassVisitor createAnalyzingVisitor(final long classid,
-			final String classname) {
+	public ClassVisitor createAnalyzingVisitor(final long classid) {
 		final IClassStructureVisitor classStructure = structureVisitor
-				.visitClassStructure(classid, classname);
+				.visitClassStructure(classid);
 		return new ClassAnalyzer(classStructure);
 	}
 
@@ -76,7 +73,7 @@ public class Analyzer {
 		}
 
 		final ClassVisitor visitor = createAnalyzingVisitor(CRC64
-				.checksum(reader.b), reader.getClassName());
+				.checksum(reader.b));
 		reader.accept(visitor, 0);
 	}
 

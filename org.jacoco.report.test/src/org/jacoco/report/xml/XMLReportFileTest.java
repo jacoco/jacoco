@@ -73,7 +73,8 @@ public class XMLReportFileTest {
 
 		MethodCoverage methodCoverage = new MethodCoverage("foo", "V", "V");
 		ClassCoverage classCoverage = new ClassCoverage("org/jacoco/test/Test",
-				"Test.java", Arrays.asList(methodCoverage));
+				null, "java/lang/Object", new String[0], "Test.java", Arrays
+						.asList(methodCoverage));
 		PackageCoverage packageCoverage = new PackageCoverage(
 				"org/jacoco/test", Arrays.asList(classCoverage), Collections
 						.<SourceFileCoverage> emptyList());

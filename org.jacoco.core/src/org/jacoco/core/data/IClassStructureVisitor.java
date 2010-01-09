@@ -23,6 +23,22 @@ package org.jacoco.core.data;
 public interface IClassStructureVisitor {
 
 	/**
+	 * Called once to report the class name, signature, superclass name and
+	 * names of implemented/extended interfaces.
+	 * 
+	 * @param name
+	 *            VM name of the class
+	 * @param signature
+	 *            VM signature of the class
+	 * @param superName
+	 *            VM name of the super class
+	 * @param interfaces
+	 *            VM names of extended/implemented interfaces
+	 */
+	public void visit(String name, String signature, String superName,
+			String[] interfaces);
+
+	/**
 	 * The source file name might be reported through this method call.
 	 * 
 	 * @param name

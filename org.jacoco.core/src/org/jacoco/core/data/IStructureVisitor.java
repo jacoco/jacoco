@@ -28,11 +28,9 @@ public interface IStructureVisitor {
 	 * 
 	 * @param id
 	 *            unique id for the class
-	 * @param name
-	 *            VM name of the class
 	 * @return call-back for structure details about the class
 	 * 
 	 */
-	public IClassStructureVisitor visitClassStructure(long id, String name);
+	public IClassStructureVisitor visitClassStructure(long id);
 
 }
