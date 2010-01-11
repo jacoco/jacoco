@@ -39,7 +39,7 @@ public class AgentJar {
 	public static URL getResource() {
 		final URL url = AgentJar.class.getResource(RESOURCE);
 		if (url == null) {
-			throw new RuntimeException("Resource not found: " + RESOURCE);
+			throw new RuntimeException(ERRORMSG);
 		}
 		return url;
 	}
@@ -52,9 +52,13 @@ public class AgentJar {
 	public static InputStream getResourceAsStream() {
 		final InputStream stream = AgentJar.class.getResourceAsStream(RESOURCE);
 		if (stream == null) {
-			throw new RuntimeException("Resource not found: " + RESOURCE);
+			throw new RuntimeException(ERRORMSG);
 		}
 		return stream;
 	}
+
+	private static final String ERRORMSG = String.format(
+			"The resource %s has not been found. Please see "
+					+ "/org.jacoco.agent/README.TXT for details.", RESOURCE);
 
 }
