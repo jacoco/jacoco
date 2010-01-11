@@ -96,7 +96,7 @@ public class JavaNamesTest {
 	@Test
 	public void testGetMethodName7() {
 		assertEquals("static {...}", names.getMethodName(
-				"com/example/SomeClass", "<cinit>", "()V"));
+				"com/example/SomeClass", "<clinit>", "()V"));
 	}
 
 	@Test

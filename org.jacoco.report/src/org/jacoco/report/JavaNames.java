@@ -37,7 +37,7 @@ public class JavaNames implements ILanguageNames {
 
 	public String getMethodName(final String vmclassname,
 			final String vmmethodname, final String vmdesc) {
-		if (vmmethodname.equals("<cinit>")) {
+		if (vmmethodname.equals("<clinit>")) {
 			return "static {...}";
 		}
 		final Type[] arguments = Type.getArgumentTypes(vmdesc);
