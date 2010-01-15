@@ -11,6 +11,7 @@
 	
 	<path id="bundle-org.junit4">
 		<fileset dir="${target.plugins.dir}" includes="org.junit4_*/junit.jar"/>
+		<fileset dir="${target.plugins.dir}" includes="org.junit_4*/junit.jar"/>
 		<fileset dir="${target.plugins.dir}" includes="org.hamcrest.core_*.jar"/>
 		<fileset dir="${target.plugins.dir}" includes="org.hamcrest.ui_*.jar"/>
 		<fileset dir="${target.plugins.dir}" includes="org.hamcrest.text_*.jar"/>
@@ -28,7 +29,7 @@
 	</target>
 
 	<target name="testCoverageAgent">
-		<jacoco:agent property="jacocoagent" merge="false" file="${basedir}/test.exec" exclClassLoader="sun.reflect.DelegatingClassLoader"/>
+		<jacoco:agent property="jacocoagent" append="false" destfile="${basedir}/test.exec" exclClassLoader="sun.reflect.DelegatingClassLoader"/>
 		<au:assertPropertySet name="jacocoagent"/>
 	</target>
 	
@@ -71,7 +72,7 @@
 
 	<target name="testCoverageOfForkedJava">
 		<property name="testCoverageOfForkedJava.exec.file" location="${result.tmp.bundle.testdata.dir}/testCoverageOfForkedJava.exec"/>
-		<jacoco:coverage file="${testCoverageOfForkedJava.exec.file}">
+		<jacoco:coverage destfile="${testCoverageOfForkedJava.exec.file}">
 			<java classname="org.jacoco.ant.test.EmptyMain" fork="true">
 				<classpath>
 					<path refid="ant-test-classes"/>
@@ -96,7 +97,7 @@
 
 	<target name="testCoverageOfForkedJUnit">
 		<property name="testCoverageOfForkedJUnit.exec.file" location="${result.tmp.bundle.testdata.dir}/testCoverageOfForkedJUnit.exec"/>
-		<jacoco:coverage file="${testCoverageOfForkedJUnit.exec.file}">
+		<jacoco:coverage destfile="${testCoverageOfForkedJUnit.exec.file}">
 			<junit fork="true" >
 				<classpath>
 					<path refid="bundle-org.junit4"/>

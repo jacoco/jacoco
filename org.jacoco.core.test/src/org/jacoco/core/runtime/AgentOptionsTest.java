@@ -29,8 +29,8 @@ public class AgentOptionsTest {
 	@Test
 	public void testDefaults() {
 		AgentOptions options = new AgentOptions();
-		assertEquals("jacoco.exec", options.getFile());
-		assertTrue(options.getMerge());
+		assertEquals("jacoco.exec", options.getDestfile());
+		assertTrue(options.getAppend());
 		assertEquals("*", options.getIncludes());
 		assertEquals("", options.getExcludes());
 		assertEquals("sun.reflect.DelegatingClassLoader", options
@@ -46,44 +46,44 @@ public class AgentOptionsTest {
 
 	@Test
 	public void testGetFile() {
-		AgentOptions options = new AgentOptions("file=/var/test.exec");
-		assertEquals("/var/test.exec", options.getFile());
+		AgentOptions options = new AgentOptions("destfile=/var/test.exec");
+		assertEquals("/var/test.exec", options.getDestfile());
 	}
 
 	@Test
 	public void testSetFile() {
 		AgentOptions options = new AgentOptions();
-		options.setFile("/var/test.exec");
-		assertEquals("/var/test.exec", options.getFile());
-		assertEquals("file=/var/test.exec", options.toString());
+		options.setDestfile("/var/test.exec");
+		assertEquals("/var/test.exec", options.getDestfile());
+		assertEquals("destfile=/var/test.exec", options.toString());
 	}
 
 	@Test
 	public void testGetMergeTrue() {
-		AgentOptions options = new AgentOptions("merge=true");
-		assertTrue(options.getMerge());
+		AgentOptions options = new AgentOptions("append=true");
+		assertTrue(options.getAppend());
 	}
 
 	@Test
 	public void testGetMergeFalse() {
-		AgentOptions options = new AgentOptions("merge=false");
-		assertFalse(options.getMerge());
+		AgentOptions options = new AgentOptions("append=false");
+		assertFalse(options.getAppend());
 	}
 
 	@Test
 	public void testSetMergeTrue() {
 		AgentOptions options = new AgentOptions();
-		options.setMerge(true);
-		assertTrue(options.getMerge());
-		assertEquals("merge=true", options.toString());
+		options.setAppend(true);
+		assertTrue(options.getAppend());
+		assertEquals("append=true", options.toString());
 	}
 
 	@Test
 	public void testSetMergeFalse() {
 		AgentOptions options = new AgentOptions();
-		options.setMerge(false);
-		assertFalse(options.getMerge());
-		assertEquals("merge=false", options.toString());
+		options.setAppend(false);
+		assertFalse(options.getAppend());
+		assertEquals("append=false", options.toString());
 	}
 
 	@Test
@@ -133,25 +133,25 @@ public class AgentOptionsTest {
 	@Test
 	public void testToString() {
 		AgentOptions options = new AgentOptions();
-		options.setFile("test.exec");
-		options.setMerge(false);
-		assertEquals("file=test.exec,merge=false", options.toString());
+		options.setDestfile("test.exec");
+		options.setAppend(false);
+		assertEquals("destfile=test.exec,append=false", options.toString());
 	}
 
 	@Test(expected = IllegalArgumentException.class)
 	public void testInvalidOptionFormat() {
-		new AgentOptions("file");
+		new AgentOptions("destfile");
 	}
 
 	@Test(expected = IllegalArgumentException.class)
 	public void testInvalidOptionKey() {
-		new AgentOptions("file=test.exec,something=true");
+		new AgentOptions("destfile=test.exec,something=true");
 	}
 
 	@Test(expected = IllegalArgumentException.class)
 	public void testInvalidOptionValue() {
 		AgentOptions options = new AgentOptions();
-		options.setFile("invalid,name.exec");
+		options.setDestfile("invalid,name.exec");
 	}
 
 }

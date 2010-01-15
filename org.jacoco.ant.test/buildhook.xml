@@ -42,8 +42,8 @@
 		<mkdir dir="${result.tmp.bundle.test.dir}"/>
 
 		<jacoco:coverage
-				merge="true"
-				file="${result.tmp.coverage.file}">
+				append="true"
+				destfile="${result.tmp.coverage.file}">
 			<java fork="true" jar="${ant.library.dir}/ant-launcher.jar" failonerror="true">
 				<arg value="-f"/>
 				<arg value="${source.bundle.dir}/ant/runtest.xml"/>

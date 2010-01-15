@@ -92,13 +92,13 @@ public class JacocoAgent {
 	 */
 	protected void writeExecutionData() {
 		try {
-			File execFile = new File(options.getFile()).getAbsoluteFile();
+			File execFile = new File(options.getDestfile()).getAbsoluteFile();
 			File folder = execFile.getParentFile();
 			if (folder != null) {
 				folder.mkdirs();
 			}
 			OutputStream output = new BufferedOutputStream(
-					new FileOutputStream(execFile, options.getMerge()));
+					new FileOutputStream(execFile, options.getAppend()));
 			ExecutionDataWriter writer = new ExecutionDataWriter(output);
 			writer.writeHeader();
 			runtime.collect(writer, false);

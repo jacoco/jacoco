@@ -36,13 +36,13 @@ public class AgentOptions {
 	 * Specifies the output file for execution data. Default is
 	 * <code>jacoco.exec</code> in the working directory.
 	 */
-	public static final String FILE = "file";
+	public static final String DESTFILE = "destfile";
 
 	/**
 	 * Specifies whether execution data should be appended to the output file.
 	 * Default is <code>true</code>.
 	 */
-	public static final String MERGE = "merge";
+	public static final String APPEND = "append";
 
 	/**
 	 * Wildcard expression for class names that should be included for code
@@ -71,8 +71,8 @@ public class AgentOptions {
 	 */
 	public static final String EXCLCLASSLOADER = "exclclassloader";
 
-	private static final Collection<String> VALID_OPTIONS = Arrays.asList(FILE,
-			MERGE, INCLUDES, EXCLUDES, EXCLCLASSLOADER);
+	private static final Collection<String> VALID_OPTIONS = Arrays.asList(
+			DESTFILE, APPEND, INCLUDES, EXCLUDES, EXCLCLASSLOADER);
 
 	private final Map<String, String> options;
 
@@ -113,39 +113,39 @@ public class AgentOptions {
 	 * 
 	 * @return output file location
 	 */
-	public String getFile() {
-		final String file = options.get(FILE);
-		return file == null ? "jacoco.exec" : file;
+	public String getDestfile() {
+		final String destfile = options.get(DESTFILE);
+		return destfile == null ? "jacoco.exec" : destfile;
 	}
 
 	/**
 	 * Sets the output file location.
 	 * 
-	 * @param file
+	 * @param destfile
 	 *            output file location
 	 */
-	public void setFile(final String file) {
-		setOption(FILE, file);
+	public void setDestfile(final String destfile) {
+		setOption(DESTFILE, destfile);
 	}
 
 	/**
-	 * Returns whether the output should be merged with an existing file.
+	 * Returns whether the output should be appended to an existing file.
 	 * 
-	 * @return <code>true</code>, when the output should be merged
+	 * @return <code>true</code>, when the output should be appended
 	 */
-	public boolean getMerge() {
-		final String value = options.get(MERGE);
+	public boolean getAppend() {
+		final String value = options.get(APPEND);
 		return value == null ? true : Boolean.parseBoolean(value);
 	}
 
 	/**
-	 * Sets whether the output should be merged with an existing file.
+	 * Sets whether the output should be appended to an existing file.
 	 * 
-	 * @param flag
-	 *            <code>true</code>, when the output should be merged
+	 * @param append
+	 *            <code>true</code>, when the output should be appended
 	 */
-	public void setMerge(final boolean flag) {
-		setOption(MERGE, String.valueOf(flag));
+	public void setAppend(final boolean append) {
+		setOption(APPEND, String.valueOf(append));
 	}
 
 	/**
