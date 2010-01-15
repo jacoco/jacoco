@@ -45,13 +45,13 @@ public class AgentOptionsTest {
 	}
 
 	@Test
-	public void testGetFile() {
+	public void testGetDestile() {
 		AgentOptions options = new AgentOptions("destfile=/var/test.exec");
 		assertEquals("/var/test.exec", options.getDestfile());
 	}
 
 	@Test
-	public void testSetFile() {
+	public void testSetDestile() {
 		AgentOptions options = new AgentOptions();
 		options.setDestfile("/var/test.exec");
 		assertEquals("/var/test.exec", options.getDestfile());
@@ -59,19 +59,19 @@ public class AgentOptionsTest {
 	}
 
 	@Test
-	public void testGetMergeTrue() {
+	public void testGetAppendTrue() {
 		AgentOptions options = new AgentOptions("append=true");
 		assertTrue(options.getAppend());
 	}
 
 	@Test
-	public void testGetMergeFalse() {
+	public void testGetAppendFalse() {
 		AgentOptions options = new AgentOptions("append=false");
 		assertFalse(options.getAppend());
 	}
 
 	@Test
-	public void testSetMergeTrue() {
+	public void testSetAppendTrue() {
 		AgentOptions options = new AgentOptions();
 		options.setAppend(true);
 		assertTrue(options.getAppend());
@@ -79,7 +79,7 @@ public class AgentOptionsTest {
 	}
 
 	@Test
-	public void testSetMergeFalse() {
+	public void testSetAppendFalse() {
 		AgentOptions options = new AgentOptions();
 		options.setAppend(false);
 		assertFalse(options.getAppend());
