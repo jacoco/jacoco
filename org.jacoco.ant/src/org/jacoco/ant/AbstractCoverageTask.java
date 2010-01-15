@@ -50,19 +50,19 @@ public class AbstractCoverageTask extends Task {
 	 * @param file
 	 *            Location to write coverage execution data
 	 */
-	public void setFile(final File file) {
-		agentOptions.setFile(file.getAbsolutePath());
+	public void setDestfile(final File file) {
+		agentOptions.setDestfile(file.getAbsolutePath());
 	}
 
 	/**
-	 * Merge execution coverage data if a coverage file is already present
+	 * Append execution coverage data if a coverage file is already present
 	 * 
 	 * @ant.not-required Default is true
-	 * @param merge
-	 *            <code>true</code> to merge execution data
+	 * @param append
+	 *            <code>true</code> to append execution data to an existing file
 	 */
-	public void setMerge(final boolean merge) {
-		agentOptions.setMerge(merge);
+	public void setAppend(final boolean append) {
+		agentOptions.setAppend(append);
 	}
 
 	/**
