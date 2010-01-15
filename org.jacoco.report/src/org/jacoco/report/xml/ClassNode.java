@@ -14,6 +14,7 @@ package org.jacoco.report.xml;
 
 import java.io.IOException;
 
+import org.jacoco.core.analysis.ClassCoverage;
 import org.jacoco.core.analysis.ICoverageNode;
 import org.jacoco.core.analysis.ICoverageNode.CounterEntity;
 import org.jacoco.report.IReportVisitor;
@@ -43,6 +44,26 @@ public class ClassNode extends NodeWithCoverage {
 	public ClassNode(final PackageNode parent, final ICoverageNode classNode)
 			throws IOException {
 		super(parent, "class", classNode);
+		final ClassCoverage classCoverageNode = (ClassCoverage) classNode;
+		if (classCoverageNode.getSignature() != null) {
+			this.attr("signature", classCoverageNode.getSignature());
+		}
+		if (classCoverageNode.getSuperName() != null) {
+			this.attr("superclass", classCoverageNode.getSuperName());
+		}
+		if (classCoverageNode.getInterfaceNames() != null) {
+			boolean first = true;
+			final StringBuilder builder = new StringBuilder();
+			for (final String iface : classCoverageNode.getInterfaceNames()) {
+				if (first) {
+					first = false;
+				} else {
+					builder.append(' ');
+				}
+				builder.append(iface);
+			}
+			this.attr("interfaces", builder.toString());
+		}
 	}
 
 	public IReportVisitor visitChild(final ICoverageNode node)

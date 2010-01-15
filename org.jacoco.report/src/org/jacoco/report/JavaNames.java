@@ -29,14 +29,43 @@ public class JavaNames implements ILanguageNames {
 		return vmname.replace('/', '.');
 	}
 
-	public String getClassName(final String vmname) {
+	private String getClassName(final String vmname) {
 		final int pos = vmname.lastIndexOf('/');
 		final String name = pos == -1 ? vmname : vmname.substring(pos + 1);
 		return name.replace('$', '.');
 	}
 
+	private boolean isAnonymous(final String vmname) {
+		// assume non-identifier start character for anonymous classes
+		final char start = vmname.charAt(vmname.lastIndexOf('$') + 1);
+		return !Character.isJavaIdentifierStart(start);
+	}
+
+	public String getClassName(final String vmname, final String vmsignature,
+			final String vmsuperclass, final String[] vminterfaces) {
+		if (isAnonymous(vmname)) {
+			final String vmsupertype;
+			if (vminterfaces != null && vminterfaces.length > 0) {
+				vmsupertype = vminterfaces[0];
+			} else if (vmsuperclass != null) {
+				vmsupertype = vmsuperclass;
+			} else {
+				vmsupertype = null;
+			}
+			// Append Eclipse style label, e.g. "Foo.1: new Bar() {...}"
+			if (vmsupertype != null) {
+				final StringBuilder builder = new StringBuilder();
+				builder.append(getClassName(vmname)).append(": new ").append(
+						getClassName(vmsupertype)).append("() {...}");
+				return builder.toString();
+			}
+		}
+		return getClassName(vmname);
+	}
+
 	public String getMethodName(final String vmclassname,
-			final String vmmethodname, final String vmdesc) {
+			final String vmmethodname, final String vmdesc,
+			final String vmsignature) {
 		if (vmmethodname.equals("<clinit>")) {
 			return "static {...}";
 		}

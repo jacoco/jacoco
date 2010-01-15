@@ -39,7 +39,7 @@ public abstract class ReportPage implements IReportVisitor, ICoverageTableItem {
 	/** context for this report */
 	protected final IHTMLReportContext context;
 
-	private ICoverageNode node;
+	private final ICoverageNode node;
 
 	/**
 	 * Creates a new report page.
@@ -65,7 +65,7 @@ public abstract class ReportPage implements IReportVisitor, ICoverageTableItem {
 	public void visitEnd(final ISourceFileLocator sourceFileLocator)
 			throws IOException {
 		renderDocument(sourceFileLocator);
-		this.node = node.getPlainCopy();
+		// this.node = node.getPlainCopy(); TODO Trac #60
 	}
 
 	private void renderDocument(final ISourceFileLocator sourceFileLocator)

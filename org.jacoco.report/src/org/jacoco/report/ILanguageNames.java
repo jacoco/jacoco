@@ -34,9 +34,17 @@ public interface ILanguageNames {
 	 * 
 	 * @param vmname
 	 *            vm name of a class
+	 * @param vmsignature
+	 *            vm signature of the class (may be <code>null</code>)
+	 * @param vmsuperclass
+	 *            vm name of the superclass of the class (may be
+	 *            <code>null</code>)
+	 * @param vminterfaces
+	 *            vm names of interfaces of the class (may be <code>null</code>)
 	 * @return language specific notation of the class
 	 */
-	public String getClassName(String vmname);
+	public String getClassName(String vmname, String vmsignature,
+			String vmsuperclass, String[] vminterfaces);
 
 	/**
 	 * Calculates the language specific name of a method.
@@ -47,9 +55,11 @@ public interface ILanguageNames {
 	 *            vm name of the method
 	 * @param vmdesc
 	 *            vm parameter description of the method
+	 * @param vmsignature
+	 *            vm signature of the method (may be <code>null</code>)
 	 * @return language specific notation for the method
 	 */
 	public String getMethodName(String vmclassname, String vmmethodname,
-			String vmdesc);
+			String vmdesc, String vmsignature);
 
 }

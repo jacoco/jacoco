@@ -44,7 +44,7 @@ public class ClassPage extends ReportPage {
 		public String getLabel() {
 			return context.getLanguageNames().getMethodName(
 					ClassPage.this.getNode().getName(), node.getName(),
-					node.getDesc());
+					node.getDesc(), node.getSignature());
 		}
 
 		public String getLink(final ReportOutputFolder base) {
@@ -109,12 +109,16 @@ public class ClassPage extends ReportPage {
 
 	@Override
 	protected String getFileName() {
-		return getLabel() + ".html";
+		return context.getLanguageNames().getClassName(getNode().getName(),
+				null, null, null) + ".html";
 	}
 
 	@Override
 	public String getLabel() {
-		return context.getLanguageNames().getClassName(getNode().getName());
+		final ClassCoverage classNode = (ClassCoverage) getNode();
+		return context.getLanguageNames().getClassName(classNode.getName(),
+				classNode.getSignature(), classNode.getSuperName(),
+				classNode.getInterfaceNames());
 	}
 
 	@Override

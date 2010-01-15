@@ -44,65 +44,82 @@ public class JavaNamesTest {
 
 	@Test
 	public void testGetClassName1() {
-		assertEquals("Main", names.getClassName("Main"));
+		assertEquals("Main", names.getClassName("Main", null, null, null));
 	}
 
 	@Test
 	public void testGetClassName2() {
-		assertEquals("Object", names.getClassName("java/lang/Object"));
+		assertEquals("Object", names.getClassName("java/lang/Object", null,
+				null, null));
 	}
 
 	@Test
 	public void testGetClassName3() {
-		assertEquals("Map.Entry", names.getClassName("java/util/Map$Entry"));
+		assertEquals("Map.Entry", names.getClassName("java/util/Map$Entry",
+				null, null, null));
+	}
+
+	@Test
+	public void testGetClassName4() {
+		assertEquals("Bar.1: new Object() {...}", names.getClassName(
+				"com/foo/Bar$1", null, "java/lang/Object", new String[0]));
+	}
+
+	@Test
+	public void testGetClassName5() {
+		assertEquals("Bar.1: new ISample() {...}", names.getClassName(
+				"com/foo/Bar$1", null, "java/lang/Object",
+				new String[] { "org/foo/ISample" }));
 	}
 
 	@Test
 	public void testGetMethodName1() {
 		assertEquals("wait()", names.getMethodName("java/lang/Object", "wait",
-				"()V"));
+				"()V", null));
 	}
 
 	@Test
 	public void testGetMethodName2() {
-		assertEquals("remove(Object)", names.getMethodName(
-				"java/util/Collection", "remove", "(Ljava/lang/Object;)V"));
+		assertEquals("remove(Object)", names
+				.getMethodName("java/util/Collection", "remove",
+						"(Ljava/lang/Object;)V", null));
 	}
 
 	@Test
 	public void testGetMethodName3() {
 		assertEquals("remove(int)", names.getMethodName("java/util/List",
-				"remove", "(I)V"));
+				"remove", "(I)V", null));
 	}
 
 	@Test
 	public void testGetMethodName4() {
 		assertEquals("add(int, Object)", names.getMethodName("java/util/List",
-				"add", "(ILjava/lang/Object;)V"));
+				"add", "(ILjava/lang/Object;)V", null));
 	}
 
 	@Test
 	public void testGetMethodName5() {
 		assertEquals("sort(Object[])", names.getMethodName("java/util/Arrays",
-				"sort", "([Ljava/lang/Object;)V"));
+				"sort", "([Ljava/lang/Object;)V", null));
 	}
 
 	@Test
 	public void testGetMethodName6() {
 		assertEquals("Object()", names.getMethodName("java/lang/Object",
-				"<init>", "()V"));
+				"<init>", "()V", null));
 	}
 
 	@Test
 	public void testGetMethodName7() {
 		assertEquals("static {...}", names.getMethodName(
-				"com/example/SomeClass", "<clinit>", "()V"));
+				"com/example/SomeClass", "<clinit>", "()V", null));
 	}
 
 	@Test
 	public void testGetMethodName8() {
 		assertEquals("update(Map.Entry)", names.getMethodName(
-				"com/example/SomeClass", "update", "(Ljava/util/Map$Entry;)V"));
+				"com/example/SomeClass", "update", "(Ljava/util/Map$Entry;)V",
+				null));
 	}
 
 }

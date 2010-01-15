@@ -23,7 +23,10 @@
 
 <!ELEMENT class ((method*), counter+)>
 <!ATTLIST class
-  name CDATA #REQUIRED>
+  name CDATA #REQUIRED
+  signature CDATA #IMPLIED
+  superclass CDATA #IMPLIED
+  interfaces CDATA #IMPLIED>
 
 <!ELEMENT method (counter+)>
 <!ATTLIST method

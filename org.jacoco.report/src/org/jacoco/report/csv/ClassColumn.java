@@ -14,6 +14,7 @@ package org.jacoco.report.csv;
 
 import java.io.IOException;
 
+import org.jacoco.core.analysis.ClassCoverage;
 import org.jacoco.core.analysis.ICounter;
 import org.jacoco.core.analysis.ICoverageNode;
 import org.jacoco.core.analysis.ICoverageNode.CounterEntity;
@@ -78,7 +79,10 @@ public class ClassColumn implements IReportVisitor, ICsvColumn {
 
 	public void writeContents(final DelimitedWriter writer) throws IOException {
 		final ILanguageNames languageNames = reportFile.getLanguageNames();
-		final String className = languageNames.getClassName(node.getName());
+		final ClassCoverage classNode = (ClassCoverage) node;
+		final String className = languageNames.getClassName(
+				classNode.getName(), classNode.getSignature(), classNode
+						.getSuperName(), classNode.getInterfaceNames());
 		writer.write(className);
 
 		for (final CounterEntity entity : CsvReportFile.COUNTERS) {
