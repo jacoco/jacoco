@@ -17,6 +17,7 @@ import java.io.IOException;
 
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Task;
+import org.jacoco.agent.AgentJar;
 import org.jacoco.core.runtime.AgentOptions;
 
 /**
@@ -108,8 +109,23 @@ public class AbstractCoverageTask extends Task {
 	 * @return JVM Argument to pass to new VM
 	 */
 	protected String getLaunchingArgument() {
+		return getAgentOptions().getVMArgument(getAgentFile());
+	}
+
+	private File getAgentFile() {
 		try {
-			return getAgentOptions().getVMArgument(JaCoCoState.getAgentFile());
+			File agentFile = null;
+			final String agentFileLocation = getProject().getProperty(
+					"_jacoco.agentFile");
+			if (agentFileLocation != null) {
+				agentFile = new File(agentFileLocation);
+			} else {
+				agentFile = AgentJar.extractToTempLocation();
+				getProject().setProperty("_jacoco.agentFile",
+						agentFile.toString());
+			}
+
+			return agentFile;
 		} catch (final IOException e) {
 			throw new BuildException("Unable to extract agent jar", e);
 		}
