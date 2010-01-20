@@ -57,8 +57,6 @@ public class AgentTask extends AbstractCoverageTask {
 		if (property == null || property.length() == 0) {
 			throw new BuildException("Property is mandatory");
 		}
-		final JvmArgumentHelper jvmArgumentHelper = new JvmArgumentHelper();
-		getProject().setNewProperty(property,
-				jvmArgumentHelper.createJavaAgentParam(getAgentOptions()));
+		getProject().setNewProperty(property, getLaunchingArgument());
 	}
 }

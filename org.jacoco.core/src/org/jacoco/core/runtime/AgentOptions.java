@@ -14,6 +14,7 @@ package org.jacoco.core.runtime;
 
 import static java.lang.String.format;
 
+import java.io.File;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
@@ -220,6 +221,26 @@ public class AgentOptions {
 					"Invalid character in option argument \"%s\"", value));
 		}
 		options.put(key, value);
+	}
+
+	/**
+	 * Generate required JVM argument string based on current configuration and
+	 * supplied agent jar location
+	 * 
+	 * @param agentJarFile
+	 *            location of the JaCoCo Agent Jar
+	 * @return Argument to pass to create new VM with coverage enabled
+	 */
+	public String getVMArgument(final File agentJarFile) {
+		final StringBuilder param = new StringBuilder();
+		param.append('"');
+		param.append("-javaagent:");
+		param.append(agentJarFile.toString());
+		param.append("=");
+		param.append(this.toString());
+		param.append('"');
+
+		return param.toString();
 	}
 
 	/**

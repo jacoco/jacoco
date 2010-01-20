@@ -125,17 +125,14 @@ public class CoverageTask extends AbstractCoverageTask implements TaskContainer 
 		}
 
 		public void addJvmArgs(final UnknownElement task) {
-			final JvmArgumentHelper jvmArgumentHelper = new JvmArgumentHelper();
-			final String agentParam = jvmArgumentHelper
-					.createJavaAgentParam(getAgentOptions());
-
 			final UnknownElement el = new UnknownElement("jvmarg");
 			el.setTaskName("jvmarg");
 			el.setQName("jvmarg");
 
 			final RuntimeConfigurable runtimeConfigurableWrapper = el
 					.getRuntimeConfigurableWrapper();
-			runtimeConfigurableWrapper.setAttribute("value", agentParam);
+			runtimeConfigurableWrapper.setAttribute("value",
+					getLaunchingArgument());
 
 			task.getRuntimeConfigurableWrapper().addChild(
 					runtimeConfigurableWrapper);

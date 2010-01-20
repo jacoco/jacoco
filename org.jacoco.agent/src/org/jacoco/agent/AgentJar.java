@@ -12,8 +12,12 @@
  *******************************************************************************/
 package org.jacoco.agent;
 
+import java.io.Closeable;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
-import java.net.URL;
+import java.io.OutputStream;
 
 /**
  * API to access the agent JAR file as a resource.
@@ -24,24 +28,59 @@ import java.net.URL;
 public class AgentJar {
 
 	/**
-	 * Name of the agent JAR file resource within this bunde.
+	 * Name of the agent JAR file resource within this bundle.
 	 */
-	public static final String RESOURCE = "/jacocoagent.jar";
+	private static final String RESOURCE = "/jacocoagent.jar";
 
 	private AgentJar() {
 	}
 
 	/**
-	 * Returns a URL pointing to the JAR file.
+	 * Extract the JaCoCo agent jar from the classpath and put it into a
+	 * temporary location. This file should be deleted on exit, but may not if
+	 * the VM is terminated
 	 * 
-	 * @return URL of the JAR file
+	 * @return Location of the Agent Jar file in the local file system. The file
+	 *         should exist and be readable.
+	 * @throws IOException
+	 *             Unable to unpack agent jar
 	 */
-	public static URL getResource() {
-		final URL url = AgentJar.class.getResource(RESOURCE);
-		if (url == null) {
-			throw new RuntimeException(ERRORMSG);
+	public static File extractToTempLocation() throws IOException {
+		final File agentJar = File.createTempFile("jacocoagent", ".jar");
+		agentJar.deleteOnExit();
+
+		extractTo(agentJar);
+
+		return agentJar;
+	}
+
+	/**
+	 * Extract the JaCoCo agent jar from the classpath and put it into the
+	 * specified location.
+	 * 
+	 * @param destination
+	 *            Location to write JaCoCo Agent Jar to. Must be writeable
+	 * @throws IOException
+	 *             Unable to unpack agent jar
+	 */
+	public static void extractTo(File destination) throws IOException {
+		InputStream inputJarStream = getResourceAsStream();
+		OutputStream outputJarStream = null;
+
+		try {
+
+			outputJarStream = new FileOutputStream(destination);
+
+			final byte[] buffer = new byte[8192];
+
+			int bytesRead;
+			while ((bytesRead = inputJarStream.read(buffer)) != -1) {
+				outputJarStream.write(buffer, 0, bytesRead);
+			}
+		} finally {
+			safeClose(inputJarStream);
+			safeClose(outputJarStream);
 		}
-		return url;
 	}
 
 	/**
@@ -49,12 +88,27 @@ public class AgentJar {
 	 * 
 	 * @return content of the JAR file
 	 */
-	public static InputStream getResourceAsStream() {
+	private static InputStream getResourceAsStream() throws IOException {
 		final InputStream stream = AgentJar.class.getResourceAsStream(RESOURCE);
 		if (stream == null) {
-			throw new RuntimeException(ERRORMSG);
+			throw new IOException(ERRORMSG);
 		}
 		return stream;
+	}
+
+	/**
+	 * Close a stream ignoring any error
+	 * 
+	 * @param closeable
+	 *            stream to be closed
+	 */
+	private static void safeClose(Closeable closeable) {
+		try {
+			if (closeable != null) {
+				closeable.close();
+			}
+		} catch (IOException e) {
+		}
 	}
 
 	private static final String ERRORMSG = String.format(

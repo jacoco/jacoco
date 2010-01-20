@@ -13,7 +13,9 @@
 package org.jacoco.ant;
 
 import java.io.File;
+import java.io.IOException;
 
+import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Task;
 import org.jacoco.core.runtime.AgentOptions;
 
@@ -97,6 +99,20 @@ public class AbstractCoverageTask extends Task {
 	 */
 	public void setExclClassLoader(final String exclClassLoader) {
 		agentOptions.setExclClassloader(exclClassLoader);
+	}
+
+	/**
+	 * Creates JVM argument to launch with the specified JaCoCo agent jar and
+	 * the current options
+	 * 
+	 * @return JVM Argument to pass to new VM
+	 */
+	protected String getLaunchingArgument() {
+		try {
+			return getAgentOptions().getVMArgument(JaCoCoState.getAgentFile());
+		} catch (final IOException e) {
+			throw new BuildException("Unable to extract agent jar", e);
+		}
 	}
 
 }
