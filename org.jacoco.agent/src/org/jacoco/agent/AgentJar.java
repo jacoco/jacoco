@@ -18,6 +18,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.net.URL;
 
 /**
  * API to access the agent JAR file as a resource.
@@ -33,6 +34,19 @@ public class AgentJar {
 	private static final String RESOURCE = "/jacocoagent.jar";
 
 	private AgentJar() {
+	}
+
+	/**
+	 * Returns a URL pointing to the JAR file.
+	 * 
+	 * @return URL of the JAR file
+	 */
+	public static URL getResource() {
+		final URL url = AgentJar.class.getResource(RESOURCE);
+		if (url == null) {
+			throw new RuntimeException(ERRORMSG);
+		}
+		return url;
 	}
 
 	/**
