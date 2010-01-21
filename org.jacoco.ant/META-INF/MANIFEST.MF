@@ -5,17 +5,8 @@ Bundle-SymbolicName: org.jacoco.ant
 Bundle-Version: 0.2.0.qualifier
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
 Bundle-Vendor: Mountainminds GmbH & Co. KG and Contributors
-Import-Package: org.apache.tools.ant,
- org.apache.tools.ant.types,
- org.apache.tools.ant.types.resources,
- org.apache.tools.ant.util,
+Require-Bundle: org.apache.ant,
  org.jacoco.agent,
- org.jacoco.core.analysis,
- org.jacoco.core.data,
- org.jacoco.core.instr,
- org.jacoco.core.runtime,
+ org.jacoco.core,
  org.jacoco.report,
- org.jacoco.report.csv,
- org.jacoco.report.html,
- org.jacoco.report.xml,
  org.objectweb.asm;version="[3.1.0,4.0.0)"
