@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009 Mountainminds GmbH & Co. KG and others
+ * Copyright (c) 2009, 2010 Mountainminds GmbH & Co. KG and others
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -16,6 +16,9 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
+import java.io.File;
+
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 /**
@@ -25,6 +28,12 @@ import org.junit.Test;
  * @version $Revision: $
  */
 public class AgentOptionsTest {
+	private static File defaultAgentJarFile;
+
+	@BeforeClass
+	public static void beforeClass() {
+		defaultAgentJarFile = new File("jacocoagent.jar");
+	}
 
 	@Test
 	public void testDefaults() {
@@ -154,4 +163,35 @@ public class AgentOptionsTest {
 		options.setDestfile("invalid,name.exec");
 	}
 
+	@Test
+	public void testVMArgsWithNoOptions() {
+		AgentOptions options = new AgentOptions();
+		String vmArgument = options.getVMArgument(defaultAgentJarFile);
+
+		assertEquals(String.format("\"-javaagent:%s=\"", defaultAgentJarFile
+				.toString()), vmArgument);
+	}
+
+	@Test
+	public void testVMArgsWithOneOption() {
+		AgentOptions options = new AgentOptions();
+		options.setAppend(true);
+
+		String vmArgument = options.getVMArgument(defaultAgentJarFile);
+
+		assertEquals(String.format("\"-javaagent:%s=append=true\"",
+				defaultAgentJarFile.toString()), vmArgument);
+	}
+
+	@Test
+	public void testVMArgsWithOptions() {
+		AgentOptions options = new AgentOptions();
+		options.setAppend(true);
+		options.setDestfile("some test.exec");
+		String vmArgument = options.getVMArgument(defaultAgentJarFile);
+
+		assertEquals(String.format(
+				"\"-javaagent:%s=destfile=some test.exec,append=true\"",
+				defaultAgentJarFile.toString()), vmArgument);
+	}
 }
