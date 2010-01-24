@@ -50,6 +50,19 @@ public class AgentJar {
 	}
 
 	/**
+	 * Returns the content of the JAR file as a stream.
+	 * 
+	 * @return content of the JAR file
+	 */
+	public static InputStream getResourceAsStream() throws IOException {
+		final InputStream stream = AgentJar.class.getResourceAsStream(RESOURCE);
+		if (stream == null) {
+			throw new IOException(ERRORMSG);
+		}
+		return stream;
+	}
+
+	/**
 	 * Extract the JaCoCo agent jar from the classpath and put it into a
 	 * temporary location. This file should be deleted on exit, but may not if
 	 * the VM is terminated
@@ -95,19 +108,6 @@ public class AgentJar {
 			safeClose(inputJarStream);
 			safeClose(outputJarStream);
 		}
-	}
-
-	/**
-	 * Returns the content of the JAR file as a stream.
-	 * 
-	 * @return content of the JAR file
-	 */
-	private static InputStream getResourceAsStream() throws IOException {
-		final InputStream stream = AgentJar.class.getResourceAsStream(RESOURCE);
-		if (stream == null) {
-			throw new IOException(ERRORMSG);
-		}
-		return stream;
 	}
 
 	/**
