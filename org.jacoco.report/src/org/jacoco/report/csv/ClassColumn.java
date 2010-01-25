@@ -43,7 +43,9 @@ import org.jacoco.report.ISourceFileLocator;
 public class ClassColumn implements IReportVisitor, ICsvColumn {
 
 	private final ICsvColumn parent;
-	private final ICoverageNode node;
+
+	private final ClassCoverage node;
+
 	private final CsvReportFile reportFile;
 
 	/**
@@ -57,7 +59,7 @@ public class ClassColumn implements IReportVisitor, ICsvColumn {
 	 *            {@link ElementType#CLASS} coverage node
 	 */
 	public ClassColumn(final CsvReportFile reportFile, final ICsvColumn parent,
-			final ICoverageNode node) {
+			final ClassCoverage node) {
 		this.reportFile = reportFile;
 		this.parent = parent;
 		this.node = node;
@@ -79,10 +81,9 @@ public class ClassColumn implements IReportVisitor, ICsvColumn {
 
 	public void writeContents(final DelimitedWriter writer) throws IOException {
 		final ILanguageNames languageNames = reportFile.getLanguageNames();
-		final ClassCoverage classNode = (ClassCoverage) node;
-		final String className = languageNames.getClassName(
-				classNode.getName(), classNode.getSignature(), classNode
-						.getSuperName(), classNode.getInterfaceNames());
+		final String className = languageNames.getClassName(node.getName(),
+				node.getSignature(), node.getSuperName(), node
+						.getInterfaceNames());
 		writer.write(className);
 
 		for (final CounterEntity entity : CsvReportFile.COUNTERS) {

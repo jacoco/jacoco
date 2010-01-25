@@ -18,7 +18,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.jacoco.core.analysis.ClassCoverage;
 import org.jacoco.core.analysis.ICoverageNode;
+import org.jacoco.core.analysis.SourceFileCoverage;
 import org.jacoco.core.analysis.ICoverageNode.ElementType;
 import org.jacoco.report.IReportVisitor;
 import org.jacoco.report.ISourceFileLocator;
@@ -55,13 +57,13 @@ public class PackagePage extends ReportPage {
 		final ElementType type = node.getElementType();
 		switch (type) {
 		case SOURCEFILE:
-			final SourceFilePage sourcePage = new SourceFilePage(node, this,
-					outputFolder, context);
+			final SourceFilePage sourcePage = new SourceFilePage(
+					(SourceFileCoverage) node, this, outputFolder, context);
 			sourceFiles.put(node.getName(), sourcePage);
 			return sourcePage;
 		case CLASS:
-			final ClassPage classPage = new ClassPage(node, this, sourceFiles,
-					outputFolder, context);
+			final ClassPage classPage = new ClassPage((ClassCoverage) node,
+					this, sourceFiles, outputFolder, context);
 			classes.add(classPage);
 			return classPage;
 		}

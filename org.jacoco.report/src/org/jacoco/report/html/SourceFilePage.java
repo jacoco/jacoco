@@ -16,6 +16,7 @@ import java.io.IOException;
 import java.io.Reader;
 
 import org.jacoco.core.analysis.ICoverageNode;
+import org.jacoco.core.analysis.ILines;
 import org.jacoco.core.analysis.SourceFileCoverage;
 import org.jacoco.report.IReportVisitor;
 import org.jacoco.report.ISourceFileLocator;
@@ -33,18 +34,24 @@ public class SourceFilePage extends ReportPage {
 
 	private Reader sourceReader;
 
+	private final String packageName;
+
+	private final ILines lines;
+
 	/**
 	 * Creates a new visitor in the given context.
 	 * 
-	 * @param node
+	 * @param sourceFileNode
 	 * @param parent
 	 * @param outputFolder
 	 * @param context
 	 */
-	public SourceFilePage(final ICoverageNode node, final ReportPage parent,
-			final ReportOutputFolder outputFolder,
+	public SourceFilePage(final SourceFileCoverage sourceFileNode,
+			final ReportPage parent, final ReportOutputFolder outputFolder,
 			final IHTMLReportContext context) {
-		super(node, parent, outputFolder, context);
+		super(sourceFileNode, parent, outputFolder, context);
+		packageName = sourceFileNode.getPackageName();
+		lines = sourceFileNode.getLines();
 	}
 
 	public IReportVisitor visitChild(final ICoverageNode node) {
@@ -54,8 +61,7 @@ public class SourceFilePage extends ReportPage {
 	@Override
 	public void visitEnd(final ISourceFileLocator sourceFileLocator)
 			throws IOException {
-		final SourceFileCoverage s = (SourceFileCoverage) getNode();
-		sourceReader = sourceFileLocator.getSourceFile(s.getPackageName(), s
+		sourceReader = sourceFileLocator.getSourceFile(packageName, getNode()
 				.getName());
 		if (sourceReader != null) {
 			super.visitEnd(sourceFileLocator);
@@ -65,8 +71,7 @@ public class SourceFilePage extends ReportPage {
 	@Override
 	protected void content(final HTMLElement body,
 			final ISourceFileLocator sourceFileLocator) throws IOException {
-		final SourceFileCoverage s = (SourceFileCoverage) getNode();
-		new SourceHighlighter().render(body, s.getLines(), sourceReader);
+		new SourceHighlighter().render(body, lines, sourceReader);
 		sourceReader.close();
 	}
 

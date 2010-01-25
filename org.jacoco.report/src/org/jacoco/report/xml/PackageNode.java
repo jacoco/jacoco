@@ -14,6 +14,7 @@ package org.jacoco.report.xml;
 
 import java.io.IOException;
 
+import org.jacoco.core.analysis.ClassCoverage;
 import org.jacoco.core.analysis.ICoverageNode;
 import org.jacoco.core.analysis.ICoverageNode.ElementType;
 import org.jacoco.report.IReportVisitor;
@@ -45,7 +46,7 @@ public class PackageNode extends NodeWithCoverage {
 	public IReportVisitor visitChild(final ICoverageNode node)
 			throws IOException {
 		if (node.getElementType() == ElementType.CLASS) {
-			return new ClassNode(this, node);
+			return new ClassNode(this, (ClassCoverage) node);
 		} else if (node.getElementType() == ElementType.SOURCEFILE) {
 			return new IReportVisitor() {
 

@@ -49,8 +49,7 @@ public class ClassPage extends ReportPage {
 
 		public String getLink(final ReportOutputFolder base) {
 			final SourceFilePage sourceFilePage = sourceFiles
-					.get(((ClassCoverage) ClassPage.this.getNode())
-							.getSourceFileName());
+					.get(sourceFileName);
 			if (sourceFilePage == null || !sourceFilePage.exists()) {
 				return null;
 			}
@@ -69,21 +68,29 @@ public class ClassPage extends ReportPage {
 
 	private final Map<String, SourceFilePage> sourceFiles;
 
+	private final String label;
+
+	private final String sourceFileName;
+
 	/**
 	 * Creates a new visitor in the given context.
 	 * 
-	 * @param node
+	 * @param classNode
 	 * @param parent
 	 * @param sourceFiles
 	 * @param outputFolder
 	 * @param context
 	 */
-	public ClassPage(final ICoverageNode node, final ReportPage parent,
+	public ClassPage(final ClassCoverage classNode, final ReportPage parent,
 			final Map<String, SourceFilePage> sourceFiles,
 			final ReportOutputFolder outputFolder,
 			final IHTMLReportContext context) {
-		super(node, parent, outputFolder, context);
+		super(classNode, parent, outputFolder, context);
 		this.sourceFiles = sourceFiles;
+		this.label = context.getLanguageNames().getClassName(
+				classNode.getName(), classNode.getSignature(),
+				classNode.getSuperName(), classNode.getInterfaceNames());
+		this.sourceFileName = classNode.getSourceFileName();
 	}
 
 	public IReportVisitor visitChild(final ICoverageNode node) {
@@ -109,16 +116,15 @@ public class ClassPage extends ReportPage {
 
 	@Override
 	protected String getFileName() {
-		return context.getLanguageNames().getClassName(getNode().getName(),
-				null, null, null) + ".html";
+		final String vmname = getNode().getName();
+		final int pos = vmname.lastIndexOf('/');
+		final String shortname = pos == -1 ? vmname : vmname.substring(pos + 1);
+		return shortname + ".html";
 	}
 
 	@Override
 	public String getLabel() {
-		final ClassCoverage classNode = (ClassCoverage) getNode();
-		return context.getLanguageNames().getClassName(classNode.getName(),
-				classNode.getSignature(), classNode.getSuperName(),
-				classNode.getInterfaceNames());
+		return label;
 	}
 
 	@Override

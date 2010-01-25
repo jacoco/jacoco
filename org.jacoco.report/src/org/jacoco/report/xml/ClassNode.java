@@ -16,6 +16,7 @@ import java.io.IOException;
 
 import org.jacoco.core.analysis.ClassCoverage;
 import org.jacoco.core.analysis.ICoverageNode;
+import org.jacoco.core.analysis.MethodCoverage;
 import org.jacoco.core.analysis.ICoverageNode.CounterEntity;
 import org.jacoco.report.IReportVisitor;
 
@@ -41,20 +42,19 @@ public class ClassNode extends NodeWithCoverage {
 	 * @throws IOException
 	 *             IO Error creating the element
 	 */
-	public ClassNode(final PackageNode parent, final ICoverageNode classNode)
+	public ClassNode(final PackageNode parent, final ClassCoverage classNode)
 			throws IOException {
 		super(parent, "class", classNode);
-		final ClassCoverage classCoverageNode = (ClassCoverage) classNode;
-		if (classCoverageNode.getSignature() != null) {
-			this.attr("signature", classCoverageNode.getSignature());
+		if (classNode.getSignature() != null) {
+			this.attr("signature", classNode.getSignature());
 		}
-		if (classCoverageNode.getSuperName() != null) {
-			this.attr("superclass", classCoverageNode.getSuperName());
+		if (classNode.getSuperName() != null) {
+			this.attr("superclass", classNode.getSuperName());
 		}
-		if (classCoverageNode.getInterfaceNames() != null) {
+		if (classNode.getInterfaceNames() != null) {
 			boolean first = true;
 			final StringBuilder builder = new StringBuilder();
-			for (final String iface : classCoverageNode.getInterfaceNames()) {
+			for (final String iface : classNode.getInterfaceNames()) {
 				if (first) {
 					first = false;
 				} else {
@@ -68,8 +68,7 @@ public class ClassNode extends NodeWithCoverage {
 
 	public IReportVisitor visitChild(final ICoverageNode node)
 			throws IOException {
-
-		return new MethodNode(this, node);
+		return new MethodNode(this, (MethodCoverage) node);
 	}
 
 	@Override

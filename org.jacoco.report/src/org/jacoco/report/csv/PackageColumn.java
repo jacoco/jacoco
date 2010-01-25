@@ -14,6 +14,7 @@ package org.jacoco.report.csv;
 
 import java.io.IOException;
 
+import org.jacoco.core.analysis.ClassCoverage;
 import org.jacoco.core.analysis.ICoverageNode;
 import org.jacoco.core.analysis.ICoverageNode.ElementType;
 import org.jacoco.report.ILanguageNames;
@@ -54,7 +55,7 @@ public class PackageColumn implements IReportVisitor, ICsvColumn {
 		if (node.getElementType() == ElementType.SOURCEFILE) {
 			return CsvReportFile.NULL_VISITOR;
 		}
-		return new ClassColumn(reportFile, this, node);
+		return new ClassColumn(reportFile, this, (ClassCoverage) node);
 	}
 
 	public void visitEnd(final ISourceFileLocator sourceFileLocator)
