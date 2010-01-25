@@ -35,6 +35,8 @@ public class ReportOutputFolder {
 	/** Cached sub-folder instances to guarantee stable normalization */
 	private final Map<String, ReportOutputFolder> subFolders = new HashMap<String, ReportOutputFolder>();
 
+	private final NormalizedFileNames fileNames;
+
 	/**
 	 * Creates a new root folder for the given output.
 	 * 
@@ -56,6 +58,7 @@ public class ReportOutputFolder {
 		this.output = output;
 		this.parent = parent;
 		this.path = path;
+		fileNames = new NormalizedFileNames();
 	}
 
 	/**
@@ -131,8 +134,7 @@ public class ReportOutputFolder {
 	}
 
 	private String normalize(final String name) {
-		// TODO: escape unsafe characters, case awareness, ensure unique names
-		return name;
+		return fileNames.getFileName(name);
 	}
 
 }
