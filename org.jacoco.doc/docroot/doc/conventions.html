@@ -32,8 +32,17 @@
   Documentation is part of the product. Whenever you implement a new feature or
   change existing behavior make sure to update all corresponding JavaDoc as well
   as other documentation with the same change set. The product should always be
-  in a consistent state.    
+  in a consistent state. For every change the following items should be checked:  
 </p>
+
+<ul>
+  <li>Corresponding JavaDoc.</li>
+  <li>Documentation referring to the modified concepts, interfaces or
+    implementation.</li>
+  <li>New features, bug fixes and modified behavior should be enlisted in the
+    <code>org.jacoco.doc/docroot/doc/changes.html</code> file together with
+    the corresponding issue tracker id.</li>
+</ul>
 
 <h3>Keep an Eye on License Issues</h3>
 
@@ -42,23 +51,33 @@
 </p>
 
 <ul>
-  <li>Every third party content must be enlisted in the corresponding
-      <code>about.html</code> file along with its license.</li>
-  <li>Every third party content included with the JaCoCo distribution must be
-      enlisted in the <code>org.jacoco.doc/docroot/doc/license.html</code> file
-      along with its license.</li>
-  <li>Every source file (Java, Build Script, DTD) must have a
-      <a href="http://www.eclipse.org/legal/copyrightandlicensenotice.php">EPL
-      license notice</a>. The initial contributor should be listed. In case of
-      significant changes or additions additional contributors should also
-      be listed. 
+  <li>
+    Every committer and contributor must agree that all code will be published
+    under EPL. He or she must be the original author and must have the
+    permission to contribute code to JaCoCo, for example if such a permission
+    is required by the employer. 
+  </li>
+  <li>
+    Every third party content must be enlisted in the corresponding
+    <code>about.html</code> file along with its license.
+  </li>
+  <li>
+    Every third party content included with the JaCoCo distribution must be
+    enlisted in the <code>org.jacoco.doc/docroot/doc/license.html</code> file
+    and the corresponding <code>about.html</code> file along with its license.
+  </li>
+  <li>
+    Every source file (Java, Build Script, DTD) must have a
+    <a href="http://www.eclipse.org/legal/copyrightandlicensenotice.php">EPL
+    license notice</a>. The initial contributor should be listed. In case of
+    significant changes or additions additional contributors should also
+    be listed. 
   </li>
 </ul>
 
-
 <div class="footer">
   <div class="versioninfo"><a href="@HOMEURL@">JaCoCo</a> @VERSION@</div>
-  <a href="license.html">Copyright</a> &copy; 2009 Mountainminds GmbH &amp; Co. KG and Contributors
+  <a href="license.html">Copyright</a> &copy; 2009, 2010 Mountainminds GmbH &amp; Co. KG and Contributors
 </div>
 
 </body>
