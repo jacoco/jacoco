@@ -57,6 +57,8 @@ public class AgentTask extends AbstractCoverageTask {
 		if (property == null || property.length() == 0) {
 			throw new BuildException("Property is mandatory");
 		}
-		getProject().setNewProperty(property, getLaunchingArgument());
+		final String jvmArg = isEnabled() ? getLaunchingArgument() : "";
+
+		getProject().setNewProperty(property, jvmArg);
 	}
 }

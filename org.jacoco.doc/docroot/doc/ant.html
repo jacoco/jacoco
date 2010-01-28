@@ -61,7 +61,7 @@
 </p>
 
 
-<h2>Task <code>coverage</code></h2>
+<h2><a name="coverage">Task <code>coverage</code></a></h2>
 
 <p>
   The standard Ant tasks to launch Java programs are <code>java</code> and
@@ -120,6 +120,11 @@
   </thead>
   <tbody>
     <tr>
+    <tr>
+      <td><code>enabled</code></td>
+      <td>If set to <code>true</code> coverage data will be collected for the contained task.</td>
+      <td><code>true</code></td>
+    </tr>
       <td><code>destfile</code></td>
       <td>Path to the output file for execution data.</td>
       <td><code>jacoco.exec</code></td>
@@ -168,7 +173,38 @@
 </table>
 
 
-<h2>Task <code>agent</code></h2>
+<h2><a name="agent">Task <code>merge</code></a></h2>
+
+<p>
+  This task can be used to merge the execution data from multiple test runs
+  into a single data store.
+</p>
+
+<pre class="source">
+<span class="nr">    1</span>&lt;jacoco:merge destfile="merged.exec"/>
+</pre>
+
+
+<table class="merge">
+  <thead>
+    <tr>
+      <td>Attribute</td>
+      <td>Description</td>
+      <td>Default</td>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>destfile</code></td>
+      <td>Location to write the merged execution data.</td>
+      <td><i>none (required)</i></td>
+    </tr>
+  </tbody>
+</table>
+
+<h3>Element <code>fileset</code></h3>
+
+<h2><a name="agent">Task <code>agent</code></a></h2>
 
 <p>
   If the <code>coverage</code> task is not suitable for your launch target, you
@@ -196,6 +232,12 @@
   </thead>
   <tbody>
     <tr>
+      <td><code>enabled</code></td>
+      <td>When this variable is set to <code>false</code> the value of <code>property</code> will be set to an empty string, effectively
+          disabling coverage instrumentation for any tasks that used the value</td>
+      <td><code>true</code></td>
+    </tr>
+    <tr>
       <td><code>property</code></td>
       <td>Name of the Ant property to set.</td>
       <td><i>none (required)</i></td>
@@ -206,7 +248,7 @@
   </tbody>
 </table>
 
-<h2>Task <code>report</code></h2>
+<h2><a name="report">Task <code>report</code></a></h2>
 
 <p>
   Finally different reports can be created with the <code>report</code> task.

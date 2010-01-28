@@ -88,8 +88,10 @@ public class CoverageTask extends AbstractCoverageTask implements TaskContainer 
 			throw new BuildException(
 					"A child task must be supplied for the coverage task");
 		}
-		log(format("Enhancing %s with coverage.", childTask.getTaskName()));
-		childTask.execute();
+		if (isEnabled()) {
+			log(format("Enhancing %s with coverage.", childTask.getTaskName()));
+			childTask.execute();
+		}
 	}
 
 	/**

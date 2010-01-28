@@ -33,6 +33,11 @@
 		<au:assertPropertySet name="jacocoagent"/>
 	</target>
 	
+	<target name="testCoverageAgentDisabled">
+		<jacoco:agent enabled="false" property="jacocoagent" append="false" destfile="${basedir}/test.exec" exclClassLoader="sun.reflect.DelegatingClassLoader"/>
+		<au:assertPropertyEquals name="jacocoagent" value=""/>
+	</target>
+	
 	<target name="testCoverageAgentWithNoProperty">
 		<au:expectfailure expectedMessage="Property is mandatory">
 			<jacoco:agent/>
@@ -82,6 +87,19 @@
 		<au:assertLogContains text="Enhancing java with coverage"/>
 		<au:assertFileExists file="${testCoverageOfForkedJava.exec.file}"/>
 	</target>
+	
+	<target name="testCoverageOfForkedJavaDisabled">
+		<property name="testCoverageOfForkedJava.exec.file" location="${result.tmp.bundle.testdata.dir}/testCoverageOfForkedJavaDisabled.exec"/>
+		<jacoco:coverage enabled="false" destfile="${testCoverageOfForkedJava.exec.file}">
+			<java classname="org.jacoco.ant.test.EmptyMain" fork="true">
+				<classpath>
+					<path refid="ant-test-classes"/>
+				</classpath>
+			</java>
+		</jacoco:coverage>
+		<au:assertLogDoesntContain text="Enhancing java with coverage"/>
+		<au:assertFileDoesntExist file="${testCoverageOfForkedJava.exec.file}"/>
+	</target>
 
 	<target name="testCoverageOfNonForkedJava">
 		<au:expectfailure expectedMessage="Coverage can only be applied on a forked VM">
@@ -112,6 +130,25 @@
 		</jacoco:coverage>
 		<au:assertLogContains text="Enhancing junit with coverage"/>
 		<au:assertFileExists file="${testCoverageOfForkedJUnit.exec.file}"/>
+	</target>
+	
+	<target name="testCoverageOfForkedJUnitDisabled">
+		<property name="testCoverageOfForkedJUnit.exec.file" location="${result.tmp.bundle.testdata.dir}/testCoverageOfForkedJUnitDisabled.exec"/>
+		<jacoco:coverage enabled="false" destfile="${testCoverageOfForkedJUnit.exec.file}">
+			<junit fork="true" >
+				<classpath>
+					<path refid="bundle-org.junit4"/>
+					<path refid="ant-test-classes"/>
+				</classpath>
+			    <batchtest todir="${result.tmp.bundle.test.dir}" >
+					<fileset dir="${result.tmp.bundle.classes.dir}">
+						<include name="org/jacoco/ant/test/EmptyTest.class"/>
+					</fileset>
+			    </batchtest>
+			</junit>
+		</jacoco:coverage>
+		<au:assertLogDoesntContain text="Enhancing junit with coverage"/>
+		<au:assertFileDoesntExist file="${testCoverageOfForkedJUnit.exec.file}"/>
 	</target>
 
 	<target name="testCoverageOfNonForkedJUnit">
