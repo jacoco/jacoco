@@ -29,13 +29,15 @@ import org.jacoco.core.runtime.AgentOptions;
 public class AbstractCoverageTask extends Task {
 
 	private final AgentOptions agentOptions;
-	private boolean enabled = true;
+
+	private boolean enabled;
 
 	/**
 	 * Create default agent options
 	 */
 	protected AbstractCoverageTask() {
 		agentOptions = new AgentOptions();
+		enabled = true;
 	}
 
 	/**
