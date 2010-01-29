@@ -22,12 +22,6 @@
 		<path refid="bundle-org.junit4"/>
 	</path>
 		
-	<taskdef uri="antlib:org.apache.ant.antunit" resource="org/apache/ant/antunit/antlib.xml">
-		<classpath>
-			<fileset dir="${source.bundle.dir}/ant/lib" includes="*.jar"/>
-		</classpath>
-	</taskdef>
-	
 	<taskdef uri="antlib:org.jacoco.ant" resource="org/jacoco/ant/antlib.xml">
 		<classpath>
 			<file file="${result.dist.lib.dir}/jacocoant.jar"/>
