@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009 Mountainminds GmbH & Co. KG and others
+ * Copyright (c) 2009, 2010 Mountainminds GmbH & Co. KG and others
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -13,7 +13,7 @@
 package org.jacoco.core.runtime;
 
 import org.jacoco.core.data.IExecutionDataVisitor;
-import org.objectweb.asm.commons.GeneratorAdapter;
+import org.objectweb.asm.MethodVisitor;
 
 /**
  * This interface represents a particular mechanism to collect execution
@@ -31,18 +31,18 @@ public interface IRuntime {
 	 * initialization. This method can be called at any time even outside the
 	 * target VM.
 	 * 
-	 * The generated code must push a <code>byte[][]</code> instance to the
+	 * The generated code must push a <code>boolean[]</code> instance to the
 	 * operand stack. Except this result object the generated code must not make
 	 * any assumptions about the structure of the embedding method or class.
 	 * 
 	 * @param classid
 	 *            identifier of the class
-	 * @param gen
+	 * @param mv
 	 *            code output
 	 * @return additional stack size required by the implementation, including
 	 *         the instance pushed to the stack
 	 */
-	public int generateDataAccessor(long classid, GeneratorAdapter gen);
+	public int generateDataAccessor(long classid, MethodVisitor mv);
 
 	/**
 	 * Starts the coverage runtime. This method MUST be called before any class
@@ -68,8 +68,7 @@ public interface IRuntime {
 	 * @param data
 	 *            execution data structure for this class
 	 */
-	public void registerClass(long classid, final String name,
-			boolean[] data);
+	public void registerClass(long classid, final String name, boolean[] data);
 
 	/**
 	 * Collects the current execution data and writes it to the given

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009 Mountainminds GmbH & Co. KG and others
+ * Copyright (c) 2009, 2010 Mountainminds GmbH & Co. KG and others
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -18,9 +18,8 @@ import java.util.logging.LogRecord;
 import java.util.logging.Logger;
 
 import org.jacoco.core.instr.GeneratorConstants;
+import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
-import org.objectweb.asm.Type;
-import org.objectweb.asm.commons.GeneratorAdapter;
 
 /**
  * This {@link IRuntime} implementation uses the Java logging API to report
@@ -63,23 +62,22 @@ public class LoggerRuntime extends AbstractRuntime {
 		return l;
 	}
 
-	public int generateDataAccessor(final long classid,
-			final GeneratorAdapter gen) {
+	public int generateDataAccessor(final long classid, final MethodVisitor mv) {
 
 		// 1. Create parameter array:
 
-		gen.push(1);
-		gen.newArray(Type.getObjectType("java/lang/Object"));
+		mv.visitInsn(Opcodes.ICONST_1);
+		mv.visitTypeInsn(Opcodes.ANEWARRAY, "java/lang/Object");
 
 		// Stack[0]: [Ljava/lang/Object;
 
-		gen.dup();
+		mv.visitInsn(Opcodes.DUP);
 
 		// Stack[1]: [Ljava/lang/Object;
 		// Stack[0]: [Ljava/lang/Object;
 
-		gen.push(0);
-		gen.push(classid);
+		mv.visitInsn(Opcodes.ICONST_0);
+		mv.visitLdcInsn(Long.valueOf(classid));
 
 		// Stack[4]: J
 		// Stack[3]: .
@@ -87,7 +85,7 @@ public class LoggerRuntime extends AbstractRuntime {
 		// Stack[1]: [Ljava/lang/Object;
 		// Stack[0]: [Ljava/lang/Object;
 
-		gen.visitMethodInsn(Opcodes.INVOKESTATIC, "java/lang/Long", "valueOf",
+		mv.visitMethodInsn(Opcodes.INVOKESTATIC, "java/lang/Long", "valueOf",
 				"(J)Ljava/lang/Long;");
 
 		// Stack[3]: Ljava/lang/Long;
@@ -95,55 +93,55 @@ public class LoggerRuntime extends AbstractRuntime {
 		// Stack[1]: [Ljava/lang/Object;
 		// Stack[0]: [Ljava/lang/Object;
 
-		gen.arrayStore(Type.getObjectType("java/lang/Object"));
+		mv.visitInsn(Opcodes.AASTORE);
 
 		// Stack[0]: [Ljava/lang/Object;
 
-		final int param = gen.newLocal(Type.getObjectType("java/lang/Object"));
-		gen.storeLocal(param);
+		mv.visitVarInsn(Opcodes.ASTORE, 0);
 
 		// 2. Call Logger:
 
-		gen.push(CHANNEL);
-		gen.visitMethodInsn(Opcodes.INVOKESTATIC, "java/util/logging/Logger",
+		mv.visitLdcInsn(CHANNEL);
+		mv.visitMethodInsn(Opcodes.INVOKESTATIC, "java/util/logging/Logger",
 				"getLogger", "(Ljava/lang/String;)Ljava/util/logging/Logger;");
 
 		// Stack[0]: Ljava/util/logging/Logger;
 
-		gen.getStatic(Type.getObjectType("java/util/logging/Level"), "INFO",
-				Type.getObjectType("java/util/logging/Level"));
+		mv.visitFieldInsn(Opcodes.GETSTATIC, "java/util/logging/Level",
+				"INFO", "Ljava/util/logging/Level;");
 
 		// Stack[1]: Ljava/util/logging/Level;
 		// Stack[0]: Ljava/util/logging/Logger;
 
-		gen.push(key);
+		mv.visitLdcInsn(key);
 
 		// Stack[2]: Ljava/lang/String;
 		// Stack[1]: Ljava/util/logging/Level;
 		// Stack[0]: Ljava/util/logging/Logger;
 
-		gen.loadLocal(param);
+		mv.visitVarInsn(Opcodes.ALOAD, 0);
 
 		// Stack[3]: [Ljava/lang/Object;
 		// Stack[2]: Ljava/lang/String;
 		// Stack[1]: Ljava/util/logging/Level;
 		// Stack[0]: Ljava/util/logging/Logger;
 
-		gen
+		mv
 				.visitMethodInsn(Opcodes.INVOKEVIRTUAL,
 						"java/util/logging/Logger", "log",
 						"(Ljava/util/logging/Level;Ljava/lang/String;[Ljava/lang/Object;)V");
 
 		// 3. Load data structure from parameter array:
 
-		gen.loadLocal(param);
-		gen.push(0);
+		mv.visitVarInsn(Opcodes.ALOAD, 0);
+		mv.visitInsn(Opcodes.ICONST_0);
 
 		// Stack[1]: I
 		// Stack[0]: [Ljava/lang/Object;
 
-		gen.arrayLoad(GeneratorConstants.PROBEDATA_TYPE);
-		gen.checkCast(GeneratorConstants.PROBEDATA_TYPE);
+		mv.visitInsn(Opcodes.AALOAD);
+		mv.visitTypeInsn(Opcodes.CHECKCAST, GeneratorConstants.PROBEDATA_TYPE
+				.getInternalName());
 
 		// Stack[0]: [Z
 

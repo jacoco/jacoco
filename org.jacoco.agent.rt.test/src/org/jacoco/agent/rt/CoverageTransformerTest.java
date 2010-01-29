@@ -19,7 +19,7 @@ import org.jacoco.core.runtime.AbstractRuntime;
 import org.jacoco.core.runtime.AgentOptions;
 import org.junit.Before;
 import org.junit.Test;
-import org.objectweb.asm.commons.GeneratorAdapter;
+import org.objectweb.asm.MethodVisitor;
 
 /**
  * Unit tests for {@link CoverageTransformer}.
@@ -96,7 +96,7 @@ public class CoverageTransformerTest {
 	}
 
 	private static class StubRuntime extends AbstractRuntime {
-		public int generateDataAccessor(long classid, GeneratorAdapter gen) {
+		public int generateDataAccessor(long classid, MethodVisitor mv) {
 			return 0;
 		}
 

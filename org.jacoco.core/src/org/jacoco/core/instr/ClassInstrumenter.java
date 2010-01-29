@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009 Mountainminds GmbH & Co. KG and others
+ * Copyright (c) 2009, 2010 Mountainminds GmbH & Co. KG and others
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -21,6 +21,7 @@ import org.objectweb.asm.ClassVisitor;
 import org.objectweb.asm.FieldVisitor;
 import org.objectweb.asm.Label;
 import org.objectweb.asm.MethodVisitor;
+import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.Type;
 import org.objectweb.asm.commons.GeneratorAdapter;
 
@@ -115,27 +116,28 @@ public class ClassInstrumenter extends BlockClassAdapter {
 				access, name, desc, null, null), access, name, desc);
 
 		// Load the value of the static data field:
-		gen.getStatic(type, GeneratorConstants.DATAFIELD_NAME,
-				GeneratorConstants.PROBEDATA_TYPE);
-		gen.dup();
+		gen.visitFieldInsn(Opcodes.GETSTATIC, type.getInternalName(),
+				GeneratorConstants.DATAFIELD_NAME,
+				GeneratorConstants.PROBEDATA_TYPE.getDescriptor());
+		gen.visitInsn(Opcodes.DUP);
 
 		// Stack[1]: [Z
 		// Stack[0]: [Z
 
 		// Skip initialization when we already have a data array:
 		final Label alreadyInitialized = new Label();
-		gen.ifNonNull(alreadyInitialized);
+		gen.visitJumpInsn(Opcodes.IFNONNULL, alreadyInitialized);
 
 		// Stack[0]: [Z
 
-		gen.pop();
+		gen.visitInsn(Opcodes.POP);
 		final int size = genInitializeDataField(gen);
 
 		// Stack[0]: [Z
 
 		// Return the method's block array:
 		gen.visitLabel(alreadyInitialized);
-		gen.returnValue();
+		gen.visitInsn(Opcodes.ARETURN);
 
 		gen.visitMaxs(Math.max(size, 2), 0); // Maximum local stack size is 2
 		gen.visitEnd();
@@ -155,13 +157,14 @@ public class ClassInstrumenter extends BlockClassAdapter {
 
 		// Stack[0]: [Z
 
-		gen.dup();
+		gen.visitInsn(Opcodes.DUP);
 
 		// Stack[1]: [Z
 		// Stack[0]: [Z
 
-		gen.putStatic(type, GeneratorConstants.DATAFIELD_NAME,
-				GeneratorConstants.PROBEDATA_TYPE);
+		gen.visitFieldInsn(Opcodes.PUTSTATIC, type.getInternalName(),
+				GeneratorConstants.DATAFIELD_NAME,
+				GeneratorConstants.PROBEDATA_TYPE.getDescriptor());
 
 		// Stack[0]: [Z
 
