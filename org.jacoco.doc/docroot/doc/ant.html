@@ -173,41 +173,6 @@
 </table>
 
 
-<h2><a name="merge">Task <code>merge</code></a></h2>
-
-<p>
-  This task can be used to merge the execution data from multiple test runs
-  into a single data store.
-</p>
-
-<pre class="source">
-<span class="nr">    1</span>&lt;jacoco:merge destfile="merged.exec"/>
-<span class="nr">    2</span>    &lt;fileset dir="executionData" includes="*.exec"/>
-<span class="nr">    3</span>&lt;/jacoco:merge/>
-</pre>
-
-
-<table class="coverage">
-  <thead>
-    <tr>
-      <td>Attribute</td>
-      <td>Description</td>
-      <td>Default</td>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td><code>destfile</code></td>
-      <td>Location to write the merged execution data.</td>
-      <td><i>none (required)</i></td>
-    </tr>
-  </tbody>
-</table>
-
-<h3>Element <code>fileset</code></h3>
-
-<p>Fileset containing the list of execution data files to be merged</p>
-
 <h2><a name="agent">Task <code>agent</code></a></h2>
 
 <p>
@@ -251,6 +216,43 @@
     </tr>
   </tbody>
 </table>
+
+
+<h2><a name="merge">Task <code>merge</code></a></h2>
+
+<p>
+  This task can be used to merge the execution data from multiple test runs
+  into a single data store. 
+</p>
+
+<pre class="source">
+<span class="nr">    1</span>&lt;jacoco:merge destfile="merged.exec"/>
+<span class="nr">    2</span>    &lt;fileset dir="executionData" includes="*.exec"/>
+<span class="nr">    3</span>&lt;/jacoco:merge/>
+</pre>
+
+<p>
+  The task definition can contain any number of resource collection types and
+  has the following mandatory attribute: 
+</p>
+
+<table class="coverage">
+  <thead>
+    <tr>
+      <td>Attribute</td>
+      <td>Description</td>
+      <td>Default</td>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>destfile</code></td>
+      <td>Location to write the merged execution data.</td>
+      <td><i>none (required)</i></td>
+    </tr>
+  </tbody>
+</table>
+
 
 <h2><a name="report">Task <code>report</code></a></h2>
 

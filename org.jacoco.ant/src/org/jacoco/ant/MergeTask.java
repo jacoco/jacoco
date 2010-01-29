@@ -18,15 +18,14 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.util.Collections;
 import java.util.Iterator;
 
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
-import org.apache.tools.ant.types.FileSet;
 import org.apache.tools.ant.types.Resource;
 import org.apache.tools.ant.types.ResourceCollection;
+import org.apache.tools.ant.types.resources.Union;
 import org.apache.tools.ant.util.FileUtils;
 import org.jacoco.core.data.ExecutionDataReader;
 import org.jacoco.core.data.ExecutionDataStore;
@@ -41,7 +40,8 @@ import org.jacoco.core.data.ExecutionDataWriter;
 public class MergeTask extends Task {
 
 	private File destfile;
-	private ResourceCollection files;
+
+	private final Union files = new Union();
 
 	/**
 	 * Sets the location of the merged data store
@@ -54,24 +54,13 @@ public class MergeTask extends Task {
 	}
 
 	/**
-	 * Sets the fileset used to describe the list of files to merge
+	 * This task accepts any number of execution data resources.
 	 * 
-	 * @param fileset
-	 *            Set of files to be merged
+	 * @param resources
+	 *            Execution data resources
 	 */
-	public void setFileset(final FileSet fileset) {
-		this.files = fileset;
-	}
-
-	/**
-	 * Creates a new File Set
-	 * 
-	 * @return New empty file set
-	 */
-	public FileSet createFileSet() {
-		final FileSet fileset = new FileSet();
-		setFileset(fileset);
-		return fileset;
+	public void addConfigured(final ResourceCollection resources) {
+		files.add(resources);
 	}
 
 	@Override
@@ -88,10 +77,13 @@ public class MergeTask extends Task {
 
 		int numFilesMerged = 0;
 
-		final Iterator<?> resourceIterator = files != null ? files.iterator()
-				: Collections.EMPTY_SET.iterator();
+		final Iterator<?> resourceIterator = files.iterator();
 		while (resourceIterator.hasNext()) {
 			final Resource resource = (Resource) resourceIterator.next();
+
+			if (resource.isDirectory()) {
+				continue;
+			}
 
 			log(String.format("Merging %s", resource.getName()),
 					Project.MSG_DEBUG);
@@ -126,7 +118,6 @@ public class MergeTask extends Task {
 					outputStream);
 			dataStore.accept(dataWriter);
 		} catch (final IOException e) {
-			e.printStackTrace();
 			throw new BuildException(String.format(
 					"Unable to write merged file %s", destfile.getName()), e);
 		} finally {

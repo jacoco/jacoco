@@ -193,7 +193,7 @@
 	<target name="testMergeMultipleFiles">
 		<property name="testMergeMultipleFiles.exec.file" value="${result.tmp.bundle.testdata.dir}/merged.exec"/>
 		<jacoco:merge destfile="${testMergeMultipleFiles.exec.file}">
-			<fileset dir="executiondata" includes="*.exec"/>
+			<fileset dir="executionData" includes="*.exec"/>
 		</jacoco:merge>
 		
 		<au:assertLogContains text="2 files merged"/>
