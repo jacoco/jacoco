@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009 Mountainminds GmbH & Co. KG and others
+ * Copyright (c) 2009, 2010 Mountainminds GmbH & Co. KG and others
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -12,6 +12,8 @@
  *******************************************************************************/
 package org.jacoco.core.test;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 
 /**
@@ -64,6 +66,18 @@ public class TargetLoader extends ClassLoader {
 		final String resource = "/" + clazz.getName().replace('.', '/')
 				+ ".class";
 		return clazz.getResourceAsStream(resource);
+	}
+
+	public static byte[] getClassDataAsBytes(Class<?> clazz) throws IOException {
+		InputStream in = getClassData(clazz);
+		ByteArrayOutputStream out = new ByteArrayOutputStream();
+		byte[] buffer = new byte[0x100];
+		int len;
+		while ((len = in.read(buffer)) != -1) {
+			out.write(buffer, 0, len);
+		}
+		in.close();
+		return out.toByteArray();
 	}
 
 	@Override

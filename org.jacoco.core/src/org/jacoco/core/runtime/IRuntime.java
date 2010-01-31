@@ -47,8 +47,11 @@ public interface IRuntime {
 	/**
 	 * Starts the coverage runtime. This method MUST be called before any class
 	 * instrumented for this runtime is loaded.
+	 * 
+	 * @throws Exception
+	 *             any internal problem during startup
 	 */
-	public void startup();
+	public void startup() throws Exception;
 
 	/**
 	 * Allows the coverage runtime to cleanup internals. This class should be

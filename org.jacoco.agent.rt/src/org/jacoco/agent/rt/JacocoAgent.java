@@ -22,7 +22,7 @@ import java.lang.instrument.Instrumentation;
 import org.jacoco.core.data.ExecutionDataWriter;
 import org.jacoco.core.runtime.AgentOptions;
 import org.jacoco.core.runtime.IRuntime;
-import org.jacoco.core.runtime.LoggerRuntime;
+import org.jacoco.core.runtime.ModifiedSystemClassRuntime;
 
 /**
  * The agent which is referred as the <code>Premain-Class</code>.
@@ -60,10 +60,12 @@ public class JacocoAgent {
 	 * Initializes this agent.
 	 * 
 	 * @param inst
-	 *            instrumentation callback
+	 *            instrumentation services
+	 * @throws Exception
+	 *             internal startup problem
 	 */
-	public void init(final Instrumentation inst) {
-		runtime = createRuntime();
+	public void init(final Instrumentation inst) throws Exception {
+		runtime = createRuntime(inst);
 		runtime.startup();
 		inst.addTransformer(new CoverageTransformer(runtime, options));
 	}
@@ -71,10 +73,15 @@ public class JacocoAgent {
 	/**
 	 * Creates the specific coverage runtime implementation.
 	 * 
+	 * @param inst
+	 *            instrumentation services
 	 * @return coverage runtime instance
+	 * @throws Exception
+	 *             creation problem
 	 */
-	protected IRuntime createRuntime() {
-		return new LoggerRuntime();
+	protected IRuntime createRuntime(final Instrumentation inst)
+			throws Exception {
+		return ModifiedSystemClassRuntime.createFor(inst, "java/lang/Void");
 	}
 
 	/**
@@ -116,7 +123,8 @@ public class JacocoAgent {
 	 * @param inst
 	 *            intrumentation callback provided by the JVM
 	 */
-	public static void premain(final String options, final Instrumentation inst) {
+	public static void premain(final String options, final Instrumentation inst)
+			throws Exception {
 		final JacocoAgent agent = new JacocoAgent(options);
 		agent.init(inst);
 
