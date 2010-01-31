@@ -18,7 +18,6 @@ import org.jacoco.core.test.MethodRecorder;
 import org.junit.Before;
 import org.junit.Test;
 import org.objectweb.asm.Opcodes;
-import org.objectweb.asm.Type;
 
 /**
  * Unit tests for {@link MethodInstrumenter}.
@@ -38,8 +37,8 @@ public class MethodInstrumenterTest {
 	public void setup() {
 		actual = new MethodRecorder();
 		expected = new MethodRecorder();
-		instrumenter = new MethodInstrumenter(actual, 0, "test", "()V", Type
-				.getObjectType("Target"));
+		instrumenter = new MethodInstrumenter(actual, 0, "test", "()V",
+				"Target");
 	}
 
 	void sampleReturn() {

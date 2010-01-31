@@ -22,8 +22,6 @@ import org.objectweb.asm.FieldVisitor;
 import org.objectweb.asm.Label;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
-import org.objectweb.asm.Type;
-import org.objectweb.asm.commons.GeneratorAdapter;
 
 /**
  * Adapter that instruments a class for coverage tracing.
@@ -39,7 +37,7 @@ public class ClassInstrumenter extends BlockClassAdapter {
 
 	private final IRuntime runtime;
 
-	private Type type;
+	private String className;
 
 	/**
 	 * Emits a instrumented version of this class to the given class visitor.
@@ -62,7 +60,7 @@ public class ClassInstrumenter extends BlockClassAdapter {
 	public void visit(final int version, final int access, final String name,
 			final String signature, final String superName,
 			final String[] interfaces) {
-		this.type = Type.getObjectType(name);
+		this.className = name;
 		delegate.visit(version, access, name, signature, superName, interfaces);
 	}
 
@@ -77,7 +75,7 @@ public class ClassInstrumenter extends BlockClassAdapter {
 			final String name, final String desc, final String signature,
 			final String[] exceptions) {
 
-		assertNotInstrumented(name, GeneratorConstants.INIT_METHOD.getName());
+		assertNotInstrumented(name, GeneratorConstants.INITMETHOD_NAME);
 
 		final MethodVisitor mv = delegate.visitMethod(access, name, desc,
 				signature, exceptions);
@@ -85,7 +83,7 @@ public class ClassInstrumenter extends BlockClassAdapter {
 		if (mv == null) {
 			return null;
 		}
-		return new MethodInstrumenter(mv, access, name, desc, type);
+		return new MethodInstrumenter(mv, access, name, desc, className);
 	}
 
 	@Override
@@ -109,38 +107,37 @@ public class ClassInstrumenter extends BlockClassAdapter {
 	}
 
 	private void createInitMethod() {
-		final int access = GeneratorConstants.INIT_METHOD_ACC;
-		final String name = GeneratorConstants.INIT_METHOD.getName();
-		final String desc = GeneratorConstants.INIT_METHOD.getDescriptor();
-		final GeneratorAdapter gen = new GeneratorAdapter(delegate.visitMethod(
-				access, name, desc, null, null), access, name, desc);
+		final int access = GeneratorConstants.INITMETHOD_ACC;
+		final MethodVisitor mv = delegate.visitMethod(access,
+				GeneratorConstants.INITMETHOD_NAME,
+				GeneratorConstants.INITMETHOD_DESC, null, null);
 
 		// Load the value of the static data field:
-		gen.visitFieldInsn(Opcodes.GETSTATIC, type.getInternalName(),
+		mv.visitFieldInsn(Opcodes.GETSTATIC, className,
 				GeneratorConstants.DATAFIELD_NAME,
 				GeneratorConstants.PROBEDATA_TYPE.getDescriptor());
-		gen.visitInsn(Opcodes.DUP);
+		mv.visitInsn(Opcodes.DUP);
 
 		// Stack[1]: [Z
 		// Stack[0]: [Z
 
 		// Skip initialization when we already have a data array:
 		final Label alreadyInitialized = new Label();
-		gen.visitJumpInsn(Opcodes.IFNONNULL, alreadyInitialized);
+		mv.visitJumpInsn(Opcodes.IFNONNULL, alreadyInitialized);
 
 		// Stack[0]: [Z
 
-		gen.visitInsn(Opcodes.POP);
-		final int size = genInitializeDataField(gen);
+		mv.visitInsn(Opcodes.POP);
+		final int size = genInitializeDataField(mv);
 
 		// Stack[0]: [Z
 
 		// Return the method's block array:
-		gen.visitLabel(alreadyInitialized);
-		gen.visitInsn(Opcodes.ARETURN);
+		mv.visitLabel(alreadyInitialized);
+		mv.visitInsn(Opcodes.ARETURN);
 
-		gen.visitMaxs(Math.max(size, 2), 0); // Maximum local stack size is 2
-		gen.visitEnd();
+		mv.visitMaxs(Math.max(size, 2), 1); // Maximum local stack size is 2
+		mv.visitEnd();
 	}
 
 	/**
@@ -149,20 +146,20 @@ public class ClassInstrumenter extends BlockClassAdapter {
 	 * 
 	 * The code will push the [[Z data array on the operand stack.
 	 * 
-	 * @param gen
+	 * @param mv
 	 *            generator to emit code to
 	 */
-	private int genInitializeDataField(final GeneratorAdapter gen) {
-		final int size = runtime.generateDataAccessor(id, gen);
+	private int genInitializeDataField(final MethodVisitor mv) {
+		final int size = runtime.generateDataAccessor(id, mv);
 
 		// Stack[0]: [Z
 
-		gen.visitInsn(Opcodes.DUP);
+		mv.visitInsn(Opcodes.DUP);
 
 		// Stack[1]: [Z
 		// Stack[0]: [Z
 
-		gen.visitFieldInsn(Opcodes.PUTSTATIC, type.getInternalName(),
+		mv.visitFieldInsn(Opcodes.PUTSTATIC, className,
 				GeneratorConstants.DATAFIELD_NAME,
 				GeneratorConstants.PROBEDATA_TYPE.getDescriptor());
 
@@ -188,7 +185,7 @@ public class ClassInstrumenter extends BlockClassAdapter {
 			final String instrMember) throws IllegalStateException {
 		if (member.equals(instrMember)) {
 			throw new IllegalStateException(format(
-					"Class %s is already instrumented.", type.getClassName()));
+					"Class %s is already instrumented.", className));
 		}
 	}
 
@@ -198,7 +195,7 @@ public class ClassInstrumenter extends BlockClassAdapter {
 	 */
 	private void registerClass() {
 		final boolean[] data = new boolean[getProbeCount()];
-		runtime.registerClass(id, type.getInternalName(), data);
+		runtime.registerClass(id, className, data);
 	}
 
 	// Methods we simply delegate:

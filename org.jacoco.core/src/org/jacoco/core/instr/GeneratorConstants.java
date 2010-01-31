@@ -14,7 +14,6 @@ package org.jacoco.core.instr;
 
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.Type;
-import org.objectweb.asm.commons.Method;
 
 /**
  * Constants for generated instrumentation code.
@@ -47,14 +46,19 @@ public final class GeneratorConstants {
 	// === Init Method ===
 
 	/**
-	 * Initialization method that is added into every instrumented class.
+	 * Name of the initialization method.
 	 */
-	public static final Method INIT_METHOD = new Method("$jacocoInit", "()[Z");
+	public static final String INITMETHOD_NAME = "$jacocoInit";
+
+	/**
+	 * Descriptor of the initialization method.
+	 */
+	public static final String INITMETHOD_DESC = "()[Z";
 
 	/**
 	 * Access modifiers of the initialization method.
 	 */
-	public static final int INIT_METHOD_ACC = Opcodes.ACC_SYNTHETIC
+	public static final int INITMETHOD_ACC = Opcodes.ACC_SYNTHETIC
 			| Opcodes.ACC_PRIVATE | Opcodes.ACC_STATIC | Opcodes.ACC_FINAL;
 
 }

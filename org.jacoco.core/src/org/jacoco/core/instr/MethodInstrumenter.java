@@ -14,7 +14,6 @@ package org.jacoco.core.instr;
 
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
-import org.objectweb.asm.Type;
 import org.objectweb.asm.commons.GeneratorAdapter;
 
 /**
@@ -27,7 +26,7 @@ import org.objectweb.asm.commons.GeneratorAdapter;
 public class MethodInstrumenter extends GeneratorAdapter implements
 		IBlockMethodVisitor {
 
-	private final Type enclosingType;
+	private final String enclosingType;
 
 	private int probeArray;
 
@@ -46,7 +45,7 @@ public class MethodInstrumenter extends GeneratorAdapter implements
 	 *            type enclosing this method
 	 */
 	public MethodInstrumenter(final MethodVisitor mv, final int access,
-			final String name, final String desc, final Type enclosingType) {
+			final String name, final String desc, final String enclosingType) {
 		super(mv, access, name, desc);
 		this.enclosingType = enclosingType;
 	}
@@ -56,12 +55,14 @@ public class MethodInstrumenter extends GeneratorAdapter implements
 		super.visitCode();
 		// At the very beginning of the method we load the boolean[] array into
 		// a local variable that stores the probes for this class.
-		invokeStatic(enclosingType, GeneratorConstants.INIT_METHOD);
+		mv.visitMethodInsn(Opcodes.INVOKESTATIC, enclosingType,
+				GeneratorConstants.INITMETHOD_NAME,
+				GeneratorConstants.INITMETHOD_DESC);
 
 		// Stack[0]: [Z
 
 		probeArray = newLocal(GeneratorConstants.PROBEDATA_TYPE);
-		storeLocal(probeArray);
+		mv.visitVarInsn(Opcodes.ASTORE, probeArray);
 	}
 
 	@Override
@@ -76,7 +77,7 @@ public class MethodInstrumenter extends GeneratorAdapter implements
 		// At the end of every block we set the corresponding position in the
 		// boolean[] array to true.
 
-		loadLocal(probeArray);
+		mv.visitVarInsn(Opcodes.ALOAD, probeArray);
 
 		// Stack[0]: [Z
 
@@ -85,7 +86,7 @@ public class MethodInstrumenter extends GeneratorAdapter implements
 		// Stack[1]: I
 		// Stack[0]: [Z
 
-		push(1);
+		mv.visitInsn(Opcodes.ICONST_1);
 
 		// Stack[2]: I
 		// Stack[1]: I
