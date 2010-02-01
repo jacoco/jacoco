@@ -81,7 +81,7 @@ public class JacocoAgent {
 	 */
 	protected IRuntime createRuntime(final Instrumentation inst)
 			throws Exception {
-		return ModifiedSystemClassRuntime.createFor(inst, "java/lang/Void");
+		return ModifiedSystemClassRuntime.createFor(inst, "java/sql/Types");
 	}
 
 	/**
