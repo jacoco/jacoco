@@ -22,11 +22,11 @@ import static org.junit.Assert.fail;
 import java.lang.instrument.ClassDefinition;
 import java.lang.instrument.ClassFileTransformer;
 import java.lang.instrument.Instrumentation;
-import java.lang.instrument.UnmodifiableClassException;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.Map;
+import java.util.jar.JarFile;
 
 import org.jacoco.core.test.TargetLoader;
 import org.junit.Test;
@@ -131,10 +131,49 @@ public class ModifiedSystemClassRuntimeTest extends RuntimeTestBase {
 			return false;
 		}
 
-		public void redefineClasses(ClassDefinition[] definitions)
-				throws ClassNotFoundException, UnmodifiableClassException {
+		public void redefineClasses(ClassDefinition[] definitions) {
 			fail();
 		}
+
+		// JDK 1.6 Methods:
+
+		public void addTransformer(ClassFileTransformer transformer,
+				boolean canRetransform) {
+			fail();
+		}
+
+		public void appendToBootstrapClassLoaderSearch(JarFile jarfile) {
+			fail();
+		}
+
+		public void appendToSystemClassLoaderSearch(JarFile jarfile) {
+			fail();
+		}
+
+		public boolean isModifiableClass(Class<?> theClass) {
+			fail();
+			return false;
+		}
+
+		public boolean isNativeMethodPrefixSupported() {
+			fail();
+			return false;
+		}
+
+		public boolean isRetransformClassesSupported() {
+			fail();
+			return false;
+		}
+
+		public void retransformClasses(Class<?>... classes) {
+			fail();
+		}
+
+		public void setNativeMethodPrefix(ClassFileTransformer transformer,
+				String prefix) {
+			fail();
+		}
+
 	}
 
 	private static void verifyInstrumentedClass(String name, byte[] source)
