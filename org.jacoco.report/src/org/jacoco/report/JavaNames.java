@@ -52,7 +52,7 @@ public class JavaNames implements ILanguageNames {
 			} else {
 				vmsupertype = null;
 			}
-			// Append Eclipse style label, e.g. "Foo.1: new Bar() {...}"
+			// Append Eclipse style label, e.g. "Foo.new Bar() {...}"
 			if (vmsupertype != null) {
 				final StringBuilder builder = new StringBuilder();
 				final String vmenclosing = vmname.substring(0, vmname
