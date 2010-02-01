@@ -61,13 +61,13 @@ public class JavaNamesTest {
 
 	@Test
 	public void testGetClassName4() {
-		assertEquals("Bar.1: new Object() {...}", names.getClassName(
+		assertEquals("Bar.new Object() {...}", names.getClassName(
 				"com/foo/Bar$1", null, "java/lang/Object", new String[0]));
 	}
 
 	@Test
 	public void testGetClassName5() {
-		assertEquals("Bar.1: new ISample() {...}", names.getClassName(
+		assertEquals("Bar.new ISample() {...}", names.getClassName(
 				"com/foo/Bar$1", null, "java/lang/Object",
 				new String[] { "org/foo/ISample" }));
 	}
@@ -120,6 +120,12 @@ public class JavaNamesTest {
 		assertEquals("update(Map.Entry)", names.getMethodName(
 				"com/example/SomeClass", "update", "(Ljava/util/Map$Entry;)V",
 				null));
+	}
+
+	@Test
+	public void testGetMethodName9() {
+		assertEquals("{...}", names.getMethodName("com/example/SomeClass$1",
+				"<init>", "()V", null));
 	}
 
 }

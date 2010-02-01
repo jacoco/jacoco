@@ -38,7 +38,7 @@ public class JavaNames implements ILanguageNames {
 	private boolean isAnonymous(final String vmname) {
 		// assume non-identifier start character for anonymous classes
 		final char start = vmname.charAt(vmname.lastIndexOf('$') + 1);
-		return !Character.isJavaIdentifierStart(start);
+		return start > 0 && !Character.isJavaIdentifierStart(start);
 	}
 
 	public String getClassName(final String vmname, final String vmsignature,
@@ -55,8 +55,10 @@ public class JavaNames implements ILanguageNames {
 			// Append Eclipse style label, e.g. "Foo.1: new Bar() {...}"
 			if (vmsupertype != null) {
 				final StringBuilder builder = new StringBuilder();
-				builder.append(getClassName(vmname)).append(": new ").append(
-						getClassName(vmsupertype)).append("() {...}");
+				final String vmenclosing = vmname.substring(0, vmname
+						.lastIndexOf('$'));
+				builder.append(getClassName(vmenclosing)).append(".new ")
+						.append(getClassName(vmsupertype)).append("() {...}");
 				return builder.toString();
 			}
 		}
@@ -69,21 +71,26 @@ public class JavaNames implements ILanguageNames {
 		if (vmmethodname.equals("<clinit>")) {
 			return "static {...}";
 		}
-		final Type[] arguments = Type.getArgumentTypes(vmdesc);
 		final StringBuilder result = new StringBuilder();
 		if (vmmethodname.equals("<init>")) {
-			result.append(getClassName(vmclassname));
+			if (isAnonymous(vmclassname)) {
+				return "{...}";
+			} else {
+				result.append(getClassName(vmclassname));
+			}
 		} else {
 			result.append(vmmethodname);
 		}
 		result.append('(');
-		boolean colon = false;
+		final Type[] arguments = Type.getArgumentTypes(vmdesc);
+		boolean comma = false;
 		for (final Type arg : arguments) {
-			if (colon) {
+			if (comma) {
 				result.append(", ");
+			} else {
+				comma = true;
 			}
 			result.append(getShortTypeName(arg));
-			colon = true;
 		}
 		result.append(')');
 		return result.toString();
