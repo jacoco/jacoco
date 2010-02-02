@@ -130,3 +130,8 @@ p.hint {
   background-color:#ffff80;
 }
 
+div#content a[href^='http://'], a[href^='https://'] {
+  display:inline-block;
+  padding-left:15px;
+  background:transparent url(extern.gif) center left no-repeat;
+}
