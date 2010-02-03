@@ -46,6 +46,7 @@
       </style>
         </head>
         <body>
+            <div id="content">
             <a name="top"></a>
             <xsl:call-template name="pageHeader"/>
 
@@ -64,6 +65,7 @@
             <!-- For each class create the  part -->
             <xsl:call-template name="classes"/>
             
+            </div>
 			<div class="footer">
 				<div class="versioninfo"><a href="{$HOMEURL}">JaCoCo</a>&#160;<xsl:value-of select="$VERSION"/></div>
 				<a href="../doc/license.html">Copyright</a> &#169; 2009 Mountainminds GmbH &amp; Co. KG and Contributors
