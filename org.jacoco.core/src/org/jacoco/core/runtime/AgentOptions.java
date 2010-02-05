@@ -232,15 +232,7 @@ public class AgentOptions {
 	 * @return Argument to pass to create new VM with coverage enabled
 	 */
 	public String getVMArgument(final File agentJarFile) {
-		final StringBuilder param = new StringBuilder();
-		param.append('"');
-		param.append("-javaagent:");
-		param.append(agentJarFile.toString());
-		param.append("=");
-		param.append(this.toString());
-		param.append('"');
-
-		return param.toString();
+		return format("-javaagent:%s=%s", agentJarFile, this);
 	}
 
 	/**

@@ -168,7 +168,7 @@ public class AgentOptionsTest {
 		AgentOptions options = new AgentOptions();
 		String vmArgument = options.getVMArgument(defaultAgentJarFile);
 
-		assertEquals(String.format("\"-javaagent:%s=\"", defaultAgentJarFile
+		assertEquals(String.format("-javaagent:%s=", defaultAgentJarFile
 				.toString()), vmArgument);
 	}
 
@@ -179,7 +179,7 @@ public class AgentOptionsTest {
 
 		String vmArgument = options.getVMArgument(defaultAgentJarFile);
 
-		assertEquals(String.format("\"-javaagent:%s=append=true\"",
+		assertEquals(String.format("-javaagent:%s=append=true",
 				defaultAgentJarFile.toString()), vmArgument);
 	}
 
@@ -191,7 +191,7 @@ public class AgentOptionsTest {
 		String vmArgument = options.getVMArgument(defaultAgentJarFile);
 
 		assertEquals(String.format(
-				"\"-javaagent:%s=destfile=some test.exec,append=true\"",
+				"-javaagent:%s=destfile=some test.exec,append=true",
 				defaultAgentJarFile.toString()), vmArgument);
 	}
 }
