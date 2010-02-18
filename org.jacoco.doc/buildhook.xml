@@ -97,7 +97,8 @@
 		
 		<javadoc destdir="${result.dist.dir}/doc/api"
 			windowtitle="JaCoCo ${qualified.bundle.version}"
-			overview="${source.bundle.dir}/javadoc/overview.html">
+			overview="${source.bundle.dir}/javadoc/overview.html"
+			stylesheetfile="${source.bundle.dir}/javadoc/stylesheet.css">
 			<sourcefiles>
 				<fileset dir="${source.org.jacoco.agent.dir}/src" includes="**/*.java"/>
 				<fileset dir="${source.org.jacoco.core.dir}/src" includes="**/*.java"/>
@@ -111,6 +112,12 @@
 			<group title="Bundle org.jacoco.report" packages="org.jacoco.report*"/>
 			<link href="http://java.sun.com/j2se/1.5.0/docs/api" offline="true" packagelistloc="${source.bundle.dir}/javadoc/java"/>
 			<link href="http://asm.ow2.org/asm31/javadoc/user" offline="true" packagelistloc="${source.bundle.dir}/javadoc/asm"/>
+			<bottom>
+				&lt;div class="footer"&gt;
+					&lt;div class="versioninfo"&gt;&lt;a href="${jacoco.home.url}"&gt;JaCoCo&lt;/a&gt; ${qualified.bundle.version}&lt;/div&gt;
+					Copyright &#169; 2009, 2010 Mountainminds GmbH &amp; Co. KG and Contributors
+				&lt;/div>
+			</bottom>
 		</javadoc>
 		
 		<copy todir="${result.dist.dir}">
