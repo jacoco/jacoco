@@ -12,8 +12,12 @@
  *******************************************************************************/
 package org.jacoco.agent.rt;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
+
+import java.lang.instrument.IllegalClassFormatException;
 
 import org.jacoco.core.runtime.AbstractRuntime;
 import org.jacoco.core.runtime.AgentOptions;
@@ -89,6 +93,20 @@ public class CoverageTransformerTest {
 		CoverageTransformer t = createTransformer();
 		assertTrue(t.filter(new ClassLoader(null) {
 		}, "org/jacoco/core/Foo"));
+	}
+
+	@Test
+	public void testInstrumentationFailure() {
+		CoverageTransformer t = createTransformer();
+		try {
+			t.transform(getClass().getClassLoader(), "org.jacoco.Sample", null,
+					null, new byte[0]);
+			fail("IllegalClassFormatException expected.");
+		} catch (IllegalClassFormatException e) {
+			assertEquals(
+					"Error while instrumenting class org.jacoco.Sample (id=0x0).",
+					e.getMessage());
+		}
 	}
 
 	private CoverageTransformer createTransformer() {
