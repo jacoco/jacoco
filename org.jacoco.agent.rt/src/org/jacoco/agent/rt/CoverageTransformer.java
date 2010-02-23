@@ -12,10 +12,13 @@
  *******************************************************************************/
 package org.jacoco.agent.rt;
 
+import static java.lang.String.format;
+
 import java.lang.instrument.ClassFileTransformer;
 import java.lang.instrument.IllegalClassFormatException;
 import java.security.ProtectionDomain;
 
+import org.jacoco.core.instr.CRC64;
 import org.jacoco.core.instr.Instrumenter;
 import org.jacoco.core.runtime.AgentOptions;
 import org.jacoco.core.runtime.IRuntime;
@@ -56,8 +59,12 @@ public class CoverageTransformer implements ClassFileTransformer {
 		try {
 			return instrumenter.instrument(classfileBuffer);
 		} catch (Throwable t) {
-			t.printStackTrace();
-			return null;
+			final Long id = Long.valueOf(CRC64.checksum(classfileBuffer));
+			final String msg = "Error while instrumenting class %s (id=0x%x).";
+			final IllegalClassFormatException ex = new IllegalClassFormatException(
+					format(msg, classname, id));
+			ex.initCause(t);
+			throw ex;
 		}
 	}
 
