@@ -64,6 +64,8 @@ public class CoverageTransformer implements ClassFileTransformer {
 			final IllegalClassFormatException ex = new IllegalClassFormatException(
 					format(msg, classname, id));
 			ex.initCause(t);
+			// Force some output, as the exception is ignored by the JVM:
+			ex.printStackTrace();
 			throw ex;
 		}
 	}
