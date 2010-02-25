@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009 Mountainminds GmbH & Co. KG and others
+ * Copyright (c) 2009, 2010 Mountainminds GmbH & Co. KG and others
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -11,6 +11,9 @@
  * $Id: $
  *******************************************************************************/
 package org.jacoco.core.instr;
+
+import java.io.IOException;
+import java.io.InputStream;
 
 import org.jacoco.core.runtime.IRuntime;
 import org.objectweb.asm.ClassReader;
@@ -84,6 +87,20 @@ public class Instrumenter {
 	 */
 	public byte[] instrument(final byte[] buffer) {
 		return instrument(new ClassReader(buffer));
+	}
+
+	/**
+	 * Creates a instrumented version of the given class if possible.
+	 * 
+	 * @param input
+	 *            stream to read class definition from
+	 * @return instrumented definition or <code>null</code>
+	 * @throws IOException
+	 *             if reading data from the stream fails
+	 * 
+	 */
+	public byte[] instrument(final InputStream input) throws IOException {
+		return instrument(new ClassReader(input));
 	}
 
 }
