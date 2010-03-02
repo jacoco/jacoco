@@ -120,7 +120,7 @@ public class CsvReportFile implements IReportVisitor {
 
 		for (final CounterEntity entity : COUNTERS) {
 			writer.write(entity.name() + "_COVERED");
-			writer.write(entity.name() + "_NOTCOVERED");
+			writer.write(entity.name() + "_MISSED");
 		}
 
 		writer.nextLine();

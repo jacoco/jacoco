@@ -86,8 +86,8 @@ public class BarColumn implements ICoverageTableColumn {
 		final HTMLElement td = tr.td();
 		if (max > 0) {
 			final ICounter counter = item.getNode().getCounter(entity);
-			final int notCovered = counter.getNotCoveredCount();
-			bar(td, notCovered, Resources.REDBAR, resources, base);
+			final int missed = counter.getMissedCount();
+			bar(td, missed, Resources.REDBAR, resources, base);
 			final int covered = counter.getCoveredCount();
 			bar(td, covered, Resources.GREENBAR, resources, base);
 		}

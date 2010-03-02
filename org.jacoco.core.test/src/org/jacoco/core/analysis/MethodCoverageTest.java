@@ -51,7 +51,7 @@ public class MethodCoverageTest {
 	}
 
 	@Test
-	public void testNotCovered() {
+	public void testMissed() {
 		MethodCoverage data = new MethodCoverage("sample", "()V", null);
 		data.addBlock(5, new int[0], false);
 		data.addBlock(8, new int[0], false);

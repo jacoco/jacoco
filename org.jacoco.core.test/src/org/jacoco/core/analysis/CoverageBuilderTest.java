@@ -48,7 +48,7 @@ public class CoverageBuilderTest {
 	}
 
 	@Test
-	public void testCreateClassNotCovered() {
+	public void testCreateClassMissed() {
 		final IClassStructureVisitor classStructure = coverageBuilder
 				.visitClassStructure(123L);
 		classStructure.visit("org/jacoco/examples/Sample", null,

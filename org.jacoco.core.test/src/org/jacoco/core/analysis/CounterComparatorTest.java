@@ -47,8 +47,8 @@ public class CounterComparatorTest {
 	}
 
 	@Test
-	public void testNotCoveredItemsComparator() {
-		final Comparator<ICounter> cmp = CounterComparator.NOTCOVEREDITEMS;
+	public void testMissedItemsComparator() {
+		final Comparator<ICounter> cmp = CounterComparator.MISSEDITEMS;
 		assertCmpLess(cmp, 50, 40, 91, 80);
 		assertCmpEquals(cmp, 50, 40, 90, 80);
 		assertCmpGreater(cmp, 50, 39, 90, 80);
@@ -63,8 +63,8 @@ public class CounterComparatorTest {
 	}
 
 	@Test
-	public void testNotCoveredRatioComparator() {
-		final Comparator<ICounter> cmp = CounterComparator.NOTCOVEREDRATIO;
+	public void testMissedRatioComparator() {
+		final Comparator<ICounter> cmp = CounterComparator.MISSEDRATIO;
 		assertCmpLess(cmp, 50, 25, 90, 44);
 		assertCmpEquals(cmp, 50, 10, 80, 16);
 		assertCmpGreater(cmp, 50, 25, 90, 46);

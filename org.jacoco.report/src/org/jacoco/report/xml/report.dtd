@@ -38,4 +38,4 @@
 <!ATTLIST counter
   type CDATA #REQUIRED
   covered CDATA #REQUIRED
-  notcovered CDATA #REQUIRED>
+  missed CDATA #REQUIRED>

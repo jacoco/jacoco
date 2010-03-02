@@ -90,7 +90,7 @@ public class ClassColumn implements IReportVisitor, ICsvColumn {
 
 			final ICounter counter = node.getCounter(entity);
 			writer.write(counter.getCoveredCount());
-			writer.write(counter.getNotCoveredCount());
+			writer.write(counter.getMissedCount());
 		}
 
 		writer.nextLine();

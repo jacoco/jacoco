@@ -18,7 +18,6 @@ import static org.jacoco.core.analysis.ILines.NO_CODE;
 import static org.jacoco.core.analysis.ILines.PARTLY_COVERED;
 import static org.junit.Assert.assertEquals;
 
-import org.jacoco.core.analysis.LinesImpl;
 import org.junit.Test;
 
 /**
@@ -60,7 +59,7 @@ public class LinesImplTest {
 	}
 
 	@Test
-	public void testInitNotCovered() {
+	public void testInitMissed() {
 		ILines c = new LinesImpl(new int[] { 5, 7, 10 }, false);
 		assertEquals(3, c.getTotalCount(), 0.0);
 		assertEquals(0, c.getCoveredCount(), 0.0);

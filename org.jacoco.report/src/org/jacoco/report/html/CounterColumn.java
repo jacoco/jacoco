@@ -94,7 +94,7 @@ public class CounterColumn implements ICoverageTableColumn {
 			tr.td(); // extra column to allow alignment to the right
 			final ICounter c = node.getCounter(entity);
 			tr.td(Styles.CTR1).text(
-					integerFormat.format(c.getNotCoveredCount())).text(" / ");
+					integerFormat.format(c.getMissedCount())).text(" / ");
 			tr.td(Styles.CTR2).text(integerFormat.format(c.getTotalCount()));
 		}
 	}

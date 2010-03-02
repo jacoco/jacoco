@@ -44,11 +44,11 @@ public abstract class CounterComparator implements Comparator<ICounter> {
 	};
 
 	/**
-	 * Compares the absolute number of not covered items.
+	 * Compares the absolute number of missed items.
 	 */
-	public static final CounterComparator NOTCOVEREDITEMS = new CounterComparator() {
+	public static final CounterComparator MISSEDITEMS = new CounterComparator() {
 		public int compare(final ICounter c1, final ICounter c2) {
-			return c1.getNotCoveredCount() - c2.getNotCoveredCount();
+			return c1.getMissedCount() - c2.getMissedCount();
 		}
 	};
 
@@ -62,12 +62,11 @@ public abstract class CounterComparator implements Comparator<ICounter> {
 	};
 
 	/**
-	 * Compares the ratio of not covered items.
+	 * Compares the ratio of missed items.
 	 */
-	public static final CounterComparator NOTCOVEREDRATIO = new CounterComparator() {
+	public static final CounterComparator MISSEDRATIO = new CounterComparator() {
 		public int compare(final ICounter c1, final ICounter c2) {
-			return Double.compare(c1.getNotCoveredRatio(), c2
-					.getNotCoveredRatio());
+			return Double.compare(c1.getMissedRatio(), c2.getMissedRatio());
 		}
 	};
 

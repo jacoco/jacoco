@@ -50,7 +50,7 @@ public class HTMLFormatter implements IReportFormatter, IHTMLReportContext {
 	 * The default sorting which is absolute not covered instructions and
 	 * absolute total instructions as the second criterion.
 	 */
-	public static final Comparator<ICoverageNode> DEFAULT_SORTING = CounterComparator.NOTCOVEREDITEMS
+	public static final Comparator<ICoverageNode> DEFAULT_SORTING = CounterComparator.MISSEDITEMS
 			.reverse().on(CounterEntity.INSTRUCTION).second(
 					CounterComparator.TOTALITEMS.reverse().on(
 							CounterEntity.INSTRUCTION));

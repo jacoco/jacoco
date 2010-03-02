@@ -89,7 +89,7 @@ public class ClassCoverageTest {
 	}
 
 	@Test
-	public void testNotCovered() {
+	public void testMissed() {
 		final ArrayList<MethodCoverage> methods = new ArrayList<MethodCoverage>();
 		methods.add(createMethod(false));
 		methods.add(createMethod(false));

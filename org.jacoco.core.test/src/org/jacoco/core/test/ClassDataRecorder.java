@@ -82,7 +82,7 @@ class ClassDataRecorder implements IExecutionDataVisitor, IStructureVisitor,
 			assertTrue(isCovered());
 		}
 
-		public void assertNotCovered() {
+		public void assertMissed() {
 			assertFalse(isCovered());
 		}
 

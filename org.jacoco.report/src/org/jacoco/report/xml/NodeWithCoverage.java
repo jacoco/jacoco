@@ -81,8 +81,7 @@ public abstract class NodeWithCoverage extends XMLElement implements
 		counterNode.attr("type", counterEntity.name());
 		counterNode
 				.attr("covered", Integer.toString(counter.getCoveredCount()));
-		counterNode.attr("notcovered", Integer.toString(counter
-				.getNotCoveredCount()));
+		counterNode.attr("missed", Integer.toString(counter.getMissedCount()));
 
 		counterNode.close();
 	}

@@ -47,7 +47,7 @@ public abstract class AbstractCounter implements ICounter {
 		return covered;
 	}
 
-	public int getNotCoveredCount() {
+	public int getMissedCount() {
 		return total - covered;
 	}
 
@@ -55,7 +55,7 @@ public abstract class AbstractCounter implements ICounter {
 		return (double) covered / total;
 	}
 
-	public double getNotCoveredRatio() {
+	public double getMissedRatio() {
 		return (double) (total - covered) / total;
 	}
 

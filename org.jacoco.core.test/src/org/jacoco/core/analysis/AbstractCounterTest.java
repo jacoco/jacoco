@@ -32,21 +32,21 @@ public class AbstractCounterTest {
 	}
 
 	@Test
-	public void testGetTotal() {
+	public void testGetTotalCount() {
 		AbstractCounter c = CounterImpl.getInstance(33, 12);
 		assertEquals(33, c.getTotalCount(), 0.0);
 	}
 
 	@Test
-	public void testGetCovered() {
+	public void testGetCoveredCount() {
 		AbstractCounter c = CounterImpl.getInstance(33, 15);
 		assertEquals(15, c.getCoveredCount(), 0.0);
 	}
 
 	@Test
-	public void testGetNotCovered() {
+	public void testGetMissedCount() {
 		AbstractCounter c = CounterImpl.getInstance(22, 15);
-		assertEquals(7, c.getNotCoveredCount(), 0.0);
+		assertEquals(7, c.getMissedCount(), 0.0);
 	}
 
 	@Test
@@ -68,21 +68,21 @@ public class AbstractCounterTest {
 	}
 
 	@Test
-	public void testGetNotCoveredRatio1() {
+	public void testGetMissedRatio1() {
 		AbstractCounter c = getInstance(20, 10);
-		assertEquals(0.5, c.getNotCoveredRatio(), 0.0);
+		assertEquals(0.5, c.getMissedRatio(), 0.0);
 	}
 
 	@Test
-	public void testGetNotCoveredRatio2() {
+	public void testGetMissedRatio2() {
 		AbstractCounter c = getInstance(20, 20);
-		assertEquals(0.0, c.getNotCoveredRatio(), 0.0);
+		assertEquals(0.0, c.getMissedRatio(), 0.0);
 	}
 
 	@Test
-	public void testGetNotCoveredRatio3() {
+	public void testGetMissedRatio3() {
 		AbstractCounter c = getInstance(0, 0);
-		assertTrue(Double.isNaN(c.getNotCoveredRatio()));
+		assertTrue(Double.isNaN(c.getMissedRatio()));
 	}
 
 	@Test

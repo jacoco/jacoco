@@ -37,11 +37,11 @@ public interface ICounter {
 	public int getCoveredCount();
 
 	/**
-	 * Returns the total count of items not covered.
+	 * Returns the total count of missed items.
 	 * 
-	 * @return total count of items not covered
+	 * @return total count of missed items
 	 */
-	public int getNotCoveredCount();
+	public int getMissedCount();
 
 	/**
 	 * Calculates the ratio of covered to total count items. If total count
@@ -52,11 +52,11 @@ public interface ICounter {
 	public double getCoveredRatio();
 
 	/**
-	 * Calculates the ratio of not covered to total count items. If total count
-	 * items is 0 this method returns NaN.
+	 * Calculates the ratio of missed to total count items. If total count items
+	 * is 0 this method returns NaN.
 	 * 
-	 * @return ratio of not covered to total count items
+	 * @return ratio of missed to total count items
 	 */
-	public double getNotCoveredRatio();
+	public double getMissedRatio();
 
 }
