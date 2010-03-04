@@ -33,7 +33,8 @@ public interface IRuntime {
 	 * 
 	 * The generated code must push a <code>boolean[]</code> instance to the
 	 * operand stack. Except this result object the generated code must not make
-	 * any assumptions about the structure of the embedding method or class.
+	 * any assumptions about the structure of the embedding method or class. The
+	 * generated code must not use or allocate local variables.
 	 * 
 	 * @param classid
 	 *            identifier of the class

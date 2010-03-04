@@ -64,6 +64,17 @@ public class LoggerRuntime extends AbstractRuntime {
 
 	public int generateDataAccessor(final long classid, final MethodVisitor mv) {
 
+		// The data accessor performs the following steps:
+		//
+		// final Object[] args = new Object[1];
+		// args[0] = Long.valueOf(classid);
+		// Logger.getLogger(CHANNEL).log(Level.INFO, key, args);
+		// final byte[] probedata = (byte[]) args[0];
+		//
+		// Note that local variable 'args' is used at two places. As were not
+		// allowed to allocate local variables we have to keep this value with
+		// DUP and SWAP operations on the operand stack.
+
 		// 1. Create parameter array:
 
 		mv.visitInsn(Opcodes.ICONST_1);
@@ -97,7 +108,10 @@ public class LoggerRuntime extends AbstractRuntime {
 
 		// Stack[0]: [Ljava/lang/Object;
 
-		mv.visitVarInsn(Opcodes.ASTORE, 0);
+		mv.visitInsn(Opcodes.DUP);
+
+		// Stack[1]: [Ljava/lang/Object;
+		// Stack[0]: [Ljava/lang/Object;
 
 		// 2. Call Logger:
 
@@ -105,35 +119,56 @@ public class LoggerRuntime extends AbstractRuntime {
 		mv.visitMethodInsn(Opcodes.INVOKESTATIC, "java/util/logging/Logger",
 				"getLogger", "(Ljava/lang/String;)Ljava/util/logging/Logger;");
 
-		// Stack[0]: Ljava/util/logging/Logger;
+		// Stack[2]: Ljava/util/logging/Logger;
+		// Stack[1]: [Ljava/lang/Object;
+		// Stack[0]: [Ljava/lang/Object;
 
-		mv.visitFieldInsn(Opcodes.GETSTATIC, "java/util/logging/Level",
-				"INFO", "Ljava/util/logging/Level;");
+		mv.visitInsn(Opcodes.SWAP);
 
-		// Stack[1]: Ljava/util/logging/Level;
-		// Stack[0]: Ljava/util/logging/Logger;
+		// Stack[2]: [Ljava/lang/Object;
+		// Stack[1]: Ljava/util/logging/Logger;
+		// Stack[0]: [Ljava/lang/Object;
+
+		mv.visitFieldInsn(Opcodes.GETSTATIC, "java/util/logging/Level", "INFO",
+				"Ljava/util/logging/Level;");
+
+		// Stack[3]: Ljava/util/logging/Level;
+		// Stack[2]: [Ljava/lang/Object;
+		// Stack[1]: Ljava/util/logging/Logger;
+		// Stack[0]: [Ljava/lang/Object;
+
+		mv.visitInsn(Opcodes.SWAP);
+
+		// Stack[3]: [Ljava/lang/Object;
+		// Stack[2]: Ljava/util/logging/Level;
+		// Stack[1]: Ljava/util/logging/Logger;
+		// Stack[0]: [Ljava/lang/Object;
 
 		mv.visitLdcInsn(key);
 
-		// Stack[2]: Ljava/lang/String;
-		// Stack[1]: Ljava/util/logging/Level;
-		// Stack[0]: Ljava/util/logging/Logger;
-
-		mv.visitVarInsn(Opcodes.ALOAD, 0);
-
+		// Stack[4]: Ljava/lang/String;
 		// Stack[3]: [Ljava/lang/Object;
-		// Stack[2]: Ljava/lang/String;
-		// Stack[1]: Ljava/util/logging/Level;
-		// Stack[0]: Ljava/util/logging/Logger;
+		// Stack[2]: Ljava/util/logging/Level;
+		// Stack[1]: Ljava/util/logging/Logger;
+		// Stack[0]: [Ljava/lang/Object;
+
+		mv.visitInsn(Opcodes.SWAP);
+
+		// Stack[4]: [Ljava/lang/Object;
+		// Stack[3]: Ljava/lang/String;
+		// Stack[2]: Ljava/util/logging/Level;
+		// Stack[1]: Ljava/util/logging/Logger;
+		// Stack[0]: [Ljava/lang/Object;
 
 		mv
 				.visitMethodInsn(Opcodes.INVOKEVIRTUAL,
 						"java/util/logging/Logger", "log",
 						"(Ljava/util/logging/Level;Ljava/lang/String;[Ljava/lang/Object;)V");
 
+		// Stack[0]: [Ljava/lang/Object;
+
 		// 3. Load data structure from parameter array:
 
-		mv.visitVarInsn(Opcodes.ALOAD, 0);
 		mv.visitInsn(Opcodes.ICONST_0);
 
 		// Stack[1]: I

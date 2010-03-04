@@ -16,6 +16,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -29,6 +30,7 @@ import org.junit.Test;
 import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.Type;
+import org.objectweb.asm.commons.EmptyVisitor;
 import org.objectweb.asm.commons.GeneratorAdapter;
 import org.objectweb.asm.commons.Method;
 
@@ -101,6 +103,19 @@ public abstract class RuntimeTestBase {
 		runtime.registerClass(1001, "Target", data);
 		ITarget t = generateAndInstantiateClass(1001);
 		assertSame(data, t.get());
+	}
+
+	@Test
+	public void testNoLocalVariablesInDataAccessor()
+			throws InstantiationException, IllegalAccessException {
+		final boolean[] data = newStructure();
+		runtime.registerClass(1001, "Target", data);
+		runtime.generateDataAccessor(1001, new EmptyVisitor() {
+			@Override
+			public void visitVarInsn(int opcode, int var) {
+				fail("No usage of local variables allowed.");
+			}
+		});
 	}
 
 	@Test
