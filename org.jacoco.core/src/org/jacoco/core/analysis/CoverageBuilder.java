@@ -117,11 +117,14 @@ public class CoverageBuilder implements IStructureVisitor {
 				final ClassCoverage classData = new ClassCoverage(name,
 						signature, superName, interfaces, sourcename[0],
 						methods);
-				classes.put(Long.valueOf(id), classData);
-				if (sourcename[0] != null) {
-					final SourceFileCoverage sourceFile = getSourceFile(
-							sourcename[0], classData.getPackageName());
-					sourceFile.increment(classData);
+				// Only consider classes that actually contain code:
+				if (classData.getInstructionCounter().getTotalCount() > 0) {
+					classes.put(Long.valueOf(id), classData);
+					if (sourcename[0] != null) {
+						final SourceFileCoverage sourceFile = getSourceFile(
+								sourcename[0], classData.getPackageName());
+						sourceFile.increment(classData);
+					}
 				}
 			}
 		};

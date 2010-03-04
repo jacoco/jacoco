@@ -14,6 +14,7 @@ package org.jacoco.core.analysis;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -126,12 +127,31 @@ public class CoverageBuilderTest {
 	}
 
 	@Test
+	public void testIgnoreClassesWithoutCode() {
+		final IClassStructureVisitor classStructure = coverageBuilder
+				.visitClassStructure(123L);
+		classStructure.visit("org/jacoco/examples/Sample", null,
+				"java/lang/Object", new String[0]);
+		final IMethodStructureVisitor methodStructure = classStructure
+				.visitMethodStructure("doit", "()V", null);
+		methodStructure.visitEnd();
+		classStructure.visitEnd();
+
+		final Collection<ClassCoverage> classes = coverageBuilder.getClasses();
+		assertTrue(classes.isEmpty());
+	}
+
+	@Test
 	public void testCreateSourceFile() {
 		final IClassStructureVisitor classStructure1 = coverageBuilder
 				.visitClassStructure(123L);
 		classStructure1.visit("org/jacoco/examples/Sample", null,
 				"java/lang/Object", new String[0]);
 		classStructure1.visitSourceFile("Sample.java");
+		final IMethodStructureVisitor methodStructure1 = classStructure1
+				.visitMethodStructure("doit", "()V", null);
+		methodStructure1.block(0, 3, new int[] { 3, 4, 5 });
+		methodStructure1.visitEnd();
 		classStructure1.visitEnd();
 
 		final IClassStructureVisitor classStructure2 = coverageBuilder
@@ -139,6 +159,10 @@ public class CoverageBuilderTest {
 		classStructure2.visit("org/jacoco/examples/Sample", null,
 				"java/lang/Object", new String[0]);
 		classStructure2.visitSourceFile("Sample.java");
+		final IMethodStructureVisitor methodStructure2 = classStructure2
+				.visitMethodStructure("doit", "()V", null);
+		methodStructure2.block(0, 3, new int[] { 6, 7, 8 });
+		methodStructure2.visitEnd();
 		classStructure2.visitEnd();
 
 		final Collection<SourceFileCoverage> sourcefiles = coverageBuilder
@@ -156,18 +180,30 @@ public class CoverageBuilderTest {
 				.visitClassStructure(1);
 		classStructure1.visit("org/jacoco/examples/Sample1", null,
 				"java/lang/Object", new String[0]);
+		final IMethodStructureVisitor methodStructure1 = classStructure1
+				.visitMethodStructure("doit", "()V", null);
+		methodStructure1.block(0, 3, new int[] { 3, 4, 5 });
+		methodStructure1.visitEnd();
 		classStructure1.visitEnd();
 
 		final IClassStructureVisitor classStructure2 = coverageBuilder
 				.visitClassStructure(2);
 		classStructure2.visit("org/jacoco/examples/Sample2", null,
 				"java/lang/Object", new String[0]);
+		final IMethodStructureVisitor methodStructure2 = classStructure2
+				.visitMethodStructure("doit", "()V", null);
+		methodStructure2.block(0, 3, new int[] { 6, 7, 8 });
+		methodStructure2.visitEnd();
 		classStructure2.visitEnd();
 
 		final IClassStructureVisitor classStructure3 = coverageBuilder
 				.visitClassStructure(3);
 		classStructure3.visit("Sample3", null, "java/lang/Object",
 				new String[0]);
+		final IMethodStructureVisitor methodStructure3 = classStructure3
+				.visitMethodStructure("doit", "()V", null);
+		methodStructure3.block(0, 2, new int[] { 1, 2 });
+		methodStructure3.visitEnd();
 		classStructure3.visitEnd();
 
 		BundleCoverage bundle = coverageBuilder.getBundle("testbundle");
