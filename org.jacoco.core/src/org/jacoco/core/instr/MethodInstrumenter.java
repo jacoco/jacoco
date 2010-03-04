@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009 Mountainminds GmbH & Co. KG and others
+ * Copyright (c) 2009, 2010 Mountainminds GmbH & Co. KG and others
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -12,6 +12,7 @@
  *******************************************************************************/
 package org.jacoco.core.instr;
 
+import org.jacoco.core.runtime.IExecutionDataAccessorGenerator;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.commons.GeneratorAdapter;
@@ -26,7 +27,11 @@ import org.objectweb.asm.commons.GeneratorAdapter;
 public class MethodInstrumenter extends GeneratorAdapter implements
 		IBlockMethodVisitor {
 
-	private final String enclosingType;
+	private final IExecutionDataAccessorGenerator accessorGenerator;
+
+	private final long classid;
+
+	private int accessorStackSize;
 
 	private int probeArray;
 
@@ -41,13 +46,18 @@ public class MethodInstrumenter extends GeneratorAdapter implements
 	 *            name of the method
 	 * @param desc
 	 *            description of the method
-	 * @param enclosingType
-	 *            type enclosing this method
+	 * @param accessorGenerator
+	 *            the current coverage runtime
+	 * @param classid
+	 *            the id of the enclosing type
 	 */
 	public MethodInstrumenter(final MethodVisitor mv, final int access,
-			final String name, final String desc, final String enclosingType) {
+			final String name, final String desc,
+			final IExecutionDataAccessorGenerator accessorGenerator,
+			final long classid) {
 		super(mv, access, name, desc);
-		this.enclosingType = enclosingType;
+		this.accessorGenerator = accessorGenerator;
+		this.classid = classid;
 	}
 
 	@Override
@@ -55,9 +65,7 @@ public class MethodInstrumenter extends GeneratorAdapter implements
 		super.visitCode();
 		// At the very beginning of the method we load the boolean[] array into
 		// a local variable that stores the probes for this class.
-		mv.visitMethodInsn(Opcodes.INVOKESTATIC, enclosingType,
-				GeneratorConstants.INITMETHOD_NAME,
-				GeneratorConstants.INITMETHOD_DESC);
+		accessorStackSize = accessorGenerator.generateDataAccessor(classid, mv);
 
 		// Stack[0]: [Z
 
@@ -67,8 +75,12 @@ public class MethodInstrumenter extends GeneratorAdapter implements
 
 	@Override
 	public void visitMaxs(final int maxStack, final int maxLocals) {
-		// Max stack size of the probe code is 3
-		super.visitMaxs(maxStack + 3, maxLocals + 1);
+		// Max stack size of the probe code is 3 which can add to the
+		// original stack size depending on the probe locations. The accessor
+		// stack size is an absolute maximum, as the accessor code is inserted
+		// at the very beginning of each method when the stack size is empty.
+		final int increasedStack = Math.max(maxStack + 3, accessorStackSize);
+		super.visitMaxs(increasedStack, maxLocals + 1);
 	}
 
 	// === IBlockMethodVisitor ===

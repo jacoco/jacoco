@@ -36,7 +36,7 @@ import org.objectweb.asm.ClassReader;
  * @author Marc R. Hoffmann
  * @version $Revision: $
  */
-public class ValidationTestBase {
+public abstract class ValidationTestBase {
 
 	private static final String[] STATUS_NAME = new String[4];
 
@@ -47,7 +47,7 @@ public class ValidationTestBase {
 		STATUS_NAME[ILines.PARTLY_COVERED] = "PARTLY_COVERED";
 	}
 
-	protected final Class<? extends Runnable> target;
+	protected final Class<?> target;
 
 	protected ClassCoverage classCoverage;
 
@@ -57,7 +57,7 @@ public class ValidationTestBase {
 
 	protected Source source;
 
-	protected ValidationTestBase(final Class<? extends Runnable> target) {
+	protected ValidationTestBase(final Class<?> target) {
 		this.target = target;
 	}
 
@@ -76,15 +76,17 @@ public class ValidationTestBase {
 		runtime.startup();
 		final byte[] bytes = new Instrumenter(runtime).instrument(reader);
 		final TargetLoader loader = new TargetLoader(target, bytes);
-		final Object instance = loader.getTargetClass().newInstance();
-		((Runnable) instance).run();
+		run(loader.getTargetClass());
 		final ExecutionDataStore store = new ExecutionDataStore();
 		runtime.collect(store, false);
 		runtime.shutdown();
 		return store;
 	}
 
-	private void analyze(ClassReader reader, ExecutionDataStore store) {
+	protected abstract void run(final Class<?> targetClass) throws Exception;
+
+	private void analyze(final ClassReader reader,
+			final ExecutionDataStore store) {
 		final CoverageBuilder builder = new CoverageBuilder(store);
 		final Analyzer analyzer = new Analyzer(builder);
 		analyzer.analyze(reader);

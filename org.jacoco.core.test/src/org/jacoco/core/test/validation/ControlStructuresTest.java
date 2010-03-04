@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009 Mountainminds GmbH & Co. KG and others
+ * Copyright (c) 2009, 2010 Mountainminds GmbH & Co. KG and others
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -29,6 +29,12 @@ public class ControlStructuresTest extends ValidationTestBase {
 
 	public ControlStructuresTest() {
 		super(Target01.class);
+	}
+
+	@Override
+	protected void run(final Class<?> targetClass) throws Exception {
+		final Object instance = targetClass.newInstance();
+		((Runnable) instance).run();
 	}
 
 	@Test

@@ -14,6 +14,7 @@ package org.jacoco.core.instr;
 
 import static java.lang.String.format;
 
+import org.jacoco.core.runtime.IExecutionDataAccessorGenerator;
 import org.jacoco.core.runtime.IRuntime;
 import org.objectweb.asm.AnnotationVisitor;
 import org.objectweb.asm.Attribute;
@@ -29,7 +30,8 @@ import org.objectweb.asm.Opcodes;
  * @author Marc R. Hoffmann
  * @version $Revision: $
  */
-public class ClassInstrumenter extends BlockClassAdapter {
+public class ClassInstrumenter extends BlockClassAdapter implements
+		IExecutionDataAccessorGenerator {
 
 	private final ClassVisitor delegate;
 
@@ -38,6 +40,10 @@ public class ClassInstrumenter extends BlockClassAdapter {
 	private final IRuntime runtime;
 
 	private String className;
+
+	// Inlining the coverage data init method is required for interfaces because
+	// we can't add additional methods here.
+	private boolean inlineInit;
 
 	/**
 	 * Emits a instrumented version of this class to the given class visitor.
@@ -61,6 +67,7 @@ public class ClassInstrumenter extends BlockClassAdapter {
 			final String signature, final String superName,
 			final String[] interfaces) {
 		this.className = name;
+		this.inlineInit = (access & Opcodes.ACC_INTERFACE) != 0;
 		delegate.visit(version, access, name, signature, superName, interfaces);
 	}
 
@@ -83,7 +90,8 @@ public class ClassInstrumenter extends BlockClassAdapter {
 		if (mv == null) {
 			return null;
 		}
-		return new MethodInstrumenter(mv, access, name, desc, className);
+		final IExecutionDataAccessorGenerator gen = inlineInit ? runtime : this;
+		return new MethodInstrumenter(mv, access, name, desc, gen, id);
 	}
 
 	@Override
@@ -94,8 +102,10 @@ public class ClassInstrumenter extends BlockClassAdapter {
 	}
 
 	public void visitEnd() {
-		createDataField();
-		createInitMethod();
+		if (!inlineInit) {
+			createDataField();
+			createInitMethod();
+		}
 		registerClass();
 		delegate.visitEnd();
 	}
@@ -221,6 +231,15 @@ public class ClassInstrumenter extends BlockClassAdapter {
 
 	public void visitSource(final String source, final String debug) {
 		delegate.visitSource(source, debug);
+	}
+
+	// === IExecutionDataAccessorGenerator ===
+
+	public int generateDataAccessor(final long classid, final MethodVisitor mv) {
+		mv.visitMethodInsn(Opcodes.INVOKESTATIC, className,
+				GeneratorConstants.INITMETHOD_NAME,
+				GeneratorConstants.INITMETHOD_DESC);
+		return 1;
 	}
 
 }

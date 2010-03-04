@@ -19,7 +19,6 @@ import org.jacoco.core.runtime.IRuntime;
 import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.ClassVisitor;
 import org.objectweb.asm.ClassWriter;
-import org.objectweb.asm.Opcodes;
 
 /**
  * Several APIs to instrument Java class definitions for coverage tracing.
@@ -64,12 +63,6 @@ public class Instrumenter {
 	 * 
 	 */
 	public byte[] instrument(final ClassReader reader) {
-
-		// Don't instrument interfaces
-		if ((reader.getAccess() & Opcodes.ACC_INTERFACE) != 0) {
-			return null;
-		}
-
 		final ClassWriter writer = new ClassWriter(reader, 0);
 		final ClassVisitor visitor = createInstrumentingVisitor(CRC64
 				.checksum(reader.b), writer);

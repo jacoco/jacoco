@@ -13,7 +13,6 @@
 package org.jacoco.core.runtime;
 
 import org.jacoco.core.data.IExecutionDataVisitor;
-import org.objectweb.asm.MethodVisitor;
 
 /**
  * This interface represents a particular mechanism to collect execution
@@ -22,28 +21,7 @@ import org.objectweb.asm.MethodVisitor;
  * @author Marc R. Hoffmann
  * @version $Revision: $
  */
-public interface IRuntime {
-
-	/**
-	 * This method generates the byte code required to obtain the coverage data
-	 * structure for the class with the given id. Typically the instrumentation
-	 * process will embed this code into a method that is called on class
-	 * initialization. This method can be called at any time even outside the
-	 * target VM.
-	 * 
-	 * The generated code must push a <code>boolean[]</code> instance to the
-	 * operand stack. Except this result object the generated code must not make
-	 * any assumptions about the structure of the embedding method or class. The
-	 * generated code must not use or allocate local variables.
-	 * 
-	 * @param classid
-	 *            identifier of the class
-	 * @param mv
-	 *            code output
-	 * @return additional stack size required by the implementation, including
-	 *         the instance pushed to the stack
-	 */
-	public int generateDataAccessor(long classid, MethodVisitor mv);
+public interface IRuntime extends IExecutionDataAccessorGenerator {
 
 	/**
 	 * Starts the coverage runtime. This method MUST be called before any class

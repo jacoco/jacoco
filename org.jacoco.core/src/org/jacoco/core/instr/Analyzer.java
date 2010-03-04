@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009 Mountainminds GmbH & Co. KG and others
+ * Copyright (c) 2009, 2010 Mountainminds GmbH & Co. KG and others
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -26,7 +26,6 @@ import org.jacoco.core.data.IClassStructureVisitor;
 import org.jacoco.core.data.IStructureVisitor;
 import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.ClassVisitor;
-import org.objectweb.asm.Opcodes;
 
 /**
  * Several APIs to analyze class structures.
@@ -68,10 +67,6 @@ public class Analyzer {
 	 *            reader with class definitions
 	 */
 	public void analyze(final ClassReader reader) {
-		if ((reader.getAccess() & Opcodes.ACC_INTERFACE) != 0) {
-			return;
-		}
-
 		final ClassVisitor visitor = createAnalyzingVisitor(CRC64
 				.checksum(reader.b));
 		reader.accept(visitor, 0);
