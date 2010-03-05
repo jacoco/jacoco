@@ -13,6 +13,7 @@
 package org.jacoco.core.test.validation;
 
 import static org.jacoco.core.analysis.ILines.FULLY_COVERED;
+import static org.jacoco.core.analysis.ILines.NO_CODE;
 
 import org.jacoco.core.test.validation.targets.Target04;
 import org.junit.Test;
@@ -38,10 +39,11 @@ public class InterfaceClassInitializerTest extends ValidationTestBase {
 	@Test
 	public void testCoverageResult() {
 
-		// All constant fields are initialized:
-		assertLine("const1", FULLY_COVERED);
-		assertLine("const2", FULLY_COVERED);
-		assertLine("const2", FULLY_COVERED);
+		assertLine("const1", NO_CODE);
+		assertLine("const2", NO_CODE);
+
+		assertLine("const3", FULLY_COVERED);
+		assertLine("const4", FULLY_COVERED);
 	}
 
 }

@@ -13,7 +13,6 @@
 package org.jacoco.core.test.validation.targets;
 
 import static org.jacoco.core.test.validation.targets.Stubs.i1;
-import static org.jacoco.core.test.validation.targets.Stubs.i2;
 
 /**
  * This test target is an interface with a class initializer.
@@ -23,10 +22,16 @@ import static org.jacoco.core.test.validation.targets.Stubs.i2;
  */
 public interface Target04 {
 
-	public static final int CONST1 = i1(); // $line-const1$
+	// No code required to initialize these fields:
 
-	public static final int CONST2 = i2(); // $line-const2$
+	static final int CONST1 = 12345; // $line-const1$
 
-	public static final Object CONST3 = new Object(); // $line-const3$
+	static final String CONST2 = "const"; // $line-const2$
+
+	// These fields are initialized within <clinit>
+
+	static final int CONST3 = i1(); // $line-const3$
+
+	static final Object CONST4 = new Object(); // $line-const4$
 
 }
