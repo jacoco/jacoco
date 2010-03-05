@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009 Mountainminds GmbH & Co. KG and others
+ * Copyright (c) 2009, 2010 Mountainminds GmbH & Co. KG and Contributors
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -40,7 +40,7 @@ final class IntSet {
 	 * @param initialCapacity
 	 *            this is the initial capacity
 	 */
-	public IntSet(int initialCapacity) {
+	public IntSet(final int initialCapacity) {
 		this.store = new int[initialCapacity];
 		this.size = 0;
 	}
@@ -52,7 +52,7 @@ final class IntSet {
 	 *            value to add
 	 * @return <code>true</code> if the value has actually been added
 	 */
-	public boolean add(int value) {
+	public boolean add(final int value) {
 		if (contains(value)) {
 			return false;
 		}
@@ -79,7 +79,7 @@ final class IntSet {
 	 *            value to check
 	 * @return <code>true</code> if the value is contained
 	 */
-	public boolean contains(int value) {
+	public boolean contains(final int value) {
 		// search backwards as the last value is typically added again
 		for (int i = size; --i >= 0;) {
 			if (store[i] == value) {

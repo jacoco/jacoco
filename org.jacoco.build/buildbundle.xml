@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <!-- 
-   Copyright (c) 2009 Mountainminds GmbH & Co. KG and others
+   Copyright (c) 2009, 2010 Mountainminds GmbH & Co. KG and Contributors
    All rights reserved. This program and the accompanying materials
    are made available under the terms of the Eclipse Public License v1.0
    which accompanies this distribution, and is available at
@@ -123,13 +123,41 @@
 	
 	<target name="doc" if="do.customdoc" depends="manifest">
 		<antcall target="customdoc" inheritall="true" inheritrefs="true"/>
-    </target>	
+    </target>
+	
+	
+	<!-- =================================================================== 
+	     LEGAL 
+	     =================================================================== -->
+
+	<target name="legal">
+		<fileset dir="${source.bundle.dir}" includes="**/*.java,**/*.xml" excludes="result/**,bin/**" id="missinglicense.fileset">
+			<not>
+				<and>
+					<contains text="Copyright (c) 2009, 2010 Mountainminds GmbH &amp; Co. KG and Contributors"/>
+					<contains text="All rights reserved. This program and the accompanying materials"/>
+					<contains text="are made available under the terms of the Eclipse Public License v1.0"/>
+					<contains text="which accompanies this distribution, and is available at"/>
+					<contains text="http://www.eclipse.org/legal/epl-v10.html"/>
+				</and>
+			</not>
+		</fileset>
+		
+		<pathconvert property="missing" refid="missinglicense.fileset"/>
+		<fail message="Invalid license info in: ${missing}">
+			<condition>
+				<not>
+					<equals arg1="${missing}" arg2=""/>
+				</not>
+			</condition>
+		</fail>
+	</target>
 				
 	
 	<!-- =================================================================== 
 	     BUILD 
 	     =================================================================== -->
 	
-	<target name="build" depends="compile,package,verify,doc"/>
+	<target name="build" depends="compile,package,verify,doc,legal"/>
 	
 </project>

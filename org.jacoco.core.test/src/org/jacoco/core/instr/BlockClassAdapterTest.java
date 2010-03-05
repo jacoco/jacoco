@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009 Mountainminds GmbH & Co. KG and others
+ * Copyright (c) 2009, 2010 Mountainminds GmbH & Co. KG and Contributors
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -104,11 +104,9 @@ public class BlockClassAdapterTest {
 	@Test
 	public void testNonAbstractMethods() {
 		adapter.visitMethod(ACC_PUBLIC, "a", "()V", null, null);
-		adapter.visitMethod(ACC_PUBLIC | ACC_ABSTRACT, "x", "()V", null,
-				null);
+		adapter.visitMethod(ACC_PUBLIC | ACC_ABSTRACT, "x", "()V", null, null);
 		adapter.visitMethod(ACC_PUBLIC, "b", "()V", null, null);
-		adapter.visitMethod(ACC_PUBLIC | ACC_ABSTRACT, "y", "()V", null,
-				null);
+		adapter.visitMethod(ACC_PUBLIC | ACC_ABSTRACT, "y", "()V", null, null);
 		adapter.visitMethod(ACC_PUBLIC, "c", "()V", null, null);
 		adapter.assertNonAbstractMethods("a", "b", "c");
 	}
@@ -116,11 +114,9 @@ public class BlockClassAdapterTest {
 	@Test
 	public void testAbstractMethods() {
 		adapter.visitMethod(ACC_PUBLIC, "a", "()V", null, null);
-		adapter.visitMethod(ACC_PUBLIC | ACC_ABSTRACT, "x", "()V", null,
-				null);
+		adapter.visitMethod(ACC_PUBLIC | ACC_ABSTRACT, "x", "()V", null, null);
 		adapter.visitMethod(ACC_PUBLIC, "b", "()V", null, null);
-		adapter.visitMethod(ACC_PUBLIC | ACC_ABSTRACT, "y", "()V", null,
-				null);
+		adapter.visitMethod(ACC_PUBLIC | ACC_ABSTRACT, "y", "()V", null, null);
 		adapter.visitMethod(ACC_PUBLIC, "c", "()V", null, null);
 		adapter.assertAbstractMethods("x", "y");
 	}

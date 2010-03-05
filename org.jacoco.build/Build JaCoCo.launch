@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <launchConfiguration type="org.eclipse.ant.AntLaunchConfigurationType">
 <booleanAttribute key="org.eclipse.ant.ui.DEFAULT_VM_INSTALL" value="false"/>
 <stringAttribute key="org.eclipse.debug.core.ATTR_REFRESH_SCOPE" value="${working_set:&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;&#13;&#10;&lt;launchConfigurationWorkingSet editPageId=&quot;org.eclipse.ui.resourceWorkingSetPage&quot; factoryID=&quot;org.eclipse.ui.internal.WorkingSetFactory&quot; id=&quot;1263345985455_4&quot; label=&quot;working set&quot; name=&quot;working set&quot;&gt;&#13;&#10;&lt;item factoryID=&quot;org.eclipse.ui.internal.model.ResourceFactory&quot; path=&quot;/org.jacoco.build/result&quot; type=&quot;2&quot;/&gt;&#13;&#10;&lt;item factoryID=&quot;org.eclipse.ui.internal.model.ResourceFactory&quot; path=&quot;/org.jacoco.agent/src/jacocoagent.jar&quot; type=&quot;1&quot;/&gt;&#13;&#10;&lt;/launchConfigurationWorkingSet&gt;}"/>
