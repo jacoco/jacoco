@@ -19,8 +19,6 @@ import org.jacoco.core.instr.Instrumenter;
 import org.jacoco.core.runtime.IRuntime;
 import org.jacoco.core.runtime.LoggerRuntime;
 import org.jacoco.core.test.ClassDataRecorder.BlockData;
-import org.jacoco.core.test.targets.Target_cinit_01;
-import org.jacoco.core.test.targets.Target_cinit_02;
 import org.jacoco.core.test.targets.Target_init_01;
 import org.jacoco.core.test.targets.Target_init_02;
 import org.jacoco.core.test.targets.Target_init_03;
@@ -86,20 +84,6 @@ public class InstrumentationScenariosTest {
 		final ClassDataRecorder rec = runScenario(Target_init_05.class);
 		final BlockData block0 = rec.getMethod("<init>").getBlock(0);
 		block0.assertLines(29);
-		block0.assertCovered();
-	}
-
-	@Test
-	public void cinit_01() throws Exception {
-		final ClassDataRecorder rec = runScenario(Target_cinit_01.class);
-		final BlockData block0 = rec.getMethod("<clinit>").getBlock(0);
-		block0.assertCovered();
-	}
-
-	@Test
-	public void cinit_02() throws Exception {
-		final ClassDataRecorder rec = runScenario(Target_cinit_02.class);
-		final BlockData block0 = rec.getMethod("<clinit>").getBlock(0);
 		block0.assertCovered();
 	}
 
