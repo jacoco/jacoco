@@ -86,13 +86,13 @@ public class ReportTask extends Task {
 	 */
 	public static class GroupElement {
 
-		final List<GroupElement> children = new ArrayList<GroupElement>();
+		private final List<GroupElement> children = new ArrayList<GroupElement>();
 
-		final Union classfiles = new Union();
+		private final Union classfiles = new Union();
 
-		final SourceFilesElement sourcefiles = new SourceFilesElement();
+		private final SourceFilesElement sourcefiles = new SourceFilesElement();
 
-		String name;
+		private String name;
 
 		/**
 		 * Sets the name of the group.
@@ -187,6 +187,10 @@ public class ReportTask extends Task {
 		}
 
 		public IReportFormatter createFormatter() {
+			if (destdir == null) {
+				throw new BuildException(
+						"Destination directory must be supplied for html report");
+			}
 			final HTMLFormatter formatter = new HTMLFormatter();
 			formatter.setReportOutput(new FileMultiReportOutput(destdir));
 			formatter.setFooterText(footer);
@@ -216,6 +220,10 @@ public class ReportTask extends Task {
 		}
 
 		public IReportFormatter createFormatter() {
+			if (destfile == null) {
+				throw new BuildException(
+						"Destination file must be supplied for csv report");
+			}
 			final CsvFormatter formatter = new CsvFormatter();
 			formatter.setReportOutput(new FileSingleReportOutput(destfile));
 			formatter.setOutputEncoding(encoding);
@@ -263,6 +271,10 @@ public class ReportTask extends Task {
 		}
 
 		public IReportFormatter createFormatter() {
+			if (destfile == null) {
+				throw new BuildException(
+						"Destination file must be supplied for xml report");
+			}
 			final XMLFormatter formatter = new XMLFormatter();
 			formatter.setReportOutput(new FileSingleReportOutput(destfile));
 			formatter.setOutputEncoding(encoding);
@@ -404,6 +416,9 @@ public class ReportTask extends Task {
 
 	private CoverageNodeImpl createNode(final GroupElement group,
 			final ExecutionDataStore executionData) throws IOException {
+		if (group.name == null) {
+			throw new BuildException("Group name must be supplied");
+		}
 		if (group.children.size() > 0) {
 			return new CoverageNodeImpl(ElementType.GROUP, group.name, false);
 		} else {

@@ -34,7 +34,7 @@
 	</target>
 	
 	<target name="testMergeEmptySet">
-		<property name="testMergeEmptySet.exec.file" value="${result.tmp.bundle.testdata.dir}/empty.exec"/>
+		<property name="testMergeEmptySet.exec.file" location="${result.tmp.bundle.testdata.dir}/empty.exec"/>
 		<jacoco:merge destfile="${testMergeEmptySet.exec.file}"/>
 		
 		<au:assertLogContains text="0 files merged"/>
@@ -42,7 +42,7 @@
 	</target>
 	
 	<target name="testMergeMultipleFiles">
-		<property name="testMergeMultipleFiles.exec.file" value="${result.tmp.bundle.testdata.dir}/merged.exec"/>
+		<property name="testMergeMultipleFiles.exec.file" location="${result.tmp.bundle.testdata.dir}/merged.exec"/>
 		<jacoco:merge destfile="${testMergeMultipleFiles.exec.file}">
 			<fileset dir="executionData" includes="*.exec"/>
 		</jacoco:merge>

@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- 
+   Copyright (c) 2009, 2010 Mountainminds GmbH & Co. KG and Contributors
+   All rights reserved. This program and the accompanying materials
+   are made available under the terms of the Eclipse Public License v1.0
+   which accompanies this distribution, and is available at
+   http://www.eclipse.org/legal/epl-v10.html
+  
+   Contributors:
+      Brock Janiczak - initial API and implementation
+      
+   $Id: $
+-->
+
+<project name="JaCoCo Report Task Tests" xmlns:au="antlib:org.apache.ant.antunit" xmlns:jacoco="antlib:org.jacoco.ant">
+			
+	<taskdef uri="antlib:org.jacoco.ant" resource="org/jacoco/ant/antlib.xml">
+		<classpath>
+			<file file="${result.dist.lib.dir}/jacocoant.jar"/>
+		</classpath>
+	</taskdef>
+	
+	<target name="testReportNoStructureElement">
+		<au:expectfailure expectedMessage="Group name must be supplied">
+			<jacoco:report/>
+		</au:expectfailure>
+	</target>
+
+	<target name="testReportNoStructureName">
+		<au:expectfailure expectedMessage="Group name must be supplied">
+			<jacoco:report>
+				<structure/>
+			</jacoco:report>
+		</au:expectfailure>
+	</target>
+
+	<target name="testReportNoGroupName">
+		<au:expectfailure expectedMessage="Group name must be supplied">
+			<jacoco:report>
+				<structure name="root">
+					<group/>
+				</structure>
+			</jacoco:report>
+		</au:expectfailure>
+	</target>
+	
+	<target name="testReportNoHtmlDestdir">
+		<au:expectfailure expectedMessage="Destination directory must be supplied for html report">
+			<jacoco:report>
+				<structure name="root"/>
+				<html/>
+			</jacoco:report>
+		</au:expectfailure>
+	</target>
+
+	<target name="testReportNoCsvDestfile">
+		<au:expectfailure expectedMessage="Destination file must be supplied for csv report">
+			<jacoco:report>
+				<structure name="root"/>
+				<csv/>
+			</jacoco:report>
+		</au:expectfailure>
+	</target>
+
+	<target name="testReportNoXmlDestfile">
+		<au:expectfailure expectedMessage="Destination file must be supplied for xml report">
+			<jacoco:report>
+				<structure name="root"/>
+				<xml/>
+			</jacoco:report>
+		</au:expectfailure>
+	</target>
+
+	<target name="testReportHtmlWithClassFileSet">
+		<property name="testReportHtmlWithClassFileSet.destdir" location="${result.tmp.bundle.testdata.dir}/htmlreport"/>
+		<jacoco:report>
+			<structure name="Test">
+				<group name="Group">
+					<classfiles>
+						<fileset dir="${result.tmp.bundle.classes.dir}" includes="**/*.class"/>
+					</classfiles>
+				</group>
+			</structure>
+			<html destdir="${testReportHtmlWithClassFileSet.destdir}"/>
+		</jacoco:report>
+		
+		<au:assertFileExists file="${testReportHtmlWithClassFileSet.destdir}/Group/org.jacoco.ant.test/EmptyTest.html"/>
+	</target>
+
+	<target name="testReportHtmlWithPath">
+		<property name="testReportHtmlWithPath.destdir" location="${result.tmp.bundle.testdata.dir}/htmlreport"/>
+		<jacoco:report>
+			<structure name="Test">
+				<group name="Group">
+					<classfiles>
+						<path location="${result.tmp.bundle.classes.dir}"/>
+					</classfiles>
+				</group>
+			</structure>
+			<html destdir="${testReportHtmlWithPath.destdir}"/>
+		</jacoco:report>
+		
+		<au:assertFileExists file="${testReportHtmlWithPath.destdir}/Group/org.jacoco.ant.test/EmptyTest.html"/>
+	</target>
+	
+	<target name="testReportHtmlWithJAR">
+		<property name="testReportHtmlWithJAR.destdir" location="${result.tmp.bundle.testdata.dir}/htmlreport"/>
+		<property name="testReportHtmlWithJAR.jarfile" location="${result.tmp.bundle.testdata.dir}/testclasses.jar"/>
+		<jar destfile="${testReportHtmlWithJAR.jarfile}">
+			<fileset dir="${result.tmp.bundle.classes.dir}" includes="**/*.class"/>
+		</jar>
+		<jacoco:report>
+			<structure name="Test">
+				<group name="Group">
+					<classfiles>
+						<file file="${testReportHtmlWithJAR.jarfile}"/>
+					</classfiles>
+				</group>
+			</structure>
+			<html destdir="${testReportHtmlWithJAR.destdir}"/>
+		</jacoco:report>
+		
+		<au:assertFileExists file="${testReportHtmlWithJAR.destdir}/Group/org.jacoco.ant.test/EmptyTest.html"/>
+	</target>
+
+	
+	<target name="testReportCsv">
+		<property name="testReportCsv.destfile" location="${result.tmp.bundle.testdata.dir}/report.csv"/>
+		<jacoco:report>
+			<structure name="Test"/>
+			<csv destfile="${testReportCsv.destfile}"/>
+		</jacoco:report>
+		
+		<au:assertFileExists file="${testReportCsv.destfile}"/>
+	</target>
+	
+	<target name="testReportXml">
+		<property name="testReportXml.destfile" location="${result.tmp.bundle.testdata.dir}/report.xml"/>
+		<jacoco:report>
+			<structure name="Test"/>
+			<xml destfile="${testReportXml.destfile}"/>
+		</jacoco:report>
+		
+		<au:assertFileExists file="${testReportXml.destfile}"/>
+	</target>
+	
+</project>
