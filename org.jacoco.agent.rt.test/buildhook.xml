@@ -25,4 +25,6 @@
 	<property name="do.compile" value="true"/>
 	<property name="do.verify"  value="true"/>
 	
+	<property name="testscope" value="org.jacoco.agent.rt.*"/>
+	
 </project>

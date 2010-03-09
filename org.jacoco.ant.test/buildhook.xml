@@ -15,12 +15,14 @@
 
 <project name="org.jacoco.ant.tests.buildhook" xmlns:au="antlib:org.apache.ant.antunit" xmlns:jacoco="antlib:org.jacoco.ant" basedir=".">
 	
-	<property name="do.compile" value="true"/>
-	<property name="do.customverify" value="true"/>
-	
 	<path id="dependencies">
 		<path refid="bundle-org.junit4"/>
 	</path>
+	
+	<property name="do.compile" value="true"/>
+	<property name="do.customverify" value="true"/>
+	
+	<property name="testscope" value="org.jacoco.ant.*"/>
 		
 	<taskdef uri="antlib:org.jacoco.ant" resource="org/jacoco/ant/antlib.xml">
 		<classpath>
@@ -37,6 +39,7 @@
 
 		<jacoco:coverage
 				append="true"
+				includes="${testscope}"
 				destfile="${result.tmp.coverage.file}">
 			<java fork="true" jar="${ant.library.dir}/ant-launcher.jar" failonerror="true">
 				<arg value="-f"/>

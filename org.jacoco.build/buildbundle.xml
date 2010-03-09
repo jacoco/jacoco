@@ -31,6 +31,9 @@
 	
 	<import file="${source.bundle.dir}/buildhook.xml"/>
 	
+	<!-- The following property should be overwritten by the project specific build hook -->
+	<property name="testscope" value="*"/>
+	
 	
 	<!-- =================================================================== 
          COMPILE 
@@ -98,6 +101,7 @@
 		<jacoco:coverage
 				append="true"
 				destfile="${result.tmp.coverage.file}"
+				includes="${testscope}"
 				exclClassLoader="sun.reflect.DelegatingClassLoader|org.jacoco.core.test.TargetLoader">
 			
 			<junit haltonfailure="true" fork="true" forkmode="once" dir="${source.bundle.dir}">

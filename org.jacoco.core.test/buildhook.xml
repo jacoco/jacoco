@@ -24,6 +24,8 @@
 	<property name="do.compile" value="true"/>
 	<property name="do.verify" value="true"/>
 	<property name="do.customverify" value="true"/>
+	
+	<property name="testscope" value="org.jacoco.core.*"/>
 
 	<target name="customverify">
 		<mkdir dir="${result.dist.test.dir}"/>
