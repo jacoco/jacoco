@@ -38,7 +38,7 @@
 		<!-- create the all-in-one agent JAR -->
 		<jar destfile="${result.dist.lib.dir}/jacocoagent.jar" level="9">
 			<manifest>
-				<attribute name="Premain-Class" value="org.jacoco.${randomid}.agent.rt.JacocoAgent"/>
+				<attribute name="Premain-Class" value="org.jacoco.agent.rt_${randomid}.JacocoAgent"/>
 				<attribute name="Implementation-Title" value="JaCoCo Java Agent"/>
 				<attribute name="Implementation-Vendor" value="Mountainminds GmbH &amp; Co. KG"/>
 				<attribute name="Implementation-Version" value="${qualified.bundle.version}"/>
@@ -47,8 +47,9 @@
 			<!-- Move classes into unique packages -->
 			<jacocobuild:renamedclassfileset>
 				
-				<mapping from="org/jacoco/(.*)" to="org/jacoco/${randomid}/$1"/>
-				<mapping from="org/objectweb/asm/(.*)" to="org/jacoco/${randomid}/asm/$1"/>
+				<mapping from="org/jacoco/agent/rt/(.*)" to="org/jacoco/agent/rt_${randomid}/$1"/>
+				<mapping from="org/jacoco/core/(.*)" to="org/jacoco/agent/rt_${randomid}/core/$1"/>
+				<mapping from="org/objectweb/asm/(.*)" to="org/jacoco/agent/rt_${randomid}/asm/$1"/>
 				
 				<fileset dir="${result.tmp.bundle.classes.dir}"/>
 				

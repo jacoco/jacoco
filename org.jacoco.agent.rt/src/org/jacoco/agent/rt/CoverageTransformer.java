@@ -32,6 +32,13 @@ import org.jacoco.core.runtime.WildcardMatcher;
  */
 public class CoverageTransformer implements ClassFileTransformer {
 
+	private static final String AGENT_PREFIX;
+
+	static {
+		final String name = CoverageTransformer.class.getName();
+		AGENT_PREFIX = toVMName(name.substring(0, name.lastIndexOf('.')));
+	}
+
 	private final Instrumenter instrumenter;
 
 	private final WildcardMatcher includes;
@@ -43,8 +50,8 @@ public class CoverageTransformer implements ClassFileTransformer {
 	public CoverageTransformer(IRuntime runtime, AgentOptions options) {
 		this.instrumenter = new Instrumenter(runtime);
 		// Class names will be reported in VM notation:
-		includes = new WildcardMatcher(options.getIncludes().replace('.', '/'));
-		excludes = new WildcardMatcher(options.getExcludes().replace('.', '/'));
+		includes = new WildcardMatcher(toVMName(options.getIncludes()));
+		excludes = new WildcardMatcher(toVMName(options.getExcludes()));
 		exclClassloader = new WildcardMatcher(options.getExclClassloader());
 	}
 
@@ -81,10 +88,17 @@ public class CoverageTransformer implements ClassFileTransformer {
 		// Don't instrument classes of the bootstrap loader:
 		return loader != null &&
 
+		!classname.startsWith(AGENT_PREFIX) &&
+
 		!exclClassloader.matches(loader.getClass().getName()) &&
 
 		includes.matches(classname) &&
 
 		!excludes.matches(classname);
 	}
+
+	private static String toVMName(String srcName) {
+		return srcName.replace('.', '/');
+	}
+
 }

@@ -14,6 +14,7 @@ package org.jacoco.agent.rt;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
@@ -35,9 +36,19 @@ public class CoverageTransformerTest {
 
 	private AgentOptions options;
 
+	private ClassLoader classLoader;
+
 	@Before
 	public void setup() {
 		options = new AgentOptions();
+		classLoader = getClass().getClassLoader();
+	}
+
+	@Test
+	public void testFilterAgentClass() {
+		CoverageTransformer t = createTransformer();
+		assertFalse(t.filter(classLoader,
+				"org/jacoco/agent/rt/somepkg/SomeClass"));
 	}
 
 	@Test
@@ -50,8 +61,7 @@ public class CoverageTransformerTest {
 	public void testFilterClassLoaderPositive() {
 		options.setExclClassloader("org.jacoco.agent.SomeWhere$*");
 		CoverageTransformer t = createTransformer();
-		assertTrue(t.filter(new ClassLoader(null) {
-		}, "org/example/Foo"));
+		assertTrue(t.filter(classLoader, "org/example/Foo"));
 	}
 
 	@Test
@@ -59,48 +69,52 @@ public class CoverageTransformerTest {
 		options
 				.setExclClassloader("org.jacoco.agent.rt.CoverageTransformerTest$*");
 		CoverageTransformer t = createTransformer();
-		assertFalse(t.filter(new ClassLoader(null) {
-		}, "org/example/Foo"));
+		ClassLoader myClassLoader = new ClassLoader(null) {
+		};
+		assertFalse(t.filter(myClassLoader, "org/example/Foo"));
 	}
 
 	@Test
 	public void testFilterIncludedClassPositive() {
 		options.setIncludes("org.jacoco.core.*|org.jacoco.agent.rt.*");
 		CoverageTransformer t = createTransformer();
-		assertTrue(t.filter(new ClassLoader(null) {
-		}, "org/jacoco/core/Foo"));
+		assertTrue(t.filter(classLoader, "org/jacoco/core/Foo"));
 	}
 
 	@Test
 	public void testFilterIncludedClassNegative() {
 		options.setIncludes("org.jacoco.core.*|org.jacoco.agent.rt.*");
 		CoverageTransformer t = createTransformer();
-		assertFalse(t.filter(new ClassLoader(null) {
-		}, "org/jacoco/report/Foo"));
+		assertFalse(t.filter(classLoader, "org/jacoco/report/Foo"));
 	}
 
 	@Test
 	public void testFilterExcludedClassPositive() {
 		options.setExcludes("*Test");
 		CoverageTransformer t = createTransformer();
-		assertFalse(t.filter(new ClassLoader(null) {
-		}, "org/jacoco/core/FooTest"));
+		assertFalse(t.filter(classLoader, "org/jacoco/core/FooTest"));
 	}
 
 	@Test
 	public void testFilterExcludedClassNegative() {
 		options.setExcludes("*Test");
 		CoverageTransformer t = createTransformer();
-		assertTrue(t.filter(new ClassLoader(null) {
-		}, "org/jacoco/core/Foo"));
+		assertTrue(t.filter(classLoader, "org/jacoco/core/Foo"));
 	}
 
 	@Test
-	public void testInstrumentationFailure() {
+	public void testTransformFiltered() throws IllegalClassFormatException {
+		CoverageTransformer t = createTransformer();
+		assertNull(t.transform(null, "org.jacoco.Sample", null, null,
+				new byte[0]));
+	}
+
+	@Test
+	public void testTransformFailure() {
 		CoverageTransformer t = createTransformer();
 		try {
-			t.transform(getClass().getClassLoader(), "org.jacoco.Sample", null,
-					null, new byte[0]);
+			t.transform(classLoader, "org.jacoco.Sample", null, null,
+					new byte[0]);
 			fail("IllegalClassFormatException expected.");
 		} catch (IllegalClassFormatException e) {
 			assertEquals(
