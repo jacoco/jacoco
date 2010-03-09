@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- 
+   Copyright (c) 2009, 2010 Mountainminds GmbH & Co. KG and Contributors
+   All rights reserved. This program and the accompanying materials
+   are made available under the terms of the Eclipse Public License v1.0
+   which accompanies this distribution, and is available at
+   http://www.eclipse.org/legal/epl-v10.html
+  
+   Contributors:
+      Brock Janiczak - initial API and implementation
+      
+   $Id: $
+-->
+
+<project name="JaCoCo Merge Task Tests" xmlns:au="antlib:org.apache.ant.antunit" xmlns:jacoco="antlib:org.jacoco.ant">
+			
+	<taskdef uri="antlib:org.jacoco.ant" resource="org/jacoco/ant/antlib.xml">
+		<classpath>
+			<file file="${result.dist.lib.dir}/jacocoant.jar"/>
+		</classpath>
+	</taskdef>
+	
+	<target name="testMergeNoDestination">
+		<au:expectfailure expectedMessage="Destination file must be supplied">
+			<jacoco:merge/>
+		</au:expectfailure>
+	</target>
+	
+	<target name="testMergeToDirectory">
+		<au:expectfailure expectedMessage="Unable to write to destination file">
+			<jacoco:merge destfile="${basedir}"/>
+		</au:expectfailure>
+	</target>
+	
+	<target name="testMergeEmptySet">
+		<property name="testMergeEmptySet.exec.file" value="${result.tmp.bundle.testdata.dir}/empty.exec"/>
+		<jacoco:merge destfile="${testMergeEmptySet.exec.file}"/>
+		
+		<au:assertLogContains text="0 files merged"/>
+		<au:assertFileExists file="${testMergeEmptySet.exec.file}"/>
+	</target>
+	
+	<target name="testMergeMultipleFiles">
+		<property name="testMergeMultipleFiles.exec.file" value="${result.tmp.bundle.testdata.dir}/merged.exec"/>
+		<jacoco:merge destfile="${testMergeMultipleFiles.exec.file}">
+			<fileset dir="executionData" includes="*.exec"/>
+		</jacoco:merge>
+		
+		<au:assertLogContains text="2 files merged"/>
+		<au:assertFileExists file="${testMergeMultipleFiles.exec.file}"/>
+	</target>
+
+</project>
