@@ -22,7 +22,7 @@
   of rules.  
 </p>
 
-<h3>Consistent Source Tree</h3>
+<h2>Consistent Source Tree</h2>
 
 <p>
   Update your sources and run the build locally before every check-in. Commit
@@ -45,7 +45,59 @@
     the corresponding issue tracker id.</li>
 </ul>
 
-<h3>Keep an Eye on License Issues</h3>
+<h2>Design for Integration</h2>
+
+<p>
+  The primary focus of the JaCoCo project is to provide a code coverage library.
+  Integrators may want to embed JaCoCo in different tools and environments with
+  very different usage scenarios. Therefore following aspects should be considered:    
+</p>
+
+<p>
+  <b>Documentation:</b> All APIs should be properly documented on different
+  levels of granularity: 
+</p>
+
+<ul>
+  <li>General usage</li>
+  <li>Bundle summary</li>
+  <li>Package summary</li>
+  <li>Type description</li>
+  <li>Member description</li>
+</ul>
+
+<p>
+  <b>Proper Units:</b> All APIs and internal implementation classes should form proper
+  units with well defined responsibilities and dependencies. Each class and method
+  should focus on a single concept. It should be possible to use different aspects
+  separately.
+</p>
+
+<p>
+  <b>Abstraction:</b> All APIs must  use the most general abstractions possible. For instance
+  reading binary data should rely on the <code>java.io.InputStream</code> interface, not
+  on a <code>java.io.File</code> object.
+</p>
+
+<p>
+  <b>System Dependencies:</b> Avoid any dependencies to the local file system, network
+  resources, threads, processes etc.
+</p>
+
+<h2>Test Driven Development</h2>
+
+<p>
+  All code added to JaCoCo should have corresponding JUnit test cases. Ideally tests
+  are developed before or along with the actual implementation:
+</p>
+
+<ul>
+  <li>Every new feature should be verified by test cases.</li>
+  <li>Modified behavior should also be reflected by test cases.</li>
+  <li>Ideally for every reported bug a reproducer is added to the unit tests.</li>
+</ul>
+
+<h2>Keep an Eye on License Issues</h2>
 
 <p>
   All code included with JaCoCo must conform to the EPL license. 
