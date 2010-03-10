@@ -18,7 +18,7 @@ import org.objectweb.asm.MethodVisitor;
  * The instrumented classes need a piece of code that obtains a
  * <code>boolean[]</code> instance from the runtime. The mechanism is runtime
  * specific and therefore abstracted by this interface. Implementations are
- * therefore provided by {@link IRuntime} implementations and are used by the
+ * provided by {@link IRuntime} implementations and are used by the
  * instrumentation process.
  * 
  * @author Marc R. Hoffmann
@@ -40,11 +40,16 @@ public interface IExecutionDataAccessorGenerator {
 	 * 
 	 * @param classid
 	 *            identifier of the class
+	 * @param classname
+	 *            VM class name
+	 * @param probecount
+	 *            probe count for this class
 	 * @param mv
 	 *            code output
 	 * @return additional stack size required by the implementation, including
 	 *         the instance pushed to the stack
 	 */
-	public int generateDataAccessor(long classid, MethodVisitor mv);
+	public int generateDataAccessor(final long classid, final String classname,
+			final int probecount, MethodVisitor mv);
 
 }

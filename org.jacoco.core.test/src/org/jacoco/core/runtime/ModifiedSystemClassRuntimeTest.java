@@ -15,7 +15,6 @@ package org.jacoco.core.runtime;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
@@ -23,9 +22,7 @@ import java.lang.instrument.ClassDefinition;
 import java.lang.instrument.ClassFileTransformer;
 import java.lang.instrument.Instrumentation;
 import java.lang.reflect.Field;
-import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
-import java.util.Map;
 import java.util.jar.JarFile;
 
 import org.jacoco.core.test.TargetLoader;
@@ -42,8 +39,7 @@ public class ModifiedSystemClassRuntimeTest extends RuntimeTestBase {
 	@Override
 	IRuntime createRuntime() {
 		return new ModifiedSystemClassRuntime(
-				ModifiedSystemClassRuntimeTest.class, "accessMethod",
-				"dataField");
+				ModifiedSystemClassRuntimeTest.class, "accessField");
 	}
 
 	@Test
@@ -60,13 +56,8 @@ public class ModifiedSystemClassRuntimeTest extends RuntimeTestBase {
 		ModifiedSystemClassRuntime.createFor(inst, TARGET_CLASS_NAME);
 	}
 
-	// these static members emulate the instrumented system class
-
-	public static Map<Long, boolean[]> dataField;
-
-	public static boolean[] accessMethod(long id) {
-		return dataField.get(Long.valueOf(id));
-	}
+	/** This static member emulate the instrumented system class. */
+	public static Object accessField;
 
 	private static final String TARGET_CLASS_NAME = "org/jacoco/core/runtime/ModifiedSystemClassRuntimeTest";
 
@@ -183,22 +174,8 @@ public class ModifiedSystemClassRuntimeTest extends RuntimeTestBase {
 				.getTargetClass();
 
 		// Check added field:
-		final Field f = targetClass.getField("$jacocoData");
+		final Field f = targetClass.getField("$jacocoAccess");
 		assertEquals(Modifier.PUBLIC | Modifier.STATIC, f.getModifiers(), 0.0);
-		assertEquals(Map.class, f.getType());
-
-		// Check added method:
-		final Method m = targetClass.getMethod("$jacocoGet", Long.TYPE);
-		assertEquals(Modifier.PUBLIC | Modifier.STATIC, m.getModifiers(), 0.0);
-		assertEquals(boolean[].class, m.getReturnType());
-
-		// See whether the added code works with the runtime:
-		final ModifiedSystemClassRuntime r = new ModifiedSystemClassRuntime(
-				targetClass, "$jacocoGet", "$jacocoData");
-		r.startup();
-		boolean[] data = new boolean[] { true, false, false };
-		r.registerClass(5555, "Foo", data);
-		assertSame(data, m.invoke(null, Long.valueOf(5555)));
+		assertEquals(Object.class, f.getType());
 	}
-
 }

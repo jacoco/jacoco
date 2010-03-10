@@ -26,11 +26,15 @@ public abstract class AbstractRuntime implements IRuntime {
 	/** store for execution data */
 	protected final ExecutionDataStore store;
 
+	/** access for this runtime instance */
+	protected final ExecutionDataAccess access;
+
 	/**
 	 * Creates a new runtime.
 	 */
 	protected AbstractRuntime() {
 		store = new ExecutionDataStore();
+		access = new ExecutionDataAccess(store);
 	}
 
 	public final void collect(final IExecutionDataVisitor visitor,
@@ -41,11 +45,6 @@ public abstract class AbstractRuntime implements IRuntime {
 				store.reset();
 			}
 		}
-	}
-
-	public final void registerClass(final long classid, final String name,
-			final boolean[] data) {
-		store.put(classid, name, data);
 	}
 
 	public final void reset() {

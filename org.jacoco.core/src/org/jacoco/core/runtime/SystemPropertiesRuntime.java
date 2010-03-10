@@ -14,7 +14,6 @@ package org.jacoco.core.runtime;
 
 import java.util.Map;
 
-import org.jacoco.core.instr.GeneratorConstants;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
 
@@ -38,8 +37,6 @@ public class SystemPropertiesRuntime extends AbstractRuntime {
 
 	private final String key;
 
-	private final Map<Long, boolean[]> dataAccess = new MapAdapter(store);
-
 	/**
 	 * Creates a new runtime.
 	 */
@@ -47,8 +44,8 @@ public class SystemPropertiesRuntime extends AbstractRuntime {
 		this.key = KEYPREFIX + hashCode();
 	}
 
-	public int generateDataAccessor(final long classid, final MethodVisitor mv) {
-
+	public int generateDataAccessor(final long classid, final String classname,
+			final int probecount, final MethodVisitor mv) {
 		mv.visitMethodInsn(Opcodes.INVOKESTATIC, "java/lang/System",
 				"getProperties", "()Ljava/util/Properties;");
 
@@ -64,37 +61,15 @@ public class SystemPropertiesRuntime extends AbstractRuntime {
 
 		// Stack[0]: Ljava/lang/Object;
 
-		mv.visitTypeInsn(Opcodes.CHECKCAST, "java/util/Map");
-
-		// Stack[0]: Ljava/util/Map;
-
-		mv.visitLdcInsn(Long.valueOf(classid));
-
-		// Stack[2]: J
-		// Stack[1]: .
-		// Stack[0]: Ljava/util/Map;
-
-		mv.visitMethodInsn(Opcodes.INVOKESTATIC, "java/lang/Long", "valueOf",
-				"(J)Ljava/lang/Long;");
-
-		// Stack[1]: Ljava/lang/Long;
-		// Stack[0]: Ljava/util/Map;
-
-		mv.visitMethodInsn(Opcodes.INVOKEINTERFACE, "java/util/Map", "get",
-				"(Ljava/lang/Object;)Ljava/lang/Object;");
-
-		// Stack[0]: Ljava/lang/Object;
-
-		mv.visitTypeInsn(Opcodes.CHECKCAST, GeneratorConstants.PROBEDATA_TYPE
-				.getInternalName());
+		ExecutionDataAccess.generateAccessCall(classid, classname, probecount, mv);
 
 		// Stack[0]: [Z
 
-		return 3; // Maximum local stack size is 3
+		return 6; // Maximum local stack size is 3
 	}
 
 	public void startup() {
-		System.getProperties().put(key, dataAccess);
+		System.getProperties().put(key, access);
 	}
 
 	public void shutdown() {

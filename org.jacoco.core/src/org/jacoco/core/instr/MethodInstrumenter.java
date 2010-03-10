@@ -12,7 +12,6 @@
  *******************************************************************************/
 package org.jacoco.core.instr;
 
-import org.jacoco.core.runtime.IExecutionDataAccessorGenerator;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.commons.GeneratorAdapter;
@@ -24,12 +23,10 @@ import org.objectweb.asm.commons.GeneratorAdapter;
  * @author Marc R. Hoffmann
  * @version $Revision: $
  */
-public class MethodInstrumenter extends GeneratorAdapter implements
+class MethodInstrumenter extends GeneratorAdapter implements
 		IBlockMethodVisitor {
 
-	private final IExecutionDataAccessorGenerator accessorGenerator;
-
-	private final long classid;
+	private final IProbeArrayStrategy probeArrayStrategy;
 
 	private int accessorStackSize;
 
@@ -46,18 +43,14 @@ public class MethodInstrumenter extends GeneratorAdapter implements
 	 *            name of the method
 	 * @param desc
 	 *            description of the method
-	 * @param accessorGenerator
-	 *            the current coverage runtime
-	 * @param classid
-	 *            the id of the enclosing type
+	 * @param probeArrayStrategy
+	 *            strategy to get access to the probe array
 	 */
 	public MethodInstrumenter(final MethodVisitor mv, final int access,
 			final String name, final String desc,
-			final IExecutionDataAccessorGenerator accessorGenerator,
-			final long classid) {
+			final IProbeArrayStrategy probeArrayStrategy) {
 		super(mv, access, name, desc);
-		this.accessorGenerator = accessorGenerator;
-		this.classid = classid;
+		this.probeArrayStrategy = probeArrayStrategy;
 	}
 
 	@Override
@@ -65,7 +58,7 @@ public class MethodInstrumenter extends GeneratorAdapter implements
 		super.visitCode();
 		// At the very beginning of the method we load the boolean[] array into
 		// a local variable that stores the probes for this class.
-		accessorStackSize = accessorGenerator.generateDataAccessor(classid, mv);
+		accessorStackSize = probeArrayStrategy.pushInstance(mv);
 
 		// Stack[0]: [Z
 

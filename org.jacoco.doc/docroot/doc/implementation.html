@@ -143,10 +143,11 @@
 <p>
   The JaCoCo build renames all classes contained in the
   <code>jacocoagent.jar</code> into classes with a 
-  <code>org.jacoco.&lt;randomid&gt;</code> prefix, including the required ASM
-  library classes. The identifier is created from a random number. As the agent
-  does not provide any API, no one should be affected by this renaming. This
-  trick also allows that JaCoCo tests can be verified with JaCoCo.
+  <code>org.jacoco.agent.rt_&lt;randomid&gt;</code> prefix, including the
+  required ASM library classes. The identifier is created from a random number.
+  As the agent does not provide any API, no one should be affected by this
+  renaming. This trick also allows that JaCoCo tests can be verified with
+  JaCoCo.
 </p>
 
 
@@ -217,41 +218,63 @@
 <p class="intro">
   Instrumented code typically gets a dependency to a coverage runtime which is
   responsible for collecting and storing execution data. JaCoCo uses JRE types
-  and interfaces only in generated instrumentation code. 
+  only in generated instrumentation code. 
 </p>
 
 <p>
-   
-  
   Making a runtime library available to all instrumented classes can be a
   painful or impossible task in frameworks that use their own class loading
   mechanisms. Since Java 1.6 <code>java.lang.instrument.Instrumentation</code>
   has an API to extends the bootsstrap loader. As our minimum target is Java 1.5 
   JaCoCo decouples the instrumented classes and the coverage runtime through
-  official JRE API types only. Different approaches have been implemented and
-  tested so far:
+  official JRE API types only. The instrumented classes communicate through the
+  <code>Object.equals(Object)</code> method with the runtime. A instrumented
+  class can retrieve its probe array instance with the following code. Note
+  that only JRE APIs are used:   
+</p>
+
+
+<pre class="source">
+<span class="nr">    1</span>Object access = ...                          // Retrieve instance
+<span class="nr">    2</span>
+<span class="nr">    3</span>Object[] args = new Object[3];
+<span class="nr">    4</span>args[0] = Long.valueOf(8060044182221863588); // class id 
+<span class="nr">    5</span>args[1] = "com/example/MyClass";             // class name
+<span class="nr">    6</span>args[2] = Integer.valueOf(24);               // probe count
+<span class="nr">    7</span>
+<span class="nr">    8</span>access.equals(args);
+<span class="nr">    9</span>
+<span class="nr">   10</span>boolean[] probes = (boolean[]) args[0];
+</pre>
+
+<p>
+  The most tricky part takes place in line 1 and is not shown in the snippet
+  above. The object instance providing access to the coverage runtime through
+  its <code>equals()</code> method has to be obtained. Different approaches have
+  been implemented and tested so far:
 </p>
 
 <ul>
-  <li><b><code>SystemPropertiesRuntime</code></b>: This approach stores a
-    <code>java.util.Map</code> instance under a system property containing the
-    execution data. This solution breaks the contract that system properties
-    must only contain <code>java.lang.String</code> values and therefore causes
-    trouble in applications that rely on this definition (e.g. Ant).</li>
+  <li><b><code>SystemPropertiesRuntime</code></b>: This approach stores the
+    object instance under a system property. This solution breaks the contract
+    that system properties must only contain <code>java.lang.String</code>
+    values and therefore causes trouble in applications that rely on this
+    definition (e.g. Ant).</li>
   <li><b><code>LoggerRuntime</code></b>: Here we use a shared
-    <code>java.util.logging.Logger</code> instance to report coverage data to.
-    The coverage runtime registers a custom <code>Handler</code> to receive the
-    data. This approach might break environments that install their own log
+    <code>java.util.logging.Logger</code> and communicate through the logging
+    parameter array instead of a <code>equals()</code> method. The coverage
+    runtime registers a custom <code>Handler</code> to receive the parameter
+    array. This approach might break environments that install their own log
     managers (e.g. Glassfish).</li> 
-  <li><b><code>ModifiedSystemClassRuntime</code></b>: This approach adds
-    additional APIs to existing JRE classes through instrumentation. Unlike the
-    other methods above this is only possible for environments where a Java
+  <li><b><code>ModifiedSystemClassRuntime</code></b>: This approach adds a
+    public static field to an existing JRE class through instrumentation. Unlike
+    the other methods above this is only possible for environments where a Java
     agent is active.</li> 
 </ul>
 
 <p>
   The current JaCoCo Java agent implementation uses the 
-  <code>ModifiedSystemClassRuntime</code> adding APIs to the class
+  <code>ModifiedSystemClassRuntime</code> adding a field to the class
   <code>java.sql.Types</code>.
 </p>
 

@@ -14,10 +14,10 @@ package org.jacoco.core.instr;
 
 import static org.junit.Assert.assertEquals;
 
-import org.jacoco.core.runtime.IExecutionDataAccessorGenerator;
 import org.jacoco.core.test.MethodRecorder;
 import org.junit.Before;
 import org.junit.Test;
+import org.objectweb.asm.ClassVisitor;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
 
@@ -29,7 +29,7 @@ import org.objectweb.asm.Opcodes;
  */
 public class MethodInstrumenterTest {
 
-	private IExecutionDataAccessorGenerator accessorGenerator;
+	private IProbeArrayStrategy probeArrayStrategy;
 
 	private MethodInstrumenter instrumenter;
 
@@ -41,16 +41,20 @@ public class MethodInstrumenterTest {
 	public void setup() {
 		actual = new MethodRecorder();
 		expected = new MethodRecorder();
-		accessorGenerator = new IExecutionDataAccessorGenerator() {
+		probeArrayStrategy = new IProbeArrayStrategy() {
 
-			public int generateDataAccessor(long classid, MethodVisitor mv) {
+			public int pushInstance(MethodVisitor mv) {
 				mv.visitMethodInsn(Opcodes.INVOKESTATIC, "Target",
 						"$jacocoInit", "()[Z");
 				return 1;
 			}
+
+			public void addMembers(ClassVisitor delegate) {
+			}
+
 		};
 		instrumenter = new MethodInstrumenter(actual, 0, "test", "()V",
-				accessorGenerator, 0);
+				probeArrayStrategy);
 	}
 
 	void sampleReturn() {

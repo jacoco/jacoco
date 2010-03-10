@@ -15,7 +15,6 @@ package org.jacoco.core.instr;
 import static java.lang.String.format;
 
 import org.jacoco.core.runtime.IExecutionDataAccessorGenerator;
-import org.jacoco.core.runtime.IRuntime;
 import org.objectweb.asm.AnnotationVisitor;
 import org.objectweb.asm.Attribute;
 import org.objectweb.asm.ClassVisitor;
@@ -30,44 +29,46 @@ import org.objectweb.asm.Opcodes;
  * @author Marc R. Hoffmann
  * @version $Revision: $
  */
-public class ClassInstrumenter extends BlockClassAdapter implements
-		IExecutionDataAccessorGenerator {
+public class ClassInstrumenter extends BlockClassAdapter {
 
 	private final ClassVisitor delegate;
 
 	private final long id;
 
-	private final IRuntime runtime;
+	private final IExecutionDataAccessorGenerator accessorGenerator;
+
+	private IProbeArrayStrategy probeArrayStrategy;
 
 	private String className;
-
-	// Inlining the coverage data init method is required for interfaces because
-	// we can't add additional methods here.
-	private boolean inlineInit;
 
 	/**
 	 * Emits a instrumented version of this class to the given class visitor.
 	 * 
 	 * @param id
 	 *            unique identifier given to this class
-	 * @param runtime
-	 *            this runtime will be used for instrumentation
+	 * @param accessorGenerator
+	 *            this generator will be used for instrumentation
 	 * @param cv
 	 *            next delegate in the visitor chain will receive the
 	 *            instrumented class
 	 */
-	public ClassInstrumenter(final long id, final IRuntime runtime,
+	public ClassInstrumenter(final long id,
+			final IExecutionDataAccessorGenerator accessorGenerator,
 			final ClassVisitor cv) {
 		this.delegate = cv;
 		this.id = id;
-		this.runtime = runtime;
+		this.accessorGenerator = accessorGenerator;
 	}
 
 	public void visit(final int version, final int access, final String name,
 			final String signature, final String superName,
 			final String[] interfaces) {
 		this.className = name;
-		this.inlineInit = (access & Opcodes.ACC_INTERFACE) != 0;
+		if ((access & Opcodes.ACC_INTERFACE) == 0) {
+			this.probeArrayStrategy = new ClassTypeStrategy();
+		} else {
+			this.probeArrayStrategy = new InterfaceTypeStrategy();
+		}
 		delegate.visit(version, access, name, signature, superName, interfaces);
 	}
 
@@ -90,8 +91,8 @@ public class ClassInstrumenter extends BlockClassAdapter implements
 		if (mv == null) {
 			return null;
 		}
-		final IExecutionDataAccessorGenerator gen = inlineInit ? runtime : this;
-		return new MethodInstrumenter(mv, access, name, desc, gen, id);
+		return new MethodInstrumenter(mv, access, name, desc,
+				probeArrayStrategy);
 	}
 
 	@Override
@@ -102,80 +103,8 @@ public class ClassInstrumenter extends BlockClassAdapter implements
 	}
 
 	public void visitEnd() {
-		if (!inlineInit) {
-			createDataField();
-			createInitMethod();
-		}
-		registerClass();
+		probeArrayStrategy.addMembers(delegate);
 		delegate.visitEnd();
-	}
-
-	private void createDataField() {
-		delegate.visitField(GeneratorConstants.DATAFIELD_ACC,
-				GeneratorConstants.DATAFIELD_NAME,
-				GeneratorConstants.PROBEDATA_TYPE.getDescriptor(), null, null);
-	}
-
-	private void createInitMethod() {
-		final int access = GeneratorConstants.INITMETHOD_ACC;
-		final MethodVisitor mv = delegate.visitMethod(access,
-				GeneratorConstants.INITMETHOD_NAME,
-				GeneratorConstants.INITMETHOD_DESC, null, null);
-
-		// Load the value of the static data field:
-		mv.visitFieldInsn(Opcodes.GETSTATIC, className,
-				GeneratorConstants.DATAFIELD_NAME,
-				GeneratorConstants.PROBEDATA_TYPE.getDescriptor());
-		mv.visitInsn(Opcodes.DUP);
-
-		// Stack[1]: [Z
-		// Stack[0]: [Z
-
-		// Skip initialization when we already have a data array:
-		final Label alreadyInitialized = new Label();
-		mv.visitJumpInsn(Opcodes.IFNONNULL, alreadyInitialized);
-
-		// Stack[0]: [Z
-
-		mv.visitInsn(Opcodes.POP);
-		final int size = genInitializeDataField(mv);
-
-		// Stack[0]: [Z
-
-		// Return the method's block array:
-		mv.visitLabel(alreadyInitialized);
-		mv.visitInsn(Opcodes.ARETURN);
-
-		mv.visitMaxs(Math.max(size, 2), 1); // Maximum local stack size is 2
-		mv.visitEnd();
-	}
-
-	/**
-	 * Generates the byte code to initialize the static coverage data field
-	 * within this class.
-	 * 
-	 * The code will push the [[Z data array on the operand stack.
-	 * 
-	 * @param mv
-	 *            generator to emit code to
-	 */
-	private int genInitializeDataField(final MethodVisitor mv) {
-		final int size = runtime.generateDataAccessor(id, mv);
-
-		// Stack[0]: [Z
-
-		mv.visitInsn(Opcodes.DUP);
-
-		// Stack[1]: [Z
-		// Stack[0]: [Z
-
-		mv.visitFieldInsn(Opcodes.PUTSTATIC, className,
-				GeneratorConstants.DATAFIELD_NAME,
-				GeneratorConstants.PROBEDATA_TYPE.getDescriptor());
-
-		// Stack[0]: [Z
-
-		return Math.max(size, 2); // Maximum local stack size is 2
 	}
 
 	/**
@@ -197,15 +126,6 @@ public class ClassInstrumenter extends BlockClassAdapter implements
 			throw new IllegalStateException(format(
 					"Class %s is already instrumented.", className));
 		}
-	}
-
-	/**
-	 * Create a execution data structure according to the structure of this
-	 * class and registers it with the runtime.
-	 */
-	private void registerClass() {
-		final boolean[] data = new boolean[getProbeCount()];
-		runtime.registerClass(id, className, data);
 	}
 
 	// Methods we simply delegate:
@@ -233,13 +153,108 @@ public class ClassInstrumenter extends BlockClassAdapter implements
 		delegate.visitSource(source, debug);
 	}
 
-	// === IExecutionDataAccessorGenerator ===
+	// === probe array strategies ===
 
-	public int generateDataAccessor(final long classid, final MethodVisitor mv) {
-		mv.visitMethodInsn(Opcodes.INVOKESTATIC, className,
-				GeneratorConstants.INITMETHOD_NAME,
-				GeneratorConstants.INITMETHOD_DESC);
-		return 1;
+	private class ClassTypeStrategy implements IProbeArrayStrategy {
+
+		public int pushInstance(final MethodVisitor mv) {
+			mv.visitMethodInsn(Opcodes.INVOKESTATIC, className,
+					GeneratorConstants.INITMETHOD_NAME,
+					GeneratorConstants.INITMETHOD_DESC);
+			return 1;
+		}
+
+		public void addMembers(final ClassVisitor delegate) {
+			createDataField();
+			createInitMethod();
+		}
+
+		private void createDataField() {
+			delegate.visitField(GeneratorConstants.DATAFIELD_ACC,
+					GeneratorConstants.DATAFIELD_NAME,
+					GeneratorConstants.PROBEDATA_TYPE.getDescriptor(), null,
+					null);
+		}
+
+		private void createInitMethod() {
+			final MethodVisitor mv = delegate.visitMethod(
+					GeneratorConstants.INITMETHOD_ACC,
+					GeneratorConstants.INITMETHOD_NAME,
+					GeneratorConstants.INITMETHOD_DESC, null, null);
+
+			// Load the value of the static data field:
+			mv.visitFieldInsn(Opcodes.GETSTATIC, className,
+					GeneratorConstants.DATAFIELD_NAME,
+					GeneratorConstants.PROBEDATA_TYPE.getDescriptor());
+			mv.visitInsn(Opcodes.DUP);
+
+			// Stack[1]: [Z
+			// Stack[0]: [Z
+
+			// Skip initialization when we already have a data array:
+			final Label alreadyInitialized = new Label();
+			mv.visitJumpInsn(Opcodes.IFNONNULL, alreadyInitialized);
+
+			// Stack[0]: [Z
+
+			mv.visitInsn(Opcodes.POP);
+			final int size = genInitializeDataField(mv);
+
+			// Stack[0]: [Z
+
+			// Return the method's block array:
+			mv.visitLabel(alreadyInitialized);
+			mv.visitInsn(Opcodes.ARETURN);
+
+			mv.visitMaxs(Math.max(size, 2), 1); // Maximum local stack size is 2
+			mv.visitEnd();
+		}
+
+		/**
+		 * Generates the byte code to initialize the static coverage data field
+		 * within this class.
+		 * 
+		 * The code will push the [[Z data array on the operand stack.
+		 * 
+		 * @param mv
+		 *            generator to emit code to
+		 */
+		private int genInitializeDataField(final MethodVisitor mv) {
+			final int size = accessorGenerator.generateDataAccessor(id,
+					className, getProbeCount(), mv);
+
+			// Stack[0]: [Z
+
+			mv.visitInsn(Opcodes.DUP);
+
+			// Stack[1]: [Z
+			// Stack[0]: [Z
+
+			mv.visitFieldInsn(Opcodes.PUTSTATIC, className,
+					GeneratorConstants.DATAFIELD_NAME,
+					GeneratorConstants.PROBEDATA_TYPE.getDescriptor());
+
+			// Stack[0]: [Z
+
+			return Math.max(size, 2); // Maximum local stack size is 2
+		}
+	}
+
+	private class InterfaceTypeStrategy implements IProbeArrayStrategy {
+
+		public int pushInstance(final MethodVisitor mv) {
+			// TODO As we don't know the actual probe count at this point in
+			// time use a hard coded value of 64. This is typically be way too
+			// big and will break static initializers in interfaces with more
+			// than 64 blocks. So this has to be replaced with the actual probe
+			// count.
+			final int size = accessorGenerator.generateDataAccessor(id,
+					className, 64, mv);
+			return size;
+		}
+
+		public void addMembers(final ClassVisitor delegate) {
+		}
 	}
 
 }

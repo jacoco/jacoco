@@ -62,12 +62,15 @@ public class LoggerRuntime extends AbstractRuntime {
 		return l;
 	}
 
-	public int generateDataAccessor(final long classid, final MethodVisitor mv) {
+	public int generateDataAccessor(final long classid, final String classname,
+			final int probecount, final MethodVisitor mv) {
 
 		// The data accessor performs the following steps:
 		//
-		// final Object[] args = new Object[1];
+		// final Object[] args = new Object[3];
 		// args[0] = Long.valueOf(classid);
+		// args[1] = classname;
+		// args[2] = Integer.valueOf(probecount);
 		// Logger.getLogger(CHANNEL).log(Level.INFO, key, args);
 		// final byte[] probedata = (byte[]) args[0];
 		//
@@ -77,34 +80,7 @@ public class LoggerRuntime extends AbstractRuntime {
 
 		// 1. Create parameter array:
 
-		mv.visitInsn(Opcodes.ICONST_1);
-		mv.visitTypeInsn(Opcodes.ANEWARRAY, "java/lang/Object");
-
-		// Stack[0]: [Ljava/lang/Object;
-
-		mv.visitInsn(Opcodes.DUP);
-
-		// Stack[1]: [Ljava/lang/Object;
-		// Stack[0]: [Ljava/lang/Object;
-
-		mv.visitInsn(Opcodes.ICONST_0);
-		mv.visitLdcInsn(Long.valueOf(classid));
-
-		// Stack[4]: J
-		// Stack[3]: .
-		// Stack[2]: I
-		// Stack[1]: [Ljava/lang/Object;
-		// Stack[0]: [Ljava/lang/Object;
-
-		mv.visitMethodInsn(Opcodes.INVOKESTATIC, "java/lang/Long", "valueOf",
-				"(J)Ljava/lang/Long;");
-
-		// Stack[3]: Ljava/lang/Long;
-		// Stack[2]: I
-		// Stack[1]: [Ljava/lang/Object;
-		// Stack[0]: [Ljava/lang/Object;
-
-		mv.visitInsn(Opcodes.AASTORE);
+		ExecutionDataAccess.generateArgumentArray(classid, classname, probecount, mv);
 
 		// Stack[0]: [Ljava/lang/Object;
 
@@ -196,16 +172,7 @@ public class LoggerRuntime extends AbstractRuntime {
 		@Override
 		public void publish(final LogRecord record) {
 			if (key.equals(record.getMessage())) {
-				final Object[] params = record.getParameters();
-				final Long id = (Long) params[0];
-				synchronized (store) {
-					final boolean[] data = store.getData(id);
-					if (data == null) {
-						throw new IllegalStateException(String.format(
-								"Unknown class id %x.", id));
-					}
-					params[0] = data;
-				}
+				access.getExecutionData(record.getParameters());
 			}
 		}
 

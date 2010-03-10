@@ -68,8 +68,39 @@ public class ExecutionDataStoreTest implements IExecutionDataVisitor {
 				nameOutput);
 	}
 
-	@Test(expected = IllegalArgumentException.class)
-	public void testIdClash() {
+	@Test
+	public void testGetWithoutCreate() {
+		boolean[] data = new boolean[] { false, false, true };
+		store.put(1000, "Sample", data);
+		assertSame(data, store.getData(Long.valueOf(1000), "Sample", 3));
+	}
+
+	@Test
+	public void testGetWithCreate() {
+		boolean[] data = store.getData(Long.valueOf(1000), "Sample", 3);
+		assertEquals(3, data.length, 0.0);
+		assertFalse(data[0]);
+		assertFalse(data[1]);
+		assertFalse(data[2]);
+		assertSame(data, store.getData(Long.valueOf(1000), "Sample", 3));
+	}
+
+	@Test(expected = IllegalStateException.class)
+	public void testGetNegative1() {
+		boolean[] data = new boolean[] { false, false, true };
+		store.put(1000, "Sample", data);
+		assertSame(data, store.getData(Long.valueOf(1000), "Other", 3));
+	}
+
+	@Test(expected = IllegalStateException.class)
+	public void testGetNegative2() {
+		boolean[] data = new boolean[] { false, false, true };
+		store.put(1000, "Sample", data);
+		assertSame(data, store.getData(Long.valueOf(1000), "Sample", 4));
+	}
+
+	@Test(expected = IllegalStateException.class)
+	public void testPutNegative() {
 		boolean[] data = new boolean[0];
 		store.put(1000, "Sample1", data);
 		store.put(1000, "Sample2", data);
@@ -90,7 +121,7 @@ public class ExecutionDataStoreTest implements IExecutionDataVisitor {
 	}
 
 	@Test(expected = IllegalStateException.class)
-	public void testNegative1() {
+	public void testMergeNegative() {
 		boolean[] data1 = new boolean[] { false, false };
 		store.visitClassExecution(1000, "Sample", data1);
 		boolean[] data2 = new boolean[] { false, false, false };

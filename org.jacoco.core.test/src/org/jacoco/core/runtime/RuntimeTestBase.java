@@ -67,50 +67,47 @@ public abstract class RuntimeTestBase {
 	}
 
 	@Test
+	public void testDataAccessor() throws InstantiationException,
+			IllegalAccessException {
+		ITarget t = generateAndInstantiateClass(1234);
+		runtime.collect(storage, false);
+		storage.assertData(1234, t.get());
+	}
+
+	@Test
 	public void testReset() throws InstantiationException,
 			IllegalAccessException {
-		final boolean[] data1 = new boolean[] { true, true, false };
-		runtime.registerClass(1001, "Target", data1);
+		final ITarget target = generateAndInstantiateClass(1000);
+		target.a();
+		target.b();
+
 		runtime.reset();
-		assertFalse(data1[0]);
-		assertFalse(data1[1]);
-		assertFalse(data1[2]);
+
+		final boolean[] data = target.get();
+		assertFalse(data[0]);
+		assertFalse(data[1]);
 	}
 
 	@Test
 	public void testCollectAndReset() throws InstantiationException,
 			IllegalAccessException {
-		final boolean[] data1 = new boolean[] { true, true, true };
-		runtime.registerClass(1001, "Target", data1);
+		final ITarget target = generateAndInstantiateClass(1001);
+		target.a();
+		target.b();
+
 		runtime.collect(storage, true);
+
+		final boolean[] data = target.get();
 		storage.assertSize(1);
-		storage.assertData(1001, data1);
-		assertFalse(data1[0]);
-		assertFalse(data1[1]);
-		assertFalse(data1[2]);
-	}
-
-	@Test(expected = IllegalStateException.class)
-	public void testNoClassRegistration() throws InstantiationException,
-			IllegalAccessException {
-		generateAndInstantiateClass(1001);
-	}
-
-	@Test
-	public void testDataAccessor() throws InstantiationException,
-			IllegalAccessException {
-		final boolean[] data = newStructure();
-		runtime.registerClass(1001, "Target", data);
-		ITarget t = generateAndInstantiateClass(1001);
-		assertSame(data, t.get());
+		storage.assertData(1001, data);
+		assertFalse(data[0]);
+		assertFalse(data[1]);
 	}
 
 	@Test
 	public void testNoLocalVariablesInDataAccessor()
 			throws InstantiationException, IllegalAccessException {
-		final boolean[] data = newStructure();
-		runtime.registerClass(1001, "Target", data);
-		runtime.generateDataAccessor(1001, new EmptyVisitor() {
+		runtime.generateDataAccessor(1001, "Target", 5, new EmptyVisitor() {
 			@Override
 			public void visitVarInsn(int opcode, int var) {
 				fail("No usage of local variables allowed.");
@@ -121,28 +118,24 @@ public abstract class RuntimeTestBase {
 	@Test
 	public void testExecutionRecording() throws InstantiationException,
 			IllegalAccessException {
-		boolean[] data1 = newStructure();
-		runtime.registerClass(1001, "Target", data1);
 		generateAndInstantiateClass(1001).a();
 		runtime.collect(storage, false);
 		storage.assertSize(1);
-		storage.assertData(1001, data1);
-		assertTrue(data1[0]);
-		assertFalse(data1[1]);
+		final boolean[] data = storage.getData(1001);
+		assertTrue(data[0]);
+		assertFalse(data[1]);
 	}
 
 	@Test
 	public void testLoadSameClassTwice() throws InstantiationException,
 			IllegalAccessException {
-		boolean[] data1 = newStructure();
-		runtime.registerClass(1001, "Target", data1);
 		generateAndInstantiateClass(1001).a();
 		generateAndInstantiateClass(1001).b();
 		runtime.collect(storage, false);
 		storage.assertSize(1);
-		storage.assertData(1001, data1);
-		assertTrue(data1[0]);
-		assertTrue(data1[0]);
+		final boolean[] data = storage.getData(1001);
+		assertTrue(data[0]);
+		assertTrue(data[0]);
 	}
 
 	/**
@@ -179,7 +172,8 @@ public abstract class RuntimeTestBase {
 		gen.invokeConstructor(Type.getType(Object.class), new Method("<init>",
 				"()V"));
 		gen.loadThis();
-		final int size = runtime.generateDataAccessor(classid, gen);
+		final int size = runtime.generateDataAccessor(classid, className, 2,
+				gen);
 		gen.putField(classType, "data", GeneratorConstants.PROBEDATA_TYPE);
 		gen.returnValue();
 		gen.visitMaxs(size + 1, 0);
@@ -237,16 +231,12 @@ public abstract class RuntimeTestBase {
 
 		boolean[] get();
 
-		// implementations just mark method 0 as executed
+		// implementations just mark probe 0 as executed
 		void a();
 
-		// implementations just mark method 1 as executed
+		// implementations just mark probe 1 as executed
 		void b();
 
-	}
-
-	private boolean[] newStructure() {
-		return new boolean[] { false, false };
 	}
 
 	private static class TestStorage implements IExecutionDataVisitor {

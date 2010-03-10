@@ -128,7 +128,9 @@ public class CoverageTransformerTest {
 	}
 
 	private static class StubRuntime extends AbstractRuntime {
-		public int generateDataAccessor(long classid, MethodVisitor mv) {
+
+		public int generateDataAccessor(long classid, String classname,
+				int probecount, MethodVisitor mv) {
 			return 0;
 		}
 

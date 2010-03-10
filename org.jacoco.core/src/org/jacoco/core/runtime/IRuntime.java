@@ -39,20 +39,6 @@ public interface IRuntime extends IExecutionDataAccessorGenerator {
 	public void shutdown();
 
 	/**
-	 * Before a particular class gets loaded, its execution data structure must
-	 * be registered with the runtime through this method. This method must only
-	 * be called between {@link #startup()} and {@link #shutdown()}.
-	 * 
-	 * @param classid
-	 *            identifier of the class
-	 * @param name
-	 *            VM name of the class
-	 * @param data
-	 *            execution data structure for this class
-	 */
-	public void registerClass(long classid, final String name, boolean[] data);
-
-	/**
 	 * Collects the current execution data and writes it to the given
 	 * {@link IExecutionDataVisitor} object. This method must only be called
 	 * between {@link #startup()} and {@link #shutdown()}.

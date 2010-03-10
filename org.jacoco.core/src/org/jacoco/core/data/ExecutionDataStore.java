@@ -100,6 +100,30 @@ public class ExecutionDataStore implements IExecutionDataVisitor {
 	}
 
 	/**
+	 * Returns the coverage date for the class with the given identifier. If
+	 * there is not data available under the given id a new entry is created.
+	 * 
+	 * @param classid
+	 *            class identifier
+	 * @param name
+	 *            VM name of the class
+	 * @param probecount
+	 *            probe array length
+	 * @return execution data
+	 */
+	public boolean[] getData(final Long classid, final String name,
+			final int probecount) {
+		Entry entry = entries.get(classid);
+		if (entry == null) {
+			entry = new Entry(name, new boolean[probecount]);
+			entries.put(classid, entry);
+		} else {
+			entry.checkCompatibility(classid, name, probecount);
+		}
+		return entry.data;
+	}
+
+	/**
 	 * Returns the vm name of the class with the given id.
 	 * 
 	 * @param classid
@@ -163,18 +187,23 @@ public class ExecutionDataStore implements IExecutionDataVisitor {
 			this.data = data;
 		}
 
-		void merge(final Long classid, final String newName,
-				final boolean[] newData) {
-			if (!newName.equals(name)) {
-				throw new IllegalArgumentException(format(
+		void checkCompatibility(final Long classid, final String otherName,
+				final int otherLength) {
+			if (!otherName.equals(name)) {
+				throw new IllegalStateException(format(
 						"Duplicate id %x for classes %s and %s.", classid,
-						name, newName));
+						name, otherName));
 			}
-			if (data.length != newData.length) {
+			if (data.length != otherLength) {
 				throw new IllegalStateException(format(
 						"Incompatible execution data for class %s (id %s).",
 						name, classid));
 			}
+		}
+
+		void merge(final Long classid, final String newName,
+				final boolean[] newData) {
+			checkCompatibility(classid, newName, newData.length);
 			for (int i = 0; i < data.length; i++) {
 				if (!data[i]) {
 					data[i] = newData[i];
