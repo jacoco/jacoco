@@ -26,6 +26,7 @@
 		<mkdir dir="${result.tmp.bundle.testdata.dir}"/>
 	</target>
 	
+	
 	<target name="testReportNoStructureElement">
 		<au:expectfailure expectedMessage="Group name must be supplied">
 			<jacoco:report/>
@@ -50,7 +51,20 @@
 		</au:expectfailure>
 	</target>
 	
-	<target name="testReportNoHtmlDestdir">
+	<target name="testReportInvalidExecutiondataFile">
+		<au:expectfailure expectedMessage="Unable to read execution data file doesnotexist.exec">
+			<jacoco:report>
+				<executiondata>
+					<file file="doesnotexist.exec"/>
+				</executiondata>
+				<structure name="root"/>
+			</jacoco:report>
+		</au:expectfailure>
+	</target>
+	
+	<!-- HTML Output -->
+	
+	<target name="testReportHtmlNoDestdir">
 		<au:expectfailure expectedMessage="Destination directory must be supplied for html report">
 			<jacoco:report>
 				<structure name="root"/>
@@ -58,27 +72,8 @@
 			</jacoco:report>
 		</au:expectfailure>
 	</target>
-
-	<target name="testReportNoCsvDestfile">
-		<au:expectfailure expectedMessage="Destination file must be supplied for csv report">
-			<jacoco:report>
-				<structure name="root"/>
-				<csv/>
-			</jacoco:report>
-		</au:expectfailure>
-	</target>
-
-	<target name="testReportNoXmlDestfile">
-		<au:expectfailure expectedMessage="Destination file must be supplied for xml report">
-			<jacoco:report>
-				<structure name="root"/>
-				<xml/>
-			</jacoco:report>
-		</au:expectfailure>
-	</target>
-
+	
 	<target name="testReportHtmlWithClassFileSet">
-		<property name="testReportHtmlWithClassFileSet.destdir" location="${result.tmp.bundle.testdata.dir}/htmlreport"/>
 		<jacoco:report>
 			<structure name="Test">
 				<group name="Group">
@@ -87,14 +82,13 @@
 					</classfiles>
 				</group>
 			</structure>
-			<html destdir="${testReportHtmlWithClassFileSet.destdir}"/>
+			<html destdir="${result.tmp.bundle.testdata.dir}"/>
 		</jacoco:report>
 		
-		<au:assertFileExists file="${testReportHtmlWithClassFileSet.destdir}/Group/org.jacoco.ant.test/EmptyTest.html"/>
+		<au:assertFileExists file="${result.tmp.bundle.testdata.dir}/Group/org.jacoco.ant.test/EmptyTest.html"/>
 	</target>
-
+	
 	<target name="testReportHtmlWithPath">
-		<property name="testReportHtmlWithPath.destdir" location="${result.tmp.bundle.testdata.dir}/htmlreport"/>
 		<jacoco:report>
 			<structure name="Test">
 				<group name="Group">
@@ -103,14 +97,13 @@
 					</classfiles>
 				</group>
 			</structure>
-			<html destdir="${testReportHtmlWithPath.destdir}"/>
+			<html destdir="${result.tmp.bundle.testdata.dir}"/>
 		</jacoco:report>
 		
-		<au:assertFileExists file="${testReportHtmlWithPath.destdir}/Group/org.jacoco.ant.test/EmptyTest.html"/>
+		<au:assertFileExists file="${result.tmp.bundle.testdata.dir}/Group/org.jacoco.ant.test/EmptyTest.html"/>
 	</target>
 	
 	<target name="testReportHtmlWithJAR">
-		<property name="testReportHtmlWithJAR.destdir" location="${result.tmp.bundle.testdata.dir}/htmlreport"/>
 		<property name="testReportHtmlWithJAR.jarfile" location="${result.tmp.bundle.testdata.dir}/testclasses.jar"/>
 		<jar destfile="${testReportHtmlWithJAR.jarfile}">
 			<fileset dir="${result.tmp.bundle.classes.dir}" includes="**/*.class"/>
@@ -123,31 +116,87 @@
 					</classfiles>
 				</group>
 			</structure>
-			<html destdir="${testReportHtmlWithJAR.destdir}"/>
+			<html destdir="${result.tmp.bundle.testdata.dir}"/>
 		</jacoco:report>
 		
-		<au:assertFileExists file="${testReportHtmlWithJAR.destdir}/Group/org.jacoco.ant.test/EmptyTest.html"/>
+		<au:assertFileExists file="${result.tmp.bundle.testdata.dir}/Group/org.jacoco.ant.test/EmptyTest.html"/>
+	</target>
+	
+	<target name="testReportHtmlFooter">
+		<jacoco:report>
+			<structure name="Test"/>
+			<html footer="ExampleFooter" destdir="${result.tmp.bundle.testdata.dir}"/>
+		</jacoco:report>
+		
+		<loadfile property="testReportHtmlFooter.content" srcfile="${result.tmp.bundle.testdata.dir}/index.html" encoding="UTF-8"/>
+		<au:assertTrue message="Footer not included in ${testReportHtmlFooter.content}">
+			<contains string="${testReportHtmlFooter.content}" substring="ExampleFooter"/>
+		</au:assertTrue>
+	</target>
+
+	<target name="testReportHtmlEncoding">
+		<jacoco:report>
+			<structure name="Test"/>
+			<html encoding="UTF-16" destdir="${result.tmp.bundle.testdata.dir}"/>
+		</jacoco:report>
+		
+		<loadfile property="testReportHtmlEncoding.content" srcfile="${result.tmp.bundle.testdata.dir}/index.html" encoding="UTF-16"/>
+		<au:assertTrue message="Encoding not set in ${testReportHtmlEncoding.content}">
+			<contains string="${testReportHtmlEncoding.content}" substring="encoding=&quot;UTF-16&quot;"/>
+		</au:assertTrue>
+	</target>
+	
+	
+	<!-- CSV Output -->
+
+	<target name="testReportCsvNoDestfile">
+		<au:expectfailure expectedMessage="Destination file must be supplied for csv report">
+			<jacoco:report>
+				<structure name="root"/>
+				<csv/>
+			</jacoco:report>
+		</au:expectfailure>
+	</target>
+	
+	<target name="testReportCsvEncoding">
+		<property name="testReportCsvEncoding.destfile" location="${result.tmp.bundle.testdata.dir}/report.csv"/>
+		<jacoco:report>
+			<structure name="Test"/>
+			<csv encoding="UTF-16" destfile="${testReportCsvEncoding.destfile}"/>
+		</jacoco:report>
+		
+		<au:assertFileExists file="${testReportCsvEncoding.destfile}"/>
+		<loadfile property="testReportCsvEncoding.content" srcfile="${testReportCsvEncoding.destfile}" encoding="UTF-16"/>
+		<au:assertTrue message="Encoding not set in ${testReportCsvEncoding.content}">
+			<contains string="${testReportCsvEncoding.content}" substring="METHOD_COVERED"/>
+		</au:assertTrue>
 	</target>
 
 	
-	<target name="testReportCsv">
-		<property name="testReportCsv.destfile" location="${result.tmp.bundle.testdata.dir}/report.csv"/>
-		<jacoco:report>
-			<structure name="Test"/>
-			<csv destfile="${testReportCsv.destfile}"/>
-		</jacoco:report>
-		
-		<au:assertFileExists file="${testReportCsv.destfile}"/>
-	</target>
+	<!-- XML Output -->
 	
-	<target name="testReportXml">
-		<property name="testReportXml.destfile" location="${result.tmp.bundle.testdata.dir}/report.xml"/>
+	<target name="testReportXmlNoDestfile">
+		<au:expectfailure expectedMessage="Destination file must be supplied for xml report">
+			<jacoco:report>
+				<structure name="root"/>
+				<xml/>
+			</jacoco:report>
+		</au:expectfailure>
+	</target>
+
+	<target name="testReportXmlEncoding">
+		<property name="testReportXmlEncoding.destfile" location="${result.tmp.bundle.testdata.dir}/report.xml"/>
 		<jacoco:report>
 			<structure name="Test"/>
-			<xml destfile="${testReportXml.destfile}"/>
+			<xml encoding="UTF-16" destfile="${testReportXmlEncoding.destfile}"/>
 		</jacoco:report>
 		
-		<au:assertFileExists file="${testReportXml.destfile}"/>
+		<au:assertFileExists file="${testReportXmlEncoding.destfile}"/>
+		<loadfile property="testReportXmlEncoding.content" srcfile="${testReportXmlEncoding.destfile}" encoding="UTF-16"/>
+		<au:assertTrue message="Encoding not set in ${testReportXmlEncoding.content}">
+			<contains string="${testReportXmlEncoding.content}" substring="encoding=&quot;UTF-16&quot;"/>
+		</au:assertTrue>
 	</target>
+
 	
 </project>
