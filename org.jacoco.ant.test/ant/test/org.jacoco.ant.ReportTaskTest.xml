@@ -21,6 +21,11 @@
 		</classpath>
 	</taskdef>
 	
+	<target name="setUp">
+		<delete dir="${result.tmp.bundle.testdata.dir}" quiet="false" failonerror="true"/>
+		<mkdir dir="${result.tmp.bundle.testdata.dir}"/>
+	</target>
+	
 	<target name="testReportNoStructureElement">
 		<au:expectfailure expectedMessage="Group name must be supplied">
 			<jacoco:report/>

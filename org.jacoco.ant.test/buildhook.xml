@@ -35,8 +35,6 @@
 		<property name="result.tmp.bundle.test.dir" location="${result.tmp.bundle.dir}/test"/>
 		<property name="result.tmp.bundle.testdata.dir" location="${result.tmp.bundle.dir}/testdata"/>
 		
-		<mkdir dir="${result.tmp.bundle.test.dir}"/>
-
 		<jacoco:coverage
 				append="true"
 				includes="${testscope}"
