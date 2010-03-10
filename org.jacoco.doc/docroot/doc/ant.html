@@ -4,9 +4,11 @@
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1" />
   <link rel="stylesheet" href=".resources/doc.css" charset="ISO-8859-1" type="text/css" />
+  <link rel="stylesheet" href="../coverage/.resources/prettify.css" charset="ISO-8859-1" type="text/css" />
+  <script type="text/javascript" src="../coverage/.resources/prettify.js"></script>
   <title>JaCoCo - Ant Tasks</title>
 </head>
-<body>
+<body onload="prettyPrint()">
 
 <div class="breadcrumb">
   <a href="../index.html" class="el_session">JaCoCo</a> &gt;
@@ -34,7 +36,7 @@
   <code>taskdef</code> declaration:   
 </p>
 
-<pre class="source">
+<pre class="source lang-xml">
 <span class="nr">    1</span>&lt;project name="Example" xmlns:jacoco="antlib:org.jacoco.ant"&gt;
 <span class="nr">    2</span>
 <span class="nr">    3</span>    &lt;taskdef uri="antlib:org.jacoco.ant" resource="org/jacoco/ant/antlib.xml"&gt;
@@ -71,7 +73,7 @@
   following examples:  
 </p>
 
-<pre class="source">
+<pre class="source lang-xml">
 <span class="nr">    1</span>&lt;jacoco:coverage>
 <span class="nr">    2</span>    &lt;java classname="org.jacoco.examples.HelloJaCoCo" fork="true"&gt;
 <span class="nr">    3</span>        &lt;classpath&gt;
@@ -183,7 +185,7 @@
   <code>agentvmparam</code> that can be directly used as a Java VM parameter:
 </p>
 
-<pre class="source">
+<pre class="source lang-xml">
 <span class="nr">    1</span>&lt;jacoco:agent property="agentvmparam"/>
 </pre>
 
@@ -226,7 +228,7 @@
   into a single data store. 
 </p>
 
-<pre class="source">
+<pre class="source lang-xml">
 <span class="nr">    1</span>&lt;jacoco:merge destfile="merged.exec"&gt;
 <span class="nr">    2</span>    &lt;fileset dir="executionData" includes="*.exec"/&gt;
 <span class="nr">    3</span>&lt;/jacoco:merge&gt;
@@ -263,7 +265,7 @@
   input data, additional ones specify the output formats:  
 </p>
 
-<pre class="source">
+<pre class="source lang-xml">
 <span class="nr">    1</span>&lt;jacoco:report&gt;
 <span class="nr">    2</span>			
 <span class="nr">    3</span>    &lt;executiondata&gt;
@@ -326,7 +328,7 @@
   report (see the <a href="../coverage/index.html">resulting report</a>): 
 </p>
 
-<pre class="source">
+<pre class="source lang-xml">
 <span class="nr">    1</span>&lt;structure name="JaCoCo"&gt;
 <span class="nr">    2</span>    &lt;group name="org.jacoco.core"&gt;
 <span class="nr">    3</span>        &lt;classfiles&gt;
