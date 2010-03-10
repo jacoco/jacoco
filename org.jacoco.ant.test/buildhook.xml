@@ -47,7 +47,7 @@
 				<arg value="-Dresult.dist.lib.dir=${result.dist.lib.dir}"/>
 				<arg value="-Dresult.tmp.bundle.testdata.dir=${result.tmp.bundle.testdata.dir}"/>
 				<arg value="-Dresult.tmp.bundle.classes.dir=${result.tmp.bundle.classes.dir}"/>
-				<arg value="-Dtarget.plugins.dir=${target.plugins.dir}"/>
+				<arg value="-Dbundle-org.junit4.path=${toString:bundle-org.junit4}"/>
 			</java>
 		</jacoco:coverage>
 

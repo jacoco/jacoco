@@ -27,7 +27,7 @@
 				<propertyref name="result.dist.lib.dir"/>
 				<propertyref name="result.tmp.bundle.testdata.dir"/>
 				<propertyref name="result.tmp.bundle.classes.dir"/>
-				<propertyref name="target.plugins.dir"/>
+				<propertyref name="bundle-org.junit4.path"/>
 			</propertyset>
 	    	
 			<fileset dir="test" includes="*.xml"/>

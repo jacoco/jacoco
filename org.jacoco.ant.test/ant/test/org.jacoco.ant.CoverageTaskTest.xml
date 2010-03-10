@@ -19,14 +19,7 @@
 		<path path="${result.tmp.bundle.classes.dir}"/>
 	</path>
 	
-	<path id="bundle-org.junit4">
-		<fileset dir="${target.plugins.dir}" includes="org.junit4_*/junit.jar"/>
-		<fileset dir="${target.plugins.dir}" includes="org.junit_4*/junit.jar"/>
-		<fileset dir="${target.plugins.dir}" includes="org.hamcrest.core_*.jar"/>
-		<fileset dir="${target.plugins.dir}" includes="org.hamcrest.ui_*.jar"/>
-		<fileset dir="${target.plugins.dir}" includes="org.hamcrest.text_*.jar"/>
-		<fileset dir="${target.plugins.dir}" includes="org.hamcrest.library_*.jar"/>
-	</path>
+	<path id="bundle-org.junit4" path="${bundle-org.junit4.path}"/>
 			
 	<taskdef uri="antlib:org.jacoco.ant" resource="org/jacoco/ant/antlib.xml">
 		<classpath>
