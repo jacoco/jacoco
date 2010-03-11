@@ -14,8 +14,6 @@ package org.jacoco.core.test.validation.targets;
 
 import static org.jacoco.core.test.validation.targets.Stubs.i1;
 
-import org.jacoco.core.test.targets.Stubs;
-
 /**
  * This test target is a class with a static initializer.
  * 

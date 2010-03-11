@@ -128,38 +128,46 @@ public class ModifiedSystemClassRuntimeTest extends RuntimeTestBase {
 
 		// JDK 1.6 Methods:
 
+		@SuppressWarnings("unused")
 		public void addTransformer(ClassFileTransformer transformer,
 				boolean canRetransform) {
 			fail();
 		}
 
+		@SuppressWarnings("unused")
 		public void appendToBootstrapClassLoaderSearch(JarFile jarfile) {
 			fail();
 		}
 
+		@SuppressWarnings("unused")
 		public void appendToSystemClassLoaderSearch(JarFile jarfile) {
 			fail();
 		}
 
+		@SuppressWarnings("unused")
 		public boolean isModifiableClass(Class<?> theClass) {
 			fail();
 			return false;
 		}
 
+		@SuppressWarnings("unused")
 		public boolean isNativeMethodPrefixSupported() {
 			fail();
 			return false;
 		}
 
+		@SuppressWarnings("unused")
 		public boolean isRetransformClassesSupported() {
 			fail();
 			return false;
 		}
 
+		@SuppressWarnings("unused")
 		public void retransformClasses(Class<?>... classes) {
 			fail();
 		}
 
+		@SuppressWarnings("unused")
 		public void setNativeMethodPrefix(ClassFileTransformer transformer,
 				String prefix) {
 			fail();

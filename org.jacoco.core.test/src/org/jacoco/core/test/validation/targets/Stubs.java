@@ -21,11 +21,21 @@ package org.jacoco.core.test.validation.targets;
 public class Stubs {
 
 	/**
-	 * Exception Stub.
+	 * Exception stub.
 	 */
 	public static class StubException extends RuntimeException {
 
 		static final long serialVersionUID = 0L;
+
+	}
+
+	/**
+	 * Superclass stub.
+	 */
+	public static class SuperClass {
+
+		public SuperClass(boolean arg) {
+		}
 
 	}
 
