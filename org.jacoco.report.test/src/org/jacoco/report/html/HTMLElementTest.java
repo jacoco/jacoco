@@ -198,7 +198,7 @@ public class HTMLElementTest {
 		root.img("sample.gif", 16, 32, "Hello");
 		root.close();
 		assertEquals(
-				"<root><img src=\"sample.gif\" width=\"16\" height=\"32\" alt=\"Hello\"/></root>",
+				"<root><img src=\"sample.gif\" width=\"16\" height=\"32\" title=\"Hello\" alt=\"Hello\"/></root>",
 				buffer.toString());
 	}
 

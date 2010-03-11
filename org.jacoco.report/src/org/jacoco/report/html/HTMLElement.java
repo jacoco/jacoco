@@ -345,18 +345,19 @@ public class HTMLElement extends XMLElement {
 	 *            value of the width attribute
 	 * @param heightattr
 	 *            value of the height attribute
-	 * @param altattr
-	 *            value of the alt attribute
+	 * @param titleattr
+	 *            value of the title and alt attribute
 	 * @throws IOException
 	 *             in case of problems with the writer
 	 */
 	public void img(final String srcattr, final int widthattr,
-			final int heightattr, final String altattr) throws IOException {
+			final int heightattr, final String titleattr) throws IOException {
 		final HTMLElement img = element("img");
 		img.attr("src", srcattr);
 		img.attr("width", String.valueOf(widthattr));
 		img.attr("height", String.valueOf(heightattr));
-		img.attr("alt", String.valueOf(altattr));
+		img.attr("title", titleattr);
+		img.attr("alt", titleattr);
 		img.close();
 	}
 
