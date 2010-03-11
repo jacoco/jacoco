@@ -79,6 +79,13 @@ public class BooleanExpressionsTest extends ValidationTestBase {
 		assertLine("condT", PARTLY_COVERED);
 		assertLine("condF", PARTLY_COVERED);
 
+		// 9. Not (one case)
+		assertLine("notT", PARTLY_COVERED);
+		assertLine("notF", PARTLY_COVERED);
+
+		// 10. Not (both cases)
+		assertLine("notTF", FULLY_COVERED);
+
 	}
 
 }

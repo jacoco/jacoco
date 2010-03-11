@@ -110,6 +110,15 @@ public class Target02 implements Runnable {
 		nop(t() ? i1() : i2()); // $line-condT$
 		nop(f() ? i1() : i2()); // $line-condF$
 
+		// 9. Not (one case)
+		nop(!t()); // $line-notT$
+		nop(!f()); // $line-notF$
+
+		// 10. Not (both cases)
+		for (boolean b : new boolean[] { true, false }) {
+			nop(b); // $line-notTF$
+		}
+
 	}
 
 	public static void main(String[] args) {
