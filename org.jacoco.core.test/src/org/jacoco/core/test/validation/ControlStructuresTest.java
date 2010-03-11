@@ -124,6 +124,9 @@ public class ControlStructuresTest extends ValidationTestBase {
 		assertLine("return", FULLY_COVERED);
 		assertLine("afterreturn", NOT_COVERED);
 
+		// 20. Implicit return
+		assertLine("implicitreturn", FULLY_COVERED);
+
 	}
 
 }

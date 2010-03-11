@@ -186,6 +186,13 @@ public class Target01 implements Runnable {
 			nop(); // $line-missedaftercontinue$
 		}
 
+		runReturn();
+		runImplicitReturn();
+
+	}
+
+	private void runReturn() {
+
 		// 19. Return statement
 		if (t()) {
 			return; // $line-return$
@@ -193,6 +200,11 @@ public class Target01 implements Runnable {
 		nop(); // $line-afterreturn$
 
 	}
+
+	private void runImplicitReturn() {
+
+		// 20. Implicit return
+	} // $line-implicitreturn$
 
 	public static void main(String[] args) {
 		new Target01().run();
