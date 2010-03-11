@@ -69,6 +69,9 @@
 			<runbundlebuild bundleid="org.jacoco.report" target="@{target}"/>
 			<runbundlebuild bundleid="org.jacoco.ant" target="@{target}"/>
 			
+			<!-- Examples -->
+			<runbundlebuild bundleid="org.jacoco.examples" target="@{target}"/>
+			
 			<!-- Tests -->
 			<runbundlebuild bundleid="org.jacoco.core.test" target="@{target}"/>
 			<runbundlebuild bundleid="org.jacoco.agent.rt.test" target="@{target}"/>

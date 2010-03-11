@@ -128,6 +128,10 @@
 			<fileset dir="${source.org.jacoco.report.dir}/src/org/jacoco/report/xml" includes="report.dtd"/>
 		</copy>
 
+		<copy todir="${result.dist.dir}/doc/examples">
+			<fileset dir="${source.org.jacoco.examples.dir}/src/org/jacoco/examples" includes="*.java"/>
+		</copy>
+		
 		<copy todir="${result.dist.dir}">
 			<fileset dir="${source.bundle.dir}/docroot" includes="**/*.html"/>
 			<filterset>
