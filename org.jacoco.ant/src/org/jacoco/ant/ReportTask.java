@@ -14,6 +14,7 @@ package org.jacoco.ant;
 
 import java.io.BufferedInputStream;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -24,6 +25,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.zip.ZipOutputStream;
 
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Task;
@@ -43,10 +45,12 @@ import org.jacoco.core.data.ExecutionDataStore;
 import org.jacoco.core.instr.Analyzer;
 import org.jacoco.report.FileMultiReportOutput;
 import org.jacoco.report.FileSingleReportOutput;
+import org.jacoco.report.IMultiReportOutput;
 import org.jacoco.report.IReportFormatter;
 import org.jacoco.report.IReportVisitor;
 import org.jacoco.report.ISourceFileLocator;
 import org.jacoco.report.MultiFormatter;
+import org.jacoco.report.ZipMultiReportOutput;
 import org.jacoco.report.csv.CsvFormatter;
 import org.jacoco.report.html.HTMLFormatter;
 import org.jacoco.report.xml.XMLFormatter;
@@ -140,7 +144,9 @@ public class ReportTask extends Task {
 	 */
 	private interface IFormatterElement {
 
-		IReportFormatter createFormatter();
+		IReportFormatter createFormatter() throws IOException;
+
+		void finish() throws IOException;
 
 	}
 
@@ -151,9 +157,13 @@ public class ReportTask extends Task {
 
 		private File destdir;
 
+		private File destfile;
+
 		private String footer = "";
 
 		private String encoding = "UTF-8";
+
+		private ZipOutputStream zipOutput;
 
 		/**
 		 * Sets the output directory for the report.
@@ -163,6 +173,16 @@ public class ReportTask extends Task {
 		 */
 		public void setDestdir(final File destdir) {
 			this.destdir = destdir;
+		}
+
+		/**
+		 * Sets the Zip output file for the report.
+		 * 
+		 * @param destfile
+		 *            Zip output file
+		 */
+		public void setDestfile(final File destfile) {
+			this.destfile = destfile;
 		}
 
 		/**
@@ -186,16 +206,34 @@ public class ReportTask extends Task {
 			this.encoding = encoding;
 		}
 
-		public IReportFormatter createFormatter() {
-			if (destdir == null) {
-				throw new BuildException(
-						"Destination directory must be supplied for html report");
+		public IReportFormatter createFormatter() throws IOException {
+			final IMultiReportOutput output;
+			if (destfile != null) {
+				if (destdir != null) {
+					throw new BuildException(
+							"Either destination directory or file must be supplied, not both");
+				}
+				zipOutput = new ZipOutputStream(new FileOutputStream(destfile));
+				output = new ZipMultiReportOutput(zipOutput);
+
+			} else {
+				if (destdir == null) {
+					throw new BuildException(
+							"Destination directory or file must be supplied for html report");
+				}
+				output = new FileMultiReportOutput(destdir);
 			}
 			final HTMLFormatter formatter = new HTMLFormatter();
-			formatter.setReportOutput(new FileMultiReportOutput(destdir));
+			formatter.setReportOutput(output);
 			formatter.setFooterText(footer);
 			formatter.setOutputEncoding(encoding);
 			return formatter;
+		}
+
+		public void finish() throws IOException {
+			if (zipOutput != null) {
+				zipOutput.close();
+			}
 		}
 
 	}
@@ -239,6 +277,10 @@ public class ReportTask extends Task {
 		public void setEncoding(final String encoding) {
 			this.encoding = encoding;
 		}
+
+		public void finish() {
+		}
+
 	}
 
 	/**
@@ -280,6 +322,10 @@ public class ReportTask extends Task {
 			formatter.setOutputEncoding(encoding);
 			return formatter;
 		}
+
+		public void finish() {
+		}
+
 	}
 
 	private final Union executiondataElement = new Union();
@@ -342,9 +388,10 @@ public class ReportTask extends Task {
 	@Override
 	public void execute() throws BuildException {
 		final ExecutionDataStore executionData = loadExecutionData();
-		final IReportFormatter formatter = createFormatter();
 		try {
+			final IReportFormatter formatter = createFormatter();
 			createReport(structure, formatter, executionData);
+			finishFormatters();
 		} catch (final IOException e) {
 			throw new BuildException("Error while creating report.", e);
 		}
@@ -370,12 +417,18 @@ public class ReportTask extends Task {
 		return data;
 	}
 
-	private IReportFormatter createFormatter() {
+	private IReportFormatter createFormatter() throws IOException {
 		final MultiFormatter multi = new MultiFormatter();
 		for (final IFormatterElement f : formatters) {
 			multi.add(f.createFormatter());
 		}
 		return multi;
+	}
+
+	private void finishFormatters() throws IOException {
+		for (final IFormatterElement f : formatters) {
+			f.finish();
+		}
 	}
 
 	private void createReport(final GroupElement group,

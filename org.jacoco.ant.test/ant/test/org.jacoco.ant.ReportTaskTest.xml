@@ -64,11 +64,20 @@
 	
 	<!-- HTML Output -->
 	
-	<target name="testReportHtmlNoDestdir">
-		<au:expectfailure expectedMessage="Destination directory must be supplied for html report">
+	<target name="testReportHtmlNoDestdirOrDestfile">
+		<au:expectfailure expectedMessage="Destination directory or file must be supplied for html report">
 			<jacoco:report>
 				<structure name="root"/>
 				<html/>
+			</jacoco:report>
+		</au:expectfailure>
+	</target>
+
+	<target name="testReportHtmlBothDestdirAndDestfile">
+		<au:expectfailure expectedMessage="Either destination directory or file must be supplied, not both">
+			<jacoco:report>
+				<structure name="root"/>
+				<html destdir="${result.tmp.bundle.testdata.dir}" destfile="${result.tmp.bundle.testdata.dir}/report.zip"/>
 			</jacoco:report>
 		</au:expectfailure>
 	</target>
@@ -144,6 +153,19 @@
 		<au:assertTrue message="Encoding not set in ${testReportHtmlEncoding.content}">
 			<contains string="${testReportHtmlEncoding.content}" substring="encoding=&quot;UTF-16&quot;"/>
 		</au:assertTrue>
+	</target>
+	
+	<target name="testReportHtmlZipFile">
+		<jacoco:report>
+			<structure name="Test">
+				<classfiles>
+					<fileset dir="${result.tmp.bundle.classes.dir}" includes="**/*.class"/>
+				</classfiles>
+			</structure>
+			<html destfile="${result.tmp.bundle.testdata.dir}/report.zip"/>
+		</jacoco:report>
+		
+		<au:assertFileExists file="${result.tmp.bundle.testdata.dir}/report.zip"/>
 	</target>
 	
 	

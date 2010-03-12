@@ -377,7 +377,8 @@
 <h3>Element <code>html</code></h3>
 
 <p>
-  Create a multi-page report in HTML format. 
+  Create a multi-page report in HTML format. The report can either be written as
+  multiple files into a directory or compressed into a single ZIP file.
 </p>
 
 <table class="coverage">
@@ -391,7 +392,14 @@
   <tbody>
     <tr>
       <td><code>destdir</code></td>
-      <td>Directory to create the report in.</td>
+      <td>Directory to create the report in. Either this property or
+        <code>destfile</code> has to be supplied.</td>
+      <td><i>none (required)</i></td>
+    </tr>
+    <tr>
+      <td><code>destfile</code></td>
+      <td>Zip file to create the report in.  Either this property or
+        <code>destdir</code> has to be supplied.</td>
       <td><i>none (required)</i></td>
     </tr>
     <tr>
