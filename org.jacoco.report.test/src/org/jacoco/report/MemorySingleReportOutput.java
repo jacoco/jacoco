@@ -15,8 +15,10 @@ package org.jacoco.report;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 
+import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
 
 /**
@@ -39,4 +41,9 @@ public class MemorySingleReportOutput implements ISingleReportOutput {
 		assertNotNull("Missing file.", file);
 		return file.toByteArray();
 	}
+
+	public InputStream getFileAsStream() {
+		return new ByteArrayInputStream(getFile());
+	}
+
 }
