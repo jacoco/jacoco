@@ -17,6 +17,7 @@ import static org.junit.Assert.assertSame;
 
 import java.io.IOException;
 
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -37,6 +38,11 @@ public class ReportOutputFolderTest {
 	public void setup() {
 		output = new MemoryMultiReportOutput();
 		root = new ReportOutputFolder(output);
+	}
+
+	@After
+	public void teardown() {
+		output.assertAllClosed();
 	}
 
 	@Test
@@ -62,6 +68,7 @@ public class ReportOutputFolderTest {
 		root.subFolder("folderA").subFolder("folderB").createFile("test.html")
 				.close();
 		output.assertSingleFile("folderA/folderB/test.html");
+		output.assertAllClosed();
 	}
 
 	@Test

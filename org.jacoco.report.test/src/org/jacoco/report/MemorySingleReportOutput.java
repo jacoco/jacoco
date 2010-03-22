@@ -14,6 +14,7 @@ package org.jacoco.report;
 
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -31,9 +32,18 @@ public class MemorySingleReportOutput implements ISingleReportOutput {
 
 	private ByteArrayOutputStream file;
 
+	private boolean closed = false;
+
 	public OutputStream createFile() throws IOException {
 		assertNull("Duplicate output.", file);
-		file = new ByteArrayOutputStream();
+		file = new ByteArrayOutputStream() {
+
+			@Override
+			public void close() throws IOException {
+				closed = true;
+				super.close();
+			}
+		};
 		return file;
 	}
 
@@ -44,6 +54,10 @@ public class MemorySingleReportOutput implements ISingleReportOutput {
 
 	public InputStream getFileAsStream() {
 		return new ByteArrayInputStream(getFile());
+	}
+
+	public void assertClosed() {
+		assertTrue(closed);
 	}
 
 }

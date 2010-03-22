@@ -25,6 +25,7 @@ import org.jacoco.report.ISourceFileLocator;
 import org.jacoco.report.MemoryMultiReportOutput;
 import org.jacoco.report.ReportOutputFolder;
 import org.jacoco.report.html.resources.Resources;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.w3c.dom.Document;
@@ -106,6 +107,11 @@ public class ReportPageTest {
 				ElementType.SESSION, "Session", false), null);
 		node = new CoverageNodeImpl(ElementType.GROUP, "Test", false);
 		page = new TestReportPage(node, parent);
+	}
+
+	@After
+	public void teardown() {
+		output.assertAllClosed();
 	}
 
 	@Test

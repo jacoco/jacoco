@@ -20,6 +20,7 @@ import org.jacoco.core.analysis.ICoverageNode.ElementType;
 import org.jacoco.report.MemoryMultiReportOutput;
 import org.jacoco.report.ReportOutputFolder;
 import org.jacoco.report.html.resources.Resources;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.w3c.dom.Document;
@@ -56,6 +57,11 @@ public class LabelColumnTest {
 		tr = doc.body().table("somestyle").tr();
 		support = new HTMLSupport();
 		column = new LabelColumn();
+	}
+
+	@After
+	public void teardown() {
+		output.assertAllClosed();
 	}
 
 	@Test

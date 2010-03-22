@@ -27,6 +27,7 @@ import org.jacoco.core.analysis.ICoverageNode.ElementType;
 import org.jacoco.report.MemoryMultiReportOutput;
 import org.jacoco.report.ReportOutputFolder;
 import org.jacoco.report.html.resources.Resources;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.w3c.dom.Document;
@@ -57,6 +58,11 @@ public class CoverageTableTest {
 		doc = new HTMLDocument(root.createFile("Test.html"), "UTF-8");
 		doc.head().title();
 		body = doc.body();
+	}
+
+	@After
+	public void teardown() {
+		output.assertAllClosed();
 	}
 
 	@Test
@@ -94,6 +100,7 @@ public class CoverageTableTest {
 		new CoverageTable(Arrays.asList(recorder), CounterComparator.TOTALITEMS
 				.on(CounterEntity.CLASS)).render(body, items, createTotal(
 				"Sum", 6), resources, root);
+		doc.close();
 		assertEquals("init-header-footer-itemA-itemB-itemC-", recorder
 				.toString());
 	}
@@ -131,6 +138,7 @@ public class CoverageTableTest {
 		new CoverageTable(Arrays.asList(recorder), CounterComparator.TOTALITEMS
 				.on(CounterEntity.CLASS)).render(body, items, createTotal(
 				"Sum", 6), resources, root);
+		doc.close();
 		assertEquals("ABCDE", recorder.toString());
 	}
 

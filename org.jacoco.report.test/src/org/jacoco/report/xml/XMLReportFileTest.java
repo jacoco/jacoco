@@ -27,6 +27,7 @@ import org.jacoco.core.analysis.SourceFileCoverage;
 import org.jacoco.report.IReportVisitor;
 import org.jacoco.report.ISourceFileLocator;
 import org.jacoco.report.MemorySingleReportOutput;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.w3c.dom.Document;
@@ -56,6 +57,11 @@ public class XMLReportFileTest {
 	public void setUp() throws Exception {
 		output = new MemorySingleReportOutput();
 		report = new XMLReportFile("UTF-8", output.createFile());
+	}
+
+	@After
+	public void teardown() {
+		output.assertClosed();
 	}
 
 	@Test

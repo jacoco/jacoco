@@ -21,7 +21,9 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * In-memory report output for test purposes.
@@ -33,9 +35,18 @@ public class MemoryMultiReportOutput implements IMultiReportOutput {
 
 	private final Map<String, ByteArrayOutputStream> files = new HashMap<String, ByteArrayOutputStream>();
 
-	public OutputStream createFile(String path) throws IOException {
+	private final Set<String> open = new HashSet<String>();
+
+	public OutputStream createFile(final String path) throws IOException {
 		assertFalse("Duplicate output " + path, files.containsKey(path));
-		final ByteArrayOutputStream out = new ByteArrayOutputStream();
+		open.add(path);
+		final ByteArrayOutputStream out = new ByteArrayOutputStream() {
+			@Override
+			public void close() throws IOException {
+				open.remove(path);
+				super.close();
+			}
+		};
 		files.put(path, out);
 		return out;
 	}
@@ -51,6 +62,10 @@ public class MemoryMultiReportOutput implements IMultiReportOutput {
 	public byte[] getFile(String path) {
 		assertFile(path);
 		return files.get(path).toByteArray();
+	}
+
+	public void assertAllClosed() {
+		assertEquals(Collections.emptySet(), open);
 	}
 
 }

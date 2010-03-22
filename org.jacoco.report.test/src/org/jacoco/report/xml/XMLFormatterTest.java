@@ -16,6 +16,7 @@ import static org.junit.Assert.assertEquals;
 
 import org.jacoco.report.MemorySingleReportOutput;
 import org.jacoco.report.ReportStructureTestDriver;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -41,6 +42,11 @@ public class XMLFormatterTest {
 		formatter = new XMLFormatter();
 		output = new MemorySingleReportOutput();
 		formatter.setReportOutput(output);
+	}
+
+	@After
+	public void teardown() {
+		output.assertClosed();
 	}
 
 	@Test

@@ -16,6 +16,7 @@ import java.io.IOException;
 
 import org.jacoco.report.MemoryMultiReportOutput;
 import org.jacoco.report.ReportStructureTestDriver;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -39,6 +40,11 @@ public class HTMLFormatterTest {
 		formatter = new HTMLFormatter();
 		output = new MemoryMultiReportOutput();
 		formatter.setReportOutput(output);
+	}
+
+	@After
+	public void teardown() {
+		output.assertAllClosed();
 	}
 
 	@Test
