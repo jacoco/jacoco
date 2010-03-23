@@ -13,12 +13,14 @@
 package org.jacoco.report.csv;
 
 import java.io.IOException;
+import java.io.OutputStreamWriter;
 
 import org.jacoco.core.analysis.ICoverageNode;
 import org.jacoco.report.ILanguageNames;
 import org.jacoco.report.IReportFormatter;
 import org.jacoco.report.IReportVisitor;
 import org.jacoco.report.ISingleReportOutput;
+import org.jacoco.report.ISourceFileLocator;
 import org.jacoco.report.JavaNames;
 
 /**
@@ -42,9 +44,18 @@ public class CsvFormatter implements IReportFormatter {
 		if (output == null) {
 			throw new IllegalStateException("No report output set.");
 		}
-
-		return new CsvReportFile(languageNames, output.createFile(),
-				outputEncoding);
+		final DelimitedWriter writer = new DelimitedWriter(
+				new OutputStreamWriter(output.createFile(), outputEncoding));
+		final ClassRowWriter rowWriter = new ClassRowWriter(writer,
+				languageNames);
+		return new CsvGroupHandler(rowWriter, session.getName()) {
+			@Override
+			public void visitEnd(final ISourceFileLocator sourceFileLocator)
+					throws IOException {
+				writer.close();
+				super.visitEnd(sourceFileLocator);
+			}
+		};
 	}
 
 	/**

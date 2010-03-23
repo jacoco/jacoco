@@ -4,13 +4,13 @@
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- *
+ * 
  * Contributors:
- *    Brock Janiczak -initial API and implementation
- *    
+ *    Brock Janiczak - initial API and implementation
+ * 
  * $Id: $
  *******************************************************************************/
-package org.jacoco.report.xml;
+package org.jacoco.report.csv;
 
 import static java.lang.String.format;
 
@@ -20,28 +20,27 @@ import org.jacoco.core.analysis.ClassCoverage;
 import org.jacoco.core.analysis.ICoverageNode;
 import org.jacoco.core.analysis.ICoverageNode.ElementType;
 import org.jacoco.report.IReportVisitor;
+import org.jacoco.report.ISourceFileLocator;
 
 /**
- * Wrapper for an {@link XMLElement} that contains package coverage data
+ * Report visitor that handles coverage information for packages.
  * 
  * @author Brock Janiczak
  * @version $Revision: $
  */
-public class PackageNode extends NodeWithCoverage {
+class CsvPackageHandler implements IReportVisitor {
 
-	/**
-	 * Creates a new Package coverage element under the supplied group element
-	 * 
-	 * @param parent
-	 *            Parent element that will own this class element
-	 * @param packageNode
-	 *            Package coverage node
-	 * @throws IOException
-	 *             IO Error creating the element
-	 */
-	public PackageNode(final GroupNode parent, final ICoverageNode packageNode)
-			throws IOException {
-		super(parent, "package", packageNode);
+	private final ClassRowWriter writer;
+
+	private final String groupName;
+
+	private final String packageName;
+
+	public CsvPackageHandler(final ClassRowWriter writer,
+			final String groupName, final String packageName) {
+		this.writer = writer;
+		this.groupName = groupName;
+		this.packageName = packageName;
 	}
 
 	public IReportVisitor visitChild(final ICoverageNode node)
@@ -49,11 +48,17 @@ public class PackageNode extends NodeWithCoverage {
 		final ElementType type = node.getElementType();
 		switch (type) {
 		case CLASS:
-			return new ClassNode(this, (ClassCoverage) node);
+			final ClassCoverage classNode = (ClassCoverage) node;
+			writer.writeRow(groupName, packageName, classNode);
+			return IReportVisitor.NOP;
 		case SOURCEFILE:
 			return IReportVisitor.NOP;
 		}
 		throw new IllegalStateException(format("Unexpected child node %s.",
 				type));
 	}
+
+	public void visitEnd(final ISourceFileLocator sourceFileLocator) {
+	}
+
 }

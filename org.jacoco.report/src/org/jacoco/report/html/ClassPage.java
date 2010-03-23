@@ -95,16 +95,7 @@ public class ClassPage extends ReportPage {
 
 	public IReportVisitor visitChild(final ICoverageNode node) {
 		methods.add(new MethodItem((MethodCoverage) node));
-		return new IReportVisitor() {
-
-			public IReportVisitor visitChild(final ICoverageNode node) {
-				throw new IllegalStateException(
-						"Methods must not have child nodes.");
-			}
-
-			public void visitEnd(final ISourceFileLocator sourceFileLocator) {
-			}
-		};
+		return IReportVisitor.NOP;
 	}
 
 	@Override

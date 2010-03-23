@@ -28,6 +28,20 @@ import org.jacoco.core.analysis.ICoverageNode;
 public interface IReportVisitor {
 
 	/**
+	 * Visitor without any operation.
+	 */
+	public static final IReportVisitor NOP = new IReportVisitor() {
+
+		public IReportVisitor visitChild(final ICoverageNode node) {
+			return NOP;
+		}
+
+		public void visitEnd(final ISourceFileLocator sourceFileLocator) {
+		}
+
+	};
+
+	/**
 	 * Called for every direct child.
 	 * 
 	 * @param node

@@ -4,13 +4,15 @@
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- *
+ * 
  * Contributors:
  *    Brock Janiczak - initial API and implementation
- *    
+ * 
  * $Id: $
  *******************************************************************************/
 package org.jacoco.report.csv;
+
+import static java.lang.String.format;
 
 import java.io.IOException;
 
@@ -20,45 +22,38 @@ import org.jacoco.report.IReportVisitor;
 import org.jacoco.report.ISourceFileLocator;
 
 /**
- * Column containing the aggregated group name. Consecutive groups will be
- * merged into a single group
+ * Report visitor that handles coverage information for groups.
  * 
  * @author Brock Janiczak
  * @version $Revision: $
  */
-public class GroupColumn implements IReportVisitor, ICsvColumn {
-	private String groupName;
-	private final CsvReportFile reportFile;
+class CsvGroupHandler implements IReportVisitor {
 
-	/**
-	 * Creates a new Group Column for the report
-	 * 
-	 * @param reportFile
-	 *            CSV Report context
-	 * @param node
-	 *            {@link ElementType#GROUP} coverage node
-	 */
-	public GroupColumn(final CsvReportFile reportFile, final ICoverageNode node) {
-		this.reportFile = reportFile;
-		groupName = node.getName();
+	private final ClassRowWriter writer;
+
+	private final String groupName;
+
+	public CsvGroupHandler(final ClassRowWriter writer, final String groupName) {
+		this.writer = writer;
+		this.groupName = groupName;
 	}
 
 	public IReportVisitor visitChild(final ICoverageNode node)
 			throws IOException {
-		if (node.getElementType() == ElementType.GROUP) {
-			groupName += "/" + node.getName();
-			return this;
+		final ElementType type = node.getElementType();
+		switch (type) {
+		case PACKAGE:
+			return new CsvPackageHandler(writer, groupName, node.getName());
+		case GROUP:
+		case BUNDLE:
+			return new CsvGroupHandler(writer, groupName + "/" + node.getName());
 		}
-
-		return new BundleColumn(reportFile, this, node);
+		throw new IllegalStateException(format("Unexpected child node %s.",
+				type));
 	}
 
 	public void visitEnd(final ISourceFileLocator sourceFileLocator)
 			throws IOException {
-
 	}
 
-	public void writeContents(final DelimitedWriter writer) throws IOException {
-		writer.write(groupName);
-	}
 }

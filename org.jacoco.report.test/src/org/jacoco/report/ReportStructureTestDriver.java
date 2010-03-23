@@ -33,7 +33,7 @@ import org.jacoco.core.analysis.ICoverageNode.ElementType;
  */
 public class ReportStructureTestDriver {
 
-	private final ISourceFileLocator sourceFileLocator = new ISourceFileLocator() {
+	public final ISourceFileLocator sourceFileLocator = new ISourceFileLocator() {
 
 		public Reader getSourceFile(String packageName, String fileName)
 				throws IOException {
@@ -65,6 +65,12 @@ public class ReportStructureTestDriver {
 	public void sendGroup(IReportFormatter formatter) throws IOException {
 		final IReportVisitor child = formatter
 				.createReportVisitor(groupCoverage);
+		sendBundle(child);
+		child.visitEnd(sourceFileLocator);
+	}
+
+	public void sendGroup(IReportVisitor parent) throws IOException {
+		final IReportVisitor child = parent.visitChild(groupCoverage);
 		sendBundle(child);
 		child.visitEnd(sourceFileLocator);
 	}
