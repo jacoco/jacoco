@@ -34,7 +34,7 @@
     <fail message="Please specify property 'target.plugins.dir'" unless="target.plugins.dir"/>
 		
 	<path id="bundle-org.objectweb.asm">
-        <fileset dir="${target.plugins.dir}" includes="org.objectweb.asm_3.1.0.*.jar"/>
+        <fileset dir="${target.plugins.dir}" includes="org.objectweb.asm_3.*.jar"/>
 	</path>
 
 	<path id="bundle-org.apache.ant">
