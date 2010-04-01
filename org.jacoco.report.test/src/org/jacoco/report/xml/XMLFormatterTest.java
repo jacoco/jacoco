@@ -18,7 +18,6 @@ import org.jacoco.report.MemorySingleReportOutput;
 import org.jacoco.report.ReportStructureTestDriver;
 import org.junit.After;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.w3c.dom.Document;
 
@@ -52,6 +51,7 @@ public class XMLFormatterTest {
 	@Test
 	public void testStructureWithGroup() throws Exception {
 		driver.sendGroup(formatter);
+		assertPathMatches("group", "/report/@name");
 		assertPathMatches("bundle", "/report/group/@name");
 		assertPathMatches("org/jacoco/example", "/report/group/package/@name");
 		assertPathMatches("org/jacoco/example/FooClass",
@@ -60,12 +60,10 @@ public class XMLFormatterTest {
 				"/report/group/package/class/method/@name");
 	}
 
-	// TODO: Trac #67
-	@Ignore
 	@Test
 	public void testStructureWithBundleOnly() throws Exception {
 		driver.sendBundle(formatter);
-		assertPathMatches("bundle", "/report/group/@name");
+		assertPathMatches("bundle", "/report/@name");
 		assertPathMatches("org/jacoco/example", "/report/package/@name");
 		assertPathMatches("org/jacoco/example/FooClass",
 				"/report/package/class/@name");
@@ -74,7 +72,7 @@ public class XMLFormatterTest {
 
 	private void assertPathMatches(String expected, String path)
 			throws Exception {
-		XMLSupport support = new XMLSupport(XMLReportFile.class);
+		XMLSupport support = new XMLSupport(XMLFormatter.class);
 		Document document = support.parse(output.getFile());
 		assertEquals(expected, support.findStr(document, path));
 	}

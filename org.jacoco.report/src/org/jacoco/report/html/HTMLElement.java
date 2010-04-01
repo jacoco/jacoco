@@ -331,7 +331,7 @@ public class HTMLElement extends XMLElement {
 			td.attr("class", classattr);
 		}
 		if (colspanattr > 1) {
-			td.attr("colspan", String.valueOf(colspanattr));
+			td.attr("colspan", colspanattr);
 		}
 		return td;
 	}
@@ -354,8 +354,8 @@ public class HTMLElement extends XMLElement {
 			final int heightattr, final String titleattr) throws IOException {
 		final HTMLElement img = element("img");
 		img.attr("src", srcattr);
-		img.attr("width", String.valueOf(widthattr));
-		img.attr("height", String.valueOf(heightattr));
+		img.attr("width", widthattr);
+		img.attr("height", heightattr);
 		img.attr("title", titleattr);
 		img.attr("alt", titleattr);
 		img.close();

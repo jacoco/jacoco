@@ -27,13 +27,19 @@ import org.jacoco.report.ISingleReportOutput;
  */
 public class XMLFormatter implements IReportFormatter {
 
+	private static final String PUBID = "-//JACOCO//DTD Report 1.0//EN";
+
+	private static final String SYSTEM = "report.dtd";
+
 	private ISingleReportOutput output;
 
 	private String outputEncoding = "UTF-8";
 
 	public IReportVisitor createReportVisitor(final ICoverageNode session)
 			throws IOException {
-		return new XMLReportFile(outputEncoding, output.createFile());
+		final XMLElement root = new XMLDocument("report", PUBID, SYSTEM,
+				outputEncoding, true, output.createFile());
+		return new XMLReportNodeHandler(root, session);
 	}
 
 	/**

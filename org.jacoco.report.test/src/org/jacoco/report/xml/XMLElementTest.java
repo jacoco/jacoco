@@ -105,11 +105,18 @@ public class XMLElementTest {
 	}
 
 	@Test
-	public void testAttributes() throws IOException {
+	public void testStringAttributes() throws IOException {
 		root.attr("id", "12345").attr("quote", "<\">");
 		root.close();
 		assertEquals("<root id=\"12345\" quote=\"&lt;&quot;&gt;\"/>", buffer
 				.toString());
+	}
+
+	@Test
+	public void testIntAttributes() throws IOException {
+		root.attr("missed", 0).attr("total", 123);
+		root.close();
+		assertEquals("<root missed=\"0\" total=\"123\"/>", buffer.toString());
 	}
 
 	@Test(expected = IOException.class)
