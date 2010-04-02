@@ -16,8 +16,17 @@
 <project name="JaCoCo Agent Task Tests" xmlns:au="antlib:org.apache.ant.antunit" xmlns:jacoco="antlib:org.jacoco.ant">
 			
 	<target name="testCoverageAgent">
-		<jacoco:agent property="jacocoagent" append="false" destfile="test.exec" exclClassLoader="sun.reflect.DelegatingClassLoader"/>
+		<jacoco:agent property="jacocoagent" append="false" destfile="test.exec"
+			exclClassLoader="EvilClassLoader" includes="org.example.*"
+		    excludes="*Test"/>
 		<au:assertPropertySet name="jacocoagent"/>
+		<au:assertPropertyContains name="jacocoagent" value="-javaagent:"/>
+		<au:assertPropertyContains name="jacocoagent" value="append=false"/>
+		<property name="exec.file" location="test.exec"/>
+		<au:assertPropertyContains name="jacocoagent" value="destfile=${exec.file}"/>
+		<au:assertPropertyContains name="jacocoagent" value="exclclassloader=EvilClassLoader"/>
+		<au:assertPropertyContains name="jacocoagent" value="includes=org.example.*"/>
+		<au:assertPropertyContains name="jacocoagent" value="excludes=*Test"/>
 	</target>
 	
 	<target name="testCoverageAgentDisabled">
