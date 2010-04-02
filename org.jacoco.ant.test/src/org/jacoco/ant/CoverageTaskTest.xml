@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- 
+   Copyright (c) 2009, 2010 Mountainminds GmbH & Co. KG and Contributors
+   All rights reserved. This program and the accompanying materials
+   are made available under the terms of the Eclipse Public License v1.0
+   which accompanies this distribution, and is available at
+   http://www.eclipse.org/legal/epl-v10.html
+  
+   Contributors:
+      Brock Janiczak - initial API and implementation
+      
+   $Id: $
+-->
+
+<project name="JaCoCo Coverage Task Tests" xmlns:au="antlib:org.apache.ant.antunit" xmlns:jacoco="antlib:org.jacoco.ant">
+	
+	<target name="setUp">
+		<tempfile property="temp.dir" prefix="jacocoTest" destdir="${java.io.tmpdir}" />
+		<mkdir dir="${temp.dir}"/>
+		<property name="exec.file" location="${temp.dir}/exec.file" />
+	</target>
+
+	<target name="tearDown">
+		<delete dir="${temp.dir}" quiet="false" failonerror="true"/>
+	</target>
+			
+	<target name="testNoSubTasks">
+		<au:expectfailure expectedMessage="A child task must be supplied for the coverage task">
+			<jacoco:coverage/>
+		</au:expectfailure>
+	</target>
+
+	<target name="testMultipleSubTasks">
+		<au:expectfailure expectedMessage="Only one child task can be supplied to the coverge task">
+			<jacoco:coverage>
+				<java fork="true" classname="Foo" />
+				<java fork="true" classname="Foo" />
+			</jacoco:coverage>
+		</au:expectfailure>
+	</target>
+	
+	<target name="testInvalidSubTask">
+		<au:expectfailure expectedMessage="jar is not a valid child of the coverage task">
+			<jacoco:coverage>
+				<jar destfile="test.jar"/>
+			</jacoco:coverage>
+		</au:expectfailure>
+	</target>
+
+	<target name="testCoverageOfForkedJava">
+		<jacoco:coverage destfile="${exec.file}">
+			<java classname="org.jacoco.ant.test.EmptyMain" fork="true" />
+		</jacoco:coverage>
+		<au:assertLogContains text="Enhancing java with coverage"/>
+		<au:assertFileExists file="${exec.file}"/>
+	</target>
+	
+	<target name="testCoverageOfForkedJavaDisabled">
+		<jacoco:coverage enabled="false" destfile="${exec.file}">
+			<java classname="org.jacoco.ant.test.EmptyMain" fork="true" />
+		</jacoco:coverage>
+		<au:assertLogDoesntContain text="Enhancing java with coverage"/>
+		<au:assertFileDoesntExist file="${exec.file}"/>
+	</target>
+
+	<target name="testCoverageOfNonForkedJava">
+		<au:expectfailure expectedMessage="Coverage can only be applied on a forked VM">
+			<jacoco:coverage>
+				<java classname="Foo" fork="false" />
+			</jacoco:coverage>
+		</au:expectfailure>
+	</target>
+
+	<target name="testCoverageOfForkedJUnit">
+		<jacoco:coverage destfile="${exec.file}">
+			<junit fork="true" >
+			    <batchtest todir="${temp.dir}" >
+					<fileset dir=".">
+						<include name="**/EmptyTestTarget.java"/>
+					</fileset>
+			    </batchtest>
+			</junit>
+		</jacoco:coverage>
+		<au:assertLogContains text="Enhancing junit with coverage"/>
+		<au:assertFileExists file="${exec.file}"/>
+	</target>
+	
+	<target name="testCoverageOfForkedJUnitDisabled">
+		<jacoco:coverage enabled="false" destfile="${exec.file}">
+			<junit fork="true" >
+			    <batchtest todir="${temp.dir}" >
+					<fileset dir=".">
+						<include name="**/EmptyTestTarget.java"/>
+					</fileset>
+			    </batchtest>
+			</junit>
+		</jacoco:coverage>
+		<au:assertLogDoesntContain text="Enhancing junit with coverage"/>
+		<au:assertFileDoesntExist file="${exec.file}"/>
+	</target>
+
+	<target name="testCoverageOfNonForkedJUnit">
+		<au:expectfailure expectedMessage="Coverage can only be applied on a forked VM">
+			<jacoco:coverage>
+				<junit fork="false" />
+			</jacoco:coverage>
+		</au:expectfailure>
+	</target>
+	
+</project>

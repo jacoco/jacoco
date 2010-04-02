@@ -15,14 +15,8 @@
 
 <project name="JaCoCo Agent Task Tests" xmlns:au="antlib:org.apache.ant.antunit" xmlns:jacoco="antlib:org.jacoco.ant">
 			
-	<taskdef uri="antlib:org.jacoco.ant" resource="org/jacoco/ant/antlib.xml">
-		<classpath>
-			<file file="${result.dist.lib.dir}/jacocoant.jar"/>
-		</classpath>
-	</taskdef>
-	
 	<target name="testCoverageAgent">
-		<jacoco:agent property="jacocoagent" append="false" destfile="${basedir}/test.exec" exclClassLoader="sun.reflect.DelegatingClassLoader"/>
+		<jacoco:agent property="jacocoagent" append="false" destfile="test.exec" exclClassLoader="sun.reflect.DelegatingClassLoader"/>
 		<au:assertPropertySet name="jacocoagent"/>
 	</target>
 	

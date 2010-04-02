@@ -10,13 +10,22 @@
  *    
  * $Id: $
  *******************************************************************************/
-package org.jacoco.ant.test;
+package org.jacoco.ant;
 
-import org.junit.Test;
+import java.io.File;
 
-public class EmptyTest {
+import junit.framework.TestSuite;
 
-	@Test
-	public void testNothing() {
+import org.apache.ant.antunit.junit3.AntUnitSuite;
+import org.apache.ant.antunit.junit4.AntUnitSuiteRunner;
+import org.junit.runner.RunWith;
+
+@RunWith(AntUnitSuiteRunner.class)
+public class CoverageTaskTest {
+
+	public static TestSuite suite() {
+		final File file = new File("src/org/jacoco/ant/CoverageTaskTest.xml");
+		return new AntUnitSuite(file, CoverageTaskTest.class);
 	}
+
 }

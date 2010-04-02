@@ -16,38 +16,18 @@
 <project name="org.jacoco.ant.tests.buildhook" xmlns:au="antlib:org.apache.ant.antunit" xmlns:jacoco="antlib:org.jacoco.ant" basedir=".">
 	
 	<path id="dependencies">
+		<path refid="bundle-org.jacoco.core"/>
+		<path refid="bundle-org.jacoco.agent"/>
+		<path refid="bundle-org.jacoco.report"/>
+		<path refid="bundle-org.jacoco.ant"/>
+		<path refid="bundle-org.objectweb.asm"/>
 		<path refid="bundle-org.junit4"/>
+		<file file="${source.bundle.dir}/lib/ant-antunit-1.2alpha.jar"/>
 	</path>
 	
 	<property name="do.compile" value="true"/>
-	<property name="do.customverify" value="true"/>
+	<property name="do.verify" value="true"/>
 	
 	<property name="testscope" value="org.jacoco.ant.*"/>
-		
-	<taskdef uri="antlib:org.jacoco.ant" resource="org/jacoco/ant/antlib.xml">
-		<classpath>
-			<file file="${result.dist.lib.dir}/jacocoant.jar"/>
-		</classpath>
-	</taskdef>
-	
-	<target name="customverify">
-		<property name="result.dist.bundle.jar.file" location="${result.dist.lib.dir}/${manifest.Bundle-SymbolicName}_${qualified.bundle.version}.jar"/>
-		<property name="result.tmp.bundle.test.dir" location="${result.tmp.bundle.dir}/test"/>
-		<property name="result.tmp.bundle.testdata.dir" location="${result.tmp.bundle.dir}/testdata"/>
-		
-		<jacoco:coverage
-				append="true"
-				includes="${testscope}"
-				destfile="${result.tmp.coverage.file}">
-			<java fork="true" jar="${ant.library.dir}/ant-launcher.jar" failonerror="true">
-				<arg value="-f"/>
-				<arg value="${source.bundle.dir}/ant/runtest.xml"/>
-				<arg value="-Dresult.dist.lib.dir=${result.dist.lib.dir}"/>
-				<arg value="-Dresult.tmp.bundle.testdata.dir=${result.tmp.bundle.testdata.dir}"/>
-				<arg value="-Dresult.tmp.bundle.classes.dir=${result.tmp.bundle.classes.dir}"/>
-				<arg value="-Dbundle-org.junit4.path=${toString:bundle-org.junit4}"/>
-			</java>
-		</jacoco:coverage>
 
-	</target>
 </project>

@@ -14,16 +14,15 @@
 -->
 
 <project name="JaCoCo Merge Task Tests" xmlns:au="antlib:org.apache.ant.antunit" xmlns:jacoco="antlib:org.jacoco.ant">
-			
-	<taskdef uri="antlib:org.jacoco.ant" resource="org/jacoco/ant/antlib.xml">
-		<classpath>
-			<file file="${result.dist.lib.dir}/jacocoant.jar"/>
-		</classpath>
-	</taskdef>
-	
+
 	<target name="setUp">
-		<delete dir="${result.tmp.bundle.testdata.dir}" quiet="false" failonerror="true"/>
-		<mkdir dir="${result.tmp.bundle.testdata.dir}"/>
+		<tempfile property="temp.dir" prefix="jacocoTest" destdir="${java.io.tmpdir}" />
+		<mkdir dir="${temp.dir}"/>
+		<property name="exec.file" location="${temp.dir}/exec.file" />
+	</target>
+
+	<target name="tearDown">
+		<delete dir="${temp.dir}" quiet="false" failonerror="true"/>
 	</target>
 	
 	<target name="testMergeNoDestination">
@@ -34,26 +33,24 @@
 	
 	<target name="testMergeToDirectory">
 		<au:expectfailure expectedMessage="Unable to write to destination file">
-			<jacoco:merge destfile="${basedir}"/>
+			<jacoco:merge destfile="${temp.dir}"/>
 		</au:expectfailure>
 	</target>
 	
 	<target name="testMergeEmptySet">
-		<property name="testMergeEmptySet.exec.file" location="${result.tmp.bundle.testdata.dir}/empty.exec"/>
-		<jacoco:merge destfile="${testMergeEmptySet.exec.file}"/>
+		<jacoco:merge destfile="${exec.file}"/>
 		
 		<au:assertLogContains text="0 files merged"/>
-		<au:assertFileExists file="${testMergeEmptySet.exec.file}"/>
+		<au:assertFileExists file="${exec.file}"/>
 	</target>
 	
 	<target name="testMergeMultipleFiles">
-		<property name="testMergeMultipleFiles.exec.file" location="${result.tmp.bundle.testdata.dir}/merged.exec"/>
-		<jacoco:merge destfile="${testMergeMultipleFiles.exec.file}">
-			<fileset dir="executionData" includes="*.exec"/>
+		<jacoco:merge destfile="${exec.file}">
+			<fileset dir="data" includes="*.exec"/>
 		</jacoco:merge>
 		
 		<au:assertLogContains text="2 files merged"/>
-		<au:assertFileExists file="${testMergeMultipleFiles.exec.file}"/>
+		<au:assertFileExists file="${exec.file}"/>
 	</target>
 
 </project>

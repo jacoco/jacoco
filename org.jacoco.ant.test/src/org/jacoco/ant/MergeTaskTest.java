@@ -10,15 +10,22 @@
  *    
  * $Id: $
  *******************************************************************************/
-package org.jacoco.ant.test;
+package org.jacoco.ant;
 
-/**
- * Simple test application that performs no processing
- * 
- * @author Brock Janiczak
- * @version $Revision: $
- */
-public class EmptyMain {
-	public static void main(String[] args) {
+import java.io.File;
+
+import junit.framework.TestSuite;
+
+import org.apache.ant.antunit.junit3.AntUnitSuite;
+import org.apache.ant.antunit.junit4.AntUnitSuiteRunner;
+import org.junit.runner.RunWith;
+
+@RunWith(AntUnitSuiteRunner.class)
+public class MergeTaskTest {
+
+	public static TestSuite suite() {
+		final File file = new File("src/org/jacoco/ant/MergeTaskTest.xml");
+		return new AntUnitSuite(file, MergeTaskTest.class);
 	}
+
 }

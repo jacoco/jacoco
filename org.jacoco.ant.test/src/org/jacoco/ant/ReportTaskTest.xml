@@ -15,15 +15,13 @@
 
 <project name="JaCoCo Report Task Tests" xmlns:au="antlib:org.apache.ant.antunit" xmlns:jacoco="antlib:org.jacoco.ant">
 			
-	<taskdef uri="antlib:org.jacoco.ant" resource="org/jacoco/ant/antlib.xml">
-		<classpath>
-			<file file="${result.dist.lib.dir}/jacocoant.jar"/>
-		</classpath>
-	</taskdef>
-	
 	<target name="setUp">
-		<delete dir="${result.tmp.bundle.testdata.dir}" quiet="false" failonerror="true"/>
-		<mkdir dir="${result.tmp.bundle.testdata.dir}"/>
+		<tempfile property="temp.dir" prefix="jacocoTest" destdir="${java.io.tmpdir}" />
+		<mkdir dir="${temp.dir}"/>
+	</target>
+
+	<target name="tearDown">
+		<delete dir="${temp.dir}" quiet="false" failonerror="true" />
 	</target>
 	
 	
@@ -77,7 +75,7 @@
 		<au:expectfailure expectedMessage="Either destination directory or file must be supplied, not both">
 			<jacoco:report>
 				<structure name="root"/>
-				<html destdir="${result.tmp.bundle.testdata.dir}" destfile="${result.tmp.bundle.testdata.dir}/report.zip"/>
+				<html destdir="${temp.dir}" destfile="${temp.dir}/report.zip"/>
 			</jacoco:report>
 		</au:expectfailure>
 	</target>
@@ -87,14 +85,14 @@
 			<structure name="Test">
 				<group name="Group">
 					<classfiles>
-						<fileset dir="${result.tmp.bundle.classes.dir}" includes="**/*.class"/>
+						<fileset dir="${org.jacoco.ant.reportTaskTest.classes.dir}" includes="**/*.class"/>
 					</classfiles>
 				</group>
 			</structure>
-			<html destdir="${result.tmp.bundle.testdata.dir}"/>
+			<html destdir="${temp.dir}"/>
 		</jacoco:report>
 		
-		<au:assertFileExists file="${result.tmp.bundle.testdata.dir}/Group/org.jacoco.ant.test/EmptyTest.html"/>
+		<au:assertFileExists file="${temp.dir}/Group/org.jacoco.ant/ReportTaskTest.html"/>
 	</target>
 	
 	<target name="testReportHtmlWithPath">
@@ -102,20 +100,20 @@
 			<structure name="Test">
 				<group name="Group">
 					<classfiles>
-						<path location="${result.tmp.bundle.classes.dir}"/>
+						<path location="${org.jacoco.ant.reportTaskTest.classes.dir}"/>
 					</classfiles>
 				</group>
 			</structure>
-			<html destdir="${result.tmp.bundle.testdata.dir}"/>
+			<html destdir="${temp.dir}"/>
 		</jacoco:report>
 		
-		<au:assertFileExists file="${result.tmp.bundle.testdata.dir}/Group/org.jacoco.ant.test/EmptyTest.html"/>
+		<au:assertFileExists file="${temp.dir}/Group/org.jacoco.ant/ReportTaskTest.html"/>
 	</target>
 	
 	<target name="testReportHtmlWithJAR">
-		<property name="testReportHtmlWithJAR.jarfile" location="${result.tmp.bundle.testdata.dir}/testclasses.jar"/>
+		<property name="testReportHtmlWithJAR.jarfile" location="${temp.dir}/testclasses.jar"/>
 		<jar destfile="${testReportHtmlWithJAR.jarfile}">
-			<fileset dir="${result.tmp.bundle.classes.dir}" includes="**/*.class"/>
+			<fileset dir="${org.jacoco.ant.reportTaskTest.classes.dir}" includes="**/*.class"/>
 		</jar>
 		<jacoco:report>
 			<structure name="Test">
@@ -125,19 +123,19 @@
 					</classfiles>
 				</group>
 			</structure>
-			<html destdir="${result.tmp.bundle.testdata.dir}"/>
+			<html destdir="${temp.dir}"/>
 		</jacoco:report>
 		
-		<au:assertFileExists file="${result.tmp.bundle.testdata.dir}/Group/org.jacoco.ant.test/EmptyTest.html"/>
+		<au:assertFileExists file="${temp.dir}/Group/org.jacoco.ant/ReportTaskTest.html"/>
 	</target>
 	
 	<target name="testReportHtmlFooter">
 		<jacoco:report>
 			<structure name="Test"/>
-			<html footer="ExampleFooter" destdir="${result.tmp.bundle.testdata.dir}"/>
+			<html footer="ExampleFooter" destdir="${temp.dir}"/>
 		</jacoco:report>
 		
-		<loadfile property="testReportHtmlFooter.content" srcfile="${result.tmp.bundle.testdata.dir}/index.html" encoding="UTF-8"/>
+		<loadfile property="testReportHtmlFooter.content" srcfile="${temp.dir}/index.html" encoding="UTF-8"/>
 		<au:assertTrue message="Footer not included in ${testReportHtmlFooter.content}">
 			<contains string="${testReportHtmlFooter.content}" substring="ExampleFooter"/>
 		</au:assertTrue>
@@ -146,10 +144,10 @@
 	<target name="testReportHtmlEncoding">
 		<jacoco:report>
 			<structure name="Test"/>
-			<html encoding="UTF-16" destdir="${result.tmp.bundle.testdata.dir}"/>
+			<html encoding="UTF-16" destdir="${temp.dir}"/>
 		</jacoco:report>
 		
-		<loadfile property="testReportHtmlEncoding.content" srcfile="${result.tmp.bundle.testdata.dir}/index.html" encoding="UTF-16"/>
+		<loadfile property="testReportHtmlEncoding.content" srcfile="${temp.dir}/index.html" encoding="UTF-16"/>
 		<au:assertTrue message="Encoding not set in ${testReportHtmlEncoding.content}">
 			<contains string="${testReportHtmlEncoding.content}" substring="encoding=&quot;UTF-16&quot;"/>
 		</au:assertTrue>
@@ -159,13 +157,13 @@
 		<jacoco:report>
 			<structure name="Test">
 				<classfiles>
-					<fileset dir="${result.tmp.bundle.classes.dir}" includes="**/*.class"/>
+					<fileset dir="${org.jacoco.ant.reportTaskTest.classes.dir}" includes="**/*.class"/>
 				</classfiles>
 			</structure>
-			<html destfile="${result.tmp.bundle.testdata.dir}/report.zip"/>
+			<html destfile="${temp.dir}/report.zip"/>
 		</jacoco:report>
 		
-		<au:assertFileExists file="${result.tmp.bundle.testdata.dir}/report.zip"/>
+		<au:assertFileExists file="${temp.dir}/report.zip"/>
 	</target>
 	
 	
@@ -181,7 +179,7 @@
 	</target>
 	
 	<target name="testReportCsvEncoding">
-		<property name="testReportCsvEncoding.destfile" location="${result.tmp.bundle.testdata.dir}/report.csv"/>
+		<property name="testReportCsvEncoding.destfile" location="${temp.dir}/report.csv"/>
 		<jacoco:report>
 			<structure name="Test"/>
 			<csv encoding="UTF-16" destfile="${testReportCsvEncoding.destfile}"/>
@@ -207,7 +205,7 @@
 	</target>
 
 	<target name="testReportXmlEncoding">
-		<property name="testReportXmlEncoding.destfile" location="${result.tmp.bundle.testdata.dir}/report.xml"/>
+		<property name="testReportXmlEncoding.destfile" location="${temp.dir}/report.xml"/>
 		<jacoco:report>
 			<structure name="Test"/>
 			<xml encoding="UTF-16" destfile="${testReportXmlEncoding.destfile}"/>
