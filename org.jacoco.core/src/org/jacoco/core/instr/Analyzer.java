@@ -12,8 +12,6 @@
  *******************************************************************************/
 package org.jacoco.core.instr;
 
-import static java.lang.String.format;
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -66,7 +64,7 @@ public class Analyzer {
 	 * @param reader
 	 *            reader with class definitions
 	 */
-	public void analyze(final ClassReader reader) {
+	public void analyzeClass(final ClassReader reader) {
 		final ClassVisitor visitor = createAnalyzingVisitor(CRC64
 				.checksum(reader.b));
 		reader.accept(visitor, 0);
@@ -78,8 +76,8 @@ public class Analyzer {
 	 * @param buffer
 	 *            class definitions
 	 */
-	public void analyze(final byte[] buffer) {
-		analyze(new ClassReader(buffer));
+	public void analyzeClass(final byte[] buffer) {
+		analyzeClass(new ClassReader(buffer));
 	}
 
 	/**
@@ -89,84 +87,82 @@ public class Analyzer {
 	 *            stream to read class definition from
 	 * @throws IOException
 	 */
-	public void analyze(final InputStream input) throws IOException {
-		analyze(new ClassReader(input));
+	public void analyzeClass(final InputStream input) throws IOException {
+		analyzeClass(new ClassReader(input));
 	}
 
 	/**
-	 * Analyzes the class definition contained in a given file.
-	 * 
-	 * @param file
-	 *            class file
-	 * @throws IOException
-	 */
-	public void analyze(final File file) throws IOException {
-		final InputStream in = new FileInputStream(file);
-		analyze(new ClassReader(in));
-		in.close();
-	}
-
-	/**
-	 * Analyzes all class files contained in the given directory and its
-	 * children.
-	 * 
-	 * @param directory
-	 *            folder to look for class files
-	 * @throws IOException
-	 *             thrown if the given file object does not represent a readable
-	 *             directory
-	 */
-	public void analyzeAll(final File directory) throws IOException {
-		final File[] files = directory.listFiles();
-		if (files == null) {
-			throw new IOException(format("Can't read directory %s.", directory));
-		}
-		for (final File f : files) {
-			if (f.isDirectory()) {
-				analyzeAll(f);
-				continue;
-			}
-			if (f.getName().endsWith(".class")) {
-				analyze(f);
-			}
-		}
-	}
-
-	/**
-	 * Analyzes all class files contained in a JAR file.
+	 * Analyzes all classes contained in the ZIP archive (jar, war, ear, etc.)
+	 * given as an input stream. Contained archives are read recursively.
 	 * 
 	 * @param input
-	 *            stream to read the JAR file from
+	 *            ZIP archive data
+	 * @return number of class files found
 	 * @throws IOException
 	 */
-	public void analyzeJAR(final InputStream input) throws IOException {
+	public int analyzeArchive(final InputStream input) throws IOException {
 		final ZipInputStream zip = new ZipInputStream(input);
+		int count = 0;
 		while (true) {
 			final ZipEntry entry = zip.getNextEntry();
 			if (entry == null) {
 				break;
 			}
-			if (entry.getName().endsWith(".class")) {
-				analyze(zip);
-			}
+			count += analyzeAll(zip);
 		}
+		return count;
 	}
 
 	/**
-	 * Analyzes all class files contained in a JAR file.
+	 * Analyzes all classes found in the given input stream. The input stream
+	 * may either represent a single class file or a ZIP archive that is
+	 * searched recursively for class files. All other content types are
+	 * ignored.
 	 * 
-	 * @param jarfile
-	 *            JAR file
+	 * @param input
+	 *            input data
+	 * @return number of class files found
 	 * @throws IOException
 	 */
-	public void analyzeJAR(final File jarfile) throws IOException {
-		final InputStream in = new FileInputStream(jarfile);
-		analyzeJAR(in);
-		in.close();
+	public int analyzeAll(final InputStream input) throws IOException {
+		final ContentTypeDetector detector = new ContentTypeDetector(input);
+		switch (detector.getHeader()) {
+		case ContentTypeDetector.CLASSFILE:
+			analyzeClass(detector.getInputStream());
+			return 1;
+		case ContentTypeDetector.ZIPFILE:
+			return analyzeArchive(detector.getInputStream());
+		}
+		return 0;
 	}
 
 	/**
-	 * Analyzes all class from the given class path.
+	 * Analyzes all class files contained in the given file or folder. Class
+	 * files as well as ZIP files are considered. Folders are searched
+	 * recursively.
+	 * 
+	 * @param file
+	 *            file or folder to look for class files
+	 * @return number of class files found
+	 * @throws IOException
+	 */
+	public int analyzeAll(final File file) throws IOException {
+		int count = 0;
+		if (file.isDirectory()) {
+			for (final File f : file.listFiles()) {
+				count += analyzeAll(f);
+			}
+		} else {
+			final InputStream in = new FileInputStream(file);
+			count += analyzeAll(in);
+			in.close();
+		}
+		return count;
+	}
+
+	/**
+	 * Analyzes all classes from the given class path. Directories containing
+	 * class files as well as archive files are considered.
 	 * 
 	 * @param path
 	 *            path definition
@@ -174,22 +170,17 @@ public class Analyzer {
 	 *            optional base directory, if <code>null</code> the current
 	 *            working directory is used as the base for relative path
 	 *            entries
+	 * @return number of class files found
 	 * @throws IOException
 	 */
-	public void analyzePath(final String path, final File basedir)
+	public int analyzeAll(final String path, final File basedir)
 			throws IOException {
-		final StringTokenizer tokenizer = new StringTokenizer(path,
-				File.pathSeparator);
-		while (tokenizer.hasMoreTokens()) {
-			final File entry = new File(basedir, tokenizer.nextToken());
-			if (entry.isDirectory()) {
-				analyzeAll(entry);
-				continue;
-			}
-			if (entry.isFile() && entry.getName().endsWith(".jar")) {
-				analyzeJAR(entry);
-			}
+		int count = 0;
+		final StringTokenizer st = new StringTokenizer(path, File.pathSeparator);
+		while (st.hasMoreTokens()) {
+			count += analyzeAll(new File(basedir, st.nextToken()));
 		}
+		return count;
 	}
 
 }

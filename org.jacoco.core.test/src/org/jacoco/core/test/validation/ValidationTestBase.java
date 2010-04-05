@@ -89,7 +89,7 @@ public abstract class ValidationTestBase {
 			final ExecutionDataStore store) {
 		final CoverageBuilder builder = new CoverageBuilder(store);
 		final Analyzer analyzer = new Analyzer(builder);
-		analyzer.analyze(reader);
+		analyzer.analyzeClass(reader);
 		final Collection<ClassCoverage> classes = builder.getClasses();
 		assertEquals(1, classes.size(), 0.0);
 		classCoverage = classes.iterator().next();

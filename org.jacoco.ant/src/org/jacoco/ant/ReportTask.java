@@ -481,17 +481,9 @@ public class ReportTask extends Task {
 				final Resource resource = (Resource) i.next();
 				if (resource.isDirectory() && resource instanceof FileResource) {
 					analyzer.analyzeAll(((FileResource) resource).getFile());
-					continue;
-				}
-				if (resource.getName().toLowerCase().endsWith(".jar")) {
+				} else {
 					final InputStream in = resource.getInputStream();
-					analyzer.analyzeJAR(in);
-					in.close();
-					continue;
-				}
-				if (resource.getName().toLowerCase().endsWith(".class")) {
-					final InputStream in = resource.getInputStream();
-					analyzer.analyze(in);
+					analyzer.analyzeAll(in);
 					in.close();
 				}
 			}

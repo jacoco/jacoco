@@ -151,7 +151,7 @@ public class CoreTutorial {
 		final CoverageBuilder coverageBuilder = new CoverageBuilder(
 				executionData);
 		final Analyzer analyzer = new Analyzer(coverageBuilder);
-		analyzer.analyze(getTargetClass(targetName));
+		analyzer.analyzeClass(getTargetClass(targetName));
 
 		// Let's dump some metrics and line coverage information:
 		for (final ClassCoverage cc : coverageBuilder.getClasses()) {

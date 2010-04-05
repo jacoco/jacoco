@@ -46,7 +46,8 @@
 			<structure name="JaCoCo">
 				<group name="org.jacoco.agent">
 					<classfiles>
-						<path refid="bundle-org.jacoco.agent"/>
+						<!-- Process class files only, ignore jacocoagent.jar -->
+						<fileset dir="${toString:bundle-org.jacoco.agent}" includes="**/*.class"/>
 					</classfiles>
 					<sourcefiles>
 						<fileset dir="${workspace.dir}/org.jacoco.agent/src"/>
