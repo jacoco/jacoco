@@ -58,7 +58,6 @@ public class ContentTypeDetectorTest {
 		zip.write("Hello Zip!".getBytes());
 		zip.close();
 		initData(buffer.toByteArray());
-		System.out.println(Integer.toHexString(detector.getHeader()));
 		assertEquals(ContentTypeDetector.ZIPFILE, detector.getHeader());
 		assertContent();
 	}
