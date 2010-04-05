@@ -34,20 +34,27 @@
     <fail message="Please specify property 'target.plugins.dir'" unless="target.plugins.dir"/>
 		
 	<path id="bundle-org.objectweb.asm">
-        <fileset dir="${target.plugins.dir}" includes="org.objectweb.asm_3.*.jar"/>
+		<last><sort>
+        		<fileset dir="${target.plugins.dir}" includes="org.objectweb.asm_3.*.jar"/>
+		</sort></last>
 	</path>
 
 	<path id="bundle-org.apache.ant">
-        <fileset dir="${target.plugins.dir}" includes="org.apache.ant_*/lib/ant.jar"/>
+		<last><sort>
+	        <fileset dir="${target.plugins.dir}" includes="org.apache.ant_*/lib/ant.jar"/>
+		</sort></last>
 	</path>
 	
 	<path id="bundle-org.junit4">
-        <fileset dir="${target.plugins.dir}" includes="org.junit4_*/junit.jar"/>
-		<fileset dir="${target.plugins.dir}" includes="org.junit_4*/junit.jar"/>
-        <fileset dir="${target.plugins.dir}" includes="org.hamcrest.core_*.jar"/>
-		<fileset dir="${target.plugins.dir}" includes="org.hamcrest.ui_*.jar"/>
-		<fileset dir="${target.plugins.dir}" includes="org.hamcrest.text_*.jar"/>
-		<fileset dir="${target.plugins.dir}" includes="org.hamcrest.library_*.jar"/>
+		<last><sort>
+	        <fileset dir="${target.plugins.dir}">
+	        	<include name="org.junit4_*/junit.jar"/>
+	        	<include name="org.junit_4*/junit.jar"/>
+	        </fileset>
+		</sort></last>
+    	<last><sort>
+        	<fileset dir="${target.plugins.dir}" includes="org.hamcrest.core_*.jar"/>
+    	</sort></last>
 	</path>
 	
 </project>
