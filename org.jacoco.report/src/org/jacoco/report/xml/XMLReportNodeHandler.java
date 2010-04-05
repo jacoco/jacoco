@@ -7,7 +7,7 @@
  *
  * Contributors:
  *    Brock Janiczak - initial API and implementation
- *    Marc R. Hoffmann - generalized structure 
+ *    Marc R. Hoffmann - generalized structure, line info
  *    
  * $Id: $
  *******************************************************************************/
@@ -15,9 +15,9 @@ package org.jacoco.report.xml;
 
 import java.io.IOException;
 
-import org.jacoco.core.analysis.ClassCoverage;
 import org.jacoco.core.analysis.ICounter;
 import org.jacoco.core.analysis.ICoverageNode;
+import org.jacoco.core.analysis.ILines;
 import org.jacoco.core.analysis.MethodCoverage;
 import org.jacoco.core.analysis.ICoverageNode.CounterEntity;
 import org.jacoco.core.analysis.ICoverageNode.ElementType;
@@ -64,13 +64,21 @@ class XMLReportNodeHandler implements IReportVisitor {
 		case PACKAGE:
 			return new XMLReportNodeHandler(element.element("package"), node);
 		case CLASS:
-			final XMLElement classChild = element.element("class");
-			addClassAttributes(classChild, (ClassCoverage) node);
-			return new XMLReportNodeHandler(classChild, node);
+			return new XMLReportNodeHandler(element.element("class"), node);
 		case METHOD:
 			final XMLElement methodChild = element.element("method");
-			addMethodAttributes(methodChild, (MethodCoverage) node);
+			methodChild.attr("desc", ((MethodCoverage) node).getDesc());
 			return new XMLReportNodeHandler(methodChild, node);
+		case SOURCEFILE:
+			return new XMLReportNodeHandler(element.element("sourcefile"), node) {
+				@Override
+				public void visitEnd(final ISourceFileLocator sourceFileLocator)
+						throws IOException {
+					writeLines(node.getLines(), element);
+					super.visitEnd(sourceFileLocator);
+				}
+
+			};
 		}
 		return IReportVisitor.NOP;
 	}
@@ -95,35 +103,26 @@ class XMLReportNodeHandler implements IReportVisitor {
 		}
 	}
 
-	private static void addClassAttributes(final XMLElement element,
-			final ClassCoverage node) throws IOException {
-		if (node.getSignature() != null) {
-			element.attr("signature", node.getSignature());
-		}
-		if (node.getSuperName() != null) {
-			element.attr("superclass", node.getSuperName());
-		}
-		if (node.getInterfaceNames() != null) {
-			boolean first = true;
-			final StringBuilder builder = new StringBuilder();
-			for (final String iface : node.getInterfaceNames()) {
-				if (first) {
-					first = false;
-				} else {
-					builder.append(' ');
+	private void writeLines(final ILines lines, final XMLElement parent)
+			throws IOException {
+		final int last = lines.getLastLine();
+		for (int nr = lines.getFirstLine(); nr <= last; nr++) {
+			final byte status = lines.getStatus(nr);
+			if (status != ILines.NO_CODE) {
+				final XMLElement line = parent.element("line");
+				line.attr("nr", nr);
+				switch (status) {
+				case ILines.NOT_COVERED:
+					line.attr("status", "N");
+					break;
+				case ILines.PARTLY_COVERED:
+					line.attr("status", "P");
+					break;
+				case ILines.FULLY_COVERED:
+					line.attr("status", "F");
+					break;
 				}
-				builder.append(iface);
 			}
-			element.attr("interfaces", builder.toString());
-		}
-	}
-
-	private static void addMethodAttributes(final XMLElement element,
-			final MethodCoverage node) throws IOException {
-		element.attr("desc", node.getDesc());
-		final String signature = node.getSignature();
-		if (signature != null) {
-			element.attr("signature", signature);
 		}
 	}
 

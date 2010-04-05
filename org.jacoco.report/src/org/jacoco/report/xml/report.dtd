@@ -7,35 +7,40 @@
   
    Contributors:
       Brock Janiczak - initial API and implementation
-      Marc R. Hoffmann - generalized report structure
+      Marc R. Hoffmann - generalized report structure, line info
       
    $Id: $
 -->
 
-<!ELEMENT report ((group* , package*) , counter*)>
+<!ELEMENT report (group* , package* , counter*)>
 <!ATTLIST report
   name CDATA #REQUIRED>
 
-<!ELEMENT group ((group* , package*) , counter*)>
+<!ELEMENT group (group* , package* , counter*)>
 <!ATTLIST group
   name CDATA #REQUIRED>
 
-<!ELEMENT package ((class*) , counter*)>
+<!ELEMENT package ((class | sourcefile)* , counter*)>
 <!ATTLIST package
   name CDATA #REQUIRED>
 
-<!ELEMENT class ((method*), counter*)>
+<!ELEMENT class (method*, counter*)>
 <!ATTLIST class
-  name CDATA #REQUIRED
-  signature CDATA #IMPLIED
-  superclass CDATA #IMPLIED
-  interfaces CDATA #IMPLIED>
+  name CDATA #REQUIRED>
 
 <!ELEMENT method (counter*)>
 <!ATTLIST method
   name CDATA #REQUIRED
-  desc CDATA #REQUIRED
-  signature CDATA #IMPLIED>
+  desc CDATA #REQUIRED>
+  
+<!ELEMENT sourcefile (line*)>
+<!ATTLIST sourcefile
+  name CDATA #REQUIRED>
+
+<!ELEMENT line EMPTY>
+<!ATTLIST line
+  nr     CDATA #REQUIRED
+  status (N|P|F) #REQUIRED>
 
 <!ELEMENT counter EMPTY>
 <!ATTLIST counter

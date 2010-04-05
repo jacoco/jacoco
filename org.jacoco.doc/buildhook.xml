@@ -91,6 +91,10 @@
 			<csv destfile="${result.dist.coverage.dir}/coverage.csv"/>
 			<xml destfile="${result.dist.coverage.dir}/coverage.xml"/>
 		</jacoco:report>
+
+		<copy todir="${result.dist.coverage.dir}">
+			<fileset dir="${source.org.jacoco.report.dir}/src/org/jacoco/report/xml" includes="report.dtd"/>
+		</copy>
 	</target>
 	
 	
