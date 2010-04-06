@@ -309,8 +309,9 @@
 
 <ul>
   <li><code>classfiles</code>: Container element for Ant resources and resource
-    collections that can specify Java class files, JAR files or directories
-    containing class files.</li>
+    collections that can specify Java class files, ZIP archive files (jar, war,
+    ear etc.) or folders containing class files. Archives and folders are
+    searched recursively for class files.</li>
   <li><code>sourcefiles</code>: Optional container element for Ant resources and
     resource collections that specify corresponding source files. The element
     has an optional attribute <code>encoding</code> to specify the character
