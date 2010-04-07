@@ -13,16 +13,19 @@
    $Id: $
 -->
 	
-<project name="target">
+<project name="target.default">
 
 	<description>
-		This file specifies the build target dependencies.
+		This file specifies the default build target dependencies.
 	</description>
+	
+	<property name="java.target.version" value="1.5"/>
+	<property name="verify.jvm.args" value=""/>
 
-	<fail message="JaCoCo should only be compiled against Java 1.5">
+	<fail message="JaCoCo should only be compiled against Java ${java.target.version}">
 		<condition>
 			<not>
-				<equals arg1="${ant.java.version}" arg2="1.5"/>
+				<equals arg1="${ant.java.version}" arg2="${java.target.version}"/>
 			</not>
 		</condition>
 	</fail>

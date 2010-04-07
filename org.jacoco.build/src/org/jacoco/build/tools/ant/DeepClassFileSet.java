@@ -173,7 +173,7 @@ public class DeepClassFileSet implements ResourceCollection {
 			final ClassReader reader = new ClassReader(stream);
 			stream.close();
 			reader.accept(new RemappingClassAdapter(new EmptyVisitor(),
-					remapper), 0);
+					remapper), ClassReader.EXPAND_FRAMES);
 		} catch (final IOException e) {
 			throw new BuildException(e);
 		}

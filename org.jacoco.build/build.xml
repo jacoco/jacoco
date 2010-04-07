@@ -18,8 +18,9 @@
 	<description>
 		This is the main build file for the JaCoCo build.
 	</description>
-	
-	<import file="target.xml"/>
+
+	<property name="target.name" value="default"/>
+	<import file="target_${target.name}.xml"/>
 	
 	<property name="workspace.dir" location=".."/>
 	
@@ -114,6 +115,13 @@
 	<target name="rebuild" depends="clean,build"/>
 	
 	<target name="deliver" depends="rebuild">
+		<fail message="JaCoCo delivery only allowed with default target.">
+			<condition>
+				<not>
+					<equals arg1="${target.name}" arg2="default"/>
+				</not>
+			</condition>
+		</fail>
 		<property prefix="core.manifest." file="${result.tmp.dir}/org.jacoco.core/MANIFEST.MF"/>
 		<property name="result.zip.file" location="${result.dir}/jacoco-${core.manifest.Bundle-Version}.zip"/>
 		<zip destfile="${result.zip.file}" level="9">

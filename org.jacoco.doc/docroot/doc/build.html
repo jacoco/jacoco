@@ -164,7 +164,11 @@
       <td>URL of the current home page for JaCoCo.</td>
       <td><code>http://www.eclemma.org/jacoco</code></td>
     </tr>
-
+    <tr>
+      <td><code>target.name</code></td>
+      <td>Name of the target environment to run the build against.</td>
+      <td><code>default</code></td>
+    </tr>
   </tbody>
 </table>
 
@@ -193,15 +197,15 @@
 
 <p>
   The main <code>build.xml</code> calls the <code>buildbundle.xml</code> script
-  for each bundle. The <code>target.xml</code> file is included in the main
-  build file and defines the structure of the target platform. Each bundle
-  defines its specific requirements in a local <code>buildhook.xml</code> file
-  which is included into the <code>buildbundle.xml</code> when the respective
-  bundle is build.
+  for each bundle. A <code>target_*.xml</code> file is included in the main
+  build file to define the structure of the target platform. Each bundle defines
+  its specific requirements in a local <code>buildhook.xml</code> file which is
+  included into the <code>buildbundle.xml</code> when the respective bundle is
+  build.
 </p>
 
 <div style="padding-left:2em"><code><b>org.jacoco.build/build.xml</b></code></div>
-<div style="padding-left:4em">include <code><b>org.jacoco.build/target.xml</b></code></div>
+<div style="padding-left:4em">include <code><b>org.jacoco.build/target_${target.name}.xml</b></code></div>
 <div style="padding-left:4em">for each bundle:</div>
 <div style="padding-left:6em">call <code><b>org.jacoco.build/buildbundle.xml</b></code>:</div>
 <div style="padding-left:8em">include <code><b>&lt;bundleid&gt;/buildhook.xml</b></code></div>

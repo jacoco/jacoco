@@ -43,7 +43,7 @@
 		<property name="result.tmp.bundle.classes.dir" location="${result.tmp.bundle.dir}/classes"/>
 		<mkdir dir="${result.tmp.bundle.classes.dir}"/>
 		<javac srcdir="${source.bundle.java.dir}" destdir="${result.tmp.bundle.classes.dir}"
-		       debug="true" source="1.5" target="1.5" includeAntRuntime="no">
+		       debug="true" source="1.5" target="${java.target.version}" includeAntRuntime="no">
 			<classpath refid="dependencies"/>
 		</javac>
 		<copy todir="${result.tmp.bundle.classes.dir}">
@@ -105,6 +105,7 @@
 				exclClassLoader="sun.reflect.DelegatingClassLoader|org.jacoco.core.test.TargetLoader">
 			
 			<junit haltonfailure="true" fork="true" forkmode="once" dir="${source.bundle.dir}">
+				<jvmarg line="${verify.jvm.args}"/>
 	    		<batchtest todir="${result.tmp.bundle.test.dir}" >
 					<fileset dir="${result.tmp.bundle.classes.dir}">
    						<include name="**/*Test.class"/>
