@@ -65,16 +65,26 @@
 		<property name="qualified.bundle.version" value="${manifest.Bundle-Version}"/>
 	</target>
 	
-	<target name="runcustompackage" if="do.custompackage" depends="manifest">
+	<target name="about">
+		<property name="source.bundle.about.file" location="${source.bundle.dir}/about.html"/>
+		<property name="result.temp.bundle.about.file" location="${result.tmp.bundle.dir}/about.html"/>
+		<copy file="${source.bundle.about.file}" tofile="${result.temp.bundle.about.file}">
+			<filterset>
+				<filter token="DATE" value="${build.date}"/>
+			</filterset>
+		</copy>
+	</target>
+	
+	<target name="runcustompackage" if="do.custompackage" depends="manifest,about">
 		<antcall target="custompackage" inheritall="true" inheritrefs="true"/>
 	</target>
 	
-	<target name="package" if="do.package" depends="compile,runcustompackage,manifest">
+	<target name="package" if="do.package" depends="compile,runcustompackage,manifest,about">
 		<property name="result.dist.bundle.jar.file" location="${result.dist.lib.dir}/${manifest.Bundle-SymbolicName}_${qualified.bundle.version}.jar"/>
 		<mkdir dir="${result.dist.lib.dir}"/>
 		<jar destfile="${result.dist.bundle.jar.file}" manifest="${result.temp.bundle.manifest.file}" level="9">
 			<fileset dir="${result.tmp.bundle.classes.dir}"/>
-			<file file="${source.bundle.dir}/about.html"/>
+			<file file="${result.temp.bundle.about.file}"/>
 		</jar>
 	</target>
 	

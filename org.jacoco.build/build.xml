@@ -37,6 +37,7 @@
 	<property name="jacoco.home.url" value="http://www.eclemma.org/jacoco"/>
 	
 	<tstamp>
+		<format property="build.date" pattern="yyyy/MM/dd" timezone="GMT+0"/>
 		<format property="build.qualifier" pattern="yyyyMMddHHmmss" timezone="GMT+0"/>
 	</tstamp>
 

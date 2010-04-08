@@ -48,7 +48,7 @@
 				<attribute name="Implementation-Vendor" value="Mountainminds GmbH &amp; Co. KG"/>
 				<attribute name="Implementation-Version" value="${qualified.bundle.version}"/>
 			</manifest>		
-			<file file="${source.bundle.dir}/about.html"/>
+			<file file="${result.temp.bundle.about.file}"/>
 			<file file="${result.dist.lib.dir}/jacocoagent.jar"/>
 			<fileset dir="${result.tmp.bundle.classes.dir}"/>
 			<fileset dir="${toString:bundle-org.jacoco.report}" excludes="**/*.class"/>

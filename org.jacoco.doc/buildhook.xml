@@ -140,6 +140,7 @@
 		<copy todir="${result.dist.dir}">
 			<fileset dir="${source.bundle.dir}/docroot" includes="**/*.html"/>
 			<filterset>
+				<filter token="DATE"    value="${build.date}"/>
 				<filter token="VERSION" value="${qualified.bundle.version}"/>
 				<filter token="HOMEURL" value="${jacoco.home.url}"/>
 			</filterset>
