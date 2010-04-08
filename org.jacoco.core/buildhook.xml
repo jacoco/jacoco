@@ -26,6 +26,8 @@
 	<target name="custompackage">
 		<!-- Compile JaCoCo.java with version info included -->
 		
+		<delete dir="${result.tmp.bundle.classes.dir}" includes="**/JaCoCo.class"/>
+		
 		<property name="result.tmp.bundle.java.dir" location="${result.tmp.bundle.dir}/java"/>
 		<mkdir dir="${result.tmp.bundle.java.dir}"/>
 		<copy todir="${result.tmp.bundle.java.dir}">
