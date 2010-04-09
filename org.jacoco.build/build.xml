@@ -35,6 +35,7 @@
 	<property name="result.tmp.coverage.file" location="${result.tmp.dir}/jacoco.exec"/>
 	
 	<property name="jacoco.home.url" value="http://www.eclemma.org/jacoco"/>
+	<property name="copyright.years" value="2009, 2010"/>
 	
 	<tstamp>
 		<format property="build.date" pattern="yyyy/MM/dd" timezone="GMT+0"/>

@@ -149,7 +149,7 @@
 		<fileset dir="${source.bundle.dir}" includes="**/*.java,**/*.xml" excludes="result/**,bin/**" id="missinglicense.fileset">
 			<not>
 				<and>
-					<contains text="Copyright (c) 2009, 2010 Mountainminds GmbH &amp; Co. KG and Contributors"/>
+					<contains text="Copyright (c) ${copyright.years} Mountainminds GmbH &amp; Co. KG and Contributors"/>
 					<contains text="All rights reserved. This program and the accompanying materials"/>
 					<contains text="are made available under the terms of the Eclipse Public License v1.0"/>
 					<contains text="which accompanies this distribution, and is available at"/>

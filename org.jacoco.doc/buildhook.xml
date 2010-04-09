@@ -26,6 +26,7 @@
 			<report format="noframes" styledir="${source.bundle.dir}/junitstyle" todir="${result.dist.test.dir}">
 				<param name="VERSION" expression="${qualified.bundle.version}"/>
 				<param name="HOMEURL" expression="${jacoco.home.url}"/>
+				<param name="COPYRIGHTYEARS" expression="${copyright.years}"/>
 			</report>
 		</junitreport>
 		<move file="${result.dist.test.dir}/junit-noframes.html"  
@@ -120,7 +121,7 @@
 			<bottom>
 				&lt;div class="footer"&gt;
 					&lt;div class="versioninfo"&gt;&lt;a href="${jacoco.home.url}"&gt;JaCoCo&lt;/a&gt; ${qualified.bundle.version}&lt;/div&gt;
-					Copyright &#169; 2009, 2010 Mountainminds GmbH &amp; Co. KG and Contributors
+					Copyright &#169; ${copyright.years} Mountainminds GmbH &amp; Co. KG and Contributors
 				&lt;/div>
 			</bottom>
 		</javadoc>
@@ -143,6 +144,7 @@
 				<filter token="DATE"    value="${build.date}"/>
 				<filter token="VERSION" value="${qualified.bundle.version}"/>
 				<filter token="HOMEURL" value="${jacoco.home.url}"/>
+				<filter token="COPYRIGHTYEARS" value="${copyright.years}"/>
 			</filterset>
 		</copy>
 		

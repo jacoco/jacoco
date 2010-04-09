@@ -24,6 +24,7 @@
 
 <xsl:param name="VERSION"/>
 <xsl:param name="HOMEURL"/>
+<xsl:param name="COPYRIGHTYEARS"/>
 
 <!--
 
@@ -68,7 +69,7 @@
             </div>
 			<div class="footer">
 				<div class="versioninfo"><a href="{$HOMEURL}">JaCoCo</a>&#160;<xsl:value-of select="$VERSION"/></div>
-				<a href="../doc/license.html">Copyright</a> &#169; 2009 Mountainminds GmbH &amp; Co. KG and Contributors
+				<a href="../doc/license.html">Copyright</a> &#169; <xsl:value-of select="$COPYRIGHTYEARS"/> Mountainminds GmbH &amp; Co. KG and Contributors
 			</div>
         </body>
     </html>
