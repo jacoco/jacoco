@@ -49,7 +49,7 @@ public class JacocoAgent {
 	/**
 	 * Creates a new agent with the given agent options string.
 	 * 
-	 * @param agentArgs
+	 * @param options
 	 *            agent options as text string
 	 */
 	public JacocoAgent(String options) {
@@ -93,9 +93,6 @@ public class JacocoAgent {
 
 	/**
 	 * Writes the collected execution data to the specified file.
-	 * 
-	 * @param runtime
-	 *            runtime containing the execution data
 	 */
 	protected void writeExecutionData() {
 		try {
