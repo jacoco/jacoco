@@ -19,7 +19,6 @@ import org.jacoco.core.runtime.IRuntime;
 import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.ClassVisitor;
 import org.objectweb.asm.ClassWriter;
-import org.objectweb.asm.Opcodes;
 
 /**
  * Several APIs to instrument Java class definitions for coverage tracing.
@@ -64,12 +63,7 @@ public class Instrumenter {
 	 * 
 	 */
 	public byte[] instrument(final ClassReader reader) {
-		// TODO: Temporary hack to produce valid stackmap frames for Java > 1.6,
-		// ideally the visitor chain for instrumentation would produce valid
-		// frames directly.
-		final int ver = reader.readUnsignedShort(6);
-		final int flags = ver >= Opcodes.V1_6 ? ClassWriter.COMPUTE_FRAMES : 0;
-		final ClassWriter writer = new ClassWriter(reader, flags);
+		final ClassWriter writer = new ClassWriter(reader, 0);
 		final ClassVisitor visitor = createInstrumentingVisitor(CRC64
 				.checksum(reader.b), writer);
 		reader.accept(visitor, ClassReader.EXPAND_FRAMES);

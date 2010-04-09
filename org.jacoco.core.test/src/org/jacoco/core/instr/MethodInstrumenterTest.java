@@ -53,7 +53,7 @@ public class MethodInstrumenterTest {
 			}
 
 		};
-		instrumenter = new MethodInstrumenter(actual, 0, "test", "()V",
+		instrumenter = new MethodInstrumenter(actual, 0, "()V",
 				probeArrayStrategy);
 	}
 

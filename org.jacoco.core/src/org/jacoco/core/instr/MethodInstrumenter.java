@@ -14,7 +14,6 @@ package org.jacoco.core.instr;
 
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
-import org.objectweb.asm.commons.GeneratorAdapter;
 
 /**
  * This method adapter instruments a method to record every block that gets
@@ -23,14 +22,12 @@ import org.objectweb.asm.commons.GeneratorAdapter;
  * @author Marc R. Hoffmann
  * @version $Revision: $
  */
-class MethodInstrumenter extends GeneratorAdapter implements
+class MethodInstrumenter extends ProbeVariableInserter implements
 		IBlockMethodVisitor {
 
 	private final IProbeArrayStrategy probeArrayStrategy;
 
 	private int accessorStackSize;
-
-	private int probeArray;
 
 	/**
 	 * Create a new instrumenter instance for the given method.
@@ -39,17 +36,14 @@ class MethodInstrumenter extends GeneratorAdapter implements
 	 *            next method visitor in the chain
 	 * @param access
 	 *            access flags for the method
-	 * @param name
-	 *            name of the method
 	 * @param desc
 	 *            description of the method
 	 * @param probeArrayStrategy
 	 *            strategy to get access to the probe array
 	 */
 	public MethodInstrumenter(final MethodVisitor mv, final int access,
-			final String name, final String desc,
-			final IProbeArrayStrategy probeArrayStrategy) {
-		super(mv, access, name, desc);
+			final String desc, final IProbeArrayStrategy probeArrayStrategy) {
+		super(access, desc, mv);
 		this.probeArrayStrategy = probeArrayStrategy;
 	}
 
@@ -62,8 +56,7 @@ class MethodInstrumenter extends GeneratorAdapter implements
 
 		// Stack[0]: [Z
 
-		probeArray = newLocal(GeneratorConstants.PROBEDATA_TYPE);
-		mv.visitVarInsn(Opcodes.ASTORE, probeArray);
+		mv.visitVarInsn(Opcodes.ASTORE, variable);
 	}
 
 	@Override
@@ -73,7 +66,7 @@ class MethodInstrumenter extends GeneratorAdapter implements
 		// stack size is an absolute maximum, as the accessor code is inserted
 		// at the very beginning of each method when the stack size is empty.
 		final int increasedStack = Math.max(maxStack + 3, accessorStackSize);
-		super.visitMaxs(increasedStack, maxLocals + 1);
+		super.visitMaxs(increasedStack, maxLocals);
 	}
 
 	// === IBlockMethodVisitor ===
@@ -82,7 +75,7 @@ class MethodInstrumenter extends GeneratorAdapter implements
 		// At the end of every block we set the corresponding position in the
 		// boolean[] array to true.
 
-		mv.visitVarInsn(Opcodes.ALOAD, probeArray);
+		mv.visitVarInsn(Opcodes.ALOAD, variable);
 
 		// Stack[0]: [Z
 
@@ -98,6 +91,18 @@ class MethodInstrumenter extends GeneratorAdapter implements
 		// Stack[0]: [Z
 
 		visitInsn(Opcodes.BASTORE);
+	}
+
+	private void push(final int value) {
+		if (value >= -1 && value <= 5) {
+			mv.visitInsn(Opcodes.ICONST_0 + value);
+		} else if (value >= Byte.MIN_VALUE && value <= Byte.MAX_VALUE) {
+			mv.visitIntInsn(Opcodes.BIPUSH, value);
+		} else if (value >= Short.MIN_VALUE && value <= Short.MAX_VALUE) {
+			mv.visitIntInsn(Opcodes.SIPUSH, value);
+		} else {
+			mv.visitLdcInsn(new Integer(value));
+		}
 	}
 
 	public void visitBlockEnd(final int id) {

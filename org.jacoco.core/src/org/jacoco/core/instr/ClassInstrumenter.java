@@ -31,6 +31,9 @@ import org.objectweb.asm.Opcodes;
  */
 public class ClassInstrumenter extends BlockClassAdapter {
 
+	private static final Object[] STACK_ARRZ = new Object[] { GeneratorConstants.PROBEDATA_TYPE
+			.getDescriptor() };
+
 	private final ClassVisitor delegate;
 
 	private final long id;
@@ -91,8 +94,7 @@ public class ClassInstrumenter extends BlockClassAdapter {
 		if (mv == null) {
 			return null;
 		}
-		return new MethodInstrumenter(mv, access, name, desc,
-				probeArrayStrategy);
+		return new MethodInstrumenter(mv, access, desc, probeArrayStrategy);
 	}
 
 	@Override
@@ -203,6 +205,7 @@ public class ClassInstrumenter extends BlockClassAdapter {
 			// Stack[0]: [Z
 
 			// Return the method's block array:
+			mv.visitFrame(Opcodes.F_FULL, 0, new Object[0], 1, STACK_ARRZ);
 			mv.visitLabel(alreadyInitialized);
 			mv.visitInsn(Opcodes.ARETURN);
 

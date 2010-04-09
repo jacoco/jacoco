@@ -22,13 +22,15 @@
 <h3>New Features</h3>
 <ul>
   <li>Support for different archives (jar, war, ear etc.) and nested archives
-  (Trac #78).</li>
+      (Trac #78).</li>
   <li>XML report with line level coverage information (requested for Sonar).</li>
 </ul>
 
 <h3>Fixed Bugs</h3>
 <ul>
   <li>Correct stackmap frames for Java 1.6 class files. (Track #81).</li>
+  <li>Avoid usage of <code>LocalVariableSorter</code> due to ASM bug #314563
+      (Track #69).</li>
 </ul>
 
 <h2>Release 0.3.2 (2010/04/01)</h2>
@@ -36,7 +38,7 @@
 <h3>New Features</h3>
 <ul>
   <li>New HTML report option to directly create a zip file containing the report
-    (Trac #12).</li>
+      (Trac #12).</li>
   <li>Code coverage for static initializers in interfaces (Trac #21).</li>
   <li>Better error handling for <code>report</code> Ant task (Trac #71).</li>
   <li>Classes without instructions are excluded from reports (Trac #73).</li>
@@ -45,7 +47,7 @@
 <h3>Fixed Bugs</h3>
 <ul>
   <li>XML and CSV report output now also works for structures without groups
-  (Track #76).</li>
+      (Track #76).</li>
 </ul>
 
 <h3>API Changes</h3>
