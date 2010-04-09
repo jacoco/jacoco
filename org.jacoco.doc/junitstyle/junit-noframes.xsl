@@ -22,9 +22,9 @@
    limitations under the License.
  -->
 
-<xsl:param name="VERSION"/>
-<xsl:param name="HOMEURL"/>
-<xsl:param name="COPYRIGHTYEARS"/>
+<xsl:param name="qualified.bundle.version"/>
+<xsl:param name="jacoco.home.url"/>
+<xsl:param name="copyright.years"/>
 
 <!--
 
@@ -68,8 +68,8 @@
             
             </div>
 			<div class="footer">
-				<div class="versioninfo"><a href="{$HOMEURL}">JaCoCo</a>&#160;<xsl:value-of select="$VERSION"/></div>
-				<a href="../doc/license.html">Copyright</a> &#169; <xsl:value-of select="$COPYRIGHTYEARS"/> Mountainminds GmbH &amp; Co. KG and Contributors
+				<div class="versioninfo"><a href="{$jacoco.home.url}">JaCoCo</a>&#160;<xsl:value-of select="$qualified.bundle.version"/></div>
+				<a href="../doc/license.html">Copyright</a> &#169; <xsl:value-of select="$copyright.years"/> Mountainminds GmbH &amp; Co. KG and Contributors
 			</div>
         </body>
     </html>

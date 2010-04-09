@@ -33,8 +33,8 @@
 		<copy todir="${result.tmp.bundle.java.dir}">
 			<fileset dir="${source.bundle.java.dir}" includes="**/JaCoCo.java"/>
 			<filterset>
-				<filter token="VERSION" value="${qualified.bundle.version}"/>
-				<filter token="HOMEURL" value="${jacoco.home.url}"/>
+				<filter token="qualified.bundle.version" value="${qualified.bundle.version}"/>
+				<filter token="jacoco.home.url" value="${jacoco.home.url}"/>
 			</filterset>
 		</copy>
 		

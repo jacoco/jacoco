@@ -24,9 +24,9 @@
 		<junitreport todir="${result.dist.test.dir}">
 			<fileset dir="${result.tmp.dir}" includes="*/test/*.xml"/>
 			<report format="noframes" styledir="${source.bundle.dir}/junitstyle" todir="${result.dist.test.dir}">
-				<param name="VERSION" expression="${qualified.bundle.version}"/>
-				<param name="HOMEURL" expression="${jacoco.home.url}"/>
-				<param name="COPYRIGHTYEARS" expression="${copyright.years}"/>
+				<param name="qualified.bundle.version" expression="${qualified.bundle.version}"/>
+				<param name="jacoco.home.url" expression="${jacoco.home.url}"/>
+				<param name="copyright.years" expression="${copyright.years}"/>
 			</report>
 		</junitreport>
 		<move file="${result.dist.test.dir}/junit-noframes.html"  
@@ -141,10 +141,10 @@
 		<copy todir="${result.dist.dir}">
 			<fileset dir="${source.bundle.dir}/docroot" includes="**/*.html"/>
 			<filterset>
-				<filter token="DATE"    value="${build.date}"/>
-				<filter token="VERSION" value="${qualified.bundle.version}"/>
-				<filter token="HOMEURL" value="${jacoco.home.url}"/>
-				<filter token="COPYRIGHTYEARS" value="${copyright.years}"/>
+				<filter token="build.date" value="${build.date}"/>
+				<filter token="qualified.bundle.version" value="${qualified.bundle.version}"/>
+				<filter token="jacoco.home.url" value="${jacoco.home.url}"/>
+				<filter token="copyright.years" value="${copyright.years}"/>
 			</filterset>
 		</copy>
 		
