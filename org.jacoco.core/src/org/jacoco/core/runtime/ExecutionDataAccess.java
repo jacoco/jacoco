@@ -15,6 +15,7 @@ package org.jacoco.core.runtime;
 import java.util.ListIterator;
 
 import org.jacoco.core.data.ExecutionDataStore;
+import org.jacoco.core.instr.InstrSupport;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
 
@@ -150,7 +151,7 @@ class ExecutionDataAccess {
 
 		// stack[0]: [Z
 
-		mv.visitTypeInsn(Opcodes.CHECKCAST, "[Z");
+		mv.visitTypeInsn(Opcodes.CHECKCAST, InstrSupport.DATAFIELD_DESC);
 	}
 
 	/**

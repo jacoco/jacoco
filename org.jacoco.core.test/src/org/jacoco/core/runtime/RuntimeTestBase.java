@@ -22,7 +22,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.jacoco.core.data.IExecutionDataVisitor;
-import org.jacoco.core.instr.GeneratorConstants;
 import org.jacoco.core.test.TargetLoader;
 import org.junit.After;
 import org.junit.Before;
@@ -174,7 +173,7 @@ public abstract class RuntimeTestBase {
 		gen.loadThis();
 		final int size = runtime.generateDataAccessor(classid, className, 2,
 				gen);
-		gen.putField(classType, "data", GeneratorConstants.PROBEDATA_TYPE);
+		gen.putField(classType, "data", Type.getObjectType("[Z"));
 		gen.returnValue();
 		gen.visitMaxs(size + 1, 0);
 		gen.visitEnd();
@@ -185,7 +184,7 @@ public abstract class RuntimeTestBase {
 				"()[Z");
 		gen.visitCode();
 		gen.loadThis();
-		gen.getField(classType, "data", GeneratorConstants.PROBEDATA_TYPE);
+		gen.getField(classType, "data", Type.getObjectType("[Z"));
 		gen.returnValue();
 		gen.visitMaxs(1, 0);
 		gen.visitEnd();
@@ -195,7 +194,7 @@ public abstract class RuntimeTestBase {
 				"()V", null, new String[0]), Opcodes.ACC_PUBLIC, "a", "()V");
 		gen.visitCode();
 		gen.loadThis();
-		gen.getField(classType, "data", GeneratorConstants.PROBEDATA_TYPE);
+		gen.getField(classType, "data", Type.getObjectType("[Z"));
 		gen.push(0);
 		gen.push(1);
 		gen.arrayStore(Type.BOOLEAN_TYPE);
@@ -208,7 +207,7 @@ public abstract class RuntimeTestBase {
 				"()V", null, new String[0]), Opcodes.ACC_PUBLIC, "b", "()V");
 		gen.visitCode();
 		gen.loadThis();
-		gen.getField(classType, "data", GeneratorConstants.PROBEDATA_TYPE);
+		gen.getField(classType, "data", Type.getObjectType("[Z"));
 		gen.push(1);
 		gen.push(1);
 		gen.arrayStore(Type.BOOLEAN_TYPE);

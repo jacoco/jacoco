@@ -31,8 +31,7 @@ import org.objectweb.asm.Opcodes;
  */
 public class ClassInstrumenter extends BlockClassAdapter {
 
-	private static final Object[] STACK_ARRZ = new Object[] { GeneratorConstants.PROBEDATA_TYPE
-			.getDescriptor() };
+	private static final Object[] STACK_ARRZ = new Object[] { InstrSupport.DATAFIELD_DESC };
 
 	private final ClassVisitor delegate;
 
@@ -77,7 +76,7 @@ public class ClassInstrumenter extends BlockClassAdapter {
 
 	public FieldVisitor visitField(final int access, final String name,
 			final String desc, final String signature, final Object value) {
-		assertNotInstrumented(name, GeneratorConstants.DATAFIELD_NAME);
+		assertNotInstrumented(name, InstrSupport.DATAFIELD_NAME);
 		return delegate.visitField(access, name, desc, signature, value);
 	}
 
@@ -86,7 +85,7 @@ public class ClassInstrumenter extends BlockClassAdapter {
 			final String name, final String desc, final String signature,
 			final String[] exceptions) {
 
-		assertNotInstrumented(name, GeneratorConstants.INITMETHOD_NAME);
+		assertNotInstrumented(name, InstrSupport.INITMETHOD_NAME);
 
 		final MethodVisitor mv = delegate.visitMethod(access, name, desc,
 				signature, exceptions);
@@ -161,8 +160,8 @@ public class ClassInstrumenter extends BlockClassAdapter {
 
 		public int pushInstance(final MethodVisitor mv) {
 			mv.visitMethodInsn(Opcodes.INVOKESTATIC, className,
-					GeneratorConstants.INITMETHOD_NAME,
-					GeneratorConstants.INITMETHOD_DESC);
+					InstrSupport.INITMETHOD_NAME,
+					InstrSupport.INITMETHOD_DESC);
 			return 1;
 		}
 
@@ -172,22 +171,21 @@ public class ClassInstrumenter extends BlockClassAdapter {
 		}
 
 		private void createDataField() {
-			delegate.visitField(GeneratorConstants.DATAFIELD_ACC,
-					GeneratorConstants.DATAFIELD_NAME,
-					GeneratorConstants.PROBEDATA_TYPE.getDescriptor(), null,
-					null);
+			delegate.visitField(InstrSupport.DATAFIELD_ACC,
+					InstrSupport.DATAFIELD_NAME,
+					InstrSupport.DATAFIELD_DESC, null, null);
 		}
 
 		private void createInitMethod() {
 			final MethodVisitor mv = delegate.visitMethod(
-					GeneratorConstants.INITMETHOD_ACC,
-					GeneratorConstants.INITMETHOD_NAME,
-					GeneratorConstants.INITMETHOD_DESC, null, null);
+					InstrSupport.INITMETHOD_ACC,
+					InstrSupport.INITMETHOD_NAME,
+					InstrSupport.INITMETHOD_DESC, null, null);
 
 			// Load the value of the static data field:
 			mv.visitFieldInsn(Opcodes.GETSTATIC, className,
-					GeneratorConstants.DATAFIELD_NAME,
-					GeneratorConstants.PROBEDATA_TYPE.getDescriptor());
+					InstrSupport.DATAFIELD_NAME,
+					InstrSupport.DATAFIELD_DESC);
 			mv.visitInsn(Opcodes.DUP);
 
 			// Stack[1]: [Z
@@ -217,7 +215,7 @@ public class ClassInstrumenter extends BlockClassAdapter {
 		 * Generates the byte code to initialize the static coverage data field
 		 * within this class.
 		 * 
-		 * The code will push the [[Z data array on the operand stack.
+		 * The code will push the [Z data array on the operand stack.
 		 * 
 		 * @param mv
 		 *            generator to emit code to
@@ -234,8 +232,8 @@ public class ClassInstrumenter extends BlockClassAdapter {
 			// Stack[0]: [Z
 
 			mv.visitFieldInsn(Opcodes.PUTSTATIC, className,
-					GeneratorConstants.DATAFIELD_NAME,
-					GeneratorConstants.PROBEDATA_TYPE.getDescriptor());
+					InstrSupport.DATAFIELD_NAME,
+					InstrSupport.DATAFIELD_DESC);
 
 			// Stack[0]: [Z
 

@@ -79,7 +79,7 @@ class MethodInstrumenter extends ProbeVariableInserter implements
 
 		// Stack[0]: [Z
 
-		push(id);
+		InstrSupport.push(mv, id);
 
 		// Stack[1]: I
 		// Stack[0]: [Z
@@ -91,18 +91,6 @@ class MethodInstrumenter extends ProbeVariableInserter implements
 		// Stack[0]: [Z
 
 		visitInsn(Opcodes.BASTORE);
-	}
-
-	private void push(final int value) {
-		if (value >= -1 && value <= 5) {
-			mv.visitInsn(Opcodes.ICONST_0 + value);
-		} else if (value >= Byte.MIN_VALUE && value <= Byte.MAX_VALUE) {
-			mv.visitIntInsn(Opcodes.BIPUSH, value);
-		} else if (value >= Short.MIN_VALUE && value <= Short.MAX_VALUE) {
-			mv.visitIntInsn(Opcodes.SIPUSH, value);
-		} else {
-			mv.visitLdcInsn(new Integer(value));
-		}
 	}
 
 	public void visitBlockEnd(final int id) {

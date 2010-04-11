@@ -12,22 +12,20 @@
  *******************************************************************************/
 package org.jacoco.core.instr;
 
+import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
-import org.objectweb.asm.Type;
+import org.objectweb.asm.commons.GeneratorAdapter;
 
 /**
- * Constants for generated instrumentation code.
+ * Constants and utilities for byte code instrumentation.
  * 
  * @author Marc R. Hoffmann
  * @version $Revision: $
  */
-public final class GeneratorConstants {
+public final class InstrSupport {
 
-	/**
-	 * Type for array of primitive boolean values. This type is used to store
-	 * executed probes of a class.
-	 */
-	public static final Type PROBEDATA_TYPE = Type.getType("[Z");
+	private InstrSupport() {
+	}
 
 	// === Data Field ===
 
@@ -42,6 +40,12 @@ public final class GeneratorConstants {
 	 */
 	public static final int DATAFIELD_ACC = Opcodes.ACC_SYNTHETIC
 			| Opcodes.ACC_PRIVATE | Opcodes.ACC_STATIC | Opcodes.ACC_FINAL;
+
+	/**
+	 * Data type of the field that stores coverage information for a class (
+	 * <code>boolean[]</code>).
+	 */
+	public static final String DATAFIELD_DESC = "[Z";
 
 	// === Init Method ===
 
@@ -60,5 +64,28 @@ public final class GeneratorConstants {
 	 */
 	public static final int INITMETHOD_ACC = Opcodes.ACC_SYNTHETIC
 			| Opcodes.ACC_PRIVATE | Opcodes.ACC_STATIC | Opcodes.ACC_FINAL;
+
+	// === Utilities ===
+
+	/**
+	 * Generates the instruction to push the given int value on the stack.
+	 * Implementation taken from {@link GeneratorAdapter#push(int)}.
+	 * 
+	 * @param mv
+	 *            visitor to emit the instruction
+	 * @param value
+	 *            the value to be pushed on the stack.
+	 */
+	public static void push(final MethodVisitor mv, final int value) {
+		if (value >= -1 && value <= 5) {
+			mv.visitInsn(Opcodes.ICONST_0 + value);
+		} else if (value >= Byte.MIN_VALUE && value <= Byte.MAX_VALUE) {
+			mv.visitIntInsn(Opcodes.BIPUSH, value);
+		} else if (value >= Short.MIN_VALUE && value <= Short.MAX_VALUE) {
+			mv.visitIntInsn(Opcodes.SIPUSH, value);
+		} else {
+			mv.visitLdcInsn(new Integer(value));
+		}
+	}
 
 }

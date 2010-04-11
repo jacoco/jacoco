@@ -17,7 +17,7 @@ import java.util.logging.Level;
 import java.util.logging.LogRecord;
 import java.util.logging.Logger;
 
-import org.jacoco.core.instr.GeneratorConstants;
+import org.jacoco.core.instr.InstrSupport;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
 
@@ -80,7 +80,8 @@ public class LoggerRuntime extends AbstractRuntime {
 
 		// 1. Create parameter array:
 
-		ExecutionDataAccess.generateArgumentArray(classid, classname, probecount, mv);
+		ExecutionDataAccess.generateArgumentArray(classid, classname,
+				probecount, mv);
 
 		// Stack[0]: [Ljava/lang/Object;
 
@@ -151,8 +152,7 @@ public class LoggerRuntime extends AbstractRuntime {
 		// Stack[0]: [Ljava/lang/Object;
 
 		mv.visitInsn(Opcodes.AALOAD);
-		mv.visitTypeInsn(Opcodes.CHECKCAST, GeneratorConstants.PROBEDATA_TYPE
-				.getInternalName());
+		mv.visitTypeInsn(Opcodes.CHECKCAST, InstrSupport.DATAFIELD_DESC);
 
 		// Stack[0]: [Z
 
