@@ -34,10 +34,16 @@
 	<target name="testMultipleSubTasks">
 		<au:expectfailure expectedMessage="Only one child task can be supplied to the coverge task">
 			<jacoco:coverage>
-				<java fork="true" classname="Foo" />
-				<java fork="true" classname="Foo" />
+				<java classname="org.jacoco.ant.TestTarget" fork="true" failonerror="true">
+					<classpath path="${org.jacoco.ant.coverageTaskTest.classes.dir}"/>
+				</java>
+				<java classname="org.jacoco.ant.TestTarget" fork="true" failonerror="true">
+					<classpath path="${org.jacoco.ant.coverageTaskTest.classes.dir}"/>
+				</java>
 			</jacoco:coverage>
 		</au:expectfailure>
+		
+		<au:assertLogDoesntContain text="Target executed"/>
 	</target>
 	
 	<target name="testInvalidSubTask">
@@ -50,26 +56,41 @@
 
 	<target name="testCoverageOfForkedJava">
 		<jacoco:coverage destfile="${exec.file}">
-			<java classname="org.jacoco.ant.test.EmptyMain" fork="true" />
+			<java classname="org.jacoco.ant.TestTarget" fork="true" failonerror="true">
+				<classpath path="${org.jacoco.ant.coverageTaskTest.classes.dir}"/>
+			</java>
 		</jacoco:coverage>
+		
 		<au:assertLogContains text="Enhancing java with coverage"/>
 		<au:assertFileExists file="${exec.file}"/>
+		<au:assertLogContains text="Target executed"/>
 	</target>
 	
 	<target name="testCoverageOfForkedJavaDisabled">
 		<jacoco:coverage enabled="false" destfile="${exec.file}">
-			<java classname="org.jacoco.ant.test.EmptyMain" fork="true" />
+			<java classname="org.jacoco.ant.TestTarget" fork="true" failonerror="true">
+				<classpath path="${org.jacoco.ant.coverageTaskTest.classes.dir}"/>
+			</java>
 		</jacoco:coverage>
+		
 		<au:assertLogDoesntContain text="Enhancing java with coverage"/>
 		<au:assertFileDoesntExist file="${exec.file}"/>
+		<!--
+		TODO: Target should be executed
+		<au:assertLogContains text="Target executed"/>
+		-->
 	</target>
 
 	<target name="testCoverageOfNonForkedJava">
 		<au:expectfailure expectedMessage="Coverage can only be applied on a forked VM">
 			<jacoco:coverage>
-				<java classname="Foo" fork="false" />
+				<java classname="org.jacoco.ant.TestTarget" fork="false" failonerror="true">
+					<classpath path="${org.jacoco.ant.coverageTaskTest.classes.dir}"/>
+				</java>
 			</jacoco:coverage>
 		</au:expectfailure>
+		
+		<au:assertLogDoesntContain text="Target executed"/>
 	</target>
 
 	<target name="testCoverageOfForkedJUnit">
@@ -77,7 +98,7 @@
 			<junit fork="true" >
 			    <batchtest todir="${temp.dir}" >
 					<fileset dir=".">
-						<include name="**/EmptyTestTarget.java"/>
+						<include name="**/TestTarget.java"/>
 					</fileset>
 			    </batchtest>
 			</junit>

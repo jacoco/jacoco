@@ -25,19 +25,9 @@ public class ReportTaskTest {
 
 	public static TestSuite suite() {
 		System.setProperty("org.jacoco.ant.reportTaskTest.classes.dir",
-				getClassFileLocation());
+				TestTarget.getClassPath());
 		final File file = new File("src/org/jacoco/ant/ReportTaskTest.xml");
 		return new AntUnitSuite(file, ReportTaskTest.class);
-	}
-
-	/**
-	 * @return class path entry where this class is located
-	 */
-	private static String getClassFileLocation() {
-		String name = ReportTaskTest.class.getName();
-		final String res = "/" + name.replace('.', '/') + ".class";
-		final String loc = ReportTaskTest.class.getResource(res).getFile();
-		return loc.substring(0, loc.length() - res.length());
 	}
 
 }

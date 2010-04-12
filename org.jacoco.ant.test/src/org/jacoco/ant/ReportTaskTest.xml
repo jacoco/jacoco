@@ -92,7 +92,7 @@
 			<html destdir="${temp.dir}"/>
 		</jacoco:report>
 		
-		<au:assertFileExists file="${temp.dir}/Group/org.jacoco.ant/ReportTaskTest.html"/>
+		<au:assertFileExists file="${temp.dir}/Group/org.jacoco.ant/TestTarget.html"/>
 	</target>
 	
 	<target name="testReportHtmlWithPath">
@@ -107,7 +107,7 @@
 			<html destdir="${temp.dir}"/>
 		</jacoco:report>
 		
-		<au:assertFileExists file="${temp.dir}/Group/org.jacoco.ant/ReportTaskTest.html"/>
+		<au:assertFileExists file="${temp.dir}/Group/org.jacoco.ant/TestTarget.html"/>
 	</target>
 	
 	<target name="testReportHtmlWithJAR">
@@ -126,7 +126,7 @@
 			<html destdir="${temp.dir}"/>
 		</jacoco:report>
 		
-		<au:assertFileExists file="${temp.dir}/Group/org.jacoco.ant/ReportTaskTest.html"/>
+		<au:assertFileExists file="${temp.dir}/Group/org.jacoco.ant/TestTarget.html"/>
 	</target>
 	
 	<target name="testReportHtmlFooter">
