@@ -92,38 +92,41 @@
 
 	<target name="testCoverageOfForkedJUnit">
 		<jacoco:coverage destfile="${exec.file}">
-			<junit fork="true" >
-			    <batchtest todir="${temp.dir}" >
-					<fileset dir=".">
-						<include name="**/TestTarget.java"/>
-					</fileset>
-			    </batchtest>
+			<junit fork="true" haltonfailure="true" showoutput="true">
+				<classpath path="${java.class.path}"/>
+				<test name="org.jacoco.ant.TestTarget" />
 			</junit>
 		</jacoco:coverage>
+		
 		<au:assertLogContains text="Enhancing junit with coverage"/>
 		<au:assertFileExists file="${exec.file}"/>
+		<au:assertLogContains text="Target executed"/>
 	</target>
 	
 	<target name="testCoverageOfForkedJUnitDisabled">
 		<jacoco:coverage enabled="false" destfile="${exec.file}">
-			<junit fork="true" >
-			    <batchtest todir="${temp.dir}" >
-					<fileset dir=".">
-						<include name="**/EmptyTestTarget.java"/>
-					</fileset>
-			    </batchtest>
+			<junit fork="true" haltonfailure="true" showoutput="true">
+				<classpath path="${java.class.path}"/>
+				<test name="org.jacoco.ant.TestTarget" />
 			</junit>
 		</jacoco:coverage>
+		
 		<au:assertLogDoesntContain text="Enhancing junit with coverage"/>
 		<au:assertFileDoesntExist file="${exec.file}"/>
+		<au:assertLogContains text="Target executed"/>
 	</target>
 
 	<target name="testCoverageOfNonForkedJUnit">
 		<au:expectfailure expectedMessage="Coverage can only be applied on a forked VM">
 			<jacoco:coverage>
-				<junit fork="false" />
+				<junit fork="false" haltonfailure="true" showoutput="true">
+					<classpath path="${java.class.path}"/>
+					<test name="org.jacoco.ant.TestTarget" />
+				</junit>
 			</jacoco:coverage>
 		</au:expectfailure>
+		
+		<au:assertLogDoesntContain text="Target executed"/>
 	</target>
 	
 </project>
