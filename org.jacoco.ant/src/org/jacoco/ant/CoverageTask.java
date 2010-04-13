@@ -66,17 +66,29 @@ public class CoverageTask extends AbstractCoverageTask implements TaskContainer 
 
 		final String subTaskTypeName = unknownElement.getTaskType();
 
+		final TaskEnhancer enhancer = findEnhancerForTask(subTaskTypeName);
+		if (enhancer == null) {
+			throw new BuildException(format(
+					"%s is not a valid child of the coverage task.",
+					subTaskTypeName));
+		}
+
+		if (isEnabled()) {
+			log(format("Enhancing %s with coverage.", childTask.getTaskName()));
+			enhancer.enhanceTask(task);
+		}
+
+		task.maybeConfigure();
+	}
+
+	private TaskEnhancer findEnhancerForTask(final String taskName) {
 		for (final TaskEnhancer enhancer : taskEnhancers) {
-			if (enhancer.supportsTask(subTaskTypeName)) {
-				enhancer.enhanceTask(task);
-				return;
+			if (enhancer.supportsTask(taskName)) {
+				return enhancer;
 			}
 		}
 
-		throw new BuildException(format(
-				"%s is not a valid child of the coverage task.",
-				subTaskTypeName));
-
+		return null;
 	}
 
 	/**
@@ -88,10 +100,8 @@ public class CoverageTask extends AbstractCoverageTask implements TaskContainer 
 			throw new BuildException(
 					"A child task must be supplied for the coverage task");
 		}
-		if (isEnabled()) {
-			log(format("Enhancing %s with coverage.", childTask.getTaskName()));
-			childTask.execute();
-		}
+
+		childTask.execute();
 	}
 
 	/**
@@ -123,7 +133,6 @@ public class CoverageTask extends AbstractCoverageTask implements TaskContainer 
 			}
 
 			addJvmArgs((UnknownElement) task);
-			task.maybeConfigure();
 		}
 
 		public void addJvmArgs(final UnknownElement task) {
