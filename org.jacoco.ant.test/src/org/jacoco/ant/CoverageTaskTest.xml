@@ -75,10 +75,7 @@
 		
 		<au:assertLogDoesntContain text="Enhancing java with coverage"/>
 		<au:assertFileDoesntExist file="${exec.file}"/>
-		<!--
-		TODO: Target should be executed
 		<au:assertLogContains text="Target executed"/>
-		-->
 	</target>
 
 	<target name="testCoverageOfNonForkedJava">
