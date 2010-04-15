@@ -12,8 +12,6 @@
  *******************************************************************************/
 package org.jacoco.core.runtime;
 
-import java.util.ListIterator;
-
 import org.jacoco.core.data.ExecutionDataStore;
 import org.jacoco.core.instr.InstrSupport;
 import org.objectweb.asm.MethodVisitor;
@@ -107,7 +105,7 @@ class ExecutionDataAccess {
 		// Probe Count:
 		mv.visitInsn(Opcodes.DUP);
 		mv.visitInsn(Opcodes.ICONST_2);
-		mv.visitLdcInsn(Integer.valueOf(probecount));
+		InstrSupport.push(mv, probecount);
 		mv.visitMethodInsn(Opcodes.INVOKESTATIC, "java/lang/Integer",
 				"valueOf", "(I)Ljava/lang/Integer;");
 		mv.visitInsn(Opcodes.AASTORE);
@@ -115,10 +113,10 @@ class ExecutionDataAccess {
 
 	/**
 	 * Generates the code that calls the runtime data access through the JRE API
-	 * method {@link ListIterator#add(Object)}. The code pops a
-	 * {@link ListIterator} instance from the stack and pushes the probe array
-	 * of type <code>boolean[]</code> on the operand stack. The generated code
-	 * requires a stack size of 6.
+	 * method {@link Object#equals(Object)}. The code pops a {@link Object}
+	 * instance from the stack and pushes the probe array of type
+	 * <code>boolean[]</code> on the operand stack. The generated code requires
+	 * a stack size of 6.
 	 * 
 	 * @param classid
 	 * @param classname
@@ -127,17 +125,17 @@ class ExecutionDataAccess {
 	 */
 	public static void generateAccessCall(final long classid,
 			final String classname, final int probecount, final MethodVisitor mv) {
-		// stack[0]: Ljava/util/ListIterator;
+		// stack[0]: Ljava/lang/Object;
 
 		generateArgumentArray(classid, classname, probecount, mv);
 
 		// stack[1]: [Ljava/lang/Object;
-		// stack[0]: Ljava/util/ListIterator;
+		// stack[0]: Ljava/lang/Object;
 
 		mv.visitInsn(Opcodes.DUP_X1);
 
 		// stack[2]: [Ljava/lang/Object;
-		// stack[1]: Ljava/util/ListIterator;
+		// stack[1]: Ljava/lang/Object;
 		// stack[0]: [Ljava/lang/Object;
 
 		mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "java/lang/Object", "equals",
@@ -157,10 +155,14 @@ class ExecutionDataAccess {
 	/**
 	 * In violation of the regular semantic of {@link Object#equals(Object)}
 	 * this implementation is used as the interface to the execution data store.
+	 * 
+	 * @param args
+	 *            the arguments as an {@link Object} array
+	 * @return has no meaning
 	 */
 	@Override
-	public boolean equals(final Object o) {
-		getExecutionData((Object[]) o);
+	public boolean equals(final Object args) {
+		getExecutionData((Object[]) args);
 		return false;
 	}
 

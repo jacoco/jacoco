@@ -100,8 +100,8 @@ public class ExecutionDataStore implements IExecutionDataVisitor {
 	}
 
 	/**
-	 * Returns the coverage date for the class with the given identifier. If
-	 * there is not data available under the given id a new entry is created.
+	 * Returns the coverage data for the class with the given identifier. If
+	 * there is no data available under the given id a new entry is created.
 	 * 
 	 * @param classid
 	 *            class identifier

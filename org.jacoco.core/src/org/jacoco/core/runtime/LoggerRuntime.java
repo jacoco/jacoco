@@ -23,8 +23,7 @@ import org.objectweb.asm.Opcodes;
 
 /**
  * This {@link IRuntime} implementation uses the Java logging API to report
- * coverage data. The advantage is, that the instrumented classes do not get
- * dependencies to other classes than the JRE library itself.
+ * coverage data.
  * <p>
  * 
  * The implementation uses a dedicated log channel. Instrumented classes call
@@ -147,10 +146,6 @@ public class LoggerRuntime extends AbstractRuntime {
 		// 3. Load data structure from parameter array:
 
 		mv.visitInsn(Opcodes.ICONST_0);
-
-		// Stack[1]: I
-		// Stack[0]: [Ljava/lang/Object;
-
 		mv.visitInsn(Opcodes.AALOAD);
 		mv.visitTypeInsn(Opcodes.CHECKCAST, InstrSupport.DATAFIELD_DESC);
 
@@ -186,8 +181,7 @@ public class LoggerRuntime extends AbstractRuntime {
 			// shutdown. As soon as our handler has been removed, all classes
 			// that might get instrumented during shutdown (e.g. loaded by other
 			// shutdown hooks) will fail to initialize. Therefore we add ourself
-			// again here.
-			// This is a nasty hack that might fail in some Java
+			// again here. This is a nasty hack that might fail in some Java
 			// implementations.
 			logger.addHandler(handler);
 		}
