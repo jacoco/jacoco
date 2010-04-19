@@ -70,7 +70,7 @@
 		<property name="result.temp.bundle.about.file" location="${result.tmp.bundle.dir}/about.html"/>
 		<copy file="${source.bundle.about.file}" tofile="${result.temp.bundle.about.file}">
 			<filterset>
-				<filter token="DATE" value="${build.date}"/>
+				<filter token="build.date" value="${build.date}"/>
 			</filterset>
 		</copy>
 	</target>
