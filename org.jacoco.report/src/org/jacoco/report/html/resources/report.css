@@ -17,12 +17,14 @@ h1 {
 .el_session {
   padding-left:18px;
   background-image:url(session.gif);
+  background-position:left center;
   background-repeat:no-repeat;
 }
 
 .el_group {
   padding-left:18px;
   background-image:url(group.gif);
+  background-position:left center;
   background-repeat:no-repeat;
 }
 

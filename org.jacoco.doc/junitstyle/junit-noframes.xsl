@@ -104,7 +104,7 @@
                             <xsl:when test="$errorCount &gt; 0">Error</xsl:when>
                         </xsl:choose>
                     </xsl:attribute>
-                    <td><a href="#{@package}"><xsl:value-of select="@package"/></a></td>
+                    <td><a href="#{@package}" class="el_testsuite"><xsl:value-of select="@package"/></a></td>
                     <td><xsl:value-of select="$testCount"/></td>
                     <td><xsl:value-of select="$errorCount"/></td>
                     <td><xsl:value-of select="$failureCount"/></td>
@@ -222,7 +222,7 @@
 <xsl:template name="pageHeader">
 	<div class="breadcrumb">
 		<a href="../index.html" class="el_session">JaCoCo</a> &gt;
-		<span class="el_group">JUnit Test Results</span>
+		<span class="el_testsuite">JUnit Test Results</span>
 	</div>
     <h1>JUnit Test Results</h1>
     <table width="100%">
@@ -285,7 +285,7 @@
         </xsl:attribute>
 
         <!-- print testsuite information -->
-        <td><a href="#{@name}"><xsl:value-of select="@name"/></a></td>
+        <td><a href="#{@name}" class="el_testsuite"><xsl:value-of select="@name"/></a></td>
         <td><xsl:value-of select="@tests"/></td>
         <td><xsl:value-of select="@errors"/></td>
         <td><xsl:value-of select="@failures"/></td>
@@ -305,7 +305,7 @@
                 <xsl:when test="failure | error">Error</xsl:when>
             </xsl:choose>
         </xsl:attribute>
-        <td><xsl:value-of select="@name"/></td>
+        <td><span class="el_test"><xsl:value-of select="@name"/></span></td>
         <xsl:choose>
             <xsl:when test="failure">
                 <td>Failure</td>

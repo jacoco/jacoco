@@ -34,18 +34,41 @@ h1 {
 .el_session {
   padding-left:18px;
   background-image:url(session.gif);
+  background-position:left center;
   background-repeat:no-repeat;
 }
 
 .el_group {
   padding-left:18px;
   background-image:url(group.gif);
+  background-position:left center;
   background-repeat:no-repeat;
 }
 
 .el_source {
   padding-left:18px;
   background-image:url(source.gif);
+  background-position:left center;
+  background-repeat:no-repeat;
+}
+
+.el_jar {
+  padding-left:18px;
+  background-image:url(jar.gif);
+  background-position:left center;
+  background-repeat:no-repeat;
+}
+
+.el_test {
+  padding-left:18px;
+  background-image:url(test.gif);
+  background-position:left center;
+  background-repeat:no-repeat;
+}
+
+.el_testsuite {
+  padding-left:18px;
+  background-image:url(testsuite.gif);
   background-position:left center;
   background-repeat:no-repeat;
 }
@@ -95,6 +118,10 @@ table.coverage td {
 
 table.coverage tbody td {
   border-bottom:#d6d3ce 1px solid;
+}
+
+table.coverage tbody tr:hover { 
+  background: #f0f0d0 !important;
 }
 
 table.coverage td.ctr1 {
