@@ -92,11 +92,7 @@ public class ExecutionDataReader {
 	private void readExecutionData() throws IOException {
 		final long classid = in.readLong();
 		final String name = in.readUTF();
-		final boolean[] data = new boolean[in.readVarInt()];
-		for (int i = 0; i < data.length; i++) {
-			data[i] = in.readPackedBoolean();
-		}
-		in.finishPackedBoolean();
+		final boolean[] data = in.readBooleanArray();
 		if (executionDataVisitor != null) {
 			executionDataVisitor.visitClassExecution(classid, name, data);
 		}

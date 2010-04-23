@@ -110,16 +110,13 @@ public class CompactDataInputOutputTest {
 	}
 
 	private void testPackedBoolean(boolean... values) throws IOException {
-		for (boolean v : values) {
-			out.writePackedBoolean(v);
-		}
-		out.finishPackedBoolean();
+		out.writeBooleanArray(values);
 		out.close();
-		for (boolean v : values) {
-			assertEquals(Boolean.valueOf(v), Boolean.valueOf(in
-					.readPackedBoolean()));
+		final boolean[] actual = in.readBooleanArray();
+		for (int i = 0; i < values.length; i++) {
+			assertEquals("Index " + i, Boolean.valueOf(values[i]), Boolean
+					.valueOf(actual[i]));
 		}
-		in.finishPackedBoolean();
 	}
 
 }
