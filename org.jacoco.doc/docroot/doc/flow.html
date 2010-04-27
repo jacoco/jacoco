@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1" />
+  <link rel="stylesheet" href=".resources/doc.css" charset="ISO-8859-1" type="text/css" />
+  <title>JaCoCo - Control Flow Analysis</title>
+</head>
+<body>
+
+<div class="breadcrumb">
+  <a href="../index.html" class="el_session">JaCoCo</a> &gt;
+  <a href="index.html" class="el_group">Documentation</a> &gt;
+  <span class="el_source">Control Flow Analysis</span>
+</div>
+<div id="content"> 
+
+<h1>Control Flow Analysis for Java Methods</h1>
+
+<p style="font-weight:bold;">
+  DRAFT - This document does not reflect the current JaCoCo implementation. 
+</p>
+
+<p class="hint">
+  Implementing a coverage tool for branch coverage requires detailed analysis
+  of the internal control flow of Java methods. Due to the architecture of
+  JaCoCo this analysis needs to happen on compiled class files (byte code).
+  This document defines graph structures for control flow analysis of Java byte
+  code and discusses strategies for probe insertion. Marc R. Hoffmann, April 2010
+</p>
+
+<h2>Motivation and Requirements</h2>
+
+<ul>
+  <li>Path Coverage</li>
+  <li>Exception Detection</li>
+</ul>
+
+<h2>The Control Flow Graph</h2>
+
+<ul>
+  <li>Virtual Entry and Exit Nodes</li>
+  <li>Subsequent Instructions</li>
+  <li>(Conditional) Jump</li>
+  <li>Table/Lookup Switch</li>
+  <li>Exception Handlers</li>
+  <li>Unhandled Exceptions</li>
+</ul>
+
+<h2>Probe Insertion</h2>
+
+<p>
+  Code coverage analysis is a runtime metric that provides execution details
+  of the software under test. This requires detailed recording about the
+  instructions (instruction coverage) that have been executed. For path coverage
+  also the outcome of decisions has to be recorded. In any case execution data
+  is collected by so called probes:
+</p>
+
+<p class="hint">
+  A <b>probe</b> is a sequence of byte code instructions that can be inserted
+  into a Java method. When the probe is executed, this fact is recorded and can
+  be reported by the coverage runtime.
+</p>
+
+<p>
+  The only purpose of the probe is to record that it has been executed at least
+  once. The probe does not record the number of times it has been called or
+  collect any timing information. The latter is out of scope for code coverage
+  analysis and more in the objective of a performance analysis tool. Typically
+  multiple probes needs to be inserted into each method, therefore probes needs
+  to be identified. Also the probe implementation and the storage mechanism it
+  depends on needs to be thread safe as multi-threaded execution is a common
+  scenario for java applications (albeit not for plain unit tests). Probes must
+  not have any side effects on the original code of the method. Also they should
+  add minimal overhead.
+</p>
+
+<p>
+  So to summarize the requirements for execution probes:
+</p>
+
+<ul>
+  <li>Record execution</li>
+  <li>Identification for different probes</li>
+  <li>Thread safe</li>
+  <li>No side effects on application code</li>
+  <li>Minimal runtime overhead</li>
+</ul>
+
+<p>
+  JaCoCo implements probes with a <code>boolean[]</code> array instance per
+  class. Each probe corresponds to a entry in this array. Whenever the probe is
+  executed the entry is set to <code>true</code> with the following four byte
+  code instructions:
+</p>
+
+<pre class="source">
+ALOAD    probearray
+xPUSH    probeid
+ICONST_1
+BASTORE
+</pre>
+
+<p>
+  Note that this probe code is thread safe, does not modify the operand stack
+  or modify local variables and is also thread safe. It does also not leave the
+  method though an external call. The only prerequisite is that the probe array
+  is available as a local variable. For this at the beginning of each method
+  additional instrumentation code needs to be added to obtain the array instance
+  associated with the belonging class (to avoid code duplication the
+  initialization is delegated to a method <code>$jacocoinit()</code> which is
+  added to every non-interface class).   
+</p>
+
+<ul>
+  <li>Byte code size per Probe</li>
+  <li>Limitation: Only proves that the probe itself has been executed,
+      assumptions about the surrounding application code is interpolation</li>
+  <li>Probe in every edge of the control flow graph</li>
+  <li>Every exit path known (branch coverage)</li>
+  <li>Block entry known (exceptions within blocks)</li>
+</ul>
+
+<h2>Different Types of Edges</h2>
+
+<ul>
+  <li>Probe insertion strategies</li>
+</ul>
+
+<h2>Runtime Overhead</h2>
+
+<ul>
+  <li>Comparison to current basic block probes</li>
+</ul>
+
+</div>
+<div class="footer">
+  <div class="versioninfo"><a href="@jacoco.home.url@">JaCoCo</a> @qualified.bundle.version@</div>
+  <a href="license.html">Copyright</a> &copy; @copyright.years@ Mountainminds GmbH &amp; Co. KG and Contributors
+</div>
+
+</body>
+</html>
