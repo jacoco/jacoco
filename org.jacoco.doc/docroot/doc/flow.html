@@ -24,9 +24,10 @@
 <p class="hint">
   Implementing a coverage tool for branch coverage requires detailed analysis
   of the internal control flow of Java methods. Due to the architecture of
-  JaCoCo this analysis needs to happen on compiled class files (byte code).
-  This document defines graph structures for control flow analysis of Java byte
-  code and discusses strategies for probe insertion. Marc R. Hoffmann, April 2010
+  JaCoCo this analysis needs to happen on compiled class files (bytecode).
+  This document defines graph structures for control flow analysis of Java
+  bytecode and discusses strategies for probe insertion.
+  Marc R. Hoffmann, April 2010
 </p>
 
 <h2>Motivation and Requirements</h2>
@@ -58,7 +59,7 @@
 </p>
 
 <p class="hint">
-  A <b>probe</b> is a sequence of byte code instructions that can be inserted
+  A <b>probe</b> is a sequence of bytecode instructions that can be inserted
   into a Java method. When the probe is executed, this fact is recorded and can
   be reported by the coverage runtime.
 </p>
@@ -91,8 +92,8 @@
 <p>
   JaCoCo implements probes with a <code>boolean[]</code> array instance per
   class. Each probe corresponds to a entry in this array. Whenever the probe is
-  executed the entry is set to <code>true</code> with the following four byte
-  code instructions:
+  executed the entry is set to <code>true</code> with the following four
+  bytecode instructions:
 </p>
 
 <pre class="source">
@@ -110,11 +111,71 @@ BASTORE
   additional instrumentation code needs to be added to obtain the array instance
   associated with the belonging class (to avoid code duplication the
   initialization is delegated to a method <code>$jacocoinit()</code> which is
-  added to every non-interface class).   
+  added to every non-interface class).
+</p>
+
+<p>
+  The size of the probe code above depends on the position of the probe array
+  variable and the value of the probe identifier as different opcodes can be
+  used. As calculated in the table below the overhead per probe ranges between 4
+  and 7 bytes of additional bytecode: 
+</p>
+
+<table class="coverage">
+  <thead>
+    <tr>
+      <td>Possible Opcodes</td>
+      <td>Min. Size [bytes]</td>
+      <td>Max. Size [bytes]</td>
+      <td>Comment</td>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>ALOAD_x</code>, <code>ALOAD</code></td>
+      <td>1</td>
+      <td>2</td>
+      <td>(1)</td>
+    </tr>
+    <tr>
+      <td><code>ICONST_x</code>, <code>BIPUSH</code>, <code>SIPUSH</code>, <code>LDC</code>, <code>LDC_W</code></td>
+      <td>1</td>
+      <td>3</td>
+      <td>(2)</td>
+    </tr>
+    <tr>
+      <td><code>ICONST_1</code></td>
+      <td>1</td>
+      <td>1</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><code>BASTORE</code></td>
+      <td>1</td>
+      <td>1</td>
+      <td></td>
+    </tr>
+  </tbody>
+  <tfoot>
+    <tr>
+      <td>Total:</td>
+      <td>4</td>
+      <td>7</td>
+      <td></td>
+    </tr>
+  </tfoot>
+</table>
+
+<p>
+  (1) The probe array is the first variable after the arguments. If the method
+  arguments do not consume more that 3 slots the 1-byte opcode can be used.<br/>
+  (2) 1-byte opcodes for ids 0 to 5, 2-byte opcode for ids up to 127, 3-byte opcode
+  for ids up to 32767. Ids values of 32768 or more require an additional
+  constant pool entry. For normal class files it is very unlikely to require
+  more than 32,000 probes.
 </p>
 
 <ul>
-  <li>Byte code size per Probe</li>
   <li>Limitation: Only proves that the probe itself has been executed,
       assumptions about the surrounding application code is interpolation</li>
   <li>Probe in every edge of the control flow graph</li>
