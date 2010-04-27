@@ -109,9 +109,9 @@ BASTORE
   method though an external call. The only prerequisite is that the probe array
   is available as a local variable. For this at the beginning of each method
   additional instrumentation code needs to be added to obtain the array instance
-  associated with the belonging class (to avoid code duplication the
-  initialization is delegated to a method <code>$jacocoinit()</code> which is
-  added to every non-interface class).
+  associated with the belonging class. To avoid code duplication the
+  initialization is delegated to a static private method
+  <code>$jacocoinit()</code> which is added to every non-interface class.
 </p>
 
 <p>
@@ -127,52 +127,47 @@ BASTORE
       <td>Possible Opcodes</td>
       <td>Min. Size [bytes]</td>
       <td>Max. Size [bytes]</td>
-      <td>Comment</td>
     </tr>
   </thead>
-  <tbody>
-    <tr>
-      <td><code>ALOAD_x</code>, <code>ALOAD</code></td>
-      <td>1</td>
-      <td>2</td>
-      <td>(1)</td>
-    </tr>
-    <tr>
-      <td><code>ICONST_x</code>, <code>BIPUSH</code>, <code>SIPUSH</code>, <code>LDC</code>, <code>LDC_W</code></td>
-      <td>1</td>
-      <td>3</td>
-      <td>(2)</td>
-    </tr>
-    <tr>
-      <td><code>ICONST_1</code></td>
-      <td>1</td>
-      <td>1</td>
-      <td></td>
-    </tr>
-    <tr>
-      <td><code>BASTORE</code></td>
-      <td>1</td>
-      <td>1</td>
-      <td></td>
-    </tr>
-  </tbody>
   <tfoot>
     <tr>
       <td>Total:</td>
       <td>4</td>
       <td>7</td>
-      <td></td>
     </tr>
   </tfoot>
+  <tbody>
+    <tr>
+      <td><code>ALOAD_x</code>, <code>ALOAD</code> <sup>1</sup></td>
+      <td>1</td>
+      <td>2</td>
+    </tr>
+    <tr>
+      <td><code>ICONST_x</code>, <code>BIPUSH</code>, <code>SIPUSH</code>, <code>LDC</code>, <code>LDC_W</code> <sup>2</sup></td>
+      <td>1</td>
+      <td>3</td>
+    </tr>
+    <tr>
+      <td><code>ICONST_1</code></td>
+      <td>1</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <td><code>BASTORE</code></td>
+      <td>1</td>
+      <td>1</td>
+    </tr>
+  </tbody>
 </table>
 
 <p>
-  (1) The probe array is the first variable after the arguments. If the method
-  arguments do not consume more that 3 slots the 1-byte opcode can be used.<br/>
-  (2) 1-byte opcodes for ids 0 to 5, 2-byte opcode for ids up to 127, 3-byte opcode
-  for ids up to 32767. Ids values of 32768 or more require an additional
-  constant pool entry. For normal class files it is very unlikely to require
-  more than 32,000 probes.
+  <sup>1</sup> The probe array is the first variable after the arguments.
+  If the method arguments do not consume more that 3 slots the 1-byte opcode can
+  be used.<br/>
+  <sup>2</sup> 1-byte opcodes for ids 0 to 5, 2-byte opcode for ids up to 127,
+  3-byte opcode for ids up to 32767. Ids values of 32768 or more require an
+  additional constant pool entry. For normal class files it is very unlikely to
+  require more than 32,000 probes.
 </p>
 
 <ul>
