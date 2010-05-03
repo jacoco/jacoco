@@ -49,9 +49,11 @@ public class ExecutionDataWriter implements ISessionInfoVisitor,
 	 * 
 	 * @param output
 	 *            binary stream to write execution data to
+	 * @throws IOException
 	 */
-	public ExecutionDataWriter(final OutputStream output) {
+	public ExecutionDataWriter(final OutputStream output) throws IOException {
 		this.out = new CompactDataOutput(output);
+		writeHeader();
 	}
 
 	/**
@@ -59,7 +61,7 @@ public class ExecutionDataWriter implements ISessionInfoVisitor,
 	 * 
 	 * @throws IOException
 	 */
-	public void writeHeader() throws IOException {
+	private void writeHeader() throws IOException {
 		out.writeByte(BLOCK_HEADER);
 		out.writeChar(MAGIC_NUMBER);
 		out.writeChar(FORMAT_VERSION);

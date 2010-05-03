@@ -17,10 +17,10 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.io.PipedInputStream;
-import java.io.PipedOutputStream;
 import java.util.Random;
 
 import org.junit.Before;
@@ -36,11 +36,9 @@ import org.junit.Test;
  */
 public class ExecutionDataReaderWriterTest {
 
-	private PipedOutputStream pipe;
+	private ByteArrayOutputStream buffer;
 
 	private ExecutionDataWriter writer;
-
-	private ExecutionDataReader reader;
 
 	private ExecutionDataStore store;
 
@@ -50,22 +48,20 @@ public class ExecutionDataReaderWriterTest {
 
 	@Before
 	public void setup() throws IOException {
-		pipe = new PipedOutputStream();
-		writer = new ExecutionDataWriter(pipe);
-		reader = new ExecutionDataReader(new PipedInputStream(pipe));
+		buffer = new ByteArrayOutputStream();
+		writer = new ExecutionDataWriter(buffer);
 		store = new ExecutionDataStore();
-		reader.setExecutionDataVisitor(store);
-		reader.setSessionInfoVisitor(new ISessionInfoVisitor() {
-			public void visitSessionInfo(SessionInfo info) {
-				sessionInfo = info;
-			}
-		});
 		random = new Random(5);
 	}
 
 	@Test
 	public void testEmpty() throws IOException {
-		pipe.close();
+		final ExecutionDataReader reader = createReader();
+		reader.setSessionInfoVisitor(new ISessionInfoVisitor() {
+			public void visitSessionInfo(SessionInfo info) {
+				fail("No data expected.");
+			}
+		});
 		reader.setExecutionDataVisitor(new IExecutionDataVisitor() {
 			public void visitClassExecution(long id, String name,
 					boolean[] blockdata) {
@@ -87,58 +83,53 @@ public class ExecutionDataReaderWriterTest {
 	}
 
 	@Test
-	public void testValidHeader() throws IOException {
-		writer.writeHeader();
-		pipe.close();
-		reader.read();
+	public void testMultipleHeaders() throws IOException {
+		new ExecutionDataWriter(buffer);
+		new ExecutionDataWriter(buffer);
+		new ExecutionDataWriter(buffer);
+		createReader().read();
 	}
 
 	@Test(expected = IOException.class)
 	public void testInvalidMagicNumber() throws IOException {
-		pipe.write(ExecutionDataWriter.BLOCK_HEADER);
-		pipe.write(0x12);
-		pipe.write(0x34);
-		pipe.close();
-		reader.read();
+		buffer = new ByteArrayOutputStream();
+		buffer.write(ExecutionDataWriter.BLOCK_HEADER);
+		buffer.write(0x12);
+		buffer.write(0x34);
+		createReader();
 	}
 
 	@Test(expected = IOException.class)
 	public void testInvalidHeaderVersion() throws IOException {
-		pipe.write(ExecutionDataWriter.BLOCK_HEADER);
-		pipe.write(0xC0);
-		pipe.write(0xC0);
+		buffer = new ByteArrayOutputStream();
+		buffer.write(ExecutionDataWriter.BLOCK_HEADER);
+		buffer.write(0xC0);
+		buffer.write(0xC0);
 		final char version = ExecutionDataWriter.FORMAT_VERSION - 1;
-		pipe.write(version >> 8);
-		pipe.write(version & 0xFF);
-		pipe.close();
-		reader.read();
+		buffer.write(version >> 8);
+		buffer.write(version & 0xFF);
+		createReader();
 	}
 
 	@Test(expected = IOException.class)
 	public void testUnknownBlock() throws IOException {
-		pipe.write(0xff);
-		pipe.close();
-		reader.read();
+		buffer.write(0xff);
+		createReader().read();
 	}
 
 	// === Session Info ===
 
 	@Test(expected = IOException.class)
 	public void testNoSessionInfoVisitor() throws IOException {
-		pipe = new PipedOutputStream();
-		writer = new ExecutionDataWriter(pipe);
-		reader = new ExecutionDataReader(new PipedInputStream(pipe));
 		writer.visitSessionInfo(new SessionInfo("x", 0, 1));
-		pipe.close();
-		reader.read();
+		createReader().read();
 	}
 
 	@Test
 	public void testSessionInfo() throws IOException {
 		writer.visitSessionInfo(new SessionInfo("TestSession",
 				2837123124567891234L, 3444234223498879234L));
-		pipe.close();
-		reader.read();
+		createReaderWithVisitors().read();
 		assertNotNull(sessionInfo);
 		assertEquals("TestSession", sessionInfo.getId());
 		assertEquals(2837123124567891234L, sessionInfo.getStartTimeStamp());
@@ -165,20 +156,15 @@ public class ExecutionDataReaderWriterTest {
 
 	@Test(expected = IOException.class)
 	public void testNoExecutionDataVisitor() throws IOException {
-		pipe = new PipedOutputStream();
-		writer = new ExecutionDataWriter(pipe);
-		reader = new ExecutionDataReader(new PipedInputStream(pipe));
 		writer.visitClassExecution(Long.MIN_VALUE, "Sample", createData(0));
-		pipe.close();
-		reader.read();
+		createReader().read();
 	}
 
 	@Test
 	public void testMinClassId() throws IOException {
 		final boolean[] data = createData(0);
 		writer.visitClassExecution(Long.MIN_VALUE, "Sample", data);
-		pipe.close();
-		reader.read();
+		createReaderWithVisitors().read();
 		assertArrayEquals(data, store.getData(Long.MIN_VALUE));
 	}
 
@@ -186,8 +172,7 @@ public class ExecutionDataReaderWriterTest {
 	public void testMaxClassId() throws IOException {
 		final boolean[] data = createData(0);
 		writer.visitClassExecution(Long.MAX_VALUE, "Sample", data);
-		pipe.close();
-		reader.read();
+		createReaderWithVisitors().read();
 		assertArrayEquals(data, store.getData(Long.MAX_VALUE));
 	}
 
@@ -195,8 +180,7 @@ public class ExecutionDataReaderWriterTest {
 	public void testEmptyClass() throws IOException {
 		final boolean[] data = createData(0);
 		writer.visitClassExecution(3, "Sample", data);
-		pipe.close();
-		reader.read();
+		createReaderWithVisitors().read();
 		assertArrayEquals(data, store.getData(3));
 	}
 
@@ -204,8 +188,7 @@ public class ExecutionDataReaderWriterTest {
 	public void testOneClass() throws IOException {
 		final boolean[] data = createData(5);
 		writer.visitClassExecution(3, "Sample", data);
-		pipe.close();
-		reader.read();
+		createReaderWithVisitors().read();
 		assertArrayEquals(data, store.getData(3));
 	}
 
@@ -215,8 +198,7 @@ public class ExecutionDataReaderWriterTest {
 		final boolean[] data2 = createData(7);
 		writer.visitClassExecution(333, "Sample", data1);
 		writer.visitClassExecution(-45, "Sample", data2);
-		pipe.close();
-		reader.read();
+		createReaderWithVisitors().read();
 		assertArrayEquals(data1, store.getData(333));
 		assertArrayEquals(data2, store.getData(-45));
 	}
@@ -225,8 +207,7 @@ public class ExecutionDataReaderWriterTest {
 	public void testBigClass() throws IOException {
 		final boolean[] data = createData(117);
 		writer.visitClassExecution(123, "Sample", data);
-		pipe.close();
-		reader.read();
+		createReaderWithVisitors().read();
 		assertArrayEquals(data, store.getData(123));
 	}
 
@@ -244,6 +225,22 @@ public class ExecutionDataReaderWriterTest {
 				});
 		broken[0] = true;
 		writer.visitClassExecution(3, "Sample", createData(1));
+	}
+
+	private ExecutionDataReader createReader() throws IOException {
+		return new ExecutionDataReader(new ByteArrayInputStream(buffer
+				.toByteArray()));
+	}
+
+	private ExecutionDataReader createReaderWithVisitors() throws IOException {
+		final ExecutionDataReader reader = createReader();
+		reader.setExecutionDataVisitor(store);
+		reader.setSessionInfoVisitor(new ISessionInfoVisitor() {
+			public void visitSessionInfo(SessionInfo info) {
+				sessionInfo = info;
+			}
+		});
+		return reader;
 	}
 
 	private boolean[] createData(final int probeCount) {

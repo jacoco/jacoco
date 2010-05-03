@@ -39,9 +39,13 @@ public class ExecutionDataReader {
 	 * 
 	 * @param input
 	 *            input stream to read execution data from
+	 * @throws IOException
+	 *             thrown if the stream does not represent execution data
 	 */
-	public ExecutionDataReader(final InputStream input) {
+	public ExecutionDataReader(final InputStream input) throws IOException {
 		this.in = new CompactDataInput(input);
+		in.readByte();
+		readHeader();
 	}
 
 	/**
@@ -98,8 +102,8 @@ public class ExecutionDataReader {
 		}
 		final char version = in.readChar();
 		if (version != ExecutionDataWriter.FORMAT_VERSION) {
-			throw new IOException(format("Incompatible format version %x.",
-					Integer.valueOf(version)));
+			throw new IOException(format("Incompatible version %x.", Integer
+					.valueOf(version)));
 		}
 	}
 
