@@ -57,7 +57,7 @@ public class ExecutionDataStoreTest implements IExecutionDataVisitor {
 
 	@Test
 	public void testPut() {
-		boolean[] data = new boolean[] { false, false, true };
+		final boolean[] data = new boolean[] { false, false, true };
 		store.put(1000, "Sample", data);
 		assertSame(data, store.getData(1000));
 		assertEquals("Sample", store.getName(1000));
@@ -70,14 +70,14 @@ public class ExecutionDataStoreTest implements IExecutionDataVisitor {
 
 	@Test
 	public void testGetWithoutCreate() {
-		boolean[] data = new boolean[] { false, false, true };
+		final boolean[] data = new boolean[] { false, false, true };
 		store.put(1000, "Sample", data);
 		assertSame(data, store.getData(Long.valueOf(1000), "Sample", 3));
 	}
 
 	@Test
 	public void testGetWithCreate() {
-		boolean[] data = store.getData(Long.valueOf(1000), "Sample", 3);
+		final boolean[] data = store.getData(Long.valueOf(1000), "Sample", 3);
 		assertEquals(3, data.length, 0.0);
 		assertFalse(data[0]);
 		assertFalse(data[1]);
@@ -87,30 +87,30 @@ public class ExecutionDataStoreTest implements IExecutionDataVisitor {
 
 	@Test(expected = IllegalStateException.class)
 	public void testGetNegative1() {
-		boolean[] data = new boolean[] { false, false, true };
+		final boolean[] data = new boolean[] { false, false, true };
 		store.put(1000, "Sample", data);
 		assertSame(data, store.getData(Long.valueOf(1000), "Other", 3));
 	}
 
 	@Test(expected = IllegalStateException.class)
 	public void testGetNegative2() {
-		boolean[] data = new boolean[] { false, false, true };
+		final boolean[] data = new boolean[] { false, false, true };
 		store.put(1000, "Sample", data);
 		assertSame(data, store.getData(Long.valueOf(1000), "Sample", 4));
 	}
 
 	@Test(expected = IllegalStateException.class)
 	public void testPutNegative() {
-		boolean[] data = new boolean[0];
+		final boolean[] data = new boolean[0];
 		store.put(1000, "Sample1", data);
 		store.put(1000, "Sample2", data);
 	}
 
 	@Test
 	public void testMerge() {
-		boolean[] data1 = new boolean[] { false, true, false, true };
+		final boolean[] data1 = new boolean[] { false, true, false, true };
 		store.visitClassExecution(1000, "Sample", data1);
-		boolean[] data2 = new boolean[] { false, true, true, false };
+		final boolean[] data2 = new boolean[] { false, true, true, false };
 		store.visitClassExecution(1000, "Sample", data2);
 
 		final boolean[] result = store.getData(1000);
@@ -122,9 +122,9 @@ public class ExecutionDataStoreTest implements IExecutionDataVisitor {
 
 	@Test(expected = IllegalStateException.class)
 	public void testMergeNegative() {
-		boolean[] data1 = new boolean[] { false, false };
+		final boolean[] data1 = new boolean[] { false, false };
 		store.visitClassExecution(1000, "Sample", data1);
-		boolean[] data2 = new boolean[] { false, false, false };
+		final boolean[] data2 = new boolean[] { false, false, false };
 		store.visitClassExecution(1000, "Sample", data2);
 	}
 
@@ -134,7 +134,7 @@ public class ExecutionDataStoreTest implements IExecutionDataVisitor {
 		final boolean[] data1 = new boolean[] { true, true, false };
 		store.put(1000, "Sample", data1);
 		store.reset();
-		boolean[] data2 = store.getData(1000);
+		final boolean[] data2 = store.getData(1000);
 		assertNotNull(data2);
 		assertFalse(data2[0]);
 		assertFalse(data2[1]);
@@ -143,8 +143,9 @@ public class ExecutionDataStoreTest implements IExecutionDataVisitor {
 
 	// === IExecutionDataOutput ===
 
-	public void visitClassExecution(long id, String name, boolean[] blockdata) {
-		Long key = Long.valueOf(id);
+	public void visitClassExecution(final long id, final String name,
+			final boolean[] blockdata) {
+		final Long key = Long.valueOf(id);
 		dataOutput.put(key, blockdata);
 		nameOutput.put(key, name);
 	}

@@ -13,6 +13,7 @@
 package org.jacoco.core.data;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
@@ -43,6 +44,8 @@ public class ExecutionDataReaderWriterTest {
 
 	private ExecutionDataStore store;
 
+	private SessionInfo sessionInfo;
+
 	private Random random;
 
 	@Before
@@ -52,6 +55,11 @@ public class ExecutionDataReaderWriterTest {
 		reader = new ExecutionDataReader(new PipedInputStream(pipe));
 		store = new ExecutionDataStore();
 		reader.setExecutionDataVisitor(store);
+		reader.setSessionInfoVisitor(new ISessionInfoVisitor() {
+			public void visitSessionInfo(SessionInfo info) {
+				sessionInfo = info;
+			}
+		});
 		random = new Random(5);
 	}
 
@@ -113,9 +121,61 @@ public class ExecutionDataReaderWriterTest {
 		reader.read();
 	}
 
+	// === Session Info ===
+
+	@Test(expected = IOException.class)
+	public void testNoSessionInfoVisitor() throws IOException {
+		pipe = new PipedOutputStream();
+		writer = new ExecutionDataWriter(pipe);
+		reader = new ExecutionDataReader(new PipedInputStream(pipe));
+		writer.visitSessionInfo(new SessionInfo("x", 0, 1));
+		pipe.close();
+		reader.read();
+	}
+
+	@Test
+	public void testSessionInfo() throws IOException {
+		writer.visitSessionInfo(new SessionInfo("TestSession",
+				2837123124567891234L, 3444234223498879234L));
+		pipe.close();
+		reader.read();
+		assertNotNull(sessionInfo);
+		assertEquals("TestSession", sessionInfo.getId());
+		assertEquals(2837123124567891234L, sessionInfo.getStartTimeStamp());
+		assertEquals(3444234223498879234L, sessionInfo.getDumpTimeStamp());
+	}
+
+	@Test(expected = RuntimeException.class)
+	public void testSessionInfoIOException() throws IOException {
+		final boolean[] broken = new boolean[1];
+		final ExecutionDataWriter writer = new ExecutionDataWriter(
+				new OutputStream() {
+					@Override
+					public void write(int b) throws IOException {
+						if (broken[0]) {
+							throw new IOException();
+						}
+					}
+				});
+		broken[0] = true;
+		writer.visitSessionInfo(new SessionInfo("X", 0, 0));
+	}
+
+	// === Execution Data ===
+
+	@Test(expected = IOException.class)
+	public void testNoExecutionDataVisitor() throws IOException {
+		pipe = new PipedOutputStream();
+		writer = new ExecutionDataWriter(pipe);
+		reader = new ExecutionDataReader(new PipedInputStream(pipe));
+		writer.visitClassExecution(Long.MIN_VALUE, "Sample", createData(0));
+		pipe.close();
+		reader.read();
+	}
+
 	@Test
 	public void testMinClassId() throws IOException {
-		boolean[] data = createData(0);
+		final boolean[] data = createData(0);
 		writer.visitClassExecution(Long.MIN_VALUE, "Sample", data);
 		pipe.close();
 		reader.read();
@@ -124,7 +184,7 @@ public class ExecutionDataReaderWriterTest {
 
 	@Test
 	public void testMaxClassId() throws IOException {
-		boolean[] data = createData(0);
+		final boolean[] data = createData(0);
 		writer.visitClassExecution(Long.MAX_VALUE, "Sample", data);
 		pipe.close();
 		reader.read();
@@ -133,7 +193,7 @@ public class ExecutionDataReaderWriterTest {
 
 	@Test
 	public void testEmptyClass() throws IOException {
-		boolean[] data = createData(0);
+		final boolean[] data = createData(0);
 		writer.visitClassExecution(3, "Sample", data);
 		pipe.close();
 		reader.read();
@@ -142,7 +202,7 @@ public class ExecutionDataReaderWriterTest {
 
 	@Test
 	public void testOneClass() throws IOException {
-		boolean[] data = createData(5);
+		final boolean[] data = createData(5);
 		writer.visitClassExecution(3, "Sample", data);
 		pipe.close();
 		reader.read();
@@ -151,8 +211,8 @@ public class ExecutionDataReaderWriterTest {
 
 	@Test
 	public void testTwoClasses() throws IOException {
-		boolean[] data1 = createData(5);
-		boolean[] data2 = createData(7);
+		final boolean[] data1 = createData(5);
+		final boolean[] data2 = createData(7);
 		writer.visitClassExecution(333, "Sample", data1);
 		writer.visitClassExecution(-45, "Sample", data2);
 		pipe.close();
@@ -163,7 +223,7 @@ public class ExecutionDataReaderWriterTest {
 
 	@Test
 	public void testBigClass() throws IOException {
-		boolean[] data = createData(117);
+		final boolean[] data = createData(117);
 		writer.visitClassExecution(123, "Sample", data);
 		pipe.close();
 		reader.read();
@@ -171,9 +231,9 @@ public class ExecutionDataReaderWriterTest {
 	}
 
 	@Test(expected = RuntimeException.class)
-	public void testIOException() throws IOException {
+	public void testExecutionDataIOException() throws IOException {
 		final boolean[] broken = new boolean[1];
-		ExecutionDataWriter writer = new ExecutionDataWriter(
+		final ExecutionDataWriter writer = new ExecutionDataWriter(
 				new OutputStream() {
 					@Override
 					public void write(int b) throws IOException {
@@ -183,19 +243,19 @@ public class ExecutionDataReaderWriterTest {
 					}
 				});
 		broken[0] = true;
-		boolean[] data = createData(1);
-		writer.visitClassExecution(3, "Sample", data);
+		writer.visitClassExecution(3, "Sample", createData(1));
 	}
 
-	private boolean[] createData(int probeCount) {
-		boolean[] data = new boolean[random.nextInt(probeCount + 1)];
+	private boolean[] createData(final int probeCount) {
+		final boolean[] data = new boolean[random.nextInt(probeCount + 1)];
 		for (int j = 0; j < data.length; j++) {
 			data[j] = random.nextBoolean();
 		}
 		return data;
 	}
 
-	private void assertArrayEquals(boolean[] expected, boolean[] actual) {
+	private void assertArrayEquals(final boolean[] expected,
+			final boolean[] actual) {
 		assertEquals(expected.length, actual.length, 0.0);
 		for (int i = 0; i < expected.length; i++) {
 			assertTrue(expected[i] == expected[i]);

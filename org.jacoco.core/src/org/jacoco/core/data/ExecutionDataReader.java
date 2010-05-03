@@ -28,6 +28,8 @@ public class ExecutionDataReader {
 
 	private final CompactDataInput in;
 
+	private ISessionInfoVisitor sessionInfoVisitor;
+
 	private IExecutionDataVisitor executionDataVisitor;
 
 	/**
@@ -40,6 +42,15 @@ public class ExecutionDataReader {
 	 */
 	public ExecutionDataReader(final InputStream input) {
 		this.in = new CompactDataInput(input);
+	}
+
+	/**
+	 * Sets an listener for session information.
+	 * 
+	 * @param visitor
+	 */
+	public void setSessionInfoVisitor(final ISessionInfoVisitor visitor) {
+		this.sessionInfoVisitor = visitor;
 	}
 
 	/**
@@ -65,6 +76,9 @@ public class ExecutionDataReader {
 				case ExecutionDataWriter.BLOCK_HEADER:
 					readHeader();
 					break;
+				case ExecutionDataWriter.BLOCK_SESSIONINFO:
+					readSessionInfo();
+					break;
 				case ExecutionDataWriter.BLOCK_EXECUTIONDATA:
 					readExecutionData();
 					break;
@@ -89,13 +103,24 @@ public class ExecutionDataReader {
 		}
 	}
 
+	private void readSessionInfo() throws IOException {
+		if (sessionInfoVisitor == null) {
+			throw new IOException("No execution data visitor.");
+		}
+		final String id = in.readUTF();
+		final long start = in.readLong();
+		final long dump = in.readLong();
+		sessionInfoVisitor.visitSessionInfo(new SessionInfo(id, start, dump));
+	}
+
 	private void readExecutionData() throws IOException {
+		if (executionDataVisitor == null) {
+			throw new IOException("No execution data visitor.");
+		}
 		final long classid = in.readLong();
 		final String name = in.readUTF();
 		final boolean[] data = in.readBooleanArray();
-		if (executionDataVisitor != null) {
-			executionDataVisitor.visitClassExecution(classid, name, data);
-		}
+		executionDataVisitor.visitClassExecution(classid, name, data);
 	}
 
 }

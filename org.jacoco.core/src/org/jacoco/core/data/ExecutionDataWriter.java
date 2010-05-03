@@ -22,10 +22,11 @@ import java.io.OutputStream;
  * @author Marc R. Hoffmann
  * @version $Revision: $
  */
-public class ExecutionDataWriter implements IExecutionDataVisitor {
+public class ExecutionDataWriter implements ISessionInfoVisitor,
+		IExecutionDataVisitor {
 
 	/** File format version, will be incremented for each incompatible change. */
-	public static final char FORMAT_VERSION = 0x1004;
+	public static final char FORMAT_VERSION = 0x1005;
 
 	/** Magic number in header for file format identification. */
 	public static final char MAGIC_NUMBER = 0xC0C0;
@@ -33,8 +34,11 @@ public class ExecutionDataWriter implements IExecutionDataVisitor {
 	/** Block identifier for file headers. */
 	public static final byte BLOCK_HEADER = 0x01;
 
+	/** Block identifier for session information. */
+	public static final byte BLOCK_SESSIONINFO = 0x10;
+
 	/** Block identifier for execution data of a single class. */
-	public static final byte BLOCK_EXECUTIONDATA = 0x10;
+	public static final byte BLOCK_EXECUTIONDATA = 0x11;
 
 	private final CompactDataOutput out;
 
@@ -59,6 +63,17 @@ public class ExecutionDataWriter implements IExecutionDataVisitor {
 		out.writeByte(BLOCK_HEADER);
 		out.writeChar(MAGIC_NUMBER);
 		out.writeChar(FORMAT_VERSION);
+	}
+
+	public void visitSessionInfo(final SessionInfo info) {
+		try {
+			out.writeByte(BLOCK_SESSIONINFO);
+			out.writeUTF(info.getId());
+			out.writeLong(info.getStartTimeStamp());
+			out.writeLong(info.getDumpTimeStamp());
+		} catch (final IOException e) {
+			throw new RuntimeException(e);
+		}
 	}
 
 	public void visitClassExecution(final long id, final String name,
@@ -86,7 +101,7 @@ public class ExecutionDataWriter implements IExecutionDataVisitor {
 			new ExecutionDataWriter(buffer).writeHeader();
 		} catch (final IOException e) {
 			// Must not happen with ByteArrayOutputStream
-			throw new RuntimeException(e);
+			throw new AssertionError(e);
 		}
 		return buffer.toByteArray();
 	}
