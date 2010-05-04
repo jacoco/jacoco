@@ -30,6 +30,7 @@ import org.apache.tools.ant.util.FileUtils;
 import org.jacoco.core.data.ExecutionDataReader;
 import org.jacoco.core.data.ExecutionDataStore;
 import org.jacoco.core.data.ExecutionDataWriter;
+import org.jacoco.core.data.SessionInfoStore;
 
 /**
  * Task for merging a set of execution data store files into a single file
@@ -73,8 +74,32 @@ public class MergeTask extends Task {
 			throw new BuildException("Unable to write to destination file");
 		}
 
+		final SessionInfoStore infoStore = new SessionInfoStore();
 		final ExecutionDataStore dataStore = new ExecutionDataStore();
 
+		loadSourceFiles(infoStore, dataStore);
+
+		OutputStream outputStream = null;
+		try {
+			destfile.getParentFile().mkdirs();
+			destfile.createNewFile();
+			outputStream = new BufferedOutputStream(new FileOutputStream(
+					destfile));
+			final ExecutionDataWriter dataWriter = new ExecutionDataWriter(
+					outputStream);
+			infoStore.accept(dataWriter);
+			dataStore.accept(dataWriter);
+		} catch (final IOException e) {
+			throw new BuildException(String.format(
+					"Unable to write merged file %s", destfile.getName()), e);
+		} finally {
+			FileUtils.close(outputStream);
+		}
+
+	}
+
+	private void loadSourceFiles(final SessionInfoStore infoStore,
+			final ExecutionDataStore dataStore) {
 		int numFilesMerged = 0;
 
 		final Iterator<?> resourceIterator = files.iterator();
@@ -93,6 +118,7 @@ public class MergeTask extends Task {
 				resourceStream = resource.getInputStream();
 				final ExecutionDataReader reader = new ExecutionDataReader(
 						resourceStream);
+				reader.setSessionInfoVisitor(infoStore);
 				reader.setExecutionDataVisitor(dataStore);
 				reader.read();
 
@@ -107,22 +133,6 @@ public class MergeTask extends Task {
 
 		log(String.format("%d files merged", Integer.valueOf(numFilesMerged)),
 				Project.MSG_INFO);
-
-		OutputStream outputStream = null;
-		try {
-			destfile.getParentFile().mkdirs();
-			destfile.createNewFile();
-			outputStream = new BufferedOutputStream(new FileOutputStream(
-					destfile));
-			final ExecutionDataWriter dataWriter = new ExecutionDataWriter(
-					outputStream);
-			dataStore.accept(dataWriter);
-		} catch (final IOException e) {
-			throw new BuildException(String.format(
-					"Unable to write merged file %s", destfile.getName()), e);
-		} finally {
-			FileUtils.close(outputStream);
-		}
-
 	}
+
 }
