@@ -114,12 +114,24 @@ public class AbstractCoverageTask extends Task {
 	 * List of wildcard patterns for classloaders that JaCoCo will not
 	 * instrument classes from.
 	 * 
-	 * @ant.not-required Default is sun.reflect.DelegatingClassLoader
+	 * @ant.not-required Default is
+	 *                   <code>sun.reflect.DelegatingClassLoader</code>
 	 * @param exclClassLoader
 	 *            Wildcard pattern of class loaders to exclude
 	 */
 	public void setExclClassLoader(final String exclClassLoader) {
 		agentOptions.setExclClassloader(exclClassLoader);
+	}
+
+	/**
+	 * Dump coverage data on VM termination
+	 * 
+	 * @ant.not-required Default is <code>true</code>
+	 * @param dumpOnExit
+	 *            <code>true</code> to write coverage data on VM termination
+	 */
+	public void setDumpOnExit(final boolean dumpOnExit) {
+		agentOptions.setDumpOnExit(dumpOnExit);
 	}
 
 	/**

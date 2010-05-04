@@ -18,7 +18,7 @@
 	<target name="testCoverageAgent">
 		<jacoco:agent property="jacocoagent" append="false" destfile="test.exec"
 			exclClassLoader="EvilClassLoader" includes="org.example.*"
-		    excludes="*Test"/>
+		    excludes="*Test" dumponexit="false"/>
 		<au:assertPropertySet name="jacocoagent"/>
 		<au:assertPropertyContains name="jacocoagent" value="-javaagent:"/>
 		<au:assertPropertyContains name="jacocoagent" value="append=false"/>
@@ -27,6 +27,7 @@
 		<au:assertPropertyContains name="jacocoagent" value="exclclassloader=EvilClassLoader"/>
 		<au:assertPropertyContains name="jacocoagent" value="includes=org.example.*"/>
 		<au:assertPropertyContains name="jacocoagent" value="excludes=*Test"/>
+		<au:assertPropertyContains name="jacocoagent" value="dumponexit=false"/>
 	</target>
 	
 	<target name="testCoverageAgentDisabled">

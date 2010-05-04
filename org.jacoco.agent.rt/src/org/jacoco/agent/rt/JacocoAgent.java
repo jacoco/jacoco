@@ -88,7 +88,9 @@ public class JacocoAgent {
 	 * Shutdown the agent again.
 	 */
 	public void shutdown() {
-		writeExecutionData();
+		if (options.getDumpOnExit()) {
+			writeExecutionData();
+		}
 	}
 
 	/**
@@ -117,7 +119,7 @@ public class JacocoAgent {
 	 * @param options
 	 *            agent options
 	 * @param inst
-	 *            intrumentation callback provided by the JVM
+	 *            instrumentation callback provided by the JVM
 	 */
 	public static void premain(final String options, final Instrumentation inst)
 			throws Exception {

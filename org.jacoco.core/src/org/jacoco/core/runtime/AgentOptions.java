@@ -72,8 +72,14 @@ public class AgentOptions {
 	 */
 	public static final String EXCLCLASSLOADER = "exclclassloader";
 
+	/**
+	 * Specifies whether the agent will automatically dump coverage data on VM
+	 * exit. Default is <code>true</code>
+	 */
+	public static final String DUMPONEXIT = "dumponexit";
+
 	private static final Collection<String> VALID_OPTIONS = Arrays.asList(
-			DESTFILE, APPEND, INCLUDES, EXCLUDES, EXCLCLASSLOADER);
+			DESTFILE, APPEND, INCLUDES, EXCLUDES, EXCLCLASSLOADER, DUMPONEXIT);
 
 	private final Map<String, String> options;
 
@@ -115,8 +121,7 @@ public class AgentOptions {
 	 * @return output file location
 	 */
 	public String getDestfile() {
-		final String destfile = options.get(DESTFILE);
-		return destfile == null ? "jacoco.exec" : destfile;
+		return getOption(DESTFILE, "jacoco.exec");
 	}
 
 	/**
@@ -135,8 +140,7 @@ public class AgentOptions {
 	 * @return <code>true</code>, when the output should be appended
 	 */
 	public boolean getAppend() {
-		final String value = options.get(APPEND);
-		return value == null ? true : Boolean.parseBoolean(value);
+		return getOption(APPEND, true);
 	}
 
 	/**
@@ -146,7 +150,7 @@ public class AgentOptions {
 	 *            <code>true</code>, when the output should be appended
 	 */
 	public void setAppend(final boolean append) {
-		setOption(APPEND, String.valueOf(append));
+		setOption(APPEND, append);
 	}
 
 	/**
@@ -156,8 +160,7 @@ public class AgentOptions {
 	 * @see WildcardMatcher
 	 */
 	public String getIncludes() {
-		final String value = options.get(INCLUDES);
-		return value == null ? "*" : value;
+		return getOption(INCLUDES, "*");
 	}
 
 	/**
@@ -178,8 +181,7 @@ public class AgentOptions {
 	 * @see WildcardMatcher
 	 */
 	public String getExcludes() {
-		final String value = options.get(EXCLUDES);
-		return value == null ? "" : value;
+		return getOption(EXCLUDES, "");
 	}
 
 	/**
@@ -200,8 +202,7 @@ public class AgentOptions {
 	 * @see WildcardMatcher
 	 */
 	public String getExclClassloader() {
-		final String value = options.get(EXCLCLASSLOADER);
-		return value == null ? "sun.reflect.DelegatingClassLoader" : value;
+		return getOption(EXCLCLASSLOADER, "sun.reflect.DelegatingClassLoader");
 	}
 
 	/**
@@ -215,12 +216,46 @@ public class AgentOptions {
 		setOption(EXCLCLASSLOADER, expression);
 	}
 
+	/**
+	 * Returns whether coverage data should be dumped on exit
+	 * 
+	 * @return <code>true</code> if coverage data will be written on VM exit
+	 */
+	public boolean getDumpOnExit() {
+		return getOption(DUMPONEXIT, true);
+	}
+
+	/**
+	 * Sets whether coverage data should be dumped on exit
+	 * 
+	 * @param dumpOnExit
+	 *            <code>true</code> if coverage data should be written on VM
+	 *            exit
+	 */
+	public void setDumpOnExit(final boolean dumpOnExit) {
+		setOption(DUMPONEXIT, dumpOnExit);
+	}
+
+	private void setOption(final String key, final boolean value) {
+		setOption(key, Boolean.toString(value));
+	}
+
 	private void setOption(final String key, final String value) {
 		if (value.contains(",")) {
 			throw new IllegalArgumentException(format(
 					"Invalid character in option argument \"%s\"", value));
 		}
 		options.put(key, value);
+	}
+
+	private String getOption(final String key, final String defaultValue) {
+		final String value = options.get(key);
+		return value == null ? defaultValue : value;
+	}
+
+	private boolean getOption(final String key, final boolean defaultValue) {
+		final String value = options.get(key);
+		return value == null ? defaultValue : Boolean.parseBoolean(value);
 	}
 
 	/**

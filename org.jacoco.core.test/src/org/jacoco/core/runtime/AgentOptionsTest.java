@@ -44,6 +44,7 @@ public class AgentOptionsTest {
 		assertEquals("", options.getExcludes());
 		assertEquals("sun.reflect.DelegatingClassLoader", options
 				.getExclClassloader());
+		assertTrue(options.getDumpOnExit());
 		assertEquals("", options.toString());
 	}
 
@@ -137,6 +138,19 @@ public class AgentOptionsTest {
 		options.setExcludes("org.jacoco.test.*");
 		assertEquals("org.jacoco.test.*", options.getExcludes());
 		assertEquals("excludes=org.jacoco.test.*", options.toString());
+	}
+
+	@Test
+	public void testGetDumpOnExit() {
+		AgentOptions options = new AgentOptions("dumponexit=false");
+		assertFalse(options.getDumpOnExit());
+	}
+
+	@Test
+	public void testSetDumpOnExit() {
+		AgentOptions options = new AgentOptions();
+		options.setDumpOnExit(false);
+		assertFalse(options.getDumpOnExit());
 	}
 
 	@Test
