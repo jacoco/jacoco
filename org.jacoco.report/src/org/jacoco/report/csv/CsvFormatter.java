@@ -14,8 +14,10 @@ package org.jacoco.report.csv;
 
 import java.io.IOException;
 import java.io.OutputStreamWriter;
+import java.util.List;
 
 import org.jacoco.core.analysis.ICoverageNode;
+import org.jacoco.core.data.SessionInfo;
 import org.jacoco.report.ILanguageNames;
 import org.jacoco.report.IReportFormatter;
 import org.jacoco.report.IReportVisitor;
@@ -38,8 +40,8 @@ public class CsvFormatter implements IReportFormatter {
 
 	private String outputEncoding = "UTF-8";
 
-	public IReportVisitor createReportVisitor(final ICoverageNode session)
-			throws IOException {
+	public IReportVisitor createReportVisitor(final ICoverageNode session,
+			final List<SessionInfo> sessionInfos) throws IOException {
 
 		if (output == null) {
 			throw new IllegalStateException("No report output set.");

@@ -42,6 +42,7 @@ import org.jacoco.core.analysis.PackageCoverage;
 import org.jacoco.core.analysis.ICoverageNode.ElementType;
 import org.jacoco.core.data.ExecutionDataReader;
 import org.jacoco.core.data.ExecutionDataStore;
+import org.jacoco.core.data.SessionInfoStore;
 import org.jacoco.core.instr.Analyzer;
 import org.jacoco.report.FileMultiReportOutput;
 import org.jacoco.report.FileSingleReportOutput;
@@ -330,6 +331,10 @@ public class ReportTask extends Task {
 
 	private final Union executiondataElement = new Union();
 
+	private SessionInfoStore sessionInfoStore;
+
+	private ExecutionDataStore executionDataStore;
+
 	private final GroupElement structure = new GroupElement();
 
 	private final List<IFormatterElement> formatters = new ArrayList<IFormatterElement>();
@@ -387,25 +392,27 @@ public class ReportTask extends Task {
 
 	@Override
 	public void execute() throws BuildException {
-		final ExecutionDataStore executionData = loadExecutionData();
+		loadExecutionData();
 		try {
 			final IReportFormatter formatter = createFormatter();
-			createReport(structure, formatter, executionData);
+			createReport(formatter);
 			finishFormatters();
 		} catch (final IOException e) {
 			throw new BuildException("Error while creating report.", e);
 		}
 	}
 
-	private ExecutionDataStore loadExecutionData() {
-		final ExecutionDataStore data = new ExecutionDataStore();
+	private void loadExecutionData() {
+		sessionInfoStore = new SessionInfoStore();
+		executionDataStore = new ExecutionDataStore();
 		for (final Iterator<?> i = executiondataElement.iterator(); i.hasNext();) {
 			final Resource resource = (Resource) i.next();
 			InputStream in = null;
 			try {
 				in = new BufferedInputStream(resource.getInputStream());
 				final ExecutionDataReader reader = new ExecutionDataReader(in);
-				reader.setExecutionDataVisitor(data);
+				reader.setSessionInfoVisitor(sessionInfoStore);
+				reader.setExecutionDataVisitor(executionDataStore);
 				reader.read();
 			} catch (final IOException e) {
 				throw new BuildException("Unable to read execution data file "
@@ -414,7 +421,6 @@ public class ReportTask extends Task {
 				FileUtils.close(in);
 			}
 		}
-		return data;
 	}
 
 	private IReportFormatter createFormatter() throws IOException {
@@ -431,18 +437,18 @@ public class ReportTask extends Task {
 		}
 	}
 
-	private void createReport(final GroupElement group,
-			final IReportFormatter formatter,
-			final ExecutionDataStore executionData) throws IOException {
-		final CoverageNodeImpl node = createNode(group, executionData);
-		final IReportVisitor visitor = formatter.createReportVisitor(node);
+	private void createReport(final IReportFormatter formatter)
+			throws IOException {
+		final CoverageNodeImpl node = createNode(structure);
+		final IReportVisitor visitor = formatter.createReportVisitor(node,
+				sessionInfoStore.getInfos());
 		final SourceFileCollection sourceFileLocator = new SourceFileCollection(
-				group.sourcefiles);
+				structure.sourcefiles);
 		if (node instanceof BundleCoverage) {
 			visitBundle(visitor, (BundleCoverage) node, sourceFileLocator);
 		} else {
-			for (final GroupElement g : group.children) {
-				createReport(g, visitor, node, executionData);
+			for (final GroupElement g : structure.children) {
+				createReport(g, visitor, node);
 			}
 		}
 		visitor.visitEnd(sourceFileLocator);
@@ -450,9 +456,8 @@ public class ReportTask extends Task {
 
 	private void createReport(final GroupElement group,
 			final IReportVisitor parentVisitor,
-			final CoverageNodeImpl parentNode,
-			final ExecutionDataStore executionData) throws IOException {
-		final CoverageNodeImpl node = createNode(group, executionData);
+			final CoverageNodeImpl parentNode) throws IOException {
+		final CoverageNodeImpl node = createNode(group);
 		final IReportVisitor visitor = parentVisitor.visitChild(node);
 		final SourceFileCollection sourceFileLocator = new SourceFileCollection(
 				group.sourcefiles);
@@ -460,22 +465,23 @@ public class ReportTask extends Task {
 			visitBundle(visitor, (BundleCoverage) node, sourceFileLocator);
 		} else {
 			for (final GroupElement g : group.children) {
-				createReport(g, visitor, node, executionData);
+				createReport(g, visitor, node);
 			}
 		}
 		parentNode.increment(node);
 		visitor.visitEnd(sourceFileLocator);
 	}
 
-	private CoverageNodeImpl createNode(final GroupElement group,
-			final ExecutionDataStore executionData) throws IOException {
+	private CoverageNodeImpl createNode(final GroupElement group)
+			throws IOException {
 		if (group.name == null) {
 			throw new BuildException("Group name must be supplied");
 		}
 		if (group.children.size() > 0) {
 			return new CoverageNodeImpl(ElementType.GROUP, group.name, false);
 		} else {
-			final CoverageBuilder builder = new CoverageBuilder(executionData);
+			final CoverageBuilder builder = new CoverageBuilder(
+					executionDataStore);
 			final Analyzer analyzer = new Analyzer(builder);
 			for (final Iterator<?> i = group.classfiles.iterator(); i.hasNext();) {
 				final Resource resource = (Resource) i.next();

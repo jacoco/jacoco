@@ -13,8 +13,10 @@
 package org.jacoco.report.xml;
 
 import java.io.IOException;
+import java.util.List;
 
 import org.jacoco.core.analysis.ICoverageNode;
+import org.jacoco.core.data.SessionInfo;
 import org.jacoco.report.IReportFormatter;
 import org.jacoco.report.IReportVisitor;
 import org.jacoco.report.ISingleReportOutput;
@@ -35,8 +37,8 @@ public class XMLFormatter implements IReportFormatter {
 
 	private String outputEncoding = "UTF-8";
 
-	public IReportVisitor createReportVisitor(final ICoverageNode session)
-			throws IOException {
+	public IReportVisitor createReportVisitor(final ICoverageNode session,
+			List<SessionInfo> sessionInfos) throws IOException {
 		final XMLElement root = new XMLDocument("report", PUBID, SYSTEM,
 				outputEncoding, true, output.createFile());
 		return new XMLReportNodeHandler(root, session);

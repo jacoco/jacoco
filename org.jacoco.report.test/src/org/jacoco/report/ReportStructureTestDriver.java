@@ -15,6 +15,7 @@ package org.jacoco.report;
 import java.io.IOException;
 import java.io.Reader;
 import java.util.Collections;
+import java.util.List;
 
 import org.jacoco.core.analysis.BundleCoverage;
 import org.jacoco.core.analysis.ClassCoverage;
@@ -23,6 +24,7 @@ import org.jacoco.core.analysis.MethodCoverage;
 import org.jacoco.core.analysis.PackageCoverage;
 import org.jacoco.core.analysis.SourceFileCoverage;
 import org.jacoco.core.analysis.ICoverageNode.ElementType;
+import org.jacoco.core.data.SessionInfo;
 
 /**
  * Creates a simple hierarchy of coverage nodes and feeds it into
@@ -32,6 +34,8 @@ import org.jacoco.core.analysis.ICoverageNode.ElementType;
  * @version $Revision: $
  */
 public class ReportStructureTestDriver {
+
+	private final List<SessionInfo> sessions = Collections.emptyList();
 
 	public final ISourceFileLocator sourceFileLocator = new ISourceFileLocator() {
 
@@ -63,8 +67,8 @@ public class ReportStructureTestDriver {
 			ElementType.GROUP, "group", false);
 
 	public void sendGroup(IReportFormatter formatter) throws IOException {
-		final IReportVisitor child = formatter
-				.createReportVisitor(groupCoverage);
+		final IReportVisitor child = formatter.createReportVisitor(
+				groupCoverage, sessions);
 		sendBundle(child);
 		child.visitEnd(sourceFileLocator);
 	}
@@ -76,8 +80,8 @@ public class ReportStructureTestDriver {
 	}
 
 	public void sendBundle(IReportFormatter formatter) throws IOException {
-		final IReportVisitor child = formatter
-				.createReportVisitor(bundleCoverage);
+		final IReportVisitor child = formatter.createReportVisitor(
+				bundleCoverage, sessions);
 		sendPackage(child);
 		child.visitEnd(sourceFileLocator);
 	}

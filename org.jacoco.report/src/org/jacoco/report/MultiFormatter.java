@@ -17,6 +17,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.jacoco.core.analysis.ICoverageNode;
+import org.jacoco.core.data.SessionInfo;
 
 /**
  * A formatter that is composed from multiple other formatters. This can be used
@@ -40,11 +41,11 @@ public class MultiFormatter implements IReportFormatter {
 		formatters.add(formatter);
 	}
 
-	public IReportVisitor createReportVisitor(final ICoverageNode session)
-			throws IOException {
+	public IReportVisitor createReportVisitor(final ICoverageNode session,
+			final List<SessionInfo> sessionInfos) throws IOException {
 		final List<IReportVisitor> visitors = new ArrayList<IReportVisitor>();
 		for (final IReportFormatter f : formatters) {
-			visitors.add(f.createReportVisitor(session));
+			visitors.add(f.createReportVisitor(session, sessionInfos));
 		}
 		return new MultiVisitor(visitors);
 	}

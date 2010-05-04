@@ -13,8 +13,10 @@
 package org.jacoco.report;
 
 import java.io.IOException;
+import java.util.List;
 
 import org.jacoco.core.analysis.ICoverageNode;
+import org.jacoco.core.data.SessionInfo;
 
 /**
  * Interface for all implementations that produce a particular report format.
@@ -29,11 +31,14 @@ public interface IReportFormatter {
 	 * 
 	 * @param session
 	 *            session root node
+	 * @param sessionInfos
+	 *            list of chronological ordered {@link SessionInfo} objects
+	 *            where execution data has been collected for this report.
 	 * 
 	 * @return visitor for the root node
 	 * @throws IOException
 	 */
-	public IReportVisitor createReportVisitor(ICoverageNode session)
-			throws IOException;
+	public IReportVisitor createReportVisitor(ICoverageNode session,
+			List<SessionInfo> sessionInfos) throws IOException;
 
 }

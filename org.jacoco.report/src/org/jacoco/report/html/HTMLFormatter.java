@@ -15,11 +15,13 @@ package org.jacoco.report.html;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.Comparator;
+import java.util.List;
 
 import org.jacoco.core.analysis.CounterComparator;
 import org.jacoco.core.analysis.ICoverageNode;
 import org.jacoco.core.analysis.ICoverageNode.CounterEntity;
 import org.jacoco.core.analysis.ICoverageNode.ElementType;
+import org.jacoco.core.data.SessionInfo;
 import org.jacoco.report.ILanguageNames;
 import org.jacoco.report.IMultiReportOutput;
 import org.jacoco.report.IReportFormatter;
@@ -148,8 +150,8 @@ public class HTMLFormatter implements IReportFormatter, IHTMLReportContext {
 
 	// === IReportFormatter ===
 
-	public IReportVisitor createReportVisitor(final ICoverageNode session)
-			throws IOException {
+	public IReportVisitor createReportVisitor(final ICoverageNode session,
+			final List<SessionInfo> sessionInfos) throws IOException {
 		if (output == null) {
 			throw new IllegalStateException("No report output set.");
 		}
@@ -162,6 +164,7 @@ public class HTMLFormatter implements IReportFormatter, IHTMLReportContext {
 			protected ReportOutputFolder getFolder(final ReportOutputFolder base) {
 				return base;
 			}
+
 		};
 	}
 
