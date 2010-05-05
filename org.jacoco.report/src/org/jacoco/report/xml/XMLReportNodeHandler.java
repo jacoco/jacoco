@@ -32,9 +32,9 @@ import org.jacoco.report.ISourceFileLocator;
  */
 class XMLReportNodeHandler implements IReportVisitor {
 
-	protected final XMLElement element;
+	private final XMLElement element;
 
-	protected final ICoverageNode node;
+	private final ICoverageNode node;
 
 	/**
 	 * New handler for the given coverage node.

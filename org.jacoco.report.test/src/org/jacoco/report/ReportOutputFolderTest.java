@@ -59,22 +59,11 @@ public class ReportOutputFolderTest {
 	}
 
 	@Test
-	public void testLinkInRoot() throws IOException {
-		assertEquals("test.html", root.getLink("test.html"));
-	}
-
-	@Test
 	public void testFileInSubFolder() throws IOException {
 		root.subFolder("folderA").subFolder("folderB").createFile("test.html")
 				.close();
 		output.assertSingleFile("folderA/folderB/test.html");
 		output.assertAllClosed();
-	}
-
-	@Test
-	public void testLinkInSubFolder() throws IOException {
-		assertEquals("test.html", root.subFolder("folderA")
-				.subFolder("folberB").getLink("test.html"));
 	}
 
 	@Test

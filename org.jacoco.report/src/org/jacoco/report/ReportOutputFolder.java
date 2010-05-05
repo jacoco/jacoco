@@ -94,18 +94,6 @@ public class ReportOutputFolder {
 	}
 
 	/**
-	 * Returns a link relative to this folder to the given resource within this
-	 * folder.
-	 * 
-	 * @param name
-	 *            name of the file or folder
-	 * @return relative link
-	 */
-	public String getLink(final String name) {
-		return normalize(name);
-	}
-
-	/**
 	 * Returns a link relative to a given base to a resource within this folder.
 	 * 
 	 * @param base
