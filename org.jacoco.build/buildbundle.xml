@@ -107,6 +107,7 @@
 		</taskdef>
 		
 		<property name="result.tmp.bundle.test.dir" location="${result.tmp.bundle.dir}/test"/>
+		<property name="result.tmp.coverage.file" location="${result.tmp.bundle.test.dir}/jacoco.exec"/>
 		<mkdir dir="${result.tmp.bundle.test.dir}"/>
 		<jacoco:coverage
 				append="true"

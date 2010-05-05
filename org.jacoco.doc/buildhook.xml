@@ -42,7 +42,7 @@
 		<mkdir dir="${result.dist.coverage.dir}"/>
 		<jacoco:report>
 			<executiondata>
-				<file file="${result.tmp.coverage.file}"/>
+				<fileset dir="${result.tmp.dir}" includes="*/test/jacoco.exec"/>
 			</executiondata>
 			<structure name="JaCoCo">
 				<group name="org.jacoco.agent">

@@ -32,7 +32,6 @@
 	<property name="result.dist.coverage.dir" location="${result.dist.dir}/coverage"/>
 
 	<property name="result.tmp.dir" location="${result.dir}/tmp"/>
-	<property name="result.tmp.coverage.file" location="${result.tmp.dir}/jacoco.exec"/>
 	
 	<property name="jacoco.home.url" value="http://www.eclemma.org/jacoco"/>
 	<property name="copyright.years" value="2009, 2010"/>
