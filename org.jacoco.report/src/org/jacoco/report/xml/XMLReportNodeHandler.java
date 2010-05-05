@@ -32,7 +32,7 @@ import org.jacoco.report.ISourceFileLocator;
  */
 class XMLReportNodeHandler implements IReportVisitor {
 
-	private final XMLElement element;
+	protected final XMLElement element;
 
 	private final ICoverageNode node;
 
@@ -74,7 +74,7 @@ class XMLReportNodeHandler implements IReportVisitor {
 				@Override
 				public void visitEnd(final ISourceFileLocator sourceFileLocator)
 						throws IOException {
-					writeLines(node.getLines(), element);
+					writeLines(node.getLines(), this.element);
 					super.visitEnd(sourceFileLocator);
 				}
 
@@ -103,7 +103,7 @@ class XMLReportNodeHandler implements IReportVisitor {
 		}
 	}
 
-	private void writeLines(final ILines lines, final XMLElement parent)
+	private static void writeLines(final ILines lines, final XMLElement parent)
 			throws IOException {
 		final int last = lines.getLastLine();
 		for (int nr = lines.getFirstLine(); nr <= last; nr++) {
