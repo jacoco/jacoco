@@ -14,6 +14,7 @@ package org.jacoco.core.runtime;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 import java.io.File;
@@ -44,6 +45,7 @@ public class AgentOptionsTest {
 		assertEquals("", options.getExcludes());
 		assertEquals("sun.reflect.DelegatingClassLoader", options
 				.getExclClassloader());
+		assertNull(options.getSessionId());
 		assertTrue(options.getDumpOnExit());
 		assertEquals("", options.toString());
 	}
@@ -138,6 +140,20 @@ public class AgentOptionsTest {
 		options.setExcludes("org.jacoco.test.*");
 		assertEquals("org.jacoco.test.*", options.getExcludes());
 		assertEquals("excludes=org.jacoco.test.*", options.toString());
+	}
+
+	@Test
+	public void testGetSessionId() {
+		AgentOptions options = new AgentOptions("sessionid=testsession");
+		assertEquals("testsession", options.getSessionId());
+	}
+
+	@Test
+	public void testSetSessionId() {
+		AgentOptions options = new AgentOptions();
+		options.setSessionId("testsession");
+		assertEquals("testsession", options.getSessionId());
+		assertEquals("sessionid=testsession", options.toString());
 	}
 
 	@Test

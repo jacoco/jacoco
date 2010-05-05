@@ -124,6 +124,18 @@ public class AbstractCoverageTask extends Task {
 	}
 
 	/**
+	 * Sets the session identifier.
+	 * 
+	 * @ant.not-required Default is a auto-generated id
+	 * 
+	 * @param id
+	 *            session identifier
+	 */
+	public void setSessionId(final String id) {
+		agentOptions.setSessionId(id);
+	}
+
+	/**
 	 * Dump coverage data on VM termination
 	 * 
 	 * @ant.not-required Default is <code>true</code>

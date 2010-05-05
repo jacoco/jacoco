@@ -73,13 +73,20 @@ public class AgentOptions {
 	public static final String EXCLCLASSLOADER = "exclclassloader";
 
 	/**
+	 * Specifies a session identifier that is written with the execution data.
+	 * Without this parameter a random identifier is created by the agent.
+	 */
+	public static final String SESSIONID = "sessionid";
+
+	/**
 	 * Specifies whether the agent will automatically dump coverage data on VM
 	 * exit. Default is <code>true</code>
 	 */
 	public static final String DUMPONEXIT = "dumponexit";
 
 	private static final Collection<String> VALID_OPTIONS = Arrays.asList(
-			DESTFILE, APPEND, INCLUDES, EXCLUDES, EXCLCLASSLOADER, DUMPONEXIT);
+			DESTFILE, APPEND, INCLUDES, EXCLUDES, EXCLCLASSLOADER, SESSIONID,
+			DUMPONEXIT);
 
 	private final Map<String, String> options;
 
@@ -214,6 +221,25 @@ public class AgentOptions {
 	 */
 	public void setExclClassloader(final String expression) {
 		setOption(EXCLCLASSLOADER, expression);
+	}
+
+	/**
+	 * Returns the session identifier.
+	 * 
+	 * @return session identifier
+	 */
+	public String getSessionId() {
+		return getOption(SESSIONID, null);
+	}
+
+	/**
+	 * Sets the session identifier.
+	 * 
+	 * @param id
+	 *            session identifier
+	 */
+	public void setSessionId(final String id) {
+		setOption(SESSIONID, id);
 	}
 
 	/**

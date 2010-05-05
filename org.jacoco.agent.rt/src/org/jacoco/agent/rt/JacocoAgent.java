@@ -18,6 +18,9 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.lang.instrument.Instrumentation;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
+import java.util.Random;
 
 import org.jacoco.core.data.ExecutionDataWriter;
 import org.jacoco.core.runtime.AgentOptions;
@@ -66,8 +69,23 @@ public class JacocoAgent {
 	 */
 	public void init(final Instrumentation inst) throws Exception {
 		runtime = createRuntime(inst);
+		String sessionId = options.getSessionId();
+		if (sessionId == null) {
+			sessionId = createSessionId();
+		}
+		runtime.setSessionId(sessionId);
 		runtime.startup();
 		inst.addTransformer(new CoverageTransformer(runtime, options));
+	}
+
+	private String createSessionId() {
+		String host;
+		try {
+			host = InetAddress.getLocalHost().getHostName();
+		} catch (UnknownHostException e) {
+			host = "unknownhost";
+		}
+		return host + "-" + Integer.toHexString(new Random().nextInt());
 	}
 
 	/**
