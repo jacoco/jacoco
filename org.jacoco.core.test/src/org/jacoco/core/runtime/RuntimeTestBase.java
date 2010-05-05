@@ -14,6 +14,7 @@ package org.jacoco.core.runtime;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
@@ -22,6 +23,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.jacoco.core.data.IExecutionDataVisitor;
+import org.jacoco.core.data.ISessionInfoVisitor;
+import org.jacoco.core.data.SessionInfo;
 import org.jacoco.core.test.TargetLoader;
 import org.junit.After;
 import org.junit.Before;
@@ -60,8 +63,15 @@ public abstract class RuntimeTestBase {
 	}
 
 	@Test
+	public void testGetSetSessionId() {
+		assertNotNull(runtime.getSessionId());
+		runtime.setSessionId("test-id");
+		assertEquals("test-id", runtime.getSessionId());
+	}
+
+	@Test
 	public void testCollectEmpty() {
-		runtime.collect(storage, false);
+		runtime.collect(storage, null, false);
 		storage.assertSize(0);
 	}
 
@@ -69,7 +79,7 @@ public abstract class RuntimeTestBase {
 	public void testDataAccessor() throws InstantiationException,
 			IllegalAccessException {
 		ITarget t = generateAndInstantiateClass(1234);
-		runtime.collect(storage, false);
+		runtime.collect(storage, null, false);
 		storage.assertData(1234, t.get());
 	}
 
@@ -94,13 +104,38 @@ public abstract class RuntimeTestBase {
 		target.a();
 		target.b();
 
-		runtime.collect(storage, true);
+		runtime.collect(storage, null, true);
 
 		final boolean[] data = target.get();
 		storage.assertSize(1);
 		storage.assertData(1001, data);
 		assertFalse(data[0]);
 		assertFalse(data[1]);
+	}
+
+	@Test
+	public void testSessionInfo() {
+		final SessionInfo[] info = new SessionInfo[1];
+		final ISessionInfoVisitor visitor = new ISessionInfoVisitor() {
+			public void visitSessionInfo(SessionInfo i) {
+				info[0] = i;
+			}
+		};
+		runtime.setSessionId("test-session");
+		final long t1 = System.currentTimeMillis();
+		runtime.collect(storage, visitor, true);
+		assertNotNull(info[0]);
+		assertEquals("test-session", info[0].getId());
+		assertTrue(info[0].getStartTimeStamp() <= t1);
+		assertTrue(info[0].getDumpTimeStamp() >= t1);
+
+		info[0] = null;
+		final long t2 = System.currentTimeMillis();
+		runtime.collect(storage, visitor, true);
+		assertNotNull(info[0]);
+		assertEquals("test-session", info[0].getId());
+		assertTrue(info[0].getStartTimeStamp() >= t1);
+		assertTrue(info[0].getDumpTimeStamp() >= t2);
 	}
 
 	@Test
@@ -118,7 +153,7 @@ public abstract class RuntimeTestBase {
 	public void testExecutionRecording() throws InstantiationException,
 			IllegalAccessException {
 		generateAndInstantiateClass(1001).a();
-		runtime.collect(storage, false);
+		runtime.collect(storage, null, false);
 		storage.assertSize(1);
 		final boolean[] data = storage.getData(1001);
 		assertTrue(data[0]);
@@ -130,7 +165,7 @@ public abstract class RuntimeTestBase {
 			IllegalAccessException {
 		generateAndInstantiateClass(1001).a();
 		generateAndInstantiateClass(1001).b();
-		runtime.collect(storage, false);
+		runtime.collect(storage, null, false);
 		storage.assertSize(1);
 		final boolean[] data = storage.getData(1001);
 		assertTrue(data[0]);

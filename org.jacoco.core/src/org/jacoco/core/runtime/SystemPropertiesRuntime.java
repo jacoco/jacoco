@@ -61,7 +61,8 @@ public class SystemPropertiesRuntime extends AbstractRuntime {
 
 		// Stack[0]: Ljava/lang/Object;
 
-		ExecutionDataAccess.generateAccessCall(classid, classname, probecount, mv);
+		ExecutionDataAccess.generateAccessCall(classid, classname, probecount,
+				mv);
 
 		// Stack[0]: [Z
 
@@ -69,6 +70,7 @@ public class SystemPropertiesRuntime extends AbstractRuntime {
 	}
 
 	public void startup() {
+		setStartTimeStamp();
 		System.getProperties().put(key, access);
 	}
 

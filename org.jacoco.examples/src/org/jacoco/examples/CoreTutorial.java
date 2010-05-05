@@ -143,7 +143,7 @@ public class CoreTutorial {
 		// At the end of test execution we collect execution data and shutdown
 		// the runtime:
 		final ExecutionDataStore executionData = new ExecutionDataStore();
-		runtime.collect(executionData, false);
+		runtime.collect(executionData, null, false);
 		runtime.shutdown();
 
 		// Together with the original class definition we can calculate coverage

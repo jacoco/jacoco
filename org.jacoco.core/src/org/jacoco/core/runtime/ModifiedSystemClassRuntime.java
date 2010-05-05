@@ -63,6 +63,7 @@ public class ModifiedSystemClassRuntime extends AbstractRuntime {
 	}
 
 	public void startup() throws Exception {
+		setStartTimeStamp();
 		final Field field = systemClass.getField(accessFieldName);
 		field.set(null, new ExecutionDataAccess(store));
 	}
@@ -77,7 +78,8 @@ public class ModifiedSystemClassRuntime extends AbstractRuntime {
 		mv.visitFieldInsn(Opcodes.GETSTATIC, systemClassName, accessFieldName,
 				ACCESS_FIELD_TYPE);
 
-		ExecutionDataAccess.generateAccessCall(classid, classname, probecount, mv);
+		ExecutionDataAccess.generateAccessCall(classid, classname, probecount,
+				mv);
 
 		return 6;
 	}

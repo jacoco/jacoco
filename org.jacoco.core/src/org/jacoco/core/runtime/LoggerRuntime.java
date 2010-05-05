@@ -155,6 +155,7 @@ public class LoggerRuntime extends AbstractRuntime {
 	}
 
 	public void startup() {
+		setStartTimeStamp();
 		this.logger.addHandler(handler);
 	}
 

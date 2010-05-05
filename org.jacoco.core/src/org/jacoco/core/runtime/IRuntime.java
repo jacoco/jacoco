@@ -13,6 +13,7 @@
 package org.jacoco.core.runtime;
 
 import org.jacoco.core.data.IExecutionDataVisitor;
+import org.jacoco.core.data.ISessionInfoVisitor;
 
 /**
  * This interface represents a particular mechanism to collect execution
@@ -22,6 +23,26 @@ import org.jacoco.core.data.IExecutionDataVisitor;
  * @version $Revision: $
  */
 public interface IRuntime extends IExecutionDataAccessorGenerator {
+
+	/**
+	 * Sets a session identifier for this runtime. The identifier is used when
+	 * execution data is collected. If no identifier is explicitly set a
+	 * identifier is generated from the host name and a random number. This
+	 * method can be called at any time.
+	 * 
+	 * @see #collect(IExecutionDataVisitor, ISessionInfoVisitor, boolean)
+	 * @param id
+	 *            new session identifier
+	 */
+	public void setSessionId(String id);
+
+	/**
+	 * Get the current a session identifier for this runtime.
+	 * 
+	 * @see #setSessionId(String)
+	 * @return current session identifier
+	 */
+	public String getSessionId();
 
 	/**
 	 * Starts the coverage runtime. This method MUST be called before any class
@@ -43,13 +64,17 @@ public interface IRuntime extends IExecutionDataAccessorGenerator {
 	 * {@link IExecutionDataVisitor} object. This method must only be called
 	 * between {@link #startup()} and {@link #shutdown()}.
 	 * 
-	 * @param visitor
+	 * @param executionDataVisitor
 	 *            handler to write coverage data to
+	 * @param sessionInfoVisitor
+	 *            optional visitor to write session information to or
+	 *            <code>null</code> if session information is not required
 	 * @param reset
 	 *            if <code>true</code> the current coverage information is also
 	 *            cleared
 	 */
-	public void collect(IExecutionDataVisitor visitor, boolean reset);
+	public void collect(IExecutionDataVisitor executionDataVisitor,
+			ISessionInfoVisitor sessionInfoVisitor, boolean reset);
 
 	/**
 	 * Resets all coverage information. This method must only be called between

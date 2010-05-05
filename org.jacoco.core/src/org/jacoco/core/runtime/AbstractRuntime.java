@@ -12,8 +12,12 @@
  *******************************************************************************/
 package org.jacoco.core.runtime;
 
+import java.util.Random;
+
 import org.jacoco.core.data.ExecutionDataStore;
 import org.jacoco.core.data.IExecutionDataVisitor;
+import org.jacoco.core.data.ISessionInfoVisitor;
+import org.jacoco.core.data.SessionInfo;
 
 /**
  * Base {@link IRuntime} implementation.
@@ -29,20 +33,46 @@ public abstract class AbstractRuntime implements IRuntime {
 	/** access for this runtime instance */
 	protected final ExecutionDataAccess access;
 
+	private long startTimeStamp;
+
+	private String sessionId;
+
 	/**
 	 * Creates a new runtime.
 	 */
 	protected AbstractRuntime() {
 		store = new ExecutionDataStore();
 		access = new ExecutionDataAccess(store);
+		sessionId = generateSessionId();
 	}
 
-	public final void collect(final IExecutionDataVisitor visitor,
-			final boolean reset) {
+	/**
+	 * Subclasses need to call this method in their {@link #startup()}
+	 * implementation to record the timestamp of session startup.
+	 */
+	protected final void setStartTimeStamp() {
+		startTimeStamp = System.currentTimeMillis();
+	}
+
+	public void setSessionId(final String id) {
+		sessionId = id;
+	}
+
+	public String getSessionId() {
+		return sessionId;
+	}
+
+	public final void collect(final IExecutionDataVisitor executionDataVisitor,
+			final ISessionInfoVisitor sessionInfoVisitor, final boolean reset) {
 		synchronized (store) {
-			store.accept(visitor);
+			if (sessionInfoVisitor != null) {
+				final SessionInfo info = new SessionInfo(sessionId,
+						startTimeStamp, System.currentTimeMillis());
+				sessionInfoVisitor.visitSessionInfo(info);
+			}
+			store.accept(executionDataVisitor);
 			if (reset) {
-				store.reset();
+				reset();
 			}
 		}
 	}
@@ -50,7 +80,12 @@ public abstract class AbstractRuntime implements IRuntime {
 	public final void reset() {
 		synchronized (store) {
 			store.reset();
+			setStartTimeStamp();
 		}
+	}
+
+	private String generateSessionId() {
+		return Integer.toHexString(new Random().nextInt());
 	}
 
 }

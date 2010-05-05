@@ -78,7 +78,7 @@ public abstract class ValidationTestBase {
 		final TargetLoader loader = new TargetLoader(target, bytes);
 		run(loader.getTargetClass());
 		final ExecutionDataStore store = new ExecutionDataStore();
-		runtime.collect(store, false);
+		runtime.collect(store, null, false);
 		runtime.shutdown();
 		return store;
 	}

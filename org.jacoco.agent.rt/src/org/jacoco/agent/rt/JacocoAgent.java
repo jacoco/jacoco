@@ -106,7 +106,7 @@ public class JacocoAgent {
 			OutputStream output = new BufferedOutputStream(
 					new FileOutputStream(execFile, options.getAppend()));
 			ExecutionDataWriter writer = new ExecutionDataWriter(output);
-			runtime.collect(writer, false);
+			runtime.collect(writer, writer, false);
 			output.close();
 		} catch (IOException e) {
 			e.printStackTrace();
