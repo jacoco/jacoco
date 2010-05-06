@@ -119,6 +119,15 @@ public class XMLElementTest {
 		assertEquals("<root missed=\"0\" total=\"123\"/>", buffer.toString());
 	}
 
+	@Test
+	public void testLongAttributes() throws IOException {
+		root.attr("min", Long.MIN_VALUE).attr("max", Long.MAX_VALUE);
+		root.close();
+		assertEquals(
+				"<root min=\"-9223372036854775808\" max=\"9223372036854775807\"/>",
+				buffer.toString());
+	}
+
 	@Test(expected = IOException.class)
 	public void testInvalidAttributeOutput1() throws IOException {
 		root.text("text");

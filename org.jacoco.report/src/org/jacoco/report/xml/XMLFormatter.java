@@ -38,10 +38,26 @@ public class XMLFormatter implements IReportFormatter {
 	private String outputEncoding = "UTF-8";
 
 	public IReportVisitor createReportVisitor(final ICoverageNode session,
-			List<SessionInfo> sessionInfos) throws IOException {
+			final List<SessionInfo> sessionInfos) throws IOException {
 		final XMLElement root = new XMLDocument("report", PUBID, SYSTEM,
 				outputEncoding, true, output.createFile());
-		return new XMLReportNodeHandler(root, session);
+		return new XMLReportNodeHandler(root, session) {
+			@Override
+			protected void insertElementsBefore(final XMLElement element)
+					throws IOException {
+				writeSessionInfos(element, sessionInfos);
+			}
+		};
+	}
+
+	private void writeSessionInfos(final XMLElement root,
+			final List<SessionInfo> infos) throws IOException {
+		for (final SessionInfo i : infos) {
+			final XMLElement sessioninfo = root.element("sessioninfo");
+			sessioninfo.attr("id", i.getId());
+			sessioninfo.attr("start", i.getStartTimeStamp());
+			sessioninfo.attr("dump", i.getDumpTimeStamp());
+		}
 	}
 
 	/**

@@ -14,6 +14,13 @@ package org.jacoco.report.xml;
 
 import static org.junit.Assert.assertEquals;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import org.jacoco.core.analysis.CoverageNodeImpl;
+import org.jacoco.core.analysis.ICoverageNode;
+import org.jacoco.core.analysis.ICoverageNode.ElementType;
+import org.jacoco.core.data.SessionInfo;
 import org.jacoco.report.MemorySingleReportOutput;
 import org.jacoco.report.ReportStructureTestDriver;
 import org.junit.After;
@@ -46,6 +53,22 @@ public class XMLFormatterTest {
 	@After
 	public void teardown() {
 		output.assertClosed();
+	}
+
+	@Test
+	public void testSessionInfo() throws Exception {
+		final List<SessionInfo> infos = new ArrayList<SessionInfo>();
+		infos.add(new SessionInfo("session-1", 12345, 67890));
+		infos.add(new SessionInfo("session-2", 1, 2));
+		infos.add(new SessionInfo("session-3", 1, 2));
+		ICoverageNode node = new CoverageNodeImpl(ElementType.SESSION,
+				"Session", false);
+		formatter.createReportVisitor(node, infos).visitEnd(null);
+		assertPathMatches("session-1", "/report/sessioninfo[1]/@id");
+		assertPathMatches("12345", "/report/sessioninfo[1]/@start");
+		assertPathMatches("67890", "/report/sessioninfo[1]/@dump");
+		assertPathMatches("session-2", "/report/sessioninfo[2]/@id");
+		assertPathMatches("session-3", "/report/sessioninfo[3]/@id");
 	}
 
 	@Test

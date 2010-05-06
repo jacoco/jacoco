@@ -180,6 +180,25 @@ public class XMLElement {
 	}
 
 	/**
+	 * Adds an attribute to this element. May only be called before an child
+	 * element is added or this element has been closed. The attribute value is
+	 * the decimal representation of the given long value.
+	 * 
+	 * @param name
+	 *            attribute name
+	 * @param value
+	 *            attribute value
+	 * 
+	 * @return this element
+	 * @throws IOException
+	 *             in case of problems with the writer
+	 */
+	public XMLElement attr(final String name, final long value)
+			throws IOException {
+		return attr(name, String.valueOf(value));
+	}
+
+	/**
 	 * Adds the given text as a child to this node. The text will be quoted.
 	 * 
 	 * @param text

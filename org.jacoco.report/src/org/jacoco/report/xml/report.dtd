@@ -12,9 +12,15 @@
    $Id: $
 -->
 
-<!ELEMENT report (group* , package* , counter*)>
+<!ELEMENT report (sessioninfo*, group* , package* , counter*)>
 <!ATTLIST report
   name CDATA #REQUIRED>
+
+<!ELEMENT sessioninfo EMPTY>
+<!ATTLIST sessioninfo
+  id    CDATA #REQUIRED
+  start CDATA #REQUIRED
+  dump  CDATA #REQUIRED>
 
 <!ELEMENT group (group* , package* , counter*)>
 <!ATTLIST group
@@ -44,6 +50,6 @@
 
 <!ELEMENT counter EMPTY>
 <!ATTLIST counter
-  type CDATA #REQUIRED
+  type    CDATA #REQUIRED
   covered CDATA #REQUIRED
-  missed CDATA #REQUIRED>
+  missed  CDATA #REQUIRED>

@@ -32,7 +32,7 @@ import org.jacoco.report.ISourceFileLocator;
  */
 class XMLReportNodeHandler implements IReportVisitor {
 
-	protected final XMLElement element;
+	private final XMLElement element;
 
 	private final ICoverageNode node;
 
@@ -52,6 +52,29 @@ class XMLReportNodeHandler implements IReportVisitor {
 		this.element = element;
 		this.node = node;
 		element.attr("name", node.getName());
+		insertElementsBefore(element);
+	}
+
+	/**
+	 * Hook to add XML elements before the child elements created by default.
+	 * 
+	 * @param element
+	 *            this element
+	 * @throws IOException
+	 */
+	protected void insertElementsBefore(final XMLElement element)
+			throws IOException {
+	}
+
+	/**
+	 * Hook to add XML elements before the child elements created by default.
+	 * 
+	 * @param element
+	 *            this element
+	 * @throws IOException
+	 */
+	protected void insertElementsAfter(final XMLElement element)
+			throws IOException {
 	}
 
 	public IReportVisitor visitChild(final ICoverageNode node)
@@ -72,23 +95,22 @@ class XMLReportNodeHandler implements IReportVisitor {
 		case SOURCEFILE:
 			return new XMLReportNodeHandler(element.element("sourcefile"), node) {
 				@Override
-				public void visitEnd(final ISourceFileLocator sourceFileLocator)
+				protected void insertElementsAfter(final XMLElement element)
 						throws IOException {
-					writeLines(node.getLines(), this.element);
-					super.visitEnd(sourceFileLocator);
+					writeLines(node.getLines(), element);
 				}
-
 			};
 		}
 		return IReportVisitor.NOP;
 	}
 
-	public void visitEnd(final ISourceFileLocator sourceFileLocator)
+	public final void visitEnd(final ISourceFileLocator sourceFileLocator)
 			throws IOException {
 		for (final CounterEntity counterEntity : CounterEntity.values()) {
 			createCounterElement(counterEntity);
 		}
-		this.element.close();
+		insertElementsAfter(element);
+		element.close();
 	}
 
 	private void createCounterElement(final CounterEntity counterEntity)
