@@ -67,9 +67,9 @@ public class AbstractCoverageTask extends Task {
 	}
 
 	/**
-	 * Sets the location to write coverage execution data
+	 * Sets the location to write coverage execution data. Default is current
+	 * working directory
 	 * 
-	 * @ant.not-required Default is current working directory
 	 * @param file
 	 *            Location to write coverage execution data
 	 */
@@ -78,9 +78,9 @@ public class AbstractCoverageTask extends Task {
 	}
 
 	/**
-	 * Append execution coverage data if a coverage file is already present
+	 * Append execution coverage data if a coverage file is already present.
+	 * Default is <code>true</code>
 	 * 
-	 * @ant.not-required Default is true
 	 * @param append
 	 *            <code>true</code> to append execution data to an existing file
 	 */
@@ -89,9 +89,9 @@ public class AbstractCoverageTask extends Task {
 	}
 
 	/**
-	 * List of wildcard patterns classes to include for instrumentation.
+	 * List of wildcard patterns classes to include for instrumentation. Default
+	 * is <code>*</code>
 	 * 
-	 * @ant.not-required Default is *
 	 * @param includes
 	 *            Wildcard pattern of included classes
 	 */
@@ -101,8 +101,8 @@ public class AbstractCoverageTask extends Task {
 
 	/**
 	 * List of wildcard patterns classes to exclude from instrumentation.
+	 * Default is the empty string, no classes excluded
 	 * 
-	 * @ant.not-required Default is the empty string, no classes excluded
 	 * @param excludes
 	 *            Wildcard pattern of excluded classes
 	 */
@@ -112,10 +112,9 @@ public class AbstractCoverageTask extends Task {
 
 	/**
 	 * List of wildcard patterns for classloaders that JaCoCo will not
-	 * instrument classes from.
+	 * instrument classes from. Default is
+	 * <code>sun.reflect.DelegatingClassLoader</code>
 	 * 
-	 * @ant.not-required Default is
-	 *                   <code>sun.reflect.DelegatingClassLoader</code>
 	 * @param exclClassLoader
 	 *            Wildcard pattern of class loaders to exclude
 	 */
@@ -124,9 +123,7 @@ public class AbstractCoverageTask extends Task {
 	}
 
 	/**
-	 * Sets the session identifier.
-	 * 
-	 * @ant.not-required Default is a auto-generated id
+	 * Sets the session identifier. Default is a auto-generated id
 	 * 
 	 * @param id
 	 *            session identifier
@@ -136,9 +133,8 @@ public class AbstractCoverageTask extends Task {
 	}
 
 	/**
-	 * Dump coverage data on VM termination
+	 * Dump coverage data on VM termination. Default is <code>true</code>
 	 * 
-	 * @ant.not-required Default is <code>true</code>
 	 * @param dumpOnExit
 	 *            <code>true</code> to write coverage data on VM termination
 	 */

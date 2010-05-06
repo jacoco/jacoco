@@ -33,7 +33,6 @@ import org.apache.tools.ant.UnknownElement;
  * <li>Task must be using a forked VM (so vm args can be passed)</li>
  * </ul>
  * 
- * @ant.task category="java"
  * @author Brock Janiczak
  * @version $Revision: $
  */
