@@ -39,9 +39,9 @@ public class MultiFormatterTest {
 
 		private MockVisitor visitor;
 
-		public IReportVisitor createReportVisitor(ICoverageNode session,
+		public IReportVisitor createReportVisitor(ICoverageNode root,
 				List<SessionInfo> sessionInfos) throws IOException {
-			visitor = new MockVisitor(session);
+			visitor = new MockVisitor(root);
 			return visitor;
 		}
 
@@ -88,15 +88,15 @@ public class MultiFormatterTest {
 		return new CoverageNodeImpl(ElementType.GROUP, name, false);
 	}
 
-	private static final String MOCK_SESSION = "Session[b1[p1[], p2[]], b2[]]";
+	private static final String MOCK_REPORT = "Session[b1[p1[], p2[]], b2[]]";
 
-	private void createMockSession(IReportFormatter formatter)
+	private void createMockReport(IReportFormatter formatter)
 			throws IOException {
 		final List<SessionInfo> sessions = Collections.emptyList();
-		IReportVisitor session = formatter.createReportVisitor(
+		IReportVisitor root = formatter.createReportVisitor(
 				createNode("Session"), sessions);
 		{
-			IReportVisitor b1 = session.visitChild(createNode("b1"));
+			IReportVisitor b1 = root.visitChild(createNode("b1"));
 			{
 				IReportVisitor p1 = b1.visitChild(createNode("p1"));
 				p1.visitEnd(null);
@@ -108,17 +108,17 @@ public class MultiFormatterTest {
 			b1.visitEnd(null);
 		}
 		{
-			IReportVisitor b2 = session.visitChild(createNode("b2"));
+			IReportVisitor b2 = root.visitChild(createNode("b2"));
 			b2.visitEnd(null);
 		}
-		session.visitEnd(null);
+		root.visitEnd(null);
 	}
 
 	@Test
 	public void testMockFormatter() throws IOException {
 		MockFormatter formatter = new MockFormatter();
-		createMockSession(formatter);
-		assertEquals(MOCK_SESSION, formatter.toString());
+		createMockReport(formatter);
+		assertEquals(MOCK_REPORT, formatter.toString());
 	}
 
 	@Test
@@ -130,10 +130,10 @@ public class MultiFormatterTest {
 		multi.add(mock1);
 		multi.add(mock2);
 		multi.add(mock3);
-		createMockSession(multi);
-		assertEquals(MOCK_SESSION, mock1.toString());
-		assertEquals(MOCK_SESSION, mock2.toString());
-		assertEquals(MOCK_SESSION, mock3.toString());
+		createMockReport(multi);
+		assertEquals(MOCK_REPORT, mock1.toString());
+		assertEquals(MOCK_REPORT, mock2.toString());
+		assertEquals(MOCK_REPORT, mock3.toString());
 	}
 
 }

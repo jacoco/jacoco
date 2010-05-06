@@ -44,9 +44,6 @@ public interface ICoverageNode {
 		/** Logical Group of Bundles */
 		GROUP,
 
-		/** Coverage Session */
-		SESSION
-
 	}
 
 	/**

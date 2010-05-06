@@ -35,6 +35,7 @@
     <html>
         <head>
             <link rel="stylesheet" href="../doc/.resources/doc.css" charset="ISO-8859-1" type="text/css" />
+            <link rel="shortcut icon" href="../doc/.resources/report.gif" type="image/gif" />
             <title>JaCoCo - JUnit Test Results</title>
             
     <style type="text/css">
@@ -221,7 +222,7 @@
 <!-- Page HEADER -->
 <xsl:template name="pageHeader">
 	<div class="breadcrumb">
-		<a href="../index.html" class="el_session">JaCoCo</a> &gt;
+		<a href="../index.html" class="el_report">JaCoCo</a> &gt;
 		<span class="el_testsuite">JUnit Test Results</span>
 	</div>
     <h1>JUnit Test Results</h1>

@@ -106,7 +106,7 @@ public class ReportPageTest {
 				return "UTF-8";
 			}
 		};
-		ReportPage parent = new TestReportPage("Session", "el_session", null);
+		ReportPage parent = new TestReportPage("Report", "el_report", null);
 		page = new TestReportPage("Test", "el_group", parent);
 	}
 
@@ -132,11 +132,11 @@ public class ReportPageTest {
 				"/html/head/link[@rel='stylesheet']/@href"));
 
 		// bread crumb
-		assertEquals("Session", support.findStr(doc,
+		assertEquals("Report", support.findStr(doc,
 				"/html/body/div[@class='breadcrumb']/a[1]/text()"));
-		assertEquals("Session.html", support.findStr(doc,
+		assertEquals("Report.html", support.findStr(doc,
 				"/html/body/div[@class='breadcrumb']/a[1]/@href"));
-		assertEquals("el_session", support.findStr(doc,
+		assertEquals("el_report", support.findStr(doc,
 				"/html/body/div[@class='breadcrumb']/a[1]/@class"));
 		assertEquals("Test", support.findStr(doc,
 				"/html/body/div[@class='breadcrumb']/span[2]/text()"));

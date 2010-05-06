@@ -92,7 +92,7 @@ public abstract class ReportPage {
 		head.link("stylesheet", context.getResources().getLink(folder,
 				Resources.STYLESHEET), "text/css");
 		head.link("shortcut icon", context.getResources().getLink(folder,
-				"session.gif"), "image/gif");
+				"report.gif"), "image/gif");
 		head.title().text(getLabel());
 	}
 

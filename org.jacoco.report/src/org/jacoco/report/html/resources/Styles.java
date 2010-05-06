@@ -29,7 +29,10 @@ public class Styles {
 	/** Test block aligned to the right */
 	public static final String RIGHT = "right";
 
-	/** Info element */
+	/** Report element */
+	public static final String EL_REPORT = "el_report";
+
+	/** Sessions element */
 	public static final String EL_SESSIONS = "el_sessions";
 
 	/** Coverage table */

@@ -61,8 +61,8 @@ public class XMLFormatterTest {
 		infos.add(new SessionInfo("session-1", 12345, 67890));
 		infos.add(new SessionInfo("session-2", 1, 2));
 		infos.add(new SessionInfo("session-3", 1, 2));
-		ICoverageNode node = new CoverageNodeImpl(ElementType.SESSION,
-				"Session", false);
+		ICoverageNode node = new CoverageNodeImpl(ElementType.GROUP, "Sample",
+				false);
 		formatter.createReportVisitor(node, infos).visitEnd(null);
 		assertPathMatches("session-1", "/report/sessioninfo[1]/@id");
 		assertPathMatches("12345", "/report/sessioninfo[1]/@start");

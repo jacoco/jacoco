@@ -37,11 +37,11 @@ public class XMLFormatter implements IReportFormatter {
 
 	private String outputEncoding = "UTF-8";
 
-	public IReportVisitor createReportVisitor(final ICoverageNode session,
+	public IReportVisitor createReportVisitor(final ICoverageNode rootNode,
 			final List<SessionInfo> sessionInfos) throws IOException {
 		final XMLElement root = new XMLDocument("report", PUBID, SYSTEM,
 				outputEncoding, true, output.createFile());
-		return new XMLReportNodeHandler(root, session) {
+		return new XMLReportNodeHandler(root, rootNode) {
 			@Override
 			protected void insertElementsBefore(final XMLElement element)
 					throws IOException {

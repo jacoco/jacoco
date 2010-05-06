@@ -14,9 +14,9 @@ h1 {
 }
 
 
-.el_session {
+.el_report {
   padding-left:18px;
-  background-image:url(session.gif);
+  background-image:url(report.gif);
   background-position:left center;
   background-repeat:no-repeat;
 }

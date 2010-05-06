@@ -29,6 +29,7 @@ import org.jacoco.report.IReportVisitor;
 import org.jacoco.report.JavaNames;
 import org.jacoco.report.ReportOutputFolder;
 import org.jacoco.report.html.resources.Resources;
+import org.jacoco.report.html.resources.Styles;
 
 /**
  * Formatter for coverage reports in multiple HTML pages.
@@ -156,7 +157,7 @@ public class HTMLFormatter implements IReportFormatter, IHTMLReportContext {
 
 	// === IReportFormatter ===
 
-	public IReportVisitor createReportVisitor(final ICoverageNode session,
+	public IReportVisitor createReportVisitor(final ICoverageNode rootNode,
 			final List<SessionInfo> sessionInfos) throws IOException {
 		if (output == null) {
 			throw new IllegalStateException("No report output set.");
@@ -164,7 +165,12 @@ public class HTMLFormatter implements IReportFormatter, IHTMLReportContext {
 		final ReportOutputFolder root = new ReportOutputFolder(output);
 		resources = new Resources(root);
 		resources.copyResources();
-		final GroupPage rootpage = new GroupPage(session, null, root, this);
+		final GroupPage rootpage = new GroupPage(rootNode, null, root, this) {
+			@Override
+			protected String getElementStyle() {
+				return Styles.EL_REPORT;
+			}
+		};
 		infoPage = new SessionsPage(sessionInfos, rootpage, root, this);
 		infoPage.renderDocument();
 		return rootpage;

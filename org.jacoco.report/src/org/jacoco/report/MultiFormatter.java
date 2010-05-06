@@ -41,11 +41,11 @@ public class MultiFormatter implements IReportFormatter {
 		formatters.add(formatter);
 	}
 
-	public IReportVisitor createReportVisitor(final ICoverageNode session,
+	public IReportVisitor createReportVisitor(final ICoverageNode root,
 			final List<SessionInfo> sessionInfos) throws IOException {
 		final List<IReportVisitor> visitors = new ArrayList<IReportVisitor>();
 		for (final IReportFormatter f : formatters) {
-			visitors.add(f.createReportVisitor(session, sessionInfos));
+			visitors.add(f.createReportVisitor(root, sessionInfos));
 		}
 		return new MultiVisitor(visitors);
 	}

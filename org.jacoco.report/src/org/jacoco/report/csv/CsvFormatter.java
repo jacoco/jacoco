@@ -40,7 +40,7 @@ public class CsvFormatter implements IReportFormatter {
 
 	private String outputEncoding = "UTF-8";
 
-	public IReportVisitor createReportVisitor(final ICoverageNode session,
+	public IReportVisitor createReportVisitor(final ICoverageNode root,
 			final List<SessionInfo> sessionInfos) throws IOException {
 
 		if (output == null) {
@@ -50,7 +50,7 @@ public class CsvFormatter implements IReportFormatter {
 				new OutputStreamWriter(output.createFile(), outputEncoding));
 		final ClassRowWriter rowWriter = new ClassRowWriter(writer,
 				languageNames);
-		return new CsvGroupHandler(rowWriter, session.getName()) {
+		return new CsvGroupHandler(rowWriter, root.getName()) {
 			@Override
 			public void visitEnd(final ISourceFileLocator sourceFileLocator)
 					throws IOException {

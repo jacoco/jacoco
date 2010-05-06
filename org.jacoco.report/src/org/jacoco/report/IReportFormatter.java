@@ -29,8 +29,8 @@ public interface IReportFormatter {
 	/**
 	 * Creates a visitor for root of a coverage data tree.
 	 * 
-	 * @param session
-	 *            session root node
+	 * @param root
+	 *            report root node
 	 * @param sessionInfos
 	 *            list of chronological ordered {@link SessionInfo} objects
 	 *            where execution data has been collected for this report.
@@ -38,7 +38,7 @@ public interface IReportFormatter {
 	 * @return visitor for the root node
 	 * @throws IOException
 	 */
-	public IReportVisitor createReportVisitor(ICoverageNode session,
+	public IReportVisitor createReportVisitor(ICoverageNode root,
 			List<SessionInfo> sessionInfos) throws IOException;
 
 }

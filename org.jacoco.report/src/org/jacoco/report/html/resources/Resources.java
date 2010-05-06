@@ -77,8 +77,6 @@ public class Resources {
 	 */
 	public static String getElementStyle(final ElementType type) {
 		switch (type) {
-		case SESSION:
-			return "el_session";
 		case GROUP:
 			return "el_group";
 		case BUNDLE:
@@ -103,7 +101,7 @@ public class Resources {
 	 */
 	public void copyResources() throws IOException {
 		copyResource(STYLESHEET);
-		copyResource("session.gif");
+		copyResource("report.gif");
 		copyResource("group.gif");
 		copyResource("bundle.gif");
 		copyResource("package.gif");
