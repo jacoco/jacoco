@@ -18,7 +18,7 @@ package org.jacoco.report.html.resources;
  * @author Marc R. Hoffmann
  * @version $Revision: $
  */
-public class Styles {
+public interface Styles {
 
 	/** Breadcrumb bar */
 	public static final String BREADCRUMB = "breadcrumb";

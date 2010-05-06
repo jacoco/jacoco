@@ -18,10 +18,7 @@ package org.jacoco.core;
  * @author Marc R. Hoffmann
  * @version $Revision: $
  */
-public class JaCoCo {
-
-	private JaCoCo() {
-	}
+public interface JaCoCo {
 
 	/** Qualified build version of the JaCoCo core library. */
 	public static final String VERSION = "@qualified.bundle.version@";
