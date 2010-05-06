@@ -10,7 +10,7 @@ h1 {
 
 .breadcrumb {
   border:#d6d3ce 1px solid;
-  padding:2px 2px 2px 2px;
+  padding:2px 4px 2px 4px;
 }
 
 .footer {
@@ -21,10 +21,8 @@ h1 {
   color:#a0a0a0;
 }
 
-.footer div.versioninfo {
-  width:30%;
+.right {
   float:right;
-  text-align:right;
 }
 
 .footer a {

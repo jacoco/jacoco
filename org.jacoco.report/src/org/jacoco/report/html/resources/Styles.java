@@ -26,8 +26,11 @@ public class Styles {
 	/** Footer */
 	public static final String FOOTER = "footer";
 
-	/** Version Info in Footer */
-	public static final String VERSIONINFO = "versioninfo";
+	/** Test block aligned to the right */
+	public static final String RIGHT = "right";
+
+	/** Info element */
+	public static final String EL_SESSIONS = "el_sessions";
 
 	/** Coverage table */
 	public static final String COVERAGETABLE = "coverage";

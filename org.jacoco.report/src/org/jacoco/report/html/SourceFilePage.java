@@ -30,7 +30,7 @@ import org.jacoco.report.html.resources.Resources;
  * @author Marc R. Hoffmann
  * @version $Revision: $
  */
-public class SourceFilePage extends ReportPage {
+public class SourceFilePage extends NodePage {
 
 	private Reader sourceReader;
 
@@ -43,13 +43,13 @@ public class SourceFilePage extends ReportPage {
 	 * 
 	 * @param sourceFileNode
 	 * @param parent
-	 * @param outputFolder
+	 * @param folder
 	 * @param context
 	 */
 	public SourceFilePage(final SourceFileCoverage sourceFileNode,
-			final ReportPage parent, final ReportOutputFolder outputFolder,
+			final ReportPage parent, final ReportOutputFolder folder,
 			final IHTMLReportContext context) {
-		super(sourceFileNode, parent, outputFolder, context);
+		super(sourceFileNode, parent, folder, context);
 		packageName = sourceFileNode.getPackageName();
 		lines = sourceFileNode.getLines();
 	}
@@ -69,8 +69,7 @@ public class SourceFilePage extends ReportPage {
 	}
 
 	@Override
-	protected void content(final HTMLElement body,
-			final ISourceFileLocator sourceFileLocator) throws IOException {
+	protected void content(final HTMLElement body) throws IOException {
 		new SourceHighlighter().render(body, lines, sourceReader);
 		sourceReader.close();
 	}
@@ -78,27 +77,21 @@ public class SourceFilePage extends ReportPage {
 	@Override
 	protected void head(final HTMLElement head) throws IOException {
 		super.head(head);
-		head.link("stylesheet", context.getResources().getLink(outputFolder,
+		head.link("stylesheet", context.getResources().getLink(folder,
 				Resources.PRETTIFY_STYLESHEET), "text/css");
 		head.script("text/javascript", context.getResources().getLink(
-				outputFolder, Resources.PRETTIFY_SCRIPT));
+				folder, Resources.PRETTIFY_SCRIPT));
 	}
 
 	@Override
-	protected void body(final HTMLElement body,
-			final ISourceFileLocator sourceFileLocator) throws IOException {
+	protected void body(final HTMLElement body) throws IOException {
 		body.attr("onload", "prettyPrint()");
-		super.body(body, sourceFileLocator);
+		super.body(body);
 	}
 
 	@Override
 	protected String getFileName() {
 		return getNode().getName() + ".html";
-	}
-
-	@Override
-	protected ReportOutputFolder getFolder(final ReportOutputFolder base) {
-		return base;
 	}
 
 	/**

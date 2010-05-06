@@ -68,7 +68,7 @@
             
             </div>
 			<div class="footer">
-				<div class="versioninfo"><a href="{$jacoco.home.url}">JaCoCo</a>&#160;<xsl:value-of select="$qualified.bundle.version"/></div>
+				<span class="right"><a href="{$jacoco.home.url}">JaCoCo</a>&#160;<xsl:value-of select="$qualified.bundle.version"/></span>
 				<a href="../doc/license.html">Copyright</a> &#169; <xsl:value-of select="$copyright.years"/> Mountainminds GmbH &amp; Co. KG and Contributors
 			</div>
         </body>

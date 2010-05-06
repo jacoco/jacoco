@@ -28,32 +28,33 @@ import org.jacoco.report.ReportOutputFolder;
  * @author Marc R. Hoffmann
  * @version $Revision: $
  */
-public class GroupPage extends ReportPage {
+public class GroupPage extends NodePage {
 
-	private final List<ReportPage> children = new ArrayList<ReportPage>();
+	private final List<NodePage> children = new ArrayList<NodePage>();
 
 	/**
 	 * Creates a new visitor in the given context.
 	 * 
 	 * @param node
 	 * @param parent
-	 * @param outputFolder
+	 * @param folder
 	 * @param context
 	 */
 	public GroupPage(final ICoverageNode node, final ReportPage parent,
-			final ReportOutputFolder outputFolder,
-			final IHTMLReportContext context) {
-		super(node, parent, outputFolder, context);
+			final ReportOutputFolder folder, final IHTMLReportContext context) {
+		super(node, parent, folder, context);
 	}
 
 	public IReportVisitor visitChild(final ICoverageNode node) {
-		ReportPage child;
+		final NodePage child;
 		switch (node.getElementType()) {
 		case PACKAGE:
-			child = new PackagePage(node, this, outputFolder, context);
+			child = new PackagePage(node, this, folder.subFolder(node.getName()
+					.replace('/', '.')), context);
 			break;
 		default:
-			child = new GroupPage(node, this, outputFolder, context);
+			child = new GroupPage(node, this, folder.subFolder(node.getName()),
+					context);
 			break;
 		}
 		children.add(child);
@@ -69,20 +70,14 @@ public class GroupPage extends ReportPage {
 	}
 
 	@Override
-	protected void content(final HTMLElement body,
-			final ISourceFileLocator sourceFileLocator) throws IOException {
+	protected void content(final HTMLElement body) throws IOException {
 		context.getTable(getNode().getElementType()).render(body, children,
-				getNode(), context.getResources(), outputFolder);
+				getNode(), context.getResources(), folder);
 	}
 
 	@Override
 	protected String getFileName() {
 		return "index.html";
-	}
-
-	@Override
-	protected ReportOutputFolder getFolder(final ReportOutputFolder base) {
-		return base.subFolder(getLabel());
 	}
 
 }

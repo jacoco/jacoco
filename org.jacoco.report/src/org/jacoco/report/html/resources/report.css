@@ -10,7 +10,7 @@ h1 {
 
 .breadcrumb {
   border:#d6d3ce 1px solid;
-  padding:2px 2px 2px 2px;
+  padding:2px 4px 2px 4px;
 }
 
 
@@ -63,6 +63,12 @@ h1 {
   background-repeat:no-repeat;
 }
 
+.el_sessions {
+  padding-left:18px;
+  background-image:url(sessions.gif);
+  background-position:left center;
+  background-repeat:no-repeat;
+}
 
 pre.source {
   border:#d6d3ce 1px solid;
@@ -163,13 +169,11 @@ table.coverage tfoot td.ctr2 {
   color:#a0a0a0;
 }
 
-.footer div.versioninfo {
-  width:40%;
-  float:right;
-  text-align:right;
-}
-
 .footer a {
   color:#a0a0a0;
+}
+
+.right {
+  float:right;
 }
 

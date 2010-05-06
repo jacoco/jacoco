@@ -33,7 +33,7 @@ import org.jacoco.report.ReportOutputFolder;
  * @author Marc R. Hoffmann
  * @version $Revision: $
  */
-public class PackagePage extends ReportPage {
+public class PackagePage extends NodePage {
 
 	private final List<ClassPage> classes = new ArrayList<ClassPage>();
 
@@ -44,13 +44,12 @@ public class PackagePage extends ReportPage {
 	 * 
 	 * @param node
 	 * @param parent
-	 * @param outputFolder
+	 * @param folder
 	 * @param context
 	 */
 	public PackagePage(final ICoverageNode node, final ReportPage parent,
-			final ReportOutputFolder outputFolder,
-			final IHTMLReportContext context) {
-		super(node, parent, outputFolder, context);
+			final ReportOutputFolder folder, final IHTMLReportContext context) {
+		super(node, parent, folder, context);
 	}
 
 	public IReportVisitor visitChild(final ICoverageNode node) {
@@ -58,12 +57,12 @@ public class PackagePage extends ReportPage {
 		switch (type) {
 		case SOURCEFILE:
 			final SourceFilePage sourcePage = new SourceFilePage(
-					(SourceFileCoverage) node, this, outputFolder, context);
+					(SourceFileCoverage) node, this, folder, context);
 			sourceFiles.put(node.getName(), sourcePage);
 			return sourcePage;
 		case CLASS:
 			final ClassPage classPage = new ClassPage((ClassCoverage) node,
-					this, sourceFiles, outputFolder, context);
+					this, sourceFiles, folder, context);
 			classes.add(classPage);
 			return classPage;
 		}
@@ -80,10 +79,9 @@ public class PackagePage extends ReportPage {
 	}
 
 	@Override
-	protected void content(final HTMLElement body,
-			final ISourceFileLocator sourceFileLocator) throws IOException {
+	protected void content(final HTMLElement body) throws IOException {
 		context.getTable(getNode().getElementType()).render(body, classes,
-				getNode(), context.getResources(), outputFolder);
+				getNode(), context.getResources(), folder);
 	}
 
 	@Override
@@ -94,11 +92,6 @@ public class PackagePage extends ReportPage {
 	@Override
 	public String getLabel() {
 		return context.getLanguageNames().getPackageName(getNode().getName());
-	}
-
-	@Override
-	protected ReportOutputFolder getFolder(final ReportOutputFolder base) {
-		return base.subFolder(getLabel());
 	}
 
 }

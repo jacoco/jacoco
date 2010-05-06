@@ -15,65 +15,67 @@ package org.jacoco.report.html;
 import java.io.IOException;
 
 import org.jacoco.core.JaCoCo;
-import org.jacoco.core.analysis.ICoverageNode;
-import org.jacoco.report.IReportVisitor;
-import org.jacoco.report.ISourceFileLocator;
 import org.jacoco.report.ReportOutputFolder;
 import org.jacoco.report.html.resources.Resources;
 import org.jacoco.report.html.resources.Styles;
 
 /**
  * Base class for HTML page generators. It renders the page skeleton with the
- * breadcrumb, the title and the footer.
+ * breadcrumb, the title and the footer. Every report page is part of a
+ * hierarchy and has a parent page (except the root page).
  * 
  * @author Marc R. Hoffmann
  * @version $Revision: $
  */
-public abstract class ReportPage implements IReportVisitor, ICoverageTableItem {
+public abstract class ReportPage {
 
 	private final ReportPage parent;
 
 	/** output folder for this node */
-	protected final ReportOutputFolder outputFolder;
+	protected final ReportOutputFolder folder;
 
 	/** context for this report */
 	protected final IHTMLReportContext context;
 
-	private ICoverageNode node;
-
 	/**
 	 * Creates a new report page.
 	 * 
-	 * @param node
-	 *            corresponding node
 	 * @param parent
 	 *            optional hierarchical parent
-	 * @param baseFolder
-	 *            base folder to create this report page relative to
+	 * @param folder
+	 *            base folder to create this report in
 	 * @param context
 	 *            settings context
 	 */
-	protected ReportPage(final ICoverageNode node, final ReportPage parent,
-			final ReportOutputFolder baseFolder,
-			final IHTMLReportContext context) {
-		this.node = node;
+	protected ReportPage(final ReportPage parent,
+			final ReportOutputFolder folder, final IHTMLReportContext context) {
 		this.parent = parent;
 		this.context = context;
-		this.outputFolder = getFolder(baseFolder);
+		this.folder = folder;
 	}
 
-	public void visitEnd(final ISourceFileLocator sourceFileLocator)
-			throws IOException {
-		renderDocument(sourceFileLocator);
-		this.node = node.getPlainCopy();
+	/**
+	 * Returns a relative link to this page that works from the given base
+	 * folder.
+	 * 
+	 * @param base
+	 *            folder where the link should be inserted
+	 * @return relative link
+	 */
+	public final String getLink(final ReportOutputFolder base) {
+		return folder.getLink(base, getFileName());
 	}
 
-	private void renderDocument(final ISourceFileLocator sourceFileLocator)
-			throws IOException {
-		final HTMLDocument doc = new HTMLDocument(outputFolder
+	/**
+	 * Renders the page content. This method must be called at most once.
+	 * 
+	 * @throws IOException
+	 */
+	public final void renderDocument() throws IOException {
+		final HTMLDocument doc = new HTMLDocument(folder
 				.createFile(getFileName()), context.getOutputEncoding());
 		head(doc.head());
-		body(doc.body(), sourceFileLocator);
+		body(doc.body());
 		doc.close();
 	}
 
@@ -87,9 +89,9 @@ public abstract class ReportPage implements IReportVisitor, ICoverageTableItem {
 	 */
 	protected void head(final HTMLElement head) throws IOException {
 		head.meta("Content-Type", "text/html;charset=UTF-8");
-		head.link("stylesheet", context.getResources().getLink(outputFolder,
+		head.link("stylesheet", context.getResources().getLink(folder,
 				Resources.STYLESHEET), "text/css");
-		head.link("shortcut icon", context.getResources().getLink(outputFolder,
+		head.link("shortcut icon", context.getResources().getLink(folder,
 				"session.gif"), "image/gif");
 		head.title().text(getLabel());
 	}
@@ -99,58 +101,43 @@ public abstract class ReportPage implements IReportVisitor, ICoverageTableItem {
 	 * 
 	 * @param body
 	 *            enclosing body element
-	 * @param sourceFileLocator
-	 *            locator for source file content in this context
 	 * @throws IOException
 	 *             in case of IO problems with the report writer
 	 */
-	protected void body(final HTMLElement body,
-			final ISourceFileLocator sourceFileLocator) throws IOException {
-		breadcrumb(body.div(Styles.BREADCRUMB), outputFolder, this);
+	protected void body(final HTMLElement body) throws IOException {
+		final HTMLElement navigation = body.div(Styles.BREADCRUMB);
+		infoLinks(navigation.span(Styles.RIGHT));
+		breadcrumb(navigation, folder);
 		body.h1().text(getLabel());
-		content(body, sourceFileLocator);
+		content(body);
 		footer(body);
 	}
 
-	private void breadcrumb(final HTMLElement body,
-			final ReportOutputFolder base, final ReportPage current)
+	private void infoLinks(final HTMLElement span) throws IOException {
+		span.a(context.getInfoPageLink(folder), Styles.EL_SESSIONS).text(
+				"Sessions");
+	}
+
+	private void breadcrumb(final HTMLElement div, final ReportOutputFolder base)
 			throws IOException {
-		if (parent != null) {
-			parent.breadcrumb(body, base, current);
-			body.text(" > ");
-		}
-		final String style = Resources.getElementStyle(node.getElementType());
-		if (this == current) {
-			body.span(style).text(getLabel());
-		} else {
-			body.a(getLink(base), style).text(getLabel());
+		breadcrumbParent(parent, div, base);
+		div.span(getElementStyle()).text(getLabel());
+	}
+
+	private static void breadcrumbParent(final ReportPage page,
+			final HTMLElement div, final ReportOutputFolder base)
+			throws IOException {
+		if (page != null) {
+			breadcrumbParent(page.parent, div, base);
+			final String style = page.getElementStyle();
+			div.a(page.getLink(base), style).text(page.getLabel());
+			div.text(" > ");
 		}
 	}
 
-	/**
-	 * Creates the actual content of the page.
-	 * 
-	 * @param body
-	 *            body tag of the page
-	 * @param sourceFileLocator
-	 *            locator for source file content in this context
-	 * @throws IOException
-	 *             in case of IO problems with the report writer
-	 */
-	protected abstract void content(final HTMLElement body,
-			final ISourceFileLocator sourceFileLocator) throws IOException;
-
-	/**
-	 * Renders the page footer.
-	 * 
-	 * @param body
-	 *            enclosing body element
-	 * @throws IOException
-	 *             in case of IO problems with the report writer
-	 */
-	protected void footer(final HTMLElement body) throws IOException {
+	private void footer(final HTMLElement body) throws IOException {
 		final HTMLElement footer = body.div(Styles.FOOTER);
-		final HTMLElement versioninfo = footer.div(Styles.VERSIONINFO);
+		final HTMLElement versioninfo = footer.span(Styles.RIGHT);
 		versioninfo.text("Created with ");
 		versioninfo.a(JaCoCo.HOMEURL).text("JaCoCo");
 		versioninfo.text(" ").text(JaCoCo.VERSION);
@@ -165,27 +152,28 @@ public abstract class ReportPage implements IReportVisitor, ICoverageTableItem {
 	protected abstract String getFileName();
 
 	/**
-	 * Creates the output folder relative to the given base for this report
-	 * page. The method may decide to simply return the base folder itself.
+	 * Returns the display label used for the element represented on this page.
 	 * 
-	 * @param base
-	 *            base folder
-	 * @return folder to create this page in
+	 * @return display label
 	 */
-	protected abstract ReportOutputFolder getFolder(ReportOutputFolder base);
+	protected abstract String getLabel();
 
-	// === ICoverageTableItem ===
+	/**
+	 * The CSS style class that might be associated with this element when it is
+	 * displayed in the header or in tables.
+	 * 
+	 * @return CSS style class for this element
+	 */
+	protected abstract String getElementStyle();
 
-	public String getLabel() {
-		return node.getName();
-	}
-
-	public ICoverageNode getNode() {
-		return node;
-	}
-
-	public final String getLink(final ReportOutputFolder base) {
-		return outputFolder.getLink(base, getFileName());
-	}
+	/**
+	 * Creates the actual content of the page.
+	 * 
+	 * @param body
+	 *            body tag of the page
+	 * @throws IOException
+	 *             in case of IO problems with the report writer
+	 */
+	protected abstract void content(final HTMLElement body) throws IOException;
 
 }

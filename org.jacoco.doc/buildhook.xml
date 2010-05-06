@@ -120,7 +120,7 @@
 			<link href="http://asm.ow2.org/asm31/javadoc/user" offline="true" packagelistloc="${source.bundle.dir}/javadoc/asm"/>
 			<bottom>
 				&lt;div class="footer"&gt;
-					&lt;div class="versioninfo"&gt;&lt;a href="${jacoco.home.url}"&gt;JaCoCo&lt;/a&gt; ${qualified.bundle.version}&lt;/div&gt;
+					&lt;span class="right"&gt;&lt;a href="${jacoco.home.url}"&gt;JaCoCo&lt;/a&gt; ${qualified.bundle.version}&lt;/span&gt;
 					Copyright &#169; ${copyright.years} Mountainminds GmbH &amp; Co. KG and Contributors
 				&lt;/div>
 			</bottom>

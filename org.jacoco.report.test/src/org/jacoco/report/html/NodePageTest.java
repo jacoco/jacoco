@@ -12,19 +12,21 @@
  *******************************************************************************/
 package org.jacoco.report.html;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertSame;
 
 import java.io.IOException;
 
+import org.jacoco.core.analysis.CoverageNodeImpl;
+import org.jacoco.core.analysis.ICoverageNode;
 import org.jacoco.core.analysis.ICoverageNode.ElementType;
 import org.jacoco.report.ILanguageNames;
+import org.jacoco.report.IReportVisitor;
 import org.jacoco.report.MemoryMultiReportOutput;
 import org.jacoco.report.ReportOutputFolder;
 import org.jacoco.report.html.resources.Resources;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import org.w3c.dom.Document;
 
 /**
  * Unit tests for {@link ReportPage}.
@@ -32,7 +34,7 @@ import org.w3c.dom.Document;
  * @author Marc R. Hoffmann
  * @version $Revision: $
  */
-public class ReportPageTest {
+public class NodePageTest {
 
 	private MemoryMultiReportOutput output;
 
@@ -40,37 +42,27 @@ public class ReportPageTest {
 
 	private IHTMLReportContext context;
 
-	private ReportPage page;
+	private CoverageNodeImpl node;
 
-	private class TestReportPage extends ReportPage {
+	private NodePage page;
 
-		private final String label;
-		private final String style;
+	private class TestNodePage extends NodePage {
 
-		protected TestReportPage(String label, String style, ReportPage parent) {
-			super(parent, root, ReportPageTest.this.context);
-			this.label = label;
-			this.style = style;
+		protected TestNodePage(ICoverageNode node) {
+			super(node, null, root, NodePageTest.this.context);
 		}
 
 		@Override
 		protected void content(HTMLElement body) throws IOException {
-			body.div("testcontent").text("Hello Test");
 		}
 
 		@Override
 		protected String getFileName() {
-			return label + ".html";
+			return "index.html";
 		}
 
-		@Override
-		protected String getLabel() {
-			return label;
-		}
-
-		@Override
-		protected String getElementStyle() {
-			return style;
+		public IReportVisitor visitChild(ICoverageNode node) {
+			throw new UnsupportedOperationException();
 		}
 
 	}
@@ -106,8 +98,8 @@ public class ReportPageTest {
 				return "UTF-8";
 			}
 		};
-		ReportPage parent = new TestReportPage("Session", "el_session", null);
-		page = new TestReportPage("Test", "el_group", parent);
+		node = new CoverageNodeImpl(ElementType.GROUP, "Test", false);
+		page = new TestNodePage(node);
 	}
 
 	@After
@@ -116,43 +108,24 @@ public class ReportPageTest {
 	}
 
 	@Test
-	public void testGetLink() throws IOException {
-		ReportOutputFolder base = root.subFolder("here");
-		assertEquals("../Test.html", page.getLink(base));
+	public void testGetNode() throws IOException {
+		assertSame(node, page.getNode());
 	}
 
 	@Test
-	public void testPageContent() throws Exception {
-		page.renderDocument();
-		final HTMLSupport support = new HTMLSupport();
-		final Document doc = support.parse(output.getFile("Test.html"));
+	public void testGetLabel() throws IOException {
+		assertSame("Test", page.getLabel());
+	}
 
-		// style sheet
-		assertEquals(".resources/report.css", support.findStr(doc,
-				"/html/head/link[@rel='stylesheet']/@href"));
+	@Test
+	public void testGetElementStyle() throws IOException {
+		assertSame("el_group", page.getElementStyle());
+	}
 
-		// bread crumb
-		assertEquals("Session", support.findStr(doc,
-				"/html/body/div[@class='breadcrumb']/a[1]/text()"));
-		assertEquals("Session.html", support.findStr(doc,
-				"/html/body/div[@class='breadcrumb']/a[1]/@href"));
-		assertEquals("el_session", support.findStr(doc,
-				"/html/body/div[@class='breadcrumb']/a[1]/@class"));
-		assertEquals("Test", support.findStr(doc,
-				"/html/body/div[@class='breadcrumb']/span[2]/text()"));
-		assertEquals("el_group", support.findStr(doc,
-				"/html/body/div[@class='breadcrumb']/span[2]/@class"));
-
-		// Header
-		assertEquals("Test", support.findStr(doc, "/html/body/h1/text()"));
-
-		// Content
-		assertEquals("Hello Test", support.findStr(doc,
-				"/html/body/div[@class='testcontent']/text()"));
-
-		// Footer
-		assertEquals("CustomFooter", support.findStr(doc,
-				"/html/body/div[@class='footer']/text()"));
+	@Test
+	public void testVisitEnd() throws IOException {
+		page.visitEnd(null);
+		output.assertSingleFile("index.html");
 	}
 
 }

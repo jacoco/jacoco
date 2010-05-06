@@ -109,6 +109,17 @@ public class HTMLElement extends XMLElement {
 	}
 
 	/**
+	 * Creates a 'p' element.
+	 * 
+	 * @return 'p' element
+	 * @throws IOException
+	 *             in case of problems with the writer
+	 */
+	public HTMLElement p() throws IOException {
+		return element("p");
+	}
+
+	/**
 	 * Creates a 'span' element.
 	 * 
 	 * @param classattr

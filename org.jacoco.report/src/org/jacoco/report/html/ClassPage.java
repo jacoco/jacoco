@@ -21,7 +21,6 @@ import org.jacoco.core.analysis.ClassCoverage;
 import org.jacoco.core.analysis.ICoverageNode;
 import org.jacoco.core.analysis.MethodCoverage;
 import org.jacoco.report.IReportVisitor;
-import org.jacoco.report.ISourceFileLocator;
 import org.jacoco.report.ReportOutputFolder;
 
 /**
@@ -31,7 +30,7 @@ import org.jacoco.report.ReportOutputFolder;
  * @author Marc R. Hoffmann
  * @version $Revision: $
  */
-public class ClassPage extends ReportPage {
+public class ClassPage extends NodePage {
 
 	private class MethodItem implements ICoverageTableItem {
 
@@ -78,14 +77,14 @@ public class ClassPage extends ReportPage {
 	 * @param classNode
 	 * @param parent
 	 * @param sourceFiles
-	 * @param outputFolder
+	 * @param folder
 	 * @param context
 	 */
 	public ClassPage(final ClassCoverage classNode, final ReportPage parent,
 			final Map<String, SourceFilePage> sourceFiles,
-			final ReportOutputFolder outputFolder,
+			final ReportOutputFolder folder,
 			final IHTMLReportContext context) {
-		super(classNode, parent, outputFolder, context);
+		super(classNode, parent, folder, context);
 		this.sourceFiles = sourceFiles;
 		this.label = context.getLanguageNames().getClassName(
 				classNode.getName(), classNode.getSignature(),
@@ -99,10 +98,9 @@ public class ClassPage extends ReportPage {
 	}
 
 	@Override
-	protected void content(final HTMLElement body,
-			final ISourceFileLocator sourceFileLocator) throws IOException {
+	protected void content(final HTMLElement body) throws IOException {
 		context.getTable(getNode().getElementType()).render(body, methods,
-				getNode(), context.getResources(), outputFolder);
+				getNode(), context.getResources(), folder);
 	}
 
 	@Override
@@ -116,11 +114,6 @@ public class ClassPage extends ReportPage {
 	@Override
 	public String getLabel() {
 		return label;
-	}
-
-	@Override
-	protected ReportOutputFolder getFolder(final ReportOutputFolder base) {
-		return base;
 	}
 
 }

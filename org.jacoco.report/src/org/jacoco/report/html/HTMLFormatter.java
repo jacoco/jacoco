@@ -48,6 +48,8 @@ public class HTMLFormatter implements IReportFormatter, IHTMLReportContext {
 
 	private Resources resources;
 
+	private SessionsPage infoPage;
+
 	/**
 	 * The default sorting which is absolute not covered instructions and
 	 * absolute total instructions as the second criterion.
@@ -144,6 +146,10 @@ public class HTMLFormatter implements IReportFormatter, IHTMLReportContext {
 		return footerText;
 	}
 
+	public String getInfoPageLink(final ReportOutputFolder base) {
+		return infoPage.getLink(base);
+	}
+
 	public String getOutputEncoding() {
 		return outputEncoding;
 	}
@@ -158,14 +164,10 @@ public class HTMLFormatter implements IReportFormatter, IHTMLReportContext {
 		final ReportOutputFolder root = new ReportOutputFolder(output);
 		resources = new Resources(root);
 		resources.copyResources();
-		return new GroupPage(session, null, root, this) {
-
-			@Override
-			protected ReportOutputFolder getFolder(final ReportOutputFolder base) {
-				return base;
-			}
-
-		};
+		final GroupPage rootpage = new GroupPage(session, null, root, this);
+		infoPage = new SessionsPage(sessionInfos, rootpage, root, this);
+		infoPage.renderDocument();
+		return rootpage;
 	}
 
 }
