@@ -114,7 +114,7 @@ public abstract class ReportPage {
 	}
 
 	private void infoLinks(final HTMLElement span) throws IOException {
-		span.a(context.getInfoPageLink(folder), Styles.EL_SESSIONS).text(
+		span.a(context.getSessionsPageLink(folder), Styles.EL_SESSIONS).text(
 				"Sessions");
 	}
 

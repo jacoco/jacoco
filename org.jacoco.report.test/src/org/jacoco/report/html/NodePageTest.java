@@ -90,7 +90,7 @@ public class NodePageTest {
 				return "CustomFooter";
 			}
 
-			public String getInfoPageLink(ReportOutputFolder base) {
+			public String getSessionsPageLink(ReportOutputFolder base) {
 				return "info.html";
 			}
 

@@ -147,7 +147,7 @@ public class HTMLFormatter implements IReportFormatter, IHTMLReportContext {
 		return footerText;
 	}
 
-	public String getInfoPageLink(final ReportOutputFolder base) {
+	public String getSessionsPageLink(final ReportOutputFolder base) {
 		return infoPage.getLink(base);
 	}
 

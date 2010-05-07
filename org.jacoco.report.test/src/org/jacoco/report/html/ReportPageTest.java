@@ -98,7 +98,7 @@ public class ReportPageTest {
 				return "CustomFooter";
 			}
 
-			public String getInfoPageLink(ReportOutputFolder base) {
+			public String getSessionsPageLink(ReportOutputFolder base) {
 				return "info.html";
 			}
 
