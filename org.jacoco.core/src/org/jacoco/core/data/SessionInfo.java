@@ -80,8 +80,4 @@ public class SessionInfo implements Comparable<SessionInfo> {
 		return 0;
 	}
 
-	// public static String generateId() {
-	// final String hostname = InetAddress.getLocalHost().getHostName();
-	// }
-
 }
