@@ -69,7 +69,7 @@ public class SessionsPage extends ReportPage {
 	private void tablebody(final HTMLElement tbody) throws IOException {
 		for (final SessionInfo i : sessionInfos) {
 			final HTMLElement tr = tbody.tr();
-			tr.td().text(i.getId());
+			tr.td().span(Styles.EL_SESSION).text(i.getId());
 			tr.td().text(dateFormat.format(new Date(i.getStartTimeStamp())));
 			tr.td().text(dateFormat.format(new Date(i.getDumpTimeStamp())));
 		}
@@ -77,7 +77,7 @@ public class SessionsPage extends ReportPage {
 
 	@Override
 	protected String getElementStyle() {
-		return Styles.EL_SESSIONS;
+		return Styles.EL_SESSION;
 	}
 
 	@Override

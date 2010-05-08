@@ -87,7 +87,7 @@ public class SessionsPageTest {
 	public void testGetElementStyle() {
 		final SessionsPage page = new SessionsPage(noSessions, null, root,
 				context);
-		assertEquals("el_sessions", page.getElementStyle());
+		assertEquals("el_session", page.getElementStyle());
 	}
 
 	@Test
@@ -115,8 +115,10 @@ public class SessionsPageTest {
 		page.renderDocument();
 		final HTMLSupport support = new HTMLSupport();
 		final Document doc = support.parse(output.getFile(".sessions.html"));
+		assertEquals("el_session", support.findStr(doc,
+				"/html/body/table[1]/tbody/tr[1]/td[1]/span/@class"));
 		assertEquals("Session-A", support.findStr(doc,
-				"/html/body/table[1]/tbody/tr[1]/td[1]"));
+				"/html/body/table[1]/tbody/tr[1]/td[1]/span"));
 		assertEquals("Session-B", support.findStr(doc,
 				"/html/body/table[1]/tbody/tr[2]/td[1]"));
 		assertEquals("Session-C", support.findStr(doc,

@@ -33,7 +33,7 @@ public interface Styles {
 	public static final String EL_REPORT = "el_report";
 
 	/** Sessions element */
-	public static final String EL_SESSIONS = "el_sessions";
+	public static final String EL_SESSION = "el_session";
 
 	/** Coverage table */
 	public static final String COVERAGETABLE = "coverage";

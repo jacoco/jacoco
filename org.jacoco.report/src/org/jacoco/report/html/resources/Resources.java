@@ -108,7 +108,7 @@ public class Resources {
 		copyResource("source.gif");
 		copyResource("class.gif");
 		copyResource("method.gif");
-		copyResource("sessions.gif");
+		copyResource("session.gif");
 		copyResource(REDBAR);
 		copyResource(GREENBAR);
 		copyResource(PRETTIFY_STYLESHEET);

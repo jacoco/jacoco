@@ -63,9 +63,9 @@ h1 {
   background-repeat:no-repeat;
 }
 
-.el_sessions {
+.el_session {
   padding-left:18px;
-  background-image:url(sessions.gif);
+  background-image:url(session.gif);
   background-position:left center;
   background-repeat:no-repeat;
 }
