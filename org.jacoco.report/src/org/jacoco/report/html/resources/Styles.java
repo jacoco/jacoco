@@ -35,6 +35,9 @@ public interface Styles {
 	/** Sessions element */
 	public static final String EL_SESSION = "el_session";
 
+	/** Class element */
+	public static final String EL_CLASS = "el_class";
+
 	/** Coverage table */
 	public static final String COVERAGETABLE = "coverage";
 

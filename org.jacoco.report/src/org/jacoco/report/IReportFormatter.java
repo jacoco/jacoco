@@ -13,9 +13,11 @@
 package org.jacoco.report;
 
 import java.io.IOException;
+import java.util.Collection;
 import java.util.List;
 
 import org.jacoco.core.analysis.ICoverageNode;
+import org.jacoco.core.data.ExecutionData;
 import org.jacoco.core.data.SessionInfo;
 
 /**
@@ -34,11 +36,15 @@ public interface IReportFormatter {
 	 * @param sessionInfos
 	 *            list of chronological ordered {@link SessionInfo} objects
 	 *            where execution data has been collected for this report.
+	 * @param executionData
+	 *            collection of all {@link ExecutionData} objects that are
+	 *            considered for this report
 	 * 
 	 * @return visitor for the root node
 	 * @throws IOException
 	 */
 	public IReportVisitor createReportVisitor(ICoverageNode root,
-			List<SessionInfo> sessionInfos) throws IOException;
+			List<SessionInfo> sessionInfos,
+			Collection<ExecutionData> executionData) throws IOException;
 
 }

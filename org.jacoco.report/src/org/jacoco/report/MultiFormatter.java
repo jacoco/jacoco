@@ -14,9 +14,11 @@ package org.jacoco.report;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import org.jacoco.core.analysis.ICoverageNode;
+import org.jacoco.core.data.ExecutionData;
 import org.jacoco.core.data.SessionInfo;
 
 /**
@@ -42,10 +44,12 @@ public class MultiFormatter implements IReportFormatter {
 	}
 
 	public IReportVisitor createReportVisitor(final ICoverageNode root,
-			final List<SessionInfo> sessionInfos) throws IOException {
+			final List<SessionInfo> sessionInfos,
+			final Collection<ExecutionData> executionData) throws IOException {
 		final List<IReportVisitor> visitors = new ArrayList<IReportVisitor>();
 		for (final IReportFormatter f : formatters) {
-			visitors.add(f.createReportVisitor(root, sessionInfos));
+			visitors.add(f.createReportVisitor(root, sessionInfos,
+					executionData));
 		}
 		return new MultiVisitor(visitors);
 	}

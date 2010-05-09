@@ -441,7 +441,7 @@ public class ReportTask extends Task {
 			throws IOException {
 		final CoverageNodeImpl node = createNode(structure);
 		final IReportVisitor visitor = formatter.createReportVisitor(node,
-				sessionInfoStore.getInfos());
+				sessionInfoStore.getInfos(), executionDataStore.getContents());
 		final SourceFileCollection sourceFileLocator = new SourceFileCollection(
 				structure.sourcefiles);
 		if (node instanceof BundleCoverage) {

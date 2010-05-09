@@ -55,8 +55,8 @@ public class ExecutionDataAccessTest {
 		assertFalse(data[0]);
 		assertFalse(data[1]);
 		assertFalse(data[2]);
-		assertSame(store.getData(Long.valueOf(123)), data);
-		assertEquals("Foo", store.getName(Long.valueOf(123)));
+		assertSame(store.get(123).getData(), data);
+		assertEquals("Foo", store.get(123).getName());
 	}
 
 	@Test
@@ -99,7 +99,8 @@ public class ExecutionDataAccessTest {
 
 	@Test
 	public void testGenerateAccessCall() throws Exception {
-		final boolean[] data = store.getData(Long.valueOf(1234), "Sample", 5);
+		final boolean[] data = store.get(Long.valueOf(1234), "Sample", 5)
+				.getData();
 
 		final ClassWriter writer = new ClassWriter(0);
 		writer.visit(Opcodes.V1_5, Opcodes.ACC_PUBLIC, "Sample", null,

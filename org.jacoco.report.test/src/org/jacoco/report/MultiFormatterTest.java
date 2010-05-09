@@ -18,12 +18,14 @@ import static org.junit.Assert.assertTrue;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
 import org.jacoco.core.analysis.CoverageNodeImpl;
 import org.jacoco.core.analysis.ICoverageNode;
 import org.jacoco.core.analysis.ICoverageNode.ElementType;
+import org.jacoco.core.data.ExecutionData;
 import org.jacoco.core.data.SessionInfo;
 import org.junit.Test;
 
@@ -40,7 +42,9 @@ public class MultiFormatterTest {
 		private MockVisitor visitor;
 
 		public IReportVisitor createReportVisitor(ICoverageNode root,
-				List<SessionInfo> sessionInfos) throws IOException {
+				List<SessionInfo> sessionInfos,
+				final Collection<ExecutionData> executionData)
+				throws IOException {
 			visitor = new MockVisitor(root);
 			return visitor;
 		}
@@ -93,8 +97,9 @@ public class MultiFormatterTest {
 	private void createMockReport(IReportFormatter formatter)
 			throws IOException {
 		final List<SessionInfo> sessions = Collections.emptyList();
+		final Collection<ExecutionData> data = Collections.emptyList();
 		IReportVisitor root = formatter.createReportVisitor(
-				createNode("Session"), sessions);
+				createNode("Session"), sessions, data);
 		{
 			IReportVisitor b1 = root.visitChild(createNode("b1"));
 			{

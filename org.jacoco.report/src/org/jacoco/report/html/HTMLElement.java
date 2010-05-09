@@ -169,6 +169,17 @@ public class HTMLElement extends XMLElement {
 	}
 
 	/**
+	 * Creates a 'code' element.
+	 * 
+	 * @return 'code' element
+	 * @throws IOException
+	 *             in case of problems with the writer
+	 */
+	public HTMLElement code() throws IOException {
+		return element("code");
+	}
+
+	/**
 	 * Creates a 'pre' element.
 	 * 
 	 * @param classattr

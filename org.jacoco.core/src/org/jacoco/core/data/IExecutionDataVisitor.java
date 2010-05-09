@@ -23,17 +23,11 @@ package org.jacoco.core.data;
 public interface IExecutionDataVisitor {
 
 	/**
-	 * Provides execution data for the class with the given id. Each slot in the
-	 * array represents a probe in the instrumented class. A value of
-	 * <code>true</code> indicates that a probe has been executed.
+	 * Provides execution data for a class.
 	 * 
-	 * @param id
-	 *            id of the class
-	 * @param name
-	 *            VM name of the class
 	 * @param data
-	 *            coverage data for the class
+	 *            execution data for a class
 	 */
-	public void visitClassExecution(long id, String name, boolean[] data);
+	public void visitClassExecution(ExecutionData data);
 
 }

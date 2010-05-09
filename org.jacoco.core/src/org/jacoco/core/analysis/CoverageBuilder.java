@@ -18,6 +18,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.jacoco.core.data.ExecutionData;
 import org.jacoco.core.data.ExecutionDataStore;
 import org.jacoco.core.data.IClassStructureVisitor;
 import org.jacoco.core.data.IMethodStructureVisitor;
@@ -86,7 +87,8 @@ public class CoverageBuilder implements IStructureVisitor {
 	// === IStructureVisitor ===
 
 	public IClassStructureVisitor visitClassStructure(final long id) {
-		final boolean[] covered = executionData.getData(id);
+		final ExecutionData data = executionData.get(id);
+		final boolean[] covered = data == null ? null : data.getData();
 		final Collection<MethodCoverage> methods = new ArrayList<MethodCoverage>();
 		return new IClassStructureVisitor() {
 			String name;

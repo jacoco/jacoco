@@ -121,10 +121,11 @@ public class ExecutionDataReader {
 		if (executionDataVisitor == null) {
 			throw new IOException("No execution data visitor.");
 		}
-		final long classid = in.readLong();
+		final long id = in.readLong();
 		final String name = in.readUTF();
 		final boolean[] data = in.readBooleanArray();
-		executionDataVisitor.visitClassExecution(classid, name, data);
+		executionDataVisitor.visitClassExecution(new ExecutionData(id, name,
+				data));
 	}
 
 }

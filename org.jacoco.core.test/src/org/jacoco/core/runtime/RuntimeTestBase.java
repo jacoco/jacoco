@@ -22,6 +22,7 @@ import static org.junit.Assert.fail;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.jacoco.core.data.ExecutionData;
 import org.jacoco.core.data.IExecutionDataVisitor;
 import org.jacoco.core.data.ISessionInfoVisitor;
 import org.jacoco.core.data.SessionInfo;
@@ -291,9 +292,8 @@ public abstract class RuntimeTestBase {
 
 		// === ICoverageDataVisitor ===
 
-		public void visitClassExecution(long id, String name,
-				boolean[] blockdata) {
-			data.put(Long.valueOf(id), blockdata);
+		public void visitClassExecution(final ExecutionData ed) {
+			data.put(Long.valueOf(ed.getId()), ed.getData());
 		}
 
 	}

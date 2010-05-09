@@ -18,12 +18,14 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
 import org.jacoco.core.analysis.CoverageNodeImpl;
 import org.jacoco.core.analysis.ICoverageNode;
 import org.jacoco.core.analysis.ICoverageNode.ElementType;
+import org.jacoco.core.data.ExecutionData;
 import org.jacoco.core.data.SessionInfo;
 import org.jacoco.report.IReportVisitor;
 import org.jacoco.report.MemorySingleReportOutput;
@@ -76,8 +78,9 @@ public class CsvFormatterTest {
 		final ICoverageNode root = new CoverageNodeImpl(ElementType.GROUP,
 				"root", false);
 		final List<SessionInfo> sessions = Collections.emptyList();
+		final Collection<ExecutionData> data = Collections.emptyList();
 		final IReportVisitor child = formatter.createReportVisitor(root,
-				sessions);
+				sessions, data);
 		driver.sendGroup(child);
 		driver.sendGroup(child);
 		child.visitEnd(driver.sourceFileLocator);

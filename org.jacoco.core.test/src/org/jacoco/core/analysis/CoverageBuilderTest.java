@@ -24,6 +24,7 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+import org.jacoco.core.data.ExecutionData;
 import org.jacoco.core.data.ExecutionDataStore;
 import org.jacoco.core.data.IClassStructureVisitor;
 import org.jacoco.core.data.IMethodStructureVisitor;
@@ -88,8 +89,8 @@ public class CoverageBuilderTest {
 
 	@Test
 	public void testCreateClassCovered() {
-		executionData.visitClassExecution(123L, "org/jacoco/examples/Sample",
-				new boolean[] { true });
+		executionData.put(new ExecutionData(123L, "org/jacoco/examples/Sample",
+				new boolean[] { true }));
 		final IClassStructureVisitor classStructure = coverageBuilder
 				.visitClassStructure(123L);
 		classStructure.visit("org/jacoco/examples/Sample", null,

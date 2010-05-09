@@ -15,11 +15,14 @@ package org.jacoco.report.xml;
 import static org.junit.Assert.assertEquals;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 import org.jacoco.core.analysis.CoverageNodeImpl;
 import org.jacoco.core.analysis.ICoverageNode;
 import org.jacoco.core.analysis.ICoverageNode.ElementType;
+import org.jacoco.core.data.ExecutionData;
 import org.jacoco.core.data.SessionInfo;
 import org.jacoco.report.MemorySingleReportOutput;
 import org.jacoco.report.ReportStructureTestDriver;
@@ -63,7 +66,8 @@ public class XMLFormatterTest {
 		infos.add(new SessionInfo("session-3", 1, 2));
 		ICoverageNode node = new CoverageNodeImpl(ElementType.GROUP, "Sample",
 				false);
-		formatter.createReportVisitor(node, infos).visitEnd(null);
+		final Collection<ExecutionData> data = Collections.emptyList();
+		formatter.createReportVisitor(node, infos, data).visitEnd(null);
 		assertPathMatches("session-1", "/report/sessioninfo[1]/@id");
 		assertPathMatches("12345", "/report/sessioninfo[1]/@start");
 		assertPathMatches("67890", "/report/sessioninfo[1]/@dump");

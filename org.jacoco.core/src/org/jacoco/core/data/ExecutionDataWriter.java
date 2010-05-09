@@ -78,13 +78,12 @@ public class ExecutionDataWriter implements ISessionInfoVisitor,
 		}
 	}
 
-	public void visitClassExecution(final long id, final String name,
-			final boolean[] data) {
+	public void visitClassExecution(final ExecutionData data) {
 		try {
 			out.writeByte(BLOCK_EXECUTIONDATA);
-			out.writeLong(id);
-			out.writeUTF(name);
-			out.writeBooleanArray(data);
+			out.writeLong(data.getId());
+			out.writeUTF(data.getName());
+			out.writeBooleanArray(data.getData());
 		} catch (final IOException e) {
 			throw new RuntimeException(e);
 		}

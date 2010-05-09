@@ -111,6 +111,13 @@ public class HTMLElementTest {
 	}
 
 	@Test
+	public void testCode() throws IOException {
+		root.code().text("0xCAFEBABE");
+		root.close();
+		assertEquals("<root><code>0xCAFEBABE</code></root>", buffer.toString());
+	}
+
+	@Test
 	public void testBr() throws IOException {
 		root.br();
 		root.close();

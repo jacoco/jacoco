@@ -14,6 +14,7 @@ package org.jacoco.report.html;
 
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Comparator;
 import java.util.List;
 
@@ -21,6 +22,7 @@ import org.jacoco.core.analysis.CounterComparator;
 import org.jacoco.core.analysis.ICoverageNode;
 import org.jacoco.core.analysis.ICoverageNode.CounterEntity;
 import org.jacoco.core.analysis.ICoverageNode.ElementType;
+import org.jacoco.core.data.ExecutionData;
 import org.jacoco.core.data.SessionInfo;
 import org.jacoco.report.ILanguageNames;
 import org.jacoco.report.IMultiReportOutput;
@@ -158,7 +160,8 @@ public class HTMLFormatter implements IReportFormatter, IHTMLReportContext {
 	// === IReportFormatter ===
 
 	public IReportVisitor createReportVisitor(final ICoverageNode rootNode,
-			final List<SessionInfo> sessionInfos) throws IOException {
+			final List<SessionInfo> sessionInfos,
+			final Collection<ExecutionData> executionData) throws IOException {
 		if (output == null) {
 			throw new IllegalStateException("No report output set.");
 		}
@@ -171,7 +174,8 @@ public class HTMLFormatter implements IReportFormatter, IHTMLReportContext {
 				return Styles.EL_REPORT;
 			}
 		};
-		infoPage = new SessionsPage(sessionInfos, rootpage, root, this);
+		infoPage = new SessionsPage(sessionInfos, executionData, rootpage,
+				root, this);
 		infoPage.renderDocument();
 		return rootpage;
 	}

@@ -65,7 +65,7 @@ class ExecutionDataAccess {
 		final String name = (String) args[1];
 		final int probecount = ((Integer) args[2]).intValue();
 		synchronized (store) {
-			args[0] = store.getData(classid, name, probecount);
+			args[0] = store.get(classid, name, probecount).getData();
 		}
 	}
 

@@ -15,10 +15,12 @@ package org.jacoco.report.html;
 import static org.junit.Assert.assertEquals;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
 import org.jacoco.core.analysis.ICoverageNode.ElementType;
+import org.jacoco.core.data.ExecutionData;
 import org.jacoco.core.data.SessionInfo;
 import org.jacoco.report.ILanguageNames;
 import org.jacoco.report.MemoryMultiReportOutput;
@@ -38,6 +40,9 @@ import org.w3c.dom.Document;
 public class SessionsPageTest {
 
 	private final List<SessionInfo> noSessions = Collections.emptyList();
+
+	private final Collection<ExecutionData> noExecutionData = Collections
+			.emptyList();
 
 	private MemoryMultiReportOutput output;
 
@@ -85,23 +90,36 @@ public class SessionsPageTest {
 
 	@Test
 	public void testGetElementStyle() {
-		final SessionsPage page = new SessionsPage(noSessions, null, root,
-				context);
+		final SessionsPage page = new SessionsPage(noSessions, noExecutionData,
+				null, root, context);
 		assertEquals("el_session", page.getElementStyle());
 	}
 
 	@Test
 	public void testGetFileName() {
-		final SessionsPage page = new SessionsPage(noSessions, null, root,
-				context);
+		final SessionsPage page = new SessionsPage(noSessions, noExecutionData,
+				null, root, context);
 		assertEquals(".sessions.html", page.getFileName());
 	}
 
 	@Test
 	public void testGetLabel() {
-		final SessionsPage page = new SessionsPage(noSessions, null, root,
-				context);
+		final SessionsPage page = new SessionsPage(noSessions, noExecutionData,
+				null, root, context);
 		assertEquals("Sessions", page.getLabel());
+	}
+
+	@Test
+	public void testEmptyContent() throws Exception {
+		final SessionsPage page = new SessionsPage(noSessions, noExecutionData,
+				null, root, context);
+		page.renderDocument();
+		final HTMLSupport support = new HTMLSupport();
+		final Document doc = support.parse(output.getFile(".sessions.html"));
+		assertEquals("No session information available.", support.findStr(doc,
+				"/html/body/p[1]"));
+		assertEquals("No execution data available.", support.findStr(doc,
+				"/html/body/p[2]"));
 	}
 
 	@Test
@@ -110,8 +128,8 @@ public class SessionsPageTest {
 		sessions.add(new SessionInfo("Session-A", 0, 0));
 		sessions.add(new SessionInfo("Session-B", 0, 0));
 		sessions.add(new SessionInfo("Session-C", 0, 0));
-		final SessionsPage page = new SessionsPage(sessions, null, root,
-				context);
+		final SessionsPage page = new SessionsPage(sessions, noExecutionData,
+				null, root, context);
 		page.renderDocument();
 		final HTMLSupport support = new HTMLSupport();
 		final Document doc = support.parse(output.getFile(".sessions.html"));
@@ -122,6 +140,29 @@ public class SessionsPageTest {
 		assertEquals("Session-B", support.findStr(doc,
 				"/html/body/table[1]/tbody/tr[2]/td[1]"));
 		assertEquals("Session-C", support.findStr(doc,
+				"/html/body/table[1]/tbody/tr[3]/td[1]"));
+	}
+
+	@Test
+	public void testExecutionDataContent() throws Exception {
+		final Collection<ExecutionData> data = new ArrayList<ExecutionData>();
+		data.add(new ExecutionData(0x1000, "ClassB", new boolean[0]));
+		data.add(new ExecutionData(0x1001, "ClassC", new boolean[0]));
+		data.add(new ExecutionData(0x1002, "ClassA", new boolean[0]));
+		final SessionsPage page = new SessionsPage(noSessions, data, null,
+				root, context);
+		page.renderDocument();
+		final HTMLSupport support = new HTMLSupport();
+		final Document doc = support.parse(output.getFile(".sessions.html"));
+		assertEquals("el_class", support.findStr(doc,
+				"/html/body/table[1]/tbody/tr[1]/td[1]/span/@class"));
+		assertEquals("ClassA", support.findStr(doc,
+				"/html/body/table[1]/tbody/tr[1]/td[1]/span"));
+		assertEquals("0000000000001002", support.findStr(doc,
+				"/html/body/table[1]/tbody/tr[1]/td[2]/code"));
+		assertEquals("ClassB", support.findStr(doc,
+				"/html/body/table[1]/tbody/tr[2]/td[1]"));
+		assertEquals("ClassC", support.findStr(doc,
 				"/html/body/table[1]/tbody/tr[3]/td[1]"));
 	}
 

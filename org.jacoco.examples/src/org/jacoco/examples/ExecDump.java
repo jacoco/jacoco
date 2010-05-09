@@ -16,6 +16,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.Date;
 
+import org.jacoco.core.data.ExecutionData;
 import org.jacoco.core.data.ExecutionDataReader;
 import org.jacoco.core.data.IExecutionDataVisitor;
 import org.jacoco.core.data.ISessionInfoVisitor;
@@ -57,11 +58,12 @@ public class ExecDump {
 			}
 		});
 		reader.setExecutionDataVisitor(new IExecutionDataVisitor() {
-			public void visitClassExecution(final long id, final String name,
-					final boolean[] data) {
-				System.out.printf("%016x  %3d of %3d   %s%n", Long.valueOf(id),
-						Integer.valueOf(getHitCount(data)), Integer
-								.valueOf(data.length), name);
+			public void visitClassExecution(final ExecutionData data) {
+				System.out
+						.printf("%016x  %3d of %3d   %s%n", Long.valueOf(data
+								.getId()), Integer.valueOf(getHitCount(data
+								.getData())), Integer
+								.valueOf(data.getData().length), data.getName());
 			}
 		});
 		reader.read();

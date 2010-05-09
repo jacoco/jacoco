@@ -12,9 +12,7 @@
  *******************************************************************************/
 package org.jacoco.core.data;
 
-import static java.lang.String.format;
-
-import java.util.Arrays;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -29,131 +27,85 @@ import java.util.Map;
  * @author Marc R. Hoffmann
  * @version $Revision: $
  */
-public class ExecutionDataStore implements IExecutionDataVisitor {
+public final class ExecutionDataStore implements IExecutionDataVisitor {
 
-	private final Map<Long, Entry> entries = new HashMap<Long, Entry>();
+	private final Map<Long, ExecutionData> entries = new HashMap<Long, ExecutionData>();
 
 	/**
-	 * Adds the given block data structure into the store. If there is already a
-	 * data structure for this class ID, this structure is merged with the given
-	 * one. In this case a {@link IllegalStateException} is thrown, if both
-	 * executions data structure do have different sizes or the name is
-	 * different.
+	 * Adds the given {@link ExecutionData} object into the store. If there is
+	 * already execution data with this same class id, this structure is merged
+	 * with the given one.
 	 * 
-	 * @param classid
-	 *            unique class identifier
-	 * @param name
-	 *            VM name of the class
 	 * @param data
-	 *            execution data
+	 *            execution data to add or merge
+	 * @throws IllegalStateException
+	 *             if the given {@link ExecutionData} object is not compatible
+	 *             to a corresponding one, that is already contained
+	 * @see ExecutionData#assertCompatibility(long, String, int)
 	 */
-	public void put(final Long classid, final String name, final boolean[] data) {
-		final Entry entry = entries.get(classid);
+	public void put(final ExecutionData data) throws IllegalStateException {
+		final Long id = Long.valueOf(data.getId());
+		final ExecutionData entry = entries.get(id);
 		if (entry == null) {
-			entries.put(classid, new Entry(name, data));
+			entries.put(id, data);
 		} else {
-			entry.merge(classid, name, data);
+			entry.merge(data);
 		}
 	}
 
 	/**
-	 * Adds the given block data structure into the store. If there is already a
-	 * data structure for this class ID, this structure is merged with the given
-	 * one. In this case a {@link IllegalStateException} is thrown, if both
-	 * executions data structure do have different sizes or the name is
-	 * different.
+	 * Returns the {@link ExecutionData} entry with the given id if it exists in
+	 * this store.
 	 * 
-	 * @param classid
-	 *            unique class identifier
-	 * @param name
-	 *            VM name of the class
-	 * @param data
-	 *            execution data
+	 * @param id
+	 *            class id
+	 * @return execution data or <code>null</code>
 	 */
-	public void put(final long classid, final String name, final boolean[] data) {
-		put(Long.valueOf(classid), name, data);
-	}
-
-	/**
-	 * Returns the coverage data for the class with the given identifier if
-	 * available.
-	 * 
-	 * @param classid
-	 *            class identifier
-	 * @return coverage data or <code>null</code>
-	 */
-	public boolean[] getData(final Long classid) {
-		final Entry entry = entries.get(classid);
-		return entry == null ? null : entry.data;
-	}
-
-	/**
-	 * Returns the coverage data for the class with the given identifier if
-	 * available.
-	 * 
-	 * @param classid
-	 *            class identifier
-	 * @return coverage data or <code>null</code>
-	 */
-	public boolean[] getData(final long classid) {
-		return getData(Long.valueOf(classid));
+	public ExecutionData get(final long id) {
+		return entries.get(Long.valueOf(id));
 	}
 
 	/**
 	 * Returns the coverage data for the class with the given identifier. If
 	 * there is no data available under the given id a new entry is created.
 	 * 
-	 * @param classid
+	 * @param id
 	 *            class identifier
 	 * @param name
 	 *            VM name of the class
-	 * @param probecount
-	 *            probe array length
+	 * @param dataLength
+	 *            probe data length
 	 * @return execution data
 	 */
-	public boolean[] getData(final Long classid, final String name,
-			final int probecount) {
-		Entry entry = entries.get(classid);
+	public ExecutionData get(final Long id, final String name,
+			final int dataLength) {
+		ExecutionData entry = entries.get(id);
 		if (entry == null) {
-			entry = new Entry(name, new boolean[probecount]);
-			entries.put(classid, entry);
+			entry = new ExecutionData(id.longValue(), name, dataLength);
+			entries.put(id, entry);
 		} else {
-			entry.checkCompatibility(classid, name, probecount);
+			entry.assertCompatibility(id.longValue(), name, dataLength);
 		}
-		return entry.data;
+		return entry;
 	}
 
 	/**
-	 * Returns the vm name of the class with the given id.
-	 * 
-	 * @param classid
-	 *            class identifier
-	 * @return vm name or <code>null</code>
-	 */
-	public String getName(final Long classid) {
-		final Entry entry = entries.get(classid);
-		return entry == null ? null : entry.name;
-	}
-
-	/**
-	 * Returns the vm name of the class with the given id.
-	 * 
-	 * @param classid
-	 *            class identifier
-	 * @return vm name or <code>null</code>
-	 */
-	public String getName(final long classid) {
-		return getName(Long.valueOf(classid));
-	}
-
-	/**
-	 * Resets all execution data structures, i.e. marks them as not executed.
-	 * The data structures itself are not deleted.
+	 * Resets all execution data probes, i.e. marks them as not executed. The
+	 * execution data objects itself are not removed.
 	 */
 	public void reset() {
-		for (final Entry executionData : this.entries.values()) {
-			Arrays.fill(executionData.data, false);
+		for (final ExecutionData executionData : this.entries.values()) {
+			executionData.reset();
 		}
+	}
+
+	/**
+	 * Returns a collection that represents current contents of the store.
+	 * 
+	 * @return current contents
+	 */
+	public Collection<ExecutionData> getContents() {
+		return entries.values();
 	}
 
 	/**
@@ -163,53 +115,14 @@ public class ExecutionDataStore implements IExecutionDataVisitor {
 	 *            interface to write content to
 	 */
 	public void accept(final IExecutionDataVisitor visitor) {
-		for (final Map.Entry<Long, Entry> i : entries.entrySet()) {
-			final long id = i.getKey().longValue();
-			final Entry entry = i.getValue();
-			visitor.visitClassExecution(id, entry.name, entry.data);
+		for (final ExecutionData data : entries.values()) {
+			visitor.visitClassExecution(data);
 		}
 	}
 
 	// === IExecutionDataVisitor ===
 
-	public void visitClassExecution(final long classid, final String name,
-			final boolean[] data) {
-		put(classid, name, data);
+	public void visitClassExecution(final ExecutionData data) {
+		put(data);
 	}
-
-	private static class Entry {
-
-		final String name;
-		final boolean[] data;
-
-		Entry(final String name, final boolean[] data) {
-			this.name = name;
-			this.data = data;
-		}
-
-		void checkCompatibility(final Long classid, final String otherName,
-				final int otherLength) {
-			if (!otherName.equals(name)) {
-				throw new IllegalStateException(format(
-						"Duplicate id %x for classes %s and %s.", classid,
-						name, otherName));
-			}
-			if (data.length != otherLength) {
-				throw new IllegalStateException(format(
-						"Incompatible execution data for class %s (id %s).",
-						name, classid));
-			}
-		}
-
-		void merge(final Long classid, final String newName,
-				final boolean[] newData) {
-			checkCompatibility(classid, newName, newData.length);
-			for (int i = 0; i < data.length; i++) {
-				if (!data[i]) {
-					data[i] = newData[i];
-				}
-			}
-		}
-	}
-
 }
