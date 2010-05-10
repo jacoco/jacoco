@@ -100,16 +100,6 @@ public class ClassCoverage extends CoverageNodeImpl {
 	}
 
 	/**
-	 * Returns the VM name of the class without the package prefix.
-	 * 
-	 * @return VM name of the class without the package
-	 */
-	public String getSimpleName() {
-		final int pos = getName().lastIndexOf('/');
-		return pos == -1 ? getName() : getName().substring(pos + 1);
-	}
-
-	/**
 	 * Returns the optional name of the corresponding source file.
 	 * 
 	 * @return name of the corresponding source file

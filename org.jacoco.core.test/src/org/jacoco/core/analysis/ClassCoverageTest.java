@@ -58,22 +58,6 @@ public class ClassCoverageTest {
 	}
 
 	@Test
-	public void testGetSimpleName1() {
-		ClassCoverage data = new ClassCoverage("ClassInDefaultPackage", null,
-				"java/lang/Object", new String[0], "Sample.java",
-				new ArrayList<MethodCoverage>());
-		assertEquals("ClassInDefaultPackage", data.getSimpleName());
-	}
-
-	@Test
-	public void testGetSimpleName2() {
-		ClassCoverage data = new ClassCoverage("org/jacoco/examples/Sample",
-				null, "java/lang/Object", new String[0], "Sample.java",
-				new ArrayList<MethodCoverage>());
-		assertEquals("Sample", data.getSimpleName());
-	}
-
-	@Test
 	public void testEmptyClass() {
 		ICoverageNode data = new ClassCoverage("Sample", null,
 				"java/lang/Object", new String[0], "Sample.java",

@@ -155,7 +155,7 @@ public class CoreTutorial {
 
 		// Let's dump some metrics and line coverage information:
 		for (final ClassCoverage cc : coverageBuilder.getClasses()) {
-			System.out.printf("Coverage of class %s%n", cc.getSimpleName());
+			System.out.printf("Coverage of class %s%n", cc.getName());
 
 			printCounter("instructions", cc.getInstructionCounter());
 			printCounter("lines", cc.getLineCounter());
