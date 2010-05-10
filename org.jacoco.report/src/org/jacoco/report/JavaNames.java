@@ -65,6 +65,10 @@ public class JavaNames implements ILanguageNames {
 		return getClassName(vmname);
 	}
 
+	public String getQualifiedClassName(final String vmname) {
+		return vmname.replace('/', '.').replace('$', '.');
+	}
+
 	public String getMethodName(final String vmclassname,
 			final String vmmethodname, final String vmdesc,
 			final String vmsignature) {

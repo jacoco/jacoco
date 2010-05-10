@@ -47,6 +47,15 @@ public interface ILanguageNames {
 			String vmsuperclass, String[] vminterfaces);
 
 	/**
+	 * Calculates the language specific qualified name of a class.
+	 * 
+	 * @param vmname
+	 *            vm name of a class
+	 * @return language specific qualified notation of the class
+	 */
+	public String getQualifiedClassName(String vmname);
+
+	/**
 	 * Calculates the language specific name of a method.
 	 * 
 	 * @param vmclassname

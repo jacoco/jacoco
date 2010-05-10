@@ -73,6 +73,23 @@ public class JavaNamesTest {
 	}
 
 	@Test
+	public void testGetQualifiedClassName1() {
+		assertEquals("Foo", names.getQualifiedClassName("Foo"));
+	}
+
+	@Test
+	public void testGetQualifiedClassName2() {
+		assertEquals("java.lang.Object", names
+				.getQualifiedClassName("java/lang/Object"));
+	}
+
+	@Test
+	public void testGetQualifiedClassName3() {
+		assertEquals("java.util.Map.Entry", names
+				.getQualifiedClassName("java/util/Map$Entry"));
+	}
+
+	@Test
 	public void testGetMethodName1() {
 		assertEquals("wait()", names.getMethodName("java/lang/Object", "wait",
 				"()V", null));

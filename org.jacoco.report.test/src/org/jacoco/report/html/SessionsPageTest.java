@@ -23,6 +23,7 @@ import org.jacoco.core.analysis.ICoverageNode.ElementType;
 import org.jacoco.core.data.ExecutionData;
 import org.jacoco.core.data.SessionInfo;
 import org.jacoco.report.ILanguageNames;
+import org.jacoco.report.JavaNames;
 import org.jacoco.report.MemoryMultiReportOutput;
 import org.jacoco.report.ReportOutputFolder;
 import org.jacoco.report.html.resources.Resources;
@@ -55,10 +56,11 @@ public class SessionsPageTest {
 		output = new MemoryMultiReportOutput();
 		root = new ReportOutputFolder(output);
 		final Resources resources = new Resources(root);
+		final ILanguageNames names = new JavaNames();
 		context = new IHTMLReportContext() {
 
 			public ILanguageNames getLanguageNames() {
-				throw new AssertionError("Unexpected method call.");
+				return names;
 			}
 
 			public Resources getResources() {

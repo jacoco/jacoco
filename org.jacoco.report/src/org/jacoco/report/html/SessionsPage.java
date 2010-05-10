@@ -23,6 +23,7 @@ import java.util.List;
 
 import org.jacoco.core.data.ExecutionData;
 import org.jacoco.core.data.SessionInfo;
+import org.jacoco.report.ILanguageNames;
 import org.jacoco.report.ReportOutputFolder;
 import org.jacoco.report.html.resources.Styles;
 
@@ -66,9 +67,11 @@ public class SessionsPage extends ReportPage {
 		super(parent, folder, context);
 		this.sessionInfos = sessionInfos;
 		this.executionData = new ArrayList<ExecutionData>(executionData);
+		final ILanguageNames names = context.getLanguageNames();
 		Collections.sort(this.executionData, new Comparator<ExecutionData>() {
 			public int compare(final ExecutionData e1, final ExecutionData e2) {
-				return e1.getName().compareTo(e2.getName());
+				return names.getQualifiedClassName(e1.getName()).compareTo(
+						names.getQualifiedClassName(e2.getName()));
 			}
 		});
 	}
@@ -114,9 +117,11 @@ public class SessionsPage extends ReportPage {
 			tr.td().text("Id");
 		}
 		final HTMLElement tbody = table.tbody();
+		final ILanguageNames names = context.getLanguageNames();
 		for (final ExecutionData e : executionData) {
 			final HTMLElement tr = tbody.tr();
-			tr.td().span(Styles.EL_CLASS).text(e.getName());
+			tr.td().span(Styles.EL_CLASS).text(
+					names.getQualifiedClassName(e.getName()));
 			final String id = String.format("%016x", Long.valueOf(e.getId()));
 			tr.td().code().text(id);
 		}
