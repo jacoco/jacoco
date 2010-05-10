@@ -54,7 +54,7 @@ public class ReportStructureTestDriver {
 			"fooMethod", "()V", null);
 
 	private final ClassCoverage classCoverage = new ClassCoverage(
-			"org/jacoco/example/FooClass", null, "java/lang/Object",
+			"org/jacoco/example/FooClass", 1001, null, "java/lang/Object",
 			new String[0], "FooClass.java", Collections
 					.singleton(methodCoverage));
 

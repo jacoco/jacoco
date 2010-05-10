@@ -80,10 +80,10 @@ public class BundleCoverageTest {
 	@Test
 	public void testGroupByPackage() {
 		Set<MethodCoverage> noMethods = Collections.emptySet();
-		ClassCoverage ca = new ClassCoverage("p1/A", null, "java/lang/Object",
-				new String[0], "A.java", noMethods);
-		ClassCoverage cb = new ClassCoverage("p2/B", null, "java/lang/Object",
-				new String[0], "B.java", noMethods);
+		ClassCoverage ca = new ClassCoverage("p1/A", 1, null,
+				"java/lang/Object", new String[0], "A.java", noMethods);
+		ClassCoverage cb = new ClassCoverage("p2/B", 2, null,
+				"java/lang/Object", new String[0], "B.java", noMethods);
 		SourceFileCoverage sb = new SourceFileCoverage("B.java", "p2");
 		SourceFileCoverage sc = new SourceFileCoverage("C.java", "p3");
 		BundleCoverage bundle = new BundleCoverage("bundle", Arrays.asList(ca,

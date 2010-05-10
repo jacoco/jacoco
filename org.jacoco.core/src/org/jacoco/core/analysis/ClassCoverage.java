@@ -22,6 +22,7 @@ import java.util.Collection;
  */
 public class ClassCoverage extends CoverageNodeImpl {
 
+	private final long id;
 	private final String signature;
 	private final String superName;
 	private final String[] interfaces;
@@ -33,6 +34,8 @@ public class ClassCoverage extends CoverageNodeImpl {
 	 * 
 	 * @param name
 	 *            vm name of the class
+	 * @param id
+	 *            class identifier
 	 * @param signature
 	 *            vm signature of the class
 	 * @param superName
@@ -44,11 +47,12 @@ public class ClassCoverage extends CoverageNodeImpl {
 	 * @param methods
 	 *            contained methods
 	 */
-	public ClassCoverage(final String name, final String signature,
-			final String superName, final String[] interfaces,
-			final String sourceFileName,
+	public ClassCoverage(final String name, final long id,
+			final String signature, final String superName,
+			final String[] interfaces, final String sourceFileName,
 			final Collection<MethodCoverage> methods) {
 		super(ElementType.CLASS, name, true);
+		this.id = id;
 		this.signature = signature;
 		this.superName = superName;
 		this.interfaces = interfaces;
@@ -59,6 +63,16 @@ public class ClassCoverage extends CoverageNodeImpl {
 		// covered:
 		final boolean covered = methodCounter.getCoveredCount() > 0;
 		this.classCounter = CounterImpl.getInstance(covered);
+	}
+
+	/**
+	 * Returns the identifier for this class which is the CRC64 signature of the
+	 * class definition.
+	 * 
+	 * @return class identifier
+	 */
+	public long getId() {
+		return id;
 	}
 
 	/**

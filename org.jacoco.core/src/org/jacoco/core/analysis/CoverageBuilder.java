@@ -116,7 +116,7 @@ public class CoverageBuilder implements IStructureVisitor {
 			}
 
 			public void visitEnd() {
-				final ClassCoverage classData = new ClassCoverage(name,
+				final ClassCoverage classData = new ClassCoverage(name, id,
 						signature, superName, interfaces, sourcename, methods);
 				// Only consider classes that actually contain code:
 				if (classData.getInstructionCounter().getTotalCount() > 0) {
