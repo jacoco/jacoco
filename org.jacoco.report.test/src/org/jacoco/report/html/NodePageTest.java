@@ -12,7 +12,7 @@
  *******************************************************************************/
 package org.jacoco.report.html;
 
-import static org.junit.Assert.assertSame;
+import static org.junit.Assert.assertEquals;
 
 import java.io.IOException;
 
@@ -109,17 +109,18 @@ public class NodePageTest {
 
 	@Test
 	public void testGetNode() throws IOException {
-		assertSame(node, page.getNode());
+		assertEquals(node.getName(), page.getNode().getName());
+		assertEquals(node.getElementType(), page.getNode().getElementType());
 	}
 
 	@Test
 	public void testGetLabel() throws IOException {
-		assertSame("Test", page.getLabel());
+		assertEquals("Test", page.getLabel());
 	}
 
 	@Test
 	public void testGetElementStyle() throws IOException {
-		assertSame("el_group", page.getElementStyle());
+		assertEquals("el_group", page.getElementStyle());
 	}
 
 	@Test
