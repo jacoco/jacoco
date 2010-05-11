@@ -143,6 +143,38 @@ public class AbstractCoverageTask extends Task {
 	}
 
 	/**
+	 * Sets the output method. Default is <code>file</code>
+	 * 
+	 * @param output
+	 *            Output method
+	 */
+	public void setOutput(final String output) {
+		agentOptions.setOutput(output);
+	}
+
+	/**
+	 * Sets the IP address or hostname to bind to when output method is tcp
+	 * server or connect to when the output method is tcp client. Default is
+	 * <code>localhost</code>
+	 * 
+	 * @param address
+	 *            Address to bind or connect to
+	 */
+	public void setAddress(final String address) {
+		agentOptions.setAddress(address);
+	}
+
+	/**
+	 * Sets the Port to bind to when the output method is tcp server or connect
+	 * to when the output method is tcp client. Default is <code>6300</code>
+	 * 
+	 * @param port
+	 */
+	public void setPort(final int port) {
+		agentOptions.setPort(port);
+	}
+
+	/**
 	 * Creates JVM argument to launch with the specified JaCoCo agent jar and
 	 * the current options
 	 * 

@@ -84,9 +84,40 @@ public class AgentOptions {
 	 */
 	public static final String DUMPONEXIT = "dumponexit";
 
+	/**
+	 * Specifies the output mode. There a three possible values:
+	 * <dl>
+	 * <dt>file</dt>
+	 * <dd>At VM termination execution data is written to the filed specified on
+	 * the tofile attribute.</dd>
+	 * <dt>tcpserver</dt>
+	 * <dd>The agent listens for incoming connections a TCP port specified by
+	 * the address and port attribute.</dd>
+	 * <dt>tcpclient</dt>
+	 * <dd>At startup the agent connects to TCP port specified by the address
+	 * and port attribute.</dd>
+	 * </dl>
+	 * Default is <code>file</code>.
+	 */
+	public static final String OUTPUT = "output";
+
+	/**
+	 * The IP address or DNS name the tcpserver binds to or the tcpclient
+	 * connects to. Default is <code>localhost</code>.
+	 */
+	public static final String ADDRESS = "address";
+
+	/**
+	 * The port the tcpserver binds to or the tcpclient connects to. In
+	 * tcpserver mode the port must be available, which means that if multiple
+	 * JaCoCo agents should run on the same machine, different ports have to be
+	 * specified. Default is <code>6300</code>.
+	 */
+	public static final String PORT = "port";
+
 	private static final Collection<String> VALID_OPTIONS = Arrays.asList(
 			DESTFILE, APPEND, INCLUDES, EXCLUDES, EXCLCLASSLOADER, SESSIONID,
-			DUMPONEXIT);
+			DUMPONEXIT, OUTPUT, ADDRESS, PORT);
 
 	private final Map<String, String> options;
 
@@ -117,8 +148,22 @@ public class AgentOptions {
 					throw new IllegalArgumentException(format(
 							"Unknown agent option \"%s\".", key));
 				}
-				options.put(key, entry.substring(pos + 1));
+
+				final String value = entry.substring(pos + 1);
+				setOption(key, value);
 			}
+
+			validateAll();
+		}
+	}
+
+	private void validateAll() {
+		validatePort(getPort());
+	}
+
+	private void validatePort(final int port) {
+		if (port < 0) {
+			throw new IllegalArgumentException("port must be positive");
 		}
 	}
 
@@ -262,6 +307,73 @@ public class AgentOptions {
 		setOption(DUMPONEXIT, dumpOnExit);
 	}
 
+	/**
+	 * Returns the port on which to listen to when the output is
+	 * <code>tcpserver</code> or the port to connect to when output is
+	 * <code>tcpclient</code>.
+	 * 
+	 * @return port to listen on or connect to
+	 */
+	public int getPort() {
+		return getOption(PORT, 6300);
+	}
+
+	/**
+	 * Sets the port on which to listen to when output is <code>tcpserver</code>
+	 * or the port to connect to when output is <code>tcpclient</code>
+	 * 
+	 * @param port
+	 */
+	public void setPort(final int port) {
+		validatePort(port);
+		setOption(PORT, port);
+	}
+
+	/**
+	 * Gets the hostname or IP address to listen to when output is
+	 * <code>tcpserver</code> or connect to when output is
+	 * <code>tcpclient</code>
+	 * 
+	 * @return Hostname or IP address
+	 */
+	public String getAddress() {
+		return getOption(ADDRESS, "localhost");
+	}
+
+	/**
+	 * Sets the hostname or IP address to listen to when output is
+	 * <code>tcpserver</cose> or connect to when output is <code>tcpclient</code>
+	 * 
+	 * @param address
+	 *            Hostname or IP address
+	 */
+	public void setAddress(final String address) {
+		setOption(ADDRESS, address);
+	}
+
+	/**
+	 * Returns the output mode
+	 * 
+	 * @return current output mode
+	 */
+	public String getOutput() {
+		return getOption(OUTPUT, "file");
+	}
+
+	/**
+	 * Sets the output mode
+	 * 
+	 * @param output
+	 *            Output mode
+	 */
+	public void setOutput(final String output) {
+		setOption(OUTPUT, output);
+	}
+
+	private void setOption(final String key, final int value) {
+		setOption(key, Integer.toString(value));
+	}
+
 	private void setOption(final String key, final boolean value) {
 		setOption(key, Boolean.toString(value));
 	}
@@ -282,6 +394,11 @@ public class AgentOptions {
 	private boolean getOption(final String key, final boolean defaultValue) {
 		final String value = options.get(key);
 		return value == null ? defaultValue : Boolean.parseBoolean(value);
+	}
+
+	private int getOption(final String key, final int defaultValue) {
+		final String value = options.get(key);
+		return value == null ? defaultValue : Integer.parseInt(value);
 	}
 
 	/**

@@ -43,10 +43,13 @@ public class AgentOptionsTest {
 		assertTrue(options.getAppend());
 		assertEquals("*", options.getIncludes());
 		assertEquals("", options.getExcludes());
-		assertEquals("sun.reflect.DelegatingClassLoader", options
-				.getExclClassloader());
+		assertEquals("sun.reflect.DelegatingClassLoader",
+				options.getExclClassloader());
 		assertNull(options.getSessionId());
 		assertTrue(options.getDumpOnExit());
+		assertEquals(6300, options.getPort());
+		assertEquals("localhost", options.getAddress());
+		assertEquals("file", options.getOutput());
 		assertEquals("", options.toString());
 	}
 
@@ -110,8 +113,8 @@ public class AgentOptionsTest {
 		AgentOptions options = new AgentOptions();
 		options.setExclClassloader("org.jacoco.test.TestLoader");
 		assertEquals("org.jacoco.test.TestLoader", options.getExclClassloader());
-		assertEquals("exclclassloader=org.jacoco.test.TestLoader", options
-				.toString());
+		assertEquals("exclclassloader=org.jacoco.test.TestLoader",
+				options.toString());
 	}
 
 	@Test
@@ -170,6 +173,51 @@ public class AgentOptionsTest {
 	}
 
 	@Test
+	public void testGetOutput() {
+		AgentOptions options = new AgentOptions("output=tcpserver");
+		assertEquals("tcpserver", options.getOutput());
+	}
+
+	@Test
+	public void testSetOutput() {
+		AgentOptions options = new AgentOptions();
+		options.setOutput("tcpserver");
+		assertEquals("tcpserver", options.getOutput());
+	}
+
+	@Test
+	public void testGetPort() {
+		AgentOptions options = new AgentOptions("port=1234");
+		assertEquals(1234, options.getPort());
+	}
+
+	@Test
+	public void testSetPort() {
+		AgentOptions options = new AgentOptions();
+		options.setPort(1234);
+		assertEquals(1234, options.getPort());
+	}
+
+	@Test(expected = IllegalArgumentException.class)
+	public void testSetNegativePort() {
+		AgentOptions options = new AgentOptions();
+		options.setPort(-1234);
+	}
+
+	@Test
+	public void testGetAddress() {
+		AgentOptions options = new AgentOptions("address=remotehost");
+		assertEquals("remotehost", options.getAddress());
+	}
+
+	@Test
+	public void testSetAddress() {
+		AgentOptions options = new AgentOptions();
+		options.setAddress("remotehost");
+		assertEquals("remotehost", options.getAddress());
+	}
+
+	@Test
 	public void testToString() {
 		AgentOptions options = new AgentOptions();
 		options.setDestfile("test.exec");
@@ -193,13 +241,19 @@ public class AgentOptionsTest {
 		options.setDestfile("invalid,name.exec");
 	}
 
+	@Test(expected = IllegalArgumentException.class)
+	public void testInvalidPortOptionValue() {
+		new AgentOptions("port=-1234");
+	}
+
 	@Test
 	public void testVMArgsWithNoOptions() {
 		AgentOptions options = new AgentOptions();
 		String vmArgument = options.getVMArgument(defaultAgentJarFile);
 
-		assertEquals(String.format("-javaagent:%s=", defaultAgentJarFile
-				.toString()), vmArgument);
+		assertEquals(
+				String.format("-javaagent:%s=", defaultAgentJarFile.toString()),
+				vmArgument);
 	}
 
 	@Test
@@ -209,8 +263,9 @@ public class AgentOptionsTest {
 
 		String vmArgument = options.getVMArgument(defaultAgentJarFile);
 
-		assertEquals(String.format("-javaagent:%s=append=true",
-				defaultAgentJarFile.toString()), vmArgument);
+		assertEquals(
+				String.format("-javaagent:%s=append=true",
+						defaultAgentJarFile.toString()), vmArgument);
 	}
 
 	@Test
