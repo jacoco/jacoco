@@ -29,6 +29,7 @@ import org.junit.Test;
  * @version $Revision: $
  */
 public class AgentOptionsTest {
+
 	private static File defaultAgentJarFile;
 
 	@BeforeClass
@@ -43,8 +44,8 @@ public class AgentOptionsTest {
 		assertTrue(options.getAppend());
 		assertEquals("*", options.getIncludes());
 		assertEquals("", options.getExcludes());
-		assertEquals("sun.reflect.DelegatingClassLoader",
-				options.getExclClassloader());
+		assertEquals("sun.reflect.DelegatingClassLoader", options
+				.getExclClassloader());
 		assertNull(options.getSessionId());
 		assertTrue(options.getDumpOnExit());
 		assertEquals(6300, options.getPort());
@@ -113,8 +114,8 @@ public class AgentOptionsTest {
 		AgentOptions options = new AgentOptions();
 		options.setExclClassloader("org.jacoco.test.TestLoader");
 		assertEquals("org.jacoco.test.TestLoader", options.getExclClassloader());
-		assertEquals("exclclassloader=org.jacoco.test.TestLoader",
-				options.toString());
+		assertEquals("exclclassloader=org.jacoco.test.TestLoader", options
+				.toString());
 	}
 
 	@Test
@@ -199,6 +200,11 @@ public class AgentOptionsTest {
 	}
 
 	@Test(expected = IllegalArgumentException.class)
+	public void testParseInvalidPort() {
+		new AgentOptions("port=xxx");
+	}
+
+	@Test(expected = IllegalArgumentException.class)
 	public void testSetNegativePort() {
 		AgentOptions options = new AgentOptions();
 		options.setPort(-1234);
@@ -251,9 +257,8 @@ public class AgentOptionsTest {
 		AgentOptions options = new AgentOptions();
 		String vmArgument = options.getVMArgument(defaultAgentJarFile);
 
-		assertEquals(
-				String.format("-javaagent:%s=", defaultAgentJarFile.toString()),
-				vmArgument);
+		assertEquals(String.format("-javaagent:%s=", defaultAgentJarFile
+				.toString()), vmArgument);
 	}
 
 	@Test
@@ -263,9 +268,8 @@ public class AgentOptionsTest {
 
 		String vmArgument = options.getVMArgument(defaultAgentJarFile);
 
-		assertEquals(
-				String.format("-javaagent:%s=append=true",
-						defaultAgentJarFile.toString()), vmArgument);
+		assertEquals(String.format("-javaagent:%s=append=true",
+				defaultAgentJarFile.toString()), vmArgument);
 	}
 
 	@Test
@@ -279,4 +283,5 @@ public class AgentOptionsTest {
 				"-javaagent:%s=destfile=some test.exec,append=true",
 				defaultAgentJarFile.toString()), vmArgument);
 	}
+
 }
