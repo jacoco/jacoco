@@ -29,7 +29,7 @@ import org.jacoco.report.html.resources.Resources;
 public abstract class NodePage extends ReportPage implements IReportVisitor,
 		ICoverageTableItem {
 
-	private final ICoverageNode node;
+	private ICoverageNode node;
 
 	/**
 	 * Creates a new node page.
@@ -46,7 +46,7 @@ public abstract class NodePage extends ReportPage implements IReportVisitor,
 	protected NodePage(final ICoverageNode node, final ReportPage parent,
 			final ReportOutputFolder folder, final IHTMLReportContext context) {
 		super(parent, folder, context);
-		this.node = node.getPlainCopy();
+		this.node = node;
 	}
 
 	@Override
@@ -57,6 +57,7 @@ public abstract class NodePage extends ReportPage implements IReportVisitor,
 	public void visitEnd(final ISourceFileLocator sourceFileLocator)
 			throws IOException {
 		renderDocument();
+		this.node = node.getPlainCopy();
 	}
 
 	// === ICoverageTableItem ===
