@@ -22,8 +22,7 @@
   JaCoCo uses class file instrumentation to record execution coverage data.
   Class files are instrumented on-the-fly using a so called Java agent. This
   mechanism allows in-memory pre-processing of all class files during class
-  loading independent of the application framework. The JaCoCo agent collects
-  execution information and dumps it to a local file when the JVM exits.
+  loading independent of the application framework.
 </p>
 
 <p class="hint">
@@ -31,6 +30,17 @@
   about the agent and its options directly. This is transparently handled by the
   Ant tasks.
 </p>
+
+<p>
+  The JaCoCo agent collects execution information and dumps it on request or
+  when the JVM exits. There are three different modes for execution data ouput:
+</p>
+
+<ul>
+  <li>File System: At JVM termination execution data is written to a local file.</li>
+  <li>TCP Socket Server: External tools can connect to the JVM and retrieve execution data over the socket connection. Optional execution data reset and execution data dump on VM exit is possible.</li>
+  <li>TCP Socket Client: At startup the JaCoCo agent connects to a given TCP endpoint. Execution data is written to the socket connection on request. Optional execution data reset and execution data dump on VM exit is possible.</li> 
+</ul>
 
 <p>
   The agent <code>jacocoagent.jar</code> is part of the JaCoCo distribution and
@@ -110,37 +120,47 @@
     <tr>
       <td><code>dumponexit</code></td>
       <td>If set to <code>true</code> coverage data will be written on VM
-          shutdown.
+          shutdown. The dump can only be written if either <code>file</code> is
+          specified or the output is <code>tcpserver</code>/<code>tcpclient</code>
+          and a connection is open at the time when the VM terminates.
       </td>
       <td><code>true</code></td>
     </tr>
-
     <tr>
       <td><code>output</code></td>
-      <td>Output method to use for writing coverage data.  Valid options are:
+      <td>Output method to use for writing coverage data. Valid options are:
         <ul>
-          <li>file</li>
-          <li>tcpserver</li>
-          <li>tcpserver</li>
-        </ul
+          <li><code>file</code>: At VM termination execution data is written to
+              the file specified in the <code>tofile</code> attribute.</li>
+          <li><code>tcpserver</code>: The agent listens for incoming connections
+              on the TCP port specified by the <code>address</code> and
+              <code>port</code> attribute. Execution data is written to this
+              TCP connection.</li>
+          <li><code>tcpclient</code>: At startup the agent connects to the TCP
+              port specified by the <code>address</code> and <code>port</code>
+              attribute. Execution data is written to this TCP connection.</li>
+        </ul>
       </td>
       <td><code>file</code></td>
     </tr>
     <tr>
       <td><code>address</code></td>
-      <td>IP address or hostname to bind to when the output method is tcpserver
-          or connect to when the output method is tcpclient.
+      <td>IP address or hostname to bind to when the output method is
+          <code>tcpserver</code> or connect to when the output method is
+          <code>tcpclient</code>.
       </td>
       <td><code>localhost</code></td>
     </tr>
     <tr>
       <td><code>port</code></td>
-      <td>Port to bind to when the output method is tcpserver or connect to
-          when the output method is tcpclient.
+      <td>Port to bind to when the output method is <code>tcpserver</code> or
+          connect to when the output method is <code>tcpclient</code>. In
+          <code>tcpserver</code> mode the port must be available, which means
+          that if multiple JaCoCo agents should run on the same machine,
+          different ports have to be specified.
       </td>
       <td><code>6300</code></td>
     </tr>
-
   </tbody>
 </table>
 

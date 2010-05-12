@@ -187,6 +187,41 @@
       </td>
       <td><code>true</code></td>
     </tr>
+    <tr>
+      <td><code>output</code></td>
+      <td>Output method to use for writing coverage data. Valid options are:
+        <ul>
+          <li><code>file</code>: At VM termination execution data is written to
+              the file specified in the <code>tofile</code> attribute.</li>
+          <li><code>tcpserver</code>: The agent listens for incoming connections
+              on the TCP port specified by the <code>address</code> and
+              <code>port</code> attribute. Execution data is written to this
+              TCP connection.</li>
+          <li><code>tcpclient</code>: At startup the agent connects to the TCP
+              port specified by the <code>address</code> and <code>port</code>
+              attribute. Execution data is written to this TCP connection.</li>
+        </ul>
+      </td>
+      <td><code>file</code></td>
+    </tr>
+    <tr>
+      <td><code>address</code></td>
+      <td>IP address or hostname to bind to when the output method is
+          <code>tcpserver</code> or connect to when the output method is
+          <code>tcpclient</code>.
+      </td>
+      <td><code>localhost</code></td>
+    </tr>
+    <tr>
+      <td><code>port</code></td>
+      <td>Port to bind to when the output method is <code>tcpserver</code> or
+          connect to when the output method is <code>tcpclient</code>. In
+          <code>tcpserver</code> mode the port must be available, which means
+          that if multiple JaCoCo agents should run on the same machine,
+          different ports have to be specified.
+      </td>
+      <td><code>6300</code></td>
+    </tr>
   </tbody>
 </table>
 
