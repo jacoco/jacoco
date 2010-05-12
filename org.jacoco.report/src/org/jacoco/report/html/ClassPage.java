@@ -82,14 +82,14 @@ public class ClassPage extends NodePage {
 	 */
 	public ClassPage(final ClassCoverage classNode, final ReportPage parent,
 			final Map<String, SourceFilePage> sourceFiles,
-			final ReportOutputFolder folder,
-			final IHTMLReportContext context) {
+			final ReportOutputFolder folder, final IHTMLReportContext context) {
 		super(classNode, parent, folder, context);
 		this.sourceFiles = sourceFiles;
 		this.label = context.getLanguageNames().getClassName(
 				classNode.getName(), classNode.getSignature(),
 				classNode.getSuperName(), classNode.getInterfaceNames());
 		this.sourceFileName = classNode.getSourceFileName();
+		context.getIndexUpdate().addClass(this, classNode.getId());
 	}
 
 	public IReportVisitor visitChild(final ICoverageNode node) {

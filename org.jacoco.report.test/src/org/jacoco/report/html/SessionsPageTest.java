@@ -26,6 +26,8 @@ import org.jacoco.report.ILanguageNames;
 import org.jacoco.report.JavaNames;
 import org.jacoco.report.MemoryMultiReportOutput;
 import org.jacoco.report.ReportOutputFolder;
+import org.jacoco.report.html.index.ElementIndex;
+import org.jacoco.report.html.index.IIndexUpdate;
 import org.jacoco.report.html.resources.Resources;
 import org.junit.After;
 import org.junit.Before;
@@ -49,12 +51,15 @@ public class SessionsPageTest {
 
 	private ReportOutputFolder root;
 
+	private ElementIndex index;
+
 	private IHTMLReportContext context;
 
 	@Before
 	public void setup() {
 		output = new MemoryMultiReportOutput();
 		root = new ReportOutputFolder(output);
+		index = new ElementIndex(root);
 		final Resources resources = new Resources(root);
 		final ILanguageNames names = new JavaNames();
 		context = new IHTMLReportContext() {
@@ -82,6 +87,11 @@ public class SessionsPageTest {
 			public String getOutputEncoding() {
 				return "UTF-8";
 			}
+
+			public IIndexUpdate getIndexUpdate() {
+				return index;
+			}
+
 		};
 	}
 
@@ -93,28 +103,28 @@ public class SessionsPageTest {
 	@Test
 	public void testGetElementStyle() {
 		final SessionsPage page = new SessionsPage(noSessions, noExecutionData,
-				null, root, context);
+				index, null, root, context);
 		assertEquals("el_session", page.getElementStyle());
 	}
 
 	@Test
 	public void testGetFileName() {
 		final SessionsPage page = new SessionsPage(noSessions, noExecutionData,
-				null, root, context);
+				index, null, root, context);
 		assertEquals(".sessions.html", page.getFileName());
 	}
 
 	@Test
 	public void testGetLabel() {
 		final SessionsPage page = new SessionsPage(noSessions, noExecutionData,
-				null, root, context);
+				index, null, root, context);
 		assertEquals("Sessions", page.getLabel());
 	}
 
 	@Test
 	public void testEmptyContent() throws Exception {
 		final SessionsPage page = new SessionsPage(noSessions, noExecutionData,
-				null, root, context);
+				index, null, root, context);
 		page.renderDocument();
 		final HTMLSupport support = new HTMLSupport();
 		final Document doc = support.parse(output.getFile(".sessions.html"));
@@ -131,7 +141,7 @@ public class SessionsPageTest {
 		sessions.add(new SessionInfo("Session-B", 0, 0));
 		sessions.add(new SessionInfo("Session-C", 0, 0));
 		final SessionsPage page = new SessionsPage(sessions, noExecutionData,
-				null, root, context);
+				index, null, root, context);
 		page.renderDocument();
 		final HTMLSupport support = new HTMLSupport();
 		final Document doc = support.parse(output.getFile(".sessions.html"));
@@ -151,8 +161,8 @@ public class SessionsPageTest {
 		data.add(new ExecutionData(0x1000, "ClassB", new boolean[0]));
 		data.add(new ExecutionData(0x1001, "ClassC", new boolean[0]));
 		data.add(new ExecutionData(0x1002, "ClassA", new boolean[0]));
-		final SessionsPage page = new SessionsPage(noSessions, data, null,
-				root, context);
+		final SessionsPage page = new SessionsPage(noSessions, data, index,
+				null, root, context);
 		page.renderDocument();
 		final HTMLSupport support = new HTMLSupport();
 		final Document doc = support.parse(output.getFile(".sessions.html"));

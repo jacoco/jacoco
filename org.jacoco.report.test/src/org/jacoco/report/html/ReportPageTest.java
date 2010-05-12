@@ -20,6 +20,7 @@ import org.jacoco.core.analysis.ICoverageNode.ElementType;
 import org.jacoco.report.ILanguageNames;
 import org.jacoco.report.MemoryMultiReportOutput;
 import org.jacoco.report.ReportOutputFolder;
+import org.jacoco.report.html.index.IIndexUpdate;
 import org.jacoco.report.html.resources.Resources;
 import org.junit.After;
 import org.junit.Before;
@@ -104,6 +105,10 @@ public class ReportPageTest {
 
 			public String getOutputEncoding() {
 				return "UTF-8";
+			}
+
+			public IIndexUpdate getIndexUpdate() {
+				throw new AssertionError("Unexpected method call.");
 			}
 		};
 		ReportPage parent = new TestReportPage("Report", "el_report", null);

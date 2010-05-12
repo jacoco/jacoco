@@ -15,6 +15,7 @@ package org.jacoco.report.html;
 import org.jacoco.core.analysis.ICoverageNode.ElementType;
 import org.jacoco.report.ILanguageNames;
 import org.jacoco.report.ReportOutputFolder;
+import org.jacoco.report.html.index.IIndexUpdate;
 import org.jacoco.report.html.resources.Resources;
 
 /**
@@ -70,5 +71,12 @@ public interface IHTMLReportContext {
 	 * @return encoding for generated HTML documents
 	 */
 	public String getOutputEncoding();
+
+	/**
+	 * Returns the service for index updates.
+	 * 
+	 * @return sevice for indes updates
+	 */
+	public IIndexUpdate getIndexUpdate();
 
 }

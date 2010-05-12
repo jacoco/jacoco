@@ -28,8 +28,11 @@ import org.jacoco.report.ILanguageNames;
 import org.jacoco.report.IMultiReportOutput;
 import org.jacoco.report.IReportFormatter;
 import org.jacoco.report.IReportVisitor;
+import org.jacoco.report.ISourceFileLocator;
 import org.jacoco.report.JavaNames;
 import org.jacoco.report.ReportOutputFolder;
+import org.jacoco.report.html.index.ElementIndex;
+import org.jacoco.report.html.index.IIndexUpdate;
 import org.jacoco.report.html.resources.Resources;
 import org.jacoco.report.html.resources.Styles;
 
@@ -50,6 +53,8 @@ public class HTMLFormatter implements IReportFormatter, IHTMLReportContext {
 	private String outputEncoding = "UTF-8";
 
 	private Resources resources;
+
+	private ElementIndex index;
 
 	private SessionsPage infoPage;
 
@@ -157,6 +162,10 @@ public class HTMLFormatter implements IReportFormatter, IHTMLReportContext {
 		return outputEncoding;
 	}
 
+	public IIndexUpdate getIndexUpdate() {
+		return index;
+	}
+
 	// === IReportFormatter ===
 
 	public IReportVisitor createReportVisitor(final ICoverageNode rootNode,
@@ -168,15 +177,22 @@ public class HTMLFormatter implements IReportFormatter, IHTMLReportContext {
 		final ReportOutputFolder root = new ReportOutputFolder(output);
 		resources = new Resources(root);
 		resources.copyResources();
+		index = new ElementIndex(root);
 		final GroupPage rootpage = new GroupPage(rootNode, null, root, this) {
 			@Override
 			protected String getElementStyle() {
 				return Styles.EL_REPORT;
 			}
+
+			@Override
+			public void visitEnd(final ISourceFileLocator sourceFileLocator)
+					throws IOException {
+				super.visitEnd(sourceFileLocator);
+				infoPage.renderDocument();
+			}
 		};
-		infoPage = new SessionsPage(sessionInfos, executionData, rootpage,
-				root, this);
-		infoPage.renderDocument();
+		infoPage = new SessionsPage(sessionInfos, executionData, index,
+				rootpage, root, this);
 		return rootpage;
 	}
 

@@ -13,6 +13,7 @@
 package org.jacoco.report.html;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertSame;
 
 import java.io.IOException;
 
@@ -23,6 +24,7 @@ import org.jacoco.report.ILanguageNames;
 import org.jacoco.report.IReportVisitor;
 import org.jacoco.report.MemoryMultiReportOutput;
 import org.jacoco.report.ReportOutputFolder;
+import org.jacoco.report.html.index.IIndexUpdate;
 import org.jacoco.report.html.resources.Resources;
 import org.junit.After;
 import org.junit.Before;
@@ -97,6 +99,10 @@ public class NodePageTest {
 			public String getOutputEncoding() {
 				return "UTF-8";
 			}
+
+			public IIndexUpdate getIndexUpdate() {
+				throw new AssertionError("Unexpected method call.");
+			}
 		};
 		node = new CoverageNodeImpl(ElementType.GROUP, "Test", false);
 		page = new TestNodePage(node);
@@ -109,6 +115,12 @@ public class NodePageTest {
 
 	@Test
 	public void testGetNode() throws IOException {
+		// Before all child elements are processed, we must keep the original
+		// node instance to see summary information:
+		assertSame(node, page.getNode());
+
+		// Afterwards a plain copy will do it:
+		page.visitEnd(null);
 		assertEquals(node.getName(), page.getNode().getName());
 		assertEquals(node.getElementType(), page.getNode().getElementType());
 	}
