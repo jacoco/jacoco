@@ -12,18 +12,16 @@
  *******************************************************************************/
 package org.jacoco.agent.rt;
 
-import java.io.BufferedOutputStream;
-import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.OutputStream;
 import java.lang.instrument.Instrumentation;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.Random;
 
-import org.jacoco.core.data.ExecutionDataWriter;
+import org.jacoco.agent.rt.controller.IAgentController;
+import org.jacoco.agent.rt.controller.LocalAgentController;
 import org.jacoco.core.runtime.AgentOptions;
+import org.jacoco.core.runtime.AgentOptions.OutputMode;
 import org.jacoco.core.runtime.IRuntime;
 import org.jacoco.core.runtime.ModifiedSystemClassRuntime;
 
@@ -38,6 +36,7 @@ public class JacocoAgent {
 	private final AgentOptions options;
 
 	private IRuntime runtime;
+	private IAgentController output;
 
 	/**
 	 * Creates a new agent with the given agent options.
@@ -76,6 +75,19 @@ public class JacocoAgent {
 		runtime.setSessionId(sessionId);
 		runtime.startup();
 		inst.addTransformer(new CoverageTransformer(runtime, options));
+		output = createAgentController();
+		output.startup(options, runtime);
+	}
+
+	private IAgentController createAgentController() {
+		OutputMode controllerType = options.getOutput();
+		switch (controllerType) {
+		case file:
+			return new LocalAgentController();
+		default:
+			throw new IllegalArgumentException(String.format(
+					"Unsupported agent controller type: %s", controllerType));
+		}
 	}
 
 	private String createSessionId() {
@@ -107,28 +119,13 @@ public class JacocoAgent {
 	 */
 	public void shutdown() {
 		if (options.getDumpOnExit()) {
-			writeExecutionData();
-		}
-	}
-
-	/**
-	 * Writes the collected execution data to the specified file.
-	 */
-	protected void writeExecutionData() {
-		try {
-			File execFile = new File(options.getDestfile()).getAbsoluteFile();
-			File folder = execFile.getParentFile();
-			if (folder != null) {
-				folder.mkdirs();
+			try {
+				output.writeExecutionData();
+			} catch (IOException e) {
+				e.printStackTrace();
 			}
-			OutputStream output = new BufferedOutputStream(
-					new FileOutputStream(execFile, options.getAppend()));
-			ExecutionDataWriter writer = new ExecutionDataWriter(output);
-			runtime.collect(writer, writer, false);
-			output.close();
-		} catch (IOException e) {
-			e.printStackTrace();
 		}
+		output.shutdown();
 	}
 
 	/**
