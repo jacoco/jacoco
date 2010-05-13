@@ -13,10 +13,10 @@
 package org.jacoco.report.html;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertSame;
 
 import java.io.IOException;
 
+import org.jacoco.core.analysis.CounterImpl;
 import org.jacoco.core.analysis.CoverageNodeImpl;
 import org.jacoco.core.analysis.ICoverageNode;
 import org.jacoco.core.analysis.ICoverageNode.ElementType;
@@ -115,14 +115,16 @@ public class NodePageTest {
 
 	@Test
 	public void testGetNode() throws IOException {
-		// Before all child elements are processed, we must keep the original
-		// node instance to see summary information:
-		assertSame(node, page.getNode());
-
-		// Afterwards a plain copy will do it:
+		node.increment(new CoverageNodeImpl(ElementType.GROUP, "Foo", false) {
+			{
+				blockCounter = CounterImpl.getInstance(15, 8);
+			}
+		});
 		page.visitEnd(null);
 		assertEquals(node.getName(), page.getNode().getName());
 		assertEquals(node.getElementType(), page.getNode().getElementType());
+		assertEquals(CounterImpl.getInstance(15, 8), page.getNode()
+				.getBlockCounter());
 	}
 
 	@Test
