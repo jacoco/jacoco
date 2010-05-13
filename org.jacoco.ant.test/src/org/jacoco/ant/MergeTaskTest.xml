@@ -52,5 +52,20 @@
 		<au:assertLogContains text="2 files merged"/>
 		<au:assertFileExists file="${exec.file}"/>
 	</target>
+	
+	<target name="testMergeBadFiles">
+		<au:expectfailure expectedMessage="Unable to read sample.bad">
+		<jacoco:merge destfile="${exec.file}">
+			<fileset dir="data" includes="sample.bad"/>
+		</jacoco:merge>
+		</au:expectfailure>
+	</target>
+	
+	<target name="testMergeDirecotry">
+		<jacoco:merge destfile="${exec.file}">
+			<dirset dir="data"/>
+		</jacoco:merge>
 
+		<au:assertFileExists file="${exec.file}"/>
+	</target>
 </project>
