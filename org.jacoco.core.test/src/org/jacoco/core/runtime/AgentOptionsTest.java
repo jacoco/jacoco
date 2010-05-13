@@ -50,7 +50,7 @@ public class AgentOptionsTest {
 		assertTrue(options.getDumpOnExit());
 		assertEquals(6300, options.getPort());
 		assertEquals("localhost", options.getAddress());
-		assertEquals("file", options.getOutput());
+		assertEquals(AgentOptions.OutputMode.file, options.getOutput());
 		assertEquals("", options.toString());
 	}
 
@@ -176,14 +176,32 @@ public class AgentOptionsTest {
 	@Test
 	public void testGetOutput() {
 		AgentOptions options = new AgentOptions("output=tcpserver");
-		assertEquals("tcpserver", options.getOutput());
+		assertEquals(AgentOptions.OutputMode.tcpserver, options.getOutput());
 	}
 
 	@Test
-	public void testSetOutput() {
+	public void testSetOutput1() {
 		AgentOptions options = new AgentOptions();
-		options.setOutput("tcpserver");
-		assertEquals("tcpserver", options.getOutput());
+		options.setOutput("tcpclient");
+		assertEquals(AgentOptions.OutputMode.tcpclient, options.getOutput());
+	}
+
+	@Test
+	public void testSetOutput2() {
+		AgentOptions options = new AgentOptions();
+		options.setOutput(AgentOptions.OutputMode.tcpclient);
+		assertEquals(AgentOptions.OutputMode.tcpclient, options.getOutput());
+	}
+
+	@Test(expected = IllegalArgumentException.class)
+	public void testInvalidOutput1() {
+		new AgentOptions("output=foo");
+	}
+
+	@Test(expected = IllegalArgumentException.class)
+	public void testInvalidOutput2() {
+		AgentOptions options = new AgentOptions();
+		options.setOutput("foo");
 	}
 
 	@Test

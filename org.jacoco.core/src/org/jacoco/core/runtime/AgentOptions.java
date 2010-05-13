@@ -85,21 +85,61 @@ public class AgentOptions {
 	public static final String DUMPONEXIT = "dumponexit";
 
 	/**
-	 * Specifies the output mode. There a three possible values:
-	 * <dl>
-	 * <dt>file</dt>
-	 * <dd>At VM termination execution data is written to the filed specified on
-	 * the tofile attribute.</dd>
-	 * <dt>tcpserver</dt>
-	 * <dd>The agent listens for incoming connections a TCP port specified by
-	 * the address and port attribute.</dd>
-	 * <dt>tcpclient</dt>
-	 * <dd>At startup the agent connects to TCP port specified by the address
-	 * and port attribute.</dd>
-	 * </dl>
-	 * Default is <code>file</code>.
+	 * Specifies the output mode. Default is
+	 * <code>{@link OutputMode#file}</code>.
+	 * 
+	 * @see OutputMode#file
+	 * @see OutputMode#tcpserver
+	 * @see OutputMode#tcpclient
 	 */
 	public static final String OUTPUT = "output";
+
+	/**
+	 * Possible values for {@link AgentOptions#OUTPUT}.
+	 */
+	public static enum OutputMode {
+
+		/**
+		 * Value for the {@link AgentOptions#OUTPUT} parameter: At VM
+		 * termination execution data is written to the file specified by
+		 * {@link AgentOptions#DESTFILE}.
+		 */
+		file,
+
+		/**
+		 * Value for the {@link AgentOptions#OUTPUT} parameter: The agent
+		 * listens for incoming connections on a TCP port specified by
+		 * {@link AgentOptions#ADDRESS} and {@link AgentOptions#PORT} .
+		 */
+		tcpserver,
+
+		/**
+		 * Value for the {@link AgentOptions#OUTPUT} parameter: At startup the
+		 * agent connects to a TCP port specified by the
+		 * {@link AgentOptions#ADDRESS} and {@link AgentOptions#PORT} attribute.
+		 */
+		tcpclient
+
+	}
+
+	/**
+	 * Value for the {@link #OUTPUT} parameter: At VM termination execution data
+	 * is written to the file specified by {@link #DESTFILE}.
+	 */
+	public static final String OUTPUT_FILE = "file";
+
+	/**
+	 * Value for the {@link #OUTPUT} parameter: The agent listens for incoming
+	 * connections on a TCP port specified by {@link #ADDRESS} and {@link #PORT}
+	 * .
+	 */
+	public static final String OUTPUT_TCPSERVER = "tcpserver";
+
+	/**
+	 * Value for the {@link #OUTPUT} parameter: At startup the agent connects to
+	 * a TCP port specified by the {@link #ADDRESS} and {@link #PORT} attribute.
+	 */
+	public static final String OUTPUT_TCPCLIENT = "tcpclient";
 
 	/**
 	 * The IP address or DNS name the tcpserver binds to or the tcpclient
@@ -159,6 +199,7 @@ public class AgentOptions {
 
 	private void validateAll() {
 		validatePort(getPort());
+		getOutput();
 	}
 
 	private void validatePort(final int port) {
@@ -356,8 +397,9 @@ public class AgentOptions {
 	 * 
 	 * @return current output mode
 	 */
-	public String getOutput() {
-		return getOption(OUTPUT, "file");
+	public OutputMode getOutput() {
+		final String value = options.get(OUTPUT);
+		return value == null ? OutputMode.file : OutputMode.valueOf(value);
 	}
 
 	/**
@@ -367,7 +409,18 @@ public class AgentOptions {
 	 *            Output mode
 	 */
 	public void setOutput(final String output) {
+		OutputMode.valueOf(output);
 		setOption(OUTPUT, output);
+	}
+
+	/**
+	 * Sets the output mode
+	 * 
+	 * @param output
+	 *            Output mode
+	 */
+	public void setOutput(final OutputMode output) {
+		setOption(OUTPUT, output.name());
 	}
 
 	private void setOption(final String key, final int value) {
