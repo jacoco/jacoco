@@ -12,8 +12,6 @@
  *******************************************************************************/
 package org.jacoco.core.analysis;
 
-import static java.lang.String.format;
-
 import java.util.Collection;
 
 /**
@@ -143,7 +141,7 @@ public class CoverageNodeImpl implements ICoverageNode {
 		case CLASS:
 			return getClassCounter();
 		}
-		throw new IllegalArgumentException(format("Unknown entity %s.", entity));
+		throw new AssertionError(entity);
 	}
 
 	public ILines getLines() {
