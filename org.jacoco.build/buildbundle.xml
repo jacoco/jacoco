@@ -107,8 +107,10 @@
 		</taskdef>
 		
 		<property name="result.tmp.bundle.test.dir" location="${result.tmp.bundle.dir}/test"/>
+		<property name="result.tmp.bundle.tmp.dir" location="${result.tmp.bundle.dir}/tmp"/>
 		<property name="result.tmp.coverage.file" location="${result.tmp.bundle.test.dir}/jacoco.exec"/>
 		<mkdir dir="${result.tmp.bundle.test.dir}"/>
+		<mkdir dir="${result.tmp.bundle.tmp.dir}"/>
 		<jacoco:coverage
 				append="true"
 				destfile="${result.tmp.coverage.file}"
@@ -118,6 +120,7 @@
 			
 			<junit haltonfailure="true" fork="true" forkmode="once" dir="${source.bundle.dir}">
 				<jvmarg line="${verify.jvm.args}"/>
+				<sysproperty key="java.io.tmpdir" value="${result.tmp.bundle.tmp.dir}"/>
 	    		<batchtest todir="${result.tmp.bundle.test.dir}" >
 					<fileset dir="${result.tmp.bundle.classes.dir}">
    						<include name="**/*Test.class"/>
