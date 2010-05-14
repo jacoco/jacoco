@@ -21,9 +21,9 @@ import java.util.Random;
 import org.jacoco.agent.rt.controller.IAgentController;
 import org.jacoco.agent.rt.controller.LocalAgentController;
 import org.jacoco.core.runtime.AgentOptions;
-import org.jacoco.core.runtime.AgentOptions.OutputMode;
 import org.jacoco.core.runtime.IRuntime;
 import org.jacoco.core.runtime.ModifiedSystemClassRuntime;
+import org.jacoco.core.runtime.AgentOptions.OutputMode;
 
 /**
  * The agent which is referred as the <code>Premain-Class</code>.
@@ -36,7 +36,8 @@ public class JacocoAgent {
 	private final AgentOptions options;
 
 	private IRuntime runtime;
-	private IAgentController output;
+
+	private IAgentController controller;
 
 	/**
 	 * Creates a new agent with the given agent options.
@@ -75,8 +76,8 @@ public class JacocoAgent {
 		runtime.setSessionId(sessionId);
 		runtime.startup();
 		inst.addTransformer(new CoverageTransformer(runtime, options));
-		output = createAgentController();
-		output.startup(options, runtime);
+		controller = createAgentController();
+		controller.startup(options, runtime);
 	}
 
 	private IAgentController createAgentController() {
@@ -120,12 +121,12 @@ public class JacocoAgent {
 	public void shutdown() {
 		if (options.getDumpOnExit()) {
 			try {
-				output.writeExecutionData();
+				controller.writeExecutionData();
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
 		}
-		output.shutdown();
+		controller.shutdown();
 	}
 
 	/**
