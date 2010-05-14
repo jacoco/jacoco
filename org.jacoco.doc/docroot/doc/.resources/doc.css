@@ -1,55 +1,3 @@
-body, td {
-  font-family:sans-serif;
-  font-size:10pt;
-}
-
-h1 {
-  font-weight:bold;
-  font-size:18pt;
-}
-
-.breadcrumb {
-  border:#d6d3ce 1px solid;
-  padding:2px 4px 2px 4px;
-}
-
-.footer {
-  margin-top:20px;
-  border-top:#d6d3ce 1px solid;
-  padding-top:2px;
-  font-size:8pt;
-  color:#a0a0a0;
-}
-
-.right {
-  float:right;
-}
-
-.footer a {
-  color:#a0a0a0;
-}
-
-.el_report {
-  padding-left:18px;
-  background-image:url(report.gif);
-  background-position:left center;
-  background-repeat:no-repeat;
-}
-
-.el_group {
-  padding-left:18px;
-  background-image:url(group.gif);
-  background-position:left center;
-  background-repeat:no-repeat;
-}
-
-.el_source {
-  padding-left:18px;
-  background-image:url(source.gif);
-  background-position:left center;
-  background-repeat:no-repeat;
-}
-
 .el_jar {
   padding-left:18px;
   background-image:url(jar.gif);
@@ -67,6 +15,104 @@ h1 {
 .el_testsuite {
   padding-left:18px;
   background-image:url(testsuite.gif);
+  background-position:left center;
+  background-repeat:no-repeat;
+}
+
+p.intro {
+  margin-left:20px;
+  padding-left:4px;
+  border-left:#cccca0 4px solid;
+  font-style:italic
+}
+
+p.hint {
+  margin-left:20px;
+  padding-left:4px;
+  border-left:#cccca0 4px solid;
+  font-style:italic
+}
+
+.high {
+  background-color:#ffff80;
+}
+
+div#content a[href^='http://'], a[href^='https://'] {
+  display:inline-block;
+  padding-left:15px;
+  background:transparent url(extern.gif) center left no-repeat;
+}
+
+/* === Definitions from report.css start here: === */ 
+
+body, td {
+  font-family:sans-serif;
+  font-size:10pt;
+}
+
+h1 {
+  font-weight:bold;
+  font-size:18pt;
+}
+
+.breadcrumb {
+  border:#d6d3ce 1px solid;
+  padding:2px 4px 2px 4px;
+}
+
+
+.el_report {
+  padding-left:18px;
+  background-image:url(report.gif);
+  background-position:left center;
+  background-repeat:no-repeat;
+}
+
+.el_group {
+  padding-left:18px;
+  background-image:url(group.gif);
+  background-position:left center;
+  background-repeat:no-repeat;
+}
+
+.el_bundle {
+  padding-left:18px;
+  background-image:url(bundle.gif);
+  background-position:left center;
+  background-repeat:no-repeat;
+}
+
+.el_package {
+  padding-left:18px;
+  background-image:url(package.gif);
+  background-position:left center;
+  background-repeat:no-repeat;
+}
+
+.el_class {
+  padding-left:18px;
+  background-image:url(class.gif);
+  background-position:left center;
+  background-repeat:no-repeat;
+}
+
+.el_source {
+  padding-left:18px;
+  background-image:url(source.gif);
+  background-position:left center;
+  background-repeat:no-repeat;
+}
+
+.el_method {
+  padding-left:18px;
+  background-image:url(method.gif);
+  background-position:left center;
+  background-repeat:no-repeat;
+}
+
+.el_session {
+  padding-left:18px;
+  background-image:url(session.gif);
   background-position:left center;
   background-repeat:no-repeat;
 }
@@ -105,16 +151,17 @@ table.coverage thead {
 }
 
 table.coverage thead td {
-  border-bottom:#b0b0b0 1px solid;
+  white-space:nowrap;
   padding:2px 12px 0px 6px;
+  border-bottom:#b0b0b0 1px solid;
 }
 
-table.coverage td {
-  vertical-align:top;
-  padding:2px 12px 2px 6px;
+table.coverage thead td.ctr2 {
+  text-align:right;
 }
 
 table.coverage tbody td {
+  padding:2px 12px 2px 6px;
   border-bottom:#d6d3ce 1px solid;
 }
 
@@ -122,41 +169,42 @@ table.coverage tbody tr:hover {
   background: #f0f0d0 !important;
 }
 
-table.coverage td.ctr1 {
+table.coverage tbody td.ctr1 {
   text-align:right;
-  padding:2px 0px 2px 12px;
+  padding:2px 0px 2px 6px;
 }
 
-table.coverage td.ctr2 {
-  text-align:right;
-  padding:2px 0px 2px 4px;
-}
-
-table.coverage td.ctr3 {
+table.coverage tbody td.ctr2 {
   text-align:right;
   padding:2px 12px 2px 4px;
 }
 
-p.intro {
-  margin-left:20px;
-  padding-left:4px;
-  border-left:#cccca0 4px solid;
-  font-style:italic
+table.coverage tfoot td {
+  padding:2px 12px 2px 6px;
 }
 
-p.hint {
-  margin-left:20px;
-  padding-left:4px;
-  border-left:#cccca0 4px solid;
-  font-style:italic
+table.coverage tfoot td.ctr1 {
+  text-align:right;
+  padding:2px 0px 2px 6px;
 }
 
-.high {
-  background-color:#ffff80;
+table.coverage tfoot td.ctr2 {
+  text-align:right;
+  padding:2px 12px 2px 4px;
 }
 
-div#content a[href^='http://'], a[href^='https://'] {
-  display:inline-block;
-  padding-left:15px;
-  background:transparent url(extern.gif) center left no-repeat;
+.footer {
+  margin-top:20px;
+  border-top:#d6d3ce 1px solid;
+  padding-top:2px;
+  font-size:8pt;
+  color:#a0a0a0;
+}
+
+.footer a {
+  color:#a0a0a0;
+}
+
+.right {
+  float:right;
 }
