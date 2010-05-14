@@ -35,6 +35,7 @@
 <xsl:template match="testsuites">
     <html>
         <head>
+            <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
             <link rel="stylesheet" href="../doc/.resources/doc.css" charset="ISO-8859-1" type="text/css" />
             <link rel="shortcut icon" href="../doc/.resources/report.gif" type="image/gif" />
             <title>JaCoCo - JUnit Test Results</title>
