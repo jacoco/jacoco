@@ -1,9 +1,10 @@
 <?xml version="1.0"?>
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="1.0"
-        xmlns:lxslt="http://xml.apache.org/xslt"
-        xmlns:stringutils="xalan://org.apache.tools.ant.util.StringUtils">
-<xsl:output method="html" indent="yes" encoding="US-ASCII"
-  doctype-public="-//W3C//DTD HTML 4.01 Transitional//EN" />
+        xmlns:stringutils="xalan://org.apache.tools.ant.util.StringUtils"
+        exclude-result-prefixes="stringutils">
+<xsl:output method="xml" indent="yes" encoding="UTF-8"
+  doctype-public="-//W3C//DTD XHTML 1.0 Strict//EN" 
+  doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"/>
 <xsl:decimal-format decimal-separator="." grouping-separator="," />
 <!--
    Licensed to the Apache Software Foundation (ASF) under one or more
@@ -54,15 +55,12 @@
 
             <!-- Summary part -->
             <xsl:call-template name="summary"/>
-            <hr size="1"/>
 
             <!-- Package List part -->
             <xsl:call-template name="packagelist"/>
-            <hr size="1"/>
 
             <!-- For each package create its part -->
             <xsl:call-template name="packages"/>
-            <hr size="1"/>
 
             <!-- For each class create the  part -->
             <xsl:call-template name="classes"/>
@@ -105,7 +103,7 @@
                             <xsl:when test="$errorCount &gt; 0">Error</xsl:when>
                         </xsl:choose>
                     </xsl:attribute>
-                    <td><a href="#{@package}" class="el_testsuite"><xsl:value-of select="@package"/></a></td>
+                    <td style="width:24em"><a href="#{@package}" class="el_testsuite"><xsl:value-of select="@package"/></a></td>
                     <td><xsl:value-of select="$testCount"/></td>
                     <td><xsl:value-of select="$errorCount"/></td>
                     <td><xsl:value-of select="$failureCount"/></td>
@@ -137,14 +135,15 @@
                 <a name="{@package}"></a>
                 <h3>Package <xsl:value-of select="@package"/></h3>
 
-                <table class="coverage" style="width:36em">
+                <table class="coverage">
                     <xsl:call-template name="testsuite.test.header"/>
 
                     <!-- match the testsuites of this package -->
                     <xsl:apply-templates select="/testsuites/testsuite[./@package = current()/@package]" mode="print.test"/>
                 </table>
-                <p/>
-                <a href="#top">Back to top</a>
+                <p>
+                	<a href="#top">Back to top</a>
+                </p>
         </xsl:for-each>
     </xsl:template>
 
@@ -155,7 +154,7 @@
             <a name="{@name}"></a>
             <h3>TestCase <xsl:value-of select="@name"/></h3>
 
-            <table class="coverage" style="width:28em">
+            <table class="coverage">
               <xsl:call-template name="testcase.test.header"/>
               <!--
               test can even not be started at all (failure to load the class)
@@ -168,8 +167,9 @@
                 </xsl:if>
                 <xsl:apply-templates select="./testcase" mode="print.test"/>
             </table>
-            <p/>
-            <a href="#top">Back to top</a>
+            <p>
+            	<a href="#top">Back to top</a>
+            </p>
         </xsl:for-each>
     </xsl:template>
 
@@ -226,19 +226,12 @@
 		<span class="el_testsuite">JUnit Test Results</span>
 	</div>
     <h1>JUnit Test Results</h1>
-    <table width="100%">
-    <tr>
-        <td align="left"></td>
-        <td align="right">Designed for use with <a href='http://www.junit.org'>JUnit</a> and <a href='http://ant.apache.org/ant'>Ant</a>.</td>
-    </tr>
-    </table>
-    <hr size="1"/>
 </xsl:template>
 
 <xsl:template match="testsuite" mode="header">
 	<thead>
     	<tr valign="top">
-        	<td width="80%">Name</td>
+        	<td>Name</td>
         	<td>Tests</td>
         	<td>Errors</td>
         	<td>Failures</td>
@@ -286,7 +279,7 @@
         </xsl:attribute>
 
         <!-- print testsuite information -->
-        <td><a href="#{@name}" class="el_testsuite"><xsl:value-of select="@name"/></a></td>
+        <td style="width:24em"><a href="#{@name}" class="el_testsuite"><xsl:value-of select="@name"/></a></td>
         <td><xsl:value-of select="@tests"/></td>
         <td><xsl:value-of select="@errors"/></td>
         <td><xsl:value-of select="@failures"/></td>
@@ -306,7 +299,7 @@
                 <xsl:when test="failure | error">Error</xsl:when>
             </xsl:choose>
         </xsl:attribute>
-        <td><span class="el_test"><xsl:value-of select="@name"/></span></td>
+        <td style="width:24em"><span class="el_test"><xsl:value-of select="@name"/></span></td>
         <xsl:choose>
             <xsl:when test="failure">
                 <td>Failure</td>
