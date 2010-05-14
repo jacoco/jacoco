@@ -161,6 +161,7 @@ table.coverage thead td.ctr2 {
 }
 
 table.coverage tbody td {
+  vertical-align:top;
   padding:2px 12px 2px 6px;
   border-bottom:#d6d3ce 1px solid;
 }
