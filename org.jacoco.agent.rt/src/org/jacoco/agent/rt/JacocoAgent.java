@@ -20,10 +20,11 @@ import java.util.Random;
 
 import org.jacoco.agent.rt.controller.IAgentController;
 import org.jacoco.agent.rt.controller.LocalAgentController;
+import org.jacoco.agent.rt.controller.TcpServerAgentController;
 import org.jacoco.core.runtime.AgentOptions;
+import org.jacoco.core.runtime.AgentOptions.OutputMode;
 import org.jacoco.core.runtime.IRuntime;
 import org.jacoco.core.runtime.ModifiedSystemClassRuntime;
-import org.jacoco.core.runtime.AgentOptions.OutputMode;
 
 /**
  * The agent which is referred as the <code>Premain-Class</code>.
@@ -85,6 +86,8 @@ public class JacocoAgent {
 		switch (controllerType) {
 		case file:
 			return new LocalAgentController();
+		case tcpserver:
+			return new TcpServerAgentController();
 		default:
 			throw new IllegalArgumentException(String.format(
 					"Unsupported agent controller type: %s", controllerType));
