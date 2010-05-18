@@ -49,7 +49,8 @@ class TcpConnection implements IRemoteCommandVisitor {
 	 */
 	public void run() throws IOException {
 		try {
-			reader.read();
+			while (reader.read()) {
+			}
 		} finally {
 			socket.close();
 		}
