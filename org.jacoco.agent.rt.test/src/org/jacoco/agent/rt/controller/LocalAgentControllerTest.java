@@ -61,7 +61,7 @@ public class LocalAgentControllerTest {
 			}
 		};
 
-		LocalAgentController controller = new LocalAgentController();
+		LocalController controller = new LocalController();
 		controller.startup(options, runtime);
 		controller.writeExecutionData();
 		controller.shutdown();

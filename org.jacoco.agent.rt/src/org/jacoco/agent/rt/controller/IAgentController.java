@@ -33,12 +33,13 @@ public interface IAgentController {
 	 * @param runtime
 	 *            Coverage runtime this agent controller will be connected to
 	 */
-	public void startup(final AgentOptions options, final IRuntime runtime);
+	public void startup(final AgentOptions options, final IRuntime runtime)
+			throws IOException;
 
 	/**
 	 * Shutdown the agent controller and clean up any resources it has created.
 	 */
-	public void shutdown();
+	public void shutdown() throws IOException;
 
 	/**
 	 * Write all execution data in the runtime to a location determined by the

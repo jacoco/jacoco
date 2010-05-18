@@ -19,6 +19,8 @@ import java.io.IOException;
 import java.io.OutputStream;
 
 import org.jacoco.core.data.ExecutionDataWriter;
+import org.jacoco.core.runtime.AgentOptions;
+import org.jacoco.core.runtime.IRuntime;
 
 /**
  * Local only agent controller that will write coverage data to the filesystem.
@@ -31,13 +33,18 @@ import org.jacoco.core.data.ExecutionDataWriter;
  * @author Brock Janiczak
  * @version $Revision: $
  */
-public class LocalAgentController extends AbstractAgentController {
+public class LocalController implements IAgentController {
 
 	private File execFile;
 
-	@Override
-	public void startup() {
-		execFile = new File(getOptions().getDestfile()).getAbsoluteFile();
+	private boolean append;
+
+	private IRuntime runtime;
+
+	public final void startup(final AgentOptions options, final IRuntime runtime) {
+		this.runtime = runtime;
+		execFile = new File(options.getDestfile()).getAbsoluteFile();
+		append = options.getAppend();
 		final File folder = execFile.getParentFile();
 		if (folder != null) {
 			folder.mkdirs();
@@ -46,20 +53,17 @@ public class LocalAgentController extends AbstractAgentController {
 
 	public void writeExecutionData() throws IOException {
 
-		OutputStream output = null;
+		final OutputStream output = new BufferedOutputStream(
+				new FileOutputStream(execFile, append));
 		try {
-			output = new BufferedOutputStream(new FileOutputStream(execFile,
-					getOptions().getAppend()));
 			final ExecutionDataWriter writer = new ExecutionDataWriter(output);
-			getRuntime().collect(writer, writer, false);
+			runtime.collect(writer, writer, false);
 		} finally {
-			if (output != null) {
-				try {
-					output.close();
-				} catch (final IOException e) {
-				}
-			}
+			output.close();
 		}
+	}
+
+	public void shutdown() throws IOException {
 	}
 
 }

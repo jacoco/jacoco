@@ -19,12 +19,13 @@ import java.net.UnknownHostException;
 import java.util.Random;
 
 import org.jacoco.agent.rt.controller.IAgentController;
-import org.jacoco.agent.rt.controller.LocalAgentController;
-import org.jacoco.agent.rt.controller.TcpServerAgentController;
+import org.jacoco.agent.rt.controller.LocalController;
+import org.jacoco.agent.rt.controller.TcpClientController;
+import org.jacoco.agent.rt.controller.TcpServerController;
 import org.jacoco.core.runtime.AgentOptions;
-import org.jacoco.core.runtime.AgentOptions.OutputMode;
 import org.jacoco.core.runtime.IRuntime;
 import org.jacoco.core.runtime.ModifiedSystemClassRuntime;
+import org.jacoco.core.runtime.AgentOptions.OutputMode;
 
 /**
  * The agent which is referred as the <code>Premain-Class</code>.
@@ -36,6 +37,8 @@ public class JacocoAgent {
 
 	private final AgentOptions options;
 
+	private final IExceptionLogger logger;
+
 	private IRuntime runtime;
 
 	private IAgentController controller;
@@ -45,9 +48,12 @@ public class JacocoAgent {
 	 * 
 	 * @param options
 	 *            agent options
+	 * @param logger
+	 *            logger used by this agent
 	 */
-	public JacocoAgent(AgentOptions options) {
+	public JacocoAgent(final AgentOptions options, final IExceptionLogger logger) {
 		this.options = options;
+		this.logger = logger;
 	}
 
 	/**
@@ -56,8 +62,8 @@ public class JacocoAgent {
 	 * @param options
 	 *            agent options as text string
 	 */
-	public JacocoAgent(String options) {
-		this(new AgentOptions(options));
+	public JacocoAgent(String options, IExceptionLogger logger) {
+		this(new AgentOptions(options), logger);
 	}
 
 	/**
@@ -76,7 +82,7 @@ public class JacocoAgent {
 		}
 		runtime.setSessionId(sessionId);
 		runtime.startup();
-		inst.addTransformer(new CoverageTransformer(runtime, options));
+		inst.addTransformer(new CoverageTransformer(runtime, options, logger));
 		controller = createAgentController();
 		controller.startup(options, runtime);
 	}
@@ -85,12 +91,13 @@ public class JacocoAgent {
 		OutputMode controllerType = options.getOutput();
 		switch (controllerType) {
 		case file:
-			return new LocalAgentController();
+			return new LocalController();
 		case tcpserver:
-			return new TcpServerAgentController();
+			return new TcpServerController(logger);
+		case tcpclient:
+			return new TcpClientController(logger);
 		default:
-			throw new IllegalArgumentException(String.format(
-					"Unsupported agent controller type: %s", controllerType));
+			throw new AssertionError(controllerType);
 		}
 	}
 
@@ -122,14 +129,14 @@ public class JacocoAgent {
 	 * Shutdown the agent again.
 	 */
 	public void shutdown() {
-		if (options.getDumpOnExit()) {
-			try {
+		try {
+			if (options.getDumpOnExit()) {
 				controller.writeExecutionData();
-			} catch (IOException e) {
-				e.printStackTrace();
 			}
+			controller.shutdown();
+		} catch (IOException e) {
+			logger.logExeption(e);
 		}
-		controller.shutdown();
 	}
 
 	/**
@@ -142,7 +149,14 @@ public class JacocoAgent {
 	 */
 	public static void premain(final String options, final Instrumentation inst)
 			throws Exception {
-		final JacocoAgent agent = new JacocoAgent(options);
+
+		final JacocoAgent agent = new JacocoAgent(options,
+				new IExceptionLogger() {
+					public void logExeption(Exception ex) {
+						ex.printStackTrace();
+					}
+				});
+
 		agent.init(inst);
 
 		Runtime.getRuntime().addShutdownHook(new Thread() {

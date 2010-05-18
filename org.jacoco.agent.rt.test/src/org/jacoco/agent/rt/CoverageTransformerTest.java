@@ -22,6 +22,7 @@ import java.lang.instrument.IllegalClassFormatException;
 
 import org.jacoco.core.runtime.AbstractRuntime;
 import org.jacoco.core.runtime.AgentOptions;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.objectweb.asm.MethodVisitor;
@@ -34,14 +35,22 @@ import org.objectweb.asm.MethodVisitor;
  */
 public class CoverageTransformerTest {
 
+	private ExceptionRecorder recorder;
+
 	private AgentOptions options;
 
 	private ClassLoader classLoader;
 
 	@Before
 	public void setup() {
+		recorder = new ExceptionRecorder();
 		options = new AgentOptions();
 		classLoader = getClass().getClassLoader();
+	}
+
+	@After
+	public void teardown() {
+		recorder.assertEmpty();
 	}
 
 	@Test
@@ -118,13 +127,17 @@ public class CoverageTransformerTest {
 			fail("IllegalClassFormatException expected.");
 		} catch (IllegalClassFormatException e) {
 			assertEquals(
-					"Error while instrumenting class org.jacoco.Sample (id=0x0).",
+					"Error while instrumenting class org.jacoco.Sample (id=0000000000000000).",
 					e.getMessage());
 		}
+		recorder
+				.assertException(IllegalClassFormatException.class,
+						"Error while instrumenting class org.jacoco.Sample (id=0000000000000000).");
+		recorder.clear();
 	}
 
 	private CoverageTransformer createTransformer() {
-		return new CoverageTransformer(new StubRuntime(), options);
+		return new CoverageTransformer(new StubRuntime(), options, recorder);
 	}
 
 	private static class StubRuntime extends AbstractRuntime {

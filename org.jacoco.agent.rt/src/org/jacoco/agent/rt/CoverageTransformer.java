@@ -39,6 +39,8 @@ public class CoverageTransformer implements ClassFileTransformer {
 		AGENT_PREFIX = toVMName(name.substring(0, name.lastIndexOf('.')));
 	}
 
+	private final IExceptionLogger logger;
+
 	private final Instrumenter instrumenter;
 
 	private final WildcardMatcher includes;
@@ -47,8 +49,10 @@ public class CoverageTransformer implements ClassFileTransformer {
 
 	private final WildcardMatcher exclClassloader;
 
-	public CoverageTransformer(IRuntime runtime, AgentOptions options) {
+	public CoverageTransformer(IRuntime runtime, AgentOptions options,
+			final IExceptionLogger logger) {
 		this.instrumenter = new Instrumenter(runtime);
+		this.logger = logger;
 		// Class names will be reported in VM notation:
 		includes = new WildcardMatcher(toVMName(options.getIncludes()));
 		excludes = new WildcardMatcher(toVMName(options.getExcludes()));
@@ -67,12 +71,12 @@ public class CoverageTransformer implements ClassFileTransformer {
 			return instrumenter.instrument(classfileBuffer);
 		} catch (Throwable t) {
 			final Long id = Long.valueOf(CRC64.checksum(classfileBuffer));
-			final String msg = "Error while instrumenting class %s (id=0x%x).";
+			final String msg = "Error while instrumenting class %s (id=%016x).";
 			final IllegalClassFormatException ex = new IllegalClassFormatException(
 					format(msg, classname, id));
 			ex.initCause(t);
-			// Force some output, as the exception is ignored by the JVM:
-			ex.printStackTrace();
+			// Report this, as the exception is ignored by the JVM:
+			logger.logExeption(ex);
 			throw ex;
 		}
 	}
