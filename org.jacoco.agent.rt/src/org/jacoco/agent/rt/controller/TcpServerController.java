@@ -33,6 +33,10 @@ public class TcpServerController implements IAgentController {
 
 	private final IExceptionLogger logger;
 
+	private ServerSocket serverSocket;
+
+	private Thread worker;
+
 	public TcpServerController(final IExceptionLogger logger) {
 		this.logger = logger;
 	}
@@ -40,9 +44,9 @@ public class TcpServerController implements IAgentController {
 	public void startup(final AgentOptions options, final IRuntime runtime)
 			throws IOException {
 		active = true;
-		final ServerSocket serverSocket = new ServerSocket(options.getPort(),
-				1, InetAddress.getByName(options.getAddress()));
-		final Thread worker = new Thread(new Runnable() {
+		serverSocket = new ServerSocket(options.getPort(), 1, InetAddress
+				.getByName(options.getAddress()));
+		worker = new Thread(new Runnable() {
 			public void run() {
 				while (active) {
 					try {
@@ -60,11 +64,13 @@ public class TcpServerController implements IAgentController {
 		worker.start();
 	}
 
-	public void shutdown() throws IOException {
+	public void shutdown() throws Exception {
 		active = false;
 		if (connection != null) {
 			connection.close();
 		}
+		worker.join();
+		serverSocket.close();
 	}
 
 	public void writeExecutionData() throws IOException {

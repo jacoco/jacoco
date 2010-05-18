@@ -12,12 +12,12 @@
  *******************************************************************************/
 package org.jacoco.agent.rt.controller;
 
-import java.io.IOException;
-
 import org.jacoco.core.runtime.AgentOptions;
 import org.jacoco.core.runtime.IRuntime;
 
 /**
+ * Common interface for different implementations that control execution data
+ * dumps.
  * 
  * @author Brock Janiczak
  * @version $Revision: $
@@ -34,20 +34,17 @@ public interface IAgentController {
 	 *            Coverage runtime this agent controller will be connected to
 	 */
 	public void startup(final AgentOptions options, final IRuntime runtime)
-			throws IOException;
+			throws Exception;
 
 	/**
 	 * Shutdown the agent controller and clean up any resources it has created.
 	 */
-	public void shutdown() throws IOException;
+	public void shutdown() throws Exception;
 
 	/**
 	 * Write all execution data in the runtime to a location determined by the
 	 * agent controller. This method should only be called by the Agent
-	 * 
-	 * @throws IOException
-	 *             Error writing execution data
 	 */
-	public void writeExecutionData() throws IOException;
+	public void writeExecutionData() throws Exception;
 
 }

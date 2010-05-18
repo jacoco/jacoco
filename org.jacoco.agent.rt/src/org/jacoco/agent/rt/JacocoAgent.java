@@ -12,7 +12,6 @@
  *******************************************************************************/
 package org.jacoco.agent.rt;
 
-import java.io.IOException;
 import java.lang.instrument.Instrumentation;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
@@ -134,7 +133,7 @@ public class JacocoAgent {
 				controller.writeExecutionData();
 			}
 			controller.shutdown();
-		} catch (IOException e) {
+		} catch (Exception e) {
 			logger.logExeption(e);
 		}
 	}
