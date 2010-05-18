@@ -40,7 +40,8 @@ public class ExecutionDataWriter implements ISessionInfoVisitor,
 	/** Block identifier for execution data of a single class. */
 	public static final byte BLOCK_EXECUTIONDATA = 0x11;
 
-	private final CompactDataOutput out;
+	/** Underlying data output */
+	protected final CompactDataOutput out;
 
 	/**
 	 * Creates a new writer based on the given output stream. Depending on the
@@ -65,6 +66,15 @@ public class ExecutionDataWriter implements ISessionInfoVisitor,
 		out.writeByte(BLOCK_HEADER);
 		out.writeChar(MAGIC_NUMBER);
 		out.writeChar(FORMAT_VERSION);
+	}
+
+	/**
+	 * Flushes the underlying stream.
+	 * 
+	 * @throws IOException
+	 */
+	public void flush() throws IOException {
+		out.flush();
 	}
 
 	public void visitSessionInfo(final SessionInfo info) {

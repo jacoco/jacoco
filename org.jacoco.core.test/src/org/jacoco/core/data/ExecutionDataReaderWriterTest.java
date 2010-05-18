@@ -13,6 +13,7 @@
 package org.jacoco.core.data;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
@@ -67,7 +68,45 @@ public class ExecutionDataReaderWriterTest {
 				fail("No data expected.");
 			}
 		});
-		reader.read();
+		assertFalse(reader.read());
+	}
+
+	@Test
+	public void testFlush() throws IOException {
+		final boolean[] flushCalled = new boolean[] { false };
+		final OutputStream out = new OutputStream() {
+			@Override
+			public void write(int b) throws IOException {
+			}
+
+			@Override
+			public void flush() throws IOException {
+				flushCalled[0] = true;
+			}
+		};
+		new ExecutionDataWriter(out).flush();
+		assertTrue(flushCalled[0]);
+	}
+
+	@Test
+	public void testCustomBlocks() throws IOException {
+		buffer.write(-22);
+		buffer.write(-33);
+		final ExecutionDataReader reader = new ExecutionDataReader(
+				new ByteArrayInputStream(buffer.toByteArray())) {
+
+			@Override
+			protected boolean readBlock(byte blocktype) throws IOException {
+				switch (blocktype) {
+				case -22:
+					return true;
+				case -33:
+					return false;
+				}
+				return super.readBlock(blocktype);
+			}
+		};
+		assertTrue(reader.read());
 	}
 
 	@Test
@@ -86,7 +125,7 @@ public class ExecutionDataReaderWriterTest {
 		new ExecutionDataWriter(buffer);
 		new ExecutionDataWriter(buffer);
 		new ExecutionDataWriter(buffer);
-		createReader().read();
+		assertFalse(createReader().read());
 	}
 
 	@Test(expected = IOException.class)
@@ -128,7 +167,7 @@ public class ExecutionDataReaderWriterTest {
 	public void testSessionInfo() throws IOException {
 		writer.visitSessionInfo(new SessionInfo("TestSession",
 				2837123124567891234L, 3444234223498879234L));
-		createReaderWithVisitors().read();
+		assertFalse(createReaderWithVisitors().read());
 		assertNotNull(sessionInfo);
 		assertEquals("TestSession", sessionInfo.getId());
 		assertEquals(2837123124567891234L, sessionInfo.getStartTimeStamp());
@@ -165,7 +204,7 @@ public class ExecutionDataReaderWriterTest {
 		final boolean[] data = createData(0);
 		writer.visitClassExecution(new ExecutionData(Long.MIN_VALUE, "Sample",
 				data));
-		createReaderWithVisitors().read();
+		assertFalse(createReaderWithVisitors().read());
 		assertArrayEquals(data, store.get(Long.MIN_VALUE).getData());
 	}
 
@@ -174,7 +213,7 @@ public class ExecutionDataReaderWriterTest {
 		final boolean[] data = createData(0);
 		writer.visitClassExecution(new ExecutionData(Long.MAX_VALUE, "Sample",
 				data));
-		createReaderWithVisitors().read();
+		assertFalse(createReaderWithVisitors().read());
 		assertArrayEquals(data, store.get(Long.MAX_VALUE).getData());
 	}
 
@@ -182,7 +221,7 @@ public class ExecutionDataReaderWriterTest {
 	public void testEmptyClass() throws IOException {
 		final boolean[] data = createData(0);
 		writer.visitClassExecution(new ExecutionData(3, "Sample", data));
-		createReaderWithVisitors().read();
+		assertFalse(createReaderWithVisitors().read());
 		assertArrayEquals(data, store.get(3).getData());
 	}
 
@@ -190,7 +229,7 @@ public class ExecutionDataReaderWriterTest {
 	public void testOneClass() throws IOException {
 		final boolean[] data = createData(5);
 		writer.visitClassExecution(new ExecutionData(3, "Sample", data));
-		createReaderWithVisitors().read();
+		assertFalse(createReaderWithVisitors().read());
 		assertArrayEquals(data, store.get(3).getData());
 	}
 
@@ -200,7 +239,7 @@ public class ExecutionDataReaderWriterTest {
 		final boolean[] data2 = createData(7);
 		writer.visitClassExecution(new ExecutionData(333, "Sample", data1));
 		writer.visitClassExecution(new ExecutionData(-45, "Sample", data2));
-		createReaderWithVisitors().read();
+		assertFalse(createReaderWithVisitors().read());
 		assertArrayEquals(data1, store.get(333).getData());
 		assertArrayEquals(data2, store.get(-45).getData());
 	}
@@ -209,7 +248,7 @@ public class ExecutionDataReaderWriterTest {
 	public void testBigClass() throws IOException {
 		final boolean[] data = createData(117);
 		writer.visitClassExecution(new ExecutionData(123, "Sample", data));
-		createReaderWithVisitors().read();
+		assertFalse(createReaderWithVisitors().read());
 		assertArrayEquals(data, store.get(123).getData());
 	}
 

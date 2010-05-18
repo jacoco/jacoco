@@ -26,7 +26,8 @@ import java.io.InputStream;
  */
 public class ExecutionDataReader {
 
-	private final CompactDataInput in;
+	/** Underlying data input */
+	protected final CompactDataInput in;
 
 	private ISessionInfoVisitor sessionInfoVisitor;
 
@@ -67,32 +68,49 @@ public class ExecutionDataReader {
 	}
 
 	/**
-	 * Reads all data and reports it to the corresponding visitors.
+	 * Reads all data and reports it to the corresponding visitors. The stream
+	 * is read until its end or a command confirmation has been sent.
 	 * 
+	 * @return <code>true</code> if additional data can be expected after a
+	 *         command has been executed. <code>false</code> if the end of the
+	 *         stream has been reached.
 	 * @throws IOException
 	 *             might be thrown by the underlying input stream
 	 */
-	public void read() throws IOException {
+	public boolean read() throws IOException {
 		try {
-			while (true) {
-				final byte block = in.readByte();
-				switch (block) {
-				case ExecutionDataWriter.BLOCK_HEADER:
-					readHeader();
-					break;
-				case ExecutionDataWriter.BLOCK_SESSIONINFO:
-					readSessionInfo();
-					break;
-				case ExecutionDataWriter.BLOCK_EXECUTIONDATA:
-					readExecutionData();
-					break;
-				default:
-					throw new IOException(format("Unknown block type %x.",
-							Integer.valueOf(block)));
-				}
+			while (readBlock(in.readByte())) {
 			}
+			return true;
 		} catch (final EOFException e) {
-			// expected at the end of the stream
+			return false;
+		}
+	}
+
+	/**
+	 * Reads a block of data identified by the given id. Subclasses may
+	 * overwrite this method to support additional block types.
+	 * 
+	 * @param blocktype
+	 *            block type
+	 * @return <code>true</code> if there are more blocks to read
+	 * @throws IOException
+	 *             might be thrown by the underlying input stream
+	 */
+	protected boolean readBlock(final byte blocktype) throws IOException {
+		switch (blocktype) {
+		case ExecutionDataWriter.BLOCK_HEADER:
+			readHeader();
+			return true;
+		case ExecutionDataWriter.BLOCK_SESSIONINFO:
+			readSessionInfo();
+			return true;
+		case ExecutionDataWriter.BLOCK_EXECUTIONDATA:
+			readExecutionData();
+			return true;
+		default:
+			throw new IOException(format("Unknown block type %x.", Byte
+					.valueOf(blocktype)));
 		}
 	}
 
@@ -109,7 +127,7 @@ public class ExecutionDataReader {
 
 	private void readSessionInfo() throws IOException {
 		if (sessionInfoVisitor == null) {
-			throw new IOException("No execution data visitor.");
+			throw new IOException("No session info visitor.");
 		}
 		final String id = in.readUTF();
 		final long start = in.readLong();
