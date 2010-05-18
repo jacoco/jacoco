@@ -51,6 +51,7 @@ public class ExecutionDataWriter implements ISessionInfoVisitor,
 	 * @param output
 	 *            binary stream to write execution data to
 	 * @throws IOException
+	 *             if the header can't be written
 	 */
 	public ExecutionDataWriter(final OutputStream output) throws IOException {
 		this.out = new CompactDataOutput(output);

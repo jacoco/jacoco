@@ -37,7 +37,7 @@ import org.junit.Test;
  */
 public class ExecutionDataReaderWriterTest {
 
-	private ByteArrayOutputStream buffer;
+	protected ByteArrayOutputStream buffer;
 
 	private ExecutionDataWriter writer;
 
@@ -50,7 +50,7 @@ public class ExecutionDataReaderWriterTest {
 	@Before
 	public void setup() throws IOException {
 		buffer = new ByteArrayOutputStream();
-		writer = new ExecutionDataWriter(buffer);
+		writer = createWriter(buffer);
 		store = new ExecutionDataStore();
 		random = new Random(5);
 	}
@@ -177,15 +177,14 @@ public class ExecutionDataReaderWriterTest {
 	@Test(expected = RuntimeException.class)
 	public void testSessionInfoIOException() throws IOException {
 		final boolean[] broken = new boolean[1];
-		final ExecutionDataWriter writer = new ExecutionDataWriter(
-				new OutputStream() {
-					@Override
-					public void write(int b) throws IOException {
-						if (broken[0]) {
-							throw new IOException();
-						}
-					}
-				});
+		final ExecutionDataWriter writer = createWriter(new OutputStream() {
+			@Override
+			public void write(int b) throws IOException {
+				if (broken[0]) {
+					throw new IOException();
+				}
+			}
+		});
 		broken[0] = true;
 		writer.visitSessionInfo(new SessionInfo("X", 0, 0));
 	}
@@ -255,24 +254,18 @@ public class ExecutionDataReaderWriterTest {
 	@Test(expected = RuntimeException.class)
 	public void testExecutionDataIOException() throws IOException {
 		final boolean[] broken = new boolean[1];
-		final ExecutionDataWriter writer = new ExecutionDataWriter(
-				new OutputStream() {
-					@Override
-					public void write(int b) throws IOException {
-						if (broken[0]) {
-							throw new IOException();
-						}
-					}
-				});
+		final ExecutionDataWriter writer = createWriter(new OutputStream() {
+			@Override
+			public void write(int b) throws IOException {
+				if (broken[0]) {
+					throw new IOException();
+				}
+			}
+		});
 		broken[0] = true;
 		writer
 				.visitClassExecution(new ExecutionData(3, "Sample",
 						createData(1)));
-	}
-
-	private ExecutionDataReader createReader() throws IOException {
-		return new ExecutionDataReader(new ByteArrayInputStream(buffer
-				.toByteArray()));
 	}
 
 	private ExecutionDataReader createReaderWithVisitors() throws IOException {
@@ -300,6 +293,16 @@ public class ExecutionDataReaderWriterTest {
 		for (int i = 0; i < expected.length; i++) {
 			assertTrue(expected[i] == expected[i]);
 		}
+	}
+
+	protected ExecutionDataWriter createWriter(OutputStream out)
+			throws IOException {
+		return new ExecutionDataWriter(out);
+	}
+
+	protected ExecutionDataReader createReader() throws IOException {
+		return new ExecutionDataReader(new ByteArrayInputStream(buffer
+				.toByteArray()));
 	}
 
 }

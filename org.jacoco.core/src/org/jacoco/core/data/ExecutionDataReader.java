@@ -41,7 +41,7 @@ public class ExecutionDataReader {
 	 * @param input
 	 *            input stream to read execution data from
 	 * @throws IOException
-	 *             thrown if the stream does not represent execution data
+	 *             if the stream does not have a valid header
 	 */
 	public ExecutionDataReader(final InputStream input) throws IOException {
 		this.in = new CompactDataInput(input);
