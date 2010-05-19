@@ -19,7 +19,6 @@ import java.net.ServerSocket;
 import java.net.Socket;
 
 import org.jacoco.core.data.ExecutionData;
-import org.jacoco.core.data.ExecutionDataWriter;
 import org.jacoco.core.data.IExecutionDataVisitor;
 import org.jacoco.core.data.ISessionInfoVisitor;
 import org.jacoco.core.data.SessionInfo;
@@ -72,10 +71,13 @@ public class ExecutionDataServer {
 				throws IOException {
 			this.socket = socket;
 			this.fileWriter = fileWriter;
-			new ExecutionDataWriter(socket.getOutputStream());
+
+			// Just send a valid header:
+			new RemoteControlWriter(socket.getOutputStream());
+
 			reader = new RemoteControlReader(socket.getInputStream());
 			reader.setSessionInfoVisitor(this);
-			reader.setExecutionDataVisitor(fileWriter);
+			reader.setExecutionDataVisitor(this);
 		}
 
 		public void run() {
