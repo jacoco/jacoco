@@ -26,6 +26,15 @@ import java.util.List;
  */
 public class ExceptionRecorder implements IExceptionLogger {
 
+	/**
+	 * Shared Exception logger that can be used to ignore all exceptions
+	 */
+	public static IExceptionLogger IGNORE_ALL = new IExceptionLogger() {
+
+		public void logExeption(Exception ex) {
+		}
+	};
+
 	private final List<Exception> exceptions = new ArrayList<Exception>();
 
 	public void logExeption(Exception ex) {
@@ -40,7 +49,8 @@ public class ExceptionRecorder implements IExceptionLogger {
 		assertEquals(Collections.emptyList(), getTypes());
 	}
 
-	public void assertException(final Class<?> type, final String message) {
+	public void assertException(final Class<? extends Throwable> type,
+			final String message) {
 		assertEquals(Collections.singletonList(type), getTypes());
 		assertEquals(Collections.singletonList(message), getMessages());
 	}

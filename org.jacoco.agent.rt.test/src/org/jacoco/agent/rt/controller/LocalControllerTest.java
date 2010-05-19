@@ -16,19 +16,18 @@ import static org.junit.Assert.assertTrue;
 
 import java.io.File;
 
-import org.jacoco.core.runtime.AbstractRuntime;
+import org.jacoco.agent.rt.StubRuntime;
 import org.jacoco.core.runtime.AgentOptions;
 import org.jacoco.core.runtime.IRuntime;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import org.objectweb.asm.MethodVisitor;
 
 /**
  * @author Brock Janiczak
  * @version $Revision: $
  */
-public class LocalAgentControllerTest {
+public class LocalControllerTest {
 
 	private File coverageFile;
 
@@ -47,19 +46,7 @@ public class LocalAgentControllerTest {
 		AgentOptions options = new AgentOptions();
 		options.setDestfile(coverageFile.getAbsolutePath());
 
-		IRuntime runtime = new AbstractRuntime() {
-
-			public int generateDataAccessor(long classid, String classname,
-					int probecount, MethodVisitor mv) {
-				return 0;
-			}
-
-			public void startup() throws Exception {
-			}
-
-			public void shutdown() {
-			}
-		};
+		IRuntime runtime = new StubRuntime();
 
 		LocalController controller = new LocalController();
 		controller.startup(options, runtime);

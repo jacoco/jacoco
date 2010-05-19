@@ -69,8 +69,13 @@ public class TcpServerController implements IAgentController {
 		if (connection != null) {
 			connection.close();
 		}
+
+		if (serverSocket != null) {
+			serverSocket.close();
+		}
+
 		worker.join();
-		serverSocket.close();
+
 	}
 
 	public void writeExecutionData() throws IOException {

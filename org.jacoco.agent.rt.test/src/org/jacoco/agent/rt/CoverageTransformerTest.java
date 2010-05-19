@@ -20,12 +20,10 @@ import static org.junit.Assert.fail;
 
 import java.lang.instrument.IllegalClassFormatException;
 
-import org.jacoco.core.runtime.AbstractRuntime;
 import org.jacoco.core.runtime.AgentOptions;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import org.objectweb.asm.MethodVisitor;
 
 /**
  * Unit tests for {@link CoverageTransformer}.
@@ -138,20 +136,6 @@ public class CoverageTransformerTest {
 
 	private CoverageTransformer createTransformer() {
 		return new CoverageTransformer(new StubRuntime(), options, recorder);
-	}
-
-	private static class StubRuntime extends AbstractRuntime {
-
-		public int generateDataAccessor(long classid, String classname,
-				int probecount, MethodVisitor mv) {
-			return 0;
-		}
-
-		public void startup() {
-		}
-
-		public void shutdown() {
-		}
 	}
 
 }
