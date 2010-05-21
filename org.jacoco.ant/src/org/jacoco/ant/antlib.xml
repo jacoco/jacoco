@@ -18,4 +18,5 @@
    <taskdef name="agent" classname="org.jacoco.ant.AgentTask"/>
    <taskdef name="report" classname="org.jacoco.ant.ReportTask"/>
    <taskdef name="merge" classname="org.jacoco.ant.MergeTask"/>
+   <taskdef name="dump" classname="org.jacoco.ant.DumpTask"/>
 </antlib>

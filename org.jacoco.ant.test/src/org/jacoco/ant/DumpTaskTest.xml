@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+   Copyright (c) 2009, 2010 Mountainminds GmbH & Co. KG and Contributors
+   All rights reserved. This program and the accompanying materials
+   are made available under the terms of the Eclipse Public License v1.0
+   which accompanies this distribution, and is available at
+   http://www.eclipse.org/legal/epl-v10.html
+  
+   Contributors:
+      Brock Janiczak - initial API and implementation
+      
+   $Id: $
+-->
+
+<project name="JaCoCo Dump Task Tests" xmlns:au="antlib:org.apache.ant.antunit" xmlns:jacoco="antlib:org.jacoco.ant">
+                        
+        <target name="testDumpWithNoServer">
+                <au:expectfailure expectedMessage="Unable to communicate with JaCoCo server">
+                        <jacoco:dump/>
+                </au:expectfailure>
+        </target>
+        
+        <target name="testUnknownHost">
+                <au:expectfailure expectedMessage="Unable to communicate with JaCoCo server">
+                        <jacoco:dump address="nosuchhost"/>
+                </au:expectfailure>
+        </target>
+
+</project>
