@@ -13,6 +13,8 @@
 package org.jacoco.ant;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 
 import org.junit.Test;
 
@@ -41,7 +43,11 @@ public class TestTarget {
 	public static String getClassPath() {
 		final String name = TestTarget.class.getName();
 		final String res = "/" + name.replace('.', '/') + ".class";
-		final String loc = TestTarget.class.getResource(res).getFile();
+		String loc = TestTarget.class.getResource(res).getFile();
+		try {
+			loc = URLDecoder.decode(loc, "UTF-8");
+		} catch (UnsupportedEncodingException e) {
+		}
 		return loc.substring(0, loc.length() - res.length());
 	}
 
