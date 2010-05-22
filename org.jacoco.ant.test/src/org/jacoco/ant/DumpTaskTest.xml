@@ -14,17 +14,41 @@
 -->
 
 <project name="JaCoCo Dump Task Tests" xmlns:au="antlib:org.apache.ant.antunit" xmlns:jacoco="antlib:org.jacoco.ant">
-                        
-        <target name="testDumpWithNoServer">
-                <au:expectfailure expectedMessage="Unable to communicate with JaCoCo server">
-                        <jacoco:dump/>
-                </au:expectfailure>
-        </target>
-        
-        <target name="testUnknownHost">
-                <au:expectfailure expectedMessage="Unable to communicate with JaCoCo server">
-                        <jacoco:dump address="nosuchhost"/>
-                </au:expectfailure>
-        </target>
+
+	<macrodef name="assertFileNotEmpty" backtrace="false">
+		<attribute name="file" />
+		<attribute name="message" default="Expected file '@{file}' is not empty" />
+		<sequential>
+			<au:fail message="@{message}">
+				<isfileselected file="@{file}">
+					<size when="more" value="0"/>
+				</isfileselected>
+			</au:fail>
+		</sequential>
+	</macrodef>
+	
+	<target name="setUp">
+		<tempfile property="temp.dir" prefix="jacocoTest" destdir="${java.io.tmpdir}" />
+		<mkdir dir="${temp.dir}" />
+		<property name="exec.file" location="${temp.dir}/exec.file" />
+	</target>
+
+	<target name="tearDown">
+		<delete dir="${temp.dir}" quiet="false" failonerror="true" />
+	</target>
+
+	<target name="testDumpWithNoServer">
+		<au:expectfailure expectedMessage="Unable to communicate with JaCoCo server">
+			<jacoco:dump destfile="${exec.file}" />
+		</au:expectfailure>
+		<assertFileNotEmpty file="${exec.file}" />
+	</target>
+
+	<target name="testUnknownHost">
+		<au:expectfailure expectedMessage="Unable to communicate with JaCoCo server">
+			<jacoco:dump destfile="${exec.file}" address="nosuchhost" />
+		</au:expectfailure>
+		<assertFileNotEmpty file="${exec.file}" />
+	</target>
 
 </project>
