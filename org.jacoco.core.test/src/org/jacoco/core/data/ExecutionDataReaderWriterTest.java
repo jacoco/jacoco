@@ -112,12 +112,13 @@ public class ExecutionDataReaderWriterTest {
 	@Test
 	public void testGetFileHeader() {
 		byte[] header = ExecutionDataWriter.getFileHeader();
-		assertEquals(0x01, 0xFF & header[0], 0.0);
-		assertEquals(0xC0, 0xFF & header[1], 0.0);
-		assertEquals(0xC0, 0xFF & header[2], 0.0);
+		assertEquals(5, header.length);
+		assertEquals(0x01, 0xFF & header[0]);
+		assertEquals(0xC0, 0xFF & header[1]);
+		assertEquals(0xC0, 0xFF & header[2]);
 		final char version = ExecutionDataWriter.FORMAT_VERSION;
-		assertEquals(version >> 8, 0xFF & header[3], 0.0);
-		assertEquals(version & 0xFF, 0xFF & header[4], 0.0);
+		assertEquals(version >> 8, 0xFF & header[3]);
+		assertEquals(version & 0xFF, 0xFF & header[4]);
 	}
 
 	@Test

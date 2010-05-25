@@ -110,7 +110,7 @@ public class ExecutionDataWriter implements ISessionInfoVisitor,
 	public static final byte[] getFileHeader() {
 		final ByteArrayOutputStream buffer = new ByteArrayOutputStream();
 		try {
-			new ExecutionDataWriter(buffer).writeHeader();
+			new ExecutionDataWriter(buffer);
 		} catch (final IOException e) {
 			// Must not happen with ByteArrayOutputStream
 			throw new AssertionError(e);
