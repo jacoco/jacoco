@@ -12,7 +12,6 @@
  *******************************************************************************/
 package org.jacoco.core.runtime;
 
-import java.io.EOFException;
 import java.io.IOException;
 import java.io.InputStream;
 
@@ -48,8 +47,6 @@ public class RemoteControlReader extends ExecutionDataReader {
 			return true;
 		case RemoteControlWriter.BLOCK_CMDOK:
 			return false;
-		case RemoteControlWriter.BLOCK_CMDCLOSE:
-			throw new EOFException();
 		default:
 			return super.readBlock(blockid);
 		}

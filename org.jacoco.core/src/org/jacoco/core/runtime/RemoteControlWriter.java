@@ -29,9 +29,6 @@ public class RemoteControlWriter extends ExecutionDataWriter implements
 	/** Block identifier to confirm successful command execution. */
 	public static final byte BLOCK_CMDOK = 0x20;
 
-	/** Block identifier to announce that the connection will be closed. */
-	public static final byte BLOCK_CMDCLOSE = 0x2f;
-
 	/** Block identifier for dump command */
 	public static final byte BLOCK_CMDDUMP = 0x40;
 
@@ -57,16 +54,6 @@ public class RemoteControlWriter extends ExecutionDataWriter implements
 		} catch (final IOException e) {
 			throw new RuntimeException(e);
 		}
-	}
-
-	/**
-	 * Sends a announcement that the stream connection will be closed
-	 * afterwards.
-	 * 
-	 * @throws IOException
-	 */
-	public void sendCmdClose() throws IOException {
-		out.writeByte(RemoteControlWriter.BLOCK_CMDCLOSE);
 	}
 
 	public void visitDumpCommand(final boolean dump, final boolean reset) {

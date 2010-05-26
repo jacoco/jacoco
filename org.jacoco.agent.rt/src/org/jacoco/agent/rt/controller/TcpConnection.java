@@ -14,6 +14,7 @@ package org.jacoco.agent.rt.controller;
 
 import java.io.IOException;
 import java.net.Socket;
+import java.net.SocketException;
 
 import org.jacoco.core.runtime.IRemoteCommandVisitor;
 import org.jacoco.core.runtime.IRuntime;
@@ -51,8 +52,14 @@ class TcpConnection implements IRemoteCommandVisitor {
 		try {
 			while (reader.read()) {
 			}
+		} catch (SocketException e) {
+			// If the local socket is closed while polling for commands the
+			// SocketException is expected.
+			if (!socket.isClosed()) {
+				throw e;
+			}
 		} finally {
-			socket.close();
+			close();
 		}
 	}
 
@@ -74,10 +81,11 @@ class TcpConnection implements IRemoteCommandVisitor {
 	 */
 	public void close() throws IOException {
 		if (!socket.isClosed()) {
-			writer.sendCmdClose();
-			socket.shutdownInput();
+			socket.close();
 		}
 	}
+
+	// === IRemoteCommandVisitor ===
 
 	public void visitDumpCommand(boolean dump, boolean reset) {
 		if (dump) {

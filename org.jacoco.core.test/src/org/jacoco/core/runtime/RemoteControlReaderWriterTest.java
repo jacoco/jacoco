@@ -95,13 +95,6 @@ public class RemoteControlReaderWriterTest extends
 		assertTrue(reader.read());
 	}
 
-	@Test
-	public void testSendCmdClose() throws IOException {
-		writer.sendCmdClose();
-		final RemoteControlReader reader = createReader();
-		assertFalse(reader.read());
-	}
-
 	@Override
 	protected RemoteControlReader createReader() throws IOException {
 		return new RemoteControlReader(new ByteArrayInputStream(buffer

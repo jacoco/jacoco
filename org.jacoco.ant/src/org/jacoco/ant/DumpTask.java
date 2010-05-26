@@ -134,7 +134,6 @@ public class DumpTask extends Task {
 			remoteWriter.visitDumpCommand(dump, reset);
 			remoteReader.read();
 
-			remoteWriter.sendCmdClose();
 			socket.close();
 		} catch (final IOException e) {
 			throw new BuildException(
