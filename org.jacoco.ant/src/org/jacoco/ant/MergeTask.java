@@ -81,8 +81,8 @@ public class MergeTask extends Task {
 
 		OutputStream outputStream = null;
 		try {
-			destfile.getParentFile().mkdirs();
-			destfile.createNewFile();
+			FileUtils.getFileUtils().createNewFile(destfile, true);
+
 			outputStream = new BufferedOutputStream(new FileOutputStream(
 					destfile));
 			final ExecutionDataWriter dataWriter = new ExecutionDataWriter(
