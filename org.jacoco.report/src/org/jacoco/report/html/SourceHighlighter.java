@@ -103,21 +103,22 @@ public class SourceHighlighter {
 
 	private void renderCodeLine(final HTMLElement pre, final String line,
 			final int status) throws IOException {
-		final String lineWithoutTabs = line.replace("\t", tabReplacement);
+		highlight(pre, status).text(line.replace("\t", tabReplacement));
+		pre.text("\n");
+	}
+
+	private HTMLElement highlight(final HTMLElement pre, final int status)
+			throws IOException {
 		switch (status) {
 		case ILines.NOT_COVERED:
-			pre.span(Styles.NOT_COVERED).text(lineWithoutTabs);
-			break;
+			return pre.span(Styles.NOT_COVERED);
 		case ILines.FULLY_COVERED:
-			pre.span(Styles.FULLY_COVERED).text(lineWithoutTabs);
-			break;
+			return pre.span(Styles.FULLY_COVERED);
 		case ILines.PARTLY_COVERED:
-			pre.span(Styles.PARTLY_COVERED).text(lineWithoutTabs);
-			break;
+			return pre.span(Styles.PARTLY_COVERED);
 		default:
-			pre.text(lineWithoutTabs);
+			return pre;
 		}
-		pre.text("\n");
 	}
 
 }

@@ -26,7 +26,6 @@ import org.w3c.dom.Document;
 /**
  * Unit tests for {@link SourceHighlighter}.
  * 
- * 
  * @author Marc R. Hoffmann
  * @version $Revision: $
  */
@@ -84,13 +83,41 @@ public class SourceHighlighterTest {
 	}
 
 	@Test
-	public void testTabReplacement() throws Exception {
+	public void testDefaultTabWidth() throws Exception {
+		final String src = "\tA";
+		sourceHighlighter.render(parent, lines, new StringReader(src));
+		html.close();
+		final Document doc = htmlSupport.parse(buffer.toString());
+		assertEquals("    A\n", htmlSupport.findStr(doc, "//pre/text()"));
+	}
+
+	@Test
+	public void testSetTabWidth() throws Exception {
 		final String src = "\tA";
 		sourceHighlighter.setTabWidth(3);
 		sourceHighlighter.render(parent, lines, new StringReader(src));
 		html.close();
 		final Document doc = htmlSupport.parse(buffer.toString());
 		assertEquals("   A\n", htmlSupport.findStr(doc, "//pre/text()"));
+	}
+
+	@Test
+	public void testDefaultLanguage() throws Exception {
+		sourceHighlighter.render(parent, lines, new StringReader(""));
+		html.close();
+		final Document doc = htmlSupport.parse(buffer.toString());
+		assertEquals("source lang-java", htmlSupport.findStr(doc,
+				"//pre/@class"));
+	}
+
+	@Test
+	public void testSetLanguage() throws Exception {
+		sourceHighlighter.setLanguage("scala");
+		sourceHighlighter.render(parent, lines, new StringReader(""));
+		html.close();
+		final Document doc = htmlSupport.parse(buffer.toString());
+		assertEquals("source lang-scala", htmlSupport.findStr(doc,
+				"//pre/@class"));
 	}
 
 	@Test
