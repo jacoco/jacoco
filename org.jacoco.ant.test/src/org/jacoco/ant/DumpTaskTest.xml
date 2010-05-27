@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<!--
+<!-- 
    Copyright (c) 2009, 2010 Mountainminds GmbH & Co. KG and Contributors
    All rights reserved. This program and the accompanying materials
    are made available under the terms of the Eclipse Public License v1.0
@@ -15,40 +15,44 @@
 
 <project name="JaCoCo Dump Task Tests" xmlns:au="antlib:org.apache.ant.antunit" xmlns:jacoco="antlib:org.jacoco.ant">
 
-	<macrodef name="assertFileNotEmpty" backtrace="false">
-		<attribute name="file" />
-		<attribute name="message" default="Expected file '@{file}' is not empty" />
-		<sequential>
-			<au:fail message="@{message}">
-				<isfileselected file="@{file}">
-					<size when="more" value="0"/>
-				</isfileselected>
-			</au:fail>
-		</sequential>
-	</macrodef>
-	
 	<target name="setUp">
 		<tempfile property="temp.dir" prefix="jacocoTest" destdir="${java.io.tmpdir}" />
-		<mkdir dir="${temp.dir}" />
+		<mkdir dir="${temp.dir}"/>
 		<property name="exec.file" location="${temp.dir}/exec.file" />
 	</target>
 
 	<target name="tearDown">
-		<delete dir="${temp.dir}" quiet="false" failonerror="true" />
+		<delete dir="${temp.dir}" quiet="false" failonerror="true"/>
 	</target>
-
-	<target name="testDumpWithNoServer">
+	
+	<target name="testDumpNoServer">
 		<au:expectfailure expectedMessage="Unable to communicate with JaCoCo server">
-			<jacoco:dump destfile="${exec.file}" />
+			<jacoco:dump dump="true" destfile="${exec.file}"/>
 		</au:expectfailure>
-		<assertFileNotEmpty file="${exec.file}" />
+		<au:assertFileDoesntExist file="${exec.file}"/>
 	</target>
-
+		
+	<target name="testNoServer">
+		<au:expectfailure expectedMessage="Unable to communicate with JaCoCo server">
+			<jacoco:dump dump="false"/>
+		</au:expectfailure>
+		<au:assertFileDoesntExist file="${exec.file}"/>
+	</target>
+	
 	<target name="testUnknownHost">
 		<au:expectfailure expectedMessage="Unable to communicate with JaCoCo server">
-			<jacoco:dump destfile="${exec.file}" address="nosuchhost" />
+			<jacoco:dump dump="false" address="nosuchhost"/>
 		</au:expectfailure>
-		<assertFileNotEmpty file="${exec.file}" />
+		<au:assertFileDoesntExist file="${exec.file}"/>
 	</target>
+
+	<target name="testInvalidPort">
+		<au:expectfailure expectedMessage="Invalid port value">
+			<jacoco:dump dump="false" port="-1234"/>
+		</au:expectfailure>
+		<au:assertFileDoesntExist file="${exec.file}"/>
+	</target>
+	
+	<!-- TODO Add tests that actually connect to a running server -->
 
 </project>

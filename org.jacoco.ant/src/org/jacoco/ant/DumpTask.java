@@ -34,19 +34,23 @@ import org.jacoco.core.runtime.RemoteControlWriter;
  * @version $Revision: $
  */
 public class DumpTask extends Task {
-	private final AgentOptions options = new AgentOptions();
 	private boolean dump = true;
 	private boolean reset;
+	private File destfile;
+	private String address = AgentOptions.DEFAULT_ADDRESS;
+	private int port = AgentOptions.DEFAULT_PORT;
+	private boolean append;
 
 	/**
-	 * Sets the location of the execution data file to write. Default is
+	 * Sets the location of the execution data file to write. This parameter is
+	 * required when dump is <code>true</code>. Default is
 	 * <code>jacoco.exec</code>
 	 * 
 	 * @param destfile
 	 *            Location to write execution data to
 	 */
 	public void setDestFile(final File destfile) {
-		options.setDestfile(destfile.getAbsolutePath());
+		this.destfile = destfile;
 	}
 
 	/**
@@ -56,7 +60,7 @@ public class DumpTask extends Task {
 	 *            IP Address or hostname to connect to
 	 */
 	public void setAddress(final String address) {
-		options.setAddress(address);
+		this.address = address;
 	}
 
 	/**
@@ -66,7 +70,11 @@ public class DumpTask extends Task {
 	 *            Port to connect to
 	 */
 	public void setPort(final int port) {
-		options.setPort(port);
+		if (port <= 0) {
+			throw new BuildException("Invalid port value");
+		}
+
+		this.port = port;
 	}
 
 	/**
@@ -78,7 +86,7 @@ public class DumpTask extends Task {
 	 *            to
 	 */
 	public void setAppend(final boolean append) {
-		options.setAppend(append);
+		this.append = append;
 	}
 
 	/**
@@ -111,27 +119,38 @@ public class DumpTask extends Task {
 	@Override
 	public void execute() throws BuildException {
 
-		final File destFile = new File(options.getDestfile());
-		FileOutputStream fileOutput = null;
-		ExecutionDataWriter fileWriter;
-		try {
-			fileOutput = new FileOutputStream(destFile, options.getAppend());
-			fileWriter = new ExecutionDataWriter(fileOutput);
-		} catch (final IOException e) {
-			throw new BuildException("Unable to create destination file", e);
+		if (dump && destfile == null) {
+			throw new BuildException(
+					"Destination file is required when dumping execution data");
 		}
 
+		FileOutputStream fileOutput = null;
+
 		try {
-			final Socket socket = new Socket(InetAddress.getByName(options
-					.getAddress()), options.getPort());
+			final Socket socket = new Socket(InetAddress.getByName(address),
+					port);
 			final RemoteControlWriter remoteWriter = new RemoteControlWriter(
 					socket.getOutputStream());
 			final RemoteControlReader remoteReader = new RemoteControlReader(
 					socket.getInputStream());
-			remoteReader.setSessionInfoVisitor(fileWriter);
-			remoteReader.setExecutionDataVisitor(fileWriter);
+
+			if (dump) {
+				try {
+					FileUtils.getFileUtils().createNewFile(destfile, true);
+					fileOutput = new FileOutputStream(destfile, append);
+
+					final ExecutionDataWriter executionDataWriter = new ExecutionDataWriter(
+							fileOutput);
+					remoteReader.setSessionInfoVisitor(executionDataWriter);
+					remoteReader.setExecutionDataVisitor(executionDataWriter);
+				} catch (final IOException e) {
+					throw new BuildException(
+							"Unable to create destination file", e);
+				}
+			}
 
 			remoteWriter.visitDumpCommand(dump, reset);
+			// Read status and/or execution data
 			remoteReader.read();
 
 			socket.close();
