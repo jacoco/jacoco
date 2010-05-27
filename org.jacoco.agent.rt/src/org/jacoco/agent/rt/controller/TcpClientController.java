@@ -35,8 +35,7 @@ public class TcpClientController implements IAgentController {
 
 	public void startup(final AgentOptions options, final IRuntime runtime)
 			throws IOException {
-		final Socket socket = new Socket(options.getAddress(), options
-				.getPort());
+		final Socket socket = createSocket(options);
 		connection = new TcpConnection(socket, runtime);
 		final Thread worker = new Thread(new Runnable() {
 			public void run() {
@@ -58,6 +57,19 @@ public class TcpClientController implements IAgentController {
 
 	public void writeExecutionData() throws IOException {
 		connection.writeExecutionData();
+	}
+
+	/**
+	 * Open a socket based on the given configuration.
+	 * 
+	 * @param options
+	 *            address and port configuration
+	 * @return opened socket
+	 * @throws IOException
+	 */
+	protected Socket createSocket(final AgentOptions options)
+			throws IOException {
+		return new Socket(options.getAddress(), options.getPort());
 	}
 
 }
