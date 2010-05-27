@@ -24,8 +24,6 @@ import org.junit.runner.RunWith;
 public class DumpTaskTest {
 
 	public static TestSuite suite() {
-		System.setProperty("org.jacoco.ant.dumpTaskTest.classes.dir",
-				TestTarget.getClassPath());
 		final File file = new File("src/org/jacoco/ant/DumpTaskTest.xml");
 		return new AntUnitSuite(file, DumpTaskTest.class);
 	}
