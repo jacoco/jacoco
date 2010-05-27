@@ -54,16 +54,22 @@
 <h3>Features</h3>
 <ul>
   <li><i>Statement coverage</i> on Java byte code level, where instrumentation
-    and recording happens on 
-  <a class="extern" href="http://en.wikipedia.org/wiki/Basic_block"><i>basic block</i></a>
-    granularity. This is the same mechanism implemented by the
-  <a class="extern" href="http://emma.sourceforge.net/">EMMA</a> library.</li>
-  <li>Simple integration through Java agent based on-the-fly instrumentation.</li>
+      and recording happens on 
+      <a class="extern" href="http://en.wikipedia.org/wiki/Basic_block"><i>basic block</i></a>
+      granularity. This is the same mechanism implemented by the
+      <a class="extern" href="http://emma.sourceforge.net/">EMMA</a> library.</li>
+  <li>Simple integration through <a href="agent.html">Java agent</a> based
+      on-the-fly instrumentation. Other integration scenarios like custom class
+      loaders are possible through the API.</li>
   <li>Framework agnostic: Smoothly integrates with Java VM based applications
-    like plain Java programs, OSGi frameworks, web containers or EJB servers.</li>
+      like plain Java programs, OSGi frameworks, web containers or EJB servers.</li>
   <li>Support for different
-    <a href="http://en.wikipedia.org/wiki/List_of_JVM_languages">JVM languages</a>.</li>
+      <a href="http://en.wikipedia.org/wiki/List_of_JVM_languages">JVM languages</a>.</li>
   <li>Several report formats (HTML, XML, CSV).</li>
+  <li>Remote protocol to request execution data dumps from the coverage agent at
+      any point in time.</li>
+  <li>Several <a href="ant.html">Ant task</a> to collect and manage execution
+      data and create structured coverage reports.</li>
   <li>Planned: Branch coverage based on basic block flow.</li>
   <li>Planned: Better reporting of Exception within blocks.</li>
 </ul>
@@ -72,13 +78,14 @@
 <ul>
   <li>Simple usage and integration with existing build scripts and tools.</li>
   <li>Good performance with minimal runtime overhead especially for large scale
-    projects.</li>
+      projects.</li>
   <li>Lightweight implementation with minimal dependencies on external libraries
-    and system resources.</li>
-  <li>Fully documented API (JavaDoc) including descriptions of the basic
-    concepts.</li>
-  <li>Regression tests with full functional test coverage based on JUnit test
-    cases.</li>
+      and system resources.</li>
+  <li>Fully documented API (<a href="api/index.html">JavaDoc</a>) including
+      descriptions of the basic concepts.</li>
+  <li>Regression <a href="../test/index.html">tests</a> with full functional
+      test <a href="../coverage/index.html">coverage</a> based on
+      <a href="http://junit.org/">JUnit</a> test cases.</li>
 </ul>
 
 </div>

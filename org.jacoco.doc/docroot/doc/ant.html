@@ -271,6 +271,80 @@
 </table>
 
 
+<h2><a name="dump">Task <code>dump</code></a></h2>
+
+<p>
+  This task allows to remotely collect execution data from another JVM without
+  stopping it. For example:
+</p>
+
+<pre class="source lang-xml">
+<span class="nr">    1</span>&lt;jacoco:dump address="server.example.com" reset="true" destfile="remote.exec"/&gt;
+</pre>
+
+<p>
+  Remote dumps are usefull for long running Java processes like application
+  servers.
+</p>
+
+<p class="hint">
+  The target JVM needs to have a JaCoCo agent configured with
+  <code>output</code> mode <code>tcpserver</code>. See
+  <a href="#coverage"><code>coverage</code></a> and
+  <a href="#agent"><code>agent</code></a> tasks above.
+</p>
+
+<p>
+  The <code>dump</code> task has the following attributes: 
+</p>
+
+<table class="coverage">
+  <thead>
+    <tr>
+      <td>Attribute</td>
+      <td>Description</td>
+      <td>Default</td>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>address</code></td>
+      <td>Target IP address or DNS name.</td>
+      <td><code>localhost</code></td>
+    </tr>
+    <tr>
+      <td><code>port</code></td>
+      <td>Target TCP port.</td>
+      <td><code>6300</code></td>
+    </tr>
+    <tr>
+      <td><code>dump</code></td>
+      <td>Flag whether execution data should be dumped.</td>
+      <td><code>true</code></td>
+    </tr>
+    <tr>
+      <td><code>reset</code></td>
+      <td>Flag whether execution data should be reset in the target agent after
+          the dump.</td>
+      <td><code>false</code></td>
+    </tr>
+    <tr>
+      <td><code>destfile</code></td>
+      <td>File location to write the collected execution data to.</td>
+      <td><i>none (required if dump=true)</i></td>
+    </tr>
+    <tr>
+      <td><code>append</code></td>
+      <td>If set to <code>true</code> and the execution data file already
+          exists, coverage data is appended to the existing file. If set to
+          <code>false</code>, an existing execution data file will be replaced.
+      </td>
+      <td><code>true</code></td>
+    </tr>
+  </tbody>
+</table>
+
+
 <h2><a name="merge">Task <code>merge</code></a></h2>
 
 <p>
@@ -300,7 +374,7 @@
   <tbody>
     <tr>
       <td><code>destfile</code></td>
-      <td>Location to write the merged execution data.</td>
+      <td>File location to write the merged execution data to.</td>
       <td><i>none (required)</i></td>
     </tr>
   </tbody>
