@@ -143,17 +143,27 @@ public class AgentOptions {
 
 	/**
 	 * The IP address or DNS name the tcpserver binds to or the tcpclient
-	 * connects to. Default is <code>localhost</code>.
+	 * connects to. Default is defined by {@link #DEFAULT_ADDRESS}.
 	 */
 	public static final String ADDRESS = "address";
+
+	/**
+	 * Default value for the "address" agent option
+	 */
+	public static final String DEFAULT_ADDRESS = "localhost";
 
 	/**
 	 * The port the tcpserver binds to or the tcpclient connects to. In
 	 * tcpserver mode the port must be available, which means that if multiple
 	 * JaCoCo agents should run on the same machine, different ports have to be
-	 * specified. Default is <code>6300</code>.
+	 * specified. Default is defined by {@link #DEFAULT_PORT}.
 	 */
 	public static final String PORT = "port";
+
+	/**
+	 * Default value for the "port" agent option
+	 */
+	public static final int DEFAULT_PORT = 6300;
 
 	private static final Collection<String> VALID_OPTIONS = Arrays.asList(
 			DESTFILE, APPEND, INCLUDES, EXCLUDES, EXCLCLASSLOADER, SESSIONID,
@@ -356,7 +366,7 @@ public class AgentOptions {
 	 * @return port to listen on or connect to
 	 */
 	public int getPort() {
-		return getOption(PORT, 6300);
+		return getOption(PORT, DEFAULT_PORT);
 	}
 
 	/**
@@ -378,7 +388,7 @@ public class AgentOptions {
 	 * @return Hostname or IP address
 	 */
 	public String getAddress() {
-		return getOption(ADDRESS, "localhost");
+		return getOption(ADDRESS, DEFAULT_ADDRESS);
 	}
 
 	/**
