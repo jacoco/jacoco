@@ -29,14 +29,17 @@ import org.objectweb.asm.commons.EmptyVisitor;
 public abstract class BlockClassAdapter implements ClassVisitor,
 		IProbeIdGenerator {
 
-	private static class EmptyBlockMethodVisitor extends EmptyVisitor implements
-			IBlockMethodVisitor {
+	private static final IBlockMethodVisitor EMPTY_BLOCK_METHOD_VISITOR;
 
-		public void visitBlockEndBeforeJump(final int id) {
-		}
+	static {
+		class Impl extends EmptyVisitor implements IBlockMethodVisitor {
+			public void visitBlockEndBeforeJump(final int id) {
+			}
 
-		public void visitBlockEnd(final int id) {
+			public void visitBlockEnd(final int id) {
+			}
 		}
+		EMPTY_BLOCK_METHOD_VISITOR = new Impl();
 	}
 
 	private int counter = 0;
@@ -48,7 +51,7 @@ public abstract class BlockClassAdapter implements ClassVisitor,
 		if (mv == null) {
 			// We need to visit the method in any case, otherwise probe ids
 			// are not reproducible
-			mv = new EmptyBlockMethodVisitor();
+			mv = EMPTY_BLOCK_METHOD_VISITOR;
 		}
 		return new BlockMethodAdapter(mv, this, access, name, desc, signature,
 				exceptions);
