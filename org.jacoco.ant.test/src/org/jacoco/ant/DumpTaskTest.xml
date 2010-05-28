@@ -27,21 +27,20 @@
 	
 	
 	<target name="testDumpNoServer">
-		<au:expectfailure expectedMessage="Unable to communicate with JaCoCo server">
+		<au:expectfailure expectedMessage="Unable to dump coverage data">
 			<jacoco:dump dump="true" destfile="${exec.file}"/>
 		</au:expectfailure>
-		<au:assertFileDoesntExist file="${exec.file}"/>
 	</target>
 		
 	<target name="testNoServer">
-		<au:expectfailure expectedMessage="Unable to communicate with JaCoCo server">
+		<au:expectfailure expectedMessage="Unable to dump coverage data">
 			<jacoco:dump dump="false"/>
 		</au:expectfailure>
 		<au:assertFileDoesntExist file="${exec.file}"/>
 	</target>
 	
 	<target name="testUnknownHost">
-		<au:expectfailure expectedMessage="Unable to communicate with JaCoCo server">
+		<au:expectfailure expectedMessage="Unable to dump coverage data">
 			<jacoco:dump dump="false" address="nosuchhost"/>
 		</au:expectfailure>
 		<au:assertFileDoesntExist file="${exec.file}"/>

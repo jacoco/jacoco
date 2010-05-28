@@ -15,6 +15,7 @@ package org.jacoco.ant;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.net.InetAddress;
 import java.net.Socket;
 
@@ -111,54 +112,51 @@ public class DumpTask extends Task {
 		this.reset = reset;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.apache.tools.ant.Task#execute()
-	 */
 	@Override
 	public void execute() throws BuildException {
 
-		if (dump && destfile == null) {
-			throw new BuildException(
-					"Destination file is required when dumping execution data");
-		}
-
-		FileOutputStream fileOutput = null;
+		OutputStream output = null;
 
 		try {
+
+			if (dump) {
+				if (destfile == null) {
+					throw new BuildException(
+							"Destination file is required when dumping execution data");
+				}
+				FileUtils.getFileUtils().createNewFile(destfile, true);
+				output = new FileOutputStream(destfile, append);
+			} else {
+				output = new Nul();
+			}
+
 			final Socket socket = new Socket(InetAddress.getByName(address),
 					port);
 			final RemoteControlWriter remoteWriter = new RemoteControlWriter(
 					socket.getOutputStream());
 			final RemoteControlReader remoteReader = new RemoteControlReader(
 					socket.getInputStream());
-
-			if (dump) {
-				try {
-					FileUtils.getFileUtils().createNewFile(destfile, true);
-					fileOutput = new FileOutputStream(destfile, append);
-
-					final ExecutionDataWriter executionDataWriter = new ExecutionDataWriter(
-							fileOutput);
-					remoteReader.setSessionInfoVisitor(executionDataWriter);
-					remoteReader.setExecutionDataVisitor(executionDataWriter);
-				} catch (final IOException e) {
-					throw new BuildException(
-							"Unable to create destination file", e);
-				}
-			}
+			final ExecutionDataWriter outputWriter = new ExecutionDataWriter(
+					output);
+			remoteReader.setSessionInfoVisitor(outputWriter);
+			remoteReader.setExecutionDataVisitor(outputWriter);
 
 			remoteWriter.visitDumpCommand(dump, reset);
-			// Read status and/or execution data
+			// Read session and/or execution data
 			remoteReader.read();
 
 			socket.close();
 		} catch (final IOException e) {
-			throw new BuildException(
-					"Unable to communicate with JaCoCo server", e);
+			throw new BuildException("Unable to dump coverage data", e);
 		} finally {
-			FileUtils.close(fileOutput);
+			FileUtils.close(output);
 		}
 	}
+
+	private static class Nul extends OutputStream {
+		@Override
+		public void write(final int b) throws IOException {
+		}
+	}
+
 }
