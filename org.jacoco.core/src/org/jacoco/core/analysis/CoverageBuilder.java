@@ -143,7 +143,10 @@ public class CoverageBuilder implements IStructureVisitor {
 			}
 
 			public void visitEnd() {
-				container.add(method);
+				// Only consider methods that actually contain code:
+				if (method.getInstructionCounter().getTotalCount() > 0) {
+					container.add(method);
+				}
 			}
 		};
 	}

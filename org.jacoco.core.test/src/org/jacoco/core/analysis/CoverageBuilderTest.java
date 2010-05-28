@@ -128,6 +128,27 @@ public class CoverageBuilderTest {
 	}
 
 	@Test
+	public void testIgnoreMethodsWithoutCode() {
+		final IClassStructureVisitor classStructure = coverageBuilder
+				.visitClassStructure(123L);
+		classStructure.visit("org/jacoco/examples/Sample", null,
+				"java/lang/Object", new String[0]);
+		final IMethodStructureVisitor methodStructure1 = classStructure
+				.visitMethodStructure("a", "()V", null);
+		methodStructure1.block(0, 5, new int[0]);
+		methodStructure1.visitEnd();
+		final IMethodStructureVisitor methodStructure2 = classStructure
+				.visitMethodStructure("b", "()V", null);
+		methodStructure2.visitEnd();
+		classStructure.visitEnd();
+
+		final ClassCoverage classCoverage = coverageBuilder.getClasses()
+				.iterator().next();
+		assertEquals(Collections.singleton("a"), getNames(classCoverage
+				.getMethods()));
+	}
+
+	@Test
 	public void testIgnoreClassesWithoutCode() {
 		final IClassStructureVisitor classStructure = coverageBuilder
 				.visitClassStructure(123L);

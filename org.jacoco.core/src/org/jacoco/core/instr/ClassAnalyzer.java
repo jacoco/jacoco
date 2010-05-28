@@ -18,7 +18,6 @@ import org.objectweb.asm.AnnotationVisitor;
 import org.objectweb.asm.Attribute;
 import org.objectweb.asm.ClassVisitor;
 import org.objectweb.asm.FieldVisitor;
-import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
 
 /**
@@ -55,7 +54,7 @@ public class ClassAnalyzer extends BlockClassAdapter {
 	}
 
 	@Override
-	protected IBlockMethodVisitor visitNonAbstractMethod(final int access,
+	protected IBlockMethodVisitor visitMethodWithBlocks(final int access,
 			final String name, final String desc, final String signature,
 			final String[] exceptions) {
 
@@ -67,13 +66,6 @@ public class ClassAnalyzer extends BlockClassAdapter {
 		final IMethodStructureVisitor structure = structureVisitor
 				.visitMethodStructure(name, desc, signature);
 		return new MethodAnalyzer(structure);
-	}
-
-	@Override
-	protected MethodVisitor visitAbstractMethod(final int access,
-			final String name, final String desc, final String signature,
-			final String[] exceptions) {
-		return null;
 	}
 
 	public void visitEnd() {
