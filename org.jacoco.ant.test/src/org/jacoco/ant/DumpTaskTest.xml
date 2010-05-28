@@ -25,6 +25,7 @@
 		<delete dir="${temp.dir}" quiet="false" failonerror="true"/>
 	</target>
 	
+	
 	<target name="testDumpNoServer">
 		<au:expectfailure expectedMessage="Unable to communicate with JaCoCo server">
 			<jacoco:dump dump="true" destfile="${exec.file}"/>
@@ -53,6 +54,4 @@
 		<au:assertFileDoesntExist file="${exec.file}"/>
 	</target>
 	
-	<!-- TODO Add tests that actually connect to a running server -->
-
 </project>

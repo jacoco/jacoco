@@ -21,12 +21,13 @@ import org.apache.ant.antunit.junit4.AntUnitSuiteRunner;
 import org.junit.runner.RunWith;
 
 @RunWith(AntUnitSuiteRunner.class)
-public class DumpTaskTest {
+public class DumpTaskWithServerTest {
 
 	public static TestSuite suite() {
 		System.setProperty("org.jacoco.ant.dumpTaskTest.classes.dir",
 				TestTarget.getClassPath());
-		final File file = new File("src/org/jacoco/ant/DumpTaskTest.xml");
-		return new AntUnitSuite(file, DumpTaskTest.class);
+		final File file = new File(
+				"src/org/jacoco/ant/DumpTaskWithServerTest.xml");
+		return new AntUnitSuite(file, DumpTaskWithServerTest.class);
 	}
 }

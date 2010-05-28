@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- 
+   Copyright (c) 2009, 2010 Mountainminds GmbH & Co. KG and Contributors
+   All rights reserved. This program and the accompanying materials
+   are made available under the terms of the Eclipse Public License v1.0
+   which accompanies this distribution, and is available at
+   http://www.eclipse.org/legal/epl-v10.html
+  
+   Contributors:
+      Brock Janiczak - initial API and implementation
+      
+   $Id: $
+-->
+
+<project name="JaCoCo Dump Task Tests" xmlns:au="antlib:org.apache.ant.antunit" xmlns:jacoco="antlib:org.jacoco.ant">
+
+	<target name="setUp">
+		<tempfile property="temp.dir" prefix="jacocoTest" destdir="${java.io.tmpdir}" />
+		<mkdir dir="${temp.dir}"/>
+		<property name="exec.file" location="${temp.dir}/exec.file" />
+		<property name="term.file" location="${temp.dir}/term.file" />
+		
+		<jacoco:coverage output="tcpserver" port="6300">
+			<java classname="org.jacoco.ant.TestTarget" spawn="true" fork="true" maxmemory="16m">
+				<classpath path="${org.jacoco.ant.dumpTaskTest.classes.dir}"/>
+				<jvmarg value="-client"/>
+				<arg value="${term.file}"/>
+			</java>
+		</jacoco:coverage>
+		
+		<waitfor maxwait="1" maxwaitunit="second" checkevery="10" checkeveryunit="millisecond">
+			<socket server="localhost" port="6300"/>
+		</waitfor>
+	</target>
+
+	<target name="tearDown">
+		<touch file="${term.file}"/>
+		<waitfor maxwait="5" maxwaitunit="second" checkevery="10" checkeveryunit="millisecond">
+			<not>
+				<socket server="localhost" port="6300"/>
+			</not>
+		</waitfor>
+		<delete dir="${temp.dir}" quiet="false" failonerror="true"/>
+	</target>
+	
+	
+	<target name="testDump">
+		<jacoco:dump dump="true" destfile="${exec.file}"/>
+		<au:assertFileExists file="${exec.file}"/>
+	</target>
+	
+	<target name="testNoDumpOrReset">
+		<jacoco:dump dump="false" reset="false"/>
+	</target>
+
+	<target name="testResetOnly">
+		<jacoco:dump dump="false" reset="true"/>
+	</target>
+	
+	<target name="testNoDumpWithFileSet">
+		<jacoco:dump dump="false" destfile="${exec.file}"/>
+		<au:assertFileDoesntExist file="${exec.file}"/>
+	</target>
+</project>
