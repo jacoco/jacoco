@@ -15,8 +15,7 @@ package org.jacoco.core.instr;
 import static java.lang.String.format;
 
 import org.jacoco.core.runtime.IExecutionDataAccessorGenerator;
-import org.objectweb.asm.AnnotationVisitor;
-import org.objectweb.asm.Attribute;
+import org.objectweb.asm.ClassAdapter;
 import org.objectweb.asm.ClassVisitor;
 import org.objectweb.asm.FieldVisitor;
 import org.objectweb.asm.Label;
@@ -29,11 +28,9 @@ import org.objectweb.asm.Opcodes;
  * @author Marc R. Hoffmann
  * @version $Revision: $
  */
-public class ClassInstrumenter extends BlockClassAdapter {
+class ClassInstrumenter extends ClassAdapter implements IBlockClassVisitor {
 
 	private static final Object[] STACK_ARRZ = new Object[] { InstrSupport.DATAFIELD_DESC };
-
-	private final ClassVisitor delegate;
 
 	private final long id;
 
@@ -57,11 +54,12 @@ public class ClassInstrumenter extends BlockClassAdapter {
 	public ClassInstrumenter(final long id,
 			final IExecutionDataAccessorGenerator accessorGenerator,
 			final ClassVisitor cv) {
-		this.delegate = cv;
+		super(cv);
 		this.id = id;
 		this.accessorGenerator = accessorGenerator;
 	}
 
+	@Override
 	public void visit(final int version, final int access, final String name,
 			final String signature, final String superName,
 			final String[] interfaces) {
@@ -71,23 +69,23 @@ public class ClassInstrumenter extends BlockClassAdapter {
 		} else {
 			this.probeArrayStrategy = new InterfaceTypeStrategy();
 		}
-		delegate.visit(version, access, name, signature, superName, interfaces);
-	}
-
-	public FieldVisitor visitField(final int access, final String name,
-			final String desc, final String signature, final Object value) {
-		assertNotInstrumented(name, InstrSupport.DATAFIELD_NAME);
-		return delegate.visitField(access, name, desc, signature, value);
+		super.visit(version, access, name, signature, superName, interfaces);
 	}
 
 	@Override
-	protected IBlockMethodVisitor visitMethodWithBlocks(final int access,
-			final String name, final String desc, final String signature,
-			final String[] exceptions) {
+	public FieldVisitor visitField(final int access, final String name,
+			final String desc, final String signature, final Object value) {
+		assertNotInstrumented(name, InstrSupport.DATAFIELD_NAME);
+		return super.visitField(access, name, desc, signature, value);
+	}
+
+	@Override
+	public IBlockMethodVisitor visitMethod(final int access, final String name,
+			final String desc, final String signature, final String[] exceptions) {
 
 		assertNotInstrumented(name, InstrSupport.INITMETHOD_NAME);
 
-		final MethodVisitor mv = delegate.visitMethod(access, name, desc,
+		final MethodVisitor mv = super.visitMethod(access, name, desc,
 				signature, exceptions);
 
 		if (mv == null) {
@@ -96,9 +94,8 @@ public class ClassInstrumenter extends BlockClassAdapter {
 		return new MethodInstrumenter(mv, access, desc, probeArrayStrategy);
 	}
 
-	public void visitEnd() {
-		probeArrayStrategy.addMembers(delegate);
-		delegate.visitEnd();
+	public void visitTotalProbeCount(final int count) {
+		probeArrayStrategy.addMembers(cv, count);
 	}
 
 	/**
@@ -122,31 +119,6 @@ public class ClassInstrumenter extends BlockClassAdapter {
 		}
 	}
 
-	// Methods we simply delegate:
-
-	public AnnotationVisitor visitAnnotation(final String desc,
-			final boolean visible) {
-		return delegate.visitAnnotation(desc, visible);
-	}
-
-	public void visitAttribute(final Attribute attr) {
-		delegate.visitAttribute(attr);
-	}
-
-	public void visitInnerClass(final String name, final String outerName,
-			final String innerName, final int access) {
-		delegate.visitInnerClass(name, outerName, innerName, access);
-	}
-
-	public void visitOuterClass(final String owner, final String name,
-			final String desc) {
-		delegate.visitOuterClass(owner, name, desc);
-	}
-
-	public void visitSource(final String source, final String debug) {
-		delegate.visitSource(source, debug);
-	}
-
 	// === probe array strategies ===
 
 	private class ClassTypeStrategy implements IProbeArrayStrategy {
@@ -157,19 +129,19 @@ public class ClassInstrumenter extends BlockClassAdapter {
 			return 1;
 		}
 
-		public void addMembers(final ClassVisitor delegate) {
+		public void addMembers(final ClassVisitor delegate, final int probeCount) {
 			createDataField();
-			createInitMethod();
+			createInitMethod(probeCount);
 		}
 
 		private void createDataField() {
-			delegate.visitField(InstrSupport.DATAFIELD_ACC,
+			cv.visitField(InstrSupport.DATAFIELD_ACC,
 					InstrSupport.DATAFIELD_NAME, InstrSupport.DATAFIELD_DESC,
 					null, null);
 		}
 
-		private void createInitMethod() {
-			final MethodVisitor mv = delegate.visitMethod(
+		private void createInitMethod(final int probeCount) {
+			final MethodVisitor mv = cv.visitMethod(
 					InstrSupport.INITMETHOD_ACC, InstrSupport.INITMETHOD_NAME,
 					InstrSupport.INITMETHOD_DESC, null, null);
 
@@ -188,7 +160,7 @@ public class ClassInstrumenter extends BlockClassAdapter {
 			// Stack[0]: [Z
 
 			mv.visitInsn(Opcodes.POP);
-			final int size = genInitializeDataField(mv);
+			final int size = genInitializeDataField(mv, probeCount);
 
 			// Stack[0]: [Z
 
@@ -210,9 +182,10 @@ public class ClassInstrumenter extends BlockClassAdapter {
 		 * @param mv
 		 *            generator to emit code to
 		 */
-		private int genInitializeDataField(final MethodVisitor mv) {
+		private int genInitializeDataField(final MethodVisitor mv,
+				final int probeCount) {
 			final int size = accessorGenerator.generateDataAccessor(id,
-					className, getProbeCount(), mv);
+					className, probeCount, mv);
 
 			// Stack[0]: [Z
 
@@ -243,8 +216,9 @@ public class ClassInstrumenter extends BlockClassAdapter {
 			return size;
 		}
 
-		public void addMembers(final ClassVisitor delegate) {
+		public void addMembers(final ClassVisitor delegate, final int probeCount) {
 		}
+
 	}
 
 }

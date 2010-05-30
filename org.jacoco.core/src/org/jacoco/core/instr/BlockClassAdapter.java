@@ -12,22 +12,20 @@
  *******************************************************************************/
 package org.jacoco.core.instr;
 
+import org.objectweb.asm.ClassAdapter;
 import org.objectweb.asm.ClassVisitor;
 import org.objectweb.asm.MethodVisitor;
-import org.objectweb.asm.Opcodes;
-import org.objectweb.asm.Type;
 import org.objectweb.asm.commons.EmptyVisitor;
 
 /**
- * A {@link ClassVisitor} that drives {@link IBlockMethodVisitor} for each
- * non-abstract method.
+ * A {@link ClassVisitor} that calculates block boundaries for every
+ * method.
  * 
  * @author Marc R. Hoffmann
  * @version $Revision: $
  */
 
-public abstract class BlockClassAdapter implements ClassVisitor,
-		IProbeIdGenerator {
+class BlockClassAdapter extends ClassAdapter implements IProbeIdGenerator {
 
 	private static final IBlockMethodVisitor EMPTY_BLOCK_METHOD_VISITOR;
 
@@ -42,12 +40,26 @@ public abstract class BlockClassAdapter implements ClassVisitor,
 		EMPTY_BLOCK_METHOD_VISITOR = new Impl();
 	}
 
+	private final IBlockClassVisitor cv;
+
 	private int counter = 0;
 
+	/**
+	 * Creates a new adapter that delegates to the given visitor.
+	 * 
+	 * @param cv
+	 *            instance to delegate to
+	 */
+	public BlockClassAdapter(final IBlockClassVisitor cv) {
+		super(cv);
+		this.cv = cv;
+	}
+
+	@Override
 	public final MethodVisitor visitMethod(final int access, final String name,
 			final String desc, final String signature, final String[] exceptions) {
-		IBlockMethodVisitor mv = visitMethodWithBlocks(access, name, desc,
-				signature, exceptions);
+		IBlockMethodVisitor mv = cv.visitMethod(access, name, desc, signature,
+				exceptions);
 		if (mv == null) {
 			// We need to visit the method in any case, otherwise probe ids
 			// are not reproducible
@@ -57,41 +69,10 @@ public abstract class BlockClassAdapter implements ClassVisitor,
 				exceptions);
 	}
 
-	/**
-	 * This method is called for every method to return a
-	 * {@link IBlockMethodVisitor} instance for this method.
-	 * 
-	 * @param access
-	 *            the method's access flags (see {@link Opcodes}). This
-	 *            parameter also indicates if the method is synthetic and/or
-	 *            deprecated.
-	 * @param name
-	 *            the method's name.
-	 * @param desc
-	 *            the method's descriptor (see {@link Type Type}).
-	 * @param signature
-	 *            the method's signature. May be <tt>null</tt> if the method
-	 *            parameters, return type and exceptions do not use generic
-	 *            types.
-	 * @param exceptions
-	 *            the internal names of the method's exception classes (see
-	 *            {@link Type#getInternalName() getInternalName}). May be
-	 *            <tt>null</tt>.
-	 * @return an object to visit the byte code of the method, or <tt>null</tt>
-	 *         if this class visitor is not interested in visiting the code of
-	 *         this method.
-	 */
-	protected abstract IBlockMethodVisitor visitMethodWithBlocks(
-			final int access, final String name, final String desc,
-			final String signature, final String[] exceptions);
-
-	/**
-	 * Returns the total number of probes of the processed class.
-	 * 
-	 * @return number of probes
-	 */
-	protected final int getProbeCount() {
-		return counter;
+	@Override
+	public void visitEnd() {
+		cv.visitTotalProbeCount(counter);
+		super.visitEnd();
 	}
 
 	// === IProbeIdGenerator ===

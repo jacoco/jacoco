@@ -10,7 +10,7 @@
  *    
  * $Id: $
  *******************************************************************************/
-package org.jacoco.core.test;
+package org.jacoco.core.instr;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;

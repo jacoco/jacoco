@@ -16,12 +16,7 @@ import org.jacoco.core.runtime.IRuntime;
 import org.jacoco.core.runtime.LoggerRuntime;
 import org.junit.Before;
 import org.junit.Test;
-import org.objectweb.asm.ClassVisitor;
-import org.objectweb.asm.Opcodes;
-import org.objectweb.asm.Type;
 import org.objectweb.asm.commons.EmptyVisitor;
-import org.objectweb.asm.commons.GeneratorAdapter;
-import org.objectweb.asm.commons.Method;
 
 /**
  * Unit tests for {@link ClassInstrumenter}.
@@ -42,29 +37,17 @@ public class ClassInstrumenterTest {
 	}
 
 	@Test(expected = IllegalStateException.class)
-	public void testInstrumentInstrumentedClass() {
-		generateClass(new ClassInstrumenter(123, runtime, instrumenter));
+	public void testInstrumentInstrumentedClass1() {
+		instrumenter.visitField(InstrSupport.DATAFIELD_ACC,
+				InstrSupport.DATAFIELD_NAME, InstrSupport.DATAFIELD_DESC, null,
+				null);
 	}
 
-	private void generateClass(ClassVisitor visitor) {
-
-		final String className = "org/jacoco/test/targets/ClassInstrumenterTestTarget";
-		visitor.visit(Opcodes.V1_5, Opcodes.ACC_PUBLIC, className, null,
-				"java/lang/Object", new String[] {});
-
-		// Constructor
-		GeneratorAdapter gen = new GeneratorAdapter(visitor.visitMethod(
-				Opcodes.ACC_PUBLIC, "<init>", "()V", null, new String[0]),
-				Opcodes.ACC_PUBLIC, "<init>", "()V");
-		gen.visitCode();
-		gen.loadThis();
-		gen.invokeConstructor(Type.getType(Object.class), new Method("<init>",
-				"()V"));
-		gen.returnValue();
-		gen.visitMaxs(0, 0);
-		gen.visitEnd();
-
-		visitor.visitEnd();
+	@Test(expected = IllegalStateException.class)
+	public void testInstrumentInstrumentedClass2() {
+		instrumenter.visitMethod(InstrSupport.INITMETHOD_ACC,
+				InstrSupport.INITMETHOD_NAME, InstrSupport.INITMETHOD_DESC,
+				null, null);
 	}
 
 }

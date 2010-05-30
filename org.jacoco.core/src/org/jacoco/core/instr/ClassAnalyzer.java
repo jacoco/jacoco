@@ -13,20 +13,16 @@
 package org.jacoco.core.instr;
 
 import org.jacoco.core.data.IClassStructureVisitor;
-import org.jacoco.core.data.IMethodStructureVisitor;
-import org.objectweb.asm.AnnotationVisitor;
-import org.objectweb.asm.Attribute;
-import org.objectweb.asm.ClassVisitor;
-import org.objectweb.asm.FieldVisitor;
 import org.objectweb.asm.Opcodes;
+import org.objectweb.asm.commons.EmptyVisitor;
 
 /**
- * A {@link ClassVisitor} that analyzes the structure of a class.
+ * Analyzes the structure of a class.
  * 
  * @author Marc R. Hoffmann
  * @version $Revision: $
  */
-public class ClassAnalyzer extends BlockClassAdapter {
+class ClassAnalyzer extends EmptyVisitor implements IBlockClassVisitor {
 
 	private final IClassStructureVisitor structureVisitor;
 
@@ -41,12 +37,14 @@ public class ClassAnalyzer extends BlockClassAdapter {
 		this.structureVisitor = structureVisitor;
 	}
 
+	@Override
 	public void visit(final int version, final int access, final String name,
 			final String signature, final String superName,
 			final String[] interfaces) {
 		structureVisitor.visit(name, signature, superName, interfaces);
 	}
 
+	@Override
 	public void visitSource(final String source, final String debug) {
 		if (source != null) {
 			structureVisitor.visitSourceFile(source);
@@ -54,45 +52,24 @@ public class ClassAnalyzer extends BlockClassAdapter {
 	}
 
 	@Override
-	protected IBlockMethodVisitor visitMethodWithBlocks(final int access,
-			final String name, final String desc, final String signature,
-			final String[] exceptions) {
+	public IBlockMethodVisitor visitMethod(final int access, final String name,
+			final String desc, final String signature, final String[] exceptions) {
 
 		// TODO: Use filter hook
 		if ((access & Opcodes.ACC_SYNTHETIC) != 0) {
 			return null;
 		}
 
-		final IMethodStructureVisitor structure = structureVisitor
-				.visitMethodStructure(name, desc, signature);
-		return new MethodAnalyzer(structure);
+		return new MethodAnalyzer(structureVisitor.visitMethodStructure(name,
+				desc, signature));
 	}
 
+	@Override
 	public void visitEnd() {
 		structureVisitor.visitEnd();
 	}
 
-	// Ignored methods:
-
-	public AnnotationVisitor visitAnnotation(final String desc,
-			final boolean visible) {
-		return null;
-	}
-
-	public FieldVisitor visitField(final int access, final String name,
-			final String desc, final String signature, final Object value) {
-		return null;
-	}
-
-	public void visitInnerClass(final String name, final String outerName,
-			final String innerName, final int access) {
-	}
-
-	public void visitOuterClass(final String owner, final String name,
-			final String desc) {
-	}
-
-	public void visitAttribute(final Attribute attr) {
+	public void visitTotalProbeCount(final int count) {
 	}
 
 }

@@ -39,7 +39,9 @@ interface IProbeArrayStrategy {
 	 * 
 	 * @param delegate
 	 *            visitor to create fields and classes
+	 * @param probeCount
+	 *            total number of probes inserted into this class
 	 */
-	void addMembers(ClassVisitor delegate);
+	void addMembers(ClassVisitor delegate, int probeCount);
 
 }

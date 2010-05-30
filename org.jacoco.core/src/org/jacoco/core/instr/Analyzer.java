@@ -55,7 +55,7 @@ public class Analyzer {
 	public ClassVisitor createAnalyzingVisitor(final long classid) {
 		final IClassStructureVisitor classStructure = structureVisitor
 				.visitClassStructure(classid);
-		return new ClassAnalyzer(classStructure);
+		return new BlockClassAdapter(new ClassAnalyzer(classStructure));
 	}
 
 	/**

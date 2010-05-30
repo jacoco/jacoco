@@ -12,32 +12,27 @@
  *******************************************************************************/
 package org.jacoco.core.instr;
 
-import org.objectweb.asm.MethodVisitor;
+import org.objectweb.asm.ClassVisitor;
 
 /**
- * A method visitor with additional notifications for block boundaries.
+ * A class visitor with additional notifications for block boundaries for all
+ * methods.
  * 
  * @author Marc R. Hoffmann
  * @version $Revision: $
  */
-interface IBlockMethodVisitor extends MethodVisitor {
+interface IBlockClassVisitor extends ClassVisitor {
+
+	public IBlockMethodVisitor visitMethod(int access, String name,
+			String desc, String signature, String[] exceptions);
 
 	/**
-	 * This method is called at the end of a block. If the last instruction of
-	 * the block may interrupt the control flow (e.g. jump or return) this
-	 * method is called right before this statement is visited.
+	 * Reports the total number of encountered probes. This method is called
+	 * just before {@link ClassVisitor#visitEnd()}.
 	 * 
-	 * @param id
-	 *            identifier of the block within the method
+	 * @param count
+	 *            total number of probes
 	 */
-	public void visitBlockEndBeforeJump(int id);
-
-	/**
-	 * This method is always called after the last instruction of a block.
-	 * 
-	 * @param id
-	 *            identifier of the block within the method
-	 */
-	public void visitBlockEnd(int id);
+	public void visitTotalProbeCount(int count);
 
 }

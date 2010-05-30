@@ -51,7 +51,8 @@ public class Instrumenter {
 	 */
 	public ClassVisitor createInstrumentingVisitor(final long classid,
 			final ClassVisitor cv) {
-		return new ClassInstrumenter(classid, runtime, cv);
+		return new BlockClassAdapter(
+				new ClassInstrumenter(classid, runtime, cv));
 	}
 
 	/**

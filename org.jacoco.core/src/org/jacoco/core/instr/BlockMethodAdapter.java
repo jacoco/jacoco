@@ -22,14 +22,14 @@ import org.objectweb.asm.tree.MethodNode;
 
 /**
  * A method visitor that determines block boundaries and reports them to the
- * wrapped {@link IBlockMethodVisitor}. The implementation first buffers the
- * content of the method to extract all control flow target labels. At the end
- * of the method it flushes the content to the {@link IBlockMethodVisitor}.
+ * wrapped visitor. The implementation first buffers the content of the method
+ * to extract all control flow target labels. At the end of the method it
+ * flushes the content to the next visitor.
  * 
  * @author Marc R. Hoffmann
  * @version $Revision: $
  */
-public final class BlockMethodAdapter extends MethodNode {
+final class BlockMethodAdapter extends MethodNode {
 
 	private final IBlockMethodVisitor blockVisitor;
 

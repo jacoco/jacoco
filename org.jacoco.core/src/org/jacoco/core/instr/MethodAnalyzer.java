@@ -18,13 +18,13 @@ import org.objectweb.asm.Attribute;
 import org.objectweb.asm.Label;
 
 /**
- * This {@link IBlockMethodVisitor} analyzes the block structure of a method and
- * reports it to a {@link IMethodStructureVisitor} instance.
+ * Analyzes the block structure of a method and reports it to a
+ * {@link IMethodStructureVisitor} instance.
  * 
  * @author Marc R. Hoffmann
  * @version $Revision: $
  */
-public final class MethodAnalyzer implements IBlockMethodVisitor {
+final class MethodAnalyzer implements IBlockMethodVisitor {
 
 	private static final int NO_LINE_INFO = -1;
 
