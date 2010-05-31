@@ -12,6 +12,7 @@
  *******************************************************************************/
 package org.jacoco.ant;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
@@ -33,8 +34,18 @@ public class TestTarget {
 		System.out.println("Target executed");
 	}
 
-	public static void main(String[] args) throws IOException {
+	public static void main(String[] args) throws Exception {
 		System.out.println("Target executed");
+
+		// Wait for termination file to turn up
+		// This option puts the target in a pseudo 'server' mode
+		if (args.length == 1) {
+			final File termFile = new File(args[0]);
+
+			while (!termFile.exists()) {
+				Thread.sleep(100);
+			}
+		}
 	}
 
 	/**
