@@ -33,13 +33,16 @@ class TcpConnection implements IRemoteCommandVisitor {
 
 	private final Socket socket;
 
-	private final RemoteControlWriter writer;
+	private RemoteControlWriter writer;
 
-	private final RemoteControlReader reader;
+	private RemoteControlReader reader;
 
-	public TcpConnection(Socket socket, IRuntime runtime) throws IOException {
+	public TcpConnection(Socket socket, IRuntime runtime) {
 		this.socket = socket;
 		this.runtime = runtime;
+	}
+
+	public void init() throws IOException {
 		this.writer = new RemoteControlWriter(socket.getOutputStream());
 		this.reader = new RemoteControlReader(socket.getInputStream());
 		this.reader.setRemoteCommandVisitor(this);

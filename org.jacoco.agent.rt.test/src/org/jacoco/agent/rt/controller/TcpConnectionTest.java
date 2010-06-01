@@ -60,7 +60,7 @@ public class TcpConnectionTest extends ExecutorTestBase {
 		remoteOut.write(0x01);
 		remoteOut.write(0xC0);
 		remoteOut.write(0xCA);
-		new TcpConnection(mockConnection.getSocketA(), runtime);
+		new TcpConnection(mockConnection.getSocketA(), runtime).init();
 	}
 
 	@Test(expected = IOException.class)
@@ -70,6 +70,7 @@ public class TcpConnectionTest extends ExecutorTestBase {
 		new ExecutionDataWriter(remoteOut);
 		final TcpConnection con = new TcpConnection(
 				mockConnection.getSocketA(), runtime);
+		con.init();
 		remoteOut.write(123);
 		con.run();
 	}
@@ -85,6 +86,7 @@ public class TcpConnectionTest extends ExecutorTestBase {
 
 		final TcpConnection con = new TcpConnection(
 				mockConnection.getSocketA(), runtime);
+		con.init();
 
 		final Future<Void> f = executor.submit(new Callable<Void>() {
 			public Void call() throws Exception {
@@ -104,10 +106,12 @@ public class TcpConnectionTest extends ExecutorTestBase {
 	 */
 	@Test(expected = EOFException.class)
 	public void testRemoteCloseWithoutHeader() throws Throwable {
+		final TcpConnection con = new TcpConnection(
+				mockConnection.getSocketA(), runtime);
 
 		final Future<Void> f = executor.submit(new Callable<Void>() {
 			public Void call() throws Exception {
-				new TcpConnection(mockConnection.getSocketA(), runtime);
+				con.init();
 				return null;
 			}
 		});
@@ -135,6 +139,7 @@ public class TcpConnectionTest extends ExecutorTestBase {
 
 		final TcpConnection con = new TcpConnection(
 				mockConnection.getSocketA(), runtime);
+		con.init();
 
 		final Future<Void> f = executor.submit(new Callable<Void>() {
 			public Void call() throws Exception {
@@ -156,6 +161,7 @@ public class TcpConnectionTest extends ExecutorTestBase {
 
 		final TcpConnection con = new TcpConnection(
 				mockConnection.getSocketA(), runtime);
+		con.init();
 
 		final Future<Void> f = executor.submit(new Callable<Void>() {
 			public Void call() throws Exception {
@@ -179,6 +185,7 @@ public class TcpConnectionTest extends ExecutorTestBase {
 
 		final TcpConnection con = new TcpConnection(
 				mockConnection.getSocketA(), runtime);
+		con.init();
 
 		final Future<Void> f = executor.submit(new Callable<Void>() {
 			public Void call() throws Exception {
@@ -223,6 +230,7 @@ public class TcpConnectionTest extends ExecutorTestBase {
 
 		final TcpConnection con = new TcpConnection(
 				mockConnection.getSocketA(), runtime);
+		con.init();
 
 		final Future<Void> f = executor.submit(new Callable<Void>() {
 			public Void call() throws Exception {

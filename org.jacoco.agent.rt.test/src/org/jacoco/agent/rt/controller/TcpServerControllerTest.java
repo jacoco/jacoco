@@ -7,94 +7,119 @@
  *
  * Contributors:
  *    Brock Janiczak - initial API and implementation
+ *    Marc R. Hoffmann - migration to mock socket
  *    
  * $Id: $
  *******************************************************************************/
 package org.jacoco.agent.rt.controller;
 
-import static org.junit.Assert.fail;
+import static org.junit.Assert.assertEquals;
 
 import java.io.IOException;
-import java.net.BindException;
-import java.net.InetSocketAddress;
+import java.io.OutputStream;
 import java.net.ServerSocket;
+import java.net.Socket;
+import java.util.List;
 
 import org.jacoco.agent.rt.ExceptionRecorder;
 import org.jacoco.agent.rt.StubRuntime;
+import org.jacoco.core.data.ExecutionDataStore;
+import org.jacoco.core.data.ExecutionDataWriter;
+import org.jacoco.core.data.SessionInfo;
+import org.jacoco.core.data.SessionInfoStore;
 import org.jacoco.core.runtime.AgentOptions;
-import org.jacoco.core.runtime.IRuntime;
+import org.jacoco.core.runtime.RemoteControlReader;
+import org.jacoco.core.runtime.RemoteControlWriter;
+import org.junit.Before;
 import org.junit.Test;
 
 /**
+ * Unit tests for {@link TcpServerController}.
+ * 
  * @author Brock Janiczak
  * @version $Revision: $
  */
 public class TcpServerControllerTest {
 
+	private ExceptionRecorder logger;
+
+	private AgentOptions options;
+
+	private StubRuntime runtime;
+
+	private MockServerSocket serverSocket;
+
+	private TcpServerController controller;
+
+	@Before
+	public void setup() throws Exception {
+		options = new AgentOptions();
+		runtime = new StubRuntime();
+		logger = new ExceptionRecorder();
+		serverSocket = new MockServerSocket();
+		controller = new TcpServerController(logger) {
+			@Override
+			protected ServerSocket createServerSocket(AgentOptions options)
+					throws IOException {
+				return serverSocket;
+			}
+		};
+		controller.startup(options, runtime);
+	}
+
 	@Test
-	public void testShutdownWithNoAccept() throws Exception {
-
-		AgentOptions options = new AgentOptions();
-		options.setPort(6301);
-
-		IRuntime runtime = new StubRuntime();
-
-		assertPortNotInUse(options.getPort());
-		TcpServerController c1 = new TcpServerController(
-				ExceptionRecorder.IGNORE_ALL);
-		c1.startup(options, runtime);
-
-		// wait for socket accept
-		Thread.sleep(1000L);
-		c1.shutdown();
-
-		assertPortNotInUse(options.getPort());
+	public void testShutdownWithoutConnection() throws Exception {
+		serverSocket.waitForAccept();
+		controller.shutdown();
+		logger.assertEmpty();
 	}
 
-	@Test(expected = BindException.class)
-	public void testPortAlreadyInUse() throws Exception {
-		AgentOptions options = new AgentOptions();
-		options.setPort(6302);
-
-		IRuntime runtime = new StubRuntime();
-
-		ServerSocket serverSocket = openLocalPort(options.getPort());
-		try {
-			assertPortInUse(options.getPort());
-			TcpServerController c1 = new TcpServerController(
-					ExceptionRecorder.IGNORE_ALL);
-			c1.startup(options, runtime);
-		} finally {
-			serverSocket.close();
-		}
+	@Test
+	public void testShutdownWithConnection() throws Exception {
+		serverSocket.waitForAccept();
+		new ExecutionDataWriter(serverSocket.connect().getOutputStream());
+		controller.shutdown();
+		logger.assertEmpty();
 	}
 
-	private void assertPortNotInUse(int port) throws Exception {
-		if (isPortInUse(port)) {
-			fail(String.format("Port %d is in use", Integer.valueOf(port)));
-		}
+	@Test
+	public void testWriteExecutionData() throws Exception {
+		final Socket socket = serverSocket.connect();
+		new RemoteControlWriter(socket.getOutputStream());
+		final RemoteControlReader remoteReader = new RemoteControlReader(socket
+				.getInputStream());
+
+		controller.writeExecutionData();
+
+		final ExecutionDataStore execStore = new ExecutionDataStore();
+		remoteReader.setExecutionDataVisitor(execStore);
+		final SessionInfoStore infoStore = new SessionInfoStore();
+		remoteReader.setSessionInfoVisitor(infoStore);
+
+		remoteReader.read();
+
+		assertEquals("Foo", execStore.get(0x12345678).getName());
+
+		final List<SessionInfo> infos = infoStore.getInfos();
+		assertEquals(1, infos.size());
+		assertEquals("stubid", infos.get(0).getId());
+
+		logger.assertEmpty();
+		controller.shutdown();
 	}
 
-	private void assertPortInUse(int port) throws Exception {
-		if (!isPortInUse(port)) {
-			fail(String.format("Port %d is not in use", Integer.valueOf(port)));
-		}
+	@Test
+	public void testInvalidHeader() throws Exception {
+		final Socket socket = serverSocket.connect();
+		final OutputStream out = socket.getOutputStream();
+		out.write(0xca);
+		out.write(0xfe);
+		out.write(0xba);
+		out.write(0xbe);
+		serverSocket.waitForAccept();
+		logger.assertException(IOException.class,
+				"Invalid execution data file.");
+		controller.shutdown();
 	}
 
-	private boolean isPortInUse(int port) throws IOException {
-		try {
-			ServerSocket serverSocket = openLocalPort(port);
-			serverSocket.close();
-			return false;
-		} catch (BindException e) {
-			return true;
-		}
-	}
-
-	private ServerSocket openLocalPort(int port) throws IOException {
-		ServerSocket serverSocket = new ServerSocket();
-		serverSocket.bind(new InetSocketAddress("localhost", port));
-
-		return serverSocket;
-	}
 }

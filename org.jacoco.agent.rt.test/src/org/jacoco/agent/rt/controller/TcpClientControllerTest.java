@@ -87,6 +87,8 @@ public class TcpClientControllerTest {
 	@Test
 	public void testInvalidCommand() throws Exception {
 		remoteWriter.visitSessionInfo(new SessionInfo("info", 1, 2));
+		while (remoteReader.read()) {
+		}
 		logger.assertException(IOException.class, "No session info visitor.");
 	}
 

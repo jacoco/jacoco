@@ -15,7 +15,6 @@ package org.jacoco.agent.rt.controller;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.ServerSocket;
-import java.net.Socket;
 
 import org.jacoco.agent.rt.IExceptionLogger;
 import org.jacoco.core.runtime.AgentOptions;
@@ -26,8 +25,6 @@ import org.jacoco.core.runtime.IRuntime;
  * @version $Revision: $
  */
 public class TcpServerController implements IAgentController {
-
-	private boolean active;
 
 	private TcpConnection connection;
 
@@ -43,18 +40,21 @@ public class TcpServerController implements IAgentController {
 
 	public void startup(final AgentOptions options, final IRuntime runtime)
 			throws IOException {
-		active = true;
-		serverSocket = new ServerSocket(options.getPort(), 1, InetAddress
-				.getByName(options.getAddress()));
+		serverSocket = createServerSocket(options);
 		worker = new Thread(new Runnable() {
 			public void run() {
-				while (active) {
+				while (!serverSocket.isClosed()) {
 					try {
-						final Socket socket = serverSocket.accept();
-						connection = new TcpConnection(socket, runtime);
+						connection = new TcpConnection(serverSocket.accept(),
+								runtime);
+						connection.init();
 						connection.run();
 					} catch (IOException e) {
-						logger.logExeption(e);
+						// If the serverSocket is closed while accepting
+						// connections a SocketException is expected.
+						if (!serverSocket.isClosed()) {
+							logger.logExeption(e);
+						}
 					}
 				}
 			}
@@ -65,11 +65,10 @@ public class TcpServerController implements IAgentController {
 	}
 
 	public void shutdown() throws Exception {
-		active = false;
+		serverSocket.close();
 		if (connection != null) {
 			connection.close();
 		}
-		serverSocket.close();
 		worker.join();
 	}
 
@@ -77,6 +76,20 @@ public class TcpServerController implements IAgentController {
 		if (connection != null) {
 			connection.writeExecutionData();
 		}
+	}
+
+	/**
+	 * Open a server socket based on the given configuration.
+	 * 
+	 * @param options
+	 *            address and port configuration
+	 * @return opened server socket
+	 * @throws IOException
+	 */
+	protected ServerSocket createServerSocket(final AgentOptions options)
+			throws IOException {
+		final InetAddress addr = InetAddress.getByName(options.getAddress());
+		return new ServerSocket(options.getPort(), 1, addr);
 	}
 
 }

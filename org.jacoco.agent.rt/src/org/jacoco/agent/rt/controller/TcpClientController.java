@@ -37,6 +37,7 @@ public class TcpClientController implements IAgentController {
 			throws IOException {
 		final Socket socket = createSocket(options);
 		connection = new TcpConnection(socket, runtime);
+		connection.init();
 		final Thread worker = new Thread(new Runnable() {
 			public void run() {
 				try {
