@@ -39,7 +39,7 @@ public class SourceFilePage extends NodePage {
 	private final ILines lines;
 
 	/**
-	 * Creates a new visitor in the given context.
+	 * Creates a new page with given information.
 	 * 
 	 * @param sourceFileNode
 	 * @param parent
@@ -79,8 +79,8 @@ public class SourceFilePage extends NodePage {
 		super.head(head);
 		head.link("stylesheet", context.getResources().getLink(folder,
 				Resources.PRETTIFY_STYLESHEET), "text/css");
-		head.script("text/javascript", context.getResources().getLink(
-				folder, Resources.PRETTIFY_SCRIPT));
+		head.script("text/javascript", context.getResources().getLink(folder,
+				Resources.PRETTIFY_SCRIPT));
 	}
 
 	@Override

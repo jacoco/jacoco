@@ -73,6 +73,12 @@ public class JavaNamesTest {
 	}
 
 	@Test
+	public void testGetClassName6() {
+		assertEquals("Bar.1", names.getClassName("com/foo/Bar$1", null, null,
+				null));
+	}
+
+	@Test
 	public void testGetQualifiedClassName1() {
 		assertEquals("Foo", names.getQualifiedClassName("Foo"));
 	}

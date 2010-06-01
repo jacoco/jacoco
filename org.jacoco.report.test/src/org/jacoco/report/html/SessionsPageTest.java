@@ -14,6 +14,7 @@ package org.jacoco.report.html;
 
 import static org.junit.Assert.assertEquals;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -161,15 +162,39 @@ public class SessionsPageTest {
 		data.add(new ExecutionData(0x1000, "ClassB", new boolean[0]));
 		data.add(new ExecutionData(0x1001, "ClassC", new boolean[0]));
 		data.add(new ExecutionData(0x1002, "ClassA", new boolean[0]));
+		index.addClass(new ReportPage(null, root, context) {
+
+			@Override
+			protected String getLabel() {
+				return "Foo";
+			}
+
+			@Override
+			protected String getFileName() {
+				return "Foo.html";
+			}
+
+			@Override
+			protected String getElementStyle() {
+				return "sample";
+			}
+
+			@Override
+			protected void content(HTMLElement body) throws IOException {
+			}
+		}, 0x1002);
+
 		final SessionsPage page = new SessionsPage(noSessions, data, index,
 				null, root, context);
 		page.renderDocument();
 		final HTMLSupport support = new HTMLSupport();
 		final Document doc = support.parse(output.getFile(".sessions.html"));
 		assertEquals("el_class", support.findStr(doc,
-				"/html/body/table[1]/tbody/tr[1]/td[1]/span/@class"));
+				"/html/body/table[1]/tbody/tr[1]/td[1]/a/@class"));
+		assertEquals("Foo.html", support.findStr(doc,
+				"/html/body/table[1]/tbody/tr[1]/td[1]/a/@href"));
 		assertEquals("ClassA", support.findStr(doc,
-				"/html/body/table[1]/tbody/tr[1]/td[1]/span"));
+				"/html/body/table[1]/tbody/tr[1]/td[1]/a"));
 		assertEquals("0000000000001002", support.findStr(doc,
 				"/html/body/table[1]/tbody/tr[1]/td[2]/code"));
 		assertEquals("ClassB", support.findStr(doc,

@@ -51,6 +51,10 @@ public class MemoryMultiReportOutput implements IMultiReportOutput {
 		return out;
 	}
 
+	public void assertEmpty() {
+		assertEquals(Collections.emptySet(), files.keySet());
+	}
+
 	public void assertFile(String path) {
 		assertNotNull(String.format("Missing file %s. Actual files are %s.",
 				path, files.keySet()), files.get(path));
