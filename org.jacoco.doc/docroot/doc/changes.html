@@ -43,6 +43,11 @@
   <li>Additional and modified methods in <code>IRuntime</code> to produce
       session information (Trac #88).</li>
   <li>Coverage element type <code>SESSION</code> removed (Trac #95).</li>
+  <li>Removed several internal APIs from package 
+      <code>org.jacoco.core.instr</code> used for class instrumentation.</li>
+  <li>Renamed class <code>org.jacoco.report.csv.CsvFormatter</code> to
+      <code>CSVFormatter</code> (upper case) for consistency with other
+      formatters.</li>
 </ul>
 
 <h2>Release 0.3.3 (2010/04/19)</h2>
@@ -99,8 +104,9 @@
 <h3>New Features</h3>
 <ul>
   <li>Report renders anonymous classes with type information (Trac #46).</li>
-  <li><code>enabled</code> property added to <a href="ant.html#agent">Agent</a> and <a href="ant#coverage">Coverage</a> tasks (Trac #63).</li>
-  <li><a href="ant.html#merge">Merge</a> Ant task added (Trac #52).</li>
+  <li><code>enabled</code> property added to <code>agent</code> and
+      <code>coverage</code> Ant tasks (Trac #63).</li>
+  <li>Ant task <code>merge</code> added (Trac #52).</li>
 </ul>
 
 <h3>Fixed Bugs</h3>
