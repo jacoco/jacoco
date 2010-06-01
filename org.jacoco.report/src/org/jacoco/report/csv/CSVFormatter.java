@@ -34,7 +34,7 @@ import org.jacoco.report.JavaNames;
  * @author Brock Janiczak
  * @version $Revision: $
  */
-public class CsvFormatter implements IReportFormatter {
+public class CSVFormatter implements IReportFormatter {
 
 	private ISingleReportOutput output;
 
@@ -53,7 +53,7 @@ public class CsvFormatter implements IReportFormatter {
 				new OutputStreamWriter(output.createFile(), outputEncoding));
 		final ClassRowWriter rowWriter = new ClassRowWriter(writer,
 				languageNames);
-		return new CsvGroupHandler(rowWriter, root.getName()) {
+		return new CSVGroupHandler(rowWriter, root.getName()) {
 			@Override
 			public void visitEnd(final ISourceFileLocator sourceFileLocator)
 					throws IOException {

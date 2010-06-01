@@ -52,7 +52,7 @@ import org.jacoco.report.IReportVisitor;
 import org.jacoco.report.ISourceFileLocator;
 import org.jacoco.report.MultiFormatter;
 import org.jacoco.report.ZipMultiReportOutput;
-import org.jacoco.report.csv.CsvFormatter;
+import org.jacoco.report.csv.CSVFormatter;
 import org.jacoco.report.html.HTMLFormatter;
 import org.jacoco.report.xml.XMLFormatter;
 
@@ -242,7 +242,7 @@ public class ReportTask extends Task {
 	/**
 	 * Formatter Element for CSV reports.
 	 */
-	public static class CsvFormatterElement implements IFormatterElement {
+	public static class CSVFormatterElement implements IFormatterElement {
 
 		private File destfile;
 
@@ -263,7 +263,7 @@ public class ReportTask extends Task {
 				throw new BuildException(
 						"Destination file must be supplied for csv report");
 			}
-			final CsvFormatter formatter = new CsvFormatter();
+			final CSVFormatter formatter = new CSVFormatter();
 			formatter.setReportOutput(new FileSingleReportOutput(destfile));
 			formatter.setOutputEncoding(encoding);
 			return formatter;
@@ -373,8 +373,8 @@ public class ReportTask extends Task {
 	 * 
 	 * @return CSV report element
 	 */
-	public CsvFormatterElement createCsv() {
-		final CsvFormatterElement element = new CsvFormatterElement();
+	public CSVFormatterElement createCsv() {
+		final CSVFormatterElement element = new CSVFormatterElement();
 		formatters.add(element);
 		return element;
 	}

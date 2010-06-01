@@ -35,25 +35,25 @@ import org.junit.Before;
 import org.junit.Test;
 
 /**
- * Unit tests for {@link CsvFormatter}.
+ * Unit tests for {@link CSVFormatter}.
  * 
  * @author Marc R. Hoffmann
  * @version $Revision: $
  */
-public class CsvFormatterTest {
+public class CSVFormatterTest {
 
 	private static final String HEADER = "GROUP,PACKAGE,CLASS,METHOD_COVERED,METHOD_MISSED,BLOCK_COVERED,BLOCK_MISSED,LINE_COVERED,LINE_MISSED,INSTRUCTION_COVERED,INSTRUCTION_MISSED";
 
 	private ReportStructureTestDriver driver;
 
-	private CsvFormatter formatter;
+	private CSVFormatter formatter;
 
 	private MemorySingleReportOutput output;
 
 	@Before
 	public void setup() {
 		driver = new ReportStructureTestDriver();
-		formatter = new CsvFormatter();
+		formatter = new CSVFormatter();
 		output = new MemorySingleReportOutput();
 		formatter.setReportOutput(output);
 	}
@@ -65,7 +65,7 @@ public class CsvFormatterTest {
 
 	@Test(expected = IllegalStateException.class)
 	public void testNoReportOutput() throws IOException {
-		new CsvFormatter().createReportVisitor(null, null, null);
+		new CSVFormatter().createReportVisitor(null, null, null);
 	}
 
 	@Test
