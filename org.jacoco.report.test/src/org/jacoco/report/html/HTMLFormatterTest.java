@@ -12,7 +12,11 @@
  *******************************************************************************/
 package org.jacoco.report.html;
 
+import static org.junit.Assert.assertTrue;
+
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 
 import org.jacoco.report.MemoryMultiReportOutput;
 import org.jacoco.report.ReportStructureTestDriver;
@@ -47,6 +51,11 @@ public class HTMLFormatterTest {
 		output.assertAllClosed();
 	}
 
+	@Test(expected = IllegalStateException.class)
+	public void testNoReportOutput() throws IOException {
+		new HTMLFormatter().createReportVisitor(null, null, null);
+	}
+
 	@Test
 	public void testStructureWithGroup() throws IOException {
 		driver.sendGroup(formatter);
@@ -62,6 +71,27 @@ public class HTMLFormatterTest {
 		output.assertFile("index.html");
 		output.assertFile("org.jacoco.example/index.html");
 		output.assertFile("org.jacoco.example/FooClass.html");
+	}
+
+	@Test
+	public void testDefaultEncoding() throws Exception {
+		driver.sendBundle(formatter);
+		final BufferedReader reader = new BufferedReader(new InputStreamReader(
+				output.getFileAsStream("index.html"), "UTF-8"));
+		final String line = reader.readLine();
+		assertTrue(line, line
+				.startsWith("<?xml version=\"1.0\" encoding=\"UTF-8\""));
+	}
+
+	@Test
+	public void testSetEncoding() throws Exception {
+		formatter.setOutputEncoding("UTF-16");
+		driver.sendBundle(formatter);
+		final BufferedReader reader = new BufferedReader(new InputStreamReader(
+				output.getFileAsStream("index.html"), "UTF-16"));
+		final String line = reader.readLine();
+		assertTrue(line, line
+				.startsWith("<?xml version=\"1.0\" encoding=\"UTF-16\""));
 	}
 
 }

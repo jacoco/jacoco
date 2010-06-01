@@ -13,7 +13,11 @@
 package org.jacoco.report.xml;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -58,6 +62,11 @@ public class XMLFormatterTest {
 		output.assertClosed();
 	}
 
+	@Test(expected = IllegalStateException.class)
+	public void testNoReportOutput() throws IOException {
+		new XMLFormatter().createReportVisitor(null, null, null);
+	}
+
 	@Test
 	public void testSessionInfo() throws Exception {
 		final List<SessionInfo> infos = new ArrayList<SessionInfo>();
@@ -95,6 +104,27 @@ public class XMLFormatterTest {
 		assertPathMatches("org/jacoco/example/FooClass",
 				"/report/package/class/@name");
 		assertPathMatches("fooMethod", "/report/package/class/method/@name");
+	}
+
+	@Test
+	public void testDefaultEncoding() throws Exception {
+		driver.sendBundle(formatter);
+		final BufferedReader reader = new BufferedReader(new InputStreamReader(
+				output.getFileAsStream(), "UTF-8"));
+		final String line = reader.readLine();
+		assertTrue(line, line
+				.startsWith("<?xml version=\"1.0\" encoding=\"UTF-8\""));
+	}
+
+	@Test
+	public void testSetEncoding() throws Exception {
+		formatter.setOutputEncoding("UTF-16");
+		driver.sendBundle(formatter);
+		final BufferedReader reader = new BufferedReader(new InputStreamReader(
+				output.getFileAsStream(), "UTF-16"));
+		final String line = reader.readLine();
+		assertTrue(line, line
+				.startsWith("<?xml version=\"1.0\" encoding=\"UTF-16\""));
 	}
 
 	private void assertPathMatches(String expected, String path)

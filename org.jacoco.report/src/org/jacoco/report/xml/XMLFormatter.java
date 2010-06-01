@@ -42,6 +42,10 @@ public class XMLFormatter implements IReportFormatter {
 	public IReportVisitor createReportVisitor(final ICoverageNode rootNode,
 			final List<SessionInfo> sessionInfos,
 			final Collection<ExecutionData> executionData) throws IOException {
+
+		if (output == null) {
+			throw new IllegalStateException("No report output set.");
+		}
 		final XMLElement root = new XMLDocument("report", PUBID, SYSTEM,
 				outputEncoding, true, output.createFile());
 		return new XMLReportNodeHandler(root, rootNode) {

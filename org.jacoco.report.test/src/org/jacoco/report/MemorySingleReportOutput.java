@@ -32,10 +32,11 @@ public class MemorySingleReportOutput implements ISingleReportOutput {
 
 	private ByteArrayOutputStream file;
 
-	private boolean closed = false;
+	private boolean closed = true;
 
 	public OutputStream createFile() throws IOException {
 		assertNull("Duplicate output.", file);
+		closed = false;
 		file = new ByteArrayOutputStream() {
 
 			@Override

@@ -16,8 +16,10 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 
+import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Collections;
 import java.util.HashMap;
@@ -67,6 +69,10 @@ public class MemoryMultiReportOutput implements IMultiReportOutput {
 	public byte[] getFile(String path) {
 		assertFile(path);
 		return files.get(path).toByteArray();
+	}
+
+	public InputStream getFileAsStream(String path) {
+		return new ByteArrayInputStream(getFile(path));
 	}
 
 	public void assertAllClosed() {

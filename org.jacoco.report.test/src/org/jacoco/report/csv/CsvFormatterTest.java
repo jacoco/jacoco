@@ -63,6 +63,11 @@ public class CsvFormatterTest {
 		output.assertClosed();
 	}
 
+	@Test(expected = IllegalStateException.class)
+	public void testNoReportOutput() throws IOException {
+		new CsvFormatter().createReportVisitor(null, null, null);
+	}
+
 	@Test
 	public void testStructureWithGroup() throws IOException {
 		driver.sendGroup(formatter);
@@ -103,9 +108,21 @@ public class CsvFormatterTest {
 				lines.get(1));
 	}
 
+	@Test
+	public void testSetEncoding() throws Exception {
+		formatter.setOutputEncoding("UTF-16");
+		driver.sendBundle(formatter);
+		final List<String> lines = getLines("UTF-16");
+		assertEquals(HEADER, lines.get(0));
+	}
+
 	private List<String> getLines() throws IOException {
+		return getLines("UTF-8");
+	}
+
+	private List<String> getLines(String encoding) throws IOException {
 		final BufferedReader reader = new BufferedReader(new InputStreamReader(
-				output.getFileAsStream(), "UTF-8"));
+				output.getFileAsStream(), encoding));
 		final List<String> lines = new ArrayList<String>();
 		String line;
 		while ((line = reader.readLine()) != null) {
