@@ -88,11 +88,27 @@ public class RemoteControlReaderWriterTest extends
 		assertEquals("cmd(" + doDump + "," + doReset + ")", calls.toString());
 	}
 
+	@Test(expected = RuntimeException.class)
+	public void testVisitDumpNegative() throws IOException {
+		BrokenOutput out = new BrokenOutput();
+		final RemoteControlWriter writer = new RemoteControlWriter(out);
+		out.broken = true;
+		writer.visitDumpCommand(true, false);
+	}
+
 	@Test
 	public void testSendCmdOk() throws IOException {
 		writer.sendCmdOk();
 		final RemoteControlReader reader = createReader();
 		assertTrue(reader.read());
+	}
+
+	@Test(expected = RuntimeException.class)
+	public void testSendCmdOkNegative() throws IOException {
+		BrokenOutput out = new BrokenOutput();
+		final RemoteControlWriter writer = new RemoteControlWriter(out);
+		out.broken = true;
+		writer.sendCmdOk();
 	}
 
 	@Override
@@ -105,6 +121,18 @@ public class RemoteControlReaderWriterTest extends
 	protected RemoteControlWriter createWriter(OutputStream out)
 			throws IOException {
 		return new RemoteControlWriter(out);
+	}
+
+	private static class BrokenOutput extends OutputStream {
+
+		boolean broken = false;
+
+		@Override
+		public void write(int b) throws IOException {
+			if (broken) {
+				throw new IOException();
+			}
+		}
 	}
 
 }
