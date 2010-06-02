@@ -140,6 +140,7 @@
               port specified by the <code>address</code> and <code>port</code>
               attribute. Execution data is written to this TCP connection.</li>
         </ul>
+        Please see the security considerations below. 
       </td>
       <td><code>file</code></td>
     </tr>
@@ -163,6 +164,17 @@
     </tr>
   </tbody>
 </table>
+
+<h2>Security Consideration for Remote Agent Control</h2>
+
+<p>
+  The ports and connections opened in <code>tcpserver</code> and
+  <code>tcpclient</code> mode do not provide any authentication mechanism. If
+  you run JaCoCo on production systems make sure that no untrusted sources have
+  access to the TCP server port, or JaCoCo TCP clients only connect to trusted
+  targets. Otherwise internal information of the application might be revealed
+  or DOS attacks are possible. 
+</p>
 
 </div>
 <div class="footer">
