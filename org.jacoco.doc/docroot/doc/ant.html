@@ -22,8 +22,30 @@
 
 <p>
   JaCoCo comes with Ant tasks to launch Java programs with execution recording
-  and for creating coverage reports from the recorded data. The JaCoCo Ant tasks
-  require
+  and for creating coverage reports from the recorded data. Execution data can
+  be collected and managed with the tasks
+  <a href="#coverage"><code>coverage</code></a>,
+  <a href="#agent"><code>agent</code></a>,
+  <a href="#dump"><code>dump</code></a> and
+  <a href="#merge"><code>merge</code></a>. Reports in different formats are
+  creates with the <a href="#report"><code>report</code></a> task.  
+</p>
+
+<h2>Example</h2>
+
+<p>
+  The JaCoCo distribution contains a simple example how code coverage can be
+  added to a Ant based build. The
+  <a href="examples/ant/build.xml">build script</a> compiles Java sources, runs
+  the test program and creates a coverage report. The complete example is
+  located  in the <code>./doc/examples/ant</code> folder of the distribution.
+</p>
+
+
+<h2>Prerequisites</h2>
+
+<p>
+  The JaCoCo Ant tasks require
 </p>
 
 <ul>
@@ -41,29 +63,23 @@
 <span class="nr">    1</span>&lt;project name="Example" xmlns:jacoco="antlib:org.jacoco.ant"&gt;
 <span class="nr">    2</span>
 <span class="nr">    3</span>    &lt;taskdef uri="antlib:org.jacoco.ant" resource="org/jacoco/ant/antlib.xml"&gt;
-<span class="nr">    4</span>        &lt;classpath&gt;
-<span class="nr">    5</span>            &lt;pathelement location="<i>path_to_jacoco</i>/lib/jacocoant.jar"/&gt;
-<span class="nr">    6</span>        &lt;/classpath&gt;
-<span class="nr">    7</span>    &lt;/taskdef&gt;
+<span class="nr">    4</span>        &lt;classpath path="<i>path_to_jacoco</i>/lib/jacocoant.jar"/&gt;
+<span class="nr">    5</span>    &lt;/taskdef&gt;
+<span class="nr">    6</span>    
+<span class="nr">    7</span>    ...
 <span class="nr">    8</span>    
-<span class="nr">    9</span>    ...
-<span class="nr">   10</span>    
-<span class="nr">   11</span>&lt;/project&gt;
+<span class="nr">    9</span>&lt;/project&gt;
 </pre>
 
 <p>
   Alternatively you might also place the <code>jacocoant.jar</code> in your
   Ant <code><i>ANT_HOME</i>/lib</code> folder. If you use the name space URI
   <code>antlib:org.jacoco.ant</code> for JaCoCo tasks Ant will find them
-  automatically without the <code>taskdef</code> declaration above.
-</p>
-
-<p>
-  Declaring a XML namespace for JaCoCo tasks is optional but always recommended
-  if you mix tasks from different libraries. All subsequent examples use the
+  automatically without the <code>taskdef</code> declaration above. Declaring a
+  XML namespace for JaCoCo tasks is optional but always recommended if you mix
+  tasks from different libraries. All subsequent examples use the
   <code>jacoco</code> prefix declared above.  
 </p>
-
 
 <h2><a name="coverage">Task <code>coverage</code></a></h2>
 
@@ -230,9 +246,10 @@
 
 <p>
   If the <code>coverage</code> task is not suitable for your launch target, you
-  might alternatively use the <code>agent</code> task to create the Java agent
-  parameter. The following example defines a Ant property with the name
-  <code>agentvmparam</code> that can be directly used as a Java VM parameter:
+  might alternatively use the <code>agent</code> task to create the
+  <a href="agent.html">Java agent</a> parameter. The following example defines a
+  Ant property with the name <code>agentvmparam</code> that can be directly used
+  as a Java VM parameter:
 </p>
 
 <pre class="source lang-xml">
@@ -288,8 +305,8 @@
 </p>
 
 <p class="hint">
-  The target JVM needs to have a JaCoCo agent configured with
-  <code>output</code> mode <code>tcpserver</code>. See
+  The target JVM needs to have a <a href="agent.html">JaCoCo agent</a>
+  configured with <code>output</code> mode <code>tcpserver</code>. See
   <a href="#coverage"><code>coverage</code></a> and
   <a href="#agent"><code>agent</code></a> tasks above.
 </p>

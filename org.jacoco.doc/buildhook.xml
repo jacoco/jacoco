@@ -134,8 +134,12 @@
 			<fileset dir="${source.org.jacoco.report.dir}/src/org/jacoco/report/xml" includes="report.dtd"/>
 		</copy>
 
-		<copy todir="${result.dist.dir}/doc/examples">
+		<copy todir="${result.dist.dir}/doc/examples/java">
 			<fileset dir="${source.org.jacoco.examples.dir}/src/org/jacoco/examples" includes="*.java"/>
+		</copy>
+
+		<copy todir="${result.dist.dir}/doc/examples/ant">
+			<fileset dir="${source.org.jacoco.examples.dir}/ant" includes="build.xml,**/*.java"/>
 		</copy>
 		
 		<copy todir="${result.dist.dir}">
