@@ -2,10 +2,10 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: JaCoCo Ant Tasks
 Bundle-SymbolicName: org.jacoco.ant
-Bundle-Version: 0.3.3.qualifier
+Bundle-Version: 0.4.0.qualifier
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
 Bundle-Vendor: Mountainminds GmbH & Co. KG and Contributors
-Require-Bundle: org.apache.ant,
+Require-Bundle: org.apache.ant;bundle-version="[1.7.0,2.0.0)",
  org.jacoco.agent,
  org.jacoco.core,
  org.jacoco.report,
