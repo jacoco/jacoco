@@ -150,7 +150,7 @@ public class AgentOptions {
 	/**
 	 * Default value for the "address" agent option
 	 */
-	public static final String DEFAULT_ADDRESS = "localhost";
+	public static final String DEFAULT_ADDRESS = null;
 
 	/**
 	 * The port the tcpserver binds to or the tcpclient connects to. In

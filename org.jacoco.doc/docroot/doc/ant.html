@@ -224,9 +224,11 @@
       <td><code>address</code></td>
       <td>IP address or hostname to bind to when the output method is
           <code>tcpserver</code> or connect to when the output method is
-          <code>tcpclient</code>.
+          <code>tcpclient</code>.  In <code>tcpserver</code> mode the value
+          "<code>*</code>" causes the agent to accept connections on any local
+          address.
       </td>
-      <td><code>localhost</code></td>
+      <td><i>loopback interface</i></td>
     </tr>
     <tr>
       <td><code>port</code></td>

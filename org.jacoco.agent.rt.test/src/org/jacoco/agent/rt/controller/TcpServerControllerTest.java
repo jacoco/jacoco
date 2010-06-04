@@ -14,11 +14,15 @@
 package org.jacoco.agent.rt.controller;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 
 import java.io.IOException;
 import java.io.OutputStream;
+import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.net.UnknownHostException;
 import java.util.List;
 
 import org.jacoco.agent.rt.ExceptionRecorder;
@@ -120,6 +124,18 @@ public class TcpServerControllerTest {
 		logger.assertException(IOException.class,
 				"Invalid execution data file.");
 		controller.shutdown();
+	}
+
+	@Test
+	public void testGetInetAddressLoopback() throws UnknownHostException {
+		final InetAddress addr = controller.getInetAddress(null);
+		assertTrue(addr.isLoopbackAddress());
+	}
+
+	@Test
+	public void testGetInetAddressAny() throws UnknownHostException {
+		final InetAddress addr = controller.getInetAddress("*");
+		assertNull(addr);
 	}
 
 }

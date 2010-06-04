@@ -15,6 +15,7 @@ package org.jacoco.agent.rt.controller;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.ServerSocket;
+import java.net.UnknownHostException;
 
 import org.jacoco.agent.rt.IExceptionLogger;
 import org.jacoco.core.runtime.AgentOptions;
@@ -88,8 +89,25 @@ public class TcpServerController implements IAgentController {
 	 */
 	protected ServerSocket createServerSocket(final AgentOptions options)
 			throws IOException {
-		final InetAddress addr = InetAddress.getByName(options.getAddress());
-		return new ServerSocket(options.getPort(), 1, addr);
+		final InetAddress inetAddr = getInetAddress(options.getAddress());
+		return new ServerSocket(options.getPort(), 1, inetAddr);
+	}
+
+	/**
+	 * Returns the {@link InetAddress} object to open the server socket on.
+	 * 
+	 * @param options
+	 *            agent options
+	 * @return address to open the server socket
+	 * @throws UnknownHostException
+	 */
+	protected InetAddress getInetAddress(final String address)
+			throws UnknownHostException {
+		if ("*".equals(address)) {
+			return null;
+		} else {
+			return InetAddress.getByName(address);
+		}
 	}
 
 }

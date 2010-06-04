@@ -49,7 +49,7 @@ public class AgentOptionsTest {
 		assertNull(options.getSessionId());
 		assertTrue(options.getDumpOnExit());
 		assertEquals(6300, options.getPort());
-		assertEquals("localhost", options.getAddress());
+		assertEquals(null, options.getAddress());
 		assertEquals(AgentOptions.OutputMode.file, options.getOutput());
 		assertEquals("", options.toString());
 	}
