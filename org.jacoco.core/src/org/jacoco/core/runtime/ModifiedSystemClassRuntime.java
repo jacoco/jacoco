@@ -122,14 +122,12 @@ public class ModifiedSystemClassRuntime extends AbstractRuntime {
 	public static IRuntime createFor(final Instrumentation inst,
 			final String className, final String accessFieldName)
 			throws ClassNotFoundException {
-		final boolean[] instrumented = new boolean[] { false };
 		final ClassFileTransformer transformer = new ClassFileTransformer() {
 			public byte[] transform(final ClassLoader loader,
 					final String name, final Class<?> classBeingRedefined,
 					final ProtectionDomain protectionDomain, final byte[] source)
 					throws IllegalClassFormatException {
 				if (name.equals(className)) {
-					instrumented[0] = true;
 					return instrument(source, accessFieldName);
 				}
 				return null;
@@ -138,9 +136,11 @@ public class ModifiedSystemClassRuntime extends AbstractRuntime {
 		inst.addTransformer(transformer);
 		final Class<?> clazz = Class.forName(className.replace('/', '.'));
 		inst.removeTransformer(transformer);
-		if (!instrumented[0]) {
-			final String msg = format("Class %s was not loaded.", className);
-			throw new RuntimeException(msg);
+		try {
+			clazz.getField(accessFieldName);
+		} catch (final NoSuchFieldException e) {
+			throw new RuntimeException(format("Class %s could not be instrumented.",
+					className));
 		}
 		return new ModifiedSystemClassRuntime(clazz, accessFieldName);
 	}

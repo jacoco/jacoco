@@ -42,17 +42,9 @@ public class ModifiedSystemClassRuntimeTest extends RuntimeTestBase {
 				ModifiedSystemClassRuntimeTest.class, "accessField");
 	}
 
-	@Test
-	public void testCreateFor() throws Exception {
-		InstrumentationMock inst = new InstrumentationMock(true);
-		ModifiedSystemClassRuntime.createFor(inst, TARGET_CLASS_NAME);
-		assertTrue(inst.added);
-		assertTrue(inst.removed);
-	}
-
 	@Test(expected = RuntimeException.class)
 	public void testCreateForNegative() throws Exception {
-		InstrumentationMock inst = new InstrumentationMock(false);
+		InstrumentationMock inst = new InstrumentationMock();
 		ModifiedSystemClassRuntime.createFor(inst, TARGET_CLASS_NAME);
 	}
 
@@ -63,35 +55,25 @@ public class ModifiedSystemClassRuntimeTest extends RuntimeTestBase {
 
 	private static class InstrumentationMock implements Instrumentation {
 
-		private final boolean doTransform;
-
 		boolean added = false;
 
 		boolean removed = false;
 
-		InstrumentationMock(boolean doTransform) {
-			this.doTransform = doTransform;
-		}
-
 		public void addTransformer(ClassFileTransformer transformer) {
 			assertFalse(added);
 			added = true;
-			if (doTransform) {
-				try {
-					// Our class should get instrumented:
-					final byte[] data = TargetLoader
-							.getClassDataAsBytes(ModifiedSystemClassRuntimeTest.class);
-					verifyInstrumentedClass(TARGET_CLASS_NAME, transformer
-							.transform(null, TARGET_CLASS_NAME, null, null,
-									data));
+			try {
+				// Our class should get instrumented:
+				final byte[] data = TargetLoader
+						.getClassDataAsBytes(ModifiedSystemClassRuntimeTest.class);
+				verifyInstrumentedClass(TARGET_CLASS_NAME, transformer
+						.transform(null, TARGET_CLASS_NAME, null, null, data));
 
-					// Other classes will not be instrumented:
-					assertNull(transformer.transform(getClass()
-							.getClassLoader(), "some/other/Class", null, null,
-							new byte[0]));
-				} catch (Exception e) {
-					throw new RuntimeException(e);
-				}
+				// Other classes will not be instrumented:
+				assertNull(transformer.transform(getClass().getClassLoader(),
+						"some/other/Class", null, null, new byte[0]));
+			} catch (Exception e) {
+				throw new RuntimeException(e);
 			}
 		}
 
