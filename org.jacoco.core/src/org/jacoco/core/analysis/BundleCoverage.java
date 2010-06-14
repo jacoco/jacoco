@@ -59,7 +59,27 @@ public class BundleCoverage extends CoverageNodeImpl {
 	public BundleCoverage(final String name,
 			final Collection<ClassCoverage> classes,
 			final Collection<SourceFileCoverage> sourcefiles) {
-		this(name, groupByPackage(classes, sourcefiles));
+		this(name, groupByPackage(classes, sourcefiles, new StringPool()));
+	}
+
+	/**
+	 * Creates a new instance of a bundle with the given name. The packages are
+	 * calculated from the given classes and source files.
+	 * 
+	 * @param name
+	 *            name of this bundle
+	 * @param classes
+	 *            all classes in this bundle
+	 * @param sourcefiles
+	 *            all source files in this bundle
+	 * @param stringPool
+	 *            pool to optimize the number of {@link String} instances
+	 */
+	public BundleCoverage(final String name,
+			final Collection<ClassCoverage> classes,
+			final Collection<SourceFileCoverage> sourcefiles,
+			final StringPool stringPool) {
+		this(name, groupByPackage(classes, sourcefiles, stringPool));
 	}
 
 	/**
@@ -73,10 +93,11 @@ public class BundleCoverage extends CoverageNodeImpl {
 
 	private static Collection<PackageCoverage> groupByPackage(
 			final Collection<ClassCoverage> classes,
-			final Collection<SourceFileCoverage> sourcefiles) {
+			final Collection<SourceFileCoverage> sourcefiles,
+			final StringPool stringPool) {
 		final Map<String, Collection<ClassCoverage>> classesByPackage = new HashMap<String, Collection<ClassCoverage>>();
 		for (final ClassCoverage c : classes) {
-			addByName(classesByPackage, c.getPackageName(), c);
+			addByName(classesByPackage, stringPool.get(c.getPackageName()), c);
 		}
 
 		final Map<String, Collection<SourceFileCoverage>> sourceFilesByPackage = new HashMap<String, Collection<SourceFileCoverage>>();

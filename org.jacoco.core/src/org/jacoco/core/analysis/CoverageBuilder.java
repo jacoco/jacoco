@@ -39,6 +39,8 @@ public class CoverageBuilder implements IStructureVisitor {
 
 	private final ExecutionDataStore executionData;
 
+	private final StringPool stringPool;
+
 	private final Map<Long, ClassCoverage> classes;
 
 	private final Map<String, SourceFileCoverage> sourcefiles;
@@ -50,7 +52,21 @@ public class CoverageBuilder implements IStructureVisitor {
 	 *            execution data
 	 */
 	public CoverageBuilder(final ExecutionDataStore executionData) {
+		this(executionData, new StringPool());
+	}
+
+	/**
+	 * Create a new builder based on the given execution data.
+	 * 
+	 * @param executionData
+	 *            execution data
+	 * @param stringPool
+	 *            pool to optimize the number of {@link String} instances
+	 */
+	public CoverageBuilder(final ExecutionDataStore executionData,
+			final StringPool stringPool) {
 		this.executionData = executionData;
+		this.stringPool = stringPool;
 		this.classes = new HashMap<Long, ClassCoverage>();
 		this.sourcefiles = new HashMap<String, SourceFileCoverage>();
 	}
@@ -81,7 +97,8 @@ public class CoverageBuilder implements IStructureVisitor {
 	 * @return bundle containing all classes and source files
 	 */
 	public BundleCoverage getBundle(final String name) {
-		return new BundleCoverage(name, classes.values(), sourcefiles.values());
+		return new BundleCoverage(name, classes.values(), sourcefiles.values(),
+				stringPool);
 	}
 
 	// === IStructureVisitor ===
@@ -99,14 +116,14 @@ public class CoverageBuilder implements IStructureVisitor {
 
 			public void visit(final String name, final String signature,
 					final String superName, final String[] interfaces) {
-				this.name = name;
-				this.signature = signature;
-				this.superName = superName;
-				this.interfaces = interfaces;
+				this.name = stringPool.get(name);
+				this.signature = stringPool.get(signature);
+				this.superName = stringPool.get(superName);
+				this.interfaces = stringPool.get(interfaces);
 			}
 
 			public void visitSourceFile(final String name) {
-				sourcename = name;
+				sourcename = stringPool.get(name);
 			}
 
 			public IMethodStructureVisitor visitMethodStructure(
@@ -122,8 +139,10 @@ public class CoverageBuilder implements IStructureVisitor {
 				if (classData.getInstructionCounter().getTotalCount() > 0) {
 					classes.put(Long.valueOf(id), classData);
 					if (sourcename != null) {
+						final String packageName = stringPool.get(classData
+								.getPackageName());
 						final SourceFileCoverage sourceFile = getSourceFile(
-								sourcename, classData.getPackageName());
+								sourcename, packageName);
 						sourceFile.increment(classData);
 					}
 				}
@@ -134,7 +153,8 @@ public class CoverageBuilder implements IStructureVisitor {
 	private IMethodStructureVisitor createMethodVisitor(final String name,
 			final String desc, final String signature,
 			final Collection<MethodCoverage> container, final boolean[] covered) {
-		final MethodCoverage method = new MethodCoverage(name, desc, signature);
+		final MethodCoverage method = new MethodCoverage(stringPool.get(name),
+				stringPool.get(desc), stringPool.get(signature));
 		return new IMethodStructureVisitor() {
 			public void block(final int id, final int instructions,
 					final int[] lineNumbers) {
