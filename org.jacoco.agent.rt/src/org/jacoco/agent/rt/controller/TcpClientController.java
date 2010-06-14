@@ -29,6 +29,8 @@ public class TcpClientController implements IAgentController {
 
 	private TcpConnection connection;
 
+	private Thread worker;
+
 	public TcpClientController(final IExceptionLogger logger) {
 		this.logger = logger;
 	}
@@ -38,7 +40,7 @@ public class TcpClientController implements IAgentController {
 		final Socket socket = createSocket(options);
 		connection = new TcpConnection(socket, runtime);
 		connection.init();
-		final Thread worker = new Thread(new Runnable() {
+		worker = new Thread(new Runnable() {
 			public void run() {
 				try {
 					connection.run();
@@ -52,8 +54,9 @@ public class TcpClientController implements IAgentController {
 		worker.start();
 	}
 
-	public void shutdown() throws IOException {
+	public void shutdown() throws Exception {
 		connection.close();
+		worker.join();
 	}
 
 	public void writeExecutionData() throws IOException {

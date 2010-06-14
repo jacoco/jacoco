@@ -89,6 +89,7 @@ public class TcpClientControllerTest {
 		remoteWriter.visitSessionInfo(new SessionInfo("info", 1, 2));
 		while (remoteReader.read()) {
 		}
+		controller.shutdown();
 		logger.assertException(IOException.class, "No session info visitor.");
 	}
 
