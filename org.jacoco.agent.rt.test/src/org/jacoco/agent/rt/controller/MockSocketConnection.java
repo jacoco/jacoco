@@ -136,7 +136,7 @@ public class MockSocketConnection {
 		}
 
 		@Override
-		public synchronized void close() throws IOException {
+		public void close() throws IOException {
 			closed = true;
 			synchronized (buffer) {
 				buffer.notifyAll();
