@@ -13,8 +13,10 @@
 package org.jacoco.core.instr;
 
 import org.jacoco.core.data.IClassStructureVisitor;
+import org.objectweb.asm.AnnotationVisitor;
+import org.objectweb.asm.Attribute;
+import org.objectweb.asm.FieldVisitor;
 import org.objectweb.asm.Opcodes;
-import org.objectweb.asm.commons.EmptyVisitor;
 
 /**
  * Analyzes the structure of a class.
@@ -22,7 +24,7 @@ import org.objectweb.asm.commons.EmptyVisitor;
  * @author Marc R. Hoffmann
  * @version $Revision: $
  */
-class ClassAnalyzer extends EmptyVisitor implements IBlockClassVisitor {
+class ClassAnalyzer implements IBlockClassVisitor {
 
 	private final IClassStructureVisitor structureVisitor;
 
@@ -37,21 +39,18 @@ class ClassAnalyzer extends EmptyVisitor implements IBlockClassVisitor {
 		this.structureVisitor = structureVisitor;
 	}
 
-	@Override
 	public void visit(final int version, final int access, final String name,
 			final String signature, final String superName,
 			final String[] interfaces) {
 		structureVisitor.visit(name, signature, superName, interfaces);
 	}
 
-	@Override
 	public void visitSource(final String source, final String debug) {
 		if (source != null) {
 			structureVisitor.visitSourceFile(source);
 		}
 	}
 
-	@Override
 	public IBlockMethodVisitor visitMethod(final int access, final String name,
 			final String desc, final String signature, final String[] exceptions) {
 
@@ -64,12 +63,34 @@ class ClassAnalyzer extends EmptyVisitor implements IBlockClassVisitor {
 				desc, signature));
 	}
 
-	@Override
 	public void visitEnd() {
 		structureVisitor.visitEnd();
 	}
 
+	// Nothing to do here:
+
 	public void visitTotalProbeCount(final int count) {
+	}
+
+	public AnnotationVisitor visitAnnotation(final String desc,
+			final boolean visible) {
+		return null;
+	}
+
+	public void visitAttribute(final Attribute attr) {
+	}
+
+	public FieldVisitor visitField(final int access, final String name,
+			final String desc, final String signature, final Object value) {
+		return null;
+	}
+
+	public void visitInnerClass(final String name, final String outerName,
+			final String innerName, final int access) {
+	}
+
+	public void visitOuterClass(final String owner, final String name,
+			final String desc) {
 	}
 
 }
