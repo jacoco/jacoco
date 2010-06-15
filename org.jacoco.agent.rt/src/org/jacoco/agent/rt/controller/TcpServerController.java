@@ -46,8 +46,10 @@ public class TcpServerController implements IAgentController {
 			public void run() {
 				while (!serverSocket.isClosed()) {
 					try {
-						connection = new TcpConnection(serverSocket.accept(),
-								runtime);
+						synchronized (serverSocket) {
+							connection = new TcpConnection(serverSocket
+									.accept(), runtime);
+						}
 						connection.init();
 						connection.run();
 					} catch (IOException e) {
@@ -67,8 +69,10 @@ public class TcpServerController implements IAgentController {
 
 	public void shutdown() throws Exception {
 		serverSocket.close();
-		if (connection != null) {
-			connection.close();
+		synchronized (serverSocket) {
+			if (connection != null) {
+				connection.close();
+			}
 		}
 		worker.join();
 	}
