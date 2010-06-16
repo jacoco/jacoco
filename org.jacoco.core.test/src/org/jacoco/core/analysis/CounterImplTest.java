@@ -13,6 +13,8 @@
 package org.jacoco.core.analysis;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotSame;
+import static org.junit.Assert.assertSame;
 
 import org.junit.Test;
 
@@ -75,6 +77,20 @@ public class CounterImplTest {
 	}
 
 	@Test
+	public void testFixInstance() {
+		ICounter c1 = CounterImpl.getInstance(30, 30);
+		ICounter c2 = CounterImpl.getInstance(30, 30);
+		assertSame(c1, c2);
+	}
+
+	@Test
+	public void testVarInstance() {
+		ICounter c1 = CounterImpl.getInstance(31, 30);
+		ICounter c2 = CounterImpl.getInstance(31, 30);
+		assertNotSame(c1, c2);
+	}
+
+	@Test
 	public void testIncrement1() {
 		CounterImpl c = CounterImpl.getInstance(1, 1);
 		c = c.increment(CounterImpl.getInstance(2, 1));
@@ -84,9 +100,9 @@ public class CounterImplTest {
 
 	@Test
 	public void testIncrement2() {
-		CounterImpl c = CounterImpl.getInstance(11, 5);
+		CounterImpl c = CounterImpl.getInstance(31, 5);
 		c = c.increment(CounterImpl.getInstance(7, 3));
-		assertEquals(18, c.getTotalCount(), 0.0);
+		assertEquals(38, c.getTotalCount(), 0.0);
 		assertEquals(8, c.getCoveredCount(), 0.0);
 	}
 

@@ -22,7 +22,7 @@ package org.jacoco.core.analysis;
 public abstract class CounterImpl extends AbstractCounter {
 
 	/** Max counter value for which singletons are created */
-	private static final int SINGLETON_LIMIT = 10;
+	private static final int SINGLETON_LIMIT = 30;
 
 	private static final CounterImpl[][] SINGLETONS = new CounterImpl[SINGLETON_LIMIT + 1][];
 
