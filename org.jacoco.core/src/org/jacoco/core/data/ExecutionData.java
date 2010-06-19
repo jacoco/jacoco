@@ -153,4 +153,8 @@ public final class ExecutionData {
 		}
 	}
 
+	@Override
+	public String toString() {
+		return String.format("%s %016x", name, Long.valueOf(id));
+	}
 }

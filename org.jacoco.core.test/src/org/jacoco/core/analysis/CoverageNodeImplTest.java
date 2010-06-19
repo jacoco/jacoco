@@ -193,4 +193,11 @@ public class CoverageNodeImplTest {
 		assertNull(copy.getLines());
 	}
 
+	@Test
+	public void testToString() {
+		CoverageNodeImpl node = new CoverageNodeImpl(ElementType.CLASS, "Test",
+				false);
+		assertEquals("Test [CLASS]", node.toString());
+	}
+
 }

@@ -106,4 +106,11 @@ public class ExecutionDataTest {
 		a.assertCompatibility(5, "Example", 3);
 	}
 
+	@Test
+	public void testToString() {
+		final ExecutionData a = new ExecutionData(Long.MAX_VALUE, "Example",
+				new boolean[] { true });
+		assertEquals("Example 7fffffffffffffff", a.toString());
+	}
+
 }

@@ -46,5 +46,10 @@ public class SessionInfoTest {
 		assertEquals(+1, new SessionInfo("id", 1234, 2001)
 				.compareTo(new SessionInfo("id", 2222, 2000)));
 	}
+	
+	@Test
+	public void testToString() {
+		assertEquals("id", new SessionInfo("id", 1000, 2000).toString());
+	}
 
 }
