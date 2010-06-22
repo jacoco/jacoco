@@ -41,9 +41,11 @@ public final class StringPool {
 	 * @return normalized instance or <code>null</code>
 	 */
 	public String get(final String s) {
-		String norm = pool.get(s);
+		if (s == null) {
+			return null;
+		}
+		final String norm = pool.get(s);
 		if (norm == null) {
-			norm = s;
 			pool.put(s, s);
 			return s;
 		}
