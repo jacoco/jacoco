@@ -12,12 +12,10 @@
  *******************************************************************************/
 package org.jacoco.core.instr;
 
-import java.util.HashSet;
-import java.util.Set;
-
 import org.objectweb.asm.Label;
 import org.objectweb.asm.MethodAdapter;
 import org.objectweb.asm.Opcodes;
+import org.objectweb.asm.tree.LabelNode;
 import org.objectweb.asm.tree.MethodNode;
 
 /**
@@ -34,8 +32,6 @@ final class BlockMethodAdapter extends MethodNode {
 	private final IBlockMethodVisitor blockVisitor;
 
 	private final IProbeIdGenerator idGenerator;
-
-	private final Set<Label> targetLabels;
 
 	/**
 	 * Create a new adapter for the given block visitor.
@@ -63,44 +59,43 @@ final class BlockMethodAdapter extends MethodNode {
 		super(access, name, desc, signature, exceptions);
 		this.blockVisitor = blockVisitor;
 		this.idGenerator = idGenerator;
-		this.targetLabels = new HashSet<Label>();
 	}
 
 	// === MethodVisitor ===
 
 	@Override
 	public void visitJumpInsn(final int opcode, final Label label) {
-		targetLabels.add(label);
 		super.visitJumpInsn(opcode, label);
+		setTarget(label);
 	}
 
 	@Override
 	public void visitTableSwitchInsn(final int min, final int max,
 			final Label dflt, final Label[] labels) {
-		targetLabels.add(dflt);
-		for (final Label l : labels) {
-			targetLabels.add(l);
-		}
 		super.visitTableSwitchInsn(min, max, dflt, labels);
+		setTarget(dflt);
+		for (final Label l : labels) {
+			setTarget(l);
+		}
 	}
 
 	@Override
 	public void visitLookupSwitchInsn(final Label dflt, final int[] keys,
 			final Label[] labels) {
-		targetLabels.add(dflt);
-		for (final Label l : labels) {
-			targetLabels.add(l);
-		}
 		super.visitLookupSwitchInsn(dflt, keys, labels);
+		setTarget(dflt);
+		for (final Label l : labels) {
+			setTarget(l);
+		}
 	}
 
 	@Override
 	public void visitTryCatchBlock(final Label start, final Label end,
 			final Label handler, final String type) {
-		targetLabels.add(start);
-		targetLabels.add(end);
-		targetLabels.add(handler);
 		super.visitTryCatchBlock(start, end, handler, type);
+		setTarget(start);
+		setTarget(end);
+		setTarget(handler);
 	}
 
 	@Override
@@ -135,7 +130,7 @@ final class BlockMethodAdapter extends MethodNode {
 
 		@Override
 		public void visitLabel(final Label label) {
-			if (targetLabels.contains(label)) {
+			if (isTarget(label)) {
 				onBlockEndBeforeJump();
 				onBlockEnd();
 			}
@@ -239,6 +234,36 @@ final class BlockMethodAdapter extends MethodNode {
 			super.visitVarInsn(opcode, var);
 		}
 
+	}
+
+	// === Utilities for marking jump target labels: ===
+
+	private static final class TargetMarker {
+
+		final LabelNode labelNode;
+
+		TargetMarker(final LabelNode labelNode) {
+			this.labelNode = labelNode;
+		}
+
+	}
+
+	@Override
+	protected LabelNode getLabelNode(final Label l) {
+		if (l.info instanceof TargetMarker) {
+			return ((TargetMarker) l.info).labelNode;
+		}
+		return super.getLabelNode(l);
+	}
+
+	private final void setTarget(final Label l) {
+		if (!isTarget(l)) {
+			l.info = new TargetMarker(getLabelNode(l));
+		}
+	}
+
+	private final boolean isTarget(final Label l) {
+		return l.info instanceof TargetMarker;
 	}
 
 }
