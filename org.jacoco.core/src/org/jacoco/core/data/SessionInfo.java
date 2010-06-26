@@ -83,6 +83,6 @@ public class SessionInfo implements Comparable<SessionInfo> {
 
 	@Override
 	public String toString() {
-		return id;
+		return "SessionInfo [" + id + "]";
 	}
 }

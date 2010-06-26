@@ -110,7 +110,8 @@ public class ExecutionDataTest {
 	public void testToString() {
 		final ExecutionData a = new ExecutionData(Long.MAX_VALUE, "Example",
 				new boolean[] { true });
-		assertEquals("Example 7fffffffffffffff", a.toString());
+		assertEquals("ExecutionData [name=Example, id=7fffffffffffffff]",
+				a.toString());
 	}
 
 }

@@ -155,6 +155,6 @@ public final class ExecutionData {
 
 	@Override
 	public String toString() {
-		return String.format("%s %016x", name, Long.valueOf(id));
+		return String.format("ExecutionData [name=%s, id=%016x]", name, Long.valueOf(id));
 	}
 }

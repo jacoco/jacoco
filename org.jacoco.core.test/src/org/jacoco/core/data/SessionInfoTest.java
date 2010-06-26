@@ -39,17 +39,21 @@ public class SessionInfoTest {
 
 	@Test
 	public void testCompare() {
-		assertEquals(0, new SessionInfo("id", 1000, 2000)
-				.compareTo(new SessionInfo("id", 1234, 2000)));
-		assertEquals(-1, new SessionInfo("id", 3333, 1999)
-				.compareTo(new SessionInfo("id", 1234, 2000)));
-		assertEquals(+1, new SessionInfo("id", 1234, 2001)
-				.compareTo(new SessionInfo("id", 2222, 2000)));
+		assertEquals(0,
+				new SessionInfo("id", 1000, 2000).compareTo(new SessionInfo(
+						"id", 1234, 2000)));
+		assertEquals(-1,
+				new SessionInfo("id", 3333, 1999).compareTo(new SessionInfo(
+						"id", 1234, 2000)));
+		assertEquals(+1,
+				new SessionInfo("id", 1234, 2001).compareTo(new SessionInfo(
+						"id", 2222, 2000)));
 	}
-	
+
 	@Test
 	public void testToString() {
-		assertEquals("id", new SessionInfo("id", 1000, 2000).toString());
+		assertEquals("SessionInfo [id]",
+				new SessionInfo("id", 1000, 2000).toString());
 	}
 
 }
