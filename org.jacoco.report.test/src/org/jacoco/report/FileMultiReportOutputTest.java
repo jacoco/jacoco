@@ -12,7 +12,6 @@
  *******************************************************************************/
 package org.jacoco.report;
 
-import static junit.framework.Assert.assertTrue;
 import static org.junit.Assert.assertEquals;
 
 import java.io.File;
@@ -21,9 +20,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
-import org.junit.After;
-import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.TemporaryFolder;
 
 /**
  * Unit tests for {@link FileMultiReportOutput}.
@@ -33,31 +32,21 @@ import org.junit.Test;
  */
 public class FileMultiReportOutputTest {
 
-	private File dir;
-
-	@Before
-	public void setup() throws IOException {
-		dir = File.createTempFile("jacocoTest", null);
-		assertTrue(dir.delete());
-		assertTrue(dir.mkdirs());
-	}
-
-	@After
-	public void teardown() {
-		dir.delete();
-	}
+	@Rule
+	public TemporaryFolder folder = new TemporaryFolder();
 
 	@Test
 	public void testCreateFileWithDirectories() throws IOException {
-		final IMultiReportOutput output = new FileMultiReportOutput(dir);
+		final IMultiReportOutput output = new FileMultiReportOutput(
+				folder.getRoot());
 		final OutputStream stream = output.createFile("a/b/c/test");
 		stream.write(1);
 		stream.write(2);
 		stream.write(3);
 		stream.close();
 
-		final InputStream actual = new FileInputStream(new File(dir,
-				"a/b/c/test"));
+		final InputStream actual = new FileInputStream(new File(
+				folder.getRoot(), "a/b/c/test"));
 		assertEquals(1, actual.read());
 		assertEquals(2, actual.read());
 		assertEquals(3, actual.read());
@@ -66,9 +55,10 @@ public class FileMultiReportOutputTest {
 
 	@Test(expected = IOException.class)
 	public void testCreateFileNegative() throws IOException {
-		final File d = new File(dir, "a");
-		assertTrue(d.createNewFile());
-		final IMultiReportOutput output = new FileMultiReportOutput(dir);
+		folder.newFile("a");
+		final IMultiReportOutput output = new FileMultiReportOutput(
+				folder.getRoot());
 		output.createFile("a/b/c/test");
 	}
+
 }

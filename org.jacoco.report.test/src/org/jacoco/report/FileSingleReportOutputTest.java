@@ -12,7 +12,6 @@
  *******************************************************************************/
 package org.jacoco.report;
 
-import static junit.framework.Assert.assertTrue;
 import static org.junit.Assert.assertEquals;
 
 import java.io.File;
@@ -21,9 +20,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
-import org.junit.After;
-import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.TemporaryFolder;
 
 /**
  * Unit tests for {@link FileSingleReportOutput}.
@@ -33,23 +32,12 @@ import org.junit.Test;
  */
 public class FileSingleReportOutputTest {
 
-	private File dir;
-
-	@Before
-	public void setup() throws IOException {
-		dir = File.createTempFile("jacocoTest", null);
-		assertTrue(dir.delete());
-		assertTrue(dir.mkdirs());
-	}
-
-	@After
-	public void teardown() {
-		dir.delete();
-	}
+	@Rule
+	public TemporaryFolder folder = new TemporaryFolder();
 
 	@Test
 	public void testCreateFileWithDirectories() throws IOException {
-		final File f = new File(dir, "a/b/c/test");
+		final File f = new File(folder.getRoot(), "a/b/c/test");
 
 		final ISingleReportOutput output = new FileSingleReportOutput(f);
 		final OutputStream stream = output.createFile();
@@ -67,8 +55,7 @@ public class FileSingleReportOutputTest {
 
 	@Test(expected = IOException.class)
 	public void testCreateFileNegative() throws IOException {
-		final File d = new File(dir, "a");
-		assertTrue(d.createNewFile());
+		final File d = folder.newFile("a");
 		final File f = new File(d, "b/c/test");
 		final ISingleReportOutput output = new FileSingleReportOutput(f);
 		output.createFile();
