@@ -43,7 +43,7 @@
 	<target name="test" depends="compile">
 		<!-- Step 2: Wrap test execution with the JaCoCo coverage task -->
 		<jacoco:coverage destfile="${result.exec.file}">
-			<java classname="org.jacoco.example.parser.ExpressionParserTest" fork="true">
+			<java classname="org.jacoco.examples.parser.ExpressionParserTest" fork="true">
 				<classpath path="${result.classes.dir}" />
 			</java>
 		</jacoco:coverage>

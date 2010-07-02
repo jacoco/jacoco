@@ -10,7 +10,7 @@
  *    
  * $Id: $
  *******************************************************************************/
-package org.jacoco.example.parser;
+package org.jacoco.examples.parser;
 
 import static java.io.StreamTokenizer.TT_EOF;
 import static java.io.StreamTokenizer.TT_NUMBER;

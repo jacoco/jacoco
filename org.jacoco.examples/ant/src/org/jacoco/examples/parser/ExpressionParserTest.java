@@ -10,7 +10,7 @@
  *    
  * $Id: $
  *******************************************************************************/
-package org.jacoco.example.parser;
+package org.jacoco.examples.parser;
 
 import java.io.IOException;
 
