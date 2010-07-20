@@ -37,15 +37,19 @@ class TcpConnection implements IRemoteCommandVisitor {
 
 	private RemoteControlReader reader;
 
+	private boolean initialized;
+
 	public TcpConnection(Socket socket, IRuntime runtime) {
 		this.socket = socket;
 		this.runtime = runtime;
+		this.initialized = false;
 	}
 
 	public void init() throws IOException {
 		this.writer = new RemoteControlWriter(socket.getOutputStream());
 		this.reader = new RemoteControlReader(socket.getInputStream());
 		this.reader.setRemoteCommandVisitor(this);
+		this.initialized = true;
 	}
 
 	/**
@@ -67,12 +71,13 @@ class TcpConnection implements IRemoteCommandVisitor {
 	}
 
 	/**
-	 * Dumps the current execution data if the underlying socket is still open.
+	 * Dumps the current execution data if the connection is already initialized
+	 * and the underlying socket is still open.
 	 * 
 	 * @throws IOException
 	 */
 	public void writeExecutionData() throws IOException {
-		if (!socket.isClosed()) {
+		if (initialized && !socket.isClosed()) {
 			visitDumpCommand(true, false);
 		}
 	}

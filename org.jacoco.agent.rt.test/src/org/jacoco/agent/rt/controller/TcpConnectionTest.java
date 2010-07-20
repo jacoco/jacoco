@@ -203,6 +203,17 @@ public class TcpConnectionTest extends ExecutorTestBase {
 		f.get();
 	}
 
+	@Test
+	public void testLocalDumpWithoutInit() throws Exception {
+		final TcpConnection con = new TcpConnection(
+				mockConnection.getSocketA(), runtime);
+		// Must not write any data as we're not initialized:
+		con.writeExecutionData();
+
+		assertEquals(0, mockConnection.getSocketB().getInputStream()
+				.available());
+	}
+
 	private void readAndAssertData() throws IOException {
 		final RemoteControlReader remoteReader = new RemoteControlReader(
 				mockConnection.getSocketB().getInputStream());
