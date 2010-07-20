@@ -89,17 +89,22 @@ public class TcpServerControllerTest {
 	@Test
 	public void testWriteExecutionData() throws Exception {
 		final Socket socket = serverSocket.connect();
-		new RemoteControlWriter(socket.getOutputStream());
-		final RemoteControlReader remoteReader = new RemoteControlReader(socket
-				.getInputStream());
+		final RemoteControlWriter remoteWriter = new RemoteControlWriter(
+				socket.getOutputStream());
+		final RemoteControlReader remoteReader = new RemoteControlReader(
+				socket.getInputStream());
 
+		// First process a NOP command to ensure the connection is initialized:
+		remoteWriter.visitDumpCommand(false, false);
+		remoteReader.read();
+
+		// Now the actual test starts:
 		controller.writeExecutionData();
 
 		final ExecutionDataStore execStore = new ExecutionDataStore();
 		remoteReader.setExecutionDataVisitor(execStore);
 		final SessionInfoStore infoStore = new SessionInfoStore();
 		remoteReader.setSessionInfoVisitor(infoStore);
-
 		remoteReader.read();
 
 		assertEquals("Foo", execStore.get(0x12345678).getName());
