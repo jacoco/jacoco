@@ -66,8 +66,9 @@ public class ModifiedSystemClassRuntimeTest extends RuntimeTestBase {
 				// Our class should get instrumented:
 				final byte[] data = TargetLoader
 						.getClassDataAsBytes(ModifiedSystemClassRuntimeTest.class);
-				verifyInstrumentedClass(TARGET_CLASS_NAME, transformer
-						.transform(null, TARGET_CLASS_NAME, null, null, data));
+				verifyInstrumentedClass(TARGET_CLASS_NAME,
+						transformer.transform(null, TARGET_CLASS_NAME, null,
+								null, data));
 
 				// Other classes will not be instrumented:
 				assertNull(transformer.transform(getClass().getClassLoader(),
@@ -165,7 +166,9 @@ public class ModifiedSystemClassRuntimeTest extends RuntimeTestBase {
 
 		// Check added field:
 		final Field f = targetClass.getField("$jacocoAccess");
-		assertEquals(Modifier.PUBLIC | Modifier.STATIC, f.getModifiers(), 0.0);
+		assertTrue(Modifier.isPublic(f.getModifiers()));
+		assertTrue(Modifier.isStatic(f.getModifiers()));
+		assertTrue(Modifier.isTransient(f.getModifiers()));
 		assertEquals(Object.class, f.getType());
 	}
 }
