@@ -170,7 +170,7 @@ public abstract class RuntimeTestBase {
 		storage.assertSize(1);
 		final boolean[] data = storage.getData(1001);
 		assertTrue(data[0]);
-		assertTrue(data[0]);
+		assertTrue(data[1]);
 	}
 
 	/**
@@ -192,8 +192,8 @@ public abstract class RuntimeTestBase {
 
 		final ClassWriter writer = new ClassWriter(0);
 		writer.visit(Opcodes.V1_5, Opcodes.ACC_PUBLIC, className, null,
-				"java/lang/Object", new String[] { Type
-						.getInternalName(ITarget.class) });
+				"java/lang/Object",
+				new String[] { Type.getInternalName(ITarget.class) });
 
 		writer.visitField(Opcodes.ACC_PRIVATE | Opcodes.ACC_FINAL, "data",
 				"[Z", null, null);
@@ -253,8 +253,8 @@ public abstract class RuntimeTestBase {
 
 		writer.visitEnd();
 
-		final TargetLoader loader = new TargetLoader(className
-				.replace('/', '.'), writer.toByteArray());
+		final TargetLoader loader = new TargetLoader(
+				className.replace('/', '.'), writer.toByteArray());
 		return (ITarget) loader.newTargetInstance();
 	}
 
