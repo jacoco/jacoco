@@ -20,8 +20,8 @@ import java.io.File;
 import java.io.IOException;
 
 import org.jacoco.core.analysis.CoverageNodeImpl;
-import org.jacoco.core.analysis.SourceFileCoverage;
 import org.jacoco.core.analysis.ICoverageNode.ElementType;
+import org.jacoco.core.analysis.SourceFileCoverage;
 import org.jacoco.report.DirectorySourceFileLocator;
 import org.jacoco.report.ILanguageNames;
 import org.jacoco.report.ISourceFileLocator;
@@ -123,16 +123,16 @@ public class SourceFilePageTest {
 				"/html/head/link[@rel='stylesheet'][2]/@href"));
 
 		// highlighting script
-		assertEquals("text/javascript", support.findStr(result,
-				"/html/head/script/@type"));
-		assertEquals(".resources/prettify.js", support.findStr(result,
-				"/html/head/script/@src"));
-		assertEquals("prettyPrint()", support.findStr(result,
-				"/html/body/@onload"));
+		assertEquals("text/javascript",
+				support.findStr(result, "/html/head/script/@type"));
+		assertEquals(".resources/prettify.js",
+				support.findStr(result, "/html/head/script/@src"));
+		assertEquals("prettyPrint()",
+				support.findStr(result, "/html/body/@onload"));
 
 		// source code
-		assertEquals("L1", support
-				.findStr(result, "/html/body/pre/span[1]/@id"));
+		assertEquals("L1",
+				support.findStr(result, "/html/body/pre/span[1]/@id"));
 	}
 
 	@Test
@@ -145,11 +145,6 @@ public class SourceFilePageTest {
 
 		assertFalse(page.exists());
 		output.assertEmpty();
-	}
-
-	@Test
-	public void testExists2() {
-		// TODO
 	}
 
 }
