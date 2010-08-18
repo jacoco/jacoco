@@ -12,6 +12,8 @@
  *******************************************************************************/
 package org.jacoco.ant;
 
+import static java.lang.String.format;
+
 import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -28,6 +30,7 @@ import java.util.Map;
 import java.util.zip.ZipOutputStream;
 
 import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.types.Resource;
 import org.apache.tools.ant.types.resources.FileResource;
@@ -38,8 +41,8 @@ import org.jacoco.core.analysis.ClassCoverage;
 import org.jacoco.core.analysis.CoverageBuilder;
 import org.jacoco.core.analysis.CoverageNodeImpl;
 import org.jacoco.core.analysis.ICoverageNode;
-import org.jacoco.core.analysis.PackageCoverage;
 import org.jacoco.core.analysis.ICoverageNode.ElementType;
+import org.jacoco.core.analysis.PackageCoverage;
 import org.jacoco.core.data.ExecutionDataReader;
 import org.jacoco.core.data.ExecutionDataStore;
 import org.jacoco.core.data.SessionInfoStore;
@@ -523,13 +526,29 @@ public class ReportTask extends Task {
 				return new InputStreamReader(r.getInputStream(), encoding);
 			}
 		}
+
+		public boolean isEmpty() {
+			return resources.isEmpty();
+		}
 	}
 
-	private static void visitBundle(final IReportVisitor visitor,
+	private void visitBundle(final IReportVisitor visitor,
 			final BundleCoverage bundledata,
-			final ISourceFileLocator sourceFileLocator) throws IOException {
+			final SourceFileCollection sourceFileLocator) throws IOException {
+		if (!sourceFileLocator.isEmpty()) {
+			checkForMissingDebugInformation(bundledata);
+		}
 		for (final PackageCoverage p : bundledata.getPackages()) {
 			visitPackage(visitor.visitChild(p), p, sourceFileLocator);
+		}
+	}
+
+	private void checkForMissingDebugInformation(final ICoverageNode node) {
+		if (node.getClassCounter().getTotalCount() > 0
+				&& node.getLineCounter().getTotalCount() == 0) {
+			log(format(
+					"To enable source code annotation class files for bundle '%s' have to be compiled with debug information.",
+					node.getName()), Project.MSG_WARN);
 		}
 	}
 

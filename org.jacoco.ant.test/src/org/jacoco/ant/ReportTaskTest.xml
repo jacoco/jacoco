@@ -60,6 +60,24 @@
 		</au:expectfailure>
 	</target>
 	
+	<target name="testReportWithSourceButNoDebug">
+		<java classname="org.jacoco.ant.RemoveDebugInfos" classpath="${java.class.path}" failonerror="true">
+			<arg value="${org.jacoco.ant.reportTaskTest.classes.dir}/org/jacoco/ant/TestTarget.class" />
+			<arg value="${temp.dir}/TestTarget.class" />
+		</java>
+		<jacoco:report>
+			<structure name="root">
+				<classfiles>
+					<fileset dir="${temp.dir}" id="*.class" />
+				</classfiles>
+				<sourcefiles>
+					<fileset dir="." id="*.java" />
+				</sourcefiles>
+			</structure>
+		</jacoco:report>
+		<au:assertLogContains level="warn" text="To enable source code annotation class files for bundle 'root' have to be compiled with debug information."/>
+	</target>
+	
 	<!-- HTML Output -->
 	
 	<target name="testReportHtmlNoDestdirOrDestfile">
