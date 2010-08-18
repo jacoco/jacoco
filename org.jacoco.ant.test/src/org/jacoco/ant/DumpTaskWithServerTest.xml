@@ -23,7 +23,7 @@
 		
 		<jacoco:coverage output="tcpserver" port="6300">
 			<java classname="org.jacoco.ant.TestTarget" spawn="true" fork="true" maxmemory="16m">
-				<classpath path="${org.jacoco.ant.dumpTaskTest.classes.dir}"/>
+				<classpath path="${org.jacoco.ant.dumpTaskWithServerTest.classes.dir}"/>
 				<jvmarg value="-client"/>
 				<arg value="${term.file}"/>
 			</java>
