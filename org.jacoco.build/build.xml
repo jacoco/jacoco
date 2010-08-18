@@ -36,6 +36,10 @@
 	<property name="jacoco.home.url" value="http://www.eclemma.org/jacoco"/>
 	<property name="copyright.years" value="2009, 2010"/>
 	
+    <property name="sign.keystore.alias" value="mtnminds"/>
+	<property name="sign.tsa.url" value="https://timestamp.geotrust.com/tsa"/>
+	<property name="sign.tsa.cert" value="mtnminds"/>
+	
 	<tstamp>
 		<format property="build.date" pattern="yyyy/MM/dd" timezone="GMT+0"/>
 		<format property="build.qualifier" pattern="yyyyMMddHHmmss" timezone="GMT+0"/>
@@ -115,7 +119,7 @@
 	
 	<target name="rebuild" depends="clean,build"/>
 	
-	<target name="deliver" depends="rebuild">
+	<target name="deliver" depends="clean">
 		<fail message="JaCoCo delivery only allowed with default target.">
 			<condition>
 				<not>
@@ -123,6 +127,10 @@
 				</not>
 			</condition>
 		</fail>
+	    <fail message="Please specify property 'sign.keystore.file'" unless="sign.keystore.file"/>
+		<input addproperty="sign.keystore.password">Keystore password:</input>
+
+		<runallbundlebuilds target="deliver"/>
 		<property prefix="core.manifest." file="${result.tmp.dir}/org.jacoco.core/MANIFEST.MF"/>
 		<property name="result.zip.file" location="${result.dir}/jacoco-${core.manifest.Bundle-Version}.zip"/>
 		<zip destfile="${result.zip.file}" level="9">

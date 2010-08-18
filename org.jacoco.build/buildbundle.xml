@@ -179,5 +179,29 @@
 	     =================================================================== -->
 	
 	<target name="build" depends="compile,package,verify,doc,legal"/>
+
+	
+	<!-- =================================================================== 
+	     SIGN 
+	     =================================================================== -->
+
+	<target name="sign" depends="package">
+		<signjar keystore="${sign.keystore.file}" 
+			     storepass="${sign.keystore.password}"
+			     alias="${sign.keystore.alias}"
+			     tsaurl="${sign.tsa.url}"
+			     tsacert="${sign.tsa.cert}"
+			     lazy="true">
+			<fileset dir="${result.dist.lib.dir}" includes="*.jar" erroronmissingdir="false"/>
+		</signjar>
+	</target>
+
+	
+	<!-- =================================================================== 
+	     DELIVER 
+	     =================================================================== -->
+
+	<target name="deliver" depends="build,sign"/>
+
 	
 </project>
