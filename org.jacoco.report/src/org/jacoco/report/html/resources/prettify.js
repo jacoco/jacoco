@@ -16,31 +16,40 @@
 /**
  * @fileoverview
  * some functions for browser-side pretty printing of code contained in html.
+ * <p>
  *
- * The lexer should work on a number of languages including C and friends,
- * Java, Python, Bash, SQL, HTML, XML, CSS, Javascript, and Makefiles.
- * It works passably on Ruby, PHP and Awk and a decent subset of Perl, but,
- * because of commenting conventions, doesn't work on Smalltalk, Lisp-like, or
- * CAML-like languages.
- *
- * If there's a language not mentioned here, then I don't know it, and don't
- * know whether it works.  If it has a C-like, Bash-like, or XML-like syntax
- * then it should work passably.
- *
- * Usage:
- * 1) include this source file in an html page via
- * <script type="text/javascript" src="/path/to/prettify.js"></script>
- * 2) define style rules.  See the example page for examples.
- * 3) mark the <pre> and <code> tags in your source with class=prettyprint.
- *    You can also use the (html deprecated) <xmp> tag, but the pretty printer
- *    needs to do more substantial DOM manipulations to support that, so some
- *    css styles may not be preserved.
+ * For a fairly comprehensive set of languages see the
+ * <a href="http://google-code-prettify.googlecode.com/svn/trunk/README.html#langs">README</a>
+ * file that came with this source.  At a minimum, the lexer should work on a
+ * number of languages including C and friends, Java, Python, Bash, SQL, HTML,
+ * XML, CSS, Javascript, and Makefiles.  It works passably on Ruby, PHP and Awk
+ * and a subset of Perl, but, because of commenting conventions, doesn't work on
+ * Smalltalk, Lisp-like, or CAML-like languages without an explicit lang class.
+ * <p>
+ * Usage: <ol>
+ * <li> include this source file in an html page via
+ *   {@code <script type="text/javascript" src="/path/to/prettify.js"></script>}
+ * <li> define style rules.  See the example page for examples.
+ * <li> mark the {@code <pre>} and {@code <code>} tags in your source with
+ *    {@code class=prettyprint.}
+ *    You can also use the (html deprecated) {@code <xmp>} tag, but the pretty
+ *    printer needs to do more substantial DOM manipulations to support that, so
+ *    some css styles may not be preserved.
+ * </ol>
  * That's it.  I wanted to keep the API as simple as possible, so there's no
- * need to specify which language the code is in.
- *
- * Change log:
+ * need to specify which language the code is in, but if you wish, you can add
+ * another class to the {@code <pre>} or {@code <code>} element to specify the
+ * language, as in {@code <pre class="prettyprint lang-java">}.  Any class that
+ * starts with "lang-" followed by a file extension, specifies the file type.
+ * See the "lang-*.js" files in this directory for code that implements
+ * per-language file handlers.
+ * <p>
+ * Change log:<br>
  * cbeust, 2006/08/22
+ * <blockquote>
  *   Java annotations (start with "@") are now captured as literals ("lit")
+ * </blockquote>
+ * @requires console
  */
 
 // JSLint declarations
@@ -80,12 +89,13 @@ window['PR_normalizedHtml']
   */
   = window['prettyPrint'] = void 0;
 
-/** browser detection. @extern */
+/** browser detection. @extern @returns false if not IE, otherwise the major version. */
 window['_pr_isIE6'] = function () {
-  var isIE6 = navigator && navigator.userAgent &&
-      /\bMSIE 6\./.test(navigator.userAgent);
-  window['_pr_isIE6'] = function () { return isIE6; };
-  return isIE6;
+  var ieVersion = navigator && navigator.userAgent &&
+      navigator.userAgent.match(/\bMSIE ([678])\./);
+  ieVersion = ieVersion ? +ieVersion[1] : false;
+  window['_pr_isIE6'] = function () { return ieVersion; };
+  return ieVersion;
 };
 
 
@@ -97,15 +107,16 @@ window['_pr_isIE6'] = function () {
       "double enum extern float goto int long register short signed sizeof " +
       "static struct switch typedef union unsigned void volatile ";
   var COMMON_KEYWORDS = C_KEYWORDS + "catch class delete false import " +
-      "new operator private protected public this throw true try ";
+      "new operator private protected public this throw true try typeof ";
   var CPP_KEYWORDS = COMMON_KEYWORDS + "alignof align_union asm axiom bool " +
       "concept concept_map const_cast constexpr decltype " +
       "dynamic_cast explicit export friend inline late_check " +
       "mutable namespace nullptr reinterpret_cast static_assert static_cast " +
-      "template typeid typename typeof using virtual wchar_t where ";
+      "template typeid typename using virtual wchar_t where ";
   var JAVA_KEYWORDS = COMMON_KEYWORDS +
-      "boolean byte extends final finally implements import instanceof null " +
-      "native package strictfp super synchronized throws transient ";
+      "abstract boolean byte extends final finally implements import " +
+      "instanceof null native package strictfp super synchronized throws " +
+      "transient ";
   var CSHARP_KEYWORDS = JAVA_KEYWORDS +
       "as base by checked decimal delegate descending event " +
       "fixed foreach from group implicit in interface internal into is lock " +
@@ -265,8 +276,8 @@ window['_pr_isIE6'] = function () {
         .replace(pr_gtEnt, '>')
         .replace(pr_aposEnt, "'")
         .replace(pr_quotEnt, '"')
-        .replace(pr_ampEnt, '&')
-        .replace(pr_nbspEnt, ' ');
+        .replace(pr_nbspEnt, ' ')
+        .replace(pr_ampEnt, '&');
   }
 
   /** is the given node's innerHTML normally unescaped? */
@@ -274,27 +285,58 @@ window['_pr_isIE6'] = function () {
     return 'XMP' === node.tagName;
   }
 
-  function normalizedHtml(node, out) {
+  var newlineRe = /[\r\n]/g;
+  /**
+   * Are newlines and adjacent spaces significant in the given node's innerHTML?
+   */
+  function isPreformatted(node, content) {
+    // PRE means preformatted, and is a very common case, so don't create
+    // unnecessary computed style objects.
+    if ('PRE' === node.tagName) { return true; }
+    if (!newlineRe.test(content)) { return true; }  // Don't care
+    var whitespace = '';
+    // For disconnected nodes, IE has no currentStyle.
+    if (node.currentStyle) {
+      whitespace = node.currentStyle.whiteSpace;
+    } else if (window.getComputedStyle) {
+      // Firefox makes a best guess if node is disconnected whereas Safari
+      // returns the empty string.
+      whitespace = window.getComputedStyle(node, null).whiteSpace;
+    }
+    return !whitespace || whitespace === 'pre';
+  }
+
+  function normalizedHtml(node, out, opt_sortAttrs) {
     switch (node.nodeType) {
       case 1:  // an element
         var name = node.tagName.toLowerCase();
+
         out.push('<', name);
-        for (var i = 0; i < node.attributes.length; ++i) {
-          var attr = node.attributes[i];
-          if (!attr.specified) { continue; }
-          out.push(' ');
-          normalizedHtml(attr, out);
+        var attrs = node.attributes;
+        var n = attrs.length;
+        if (n) {
+          if (opt_sortAttrs) {
+            var sortedAttrs = [];
+            for (var i = n; --i >= 0;) { sortedAttrs[i] = attrs[i]; }
+            sortedAttrs.sort(function (a, b) {
+                return (a.name < b.name) ? -1 : a.name === b.name ? 0 : 1;
+              });
+            attrs = sortedAttrs;
+          }
+          for (var i = 0; i < n; ++i) {
+            var attr = attrs[i];
+            if (!attr.specified) { continue; }
+            out.push(' ', attr.name.toLowerCase(),
+                     '="', attribToHtml(attr.value), '"');
+          }
         }
         out.push('>');
         for (var child = node.firstChild; child; child = child.nextSibling) {
-          normalizedHtml(child, out);
+          normalizedHtml(child, out, opt_sortAttrs);
         }
         if (node.firstChild || !/^(?:br|link|img)$/.test(name)) {
           out.push('<\/', name, '>');
         }
-        break;
-      case 2: // an attribute
-        out.push(node.name.toLowerCase(), '="', attribToHtml(node.value), '"');
         break;
       case 3: case 4: // text
         out.push(textToHtml(node.nodeValue));
@@ -307,7 +349,7 @@ window['_pr_isIE6'] = function () {
    * matches the union o the sets o strings matched d by the input RegExp.
    * Since it matches globally, if the input strings have a start-of-input
    * anchor (/^.../), it is ignored for the purposes of unioning.
-   * @param {Array.<RegExpr>} regexs non multiline, non-global regexs.
+   * @param {Array.<RegExp>} regexs non multiline, non-global regexs.
    * @return {RegExp} a global regex.
    */
   function combinePrefixPatterns(regexs) {
@@ -456,7 +498,6 @@ window['_pr_isIE6'] = function () {
 
       // Walk over and identify back references to build the capturedGroups
       // mapping.
-      var groupIndex;
       for (var i = 0, groupIndex = 0; i < n; ++i) {
         var p = parts[i];
         if (p === '(') {
@@ -549,6 +590,9 @@ window['_pr_isIE6'] = function () {
       // XMP tags contain unescaped entities so require special handling.
       if (isRawContent(node)) {
         content = textToHtml(content);
+      } else if (!isPreformatted(node, content)) {
+        content = content.replace(/(<br\s*\/?>)[\r\n]+/g, '$1')
+            .replace(/(?:[\r\n]+[ \t]*)+/g, ' ');
       }
       return content;
     }
@@ -612,13 +656,14 @@ window['_pr_isIE6'] = function () {
       '[^<]+'  // A run of characters other than '<'
       + '|<\!--[\\s\\S]*?--\>'  // an HTML comment
       + '|<!\\[CDATA\\[[\\s\\S]*?\\]\\]>'  // a CDATA section
-      + '|</?[a-zA-Z][^>]*>'  // a probable tag that should not be highlighted
+      // a probable tag that should not be highlighted
+      + '|<\/?[a-zA-Z](?:[^>\"\']|\'[^\']*\'|\"[^\"]*\")*>'
       + '|<',  // A '<' that does not begin a larger chunk
       'g');
   var pr_commentPrefix = /^<\!--/;
-  var pr_cdataPrefix = /^<\[CDATA\[/;
+  var pr_cdataPrefix = /^<!\[CDATA\[/;
   var pr_brPrefix = /^<br\b/i;
-  var pr_tagNameRe = /^<(\/?)([a-zA-Z]+)/;
+  var pr_tagNameRe = /^<(\/?)([a-zA-Z][a-zA-Z0-9]*)/;
 
   /** split markup into chunks of html tags (style null) and
     * plain text (style {@link #PR_PLAIN}), converting tags which are
@@ -818,7 +863,7 @@ window['_pr_isIE6'] = function () {
       for (var ti = 0, nTokens = tokens.length; ti < nTokens; ++ti) {
         var token = tokens[ti];
         var style = styleCache[token];
-        var match;
+        var match = void 0;
 
         var isEmbedded;
         if (typeof style === 'string') {
@@ -844,7 +889,7 @@ window['_pr_isIE6'] = function () {
           }
 
           isEmbedded = style.length >= 5 && 'lang-' === style.substring(0, 5);
-          if (isEmbedded && !(match && match[1])) {
+          if (isEmbedded && !(match && typeof match[1] === 'string')) {
             isEmbedded = false;
             style = PR_SOURCE;
           }
@@ -861,8 +906,14 @@ window['_pr_isIE6'] = function () {
           var embeddedSource = match[1];
           var embeddedSourceStart = token.indexOf(embeddedSource);
           var embeddedSourceEnd = embeddedSourceStart + embeddedSource.length;
+          if (match[2]) {
+            // If embeddedSource can be blank, then it would match at the
+            // beginning which would cause us to infinitely recurse on the
+            // entire token, so we catch the right context in match[2].
+            embeddedSourceEnd = token.length - match[2].length;
+            embeddedSourceStart = embeddedSourceEnd - embeddedSource.length;
+          }
           var lang = style.substring(5);
-          var size = decorations.length - 10;
           // Decorate the left of the embedded source
           appendDecorations(
               basePos + tokenStart,
@@ -920,12 +971,21 @@ window['_pr_isIE6'] = function () {
            /^(?:\'(?:[^\\\'\r\n]|\\.)*(?:\'|$)|\"(?:[^\\\"\r\n]|\\.)*(?:\"|$))/,
            null, '"\'']);
     }
+    if (options['verbatimStrings']) {
+      // verbatim-string-literal production from the C# grammar.  See issue 93.
+      fallthroughStylePatterns.push(
+          [PR_STRING, /^@\"(?:[^\"]|\"\")*(?:\"|$)/, null]);
+    }
     if (options['hashComments']) {
       if (options['cStyleComments']) {
         // Stop C preprocessor declarations at an unclosed open comment
         shortcutStylePatterns.push(
-            [PR_COMMENT, /^#(?:[^\r\n\/]|\/(?!\*)|\/\*[^\r\n]*?\*\/)*/,
+            [PR_COMMENT, /^#(?:(?:define|elif|else|endif|error|ifdef|include|ifndef|line|pragma|undef|warning)\b|[^\r\n]*)/,
              null, '#']);
+        fallthroughStylePatterns.push(
+            [PR_STRING,
+             /^<(?:(?:(?:\.\.\/)*|\/?)(?:[\w-]+(?:\/[\w-]+)+)?[\w-]+\.h|[a-z]\w*)>/,
+             null]);
       } else {
         shortcutStylePatterns.push([PR_COMMENT, /^#[^\r\n]*/, null, '#']);
       }
@@ -965,7 +1025,7 @@ window['_pr_isIE6'] = function () {
     shortcutStylePatterns.push([PR_PLAIN,       /^\s+/, null, ' \r\n\t\xA0']);
     fallthroughStylePatterns.push(
         // TODO(mikesamuel): recognize non-latin letters and numerals in idents
-        [PR_LITERAL,     /^@[a-z_$][a-z_$@0-9]*/i, null, '@'],
+        [PR_LITERAL,     /^@[a-z_$][a-z_$@0-9]*/i, null],
         [PR_TYPE,        /^@?[A-Z]+[a-z][A-Za-z_$@0-9]*/, null],
         [PR_PLAIN,       /^[a-z_$][a-z_$@0-9]*/i, null],
         [PR_LITERAL,
@@ -1028,6 +1088,50 @@ window['_pr_isIE6'] = function () {
     var trailingSpaceRe = /[ \r\n]$/;
     var lastWasSpace = true;  // the last text chunk emitted ended with a space.
 
+    // See bug 71 and http://stackoverflow.com/questions/136443/why-doesnt-ie7-
+    var isIE678 = window['_pr_isIE6']();
+    var lineBreakHtml = (
+        isIE678
+        ? (job.sourceNode.tagName === 'PRE'
+           // Use line feeds instead of <br>s so that copying and pasting works
+           // on IE.
+           // Doing this on other browsers breaks lots of stuff since \r\n is
+           // treated as two newlines on Firefox.
+           ? (isIE678 === 6 ? '&#160;\r\n' :
+              isIE678 === 7 ? '&#160;<br>\r' : '&#160;\r')
+           // IE collapses multiple adjacent <br>s into 1 line break.
+           // Prefix every newline with '&#160;' to prevent such behavior.
+           // &nbsp; is the same as &#160; but works in XML as well as HTML.
+           : '&#160;<br />')
+        : '<br />');
+
+    // Look for a class like linenums or linenums:<n> where <n> is the 1-indexed
+    // number of the first line.
+    var numberLines = job.sourceNode.className.match(/\blinenums\b(?::(\d+))?/);
+    var lineBreaker;
+    if (numberLines) {
+      var lineBreaks = [];
+      for (var i = 0; i < 10; ++i) {
+        lineBreaks[i] = lineBreakHtml + '</li><li class="L' + i + '">';
+      }
+      var lineNum = numberLines[1] && numberLines[1].length 
+          ? numberLines[1] - 1 : 0;  // Lines are 1-indexed
+      html.push('<ol class="linenums"><li class="L', (lineNum) % 10, '"');
+      if (lineNum) {
+        html.push(' value="', lineNum + 1, '"');
+      }
+      html.push('>');
+      lineBreaker = function () {
+        var lb = lineBreaks[++lineNum % 10];
+        // If a decoration is open, we need to close it before closing a list-item
+        // and reopen it on the other side of the list item.
+        return openDecoration
+            ? ('</span>' + lb + '<span class="' + openDecoration + '">') : lb;
+      };
+    } else {
+      lineBreaker = lineBreakHtml;
+    }
+
     // A helper function that is responsible for opening sections of decoration
     // and outputing properly escaped chunks of source
     function emitTextUpTo(sourceIdx) {
@@ -1052,14 +1156,11 @@ window['_pr_isIE6'] = function () {
             tabExpander(sourceText.substring(outputIdx, sourceIdx)))
             .replace(lastWasSpace
                      ? startOrSpaceRe
-                     : adjacentSpaceRe, '$1&nbsp;');
+                     : adjacentSpaceRe, '$1&#160;');
         // Keep track of whether we need to escape space at the beginning of the
         // next chunk.
         lastWasSpace = trailingSpaceRe.test(htmlChunk);
-        // IE collapses multiple adjacient <br>s into 1 line break.
-        // Prefix every <br> with '&nbsp;' can prevent such IE's behavior.
-        var lineBreakHtml = window['_pr_isIE6']() ? '&nbsp;<br />' : '<br />';
-        html.push(htmlChunk.replace(newlineRe, lineBreakHtml));
+        html.push(htmlChunk.replace(newlineRe, lineBreaker));
         outputIdx = sourceIdx;
       }
     }
@@ -1102,6 +1203,7 @@ window['_pr_isIE6'] = function () {
     if (openDecoration) {
       html.push('</span>');
     }
+    if (numberLines) { html.push('</li></ol>'); }
     job.prettyPrintedHtml = html.join('');
   }
 
@@ -1129,7 +1231,7 @@ window['_pr_isIE6'] = function () {
       if (!langHandlerRegistry.hasOwnProperty(ext)) {
         langHandlerRegistry[ext] = handler;
       } else if ('console' in window) {
-        console.warn('cannot override language handler %s', ext);
+        console['warn']('cannot override language handler %s', ext);
       }
     }
   }
@@ -1157,9 +1259,9 @@ window['_pr_isIE6'] = function () {
            [PR_PUNCTUATION, /^(?:<[%?]|[%?]>)/],
            ['lang-',        /^<xmp\b[^>]*>([\s\S]+?)<\/xmp\b[^>]*>/i],
            // Unescaped content in javascript.  (Or possibly vbscript).
-           ['lang-js',      /^<script\b[^>]*>([\s\S]+?)<\/script\b[^>]*>/i],
+           ['lang-js',      /^<script\b[^>]*>([\s\S]*?)(<\/script\b[^>]*>)/i],
            // Contains unescaped stylesheet content
-           ['lang-css',     /^<style\b[^>]*>([\s\S]+?)<\/style\b[^>]*>/i],
+           ['lang-css',     /^<style\b[^>]*>([\s\S]*?)(<\/style\b[^>]*>)/i],
            ['lang-in.tag',  /^(<\/?[a-z][^<>]*>)/i]
           ]),
       ['default-markup', 'htm', 'html', 'mxml', 'xhtml', 'xml', 'xsl']);
@@ -1170,16 +1272,16 @@ window['_pr_isIE6'] = function () {
            [PR_ATTRIB_VALUE, /^(?:\"[^\"]*\"?|\'[^\']*\'?)/, null, '\"\'']
            ],
           [
-           [PR_TAG,          /^^<\/?[a-z](?:[\w:-]*\w)?|\/?>$/],
-           [PR_ATTRIB_NAME,  /^(?!style\b|on)[a-z](?:[\w:-]*\w)?/],
+           [PR_TAG,          /^^<\/?[a-z](?:[\w.:-]*\w)?|\/?>$/i],
+           [PR_ATTRIB_NAME,  /^(?!style[\s=]|on)[a-z](?:[\w:-]*\w)?/i],
            ['lang-uq.val',   /^=\s*([^>\'\"\s]*(?:[^>\'\"\s\/]|\/(?=\s)))/],
            [PR_PUNCTUATION,  /^[=<>\/]+/],
            ['lang-js',       /^on\w+\s*=\s*\"([^\"]+)\"/i],
            ['lang-js',       /^on\w+\s*=\s*\'([^\']+)\'/i],
            ['lang-js',       /^on\w+\s*=\s*([^\"\'>\s]+)/i],
-           ['lang-css',      /^sty\w+\s*=\s*\"([^\"]+)\"/i],
-           ['lang-css',      /^sty\w+\s*=\s*\'([^\']+)\'/i],
-           ['lang-css',      /^sty\w+\s*=\s*([^\"\'>\s]+)/i]
+           ['lang-css',      /^style\s*=\s*\"([^\"]+)\"/i],
+           ['lang-css',      /^style\s*=\s*\'([^\']+)\'/i],
+           ['lang-css',      /^style\s*=\s*([^\"\'>\s]+)/i]
            ]),
       ['in.tag']);
   registerLangHandler(
@@ -1195,7 +1297,8 @@ window['_pr_isIE6'] = function () {
   registerLangHandler(sourceDecorator({
           'keywords': CSHARP_KEYWORDS,
           'hashComments': true,
-          'cStyleComments': true
+          'cStyleComments': true,
+          'verbatimStrings': true
         }), ['cs']);
   registerLangHandler(sourceDecorator({
           'keywords': JAVA_KEYWORDS,
@@ -1260,8 +1363,7 @@ window['_pr_isIE6'] = function () {
       recombineTagsAndDecorations(job);
     } catch (e) {
       if ('console' in window) {
-        console.log(e);
-        console.trace();
+        console['log'](e && e['stack'] ? e['stack'] : e);
       }
     }
   }
@@ -1276,13 +1378,9 @@ window['_pr_isIE6'] = function () {
   }
 
   function prettyPrint(opt_whenDone) {
-    var isIE6 = window['_pr_isIE6']();
-
+    function byTagName(tn) { return document.getElementsByTagName(tn); }
     // fetch a list of nodes to rewrite
-    var codeSegments = [
-        document.getElementsByTagName('pre'),
-        document.getElementsByTagName('code'),
-        document.getElementsByTagName('xmp') ];
+    var codeSegments = [byTagName('pre'), byTagName('code'), byTagName('xmp')];
     var elements = [];
     for (var i = 0; i < codeSegments.length; ++i) {
       for (var j = 0, n = codeSegments[i].length; j < n; ++j) {
@@ -1383,20 +1481,6 @@ window['_pr_isIE6'] = function () {
         // remove the old
         cs.parentNode.replaceChild(pre, cs);
         cs = pre;
-      }
-
-      // Replace <br>s with line-feeds so that copying and pasting works
-      // on IE 6.
-      // Doing this on other browsers breaks lots of stuff since \r\n is
-      // treated as two newlines on Firefox, and doing this also slows
-      // down rendering.
-      if (isIE6 && cs.tagName === 'PRE') {
-        var lineBreaks = cs.getElementsByTagName('br');
-        for (var j = lineBreaks.length; --j >= 0;) {
-          var lineBreak = lineBreaks[j];
-          lineBreak.parentNode.replaceChild(
-              document.createTextNode('\r'), lineBreak);
-        }
       }
     }
 
