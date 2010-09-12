@@ -165,7 +165,8 @@ public class RenamedClassFileSet implements ResourceCollection {
 		};
 		final ClassReader reader = new ClassReader(stream);
 		stream.close();
-		final ClassWriter writer = new ClassWriter(reader, 0);
+		// Don't re-use constant pool as we're renaming all classes:
+		final ClassWriter writer = new ClassWriter(0);
 		reader.accept(new RemappingClassAdapter(writer, remapper),
 				ClassReader.EXPAND_FRAMES);
 		return new ByteArrayInputStream(writer.toByteArray());
