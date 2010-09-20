@@ -123,25 +123,6 @@ public class AgentOptions {
 	}
 
 	/**
-	 * Value for the {@link #OUTPUT} parameter: At VM termination execution data
-	 * is written to the file specified by {@link #DESTFILE}.
-	 */
-	public static final String OUTPUT_FILE = "file";
-
-	/**
-	 * Value for the {@link #OUTPUT} parameter: The agent listens for incoming
-	 * connections on a TCP port specified by {@link #ADDRESS} and {@link #PORT}
-	 * .
-	 */
-	public static final String OUTPUT_TCPSERVER = "tcpserver";
-
-	/**
-	 * Value for the {@link #OUTPUT} parameter: At startup the agent connects to
-	 * a TCP port specified by the {@link #ADDRESS} and {@link #PORT} attribute.
-	 */
-	public static final String OUTPUT_TCPCLIENT = "tcpclient";
-
-	/**
 	 * The IP address or DNS name the tcpserver binds to or the tcpclient
 	 * connects to. Default is defined by {@link #DEFAULT_ADDRESS}.
 	 */
@@ -419,8 +400,7 @@ public class AgentOptions {
 	 *            Output mode
 	 */
 	public void setOutput(final String output) {
-		OutputMode.valueOf(output);
-		setOption(OUTPUT, output);
+		setOutput(OutputMode.valueOf(output));
 	}
 
 	/**
