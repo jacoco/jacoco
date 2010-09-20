@@ -41,7 +41,7 @@ public class SystemPropertiesRuntime extends AbstractRuntime {
 	 * Creates a new runtime.
 	 */
 	public SystemPropertiesRuntime() {
-		this.key = KEYPREFIX + hashCode();
+		this.key = KEYPREFIX + Integer.toHexString(hashCode());
 	}
 
 	public int generateDataAccessor(final long classid, final String classname,
