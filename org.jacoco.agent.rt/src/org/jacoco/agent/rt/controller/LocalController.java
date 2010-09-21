@@ -35,35 +35,29 @@ import org.jacoco.core.runtime.IRuntime;
  */
 public class LocalController implements IAgentController {
 
-	private File execFile;
-
-	private boolean append;
-
 	private IRuntime runtime;
 
-	public final void startup(final AgentOptions options, final IRuntime runtime) {
+	private OutputStream output;
+
+	public final void startup(final AgentOptions options, final IRuntime runtime)
+			throws IOException {
 		this.runtime = runtime;
-		execFile = new File(options.getDestfile()).getAbsoluteFile();
-		append = options.getAppend();
-		final File folder = execFile.getParentFile();
+		final File destFile = new File(options.getDestfile()).getAbsoluteFile();
+		final File folder = destFile.getParentFile();
 		if (folder != null) {
 			folder.mkdirs();
 		}
+		output = new BufferedOutputStream(new FileOutputStream(destFile,
+				options.getAppend()));
 	}
 
 	public void writeExecutionData() throws IOException {
-
-		final OutputStream output = new BufferedOutputStream(
-				new FileOutputStream(execFile, append));
-		try {
-			final ExecutionDataWriter writer = new ExecutionDataWriter(output);
-			runtime.collect(writer, writer, false);
-		} finally {
-			output.close();
-		}
+		final ExecutionDataWriter writer = new ExecutionDataWriter(output);
+		runtime.collect(writer, writer, false);
 	}
 
 	public void shutdown() throws IOException {
+		output.close();
 	}
 
 }
