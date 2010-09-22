@@ -10,32 +10,36 @@
  *    
  * $Id: $
  *******************************************************************************/
-package org.jacoco.report.html;
+package org.jacoco.report.html.table;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 
-import java.util.Collections;
-
-import org.jacoco.core.analysis.CounterImpl;
 import org.jacoco.core.analysis.CoverageNodeImpl;
 import org.jacoco.core.analysis.ICoverageNode;
-import org.jacoco.core.analysis.ICoverageNode.CounterEntity;
 import org.jacoco.core.analysis.ICoverageNode.ElementType;
 import org.jacoco.report.MemoryMultiReportOutput;
 import org.jacoco.report.ReportOutputFolder;
+import org.jacoco.report.html.HTMLDocument;
+import org.jacoco.report.html.HTMLElement;
+import org.jacoco.report.html.HTMLSupport;
 import org.jacoco.report.html.resources.Resources;
+import org.jacoco.report.html.table.ICoverageTableColumn;
+import org.jacoco.report.html.table.ICoverageTableItem;
+import org.jacoco.report.html.table.LabelColumn;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.w3c.dom.Document;
 
 /**
- * Unit tests for {@link PercentageColumn}.
+ * Unit tests for {@link LabelColumn}.
  * 
  * @author Marc R. Hoffmann
  * @version $Revision: $
  */
-public class PercentageColumnTest {
+public class LabelColumnTest {
 
 	private MemoryMultiReportOutput output;
 
@@ -45,7 +49,7 @@ public class PercentageColumnTest {
 
 	private HTMLDocument doc;
 
-	private HTMLElement tr;
+	private HTMLElement td;
 
 	private HTMLSupport support;
 
@@ -58,9 +62,10 @@ public class PercentageColumnTest {
 		resources = new Resources(root);
 		doc = new HTMLDocument(root.createFile("Test.html"), "UTF-8");
 		doc.head().title();
-		tr = doc.body().table("somestyle").tr();
+		td = doc.body().table("somestyle").tr().td();
 		support = new HTMLSupport();
-		column = new PercentageColumn("TestHeader", CounterEntity.LINE);
+		column = new LabelColumn();
+		column.init(null, null);
 	}
 
 	@After
@@ -69,67 +74,71 @@ public class PercentageColumnTest {
 	}
 
 	@Test
+	public void testIsVisible() throws Exception {
+		assertTrue(column.isVisible());
+		doc.close();
+	}
+
+	@Test
+	public void testGetStyle() throws Exception {
+		assertNull(column.getStyle());
+		doc.close();
+	}
+
+	@Test
 	public void testHeader() throws Exception {
-		final ICoverageTableItem item = createItem(1, 3);
-		column.init(Collections.singletonList(item), item.getNode());
-		column.header(tr, resources, root);
+		column.header(td, resources, root);
 		doc.close();
 		final Document doc = support.parse(output.getFile("Test.html"));
-		assertEquals("TestHeader",
+		assertEquals("Element",
 				support.findStr(doc, "/html/body/table/tr/td/text()"));
 	}
 
 	@Test
-	public void testItem1() throws Exception {
-		final ICoverageTableItem item = createItem(150, 50);
-		column.init(Collections.singletonList(item), item.getNode());
-		column.item(tr, item, resources, root);
+	public void testFooter() throws Exception {
+		column.footer(td,
+				new CoverageNodeImpl(ElementType.GROUP, "Foo", false),
+				resources, root);
 		doc.close();
 		final Document doc = support.parse(output.getFile("Test.html"));
-		assertEquals("33%",
-				support.findStr(doc, "/html/body/table/tr/td[1]/text()"));
+		assertEquals("Total",
+				support.findStr(doc, "/html/body/table/tr/td/text()"));
 	}
 
 	@Test
-	public void testItem2() throws Exception {
-		final ICoverageTableItem item = createItem(0, 50);
-		column.init(Collections.singletonList(item), item.getNode());
-		column.item(tr, item, resources, root);
+	public void testItemWithoutLink() throws Exception {
+		column.item(td, createItem("Abc", null), resources, root);
 		doc.close();
 		final Document doc = support.parse(output.getFile("Test.html"));
-		assertEquals("n/a",
-				support.findStr(doc, "/html/body/table/tr/td[1]/text()"));
+		assertEquals("Abc",
+				support.findStr(doc, "/html/body/table/tr/td/span/text()"));
+		assertEquals("el_group",
+				support.findStr(doc, "/html/body/table/tr/td/span/@class"));
 	}
 
 	@Test
-	public void testFooter1() throws Exception {
-		final ICoverageTableItem item = createItem(80, 60);
-		column.init(Collections.singletonList(item), item.getNode());
-		column.footer(tr, item.getNode(), resources, root);
+	public void testItemWithLink() throws Exception {
+		column.item(td, createItem("Def", "def.html"), resources, root);
 		doc.close();
 		final Document doc = support.parse(output.getFile("Test.html"));
-		assertEquals("75%", support.findStr(doc, "/html/body/table/tr"));
+		assertEquals("Def",
+				support.findStr(doc, "/html/body/table/tr/td/a/text()"));
+		assertEquals("def.html",
+				support.findStr(doc, "/html/body/table/tr/td/a/@href"));
+		assertEquals("el_group",
+				support.findStr(doc, "/html/body/table/tr/td/a/@class"));
 	}
 
-	@Test
-	public void testFooter2() throws Exception {
-		final ICoverageTableItem item = createItem(0, 60);
-		column.init(Collections.singletonList(item), item.getNode());
-		column.footer(tr, item.getNode(), resources, root);
-		doc.close();
-		final Document doc = support.parse(output.getFile("Test.html"));
-		assertEquals("n/a", support.findStr(doc, "/html/body/table/tr"));
-	}
-
-	private ICoverageTableItem createItem(final int total, final int covered) {
-		final ICoverageNode node = createNode(total, covered);
+	private ICoverageTableItem createItem(final String name, final String link) {
+		final ICoverageNode node = new CoverageNodeImpl(ElementType.GROUP,
+				name, false);
 		return new ICoverageTableItem() {
 			public String getLinkLabel() {
-				return "Foo";
+				return name;
 			}
 
 			public String getLink(ReportOutputFolder base) {
-				return null;
+				return link;
 			}
 
 			public String getLinkStyle() {
@@ -142,11 +151,4 @@ public class PercentageColumnTest {
 		};
 	}
 
-	private CoverageNodeImpl createNode(final int total, final int covered) {
-		return new CoverageNodeImpl(ElementType.GROUP, "Foo", false) {
-			{
-				this.lineCounter = CounterImpl.getInstance(total, covered);
-			}
-		};
-	}
 }

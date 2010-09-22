@@ -10,7 +10,7 @@
  *    
  * $Id: $
  *******************************************************************************/
-package org.jacoco.report.html;
+package org.jacoco.report.html.table;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -21,6 +21,7 @@ import java.util.List;
 
 import org.jacoco.core.analysis.ICoverageNode;
 import org.jacoco.report.ReportOutputFolder;
+import org.jacoco.report.html.HTMLElement;
 import org.jacoco.report.html.resources.Resources;
 import org.jacoco.report.html.resources.Styles;
 
@@ -89,7 +90,9 @@ public class CoverageTable {
 		final HTMLElement tr = table.thead().tr();
 		for (final ICoverageTableColumn c : columns) {
 			c.init(items, total);
-			c.header(tr, resources, base);
+			if (c.isVisible()) {
+				c.header(tr.td(c.getStyle()), resources, base);
+			}
 		}
 	}
 
@@ -98,7 +101,9 @@ public class CoverageTable {
 			throws IOException {
 		final HTMLElement tr = table.tfoot().tr();
 		for (final ICoverageTableColumn c : columns) {
-			c.footer(tr, total, resources, base);
+			if (c.isVisible()) {
+				c.footer(tr.td(c.getStyle()), total, resources, base);
+			}
 		}
 	}
 
@@ -109,7 +114,9 @@ public class CoverageTable {
 		for (final ICoverageTableItem item : items) {
 			final HTMLElement tr = tbody.tr();
 			for (final ICoverageTableColumn c : columns) {
-				c.item(tr, item, resources, base);
+				if (c.isVisible()) {
+					c.item(tr.td(c.getStyle()), item, resources, base);
+				}
 			}
 		}
 	}

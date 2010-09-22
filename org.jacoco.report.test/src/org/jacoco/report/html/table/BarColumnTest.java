@@ -10,9 +10,11 @@
  *    
  * $Id: $
  *******************************************************************************/
-package org.jacoco.report.html;
+package org.jacoco.report.html.table;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 
 import java.util.Arrays;
 
@@ -23,7 +25,11 @@ import org.jacoco.core.analysis.ICoverageNode.CounterEntity;
 import org.jacoco.core.analysis.ICoverageNode.ElementType;
 import org.jacoco.report.MemoryMultiReportOutput;
 import org.jacoco.report.ReportOutputFolder;
+import org.jacoco.report.html.HTMLDocument;
+import org.jacoco.report.html.HTMLElement;
+import org.jacoco.report.html.HTMLSupport;
 import org.jacoco.report.html.resources.Resources;
+import org.jacoco.report.html.table.BarColumn;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -45,7 +51,7 @@ public class BarColumnTest {
 
 	private HTMLDocument doc;
 
-	private HTMLElement tr;
+	private HTMLElement td;
 
 	private HTMLSupport support;
 
@@ -56,7 +62,7 @@ public class BarColumnTest {
 		resources = new Resources(root);
 		doc = new HTMLDocument(root.createFile("Test.html"), "UTF-8");
 		doc.head().title();
-		tr = doc.body().table("somestyle").tr();
+		td = doc.body().table("somestyle").tr().td();
 		support = new HTMLSupport();
 	}
 
@@ -66,8 +72,22 @@ public class BarColumnTest {
 	}
 
 	@Test
+	public void testIsVisible() throws Exception {
+		final BarColumn column = new BarColumn("TestHeader", CounterEntity.LINE);
+		assertTrue(column.isVisible());
+		doc.close();
+	}
+
+	@Test
+	public void testGetStyle() throws Exception {
+		final BarColumn column = new BarColumn("TestHeader", CounterEntity.LINE);
+		assertNull(column.getStyle());
+		doc.close();
+	}
+
+	@Test
 	public void testHeader() throws Exception {
-		new BarColumn("TestHeader", CounterEntity.LINE).header(tr, resources,
+		new BarColumn("TestHeader", CounterEntity.LINE).header(td, resources,
 				root);
 		doc.close();
 		final Document doc = support.parse(output.getFile("Test.html"));
@@ -77,7 +97,7 @@ public class BarColumnTest {
 
 	@Test
 	public void testFooter() throws Exception {
-		new BarColumn("TestHeader", CounterEntity.LINE).footer(tr,
+		new BarColumn("TestHeader", CounterEntity.LINE).footer(td,
 				createNode(20, 5), resources, root);
 		doc.close();
 		final Document doc = support.parse(output.getFile("Test.html"));
@@ -90,7 +110,7 @@ public class BarColumnTest {
 		final ICoverageTableItem i1 = createItem(20, 5);
 		final ICoverageTableItem i2 = createItem(30, 24);
 		col.init(Arrays.asList(i1, i2), createNode(50, 29));
-		col.item(tr, i1, resources, root);
+		col.item(td, i1, resources, root);
 		doc.close();
 		final Document doc = support.parse(output.getFile("Test.html"));
 
@@ -119,7 +139,7 @@ public class BarColumnTest {
 		final BarColumn col = new BarColumn("", CounterEntity.LINE);
 		final ICoverageTableItem i1 = createItem(20, 0);
 		col.init(Arrays.asList(i1), createNode(20, 0));
-		col.item(tr, i1, resources, root);
+		col.item(td, i1, resources, root);
 		doc.close();
 		final Document doc = support.parse(output.getFile("Test.html"));
 
@@ -140,7 +160,7 @@ public class BarColumnTest {
 		final BarColumn col = new BarColumn("", CounterEntity.LINE);
 		final ICoverageTableItem i1 = createItem(20, 20);
 		col.init(Arrays.asList(i1), createNode(20, 20));
-		col.item(tr, i1, resources, root);
+		col.item(td, i1, resources, root);
 		doc.close();
 		final Document doc = support.parse(output.getFile("Test.html"));
 

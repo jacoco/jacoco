@@ -349,26 +349,6 @@ public class HTMLElement extends XMLElement {
 	}
 
 	/**
-	 * Creates a 'td' element.
-	 * 
-	 * @param classattr
-	 *            value of the class attribute
-	 * @param colspanattr
-	 *            value of the colspan attribute
-	 * @return 'td' element
-	 * @throws IOException
-	 *             in case of problems with the writer
-	 */
-	public HTMLElement td(final String classattr, final int colspanattr)
-			throws IOException {
-		final HTMLElement td = td(classattr);
-		if (colspanattr > 1) {
-			td.attr("colspan", colspanattr);
-		}
-		return td;
-	}
-
-	/**
 	 * Creates a 'img' element.
 	 * 
 	 * @param srcattr

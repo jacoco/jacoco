@@ -10,13 +10,14 @@
  *    
  * $Id: $
  *******************************************************************************/
-package org.jacoco.report.html;
+package org.jacoco.report.html.table;
 
 import java.io.IOException;
 import java.util.List;
 
 import org.jacoco.core.analysis.ICoverageNode;
 import org.jacoco.report.ReportOutputFolder;
+import org.jacoco.report.html.HTMLElement;
 import org.jacoco.report.html.resources.Resources;
 
 /**
@@ -40,10 +41,26 @@ public interface ICoverageTableColumn {
 	public void init(List<ICoverageTableItem> items, ICoverageNode total);
 
 	/**
+	 * Determines whether this column should actually be rendered. Will always
+	 * be called after the call to {@link #init(List, ICoverageNode)}.
+	 * 
+	 * @return <code>true</code> if the column should be visible
+	 */
+	public boolean isVisible();
+
+	/**
+	 * Return the optional CSS style class name for the td-Elements of this
+	 * column.
+	 * 
+	 * @return css style class or <code>null</code>
+	 */
+	public String getStyle();
+
+	/**
 	 * Renders the header for this column.
 	 * 
-	 * @param tr
-	 *            the parent table row
+	 * @param td
+	 *            the parent table cell
 	 * @param resources
 	 *            static resources that might be referenced
 	 * @param base
@@ -51,14 +68,14 @@ public interface ICoverageTableColumn {
 	 * @throws IOException
 	 *             in case of IO problems with the element output
 	 */
-	public void header(HTMLElement tr, Resources resources,
+	public void header(HTMLElement td, Resources resources,
 			ReportOutputFolder base) throws IOException;
 
 	/**
 	 * Renders the footer for this column.
 	 * 
-	 * @param tr
-	 *            the parent table row
+	 * @param td
+	 *            the parent table cell
 	 * @param total
 	 *            the summary of all coverage data items in the table
 	 * @param resources
@@ -68,14 +85,14 @@ public interface ICoverageTableColumn {
 	 * @throws IOException
 	 *             in case of IO problems with the element output
 	 */
-	public void footer(HTMLElement tr, ICoverageNode total,
+	public void footer(HTMLElement td, ICoverageNode total,
 			Resources resources, ReportOutputFolder base) throws IOException;
 
 	/**
 	 * Renders a single item in this column.
 	 * 
-	 * @param tr
-	 *            the parent table row
+	 * @param td
+	 *            the parent table cell
 	 * @param item
 	 *            the item to display
 	 * @param resources
@@ -85,7 +102,7 @@ public interface ICoverageTableColumn {
 	 * @throws IOException
 	 *             in case of IO problems with the element output
 	 */
-	public void item(HTMLElement tr, ICoverageTableItem item,
+	public void item(HTMLElement td, ICoverageTableItem item,
 			Resources resources, ReportOutputFolder base) throws IOException;
 
 }

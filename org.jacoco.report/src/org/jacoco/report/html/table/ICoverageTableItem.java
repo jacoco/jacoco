@@ -10,9 +10,10 @@
  *    
  * $Id: $
  *******************************************************************************/
-package org.jacoco.report.html;
+package org.jacoco.report.html.table;
 
 import org.jacoco.core.analysis.ICoverageNode;
+import org.jacoco.report.html.ILinkable;
 
 /**
  * Interface for a item (row) in a coverage data table.

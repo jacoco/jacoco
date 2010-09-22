@@ -30,6 +30,7 @@ import org.jacoco.report.ReportOutputFolder;
 import org.jacoco.report.html.index.IIndexUpdate;
 import org.jacoco.report.html.resources.Resources;
 import org.jacoco.report.html.resources.Styles;
+import org.jacoco.report.html.table.CoverageTable;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;

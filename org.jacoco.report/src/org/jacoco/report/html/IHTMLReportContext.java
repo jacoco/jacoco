@@ -16,6 +16,7 @@ import org.jacoco.core.analysis.ICoverageNode.ElementType;
 import org.jacoco.report.ILanguageNames;
 import org.jacoco.report.html.index.IIndexUpdate;
 import org.jacoco.report.html.resources.Resources;
+import org.jacoco.report.html.table.CoverageTable;
 
 /**
  * Context and configuration information during creation of a HTML report.

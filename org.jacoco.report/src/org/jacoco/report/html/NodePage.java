@@ -19,6 +19,7 @@ import org.jacoco.report.IReportVisitor;
 import org.jacoco.report.ISourceFileLocator;
 import org.jacoco.report.ReportOutputFolder;
 import org.jacoco.report.html.resources.Resources;
+import org.jacoco.report.html.table.ICoverageTableItem;
 
 /**
  * Report page that represents a coverage node.

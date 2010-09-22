@@ -105,17 +105,24 @@ table.coverage thead {
 
 table.coverage thead td {
   white-space:nowrap;
-  padding:2px 12px 0px 6px;
+  padding:2px 8px 0px 8px;
   border-bottom:#b0b0b0 1px solid;
+}
+
+table.coverage thead td.ctr1 {
+  text-align:right;
+  padding-right:4px;
+  border-left:#b0b0b0 1px dotted;
 }
 
 table.coverage thead td.ctr2 {
   text-align:right;
+  padding-left:4px;
 }
 
 table.coverage tbody td {
   white-space:nowrap;
-  padding:2px 12px 2px 6px;
+  padding:2px 8px 2px 8px;
   border-bottom:#d6d3ce 1px solid;
 }
 
@@ -125,27 +132,29 @@ table.coverage tbody tr:hover {
 
 table.coverage tbody td.ctr1 {
   text-align:right;
-  padding:2px 0px 2px 6px;
+  padding-right:4px;
+  border-left:#d6d3ce 1px dotted;
 }
 
 table.coverage tbody td.ctr2 {
   text-align:right;
-  padding:2px 12px 2px 4px;
+  padding-left:4px;
 }
 
 table.coverage tfoot td {
   white-space:nowrap;
-  padding:2px 12px 2px 6px;
+  padding:2px 8px 2px 8px;
 }
 
 table.coverage tfoot td.ctr1 {
   text-align:right;
-  padding:2px 0px 2px 6px;
+  padding-right:4px;
+  border-left:#d6d3ce 1px dotted;
 }
 
 table.coverage tfoot td.ctr2 {
   text-align:right;
-  padding:2px 12px 2px 4px;
+  padding-left:4px;
 }
 
 .footer {
@@ -163,4 +172,3 @@ table.coverage tfoot td.ctr2 {
 .right {
   float:right;
 }
-

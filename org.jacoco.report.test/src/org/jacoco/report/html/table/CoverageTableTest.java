@@ -10,9 +10,10 @@
  *    
  * $Id: $
  *******************************************************************************/
-package org.jacoco.report.html;
+package org.jacoco.report.html.table;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 
 import java.io.IOException;
 import java.util.Arrays;
@@ -26,7 +27,11 @@ import org.jacoco.core.analysis.ICoverageNode.CounterEntity;
 import org.jacoco.core.analysis.ICoverageNode.ElementType;
 import org.jacoco.report.MemoryMultiReportOutput;
 import org.jacoco.report.ReportOutputFolder;
+import org.jacoco.report.html.HTMLDocument;
+import org.jacoco.report.html.HTMLElement;
+import org.jacoco.report.html.HTMLSupport;
 import org.jacoco.report.html.resources.Resources;
+import org.jacoco.report.html.table.CoverageTable;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -75,17 +80,25 @@ public class CoverageTableTest {
 				store.append("init-");
 			}
 
-			public void header(HTMLElement tr, Resources resources,
+			public boolean isVisible() {
+				return true;
+			}
+
+			public String getStyle() {
+				return null;
+			}
+
+			public void header(HTMLElement td, Resources resources,
 					ReportOutputFolder base) {
 				store.append("header-");
 			}
 
-			public void footer(HTMLElement tr, ICoverageNode total,
+			public void footer(HTMLElement td, ICoverageNode total,
 					Resources resources, ReportOutputFolder base) {
 				store.append("footer-");
 			}
 
-			public void item(HTMLElement tr, ICoverageTableItem item,
+			public void item(HTMLElement td, ICoverageTableItem item,
 					Resources resources, ReportOutputFolder base) {
 				store.append("item").append(item.getLinkLabel()).append("-");
 			}
@@ -106,6 +119,44 @@ public class CoverageTableTest {
 	}
 
 	@Test
+	public void testInvisible() throws IOException {
+		final ICoverageTableColumn recorder = new ICoverageTableColumn() {
+
+			public void init(List<ICoverageTableItem> items, ICoverageNode total) {
+			}
+
+			public boolean isVisible() {
+				return false;
+			}
+
+			public String getStyle() {
+				return null;
+			}
+
+			public void header(HTMLElement td, Resources resources,
+					ReportOutputFolder base) {
+				fail();
+			}
+
+			public void footer(HTMLElement td, ICoverageNode total,
+					Resources resources, ReportOutputFolder base) {
+				fail();
+			}
+
+			public void item(HTMLElement td, ICoverageTableItem item,
+					Resources resources, ReportOutputFolder base) {
+				fail();
+			}
+		};
+		final List<ICoverageTableItem> items = Arrays
+				.asList(createItem("A", 1));
+		new CoverageTable(Arrays.asList(recorder),
+				CounterComparator.TOTALITEMS.on(CounterEntity.CLASS)).render(
+				body, items, createTotal("Sum", 1), resources, root);
+		doc.close();
+	}
+
+	@Test
 	public void testSorting() throws IOException {
 		final ICoverageTableColumn recorder = new ICoverageTableColumn() {
 
@@ -114,15 +165,23 @@ public class CoverageTableTest {
 			public void init(List<ICoverageTableItem> items, ICoverageNode total) {
 			}
 
-			public void header(HTMLElement tr, Resources resources,
+			public boolean isVisible() {
+				return true;
+			}
+
+			public String getStyle() {
+				return null;
+			}
+
+			public void header(HTMLElement td, Resources resources,
 					ReportOutputFolder base) {
 			}
 
-			public void footer(HTMLElement tr, ICoverageNode total,
+			public void footer(HTMLElement td, ICoverageNode total,
 					Resources resources, ReportOutputFolder base) {
 			}
 
-			public void item(HTMLElement tr, ICoverageTableItem item,
+			public void item(HTMLElement td, ICoverageTableItem item,
 					Resources resources, ReportOutputFolder base) {
 				store.append(item.getLinkLabel());
 			}
@@ -149,21 +208,29 @@ public class CoverageTableTest {
 			public void init(List<ICoverageTableItem> items, ICoverageNode total) {
 			}
 
-			public void header(HTMLElement tr, Resources resources,
+			public boolean isVisible() {
+				return true;
+			}
+
+			public String getStyle() {
+				return null;
+			}
+
+			public void header(HTMLElement td, Resources resources,
 					ReportOutputFolder base) throws IOException {
-				tr.td().text("Header");
+				td.text("Header");
 			}
 
-			public void footer(HTMLElement tr, ICoverageNode total,
+			public void footer(HTMLElement td, ICoverageNode total,
 					Resources resources, ReportOutputFolder base)
 					throws IOException {
-				tr.td().text("Footer");
+				td.text("Footer");
 			}
 
-			public void item(HTMLElement tr, ICoverageTableItem item,
+			public void item(HTMLElement td, ICoverageTableItem item,
 					Resources resources, ReportOutputFolder base)
 					throws IOException {
-				tr.td().text(item.getLinkLabel());
+				td.text(item.getLinkLabel());
 			}
 		};
 		final List<ICoverageTableItem> items = Arrays.asList(

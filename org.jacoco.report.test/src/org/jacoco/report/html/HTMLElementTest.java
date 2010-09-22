@@ -225,14 +225,6 @@ public class HTMLElementTest {
 	}
 
 	@Test
-	public void testTd3() throws IOException {
-		root.td("mystyle", 3);
-		root.close();
-		assertEquals("<root><td class=\"mystyle\" colspan=\"3\"/></root>",
-				buffer.toString());
-	}
-
-	@Test
 	public void testImg() throws IOException {
 		root.img("sample.gif", 16, 32, "Hello");
 		root.close();

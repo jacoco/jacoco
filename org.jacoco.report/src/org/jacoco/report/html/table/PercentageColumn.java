@@ -10,7 +10,7 @@
  *    
  * $Id: $
  *******************************************************************************/
-package org.jacoco.report.html;
+package org.jacoco.report.html.table;
 
 import java.io.IOException;
 import java.text.DecimalFormat;
@@ -21,6 +21,7 @@ import org.jacoco.core.analysis.ICounter;
 import org.jacoco.core.analysis.ICoverageNode;
 import org.jacoco.core.analysis.ICoverageNode.CounterEntity;
 import org.jacoco.report.ReportOutputFolder;
+import org.jacoco.report.html.HTMLElement;
 import org.jacoco.report.html.resources.Resources;
 import org.jacoco.report.html.resources.Styles;
 
@@ -59,28 +60,35 @@ public class PercentageColumn implements ICoverageTableColumn {
 			final ICoverageNode total) {
 	}
 
-	public void header(final HTMLElement tr, final Resources resources,
+	public boolean isVisible() {
+		return true;
+	}
+
+	public String getStyle() {
+		return Styles.CTR2;
+	}
+
+	public void header(final HTMLElement td, final Resources resources,
 			final ReportOutputFolder base) throws IOException {
-		tr.td().text(header);
+		td.text(header);
 	}
 
-	public void footer(final HTMLElement tr, final ICoverageNode total,
+	public void footer(final HTMLElement td, final ICoverageNode total,
 			final Resources resources, final ReportOutputFolder base)
 			throws IOException {
-		cell(tr, total);
+		cell(td, total);
 	}
 
-	public void item(final HTMLElement tr, final ICoverageTableItem item,
+	public void item(final HTMLElement td, final ICoverageTableItem item,
 			final Resources resources, final ReportOutputFolder base)
 			throws IOException {
-		cell(tr, item.getNode());
+		cell(td, item.getNode());
 	}
 
-	private void cell(final HTMLElement tr, final ICoverageNode node)
+	private void cell(final HTMLElement td, final ICoverageNode node)
 			throws IOException {
 		final ICounter counter = node.getCounter(entity);
 		final int total = counter.getTotalCount();
-		final HTMLElement td = tr.td(Styles.CTR2);
 		if (total == 0) {
 			td.text("n/a");
 		} else {

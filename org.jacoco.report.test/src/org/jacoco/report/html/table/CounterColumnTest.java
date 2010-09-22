@@ -10,9 +10,11 @@
  *    
  * $Id: $
  *******************************************************************************/
-package org.jacoco.report.html;
+package org.jacoco.report.html.table;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 import java.util.Collections;
 
@@ -23,7 +25,11 @@ import org.jacoco.core.analysis.ICoverageNode.CounterEntity;
 import org.jacoco.core.analysis.ICoverageNode.ElementType;
 import org.jacoco.report.MemoryMultiReportOutput;
 import org.jacoco.report.ReportOutputFolder;
+import org.jacoco.report.html.HTMLDocument;
+import org.jacoco.report.html.HTMLElement;
+import org.jacoco.report.html.HTMLSupport;
 import org.jacoco.report.html.resources.Resources;
+import org.jacoco.report.html.table.CounterColumn;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -45,11 +51,9 @@ public class CounterColumnTest {
 
 	private HTMLDocument doc;
 
-	private HTMLElement tr;
+	private HTMLElement td;
 
 	private HTMLSupport support;
-
-	private ICoverageTableColumn column;
 
 	@Before
 	public void setup() throws Exception {
@@ -58,9 +62,8 @@ public class CounterColumnTest {
 		resources = new Resources(root);
 		doc = new HTMLDocument(root.createFile("Test.html"), "UTF-8");
 		doc.head().title();
-		tr = doc.body().table("somestyle").tr();
+		td = doc.body().table("somestyle").tr().td();
 		support = new HTMLSupport();
-		column = new CounterColumn("TestHeader", CounterEntity.LINE);
 	}
 
 	@After
@@ -69,10 +72,40 @@ public class CounterColumnTest {
 	}
 
 	@Test
-	public void testHeader() throws Exception {
+	public void testVisible() throws Exception {
+		ICoverageTableColumn column = CounterColumn.newTotal("TestHeader",
+				"style", CounterEntity.LINE);
 		final ICoverageTableItem item = createItem(1, 3);
 		column.init(Collections.singletonList(item), item.getNode());
-		column.header(tr, resources, root);
+		assertTrue(column.isVisible());
+		doc.close();
+	}
+
+	@Test
+	public void testInvisible() throws Exception {
+		ICoverageTableColumn column = CounterColumn.newTotal("TestHeader",
+				"style", CounterEntity.LINE);
+		final ICoverageTableItem item = createItem(0, 0);
+		column.init(Collections.singletonList(item), createItem(1, 0).getNode());
+		assertFalse(column.isVisible());
+		doc.close();
+	}
+
+	@Test
+	public void testGetStyle() throws Exception {
+		ICoverageTableColumn column = CounterColumn.newTotal("TestHeader",
+				"mystyle", CounterEntity.LINE);
+		assertEquals("mystyle", column.getStyle());
+		doc.close();
+	}
+
+	@Test
+	public void testHeader() throws Exception {
+		ICoverageTableColumn column = CounterColumn.newTotal("TestHeader",
+				"style", CounterEntity.LINE);
+		final ICoverageTableItem item = createItem(1, 3);
+		column.init(Collections.singletonList(item), item.getNode());
+		column.header(td, resources, root);
 		doc.close();
 		final Document doc = support.parse(output.getFile("Test.html"));
 		assertEquals("TestHeader",
@@ -80,62 +113,55 @@ public class CounterColumnTest {
 	}
 
 	@Test
-	public void testItem() throws Exception {
+	public void testItemTotal() throws Exception {
+		ICoverageTableColumn column = CounterColumn.newTotal("TestHeader",
+				"style", CounterEntity.LINE);
 		final ICoverageTableItem item = createItem(150, 50);
 		column.init(Collections.singletonList(item), item.getNode());
-		column.item(tr, item, resources, root);
+		column.item(td, item, resources, root);
 		doc.close();
 		final Document doc = support.parse(output.getFile("Test.html"));
-		assertEquals("100 / ",
-				support.findStr(doc, "/html/body/table/tr/td[2]/text()"));
 		assertEquals("150",
-				support.findStr(doc, "/html/body/table/tr/td[3]/text()"));
+				support.findStr(doc, "/html/body/table/tr/td[1]/text()"));
+	}
+
+	@Test
+	public void testItemMissed() throws Exception {
+		ICoverageTableColumn column = CounterColumn.newMissed("TestHeader",
+				"style", CounterEntity.LINE);
+		final ICoverageTableItem item = createItem(150, 50);
+		column.init(Collections.singletonList(item), item.getNode());
+		column.item(td, item, resources, root);
+		doc.close();
+		final Document doc = support.parse(output.getFile("Test.html"));
+		assertEquals("100",
+				support.findStr(doc, "/html/body/table/tr/td[1]/text()"));
+	}
+
+	@Test
+	public void testItemCovered() throws Exception {
+		ICoverageTableColumn column = CounterColumn.newCovered("TestHeader",
+				"style", CounterEntity.LINE);
+		final ICoverageTableItem item = createItem(150, 50);
+		column.init(Collections.singletonList(item), item.getNode());
+		column.item(td, item, resources, root);
+		doc.close();
+		final Document doc = support.parse(output.getFile("Test.html"));
+		assertEquals("50",
+				support.findStr(doc, "/html/body/table/tr/td[1]/text()"));
 	}
 
 	@Test
 	public void testFooter() throws Exception {
+		ICoverageTableColumn column = CounterColumn.newTotal("TestHeader",
+				"style", CounterEntity.LINE);
 		final ICoverageTableItem item = createItem(80, 60);
 		column.init(Collections.singletonList(item), item.getNode());
-		column.footer(tr, item.getNode(), resources, root);
+		column.footer(td, item.getNode(), resources, root);
 		doc.close();
 		final Document doc = support.parse(output.getFile("Test.html"));
-		assertEquals("20 / ",
-				support.findStr(doc, "/html/body/table/tr/td[2]/text()"));
 		assertEquals("80",
-				support.findStr(doc, "/html/body/table/tr/td[3]/text()"));
-	}
-
-	@Test
-	public void testHiddenHeader() throws Exception {
-		final ICoverageTableItem item = createItem(0, 0);
-		column.init(Collections.singletonList(item), item.getNode());
-		tr.td(); // ensure we still have valid xhtml
-		column.header(tr, resources, root);
-		doc.close();
-		final Document doc = support.parse(output.getFile("Test.html"));
-		assertEquals("", support.findStr(doc, "/html/body/table/tr"));
-	}
-
-	@Test
-	public void testHiddenItem() throws Exception {
-		final ICoverageTableItem item = createItem(0, 0);
-		column.init(Collections.singletonList(item), item.getNode());
-		tr.td(); // ensure we still have valid xhtml
-		column.item(tr, item, resources, root);
-		doc.close();
-		final Document doc = support.parse(output.getFile("Test.html"));
-		assertEquals("", support.findStr(doc, "/html/body/table/tr"));
-	}
-
-	@Test
-	public void testHiddenFooter() throws Exception {
-		final ICoverageTableItem item = createItem(0, 0);
-		column.init(Collections.singletonList(item), item.getNode());
-		tr.td(); // ensure we still have valid xhtml
-		column.footer(tr, item.getNode(), resources, root);
-		doc.close();
-		final Document doc = support.parse(output.getFile("Test.html"));
-		assertEquals("", support.findStr(doc, "/html/body/table/tr"));
+				support.findStr(doc, "/html/body/table/tr/td[1]/text()"));
 	}
 
 	private ICoverageTableItem createItem(final int total, final int covered) {

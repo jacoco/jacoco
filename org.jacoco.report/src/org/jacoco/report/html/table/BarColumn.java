@@ -10,7 +10,7 @@
  *    
  * $Id: $
  *******************************************************************************/
-package org.jacoco.report.html;
+package org.jacoco.report.html.table;
 
 import java.io.IOException;
 import java.text.DecimalFormat;
@@ -21,28 +21,29 @@ import org.jacoco.core.analysis.ICounter;
 import org.jacoco.core.analysis.ICoverageNode;
 import org.jacoco.core.analysis.ICoverageNode.CounterEntity;
 import org.jacoco.report.ReportOutputFolder;
+import org.jacoco.report.html.HTMLElement;
 import org.jacoco.report.html.resources.Resources;
-import org.jacoco.report.html.resources.Styles;
 
 /**
- * Column that prints the number of missed entities and the total number for
- * each item and a summary in the footer. If the total number of items is zero,
- * no column is emitted at all. The implementation is stateful, instances must
- * not be used in parallel.
+ * Column with a graphical bar that represents the total amount of items in with
+ * length, and the coverage ratio with a red/green sections. The implementation
+ * is stateful, instances must not be used in parallel.
  * 
  * @author Marc R. Hoffmann
  * @version $Revision: $
  */
-public class CounterColumn implements ICoverageTableColumn {
+public class BarColumn implements ICoverageTableColumn {
+
+	private static final int WIDTH = 120;
 
 	private final String header;
 
 	private final CounterEntity entity;
 
-	private boolean visible;
-
 	private final NumberFormat integerFormat = DecimalFormat
 			.getIntegerInstance();
+
+	private int max;
 
 	/**
 	 * Creates a new column that is based on the {@link ICounter} for the given
@@ -51,51 +52,61 @@ public class CounterColumn implements ICoverageTableColumn {
 	 * @param header
 	 *            column header caption
 	 * @param entity
-	 *            counter entity for this column
+	 *            counter entity for visualization
 	 */
-	public CounterColumn(final String header, final CounterEntity entity) {
+	public BarColumn(final String header, final CounterEntity entity) {
 		this.header = header;
 		this.entity = entity;
 	}
 
 	public void init(final List<ICoverageTableItem> items,
 			final ICoverageNode total) {
-		for (final ICoverageTableItem i : items) {
-			if (i.getNode().getCounter(entity).getTotalCount() > 0) {
-				visible = true;
-				return;
+		this.max = 0;
+		for (final ICoverageTableItem item : items) {
+			final int count = item.getNode().getCounter(entity).getTotalCount();
+			if (count > this.max) {
+				this.max = count;
 			}
 		}
-		visible = false;
 	}
 
-	public void header(final HTMLElement tr, final Resources resources,
+	public boolean isVisible() {
+		return true;
+	}
+
+	public String getStyle() {
+		return null;
+	}
+
+	public void header(final HTMLElement td, final Resources resources,
 			final ReportOutputFolder base) throws IOException {
-		if (visible) {
-			tr.td(Styles.CTR2, 3).text(header);
+		td.text(header);
+	}
+
+	public void footer(final HTMLElement td, final ICoverageNode total,
+			final Resources resources, final ReportOutputFolder base)
+			throws IOException {
+	}
+
+	public void item(final HTMLElement td, final ICoverageTableItem item,
+			final Resources resources, final ReportOutputFolder base)
+			throws IOException {
+		if (max > 0) {
+			final ICounter counter = item.getNode().getCounter(entity);
+			final int missed = counter.getMissedCount();
+			bar(td, missed, Resources.REDBAR, resources, base);
+			final int covered = counter.getCoveredCount();
+			bar(td, covered, Resources.GREENBAR, resources, base);
 		}
 	}
 
-	public void footer(final HTMLElement tr, final ICoverageNode total,
+	private void bar(final HTMLElement td, final int count, final String image,
 			final Resources resources, final ReportOutputFolder base)
 			throws IOException {
-		cell(tr, total);
-	}
-
-	public void item(final HTMLElement tr, final ICoverageTableItem item,
-			final Resources resources, final ReportOutputFolder base)
-			throws IOException {
-		cell(tr, item.getNode());
-	}
-
-	private void cell(final HTMLElement tr, final ICoverageNode node)
-			throws IOException {
-		if (visible) {
-			tr.td(); // extra column to allow alignment to the right
-			final ICounter c = node.getCounter(entity);
-			tr.td(Styles.CTR1).text(
-					integerFormat.format(c.getMissedCount())).text(" / ");
-			tr.td(Styles.CTR2).text(integerFormat.format(c.getTotalCount()));
+		final int width = count * WIDTH / max;
+		if (width > 0) {
+			td.img(resources.getLink(base, image), width, 10,
+					integerFormat.format(count));
 		}
 	}
 

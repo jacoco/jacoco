@@ -10,13 +10,14 @@
  *    
  * $Id: $
  *******************************************************************************/
-package org.jacoco.report.html;
+package org.jacoco.report.html.table;
 
 import java.io.IOException;
 import java.util.List;
 
 import org.jacoco.core.analysis.ICoverageNode;
 import org.jacoco.report.ReportOutputFolder;
+import org.jacoco.report.html.HTMLElement;
 import org.jacoco.report.html.resources.Resources;
 
 /**
@@ -34,21 +35,29 @@ public class LabelColumn implements ICoverageTableColumn {
 			final ICoverageNode total) {
 	}
 
-	public void header(final HTMLElement tr, final Resources resources,
+	public boolean isVisible() {
+		return true;
+	}
+
+	public String getStyle() {
+		return null;
+	}
+
+	public void header(final HTMLElement td, final Resources resources,
 			final ReportOutputFolder base) throws IOException {
-		tr.td().text("Element");
+		td.text("Element");
 	}
 
-	public void footer(final HTMLElement tr, final ICoverageNode total,
+	public void footer(final HTMLElement td, final ICoverageNode total,
 			final Resources resources, final ReportOutputFolder base)
 			throws IOException {
-		tr.td().text("Total");
+		td.text("Total");
 	}
 
-	public void item(final HTMLElement tr, final ICoverageTableItem item,
+	public void item(final HTMLElement td, final ICoverageTableItem item,
 			final Resources resources, final ReportOutputFolder base)
 			throws IOException {
-		tr.td().a(item, base);
+		td.a(item, base);
 	}
 
 }

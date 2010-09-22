@@ -35,6 +35,11 @@ import org.jacoco.report.html.index.ElementIndex;
 import org.jacoco.report.html.index.IIndexUpdate;
 import org.jacoco.report.html.resources.Resources;
 import org.jacoco.report.html.resources.Styles;
+import org.jacoco.report.html.table.BarColumn;
+import org.jacoco.report.html.table.CounterColumn;
+import org.jacoco.report.html.table.CoverageTable;
+import org.jacoco.report.html.table.LabelColumn;
+import org.jacoco.report.html.table.PercentageColumn;
 
 /**
  * Formatter for coverage reports in multiple HTML pages.
@@ -86,13 +91,23 @@ public class HTMLFormatter implements IReportFormatter, IHTMLReportContext {
 
 		new PercentageColumn("", CounterEntity.INSTRUCTION),
 
-		new CounterColumn("Missed Classes", CounterEntity.CLASS),
+		CounterColumn.newMissed("Missed", Styles.CTR1, CounterEntity.CLASS),
 
-		new CounterColumn("Missed Methods", CounterEntity.METHOD),
+		CounterColumn.newTotal("Classes", Styles.CTR2, CounterEntity.CLASS),
 
-		new CounterColumn("Missed Blocks", CounterEntity.BLOCK),
+		CounterColumn.newMissed("Missed", Styles.CTR1, CounterEntity.METHOD),
 
-		new CounterColumn("Missed Lines", CounterEntity.LINE)), DEFAULT_SORTING);
+		CounterColumn.newTotal("Methods", Styles.CTR2, CounterEntity.METHOD),
+
+		CounterColumn.newMissed("Missed", Styles.CTR1, CounterEntity.BLOCK),
+
+		CounterColumn.newTotal("Blocks", Styles.CTR2, CounterEntity.BLOCK),
+
+		CounterColumn.newMissed("Missed", Styles.CTR1, CounterEntity.LINE),
+
+		CounterColumn.newTotal("Lines", Styles.CTR2, CounterEntity.LINE)),
+
+		DEFAULT_SORTING);
 	}
 
 	/**
