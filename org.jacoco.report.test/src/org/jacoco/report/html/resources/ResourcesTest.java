@@ -46,8 +46,8 @@ public class ResourcesTest {
 	@Test
 	public void testGetLink() {
 		ReportOutputFolder base = root.subFolder("f1").subFolder("f2");
-		assertEquals("../../.resources/test.png", resources.getLink(base,
-				"test.png"));
+		assertEquals("../../.resources/test.png",
+				resources.getLink(base, "test.png"));
 
 	}
 
@@ -71,11 +71,12 @@ public class ResourcesTest {
 
 	@Test
 	public void testGetElementStyle() {
+		assertEquals("el_group", Resources.getElementStyle(ElementType.GROUP));
 		assertEquals("el_bundle", Resources.getElementStyle(ElementType.BUNDLE));
-		assertEquals("el_package", Resources
-				.getElementStyle(ElementType.PACKAGE));
-		assertEquals("el_source", Resources
-				.getElementStyle(ElementType.SOURCEFILE));
+		assertEquals("el_package",
+				Resources.getElementStyle(ElementType.PACKAGE));
+		assertEquals("el_source",
+				Resources.getElementStyle(ElementType.SOURCEFILE));
 		assertEquals("el_class", Resources.getElementStyle(ElementType.CLASS));
 		assertEquals("el_method", Resources.getElementStyle(ElementType.METHOD));
 	}

@@ -35,8 +35,23 @@ public interface Styles {
 	/** Sessions element */
 	public static final String EL_SESSION = "el_session";
 
+	/** Group element */
+	public static final String EL_GROUP = "el_group";
+
+	/** Bundle element */
+	public static final String EL_BUNDLE = "el_bundle";
+
+	/** Package element */
+	public static final String EL_PACKAGE = "el_package";
+
+	/** Source file element */
+	public static final String EL_SOURCE = "el_source";
+
 	/** Class element */
 	public static final String EL_CLASS = "el_class";
+
+	/** Method element */
+	public static final String EL_METHOD = "el_method";
 
 	/** Coverage table */
 	public static final String COVERAGETABLE = "coverage";

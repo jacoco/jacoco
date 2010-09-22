@@ -78,19 +78,19 @@ public class Resources {
 	public static String getElementStyle(final ElementType type) {
 		switch (type) {
 		case GROUP:
-			return "el_group";
+			return Styles.EL_GROUP;
 		case BUNDLE:
-			return "el_bundle";
+			return Styles.EL_BUNDLE;
 		case PACKAGE:
-			return "el_package";
+			return Styles.EL_PACKAGE;
 		case SOURCEFILE:
-			return "el_source";
+			return Styles.EL_SOURCE;
 		case CLASS:
-			return "el_class";
+			return Styles.EL_CLASS;
 		case METHOD:
-			return "el_method";
+			return Styles.EL_METHOD;
 		}
-		throw new IllegalArgumentException("Unknown element type: " + type);
+		throw new AssertionError("Unknown element type: " + type);
 	}
 
 	/**
