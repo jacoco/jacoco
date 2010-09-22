@@ -12,8 +12,13 @@
  *******************************************************************************/
 package org.jacoco.report.html;
 
+import static org.jacoco.core.analysis.ICoverageNode.CounterEntity.BLOCK;
+import static org.jacoco.core.analysis.ICoverageNode.CounterEntity.CLASS;
+import static org.jacoco.core.analysis.ICoverageNode.CounterEntity.INSTRUCTION;
+import static org.jacoco.core.analysis.ICoverageNode.CounterEntity.LINE;
+import static org.jacoco.core.analysis.ICoverageNode.CounterEntity.METHOD;
+
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.List;
@@ -37,7 +42,7 @@ import org.jacoco.report.html.resources.Resources;
 import org.jacoco.report.html.resources.Styles;
 import org.jacoco.report.html.table.BarColumn;
 import org.jacoco.report.html.table.CounterColumn;
-import org.jacoco.report.html.table.CoverageTable;
+import org.jacoco.report.html.table.Table;
 import org.jacoco.report.html.table.LabelColumn;
 import org.jacoco.report.html.table.PercentageColumn;
 
@@ -73,7 +78,7 @@ public class HTMLFormatter implements IReportFormatter, IHTMLReportContext {
 			.second(CounterComparator.TOTALITEMS.reverse().on(
 					CounterEntity.INSTRUCTION));
 
-	private final CoverageTable defaultTable;
+	private final Table defaultTable;
 
 	/**
 	 * New instance with default settings.
@@ -82,32 +87,20 @@ public class HTMLFormatter implements IReportFormatter, IHTMLReportContext {
 		defaultTable = createDefaultTable();
 	}
 
-	private static CoverageTable createDefaultTable() {
-		return new CoverageTable(Arrays.asList(
-
-		new LabelColumn(),
-
-		new BarColumn("Instruction Coverage", CounterEntity.INSTRUCTION),
-
-		new PercentageColumn("", CounterEntity.INSTRUCTION),
-
-		CounterColumn.newMissed("Missed", Styles.CTR1, CounterEntity.CLASS),
-
-		CounterColumn.newTotal("Classes", Styles.CTR2, CounterEntity.CLASS),
-
-		CounterColumn.newMissed("Missed", Styles.CTR1, CounterEntity.METHOD),
-
-		CounterColumn.newTotal("Methods", Styles.CTR2, CounterEntity.METHOD),
-
-		CounterColumn.newMissed("Missed", Styles.CTR1, CounterEntity.BLOCK),
-
-		CounterColumn.newTotal("Blocks", Styles.CTR2, CounterEntity.BLOCK),
-
-		CounterColumn.newMissed("Missed", Styles.CTR1, CounterEntity.LINE),
-
-		CounterColumn.newTotal("Lines", Styles.CTR2, CounterEntity.LINE)),
-
-		DEFAULT_SORTING);
+	private static Table createDefaultTable() {
+		final Table table = new Table(DEFAULT_SORTING);
+		table.add("Element", null, new LabelColumn());
+		table.add("Instruction Coverage", null, new BarColumn(INSTRUCTION));
+		table.add("", Styles.CTR2, new PercentageColumn(INSTRUCTION));
+		table.add("Missed", Styles.CTR1, CounterColumn.newMissed(CLASS));
+		table.add("Classes", Styles.CTR2, CounterColumn.newTotal(CLASS));
+		table.add("Missed", Styles.CTR1, CounterColumn.newMissed(METHOD));
+		table.add("Methods", Styles.CTR2, CounterColumn.newTotal(METHOD));
+		table.add("Missed", Styles.CTR1, CounterColumn.newMissed(BLOCK));
+		table.add("Blocks", Styles.CTR2, CounterColumn.newTotal(BLOCK));
+		table.add("Missed", Styles.CTR1, CounterColumn.newMissed(LINE));
+		table.add("Lines", Styles.CTR2, CounterColumn.newTotal(LINE));
+		return table;
 	}
 
 	/**
@@ -162,7 +155,7 @@ public class HTMLFormatter implements IReportFormatter, IHTMLReportContext {
 		return resources;
 	}
 
-	public CoverageTable getTable(final ElementType type) {
+	public Table getTable(final ElementType type) {
 		return defaultTable;
 	}
 

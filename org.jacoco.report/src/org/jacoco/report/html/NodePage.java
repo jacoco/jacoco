@@ -19,7 +19,7 @@ import org.jacoco.report.IReportVisitor;
 import org.jacoco.report.ISourceFileLocator;
 import org.jacoco.report.ReportOutputFolder;
 import org.jacoco.report.html.resources.Resources;
-import org.jacoco.report.html.table.ICoverageTableItem;
+import org.jacoco.report.html.table.ITableItem;
 
 /**
  * Report page that represents a coverage node.
@@ -28,7 +28,7 @@ import org.jacoco.report.html.table.ICoverageTableItem;
  * @version $Revision: $
  */
 public abstract class NodePage extends ReportPage implements IReportVisitor,
-		ICoverageTableItem {
+		ITableItem {
 
 	private ICoverageNode node;
 

@@ -13,7 +13,6 @@
 package org.jacoco.report.html.table;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 import org.jacoco.core.analysis.CoverageNodeImpl;
@@ -25,9 +24,6 @@ import org.jacoco.report.html.HTMLDocument;
 import org.jacoco.report.html.HTMLElement;
 import org.jacoco.report.html.HTMLSupport;
 import org.jacoco.report.html.resources.Resources;
-import org.jacoco.report.html.table.ICoverageTableColumn;
-import org.jacoco.report.html.table.ICoverageTableItem;
-import org.jacoco.report.html.table.LabelColumn;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -53,7 +49,7 @@ public class LabelColumnTest {
 
 	private HTMLSupport support;
 
-	private ICoverageTableColumn column;
+	private IColumnRenderer column;
 
 	@Before
 	public void setup() throws Exception {
@@ -65,7 +61,6 @@ public class LabelColumnTest {
 		td = doc.body().table("somestyle").tr().td();
 		support = new HTMLSupport();
 		column = new LabelColumn();
-		column.init(null, null);
 	}
 
 	@After
@@ -74,24 +69,9 @@ public class LabelColumnTest {
 	}
 
 	@Test
-	public void testIsVisible() throws Exception {
-		assertTrue(column.isVisible());
+	public void testInit() throws Exception {
+		assertTrue(column.init(null, null));
 		doc.close();
-	}
-
-	@Test
-	public void testGetStyle() throws Exception {
-		assertNull(column.getStyle());
-		doc.close();
-	}
-
-	@Test
-	public void testHeader() throws Exception {
-		column.header(td, resources, root);
-		doc.close();
-		final Document doc = support.parse(output.getFile("Test.html"));
-		assertEquals("Element",
-				support.findStr(doc, "/html/body/table/tr/td/text()"));
 	}
 
 	@Test
@@ -129,10 +109,10 @@ public class LabelColumnTest {
 				support.findStr(doc, "/html/body/table/tr/td/a/@class"));
 	}
 
-	private ICoverageTableItem createItem(final String name, final String link) {
+	private ITableItem createItem(final String name, final String link) {
 		final ICoverageNode node = new CoverageNodeImpl(ElementType.GROUP,
 				name, false);
-		return new ICoverageTableItem() {
+		return new ITableItem() {
 			public String getLinkLabel() {
 				return name;
 			}

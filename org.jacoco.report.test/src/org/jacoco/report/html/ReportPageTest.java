@@ -23,7 +23,7 @@ import org.jacoco.report.ReportOutputFolder;
 import org.jacoco.report.html.index.IIndexUpdate;
 import org.jacoco.report.html.resources.Resources;
 import org.jacoco.report.html.resources.Styles;
-import org.jacoco.report.html.table.CoverageTable;
+import org.jacoco.report.html.table.Table;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -91,7 +91,7 @@ public class ReportPageTest {
 				return resources;
 			}
 
-			public CoverageTable getTable(ElementType type) {
+			public Table getTable(ElementType type) {
 				throw new AssertionError("Unexpected method call.");
 			}
 

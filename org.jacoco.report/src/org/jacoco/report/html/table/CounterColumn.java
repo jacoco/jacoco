@@ -32,22 +32,17 @@ import org.jacoco.report.html.resources.Resources;
  * @author Marc R. Hoffmann
  * @version $Revision: $
  */
-public abstract class CounterColumn implements ICoverageTableColumn {
+public abstract class CounterColumn implements IColumnRenderer {
 
 	/**
 	 * Creates a new column that shows the total count for the given entity.
 	 * 
-	 * @param header
-	 *            column header caption
-	 * @param style
-	 *            style class for table cells created for this column
 	 * @param entity
 	 *            counter entity for this column
 	 * @return column instance
 	 */
-	public static CounterColumn newTotal(final String header,
-			final String style, final CounterEntity entity) {
-		return new CounterColumn(header, style, entity) {
+	public static CounterColumn newTotal(final CounterEntity entity) {
+		return new CounterColumn(entity) {
 			@Override
 			protected int getValue(final ICounter counter) {
 				return counter.getTotalCount();
@@ -58,17 +53,12 @@ public abstract class CounterColumn implements ICoverageTableColumn {
 	/**
 	 * Creates a new column that shows the missed count for the given entity.
 	 * 
-	 * @param header
-	 *            column header caption
-	 * @param style
-	 *            style class for table cells created for this column
 	 * @param entity
 	 *            counter entity for this column
 	 * @return column instance
 	 */
-	public static CounterColumn newMissed(final String header,
-			final String style, final CounterEntity entity) {
-		return new CounterColumn(header, style, entity) {
+	public static CounterColumn newMissed(final CounterEntity entity) {
+		return new CounterColumn(entity) {
 			@Override
 			protected int getValue(final ICounter counter) {
 				return counter.getMissedCount();
@@ -79,17 +69,12 @@ public abstract class CounterColumn implements ICoverageTableColumn {
 	/**
 	 * Creates a new column that shows the covered count for the given entity.
 	 * 
-	 * @param header
-	 *            column header caption
-	 * @param style
-	 *            style class for table cells created for this column
 	 * @param entity
 	 *            counter entity for this column
 	 * @return column instance
 	 */
-	public static CounterColumn newCovered(final String header,
-			final String style, final CounterEntity entity) {
-		return new CounterColumn(header, style, entity) {
+	public static CounterColumn newCovered(final CounterEntity entity) {
+		return new CounterColumn(entity) {
 			@Override
 			protected int getValue(final ICounter counter) {
 				return counter.getCoveredCount();
@@ -97,13 +82,7 @@ public abstract class CounterColumn implements ICoverageTableColumn {
 		};
 	}
 
-	private final String header;
-
-	private final String style;
-
 	private final CounterEntity entity;
-
-	private boolean visible;
 
 	private final NumberFormat integerFormat = DecimalFormat
 			.getIntegerInstance();
@@ -112,42 +91,21 @@ public abstract class CounterColumn implements ICoverageTableColumn {
 	 * Creates a new column that is based on the {@link ICounter} for the given
 	 * entity.
 	 * 
-	 * @param header
-	 *            column header caption
-	 * @param style
-	 *            style class for table cells created for this column
 	 * @param entity
 	 *            counter entity for this column
 	 */
-	protected CounterColumn(final String header, final String style,
-			final CounterEntity entity) {
-		this.header = header;
-		this.style = style;
+	protected CounterColumn(final CounterEntity entity) {
 		this.entity = entity;
 	}
 
-	public void init(final List<ICoverageTableItem> items,
+	public boolean init(final List<ITableItem> items,
 			final ICoverageNode total) {
-		for (final ICoverageTableItem i : items) {
+		for (final ITableItem i : items) {
 			if (i.getNode().getCounter(entity).getTotalCount() > 0) {
-				visible = true;
-				return;
+				return true;
 			}
 		}
-		visible = false;
-	}
-
-	public boolean isVisible() {
-		return visible;
-	}
-
-	public String getStyle() {
-		return style;
-	}
-
-	public void header(final HTMLElement td, final Resources resources,
-			final ReportOutputFolder base) throws IOException {
-		td.text(header);
+		return false;
 	}
 
 	public void footer(final HTMLElement td, final ICoverageNode total,
@@ -156,7 +114,7 @@ public abstract class CounterColumn implements ICoverageTableColumn {
 		cell(td, total);
 	}
 
-	public void item(final HTMLElement td, final ICoverageTableItem item,
+	public void item(final HTMLElement td, final ITableItem item,
 			final Resources resources, final ReportOutputFolder base)
 			throws IOException {
 		cell(td, item.getNode());

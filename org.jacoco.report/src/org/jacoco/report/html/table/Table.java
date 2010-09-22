@@ -26,33 +26,47 @@ import org.jacoco.report.html.resources.Resources;
 import org.jacoco.report.html.resources.Styles;
 
 /**
- * Renderer for a table of {@link ICoverageTableItem}s.
+ * Renderer for a table of {@link ITableItem}s.
  * 
  * @author Marc R. Hoffmann
  * @version $Revision: $
  */
-public class CoverageTable {
+public class Table {
 
-	private final List<? extends ICoverageTableColumn> columns;
-	private final Comparator<ICoverageTableItem> comparator;
+	private final List<Column> columns;
+
+	private final Comparator<ITableItem> comparator;
 
 	/**
 	 * Create a new table with the given columns.
 	 * 
-	 * @param columns
-	 *            columns for this table
 	 * @param comparator
 	 *            comparator for sorting the table items
 	 */
-	public CoverageTable(final List<? extends ICoverageTableColumn> columns,
-			final Comparator<ICoverageNode> comparator) {
-		this.columns = columns;
-		this.comparator = new Comparator<ICoverageTableItem>() {
-			public int compare(final ICoverageTableItem i1,
-					final ICoverageTableItem i2) {
+	public Table(final Comparator<ICoverageNode> comparator) {
+		this.columns = new ArrayList<Table.Column>();
+		this.comparator = new Comparator<ITableItem>() {
+			public int compare(final ITableItem i1,
+					final ITableItem i2) {
 				return comparator.compare(i1.getNode(), i2.getNode());
 			}
 		};
+	}
+
+	/**
+	 * Adds a new column with the given properties to the table.
+	 * 
+	 * @param header
+	 *            column header caption
+	 * @param style
+	 *            optional CSS style class name for the td-Elements of this
+	 *            column
+	 * @param renderer
+	 *            callback for column rendering
+	 */
+	public void add(final String header, final String style,
+			final IColumnRenderer renderer) {
+		columns.add(new Column(header, style, renderer));
 	}
 
 	/**
@@ -73,10 +87,10 @@ public class CoverageTable {
 	 *             in case of IO problems with the element output
 	 */
 	public void render(final HTMLElement parent,
-			final Collection<? extends ICoverageTableItem> items,
+			final Collection<? extends ITableItem> items,
 			final ICoverageNode total, final Resources resources,
 			final ReportOutputFolder base) throws IOException {
-		final List<ICoverageTableItem> sortedItems = sort(items);
+		final List<ITableItem> sortedItems = sort(items);
 		final HTMLElement table = parent.table(Styles.COVERAGETABLE);
 		header(table, sortedItems, total, resources, base);
 		footer(table, total, resources, base);
@@ -84,14 +98,14 @@ public class CoverageTable {
 	}
 
 	private void header(final HTMLElement table,
-			final List<ICoverageTableItem> items, final ICoverageNode total,
+			final List<ITableItem> items, final ICoverageNode total,
 			final Resources resources, final ReportOutputFolder base)
 			throws IOException {
 		final HTMLElement tr = table.thead().tr();
-		for (final ICoverageTableColumn c : columns) {
-			c.init(items, total);
-			if (c.isVisible()) {
-				c.header(tr.td(c.getStyle()), resources, base);
+		for (final Column c : columns) {
+			c.visible = c.renderer.init(items, total);
+			if (c.visible) {
+				tr.td(c.style).text(c.header);
 			}
 		}
 	}
@@ -100,33 +114,51 @@ public class CoverageTable {
 			final Resources resources, final ReportOutputFolder base)
 			throws IOException {
 		final HTMLElement tr = table.tfoot().tr();
-		for (final ICoverageTableColumn c : columns) {
-			if (c.isVisible()) {
-				c.footer(tr.td(c.getStyle()), total, resources, base);
+		for (final Column c : columns) {
+			if (c.visible) {
+				c.renderer.footer(tr.td(c.style), total, resources, base);
 			}
 		}
 	}
 
 	private void body(final HTMLElement table,
-			final List<ICoverageTableItem> items, final Resources resources,
+			final List<ITableItem> items, final Resources resources,
 			final ReportOutputFolder base) throws IOException {
 		final HTMLElement tbody = table.tbody();
-		for (final ICoverageTableItem item : items) {
+		for (final ITableItem item : items) {
 			final HTMLElement tr = tbody.tr();
-			for (final ICoverageTableColumn c : columns) {
-				if (c.isVisible()) {
-					c.item(tr.td(c.getStyle()), item, resources, base);
+			for (final Column c : columns) {
+				if (c.visible) {
+					c.renderer.item(tr.td(c.style), item, resources, base);
 				}
 			}
 		}
 	}
 
-	private List<ICoverageTableItem> sort(
-			final Collection<? extends ICoverageTableItem> items) {
-		final ArrayList<ICoverageTableItem> result = new ArrayList<ICoverageTableItem>(
+	private List<ITableItem> sort(
+			final Collection<? extends ITableItem> items) {
+		final ArrayList<ITableItem> result = new ArrayList<ITableItem>(
 				items);
 		Collections.sort(result, comparator);
 		return result;
+	}
+
+	private static class Column {
+
+		final String header;
+
+		final String style;
+
+		final IColumnRenderer renderer;
+
+		boolean visible;
+
+		Column(final String header, final String style,
+				final IColumnRenderer renderer) {
+			this.header = header;
+			this.style = style;
+			this.renderer = renderer;
+		}
 	}
 
 }

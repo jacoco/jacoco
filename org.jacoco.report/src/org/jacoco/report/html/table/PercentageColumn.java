@@ -23,7 +23,6 @@ import org.jacoco.core.analysis.ICoverageNode.CounterEntity;
 import org.jacoco.report.ReportOutputFolder;
 import org.jacoco.report.html.HTMLElement;
 import org.jacoco.report.html.resources.Resources;
-import org.jacoco.report.html.resources.Styles;
 
 /**
  * Column that prints the coverage percentage for each item and the total
@@ -33,9 +32,7 @@ import org.jacoco.report.html.resources.Styles;
  * @author Marc R. Hoffmann
  * @version $Revision: $
  */
-public class PercentageColumn implements ICoverageTableColumn {
-
-	private final String header;
+public class PercentageColumn implements IColumnRenderer {
 
 	private final CounterEntity entity;
 
@@ -46,31 +43,16 @@ public class PercentageColumn implements ICoverageTableColumn {
 	 * Creates a new column that is based on the {@link ICounter} for the given
 	 * entity.
 	 * 
-	 * @param header
-	 *            column header caption
 	 * @param entity
 	 *            counter entity for this column
 	 */
-	public PercentageColumn(final String header, final CounterEntity entity) {
-		this.header = header;
+	public PercentageColumn(final CounterEntity entity) {
 		this.entity = entity;
 	}
 
-	public void init(final List<ICoverageTableItem> items,
+	public boolean init(final List<ITableItem> items,
 			final ICoverageNode total) {
-	}
-
-	public boolean isVisible() {
 		return true;
-	}
-
-	public String getStyle() {
-		return Styles.CTR2;
-	}
-
-	public void header(final HTMLElement td, final Resources resources,
-			final ReportOutputFolder base) throws IOException {
-		td.text(header);
 	}
 
 	public void footer(final HTMLElement td, final ICoverageNode total,
@@ -79,7 +61,7 @@ public class PercentageColumn implements ICoverageTableColumn {
 		cell(td, total);
 	}
 
-	public void item(final HTMLElement td, final ICoverageTableItem item,
+	public void item(final HTMLElement td, final ITableItem item,
 			final Resources resources, final ReportOutputFolder base)
 			throws IOException {
 		cell(td, item.getNode());

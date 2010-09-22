@@ -28,7 +28,7 @@ import org.jacoco.report.html.resources.Resources;
  * @author Marc R. Hoffmann
  * @version $Revision: $
  */
-public interface ICoverageTableColumn {
+public interface IColumnRenderer {
 
 	/**
 	 * Initializes the column before any output method is called.
@@ -37,39 +37,9 @@ public interface ICoverageTableColumn {
 	 *            all items that will be displayed in the table
 	 * @param total
 	 *            the summary of all coverage data items in the table
-	 */
-	public void init(List<ICoverageTableItem> items, ICoverageNode total);
-
-	/**
-	 * Determines whether this column should actually be rendered. Will always
-	 * be called after the call to {@link #init(List, ICoverageNode)}.
-	 * 
 	 * @return <code>true</code> if the column should be visible
 	 */
-	public boolean isVisible();
-
-	/**
-	 * Return the optional CSS style class name for the td-Elements of this
-	 * column.
-	 * 
-	 * @return css style class or <code>null</code>
-	 */
-	public String getStyle();
-
-	/**
-	 * Renders the header for this column.
-	 * 
-	 * @param td
-	 *            the parent table cell
-	 * @param resources
-	 *            static resources that might be referenced
-	 * @param base
-	 *            base folder of the table
-	 * @throws IOException
-	 *             in case of IO problems with the element output
-	 */
-	public void header(HTMLElement td, Resources resources,
-			ReportOutputFolder base) throws IOException;
+	public boolean init(List<ITableItem> items, ICoverageNode total);
 
 	/**
 	 * Renders the footer for this column.
@@ -102,7 +72,7 @@ public interface ICoverageTableColumn {
 	 * @throws IOException
 	 *             in case of IO problems with the element output
 	 */
-	public void item(HTMLElement td, ICoverageTableItem item,
+	public void item(HTMLElement td, ITableItem item,
 			Resources resources, ReportOutputFolder base) throws IOException;
 
 }

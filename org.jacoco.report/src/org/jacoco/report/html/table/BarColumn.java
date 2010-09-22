@@ -32,11 +32,9 @@ import org.jacoco.report.html.resources.Resources;
  * @author Marc R. Hoffmann
  * @version $Revision: $
  */
-public class BarColumn implements ICoverageTableColumn {
+public class BarColumn implements IColumnRenderer {
 
 	private static final int WIDTH = 120;
-
-	private final String header;
 
 	private final CounterEntity entity;
 
@@ -49,38 +47,23 @@ public class BarColumn implements ICoverageTableColumn {
 	 * Creates a new column that is based on the {@link ICounter} for the given
 	 * entity.
 	 * 
-	 * @param header
-	 *            column header caption
 	 * @param entity
 	 *            counter entity for visualization
 	 */
-	public BarColumn(final String header, final CounterEntity entity) {
-		this.header = header;
+	public BarColumn(final CounterEntity entity) {
 		this.entity = entity;
 	}
 
-	public void init(final List<ICoverageTableItem> items,
+	public boolean init(final List<ITableItem> items,
 			final ICoverageNode total) {
 		this.max = 0;
-		for (final ICoverageTableItem item : items) {
+		for (final ITableItem item : items) {
 			final int count = item.getNode().getCounter(entity).getTotalCount();
 			if (count > this.max) {
 				this.max = count;
 			}
 		}
-	}
-
-	public boolean isVisible() {
 		return true;
-	}
-
-	public String getStyle() {
-		return null;
-	}
-
-	public void header(final HTMLElement td, final Resources resources,
-			final ReportOutputFolder base) throws IOException {
-		td.text(header);
 	}
 
 	public void footer(final HTMLElement td, final ICoverageNode total,
@@ -88,7 +71,7 @@ public class BarColumn implements ICoverageTableColumn {
 			throws IOException {
 	}
 
-	public void item(final HTMLElement td, final ICoverageTableItem item,
+	public void item(final HTMLElement td, final ITableItem item,
 			final Resources resources, final ReportOutputFolder base)
 			throws IOException {
 		if (max > 0) {

@@ -15,8 +15,6 @@ package org.jacoco.report.html.table;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
-import java.util.Collections;
-
 import org.jacoco.core.analysis.CounterImpl;
 import org.jacoco.core.analysis.CoverageNodeImpl;
 import org.jacoco.core.analysis.ICoverageNode;
@@ -28,9 +26,6 @@ import org.jacoco.report.html.HTMLDocument;
 import org.jacoco.report.html.HTMLElement;
 import org.jacoco.report.html.HTMLSupport;
 import org.jacoco.report.html.resources.Resources;
-import org.jacoco.report.html.table.ICoverageTableColumn;
-import org.jacoco.report.html.table.ICoverageTableItem;
-import org.jacoco.report.html.table.PercentageColumn;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -56,7 +51,7 @@ public class PercentageColumnTest {
 
 	private HTMLSupport support;
 
-	private ICoverageTableColumn column;
+	private IColumnRenderer column;
 
 	@Before
 	public void setup() throws Exception {
@@ -67,7 +62,7 @@ public class PercentageColumnTest {
 		doc.head().title();
 		td = doc.body().table("somestyle").tr().td();
 		support = new HTMLSupport();
-		column = new PercentageColumn("TestHeader", CounterEntity.LINE);
+		column = new PercentageColumn(CounterEntity.LINE);
 	}
 
 	@After
@@ -76,32 +71,14 @@ public class PercentageColumnTest {
 	}
 
 	@Test
-	public void testIsVisible() throws Exception {
-		assertTrue(column.isVisible());
+	public void testInit() throws Exception {
+		assertTrue(column.init(null, null));
 		doc.close();
-	}
-
-	@Test
-	public void testGetStyle() throws Exception {
-		assertEquals("ctr2", column.getStyle());
-		doc.close();
-	}
-
-	@Test
-	public void testHeader() throws Exception {
-		final ICoverageTableItem item = createItem(1, 3);
-		column.init(Collections.singletonList(item), item.getNode());
-		column.header(td, resources, root);
-		doc.close();
-		final Document doc = support.parse(output.getFile("Test.html"));
-		assertEquals("TestHeader",
-				support.findStr(doc, "/html/body/table/tr/td/text()"));
 	}
 
 	@Test
 	public void testItem1() throws Exception {
-		final ICoverageTableItem item = createItem(150, 50);
-		column.init(Collections.singletonList(item), item.getNode());
+		final ITableItem item = createItem(150, 50);
 		column.item(td, item, resources, root);
 		doc.close();
 		final Document doc = support.parse(output.getFile("Test.html"));
@@ -111,8 +88,7 @@ public class PercentageColumnTest {
 
 	@Test
 	public void testItem2() throws Exception {
-		final ICoverageTableItem item = createItem(0, 50);
-		column.init(Collections.singletonList(item), item.getNode());
+		final ITableItem item = createItem(0, 50);
 		column.item(td, item, resources, root);
 		doc.close();
 		final Document doc = support.parse(output.getFile("Test.html"));
@@ -122,8 +98,7 @@ public class PercentageColumnTest {
 
 	@Test
 	public void testFooter1() throws Exception {
-		final ICoverageTableItem item = createItem(80, 60);
-		column.init(Collections.singletonList(item), item.getNode());
+		final ITableItem item = createItem(80, 60);
 		column.footer(td, item.getNode(), resources, root);
 		doc.close();
 		final Document doc = support.parse(output.getFile("Test.html"));
@@ -132,17 +107,16 @@ public class PercentageColumnTest {
 
 	@Test
 	public void testFooter2() throws Exception {
-		final ICoverageTableItem item = createItem(0, 60);
-		column.init(Collections.singletonList(item), item.getNode());
+		final ITableItem item = createItem(0, 60);
 		column.footer(td, item.getNode(), resources, root);
 		doc.close();
 		final Document doc = support.parse(output.getFile("Test.html"));
 		assertEquals("n/a", support.findStr(doc, "/html/body/table/tr"));
 	}
 
-	private ICoverageTableItem createItem(final int total, final int covered) {
+	private ITableItem createItem(final int total, final int covered) {
 		final ICoverageNode node = createNode(total, covered);
-		return new ICoverageTableItem() {
+		return new ITableItem() {
 			public String getLinkLabel() {
 				return "Foo";
 			}

@@ -31,19 +31,18 @@ import org.jacoco.report.html.HTMLDocument;
 import org.jacoco.report.html.HTMLElement;
 import org.jacoco.report.html.HTMLSupport;
 import org.jacoco.report.html.resources.Resources;
-import org.jacoco.report.html.table.CoverageTable;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.w3c.dom.Document;
 
 /**
- * Unit tests for {@link CoverageTable}.
+ * Unit tests for {@link Table}.
  * 
  * @author Marc R. Hoffmann
  * @version $Revision: $
  */
-public class CoverageTableTest {
+public class TableTest {
 
 	private MemoryMultiReportOutput output;
 
@@ -72,25 +71,14 @@ public class CoverageTableTest {
 
 	@Test
 	public void testCallbackSequence() throws IOException {
-		final ICoverageTableColumn recorder = new ICoverageTableColumn() {
+		final IColumnRenderer recorder = new IColumnRenderer() {
 
 			private final StringBuilder store = new StringBuilder();
 
-			public void init(List<ICoverageTableItem> items, ICoverageNode total) {
+			public boolean init(List<ITableItem> items,
+					ICoverageNode total) {
 				store.append("init-");
-			}
-
-			public boolean isVisible() {
 				return true;
-			}
-
-			public String getStyle() {
-				return null;
-			}
-
-			public void header(HTMLElement td, Resources resources,
-					ReportOutputFolder base) {
-				store.append("header-");
 			}
 
 			public void footer(HTMLElement td, ICoverageNode total,
@@ -98,7 +86,7 @@ public class CoverageTableTest {
 				store.append("footer-");
 			}
 
-			public void item(HTMLElement td, ICoverageTableItem item,
+			public void item(HTMLElement td, ITableItem item,
 					Resources resources, ReportOutputFolder base) {
 				store.append("item").append(item.getLinkLabel()).append("-");
 			}
@@ -108,34 +96,23 @@ public class CoverageTableTest {
 				return store.toString();
 			}
 		};
-		final List<ICoverageTableItem> items = Arrays.asList(
+		final List<ITableItem> items = Arrays.asList(
 				createItem("A", 1), createItem("B", 2), createItem("C", 3));
-		new CoverageTable(Arrays.asList(recorder),
-				CounterComparator.TOTALITEMS.on(CounterEntity.CLASS)).render(
-				body, items, createTotal("Sum", 6), resources, root);
+		final Table table = new Table(
+				CounterComparator.TOTALITEMS.on(CounterEntity.CLASS));
+		table.add("Header", null, recorder);
+		table.render(body, items, createTotal("Sum", 6), resources, root);
 		doc.close();
-		assertEquals("init-header-footer-itemA-itemB-itemC-",
-				recorder.toString());
+		assertEquals("init-footer-itemA-itemB-itemC-", recorder.toString());
 	}
 
 	@Test
 	public void testInvisible() throws IOException {
-		final ICoverageTableColumn recorder = new ICoverageTableColumn() {
+		final IColumnRenderer column = new IColumnRenderer() {
 
-			public void init(List<ICoverageTableItem> items, ICoverageNode total) {
-			}
-
-			public boolean isVisible() {
+			public boolean init(List<ITableItem> items,
+					ICoverageNode total) {
 				return false;
-			}
-
-			public String getStyle() {
-				return null;
-			}
-
-			public void header(HTMLElement td, Resources resources,
-					ReportOutputFolder base) {
-				fail();
 			}
 
 			public void footer(HTMLElement td, ICoverageNode total,
@@ -143,45 +120,36 @@ public class CoverageTableTest {
 				fail();
 			}
 
-			public void item(HTMLElement td, ICoverageTableItem item,
+			public void item(HTMLElement td, ITableItem item,
 					Resources resources, ReportOutputFolder base) {
 				fail();
 			}
 		};
-		final List<ICoverageTableItem> items = Arrays
+		final List<ITableItem> items = Arrays
 				.asList(createItem("A", 1));
-		new CoverageTable(Arrays.asList(recorder),
-				CounterComparator.TOTALITEMS.on(CounterEntity.CLASS)).render(
-				body, items, createTotal("Sum", 1), resources, root);
+		final Table table = new Table(
+				CounterComparator.TOTALITEMS.on(CounterEntity.CLASS));
+		table.add("Header", null, column);
+		table.render(body, items, createTotal("Sum", 1), resources, root);
 		doc.close();
 	}
 
 	@Test
 	public void testSorting() throws IOException {
-		final ICoverageTableColumn recorder = new ICoverageTableColumn() {
+		final IColumnRenderer column = new IColumnRenderer() {
 
 			private final StringBuilder store = new StringBuilder();
 
-			public void init(List<ICoverageTableItem> items, ICoverageNode total) {
-			}
-
-			public boolean isVisible() {
+			public boolean init(List<ITableItem> items,
+					ICoverageNode total) {
 				return true;
-			}
-
-			public String getStyle() {
-				return null;
-			}
-
-			public void header(HTMLElement td, Resources resources,
-					ReportOutputFolder base) {
 			}
 
 			public void footer(HTMLElement td, ICoverageNode total,
 					Resources resources, ReportOutputFolder base) {
 			}
 
-			public void item(HTMLElement td, ICoverageTableItem item,
+			public void item(HTMLElement td, ITableItem item,
 					Resources resources, ReportOutputFolder base) {
 				store.append(item.getLinkLabel());
 			}
@@ -191,34 +159,24 @@ public class CoverageTableTest {
 				return store.toString();
 			}
 		};
-		final List<ICoverageTableItem> items = Arrays.asList(
+		final List<ITableItem> items = Arrays.asList(
 				createItem("C", 3), createItem("E", 5), createItem("A", 1),
 				createItem("D", 4), createItem("B", 2));
-		new CoverageTable(Arrays.asList(recorder),
-				CounterComparator.TOTALITEMS.on(CounterEntity.CLASS)).render(
-				body, items, createTotal("Sum", 6), resources, root);
+		final Table table = new Table(
+				CounterComparator.TOTALITEMS.on(CounterEntity.CLASS));
+		table.add("Header", null, column);
+		table.render(body, items, createTotal("Sum", 6), resources, root);
 		doc.close();
-		assertEquals("ABCDE", recorder.toString());
+		assertEquals("ABCDE", column.toString());
 	}
 
 	@Test
 	public void testValidHTML() throws Exception {
-		final ICoverageTableColumn recorder = new ICoverageTableColumn() {
+		final IColumnRenderer column = new IColumnRenderer() {
 
-			public void init(List<ICoverageTableItem> items, ICoverageNode total) {
-			}
-
-			public boolean isVisible() {
+			public boolean init(List<ITableItem> items,
+					ICoverageNode total) {
 				return true;
-			}
-
-			public String getStyle() {
-				return null;
-			}
-
-			public void header(HTMLElement td, Resources resources,
-					ReportOutputFolder base) throws IOException {
-				td.text("Header");
 			}
 
 			public void footer(HTMLElement td, ICoverageNode total,
@@ -227,41 +185,50 @@ public class CoverageTableTest {
 				td.text("Footer");
 			}
 
-			public void item(HTMLElement td, ICoverageTableItem item,
+			public void item(HTMLElement td, ITableItem item,
 					Resources resources, ReportOutputFolder base)
 					throws IOException {
 				td.text(item.getLinkLabel());
 			}
 		};
-		final List<ICoverageTableItem> items = Arrays.asList(
+		final List<ITableItem> items = Arrays.asList(
 				createItem("A", 1), createItem("B", 2), createItem("C", 3));
-		new CoverageTable(Arrays.asList(recorder),
-				CounterComparator.TOTALITEMS.on(CounterEntity.CLASS)).render(
-				body, items, createTotal("Sum", 6), resources, root);
+		final Table table = new Table(
+				CounterComparator.TOTALITEMS.on(CounterEntity.CLASS));
+		table.add("Header", "red", column);
+		table.render(body, items, createTotal("Sum", 6), resources, root);
 		doc.close();
 
 		final HTMLSupport support = new HTMLSupport();
 		final Document doc = support.parse(output.getFile("Test.html"));
 		assertEquals("Header",
 				support.findStr(doc, "/html/body/table/thead/tr/td/text()"));
+		assertEquals("red",
+				support.findStr(doc, "/html/body/table/thead/tr/td/@class"));
 		assertEquals("Footer",
 				support.findStr(doc, "/html/body/table/tfoot/tr/td/text()"));
+		assertEquals("red",
+				support.findStr(doc, "/html/body/table/tbody/tr[1]/td/@class"));
 		assertEquals("A",
 				support.findStr(doc, "/html/body/table/tbody/tr[1]/td/text()"));
+		assertEquals("red",
+				support.findStr(doc, "/html/body/table/tbody/tr[2]/td/@class"));
 		assertEquals("B",
 				support.findStr(doc, "/html/body/table/tbody/tr[2]/td/text()"));
+		assertEquals("red",
+				support.findStr(doc, "/html/body/table/tbody/tr[3]/td/@class"));
 		assertEquals("C",
 				support.findStr(doc, "/html/body/table/tbody/tr[3]/td/text()"));
 	}
 
-	private ICoverageTableItem createItem(final String name, final int count) {
+	private ITableItem createItem(final String name, final int count) {
 		final ICoverageNode node = new CoverageNodeImpl(ElementType.GROUP,
 				name, false) {
 			{
 				this.classCounter = CounterImpl.getInstance(count, false);
 			}
 		};
-		return new ICoverageTableItem() {
+		return new ITableItem() {
 			public String getLinkLabel() {
 				return name;
 			}

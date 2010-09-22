@@ -24,28 +24,14 @@ import org.jacoco.report.html.resources.Resources;
  * Column for the item label. The implementation is stateless, instances might
  * be used in parallel.
  * 
- * @see ICoverageTableItem#getLabel()
- * @see ICoverageTableItem#getLink(org.jacoco.report.ReportOutputFolder)
  * @author Marc R. Hoffmann
  * @version $Revision: $
  */
-public class LabelColumn implements ICoverageTableColumn {
+public class LabelColumn implements IColumnRenderer {
 
-	public void init(final List<ICoverageTableItem> items,
+	public boolean init(final List<ITableItem> items,
 			final ICoverageNode total) {
-	}
-
-	public boolean isVisible() {
 		return true;
-	}
-
-	public String getStyle() {
-		return null;
-	}
-
-	public void header(final HTMLElement td, final Resources resources,
-			final ReportOutputFolder base) throws IOException {
-		td.text("Element");
 	}
 
 	public void footer(final HTMLElement td, final ICoverageNode total,
@@ -54,7 +40,7 @@ public class LabelColumn implements ICoverageTableColumn {
 		td.text("Total");
 	}
 
-	public void item(final HTMLElement td, final ICoverageTableItem item,
+	public void item(final HTMLElement td, final ITableItem item,
 			final Resources resources, final ReportOutputFolder base)
 			throws IOException {
 		td.a(item, base);

@@ -23,7 +23,7 @@ import org.jacoco.core.analysis.MethodCoverage;
 import org.jacoco.report.IReportVisitor;
 import org.jacoco.report.ReportOutputFolder;
 import org.jacoco.report.html.resources.Styles;
-import org.jacoco.report.html.table.ICoverageTableItem;
+import org.jacoco.report.html.table.ITableItem;
 
 /**
  * Page showing coverage information for a class as a table of methods. The
@@ -34,7 +34,7 @@ import org.jacoco.report.html.table.ICoverageTableItem;
  */
 public class ClassPage extends NodePage {
 
-	private class MethodItem implements ICoverageTableItem {
+	private class MethodItem implements ITableItem {
 
 		private final MethodCoverage node;
 

@@ -21,7 +21,7 @@ import org.jacoco.report.html.ILinkable;
  * @author Marc R. Hoffmann
  * @version $Revision: $
  */
-public interface ICoverageTableItem extends ILinkable {
+public interface ITableItem extends ILinkable {
 
 	/**
 	 * Returns the corresponding node data.
