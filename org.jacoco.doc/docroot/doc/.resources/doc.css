@@ -159,7 +159,7 @@ table.coverage thead td {
 table.coverage thead td.ctr1 {
   text-align:right;
   padding-right:4px;
-  border-left:#b0b0b0 1px dotted;
+  border-left:#cccccc 1px solid;
 }
 
 table.coverage thead td.ctr2 {
@@ -180,7 +180,7 @@ table.coverage tbody tr:hover {
 table.coverage tbody td.ctr1 {
   text-align:right;
   padding-right:4px;
-  border-left:#d6d3ce 1px dotted;
+  border-left:#e8e8e8 1px solid;
 }
 
 table.coverage tbody td.ctr2 {
@@ -195,7 +195,7 @@ table.coverage tfoot td {
 table.coverage tfoot td.ctr1 {
   text-align:right;
   padding-right:4px;
-  border-left:#d6d3ce 1px dotted;
+  border-left:#e8e8e8 1px solid;
 }
 
 table.coverage tfoot td.ctr2 {
