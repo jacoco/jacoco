@@ -139,17 +139,15 @@ public class SessionsPage extends ReportPage {
 	}
 
 	@Override
-	protected String getElementStyle() {
-		return Styles.EL_SESSION;
-	}
-
-	@Override
 	protected String getFileName() {
 		return ".sessions.html";
 	}
+	
+	public String getLinkStyle() {
+		return Styles.EL_SESSION;
+	}
 
-	@Override
-	protected String getLabel() {
+	public String getLinkLabel() {
 		return "Sessions";
 	}
 

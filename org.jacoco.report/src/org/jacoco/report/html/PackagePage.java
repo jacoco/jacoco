@@ -20,8 +20,8 @@ import java.util.Map;
 
 import org.jacoco.core.analysis.ClassCoverage;
 import org.jacoco.core.analysis.ICoverageNode;
-import org.jacoco.core.analysis.SourceFileCoverage;
 import org.jacoco.core.analysis.ICoverageNode.ElementType;
+import org.jacoco.core.analysis.SourceFileCoverage;
 import org.jacoco.report.IReportVisitor;
 import org.jacoco.report.ISourceFileLocator;
 import org.jacoco.report.ReportOutputFolder;
@@ -90,7 +90,7 @@ public class PackagePage extends NodePage {
 	}
 
 	@Override
-	public String getLabel() {
+	public String getLinkLabel() {
 		return context.getLanguageNames().getPackageName(getNode().getName());
 	}
 

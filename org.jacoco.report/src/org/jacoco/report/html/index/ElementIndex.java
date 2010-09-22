@@ -16,7 +16,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.jacoco.report.ReportOutputFolder;
-import org.jacoco.report.html.ReportPage;
+import org.jacoco.report.html.ILinkable;
 
 /**
  * An index over all report pages that allows queries according to certain
@@ -55,8 +55,8 @@ public class ElementIndex implements IIndexUpdate {
 
 	// === IIndexUpdater ===
 
-	public void addClass(final ReportPage page, final long classid) {
-		allClasses.put(Long.valueOf(classid), page.getLink(baseFolder));
+	public void addClass(final ILinkable link, final long classid) {
+		allClasses.put(Long.valueOf(classid), link.getLink(baseFolder));
 	}
 
 }

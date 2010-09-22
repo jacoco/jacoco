@@ -26,6 +26,7 @@ import org.jacoco.report.MemoryMultiReportOutput;
 import org.jacoco.report.ReportOutputFolder;
 import org.jacoco.report.html.index.IIndexUpdate;
 import org.jacoco.report.html.resources.Resources;
+import org.jacoco.report.html.resources.Styles;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -92,8 +93,9 @@ public class NodePageTest {
 				return "CustomFooter";
 			}
 
-			public String getSessionsPageLink(ReportOutputFolder base) {
-				return "info.html";
+			public ILinkable getSessionsPage() {
+				return new LinkableStub("sessions.html", "Sessions",
+						Styles.EL_SESSION);
 			}
 
 			public String getOutputEncoding() {
@@ -128,13 +130,13 @@ public class NodePageTest {
 	}
 
 	@Test
-	public void testGetLabel() throws IOException {
-		assertEquals("Test", page.getLabel());
+	public void testGetLinkLabel() throws IOException {
+		assertEquals("Test", page.getLinkLabel());
 	}
 
 	@Test
-	public void testGetElementStyle() throws IOException {
-		assertEquals("el_group", page.getElementStyle());
+	public void testGetLinkStyle() throws IOException {
+		assertEquals("el_group", page.getLinkStyle());
 	}
 
 	@Test

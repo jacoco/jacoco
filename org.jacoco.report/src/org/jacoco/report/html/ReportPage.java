@@ -27,7 +27,7 @@ import org.jacoco.report.html.resources.Styles;
  * @author Marc R. Hoffmann
  * @version $Revision: $
  */
-public abstract class ReportPage {
+public abstract class ReportPage implements ILinkable {
 
 	private final ReportPage parent;
 
@@ -55,25 +55,13 @@ public abstract class ReportPage {
 	}
 
 	/**
-	 * Returns a relative link to this page that works from the given base
-	 * folder.
-	 * 
-	 * @param base
-	 *            folder where the link should be inserted
-	 * @return relative link
-	 */
-	public final String getLink(final ReportOutputFolder base) {
-		return folder.getLink(base, getFileName());
-	}
-
-	/**
 	 * Renders the page content. This method must be called at most once.
 	 * 
 	 * @throws IOException
 	 */
 	public final void renderDocument() throws IOException {
-		final HTMLDocument doc = new HTMLDocument(folder
-				.createFile(getFileName()), context.getOutputEncoding());
+		final HTMLDocument doc = new HTMLDocument(
+				folder.createFile(getFileName()), context.getOutputEncoding());
 		head(doc.head());
 		body(doc.body());
 		doc.close();
@@ -89,11 +77,13 @@ public abstract class ReportPage {
 	 */
 	protected void head(final HTMLElement head) throws IOException {
 		head.meta("Content-Type", "text/html;charset=UTF-8");
-		head.link("stylesheet", context.getResources().getLink(folder,
-				Resources.STYLESHEET), "text/css");
-		head.link("shortcut icon", context.getResources().getLink(folder,
-				"report.gif"), "image/gif");
-		head.title().text(getLabel());
+		head.link("stylesheet",
+				context.getResources().getLink(folder, Resources.STYLESHEET),
+				"text/css");
+		head.link("shortcut icon",
+				context.getResources().getLink(folder, "report.gif"),
+				"image/gif");
+		head.title().text(getLinkLabel());
 	}
 
 	/**
@@ -108,20 +98,19 @@ public abstract class ReportPage {
 		final HTMLElement navigation = body.div(Styles.BREADCRUMB);
 		infoLinks(navigation.span(Styles.RIGHT));
 		breadcrumb(navigation, folder);
-		body.h1().text(getLabel());
+		body.h1().text(getLinkLabel());
 		content(body);
 		footer(body);
 	}
 
 	private void infoLinks(final HTMLElement span) throws IOException {
-		span.a(context.getSessionsPageLink(folder), Styles.EL_SESSION).text(
-				"Sessions");
+		span.a(context.getSessionsPage(), folder);
 	}
 
 	private void breadcrumb(final HTMLElement div, final ReportOutputFolder base)
 			throws IOException {
 		breadcrumbParent(parent, div, base);
-		div.span(getElementStyle()).text(getLabel());
+		div.span(getLinkStyle()).text(getLinkLabel());
 	}
 
 	private static void breadcrumbParent(final ReportPage page,
@@ -129,8 +118,7 @@ public abstract class ReportPage {
 			throws IOException {
 		if (page != null) {
 			breadcrumbParent(page.parent, div, base);
-			final String style = page.getElementStyle();
-			div.a(page.getLink(base), style).text(page.getLabel());
+			div.a(page, base);
 			div.text(" > ");
 		}
 	}
@@ -152,21 +140,6 @@ public abstract class ReportPage {
 	protected abstract String getFileName();
 
 	/**
-	 * Returns the display label used for the element represented on this page.
-	 * 
-	 * @return display label
-	 */
-	protected abstract String getLabel();
-
-	/**
-	 * The CSS style class that might be associated with this element when it is
-	 * displayed in the header or in tables.
-	 * 
-	 * @return CSS style class for this element
-	 */
-	protected abstract String getElementStyle();
-
-	/**
 	 * Creates the actual content of the page.
 	 * 
 	 * @param body
@@ -175,5 +148,11 @@ public abstract class ReportPage {
 	 *             in case of IO problems with the report writer
 	 */
 	protected abstract void content(final HTMLElement body) throws IOException;
+
+	// === ILinkable ===
+
+	public final String getLink(final ReportOutputFolder base) {
+		return folder.getLink(base, getFileName());
+	}
 
 }

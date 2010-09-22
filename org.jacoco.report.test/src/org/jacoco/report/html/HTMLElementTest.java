@@ -83,17 +83,24 @@ public class HTMLElementTest {
 
 	@Test
 	public void testSpan1() throws IOException {
+		root.span();
+		root.close();
+		assertEquals("<root><span/></root>", buffer.toString());
+	}
+
+	@Test
+	public void testSpan2() throws IOException {
 		root.span("abc");
 		root.close();
 		assertEquals("<root><span class=\"abc\"/></root>", buffer.toString());
 	}
 
 	@Test
-	public void testSpan2() throws IOException {
+	public void testSpan3() throws IOException {
 		root.span("abc", "xy");
 		root.close();
-		assertEquals("<root><span class=\"abc\" id=\"xy\"/></root>", buffer
-				.toString());
+		assertEquals("<root><span class=\"abc\" id=\"xy\"/></root>",
+				buffer.toString());
 	}
 
 	@Test
@@ -118,13 +125,6 @@ public class HTMLElementTest {
 	}
 
 	@Test
-	public void testBr() throws IOException {
-		root.br();
-		root.close();
-		assertEquals("<root><br/></root>", buffer.toString());
-	}
-
-	@Test
 	public void testA1() throws IOException {
 		root.a("http://www.jacoco.org/");
 		root.close();
@@ -138,6 +138,38 @@ public class HTMLElementTest {
 		root.close();
 		assertEquals(
 				"<root><a href=\"http://www.jacoco.org/\" class=\"extern\"/></root>",
+				buffer.toString());
+	}
+
+	@Test
+	public void testALinkable1() throws IOException {
+		root.a(new LinkableStub(null, "here", null), null);
+		root.close();
+		assertEquals("<root><span>here</span></root>", buffer.toString());
+	}
+
+	@Test
+	public void testALinkable2() throws IOException {
+		root.a(new LinkableStub(null, "here", "blue"), null);
+		root.close();
+		assertEquals("<root><span class=\"blue\">here</span></root>",
+				buffer.toString());
+	}
+
+	@Test
+	public void testALinkable3() throws IOException {
+		root.a(new LinkableStub("index.html", "here", null), null);
+		root.close();
+		assertEquals("<root><a href=\"index.html\">here</a></root>",
+				buffer.toString());
+	}
+
+	@Test
+	public void testALinkable4() throws IOException {
+		root.a(new LinkableStub("index.html", "here", "red"), null);
+		root.close();
+		assertEquals(
+				"<root><a href=\"index.html\" class=\"red\">here</a></root>",
 				buffer.toString());
 	}
 
@@ -194,13 +226,6 @@ public class HTMLElementTest {
 
 	@Test
 	public void testTd3() throws IOException {
-		root.td(5);
-		root.close();
-		assertEquals("<root><td colspan=\"5\"/></root>", buffer.toString());
-	}
-
-	@Test
-	public void testTd4() throws IOException {
 		root.td("mystyle", 3);
 		root.close();
 		assertEquals("<root><td class=\"mystyle\" colspan=\"3\"/></root>",

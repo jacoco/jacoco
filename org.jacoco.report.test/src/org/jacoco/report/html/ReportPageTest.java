@@ -22,6 +22,7 @@ import org.jacoco.report.MemoryMultiReportOutput;
 import org.jacoco.report.ReportOutputFolder;
 import org.jacoco.report.html.index.IIndexUpdate;
 import org.jacoco.report.html.resources.Resources;
+import org.jacoco.report.html.resources.Styles;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -64,13 +65,11 @@ public class ReportPageTest {
 			return label + ".html";
 		}
 
-		@Override
-		protected String getLabel() {
+		public String getLinkLabel() {
 			return label;
 		}
 
-		@Override
-		protected String getElementStyle() {
+		public String getLinkStyle() {
 			return style;
 		}
 
@@ -99,8 +98,9 @@ public class ReportPageTest {
 				return "CustomFooter";
 			}
 
-			public String getSessionsPageLink(ReportOutputFolder base) {
-				return "info.html";
+			public ILinkable getSessionsPage() {
+				return new LinkableStub("sessions.html", "Sessions",
+						Styles.EL_SESSION);
 			}
 
 			public String getOutputEncoding() {
@@ -156,8 +156,8 @@ public class ReportPageTest {
 				"/html/body/div[@class='testcontent']/text()"));
 
 		// Footer
-		assertEquals("CustomFooter", support.findStr(doc,
-				"/html/body/div[@class='footer']/text()"));
+		assertEquals("CustomFooter",
+				support.findStr(doc, "/html/body/div[@class='footer']/text()"));
 	}
 
 }

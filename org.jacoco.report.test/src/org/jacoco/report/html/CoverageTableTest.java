@@ -87,7 +87,7 @@ public class CoverageTableTest {
 
 			public void item(HTMLElement tr, ICoverageTableItem item,
 					Resources resources, ReportOutputFolder base) {
-				store.append("item").append(item.getLabel()).append("-");
+				store.append("item").append(item.getLinkLabel()).append("-");
 			}
 
 			@Override
@@ -97,12 +97,12 @@ public class CoverageTableTest {
 		};
 		final List<ICoverageTableItem> items = Arrays.asList(
 				createItem("A", 1), createItem("B", 2), createItem("C", 3));
-		new CoverageTable(Arrays.asList(recorder), CounterComparator.TOTALITEMS
-				.on(CounterEntity.CLASS)).render(body, items, createTotal(
-				"Sum", 6), resources, root);
+		new CoverageTable(Arrays.asList(recorder),
+				CounterComparator.TOTALITEMS.on(CounterEntity.CLASS)).render(
+				body, items, createTotal("Sum", 6), resources, root);
 		doc.close();
-		assertEquals("init-header-footer-itemA-itemB-itemC-", recorder
-				.toString());
+		assertEquals("init-header-footer-itemA-itemB-itemC-",
+				recorder.toString());
 	}
 
 	@Test
@@ -124,7 +124,7 @@ public class CoverageTableTest {
 
 			public void item(HTMLElement tr, ICoverageTableItem item,
 					Resources resources, ReportOutputFolder base) {
-				store.append(item.getLabel());
+				store.append(item.getLinkLabel());
 			}
 
 			@Override
@@ -135,9 +135,9 @@ public class CoverageTableTest {
 		final List<ICoverageTableItem> items = Arrays.asList(
 				createItem("C", 3), createItem("E", 5), createItem("A", 1),
 				createItem("D", 4), createItem("B", 2));
-		new CoverageTable(Arrays.asList(recorder), CounterComparator.TOTALITEMS
-				.on(CounterEntity.CLASS)).render(body, items, createTotal(
-				"Sum", 6), resources, root);
+		new CoverageTable(Arrays.asList(recorder),
+				CounterComparator.TOTALITEMS.on(CounterEntity.CLASS)).render(
+				body, items, createTotal("Sum", 6), resources, root);
 		doc.close();
 		assertEquals("ABCDE", recorder.toString());
 	}
@@ -163,28 +163,28 @@ public class CoverageTableTest {
 			public void item(HTMLElement tr, ICoverageTableItem item,
 					Resources resources, ReportOutputFolder base)
 					throws IOException {
-				tr.td().text(item.getLabel());
+				tr.td().text(item.getLinkLabel());
 			}
 		};
 		final List<ICoverageTableItem> items = Arrays.asList(
 				createItem("A", 1), createItem("B", 2), createItem("C", 3));
-		new CoverageTable(Arrays.asList(recorder), CounterComparator.TOTALITEMS
-				.on(CounterEntity.CLASS)).render(body, items, createTotal(
-				"Sum", 6), resources, root);
+		new CoverageTable(Arrays.asList(recorder),
+				CounterComparator.TOTALITEMS.on(CounterEntity.CLASS)).render(
+				body, items, createTotal("Sum", 6), resources, root);
 		doc.close();
 
 		final HTMLSupport support = new HTMLSupport();
 		final Document doc = support.parse(output.getFile("Test.html"));
-		assertEquals("Header", support.findStr(doc,
-				"/html/body/table/thead/tr/td/text()"));
-		assertEquals("Footer", support.findStr(doc,
-				"/html/body/table/tfoot/tr/td/text()"));
-		assertEquals("A", support.findStr(doc,
-				"/html/body/table/tbody/tr[1]/td/text()"));
-		assertEquals("B", support.findStr(doc,
-				"/html/body/table/tbody/tr[2]/td/text()"));
-		assertEquals("C", support.findStr(doc,
-				"/html/body/table/tbody/tr[3]/td/text()"));
+		assertEquals("Header",
+				support.findStr(doc, "/html/body/table/thead/tr/td/text()"));
+		assertEquals("Footer",
+				support.findStr(doc, "/html/body/table/tfoot/tr/td/text()"));
+		assertEquals("A",
+				support.findStr(doc, "/html/body/table/tbody/tr[1]/td/text()"));
+		assertEquals("B",
+				support.findStr(doc, "/html/body/table/tbody/tr[2]/td/text()"));
+		assertEquals("C",
+				support.findStr(doc, "/html/body/table/tbody/tr[3]/td/text()"));
 	}
 
 	private ICoverageTableItem createItem(final String name, final int count) {
@@ -195,12 +195,16 @@ public class CoverageTableTest {
 			}
 		};
 		return new ICoverageTableItem() {
-			public String getLabel() {
+			public String getLinkLabel() {
 				return name;
 			}
 
 			public String getLink(ReportOutputFolder base) {
 				return name + ".html";
+			}
+
+			public String getLinkStyle() {
+				return Resources.getElementStyle(node.getElementType());
 			}
 
 			public ICoverageNode getNode() {

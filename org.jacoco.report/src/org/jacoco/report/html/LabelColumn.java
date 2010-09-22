@@ -48,15 +48,7 @@ public class LabelColumn implements ICoverageTableColumn {
 	public void item(final HTMLElement tr, final ICoverageTableItem item,
 			final Resources resources, final ReportOutputFolder base)
 			throws IOException {
-		final String style = Resources.getElementStyle(item.getNode()
-				.getElementType());
-		final String link = item.getLink(base);
-		final String label = item.getLabel();
-		if (link == null) {
-			tr.td().span(style).text(label);
-		} else {
-			tr.td().a(link, style).text(label);
-		}
+		tr.td().a(item, base);
 	}
 
 }

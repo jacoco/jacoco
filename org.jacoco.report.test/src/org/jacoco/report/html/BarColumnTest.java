@@ -71,14 +71,14 @@ public class BarColumnTest {
 				root);
 		doc.close();
 		final Document doc = support.parse(output.getFile("Test.html"));
-		assertEquals("TestHeader", support.findStr(doc,
-				"/html/body/table/tr/td/text()"));
+		assertEquals("TestHeader",
+				support.findStr(doc, "/html/body/table/tr/td/text()"));
 	}
 
 	@Test
 	public void testFooter() throws Exception {
-		new BarColumn("TestHeader", CounterEntity.LINE).footer(tr, createNode(
-				20, 5), resources, root);
+		new BarColumn("TestHeader", CounterEntity.LINE).footer(tr,
+				createNode(20, 5), resources, root);
 		doc.close();
 		final Document doc = support.parse(output.getFile("Test.html"));
 		assertEquals("", support.findStr(doc, "/html/body/table/tr/td/text()"));
@@ -94,24 +94,24 @@ public class BarColumnTest {
 		doc.close();
 		final Document doc = support.parse(output.getFile("Test.html"));
 
-		assertEquals("2", support.findStr(doc,
-				"count(/html/body/table/tr[1]/td/img)"));
+		assertEquals("2",
+				support.findStr(doc, "count(/html/body/table/tr[1]/td/img)"));
 
 		// red bar
-		assertEquals(".resources/redbar.gif", support.findStr(doc,
-				"/html/body/table/tr[1]/td/img[1]/@src"));
-		assertEquals("15", support.findStr(doc,
-				"/html/body/table/tr[1]/td/img[1]/@alt"));
-		assertEquals("60", support.findStr(doc,
-				"/html/body/table/tr[1]/td/img[1]/@width"));
+		assertEquals(".resources/redbar.gif",
+				support.findStr(doc, "/html/body/table/tr[1]/td/img[1]/@src"));
+		assertEquals("15",
+				support.findStr(doc, "/html/body/table/tr[1]/td/img[1]/@alt"));
+		assertEquals("60",
+				support.findStr(doc, "/html/body/table/tr[1]/td/img[1]/@width"));
 
 		// green bar
-		assertEquals(".resources/greenbar.gif", support.findStr(doc,
-				"/html/body/table/tr[1]/td/img[2]/@src"));
-		assertEquals("5", support.findStr(doc,
-				"/html/body/table/tr[1]/td/img[2]/@alt"));
-		assertEquals("20", support.findStr(doc,
-				"/html/body/table/tr[1]/td/img[2]/@width"));
+		assertEquals(".resources/greenbar.gif",
+				support.findStr(doc, "/html/body/table/tr[1]/td/img[2]/@src"));
+		assertEquals("5",
+				support.findStr(doc, "/html/body/table/tr[1]/td/img[2]/@alt"));
+		assertEquals("20",
+				support.findStr(doc, "/html/body/table/tr[1]/td/img[2]/@width"));
 	}
 
 	@Test
@@ -123,16 +123,16 @@ public class BarColumnTest {
 		doc.close();
 		final Document doc = support.parse(output.getFile("Test.html"));
 
-		assertEquals("1", support.findStr(doc,
-				"count(/html/body/table/tr[1]/td/img)"));
+		assertEquals("1",
+				support.findStr(doc, "count(/html/body/table/tr[1]/td/img)"));
 
 		// red bar
-		assertEquals(".resources/redbar.gif", support.findStr(doc,
-				"/html/body/table/tr[1]/td/img[1]/@src"));
-		assertEquals("20", support.findStr(doc,
-				"/html/body/table/tr[1]/td/img[1]/@alt"));
-		assertEquals("120", support.findStr(doc,
-				"/html/body/table/tr[1]/td/img[1]/@width"));
+		assertEquals(".resources/redbar.gif",
+				support.findStr(doc, "/html/body/table/tr[1]/td/img[1]/@src"));
+		assertEquals("20",
+				support.findStr(doc, "/html/body/table/tr[1]/td/img[1]/@alt"));
+		assertEquals("120",
+				support.findStr(doc, "/html/body/table/tr[1]/td/img[1]/@width"));
 	}
 
 	@Test
@@ -144,27 +144,31 @@ public class BarColumnTest {
 		doc.close();
 		final Document doc = support.parse(output.getFile("Test.html"));
 
-		assertEquals("1", support.findStr(doc,
-				"count(/html/body/table/tr[1]/td/img)"));
+		assertEquals("1",
+				support.findStr(doc, "count(/html/body/table/tr[1]/td/img)"));
 
 		// red bar
-		assertEquals(".resources/greenbar.gif", support.findStr(doc,
-				"/html/body/table/tr[1]/td/img[1]/@src"));
-		assertEquals("20", support.findStr(doc,
-				"/html/body/table/tr[1]/td/img[1]/@alt"));
-		assertEquals("120", support.findStr(doc,
-				"/html/body/table/tr[1]/td/img[1]/@width"));
+		assertEquals(".resources/greenbar.gif",
+				support.findStr(doc, "/html/body/table/tr[1]/td/img[1]/@src"));
+		assertEquals("20",
+				support.findStr(doc, "/html/body/table/tr[1]/td/img[1]/@alt"));
+		assertEquals("120",
+				support.findStr(doc, "/html/body/table/tr[1]/td/img[1]/@width"));
 	}
 
 	private ICoverageTableItem createItem(final int total, final int covered) {
 		final ICoverageNode node = createNode(total, covered);
 		return new ICoverageTableItem() {
-			public String getLabel() {
+			public String getLinkLabel() {
 				return "Foo";
 			}
 
 			public String getLink(ReportOutputFolder base) {
 				return null;
+			}
+
+			public String getLinkStyle() {
+				return Resources.getElementStyle(node.getElementType());
 			}
 
 			public ICoverageNode getNode() {

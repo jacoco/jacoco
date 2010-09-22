@@ -10,27 +10,38 @@
  *    
  * $Id: $
  *******************************************************************************/
-package org.jacoco.report.html.index;
+package org.jacoco.report.html;
 
-import org.jacoco.report.html.ILinkable;
+import org.jacoco.report.ReportOutputFolder;
 
 /**
- * Every report page that should become part of the index must be added via this
- * interface.
+ * Stub implementation for {@link ILinkable}.
  * 
  * @author Marc R. Hoffmann
  * @version $Revision: $
  */
-public interface IIndexUpdate {
+public class LinkableStub implements ILinkable {
 
-	/**
-	 * Adds a class to the index.
-	 * 
-	 * @param link
-	 *            link to the class
-	 * @param classid
-	 *            identifier of the class
-	 */
-	public void addClass(ILinkable link, long classid);
+	protected final String link;
+	private final String label;
+	private final String style;
+
+	LinkableStub(String link, String label, String style) {
+		this.link = link;
+		this.label = label;
+		this.style = style;
+	}
+
+	public String getLink(ReportOutputFolder base) {
+		return link;
+	}
+
+	public String getLinkLabel() {
+		return label;
+	}
+
+	public String getLinkStyle() {
+		return style;
+	}
 
 }

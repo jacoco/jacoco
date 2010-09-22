@@ -75,8 +75,8 @@ public class CounterColumnTest {
 		column.header(tr, resources, root);
 		doc.close();
 		final Document doc = support.parse(output.getFile("Test.html"));
-		assertEquals("TestHeader", support.findStr(doc,
-				"/html/body/table/tr/td/text()"));
+		assertEquals("TestHeader",
+				support.findStr(doc, "/html/body/table/tr/td/text()"));
 	}
 
 	@Test
@@ -86,10 +86,10 @@ public class CounterColumnTest {
 		column.item(tr, item, resources, root);
 		doc.close();
 		final Document doc = support.parse(output.getFile("Test.html"));
-		assertEquals("100 / ", support.findStr(doc,
-				"/html/body/table/tr/td[2]/text()"));
-		assertEquals("150", support.findStr(doc,
-				"/html/body/table/tr/td[3]/text()"));
+		assertEquals("100 / ",
+				support.findStr(doc, "/html/body/table/tr/td[2]/text()"));
+		assertEquals("150",
+				support.findStr(doc, "/html/body/table/tr/td[3]/text()"));
 	}
 
 	@Test
@@ -99,10 +99,10 @@ public class CounterColumnTest {
 		column.footer(tr, item.getNode(), resources, root);
 		doc.close();
 		final Document doc = support.parse(output.getFile("Test.html"));
-		assertEquals("20 / ", support.findStr(doc,
-				"/html/body/table/tr/td[2]/text()"));
-		assertEquals("80", support.findStr(doc,
-				"/html/body/table/tr/td[3]/text()"));
+		assertEquals("20 / ",
+				support.findStr(doc, "/html/body/table/tr/td[2]/text()"));
+		assertEquals("80",
+				support.findStr(doc, "/html/body/table/tr/td[3]/text()"));
 	}
 
 	@Test
@@ -141,12 +141,16 @@ public class CounterColumnTest {
 	private ICoverageTableItem createItem(final int total, final int covered) {
 		final ICoverageNode node = createNode(total, covered);
 		return new ICoverageTableItem() {
-			public String getLabel() {
+			public String getLinkLabel() {
 				return "Foo";
 			}
 
 			public String getLink(ReportOutputFolder base) {
 				return null;
+			}
+
+			public String getLinkStyle() {
+				return Resources.getElementStyle(node.getElementType());
 			}
 
 			public ICoverageNode getNode() {

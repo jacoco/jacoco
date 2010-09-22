@@ -134,12 +134,13 @@ public class XMLElement {
 	/**
 	 * Adds an attribute to this element. May only be called before an child
 	 * element is added or this element has been closed. The attribute value
-	 * will be quoted.
+	 * will be quoted. If the value is <code>null</code> the attribute will not
+	 * be added.
 	 * 
 	 * @param name
 	 *            attribute name
 	 * @param value
-	 *            attribute value
+	 *            attribute value or <code>null</code>
 	 * 
 	 * @return this element
 	 * @throws IOException
@@ -147,6 +148,9 @@ public class XMLElement {
 	 */
 	public XMLElement attr(final String name, final String value)
 			throws IOException {
+		if (value == null) {
+			return this;
+		}
 		if (closed || openTagDone) {
 			throw new IOException(format("Element %s already closed.",
 					this.name));

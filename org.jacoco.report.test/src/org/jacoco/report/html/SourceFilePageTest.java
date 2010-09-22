@@ -29,6 +29,7 @@ import org.jacoco.report.MemoryMultiReportOutput;
 import org.jacoco.report.ReportOutputFolder;
 import org.jacoco.report.html.index.IIndexUpdate;
 import org.jacoco.report.html.resources.Resources;
+import org.jacoco.report.html.resources.Styles;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -73,8 +74,9 @@ public class SourceFilePageTest {
 				return "CustomFooter";
 			}
 
-			public String getSessionsPageLink(ReportOutputFolder base) {
-				return "info.html";
+			public ILinkable getSessionsPage() {
+				return new LinkableStub("sessions.html", "Sessions",
+						Styles.EL_SESSION);
 			}
 
 			public String getOutputEncoding() {

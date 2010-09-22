@@ -49,8 +49,7 @@ public abstract class NodePage extends ReportPage implements IReportVisitor,
 		this.node = node;
 	}
 
-	@Override
-	protected String getElementStyle() {
+	public String getLinkStyle() {
 		return Resources.getElementStyle(node.getElementType());
 	}
 
@@ -62,8 +61,7 @@ public abstract class NodePage extends ReportPage implements IReportVisitor,
 
 	// === ICoverageTableItem ===
 
-	@Override
-	public String getLabel() {
+	public String getLinkLabel() {
 		return node.getName();
 	}
 

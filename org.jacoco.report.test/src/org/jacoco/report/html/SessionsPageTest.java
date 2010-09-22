@@ -30,6 +30,7 @@ import org.jacoco.report.ReportOutputFolder;
 import org.jacoco.report.html.index.ElementIndex;
 import org.jacoco.report.html.index.IIndexUpdate;
 import org.jacoco.report.html.resources.Resources;
+import org.jacoco.report.html.resources.Styles;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -81,8 +82,9 @@ public class SessionsPageTest {
 				return "CustomFooter";
 			}
 
-			public String getSessionsPageLink(ReportOutputFolder base) {
-				return "info.html";
+			public ILinkable getSessionsPage() {
+				return new LinkableStub("sessions.html", "Sessions",
+						Styles.EL_SESSION);
 			}
 
 			public String getOutputEncoding() {
@@ -102,10 +104,10 @@ public class SessionsPageTest {
 	}
 
 	@Test
-	public void testGetElementStyle() {
+	public void testGetLinkStyle() {
 		final SessionsPage page = new SessionsPage(noSessions, noExecutionData,
 				index, null, root, context);
-		assertEquals("el_session", page.getElementStyle());
+		assertEquals("el_session", page.getLinkStyle());
 	}
 
 	@Test
@@ -116,10 +118,10 @@ public class SessionsPageTest {
 	}
 
 	@Test
-	public void testGetLabel() {
+	public void testGetLinkLabel() {
 		final SessionsPage page = new SessionsPage(noSessions, noExecutionData,
 				index, null, root, context);
-		assertEquals("Sessions", page.getLabel());
+		assertEquals("Sessions", page.getLinkLabel());
 	}
 
 	@Test
@@ -129,10 +131,10 @@ public class SessionsPageTest {
 		page.renderDocument();
 		final HTMLSupport support = new HTMLSupport();
 		final Document doc = support.parse(output.getFile(".sessions.html"));
-		assertEquals("No session information available.", support.findStr(doc,
-				"/html/body/p[1]"));
-		assertEquals("No execution data available.", support.findStr(doc,
-				"/html/body/p[2]"));
+		assertEquals("No session information available.",
+				support.findStr(doc, "/html/body/p[1]"));
+		assertEquals("No execution data available.",
+				support.findStr(doc, "/html/body/p[2]"));
 	}
 
 	@Test
@@ -150,10 +152,10 @@ public class SessionsPageTest {
 				"/html/body/table[1]/tbody/tr[1]/td[1]/span/@class"));
 		assertEquals("Session-A", support.findStr(doc,
 				"/html/body/table[1]/tbody/tr[1]/td[1]/span"));
-		assertEquals("Session-B", support.findStr(doc,
-				"/html/body/table[1]/tbody/tr[2]/td[1]"));
-		assertEquals("Session-C", support.findStr(doc,
-				"/html/body/table[1]/tbody/tr[3]/td[1]"));
+		assertEquals("Session-B",
+				support.findStr(doc, "/html/body/table[1]/tbody/tr[2]/td[1]"));
+		assertEquals("Session-C",
+				support.findStr(doc, "/html/body/table[1]/tbody/tr[3]/td[1]"));
 	}
 
 	@Test
@@ -164,8 +166,7 @@ public class SessionsPageTest {
 		data.add(new ExecutionData(0x1002, "ClassA", new boolean[0]));
 		index.addClass(new ReportPage(null, root, context) {
 
-			@Override
-			protected String getLabel() {
+			public String getLinkLabel() {
 				return "Foo";
 			}
 
@@ -174,8 +175,7 @@ public class SessionsPageTest {
 				return "Foo.html";
 			}
 
-			@Override
-			protected String getElementStyle() {
+			public String getLinkStyle() {
 				return "sample";
 			}
 
@@ -193,14 +193,14 @@ public class SessionsPageTest {
 				"/html/body/table[1]/tbody/tr[1]/td[1]/a/@class"));
 		assertEquals("Foo.html", support.findStr(doc,
 				"/html/body/table[1]/tbody/tr[1]/td[1]/a/@href"));
-		assertEquals("ClassA", support.findStr(doc,
-				"/html/body/table[1]/tbody/tr[1]/td[1]/a"));
+		assertEquals("ClassA",
+				support.findStr(doc, "/html/body/table[1]/tbody/tr[1]/td[1]/a"));
 		assertEquals("0000000000001002", support.findStr(doc,
 				"/html/body/table[1]/tbody/tr[1]/td[2]/code"));
-		assertEquals("ClassB", support.findStr(doc,
-				"/html/body/table[1]/tbody/tr[2]/td[1]"));
-		assertEquals("ClassC", support.findStr(doc,
-				"/html/body/table[1]/tbody/tr[3]/td[1]"));
+		assertEquals("ClassB",
+				support.findStr(doc, "/html/body/table[1]/tbody/tr[2]/td[1]"));
+		assertEquals("ClassC",
+				support.findStr(doc, "/html/body/table[1]/tbody/tr[3]/td[1]"));
 	}
 
 }

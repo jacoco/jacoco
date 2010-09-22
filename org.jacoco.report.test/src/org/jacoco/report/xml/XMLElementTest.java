@@ -100,16 +100,23 @@ public class XMLElementTest {
 	public void testQuotedText() throws IOException {
 		root.text("<black&white\">");
 		root.close();
-		assertEquals("<root>&lt;black&amp;white&quot;&gt;</root>", buffer
-				.toString());
+		assertEquals("<root>&lt;black&amp;white&quot;&gt;</root>",
+				buffer.toString());
+	}
+
+	@Test
+	public void testNullAttributes() throws IOException {
+		root.attr("id", null);
+		root.close();
+		assertEquals("<root/>", buffer.toString());
 	}
 
 	@Test
 	public void testStringAttributes() throws IOException {
 		root.attr("id", "12345").attr("quote", "<\">");
 		root.close();
-		assertEquals("<root id=\"12345\" quote=\"&lt;&quot;&gt;\"/>", buffer
-				.toString());
+		assertEquals("<root id=\"12345\" quote=\"&lt;&quot;&gt;\"/>",
+				buffer.toString());
 	}
 
 	@Test

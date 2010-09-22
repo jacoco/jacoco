@@ -56,16 +56,17 @@ public class HTMLFormatter implements IReportFormatter, IHTMLReportContext {
 
 	private ElementIndex index;
 
-	private SessionsPage infoPage;
+	private SessionsPage sessionsPage;
 
 	/**
 	 * The default sorting which is absolute not covered instructions and
 	 * absolute total instructions as the second criterion.
 	 */
 	public static final Comparator<ICoverageNode> DEFAULT_SORTING = CounterComparator.MISSEDITEMS
-			.reverse().on(CounterEntity.INSTRUCTION).second(
-					CounterComparator.TOTALITEMS.reverse().on(
-							CounterEntity.INSTRUCTION));
+			.reverse()
+			.on(CounterEntity.INSTRUCTION)
+			.second(CounterComparator.TOTALITEMS.reverse().on(
+					CounterEntity.INSTRUCTION));
 
 	private final CoverageTable defaultTable;
 
@@ -154,8 +155,8 @@ public class HTMLFormatter implements IReportFormatter, IHTMLReportContext {
 		return footerText;
 	}
 
-	public String getSessionsPageLink(final ReportOutputFolder base) {
-		return infoPage.getLink(base);
+	public ILinkable getSessionsPage() {
+		return sessionsPage;
 	}
 
 	public String getOutputEncoding() {
@@ -180,7 +181,7 @@ public class HTMLFormatter implements IReportFormatter, IHTMLReportContext {
 		index = new ElementIndex(root);
 		final GroupPage rootpage = new GroupPage(rootNode, null, root, this) {
 			@Override
-			protected String getElementStyle() {
+			public String getLinkStyle() {
 				return Styles.EL_REPORT;
 			}
 
@@ -188,10 +189,10 @@ public class HTMLFormatter implements IReportFormatter, IHTMLReportContext {
 			public void visitEnd(final ISourceFileLocator sourceFileLocator)
 					throws IOException {
 				super.visitEnd(sourceFileLocator);
-				infoPage.renderDocument();
+				sessionsPage.renderDocument();
 			}
 		};
-		infoPage = new SessionsPage(sessionInfos, executionData, index,
+		sessionsPage = new SessionsPage(sessionInfos, executionData, index,
 				rootpage, root, this);
 		return rootpage;
 	}

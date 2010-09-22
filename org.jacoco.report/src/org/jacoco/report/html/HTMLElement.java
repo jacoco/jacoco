@@ -15,6 +15,7 @@ package org.jacoco.report.html;
 import java.io.IOException;
 import java.io.Writer;
 
+import org.jacoco.report.ReportOutputFolder;
 import org.jacoco.report.xml.XMLElement;
 
 /**
@@ -122,6 +123,17 @@ public class HTMLElement extends XMLElement {
 	/**
 	 * Creates a 'span' element.
 	 * 
+	 * @return 'span' element
+	 * @throws IOException
+	 *             in case of problems with the writer
+	 */
+	public HTMLElement span() throws IOException {
+		return element("span");
+	}
+
+	/**
+	 * Creates a 'span' element.
+	 * 
 	 * @param classattr
 	 *            value of the class attribute
 	 * @return 'span' element
@@ -129,7 +141,7 @@ public class HTMLElement extends XMLElement {
 	 *             in case of problems with the writer
 	 */
 	public HTMLElement span(final String classattr) throws IOException {
-		final HTMLElement span = element("span");
+		final HTMLElement span = span();
 		span.attr("class", classattr);
 		return span;
 	}
@@ -147,8 +159,7 @@ public class HTMLElement extends XMLElement {
 	 */
 	public HTMLElement span(final String classattr, final String idattr)
 			throws IOException {
-		final HTMLElement span = element("span");
-		span.attr("class", classattr);
+		final HTMLElement span = span(classattr);
 		span.attr("id", idattr);
 		return span;
 	}
@@ -195,16 +206,6 @@ public class HTMLElement extends XMLElement {
 	}
 
 	/**
-	 * Creates a empty 'br' element.
-	 * 
-	 * @throws IOException
-	 *             in case of problems with the writer
-	 */
-	public void br() throws IOException {
-		element("br").close();
-	}
-
-	/**
 	 * Creates a 'a' element.
 	 * 
 	 * @param hrefattr
@@ -232,9 +233,32 @@ public class HTMLElement extends XMLElement {
 	 */
 	public HTMLElement a(final String hrefattr, final String classattr)
 			throws IOException {
-		final HTMLElement a = element("a");
-		a.attr("href", hrefattr);
+		final HTMLElement a = a(hrefattr);
 		a.attr("class", classattr);
+		return a;
+	}
+
+	/**
+	 * Creates a link to the given {@link ILinkable}.
+	 * 
+	 * @param linkable
+	 *            object to link to
+	 * @param base
+	 *            base folder where the link should be placed
+	 * @return 'a' element or 'span' element, if the link target does not exist
+	 * @throws IOException
+	 *             in case of problems with the writer
+	 */
+	public HTMLElement a(final ILinkable linkable, final ReportOutputFolder base)
+			throws IOException {
+		final HTMLElement a;
+		final String link = linkable.getLink(base);
+		if (link == null) {
+			a = span(linkable.getLinkStyle());
+		} else {
+			a = a(link, linkable.getLinkStyle());
+		}
+		a.text(linkable.getLinkLabel());
 		return a;
 	}
 
@@ -306,7 +330,7 @@ public class HTMLElement extends XMLElement {
 	 *             in case of problems with the writer
 	 */
 	public HTMLElement td() throws IOException {
-		return td(null, 1);
+		return element("td");
 	}
 
 	/**
@@ -319,20 +343,9 @@ public class HTMLElement extends XMLElement {
 	 *             in case of problems with the writer
 	 */
 	public HTMLElement td(final String classattr) throws IOException {
-		return td(classattr, 1);
-	}
-
-	/**
-	 * Creates a 'td' element.
-	 * 
-	 * @param colspanattr
-	 *            value of the colspan attribute
-	 * @return 'td' element
-	 * @throws IOException
-	 *             in case of problems with the writer
-	 */
-	public HTMLElement td(final int colspanattr) throws IOException {
-		return td(null, colspanattr);
+		final HTMLElement td = td();
+		td.attr("class", classattr);
+		return td;
 	}
 
 	/**
@@ -348,10 +361,7 @@ public class HTMLElement extends XMLElement {
 	 */
 	public HTMLElement td(final String classattr, final int colspanattr)
 			throws IOException {
-		final HTMLElement td = element("td");
-		if (classattr != null) {
-			td.attr("class", classattr);
-		}
+		final HTMLElement td = td(classattr);
 		if (colspanattr > 1) {
 			td.attr("colspan", colspanattr);
 		}

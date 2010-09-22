@@ -69,8 +69,8 @@ public class LabelColumnTest {
 		column.header(tr, resources, root);
 		doc.close();
 		final Document doc = support.parse(output.getFile("Test.html"));
-		assertEquals("Element", support.findStr(doc,
-				"/html/body/table/tr/td/text()"));
+		assertEquals("Element",
+				support.findStr(doc, "/html/body/table/tr/td/text()"));
 	}
 
 	@Test
@@ -80,8 +80,8 @@ public class LabelColumnTest {
 				resources, root);
 		doc.close();
 		final Document doc = support.parse(output.getFile("Test.html"));
-		assertEquals("Total", support.findStr(doc,
-				"/html/body/table/tr/td/text()"));
+		assertEquals("Total",
+				support.findStr(doc, "/html/body/table/tr/td/text()"));
 	}
 
 	@Test
@@ -89,10 +89,10 @@ public class LabelColumnTest {
 		column.item(tr, createItem("Abc", null), resources, root);
 		doc.close();
 		final Document doc = support.parse(output.getFile("Test.html"));
-		assertEquals("Abc", support.findStr(doc,
-				"/html/body/table/tr/td/span/text()"));
-		assertEquals("el_group", support.findStr(doc,
-				"/html/body/table/tr/td/span/@class"));
+		assertEquals("Abc",
+				support.findStr(doc, "/html/body/table/tr/td/span/text()"));
+		assertEquals("el_group",
+				support.findStr(doc, "/html/body/table/tr/td/span/@class"));
 	}
 
 	@Test
@@ -100,24 +100,28 @@ public class LabelColumnTest {
 		column.item(tr, createItem("Def", "def.html"), resources, root);
 		doc.close();
 		final Document doc = support.parse(output.getFile("Test.html"));
-		assertEquals("Def", support.findStr(doc,
-				"/html/body/table/tr/td/a/text()"));
-		assertEquals("def.html", support.findStr(doc,
-				"/html/body/table/tr/td/a/@href"));
-		assertEquals("el_group", support.findStr(doc,
-				"/html/body/table/tr/td/a/@class"));
+		assertEquals("Def",
+				support.findStr(doc, "/html/body/table/tr/td/a/text()"));
+		assertEquals("def.html",
+				support.findStr(doc, "/html/body/table/tr/td/a/@href"));
+		assertEquals("el_group",
+				support.findStr(doc, "/html/body/table/tr/td/a/@class"));
 	}
 
 	private ICoverageTableItem createItem(final String name, final String link) {
 		final ICoverageNode node = new CoverageNodeImpl(ElementType.GROUP,
 				name, false);
 		return new ICoverageTableItem() {
-			public String getLabel() {
+			public String getLinkLabel() {
 				return name;
 			}
 
 			public String getLink(ReportOutputFolder base) {
 				return link;
+			}
+
+			public String getLinkStyle() {
+				return Resources.getElementStyle(node.getElementType());
 			}
 
 			public ICoverageNode getNode() {

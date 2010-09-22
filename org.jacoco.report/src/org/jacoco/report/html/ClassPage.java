@@ -22,6 +22,7 @@ import org.jacoco.core.analysis.ICoverageNode;
 import org.jacoco.core.analysis.MethodCoverage;
 import org.jacoco.report.IReportVisitor;
 import org.jacoco.report.ReportOutputFolder;
+import org.jacoco.report.html.resources.Styles;
 
 /**
  * Page showing coverage information for a class as a table of methods. The
@@ -40,10 +41,14 @@ public class ClassPage extends NodePage {
 			this.node = node;
 		}
 
-		public String getLabel() {
+		public String getLinkLabel() {
 			return context.getLanguageNames().getMethodName(
 					ClassPage.this.getNode().getName(), node.getName(),
 					node.getDesc(), node.getSignature());
+		}
+
+		public String getLinkStyle() {
+			return Styles.EL_METHOD;
 		}
 
 		public String getLink(final ReportOutputFolder base) {
@@ -112,7 +117,7 @@ public class ClassPage extends NodePage {
 	}
 
 	@Override
-	public String getLabel() {
+	public String getLinkLabel() {
 		return label;
 	}
 
