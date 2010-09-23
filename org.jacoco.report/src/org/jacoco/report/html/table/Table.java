@@ -14,7 +14,6 @@ package org.jacoco.report.html.table;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
@@ -35,22 +34,13 @@ public class Table {
 
 	private final List<Column> columns;
 
-	private final Comparator<ITableItem> comparator;
+	private Comparator<ICoverageNode> defaultComparator;
 
 	/**
-	 * Create a new table with the given columns.
-	 * 
-	 * @param comparator
-	 *            comparator for sorting the table items
+	 * Create a new table without any columns yet.
 	 */
-	public Table(final Comparator<ICoverageNode> comparator) {
+	public Table() {
 		this.columns = new ArrayList<Table.Column>();
-		this.comparator = new Comparator<ITableItem>() {
-			public int compare(final ITableItem i1,
-					final ITableItem i2) {
-				return comparator.compare(i1.getNode(), i2.getNode());
-			}
-		};
 	}
 
 	/**
@@ -63,10 +53,25 @@ public class Table {
 	 *            column
 	 * @param renderer
 	 *            callback for column rendering
+	 * @param comparator
+	 *            optional comparator to sort this column
+	 * @param defaultSorting
+	 *            If <code>true</code>, this column is the default sorting
+	 *            column. Only one column can be selected for default sorting.
+	 * 
 	 */
 	public void add(final String header, final String style,
-			final IColumnRenderer renderer) {
+			final IColumnRenderer renderer,
+			final Comparator<ICoverageNode> comparator,
+			final boolean defaultSorting) {
 		columns.add(new Column(header, style, renderer));
+		if (defaultSorting) {
+			if (defaultComparator != null) {
+				throw new IllegalStateException(
+						"Default sorting only allowed for one column.");
+			}
+			this.defaultComparator = comparator;
+		}
 	}
 
 	/**
@@ -87,10 +92,10 @@ public class Table {
 	 *             in case of IO problems with the element output
 	 */
 	public void render(final HTMLElement parent,
-			final Collection<? extends ITableItem> items,
-			final ICoverageNode total, final Resources resources,
-			final ReportOutputFolder base) throws IOException {
-		final List<ITableItem> sortedItems = sort(items);
+			final List<? extends ITableItem> items, final ICoverageNode total,
+			final Resources resources, final ReportOutputFolder base)
+			throws IOException {
+		final List<? extends ITableItem> sortedItems = sort(items);
 		final HTMLElement table = parent.table(Styles.COVERAGETABLE);
 		header(table, sortedItems, total, resources, base);
 		footer(table, total, resources, base);
@@ -98,7 +103,7 @@ public class Table {
 	}
 
 	private void header(final HTMLElement table,
-			final List<ITableItem> items, final ICoverageNode total,
+			final List<? extends ITableItem> items, final ICoverageNode total,
 			final Resources resources, final ReportOutputFolder base)
 			throws IOException {
 		final HTMLElement tr = table.thead().tr();
@@ -122,7 +127,7 @@ public class Table {
 	}
 
 	private void body(final HTMLElement table,
-			final List<ITableItem> items, final Resources resources,
+			final List<? extends ITableItem> items, final Resources resources,
 			final ReportOutputFolder base) throws IOException {
 		final HTMLElement tbody = table.tbody();
 		for (final ITableItem item : items) {
@@ -135,12 +140,16 @@ public class Table {
 		}
 	}
 
-	private List<ITableItem> sort(
-			final Collection<? extends ITableItem> items) {
-		final ArrayList<ITableItem> result = new ArrayList<ITableItem>(
-				items);
-		Collections.sort(result, comparator);
-		return result;
+	private List<? extends ITableItem> sort(
+			final List<? extends ITableItem> items) {
+		if (defaultComparator != null) {
+			final ArrayList<ITableItem> result = new ArrayList<ITableItem>(
+					items);
+			Collections
+					.sort(result, new TableItemComparator(defaultComparator));
+			return result;
+		}
+		return items;
 	}
 
 	private static class Column {
@@ -160,5 +169,17 @@ public class Table {
 			this.renderer = renderer;
 		}
 	}
+
+	private static class TableItemComparator implements Comparator<ITableItem> {
+		private final Comparator<ICoverageNode> comparator;
+
+		TableItemComparator(final Comparator<ICoverageNode> comparator) {
+			this.comparator = comparator;
+		}
+
+		public int compare(final ITableItem i1, final ITableItem i2) {
+			return comparator.compare(i1.getNode(), i2.getNode());
+		}
+	};
 
 }

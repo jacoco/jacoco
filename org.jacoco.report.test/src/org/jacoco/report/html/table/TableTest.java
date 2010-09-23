@@ -54,6 +54,8 @@ public class TableTest {
 
 	private HTMLElement body;
 
+	private Table table;
+
 	@Before
 	public void setup() throws IOException {
 		output = new MemoryMultiReportOutput();
@@ -62,6 +64,7 @@ public class TableTest {
 		doc = new HTMLDocument(root.createFile("Test.html"), "UTF-8");
 		doc.head().title();
 		body = doc.body();
+		table = new Table();
 	}
 
 	@After
@@ -75,7 +78,7 @@ public class TableTest {
 
 			private final StringBuilder store = new StringBuilder();
 
-			public boolean init(List<ITableItem> items,
+			public boolean init(List<? extends ITableItem> items,
 					ICoverageNode total) {
 				store.append("init-");
 				return true;
@@ -96,11 +99,9 @@ public class TableTest {
 				return store.toString();
 			}
 		};
-		final List<ITableItem> items = Arrays.asList(
-				createItem("A", 1), createItem("B", 2), createItem("C", 3));
-		final Table table = new Table(
-				CounterComparator.TOTALITEMS.on(CounterEntity.CLASS));
-		table.add("Header", null, recorder);
+		final List<ITableItem> items = Arrays.asList(createItem("A", 1),
+				createItem("B", 2), createItem("C", 3));
+		table.add("Header", null, recorder, null, false);
 		table.render(body, items, createTotal("Sum", 6), resources, root);
 		doc.close();
 		assertEquals("init-footer-itemA-itemB-itemC-", recorder.toString());
@@ -110,7 +111,7 @@ public class TableTest {
 	public void testInvisible() throws IOException {
 		final IColumnRenderer column = new IColumnRenderer() {
 
-			public boolean init(List<ITableItem> items,
+			public boolean init(List<? extends ITableItem> items,
 					ICoverageNode total) {
 				return false;
 			}
@@ -125,13 +126,19 @@ public class TableTest {
 				fail();
 			}
 		};
-		final List<ITableItem> items = Arrays
-				.asList(createItem("A", 1));
-		final Table table = new Table(
-				CounterComparator.TOTALITEMS.on(CounterEntity.CLASS));
-		table.add("Header", null, column);
+		final List<ITableItem> items = Arrays.asList(createItem("A", 1));
+		table.add("Header", null, column, null, false);
 		table.render(body, items, createTotal("Sum", 1), resources, root);
 		doc.close();
+	}
+
+	@Test(expected = IllegalStateException.class)
+	public void testTwoDefaultSorts() throws IOException {
+		doc.close();
+		table.add("Header1", null, null,
+				CounterComparator.TOTALITEMS.on(CounterEntity.CLASS), true);
+		table.add("Header2", null, null,
+				CounterComparator.TOTALITEMS.on(CounterEntity.CLASS), true);
 	}
 
 	@Test
@@ -140,7 +147,7 @@ public class TableTest {
 
 			private final StringBuilder store = new StringBuilder();
 
-			public boolean init(List<ITableItem> items,
+			public boolean init(List<? extends ITableItem> items,
 					ICoverageNode total) {
 				return true;
 			}
@@ -159,12 +166,11 @@ public class TableTest {
 				return store.toString();
 			}
 		};
-		final List<ITableItem> items = Arrays.asList(
-				createItem("C", 3), createItem("E", 5), createItem("A", 1),
-				createItem("D", 4), createItem("B", 2));
-		final Table table = new Table(
-				CounterComparator.TOTALITEMS.on(CounterEntity.CLASS));
-		table.add("Header", null, column);
+		final List<ITableItem> items = Arrays.asList(createItem("C", 3),
+				createItem("E", 5), createItem("A", 1), createItem("D", 4),
+				createItem("B", 2));
+		table.add("Header", null, column,
+				CounterComparator.TOTALITEMS.on(CounterEntity.CLASS), true);
 		table.render(body, items, createTotal("Sum", 6), resources, root);
 		doc.close();
 		assertEquals("ABCDE", column.toString());
@@ -174,7 +180,7 @@ public class TableTest {
 	public void testValidHTML() throws Exception {
 		final IColumnRenderer column = new IColumnRenderer() {
 
-			public boolean init(List<ITableItem> items,
+			public boolean init(List<? extends ITableItem> items,
 					ICoverageNode total) {
 				return true;
 			}
@@ -191,11 +197,9 @@ public class TableTest {
 				td.text(item.getLinkLabel());
 			}
 		};
-		final List<ITableItem> items = Arrays.asList(
-				createItem("A", 1), createItem("B", 2), createItem("C", 3));
-		final Table table = new Table(
-				CounterComparator.TOTALITEMS.on(CounterEntity.CLASS));
-		table.add("Header", "red", column);
+		final List<ITableItem> items = Arrays.asList(createItem("A", 1),
+				createItem("B", 2), createItem("C", 3));
+		table.add("Header", "red", column, null, false);
 		table.render(body, items, createTotal("Sum", 6), resources, root);
 		doc.close();
 

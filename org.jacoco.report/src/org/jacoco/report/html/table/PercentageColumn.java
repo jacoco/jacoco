@@ -50,7 +50,7 @@ public class PercentageColumn implements IColumnRenderer {
 		this.entity = entity;
 	}
 
-	public boolean init(final List<ITableItem> items,
+	public boolean init(final List<? extends ITableItem> items,
 			final ICoverageNode total) {
 		return true;
 	}

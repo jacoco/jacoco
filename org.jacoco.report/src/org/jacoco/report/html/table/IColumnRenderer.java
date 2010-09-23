@@ -39,7 +39,7 @@ public interface IColumnRenderer {
 	 *            the summary of all coverage data items in the table
 	 * @return <code>true</code> if the column should be visible
 	 */
-	public boolean init(List<ITableItem> items, ICoverageNode total);
+	public boolean init(List<? extends ITableItem> items, ICoverageNode total);
 
 	/**
 	 * Renders the footer for this column.
@@ -72,7 +72,7 @@ public interface IColumnRenderer {
 	 * @throws IOException
 	 *             in case of IO problems with the element output
 	 */
-	public void item(HTMLElement td, ITableItem item,
-			Resources resources, ReportOutputFolder base) throws IOException;
+	public void item(HTMLElement td, ITableItem item, Resources resources,
+			ReportOutputFolder base) throws IOException;
 
 }

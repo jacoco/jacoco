@@ -42,9 +42,10 @@ import org.jacoco.report.html.resources.Resources;
 import org.jacoco.report.html.resources.Styles;
 import org.jacoco.report.html.table.BarColumn;
 import org.jacoco.report.html.table.CounterColumn;
-import org.jacoco.report.html.table.Table;
+import org.jacoco.report.html.table.IColumnRenderer;
 import org.jacoco.report.html.table.LabelColumn;
 import org.jacoco.report.html.table.PercentageColumn;
+import org.jacoco.report.html.table.Table;
 
 /**
  * Formatter for coverage reports in multiple HTML pages.
@@ -88,19 +89,29 @@ public class HTMLFormatter implements IReportFormatter, IHTMLReportContext {
 	}
 
 	private static Table createDefaultTable() {
-		final Table table = new Table(DEFAULT_SORTING);
-		table.add("Element", null, new LabelColumn());
-		table.add("Instruction Coverage", null, new BarColumn(INSTRUCTION));
-		table.add("", Styles.CTR2, new PercentageColumn(INSTRUCTION));
-		table.add("Missed", Styles.CTR1, CounterColumn.newMissed(CLASS));
-		table.add("Classes", Styles.CTR2, CounterColumn.newTotal(CLASS));
-		table.add("Missed", Styles.CTR1, CounterColumn.newMissed(METHOD));
-		table.add("Methods", Styles.CTR2, CounterColumn.newTotal(METHOD));
-		table.add("Missed", Styles.CTR1, CounterColumn.newMissed(BLOCK));
-		table.add("Blocks", Styles.CTR2, CounterColumn.newTotal(BLOCK));
-		table.add("Missed", Styles.CTR1, CounterColumn.newMissed(LINE));
-		table.add("Lines", Styles.CTR2, CounterColumn.newTotal(LINE));
+		final Table table = new Table();
+		table.add("Element", null, new LabelColumn(), null, false);
+		table.add("Instruction Coverage", null, new BarColumn(INSTRUCTION),
+				DEFAULT_SORTING, true);
+		table.add("", Styles.CTR2, new PercentageColumn(INSTRUCTION), null,
+				false);
+		addMissedTotalColumns(table, "Classes", CLASS);
+		addMissedTotalColumns(table, "Methods", METHOD);
+		addMissedTotalColumns(table, "Blocks", BLOCK);
+		addMissedTotalColumns(table, "Lines", LINE);
 		return table;
+	}
+
+	private static void addMissedTotalColumns(final Table table,
+			final String label, final CounterEntity entity) {
+		final IColumnRenderer r1 = CounterColumn.newMissed(entity);
+		final Comparator<ICoverageNode> c1 = CounterComparator.MISSEDITEMS
+				.on(entity);
+		table.add("Missed", Styles.CTR1, r1, c1, false);
+		final Comparator<ICoverageNode> c2 = CounterComparator.TOTALITEMS
+				.on(entity);
+		final IColumnRenderer r2 = CounterColumn.newTotal(entity);
+		table.add(label, Styles.CTR2, r2, c2, false);
 	}
 
 	/**

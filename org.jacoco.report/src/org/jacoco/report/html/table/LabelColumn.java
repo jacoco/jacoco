@@ -29,7 +29,7 @@ import org.jacoco.report.html.resources.Resources;
  */
 public class LabelColumn implements IColumnRenderer {
 
-	public boolean init(final List<ITableItem> items,
+	public boolean init(final List<? extends ITableItem> items,
 			final ICoverageNode total) {
 		return true;
 	}
