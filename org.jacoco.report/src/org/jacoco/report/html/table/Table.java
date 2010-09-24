@@ -64,7 +64,8 @@ public class Table {
 			final IColumnRenderer renderer,
 			final Comparator<ICoverageNode> comparator,
 			final boolean defaultSorting) {
-		columns.add(new Column(header, style, renderer));
+		columns.add(new Column(columns.size(), header, style, renderer,
+				comparator));
 		if (defaultSorting) {
 			if (defaultComparator != null) {
 				throw new IllegalStateException(
@@ -108,10 +109,7 @@ public class Table {
 			throws IOException {
 		final HTMLElement tr = table.thead().tr();
 		for (final Column c : columns) {
-			c.visible = c.renderer.init(items, total);
-			if (c.visible) {
-				tr.td(c.style).text(c.header);
-			}
+			c.init(tr, items, total);
 		}
 	}
 
@@ -120,9 +118,7 @@ public class Table {
 			throws IOException {
 		final HTMLElement tr = table.tfoot().tr();
 		for (final Column c : columns) {
-			if (c.visible) {
-				c.renderer.footer(tr.td(c.style), total, resources, base);
-			}
+			c.footer(tr, total, resources, base);
 		}
 	}
 
@@ -130,13 +126,13 @@ public class Table {
 			final List<? extends ITableItem> items, final Resources resources,
 			final ReportOutputFolder base) throws IOException {
 		final HTMLElement tbody = table.tbody();
+		int idx = 0;
 		for (final ITableItem item : items) {
 			final HTMLElement tr = tbody.tr();
 			for (final Column c : columns) {
-				if (c.visible) {
-					c.renderer.item(tr.td(c.style), item, resources, base);
-				}
+				c.body(tr, idx, item, resources, base);
 			}
+			idx++;
 		}
 	}
 
@@ -154,20 +150,65 @@ public class Table {
 
 	private static class Column {
 
-		final String header;
+		private final char idprefix;
 
-		final String style;
+		private final String header;
 
-		final IColumnRenderer renderer;
+		private final String style;
 
-		boolean visible;
+		private final IColumnRenderer renderer;
 
-		Column(final String header, final String style,
-				final IColumnRenderer renderer) {
+		private final SortIndex<ITableItem> index;
+
+		private boolean visible;
+
+		Column(final int idx, final String header, final String style,
+				final IColumnRenderer renderer,
+				final Comparator<ICoverageNode> comparator) {
+			this.idprefix = (char) ('a' + idx);
 			this.header = header;
 			this.style = style;
 			this.renderer = renderer;
+			if (comparator == null) {
+				index = null;
+			} else {
+				index = new SortIndex<ITableItem>(new TableItemComparator(
+						comparator));
+			}
 		}
+
+		void init(final HTMLElement tr, final List<? extends ITableItem> items,
+				final ICoverageNode total) throws IOException {
+			visible = renderer.init(items, total);
+			if (visible) {
+				if (index != null) {
+					index.init(items);
+				}
+				tr.td(style).text(header);
+			}
+		}
+
+		void footer(final HTMLElement tr, final ICoverageNode total,
+				final Resources resources, final ReportOutputFolder base)
+				throws IOException {
+			if (visible) {
+				renderer.footer(tr.td(style), total, resources, base);
+			}
+		}
+
+		void body(final HTMLElement tr, final int idx, final ITableItem item,
+				final Resources resources, final ReportOutputFolder base)
+				throws IOException {
+			if (visible) {
+				final HTMLElement td = tr.td(style);
+				if (index != null) {
+					td.attr("id",
+							idprefix + String.valueOf(index.getPosition(idx)));
+				}
+				renderer.item(td, item, resources, base);
+			}
+		}
+
 	}
 
 	private static class TableItemComparator implements Comparator<ITableItem> {

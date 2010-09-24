@@ -106,10 +106,10 @@ public class HTMLFormatter implements IReportFormatter, IHTMLReportContext {
 			final String label, final CounterEntity entity) {
 		final IColumnRenderer r1 = CounterColumn.newMissed(entity);
 		final Comparator<ICoverageNode> c1 = CounterComparator.MISSEDITEMS
-				.on(entity);
+				.reverse().on(entity);
 		table.add("Missed", Styles.CTR1, r1, c1, false);
 		final Comparator<ICoverageNode> c2 = CounterComparator.TOTALITEMS
-				.on(entity);
+				.reverse().on(entity);
 		final IColumnRenderer r2 = CounterColumn.newTotal(entity);
 		table.add(label, Styles.CTR2, r2, c2, false);
 	}

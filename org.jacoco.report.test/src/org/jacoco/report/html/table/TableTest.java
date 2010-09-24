@@ -177,6 +177,56 @@ public class TableTest {
 	}
 
 	@Test
+	public void testSortIds() throws Exception {
+		final IColumnRenderer column = new IColumnRenderer() {
+
+			public boolean init(List<? extends ITableItem> items,
+					ICoverageNode total) {
+				return true;
+			}
+
+			public void footer(HTMLElement td, ICoverageNode total,
+					Resources resources, ReportOutputFolder base) {
+			}
+
+			public void item(HTMLElement td, ITableItem item,
+					Resources resources, ReportOutputFolder base) {
+			}
+		};
+		final List<ITableItem> items = Arrays.asList(createItem("C", 3),
+				createItem("E", 4), createItem("A", 1), createItem("D", 2));
+		table.add("Forward", null, column,
+				CounterComparator.TOTALITEMS.on(CounterEntity.CLASS), false);
+		table.add("Reverse", null, column, CounterComparator.TOTALITEMS
+				.reverse().on(CounterEntity.CLASS), false);
+		table.render(body, items, createTotal("Sum", 6), resources, root);
+		doc.close();
+
+		final HTMLSupport support = new HTMLSupport();
+		final Document doc = support.parse(output.getFile("Test.html"));
+
+		// The elements in Column 1 are sorted in forward order:
+		assertEquals("a2",
+				support.findStr(doc, "/html/body/table/tbody/tr[1]/td[1]/@id"));
+		assertEquals("a3",
+				support.findStr(doc, "/html/body/table/tbody/tr[2]/td[1]/@id"));
+		assertEquals("a0",
+				support.findStr(doc, "/html/body/table/tbody/tr[3]/td[1]/@id"));
+		assertEquals("a1",
+				support.findStr(doc, "/html/body/table/tbody/tr[4]/td[1]/@id"));
+
+		// The elements in Column 2 are sorted in reverse order:
+		assertEquals("b1",
+				support.findStr(doc, "/html/body/table/tbody/tr[1]/td[2]/@id"));
+		assertEquals("b0",
+				support.findStr(doc, "/html/body/table/tbody/tr[2]/td[2]/@id"));
+		assertEquals("b3",
+				support.findStr(doc, "/html/body/table/tbody/tr[3]/td[2]/@id"));
+		assertEquals("b2",
+				support.findStr(doc, "/html/body/table/tbody/tr[4]/td[2]/@id"));
+	}
+
+	@Test
 	public void testValidHTML() throws Exception {
 		final IColumnRenderer column = new IColumnRenderer() {
 
