@@ -26,7 +26,6 @@ import java.util.List;
 import org.jacoco.core.analysis.CounterComparator;
 import org.jacoco.core.analysis.ICoverageNode;
 import org.jacoco.core.analysis.ICoverageNode.CounterEntity;
-import org.jacoco.core.analysis.ICoverageNode.ElementType;
 import org.jacoco.core.data.ExecutionData;
 import org.jacoco.core.data.SessionInfo;
 import org.jacoco.report.ILanguageNames;
@@ -69,16 +68,6 @@ public class HTMLFormatter implements IReportFormatter, IHTMLReportContext {
 
 	private SessionsPage sessionsPage;
 
-	/**
-	 * The default sorting which is absolute not covered instructions and
-	 * absolute total instructions as the second criterion.
-	 */
-	public static final Comparator<ICoverageNode> DEFAULT_SORTING = CounterComparator.MISSEDITEMS
-			.reverse()
-			.on(CounterEntity.INSTRUCTION)
-			.second(CounterComparator.TOTALITEMS.reverse().on(
-					CounterEntity.INSTRUCTION));
-
 	private final Table defaultTable;
 
 	/**
@@ -88,13 +77,27 @@ public class HTMLFormatter implements IReportFormatter, IHTMLReportContext {
 		defaultTable = createDefaultTable();
 	}
 
-	private static Table createDefaultTable() {
+	private Table createDefaultTable() {
 		final Table table = new Table();
-		table.add("Element", null, new LabelColumn(), null, false);
-		table.add("Instruction Coverage", null, new BarColumn(INSTRUCTION),
-				DEFAULT_SORTING, true);
-		table.add("", Styles.CTR2, new PercentageColumn(INSTRUCTION), null,
-				false);
+		table.add("Element", null, new LabelColumn(),
+				new Comparator<ICoverageNode>() {
+					public int compare(final ICoverageNode n1,
+							final ICoverageNode n2) {
+						// TODO: Use ITableItem.getLinkLabel()
+						return n1.getName().compareTo(n2.getName());
+					}
+				}, false);
+		table.add(
+				"Missed Instructions",
+				null,
+				new BarColumn(INSTRUCTION),
+				CounterComparator.MISSEDITEMS
+						.reverse()
+						.on(CounterEntity.INSTRUCTION)
+						.second(CounterComparator.TOTALITEMS.reverse().on(
+								CounterEntity.INSTRUCTION)), true);
+		table.add("Cov.", Styles.CTR2, new PercentageColumn(INSTRUCTION),
+				CounterComparator.MISSEDRATIO.on(INSTRUCTION), false);
 		addMissedTotalColumns(table, "Classes", CLASS);
 		addMissedTotalColumns(table, "Methods", METHOD);
 		addMissedTotalColumns(table, "Blocks", BLOCK);
@@ -166,7 +169,7 @@ public class HTMLFormatter implements IReportFormatter, IHTMLReportContext {
 		return resources;
 	}
 
-	public Table getTable(final ElementType type) {
+	public Table getTable() {
 		return defaultTable;
 	}
 

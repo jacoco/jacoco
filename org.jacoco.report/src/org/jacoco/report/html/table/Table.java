@@ -65,7 +65,7 @@ public class Table {
 			final Comparator<ICoverageNode> comparator,
 			final boolean defaultSorting) {
 		columns.add(new Column(columns.size(), header, style, renderer,
-				comparator));
+				comparator, defaultSorting));
 		if (defaultSorting) {
 			if (defaultComparator != null) {
 				throw new IllegalStateException(
@@ -151,23 +151,19 @@ public class Table {
 	private static class Column {
 
 		private final char idprefix;
-
 		private final String header;
-
-		private final String style;
-
 		private final IColumnRenderer renderer;
-
 		private final SortIndex<ITableItem> index;
+		private final String style, headerStyle;
 
 		private boolean visible;
 
 		Column(final int idx, final String header, final String style,
 				final IColumnRenderer renderer,
-				final Comparator<ICoverageNode> comparator) {
+				final Comparator<ICoverageNode> comparator,
+				final boolean defaultSorting) {
 			this.idprefix = (char) ('a' + idx);
 			this.header = header;
-			this.style = style;
 			this.renderer = renderer;
 			if (comparator == null) {
 				index = null;
@@ -175,6 +171,9 @@ public class Table {
 				index = new SortIndex<ITableItem>(new TableItemComparator(
 						comparator));
 			}
+			this.style = style;
+			this.headerStyle = Styles.combine(defaultSorting ? Styles.DOWN
+					: null, comparator != null ? Styles.SORTABLE : null, style);
 		}
 
 		void init(final HTMLElement tr, final List<? extends ITableItem> items,
@@ -184,7 +183,11 @@ public class Table {
 				if (index != null) {
 					index.init(items);
 				}
-				tr.td(style).text(header);
+				final HTMLElement td = tr.td(headerStyle);
+				if (index != null) {
+					td.attr("onclick", "sortColumn(this)");
+				}
+				td.text(header);
 			}
 		}
 

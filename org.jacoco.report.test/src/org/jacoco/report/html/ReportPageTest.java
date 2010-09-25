@@ -16,7 +16,6 @@ import static org.junit.Assert.assertEquals;
 
 import java.io.IOException;
 
-import org.jacoco.core.analysis.ICoverageNode.ElementType;
 import org.jacoco.report.ILanguageNames;
 import org.jacoco.report.MemoryMultiReportOutput;
 import org.jacoco.report.ReportOutputFolder;
@@ -91,7 +90,7 @@ public class ReportPageTest {
 				return resources;
 			}
 
-			public Table getTable(ElementType type) {
+			public Table getTable() {
 				throw new AssertionError("Unexpected method call.");
 			}
 

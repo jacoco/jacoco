@@ -54,19 +54,22 @@ public class ResourcesTest {
 	@Test
 	public void testCopyResources() throws IOException {
 		resources.copyResources();
-		output.assertFile(".resources/report.css");
+		output.assertFile(".resources/bundle.gif");
+		output.assertFile(".resources/class.gif");
+		output.assertFile(".resources/down.gif");
+		output.assertFile(".resources/greenbar.gif");
+		output.assertFile(".resources/group.gif");
+		output.assertFile(".resources/method.gif");
+		output.assertFile(".resources/package.gif");
 		output.assertFile(".resources/prettify.css");
 		output.assertFile(".resources/prettify.js");
-		output.assertFile(".resources/session.gif");
-		output.assertFile(".resources/report.gif");
-		output.assertFile(".resources/group.gif");
-		output.assertFile(".resources/bundle.gif");
-		output.assertFile(".resources/package.gif");
-		output.assertFile(".resources/source.gif");
-		output.assertFile(".resources/class.gif");
-		output.assertFile(".resources/method.gif");
-		output.assertFile(".resources/greenbar.gif");
 		output.assertFile(".resources/redbar.gif");
+		output.assertFile(".resources/report.css");
+		output.assertFile(".resources/report.gif");
+		output.assertFile(".resources/class.gif");
+		output.assertFile(".resources/sort.js");
+		output.assertFile(".resources/source.gif");
+		output.assertFile(".resources/up.gif");
 	}
 
 	@Test

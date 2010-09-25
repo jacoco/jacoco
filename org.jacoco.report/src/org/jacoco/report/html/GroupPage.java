@@ -20,6 +20,7 @@ import org.jacoco.core.analysis.ICoverageNode;
 import org.jacoco.report.IReportVisitor;
 import org.jacoco.report.ISourceFileLocator;
 import org.jacoco.report.ReportOutputFolder;
+import org.jacoco.report.html.resources.Resources;
 
 /**
  * Page showing coverage information for a node that groups other nodes. The
@@ -70,9 +71,16 @@ public class GroupPage extends NodePage {
 	}
 
 	@Override
+	protected void head(final HTMLElement head) throws IOException {
+		super.head(head);
+		head.script("text/javascript",
+				context.getResources().getLink(folder, Resources.SORT_SCRIPT));
+	}
+
+	@Override
 	protected void content(final HTMLElement body) throws IOException {
-		context.getTable(getNode().getElementType()).render(body, children,
-				getNode(), context.getResources(), folder);
+		context.getTable().render(body, children, getNode(),
+				context.getResources(), folder);
 	}
 
 	@Override

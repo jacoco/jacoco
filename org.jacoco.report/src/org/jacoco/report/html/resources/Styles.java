@@ -18,7 +18,7 @@ package org.jacoco.report.html.resources;
  * @author Marc R. Hoffmann
  * @version $Revision: $
  */
-public interface Styles {
+public class Styles {
 
 	/** Breadcrumb bar */
 	public static final String BREADCRUMB = "breadcrumb";
@@ -62,6 +62,15 @@ public interface Styles {
 	/** Table cells for the second column of a counter */
 	public static final String CTR2 = "ctr2";
 
+	/** Table header for sortable columns */
+	public static final String SORTABLE = "sortable";
+
+	/** Table header for column sorted upwards */
+	public static final String UP = "up";
+
+	/** Table header for column sorted downwards */
+	public static final String DOWN = "down";
+
 	/** Block of source code */
 	public static final String SOURCE = "source";
 
@@ -76,5 +85,28 @@ public interface Styles {
 
 	/** Part of source code that is fully covered */
 	public static final String FULLY_COVERED = "fc";
+
+	/**
+	 * Returns a combined style from the given styles.
+	 * 
+	 * @param styles
+	 *            list of separate styles, entries might be null
+	 * @return combined style or <code>null</code> if no style is given
+	 */
+	public static String combine(final String... styles) {
+		final StringBuilder sb = new StringBuilder();
+		for (final String style : styles) {
+			if (style != null) {
+				if (sb.length() > 0) {
+					sb.append(" ");
+				}
+				sb.append(style);
+			}
+		}
+		return sb.length() == 0 ? null : sb.toString();
+	}
+
+	private Styles() {
+	}
 
 }

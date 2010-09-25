@@ -22,6 +22,7 @@ import org.jacoco.core.analysis.ICoverageNode;
 import org.jacoco.core.analysis.MethodCoverage;
 import org.jacoco.report.IReportVisitor;
 import org.jacoco.report.ReportOutputFolder;
+import org.jacoco.report.html.resources.Resources;
 import org.jacoco.report.html.resources.Styles;
 import org.jacoco.report.html.table.ITableItem;
 
@@ -104,9 +105,16 @@ public class ClassPage extends NodePage {
 	}
 
 	@Override
+	protected void head(final HTMLElement head) throws IOException {
+		super.head(head);
+		head.script("text/javascript",
+				context.getResources().getLink(folder, Resources.SORT_SCRIPT));
+	}
+
+	@Override
 	protected void content(final HTMLElement body) throws IOException {
-		context.getTable(getNode().getElementType()).render(body, methods,
-				getNode(), context.getResources(), folder);
+		context.getTable().render(body, methods, getNode(),
+				context.getResources(), folder);
 	}
 
 	@Override

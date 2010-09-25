@@ -12,7 +12,6 @@
  *******************************************************************************/
 package org.jacoco.report.html;
 
-import org.jacoco.core.analysis.ICoverageNode.ElementType;
 import org.jacoco.report.ILanguageNames;
 import org.jacoco.report.html.index.IIndexUpdate;
 import org.jacoco.report.html.resources.Resources;
@@ -41,13 +40,11 @@ public interface IHTMLReportContext {
 	public ILanguageNames getLanguageNames();
 
 	/**
-	 * Returns a table for rendering of the given type.
+	 * Returns a table for rendering coverage nodes.
 	 * 
-	 * @param type
-	 *            element type
 	 * @return table for rendering
 	 */
-	public Table getTable(final ElementType type);
+	public Table getTable();
 
 	/**
 	 * Returns a string of textual information to include in every page footer.

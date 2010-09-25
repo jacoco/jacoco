@@ -20,7 +20,6 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
-import org.jacoco.core.analysis.ICoverageNode.ElementType;
 import org.jacoco.core.data.ExecutionData;
 import org.jacoco.core.data.SessionInfo;
 import org.jacoco.report.ILanguageNames;
@@ -75,7 +74,7 @@ public class SessionsPageTest {
 				return resources;
 			}
 
-			public Table getTable(ElementType type) {
+			public Table getTable() {
 				throw new AssertionError("Unexpected method call.");
 			}
 

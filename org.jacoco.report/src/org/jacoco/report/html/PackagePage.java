@@ -25,6 +25,7 @@ import org.jacoco.core.analysis.SourceFileCoverage;
 import org.jacoco.report.IReportVisitor;
 import org.jacoco.report.ISourceFileLocator;
 import org.jacoco.report.ReportOutputFolder;
+import org.jacoco.report.html.resources.Resources;
 
 /**
  * Page showing coverage information for a Java package. The page contains a
@@ -79,9 +80,16 @@ public class PackagePage extends NodePage {
 	}
 
 	@Override
+	protected void head(final HTMLElement head) throws IOException {
+		super.head(head);
+		head.script("text/javascript",
+				context.getResources().getLink(folder, Resources.SORT_SCRIPT));
+	}
+
+	@Override
 	protected void content(final HTMLElement body) throws IOException {
-		context.getTable(getNode().getElementType()).render(body, classes,
-				getNode(), context.getResources(), folder);
+		context.getTable().render(body, classes, getNode(),
+				context.getResources(), folder);
 	}
 
 	@Override

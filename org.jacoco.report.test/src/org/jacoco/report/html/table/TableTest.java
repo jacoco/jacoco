@@ -206,6 +206,8 @@ public class TableTest {
 		final Document doc = support.parse(output.getFile("Test.html"));
 
 		// The elements in Column 1 are sorted in forward order:
+		assertEquals("sortable",
+				support.findStr(doc, "/html/body/table/thead/tr/td[1]/@class"));
 		assertEquals("a2",
 				support.findStr(doc, "/html/body/table/tbody/tr[1]/td[1]/@id"));
 		assertEquals("a3",
@@ -216,6 +218,8 @@ public class TableTest {
 				support.findStr(doc, "/html/body/table/tbody/tr[4]/td[1]/@id"));
 
 		// The elements in Column 2 are sorted in reverse order:
+		assertEquals("sortable",
+				support.findStr(doc, "/html/body/table/thead/tr/td[2]/@class"));
 		assertEquals("b1",
 				support.findStr(doc, "/html/body/table/tbody/tr[1]/td[2]/@id"));
 		assertEquals("b0",
@@ -227,7 +231,7 @@ public class TableTest {
 	}
 
 	@Test
-	public void testValidHTML() throws Exception {
+	public void testDefaultSorting() throws Exception {
 		final IColumnRenderer column = new IColumnRenderer() {
 
 			public boolean init(List<? extends ITableItem> items,
@@ -236,43 +240,24 @@ public class TableTest {
 			}
 
 			public void footer(HTMLElement td, ICoverageNode total,
-					Resources resources, ReportOutputFolder base)
-					throws IOException {
-				td.text("Footer");
+					Resources resources, ReportOutputFolder base) {
 			}
 
 			public void item(HTMLElement td, ITableItem item,
-					Resources resources, ReportOutputFolder base)
-					throws IOException {
-				td.text(item.getLinkLabel());
+					Resources resources, ReportOutputFolder base) {
 			}
 		};
-		final List<ITableItem> items = Arrays.asList(createItem("A", 1),
-				createItem("B", 2), createItem("C", 3));
-		table.add("Header", "red", column, null, false);
-		table.render(body, items, createTotal("Sum", 6), resources, root);
+		final List<ITableItem> items = Arrays.asList(createItem("A", 1));
+		table.add("Forward", null, column,
+				CounterComparator.TOTALITEMS.on(CounterEntity.CLASS), true);
+		table.render(body, items, createTotal("Sum", 1), resources, root);
 		doc.close();
 
 		final HTMLSupport support = new HTMLSupport();
 		final Document doc = support.parse(output.getFile("Test.html"));
-		assertEquals("Header",
-				support.findStr(doc, "/html/body/table/thead/tr/td/text()"));
-		assertEquals("red",
-				support.findStr(doc, "/html/body/table/thead/tr/td/@class"));
-		assertEquals("Footer",
-				support.findStr(doc, "/html/body/table/tfoot/tr/td/text()"));
-		assertEquals("red",
-				support.findStr(doc, "/html/body/table/tbody/tr[1]/td/@class"));
-		assertEquals("A",
-				support.findStr(doc, "/html/body/table/tbody/tr[1]/td/text()"));
-		assertEquals("red",
-				support.findStr(doc, "/html/body/table/tbody/tr[2]/td/@class"));
-		assertEquals("B",
-				support.findStr(doc, "/html/body/table/tbody/tr[2]/td/text()"));
-		assertEquals("red",
-				support.findStr(doc, "/html/body/table/tbody/tr[3]/td/@class"));
-		assertEquals("C",
-				support.findStr(doc, "/html/body/table/tbody/tr[3]/td/text()"));
+
+		assertEquals("down sortable",
+				support.findStr(doc, "/html/body/table/thead/tr/td[1]/@class"));
 	}
 
 	private ITableItem createItem(final String name, final int count) {

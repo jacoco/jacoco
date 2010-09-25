@@ -37,6 +37,9 @@ public class Resources {
 	/** The name of the prettify script */
 	public static final String PRETTIFY_SCRIPT = "prettify.js";
 
+	/** The name of the sort script */
+	public static final String SORT_SCRIPT = "sort.js";
+
 	/** The name of the red part of the coverage bar */
 	public static final String REDBAR = "redbar.gif";
 
@@ -109,10 +112,14 @@ public class Resources {
 		copyResource("class.gif");
 		copyResource("method.gif");
 		copyResource("session.gif");
+		copyResource("sort.gif");
+		copyResource("up.gif");
+		copyResource("down.gif");
 		copyResource(REDBAR);
 		copyResource(GREENBAR);
 		copyResource(PRETTIFY_STYLESHEET);
 		copyResource(PRETTIFY_SCRIPT);
+		copyResource(SORT_SCRIPT);
 	}
 
 	private void copyResource(final String name) throws IOException {

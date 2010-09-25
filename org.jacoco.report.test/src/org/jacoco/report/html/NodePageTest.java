@@ -86,7 +86,7 @@ public class NodePageTest {
 				return resources;
 			}
 
-			public Table getTable(ElementType type) {
+			public Table getTable() {
 				throw new AssertionError("Unexpected method call.");
 			}
 
