@@ -20,10 +20,8 @@ import static org.jacoco.core.analysis.ICoverageNode.CounterEntity.METHOD;
 
 import java.io.IOException;
 import java.util.Collection;
-import java.util.Comparator;
 import java.util.List;
 
-import org.jacoco.core.analysis.CounterComparator;
 import org.jacoco.core.analysis.ICoverageNode;
 import org.jacoco.core.analysis.ICoverageNode.CounterEntity;
 import org.jacoco.core.data.ExecutionData;
@@ -41,7 +39,6 @@ import org.jacoco.report.html.resources.Resources;
 import org.jacoco.report.html.resources.Styles;
 import org.jacoco.report.html.table.BarColumn;
 import org.jacoco.report.html.table.CounterColumn;
-import org.jacoco.report.html.table.IColumnRenderer;
 import org.jacoco.report.html.table.LabelColumn;
 import org.jacoco.report.html.table.PercentageColumn;
 import org.jacoco.report.html.table.Table;
@@ -79,25 +76,9 @@ public class HTMLFormatter implements IReportFormatter, IHTMLReportContext {
 
 	private Table createDefaultTable() {
 		final Table table = new Table();
-		table.add("Element", null, new LabelColumn(),
-				new Comparator<ICoverageNode>() {
-					public int compare(final ICoverageNode n1,
-							final ICoverageNode n2) {
-						// TODO: Use ITableItem.getLinkLabel()
-						return n1.getName().compareTo(n2.getName());
-					}
-				}, false);
-		table.add(
-				"Missed Instructions",
-				null,
-				new BarColumn(INSTRUCTION),
-				CounterComparator.MISSEDITEMS
-						.reverse()
-						.on(CounterEntity.INSTRUCTION)
-						.second(CounterComparator.TOTALITEMS.reverse().on(
-								CounterEntity.INSTRUCTION)), true);
-		table.add("Cov.", Styles.CTR2, new PercentageColumn(INSTRUCTION),
-				CounterComparator.MISSEDRATIO.on(INSTRUCTION), false);
+		table.add("Element", null, new LabelColumn(), false);
+		table.add("Missed Instructions", null, new BarColumn(INSTRUCTION), true);
+		table.add("Cov.", Styles.CTR2, new PercentageColumn(INSTRUCTION), false);
 		addMissedTotalColumns(table, "Classes", CLASS);
 		addMissedTotalColumns(table, "Methods", METHOD);
 		addMissedTotalColumns(table, "Blocks", BLOCK);
@@ -107,14 +88,8 @@ public class HTMLFormatter implements IReportFormatter, IHTMLReportContext {
 
 	private static void addMissedTotalColumns(final Table table,
 			final String label, final CounterEntity entity) {
-		final IColumnRenderer r1 = CounterColumn.newMissed(entity);
-		final Comparator<ICoverageNode> c1 = CounterComparator.MISSEDITEMS
-				.reverse().on(entity);
-		table.add("Missed", Styles.CTR1, r1, c1, false);
-		final Comparator<ICoverageNode> c2 = CounterComparator.TOTALITEMS
-				.reverse().on(entity);
-		final IColumnRenderer r2 = CounterColumn.newTotal(entity);
-		table.add(label, Styles.CTR2, r2, c2, false);
+		table.add("Missed", Styles.CTR1, CounterColumn.newMissed(entity), false);
+		table.add(label, Styles.CTR2, CounterColumn.newTotal(entity), false);
 	}
 
 	/**

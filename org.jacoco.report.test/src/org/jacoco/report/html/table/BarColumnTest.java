@@ -16,6 +16,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 import java.util.Arrays;
+import java.util.Comparator;
 
 import org.jacoco.core.analysis.CounterImpl;
 import org.jacoco.core.analysis.CoverageNodeImpl;
@@ -156,6 +157,30 @@ public class BarColumnTest {
 				support.findStr(doc, "/html/body/table/tr[1]/td/img[1]/@alt"));
 		assertEquals("120",
 				support.findStr(doc, "/html/body/table/tr[1]/td/img[1]/@width"));
+	}
+
+	@Test
+	public void testComparator1() throws Exception {
+		final BarColumn col = new BarColumn(CounterEntity.LINE);
+		final Comparator<ITableItem> c = col.getComparator();
+		final ITableItem i1 = createItem(100, 50);
+		final ITableItem i2 = createItem(100, 80);
+		assertTrue(c.compare(i1, i2) < 0);
+		assertTrue(c.compare(i2, i1) > 0);
+		assertEquals(0, c.compare(i1, i1));
+		doc.close();
+	}
+
+	@Test
+	public void testComparator2() throws Exception {
+		final BarColumn col = new BarColumn(CounterEntity.LINE);
+		final Comparator<ITableItem> c = col.getComparator();
+		final ITableItem i1 = createItem(110, 60);
+		final ITableItem i2 = createItem(100, 50);
+		assertTrue(c.compare(i1, i2) < 0);
+		assertTrue(c.compare(i2, i1) > 0);
+		assertEquals(0, c.compare(i1, i1));
+		doc.close();
 	}
 
 	private ITableItem createItem(final int total, final int covered) {

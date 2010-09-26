@@ -15,8 +15,10 @@ package org.jacoco.report.html.table;
 import java.io.IOException;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
+import java.util.Comparator;
 import java.util.List;
 
+import org.jacoco.core.analysis.CounterComparator;
 import org.jacoco.core.analysis.ICounter;
 import org.jacoco.core.analysis.ICoverageNode;
 import org.jacoco.core.analysis.ICoverageNode.CounterEntity;
@@ -34,10 +36,12 @@ import org.jacoco.report.html.resources.Resources;
  */
 public class PercentageColumn implements IColumnRenderer {
 
-	private final CounterEntity entity;
-
 	private final NumberFormat percentageFormat = DecimalFormat
 			.getPercentInstance();
+
+	private final CounterEntity entity;
+
+	private final Comparator<ITableItem> comparator;
 
 	/**
 	 * Creates a new column that is based on the {@link ICounter} for the given
@@ -48,6 +52,8 @@ public class PercentageColumn implements IColumnRenderer {
 	 */
 	public PercentageColumn(final CounterEntity entity) {
 		this.entity = entity;
+		comparator = new TableItemComparator(
+				CounterComparator.MISSEDRATIO.on(entity));
 	}
 
 	public boolean init(final List<? extends ITableItem> items,
@@ -76,6 +82,10 @@ public class PercentageColumn implements IColumnRenderer {
 		} else {
 			td.text(percentageFormat.format(counter.getCoveredRatio()));
 		}
+	}
+
+	public Comparator<ITableItem> getComparator() {
+		return comparator;
 	}
 
 }

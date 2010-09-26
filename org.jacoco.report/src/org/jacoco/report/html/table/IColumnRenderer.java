@@ -13,6 +13,7 @@
 package org.jacoco.report.html.table;
 
 import java.io.IOException;
+import java.util.Comparator;
 import java.util.List;
 
 import org.jacoco.core.analysis.ICoverageNode;
@@ -74,5 +75,12 @@ public interface IColumnRenderer {
 	 */
 	public void item(HTMLElement td, ITableItem item, Resources resources,
 			ReportOutputFolder base) throws IOException;
+
+	/**
+	 * Returns the comparator to sort this table column.
+	 * 
+	 * @return comparator for this column
+	 */
+	public Comparator<ITableItem> getComparator();
 
 }

@@ -15,8 +15,10 @@ package org.jacoco.report.html.table;
 import java.io.IOException;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
+import java.util.Comparator;
 import java.util.List;
 
+import org.jacoco.core.analysis.CounterComparator;
 import org.jacoco.core.analysis.ICounter;
 import org.jacoco.core.analysis.ICoverageNode;
 import org.jacoco.core.analysis.ICoverageNode.CounterEntity;
@@ -36,12 +38,14 @@ public class BarColumn implements IColumnRenderer {
 
 	private static final int WIDTH = 120;
 
-	private final CounterEntity entity;
-
 	private final NumberFormat integerFormat = DecimalFormat
 			.getIntegerInstance();
 
+	private final CounterEntity entity;
+
 	private int max;
+
+	private final Comparator<ITableItem> comparator;
 
 	/**
 	 * Creates a new column that is based on the {@link ICounter} for the given
@@ -52,6 +56,9 @@ public class BarColumn implements IColumnRenderer {
 	 */
 	public BarColumn(final CounterEntity entity) {
 		this.entity = entity;
+		this.comparator = new TableItemComparator(CounterComparator.MISSEDITEMS
+				.reverse().on(entity)
+				.second(CounterComparator.TOTALITEMS.reverse().on(entity)));
 	}
 
 	public boolean init(final List<? extends ITableItem> items,
@@ -91,6 +98,10 @@ public class BarColumn implements IColumnRenderer {
 			td.img(resources.getLink(base, image), width, 10,
 					integerFormat.format(count));
 		}
+	}
+
+	public Comparator<ITableItem> getComparator() {
+		return comparator;
 	}
 
 }

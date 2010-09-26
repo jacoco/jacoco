@@ -15,8 +15,10 @@ package org.jacoco.report.html.table;
 import java.io.IOException;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
+import java.util.Comparator;
 import java.util.List;
 
+import org.jacoco.core.analysis.CounterComparator;
 import org.jacoco.core.analysis.ICounter;
 import org.jacoco.core.analysis.ICoverageNode;
 import org.jacoco.core.analysis.ICoverageNode.CounterEntity;
@@ -42,7 +44,8 @@ public abstract class CounterColumn implements IColumnRenderer {
 	 * @return column instance
 	 */
 	public static CounterColumn newTotal(final CounterEntity entity) {
-		return new CounterColumn(entity) {
+		return new CounterColumn(entity, CounterComparator.TOTALITEMS.reverse()
+				.on(entity)) {
 			@Override
 			protected int getValue(final ICounter counter) {
 				return counter.getTotalCount();
@@ -58,7 +61,8 @@ public abstract class CounterColumn implements IColumnRenderer {
 	 * @return column instance
 	 */
 	public static CounterColumn newMissed(final CounterEntity entity) {
-		return new CounterColumn(entity) {
+		return new CounterColumn(entity, CounterComparator.MISSEDITEMS
+				.reverse().on(entity)) {
 			@Override
 			protected int getValue(final ICounter counter) {
 				return counter.getMissedCount();
@@ -74,7 +78,8 @@ public abstract class CounterColumn implements IColumnRenderer {
 	 * @return column instance
 	 */
 	public static CounterColumn newCovered(final CounterEntity entity) {
-		return new CounterColumn(entity) {
+		return new CounterColumn(entity, CounterComparator.COVEREDITEMS
+				.reverse().on(entity)) {
 			@Override
 			protected int getValue(final ICounter counter) {
 				return counter.getCoveredCount();
@@ -82,10 +87,12 @@ public abstract class CounterColumn implements IColumnRenderer {
 		};
 	}
 
-	private final CounterEntity entity;
-
 	private final NumberFormat integerFormat = DecimalFormat
 			.getIntegerInstance();
+
+	private final CounterEntity entity;
+
+	private final Comparator<ITableItem> comparator;
 
 	/**
 	 * Creates a new column that is based on the {@link ICounter} for the given
@@ -93,9 +100,13 @@ public abstract class CounterColumn implements IColumnRenderer {
 	 * 
 	 * @param entity
 	 *            counter entity for this column
+	 * @param comparator
+	 *            comparator for the nodes of this column
 	 */
-	protected CounterColumn(final CounterEntity entity) {
+	protected CounterColumn(final CounterEntity entity,
+			final Comparator<ICoverageNode> comparator) {
 		this.entity = entity;
+		this.comparator = new TableItemComparator(comparator);
 	}
 
 	public boolean init(final List<? extends ITableItem> items,
@@ -124,6 +135,10 @@ public abstract class CounterColumn implements IColumnRenderer {
 			throws IOException {
 		final int value = getValue(node.getCounter(entity));
 		td.text(integerFormat.format(value));
+	}
+
+	public Comparator<ITableItem> getComparator() {
+		return comparator;
 	}
 
 	/**

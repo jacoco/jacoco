@@ -15,6 +15,8 @@ package org.jacoco.report.html.table;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
+import java.util.Comparator;
+
 import org.jacoco.core.analysis.CounterImpl;
 import org.jacoco.core.analysis.CoverageNodeImpl;
 import org.jacoco.core.analysis.ICoverageNode;
@@ -112,6 +114,17 @@ public class PercentageColumnTest {
 		doc.close();
 		final Document doc = support.parse(output.getFile("Test.html"));
 		assertEquals("n/a", support.findStr(doc, "/html/body/table/tr"));
+	}
+
+	@Test
+	public void testComparator() throws Exception {
+		final Comparator<ITableItem> c = column.getComparator();
+		final ITableItem i1 = createItem(100, 50);
+		final ITableItem i2 = createItem(1000, 200);
+		assertTrue(c.compare(i1, i2) < 0);
+		assertTrue(c.compare(i2, i1) > 0);
+		assertEquals(0, c.compare(i1, i1));
+		doc.close();
 	}
 
 	private ITableItem createItem(final int total, final int covered) {

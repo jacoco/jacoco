@@ -13,6 +13,7 @@
 package org.jacoco.report.html.table;
 
 import java.io.IOException;
+import java.util.Comparator;
 import java.util.List;
 
 import org.jacoco.core.analysis.ICoverageNode;
@@ -29,6 +30,13 @@ import org.jacoco.report.html.resources.Resources;
  */
 public class LabelColumn implements IColumnRenderer {
 
+	private static final Comparator<ITableItem> comparator = new Comparator<ITableItem>() {
+		public int compare(final ITableItem i1, final ITableItem i2) {
+			return i1.getLinkLabel().toLowerCase()
+					.compareTo(i2.getLinkLabel().toLowerCase());
+		}
+	};
+
 	public boolean init(final List<? extends ITableItem> items,
 			final ICoverageNode total) {
 		return true;
@@ -44,6 +52,10 @@ public class LabelColumn implements IColumnRenderer {
 			final Resources resources, final ReportOutputFolder base)
 			throws IOException {
 		td.a(item, base);
+	}
+
+	public Comparator<ITableItem> getComparator() {
+		return comparator;
 	}
 
 }

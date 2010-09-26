@@ -17,6 +17,7 @@ import static org.junit.Assert.fail;
 
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.List;
 
 import org.jacoco.core.analysis.CounterComparator;
@@ -74,21 +75,25 @@ public class TableTest {
 
 	@Test
 	public void testCallbackSequence() throws IOException {
-		final IColumnRenderer recorder = new IColumnRenderer() {
+		final IColumnRenderer recorder = new StubRenderer(
+				CounterComparator.TOTALITEMS.on(CounterEntity.CLASS)) {
 
 			private final StringBuilder store = new StringBuilder();
 
+			@Override
 			public boolean init(List<? extends ITableItem> items,
 					ICoverageNode total) {
 				store.append("init-");
 				return true;
 			}
 
+			@Override
 			public void footer(HTMLElement td, ICoverageNode total,
 					Resources resources, ReportOutputFolder base) {
 				store.append("footer-");
 			}
 
+			@Override
 			public void item(HTMLElement td, ITableItem item,
 					Resources resources, ReportOutputFolder base) {
 				store.append("item").append(item.getLinkLabel()).append("-");
@@ -98,10 +103,11 @@ public class TableTest {
 			public String toString() {
 				return store.toString();
 			}
+
 		};
 		final List<ITableItem> items = Arrays.asList(createItem("A", 1),
 				createItem("B", 2), createItem("C", 3));
-		table.add("Header", null, recorder, null, false);
+		table.add("Header", null, recorder, false);
 		table.render(body, items, createTotal("Sum", 6), resources, root);
 		doc.close();
 		assertEquals("init-footer-itemA-itemB-itemC-", recorder.toString());
@@ -109,25 +115,29 @@ public class TableTest {
 
 	@Test
 	public void testInvisible() throws IOException {
-		final IColumnRenderer column = new IColumnRenderer() {
+		final IColumnRenderer column = new StubRenderer(
+				CounterComparator.TOTALITEMS.on(CounterEntity.CLASS)) {
 
+			@Override
 			public boolean init(List<? extends ITableItem> items,
 					ICoverageNode total) {
 				return false;
 			}
 
+			@Override
 			public void footer(HTMLElement td, ICoverageNode total,
 					Resources resources, ReportOutputFolder base) {
 				fail();
 			}
 
+			@Override
 			public void item(HTMLElement td, ITableItem item,
 					Resources resources, ReportOutputFolder base) {
 				fail();
 			}
 		};
 		final List<ITableItem> items = Arrays.asList(createItem("A", 1));
-		table.add("Header", null, column, null, false);
+		table.add("Header", null, column, false);
 		table.render(body, items, createTotal("Sum", 1), resources, root);
 		doc.close();
 	}
@@ -135,70 +145,23 @@ public class TableTest {
 	@Test(expected = IllegalStateException.class)
 	public void testTwoDefaultSorts() throws IOException {
 		doc.close();
-		table.add("Header1", null, null,
-				CounterComparator.TOTALITEMS.on(CounterEntity.CLASS), true);
-		table.add("Header2", null, null,
-				CounterComparator.TOTALITEMS.on(CounterEntity.CLASS), true);
-	}
-
-	@Test
-	public void testSorting() throws IOException {
-		final IColumnRenderer column = new IColumnRenderer() {
-
-			private final StringBuilder store = new StringBuilder();
-
-			public boolean init(List<? extends ITableItem> items,
-					ICoverageNode total) {
-				return true;
-			}
-
-			public void footer(HTMLElement td, ICoverageNode total,
-					Resources resources, ReportOutputFolder base) {
-			}
-
-			public void item(HTMLElement td, ITableItem item,
-					Resources resources, ReportOutputFolder base) {
-				store.append(item.getLinkLabel());
-			}
-
-			@Override
-			public String toString() {
-				return store.toString();
-			}
-		};
-		final List<ITableItem> items = Arrays.asList(createItem("C", 3),
-				createItem("E", 5), createItem("A", 1), createItem("D", 4),
-				createItem("B", 2));
-		table.add("Header", null, column,
-				CounterComparator.TOTALITEMS.on(CounterEntity.CLASS), true);
-		table.render(body, items, createTotal("Sum", 6), resources, root);
-		doc.close();
-		assertEquals("ABCDE", column.toString());
+		table.add("Header1", null, new StubRenderer(
+				CounterComparator.TOTALITEMS.on(CounterEntity.CLASS)), true);
+		table.add("Header2", null, new StubRenderer(
+				CounterComparator.TOTALITEMS.on(CounterEntity.CLASS)), true);
 	}
 
 	@Test
 	public void testSortIds() throws Exception {
-		final IColumnRenderer column = new IColumnRenderer() {
-
-			public boolean init(List<? extends ITableItem> items,
-					ICoverageNode total) {
-				return true;
-			}
-
-			public void footer(HTMLElement td, ICoverageNode total,
-					Resources resources, ReportOutputFolder base) {
-			}
-
-			public void item(HTMLElement td, ITableItem item,
-					Resources resources, ReportOutputFolder base) {
-			}
-		};
 		final List<ITableItem> items = Arrays.asList(createItem("C", 3),
 				createItem("E", 4), createItem("A", 1), createItem("D", 2));
-		table.add("Forward", null, column,
-				CounterComparator.TOTALITEMS.on(CounterEntity.CLASS), false);
-		table.add("Reverse", null, column, CounterComparator.TOTALITEMS
-				.reverse().on(CounterEntity.CLASS), false);
+		table.add("Forward", null, new StubRenderer(
+				CounterComparator.TOTALITEMS.on(CounterEntity.CLASS)), false);
+		table.add(
+				"Reverse",
+				null,
+				new StubRenderer(CounterComparator.TOTALITEMS.reverse().on(
+						CounterEntity.CLASS)), false);
 		table.render(body, items, createTotal("Sum", 6), resources, root);
 		doc.close();
 
@@ -232,24 +195,11 @@ public class TableTest {
 
 	@Test
 	public void testDefaultSorting() throws Exception {
-		final IColumnRenderer column = new IColumnRenderer() {
-
-			public boolean init(List<? extends ITableItem> items,
-					ICoverageNode total) {
-				return true;
-			}
-
-			public void footer(HTMLElement td, ICoverageNode total,
-					Resources resources, ReportOutputFolder base) {
-			}
-
-			public void item(HTMLElement td, ITableItem item,
-					Resources resources, ReportOutputFolder base) {
-			}
-		};
-		final List<ITableItem> items = Arrays.asList(createItem("A", 1));
-		table.add("Forward", null, column,
-				CounterComparator.TOTALITEMS.on(CounterEntity.CLASS), true);
+		final List<ITableItem> items = Arrays.asList(createItem("C", 3),
+				createItem("E", 5), createItem("A", 1), createItem("D", 4),
+				createItem("B", 2));
+		table.add("Forward", null, new StubRenderer(
+				CounterComparator.TOTALITEMS.on(CounterEntity.CLASS)), true);
 		table.render(body, items, createTotal("Sum", 1), resources, root);
 		doc.close();
 
@@ -258,6 +208,16 @@ public class TableTest {
 
 		assertEquals("down sortable",
 				support.findStr(doc, "/html/body/table/thead/tr/td[1]/@class"));
+		assertEquals("A",
+				support.findStr(doc, "/html/body/table/tbody/tr[1]/td[1]"));
+		assertEquals("B",
+				support.findStr(doc, "/html/body/table/tbody/tr[2]/td[1]"));
+		assertEquals("C",
+				support.findStr(doc, "/html/body/table/tbody/tr[3]/td[1]"));
+		assertEquals("D",
+				support.findStr(doc, "/html/body/table/tbody/tr[4]/td[1]"));
+		assertEquals("E",
+				support.findStr(doc, "/html/body/table/tbody/tr[5]/td[1]"));
 	}
 
 	private ITableItem createItem(final String name, final int count) {
@@ -292,6 +252,34 @@ public class TableTest {
 				this.classCounter = CounterImpl.getInstance(count, false);
 			}
 		};
+	}
+
+	private static class StubRenderer implements IColumnRenderer {
+
+		private final Comparator<ITableItem> comparator;
+
+		StubRenderer(Comparator<ICoverageNode> comparator) {
+			this.comparator = new TableItemComparator(comparator);
+		}
+
+		public boolean init(List<? extends ITableItem> items,
+				ICoverageNode total) {
+			return true;
+		}
+
+		public void footer(HTMLElement td, ICoverageNode total,
+				Resources resources, ReportOutputFolder base) {
+		}
+
+		public void item(HTMLElement td, ITableItem item, Resources resources,
+				ReportOutputFolder base) throws IOException {
+			td.text(item.getLinkLabel());
+		}
+
+		public Comparator<ITableItem> getComparator() {
+			return comparator;
+		}
+
 	}
 
 }

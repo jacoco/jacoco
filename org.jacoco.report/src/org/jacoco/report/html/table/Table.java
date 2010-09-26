@@ -34,7 +34,7 @@ public class Table {
 
 	private final List<Column> columns;
 
-	private Comparator<ICoverageNode> defaultComparator;
+	private Comparator<ITableItem> defaultComparator;
 
 	/**
 	 * Create a new table without any columns yet.
@@ -53,25 +53,21 @@ public class Table {
 	 *            column
 	 * @param renderer
 	 *            callback for column rendering
-	 * @param comparator
-	 *            optional comparator to sort this column
 	 * @param defaultSorting
 	 *            If <code>true</code>, this column is the default sorting
 	 *            column. Only one column can be selected for default sorting.
 	 * 
 	 */
 	public void add(final String header, final String style,
-			final IColumnRenderer renderer,
-			final Comparator<ICoverageNode> comparator,
-			final boolean defaultSorting) {
+			final IColumnRenderer renderer, final boolean defaultSorting) {
 		columns.add(new Column(columns.size(), header, style, renderer,
-				comparator, defaultSorting));
+				defaultSorting));
 		if (defaultSorting) {
 			if (defaultComparator != null) {
 				throw new IllegalStateException(
 						"Default sorting only allowed for one column.");
 			}
-			this.defaultComparator = comparator;
+			this.defaultComparator = renderer.getComparator();
 		}
 	}
 
@@ -141,8 +137,7 @@ public class Table {
 		if (defaultComparator != null) {
 			final ArrayList<ITableItem> result = new ArrayList<ITableItem>(
 					items);
-			Collections
-					.sort(result, new TableItemComparator(defaultComparator));
+			Collections.sort(result, defaultComparator);
 			return result;
 		}
 		return items;
@@ -159,21 +154,14 @@ public class Table {
 		private boolean visible;
 
 		Column(final int idx, final String header, final String style,
-				final IColumnRenderer renderer,
-				final Comparator<ICoverageNode> comparator,
-				final boolean defaultSorting) {
+				final IColumnRenderer renderer, final boolean defaultSorting) {
 			this.idprefix = (char) ('a' + idx);
 			this.header = header;
 			this.renderer = renderer;
-			if (comparator == null) {
-				index = null;
-			} else {
-				index = new SortIndex<ITableItem>(new TableItemComparator(
-						comparator));
-			}
+			index = new SortIndex<ITableItem>(renderer.getComparator());
 			this.style = style;
 			this.headerStyle = Styles.combine(defaultSorting ? Styles.DOWN
-					: null, comparator != null ? Styles.SORTABLE : null, style);
+					: null, Styles.SORTABLE, style);
 		}
 
 		void init(final HTMLElement tr, final List<? extends ITableItem> items,
@@ -213,17 +201,5 @@ public class Table {
 		}
 
 	}
-
-	private static class TableItemComparator implements Comparator<ITableItem> {
-		private final Comparator<ICoverageNode> comparator;
-
-		TableItemComparator(final Comparator<ICoverageNode> comparator) {
-			this.comparator = comparator;
-		}
-
-		public int compare(final ITableItem i1, final ITableItem i2) {
-			return comparator.compare(i1.getNode(), i2.getNode());
-		}
-	};
 
 }

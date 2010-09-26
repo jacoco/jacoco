@@ -109,6 +109,23 @@ public class LabelColumnTest {
 				support.findStr(doc, "/html/body/table/tr/td/a/@class"));
 	}
 
+	@Test
+	public void testComparator1() throws Exception {
+		final ITableItem i1 = createItem("abcdef", null);
+		final ITableItem i2 = createItem("aBcDeF", null);
+		assertEquals(0, column.getComparator().compare(i1, i2));
+		doc.close();
+	}
+
+	@Test
+	public void testComparator2() throws Exception {
+		final ITableItem i1 = createItem("hello", null);
+		final ITableItem i2 = createItem("world", null);
+		assertTrue(column.getComparator().compare(i1, i2) < 0);
+		assertTrue(column.getComparator().compare(i2, i1) > 0);
+		doc.close();
+	}
+
 	private ITableItem createItem(final String name, final String link) {
 		final ICoverageNode node = new CoverageNodeImpl(ElementType.GROUP,
 				name, false);
