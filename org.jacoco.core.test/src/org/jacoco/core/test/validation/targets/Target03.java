@@ -8,7 +8,6 @@
  * Contributors:
  *    Marc R. Hoffmann - initial API and implementation
  *    
- * $Id: $
  *******************************************************************************/
 package org.jacoco.core.test.validation.targets;
 
@@ -21,7 +20,7 @@ import org.jacoco.core.test.validation.targets.Stubs.StubException;
  * This target produces exception based control flow examples.
  * 
  * @author Marc R. Hoffmann
- * @version $Revision: $
+ * @version $qualified.bundle.version$
  */
 public class Target03 implements Runnable {
 

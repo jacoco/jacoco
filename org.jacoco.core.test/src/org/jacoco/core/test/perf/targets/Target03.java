@@ -8,7 +8,6 @@
  * Contributors:
  *    Marc R. Hoffmann - initial API and implementation
  *    
- * $Id: $
  *******************************************************************************/
 package org.jacoco.core.test.perf.targets;
 
@@ -21,7 +20,7 @@ import java.util.Random;
  * implementations which again is not the focus here.
  * 
  * @author Marc R. Hoffmann
- * @version $Revision: $
+ * @version $qualified.bundle.version$
  */
 public class Target03 implements Runnable {
 

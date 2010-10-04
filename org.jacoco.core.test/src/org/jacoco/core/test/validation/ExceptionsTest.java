@@ -8,7 +8,6 @@
  * Contributors:
  *    Marc R. Hoffmann - initial API and implementation
  *    
- * $Id: $
  *******************************************************************************/
 package org.jacoco.core.test.validation;
 
@@ -23,7 +22,7 @@ import org.junit.Test;
  * Tests of exception based control flow.
  * 
  * @author Marc R. Hoffmann
- * @version $Revision: $
+ * @version $qualified.bundle.version$
  */
 public class ExceptionsTest extends ValidationTestBase {
 

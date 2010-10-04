@@ -8,7 +8,6 @@
  * Contributors:
  *    Marc R. Hoffmann - initial API and implementation
  *    
- * $Id: $
  *******************************************************************************/
 package org.jacoco.core.instr;
 
@@ -24,7 +23,7 @@ import org.objectweb.asm.ClassWriter;
  * Several APIs to instrument Java class definitions for coverage tracing.
  * 
  * @author Marc R. Hoffmann
- * @version $Revision: $
+ * @version $qualified.bundle.version$
  */
 public class Instrumenter {
 

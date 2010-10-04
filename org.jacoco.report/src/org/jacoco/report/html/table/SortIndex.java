@@ -8,7 +8,6 @@
  * Contributors:
  *    Marc R. Hoffmann - initial API and implementation
  *
- * $Id: $
  *******************************************************************************/
 package org.jacoco.report.html.table;
 
@@ -22,7 +21,7 @@ import java.util.List;
  * does not change the list itself.
  * 
  * @author Marc R. Hoffmann
- * @version $Revision: $
+ * @version $qualified.bundle.version$
  * @param <T>
  *            type of the items
  */

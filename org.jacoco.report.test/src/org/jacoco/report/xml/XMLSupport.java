@@ -8,7 +8,6 @@
  * Contributors:
  *    Marc R. Hoffmann - initial API and implementation
  *    
- * $Id: $
  *******************************************************************************/
 package org.jacoco.report.xml;
 
@@ -36,7 +35,7 @@ import org.xml.sax.SAXParseException;
  * Test utility to parse, validate and query XML documents.
  * 
  * @author Marc R. Hoffmann
- * @version $Revision: $
+ * @version $qualified.bundle.version$
  */
 public class XMLSupport {
 

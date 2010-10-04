@@ -8,7 +8,6 @@
  * Contributors:
  *    Marc R. Hoffmann - initial API and implementation
  *
- * $Id: $
  *******************************************************************************/
 package org.jacoco.agent.rt.controller;
 
@@ -34,7 +33,7 @@ import org.junit.Test;
  * 
  * 
  * @author Marc R. Hoffmann
- * @version $Revision: $
+ * @version $qualified.bundle.version$
  */
 public class MockServerSocketTest extends ExecutorTestBase {
 

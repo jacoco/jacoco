@@ -8,7 +8,6 @@
  * Contributors:
  *    Marc R. Hoffmann - initial API and implementation
  *    
- * $Id: $
  *******************************************************************************/
 package org.jacoco.core.test.validation.targets;
 
@@ -22,7 +21,7 @@ import static org.jacoco.core.test.validation.targets.Stubs.t;
  * This target exercises boolean expressions.
  * 
  * @author Marc R. Hoffmann
- * @version $Revision: $
+ * @version $qualified.bundle.version$
  */
 public class Target02 implements Runnable {
 

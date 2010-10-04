@@ -8,7 +8,6 @@
  * Contributors:
  *    Marc R. Hoffmann - initial API and implementation
  *
- * $Id: $
  *******************************************************************************/
 package org.jacoco.agent.rt.controller;
 
@@ -26,7 +25,7 @@ import java.nio.channels.ServerSocketChannel;
  * tcp/ip connections.
  * 
  * @author Marc R. Hoffmann
- * @version $Revision: $
+ * @version $qualified.bundle.version$
  */
 public class MockServerSocket extends ServerSocket {
 

@@ -8,7 +8,6 @@
  * Contributors:
  *    Marc R. Hoffmann - initial API and implementation
  *    
- * $Id: $
  *******************************************************************************/
 package org.jacoco.report.html;
 
@@ -20,7 +19,7 @@ import org.jacoco.report.xml.XMLSupport;
  * Support for verifying XHTML documents.
  * 
  * @author Marc R. Hoffmann
- * @version $Revision: $
+ * @version $qualified.bundle.version$
  */
 public class HTMLSupport extends XMLSupport {
 

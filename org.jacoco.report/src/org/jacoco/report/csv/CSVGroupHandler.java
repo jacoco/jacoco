@@ -8,7 +8,6 @@
  * Contributors:
  *    Brock Janiczak - initial API and implementation
  * 
- * $Id: $
  *******************************************************************************/
 package org.jacoco.report.csv;
 
@@ -25,7 +24,7 @@ import org.jacoco.report.ISourceFileLocator;
  * Report visitor that handles coverage information for groups.
  * 
  * @author Brock Janiczak
- * @version $Revision: $
+ * @version $qualified.bundle.version$
  */
 class CSVGroupHandler implements IReportVisitor {
 

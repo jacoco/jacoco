@@ -8,7 +8,6 @@
  * Contributors:
  *    Marc R. Hoffmann - initial API and implementation
  *    
- * $Id: $
  *******************************************************************************/
 package org.jacoco.examples;
 
@@ -23,7 +22,7 @@ import org.objectweb.asm.ClassReader;
  * identifiers which are used by JaCoCo.
  * 
  * @author Marc R. Hoffmann
- * @version $Revision: $
+ * @version $qualified.bundle.version$
  */
 public class ClassInfo {
 

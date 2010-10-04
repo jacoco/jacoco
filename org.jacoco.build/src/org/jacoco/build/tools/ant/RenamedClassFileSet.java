@@ -8,7 +8,6 @@
  * Contributors:
  *    Marc R. Hoffmann - initial API and implementation
  *    
- * $Id: $
  *******************************************************************************/
 package org.jacoco.build.tools.ant;
 
@@ -34,7 +33,7 @@ import org.objectweb.asm.commons.RemappingClassAdapter;
  * names are renamed, also the class definitions are adjusted.
  * 
  * @author Marc R. Hoffmann
- * @version $Revision: $
+ * @version $qualified.bundle.version$
  */
 public class RenamedClassFileSet implements ResourceCollection {
 

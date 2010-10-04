@@ -8,7 +8,6 @@
  * Contributors:
  *    Marc R. Hoffmann - initial API and implementation
  *    
- * $Id: $
  *******************************************************************************/
 package org.jacoco.core.test.perf;
 
@@ -16,7 +15,7 @@ package org.jacoco.core.test.perf;
  * Base class for execution time test scenarios.
  * 
  * @author Marc R. Hoffmann
- * @version $Revision: $
+ * @version $qualified.bundle.version$
  */
 public abstract class TimedScenario implements IPerfScenario {
 

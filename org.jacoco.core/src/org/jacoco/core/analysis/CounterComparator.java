@@ -8,7 +8,6 @@
  * Contributors:
  *    Marc R. Hoffmann - initial API and implementation
  *    
- * $Id: $
  *******************************************************************************/
 package org.jacoco.core.analysis;
 
@@ -21,7 +20,7 @@ import org.jacoco.core.analysis.ICoverageNode.CounterEntity;
  * criteria.
  * 
  * @author Marc R. Hoffmann
- * @version $Revision: $
+ * @version $qualified.bundle.version$
  */
 public abstract class CounterComparator implements Comparator<ICounter> {
 

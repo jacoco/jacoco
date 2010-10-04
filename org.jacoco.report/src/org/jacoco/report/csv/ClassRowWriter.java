@@ -8,7 +8,6 @@
  * Contributors:
  *    Brock Janiczak - initial API and implementation
  * 
- * $Id: $
  *******************************************************************************/
 package org.jacoco.report.csv;
 
@@ -24,7 +23,7 @@ import org.jacoco.report.ILanguageNames;
  * class.
  * 
  * @author Brock Janiczak
- * @version $Revision: $
+ * @version $qualified.bundle.version$
  */
 class ClassRowWriter {
 

@@ -8,7 +8,6 @@
  * Contributors:
  *    Marc R. Hoffmann - initial API and implementation
  *    
- * $Id: $
  *******************************************************************************/
 package org.jacoco.report;
 
@@ -26,7 +25,7 @@ import org.jacoco.core.data.SessionInfo;
  * to create more than one report format in one run.
  * 
  * @author Marc R. Hoffmann
- * @version $Revision: $
+ * @version $qualified.bundle.version$
  */
 
 public class MultiFormatter implements IReportFormatter {

@@ -8,7 +8,6 @@
  * Contributors:
  *    Marc R. Hoffmann - initial API and implementation
  *    
- * $Id: $
  *******************************************************************************/
 package org.jacoco.core.analysis;
 
@@ -16,7 +15,7 @@ package org.jacoco.core.analysis;
  * Base class for {@link ICounter} implementations.
  * 
  * @author Marc R. Hoffmann
- * @version $Revision: $
+ * @version $qualified.bundle.version$
  */
 public abstract class AbstractCounter implements ICounter {
 

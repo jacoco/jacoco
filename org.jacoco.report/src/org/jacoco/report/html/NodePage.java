@@ -8,7 +8,6 @@
  * Contributors:
  *    Marc R. Hoffmann - initial API and implementation
  *    
- * $Id: $
  *******************************************************************************/
 package org.jacoco.report.html;
 
@@ -25,7 +24,7 @@ import org.jacoco.report.html.table.ITableItem;
  * Report page that represents a coverage node.
  * 
  * @author Marc R. Hoffmann
- * @version $Revision: $
+ * @version $qualified.bundle.version$
  */
 public abstract class NodePage extends ReportPage implements IReportVisitor,
 		ITableItem {

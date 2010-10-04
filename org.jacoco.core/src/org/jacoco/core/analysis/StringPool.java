@@ -9,7 +9,6 @@
  *    Brock Janiczak - analysis and concept 
  *    Marc R. Hoffmann - initial API and implementation
  *    
- * $Id: $
  *******************************************************************************/
 package org.jacoco.core.analysis;
 
@@ -25,7 +24,7 @@ import java.util.Map;
  * synchronization is required for concurrent lookup.
  * 
  * @author Marc R. Hoffmann
- * @version $Revision: $
+ * @version $qualified.bundle.version$
  */
 public final class StringPool {
 

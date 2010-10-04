@@ -8,7 +8,6 @@
  * Contributors:
  *    Marc R. Hoffmann - initial API and implementation
  *    
- * $Id: $
  *******************************************************************************/
 package org.jacoco.report;
 
@@ -25,7 +24,7 @@ import java.io.OutputStream;
  * given directory.
  * 
  * @author Marc R. Hoffmann
- * @version $Revision: $
+ * @version $qualified.bundle.version$
  */
 public class FileMultiReportOutput implements IMultiReportOutput {
 

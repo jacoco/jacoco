@@ -8,7 +8,6 @@
  * Contributors:
  *    Marc R. Hoffmann - initial API and implementation
  *    
- * $Id: $
  *******************************************************************************/
 package org.jacoco.core.test.validation;
 
@@ -34,7 +33,7 @@ import org.objectweb.asm.ClassReader;
  * coverage and provides the coverage results for validation.
  * 
  * @author Marc R. Hoffmann
- * @version $Revision: $
+ * @version $qualified.bundle.version$
  */
 public abstract class ValidationTestBase {
 

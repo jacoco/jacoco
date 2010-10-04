@@ -8,7 +8,6 @@
  * Contributors:
  *    Marc R. Hoffmann - initial API and implementation
  *    
- * $Id: $
  *******************************************************************************/
 package org.jacoco.report.html;
 
@@ -18,7 +17,7 @@ import org.jacoco.report.ReportOutputFolder;
  * Abstraction for items that can be linked to in a report.
  * 
  * @author Marc R. Hoffmann
- * @version $Revision: $
+ * @version $qualified.bundle.version$
  */
 public interface ILinkable {
 

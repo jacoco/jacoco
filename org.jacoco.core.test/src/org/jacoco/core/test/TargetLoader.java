@@ -8,7 +8,6 @@
  * Contributors:
  *    Marc R. Hoffmann - initial API and implementation
  *    
- * $Id: $
  *******************************************************************************/
 package org.jacoco.core.test;
 
@@ -20,7 +19,7 @@ import java.io.InputStream;
  * Loads a single class from a byte array.
  * 
  * @author Marc R. Hoffmann
- * @version $Revision: $
+ * @version $qualified.bundle.version$
  */
 public class TargetLoader extends ClassLoader {
 

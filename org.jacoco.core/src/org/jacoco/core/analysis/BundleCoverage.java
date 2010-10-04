@@ -8,7 +8,6 @@
  * Contributors:
  *    Marc R. Hoffmann - initial API and implementation
  *    
- * $Id: $
  *******************************************************************************/
 package org.jacoco.core.analysis;
 
@@ -24,7 +23,7 @@ import java.util.Set;
  * Coverage data of a bundle. A bundle groups a collection of packages.
  * 
  * @author Marc R. Hoffmann
- * @version $Revision: $
+ * @version $qualified.bundle.version$
  */
 public class BundleCoverage extends CoverageNodeImpl {
 

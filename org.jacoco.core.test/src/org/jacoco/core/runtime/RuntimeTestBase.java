@@ -8,7 +8,6 @@
  * Contributors:
  *    Marc R. Hoffmann - initial API and implementation
  *    
- * $Id: $
  *******************************************************************************/
 package org.jacoco.core.runtime;
 
@@ -41,7 +40,7 @@ import org.objectweb.asm.commons.Method;
  * Abstract test base for {@link IRuntime} implementations.
  * 
  * @author Marc R. Hoffmann
- * @version $Revision: $
+ * @version $qualified.bundle.version$
  */
 public abstract class RuntimeTestBase {
 

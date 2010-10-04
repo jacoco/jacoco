@@ -8,7 +8,6 @@
  * Contributors:
  *    Marc R. Hoffmann - initial API and implementation
  *    
- * $Id: $
  *******************************************************************************/
 package org.jacoco.core.instr;
 
@@ -22,7 +21,7 @@ import org.objectweb.asm.Opcodes;
  * Analyzes the structure of a class.
  * 
  * @author Marc R. Hoffmann
- * @version $Revision: $
+ * @version $qualified.bundle.version$
  */
 class ClassAnalyzer implements IBlockClassVisitor {
 

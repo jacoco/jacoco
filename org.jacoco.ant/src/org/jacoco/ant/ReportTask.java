@@ -8,7 +8,6 @@
  * Contributors:
  *    Marc R. Hoffmann - initial API and implementation
  *    
- * $Id: $
  *******************************************************************************/
 package org.jacoco.ant;
 
@@ -64,7 +63,7 @@ import org.jacoco.report.xml.XMLFormatter;
  * refinement.
  * 
  * @author Marc R. Hoffmann
- * @version $Revision: $
+ * @version $qualified.bundle.version$
  */
 public class ReportTask extends Task {
 

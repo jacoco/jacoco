@@ -8,7 +8,6 @@
  * Contributors:
  *    Marc R. Hoffmann - initial API and implementation
  *    
- * $Id: $
  *******************************************************************************/
 package org.jacoco.core.analysis;
 
@@ -18,7 +17,7 @@ import java.util.Collection;
  * Coverage data of a single class.
  * 
  * @author Marc R. Hoffmann
- * @version $Revision: $
+ * @version $qualified.bundle.version$
  */
 public class ClassCoverage extends CoverageNodeImpl {
 

@@ -8,7 +8,6 @@
  * Contributors:
  *    Marc R. Hoffmann - initial API and implementation
  *    
- * $Id: $
  *******************************************************************************/
 package org.jacoco.agent.rt.controller;
 
@@ -25,7 +24,7 @@ import org.jacoco.core.runtime.RemoteControlWriter;
  * Handler for a single socket based remote connection.
  * 
  * @author Marc R. Hoffmann
- * @version $Revision: $
+ * @version $qualified.bundle.version$
  */
 class TcpConnection implements IRemoteCommandVisitor {
 

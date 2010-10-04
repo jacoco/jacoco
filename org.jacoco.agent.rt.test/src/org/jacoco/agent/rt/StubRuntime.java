@@ -8,7 +8,6 @@
  * Contributors:
  *    Marc R. Hoffmann - initial API and implementation
  *    
- * $Id: $
  *******************************************************************************/
 package org.jacoco.agent.rt;
 
@@ -24,7 +23,7 @@ import org.objectweb.asm.MethodVisitor;
  * Stub {@link IRuntime} implementation for unit testing only.
  * 
  * @author Marc R. Hoffmann
- * @version $Revision: $
+ * @version $qualified.bundle.version$
  */
 public class StubRuntime extends AbstractRuntime {
 

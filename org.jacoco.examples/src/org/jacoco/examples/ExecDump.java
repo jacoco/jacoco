@@ -8,7 +8,6 @@
  * Contributors:
  *    Marc R. Hoffmann - initial API and implementation
  *    
- * $Id: $
  *******************************************************************************/
 package org.jacoco.examples;
 
@@ -26,7 +25,7 @@ import org.jacoco.core.data.SessionInfo;
  * This example reads given execution data files and dumps their content.
  * 
  * @author Marc R. Hoffmann
- * @version $Revision: $
+ * @version $qualified.bundle.version$
  */
 public class ExecDump {
 

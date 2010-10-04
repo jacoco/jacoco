@@ -8,7 +8,6 @@
  * Contributors:
  *    Brock Janiczak - initial API and implementation
  *    
- * $Id: $
  *******************************************************************************/
 package org.jacoco.ant;
 

@@ -8,7 +8,6 @@
  * Contributors:
  *    Marc R. Hoffmann - initial API and implementation
  *    
- * $Id: $
  *******************************************************************************/
 package org.jacoco.core.test.validation;
 
@@ -22,7 +21,7 @@ import org.junit.Test;
  * Tests of basic Java boolean expressions.
  * 
  * @author Marc R. Hoffmann
- * @version $Revision: $
+ * @version $qualified.bundle.version$
  */
 public class BooleanExpressionsTest extends ValidationTestBase {
 

@@ -8,7 +8,6 @@
  * Contributors:
  *    Marc R. Hoffmann - initial API and implementation
  *    
- * $Id: $
  *******************************************************************************/
 package org.jacoco.report.html.table;
 
@@ -19,7 +18,7 @@ import org.jacoco.report.html.ILinkable;
  * Interface for a item (row) in a coverage data table.
  * 
  * @author Marc R. Hoffmann
- * @version $Revision: $
+ * @version $qualified.bundle.version$
  */
 public interface ITableItem extends ILinkable {
 

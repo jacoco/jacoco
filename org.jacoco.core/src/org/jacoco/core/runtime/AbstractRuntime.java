@@ -8,7 +8,6 @@
  * Contributors:
  *    Marc R. Hoffmann - initial API and implementation
  *    
- * $Id: $
  *******************************************************************************/
 package org.jacoco.core.runtime;
 
@@ -23,7 +22,7 @@ import org.jacoco.core.data.SessionInfo;
  * Base {@link IRuntime} implementation.
  * 
  * @author Marc R. Hoffmann
- * @version $Revision: $
+ * @version $qualified.bundle.version$
  */
 public abstract class AbstractRuntime implements IRuntime {
 

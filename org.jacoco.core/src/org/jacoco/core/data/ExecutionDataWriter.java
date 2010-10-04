@@ -8,7 +8,6 @@
  * Contributors:
  *    Marc R. Hoffmann - initial API and implementation
  *    
- * $Id: $
  *******************************************************************************/
 package org.jacoco.core.data;
 
@@ -20,7 +19,7 @@ import java.io.OutputStream;
  * Serialization of execution data into binary streams.
  * 
  * @author Marc R. Hoffmann
- * @version $Revision: $
+ * @version $qualified.bundle.version$
  */
 public class ExecutionDataWriter implements ISessionInfoVisitor,
 		IExecutionDataVisitor {

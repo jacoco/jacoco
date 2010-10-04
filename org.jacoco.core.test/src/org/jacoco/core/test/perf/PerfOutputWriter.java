@@ -8,7 +8,6 @@
  * Contributors:
  *    Marc R. Hoffmann - initial API and implementation
  *    
- * $Id: $
  *******************************************************************************/
 package org.jacoco.core.test.perf;
 
@@ -22,7 +21,7 @@ import org.jacoco.core.JaCoCo;
  * Formatted text output.
  * 
  * @author Marc R. Hoffmann
- * @version $Revision: $
+ * @version $qualified.bundle.version$
  */
 public class PerfOutputWriter implements IPerfOutput {
 

@@ -8,7 +8,6 @@
  * Contributors:
  *    Marc R. Hoffmann - initial API and implementation
  *    
- * $Id: $
  *******************************************************************************/
 package org.jacoco.report.xml;
 
@@ -25,7 +24,7 @@ import java.io.Writer;
  * 
  * @see XMLElement
  * @author Marc R. Hoffmann
- * @version $Revision: $
+ * @version $qualified.bundle.version$
  */
 public class XMLDocument extends XMLElement {
 

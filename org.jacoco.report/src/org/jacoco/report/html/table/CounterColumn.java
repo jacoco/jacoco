@@ -8,7 +8,6 @@
  * Contributors:
  *    Marc R. Hoffmann - initial API and implementation
  *    
- * $Id: $
  *******************************************************************************/
 package org.jacoco.report.html.table;
 
@@ -32,7 +31,7 @@ import org.jacoco.report.html.resources.Resources;
  * all. The implementation is stateful, instances must not be used in parallel.
  * 
  * @author Marc R. Hoffmann
- * @version $Revision: $
+ * @version $qualified.bundle.version$
  */
 public abstract class CounterColumn implements IColumnRenderer {
 

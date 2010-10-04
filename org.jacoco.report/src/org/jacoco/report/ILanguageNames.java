@@ -8,7 +8,6 @@
  * Contributors:
  *    Marc R. Hoffmann - initial API and implementation
  *    
- * $Id: $
  *******************************************************************************/
 package org.jacoco.report;
 
@@ -16,7 +15,7 @@ package org.jacoco.report;
  * Interface to create programming language specific names from VM names.
  * 
  * @author Marc R. Hoffmann
- * @version $Revision: $
+ * @version $qualified.bundle.version$
  */
 public interface ILanguageNames {
 

@@ -8,7 +8,6 @@
  * Contributors:
  *    Marc R. Hoffmann - initial API and implementation
  *    
- * $Id: $
  *******************************************************************************/
 package org.jacoco.agent.rt;
 
@@ -17,7 +16,7 @@ package org.jacoco.agent.rt;
  * testability these exceptions are emitted against this interface.
  * 
  * @author Marc R. Hoffmann
- * @version $Revision: $
+ * @version $qualified.bundle.version$
  */
 public interface IExceptionLogger {
 

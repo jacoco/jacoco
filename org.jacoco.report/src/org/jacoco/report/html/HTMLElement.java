@@ -8,7 +8,6 @@
  * Contributors:
  *    Marc R. Hoffmann - initial API and implementation
  *    
- * $Id: $
  *******************************************************************************/
 package org.jacoco.report.html;
 
@@ -23,7 +22,7 @@ import org.jacoco.report.xml.XMLElement;
  * provides methods of HTML tags to avoid magic strings in the generators.
  * 
  * @author Marc R. Hoffmann
- * @version $Revision: $
+ * @version $qualified.bundle.version$
  */
 public class HTMLElement extends XMLElement {
 

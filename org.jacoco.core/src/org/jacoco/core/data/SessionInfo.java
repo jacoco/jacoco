@@ -8,7 +8,6 @@
  * Contributors:
  *    Marc R. Hoffmann - initial API and implementation
  *    
- * $Id: $
  *******************************************************************************/
 package org.jacoco.core.data;
 
@@ -19,7 +18,7 @@ package org.jacoco.core.data;
  * {@link Comparable} interface.
  * 
  * @author Marc R. Hoffmann
- * @version $Revision: $
+ * @version $qualified.bundle.version$
  */
 public class SessionInfo implements Comparable<SessionInfo> {
 

@@ -8,7 +8,6 @@
  * Contributors:
  *    Marc R. Hoffmann - initial API and implementation
  *    
- * $Id: $
  *******************************************************************************/
 package org.jacoco.report.html;
 
@@ -18,7 +17,7 @@ import org.jacoco.report.ReportOutputFolder;
  * Stub implementation for {@link ILinkable}.
  * 
  * @author Marc R. Hoffmann
- * @version $Revision: $
+ * @version $qualified.bundle.version$
  */
 public class LinkableStub implements ILinkable {
 

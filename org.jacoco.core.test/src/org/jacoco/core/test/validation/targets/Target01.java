@@ -8,7 +8,6 @@
  * Contributors:
  *    Marc R. Hoffmann - initial API and implementation
  *    
- * $Id: $
  *******************************************************************************/
 package org.jacoco.core.test.validation.targets;
 
@@ -23,7 +22,7 @@ import java.util.Collections;
  * This target exercises a set of common Java control structures.
  * 
  * @author Marc R. Hoffmann
- * @version $Revision: $
+ * @version $qualified.bundle.version$
  */
 public class Target01 implements Runnable {
 

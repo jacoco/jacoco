@@ -8,7 +8,6 @@
  * Contributors:
  *    Marc R. Hoffmann - initial API and implementation
  *    
- * $Id: $
  *******************************************************************************/
 package org.jacoco.report.xml;
 
@@ -39,7 +38,7 @@ import org.w3c.dom.Document;
  * Unit tests for {@link XMLFormatter}.
  * 
  * @author Marc R. Hoffmann
- * @version $Revision: $
+ * @version $qualified.bundle.version$
  */
 public class XMLFormatterTest {
 

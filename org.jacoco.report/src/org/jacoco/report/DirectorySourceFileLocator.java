@@ -8,7 +8,6 @@
  * Contributors:
  *    Marc R. Hoffmann - initial API and implementation
  *    
- * $Id: $
  *******************************************************************************/
 package org.jacoco.report;
 
@@ -23,7 +22,7 @@ import java.io.Reader;
  * the file system.
  * 
  * @author Marc R. Hoffmann
- * @version $Revision: $
+ * @version $qualified.bundle.version$
  */
 public class DirectorySourceFileLocator implements ISourceFileLocator {
 

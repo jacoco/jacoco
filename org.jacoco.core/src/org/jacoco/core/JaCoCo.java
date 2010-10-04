@@ -8,7 +8,6 @@
  * Contributors:
  *    Marc R. Hoffmann - initial API and implementation
  *    
- * $Id: $
  *******************************************************************************/
 package org.jacoco.core;
 
@@ -16,14 +15,14 @@ package org.jacoco.core;
  * Static Meta information about JaCoCo.
  * 
  * @author Marc R. Hoffmann
- * @version $Revision: $
+ * @version $qualified.bundle.version$
  */
 public interface JaCoCo {
 
 	/** Qualified build version of the JaCoCo core library. */
-	public static final String VERSION = "@qualified.bundle.version@";
+	public static final String VERSION = "$qualified.bundle.version$";
 
 	/** Absolute URL of the current JaCoCo home page */
-	public static final String HOMEURL = "@jacoco.home.url@";
+	public static final String HOMEURL = "$jacoco.home.url$";
 
 }

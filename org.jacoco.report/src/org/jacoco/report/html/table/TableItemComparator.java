@@ -8,7 +8,6 @@
  * Contributors:
  *    Marc R. Hoffmann - initial API and implementation
  *
- * $Id: $
  *******************************************************************************/
 package org.jacoco.report.html.table;
 
@@ -20,7 +19,7 @@ import org.jacoco.core.analysis.ICoverageNode;
  * Adapter to sort table items based on their coverage nodes.
  * 
  * @author Marc R. Hoffmann
- * @version $Revision: $
+ * @version $qualified.bundle.version$
  */
 class TableItemComparator implements Comparator<ITableItem> {
 

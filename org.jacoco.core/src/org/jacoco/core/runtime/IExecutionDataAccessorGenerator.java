@@ -8,7 +8,6 @@
  * Contributors:
  *    Marc R. Hoffmann - initial API and implementation
  *    
- * $Id: $
  *******************************************************************************/
 package org.jacoco.core.runtime;
 
@@ -22,7 +21,7 @@ import org.objectweb.asm.MethodVisitor;
  * instrumentation process.
  * 
  * @author Marc R. Hoffmann
- * @version $Revision: $
+ * @version $qualified.bundle.version$
  */
 public interface IExecutionDataAccessorGenerator {
 

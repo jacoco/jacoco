@@ -8,7 +8,6 @@
  * Contributors:
  *    Brock Janiczak - initial API and implementation
  *    
- * $Id: $
  *******************************************************************************/
 package org.jacoco.ant;
 
@@ -34,7 +33,7 @@ import org.apache.tools.ant.UnknownElement;
  * </ul>
  * 
  * @author Brock Janiczak
- * @version $Revision: $
+ * @version $qualified.bundle.version$
  */
 public class CoverageTask extends AbstractCoverageTask implements TaskContainer {
 

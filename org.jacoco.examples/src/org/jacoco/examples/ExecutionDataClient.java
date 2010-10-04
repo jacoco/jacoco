@@ -8,7 +8,6 @@
  * Contributors:
  *    Marc R. Hoffmann - initial API and implementation
  *    
- * $Id: $
  *******************************************************************************/
 package org.jacoco.examples;
 
@@ -26,7 +25,7 @@ import org.jacoco.core.runtime.RemoteControlWriter;
  * dumped to a local file.
  * 
  * @author Marc R. Hoffmann
- * @version $Revision: $
+ * @version $qualified.bundle.version$
  */
 public class ExecutionDataClient {
 

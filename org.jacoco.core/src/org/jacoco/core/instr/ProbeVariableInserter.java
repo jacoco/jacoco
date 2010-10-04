@@ -8,7 +8,6 @@
  * Contributors:
  *    Marc R. Hoffmann - initial API and implementation
  *    
- * $Id: $
  *******************************************************************************/
 package org.jacoco.core.instr;
 
@@ -25,7 +24,7 @@ import org.objectweb.asm.Type;
  * tables and prevents ASM bug #314563.
  * 
  * @author Marc R. Hoffmann
- * @version $Revision: $
+ * @version $qualified.bundle.version$
  */
 class ProbeVariableInserter extends MethodAdapter {
 

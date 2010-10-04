@@ -8,7 +8,6 @@
  * Contributors:
  *    Marc R. Hoffmann - initial API and implementation
  *    
- * $Id: $
  *******************************************************************************/
 package org.jacoco.core.runtime;
 
@@ -20,7 +19,7 @@ import org.jacoco.core.data.ISessionInfoVisitor;
  * information in the target VM at runtime.
  * 
  * @author Marc R. Hoffmann
- * @version $Revision: $
+ * @version $qualified.bundle.version$
  */
 public interface IRuntime extends IExecutionDataAccessorGenerator {
 

@@ -8,7 +8,6 @@
  * Contributors:
  *    Marc R. Hoffmann - initial API and implementation
  *    
- * $Id: $
  *******************************************************************************/
 package org.jacoco.core.test.validation;
 
@@ -21,7 +20,7 @@ import org.junit.Test;
  * Test of blocks before the super constructor call.
  * 
  * @author Marc R. Hoffmann
- * @version $Revision: $
+ * @version $qualified.bundle.version$
  */
 public class BlocksBeforeSuperConstructorTest extends ValidationTestBase {
 

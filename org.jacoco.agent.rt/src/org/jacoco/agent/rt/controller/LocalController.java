@@ -8,7 +8,6 @@
  * Contributors:
  *    Brock Janiczak - initial API and implementation
  *    
- * $Id: $
  *******************************************************************************/
 package org.jacoco.agent.rt.controller;
 
@@ -31,7 +30,7 @@ import org.jacoco.core.runtime.IRuntime;
  * </ul>
  * 
  * @author Brock Janiczak
- * @version $Revision: $
+ * @version $qualified.bundle.version$
  */
 public class LocalController implements IAgentController {
 

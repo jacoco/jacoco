@@ -8,7 +8,6 @@
  * Contributors:
  *    Marc R. Hoffmann - initial API and implementation
  *
- * $Id: $
  *******************************************************************************/
 package org.jacoco.agent.rt.controller;
 
@@ -31,7 +30,7 @@ import java.util.concurrent.ConcurrentLinkedQueue;
  * messages have been derived from Sun JDK 1.5.0_18-b02.
  * 
  * @author Marc R. Hoffmann
- * @version $Revision: $
+ * @version $qualified.bundle.version$
  */
 public class MockSocketConnection {
 

@@ -8,7 +8,6 @@
  * Contributors:
  *    Brock Janiczak - initial API and implementation
  *    
- * $Id: $
  *******************************************************************************/
 package org.jacoco.ant;
 
@@ -24,7 +23,7 @@ import org.jacoco.core.runtime.AgentOptions;
  * Base class for all coverage tasks that require agent options
  * 
  * @author Brock Janiczak
- * @version $Revision: $
+ * @version $qualified.bundle.version$
  */
 public class AbstractCoverageTask extends Task {
 

@@ -8,7 +8,6 @@
  * Contributors:
  *    Marc R. Hoffmann - initial API and implementation
  *    
- * $Id: $
  *******************************************************************************/
 package org.jacoco.agent.rt;
 
@@ -30,7 +29,7 @@ import org.jacoco.core.runtime.AgentOptions.OutputMode;
  * The agent which is referred as the <code>Premain-Class</code>.
  * 
  * @author Marc R. Hoffmann
- * @version $Revision: $
+ * @version $qualified.bundle.version$
  */
 public class JacocoAgent {
 

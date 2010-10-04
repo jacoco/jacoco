@@ -59,6 +59,7 @@
 			</ant>
 			<path id="bundle-@{bundleid}" location="${result.tmp.dir}/@{bundleid}/classes"/>
 			<property name="source.@{bundleid}.dir" location="${workspace.dir}/@{bundleid}"/>
+			<property name="result.tmp.@{bundleid}.dir" location="${result.tmp.dir}/@{bundleid}"/>
 		</sequential>
 	</macrodef>
 

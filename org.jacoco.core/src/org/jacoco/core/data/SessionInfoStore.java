@@ -8,7 +8,6 @@
  * Contributors:
  *    Marc R. Hoffmann - initial API and implementation
  *    
- * $Id: $
  *******************************************************************************/
 package org.jacoco.core.data;
 
@@ -24,7 +23,7 @@ import java.util.List;
  * instance of this class is not thread safe.
  * 
  * @author Marc R. Hoffmann
- * @version $Revision: $
+ * @version $qualified.bundle.version$
  */
 public class SessionInfoStore implements ISessionInfoVisitor {
 

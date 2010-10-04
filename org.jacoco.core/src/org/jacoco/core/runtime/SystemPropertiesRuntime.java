@@ -8,7 +8,6 @@
  * Contributors:
  *    Marc R. Hoffmann - initial API and implementation
  *    
- * $Id: $
  *******************************************************************************/
 package org.jacoco.core.runtime;
 
@@ -29,7 +28,7 @@ import org.objectweb.asm.Opcodes;
  * fail if non-String values are placed in the system properties.
  * 
  * @author Marc R. Hoffmann
- * @version $Revision: $
+ * @version $qualified.bundle.version$
  */
 public class SystemPropertiesRuntime extends AbstractRuntime {
 

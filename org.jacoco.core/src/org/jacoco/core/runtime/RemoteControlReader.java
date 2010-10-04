@@ -8,7 +8,6 @@
  * Contributors:
  *    Marc R. Hoffmann - initial API and implementation
  *    
- * $Id: $
  *******************************************************************************/
 package org.jacoco.core.runtime;
 
@@ -21,7 +20,7 @@ import org.jacoco.core.data.ExecutionDataReader;
  * {@link ExecutionDataReader} with commands added for runtime remote control.
  * 
  * @author Marc R. Hoffmann
- * @version $Revision: $
+ * @version $qualified.bundle.version$
  */
 public class RemoteControlReader extends ExecutionDataReader {
 

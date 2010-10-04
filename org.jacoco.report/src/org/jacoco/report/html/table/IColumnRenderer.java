@@ -8,7 +8,6 @@
  * Contributors:
  *    Marc R. Hoffmann - initial API and implementation
  *    
- * $Id: $
  *******************************************************************************/
 package org.jacoco.report.html.table;
 
@@ -27,7 +26,7 @@ import org.jacoco.report.html.resources.Resources;
  * might be stateful.
  * 
  * @author Marc R. Hoffmann
- * @version $Revision: $
+ * @version $qualified.bundle.version$
  */
 public interface IColumnRenderer {
 

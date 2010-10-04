@@ -8,7 +8,6 @@
  * Contributors:
  *    Marc R. Hoffmann - initial API and implementation
  *    
- * $Id: $
  *******************************************************************************/
 package org.jacoco.report;
 
@@ -22,7 +21,7 @@ import java.util.Map;
  * ensures valid and unique file names and helps to create relative links.
  * 
  * @author Marc R. Hoffmann
- * @version $Revision: $
+ * @version $qualified.bundle.version$
  */
 public class ReportOutputFolder {
 

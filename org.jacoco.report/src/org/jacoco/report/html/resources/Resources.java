@@ -8,7 +8,6 @@
  * Contributors:
  *    Marc R. Hoffmann - initial API and implementation
  *    
- * $Id: $
  *******************************************************************************/
 package org.jacoco.report.html.resources;
 
@@ -24,7 +23,7 @@ import org.jacoco.report.ReportOutputFolder;
  * referenced from created HTML pages.
  * 
  * @author Marc R. Hoffmann
- * @version $Revision: $
+ * @version $qualified.bundle.version$
  */
 public class Resources {
 

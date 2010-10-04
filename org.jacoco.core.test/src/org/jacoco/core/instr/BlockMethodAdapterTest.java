@@ -8,7 +8,6 @@
  * Contributors:
  *    Marc R. Hoffmann - initial API and implementation
  *    
- * $Id: $
  *******************************************************************************/
 package org.jacoco.core.instr;
 
@@ -24,7 +23,7 @@ import org.objectweb.asm.Opcodes;
  * Unit tests for {@link BufferedMethodVisitor}.
  * 
  * @author Marc R. Hoffmann
- * @version $Revision: $
+ * @version $qualified.bundle.version$
  */
 public class BlockMethodAdapterTest {
 

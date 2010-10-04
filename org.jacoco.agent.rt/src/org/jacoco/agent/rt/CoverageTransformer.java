@@ -8,7 +8,6 @@
  * Contributors:
  *    Marc R. Hoffmann - initial API and implementation
  *    
- * $Id: $
  *******************************************************************************/
 package org.jacoco.agent.rt;
 
@@ -28,7 +27,7 @@ import org.jacoco.core.runtime.WildcardMatcher;
  * Class file transformer to instrument classes for code coverage analysis.
  * 
  * @author Marc R. Hoffmann
- * @version $Revision: $
+ * @version $qualified.bundle.version$
  */
 public class CoverageTransformer implements ClassFileTransformer {
 

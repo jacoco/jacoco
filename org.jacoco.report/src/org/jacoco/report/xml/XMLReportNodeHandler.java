@@ -9,7 +9,6 @@
  *    Brock Janiczak - initial API and implementation
  *    Marc R. Hoffmann - generalized structure, line info
  *    
- * $Id: $
  *******************************************************************************/
 package org.jacoco.report.xml;
 
@@ -28,7 +27,7 @@ import org.jacoco.report.ISourceFileLocator;
  * Report visitor that transforms the report structure into XML elements.
  * 
  * @author Brock Janiczak
- * @version $Revision: $
+ * @version $qualified.bundle.version$
  */
 class XMLReportNodeHandler implements IReportVisitor {
 

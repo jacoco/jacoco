@@ -8,7 +8,6 @@
  * Contributors:
  *    Marc R. Hoffmann - initial API and implementation
  *    
- * $Id: $
  *******************************************************************************/
 package org.jacoco.build.tools.ant;
 
@@ -22,7 +21,7 @@ import org.apache.tools.ant.Task;
  * identifier is a valid Java identifier.
  * 
  * @author Marc R. Hoffmann
- * @version $Revision: $
+ * @version $qualified.bundle.version$
  */
 public class RandomIdTask extends Task {
 

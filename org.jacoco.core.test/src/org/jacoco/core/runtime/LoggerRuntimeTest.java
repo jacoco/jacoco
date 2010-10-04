@@ -8,7 +8,6 @@
  * Contributors:
  *    Marc R. Hoffmann - initial API and implementation
  *    
- * $Id: $
  *******************************************************************************/
 package org.jacoco.core.runtime;
 
@@ -16,7 +15,7 @@ package org.jacoco.core.runtime;
  * Unit tests for {@link LoggerRuntime}.
  * 
  * @author Marc R. Hoffmann
- * @version $Revision: $
+ * @version $qualified.bundle.version$
  */
 public class LoggerRuntimeTest extends RuntimeTestBase {
 

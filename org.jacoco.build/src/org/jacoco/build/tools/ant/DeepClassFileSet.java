@@ -8,7 +8,6 @@
  * Contributors:
  *    Marc R. Hoffmann - initial API and implementation
  *    
- * $Id: $
  *******************************************************************************/
 package org.jacoco.build.tools.ant;
 
@@ -37,7 +36,7 @@ import org.objectweb.asm.commons.RemappingClassAdapter;
  * <code>ClassFileSet</code> this task works recursively.
  * 
  * @author Marc R. Hoffmann
- * @version $Revision: $
+ * @version $qualified.bundle.version$
  */
 public class DeepClassFileSet implements ResourceCollection {
 

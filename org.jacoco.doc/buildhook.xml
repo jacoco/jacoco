@@ -51,7 +51,7 @@
 						<fileset dir="${toString:bundle-org.jacoco.agent}" includes="**/*.class"/>
 					</classfiles>
 					<sourcefiles>
-						<fileset dir="${workspace.dir}/org.jacoco.agent/src"/>
+						<fileset dir="${result.tmp.org.jacoco.agent.dir}/java"/>
 					</sourcefiles>
 				</group>
 				<group name="org.jacoco.agent.rt">
@@ -59,7 +59,7 @@
 						<path refid="bundle-org.jacoco.agent.rt"/>
 					</classfiles>
 					<sourcefiles>
-						<fileset dir="${workspace.dir}/org.jacoco.agent.rt/src"/>
+						<fileset dir="${result.tmp.org.jacoco.agent.rt.dir}/java"/>
 					</sourcefiles>
 				</group>
 				<group name="org.jacoco.ant">
@@ -67,7 +67,7 @@
 						<path refid="bundle-org.jacoco.ant"/>
 					</classfiles>
 					<sourcefiles>
-						<fileset dir="${workspace.dir}/org.jacoco.ant/src"/>
+						<fileset dir="${result.tmp.org.jacoco.ant.dir}/java"/>
 					</sourcefiles>
 				</group>
 				<group name="org.jacoco.core">
@@ -75,7 +75,7 @@
 						<path refid="bundle-org.jacoco.core"/>
 					</classfiles>
 					<sourcefiles>
-						<fileset dir="${workspace.dir}/org.jacoco.core/src"/>
+						<fileset dir="${result.tmp.org.jacoco.core.dir}/java"/>
 					</sourcefiles>
 				</group>
 				<group name="org.jacoco.report">
@@ -83,7 +83,7 @@
 						<path refid="bundle-org.jacoco.report"/>
 					</classfiles>
 					<sourcefiles>
-						<fileset dir="${workspace.dir}/org.jacoco.report/src"/>
+						<fileset dir="${result.tmp.org.jacoco.report.dir}/java"/>
 					</sourcefiles>
 				</group>
 			</structure>
@@ -106,9 +106,9 @@
 			overview="${source.bundle.dir}/javadoc/overview.html"
 			stylesheetfile="${source.bundle.dir}/javadoc/stylesheet.css">
 			<sourcefiles>
-				<fileset dir="${source.org.jacoco.agent.dir}/src" includes="**/*.java"/>
-				<fileset dir="${source.org.jacoco.core.dir}/src" includes="**/*.java"/>
-				<fileset dir="${source.org.jacoco.report.dir}/src" includes="**/*.java"/>
+				<fileset dir="${result.tmp.org.jacoco.agent.dir}/java" includes="**/*.java"/>
+				<fileset dir="${result.tmp.org.jacoco.core.dir}/java" includes="**/*.java"/>
+				<fileset dir="${result.tmp.org.jacoco.report.dir}/java" includes="**/*.java"/>
 			</sourcefiles>
 			<classpath>
 				<path refid="bundle-org.objectweb.asm"/>

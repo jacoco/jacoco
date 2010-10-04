@@ -8,7 +8,6 @@
  * Contributors:
  *    Marc R. Hoffmann - initial API and implementation
  *    
- * $Id: $
  *******************************************************************************/
 package org.jacoco.core.instr;
 
@@ -18,7 +17,7 @@ import org.objectweb.asm.MethodVisitor;
  * A method visitor with additional notifications for block boundaries.
  * 
  * @author Marc R. Hoffmann
- * @version $Revision: $
+ * @version $qualified.bundle.version$
  */
 interface IBlockMethodVisitor extends MethodVisitor {
 

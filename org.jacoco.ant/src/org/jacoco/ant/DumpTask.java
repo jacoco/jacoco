@@ -8,7 +8,6 @@
  * Contributors:
  *    Brock Janiczak - initial API and implementation
  *    
- * $Id: $
  *******************************************************************************/
 package org.jacoco.ant;
 
@@ -32,7 +31,7 @@ import org.jacoco.core.runtime.RemoteControlWriter;
  * tcpserver output mode
  * 
  * @author Brock Janiczak
- * @version $Revision: $
+ * @version $qualified.bundle.version$
  */
 public class DumpTask extends Task {
 	private boolean dump = true;

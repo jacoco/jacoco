@@ -8,7 +8,6 @@
  * Contributors:
  *    Marc R. Hoffmann - initial API and implementation
  *    
- * $Id: $
  *******************************************************************************/
 package org.jacoco.core.instr;
 
@@ -25,7 +24,7 @@ import org.objectweb.asm.tree.MethodNode;
  * flushes the content to the next visitor.
  * 
  * @author Marc R. Hoffmann
- * @version $Revision: $
+ * @version $qualified.bundle.version$
  */
 final class BlockMethodAdapter extends MethodNode {
 

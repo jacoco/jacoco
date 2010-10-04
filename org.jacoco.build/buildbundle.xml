@@ -34,15 +34,33 @@
 	<!-- The following property should be overwritten by the project specific build hook -->
 	<property name="testscope" value="*"/>
 	
+	<target name="manifest">
+		<property name="source.bundle.manifest.file" location="${source.bundle.dir}/META-INF/MANIFEST.MF"/>
+		<property name="result.temp.bundle.manifest.file" location="${result.tmp.bundle.dir}/MANIFEST.MF"/>
+		<copy file="${source.bundle.manifest.file}" tofile="${result.temp.bundle.manifest.file}"/>
+		<replace file="${result.temp.bundle.manifest.file}" token="qualifier" value="${build.qualifier}"/>
+		<property prefix="manifest" file="${result.temp.bundle.manifest.file}"/>
+		<property name="qualified.bundle.version" value="${manifest.Bundle-Version}"/>
+	</target>
 	
 	<!-- =================================================================== 
          COMPILE 
 	     =================================================================== -->
 
-	<target name="compile" if="do.compile">
+	<target name="compile" if="do.compile" depends="manifest">
+		<property name="result.tmp.bundle.java.dir" location="${result.tmp.bundle.dir}/java"/>
+		<mkdir dir="${result.tmp.bundle.java.dir}"/>
+		<copy todir="${result.tmp.bundle.java.dir}" encoding="UTF-8">
+			<fileset dir="${source.bundle.java.dir}" includes="**/*.java"/>
+			<filterset begintoken="$" endtoken="$">
+				<filter token="qualified.bundle.version" value="${qualified.bundle.version}"/>
+				<filter token="jacoco.home.url" value="${jacoco.home.url}"/>
+			</filterset>
+		</copy>
+		
 		<property name="result.tmp.bundle.classes.dir" location="${result.tmp.bundle.dir}/classes"/>
 		<mkdir dir="${result.tmp.bundle.classes.dir}"/>
-		<javac srcdir="${source.bundle.java.dir}" destdir="${result.tmp.bundle.classes.dir}"
+		<javac srcdir="${result.tmp.bundle.java.dir}" destdir="${result.tmp.bundle.classes.dir}"
 		       debug="true" source="1.5" target="${java.target.version}" includeAntRuntime="no">
 			<classpath refid="dependencies"/>
 		</javac>
@@ -55,15 +73,6 @@
 	<!-- =================================================================== 
 	     PACKAGE 
 	     =================================================================== -->
-	
-	<target name="manifest">
-		<property name="source.bundle.manifest.file" location="${source.bundle.dir}/META-INF/MANIFEST.MF"/>
-		<property name="result.temp.bundle.manifest.file" location="${result.tmp.bundle.dir}/MANIFEST.MF"/>
-		<copy file="${source.bundle.manifest.file}" tofile="${result.temp.bundle.manifest.file}"/>
-		<replace file="${result.temp.bundle.manifest.file}" token="qualifier" value="${build.qualifier}"/>
-		<property prefix="manifest" file="${result.temp.bundle.manifest.file}"/>
-		<property name="qualified.bundle.version" value="${manifest.Bundle-Version}"/>
-	</target>
 	
 	<target name="about">
 		<property name="source.bundle.about.file" location="${source.bundle.dir}/about.html"/>

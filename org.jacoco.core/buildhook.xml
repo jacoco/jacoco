@@ -20,28 +20,6 @@
 	</path>
 	
 	<property name="do.compile" value="true"/>
-	<property name="do.custompackage" value="true"/>
 	<property name="do.package" value="true"/>
-	
-	<target name="custompackage">
-		<!-- Compile JaCoCo.java with version info included -->
-		
-		<delete dir="${result.tmp.bundle.classes.dir}" includes="**/JaCoCo.class"/>
-		
-		<property name="result.tmp.bundle.java.dir" location="${result.tmp.bundle.dir}/java"/>
-		<mkdir dir="${result.tmp.bundle.java.dir}"/>
-		<copy todir="${result.tmp.bundle.java.dir}">
-			<fileset dir="${source.bundle.java.dir}" includes="**/JaCoCo.java"/>
-			<filterset>
-				<filter token="qualified.bundle.version" value="${qualified.bundle.version}"/>
-				<filter token="jacoco.home.url" value="${jacoco.home.url}"/>
-			</filterset>
-		</copy>
-		
-		<javac srcdir="${result.tmp.bundle.java.dir}"
-			   destdir="${result.tmp.bundle.classes.dir}"
-		       debug="true" source="1.5" target="${java.target.version}" includeAntRuntime="no">
-		</javac>
-	</target>
-	
+
 </project>

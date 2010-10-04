@@ -8,7 +8,6 @@
  * Contributors:
  *    Marc R. Hoffmann - initial API and implementation
  *    
- * $Id: $
  *******************************************************************************/
 package org.jacoco.core.test.perf;
 
@@ -25,7 +24,7 @@ import org.objectweb.asm.ClassReader;
  * Scenario to measure the time taken by the instrumentation process itself.
  * 
  * @author Marc R. Hoffmann
- * @version $Revision: $
+ * @version $qualified.bundle.version$
  */
 public class InstrumentationTimeScenario extends TimedScenario {
 

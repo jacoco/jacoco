@@ -8,7 +8,6 @@
  * Contributors:
  *    Brock Janiczak -initial API and implementation
  *    
- * $Id: $
  *******************************************************************************/
 package org.jacoco.report.xml;
 
@@ -27,7 +26,7 @@ import org.jacoco.report.ISingleReportOutput;
  * Report formatter that creates a single XML file for a coverage session
  * 
  * @author Brock Janiczak
- * @version $Revision: $
+ * @version $qualified.bundle.version$
  */
 public class XMLFormatter implements IReportFormatter {
 

@@ -8,7 +8,6 @@
  * Contributors:
  *    Marc R. Hoffmann - initial API and implementation
  *    
- * $Id: $
  *******************************************************************************/
 package org.jacoco.core.instr;
 
@@ -26,7 +25,7 @@ import org.objectweb.asm.Opcodes;
  * Adapter that instruments a class for coverage tracing.
  * 
  * @author Marc R. Hoffmann
- * @version $Revision: $
+ * @version $qualified.bundle.version$
  */
 class ClassInstrumenter extends ClassAdapter implements IBlockClassVisitor {
 

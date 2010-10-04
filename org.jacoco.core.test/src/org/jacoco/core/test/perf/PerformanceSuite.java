@@ -8,7 +8,6 @@
  * Contributors:
  *    Marc R. Hoffmann - initial API and implementation
  *    
- * $Id: $
  *******************************************************************************/
 package org.jacoco.core.test.perf;
 
@@ -22,7 +21,7 @@ import org.jacoco.core.test.perf.targets.Target03;
  * The main test suite.
  * 
  * @author Marc R. Hoffmann
- * @version $Revision: $
+ * @version $qualified.bundle.version$
  */
 public class PerformanceSuite implements IPerfScenario {
 

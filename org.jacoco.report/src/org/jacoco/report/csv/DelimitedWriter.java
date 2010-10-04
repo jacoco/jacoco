@@ -8,7 +8,6 @@
  * Contributors:
  *    Brock Janiczak - initial API and implementation
  *    
- * $Id: $
  *******************************************************************************/
 package org.jacoco.report.csv;
 
@@ -33,7 +32,7 @@ import java.io.Writer;
  * </p>
  * 
  * @author Brock Janiczak
- * @version $Revision: $
+ * @version $qualified.bundle.version$
  */
 public class DelimitedWriter {
 	private static final String QUOTE = "\"";

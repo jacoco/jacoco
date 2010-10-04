@@ -8,7 +8,6 @@
  * Contributors:
  *    Marc R. Hoffmann - initial API and implementation
  *    
- * $Id: $
  *******************************************************************************/
 package org.jacoco.core.test.validation.targets;
 
@@ -22,7 +21,7 @@ import org.jacoco.core.test.validation.targets.Stubs.SuperClass;
  * superclass constructor is called.
  * 
  * @author Marc R. Hoffmann
- * @version $Revision: $
+ * @version $qualified.bundle.version$
  */
 public class Target10 extends SuperClass {
 

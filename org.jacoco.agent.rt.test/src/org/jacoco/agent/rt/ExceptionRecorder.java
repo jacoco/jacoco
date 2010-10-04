@@ -8,7 +8,6 @@
  * Contributors:
  *    Marc R. Hoffmann - initial API and implementation
  *    
- * $Id: $
  *******************************************************************************/
 package org.jacoco.agent.rt;
 
@@ -22,7 +21,7 @@ import java.util.List;
  * {@link IExceptionLogger} implementation for testing purposes.
  * 
  * @author Marc R. Hoffmann
- * @version $Revision: $
+ * @version $qualified.bundle.version$
  */
 public class ExceptionRecorder implements IExceptionLogger {
 

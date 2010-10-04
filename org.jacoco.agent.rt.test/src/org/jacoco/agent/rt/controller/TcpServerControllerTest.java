@@ -9,7 +9,6 @@
  *    Brock Janiczak - initial API and implementation
  *    Marc R. Hoffmann - migration to mock socket
  *    
- * $Id: $
  *******************************************************************************/
 package org.jacoco.agent.rt.controller;
 
@@ -41,7 +40,7 @@ import org.junit.Test;
  * Unit tests for {@link TcpServerController}.
  * 
  * @author Brock Janiczak
- * @version $Revision: $
+ * @version $qualified.bundle.version$
  */
 public class TcpServerControllerTest {
 

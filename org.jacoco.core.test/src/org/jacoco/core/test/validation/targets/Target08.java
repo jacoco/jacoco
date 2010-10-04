@@ -8,7 +8,6 @@
  * Contributors:
  *    Marc R. Hoffmann - initial API and implementation
  *    
- * $Id: $
  *******************************************************************************/
 package org.jacoco.core.test.validation.targets;
 
@@ -16,7 +15,7 @@ package org.jacoco.core.test.validation.targets;
  * This test target has instance members with implicit initializers.
  * 
  * @author Marc R. Hoffmann
- * @version $Revision: $
+ * @version $qualified.bundle.version$
  */
 public class Target08 { // $line-classdef$
 

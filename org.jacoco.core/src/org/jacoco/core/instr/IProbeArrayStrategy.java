@@ -8,7 +8,6 @@
  * Contributors:
  *    Marc R. Hoffmann - initial API and implementation
  *    
- * $Id: $
  *******************************************************************************/
 package org.jacoco.core.instr;
 
@@ -21,7 +20,7 @@ import org.objectweb.asm.MethodVisitor;
  * depending on whether the instrumented type is a class or interface.
  * 
  * @author Marc R. Hoffmann
- * @version $Revision: $
+ * @version $qualified.bundle.version$
  */
 interface IProbeArrayStrategy {
 

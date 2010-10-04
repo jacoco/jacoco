@@ -8,7 +8,6 @@
  * Contributors:
  *    Marc R. Hoffmann - initial API and implementation
  *    
- * $Id: $
  *******************************************************************************/
 package org.jacoco.core.data;
 
@@ -21,7 +20,7 @@ import java.io.OutputStream;
  * 
  * @see CompactDataOutput
  * @author Marc R. Hoffmann
- * @version $Revision: $
+ * @version $qualified.bundle.version$
  */
 public class CompactDataOutput extends DataOutputStream {
 

@@ -8,7 +8,6 @@
  * Contributors:
  *    Marc R. Hoffmann - initial API and implementation
  *    
- * $Id: $
  *******************************************************************************/
 package org.jacoco.report.html.table;
 
@@ -26,7 +25,7 @@ import org.jacoco.report.html.resources.Resources;
  * be used in parallel.
  * 
  * @author Marc R. Hoffmann
- * @version $Revision: $
+ * @version $qualified.bundle.version$
  */
 public class LabelColumn implements IColumnRenderer {
 

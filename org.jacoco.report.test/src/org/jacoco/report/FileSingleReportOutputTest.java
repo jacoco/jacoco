@@ -8,7 +8,6 @@
  * Contributors:
  *    Marc R. Hoffmann - initial API and implementation
  *    
- * $Id: $
  *******************************************************************************/
 package org.jacoco.report;
 
@@ -28,7 +27,7 @@ import org.junit.rules.TemporaryFolder;
  * Unit tests for {@link FileSingleReportOutput}.
  * 
  * @author Marc R. Hoffmann
- * @version $Revision: $
+ * @version $qualified.bundle.version$
  */
 public class FileSingleReportOutputTest {
 

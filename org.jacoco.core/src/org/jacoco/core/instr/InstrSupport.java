@@ -8,7 +8,6 @@
  * Contributors:
  *    Marc R. Hoffmann - initial API and implementation
  *    
- * $Id: $
  *******************************************************************************/
 package org.jacoco.core.instr;
 
@@ -20,7 +19,7 @@ import org.objectweb.asm.commons.GeneratorAdapter;
  * Constants and utilities for byte code instrumentation.
  * 
  * @author Marc R. Hoffmann
- * @version $Revision: $
+ * @version $qualified.bundle.version$
  */
 public final class InstrSupport {
 

@@ -8,7 +8,6 @@
  * Contributors:
  *    Marc R. Hoffmann - initial API and implementation
  *    
- * $Id: $
  *******************************************************************************/
 package org.jacoco.report.html.table;
 
@@ -33,7 +32,7 @@ import org.w3c.dom.Document;
  * Unit tests for {@link LabelColumn}.
  * 
  * @author Marc R. Hoffmann
- * @version $Revision: $
+ * @version $qualified.bundle.version$
  */
 public class LabelColumnTest {
 

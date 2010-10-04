@@ -8,7 +8,6 @@
  * Contributors:
  *    Marc R. Hoffmann - initial API and implementation
  *    
- * $Id: $
  *******************************************************************************/
 package org.jacoco.report.xml;
 
@@ -23,7 +22,7 @@ import org.xml.sax.SAXException;
  * Loader for local DTD definitions to avoid network access.
  * 
  * @author Marc R. Hoffmann
- * @version $Revision: $
+ * @version $qualified.bundle.version$
  */
 class LocalEntityResolver implements EntityResolver {
 

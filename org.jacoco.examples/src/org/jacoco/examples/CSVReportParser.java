@@ -8,7 +8,6 @@
  * Contributors:
  *    Brock Janiczak - initial API and implementation
  *    
- * $Id: $
  *******************************************************************************/
 package org.jacoco.examples;
 
@@ -22,7 +21,7 @@ import java.text.NumberFormat;
  * Simple parser for unpacking a line of the CSV report
  * 
  * @author Brock Janiczak
- * @version $Revision: $
+ * @version $qualified.bundle.version$
  */
 public class CSVReportParser {
 
@@ -79,7 +78,7 @@ public class CSVReportParser {
 	 * Wrapper around a line of CSV data
 	 * 
 	 * @author Brock Janiczak
-	 * @version $Revision: $
+	 * @version $qualified.bundle.version$
 	 */
 	public static class ReportLine {
 		private final String[] entries;
