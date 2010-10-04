@@ -67,15 +67,7 @@ public abstract class ReportPage implements ILinkable {
 		doc.close();
 	}
 
-	/**
-	 * Fills the content of the 'head' element.
-	 * 
-	 * @param head
-	 *            enclosing head element
-	 * @throws IOException
-	 *             in case of IO problems with the report writer
-	 */
-	protected void head(final HTMLElement head) throws IOException {
+	private void head(final HTMLElement head) throws IOException {
 		head.meta("Content-Type", "text/html;charset=UTF-8");
 		head.link("stylesheet",
 				context.getResources().getLink(folder, Resources.STYLESHEET),
@@ -84,23 +76,38 @@ public abstract class ReportPage implements ILinkable {
 				context.getResources().getLink(folder, "report.gif"),
 				"image/gif");
 		head.title().text(getLinkLabel());
+		headExtra(head);
 	}
 
-	/**
-	 * Renders the content of the body element.
-	 * 
-	 * @param body
-	 *            enclosing body element
-	 * @throws IOException
-	 *             in case of IO problems with the report writer
-	 */
-	protected void body(final HTMLElement body) throws IOException {
+	private void body(final HTMLElement body) throws IOException {
+		body.attr("onload", getOnload());
 		final HTMLElement navigation = body.div(Styles.BREADCRUMB);
+		navigation.attr("id", "breadcrumb");
 		infoLinks(navigation.span(Styles.RIGHT));
 		breadcrumb(navigation, folder);
 		body.h1().text(getLinkLabel());
 		content(body);
 		footer(body);
+	}
+
+	/**
+	 * Hook to add extra content into the head tag.
+	 * 
+	 * @param head
+	 *            enclosing head element
+	 * @throws IOException
+	 *             in case of IO problems with the report writer
+	 */
+	protected void headExtra(final HTMLElement head) throws IOException {
+	}
+
+	/**
+	 * Returns the onload handler for this page.
+	 * 
+	 * @return handler or <code>null</code>
+	 */
+	protected String getOnload() {
+		return null;
 	}
 
 	private void infoLinks(final HTMLElement span) throws IOException {

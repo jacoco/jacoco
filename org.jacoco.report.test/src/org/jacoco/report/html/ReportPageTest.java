@@ -56,6 +56,17 @@ public class ReportPageTest {
 		}
 
 		@Override
+		protected void headExtra(HTMLElement head) throws IOException {
+			super.headExtra(head);
+			head.script("text/javascript", "test.js");
+		}
+
+		@Override
+		protected String getOnload() {
+			return "init()";
+		}
+
+		@Override
 		protected void content(HTMLElement body) throws IOException {
 			body.div("testcontent").text("Hello Test");
 		}
@@ -135,6 +146,12 @@ public class ReportPageTest {
 		// style sheet
 		assertEquals(".resources/report.css", support.findStr(doc,
 				"/html/head/link[@rel='stylesheet']/@href"));
+
+		// extra head
+		assertEquals("test.js", support.findStr(doc, "/html/head/script/@src"));
+
+		// onload handler
+		assertEquals("init()", support.findStr(doc, "/html/body/@onload"));
 
 		// bread crumb
 		assertEquals("Report", support.findStr(doc,

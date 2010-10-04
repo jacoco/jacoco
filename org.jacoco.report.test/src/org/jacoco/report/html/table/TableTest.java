@@ -171,6 +171,8 @@ public class TableTest {
 		// The elements in Column 1 are sorted in forward order:
 		assertEquals("sortable",
 				support.findStr(doc, "/html/body/table/thead/tr/td[1]/@class"));
+		assertEquals("a",
+				support.findStr(doc, "/html/body/table/thead/tr/td[1]/@id"));
 		assertEquals("a2",
 				support.findStr(doc, "/html/body/table/tbody/tr[1]/td[1]/@id"));
 		assertEquals("a3",
@@ -183,6 +185,8 @@ public class TableTest {
 		// The elements in Column 2 are sorted in reverse order:
 		assertEquals("sortable",
 				support.findStr(doc, "/html/body/table/thead/tr/td[2]/@class"));
+		assertEquals("b",
+				support.findStr(doc, "/html/body/table/thead/tr/td[2]/@id"));
 		assertEquals("b1",
 				support.findStr(doc, "/html/body/table/tbody/tr[1]/td[2]/@id"));
 		assertEquals("b0",

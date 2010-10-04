@@ -94,6 +94,7 @@ public class Table {
 			throws IOException {
 		final List<? extends ITableItem> sortedItems = sort(items);
 		final HTMLElement table = parent.table(Styles.COVERAGETABLE);
+		table.attr("id", "coveragetable");
 		header(table, sortedItems, total, resources, base);
 		footer(table, total, resources, base);
 		body(table, sortedItems, resources, base);
@@ -172,8 +173,9 @@ public class Table {
 					index.init(items);
 				}
 				final HTMLElement td = tr.td(headerStyle);
+				td.attr("id", String.valueOf(idprefix));
 				if (index != null) {
-					td.attr("onclick", "sortColumn(this)");
+					td.attr("onclick", "toggleSort(this)");
 				}
 				td.text(header);
 			}

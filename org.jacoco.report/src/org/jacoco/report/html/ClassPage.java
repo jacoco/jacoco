@@ -105,10 +105,15 @@ public class ClassPage extends NodePage {
 	}
 
 	@Override
-	protected void head(final HTMLElement head) throws IOException {
-		super.head(head);
+	protected void headExtra(final HTMLElement head) throws IOException {
+		super.headExtra(head);
 		head.script("text/javascript",
 				context.getResources().getLink(folder, Resources.SORT_SCRIPT));
+	}
+
+	@Override
+	protected String getOnload() {
+		return "initialSort()";
 	}
 
 	@Override

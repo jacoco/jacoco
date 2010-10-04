@@ -14,13 +14,45 @@
 (function () {
 
   /**
-   * Sorts the columns with the given header.
+   * Sets the initial sorting derived from the hash.
    */  
-  function sortColumn(header) {
+  function initialSort() {
+    var hash = window.location.hash
+    if (hash) {
+      var m = hash.match(/up-./)
+      if (m) {
+        var header = window.document.getElementById(m[0].charAt(3))
+        if (header) {
+          sortColumn(header, true)
+        }
+        return
+      }
+      var m = hash.match(/dn-./)
+      if (m) {
+        var header = window.document.getElementById(m[0].charAt(3))
+        if (header) {
+          sortColumn(header, false)
+        }
+        return
+      }
+    }
+  }
+
+  /**
+   * Sorts the columns with the given header dependening on the current sort state.
+   */  
+  function toggleSort(header) {
+    var sortup = header.className.indexOf('down ') == 0
+    sortColumn(header, sortup)
+  }
+
+  /**
+   * Sorts the columns with the given header in the given direction.
+   */  
+  function sortColumn(header, sortup) {
     var table = header.parentNode.parentNode.parentNode
     var body = table.tBodies[0]
     var colidx = getNodePosition(header)
-    var sortup = header.className.indexOf('down ') == 0
     
     resetSortedStyle(table)
     
@@ -31,16 +63,47 @@
       sortedrows[parseInt(r.childNodes[colidx].id.slice(1))] = r
     }
     
+    var hash
+    
     if (sortup) {
       for (var i = sortedrows.length - 1; i >= 0; i--) {
         body.appendChild(sortedrows[i])
       }
       header.className = 'up ' + header.className
+      hash = 'up-' + header.id
     } else {
       for (var i = 0; i < sortedrows.length; i++) {
         body.appendChild(sortedrows[i])
       }
       header.className = 'down ' + header.className
+      hash = 'dn-' + header.id
+    }
+    
+    setHash(hash)
+  }
+
+  /**
+   * Adds the sort indicator as a hash to the document URL and all links.
+   */
+  function setHash(hash) {
+    window.document.location.hash = hash
+    setHashOnAllLinks(document.getElementById("breadcrumb"), hash)
+    setHashOnAllLinks(document.getElementById("coveragetable"), hash)
+  }
+
+  /**
+   * Extend all links within the given tag with the given hash.
+   */
+  function setHashOnAllLinks(tag, hash) {
+    links = tag.getElementsByTagName("a")
+    for (var i = 0; i < links.length; i++) {
+        var a = links[i]
+        var href = a.href
+        var hashpos = href.indexOf("#")
+        if (hashpos != -1) {
+            href = href.substring(0, hashpos)
+        } 
+        a.href = href + "#" + hash
     }
   }
 
@@ -72,6 +135,7 @@
     }
   }
   
-  window['sortColumn'] = sortColumn
+  window['initialSort'] = initialSort
+  window['toggleSort'] = toggleSort
 
 })();

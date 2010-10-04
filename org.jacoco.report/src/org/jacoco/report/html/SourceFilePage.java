@@ -75,18 +75,21 @@ public class SourceFilePage extends NodePage {
 	}
 
 	@Override
-	protected void head(final HTMLElement head) throws IOException {
-		super.head(head);
-		head.link("stylesheet", context.getResources().getLink(folder,
-				Resources.PRETTIFY_STYLESHEET), "text/css");
-		head.script("text/javascript", context.getResources().getLink(folder,
-				Resources.PRETTIFY_SCRIPT));
+	protected void headExtra(final HTMLElement head) throws IOException {
+		super.headExtra(head);
+		head.link(
+				"stylesheet",
+				context.getResources().getLink(folder,
+						Resources.PRETTIFY_STYLESHEET), "text/css");
+		head.script(
+				"text/javascript",
+				context.getResources().getLink(folder,
+						Resources.PRETTIFY_SCRIPT));
 	}
 
 	@Override
-	protected void body(final HTMLElement body) throws IOException {
-		body.attr("onload", "prettyPrint()");
-		super.body(body);
+	protected String getOnload() {
+		return "prettyPrint()";
 	}
 
 	@Override
