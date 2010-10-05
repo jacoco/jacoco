@@ -11,6 +11,8 @@
  *******************************************************************************/
 package org.jacoco.report.html;
 
+import java.util.Locale;
+
 import org.jacoco.report.ILanguageNames;
 import org.jacoco.report.html.index.IIndexUpdate;
 import org.jacoco.report.html.resources.Resources;
@@ -72,5 +74,12 @@ public interface IHTMLReportContext {
 	 * @return sevice for indes updates
 	 */
 	public IIndexUpdate getIndexUpdate();
+
+	/**
+	 * Returns the locale used to format numbers and dates.
+	 * 
+	 * @return locale for numbers and dates
+	 */
+	public Locale getLocale();
 
 }

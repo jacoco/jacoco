@@ -18,6 +18,7 @@ import static org.junit.Assert.assertTrue;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Locale;
 
 import org.jacoco.core.analysis.CounterImpl;
 import org.jacoco.core.analysis.CoverageNodeImpl;
@@ -55,6 +56,8 @@ public class CounterColumnTest {
 
 	private HTMLSupport support;
 
+	private Locale locale;
+
 	@Before
 	public void setup() throws Exception {
 		output = new MemoryMultiReportOutput();
@@ -64,6 +67,7 @@ public class CounterColumnTest {
 		doc.head().title();
 		td = doc.body().table("somestyle").tr().td();
 		support = new HTMLSupport();
+		locale = Locale.ENGLISH;
 	}
 
 	@After
@@ -73,7 +77,8 @@ public class CounterColumnTest {
 
 	@Test
 	public void testInitVisible() throws Exception {
-		IColumnRenderer column = CounterColumn.newTotal(CounterEntity.LINE);
+		IColumnRenderer column = CounterColumn.newTotal(CounterEntity.LINE,
+				locale);
 		final ITableItem item = createItem(1, 3);
 		assertTrue(column.init(Arrays.asList(item), item.getNode()));
 		doc.close();
@@ -81,7 +86,8 @@ public class CounterColumnTest {
 
 	@Test
 	public void testInitInvisible() throws Exception {
-		IColumnRenderer column = CounterColumn.newTotal(CounterEntity.LINE);
+		IColumnRenderer column = CounterColumn.newTotal(CounterEntity.LINE,
+				locale);
 		final ITableItem item = createItem(0, 0);
 		assertFalse(column.init(Arrays.asList(item), createNode(1, 0)));
 		doc.close();
@@ -89,7 +95,8 @@ public class CounterColumnTest {
 
 	@Test
 	public void testItemTotal() throws Exception {
-		IColumnRenderer column = CounterColumn.newTotal(CounterEntity.LINE);
+		IColumnRenderer column = CounterColumn.newTotal(CounterEntity.LINE,
+				locale);
 		final ITableItem item = createItem(150, 50);
 		column.init(Collections.singletonList(item), item.getNode());
 		column.item(td, item, resources, root);
@@ -101,7 +108,8 @@ public class CounterColumnTest {
 
 	@Test
 	public void testItemMissed() throws Exception {
-		IColumnRenderer column = CounterColumn.newMissed(CounterEntity.LINE);
+		IColumnRenderer column = CounterColumn.newMissed(CounterEntity.LINE,
+				locale);
 		final ITableItem item = createItem(150, 50);
 		column.init(Collections.singletonList(item), item.getNode());
 		column.item(td, item, resources, root);
@@ -113,7 +121,8 @@ public class CounterColumnTest {
 
 	@Test
 	public void testItemCovered() throws Exception {
-		IColumnRenderer column = CounterColumn.newCovered(CounterEntity.LINE);
+		IColumnRenderer column = CounterColumn.newCovered(CounterEntity.LINE,
+				locale);
 		final ITableItem item = createItem(150, 50);
 		column.init(Collections.singletonList(item), item.getNode());
 		column.item(td, item, resources, root);
@@ -124,8 +133,22 @@ public class CounterColumnTest {
 	}
 
 	@Test
+	public void testLocale() throws Exception {
+		IColumnRenderer column = CounterColumn.newTotal(CounterEntity.LINE,
+				Locale.ITALIAN);
+		final ITableItem item = createItem(1000, 0);
+		column.init(Collections.singletonList(item), item.getNode());
+		column.item(td, item, resources, root);
+		doc.close();
+		final Document doc = support.parse(output.getFile("Test.html"));
+		assertEquals("1.000",
+				support.findStr(doc, "/html/body/table/tr/td[1]/text()"));
+	}
+
+	@Test
 	public void testFooter() throws Exception {
-		IColumnRenderer column = CounterColumn.newTotal(CounterEntity.LINE);
+		IColumnRenderer column = CounterColumn.newTotal(CounterEntity.LINE,
+				locale);
 		final ITableItem item = createItem(80, 60);
 		column.init(Collections.singletonList(item), item.getNode());
 		column.footer(td, item.getNode(), resources, root);
@@ -137,7 +160,8 @@ public class CounterColumnTest {
 
 	@Test
 	public void testComparatorTotal() throws Exception {
-		IColumnRenderer column = CounterColumn.newTotal(CounterEntity.LINE);
+		IColumnRenderer column = CounterColumn.newTotal(CounterEntity.LINE,
+				locale);
 		final Comparator<ITableItem> c = column.getComparator();
 		final ITableItem i1 = createItem(30, 0);
 		final ITableItem i2 = createItem(40, 0);
@@ -149,7 +173,8 @@ public class CounterColumnTest {
 
 	@Test
 	public void testComparatorCovered() throws Exception {
-		IColumnRenderer column = CounterColumn.newCovered(CounterEntity.LINE);
+		IColumnRenderer column = CounterColumn.newCovered(CounterEntity.LINE,
+				locale);
 		final Comparator<ITableItem> c = column.getComparator();
 		final ITableItem i1 = createItem(100, 30);
 		final ITableItem i2 = createItem(100, 50);
@@ -161,7 +186,8 @@ public class CounterColumnTest {
 
 	@Test
 	public void testComparatorMissed() throws Exception {
-		IColumnRenderer column = CounterColumn.newMissed(CounterEntity.LINE);
+		IColumnRenderer column = CounterColumn.newMissed(CounterEntity.LINE,
+				locale);
 		final Comparator<ITableItem> c = column.getComparator();
 		final ITableItem i1 = createItem(100, 80);
 		final ITableItem i2 = createItem(100, 50);

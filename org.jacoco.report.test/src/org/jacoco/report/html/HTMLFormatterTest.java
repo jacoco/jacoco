@@ -11,12 +11,16 @@
  *******************************************************************************/
 package org.jacoco.report.html;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.Locale;
 
+import org.jacoco.report.ILanguageNames;
 import org.jacoco.report.MemoryMultiReportOutput;
 import org.jacoco.report.ReportStructureTestDriver;
 import org.junit.After;
@@ -78,8 +82,8 @@ public class HTMLFormatterTest {
 		final BufferedReader reader = new BufferedReader(new InputStreamReader(
 				output.getFileAsStream("index.html"), "UTF-8"));
 		final String line = reader.readLine();
-		assertTrue(line, line
-				.startsWith("<?xml version=\"1.0\" encoding=\"UTF-8\""));
+		assertTrue(line,
+				line.startsWith("<?xml version=\"1.0\" encoding=\"UTF-8\""));
 	}
 
 	@Test
@@ -89,8 +93,46 @@ public class HTMLFormatterTest {
 		final BufferedReader reader = new BufferedReader(new InputStreamReader(
 				output.getFileAsStream("index.html"), "UTF-16"));
 		final String line = reader.readLine();
-		assertTrue(line, line
-				.startsWith("<?xml version=\"1.0\" encoding=\"UTF-16\""));
+		assertTrue(line,
+				line.startsWith("<?xml version=\"1.0\" encoding=\"UTF-16\""));
+	}
+
+	@Test
+	public void testGetLanguageNames() throws Exception {
+		ILanguageNames names = new ILanguageNames() {
+			public String getPackageName(String vmname) {
+				return null;
+			}
+
+			public String getQualifiedClassName(String vmname) {
+				return null;
+			}
+
+			public String getClassName(String vmname, String vmsignature,
+					String vmsuperclass, String[] vminterfaces) {
+				return null;
+			}
+
+			public String getMethodName(String vmclassname,
+					String vmmethodname, String vmdesc, String vmsignature) {
+				return null;
+			}
+
+		};
+		formatter.setLanguageNames(names);
+		assertSame(names, formatter.getLanguageNames());
+	}
+
+	@Test
+	public void testGetFooterText() throws Exception {
+		formatter.setFooterText("Custom Footer");
+		assertEquals("Custom Footer", formatter.getFooterText());
+	}
+
+	@Test
+	public void testGetLocale() throws Exception {
+		formatter.setLocale(Locale.KOREAN);
+		assertEquals(Locale.KOREAN, formatter.getLocale());
 	}
 
 }

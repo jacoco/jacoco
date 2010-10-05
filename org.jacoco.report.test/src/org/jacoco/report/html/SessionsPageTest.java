@@ -18,6 +18,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import java.util.Locale;
 
 import org.jacoco.core.data.ExecutionData;
 import org.jacoco.core.data.SessionInfo;
@@ -94,6 +95,9 @@ public class SessionsPageTest {
 				return index;
 			}
 
+			public Locale getLocale() {
+				return Locale.ENGLISH;
+			}
 		};
 	}
 

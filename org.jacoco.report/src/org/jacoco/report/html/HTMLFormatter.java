@@ -20,6 +20,7 @@ import static org.jacoco.core.analysis.ICoverageNode.CounterEntity.METHOD;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.List;
+import java.util.Locale;
 
 import org.jacoco.core.analysis.ICoverageNode;
 import org.jacoco.core.analysis.ICoverageNode.CounterEntity;
@@ -54,6 +55,8 @@ public class HTMLFormatter implements IReportFormatter, IHTMLReportContext {
 
 	private ILanguageNames languageNames = new JavaNames();
 
+	private Locale locale = Locale.getDefault();
+
 	private String footerText = "";
 
 	private String outputEncoding = "UTF-8";
@@ -64,31 +67,12 @@ public class HTMLFormatter implements IReportFormatter, IHTMLReportContext {
 
 	private SessionsPage sessionsPage;
 
-	private final Table defaultTable;
+	private Table table;
 
 	/**
 	 * New instance with default settings.
 	 */
 	public HTMLFormatter() {
-		defaultTable = createDefaultTable();
-	}
-
-	private Table createDefaultTable() {
-		final Table table = new Table();
-		table.add("Element", null, new LabelColumn(), false);
-		table.add("Missed Instructions", null, new BarColumn(INSTRUCTION), true);
-		table.add("Cov.", Styles.CTR2, new PercentageColumn(INSTRUCTION), false);
-		addMissedTotalColumns(table, "Classes", CLASS);
-		addMissedTotalColumns(table, "Methods", METHOD);
-		addMissedTotalColumns(table, "Blocks", BLOCK);
-		addMissedTotalColumns(table, "Lines", LINE);
-		return table;
-	}
-
-	private static void addMissedTotalColumns(final Table table,
-			final String label, final CounterEntity entity) {
-		table.add("Missed", Styles.CTR1, CounterColumn.newMissed(entity), false);
-		table.add(label, Styles.CTR2, CounterColumn.newTotal(entity), false);
 	}
 
 	/**
@@ -111,6 +95,17 @@ public class HTMLFormatter implements IReportFormatter, IHTMLReportContext {
 	 */
 	public void setLanguageNames(final ILanguageNames languageNames) {
 		this.languageNames = languageNames;
+	}
+
+	/**
+	 * Sets the locale used for report rendering. The current default locale is
+	 * used by default.
+	 * 
+	 * @param locale
+	 *            locale used for report rendering
+	 */
+	public void setLocale(final Locale locale) {
+		this.locale = locale;
 	}
 
 	/**
@@ -144,7 +139,32 @@ public class HTMLFormatter implements IReportFormatter, IHTMLReportContext {
 	}
 
 	public Table getTable() {
-		return defaultTable;
+		if (table == null) {
+			table = createTable();
+		}
+		return table;
+	}
+
+	private Table createTable() {
+		final Table table = new Table();
+		table.add("Element", null, new LabelColumn(), false);
+		table.add("Missed Instructions", null, new BarColumn(INSTRUCTION,
+				locale), true);
+		table.add("Cov.", Styles.CTR2,
+				new PercentageColumn(INSTRUCTION, locale), false);
+		addMissedTotalColumns(table, "Classes", CLASS);
+		addMissedTotalColumns(table, "Methods", METHOD);
+		addMissedTotalColumns(table, "Blocks", BLOCK);
+		addMissedTotalColumns(table, "Lines", LINE);
+		return table;
+	}
+
+	private void addMissedTotalColumns(final Table table, final String label,
+			final CounterEntity entity) {
+		table.add("Missed", Styles.CTR1,
+				CounterColumn.newMissed(entity, locale), false);
+		table.add(label, Styles.CTR2, CounterColumn.newTotal(entity, locale),
+				false);
 	}
 
 	public String getFooterText() {
@@ -161,6 +181,10 @@ public class HTMLFormatter implements IReportFormatter, IHTMLReportContext {
 
 	public IIndexUpdate getIndexUpdate() {
 		return index;
+	}
+
+	public Locale getLocale() {
+		return locale;
 	}
 
 	// === IReportFormatter ===

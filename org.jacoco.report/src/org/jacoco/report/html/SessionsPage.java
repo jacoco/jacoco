@@ -47,7 +47,7 @@ public class SessionsPage extends ReportPage {
 
 	private final List<SessionInfo> sessionInfos;
 
-	private final DateFormat dateFormat = DateFormat.getDateTimeInstance();
+	private final DateFormat dateFormat;
 
 	private final List<ExecutionData> executionData;
 
@@ -71,6 +71,8 @@ public class SessionsPage extends ReportPage {
 		this.sessionInfos = sessionInfos;
 		this.executionData = new ArrayList<ExecutionData>(executionData);
 		this.index = index;
+		dateFormat = DateFormat.getDateTimeInstance(DateFormat.DEFAULT,
+				DateFormat.DEFAULT, context.getLocale());
 		final ILanguageNames names = context.getLanguageNames();
 		Collections.sort(this.executionData, new Comparator<ExecutionData>() {
 			public int compare(final ExecutionData e1, final ExecutionData e2) {
@@ -141,7 +143,7 @@ public class SessionsPage extends ReportPage {
 	protected String getFileName() {
 		return ".sessions.html";
 	}
-	
+
 	public String getLinkStyle() {
 		return Styles.EL_SESSION;
 	}

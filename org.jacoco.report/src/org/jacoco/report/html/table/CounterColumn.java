@@ -16,6 +16,7 @@ import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Locale;
 
 import org.jacoco.core.analysis.CounterComparator;
 import org.jacoco.core.analysis.ICounter;
@@ -40,11 +41,14 @@ public abstract class CounterColumn implements IColumnRenderer {
 	 * 
 	 * @param entity
 	 *            counter entity for this column
+	 * @param locale
+	 *            locale for rendering numbers
 	 * @return column instance
 	 */
-	public static CounterColumn newTotal(final CounterEntity entity) {
-		return new CounterColumn(entity, CounterComparator.TOTALITEMS.reverse()
-				.on(entity)) {
+	public static CounterColumn newTotal(final CounterEntity entity,
+			final Locale locale) {
+		return new CounterColumn(entity, locale, CounterComparator.TOTALITEMS
+				.reverse().on(entity)) {
 			@Override
 			protected int getValue(final ICounter counter) {
 				return counter.getTotalCount();
@@ -57,10 +61,13 @@ public abstract class CounterColumn implements IColumnRenderer {
 	 * 
 	 * @param entity
 	 *            counter entity for this column
+	 * @param locale
+	 *            locale for rendering numbers
 	 * @return column instance
 	 */
-	public static CounterColumn newMissed(final CounterEntity entity) {
-		return new CounterColumn(entity, CounterComparator.MISSEDITEMS
+	public static CounterColumn newMissed(final CounterEntity entity,
+			final Locale locale) {
+		return new CounterColumn(entity, locale, CounterComparator.MISSEDITEMS
 				.reverse().on(entity)) {
 			@Override
 			protected int getValue(final ICounter counter) {
@@ -74,10 +81,13 @@ public abstract class CounterColumn implements IColumnRenderer {
 	 * 
 	 * @param entity
 	 *            counter entity for this column
+	 * @param locale
+	 *            locale for rendering numbers
 	 * @return column instance
 	 */
-	public static CounterColumn newCovered(final CounterEntity entity) {
-		return new CounterColumn(entity, CounterComparator.COVEREDITEMS
+	public static CounterColumn newCovered(final CounterEntity entity,
+			final Locale locale) {
+		return new CounterColumn(entity, locale, CounterComparator.COVEREDITEMS
 				.reverse().on(entity)) {
 			@Override
 			protected int getValue(final ICounter counter) {
@@ -86,10 +96,9 @@ public abstract class CounterColumn implements IColumnRenderer {
 		};
 	}
 
-	private final NumberFormat integerFormat = DecimalFormat
-			.getIntegerInstance();
-
 	private final CounterEntity entity;
+
+	private final NumberFormat integerFormat;
 
 	private final Comparator<ITableItem> comparator;
 
@@ -99,12 +108,15 @@ public abstract class CounterColumn implements IColumnRenderer {
 	 * 
 	 * @param entity
 	 *            counter entity for this column
+	 * @param locale
+	 *            locale for rendering numbers
 	 * @param comparator
 	 *            comparator for the nodes of this column
 	 */
-	protected CounterColumn(final CounterEntity entity,
+	protected CounterColumn(final CounterEntity entity, final Locale locale,
 			final Comparator<ICoverageNode> comparator) {
 		this.entity = entity;
+		this.integerFormat = DecimalFormat.getIntegerInstance(locale);
 		this.comparator = new TableItemComparator(comparator);
 	}
 

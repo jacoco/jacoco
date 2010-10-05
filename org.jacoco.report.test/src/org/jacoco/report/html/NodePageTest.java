@@ -14,6 +14,7 @@ package org.jacoco.report.html;
 import static org.junit.Assert.assertEquals;
 
 import java.io.IOException;
+import java.util.Locale;
 
 import org.jacoco.core.analysis.CounterImpl;
 import org.jacoco.core.analysis.CoverageNodeImpl;
@@ -104,6 +105,10 @@ public class NodePageTest {
 
 			public IIndexUpdate getIndexUpdate() {
 				throw new AssertionError("Unexpected method call.");
+			}
+
+			public Locale getLocale() {
+				return Locale.ENGLISH;
 			}
 		};
 		node = new CoverageNodeImpl(ElementType.GROUP, "Test", false);

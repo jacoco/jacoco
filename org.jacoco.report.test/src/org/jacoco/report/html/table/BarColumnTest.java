@@ -16,6 +16,7 @@ import static org.junit.Assert.assertTrue;
 
 import java.util.Arrays;
 import java.util.Comparator;
+import java.util.Locale;
 
 import org.jacoco.core.analysis.CounterImpl;
 import org.jacoco.core.analysis.CoverageNodeImpl;
@@ -53,6 +54,8 @@ public class BarColumnTest {
 
 	private HTMLSupport support;
 
+	private IColumnRenderer column;
+
 	@Before
 	public void setup() throws Exception {
 		output = new MemoryMultiReportOutput();
@@ -62,6 +65,7 @@ public class BarColumnTest {
 		doc.head().title();
 		td = doc.body().table("somestyle").tr().td();
 		support = new HTMLSupport();
+		column = new BarColumn(CounterEntity.LINE, Locale.ENGLISH);
 	}
 
 	@After
@@ -71,7 +75,6 @@ public class BarColumnTest {
 
 	@Test
 	public void testInit() throws Exception {
-		final BarColumn column = new BarColumn(CounterEntity.LINE);
 		final ITableItem i = createItem(30, 24);
 		assertTrue(column.init(Arrays.asList(i), i.getNode()));
 		doc.close();
@@ -79,8 +82,7 @@ public class BarColumnTest {
 
 	@Test
 	public void testFooter() throws Exception {
-		new BarColumn(CounterEntity.LINE).footer(td, createNode(20, 5),
-				resources, root);
+		column.footer(td, createNode(20, 5), resources, root);
 		doc.close();
 		final Document doc = support.parse(output.getFile("Test.html"));
 		assertEquals("", support.findStr(doc, "/html/body/table/tr/td/text()"));
@@ -88,11 +90,10 @@ public class BarColumnTest {
 
 	@Test
 	public void testBarWidths() throws Exception {
-		final BarColumn col = new BarColumn(CounterEntity.LINE);
 		final ITableItem i1 = createItem(20, 5);
 		final ITableItem i2 = createItem(30, 24);
-		col.init(Arrays.asList(i1, i2), createNode(50, 29));
-		col.item(td, i1, resources, root);
+		column.init(Arrays.asList(i1, i2), createNode(50, 29));
+		column.item(td, i1, resources, root);
 		doc.close();
 		final Document doc = support.parse(output.getFile("Test.html"));
 
@@ -118,10 +119,9 @@ public class BarColumnTest {
 
 	@Test
 	public void testRedBarOnly() throws Exception {
-		final BarColumn col = new BarColumn(CounterEntity.LINE);
 		final ITableItem i1 = createItem(20, 0);
-		col.init(Arrays.asList(i1), createNode(20, 0));
-		col.item(td, i1, resources, root);
+		column.init(Arrays.asList(i1), createNode(20, 0));
+		column.item(td, i1, resources, root);
 		doc.close();
 		final Document doc = support.parse(output.getFile("Test.html"));
 
@@ -139,10 +139,9 @@ public class BarColumnTest {
 
 	@Test
 	public void testGreenBarOnly() throws Exception {
-		final BarColumn col = new BarColumn(CounterEntity.LINE);
 		final ITableItem i1 = createItem(20, 20);
-		col.init(Arrays.asList(i1), createNode(20, 20));
-		col.item(td, i1, resources, root);
+		column.init(Arrays.asList(i1), createNode(20, 20));
+		column.item(td, i1, resources, root);
 		doc.close();
 		final Document doc = support.parse(output.getFile("Test.html"));
 
@@ -159,9 +158,21 @@ public class BarColumnTest {
 	}
 
 	@Test
+	public void testLocale() throws Exception {
+		final BarColumn col = new BarColumn(CounterEntity.LINE, Locale.FRENCH);
+		final ITableItem i1 = createItem(123456, 123456);
+		col.init(Arrays.asList(i1), createNode(20, 20));
+		col.item(td, i1, resources, root);
+		doc.close();
+		final Document doc = support.parse(output.getFile("Test.html"));
+
+		assertEquals("123\u00a0456",
+				support.findStr(doc, "/html/body/table/tr[1]/td/img[1]/@alt"));
+	}
+
+	@Test
 	public void testComparator1() throws Exception {
-		final BarColumn col = new BarColumn(CounterEntity.LINE);
-		final Comparator<ITableItem> c = col.getComparator();
+		final Comparator<ITableItem> c = column.getComparator();
 		final ITableItem i1 = createItem(100, 50);
 		final ITableItem i2 = createItem(100, 80);
 		assertTrue(c.compare(i1, i2) < 0);
@@ -172,8 +183,7 @@ public class BarColumnTest {
 
 	@Test
 	public void testComparator2() throws Exception {
-		final BarColumn col = new BarColumn(CounterEntity.LINE);
-		final Comparator<ITableItem> c = col.getComparator();
+		final Comparator<ITableItem> c = column.getComparator();
 		final ITableItem i1 = createItem(110, 60);
 		final ITableItem i2 = createItem(100, 50);
 		assertTrue(c.compare(i1, i2) < 0);

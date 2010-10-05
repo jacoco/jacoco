@@ -15,6 +15,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 import java.util.Comparator;
+import java.util.Locale;
 
 import org.jacoco.core.analysis.CounterImpl;
 import org.jacoco.core.analysis.CoverageNodeImpl;
@@ -63,7 +64,7 @@ public class PercentageColumnTest {
 		doc.head().title();
 		td = doc.body().table("somestyle").tr().td();
 		support = new HTMLSupport();
-		column = new PercentageColumn(CounterEntity.LINE);
+		column = new PercentageColumn(CounterEntity.LINE, Locale.ENGLISH);
 	}
 
 	@After
@@ -94,6 +95,18 @@ public class PercentageColumnTest {
 		doc.close();
 		final Document doc = support.parse(output.getFile("Test.html"));
 		assertEquals("n/a",
+				support.findStr(doc, "/html/body/table/tr/td[1]/text()"));
+	}
+
+	@Test
+	public void testLocale() throws Exception {
+		IColumnRenderer column = new PercentageColumn(CounterEntity.LINE,
+				Locale.FRENCH);
+		final ITableItem item = createItem(123, 1230);
+		column.item(td, item, resources, root);
+		doc.close();
+		final Document doc = support.parse(output.getFile("Test.html"));
+		assertEquals("1\u00a0000 %",
 				support.findStr(doc, "/html/body/table/tr/td[1]/text()"));
 	}
 

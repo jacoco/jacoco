@@ -17,6 +17,7 @@ import static org.junit.Assert.assertTrue;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Locale;
 
 import org.jacoco.core.analysis.CoverageNodeImpl;
 import org.jacoco.core.analysis.ICoverageNode.ElementType;
@@ -85,6 +86,10 @@ public class SourceFilePageTest {
 
 			public IIndexUpdate getIndexUpdate() {
 				throw new AssertionError("Unexpected method call.");
+			}
+
+			public Locale getLocale() {
+				return Locale.ENGLISH;
 			}
 		};
 		locator = new DirectorySourceFileLocator(new File("./src"), "UTF-8");

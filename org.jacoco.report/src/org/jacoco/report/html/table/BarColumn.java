@@ -16,6 +16,7 @@ import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Locale;
 
 import org.jacoco.core.analysis.CounterComparator;
 import org.jacoco.core.analysis.ICounter;
@@ -37,10 +38,9 @@ public class BarColumn implements IColumnRenderer {
 
 	private static final int WIDTH = 120;
 
-	private final NumberFormat integerFormat = DecimalFormat
-			.getIntegerInstance();
-
 	private final CounterEntity entity;
+
+	private final NumberFormat integerFormat;
 
 	private int max;
 
@@ -52,9 +52,12 @@ public class BarColumn implements IColumnRenderer {
 	 * 
 	 * @param entity
 	 *            counter entity for visualization
+	 * @param locale
+	 *            locale for rendering numbers
 	 */
-	public BarColumn(final CounterEntity entity) {
+	public BarColumn(final CounterEntity entity, final Locale locale) {
 		this.entity = entity;
+		this.integerFormat = DecimalFormat.getIntegerInstance(locale);
 		this.comparator = new TableItemComparator(CounterComparator.MISSEDITEMS
 				.reverse().on(entity)
 				.second(CounterComparator.TOTALITEMS.reverse().on(entity)));

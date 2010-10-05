@@ -88,7 +88,8 @@
 				</group>
 			</structure>
 			<html destdir="${result.dist.coverage.dir}"
-				  footer="Code Coverage Report for JaCoCo ${qualified.bundle.version}"/>
+				  footer="Code Coverage Report for JaCoCo ${qualified.bundle.version}"
+			      locale="en"/>
 			<csv destfile="${result.dist.coverage.dir}/coverage.csv"/>
 			<xml destfile="${result.dist.coverage.dir}/coverage.xml"/>
 		</jacoco:report>

@@ -4,10 +4,12 @@
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1" />
   <link rel="stylesheet" href=".resources/doc.css" charset="ISO-8859-1" type="text/css" />
+  <link rel="stylesheet" href="../coverage/.resources/prettify.css" charset="ISO-8859-1" type="text/css" />
   <link rel="shortcut icon" href=".resources/report.gif" type="image/gif" />
+  <script type="text/javascript" src="../coverage/.resources/prettify.js"></script>
   <title>JaCoCo - Control Flow Analysis</title>
 </head>
-<body>
+<body onload="prettyPrint()">
 
 <div class="breadcrumb">
   <a href="../index.html" class="el_report">JaCoCo</a> &gt;
@@ -28,15 +30,52 @@
   JaCoCo this analysis needs to happen on compiled class files (bytecode).
   This document defines graph structures for control flow analysis of Java
   bytecode and discusses strategies for probe insertion.
-  Marc R. Hoffmann, April 2010
+  Marc R. Hoffmann, July 2010
 </p>
 
 <h2>Motivation and Requirements</h2>
 
 <ul>
-  <li>Path Coverage</li>
+  <li>Branch Coverage</li>
   <li>Exception Detection</li>
 </ul>
+
+<h2>From Statement Coverage to Branch Coverage</h2>
+
+<p>
+  A 
+  JaCoCo till version 0.4.x provides statement coverage  
+  As as starting point 
+  differnce between statement coverage and branch coverage.
+  probe insertion strategy.  
+
+</p>
+
+<pre class="source lang-java">
+<span class="nr">    1</span>public void example() {
+<span class="nr">    2</span>    a();
+<span class="nr">    3</span>    if (condition()) {
+<span class="nr">    4</span>        b();
+<span class="nr">    5</span>    }
+<span class="nr">    6</span>    c();   
+<span class="nr">    7</span>}
+</pre>
+
+
+<pre class="source">
+<span class="nr">    1</span>public example() : void
+<span class="nr">    2</span>  L0
+<span class="nr">    3</span>    INVOKESTATIC Example.a() : void
+<span class="nr">    4</span>  L1
+<span class="nr">    5</span>    INVOKESTATIC Example.condition() : boolean
+<span class="nr">    6</span>    IFEQ L3
+<span class="nr">    7</span>  L2
+<span class="nr">    8</span>    INVOKESTATIC Example.b() : void
+<span class="nr">    9</span>  L3
+<span class="nr">   10</span>    INVOKESTATIC Example.c() : void
+<span class="nr">   11</span>  L4
+<span class="nr">   11</span>    RETURN
+</pre>
 
 <h2>The Control Flow Graph</h2>
 
@@ -54,9 +93,9 @@
 <p>
   Code coverage analysis is a runtime metric that provides execution details
   of the software under test. This requires detailed recording about the
-  instructions (instruction coverage) that have been executed. For path coverage
-  also the outcome of decisions has to be recorded. In any case execution data
-  is collected by so called probes:
+  instructions (instruction coverage) that have been executed. For branch
+  coverage also the outcome of decisions has to be recorded. In any case
+  execution data is collected by so called probes:
 </p>
 
 <p class="hint">

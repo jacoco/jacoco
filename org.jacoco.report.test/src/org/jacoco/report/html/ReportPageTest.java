@@ -14,6 +14,7 @@ package org.jacoco.report.html;
 import static org.junit.Assert.assertEquals;
 
 import java.io.IOException;
+import java.util.Locale;
 
 import org.jacoco.report.ILanguageNames;
 import org.jacoco.report.MemoryMultiReportOutput;
@@ -120,6 +121,11 @@ public class ReportPageTest {
 			public IIndexUpdate getIndexUpdate() {
 				throw new AssertionError("Unexpected method call.");
 			}
+
+			public Locale getLocale() {
+				return Locale.ENGLISH;
+			}
+
 		};
 		ReportPage parent = new TestReportPage("Report", "el_report", null);
 		page = new TestReportPage("Test", "el_group", parent);

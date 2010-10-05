@@ -16,6 +16,7 @@ import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Locale;
 
 import org.jacoco.core.analysis.CounterComparator;
 import org.jacoco.core.analysis.ICounter;
@@ -35,10 +36,9 @@ import org.jacoco.report.html.resources.Resources;
  */
 public class PercentageColumn implements IColumnRenderer {
 
-	private final NumberFormat percentageFormat = DecimalFormat
-			.getPercentInstance();
-
 	private final CounterEntity entity;
+
+	private final NumberFormat percentageFormat;
 
 	private final Comparator<ITableItem> comparator;
 
@@ -48,9 +48,12 @@ public class PercentageColumn implements IColumnRenderer {
 	 * 
 	 * @param entity
 	 *            counter entity for this column
+	 * @param locale
+	 *            locale for rendering numbers
 	 */
-	public PercentageColumn(final CounterEntity entity) {
+	public PercentageColumn(final CounterEntity entity, final Locale locale) {
 		this.entity = entity;
+		this.percentageFormat = DecimalFormat.getPercentInstance(locale);
 		comparator = new TableItemComparator(
 				CounterComparator.MISSEDRATIO.on(entity));
 	}

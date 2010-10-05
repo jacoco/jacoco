@@ -25,6 +25,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.zip.ZipOutputStream;
 
@@ -166,6 +167,8 @@ public class ReportTask extends Task {
 
 		private String encoding = "UTF-8";
 
+		private Locale locale = Locale.getDefault();
+
 		private ZipOutputStream zipOutput;
 
 		/**
@@ -209,6 +212,17 @@ public class ReportTask extends Task {
 			this.encoding = encoding;
 		}
 
+		/**
+		 * Sets the locale for generated text output. By default the platform
+		 * locale is used.
+		 * 
+		 * @param locale
+		 *            text locale
+		 */
+		public void setLocale(final Locale locale) {
+			this.locale = locale;
+		}
+
 		public IReportFormatter createFormatter() throws IOException {
 			final IMultiReportOutput output;
 			if (destfile != null) {
@@ -230,6 +244,7 @@ public class ReportTask extends Task {
 			formatter.setReportOutput(output);
 			formatter.setFooterText(footer);
 			formatter.setOutputEncoding(encoding);
+			formatter.setLocale(locale);
 			return formatter;
 		}
 
