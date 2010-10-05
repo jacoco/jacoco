@@ -114,7 +114,7 @@ public abstract class RuntimeTestBase {
 	}
 
 	@Test
-	public void testSessionInfo() {
+	public void testSessionInfo() throws Exception {
 		final SessionInfo[] info = new SessionInfo[1];
 		final ISessionInfoVisitor visitor = new ISessionInfoVisitor() {
 			public void visitSessionInfo(SessionInfo i) {
@@ -123,19 +123,21 @@ public abstract class RuntimeTestBase {
 		};
 		runtime.setSessionId("test-session");
 		final long t1 = System.currentTimeMillis();
+		runtime.startup();
 		runtime.collect(storage, visitor, true);
-		assertNotNull(info[0]);
-		assertEquals("test-session", info[0].getId());
-		assertTrue(info[0].getStartTimeStamp() <= t1);
-		assertTrue(info[0].getDumpTimeStamp() >= t1);
-
-		info[0] = null;
 		final long t2 = System.currentTimeMillis();
-		runtime.collect(storage, visitor, true);
 		assertNotNull(info[0]);
 		assertEquals("test-session", info[0].getId());
 		assertTrue(info[0].getStartTimeStamp() >= t1);
-		assertTrue(info[0].getDumpTimeStamp() >= t2);
+		assertTrue(info[0].getDumpTimeStamp() <= t2);
+
+		info[0] = null;
+		runtime.collect(storage, visitor, true);
+		final long t3 = System.currentTimeMillis();
+		assertNotNull(info[0]);
+		assertEquals("test-session", info[0].getId());
+		assertTrue(info[0].getStartTimeStamp() >= t2);
+		assertTrue(info[0].getDumpTimeStamp() <= t3);
 	}
 
 	@Test
