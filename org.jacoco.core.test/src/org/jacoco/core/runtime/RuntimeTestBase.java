@@ -175,12 +175,11 @@ public abstract class RuntimeTestBase {
 	}
 
 	/**
-	 * Creates a new class with the given id, loads this class and injects the
-	 * given data instance into the class. Used to check whether the data is
-	 * properly collected in the runtime.
+	 * Creates a new class with the given id, loads this class and instantiates
+	 * it. The constructor of the generated class will request the probe array
+	 * from the runtime under test.
 	 * 
 	 * @param classid
-	 * @param data
 	 * @throws InstantiationException
 	 * @throws IllegalAccessException
 	 */
@@ -260,17 +259,26 @@ public abstract class RuntimeTestBase {
 	}
 
 	/**
-	 * With this interface we inject sample coverage data into the generated
-	 * classes.
+	 * With this interface we modify and read coverage data of the generated
+	 * class.
 	 */
 	public interface ITarget {
 
+		/**
+		 * Returns a reference to the probe array.
+		 * 
+		 * @return the probe array
+		 */
 		boolean[] get();
 
-		// implementations just mark probe 0 as executed
+		/**
+		 * The implementation will mark probe 0 as executed
+		 */
 		void a();
 
-		// implementations just mark probe 1 as executed
+		/**
+		 * The implementation will mark probe 1 as executed
+		 */
 		void b();
 
 	}
