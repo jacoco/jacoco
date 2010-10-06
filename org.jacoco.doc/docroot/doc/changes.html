@@ -22,7 +22,12 @@
 
 <h3>New Features</h3>
 <ul>
-  <li>Optional locale attribute for HTML reports (Track #122).</li>
+  <li>New attribute <code>line</code> for <code>method</code> elements in the
+      XML report containing the first source line number of the method.
+      (Track #120).</li>
+  <li>Optional <code>locale</code> attribute for number rendering HTML reports,
+      also available as an attribute of the <code>html</code> tag of the
+      <code>report</code> Ant task (Track #122).</li>
   <li>Coverage tables in HTML report are now sortable (Track #98).</li>
   <li>The <code>report</code> Ant task issues a warning if source files are
       provided but class files do not contain debug information to collect line

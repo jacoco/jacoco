@@ -44,9 +44,10 @@
 <!ELEMENT method (counter*)>
 <!ATTLIST method
   name CDATA #REQUIRED
-  desc CDATA #REQUIRED>
+  desc CDATA #REQUIRED
+  line CDATA #IMPLIED>
   
-<!ELEMENT sourcefile (line*)>
+<!ELEMENT sourcefile (line*, counter*)>
 <!ATTLIST sourcefile
   name CDATA #REQUIRED>
 
@@ -57,6 +58,6 @@
 
 <!ELEMENT counter EMPTY>
 <!ATTLIST counter
-  type    CDATA #REQUIRED
+  type    (INSTRUCTION|BLOCK|LINE|METHOD|CLASS) #REQUIRED
   covered CDATA #REQUIRED
   missed  CDATA #REQUIRED>

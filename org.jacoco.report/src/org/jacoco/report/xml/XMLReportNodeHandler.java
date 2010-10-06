@@ -16,10 +16,10 @@ import java.io.IOException;
 
 import org.jacoco.core.analysis.ICounter;
 import org.jacoco.core.analysis.ICoverageNode;
-import org.jacoco.core.analysis.ILines;
-import org.jacoco.core.analysis.MethodCoverage;
 import org.jacoco.core.analysis.ICoverageNode.CounterEntity;
 import org.jacoco.core.analysis.ICoverageNode.ElementType;
+import org.jacoco.core.analysis.ILines;
+import org.jacoco.core.analysis.MethodCoverage;
 import org.jacoco.report.IReportVisitor;
 import org.jacoco.report.ISourceFileLocator;
 
@@ -61,8 +61,7 @@ class XMLReportNodeHandler implements IReportVisitor {
 	 *            this element
 	 * @throws IOException
 	 */
-	protected void insertElementsBefore(final XMLElement element)
-			throws IOException {
+	void insertElementsBefore(final XMLElement element) throws IOException {
 	}
 
 	/**
@@ -72,8 +71,7 @@ class XMLReportNodeHandler implements IReportVisitor {
 	 *            this element
 	 * @throws IOException
 	 */
-	protected void insertElementsAfter(final XMLElement element)
-			throws IOException {
+	void insertElementsAfter(final XMLElement element) throws IOException {
 	}
 
 	public IReportVisitor visitChild(final ICoverageNode node)
@@ -89,7 +87,12 @@ class XMLReportNodeHandler implements IReportVisitor {
 			return new XMLReportNodeHandler(element.element("class"), node);
 		case METHOD:
 			final XMLElement methodChild = element.element("method");
-			methodChild.attr("desc", ((MethodCoverage) node).getDesc());
+			final MethodCoverage methodNode = (MethodCoverage) node;
+			methodChild.attr("desc", methodNode.getDesc());
+			final int line = methodNode.getLines().getFirstLine();
+			if (line != -1) {
+				methodChild.attr("line", line);
+			}
 			return new XMLReportNodeHandler(methodChild, node);
 		case SOURCEFILE:
 			return new XMLReportNodeHandler(element.element("sourcefile"), node) {
@@ -99,16 +102,17 @@ class XMLReportNodeHandler implements IReportVisitor {
 					writeLines(node.getLines(), element);
 				}
 			};
+		default:
+			throw new AssertionError(type);
 		}
-		return IReportVisitor.NOP;
 	}
 
 	public final void visitEnd(final ISourceFileLocator sourceFileLocator)
 			throws IOException {
+		insertElementsAfter(element);
 		for (final CounterEntity counterEntity : CounterEntity.values()) {
 			createCounterElement(counterEntity);
 		}
-		insertElementsAfter(element);
 		element.close();
 	}
 
