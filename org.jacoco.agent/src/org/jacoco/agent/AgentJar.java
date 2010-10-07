@@ -43,7 +43,7 @@ public class AgentJar {
 	public static URL getResource() {
 		final URL url = AgentJar.class.getResource(RESOURCE);
 		if (url == null) {
-			throw new RuntimeException(ERRORMSG);
+			throw new AssertionError(ERRORMSG);
 		}
 		return url;
 	}
@@ -53,10 +53,10 @@ public class AgentJar {
 	 * 
 	 * @return content of the JAR file
 	 */
-	public static InputStream getResourceAsStream() throws IOException {
+	public static InputStream getResourceAsStream() {
 		final InputStream stream = AgentJar.class.getResourceAsStream(RESOURCE);
 		if (stream == null) {
-			throw new IOException(ERRORMSG);
+			throw new AssertionError(ERRORMSG);
 		}
 		return stream;
 	}

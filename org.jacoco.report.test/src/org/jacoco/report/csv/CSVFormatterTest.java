@@ -12,6 +12,7 @@
 package org.jacoco.report.csv;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertSame;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -26,6 +27,7 @@ import org.jacoco.core.analysis.ICoverageNode;
 import org.jacoco.core.analysis.ICoverageNode.ElementType;
 import org.jacoco.core.data.ExecutionData;
 import org.jacoco.core.data.SessionInfo;
+import org.jacoco.report.ILanguageNames;
 import org.jacoco.report.IReportVisitor;
 import org.jacoco.report.MemorySingleReportOutput;
 import org.jacoco.report.ReportStructureTestDriver;
@@ -113,6 +115,32 @@ public class CSVFormatterTest {
 		driver.sendBundle(formatter);
 		final List<String> lines = getLines("UTF-16");
 		assertEquals(HEADER, lines.get(0));
+	}
+
+	@Test
+	public void testGetLanguageNames() throws Exception {
+		ILanguageNames names = new ILanguageNames() {
+			public String getPackageName(String vmname) {
+				return null;
+			}
+
+			public String getQualifiedClassName(String vmname) {
+				return null;
+			}
+
+			public String getClassName(String vmname, String vmsignature,
+					String vmsuperclass, String[] vminterfaces) {
+				return null;
+			}
+
+			public String getMethodName(String vmclassname,
+					String vmmethodname, String vmdesc, String vmsignature) {
+				return null;
+			}
+
+		};
+		formatter.setLanguageNames(names);
+		assertSame(names, formatter.getLanguageNames());
 	}
 
 	private List<String> getLines() throws IOException {

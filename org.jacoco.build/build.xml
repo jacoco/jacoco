@@ -82,6 +82,7 @@
 			<!-- Tests -->
 			<runbundlebuild bundleid="org.jacoco.core.test" target="@{target}"/>
 			<runbundlebuild bundleid="org.jacoco.agent.rt.test" target="@{target}"/>
+			<runbundlebuild bundleid="org.jacoco.agent.test" target="@{target}"/>
 			<runbundlebuild bundleid="org.jacoco.report.test" target="@{target}"/>
 			<runbundlebuild bundleid="org.jacoco.ant.test" target="@{target}"/>
 			
