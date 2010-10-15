@@ -19,7 +19,7 @@ import org.jacoco.core.analysis.ICoverageNode;
 import org.jacoco.report.IReportVisitor;
 import org.jacoco.report.ISourceFileLocator;
 import org.jacoco.report.ReportOutputFolder;
-import org.jacoco.report.html.resources.Resources;
+import org.jacoco.report.internal.html.resources.Resources;
 
 /**
  * Page showing coverage information for a node that groups other nodes. The

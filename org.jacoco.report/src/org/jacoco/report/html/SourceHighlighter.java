@@ -17,7 +17,7 @@ import java.io.Reader;
 import java.util.Arrays;
 
 import org.jacoco.core.analysis.ILines;
-import org.jacoco.report.html.resources.Styles;
+import org.jacoco.report.internal.html.resources.Styles;
 
 /**
  * Creates a highlighted output of a source file.

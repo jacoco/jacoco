@@ -33,15 +33,15 @@ import org.jacoco.report.IReportVisitor;
 import org.jacoco.report.ISourceFileLocator;
 import org.jacoco.report.JavaNames;
 import org.jacoco.report.ReportOutputFolder;
-import org.jacoco.report.html.index.ElementIndex;
-import org.jacoco.report.html.index.IIndexUpdate;
-import org.jacoco.report.html.resources.Resources;
-import org.jacoco.report.html.resources.Styles;
-import org.jacoco.report.html.table.BarColumn;
-import org.jacoco.report.html.table.CounterColumn;
-import org.jacoco.report.html.table.LabelColumn;
-import org.jacoco.report.html.table.PercentageColumn;
-import org.jacoco.report.html.table.Table;
+import org.jacoco.report.internal.html.index.ElementIndex;
+import org.jacoco.report.internal.html.index.IIndexUpdate;
+import org.jacoco.report.internal.html.resources.Resources;
+import org.jacoco.report.internal.html.resources.Styles;
+import org.jacoco.report.internal.html.table.BarColumn;
+import org.jacoco.report.internal.html.table.CounterColumn;
+import org.jacoco.report.internal.html.table.LabelColumn;
+import org.jacoco.report.internal.html.table.PercentageColumn;
+import org.jacoco.report.internal.html.table.Table;
 
 /**
  * Formatter for coverage reports in multiple HTML pages.

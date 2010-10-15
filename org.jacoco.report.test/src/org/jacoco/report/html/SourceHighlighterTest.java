@@ -17,7 +17,7 @@ import java.io.StringReader;
 import java.io.StringWriter;
 
 import org.jacoco.core.analysis.LinesImpl;
-import org.jacoco.report.html.resources.Styles;
+import org.jacoco.report.internal.html.resources.Styles;
 import org.junit.Before;
 import org.junit.Test;
 import org.w3c.dom.Document;

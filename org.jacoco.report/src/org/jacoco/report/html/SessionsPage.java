@@ -24,8 +24,8 @@ import org.jacoco.core.data.ExecutionData;
 import org.jacoco.core.data.SessionInfo;
 import org.jacoco.report.ILanguageNames;
 import org.jacoco.report.ReportOutputFolder;
-import org.jacoco.report.html.index.ElementIndex;
-import org.jacoco.report.html.resources.Styles;
+import org.jacoco.report.internal.html.index.ElementIndex;
+import org.jacoco.report.internal.html.resources.Styles;
 
 /**
  * Page to display information about sessions covered by this report.

@@ -14,9 +14,9 @@ package org.jacoco.report.html;
 import java.util.Locale;
 
 import org.jacoco.report.ILanguageNames;
-import org.jacoco.report.html.index.IIndexUpdate;
-import org.jacoco.report.html.resources.Resources;
-import org.jacoco.report.html.table.Table;
+import org.jacoco.report.internal.html.index.IIndexUpdate;
+import org.jacoco.report.internal.html.resources.Resources;
+import org.jacoco.report.internal.html.table.Table;
 
 /**
  * Context and configuration information during creation of a HTML report.

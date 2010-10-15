@@ -24,7 +24,7 @@ import org.jacoco.core.analysis.SourceFileCoverage;
 import org.jacoco.report.IReportVisitor;
 import org.jacoco.report.ISourceFileLocator;
 import org.jacoco.report.ReportOutputFolder;
-import org.jacoco.report.html.resources.Resources;
+import org.jacoco.report.internal.html.resources.Resources;
 
 /**
  * Page showing coverage information for a Java package. The page contains a

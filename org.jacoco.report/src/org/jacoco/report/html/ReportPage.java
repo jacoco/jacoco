@@ -15,8 +15,8 @@ import java.io.IOException;
 
 import org.jacoco.core.JaCoCo;
 import org.jacoco.report.ReportOutputFolder;
-import org.jacoco.report.html.resources.Resources;
-import org.jacoco.report.html.resources.Styles;
+import org.jacoco.report.internal.html.resources.Resources;
+import org.jacoco.report.internal.html.resources.Styles;
 
 /**
  * Base class for HTML page generators. It renders the page skeleton with the

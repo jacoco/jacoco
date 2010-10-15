@@ -21,9 +21,9 @@ import org.jacoco.core.analysis.ICoverageNode;
 import org.jacoco.core.analysis.MethodCoverage;
 import org.jacoco.report.IReportVisitor;
 import org.jacoco.report.ReportOutputFolder;
-import org.jacoco.report.html.resources.Resources;
-import org.jacoco.report.html.resources.Styles;
-import org.jacoco.report.html.table.ITableItem;
+import org.jacoco.report.internal.html.resources.Resources;
+import org.jacoco.report.internal.html.resources.Styles;
+import org.jacoco.report.internal.html.table.ITableItem;
 
 /**
  * Page showing coverage information for a class as a table of methods. The

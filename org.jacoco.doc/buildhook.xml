@@ -106,17 +106,9 @@
 			windowtitle="JaCoCo ${qualified.bundle.version}"
 			overview="${source.bundle.dir}/javadoc/overview.html"
 			stylesheetfile="${source.bundle.dir}/javadoc/stylesheet.css">
-			<sourcefiles>
-				<fileset dir="${result.tmp.org.jacoco.agent.dir}/java" includes="**/*.java"/>
-				<fileset dir="${result.tmp.org.jacoco.core.dir}/java" includes="**/*.java"/>
-				<fileset dir="${result.tmp.org.jacoco.report.dir}/java" includes="**/*.java"/>
-			</sourcefiles>
 			<classpath>
 				<path refid="bundle-org.objectweb.asm"/>
 			</classpath>
-			<group title="Bundle org.jacoco.core" packages="org.jacoco.core*"/>
-			<group title="Bundle org.jacoco.agent" packages="org.jacoco.agent*"/>
-			<group title="Bundle org.jacoco.report" packages="org.jacoco.report*"/>
 			<link href="http://java.sun.com/j2se/1.5.0/docs/api" offline="true" packagelistloc="${source.bundle.dir}/javadoc/java"/>
 			<link href="http://asm.ow2.org/asm31/javadoc/user" offline="true" packagelistloc="${source.bundle.dir}/javadoc/asm"/>
 			<bottom>
@@ -125,6 +117,15 @@
 					Copyright &#169; ${copyright.years} Mountainminds GmbH &amp; Co. KG and Contributors
 				&lt;/div>
 			</bottom>
+			
+			<packageset dir="${result.tmp.org.jacoco.agent.dir}/java" excludes="**/internal/**"/>
+			<group title="Bundle org.jacoco.core" packages="org.jacoco.core*"/>
+			
+			<packageset dir="${result.tmp.org.jacoco.core.dir}/java" excludes="**/internal/**"/>
+			<group title="Bundle org.jacoco.agent" packages="org.jacoco.agent*"/>
+			
+			<packageset dir="${result.tmp.org.jacoco.report.dir}/java" excludes="**/internal/**"/>
+			<group title="Bundle org.jacoco.report" packages="org.jacoco.report*"/>
 		</javadoc>
 		
 		<copy todir="${result.dist.dir}">
