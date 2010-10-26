@@ -15,8 +15,13 @@
 
   /**
    * Sets the initial sorting derived from the hash.
+   *
+   * @param linkelementids
+   *          list of element ids to search for links to add sort inidcator
+   *          hash links   
    */  
-  function initialSort() {
+  function initialSort(linkelementids) {
+    window.linkelementids = linkelementids
     var hash = window.location.hash
     if (hash) {
       var m = hash.match(/up-./)
@@ -87,8 +92,10 @@
    */
   function setHash(hash) {
     window.document.location.hash = hash
-    setHashOnAllLinks(document.getElementById("breadcrumb"), hash)
-    setHashOnAllLinks(document.getElementById("coveragetable"), hash)
+    ids = window.linkelementids
+    for (var i = 0; i < ids.length; i++) {
+        setHashOnAllLinks(document.getElementById(ids[i]), hash)
+    }
   }
 
   /**

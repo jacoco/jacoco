@@ -112,7 +112,7 @@ public class ClassPage extends NodePage {
 
 	@Override
 	protected String getOnload() {
-		return "initialSort()";
+		return "initialSort(['breadcrumb'])";
 	}
 
 	@Override

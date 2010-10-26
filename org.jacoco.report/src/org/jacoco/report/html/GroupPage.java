@@ -78,7 +78,7 @@ public class GroupPage extends NodePage {
 
 	@Override
 	protected String getOnload() {
-		return "initialSort()";
+		return "initialSort(['breadcrumb', 'coveragetable'])";
 	}
 
 	@Override
