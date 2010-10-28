@@ -79,14 +79,68 @@
 
 <h2>The Control Flow Graph</h2>
 
-<ul>
-  <li>Virtual Entry and Exit Nodes</li>
-  <li>Subsequent Instructions</li>
-  <li>(Conditional) Jump</li>
-  <li>Table/Lookup Switch</li>
-  <li>Exception Handlers</li>
-  <li>Unhandled Exceptions</li>
-</ul>
+<h3>Flow Edges</h3>
+
+<p>
+  The control flow graph of a Java method defined by Java byte code may have
+  the following Edges. Each edge connects a source instruction with a target
+  instruction. In some cases the source instruction or the target instruction
+  does not exist (virtual edges for method entry and exit) or cannot be
+  exactly specified (exception handlers). 
+</p>
+
+<table class="coverage">
+  <thead>
+    <tr>
+      <td>Type</td>
+      <td>Source</td>
+      <td>Target</td>
+      <td>Remarks</td>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>ENTRY</td>
+      <td>-</td>
+      <td>First instruction in method</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>SEQUENCE</td>
+      <td>Instruction, except <code>GOTO</code>, <code>xRETURN</code>, 
+        <code>THROW</code>, <code>TABLESWITCH</code> and <code>LOOKUPSWITCH</code></td>
+      <td>Subsequent instruction</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>JUMP</td>
+      <td><code>GOTO</code>, <code>IFx</code>, <code>TABLESWITCH</code> or
+        <code>LOOKUPSWITCH</code>  instruction</td>
+      <td>Target instruction</td>
+      <td><code>TABLESWITCH</code> and <code>LOOKUPSWITCH</code> will define
+        multiple edges.</td>
+    </tr>
+    <tr>
+      <td>EXHANDLER</td>
+      <td>Any instruction in range</td>
+      <td>Target instruction</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>EXIT</td>
+      <td><code>xRETURN</code> or <code>THROW</code> instruction</td>
+      <td>-</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>EXEXIT</td>
+      <td>Any instruction</td>
+      <td>-</td>
+      <td>Unhandled exception.</td>
+    </tr>
+  </tbody>
+</table>
+
 
 <h2>Probe Insertion</h2>
 
