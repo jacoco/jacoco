@@ -11,6 +11,7 @@
  *******************************************************************************/
 package org.jacoco.core.instr;
 
+import org.jacoco.core.internal.flow.IProbeIdGenerator;
 import org.objectweb.asm.ClassAdapter;
 import org.objectweb.asm.ClassVisitor;
 import org.objectweb.asm.MethodVisitor;

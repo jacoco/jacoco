@@ -13,6 +13,7 @@ package org.jacoco.core.instr;
 
 import static org.junit.Assert.assertEquals;
 
+import org.jacoco.core.internal.flow.IProbeIdGenerator;
 import org.junit.Before;
 import org.junit.Test;
 import org.objectweb.asm.Label;

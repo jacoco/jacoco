@@ -198,6 +198,8 @@ final class LabelsInfo implements MethodVisitor {
 
 	public void visitInsn(final int opcode) {
 		switch (opcode) {
+		case Opcodes.RET:
+			throw new AssertionError("Subroutines not supported.");
 		case Opcodes.IRETURN:
 		case Opcodes.LRETURN:
 		case Opcodes.FRETURN:
@@ -236,6 +238,9 @@ final class LabelsInfo implements MethodVisitor {
 	}
 
 	public void visitJumpInsn(final int opcode, final Label label) {
+		if (opcode == Opcodes.JSR) {
+			throw new AssertionError("Subroutines not supported.");
+		}
 		target(label);
 		successor = opcode != Opcodes.GOTO;
 	}

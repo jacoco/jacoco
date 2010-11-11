@@ -9,7 +9,7 @@
  *    Marc R. Hoffmann - initial API and implementation
  *    
  *******************************************************************************/
-package org.jacoco.core.instr;
+package org.jacoco.core.internal.flow;
 
 /**
  * Internal interface to create probe ids unique within a class.
@@ -17,7 +17,7 @@ package org.jacoco.core.instr;
  * @author Marc R. Hoffmann
  * @version $qualified.bundle.version$
  */
-interface IProbeIdGenerator {
+public interface IProbeIdGenerator {
 
 	/**
 	 * Returns the next unique probe id.
