@@ -24,11 +24,6 @@ import org.objectweb.asm.MethodVisitor;
 public interface IMethodProbesVisitor extends MethodVisitor {
 
 	/**
-	 * Reserved ID for "no probe".
-	 */
-	public static final int NO_PROBE = -1;
-
-	/**
 	 * Visits an unconditional probe that should be inserted at the current
 	 * position.
 	 * 
@@ -76,7 +71,8 @@ public interface IMethodProbesVisitor extends MethodVisitor {
 	 * Visits a TABLESWITCH instruction with optional probes for each target
 	 * label. Implementations can be optimized based on the fact that the same
 	 * target labels will always have the same probe id within a call to this
-	 * method.
+	 * method. The probe id for each label can be obtained with
+	 * {@link LabelInfo#getProbeId(Label)}.
 	 * 
 	 * @param min
 	 *            the minimum key value.
@@ -88,21 +84,17 @@ public interface IMethodProbesVisitor extends MethodVisitor {
 	 *            beginnings of the handler blocks. <code>labels[i]</code> is
 	 *            the beginning of the handler block for the
 	 *            <code>min + i</code> key.
-	 * @param probeIds
-	 *            probe ids of the target labels. <code>probeIds[i]</code> is
-	 *            the id for target label <code>labels[i]</code>. If no probe is
-	 *            required for a target label the corresponding id is
-	 *            {@link #NO_PROBE}.
 	 * @see MethodVisitor#visitTableSwitchInsn(int, int, Label, Label[])
 	 */
 	public void visitTableSwitchInsnWithProbes(int min, int max, Label dflt,
-			Label[] labels, int[] probeIds);
+			Label[] labels);
 
 	/**
 	 * Visits a LOOKUPSWITCH instruction with optional probes for each target
 	 * label. Implementations can be optimized based on the fact that the same
 	 * target labels will always have the same probe id within a call to this
-	 * method.
+	 * method. The probe id for each label can be obtained with
+	 * {@link LabelInfo#getProbeId(Label)}.
 	 * 
 	 * @param dflt
 	 *            beginning of the default handler block.
@@ -112,14 +104,9 @@ public interface IMethodProbesVisitor extends MethodVisitor {
 	 *            beginnings of the handler blocks. <code>labels[i]</code> is
 	 *            the beginning of the handler block for the
 	 *            <code>keys[i]</code> key.
-	 * @param probeIds
-	 *            probe ids of the target labels. <code>probeIds[i]</code> is
-	 *            the id for target label <code>labels[i]</code>. If no probe is
-	 *            required for a target label the corresponding id is
-	 *            {@link #NO_PROBE}.
 	 * @see MethodVisitor#visitLookupSwitchInsn(Label, int[], Label[])
 	 */
 	public void visitLookupSwitchInsnWithProbes(Label dflt, int[] keys,
-			Label[] labels, int[] probeIds);
+			Label[] labels);
 
 }

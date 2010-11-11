@@ -11,6 +11,7 @@
  *******************************************************************************/
 package org.jacoco.core.internal.flow;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
@@ -37,6 +38,8 @@ public class LabelInfoTest {
 	public void testDefaults() {
 		assertFalse(LabelInfo.isMultiTarget(label));
 		assertFalse(LabelInfo.isSuccessor(label));
+		assertFalse(LabelInfo.isDone(label));
+		assertEquals(LabelInfo.NO_PROBE, LabelInfo.getProbeId(label));
 	}
 
 	@Test
@@ -77,6 +80,21 @@ public class LabelInfoTest {
 		LabelInfo.setSuccessor(label);
 		assertTrue(LabelInfo.isMultiTarget(label));
 		assertTrue(LabelInfo.isSuccessor(label));
+	}
+
+	@Test
+	public void testSetResetDone() {
+		LabelInfo.setDone(label);
+		assertTrue(LabelInfo.isDone(label));
+
+		LabelInfo.resetDone(label);
+		assertFalse(LabelInfo.isDone(label));
+	}
+
+	@Test
+	public void testSetProbeId() {
+		LabelInfo.setProbeId(label, 123);
+		assertEquals(123, LabelInfo.getProbeId(label));
 	}
 
 }

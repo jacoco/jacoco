@@ -71,4 +71,43 @@ final class MethodProbesAdapter extends MethodAdapter {
 		}
 	}
 
+	@Override
+	public void visitLookupSwitchInsn(final Label dflt, final int[] keys,
+			final Label[] labels) {
+		if (markLabels(dflt, labels)) {
+			probesVisitor.visitLookupSwitchInsnWithProbes(dflt, keys, labels);
+		} else {
+			probesVisitor.visitLookupSwitchInsn(dflt, keys, labels);
+		}
+	}
+
+	@Override
+	public void visitTableSwitchInsn(final int min, final int max,
+			final Label dflt, final Label[] labels) {
+		if (markLabels(dflt, labels)) {
+			probesVisitor
+					.visitTableSwitchInsnWithProbes(min, max, dflt, labels);
+		} else {
+			probesVisitor.visitTableSwitchInsn(min, max, dflt, labels);
+		}
+	}
+
+	private boolean markLabels(final Label dflt, final Label[] labels) {
+		boolean probe = false;
+		LabelInfo.resetDone(labels);
+		if (LabelInfo.isMultiTarget(dflt)) {
+			LabelInfo.setProbeId(dflt, idGenerator.nextId());
+			probe = true;
+		}
+		LabelInfo.setDone(dflt);
+		for (final Label l : labels) {
+			if (!LabelInfo.isDone(l) && LabelInfo.isMultiTarget(l)) {
+				LabelInfo.setProbeId(l, idGenerator.nextId());
+				probe = true;
+			}
+			LabelInfo.setDone(l);
+		}
+		return probe;
+	}
+
 }

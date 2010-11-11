@@ -27,12 +27,6 @@ import org.objectweb.asm.Opcodes;
  */
 final class LabelFlowAnayzer implements MethodVisitor {
 
-	private static void setTarget(final Label[] labels) {
-		for (final Label l : labels) {
-			LabelInfo.setTarget(l);
-		}
-	}
-
 	// visible for testing
 	/* package */boolean successor = true;
 
@@ -108,18 +102,30 @@ final class LabelFlowAnayzer implements MethodVisitor {
 
 	public void visitTableSwitchInsn(final int min, final int max,
 			final Label dflt, final Label[] labels) {
-		// FIXME The same label instances must be flagged once only
-		LabelInfo.setTarget(dflt);
-		setTarget(labels);
+		visitSwitchInsn(dflt, labels);
 		successor = false;
 	}
 
 	public void visitLookupSwitchInsn(final Label dflt, final int[] keys,
 			final Label[] labels) {
-		// FIXME The same label instances must be flagged once only
-		LabelInfo.setTarget(dflt);
-		setTarget(labels);
+		visitSwitchInsn(dflt, labels);
 		successor = false;
+	}
+
+	private static void visitSwitchInsn(final Label dflt, final Label[] labels) {
+		LabelInfo.resetDone(dflt);
+		LabelInfo.resetDone(labels);
+		setTargetIfNotDone(dflt);
+		for (final Label l : labels) {
+			setTargetIfNotDone(l);
+		}
+	}
+
+	private static void setTargetIfNotDone(final Label label) {
+		if (!LabelInfo.isDone(label)) {
+			LabelInfo.setTarget(label);
+			LabelInfo.setDone(label);
+		}
 	}
 
 	public void visitMultiANewArrayInsn(final String desc, final int dims) {

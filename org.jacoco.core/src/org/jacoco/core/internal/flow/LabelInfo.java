@@ -15,18 +15,28 @@ import org.objectweb.asm.Label;
 
 /**
  * Data container that is attached to {@link Label#info} objects to store flow
- * and instrumentation specific information.
+ * and instrumentation specific information. The information is only valid
+ * locally in specific contexts.
  * 
  * @author Marc R. Hoffmann
  * @version $qualified.bundle.version$
  */
 public final class LabelInfo {
 
+	/**
+	 * Reserved ID for "no probe".
+	 */
+	public static final int NO_PROBE = -1;
+
 	private boolean target = false;
 
 	private boolean multiTarget = false;
 
 	private boolean successor = false;
+
+	private boolean done = false;
+
+	private int probeid = NO_PROBE;
 
 	// instances are only created within this class
 	private LabelInfo() {
@@ -91,6 +101,78 @@ public final class LabelInfo {
 	public static boolean isSuccessor(final Label label) {
 		final LabelInfo info = get(label);
 		return info == null ? false : info.successor;
+	}
+
+	/**
+	 * Mark a given label as done.
+	 * 
+	 * @param label
+	 *            label to mark
+	 */
+	public static void setDone(final Label label) {
+		create(label).done = true;
+	}
+
+	/**
+	 * Resets the "done" status of a given label.
+	 * 
+	 * @param label
+	 *            label to reset
+	 */
+	public static void resetDone(final Label label) {
+		final LabelInfo info = get(label);
+		if (info != null) {
+			info.done = false;
+		}
+	}
+
+	/**
+	 * Resets the "done" status of all given labels.
+	 * 
+	 * @param labels
+	 *            labels to reset
+	 */
+	public static void resetDone(final Label[] labels) {
+		for (final Label label : labels) {
+			resetDone(label);
+		}
+	}
+
+	/**
+	 * Checks whether this label is marked as done.
+	 * 
+	 * @param label
+	 *            label to check
+	 * @return <code>true</code> if this label is marked as done
+	 */
+	public static boolean isDone(final Label label) {
+		final LabelInfo info = get(label);
+		return info == null ? false : info.done;
+	}
+
+	/**
+	 * Sets the given probe id to the given label.
+	 * 
+	 * @param label
+	 *            label to assign a probe to
+	 * @param id
+	 *            id of the probe
+	 */
+	public static void setProbeId(final Label label, final int id) {
+		create(label).probeid = id;
+	}
+
+	/**
+	 * Returns the assigned probe id.
+	 * 
+	 * @param label
+	 *            label to check
+	 * @return probe id or {@link #NO_PROBE} if no probe is assigned to the
+	 *         label
+	 */
+	public static int getProbeId(final Label label) {
+		final LabelInfo info = get(label);
+		return info == null ? NO_PROBE : info.probeid;
 	}
 
 	private static LabelInfo get(final Label label) {
