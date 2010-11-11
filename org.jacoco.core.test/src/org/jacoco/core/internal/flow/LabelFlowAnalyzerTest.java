@@ -20,19 +20,19 @@ import org.junit.Test;
 import org.objectweb.asm.Label;
 
 /**
- * Unit tests for {@link LabelsInfo}.
+ * Unit tests for {@link LabelFlowAnayzer}.
  * 
  * @author Marc R. Hoffmann
  * @version $qualified.bundle.version$
  */
-public class LabelsInfoTest {
+public class LabelFlowAnalyzerTest {
 
-	private LabelsInfo info;
+	private LabelFlowAnayzer info;
 	private Label label;
 
 	@Before
 	public void setup() {
-		info = new LabelsInfo();
+		info = new LabelFlowAnayzer();
 		label = new Label();
 	}
 
@@ -310,54 +310,54 @@ public class LabelsInfoTest {
 
 	@Test
 	public void testFlowScenario01() {
-		assertFalse(LabelsInfo.isMultiTarget(label));
-		assertFalse(LabelsInfo.isSuccessor(label));
+		assertFalse(LabelInfo.isMultiTarget(label));
+		assertFalse(LabelInfo.isSuccessor(label));
 	}
 
 	@Test
 	public void testFlowScenario02() {
 		info.visitJumpInsn(GOTO, label);
-		assertFalse(LabelsInfo.isMultiTarget(label));
-		assertFalse(LabelsInfo.isSuccessor(label));
+		assertFalse(LabelInfo.isMultiTarget(label));
+		assertFalse(LabelInfo.isSuccessor(label));
 	}
 
 	@Test
 	public void testFlowScenario03() {
 		info.visitInsn(RETURN);
 		info.visitLabel(label);
-		assertFalse(LabelsInfo.isMultiTarget(label));
-		assertFalse(LabelsInfo.isSuccessor(label));
+		assertFalse(LabelInfo.isMultiTarget(label));
+		assertFalse(LabelInfo.isSuccessor(label));
 	}
 
 	@Test
 	public void testFlowScenario04() {
 		info.visitLabel(label);
-		assertFalse(LabelsInfo.isMultiTarget(label));
-		assertTrue(LabelsInfo.isSuccessor(label));
+		assertFalse(LabelInfo.isMultiTarget(label));
+		assertTrue(LabelInfo.isSuccessor(label));
 	}
 
 	@Test
 	public void testFlowScenario05() {
 		info.visitLabel(label);
 		info.visitJumpInsn(GOTO, label);
-		assertTrue(LabelsInfo.isMultiTarget(label));
-		assertTrue(LabelsInfo.isSuccessor(label));
+		assertTrue(LabelInfo.isMultiTarget(label));
+		assertTrue(LabelInfo.isSuccessor(label));
 	}
 
 	@Test
 	public void testFlowScenario06() {
 		info.visitJumpInsn(IFEQ, label);
 		info.visitLabel(label);
-		assertTrue(LabelsInfo.isMultiTarget(label));
-		assertTrue(LabelsInfo.isSuccessor(label));
+		assertTrue(LabelInfo.isMultiTarget(label));
+		assertTrue(LabelInfo.isSuccessor(label));
 	}
 
 	@Test
 	public void testFlowScenario07() {
 		info.visitJumpInsn(IFEQ, label);
 		info.visitJumpInsn(GOTO, label);
-		assertTrue(LabelsInfo.isMultiTarget(label));
-		assertFalse(LabelsInfo.isSuccessor(label));
+		assertTrue(LabelInfo.isMultiTarget(label));
+		assertFalse(LabelInfo.isSuccessor(label));
 	}
 
 	@Test
@@ -365,16 +365,16 @@ public class LabelsInfoTest {
 		info.visitJumpInsn(IFEQ, label);
 		info.visitJumpInsn(IFGT, label);
 		info.visitLabel(label);
-		assertTrue(LabelsInfo.isMultiTarget(label));
-		assertTrue(LabelsInfo.isSuccessor(label));
+		assertTrue(LabelInfo.isMultiTarget(label));
+		assertTrue(LabelInfo.isSuccessor(label));
 	}
 
 	@Test
 	public void testFlowScenario09() {
 		info.visitLabel(label);
 		info.visitLabel(label);
-		assertFalse(LabelsInfo.isMultiTarget(label));
-		assertTrue(LabelsInfo.isSuccessor(label));
+		assertFalse(LabelInfo.isMultiTarget(label));
+		assertTrue(LabelInfo.isSuccessor(label));
 	}
 
 	@Test
@@ -382,8 +382,8 @@ public class LabelsInfoTest {
 		info.visitTryCatchBlock(new Label(), new Label(), label,
 				"java/lang/Exception");
 		info.visitJumpInsn(GOTO, label);
-		assertTrue(LabelsInfo.isMultiTarget(label));
-		assertFalse(LabelsInfo.isSuccessor(label));
+		assertTrue(LabelInfo.isMultiTarget(label));
+		assertFalse(LabelInfo.isSuccessor(label));
 	}
 
 }

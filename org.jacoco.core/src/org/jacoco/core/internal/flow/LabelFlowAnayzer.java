@@ -18,182 +18,29 @@ import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
 
 /**
- * Utility class to collect flow related information about the {@link Label}s
- * within a class. After initialization it provides the following information
- * about labels:
- * 
- * <ul>
- * <li>Multi Target: Is a given label the target of multiple control flow paths?
- * Control flow path to a certain label are: jump targets, exception handlers
- * and normal control flow from its predecessor instruction (unless this a
- * unconditional jump or method exit).</li>
- * <li>Successor: Can a given label be a instruction successor in the the normal
- * control flow of a method? This is the case if the predecessor isn't a
- * unconditional jump or method exit.</li>
- * </ul>
- * 
- * Before the query method in this class can be used it has first to be
- * populated with the method data through its {@link MethodVisitor} interface.
- * Note that this class stores information in the {@link Label#info}.
+ * Method visitor to collect flow related information about the {@link Label}s
+ * within a class. It calculates the properties "multitarget" and "successor"
+ * that can afterwards be obtained via {@link LabelInfo}.
  * 
  * @author Marc R. Hoffmann
  * @version $qualified.bundle.version$
  */
-final class LabelsInfo implements MethodVisitor {
+final class LabelFlowAnayzer implements MethodVisitor {
 
-	private static enum Status {
-		NONE() {
-			@Override
-			Status target() {
-				return TARGET;
-			}
-
-			@Override
-			Status successor() {
-				return SUCCESSOR;
-			}
-
-			@Override
-			boolean isMultiTarget() {
-				return false;
-			}
-
-			@Override
-			boolean isSuccessor() {
-				return false;
-			}
-		},
-		TARGET() {
-			@Override
-			Status target() {
-				return MULTITARGET;
-			}
-
-			@Override
-			Status successor() {
-				return Status.MULTITARGETSUCCESSOR;
-			}
-
-			@Override
-			boolean isMultiTarget() {
-				return false;
-			}
-
-			@Override
-			boolean isSuccessor() {
-				return false;
-			}
-		},
-		SUCCESSOR() {
-			@Override
-			Status target() {
-				return MULTITARGETSUCCESSOR;
-			}
-
-			@Override
-			boolean isMultiTarget() {
-				return false;
-			}
-
-			@Override
-			boolean isSuccessor() {
-				return true;
-			}
-		},
-		MULTITARGET() {
-			@Override
-			Status successor() {
-				return MULTITARGETSUCCESSOR;
-			}
-
-			@Override
-			boolean isMultiTarget() {
-				return true;
-			}
-
-			@Override
-			boolean isSuccessor() {
-				return false;
-			}
-		},
-		MULTITARGETSUCCESSOR() {
-			@Override
-			boolean isMultiTarget() {
-				return true;
-			}
-
-			@Override
-			boolean isSuccessor() {
-				return true;
-			}
-		};
-
-		Status target() {
-			return this;
-		}
-
-		Status successor() {
-			return this;
-		}
-
-		abstract boolean isMultiTarget();
-
-		abstract boolean isSuccessor();
-
-	}
-
-	private static Status getStatus(final Label l) {
-		final Object info = l.info;
-		return info == null ? Status.NONE : (Status) info;
-	}
-
-	private static void target(final Label l) {
-		l.info = getStatus(l).target();
-	}
-
-	private static void target(final Label[] labels) {
+	private static void setTarget(final Label[] labels) {
 		for (final Label l : labels) {
-			target(l);
+			LabelInfo.setTarget(l);
 		}
-	}
-
-	private static void successor(final Label l) {
-		l.info = getStatus(l).successor();
 	}
 
 	// visible for testing
 	/* package */boolean successor = true;
 
-	/**
-	 * Checks whether multiple control paths lead to a label
-	 * 
-	 * @param label
-	 *            label to check
-	 * @return <code>true</code> if the given multiple control paths lead to the
-	 *         given label
-	 */
-	public static boolean isMultiTarget(final Label label) {
-		return getStatus(label).isMultiTarget();
-	}
-
-	/**
-	 * Checks whether this label is the possible successor of the previous
-	 * instruction in the method.
-	 * 
-	 * @param label
-	 *            label to check
-	 * @return <code>true</code> if the label is a possible instruction
-	 *         successor
-	 */
-	public static boolean isSuccessor(final Label label) {
-		return getStatus(label).isSuccessor();
-	}
-
 	// === MethodVisitor ===
 
 	public void visitTryCatchBlock(final Label start, final Label end,
 			final Label handler, final String type) {
-		target(handler);
+		LabelInfo.setTarget(handler);
 	}
 
 	public void visitInsn(final int opcode) {
@@ -241,13 +88,13 @@ final class LabelsInfo implements MethodVisitor {
 		if (opcode == Opcodes.JSR) {
 			throw new AssertionError("Subroutines not supported.");
 		}
-		target(label);
+		LabelInfo.setTarget(label);
 		successor = opcode != Opcodes.GOTO;
 	}
 
 	public void visitLabel(final Label label) {
 		if (successor) {
-			successor(label);
+			LabelInfo.setSuccessor(label);
 		}
 	}
 
@@ -261,15 +108,17 @@ final class LabelsInfo implements MethodVisitor {
 
 	public void visitTableSwitchInsn(final int min, final int max,
 			final Label dflt, final Label[] labels) {
-		target(dflt);
-		target(labels);
+		// FIXME The same label instances must be flagged once only
+		LabelInfo.setTarget(dflt);
+		setTarget(labels);
 		successor = false;
 	}
 
 	public void visitLookupSwitchInsn(final Label dflt, final int[] keys,
 			final Label[] labels) {
-		target(dflt);
-		target(labels);
+		// FIXME The same label instances must be flagged once only
+		LabelInfo.setTarget(dflt);
+		setTarget(labels);
 		successor = false;
 	}
 

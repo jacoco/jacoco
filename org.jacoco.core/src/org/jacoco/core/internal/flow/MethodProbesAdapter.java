@@ -37,7 +37,7 @@ final class MethodProbesAdapter extends MethodAdapter {
 
 	@Override
 	public void visitLabel(final Label label) {
-		if (LabelsInfo.isMultiTarget(label) && LabelsInfo.isSuccessor(label)) {
+		if (LabelInfo.isMultiTarget(label) && LabelInfo.isSuccessor(label)) {
 			probesVisitor.visitProbe(idGenerator.nextId());
 		}
 		probesVisitor.visitLabel(label);
@@ -63,7 +63,7 @@ final class MethodProbesAdapter extends MethodAdapter {
 
 	@Override
 	public void visitJumpInsn(final int opcode, final Label label) {
-		if (LabelsInfo.isMultiTarget(label)) {
+		if (LabelInfo.isMultiTarget(label)) {
 			probesVisitor.visitJumpInsnWithProbe(opcode, label,
 					idGenerator.nextId());
 		} else {

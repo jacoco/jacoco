@@ -44,8 +44,6 @@ public class MethodProbesAdapterTest implements IProbeIdGenerator,
 
 	private MethodVisitor adapter;
 
-	private MethodVisitor labelsInfo;
-
 	@Before
 	public void setup() {
 		label = new Label();
@@ -56,13 +54,12 @@ public class MethodProbesAdapterTest implements IProbeIdGenerator,
 				.newProxyInstance(getClass().getClassLoader(),
 						new Class[] { IMethodProbesVisitor.class }, this);
 		adapter = new MethodProbesAdapter(probesVistor, this);
-		labelsInfo = new LabelsInfo();
 	}
 
 	@Test
 	public void testVisitProbe1() {
-		labelsInfo.visitJumpInsn(Opcodes.IFEQ, label);
-		labelsInfo.visitLabel(label);
+		LabelInfo.setTarget(label);
+		LabelInfo.setSuccessor(label);
 
 		adapter.visitLabel(label);
 
@@ -75,8 +72,6 @@ public class MethodProbesAdapterTest implements IProbeIdGenerator,
 
 	@Test
 	public void testVisitProbe2() {
-		labelsInfo.visitLabel(label);
-
 		adapter.visitLabel(label);
 
 		assertEquals(1, methodName.size());
@@ -86,9 +81,6 @@ public class MethodProbesAdapterTest implements IProbeIdGenerator,
 
 	@Test
 	public void testVisitProbe3() {
-		labelsInfo.visitJumpInsn(Opcodes.GOTO, label);
-		labelsInfo.visitLabel(label);
-
 		adapter.visitLabel(label);
 
 		assertEquals(1, methodName.size());
@@ -116,8 +108,8 @@ public class MethodProbesAdapterTest implements IProbeIdGenerator,
 
 	@Test
 	public void testVisitJumpInsn1() {
-		labelsInfo.visitJumpInsn(Opcodes.IFLT, label);
-		labelsInfo.visitJumpInsn(Opcodes.IFGT, label);
+		LabelInfo.setTarget(label);
+		LabelInfo.setTarget(label);
 
 		adapter.visitJumpInsn(Opcodes.IFLT, label);
 
@@ -130,8 +122,6 @@ public class MethodProbesAdapterTest implements IProbeIdGenerator,
 
 	@Test
 	public void testVisitJumpInsn2() {
-		labelsInfo.visitJumpInsn(Opcodes.IFLT, label);
-
 		adapter.visitJumpInsn(Opcodes.IFLT, label);
 
 		assertEquals(1, methodName.size());
