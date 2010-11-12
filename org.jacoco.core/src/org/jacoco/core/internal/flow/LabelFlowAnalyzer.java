@@ -14,8 +14,6 @@ package org.jacoco.core.internal.flow;
 import org.objectweb.asm.AnnotationVisitor;
 import org.objectweb.asm.Attribute;
 import org.objectweb.asm.Label;
-import org.objectweb.asm.MethodVisitor;
-import org.objectweb.asm.Opcodes;
 
 /**
  * Method visitor to collect flow related information about the {@link Label}s
@@ -25,65 +23,17 @@ import org.objectweb.asm.Opcodes;
  * @author Marc R. Hoffmann
  * @version $qualified.bundle.version$
  */
-final class LabelFlowAnayzer implements MethodVisitor {
-
-	// visible for testing
-	/* package */boolean successor = true;
-
-	// === MethodVisitor ===
+final class LabelFlowAnalyzer extends SuccessorAnalyzer {
 
 	public void visitTryCatchBlock(final Label start, final Label end,
 			final Label handler, final String type) {
 		LabelInfo.setTarget(handler);
 	}
 
-	public void visitInsn(final int opcode) {
-		switch (opcode) {
-		case Opcodes.RET:
-			throw new AssertionError("Subroutines not supported.");
-		case Opcodes.IRETURN:
-		case Opcodes.LRETURN:
-		case Opcodes.FRETURN:
-		case Opcodes.DRETURN:
-		case Opcodes.ARETURN:
-		case Opcodes.RETURN:
-		case Opcodes.ATHROW:
-			successor = false;
-			break;
-		default:
-			successor = true;
-			break;
-		}
-	}
-
-	public void visitIntInsn(final int opcode, final int operand) {
-		successor = true;
-	}
-
-	public void visitVarInsn(final int opcode, final int var) {
-		successor = true;
-	}
-
-	public void visitTypeInsn(final int opcode, final String type) {
-		successor = true;
-	}
-
-	public void visitFieldInsn(final int opcode, final String owner,
-			final String name, final String desc) {
-		successor = true;
-	}
-
-	public void visitMethodInsn(final int opcode, final String owner,
-			final String name, final String desc) {
-		successor = true;
-	}
-
+	@Override
 	public void visitJumpInsn(final int opcode, final Label label) {
-		if (opcode == Opcodes.JSR) {
-			throw new AssertionError("Subroutines not supported.");
-		}
 		LabelInfo.setTarget(label);
-		successor = opcode != Opcodes.GOTO;
+		super.visitJumpInsn(opcode, label);
 	}
 
 	public void visitLabel(final Label label) {
@@ -92,24 +42,18 @@ final class LabelFlowAnayzer implements MethodVisitor {
 		}
 	}
 
-	public void visitLdcInsn(final Object cst) {
-		successor = true;
-	}
-
-	public void visitIincInsn(final int var, final int increment) {
-		successor = true;
-	}
-
+	@Override
 	public void visitTableSwitchInsn(final int min, final int max,
 			final Label dflt, final Label[] labels) {
 		visitSwitchInsn(dflt, labels);
-		successor = false;
+		super.visitTableSwitchInsn(min, max, dflt, labels);
 	}
 
+	@Override
 	public void visitLookupSwitchInsn(final Label dflt, final int[] keys,
 			final Label[] labels) {
 		visitSwitchInsn(dflt, labels);
-		successor = false;
+		super.visitLookupSwitchInsn(dflt, keys, labels);
 	}
 
 	private static void visitSwitchInsn(final Label dflt, final Label[] labels) {
@@ -126,10 +70,6 @@ final class LabelFlowAnayzer implements MethodVisitor {
 			LabelInfo.setTarget(label);
 			LabelInfo.setDone(label);
 		}
-	}
-
-	public void visitMultiANewArrayInsn(final String desc, final int dims) {
-		successor = true;
 	}
 
 	// Not relevant:

@@ -20,7 +20,7 @@ import org.junit.Test;
 import org.objectweb.asm.Label;
 
 /**
- * Unit tests for {@link LabelFlowAnayzer}.
+ * Unit tests for {@link LabelInfoTest}.
  * 
  * @author Marc R. Hoffmann
  * @version $qualified.bundle.version$
