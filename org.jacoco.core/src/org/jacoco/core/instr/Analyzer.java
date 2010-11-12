@@ -125,7 +125,7 @@ public class Analyzer {
 	 */
 	public int analyzeAll(final InputStream input) throws IOException {
 		final ContentTypeDetector detector = new ContentTypeDetector(input);
-		switch (detector.getHeader()) {
+		switch (detector.getType()) {
 		case ContentTypeDetector.CLASSFILE:
 			analyzeClass(detector.getInputStream());
 			return 1;

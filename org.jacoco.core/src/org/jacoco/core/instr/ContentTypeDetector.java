@@ -15,6 +15,8 @@ import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
+import org.objectweb.asm.Opcodes;
+
 /**
  * Detector for content types of binary streams based on a magic headers.
  * 
@@ -23,17 +25,20 @@ import java.io.InputStream;
  */
 class ContentTypeDetector {
 
-	/** Header of Java class files */
+	/** Unknown file type */
+	public static final int UNKNOWN = -1;
+
+	/** File type Java class */
 	public static final int CLASSFILE = 0xcafebabe;
 
-	/** Header of ZIP files */
+	/** File type ZIP archive */
 	public static final int ZIPFILE = 0x504b0304;
 
-	private static final int HEADER_SIZE = 4;
+	private static final int BUFFER_SIZE = 8;
 
 	private final InputStream in;
 
-	private final int header;
+	private final int type;
 
 	/**
 	 * Creates a new detector based on the given input. To process the complete
@@ -48,14 +53,34 @@ class ContentTypeDetector {
 		if (in.markSupported()) {
 			this.in = in;
 		} else {
-			this.in = new BufferedInputStream(in, HEADER_SIZE);
+			this.in = new BufferedInputStream(in, BUFFER_SIZE);
 		}
-		this.in.mark(HEADER_SIZE);
-		this.header = readHeader(this.in);
+		this.in.mark(BUFFER_SIZE);
+		this.type = determineType(this.in);
 		this.in.reset();
 	}
 
-	private static int readHeader(final InputStream in) throws IOException {
+	private static int determineType(final InputStream in) throws IOException {
+		switch (readInt(in)) {
+		case ZIPFILE:
+			return ZIPFILE;
+		case CLASSFILE:
+			// also verify version to distinguish from Mach Object files:
+			switch (readInt(in)) {
+			case Opcodes.V1_1:
+			case Opcodes.V1_2:
+			case Opcodes.V1_3:
+			case Opcodes.V1_4:
+			case Opcodes.V1_5:
+			case Opcodes.V1_6:
+			case Opcodes.V1_7:
+				return CLASSFILE;
+			}
+		}
+		return UNKNOWN;
+	}
+
+	private static int readInt(final InputStream in) throws IOException {
 		return in.read() << 24 | in.read() << 16 | in.read() << 8 | in.read();
 	}
 
@@ -70,12 +95,12 @@ class ContentTypeDetector {
 	}
 
 	/**
-	 * Returns the file header containing the magic number.
+	 * Returns the detected file type.
 	 * 
-	 * @return file header
+	 * @return file type
 	 */
-	public int getHeader() {
-		return header;
+	public int getType() {
+		return type;
 	}
 
 }

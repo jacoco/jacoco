@@ -38,6 +38,7 @@ public class ContentTypeDetectorTest {
 	@Test
 	public void testEmptyStream() throws IOException {
 		initData();
+		assertEquals(ContentTypeDetector.UNKNOWN, detector.getType());
 		assertContent();
 	}
 
@@ -45,7 +46,63 @@ public class ContentTypeDetectorTest {
 	public void testClassFile() throws IOException {
 		initData(TargetLoader
 				.getClassDataAsBytes(ContentTypeDetectorTest.class));
-		assertEquals(ContentTypeDetector.CLASSFILE, detector.getHeader());
+		assertEquals(ContentTypeDetector.CLASSFILE, detector.getType());
+		assertContent();
+	}
+
+	@Test
+	public void testClassFile11() throws IOException {
+		initData(0xCA, 0xFE, 0xBA, 0xBE, 0x00, 0x03, 0x00, 0x2D);
+		assertEquals(ContentTypeDetector.CLASSFILE, detector.getType());
+		assertContent();
+	}
+
+	@Test
+	public void testClassFile12() throws IOException {
+		initData(0xCA, 0xFE, 0xBA, 0xBE, 0x00, 0x00, 0x00, 0x2E);
+		assertEquals(ContentTypeDetector.CLASSFILE, detector.getType());
+		assertContent();
+	}
+
+	@Test
+	public void testClassFile13() throws IOException {
+		initData(0xCA, 0xFE, 0xBA, 0xBE, 0x00, 0x00, 0x00, 0x2F);
+		assertEquals(ContentTypeDetector.CLASSFILE, detector.getType());
+		assertContent();
+	}
+
+	@Test
+	public void testClassFile14() throws IOException {
+		initData(0xCA, 0xFE, 0xBA, 0xBE, 0x00, 0x00, 0x00, 0x30);
+		assertEquals(ContentTypeDetector.CLASSFILE, detector.getType());
+		assertContent();
+	}
+
+	@Test
+	public void testClassFile15() throws IOException {
+		initData(0xCA, 0xFE, 0xBA, 0xBE, 0x00, 0x00, 0x00, 0x31);
+		assertEquals(ContentTypeDetector.CLASSFILE, detector.getType());
+		assertContent();
+	}
+
+	@Test
+	public void testClassFile16() throws IOException {
+		initData(0xCA, 0xFE, 0xBA, 0xBE, 0x00, 0x00, 0x00, 0x32);
+		assertEquals(ContentTypeDetector.CLASSFILE, detector.getType());
+		assertContent();
+	}
+
+	@Test
+	public void testClassFile17() throws IOException {
+		initData(0xCA, 0xFE, 0xBA, 0xBE, 0x00, 0x00, 0x00, 0x33);
+		assertEquals(ContentTypeDetector.CLASSFILE, detector.getType());
+		assertContent();
+	}
+
+	@Test
+	public void testMachObjectFile() throws IOException {
+		initData(0xCA, 0xFE, 0xBA, 0xBE, 0x00, 0x00, 0x00, 0x02);
+		assertEquals(ContentTypeDetector.UNKNOWN, detector.getType());
 		assertContent();
 	}
 
@@ -57,13 +114,13 @@ public class ContentTypeDetectorTest {
 		zip.write("Hello Zip!".getBytes());
 		zip.close();
 		initData(buffer.toByteArray());
-		assertEquals(ContentTypeDetector.ZIPFILE, detector.getHeader());
+		assertEquals(ContentTypeDetector.ZIPFILE, detector.getType());
 		assertContent();
 	}
 
 	@Test
 	public void testStreamWithoutMarkSupport() throws IOException {
-		initData(0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 07);
+		initData(0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07);
 		detector = new ContentTypeDetector(new ByteArrayInputStream(data) {
 
 			@Override
