@@ -29,11 +29,11 @@
 <h2>Implementation Status</h2>
 
 <p>
-  This release of JaCoCo is a fully functional prototype to verify the basic
-  concepts and implementation strategies. It already produces
+  This release of JaCoCo is a fully functional prototype to verify the concepts
+  and implementation strategies. It already produces
   <a href="coverage/index.html">neat coverage reports</a> and has been
   successfully tested with comprehensive JUnit test suites as well as huge
-  Eclipse RCP applications and J2EE projects. JaCoCo is already
+  Eclipse RCP applications and J2EE projects. JaCoCo is
   <a href="doc/integrations.html">integrated with several tools</a>.
 </p>
 
@@ -75,37 +75,73 @@
       <td><span class="el_jar">jacocoagent.jar</span></td>
       <td>no</td>
       <td>Java agent for execution data recording</td>
-      <td>None, all dependencies included</td>
+      <td>- <i>(all dependencies included)</i></td>
     </tr>
     <tr>
       <td><span class="el_jar">jacocoant.jar</span></td>
       <td>no</td>
       <td>JaCoCo Ant tasks</td>
-      <td>Ant 1.7.x, all other dependencies included</td>
+      <td>Ant <i>(all other dependencies included)</i></td>
     </tr>
     <tr>
       <td><span class="el_jar">org.jacoco.agent_@qualified.bundle.version@.jar</span></td>
       <td>yes</td>
       <td>JaCoCo agent</td>
-      <td>None</td>
+      <td>-</td>
     </tr>
     <tr>
       <td><span class="el_jar">org.jacoco.core_@qualified.bundle.version@.jar</span></td>
       <td>yes</td>
       <td>JaCoCo core</td>
-      <td>ASM 3.x</td>
+      <td>ASM</td>
     </tr>
     <tr>
       <td><span class="el_jar">org.jacoco.report_@qualified.bundle.version@.jar</span></td>
       <td>yes</td>
       <td>JaCoCo reporting</td>
-      <td>org.jacoco.core, ASM 3.x</td>
+      <td>org.jacoco.core, ASM</td>
     </tr>
     <tr>
       <td><span class="el_jar">org.jacoco.ant_@qualified.bundle.version@.jar</span></td>
       <td>yes</td>
-      <td>JaCoCo Ant integration</td>
-      <td>org.jacoco.core, org.jacoco.agent, org.jacoco.report, ASM 3.x, Ant 1.7.x</td>
+      <td>JaCoCo Ant tasks</td>
+      <td>org.jacoco.core, org.jacoco.agent, org.jacoco.report, ASM, Ant</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2>Java Versions and 3rd Party Dependencies</h2>
+
+<p>
+  JaCoCo requires a Java runtime environment in version 1.5 or higher. Java
+  class files under test can be of any Java version ranging from 1.0 to 1.7. 
+</p>
+
+<p>
+  3rd party dependencies listed above refer to the following libraries:
+</p>
+
+<table class="coverage">
+  <thead>
+    <tr>
+      <td>Library</td>
+      <td>Version Range</td>
+      <td>Vendor</td>
+      <td>License</td>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><span class="el_jar">ASM</span></td>
+      <td>[3.2.0, 4.0.0)</td>
+      <td>INRIA, France Telecom</td>
+      <td>BSD License</td>
+    </tr>
+    <tr>
+      <td><span class="el_jar">Ant</span></td>
+      <td>[1.7.0, 2.0.0)</td>
+      <td>Apache Software Foundation</td>
+      <td>Apache License, Version 2.0</td>
     </tr>
   </tbody>
 </table>
