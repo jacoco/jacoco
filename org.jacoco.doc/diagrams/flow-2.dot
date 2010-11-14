@@ -1,0 +1,40 @@
+digraph G {
+  nodesep="0.2";
+  rankdir=LR;
+  node [shape="rect", penwidth="0.33", style="filled", fillcolor="#E0E0E0", margin="0,0.03", height="0.2", width="1.2", fontsize="10", fontname="Courier"];
+  edge [arrowsize="0.5"];
+  ordering="in";
+  
+  entry -> i1;
+  i1 -> i2;
+  i2 -> i3;
+  i3 -> i6 [tailport="e", headport="e"];
+  i3 -> i4;
+  i4 -> i5;
+  i5 -> p0 [tailport="e", headport="n"];
+  p0 -> i7 [tailport="s", headport="e"];
+  i6 -> p1;
+  p1 -> i7;
+  i7 -> i8;
+  i8 -> p2;
+  p2 -> exit;
+    
+  {
+    rank = same;
+    entry [label="", shape="circle", fillcolor="#ffffff", width="0.2"]
+    i1 [label="INVOKE a()"]
+    i2 [label="INVOKE cond()"]
+    i3 [label="IFEQ L1", shape="diamond"]
+    i4 [label="INVOKE b()"]
+    i5 [label="GOTO L2"]
+    i6 [label="INVOKE c()"]
+    i7 [label="INVOKE d()"]
+    i8 [label="RETURN"]
+    exit [label="", shape="circle", fillcolor="#808080", width="0.2"]
+    p1 [label="P[1]", style="rounded,filled", fillcolor="#ffcc00", width="0.5"]
+    p2 [label="P[2]", style="rounded,filled", fillcolor="#ffcc00", width="0.5"]
+  }
+
+  p0 [label="P[0]", style="rounded,filled", fillcolor="#ffcc00", width="0.5"]
+
+}
