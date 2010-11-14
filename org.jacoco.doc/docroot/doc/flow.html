@@ -25,59 +25,62 @@
 </p>
 
 <p class="hint">
-  Implementing a coverage tool for branch coverage requires detailed analysis
-  of the internal control flow of Java methods. Due to the architecture of
-  JaCoCo this analysis needs to happen on compiled class files (bytecode).
-  This document defines graph structures for control flow analysis of Java
-  bytecode and discusses strategies for probe insertion.
-  Marc R. Hoffmann, July 2010
+  Implementing a coverage tool that supports statement (C0) as well as branch
+  coverage coverage (C1) requires detailed analysis of the internal control flow
+  of Java methods. Due to the architecture of JaCoCo this analysis happens on
+  compiled class files (bytecode). This document defines graph structures for 
+  control flow analysis of Java bytecode and discusses strategies for probe
+  insertion. Marc R. Hoffmann, November 2010
 </p>
 
-<h2>Motivation and Requirements</h2>
+<h2>Control Flow Graphs for Java Bytecode</h2>
 
-<ul>
-  <li>Branch Coverage</li>
-  <li>Exception Detection</li>
-</ul>
-
-<h2>From Statement Coverage to Branch Coverage</h2>
-
-<p>
-  A 
-  JaCoCo till version 0.4.x provides statement coverage  
-  As as starting point 
-  differnce between statement coverage and branch coverage.
-  probe insertion strategy.  
-
+<p> 
+  As an starting point we take the following example method that contains a
+  single branching point:
 </p>
 
 <pre class="source lang-java">
-<span class="nr">    1</span>public void example() {
+<span class="nr">    1</span>public static void example() {
 <span class="nr">    2</span>    a();
-<span class="nr">    3</span>    if (condition()) {
+<span class="nr">    3</span>    if (cond()) {
 <span class="nr">    4</span>        b();
-<span class="nr">    5</span>    }
-<span class="nr">    6</span>    c();   
-<span class="nr">    7</span>}
+<span class="nr">    5</span>    } else {
+<span class="nr">    6</span>        c();
+<span class="nr">    7</span>    }
+<span class="nr">    8</span>    d();
+<span class="nr">    9</span>}
 </pre>
 
+<p>
+  A Java compiler will create the following bytecode from this example method.
+  Java bytecode is a linear sequence of instructions. Control flow is
+  implemented with <i>jump</i> instructions like the conditional
+  <code>IFEQ</code> or the unconditional <code>GOTO</code> opcode. The jump
+  targets are technically relative offsets to the target instruction. For better
+  readability we use symbolic labels (<code>L1</code>, <code>L2</code>) instead
+  (also the ASM API uses such symbolic labels):  
+</p>
 
 <pre class="source">
-<span class="nr">    1</span>public example() : void
-<span class="nr">    2</span>  L0
-<span class="nr">    3</span>    INVOKESTATIC Example.a() : void
-<span class="nr">    4</span>  L1
-<span class="nr">    5</span>    INVOKESTATIC Example.condition() : boolean
-<span class="nr">    6</span>    IFEQ L3
-<span class="nr">    7</span>  L2
-<span class="nr">    8</span>    INVOKESTATIC Example.b() : void
-<span class="nr">    9</span>  L3
-<span class="nr">   10</span>    INVOKESTATIC Example.c() : void
-<span class="nr">   11</span>  L4
-<span class="nr">   11</span>    RETURN
+<span class="nr">     </span>public static example()V
+<span class="nr">     </span>    INVOKESTATIC a()V
+<span class="nr">     </span>    INVOKESTATIC cond()Z
+<span class="nr">     </span>    IFEQ L1
+<span class="nr">     </span>    INVOKESTATIC b()V
+<span class="nr">     </span>    GOTO L2
+<span class="nr">  L1:</span>    INVOKESTATIC c()V
+<span class="nr">  L2:</span>    INVOKESTATIC d()V
+<span class="nr">     </span>    RETURN
 </pre>
 
-<h2>The Control Flow Graph</h2>
+<p>
+  The possible control flow in the bytecode above can be represented by a graph.
+  The nodes are byte code instruction, the edged of the graph represent the
+  possible control flow between the instructions:
+</p>
+
+<img src=".resources/flow-1.png" alt="Bytecode contol flow"/>
 
 <h3>Flow Edges</h3>
 
@@ -122,7 +125,7 @@
     </tr>
     <tr>
       <td>EXHANDLER</td>
-      <td>Any instruction in range</td>
+      <td>Any instruction in handler scope</td>
       <td>Target instruction</td>
       <td></td>
     </tr>
@@ -141,8 +144,39 @@
   </tbody>
 </table>
 
+<h2>Probe Insertion Strategy</h2>
 
-<h2>Probe Insertion</h2>
+<ul>
+  <li>Probes are additional instructions that can be inserted between existing
+      instructions. Probes record the fact that they have been executed. One can
+      think probes are placed on edges of the control flow graph. Therefore if
+      a probe has been executed we know that the corresponding edge has been
+      visited.</li>
+  <li>If a edge has been visited, we know that the source node of the this edge
+      has been executed.</li>
+  <li>If a node has been executed and the node is the target of only one edge
+      we know that this edge has been visited.</li>
+</ul>
+
+<p>
+  With this observations we only need probes at the following edges:
+</p>
+
+<ul>
+  <li>At every EXIT.</li>
+  <li>At every edge where the target instruction is the target of more than one
+      edge.</li>
+</ul>
+
+<p>
+  The execution status of all other edges and instructions can be derived from
+  the status of this probes by recursively applying the rules above. 
+</p>
+
+<h2>Coverage Analysis</h2>
+
+
+<h2>Probe Implementation</h2>
 
 <p>
   Code coverage analysis is a runtime metric that provides execution details
@@ -272,17 +306,14 @@ BASTORE
   <li>Block entry known (exceptions within blocks)</li>
 </ul>
 
-<h2>Different Types of Edges</h2>
+<h2>Refernces</h2>
 
 <ul>
-  <li>Probe insertion strategies</li>
+  <li>ASM</li>
+  <li><a href="http://andrei.gmxhome.de/bytecode/index.html">Bytecode Outline Plug-In</a> by Andrei Loskutov</li>
+  <li><a href="http://en.wikipedia.org/wiki/Glossary_of_graph_theory">Wikipedia: Glossary of Graph Theory</a></li>
 </ul>
 
-<h2>Runtime Overhead</h2>
-
-<ul>
-  <li>Comparison to current basic block probes</li>
-</ul>
 
 </div>
 <div class="footer">
