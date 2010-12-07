@@ -43,6 +43,12 @@ public class LabelInfoTest {
 	}
 
 	@Test
+	public void testOtherInfoObject() {
+		label.info = new Object();
+		assertFalse(LabelInfo.isSuccessor(label));
+	}
+
+	@Test
 	public void testSuccessor() {
 		LabelInfo.setSuccessor(label);
 		assertFalse(LabelInfo.isMultiTarget(label));

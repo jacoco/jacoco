@@ -176,7 +176,8 @@ public final class LabelInfo {
 	}
 
 	private static LabelInfo get(final Label label) {
-		return (LabelInfo) label.info;
+		final Object info = label.info;
+		return info instanceof LabelInfo ? (LabelInfo) info : null;
 	}
 
 	private static LabelInfo create(final Label label) {
