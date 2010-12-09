@@ -65,25 +65,154 @@ public class MethodAnalyzerTest implements IProbeIdGenerator {
 		return nextProbeId++;
 	}
 
-	@Test
-	public void testSimpleFlowNotCovered() {
-		method.visitLineNumber(5, new Label());
+	// === Scenario: linear Sequence without branches ===
+
+	private void createLinearSequence() {
+		method.visitLineNumber(1001, new Label());
+		method.visitInsn(Opcodes.NOP);
+		method.visitLineNumber(1002, new Label());
 		method.visitInsn(Opcodes.RETURN);
-
-		runMethodAnalzer();
-
-		assertLine(5, 1, 0, 0, 0);
 	}
 
 	@Test
-	public void testSimpleFlowCovered() {
-		method.visitLineNumber(5, new Label());
-		method.visitInsn(Opcodes.RETURN);
+	public void testLinearSequenceNotCovered() {
+		createLinearSequence();
+		runMethodAnalzer();
+		assertEquals(1, nextProbeId);
 
+		assertLine(1001, 1, 0, 0, 0);
+		assertLine(1002, 1, 0, 0, 0);
+	}
+
+	@Test
+	public void testLinearSequenceCovered() {
+		createLinearSequence();
 		probes[0] = true;
 		runMethodAnalzer();
 
-		assertLine(5, 0, 1, 0, 0);
+		assertLine(1001, 0, 1, 0, 0);
+		assertLine(1002, 0, 1, 0, 0);
+	}
+
+	// === Scenario: simple if branch ===
+
+	private void createIfBranch() {
+		method.visitLineNumber(1001, new Label());
+		method.visitVarInsn(Opcodes.ILOAD, 1);
+		Label l1 = new Label();
+		method.visitJumpInsn(Opcodes.IFEQ, l1);
+		method.visitLineNumber(1002, new Label());
+		method.visitLdcInsn("a");
+		method.visitInsn(Opcodes.ARETURN);
+		method.visitLabel(l1);
+		method.visitLineNumber(1003, l1);
+		method.visitLdcInsn("b");
+		method.visitInsn(Opcodes.ARETURN);
+	}
+
+	@Test
+	public void testIfBranchNotCovered() {
+		createIfBranch();
+		runMethodAnalzer();
+		assertEquals(2, nextProbeId);
+
+		assertLine(1001, 2, 0, 0, 0);
+		assertLine(1002, 2, 0, 0, 0);
+		assertLine(1003, 2, 0, 0, 0);
+	}
+
+	@Test
+	public void testIfBranchCovered1() {
+		createIfBranch();
+		probes[0] = true;
+		runMethodAnalzer();
+
+		assertLine(1001, 0, 2, 0, 0);
+		assertLine(1002, 0, 2, 0, 0);
+		assertLine(1003, 2, 0, 0, 0);
+	}
+
+	@Test
+	public void testIfBranchCovered2() {
+		createIfBranch();
+		probes[1] = true;
+		runMethodAnalzer();
+
+		assertLine(1001, 0, 2, 0, 0);
+		assertLine(1002, 2, 0, 0, 0);
+		assertLine(1003, 0, 2, 0, 0);
+	}
+
+	@Test
+	public void testIfBranchCovered3() {
+		createIfBranch();
+		probes[0] = true;
+		probes[1] = true;
+		runMethodAnalzer();
+
+		assertLine(1001, 0, 2, 0, 0);
+		assertLine(1002, 0, 2, 0, 0);
+		assertLine(1003, 0, 2, 0, 0);
+	}
+
+	// === Scenario: branch which merges back ===
+
+	private void createIfBranchMerge() {
+		method.visitLineNumber(1001, new Label());
+		method.visitVarInsn(Opcodes.ILOAD, 1);
+		Label l1 = new Label();
+		method.visitJumpInsn(Opcodes.IFEQ, l1);
+		method.visitLineNumber(1002, new Label());
+		method.visitInsn(Opcodes.NOP);
+		method.visitLabel(l1);
+		method.visitLineNumber(1003, l1);
+		method.visitInsn(Opcodes.RETURN);
+	}
+
+	@Test
+	public void testIfBranchMergeNotCovered() {
+		createIfBranchMerge();
+		runMethodAnalzer();
+		assertEquals(3, nextProbeId);
+
+		assertLine(1001, 2, 0, 0, 0);
+		assertLine(1002, 1, 0, 0, 0);
+		assertLine(1003, 1, 0, 0, 0);
+	}
+
+	@Test
+	public void testIfBranchMergeCovered1() {
+		createIfBranchMerge();
+		probes[0] = true;
+		runMethodAnalzer();
+
+		assertLine(1001, 0, 2, 0, 0);
+		assertLine(1002, 1, 0, 0, 0);
+		assertLine(1003, 1, 0, 0, 0);
+	}
+
+	@Test
+	public void testIfBranchMergeCovered2() {
+		createIfBranchMerge();
+		probes[1] = true;
+		runMethodAnalzer();
+
+		assertLine(1001, 0, 2, 0, 0);
+		assertLine(1002, 0, 1, 0, 0);
+		assertLine(1003, 1, 0, 0, 0);
+	}
+
+	@Test
+	public void testIfBranchMergeCovered3() {
+		createIfBranchMerge();
+		probes[0] = true;
+		probes[1] = true;
+		probes[2] = true;
+		runMethodAnalzer();
+
+		assertLine(1001, 0, 2, 0, 0);
+		assertLine(1002, 0, 1, 0, 0);
+		assertLine(1003, 0, 1, 0, 0);
 	}
 
 	private void runMethodAnalzer() {
