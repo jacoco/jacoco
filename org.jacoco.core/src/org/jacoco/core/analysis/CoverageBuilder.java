@@ -40,7 +40,7 @@ public class CoverageBuilder implements IStructureVisitor {
 
 	private final StringPool stringPool;
 
-	private final Map<Long, ClassCoverage> classes;
+	private final Map<String, ClassCoverage> classes;
 
 	private final Map<String, SourceFileCoverage> sourcefiles;
 
@@ -66,7 +66,7 @@ public class CoverageBuilder implements IStructureVisitor {
 			final StringPool stringPool) {
 		this.executionData = executionData;
 		this.stringPool = stringPool;
-		this.classes = new HashMap<Long, ClassCoverage>();
+		this.classes = new HashMap<String, ClassCoverage>();
 		this.sourcefiles = new HashMap<String, SourceFileCoverage>();
 	}
 
@@ -136,7 +136,10 @@ public class CoverageBuilder implements IStructureVisitor {
 						signature, superName, interfaces, sourcename, methods);
 				// Only consider classes that actually contain code:
 				if (classData.getInstructionCounter().getTotalCount() > 0) {
-					classes.put(Long.valueOf(id), classData);
+					if (classes.put(name, classData) != null) {
+						throw new IllegalStateException(
+								"Duplicate class name in same group: " + name);
+					}
 					if (sourcename != null) {
 						final String packageName = stringPool.get(classData
 								.getPackageName());

@@ -143,8 +143,8 @@ public class CoverageBuilderTest {
 
 		final ClassCoverage classCoverage = coverageBuilder.getClasses()
 				.iterator().next();
-		assertEquals(Collections.singleton("a"), getNames(classCoverage
-				.getMethods()));
+		assertEquals(Collections.singleton("a"),
+				getNames(classCoverage.getMethods()));
 	}
 
 	@Test
@@ -162,6 +162,28 @@ public class CoverageBuilderTest {
 		assertTrue(classes.isEmpty());
 	}
 
+	@Test(expected = IllegalStateException.class)
+	public void testDuplicateClassName() {
+		IClassStructureVisitor classStructure = coverageBuilder
+				.visitClassStructure(123L);
+		classStructure.visit("org/jacoco/examples/Sample", null,
+				"java/lang/Object", new String[0]);
+		IMethodStructureVisitor methodStructure = classStructure
+				.visitMethodStructure("doit", "()V", null);
+		methodStructure.block(0, 3, new int[] { 3, 4, 5 });
+		methodStructure.visitEnd();
+		classStructure.visitEnd();
+
+		classStructure = coverageBuilder.visitClassStructure(345L);
+		classStructure.visit("org/jacoco/examples/Sample", null,
+				"java/lang/Object", new String[0]);
+		methodStructure = classStructure.visitMethodStructure("doit", "()V",
+				null);
+		methodStructure.block(0, 3, new int[] { 3, 4, 5 });
+		methodStructure.visitEnd();
+		classStructure.visitEnd();
+	}
+
 	@Test
 	public void testCreateSourceFile() {
 		final IClassStructureVisitor classStructure1 = coverageBuilder
@@ -177,7 +199,7 @@ public class CoverageBuilderTest {
 
 		final IClassStructureVisitor classStructure2 = coverageBuilder
 				.visitClassStructure(123L);
-		classStructure2.visit("org/jacoco/examples/Sample", null,
+		classStructure2.visit("org/jacoco/examples/Second", null,
 				"java/lang/Object", new String[0]);
 		classStructure2.visitSourceFile("Sample.java");
 		final IMethodStructureVisitor methodStructure2 = classStructure2
@@ -239,8 +261,10 @@ public class CoverageBuilderTest {
 
 		PackageCoverage p1 = packagesByName.get("org/jacoco/examples");
 		assertNotNull(p1);
-		assertEquals(new HashSet<String>(Arrays.asList(
-				"org/jacoco/examples/Sample1", "org/jacoco/examples/Sample2")),
+		assertEquals(
+				new HashSet<String>(Arrays.asList(
+						"org/jacoco/examples/Sample1",
+						"org/jacoco/examples/Sample2")),
 				getNames(p1.getClasses()));
 
 		PackageCoverage p2 = packagesByName.get("");
