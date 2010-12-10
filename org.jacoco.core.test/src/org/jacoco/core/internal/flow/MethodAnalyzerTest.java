@@ -18,7 +18,6 @@ import java.util.Map;
 
 import org.jacoco.core.internal.flow.MethodAnalyzer.Output;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.objectweb.asm.Label;
 import org.objectweb.asm.MethodVisitor;
@@ -243,7 +242,6 @@ public class MethodAnalyzerTest implements IProbeIdGenerator {
 	}
 
 	@Test
-	@Ignore
 	public void testJumpBackwardsCovered() {
 		createJumpBackwards();
 		probes[0] = true;
@@ -252,6 +250,171 @@ public class MethodAnalyzerTest implements IProbeIdGenerator {
 		assertLine(1001, 0, 1, 0, 0);
 		assertLine(1002, 0, 1, 0, 0);
 		assertLine(1003, 0, 1, 0, 0);
+	}
+
+	// === Scenario: table switch ===
+
+	private void createTableSwitch() {
+		method.visitLineNumber(1001, new Label());
+		method.visitVarInsn(Opcodes.ILOAD, 1);
+		Label l1 = new Label();
+		Label l2 = new Label();
+		Label l3 = new Label();
+		method.visitTableSwitchInsn(1, 2, l3, new Label[] { l1, l2 });
+		method.visitLabel(l1);
+		method.visitLineNumber(1002, l1);
+		method.visitIntInsn(Opcodes.BIPUSH, 11);
+		method.visitVarInsn(Opcodes.ISTORE, 2);
+		method.visitLineNumber(1003, new Label());
+		Label l5 = new Label();
+		method.visitJumpInsn(Opcodes.GOTO, l5);
+		method.visitLabel(l2);
+		method.visitLineNumber(1004, l2);
+		method.visitIntInsn(Opcodes.BIPUSH, 22);
+		method.visitVarInsn(Opcodes.ISTORE, 2);
+		method.visitLineNumber(1005, new Label());
+		method.visitJumpInsn(Opcodes.GOTO, l5);
+		method.visitLabel(l3);
+		method.visitLineNumber(1006, l3);
+		method.visitInsn(Opcodes.ICONST_0);
+		method.visitVarInsn(Opcodes.ISTORE, 2);
+		method.visitLabel(l5);
+		method.visitLineNumber(1007, l5);
+		method.visitVarInsn(Opcodes.ILOAD, 2);
+		method.visitInsn(Opcodes.IRETURN);
+	}
+
+	@Test
+	public void testTableSwitchNotCovered() {
+		createTableSwitch();
+		runMethodAnalzer();
+		assertEquals(4, nextProbeId);
+
+		assertLine(1001, 2, 0, 0, 0);
+		assertLine(1002, 2, 0, 0, 0);
+		assertLine(1003, 1, 0, 0, 0);
+		assertLine(1004, 2, 0, 0, 0);
+		assertLine(1005, 1, 0, 0, 0);
+		assertLine(1006, 2, 0, 0, 0);
+		assertLine(1007, 2, 0, 0, 0);
+	}
+
+	@Test
+	public void testTableSwitchCovered1() {
+		createTableSwitch();
+		probes[0] = true;
+		probes[3] = true;
+		runMethodAnalzer();
+		assertEquals(4, nextProbeId);
+
+		assertLine(1001, 0, 2, 0, 0);
+		assertLine(1002, 0, 2, 0, 0);
+		assertLine(1003, 0, 1, 0, 0);
+		assertLine(1004, 2, 0, 0, 0);
+		assertLine(1005, 1, 0, 0, 0);
+		assertLine(1006, 2, 0, 0, 0);
+		assertLine(1007, 0, 2, 0, 0);
+	}
+
+	@Test
+	public void testTableSwitchCovered2() {
+		createTableSwitch();
+		probes[2] = true;
+		probes[3] = true;
+		runMethodAnalzer();
+		assertEquals(4, nextProbeId);
+
+		assertLine(1001, 0, 2, 0, 0);
+		assertLine(1002, 2, 0, 0, 0);
+		assertLine(1003, 1, 0, 0, 0);
+		assertLine(1004, 2, 0, 0, 0);
+		assertLine(1005, 1, 0, 0, 0);
+		assertLine(1006, 0, 2, 0, 0);
+		assertLine(1007, 0, 2, 0, 0);
+	}
+
+	// === Scenario: table switch with merge ===
+
+	private void createTableSwitchMerge() {
+		method.visitLineNumber(1001, new Label());
+		method.visitInsn(Opcodes.ICONST_0);
+		method.visitVarInsn(Opcodes.ISTORE, 2);
+		method.visitLineNumber(1002, new Label());
+		method.visitVarInsn(Opcodes.ILOAD, 1);
+		Label l2 = new Label();
+		Label l3 = new Label();
+		Label l4 = new Label();
+		method.visitTableSwitchInsn(1, 2, l4, new Label[] { l2, l3 });
+		method.visitLabel(l2);
+		method.visitLineNumber(1003, l2);
+		method.visitIincInsn(2, 1);
+		method.visitLabel(l3);
+		method.visitLineNumber(1004, l3);
+		method.visitIincInsn(2, 1);
+		method.visitLabel(l4);
+		method.visitLineNumber(1005, l4);
+		method.visitVarInsn(Opcodes.ILOAD, 2);
+		method.visitInsn(Opcodes.IRETURN);
+	}
+
+	@Test
+	public void testTableSwitchMergeNotCovered() {
+		createTableSwitchMerge();
+		runMethodAnalzer();
+		assertEquals(5, nextProbeId);
+
+		assertLine(1001, 2, 0, 0, 0);
+		assertLine(1002, 2, 0, 0, 0);
+		assertLine(1003, 1, 0, 0, 0);
+		assertLine(1004, 1, 0, 0, 0);
+		assertLine(1005, 2, 0, 0, 0);
+	}
+
+	@Test
+	public void testTableSwitchMergeNotCovered1() {
+		createTableSwitchMerge();
+		probes[0] = true;
+		probes[4] = true;
+		runMethodAnalzer();
+		assertEquals(5, nextProbeId);
+
+		assertLine(1001, 0, 2, 0, 0);
+		assertLine(1002, 0, 2, 0, 0);
+		assertLine(1003, 1, 0, 0, 0);
+		assertLine(1004, 1, 0, 0, 0);
+		assertLine(1005, 0, 2, 0, 0);
+	}
+
+	@Test
+	public void testTableSwitchMergeNotCovered2() {
+		createTableSwitchMerge();
+		probes[1] = true;
+		probes[3] = true;
+		probes[4] = true;
+		runMethodAnalzer();
+		assertEquals(5, nextProbeId);
+
+		assertLine(1001, 0, 2, 0, 0);
+		assertLine(1002, 0, 2, 0, 0);
+		assertLine(1003, 1, 0, 0, 0);
+		assertLine(1004, 0, 1, 0, 0);
+		assertLine(1005, 0, 2, 0, 0);
+	}
+
+	@Test
+	public void testTableSwitchMergeNotCovered3() {
+		createTableSwitchMerge();
+		probes[2] = true;
+		probes[3] = true;
+		probes[4] = true;
+		runMethodAnalzer();
+		assertEquals(5, nextProbeId);
+
+		assertLine(1001, 0, 2, 0, 0);
+		assertLine(1002, 0, 2, 0, 0);
+		assertLine(1003, 0, 1, 0, 0);
+		assertLine(1004, 0, 1, 0, 0);
+		assertLine(1005, 0, 2, 0, 0);
 	}
 
 	private void runMethodAnalzer() {

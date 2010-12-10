@@ -19,7 +19,6 @@ import java.util.Map;
 import org.objectweb.asm.AnnotationVisitor;
 import org.objectweb.asm.Attribute;
 import org.objectweb.asm.Label;
-import org.objectweb.asm.Opcodes;
 
 /**
  * A {@link IMethodProbesVisitor} that analyzes which statements and branches of
@@ -60,42 +59,50 @@ public final class MethodAnalyzer implements IMethodProbesVisitor {
 		public void visitBranch(boolean covered, int line);
 	}
 
-	private final boolean[] probes;
+	private final boolean[] executionData;
 
 	private final Output output;
 
 	private int currentLine = Output.UNKNOWN_LINE;
 
+	private Label currentLabel = null;
+
 	/** List of all analyzed instructions */
 	private final List<Insn> instructions = new ArrayList<Insn>();
+
+	/** List of all probes encountered */
+	private final List<Probe> probes = new ArrayList<Probe>();
+
+	/** List of all jumps encountered */
+	private final List<Jump> jumps = new ArrayList<Jump>();
 
 	/** Last instruction in byte code sequence */
 	private Insn lastInsn;
 
 	/**
-	 * Jump instruction to the given label
+	 * Mapping from labels to addressed instruction.
 	 * 
 	 * TODO: Replace Map by LabelInfo
 	 */
-	private final Map<Label, Insn> jumpInsn = new HashMap<Label, Insn>();
+	private final Map<Label, Insn> labels = new HashMap<Label, Insn>();
 
 	/**
 	 * New Method analyzer for the given probe data.
 	 * 
-	 * @param probes
+	 * @param executionData
 	 *            recorded probe date of the containing class
 	 * @param output
 	 *            instance to report coverage information to
 	 */
-	public MethodAnalyzer(final boolean[] probes, final Output output) {
-		this.probes = probes;
+	public MethodAnalyzer(final boolean[] executionData, final Output output) {
+		this.executionData = executionData;
 		this.output = output;
 	}
 
 	public void visitLabel(final Label label) {
-		final Insn insn = jumpInsn.remove(label);
-		if (insn != null) {
-			lastInsn = insn;
+		currentLabel = label;
+		if (!LabelInfo.isSuccessor(label)) {
+			lastInsn = null;
 		}
 	}
 
@@ -106,6 +113,10 @@ public final class MethodAnalyzer implements IMethodProbesVisitor {
 	private void visitInsn() {
 		final Insn insn = new Insn(currentLine, lastInsn);
 		instructions.add(insn);
+		if (currentLabel != null) {
+			labels.put(currentLabel, insn);
+			currentLabel = null;
+		}
 		lastInsn = insn;
 	}
 
@@ -137,7 +148,7 @@ public final class MethodAnalyzer implements IMethodProbesVisitor {
 
 	public void visitJumpInsn(final int opcode, final Label label) {
 		visitInsn();
-		jumpInsn.put(label, lastInsn);
+		jumps.add(new Jump(lastInsn, label));
 	}
 
 	public void visitLdcInsn(final Object cst) {
@@ -150,12 +161,20 @@ public final class MethodAnalyzer implements IMethodProbesVisitor {
 
 	public void visitTableSwitchInsn(final int min, final int max,
 			final Label dflt, final Label[] labels) {
-		visitInsn();
+		visitSwitchInsn(dflt, labels);
 	}
 
 	public void visitLookupSwitchInsn(final Label dflt, final int[] keys,
 			final Label[] labels) {
+		visitSwitchInsn(dflt, labels);
+	}
+
+	private void visitSwitchInsn(final Label dflt, final Label[] labels) {
 		visitInsn();
+		jumps.add(new Jump(lastInsn, dflt));
+		for (final Label l : labels) {
+			jumps.add(new Jump(lastInsn, l));
+		}
 	}
 
 	public void visitMultiANewArrayInsn(final String desc, final int dims) {
@@ -168,47 +187,68 @@ public final class MethodAnalyzer implements IMethodProbesVisitor {
 	}
 
 	public void visitProbe(final int probeId) {
-		if (probes[probeId]) {
-			lastInsn.setCovered();
-		}
+		probes.add(new Probe(executionData[probeId], lastInsn));
 		lastInsn = null;
 	}
 
 	public void visitJumpInsnWithProbe(final int opcode, final Label label,
 			final int probeId) {
 		visitInsn();
-		if (probes[probeId]) {
-			lastInsn.setCovered();
-		}
-		if (opcode == Opcodes.GOTO) {
-			lastInsn = null;
-		}
+		probes.add(new Probe(executionData[probeId], lastInsn));
 	}
 
 	public void visitInsnWithProbe(final int opcode, final int probeId) {
 		visitInsn();
-		if (probes[probeId]) {
-			lastInsn.setCovered();
-		}
-		lastInsn = null;
+		probes.add(new Probe(executionData[probeId], lastInsn));
 	}
 
 	public void visitTableSwitchInsnWithProbes(final int min, final int max,
 			final Label dflt, final Label[] labels) {
-		// TODO Auto-generated method stub
-
+		visitSwitchInsnWithProbes(dflt, labels);
 	}
 
 	public void visitLookupSwitchInsnWithProbes(final Label dflt,
 			final int[] keys, final Label[] labels) {
-		// TODO Auto-generated method stub
+		visitSwitchInsnWithProbes(dflt, labels);
+	}
 
+	private void visitSwitchInsnWithProbes(final Label dflt,
+			final Label[] labels) {
+		visitInsn();
+		LabelInfo.resetDone(dflt);
+		LabelInfo.resetDone(labels);
+		visitSwitchTarget(dflt);
+		for (final Label l : labels) {
+			visitSwitchTarget(l);
+		}
+	}
+
+	private void visitSwitchTarget(final Label label) {
+		final int id = LabelInfo.getProbeId(label);
+		if (id == LabelInfo.NO_PROBE) {
+			jumps.add(new Jump(lastInsn, label));
+		} else {
+			if (!LabelInfo.isDone(label)) {
+				probes.add(new Probe(executionData[id], lastInsn));
+				LabelInfo.setDone(label);
+			}
+		}
 	}
 
 	public void visitEnd() {
+		// Wire jumps:
+		for (final Jump j : jumps) {
+			j.process();
+		}
+		// Propagate probe values:
+		for (final Probe p : probes) {
+			p.process();
+		}
+		// Report result:
 		for (final Insn i : instructions) {
 			i.process(output);
 		}
+
 	}
 
 	// === nothing to do here ===
@@ -248,15 +288,23 @@ public final class MethodAnalyzer implements IMethodProbesVisitor {
 	private static class Insn {
 
 		private final int line;
-		private final Insn predecessor;
+		private Insn predecessor;
 		private boolean covered;
 
 		Insn(final int line, final Insn predecessor) {
 			this.line = line;
 			this.predecessor = predecessor;
+			this.covered = false;
 		}
 
-		void setCovered() {
+		public void setPredecessor(final Insn predecessor) {
+			if (this.predecessor != null) {
+				throw new IllegalStateException();
+			}
+			this.predecessor = predecessor;
+		}
+
+		public void setCovered() {
 			covered = true;
 			if (predecessor != null) {
 				predecessor.setCovered();
@@ -267,6 +315,39 @@ public final class MethodAnalyzer implements IMethodProbesVisitor {
 			output.visitInsn(covered, line);
 		}
 
+	}
+
+	private class Jump {
+
+		private final Insn source;
+		private final Label target;
+
+		Jump(final Insn source, final Label target) {
+			this.source = source;
+			this.target = target;
+		}
+
+		void process() {
+			labels.get(target).setPredecessor(source);
+		}
+
+	}
+
+	private static class Probe {
+
+		private final boolean covered;
+		private final Insn predecessor;
+
+		Probe(final boolean covered, final Insn predecessor) {
+			this.covered = covered;
+			this.predecessor = predecessor;
+		}
+
+		void process() {
+			if (covered) {
+				predecessor.setCovered();
+			}
+		}
 	}
 
 }
