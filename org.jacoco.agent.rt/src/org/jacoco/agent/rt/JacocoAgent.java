@@ -21,9 +21,9 @@ import org.jacoco.agent.rt.controller.LocalController;
 import org.jacoco.agent.rt.controller.TcpClientController;
 import org.jacoco.agent.rt.controller.TcpServerController;
 import org.jacoco.core.runtime.AgentOptions;
+import org.jacoco.core.runtime.AgentOptions.OutputMode;
 import org.jacoco.core.runtime.IRuntime;
 import org.jacoco.core.runtime.ModifiedSystemClassRuntime;
-import org.jacoco.core.runtime.AgentOptions.OutputMode;
 
 /**
  * The agent which is referred as the <code>Premain-Class</code>.
@@ -120,7 +120,7 @@ public class JacocoAgent {
 	 */
 	protected IRuntime createRuntime(final Instrumentation inst)
 			throws Exception {
-		return ModifiedSystemClassRuntime.createFor(inst, "java/sql/Types");
+		return ModifiedSystemClassRuntime.createFor(inst, "java/util/UUID");
 	}
 
 	/**
