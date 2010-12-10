@@ -18,6 +18,7 @@ import java.util.Map;
 
 import org.jacoco.core.internal.flow.MethodAnalyzer.Output;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.objectweb.asm.Label;
 import org.objectweb.asm.MethodVisitor;
@@ -211,6 +212,44 @@ public class MethodAnalyzerTest implements IProbeIdGenerator {
 		runMethodAnalzer();
 
 		assertLine(1001, 0, 2, 0, 0);
+		assertLine(1002, 0, 1, 0, 0);
+		assertLine(1003, 0, 1, 0, 0);
+	}
+
+	// === Scenario: branch which jump backwards ===
+
+	private void createJumpBackwards() {
+		method.visitLineNumber(1001, new Label());
+		final Label l1 = new Label();
+		method.visitJumpInsn(Opcodes.GOTO, l1);
+		final Label l2 = new Label();
+		method.visitLabel(l2);
+		method.visitLineNumber(1002, l2);
+		method.visitInsn(Opcodes.RETURN);
+		method.visitLabel(l1);
+		method.visitLineNumber(1003, l1);
+		method.visitJumpInsn(Opcodes.GOTO, l2);
+	}
+
+	@Test
+	public void testJumpBackwardsNotCovered() {
+		createJumpBackwards();
+		runMethodAnalzer();
+		assertEquals(1, nextProbeId);
+
+		assertLine(1001, 1, 0, 0, 0);
+		assertLine(1002, 1, 0, 0, 0);
+		assertLine(1003, 1, 0, 0, 0);
+	}
+
+	@Test
+	@Ignore
+	public void testJumpBackwardsCovered() {
+		createJumpBackwards();
+		probes[0] = true;
+		runMethodAnalzer();
+
+		assertLine(1001, 0, 1, 0, 0);
 		assertLine(1002, 0, 1, 0, 0);
 		assertLine(1003, 0, 1, 0, 0);
 	}
