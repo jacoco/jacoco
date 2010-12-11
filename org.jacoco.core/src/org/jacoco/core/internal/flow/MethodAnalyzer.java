@@ -292,14 +292,12 @@ public final class MethodAnalyzer implements IMethodProbesVisitor {
 	private static class Insn {
 
 		private final int line;
-		private boolean covered;
 		private int branches;
 		private int coveredBranches;
 		private Insn predecessor;
 
 		Insn(final int line) {
 			this.line = line;
-			this.covered = false;
 			this.branches = 0;
 			this.coveredBranches = 0;
 		}
@@ -314,21 +312,27 @@ public final class MethodAnalyzer implements IMethodProbesVisitor {
 		}
 
 		public void setCovered() {
-			coveredBranches++;
-			if (!covered) {
-				covered = true;
+			if (coveredBranches == 0) {
 				if (predecessor != null) {
 					predecessor.setCovered();
 				}
 			}
+			coveredBranches++;
 		}
 
 		void process(final Output output) {
-			output.visitInsn(covered, line);
+			output.visitInsn(coveredBranches > 0, line);
 			if (branches > 1) {
 				output.visitBranches(branches - coveredBranches,
 						coveredBranches, line);
 			}
+		}
+	}
+
+	private void addProbe(final Insn predecessor, final int probeId) {
+		predecessor.addBranch();
+		if (executionData[probeId]) {
+			coveredProbes.add(predecessor);
 		}
 	}
 
@@ -340,13 +344,6 @@ public final class MethodAnalyzer implements IMethodProbesVisitor {
 		Jump(final Insn source, final Label target) {
 			this.source = source;
 			this.target = target;
-		}
-	}
-
-	private void addProbe(final Insn predecessor, final int probeId) {
-		predecessor.addBranch();
-		if (executionData[probeId]) {
-			coveredProbes.add(predecessor);
 		}
 	}
 
