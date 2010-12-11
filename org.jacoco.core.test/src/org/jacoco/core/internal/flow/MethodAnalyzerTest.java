@@ -52,9 +52,10 @@ public class MethodAnalyzerTest implements IProbeIdGenerator {
 				getLine(line).addInsn(covered);
 			}
 
-			public void visitBranch(boolean covered, int line) {
-				getLine(line).addBranch(covered);
+			public void visitBranches(int missed, int covered, int line) {
+				getLine(line).addBranches(missed, covered);
 			}
+
 		};
 		probes = new boolean[32];
 		final MethodAnalyzer analyzer = new MethodAnalyzer(probes, output);
@@ -116,7 +117,7 @@ public class MethodAnalyzerTest implements IProbeIdGenerator {
 		runMethodAnalzer();
 		assertEquals(2, nextProbeId);
 
-		assertLine(1001, 2, 0, 0, 0);
+		assertLine(1001, 2, 0, 2, 0);
 		assertLine(1002, 2, 0, 0, 0);
 		assertLine(1003, 2, 0, 0, 0);
 	}
@@ -127,7 +128,7 @@ public class MethodAnalyzerTest implements IProbeIdGenerator {
 		probes[0] = true;
 		runMethodAnalzer();
 
-		assertLine(1001, 0, 2, 0, 0);
+		assertLine(1001, 0, 2, 1, 1);
 		assertLine(1002, 0, 2, 0, 0);
 		assertLine(1003, 2, 0, 0, 0);
 	}
@@ -138,7 +139,7 @@ public class MethodAnalyzerTest implements IProbeIdGenerator {
 		probes[1] = true;
 		runMethodAnalzer();
 
-		assertLine(1001, 0, 2, 0, 0);
+		assertLine(1001, 0, 2, 1, 1);
 		assertLine(1002, 2, 0, 0, 0);
 		assertLine(1003, 0, 2, 0, 0);
 	}
@@ -150,7 +151,7 @@ public class MethodAnalyzerTest implements IProbeIdGenerator {
 		probes[1] = true;
 		runMethodAnalzer();
 
-		assertLine(1001, 0, 2, 0, 0);
+		assertLine(1001, 0, 2, 0, 2);
 		assertLine(1002, 0, 2, 0, 0);
 		assertLine(1003, 0, 2, 0, 0);
 	}
@@ -175,7 +176,7 @@ public class MethodAnalyzerTest implements IProbeIdGenerator {
 		runMethodAnalzer();
 		assertEquals(3, nextProbeId);
 
-		assertLine(1001, 2, 0, 0, 0);
+		assertLine(1001, 2, 0, 2, 0);
 		assertLine(1002, 1, 0, 0, 0);
 		assertLine(1003, 1, 0, 0, 0);
 	}
@@ -186,7 +187,7 @@ public class MethodAnalyzerTest implements IProbeIdGenerator {
 		probes[0] = true;
 		runMethodAnalzer();
 
-		assertLine(1001, 0, 2, 0, 0);
+		assertLine(1001, 0, 2, 1, 1);
 		assertLine(1002, 1, 0, 0, 0);
 		assertLine(1003, 1, 0, 0, 0);
 	}
@@ -197,7 +198,7 @@ public class MethodAnalyzerTest implements IProbeIdGenerator {
 		probes[1] = true;
 		runMethodAnalzer();
 
-		assertLine(1001, 0, 2, 0, 0);
+		assertLine(1001, 0, 2, 1, 1);
 		assertLine(1002, 0, 1, 0, 0);
 		assertLine(1003, 1, 0, 0, 0);
 	}
@@ -210,7 +211,7 @@ public class MethodAnalyzerTest implements IProbeIdGenerator {
 		probes[2] = true;
 		runMethodAnalzer();
 
-		assertLine(1001, 0, 2, 0, 0);
+		assertLine(1001, 0, 2, 0, 2);
 		assertLine(1002, 0, 1, 0, 0);
 		assertLine(1003, 0, 1, 0, 0);
 	}
@@ -290,7 +291,7 @@ public class MethodAnalyzerTest implements IProbeIdGenerator {
 		runMethodAnalzer();
 		assertEquals(4, nextProbeId);
 
-		assertLine(1001, 2, 0, 0, 0);
+		assertLine(1001, 2, 0, 3, 0);
 		assertLine(1002, 2, 0, 0, 0);
 		assertLine(1003, 1, 0, 0, 0);
 		assertLine(1004, 2, 0, 0, 0);
@@ -307,7 +308,7 @@ public class MethodAnalyzerTest implements IProbeIdGenerator {
 		runMethodAnalzer();
 		assertEquals(4, nextProbeId);
 
-		assertLine(1001, 0, 2, 0, 0);
+		assertLine(1001, 0, 2, 2, 1);
 		assertLine(1002, 0, 2, 0, 0);
 		assertLine(1003, 0, 1, 0, 0);
 		assertLine(1004, 2, 0, 0, 0);
@@ -324,11 +325,30 @@ public class MethodAnalyzerTest implements IProbeIdGenerator {
 		runMethodAnalzer();
 		assertEquals(4, nextProbeId);
 
-		assertLine(1001, 0, 2, 0, 0);
+		assertLine(1001, 0, 2, 2, 1);
 		assertLine(1002, 2, 0, 0, 0);
 		assertLine(1003, 1, 0, 0, 0);
 		assertLine(1004, 2, 0, 0, 0);
 		assertLine(1005, 1, 0, 0, 0);
+		assertLine(1006, 0, 2, 0, 0);
+		assertLine(1007, 0, 2, 0, 0);
+	}
+
+	@Test
+	public void testTableSwitchCovered3() {
+		createTableSwitch();
+		probes[0] = true;
+		probes[1] = true;
+		probes[2] = true;
+		probes[3] = true;
+		runMethodAnalzer();
+		assertEquals(4, nextProbeId);
+
+		assertLine(1001, 0, 2, 0, 3);
+		assertLine(1002, 0, 2, 0, 0);
+		assertLine(1003, 0, 1, 0, 0);
+		assertLine(1004, 0, 2, 0, 0);
+		assertLine(1005, 0, 1, 0, 0);
 		assertLine(1006, 0, 2, 0, 0);
 		assertLine(1007, 0, 2, 0, 0);
 	}
@@ -364,7 +384,7 @@ public class MethodAnalyzerTest implements IProbeIdGenerator {
 		assertEquals(5, nextProbeId);
 
 		assertLine(1001, 2, 0, 0, 0);
-		assertLine(1002, 2, 0, 0, 0);
+		assertLine(1002, 2, 0, 3, 0);
 		assertLine(1003, 1, 0, 0, 0);
 		assertLine(1004, 1, 0, 0, 0);
 		assertLine(1005, 2, 0, 0, 0);
@@ -379,7 +399,7 @@ public class MethodAnalyzerTest implements IProbeIdGenerator {
 		assertEquals(5, nextProbeId);
 
 		assertLine(1001, 0, 2, 0, 0);
-		assertLine(1002, 0, 2, 0, 0);
+		assertLine(1002, 0, 2, 2, 1);
 		assertLine(1003, 1, 0, 0, 0);
 		assertLine(1004, 1, 0, 0, 0);
 		assertLine(1005, 0, 2, 0, 0);
@@ -395,7 +415,7 @@ public class MethodAnalyzerTest implements IProbeIdGenerator {
 		assertEquals(5, nextProbeId);
 
 		assertLine(1001, 0, 2, 0, 0);
-		assertLine(1002, 0, 2, 0, 0);
+		assertLine(1002, 0, 2, 2, 1);
 		assertLine(1003, 1, 0, 0, 0);
 		assertLine(1004, 0, 1, 0, 0);
 		assertLine(1005, 0, 2, 0, 0);
@@ -411,7 +431,25 @@ public class MethodAnalyzerTest implements IProbeIdGenerator {
 		assertEquals(5, nextProbeId);
 
 		assertLine(1001, 0, 2, 0, 0);
-		assertLine(1002, 0, 2, 0, 0);
+		assertLine(1002, 0, 2, 2, 1);
+		assertLine(1003, 0, 1, 0, 0);
+		assertLine(1004, 0, 1, 0, 0);
+		assertLine(1005, 0, 2, 0, 0);
+	}
+
+	@Test
+	public void testTableSwitchMergeNotCovered4() {
+		createTableSwitchMerge();
+		probes[0] = true;
+		probes[1] = true;
+		probes[2] = true;
+		probes[3] = true;
+		probes[4] = true;
+		runMethodAnalzer();
+		assertEquals(5, nextProbeId);
+
+		assertLine(1001, 0, 2, 0, 0);
+		assertLine(1002, 0, 2, 0, 3);
 		assertLine(1003, 0, 1, 0, 0);
 		assertLine(1004, 0, 1, 0, 0);
 		assertLine(1005, 0, 2, 0, 0);
@@ -467,12 +505,9 @@ public class MethodAnalyzerTest implements IProbeIdGenerator {
 			}
 		}
 
-		void addBranch(boolean covered) {
-			if (covered) {
-				branchesCovered++;
-			} else {
-				branchesMissed++;
-			}
+		public void addBranches(int missed, int covered) {
+			branchesMissed += missed;
+			branchesCovered += covered;
 		}
 
 		@Override

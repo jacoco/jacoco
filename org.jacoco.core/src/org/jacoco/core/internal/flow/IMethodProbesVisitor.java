@@ -54,7 +54,7 @@ public interface IMethodProbesVisitor extends MethodVisitor {
 
 	/**
 	 * Visits a zero operand instruction with a probe. This event is used only
-	 * for instructions that terminates the method. Therefore the probe must be
+	 * for instructions that terminate the method. Therefore the probe must be
 	 * inserted before the actual instruction.
 	 * 
 	 * @param opcode

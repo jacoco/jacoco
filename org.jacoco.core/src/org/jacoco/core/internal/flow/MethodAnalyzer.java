@@ -49,14 +49,16 @@ public final class MethodAnalyzer implements IMethodProbesVisitor {
 		public void visitInsn(boolean covered, int line);
 
 		/**
-		 * Called for every branch.
+		 * Called for every branching point.
 		 * 
+		 * @param missed
+		 *            number of missed branches
 		 * @param covered
-		 *            <code>true</code> if the branch has been executed
+		 *            number of covered branches
 		 * @param line
 		 *            source line number of the instruction
 		 */
-		public void visitBranch(boolean covered, int line);
+		public void visitBranches(int missed, int covered, int line);
 	}
 
 	private final boolean[] executionData;
@@ -70,8 +72,8 @@ public final class MethodAnalyzer implements IMethodProbesVisitor {
 	/** List of all analyzed instructions */
 	private final List<Insn> instructions = new ArrayList<Insn>();
 
-	/** List of all probes encountered */
-	private final List<Probe> probes = new ArrayList<Probe>();
+	/** List of all predecessors of covered probes */
+	private final List<Insn> coveredProbes = new ArrayList<Insn>();
 
 	/** List of all jumps encountered */
 	private final List<Jump> jumps = new ArrayList<Jump>();
@@ -111,8 +113,11 @@ public final class MethodAnalyzer implements IMethodProbesVisitor {
 	}
 
 	private void visitInsn() {
-		final Insn insn = new Insn(currentLine, lastInsn);
+		final Insn insn = new Insn(currentLine);
 		instructions.add(insn);
+		if (lastInsn != null) {
+			insn.setPredecessor(lastInsn);
+		}
 		if (currentLabel != null) {
 			labels.put(currentLabel, insn);
 			currentLabel = null;
@@ -187,19 +192,19 @@ public final class MethodAnalyzer implements IMethodProbesVisitor {
 	}
 
 	public void visitProbe(final int probeId) {
-		probes.add(new Probe(executionData[probeId], lastInsn));
+		addProbe(lastInsn, probeId);
 		lastInsn = null;
 	}
 
 	public void visitJumpInsnWithProbe(final int opcode, final Label label,
 			final int probeId) {
 		visitInsn();
-		probes.add(new Probe(executionData[probeId], lastInsn));
+		addProbe(lastInsn, probeId);
 	}
 
 	public void visitInsnWithProbe(final int opcode, final int probeId) {
 		visitInsn();
-		probes.add(new Probe(executionData[probeId], lastInsn));
+		addProbe(lastInsn, probeId);
 	}
 
 	public void visitTableSwitchInsnWithProbes(final int min, final int max,
@@ -229,7 +234,7 @@ public final class MethodAnalyzer implements IMethodProbesVisitor {
 			jumps.add(new Jump(lastInsn, label));
 		} else {
 			if (!LabelInfo.isDone(label)) {
-				probes.add(new Probe(executionData[id], lastInsn));
+				addProbe(lastInsn, id);
 				LabelInfo.setDone(label);
 			}
 		}
@@ -238,17 +243,16 @@ public final class MethodAnalyzer implements IMethodProbesVisitor {
 	public void visitEnd() {
 		// Wire jumps:
 		for (final Jump j : jumps) {
-			j.process();
+			labels.get(j.target).setPredecessor(j.source);
 		}
 		// Propagate probe values:
-		for (final Probe p : probes) {
-			p.process();
+		for (final Insn p : coveredProbes) {
+			p.setCovered();
 		}
 		// Report result:
 		for (final Insn i : instructions) {
 			i.process(output);
 		}
-
 	}
 
 	// === nothing to do here ===
@@ -288,65 +292,61 @@ public final class MethodAnalyzer implements IMethodProbesVisitor {
 	private static class Insn {
 
 		private final int line;
-		private Insn predecessor;
 		private boolean covered;
+		private int branches;
+		private int coveredBranches;
+		private Insn predecessor;
 
-		Insn(final int line, final Insn predecessor) {
+		Insn(final int line) {
 			this.line = line;
-			this.predecessor = predecessor;
 			this.covered = false;
+			this.branches = 0;
+			this.coveredBranches = 0;
 		}
 
 		public void setPredecessor(final Insn predecessor) {
-			if (this.predecessor != null) {
-				throw new IllegalStateException();
-			}
 			this.predecessor = predecessor;
+			predecessor.addBranch();
+		}
+
+		public void addBranch() {
+			branches++;
 		}
 
 		public void setCovered() {
-			covered = true;
-			if (predecessor != null) {
-				predecessor.setCovered();
+			coveredBranches++;
+			if (!covered) {
+				covered = true;
+				if (predecessor != null) {
+					predecessor.setCovered();
+				}
 			}
 		}
 
 		void process(final Output output) {
 			output.visitInsn(covered, line);
+			if (branches > 1) {
+				output.visitBranches(branches - coveredBranches,
+						coveredBranches, line);
+			}
 		}
-
 	}
 
-	private class Jump {
+	private static class Jump {
 
-		private final Insn source;
-		private final Label target;
+		final Insn source;
+		final Label target;
 
 		Jump(final Insn source, final Label target) {
 			this.source = source;
 			this.target = target;
 		}
-
-		void process() {
-			labels.get(target).setPredecessor(source);
-		}
-
 	}
 
-	private static class Probe {
-
-		private final boolean covered;
-		private final Insn predecessor;
-
-		Probe(final boolean covered, final Insn predecessor) {
-			this.covered = covered;
-			this.predecessor = predecessor;
-		}
-
-		void process() {
-			if (covered) {
-				predecessor.setCovered();
-			}
+	private void addProbe(final Insn predecessor, final int probeId) {
+		predecessor.addBranch();
+		if (executionData[probeId]) {
+			coveredProbes.add(predecessor);
 		}
 	}
 
