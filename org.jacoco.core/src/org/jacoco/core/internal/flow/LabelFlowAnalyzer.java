@@ -14,6 +14,8 @@ package org.jacoco.core.internal.flow;
 import org.objectweb.asm.AnnotationVisitor;
 import org.objectweb.asm.Attribute;
 import org.objectweb.asm.Label;
+import org.objectweb.asm.MethodVisitor;
+import org.objectweb.asm.Opcodes;
 
 /**
  * Method visitor to collect flow related information about the {@link Label}s
@@ -23,17 +25,25 @@ import org.objectweb.asm.Label;
  * @author Marc R. Hoffmann
  * @version $qualified.bundle.version$
  */
-final class LabelFlowAnalyzer extends SuccessorAnalyzer {
+final class LabelFlowAnalyzer implements MethodVisitor {
+
+	/**
+	 * <code>true</code> if the current instruction is a potential successor of
+	 * the previous instruction. Accessible for testing only.
+	 */
+	boolean successor = true;
 
 	public void visitTryCatchBlock(final Label start, final Label end,
 			final Label handler, final String type) {
 		LabelInfo.setTarget(handler);
 	}
 
-	@Override
 	public void visitJumpInsn(final int opcode, final Label label) {
 		LabelInfo.setTarget(label);
-		super.visitJumpInsn(opcode, label);
+		if (opcode == Opcodes.JSR) {
+			throw new AssertionError("Subroutines not supported.");
+		}
+		successor = opcode != Opcodes.GOTO;
 	}
 
 	public void visitLabel(final Label label) {
@@ -42,27 +52,24 @@ final class LabelFlowAnalyzer extends SuccessorAnalyzer {
 		}
 	}
 
-	@Override
 	public void visitTableSwitchInsn(final int min, final int max,
 			final Label dflt, final Label[] labels) {
 		visitSwitchInsn(dflt, labels);
-		super.visitTableSwitchInsn(min, max, dflt, labels);
 	}
 
-	@Override
 	public void visitLookupSwitchInsn(final Label dflt, final int[] keys,
 			final Label[] labels) {
 		visitSwitchInsn(dflt, labels);
-		super.visitLookupSwitchInsn(dflt, keys, labels);
 	}
 
-	private static void visitSwitchInsn(final Label dflt, final Label[] labels) {
+	private void visitSwitchInsn(final Label dflt, final Label[] labels) {
 		LabelInfo.resetDone(dflt);
 		LabelInfo.resetDone(labels);
 		setTargetIfNotDone(dflt);
 		for (final Label l : labels) {
 			setTargetIfNotDone(l);
 		}
+		successor = false;
 	}
 
 	private static void setTargetIfNotDone(final Label label) {
@@ -70,6 +77,59 @@ final class LabelFlowAnalyzer extends SuccessorAnalyzer {
 			LabelInfo.setTarget(label);
 			LabelInfo.setDone(label);
 		}
+	}
+
+	public void visitInsn(final int opcode) {
+		switch (opcode) {
+		case Opcodes.RET:
+			throw new AssertionError("Subroutines not supported.");
+		case Opcodes.IRETURN:
+		case Opcodes.LRETURN:
+		case Opcodes.FRETURN:
+		case Opcodes.DRETURN:
+		case Opcodes.ARETURN:
+		case Opcodes.RETURN:
+		case Opcodes.ATHROW:
+			successor = false;
+			break;
+		default:
+			successor = true;
+			break;
+		}
+	}
+
+	public void visitIntInsn(final int opcode, final int operand) {
+		successor = true;
+	}
+
+	public void visitVarInsn(final int opcode, final int var) {
+		successor = true;
+	}
+
+	public void visitTypeInsn(final int opcode, final String type) {
+		successor = true;
+	}
+
+	public void visitFieldInsn(final int opcode, final String owner,
+			final String name, final String desc) {
+		successor = true;
+	}
+
+	public void visitMethodInsn(final int opcode, final String owner,
+			final String name, final String desc) {
+		successor = true;
+	}
+
+	public void visitLdcInsn(final Object cst) {
+		successor = true;
+	}
+
+	public void visitIincInsn(final int var, final int increment) {
+		successor = true;
+	}
+
+	public void visitMultiANewArrayInsn(final String desc, final int dims) {
+		successor = true;
 	}
 
 	// Not relevant:
