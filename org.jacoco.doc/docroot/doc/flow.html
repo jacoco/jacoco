@@ -144,14 +144,22 @@
   </tbody>
 </table>
 
+<p>
+  For the first implementation approach we ignore edges caused by exceptions
+  and the the method entry. This means we consider SEQUENCE, JUMP and EXIT.
+</p>
+
 <h2>Probe Insertion Strategy</h2>
 
+<p>
+  Probes are additional instructions that can be inserted between existing
+  instructions. Probes record the fact that they have been executed. One can
+  think probes are placed on edges of the control flow graph. Therefore if a
+  probe has been executed we know that the corresponding edge has been visited.
+  From this edge we can conclude to other preceding nodes and edges: 
+</p>
+
 <ul>
-  <li>Probes are additional instructions that can be inserted between existing
-      instructions. Probes record the fact that they have been executed. One can
-      think probes are placed on edges of the control flow graph. Therefore if
-      a probe has been executed we know that the corresponding edge has been
-      visited.</li>
   <li>If a edge has been visited, we know that the source node of the this edge
       has been executed.</li>
   <li>If a node has been executed and the node is the target of only one edge
@@ -169,15 +177,52 @@
 </ul>
 
 <p>
-  The execution status of all other edges and instructions can be derived from
-  the status of this probes by recursively applying the rules above. 
+  Given the example method above we see that <code>INVOKE d()</code> is the only
+  node with more than one incoming edge. So we need to place probes on those
+  edges and another probe on the only exit node:
 </p>
 
 <img src=".resources/flow-2.png" alt="Probe positions"/>
 
+<p>
+  <i>TODO: Insertion strategies for SEQUENCE</i>
+</p>
+
+<img src=".resources/flow-3.png" alt="SEQUENCE Probe"/>
+
+<table class="coverage">
+  <thead>
+    <tr>
+      <td>Type</td>
+      <td>Before</td>
+      <td>After</td>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>SEQUENCE</td>
+      <td><img src=".resources/flow-3a.png" alt="SEQUENCE"/></td>
+      <td><img src=".resources/flow-3b.png" alt="SEQUENCE with Probe"/></td>
+    </tr>
+    <tr>
+      <td>JUMP (unconditional)</td>
+      <td><img src=".resources/flow-4a.png" alt="JUMP"/></td>
+      <td><img src=".resources/flow-4b.png" alt="JUMP with Probe"/></td>
+    </tr>
+    <tr>
+      <td>JUMP (conditional)</td>
+      <td><img src=".resources/flow-5a.png" alt="JUMP"/></td>
+      <td><img src=".resources/flow-5b.png" alt="JUMP with Probe"/></td>
+    </tr>
+  </tbody>
+</table>
 
 <h2>Coverage Analysis</h2>
 
+<p>
+  The execution status of all other edges and instructions can be derived from
+  the status of this probes by recursively applying the rules above. 
+</p>
 
 <h2>Probe Implementation</h2>
 

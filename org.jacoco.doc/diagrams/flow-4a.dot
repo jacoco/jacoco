@@ -1,0 +1,16 @@
+digraph G {
+  nodesep="0.2";
+  rankdir=LR;
+  node [shape="rect", penwidth="0.33", style="filled", fillcolor="#E0E0E0", margin="0,0.03", height="0.2", width="1.2", fontsize="10", fontname="Courier"];
+  edge [arrowsize="0.5"];
+  
+  {
+    ordering="in";
+    rank = same;
+    i1 -> i2 [headport="e", tailport="e"];
+      
+    i1 [label="GOTO"]
+    i2 [label="TARGET INSN"]
+  }
+  
+}
