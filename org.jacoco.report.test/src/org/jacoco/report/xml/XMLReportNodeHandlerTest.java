@@ -76,7 +76,7 @@ public class XMLReportNodeHandlerTest {
 			{
 				classCounter = CounterImpl.getInstance(10, 1);
 				methodCounter = CounterImpl.getInstance(20, 2);
-				blockCounter = CounterImpl.getInstance(30, 3);
+				branchCounter = CounterImpl.getInstance(30, 3);
 				instructionCounter = CounterImpl.getInstance(40, 4);
 				lineCounter = CounterImpl.getInstance(50, 5);
 			}
@@ -92,9 +92,9 @@ public class XMLReportNodeHandlerTest {
 		assertEquals("18", support.findStr(doc,
 				"//report/group/counter[@type='METHOD']/@missed"));
 		assertEquals("3", support.findStr(doc,
-				"//report/group/counter[@type='BLOCK']/@covered"));
+				"//report/group/counter[@type='BRANCH']/@covered"));
 		assertEquals("27", support.findStr(doc,
-				"//report/group/counter[@type='BLOCK']/@missed"));
+				"//report/group/counter[@type='BRANCH']/@missed"));
 		assertEquals("4", support.findStr(doc,
 				"//report/group/counter[@type='INSTRUCTION']/@covered"));
 		assertEquals("36", support.findStr(doc,

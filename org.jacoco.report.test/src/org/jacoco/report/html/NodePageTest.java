@@ -124,14 +124,14 @@ public class NodePageTest {
 	public void testGetNode() throws IOException {
 		node.increment(new CoverageNodeImpl(ElementType.GROUP, "Foo", false) {
 			{
-				blockCounter = CounterImpl.getInstance(15, 8);
+				branchCounter = CounterImpl.getInstance(15, 8);
 			}
 		});
 		page.visitEnd(null);
 		assertEquals(node.getName(), page.getNode().getName());
 		assertEquals(node.getElementType(), page.getNode().getElementType());
 		assertEquals(CounterImpl.getInstance(15, 8), page.getNode()
-				.getBlockCounter());
+				.getBranchCounter());
 	}
 
 	@Test

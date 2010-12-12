@@ -37,7 +37,8 @@ public class NodeComparatorTest {
 		ICoverageNode d4 = new MockBlockData(60);
 		ICoverageNode d5 = new MockBlockData(99);
 		final List<ICoverageNode> result = CounterComparator.TOTALITEMS.on(
-				CounterEntity.BLOCK).sort(Arrays.asList(d3, d5, d1, d4, d2));
+				CounterEntity.INSTRUCTION).sort(
+				Arrays.asList(d3, d5, d1, d4, d2));
 		assertEquals(Arrays.asList(d1, d2, d3, d4, d5), result);
 	}
 
@@ -46,7 +47,7 @@ public class NodeComparatorTest {
 		ICoverageNode d1 = new MockBlockLineData(5, 30);
 		ICoverageNode d2 = new MockBlockLineData(3, 80);
 		final NodeComparator c1 = CounterComparator.TOTALITEMS
-				.on(CounterEntity.BLOCK);
+				.on(CounterEntity.INSTRUCTION);
 		final NodeComparator c2 = CounterComparator.TOTALITEMS
 				.on(CounterEntity.LINE);
 		assertTrue(c1.second(c2).compare(d1, d2) > 0);
@@ -57,7 +58,7 @@ public class NodeComparatorTest {
 		ICoverageNode d1 = new MockBlockLineData(5, 30);
 		ICoverageNode d2 = new MockBlockLineData(5, 80);
 		final NodeComparator c1 = CounterComparator.TOTALITEMS
-				.on(CounterEntity.BLOCK);
+				.on(CounterEntity.INSTRUCTION);
 		final NodeComparator c2 = CounterComparator.TOTALITEMS
 				.on(CounterEntity.LINE);
 		assertTrue(c1.second(c2).compare(d1, d2) < 0);
@@ -66,14 +67,15 @@ public class NodeComparatorTest {
 	private static final class MockBlockData extends CoverageNodeImpl {
 		MockBlockData(int total) {
 			super(GROUP, "mock", false);
-			blockCounter = CounterImpl.getInstance(total, false);
+			instructionCounter = CounterImpl.getInstance(total, false);
 		}
 	}
 
 	private static final class MockBlockLineData extends CoverageNodeImpl {
-		MockBlockLineData(int totalBlock, int totalLine) {
+		MockBlockLineData(int totalInstruction, int totalLine) {
 			super(GROUP, "mock", false);
-			blockCounter = CounterImpl.getInstance(totalBlock, false);
+			instructionCounter = CounterImpl.getInstance(totalInstruction,
+					false);
 			lineCounter = CounterImpl.getInstance(totalLine, false);
 		}
 	}

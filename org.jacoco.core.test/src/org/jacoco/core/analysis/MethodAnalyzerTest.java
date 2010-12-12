@@ -17,7 +17,6 @@ import static junit.framework.Assert.assertTrue;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.jacoco.core.analysis.MethodAnalyzer;
 import org.jacoco.core.data.IMethodStructureVisitor;
 import org.jacoco.core.internal.flow.IProbeIdGenerator;
 import org.jacoco.core.internal.flow.LabelFlowAnalyzer;
@@ -464,8 +463,8 @@ public class MethodAnalyzerTest implements IProbeIdGenerator {
 				getLine(line).addInsn(covered);
 			}
 
-			public void visitBranches(int missed, int covered, int line) {
-				getLine(line).addBranches(missed, covered);
+			public void visitBranches(int total, int covered, int line) {
+				getLine(line).addBranches(total - covered, covered);
 			}
 
 			public void visitEnd() {

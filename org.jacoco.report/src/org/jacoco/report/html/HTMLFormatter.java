@@ -11,7 +11,7 @@
  *******************************************************************************/
 package org.jacoco.report.html;
 
-import static org.jacoco.core.analysis.ICoverageNode.CounterEntity.BLOCK;
+import static org.jacoco.core.analysis.ICoverageNode.CounterEntity.BRANCH;
 import static org.jacoco.core.analysis.ICoverageNode.CounterEntity.CLASS;
 import static org.jacoco.core.analysis.ICoverageNode.CounterEntity.INSTRUCTION;
 import static org.jacoco.core.analysis.ICoverageNode.CounterEntity.LINE;
@@ -152,10 +152,10 @@ public class HTMLFormatter implements IReportFormatter, IHTMLReportContext {
 				locale), true);
 		table.add("Cov.", Styles.CTR2,
 				new PercentageColumn(INSTRUCTION, locale), false);
-		addMissedTotalColumns(table, "Classes", CLASS);
-		addMissedTotalColumns(table, "Methods", METHOD);
-		addMissedTotalColumns(table, "Blocks", BLOCK);
+		addMissedTotalColumns(table, "Branches", BRANCH);
 		addMissedTotalColumns(table, "Lines", LINE);
+		addMissedTotalColumns(table, "Methods", METHOD);
+		addMissedTotalColumns(table, "Classes", CLASS);
 		return table;
 	}
 

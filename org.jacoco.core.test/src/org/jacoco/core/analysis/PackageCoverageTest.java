@@ -56,7 +56,7 @@ public class PackageCoverageTest {
 			{
 				classCounter = CounterImpl.getInstance(9, 0);
 				methodCounter = CounterImpl.getInstance(9, 0);
-				blockCounter = CounterImpl.getInstance(9, 0);
+				branchCounter = CounterImpl.getInstance(9, 0);
 				instructionCounter = CounterImpl.getInstance(9, 0);
 				lines.increment(1, false);
 			}
@@ -67,7 +67,7 @@ public class PackageCoverageTest {
 			{
 				classCounter = CounterImpl.getInstance(1, 0);
 				methodCounter = CounterImpl.getInstance(2, 0);
-				blockCounter = CounterImpl.getInstance(3, 0);
+				branchCounter = CounterImpl.getInstance(3, 0);
 				instructionCounter = CounterImpl.getInstance(4, 0);
 				lines.increment(1, false);
 				lines.increment(2, false);
@@ -81,7 +81,7 @@ public class PackageCoverageTest {
 				Collections.singleton(sourceFile));
 		assertEquals(CounterImpl.getInstance(1, 0), data.getClassCounter());
 		assertEquals(CounterImpl.getInstance(2, 0), data.getMethodCounter());
-		assertEquals(CounterImpl.getInstance(3, 0), data.getBlockCounter());
+		assertEquals(CounterImpl.getInstance(3, 0), data.getBranchCounter());
 		assertEquals(CounterImpl.getInstance(4, 0),
 				data.getInstructionCounter());
 		assertEquals(CounterImpl.getInstance(5, 0), data.getLineCounter());
@@ -97,7 +97,7 @@ public class PackageCoverageTest {
 			{
 				classCounter = CounterImpl.getInstance(1, 0);
 				methodCounter = CounterImpl.getInstance(2, 0);
-				blockCounter = CounterImpl.getInstance(3, 0);
+				branchCounter = CounterImpl.getInstance(3, 0);
 				instructionCounter = CounterImpl.getInstance(4, 0);
 			}
 		};
@@ -107,7 +107,7 @@ public class PackageCoverageTest {
 				Collections.singleton(classnode), sourceFiles);
 		assertEquals(CounterImpl.getInstance(1, 0), data.getClassCounter());
 		assertEquals(CounterImpl.getInstance(2, 0), data.getMethodCounter());
-		assertEquals(CounterImpl.getInstance(3, 0), data.getBlockCounter());
+		assertEquals(CounterImpl.getInstance(3, 0), data.getBranchCounter());
 		assertEquals(CounterImpl.getInstance(4, 0),
 				data.getInstructionCounter());
 		assertEquals(CounterImpl.getInstance(0, 0), data.getLineCounter());

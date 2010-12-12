@@ -53,8 +53,8 @@ public interface ICoverageNode {
 		/** Counter for instructions */
 		INSTRUCTION,
 
-		/** Counter for basic blocks */
-		BLOCK,
+		/** Counter for branches */
+		BRANCH,
 
 		/** Counter for source lines */
 		LINE,
@@ -88,11 +88,11 @@ public interface ICoverageNode {
 	public abstract ICounter getInstructionCounter();
 
 	/**
-	 * Returns the counter for blocks.
+	 * Returns the counter for branches.
 	 * 
-	 * @return counter for blocks
+	 * @return counter for branches
 	 */
-	public ICounter getBlockCounter();
+	public ICounter getBranchCounter();
 
 	/**
 	 * Returns the counter for lines.

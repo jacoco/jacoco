@@ -63,6 +63,22 @@ public class MethodCoverage extends CoverageNodeImpl {
 	}
 
 	/**
+	 * Adds a branching point to this method.
+	 * 
+	 * @param total
+	 *            total number of branches
+	 * @param covered
+	 *            number of covered branches
+	 * @param line
+	 *            source line number of the branching point
+	 */
+	public void addBranches(final int total, final int covered, final int line) {
+		// TODO: process line location
+		this.branchCounter = this.branchCounter.increment(CounterImpl
+				.getInstance(total, covered));
+	}
+
+	/**
 	 * Returns the parameter description of the method.
 	 * 
 	 * @return parameter description

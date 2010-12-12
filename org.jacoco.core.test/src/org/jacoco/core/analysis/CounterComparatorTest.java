@@ -82,7 +82,7 @@ public class CounterComparatorTest {
 		ICoverageNode d1 = new MockBlockData(18);
 		ICoverageNode d2 = new MockBlockData(15);
 		final Comparator<ICoverageNode> cmp = CounterComparator.TOTALITEMS
-				.on(CounterEntity.BLOCK);
+				.on(CounterEntity.INSTRUCTION);
 		assertTrue(cmp.compare(d1, d2) > 0);
 	}
 
@@ -97,8 +97,8 @@ public class CounterComparatorTest {
 
 	private void assertCmpEquals(Comparator<ICounter> cmp, int total1,
 			int covered1, int total2, int covered2) {
-		assertEquals(0, cmp.compare(ctr(total1, covered1),
-				ctr(total2, covered2)), 0.0);
+		assertEquals(0,
+				cmp.compare(ctr(total1, covered1), ctr(total2, covered2)), 0.0);
 	}
 
 	private void assertCmpLess(Comparator<ICounter> cmp, int total1,
@@ -118,7 +118,7 @@ public class CounterComparatorTest {
 	private static final class MockBlockData extends CoverageNodeImpl {
 		MockBlockData(int total) {
 			super(GROUP, "mock", false);
-			blockCounter = CounterImpl.getInstance(total, false);
+			instructionCounter = CounterImpl.getInstance(total, false);
 		}
 	}
 

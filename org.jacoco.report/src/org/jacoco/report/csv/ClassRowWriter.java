@@ -28,7 +28,7 @@ import org.jacoco.report.ILanguageNames;
 class ClassRowWriter {
 
 	private static CounterEntity[] COUNTERS = { CounterEntity.METHOD,
-			CounterEntity.BLOCK, CounterEntity.LINE, CounterEntity.INSTRUCTION };
+			CounterEntity.LINE, CounterEntity.INSTRUCTION, CounterEntity.BRANCH };
 
 	private final DelimitedWriter writer;
 
@@ -78,8 +78,8 @@ class ClassRowWriter {
 		writer.write(groupName);
 		writer.write(languageNames.getPackageName(packageName));
 		final String className = languageNames.getClassName(node.getName(),
-				node.getSignature(), node.getSuperName(), node
-						.getInterfaceNames());
+				node.getSignature(), node.getSuperName(),
+				node.getInterfaceNames());
 		writer.write(className);
 
 		for (final CounterEntity entity : COUNTERS) {

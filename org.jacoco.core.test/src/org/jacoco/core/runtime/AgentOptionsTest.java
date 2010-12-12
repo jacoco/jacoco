@@ -43,8 +43,8 @@ public class AgentOptionsTest {
 		assertTrue(options.getAppend());
 		assertEquals("*", options.getIncludes());
 		assertEquals("", options.getExcludes());
-		assertEquals("sun.reflect.DelegatingClassLoader", options
-				.getExclClassloader());
+		assertEquals("sun.reflect.DelegatingClassLoader",
+				options.getExclClassloader());
 		assertNull(options.getSessionId());
 		assertTrue(options.getDumpOnExit());
 		assertEquals(6300, options.getPort());
@@ -56,6 +56,12 @@ public class AgentOptionsTest {
 	@Test
 	public void testEmptyOptions() {
 		AgentOptions options = new AgentOptions("");
+		assertEquals("", options.toString());
+	}
+
+	@Test
+	public void testNullOptions() {
+		AgentOptions options = new AgentOptions(null);
 		assertEquals("", options.toString());
 	}
 
@@ -113,8 +119,8 @@ public class AgentOptionsTest {
 		AgentOptions options = new AgentOptions();
 		options.setExclClassloader("org.jacoco.test.TestLoader");
 		assertEquals("org.jacoco.test.TestLoader", options.getExclClassloader());
-		assertEquals("exclclassloader=org.jacoco.test.TestLoader", options
-				.toString());
+		assertEquals("exclclassloader=org.jacoco.test.TestLoader",
+				options.toString());
 	}
 
 	@Test
@@ -274,8 +280,9 @@ public class AgentOptionsTest {
 		AgentOptions options = new AgentOptions();
 		String vmArgument = options.getVMArgument(defaultAgentJarFile);
 
-		assertEquals(String.format("-javaagent:%s=", defaultAgentJarFile
-				.toString()), vmArgument);
+		assertEquals(
+				String.format("-javaagent:%s=", defaultAgentJarFile.toString()),
+				vmArgument);
 	}
 
 	@Test
@@ -285,8 +292,9 @@ public class AgentOptionsTest {
 
 		String vmArgument = options.getVMArgument(defaultAgentJarFile);
 
-		assertEquals(String.format("-javaagent:%s=append=true",
-				defaultAgentJarFile.toString()), vmArgument);
+		assertEquals(
+				String.format("-javaagent:%s=append=true",
+						defaultAgentJarFile.toString()), vmArgument);
 	}
 
 	@Test

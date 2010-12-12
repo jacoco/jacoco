@@ -63,14 +63,10 @@ public class ClassCoverageTest {
 		ICoverageNode data = new ClassCoverage("Sample", 0, null,
 				"java/lang/Object", new String[0], "Sample.java",
 				new ArrayList<MethodCoverage>());
-		assertEquals(0, data.getInstructionCounter().getTotalCount(), 0.0);
-		assertEquals(0, data.getInstructionCounter().getCoveredCount(), 0.0);
-		assertEquals(0, data.getBlockCounter().getTotalCount(), 0.0);
-		assertEquals(0, data.getBlockCounter().getCoveredCount(), 0.0);
-		assertEquals(0, data.getMethodCounter().getTotalCount(), 0.0);
-		assertEquals(0, data.getMethodCounter().getCoveredCount(), 0.0);
-		assertEquals(1, data.getClassCounter().getTotalCount(), 0.0);
-		assertEquals(0, data.getClassCounter().getCoveredCount(), 0.0);
+		assertEquals(CounterImpl.COUNTER_0_0, data.getInstructionCounter());
+		assertEquals(CounterImpl.COUNTER_0_0, data.getBranchCounter());
+		assertEquals(CounterImpl.COUNTER_0_0, data.getMethodCounter());
+		assertEquals(CounterImpl.getInstance(false), data.getClassCounter());
 	}
 
 	@Test

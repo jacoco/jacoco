@@ -25,8 +25,8 @@ public class CoverageNodeImpl implements ICoverageNode {
 
 	private final String name;
 
-	/** Counter for blocks. */
-	protected CounterImpl blockCounter;
+	/** Counter for branches. */
+	protected CounterImpl branchCounter;
 
 	/** Counter for instructions. */
 	protected CounterImpl instructionCounter;
@@ -57,7 +57,7 @@ public class CoverageNodeImpl implements ICoverageNode {
 			final boolean hasLines) {
 		this.elementType = elementType;
 		this.name = name;
-		this.blockCounter = CounterImpl.COUNTER_0_0;
+		this.branchCounter = CounterImpl.COUNTER_0_0;
 		this.instructionCounter = CounterImpl.COUNTER_0_0;
 		this.methodCounter = CounterImpl.COUNTER_0_0;
 		this.classCounter = CounterImpl.COUNTER_0_0;
@@ -72,9 +72,9 @@ public class CoverageNodeImpl implements ICoverageNode {
 	 *            counters to add
 	 */
 	public void increment(final ICoverageNode child) {
-		blockCounter = blockCounter.increment(child.getBlockCounter());
 		instructionCounter = instructionCounter.increment(child
 				.getInstructionCounter());
+		branchCounter = branchCounter.increment(child.getBranchCounter());
 		methodCounter = methodCounter.increment(child.getMethodCounter());
 		classCounter = classCounter.increment(child.getClassCounter());
 		if (lines == null) {
@@ -111,8 +111,8 @@ public class CoverageNodeImpl implements ICoverageNode {
 		return instructionCounter;
 	}
 
-	public ICounter getBlockCounter() {
-		return blockCounter;
+	public ICounter getBranchCounter() {
+		return branchCounter;
 	}
 
 	public ICounter getLineCounter() {
@@ -131,8 +131,8 @@ public class CoverageNodeImpl implements ICoverageNode {
 		switch (entity) {
 		case INSTRUCTION:
 			return getInstructionCounter();
-		case BLOCK:
-			return getBlockCounter();
+		case BRANCH:
+			return getBranchCounter();
 		case LINE:
 			return getLineCounter();
 		case METHOD:
@@ -152,7 +152,7 @@ public class CoverageNodeImpl implements ICoverageNode {
 		final CoverageNodeImpl copy = new CoverageNodeImpl(elementType, name,
 				hasLines);
 		copy.instructionCounter = CounterImpl.getInstance(instructionCounter);
-		copy.blockCounter = CounterImpl.getInstance(blockCounter);
+		copy.branchCounter = CounterImpl.getInstance(branchCounter);
 		copy.methodCounter = CounterImpl.getInstance(methodCounter);
 		copy.classCounter = CounterImpl.getInstance(classCounter);
 		if (hasLines) {
@@ -169,4 +169,5 @@ public class CoverageNodeImpl implements ICoverageNode {
 		sb.append(name).append(" [").append(elementType).append("]");
 		return sb.toString();
 	}
+
 }

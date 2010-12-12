@@ -37,14 +37,14 @@ public interface IMethodStructureVisitor {
 	/**
 	 * Called for every branching point.
 	 * 
-	 * @param missed
-	 *            number of missed branches
+	 * @param total
+	 *            total number of branches
 	 * @param covered
 	 *            number of covered branches
 	 * @param line
 	 *            source line number of the instruction
 	 */
-	public void visitBranches(int missed, int covered, int line);
+	public void visitBranches(int total, int covered, int line);
 
 	/**
 	 * Signals the end of this method structure.

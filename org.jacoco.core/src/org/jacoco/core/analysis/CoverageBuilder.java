@@ -151,9 +151,9 @@ public class CoverageBuilder implements IStructureVisitor {
 				method.addInsn(covered, line);
 			}
 
-			public void visitBranches(final int missed, final int covered,
+			public void visitBranches(final int total, final int covered,
 					final int line) {
-				// TODO Auto-generated method stub
+				method.addBranches(total, covered, line);
 			}
 
 			public void visitEnd() {

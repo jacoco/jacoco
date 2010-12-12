@@ -149,9 +149,14 @@ final class MethodAnalyzer implements IMethodProbesVisitor {
 
 	private void visitSwitchInsn(final Label dflt, final Label[] labels) {
 		visitInsn();
+		LabelInfo.resetDone(labels);
 		jumps.add(new Jump(lastInsn, dflt));
+		LabelInfo.setDone(dflt);
 		for (final Label l : labels) {
-			jumps.add(new Jump(lastInsn, l));
+			if (!LabelInfo.isDone(l)) {
+				jumps.add(new Jump(lastInsn, l));
+				LabelInfo.setDone(l);
+			}
 		}
 	}
 
@@ -203,13 +208,13 @@ final class MethodAnalyzer implements IMethodProbesVisitor {
 
 	private void visitSwitchTarget(final Label label) {
 		final int id = LabelInfo.getProbeId(label);
-		if (id == LabelInfo.NO_PROBE) {
-			jumps.add(new Jump(lastInsn, label));
-		} else {
-			if (!LabelInfo.isDone(label)) {
+		if (!LabelInfo.isDone(label)) {
+			if (id == LabelInfo.NO_PROBE) {
+				jumps.add(new Jump(lastInsn, label));
+			} else {
 				addProbe(lastInsn, id);
-				LabelInfo.setDone(label);
 			}
+			LabelInfo.setDone(label);
 		}
 	}
 
@@ -297,8 +302,7 @@ final class MethodAnalyzer implements IMethodProbesVisitor {
 		void process(final IMethodStructureVisitor output) {
 			output.visitInsn(coveredBranches > 0, line);
 			if (branches > 1) {
-				output.visitBranches(branches - coveredBranches,
-						coveredBranches, line);
+				output.visitBranches(branches, coveredBranches, line);
 			}
 		}
 	}
