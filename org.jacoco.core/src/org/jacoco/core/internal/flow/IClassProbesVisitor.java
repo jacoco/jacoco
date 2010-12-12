@@ -20,7 +20,7 @@ import org.objectweb.asm.ClassVisitor;
  * @author Marc R. Hoffmann
  * @version $qualified.bundle.version$
  */
-interface IClassProbesVisitor extends ClassVisitor {
+public interface IClassProbesVisitor extends ClassVisitor {
 
 	public IMethodProbesVisitor visitMethod(int access, String name,
 			String desc, String signature, String[] exceptions);

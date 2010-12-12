@@ -21,17 +21,30 @@ package org.jacoco.core.data;
  */
 public interface IMethodStructureVisitor {
 
+	/** Place holder for unknown lines (no debug information) */
+	public static int UNKNOWN_LINE = -1;
+
 	/**
-	 * Called for every block within the method.
+	 * Called for every instruction.
 	 * 
-	 * @param id
-	 *            identifier of the block within the method
-	 * @param instructionCount
-	 *            number of byte code instructions within this block
-	 * @param lineNumbers
-	 *            list of source lines corresponding to this block
+	 * @param covered
+	 *            <code>true</code> if the instruction has been executed
+	 * @param line
+	 *            source line number of the instruction
 	 */
-	public void block(int id, int instructionCount, int[] lineNumbers);
+	public void visitInsn(boolean covered, int line);
+
+	/**
+	 * Called for every branching point.
+	 * 
+	 * @param missed
+	 *            number of missed branches
+	 * @param covered
+	 *            number of covered branches
+	 * @param line
+	 *            source line number of the instruction
+	 */
+	public void visitBranches(int missed, int covered, int line);
 
 	/**
 	 * Signals the end of this method structure.

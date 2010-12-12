@@ -58,7 +58,7 @@ public class PackageCoverageTest {
 				methodCounter = CounterImpl.getInstance(9, 0);
 				blockCounter = CounterImpl.getInstance(9, 0);
 				instructionCounter = CounterImpl.getInstance(9, 0);
-				lines.increment(new int[] { 1, 2, 3, 4, 5, 6, 7, 8, 9 }, false);
+				lines.increment(1, false);
 			}
 		};
 		// Only source files will be considered for counters:
@@ -69,17 +69,21 @@ public class PackageCoverageTest {
 				methodCounter = CounterImpl.getInstance(2, 0);
 				blockCounter = CounterImpl.getInstance(3, 0);
 				instructionCounter = CounterImpl.getInstance(4, 0);
-				lines.increment(new int[] { 1, 2, 3, 4, 5 }, false);
+				lines.increment(1, false);
+				lines.increment(2, false);
+				lines.increment(3, false);
+				lines.increment(4, false);
+				lines.increment(5, false);
 			}
 		};
 		PackageCoverage data = new PackageCoverage("org/jacoco/test",
-				Collections.singleton(classnode), Collections
-						.singleton(sourceFile));
+				Collections.singleton(classnode),
+				Collections.singleton(sourceFile));
 		assertEquals(CounterImpl.getInstance(1, 0), data.getClassCounter());
 		assertEquals(CounterImpl.getInstance(2, 0), data.getMethodCounter());
 		assertEquals(CounterImpl.getInstance(3, 0), data.getBlockCounter());
-		assertEquals(CounterImpl.getInstance(4, 0), data
-				.getInstructionCounter());
+		assertEquals(CounterImpl.getInstance(4, 0),
+				data.getInstructionCounter());
 		assertEquals(CounterImpl.getInstance(5, 0), data.getLineCounter());
 	}
 
@@ -104,8 +108,8 @@ public class PackageCoverageTest {
 		assertEquals(CounterImpl.getInstance(1, 0), data.getClassCounter());
 		assertEquals(CounterImpl.getInstance(2, 0), data.getMethodCounter());
 		assertEquals(CounterImpl.getInstance(3, 0), data.getBlockCounter());
-		assertEquals(CounterImpl.getInstance(4, 0), data
-				.getInstructionCounter());
+		assertEquals(CounterImpl.getInstance(4, 0),
+				data.getInstructionCounter());
 		assertEquals(CounterImpl.getInstance(0, 0), data.getLineCounter());
 	}
 

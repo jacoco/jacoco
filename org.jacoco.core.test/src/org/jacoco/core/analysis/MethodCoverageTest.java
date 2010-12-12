@@ -13,6 +13,7 @@ package org.jacoco.core.analysis;
 
 import static org.junit.Assert.assertEquals;
 
+import org.jacoco.core.data.IMethodStructureVisitor;
 import org.junit.Test;
 
 /**
@@ -32,51 +33,57 @@ public class MethodCoverageTest {
 		assertEquals(ICoverageNode.ElementType.METHOD, data.getElementType());
 		assertEquals("emptySet", data.getName());
 		assertEquals("()Ljava/util/Set;", data.getDesc());
-		assertEquals("<T:Ljava/lang/Object;>()Ljava/util/Set<TT;>;", data
-				.getSignature());
+		assertEquals("<T:Ljava/lang/Object;>()Ljava/util/Set<TT;>;",
+				data.getSignature());
 	}
 
 	@Test
 	public void testEmptyMethod() {
 		ICoverageNode data = new MethodCoverage("sample", "()V", null);
-		assertEquals(0, data.getInstructionCounter().getTotalCount(), 0.0);
-		assertEquals(0, data.getInstructionCounter().getCoveredCount(), 0.0);
-		assertEquals(0, data.getBlockCounter().getTotalCount(), 0.0);
-		assertEquals(0, data.getBlockCounter().getCoveredCount(), 0.0);
-		assertEquals(1, data.getMethodCounter().getTotalCount(), 0.0);
-		assertEquals(0, data.getMethodCounter().getCoveredCount(), 0.0);
-		assertEquals(0, data.getClassCounter().getTotalCount(), 0.0);
-		assertEquals(0, data.getClassCounter().getCoveredCount(), 0.0);
+
+		assertEquals(CounterImpl.getInstance(0, 0), data.getLineCounter());
+		assertEquals(CounterImpl.getInstance(0, 0),
+				data.getInstructionCounter());
+		assertEquals(CounterImpl.getInstance(1, 0), data.getMethodCounter());
+		assertEquals(CounterImpl.getInstance(0, 0), data.getClassCounter());
 	}
 
 	@Test
 	public void testMissed() {
 		MethodCoverage data = new MethodCoverage("sample", "()V", null);
-		data.addBlock(5, new int[0], false);
-		data.addBlock(8, new int[0], false);
-		assertEquals(13, data.getInstructionCounter().getTotalCount(), 0.0);
-		assertEquals(0, data.getInstructionCounter().getCoveredCount(), 0.0);
-		assertEquals(2, data.getBlockCounter().getTotalCount(), 0.0);
-		assertEquals(0, data.getBlockCounter().getCoveredCount(), 0.0);
-		assertEquals(1, data.getMethodCounter().getTotalCount(), 0.0);
-		assertEquals(0, data.getMethodCounter().getCoveredCount(), 0.0);
-		assertEquals(0, data.getClassCounter().getTotalCount(), 0.0);
-		assertEquals(0, data.getClassCounter().getCoveredCount(), 0.0);
+		data.addInsn(false, 0);
+		data.addInsn(false, 0);
+
+		assertEquals(CounterImpl.getInstance(1, 0), data.getLineCounter());
+		assertEquals(CounterImpl.getInstance(2, 0),
+				data.getInstructionCounter());
+		assertEquals(CounterImpl.getInstance(1, 0), data.getMethodCounter());
+		assertEquals(CounterImpl.getInstance(0, 0), data.getClassCounter());
 	}
 
 	@Test
 	public void testCovered() {
 		MethodCoverage data = new MethodCoverage("sample", "()V", null);
-		data.addBlock(5, new int[0], true);
-		data.addBlock(8, new int[0], false);
-		assertEquals(13, data.getInstructionCounter().getTotalCount(), 0.0);
-		assertEquals(5, data.getInstructionCounter().getCoveredCount(), 0.0);
-		assertEquals(2, data.getBlockCounter().getTotalCount(), 0.0);
-		assertEquals(1, data.getBlockCounter().getCoveredCount(), 0.0);
-		assertEquals(1, data.getMethodCounter().getTotalCount(), 0.0);
-		assertEquals(1, data.getMethodCounter().getCoveredCount(), 0.0);
-		assertEquals(0, data.getClassCounter().getTotalCount(), 0.0);
-		assertEquals(0, data.getClassCounter().getCoveredCount(), 0.0);
+		data.addInsn(true, 0);
+		data.addInsn(false, 0);
+
+		assertEquals(CounterImpl.getInstance(1, 1), data.getLineCounter());
+		assertEquals(CounterImpl.getInstance(2, 1),
+				data.getInstructionCounter());
+		assertEquals(CounterImpl.getInstance(1, 1), data.getMethodCounter());
+		assertEquals(CounterImpl.getInstance(0, 0), data.getClassCounter());
+	}
+
+	@Test
+	public void testNoLine() {
+		MethodCoverage data = new MethodCoverage("sample", "()V", null);
+		data.addInsn(false, IMethodStructureVisitor.UNKNOWN_LINE);
+
+		assertEquals(CounterImpl.getInstance(0, 0), data.getLineCounter());
+		assertEquals(CounterImpl.getInstance(1, 0),
+				data.getInstructionCounter());
+		assertEquals(CounterImpl.getInstance(1, 0), data.getMethodCounter());
+		assertEquals(CounterImpl.getInstance(0, 0), data.getClassCounter());
 	}
 
 }

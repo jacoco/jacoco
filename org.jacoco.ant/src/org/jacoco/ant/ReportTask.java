@@ -36,6 +36,7 @@ import org.apache.tools.ant.types.Resource;
 import org.apache.tools.ant.types.resources.FileResource;
 import org.apache.tools.ant.types.resources.Union;
 import org.apache.tools.ant.util.FileUtils;
+import org.jacoco.core.analysis.Analyzer;
 import org.jacoco.core.analysis.BundleCoverage;
 import org.jacoco.core.analysis.ClassCoverage;
 import org.jacoco.core.analysis.CoverageBuilder;
@@ -46,7 +47,6 @@ import org.jacoco.core.analysis.PackageCoverage;
 import org.jacoco.core.data.ExecutionDataReader;
 import org.jacoco.core.data.ExecutionDataStore;
 import org.jacoco.core.data.SessionInfoStore;
-import org.jacoco.core.instr.Analyzer;
 import org.jacoco.report.FileMultiReportOutput;
 import org.jacoco.report.FileSingleReportOutput;
 import org.jacoco.report.IMultiReportOutput;
@@ -497,9 +497,8 @@ public class ReportTask extends Task {
 		if (group.children.size() > 0) {
 			return new CoverageNodeImpl(ElementType.GROUP, group.name, false);
 		} else {
-			final CoverageBuilder builder = new CoverageBuilder(
-					executionDataStore);
-			final Analyzer analyzer = new Analyzer(builder);
+			final CoverageBuilder builder = new CoverageBuilder();
+			final Analyzer analyzer = new Analyzer(executionDataStore, builder);
 			for (final Iterator<?> i = group.classfiles.iterator(); i.hasNext();) {
 				final Resource resource = (Resource) i.next();
 				if (resource.isDirectory() && resource instanceof FileResource) {

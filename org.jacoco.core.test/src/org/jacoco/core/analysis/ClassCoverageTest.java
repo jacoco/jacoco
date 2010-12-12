@@ -16,6 +16,7 @@ import static org.junit.Assert.assertNotNull;
 
 import java.util.ArrayList;
 
+import org.jacoco.core.data.IMethodStructureVisitor;
 import org.junit.Test;
 
 /**
@@ -79,10 +80,8 @@ public class ClassCoverageTest {
 		methods.add(createMethod(false));
 		ICoverageNode data = new ClassCoverage("Sample", 0, null,
 				"java/lang/Object", new String[0], "Sample.java", methods);
-		assertEquals(10, data.getInstructionCounter().getTotalCount(), 0.0);
+		assertEquals(2, data.getInstructionCounter().getTotalCount(), 0.0);
 		assertEquals(0, data.getInstructionCounter().getCoveredCount(), 0.0);
-		assertEquals(2, data.getBlockCounter().getTotalCount(), 0.0);
-		assertEquals(0, data.getBlockCounter().getCoveredCount(), 0.0);
 		assertEquals(2, data.getMethodCounter().getTotalCount(), 0.0);
 		assertEquals(0, data.getMethodCounter().getCoveredCount(), 0.0);
 		assertEquals(1, data.getClassCounter().getTotalCount(), 0.0);
@@ -96,10 +95,8 @@ public class ClassCoverageTest {
 		methods.add(createMethod(true));
 		ICoverageNode data = new ClassCoverage("Sample", 0, null,
 				"java/lang/Object", new String[0], "Sample.java", methods);
-		assertEquals(10, data.getInstructionCounter().getTotalCount(), 0.0);
-		assertEquals(5, data.getInstructionCounter().getCoveredCount(), 0.0);
-		assertEquals(2, data.getBlockCounter().getTotalCount(), 0.0);
-		assertEquals(1, data.getBlockCounter().getCoveredCount(), 0.0);
+		assertEquals(2, data.getInstructionCounter().getTotalCount(), 0.0);
+		assertEquals(1, data.getInstructionCounter().getCoveredCount(), 0.0);
 		assertEquals(2, data.getMethodCounter().getTotalCount(), 0.0);
 		assertEquals(1, data.getMethodCounter().getCoveredCount(), 0.0);
 		assertEquals(1, data.getClassCounter().getTotalCount(), 0.0);
@@ -108,7 +105,7 @@ public class ClassCoverageTest {
 
 	private MethodCoverage createMethod(boolean covered) {
 		final MethodCoverage m = new MethodCoverage("sample", "()V", null);
-		m.addBlock(5, new int[0], covered);
+		m.addInsn(covered, IMethodStructureVisitor.UNKNOWN_LINE);
 		return m;
 	}
 

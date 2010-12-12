@@ -9,7 +9,7 @@
  *    Marc R. Hoffmann - initial API and implementation
  *    
  *******************************************************************************/
-package org.jacoco.core.instr;
+package org.jacoco.core.analysis;
 
 import static junit.framework.Assert.assertEquals;
 
@@ -20,6 +20,7 @@ import java.io.InputStream;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
+import org.jacoco.core.analysis.ContentTypeDetector;
 import org.jacoco.core.test.TargetLoader;
 import org.junit.Test;
 

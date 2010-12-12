@@ -29,27 +29,7 @@ public class LinesImplTest {
 
 	@Test
 	public void testEmpty1() {
-		ILines c = new LinesImpl();
-		assertEquals(0, c.getTotalCount(), 0.0);
-		assertEquals(0, c.getCoveredCount(), 0.0);
-		assertEquals(-1, c.getFirstLine(), 0.0);
-		assertEquals(-1, c.getLastLine(), 0.0);
-		assertEquals(NO_CODE, c.getStatus(5), 0.0);
-	}
-
-	@Test
-	public void testEmpty2() {
-		ILines c = new LinesImpl(new int[0], false);
-		assertEquals(0, c.getTotalCount(), 0.0);
-		assertEquals(0, c.getCoveredCount(), 0.0);
-		assertEquals(-1, c.getFirstLine(), 0.0);
-		assertEquals(-1, c.getLastLine(), 0.0);
-		assertEquals(NO_CODE, c.getStatus(5), 0.0);
-	}
-
-	@Test
-	public void testEmpty3() {
-		ILines c = new LinesImpl(new int[0], true);
+		final ILines c = new LinesImpl();
 		assertEquals(0, c.getTotalCount(), 0.0);
 		assertEquals(0, c.getCoveredCount(), 0.0);
 		assertEquals(-1, c.getFirstLine(), 0.0);
@@ -59,7 +39,7 @@ public class LinesImplTest {
 
 	@Test
 	public void testInitMissed() {
-		ILines c = new LinesImpl(new int[] { 5, 7, 10 }, false);
+		final LinesImpl c = createNotCovered(5, 7, 10);
 		assertEquals(3, c.getTotalCount(), 0.0);
 		assertEquals(0, c.getCoveredCount(), 0.0);
 		assertEquals(5, c.getFirstLine(), 0.0);
@@ -76,7 +56,7 @@ public class LinesImplTest {
 
 	@Test
 	public void testInitCovered() {
-		ILines c = new LinesImpl(new int[] { 5, 7, 10 }, true);
+		final LinesImpl c = createFullyCovered(5, 7, 10);
 		assertEquals(3, c.getTotalCount(), 0.0);
 		assertEquals(3, c.getCoveredCount(), 0.0);
 		assertEquals(5, c.getFirstLine(), 0.0);
@@ -100,8 +80,8 @@ public class LinesImplTest {
 		// 5: N + N = N
 		// ============
 		// 4 total, 0 covered
-		LinesImpl c = new LinesImpl(new int[] { 1, 2, 5 }, false);
-		c.increment(new LinesImpl(new int[] { 1, 4, 5 }, false));
+		final LinesImpl c = createNotCovered(1, 2, 5);
+		c.increment(createNotCovered(1, 4, 5));
 		assertEquals(4, c.getTotalCount(), 0.0);
 		assertEquals(0, c.getCoveredCount(), 0.0);
 		assertEquals(1, c.getFirstLine(), 0.0);
@@ -121,8 +101,8 @@ public class LinesImplTest {
 		// 4: F + F = F
 		// ============
 		// 4 total, 4 covered
-		LinesImpl c = new LinesImpl(new int[] { 1, 2, 4 }, true);
-		c.increment(new LinesImpl(new int[] { 1, 3, 4 }, true));
+		final LinesImpl c = createFullyCovered(1, 2, 4);
+		c.increment(createFullyCovered(1, 3, 4));
 		assertEquals(4, c.getTotalCount(), 0.0);
 		assertEquals(4, c.getCoveredCount(), 0.0);
 		assertEquals(1, c.getFirstLine(), 0.0);
@@ -138,8 +118,8 @@ public class LinesImplTest {
 		// 1: F + N = P
 		// ============
 		// 1 total, 1 covered
-		LinesImpl c = new LinesImpl(new int[] { 1 }, true);
-		c.increment(new LinesImpl(new int[] { 1 }, false));
+		final LinesImpl c = createFullyCovered(1);
+		c.increment(createNotCovered(1));
 		assertEquals(1, c.getTotalCount(), 0.0);
 		assertEquals(1, c.getCoveredCount(), 0.0);
 		assertEquals(1, c.getFirstLine(), 0.0);
@@ -152,8 +132,8 @@ public class LinesImplTest {
 		// 1: N + F = P
 		// ============
 		// 1 total, 1 covered
-		LinesImpl c = new LinesImpl(new int[] { 1 }, false);
-		c.increment(new LinesImpl(new int[] { 1 }, true));
+		final LinesImpl c = createNotCovered(1);
+		c.increment(createFullyCovered(1));
 		assertEquals(1, c.getTotalCount(), 0.0);
 		assertEquals(1, c.getCoveredCount(), 0.0);
 		assertEquals(1, c.getFirstLine(), 0.0);
@@ -170,8 +150,8 @@ public class LinesImplTest {
 		// 5: P + P = P
 		// ============
 		// 4 total, 4 covered
-		LinesImpl c = createPartyCovered(1, 2, 5);
-		c.increment(createPartyCovered(1, 4, 5));
+		final LinesImpl c = createPartlyCovered(1, 2, 5);
+		c.increment(createPartlyCovered(1, 4, 5));
 		assertEquals(4, c.getTotalCount(), 0.0);
 		assertEquals(4, c.getCoveredCount(), 0.0);
 		assertEquals(1, c.getFirstLine(), 0.0);
@@ -188,8 +168,8 @@ public class LinesImplTest {
 		// 1: P + N = P
 		// ============
 		// 1 total, 1 covered
-		LinesImpl c = createPartyCovered(1);
-		c.increment(new LinesImpl(new int[] { 1 }, false));
+		final LinesImpl c = createPartlyCovered(1);
+		c.increment(createNotCovered(1));
 		assertEquals(1, c.getTotalCount(), 0.0);
 		assertEquals(1, c.getCoveredCount(), 0.0);
 		assertEquals(1, c.getFirstLine(), 0.0);
@@ -202,8 +182,8 @@ public class LinesImplTest {
 		// 1: N + P = P
 		// ============
 		// 1 total, 1 covered
-		LinesImpl c = new LinesImpl(new int[] { 1 }, false);
-		c.increment(createPartyCovered(1));
+		final LinesImpl c = createNotCovered(1);
+		c.increment(createPartlyCovered(1));
 		assertEquals(1, c.getTotalCount(), 0.0);
 		assertEquals(1, c.getCoveredCount(), 0.0);
 		assertEquals(1, c.getFirstLine(), 0.0);
@@ -216,8 +196,8 @@ public class LinesImplTest {
 		// 1: P + F = P
 		// ============
 		// 1 total, 1 covered
-		LinesImpl c = createPartyCovered(1);
-		c.increment(new LinesImpl(new int[] { 1 }, true));
+		final LinesImpl c = createPartlyCovered(1);
+		c.increment(createFullyCovered(1));
 		assertEquals(1, c.getTotalCount(), 0.0);
 		assertEquals(1, c.getCoveredCount(), 0.0);
 		assertEquals(1, c.getFirstLine(), 0.0);
@@ -230,8 +210,8 @@ public class LinesImplTest {
 		// 1: F + P = P
 		// ============
 		// 1 total, 1 covered
-		LinesImpl c = new LinesImpl(new int[] { 1 }, true);
-		c.increment(createPartyCovered(1));
+		final LinesImpl c = createFullyCovered(1);
+		c.increment(createPartlyCovered(1));
 		assertEquals(1, c.getTotalCount(), 0.0);
 		assertEquals(1, c.getCoveredCount(), 0.0);
 		assertEquals(1, c.getFirstLine(), 0.0);
@@ -241,7 +221,7 @@ public class LinesImplTest {
 
 	@Test
 	public void testIncrementEmpty() {
-		LinesImpl c = new LinesImpl(new int[] { 1 }, true);
+		final LinesImpl c = createFullyCovered(1);
 		c.increment(new LinesImpl());
 		assertEquals(1, c.getTotalCount(), 0.0);
 		assertEquals(1, c.getCoveredCount(), 0.0);
@@ -257,8 +237,8 @@ public class LinesImplTest {
 		// 3: F + F = F
 		// ============
 		// 3 total, 3 covered
-		LinesImpl c = new LinesImpl(new int[] { 2, 3 }, true);
-		c.increment(new LinesImpl(new int[] { 1, 2, 3 }, true));
+		final LinesImpl c = createFullyCovered(2, 3);
+		c.increment(createFullyCovered(1, 2, 3));
 		assertEquals(3, c.getTotalCount(), 0.0);
 		assertEquals(3, c.getCoveredCount(), 0.0);
 		assertEquals(1, c.getFirstLine(), 0.0);
@@ -275,8 +255,8 @@ public class LinesImplTest {
 		// 3: . + F = F
 		// ============
 		// 3 total, 3 covered
-		LinesImpl c = new LinesImpl(new int[] { 1, 2 }, true);
-		c.increment(new LinesImpl(new int[] { 1, 2, 3 }, true));
+		final LinesImpl c = createFullyCovered(1, 2);
+		c.increment(createFullyCovered(1, 2, 3));
 		assertEquals(3, c.getTotalCount(), 0.0);
 		assertEquals(3, c.getCoveredCount(), 0.0);
 		assertEquals(1, c.getFirstLine(), 0.0);
@@ -293,8 +273,8 @@ public class LinesImplTest {
 		// 3: . + F = F
 		// ============
 		// 3 total, 3 covered
-		LinesImpl c = new LinesImpl(new int[] { 2 }, true);
-		c.increment(new LinesImpl(new int[] { 1, 2, 3 }, true));
+		final LinesImpl c = createFullyCovered(2);
+		c.increment(createFullyCovered(1, 2, 3));
 		assertEquals(3, c.getTotalCount(), 0.0);
 		assertEquals(3, c.getCoveredCount(), 0.0);
 		assertEquals(1, c.getFirstLine(), 0.0);
@@ -304,9 +284,28 @@ public class LinesImplTest {
 		assertEquals(FULLY_COVERED, c.getStatus(3), 0.0);
 	}
 
-	private LinesImpl createPartyCovered(int... lines) {
-		LinesImpl c = new LinesImpl(lines, true);
-		c.increment(new LinesImpl(lines, false));
+	private LinesImpl createNotCovered(final int... lines) {
+		final LinesImpl c = new LinesImpl();
+		for (int l : lines) {
+			c.increment(l, false);
+		}
+		return c;
+	}
+
+	private LinesImpl createFullyCovered(final int... lines) {
+		final LinesImpl c = new LinesImpl();
+		for (int l : lines) {
+			c.increment(l, true);
+		}
+		return c;
+	}
+
+	private LinesImpl createPartlyCovered(final int... lines) {
+		final LinesImpl c = new LinesImpl();
+		for (int l : lines) {
+			c.increment(l, false);
+			c.increment(l, true);
+		}
 		return c;
 	}
 

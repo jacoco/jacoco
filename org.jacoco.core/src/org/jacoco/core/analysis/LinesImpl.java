@@ -11,6 +11,7 @@
  *******************************************************************************/
 package org.jacoco.core.analysis;
 
+
 /**
  * {@link ILines} implementation.
  * 
@@ -34,20 +35,6 @@ public class LinesImpl extends AbstractCounter implements ILines {
 		offset = -1;
 	}
 
-	/**
-	 * Created a line counter with the given lines
-	 * 
-	 * @param lines
-	 *            line numbers to add
-	 * @param covered
-	 *            <code>true</code> if all lines are covered
-	 * 
-	 */
-	public LinesImpl(final int[] lines, final boolean covered) {
-		this();
-		increment(lines, covered);
-	}
-
 	private void ensureCapacity(final int first, final int last) {
 		if (status == null) {
 			offset = first;
@@ -67,22 +54,18 @@ public class LinesImpl extends AbstractCounter implements ILines {
 	}
 
 	/**
-	 * Adds the given lines as fully covered or not covered.
+	 * Adds the given line.
 	 * 
-	 * @param lines
-	 *            line numbers to add
+	 * @param line
+	 *            line number to add
 	 * @param covered
-	 *            <code>true</code> if all lines are covered
+	 *            <code>true</code> if the line is covered
 	 * 
 	 */
-	public void increment(final int[] lines, final boolean covered) {
-		if (lines.length > 0) {
-			ensureCapacity(lines[0], lines[lines.length - 1]);
-			final byte newStatus = covered ? FULLY_COVERED : NOT_COVERED;
-			for (final int line : lines) {
-				incrementLine(line, newStatus);
-			}
-		}
+	public void increment(final int line, final boolean covered) {
+		ensureCapacity(line, line);
+		final byte newStatus = covered ? FULLY_COVERED : NOT_COVERED;
+		incrementLine(line, newStatus);
 	}
 
 	/**

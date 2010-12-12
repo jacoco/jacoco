@@ -15,12 +15,12 @@ import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.jacoco.core.analysis.Analyzer;
 import org.jacoco.core.analysis.ClassCoverage;
 import org.jacoco.core.analysis.CoverageBuilder;
 import org.jacoco.core.analysis.ICounter;
 import org.jacoco.core.analysis.ILines;
 import org.jacoco.core.data.ExecutionDataStore;
-import org.jacoco.core.instr.Analyzer;
 import org.jacoco.core.instr.Instrumenter;
 import org.jacoco.core.runtime.IRuntime;
 import org.jacoco.core.runtime.LoggerRuntime;
@@ -147,9 +147,8 @@ public class CoreTutorial {
 
 		// Together with the original class definition we can calculate coverage
 		// information:
-		final CoverageBuilder coverageBuilder = new CoverageBuilder(
-				executionData);
-		final Analyzer analyzer = new Analyzer(coverageBuilder);
+		final CoverageBuilder coverageBuilder = new CoverageBuilder();
+		final Analyzer analyzer = new Analyzer(executionData, coverageBuilder);
 		analyzer.analyzeClass(getTargetClass(targetName));
 
 		// Let's dump some metrics and line coverage information:

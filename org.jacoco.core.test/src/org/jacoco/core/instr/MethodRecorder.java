@@ -14,7 +14,6 @@ package org.jacoco.core.instr;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 
-import org.jacoco.core.instr.IBlockMethodVisitor;
 import org.objectweb.asm.util.TraceMethodVisitor;
 
 /**
@@ -23,18 +22,7 @@ import org.objectweb.asm.util.TraceMethodVisitor;
  * @author Marc R. Hoffmann
  * @version $qualified.bundle.version$
  */
-public class MethodRecorder extends TraceMethodVisitor implements
-		IBlockMethodVisitor {
-
-	@SuppressWarnings("unchecked")
-	public void visitBlockEndBeforeJump(int id) {
-		text.add(tab2 + "BlockEndBeforeJump #" + id + "\n");
-	}
-
-	@SuppressWarnings("unchecked")
-	public void visitBlockEnd(int id) {
-		text.add(tab2 + "BlockEnd #" + id + "\n");
-	}
+public class MethodRecorder extends TraceMethodVisitor {
 
 	@Override
 	public boolean equals(Object obj) {

@@ -9,7 +9,7 @@
  *    Marc R. Hoffmann - initial API and implementation
  *    
  *******************************************************************************/
-package org.jacoco.core.instr;
+package org.jacoco.core.analysis;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -19,8 +19,12 @@ import java.util.StringTokenizer;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
+import org.jacoco.core.data.ExecutionData;
+import org.jacoco.core.data.ExecutionDataStore;
 import org.jacoco.core.data.IClassStructureVisitor;
 import org.jacoco.core.data.IStructureVisitor;
+import org.jacoco.core.instr.CRC64;
+import org.jacoco.core.internal.flow.ClassProbesAdapter;
 import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.ClassVisitor;
 
@@ -32,15 +36,20 @@ import org.objectweb.asm.ClassVisitor;
  */
 public class Analyzer {
 
+	private final ExecutionDataStore executionData;
 	private final IStructureVisitor structureVisitor;
 
 	/**
 	 * Creates a new analyzer reporting to the given output.
 	 * 
+	 * @param executionData
+	 *            execution data
 	 * @param structureVisitor
 	 *            the output instance that will receive all structure data
 	 */
-	public Analyzer(final IStructureVisitor structureVisitor) {
+	public Analyzer(final ExecutionDataStore executionData,
+			final IStructureVisitor structureVisitor) {
+		this.executionData = executionData;
 		this.structureVisitor = structureVisitor;
 	}
 
@@ -52,9 +61,13 @@ public class Analyzer {
 	 * @return ASM visitor to write class definition to
 	 */
 	public ClassVisitor createAnalyzingVisitor(final long classid) {
+		final ExecutionData data = executionData.get(classid);
+		final boolean[] classExec = data == null ? null : data.getData();
+
 		final IClassStructureVisitor classStructure = structureVisitor
 				.visitClassStructure(classid);
-		return new BlockClassAdapter(new ClassAnalyzer(classStructure));
+		return new ClassProbesAdapter(new ClassAnalyzer(classStructure,
+				classExec));
 	}
 
 	/**

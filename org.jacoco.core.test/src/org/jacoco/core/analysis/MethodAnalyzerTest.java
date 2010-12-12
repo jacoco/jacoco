@@ -9,18 +9,22 @@
  *    Marc R. Hoffmann - initial API and implementation
  *    
  *******************************************************************************/
-package org.jacoco.core.internal.flow;
+package org.jacoco.core.analysis;
 
 import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.assertTrue;
 
 import java.util.HashMap;
 import java.util.Map;
 
-import org.jacoco.core.internal.flow.MethodAnalyzer.Output;
+import org.jacoco.core.analysis.MethodAnalyzer;
+import org.jacoco.core.data.IMethodStructureVisitor;
+import org.jacoco.core.internal.flow.IProbeIdGenerator;
+import org.jacoco.core.internal.flow.LabelFlowAnalyzer;
+import org.jacoco.core.internal.flow.MethodProbesAdapter;
 import org.junit.Before;
 import org.junit.Test;
 import org.objectweb.asm.Label;
-import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.tree.MethodNode;
 
@@ -38,8 +42,6 @@ public class MethodAnalyzerTest implements IProbeIdGenerator {
 
 	private MethodNode method;
 
-	private MethodVisitor visitor;
-
 	private Map<Integer, LineInfo> lines;
 
 	@Before
@@ -47,19 +49,7 @@ public class MethodAnalyzerTest implements IProbeIdGenerator {
 		nextProbeId = 0;
 		lines = new HashMap<Integer, MethodAnalyzerTest.LineInfo>();
 		method = new MethodNode();
-		final MethodAnalyzer.Output output = new Output() {
-			public void visitInsn(boolean covered, int line) {
-				getLine(line).addInsn(covered);
-			}
-
-			public void visitBranches(int missed, int covered, int line) {
-				getLine(line).addBranches(missed, covered);
-			}
-
-		};
 		probes = new boolean[32];
-		final MethodAnalyzer analyzer = new MethodAnalyzer(probes, output);
-		visitor = new MethodProbesAdapter(analyzer, this);
 	}
 
 	public int nextId() {
@@ -76,8 +66,19 @@ public class MethodAnalyzerTest implements IProbeIdGenerator {
 	}
 
 	@Test
-	public void testLinearSequenceNotCovered() {
+	public void testLinearSequenceNotCovered1() {
 		createLinearSequence();
+		runMethodAnalzer();
+		assertEquals(1, nextProbeId);
+
+		assertLine(1001, 1, 0, 0, 0);
+		assertLine(1002, 1, 0, 0, 0);
+	}
+
+	@Test
+	public void testLinearSequenceNotCovered2() {
+		createLinearSequence();
+		probes = null;
 		runMethodAnalzer();
 		assertEquals(1, nextProbeId);
 
@@ -457,7 +458,23 @@ public class MethodAnalyzerTest implements IProbeIdGenerator {
 
 	private void runMethodAnalzer() {
 		method.accept(new LabelFlowAnalyzer());
-		method.accept(visitor);
+		final boolean[] endCalled = new boolean[] { false };
+		final IMethodStructureVisitor output = new IMethodStructureVisitor() {
+			public void visitInsn(boolean covered, int line) {
+				getLine(line).addInsn(covered);
+			}
+
+			public void visitBranches(int missed, int covered, int line) {
+				getLine(line).addBranches(missed, covered);
+			}
+
+			public void visitEnd() {
+				endCalled[0] = true;
+			}
+		};
+		final MethodAnalyzer analyzer = new MethodAnalyzer(probes, output);
+		method.accept(new MethodProbesAdapter(analyzer, this));
+		assertTrue(endCalled[0]);
 	}
 
 	private LineInfo getLine(int nr) {

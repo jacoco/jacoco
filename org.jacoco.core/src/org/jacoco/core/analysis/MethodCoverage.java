@@ -11,6 +11,8 @@
  *******************************************************************************/
 package org.jacoco.core.analysis;
 
+import org.jacoco.core.data.IMethodStructureVisitor;
+
 /**
  * Coverage data of a single method.
  * 
@@ -42,22 +44,19 @@ public class MethodCoverage extends CoverageNodeImpl {
 	}
 
 	/**
-	 * Adds the given block to this method.
+	 * Adds a single instruction to this method.
 	 * 
-	 * @param instructions
-	 *            number of instructions of this block
-	 * @param lines
-	 *            lines of this block
 	 * @param covered
-	 *            <code>true</code>, if this block is covered
+	 *            <code>true</code> if the instruction was executed
+	 * @param line
+	 *            source line number of the instruction
 	 */
-	public void addBlock(final int instructions, final int[] lines,
-			final boolean covered) {
-		this.lines.increment(lines, covered);
-		this.blockCounter = this.blockCounter.increment(CounterImpl
-				.getInstance(covered));
+	public void addInsn(final boolean covered, final int line) {
+		if (line != IMethodStructureVisitor.UNKNOWN_LINE) {
+			this.lines.increment(line, covered);
+		}
 		this.instructionCounter = this.instructionCounter.increment(CounterImpl
-				.getInstance(instructions, covered));
+				.getInstance(covered));
 		if (covered && this.methodCounter.getCoveredCount() == 0) {
 			this.methodCounter = CounterImpl.getInstance(true);
 		}

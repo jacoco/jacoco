@@ -9,13 +9,16 @@
  *    Marc R. Hoffmann - initial API and implementation
  *    
  *******************************************************************************/
-package org.jacoco.core.internal.flow;
+package org.jacoco.core.analysis;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.jacoco.core.data.IMethodStructureVisitor;
+import org.jacoco.core.internal.flow.IMethodProbesVisitor;
+import org.jacoco.core.internal.flow.LabelInfo;
 import org.objectweb.asm.AnnotationVisitor;
 import org.objectweb.asm.Attribute;
 import org.objectweb.asm.Label;
@@ -27,45 +30,13 @@ import org.objectweb.asm.Label;
  * @author Marc R. Hoffmann
  * @version $qualified.bundle.version$
  */
-public final class MethodAnalyzer implements IMethodProbesVisitor {
-
-	/**
-	 * The result for each instruction and branch of the analysis is reported to
-	 * an instance of this interface.
-	 */
-	public interface Output {
-
-		/** Place holder for unknown lines (no debug information) */
-		public static int UNKNOWN_LINE = -1;
-
-		/**
-		 * Called for every instruction.
-		 * 
-		 * @param covered
-		 *            <code>true</code> if the instruction has been executed
-		 * @param line
-		 *            source line number of the instruction
-		 */
-		public void visitInsn(boolean covered, int line);
-
-		/**
-		 * Called for every branching point.
-		 * 
-		 * @param missed
-		 *            number of missed branches
-		 * @param covered
-		 *            number of covered branches
-		 * @param line
-		 *            source line number of the instruction
-		 */
-		public void visitBranches(int missed, int covered, int line);
-	}
+final class MethodAnalyzer implements IMethodProbesVisitor {
 
 	private final boolean[] executionData;
 
-	private final Output output;
+	private final IMethodStructureVisitor output;
 
-	private int currentLine = Output.UNKNOWN_LINE;
+	private int currentLine = IMethodStructureVisitor.UNKNOWN_LINE;
 
 	private Label currentLabel = null;
 
@@ -92,11 +63,13 @@ public final class MethodAnalyzer implements IMethodProbesVisitor {
 	 * New Method analyzer for the given probe data.
 	 * 
 	 * @param executionData
-	 *            recorded probe date of the containing class
+	 *            recorded probe date of the containing class or
+	 *            <code>null</code> if the class is not executed at all
 	 * @param output
 	 *            instance to report coverage information to
 	 */
-	public MethodAnalyzer(final boolean[] executionData, final Output output) {
+	public MethodAnalyzer(final boolean[] executionData,
+			final IMethodStructureVisitor output) {
 		this.executionData = executionData;
 		this.output = output;
 	}
@@ -253,6 +226,7 @@ public final class MethodAnalyzer implements IMethodProbesVisitor {
 		for (final Insn i : instructions) {
 			i.process(output);
 		}
+		output.visitEnd();
 	}
 
 	// === nothing to do here ===
@@ -320,7 +294,7 @@ public final class MethodAnalyzer implements IMethodProbesVisitor {
 			coveredBranches++;
 		}
 
-		void process(final Output output) {
+		void process(final IMethodStructureVisitor output) {
 			output.visitInsn(coveredBranches > 0, line);
 			if (branches > 1) {
 				output.visitBranches(branches - coveredBranches,
@@ -331,7 +305,7 @@ public final class MethodAnalyzer implements IMethodProbesVisitor {
 
 	private void addProbe(final Insn predecessor, final int probeId) {
 		predecessor.addBranch();
-		if (executionData[probeId]) {
+		if (executionData != null && executionData[probeId]) {
 			coveredProbes.add(predecessor);
 		}
 	}

@@ -22,12 +22,20 @@ import org.objectweb.asm.Opcodes;
  * @author Marc R. Hoffmann
  * @version $qualified.bundle.version$
  */
-final class MethodProbesAdapter extends MethodAdapter {
+public final class MethodProbesAdapter extends MethodAdapter {
 
 	private final IMethodProbesVisitor probesVisitor;
 
 	private final IProbeIdGenerator idGenerator;
 
+	/**
+	 * Create a new adapter instance.
+	 * 
+	 * @param probesVisitor
+	 *            visitor to delegate to
+	 * @param idGenerator
+	 *            generator for unique probe ids
+	 */
 	public MethodProbesAdapter(final IMethodProbesVisitor probesVisitor,
 			final IProbeIdGenerator idGenerator) {
 		super(probesVisitor);

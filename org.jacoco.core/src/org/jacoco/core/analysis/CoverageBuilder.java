@@ -17,7 +17,6 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.jacoco.core.data.ExecutionData;
 import org.jacoco.core.data.ExecutionDataStore;
 import org.jacoco.core.data.IClassStructureVisitor;
 import org.jacoco.core.data.IMethodStructureVisitor;
@@ -36,8 +35,6 @@ import org.jacoco.core.data.IStructureVisitor;
  */
 public class CoverageBuilder implements IStructureVisitor {
 
-	private final ExecutionDataStore executionData;
-
 	private final StringPool stringPool;
 
 	private final Map<String, ClassCoverage> classes;
@@ -45,26 +42,20 @@ public class CoverageBuilder implements IStructureVisitor {
 	private final Map<String, SourceFileCoverage> sourcefiles;
 
 	/**
-	 * Create a new builder based on the given execution data.
+	 * Create a new builder.
 	 * 
-	 * @param executionData
-	 *            execution data
 	 */
-	public CoverageBuilder(final ExecutionDataStore executionData) {
-		this(executionData, new StringPool());
+	public CoverageBuilder() {
+		this(new StringPool());
 	}
 
 	/**
-	 * Create a new builder based on the given execution data.
+	 * Create a new builder with a shared string pool.
 	 * 
-	 * @param executionData
-	 *            execution data
 	 * @param stringPool
 	 *            pool to optimize the number of {@link String} instances
 	 */
-	public CoverageBuilder(final ExecutionDataStore executionData,
-			final StringPool stringPool) {
-		this.executionData = executionData;
+	public CoverageBuilder(final StringPool stringPool) {
 		this.stringPool = stringPool;
 		this.classes = new HashMap<String, ClassCoverage>();
 		this.sourcefiles = new HashMap<String, SourceFileCoverage>();
@@ -103,8 +94,6 @@ public class CoverageBuilder implements IStructureVisitor {
 	// === IStructureVisitor ===
 
 	public IClassStructureVisitor visitClassStructure(final long id) {
-		final ExecutionData data = executionData.get(id);
-		final boolean[] covered = data == null ? null : data.getData();
 		final Collection<MethodCoverage> methods = new ArrayList<MethodCoverage>();
 		return new IClassStructureVisitor() {
 			String name;
@@ -127,8 +116,7 @@ public class CoverageBuilder implements IStructureVisitor {
 
 			public IMethodStructureVisitor visitMethodStructure(
 					final String name, final String desc, final String signature) {
-				return createMethodVisitor(name, desc, signature, methods,
-						covered);
+				return createMethodVisitor(name, desc, signature, methods);
 			}
 
 			public void visitEnd() {
@@ -154,14 +142,18 @@ public class CoverageBuilder implements IStructureVisitor {
 
 	private IMethodStructureVisitor createMethodVisitor(final String name,
 			final String desc, final String signature,
-			final Collection<MethodCoverage> container, final boolean[] covered) {
+			final Collection<MethodCoverage> container) {
 		final MethodCoverage method = new MethodCoverage(stringPool.get(name),
 				stringPool.get(desc), stringPool.get(signature));
 		return new IMethodStructureVisitor() {
-			public void block(final int id, final int instructions,
-					final int[] lineNumbers) {
-				final boolean c = covered == null ? false : covered[id];
-				method.addBlock(instructions, lineNumbers, c);
+
+			public void visitInsn(final boolean covered, final int line) {
+				method.addInsn(covered, line);
+			}
+
+			public void visitBranches(final int missed, final int covered,
+					final int line) {
+				// TODO Auto-generated method stub
 			}
 
 			public void visitEnd() {

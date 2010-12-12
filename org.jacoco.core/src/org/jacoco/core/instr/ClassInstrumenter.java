@@ -13,6 +13,8 @@ package org.jacoco.core.instr;
 
 import static java.lang.String.format;
 
+import org.jacoco.core.internal.flow.IClassProbesVisitor;
+import org.jacoco.core.internal.flow.IMethodProbesVisitor;
 import org.jacoco.core.runtime.IExecutionDataAccessorGenerator;
 import org.objectweb.asm.ClassAdapter;
 import org.objectweb.asm.ClassVisitor;
@@ -27,7 +29,7 @@ import org.objectweb.asm.Opcodes;
  * @author Marc R. Hoffmann
  * @version $qualified.bundle.version$
  */
-class ClassInstrumenter extends ClassAdapter implements IBlockClassVisitor {
+class ClassInstrumenter extends ClassAdapter implements IClassProbesVisitor {
 
 	private static final Object[] STACK_ARRZ = new Object[] { InstrSupport.DATAFIELD_DESC };
 
@@ -79,8 +81,9 @@ class ClassInstrumenter extends ClassAdapter implements IBlockClassVisitor {
 	}
 
 	@Override
-	public IBlockMethodVisitor visitMethod(final int access, final String name,
-			final String desc, final String signature, final String[] exceptions) {
+	public IMethodProbesVisitor visitMethod(final int access,
+			final String name, final String desc, final String signature,
+			final String[] exceptions) {
 
 		assertNotInstrumented(name, InstrSupport.INITMETHOD_NAME);
 

@@ -16,6 +16,7 @@ import static org.junit.Assert.assertEquals;
 import org.junit.Before;
 import org.junit.Test;
 import org.objectweb.asm.ClassVisitor;
+import org.objectweb.asm.Label;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
 
@@ -58,26 +59,158 @@ public class MethodInstrumenterTest {
 	}
 
 	@Test
-	public void testReturn() {
+	public void testVisitCode() {
 		instrumenter.visitCode();
-		instrumenter.visitBlockEndBeforeJump(0);
-		instrumenter.visitInsn(Opcodes.RETURN);
-		instrumenter.visitBlockEnd(0);
-		instrumenter.visitMaxs(0, 1);
-		instrumenter.visitEnd();
 
-		expected.visitCode();
 		expected.visitMethodInsn(Opcodes.INVOKESTATIC, "Target", "$jacocoInit",
 				"()[Z");
 		expected.visitVarInsn(Opcodes.ASTORE, 1);
-		expected.visitVarInsn(Opcodes.ALOAD, 1);
-		expected.visitInsn(Opcodes.ICONST_0);
-		expected.visitInsn(Opcodes.ICONST_1);
-		expected.visitInsn(Opcodes.BASTORE);
-		expected.visitInsn(Opcodes.RETURN);
-		expected.visitMaxs(3, 2);
-		expected.visitEnd();
 
 		assertEquals(expected, actual);
 	}
+
+	@Test
+	public void testVisitMaxs() {
+		instrumenter.visitMaxs(2, 7);
+
+		expected.visitMaxs(5, 8);
+
+		assertEquals(expected, actual);
+	}
+
+	@Test
+	public void testVisitProbe() {
+		instrumenter.visitProbe(33);
+
+		expected.visitVarInsn(Opcodes.ALOAD, 1);
+		expected.visitIntInsn(Opcodes.BIPUSH, 33);
+		expected.visitInsn(Opcodes.ICONST_1);
+		expected.visitInsn(Opcodes.BASTORE);
+
+		assertEquals(expected, actual);
+	}
+
+	@Test
+	public void testVisitInsnWithProbe() {
+		instrumenter.visitInsnWithProbe(Opcodes.RETURN, 3);
+
+		expected.visitVarInsn(Opcodes.ALOAD, 1);
+		expected.visitInsn(Opcodes.ICONST_3);
+		expected.visitInsn(Opcodes.ICONST_1);
+		expected.visitInsn(Opcodes.BASTORE);
+		expected.visitInsn(Opcodes.RETURN);
+
+		assertEquals(expected, actual);
+	}
+
+	@Test
+	public void testVisitJumpInsnWithProbe_GOTO() {
+		final Label label = new Label();
+		instrumenter.visitJumpInsnWithProbe(Opcodes.GOTO, label, 3);
+
+		expected.visitVarInsn(Opcodes.ALOAD, 1);
+		expected.visitInsn(Opcodes.ICONST_3);
+		expected.visitInsn(Opcodes.ICONST_1);
+		expected.visitInsn(Opcodes.BASTORE);
+		expected.visitJumpInsn(Opcodes.GOTO, label);
+
+		assertEquals(expected, actual);
+	}
+
+	@Test
+	public void testVisitJumpInsnWithProbe_IFEQ() {
+		testVisitJumpInsnWithProbe(Opcodes.IFEQ, Opcodes.IFNE);
+	}
+
+	@Test
+	public void testVisitJumpInsnWithProbe_IFNE() {
+		testVisitJumpInsnWithProbe(Opcodes.IFNE, Opcodes.IFEQ);
+	}
+
+	@Test
+	public void testVisitJumpInsnWithProbe_IFLT() {
+		testVisitJumpInsnWithProbe(Opcodes.IFLT, Opcodes.IFGE);
+	}
+
+	@Test
+	public void testVisitJumpInsnWithProbe_IFGE() {
+		testVisitJumpInsnWithProbe(Opcodes.IFGE, Opcodes.IFLT);
+	}
+
+	@Test
+	public void testVisitJumpInsnWithProbe_IFGT() {
+		testVisitJumpInsnWithProbe(Opcodes.IFGT, Opcodes.IFLE);
+	}
+
+	@Test
+	public void testVisitJumpInsnWithProbe_IFLE() {
+		testVisitJumpInsnWithProbe(Opcodes.IFLE, Opcodes.IFGT);
+	}
+
+	@Test
+	public void testVisitJumpInsnWithProbe_IF_ICMPEQ() {
+		testVisitJumpInsnWithProbe(Opcodes.IF_ICMPEQ, Opcodes.IF_ICMPNE);
+	}
+
+	@Test
+	public void testVisitJumpInsnWithProbe_IF_ICMPNE() {
+		testVisitJumpInsnWithProbe(Opcodes.IF_ICMPNE, Opcodes.IF_ICMPEQ);
+	}
+
+	@Test
+	public void testVisitJumpInsnWithProbe_IF_ICMPLT() {
+		testVisitJumpInsnWithProbe(Opcodes.IF_ICMPLT, Opcodes.IF_ICMPGE);
+	}
+
+	@Test
+	public void testVisitJumpInsnWithProbe_IF_ICMPGE() {
+		testVisitJumpInsnWithProbe(Opcodes.IF_ICMPGE, Opcodes.IF_ICMPLT);
+	}
+
+	@Test
+	public void testVisitJumpInsnWithProbe_IF_ICMPGT() {
+		testVisitJumpInsnWithProbe(Opcodes.IF_ICMPGT, Opcodes.IF_ICMPLE);
+	}
+
+	@Test
+	public void testVisitJumpInsnWithProbe_IF_ICMPLE() {
+		testVisitJumpInsnWithProbe(Opcodes.IF_ICMPLE, Opcodes.IF_ICMPGT);
+	}
+
+	@Test
+	public void testVisitJumpInsnWithProbe_IF_ACMPEQ() {
+		testVisitJumpInsnWithProbe(Opcodes.IF_ACMPEQ, Opcodes.IF_ACMPNE);
+	}
+
+	@Test
+	public void testVisitJumpInsnWithProbe_IF_ACMPNE() {
+		testVisitJumpInsnWithProbe(Opcodes.IF_ACMPNE, Opcodes.IF_ACMPEQ);
+	}
+
+	@Test
+	public void testVisitJumpInsnWithProbe_IFNULL() {
+		testVisitJumpInsnWithProbe(Opcodes.IFNULL, Opcodes.IFNONNULL);
+	}
+
+	@Test
+	public void testVisitJumpInsnWithProbe_IFNONNULL() {
+		testVisitJumpInsnWithProbe(Opcodes.IFNONNULL, Opcodes.IFNULL);
+	}
+
+	public void testVisitJumpInsnWithProbe(int opcode, int exOpcode) {
+		final Label label = new Label();
+		instrumenter.visitJumpInsnWithProbe(opcode, label, 3);
+
+		final Label l2 = new Label();
+		expected.visitJumpInsn(exOpcode, l2);
+		expected.visitVarInsn(Opcodes.ALOAD, 1);
+		expected.visitInsn(Opcodes.ICONST_3);
+		expected.visitInsn(Opcodes.ICONST_1);
+		expected.visitInsn(Opcodes.BASTORE);
+		expected.visitJumpInsn(Opcodes.GOTO, label);
+		expected.visitLabel(l2);
+
+		assertEquals(expected, actual);
+	}
+
 }

@@ -15,12 +15,12 @@ import static org.junit.Assert.assertEquals;
 
 import java.util.Collection;
 
+import org.jacoco.core.analysis.Analyzer;
 import org.jacoco.core.analysis.ClassCoverage;
 import org.jacoco.core.analysis.CoverageBuilder;
 import org.jacoco.core.analysis.ILines;
 import org.jacoco.core.analysis.SourceFileCoverage;
 import org.jacoco.core.data.ExecutionDataStore;
-import org.jacoco.core.instr.Analyzer;
 import org.jacoco.core.instr.Instrumenter;
 import org.jacoco.core.runtime.IRuntime;
 import org.jacoco.core.runtime.SystemPropertiesRuntime;
@@ -62,8 +62,8 @@ public abstract class ValidationTestBase {
 
 	@Before
 	public void setup() throws Exception {
-		final ClassReader reader = new ClassReader(TargetLoader
-				.getClassData(target));
+		final ClassReader reader = new ClassReader(
+				TargetLoader.getClassData(target));
 		final ExecutionDataStore store = execute(reader);
 		analyze(reader, store);
 		source = Source.getSourceFor(target);
@@ -86,8 +86,8 @@ public abstract class ValidationTestBase {
 
 	private void analyze(final ClassReader reader,
 			final ExecutionDataStore store) {
-		final CoverageBuilder builder = new CoverageBuilder(store);
-		final Analyzer analyzer = new Analyzer(builder);
+		final CoverageBuilder builder = new CoverageBuilder();
+		final Analyzer analyzer = new Analyzer(store, builder);
 		analyzer.analyzeClass(reader);
 		final Collection<ClassCoverage> classes = builder.getClasses();
 		assertEquals(1, classes.size(), 0.0);
@@ -102,8 +102,8 @@ public abstract class ValidationTestBase {
 		final int nr = source.getLineNumber(tag);
 		final String line = source.getLine(nr);
 		String msg = String.format("L%s: %s", Integer.valueOf(nr), line);
-		assertEquals(msg, STATUS_NAME[status], STATUS_NAME[lineCoverage
-				.getStatus(nr)]);
+		assertEquals(msg, STATUS_NAME[status],
+				STATUS_NAME[lineCoverage.getStatus(nr)]);
 	}
 
 }

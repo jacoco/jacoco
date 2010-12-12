@@ -9,7 +9,7 @@
  *    Marc R. Hoffmann - initial API and implementation
  *    
  *******************************************************************************/
-package org.jacoco.core.instr;
+package org.jacoco.core.analysis;
 
 import static junit.framework.Assert.assertTrue;
 import static org.junit.Assert.assertEquals;
@@ -23,6 +23,7 @@ import java.util.Set;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
+import org.jacoco.core.data.ExecutionDataStore;
 import org.jacoco.core.data.IClassStructureVisitor;
 import org.jacoco.core.data.IMethodStructureVisitor;
 import org.jacoco.core.data.IStructureVisitor;
@@ -62,7 +63,10 @@ public class AnalyzerTest {
 			return this;
 		}
 
-		public void block(int id, int instructionCount, int[] lineNumbers) {
+		public void visitInsn(boolean covered, int line) {
+		}
+
+		public void visitBranches(int missed, int covered, int line) {
 		}
 
 		public void visitEnd() {
@@ -72,22 +76,25 @@ public class AnalyzerTest {
 
 	@Before
 	public void setup() {
-		analyzer = new Analyzer(new EmptyStructureVisitor());
+		analyzer = new Analyzer(new ExecutionDataStore(),
+				new EmptyStructureVisitor());
 	}
 
 	@Test
 	public void testAnalyzeClass1() throws IOException {
 		analyzer.analyzeClass(TargetLoader.getClassData(AnalyzerTest.class));
-		assertEquals(Collections
-				.singleton("org/jacoco/core/instr/AnalyzerTest"), classes);
+		assertEquals(
+				Collections.singleton("org/jacoco/core/analysis/AnalyzerTest"),
+				classes);
 	}
 
 	@Test
 	public void testAnalyzeClass2() throws IOException {
 		analyzer.analyzeClass(TargetLoader
 				.getClassDataAsBytes(AnalyzerTest.class));
-		assertEquals(Collections
-				.singleton("org/jacoco/core/instr/AnalyzerTest"), classes);
+		assertEquals(
+				Collections.singleton("org/jacoco/core/analysis/AnalyzerTest"),
+				classes);
 	}
 
 	@Test
@@ -95,14 +102,15 @@ public class AnalyzerTest {
 		final ByteArrayOutputStream buffer = new ByteArrayOutputStream();
 		final ZipOutputStream zip = new ZipOutputStream(buffer);
 		zip.putNextEntry(new ZipEntry(
-				"org/jacoco/core/instr/AnalyzerTest.class"));
+				"org/jacoco/core/analysis/AnalyzerTest.class"));
 		zip.write(TargetLoader.getClassDataAsBytes(AnalyzerTest.class));
 		zip.finish();
 		final int count = analyzer.analyzeArchive(new ByteArrayInputStream(
 				buffer.toByteArray()));
 		assertEquals(1, count);
-		assertEquals(Collections
-				.singleton("org/jacoco/core/instr/AnalyzerTest"), classes);
+		assertEquals(
+				Collections.singleton("org/jacoco/core/analysis/AnalyzerTest"),
+				classes);
 	}
 
 	@Test
@@ -110,8 +118,9 @@ public class AnalyzerTest {
 		final int count = analyzer.analyzeAll(TargetLoader
 				.getClassData(AnalyzerTest.class));
 		assertEquals(1, count);
-		assertEquals(Collections
-				.singleton("org/jacoco/core/instr/AnalyzerTest"), classes);
+		assertEquals(
+				Collections.singleton("org/jacoco/core/analysis/AnalyzerTest"),
+				classes);
 	}
 
 	@Test
@@ -119,14 +128,15 @@ public class AnalyzerTest {
 		final ByteArrayOutputStream buffer = new ByteArrayOutputStream();
 		final ZipOutputStream zip = new ZipOutputStream(buffer);
 		zip.putNextEntry(new ZipEntry(
-				"org/jacoco/core/instr/AnalyzerTest.class"));
+				"org/jacoco/core/analysis/AnalyzerTest.class"));
 		zip.write(TargetLoader.getClassDataAsBytes(AnalyzerTest.class));
 		zip.finish();
 		final int count = analyzer.analyzeAll(new ByteArrayInputStream(buffer
 				.toByteArray()));
 		assertEquals(1, count);
-		assertEquals(Collections
-				.singleton("org/jacoco/core/instr/AnalyzerTest"), classes);
+		assertEquals(
+				Collections.singleton("org/jacoco/core/analysis/AnalyzerTest"),
+				classes);
 	}
 
 	@Test

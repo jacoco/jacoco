@@ -16,7 +16,7 @@ import org.objectweb.asm.ClassVisitor;
 import org.objectweb.asm.Label;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.commons.EmptyVisitor;
-import org.objectweb.asm.tree.MethodNode;
+import org.objectweb.asm.commons.JSRInlinerAdapter;
 
 /**
  * A {@link ClassVisitor} that calculates probes for every method.
@@ -82,7 +82,8 @@ public class ClassProbesAdapter extends ClassAdapter implements
 		} else {
 			methodProbes = mv;
 		}
-		return new MethodNode() {
+		return new JSRInlinerAdapter(null, access, name, desc, signature,
+				exceptions) {
 			@Override
 			public void visitEnd() {
 				super.visitEnd();

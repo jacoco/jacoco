@@ -14,6 +14,7 @@ package org.jacoco.core.instr;
 import java.io.IOException;
 import java.io.InputStream;
 
+import org.jacoco.core.internal.flow.ClassProbesAdapter;
 import org.jacoco.core.runtime.IRuntime;
 import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.ClassVisitor;
@@ -50,8 +51,8 @@ public class Instrumenter {
 	 */
 	public ClassVisitor createInstrumentingVisitor(final long classid,
 			final ClassVisitor cv) {
-		return new BlockClassAdapter(
-				new ClassInstrumenter(classid, runtime, cv));
+		return new ClassProbesAdapter(new ClassInstrumenter(classid, runtime,
+				cv));
 	}
 
 	/**
@@ -64,8 +65,8 @@ public class Instrumenter {
 	 */
 	public byte[] instrument(final ClassReader reader) {
 		final ClassWriter writer = new ClassWriter(reader, 0);
-		final ClassVisitor visitor = createInstrumentingVisitor(CRC64
-				.checksum(reader.b), writer);
+		final ClassVisitor visitor = createInstrumentingVisitor(
+				CRC64.checksum(reader.b), writer);
 		reader.accept(visitor, ClassReader.EXPAND_FRAMES);
 		return writer.toByteArray();
 	}

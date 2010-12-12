@@ -9,9 +9,11 @@
  *    Marc R. Hoffmann - initial API and implementation
  *    
  *******************************************************************************/
-package org.jacoco.core.instr;
+package org.jacoco.core.analysis;
 
 import org.jacoco.core.data.IClassStructureVisitor;
+import org.jacoco.core.internal.flow.IClassProbesVisitor;
+import org.jacoco.core.internal.flow.IMethodProbesVisitor;
 import org.objectweb.asm.AnnotationVisitor;
 import org.objectweb.asm.Attribute;
 import org.objectweb.asm.FieldVisitor;
@@ -23,9 +25,10 @@ import org.objectweb.asm.Opcodes;
  * @author Marc R. Hoffmann
  * @version $qualified.bundle.version$
  */
-class ClassAnalyzer implements IBlockClassVisitor {
+class ClassAnalyzer implements IClassProbesVisitor {
 
 	private final IClassStructureVisitor structureVisitor;
+	private final boolean executionData[];
 
 	/**
 	 * Creates a new analyzer that reports to the given
@@ -33,9 +36,13 @@ class ClassAnalyzer implements IBlockClassVisitor {
 	 * 
 	 * @param structureVisitor
 	 *            consumer for class structure output
+	 * @param executionData
+	 *            execution data for this class or <code>null</code>
 	 */
-	public ClassAnalyzer(final IClassStructureVisitor structureVisitor) {
+	public ClassAnalyzer(final IClassStructureVisitor structureVisitor,
+			final boolean[] executionData) {
 		this.structureVisitor = structureVisitor;
+		this.executionData = executionData;
 	}
 
 	public void visit(final int version, final int access, final String name,
@@ -50,16 +57,17 @@ class ClassAnalyzer implements IBlockClassVisitor {
 		}
 	}
 
-	public IBlockMethodVisitor visitMethod(final int access, final String name,
-			final String desc, final String signature, final String[] exceptions) {
+	public IMethodProbesVisitor visitMethod(final int access,
+			final String name, final String desc, final String signature,
+			final String[] exceptions) {
 
 		// TODO: Use filter hook
 		if ((access & Opcodes.ACC_SYNTHETIC) != 0) {
 			return null;
 		}
 
-		return new MethodAnalyzer(structureVisitor.visitMethodStructure(name,
-				desc, signature));
+		return new MethodAnalyzer(executionData,
+				structureVisitor.visitMethodStructure(name, desc, signature));
 	}
 
 	public void visitEnd() {

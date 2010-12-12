@@ -137,7 +137,9 @@ public class XMLReportNodeHandlerTest {
 		final IReportVisitor classHandler = packageHandler
 				.visitChild(new CoverageNodeImpl(ElementType.CLASS, "Foo", true));
 		MethodCoverage node = new MethodCoverage("doit", "()V", null);
-		node.addBlock(5, new int[] { 15, 16, 17 }, false);
+		node.addInsn(false, 15);
+		node.addInsn(false, 16);
+		node.addInsn(false, 16);
 		classHandler.visitChild(node).visitEnd(null);
 		classHandler.visitEnd(null);
 		packageHandler.visitEnd(null);
@@ -158,8 +160,10 @@ public class XMLReportNodeHandlerTest {
 		final CoverageNodeImpl node = new CoverageNodeImpl(
 				ElementType.SOURCEFILE, "Foo.java", true) {
 			{
-				lines.increment(new int[] { 11, 13 }, false);
-				lines.increment(new int[] { 13, 14 }, true);
+				lines.increment(11, false);
+				lines.increment(13, false);
+				lines.increment(13, true);
+				lines.increment(14, true);
 			}
 		};
 		packageHandler.visitChild(node).visitEnd(null);

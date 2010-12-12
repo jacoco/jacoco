@@ -11,18 +11,20 @@
  *******************************************************************************/
 package org.jacoco.core.instr;
 
+import org.jacoco.core.internal.flow.IMethodProbesVisitor;
+import org.objectweb.asm.Label;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
 
 /**
- * This method adapter instruments a method to record every block that gets
- * fully executed.
+ * This method adapter inserts probes as requested by the
+ * {@link IMethodProbesVisitor} events.
  * 
  * @author Marc R. Hoffmann
  * @version $qualified.bundle.version$
  */
 class MethodInstrumenter extends ProbeVariableInserter implements
-		IBlockMethodVisitor {
+		IMethodProbesVisitor {
 
 	private final IProbeArrayStrategy probeArrayStrategy;
 
@@ -68,9 +70,7 @@ class MethodInstrumenter extends ProbeVariableInserter implements
 		super.visitMaxs(increasedStack, maxLocals);
 	}
 
-	// === IBlockMethodVisitor ===
-
-	public void visitBlockEndBeforeJump(final int id) {
+	private void insertProbe(final int id) {
 		// At the end of every block we set the corresponding position in the
 		// boolean[] array to true.
 
@@ -92,8 +92,79 @@ class MethodInstrumenter extends ProbeVariableInserter implements
 		visitInsn(Opcodes.BASTORE);
 	}
 
-	public void visitBlockEnd(final int id) {
-		// nothing to do here
+	// === IMethodProbesVisitor ===
+
+	public void visitProbe(final int probeId) {
+		insertProbe(probeId);
+	}
+
+	public void visitInsnWithProbe(final int opcode, final int probeId) {
+		insertProbe(probeId);
+		mv.visitInsn(opcode);
+	}
+
+	public void visitJumpInsnWithProbe(final int opcode, final Label label,
+			final int probeId) {
+		if (opcode == Opcodes.GOTO) {
+			insertProbe(probeId);
+			mv.visitJumpInsn(Opcodes.GOTO, label);
+		} else {
+			final Label l = new Label();
+			mv.visitJumpInsn(getNegation(opcode), l);
+			insertProbe(probeId);
+			mv.visitJumpInsn(Opcodes.GOTO, label);
+			mv.visitLabel(l);
+		}
+	}
+
+	private int getNegation(final int opcode) {
+		switch (opcode) {
+		case Opcodes.IFEQ:
+			return Opcodes.IFNE;
+		case Opcodes.IFNE:
+			return Opcodes.IFEQ;
+		case Opcodes.IFLT:
+			return Opcodes.IFGE;
+		case Opcodes.IFGE:
+			return Opcodes.IFLT;
+		case Opcodes.IFGT:
+			return Opcodes.IFLE;
+		case Opcodes.IFLE:
+			return Opcodes.IFGT;
+		case Opcodes.IF_ICMPEQ:
+			return Opcodes.IF_ICMPNE;
+		case Opcodes.IF_ICMPNE:
+			return Opcodes.IF_ICMPEQ;
+		case Opcodes.IF_ICMPLT:
+			return Opcodes.IF_ICMPGE;
+		case Opcodes.IF_ICMPGE:
+			return Opcodes.IF_ICMPLT;
+		case Opcodes.IF_ICMPGT:
+			return Opcodes.IF_ICMPLE;
+		case Opcodes.IF_ICMPLE:
+			return Opcodes.IF_ICMPGT;
+		case Opcodes.IF_ACMPEQ:
+			return Opcodes.IF_ACMPNE;
+		case Opcodes.IF_ACMPNE:
+			return Opcodes.IF_ACMPEQ;
+		case Opcodes.IFNULL:
+			return Opcodes.IFNONNULL;
+		case Opcodes.IFNONNULL:
+			return Opcodes.IFNULL;
+		}
+		throw new AssertionError(opcode);
+	}
+
+	public void visitTableSwitchInsnWithProbes(final int min, final int max,
+			final Label dflt, final Label[] labels) {
+		// TODO Auto-generated method stub
+		mv.visitTableSwitchInsn(min, max, dflt, labels);
+	}
+
+	public void visitLookupSwitchInsnWithProbes(final Label dflt,
+			final int[] keys, final Label[] labels) {
+		// TODO Auto-generated method stub
+		mv.visitLookupSwitchInsn(dflt, keys, labels);
 	}
 
 }

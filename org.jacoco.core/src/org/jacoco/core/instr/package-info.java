@@ -17,7 +17,7 @@
  * </p>
  *
  * <ul>
- *   <li>{@link org.jacoco.core.instr.Analyzer}: Class structure information for
+ *   <li>{@link org.jacoco.core.analysis.Analyzer}: Class structure information for
  *   analysis and report generation.</li>
  *   <li>{@link org.jacoco.core.instr.Instrumenter}: Classes instrumentation for
  *   tracing coverage at runtime.</li>

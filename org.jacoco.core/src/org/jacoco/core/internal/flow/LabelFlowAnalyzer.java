@@ -25,7 +25,7 @@ import org.objectweb.asm.Opcodes;
  * @author Marc R. Hoffmann
  * @version $qualified.bundle.version$
  */
-final class LabelFlowAnalyzer implements MethodVisitor {
+public final class LabelFlowAnalyzer implements MethodVisitor {
 
 	/**
 	 * <code>true</code> if the current instruction is a potential successor of
@@ -35,6 +35,8 @@ final class LabelFlowAnalyzer implements MethodVisitor {
 
 	public void visitTryCatchBlock(final Label start, final Label end,
 			final Label handler, final String type) {
+		// Enforce a probe also at the beginning of the block:
+		LabelInfo.setTarget(start);
 		LabelInfo.setTarget(handler);
 	}
 
