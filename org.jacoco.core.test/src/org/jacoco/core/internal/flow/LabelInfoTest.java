@@ -13,6 +13,8 @@ package org.jacoco.core.internal.flow;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
 
 import org.junit.Before;
@@ -40,6 +42,7 @@ public class LabelInfoTest {
 		assertFalse(LabelInfo.isSuccessor(label));
 		assertFalse(LabelInfo.isDone(label));
 		assertEquals(LabelInfo.NO_PROBE, LabelInfo.getProbeId(label));
+		assertNull(LabelInfo.getIntermediateLabel(label));
 	}
 
 	@Test
@@ -101,6 +104,13 @@ public class LabelInfoTest {
 	public void testSetProbeId() {
 		LabelInfo.setProbeId(label, 123);
 		assertEquals(123, LabelInfo.getProbeId(label));
+	}
+
+	@Test
+	public void testIntermediateLabel() {
+		final Label i = new Label();
+		LabelInfo.setIntermediateLabel(label, i);
+		assertSame(i, LabelInfo.getIntermediateLabel(label));
 	}
 
 }

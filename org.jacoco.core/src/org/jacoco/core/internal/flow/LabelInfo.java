@@ -38,6 +38,8 @@ public final class LabelInfo {
 
 	private int probeid = NO_PROBE;
 
+	private Label intermediate = null;
+
 	// instances are only created within this class
 	private LabelInfo() {
 	}
@@ -173,6 +175,33 @@ public final class LabelInfo {
 	public static int getProbeId(final Label label) {
 		final LabelInfo info = get(label);
 		return info == null ? NO_PROBE : info.probeid;
+	}
+
+	/**
+	 * Defines an intermediate label for the given label. Such intermediate
+	 * labels are required during instrumentation to add probes to jump targets.
+	 * 
+	 * @param label
+	 *            label to define for
+	 * @param intermediate
+	 *            intermediate label
+	 */
+	public static void setIntermediateLabel(final Label label,
+			final Label intermediate) {
+		create(label).intermediate = intermediate;
+	}
+
+	/**
+	 * Returns the intermediate label for the given label if one has been
+	 * defined.
+	 * 
+	 * @param label
+	 *            label to look for
+	 * @return intermediate label or <code>null</code>
+	 */
+	public static Label getIntermediateLabel(final Label label) {
+		final LabelInfo info = get(label);
+		return info == null ? null : info.intermediate;
 	}
 
 	private static LabelInfo get(final Label label) {

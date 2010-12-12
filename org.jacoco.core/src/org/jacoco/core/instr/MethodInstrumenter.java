@@ -12,6 +12,7 @@
 package org.jacoco.core.instr;
 
 import org.jacoco.core.internal.flow.IMethodProbesVisitor;
+import org.jacoco.core.internal.flow.LabelInfo;
 import org.objectweb.asm.Label;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
@@ -157,14 +158,71 @@ class MethodInstrumenter extends ProbeVariableInserter implements
 
 	public void visitTableSwitchInsnWithProbes(final int min, final int max,
 			final Label dflt, final Label[] labels) {
-		// TODO Auto-generated method stub
-		mv.visitTableSwitchInsn(min, max, dflt, labels);
+		// 1. Calculate intermediate labels:
+		LabelInfo.resetDone(dflt);
+		LabelInfo.resetDone(labels);
+		final Label newDflt = createIntermediate(dflt);
+		final Label[] newLabels = createIntermediates(labels);
+		mv.visitTableSwitchInsn(min, max, newDflt, newLabels);
+
+		// 2. Insert probes:
+		insertIntermediateProbes(dflt, labels);
 	}
 
 	public void visitLookupSwitchInsnWithProbes(final Label dflt,
 			final int[] keys, final Label[] labels) {
-		// TODO Auto-generated method stub
-		mv.visitLookupSwitchInsn(dflt, keys, labels);
+		// 1. Calculate intermediate labels:
+		LabelInfo.resetDone(dflt);
+		LabelInfo.resetDone(labels);
+		final Label newDflt = createIntermediate(dflt);
+		final Label[] newLabels = createIntermediates(labels);
+		mv.visitLookupSwitchInsn(newDflt, keys, newLabels);
+
+		// 2. Insert probes:
+		insertIntermediateProbes(dflt, labels);
+	}
+
+	private Label createIntermediate(final Label label) {
+		final Label intermediate;
+		if (LabelInfo.getProbeId(label) == LabelInfo.NO_PROBE) {
+			intermediate = label;
+		} else {
+			if (LabelInfo.isDone(label)) {
+				intermediate = LabelInfo.getIntermediateLabel(label);
+			} else {
+				intermediate = new Label();
+				LabelInfo.setIntermediateLabel(label, intermediate);
+				LabelInfo.setDone(label);
+			}
+		}
+		return intermediate;
+	}
+
+	private Label[] createIntermediates(final Label[] labels) {
+		final Label[] intermediates = new Label[labels.length];
+		for (int i = 0; i < labels.length; i++) {
+			intermediates[i] = createIntermediate(labels[i]);
+		}
+		return intermediates;
+	}
+
+	private void insertIntermediateProbe(final Label label) {
+		final int probeId = LabelInfo.getProbeId(label);
+		if (probeId != LabelInfo.NO_PROBE && !LabelInfo.isDone(label)) {
+			mv.visitLabel(LabelInfo.getIntermediateLabel(label));
+			insertProbe(probeId);
+			mv.visitJumpInsn(Opcodes.GOTO, label);
+			LabelInfo.setDone(label);
+		}
+	}
+
+	private void insertIntermediateProbes(final Label dflt, final Label[] labels) {
+		LabelInfo.resetDone(dflt);
+		LabelInfo.resetDone(labels);
+		insertIntermediateProbe(dflt);
+		for (final Label l : labels) {
+			insertIntermediateProbe(l);
+		}
 	}
 
 }

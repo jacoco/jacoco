@@ -13,6 +13,7 @@ package org.jacoco.core.instr;
 
 import static org.junit.Assert.assertEquals;
 
+import org.jacoco.core.internal.flow.LabelInfo;
 import org.junit.Before;
 import org.junit.Test;
 import org.objectweb.asm.ClassVisitor;
@@ -209,6 +210,61 @@ public class MethodInstrumenterTest {
 		expected.visitInsn(Opcodes.BASTORE);
 		expected.visitJumpInsn(Opcodes.GOTO, label);
 		expected.visitLabel(l2);
+
+		assertEquals(expected, actual);
+	}
+
+	@Test
+	public void testVisitTableSwitchInsnWithProbes() {
+		final Label L0 = new Label();
+		final Label L1 = new Label();
+		final Label L2 = new Label();
+		LabelInfo.setProbeId(L0, 0);
+		LabelInfo.setProbeId(L1, 1);
+		instrumenter.visitTableSwitchInsnWithProbes(3, 5, L0, new Label[] { L1,
+				L1, L2 });
+
+		expected.visitTableSwitchInsn(3, 4, L0, new Label[] { L1, L1, L2 });
+		expected.visitLabel(L0);
+		expected.visitVarInsn(Opcodes.ALOAD, 1);
+		expected.visitInsn(Opcodes.ICONST_0);
+		expected.visitInsn(Opcodes.ICONST_1);
+		expected.visitInsn(Opcodes.BASTORE);
+		expected.visitJumpInsn(Opcodes.GOTO, new Label());
+		expected.visitLabel(L1);
+		expected.visitVarInsn(Opcodes.ALOAD, 1);
+		expected.visitInsn(Opcodes.ICONST_1);
+		expected.visitInsn(Opcodes.ICONST_1);
+		expected.visitInsn(Opcodes.BASTORE);
+		expected.visitJumpInsn(Opcodes.GOTO, new Label());
+
+		assertEquals(expected, actual);
+	}
+
+	@Test
+	public void testVisitLookupSwitchInsnWithProbes() {
+		final Label L0 = new Label();
+		final Label L1 = new Label();
+		final Label L2 = new Label();
+		LabelInfo.setProbeId(L0, 0);
+		LabelInfo.setProbeId(L1, 1);
+		instrumenter.visitLookupSwitchInsnWithProbes(L0,
+				new int[] { 10, 20, 30 }, new Label[] { L1, L1, L2 });
+
+		expected.visitLookupSwitchInsn(L0, new int[] { 10, 20, 30 },
+				new Label[] { L1, L1, L2 });
+		expected.visitLabel(L0);
+		expected.visitVarInsn(Opcodes.ALOAD, 1);
+		expected.visitInsn(Opcodes.ICONST_0);
+		expected.visitInsn(Opcodes.ICONST_1);
+		expected.visitInsn(Opcodes.BASTORE);
+		expected.visitJumpInsn(Opcodes.GOTO, new Label());
+		expected.visitLabel(L1);
+		expected.visitVarInsn(Opcodes.ALOAD, 1);
+		expected.visitInsn(Opcodes.ICONST_1);
+		expected.visitInsn(Opcodes.ICONST_1);
+		expected.visitInsn(Opcodes.BASTORE);
+		expected.visitJumpInsn(Opcodes.GOTO, new Label());
 
 		assertEquals(expected, actual);
 	}
