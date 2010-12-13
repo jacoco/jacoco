@@ -58,7 +58,7 @@ public class PackageCoverageTest {
 				methodCounter = CounterImpl.getInstance(9, 0);
 				branchCounter = CounterImpl.getInstance(9, 0);
 				instructionCounter = CounterImpl.getInstance(9, 0);
-				lines.increment(1, false);
+				lines.incrementInsn(1, false);
 			}
 		};
 		// Only source files will be considered for counters:
@@ -69,11 +69,11 @@ public class PackageCoverageTest {
 				methodCounter = CounterImpl.getInstance(2, 0);
 				branchCounter = CounterImpl.getInstance(3, 0);
 				instructionCounter = CounterImpl.getInstance(4, 0);
-				lines.increment(1, false);
-				lines.increment(2, false);
-				lines.increment(3, false);
-				lines.increment(4, false);
-				lines.increment(5, false);
+				lines.incrementInsn(1, false);
+				lines.incrementInsn(2, false);
+				lines.incrementInsn(3, false);
+				lines.incrementInsn(4, false);
+				lines.incrementInsn(5, false);
 			}
 		};
 		PackageCoverage data = new PackageCoverage("org/jacoco/test",

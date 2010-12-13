@@ -53,7 +53,7 @@ public class MethodCoverage extends CoverageNodeImpl {
 	 */
 	public void addInsn(final boolean covered, final int line) {
 		if (line != IMethodStructureVisitor.UNKNOWN_LINE) {
-			this.lines.increment(line, covered);
+			this.lines.incrementInsn(line, covered);
 		}
 		this.instructionCounter = this.instructionCounter.increment(CounterImpl
 				.getInstance(covered));
@@ -73,7 +73,9 @@ public class MethodCoverage extends CoverageNodeImpl {
 	 *            source line number of the branching point
 	 */
 	public void addBranches(final int total, final int covered, final int line) {
-		// TODO: process line location
+		if (line != IMethodStructureVisitor.UNKNOWN_LINE) {
+			this.lines.incrementBranches(line, total, covered);
+		}
 		this.branchCounter = this.branchCounter.increment(CounterImpl
 				.getInstance(total, covered));
 	}

@@ -28,47 +28,56 @@ import org.junit.Test;
 public class LinesImplTest {
 
 	@Test
-	public void testEmpty1() {
+	public void testEmpty() {
 		final ILines c = new LinesImpl();
-		assertEquals(0, c.getTotalCount(), 0.0);
-		assertEquals(0, c.getCoveredCount(), 0.0);
-		assertEquals(-1, c.getFirstLine(), 0.0);
-		assertEquals(-1, c.getLastLine(), 0.0);
-		assertEquals(NO_CODE, c.getStatus(5), 0.0);
+		assertEquals(0, c.getTotalCount());
+		assertEquals(0, c.getCoveredCount());
+		assertEquals(-1, c.getFirstLine());
+		assertEquals(-1, c.getLastLine());
+		assertEquals(NO_CODE, c.getStatus(5));
+		assertEquals(0, c.getTotalBranches(5));
+		assertEquals(0, c.getMissedBranches(5));
+		assertEquals(0, c.getCoveredBranches(5));
 	}
 
 	@Test
 	public void testInitMissed() {
 		final LinesImpl c = createNotCovered(5, 7, 10);
-		assertEquals(3, c.getTotalCount(), 0.0);
-		assertEquals(0, c.getCoveredCount(), 0.0);
-		assertEquals(5, c.getFirstLine(), 0.0);
-		assertEquals(10, c.getLastLine(), 0.0);
-		assertEquals(NO_CODE, c.getStatus(4), 0.0);
-		assertEquals(NOT_COVERED, c.getStatus(5), 0.0);
-		assertEquals(NO_CODE, c.getStatus(6), 0.0);
-		assertEquals(NOT_COVERED, c.getStatus(7), 0.0);
-		assertEquals(NO_CODE, c.getStatus(8), 0.0);
-		assertEquals(NO_CODE, c.getStatus(9), 0.0);
-		assertEquals(NOT_COVERED, c.getStatus(10), 0.0);
-		assertEquals(NO_CODE, c.getStatus(11), 0.0);
+		assertEquals(3, c.getTotalCount());
+		assertEquals(0, c.getCoveredCount());
+		assertEquals(5, c.getFirstLine());
+		assertEquals(10, c.getLastLine());
+		assertEquals(NO_CODE, c.getStatus(4));
+		assertEquals(NOT_COVERED, c.getStatus(5));
+		assertEquals(NO_CODE, c.getStatus(6));
+		assertEquals(NOT_COVERED, c.getStatus(7));
+		assertEquals(NO_CODE, c.getStatus(8));
+		assertEquals(NO_CODE, c.getStatus(9));
+		assertEquals(NOT_COVERED, c.getStatus(10));
+		assertEquals(NO_CODE, c.getStatus(11));
+		assertEquals(0, c.getTotalBranches(0));
+		assertEquals(0, c.getMissedBranches(0));
+		assertEquals(0, c.getCoveredBranches(0));
 	}
 
 	@Test
 	public void testInitCovered() {
 		final LinesImpl c = createFullyCovered(5, 7, 10);
-		assertEquals(3, c.getTotalCount(), 0.0);
-		assertEquals(3, c.getCoveredCount(), 0.0);
-		assertEquals(5, c.getFirstLine(), 0.0);
-		assertEquals(10, c.getLastLine(), 0.0);
-		assertEquals(NO_CODE, c.getStatus(4), 0.0);
-		assertEquals(FULLY_COVERED, c.getStatus(5), 0.0);
-		assertEquals(NO_CODE, c.getStatus(6), 0.0);
-		assertEquals(FULLY_COVERED, c.getStatus(7), 0.0);
-		assertEquals(NO_CODE, c.getStatus(8), 0.0);
-		assertEquals(NO_CODE, c.getStatus(9), 0.0);
-		assertEquals(FULLY_COVERED, c.getStatus(10), 0.0);
-		assertEquals(NO_CODE, c.getStatus(11), 0.0);
+		assertEquals(3, c.getTotalCount());
+		assertEquals(3, c.getCoveredCount());
+		assertEquals(5, c.getFirstLine());
+		assertEquals(10, c.getLastLine());
+		assertEquals(NO_CODE, c.getStatus(4));
+		assertEquals(FULLY_COVERED, c.getStatus(5));
+		assertEquals(NO_CODE, c.getStatus(6));
+		assertEquals(FULLY_COVERED, c.getStatus(7));
+		assertEquals(NO_CODE, c.getStatus(8));
+		assertEquals(NO_CODE, c.getStatus(9));
+		assertEquals(FULLY_COVERED, c.getStatus(10));
+		assertEquals(NO_CODE, c.getStatus(11));
+		assertEquals(0, c.getTotalBranches(0));
+		assertEquals(0, c.getMissedBranches(0));
+		assertEquals(0, c.getCoveredBranches(0));
 	}
 
 	@Test
@@ -82,15 +91,18 @@ public class LinesImplTest {
 		// 4 total, 0 covered
 		final LinesImpl c = createNotCovered(1, 2, 5);
 		c.increment(createNotCovered(1, 4, 5));
-		assertEquals(4, c.getTotalCount(), 0.0);
-		assertEquals(0, c.getCoveredCount(), 0.0);
-		assertEquals(1, c.getFirstLine(), 0.0);
-		assertEquals(5, c.getLastLine(), 0.0);
-		assertEquals(NOT_COVERED, c.getStatus(1), 0.0);
-		assertEquals(NOT_COVERED, c.getStatus(2), 0.0);
-		assertEquals(NO_CODE, c.getStatus(3), 0.0);
-		assertEquals(NOT_COVERED, c.getStatus(4), 0.0);
-		assertEquals(NOT_COVERED, c.getStatus(5), 0.0);
+		assertEquals(4, c.getTotalCount());
+		assertEquals(0, c.getCoveredCount());
+		assertEquals(1, c.getFirstLine());
+		assertEquals(5, c.getLastLine());
+		assertEquals(NOT_COVERED, c.getStatus(1));
+		assertEquals(NOT_COVERED, c.getStatus(2));
+		assertEquals(NO_CODE, c.getStatus(3));
+		assertEquals(NOT_COVERED, c.getStatus(4));
+		assertEquals(NOT_COVERED, c.getStatus(5));
+		assertEquals(0, c.getTotalBranches(0));
+		assertEquals(0, c.getMissedBranches(0));
+		assertEquals(0, c.getCoveredBranches(0));
 	}
 
 	@Test
@@ -103,14 +115,17 @@ public class LinesImplTest {
 		// 4 total, 4 covered
 		final LinesImpl c = createFullyCovered(1, 2, 4);
 		c.increment(createFullyCovered(1, 3, 4));
-		assertEquals(4, c.getTotalCount(), 0.0);
-		assertEquals(4, c.getCoveredCount(), 0.0);
-		assertEquals(1, c.getFirstLine(), 0.0);
-		assertEquals(4, c.getLastLine(), 0.0);
-		assertEquals(FULLY_COVERED, c.getStatus(1), 0.0);
-		assertEquals(FULLY_COVERED, c.getStatus(2), 0.0);
-		assertEquals(FULLY_COVERED, c.getStatus(3), 0.0);
-		assertEquals(FULLY_COVERED, c.getStatus(4), 0.0);
+		assertEquals(4, c.getTotalCount());
+		assertEquals(4, c.getCoveredCount());
+		assertEquals(1, c.getFirstLine());
+		assertEquals(4, c.getLastLine());
+		assertEquals(FULLY_COVERED, c.getStatus(1));
+		assertEquals(FULLY_COVERED, c.getStatus(2));
+		assertEquals(FULLY_COVERED, c.getStatus(3));
+		assertEquals(FULLY_COVERED, c.getStatus(4));
+		assertEquals(0, c.getTotalBranches(0));
+		assertEquals(0, c.getMissedBranches(0));
+		assertEquals(0, c.getCoveredBranches(0));
 	}
 
 	@Test
@@ -120,11 +135,14 @@ public class LinesImplTest {
 		// 1 total, 1 covered
 		final LinesImpl c = createFullyCovered(1);
 		c.increment(createNotCovered(1));
-		assertEquals(1, c.getTotalCount(), 0.0);
-		assertEquals(1, c.getCoveredCount(), 0.0);
-		assertEquals(1, c.getFirstLine(), 0.0);
-		assertEquals(1, c.getLastLine(), 0.0);
-		assertEquals(PARTLY_COVERED, c.getStatus(1), 0.0);
+		assertEquals(1, c.getTotalCount());
+		assertEquals(1, c.getCoveredCount());
+		assertEquals(1, c.getFirstLine());
+		assertEquals(1, c.getLastLine());
+		assertEquals(PARTLY_COVERED, c.getStatus(1));
+		assertEquals(0, c.getTotalBranches(0));
+		assertEquals(0, c.getMissedBranches(0));
+		assertEquals(0, c.getCoveredBranches(0));
 	}
 
 	@Test
@@ -134,11 +152,14 @@ public class LinesImplTest {
 		// 1 total, 1 covered
 		final LinesImpl c = createNotCovered(1);
 		c.increment(createFullyCovered(1));
-		assertEquals(1, c.getTotalCount(), 0.0);
-		assertEquals(1, c.getCoveredCount(), 0.0);
-		assertEquals(1, c.getFirstLine(), 0.0);
-		assertEquals(1, c.getLastLine(), 0.0);
-		assertEquals(PARTLY_COVERED, c.getStatus(1), 0.0);
+		assertEquals(1, c.getTotalCount());
+		assertEquals(1, c.getCoveredCount());
+		assertEquals(1, c.getFirstLine());
+		assertEquals(1, c.getLastLine());
+		assertEquals(PARTLY_COVERED, c.getStatus(1));
+		assertEquals(0, c.getTotalBranches(0));
+		assertEquals(0, c.getMissedBranches(0));
+		assertEquals(0, c.getCoveredBranches(0));
 	}
 
 	@Test
@@ -152,15 +173,18 @@ public class LinesImplTest {
 		// 4 total, 4 covered
 		final LinesImpl c = createPartlyCovered(1, 2, 5);
 		c.increment(createPartlyCovered(1, 4, 5));
-		assertEquals(4, c.getTotalCount(), 0.0);
-		assertEquals(4, c.getCoveredCount(), 0.0);
-		assertEquals(1, c.getFirstLine(), 0.0);
-		assertEquals(5, c.getLastLine(), 0.0);
-		assertEquals(PARTLY_COVERED, c.getStatus(1), 0.0);
-		assertEquals(PARTLY_COVERED, c.getStatus(2), 0.0);
-		assertEquals(NO_CODE, c.getStatus(3), 0.0);
-		assertEquals(PARTLY_COVERED, c.getStatus(4), 0.0);
-		assertEquals(PARTLY_COVERED, c.getStatus(5), 0.0);
+		assertEquals(4, c.getTotalCount());
+		assertEquals(4, c.getCoveredCount());
+		assertEquals(1, c.getFirstLine());
+		assertEquals(5, c.getLastLine());
+		assertEquals(PARTLY_COVERED, c.getStatus(1));
+		assertEquals(PARTLY_COVERED, c.getStatus(2));
+		assertEquals(NO_CODE, c.getStatus(3));
+		assertEquals(PARTLY_COVERED, c.getStatus(4));
+		assertEquals(PARTLY_COVERED, c.getStatus(5));
+		assertEquals(0, c.getTotalBranches(0));
+		assertEquals(0, c.getMissedBranches(0));
+		assertEquals(0, c.getCoveredBranches(0));
 	}
 
 	@Test
@@ -170,11 +194,14 @@ public class LinesImplTest {
 		// 1 total, 1 covered
 		final LinesImpl c = createPartlyCovered(1);
 		c.increment(createNotCovered(1));
-		assertEquals(1, c.getTotalCount(), 0.0);
-		assertEquals(1, c.getCoveredCount(), 0.0);
-		assertEquals(1, c.getFirstLine(), 0.0);
-		assertEquals(1, c.getLastLine(), 0.0);
-		assertEquals(PARTLY_COVERED, c.getStatus(1), 0.0);
+		assertEquals(1, c.getTotalCount());
+		assertEquals(1, c.getCoveredCount());
+		assertEquals(1, c.getFirstLine());
+		assertEquals(1, c.getLastLine());
+		assertEquals(PARTLY_COVERED, c.getStatus(1));
+		assertEquals(0, c.getTotalBranches(0));
+		assertEquals(0, c.getMissedBranches(0));
+		assertEquals(0, c.getCoveredBranches(0));
 	}
 
 	@Test
@@ -184,11 +211,14 @@ public class LinesImplTest {
 		// 1 total, 1 covered
 		final LinesImpl c = createNotCovered(1);
 		c.increment(createPartlyCovered(1));
-		assertEquals(1, c.getTotalCount(), 0.0);
-		assertEquals(1, c.getCoveredCount(), 0.0);
-		assertEquals(1, c.getFirstLine(), 0.0);
-		assertEquals(1, c.getLastLine(), 0.0);
-		assertEquals(PARTLY_COVERED, c.getStatus(1), 0.0);
+		assertEquals(1, c.getTotalCount());
+		assertEquals(1, c.getCoveredCount());
+		assertEquals(1, c.getFirstLine());
+		assertEquals(1, c.getLastLine());
+		assertEquals(PARTLY_COVERED, c.getStatus(1));
+		assertEquals(0, c.getTotalBranches(0));
+		assertEquals(0, c.getMissedBranches(0));
+		assertEquals(0, c.getCoveredBranches(0));
 	}
 
 	@Test
@@ -198,11 +228,14 @@ public class LinesImplTest {
 		// 1 total, 1 covered
 		final LinesImpl c = createPartlyCovered(1);
 		c.increment(createFullyCovered(1));
-		assertEquals(1, c.getTotalCount(), 0.0);
-		assertEquals(1, c.getCoveredCount(), 0.0);
-		assertEquals(1, c.getFirstLine(), 0.0);
-		assertEquals(1, c.getLastLine(), 0.0);
-		assertEquals(PARTLY_COVERED, c.getStatus(1), 0.0);
+		assertEquals(1, c.getTotalCount());
+		assertEquals(1, c.getCoveredCount());
+		assertEquals(1, c.getFirstLine());
+		assertEquals(1, c.getLastLine());
+		assertEquals(PARTLY_COVERED, c.getStatus(1));
+		assertEquals(0, c.getTotalBranches(0));
+		assertEquals(0, c.getMissedBranches(0));
+		assertEquals(0, c.getCoveredBranches(0));
 	}
 
 	@Test
@@ -212,22 +245,28 @@ public class LinesImplTest {
 		// 1 total, 1 covered
 		final LinesImpl c = createFullyCovered(1);
 		c.increment(createPartlyCovered(1));
-		assertEquals(1, c.getTotalCount(), 0.0);
-		assertEquals(1, c.getCoveredCount(), 0.0);
-		assertEquals(1, c.getFirstLine(), 0.0);
-		assertEquals(1, c.getLastLine(), 0.0);
-		assertEquals(PARTLY_COVERED, c.getStatus(1), 0.0);
+		assertEquals(1, c.getTotalCount());
+		assertEquals(1, c.getCoveredCount());
+		assertEquals(1, c.getFirstLine());
+		assertEquals(1, c.getLastLine());
+		assertEquals(PARTLY_COVERED, c.getStatus(1));
+		assertEquals(0, c.getTotalBranches(0));
+		assertEquals(0, c.getMissedBranches(0));
+		assertEquals(0, c.getCoveredBranches(0));
 	}
 
 	@Test
 	public void testIncrementEmpty() {
 		final LinesImpl c = createFullyCovered(1);
 		c.increment(new LinesImpl());
-		assertEquals(1, c.getTotalCount(), 0.0);
-		assertEquals(1, c.getCoveredCount(), 0.0);
-		assertEquals(1, c.getFirstLine(), 0.0);
-		assertEquals(1, c.getLastLine(), 0.0);
-		assertEquals(FULLY_COVERED, c.getStatus(1), 0.0);
+		assertEquals(1, c.getTotalCount());
+		assertEquals(1, c.getCoveredCount());
+		assertEquals(1, c.getFirstLine());
+		assertEquals(1, c.getLastLine());
+		assertEquals(FULLY_COVERED, c.getStatus(1));
+		assertEquals(0, c.getTotalBranches(0));
+		assertEquals(0, c.getMissedBranches(0));
+		assertEquals(0, c.getCoveredBranches(0));
 	}
 
 	@Test
@@ -239,13 +278,16 @@ public class LinesImplTest {
 		// 3 total, 3 covered
 		final LinesImpl c = createFullyCovered(2, 3);
 		c.increment(createFullyCovered(1, 2, 3));
-		assertEquals(3, c.getTotalCount(), 0.0);
-		assertEquals(3, c.getCoveredCount(), 0.0);
-		assertEquals(1, c.getFirstLine(), 0.0);
-		assertEquals(3, c.getLastLine(), 0.0);
-		assertEquals(FULLY_COVERED, c.getStatus(1), 0.0);
-		assertEquals(FULLY_COVERED, c.getStatus(2), 0.0);
-		assertEquals(FULLY_COVERED, c.getStatus(3), 0.0);
+		assertEquals(3, c.getTotalCount());
+		assertEquals(3, c.getCoveredCount());
+		assertEquals(1, c.getFirstLine());
+		assertEquals(3, c.getLastLine());
+		assertEquals(FULLY_COVERED, c.getStatus(1));
+		assertEquals(FULLY_COVERED, c.getStatus(2));
+		assertEquals(FULLY_COVERED, c.getStatus(3));
+		assertEquals(0, c.getTotalBranches(0));
+		assertEquals(0, c.getMissedBranches(0));
+		assertEquals(0, c.getCoveredBranches(0));
 	}
 
 	@Test
@@ -257,13 +299,16 @@ public class LinesImplTest {
 		// 3 total, 3 covered
 		final LinesImpl c = createFullyCovered(1, 2);
 		c.increment(createFullyCovered(1, 2, 3));
-		assertEquals(3, c.getTotalCount(), 0.0);
-		assertEquals(3, c.getCoveredCount(), 0.0);
-		assertEquals(1, c.getFirstLine(), 0.0);
-		assertEquals(3, c.getLastLine(), 0.0);
-		assertEquals(FULLY_COVERED, c.getStatus(1), 0.0);
-		assertEquals(FULLY_COVERED, c.getStatus(2), 0.0);
-		assertEquals(FULLY_COVERED, c.getStatus(3), 0.0);
+		assertEquals(3, c.getTotalCount());
+		assertEquals(3, c.getCoveredCount());
+		assertEquals(1, c.getFirstLine());
+		assertEquals(3, c.getLastLine());
+		assertEquals(FULLY_COVERED, c.getStatus(1));
+		assertEquals(FULLY_COVERED, c.getStatus(2));
+		assertEquals(FULLY_COVERED, c.getStatus(3));
+		assertEquals(0, c.getTotalBranches(0));
+		assertEquals(0, c.getMissedBranches(0));
+		assertEquals(0, c.getCoveredBranches(0));
 	}
 
 	@Test
@@ -275,19 +320,22 @@ public class LinesImplTest {
 		// 3 total, 3 covered
 		final LinesImpl c = createFullyCovered(2);
 		c.increment(createFullyCovered(1, 2, 3));
-		assertEquals(3, c.getTotalCount(), 0.0);
-		assertEquals(3, c.getCoveredCount(), 0.0);
-		assertEquals(1, c.getFirstLine(), 0.0);
-		assertEquals(3, c.getLastLine(), 0.0);
-		assertEquals(FULLY_COVERED, c.getStatus(1), 0.0);
-		assertEquals(FULLY_COVERED, c.getStatus(2), 0.0);
-		assertEquals(FULLY_COVERED, c.getStatus(3), 0.0);
+		assertEquals(3, c.getTotalCount());
+		assertEquals(3, c.getCoveredCount());
+		assertEquals(1, c.getFirstLine());
+		assertEquals(3, c.getLastLine());
+		assertEquals(FULLY_COVERED, c.getStatus(1));
+		assertEquals(FULLY_COVERED, c.getStatus(2));
+		assertEquals(FULLY_COVERED, c.getStatus(3));
+		assertEquals(0, c.getTotalBranches(0));
+		assertEquals(0, c.getMissedBranches(0));
+		assertEquals(0, c.getCoveredBranches(0));
 	}
 
 	private LinesImpl createNotCovered(final int... lines) {
 		final LinesImpl c = new LinesImpl();
 		for (int l : lines) {
-			c.increment(l, false);
+			c.incrementInsn(l, false);
 		}
 		return c;
 	}
@@ -295,7 +343,7 @@ public class LinesImplTest {
 	private LinesImpl createFullyCovered(final int... lines) {
 		final LinesImpl c = new LinesImpl();
 		for (int l : lines) {
-			c.increment(l, true);
+			c.incrementInsn(l, true);
 		}
 		return c;
 	}
@@ -303,10 +351,62 @@ public class LinesImplTest {
 	private LinesImpl createPartlyCovered(final int... lines) {
 		final LinesImpl c = new LinesImpl();
 		for (int l : lines) {
-			c.increment(l, false);
-			c.increment(l, true);
+			c.incrementInsn(l, false);
+			c.incrementInsn(l, true);
 		}
 		return c;
+	}
+
+	@Test
+	public void testIncrementBranches1() {
+		final LinesImpl c = new LinesImpl();
+		c.incrementBranches(5, 8, 3);
+		assertEquals(5, c.getFirstLine());
+		assertEquals(5, c.getLastLine());
+
+		assertEquals(0, c.getTotalBranches(4));
+		assertEquals(0, c.getCoveredBranches(4));
+		assertEquals(0, c.getMissedBranches(4));
+
+		assertEquals(8, c.getTotalBranches(5));
+		assertEquals(3, c.getCoveredBranches(5));
+		assertEquals(5, c.getMissedBranches(5));
+		assertEquals(NO_CODE, c.getStatus(5));
+
+		assertEquals(0, c.getTotalBranches(6));
+		assertEquals(0, c.getCoveredBranches(6));
+		assertEquals(0, c.getMissedBranches(6));
+	}
+
+	@Test
+	public void testIncrementBranches2() {
+		final LinesImpl c = new LinesImpl();
+		c.incrementBranches(5, 8, 3);
+
+		final LinesImpl c2 = new LinesImpl();
+		c2.incrementBranches(5, 80, 30);
+
+		c.increment(c2);
+
+		assertEquals(5, c.getFirstLine());
+		assertEquals(5, c.getLastLine());
+		assertEquals(88, c.getTotalBranches(5));
+		assertEquals(33, c.getCoveredBranches(5));
+		assertEquals(55, c.getMissedBranches(5));
+		assertEquals(NO_CODE, c.getStatus(5));
+	}
+
+	@Test
+	public void testIncrementBranchesOverflow() {
+		final LinesImpl c = new LinesImpl();
+		c.incrementBranches(5, 1000, 0);
+
+		assertEquals(5, c.getFirstLine());
+		assertEquals(5, c.getLastLine());
+		assertEquals(127, c.getTotalBranches(5));
+		assertEquals(0, c.getCoveredBranches(5));
+		assertEquals(127, c.getMissedBranches(5));
+		assertEquals(NO_CODE, c.getStatus(5));
 	}
 
 }

@@ -49,7 +49,7 @@ public interface ILines extends ICounter {
 	public int getLastLine();
 
 	/**
-	 * Returns the coverage status of the given line.
+	 * Returns the instruction coverage status of the given line.
 	 * 
 	 * @see #NO_CODE
 	 * @see #NOT_COVERED
@@ -61,5 +61,32 @@ public interface ILines extends ICounter {
 	 * @return status of this line
 	 */
 	public byte getStatus(int line);
+
+	/**
+	 * Returns the total number of branches in the given line.
+	 * 
+	 * @param line
+	 *            number of the line in question
+	 * @return total number of branches
+	 */
+	public int getTotalBranches(int line);
+
+	/**
+	 * Returns the number of covered branches in the given line.
+	 * 
+	 * @param line
+	 *            number of the line in question
+	 * @return number of covered branches
+	 */
+	public int getCoveredBranches(int line);
+
+	/**
+	 * Returns the number of missed branches in the given line.
+	 * 
+	 * @param line
+	 *            number of the line in question
+	 * @return number of missed branches
+	 */
+	public int getMissedBranches(int line);
 
 }

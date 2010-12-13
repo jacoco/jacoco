@@ -103,10 +103,10 @@ public class CoverageNodeImplTest {
 			{
 				instructionCounter = CounterImpl.getInstance(42, 41);
 				branchCounter = CounterImpl.getInstance(25, 15);
-				lines.increment(1, false);
-				lines.increment(2, false);
-				lines.increment(3, true);
-				lines.increment(4, true);
+				lines.incrementInsn(1, false);
+				lines.incrementInsn(2, false);
+				lines.incrementInsn(3, true);
+				lines.incrementInsn(4, true);
 				methodCounter = CounterImpl.getInstance(22, 21);
 				classCounter = CounterImpl.getInstance(12, 11);
 			}
@@ -153,11 +153,11 @@ public class CoverageNodeImplTest {
 				methodCounter = CounterImpl.getInstance(2, 2);
 				branchCounter = CounterImpl.getInstance(3, 3);
 				instructionCounter = CounterImpl.getInstance(4, 4);
-				lines.increment(1, true);
-				lines.increment(2, true);
-				lines.increment(3, true);
-				lines.increment(4, true);
-				lines.increment(5, true);
+				lines.incrementInsn(1, true);
+				lines.incrementInsn(2, true);
+				lines.incrementInsn(3, true);
+				lines.incrementInsn(4, true);
+				lines.incrementInsn(5, true);
 			}
 		};
 		ICoverageNode copy = node.getPlainCopy();

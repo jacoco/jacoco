@@ -101,6 +101,23 @@ public class MethodCoverageTest {
 		assertEquals(CounterImpl.getInstance(7, 3), data.getBranchCounter());
 		assertEquals(CounterImpl.getInstance(1, 0), data.getMethodCounter());
 		assertEquals(CounterImpl.getInstance(0, 0), data.getClassCounter());
+		assertEquals(7, data.getLines().getTotalBranches(0));
+		assertEquals(3, data.getLines().getCoveredBranches(0));
+	}
+
+	@Test
+	public void testBranchesNoLine() {
+		MethodCoverage data = new MethodCoverage("sample", "()V", null);
+		data.addBranches(7, 3, IMethodStructureVisitor.UNKNOWN_LINE);
+
+		assertEquals(CounterImpl.getInstance(0, 0), data.getLineCounter());
+		assertEquals(CounterImpl.getInstance(0, 0),
+				data.getInstructionCounter());
+		assertEquals(CounterImpl.getInstance(7, 3), data.getBranchCounter());
+		assertEquals(CounterImpl.getInstance(1, 0), data.getMethodCounter());
+		assertEquals(CounterImpl.getInstance(0, 0), data.getClassCounter());
+		assertEquals(0, data.getLines().getTotalBranches(0));
+		assertEquals(0, data.getLines().getCoveredBranches(0));
 	}
 
 }
