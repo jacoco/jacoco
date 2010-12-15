@@ -101,7 +101,6 @@ pre.source span.bfc {
 
 pre.source span.bfc:hover {
   background-color:#80ff80;
-  cursor: help;
 }
 
 pre.source span.bnc {
@@ -112,7 +111,6 @@ pre.source span.bnc {
 
 pre.source span.bnc:hover {
   background-color:#ff8080;
-  cursor: help;
 }
 
 pre.source span.bpc {
@@ -123,7 +121,6 @@ pre.source span.bpc {
 
 pre.source span.bpc:hover {
   background-color:#ffff80;
-  cursor: help;
 }
 
 table.coverage {
