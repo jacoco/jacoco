@@ -18,7 +18,6 @@ import java.io.IOException;
 import org.jacoco.core.analysis.ICoverageNode.ElementType;
 import org.jacoco.report.MemoryMultiReportOutput;
 import org.jacoco.report.ReportOutputFolder;
-import org.jacoco.report.internal.html.resources.Resources;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -54,6 +53,9 @@ public class ResourcesTest {
 	@Test
 	public void testCopyResources() throws IOException {
 		resources.copyResources();
+		output.assertFile(".resources/branchfc.gif");
+		output.assertFile(".resources/branchnc.gif");
+		output.assertFile(".resources/branchpc.gif");
 		output.assertFile(".resources/bundle.gif");
 		output.assertFile(".resources/class.gif");
 		output.assertFile(".resources/down.gif");

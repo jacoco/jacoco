@@ -114,6 +114,9 @@ public class Resources {
 		copyResource("sort.gif");
 		copyResource("up.gif");
 		copyResource("down.gif");
+		copyResource("branchfc.gif");
+		copyResource("branchnc.gif");
+		copyResource("branchpc.gif");
 		copyResource(REDBAR);
 		copyResource(GREENBAR);
 		copyResource(PRETTIFY_STYLESHEET);

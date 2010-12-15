@@ -160,10 +160,10 @@ public class XMLReportNodeHandlerTest {
 		final CoverageNodeImpl node = new CoverageNodeImpl(
 				ElementType.SOURCEFILE, "Foo.java", true) {
 			{
-				lines.increment(11, false);
-				lines.increment(13, false);
-				lines.increment(13, true);
-				lines.increment(14, true);
+				lines.incrementInsn(11, false);
+				lines.incrementInsn(13, false);
+				lines.incrementInsn(13, true);
+				lines.incrementInsn(14, true);
 			}
 		};
 		packageHandler.visitChild(node).visitEnd(null);

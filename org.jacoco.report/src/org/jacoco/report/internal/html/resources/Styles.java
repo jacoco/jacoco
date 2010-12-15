@@ -76,14 +76,23 @@ public class Styles {
 	/** Line number before each source line */
 	public static final String NR = "nr";
 
-	/** Part of source code that is not covered */
+	/** Part of source code where instructions are not covered */
 	public static final String NOT_COVERED = "nc";
 
-	/** Part of source code that is partly covered */
+	/** Part of source code where instructions are partly covered */
 	public static final String PARTLY_COVERED = "pc";
 
-	/** Part of source code that is fully covered */
+	/** Part of source code where instructions are is fully covered */
 	public static final String FULLY_COVERED = "fc";
+
+	/** Part of source code where branches are not covered */
+	public static final String BRANCH_NOT_COVERED = "bnc";
+
+	/** Part of source code where branches are partly covered */
+	public static final String BRANCH_PARTLY_COVERED = "bpc";
+
+	/** Part of source code where branches are fully covered */
+	public static final String BRANCH_FULLY_COVERED = "bfc";
 
 	/**
 	 * Returns a combined style from the given styles.

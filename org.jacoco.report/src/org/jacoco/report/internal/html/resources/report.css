@@ -76,7 +76,7 @@ pre.source {
 }
 
 pre.source span.nr {
-  color:#c0c0c0;
+  color:#a0a0a0;
   border-right:#d6d3ce 1px solid;
   padding-right:2pt;
 }
@@ -93,6 +93,38 @@ pre.source span.pc {
   background-color:#ffffcc;
 }
 
+pre.source span.bfc {
+  background-image: url(branchfc.gif);
+  background-repeat: no-repeat;
+  background-position: 2px center;
+}
+
+pre.source span.bfc:hover {
+  background-color:#80ff80;
+  cursor: help;
+}
+
+pre.source span.bnc {
+  background-image: url(branchnc.gif);
+  background-repeat: no-repeat;
+  background-position: 2px center;
+}
+
+pre.source span.bnc:hover {
+  background-color:#ff8080;
+  cursor: help;
+}
+
+pre.source span.bpc {
+  background-image: url(branchpc.gif);
+  background-repeat: no-repeat;
+  background-position: 2px center;
+}
+
+pre.source span.bpc:hover {
+  background-color:#ffff80;
+  cursor: help;
+}
 
 table.coverage {
   empty-cells:show;
