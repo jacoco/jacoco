@@ -53,11 +53,8 @@
 
 <h3>Features</h3>
 <ul>
-  <li><i>Statement coverage</i> on Java byte code level, where instrumentation
-      and recording happens on 
-      <a class="extern" href="http://en.wikipedia.org/wiki/Basic_block"><i>basic block</i></a>
-      granularity. This is the same mechanism implemented by the
-      <a class="extern" href="http://emma.sourceforge.net/">EMMA</a> library.</li>
+  <li>Statement (C0) and branch (C1) coverage analysis.</li>
+  <li>Based on Java byte code and therefore works also without source files.</li>
   <li>Simple integration through <a href="agent.html">Java agent</a> based
       on-the-fly instrumentation. Other integration scenarios like custom class
       loaders are possible through the API.</li>
@@ -70,7 +67,6 @@
       any point in time.</li>
   <li>Several <a href="ant.html">Ant task</a> to collect and manage execution
       data and create structured coverage reports.</li>
-  <li>Planned: Branch coverage based on basic block flow.</li>
   <li>Planned: Better reporting of Exception within blocks.</li>
 </ul>
 
