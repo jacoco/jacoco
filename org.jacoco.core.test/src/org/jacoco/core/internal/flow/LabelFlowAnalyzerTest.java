@@ -18,6 +18,7 @@ import static org.objectweb.asm.Opcodes.*;
 import org.junit.Before;
 import org.junit.Test;
 import org.objectweb.asm.Label;
+import org.objectweb.asm.Opcodes;
 
 /**
  * Unit tests for {@link LabelFlowAnalyzer}.
@@ -62,7 +63,7 @@ public class LabelFlowAnalyzerTest {
 	public void testFlowScenario04() {
 		analyzer.visitLabel(label);
 		assertFalse(LabelInfo.isMultiTarget(label));
-		assertTrue(LabelInfo.isSuccessor(label));
+		assertFalse(LabelInfo.isSuccessor(label));
 	}
 
 	@Test
@@ -70,7 +71,7 @@ public class LabelFlowAnalyzerTest {
 		analyzer.visitLabel(label);
 		analyzer.visitJumpInsn(GOTO, label);
 		assertTrue(LabelInfo.isMultiTarget(label));
-		assertTrue(LabelInfo.isSuccessor(label));
+		assertFalse(LabelInfo.isSuccessor(label));
 	}
 
 	@Test
@@ -100,6 +101,7 @@ public class LabelFlowAnalyzerTest {
 
 	@Test
 	public void testFlowScenario09() {
+		analyzer.visitInsn(Opcodes.NOP);
 		analyzer.visitLabel(label);
 		analyzer.visitLabel(label);
 		assertFalse(LabelInfo.isMultiTarget(label));
@@ -136,7 +138,8 @@ public class LabelFlowAnalyzerTest {
 
 	@Test
 	public void testInit() {
-		assertTrue(analyzer.successor);
+		assertFalse(analyzer.successor);
+		assertTrue(analyzer.first);
 	}
 
 	@Test
@@ -251,90 +254,53 @@ public class LabelFlowAnalyzerTest {
 	}
 
 	private void testInsn(int opcode, boolean expected) {
-		// ensure the flag is actually set:
+		// ensure the flags are actually set:
 		analyzer.successor = !expected;
+		analyzer.first = true;
 		analyzer.visitInsn(opcode);
 		assertTrue(expected == analyzer.successor);
+		assertFalse(analyzer.first);
+	}
+
+	@Test(expected = AssertionError.class)
+	public void testVisitInsnNegative() {
+		analyzer.visitInsn(RET);
 	}
 
 	@Test
 	public void testIntInsn() {
-		testIntInsn(BIPUSH);
-		testIntInsn(SIPUSH);
-		testIntInsn(NEWARRAY);
-	}
-
-	private void testIntInsn(int opcode) {
-		// ensure the flag is actually set:
-		analyzer.successor = false;
-		analyzer.visitIntInsn(opcode, 0);
+		analyzer.visitIntInsn(BIPUSH, 0);
 		assertTrue(analyzer.successor);
+		assertFalse(analyzer.first);
 	}
 
 	@Test
 	public void testVarInsn() {
-		testVarInsn(ILOAD);
-		testVarInsn(LLOAD);
-		testVarInsn(FLOAD);
-		testVarInsn(DLOAD);
-		testVarInsn(ALOAD);
-		testVarInsn(ISTORE);
-		testVarInsn(LSTORE);
-		testVarInsn(FSTORE);
-		testVarInsn(DSTORE);
-		testVarInsn(ASTORE);
-	}
-
-	private void testVarInsn(int opcode) {
-		// ensure the flag is actually set:
-		analyzer.successor = false;
-		analyzer.visitVarInsn(opcode, 0);
+		analyzer.visitVarInsn(ILOAD, 0);
 		assertTrue(analyzer.successor);
+		assertFalse(analyzer.first);
 	}
 
 	@Test
 	public void testTypeInsn() {
-		testTypeInsn(NEW);
-		testTypeInsn(ANEWARRAY);
-		testTypeInsn(CHECKCAST);
-		testTypeInsn(INSTANCEOF);
-	}
-
-	private void testTypeInsn(int opcode) {
-		// ensure the flag is actually set:
-		analyzer.successor = false;
-		analyzer.visitTypeInsn(opcode, "java/lang/String");
+		analyzer.visitTypeInsn(NEW, "java/lang/String");
 		assertTrue(analyzer.successor);
+		assertFalse(analyzer.first);
 	}
 
 	@Test
 	public void testFieldInsn() {
-		testFieldInsn(GETSTATIC);
-		testFieldInsn(PUTSTATIC);
-		testFieldInsn(GETFIELD);
-		testFieldInsn(PUTFIELD);
-	}
-
-	private void testFieldInsn(int opcode) {
-		// ensure the flag is actually set:
 		analyzer.successor = false;
-		analyzer.visitFieldInsn(opcode, "Foo", "name", "Ljava/lang/String;");
+		analyzer.visitFieldInsn(GETFIELD, "Foo", "name", "Ljava/lang/String;");
 		assertTrue(analyzer.successor);
+		assertFalse(analyzer.first);
 	}
 
 	@Test
 	public void testMethodInsn() {
-		testMethodInsn(INVOKEVIRTUAL);
-		testMethodInsn(INVOKESPECIAL);
-		testMethodInsn(INVOKESTATIC);
-		testMethodInsn(INVOKEINTERFACE);
-	}
-
-	private void testMethodInsn(int opcode) {
-		// ensure the flag is actually set:
-		analyzer.successor = false;
-		analyzer.visitMethodInsn(opcode, "Foo", "doit", "()V");
+		analyzer.visitMethodInsn(INVOKEVIRTUAL, "Foo", "doit", "()V");
 		assertTrue(analyzer.successor);
+		assertFalse(analyzer.first);
 	}
 
 	@Test
@@ -359,51 +325,53 @@ public class LabelFlowAnalyzerTest {
 	}
 
 	private void testJumpInsn(int opcode, boolean expected) {
-		// ensure the flag is actually set:
+		// ensure the flags are actually set:
 		analyzer.successor = !expected;
+		analyzer.first = true;
 		analyzer.visitJumpInsn(opcode, label);
 		assertTrue(expected == analyzer.successor);
+		assertFalse(analyzer.first);
+	}
+
+	@Test(expected = AssertionError.class)
+	public void testVisitJumpInsnNegative() {
+		analyzer.visitJumpInsn(JSR, label);
 	}
 
 	@Test
 	public void testLdcInsn() {
-		// ensure the flag is actually set:
-		analyzer.successor = false;
 		analyzer.visitLdcInsn("Foo");
 		assertTrue(analyzer.successor);
+		assertFalse(analyzer.first);
 	}
 
 	@Test
 	public void testIincInsn() {
-		// ensure the flag is actually set:
-		analyzer.successor = false;
 		analyzer.visitIincInsn(0, 1);
 		assertTrue(analyzer.successor);
+		assertFalse(analyzer.first);
 	}
 
 	@Test
 	public void testTableSwitchInsn() {
-		// ensure the flag is actually set:
-		analyzer.successor = true;
 		analyzer.visitTableSwitchInsn(0, 0, label, new Label[] { label });
 		assertFalse(analyzer.successor);
+		assertFalse(analyzer.first);
 	}
 
 	@Test
 	public void testLookupSwitchInsn() {
-		// ensure the flag is actually set:
-		analyzer.successor = true;
 		analyzer.visitLookupSwitchInsn(label, new int[] { 0 },
 				new Label[] { label });
 		assertFalse(analyzer.successor);
+		assertFalse(analyzer.first);
 	}
 
 	@Test
 	public void testMultiANewArrayInsn() {
-		// ensure the flag is actually set:
-		analyzer.successor = false;
 		analyzer.visitMultiANewArrayInsn("java/lang/String", 3);
 		assertTrue(analyzer.successor);
+		assertFalse(analyzer.first);
 	}
 
 }

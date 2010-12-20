@@ -29,9 +29,15 @@ public final class LabelFlowAnalyzer implements MethodVisitor {
 
 	/**
 	 * <code>true</code> if the current instruction is a potential successor of
-	 * the previous instruction. Accessible for testing only.
+	 * the previous instruction. Accessible for testing.
 	 */
-	boolean successor = true;
+	boolean successor = false;
+
+	/**
+	 * <code>true</code> for the very first instruction only. Accessible for
+	 * testing.
+	 */
+	boolean first = true;
 
 	public void visitTryCatchBlock(final Label start, final Label end,
 			final Label handler, final String type) {
@@ -46,9 +52,13 @@ public final class LabelFlowAnalyzer implements MethodVisitor {
 			throw new AssertionError("Subroutines not supported.");
 		}
 		successor = opcode != Opcodes.GOTO;
+		first = false;
 	}
 
 	public void visitLabel(final Label label) {
+		if (first) {
+			LabelInfo.setTarget(label);
+		}
 		if (successor) {
 			LabelInfo.setSuccessor(label);
 		}
@@ -72,6 +82,7 @@ public final class LabelFlowAnalyzer implements MethodVisitor {
 			setTargetIfNotDone(l);
 		}
 		successor = false;
+		first = false;
 	}
 
 	private static void setTargetIfNotDone(final Label label) {
@@ -98,40 +109,49 @@ public final class LabelFlowAnalyzer implements MethodVisitor {
 			successor = true;
 			break;
 		}
+		first = false;
 	}
 
 	public void visitIntInsn(final int opcode, final int operand) {
 		successor = true;
+		first = false;
 	}
 
 	public void visitVarInsn(final int opcode, final int var) {
 		successor = true;
+		first = false;
 	}
 
 	public void visitTypeInsn(final int opcode, final String type) {
 		successor = true;
+		first = false;
 	}
 
 	public void visitFieldInsn(final int opcode, final String owner,
 			final String name, final String desc) {
 		successor = true;
+		first = false;
 	}
 
 	public void visitMethodInsn(final int opcode, final String owner,
 			final String name, final String desc) {
 		successor = true;
+		first = false;
 	}
 
 	public void visitLdcInsn(final Object cst) {
 		successor = true;
+		first = false;
 	}
 
 	public void visitIincInsn(final int var, final int increment) {
 		successor = true;
+		first = false;
 	}
 
 	public void visitMultiANewArrayInsn(final String desc, final int dims) {
 		successor = true;
+		first = false;
 	}
 
 	// Not relevant:

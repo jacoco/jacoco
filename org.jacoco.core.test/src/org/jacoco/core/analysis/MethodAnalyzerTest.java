@@ -253,6 +253,54 @@ public class MethodAnalyzerTest implements IProbeIdGenerator {
 		assertLine(1003, 0, 1, 0, 0);
 	}
 
+	// === Scenario: jump to first instruction ===
+
+	private void createJumpToFirst() {
+		final Label l1 = new Label();
+		method.visitLabel(l1);
+		method.visitLineNumber(1001, l1);
+		method.visitVarInsn(Opcodes.ALOAD, 0);
+		method.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "Foo", "test", "()Z");
+		method.visitJumpInsn(Opcodes.IFEQ, l1);
+		final Label l2 = new Label();
+		method.visitLabel(l2);
+		method.visitLineNumber(1002, l2);
+		method.visitInsn(Opcodes.RETURN);
+	}
+
+	@Test
+	public void testJumpToFirstNotCovered() {
+		createJumpToFirst();
+		runMethodAnalzer();
+		assertEquals(2, nextProbeId);
+
+		assertLine(1001, 3, 0, 2, 0);
+		assertLine(1002, 1, 0, 0, 0);
+	}
+
+	@Test
+	public void testJumpToFirstCovered1() {
+		createJumpToFirst();
+		probes[0] = true;
+		runMethodAnalzer();
+		assertEquals(2, nextProbeId);
+
+		assertLine(1001, 0, 3, 1, 1);
+		assertLine(1002, 1, 0, 0, 0);
+	}
+
+	@Test
+	public void testJumpToFirstCovered2() {
+		createJumpToFirst();
+		probes[0] = true;
+		probes[1] = true;
+		runMethodAnalzer();
+		assertEquals(2, nextProbeId);
+
+		assertLine(1001, 0, 3, 0, 2);
+		assertLine(1002, 0, 1, 0, 0);
+	}
+
 	// === Scenario: table switch ===
 
 	private void createTableSwitch() {
