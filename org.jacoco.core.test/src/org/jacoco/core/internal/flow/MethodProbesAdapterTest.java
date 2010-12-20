@@ -11,8 +11,8 @@
  *******************************************************************************/
 package org.jacoco.core.internal.flow;
 
+import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertSame;
 
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
@@ -65,10 +65,8 @@ public class MethodProbesAdapterTest implements IProbeIdGenerator,
 		adapter.visitLabel(label);
 
 		assertEquals(2, methodName.size());
-		assertEquals("visitProbe", methodName.get(0));
-		assertEquals(Integer.valueOf(1000), methodArgs.get(0)[0]);
-		assertEquals("visitLabel", methodName.get(1));
-		assertEquals(label, methodArgs.get(1)[0]);
+		assertMethodCall(0, "visitProbe", Integer.valueOf(1000));
+		assertMethodCall(1, "visitLabel", label);
 	}
 
 	@Test
@@ -76,17 +74,7 @@ public class MethodProbesAdapterTest implements IProbeIdGenerator,
 		adapter.visitLabel(label);
 
 		assertEquals(1, methodName.size());
-		assertEquals("visitLabel", methodName.get(0));
-		assertEquals(label, methodArgs.get(0)[0]);
-	}
-
-	@Test
-	public void testVisitProbe3() {
-		adapter.visitLabel(label);
-
-		assertEquals(1, methodName.size());
-		assertEquals("visitLabel", methodName.get(0));
-		assertEquals(label, methodArgs.get(0)[0]);
+		assertMethodCall(0, "visitLabel", label);
 	}
 
 	@Test
@@ -94,8 +82,8 @@ public class MethodProbesAdapterTest implements IProbeIdGenerator,
 		adapter.visitInsn(Opcodes.RETURN);
 
 		assertEquals(1, methodName.size());
-		assertEquals("visitInsnWithProbe", methodName.get(0));
-		assertEquals(Integer.valueOf(Opcodes.RETURN), methodArgs.get(0)[0]);
+		assertMethodCall(0, "visitInsnWithProbe",
+				Integer.valueOf(Opcodes.RETURN), Integer.valueOf(1000));
 	}
 
 	@Test
@@ -103,8 +91,7 @@ public class MethodProbesAdapterTest implements IProbeIdGenerator,
 		adapter.visitInsn(Opcodes.IADD);
 
 		assertEquals(1, methodName.size());
-		assertEquals("visitInsn", methodName.get(0));
-		assertEquals(Integer.valueOf(Opcodes.IADD), methodArgs.get(0)[0]);
+		assertMethodCall(0, "visitInsn", Integer.valueOf(Opcodes.IADD));
 	}
 
 	@Test
@@ -115,10 +102,8 @@ public class MethodProbesAdapterTest implements IProbeIdGenerator,
 		adapter.visitJumpInsn(Opcodes.IFLT, label);
 
 		assertEquals(1, methodName.size());
-		assertEquals("visitJumpInsnWithProbe", methodName.get(0));
-		assertEquals(Integer.valueOf(Opcodes.IFLT), methodArgs.get(0)[0]);
-		assertEquals(label, methodArgs.get(0)[1]);
-		assertEquals(Integer.valueOf(1000), methodArgs.get(0)[2]);
+		assertMethodCall(0, "visitJumpInsnWithProbe",
+				Integer.valueOf(Opcodes.IFLT), label, Integer.valueOf(1000));
 	}
 
 	@Test
@@ -126,9 +111,8 @@ public class MethodProbesAdapterTest implements IProbeIdGenerator,
 		adapter.visitJumpInsn(Opcodes.IFLT, label);
 
 		assertEquals(1, methodName.size());
-		assertEquals("visitJumpInsn", methodName.get(0));
-		assertEquals(Integer.valueOf(Opcodes.IFLT), methodArgs.get(0)[0]);
-		assertEquals(label, methodArgs.get(0)[1]);
+		assertMethodCall(0, "visitJumpInsn", Integer.valueOf(Opcodes.IFLT),
+				label);
 	}
 
 	@Test
@@ -141,10 +125,8 @@ public class MethodProbesAdapterTest implements IProbeIdGenerator,
 		adapter.visitLookupSwitchInsn(label, keys, labels);
 
 		assertEquals(1, methodName.size());
-		assertEquals("visitLookupSwitchInsnWithProbes", methodName.get(0));
-		assertSame(label, methodArgs.get(0)[0]);
-		assertSame(keys, methodArgs.get(0)[1]);
-		assertSame(labels, methodArgs.get(0)[2]);
+		assertMethodCall(0, "visitLookupSwitchInsnWithProbes", label, keys,
+				labels);
 		assertEquals(1000, LabelInfo.getProbeId(label));
 	}
 
@@ -159,10 +141,8 @@ public class MethodProbesAdapterTest implements IProbeIdGenerator,
 		adapter.visitLookupSwitchInsn(label, keys, labels);
 
 		assertEquals(1, methodName.size());
-		assertEquals("visitLookupSwitchInsnWithProbes", methodName.get(0));
-		assertSame(label, methodArgs.get(0)[0]);
-		assertSame(keys, methodArgs.get(0)[1]);
-		assertSame(labels, methodArgs.get(0)[2]);
+		assertMethodCall(0, "visitLookupSwitchInsnWithProbes", label, keys,
+				labels);
 		assertEquals(LabelInfo.NO_PROBE, LabelInfo.getProbeId(label));
 		assertEquals(1000, LabelInfo.getProbeId(label2));
 	}
@@ -174,10 +154,7 @@ public class MethodProbesAdapterTest implements IProbeIdGenerator,
 		adapter.visitLookupSwitchInsn(label, keys, labels);
 
 		assertEquals(1, methodName.size());
-		assertEquals("visitLookupSwitchInsn", methodName.get(0));
-		assertSame(label, methodArgs.get(0)[0]);
-		assertSame(keys, methodArgs.get(0)[1]);
-		assertSame(labels, methodArgs.get(0)[2]);
+		assertMethodCall(0, "visitLookupSwitchInsn", label, keys, labels);
 	}
 
 	@Test
@@ -189,11 +166,8 @@ public class MethodProbesAdapterTest implements IProbeIdGenerator,
 		adapter.visitTableSwitchInsn(0, 1, label, labels);
 
 		assertEquals(1, methodName.size());
-		assertEquals("visitTableSwitchInsnWithProbes", methodName.get(0));
-		assertSame(Integer.valueOf(0), methodArgs.get(0)[0]);
-		assertSame(Integer.valueOf(1), methodArgs.get(0)[1]);
-		assertSame(label, methodArgs.get(0)[2]);
-		assertSame(labels, methodArgs.get(0)[3]);
+		assertMethodCall(0, "visitTableSwitchInsnWithProbes",
+				Integer.valueOf(0), Integer.valueOf(1), label, labels);
 		assertEquals(1000, LabelInfo.getProbeId(label));
 	}
 
@@ -207,11 +181,8 @@ public class MethodProbesAdapterTest implements IProbeIdGenerator,
 		adapter.visitTableSwitchInsn(0, 1, label, labels);
 
 		assertEquals(1, methodName.size());
-		assertEquals("visitTableSwitchInsnWithProbes", methodName.get(0));
-		assertSame(Integer.valueOf(0), methodArgs.get(0)[0]);
-		assertSame(Integer.valueOf(1), methodArgs.get(0)[1]);
-		assertSame(label, methodArgs.get(0)[2]);
-		assertSame(labels, methodArgs.get(0)[3]);
+		assertMethodCall(0, "visitTableSwitchInsnWithProbes",
+				Integer.valueOf(0), Integer.valueOf(1), label, labels);
 		assertEquals(LabelInfo.NO_PROBE, LabelInfo.getProbeId(label));
 		assertEquals(1000, LabelInfo.getProbeId(label2));
 	}
@@ -222,11 +193,13 @@ public class MethodProbesAdapterTest implements IProbeIdGenerator,
 		adapter.visitTableSwitchInsn(0, 1, label, labels);
 
 		assertEquals(1, methodName.size());
-		assertEquals("visitTableSwitchInsn", methodName.get(0));
-		assertSame(Integer.valueOf(0), methodArgs.get(0)[0]);
-		assertSame(Integer.valueOf(1), methodArgs.get(0)[1]);
-		assertSame(label, methodArgs.get(0)[2]);
-		assertSame(labels, methodArgs.get(0)[3]);
+		assertMethodCall(0, "visitTableSwitchInsn", Integer.valueOf(0),
+				Integer.valueOf(1), label, labels);
+	}
+
+	private void assertMethodCall(int idx, String name, Object... params) {
+		assertEquals(name, methodName.get(idx));
+		assertArrayEquals(params, methodArgs.get(idx));
 	}
 
 	// === IProbeIdGenerator ===
