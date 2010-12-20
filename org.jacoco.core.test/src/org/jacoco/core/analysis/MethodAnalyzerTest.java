@@ -309,7 +309,7 @@ public class MethodAnalyzerTest implements IProbeIdGenerator {
 		Label l1 = new Label();
 		Label l2 = new Label();
 		Label l3 = new Label();
-		method.visitTableSwitchInsn(1, 2, l3, new Label[] { l1, l2 });
+		method.visitTableSwitchInsn(1, 3, l3, new Label[] { l1, l2, l1 });
 		method.visitLabel(l1);
 		method.visitLineNumber(1002, l1);
 		method.visitIntInsn(Opcodes.BIPUSH, 11);
@@ -412,7 +412,7 @@ public class MethodAnalyzerTest implements IProbeIdGenerator {
 		Label l2 = new Label();
 		Label l3 = new Label();
 		Label l4 = new Label();
-		method.visitTableSwitchInsn(1, 2, l4, new Label[] { l2, l3 });
+		method.visitTableSwitchInsn(1, 3, l4, new Label[] { l2, l3, l2 });
 		method.visitLabel(l2);
 		method.visitLineNumber(1003, l2);
 		method.visitIincInsn(2, 1);
