@@ -19,97 +19,85 @@
 <h1>Coverage Counters</h1>
 
 <p>
-  JaCoCo uses a set of different counters to calculate coverage metrics. The
-  foundation of all counters are so called <i>basic blocks</i>. All other
-  counters are derived from the <i>basic block</i> coverage information. While
-  JaCoCo counters appear to be closely related to Java source code they are
-  actually only derived from Java class files. In cases where the Java compiler
-  creates so called <i>synthetic</i> code to reflect certain Java language
-  constructs counters may therefore show unexpected results.   
+  JaCoCo uses a set of different counters to calculate coverage metrics. All
+  these counters are derived from information contained in Java class files
+  which basically are Java byte code instructions and debug information 
+  optionally embedded in class files. This approach allows efficient on-the-fly
+  instrumentation and analysis of applications even when no source code is
+  available. In most cases the collected information can be mapped back to
+  source code and visualized down to line level granularity. Anyhow there are
+  limitations to this approach. The class files have to be compiled with debug
+  information to calculate line level coverage and provide source highlighting.
+  Not all Java language constructs can be directly compiled to corresponding
+  byte code. In such cases the Java compiler creates so called <i>synthetic</i>
+  code which sometimes results in unexpected code coverage results. 
 </p>
 
-<h2>Basic Blocks</h2>
+<h2>Instructions (C0 Coverage)</h2>
 
 <p>
-  A basic block &ndash; mostly just referred to as <i>block</i> in the APIs and
-  reports &ndash; represents a consecutive sequence of byte code instructions
-  and is a unit that will either execute completely or not all. The single
-  exception from this definition occurs when the java exception mechanism comes
-  to action (i.e. a java exception "flies"). This always interrupts the current
-  blocks execution. The boundaries between blocks are
+  The smallest unit JaCoCo counts are single Java byte code instructions.
+  <i>Instruction coverage</i> provides information about the amount of code that
+  has been executed or missed. This metric is completely independent from source
+  formatting and always available, even in absence of debug information in the
+  class files.
+</p>
+
+<h2>Branches (C1 Coverage)</h2>
+
+<p>
+  JaCoCo also calculates <i>branch coverage</i> for all <code>if</code> and
+  <code>switch</code> statements. This metric counts the total number of such
+  branches in a method and determines the number of executed or missed branches.
+  Branch coverage is always available, even in absence of debug information in
+  the class files.
+</p>
+
+<p>
+  If the class files haven been compiled with debug information decision points
+  can be mapped to source lines and hightighted accordingly:
 </p>
 
 <ul>
-  <li>return instructions,</li>
-  <li>throw instructions,</li>
-  <li>(conditional) jump instructions and</li>
-  <li>target labels referred from jump, try/catch or switch instructions.</li>
+  <li>No coverage: No branches in the line has been executed (red diamond)</li>
+  <li>Partial coverage: Only a part of the branches in the line have been
+      executed (yellow diamond)</li>
+  <li>Full coverage: All branches in the line have been executed (green diamond)</li>
 </ul>
-
-<p>
-  The JaCoCo instrumentation mechanism inserts a probe at the end of every
-  block. When the probe gets executed the block is considered executed.
-  This results in the major drawback of basic block based probes:
-</p>
-
-<p class="hint">
-  Blocks that encounter an exception somewhere in the middle of their execution
-  will be considered as not executed. This is correct as the block actually
-  didn't get executed but JaCoCo won't be able to tell which lines of the block
-  executed and which didn't.  
-</p>
-
-<p>
-  Beside this, basic block code coverage has been proven to work very
-  efficiently even with huge applications under test. The reasons are that the
-  blocks can be easily determined at instrumentation time. The amount of
-  inserted probes offer a good tradeoff between runtime overhead and report
-  granularity. And last but not least basic blocks can be determined even if the
-  class files have not been compiled in debug mode and therefore do not contain
-  any source line information. Therefore all coverage counters except the line
-  counter will work also in this case and provide useful coverage information
-  e.g. for binary third party libraries.  
-</p>
-
-<h2>Instructions</h2>
-
-<p>
-  For each block the number of included byte code instructions can be easily
-  determined. The instruction counter summarizes the number of single byte code
-  instructions that belong to executed blocks. As blocks may be of different
-  length, instructions give a good measure of block size and can serve as a
-  replacement when no line information is available. 
-</p>
 
 <h2>Lines</h2>
 
 <p>
-  For all class files that have been compiled in debug mode with source line
-  information, coverage information for individual lines can be derived from
-  basic blocks. Each block may span one or multiple lines of source code. On
-  the other hand a single line of source may belong to multiple blocks. A source
-  line is considered executed when at least one block that includes this line
-  has been executed.
+  For all class files that have been compiled with debug information, coverage
+  information for individual lines can be calculated. A source line is
+  considered executed when at least one instruction that is assigned to this
+  line has been executed.
 </p>
 
 <p>
-  Due to the fact that a single line may belong to more than one block 
-  <i>partial</i> coverage can happen if some of the blocks are executed while
-  others are not. This is typically the case with boolean expressions. While
-  partially covered lines are seen as executed due to the definition in the
-  previous paragraph, they are highlighted in yellow color in the coverage
-  reports. 
+  Due to the fact that a single line typically compiles to multiple byte code
+  instructions the source code highlighting shows three different status for
+  each line containing source code: 
 </p>
+
+<ul>
+  <li>No coverage: No instruction in the line has been executed (red
+      background)</li>
+  <li>Partial coverage: Only a part of the instruction in the line have been
+      executed (yellow background)</li>
+  <li>Full coverage: All instructions in the line have been executed (green
+      background)</li>
+</ul>
 
 <h2>Methods</h2>
 
 <p>
-  Each non-abstract method consists of at least one block. A method is
-  considered as executed when at least one block has been executed. As JaCoCo
-  works on byte code level also constructors and static initializers are counted
-  as methods. Some of these methods may not have a direct correspondence in Java
-  source code, like implicit and thus generated default constructors or initializers
-  for constants.
+  Each non-abstract method contains at least one instruction. A method is
+  considered as executed when at least one instruction has been executed. As
+  JaCoCo works on byte code level also constructors and static initializers are
+  counted as methods. Some of these methods may not have a direct correspondence
+  in Java source code, like implicit and thus generated default constructors or
+  initializers for constants.
 </p>
 
 <h2>Classes</h2>
@@ -120,7 +108,6 @@
   initializers as methods. As Java interface types may contain static
   initializers such interfaces are also considered as executable classes.
 </p>
-
 
 </div> 
 <div class="footer">
