@@ -12,12 +12,11 @@
 package org.jacoco.core.analysis;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.jacoco.core.data.IMethodStructureVisitor;
 import org.jacoco.core.internal.flow.IMethodProbesVisitor;
+import org.jacoco.core.internal.flow.Instruction;
 import org.jacoco.core.internal.flow.LabelInfo;
 import org.objectweb.asm.AnnotationVisitor;
 import org.objectweb.asm.Attribute;
@@ -41,23 +40,16 @@ final class MethodAnalyzer implements IMethodProbesVisitor {
 	private Label currentLabel = null;
 
 	/** List of all analyzed instructions */
-	private final List<Insn> instructions = new ArrayList<Insn>();
+	private final List<Instruction> instructions = new ArrayList<Instruction>();
 
 	/** List of all predecessors of covered probes */
-	private final List<Insn> coveredProbes = new ArrayList<Insn>();
+	private final List<Instruction> coveredProbes = new ArrayList<Instruction>();
 
 	/** List of all jumps encountered */
 	private final List<Jump> jumps = new ArrayList<Jump>();
 
 	/** Last instruction in byte code sequence */
-	private Insn lastInsn;
-
-	/**
-	 * Mapping from labels to addressed instruction.
-	 * 
-	 * TODO: Replace Map by LabelInfo
-	 */
-	private final Map<Label, Insn> labels = new HashMap<Label, Insn>();
+	private Instruction lastInsn;
 
 	/**
 	 * New Method analyzer for the given probe data.
@@ -86,13 +78,13 @@ final class MethodAnalyzer implements IMethodProbesVisitor {
 	}
 
 	private void visitInsn() {
-		final Insn insn = new Insn(currentLine);
+		final Instruction insn = new Instruction(currentLine);
 		instructions.add(insn);
 		if (lastInsn != null) {
 			insn.setPredecessor(lastInsn);
 		}
 		if (currentLabel != null) {
-			labels.put(currentLabel, insn);
+			LabelInfo.setInstruction(currentLabel, insn);
 			currentLabel = null;
 		}
 		lastInsn = insn;
@@ -221,15 +213,19 @@ final class MethodAnalyzer implements IMethodProbesVisitor {
 	public void visitEnd() {
 		// Wire jumps:
 		for (final Jump j : jumps) {
-			labels.get(j.target).setPredecessor(j.source);
+			LabelInfo.getInstruction(j.target).setPredecessor(j.source);
 		}
 		// Propagate probe values:
-		for (final Insn p : coveredProbes) {
+		for (final Instruction p : coveredProbes) {
 			p.setCovered();
 		}
 		// Report result:
-		for (final Insn i : instructions) {
-			i.process(output);
+		for (final Instruction i : instructions) {
+			output.visitInsn(i.getCoveredBranches() > 0, i.getLine());
+			if (i.getBranches() > 1) {
+				output.visitBranches(i.getBranches(), i.getCoveredBranches(),
+						i.getLine());
+			}
 		}
 		output.visitEnd();
 	}
@@ -268,46 +264,7 @@ final class MethodAnalyzer implements IMethodProbesVisitor {
 	public void visitMaxs(final int maxStack, final int maxLocals) {
 	}
 
-	private static class Insn {
-
-		private final int line;
-		private int branches;
-		private int coveredBranches;
-		private Insn predecessor;
-
-		Insn(final int line) {
-			this.line = line;
-			this.branches = 0;
-			this.coveredBranches = 0;
-		}
-
-		public void setPredecessor(final Insn predecessor) {
-			this.predecessor = predecessor;
-			predecessor.addBranch();
-		}
-
-		public void addBranch() {
-			branches++;
-		}
-
-		public void setCovered() {
-			if (coveredBranches == 0) {
-				if (predecessor != null) {
-					predecessor.setCovered();
-				}
-			}
-			coveredBranches++;
-		}
-
-		void process(final IMethodStructureVisitor output) {
-			output.visitInsn(coveredBranches > 0, line);
-			if (branches > 1) {
-				output.visitBranches(branches, coveredBranches, line);
-			}
-		}
-	}
-
-	private void addProbe(final Insn predecessor, final int probeId) {
+	private void addProbe(final Instruction predecessor, final int probeId) {
 		predecessor.addBranch();
 		if (executionData != null && executionData[probeId]) {
 			coveredProbes.add(predecessor);
@@ -316,10 +273,10 @@ final class MethodAnalyzer implements IMethodProbesVisitor {
 
 	private static class Jump {
 
-		final Insn source;
+		final Instruction source;
 		final Label target;
 
-		Jump(final Insn source, final Label target) {
+		Jump(final Instruction source, final Label target) {
 			this.source = source;
 			this.target = target;
 		}

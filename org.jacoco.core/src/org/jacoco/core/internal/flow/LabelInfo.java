@@ -40,6 +40,8 @@ public final class LabelInfo {
 
 	private Label intermediate = null;
 
+	private Instruction instruction = null;
+
 	// instances are only created within this class
 	private LabelInfo() {
 	}
@@ -202,6 +204,32 @@ public final class LabelInfo {
 	public static Label getIntermediateLabel(final Label label) {
 		final LabelInfo info = get(label);
 		return info == null ? null : info.intermediate;
+	}
+
+	/**
+	 * Sets the instruction corresponding to this label.
+	 * 
+	 * @param label
+	 *            label to set the instruction for
+	 * @param instruction
+	 *            corresponding instruction
+	 */
+	public static void setInstruction(final Label label,
+			final Instruction instruction) {
+		create(label).instruction = instruction;
+	}
+
+	/**
+	 * Returns the corresponding instruction for the given label if one has been
+	 * defined.
+	 * 
+	 * @param label
+	 *            label to look for
+	 * @return corresponding instruction or <code>null</code>
+	 */
+	public static Instruction getInstruction(final Label label) {
+		final LabelInfo info = get(label);
+		return info == null ? null : info.instruction;
 	}
 
 	private static LabelInfo get(final Label label) {

@@ -43,6 +43,7 @@ public class LabelInfoTest {
 		assertFalse(LabelInfo.isDone(label));
 		assertEquals(LabelInfo.NO_PROBE, LabelInfo.getProbeId(label));
 		assertNull(LabelInfo.getIntermediateLabel(label));
+		assertNull(LabelInfo.getInstruction(label));
 	}
 
 	@Test
@@ -92,11 +93,20 @@ public class LabelInfoTest {
 	}
 
 	@Test
-	public void testSetResetDone() {
+	public void testSetResetDone1() {
 		LabelInfo.setDone(label);
 		assertTrue(LabelInfo.isDone(label));
 
 		LabelInfo.resetDone(label);
+		assertFalse(LabelInfo.isDone(label));
+	}
+
+	@Test
+	public void testSetResetDone2() {
+		LabelInfo.setDone(label);
+		assertTrue(LabelInfo.isDone(label));
+
+		LabelInfo.resetDone(new Label[] { label, new Label() });
 		assertFalse(LabelInfo.isDone(label));
 	}
 
@@ -107,10 +117,17 @@ public class LabelInfoTest {
 	}
 
 	@Test
-	public void testIntermediateLabel() {
+	public void testSetIntermediateLabel() {
 		final Label i = new Label();
 		LabelInfo.setIntermediateLabel(label, i);
 		assertSame(i, LabelInfo.getIntermediateLabel(label));
+	}
+
+	@Test
+	public void testSetInstruction() {
+		final Instruction instruction = new Instruction(123);
+		LabelInfo.setInstruction(label, instruction);
+		assertSame(instruction, LabelInfo.getInstruction(label));
 	}
 
 }
