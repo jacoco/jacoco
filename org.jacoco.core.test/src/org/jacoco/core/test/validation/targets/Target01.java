@@ -32,27 +32,27 @@ public class Target01 implements Runnable {
 		nop(); // $line-unconditional$
 
 		// 2. Missed if block
-		if (f()) {
+		if (f()) { // $line-iffalse$
 			nop(); // $line-missedif$
 		} else {
 			nop(); // $line-executedelse$
 		}
 
 		// 3. Executed if block
-		if (t()) {
+		if (t()) { // $line-iftrue$
 			nop(); // $line-executedif$
 		} else {
 			nop(); // $line-missedelse$
 		}
 
 		// 4. Missed while block
-		while (f()) {
+		while (f()) { // $line-whilefalse$
 			nop(); // $line-missedwhile$
 		}
 
 		// 5. Executed while block
 		int i = 0;
-		while (i++ < 3) {
+		while (i++ < 3) { // $line-whiletruefalse$
 			nop(); // $line-executedwhile$
 		}
 
@@ -82,7 +82,7 @@ public class Target01 implements Runnable {
 		}
 
 		// 11. Table switch with hit
-		switch (i2()) {
+		switch (i2()) { // $line-tswitch1$
 		case 1:
 			nop(); // $line-tswitch1case1$
 			break;
@@ -98,7 +98,7 @@ public class Target01 implements Runnable {
 		}
 
 		// 12. Continued table switch with hit
-		switch (i2()) {
+		switch (i2()) { // $line-tswitch2$
 		case 1:
 			nop(); // $line-tswitch2case1$
 		case 2:
@@ -110,7 +110,7 @@ public class Target01 implements Runnable {
 		}
 
 		// 13. Table switch without hit
-		switch (i2()) {
+		switch (i2()) { // $line-tswitch3$
 		case 3:
 			nop(); // $line-tswitch3case1$
 			break;
@@ -126,7 +126,7 @@ public class Target01 implements Runnable {
 		}
 
 		// 14. Lookup switch with hit
-		switch (i2()) {
+		switch (i2()) { // $line-lswitch1$
 		case -123:
 			nop(); // $line-lswitch1case1$
 			break;
@@ -142,7 +142,7 @@ public class Target01 implements Runnable {
 		}
 
 		// 15. Continued lookup switch with hit
-		switch (i2()) {
+		switch (i2()) { // $line-lswitch2$
 		case -123:
 			nop(); // $line-lswitch2case1$
 		case 2:
@@ -154,7 +154,7 @@ public class Target01 implements Runnable {
 		}
 
 		// 16. Lookup switch without hit
-		switch (i2()) {
+		switch (i2()) { // $line-lswitch3$
 		case -123:
 			nop(); // $line-lswitch3case1$
 			break;

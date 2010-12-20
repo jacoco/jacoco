@@ -39,48 +39,48 @@ public class BooleanExpressionsTest extends ValidationTestBase {
 	public void testCoverageResult() {
 
 		// 1. Boolean comparison result (one case)
-		assertLine("booleancmp1", PARTLY_COVERED);
+		assertLine("booleancmp1", PARTLY_COVERED, 1, 1);
 
 		// 2. Boolean comparison result (both cases)
-		assertLine("booleancmp2", FULLY_COVERED);
+		assertLine("booleancmp2", FULLY_COVERED, 0, 2);
 
 		// 3. And
-		assertLine("andFF", FULLY_COVERED);
-		assertLine("andFT", FULLY_COVERED);
-		assertLine("andTF", FULLY_COVERED);
-		assertLine("andTT", FULLY_COVERED);
+		assertLine("andFF", FULLY_COVERED, 1, 1);
+		assertLine("andFT", FULLY_COVERED, 1, 1);
+		assertLine("andTF", FULLY_COVERED, 1, 1);
+		assertLine("andTT", FULLY_COVERED, 1, 1);
 
 		// 4. Conditional And
-		assertLine("conditionalandFF", PARTLY_COVERED);
-		assertLine("conditionalandFT", PARTLY_COVERED);
-		assertLine("conditionalandTF", FULLY_COVERED);
-		assertLine("conditionalandTT", FULLY_COVERED);
+		assertLine("conditionalandFF", PARTLY_COVERED, 3, 1);
+		assertLine("conditionalandFT", PARTLY_COVERED, 3, 1);
+		assertLine("conditionalandTF", FULLY_COVERED, 2, 2);
+		assertLine("conditionalandTT", FULLY_COVERED, 2, 2);
 
 		// 5. Or
-		assertLine("orFF", FULLY_COVERED);
-		assertLine("orFT", FULLY_COVERED);
-		assertLine("orTF", FULLY_COVERED);
-		assertLine("orTT", FULLY_COVERED);
+		assertLine("orFF", FULLY_COVERED, 1, 1);
+		assertLine("orFT", FULLY_COVERED, 1, 1);
+		assertLine("orTF", FULLY_COVERED, 1, 1);
+		assertLine("orTT", FULLY_COVERED, 1, 1);
 
 		// 6. Conditional Or
-		assertLine("conditionalorFF", FULLY_COVERED);
-		assertLine("conditionalorFT", FULLY_COVERED);
-		assertLine("conditionalorTF", PARTLY_COVERED);
-		assertLine("conditionalorTT", PARTLY_COVERED);
+		assertLine("conditionalorFF", FULLY_COVERED, 2, 2);
+		assertLine("conditionalorFT", FULLY_COVERED, 2, 2);
+		assertLine("conditionalorTF", PARTLY_COVERED, 3, 1);
+		assertLine("conditionalorTT", PARTLY_COVERED, 3, 1);
 
 		// 7. Exclusive Or
-		assertLine("xorFF", FULLY_COVERED);
-		assertLine("xorFT", FULLY_COVERED);
-		assertLine("xorTF", FULLY_COVERED);
-		assertLine("xorTT", FULLY_COVERED);
+		assertLine("xorFF", FULLY_COVERED, 1, 1);
+		assertLine("xorFT", FULLY_COVERED, 1, 1);
+		assertLine("xorTF", FULLY_COVERED, 1, 1);
+		assertLine("xorTT", FULLY_COVERED, 1, 1);
 
 		// 8. Conditional Operator
-		assertLine("condT", PARTLY_COVERED);
-		assertLine("condF", PARTLY_COVERED);
+		assertLine("condT", PARTLY_COVERED, 1, 1);
+		assertLine("condF", PARTLY_COVERED, 1, 1);
 
 		// 9. Not (one case)
-		assertLine("notT", PARTLY_COVERED);
-		assertLine("notF", PARTLY_COVERED);
+		assertLine("notT", PARTLY_COVERED, 1, 1);
+		assertLine("notF", PARTLY_COVERED, 1, 1);
 
 		// 10. Not (both cases)
 		assertLine("notTF", FULLY_COVERED);

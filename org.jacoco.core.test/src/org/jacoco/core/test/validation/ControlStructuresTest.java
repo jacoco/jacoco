@@ -43,10 +43,12 @@ public class ControlStructuresTest extends ValidationTestBase {
 		assertLine("unconditional", FULLY_COVERED);
 
 		// 2. Missed if block
+		assertLine("iffalse", FULLY_COVERED, 1, 1);
 		assertLine("missedif", NOT_COVERED);
 		assertLine("executedelse", FULLY_COVERED);
 
 		// 3. Executed if block
+		assertLine("iftrue", FULLY_COVERED, 1, 1);
 		assertLine("executedif", FULLY_COVERED);
 		assertLine("missedelse", NOT_COVERED);
 
@@ -54,58 +56,65 @@ public class ControlStructuresTest extends ValidationTestBase {
 		assertLine("missedwhile", NOT_COVERED);
 
 		// 5. Executed while block
+		assertLine("whiletruefalse", FULLY_COVERED, 0, 2);
 		assertLine("executedwhile", FULLY_COVERED);
 
 		// 6. Executed do while block
 		assertLine("executeddowhile", FULLY_COVERED);
 
 		// 7. Missed for block
-		assertLine("missedforincrementer", PARTLY_COVERED);
+		assertLine("missedforincrementer", PARTLY_COVERED, 1, 1);
 		assertLine("missedfor", NOT_COVERED);
 
 		// 8. Executed for block
-		assertLine("executedforincrementer", FULLY_COVERED);
+		assertLine("executedforincrementer", FULLY_COVERED, 0, 2);
 		assertLine("executedfor", FULLY_COVERED);
 
 		// 9. Missed for each block
-		assertLine("missedforeachincrementer", PARTLY_COVERED);
+		assertLine("missedforeachincrementer", PARTLY_COVERED, 1, 1);
 		assertLine("missedforeach", NOT_COVERED);
 
 		// 10. Executed for each block
-		assertLine("executedforeachincrementer", FULLY_COVERED);
+		assertLine("executedforeachincrementer", FULLY_COVERED, 0, 2);
 		assertLine("executedforeach", FULLY_COVERED);
 
 		// 11. Table switch with hit
+		assertLine("tswitch1", FULLY_COVERED, 3, 1);
 		assertLine("tswitch1case1", NOT_COVERED);
 		assertLine("tswitch1case2", FULLY_COVERED);
 		assertLine("tswitch1case3", NOT_COVERED);
 		assertLine("tswitch1default", NOT_COVERED);
 
 		// 12. Continued table switch with hit
+		assertLine("tswitch2", FULLY_COVERED, 3, 1);
 		assertLine("tswitch2case1", NOT_COVERED);
 		assertLine("tswitch2case2", FULLY_COVERED);
 		assertLine("tswitch2case3", FULLY_COVERED);
 		assertLine("tswitch2default", FULLY_COVERED);
 
 		// 13. Table switch without hit
+		assertLine("tswitch2", FULLY_COVERED, 3, 1);
 		assertLine("tswitch3case1", NOT_COVERED);
 		assertLine("tswitch3case2", NOT_COVERED);
 		assertLine("tswitch3case3", NOT_COVERED);
 		assertLine("tswitch3default", FULLY_COVERED);
 
 		// 14. Lookup switch with hit
+		assertLine("lswitch1", FULLY_COVERED, 3, 1);
 		assertLine("lswitch1case1", NOT_COVERED);
 		assertLine("lswitch1case2", FULLY_COVERED);
 		assertLine("lswitch1case3", NOT_COVERED);
 		assertLine("lswitch1default", NOT_COVERED);
 
 		// 15. Continued lookup switch with hit
+		assertLine("lswitch2", FULLY_COVERED, 3, 1);
 		assertLine("lswitch2case1", NOT_COVERED);
 		assertLine("lswitch2case2", FULLY_COVERED);
 		assertLine("lswitch2case3", FULLY_COVERED);
 		assertLine("lswitch2default", FULLY_COVERED);
 
 		// 16. Lookup switch without hit
+		assertLine("lswitch3", FULLY_COVERED, 3, 1);
 		assertLine("lswitch3case1", NOT_COVERED);
 		assertLine("lswitch3case2", NOT_COVERED);
 		assertLine("lswitch3case3", NOT_COVERED);

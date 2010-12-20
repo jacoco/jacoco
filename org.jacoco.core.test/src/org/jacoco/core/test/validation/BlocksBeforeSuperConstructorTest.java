@@ -36,7 +36,7 @@ public class BlocksBeforeSuperConstructorTest extends ValidationTestBase {
 	@Test
 	public void testCoverageResult() {
 
-		assertLine("super", PARTLY_COVERED);
+		assertLine("super", PARTLY_COVERED, 1, 1);
 
 	}
 

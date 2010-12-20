@@ -99,11 +99,20 @@ public abstract class ValidationTestBase {
 	}
 
 	protected void assertLine(final String tag, final int status) {
+		assertLine(tag, status, 0, 0);
+	}
+
+	protected void assertLine(final String tag, final int status,
+			final int missedBranches, final int coveredBranches) {
 		final int nr = source.getLineNumber(tag);
 		final String line = source.getLine(nr);
 		String msg = String.format("L%s: %s", Integer.valueOf(nr), line);
 		assertEquals(msg, STATUS_NAME[status],
 				STATUS_NAME[lineCoverage.getStatus(nr)]);
+		assertEquals(msg + " missed branches", missedBranches,
+				lineCoverage.getMissedBranches(nr));
+		assertEquals(msg + " covered branches", coveredBranches,
+				lineCoverage.getCoveredBranches(nr));
 	}
 
 }
