@@ -146,7 +146,8 @@ class ClassInstrumenter extends ClassAdapter implements IClassProbesVisitor {
 			final MethodVisitor mv = cv.visitMethod(
 					InstrSupport.INITMETHOD_ACC, InstrSupport.INITMETHOD_NAME,
 					InstrSupport.INITMETHOD_DESC, null, null);
-
+			mv.visitCode();
+			
 			// Load the value of the static data field:
 			mv.visitFieldInsn(Opcodes.GETSTATIC, className,
 					InstrSupport.DATAFIELD_NAME, InstrSupport.DATAFIELD_DESC);
@@ -171,7 +172,7 @@ class ClassInstrumenter extends ClassAdapter implements IClassProbesVisitor {
 			mv.visitLabel(alreadyInitialized);
 			mv.visitInsn(Opcodes.ARETURN);
 
-			mv.visitMaxs(Math.max(size, 2), 1); // Maximum local stack size is 2
+			mv.visitMaxs(Math.max(size, 2), 0); // Maximum local stack size is 2
 			mv.visitEnd();
 		}
 
