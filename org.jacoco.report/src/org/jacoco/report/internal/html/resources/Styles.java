@@ -55,6 +55,9 @@ public class Styles {
 	/** Coverage table */
 	public static final String COVERAGETABLE = "coverage";
 
+	/** Table cells for a graphical bar */
+	public static final String BAR = "bar";
+
 	/** Table cells for the first column of a counter */
 	public static final String CTR1 = "ctr1";
 

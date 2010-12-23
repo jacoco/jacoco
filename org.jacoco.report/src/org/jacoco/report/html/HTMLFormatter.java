@@ -148,11 +148,14 @@ public class HTMLFormatter implements IReportFormatter, IHTMLReportContext {
 	private Table createTable() {
 		final Table table = new Table();
 		table.add("Element", null, new LabelColumn(), false);
-		table.add("Missed Instructions", null, new BarColumn(INSTRUCTION,
+		table.add("Missed Instructions", Styles.BAR, new BarColumn(INSTRUCTION,
 				locale), true);
 		table.add("Cov.", Styles.CTR2,
 				new PercentageColumn(INSTRUCTION, locale), false);
-		addMissedTotalColumns(table, "Branches", BRANCH);
+		table.add("Missed Branches", Styles.BAR, new BarColumn(BRANCH, locale),
+				false);
+		table.add("Cov.", Styles.CTR2, new PercentageColumn(BRANCH, locale),
+				false);
 		addMissedTotalColumns(table, "Lines", LINE);
 		addMissedTotalColumns(table, "Methods", METHOD);
 		addMissedTotalColumns(table, "Classes", CLASS);

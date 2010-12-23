@@ -29,9 +29,6 @@ import org.jacoco.report.html.HTMLDocument;
 import org.jacoco.report.html.HTMLElement;
 import org.jacoco.report.html.HTMLSupport;
 import org.jacoco.report.internal.html.resources.Resources;
-import org.jacoco.report.internal.html.table.BarColumn;
-import org.jacoco.report.internal.html.table.IColumnRenderer;
-import org.jacoco.report.internal.html.table.ITableItem;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -88,7 +85,8 @@ public class BarColumnTest {
 		column.footer(td, createNode(20, 5), resources, root);
 		doc.close();
 		final Document doc = support.parse(output.getFile("Test.html"));
-		assertEquals("", support.findStr(doc, "/html/body/table/tr/td/text()"));
+		assertEquals("15 of 20",
+				support.findStr(doc, "/html/body/table/tr/td/text()"));
 	}
 
 	@Test

@@ -78,6 +78,9 @@ public class BarColumn implements IColumnRenderer {
 	public void footer(final HTMLElement td, final ICoverageNode total,
 			final Resources resources, final ReportOutputFolder base)
 			throws IOException {
+		final ICounter counter = total.getCounter(entity);
+		td.text(integerFormat.format(counter.getMissedCount())).text(" of ")
+				.text(integerFormat.format(counter.getTotalCount()));
 	}
 
 	public void item(final HTMLElement td, final ITableItem item,
