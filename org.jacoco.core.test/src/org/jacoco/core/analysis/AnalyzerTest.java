@@ -24,9 +24,6 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
 import org.jacoco.core.data.ExecutionDataStore;
-import org.jacoco.core.data.IClassStructureVisitor;
-import org.jacoco.core.data.IMethodStructureVisitor;
-import org.jacoco.core.data.IStructureVisitor;
 import org.jacoco.core.test.TargetLoader;
 import org.junit.Before;
 import org.junit.Test;
@@ -43,35 +40,12 @@ public class AnalyzerTest {
 
 	private final Set<String> classes = new HashSet<String>();
 
-	private class EmptyStructureVisitor implements IStructureVisitor,
-			IClassStructureVisitor, IMethodStructureVisitor {
+	private class EmptyStructureVisitor implements ICoverageVisitor {
 
-		public IClassStructureVisitor visitClassStructure(long id) {
-			return this;
-		}
-
-		public void visit(String name, String signature, String superName,
-				String[] interfaces) {
+		public void visitCoverage(ClassCoverage coverage) {
+			final String name = coverage.getName();
 			assertTrue("Class already processed: " + name, classes.add(name));
 		}
-
-		public void visitSourceFile(String name) {
-		}
-
-		public IMethodStructureVisitor visitMethodStructure(String name,
-				String desc, String signature) {
-			return this;
-		}
-
-		public void visitInsn(boolean covered, int line) {
-		}
-
-		public void visitBranches(int missed, int covered, int line) {
-		}
-
-		public void visitEnd() {
-		}
-
 	}
 
 	@Before

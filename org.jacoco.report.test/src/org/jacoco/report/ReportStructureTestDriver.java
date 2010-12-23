@@ -20,10 +20,10 @@ import java.util.List;
 import org.jacoco.core.analysis.BundleCoverage;
 import org.jacoco.core.analysis.ClassCoverage;
 import org.jacoco.core.analysis.CoverageNodeImpl;
+import org.jacoco.core.analysis.ICoverageNode.ElementType;
 import org.jacoco.core.analysis.MethodCoverage;
 import org.jacoco.core.analysis.PackageCoverage;
 import org.jacoco.core.analysis.SourceFileCoverage;
-import org.jacoco.core.analysis.ICoverageNode.ElementType;
 import org.jacoco.core.data.ExecutionData;
 import org.jacoco.core.data.SessionInfo;
 
@@ -54,8 +54,7 @@ public class ReportStructureTestDriver {
 
 	private final ClassCoverage classCoverage = new ClassCoverage(
 			"org/jacoco/example/FooClass", 1001, null, "java/lang/Object",
-			new String[0], "FooClass.java", Collections
-					.singleton(methodCoverage));
+			new String[0]);
 
 	private final SourceFileCoverage sourceFileCoverage = new SourceFileCoverage(
 			"FooClass.java", "org/jacoco/example");
@@ -69,6 +68,11 @@ public class ReportStructureTestDriver {
 
 	private final CoverageNodeImpl groupCoverage = new CoverageNodeImpl(
 			ElementType.GROUP, "group", false);
+
+	public ReportStructureTestDriver() {
+		classCoverage.setSourceFileName("FooClass.java");
+		classCoverage.addMethod(methodCoverage);
+	}
 
 	public void sendGroup(IReportFormatter formatter) throws IOException {
 		final IReportVisitor child = formatter.createReportVisitor(

@@ -14,7 +14,6 @@ package org.jacoco.core.analysis;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.jacoco.core.data.IMethodStructureVisitor;
 import org.jacoco.core.internal.flow.IMethodProbesVisitor;
 import org.jacoco.core.internal.flow.Instruction;
 import org.jacoco.core.internal.flow.LabelInfo;
@@ -29,13 +28,13 @@ import org.objectweb.asm.Label;
  * @author Marc R. Hoffmann
  * @version $qualified.bundle.version$
  */
-final class MethodAnalyzer implements IMethodProbesVisitor {
+class MethodAnalyzer implements IMethodProbesVisitor {
 
 	private final boolean[] executionData;
 
-	private final IMethodStructureVisitor output;
+	private final MethodCoverage coverage;
 
-	private int currentLine = IMethodStructureVisitor.UNKNOWN_LINE;
+	private int currentLine = MethodCoverage.UNKNOWN_LINE;
 
 	private Label currentLabel = null;
 
@@ -54,16 +53,31 @@ final class MethodAnalyzer implements IMethodProbesVisitor {
 	/**
 	 * New Method analyzer for the given probe data.
 	 * 
+	 * @param name
+	 *            method name
+	 * @param desc
+	 *            description of the method
+	 * @param signature
+	 *            optional parameterized signature
+	 * 
 	 * @param executionData
 	 *            recorded probe date of the containing class or
 	 *            <code>null</code> if the class is not executed at all
-	 * @param output
-	 *            instance to report coverage information to
 	 */
-	public MethodAnalyzer(final boolean[] executionData,
-			final IMethodStructureVisitor output) {
+	public MethodAnalyzer(final String name, final String desc,
+			final String signature, final boolean[] executionData) {
 		this.executionData = executionData;
-		this.output = output;
+		this.coverage = new MethodCoverage(name, desc, signature);
+	}
+
+	/**
+	 * Returns the coverage data for this method after this visitor has been
+	 * processed.
+	 * 
+	 * @return coverage data for this method
+	 */
+	public MethodCoverage getCoverage() {
+		return coverage;
 	}
 
 	public void visitLabel(final Label label) {
@@ -221,13 +235,12 @@ final class MethodAnalyzer implements IMethodProbesVisitor {
 		}
 		// Report result:
 		for (final Instruction i : instructions) {
-			output.visitInsn(i.getCoveredBranches() > 0, i.getLine());
+			coverage.addInsn(i.getCoveredBranches() > 0, i.getLine());
 			if (i.getBranches() > 1) {
-				output.visitBranches(i.getBranches(), i.getCoveredBranches(),
+				coverage.addBranches(i.getBranches(), i.getCoveredBranches(),
 						i.getLine());
 			}
 		}
-		output.visitEnd();
 	}
 
 	// === nothing to do here ===

@@ -13,7 +13,6 @@ package org.jacoco.core.analysis;
 
 import static org.junit.Assert.assertEquals;
 
-import org.jacoco.core.data.IMethodStructureVisitor;
 import org.junit.Test;
 
 /**
@@ -80,7 +79,7 @@ public class MethodCoverageTest {
 	@Test
 	public void testInstructionNoLine() {
 		MethodCoverage data = new MethodCoverage("sample", "()V", null);
-		data.addInsn(false, IMethodStructureVisitor.UNKNOWN_LINE);
+		data.addInsn(false, MethodCoverage.UNKNOWN_LINE);
 
 		assertEquals(CounterImpl.getInstance(0, 0), data.getLineCounter());
 		assertEquals(CounterImpl.getInstance(1, 0),
@@ -108,7 +107,7 @@ public class MethodCoverageTest {
 	@Test
 	public void testBranchesNoLine() {
 		MethodCoverage data = new MethodCoverage("sample", "()V", null);
-		data.addBranches(7, 3, IMethodStructureVisitor.UNKNOWN_LINE);
+		data.addBranches(7, 3, MethodCoverage.UNKNOWN_LINE);
 
 		assertEquals(CounterImpl.getInstance(0, 0), data.getLineCounter());
 		assertEquals(CounterImpl.getInstance(0, 0),

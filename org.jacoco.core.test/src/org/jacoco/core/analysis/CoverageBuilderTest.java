@@ -23,8 +23,6 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-import org.jacoco.core.data.IClassStructureVisitor;
-import org.jacoco.core.data.IMethodStructureVisitor;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -45,22 +43,16 @@ public class CoverageBuilderTest {
 
 	@Test
 	public void testCreateClassMissed() {
-		final IClassStructureVisitor classStructure = coverageBuilder
-				.visitClassStructure(123L);
-		classStructure.visit("org/jacoco/examples/Sample", null,
-				"java/lang/Object", new String[0]);
-		final IMethodStructureVisitor methodStructure = classStructure
-				.visitMethodStructure("doit", "()V", null);
-		methodStructure.visitInsn(false, 6);
-		methodStructure.visitInsn(false, 7);
-		methodStructure.visitInsn(false, 8);
-		methodStructure.visitEnd();
-		classStructure.visitEnd();
+		final MethodCoverage method = new MethodCoverage("doit", "()V", null);
+		method.addInsn(false, 6);
+		method.addInsn(false, 7);
+		method.addInsn(false, 8);
+		addClass(123L, "Sample", null, method);
 
 		final Collection<ClassCoverage> classes = coverageBuilder.getClasses();
 		assertEquals(1, classes.size(), 1.0);
 		ClassCoverage c = classes.iterator().next();
-		assertEquals("org/jacoco/examples/Sample", c.getName());
+		assertEquals("Sample", c.getName());
 		assertEquals(1, c.getClassCounter().getTotalCount(), 0.0);
 		assertEquals(0, c.getClassCounter().getCoveredCount(), 0.0);
 		assertEquals(1, c.getMethodCounter().getTotalCount(), 0.0);
@@ -81,22 +73,16 @@ public class CoverageBuilderTest {
 
 	@Test
 	public void testCreateClassCovered() {
-		final IClassStructureVisitor classStructure = coverageBuilder
-				.visitClassStructure(123L);
-		classStructure.visit("org/jacoco/examples/Sample", null,
-				"java/lang/Object", new String[0]);
-		final IMethodStructureVisitor methodStructure = classStructure
-				.visitMethodStructure("doit", "()V", null);
-		methodStructure.visitInsn(true, 6);
-		methodStructure.visitInsn(true, 7);
-		methodStructure.visitInsn(true, 8);
-		methodStructure.visitEnd();
-		classStructure.visitEnd();
+		final MethodCoverage method = new MethodCoverage("doit", "()V", null);
+		method.addInsn(true, 6);
+		method.addInsn(true, 7);
+		method.addInsn(true, 8);
+		addClass(123L, "Sample", null, method);
 
 		final Collection<ClassCoverage> classes = coverageBuilder.getClasses();
 		assertEquals(1, classes.size(), 1.0);
 		ClassCoverage c = classes.iterator().next();
-		assertEquals("org/jacoco/examples/Sample", c.getName());
+		assertEquals("Sample", c.getName());
 		assertEquals(1, c.getClassCounter().getTotalCount(), 0.0);
 		assertEquals(1, c.getClassCounter().getCoveredCount(), 0.0);
 		assertEquals(1, c.getMethodCounter().getTotalCount(), 0.0);
@@ -116,36 +102,9 @@ public class CoverageBuilderTest {
 	}
 
 	@Test
-	public void testIgnoreMethodsWithoutCode() {
-		final IClassStructureVisitor classStructure = coverageBuilder
-				.visitClassStructure(123L);
-		classStructure.visit("org/jacoco/examples/Sample", null,
-				"java/lang/Object", new String[0]);
-		final IMethodStructureVisitor methodStructure1 = classStructure
-				.visitMethodStructure("a", "()V", null);
-		methodStructure1.visitInsn(false, 0);
-		methodStructure1.visitEnd();
-		final IMethodStructureVisitor methodStructure2 = classStructure
-				.visitMethodStructure("b", "()V", null);
-		methodStructure2.visitEnd();
-		classStructure.visitEnd();
-
-		final ClassCoverage classCoverage = coverageBuilder.getClasses()
-				.iterator().next();
-		assertEquals(Collections.singleton("a"),
-				getNames(classCoverage.getMethods()));
-	}
-
-	@Test
 	public void testIgnoreClassesWithoutCode() {
-		final IClassStructureVisitor classStructure = coverageBuilder
-				.visitClassStructure(123L);
-		classStructure.visit("org/jacoco/examples/Sample", null,
-				"java/lang/Object", new String[0]);
-		final IMethodStructureVisitor methodStructure = classStructure
-				.visitMethodStructure("doit", "()V", null);
-		methodStructure.visitEnd();
-		classStructure.visitEnd();
+		final MethodCoverage method = new MethodCoverage("doit", "()V", null);
+		addClass(123L, "Sample", null, method);
 
 		final Collection<ClassCoverage> classes = coverageBuilder.getClasses();
 		assertTrue(classes.isEmpty());
@@ -153,49 +112,24 @@ public class CoverageBuilderTest {
 
 	@Test(expected = IllegalStateException.class)
 	public void testDuplicateClassName() {
-		IClassStructureVisitor classStructure = coverageBuilder
-				.visitClassStructure(123L);
-		classStructure.visit("org/jacoco/examples/Sample", null,
-				"java/lang/Object", new String[0]);
-		IMethodStructureVisitor methodStructure = classStructure
-				.visitMethodStructure("doit", "()V", null);
-		methodStructure.visitInsn(false, 3);
-		methodStructure.visitEnd();
-		classStructure.visitEnd();
+		MethodCoverage method = new MethodCoverage("doit", "()V", null);
+		method.addInsn(false, 3);
+		addClass(123L, "Sample", null, method);
 
-		classStructure = coverageBuilder.visitClassStructure(345L);
-		classStructure.visit("org/jacoco/examples/Sample", null,
-				"java/lang/Object", new String[0]);
-		methodStructure = classStructure.visitMethodStructure("doit", "()V",
-				null);
-		methodStructure.visitInsn(false, 3);
-		methodStructure.visitEnd();
-		classStructure.visitEnd();
+		method = new MethodCoverage("doit", "()V", null);
+		method.addInsn(false, 3);
+		addClass(345L, "Sample", null, method);
 	}
 
 	@Test
 	public void testCreateSourceFile() {
-		final IClassStructureVisitor classStructure1 = coverageBuilder
-				.visitClassStructure(123L);
-		classStructure1.visit("org/jacoco/examples/Sample", null,
-				"java/lang/Object", new String[0]);
-		classStructure1.visitSourceFile("Sample.java");
-		final IMethodStructureVisitor methodStructure1 = classStructure1
-				.visitMethodStructure("doit", "()V", null);
-		methodStructure1.visitInsn(false, 3);
-		methodStructure1.visitEnd();
-		classStructure1.visitEnd();
+		final MethodCoverage method1 = new MethodCoverage("doit", "()V", null);
+		method1.addInsn(false, 3);
+		addClass(123L, "Sample", "Sample.java", method1);
 
-		final IClassStructureVisitor classStructure2 = coverageBuilder
-				.visitClassStructure(123L);
-		classStructure2.visit("org/jacoco/examples/Second", null,
-				"java/lang/Object", new String[0]);
-		classStructure2.visitSourceFile("Sample.java");
-		final IMethodStructureVisitor methodStructure2 = classStructure2
-				.visitMethodStructure("doit", "()V", null);
-		methodStructure2.visitInsn(false, 6);
-		methodStructure2.visitEnd();
-		classStructure2.visitEnd();
+		final MethodCoverage method2 = new MethodCoverage("doit", "()V", null);
+		method2.addInsn(false, 6);
+		addClass(234L, "Second", "Sample.java", method2);
 
 		final Collection<SourceFileCoverage> sourcefiles = coverageBuilder
 				.getSourceFiles();
@@ -208,35 +142,17 @@ public class CoverageBuilderTest {
 
 	@Test
 	public void testGetBundle() {
-		final IClassStructureVisitor classStructure1 = coverageBuilder
-				.visitClassStructure(1);
-		classStructure1.visit("org/jacoco/examples/Sample1", null,
-				"java/lang/Object", new String[0]);
-		final IMethodStructureVisitor methodStructure1 = classStructure1
-				.visitMethodStructure("doit", "()V", null);
-		methodStructure1.visitInsn(false, 3);
-		methodStructure1.visitEnd();
-		classStructure1.visitEnd();
+		final MethodCoverage method1 = new MethodCoverage("doit", "()V", null);
+		method1.addInsn(false, 3);
+		addClass(1, "org/jacoco/examples/Sample1", null, method1);
 
-		final IClassStructureVisitor classStructure2 = coverageBuilder
-				.visitClassStructure(2);
-		classStructure2.visit("org/jacoco/examples/Sample2", null,
-				"java/lang/Object", new String[0]);
-		final IMethodStructureVisitor methodStructure2 = classStructure2
-				.visitMethodStructure("doit", "()V", null);
-		methodStructure2.visitInsn(false, 6);
-		methodStructure2.visitEnd();
-		classStructure2.visitEnd();
+		final MethodCoverage method2 = new MethodCoverage("doit", "()V", null);
+		method2.addInsn(false, 6);
+		addClass(2, "org/jacoco/examples/Sample2", null, method2);
 
-		final IClassStructureVisitor classStructure3 = coverageBuilder
-				.visitClassStructure(3);
-		classStructure3.visit("Sample3", null, "java/lang/Object",
-				new String[0]);
-		final IMethodStructureVisitor methodStructure3 = classStructure3
-				.visitMethodStructure("doit", "()V", null);
-		methodStructure3.visitInsn(false, 1);
-		methodStructure3.visitEnd();
-		classStructure3.visitEnd();
+		final MethodCoverage method3 = new MethodCoverage("doit", "()V", null);
+		method3.addInsn(false, 1);
+		addClass(3, "Sample3", null, method3);
 
 		BundleCoverage bundle = coverageBuilder.getBundle("testbundle");
 		assertEquals("testbundle", bundle.getName());
@@ -270,4 +186,14 @@ public class CoverageBuilderTest {
 		return result;
 	}
 
+	private void addClass(long id, String name, String source,
+			MethodCoverage... methods) {
+		final ClassCoverage coverage = new ClassCoverage(name, id, null,
+				"java/lang/Object", new String[0]);
+		coverage.setSourceFileName(source);
+		for (MethodCoverage m : methods) {
+			coverage.addMethod(m);
+		}
+		coverageBuilder.visitCoverage(coverage);
+	}
 }

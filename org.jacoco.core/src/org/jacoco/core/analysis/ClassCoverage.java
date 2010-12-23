@@ -11,6 +11,7 @@
  *******************************************************************************/
 package org.jacoco.core.analysis;
 
+import java.util.ArrayList;
 import java.util.Collection;
 
 /**
@@ -26,7 +27,7 @@ public class ClassCoverage extends CoverageNodeImpl {
 	private final String superName;
 	private final String[] interfaces;
 	private final Collection<MethodCoverage> methods;
-	private final String sourceFileName;
+	private String sourceFileName;
 
 	/**
 	 * Creates a class coverage data object with the given parameters.
@@ -41,27 +42,43 @@ public class ClassCoverage extends CoverageNodeImpl {
 	 *            vm name of the superclass of this class
 	 * @param interfaces
 	 *            vm names of interfaces of this class
-	 * @param sourceFileName
-	 *            optional name of the corresponding source file
-	 * @param methods
-	 *            contained methods
 	 */
 	public ClassCoverage(final String name, final long id,
 			final String signature, final String superName,
-			final String[] interfaces, final String sourceFileName,
-			final Collection<MethodCoverage> methods) {
+			final String[] interfaces) {
 		super(ElementType.CLASS, name, true);
 		this.id = id;
 		this.signature = signature;
 		this.superName = superName;
 		this.interfaces = interfaces;
-		this.sourceFileName = sourceFileName;
-		this.methods = methods;
-		increment(methods);
+		this.methods = new ArrayList<MethodCoverage>();
+		this.classCounter = CounterImpl.getInstance(false);
+	}
+
+	/**
+	 * Add a method to this class.
+	 * 
+	 * @param method
+	 *            method data to add
+	 */
+	public void addMethod(final MethodCoverage method) {
+		this.methods.add(method);
+		increment(method);
 		// As class is considered as covered when at least one method is
 		// covered:
-		final boolean covered = methodCounter.getCoveredCount() > 0;
-		this.classCounter = CounterImpl.getInstance(covered);
+		if (methodCounter.getCoveredCount() > 0) {
+			this.classCounter = CounterImpl.getInstance(true);
+		}
+	}
+
+	/**
+	 * Sets the name of the corresponding source file for this class.
+	 * 
+	 * @param sourceFileName
+	 *            name of the source file
+	 */
+	public void setSourceFileName(final String sourceFileName) {
+		this.sourceFileName = sourceFileName;
 	}
 
 	/**

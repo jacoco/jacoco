@@ -14,7 +14,7 @@
  * <p>
  * Structures to represent coverage information in node hierarchies. Each node
  * represents a Java element like class or method. The coverage information is
- * build from {@linkplain org.jacoco.core.data.IStructureVisitor structure}
+ * build from {@linkplain org.jacoco.core.analysis.ICoverageVisitor structure}
  * and {@linkplain org.jacoco.core.data.IExecutionDataVisitor execution}</a>
  * information.
  * </p>

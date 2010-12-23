@@ -11,8 +11,10 @@
  *******************************************************************************/
 package org.jacoco.core.test.perf;
 
-import org.jacoco.core.instr.Instrumenter;
-import org.jacoco.core.runtime.LoggerRuntime;
+import org.jacoco.core.analysis.Analyzer;
+import org.jacoco.core.analysis.ClassCoverage;
+import org.jacoco.core.analysis.ICoverageVisitor;
+import org.jacoco.core.data.ExecutionDataStore;
 import org.jacoco.core.test.TargetLoader;
 
 /**
@@ -21,14 +23,14 @@ import org.jacoco.core.test.TargetLoader;
  * @author Marc R. Hoffmann
  * @version $qualified.bundle.version$
  */
-public class InstrumentationTimeScenario extends TimedScenario {
+public class AnalysisTimeScenario extends TimedScenario {
 
 	private final Class<?> target;
 
 	private final int count;
 
-	protected InstrumentationTimeScenario(Class<?> target, int count) {
-		super(String.format("instrumenting %s classes", Integer.valueOf(count)));
+	protected AnalysisTimeScenario(Class<?> target, int count) {
+		super(String.format("analysing %s classes", Integer.valueOf(count)));
 		this.target = target;
 		this.count = count;
 	}
@@ -36,14 +38,18 @@ public class InstrumentationTimeScenario extends TimedScenario {
 	@Override
 	protected Runnable getInstrumentedRunnable() throws Exception {
 		final byte[] bytes = TargetLoader.getClassDataAsBytes(target);
-		final Instrumenter instr = new Instrumenter(new LoggerRuntime());
+		final ExecutionDataStore executionData = new ExecutionDataStore();
+		ICoverageVisitor visitor = new ICoverageVisitor() {
+			public void visitCoverage(ClassCoverage coverage) {
+			}
+		};
+		final Analyzer analyzer = new Analyzer(executionData, visitor);
 		return new Runnable() {
 			public void run() {
 				for (int i = 0; i < count; i++) {
-					instr.instrument(bytes);
+					analyzer.analyzeClass(bytes);
 				}
 			}
 		};
 	}
-
 }

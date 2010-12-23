@@ -21,8 +21,6 @@ import java.util.zip.ZipInputStream;
 
 import org.jacoco.core.data.ExecutionData;
 import org.jacoco.core.data.ExecutionDataStore;
-import org.jacoco.core.data.IClassStructureVisitor;
-import org.jacoco.core.data.IStructureVisitor;
 import org.jacoco.core.instr.CRC64;
 import org.jacoco.core.internal.flow.ClassProbesAdapter;
 import org.objectweb.asm.ClassReader;
@@ -37,7 +35,10 @@ import org.objectweb.asm.ClassVisitor;
 public class Analyzer {
 
 	private final ExecutionDataStore executionData;
-	private final IStructureVisitor structureVisitor;
+
+	private final ICoverageVisitor structureVisitor;
+
+	private final StringPool stringPool;
 
 	/**
 	 * Creates a new analyzer reporting to the given output.
@@ -48,9 +49,25 @@ public class Analyzer {
 	 *            the output instance that will receive all structure data
 	 */
 	public Analyzer(final ExecutionDataStore executionData,
-			final IStructureVisitor structureVisitor) {
+			final ICoverageVisitor structureVisitor) {
+		this(executionData, structureVisitor, new StringPool());
+	}
+
+	/**
+	 * Creates a new analyzer reporting to the given output.
+	 * 
+	 * @param executionData
+	 *            execution data
+	 * @param structureVisitor
+	 *            the output instance that will receive all structure data
+	 * @param stringPool
+	 *            shared pool to minimize the number of {@link String} instances
+	 */
+	public Analyzer(final ExecutionDataStore executionData,
+			final ICoverageVisitor structureVisitor, final StringPool stringPool) {
 		this.executionData = executionData;
 		this.structureVisitor = structureVisitor;
+		this.stringPool = stringPool;
 	}
 
 	/**
@@ -63,11 +80,15 @@ public class Analyzer {
 	public ClassVisitor createAnalyzingVisitor(final long classid) {
 		final ExecutionData data = executionData.get(classid);
 		final boolean[] classExec = data == null ? null : data.getData();
-
-		final IClassStructureVisitor classStructure = structureVisitor
-				.visitClassStructure(classid);
-		return new ClassProbesAdapter(new ClassAnalyzer(classStructure,
-				classExec));
+		final ClassAnalyzer analyzer = new ClassAnalyzer(classid, classExec,
+				stringPool) {
+			@Override
+			public void visitEnd() {
+				super.visitEnd();
+				structureVisitor.visitCoverage(getCoverage());
+			}
+		};
+		return new ClassProbesAdapter(analyzer);
 	}
 
 	/**

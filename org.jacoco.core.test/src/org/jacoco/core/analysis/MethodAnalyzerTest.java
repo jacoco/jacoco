@@ -12,12 +12,7 @@
 package org.jacoco.core.analysis;
 
 import static junit.framework.Assert.assertEquals;
-import static junit.framework.Assert.assertTrue;
 
-import java.util.HashMap;
-import java.util.Map;
-
-import org.jacoco.core.data.IMethodStructureVisitor;
 import org.jacoco.core.internal.flow.IProbeIdGenerator;
 import org.jacoco.core.internal.flow.LabelFlowAnalyzer;
 import org.jacoco.core.internal.flow.MethodProbesAdapter;
@@ -41,12 +36,11 @@ public class MethodAnalyzerTest implements IProbeIdGenerator {
 
 	private MethodNode method;
 
-	private Map<Integer, LineInfo> lines;
+	private MethodCoverage result;
 
 	@Before
 	public void setup() {
 		nextProbeId = 0;
-		lines = new HashMap<Integer, MethodAnalyzerTest.LineInfo>();
 		method = new MethodNode();
 		probes = new boolean[32];
 	}
@@ -505,98 +499,29 @@ public class MethodAnalyzerTest implements IProbeIdGenerator {
 
 	private void runMethodAnalzer() {
 		method.accept(new LabelFlowAnalyzer());
-		final boolean[] endCalled = new boolean[] { false };
-		final IMethodStructureVisitor output = new IMethodStructureVisitor() {
-			public void visitInsn(boolean covered, int line) {
-				getLine(line).addInsn(covered);
-			}
-
-			public void visitBranches(int total, int covered, int line) {
-				getLine(line).addBranches(total - covered, covered);
-			}
-
-			public void visitEnd() {
-				endCalled[0] = true;
-			}
-		};
-		final MethodAnalyzer analyzer = new MethodAnalyzer(probes, output);
+		final MethodAnalyzer analyzer = new MethodAnalyzer("doit", "()V", null,
+				probes);
 		method.accept(new MethodProbesAdapter(analyzer, this));
-		assertTrue(endCalled[0]);
-	}
-
-	private LineInfo getLine(int nr) {
-		final Integer key = Integer.valueOf(nr);
-		LineInfo info = lines.get(key);
-		if (info == null) {
-			lines.put(key, info = new LineInfo());
-		}
-		return info;
+		result = analyzer.getCoverage();
 	}
 
 	private void assertLine(int nr, int insnMissed, int insnCovered,
 			int branchesMissed, int branchesCovered) {
-		assertEquals("Line " + nr, new LineInfo(insnMissed, insnCovered,
-				branchesMissed, branchesCovered), getLine(nr));
-	}
+		final ILines lines = result.getLines();
 
-	private static class LineInfo {
-
-		private int insnMissed;
-
-		private int insnCovered;
-
-		private int branchesMissed;
-
-		private int branchesCovered;
-
-		LineInfo(int insnMissed, int insnCovered, int branchesMissed,
-				int branchesCovered) {
-			this.insnMissed = insnMissed;
-			this.insnCovered = insnCovered;
-			this.branchesMissed = branchesMissed;
-			this.branchesCovered = branchesCovered;
+		final int status;
+		if (insnMissed == 0) {
+			status = insnCovered == 0 ? ILines.NO_CODE : ILines.FULLY_COVERED;
+		} else {
+			status = insnCovered == 0 ? ILines.NOT_COVERED
+					: ILines.PARTLY_COVERED;
 		}
 
-		LineInfo() {
-			this(0, 0, 0, 0);
-		}
-
-		void addInsn(boolean covered) {
-			if (covered) {
-				insnCovered++;
-			} else {
-				insnMissed++;
-			}
-		}
-
-		public void addBranches(int missed, int covered) {
-			branchesMissed += missed;
-			branchesCovered += covered;
-		}
-
-		@Override
-		public int hashCode() {
-			return insnMissed ^ insnCovered ^ branchesMissed ^ branchesCovered;
-		}
-
-		@Override
-		public boolean equals(Object obj) {
-			if (!(obj instanceof LineInfo)) {
-				return false;
-			}
-			LineInfo that = (LineInfo) obj;
-			return this.insnMissed == that.insnMissed
-					&& this.insnCovered == that.insnCovered
-					&& this.branchesMissed == that.branchesMissed
-					&& this.branchesCovered == that.branchesCovered;
-		}
-
-		@Override
-		public String toString() {
-			return "[insn: " + insnMissed + "/" + insnCovered + ", branches: "
-					+ branchesMissed + "," + branchesCovered + "]";
-		}
-
+		assertEquals("Status in line " + nr, status, lines.getStatus(nr));
+		assertEquals("Missed branches in line " + nr, branchesMissed,
+				lines.getMissedBranches(nr));
+		assertEquals("Covered branches in line " + nr, branchesCovered,
+				lines.getCoveredBranches(nr));
 	}
 
 }

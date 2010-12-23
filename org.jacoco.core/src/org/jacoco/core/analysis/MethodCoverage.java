@@ -11,8 +11,6 @@
  *******************************************************************************/
 package org.jacoco.core.analysis;
 
-import org.jacoco.core.data.IMethodStructureVisitor;
-
 /**
  * Coverage data of a single method.
  * 
@@ -20,6 +18,9 @@ import org.jacoco.core.data.IMethodStructureVisitor;
  * @version $qualified.bundle.version$
  */
 public class MethodCoverage extends CoverageNodeImpl {
+
+	/** Place holder for unknown lines (no debug information) */
+	public static int UNKNOWN_LINE = -1;
 
 	private final String desc;
 
@@ -52,7 +53,7 @@ public class MethodCoverage extends CoverageNodeImpl {
 	 *            source line number of the instruction
 	 */
 	public void addInsn(final boolean covered, final int line) {
-		if (line != IMethodStructureVisitor.UNKNOWN_LINE) {
+		if (line != UNKNOWN_LINE) {
 			this.lines.incrementInsn(line, covered);
 		}
 		this.instructionCounter = this.instructionCounter.increment(CounterImpl
@@ -73,7 +74,7 @@ public class MethodCoverage extends CoverageNodeImpl {
 	 *            source line number of the branching point
 	 */
 	public void addBranches(final int total, final int covered, final int line) {
-		if (line != IMethodStructureVisitor.UNKNOWN_LINE) {
+		if (line != UNKNOWN_LINE) {
 			this.lines.incrementBranches(line, total, covered);
 		}
 		this.branchCounter = this.branchCounter.increment(CounterImpl

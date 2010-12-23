@@ -18,7 +18,6 @@ import static org.junit.Assert.assertTrue;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.Set;
 
 import org.junit.Test;
 
@@ -78,11 +77,12 @@ public class BundleCoverageTest {
 
 	@Test
 	public void testGroupByPackage() {
-		Set<MethodCoverage> noMethods = Collections.emptySet();
 		ClassCoverage ca = new ClassCoverage("p1/A", 1, null,
-				"java/lang/Object", new String[0], "A.java", noMethods);
+				"java/lang/Object", new String[0]);
+		ca.setSourceFileName("A.java");
 		ClassCoverage cb = new ClassCoverage("p2/B", 2, null,
-				"java/lang/Object", new String[0], "B.java", noMethods);
+				"java/lang/Object", new String[0]);
+		cb.setSourceFileName("B.java");
 		SourceFileCoverage sb = new SourceFileCoverage("B.java", "p2");
 		SourceFileCoverage sc = new SourceFileCoverage("C.java", "p3");
 		BundleCoverage bundle = new BundleCoverage("bundle", Arrays.asList(ca,

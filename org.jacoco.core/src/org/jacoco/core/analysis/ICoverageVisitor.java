@@ -9,27 +9,23 @@
  *    Marc R. Hoffmann - initial API and implementation
  *    
  *******************************************************************************/
-package org.jacoco.core.data;
+package org.jacoco.core.analysis;
 
 /**
- * Interface for data output of the internal class structure. This interface is
- * meant to be implemented by parties that want to retrieve data from the class
- * analyzing process.
+ * Interface for coverage data output as a stream of {@link ClassCoverage}
+ * instances.
  * 
  * @author Marc R. Hoffmann
  * @version $qualified.bundle.version$
  */
-public interface IStructureVisitor {
+public interface ICoverageVisitor {
 
 	/**
-	 * Provides structural information about a class as collected during
-	 * instrumentation.
+	 * For analyzed class coverage data is emitted to this method.
 	 * 
-	 * @param id
-	 *            unique id for the class
-	 * @return call-back for structure details about the class
-	 * 
+	 * @param coverage
+	 *            coverage data for a class
 	 */
-	public IClassStructureVisitor visitClassStructure(long id);
+	public void visitCoverage(ClassCoverage coverage);
 
 }
