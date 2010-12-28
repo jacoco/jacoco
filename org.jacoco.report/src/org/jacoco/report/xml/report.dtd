@@ -7,7 +7,7 @@
      
    Contributors:
       Brock Janiczak - initial API and implementation
-      Marc R. Hoffmann - generalized report structure, line info
+      Marc R. Hoffmann - generalized report structure, line info, documentation
       
    $Id: $
 -->
@@ -19,45 +19,64 @@
         SYSTEM = "report.dtd"
 -->
 
-<!ELEMENT report (sessioninfo*, group* , package* , counter*)>
-<!ATTLIST report
-  name CDATA #REQUIRED>
+<!-- report root node -->
+<!ELEMENT report (sessioninfo*, group*, package*, counter*)>
+  <!ATTLIST report name CDATA #REQUIRED>
 
+<!-- information about a session which contributed execution data -->
 <!ELEMENT sessioninfo EMPTY>
-<!ATTLIST sessioninfo
-  id    CDATA #REQUIRED
-  start CDATA #REQUIRED
-  dump  CDATA #REQUIRED>
+  <!-- session id -->
+  <!ATTLIST sessioninfo id CDATA #REQUIRED>
+  <!-- start time stamp -->
+  <!ATTLIST sessioninfo start CDATA #REQUIRED>
+  <!-- dump time stamp -->
+  <!ATTLIST sessioninfo dump CDATA #REQUIRED>
 
-<!ELEMENT group (group* , package* , counter*)>
-<!ATTLIST group
-  name CDATA #REQUIRED>
+<!-- representation of a group -->
+<!ELEMENT group ((group* | package*) , counter*)>
+  <!-- group name -->
+  <!ATTLIST group name CDATA #REQUIRED>
 
-<!ELEMENT package ((class | sourcefile)* , counter*)>
-<!ATTLIST package
-  name CDATA #REQUIRED>
+<!-- representation of a package -->
+<!ELEMENT package ((class | sourcefile)*, counter*)>
+  <!-- package name in VM notation -->
+  <!ATTLIST package name CDATA #REQUIRED>
 
+<!-- representation of a class -->
 <!ELEMENT class (method*, counter*)>
-<!ATTLIST class
-  name CDATA #REQUIRED>
+  <!-- full qualified VM name -->
+  <!ATTLIST class name CDATA #REQUIRED>
 
+<!-- representation of a method -->
 <!ELEMENT method (counter*)>
-<!ATTLIST method
-  name CDATA #REQUIRED
-  desc CDATA #REQUIRED
-  line CDATA #IMPLIED>
+  <!-- method name -->
+  <!ATTLIST method name CDATA #REQUIRED>
+  <!-- method parameter description -->
+  <!ATTLIST method desc CDATA #REQUIRED>
+  <!-- first source line of this method -->
+  <!ATTLIST method line CDATA #IMPLIED>
   
+<!-- representation of a source file -->
 <!ELEMENT sourcefile (line*, counter*)>
-<!ATTLIST sourcefile
-  name CDATA #REQUIRED>
+  <!-- local source file name -->
+  <!ATTLIST sourcefile name CDATA #REQUIRED>
 
+<!-- representation of a source line -->
 <!ELEMENT line EMPTY>
-<!ATTLIST line
-  nr     CDATA #REQUIRED
-  status (N|P|F) #REQUIRED>
+  <!-- line number -->
+  <!ATTLIST line nr CDATA #REQUIRED>
+  <!-- instruction coverage status -->
+  <!ATTLIST line status (N|P|F) #REQUIRED>
+  <!-- number of missed branches -->
+  <!ATTLIST line mb CDATA #IMPLIED>
+  <!-- number of covered branches -->
+  <!ATTLIST line cb CDATA #IMPLIED>
 
+<!-- coverage data counter for different metrics -->
 <!ELEMENT counter EMPTY>
-<!ATTLIST counter
-  type    (INSTRUCTION|BRANCH|LINE|METHOD|CLASS) #REQUIRED
-  covered CDATA #REQUIRED
-  missed  CDATA #REQUIRED>
+  <!-- metric type -->
+  <!ATTLIST counter type (INSTRUCTION|BRANCH|LINE|METHOD|CLASS) #REQUIRED>
+  <!-- number of missed items -->
+  <!ATTLIST counter missed CDATA #REQUIRED>
+  <!-- number of total items -->
+  <!ATTLIST counter covered CDATA #REQUIRED>
