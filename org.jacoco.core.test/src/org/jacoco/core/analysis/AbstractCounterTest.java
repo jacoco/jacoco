@@ -32,7 +32,7 @@ public class AbstractCounterTest {
 
 	@Test
 	public void testGetTotalCount() {
-		AbstractCounter c = CounterImpl.getInstance(33, 12);
+		AbstractCounter c = CounterImpl.getInstance(21, 12);
 		assertEquals(33, c.getTotalCount(), 0.0);
 	}
 
@@ -44,14 +44,14 @@ public class AbstractCounterTest {
 
 	@Test
 	public void testGetMissedCount() {
-		AbstractCounter c = CounterImpl.getInstance(22, 15);
+		AbstractCounter c = CounterImpl.getInstance(7, 15);
 		assertEquals(7, c.getMissedCount(), 0.0);
 	}
 
 	@Test
 	public void testGetCoveredRatio1() {
-		AbstractCounter c = getInstance(20, 10);
-		assertEquals(0.5, c.getCoveredRatio(), 0.0);
+		AbstractCounter c = getInstance(30, 10);
+		assertEquals(0.25, c.getCoveredRatio(), 0.0);
 	}
 
 	@Test
@@ -68,13 +68,13 @@ public class AbstractCounterTest {
 
 	@Test
 	public void testGetMissedRatio1() {
-		AbstractCounter c = getInstance(20, 10);
-		assertEquals(0.5, c.getMissedRatio(), 0.0);
+		AbstractCounter c = getInstance(10, 30);
+		assertEquals(0.25, c.getMissedRatio(), 0.0);
 	}
 
 	@Test
 	public void testGetMissedRatio2() {
-		AbstractCounter c = getInstance(20, 20);
+		AbstractCounter c = getInstance(0, 20);
 		assertEquals(0.0, c.getMissedRatio(), 0.0);
 	}
 
@@ -135,7 +135,7 @@ public class AbstractCounterTest {
 	@Test
 	public void testToString() {
 		AbstractCounter c = getInstance(300, 123);
-		assertEquals("Counter[123/300]", c.toString());
+		assertEquals("Counter[300/123]", c.toString());
 	}
 
 }

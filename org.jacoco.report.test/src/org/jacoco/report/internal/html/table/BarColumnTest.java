@@ -75,14 +75,14 @@ public class BarColumnTest {
 
 	@Test
 	public void testInit() throws Exception {
-		final ITableItem i = createItem(30, 24);
+		final ITableItem i = createItem(6, 24);
 		assertTrue(column.init(Arrays.asList(i), i.getNode()));
 		doc.close();
 	}
 
 	@Test
 	public void testFooter() throws Exception {
-		column.footer(td, createNode(20, 5), resources, root);
+		column.footer(td, createNode(15, 5), resources, root);
 		doc.close();
 		final Document doc = support.parse(output.getFile("Test.html"));
 		assertEquals("15 of 20",
@@ -91,9 +91,9 @@ public class BarColumnTest {
 
 	@Test
 	public void testBarWidths() throws Exception {
-		final ITableItem i1 = createItem(20, 5);
-		final ITableItem i2 = createItem(30, 24);
-		column.init(Arrays.asList(i1, i2), createNode(50, 29));
+		final ITableItem i1 = createItem(15, 5);
+		final ITableItem i2 = createItem(6, 24);
+		column.init(Arrays.asList(i1, i2), createNode(21, 29));
 		column.item(td, i1, resources, root);
 		doc.close();
 		final Document doc = support.parse(output.getFile("Test.html"));
@@ -140,8 +140,8 @@ public class BarColumnTest {
 
 	@Test
 	public void testGreenBarOnly() throws Exception {
-		final ITableItem i1 = createItem(20, 20);
-		column.init(Arrays.asList(i1), createNode(20, 20));
+		final ITableItem i1 = createItem(00, 20);
+		column.init(Arrays.asList(i1), createNode(00, 20));
 		column.item(td, i1, resources, root);
 		doc.close();
 		final Document doc = support.parse(output.getFile("Test.html"));
@@ -161,8 +161,8 @@ public class BarColumnTest {
 	@Test
 	public void testLocale() throws Exception {
 		final BarColumn col = new BarColumn(CounterEntity.LINE, Locale.FRENCH);
-		final ITableItem i1 = createItem(123456, 123456);
-		col.init(Arrays.asList(i1), createNode(20, 20));
+		final ITableItem i1 = createItem(0, 123456);
+		col.init(Arrays.asList(i1), createNode(00, 20));
 		col.item(td, i1, resources, root);
 		doc.close();
 		final Document doc = support.parse(output.getFile("Test.html"));
@@ -174,8 +174,8 @@ public class BarColumnTest {
 	@Test
 	public void testComparator1() throws Exception {
 		final Comparator<ITableItem> c = column.getComparator();
-		final ITableItem i1 = createItem(100, 50);
-		final ITableItem i2 = createItem(100, 80);
+		final ITableItem i1 = createItem(50, 50);
+		final ITableItem i2 = createItem(20, 80);
 		assertTrue(c.compare(i1, i2) < 0);
 		assertTrue(c.compare(i2, i1) > 0);
 		assertEquals(0, c.compare(i1, i1));
@@ -185,16 +185,16 @@ public class BarColumnTest {
 	@Test
 	public void testComparator2() throws Exception {
 		final Comparator<ITableItem> c = column.getComparator();
-		final ITableItem i1 = createItem(110, 60);
-		final ITableItem i2 = createItem(100, 50);
+		final ITableItem i1 = createItem(50, 60);
+		final ITableItem i2 = createItem(50, 50);
 		assertTrue(c.compare(i1, i2) < 0);
 		assertTrue(c.compare(i2, i1) > 0);
 		assertEquals(0, c.compare(i1, i1));
 		doc.close();
 	}
 
-	private ITableItem createItem(final int total, final int covered) {
-		final ICoverageNode node = createNode(total, covered);
+	private ITableItem createItem(final int missed, final int covered) {
+		final ICoverageNode node = createNode(missed, covered);
 		return new ITableItem() {
 			public String getLinkLabel() {
 				return "Foo";
@@ -214,10 +214,10 @@ public class BarColumnTest {
 		};
 	}
 
-	private CoverageNodeImpl createNode(final int total, final int covered) {
+	private CoverageNodeImpl createNode(final int missed, final int covered) {
 		return new CoverageNodeImpl(ElementType.GROUP, "Foo", false) {
 			{
-				this.lineCounter = CounterImpl.getInstance(total, covered);
+				this.lineCounter = CounterImpl.getInstance(missed, covered);
 			}
 		};
 	}

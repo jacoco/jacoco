@@ -32,49 +32,49 @@ public class CounterComparatorTest {
 	@Test
 	public void testTotalItemsComparator() {
 		final Comparator<ICounter> cmp = CounterComparator.TOTALITEMS;
-		assertCmpLess(cmp, 24, 5, 25, 6);
-		assertCmpEquals(cmp, 25, 5, 25, 6);
-		assertCmpGreater(cmp, 26, 5, 25, 6);
+		assertCmpLess(cmp, 19, 5, 19, 6);
+		assertCmpEquals(cmp, 20, 5, 19, 6);
+		assertCmpGreater(cmp, 21, 5, 19, 6);
 	}
 
 	@Test
 	public void testCoveredItemsComparator() {
 		final Comparator<ICounter> cmp = CounterComparator.COVEREDITEMS;
-		assertCmpLess(cmp, 80, 7, 50, 8);
-		assertCmpEquals(cmp, 50, 8, 90, 8);
-		assertCmpGreater(cmp, 30, 9, 40, 8);
+		assertCmpLess(cmp, 73, 7, 42, 8);
+		assertCmpEquals(cmp, 42, 8, 82, 8);
+		assertCmpGreater(cmp, 21, 9, 32, 8);
 	}
 
 	@Test
 	public void testMissedItemsComparator() {
 		final Comparator<ICounter> cmp = CounterComparator.MISSEDITEMS;
-		assertCmpLess(cmp, 50, 40, 91, 80);
-		assertCmpEquals(cmp, 50, 40, 90, 80);
-		assertCmpGreater(cmp, 50, 39, 90, 80);
+		assertCmpLess(cmp, 10, 40, 11, 80);
+		assertCmpEquals(cmp, 10, 40, 10, 80);
+		assertCmpGreater(cmp, 11, 39, 10, 80);
 	}
 
 	@Test
 	public void testCoveredRatioComparator() {
 		final Comparator<ICounter> cmp = CounterComparator.COVEREDRATIO;
-		assertCmpLess(cmp, 50, 25, 90, 46);
-		assertCmpEquals(cmp, 50, 10, 80, 16);
-		assertCmpGreater(cmp, 50, 25, 90, 44);
+		assertCmpLess(cmp, 25, 25, 44, 46);
+		assertCmpEquals(cmp, 40, 10, 64, 16);
+		assertCmpGreater(cmp, 25, 25, 46, 44);
 	}
 
 	@Test
 	public void testMissedRatioComparator() {
 		final Comparator<ICounter> cmp = CounterComparator.MISSEDRATIO;
-		assertCmpLess(cmp, 50, 25, 90, 44);
-		assertCmpEquals(cmp, 50, 10, 80, 16);
-		assertCmpGreater(cmp, 50, 25, 90, 46);
+		assertCmpLess(cmp, 25, 25, 46, 44);
+		assertCmpEquals(cmp, 40, 10, 64, 16);
+		assertCmpGreater(cmp, 25, 25, 44, 46);
 	}
 
 	@Test
 	public void testReverseComparator() {
 		final Comparator<ICounter> cmp = CounterComparator.TOTALITEMS.reverse();
-		assertCmpGreater(cmp, 24, 5, 25, 6);
-		assertCmpEquals(cmp, 25, 5, 25, 6);
-		assertCmpLess(cmp, 26, 5, 25, 6);
+		assertCmpGreater(cmp, 19, 5, 19, 6);
+		assertCmpEquals(cmp, 20, 5, 19, 6);
+		assertCmpLess(cmp, 21, 5, 19, 6);
 	}
 
 	@Test
@@ -95,30 +95,31 @@ public class CounterComparatorTest {
 		assertEquals(0, cmp.compare(d1, d2), 0.0);
 	}
 
-	private void assertCmpEquals(Comparator<ICounter> cmp, int total1,
-			int covered1, int total2, int covered2) {
+	private void assertCmpEquals(Comparator<ICounter> cmp, int missed1,
+			int covered1, int missed2, int covered2) {
 		assertEquals(0,
-				cmp.compare(ctr(total1, covered1), ctr(total2, covered2)), 0.0);
+				cmp.compare(ctr(missed1, covered1), ctr(missed2, covered2)),
+				0.0);
 	}
 
-	private void assertCmpLess(Comparator<ICounter> cmp, int total1,
-			int covered1, int total2, int covered2) {
-		assertTrue(cmp.compare(ctr(total1, covered1), ctr(total2, covered2)) < 0);
+	private void assertCmpLess(Comparator<ICounter> cmp, int missed1,
+			int covered1, int missed2, int covered2) {
+		assertTrue(cmp.compare(ctr(missed1, covered1), ctr(missed2, covered2)) < 0);
 	}
 
-	private void assertCmpGreater(Comparator<ICounter> cmp, int total1,
-			int covered1, int total2, int covered2) {
-		assertTrue(cmp.compare(ctr(total1, covered1), ctr(total2, covered2)) > 0);
+	private void assertCmpGreater(Comparator<ICounter> cmp, int missed1,
+			int covered1, int missed2, int covered2) {
+		assertTrue(cmp.compare(ctr(missed1, covered1), ctr(missed2, covered2)) > 0);
 	}
 
-	private CounterImpl ctr(int total, int covered) {
-		return CounterImpl.getInstance(total, covered);
+	private CounterImpl ctr(int missed, int covered) {
+		return CounterImpl.getInstance(missed, covered);
 	}
 
 	private static final class MockBlockData extends CoverageNodeImpl {
 		MockBlockData(int total) {
 			super(GROUP, "mock", false);
-			instructionCounter = CounterImpl.getInstance(total, false);
+			instructionCounter = CounterImpl.getInstance(total, 0);
 		}
 	}
 

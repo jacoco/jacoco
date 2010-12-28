@@ -74,11 +74,11 @@ public class XMLReportNodeHandlerTest {
 		final CoverageNodeImpl node = new CoverageNodeImpl(ElementType.GROUP,
 				"Group1", false) {
 			{
-				classCounter = CounterImpl.getInstance(10, 1);
-				methodCounter = CounterImpl.getInstance(20, 2);
-				branchCounter = CounterImpl.getInstance(30, 3);
-				instructionCounter = CounterImpl.getInstance(40, 4);
-				lineCounter = CounterImpl.getInstance(50, 5);
+				classCounter = CounterImpl.getInstance(9, 1);
+				methodCounter = CounterImpl.getInstance(18, 2);
+				branchCounter = CounterImpl.getInstance(27, 3);
+				instructionCounter = CounterImpl.getInstance(36, 4);
+				lineCounter = CounterImpl.getInstance(45, 5);
 			}
 		};
 		handler.visitChild(node).visitEnd(null);

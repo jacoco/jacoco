@@ -28,9 +28,6 @@ import org.jacoco.report.html.HTMLDocument;
 import org.jacoco.report.html.HTMLElement;
 import org.jacoco.report.html.HTMLSupport;
 import org.jacoco.report.internal.html.resources.Resources;
-import org.jacoco.report.internal.html.table.IColumnRenderer;
-import org.jacoco.report.internal.html.table.ITableItem;
-import org.jacoco.report.internal.html.table.PercentageColumn;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -83,7 +80,7 @@ public class PercentageColumnTest {
 
 	@Test
 	public void testItem1() throws Exception {
-		final ITableItem item = createItem(150, 50);
+		final ITableItem item = createItem(100, 50);
 		column.item(td, item, resources, root);
 		doc.close();
 		final Document doc = support.parse(output.getFile("Test.html"));
@@ -93,7 +90,7 @@ public class PercentageColumnTest {
 
 	@Test
 	public void testItem2() throws Exception {
-		final ITableItem item = createItem(0, 50);
+		final ITableItem item = createItem(0, 0);
 		column.item(td, item, resources, root);
 		doc.close();
 		final Document doc = support.parse(output.getFile("Test.html"));
@@ -105,17 +102,17 @@ public class PercentageColumnTest {
 	public void testLocale() throws Exception {
 		IColumnRenderer column = new PercentageColumn(CounterEntity.LINE,
 				Locale.FRENCH);
-		final ITableItem item = createItem(123, 1230);
+		final ITableItem item = createItem(0, 1000);
 		column.item(td, item, resources, root);
 		doc.close();
 		final Document doc = support.parse(output.getFile("Test.html"));
-		assertEquals("1\u00a0000 %",
+		assertEquals("100 %",
 				support.findStr(doc, "/html/body/table/tr/td[1]/text()"));
 	}
 
 	@Test
 	public void testFooter1() throws Exception {
-		final ITableItem item = createItem(80, 60);
+		final ITableItem item = createItem(20, 60);
 		column.footer(td, item.getNode(), resources, root);
 		doc.close();
 		final Document doc = support.parse(output.getFile("Test.html"));
@@ -124,7 +121,7 @@ public class PercentageColumnTest {
 
 	@Test
 	public void testFooter2() throws Exception {
-		final ITableItem item = createItem(0, 60);
+		final ITableItem item = createItem(0, 0);
 		column.footer(td, item.getNode(), resources, root);
 		doc.close();
 		final Document doc = support.parse(output.getFile("Test.html"));
@@ -134,16 +131,16 @@ public class PercentageColumnTest {
 	@Test
 	public void testComparator() throws Exception {
 		final Comparator<ITableItem> c = column.getComparator();
-		final ITableItem i1 = createItem(100, 50);
-		final ITableItem i2 = createItem(1000, 200);
+		final ITableItem i1 = createItem(50, 50);
+		final ITableItem i2 = createItem(800, 200);
 		assertTrue(c.compare(i1, i2) < 0);
 		assertTrue(c.compare(i2, i1) > 0);
 		assertEquals(0, c.compare(i1, i1));
 		doc.close();
 	}
 
-	private ITableItem createItem(final int total, final int covered) {
-		final ICoverageNode node = createNode(total, covered);
+	private ITableItem createItem(final int missed, final int covered) {
+		final ICoverageNode node = createNode(missed, covered);
 		return new ITableItem() {
 			public String getLinkLabel() {
 				return "Foo";
@@ -163,10 +160,10 @@ public class PercentageColumnTest {
 		};
 	}
 
-	private CoverageNodeImpl createNode(final int total, final int covered) {
+	private CoverageNodeImpl createNode(final int missed, final int covered) {
 		return new CoverageNodeImpl(ElementType.GROUP, "Foo", false) {
 			{
-				this.lineCounter = CounterImpl.getInstance(total, covered);
+				this.lineCounter = CounterImpl.getInstance(missed, covered);
 			}
 		};
 	}

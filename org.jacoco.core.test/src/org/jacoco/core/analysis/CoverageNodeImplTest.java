@@ -72,26 +72,26 @@ public class CoverageNodeImplTest {
 		ICoverageNode child = new CoverageNodeImpl(ElementType.GROUP, "sample",
 				false) {
 			{
-				instructionCounter = CounterImpl.getInstance(42, 41);
-				branchCounter = CounterImpl.getInstance(25, 15);
-				lineCounter = CounterImpl.getInstance(8, 3);
-				methodCounter = CounterImpl.getInstance(22, 21);
-				classCounter = CounterImpl.getInstance(12, 11);
+				instructionCounter = CounterImpl.getInstance(1, 41);
+				branchCounter = CounterImpl.getInstance(10, 15);
+				lineCounter = CounterImpl.getInstance(5, 3);
+				methodCounter = CounterImpl.getInstance(1, 21);
+				classCounter = CounterImpl.getInstance(1, 11);
 			}
 		};
 		parent.increment(child);
-		assertEquals(CounterImpl.getInstance(42, 41),
+		assertEquals(CounterImpl.getInstance(1, 41),
 				parent.getCounter(INSTRUCTION));
-		assertEquals(CounterImpl.getInstance(42, 41),
+		assertEquals(CounterImpl.getInstance(1, 41),
 				parent.getInstructionCounter());
-		assertEquals(CounterImpl.getInstance(25, 15), parent.getCounter(BRANCH));
-		assertEquals(CounterImpl.getInstance(25, 15), parent.getBranchCounter());
-		assertEquals(CounterImpl.getInstance(8, 3), parent.getCounter(LINE));
-		assertEquals(CounterImpl.getInstance(8, 3), parent.getLineCounter());
-		assertEquals(CounterImpl.getInstance(22, 21), parent.getCounter(METHOD));
-		assertEquals(CounterImpl.getInstance(22, 21), parent.getMethodCounter());
-		assertEquals(CounterImpl.getInstance(12, 11), parent.getCounter(CLASS));
-		assertEquals(CounterImpl.getInstance(12, 11), parent.getClassCounter());
+		assertEquals(CounterImpl.getInstance(10, 15), parent.getCounter(BRANCH));
+		assertEquals(CounterImpl.getInstance(10, 15), parent.getBranchCounter());
+		assertEquals(CounterImpl.getInstance(5, 3), parent.getCounter(LINE));
+		assertEquals(CounterImpl.getInstance(5, 3), parent.getLineCounter());
+		assertEquals(CounterImpl.getInstance(1, 21), parent.getCounter(METHOD));
+		assertEquals(CounterImpl.getInstance(1, 21), parent.getMethodCounter());
+		assertEquals(CounterImpl.getInstance(1, 11), parent.getCounter(CLASS));
+		assertEquals(CounterImpl.getInstance(1, 11), parent.getClassCounter());
 	}
 
 	@Test
@@ -101,23 +101,23 @@ public class CoverageNodeImplTest {
 		ICoverageNode child = new CoverageNodeImpl(ElementType.CLASS, "Sample",
 				true) {
 			{
-				instructionCounter = CounterImpl.getInstance(42, 41);
-				branchCounter = CounterImpl.getInstance(25, 15);
+				instructionCounter = CounterImpl.getInstance(1, 41);
+				branchCounter = CounterImpl.getInstance(10, 15);
 				lines.incrementInsn(1, false);
 				lines.incrementInsn(2, false);
 				lines.incrementInsn(3, true);
 				lines.incrementInsn(4, true);
-				methodCounter = CounterImpl.getInstance(22, 21);
-				classCounter = CounterImpl.getInstance(12, 11);
+				methodCounter = CounterImpl.getInstance(1, 21);
+				classCounter = CounterImpl.getInstance(1, 11);
 			}
 		};
 		node.increment(child);
-		assertEquals(CounterImpl.getInstance(42, 41),
+		assertEquals(CounterImpl.getInstance(1, 41),
 				node.getInstructionCounter());
-		assertEquals(CounterImpl.getInstance(25, 15), node.getBranchCounter());
-		assertEquals(CounterImpl.getInstance(22, 21), node.getMethodCounter());
-		assertEquals(CounterImpl.getInstance(12, 11), node.getClassCounter());
-		assertEquals(CounterImpl.getInstance(4, 2), node.getLineCounter());
+		assertEquals(CounterImpl.getInstance(10, 15), node.getBranchCounter());
+		assertEquals(CounterImpl.getInstance(1, 21), node.getMethodCounter());
+		assertEquals(CounterImpl.getInstance(1, 11), node.getClassCounter());
+		assertEquals(CounterImpl.getInstance(2, 2), node.getLineCounter());
 		assertEquals(ILines.NOT_COVERED, node.getLines().getStatus(1), 0.0);
 		assertEquals(ILines.NOT_COVERED, node.getLines().getStatus(2), 0.0);
 		assertEquals(ILines.FULLY_COVERED, node.getLines().getStatus(3), 0.0);
@@ -149,10 +149,10 @@ public class CoverageNodeImplTest {
 		ICoverageNode node = new CoverageNodeImpl(ElementType.GROUP, "sample",
 				true) {
 			{
-				classCounter = CounterImpl.getInstance(1, 1);
-				methodCounter = CounterImpl.getInstance(2, 2);
-				branchCounter = CounterImpl.getInstance(3, 3);
-				instructionCounter = CounterImpl.getInstance(4, 4);
+				classCounter = CounterImpl.getInstance(0, 1);
+				methodCounter = CounterImpl.getInstance(0, 2);
+				branchCounter = CounterImpl.getInstance(0, 3);
+				instructionCounter = CounterImpl.getInstance(0, 4);
 				lines.incrementInsn(1, true);
 				lines.incrementInsn(2, true);
 				lines.incrementInsn(3, true);
@@ -163,12 +163,12 @@ public class CoverageNodeImplTest {
 		ICoverageNode copy = node.getPlainCopy();
 		assertEquals(ElementType.GROUP, copy.getElementType());
 		assertEquals("sample", copy.getName());
-		assertEquals(CounterImpl.getInstance(1, 1), copy.getClassCounter());
-		assertEquals(CounterImpl.getInstance(2, 2), copy.getMethodCounter());
-		assertEquals(CounterImpl.getInstance(3, 3), copy.getBranchCounter());
-		assertEquals(CounterImpl.getInstance(4, 4),
+		assertEquals(CounterImpl.getInstance(0, 1), copy.getClassCounter());
+		assertEquals(CounterImpl.getInstance(0, 2), copy.getMethodCounter());
+		assertEquals(CounterImpl.getInstance(0, 3), copy.getBranchCounter());
+		assertEquals(CounterImpl.getInstance(0, 4),
 				copy.getInstructionCounter());
-		assertEquals(CounterImpl.getInstance(5, 5), copy.getLineCounter());
+		assertEquals(CounterImpl.getInstance(0, 5), copy.getLineCounter());
 		assertEquals(1, copy.getLines().getFirstLine(), 0.0);
 		assertEquals(5, copy.getLines().getLastLine(), 0.0);
 		assertEquals(ILines.FULLY_COVERED, copy.getLines().getStatus(3), 0.0);

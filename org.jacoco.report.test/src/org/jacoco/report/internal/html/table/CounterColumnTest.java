@@ -31,9 +31,6 @@ import org.jacoco.report.html.HTMLDocument;
 import org.jacoco.report.html.HTMLElement;
 import org.jacoco.report.html.HTMLSupport;
 import org.jacoco.report.internal.html.resources.Resources;
-import org.jacoco.report.internal.html.table.CounterColumn;
-import org.jacoco.report.internal.html.table.IColumnRenderer;
-import org.jacoco.report.internal.html.table.ITableItem;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -82,7 +79,7 @@ public class CounterColumnTest {
 	public void testInitVisible() throws Exception {
 		IColumnRenderer column = CounterColumn.newTotal(CounterEntity.LINE,
 				locale);
-		final ITableItem item = createItem(1, 3);
+		final ITableItem item = createItem(0, 3);
 		assertTrue(column.init(Arrays.asList(item), item.getNode()));
 		doc.close();
 	}
@@ -100,7 +97,7 @@ public class CounterColumnTest {
 	public void testItemTotal() throws Exception {
 		IColumnRenderer column = CounterColumn.newTotal(CounterEntity.LINE,
 				locale);
-		final ITableItem item = createItem(150, 50);
+		final ITableItem item = createItem(100, 50);
 		column.init(Collections.singletonList(item), item.getNode());
 		column.item(td, item, resources, root);
 		doc.close();
@@ -113,7 +110,7 @@ public class CounterColumnTest {
 	public void testItemMissed() throws Exception {
 		IColumnRenderer column = CounterColumn.newMissed(CounterEntity.LINE,
 				locale);
-		final ITableItem item = createItem(150, 50);
+		final ITableItem item = createItem(100, 50);
 		column.init(Collections.singletonList(item), item.getNode());
 		column.item(td, item, resources, root);
 		doc.close();
@@ -126,7 +123,7 @@ public class CounterColumnTest {
 	public void testItemCovered() throws Exception {
 		IColumnRenderer column = CounterColumn.newCovered(CounterEntity.LINE,
 				locale);
-		final ITableItem item = createItem(150, 50);
+		final ITableItem item = createItem(100, 50);
 		column.init(Collections.singletonList(item), item.getNode());
 		column.item(td, item, resources, root);
 		doc.close();
@@ -152,7 +149,7 @@ public class CounterColumnTest {
 	public void testFooter() throws Exception {
 		IColumnRenderer column = CounterColumn.newTotal(CounterEntity.LINE,
 				locale);
-		final ITableItem item = createItem(80, 60);
+		final ITableItem item = createItem(20, 60);
 		column.init(Collections.singletonList(item), item.getNode());
 		column.footer(td, item.getNode(), resources, root);
 		doc.close();
@@ -179,8 +176,8 @@ public class CounterColumnTest {
 		IColumnRenderer column = CounterColumn.newCovered(CounterEntity.LINE,
 				locale);
 		final Comparator<ITableItem> c = column.getComparator();
-		final ITableItem i1 = createItem(100, 30);
-		final ITableItem i2 = createItem(100, 50);
+		final ITableItem i1 = createItem(70, 30);
+		final ITableItem i2 = createItem(50, 50);
 		assertEquals(0, c.compare(i1, i1));
 		assertTrue(c.compare(i1, i2) > 0);
 		assertTrue(c.compare(i2, i1) < 0);
@@ -192,16 +189,16 @@ public class CounterColumnTest {
 		IColumnRenderer column = CounterColumn.newMissed(CounterEntity.LINE,
 				locale);
 		final Comparator<ITableItem> c = column.getComparator();
-		final ITableItem i1 = createItem(100, 80);
-		final ITableItem i2 = createItem(100, 50);
+		final ITableItem i1 = createItem(20, 80);
+		final ITableItem i2 = createItem(50, 50);
 		assertEquals(0, c.compare(i1, i1));
 		assertTrue(c.compare(i1, i2) > 0);
 		assertTrue(c.compare(i2, i1) < 0);
 		doc.close();
 	}
 
-	private ITableItem createItem(final int total, final int covered) {
-		final ICoverageNode node = createNode(total, covered);
+	private ITableItem createItem(final int missed, final int covered) {
+		final ICoverageNode node = createNode(missed, covered);
 		return new ITableItem() {
 			public String getLinkLabel() {
 				return "Foo";
@@ -221,10 +218,10 @@ public class CounterColumnTest {
 		};
 	}
 
-	private CoverageNodeImpl createNode(final int total, final int covered) {
+	private CoverageNodeImpl createNode(final int missed, final int covered) {
 		return new CoverageNodeImpl(ElementType.GROUP, "Foo", false) {
 			{
-				this.lineCounter = CounterImpl.getInstance(total, covered);
+				this.lineCounter = CounterImpl.getInstance(missed, covered);
 			}
 		};
 	}

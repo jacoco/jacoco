@@ -31,10 +31,6 @@ import org.jacoco.report.html.HTMLDocument;
 import org.jacoco.report.html.HTMLElement;
 import org.jacoco.report.html.HTMLSupport;
 import org.jacoco.report.internal.html.resources.Resources;
-import org.jacoco.report.internal.html.table.IColumnRenderer;
-import org.jacoco.report.internal.html.table.ITableItem;
-import org.jacoco.report.internal.html.table.Table;
-import org.jacoco.report.internal.html.table.TableItemComparator;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -231,7 +227,7 @@ public class TableTest {
 		final ICoverageNode node = new CoverageNodeImpl(ElementType.GROUP,
 				name, false) {
 			{
-				this.classCounter = CounterImpl.getInstance(count, false);
+				this.classCounter = CounterImpl.getInstance(count, 0);
 			}
 		};
 		return new ITableItem() {
@@ -256,7 +252,7 @@ public class TableTest {
 	private ICoverageNode createTotal(final String name, final int count) {
 		return new CoverageNodeImpl(ElementType.GROUP, name, false) {
 			{
-				this.classCounter = CounterImpl.getInstance(count, false);
+				this.classCounter = CounterImpl.getInstance(count, 0);
 			}
 		};
 	}

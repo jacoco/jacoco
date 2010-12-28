@@ -68,11 +68,11 @@ public class MethodCoverageTest {
 		data.addInsn(true, 0);
 		data.addInsn(false, 0);
 
-		assertEquals(CounterImpl.getInstance(1, 1), data.getLineCounter());
-		assertEquals(CounterImpl.getInstance(2, 1),
+		assertEquals(CounterImpl.getInstance(0, 1), data.getLineCounter());
+		assertEquals(CounterImpl.getInstance(1, 1),
 				data.getInstructionCounter());
 		assertEquals(CounterImpl.getInstance(0, 0), data.getBranchCounter());
-		assertEquals(CounterImpl.getInstance(1, 1), data.getMethodCounter());
+		assertEquals(CounterImpl.getInstance(0, 1), data.getMethodCounter());
 		assertEquals(CounterImpl.getInstance(0, 0), data.getClassCounter());
 	}
 
@@ -92,12 +92,12 @@ public class MethodCoverageTest {
 	@Test
 	public void testBranches() {
 		MethodCoverage data = new MethodCoverage("sample", "()V", null);
-		data.addBranches(7, 3, 0);
+		data.addBranches(4, 3, 0);
 
 		assertEquals(CounterImpl.getInstance(0, 0), data.getLineCounter());
 		assertEquals(CounterImpl.getInstance(0, 0),
 				data.getInstructionCounter());
-		assertEquals(CounterImpl.getInstance(7, 3), data.getBranchCounter());
+		assertEquals(CounterImpl.getInstance(4, 3), data.getBranchCounter());
 		assertEquals(CounterImpl.getInstance(1, 0), data.getMethodCounter());
 		assertEquals(CounterImpl.getInstance(0, 0), data.getClassCounter());
 		assertEquals(7, data.getLines().getTotalBranches(0));
@@ -107,12 +107,12 @@ public class MethodCoverageTest {
 	@Test
 	public void testBranchesNoLine() {
 		MethodCoverage data = new MethodCoverage("sample", "()V", null);
-		data.addBranches(7, 3, MethodCoverage.UNKNOWN_LINE);
+		data.addBranches(4, 3, MethodCoverage.UNKNOWN_LINE);
 
 		assertEquals(CounterImpl.getInstance(0, 0), data.getLineCounter());
 		assertEquals(CounterImpl.getInstance(0, 0),
 				data.getInstructionCounter());
-		assertEquals(CounterImpl.getInstance(7, 3), data.getBranchCounter());
+		assertEquals(CounterImpl.getInstance(4, 3), data.getBranchCounter());
 		assertEquals(CounterImpl.getInstance(1, 0), data.getMethodCounter());
 		assertEquals(CounterImpl.getInstance(0, 0), data.getClassCounter());
 		assertEquals(0, data.getLines().getTotalBranches(0));

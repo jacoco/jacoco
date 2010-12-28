@@ -35,43 +35,29 @@ public class CounterImplTest {
 	@Test
 	public void testGetInstance2() {
 		ICounter c = CounterImpl.getInstance(33, 15);
-		assertEquals(33, c.getTotalCount(), 0.0);
+		assertEquals(33, c.getMissedCount(), 0.0);
 		assertEquals(15, c.getCoveredCount(), 0.0);
 	}
 
 	@Test
 	public void testGetInstance3() {
-		ICounter c = CounterImpl.getInstance(17, true);
-		assertEquals(17, c.getTotalCount(), 0.0);
-		assertEquals(17, c.getCoveredCount(), 0.0);
-	}
-
-	@Test
-	public void testGetInstance4() {
-		ICounter c = CounterImpl.getInstance(17, false);
-		assertEquals(17, c.getTotalCount(), 0.0);
-		assertEquals(0, c.getCoveredCount(), 0.0);
-	}
-
-	@Test
-	public void testGetInstance5() {
 		ICounter c = CounterImpl.getInstance(true);
 		assertEquals(1, c.getTotalCount(), 0.0);
 		assertEquals(1, c.getCoveredCount(), 0.0);
 	}
 
 	@Test
-	public void testGetInstance6() {
+	public void testGetInstance4() {
 		ICounter c = CounterImpl.getInstance(false);
 		assertEquals(1, c.getTotalCount(), 0.0);
 		assertEquals(0, c.getCoveredCount(), 0.0);
 	}
 
 	@Test
-	public void testGetInstance7() {
+	public void testGetInstance5() {
 		ICounter c = CounterImpl.getInstance(15, 12);
 		ICounter copy = CounterImpl.getInstance(c);
-		assertEquals(15, copy.getTotalCount(), 0.0);
+		assertEquals(15, copy.getMissedCount(), 0.0);
 		assertEquals(12, copy.getCoveredCount(), 0.0);
 	}
 
@@ -93,7 +79,7 @@ public class CounterImplTest {
 	public void testIncrement1() {
 		CounterImpl c = CounterImpl.getInstance(1, 1);
 		c = c.increment(CounterImpl.getInstance(2, 1));
-		assertEquals(3, c.getTotalCount(), 0.0);
+		assertEquals(3, c.getMissedCount(), 0.0);
 		assertEquals(2, c.getCoveredCount(), 0.0);
 	}
 
@@ -101,7 +87,7 @@ public class CounterImplTest {
 	public void testIncrement2() {
 		CounterImpl c = CounterImpl.getInstance(31, 5);
 		c = c.increment(CounterImpl.getInstance(7, 3));
-		assertEquals(38, c.getTotalCount(), 0.0);
+		assertEquals(38, c.getMissedCount(), 0.0);
 		assertEquals(8, c.getCoveredCount(), 0.0);
 	}
 

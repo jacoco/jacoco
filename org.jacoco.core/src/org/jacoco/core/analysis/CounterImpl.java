@@ -27,8 +27,8 @@ public abstract class CounterImpl extends AbstractCounter {
 
 	static {
 		for (int i = 0; i <= SINGLETON_LIMIT; i++) {
-			SINGLETONS[i] = new CounterImpl[i + 1];
-			for (int j = 0; j <= i; j++) {
+			SINGLETONS[i] = new CounterImpl[SINGLETON_LIMIT + 1];
+			for (int j = 0; j <= SINGLETON_LIMIT; j++) {
 				SINGLETONS[i][j] = new Fix(i, j);
 			}
 		}
@@ -37,17 +37,23 @@ public abstract class CounterImpl extends AbstractCounter {
 	/** Constant for Counter with 0/0 values. */
 	public static final CounterImpl COUNTER_0_0 = SINGLETONS[0][0];
 
+	/** Constant for Counter with 1/0 values. */
+	public static final CounterImpl COUNTER_1_0 = SINGLETONS[1][0];
+
+	/** Constant for Counter with 0/1 values. */
+	public static final CounterImpl COUNTER_0_1 = SINGLETONS[0][1];
+
 	/**
 	 * Mutable version of the counter.
 	 */
 	private static class Var extends CounterImpl {
-		public Var(final int total, final int covered) {
-			super(total, covered);
+		public Var(final int missed, final int covered) {
+			super(missed, covered);
 		}
 
 		@Override
 		public CounterImpl increment(final ICounter counter) {
-			this.total += counter.getTotalCount();
+			this.missed += counter.getMissedCount();
 			this.covered += counter.getCoveredCount();
 			return this;
 		}
@@ -57,13 +63,13 @@ public abstract class CounterImpl extends AbstractCounter {
 	 * Immutable version of the counter.
 	 */
 	private static class Fix extends CounterImpl {
-		public Fix(final int total, final int covered) {
-			super(total, covered);
+		public Fix(final int missed, final int covered) {
+			super(missed, covered);
 		}
 
 		@Override
 		public CounterImpl increment(final ICounter counter) {
-			return getInstance(this.total + counter.getTotalCount(),
+			return getInstance(this.missed + counter.getMissedCount(),
 					this.covered + counter.getCoveredCount());
 		}
 	}
@@ -71,42 +77,29 @@ public abstract class CounterImpl extends AbstractCounter {
 	/**
 	 * Factory method to retrieve a counter with the given number of items.
 	 * 
-	 * @param total
-	 *            total number of items
+	 * @param missed
+	 *            number of missed items
 	 * @param covered
-	 *            covered number of items
+	 *            number of covered items
 	 * @return counter instance
 	 */
-	public static CounterImpl getInstance(final int total, final int covered) {
-		if (total <= SINGLETON_LIMIT && covered <= total) {
-			return SINGLETONS[total][covered];
+	public static CounterImpl getInstance(final int missed, final int covered) {
+		if (missed <= SINGLETON_LIMIT && covered <= SINGLETON_LIMIT) {
+			return SINGLETONS[missed][covered];
 		} else {
-			return new Var(total, covered);
+			return new Var(missed, covered);
 		}
 	}
 
 	/**
-	 * Factory method to retrieve a clone ot the given counter.
+	 * Factory method to retrieve a clone of the given counter.
 	 * 
 	 * @param counter
 	 *            counter to copy
 	 * @return counter instance
 	 */
 	public static CounterImpl getInstance(final ICounter counter) {
-		return getInstance(counter.getTotalCount(), counter.getCoveredCount());
-	}
-
-	/**
-	 * Factory method to retrieve a counter with the given number of items.
-	 * 
-	 * @param total
-	 *            total number of items
-	 * @param covered
-	 *            <code>true</code>, if all items are covered
-	 * @return counter instance
-	 */
-	public static CounterImpl getInstance(final int total, final boolean covered) {
-		return getInstance(total, covered ? total : 0);
+		return getInstance(counter.getMissedCount(), counter.getCoveredCount());
 	}
 
 	/**
@@ -117,19 +110,19 @@ public abstract class CounterImpl extends AbstractCounter {
 	 * @return counter instance
 	 */
 	public static CounterImpl getInstance(final boolean covered) {
-		return getInstance(1, covered ? 1 : 0);
+		return covered ? COUNTER_0_1 : COUNTER_1_0;
 	}
 
 	/**
-	 * Creates a new instance with the given figures.
+	 * Creates a new instance with the given numbers.
 	 * 
-	 * @param total
-	 *            total number of items
+	 * @param missed
+	 *            number of missed items
 	 * @param covered
-	 *            covered number of items
+	 *            number of covered items
 	 */
-	protected CounterImpl(final int total, final int covered) {
-		super(total, covered);
+	protected CounterImpl(final int missed, final int covered) {
+		super(missed, covered);
 	}
 
 	/**

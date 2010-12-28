@@ -235,10 +235,11 @@ class MethodAnalyzer implements IMethodProbesVisitor {
 		}
 		// Report result:
 		for (final Instruction i : instructions) {
-			coverage.addInsn(i.getCoveredBranches() > 0, i.getLine());
-			if (i.getBranches() > 1) {
-				coverage.addBranches(i.getBranches(), i.getCoveredBranches(),
-						i.getLine());
+			final int total = i.getBranches();
+			final int covered = i.getCoveredBranches();
+			coverage.addInsn(covered > 0, i.getLine());
+			if (total > 1) {
+				coverage.addBranches(total - covered, covered, i.getLine());
 			}
 		}
 	}

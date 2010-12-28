@@ -161,7 +161,7 @@ public class SourceHighlighterTest {
 	@Test
 	public void testHighlightFC_branchesFC() throws Exception {
 		lines.incrementInsn(1, true);
-		lines.incrementBranches(1, 5, 5);
+		lines.incrementBranches(0, 5, 1);
 		sourceHighlighter.highlight(parent.pre(null), lines, 1);
 		html.close();
 		final Document doc = htmlSupport.parse(buffer.toString());
@@ -173,7 +173,7 @@ public class SourceHighlighterTest {
 	@Test
 	public void testHighlightFC_branchesPC() throws Exception {
 		lines.incrementInsn(1, true);
-		lines.incrementBranches(1, 5, 3);
+		lines.incrementBranches(2, 3, 1);
 		sourceHighlighter.highlight(parent.pre(null), lines, 1);
 		html.close();
 		final Document doc = htmlSupport.parse(buffer.toString());
@@ -185,7 +185,7 @@ public class SourceHighlighterTest {
 	@Test
 	public void testHighlightFC_branchesNC() throws Exception {
 		lines.incrementInsn(1, true);
-		lines.incrementBranches(1, 5, 0);
+		lines.incrementBranches(5, 0, 1);
 		sourceHighlighter.highlight(parent.pre(null), lines, 1);
 		html.close();
 		final Document doc = htmlSupport.parse(buffer.toString());

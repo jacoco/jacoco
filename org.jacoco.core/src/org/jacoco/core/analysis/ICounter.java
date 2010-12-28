@@ -12,9 +12,8 @@
 package org.jacoco.core.analysis;
 
 /**
- * A counter holds the total and the covered number of particular items like
- * classes, methods, blocks or instructions. Counters provide canonical
- * comparison of their covered/total ratios.
+ * A counter holds the missed and the covered number of particular items like
+ * classes, methods, blocks or instructions.
  * 
  * @author Marc R. Hoffmann
  * @version $Revision: 11 $
@@ -22,23 +21,23 @@ package org.jacoco.core.analysis;
 public interface ICounter {
 
 	/**
-	 * Returns the total count of instrumented items.
+	 * Returns the total count of items.
 	 * 
-	 * @return total count of instrumented items
+	 * @return total count of items
 	 */
 	public int getTotalCount();
 
 	/**
-	 * Returns the total count of covered items.
+	 * Returns the count of covered items.
 	 * 
-	 * @return total count of covered items
+	 * @return count of covered items
 	 */
 	public int getCoveredCount();
 
 	/**
-	 * Returns the total count of missed items.
+	 * Returns the count of missed items.
 	 * 
-	 * @return total count of missed items
+	 * @return count of missed items
 	 */
 	public int getMissedCount();
 

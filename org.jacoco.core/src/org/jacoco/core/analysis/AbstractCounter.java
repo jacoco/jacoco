@@ -19,27 +19,27 @@ package org.jacoco.core.analysis;
  */
 public abstract class AbstractCounter implements ICounter {
 
-	/** total number of items */
-	protected int total;
+	/** number of missed items */
+	protected int missed;
 
-	/** covered number of items */
+	/** number of covered items */
 	protected int covered;
 
 	/**
 	 * Creates a instance with the given numbers.
 	 * 
-	 * @param total
-	 *            number of total items
+	 * @param missed
+	 *            number of missed items
 	 * @param covered
 	 *            number of covered items
 	 */
-	protected AbstractCounter(final int total, final int covered) {
-		this.total = total;
+	protected AbstractCounter(final int missed, final int covered) {
+		this.missed = missed;
 		this.covered = covered;
 	}
 
 	public int getTotalCount() {
-		return total;
+		return missed + covered;
 	}
 
 	public int getCoveredCount() {
@@ -47,22 +47,22 @@ public abstract class AbstractCounter implements ICounter {
 	}
 
 	public int getMissedCount() {
-		return total - covered;
+		return missed;
 	}
 
 	public double getCoveredRatio() {
-		return (double) covered / total;
+		return (double) covered / (missed + covered);
 	}
 
 	public double getMissedRatio() {
-		return (double) (total - covered) / total;
+		return (double) missed / (missed + covered);
 	}
 
 	@Override
 	public boolean equals(final Object obj) {
 		if (obj instanceof ICounter) {
 			final ICounter that = (ICounter) obj;
-			return this.total == that.getTotalCount()
+			return this.missed == that.getMissedCount()
 					&& this.covered == that.getCoveredCount();
 		} else {
 			return false;
@@ -71,14 +71,14 @@ public abstract class AbstractCounter implements ICounter {
 
 	@Override
 	public int hashCode() {
-		return total ^ covered * 17;
+		return missed ^ covered * 17;
 	}
 
 	@Override
 	public String toString() {
 		final StringBuilder b = new StringBuilder("Counter["); //$NON-NLS-1$
-		b.append(getCoveredCount());
-		b.append('/').append(getTotalCount());
+		b.append(getMissedCount());
+		b.append('/').append(getCoveredCount());
 		b.append(']');
 		return b.toString();
 	}

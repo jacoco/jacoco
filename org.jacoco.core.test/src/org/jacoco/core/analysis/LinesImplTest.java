@@ -360,7 +360,7 @@ public class LinesImplTest {
 	@Test
 	public void testIncrementBranches1() {
 		final LinesImpl c = new LinesImpl();
-		c.incrementBranches(5, 8, 3);
+		c.incrementBranches(5, 3, 5);
 		assertEquals(5, c.getFirstLine());
 		assertEquals(5, c.getLastLine());
 
@@ -381,10 +381,10 @@ public class LinesImplTest {
 	@Test
 	public void testIncrementBranches2() {
 		final LinesImpl c = new LinesImpl();
-		c.incrementBranches(5, 8, 3);
+		c.incrementBranches(5, 3, 5);
 
 		final LinesImpl c2 = new LinesImpl();
-		c2.incrementBranches(5, 80, 30);
+		c2.incrementBranches(50, 30, 5);
 
 		c.increment(c2);
 
@@ -399,7 +399,7 @@ public class LinesImplTest {
 	@Test
 	public void testIncrementBranchesOverflow() {
 		final LinesImpl c = new LinesImpl();
-		c.incrementBranches(5, 1000, 0);
+		c.incrementBranches(1000, 0, 5);
 
 		assertEquals(5, c.getFirstLine());
 		assertEquals(5, c.getLastLine());

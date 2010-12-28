@@ -66,19 +66,19 @@ public class MethodCoverage extends CoverageNodeImpl {
 	/**
 	 * Adds a branching point to this method.
 	 * 
-	 * @param total
-	 *            total number of branches
+	 * @param missed
+	 *            number of missed branches
 	 * @param covered
 	 *            number of covered branches
 	 * @param line
 	 *            source line number of the branching point
 	 */
-	public void addBranches(final int total, final int covered, final int line) {
+	public void addBranches(final int missed, final int covered, final int line) {
 		if (line != UNKNOWN_LINE) {
-			this.lines.incrementBranches(line, total, covered);
+			this.lines.incrementBranches(missed, covered, line);
 		}
 		this.branchCounter = this.branchCounter.increment(CounterImpl
-				.getInstance(total, covered));
+				.getInstance(missed, covered));
 	}
 
 	/**

@@ -114,29 +114,36 @@ public class LinesImpl extends AbstractCounter implements ILines {
 		final int newCovbr = Math.min(MASK_MISBR, oldCovbr
 				+ (missedBranches << OFFSET_MISBR));
 		status[line - offset] = (char) (oldStatus | newStatus | newTotbr | newCovbr);
-		if (oldStatus == NO_CODE && newStatus != NO_CODE) {
-			total++;
-		}
-		if ((oldStatus == NO_CODE || oldStatus == NOT_COVERED)
-				&& (newStatus == PARTLY_COVERED || newStatus == FULLY_COVERED)) {
-			covered++;
+		if (newStatus != NO_CODE) {
+			if (newStatus == NOT_COVERED) {
+				if (oldStatus == NO_CODE) {
+					missed++;
+				}
+			} else {
+				if (oldStatus == NO_CODE || oldStatus == NOT_COVERED) {
+					covered++;
+				}
+				if (oldStatus == NOT_COVERED) {
+					missed--;
+				}
+			}
 		}
 	}
 
 	/**
 	 * Add branches to the given line
 	 * 
+	 * @param missed
+	 *            number of missed branches to add
+	 * @param covered
+	 *            number of covered branches to add
 	 * @param line
 	 *            line to add branches to
-	 * @param totalBranches
-	 *            number of total branches to add
-	 * @param coveredBranches
-	 *            number of covered branches to add
 	 */
-	public void incrementBranches(final int line, final int totalBranches,
-			final int coveredBranches) {
+	public void incrementBranches(final int missed, final int covered,
+			final int line) {
 		ensureCapacity(line, line);
-		increment(line, NO_CODE, totalBranches, totalBranches - coveredBranches);
+		increment(line, NO_CODE, missed + covered, missed);
 	}
 
 	// === ILineCounter ===
