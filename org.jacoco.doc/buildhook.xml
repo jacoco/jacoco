@@ -109,8 +109,8 @@
 			<classpath>
 				<path refid="bundle-org.objectweb.asm"/>
 			</classpath>
-			<link href="http://java.sun.com/j2se/1.5.0/docs/api" offline="true" packagelistloc="${source.bundle.dir}/javadoc/java"/>
-			<link href="http://asm.ow2.org/asm31/javadoc/user" offline="true" packagelistloc="${source.bundle.dir}/javadoc/asm"/>
+			<link href="http://download.oracle.com/javase/1.5.0/docs/api" offline="true" packagelistloc="${source.bundle.dir}/javadoc/java"/>
+			<link href="http://asm.ow2.org/asm32/javadoc/user" offline="true" packagelistloc="${source.bundle.dir}/javadoc/asm"/>
 			<bottom>
 				&lt;div class="footer"&gt;
 					&lt;span class="right"&gt;&lt;a href="${jacoco.home.url}"&gt;JaCoCo&lt;/a&gt; ${qualified.bundle.version}&lt;/span&gt;
