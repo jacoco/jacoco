@@ -11,7 +11,7 @@
  *******************************************************************************/
 package org.jacoco.agent.rt;
 
-import static junit.framework.Assert.assertFalse;
+import static org.junit.Assert.assertFalse;
 
 import java.util.Arrays;
 

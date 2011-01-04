@@ -11,7 +11,7 @@
  *******************************************************************************/
 package org.jacoco.agent.rt.controller;
 
-import static junit.framework.Assert.fail;
+import static org.junit.Assert.fail;
 
 import java.util.concurrent.Executor;
 import java.util.concurrent.ExecutorService;
