@@ -14,10 +14,9 @@ package org.jacoco.core.internal.analysis;
 import org.jacoco.core.analysis.CounterImpl;
 import org.jacoco.core.analysis.ICounter;
 import org.jacoco.core.analysis.ILine;
-import org.jacoco.core.analysis.ILines;
 
 /**
- * {@link ILines} implementation.
+ * {@link ILine} implementation.
  * 
  * @author Marc R. Hoffmann
  * @version $qualified.bundle.version$
