@@ -135,7 +135,7 @@ public interface ICoverageNode {
 	/**
 	 * Creates a plain copy of this node. While {@link ICoverageNode}
 	 * implementations may contain heavy data structures, the copy returned by
-	 * this method is reduced to the counters only. This helps tp save memory
+	 * this method is reduced to the counters only. This helps to save memory
 	 * while processing huge structures.
 	 * 
 	 * @return copy with counters only

@@ -52,9 +52,9 @@ public abstract class CounterImpl extends AbstractCounter {
 		}
 
 		@Override
-		public CounterImpl increment(final ICounter counter) {
-			this.missed += counter.getMissedCount();
-			this.covered += counter.getCoveredCount();
+		public CounterImpl increment(final int missed, final int covered) {
+			this.missed += missed;
+			this.covered += covered;
 			return this;
 		}
 	}
@@ -68,9 +68,8 @@ public abstract class CounterImpl extends AbstractCounter {
 		}
 
 		@Override
-		public CounterImpl increment(final ICounter counter) {
-			return getInstance(this.missed + counter.getMissedCount(),
-					this.covered + counter.getCoveredCount());
+		public CounterImpl increment(final int missed, final int covered) {
+			return getInstance(this.missed + missed, this.covered + covered);
 		}
 	}
 
@@ -134,6 +133,21 @@ public abstract class CounterImpl extends AbstractCounter {
 	 *            number of additional total and covered items
 	 * @return counter instance with incremented values
 	 */
-	public abstract CounterImpl increment(final ICounter counter);
+	public CounterImpl increment(final ICounter counter) {
+		return increment(counter.getMissedCount(), counter.getCoveredCount());
+	}
+
+	/**
+	 * Returns a counter with values incremented by the given numbers. It is up
+	 * to the implementation whether this counter instance is modified or a new
+	 * instance is returned.
+	 * 
+	 * @param missed
+	 *            number of missed items
+	 * @param covered
+	 *            number of covered items
+	 * @return counter instance with incremented values
+	 */
+	public abstract CounterImpl increment(int missed, int covered);
 
 }
