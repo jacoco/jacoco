@@ -9,11 +9,12 @@
  *    Marc R. Hoffmann - initial API and implementation
  *    
  *******************************************************************************/
-package org.jacoco.core.data;
+package org.jacoco.core.internal.data;
 
 import java.io.DataInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+
 
 /**
  * Additional data input methods for compact storage of data structures.

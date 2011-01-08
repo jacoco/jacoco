@@ -15,6 +15,8 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 
+import org.jacoco.core.internal.data.CompactDataOutput;
+
 /**
  * Serialization of execution data into binary streams.
  * 

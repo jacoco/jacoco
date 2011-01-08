@@ -9,7 +9,7 @@
  *    Marc R. Hoffmann - initial API and implementation
  *    
  *******************************************************************************/
-package org.jacoco.core.data;
+package org.jacoco.core.internal.data;
 
 import static org.junit.Assert.assertEquals;
 
@@ -17,6 +17,8 @@ import java.io.IOException;
 import java.io.PipedInputStream;
 import java.io.PipedOutputStream;
 
+import org.jacoco.core.internal.data.CompactDataInput;
+import org.jacoco.core.internal.data.CompactDataOutput;
 import org.junit.Before;
 import org.junit.Test;
 

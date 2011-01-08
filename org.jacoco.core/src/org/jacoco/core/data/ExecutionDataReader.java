@@ -17,6 +17,8 @@ import java.io.EOFException;
 import java.io.IOException;
 import java.io.InputStream;
 
+import org.jacoco.core.internal.data.CompactDataInput;
+
 /**
  * Deserialization of execution data from binary streams.
  * 

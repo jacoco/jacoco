@@ -9,7 +9,7 @@
  *    Marc R. Hoffmann - initial API and implementation
  *    
  *******************************************************************************/
-package org.jacoco.core.data;
+package org.jacoco.core.internal.data;
 
 import java.io.DataOutputStream;
 import java.io.IOException;
