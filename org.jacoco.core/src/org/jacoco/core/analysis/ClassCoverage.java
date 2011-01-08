@@ -14,7 +14,6 @@ package org.jacoco.core.analysis;
 import java.util.ArrayList;
 import java.util.Collection;
 
-
 /**
  * Coverage data of a single class.
  * 
@@ -53,7 +52,7 @@ public class ClassCoverage extends SourceNodeImpl implements ISourceNode {
 		this.superName = superName;
 		this.interfaces = interfaces;
 		this.methods = new ArrayList<MethodCoverage>();
-		this.classCounter = CounterImpl.getInstance(false);
+		this.classCounter = CounterImpl.COUNTER_1_0;
 	}
 
 	/**
@@ -68,7 +67,7 @@ public class ClassCoverage extends SourceNodeImpl implements ISourceNode {
 		// As class is considered as covered when at least one method is
 		// covered:
 		if (methodCounter.getCoveredCount() > 0) {
-			this.classCounter = CounterImpl.getInstance(true);
+			this.classCounter = CounterImpl.COUNTER_0_1;
 		}
 	}
 

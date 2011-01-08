@@ -11,7 +11,6 @@
  *******************************************************************************/
 package org.jacoco.core.analysis;
 
-
 /**
  * Coverage data of a single method.
  * 
@@ -39,7 +38,7 @@ public class MethodCoverage extends SourceNodeImpl {
 		super(ElementType.METHOD, name);
 		this.desc = desc;
 		this.signature = signature;
-		this.methodCounter = CounterImpl.getInstance(false);
+		this.methodCounter = CounterImpl.COUNTER_1_0;
 	}
 
 	@Override

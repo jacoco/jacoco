@@ -18,7 +18,7 @@ package org.jacoco.core.analysis;
  * @author Marc R. Hoffmann
  * @version $qualified.bundle.version$
  */
-public abstract class CounterImpl extends AbstractCounter {
+public abstract class CounterImpl implements ICounter {
 
 	/** Max counter value for which singletons are created */
 	private static final int SINGLETON_LIMIT = 30;
@@ -101,16 +101,11 @@ public abstract class CounterImpl extends AbstractCounter {
 		return getInstance(counter.getMissedCount(), counter.getCoveredCount());
 	}
 
-	/**
-	 * Factory method to retrieve a counter for a single item.
-	 * 
-	 * @param covered
-	 *            <code>true</code>, if the item is covered
-	 * @return counter instance
-	 */
-	public static CounterImpl getInstance(final boolean covered) {
-		return covered ? COUNTER_0_1 : COUNTER_1_0;
-	}
+	/** number of missed items */
+	protected int missed;
+
+	/** number of covered items */
+	protected int covered;
 
 	/**
 	 * Creates a new instance with the given numbers.
@@ -121,7 +116,8 @@ public abstract class CounterImpl extends AbstractCounter {
 	 *            number of covered items
 	 */
 	protected CounterImpl(final int missed, final int covered) {
-		super(missed, covered);
+		this.missed = missed;
+		this.covered = covered;
 	}
 
 	/**
@@ -149,5 +145,52 @@ public abstract class CounterImpl extends AbstractCounter {
 	 * @return counter instance with incremented values
 	 */
 	public abstract CounterImpl increment(int missed, int covered);
+
+	// === ICounter implementation ===
+
+	public int getTotalCount() {
+		return missed + covered;
+	}
+
+	public int getCoveredCount() {
+		return covered;
+	}
+
+	public int getMissedCount() {
+		return missed;
+	}
+
+	public double getCoveredRatio() {
+		return (double) covered / (missed + covered);
+	}
+
+	public double getMissedRatio() {
+		return (double) missed / (missed + covered);
+	}
+
+	@Override
+	public boolean equals(final Object obj) {
+		if (obj instanceof ICounter) {
+			final ICounter that = (ICounter) obj;
+			return this.missed == that.getMissedCount()
+					&& this.covered == that.getCoveredCount();
+		} else {
+			return false;
+		}
+	}
+
+	@Override
+	public int hashCode() {
+		return missed ^ covered * 17;
+	}
+
+	@Override
+	public String toString() {
+		final StringBuilder b = new StringBuilder("Counter["); //$NON-NLS-1$
+		b.append(getMissedCount());
+		b.append('/').append(getCoveredCount());
+		b.append(']');
+		return b.toString();
+	}
 
 }

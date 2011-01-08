@@ -58,7 +58,7 @@ public class ClassCoverageTest {
 		assertEquals(CounterImpl.COUNTER_0_0, data.getInstructionCounter());
 		assertEquals(CounterImpl.COUNTER_0_0, data.getBranchCounter());
 		assertEquals(CounterImpl.COUNTER_0_0, data.getMethodCounter());
-		assertEquals(CounterImpl.getInstance(false), data.getClassCounter());
+		assertEquals(CounterImpl.COUNTER_1_0, data.getClassCounter());
 	}
 
 	@Test
@@ -66,10 +66,9 @@ public class ClassCoverageTest {
 		ClassCoverage data = new ClassCoverage("Sample", 0, null,
 				"java/lang/Object", new String[0]);
 		data.addMethod(createMethod(false));
-		assertEquals(CounterImpl.getInstance(false),
-				data.getInstructionCounter());
-		assertEquals(CounterImpl.getInstance(false), data.getMethodCounter());
-		assertEquals(CounterImpl.getInstance(false), data.getClassCounter());
+		assertEquals(CounterImpl.COUNTER_1_0, data.getInstructionCounter());
+		assertEquals(CounterImpl.COUNTER_1_0, data.getMethodCounter());
+		assertEquals(CounterImpl.COUNTER_1_0, data.getClassCounter());
 	}
 
 	@Test
@@ -77,16 +76,16 @@ public class ClassCoverageTest {
 		ClassCoverage data = new ClassCoverage("Sample", 0, null,
 				"java/lang/Object", new String[0]);
 		data.addMethod(createMethod(true));
-		assertEquals(CounterImpl.getInstance(true),
-				data.getInstructionCounter());
-		assertEquals(CounterImpl.getInstance(true), data.getMethodCounter());
-		assertEquals(CounterImpl.getInstance(true), data.getClassCounter());
+		assertEquals(CounterImpl.COUNTER_0_1, data.getInstructionCounter());
+		assertEquals(CounterImpl.COUNTER_0_1, data.getMethodCounter());
+		assertEquals(CounterImpl.COUNTER_0_1, data.getClassCounter());
 	}
 
 	private MethodCoverage createMethod(boolean covered) {
 		final MethodCoverage m = new MethodCoverage("sample", "()V", null);
-		m.increment(CounterImpl.getInstance(covered), CounterImpl.COUNTER_0_0,
-				ISourceNode.UNKNOWN_LINE);
+		m.increment(
+				covered ? CounterImpl.COUNTER_0_1 : CounterImpl.COUNTER_1_0,
+				CounterImpl.COUNTER_0_0, ISourceNode.UNKNOWN_LINE);
 		return m;
 	}
 
