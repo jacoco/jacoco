@@ -9,10 +9,14 @@
  *    Marc R. Hoffmann - initial API and implementation
  *    
  *******************************************************************************/
-package org.jacoco.core.analysis;
+package org.jacoco.core.internal.analysis;
 
 import static org.junit.Assert.assertEquals;
 
+import org.jacoco.core.analysis.CounterImpl;
+import org.jacoco.core.analysis.ILine;
+import org.jacoco.core.analysis.MethodCoverage;
+import org.jacoco.core.internal.analysis.MethodAnalyzer;
 import org.jacoco.core.internal.flow.IProbeIdGenerator;
 import org.jacoco.core.internal.flow.LabelFlowAnalyzer;
 import org.jacoco.core.internal.flow.MethodProbesAdapter;

@@ -9,8 +9,11 @@
  *    Marc R. Hoffmann - initial API and implementation
  *    
  *******************************************************************************/
-package org.jacoco.core.analysis;
+package org.jacoco.core.internal.analysis;
 
+import org.jacoco.core.analysis.ClassCoverage;
+import org.jacoco.core.analysis.MethodCoverage;
+import org.jacoco.core.analysis.StringPool;
 import org.jacoco.core.internal.flow.IClassProbesVisitor;
 import org.jacoco.core.internal.flow.IMethodProbesVisitor;
 import org.objectweb.asm.AnnotationVisitor;
@@ -24,7 +27,7 @@ import org.objectweb.asm.Opcodes;
  * @author Marc R. Hoffmann
  * @version $qualified.bundle.version$
  */
-class ClassAnalyzer implements IClassProbesVisitor {
+public class ClassAnalyzer implements IClassProbesVisitor {
 
 	private final long classid;
 	private final boolean executionData[];

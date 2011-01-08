@@ -9,11 +9,14 @@
  *    Marc R. Hoffmann - initial API and implementation
  *    
  *******************************************************************************/
-package org.jacoco.core.analysis;
+package org.jacoco.core.internal.analysis;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import org.jacoco.core.analysis.CounterImpl;
+import org.jacoco.core.analysis.ICounter;
+import org.jacoco.core.analysis.MethodCoverage;
 import org.jacoco.core.internal.flow.IMethodProbesVisitor;
 import org.jacoco.core.internal.flow.Instruction;
 import org.jacoco.core.internal.flow.LabelInfo;
@@ -28,7 +31,7 @@ import org.objectweb.asm.Label;
  * @author Marc R. Hoffmann
  * @version $qualified.bundle.version$
  */
-class MethodAnalyzer implements IMethodProbesVisitor {
+public class MethodAnalyzer implements IMethodProbesVisitor {
 
 	private final boolean[] executionData;
 

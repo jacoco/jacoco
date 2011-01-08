@@ -9,7 +9,7 @@
  *    Marc R. Hoffmann - initial API and implementation
  *    
  *******************************************************************************/
-package org.jacoco.core.analysis;
+package org.jacoco.core.internal.analysis;
 
 import java.io.BufferedInputStream;
 import java.io.IOException;
@@ -23,7 +23,7 @@ import org.objectweb.asm.Opcodes;
  * @author Marc R. Hoffmann
  * @version $qualified.bundle.version$
  */
-class ContentTypeDetector {
+public class ContentTypeDetector {
 
 	/** Unknown file type */
 	public static final int UNKNOWN = -1;
@@ -49,7 +49,7 @@ class ContentTypeDetector {
 	 *            input to read the header from
 	 * @throws IOException
 	 */
-	ContentTypeDetector(final InputStream in) throws IOException {
+	public ContentTypeDetector(final InputStream in) throws IOException {
 		if (in.markSupported()) {
 			this.in = in;
 		} else {
