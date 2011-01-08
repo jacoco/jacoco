@@ -19,6 +19,10 @@
 		<path refid="bundle-org.objectweb.asm"/>
 	</path>
 	
+	<fileset dir="${source.bundle.java.dir}" id="filteredclasspathresources">
+		<include name="**/*.properties"/>
+	</fileset>
+	
 	<property name="do.compile" value="true"/>
 	<property name="do.package" value="true"/>
 

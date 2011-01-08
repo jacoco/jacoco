@@ -51,6 +51,7 @@
 			<file file="${result.temp.bundle.about.file}"/>
 			<file file="${result.dist.lib.dir}/jacocoagent.jar"/>
 			<fileset dir="${result.tmp.bundle.classes.dir}"/>
+			<fileset dir="${toString:bundle-org.jacoco.core}" excludes="**/*.class"/>
 			<fileset dir="${toString:bundle-org.jacoco.report}" excludes="**/*.class"/>
 			
 			<!-- Just add those classes we really need -->

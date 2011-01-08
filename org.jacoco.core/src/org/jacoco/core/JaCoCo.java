@@ -11,18 +11,39 @@
  *******************************************************************************/
 package org.jacoco.core;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Properties;
+
 /**
  * Static Meta information about JaCoCo.
  * 
  * @author Marc R. Hoffmann
  * @version $qualified.bundle.version$
  */
-public interface JaCoCo {
+public class JaCoCo {
 
 	/** Qualified build version of the JaCoCo core library. */
-	public static final String VERSION = "$qualified.bundle.version$";
+	public static final String VERSION;
 
 	/** Absolute URL of the current JaCoCo home page */
-	public static final String HOMEURL = "$jacoco.home.url$";
+	public static final String HOMEURL;
+
+	static {
+		final Properties properties = new Properties();
+		try {
+			final InputStream in = JaCoCo.class
+					.getResourceAsStream("jacoco.properties");
+			properties.load(in);
+			in.close();
+		} catch (final IOException e) {
+			throw new AssertionError(e);
+		}
+		VERSION = properties.getProperty("VERSION");
+		HOMEURL = properties.getProperty("HOMEURL");
+	}
+
+	private JaCoCo() {
+	}
 
 }

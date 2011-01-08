@@ -28,6 +28,10 @@
 	     none, can be overwritten by the build hook.                         -->
 	<fileset dir="${source.bundle.java.dir}" excludes="**/*" id="classpathresources"/>
 
+	<!-- Additional resources to be filtered and include with the compiled
+	     classes. By default none, can be overwritten by the build hook.     -->
+	<fileset dir="${source.bundle.java.dir}" excludes="**/*" id="filteredclasspathresources"/>
+
 	
 	<import file="${source.bundle.dir}/buildhook.xml"/>
 	
@@ -48,24 +52,21 @@
 	     =================================================================== -->
 
 	<target name="compile" if="do.compile" depends="manifest">
-		<property name="result.tmp.bundle.java.dir" location="${result.tmp.bundle.dir}/java"/>
-		<mkdir dir="${result.tmp.bundle.java.dir}"/>
-		<copy todir="${result.tmp.bundle.java.dir}" encoding="UTF-8">
-			<fileset dir="${source.bundle.java.dir}" includes="**/*.java"/>
-			<filterset begintoken="$" endtoken="$">
-				<filter token="qualified.bundle.version" value="${qualified.bundle.version}"/>
-				<filter token="jacoco.home.url" value="${jacoco.home.url}"/>
-			</filterset>
-		</copy>
-		
 		<property name="result.tmp.bundle.classes.dir" location="${result.tmp.bundle.dir}/classes"/>
 		<mkdir dir="${result.tmp.bundle.classes.dir}"/>
-		<javac srcdir="${result.tmp.bundle.java.dir}" destdir="${result.tmp.bundle.classes.dir}"
+		<javac srcdir="${source.bundle.java.dir}" destdir="${result.tmp.bundle.classes.dir}"
 		       debug="true" source="1.5" target="${java.target.version}" includeAntRuntime="no">
 			<classpath refid="dependencies"/>
 		</javac>
 		<copy todir="${result.tmp.bundle.classes.dir}">
 			<fileset refid="classpathresources"/>
+		</copy>
+		<copy todir="${result.tmp.bundle.classes.dir}">
+			<fileset refid="filteredclasspathresources"/>
+			<filterset begintoken="$" endtoken="$">
+				<filter token="qualified.bundle.version" value="${qualified.bundle.version}"/>
+				<filter token="jacoco.home.url" value="${jacoco.home.url}"/>
+			</filterset>
 		</copy>
 	</target>
 	
