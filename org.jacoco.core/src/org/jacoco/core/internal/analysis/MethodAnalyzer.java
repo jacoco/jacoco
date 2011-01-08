@@ -44,7 +44,8 @@ public class MethodAnalyzer implements IMethodProbesVisitor {
 
 	private int lastLine = ISourceNode.UNKNOWN_LINE;
 
-	private Label currentLabel = null;
+	// Due to ASM issue #315745 there can be more than one label per instruction
+	private final List<Label> currentLabel = new ArrayList<Label>(2);
 
 	/** List of all analyzed instructions */
 	private final List<Instruction> instructions = new ArrayList<Instruction>();
@@ -89,7 +90,7 @@ public class MethodAnalyzer implements IMethodProbesVisitor {
 	}
 
 	public void visitLabel(final Label label) {
-		currentLabel = label;
+		currentLabel.add(label);
 		if (!LabelInfo.isSuccessor(label)) {
 			lastInsn = null;
 		}
@@ -111,9 +112,11 @@ public class MethodAnalyzer implements IMethodProbesVisitor {
 		if (lastInsn != null) {
 			insn.setPredecessor(lastInsn);
 		}
-		if (currentLabel != null) {
-			LabelInfo.setInstruction(currentLabel, insn);
-			currentLabel = null;
+		while (!currentLabel.isEmpty()) {
+			for (int i = currentLabel.size(); --i >= 0;) {
+				LabelInfo.setInstruction(currentLabel.get(i), insn);
+			}
+			currentLabel.clear();
 		}
 		lastInsn = insn;
 	}
