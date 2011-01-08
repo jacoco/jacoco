@@ -507,21 +507,13 @@ public class MethodAnalyzerTest implements IProbeIdGenerator {
 
 	private void assertLine(int nr, int insnMissed, int insnCovered,
 			int branchesMissed, int branchesCovered) {
-		final ILines lines = result.getLines();
-
-		final int status;
-		if (insnMissed == 0) {
-			status = insnCovered == 0 ? ILines.NO_CODE : ILines.FULLY_COVERED;
-		} else {
-			status = insnCovered == 0 ? ILines.NOT_COVERED
-					: ILines.PARTLY_COVERED;
-		}
-
-		assertEquals("Status in line " + nr, status, lines.getStatus(nr));
-		assertEquals("Missed branches in line " + nr, branchesMissed,
-				lines.getMissedBranches(nr));
-		assertEquals("Covered branches in line " + nr, branchesCovered,
-				lines.getCoveredBranches(nr));
+		final ILine line = result.getLine(nr);
+		assertEquals("Instructions in line " + nr,
+				CounterImpl.getInstance(insnMissed, insnCovered),
+				line.getInstructionCounter());
+		assertEquals("Branches in line " + nr,
+				CounterImpl.getInstance(branchesMissed, branchesCovered),
+				line.getBranchCounter());
 	}
 
 }

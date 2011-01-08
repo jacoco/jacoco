@@ -9,11 +9,8 @@
  *    Marc R. Hoffmann - initial API and implementation
  *    
  *******************************************************************************/
-package org.jacoco.core.internal.analysis;
+package org.jacoco.core.analysis;
 
-import org.jacoco.core.analysis.CounterImpl;
-import org.jacoco.core.analysis.ICounter;
-import org.jacoco.core.analysis.ILine;
 
 /**
  * {@link ILine} implementation.

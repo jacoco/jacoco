@@ -12,7 +12,6 @@
 package org.jacoco.core.analysis;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -41,7 +40,6 @@ public class PackageCoverageTest {
 		assertEquals("org/jacoco/test", data.getName());
 		assertEquals(classes, data.getClasses());
 		assertEquals(sourceFiles, data.getSourceFiles());
-		assertNull(data.getLines());
 	}
 
 	@Test
@@ -55,7 +53,6 @@ public class PackageCoverageTest {
 				methodCounter = CounterImpl.getInstance(9, 0);
 				branchCounter = CounterImpl.getInstance(9, 0);
 				instructionCounter = CounterImpl.getInstance(9, 0);
-				lines.incrementInsn(1, false);
 			}
 		};
 		classnode.setSourceFileName("Sample.java");
@@ -67,11 +64,6 @@ public class PackageCoverageTest {
 				methodCounter = CounterImpl.getInstance(2, 0);
 				branchCounter = CounterImpl.getInstance(3, 0);
 				instructionCounter = CounterImpl.getInstance(4, 0);
-				lines.incrementInsn(1, false);
-				lines.incrementInsn(2, false);
-				lines.incrementInsn(3, false);
-				lines.incrementInsn(4, false);
-				lines.incrementInsn(5, false);
 			}
 		};
 		PackageCoverage data = new PackageCoverage("org/jacoco/test",
@@ -82,7 +74,6 @@ public class PackageCoverageTest {
 		assertEquals(CounterImpl.getInstance(3, 0), data.getBranchCounter());
 		assertEquals(CounterImpl.getInstance(4, 0),
 				data.getInstructionCounter());
-		assertEquals(CounterImpl.getInstance(5, 0), data.getLineCounter());
 	}
 
 	@Test

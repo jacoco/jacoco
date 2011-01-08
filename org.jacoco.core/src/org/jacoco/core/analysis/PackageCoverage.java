@@ -40,7 +40,7 @@ public class PackageCoverage extends CoverageNodeImpl {
 	public PackageCoverage(final String name,
 			final Collection<ClassCoverage> classes,
 			final Collection<SourceFileCoverage> sourceFiles) {
-		super(ElementType.PACKAGE, name, false);
+		super(ElementType.PACKAGE, name);
 		this.classes = classes;
 		this.sourceFiles = sourceFiles;
 		increment(sourceFiles);

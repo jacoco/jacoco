@@ -40,9 +40,6 @@ public class CoverageNodeImpl implements ICoverageNode {
 	/** Counter for classes. */
 	protected CounterImpl classCounter;
 
-	/** Line information if this element has lines. */
-	protected final LinesImpl lines;
-
 	/**
 	 * Creates a new coverage data node.
 	 * 
@@ -50,19 +47,15 @@ public class CoverageNodeImpl implements ICoverageNode {
 	 *            type of the element represented by this instance
 	 * @param name
 	 *            name of this node
-	 * @param hasLines
-	 *            <code>true</code> id this element has source lines
 	 */
-	public CoverageNodeImpl(final ElementType elementType, final String name,
-			final boolean hasLines) {
+	public CoverageNodeImpl(final ElementType elementType, final String name) {
 		this.elementType = elementType;
 		this.name = name;
 		this.branchCounter = CounterImpl.COUNTER_0_0;
 		this.instructionCounter = CounterImpl.COUNTER_0_0;
 		this.methodCounter = CounterImpl.COUNTER_0_0;
 		this.classCounter = CounterImpl.COUNTER_0_0;
-		this.lineCounter = hasLines ? null : CounterImpl.COUNTER_0_0;
-		this.lines = hasLines ? new LinesImpl() : null;
+		this.lineCounter = CounterImpl.COUNTER_0_0;
 	}
 
 	/**
@@ -77,11 +70,7 @@ public class CoverageNodeImpl implements ICoverageNode {
 		branchCounter = branchCounter.increment(child.getBranchCounter());
 		methodCounter = methodCounter.increment(child.getMethodCounter());
 		classCounter = classCounter.increment(child.getClassCounter());
-		if (lines == null) {
-			lineCounter = lineCounter.increment(child.getLineCounter());
-		} else {
-			lines.increment(child.getLines());
-		}
+		lineCounter = lineCounter.increment(child.getLineCounter());
 	}
 
 	/**
@@ -116,7 +105,7 @@ public class CoverageNodeImpl implements ICoverageNode {
 	}
 
 	public ICounter getLineCounter() {
-		return lines != null ? lines : lineCounter;
+		return lineCounter;
 	}
 
 	public ICounter getMethodCounter() {
@@ -143,23 +132,13 @@ public class CoverageNodeImpl implements ICoverageNode {
 		throw new AssertionError(entity);
 	}
 
-	public ILines getLines() {
-		return lines;
-	}
-
 	public ICoverageNode getPlainCopy() {
-		final boolean hasLines = lines != null;
-		final CoverageNodeImpl copy = new CoverageNodeImpl(elementType, name,
-				hasLines);
+		final CoverageNodeImpl copy = new CoverageNodeImpl(elementType, name);
 		copy.instructionCounter = CounterImpl.getInstance(instructionCounter);
 		copy.branchCounter = CounterImpl.getInstance(branchCounter);
 		copy.methodCounter = CounterImpl.getInstance(methodCounter);
 		copy.classCounter = CounterImpl.getInstance(classCounter);
-		if (hasLines) {
-			copy.lines.increment(lines);
-		} else {
-			copy.lineCounter = CounterImpl.getInstance(lineCounter);
-		}
+		copy.lineCounter = CounterImpl.getInstance(lineCounter);
 		return copy;
 	}
 

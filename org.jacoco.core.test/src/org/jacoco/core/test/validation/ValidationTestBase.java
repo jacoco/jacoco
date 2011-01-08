@@ -17,8 +17,10 @@ import java.util.Collection;
 
 import org.jacoco.core.analysis.Analyzer;
 import org.jacoco.core.analysis.ClassCoverage;
+import org.jacoco.core.analysis.CounterImpl;
 import org.jacoco.core.analysis.CoverageBuilder;
-import org.jacoco.core.analysis.ILines;
+import org.jacoco.core.analysis.ILine;
+import org.jacoco.core.analysis.LineImpl;
 import org.jacoco.core.analysis.SourceFileCoverage;
 import org.jacoco.core.data.ExecutionDataStore;
 import org.jacoco.core.instr.Instrumenter;
@@ -40,10 +42,10 @@ public abstract class ValidationTestBase {
 	private static final String[] STATUS_NAME = new String[4];
 
 	{
-		STATUS_NAME[ILines.NO_CODE] = "NO_CODE";
-		STATUS_NAME[ILines.NOT_COVERED] = "NOT_COVERED";
-		STATUS_NAME[ILines.FULLY_COVERED] = "FULLY_COVERED";
-		STATUS_NAME[ILines.PARTLY_COVERED] = "PARTLY_COVERED";
+		STATUS_NAME[ILine.NO_CODE] = "NO_CODE";
+		STATUS_NAME[ILine.NOT_COVERED] = "NOT_COVERED";
+		STATUS_NAME[ILine.FULLY_COVERED] = "FULLY_COVERED";
+		STATUS_NAME[ILine.PARTLY_COVERED] = "PARTLY_COVERED";
 	}
 
 	protected final Class<?> target;
@@ -51,8 +53,6 @@ public abstract class ValidationTestBase {
 	protected ClassCoverage classCoverage;
 
 	protected SourceFileCoverage sourceCoverage;
-
-	protected ILines lineCoverage;
 
 	protected Source source;
 
@@ -95,7 +95,6 @@ public abstract class ValidationTestBase {
 		final Collection<SourceFileCoverage> files = builder.getSourceFiles();
 		assertEquals(1, files.size(), 0.0);
 		sourceCoverage = files.iterator().next();
-		lineCoverage = sourceCoverage.getLines();
 	}
 
 	protected void assertLine(final String tag, final int status) {
@@ -105,14 +104,20 @@ public abstract class ValidationTestBase {
 	protected void assertLine(final String tag, final int status,
 			final int missedBranches, final int coveredBranches) {
 		final int nr = source.getLineNumber(tag);
-		final String line = source.getLine(nr);
-		String msg = String.format("L%s: %s", Integer.valueOf(nr), line);
-		assertEquals(msg, STATUS_NAME[status],
-				STATUS_NAME[lineCoverage.getStatus(nr)]);
-		assertEquals(msg + " missed branches", missedBranches,
-				lineCoverage.getMissedBranches(nr));
-		assertEquals(msg + " covered branches", coveredBranches,
-				lineCoverage.getCoveredBranches(nr));
+		final LineImpl line = sourceCoverage.getLine(nr);
+		String msg = String.format("L%s: %s", Integer.valueOf(nr),
+				source.getLine(nr));
+		int insnStatus = ILine.NO_CODE;
+		if (line.getInstructionCounter().getMissedCount() > 0) {
+			insnStatus |= ILine.NOT_COVERED;
+		}
+		if (line.getInstructionCounter().getCoveredCount() > 0) {
+			insnStatus |= ILine.FULLY_COVERED;
+		}
+		assertEquals(msg, STATUS_NAME[status], STATUS_NAME[insnStatus]);
+		assertEquals(msg + " branches",
+				CounterImpl.getInstance(missedBranches, coveredBranches),
+				line.getBranchCounter());
 	}
 
 }

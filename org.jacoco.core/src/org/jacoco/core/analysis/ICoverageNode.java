@@ -125,14 +125,6 @@ public interface ICoverageNode {
 	public ICounter getCounter(CounterEntity entity);
 
 	/**
-	 * Returns the line coverage information if this node represents a source
-	 * file or a part of a source file.
-	 * 
-	 * @return line coverage or <code>null</code>
-	 */
-	public ILines getLines();
-
-	/**
 	 * Creates a plain copy of this node. While {@link ICoverageNode}
 	 * implementations may contain heavy data structures, the copy returned by
 	 * this method is reduced to the counters only. This helps to save memory

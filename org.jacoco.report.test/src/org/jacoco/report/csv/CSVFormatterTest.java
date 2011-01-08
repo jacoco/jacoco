@@ -82,7 +82,7 @@ public class CSVFormatterTest {
 	@Test
 	public void testStructureWithNestedGroups() throws IOException {
 		final ICoverageNode root = new CoverageNodeImpl(ElementType.GROUP,
-				"root", false);
+				"root");
 		final List<SessionInfo> sessions = Collections.emptyList();
 		final Collection<ExecutionData> data = Collections.emptyList();
 		final IReportVisitor child = formatter.createReportVisitor(root,

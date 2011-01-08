@@ -19,7 +19,7 @@ import org.jacoco.core.analysis.Analyzer;
 import org.jacoco.core.analysis.ClassCoverage;
 import org.jacoco.core.analysis.CoverageBuilder;
 import org.jacoco.core.analysis.ICounter;
-import org.jacoco.core.analysis.ILines;
+import org.jacoco.core.analysis.ILine;
 import org.jacoco.core.data.ExecutionDataStore;
 import org.jacoco.core.instr.Instrumenter;
 import org.jacoco.core.runtime.IRuntime;
@@ -101,11 +101,11 @@ public class CoreTutorial {
 
 	private String getColor(final int status) {
 		switch (status) {
-		case ILines.NOT_COVERED:
+		case ILine.NOT_COVERED:
 			return "red";
-		case ILines.PARTLY_COVERED:
+		case ILine.PARTLY_COVERED:
 			return "yellow";
-		case ILines.FULLY_COVERED:
+		case ILine.FULLY_COVERED:
 			return "green";
 		}
 		return "";
@@ -156,13 +156,13 @@ public class CoreTutorial {
 			System.out.printf("Coverage of class %s%n", cc.getName());
 
 			printCounter("instructions", cc.getInstructionCounter());
+			printCounter("branches", cc.getBranchCounter());
 			printCounter("lines", cc.getLineCounter());
 			printCounter("methods", cc.getMethodCounter());
 
-			final ILines lines = cc.getLines();
-			for (int i = lines.getFirstLine(); i <= lines.getLastLine(); i++) {
+			for (int i = cc.getFirstLine(); i <= cc.getLastLine(); i++) {
 				System.out.printf("Line %s: %s%n", Integer.valueOf(i),
-						getColor(lines.getStatus(i)));
+						getColor(cc.getLine(i).getStatus()));
 			}
 		}
 	}

@@ -9,13 +9,14 @@
  *    Marc R. Hoffmann - initial API and implementation
  *    
  *******************************************************************************/
-package org.jacoco.core.internal.analysis;
+package org.jacoco.core.analysis;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 
 import org.jacoco.core.analysis.CounterImpl;
 import org.jacoco.core.analysis.ILine;
+import org.jacoco.core.analysis.LineImpl;
 import org.junit.Before;
 import org.junit.Test;
 

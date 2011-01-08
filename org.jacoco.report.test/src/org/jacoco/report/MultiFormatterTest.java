@@ -88,7 +88,7 @@ public class MultiFormatterTest {
 	}
 
 	private CoverageNodeImpl createNode(String name) {
-		return new CoverageNodeImpl(ElementType.GROUP, name, false);
+		return new CoverageNodeImpl(ElementType.GROUP, name);
 	}
 
 	private static final String MOCK_REPORT = "Session[b1[p1[], p2[]], b2[]]";

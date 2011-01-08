@@ -17,7 +17,8 @@ import java.io.Reader;
 import java.util.Arrays;
 import java.util.Locale;
 
-import org.jacoco.core.analysis.ILines;
+import org.jacoco.core.analysis.ILine;
+import org.jacoco.core.analysis.ISourceNode;
 import org.jacoco.report.internal.html.resources.Styles;
 
 /**
@@ -77,14 +78,14 @@ class SourceHighlighter {
 	 * 
 	 * @param parent
 	 *            parent HTML element
-	 * @param lines
+	 * @param source
 	 *            highlighting information
 	 * @param contents
 	 *            contents of the source file
 	 * @throws IOException
 	 *             problems while reading the source file or writing the output
 	 */
-	public void render(final HTMLElement parent, final ILines lines,
+	public void render(final HTMLElement parent, final ISourceNode source,
 			final Reader contents) throws IOException {
 		final HTMLElement pre = parent.pre(Styles.SOURCE + " lang-" + lang);
 		final BufferedReader lineBuffer = new BufferedReader(contents);
@@ -93,7 +94,7 @@ class SourceHighlighter {
 		while ((line = lineBuffer.readLine()) != null) {
 			nr++;
 			renderLineNr(pre, nr);
-			renderCodeLine(pre, line, lines, nr);
+			renderCodeLine(pre, line, source.getLine(nr));
 		}
 	}
 
@@ -107,38 +108,33 @@ class SourceHighlighter {
 		linespan.text(linestr);
 	}
 
-	private void renderCodeLine(final HTMLElement pre, final String line,
-			final ILines lines, final int nr) throws IOException {
-		highlight(pre, lines, nr).text(line.replace("\t", tabReplacement));
+	private void renderCodeLine(final HTMLElement pre, final String linesrc,
+			final ILine line) throws IOException {
+		highlight(pre, line).text(linesrc.replace("\t", tabReplacement));
 		pre.text("\n");
 	}
 
-	HTMLElement highlight(final HTMLElement pre, final ILines lines,
-			final int nr) throws IOException {
+	HTMLElement highlight(final HTMLElement pre, final ILine line)
+			throws IOException {
 		final String style;
-		final int missedBranches = lines.getMissedBranches(nr);
-		switch (lines.getStatus(nr)) {
-		case ILines.NOT_COVERED:
+		switch (line.getStatus()) {
+		case ILine.NOT_COVERED:
 			style = Styles.NOT_COVERED;
 			break;
-		case ILines.FULLY_COVERED:
-			if (missedBranches == 0) {
-				style = Styles.FULLY_COVERED;
-			} else {
-				// We also mark lines in yellow with partial branch coverage:
-				style = Styles.PARTLY_COVERED;
-			}
+		case ILine.FULLY_COVERED:
+			style = Styles.FULLY_COVERED;
 			break;
-		case ILines.PARTLY_COVERED:
+		case ILine.PARTLY_COVERED:
 			style = Styles.PARTLY_COVERED;
 			break;
 		default:
 			return pre;
 		}
-		final int totalBranches = lines.getTotalBranches(nr);
+		final int totalBranches = line.getBranchCounter().getTotalCount();
 		if (totalBranches == 0) {
 			return pre.span(style);
 		}
+		final int missedBranches = line.getBranchCounter().getMissedCount();
 		final Integer t = Integer.valueOf(totalBranches);
 		if (missedBranches == 0) {
 			return span(pre, style, Styles.BRANCH_FULLY_COVERED,

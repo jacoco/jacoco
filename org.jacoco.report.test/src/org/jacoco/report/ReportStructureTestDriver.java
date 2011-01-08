@@ -67,7 +67,7 @@ public class ReportStructureTestDriver {
 			Collections.singleton(packageCoverage));
 
 	private final CoverageNodeImpl groupCoverage = new CoverageNodeImpl(
-			ElementType.GROUP, "group", false);
+			ElementType.GROUP, "group");
 
 	public ReportStructureTestDriver() {
 		classCoverage.setSourceFileName("FooClass.java");

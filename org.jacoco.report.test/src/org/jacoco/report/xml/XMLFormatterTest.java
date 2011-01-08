@@ -72,8 +72,7 @@ public class XMLFormatterTest {
 		infos.add(new SessionInfo("session-1", 12345, 67890));
 		infos.add(new SessionInfo("session-2", 1, 2));
 		infos.add(new SessionInfo("session-3", 1, 2));
-		ICoverageNode node = new CoverageNodeImpl(ElementType.GROUP, "Sample",
-				false);
+		ICoverageNode node = new CoverageNodeImpl(ElementType.GROUP, "Sample");
 		final Collection<ExecutionData> data = Collections.emptyList();
 		formatter.createReportVisitor(node, infos, data).visitEnd(null);
 		assertPathMatches("session-1", "/report/sessioninfo[1]/@id");
@@ -111,8 +110,8 @@ public class XMLFormatterTest {
 		final BufferedReader reader = new BufferedReader(new InputStreamReader(
 				output.getFileAsStream(), "UTF-8"));
 		final String line = reader.readLine();
-		assertTrue(line, line
-				.startsWith("<?xml version=\"1.0\" encoding=\"UTF-8\""));
+		assertTrue(line,
+				line.startsWith("<?xml version=\"1.0\" encoding=\"UTF-8\""));
 	}
 
 	@Test
@@ -122,8 +121,8 @@ public class XMLFormatterTest {
 		final BufferedReader reader = new BufferedReader(new InputStreamReader(
 				output.getFileAsStream(), "UTF-16"));
 		final String line = reader.readLine();
-		assertTrue(line, line
-				.startsWith("<?xml version=\"1.0\" encoding=\"UTF-16\""));
+		assertTrue(line,
+				line.startsWith("<?xml version=\"1.0\" encoding=\"UTF-16\""));
 	}
 
 	private void assertPathMatches(String expected, String path)

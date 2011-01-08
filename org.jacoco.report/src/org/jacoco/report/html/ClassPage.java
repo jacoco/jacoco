@@ -18,6 +18,7 @@ import java.util.Map;
 
 import org.jacoco.core.analysis.ClassCoverage;
 import org.jacoco.core.analysis.ICoverageNode;
+import org.jacoco.core.analysis.ISourceNode;
 import org.jacoco.core.analysis.MethodCoverage;
 import org.jacoco.report.IReportVisitor;
 import org.jacoco.report.ReportOutputFolder;
@@ -59,8 +60,10 @@ public class ClassPage extends NodePage {
 				return null;
 			}
 			final String link = sourceFilePage.getLink(base);
-			final int first = node.getLines().getFirstLine();
-			return first != -1 ? link + "#L" + first : link;
+			final ISourceNode source = node;
+			final int first = source.getFirstLine();
+			return first != ISourceNode.UNKNOWN_LINE ? link + "#L" + first
+					: link;
 		}
 
 		public ICoverageNode getNode() {

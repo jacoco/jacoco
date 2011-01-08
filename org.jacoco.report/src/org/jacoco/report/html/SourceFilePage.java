@@ -15,7 +15,7 @@ import java.io.IOException;
 import java.io.Reader;
 
 import org.jacoco.core.analysis.ICoverageNode;
-import org.jacoco.core.analysis.ILines;
+import org.jacoco.core.analysis.ISourceNode;
 import org.jacoco.core.analysis.SourceFileCoverage;
 import org.jacoco.report.IReportVisitor;
 import org.jacoco.report.ISourceFileLocator;
@@ -35,7 +35,7 @@ public class SourceFilePage extends NodePage {
 
 	private final String packageName;
 
-	private final ILines lines;
+	private final ISourceNode source;
 
 	/**
 	 * Creates a new page with given information.
@@ -50,7 +50,7 @@ public class SourceFilePage extends NodePage {
 			final IHTMLReportContext context) {
 		super(sourceFileNode, parent, folder, context);
 		packageName = sourceFileNode.getPackageName();
-		lines = sourceFileNode.getLines();
+		source = sourceFileNode;
 	}
 
 	public IReportVisitor visitChild(final ICoverageNode node) {
@@ -70,7 +70,7 @@ public class SourceFilePage extends NodePage {
 	@Override
 	protected void content(final HTMLElement body) throws IOException {
 		final SourceHighlighter hl = new SourceHighlighter(context.getLocale());
-		hl.render(body, lines, sourceReader);
+		hl.render(body, source, sourceReader);
 		sourceReader.close();
 	}
 

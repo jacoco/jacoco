@@ -237,10 +237,11 @@ class MethodAnalyzer implements IMethodProbesVisitor {
 		for (final Instruction i : instructions) {
 			final int total = i.getBranches();
 			final int covered = i.getCoveredBranches();
-			coverage.addInsn(covered > 0, i.getLine());
-			if (total > 1) {
-				coverage.addBranches(total - covered, covered, i.getLine());
-			}
+			final ICounter instructions = covered == 0 ? CounterImpl.COUNTER_1_0
+					: CounterImpl.COUNTER_0_1;
+			final ICounter branches = total > 1 ? CounterImpl.getInstance(total
+					- covered, covered) : CounterImpl.COUNTER_0_0;
+			coverage.increment(instructions, branches, i.getLine());
 		}
 	}
 

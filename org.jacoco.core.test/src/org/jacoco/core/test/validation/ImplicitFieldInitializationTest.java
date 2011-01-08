@@ -11,8 +11,8 @@
  *******************************************************************************/
 package org.jacoco.core.test.validation;
 
-import static org.jacoco.core.analysis.ILines.FULLY_COVERED;
-import static org.jacoco.core.analysis.ILines.NO_CODE;
+import static org.jacoco.core.analysis.ILine.FULLY_COVERED;
+import static org.jacoco.core.analysis.ILine.NO_CODE;
 
 import org.jacoco.core.test.validation.targets.Target08;
 import org.junit.Test;

@@ -44,61 +44,61 @@ public class CoverageBuilderTest {
 	@Test
 	public void testCreateClassMissed() {
 		final MethodCoverage method = new MethodCoverage("doit", "()V", null);
-		method.addInsn(false, 6);
-		method.addInsn(false, 7);
-		method.addInsn(false, 8);
+		method.increment(CounterImpl.COUNTER_1_0, CounterImpl.COUNTER_0_0, 6);
+		method.increment(CounterImpl.COUNTER_1_0, CounterImpl.COUNTER_0_0, 7);
+		method.increment(CounterImpl.COUNTER_1_0, CounterImpl.COUNTER_0_0, 8);
 		addClass(123L, "Sample", null, method);
 
 		final Collection<ClassCoverage> classes = coverageBuilder.getClasses();
-		assertEquals(1, classes.size(), 1.0);
+		assertEquals(1, classes.size());
 		ClassCoverage c = classes.iterator().next();
 		assertEquals("Sample", c.getName());
-		assertEquals(1, c.getClassCounter().getTotalCount(), 0.0);
-		assertEquals(0, c.getClassCounter().getCoveredCount(), 0.0);
-		assertEquals(1, c.getMethodCounter().getTotalCount(), 0.0);
-		assertEquals(0, c.getMethodCounter().getCoveredCount(), 0.0);
-		assertEquals(3, c.getLineCounter().getTotalCount(), 0.0);
-		assertEquals(0, c.getLineCounter().getCoveredCount(), 0.0);
+		assertEquals(1, c.getClassCounter().getTotalCount());
+		assertEquals(0, c.getClassCounter().getCoveredCount());
+		assertEquals(1, c.getMethodCounter().getTotalCount());
+		assertEquals(0, c.getMethodCounter().getCoveredCount());
+		assertEquals(3, c.getLineCounter().getTotalCount());
+		assertEquals(0, c.getLineCounter().getCoveredCount());
 
 		final Collection<MethodCoverage> methods = c.getMethods();
-		assertEquals(1, methods.size(), 1.0);
+		assertEquals(1, methods.size());
 		MethodCoverage m = methods.iterator().next();
 		assertEquals("doit", m.getName());
 		assertEquals("()V", m.getDesc());
-		assertEquals(1, m.getMethodCounter().getTotalCount(), 0.0);
-		assertEquals(0, m.getMethodCounter().getCoveredCount(), 0.0);
-		assertEquals(3, m.getLineCounter().getTotalCount(), 0.0);
-		assertEquals(0, m.getLineCounter().getCoveredCount(), 0.0);
+		assertEquals(1, m.getMethodCounter().getTotalCount());
+		assertEquals(0, m.getMethodCounter().getCoveredCount());
+		assertEquals(3, m.getLineCounter().getTotalCount());
+		assertEquals(0, m.getLineCounter().getCoveredCount());
 	}
 
 	@Test
 	public void testCreateClassCovered() {
 		final MethodCoverage method = new MethodCoverage("doit", "()V", null);
-		method.addInsn(true, 6);
-		method.addInsn(true, 7);
-		method.addInsn(true, 8);
+		method.increment(CounterImpl.COUNTER_0_1, CounterImpl.COUNTER_0_0, 6);
+		method.increment(CounterImpl.COUNTER_0_1, CounterImpl.COUNTER_0_0, 7);
+		method.increment(CounterImpl.COUNTER_0_1, CounterImpl.COUNTER_0_0, 8);
 		addClass(123L, "Sample", null, method);
 
 		final Collection<ClassCoverage> classes = coverageBuilder.getClasses();
-		assertEquals(1, classes.size(), 1.0);
+		assertEquals(1, classes.size());
 		ClassCoverage c = classes.iterator().next();
 		assertEquals("Sample", c.getName());
-		assertEquals(1, c.getClassCounter().getTotalCount(), 0.0);
-		assertEquals(1, c.getClassCounter().getCoveredCount(), 0.0);
-		assertEquals(1, c.getMethodCounter().getTotalCount(), 0.0);
-		assertEquals(1, c.getMethodCounter().getCoveredCount(), 0.0);
-		assertEquals(3, c.getLineCounter().getTotalCount(), 0.0);
-		assertEquals(3, c.getLineCounter().getCoveredCount(), 0.0);
+		assertEquals(1, c.getClassCounter().getTotalCount());
+		assertEquals(1, c.getClassCounter().getCoveredCount());
+		assertEquals(1, c.getMethodCounter().getTotalCount());
+		assertEquals(1, c.getMethodCounter().getCoveredCount());
+		assertEquals(3, c.getLineCounter().getTotalCount());
+		assertEquals(3, c.getLineCounter().getCoveredCount());
 
 		final Collection<MethodCoverage> methods = c.getMethods();
-		assertEquals(1, methods.size(), 1.0);
+		assertEquals(1, methods.size());
 		MethodCoverage m = methods.iterator().next();
 		assertEquals("doit", m.getName());
 		assertEquals("()V", m.getDesc());
-		assertEquals(1, m.getMethodCounter().getTotalCount(), 0.0);
-		assertEquals(1, m.getMethodCounter().getCoveredCount(), 0.0);
-		assertEquals(3, m.getLineCounter().getTotalCount(), 0.0);
-		assertEquals(3, m.getLineCounter().getCoveredCount(), 0.0);
+		assertEquals(1, m.getMethodCounter().getTotalCount());
+		assertEquals(1, m.getMethodCounter().getCoveredCount());
+		assertEquals(3, m.getLineCounter().getTotalCount());
+		assertEquals(3, m.getLineCounter().getCoveredCount());
 	}
 
 	@Test
@@ -113,52 +113,52 @@ public class CoverageBuilderTest {
 	@Test(expected = IllegalStateException.class)
 	public void testDuplicateClassName() {
 		MethodCoverage method = new MethodCoverage("doit", "()V", null);
-		method.addInsn(false, 3);
+		method.increment(CounterImpl.COUNTER_1_0, CounterImpl.COUNTER_0_0, 3);
 		addClass(123L, "Sample", null, method);
 
 		method = new MethodCoverage("doit", "()V", null);
-		method.addInsn(false, 3);
+		method.increment(CounterImpl.COUNTER_1_0, CounterImpl.COUNTER_0_0, 3);
 		addClass(345L, "Sample", null, method);
 	}
 
 	@Test
 	public void testCreateSourceFile() {
 		final MethodCoverage method1 = new MethodCoverage("doit", "()V", null);
-		method1.addInsn(false, 3);
+		method1.increment(CounterImpl.COUNTER_1_0, CounterImpl.COUNTER_0_0, 3);
 		addClass(123L, "Sample", "Sample.java", method1);
 
 		final MethodCoverage method2 = new MethodCoverage("doit", "()V", null);
-		method2.addInsn(false, 6);
+		method2.increment(CounterImpl.COUNTER_1_0, CounterImpl.COUNTER_0_0, 6);
 		addClass(234L, "Second", "Sample.java", method2);
 
 		final Collection<SourceFileCoverage> sourcefiles = coverageBuilder
 				.getSourceFiles();
-		assertEquals(1, sourcefiles.size(), 1.0);
+		assertEquals(1, sourcefiles.size());
 		SourceFileCoverage s = sourcefiles.iterator().next();
 
-		assertEquals(2, s.getClassCounter().getTotalCount(), 0.0);
-		assertEquals(0, s.getClassCounter().getCoveredCount(), 0.0);
+		assertEquals(2, s.getClassCounter().getTotalCount());
+		assertEquals(0, s.getClassCounter().getCoveredCount());
 	}
 
 	@Test
 	public void testGetBundle() {
 		final MethodCoverage method1 = new MethodCoverage("doit", "()V", null);
-		method1.addInsn(false, 3);
+		method1.increment(CounterImpl.COUNTER_1_0, CounterImpl.COUNTER_0_0, 3);
 		addClass(1, "org/jacoco/examples/Sample1", null, method1);
 
 		final MethodCoverage method2 = new MethodCoverage("doit", "()V", null);
-		method2.addInsn(false, 6);
+		method2.increment(CounterImpl.COUNTER_1_0, CounterImpl.COUNTER_0_0, 6);
 		addClass(2, "org/jacoco/examples/Sample2", null, method2);
 
 		final MethodCoverage method3 = new MethodCoverage("doit", "()V", null);
-		method3.addInsn(false, 1);
+		method3.increment(CounterImpl.COUNTER_1_0, CounterImpl.COUNTER_0_0, 1);
 		addClass(3, "Sample3", null, method3);
 
 		BundleCoverage bundle = coverageBuilder.getBundle("testbundle");
 		assertEquals("testbundle", bundle.getName());
 
 		final Collection<PackageCoverage> packages = bundle.getPackages();
-		assertEquals(2, packages.size(), 0.0);
+		assertEquals(2, packages.size());
 		Map<String, PackageCoverage> packagesByName = new HashMap<String, PackageCoverage>();
 		for (PackageCoverage p : packages) {
 			packagesByName.put(p.getName(), p);

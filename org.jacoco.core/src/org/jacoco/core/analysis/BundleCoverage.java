@@ -39,7 +39,7 @@ public class BundleCoverage extends CoverageNodeImpl {
 	 */
 	public BundleCoverage(final String name,
 			final Collection<PackageCoverage> packages) {
-		super(ElementType.BUNDLE, name, false);
+		super(ElementType.BUNDLE, name);
 		this.packages = packages;
 		increment(packages);
 	}

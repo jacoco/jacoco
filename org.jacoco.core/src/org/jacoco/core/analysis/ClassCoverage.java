@@ -14,13 +14,14 @@ package org.jacoco.core.analysis;
 import java.util.ArrayList;
 import java.util.Collection;
 
+
 /**
  * Coverage data of a single class.
  * 
  * @author Marc R. Hoffmann
  * @version $qualified.bundle.version$
  */
-public class ClassCoverage extends CoverageNodeImpl {
+public class ClassCoverage extends SourceNodeImpl implements ISourceNode {
 
 	private final long id;
 	private final String signature;
@@ -46,7 +47,7 @@ public class ClassCoverage extends CoverageNodeImpl {
 	public ClassCoverage(final String name, final long id,
 			final String signature, final String superName,
 			final String[] interfaces) {
-		super(ElementType.CLASS, name, true);
+		super(ElementType.CLASS, name);
 		this.id = id;
 		this.signature = signature;
 		this.superName = superName;

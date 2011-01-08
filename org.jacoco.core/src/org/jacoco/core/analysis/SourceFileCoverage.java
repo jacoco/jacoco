@@ -11,6 +11,7 @@
  *******************************************************************************/
 package org.jacoco.core.analysis;
 
+
 /**
  * Coverage data of a single source file. As source file contains one or more
  * classes.
@@ -18,7 +19,7 @@ package org.jacoco.core.analysis;
  * @author Marc R. Hoffmann
  * @version $qualified.bundle.version$
  */
-public class SourceFileCoverage extends CoverageNodeImpl {
+public class SourceFileCoverage extends SourceNodeImpl {
 
 	private final String packagename;
 
@@ -31,7 +32,7 @@ public class SourceFileCoverage extends CoverageNodeImpl {
 	 *            vm name of the package the source file belongs to
 	 */
 	public SourceFileCoverage(final String name, final String packagename) {
-		super(ElementType.SOURCEFILE, name, true);
+		super(ElementType.SOURCEFILE, name);
 		this.packagename = packagename;
 	}
 

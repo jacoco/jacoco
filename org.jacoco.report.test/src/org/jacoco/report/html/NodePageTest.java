@@ -111,7 +111,7 @@ public class NodePageTest {
 				return Locale.ENGLISH;
 			}
 		};
-		node = new CoverageNodeImpl(ElementType.GROUP, "Test", false);
+		node = new CoverageNodeImpl(ElementType.GROUP, "Test");
 		page = new TestNodePage(node);
 	}
 
@@ -122,7 +122,7 @@ public class NodePageTest {
 
 	@Test
 	public void testGetNode() throws IOException {
-		node.increment(new CoverageNodeImpl(ElementType.GROUP, "Foo", false) {
+		node.increment(new CoverageNodeImpl(ElementType.GROUP, "Foo") {
 			{
 				branchCounter = CounterImpl.getInstance(15, 8);
 			}

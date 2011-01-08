@@ -495,7 +495,7 @@ public class ReportTask extends Task {
 			throw new BuildException("Group name must be supplied");
 		}
 		if (group.children.size() > 0) {
-			return new CoverageNodeImpl(ElementType.GROUP, group.name, false);
+			return new CoverageNodeImpl(ElementType.GROUP, group.name);
 		} else {
 			final CoverageBuilder builder = new CoverageBuilder();
 			final Analyzer analyzer = new Analyzer(executionDataStore, builder);

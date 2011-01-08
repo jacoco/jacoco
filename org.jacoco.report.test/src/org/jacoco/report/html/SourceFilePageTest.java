@@ -106,7 +106,7 @@ public class SourceFilePageTest {
 				"SourceFilePageTest.java", "org/jacoco/report/html");
 		final SourceFilePage page = new SourceFilePage(node, null, root,
 				context);
-		page.visitChild(new CoverageNodeImpl(ElementType.CLASS, "Foo", false));
+		page.visitChild(new CoverageNodeImpl(ElementType.CLASS, "Foo"));
 	}
 
 	@Test

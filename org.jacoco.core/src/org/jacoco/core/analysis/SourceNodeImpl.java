@@ -9,13 +9,8 @@
  *    Marc R. Hoffmann - initial API and implementation
  *    
  *******************************************************************************/
-package org.jacoco.core.internal.analysis;
+package org.jacoco.core.analysis;
 
-import org.jacoco.core.analysis.CounterImpl;
-import org.jacoco.core.analysis.CoverageNodeImpl;
-import org.jacoco.core.analysis.ICounter;
-import org.jacoco.core.analysis.ILine;
-import org.jacoco.core.analysis.ISourceNode;
 
 /**
  * {@link ISourceNode} implementation.
@@ -39,7 +34,7 @@ public class SourceNodeImpl extends CoverageNodeImpl implements ISourceNode {
 	 *            name of the element
 	 */
 	public SourceNodeImpl(final ElementType elementType, final String name) {
-		super(elementType, name, false);
+		super(elementType, name);
 		lines = null;
 		offset = UNKNOWN_LINE;
 	}
@@ -102,8 +97,8 @@ public class SourceNodeImpl extends CoverageNodeImpl implements ISourceNode {
 			ensureCapacity(firstLine, lastLine);
 			for (int i = firstLine; i <= lastLine; i++) {
 				final ILine line = child.getLine(i);
-				incrementLine(line.getInstructionCounter(), getBranchCounter(),
-						i);
+				incrementLine(line.getInstructionCounter(),
+						line.getBranchCounter(), i);
 			}
 		}
 	}

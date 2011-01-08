@@ -11,16 +11,14 @@
  *******************************************************************************/
 package org.jacoco.core.analysis;
 
+
 /**
  * Coverage data of a single method.
  * 
  * @author Marc R. Hoffmann
  * @version $qualified.bundle.version$
  */
-public class MethodCoverage extends CoverageNodeImpl {
-
-	/** Place holder for unknown lines (no debug information) */
-	public static int UNKNOWN_LINE = -1;
+public class MethodCoverage extends SourceNodeImpl {
 
 	private final String desc;
 
@@ -38,47 +36,20 @@ public class MethodCoverage extends CoverageNodeImpl {
 	 */
 	public MethodCoverage(final String name, final String desc,
 			final String signature) {
-		super(ElementType.METHOD, name, true);
+		super(ElementType.METHOD, name);
 		this.desc = desc;
 		this.signature = signature;
 		this.methodCounter = CounterImpl.getInstance(false);
 	}
 
-	/**
-	 * Adds a single instruction to this method.
-	 * 
-	 * @param covered
-	 *            <code>true</code> if the instruction was executed
-	 * @param line
-	 *            source line number of the instruction
-	 */
-	public void addInsn(final boolean covered, final int line) {
-		if (line != UNKNOWN_LINE) {
-			this.lines.incrementInsn(line, covered);
+	@Override
+	public void increment(final ICounter instructions, final ICounter branches,
+			final int line) {
+		super.increment(instructions, branches, line);
+		if (instructions.getCoveredCount() > 0
+				&& this.methodCounter.getCoveredCount() == 0) {
+			this.methodCounter = CounterImpl.COUNTER_0_1;
 		}
-		this.instructionCounter = this.instructionCounter.increment(CounterImpl
-				.getInstance(covered));
-		if (covered && this.methodCounter.getCoveredCount() == 0) {
-			this.methodCounter = CounterImpl.getInstance(true);
-		}
-	}
-
-	/**
-	 * Adds a branching point to this method.
-	 * 
-	 * @param missed
-	 *            number of missed branches
-	 * @param covered
-	 *            number of covered branches
-	 * @param line
-	 *            source line number of the branching point
-	 */
-	public void addBranches(final int missed, final int covered, final int line) {
-		if (line != UNKNOWN_LINE) {
-			this.lines.incrementBranches(missed, covered, line);
-		}
-		this.branchCounter = this.branchCounter.increment(CounterImpl
-				.getInstance(missed, covered));
 	}
 
 	/**

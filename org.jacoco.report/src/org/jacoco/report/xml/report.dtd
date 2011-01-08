@@ -65,8 +65,10 @@
 <!ELEMENT line EMPTY>
   <!-- line number -->
   <!ATTLIST line nr CDATA #REQUIRED>
-  <!-- instruction coverage status -->
-  <!ATTLIST line status (N|P|F) #REQUIRED>
+  <!-- number of missed instructions -->
+  <!ATTLIST line mi CDATA #IMPLIED>
+  <!-- number of covered instructions -->
+  <!ATTLIST line ci CDATA #IMPLIED>
   <!-- number of missed branches -->
   <!ATTLIST line mb CDATA #IMPLIED>
   <!-- number of covered branches -->

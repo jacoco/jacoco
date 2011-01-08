@@ -215,7 +215,7 @@ public class BarColumnTest {
 	}
 
 	private CoverageNodeImpl createNode(final int missed, final int covered) {
-		return new CoverageNodeImpl(ElementType.GROUP, "Foo", false) {
+		return new CoverageNodeImpl(ElementType.GROUP, "Foo") {
 			{
 				this.lineCounter = CounterImpl.getInstance(missed, covered);
 			}

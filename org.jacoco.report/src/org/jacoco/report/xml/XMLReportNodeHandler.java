@@ -18,7 +18,8 @@ import org.jacoco.core.analysis.ICounter;
 import org.jacoco.core.analysis.ICoverageNode;
 import org.jacoco.core.analysis.ICoverageNode.CounterEntity;
 import org.jacoco.core.analysis.ICoverageNode.ElementType;
-import org.jacoco.core.analysis.ILines;
+import org.jacoco.core.analysis.ILine;
+import org.jacoco.core.analysis.ISourceNode;
 import org.jacoco.core.analysis.MethodCoverage;
 import org.jacoco.report.IReportVisitor;
 import org.jacoco.report.ISourceFileLocator;
@@ -89,7 +90,7 @@ class XMLReportNodeHandler implements IReportVisitor {
 			final XMLElement methodChild = element.element("method");
 			final MethodCoverage methodNode = (MethodCoverage) node;
 			methodChild.attr("desc", methodNode.getDesc());
-			final int line = methodNode.getLines().getFirstLine();
+			final int line = methodNode.getFirstLine();
 			if (line != -1) {
 				methodChild.attr("line", line);
 			}
@@ -99,7 +100,7 @@ class XMLReportNodeHandler implements IReportVisitor {
 				@Override
 				protected void insertElementsAfter(final XMLElement element)
 						throws IOException {
-					writeLines(node.getLines(), element);
+					writeLines((ISourceNode) node, element);
 				}
 			};
 		default:
@@ -128,25 +129,20 @@ class XMLReportNodeHandler implements IReportVisitor {
 		}
 	}
 
-	private static void writeLines(final ILines lines, final XMLElement parent)
-			throws IOException {
-		final int last = lines.getLastLine();
-		for (int nr = lines.getFirstLine(); nr <= last; nr++) {
-			final byte status = lines.getStatus(nr);
-			if (status != ILines.NO_CODE) {
-				final XMLElement line = parent.element("line");
-				line.attr("nr", nr);
-				switch (status) {
-				case ILines.NOT_COVERED:
-					line.attr("status", "N");
-					break;
-				case ILines.PARTLY_COVERED:
-					line.attr("status", "P");
-					break;
-				case ILines.FULLY_COVERED:
-					line.attr("status", "F");
-					break;
-				}
+	private static void writeLines(final ISourceNode source,
+			final XMLElement parent) throws IOException {
+		final int last = source.getLastLine();
+		for (int nr = source.getFirstLine(); nr <= last; nr++) {
+			final ILine line = source.getLine(nr);
+			if (line.getStatus() != ILine.NO_CODE) {
+				final XMLElement element = parent.element("line");
+				element.attr("nr", nr);
+				final ICounter insn = line.getInstructionCounter();
+				element.attr("mi", insn.getMissedCount());
+				element.attr("ci", insn.getCoveredCount());
+				final ICounter branches = line.getBranchCounter();
+				element.attr("mb", branches.getMissedCount());
+				element.attr("cb", branches.getCoveredCount());
 			}
 		}
 	}

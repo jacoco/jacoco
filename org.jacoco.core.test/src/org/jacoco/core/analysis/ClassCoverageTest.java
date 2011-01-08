@@ -12,7 +12,6 @@
 package org.jacoco.core.analysis;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
 
 import org.junit.Test;
 
@@ -36,7 +35,6 @@ public class ClassCoverageTest {
 		assertEquals("java/lang/Object", data.getSuperName());
 		assertEquals(0, data.getInterfaceNames().length);
 		assertEquals("Sample.java", data.getSourceFileName());
-		assertNotNull(data.getLines());
 	}
 
 	@Test
@@ -87,7 +85,8 @@ public class ClassCoverageTest {
 
 	private MethodCoverage createMethod(boolean covered) {
 		final MethodCoverage m = new MethodCoverage("sample", "()V", null);
-		m.addInsn(covered, MethodCoverage.UNKNOWN_LINE);
+		m.increment(CounterImpl.getInstance(covered), CounterImpl.COUNTER_0_0,
+				ISourceNode.UNKNOWN_LINE);
 		return m;
 	}
 

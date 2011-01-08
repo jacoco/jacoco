@@ -22,6 +22,7 @@ import org.jacoco.core.analysis.CounterImpl;
 import org.jacoco.core.analysis.CoverageNodeImpl;
 import org.jacoco.core.analysis.ICoverageNode.ElementType;
 import org.jacoco.core.analysis.MethodCoverage;
+import org.jacoco.core.analysis.SourceNodeImpl;
 import org.jacoco.report.IReportVisitor;
 import org.junit.Before;
 import org.junit.Test;
@@ -51,7 +52,7 @@ public class XMLReportNodeHandlerTest {
 		root = new XMLDocument("report", "-//JACOCO//DTD Report 1.0//EN",
 				"report.dtd", "UTF-8", true, buffer);
 		handler = new XMLReportNodeHandler(root, new CoverageNodeImpl(
-				ElementType.GROUP, "Sample", false));
+				ElementType.GROUP, "Sample"));
 	}
 
 	@Test
@@ -62,8 +63,7 @@ public class XMLReportNodeHandlerTest {
 
 	@Test
 	public void testGroup() throws Exception {
-		handler.visitChild(
-				new CoverageNodeImpl(ElementType.GROUP, "Group1", false))
+		handler.visitChild(new CoverageNodeImpl(ElementType.GROUP, "Group1"))
 				.visitEnd(null);
 		final Document doc = getDocument();
 		assertEquals("Group1", support.findStr(doc, "//report/group/@name"));
@@ -72,7 +72,7 @@ public class XMLReportNodeHandlerTest {
 	@Test
 	public void testCounters() throws Exception {
 		final CoverageNodeImpl node = new CoverageNodeImpl(ElementType.GROUP,
-				"Group1", false) {
+				"Group1") {
 			{
 				classCounter = CounterImpl.getInstance(9, 1);
 				methodCounter = CounterImpl.getInstance(18, 2);
@@ -108,8 +108,8 @@ public class XMLReportNodeHandlerTest {
 	@Test
 	public void testPackage() throws Exception {
 		handler.visitChild(
-				new CoverageNodeImpl(ElementType.PACKAGE, "org.jacoco.example",
-						false)).visitEnd(null);
+				new CoverageNodeImpl(ElementType.PACKAGE, "org.jacoco.example"))
+				.visitEnd(null);
 		final Document doc = getDocument();
 		assertEquals("org.jacoco.example",
 				support.findStr(doc, "//report/package/@name"));
@@ -119,10 +119,9 @@ public class XMLReportNodeHandlerTest {
 	public void testClass() throws Exception {
 		final IReportVisitor packageHandler = handler
 				.visitChild(new CoverageNodeImpl(ElementType.PACKAGE,
-						"org.jacoco.example", false));
-		packageHandler.visitChild(
-				new CoverageNodeImpl(ElementType.CLASS, "Foo", true)).visitEnd(
-				null);
+						"org.jacoco.example"));
+		packageHandler.visitChild(new SourceNodeImpl(ElementType.CLASS, "Foo"))
+				.visitEnd(null);
 		packageHandler.visitEnd(null);
 		final Document doc = getDocument();
 		assertEquals("Foo",
@@ -133,13 +132,11 @@ public class XMLReportNodeHandlerTest {
 	public void testMethod() throws Exception {
 		final IReportVisitor packageHandler = handler
 				.visitChild(new CoverageNodeImpl(ElementType.PACKAGE,
-						"org.jacoco.example", false));
+						"org.jacoco.example"));
 		final IReportVisitor classHandler = packageHandler
-				.visitChild(new CoverageNodeImpl(ElementType.CLASS, "Foo", true));
+				.visitChild(new SourceNodeImpl(ElementType.CLASS, "Foo"));
 		MethodCoverage node = new MethodCoverage("doit", "()V", null);
-		node.addInsn(false, 15);
-		node.addInsn(false, 16);
-		node.addInsn(false, 16);
+		node.increment(CounterImpl.COUNTER_1_0, CounterImpl.COUNTER_0_0, 15);
 		classHandler.visitChild(node).visitEnd(null);
 		classHandler.visitEnd(null);
 		packageHandler.visitEnd(null);
@@ -156,33 +153,26 @@ public class XMLReportNodeHandlerTest {
 	public void testSourcefile() throws Exception {
 		final IReportVisitor packageHandler = handler
 				.visitChild(new CoverageNodeImpl(ElementType.PACKAGE,
-						"org.jacoco.example", false));
-		final CoverageNodeImpl node = new CoverageNodeImpl(
-				ElementType.SOURCEFILE, "Foo.java", true) {
-			{
-				lines.incrementInsn(11, false);
-				lines.incrementInsn(13, false);
-				lines.incrementInsn(13, true);
-				lines.incrementInsn(14, true);
-			}
-		};
+						"org.jacoco.example"));
+		final SourceNodeImpl node = new SourceNodeImpl(ElementType.SOURCEFILE,
+				"Foo.java");
+		node.increment(CounterImpl.getInstance(1, 2),
+				CounterImpl.getInstance(3, 4), 12);
 		packageHandler.visitChild(node).visitEnd(null);
 		packageHandler.visitEnd(null);
 		final Document doc = getDocument();
 		assertEquals("Foo.java",
 				support.findStr(doc, "//report/package/sourcefile/@name"));
-		assertEquals("11",
-				support.findStr(doc, "//report/package/sourcefile/line[1]/@nr"));
-		assertEquals("N", support.findStr(doc,
-				"//report/package/sourcefile/line[1]/@status"));
-		assertEquals("13",
-				support.findStr(doc, "//report/package/sourcefile/line[2]/@nr"));
-		assertEquals("P", support.findStr(doc,
-				"//report/package/sourcefile/line[2]/@status"));
-		assertEquals("14",
-				support.findStr(doc, "//report/package/sourcefile/line[3]/@nr"));
-		assertEquals("F", support.findStr(doc,
-				"//report/package/sourcefile/line[3]/@status"));
+		assertEquals("12",
+				support.findStr(doc, "//report/package/sourcefile/line/@nr"));
+		assertEquals("1",
+				support.findStr(doc, "//report/package/sourcefile/line/@mi"));
+		assertEquals("2",
+				support.findStr(doc, "//report/package/sourcefile/line/@ci"));
+		assertEquals("3",
+				support.findStr(doc, "//report/package/sourcefile/line/@mb"));
+		assertEquals("4",
+				support.findStr(doc, "//report/package/sourcefile/line/@cb"));
 	}
 
 	private Document getDocument() throws SAXException, IOException,

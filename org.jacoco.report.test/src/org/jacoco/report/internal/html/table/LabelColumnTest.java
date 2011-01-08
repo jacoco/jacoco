@@ -23,9 +23,6 @@ import org.jacoco.report.html.HTMLDocument;
 import org.jacoco.report.html.HTMLElement;
 import org.jacoco.report.html.HTMLSupport;
 import org.jacoco.report.internal.html.resources.Resources;
-import org.jacoco.report.internal.html.table.IColumnRenderer;
-import org.jacoco.report.internal.html.table.ITableItem;
-import org.jacoco.report.internal.html.table.LabelColumn;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -78,8 +75,7 @@ public class LabelColumnTest {
 
 	@Test
 	public void testFooter() throws Exception {
-		column.footer(td,
-				new CoverageNodeImpl(ElementType.GROUP, "Foo", false),
+		column.footer(td, new CoverageNodeImpl(ElementType.GROUP, "Foo"),
 				resources, root);
 		doc.close();
 		final Document doc = support.parse(output.getFile("Test.html"));
@@ -129,8 +125,7 @@ public class LabelColumnTest {
 	}
 
 	private ITableItem createItem(final String name, final String link) {
-		final ICoverageNode node = new CoverageNodeImpl(ElementType.GROUP,
-				name, false);
+		final ICoverageNode node = new CoverageNodeImpl(ElementType.GROUP, name);
 		return new ITableItem() {
 			public String getLinkLabel() {
 				return name;

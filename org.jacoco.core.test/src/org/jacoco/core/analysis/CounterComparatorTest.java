@@ -118,7 +118,7 @@ public class CounterComparatorTest {
 
 	private static final class MockBlockData extends CoverageNodeImpl {
 		MockBlockData(int total) {
-			super(GROUP, "mock", false);
+			super(GROUP, "mock");
 			instructionCounter = CounterImpl.getInstance(total, 0);
 		}
 	}

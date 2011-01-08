@@ -9,11 +9,12 @@
  *    Marc R. Hoffmann - initial API and implementation
  *    
  *******************************************************************************/
-package org.jacoco.core.internal.analysis;
+package org.jacoco.core.analysis;
 
 import static org.junit.Assert.assertEquals;
 
 import org.jacoco.core.analysis.CounterImpl;
+import org.jacoco.core.analysis.SourceNodeImpl;
 import org.jacoco.core.analysis.ICoverageNode.ElementType;
 import org.jacoco.core.analysis.ISourceNode;
 import org.junit.Test;
