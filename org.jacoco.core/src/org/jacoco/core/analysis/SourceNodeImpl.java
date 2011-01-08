@@ -40,26 +40,19 @@ public class SourceNodeImpl extends CoverageNodeImpl implements ISourceNode {
 	}
 
 	/**
-	 * Create a new source node implementation instance with the given line
-	 * range. This is a optimization to pre-allocate the internal buffer with
-	 * the correct size.
+	 * Make sure that the internal buffer can keep lines from first to last.
+	 * While the buffer is also incremented automatically, this method allows
+	 * optimization in case the total range in known in advance.
 	 * 
-	 * @param elementType
-	 *            element type
-	 * @param name
-	 *            name of the element
-	 * @param firstLine
-	 *            first line number
-	 * @param lastLine
-	 *            last line number
+	 * @param first
+	 *            first line number or {@link ISourceNode#UNKNOWN_LINE}
+	 * @param last
+	 *            last line number or {@link ISourceNode#UNKNOWN_LINE}
 	 */
-	public SourceNodeImpl(final ElementType elementType, final String name,
-			final int firstLine, final int lastLine) {
-		this(elementType, name);
-		ensureCapacity(firstLine, lastLine);
-	}
-
-	private void ensureCapacity(final int first, final int last) {
+	public void ensureCapacity(final int first, final int last) {
+		if (first == UNKNOWN_LINE || last == UNKNOWN_LINE) {
+			return;
+		}
 		if (lines == null) {
 			offset = first;
 			lines = new LineImpl[last - first + 1];
@@ -92,7 +85,7 @@ public class SourceNodeImpl extends CoverageNodeImpl implements ISourceNode {
 		methodCounter = methodCounter.increment(child.getMethodCounter());
 		classCounter = classCounter.increment(child.getClassCounter());
 		final int firstLine = child.getFirstLine();
-		if (firstLine != -1) {
+		if (firstLine != UNKNOWN_LINE) {
 			final int lastLine = child.getLastLine();
 			ensureCapacity(firstLine, lastLine);
 			for (int i = firstLine; i <= lastLine; i++) {

@@ -13,10 +13,7 @@ package org.jacoco.core.analysis;
 
 import static org.junit.Assert.assertEquals;
 
-import org.jacoco.core.analysis.CounterImpl;
-import org.jacoco.core.analysis.SourceNodeImpl;
 import org.jacoco.core.analysis.ICoverageNode.ElementType;
-import org.jacoco.core.analysis.ISourceNode;
 import org.junit.Test;
 
 /**
@@ -28,26 +25,13 @@ import org.junit.Test;
 public class SourceNodeImplTest {
 
 	@Test
-	public void testInit1() {
+	public void testInit() {
 		final SourceNodeImpl node = new SourceNodeImpl(ElementType.CLASS, "Foo");
 		assertEquals(ElementType.CLASS, node.getElementType());
 		assertEquals("Foo", node.getName());
 		assertEquals(ISourceNode.UNKNOWN_LINE, node.getFirstLine());
 		assertEquals(ISourceNode.UNKNOWN_LINE, node.getLastLine());
 		assertEquals(LineImpl.EMPTY, node.getLine(123));
-	}
-
-	@Test
-	public void testInit2() {
-		final SourceNodeImpl node = new SourceNodeImpl(ElementType.CLASS,
-				"Foo", 10, 15);
-		assertEquals(ElementType.CLASS, node.getElementType());
-		assertEquals("Foo", node.getName());
-		assertEquals(10, node.getFirstLine());
-		assertEquals(15, node.getLastLine());
-		assertEquals(LineImpl.EMPTY, node.getLine(7));
-		assertEquals(LineImpl.EMPTY, node.getLine(10));
-		assertEquals(LineImpl.EMPTY, node.getLine(17));
 	}
 
 	@Test

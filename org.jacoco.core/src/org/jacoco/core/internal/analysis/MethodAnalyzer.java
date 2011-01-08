@@ -16,6 +16,7 @@ import java.util.List;
 
 import org.jacoco.core.analysis.CounterImpl;
 import org.jacoco.core.analysis.ICounter;
+import org.jacoco.core.analysis.ISourceNode;
 import org.jacoco.core.analysis.MethodCoverage;
 import org.jacoco.core.internal.flow.IMethodProbesVisitor;
 import org.jacoco.core.internal.flow.Instruction;
@@ -37,7 +38,11 @@ public class MethodAnalyzer implements IMethodProbesVisitor {
 
 	private final MethodCoverage coverage;
 
-	private int currentLine = MethodCoverage.UNKNOWN_LINE;
+	private int currentLine = ISourceNode.UNKNOWN_LINE;
+
+	private int firstLine = ISourceNode.UNKNOWN_LINE;
+
+	private int lastLine = ISourceNode.UNKNOWN_LINE;
 
 	private Label currentLabel = null;
 
@@ -92,6 +97,12 @@ public class MethodAnalyzer implements IMethodProbesVisitor {
 
 	public void visitLineNumber(final int line, final Label start) {
 		currentLine = line;
+		if (firstLine > line) {
+			firstLine = line;
+		}
+		if (lastLine < line || lastLine == ISourceNode.UNKNOWN_LINE) {
+			lastLine = line;
+		}
 	}
 
 	private void visitInsn() {
@@ -237,6 +248,7 @@ public class MethodAnalyzer implements IMethodProbesVisitor {
 			p.setCovered();
 		}
 		// Report result:
+		coverage.ensureCapacity(firstLine, lastLine);
 		for (final Instruction i : instructions) {
 			final int total = i.getBranches();
 			final int covered = i.getCoveredBranches();
