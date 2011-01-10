@@ -1,0 +1,223 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+   Copyright (c) 2009, 2010 Mountainminds GmbH & Co. KG and Contributors
+   All rights reserved. This program and the accompanying materials
+   are made available under the terms of the Eclipse Public License v1.0
+   which accompanies this distribution, and is available at
+   http://www.eclipse.org/legal/epl-v10.html
+
+   Contributors:
+      Evgeny Mandrikov - initial API and implementation
+-->
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <parent>
+    <groupId>org.jacoco</groupId>
+    <artifactId>org.jacoco.build</artifactId>
+    <version>0.5.0-SNAPSHOT</version>
+    <relativePath>../org.jacoco.build</relativePath>
+  </parent>
+
+  <artifactId>org.jacoco.doc</artifactId>
+  <packaging>pom</packaging>
+
+  <name>JaCoCo :: Documentation</name>
+  <description>JaCoCo Standalone Distribution</description>
+
+  <properties>
+    <qualified.bundle.version>${project.version}</qualified.bundle.version>
+    <copyright.years>${project.inceptionYear} - 2010</copyright.years>
+  </properties>
+
+  <dependencies>
+    <dependency>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>org.jacoco.core</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>org.jacoco.report</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>org.jacoco.agent</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>org.jacoco.ant</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>org.jacoco.ant-nodeps</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>org.jacoco.agent.rt</artifactId>
+      <version>${project.version}</version>
+      <classifier>all</classifier>
+    </dependency>
+    <dependency>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>org.jacoco.examples</artifactId>
+      <version>${project.version}</version>
+      <type>zip</type>
+    </dependency>
+  </dependencies>
+
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-antrun-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>coverage-reports</id>
+            <phase>package</phase>
+            <goals>
+              <goal>run</goal>
+            </goals>
+            <configuration>
+              <target>
+                <typedef resource="org/jacoco/ant/antlib.xml"/>
+                <echo message="Coverage report"/>
+                <report>
+                  <executiondata>
+                    <fileset dir="../org.jacoco.agent.test/target" includes="jacoco.exec"/>
+                    <fileset dir="../org.jacoco.agent.rt.test/target" includes="jacoco.exec"/>
+                    <fileset dir="../org.jacoco.ant.test/target" includes="jacoco.exec"/>
+                    <fileset dir="../org.jacoco.core.test/target" includes="jacoco.exec"/>
+                    <fileset dir="../org.jacoco.report.test/target" includes="jacoco.exec"/>
+                  </executiondata>
+                  <structure name="JaCoCo">
+                    <group name="org.jacoco.agent">
+                      <classfiles>
+                        <!-- Process class files only, ignore jacocoagent.jar -->
+                        <fileset dir="../org.jacoco.agent/target/classes" includes="**/*.class"/>
+                      </classfiles>
+                      <sourcefiles>
+                        <fileset dir="../org.jacoco.agent/src"/>
+                      </sourcefiles>
+                    </group>
+                    <group name="org.jacoco.agent.rt">
+                      <classfiles>
+                        <fileset dir="../org.jacoco.agent.rt/target/classes"/>
+                      </classfiles>
+                      <sourcefiles>
+                        <fileset dir="../org.jacoco.agent.rt/src"/>
+                      </sourcefiles>
+                    </group>
+                    <group name="org.jacoco.ant">
+                      <classfiles>
+                        <fileset dir="../org.jacoco.ant/target/classes"/>
+                      </classfiles>
+                      <sourcefiles>
+                        <fileset dir="../org.jacoco.ant/src"/>
+                      </sourcefiles>
+                    </group>
+                    <group name="org.jacoco.core">
+                      <classfiles>
+                        <fileset dir="../org.jacoco.core/target/classes"/>
+                      </classfiles>
+                      <sourcefiles>
+                        <fileset dir="../org.jacoco.core/src"/>
+                      </sourcefiles>
+                    </group>
+                    <group name="org.jacoco.report">
+                      <classfiles>
+                        <fileset dir="../org.jacoco.report/target/classes"/>
+                      </classfiles>
+                      <sourcefiles>
+                        <fileset dir="../org.jacoco.report/src"/>
+                      </sourcefiles>
+                    </group>
+                  </structure>
+                  <html destdir="${project.build.directory}/coverage"
+                        footer="Code Coverage Report for JaCoCo ${project.version}"
+                        locale="en"/>
+                  <csv destfile="${project.build.directory}/coverage/coverage.csv"/>
+                  <xml destfile="${project.build.directory}/coverage/coverage.xml"/>
+                </report>
+              </target>
+            </configuration>
+          </execution>
+        </executions>
+        <dependencies>
+          <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>org.jacoco.ant</artifactId>
+            <version>${project.version}</version>
+          </dependency>
+        </dependencies>
+      </plugin>
+
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-assembly-plugin</artifactId>
+        <executions>
+          <execution>
+            <phase>package</phase>
+            <goals>
+              <goal>single</goal>
+            </goals>
+            <configuration>
+              <appendAssemblyId>false</appendAssemblyId>
+              <descriptors>
+                <descriptor>assembly.xml</descriptor>
+              </descriptors>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+  </build>
+
+  <profiles>
+    <profile>
+      <id>release</id>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-javadoc-plugin</artifactId>
+            <executions>
+              <execution>
+                <id>javadoc-aggregate</id>
+                <phase>package</phase>
+                <goals>
+                  <goal>javadoc</goal>
+                </goals>
+                <configuration>
+                  <reportOutputDirectory>${project.build.directory}/apidocs</reportOutputDirectory>
+                  <includeDependencySources>true</includeDependencySources>
+                  <excludePackageNames>*.internal,org.jacoco.ant,org.jacoco.agent.rt</excludePackageNames>
+                  <dependencySourceExcludes>
+                    <dependencySourceExclude>asm:*</dependencySourceExclude>
+                  </dependencySourceExcludes>
+                  <doctitle>JaCoCo ${project.version} API</doctitle>
+                  <use>true</use>
+                  <version>false</version>
+                  <groups>
+                    <!-- Note: using org.jacoco.core.* for packages would omit the org.jacoco.core package but using org.jacoco* will include it. -->
+                    <group>
+                      <title>Core</title>
+                      <packages>org.jacoco.core*</packages>
+                    </group>
+                    <group>
+                      <title>Report</title>
+                      <packages>org.jacoco.report*</packages>
+                    </group>
+                    <group>
+                      <title>Agent</title>
+                      <packages>org.jacoco.agent*</packages>
+                    </group>
+                  </groups>
+                </configuration>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+  </profiles>
+</project>

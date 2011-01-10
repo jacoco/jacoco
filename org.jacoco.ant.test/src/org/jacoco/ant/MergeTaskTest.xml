@@ -46,7 +46,7 @@
 	
 	<target name="testMergeMultipleFiles">
 		<jacoco:merge destfile="${exec.file}">
-			<fileset dir="data" includes="*.exec"/>
+			<fileset dir="${basedir}/data" includes="*.exec"/>
 		</jacoco:merge>
 		
 		<au:assertLogContains text="2 files merged"/>
@@ -56,14 +56,14 @@
 	<target name="testMergeBadFiles">
 		<au:expectfailure expectedMessage="Unable to read sample.bad">
 		<jacoco:merge destfile="${exec.file}">
-			<fileset dir="data" includes="sample.bad"/>
+			<fileset dir="${basedir}/data" includes="sample.bad"/>
 		</jacoco:merge>
 		</au:expectfailure>
 	</target>
 	
 	<target name="testMergeDirecotry">
 		<jacoco:merge destfile="${exec.file}">
-			<dirset dir="data"/>
+			<dirset dir="${basedir}/data"/>
 		</jacoco:merge>
 
 		<au:assertFileExists file="${exec.file}"/>
