@@ -25,7 +25,7 @@ import java.net.URL;
  * @author Marc R. Hoffmann
  * @version $qualified.bundle.version$
  */
-public class AgentJar {
+public final class AgentJar {
 
 	/**
 	 * Name of the agent JAR file resource within this bundle.

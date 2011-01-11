@@ -84,7 +84,7 @@ public final class InstrSupport {
 		} else if (value >= Short.MIN_VALUE && value <= Short.MAX_VALUE) {
 			mv.visitIntInsn(Opcodes.SIPUSH, value);
 		} else {
-			mv.visitLdcInsn(new Integer(value));
+			mv.visitLdcInsn(Integer.valueOf(value));
 		}
 	}
 

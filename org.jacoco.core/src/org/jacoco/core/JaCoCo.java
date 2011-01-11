@@ -21,7 +21,7 @@ import java.util.Properties;
  * @author Marc R. Hoffmann
  * @version $qualified.bundle.version$
  */
-public class JaCoCo {
+public final class JaCoCo {
 
 	/** Qualified build version of the JaCoCo core library. */
 	public static final String VERSION;

@@ -49,7 +49,7 @@ public class DumpTask extends Task {
 	 * @param destfile
 	 *            Location to write execution data to
 	 */
-	public void setDestFile(final File destfile) {
+	public void setDestfile(final File destfile) {
 		this.destfile = destfile;
 	}
 

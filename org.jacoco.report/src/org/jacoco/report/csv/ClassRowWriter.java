@@ -27,7 +27,7 @@ import org.jacoco.report.ILanguageNames;
  */
 class ClassRowWriter {
 
-	private static CounterEntity[] COUNTERS = { CounterEntity.METHOD,
+	private static final CounterEntity[] COUNTERS = { CounterEntity.METHOD,
 			CounterEntity.LINE, CounterEntity.INSTRUCTION, CounterEntity.BRANCH };
 
 	private final DelimitedWriter writer;

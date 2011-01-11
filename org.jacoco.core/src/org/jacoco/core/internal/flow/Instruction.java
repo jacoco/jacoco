@@ -66,10 +66,8 @@ public class Instruction {
 	 * branch.
 	 */
 	public void setCovered() {
-		if (coveredBranches == 0) {
-			if (predecessor != null) {
-				predecessor.setCovered();
-			}
+		if (coveredBranches == 0 && predecessor != null) {
+			predecessor.setCovered();
 		}
 		coveredBranches++;
 	}

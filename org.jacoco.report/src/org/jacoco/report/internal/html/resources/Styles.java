@@ -17,7 +17,7 @@ package org.jacoco.report.internal.html.resources;
  * @author Marc R. Hoffmann
  * @version $qualified.bundle.version$
  */
-public class Styles {
+public final class Styles {
 
 	/** Breadcrumb bar */
 	public static final String BREADCRUMB = "breadcrumb";
