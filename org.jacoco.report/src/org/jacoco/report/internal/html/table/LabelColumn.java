@@ -29,7 +29,7 @@ import org.jacoco.report.internal.html.resources.Resources;
  */
 public class LabelColumn implements IColumnRenderer {
 
-	private static final Comparator<ITableItem> comparator = new Comparator<ITableItem>() {
+	private static final Comparator<ITableItem> COMPARATOR = new Comparator<ITableItem>() {
 		public int compare(final ITableItem i1, final ITableItem i2) {
 			return i1.getLinkLabel().toLowerCase()
 					.compareTo(i2.getLinkLabel().toLowerCase());
@@ -54,7 +54,7 @@ public class LabelColumn implements IColumnRenderer {
 	}
 
 	public Comparator<ITableItem> getComparator() {
-		return comparator;
+		return COMPARATOR;
 	}
 
 }
