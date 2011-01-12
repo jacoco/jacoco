@@ -46,23 +46,19 @@ public class RemoteControlWriter extends ExecutionDataWriter implements
 	/**
 	 * Sends a confirmation that a commands has been successfully executed and
 	 * the response is completed.
+	 * 
+	 * @throws IOException
+	 *             in case of problems with the remote connection
 	 */
-	public void sendCmdOk() {
-		try {
-			out.writeByte(RemoteControlWriter.BLOCK_CMDOK);
-		} catch (final IOException e) {
-			throw new RuntimeException(e);
-		}
+	public void sendCmdOk() throws IOException {
+		out.writeByte(RemoteControlWriter.BLOCK_CMDOK);
 	}
 
-	public void visitDumpCommand(final boolean dump, final boolean reset) {
-		try {
-			out.writeByte(RemoteControlWriter.BLOCK_CMDDUMP);
-			out.writeBoolean(dump);
-			out.writeBoolean(reset);
-		} catch (final IOException e) {
-			throw new RuntimeException(e);
-		}
+	public void visitDumpCommand(final boolean dump, final boolean reset)
+			throws IOException {
+		out.writeByte(RemoteControlWriter.BLOCK_CMDDUMP);
+		out.writeBoolean(dump);
+		out.writeBoolean(reset);
 	}
 
 }

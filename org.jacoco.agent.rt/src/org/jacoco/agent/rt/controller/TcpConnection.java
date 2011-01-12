@@ -94,7 +94,8 @@ class TcpConnection implements IRemoteCommandVisitor {
 
 	// === IRemoteCommandVisitor ===
 
-	public void visitDumpCommand(boolean dump, boolean reset) {
+	public void visitDumpCommand(boolean dump, boolean reset)
+			throws IOException {
 		if (dump) {
 			runtime.collect(writer, writer, reset);
 		} else {

@@ -11,6 +11,8 @@
  *******************************************************************************/
 package org.jacoco.core.runtime;
 
+import java.io.IOException;
+
 /**
  * Interface for remote commands to a coverage runtime.
  * 
@@ -26,7 +28,10 @@ public interface IRemoteCommandVisitor {
 	 *            <code>true</code> if the dump should be executed
 	 * @param reset
 	 *            <code>true</code> if the reset should be executed
+	 * @throws IOException
+	 *             in case of problems with the remote connection
 	 */
-	public void visitDumpCommand(final boolean dump, final boolean reset);
+	public void visitDumpCommand(final boolean dump, final boolean reset)
+			throws IOException;
 
 }
