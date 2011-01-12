@@ -21,6 +21,9 @@ import org.jacoco.core.data.SessionInfo;
 import org.jacoco.report.IReportFormatter;
 import org.jacoco.report.IReportVisitor;
 import org.jacoco.report.ISingleReportOutput;
+import org.jacoco.report.internal.xml.XMLDocument;
+import org.jacoco.report.internal.xml.XMLElement;
+import org.jacoco.report.internal.xml.XMLReportNodeHandler;
 
 /**
  * Report formatter that creates a single XML file for a coverage session

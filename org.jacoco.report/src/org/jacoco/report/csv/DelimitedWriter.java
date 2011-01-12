@@ -34,7 +34,7 @@ import java.io.Writer;
  * @author Brock Janiczak
  * @version $qualified.bundle.version$
  */
-public class DelimitedWriter {
+class DelimitedWriter {
 	private static final String QUOTE = "\"";
 	private static final String ESCAPED_QUOTE = "\"\"";
 

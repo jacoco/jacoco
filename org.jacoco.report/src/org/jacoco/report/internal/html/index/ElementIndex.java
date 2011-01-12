@@ -15,7 +15,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.jacoco.report.ReportOutputFolder;
-import org.jacoco.report.html.ILinkable;
+import org.jacoco.report.internal.html.ILinkable;
 
 /**
  * An index over all report pages that allows queries according to certain

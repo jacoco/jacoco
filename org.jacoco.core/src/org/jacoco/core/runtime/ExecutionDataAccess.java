@@ -12,7 +12,7 @@
 package org.jacoco.core.runtime;
 
 import org.jacoco.core.data.ExecutionDataStore;
-import org.jacoco.core.instr.InstrSupport;
+import org.jacoco.core.internal.instr.InstrSupport;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
 

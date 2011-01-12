@@ -12,7 +12,7 @@
 package org.jacoco.report.internal.html.table;
 
 import org.jacoco.core.analysis.ICoverageNode;
-import org.jacoco.report.html.ILinkable;
+import org.jacoco.report.internal.html.ILinkable;
 
 /**
  * Interface for a item (row) in a coverage data table.

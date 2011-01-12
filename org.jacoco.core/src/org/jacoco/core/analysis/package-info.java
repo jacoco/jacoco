@@ -12,15 +12,17 @@
 
 /**
  * <p>
- * Structures to represent coverage information in node hierarchies. Each node
- * represents a Java element like class or method. The coverage information is
- * build from {@linkplain org.jacoco.core.analysis.ICoverageVisitor structure}
- * and {@linkplain org.jacoco.core.data.IExecutionDataVisitor execution}</a>
- * information.
+ * APIs for coverage calculation and analysis. The coverage information is
+ * calculated with an {@link org.jacoco.core.analysis.Analyzer} instance from
+ * class files (target) and
+ * {@linkplain org.jacoco.core.data.IExecutionDataVisitor execution data}</a>
+ * (actual).
  * </p>
  *
  * <p>
- * A coverage analysis is represented in the following node hierarchy:
+ * The {@link org.jacoco.core.analysis.CoverageBuilder} creates a hierarchy of
+ * {@link org.jacoco.core.analysis.ICoverageNode} instances with the following
+ * {@link org.jacoco.core.analysis.ICoverageNode.ElementType types}:
  * </p>
  *
  * <pre>

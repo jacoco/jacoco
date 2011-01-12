@@ -17,7 +17,7 @@ import java.util.List;
 
 import org.jacoco.core.analysis.ICoverageNode;
 import org.jacoco.report.ReportOutputFolder;
-import org.jacoco.report.html.HTMLElement;
+import org.jacoco.report.internal.html.HTMLElement;
 import org.jacoco.report.internal.html.resources.Resources;
 
 /**

@@ -12,15 +12,8 @@
 
 /**
  * <p>
- *  Analysis and instrumentation of Java class files for code coverage. The main
- *  entry points are:
+ *  Instrumentation of Java class files for code coverage. The main entry point
+ *  is the class {@link org.jacoco.core.instr.Instrumenter}.
  * </p>
- *
- * <ul>
- *   <li>{@link org.jacoco.core.analysis.Analyzer}: Class structure information for
- *   analysis and report generation.</li>
- *   <li>{@link org.jacoco.core.instr.Instrumenter}: Classes instrumentation for
- *   tracing coverage at runtime.</li>
- * </ul>
  */
 package org.jacoco.core.instr;

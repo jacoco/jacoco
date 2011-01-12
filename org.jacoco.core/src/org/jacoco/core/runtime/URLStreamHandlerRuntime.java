@@ -18,7 +18,7 @@ import java.net.URLConnection;
 import java.net.URLStreamHandler;
 import java.util.Hashtable;
 
-import org.jacoco.core.instr.InstrSupport;
+import org.jacoco.core.internal.instr.InstrSupport;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
 

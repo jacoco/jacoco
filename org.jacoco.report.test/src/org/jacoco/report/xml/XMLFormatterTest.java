@@ -29,6 +29,7 @@ import org.jacoco.core.data.ExecutionData;
 import org.jacoco.core.data.SessionInfo;
 import org.jacoco.report.MemorySingleReportOutput;
 import org.jacoco.report.ReportStructureTestDriver;
+import org.jacoco.report.internal.xml.XMLSupport;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
