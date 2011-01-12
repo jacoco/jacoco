@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <!-- 
-   Copyright (c) 2009, 2010 Mountainminds GmbH & Co. KG and Contributors
+   Copyright (c) 2009, 2011 Mountainminds GmbH & Co. KG and Contributors
    All rights reserved. This program and the accompanying materials
    are made available under the terms of the Eclipse Public License v1.0
    which accompanies this distribution, and is available at
@@ -34,7 +34,7 @@
 	<property name="result.tmp.dir" location="${result.dir}/tmp"/>
 	
 	<property name="jacoco.home.url" value="http://www.eclemma.org/jacoco"/>
-	<property name="copyright.years" value="2009, 2010"/>
+	<property name="copyright.years" value="2009, 2011"/>
 	
     <property name="sign.keystore.alias" value="mtnminds"/>
 	<property name="sign.tsa.url" value="https://timestamp.geotrust.com/tsa"/>
