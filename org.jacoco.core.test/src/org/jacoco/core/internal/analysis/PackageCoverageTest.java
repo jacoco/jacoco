@@ -9,17 +9,20 @@
  *    Marc R. Hoffmann - initial API and implementation
  *    
  *******************************************************************************/
-package org.jacoco.core.analysis;
+package org.jacoco.core.internal.analysis;
 
 import static org.junit.Assert.assertEquals;
 
 import java.util.Collection;
 import java.util.Collections;
 
+import org.jacoco.core.analysis.IClassCoverage;
+import org.jacoco.core.analysis.ICoverageNode;
+import org.jacoco.core.analysis.ISourceFileCoverage;
 import org.junit.Test;
 
 /**
- * Unit test for {@link PackageCoverage}.
+ * Unit test for {@link PackageCoverageImpl}.
  * 
  * @author Marc R. Hoffmann
  * @version $qualified.bundle.version$
@@ -28,14 +31,15 @@ public class PackageCoverageTest {
 
 	@Test
 	public void testProperties() {
-		Collection<ClassCoverage> classes = Collections
-				.singleton(new ClassCoverage("org/jacoco/test/Sample", 0, null,
-						"java/lang/Object", new String[0]));
-		Collection<SourceFileCoverage> sourceFiles = Collections
-				.singleton(new SourceFileCoverage("Sample.java",
-						"org/jacoco/test/Sample"));
-		PackageCoverage data = new PackageCoverage("org/jacoco/test", classes,
-				sourceFiles);
+		Collection<IClassCoverage> classes = Collections
+				.singleton((IClassCoverage) new ClassCoverageImpl(
+						"org/jacoco/test/Sample", 0, null, "java/lang/Object",
+						new String[0]));
+		Collection<ISourceFileCoverage> sourceFiles = Collections
+				.singleton((ISourceFileCoverage) new SourceFileCoverageImpl(
+						"Sample.java", "org/jacoco/test/Sample"));
+		PackageCoverageImpl data = new PackageCoverageImpl("org/jacoco/test",
+				classes, sourceFiles);
 		assertEquals(ICoverageNode.ElementType.PACKAGE, data.getElementType());
 		assertEquals("org/jacoco/test", data.getName());
 		assertEquals(classes, data.getClasses());
@@ -45,7 +49,7 @@ public class PackageCoverageTest {
 	@Test
 	public void testCountersWithSources() {
 		// Classes with source reference will not considered for counters:
-		final ClassCoverage classnode = new ClassCoverage(
+		final ClassCoverageImpl classnode = new ClassCoverageImpl(
 				"org/jacoco/test/Sample", 0, null, "java/lang/Object",
 				new String[0]) {
 			{
@@ -57,7 +61,7 @@ public class PackageCoverageTest {
 		};
 		classnode.setSourceFileName("Sample.java");
 		// Only source files will be considered for counters:
-		final SourceFileCoverage sourceFile = new SourceFileCoverage(
+		final ISourceFileCoverage sourceFile = new SourceFileCoverageImpl(
 				"Sample.java", "org/jacoco/test/Sample") {
 			{
 				classCounter = CounterImpl.getInstance(1, 0);
@@ -66,8 +70,8 @@ public class PackageCoverageTest {
 				instructionCounter = CounterImpl.getInstance(4, 0);
 			}
 		};
-		PackageCoverage data = new PackageCoverage("org/jacoco/test",
-				Collections.singleton(classnode),
+		PackageCoverageImpl data = new PackageCoverageImpl("org/jacoco/test",
+				Collections.singleton((IClassCoverage) classnode),
 				Collections.singleton(sourceFile));
 		assertEquals(CounterImpl.getInstance(1, 0), data.getClassCounter());
 		assertEquals(CounterImpl.getInstance(2, 0), data.getMethodCounter());
@@ -79,7 +83,7 @@ public class PackageCoverageTest {
 	@Test
 	public void testCountersWithoutSources() {
 		// Classes without source reference will be considered for counters:
-		final ClassCoverage classnode = new ClassCoverage(
+		final ClassCoverageImpl classnode = new ClassCoverageImpl(
 				"org/jacoco/test/Sample", 0, null, "java/lang/Object",
 				new String[0]) {
 			{
@@ -89,10 +93,10 @@ public class PackageCoverageTest {
 				instructionCounter = CounterImpl.getInstance(4, 0);
 			}
 		};
-		final Collection<SourceFileCoverage> sourceFiles = Collections
+		final Collection<ISourceFileCoverage> sourceFiles = Collections
 				.emptySet();
-		PackageCoverage data = new PackageCoverage("org/jacoco/test",
-				Collections.singleton(classnode), sourceFiles);
+		PackageCoverageImpl data = new PackageCoverageImpl("org/jacoco/test",
+				Collections.singleton((IClassCoverage) classnode), sourceFiles);
 		assertEquals(CounterImpl.getInstance(1, 0), data.getClassCounter());
 		assertEquals(CounterImpl.getInstance(2, 0), data.getMethodCounter());
 		assertEquals(CounterImpl.getInstance(3, 0), data.getBranchCounter());

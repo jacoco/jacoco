@@ -9,24 +9,27 @@
  *    Marc R. Hoffmann - initial API and implementation
  *    
  *******************************************************************************/
-package org.jacoco.core.analysis;
+package org.jacoco.core.internal.analysis;
 
 import java.util.ArrayList;
 import java.util.Collection;
 
+import org.jacoco.core.analysis.IClassCoverage;
+import org.jacoco.core.analysis.IMethodCoverage;
+
 /**
- * Coverage data of a single class.
+ * Implementation of {@link IClassCoverage}.
  * 
  * @author Marc R. Hoffmann
  * @version $qualified.bundle.version$
  */
-public class ClassCoverage extends SourceNodeImpl implements ISourceNode {
+public class ClassCoverageImpl extends SourceNodeImpl implements IClassCoverage {
 
 	private final long id;
 	private final String signature;
 	private final String superName;
 	private final String[] interfaces;
-	private final Collection<MethodCoverage> methods;
+	private final Collection<IMethodCoverage> methods;
 	private String sourceFileName;
 
 	/**
@@ -43,7 +46,7 @@ public class ClassCoverage extends SourceNodeImpl implements ISourceNode {
 	 * @param interfaces
 	 *            vm names of interfaces of this class
 	 */
-	public ClassCoverage(final String name, final long id,
+	public ClassCoverageImpl(final String name, final long id,
 			final String signature, final String superName,
 			final String[] interfaces) {
 		super(ElementType.CLASS, name);
@@ -51,7 +54,7 @@ public class ClassCoverage extends SourceNodeImpl implements ISourceNode {
 		this.signature = signature;
 		this.superName = superName;
 		this.interfaces = interfaces;
-		this.methods = new ArrayList<MethodCoverage>();
+		this.methods = new ArrayList<IMethodCoverage>();
 		this.classCounter = CounterImpl.COUNTER_1_0;
 	}
 
@@ -61,7 +64,7 @@ public class ClassCoverage extends SourceNodeImpl implements ISourceNode {
 	 * @param method
 	 *            method data to add
 	 */
-	public void addMethod(final MethodCoverage method) {
+	public void addMethod(final IMethodCoverage method) {
 		this.methods.add(method);
 		increment(method);
 		// As class is considered as covered when at least one method is
@@ -81,69 +84,34 @@ public class ClassCoverage extends SourceNodeImpl implements ISourceNode {
 		this.sourceFileName = sourceFileName;
 	}
 
-	/**
-	 * Returns the identifier for this class which is the CRC64 signature of the
-	 * class definition.
-	 * 
-	 * @return class identifier
-	 */
+	// === IClassCoverage implementation ===
+
 	public long getId() {
 		return id;
 	}
 
-	/**
-	 * Returns the VM signature of the class.
-	 * 
-	 * @return VM signature of the class (may be <code>null</code>)
-	 */
 	public String getSignature() {
 		return signature;
 	}
 
-	/**
-	 * Returns the VM name of the superclass.
-	 * 
-	 * @return VM name of the super class (may be <code>null</code>, i.e.
-	 *         <code>java/lang/Object</code>)
-	 */
 	public String getSuperName() {
 		return superName;
 	}
 
-	/**
-	 * Returns the VM names of implemented/extended interfaces
-	 * 
-	 * @return VM names of implemented/extended interfaces
-	 */
 	public String[] getInterfaceNames() {
 		return interfaces;
 	}
 
-	/**
-	 * Returns the VM name of the package this class belongs to.
-	 * 
-	 * @return VM name of the package
-	 */
 	public String getPackageName() {
 		final int pos = getName().lastIndexOf('/');
 		return pos == -1 ? "" : getName().substring(0, pos);
 	}
 
-	/**
-	 * Returns the optional name of the corresponding source file.
-	 * 
-	 * @return name of the corresponding source file
-	 */
 	public String getSourceFileName() {
 		return sourceFileName;
 	}
 
-	/**
-	 * Returns the methods included in this class.
-	 * 
-	 * @return methods of this class
-	 */
-	public Collection<MethodCoverage> getMethods() {
+	public Collection<IMethodCoverage> getMethods() {
 		return methods;
 	}
 

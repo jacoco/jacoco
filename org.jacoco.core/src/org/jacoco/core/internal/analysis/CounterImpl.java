@@ -9,7 +9,9 @@
  *    Marc R. Hoffmann - initial API and implementation
  *    
  *******************************************************************************/
-package org.jacoco.core.analysis;
+package org.jacoco.core.internal.analysis;
+
+import org.jacoco.core.analysis.ICounter;
 
 /**
  * {@link ICounter} implementations. Implementing a factory pattern allows to

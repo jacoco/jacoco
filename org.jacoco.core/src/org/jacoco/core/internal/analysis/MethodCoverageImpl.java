@@ -9,15 +9,18 @@
  *    Marc R. Hoffmann - initial API and implementation
  *    
  *******************************************************************************/
-package org.jacoco.core.analysis;
+package org.jacoco.core.internal.analysis;
+
+import org.jacoco.core.analysis.ICounter;
+import org.jacoco.core.analysis.IMethodCoverage;
 
 /**
- * Coverage data of a single method.
+ * Implementation of {@link IMethodCoverage}.
  * 
  * @author Marc R. Hoffmann
  * @version $qualified.bundle.version$
  */
-public class MethodCoverage extends SourceNodeImpl {
+public class MethodCoverageImpl extends SourceNodeImpl implements IMethodCoverage {
 
 	private final String desc;
 
@@ -33,7 +36,7 @@ public class MethodCoverage extends SourceNodeImpl {
 	 * @param signature
 	 *            generic signature or <code>null</code>
 	 */
-	public MethodCoverage(final String name, final String desc,
+	public MethodCoverageImpl(final String name, final String desc,
 			final String signature) {
 		super(ElementType.METHOD, name);
 		this.desc = desc;
@@ -51,20 +54,12 @@ public class MethodCoverage extends SourceNodeImpl {
 		}
 	}
 
-	/**
-	 * Returns the parameter description of the method.
-	 * 
-	 * @return parameter description
-	 */
+	// === IMethodCoverage implementation ===
+
 	public String getDesc() {
 		return desc;
 	}
 
-	/**
-	 * Returns the generic signature of the method if defined.
-	 * 
-	 * @return generic signature or <code>null</code>
-	 */
 	public String getSignature() {
 		return signature;
 	}

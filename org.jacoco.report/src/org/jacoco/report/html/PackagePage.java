@@ -17,10 +17,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.jacoco.core.analysis.ClassCoverage;
+import org.jacoco.core.analysis.IClassCoverage;
 import org.jacoco.core.analysis.ICoverageNode;
 import org.jacoco.core.analysis.ICoverageNode.ElementType;
-import org.jacoco.core.analysis.SourceFileCoverage;
+import org.jacoco.core.analysis.ISourceFileCoverage;
 import org.jacoco.report.IReportVisitor;
 import org.jacoco.report.ISourceFileLocator;
 import org.jacoco.report.ReportOutputFolder;
@@ -57,11 +57,11 @@ public class PackagePage extends NodePage {
 		switch (type) {
 		case SOURCEFILE:
 			final SourceFilePage sourcePage = new SourceFilePage(
-					(SourceFileCoverage) node, this, folder, context);
+					(ISourceFileCoverage) node, this, folder, context);
 			sourceFiles.put(node.getName(), sourcePage);
 			return sourcePage;
 		case CLASS:
-			final ClassPage classPage = new ClassPage((ClassCoverage) node,
+			final ClassPage classPage = new ClassPage((IClassCoverage) node,
 					this, sourceFiles, folder, context);
 			classes.add(classPage);
 			return classPage;

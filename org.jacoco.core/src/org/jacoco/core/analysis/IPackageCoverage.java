@@ -11,22 +11,30 @@
  *******************************************************************************/
 package org.jacoco.core.analysis;
 
+import java.util.Collection;
 
 /**
- * Interface for coverage data output as a stream of {@link IClassCoverage}
- * instances.
+ * Coverage data of a Java package. The name of this data node is the package
+ * name in VM notation (slash separated). The name of the default package is the
+ * empty string.
  * 
  * @author Marc R. Hoffmann
  * @version $qualified.bundle.version$
  */
-public interface ICoverageVisitor {
+public interface IPackageCoverage extends ICoverageNode {
 
 	/**
-	 * For analyzed class coverage data is emitted to this method.
+	 * Returns all classes contained in this package.
 	 * 
-	 * @param coverage
-	 *            coverage data for a class
+	 * @return all classes
 	 */
-	public void visitCoverage(IClassCoverage coverage);
+	public Collection<IClassCoverage> getClasses();
+
+	/**
+	 * Returns all source files in this package.
+	 * 
+	 * @return all source files
+	 */
+	public Collection<ISourceFileCoverage> getSourceFiles();
 
 }

@@ -16,8 +16,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.jacoco.core.analysis.Analyzer;
-import org.jacoco.core.analysis.ClassCoverage;
 import org.jacoco.core.analysis.CoverageBuilder;
+import org.jacoco.core.analysis.IClassCoverage;
 import org.jacoco.core.analysis.ICounter;
 import org.jacoco.core.analysis.ILine;
 import org.jacoco.core.data.ExecutionDataStore;
@@ -152,7 +152,7 @@ public class CoreTutorial {
 		analyzer.analyzeClass(getTargetClass(targetName));
 
 		// Let's dump some metrics and line coverage information:
-		for (final ClassCoverage cc : coverageBuilder.getClasses()) {
+		for (final IClassCoverage cc : coverageBuilder.getClasses()) {
 			System.out.printf("Coverage of class %s%n", cc.getName());
 
 			printCounter("instructions", cc.getInstructionCounter());

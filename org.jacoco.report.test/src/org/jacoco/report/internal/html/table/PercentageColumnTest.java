@@ -17,11 +17,11 @@ import static org.junit.Assert.assertTrue;
 import java.util.Comparator;
 import java.util.Locale;
 
-import org.jacoco.core.analysis.CounterImpl;
 import org.jacoco.core.analysis.CoverageNodeImpl;
 import org.jacoco.core.analysis.ICoverageNode;
 import org.jacoco.core.analysis.ICoverageNode.CounterEntity;
 import org.jacoco.core.analysis.ICoverageNode.ElementType;
+import org.jacoco.core.internal.analysis.CounterImpl;
 import org.jacoco.report.MemoryMultiReportOutput;
 import org.jacoco.report.ReportOutputFolder;
 import org.jacoco.report.html.HTMLDocument;

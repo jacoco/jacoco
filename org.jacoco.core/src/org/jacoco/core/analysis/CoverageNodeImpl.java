@@ -13,6 +13,8 @@ package org.jacoco.core.analysis;
 
 import java.util.Collection;
 
+import org.jacoco.core.internal.analysis.CounterImpl;
+
 /**
  * Base implementation for coverage data nodes.
  * 

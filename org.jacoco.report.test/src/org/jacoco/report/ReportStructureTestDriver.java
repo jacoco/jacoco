@@ -17,15 +17,19 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
-import org.jacoco.core.analysis.BundleCoverage;
-import org.jacoco.core.analysis.ClassCoverage;
 import org.jacoco.core.analysis.CoverageNodeImpl;
+import org.jacoco.core.analysis.IClassCoverage;
 import org.jacoco.core.analysis.ICoverageNode.ElementType;
-import org.jacoco.core.analysis.MethodCoverage;
-import org.jacoco.core.analysis.PackageCoverage;
-import org.jacoco.core.analysis.SourceFileCoverage;
+import org.jacoco.core.analysis.IMethodCoverage;
+import org.jacoco.core.analysis.IPackageCoverage;
+import org.jacoco.core.analysis.ISourceFileCoverage;
 import org.jacoco.core.data.ExecutionData;
 import org.jacoco.core.data.SessionInfo;
+import org.jacoco.core.internal.analysis.BundleCoverageImpl;
+import org.jacoco.core.internal.analysis.ClassCoverageImpl;
+import org.jacoco.core.internal.analysis.MethodCoverageImpl;
+import org.jacoco.core.internal.analysis.PackageCoverageImpl;
+import org.jacoco.core.internal.analysis.SourceFileCoverageImpl;
 
 /**
  * Creates a simple hierarchy of coverage nodes and feeds it into
@@ -49,29 +53,36 @@ public class ReportStructureTestDriver {
 		}
 	};
 
-	private final MethodCoverage methodCoverage = new MethodCoverage(
-			"fooMethod", "()V", null);
+	private final IMethodCoverage methodCoverage;
 
-	private final ClassCoverage classCoverage = new ClassCoverage(
-			"org/jacoco/example/FooClass", 1001, null, "java/lang/Object",
-			new String[0]);
+	private final IClassCoverage classCoverage;
 
-	private final SourceFileCoverage sourceFileCoverage = new SourceFileCoverage(
-			"FooClass.java", "org/jacoco/example");
+	private final ISourceFileCoverage sourceFileCoverage;
 
-	private final PackageCoverage packageCoverage = new PackageCoverage(
-			"org/jacoco/example", Collections.singleton(classCoverage),
-			Collections.singleton(sourceFileCoverage));
+	private final IPackageCoverage packageCoverage;
 
-	private final BundleCoverage bundleCoverage = new BundleCoverage("bundle",
-			Collections.singleton(packageCoverage));
+	private final BundleCoverageImpl bundleCoverage;
 
-	private final CoverageNodeImpl groupCoverage = new CoverageNodeImpl(
-			ElementType.GROUP, "group");
+	private final CoverageNodeImpl groupCoverage;
 
 	public ReportStructureTestDriver() {
-		classCoverage.setSourceFileName("FooClass.java");
-		classCoverage.addMethod(methodCoverage);
+		methodCoverage = new MethodCoverageImpl("fooMethod", "()V", null);
+
+		final ClassCoverageImpl classCoverageImpl = new ClassCoverageImpl(
+				"org/jacoco/example/FooClass", 1001, null, "java/lang/Object",
+				new String[0]);
+		classCoverageImpl.setSourceFileName("FooClass.java");
+		classCoverageImpl.addMethod(methodCoverage);
+		classCoverage = classCoverageImpl;
+
+		sourceFileCoverage = new SourceFileCoverageImpl("FooClass.java",
+				"org/jacoco/example");
+		packageCoverage = new PackageCoverageImpl("org/jacoco/example",
+				Collections.singleton(classCoverage),
+				Collections.singleton(sourceFileCoverage));
+		bundleCoverage = new BundleCoverageImpl("bundle",
+				Collections.singleton(packageCoverage));
+		groupCoverage = new CoverageNodeImpl(ElementType.GROUP, "group");
 	}
 
 	public void sendGroup(IReportFormatter formatter) throws IOException {

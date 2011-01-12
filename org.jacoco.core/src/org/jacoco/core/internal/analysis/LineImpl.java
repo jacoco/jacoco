@@ -9,11 +9,13 @@
  *    Marc R. Hoffmann - initial API and implementation
  *    
  *******************************************************************************/
-package org.jacoco.core.analysis;
+package org.jacoco.core.internal.analysis;
 
+import org.jacoco.core.analysis.ICounter;
+import org.jacoco.core.analysis.ILine;
 
 /**
- * {@link ILine} implementation.
+ * Implementation of {@link ILine}.
  * 
  * @author Marc R. Hoffmann
  * @version $qualified.bundle.version$
@@ -118,7 +120,7 @@ public abstract class LineImpl implements ILine {
 	public abstract LineImpl increment(final ICounter instructions,
 			final ICounter branches);
 
-	// === ILine ===
+	// === ILine implementation ===
 
 	public byte getStatus() {
 		byte status = NO_CODE;

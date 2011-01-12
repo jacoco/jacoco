@@ -37,13 +37,13 @@ import org.apache.tools.ant.types.resources.FileResource;
 import org.apache.tools.ant.types.resources.Union;
 import org.apache.tools.ant.util.FileUtils;
 import org.jacoco.core.analysis.Analyzer;
-import org.jacoco.core.analysis.BundleCoverage;
-import org.jacoco.core.analysis.ClassCoverage;
 import org.jacoco.core.analysis.CoverageBuilder;
 import org.jacoco.core.analysis.CoverageNodeImpl;
+import org.jacoco.core.analysis.IBundleCoverage;
+import org.jacoco.core.analysis.IClassCoverage;
 import org.jacoco.core.analysis.ICoverageNode;
 import org.jacoco.core.analysis.ICoverageNode.ElementType;
-import org.jacoco.core.analysis.PackageCoverage;
+import org.jacoco.core.analysis.IPackageCoverage;
 import org.jacoco.core.data.ExecutionDataReader;
 import org.jacoco.core.data.ExecutionDataStore;
 import org.jacoco.core.data.SessionInfoStore;
@@ -461,8 +461,8 @@ public class ReportTask extends Task {
 				sessionInfoStore.getInfos(), executionDataStore.getContents());
 		final SourceFileCollection sourceFileLocator = new SourceFileCollection(
 				structure.sourcefiles);
-		if (node instanceof BundleCoverage) {
-			visitBundle(visitor, (BundleCoverage) node, sourceFileLocator);
+		if (node.getElementType() == ElementType.BUNDLE) {
+			visitBundle(visitor, (IBundleCoverage) node, sourceFileLocator);
 		} else {
 			for (final GroupElement g : structure.children) {
 				createReport(g, visitor, node);
@@ -478,8 +478,8 @@ public class ReportTask extends Task {
 		final IReportVisitor visitor = parentVisitor.visitChild(node);
 		final SourceFileCollection sourceFileLocator = new SourceFileCollection(
 				group.sourcefiles);
-		if (node instanceof BundleCoverage) {
-			visitBundle(visitor, (BundleCoverage) node, sourceFileLocator);
+		if (node.getElementType() == ElementType.BUNDLE) {
+			visitBundle(visitor, (IBundleCoverage) node, sourceFileLocator);
 		} else {
 			for (final GroupElement g : group.children) {
 				createReport(g, visitor, node);
@@ -546,12 +546,12 @@ public class ReportTask extends Task {
 	}
 
 	private void visitBundle(final IReportVisitor visitor,
-			final BundleCoverage bundledata,
+			final IBundleCoverage bundledata,
 			final SourceFileCollection sourceFileLocator) throws IOException {
 		if (!sourceFileLocator.isEmpty()) {
 			checkForMissingDebugInformation(bundledata);
 		}
-		for (final PackageCoverage p : bundledata.getPackages()) {
+		for (final IPackageCoverage p : bundledata.getPackages()) {
 			visitPackage(visitor.visitChild(p), p, sourceFileLocator);
 		}
 	}
@@ -566,17 +566,17 @@ public class ReportTask extends Task {
 	}
 
 	private static void visitPackage(final IReportVisitor visitor,
-			final PackageCoverage packagedata,
+			final IPackageCoverage packagedata,
 			final ISourceFileLocator sourceFileLocator) throws IOException {
 		visitLeafs(visitor, packagedata.getSourceFiles(), sourceFileLocator);
-		for (final ClassCoverage c : packagedata.getClasses()) {
+		for (final IClassCoverage c : packagedata.getClasses()) {
 			visitClass(visitor.visitChild(c), c, sourceFileLocator);
 		}
 		visitor.visitEnd(sourceFileLocator);
 	}
 
 	private static void visitClass(final IReportVisitor visitor,
-			final ClassCoverage classdata,
+			final IClassCoverage classdata,
 			final ISourceFileLocator sourceFileLocator) throws IOException {
 		visitLeafs(visitor, classdata.getMethods(), sourceFileLocator);
 		visitor.visitEnd(sourceFileLocator);

@@ -42,7 +42,7 @@ public class AnalyzerTest {
 
 	private class EmptyStructureVisitor implements ICoverageVisitor {
 
-		public void visitCoverage(ClassCoverage coverage) {
+		public void visitCoverage(IClassCoverage coverage) {
 			final String name = coverage.getName();
 			assertTrue("Class already processed: " + name, classes.add(name));
 		}

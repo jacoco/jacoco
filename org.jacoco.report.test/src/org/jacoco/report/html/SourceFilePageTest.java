@@ -21,7 +21,7 @@ import java.util.Locale;
 
 import org.jacoco.core.analysis.CoverageNodeImpl;
 import org.jacoco.core.analysis.ICoverageNode.ElementType;
-import org.jacoco.core.analysis.SourceFileCoverage;
+import org.jacoco.core.internal.analysis.SourceFileCoverageImpl;
 import org.jacoco.report.DirectorySourceFileLocator;
 import org.jacoco.report.ILanguageNames;
 import org.jacoco.report.ISourceFileLocator;
@@ -102,7 +102,7 @@ public class SourceFilePageTest {
 
 	@Test(expected = IllegalStateException.class)
 	public void testVisitChild() {
-		final SourceFileCoverage node = new SourceFileCoverage(
+		final SourceFileCoverageImpl node = new SourceFileCoverageImpl(
 				"SourceFilePageTest.java", "org/jacoco/report/html");
 		final SourceFilePage page = new SourceFilePage(node, null, root,
 				context);
@@ -111,7 +111,7 @@ public class SourceFilePageTest {
 
 	@Test
 	public void testContents() throws Exception {
-		final SourceFileCoverage node = new SourceFileCoverage(
+		final SourceFileCoverageImpl node = new SourceFileCoverageImpl(
 				"SourceFilePageTest.java", "org/jacoco/report/html");
 		final SourceFilePage page = new SourceFilePage(node, null, root,
 				context);
@@ -144,7 +144,7 @@ public class SourceFilePageTest {
 
 	@Test
 	public void testNoSource() throws IOException {
-		final SourceFileCoverage node = new SourceFileCoverage(
+		final SourceFileCoverageImpl node = new SourceFileCoverageImpl(
 				"DoesNotExist.java", "org/jacoco/report/html");
 		final SourceFilePage page = new SourceFilePage(node, null, root,
 				context);

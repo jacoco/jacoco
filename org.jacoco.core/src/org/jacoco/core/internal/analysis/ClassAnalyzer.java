@@ -11,8 +11,6 @@
  *******************************************************************************/
 package org.jacoco.core.internal.analysis;
 
-import org.jacoco.core.analysis.ClassCoverage;
-import org.jacoco.core.analysis.MethodCoverage;
 import org.jacoco.core.analysis.StringPool;
 import org.jacoco.core.internal.flow.IClassProbesVisitor;
 import org.jacoco.core.internal.flow.IMethodProbesVisitor;
@@ -33,7 +31,7 @@ public class ClassAnalyzer implements IClassProbesVisitor {
 	private final boolean executionData[];
 	private final StringPool stringPool;
 
-	private ClassCoverage coverage;
+	private ClassCoverageImpl coverage;
 
 	/**
 	 * Creates a new analyzer that builds coverage data for a class.
@@ -58,14 +56,14 @@ public class ClassAnalyzer implements IClassProbesVisitor {
 	 * 
 	 * @return coverage data for this class
 	 */
-	public ClassCoverage getCoverage() {
+	public ClassCoverageImpl getCoverage() {
 		return coverage;
 	}
 
 	public void visit(final int version, final int access, final String name,
 			final String signature, final String superName,
 			final String[] interfaces) {
-		this.coverage = new ClassCoverage(stringPool.get(name), classid,
+		this.coverage = new ClassCoverageImpl(stringPool.get(name), classid,
 				stringPool.get(signature), stringPool.get(superName),
 				stringPool.get(interfaces));
 	}
@@ -88,7 +86,7 @@ public class ClassAnalyzer implements IClassProbesVisitor {
 			@Override
 			public void visitEnd() {
 				super.visitEnd();
-				final MethodCoverage methodCoverage = getCoverage();
+				final MethodCoverageImpl methodCoverage = getCoverage();
 				if (methodCoverage.getInstructionCounter().getTotalCount() > 0) {
 					// Only consider methods that actually contain code
 					coverage.addMethod(methodCoverage);

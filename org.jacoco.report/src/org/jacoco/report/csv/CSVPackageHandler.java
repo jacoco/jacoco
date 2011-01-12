@@ -15,7 +15,7 @@ import static java.lang.String.format;
 
 import java.io.IOException;
 
-import org.jacoco.core.analysis.ClassCoverage;
+import org.jacoco.core.analysis.IClassCoverage;
 import org.jacoco.core.analysis.ICoverageNode;
 import org.jacoco.core.analysis.ICoverageNode.ElementType;
 import org.jacoco.report.IReportVisitor;
@@ -47,7 +47,7 @@ class CSVPackageHandler implements IReportVisitor {
 		final ElementType type = node.getElementType();
 		switch (type) {
 		case CLASS:
-			final ClassCoverage classNode = (ClassCoverage) node;
+			final IClassCoverage classNode = (IClassCoverage) node;
 			writer.writeRow(groupName, packageName, classNode);
 			return IReportVisitor.NOP;
 		case SOURCEFILE:

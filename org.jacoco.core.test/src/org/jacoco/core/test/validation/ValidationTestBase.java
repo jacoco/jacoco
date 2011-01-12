@@ -16,14 +16,13 @@ import static org.junit.Assert.assertEquals;
 import java.util.Collection;
 
 import org.jacoco.core.analysis.Analyzer;
-import org.jacoco.core.analysis.ClassCoverage;
-import org.jacoco.core.analysis.CounterImpl;
 import org.jacoco.core.analysis.CoverageBuilder;
+import org.jacoco.core.analysis.IClassCoverage;
 import org.jacoco.core.analysis.ILine;
-import org.jacoco.core.analysis.LineImpl;
-import org.jacoco.core.analysis.SourceFileCoverage;
+import org.jacoco.core.analysis.ISourceFileCoverage;
 import org.jacoco.core.data.ExecutionDataStore;
 import org.jacoco.core.instr.Instrumenter;
+import org.jacoco.core.internal.analysis.CounterImpl;
 import org.jacoco.core.runtime.IRuntime;
 import org.jacoco.core.runtime.SystemPropertiesRuntime;
 import org.jacoco.core.test.TargetLoader;
@@ -50,9 +49,9 @@ public abstract class ValidationTestBase {
 
 	protected final Class<?> target;
 
-	protected ClassCoverage classCoverage;
+	protected IClassCoverage classCoverage;
 
-	protected SourceFileCoverage sourceCoverage;
+	protected ISourceFileCoverage sourceCoverage;
 
 	protected Source source;
 
@@ -89,10 +88,10 @@ public abstract class ValidationTestBase {
 		final CoverageBuilder builder = new CoverageBuilder();
 		final Analyzer analyzer = new Analyzer(store, builder);
 		analyzer.analyzeClass(reader);
-		final Collection<ClassCoverage> classes = builder.getClasses();
+		final Collection<IClassCoverage> classes = builder.getClasses();
 		assertEquals(1, classes.size(), 0.0);
 		classCoverage = classes.iterator().next();
-		final Collection<SourceFileCoverage> files = builder.getSourceFiles();
+		final Collection<ISourceFileCoverage> files = builder.getSourceFiles();
 		assertEquals(1, files.size(), 0.0);
 		sourceCoverage = files.iterator().next();
 	}
@@ -104,7 +103,7 @@ public abstract class ValidationTestBase {
 	protected void assertLine(final String tag, final int status,
 			final int missedBranches, final int coveredBranches) {
 		final int nr = source.getLineNumber(tag);
-		final LineImpl line = sourceCoverage.getLine(nr);
+		final ILine line = sourceCoverage.getLine(nr);
 		String msg = String.format("L%s: %s", Integer.valueOf(nr),
 				source.getLine(nr));
 		int insnStatus = ILine.NO_CODE;

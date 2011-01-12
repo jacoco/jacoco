@@ -18,11 +18,11 @@ import java.io.StringWriter;
 
 import javax.xml.parsers.ParserConfigurationException;
 
-import org.jacoco.core.analysis.CounterImpl;
 import org.jacoco.core.analysis.CoverageNodeImpl;
 import org.jacoco.core.analysis.ICoverageNode.ElementType;
-import org.jacoco.core.analysis.MethodCoverage;
-import org.jacoco.core.analysis.SourceNodeImpl;
+import org.jacoco.core.internal.analysis.CounterImpl;
+import org.jacoco.core.internal.analysis.MethodCoverageImpl;
+import org.jacoco.core.internal.analysis.SourceNodeImpl;
 import org.jacoco.report.IReportVisitor;
 import org.junit.Before;
 import org.junit.Test;
@@ -135,7 +135,7 @@ public class XMLReportNodeHandlerTest {
 						"org.jacoco.example"));
 		final IReportVisitor classHandler = packageHandler
 				.visitChild(new SourceNodeImpl(ElementType.CLASS, "Foo"));
-		MethodCoverage node = new MethodCoverage("doit", "()V", null);
+		MethodCoverageImpl node = new MethodCoverageImpl("doit", "()V", null);
 		node.increment(CounterImpl.COUNTER_1_0, CounterImpl.COUNTER_0_0, 15);
 		classHandler.visitChild(node).visitEnd(null);
 		classHandler.visitEnd(null);

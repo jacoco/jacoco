@@ -17,6 +17,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.jacoco.core.data.ExecutionDataStore;
+import org.jacoco.core.internal.analysis.BundleCoverageImpl;
+import org.jacoco.core.internal.analysis.SourceFileCoverageImpl;
 
 /**
  * Builder for hierarchical {@link ICoverageNode} structures based on execution
@@ -31,17 +33,17 @@ import org.jacoco.core.data.ExecutionDataStore;
  */
 public class CoverageBuilder implements ICoverageVisitor {
 
-	private final Map<String, ClassCoverage> classes;
+	private final Map<String, IClassCoverage> classes;
 
-	private final Map<String, SourceFileCoverage> sourcefiles;
+	private final Map<String, ISourceFileCoverage> sourcefiles;
 
 	/**
 	 * Create a new builder.
 	 * 
 	 */
 	public CoverageBuilder() {
-		this.classes = new HashMap<String, ClassCoverage>();
-		this.sourcefiles = new HashMap<String, SourceFileCoverage>();
+		this.classes = new HashMap<String, IClassCoverage>();
+		this.sourcefiles = new HashMap<String, ISourceFileCoverage>();
 	}
 
 	/**
@@ -49,7 +51,7 @@ public class CoverageBuilder implements ICoverageVisitor {
 	 * 
 	 * @return all class nodes
 	 */
-	public Collection<ClassCoverage> getClasses() {
+	public Collection<IClassCoverage> getClasses() {
 		return Collections.unmodifiableCollection(classes.values());
 	}
 
@@ -58,7 +60,7 @@ public class CoverageBuilder implements ICoverageVisitor {
 	 * 
 	 * @return all source file nodes
 	 */
-	public Collection<SourceFileCoverage> getSourceFiles() {
+	public Collection<ISourceFileCoverage> getSourceFiles() {
 		return Collections.unmodifiableCollection(sourcefiles.values());
 	}
 
@@ -69,13 +71,13 @@ public class CoverageBuilder implements ICoverageVisitor {
 	 *            Name of the bundle
 	 * @return bundle containing all classes and source files
 	 */
-	public BundleCoverage getBundle(final String name) {
-		return new BundleCoverage(name, classes.values(), sourcefiles.values());
+	public BundleCoverageImpl getBundle(final String name) {
+		return new BundleCoverageImpl(name, classes.values(), sourcefiles.values());
 	}
 
 	// === IStructureVisitor ===
 
-	public void visitCoverage(final ClassCoverage coverage) {
+	public void visitCoverage(final IClassCoverage coverage) {
 		// Only consider classes that actually contain code:
 		if (coverage.getInstructionCounter().getTotalCount() > 0) {
 			final String name = coverage.getName();
@@ -85,19 +87,20 @@ public class CoverageBuilder implements ICoverageVisitor {
 			}
 			final String source = coverage.getSourceFileName();
 			if (source != null) {
-				final SourceFileCoverage sourceFile = getSourceFile(source,
+				final SourceFileCoverageImpl sourceFile = getSourceFile(source,
 						coverage.getPackageName());
 				sourceFile.increment(coverage);
 			}
 		}
 	}
 
-	private SourceFileCoverage getSourceFile(final String filename,
+	private SourceFileCoverageImpl getSourceFile(final String filename,
 			final String packagename) {
 		final String key = packagename + '/' + filename;
-		SourceFileCoverage sourcefile = sourcefiles.get(key);
+		SourceFileCoverageImpl sourcefile = (SourceFileCoverageImpl) sourcefiles
+				.get(key);
 		if (sourcefile == null) {
-			sourcefile = new SourceFileCoverage(filename, packagename);
+			sourcefile = new SourceFileCoverageImpl(filename, packagename);
 			sourcefiles.put(key, sourcefile);
 		}
 		return sourcefile;

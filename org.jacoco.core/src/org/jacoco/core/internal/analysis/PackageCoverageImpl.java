@@ -9,23 +9,27 @@
  *    Marc R. Hoffmann - initial API and implementation
  *    
  *******************************************************************************/
-package org.jacoco.core.analysis;
+package org.jacoco.core.internal.analysis;
 
 import java.util.Collection;
 
+import org.jacoco.core.analysis.CoverageNodeImpl;
+import org.jacoco.core.analysis.IClassCoverage;
+import org.jacoco.core.analysis.IPackageCoverage;
+import org.jacoco.core.analysis.ISourceFileCoverage;
+
 /**
- * Coverage data of a Java package. The name of this data node is the package
- * name in VM notation (slash separated). The name of the default package is the
- * empty string.
+ * Implementation of {@link IPackageCoverage}.
  * 
  * @author Marc R. Hoffmann
  * @version $qualified.bundle.version$
  */
-public class PackageCoverage extends CoverageNodeImpl {
+public class PackageCoverageImpl extends CoverageNodeImpl implements
+		IPackageCoverage {
 
-	private final Collection<ClassCoverage> classes;
+	private final Collection<IClassCoverage> classes;
 
-	private final Collection<SourceFileCoverage> sourceFiles;
+	private final Collection<ISourceFileCoverage> sourceFiles;
 
 	/**
 	 * Creates package node instance for a package with the given name.
@@ -37,14 +41,14 @@ public class PackageCoverage extends CoverageNodeImpl {
 	 * @param sourceFiles
 	 *            collection of all source files in this package
 	 */
-	public PackageCoverage(final String name,
-			final Collection<ClassCoverage> classes,
-			final Collection<SourceFileCoverage> sourceFiles) {
+	public PackageCoverageImpl(final String name,
+			final Collection<IClassCoverage> classes,
+			final Collection<ISourceFileCoverage> sourceFiles) {
 		super(ElementType.PACKAGE, name);
 		this.classes = classes;
 		this.sourceFiles = sourceFiles;
 		increment(sourceFiles);
-		for (final ClassCoverage c : classes) {
+		for (final IClassCoverage c : classes) {
 			// We need to add only classes without a source file reference.
 			// Classes associated with a source file are already included in the
 			// SourceFileCoverage objects.
@@ -54,21 +58,13 @@ public class PackageCoverage extends CoverageNodeImpl {
 		}
 	}
 
-	/**
-	 * Returns all classes contained in this package.
-	 * 
-	 * @return all classes
-	 */
-	public Collection<ClassCoverage> getClasses() {
+	// === IPackageCoverage implementation ===
+
+	public Collection<IClassCoverage> getClasses() {
 		return classes;
 	}
 
-	/**
-	 * Returns all source files in this package.
-	 * 
-	 * @return all source files
-	 */
-	public Collection<SourceFileCoverage> getSourceFiles() {
+	public Collection<ISourceFileCoverage> getSourceFiles() {
 		return sourceFiles;
 	}
 

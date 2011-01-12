@@ -15,8 +15,8 @@ import java.io.IOException;
 import java.io.Reader;
 
 import org.jacoco.core.analysis.ICoverageNode;
+import org.jacoco.core.analysis.ISourceFileCoverage;
 import org.jacoco.core.analysis.ISourceNode;
-import org.jacoco.core.analysis.SourceFileCoverage;
 import org.jacoco.report.IReportVisitor;
 import org.jacoco.report.ISourceFileLocator;
 import org.jacoco.report.ReportOutputFolder;
@@ -45,7 +45,7 @@ public class SourceFilePage extends NodePage {
 	 * @param folder
 	 * @param context
 	 */
-	public SourceFilePage(final SourceFileCoverage sourceFileNode,
+	public SourceFilePage(final ISourceFileCoverage sourceFileNode,
 			final ReportPage parent, final ReportOutputFolder folder,
 			final IHTMLReportContext context) {
 		super(sourceFileNode, parent, folder, context);

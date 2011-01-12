@@ -9,24 +9,25 @@
  *    Marc R. Hoffmann - initial API and implementation
  *    
  *******************************************************************************/
-package org.jacoco.core.analysis;
+package org.jacoco.core.internal.analysis;
 
 import static org.junit.Assert.assertEquals;
 
+import org.jacoco.core.analysis.ICoverageNode;
 import org.junit.Test;
 
 /**
- * Unit test for {@link MethodCoverage}.
+ * Unit test for {@link MethodCoverageImpl}.
  * 
  * @author Marc R. Hoffmann
  * @version $qualified.bundle.version$
  */
-public class MethodCoverageTest {
+public class MethodCoverageImplTest {
 
 	@Test
 	public void testProperties() {
 		// Example: java.util.Collections.emptySet()
-		MethodCoverage node = new MethodCoverage("emptySet",
+		MethodCoverageImpl node = new MethodCoverageImpl("emptySet",
 				"()Ljava/util/Set;",
 				"<T:Ljava/lang/Object;>()Ljava/util/Set<TT;>;");
 		assertEquals(ICoverageNode.ElementType.METHOD, node.getElementType());
@@ -38,7 +39,7 @@ public class MethodCoverageTest {
 
 	@Test
 	public void testEmptyMethod() {
-		ICoverageNode node = new MethodCoverage("sample", "()V", null);
+		ICoverageNode node = new MethodCoverageImpl("sample", "()V", null);
 
 		assertEquals(CounterImpl.getInstance(0, 0), node.getLineCounter());
 		assertEquals(CounterImpl.getInstance(0, 0),
@@ -50,7 +51,7 @@ public class MethodCoverageTest {
 
 	@Test
 	public void testIncrementMissed() {
-		MethodCoverage node = new MethodCoverage("sample", "()V", null);
+		MethodCoverageImpl node = new MethodCoverageImpl("sample", "()V", null);
 		node.increment(CounterImpl.getInstance(25, 0), CounterImpl.COUNTER_0_0,
 				3);
 
@@ -59,7 +60,7 @@ public class MethodCoverageTest {
 
 	@Test
 	public void testIncrementCovered() {
-		MethodCoverage node = new MethodCoverage("sample", "()V", null);
+		MethodCoverageImpl node = new MethodCoverageImpl("sample", "()V", null);
 		node.increment(CounterImpl.getInstance(12, 13),
 				CounterImpl.COUNTER_0_0, 3);
 

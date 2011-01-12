@@ -14,10 +14,8 @@ package org.jacoco.core.internal.analysis;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.jacoco.core.analysis.CounterImpl;
 import org.jacoco.core.analysis.ICounter;
 import org.jacoco.core.analysis.ISourceNode;
-import org.jacoco.core.analysis.MethodCoverage;
 import org.jacoco.core.internal.flow.IMethodProbesVisitor;
 import org.jacoco.core.internal.flow.Instruction;
 import org.jacoco.core.internal.flow.LabelInfo;
@@ -36,7 +34,7 @@ public class MethodAnalyzer implements IMethodProbesVisitor {
 
 	private final boolean[] executionData;
 
-	private final MethodCoverage coverage;
+	private final MethodCoverageImpl coverage;
 
 	private int currentLine = ISourceNode.UNKNOWN_LINE;
 
@@ -76,7 +74,7 @@ public class MethodAnalyzer implements IMethodProbesVisitor {
 	public MethodAnalyzer(final String name, final String desc,
 			final String signature, final boolean[] executionData) {
 		this.executionData = executionData;
-		this.coverage = new MethodCoverage(name, desc, signature);
+		this.coverage = new MethodCoverageImpl(name, desc, signature);
 	}
 
 	/**
@@ -85,7 +83,7 @@ public class MethodAnalyzer implements IMethodProbesVisitor {
 	 * 
 	 * @return coverage data for this method
 	 */
-	public MethodCoverage getCoverage() {
+	public MethodCoverageImpl getCoverage() {
 		return coverage;
 	}
 

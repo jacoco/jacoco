@@ -9,11 +9,15 @@
  *    Marc R. Hoffmann - initial API and implementation
  *    
  *******************************************************************************/
-package org.jacoco.core.analysis;
+package org.jacoco.core.internal.analysis;
 
+import org.jacoco.core.analysis.CoverageNodeImpl;
+import org.jacoco.core.analysis.ICounter;
+import org.jacoco.core.analysis.ILine;
+import org.jacoco.core.analysis.ISourceNode;
 
 /**
- * {@link ISourceNode} implementation.
+ * Implementation of {@link ISourceNode}.
  * 
  * @author Marc R. Hoffmann
  * @version $qualified.bundle.version$
@@ -145,7 +149,7 @@ public class SourceNodeImpl extends CoverageNodeImpl implements ISourceNode {
 		}
 	}
 
-	// === ISourceNode ===
+	// === ISourceNode implementation ===
 
 	public int getFirstLine() {
 		return offset;

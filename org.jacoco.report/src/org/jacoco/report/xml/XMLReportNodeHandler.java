@@ -19,8 +19,8 @@ import org.jacoco.core.analysis.ICoverageNode;
 import org.jacoco.core.analysis.ICoverageNode.CounterEntity;
 import org.jacoco.core.analysis.ICoverageNode.ElementType;
 import org.jacoco.core.analysis.ILine;
+import org.jacoco.core.analysis.IMethodCoverage;
 import org.jacoco.core.analysis.ISourceNode;
-import org.jacoco.core.analysis.MethodCoverage;
 import org.jacoco.report.IReportVisitor;
 import org.jacoco.report.ISourceFileLocator;
 
@@ -88,7 +88,7 @@ class XMLReportNodeHandler implements IReportVisitor {
 			return new XMLReportNodeHandler(element.element("class"), node);
 		case METHOD:
 			final XMLElement methodChild = element.element("method");
-			final MethodCoverage methodNode = (MethodCoverage) node;
+			final IMethodCoverage methodNode = (IMethodCoverage) node;
 			methodChild.attr("desc", methodNode.getDesc());
 			final int line = methodNode.getFirstLine();
 			if (line != -1) {

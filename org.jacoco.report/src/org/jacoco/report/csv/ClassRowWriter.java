@@ -13,7 +13,7 @@ package org.jacoco.report.csv;
 
 import java.io.IOException;
 
-import org.jacoco.core.analysis.ClassCoverage;
+import org.jacoco.core.analysis.IClassCoverage;
 import org.jacoco.core.analysis.ICounter;
 import org.jacoco.core.analysis.ICoverageNode.CounterEntity;
 import org.jacoco.report.ILanguageNames;
@@ -74,7 +74,7 @@ class ClassRowWriter {
 	 *             in case of problems with the writer
 	 */
 	public void writeRow(final String groupName, final String packageName,
-			final ClassCoverage node) throws IOException {
+			final IClassCoverage node) throws IOException {
 		writer.write(groupName);
 		writer.write(languageNames.getPackageName(packageName));
 		final String className = languageNames.getClassName(node.getName(),

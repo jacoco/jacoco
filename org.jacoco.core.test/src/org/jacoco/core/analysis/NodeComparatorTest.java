@@ -19,6 +19,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.jacoco.core.analysis.ICoverageNode.CounterEntity;
+import org.jacoco.core.internal.analysis.CounterImpl;
 import org.junit.Test;
 
 /**

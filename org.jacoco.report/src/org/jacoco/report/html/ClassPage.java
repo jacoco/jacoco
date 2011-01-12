@@ -16,10 +16,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import org.jacoco.core.analysis.ClassCoverage;
+import org.jacoco.core.analysis.IClassCoverage;
 import org.jacoco.core.analysis.ICoverageNode;
+import org.jacoco.core.analysis.IMethodCoverage;
 import org.jacoco.core.analysis.ISourceNode;
-import org.jacoco.core.analysis.MethodCoverage;
 import org.jacoco.report.IReportVisitor;
 import org.jacoco.report.ReportOutputFolder;
 import org.jacoco.report.internal.html.resources.Resources;
@@ -37,9 +37,9 @@ public class ClassPage extends NodePage {
 
 	private class MethodItem implements ITableItem {
 
-		private final MethodCoverage node;
+		private final IMethodCoverage node;
 
-		MethodItem(final MethodCoverage node) {
+		MethodItem(final IMethodCoverage node) {
 			this.node = node;
 		}
 
@@ -89,7 +89,7 @@ public class ClassPage extends NodePage {
 	 * @param folder
 	 * @param context
 	 */
-	public ClassPage(final ClassCoverage classNode, final ReportPage parent,
+	public ClassPage(final IClassCoverage classNode, final ReportPage parent,
 			final Map<String, SourceFilePage> sourceFiles,
 			final ReportOutputFolder folder, final IHTMLReportContext context) {
 		super(classNode, parent, folder, context);
@@ -102,7 +102,7 @@ public class ClassPage extends NodePage {
 	}
 
 	public IReportVisitor visitChild(final ICoverageNode node) {
-		methods.add(new MethodItem((MethodCoverage) node));
+		methods.add(new MethodItem((IMethodCoverage) node));
 		return IReportVisitor.NOP;
 	}
 

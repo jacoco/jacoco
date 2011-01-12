@@ -9,7 +9,7 @@
  *    Marc R. Hoffmann - initial API and implementation
  *    
  *******************************************************************************/
-package org.jacoco.core.analysis;
+package org.jacoco.core.internal.analysis;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -19,15 +19,22 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+import org.jacoco.core.analysis.CoverageNodeImpl;
+import org.jacoco.core.analysis.IBundleCoverage;
+import org.jacoco.core.analysis.IClassCoverage;
+import org.jacoco.core.analysis.IPackageCoverage;
+import org.jacoco.core.analysis.ISourceFileCoverage;
+
 /**
- * Coverage data of a bundle. A bundle groups a collection of packages.
+ * Implementation of {@link IBundleCoverage}.
  * 
  * @author Marc R. Hoffmann
  * @version $qualified.bundle.version$
  */
-public class BundleCoverage extends CoverageNodeImpl {
+public class BundleCoverageImpl extends CoverageNodeImpl implements
+		IBundleCoverage {
 
-	private final Collection<PackageCoverage> packages;
+	private final Collection<IPackageCoverage> packages;
 
 	/**
 	 * Creates a new instance of a bundle with the given name.
@@ -37,8 +44,8 @@ public class BundleCoverage extends CoverageNodeImpl {
 	 * @param packages
 	 *            collection of all packages contained in this bundle
 	 */
-	public BundleCoverage(final String name,
-			final Collection<PackageCoverage> packages) {
+	public BundleCoverageImpl(final String name,
+			final Collection<IPackageCoverage> packages) {
 		super(ElementType.BUNDLE, name);
 		this.packages = packages;
 		increment(packages);
@@ -55,31 +62,22 @@ public class BundleCoverage extends CoverageNodeImpl {
 	 * @param sourcefiles
 	 *            all source files in this bundle
 	 */
-	public BundleCoverage(final String name,
-			final Collection<ClassCoverage> classes,
-			final Collection<SourceFileCoverage> sourcefiles) {
+	public BundleCoverageImpl(final String name,
+			final Collection<IClassCoverage> classes,
+			final Collection<ISourceFileCoverage> sourcefiles) {
 		this(name, groupByPackage(classes, sourcefiles));
 	}
 
-	/**
-	 * Returns all packages contained in this bundle.
-	 * 
-	 * @return all packages
-	 */
-	public Collection<PackageCoverage> getPackages() {
-		return packages;
-	}
-
-	private static Collection<PackageCoverage> groupByPackage(
-			final Collection<ClassCoverage> classes,
-			final Collection<SourceFileCoverage> sourcefiles) {
-		final Map<String, Collection<ClassCoverage>> classesByPackage = new HashMap<String, Collection<ClassCoverage>>();
-		for (final ClassCoverage c : classes) {
+	private static Collection<IPackageCoverage> groupByPackage(
+			final Collection<IClassCoverage> classes,
+			final Collection<ISourceFileCoverage> sourcefiles) {
+		final Map<String, Collection<IClassCoverage>> classesByPackage = new HashMap<String, Collection<IClassCoverage>>();
+		for (final IClassCoverage c : classes) {
 			addByName(classesByPackage, c.getPackageName(), c);
 		}
 
-		final Map<String, Collection<SourceFileCoverage>> sourceFilesByPackage = new HashMap<String, Collection<SourceFileCoverage>>();
-		for (final SourceFileCoverage s : sourcefiles) {
+		final Map<String, Collection<ISourceFileCoverage>> sourceFilesByPackage = new HashMap<String, Collection<ISourceFileCoverage>>();
+		for (final ISourceFileCoverage s : sourcefiles) {
 			addByName(sourceFilesByPackage, s.getPackageName(), s);
 		}
 
@@ -87,17 +85,17 @@ public class BundleCoverage extends CoverageNodeImpl {
 		packageNames.addAll(classesByPackage.keySet());
 		packageNames.addAll(sourceFilesByPackage.keySet());
 
-		final Collection<PackageCoverage> result = new ArrayList<PackageCoverage>();
+		final Collection<IPackageCoverage> result = new ArrayList<IPackageCoverage>();
 		for (final String name : packageNames) {
-			Collection<ClassCoverage> c = classesByPackage.get(name);
+			Collection<IClassCoverage> c = classesByPackage.get(name);
 			if (c == null) {
 				c = Collections.emptyList();
 			}
-			Collection<SourceFileCoverage> s = sourceFilesByPackage.get(name);
+			Collection<ISourceFileCoverage> s = sourceFilesByPackage.get(name);
 			if (s == null) {
 				s = Collections.emptyList();
 			}
-			result.add(new PackageCoverage(name, c, s));
+			result.add(new PackageCoverageImpl(name, c, s));
 		}
 		return result;
 	}
@@ -110,6 +108,12 @@ public class BundleCoverage extends CoverageNodeImpl {
 			map.put(name, list);
 		}
 		list.add(value);
+	}
+
+	// === IBundleCoverage implementation ===
+
+	public Collection<IPackageCoverage> getPackages() {
+		return packages;
 	}
 
 }

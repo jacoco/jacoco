@@ -9,24 +9,26 @@
  *    Marc R. Hoffmann - initial API and implementation
  *    
  *******************************************************************************/
-package org.jacoco.core.analysis;
+package org.jacoco.core.internal.analysis;
 
 import static org.junit.Assert.assertEquals;
 
+import org.jacoco.core.analysis.ICoverageNode;
+import org.jacoco.core.analysis.ISourceNode;
 import org.junit.Test;
 
 /**
- * Unit test for {@link ClassCoverage}.
+ * Unit test for {@link ClassCoverageImpl}.
  * 
  * @author Marc R. Hoffmann
  * @version $qualified.bundle.version$
  */
-public class ClassCoverageTest {
+public class ClassCoverageImplTest {
 
 	@Test
 	public void testProperties() {
-		ClassCoverage data = new ClassCoverage("Sample", 12345, "LSample;",
-				"java/lang/Object", new String[0]);
+		ClassCoverageImpl data = new ClassCoverageImpl("Sample", 12345,
+				"LSample;", "java/lang/Object", new String[0]);
 		data.setSourceFileName("Sample.java");
 		assertEquals(ICoverageNode.ElementType.CLASS, data.getElementType());
 		assertEquals("Sample", data.getName());
@@ -39,21 +41,22 @@ public class ClassCoverageTest {
 
 	@Test
 	public void testGetPackageName1() {
-		ClassCoverage data = new ClassCoverage("ClassInDefaultPackage", 0,
-				null, "java/lang/Object", new String[0]);
+		ClassCoverageImpl data = new ClassCoverageImpl("ClassInDefaultPackage",
+				0, null, "java/lang/Object", new String[0]);
 		assertEquals("", data.getPackageName());
 	}
 
 	@Test
 	public void testGetPackageName2() {
-		ClassCoverage data = new ClassCoverage("org/jacoco/examples/Sample", 0,
-				null, "java/lang/Object", new String[0]);
+		ClassCoverageImpl data = new ClassCoverageImpl(
+				"org/jacoco/examples/Sample", 0, null, "java/lang/Object",
+				new String[0]);
 		assertEquals("org/jacoco/examples", data.getPackageName());
 	}
 
 	@Test
 	public void testEmptyClass() {
-		ICoverageNode data = new ClassCoverage("Sample", 0, null,
+		ICoverageNode data = new ClassCoverageImpl("Sample", 0, null,
 				"java/lang/Object", new String[0]);
 		assertEquals(CounterImpl.COUNTER_0_0, data.getInstructionCounter());
 		assertEquals(CounterImpl.COUNTER_0_0, data.getBranchCounter());
@@ -63,7 +66,7 @@ public class ClassCoverageTest {
 
 	@Test
 	public void testAddMethodMissed() {
-		ClassCoverage data = new ClassCoverage("Sample", 0, null,
+		ClassCoverageImpl data = new ClassCoverageImpl("Sample", 0, null,
 				"java/lang/Object", new String[0]);
 		data.addMethod(createMethod(false));
 		assertEquals(CounterImpl.COUNTER_1_0, data.getInstructionCounter());
@@ -73,7 +76,7 @@ public class ClassCoverageTest {
 
 	@Test
 	public void testAddMethodCovered() {
-		ClassCoverage data = new ClassCoverage("Sample", 0, null,
+		ClassCoverageImpl data = new ClassCoverageImpl("Sample", 0, null,
 				"java/lang/Object", new String[0]);
 		data.addMethod(createMethod(true));
 		assertEquals(CounterImpl.COUNTER_0_1, data.getInstructionCounter());
@@ -81,8 +84,9 @@ public class ClassCoverageTest {
 		assertEquals(CounterImpl.COUNTER_0_1, data.getClassCounter());
 	}
 
-	private MethodCoverage createMethod(boolean covered) {
-		final MethodCoverage m = new MethodCoverage("sample", "()V", null);
+	private MethodCoverageImpl createMethod(boolean covered) {
+		final MethodCoverageImpl m = new MethodCoverageImpl("sample", "()V",
+				null);
 		m.increment(
 				covered ? CounterImpl.COUNTER_0_1 : CounterImpl.COUNTER_1_0,
 				CounterImpl.COUNTER_0_0, ISourceNode.UNKNOWN_LINE);

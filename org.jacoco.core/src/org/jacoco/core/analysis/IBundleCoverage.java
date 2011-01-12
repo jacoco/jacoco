@@ -11,25 +11,21 @@
  *******************************************************************************/
 package org.jacoco.core.analysis;
 
-import static org.jacoco.core.analysis.ICoverageNode.ElementType.SOURCEFILE;
-import static org.junit.Assert.assertEquals;
-
-import org.junit.Test;
+import java.util.Collection;
 
 /**
- * Unit test for {@link SourceFileCoverage}.
+ * Coverage data of a bundle. A bundle groups a collection of packages.
  * 
  * @author Marc R. Hoffmann
  * @version $qualified.bundle.version$
  */
-public class SourceFileCoverageTest {
+public interface IBundleCoverage extends ICoverageNode {
 
-	@Test
-	public void testProperties() {
-		SourceFileCoverage data = new SourceFileCoverage("Sample.java",
-				"org/jacoco/examples");
-		assertEquals(SOURCEFILE, data.getElementType());
-		assertEquals("org/jacoco/examples", data.getPackageName());
-	}
+	/**
+	 * Returns all packages contained in this bundle.
+	 * 
+	 * @return all packages
+	 */
+	public Collection<IPackageCoverage> getPackages();
 
 }

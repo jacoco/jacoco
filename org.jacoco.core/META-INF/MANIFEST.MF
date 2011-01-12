@@ -10,4 +10,5 @@ Export-Package: org.jacoco.core,
  org.jacoco.core.analysis,
  org.jacoco.core.data,
  org.jacoco.core.instr,
+ org.jacoco.core.internal.analysis; x-internal=true,
  org.jacoco.core.runtime

@@ -11,22 +11,26 @@
  *******************************************************************************/
 package org.jacoco.core.analysis;
 
-
 /**
- * Interface for coverage data output as a stream of {@link IClassCoverage}
- * instances.
+ * Coverage data of a single method.
  * 
  * @author Marc R. Hoffmann
  * @version $qualified.bundle.version$
  */
-public interface ICoverageVisitor {
+public interface IMethodCoverage extends ISourceNode {
 
 	/**
-	 * For analyzed class coverage data is emitted to this method.
+	 * Returns the parameter description of the method.
 	 * 
-	 * @param coverage
-	 *            coverage data for a class
+	 * @return parameter description
 	 */
-	public void visitCoverage(IClassCoverage coverage);
+	public String getDesc();
+
+	/**
+	 * Returns the generic signature of the method if defined.
+	 * 
+	 * @return generic signature or <code>null</code>
+	 */
+	public String getSignature();
 
 }

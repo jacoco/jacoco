@@ -12,7 +12,7 @@
 package org.jacoco.core.test.perf;
 
 import org.jacoco.core.analysis.Analyzer;
-import org.jacoco.core.analysis.ClassCoverage;
+import org.jacoco.core.analysis.IClassCoverage;
 import org.jacoco.core.analysis.ICoverageVisitor;
 import org.jacoco.core.data.ExecutionDataStore;
 import org.jacoco.core.test.TargetLoader;
@@ -40,7 +40,7 @@ public class AnalysisTimeScenario extends TimedScenario {
 		final byte[] bytes = TargetLoader.getClassDataAsBytes(target);
 		final ExecutionDataStore executionData = new ExecutionDataStore();
 		ICoverageVisitor visitor = new ICoverageVisitor() {
-			public void visitCoverage(ClassCoverage coverage) {
+			public void visitCoverage(IClassCoverage coverage) {
 			}
 		};
 		final Analyzer analyzer = new Analyzer(executionData, visitor);

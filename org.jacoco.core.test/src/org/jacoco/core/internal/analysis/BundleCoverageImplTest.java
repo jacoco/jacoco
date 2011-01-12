@@ -9,7 +9,7 @@
  *    Marc R. Hoffmann - initial API and implementation
  *    
  *******************************************************************************/
-package org.jacoco.core.analysis;
+package org.jacoco.core.internal.analysis;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -19,23 +19,28 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 
+import org.jacoco.core.analysis.IClassCoverage;
+import org.jacoco.core.analysis.ICoverageNode;
+import org.jacoco.core.analysis.IPackageCoverage;
+import org.jacoco.core.analysis.ISourceFileCoverage;
 import org.junit.Test;
 
 /**
- * Unit tests for {@link BundleCoverage}.
+ * Unit tests for {@link BundleCoverageImpl}.
  * 
  * @author Marc R. Hoffmann
  * @version $qualified.bundle.version$
  */
-public class BundleCoverageTest {
+public class BundleCoverageImplTest {
 
 	@Test
 	public void testProperties() {
-		Collection<ClassCoverage> classes = Collections.emptySet();
-		Collection<SourceFileCoverage> sourcefiles = Collections.emptySet();
-		Collection<PackageCoverage> packages = Collections
-				.singleton(new PackageCoverage("p1", classes, sourcefiles));
-		BundleCoverage bundle = new BundleCoverage("testbundle", packages);
+		Collection<IClassCoverage> classes = Collections.emptySet();
+		Collection<ISourceFileCoverage> sourcefiles = Collections.emptySet();
+		Collection<IPackageCoverage> packages = Collections
+				.singleton((IPackageCoverage) new PackageCoverageImpl("p1",
+						classes, sourcefiles));
+		BundleCoverageImpl bundle = new BundleCoverageImpl("testbundle", packages);
 		assertEquals(ICoverageNode.ElementType.BUNDLE, bundle.getElementType());
 		assertEquals("testbundle", bundle.getName());
 		assertEquals(packages, bundle.getPackages());
@@ -43,9 +48,9 @@ public class BundleCoverageTest {
 
 	@Test
 	public void testCounters() {
-		Collection<ClassCoverage> classes = Collections.emptySet();
-		Collection<SourceFileCoverage> sourcefiles = Collections.emptySet();
-		final PackageCoverage p1 = new PackageCoverage("p1", classes,
+		Collection<IClassCoverage> classes = Collections.emptySet();
+		Collection<ISourceFileCoverage> sourcefiles = Collections.emptySet();
+		final IPackageCoverage p1 = new PackageCoverageImpl("p1", classes,
 				sourcefiles) {
 			{
 				classCounter = CounterImpl.getInstance(1, 0);
@@ -55,7 +60,7 @@ public class BundleCoverageTest {
 				lineCounter = CounterImpl.getInstance(5, 0);
 			}
 		};
-		final PackageCoverage p2 = new PackageCoverage("p1", classes,
+		final IPackageCoverage p2 = new PackageCoverageImpl("p1", classes,
 				sourcefiles) {
 			{
 				classCounter = CounterImpl.getInstance(1, 0);
@@ -65,7 +70,7 @@ public class BundleCoverageTest {
 				lineCounter = CounterImpl.getInstance(5, 0);
 			}
 		};
-		BundleCoverage bundle = new BundleCoverage("testbundle", Arrays.asList(
+		BundleCoverageImpl bundle = new BundleCoverageImpl("testbundle", Arrays.asList(
 				p1, p2));
 		assertEquals(CounterImpl.getInstance(2, 0), bundle.getClassCounter());
 		assertEquals(CounterImpl.getInstance(4, 0), bundle.getMethodCounter());
@@ -77,39 +82,40 @@ public class BundleCoverageTest {
 
 	@Test
 	public void testGroupByPackage() {
-		ClassCoverage ca = new ClassCoverage("p1/A", 1, null,
+		ClassCoverageImpl ca = new ClassCoverageImpl("p1/A", 1, null,
 				"java/lang/Object", new String[0]);
 		ca.setSourceFileName("A.java");
-		ClassCoverage cb = new ClassCoverage("p2/B", 2, null,
+		ClassCoverageImpl cb = new ClassCoverageImpl("p2/B", 2, null,
 				"java/lang/Object", new String[0]);
 		cb.setSourceFileName("B.java");
-		SourceFileCoverage sb = new SourceFileCoverage("B.java", "p2");
-		SourceFileCoverage sc = new SourceFileCoverage("C.java", "p3");
-		BundleCoverage bundle = new BundleCoverage("bundle", Arrays.asList(ca,
-				cb), Arrays.asList(sb, sc));
+		ISourceFileCoverage sb = new SourceFileCoverageImpl("B.java", "p2");
+		ISourceFileCoverage sc = new SourceFileCoverageImpl("C.java", "p3");
+		BundleCoverageImpl bundle = new BundleCoverageImpl("bundle", Arrays.asList(
+				(IClassCoverage) ca, (IClassCoverage) cb),
+				Arrays.asList(sb, sc));
 
-		Collection<PackageCoverage> packages = bundle.getPackages();
+		Collection<IPackageCoverage> packages = bundle.getPackages();
 		assertEquals(3, packages.size(), 0.0);
 
-		PackageCoverage p1 = findPackage("p1", packages);
+		IPackageCoverage p1 = findPackage("p1", packages);
 		assertNotNull(p1);
 		assertEquals(Collections.singletonList(ca), p1.getClasses());
 		assertTrue(p1.getSourceFiles().isEmpty());
 
-		PackageCoverage p2 = findPackage("p2", packages);
+		IPackageCoverage p2 = findPackage("p2", packages);
 		assertNotNull(p2);
 		assertEquals(Collections.singletonList(cb), p2.getClasses());
 		assertEquals(Collections.singletonList(sb), p2.getSourceFiles());
 
-		PackageCoverage p3 = findPackage("p3", packages);
+		IPackageCoverage p3 = findPackage("p3", packages);
 		assertNotNull(p3);
 		assertTrue(p3.getClasses().isEmpty());
 		assertEquals(Collections.singletonList(sc), p3.getSourceFiles());
 	}
 
-	private PackageCoverage findPackage(String name,
-			Collection<PackageCoverage> packages) {
-		for (PackageCoverage p : packages) {
+	private IPackageCoverage findPackage(String name,
+			Collection<IPackageCoverage> packages) {
+		for (IPackageCoverage p : packages) {
 			if (name.equals(p.getName())) {
 				return p;
 			}

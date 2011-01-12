@@ -9,24 +9,28 @@
  *    Marc R. Hoffmann - initial API and implementation
  *    
  *******************************************************************************/
-package org.jacoco.core.analysis;
+package org.jacoco.core.internal.analysis;
 
+import static org.jacoco.core.analysis.ICoverageNode.ElementType.SOURCEFILE;
+import static org.junit.Assert.assertEquals;
+
+import org.jacoco.core.internal.analysis.SourceFileCoverageImpl;
+import org.junit.Test;
 
 /**
- * Interface for coverage data output as a stream of {@link IClassCoverage}
- * instances.
+ * Unit test for {@link SourceFileCoverageImpl}.
  * 
  * @author Marc R. Hoffmann
  * @version $qualified.bundle.version$
  */
-public interface ICoverageVisitor {
+public class SourceFileCoverageImplTest {
 
-	/**
-	 * For analyzed class coverage data is emitted to this method.
-	 * 
-	 * @param coverage
-	 *            coverage data for a class
-	 */
-	public void visitCoverage(IClassCoverage coverage);
+	@Test
+	public void testProperties() {
+		SourceFileCoverageImpl data = new SourceFileCoverageImpl("Sample.java",
+				"org/jacoco/examples");
+		assertEquals(SOURCEFILE, data.getElementType());
+		assertEquals("org/jacoco/examples", data.getPackageName());
+	}
 
 }

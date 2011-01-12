@@ -16,10 +16,10 @@ import static org.junit.Assert.assertEquals;
 import java.io.IOException;
 import java.util.Locale;
 
-import org.jacoco.core.analysis.CounterImpl;
 import org.jacoco.core.analysis.CoverageNodeImpl;
 import org.jacoco.core.analysis.ICoverageNode;
 import org.jacoco.core.analysis.ICoverageNode.ElementType;
+import org.jacoco.core.internal.analysis.CounterImpl;
 import org.jacoco.report.ILanguageNames;
 import org.jacoco.report.IReportVisitor;
 import org.jacoco.report.MemoryMultiReportOutput;
