@@ -11,20 +11,46 @@
  *******************************************************************************/
 package org.jacoco.examples;
 
-import java.io.FileInputStream;
+import java.io.File;
 import java.io.IOException;
 
-import org.jacoco.core.instr.CRC64;
-import org.objectweb.asm.ClassReader;
+import org.jacoco.core.analysis.Analyzer;
+import org.jacoco.core.analysis.IClassCoverage;
+import org.jacoco.core.analysis.ICoverageVisitor;
+import org.jacoco.core.data.ExecutionDataStore;
 
 /**
- * This example reads given Java class files and calculates the CRC64
- * identifiers which are used by JaCoCo.
+ * This example reads given Java class files, directories or JARs and dumps
+ * information about the classes.
  * 
  * @author Marc R. Hoffmann
  * @version $qualified.bundle.version$
  */
-public class ClassInfo {
+public class ClassInfo implements ICoverageVisitor {
+
+	private final Analyzer analyzer;
+
+	private ClassInfo() {
+		analyzer = new Analyzer(new ExecutionDataStore(), this);
+	}
+
+	private void dumpInfo(final String file) throws IOException {
+		analyzer.analyzeAll(new File(file));
+	}
+
+	public void visitCoverage(final IClassCoverage coverage) {
+		System.out.printf("class name:   %s%n", coverage.getName());
+		System.out.printf("class id:     %016x%n",
+				Long.valueOf(coverage.getId()));
+		System.out.printf("instructions: %s%n", Integer.valueOf(coverage
+				.getInstructionCounter().getTotalCount()));
+		System.out.printf("branches:     %s%n",
+				Integer.valueOf(coverage.getBranchCounter().getTotalCount()));
+		System.out.printf("lines:        %s%n",
+				Integer.valueOf(coverage.getLineCounter().getTotalCount()));
+		System.out.printf("methods:      %s%n%n",
+				Integer.valueOf(coverage.getMethodCounter().getTotalCount()));
+	}
 
 	/**
 	 * Reads all class file specified as the arguments and dumps information
@@ -35,20 +61,10 @@ public class ClassInfo {
 	 * @throws IOException
 	 */
 	public static void main(final String[] args) throws IOException {
+		final ClassInfo info = new ClassInfo();
 		for (final String file : args) {
-			dumpInfo(file);
+			info.dumpInfo(file);
 		}
-	}
-
-	private static void dumpInfo(final String file) throws IOException {
-		final FileInputStream in = new FileInputStream(file);
-		final ClassReader reader = new ClassReader(in);
-		in.close();
-
-		System.out.printf("class file: %s%n", file);
-		System.out.printf("class name: %s%n", reader.getClassName());
-		final long id = CRC64.checksum(reader.b);
-		System.out.printf("class id:   %016x%n%n", Long.valueOf(id));
 	}
 
 }
