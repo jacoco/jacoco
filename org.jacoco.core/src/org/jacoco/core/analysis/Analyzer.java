@@ -24,6 +24,7 @@ import org.jacoco.core.data.ExecutionData;
 import org.jacoco.core.data.ExecutionDataStore;
 import org.jacoco.core.internal.analysis.ClassAnalyzer;
 import org.jacoco.core.internal.analysis.ContentTypeDetector;
+import org.jacoco.core.internal.analysis.StringPool;
 import org.jacoco.core.internal.flow.ClassProbesAdapter;
 import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.ClassVisitor;
@@ -52,24 +53,9 @@ public class Analyzer {
 	 */
 	public Analyzer(final ExecutionDataStore executionData,
 			final ICoverageVisitor structureVisitor) {
-		this(executionData, structureVisitor, new StringPool());
-	}
-
-	/**
-	 * Creates a new analyzer reporting to the given output.
-	 * 
-	 * @param executionData
-	 *            execution data
-	 * @param structureVisitor
-	 *            the output instance that will receive all structure data
-	 * @param stringPool
-	 *            shared pool to minimize the number of {@link String} instances
-	 */
-	public Analyzer(final ExecutionDataStore executionData,
-			final ICoverageVisitor structureVisitor, final StringPool stringPool) {
 		this.executionData = executionData;
 		this.structureVisitor = structureVisitor;
-		this.stringPool = stringPool;
+		this.stringPool = new StringPool();
 	}
 
 	/**

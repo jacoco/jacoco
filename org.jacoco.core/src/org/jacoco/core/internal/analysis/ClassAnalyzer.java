@@ -11,7 +11,6 @@
  *******************************************************************************/
 package org.jacoco.core.internal.analysis;
 
-import org.jacoco.core.analysis.StringPool;
 import org.jacoco.core.internal.flow.IClassProbesVisitor;
 import org.jacoco.core.internal.flow.IMethodProbesVisitor;
 import org.objectweb.asm.AnnotationVisitor;
