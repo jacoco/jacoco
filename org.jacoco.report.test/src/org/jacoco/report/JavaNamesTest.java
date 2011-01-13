@@ -48,14 +48,14 @@ public class JavaNamesTest {
 
 	@Test
 	public void testGetClassName2() {
-		assertEquals("Object", names.getClassName("java/lang/Object", null,
-				null, null));
+		assertEquals("Object",
+				names.getClassName("java/lang/Object", null, null, null));
 	}
 
 	@Test
 	public void testGetClassName3() {
-		assertEquals("Map.Entry", names.getClassName("java/util/Map$Entry",
-				null, null, null));
+		assertEquals("Map.Entry",
+				names.getClassName("java/util/Map$Entry", null, null, null));
 	}
 
 	@Test
@@ -73,8 +73,14 @@ public class JavaNamesTest {
 
 	@Test
 	public void testGetClassName6() {
-		assertEquals("Bar.1", names.getClassName("com/foo/Bar$1", null, null,
-				null));
+		assertEquals("Bar.1",
+				names.getClassName("com/foo/Bar$1", null, null, null));
+	}
+
+	@Test
+	public void testGetClassName7() {
+		assertEquals("Strange.",
+				names.getClassName("com/foo/Strange$", null, null, null));
 	}
 
 	@Test
@@ -84,33 +90,33 @@ public class JavaNamesTest {
 
 	@Test
 	public void testGetQualifiedClassName2() {
-		assertEquals("java.lang.Object", names
-				.getQualifiedClassName("java/lang/Object"));
+		assertEquals("java.lang.Object",
+				names.getQualifiedClassName("java/lang/Object"));
 	}
 
 	@Test
 	public void testGetQualifiedClassName3() {
-		assertEquals("java.util.Map.Entry", names
-				.getQualifiedClassName("java/util/Map$Entry"));
+		assertEquals("java.util.Map.Entry",
+				names.getQualifiedClassName("java/util/Map$Entry"));
 	}
 
 	@Test
 	public void testGetMethodName1() {
-		assertEquals("wait()", names.getMethodName("java/lang/Object", "wait",
-				"()V", null));
+		assertEquals("wait()",
+				names.getMethodName("java/lang/Object", "wait", "()V", null));
 	}
 
 	@Test
 	public void testGetMethodName2() {
-		assertEquals("remove(Object)", names
-				.getMethodName("java/util/Collection", "remove",
+		assertEquals("remove(Object)",
+				names.getMethodName("java/util/Collection", "remove",
 						"(Ljava/lang/Object;)V", null));
 	}
 
 	@Test
 	public void testGetMethodName3() {
-		assertEquals("remove(int)", names.getMethodName("java/util/List",
-				"remove", "(I)V", null));
+		assertEquals("remove(int)",
+				names.getMethodName("java/util/List", "remove", "(I)V", null));
 	}
 
 	@Test
@@ -127,8 +133,8 @@ public class JavaNamesTest {
 
 	@Test
 	public void testGetMethodName6() {
-		assertEquals("Object()", names.getMethodName("java/lang/Object",
-				"<init>", "()V", null));
+		assertEquals("Object()",
+				names.getMethodName("java/lang/Object", "<init>", "()V", null));
 	}
 
 	@Test

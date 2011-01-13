@@ -39,8 +39,13 @@ public class JavaNames implements ILanguageNames {
 		if (dollarPosition == -1) {
 			return false;
 		}
+		final int internalPosition = dollarPosition + 1;
+		if (internalPosition == vmname.length()) {
+			// shouldn't happen for classes compiled from Java source
+			return false;
+		}
 		// assume non-identifier start character for anonymous classes
-		final char start = vmname.charAt(dollarPosition + 1);
+		final char start = vmname.charAt(internalPosition);
 		return !Character.isJavaIdentifierStart(start);
 	}
 
@@ -55,7 +60,7 @@ public class JavaNames implements ILanguageNames {
 			} else {
 				vmsupertype = null;
 			}
-			// Append Eclipse style label, e.g. "Foo.new Bar() {...}"
+			// append Eclipse style label, e.g. "Foo.new Bar() {...}"
 			if (vmsupertype != null) {
 				final StringBuilder builder = new StringBuilder();
 				final String vmenclosing = vmname.substring(0,
