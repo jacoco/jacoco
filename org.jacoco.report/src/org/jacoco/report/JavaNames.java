@@ -35,9 +35,13 @@ public class JavaNames implements ILanguageNames {
 	}
 
 	private boolean isAnonymous(final String vmname) {
+		final int dollarPosition = vmname.lastIndexOf('$');
+		if (dollarPosition == -1) {
+			return false;
+		}
 		// assume non-identifier start character for anonymous classes
-		final char start = vmname.charAt(vmname.lastIndexOf('$') + 1);
-		return start > 0 && !Character.isJavaIdentifierStart(start);
+		final char start = vmname.charAt(dollarPosition + 1);
+		return !Character.isJavaIdentifierStart(start);
 	}
 
 	public String getClassName(final String vmname, final String vmsignature,
@@ -54,8 +58,8 @@ public class JavaNames implements ILanguageNames {
 			// Append Eclipse style label, e.g. "Foo.new Bar() {...}"
 			if (vmsupertype != null) {
 				final StringBuilder builder = new StringBuilder();
-				final String vmenclosing = vmname.substring(0, vmname
-						.lastIndexOf('$'));
+				final String vmenclosing = vmname.substring(0,
+						vmname.lastIndexOf('$'));
 				builder.append(getClassName(vmenclosing)).append(".new ")
 						.append(getClassName(vmsupertype)).append("() {...}");
 				return builder.toString();
