@@ -62,7 +62,7 @@ public class Analyzer {
 	 *            id of the class calculated with {@link CRC64}
 	 * @return ASM visitor to write class definition to
 	 */
-	public ClassVisitor createAnalyzingVisitor(final long classid) {
+	private ClassVisitor createAnalyzingVisitor(final long classid) {
 		final ExecutionData data = executionData.get(classid);
 		final boolean[] classExec = data == null ? null : data.getData();
 		final ClassAnalyzer analyzer = new ClassAnalyzer(classid, classExec,

@@ -48,7 +48,7 @@ public class Instrumenter {
 	 *            next class visitor in the chain
 	 * @return new visitor to write class definition to
 	 */
-	public ClassVisitor createInstrumentingVisitor(final long classid,
+	private ClassVisitor createInstrumentingVisitor(final long classid,
 			final ClassVisitor cv) {
 		return new ClassProbesAdapter(new ClassInstrumenter(classid, runtime,
 				cv));

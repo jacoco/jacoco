@@ -17,7 +17,6 @@ import java.lang.instrument.ClassFileTransformer;
 import java.lang.instrument.IllegalClassFormatException;
 import java.security.ProtectionDomain;
 
-import org.jacoco.core.data.CRC64;
 import org.jacoco.core.instr.Instrumenter;
 import org.jacoco.core.runtime.AgentOptions;
 import org.jacoco.core.runtime.IRuntime;
@@ -66,10 +65,9 @@ public class CoverageTransformer implements ClassFileTransformer {
 		try {
 			return instrumenter.instrument(classfileBuffer);
 		} catch (Throwable t) {
-			final Long id = Long.valueOf(CRC64.checksum(classfileBuffer));
-			final String msg = "Error while instrumenting class %s (id=%016x).";
+			final String msg = "Error while instrumenting class %s.";
 			final IllegalClassFormatException ex = new IllegalClassFormatException(
-					format(msg, classname, id));
+					format(msg, classname));
 			ex.initCause(t);
 			// Report this, as the exception is ignored by the JVM:
 			logger.logExeption(ex);
