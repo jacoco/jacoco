@@ -31,9 +31,6 @@ import org.objectweb.asm.ClassVisitor;
 
 /**
  * Several APIs to analyze class structures.
- * 
- * @author Marc R. Hoffmann
- * @version $qualified.bundle.version$
  */
 public class Analyzer {
 

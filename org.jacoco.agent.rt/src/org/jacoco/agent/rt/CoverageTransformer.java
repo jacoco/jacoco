@@ -25,9 +25,6 @@ import org.jacoco.core.runtime.WildcardMatcher;
 
 /**
  * Class file transformer to instrument classes for code coverage analysis.
- * 
- * @author Marc R. Hoffmann
- * @version $qualified.bundle.version$
  */
 public class CoverageTransformer implements ClassFileTransformer {
 

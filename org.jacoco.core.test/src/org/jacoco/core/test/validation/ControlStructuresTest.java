@@ -20,9 +20,6 @@ import org.junit.Test;
 
 /**
  * Tests of basic Java control structures.
- * 
- * @author Marc R. Hoffmann
- * @version $qualified.bundle.version$
  */
 public class ControlStructuresTest extends ValidationTestBase {
 

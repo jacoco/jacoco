@@ -27,9 +27,6 @@ import org.objectweb.asm.Opcodes;
  * {@link Long}), the class vm name ({@link String}) and the probe count (
  * {@link Integer}). After the method call the probe array instance is stored in
  * the first slot of the {@link Object} array.
- * 
- * @author Marc R. Hoffmann
- * @version $qualified.bundle.version$
  */
 class ExecutionDataAccess {
 

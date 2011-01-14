@@ -15,7 +15,6 @@ import static org.junit.Assert.assertEquals;
 
 import org.jacoco.core.instr.MethodRecorder;
 import org.jacoco.core.internal.flow.LabelInfo;
-import org.jacoco.core.internal.instr.MethodInstrumenter;
 import org.junit.Before;
 import org.junit.Test;
 import org.objectweb.asm.ClassVisitor;
@@ -25,9 +24,6 @@ import org.objectweb.asm.Opcodes;
 
 /**
  * Unit tests for {@link MethodInstrumenter}.
- * 
- * @author Marc R. Hoffmann
- * @version $qualified.bundle.version$
  */
 public class MethodInstrumenterTest {
 

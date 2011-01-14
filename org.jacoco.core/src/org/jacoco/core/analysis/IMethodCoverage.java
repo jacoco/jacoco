@@ -13,9 +13,6 @@ package org.jacoco.core.analysis;
 
 /**
  * Coverage data of a single method.
- * 
- * @author Marc R. Hoffmann
- * @version $qualified.bundle.version$
  */
 public interface IMethodCoverage extends ISourceNode {
 

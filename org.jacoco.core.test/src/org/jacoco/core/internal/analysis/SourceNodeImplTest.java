@@ -13,15 +13,12 @@ package org.jacoco.core.internal.analysis;
 
 import static org.junit.Assert.assertEquals;
 
-import org.jacoco.core.analysis.ISourceNode;
 import org.jacoco.core.analysis.ICoverageNode.ElementType;
+import org.jacoco.core.analysis.ISourceNode;
 import org.junit.Test;
 
 /**
  * Unit tests for {@link SourceNodeImpl}.
- * 
- * @author Marc R. Hoffmann
- * @version $qualified.bundle.version$
  */
 public class SourceNodeImplTest {
 

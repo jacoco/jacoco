@@ -30,9 +30,6 @@ import org.junit.Test;
 
 /**
  * Unit tests for {@link ExecutionDataStore}.
- * 
- * @author Marc R. Hoffmann
- * @version $qualified.bundle.version$
  */
 public class ExecutionDataStoreTest implements IExecutionDataVisitor {
 
@@ -73,10 +70,10 @@ public class ExecutionDataStoreTest implements IExecutionDataVisitor {
 		store.put(aa);
 		final ExecutionData b = new ExecutionData(1001, "B", probes);
 		store.put(b);
-		final Set<ExecutionData> actual = new HashSet<ExecutionData>(store
-				.getContents());
-		final Set<ExecutionData> expected = new HashSet<ExecutionData>(Arrays
-				.asList(a, b));
+		final Set<ExecutionData> actual = new HashSet<ExecutionData>(
+				store.getContents());
+		final Set<ExecutionData> expected = new HashSet<ExecutionData>(
+				Arrays.asList(a, b));
 		assertEquals(expected, actual);
 	}
 

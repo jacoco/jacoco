@@ -23,11 +23,7 @@ import org.jacoco.core.data.SessionInfo;
 /**
  * A formatter that is composed from multiple other formatters. This can be used
  * to create more than one report format in one run.
- * 
- * @author Marc R. Hoffmann
- * @version $qualified.bundle.version$
  */
-
 public class MultiFormatter implements IReportFormatter {
 
 	private final List<IReportFormatter> formatters = new ArrayList<IReportFormatter>();

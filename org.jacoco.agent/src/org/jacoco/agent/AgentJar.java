@@ -21,9 +21,6 @@ import java.net.URL;
 
 /**
  * API to access the agent JAR file as a resource.
- * 
- * @author Marc R. Hoffmann
- * @version $qualified.bundle.version$
  */
 public final class AgentJar {
 

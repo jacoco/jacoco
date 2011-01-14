@@ -18,14 +18,10 @@ import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
 
 import org.jacoco.core.analysis.ICounter;
-import org.jacoco.core.internal.analysis.CounterImpl;
 import org.junit.Test;
 
 /**
  * Unit tests for {@link CounterImpl}.
- * 
- * @author Marc R. Hoffmann
- * @version $qualified.bundle.version$
  */
 public class CounterImplTest {
 

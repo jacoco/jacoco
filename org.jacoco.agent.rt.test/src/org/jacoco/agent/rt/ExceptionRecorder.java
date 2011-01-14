@@ -19,9 +19,6 @@ import java.util.List;
 
 /**
  * {@link IExceptionLogger} implementation for testing purposes.
- * 
- * @author Marc R. Hoffmann
- * @version $qualified.bundle.version$
  */
 public class ExceptionRecorder implements IExceptionLogger {
 

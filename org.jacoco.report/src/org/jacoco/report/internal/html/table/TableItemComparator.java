@@ -17,9 +17,6 @@ import org.jacoco.core.analysis.ICoverageNode;
 
 /**
  * Adapter to sort table items based on their coverage nodes.
- * 
- * @author Marc R. Hoffmann
- * @version $qualified.bundle.version$
  */
 class TableItemComparator implements Comparator<ITableItem> {
 

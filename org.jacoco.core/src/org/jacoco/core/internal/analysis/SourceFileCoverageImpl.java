@@ -15,9 +15,6 @@ import org.jacoco.core.analysis.ISourceFileCoverage;
 
 /**
  * Implementation of {@link ISourceFileCoverage}.
- * 
- * @author Marc R. Hoffmann
- * @version $qualified.bundle.version$
  */
 public class SourceFileCoverageImpl extends SourceNodeImpl implements
 		ISourceFileCoverage {

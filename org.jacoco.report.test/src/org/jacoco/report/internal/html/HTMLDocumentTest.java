@@ -17,14 +17,10 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.StringWriter;
 
-import org.jacoco.report.internal.html.HTMLDocument;
 import org.junit.Test;
 
 /**
  * Unit tests for {@link HTMLDocument}.
- * 
- * @author Marc R. Hoffmann
- * @version $qualified.bundle.version$
  */
 public class HTMLDocumentTest {
 

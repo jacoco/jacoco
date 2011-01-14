@@ -27,9 +27,6 @@ import org.jacoco.report.internal.xml.XMLReportNodeHandler;
 
 /**
  * Report formatter that creates a single XML file for a coverage session
- * 
- * @author Brock Janiczak
- * @version $qualified.bundle.version$
  */
 public class XMLFormatter implements IReportFormatter {
 

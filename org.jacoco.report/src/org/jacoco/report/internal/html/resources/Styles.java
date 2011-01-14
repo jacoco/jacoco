@@ -13,9 +13,6 @@ package org.jacoco.report.internal.html.resources;
 
 /**
  * Constants for styles defined by the report style sheet.
- * 
- * @author Marc R. Hoffmann
- * @version $qualified.bundle.version$
  */
 public final class Styles {
 

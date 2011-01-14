@@ -11,7 +11,6 @@
  *******************************************************************************/
 package org.jacoco.core.internal.instr;
 
-import org.jacoco.core.internal.instr.ClassInstrumenter;
 import org.jacoco.core.runtime.IRuntime;
 import org.jacoco.core.runtime.LoggerRuntime;
 import org.junit.Before;
@@ -20,9 +19,6 @@ import org.objectweb.asm.commons.EmptyVisitor;
 
 /**
  * Unit tests for {@link ClassInstrumenter}.
- * 
- * @author Marc R. Hoffmann
- * @version $qualified.bundle.version$
  */
 public class ClassInstrumenterTest {
 

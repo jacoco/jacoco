@@ -20,9 +20,6 @@ import org.junit.Test;
 
 /**
  * Unit tests for {@link ExecutionData}.
- * 
- * @author Marc R. Hoffmann
- * @version $qualified.bundle.version$
  */
 public class ExecutionDataTest {
 

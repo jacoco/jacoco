@@ -29,9 +29,6 @@ import org.junit.Test;
  * Unit tests for {@link ExecutionDataReader} and {@link ExecutionDataWriter}.
  * The tests don't care about the written binary format, they just verify
  * symmetry.
- * 
- * @author Marc R. Hoffmann
- * @version $qualified.bundle.version$
  */
 public class RemoteControlReaderWriterTest extends
 		ExecutionDataReaderWriterTest {

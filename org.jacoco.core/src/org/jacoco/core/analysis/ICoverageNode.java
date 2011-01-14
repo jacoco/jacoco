@@ -14,9 +14,6 @@ package org.jacoco.core.analysis;
 /**
  * Interface for hierarchical coverage data nodes with different coverage
  * counters.
- * 
- * @author Marc R. Hoffmann
- * @version $qualified.bundle.version$
  */
 public interface ICoverageNode {
 

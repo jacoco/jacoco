@@ -23,9 +23,6 @@ import java.io.OutputStream;
 
 /**
  * In-memory report output for test purposes.
- * 
- * @author Marc R. Hoffmann
- * @version $qualified.bundle.version$
  */
 public class MemorySingleReportOutput implements ISingleReportOutput {
 

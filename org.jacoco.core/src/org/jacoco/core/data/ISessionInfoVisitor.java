@@ -15,9 +15,6 @@ package org.jacoco.core.data;
  * Interface for data output of collected session information. This interface is
  * meant to be implemented by parties that want to retrieve data from the
  * coverage runtime.
- * 
- * @author Marc R. Hoffmann
- * @version $qualified.bundle.version$
  */
 public interface ISessionInfoVisitor {
 

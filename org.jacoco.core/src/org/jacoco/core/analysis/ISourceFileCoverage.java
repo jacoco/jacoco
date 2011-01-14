@@ -14,9 +14,6 @@ package org.jacoco.core.analysis;
 /**
  * Coverage data of a single source file. As source file contains one or more
  * classes.
- * 
- * @author Marc R. Hoffmann
- * @version $qualified.bundle.version$
  */
 public interface ISourceFileCoverage extends ISourceNode {
 

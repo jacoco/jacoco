@@ -21,9 +21,6 @@ import org.jacoco.core.data.SessionInfo;
 
 /**
  * Interface for all implementations that produce a particular report format.
- * 
- * @author Marc R. Hoffmann
- * @version $qualified.bundle.version$
  */
 public interface IReportFormatter {
 

@@ -20,9 +20,6 @@ import org.objectweb.asm.ClassReader;
 /**
  * Scenario to measure the overhead in terms of additional byte code size
  * through instrumentation.
- * 
- * @author Marc R. Hoffmann
- * @version $qualified.bundle.version$
  */
 public class InstrumentationSizeSzenario implements IPerfScenario {
 

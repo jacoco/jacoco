@@ -16,9 +16,6 @@ import java.io.OutputStream;
 
 /**
  * Interface to emit multiple binary files.
- * 
- * @author Marc R. Hoffmann
- * @version $qualified.bundle.version$
  */
 public interface IMultiReportOutput {
 

@@ -13,9 +13,6 @@ package org.jacoco.core.runtime;
 
 /**
  * Unit tests for {@link URLStreamHandlerRuntime}.
- * 
- * @author Marc R. Hoffmann
- * @version $qualified.bundle.version$
  */
 public class URLStreamHandlerRuntimeTest extends RuntimeTestBase {
 

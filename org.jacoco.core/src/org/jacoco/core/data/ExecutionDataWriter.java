@@ -19,9 +19,6 @@ import org.jacoco.core.internal.data.CompactDataOutput;
 
 /**
  * Serialization of execution data into binary streams.
- * 
- * @author Marc R. Hoffmann
- * @version $qualified.bundle.version$
  */
 public class ExecutionDataWriter implements ISessionInfoVisitor,
 		IExecutionDataVisitor {

@@ -19,9 +19,6 @@ import org.objectweb.asm.MethodVisitor;
  * specific and therefore abstracted by this interface. Implementations are
  * provided by {@link IRuntime} implementations and are used by the
  * instrumentation process.
- * 
- * @author Marc R. Hoffmann
- * @version $qualified.bundle.version$
  */
 public interface IExecutionDataAccessorGenerator {
 

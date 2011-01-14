@@ -28,9 +28,6 @@ import org.jacoco.core.runtime.RemoteControlWriter;
  * This example starts a socket server to collect coverage from agents that run
  * in output mode <code>tcpclient</code>. The collected data is dumped to a
  * local file.
- * 
- * @author Marc R. Hoffmann
- * @version $qualified.bundle.version$
  */
 public class ExecutionDataServer {
 
@@ -49,8 +46,8 @@ public class ExecutionDataServer {
 	public static void main(final String[] args) throws IOException {
 		final RemoteControlWriter fileWriter = new RemoteControlWriter(
 				new FileOutputStream(DESTFILE));
-		final ServerSocket server = new ServerSocket(PORT, 0, InetAddress
-				.getByName(ADDRESS));
+		final ServerSocket server = new ServerSocket(PORT, 0,
+				InetAddress.getByName(ADDRESS));
 		while (true) {
 			final Handler handler = new Handler(server.accept(), fileWriter);
 			new Thread(handler).start();

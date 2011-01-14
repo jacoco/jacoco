@@ -15,9 +15,6 @@ import static org.jacoco.core.test.validation.targets.Stubs.i1;
 
 /**
  * This test target is a class with a static initializer.
- * 
- * @author Marc R. Hoffmann
- * @version $qualified.bundle.version$
  */
 public class Target05 { // $line-classdef$
 

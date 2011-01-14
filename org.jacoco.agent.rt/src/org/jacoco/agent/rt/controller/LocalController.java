@@ -28,9 +28,6 @@ import org.jacoco.core.runtime.IRuntime;
  * <li>destfile</li>
  * <li>append</li>
  * </ul>
- * 
- * @author Brock Janiczak
- * @version $qualified.bundle.version$
  */
 public class LocalController implements IAgentController {
 

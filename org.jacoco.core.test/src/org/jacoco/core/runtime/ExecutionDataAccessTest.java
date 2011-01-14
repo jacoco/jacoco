@@ -28,9 +28,6 @@ import org.objectweb.asm.Type;
 
 /**
  * Unit tests for {@link ExecutionDataAccess}.
- * 
- * @author Marc R. Hoffmann
- * @version $qualified.bundle.version$
  */
 public class ExecutionDataAccessTest {
 
@@ -62,8 +59,8 @@ public class ExecutionDataAccessTest {
 	public void testGenerateArgumentArray() throws Exception {
 		final ClassWriter writer = new ClassWriter(0);
 		writer.visit(Opcodes.V1_5, Opcodes.ACC_PUBLIC, "Sample", null,
-				"java/lang/Object", new String[] { Type
-						.getInternalName(Callable.class) });
+				"java/lang/Object",
+				new String[] { Type.getInternalName(Callable.class) });
 
 		// Constructor
 		MethodVisitor mv = writer.visitMethod(Opcodes.ACC_PUBLIC, "<init>",
@@ -86,8 +83,8 @@ public class ExecutionDataAccessTest {
 		mv.visitEnd();
 
 		writer.visitEnd();
-		final TargetLoader loader = new TargetLoader("Sample", writer
-				.toByteArray());
+		final TargetLoader loader = new TargetLoader("Sample",
+				writer.toByteArray());
 		Callable<?> callable = (Callable<?>) loader.newTargetInstance();
 		final Object[] args = (Object[]) callable.call();
 		assertEquals(3, args.length, 0.0);
@@ -103,8 +100,8 @@ public class ExecutionDataAccessTest {
 
 		final ClassWriter writer = new ClassWriter(0);
 		writer.visit(Opcodes.V1_5, Opcodes.ACC_PUBLIC, "Sample", null,
-				"java/lang/Object", new String[] { Type
-						.getInternalName(Callable.class) });
+				"java/lang/Object",
+				new String[] { Type.getInternalName(Callable.class) });
 
 		// Constructor
 		MethodVisitor mv = writer.visitMethod(Opcodes.ACC_PUBLIC, "<init>",
@@ -137,8 +134,8 @@ public class ExecutionDataAccessTest {
 				null, null);
 
 		writer.visitEnd();
-		final TargetLoader loader = new TargetLoader("Sample", writer
-				.toByteArray());
+		final TargetLoader loader = new TargetLoader("Sample",
+				writer.toByteArray());
 		Callable<?> callable = (Callable<?>) loader.getTargetClass()
 				.getConstructor(Object.class).newInstance(access);
 		assertSame(data, callable.call());

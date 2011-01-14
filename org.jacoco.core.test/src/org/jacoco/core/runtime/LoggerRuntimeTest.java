@@ -13,9 +13,6 @@ package org.jacoco.core.runtime;
 
 /**
  * Unit tests for {@link LoggerRuntime}.
- * 
- * @author Marc R. Hoffmann
- * @version $qualified.bundle.version$
  */
 public class LoggerRuntimeTest extends RuntimeTestBase {
 

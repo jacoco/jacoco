@@ -38,9 +38,6 @@ import org.w3c.dom.Document;
 
 /**
  * Unit tests for {@link Table}.
- * 
- * @author Marc R. Hoffmann
- * @version $qualified.bundle.version$
  */
 public class TableTest {
 

@@ -62,9 +62,6 @@ import org.jacoco.report.xml.XMLFormatter;
 /**
  * Task for coverage report generation. Experimental implementation that needs
  * refinement.
- * 
- * @author Marc R. Hoffmann
- * @version $qualified.bundle.version$
  */
 public class ReportTask extends Task {
 

@@ -18,9 +18,7 @@ import java.io.OutputStream;
 /**
  * Additional data output methods for compact storage of data structures.
  * 
- * @see CompactDataOutput
- * @author Marc R. Hoffmann
- * @version $qualified.bundle.version$
+ * @see CompactDataInput
  */
 public class CompactDataOutput extends DataOutputStream {
 

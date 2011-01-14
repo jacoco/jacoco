@@ -22,9 +22,6 @@ import java.util.Map;
  * {@link String#intern()} does, this implementation avoids VM specific side
  * effects and is supposed to be faster, as neither native code is called nor
  * synchronization is required for concurrent lookup.
- * 
- * @author Marc R. Hoffmann
- * @version $qualified.bundle.version$
  */
 public final class StringPool {
 

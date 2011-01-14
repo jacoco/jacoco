@@ -34,9 +34,6 @@ import org.junit.Test;
 
 /**
  * Unit tests for {@link TcpConnection}.
- * 
- * @author Marc R. Hoffmann
- * @version $qualified.bundle.version$
  */
 public class TcpConnectionTest extends ExecutorTestBase {
 

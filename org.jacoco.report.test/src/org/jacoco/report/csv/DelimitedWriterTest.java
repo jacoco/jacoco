@@ -21,9 +21,6 @@ import org.junit.Test;
 
 /**
  * Unit tests for {@link DelimitedWriter}
- * 
- * @author Brock Janiczak
- * @version $qualified.bundle.version$
  */
 public class DelimitedWriterTest {
 

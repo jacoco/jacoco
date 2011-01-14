@@ -21,9 +21,6 @@ import org.objectweb.asm.Opcodes;
  * Method visitor to collect flow related information about the {@link Label}s
  * within a class. It calculates the properties "multitarget" and "successor"
  * that can afterwards be obtained via {@link LabelInfo}.
- * 
- * @author Marc R. Hoffmann
- * @version $qualified.bundle.version$
  */
 public final class LabelFlowAnalyzer implements MethodVisitor {
 

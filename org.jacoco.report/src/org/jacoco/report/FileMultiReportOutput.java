@@ -22,9 +22,6 @@ import java.io.OutputStream;
 /**
  * Implementation of {@link IMultiReportOutput} that writes files directly to a
  * given directory.
- * 
- * @author Marc R. Hoffmann
- * @version $qualified.bundle.version$
  */
 public class FileMultiReportOutput implements IMultiReportOutput {
 

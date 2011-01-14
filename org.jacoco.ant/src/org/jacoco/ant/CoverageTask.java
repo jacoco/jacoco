@@ -31,9 +31,6 @@ import org.apache.tools.ant.UnknownElement;
  * <li>Task must be either Java or JUnit</li>
  * <li>Task must be using a forked VM (so vm args can be passed)</li>
  * </ul>
- * 
- * @author Brock Janiczak
- * @version $qualified.bundle.version$
  */
 public class CoverageTask extends AbstractCoverageTask implements TaskContainer {
 

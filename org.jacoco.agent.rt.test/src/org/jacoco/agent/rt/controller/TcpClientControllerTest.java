@@ -33,9 +33,6 @@ import org.junit.Test;
 
 /**
  * Unit tests for {@link TcpClientController}.
- * 
- * @author Brock Janiczak
- * @version $qualified.bundle.version$
  */
 public class TcpClientControllerTest {
 

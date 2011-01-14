@@ -33,9 +33,6 @@ import org.junit.Test;
 
 /**
  * Unit tests for {@link ZipMultiReportOutput}.
- * 
- * @author Marc R. Hoffmann
- * @version $qualified.bundle.version$
  */
 public class ZipMultiReportOutputTest {
 
@@ -114,8 +111,9 @@ public class ZipMultiReportOutputTest {
 		zip.close();
 
 		final Map<String, byte[]> entries = readEntries();
-		assertEquals(new HashSet<String>(Arrays.asList("dir/index.html",
-				"readme.txt")), entries.keySet());
+		assertEquals(
+				new HashSet<String>(Arrays.asList("dir/index.html",
+						"readme.txt")), entries.keySet());
 		assertArrayEquals(content1, entries.get("dir/index.html"));
 		assertArrayEquals(content2, entries.get("readme.txt"));
 	}
@@ -135,8 +133,9 @@ public class ZipMultiReportOutputTest {
 		zip.close();
 
 		final Map<String, byte[]> entries = readEntries();
-		assertEquals(new HashSet<String>(Arrays.asList("dir/index.html",
-				"readme.txt")), entries.keySet());
+		assertEquals(
+				new HashSet<String>(Arrays.asList("dir/index.html",
+						"readme.txt")), entries.keySet());
 		assertArrayEquals(content1, entries.get("dir/index.html"));
 		assertArrayEquals(content2, entries.get("readme.txt"));
 	}

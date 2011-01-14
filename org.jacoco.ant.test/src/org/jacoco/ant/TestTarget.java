@@ -22,9 +22,6 @@ import org.junit.Test;
  * Simple test target for Java applications ant JUnit4 tests. To assert
  * execution it creates an empty file <code>target.txt</code> in the working
  * directory.
- * 
- * @author Marc R. Hoffmann
- * @version $qualified.bundle.version$
  */
 public class TestTarget {
 

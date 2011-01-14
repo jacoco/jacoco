@@ -20,9 +20,6 @@ import org.jacoco.core.analysis.ICoverageNode;
  * streaming and to save memory {@link ICoverageNode}s are traversed in a
  * deep-first fashion. The interface is implemented by the different report
  * writers.
- * 
- * @author Marc R. Hoffmann
- * @version $qualified.bundle.version$
  */
 public interface IReportVisitor {
 

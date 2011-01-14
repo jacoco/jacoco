@@ -23,9 +23,6 @@ import org.objectweb.asm.Label;
 
 /**
  * Unit tests for {@link LabelInfoTest}.
- * 
- * @author Marc R. Hoffmann
- * @version $qualified.bundle.version$
  */
 public class LabelInfoTest {
 

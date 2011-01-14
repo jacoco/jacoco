@@ -25,9 +25,6 @@ import org.objectweb.asm.Opcodes;
 
 /**
  * Adapter that instruments a class for coverage tracing.
- * 
- * @author Marc R. Hoffmann
- * @version $qualified.bundle.version$
  */
 public class ClassInstrumenter extends ClassAdapter implements
 		IClassProbesVisitor {

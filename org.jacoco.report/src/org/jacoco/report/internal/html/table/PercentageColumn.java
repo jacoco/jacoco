@@ -30,9 +30,6 @@ import org.jacoco.report.internal.html.resources.Resources;
  * Column that prints the coverage percentage for each item and the total
  * percentage in the footer. The implementation is stateless, instances might be
  * used in parallel.
- * 
- * @author Marc R. Hoffmann
- * @version $qualified.bundle.version$
  */
 public class PercentageColumn implements IColumnRenderer {
 

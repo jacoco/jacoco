@@ -26,9 +26,6 @@ import org.jacoco.report.ILanguageNames;
 import org.jacoco.report.JavaNames;
 import org.jacoco.report.MemoryMultiReportOutput;
 import org.jacoco.report.ReportOutputFolder;
-import org.jacoco.report.internal.html.HTMLElement;
-import org.jacoco.report.internal.html.IHTMLReportContext;
-import org.jacoco.report.internal.html.ILinkable;
 import org.jacoco.report.internal.html.index.ElementIndex;
 import org.jacoco.report.internal.html.index.IIndexUpdate;
 import org.jacoco.report.internal.html.resources.Resources;
@@ -41,9 +38,6 @@ import org.w3c.dom.Document;
 
 /**
  * Unit tests for {@link SessionsPage}.
- * 
- * @author Marc R. Hoffmann
- * @version $qualified.bundle.version$
  */
 public class SessionsPageTest {
 

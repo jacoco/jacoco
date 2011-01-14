@@ -18,9 +18,6 @@ import java.util.Random;
  * implementation could be more elegant using several classes, but the test
  * runner targets one class only. Also one could think about more efficient
  * implementations which again is not the focus here.
- * 
- * @author Marc R. Hoffmann
- * @version $qualified.bundle.version$
  */
 public class Target03 implements Runnable {
 

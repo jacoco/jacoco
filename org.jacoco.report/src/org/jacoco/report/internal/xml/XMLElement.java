@@ -16,14 +16,11 @@ import static java.lang.String.format;
 import java.io.IOException;
 import java.io.Writer;
 
-
 /**
  * Simple API to create well formed XML streams. A {@link XMLElement} instance
  * represents a single element in a XML document.
  * 
  * @see XMLDocument
- * @author Marc R. Hoffmann
- * @version $qualified.bundle.version$
  */
 public class XMLElement {
 

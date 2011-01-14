@@ -18,9 +18,6 @@ import java.util.regex.Pattern;
  * Matches strings against <code>?</code>/<code>*</code> wildcard expressions.
  * Multiple expressions can be separated with a vertical bar (|). In this case
  * the expression matches if at least one part matches.
- * 
- * @author Marc R. Hoffmann
- * @version $qualified.bundle.version$
  */
 public class WildcardMatcher {
 

@@ -15,9 +15,6 @@ import java.util.Collection;
 
 /**
  * Coverage data of a bundle. A bundle groups a collection of packages.
- * 
- * @author Marc R. Hoffmann
- * @version $qualified.bundle.version$
  */
 public interface IBundleCoverage extends ICoverageNode {
 

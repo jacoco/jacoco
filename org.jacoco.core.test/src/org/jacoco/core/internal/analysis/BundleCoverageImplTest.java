@@ -27,9 +27,6 @@ import org.junit.Test;
 
 /**
  * Unit tests for {@link BundleCoverageImpl}.
- * 
- * @author Marc R. Hoffmann
- * @version $qualified.bundle.version$
  */
 public class BundleCoverageImplTest {
 
@@ -40,7 +37,8 @@ public class BundleCoverageImplTest {
 		Collection<IPackageCoverage> packages = Collections
 				.singleton((IPackageCoverage) new PackageCoverageImpl("p1",
 						classes, sourcefiles));
-		BundleCoverageImpl bundle = new BundleCoverageImpl("testbundle", packages);
+		BundleCoverageImpl bundle = new BundleCoverageImpl("testbundle",
+				packages);
 		assertEquals(ICoverageNode.ElementType.BUNDLE, bundle.getElementType());
 		assertEquals("testbundle", bundle.getName());
 		assertEquals(packages, bundle.getPackages());
@@ -70,8 +68,8 @@ public class BundleCoverageImplTest {
 				lineCounter = CounterImpl.getInstance(5, 0);
 			}
 		};
-		BundleCoverageImpl bundle = new BundleCoverageImpl("testbundle", Arrays.asList(
-				p1, p2));
+		BundleCoverageImpl bundle = new BundleCoverageImpl("testbundle",
+				Arrays.asList(p1, p2));
 		assertEquals(CounterImpl.getInstance(2, 0), bundle.getClassCounter());
 		assertEquals(CounterImpl.getInstance(4, 0), bundle.getMethodCounter());
 		assertEquals(CounterImpl.getInstance(6, 0), bundle.getBranchCounter());
@@ -90,8 +88,8 @@ public class BundleCoverageImplTest {
 		cb.setSourceFileName("B.java");
 		ISourceFileCoverage sb = new SourceFileCoverageImpl("B.java", "p2");
 		ISourceFileCoverage sc = new SourceFileCoverageImpl("C.java", "p3");
-		BundleCoverageImpl bundle = new BundleCoverageImpl("bundle", Arrays.asList(
-				(IClassCoverage) ca, (IClassCoverage) cb),
+		BundleCoverageImpl bundle = new BundleCoverageImpl("bundle",
+				Arrays.asList((IClassCoverage) ca, (IClassCoverage) cb),
 				Arrays.asList(sb, sc));
 
 		Collection<IPackageCoverage> packages = bundle.getPackages();

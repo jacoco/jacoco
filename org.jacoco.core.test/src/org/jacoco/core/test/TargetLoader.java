@@ -17,9 +17,6 @@ import java.io.InputStream;
 
 /**
  * Loads a single class from a byte array.
- * 
- * @author Marc R. Hoffmann
- * @version $qualified.bundle.version$
  */
 public class TargetLoader extends ClassLoader {
 

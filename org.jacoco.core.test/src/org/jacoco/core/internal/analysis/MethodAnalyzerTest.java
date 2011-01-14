@@ -14,7 +14,6 @@ package org.jacoco.core.internal.analysis;
 import static org.junit.Assert.assertEquals;
 
 import org.jacoco.core.analysis.ILine;
-import org.jacoco.core.internal.analysis.MethodAnalyzer;
 import org.jacoco.core.internal.flow.IProbeIdGenerator;
 import org.jacoco.core.internal.flow.LabelFlowAnalyzer;
 import org.jacoco.core.internal.flow.MethodProbesAdapter;
@@ -26,9 +25,6 @@ import org.objectweb.asm.tree.MethodNode;
 
 /**
  * Unit tests for {@link MethodAnalyzer}.
- * 
- * @author Marc R. Hoffmann
- * @version $qualified.bundle.version$
  */
 public class MethodAnalyzerTest implements IProbeIdGenerator {
 

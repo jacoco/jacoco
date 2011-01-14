@@ -17,9 +17,6 @@ import org.jacoco.core.internal.analysis.CounterImpl;
 
 /**
  * Base implementation for coverage data nodes.
- * 
- * @author Marc R. Hoffmann
- * @version $qualified.bundle.version$
  */
 public class CoverageNodeImpl implements ICoverageNode {
 

@@ -18,14 +18,10 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.StringWriter;
 
-import org.jacoco.report.internal.xml.XMLDocument;
 import org.junit.Test;
 
 /**
  * Unit tests for {@link XMLDocument}.
- * 
- * @author Marc R. Hoffmann
- * @version $qualified.bundle.version$
  */
 public class XMLDocumentTest {
 

@@ -13,9 +13,6 @@ package org.jacoco.core.test.perf;
 
 /**
  * Interface for a performance scenario.
- * 
- * @author Marc R. Hoffmann
- * @version $qualified.bundle.version$
  */
 public interface IPerfScenario {
 

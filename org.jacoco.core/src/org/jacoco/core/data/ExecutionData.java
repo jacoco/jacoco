@@ -19,9 +19,6 @@ import java.util.Arrays;
  * Execution data for a single Java class. While instances are immutable care
  * has to be taken about the probe data array of type <code>boolean[]</code>
  * which can be modified.
- * 
- * @author Marc R. Hoffmann
- * @version $qualified.bundle.version$
  */
 public final class ExecutionData {
 
@@ -154,6 +151,7 @@ public final class ExecutionData {
 
 	@Override
 	public String toString() {
-		return String.format("ExecutionData [name=%s, id=%016x]", name, Long.valueOf(id));
+		return String.format("ExecutionData [name=%s, id=%016x]", name,
+				Long.valueOf(id));
 	}
 }

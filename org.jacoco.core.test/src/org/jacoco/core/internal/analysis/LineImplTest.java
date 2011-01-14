@@ -15,16 +15,11 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 
 import org.jacoco.core.analysis.ILine;
-import org.jacoco.core.internal.analysis.CounterImpl;
-import org.jacoco.core.internal.analysis.LineImpl;
 import org.junit.Before;
 import org.junit.Test;
 
 /**
  * Unit tests for {@link LineImplTest}.
- * 
- * @author Marc R. Hoffmann
- * @version $qualified.bundle.version$
  */
 public class LineImplTest {
 

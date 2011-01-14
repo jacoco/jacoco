@@ -30,9 +30,6 @@ import org.junit.Test;
 
 /**
  * Unit tests for {@link MockSocketConnection}.
- * 
- * @author Marc R. Hoffmann
- * @version $qualified.bundle.version$
  */
 public class MockSocketConnectionTest extends ExecutorTestBase {
 

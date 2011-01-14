@@ -31,9 +31,6 @@ import java.util.Set;
  * <li>If unique filenames can't directly created from the ids, additional
  * suffixes are appended.</li>
  * </ul>
- * 
- * @author Marc R. Hoffmann
- * @version $qualified.bundle.version$
  */
 class NormalizedFileNames {
 

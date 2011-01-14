@@ -24,9 +24,6 @@ import org.junit.Test;
 
 /**
  * Unit tests for {@link DirectorySourceFileLocator}.
- * 
- * @author Marc R. Hoffmann
- * @version $qualified.bundle.version$
  */
 public class DirectorySourceFileLocatorTest {
 

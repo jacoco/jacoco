@@ -18,9 +18,6 @@ import org.objectweb.asm.Opcodes;
 /**
  * Adapter that creates additional visitor events for probes to be inserted into
  * a method.
- * 
- * @author Marc R. Hoffmann
- * @version $qualified.bundle.version$
  */
 public final class MethodProbesAdapter extends MethodAdapter {
 

@@ -26,9 +26,6 @@ import java.util.Map;
  * <pre>
  *   key1=value1,key2=value2,key3=value3
  * </pre>
- * 
- * @author Marc R. Hoffmann
- * @version $qualified.bundle.version$
  */
 public class AgentOptions {
 

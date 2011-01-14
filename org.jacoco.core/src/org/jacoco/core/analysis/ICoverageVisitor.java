@@ -11,13 +11,9 @@
  *******************************************************************************/
 package org.jacoco.core.analysis;
 
-
 /**
  * Interface for coverage data output as a stream of {@link IClassCoverage}
  * instances.
- * 
- * @author Marc R. Hoffmann
- * @version $qualified.bundle.version$
  */
 public interface ICoverageVisitor {
 

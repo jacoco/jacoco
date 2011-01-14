@@ -20,15 +20,11 @@ import java.io.InputStream;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
-import org.jacoco.core.internal.analysis.ContentTypeDetector;
 import org.jacoco.core.test.TargetLoader;
 import org.junit.Test;
 
 /**
  * Unit tests for {@link ContentTypeDetector}.
- * 
- * @author Marc R. Hoffmann
- * @version $qualified.bundle.version$
  */
 public class ContentTypeDetectorTest {
 

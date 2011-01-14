@@ -23,9 +23,6 @@ import org.jacoco.report.ISourceFileLocator;
 
 /**
  * Report visitor that handles coverage information for packages.
- * 
- * @author Brock Janiczak
- * @version $qualified.bundle.version$
  */
 class CSVPackageHandler implements IReportVisitor {
 

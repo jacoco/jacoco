@@ -34,9 +34,6 @@ import org.objectweb.asm.commons.RemappingClassAdapter;
  * Custom Ant type that extracts all class files that are referenced from a
  * given set of root classes. Unlike the original Ant type
  * <code>ClassFileSet</code> this task works recursively.
- * 
- * @author Marc R. Hoffmann
- * @version $qualified.bundle.version$
  */
 public class DeepClassFileSet implements ResourceCollection {
 

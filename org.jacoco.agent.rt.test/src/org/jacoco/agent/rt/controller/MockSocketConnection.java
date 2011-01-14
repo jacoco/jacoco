@@ -28,9 +28,6 @@ import java.util.concurrent.ConcurrentLinkedQueue;
  * Simulates the two connected {@link Socket} objects. No physical connection is
  * established for this. The the behavior including the (inconsistent) exception
  * messages have been derived from Sun JDK 1.5.0_18-b02.
- * 
- * @author Marc R. Hoffmann
- * @version $qualified.bundle.version$
  */
 public class MockSocketConnection {
 

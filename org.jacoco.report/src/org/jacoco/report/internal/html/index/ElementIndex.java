@@ -20,9 +20,6 @@ import org.jacoco.report.internal.html.ILinkable;
 /**
  * An index over all report pages that allows queries according to certain
  * criteria.
- * 
- * @author Marc R. Hoffmann
- * @version $qualified.bundle.version$
  */
 public class ElementIndex implements IIndexUpdate {
 

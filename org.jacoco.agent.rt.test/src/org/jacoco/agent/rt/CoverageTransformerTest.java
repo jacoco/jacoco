@@ -26,9 +26,6 @@ import org.junit.Test;
 
 /**
  * Unit tests for {@link CoverageTransformer}.
- * 
- * @author Marc R. Hoffmann
- * @version $qualified.bundle.version$
  */
 public class CoverageTransformerTest {
 
@@ -72,8 +69,7 @@ public class CoverageTransformerTest {
 
 	@Test
 	public void testFilterClassLoaderNegative() {
-		options
-				.setExclClassloader("org.jacoco.agent.rt.CoverageTransformerTest$*");
+		options.setExclClassloader("org.jacoco.agent.rt.CoverageTransformerTest$*");
 		CoverageTransformer t = createTransformer();
 		ClassLoader myClassLoader = new ClassLoader(null) {
 		};
@@ -127,9 +123,8 @@ public class CoverageTransformerTest {
 					"Error while instrumenting class org.jacoco.Sample (id=0000000000000000).",
 					e.getMessage());
 		}
-		recorder
-				.assertException(IllegalClassFormatException.class,
-						"Error while instrumenting class org.jacoco.Sample (id=0000000000000000).");
+		recorder.assertException(IllegalClassFormatException.class,
+				"Error while instrumenting class org.jacoco.Sample (id=0000000000000000).");
 		recorder.clear();
 	}
 

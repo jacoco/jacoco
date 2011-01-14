@@ -34,9 +34,6 @@ import org.jacoco.core.internal.analysis.SourceFileCoverageImpl;
 /**
  * Creates a simple hierarchy of coverage nodes and feeds it into
  * {@link IReportFormatter} instances.
- * 
- * @author Marc R. Hoffmann
- * @version $qualified.bundle.version$
  */
 public class ReportStructureTestDriver {
 

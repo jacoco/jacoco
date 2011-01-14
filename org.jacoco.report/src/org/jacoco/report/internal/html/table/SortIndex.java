@@ -20,8 +20,6 @@ import java.util.List;
  * A index on a list of items sorted with a given {@link Comparator}. The index
  * does not change the list itself.
  * 
- * @author Marc R. Hoffmann
- * @version $qualified.bundle.version$
  * @param <T>
  *            type of the items
  */

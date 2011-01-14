@@ -12,13 +12,9 @@
 package org.jacoco.report.internal.html;
 
 import org.jacoco.report.ReportOutputFolder;
-import org.jacoco.report.internal.html.ILinkable;
 
 /**
  * Stub implementation for {@link ILinkable}.
- * 
- * @author Marc R. Hoffmann
- * @version $qualified.bundle.version$
  */
 public class LinkableStub implements ILinkable {
 

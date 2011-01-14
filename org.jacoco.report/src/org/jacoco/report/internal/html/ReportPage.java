@@ -22,9 +22,6 @@ import org.jacoco.report.internal.html.resources.Styles;
  * Base class for HTML page generators. It renders the page skeleton with the
  * breadcrumb, the title and the footer. Every report page is part of a
  * hierarchy and has a parent page (except the root page).
- * 
- * @author Marc R. Hoffmann
- * @version $qualified.bundle.version$
  */
 public abstract class ReportPage implements ILinkable {
 

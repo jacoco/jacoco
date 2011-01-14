@@ -14,9 +14,6 @@ package org.jacoco.core.test.validation.targets;
 /**
  * This test target has instance members with initialization in two
  * constructors.
- * 
- * @author Marc R. Hoffmann
- * @version $qualified.bundle.version$
  */
 public class Target09 {
 

@@ -24,9 +24,6 @@ import org.junit.Test;
 
 /**
  * Unit test for {@link NodeComparator}.
- * 
- * @author Marc R. Hoffmann
- * @version $qualified.bundle.version$
  */
 public class NodeComparatorTest {
 

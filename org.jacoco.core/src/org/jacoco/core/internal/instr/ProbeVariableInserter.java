@@ -22,9 +22,6 @@ import org.objectweb.asm.Type;
  * {@link org.objectweb.asm.commons.LocalVariablesSorter} that inserts a local
  * variable at the very beginning of the method. This avoids maintaining mapping
  * tables and prevents ASM bug #314563.
- * 
- * @author Marc R. Hoffmann
- * @version $qualified.bundle.version$
  */
 class ProbeVariableInserter extends MethodAdapter {
 

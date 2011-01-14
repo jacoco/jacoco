@@ -23,9 +23,6 @@ import org.junit.Test;
 
 /**
  * Unit tests for {@link Source}.
- * 
- * @author Marc R. Hoffmann
- * @version $qualified.bundle.version$
  */
 public class SourceTest {
 

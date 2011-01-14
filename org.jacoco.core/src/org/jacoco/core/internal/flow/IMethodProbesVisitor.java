@@ -17,9 +17,6 @@ import org.objectweb.asm.MethodVisitor;
 /**
  * A {@link MethodVisitor} with additional methods to get probe insertion
  * information.
- * 
- * @author Marc R. Hoffmann
- * @version $qualified.bundle.version$
  */
 public interface IMethodProbesVisitor extends MethodVisitor {
 

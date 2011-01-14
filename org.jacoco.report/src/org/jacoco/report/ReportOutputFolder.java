@@ -19,9 +19,6 @@ import java.util.Map;
 /**
  * Logical representation of a folder in the output structure. This utility
  * ensures valid and unique file names and helps to create relative links.
- * 
- * @author Marc R. Hoffmann
- * @version $qualified.bundle.version$
  */
 public class ReportOutputFolder {
 

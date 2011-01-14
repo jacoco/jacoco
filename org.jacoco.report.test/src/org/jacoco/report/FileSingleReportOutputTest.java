@@ -25,9 +25,6 @@ import org.junit.rules.TemporaryFolder;
 
 /**
  * Unit tests for {@link FileSingleReportOutput}.
- * 
- * @author Marc R. Hoffmann
- * @version $qualified.bundle.version$
  */
 public class FileSingleReportOutputTest {
 

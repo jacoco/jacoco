@@ -26,9 +26,6 @@ import org.junit.Test;
 
 /**
  * Unit tests for {@link CoverageNodeImpl}.
- * 
- * @author Marc R. Hoffmann
- * @version $qualified.bundle.version$
  */
 public class CoverageNodeImplTest {
 

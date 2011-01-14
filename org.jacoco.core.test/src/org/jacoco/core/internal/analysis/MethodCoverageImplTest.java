@@ -18,9 +18,6 @@ import org.junit.Test;
 
 /**
  * Unit test for {@link MethodCoverageImpl}.
- * 
- * @author Marc R. Hoffmann
- * @version $qualified.bundle.version$
  */
 public class MethodCoverageImplTest {
 

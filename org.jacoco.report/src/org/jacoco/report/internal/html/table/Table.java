@@ -25,9 +25,6 @@ import org.jacoco.report.internal.html.resources.Styles;
 
 /**
  * Renderer for a table of {@link ITableItem}s.
- * 
- * @author Marc R. Hoffmann
- * @version $qualified.bundle.version$
  */
 public class Table {
 

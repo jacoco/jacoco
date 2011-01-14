@@ -13,9 +13,6 @@ package org.jacoco.report;
 
 /**
  * Interface to create programming language specific names from VM names.
- * 
- * @author Marc R. Hoffmann
- * @version $qualified.bundle.version$
  */
 public interface ILanguageNames {
 

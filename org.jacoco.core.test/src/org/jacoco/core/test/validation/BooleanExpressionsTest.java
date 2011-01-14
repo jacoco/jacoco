@@ -19,9 +19,6 @@ import org.junit.Test;
 
 /**
  * Tests of basic Java boolean expressions.
- * 
- * @author Marc R. Hoffmann
- * @version $qualified.bundle.version$
  */
 public class BooleanExpressionsTest extends ValidationTestBase {
 

@@ -24,8 +24,7 @@ import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 
 /**
- * @author Brock Janiczak
- * @version $qualified.bundle.version$
+ * Unit tests for {@link LocalControllerTest}.
  */
 public class LocalControllerTest {
 

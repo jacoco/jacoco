@@ -15,9 +15,6 @@ import org.objectweb.asm.Type;
 
 /**
  * Names for the Java language.
- * 
- * @author Marc R. Hoffmann
- * @version $qualified.bundle.version$
  */
 public class JavaNames implements ILanguageNames {
 

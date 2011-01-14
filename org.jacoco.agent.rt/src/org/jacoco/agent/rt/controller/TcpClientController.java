@@ -19,8 +19,12 @@ import org.jacoco.core.runtime.AgentOptions;
 import org.jacoco.core.runtime.IRuntime;
 
 /**
- * @author Marc R. Hoffmann
- * @version $qualified.bundle.version$
+ * Controller that connects to a TCP port. This controller uses the following
+ * agent options:
+ * <ul>
+ * <li>address</li>
+ * <li>port</li>
+ * </ul>
  */
 public class TcpClientController implements IAgentController {
 

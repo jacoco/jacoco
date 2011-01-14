@@ -26,9 +26,6 @@ import org.junit.Before;
 /**
  * Unit tests base for tests that need an {@link Executor} for multithreaded
  * test scenarios.
- * 
- * @author Marc R. Hoffmann
- * @version $qualified.bundle.version$
  */
 public abstract class ExecutorTestBase {
 

@@ -19,9 +19,6 @@ import org.apache.tools.ant.Task;
 /**
  * This task creates a random identifier and loads it into a property. The
  * identifier is a valid Java identifier.
- * 
- * @author Marc R. Hoffmann
- * @version $qualified.bundle.version$
  */
 public class RandomIdTask extends Task {
 

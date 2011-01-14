@@ -26,9 +26,6 @@ import org.objectweb.asm.Opcodes;
  * This {@link IRuntime} implementation registers a special
  * {@link URLStreamHandler} to process coverage data. The handler is not
  * actually used for opening a URL, but to get access to the runtime object.
- * 
- * @author Marc R. Hoffmann
- * @version $qualified.bundle.version$
  */
 public class URLStreamHandlerRuntime extends AbstractRuntime {
 

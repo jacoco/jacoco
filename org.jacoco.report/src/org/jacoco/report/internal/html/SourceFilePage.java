@@ -25,9 +25,6 @@ import org.jacoco.report.internal.html.resources.Resources;
 /**
  * Page showing the content of a source file with numbered and highlighted
  * source lines.
- * 
- * @author Marc R. Hoffmann
- * @version $qualified.bundle.version$
  */
 public class SourceFilePage extends NodePage {
 

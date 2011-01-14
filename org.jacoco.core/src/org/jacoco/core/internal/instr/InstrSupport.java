@@ -17,9 +17,6 @@ import org.objectweb.asm.commons.GeneratorAdapter;
 
 /**
  * Constants and utilities for byte code instrumentation.
- * 
- * @author Marc R. Hoffmann
- * @version $qualified.bundle.version$
  */
 public final class InstrSupport {
 

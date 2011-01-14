@@ -26,9 +26,6 @@ import org.objectweb.asm.Opcodes;
  * This runtime may cause problems in environments with security restrictions,
  * in applications that replace the system properties or in applications that
  * fail if non-String values are placed in the system properties.
- * 
- * @author Marc R. Hoffmann
- * @version $qualified.bundle.version$
  */
 public class SystemPropertiesRuntime extends AbstractRuntime {
 

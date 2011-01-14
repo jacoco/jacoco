@@ -20,9 +20,6 @@ import org.junit.Test;
 
 /**
  * Tests of exception based control flow.
- * 
- * @author Marc R. Hoffmann
- * @version $qualified.bundle.version$
  */
 public class ExceptionsTest extends ValidationTestBase {
 

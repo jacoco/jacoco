@@ -13,9 +13,6 @@ package org.jacoco.core.test.perf;
 
 /**
  * Base class for execution time test scenarios.
- * 
- * @author Marc R. Hoffmann
- * @version $qualified.bundle.version$
  */
 public abstract class TimedScenario implements IPerfScenario {
 

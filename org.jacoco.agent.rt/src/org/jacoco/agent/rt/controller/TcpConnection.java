@@ -22,9 +22,6 @@ import org.jacoco.core.runtime.RemoteControlWriter;
 
 /**
  * Handler for a single socket based remote connection.
- * 
- * @author Marc R. Hoffmann
- * @version $qualified.bundle.version$
  */
 class TcpConnection implements IRemoteCommandVisitor {
 

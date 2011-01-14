@@ -27,9 +27,6 @@ import org.jacoco.core.internal.analysis.SourceFileCoverageImpl;
  * through its {@link ICoverageVisitor} interface. Afterwards the collected data
  * can be obtained with {@link #getClasses()}, {@link #getSourceFiles()} or
  * {@link #getBundle(String)}.
- * 
- * @author Marc R. Hoffmann
- * @version $qualified.bundle.version$
  */
 public class CoverageBuilder implements ICoverageVisitor {
 
@@ -72,7 +69,8 @@ public class CoverageBuilder implements ICoverageVisitor {
 	 * @return bundle containing all classes and source files
 	 */
 	public BundleCoverageImpl getBundle(final String name) {
-		return new BundleCoverageImpl(name, classes.values(), sourcefiles.values());
+		return new BundleCoverageImpl(name, classes.values(),
+				sourcefiles.values());
 	}
 
 	// === IStructureVisitor ===

@@ -23,9 +23,6 @@ import org.jacoco.report.internal.html.resources.Styles;
 
 /**
  * Creates a highlighted output of a source file.
- * 
- * @author Marc R. Hoffmann
- * @version $qualified.bundle.version$
  */
 class SourceHighlighter {
 

@@ -18,9 +18,6 @@ import org.objectweb.asm.MethodVisitor;
  * Strategies to retrieve the probe array instance for each method within a
  * type. This abstraction is required as we need to follow a different strategy
  * depending on whether the instrumented type is a class or interface.
- * 
- * @author Marc R. Hoffmann
- * @version $qualified.bundle.version$
  */
 interface IProbeArrayStrategy {
 

@@ -19,9 +19,6 @@ import java.util.zip.ZipOutputStream;
 /**
  * Implementation of {@link IMultiReportOutput} that writes files into a
  * {@link ZipOutputStream}.
- * 
- * @author Marc R. Hoffmann
- * @version $qualified.bundle.version$
  */
 public class ZipMultiReportOutput implements IMultiReportOutput {
 

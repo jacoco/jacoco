@@ -33,9 +33,6 @@ import org.jacoco.core.data.SessionInfoStore;
 
 /**
  * Task for merging a set of execution data store files into a single file
- * 
- * @author Brock Janiczak
- * @version $qualified.bundle.version$
  */
 public class MergeTask extends Task {
 

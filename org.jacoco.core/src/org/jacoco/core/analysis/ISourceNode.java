@@ -14,9 +14,6 @@ package org.jacoco.core.analysis;
 /**
  * Interface for coverage node that have individual source lines like methods,
  * classes and source files.
- * 
- * @author Marc R. Hoffmann
- * @version $qualified.bundle.version$
  */
 public interface ISourceNode extends ICoverageNode {
 

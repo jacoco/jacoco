@@ -19,9 +19,6 @@ import org.objectweb.asm.Opcodes;
 
 /**
  * Detector for content types of binary streams based on a magic headers.
- * 
- * @author Marc R. Hoffmann
- * @version $qualified.bundle.version$
  */
 public class ContentTypeDetector {
 

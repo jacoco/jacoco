@@ -28,9 +28,6 @@ import org.objectweb.asm.Opcodes;
 
 /**
  * Unit tests for {@link MethodProbesAdapter}.
- * 
- * @author Marc R. Hoffmann
- * @version $qualified.bundle.version$
  */
 public class MethodProbesAdapterTest implements IProbeIdGenerator,
 		InvocationHandler {

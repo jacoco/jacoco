@@ -23,9 +23,6 @@ import org.jacoco.core.data.SessionInfo;
 
 /**
  * This example reads given execution data files and dumps their content.
- * 
- * @author Marc R. Hoffmann
- * @version $qualified.bundle.version$
  */
 public class ExecDump {
 
@@ -52,17 +49,16 @@ public class ExecDump {
 		reader.setSessionInfoVisitor(new ISessionInfoVisitor() {
 			public void visitSessionInfo(final SessionInfo info) {
 				System.out.printf("Session \"%s\": %s - %s%n", info.getId(),
-						new Date(info.getStartTimeStamp()), new Date(info
-								.getDumpTimeStamp()));
+						new Date(info.getStartTimeStamp()),
+						new Date(info.getDumpTimeStamp()));
 			}
 		});
 		reader.setExecutionDataVisitor(new IExecutionDataVisitor() {
 			public void visitClassExecution(final ExecutionData data) {
-				System.out
-						.printf("%016x  %3d of %3d   %s%n", Long.valueOf(data
-								.getId()), Integer.valueOf(getHitCount(data
-								.getData())), Integer
-								.valueOf(data.getData().length), data.getName());
+				System.out.printf("%016x  %3d of %3d   %s%n",
+						Long.valueOf(data.getId()),
+						Integer.valueOf(getHitCount(data.getData())),
+						Integer.valueOf(data.getData().length), data.getName());
 			}
 		});
 		reader.read();

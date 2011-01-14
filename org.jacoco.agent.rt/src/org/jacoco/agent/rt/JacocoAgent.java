@@ -27,9 +27,6 @@ import org.jacoco.core.runtime.ModifiedSystemClassRuntime;
 
 /**
  * The agent which is referred as the <code>Premain-Class</code>.
- * 
- * @author Marc R. Hoffmann
- * @version $qualified.bundle.version$
  */
 public class JacocoAgent {
 

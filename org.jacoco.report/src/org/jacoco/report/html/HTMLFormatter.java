@@ -49,9 +49,6 @@ import org.jacoco.report.internal.html.table.Table;
 
 /**
  * Formatter for coverage reports in multiple HTML pages.
- * 
- * @author Marc R. Hoffmann
- * @version $qualified.bundle.version$
  */
 public class HTMLFormatter implements IReportFormatter, IHTMLReportContext {
 

@@ -24,9 +24,6 @@ import org.jacoco.report.internal.html.resources.Resources;
 /**
  * Page showing coverage information for a node that groups other nodes. The
  * page shows a table of linked nodes.
- * 
- * @author Marc R. Hoffmann
- * @version $qualified.bundle.version$
  */
 public class GroupPage extends NodePage {
 

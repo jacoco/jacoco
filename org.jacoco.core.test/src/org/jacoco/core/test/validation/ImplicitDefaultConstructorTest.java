@@ -18,9 +18,6 @@ import org.junit.Test;
 
 /**
  * Test of a implicit default constructor.
- * 
- * @author Marc R. Hoffmann
- * @version $qualified.bundle.version$
  */
 public class ImplicitDefaultConstructorTest extends ValidationTestBase {
 

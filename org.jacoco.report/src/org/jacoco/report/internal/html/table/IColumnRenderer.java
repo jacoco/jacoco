@@ -24,9 +24,6 @@ import org.jacoco.report.internal.html.resources.Resources;
  * Renderer for a single column of a coverage table. The methods are always
  * called in the sequence <code>init header footer item*</code>. Implementations
  * might be stateful.
- * 
- * @author Marc R. Hoffmann
- * @version $qualified.bundle.version$
  */
 public interface IColumnRenderer {
 

@@ -32,9 +32,6 @@ import org.xml.sax.SAXException;
 
 /**
  * Unit tests for {@link XMLReportNodeHandler}.
- * 
- * @author Marc R. Hoffmann
- * @version $qualified.bundle.version$
  */
 public class XMLReportNodeHandlerTest {
 

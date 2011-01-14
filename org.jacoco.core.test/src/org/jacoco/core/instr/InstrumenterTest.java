@@ -27,9 +27,6 @@ import org.junit.Test;
 
 /**
  * Unit tests for {@link Instrumenter}.
- * 
- * @author Marc R. Hoffmann
- * @version $qualified.bundle.version$
  */
 public class InstrumenterTest {
 
@@ -76,9 +73,9 @@ public class InstrumenterTest {
 				.getClassData(SerializationTarget.class));
 		final TargetLoader loader = new TargetLoader(SerializationTarget.class,
 				bytes);
-		final Object obj1 = loader.getTargetClass().getConstructor(
-				String.class, Integer.TYPE).newInstance("Hello",
-				Integer.valueOf(42));
+		final Object obj1 = loader.getTargetClass()
+				.getConstructor(String.class, Integer.TYPE)
+				.newInstance("Hello", Integer.valueOf(42));
 
 		// Serialize instrumented instance:
 		final ByteArrayOutputStream buffer = new ByteArrayOutputStream();

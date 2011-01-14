@@ -29,9 +29,6 @@ import org.jacoco.report.JavaNames;
 /**
  * Report formatter that will create a single CSV file. By default the filename
  * used will be the name of the session.
- * 
- * @author Brock Janiczak
- * @version $qualified.bundle.version$
  */
 public class CSVFormatter implements IReportFormatter {
 

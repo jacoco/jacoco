@@ -18,9 +18,6 @@ import org.junit.Test;
 
 /**
  * Test of blocks before the super constructor call.
- * 
- * @author Marc R. Hoffmann
- * @version $qualified.bundle.version$
  */
 public class BlocksBeforeSuperConstructorTest extends ValidationTestBase {
 

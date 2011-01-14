@@ -19,9 +19,6 @@ import org.jacoco.core.analysis.IMethodCoverage;
 
 /**
  * Implementation of {@link IClassCoverage}.
- * 
- * @author Marc R. Hoffmann
- * @version $qualified.bundle.version$
  */
 public class ClassCoverageImpl extends SourceNodeImpl implements IClassCoverage {
 

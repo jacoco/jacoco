@@ -17,9 +17,6 @@ import org.jacoco.core.data.ISessionInfoVisitor;
 /**
  * This interface represents a particular mechanism to collect execution
  * information in the target VM at runtime.
- * 
- * @author Marc R. Hoffmann
- * @version $qualified.bundle.version$
  */
 public interface IRuntime extends IExecutionDataAccessorGenerator {
 

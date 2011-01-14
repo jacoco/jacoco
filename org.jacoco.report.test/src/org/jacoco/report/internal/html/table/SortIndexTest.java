@@ -19,15 +19,11 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
-import org.jacoco.report.internal.html.table.SortIndex;
 import org.junit.Before;
 import org.junit.Test;
 
 /**
  * Unit tests for {@link SortIndex}.
- * 
- * @author Marc R. Hoffmann
- * @version $qualified.bundle.version$
  */
 public class SortIndexTest {
 

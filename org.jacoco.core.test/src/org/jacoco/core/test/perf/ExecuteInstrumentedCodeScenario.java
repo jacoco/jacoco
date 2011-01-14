@@ -20,9 +20,6 @@ import org.objectweb.asm.ClassReader;
 /**
  * This scenario runs a given scenario twice and reports the execution time:
  * Once on its original version, once in a instrumented version.
- * 
- * @author Marc R. Hoffmann
- * @version $qualified.bundle.version$
  */
 public class ExecuteInstrumentedCodeScenario extends TimedScenario {
 

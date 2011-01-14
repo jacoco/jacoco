@@ -36,9 +36,6 @@ import org.w3c.dom.Document;
 
 /**
  * Unit tests for {@link BarColumn}.
- * 
- * @author Marc R. Hoffmann
- * @version $qualified.bundle.version$
  */
 public class BarColumnTest {
 

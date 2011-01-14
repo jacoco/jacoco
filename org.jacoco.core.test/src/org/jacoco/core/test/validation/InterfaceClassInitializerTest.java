@@ -19,9 +19,6 @@ import org.junit.Test;
 
 /**
  * Tests of static initializer in interfaces.
- * 
- * @author Marc R. Hoffmann
- * @version $qualified.bundle.version$
  */
 public class InterfaceClassInitializerTest extends ValidationTestBase {
 

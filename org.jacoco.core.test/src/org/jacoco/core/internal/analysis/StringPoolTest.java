@@ -15,15 +15,11 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertSame;
 
-import org.jacoco.core.internal.analysis.StringPool;
 import org.junit.Before;
 import org.junit.Test;
 
 /**
  * Unit tests for {@link StringPool}.
- * 
- * @author Marc R. Hoffmann
- * @version $qualified.bundle.version$
  */
 public class StringPoolTest {
 

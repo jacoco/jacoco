@@ -29,9 +29,6 @@ import org.jacoco.report.internal.html.resources.Styles;
 
 /**
  * Page to display information about sessions covered by this report.
- * 
- * @author Marc R. Hoffmann
- * @version $qualified.bundle.version$
  */
 public class SessionsPage extends ReportPage {
 

@@ -17,9 +17,6 @@ import org.jacoco.report.internal.xml.XMLSupport;
 
 /**
  * Support for verifying XHTML documents.
- * 
- * @author Marc R. Hoffmann
- * @version $qualified.bundle.version$
  */
 public class HTMLSupport extends XMLSupport {
 

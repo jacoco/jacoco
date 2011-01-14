@@ -29,9 +29,6 @@ import org.jacoco.core.runtime.LoggerRuntime;
  * Example usage of the JaCoCo core API. In this tutorial a single target class
  * will be instrumented and executed. Finally the coverage information will be
  * dumped.
- * 
- * @author Marc R. Hoffmann
- * @version $qualified.bundle.version$
  */
 public class CoreTutorial {
 

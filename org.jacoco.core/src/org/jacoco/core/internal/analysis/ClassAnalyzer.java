@@ -20,9 +20,6 @@ import org.objectweb.asm.Opcodes;
 
 /**
  * Analyzes the structure of a class.
- * 
- * @author Marc R. Hoffmann
- * @version $qualified.bundle.version$
  */
 public class ClassAnalyzer implements IClassProbesVisitor {
 

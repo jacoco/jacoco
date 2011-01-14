@@ -18,9 +18,6 @@ import org.junit.Test;
 
 /**
  * Unit tests for {@link Instruction}.
- * 
- * @author Marc R. Hoffmann
- * @version $qualified.bundle.version$
  */
 public class InstructionTest {
 

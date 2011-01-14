@@ -20,9 +20,6 @@ import org.junit.Test;
 
 /**
  * Test of field initialization in two constructors.
- * 
- * @author Marc R. Hoffmann
- * @version $qualified.bundle.version$
  */
 public class FieldInitializationInTwoConstructorsTest extends
 		ValidationTestBase {

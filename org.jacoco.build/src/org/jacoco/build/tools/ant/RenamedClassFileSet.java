@@ -31,9 +31,6 @@ import org.objectweb.asm.commons.RemappingClassAdapter;
 /**
  * Custom Ant type that renames a collection of class files. Not only the file
  * names are renamed, also the class definitions are adjusted.
- * 
- * @author Marc R. Hoffmann
- * @version $qualified.bundle.version$
  */
 public class RenamedClassFileSet implements ResourceCollection {
 
@@ -142,8 +139,8 @@ public class RenamedClassFileSet implements ResourceCollection {
 	private Resource rename(final Resource res) {
 		// On Windows we get back slashes:
 		final String name = rename(res.getName().replace('\\', '/'));
-		return new Resource(name, res.isExists(), res.getLastModified(), res
-				.isDirectory(), res.getSize()) {
+		return new Resource(name, res.isExists(), res.getLastModified(),
+				res.isDirectory(), res.getSize()) {
 			@Override
 			public InputStream getInputStream() throws IOException {
 				final InputStream stream = res.getInputStream();

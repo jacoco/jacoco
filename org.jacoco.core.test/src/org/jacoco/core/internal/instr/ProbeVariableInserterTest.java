@@ -15,7 +15,6 @@ import static org.junit.Assert.assertEquals;
 
 import java.util.Arrays;
 
-import org.jacoco.core.internal.instr.ProbeVariableInserter;
 import org.junit.Test;
 import org.objectweb.asm.Label;
 import org.objectweb.asm.MethodVisitor;
@@ -24,9 +23,6 @@ import org.objectweb.asm.commons.EmptyVisitor;
 
 /**
  * Unit tests for {@link ProbeVariableInserter}.
- * 
- * @author Marc R. Hoffmann
- * @version $qualified.bundle.version$
  */
 public class ProbeVariableInserterTest {
 
@@ -175,8 +171,8 @@ public class ProbeVariableInserterTest {
 		i.visitFrame(Opcodes.F_NEW, 2, new Object[] { "LFoo;", Opcodes.LONG },
 				0, null);
 		assertEquals(2, rec.nLocal);
-		assertEquals(Arrays.asList((Object) "LFoo;", Opcodes.LONG), Arrays
-				.asList(rec.local));
+		assertEquals(Arrays.asList((Object) "LFoo;", Opcodes.LONG),
+				Arrays.asList(rec.local));
 
 		// Starting from the second frame on the probe variable is inserted:
 		i.visitFrame(Opcodes.F_NEW, 3, new Object[] { "LFoo;", Opcodes.LONG,

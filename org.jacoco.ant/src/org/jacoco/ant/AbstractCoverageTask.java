@@ -21,9 +21,6 @@ import org.jacoco.core.runtime.AgentOptions;
 
 /**
  * Base class for all coverage tasks that require agent options
- * 
- * @author Brock Janiczak
- * @version $qualified.bundle.version$
  */
 public class AbstractCoverageTask extends Task {
 

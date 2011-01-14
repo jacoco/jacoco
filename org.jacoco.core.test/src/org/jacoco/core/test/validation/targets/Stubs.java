@@ -13,9 +13,6 @@ package org.jacoco.core.test.validation.targets;
 
 /**
  * Collection of stub methods that are called from the coverage targets. *
- * 
- * @author Marc R. Hoffmann
- * @version $qualified.bundle.version$
  */
 public class Stubs {
 

@@ -16,9 +16,6 @@ import org.apache.tools.ant.BuildException;
 /**
  * Ant task that will unpack the coverage agent jar and generate the JVM options
  * required to use it
- * 
- * @author Brock Janiczak
- * @version $qualified.bundle.version$
  */
 public class AgentTask extends AbstractCoverageTask {
 

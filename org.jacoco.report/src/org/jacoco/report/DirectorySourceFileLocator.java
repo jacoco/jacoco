@@ -20,9 +20,6 @@ import java.io.Reader;
 /**
  * Locator for source files that picks source files from a given directory in
  * the file system.
- * 
- * @author Marc R. Hoffmann
- * @version $qualified.bundle.version$
  */
 public class DirectorySourceFileLocator implements ISourceFileLocator {
 
@@ -39,7 +36,8 @@ public class DirectorySourceFileLocator implements ISourceFileLocator {
 	 * @param encoding
 	 *            encoding of the source files
 	 */
-	public DirectorySourceFileLocator(final File directory, final String encoding) {
+	public DirectorySourceFileLocator(final File directory,
+			final String encoding) {
 		this.directory = directory;
 		this.encoding = encoding;
 	}

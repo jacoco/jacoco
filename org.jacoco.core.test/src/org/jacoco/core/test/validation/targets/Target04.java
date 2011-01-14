@@ -15,9 +15,6 @@ import static org.jacoco.core.test.validation.targets.Stubs.i1;
 
 /**
  * This test target is an interface with a class initializer.
- * 
- * @author Marc R. Hoffmann
- * @version $qualified.bundle.version$
  */
 public interface Target04 {
 

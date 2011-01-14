@@ -19,9 +19,6 @@ import static org.jacoco.core.test.validation.targets.Stubs.t;
 
 /**
  * This target exercises boolean expressions.
- * 
- * @author Marc R. Hoffmann
- * @version $qualified.bundle.version$
  */
 public class Target02 implements Runnable {
 

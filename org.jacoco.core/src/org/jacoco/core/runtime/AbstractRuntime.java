@@ -20,9 +20,6 @@ import org.jacoco.core.data.SessionInfo;
 
 /**
  * Base {@link IRuntime} implementation.
- * 
- * @author Marc R. Hoffmann
- * @version $qualified.bundle.version$
  */
 public abstract class AbstractRuntime implements IRuntime {
 

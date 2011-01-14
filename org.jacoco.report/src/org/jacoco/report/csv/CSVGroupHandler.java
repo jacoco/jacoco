@@ -22,9 +22,6 @@ import org.jacoco.report.ISourceFileLocator;
 
 /**
  * Report visitor that handles coverage information for groups.
- * 
- * @author Brock Janiczak
- * @version $qualified.bundle.version$
  */
 class CSVGroupHandler implements IReportVisitor {
 

@@ -21,9 +21,6 @@ import org.jacoco.core.internal.data.CompactDataInput;
 
 /**
  * Deserialization of execution data from binary streams.
- * 
- * @author Marc R. Hoffmann
- * @version $qualified.bundle.version$
  */
 public class ExecutionDataReader {
 
@@ -110,8 +107,8 @@ public class ExecutionDataReader {
 			readExecutionData();
 			return true;
 		default:
-			throw new IOException(format("Unknown block type %x.", Byte
-					.valueOf(blocktype)));
+			throw new IOException(format("Unknown block type %x.",
+					Byte.valueOf(blocktype)));
 		}
 	}
 
@@ -121,8 +118,8 @@ public class ExecutionDataReader {
 		}
 		final char version = in.readChar();
 		if (version != ExecutionDataWriter.FORMAT_VERSION) {
-			throw new IOException(format("Incompatible version %x.", Integer
-					.valueOf(version)));
+			throw new IOException(format("Incompatible version %x.",
+					Integer.valueOf(version)));
 		}
 	}
 

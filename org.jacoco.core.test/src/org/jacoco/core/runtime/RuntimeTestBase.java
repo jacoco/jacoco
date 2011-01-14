@@ -38,9 +38,6 @@ import org.objectweb.asm.commons.Method;
 
 /**
  * Abstract test base for {@link IRuntime} implementations.
- * 
- * @author Marc R. Hoffmann
- * @version $qualified.bundle.version$
  */
 public abstract class RuntimeTestBase {
 

@@ -16,9 +16,6 @@ import org.jacoco.report.internal.html.ILinkable;
 
 /**
  * Interface for a item (row) in a coverage data table.
- * 
- * @author Marc R. Hoffmann
- * @version $qualified.bundle.version$
  */
 public interface ITableItem extends ILinkable {
 

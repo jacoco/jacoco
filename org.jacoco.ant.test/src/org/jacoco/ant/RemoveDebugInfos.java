@@ -21,9 +21,6 @@ import org.objectweb.asm.ClassWriter;
 
 /**
  * Test utility to remove debug information from class files.
- * 
- * @author Marc R. Hoffmann
- * @version $qualified.bundle.version$
  */
 public class RemoveDebugInfos {
 

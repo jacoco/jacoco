@@ -33,9 +33,6 @@ import org.xml.sax.SAXParseException;
 
 /**
  * Test utility to parse, validate and query XML documents.
- * 
- * @author Marc R. Hoffmann
- * @version $qualified.bundle.version$
  */
 public class XMLSupport {
 

@@ -19,9 +19,6 @@ import org.jacoco.core.test.validation.targets.Stubs.SuperClass;
 /**
  * This test target has a constructor containing control structures before the
  * superclass constructor is called.
- * 
- * @author Marc R. Hoffmann
- * @version $qualified.bundle.version$
  */
 public class Target10 extends SuperClass {
 

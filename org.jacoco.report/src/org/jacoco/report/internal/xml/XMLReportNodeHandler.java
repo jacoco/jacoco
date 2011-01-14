@@ -26,9 +26,6 @@ import org.jacoco.report.ISourceFileLocator;
 
 /**
  * Report visitor that transforms the report structure into XML elements.
- * 
- * @author Brock Janiczak
- * @version $qualified.bundle.version$
  */
 public class XMLReportNodeHandler implements IReportVisitor {
 

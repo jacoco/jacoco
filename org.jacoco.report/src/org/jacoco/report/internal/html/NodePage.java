@@ -22,9 +22,6 @@ import org.jacoco.report.internal.html.table.ITableItem;
 
 /**
  * Report page that represents a coverage node.
- * 
- * @author Marc R. Hoffmann
- * @version $qualified.bundle.version$
  */
 public abstract class NodePage extends ReportPage implements IReportVisitor,
 		ITableItem {

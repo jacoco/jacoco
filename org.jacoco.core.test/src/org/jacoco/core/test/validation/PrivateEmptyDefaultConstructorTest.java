@@ -19,9 +19,6 @@ import org.junit.Test;
 
 /**
  * Test of a private empty default constructor.
- * 
- * @author Marc R. Hoffmann
- * @version $qualified.bundle.version$
  */
 public class PrivateEmptyDefaultConstructorTest extends ValidationTestBase {
 

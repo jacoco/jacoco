@@ -23,9 +23,6 @@ import org.jacoco.report.internal.html.resources.Resources;
 /**
  * Column for the item label. The implementation is stateless, instances might
  * be used in parallel.
- * 
- * @author Marc R. Hoffmann
- * @version $qualified.bundle.version$
  */
 public class LabelColumn implements IColumnRenderer {
 

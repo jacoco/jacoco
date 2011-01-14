@@ -25,9 +25,6 @@ import org.junit.Test;
 
 /**
  * Unit tests for {@link SessionInfoStore}.
- * 
- * @author Marc R. Hoffmann
- * @version $qualified.bundle.version$
  */
 public class SessionInfoStoreTest {
 

@@ -20,9 +20,6 @@ import org.jacoco.report.internal.xml.XMLElement;
 /**
  * A {@link XMLElement} with utility methods to create XHTML documents. It
  * provides methods of HTML tags to avoid magic strings in the generators.
- * 
- * @author Marc R. Hoffmann
- * @version $qualified.bundle.version$
  */
 public class HTMLElement extends XMLElement {
 

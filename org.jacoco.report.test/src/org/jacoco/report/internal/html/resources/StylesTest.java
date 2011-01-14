@@ -13,14 +13,10 @@ package org.jacoco.report.internal.html.resources;
 
 import static org.junit.Assert.assertEquals;
 
-import org.jacoco.report.internal.html.resources.Styles;
 import org.junit.Test;
 
 /**
  * Unit tests for {@link Styles}.
- * 
- * @author Marc R. Hoffmann
- * @version $qualified.bundle.version$
  */
 public class StylesTest {
 

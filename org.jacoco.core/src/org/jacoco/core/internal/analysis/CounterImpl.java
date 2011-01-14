@@ -16,9 +16,6 @@ import org.jacoco.core.analysis.ICounter;
 /**
  * {@link ICounter} implementations. Implementing a factory pattern allows to
  * share counter instances.
- * 
- * @author Marc R. Hoffmann
- * @version $qualified.bundle.version$
  */
 public abstract class CounterImpl implements ICounter {
 

@@ -19,9 +19,6 @@ package org.jacoco.core.data;
  * <li>http://en.wikipedia.org/wiki/Cyclic_redundancy_check</li>
  * <li>http://www.geocities.com/SiliconValley/Pines/8659/crc.htm</li>
  * </ul>
- * 
- * @author Marc R. Hoffmann
- * @version $qualified.bundle.version$
  */
 public final class CRC64 {
 

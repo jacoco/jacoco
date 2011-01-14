@@ -19,9 +19,6 @@ import org.junit.Test;
 
 /**
  * Tests of static initializer in classes.
- * 
- * @author Marc R. Hoffmann
- * @version $qualified.bundle.version$
  */
 public class ClassInitializerTest extends ValidationTestBase {
 

@@ -15,9 +15,6 @@ import java.util.Collection;
 
 /**
  * Coverage data of a single class.
- * 
- * @author Marc R. Hoffmann
- * @version $qualified.bundle.version$
  */
 public interface IClassCoverage extends ISourceNode {
 

@@ -29,9 +29,6 @@ import org.jacoco.report.internal.html.table.ITableItem;
 /**
  * Page showing coverage information for a class as a table of methods. The
  * methods are linked to the corresponding source file.
- * 
- * @author Marc R. Hoffmann
- * @version $qualified.bundle.version$
  */
 public class ClassPage extends NodePage {
 

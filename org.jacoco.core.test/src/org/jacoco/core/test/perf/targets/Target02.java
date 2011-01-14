@@ -13,9 +13,6 @@ package org.jacoco.core.test.perf.targets;
 
 /**
  * Simple Loop.
- * 
- * @author Marc R. Hoffmann
- * @version $qualified.bundle.version$
  */
 public class Target02 implements Runnable {
 

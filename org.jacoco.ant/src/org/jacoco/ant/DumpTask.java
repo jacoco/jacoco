@@ -29,9 +29,6 @@ import org.jacoco.core.runtime.RemoteControlWriter;
 /**
  * Ant task for remotely controlling an application that is running with the
  * tcpserver output mode
- * 
- * @author Brock Janiczak
- * @version $qualified.bundle.version$
  */
 public class DumpTask extends Task {
 	private boolean dump = true;

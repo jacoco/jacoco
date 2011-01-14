@@ -23,9 +23,6 @@ import org.junit.Test;
 
 /**
  * Unit tests for {@link Resources}.
- * 
- * @author Marc R. Hoffmann
- * @version $qualified.bundle.version$
  */
 public class ResourcesTest {
 

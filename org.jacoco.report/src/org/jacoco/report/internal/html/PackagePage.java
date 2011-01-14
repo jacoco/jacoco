@@ -29,9 +29,6 @@ import org.jacoco.report.internal.html.resources.Resources;
 /**
  * Page showing coverage information for a Java package. The page contains a
  * table with all classes of the package.
- * 
- * @author Marc R. Hoffmann
- * @version $qualified.bundle.version$
  */
 public class PackagePage extends NodePage {
 

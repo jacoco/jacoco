@@ -30,9 +30,6 @@ import org.objectweb.asm.Opcodes;
  * first slot of the parameter array. The runtime implements a {@link Handler}
  * for this channel that puts the probe data structure into the first slot of
  * the parameter array.
- * 
- * @author Marc R. Hoffmann
- * @version $qualified.bundle.version$
  */
 public class LoggerRuntime extends AbstractRuntime {
 
@@ -135,10 +132,9 @@ public class LoggerRuntime extends AbstractRuntime {
 		// Stack[1]: Ljava/util/logging/Logger;
 		// Stack[0]: [Ljava/lang/Object;
 
-		mv
-				.visitMethodInsn(Opcodes.INVOKEVIRTUAL,
-						"java/util/logging/Logger", "log",
-						"(Ljava/util/logging/Level;Ljava/lang/String;[Ljava/lang/Object;)V");
+		mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "java/util/logging/Logger",
+				"log",
+				"(Ljava/util/logging/Level;Ljava/lang/String;[Ljava/lang/Object;)V");
 
 		// Stack[0]: [Ljava/lang/Object;
 

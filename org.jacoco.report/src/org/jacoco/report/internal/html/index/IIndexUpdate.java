@@ -16,9 +16,6 @@ import org.jacoco.report.internal.html.ILinkable;
 /**
  * Every report page that should become part of the index must be added via this
  * interface.
- * 
- * @author Marc R. Hoffmann
- * @version $qualified.bundle.version$
  */
 public interface IIndexUpdate {
 

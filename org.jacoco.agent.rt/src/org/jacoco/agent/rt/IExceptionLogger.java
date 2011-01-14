@@ -14,9 +14,6 @@ package org.jacoco.agent.rt;
 /**
  * At several places exception might occur that should be reported. For
  * testability these exceptions are emitted against this interface.
- * 
- * @author Marc R. Hoffmann
- * @version $qualified.bundle.version$
  */
 public interface IExceptionLogger {
 

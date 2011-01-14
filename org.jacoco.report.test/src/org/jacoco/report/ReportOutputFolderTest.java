@@ -22,11 +22,7 @@ import org.junit.Test;
 
 /**
  * Unit tests for {@link ReportOutputFolder}.
- * 
- * @author Marc R. Hoffmann
- * @version $qualified.bundle.version$
  */
-
 public class ReportOutputFolderTest {
 
 	private MemoryMultiReportOutput output;

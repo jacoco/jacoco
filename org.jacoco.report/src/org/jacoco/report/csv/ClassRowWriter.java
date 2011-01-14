@@ -21,9 +21,6 @@ import org.jacoco.report.ILanguageNames;
 /**
  * Writer for rows in the CVS report representing the summary data of a single
  * class.
- * 
- * @author Brock Janiczak
- * @version $qualified.bundle.version$
  */
 class ClassRowWriter {
 

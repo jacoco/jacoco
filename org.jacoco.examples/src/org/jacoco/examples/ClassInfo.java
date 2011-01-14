@@ -22,9 +22,6 @@ import org.jacoco.core.data.ExecutionDataStore;
 /**
  * This example reads given Java class files, directories or JARs and dumps
  * information about the classes.
- * 
- * @author Marc R. Hoffmann
- * @version $qualified.bundle.version$
  */
 public class ClassInfo implements ICoverageVisitor {
 

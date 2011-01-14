@@ -19,9 +19,6 @@ import org.jacoco.core.test.TargetLoader;
 
 /**
  * Scenario to measure the time taken by the instrumentation process itself.
- * 
- * @author Marc R. Hoffmann
- * @version $qualified.bundle.version$
  */
 public class AnalysisTimeScenario extends TimedScenario {
 

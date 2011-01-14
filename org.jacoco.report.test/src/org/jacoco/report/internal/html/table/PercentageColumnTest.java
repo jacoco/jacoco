@@ -35,9 +35,6 @@ import org.w3c.dom.Document;
 
 /**
  * Unit tests for {@link PercentageColumn}.
- * 
- * @author Marc R. Hoffmann
- * @version $qualified.bundle.version$
  */
 public class PercentageColumnTest {
 

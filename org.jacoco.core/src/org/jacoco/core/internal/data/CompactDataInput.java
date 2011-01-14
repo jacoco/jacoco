@@ -15,13 +15,10 @@ import java.io.DataInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
-
 /**
  * Additional data input methods for compact storage of data structures.
  * 
  * @see CompactDataOutput
- * @author Marc R. Hoffmann
- * @version $qualified.bundle.version$
  */
 public class CompactDataInput extends DataInputStream {
 

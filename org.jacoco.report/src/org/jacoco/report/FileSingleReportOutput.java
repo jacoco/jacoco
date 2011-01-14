@@ -22,9 +22,6 @@ import java.io.OutputStream;
 /**
  * Implementation of {@link ISingleReportOutput} that writes the file directly
  * to a given location.
- * 
- * @author Marc R. Hoffmann
- * @version $qualified.bundle.version$
  */
 public class FileSingleReportOutput implements ISingleReportOutput {
 

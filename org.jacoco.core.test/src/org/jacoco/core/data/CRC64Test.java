@@ -15,14 +15,10 @@ import static org.junit.Assert.assertTrue;
 
 import java.io.UnsupportedEncodingException;
 
-import org.jacoco.core.data.CRC64;
 import org.junit.Test;
 
 /**
  * Unit tests for {@link CRC64}.
- * 
- * @author Marc R. Hoffmann
- * @version $qualified.bundle.version$
  */
 public class CRC64Test {
 

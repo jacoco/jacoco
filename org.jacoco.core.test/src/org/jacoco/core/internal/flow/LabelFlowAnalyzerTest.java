@@ -22,9 +22,6 @@ import org.objectweb.asm.Opcodes;
 
 /**
  * Unit tests for {@link LabelFlowAnalyzer}.
- * 
- * @author Marc R. Hoffmann
- * @version $qualified.bundle.version$
  */
 public class LabelFlowAnalyzerTest {
 

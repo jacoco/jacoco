@@ -19,9 +19,6 @@ import org.junit.Test;
 
 /**
  * Unit test for {@link ClassCoverageImpl}.
- * 
- * @author Marc R. Hoffmann
- * @version $qualified.bundle.version$
  */
 public class ClassCoverageImplTest {
 

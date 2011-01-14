@@ -20,9 +20,6 @@ import org.objectweb.asm.Opcodes;
 /**
  * This method adapter inserts probes as requested by the
  * {@link IMethodProbesVisitor} events.
- * 
- * @author Marc R. Hoffmann
- * @version $qualified.bundle.version$
  */
 class MethodInstrumenter extends ProbeVariableInserter implements
 		IMethodProbesVisitor {

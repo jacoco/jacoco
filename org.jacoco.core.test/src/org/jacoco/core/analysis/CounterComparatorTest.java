@@ -23,10 +23,6 @@ import org.junit.Test;
 
 /**
  * Unit tests for {@link CounterComparator}.
- * 
- * 
- * @author Marc R. Hoffmann
- * @version $qualified.bundle.version$
  */
 public class CounterComparatorTest {
 

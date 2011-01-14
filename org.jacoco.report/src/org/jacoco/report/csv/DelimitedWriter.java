@@ -30,9 +30,6 @@ import java.io.Writer;
  * </pre>
  * 
  * </p>
- * 
- * @author Brock Janiczak
- * @version $qualified.bundle.version$
  */
 class DelimitedWriter {
 	private static final String QUOTE = "\"";

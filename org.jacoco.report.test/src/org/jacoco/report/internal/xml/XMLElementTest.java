@@ -21,9 +21,6 @@ import org.junit.Test;
 
 /**
  * Unit tests for {@link XMLElement}.
- * 
- * @author Marc R. Hoffmann
- * @version $qualified.bundle.version$
  */
 public class XMLElementTest {
 

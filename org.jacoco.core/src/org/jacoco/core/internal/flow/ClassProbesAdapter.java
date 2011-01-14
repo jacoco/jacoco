@@ -20,11 +20,7 @@ import org.objectweb.asm.commons.JSRInlinerAdapter;
 
 /**
  * A {@link ClassVisitor} that calculates probes for every method.
- * 
- * @author Marc R. Hoffmann
- * @version $qualified.bundle.version$
  */
-
 public class ClassProbesAdapter extends ClassAdapter implements
 		IProbeIdGenerator {
 

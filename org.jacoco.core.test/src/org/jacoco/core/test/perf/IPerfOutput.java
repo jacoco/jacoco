@@ -13,9 +13,6 @@ package org.jacoco.core.test.perf;
 
 /**
  * Interface to report performance figures to.
- * 
- * @author Marc R. Hoffmann
- * @version $qualified.bundle.version$
  */
 public interface IPerfOutput {
 

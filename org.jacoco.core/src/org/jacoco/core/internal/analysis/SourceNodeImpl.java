@@ -18,9 +18,6 @@ import org.jacoco.core.analysis.ISourceNode;
 
 /**
  * Implementation of {@link ISourceNode}.
- * 
- * @author Marc R. Hoffmann
- * @version $qualified.bundle.version$
  */
 public class SourceNodeImpl extends CoverageNodeImpl implements ISourceNode {
 

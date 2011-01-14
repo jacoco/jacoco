@@ -17,9 +17,6 @@ import java.util.Collection;
  * Coverage data of a Java package. The name of this data node is the package
  * name in VM notation (slash separated). The name of the default package is the
  * empty string.
- * 
- * @author Marc R. Hoffmann
- * @version $qualified.bundle.version$
  */
 public interface IPackageCoverage extends ICoverageNode {
 

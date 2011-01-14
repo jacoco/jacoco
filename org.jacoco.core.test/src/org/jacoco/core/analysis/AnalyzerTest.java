@@ -30,9 +30,6 @@ import org.junit.Test;
 
 /**
  * Unit tests for {@link Analyzer}.
- * 
- * @author Marc R. Hoffmann
- * @version $qualified.bundle.version$
  */
 public class AnalyzerTest {
 

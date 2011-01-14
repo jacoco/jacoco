@@ -15,9 +15,6 @@ import java.io.IOException;
 
 /**
  * Interface for remote commands to a coverage runtime.
- * 
- * @author Marc R. Hoffmann
- * @version $qualified.bundle.version$
  */
 public interface IRemoteCommandVisitor {
 

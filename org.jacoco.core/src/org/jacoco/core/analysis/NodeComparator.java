@@ -24,8 +24,6 @@ import org.jacoco.core.analysis.ICoverageNode.CounterEntity;
  * different criteria.
  * 
  * @see CounterComparator#on(ICoverageNode.CounterEntity)
- * @author Marc R. Hoffmann
- * @version $qualified.bundle.version$
  */
 public class NodeComparator implements Comparator<ICoverageNode> {
 

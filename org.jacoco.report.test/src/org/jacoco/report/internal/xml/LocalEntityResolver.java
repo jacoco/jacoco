@@ -20,9 +20,6 @@ import org.xml.sax.SAXException;
 
 /**
  * Loader for local DTD definitions to avoid network access.
- * 
- * @author Marc R. Hoffmann
- * @version $qualified.bundle.version$
  */
 class LocalEntityResolver implements EntityResolver {
 

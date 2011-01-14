@@ -17,9 +17,6 @@ import java.util.Properties;
 
 /**
  * Static Meta information about JaCoCo.
- * 
- * @author Marc R. Hoffmann
- * @version $qualified.bundle.version$
  */
 public final class JaCoCo {
 

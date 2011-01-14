@@ -20,8 +20,6 @@ import java.util.Locale;
 import org.jacoco.core.analysis.ICoverageNode.ElementType;
 import org.jacoco.core.internal.analysis.CounterImpl;
 import org.jacoco.core.internal.analysis.SourceNodeImpl;
-import org.jacoco.report.internal.html.HTMLDocument;
-import org.jacoco.report.internal.html.HTMLElement;
 import org.jacoco.report.internal.html.resources.Styles;
 import org.junit.Before;
 import org.junit.Test;
@@ -29,9 +27,6 @@ import org.w3c.dom.Document;
 
 /**
  * Unit tests for {@link SourceHighlighter}.
- * 
- * @author Marc R. Hoffmann
- * @version $qualified.bundle.version$
  */
 public class SourceHighlighterTest {
 

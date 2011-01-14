@@ -16,11 +16,9 @@ import org.jacoco.core.analysis.IMethodCoverage;
 
 /**
  * Implementation of {@link IMethodCoverage}.
- * 
- * @author Marc R. Hoffmann
- * @version $qualified.bundle.version$
  */
-public class MethodCoverageImpl extends SourceNodeImpl implements IMethodCoverage {
+public class MethodCoverageImpl extends SourceNodeImpl implements
+		IMethodCoverage {
 
 	private final String desc;
 

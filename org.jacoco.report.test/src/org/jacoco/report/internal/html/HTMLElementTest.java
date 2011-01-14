@@ -16,15 +16,11 @@ import static org.junit.Assert.assertEquals;
 import java.io.IOException;
 import java.io.StringWriter;
 
-import org.jacoco.report.internal.html.HTMLElement;
 import org.junit.Before;
 import org.junit.Test;
 
 /**
  * Unit tests for {@link HTMLElement}.
- * 
- * @author Marc R. Hoffmann
- * @version $qualified.bundle.version$
  */
 public class HTMLElementTest {
 

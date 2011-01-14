@@ -21,8 +21,12 @@ import org.jacoco.core.runtime.AgentOptions;
 import org.jacoco.core.runtime.IRuntime;
 
 /**
- * @author Marc R. Hoffmann
- * @version $qualified.bundle.version$
+ * Controller that opens TCP server socket. This controller uses the following
+ * agent options:
+ * <ul>
+ * <li>address</li>
+ * <li>port</li>
+ * </ul>
  */
 public class TcpServerController implements IAgentController {
 
@@ -46,8 +50,8 @@ public class TcpServerController implements IAgentController {
 				while (!serverSocket.isClosed()) {
 					try {
 						synchronized (serverSocket) {
-							connection = new TcpConnection(serverSocket
-									.accept(), runtime);
+							connection = new TcpConnection(
+									serverSocket.accept(), runtime);
 						}
 						connection.init();
 						connection.run();

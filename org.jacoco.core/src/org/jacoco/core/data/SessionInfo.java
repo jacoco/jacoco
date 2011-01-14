@@ -11,14 +11,10 @@
  *******************************************************************************/
 package org.jacoco.core.data;
 
-
 /**
  * Data object describing a session which was the source of execution data.
  * {@link SessionInfo} instances can be sorted by dump date through the
  * {@link Comparable} interface.
- * 
- * @author Marc R. Hoffmann
- * @version $qualified.bundle.version$
  */
 public class SessionInfo implements Comparable<SessionInfo> {
 

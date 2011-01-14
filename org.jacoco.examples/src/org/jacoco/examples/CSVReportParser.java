@@ -19,9 +19,6 @@ import java.text.NumberFormat;
 
 /**
  * Simple parser for unpacking a line of the CSV report
- * 
- * @author Brock Janiczak
- * @version $qualified.bundle.version$
  */
 public class CSVReportParser {
 
@@ -76,9 +73,6 @@ public class CSVReportParser {
 
 	/**
 	 * Wrapper around a line of CSV data
-	 * 
-	 * @author Brock Janiczak
-	 * @version $qualified.bundle.version$
 	 */
 	public static class ReportLine {
 		private final String[] entries;

@@ -30,9 +30,6 @@ import org.junit.Test;
  * Unit tests for {@link ExecutionDataReader} and {@link ExecutionDataWriter}.
  * The tests don't care about the written binary format, they just verify
  * symmetry.
- * 
- * @author Marc R. Hoffmann
- * @version $qualified.bundle.version$
  */
 public class ExecutionDataReaderWriterTest {
 
@@ -263,9 +260,7 @@ public class ExecutionDataReaderWriterTest {
 			}
 		});
 		broken[0] = true;
-		writer
-				.visitClassExecution(new ExecutionData(3, "Sample",
-						createData(1)));
+		writer.visitClassExecution(new ExecutionData(3, "Sample", createData(1)));
 	}
 
 	private ExecutionDataReader createReaderWithVisitors() throws IOException {
@@ -301,8 +296,8 @@ public class ExecutionDataReaderWriterTest {
 	}
 
 	protected ExecutionDataReader createReader() throws IOException {
-		return new ExecutionDataReader(new ByteArrayInputStream(buffer
-				.toByteArray()));
+		return new ExecutionDataReader(new ByteArrayInputStream(
+				buffer.toByteArray()));
 	}
 
 }

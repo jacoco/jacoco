@@ -21,9 +21,6 @@ import java.util.List;
 /**
  * Container to collect and merge session {@link SessionInfo} objects. A
  * instance of this class is not thread safe.
- * 
- * @author Marc R. Hoffmann
- * @version $qualified.bundle.version$
  */
 public class SessionInfoStore implements ISessionInfoVisitor {
 

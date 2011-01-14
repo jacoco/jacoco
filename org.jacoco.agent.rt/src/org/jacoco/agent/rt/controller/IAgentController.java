@@ -17,9 +17,6 @@ import org.jacoco.core.runtime.IRuntime;
 /**
  * Common interface for different implementations that control execution data
  * dumps.
- * 
- * @author Brock Janiczak
- * @version $qualified.bundle.version$
  */
 public interface IAgentController {
 

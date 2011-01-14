@@ -32,9 +32,6 @@ import org.objectweb.asm.ClassReader;
 /**
  * Base class for validation tests. It executes the given class under code
  * coverage and provides the coverage results for validation.
- * 
- * @author Marc R. Hoffmann
- * @version $qualified.bundle.version$
  */
 public abstract class ValidationTestBase {
 

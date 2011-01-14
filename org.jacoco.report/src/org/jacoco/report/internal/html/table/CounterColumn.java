@@ -30,9 +30,6 @@ import org.jacoco.report.internal.html.resources.Resources;
  * Column that prints the counter values of entities for each item and a summary
  * in the footer. If the total number of items is zero, no column is emitted at
  * all. The implementation is stateful, instances must not be used in parallel.
- * 
- * @author Marc R. Hoffmann
- * @version $qualified.bundle.version$
  */
 public abstract class CounterColumn implements IColumnRenderer {
 

@@ -18,9 +18,6 @@ import org.objectweb.asm.util.TraceMethodVisitor;
 
 /**
  * Recorder of method events for test verification.
- * 
- * @author Marc R. Hoffmann
- * @version $qualified.bundle.version$
  */
 public class MethodRecorder extends TraceMethodVisitor {
 

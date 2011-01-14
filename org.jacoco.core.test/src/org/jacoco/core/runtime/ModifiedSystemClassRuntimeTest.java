@@ -29,9 +29,6 @@ import org.junit.Test;
 
 /**
  * Unit tests for {@link ModifiedSystemClassRuntime}.
- * 
- * @author Marc R. Hoffmann
- * @version $qualified.bundle.version$
  */
 public class ModifiedSystemClassRuntimeTest extends RuntimeTestBase {
 

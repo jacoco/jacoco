@@ -20,9 +20,6 @@ import org.jacoco.report.internal.html.table.Table;
 
 /**
  * Context and configuration information during creation of a HTML report.
- * 
- * @author Marc R. Hoffmann
- * @version $qualified.bundle.version$
  */
 public interface IHTMLReportContext {
 

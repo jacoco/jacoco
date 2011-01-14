@@ -21,9 +21,6 @@ import org.jacoco.report.ReportOutputFolder;
 /**
  * Static resource that are included with the coverage report and might be
  * referenced from created HTML pages.
- * 
- * @author Marc R. Hoffmann
- * @version $qualified.bundle.version$
  */
 public class Resources {
 

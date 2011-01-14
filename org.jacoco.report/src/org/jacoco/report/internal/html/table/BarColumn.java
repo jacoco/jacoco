@@ -30,9 +30,6 @@ import org.jacoco.report.internal.html.resources.Resources;
  * Column with a graphical bar that represents the total amount of items in with
  * length, and the coverage ratio with a red/green sections. The implementation
  * is stateful, instances must not be used in parallel.
- * 
- * @author Marc R. Hoffmann
- * @version $qualified.bundle.version$
  */
 public class BarColumn implements IColumnRenderer {
 

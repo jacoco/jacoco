@@ -13,16 +13,12 @@ package org.jacoco.core.internal.instr;
 
 import static org.junit.Assert.assertEquals;
 
-import org.jacoco.core.internal.instr.InstrSupport;
 import org.junit.Before;
 import org.junit.Test;
 import org.objectweb.asm.util.TraceMethodVisitor;
 
 /**
  * Unit tests for {@link InstrSupport}.
- * 
- * @author Marc R. Hoffmann
- * @version $qualified.bundle.version$
  */
 public class InstrSupportTest {
 

@@ -21,9 +21,6 @@ import org.objectweb.asm.MethodVisitor;
 
 /**
  * Stub {@link IRuntime} implementation for unit testing only.
- * 
- * @author Marc R. Hoffmann
- * @version $qualified.bundle.version$
  */
 public class StubRuntime extends AbstractRuntime {
 

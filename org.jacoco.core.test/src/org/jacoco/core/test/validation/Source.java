@@ -27,9 +27,6 @@ import java.util.regex.Pattern;
 /**
  * Reads a single source file and allows access to it through special probe
  * comments in the following format <code>//$line-<i>tag</i>$.
- * 
- * @author Marc R. Hoffmann
- * @version $qualified.bundle.version$
  */
 public class Source {
 

@@ -22,9 +22,6 @@ import java.util.Map;
  * as executed if it is reported as executed at least once. This allows to merge
  * coverage date from multiple runs. A instance of this class is not thread
  * safe.
- * 
- * @author Marc R. Hoffmann
- * @version $qualified.bundle.version$
  */
 public final class ExecutionDataStore implements IExecutionDataVisitor {
 

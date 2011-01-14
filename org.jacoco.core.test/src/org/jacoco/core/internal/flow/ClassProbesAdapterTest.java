@@ -22,9 +22,6 @@ import org.objectweb.asm.commons.EmptyVisitor;
 
 /**
  * Unit tests for {@link ClassProbesAdapter}.
- * 
- * @author Marc R. Hoffmann
- * @version $qualified.bundle.version$
  */
 public class ClassProbesAdapterTest {
 

@@ -18,9 +18,6 @@ import org.jacoco.core.analysis.ICoverageNode.CounterEntity;
 /**
  * Collection of comparators to compare {@link ICounter} objects by different
  * criteria.
- * 
- * @author Marc R. Hoffmann
- * @version $qualified.bundle.version$
  */
 public abstract class CounterComparator implements Comparator<ICounter> {
 

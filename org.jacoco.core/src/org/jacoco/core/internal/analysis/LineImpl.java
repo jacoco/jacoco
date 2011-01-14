@@ -16,9 +16,6 @@ import org.jacoco.core.analysis.ILine;
 
 /**
  * Implementation of {@link ILine}.
- * 
- * @author Marc R. Hoffmann
- * @version $qualified.bundle.version$
  */
 public abstract class LineImpl implements ILine {
 

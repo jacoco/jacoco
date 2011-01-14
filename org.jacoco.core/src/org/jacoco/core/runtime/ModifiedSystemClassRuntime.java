@@ -31,9 +31,6 @@ import org.objectweb.asm.Opcodes;
  * new static method is added to a bootstrap class that will be used by
  * instrumented classes. As the system class itself needs to be instrumented
  * this runtime requires a Java agent.
- * 
- * @author Marc R. Hoffmann
- * @version $qualified.bundle.version$
  */
 public class ModifiedSystemClassRuntime extends AbstractRuntime {
 

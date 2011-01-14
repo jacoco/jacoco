@@ -26,9 +26,6 @@ import org.objectweb.asm.Label;
 /**
  * A {@link IMethodProbesVisitor} that analyzes which statements and branches of
  * a method has been executed based on given probe data.
- * 
- * @author Marc R. Hoffmann
- * @version $qualified.bundle.version$
  */
 public class MethodAnalyzer implements IMethodProbesVisitor {
 

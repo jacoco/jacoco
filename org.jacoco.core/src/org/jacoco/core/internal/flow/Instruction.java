@@ -14,9 +14,6 @@ package org.jacoco.core.internal.flow;
 /**
  * Representation of a byte code instruction for analysis. Internally used for
  * analysis.
- * 
- * @author Marc R. Hoffmann
- * @version $qualified.bundle.version$
  */
 public class Instruction {
 

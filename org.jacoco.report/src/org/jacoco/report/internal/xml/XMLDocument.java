@@ -18,14 +18,11 @@ import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
 
-
 /**
  * Root element of an XML document. Each instance represents a separate output
  * document.
  * 
  * @see XMLElement
- * @author Marc R. Hoffmann
- * @version $qualified.bundle.version$
  */
 public class XMLDocument extends XMLElement {
 

@@ -17,9 +17,6 @@ import org.objectweb.asm.Label;
  * Data container that is attached to {@link Label#info} objects to store flow
  * and instrumentation specific information. The information is only valid
  * locally in specific contexts.
- * 
- * @author Marc R. Hoffmann
- * @version $qualified.bundle.version$
  */
 public final class LabelInfo {
 

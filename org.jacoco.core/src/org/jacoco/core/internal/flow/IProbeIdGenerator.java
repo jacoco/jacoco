@@ -13,9 +13,6 @@ package org.jacoco.core.internal.flow;
 
 /**
  * Internal interface to create probe ids unique within a class.
- * 
- * @author Marc R. Hoffmann
- * @version $qualified.bundle.version$
  */
 public interface IProbeIdGenerator {
 

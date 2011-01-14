@@ -17,17 +17,12 @@ import java.io.IOException;
 import java.io.PipedInputStream;
 import java.io.PipedOutputStream;
 
-import org.jacoco.core.internal.data.CompactDataInput;
-import org.jacoco.core.internal.data.CompactDataOutput;
 import org.junit.Before;
 import org.junit.Test;
 
 /**
  * Unit tests for {@link CompactDataInput} and {@link CompactDataOutput}. The
  * tests don't care about the written binary format, they just verify symmetry.
- * 
- * @author Marc R. Hoffmann
- * @version $qualified.bundle.version$
  */
 public class CompactDataInputOutputTest {
 
@@ -115,8 +110,8 @@ public class CompactDataInputOutputTest {
 		out.close();
 		final boolean[] actual = in.readBooleanArray();
 		for (int i = 0; i < values.length; i++) {
-			assertEquals("Index " + i, Boolean.valueOf(values[i]), Boolean
-					.valueOf(actual[i]));
+			assertEquals("Index " + i, Boolean.valueOf(values[i]),
+					Boolean.valueOf(actual[i]));
 		}
 	}
 

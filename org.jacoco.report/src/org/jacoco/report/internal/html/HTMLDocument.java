@@ -20,10 +20,6 @@ import org.jacoco.report.internal.xml.XMLDocument;
 /**
  * {@link XMLDocument} that declares its content type to be XHTML 1.0 Strict and
  * produces {@link HTMLElement}s as children.
- * 
- * 
- * @author Marc R. Hoffmann
- * @version $qualified.bundle.version$
  */
 public class HTMLDocument extends XMLDocument {
 

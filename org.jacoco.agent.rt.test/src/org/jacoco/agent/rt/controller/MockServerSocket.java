@@ -23,9 +23,6 @@ import java.nio.channels.ServerSocketChannel;
 /**
  * Emulation of a {@link ServerSocket} for testing purposes without any physical
  * tcp/ip connections.
- * 
- * @author Marc R. Hoffmann
- * @version $qualified.bundle.version$
  */
 public class MockServerSocket extends ServerSocket {
 

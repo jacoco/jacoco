@@ -13,9 +13,6 @@ package org.jacoco.core.runtime;
 
 /**
  * Unit tests for {@link SystemPropertiesRuntime}.
- * 
- * @author Marc R. Hoffmann
- * @version $qualified.bundle.version$
  */
 public class SystemPropertiesRuntimeTest extends RuntimeTestBase {
 
