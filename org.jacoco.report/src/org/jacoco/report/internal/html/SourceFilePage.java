@@ -51,7 +51,7 @@ public class SourceFilePage extends NodePage {
 	}
 
 	public IReportVisitor visitChild(final ICoverageNode node) {
-		throw new IllegalStateException("Source don't have child nodes.");
+		throw new AssertionError("Source don't have child nodes.");
 	}
 
 	@Override

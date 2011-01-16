@@ -44,8 +44,7 @@ class CSVGroupHandler implements IReportVisitor {
 		case BUNDLE:
 			return new CSVGroupHandler(writer, groupName + "/" + node.getName());
 		}
-		throw new IllegalStateException(format("Unexpected child node %s.",
-				type));
+		throw new AssertionError(format("Unexpected child node %s.", type));
 	}
 
 	public void visitEnd(final ISourceFileLocator sourceFileLocator)

@@ -97,8 +97,8 @@ public class SourceFilePageTest {
 		output.assertAllClosed();
 	}
 
-	@Test(expected = IllegalStateException.class)
-	public void testVisitChild() {
+	@Test(expected = AssertionError.class)
+	public void testVisitChildNegative() {
 		final SourceFileCoverageImpl node = new SourceFileCoverageImpl(
 				"SourceFilePageTest.java", "org/jacoco/report/html");
 		final SourceFilePage page = new SourceFilePage(node, null, root,

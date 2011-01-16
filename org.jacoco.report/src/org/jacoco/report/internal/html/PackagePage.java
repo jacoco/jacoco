@@ -63,7 +63,7 @@ public class PackagePage extends NodePage {
 			classes.add(classPage);
 			return classPage;
 		}
-		throw new IllegalStateException("Unexpected element type " + type);
+		throw new AssertionError("Unexpected element type " + type);
 	}
 
 	@Override

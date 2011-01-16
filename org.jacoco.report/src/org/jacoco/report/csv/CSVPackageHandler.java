@@ -50,8 +50,7 @@ class CSVPackageHandler implements IReportVisitor {
 		case SOURCEFILE:
 			return IReportVisitor.NOP;
 		}
-		throw new IllegalStateException(format("Unexpected child node %s.",
-				type));
+		throw new AssertionError(format("Unexpected child node %s.", type));
 	}
 
 	public void visitEnd(final ISourceFileLocator sourceFileLocator) {
