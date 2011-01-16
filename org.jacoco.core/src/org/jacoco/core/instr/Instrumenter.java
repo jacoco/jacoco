@@ -14,7 +14,7 @@ package org.jacoco.core.instr;
 import java.io.IOException;
 import java.io.InputStream;
 
-import org.jacoco.core.data.CRC64;
+import org.jacoco.core.internal.data.CRC64;
 import org.jacoco.core.internal.flow.ClassProbesAdapter;
 import org.jacoco.core.internal.instr.ClassInstrumenter;
 import org.jacoco.core.runtime.IRuntime;
