@@ -11,9 +11,7 @@
  *******************************************************************************/
 package org.jacoco.core.test.validation;
 
-import static org.jacoco.core.analysis.ILine.FULLY_COVERED;
-import static org.jacoco.core.analysis.ILine.NO_CODE;
-
+import org.jacoco.core.analysis.ICounter;
 import org.jacoco.core.test.validation.targets.Target04;
 import org.junit.Test;
 
@@ -35,11 +33,11 @@ public class InterfaceClassInitializerTest extends ValidationTestBase {
 	@Test
 	public void testCoverageResult() {
 
-		assertLine("const1", NO_CODE);
-		assertLine("const2", NO_CODE);
+		assertLine("const1", ICounter.EMPTY);
+		assertLine("const2", ICounter.EMPTY);
 
-		assertLine("const3", FULLY_COVERED);
-		assertLine("const4", FULLY_COVERED);
+		assertLine("const3", ICounter.FULLY_COVERED);
+		assertLine("const4", ICounter.FULLY_COVERED);
 	}
 
 }

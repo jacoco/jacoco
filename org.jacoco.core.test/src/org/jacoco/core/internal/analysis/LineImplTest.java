@@ -14,7 +14,7 @@ package org.jacoco.core.internal.analysis;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 
-import org.jacoco.core.analysis.ILine;
+import org.jacoco.core.analysis.ICounter;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -34,7 +34,7 @@ public class LineImplTest {
 	public void testEMPTY() {
 		assertEquals(CounterImpl.COUNTER_0_0, line.getInstructionCounter());
 		assertEquals(CounterImpl.COUNTER_0_0, line.getBranchCounter());
-		assertEquals(ILine.NO_CODE, line.getStatus());
+		assertEquals(ICounter.EMPTY, line.getStatus());
 	}
 
 	@Test
@@ -89,42 +89,42 @@ public class LineImplTest {
 	public void testGetStatus1() {
 		line = line.increment(CounterImpl.getInstance(1, 0),
 				CounterImpl.getInstance(0, 0));
-		assertEquals(ILine.NOT_COVERED, line.getStatus());
+		assertEquals(ICounter.NOT_COVERED, line.getStatus());
 	}
 
 	@Test
 	public void testGetStatus2() {
 		line = line.increment(CounterImpl.getInstance(0, 0),
 				CounterImpl.getInstance(1, 0));
-		assertEquals(ILine.NOT_COVERED, line.getStatus());
+		assertEquals(ICounter.NOT_COVERED, line.getStatus());
 	}
 
 	@Test
 	public void testGetStatus3() {
 		line = line.increment(CounterImpl.getInstance(0, 1),
 				CounterImpl.getInstance(0, 0));
-		assertEquals(ILine.FULLY_COVERED, line.getStatus());
+		assertEquals(ICounter.FULLY_COVERED, line.getStatus());
 	}
 
 	@Test
 	public void testGetStatus4() {
 		line = line.increment(CounterImpl.getInstance(0, 0),
 				CounterImpl.getInstance(0, 1));
-		assertEquals(ILine.FULLY_COVERED, line.getStatus());
+		assertEquals(ICounter.FULLY_COVERED, line.getStatus());
 	}
 
 	@Test
 	public void testGetStatus5() {
 		line = line.increment(CounterImpl.getInstance(1, 1),
 				CounterImpl.getInstance(0, 0));
-		assertEquals(ILine.PARTLY_COVERED, line.getStatus());
+		assertEquals(ICounter.PARTLY_COVERED, line.getStatus());
 	}
 
 	@Test
 	public void testGetStatus6() {
 		line = line.increment(CounterImpl.getInstance(0, 1),
 				CounterImpl.getInstance(1, 1));
-		assertEquals(ILine.PARTLY_COVERED, line.getStatus());
+		assertEquals(ICounter.PARTLY_COVERED, line.getStatus());
 	}
 
 	@Test

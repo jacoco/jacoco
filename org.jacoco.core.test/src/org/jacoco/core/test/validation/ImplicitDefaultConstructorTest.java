@@ -11,8 +11,7 @@
  *******************************************************************************/
 package org.jacoco.core.test.validation;
 
-import static org.jacoco.core.analysis.ILine.FULLY_COVERED;
-
+import org.jacoco.core.analysis.ICounter;
 import org.jacoco.core.test.validation.targets.Target06;
 import org.junit.Test;
 
@@ -33,7 +32,7 @@ public class ImplicitDefaultConstructorTest extends ValidationTestBase {
 	@Test
 	public void testCoverageResult() {
 
-		assertLine("classdef", FULLY_COVERED);
+		assertLine("classdef", ICounter.FULLY_COVERED);
 
 	}
 

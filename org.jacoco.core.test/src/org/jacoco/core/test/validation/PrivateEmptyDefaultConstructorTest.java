@@ -11,9 +11,7 @@
  *******************************************************************************/
 package org.jacoco.core.test.validation;
 
-import static org.jacoco.core.analysis.ILine.NOT_COVERED;
-import static org.jacoco.core.analysis.ILine.NO_CODE;
-
+import org.jacoco.core.analysis.ICounter;
 import org.jacoco.core.test.validation.targets.Target07;
 import org.junit.Test;
 
@@ -35,8 +33,8 @@ public class PrivateEmptyDefaultConstructorTest extends ValidationTestBase {
 	@Test
 	public void testCoverageResult() {
 
-		assertLine("classdef", NO_CODE);
-		assertLine("constructor", NOT_COVERED);
+		assertLine("classdef", ICounter.EMPTY);
+		assertLine("constructor", ICounter.NOT_COVERED);
 
 	}
 

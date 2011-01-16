@@ -11,10 +11,7 @@
  *******************************************************************************/
 package org.jacoco.core.test.validation;
 
-import static org.jacoco.core.analysis.ILine.FULLY_COVERED;
-import static org.jacoco.core.analysis.ILine.NOT_COVERED;
-import static org.jacoco.core.analysis.ILine.PARTLY_COVERED;
-
+import org.jacoco.core.analysis.ICounter;
 import org.jacoco.core.test.validation.targets.Target01;
 import org.junit.Test;
 
@@ -37,100 +34,100 @@ public class ControlStructuresTest extends ValidationTestBase {
 	public void testCoverageResult() {
 
 		// 1. Direct unconditional execution
-		assertLine("unconditional", FULLY_COVERED);
+		assertLine("unconditional", ICounter.FULLY_COVERED);
 
 		// 2. Missed if block
-		assertLine("iffalse", FULLY_COVERED, 1, 1);
-		assertLine("missedif", NOT_COVERED);
-		assertLine("executedelse", FULLY_COVERED);
+		assertLine("iffalse", ICounter.FULLY_COVERED, 1, 1);
+		assertLine("missedif", ICounter.NOT_COVERED);
+		assertLine("executedelse", ICounter.FULLY_COVERED);
 
 		// 3. Executed if block
-		assertLine("iftrue", FULLY_COVERED, 1, 1);
-		assertLine("executedif", FULLY_COVERED);
-		assertLine("missedelse", NOT_COVERED);
+		assertLine("iftrue", ICounter.FULLY_COVERED, 1, 1);
+		assertLine("executedif", ICounter.FULLY_COVERED);
+		assertLine("missedelse", ICounter.NOT_COVERED);
 
 		// 4. Missed while block
-		assertLine("missedwhile", NOT_COVERED);
+		assertLine("missedwhile", ICounter.NOT_COVERED);
 
 		// 5. Executed while block
-		assertLine("whiletruefalse", FULLY_COVERED, 0, 2);
-		assertLine("executedwhile", FULLY_COVERED);
+		assertLine("whiletruefalse", ICounter.FULLY_COVERED, 0, 2);
+		assertLine("executedwhile", ICounter.FULLY_COVERED);
 
 		// 6. Executed do while block
-		assertLine("executeddowhile", FULLY_COVERED);
+		assertLine("executeddowhile", ICounter.FULLY_COVERED);
 
 		// 7. Missed for block
-		assertLine("missedforincrementer", PARTLY_COVERED, 1, 1);
-		assertLine("missedfor", NOT_COVERED);
+		assertLine("missedforincrementer", ICounter.PARTLY_COVERED, 1, 1);
+		assertLine("missedfor", ICounter.NOT_COVERED);
 
 		// 8. Executed for block
-		assertLine("executedforincrementer", FULLY_COVERED, 0, 2);
-		assertLine("executedfor", FULLY_COVERED);
+		assertLine("executedforincrementer", ICounter.FULLY_COVERED, 0, 2);
+		assertLine("executedfor", ICounter.FULLY_COVERED);
 
 		// 9. Missed for each block
-		assertLine("missedforeachincrementer", PARTLY_COVERED, 1, 1);
-		assertLine("missedforeach", NOT_COVERED);
+		assertLine("missedforeachincrementer", ICounter.PARTLY_COVERED, 1, 1);
+		assertLine("missedforeach", ICounter.NOT_COVERED);
 
 		// 10. Executed for each block
-		assertLine("executedforeachincrementer", FULLY_COVERED, 0, 2);
-		assertLine("executedforeach", FULLY_COVERED);
+		assertLine("executedforeachincrementer", ICounter.FULLY_COVERED, 0, 2);
+		assertLine("executedforeach", ICounter.FULLY_COVERED);
 
 		// 11. Table switch with hit
-		assertLine("tswitch1", FULLY_COVERED, 3, 1);
-		assertLine("tswitch1case1", NOT_COVERED);
-		assertLine("tswitch1case2", FULLY_COVERED);
-		assertLine("tswitch1case3", NOT_COVERED);
-		assertLine("tswitch1default", NOT_COVERED);
+		assertLine("tswitch1", ICounter.FULLY_COVERED, 3, 1);
+		assertLine("tswitch1case1", ICounter.NOT_COVERED);
+		assertLine("tswitch1case2", ICounter.FULLY_COVERED);
+		assertLine("tswitch1case3", ICounter.NOT_COVERED);
+		assertLine("tswitch1default", ICounter.NOT_COVERED);
 
 		// 12. Continued table switch with hit
-		assertLine("tswitch2", FULLY_COVERED, 3, 1);
-		assertLine("tswitch2case1", NOT_COVERED);
-		assertLine("tswitch2case2", FULLY_COVERED);
-		assertLine("tswitch2case3", FULLY_COVERED);
-		assertLine("tswitch2default", FULLY_COVERED);
+		assertLine("tswitch2", ICounter.FULLY_COVERED, 3, 1);
+		assertLine("tswitch2case1", ICounter.NOT_COVERED);
+		assertLine("tswitch2case2", ICounter.FULLY_COVERED);
+		assertLine("tswitch2case3", ICounter.FULLY_COVERED);
+		assertLine("tswitch2default", ICounter.FULLY_COVERED);
 
 		// 13. Table switch without hit
-		assertLine("tswitch2", FULLY_COVERED, 3, 1);
-		assertLine("tswitch3case1", NOT_COVERED);
-		assertLine("tswitch3case2", NOT_COVERED);
-		assertLine("tswitch3case3", NOT_COVERED);
-		assertLine("tswitch3default", FULLY_COVERED);
+		assertLine("tswitch2", ICounter.FULLY_COVERED, 3, 1);
+		assertLine("tswitch3case1", ICounter.NOT_COVERED);
+		assertLine("tswitch3case2", ICounter.NOT_COVERED);
+		assertLine("tswitch3case3", ICounter.NOT_COVERED);
+		assertLine("tswitch3default", ICounter.FULLY_COVERED);
 
 		// 14. Lookup switch with hit
-		assertLine("lswitch1", FULLY_COVERED, 3, 1);
-		assertLine("lswitch1case1", NOT_COVERED);
-		assertLine("lswitch1case2", FULLY_COVERED);
-		assertLine("lswitch1case3", NOT_COVERED);
-		assertLine("lswitch1default", NOT_COVERED);
+		assertLine("lswitch1", ICounter.FULLY_COVERED, 3, 1);
+		assertLine("lswitch1case1", ICounter.NOT_COVERED);
+		assertLine("lswitch1case2", ICounter.FULLY_COVERED);
+		assertLine("lswitch1case3", ICounter.NOT_COVERED);
+		assertLine("lswitch1default", ICounter.NOT_COVERED);
 
 		// 15. Continued lookup switch with hit
-		assertLine("lswitch2", FULLY_COVERED, 3, 1);
-		assertLine("lswitch2case1", NOT_COVERED);
-		assertLine("lswitch2case2", FULLY_COVERED);
-		assertLine("lswitch2case3", FULLY_COVERED);
-		assertLine("lswitch2default", FULLY_COVERED);
+		assertLine("lswitch2", ICounter.FULLY_COVERED, 3, 1);
+		assertLine("lswitch2case1", ICounter.NOT_COVERED);
+		assertLine("lswitch2case2", ICounter.FULLY_COVERED);
+		assertLine("lswitch2case3", ICounter.FULLY_COVERED);
+		assertLine("lswitch2default", ICounter.FULLY_COVERED);
 
 		// 16. Lookup switch without hit
-		assertLine("lswitch3", FULLY_COVERED, 3, 1);
-		assertLine("lswitch3case1", NOT_COVERED);
-		assertLine("lswitch3case2", NOT_COVERED);
-		assertLine("lswitch3case3", NOT_COVERED);
-		assertLine("lswitch3default", FULLY_COVERED);
+		assertLine("lswitch3", ICounter.FULLY_COVERED, 3, 1);
+		assertLine("lswitch3case1", ICounter.NOT_COVERED);
+		assertLine("lswitch3case2", ICounter.NOT_COVERED);
+		assertLine("lswitch3case3", ICounter.NOT_COVERED);
+		assertLine("lswitch3default", ICounter.FULLY_COVERED);
 
 		// 17. Break statement
-		assertLine("executedbreak", FULLY_COVERED);
-		assertLine("missedafterbreak", NOT_COVERED);
+		assertLine("executedbreak", ICounter.FULLY_COVERED);
+		assertLine("missedafterbreak", ICounter.NOT_COVERED);
 
 		// 18. Continue statement
-		assertLine("executedcontinue", FULLY_COVERED);
-		assertLine("missedaftercontinue", NOT_COVERED);
+		assertLine("executedcontinue", ICounter.FULLY_COVERED);
+		assertLine("missedaftercontinue", ICounter.NOT_COVERED);
 
 		// 19. Return statement
-		assertLine("return", FULLY_COVERED);
-		assertLine("afterreturn", NOT_COVERED);
+		assertLine("return", ICounter.FULLY_COVERED);
+		assertLine("afterreturn", ICounter.NOT_COVERED);
 
 		// 20. Implicit return
-		assertLine("implicitreturn", FULLY_COVERED);
+		assertLine("implicitreturn", ICounter.FULLY_COVERED);
 
 	}
 

@@ -119,16 +119,8 @@ public abstract class LineImpl implements ILine {
 
 	// === ILine implementation ===
 
-	public byte getStatus() {
-		byte status = NO_CODE;
-		if (instructions.getMissedCount() > 0 || branches.getMissedCount() > 0) {
-			status = NOT_COVERED;
-		}
-		if (instructions.getCoveredCount() > 0
-				|| branches.getCoveredCount() > 0) {
-			status |= FULLY_COVERED;
-		}
-		return status;
+	public int getStatus() {
+		return instructions.getStatus() | branches.getStatus();
 	}
 
 	public ICounter getInstructionCounter() {

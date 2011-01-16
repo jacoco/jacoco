@@ -11,9 +11,7 @@
  *******************************************************************************/
 package org.jacoco.core.test.validation;
 
-import static org.jacoco.core.analysis.ILine.FULLY_COVERED;
-import static org.jacoco.core.analysis.ILine.NO_CODE;
-
+import org.jacoco.core.analysis.ICounter;
 import org.jacoco.core.test.validation.targets.Target08;
 import org.junit.Test;
 
@@ -34,11 +32,11 @@ public class ImplicitFieldInitializationTest extends ValidationTestBase {
 	@Test
 	public void testCoverageResult() {
 
-		assertLine("classdef", FULLY_COVERED);
-		assertLine("field1", NO_CODE);
-		assertLine("field2", FULLY_COVERED);
-		assertLine("field3", NO_CODE);
-		assertLine("field4", FULLY_COVERED);
+		assertLine("classdef", ICounter.FULLY_COVERED);
+		assertLine("field1", ICounter.EMPTY);
+		assertLine("field2", ICounter.FULLY_COVERED);
+		assertLine("field3", ICounter.EMPTY);
+		assertLine("field4", ICounter.FULLY_COVERED);
 
 	}
 

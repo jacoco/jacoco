@@ -132,7 +132,7 @@ public class XMLReportNodeHandler implements IReportVisitor {
 		final int last = source.getLastLine();
 		for (int nr = source.getFirstLine(); nr <= last; nr++) {
 			final ILine line = source.getLine(nr);
-			if (line.getStatus() != ILine.NO_CODE) {
+			if (line.getStatus() != ICounter.EMPTY) {
 				final XMLElement element = parent.element("line");
 				element.attr("nr", nr);
 				final ICounter insn = line.getInstructionCounter();

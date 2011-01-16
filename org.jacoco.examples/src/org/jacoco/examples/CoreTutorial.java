@@ -19,7 +19,6 @@ import org.jacoco.core.analysis.Analyzer;
 import org.jacoco.core.analysis.CoverageBuilder;
 import org.jacoco.core.analysis.IClassCoverage;
 import org.jacoco.core.analysis.ICounter;
-import org.jacoco.core.analysis.ILine;
 import org.jacoco.core.data.ExecutionDataStore;
 import org.jacoco.core.instr.Instrumenter;
 import org.jacoco.core.runtime.IRuntime;
@@ -98,11 +97,11 @@ public class CoreTutorial {
 
 	private String getColor(final int status) {
 		switch (status) {
-		case ILine.NOT_COVERED:
+		case ICounter.NOT_COVERED:
 			return "red";
-		case ILine.PARTLY_COVERED:
+		case ICounter.PARTLY_COVERED:
 			return "yellow";
-		case ILine.FULLY_COVERED:
+		case ICounter.FULLY_COVERED:
 			return "green";
 		}
 		return "";

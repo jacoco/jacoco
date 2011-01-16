@@ -17,6 +17,7 @@ import java.io.Reader;
 import java.util.Arrays;
 import java.util.Locale;
 
+import org.jacoco.core.analysis.ICounter;
 import org.jacoco.core.analysis.ILine;
 import org.jacoco.core.analysis.ISourceNode;
 import org.jacoco.report.internal.html.resources.Styles;
@@ -33,7 +34,7 @@ class SourceHighlighter {
 
 	private String tabReplacement;
 
-	private String lang = "java";
+	private String lang;
 
 	/**
 	 * Creates a new highlighter with default settings.
@@ -44,6 +45,7 @@ class SourceHighlighter {
 	public SourceHighlighter(final Locale locale) {
 		this.locale = locale;
 		setTabWidth(4);
+		lang = "java";
 	}
 
 	/**
@@ -115,42 +117,42 @@ class SourceHighlighter {
 			throws IOException {
 		final String style;
 		switch (line.getStatus()) {
-		case ILine.NOT_COVERED:
+		case ICounter.NOT_COVERED:
 			style = Styles.NOT_COVERED;
 			break;
-		case ILine.FULLY_COVERED:
+		case ICounter.FULLY_COVERED:
 			style = Styles.FULLY_COVERED;
 			break;
-		case ILine.PARTLY_COVERED:
+		case ICounter.PARTLY_COVERED:
 			style = Styles.PARTLY_COVERED;
 			break;
 		default:
 			return pre;
 		}
-		final int totalBranches = line.getBranchCounter().getTotalCount();
-		if (totalBranches == 0) {
+
+		final ICounter branches = line.getBranchCounter();
+		switch (branches.getStatus()) {
+		case ICounter.NOT_COVERED:
+			return span(pre, style, Styles.BRANCH_NOT_COVERED,
+					"All %2$d branches missed.", branches);
+		case ICounter.FULLY_COVERED:
+			return span(pre, style, Styles.BRANCH_FULLY_COVERED,
+					"All %2$d branches covered.", branches);
+		case ICounter.PARTLY_COVERED:
+			return span(pre, style, Styles.BRANCH_PARTLY_COVERED,
+					"%1$d of %2$d branches missed.", branches);
+		default:
 			return pre.span(style);
 		}
-		final int missedBranches = line.getBranchCounter().getMissedCount();
-		final Integer t = Integer.valueOf(totalBranches);
-		if (missedBranches == 0) {
-			return span(pre, style, Styles.BRANCH_FULLY_COVERED,
-					"All %d branches covered.", t);
-		}
-		if (missedBranches == totalBranches) {
-			return span(pre, style, Styles.BRANCH_NOT_COVERED,
-					"All %d branches missed.", t);
-		}
-		final Integer m = Integer.valueOf(missedBranches);
-		return span(pre, style, Styles.BRANCH_PARTLY_COVERED,
-				"%d of %d branches missed.", m, t);
 	}
 
 	private HTMLElement span(final HTMLElement parent, final String style1,
-			final String style2, final String title, final Object... params)
+			final String style2, final String title, final ICounter branches)
 			throws IOException {
 		final HTMLElement span = parent.span(style1 + " " + style2);
-		span.attr("title", String.format(locale, title, params));
+		final Integer missed = Integer.valueOf(branches.getMissedCount());
+		final Integer total = Integer.valueOf(branches.getTotalCount());
+		span.attr("title", String.format(locale, title, missed, total));
 		return span;
 	}
 

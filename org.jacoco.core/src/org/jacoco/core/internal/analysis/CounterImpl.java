@@ -167,6 +167,14 @@ public abstract class CounterImpl implements ICounter {
 		return (double) missed / (missed + covered);
 	}
 
+	public int getStatus() {
+		int status = covered > 0 ? FULLY_COVERED : EMPTY;
+		if (missed > 0) {
+			status |= NOT_COVERED;
+		}
+		return status;
+	}
+
 	@Override
 	public boolean equals(final Object obj) {
 		if (obj instanceof ICounter) {

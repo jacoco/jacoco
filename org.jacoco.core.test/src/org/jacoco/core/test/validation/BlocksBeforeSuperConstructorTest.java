@@ -11,8 +11,7 @@
  *******************************************************************************/
 package org.jacoco.core.test.validation;
 
-import static org.jacoco.core.analysis.ILine.PARTLY_COVERED;
-
+import org.jacoco.core.analysis.ICounter;
 import org.jacoco.core.test.validation.targets.Target10;
 import org.junit.Test;
 
@@ -33,7 +32,7 @@ public class BlocksBeforeSuperConstructorTest extends ValidationTestBase {
 	@Test
 	public void testCoverageResult() {
 
-		assertLine("super", PARTLY_COVERED, 1, 1);
+		assertLine("super", ICounter.PARTLY_COVERED, 1, 1);
 
 	}
 

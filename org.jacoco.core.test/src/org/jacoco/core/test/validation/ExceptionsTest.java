@@ -11,10 +11,7 @@
  *******************************************************************************/
 package org.jacoco.core.test.validation;
 
-import static org.jacoco.core.analysis.ILine.FULLY_COVERED;
-import static org.jacoco.core.analysis.ILine.NOT_COVERED;
-import static org.jacoco.core.analysis.ILine.PARTLY_COVERED;
-
+import org.jacoco.core.analysis.ICounter;
 import org.jacoco.core.test.validation.targets.Target03;
 import org.junit.Test;
 
@@ -39,54 +36,62 @@ public class ExceptionsTest extends ValidationTestBase {
 		// 1. Implicit Exception
 		// Currently no coverage at all, as we don't see when a block aborts
 		// somewhere in the middle.
-		assertLine("implicitException.before", NOT_COVERED);
-		assertLine("implicitException.exception", NOT_COVERED);
-		assertLine("implicitException.after", NOT_COVERED);
+		assertLine("implicitException.before", ICounter.NOT_COVERED);
+		assertLine("implicitException.exception", ICounter.NOT_COVERED);
+		assertLine("implicitException.after", ICounter.NOT_COVERED);
 
 		// 2. Explicit Exception
 		// Full coverage, as we recognize throw statements as block boundaries.
-		assertLine("explicitException.before", FULLY_COVERED);
-		assertLine("explicitException.throw", FULLY_COVERED);
+		assertLine("explicitException.before", ICounter.FULLY_COVERED);
+		assertLine("explicitException.throw", ICounter.FULLY_COVERED);
 
 		// 3. Try/Catch Block Without Exception Thrown
-		assertLine("noExceptionTryCatch.beforeBlock", FULLY_COVERED);
-		assertLine("noExceptionTryCatch.tryBlock", FULLY_COVERED);
-		assertLine("noExceptionTryCatch.catchBlock", NOT_COVERED);
+		assertLine("noExceptionTryCatch.beforeBlock", ICounter.FULLY_COVERED);
+		assertLine("noExceptionTryCatch.tryBlock", ICounter.FULLY_COVERED);
+		assertLine("noExceptionTryCatch.catchBlock", ICounter.NOT_COVERED);
 
 		// 4. Try/Catch Block Without a Implicit Exception Thrown
 		// As always with implicit exceptions we don't see when a block aborts
 		// somewhere in the middle.
-		assertLine("implicitExceptionTryCatch.beforeBlock", FULLY_COVERED);
-		assertLine("implicitExceptionTryCatch.before", NOT_COVERED);
-		assertLine("implicitExceptionTryCatch.exception", NOT_COVERED);
-		assertLine("implicitExceptionTryCatch.after", NOT_COVERED);
-		assertLine("implicitExceptionTryCatch.catchBlock", FULLY_COVERED);
+		assertLine("implicitExceptionTryCatch.beforeBlock",
+				ICounter.FULLY_COVERED);
+		assertLine("implicitExceptionTryCatch.before", ICounter.NOT_COVERED);
+		assertLine("implicitExceptionTryCatch.exception", ICounter.NOT_COVERED);
+		assertLine("implicitExceptionTryCatch.after", ICounter.NOT_COVERED);
+		assertLine("implicitExceptionTryCatch.catchBlock",
+				ICounter.FULLY_COVERED);
 
 		// 5. Try/Catch Block With Exception Thrown Explicitly
-		assertLine("explicitExceptionTryCatch.beforeBlock", FULLY_COVERED);
-		assertLine("explicitExceptionTryCatch.before", FULLY_COVERED);
-		assertLine("explicitExceptionTryCatch.throw", FULLY_COVERED);
-		assertLine("explicitExceptionTryCatch.catchBlock", FULLY_COVERED);
+		assertLine("explicitExceptionTryCatch.beforeBlock",
+				ICounter.FULLY_COVERED);
+		assertLine("explicitExceptionTryCatch.before", ICounter.FULLY_COVERED);
+		assertLine("explicitExceptionTryCatch.throw", ICounter.FULLY_COVERED);
+		assertLine("explicitExceptionTryCatch.catchBlock",
+				ICounter.FULLY_COVERED);
 
 		// 6. Finally Block Without Exception Thrown
 		// Finally block is yellow as the exception path is missing.
-		assertLine("noExceptionFinally.beforeBlock", FULLY_COVERED);
-		assertLine("noExceptionFinally.tryBlock", FULLY_COVERED);
-		assertLine("noExceptionFinally.finallyBlock", PARTLY_COVERED);
+		assertLine("noExceptionFinally.beforeBlock", ICounter.FULLY_COVERED);
+		assertLine("noExceptionFinally.tryBlock", ICounter.FULLY_COVERED);
+		assertLine("noExceptionFinally.finallyBlock", ICounter.PARTLY_COVERED);
 
 		// 7. Finally Block With Implicit Exception
 		// Finally block is yellow as the non-exception path is missing.
-		assertLine("implicitExceptionFinally.beforeBlock", FULLY_COVERED);
-		assertLine("implicitExceptionFinally.before", NOT_COVERED);
-		assertLine("implicitExceptionFinally.exception", NOT_COVERED);
-		assertLine("implicitExceptionFinally.after", NOT_COVERED);
-		assertLine("implicitExceptionFinally.finallyBlock", PARTLY_COVERED);
+		assertLine("implicitExceptionFinally.beforeBlock",
+				ICounter.FULLY_COVERED);
+		assertLine("implicitExceptionFinally.before", ICounter.NOT_COVERED);
+		assertLine("implicitExceptionFinally.exception", ICounter.NOT_COVERED);
+		assertLine("implicitExceptionFinally.after", ICounter.NOT_COVERED);
+		assertLine("implicitExceptionFinally.finallyBlock",
+				ICounter.PARTLY_COVERED);
 
 		// 8. Finally Block With Exception Thrown Explicitly
-		assertLine("explicitExceptionFinally.beforeBlock", FULLY_COVERED);
-		assertLine("explicitExceptionFinally.before", FULLY_COVERED);
-		assertLine("explicitExceptionFinally.throw", FULLY_COVERED);
-		assertLine("explicitExceptionFinally.finallyBlock", FULLY_COVERED);
+		assertLine("explicitExceptionFinally.beforeBlock",
+				ICounter.FULLY_COVERED);
+		assertLine("explicitExceptionFinally.before", ICounter.FULLY_COVERED);
+		assertLine("explicitExceptionFinally.throw", ICounter.FULLY_COVERED);
+		assertLine("explicitExceptionFinally.finallyBlock",
+				ICounter.FULLY_COVERED);
 
 	}
 

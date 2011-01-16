@@ -117,6 +117,30 @@ public class CounterImplTest {
 	}
 
 	@Test
+	public void testGetMissedStatus1() {
+		ICounter c = CounterImpl.getInstance(0, 0);
+		assertEquals(ICounter.EMPTY, c.getStatus());
+	}
+
+	@Test
+	public void testGetMissedStatus2() {
+		ICounter c = CounterImpl.getInstance(5, 0);
+		assertEquals(ICounter.NOT_COVERED, c.getStatus());
+	}
+
+	@Test
+	public void testGetMissedStatus3() {
+		ICounter c = CounterImpl.getInstance(0, 5);
+		assertEquals(ICounter.FULLY_COVERED, c.getStatus());
+	}
+
+	@Test
+	public void testGetMissedStatus4() {
+		ICounter c = CounterImpl.getInstance(2, 3);
+		assertEquals(ICounter.PARTLY_COVERED, c.getStatus());
+	}
+
+	@Test
 	public void testEquals1() {
 		ICounter c1 = CounterImpl.getInstance(300, 123);
 		ICounter c2 = CounterImpl.getInstance(300, 123);
