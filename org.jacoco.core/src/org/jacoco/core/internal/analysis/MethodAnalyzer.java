@@ -188,19 +188,19 @@ public class MethodAnalyzer implements IMethodProbesVisitor {
 	}
 
 	public void visitProbe(final int probeId) {
-		addProbe(lastInsn, probeId);
+		addProbe(probeId);
 		lastInsn = null;
 	}
 
 	public void visitJumpInsnWithProbe(final int opcode, final Label label,
 			final int probeId) {
 		visitInsn();
-		addProbe(lastInsn, probeId);
+		addProbe(probeId);
 	}
 
 	public void visitInsnWithProbe(final int opcode, final int probeId) {
 		visitInsn();
-		addProbe(lastInsn, probeId);
+		addProbe(probeId);
 	}
 
 	public void visitTableSwitchInsnWithProbes(final int min, final int max,
@@ -230,7 +230,7 @@ public class MethodAnalyzer implements IMethodProbesVisitor {
 			if (id == LabelInfo.NO_PROBE) {
 				jumps.add(new Jump(lastInsn, label));
 			} else {
-				addProbe(lastInsn, id);
+				addProbe(id);
 			}
 			LabelInfo.setDone(label);
 		}
@@ -292,10 +292,10 @@ public class MethodAnalyzer implements IMethodProbesVisitor {
 	public void visitMaxs(final int maxStack, final int maxLocals) {
 	}
 
-	private void addProbe(final Instruction predecessor, final int probeId) {
-		predecessor.addBranch();
+	private void addProbe(final int probeId) {
+		lastInsn.addBranch();
 		if (executionData != null && executionData[probeId]) {
-			coveredProbes.add(predecessor);
+			coveredProbes.add(lastInsn);
 		}
 	}
 

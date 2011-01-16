@@ -165,14 +165,10 @@ public class Table {
 				final ICoverageNode total) throws IOException {
 			visible = renderer.init(items, total);
 			if (visible) {
-				if (index != null) {
-					index.init(items);
-				}
+				index.init(items);
 				final HTMLElement td = tr.td(headerStyle);
 				td.attr("id", String.valueOf(idprefix));
-				if (index != null) {
-					td.attr("onclick", "toggleSort(this)");
-				}
+				td.attr("onclick", "toggleSort(this)");
 				td.text(header);
 			}
 		}
@@ -190,10 +186,7 @@ public class Table {
 				throws IOException {
 			if (visible) {
 				final HTMLElement td = tr.td(style);
-				if (index != null) {
-					td.attr("id",
-							idprefix + String.valueOf(index.getPosition(idx)));
-				}
+				td.attr("id", idprefix + String.valueOf(index.getPosition(idx)));
 				renderer.item(td, item, resources, base);
 			}
 		}
