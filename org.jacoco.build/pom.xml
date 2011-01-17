@@ -130,7 +130,8 @@
     <!-- Actually this is a dirty hack, but for now it's appropriate until we don't have jacoco-maven-plugin -->
     <jvm.args></jvm.args>
     <agent.path>${basedir}/../org.jacoco.agent.rt/target/org.jacoco.agent.rt-${project.version}-all.jar</agent.path>
-    <agent.opts>destfile=${project.build.directory}/jacoco.exec,sessionid=${project.artifactId},exclclassloader=sun.reflect.DelegatingClassLoader|org.jacoco.core.test.TargetLoader</agent.opts>
+    <agent.exclclassloader>sun.reflect.DelegatingClassLoader|org.jacoco.core.test.TargetLoader</agent.exclclassloader>
+    <agent.opts>destfile=${project.build.directory}/jacoco.exec,sessionid=${project.artifactId},exclclassloader=${agent.exclclassloader}</agent.opts>
     <argLine>-javaagent:${agent.path}=${agent.opts} ${jvm.args}</argLine>
     <tycho.testArgLine>${argLine}</tycho.testArgLine>
 
@@ -325,7 +326,7 @@
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-surefire-plugin</artifactId>
-          <version>2.6</version>
+          <version>2.7.1</version>
         </plugin>
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
@@ -568,6 +569,18 @@
       </activation>
       <properties>
         <jvm.args>-XX:-FailOverToOldVerifier -Xverify:all</jvm.args>
+      </properties>
+    </profile>
+
+    <profile>
+      <id>win</id>
+      <activation>
+        <os>
+          <family>Windows</family>
+        </os>
+      </activation>
+      <properties>
+        <agent.exclclassloader>sun.reflect.DelegatingClassLoader^|org.jacoco.core.test.TargetLoader</agent.exclclassloader>
       </properties>
     </profile>
 
