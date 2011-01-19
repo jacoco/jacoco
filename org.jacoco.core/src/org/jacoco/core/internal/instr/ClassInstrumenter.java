@@ -39,6 +39,8 @@ public class ClassInstrumenter extends ClassAdapter implements
 
 	private String className;
 
+	private int probeCount;
+
 	/**
 	 * Emits a instrumented version of this class to the given class visitor.
 	 * 
@@ -95,7 +97,13 @@ public class ClassInstrumenter extends ClassAdapter implements
 	}
 
 	public void visitTotalProbeCount(final int count) {
-		probeArrayStrategy.addMembers(cv, count);
+		probeCount = count;
+	}
+
+	@Override
+	public void visitEnd() {
+		probeArrayStrategy.addMembers(cv);
+		super.visitEnd();
 	}
 
 	/**
@@ -129,7 +137,7 @@ public class ClassInstrumenter extends ClassAdapter implements
 			return 1;
 		}
 
-		public void addMembers(final ClassVisitor delegate, final int probeCount) {
+		public void addMembers(final ClassVisitor delegate) {
 			createDataField();
 			createInitMethod(probeCount);
 		}
@@ -207,17 +215,11 @@ public class ClassInstrumenter extends ClassAdapter implements
 	private class InterfaceTypeStrategy implements IProbeArrayStrategy {
 
 		public int pushInstance(final MethodVisitor mv) {
-			// TODO As we don't know the actual probe count at this point in
-			// time use a hard coded value of 64. This is typically be way too
-			// big and will break static initializers in interfaces with more
-			// than 64 blocks. So this has to be replaced with the actual probe
-			// count.
-			final int size = accessorGenerator.generateDataAccessor(id,
-					className, 64, mv);
-			return size;
+			return accessorGenerator.generateDataAccessor(id, className,
+					probeCount, mv);
 		}
 
-		public void addMembers(final ClassVisitor delegate, final int probeCount) {
+		public void addMembers(final ClassVisitor delegate) {
 		}
 
 	}

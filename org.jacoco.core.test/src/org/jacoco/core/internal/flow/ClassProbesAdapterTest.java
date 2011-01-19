@@ -53,7 +53,7 @@ public class ClassProbesAdapterTest {
 	}
 
 	@Test
-	public void testVisitMethod() {
+	public void testVisitClassMethods() {
 		final MockVisitor mv = new MockVisitor() {
 			@Override
 			public IMethodProbesVisitor visitMethod(int access, String name,
@@ -82,11 +82,53 @@ public class ClassProbesAdapterTest {
 			}
 		};
 		final ClassProbesAdapter adapter = new ClassProbesAdapter(mv);
+		adapter.visit(Opcodes.V1_5, 0, "Foo", null, "java/lang/Object", null);
 		writeMethod(adapter);
 		writeMethod(adapter);
 		writeMethod(adapter);
+
+		assertEquals(0, mv.count);
 		adapter.visitEnd();
 		assertEquals(3, mv.count);
+	}
+
+	@Test
+	public void testVisitInterfaceMethod() {
+		final MockVisitor mv = new MockVisitor() {
+			@Override
+			public IMethodProbesVisitor visitMethod(int access, String name,
+					String desc, String signature, String[] exceptions) {
+				class MockMethodVisitor extends EmptyVisitor implements
+						IMethodProbesVisitor {
+					public void visitProbe(int probeId) {
+					}
+
+					public void visitJumpInsnWithProbe(int opcode, Label label,
+							int probeId) {
+					}
+
+					public void visitInsnWithProbe(int opcode, int probeId) {
+					}
+
+					public void visitTableSwitchInsnWithProbes(int min,
+							int max, Label dflt, Label[] labels) {
+					}
+
+					public void visitLookupSwitchInsnWithProbes(Label dflt,
+							int[] keys, Label[] labels) {
+					}
+				}
+				return new MockMethodVisitor();
+			}
+		};
+		final ClassProbesAdapter adapter = new ClassProbesAdapter(mv);
+		adapter.visit(Opcodes.V1_5, Opcodes.ACC_INTERFACE, "Foo", null,
+				"java/lang/Object", null);
+		writeMethod(adapter);
+
+		assertEquals(1, mv.count);
+		adapter.visitEnd();
+		assertEquals(1, mv.count);
 	}
 
 	@Test

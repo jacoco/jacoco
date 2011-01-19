@@ -15,6 +15,7 @@ import org.objectweb.asm.ClassAdapter;
 import org.objectweb.asm.ClassVisitor;
 import org.objectweb.asm.Label;
 import org.objectweb.asm.MethodVisitor;
+import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.commons.EmptyVisitor;
 import org.objectweb.asm.commons.JSRInlinerAdapter;
 
@@ -50,9 +51,19 @@ public class ClassProbesAdapter extends ClassAdapter implements
 		EMPTY_BLOCK_METHOD_VISITOR = new Impl();
 	}
 
+	private static class ProbeCounter implements IProbeIdGenerator {
+		int count = 0;
+
+		public int nextId() {
+			return count++;
+		}
+	}
+
 	private final IClassProbesVisitor cv;
 
 	private int counter = 0;
+
+	private boolean interfaceType;
 
 	/**
 	 * Creates a new adapter that delegates to the given visitor.
@@ -63,6 +74,14 @@ public class ClassProbesAdapter extends ClassAdapter implements
 	public ClassProbesAdapter(final IClassProbesVisitor cv) {
 		super(cv);
 		this.cv = cv;
+	}
+
+	@Override
+	public void visit(final int version, final int access, final String name,
+			final String signature, final String superName,
+			final String[] interfaces) {
+		interfaceType = (access & Opcodes.ACC_INTERFACE) != 0;
+		super.visit(version, access, name, signature, superName, interfaces);
 	}
 
 	@Override
@@ -84,6 +103,12 @@ public class ClassProbesAdapter extends ClassAdapter implements
 			public void visitEnd() {
 				super.visitEnd();
 				this.accept(new LabelFlowAnalyzer());
+				if (interfaceType) {
+					final ProbeCounter counter = new ProbeCounter();
+					this.accept(new MethodProbesAdapter(
+							EMPTY_BLOCK_METHOD_VISITOR, counter));
+					cv.visitTotalProbeCount(counter.count);
+				}
 				this.accept(new MethodProbesAdapter(methodProbes,
 						ClassProbesAdapter.this));
 			}
@@ -92,7 +117,9 @@ public class ClassProbesAdapter extends ClassAdapter implements
 
 	@Override
 	public void visitEnd() {
-		cv.visitTotalProbeCount(counter);
+		if (!interfaceType) {
+			cv.visitTotalProbeCount(counter);
+		}
 		super.visitEnd();
 	}
 

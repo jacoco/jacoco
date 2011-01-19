@@ -40,13 +40,14 @@ public class MethodInstrumenterTest {
 		actual = new MethodRecorder();
 		expected = new MethodRecorder();
 		probeArrayStrategy = new IProbeArrayStrategy() {
+
 			public int pushInstance(MethodVisitor mv) {
 				mv.visitMethodInsn(Opcodes.INVOKESTATIC, "Target",
 						"$jacocoInit", "()[Z");
 				return 1;
 			}
 
-			public void addMembers(ClassVisitor delegate, int probeCount) {
+			public void addMembers(ClassVisitor delegate) {
 			}
 		};
 		instrumenter = new MethodInstrumenter(actual, 0, "()V",
