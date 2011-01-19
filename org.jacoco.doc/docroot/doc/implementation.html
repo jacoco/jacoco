@@ -47,36 +47,8 @@
   diagram gives an overview with the techniques used by JaCoCo highlighted:
 </p>
 
-<ul>
-  <li>Runtime Profiling
-    <ul>
-      <li>Java Virtual Machine Profiler Interface (JVMPI), until Java 1.4</li>
-      <li>Java Virtual Machine Tool Interface (JVMTI), since Java 1.5</li> 
-    </ul>
-  </li>
-  <li><span class="high">Instrumentation*</span>
-    <ul>
-      <li>Java Source Instrumentation</li>
-      <li><span class="high">Byte Code Instrumentation*</span>
-        <ul>
-          <li>Offline
-            <ul>
-              <li>Replace Original Classes In-Place</li>
-              <li>Inject Instrumented Classes into the Class Path</li>
-            </ul>
-          </li>
-          <li><span class="high">On-The-Fly*</span>
-            <ul>
-              <li>Special Classloader Implementions or Framework Specific Hooks</li>
-              <li><span class="high">Java Agent*</span></li>
-            </ul>
-          </li>
-        </ul>
-      </li>
-    </ul>
-  </li>
-</ul>
- 
+<img src=".resources/implementation-1.png" alt="Coverage Implementation Techniques"/>
+
 <p>
   Byte code instrumentation is very fast, can be implemented in pure Java and
   works with every Java VM. On-the-fly instrumentation with the Java agent
@@ -228,6 +200,12 @@
     runtime registers a custom <code>Handler</code> to receive the parameter
     array. This approach might break environments that install their own log
     managers (e.g. Glassfish).</li> 
+  <li><b><code>URLStreamHandlerRuntime</code></b>: This runtime registers a
+    <code>URLStreamHandler</code> for a "jacoco-xxxxx" protocol. Instrumented
+    classes open a connection on this protocol. The returned connection object
+    is the one that provides access to the coverage runtime through its
+    <code>equals()</code> method. However to register the protocol the runtime
+    needs to access internal members of the <code>java.net.URL</code> class.</li> 
   <li><b><code>ModifiedSystemClassRuntime</code></b>: This approach adds a
     public static field to an existing JRE class through instrumentation. Unlike
     the other methods above this is only possible for environments where a Java
