@@ -132,7 +132,7 @@
     <agent.path>${basedir}/../org.jacoco.agent.rt/target/org.jacoco.agent.rt-${project.version}-all.jar</agent.path>
     <agent.exclclassloader>sun.reflect.DelegatingClassLoader|org.jacoco.core.test.TargetLoader</agent.exclclassloader>
     <agent.opts>destfile=${project.build.directory}/jacoco.exec,sessionid=${project.artifactId},exclclassloader=${agent.exclclassloader}</agent.opts>
-    <argLine>-javaagent:${agent.path}=${agent.opts} ${jvm.args}</argLine>
+    <argLine>&quot;-javaagent:${agent.path}=${agent.opts} ${jvm.args}&quot;</argLine>
     <tycho.testArgLine>${argLine}</tycho.testArgLine>
 
     <!-- Plugins versions -->
@@ -569,18 +569,6 @@
       </activation>
       <properties>
         <jvm.args>-XX:-FailOverToOldVerifier -Xverify:all</jvm.args>
-      </properties>
-    </profile>
-
-    <profile>
-      <id>win</id>
-      <activation>
-        <os>
-          <family>Windows</family>
-        </os>
-      </activation>
-      <properties>
-        <agent.exclclassloader>sun.reflect.DelegatingClassLoader^|org.jacoco.core.test.TargetLoader</agent.exclclassloader>
       </properties>
     </profile>
 
