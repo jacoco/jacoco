@@ -47,6 +47,8 @@
     <developer>
       <id>brock_j</id>
       <name>Brock Janiczak</name>
+      <email>brockj@gmail.com</email>
+      <timezone>+10</timezone>
       <roles>
         <role>Developer</role>
       </roles>
