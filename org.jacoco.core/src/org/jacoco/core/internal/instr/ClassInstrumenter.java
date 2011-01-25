@@ -173,7 +173,7 @@ public class ClassInstrumenter extends ClassAdapter implements
 
 			// Stack[0]: [Z
 
-			// Return the method's block array:
+			// Return the class' probe array:
 			mv.visitFrame(Opcodes.F_FULL, 0, new Object[0], 1, STACK_ARRZ);
 			mv.visitLabel(alreadyInitialized);
 			mv.visitInsn(Opcodes.ARETURN);

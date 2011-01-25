@@ -20,7 +20,10 @@ import java.io.OutputStream;
 import java.net.URL;
 
 /**
- * API to access the agent JAR file as a resource.
+ * API to access the agent JAR file as a resource. While the agent is a JAR file
+ * it is considered as a plain resource that must be configured for the
+ * application under test (target JVM). The agent JAR does not provide any
+ * public Java API.
  */
 public final class AgentJar {
 
@@ -59,9 +62,8 @@ public final class AgentJar {
 	}
 
 	/**
-	 * Extract the JaCoCo agent jar from the classpath and put it into a
-	 * temporary location. This file should be deleted on exit, but may not if
-	 * the VM is terminated
+	 * Extract the JaCoCo agent JAR and put it into a temporary location. This
+	 * file should be deleted on exit, but may not if the VM is terminated
 	 * 
 	 * @return Location of the Agent Jar file in the local file system. The file
 	 *         should exist and be readable.
@@ -78,8 +80,7 @@ public final class AgentJar {
 	}
 
 	/**
-	 * Extract the JaCoCo agent jar from the classpath and put it into the
-	 * specified location.
+	 * Extract the JaCoCo agent JAR and put it into the specified location.
 	 * 
 	 * @param destination
 	 *            Location to write JaCoCo Agent Jar to. Must be writeable

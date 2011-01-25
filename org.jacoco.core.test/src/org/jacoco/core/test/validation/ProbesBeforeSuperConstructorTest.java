@@ -16,11 +16,11 @@ import org.jacoco.core.test.validation.targets.Target10;
 import org.junit.Test;
 
 /**
- * Test of blocks before the super constructor call.
+ * Test of probes before the super constructor call.
  */
-public class BlocksBeforeSuperConstructorTest extends ValidationTestBase {
+public class ProbesBeforeSuperConstructorTest extends ValidationTestBase {
 
-	public BlocksBeforeSuperConstructorTest() {
+	public ProbesBeforeSuperConstructorTest() {
 		super(Target10.class);
 	}
 

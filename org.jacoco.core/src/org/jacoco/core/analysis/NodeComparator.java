@@ -20,8 +20,8 @@ import java.util.List;
 import org.jacoco.core.analysis.ICoverageNode.CounterEntity;
 
 /**
- * Collection of comparators to compare {@link ICoverageNode} objects by
- * different criteria.
+ * Comparator to compare {@link ICoverageNode} objects by different counter
+ * criteria.
  * 
  * @see CounterComparator#on(ICoverageNode.CounterEntity)
  */

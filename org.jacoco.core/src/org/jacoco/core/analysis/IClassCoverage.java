@@ -14,7 +14,10 @@ package org.jacoco.core.analysis;
 import java.util.Collection;
 
 /**
- * Coverage data of a single class.
+ * Coverage data of a single class containing methods. The name of this node is
+ * the fully qualified class name in VM notation (slash separated).
+ * 
+ * @see IMethodCoverage
  */
 public interface IClassCoverage extends ISourceNode {
 

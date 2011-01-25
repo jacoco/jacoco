@@ -16,17 +16,22 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.jacoco.core.data.ExecutionDataStore;
 import org.jacoco.core.internal.analysis.BundleCoverageImpl;
 import org.jacoco.core.internal.analysis.SourceFileCoverageImpl;
 
 /**
- * Builder for hierarchical {@link ICoverageNode} structures based on execution
- * and structure information. The builder is constructed for a given
- * {@link ExecutionDataStore} and then feed with class structure information
- * through its {@link ICoverageVisitor} interface. Afterwards the collected data
- * can be obtained with {@link #getClasses()}, {@link #getSourceFiles()} or
- * {@link #getBundle(String)}.
+ * Builder for hierarchical {@link ICoverageNode} structures from single
+ * {@link IClassCoverage} nodes. The nodes are feed into the builder through its
+ * {@link ICoverageVisitor} interface. Afterwards the aggregated data can be
+ * obtained with {@link #getClasses()}, {@link #getSourceFiles()} or
+ * {@link #getBundle(String)} in the following hierarchy:
+ * 
+ * <pre>
+ * {@link IBundleCoverage}
+ * +-- {@link IPackageCoverage}*
+ *     +-- {@link IClassCoverage}*
+ *     +-- {@link ISourceFileCoverage}*
+ * </pre>
  */
 public class CoverageBuilder implements ICoverageVisitor {
 

@@ -17,8 +17,6 @@ import org.junit.Test;
 
 /**
  * Unit tests for {@link JaCoCo}.
- * 
- * @author Marc R. Hoffmann
  */
 public class JaCoCoTest {
 

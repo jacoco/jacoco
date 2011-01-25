@@ -12,9 +12,9 @@
 
 /**
  * <p>
- * APIs for coverage calculation and analysis. The coverage information is
- * calculated with an {@link org.jacoco.core.analysis.Analyzer} instance from
- * class files (target) and
+ * Coverage calculation and analysis. The coverage information is calculated
+ * with an {@link org.jacoco.core.analysis.Analyzer} instance from class files
+ * (target) and
  * {@linkplain org.jacoco.core.data.IExecutionDataVisitor execution data}</a>
  * (actual).
  * </p>

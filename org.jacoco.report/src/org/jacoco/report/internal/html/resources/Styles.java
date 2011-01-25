@@ -22,7 +22,7 @@ public final class Styles {
 	/** Footer */
 	public static final String FOOTER = "footer";
 
-	/** Test block aligned to the right */
+	/** Text block aligned to the right */
 	public static final String RIGHT = "right";
 
 	/** Report element */

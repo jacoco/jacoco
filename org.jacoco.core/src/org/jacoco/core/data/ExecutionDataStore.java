@@ -18,7 +18,7 @@ import java.util.Map;
 /**
  * In-memory data store for execution data. The data can be added through its
  * {@link IExecutionDataVisitor} interface. If execution data is provided
- * multiple times for the same class the data is merged, i.e. a block is marked
+ * multiple times for the same class the data is merged, i.e. a probe is marked
  * as executed if it is reported as executed at least once. This allows to merge
  * coverage date from multiple runs. A instance of this class is not thread
  * safe.

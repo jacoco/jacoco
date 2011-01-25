@@ -12,7 +12,8 @@
 package org.jacoco.core.analysis;
 
 /**
- * Coverage data of a single method.
+ * Coverage data of a single method. The name of this node is the local method
+ * name.
  */
 public interface IMethodCoverage extends ISourceNode {
 

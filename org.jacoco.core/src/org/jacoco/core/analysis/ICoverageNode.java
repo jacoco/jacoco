@@ -43,7 +43,7 @@ public interface ICoverageNode {
 	}
 
 	/**
-	 * Parameter type for generic counter access.
+	 * Different counter types supported by JaCoCo.
 	 */
 	public enum CounterEntity {
 

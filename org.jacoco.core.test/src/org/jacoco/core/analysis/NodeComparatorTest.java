@@ -29,11 +29,11 @@ public class NodeComparatorTest {
 
 	@Test
 	public void testSort() {
-		ICoverageNode d1 = new MockBlockData(18);
-		ICoverageNode d2 = new MockBlockData(21);
-		ICoverageNode d3 = new MockBlockData(30);
-		ICoverageNode d4 = new MockBlockData(60);
-		ICoverageNode d5 = new MockBlockData(99);
+		ICoverageNode d1 = new MockNode(18);
+		ICoverageNode d2 = new MockNode(21);
+		ICoverageNode d3 = new MockNode(30);
+		ICoverageNode d4 = new MockNode(60);
+		ICoverageNode d5 = new MockNode(99);
 		final List<ICoverageNode> result = CounterComparator.TOTALITEMS.on(
 				CounterEntity.INSTRUCTION).sort(
 				Arrays.asList(d3, d5, d1, d4, d2));
@@ -42,8 +42,8 @@ public class NodeComparatorTest {
 
 	@Test
 	public void testSecond1() {
-		ICoverageNode d1 = new MockBlockLineData(5, 30);
-		ICoverageNode d2 = new MockBlockLineData(3, 80);
+		ICoverageNode d1 = new MockLineData(5, 30);
+		ICoverageNode d2 = new MockLineData(3, 80);
 		final NodeComparator c1 = CounterComparator.TOTALITEMS
 				.on(CounterEntity.INSTRUCTION);
 		final NodeComparator c2 = CounterComparator.TOTALITEMS
@@ -53,8 +53,8 @@ public class NodeComparatorTest {
 
 	@Test
 	public void testSecond2() {
-		ICoverageNode d1 = new MockBlockLineData(5, 30);
-		ICoverageNode d2 = new MockBlockLineData(5, 80);
+		ICoverageNode d1 = new MockLineData(5, 30);
+		ICoverageNode d2 = new MockLineData(5, 80);
 		final NodeComparator c1 = CounterComparator.TOTALITEMS
 				.on(CounterEntity.INSTRUCTION);
 		final NodeComparator c2 = CounterComparator.TOTALITEMS
@@ -62,15 +62,15 @@ public class NodeComparatorTest {
 		assertTrue(c1.second(c2).compare(d1, d2) < 0);
 	}
 
-	private static final class MockBlockData extends CoverageNodeImpl {
-		MockBlockData(int total) {
+	private static final class MockNode extends CoverageNodeImpl {
+		MockNode(int total) {
 			super(GROUP, "mock");
 			instructionCounter = CounterImpl.getInstance(total, 0);
 		}
 	}
 
-	private static final class MockBlockLineData extends CoverageNodeImpl {
-		MockBlockLineData(int totalInstruction, int totalLine) {
+	private static final class MockLineData extends CoverageNodeImpl {
+		MockLineData(int totalInstruction, int totalLine) {
 			super(GROUP, "mock");
 			instructionCounter = CounterImpl.getInstance(totalInstruction, 0);
 			lineCounter = CounterImpl.getInstance(totalLine, 0);

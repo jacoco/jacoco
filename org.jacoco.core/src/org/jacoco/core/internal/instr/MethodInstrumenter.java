@@ -69,8 +69,8 @@ class MethodInstrumenter extends ProbeVariableInserter implements
 	}
 
 	private void insertProbe(final int id) {
-		// At the end of every block we set the corresponding position in the
-		// boolean[] array to true.
+		// For a probe we set the corresponding position in the boolean[] array
+		// to true.
 
 		mv.visitVarInsn(Opcodes.ALOAD, variable);
 

@@ -14,9 +14,6 @@ package org.jacoco.core.analysis;
 /**
  * The instruction and branch coverage of a single source line is described by
  * this interface.
- * 
- * @author Marc R. Hoffmann
- * @version $Revision: 11 $
  */
 public interface ILine {
 

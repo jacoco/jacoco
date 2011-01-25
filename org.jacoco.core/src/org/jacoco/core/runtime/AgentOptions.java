@@ -76,7 +76,7 @@ public class AgentOptions {
 
 	/**
 	 * Specifies whether the agent will automatically dump coverage data on VM
-	 * exit. Default is <code>true</code>
+	 * exit. Default is <code>true</code>.
 	 */
 	public static final String DUMPONEXIT = "dumponexit";
 
@@ -125,7 +125,7 @@ public class AgentOptions {
 	public static final String ADDRESS = "address";
 
 	/**
-	 * Default value for the "address" agent option
+	 * Default value for the "address" agent option.
 	 */
 	public static final String DEFAULT_ADDRESS = null;
 
@@ -138,7 +138,7 @@ public class AgentOptions {
 	public static final String PORT = "port";
 
 	/**
-	 * Default value for the "port" agent option
+	 * Default value for the "port" agent option.
 	 */
 	public static final int DEFAULT_PORT = 6300;
 

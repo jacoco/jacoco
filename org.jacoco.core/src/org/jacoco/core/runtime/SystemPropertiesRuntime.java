@@ -11,17 +11,14 @@
  *******************************************************************************/
 package org.jacoco.core.runtime;
 
-import java.util.Map;
-
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
 
 /**
  * This {@link IRuntime} implementation makes the execution data available
- * through a special entry of the type {@link Map} in the
- * {@link System#getProperties()} hash table. The advantage is, that the
- * instrumented classes do not get dependencies to other classes than the JRE
- * library itself.
+ * through a special entry in the {@link System#getProperties()} hash table. The
+ * advantage is, that the instrumented classes do not get dependencies to other
+ * classes than the JRE library itself.
  * 
  * This runtime may cause problems in environments with security restrictions,
  * in applications that replace the system properties or in applications that

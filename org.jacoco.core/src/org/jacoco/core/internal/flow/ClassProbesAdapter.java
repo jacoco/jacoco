@@ -25,7 +25,7 @@ import org.objectweb.asm.commons.JSRInlinerAdapter;
 public class ClassProbesAdapter extends ClassAdapter implements
 		IProbeIdGenerator {
 
-	private static final IMethodProbesVisitor EMPTY_BLOCK_METHOD_VISITOR;
+	private static final IMethodProbesVisitor EMPTY_METHOD_PROBES_VISITOR;
 
 	static {
 		class Impl extends EmptyVisitor implements IMethodProbesVisitor {
@@ -48,7 +48,7 @@ public class ClassProbesAdapter extends ClassAdapter implements
 					final int[] keys, final Label[] labels) {
 			}
 		}
-		EMPTY_BLOCK_METHOD_VISITOR = new Impl();
+		EMPTY_METHOD_PROBES_VISITOR = new Impl();
 	}
 
 	private static class ProbeCounter implements IProbeIdGenerator {
@@ -93,7 +93,7 @@ public class ClassProbesAdapter extends ClassAdapter implements
 		if (mv == null) {
 			// We need to visit the method in any case, otherwise probe ids
 			// are not reproducible
-			methodProbes = EMPTY_BLOCK_METHOD_VISITOR;
+			methodProbes = EMPTY_METHOD_PROBES_VISITOR;
 		} else {
 			methodProbes = mv;
 		}
@@ -106,7 +106,7 @@ public class ClassProbesAdapter extends ClassAdapter implements
 				if (interfaceType) {
 					final ProbeCounter counter = new ProbeCounter();
 					this.accept(new MethodProbesAdapter(
-							EMPTY_BLOCK_METHOD_VISITOR, counter));
+							EMPTY_METHOD_PROBES_VISITOR, counter));
 					cv.visitTotalProbeCount(counter.count);
 				}
 				this.accept(new MethodProbesAdapter(methodProbes,

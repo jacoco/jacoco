@@ -11,6 +11,6 @@
  *******************************************************************************/
 
 /**
- * APIs to represent and persists execution data and traverse code structures.
+ * Representation and persistence of execution data and session information.
  */
 package org.jacoco.core.data;

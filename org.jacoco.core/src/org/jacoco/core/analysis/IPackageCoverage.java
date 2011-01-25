@@ -14,9 +14,12 @@ package org.jacoco.core.analysis;
 import java.util.Collection;
 
 /**
- * Coverage data of a Java package. The name of this data node is the package
- * name in VM notation (slash separated). The name of the default package is the
- * empty string.
+ * Coverage data of a Java package containing classes and source files. The name
+ * of this node is the package name in VM notation (slash separated). The name
+ * of the default package is the empty string.
+ * 
+ * @see IClassCoverage
+ * @see ISourceFileCoverage
  */
 public interface IPackageCoverage extends ICoverageNode {
 

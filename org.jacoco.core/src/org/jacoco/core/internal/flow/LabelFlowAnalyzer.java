@@ -38,7 +38,7 @@ public final class LabelFlowAnalyzer implements MethodVisitor {
 
 	public void visitTryCatchBlock(final Label start, final Label end,
 			final Label handler, final String type) {
-		// Enforce a probe also at the beginning of the block:
+		// Enforce probes at the beginning and end of the block:
 		LabelInfo.setTarget(start);
 		LabelInfo.setTarget(handler);
 	}

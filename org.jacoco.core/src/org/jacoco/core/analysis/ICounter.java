@@ -14,9 +14,6 @@ package org.jacoco.core.analysis;
 /**
  * A counter holds the missed and the covered number of particular items like
  * classes, methods, branches or instructions.
- * 
- * @author Marc R. Hoffmann
- * @version $Revision: 11 $
  */
 public interface ICounter {
 
