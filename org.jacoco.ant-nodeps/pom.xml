@@ -26,6 +26,7 @@
 
   <properties>
     <jarsigner.skip>true</jarsigner.skip>
+    <maven.deploy.skip>true</maven.deploy.skip>
   </properties>
 
   <dependencies>
