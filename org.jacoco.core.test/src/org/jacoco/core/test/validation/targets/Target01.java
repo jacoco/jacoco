@@ -47,38 +47,45 @@ public class Target01 implements Runnable {
 			nop(); // $line-missedwhile$
 		}
 
-		// 5. Executed while block
+		// 5. Always executed while block
+		while (t()) { // $line-whiletrue$
+			if (t()) {
+				break;
+			}
+		}
+
+		// 6. Executed while block
 		int i = 0;
 		while (i++ < 3) { // $line-whiletruefalse$
 			nop(); // $line-executedwhile$
 		}
 
-		// 6. Executed do while block
+		// 7. Executed do while block
 		do {
 			nop(); // $line-executeddowhile$
 		} while (f());
 
-		// 7. Missed for block
+		// 8. Missed for block
 		for (nop(); f(); nop()) { // $line-missedforincrementer$
 			nop(); // $line-missedfor$
 		}
 
-		// 8. Executed for block
+		// 9. Executed for block
 		for (int j = 0; j < 1; j++) { // $line-executedforincrementer$
 			nop(); // $line-executedfor$
 		}
 
-		// 9. Missed for each block
+		// 10. Missed for each block
 		for (Object o : Collections.emptyList()) { // $line-missedforeachincrementer$
 			nop(o); // $line-missedforeach$
 		}
 
-		// 10. Executed for each block
+		// 11. Executed for each block
 		for (Object o : Collections.singleton(new Object())) { // $line-executedforeachincrementer$
 			nop(o); // $line-executedforeach$
 		}
 
-		// 11. Table switch with hit
+		// 12. Table switch with hit
 		switch (i2()) { // $line-tswitch1$
 		case 1:
 			nop(); // $line-tswitch1case1$
@@ -94,7 +101,7 @@ public class Target01 implements Runnable {
 			break;
 		}
 
-		// 12. Continued table switch with hit
+		// 13. Continued table switch with hit
 		switch (i2()) { // $line-tswitch2$
 		case 1:
 			nop(); // $line-tswitch2case1$
@@ -106,7 +113,7 @@ public class Target01 implements Runnable {
 			nop(); // $line-tswitch2default$
 		}
 
-		// 13. Table switch without hit
+		// 14. Table switch without hit
 		switch (i2()) { // $line-tswitch3$
 		case 3:
 			nop(); // $line-tswitch3case1$
@@ -122,7 +129,7 @@ public class Target01 implements Runnable {
 			break;
 		}
 
-		// 14. Lookup switch with hit
+		// 15. Lookup switch with hit
 		switch (i2()) { // $line-lswitch1$
 		case -123:
 			nop(); // $line-lswitch1case1$
@@ -138,7 +145,7 @@ public class Target01 implements Runnable {
 			break;
 		}
 
-		// 15. Continued lookup switch with hit
+		// 16. Continued lookup switch with hit
 		switch (i2()) { // $line-lswitch2$
 		case -123:
 			nop(); // $line-lswitch2case1$
@@ -150,7 +157,7 @@ public class Target01 implements Runnable {
 			nop(); // $line-lswitch2default$
 		}
 
-		// 16. Lookup switch without hit
+		// 17. Lookup switch without hit
 		switch (i2()) { // $line-lswitch3$
 		case -123:
 			nop(); // $line-lswitch3case1$
@@ -166,7 +173,7 @@ public class Target01 implements Runnable {
 			break;
 		}
 
-		// 17. Break statement
+		// 18. Break statement
 		while (true) {
 			if (t()) {
 				break; // $line-executedbreak$
@@ -174,7 +181,7 @@ public class Target01 implements Runnable {
 			nop(); // $line-missedafterbreak$
 		}
 
-		// 18. Continue statement
+		// 19. Continue statement
 		for (int j = 0; j < 1; j++) {
 			if (t()) {
 				continue; // $line-executedcontinue$
@@ -189,7 +196,7 @@ public class Target01 implements Runnable {
 
 	private void runReturn() {
 
-		// 19. Return statement
+		// 20. Return statement
 		if (t()) {
 			return; // $line-return$
 		}
@@ -199,7 +206,7 @@ public class Target01 implements Runnable {
 
 	private void runImplicitReturn() {
 
-		// 20. Implicit return
+		// 21. Implicit return
 	} // $line-implicitreturn$
 
 	public static void main(String[] args) {

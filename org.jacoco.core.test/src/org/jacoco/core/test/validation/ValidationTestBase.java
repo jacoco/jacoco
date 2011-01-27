@@ -95,20 +95,29 @@ public abstract class ValidationTestBase {
 	}
 
 	protected void assertLine(final String tag, final int status) {
-		assertLine(tag, status, 0, 0);
+		final int nr = source.getLineNumber(tag);
+		final ILine line = sourceCoverage.getLine(nr);
+		final String msg = String.format("Status in line %s: %s",
+				Integer.valueOf(nr), source.getLine(nr));
+		final int insnStatus = line.getInstructionCounter().getStatus();
+		assertEquals(msg, STATUS_NAME[status], STATUS_NAME[insnStatus]);
+	}
+
+	protected void assertLine(final String tag, final int missedBranches,
+			final int coveredBranches) {
+		final int nr = source.getLineNumber(tag);
+		final ILine line = sourceCoverage.getLine(nr);
+		final String msg = String.format("Branches in line %s: %s",
+				Integer.valueOf(nr), source.getLine(nr));
+		assertEquals(msg + " branches",
+				CounterImpl.getInstance(missedBranches, coveredBranches),
+				line.getBranchCounter());
 	}
 
 	protected void assertLine(final String tag, final int status,
 			final int missedBranches, final int coveredBranches) {
-		final int nr = source.getLineNumber(tag);
-		final ILine line = sourceCoverage.getLine(nr);
-		final String msg = String.format("L%s: %s", Integer.valueOf(nr),
-				source.getLine(nr));
-		final int insnStatus = line.getInstructionCounter().getStatus();
-		assertEquals(msg, STATUS_NAME[status], STATUS_NAME[insnStatus]);
-		assertEquals(msg + " branches",
-				CounterImpl.getInstance(missedBranches, coveredBranches),
-				line.getBranchCounter());
+		assertLine(tag, status);
+		assertLine(tag, missedBranches, coveredBranches);
 	}
 
 }
