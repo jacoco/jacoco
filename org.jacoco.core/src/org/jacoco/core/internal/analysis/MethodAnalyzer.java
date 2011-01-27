@@ -107,8 +107,9 @@ public class MethodAnalyzer implements IMethodProbesVisitor {
 		if (lastInsn != null) {
 			insn.setPredecessor(lastInsn);
 		}
-		while (!currentLabel.isEmpty()) {
-			for (int i = currentLabel.size(); --i >= 0;) {
+		final int labelCount = currentLabel.size();
+		if (labelCount > 0) {
+			for (int i = labelCount; --i >= 0;) {
 				LabelInfo.setInstruction(currentLabel.get(i), insn);
 			}
 			currentLabel.clear();
