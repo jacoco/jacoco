@@ -115,14 +115,31 @@ public class CoverageBuilderTest {
 	}
 
 	@Test(expected = IllegalStateException.class)
-	public void testDuplicateClassName() {
+	public void testDuplicateClassNameDifferent() {
 		MethodCoverageImpl method = new MethodCoverageImpl("doit", "()V", null);
 		method.increment(CounterImpl.COUNTER_1_0, CounterImpl.COUNTER_0_0, 3);
 		addClass(123L, "Sample", null, method);
 
+		// Add class with different id must fail:
 		method = new MethodCoverageImpl("doit", "()V", null);
 		method.increment(CounterImpl.COUNTER_1_0, CounterImpl.COUNTER_0_0, 3);
 		addClass(345L, "Sample", null, method);
+	}
+
+	@Test
+	public void testDuplicateClassNameIdentical() {
+		MethodCoverageImpl method = new MethodCoverageImpl("doit", "()V", null);
+		method.increment(CounterImpl.COUNTER_1_0, CounterImpl.COUNTER_0_0, 3);
+		addClass(123L, "Sample", null, method);
+
+		// Add class with same id:
+		method = new MethodCoverageImpl("doit", "()V", null);
+		method.increment(CounterImpl.COUNTER_1_0, CounterImpl.COUNTER_0_0, 3);
+		addClass(123L, "Sample", null, method);
+
+		// Second add must be ignored:
+		final Collection<IClassCoverage> classes = coverageBuilder.getClasses();
+		assertEquals(1, classes.size());
 	}
 
 	@Test

@@ -84,9 +84,10 @@ public class CoverageBuilder implements ICoverageVisitor {
 		// Only consider classes that actually contain code:
 		if (coverage.getInstructionCounter().getTotalCount() > 0) {
 			final String name = coverage.getName();
-			if (classes.put(name, coverage) != null) {
+			final IClassCoverage dup = classes.put(name, coverage);
+			if (dup != null && dup.getId() != coverage.getId()) {
 				throw new IllegalStateException(
-						"Duplicate class name in same group: " + name);
+						"Can't add different class with same name: " + name);
 			}
 			final String source = coverage.getSourceFileName();
 			if (source != null) {
