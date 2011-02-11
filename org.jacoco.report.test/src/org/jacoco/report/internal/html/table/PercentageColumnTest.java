@@ -14,6 +14,7 @@ package org.jacoco.report.internal.html.table;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
+import java.io.IOException;
 import java.util.Comparator;
 import java.util.Locale;
 
@@ -23,7 +24,7 @@ import org.jacoco.core.analysis.ICoverageNode.CounterEntity;
 import org.jacoco.core.analysis.ICoverageNode.ElementType;
 import org.jacoco.core.internal.analysis.CounterImpl;
 import org.jacoco.report.MemoryMultiReportOutput;
-import org.jacoco.report.ReportOutputFolder;
+import org.jacoco.report.internal.ReportOutputFolder;
 import org.jacoco.report.internal.html.HTMLDocument;
 import org.jacoco.report.internal.html.HTMLElement;
 import org.jacoco.report.internal.html.HTMLSupport;
@@ -65,7 +66,8 @@ public class PercentageColumnTest {
 	}
 
 	@After
-	public void teardown() {
+	public void teardown() throws IOException {
+		output.close();
 		output.assertAllClosed();
 	}
 

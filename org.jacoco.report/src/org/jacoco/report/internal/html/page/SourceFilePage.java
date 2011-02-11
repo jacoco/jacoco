@@ -9,65 +9,45 @@
  *    Marc R. Hoffmann - initial API and implementation
  *    
  *******************************************************************************/
-package org.jacoco.report.internal.html;
+package org.jacoco.report.internal.html.page;
 
 import java.io.IOException;
 import java.io.Reader;
 
-import org.jacoco.core.analysis.ICoverageNode;
 import org.jacoco.core.analysis.ISourceFileCoverage;
-import org.jacoco.core.analysis.ISourceNode;
-import org.jacoco.report.IReportVisitor;
-import org.jacoco.report.ISourceFileLocator;
-import org.jacoco.report.ReportOutputFolder;
+import org.jacoco.report.internal.ReportOutputFolder;
+import org.jacoco.report.internal.html.HTMLElement;
+import org.jacoco.report.internal.html.IHTMLReportContext;
 import org.jacoco.report.internal.html.resources.Resources;
 
 /**
  * Page showing the content of a source file with numbered and highlighted
  * source lines.
  */
-public class SourceFilePage extends NodePage {
+public class SourceFilePage extends NodePage<ISourceFileCoverage> {
 
-	private Reader sourceReader;
-
-	private final String packageName;
-
-	private final ISourceNode source;
+	private final Reader sourceReader;
 
 	/**
 	 * Creates a new page with given information.
 	 * 
 	 * @param sourceFileNode
+	 * @param sourceReader
 	 * @param parent
 	 * @param folder
 	 * @param context
 	 */
 	public SourceFilePage(final ISourceFileCoverage sourceFileNode,
-			final ReportPage parent, final ReportOutputFolder folder,
-			final IHTMLReportContext context) {
+			final Reader sourceReader, final ReportPage parent,
+			final ReportOutputFolder folder, final IHTMLReportContext context) {
 		super(sourceFileNode, parent, folder, context);
-		packageName = sourceFileNode.getPackageName();
-		source = sourceFileNode;
-	}
-
-	public IReportVisitor visitChild(final ICoverageNode node) {
-		throw new AssertionError("Source don't have child nodes.");
-	}
-
-	@Override
-	public void visitEnd(final ISourceFileLocator sourceFileLocator)
-			throws IOException {
-		sourceReader = sourceFileLocator.getSourceFile(packageName, getNode()
-				.getName());
-		if (sourceReader != null) {
-			super.visitEnd(sourceFileLocator);
-		}
+		this.sourceReader = sourceReader;
 	}
 
 	@Override
 	protected void content(final HTMLElement body) throws IOException {
 		final SourceHighlighter hl = new SourceHighlighter(context.getLocale());
-		hl.render(body, source, sourceReader);
+		hl.render(body, getNode(), sourceReader);
 		sourceReader.close();
 	}
 
@@ -92,16 +72,6 @@ public class SourceFilePage extends NodePage {
 	@Override
 	protected String getFileName() {
 		return getNode().getName() + ".html";
-	}
-
-	/**
-	 * Checks whether this page has actually been rendered. This might not be
-	 * the case if no source file has been found.
-	 * 
-	 * @return whether the page has been created
-	 */
-	public boolean exists() {
-		return sourceReader != null;
 	}
 
 }

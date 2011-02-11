@@ -11,44 +11,49 @@
  *******************************************************************************/
 package org.jacoco.report.csv;
 
-import static java.lang.String.format;
-
 import java.io.IOException;
 
-import org.jacoco.core.analysis.ICoverageNode;
-import org.jacoco.core.analysis.ICoverageNode.ElementType;
-import org.jacoco.report.IReportVisitor;
+import org.jacoco.core.analysis.IBundleCoverage;
+import org.jacoco.core.analysis.IClassCoverage;
+import org.jacoco.core.analysis.IPackageCoverage;
+import org.jacoco.report.IReportGroupVisitor;
 import org.jacoco.report.ISourceFileLocator;
 
 /**
  * Report visitor that handles coverage information for groups.
  */
-class CSVGroupHandler implements IReportVisitor {
+class CSVGroupHandler implements IReportGroupVisitor {
 
 	private final ClassRowWriter writer;
 
 	private final String groupName;
 
-	public CSVGroupHandler(final ClassRowWriter writer, final String groupName) {
+	public CSVGroupHandler(final ClassRowWriter writer) {
+		this(writer, null);
+	}
+
+	private CSVGroupHandler(final ClassRowWriter writer, final String groupName) {
 		this.writer = writer;
 		this.groupName = groupName;
 	}
 
-	public IReportVisitor visitChild(final ICoverageNode node)
-			throws IOException {
-		final ElementType type = node.getElementType();
-		switch (type) {
-		case PACKAGE:
-			return new CSVPackageHandler(writer, groupName, node.getName());
-		case GROUP:
-		case BUNDLE:
-			return new CSVGroupHandler(writer, groupName + "/" + node.getName());
+	public void visitBundle(final IBundleCoverage bundle,
+			final ISourceFileLocator locator) throws IOException {
+		final String groupName = appendName(bundle.getName());
+		for (final IPackageCoverage p : bundle.getPackages()) {
+			final String packageName = p.getName();
+			for (final IClassCoverage c : p.getClasses()) {
+				writer.writeRow(groupName, packageName, c);
+			}
 		}
-		throw new AssertionError(format("Unexpected child node %s.", type));
 	}
 
-	public void visitEnd(final ISourceFileLocator sourceFileLocator)
-			throws IOException {
+	public IReportGroupVisitor visitGroup(final String name) throws IOException {
+		return new CSVGroupHandler(writer, appendName(name));
+	}
+
+	private String appendName(final String name) {
+		return groupName == null ? name : (groupName + "/" + name);
 	}
 
 }

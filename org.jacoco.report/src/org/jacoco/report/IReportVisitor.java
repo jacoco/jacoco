@@ -12,54 +12,41 @@
 package org.jacoco.report;
 
 import java.io.IOException;
+import java.util.Collection;
+import java.util.List;
 
-import org.jacoco.core.analysis.ICoverageNode;
+import org.jacoco.core.data.ExecutionData;
+import org.jacoco.core.data.SessionInfo;
 
 /**
- * Output-Interface for hierarchical coverage data information. To allow data
- * streaming and to save memory {@link ICoverageNode}s are traversed in a
- * deep-first fashion. The interface is implemented by the different report
- * writers.
+ * Interface for all implementations to retrieve structured report data. Unlike
+ * nested {@link IReportGroupVisitor} instances the root visitor accepts exactly one
+ * bundle or group.
  */
-public interface IReportVisitor {
+public interface IReportVisitor extends IReportGroupVisitor {
 
 	/**
-	 * Visitor without any operation.
+	 * Initializes the report with global information. This method has to be
+	 * called before any other method can be called.
+	 * 
+	 * @param sessionInfos
+	 *            list of chronological ordered {@link SessionInfo} objects
+	 *            where execution data has been collected for this report.
+	 * @param executionData
+	 *            collection of all {@link ExecutionData} objects that are
+	 *            considered for this report
+	 * @throws IOException
+	 *             in case of IO problems with the report writer
 	 */
-	public static final IReportVisitor NOP = new IReportVisitor() {
-
-		public IReportVisitor visitChild(final ICoverageNode node) {
-			return NOP;
-		}
-
-		public void visitEnd(final ISourceFileLocator sourceFileLocator) {
-		}
-
-	};
+	public void visitInfo(List<SessionInfo> sessionInfos,
+			Collection<ExecutionData> executionData) throws IOException;
 
 	/**
-	 * Called for every direct child.
-	 * 
-	 * @param node
-	 *            Node for the child in the implementation class specific to
-	 *            this type. The counters are may yet be populated.
-	 * 
-	 * @return visitor instance for processing the child node
+	 * Has to be called after all report data has been emitted.
 	 * 
 	 * @throws IOException
 	 *             in case of IO problems with the report writer
 	 */
-	IReportVisitor visitChild(ICoverageNode node) throws IOException;
-
-	/**
-	 * Called at the very end, when all child node have been processed and the
-	 * counters for this node are properly populated.
-	 * 
-	 * @param sourceFileLocator
-	 *            source file locator valid for this node
-	 * @throws IOException
-	 *             in case of IO problems with the report writer
-	 */
-	void visitEnd(ISourceFileLocator sourceFileLocator) throws IOException;
+	public void visitEnd() throws IOException;
 
 }

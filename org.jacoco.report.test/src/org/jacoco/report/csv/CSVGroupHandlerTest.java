@@ -11,12 +11,15 @@
  *******************************************************************************/
 package org.jacoco.report.csv;
 
+import static org.junit.Assert.assertEquals;
+
+import java.io.BufferedReader;
+import java.io.StringReader;
 import java.io.StringWriter;
 
-import org.jacoco.core.analysis.CoverageNodeImpl;
-import org.jacoco.core.analysis.ICoverageNode.ElementType;
-import org.jacoco.report.IReportVisitor;
+import org.jacoco.report.IReportGroupVisitor;
 import org.jacoco.report.JavaNames;
+import org.jacoco.report.ReportStructureTestDriver;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -25,28 +28,42 @@ import org.junit.Test;
  */
 public class CSVGroupHandlerTest {
 
-	private IReportVisitor handler;
+	private IReportGroupVisitor handler;
+
+	private StringWriter result;
+
+	private ReportStructureTestDriver driver;
 
 	@Before
 	public void setup() throws Exception {
-		final DelimitedWriter dw = new DelimitedWriter(new StringWriter());
+		result = new StringWriter();
+		final DelimitedWriter dw = new DelimitedWriter(result);
 		final ClassRowWriter rw = new ClassRowWriter(dw, new JavaNames());
-		handler = new CSVGroupHandler(rw, "group");
+		handler = new CSVGroupHandler(rw);
+		driver = new ReportStructureTestDriver();
 	}
 
-	@Test(expected = AssertionError.class)
-	public void testVisitChildNegative1() throws Exception {
-		handler.visitChild(new CoverageNodeImpl(ElementType.CLASS, "Foo"));
+	@Test
+	public void testVisitBundle() throws Exception {
+		driver.sendBundle(handler);
+		final BufferedReader reader = getResultReader();
+		reader.readLine();
+		assertEquals("bundle,org.jacoco.example,FooClass,2,22,3,33,0,0,1,0",
+				reader.readLine());
 	}
 
-	@Test(expected = AssertionError.class)
-	public void testVisitChildNegative2() throws Exception {
-		handler.visitChild(new CoverageNodeImpl(ElementType.METHOD, "Foo"));
+	@Test
+	public void testVisitGroup() throws Exception {
+		driver.sendGroup(handler);
+		final BufferedReader reader = getResultReader();
+		reader.readLine();
+		assertEquals(
+				"group/bundle,org.jacoco.example,FooClass,2,22,3,33,0,0,1,0",
+				reader.readLine());
 	}
 
-	@Test(expected = AssertionError.class)
-	public void testVisitChildNegative3() throws Exception {
-		handler.visitChild(new CoverageNodeImpl(ElementType.SOURCEFILE, "Foo"));
+	private BufferedReader getResultReader() {
+		return new BufferedReader(new StringReader(result.toString()));
 	}
 
 }

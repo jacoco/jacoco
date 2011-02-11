@@ -12,63 +12,26 @@
 package org.jacoco.report.csv;
 
 import java.io.IOException;
+import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.util.Collection;
 import java.util.List;
 
-import org.jacoco.core.analysis.ICoverageNode;
 import org.jacoco.core.data.ExecutionData;
 import org.jacoco.core.data.SessionInfo;
 import org.jacoco.report.ILanguageNames;
-import org.jacoco.report.IReportFormatter;
 import org.jacoco.report.IReportVisitor;
-import org.jacoco.report.ISingleReportOutput;
-import org.jacoco.report.ISourceFileLocator;
 import org.jacoco.report.JavaNames;
 
 /**
  * Report formatter that will create a single CSV file. By default the filename
  * used will be the name of the session.
  */
-public class CSVFormatter implements IReportFormatter {
-
-	private ISingleReportOutput output;
+public class CSVFormatter {
 
 	private ILanguageNames languageNames = new JavaNames();
 
 	private String outputEncoding = "UTF-8";
-
-	public IReportVisitor createReportVisitor(final ICoverageNode root,
-			final List<SessionInfo> sessionInfos,
-			final Collection<ExecutionData> executionData) throws IOException {
-
-		if (output == null) {
-			throw new IllegalStateException("No report output set.");
-		}
-		final DelimitedWriter writer = new DelimitedWriter(
-				new OutputStreamWriter(output.createFile(), outputEncoding));
-		final ClassRowWriter rowWriter = new ClassRowWriter(writer,
-				languageNames);
-		return new CSVGroupHandler(rowWriter, root.getName()) {
-			@Override
-			public void visitEnd(final ISourceFileLocator sourceFileLocator)
-					throws IOException {
-				writer.close();
-				super.visitEnd(sourceFileLocator);
-			}
-		};
-	}
-
-	/**
-	 * Sets the report output callback for this report formatter. This is a
-	 * mandatory property.
-	 * 
-	 * @param output
-	 *            file output
-	 */
-	public void setReportOutput(final ISingleReportOutput output) {
-		this.output = output;
-	}
 
 	/**
 	 * Sets the implementation for language name display. Java language names
@@ -98,6 +61,39 @@ public class CSVFormatter implements IReportFormatter {
 	 */
 	public void setOutputEncoding(final String outputEncoding) {
 		this.outputEncoding = outputEncoding;
+	}
+
+	/**
+	 * Creates a new visitor to write a report to the given stream.
+	 * 
+	 * @param output
+	 *            output stream to write the report to
+	 * @return visitor to emit the report data to
+	 * @throws IOException
+	 *             in case of problems with the output stream
+	 */
+	public IReportVisitor createVisitor(final OutputStream output)
+			throws IOException {
+		final DelimitedWriter writer = new DelimitedWriter(
+				new OutputStreamWriter(output, outputEncoding));
+		final ClassRowWriter rowWriter = new ClassRowWriter(writer,
+				languageNames);
+		class Visitor extends CSVGroupHandler implements IReportVisitor {
+			Visitor() {
+				super(rowWriter);
+			}
+
+			public void visitInfo(final List<SessionInfo> sessionInfos,
+					final Collection<ExecutionData> executionData)
+					throws IOException {
+				// Info not used for CSV report
+			}
+
+			public void visitEnd() throws IOException {
+				writer.close();
+			}
+		}
+		return new Visitor();
 	}
 
 }

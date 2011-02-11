@@ -9,24 +9,24 @@
  *    Marc R. Hoffmann - initial API and implementation
  *    
  *******************************************************************************/
-package org.jacoco.report.internal.html;
-
-import java.io.IOException;
+package org.jacoco.report.internal.html.page;
 
 import org.jacoco.core.analysis.ICoverageNode;
-import org.jacoco.report.IReportVisitor;
-import org.jacoco.report.ISourceFileLocator;
-import org.jacoco.report.ReportOutputFolder;
+import org.jacoco.report.internal.ReportOutputFolder;
+import org.jacoco.report.internal.html.IHTMLReportContext;
 import org.jacoco.report.internal.html.resources.Resources;
 import org.jacoco.report.internal.html.table.ITableItem;
 
 /**
  * Report page that represents a coverage node.
+ * 
+ * @param <NodeType>
+ *            type of the node represented by this page
  */
-public abstract class NodePage extends ReportPage implements IReportVisitor,
-		ITableItem {
+public abstract class NodePage<NodeType extends ICoverageNode> extends
+		ReportPage implements ITableItem {
 
-	private ICoverageNode node;
+	private final NodeType node;
 
 	/**
 	 * Creates a new node page.
@@ -40,29 +40,25 @@ public abstract class NodePage extends ReportPage implements IReportVisitor,
 	 * @param context
 	 *            settings context
 	 */
-	protected NodePage(final ICoverageNode node, final ReportPage parent,
+	protected NodePage(final NodeType node, final ReportPage parent,
 			final ReportOutputFolder folder, final IHTMLReportContext context) {
 		super(parent, folder, context);
 		this.node = node;
 	}
 
+	// === ILinkable ===
+
 	public String getLinkStyle() {
 		return Resources.getElementStyle(node.getElementType());
 	}
-
-	public void visitEnd(final ISourceFileLocator sourceFileLocator)
-			throws IOException {
-		renderDocument();
-		this.node = node.getPlainCopy();
-	}
-
-	// === ICoverageTableItem ===
 
 	public String getLinkLabel() {
 		return node.getName();
 	}
 
-	public ICoverageNode getNode() {
+	// === ICoverageTableItem ===
+
+	public NodeType getNode() {
 		return node;
 	}
 

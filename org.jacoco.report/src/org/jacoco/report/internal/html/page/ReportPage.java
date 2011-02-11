@@ -9,12 +9,16 @@
  *    Marc R. Hoffmann - initial API and implementation
  *    
  *******************************************************************************/
-package org.jacoco.report.internal.html;
+package org.jacoco.report.internal.html.page;
 
 import java.io.IOException;
 
 import org.jacoco.core.JaCoCo;
-import org.jacoco.report.ReportOutputFolder;
+import org.jacoco.report.internal.ReportOutputFolder;
+import org.jacoco.report.internal.html.HTMLDocument;
+import org.jacoco.report.internal.html.HTMLElement;
+import org.jacoco.report.internal.html.IHTMLReportContext;
+import org.jacoco.report.internal.html.ILinkable;
 import org.jacoco.report.internal.html.resources.Resources;
 import org.jacoco.report.internal.html.resources.Styles;
 
@@ -51,11 +55,12 @@ public abstract class ReportPage implements ILinkable {
 	}
 
 	/**
-	 * Renders the page content. This method must be called at most once.
+	 * Renders this page's content and optionally additional pages. This method
+	 * must be called at most once.
 	 * 
 	 * @throws IOException
 	 */
-	public final void renderDocument() throws IOException {
+	public void render() throws IOException {
 		final HTMLDocument doc = new HTMLDocument(
 				folder.createFile(getFileName()), context.getOutputEncoding());
 		head(doc.head());

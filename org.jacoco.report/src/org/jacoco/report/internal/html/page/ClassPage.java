@@ -9,20 +9,17 @@
  *    Marc R. Hoffmann - initial API and implementation
  *    
  *******************************************************************************/
-package org.jacoco.report.internal.html;
+package org.jacoco.report.internal.html.page;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
 
 import org.jacoco.core.analysis.IClassCoverage;
 import org.jacoco.core.analysis.ICoverageNode;
 import org.jacoco.core.analysis.IMethodCoverage;
 import org.jacoco.core.analysis.ISourceNode;
-import org.jacoco.report.IReportVisitor;
-import org.jacoco.report.ReportOutputFolder;
-import org.jacoco.report.internal.html.resources.Resources;
+import org.jacoco.report.internal.ReportOutputFolder;
+import org.jacoco.report.internal.html.IHTMLReportContext;
+import org.jacoco.report.internal.html.ILinkable;
 import org.jacoco.report.internal.html.resources.Styles;
 import org.jacoco.report.internal.html.table.ITableItem;
 
@@ -30,7 +27,7 @@ import org.jacoco.report.internal.html.table.ITableItem;
  * Page showing coverage information for a class as a table of methods. The
  * methods are linked to the corresponding source file.
  */
-public class ClassPage extends NodePage {
+public class ClassPage extends TablePage<IClassCoverage> {
 
 	private class MethodItem implements ITableItem {
 
@@ -51,14 +48,11 @@ public class ClassPage extends NodePage {
 		}
 
 		public String getLink(final ReportOutputFolder base) {
-			final SourceFilePage sourceFilePage = sourceFiles
-					.get(sourceFileName);
-			if (sourceFilePage == null || !sourceFilePage.exists()) {
+			if (sourcePage == null) {
 				return null;
 			}
-			final String link = sourceFilePage.getLink(base);
-			final ISourceNode source = node;
-			final int first = source.getFirstLine();
+			final String link = sourcePage.getLink(base);
+			final int first = node.getFirstLine();
 			return first != ISourceNode.UNKNOWN_LINE ? link + "#L" + first
 					: link;
 		}
@@ -69,45 +63,24 @@ public class ClassPage extends NodePage {
 
 	}
 
-	private final List<MethodItem> methods = new ArrayList<MethodItem>();
-
-	private final Map<String, SourceFilePage> sourceFiles;
-
-	private final String label;
-
-	private final String sourceFileName;
+	private final ILinkable sourcePage;
 
 	/**
 	 * Creates a new visitor in the given context.
 	 * 
 	 * @param classNode
 	 * @param parent
-	 * @param sourceFiles
+	 * @param sourcePage
+	 *            corresponding source page or <code>null</code>
 	 * @param folder
 	 * @param context
 	 */
 	public ClassPage(final IClassCoverage classNode, final ReportPage parent,
-			final Map<String, SourceFilePage> sourceFiles,
-			final ReportOutputFolder folder, final IHTMLReportContext context) {
+			final ILinkable sourcePage, final ReportOutputFolder folder,
+			final IHTMLReportContext context) {
 		super(classNode, parent, folder, context);
-		this.sourceFiles = sourceFiles;
-		this.label = context.getLanguageNames().getClassName(
-				classNode.getName(), classNode.getSignature(),
-				classNode.getSuperName(), classNode.getInterfaceNames());
-		this.sourceFileName = classNode.getSourceFileName();
+		this.sourcePage = sourcePage;
 		context.getIndexUpdate().addClass(this, classNode.getId());
-	}
-
-	public IReportVisitor visitChild(final ICoverageNode node) {
-		methods.add(new MethodItem((IMethodCoverage) node));
-		return IReportVisitor.NOP;
-	}
-
-	@Override
-	protected void headExtra(final HTMLElement head) throws IOException {
-		super.headExtra(head);
-		head.script("text/javascript",
-				context.getResources().getLink(folder, Resources.SORT_SCRIPT));
 	}
 
 	@Override
@@ -116,9 +89,11 @@ public class ClassPage extends NodePage {
 	}
 
 	@Override
-	protected void content(final HTMLElement body) throws IOException {
-		context.getTable().render(body, methods, getNode(),
-				context.getResources(), folder);
+	public void render() throws IOException {
+		for (final IMethodCoverage m : getNode().getMethods()) {
+			addItem(new MethodItem(m));
+		}
+		super.render();
 	}
 
 	@Override
@@ -131,7 +106,9 @@ public class ClassPage extends NodePage {
 
 	@Override
 	public String getLinkLabel() {
-		return label;
+		return context.getLanguageNames().getClassName(getNode().getName(),
+				getNode().getSignature(), getNode().getSuperName(),
+				getNode().getInterfaceNames());
 	}
 
 }

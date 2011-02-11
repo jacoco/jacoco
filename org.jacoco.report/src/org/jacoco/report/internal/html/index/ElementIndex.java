@@ -14,7 +14,7 @@ package org.jacoco.report.internal.html.index;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.jacoco.report.ReportOutputFolder;
+import org.jacoco.report.internal.ReportOutputFolder;
 import org.jacoco.report.internal.html.ILinkable;
 
 /**

@@ -9,13 +9,14 @@
  *    Marc R. Hoffmann - initial API and implementation
  *    
  *******************************************************************************/
-package org.jacoco.report;
+package org.jacoco.report.internal;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertSame;
 
 import java.io.IOException;
 
+import org.jacoco.report.MemoryMultiReportOutput;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -36,7 +37,8 @@ public class ReportOutputFolderTest {
 	}
 
 	@After
-	public void teardown() {
+	public void teardown() throws IOException {
+		output.close();
 		output.assertAllClosed();
 	}
 
@@ -58,6 +60,7 @@ public class ReportOutputFolderTest {
 		root.subFolder("folderA").subFolder("folderB").createFile("test.html")
 				.close();
 		output.assertSingleFile("folderA/folderB/test.html");
+		output.close();
 		output.assertAllClosed();
 	}
 

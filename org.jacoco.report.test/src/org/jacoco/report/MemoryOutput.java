@@ -11,22 +11,32 @@
  *******************************************************************************/
 package org.jacoco.report;
 
+import static org.junit.Assert.assertTrue;
+
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.OutputStream;
+import java.io.InputStream;
 
 /**
- * Interface to emit a single binary files.
+ * In-memory report output for test purposes.
  */
-public interface ISingleReportOutput {
+public class MemoryOutput extends ByteArrayOutputStream {
 
-	/**
-	 * Creates the output file. The returned {@link OutputStream} has to be
-	 * closed.
-	 * 
-	 * @return output for the content
-	 * @throws IOException
-	 *             if the creation fails
-	 */
-	public OutputStream createFile() throws IOException;
+	private boolean closed = false;
+
+	@Override
+	public void close() throws IOException {
+		super.close();
+		closed = true;
+	}
+
+	public InputStream getContentsAsStream() {
+		return new ByteArrayInputStream(toByteArray());
+	}
+
+	public void assertClosed() {
+		assertTrue(closed);
+	}
 
 }

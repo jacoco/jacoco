@@ -21,13 +21,11 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.zip.ZipOutputStream;
 
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
@@ -38,22 +36,17 @@ import org.apache.tools.ant.types.resources.Union;
 import org.apache.tools.ant.util.FileUtils;
 import org.jacoco.core.analysis.Analyzer;
 import org.jacoco.core.analysis.CoverageBuilder;
-import org.jacoco.core.analysis.CoverageNodeImpl;
 import org.jacoco.core.analysis.IBundleCoverage;
-import org.jacoco.core.analysis.IClassCoverage;
 import org.jacoco.core.analysis.ICoverageNode;
-import org.jacoco.core.analysis.ICoverageNode.ElementType;
-import org.jacoco.core.analysis.IPackageCoverage;
 import org.jacoco.core.data.ExecutionDataReader;
 import org.jacoco.core.data.ExecutionDataStore;
 import org.jacoco.core.data.SessionInfoStore;
 import org.jacoco.report.FileMultiReportOutput;
-import org.jacoco.report.FileSingleReportOutput;
 import org.jacoco.report.IMultiReportOutput;
-import org.jacoco.report.IReportFormatter;
+import org.jacoco.report.IReportGroupVisitor;
 import org.jacoco.report.IReportVisitor;
 import org.jacoco.report.ISourceFileLocator;
-import org.jacoco.report.MultiFormatter;
+import org.jacoco.report.MultiReportVisitor;
 import org.jacoco.report.ZipMultiReportOutput;
 import org.jacoco.report.csv.CSVFormatter;
 import org.jacoco.report.html.HTMLFormatter;
@@ -145,9 +138,7 @@ public class ReportTask extends Task {
 	 */
 	private interface IFormatterElement {
 
-		IReportFormatter createFormatter() throws IOException;
-
-		void finish() throws IOException;
+		IReportVisitor createVisitor() throws IOException;
 
 	}
 
@@ -165,8 +156,6 @@ public class ReportTask extends Task {
 		private String encoding = "UTF-8";
 
 		private Locale locale = Locale.getDefault();
-
-		private ZipOutputStream zipOutput;
 
 		/**
 		 * Sets the output directory for the report.
@@ -220,15 +209,15 @@ public class ReportTask extends Task {
 			this.locale = locale;
 		}
 
-		public IReportFormatter createFormatter() throws IOException {
+		public IReportVisitor createVisitor() throws IOException {
 			final IMultiReportOutput output;
 			if (destfile != null) {
 				if (destdir != null) {
 					throw new BuildException(
 							"Either destination directory or file must be supplied, not both");
 				}
-				zipOutput = new ZipOutputStream(new FileOutputStream(destfile));
-				output = new ZipMultiReportOutput(zipOutput);
+				final FileOutputStream stream = new FileOutputStream(destfile);
+				output = new ZipMultiReportOutput(stream);
 
 			} else {
 				if (destdir == null) {
@@ -238,17 +227,10 @@ public class ReportTask extends Task {
 				output = new FileMultiReportOutput(destdir);
 			}
 			final HTMLFormatter formatter = new HTMLFormatter();
-			formatter.setReportOutput(output);
 			formatter.setFooterText(footer);
 			formatter.setOutputEncoding(encoding);
 			formatter.setLocale(locale);
-			return formatter;
-		}
-
-		public void finish() throws IOException {
-			if (zipOutput != null) {
-				zipOutput.close();
-			}
+			return formatter.createVisitor(output);
 		}
 
 	}
@@ -272,15 +254,14 @@ public class ReportTask extends Task {
 			this.destfile = destfile;
 		}
 
-		public IReportFormatter createFormatter() {
+		public IReportVisitor createVisitor() throws IOException {
 			if (destfile == null) {
 				throw new BuildException(
 						"Destination file must be supplied for csv report");
 			}
 			final CSVFormatter formatter = new CSVFormatter();
-			formatter.setReportOutput(new FileSingleReportOutput(destfile));
 			formatter.setOutputEncoding(encoding);
-			return formatter;
+			return formatter.createVisitor(new FileOutputStream(destfile));
 		}
 
 		/**
@@ -291,9 +272,6 @@ public class ReportTask extends Task {
 		 */
 		public void setEncoding(final String encoding) {
 			this.encoding = encoding;
-		}
-
-		public void finish() {
 		}
 
 	}
@@ -327,18 +305,14 @@ public class ReportTask extends Task {
 			this.encoding = encoding;
 		}
 
-		public IReportFormatter createFormatter() {
+		public IReportVisitor createVisitor() throws IOException {
 			if (destfile == null) {
 				throw new BuildException(
 						"Destination file must be supplied for xml report");
 			}
 			final XMLFormatter formatter = new XMLFormatter();
-			formatter.setReportOutput(new FileSingleReportOutput(destfile));
 			formatter.setOutputEncoding(encoding);
-			return formatter;
-		}
-
-		public void finish() {
+			return formatter.createVisitor(new FileOutputStream(destfile));
 		}
 
 	}
@@ -408,9 +382,11 @@ public class ReportTask extends Task {
 	public void execute() throws BuildException {
 		loadExecutionData();
 		try {
-			final IReportFormatter formatter = createFormatter();
-			createReport(formatter);
-			finishFormatters();
+			final IReportVisitor visitor = createVisitor();
+			visitor.visitInfo(sessionInfoStore.getInfos(),
+					executionDataStore.getContents());
+			createReport(visitor, structure);
+			visitor.visitEnd();
 		} catch (final IOException e) {
 			throw new BuildException("Error while creating report.", e);
 		}
@@ -437,76 +413,59 @@ public class ReportTask extends Task {
 		}
 	}
 
-	private IReportFormatter createFormatter() throws IOException {
-		final MultiFormatter multi = new MultiFormatter();
+	private IReportVisitor createVisitor() throws IOException {
+		final List<IReportVisitor> visitors = new ArrayList<IReportVisitor>();
 		for (final IFormatterElement f : formatters) {
-			multi.add(f.createFormatter());
+			visitors.add(f.createVisitor());
 		}
-		return multi;
+		return new MultiReportVisitor(visitors);
 	}
 
-	private void finishFormatters() throws IOException {
-		for (final IFormatterElement f : formatters) {
-			f.finish();
-		}
-	}
-
-	private void createReport(final IReportFormatter formatter)
-			throws IOException {
-		final CoverageNodeImpl node = createNode(structure);
-		final IReportVisitor visitor = formatter.createReportVisitor(node,
-				sessionInfoStore.getInfos(), executionDataStore.getContents());
-		final SourceFileCollection sourceFileLocator = new SourceFileCollection(
-				structure.sourcefiles);
-		if (node.getElementType() == ElementType.BUNDLE) {
-			visitBundle(visitor, (IBundleCoverage) node, sourceFileLocator);
-		} else {
-			for (final GroupElement g : structure.children) {
-				createReport(g, visitor, node);
-			}
-		}
-		visitor.visitEnd(sourceFileLocator);
-	}
-
-	private void createReport(final GroupElement group,
-			final IReportVisitor parentVisitor,
-			final CoverageNodeImpl parentNode) throws IOException {
-		final CoverageNodeImpl node = createNode(group);
-		final IReportVisitor visitor = parentVisitor.visitChild(node);
-		final SourceFileCollection sourceFileLocator = new SourceFileCollection(
-				group.sourcefiles);
-		if (node.getElementType() == ElementType.BUNDLE) {
-			visitBundle(visitor, (IBundleCoverage) node, sourceFileLocator);
-		} else {
-			for (final GroupElement g : group.children) {
-				createReport(g, visitor, node);
-			}
-		}
-		parentNode.increment(node);
-		visitor.visitEnd(sourceFileLocator);
-	}
-
-	private CoverageNodeImpl createNode(final GroupElement group)
-			throws IOException {
+	private void createReport(final IReportGroupVisitor visitor,
+			final GroupElement group) throws IOException {
 		if (group.name == null) {
 			throw new BuildException("Group name must be supplied");
 		}
 		if (group.children.size() > 0) {
-			return new CoverageNodeImpl(ElementType.GROUP, group.name);
-		} else {
-			final CoverageBuilder builder = new CoverageBuilder();
-			final Analyzer analyzer = new Analyzer(executionDataStore, builder);
-			for (final Iterator<?> i = group.classfiles.iterator(); i.hasNext();) {
-				final Resource resource = (Resource) i.next();
-				if (resource.isDirectory() && resource instanceof FileResource) {
-					analyzer.analyzeAll(((FileResource) resource).getFile());
-				} else {
-					final InputStream in = resource.getInputStream();
-					analyzer.analyzeAll(in);
-					in.close();
-				}
+			final IReportGroupVisitor groupVisitor = visitor
+					.visitGroup(group.name);
+			for (final GroupElement child : group.children) {
+				createReport(groupVisitor, child);
 			}
-			return builder.getBundle(group.name);
+		} else {
+			final IBundleCoverage bundle = createBundle(group);
+			final SourceFileCollection locator = new SourceFileCollection(
+					group.sourcefiles);
+			if (!locator.isEmpty()) {
+				checkForMissingDebugInformation(bundle);
+			}
+			visitor.visitBundle(bundle, locator);
+		}
+	}
+
+	private IBundleCoverage createBundle(final GroupElement group)
+			throws IOException {
+		final CoverageBuilder builder = new CoverageBuilder();
+		final Analyzer analyzer = new Analyzer(executionDataStore, builder);
+		for (final Iterator<?> i = group.classfiles.iterator(); i.hasNext();) {
+			final Resource resource = (Resource) i.next();
+			if (resource.isDirectory() && resource instanceof FileResource) {
+				analyzer.analyzeAll(((FileResource) resource).getFile());
+			} else {
+				final InputStream in = resource.getInputStream();
+				analyzer.analyzeAll(in);
+				in.close();
+			}
+		}
+		return builder.getBundle(group.name);
+	}
+
+	private void checkForMissingDebugInformation(final ICoverageNode node) {
+		if (node.getClassCounter().getTotalCount() > 0
+				&& node.getLineCounter().getTotalCount() == 0) {
+			log(format(
+					"To enable source code annotation class files for bundle '%s' have to be compiled with debug information.",
+					node.getName()), Project.MSG_WARN);
 		}
 	}
 
@@ -539,52 +498,6 @@ public class ReportTask extends Task {
 
 		public boolean isEmpty() {
 			return resources.isEmpty();
-		}
-	}
-
-	private void visitBundle(final IReportVisitor visitor,
-			final IBundleCoverage bundledata,
-			final SourceFileCollection sourceFileLocator) throws IOException {
-		if (!sourceFileLocator.isEmpty()) {
-			checkForMissingDebugInformation(bundledata);
-		}
-		for (final IPackageCoverage p : bundledata.getPackages()) {
-			visitPackage(visitor.visitChild(p), p, sourceFileLocator);
-		}
-	}
-
-	private void checkForMissingDebugInformation(final ICoverageNode node) {
-		if (node.getClassCounter().getTotalCount() > 0
-				&& node.getLineCounter().getTotalCount() == 0) {
-			log(format(
-					"To enable source code annotation class files for bundle '%s' have to be compiled with debug information.",
-					node.getName()), Project.MSG_WARN);
-		}
-	}
-
-	private static void visitPackage(final IReportVisitor visitor,
-			final IPackageCoverage packagedata,
-			final ISourceFileLocator sourceFileLocator) throws IOException {
-		visitLeafs(visitor, packagedata.getSourceFiles(), sourceFileLocator);
-		for (final IClassCoverage c : packagedata.getClasses()) {
-			visitClass(visitor.visitChild(c), c, sourceFileLocator);
-		}
-		visitor.visitEnd(sourceFileLocator);
-	}
-
-	private static void visitClass(final IReportVisitor visitor,
-			final IClassCoverage classdata,
-			final ISourceFileLocator sourceFileLocator) throws IOException {
-		visitLeafs(visitor, classdata.getMethods(), sourceFileLocator);
-		visitor.visitEnd(sourceFileLocator);
-	}
-
-	private static void visitLeafs(final IReportVisitor visitor,
-			final Collection<? extends ICoverageNode> leafs,
-			final ISourceFileLocator sourceFileLocator) throws IOException {
-		for (final ICoverageNode l : leafs) {
-			final IReportVisitor child = visitor.visitChild(l);
-			child.visitEnd(sourceFileLocator);
 		}
 	}
 

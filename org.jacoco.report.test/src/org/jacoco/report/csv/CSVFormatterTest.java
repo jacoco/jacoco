@@ -22,14 +22,12 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
-import org.jacoco.core.analysis.CoverageNodeImpl;
-import org.jacoco.core.analysis.ICoverageNode;
-import org.jacoco.core.analysis.ICoverageNode.ElementType;
 import org.jacoco.core.data.ExecutionData;
 import org.jacoco.core.data.SessionInfo;
 import org.jacoco.report.ILanguageNames;
+import org.jacoco.report.IReportGroupVisitor;
 import org.jacoco.report.IReportVisitor;
-import org.jacoco.report.MemorySingleReportOutput;
+import org.jacoco.report.MemoryOutput;
 import org.jacoco.report.ReportStructureTestDriver;
 import org.junit.After;
 import org.junit.Before;
@@ -40,20 +38,22 @@ import org.junit.Test;
  */
 public class CSVFormatterTest {
 
-	private static final String HEADER = "GROUP,PACKAGE,CLASS,METHOD_COVERED,METHOD_MISSED,LINE_COVERED,LINE_MISSED,INSTRUCTION_COVERED,INSTRUCTION_MISSED,BRANCH_COVERED,BRANCH_MISSED";
+	private static final String HEADER = "GROUP,PACKAGE,CLASS,INSTRUCTION_MISSED,INSTRUCTION_COVERED,BRANCH_MISSED,BRANCH_COVERED,LINE_MISSED,LINE_COVERED,METHOD_MISSED,METHOD_COVERED";
 
 	private ReportStructureTestDriver driver;
 
 	private CSVFormatter formatter;
 
-	private MemorySingleReportOutput output;
+	private IReportVisitor visitor;
+
+	private MemoryOutput output;
 
 	@Before
-	public void setup() {
+	public void setup() throws Exception {
 		driver = new ReportStructureTestDriver();
 		formatter = new CSVFormatter();
-		output = new MemorySingleReportOutput();
-		formatter.setReportOutput(output);
+		output = new MemoryOutput();
+		visitor = formatter.createVisitor(output);
 	}
 
 	@After
@@ -61,55 +61,48 @@ public class CSVFormatterTest {
 		output.assertClosed();
 	}
 
-	@Test(expected = IllegalStateException.class)
-	public void testNoReportOutput() throws IOException {
-		new CSVFormatter().createReportVisitor(null, null, null);
-	}
-
 	@Test
 	public void testStructureWithGroup() throws IOException {
-		driver.sendGroup(formatter);
+		driver.sendGroup(visitor);
 		final List<String> lines = getLines();
 		assertEquals(HEADER, lines.get(0));
 		assertEquals(
-				"group/bundle,org.jacoco.example,FooClass,0,1,0,0,0,0,0,0",
+				"group/bundle,org.jacoco.example,FooClass,2,22,3,33,0,0,1,0",
 				lines.get(1));
 	}
 
 	@Test
 	public void testStructureWithNestedGroups() throws IOException {
-		final ICoverageNode root = new CoverageNodeImpl(ElementType.GROUP,
-				"root");
 		final List<SessionInfo> sessions = Collections.emptyList();
 		final Collection<ExecutionData> data = Collections.emptyList();
-		final IReportVisitor child = formatter.createReportVisitor(root,
-				sessions, data);
-		driver.sendGroup(child);
-		driver.sendGroup(child);
-		child.visitEnd(driver.sourceFileLocator);
+		visitor.visitInfo(sessions, data);
+		driver.sendGroup((IReportGroupVisitor) visitor);
+		driver.sendGroup((IReportGroupVisitor) visitor);
+		visitor.visitEnd();
 		final List<String> lines = getLines();
 		assertEquals(HEADER, lines.get(0));
 		assertEquals(
-				"root/group/bundle,org.jacoco.example,FooClass,0,1,0,0,0,0,0,0",
+				"group/bundle,org.jacoco.example,FooClass,2,22,3,33,0,0,1,0",
 				lines.get(1));
 		assertEquals(
-				"root/group/bundle,org.jacoco.example,FooClass,0,1,0,0,0,0,0,0",
+				"group/bundle,org.jacoco.example,FooClass,2,22,3,33,0,0,1,0",
 				lines.get(2));
 	}
 
 	@Test
 	public void testStructureWithBundleOnly() throws IOException {
-		driver.sendBundle(formatter);
+		driver.sendBundle(visitor);
 		final List<String> lines = getLines();
 		assertEquals(HEADER, lines.get(0));
-		assertEquals("bundle,org.jacoco.example,FooClass,0,1,0,0,0,0,0,0",
+		assertEquals("bundle,org.jacoco.example,FooClass,2,22,3,33,0,0,1,0",
 				lines.get(1));
 	}
 
 	@Test
 	public void testSetEncoding() throws Exception {
 		formatter.setOutputEncoding("UTF-16");
-		driver.sendBundle(formatter);
+		visitor = formatter.createVisitor(output);
+		driver.sendBundle(visitor);
 		final List<String> lines = getLines("UTF-16");
 		assertEquals(HEADER, lines.get(0));
 	}
@@ -138,6 +131,7 @@ public class CSVFormatterTest {
 		};
 		formatter.setLanguageNames(names);
 		assertSame(names, formatter.getLanguageNames());
+		output.close();
 	}
 
 	private List<String> getLines() throws IOException {
@@ -146,7 +140,7 @@ public class CSVFormatterTest {
 
 	private List<String> getLines(String encoding) throws IOException {
 		final BufferedReader reader = new BufferedReader(new InputStreamReader(
-				output.getFileAsStream(), encoding));
+				output.getContentsAsStream(), encoding));
 		final List<String> lines = new ArrayList<String>();
 		String line;
 		while ((line = reader.readLine()) != null) {

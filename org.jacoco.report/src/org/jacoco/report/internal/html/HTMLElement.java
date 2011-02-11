@@ -14,7 +14,7 @@ package org.jacoco.report.internal.html;
 import java.io.IOException;
 import java.io.Writer;
 
-import org.jacoco.report.ReportOutputFolder;
+import org.jacoco.report.internal.ReportOutputFolder;
 import org.jacoco.report.internal.xml.XMLElement;
 
 /**

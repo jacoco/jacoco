@@ -17,9 +17,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
-import org.jacoco.core.analysis.CoverageNodeImpl;
 import org.jacoco.core.analysis.IClassCoverage;
-import org.jacoco.core.analysis.ICoverageNode.ElementType;
 import org.jacoco.core.analysis.IMethodCoverage;
 import org.jacoco.core.analysis.IPackageCoverage;
 import org.jacoco.core.analysis.ISourceFileCoverage;
@@ -27,13 +25,14 @@ import org.jacoco.core.data.ExecutionData;
 import org.jacoco.core.data.SessionInfo;
 import org.jacoco.core.internal.analysis.BundleCoverageImpl;
 import org.jacoco.core.internal.analysis.ClassCoverageImpl;
+import org.jacoco.core.internal.analysis.CounterImpl;
 import org.jacoco.core.internal.analysis.MethodCoverageImpl;
 import org.jacoco.core.internal.analysis.PackageCoverageImpl;
 import org.jacoco.core.internal.analysis.SourceFileCoverageImpl;
 
 /**
  * Creates a simple hierarchy of coverage nodes and feeds it into
- * {@link IReportFormatter} instances.
+ * {@link IReportVisitor} instances.
  */
 public class ReportStructureTestDriver {
 
@@ -60,10 +59,13 @@ public class ReportStructureTestDriver {
 
 	private final BundleCoverageImpl bundleCoverage;
 
-	private final CoverageNodeImpl groupCoverage;
-
 	public ReportStructureTestDriver() {
-		methodCoverage = new MethodCoverageImpl("fooMethod", "()V", null);
+		methodCoverage = new MethodCoverageImpl("fooMethod", "()V", null) {
+			{
+				instructionCounter = CounterImpl.getInstance(2, 22);
+				branchCounter = CounterImpl.getInstance(3, 33);
+			}
+		};
 
 		final ClassCoverageImpl classCoverageImpl = new ClassCoverageImpl(
 				"org/jacoco/example/FooClass", 1001, null, "java/lang/Object",
@@ -72,61 +74,38 @@ public class ReportStructureTestDriver {
 		classCoverageImpl.addMethod(methodCoverage);
 		classCoverage = classCoverageImpl;
 
-		sourceFileCoverage = new SourceFileCoverageImpl("FooClass.java",
-				"org/jacoco/example");
+		final SourceFileCoverageImpl sourceFileCoverageImpl = new SourceFileCoverageImpl(
+				"FooClass.java", "org/jacoco/example");
+		sourceFileCoverageImpl.increment(classCoverage);
+		sourceFileCoverage = sourceFileCoverageImpl;
+
 		packageCoverage = new PackageCoverageImpl("org/jacoco/example",
 				Collections.singleton(classCoverage),
 				Collections.singleton(sourceFileCoverage));
 		bundleCoverage = new BundleCoverageImpl("bundle",
 				Collections.singleton(packageCoverage));
-		groupCoverage = new CoverageNodeImpl(ElementType.GROUP, "group");
 	}
 
-	public void sendGroup(IReportFormatter formatter) throws IOException {
-		final IReportVisitor child = formatter.createReportVisitor(
-				groupCoverage, sessions, executionData);
-		sendBundle(child);
-		child.visitEnd(sourceFileLocator);
+	public void sendGroup(IReportVisitor reportVisitor) throws IOException {
+		reportVisitor.visitInfo(sessions, executionData);
+		final IReportGroupVisitor group = reportVisitor.visitGroup("group");
+		sendBundle(group);
+		reportVisitor.visitEnd();
 	}
 
-	public void sendGroup(IReportVisitor parent) throws IOException {
-		final IReportVisitor child = parent.visitChild(groupCoverage);
-		sendBundle(child);
-		child.visitEnd(sourceFileLocator);
+	public void sendGroup(IReportGroupVisitor groupVisitor) throws IOException {
+		final IReportGroupVisitor group = groupVisitor.visitGroup("group");
+		sendBundle(group);
 	}
 
-	public void sendBundle(IReportFormatter formatter) throws IOException {
-		final IReportVisitor child = formatter.createReportVisitor(
-				bundleCoverage, sessions, executionData);
-		sendPackage(child);
-		child.visitEnd(sourceFileLocator);
+	public void sendBundle(IReportVisitor reportVisitor) throws IOException {
+		reportVisitor.visitInfo(sessions, executionData);
+		reportVisitor.visitBundle(bundleCoverage, sourceFileLocator);
+		reportVisitor.visitEnd();
 	}
 
-	public void sendBundle(IReportVisitor parent) throws IOException {
-		final IReportVisitor child = parent.visitChild(bundleCoverage);
-		sendPackage(child);
-		child.visitEnd(sourceFileLocator);
-	}
-
-	public void sendPackage(IReportVisitor parent) throws IOException {
-		final IReportVisitor child = parent.visitChild(packageCoverage);
-		sendClass(child);
-		sendSourceFile(child);
-		child.visitEnd(sourceFileLocator);
-	}
-
-	public void sendClass(IReportVisitor parent) throws IOException {
-		final IReportVisitor child = parent.visitChild(classCoverage);
-		sendMethod(child);
-		child.visitEnd(sourceFileLocator);
-	}
-
-	public void sendMethod(IReportVisitor parent) throws IOException {
-		parent.visitChild(methodCoverage).visitEnd(sourceFileLocator);
-	}
-
-	public void sendSourceFile(IReportVisitor parent) throws IOException {
-		parent.visitChild(sourceFileCoverage).visitEnd(sourceFileLocator);
+	public void sendBundle(IReportGroupVisitor groupVisitor) throws IOException {
+		groupVisitor.visitBundle(bundleCoverage, sourceFileLocator);
 	}
 
 }

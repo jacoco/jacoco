@@ -9,7 +9,7 @@
  *    Marc R. Hoffmann - initial API and implementation
  *    
  *******************************************************************************/
-package org.jacoco.report.internal.html;
+package org.jacoco.report.internal.html.page;
 
 import static org.junit.Assert.assertEquals;
 
@@ -20,6 +20,9 @@ import java.util.Locale;
 import org.jacoco.core.analysis.ICoverageNode.ElementType;
 import org.jacoco.core.internal.analysis.CounterImpl;
 import org.jacoco.core.internal.analysis.SourceNodeImpl;
+import org.jacoco.report.internal.html.HTMLDocument;
+import org.jacoco.report.internal.html.HTMLElement;
+import org.jacoco.report.internal.html.HTMLSupport;
 import org.jacoco.report.internal.html.resources.Styles;
 import org.junit.Before;
 import org.junit.Test;

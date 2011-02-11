@@ -9,10 +9,11 @@
  *    Marc R. Hoffmann - initial API and implementation
  *    
  *******************************************************************************/
-package org.jacoco.report;
+package org.jacoco.report.internal;
 
 import static org.junit.Assert.assertEquals;
 
+import org.jacoco.report.internal.NormalizedFileNames;
 import org.junit.Before;
 import org.junit.Test;
 

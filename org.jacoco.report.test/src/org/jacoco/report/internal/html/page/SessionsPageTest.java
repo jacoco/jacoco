@@ -9,7 +9,7 @@
  *    Marc R. Hoffmann - initial API and implementation
  *    
  *******************************************************************************/
-package org.jacoco.report.internal.html;
+package org.jacoco.report.internal.html.page;
 
 import static org.junit.Assert.assertEquals;
 
@@ -25,7 +25,12 @@ import org.jacoco.core.data.SessionInfo;
 import org.jacoco.report.ILanguageNames;
 import org.jacoco.report.JavaNames;
 import org.jacoco.report.MemoryMultiReportOutput;
-import org.jacoco.report.ReportOutputFolder;
+import org.jacoco.report.internal.ReportOutputFolder;
+import org.jacoco.report.internal.html.HTMLElement;
+import org.jacoco.report.internal.html.HTMLSupport;
+import org.jacoco.report.internal.html.IHTMLReportContext;
+import org.jacoco.report.internal.html.ILinkable;
+import org.jacoco.report.internal.html.LinkableStub;
 import org.jacoco.report.internal.html.index.ElementIndex;
 import org.jacoco.report.internal.html.index.IIndexUpdate;
 import org.jacoco.report.internal.html.resources.Resources;
@@ -99,7 +104,8 @@ public class SessionsPageTest {
 	}
 
 	@After
-	public void teardown() {
+	public void teardown() throws IOException {
+		output.close();
 		output.assertAllClosed();
 	}
 
@@ -128,7 +134,7 @@ public class SessionsPageTest {
 	public void testEmptyContent() throws Exception {
 		final SessionsPage page = new SessionsPage(noSessions, noExecutionData,
 				index, null, root, context);
-		page.renderDocument();
+		page.render();
 		final HTMLSupport support = new HTMLSupport();
 		final Document doc = support.parse(output.getFile(".sessions.html"));
 		assertEquals("No session information available.",
@@ -145,7 +151,7 @@ public class SessionsPageTest {
 		sessions.add(new SessionInfo("Session-C", 0, 0));
 		final SessionsPage page = new SessionsPage(sessions, noExecutionData,
 				index, null, root, context);
-		page.renderDocument();
+		page.render();
 		final HTMLSupport support = new HTMLSupport();
 		final Document doc = support.parse(output.getFile(".sessions.html"));
 		assertEquals("el_session", support.findStr(doc,
@@ -186,7 +192,7 @@ public class SessionsPageTest {
 
 		final SessionsPage page = new SessionsPage(noSessions, data, index,
 				null, root, context);
-		page.renderDocument();
+		page.render();
 		final HTMLSupport support = new HTMLSupport();
 		final Document doc = support.parse(output.getFile(".sessions.html"));
 		assertEquals("el_class", support.findStr(doc,

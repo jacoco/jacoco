@@ -9,7 +9,7 @@
  *    Marc R. Hoffmann - initial API and implementation
  *    
  *******************************************************************************/
-package org.jacoco.report;
+package org.jacoco.report.internal;
 
 import java.util.BitSet;
 import java.util.HashMap;

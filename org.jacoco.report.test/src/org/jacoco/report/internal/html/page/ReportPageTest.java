@@ -9,7 +9,7 @@
  *    Marc R. Hoffmann - initial API and implementation
  *    
  *******************************************************************************/
-package org.jacoco.report.internal.html;
+package org.jacoco.report.internal.html.page;
 
 import static org.junit.Assert.assertEquals;
 
@@ -18,7 +18,12 @@ import java.util.Locale;
 
 import org.jacoco.report.ILanguageNames;
 import org.jacoco.report.MemoryMultiReportOutput;
-import org.jacoco.report.ReportOutputFolder;
+import org.jacoco.report.internal.ReportOutputFolder;
+import org.jacoco.report.internal.html.HTMLElement;
+import org.jacoco.report.internal.html.HTMLSupport;
+import org.jacoco.report.internal.html.IHTMLReportContext;
+import org.jacoco.report.internal.html.ILinkable;
+import org.jacoco.report.internal.html.LinkableStub;
 import org.jacoco.report.internal.html.index.IIndexUpdate;
 import org.jacoco.report.internal.html.resources.Resources;
 import org.jacoco.report.internal.html.resources.Styles;
@@ -50,17 +55,6 @@ public class ReportPageTest {
 			super(parent, root, ReportPageTest.this.context);
 			this.label = label;
 			this.style = style;
-		}
-
-		@Override
-		protected void headExtra(HTMLElement head) throws IOException {
-			super.headExtra(head);
-			head.script("text/javascript", "test.js");
-		}
-
-		@Override
-		protected String getOnload() {
-			return "init()";
 		}
 
 		@Override
@@ -129,7 +123,8 @@ public class ReportPageTest {
 	}
 
 	@After
-	public void teardown() {
+	public void teardown() throws IOException {
+		output.close();
 		output.assertAllClosed();
 	}
 
@@ -141,19 +136,13 @@ public class ReportPageTest {
 
 	@Test
 	public void testPageContent() throws Exception {
-		page.renderDocument();
+		page.render();
 		final HTMLSupport support = new HTMLSupport();
 		final Document doc = support.parse(output.getFile("Test.html"));
 
 		// style sheet
 		assertEquals(".resources/report.css", support.findStr(doc,
 				"/html/head/link[@rel='stylesheet']/@href"));
-
-		// extra head
-		assertEquals("test.js", support.findStr(doc, "/html/head/script/@src"));
-
-		// onload handler
-		assertEquals("init()", support.findStr(doc, "/html/body/@onload"));
 
 		// bread crumb
 		assertEquals("Report", support.findStr(doc,

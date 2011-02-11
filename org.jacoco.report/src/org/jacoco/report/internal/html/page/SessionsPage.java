@@ -9,7 +9,7 @@
  *    Marc R. Hoffmann - initial API and implementation
  *    
  *******************************************************************************/
-package org.jacoco.report.internal.html;
+package org.jacoco.report.internal.html.page;
 
 import java.io.IOException;
 import java.text.DateFormat;
@@ -23,7 +23,9 @@ import java.util.List;
 import org.jacoco.core.data.ExecutionData;
 import org.jacoco.core.data.SessionInfo;
 import org.jacoco.report.ILanguageNames;
-import org.jacoco.report.ReportOutputFolder;
+import org.jacoco.report.internal.ReportOutputFolder;
+import org.jacoco.report.internal.html.HTMLElement;
+import org.jacoco.report.internal.html.IHTMLReportContext;
 import org.jacoco.report.internal.html.index.ElementIndex;
 import org.jacoco.report.internal.html.resources.Styles;
 

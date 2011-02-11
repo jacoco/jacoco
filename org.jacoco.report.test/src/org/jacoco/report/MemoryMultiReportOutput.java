@@ -14,6 +14,7 @@ package org.jacoco.report;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -35,6 +36,8 @@ public class MemoryMultiReportOutput implements IMultiReportOutput {
 
 	private final Set<String> open = new HashSet<String>();
 
+	private boolean closed = false;
+
 	public OutputStream createFile(final String path) throws IOException {
 		assertFalse("Duplicate output " + path, files.containsKey(path));
 		open.add(path);
@@ -47,6 +50,10 @@ public class MemoryMultiReportOutput implements IMultiReportOutput {
 		};
 		files.put(path, out);
 		return out;
+	}
+
+	public void close() throws IOException {
+		closed = true;
 	}
 
 	public void assertEmpty() {
@@ -73,6 +80,7 @@ public class MemoryMultiReportOutput implements IMultiReportOutput {
 
 	public void assertAllClosed() {
 		assertEquals(Collections.emptySet(), open);
+		assertTrue(closed);
 	}
 
 }

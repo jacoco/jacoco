@@ -43,7 +43,6 @@ public class HTMLFormatterTest {
 		driver = new ReportStructureTestDriver();
 		formatter = new HTMLFormatter();
 		output = new MemoryMultiReportOutput();
-		formatter.setReportOutput(output);
 	}
 
 	@After
@@ -51,14 +50,9 @@ public class HTMLFormatterTest {
 		output.assertAllClosed();
 	}
 
-	@Test(expected = IllegalStateException.class)
-	public void testNoReportOutput() throws IOException {
-		new HTMLFormatter().createReportVisitor(null, null, null);
-	}
-
 	@Test
 	public void testStructureWithGroup() throws IOException {
-		driver.sendGroup(formatter);
+		driver.sendGroup(formatter.createVisitor(output));
 		output.assertFile("index.html");
 		output.assertFile("bundle/index.html");
 		output.assertFile("bundle/org.jacoco.example/index.html");
@@ -67,7 +61,7 @@ public class HTMLFormatterTest {
 
 	@Test
 	public void testStructureWithBundleOnly() throws IOException {
-		driver.sendBundle(formatter);
+		driver.sendBundle(formatter.createVisitor(output));
 		output.assertFile("index.html");
 		output.assertFile("org.jacoco.example/index.html");
 		output.assertFile("org.jacoco.example/FooClass.html");
@@ -75,7 +69,7 @@ public class HTMLFormatterTest {
 
 	@Test
 	public void testDefaultEncoding() throws Exception {
-		driver.sendBundle(formatter);
+		driver.sendBundle(formatter.createVisitor(output));
 		final BufferedReader reader = new BufferedReader(new InputStreamReader(
 				output.getFileAsStream("index.html"), "UTF-8"));
 		final String line = reader.readLine();
@@ -86,7 +80,7 @@ public class HTMLFormatterTest {
 	@Test
 	public void testSetEncoding() throws Exception {
 		formatter.setOutputEncoding("UTF-16");
-		driver.sendBundle(formatter);
+		driver.sendBundle(formatter.createVisitor(output));
 		final BufferedReader reader = new BufferedReader(new InputStreamReader(
 				output.getFileAsStream("index.html"), "UTF-16"));
 		final String line = reader.readLine();
@@ -118,18 +112,21 @@ public class HTMLFormatterTest {
 		};
 		formatter.setLanguageNames(names);
 		assertSame(names, formatter.getLanguageNames());
+		output.close();
 	}
 
 	@Test
 	public void testGetFooterText() throws Exception {
 		formatter.setFooterText("Custom Footer");
 		assertEquals("Custom Footer", formatter.getFooterText());
+		output.close();
 	}
 
 	@Test
 	public void testGetLocale() throws Exception {
 		formatter.setLocale(Locale.KOREAN);
 		assertEquals(Locale.KOREAN, formatter.getLocale());
+		output.close();
 	}
 
 }

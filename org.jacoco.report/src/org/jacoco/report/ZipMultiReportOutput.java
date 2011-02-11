@@ -36,6 +36,16 @@ public class ZipMultiReportOutput implements IMultiReportOutput {
 		this.zip = zip;
 	}
 
+	/**
+	 * Creates a new instance based on the given {@link OutputStream}.
+	 * 
+	 * @param out
+	 *            stream to write file entries to
+	 */
+	public ZipMultiReportOutput(final OutputStream out) {
+		this.zip = new ZipOutputStream(out);
+	}
+
 	public OutputStream createFile(final String path) throws IOException {
 		if (currentEntry != null) {
 			currentEntry.close();
@@ -44,6 +54,10 @@ public class ZipMultiReportOutput implements IMultiReportOutput {
 		zip.putNextEntry(entry);
 		currentEntry = new EntryOutput();
 		return currentEntry;
+	}
+
+	public void close() throws IOException {
+		zip.close();
 	}
 
 	private final class EntryOutput extends OutputStream {

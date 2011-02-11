@@ -9,9 +9,10 @@
  *    Marc R. Hoffmann - initial API and implementation
  *    
  *******************************************************************************/
-package org.jacoco.report.internal.html;
+package org.jacoco.report.internal.html.page;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertSame;
 
 import java.io.IOException;
 import java.util.Locale;
@@ -19,11 +20,13 @@ import java.util.Locale;
 import org.jacoco.core.analysis.CoverageNodeImpl;
 import org.jacoco.core.analysis.ICoverageNode;
 import org.jacoco.core.analysis.ICoverageNode.ElementType;
-import org.jacoco.core.internal.analysis.CounterImpl;
 import org.jacoco.report.ILanguageNames;
-import org.jacoco.report.IReportVisitor;
 import org.jacoco.report.MemoryMultiReportOutput;
-import org.jacoco.report.ReportOutputFolder;
+import org.jacoco.report.internal.ReportOutputFolder;
+import org.jacoco.report.internal.html.HTMLElement;
+import org.jacoco.report.internal.html.IHTMLReportContext;
+import org.jacoco.report.internal.html.ILinkable;
+import org.jacoco.report.internal.html.LinkableStub;
 import org.jacoco.report.internal.html.index.IIndexUpdate;
 import org.jacoco.report.internal.html.resources.Resources;
 import org.jacoco.report.internal.html.resources.Styles;
@@ -45,9 +48,9 @@ public class NodePageTest {
 
 	private CoverageNodeImpl node;
 
-	private NodePage page;
+	private NodePage<ICoverageNode> page;
 
-	private class TestNodePage extends NodePage {
+	private class TestNodePage extends NodePage<ICoverageNode> {
 
 		protected TestNodePage(ICoverageNode node) {
 			super(node, null, root, NodePageTest.this.context);
@@ -60,10 +63,6 @@ public class NodePageTest {
 		@Override
 		protected String getFileName() {
 			return "index.html";
-		}
-
-		public IReportVisitor visitChild(ICoverageNode node) {
-			throw new UnsupportedOperationException();
 		}
 
 	}
@@ -113,22 +112,14 @@ public class NodePageTest {
 	}
 
 	@After
-	public void teardown() {
+	public void teardown() throws IOException {
+		output.close();
 		output.assertAllClosed();
 	}
 
 	@Test
 	public void testGetNode() throws IOException {
-		node.increment(new CoverageNodeImpl(ElementType.GROUP, "Foo") {
-			{
-				branchCounter = CounterImpl.getInstance(15, 8);
-			}
-		});
-		page.visitEnd(null);
-		assertEquals(node.getName(), page.getNode().getName());
-		assertEquals(node.getElementType(), page.getNode().getElementType());
-		assertEquals(CounterImpl.getInstance(15, 8), page.getNode()
-				.getBranchCounter());
+		assertSame(node, page.getNode());
 	}
 
 	@Test
@@ -139,12 +130,6 @@ public class NodePageTest {
 	@Test
 	public void testGetLinkStyle() throws IOException {
 		assertEquals("el_group", page.getLinkStyle());
-	}
-
-	@Test
-	public void testVisitEnd() throws IOException {
-		page.visitEnd(null);
-		output.assertSingleFile("index.html");
 	}
 
 }

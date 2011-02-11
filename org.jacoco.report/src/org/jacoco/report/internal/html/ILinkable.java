@@ -11,7 +11,7 @@
  *******************************************************************************/
 package org.jacoco.report.internal.html;
 
-import org.jacoco.report.ReportOutputFolder;
+import org.jacoco.report.internal.ReportOutputFolder;
 
 /**
  * Abstraction for items that can be linked to in a report.

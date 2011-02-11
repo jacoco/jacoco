@@ -15,19 +15,15 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 import java.io.BufferedReader;
-import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
 
-import org.jacoco.core.analysis.CoverageNodeImpl;
-import org.jacoco.core.analysis.ICoverageNode;
-import org.jacoco.core.analysis.ICoverageNode.ElementType;
 import org.jacoco.core.data.ExecutionData;
 import org.jacoco.core.data.SessionInfo;
-import org.jacoco.report.MemorySingleReportOutput;
+import org.jacoco.report.IReportVisitor;
+import org.jacoco.report.MemoryOutput;
 import org.jacoco.report.ReportStructureTestDriver;
 import org.jacoco.report.internal.xml.XMLSupport;
 import org.junit.After;
@@ -44,14 +40,19 @@ public class XMLFormatterTest {
 
 	private XMLFormatter formatter;
 
-	private MemorySingleReportOutput output;
+	private MemoryOutput output;
+
+	private List<SessionInfo> infos;
+
+	private Collection<ExecutionData> data;
 
 	@Before
 	public void setup() {
 		driver = new ReportStructureTestDriver();
 		formatter = new XMLFormatter();
-		output = new MemorySingleReportOutput();
-		formatter.setReportOutput(output);
+		output = new MemoryOutput();
+		infos = new ArrayList<SessionInfo>();
+		data = new ArrayList<ExecutionData>();
 	}
 
 	@After
@@ -59,20 +60,15 @@ public class XMLFormatterTest {
 		output.assertClosed();
 	}
 
-	@Test(expected = IllegalStateException.class)
-	public void testNoReportOutput() throws IOException {
-		new XMLFormatter().createReportVisitor(null, null, null);
-	}
-
 	@Test
 	public void testSessionInfo() throws Exception {
-		final List<SessionInfo> infos = new ArrayList<SessionInfo>();
 		infos.add(new SessionInfo("session-1", 12345, 67890));
 		infos.add(new SessionInfo("session-2", 1, 2));
 		infos.add(new SessionInfo("session-3", 1, 2));
-		ICoverageNode node = new CoverageNodeImpl(ElementType.GROUP, "Sample");
-		final Collection<ExecutionData> data = Collections.emptyList();
-		formatter.createReportVisitor(node, infos, data).visitEnd(null);
+		final IReportVisitor visitor = formatter.createVisitor(output);
+		visitor.visitInfo(infos, data);
+		visitor.visitGroup("foo");
+		visitor.visitEnd();
 		assertPathMatches("session-1", "/report/sessioninfo[1]/@id");
 		assertPathMatches("12345", "/report/sessioninfo[1]/@start");
 		assertPathMatches("67890", "/report/sessioninfo[1]/@dump");
@@ -82,7 +78,9 @@ public class XMLFormatterTest {
 
 	@Test
 	public void testStructureWithGroup() throws Exception {
-		driver.sendGroup(formatter);
+		final IReportVisitor visitor = formatter.createVisitor(output);
+		visitor.visitInfo(infos, data);
+		driver.sendGroup(visitor);
 		assertPathMatches("group", "/report/@name");
 		assertPathMatches("bundle", "/report/group/@name");
 		assertPathMatches("org/jacoco/example", "/report/group/package/@name");
@@ -90,23 +88,29 @@ public class XMLFormatterTest {
 				"/report/group/package/class/@name");
 		assertPathMatches("fooMethod",
 				"/report/group/package/class/method/@name");
+		assertPathMatches("2", "report/counter[@type='INSTRUCTION']/@missed");
 	}
 
 	@Test
 	public void testStructureWithBundleOnly() throws Exception {
-		driver.sendBundle(formatter);
+		final IReportVisitor visitor = formatter.createVisitor(output);
+		visitor.visitInfo(infos, data);
+		driver.sendBundle(visitor);
 		assertPathMatches("bundle", "/report/@name");
 		assertPathMatches("org/jacoco/example", "/report/package/@name");
 		assertPathMatches("org/jacoco/example/FooClass",
 				"/report/package/class/@name");
 		assertPathMatches("fooMethod", "/report/package/class/method/@name");
+		assertPathMatches("33", "report/counter[@type='BRANCH']/@covered");
 	}
 
 	@Test
 	public void testDefaultEncoding() throws Exception {
-		driver.sendBundle(formatter);
+		final IReportVisitor visitor = formatter.createVisitor(output);
+		visitor.visitInfo(infos, data);
+		driver.sendBundle(visitor);
 		final BufferedReader reader = new BufferedReader(new InputStreamReader(
-				output.getFileAsStream(), "UTF-8"));
+				output.getContentsAsStream(), "UTF-8"));
 		final String line = reader.readLine();
 		assertTrue(line,
 				line.startsWith("<?xml version=\"1.0\" encoding=\"UTF-8\""));
@@ -115,9 +119,11 @@ public class XMLFormatterTest {
 	@Test
 	public void testSetEncoding() throws Exception {
 		formatter.setOutputEncoding("UTF-16");
-		driver.sendBundle(formatter);
+		final IReportVisitor visitor = formatter.createVisitor(output);
+		visitor.visitInfo(infos, data);
+		driver.sendBundle(visitor);
 		final BufferedReader reader = new BufferedReader(new InputStreamReader(
-				output.getFileAsStream(), "UTF-16"));
+				output.getContentsAsStream(), "UTF-16"));
 		final String line = reader.readLine();
 		assertTrue(line,
 				line.startsWith("<?xml version=\"1.0\" encoding=\"UTF-16\""));
@@ -126,7 +132,7 @@ public class XMLFormatterTest {
 	private void assertPathMatches(String expected, String path)
 			throws Exception {
 		XMLSupport support = new XMLSupport(XMLFormatter.class);
-		Document document = support.parse(output.getFile());
+		Document document = support.parse(output.toByteArray());
 		assertEquals(expected, support.findStr(document, path));
 	}
 

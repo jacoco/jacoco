@@ -12,85 +12,82 @@
 package org.jacoco.report.internal.html;
 
 import java.io.IOException;
-import java.util.ArrayList;
+import java.io.Reader;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import org.jacoco.core.analysis.IClassCoverage;
-import org.jacoco.core.analysis.ICoverageNode;
-import org.jacoco.core.analysis.ICoverageNode.ElementType;
+import org.jacoco.core.analysis.IPackageCoverage;
 import org.jacoco.core.analysis.ISourceFileCoverage;
-import org.jacoco.report.IReportVisitor;
 import org.jacoco.report.ISourceFileLocator;
-import org.jacoco.report.ReportOutputFolder;
-import org.jacoco.report.internal.html.resources.Resources;
+import org.jacoco.report.internal.ReportOutputFolder;
+import org.jacoco.report.internal.html.page.ClassPage;
+import org.jacoco.report.internal.html.page.ReportPage;
+import org.jacoco.report.internal.html.page.SourceFilePage;
+import org.jacoco.report.internal.html.page.TablePage;
 
 /**
  * Page showing coverage information for a Java package. The page contains a
  * table with all classes of the package.
  */
-public class PackagePage extends NodePage {
+public class PackagePage extends TablePage<IPackageCoverage> {
 
-	private final List<ClassPage> classes = new ArrayList<ClassPage>();
-
-	private final Map<String, SourceFilePage> sourceFiles = new HashMap<String, SourceFilePage>();
+	private final ISourceFileLocator locator;
 
 	/**
 	 * Creates a new visitor in the given context.
 	 * 
 	 * @param node
 	 * @param parent
+	 * @param locator
 	 * @param folder
 	 * @param context
 	 */
-	public PackagePage(final ICoverageNode node, final ReportPage parent,
-			final ReportOutputFolder folder, final IHTMLReportContext context) {
+	public PackagePage(final IPackageCoverage node, final ReportPage parent,
+			final ISourceFileLocator locator, final ReportOutputFolder folder,
+			final IHTMLReportContext context) {
 		super(node, parent, folder, context);
+		this.locator = locator;
 	}
 
-	public IReportVisitor visitChild(final ICoverageNode node) {
-		final ElementType type = node.getElementType();
-		switch (type) {
-		case SOURCEFILE:
-			final SourceFilePage sourcePage = new SourceFilePage(
-					(ISourceFileCoverage) node, this, folder, context);
-			sourceFiles.put(node.getName(), sourcePage);
-			return sourcePage;
-		case CLASS:
-			final ClassPage classPage = new ClassPage((IClassCoverage) node,
-					this, sourceFiles, folder, context);
-			classes.add(classPage);
-			return classPage;
+	@Override
+	public void render() throws IOException {
+		final Map<String, ILinkable> sourceFiles = renderSourceFiles();
+		renderClasses(sourceFiles);
+		super.render();
+	}
+
+	private final Map<String, ILinkable> renderSourceFiles() throws IOException {
+		final Map<String, ILinkable> sourceFiles = new HashMap<String, ILinkable>();
+		final String packagename = getNode().getName();
+		for (final ISourceFileCoverage s : getNode().getSourceFiles()) {
+			final String sourcename = s.getName();
+			final Reader reader = locator
+					.getSourceFile(packagename, sourcename);
+			if (reader != null) {
+				final SourceFilePage sourcePage = new SourceFilePage(s, reader,
+						this, folder, context);
+				sourcePage.render();
+				sourceFiles.put(sourcename, sourcePage);
+			}
+
 		}
-		throw new AssertionError("Unexpected element type " + type);
+		return sourceFiles;
 	}
 
-	@Override
-	public void visitEnd(final ISourceFileLocator sourceFileLocator)
+	private void renderClasses(final Map<String, ILinkable> sourceFiles)
 			throws IOException {
-		super.visitEnd(sourceFileLocator);
-		// free memory, otherwise we will keep the complete tree:
-		classes.clear();
-		sourceFiles.clear();
-	}
-
-	@Override
-	protected void headExtra(final HTMLElement head) throws IOException {
-		super.headExtra(head);
-		head.script("text/javascript",
-				context.getResources().getLink(folder, Resources.SORT_SCRIPT));
+		for (final IClassCoverage c : getNode().getClasses()) {
+			final ClassPage page = new ClassPage(c, this, sourceFiles.get(c
+					.getSourceFileName()), folder, context);
+			page.render();
+			addItem(page);
+		}
 	}
 
 	@Override
 	protected String getOnload() {
 		return "initialSort(['breadcrumb', 'coveragetable'])";
-	}
-
-	@Override
-	protected void content(final HTMLElement body) throws IOException {
-		context.getTable().render(body, classes, getNode(),
-				context.getResources(), folder);
 	}
 
 	@Override

@@ -31,4 +31,12 @@ public interface IMultiReportOutput {
 	 */
 	public OutputStream createFile(String path) throws IOException;
 
+	/**
+	 * Closes the underlying resource container.
+	 * 
+	 * @throws IOException
+	 *             if closing fails
+	 */
+	public void close() throws IOException;
+
 }

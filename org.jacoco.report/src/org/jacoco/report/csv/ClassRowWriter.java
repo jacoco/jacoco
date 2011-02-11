@@ -24,8 +24,9 @@ import org.jacoco.report.ILanguageNames;
  */
 class ClassRowWriter {
 
-	private static final CounterEntity[] COUNTERS = { CounterEntity.METHOD,
-			CounterEntity.LINE, CounterEntity.INSTRUCTION, CounterEntity.BRANCH };
+	private static final CounterEntity[] COUNTERS = {
+			CounterEntity.INSTRUCTION, CounterEntity.BRANCH,
+			CounterEntity.LINE, CounterEntity.METHOD };
 
 	private final DelimitedWriter writer;
 
@@ -52,8 +53,8 @@ class ClassRowWriter {
 	private void writeHeader() throws IOException {
 		writer.write("GROUP", "PACKAGE", "CLASS");
 		for (final CounterEntity entity : COUNTERS) {
-			writer.write(entity.name() + "_COVERED");
 			writer.write(entity.name() + "_MISSED");
+			writer.write(entity.name() + "_COVERED");
 		}
 		writer.nextLine();
 	}
@@ -81,8 +82,8 @@ class ClassRowWriter {
 
 		for (final CounterEntity entity : COUNTERS) {
 			final ICounter counter = node.getCounter(entity);
-			writer.write(counter.getCoveredCount());
 			writer.write(counter.getMissedCount());
+			writer.write(counter.getCoveredCount());
 		}
 
 		writer.nextLine();

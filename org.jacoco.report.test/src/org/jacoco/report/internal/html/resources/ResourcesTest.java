@@ -17,7 +17,7 @@ import java.io.IOException;
 
 import org.jacoco.core.analysis.ICoverageNode.ElementType;
 import org.jacoco.report.MemoryMultiReportOutput;
-import org.jacoco.report.ReportOutputFolder;
+import org.jacoco.report.internal.ReportOutputFolder;
 import org.junit.Before;
 import org.junit.Test;
 

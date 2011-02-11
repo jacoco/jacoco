@@ -11,7 +11,7 @@
  *******************************************************************************/
 package org.jacoco.report.internal.html;
 
-import org.jacoco.report.ReportOutputFolder;
+import org.jacoco.report.internal.ReportOutputFolder;
 
 /**
  * Stub implementation for {@link ILinkable}.
@@ -22,7 +22,7 @@ public class LinkableStub implements ILinkable {
 	private final String label;
 	private final String style;
 
-	LinkableStub(String link, String label, String style) {
+	public LinkableStub(String link, String label, String style) {
 		this.link = link;
 		this.label = label;
 		this.style = style;
