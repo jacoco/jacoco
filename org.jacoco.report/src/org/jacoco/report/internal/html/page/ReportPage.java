@@ -55,6 +55,15 @@ public abstract class ReportPage implements ILinkable {
 	}
 
 	/**
+	 * Checks whether this is the root page of the report.
+	 * 
+	 * @return <code>true</code> if this is the root page
+	 */
+	protected final boolean isRootPage() {
+		return parent == null;
+	}
+
+	/**
 	 * Renders this page's content and optionally additional pages. This method
 	 * must be called at most once.
 	 * 

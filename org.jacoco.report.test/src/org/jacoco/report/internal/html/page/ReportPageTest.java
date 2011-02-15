@@ -12,23 +12,14 @@
 package org.jacoco.report.internal.html.page;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 import java.io.IOException;
-import java.util.Locale;
 
-import org.jacoco.report.ILanguageNames;
-import org.jacoco.report.MemoryMultiReportOutput;
 import org.jacoco.report.internal.ReportOutputFolder;
 import org.jacoco.report.internal.html.HTMLElement;
 import org.jacoco.report.internal.html.HTMLSupport;
-import org.jacoco.report.internal.html.IHTMLReportContext;
-import org.jacoco.report.internal.html.ILinkable;
-import org.jacoco.report.internal.html.LinkableStub;
-import org.jacoco.report.internal.html.index.IIndexUpdate;
-import org.jacoco.report.internal.html.resources.Resources;
-import org.jacoco.report.internal.html.resources.Styles;
-import org.jacoco.report.internal.html.table.Table;
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.w3c.dom.Document;
@@ -36,13 +27,9 @@ import org.w3c.dom.Document;
 /**
  * Unit tests for {@link ReportPage}.
  */
-public class ReportPageTest {
+public class ReportPageTest extends PageTestBase {
 
-	private MemoryMultiReportOutput output;
-
-	private ReportOutputFolder root;
-
-	private IHTMLReportContext context;
+	private ReportPage rootpage;
 
 	private ReportPage page;
 
@@ -52,7 +39,7 @@ public class ReportPageTest {
 		private final String style;
 
 		protected TestReportPage(String label, String style, ReportPage parent) {
-			super(parent, root, ReportPageTest.this.context);
+			super(parent, rootFolder, ReportPageTest.this.context);
 			this.label = label;
 			this.style = style;
 		}
@@ -78,59 +65,26 @@ public class ReportPageTest {
 	}
 
 	@Before
-	public void setup() {
-		output = new MemoryMultiReportOutput();
-		root = new ReportOutputFolder(output);
-		final Resources resources = new Resources(root);
-		context = new IHTMLReportContext() {
-
-			public ILanguageNames getLanguageNames() {
-				throw new AssertionError("Unexpected method call.");
-			}
-
-			public Resources getResources() {
-				return resources;
-			}
-
-			public Table getTable() {
-				throw new AssertionError("Unexpected method call.");
-			}
-
-			public String getFooterText() {
-				return "CustomFooter";
-			}
-
-			public ILinkable getSessionsPage() {
-				return new LinkableStub("sessions.html", "Sessions",
-						Styles.EL_SESSION);
-			}
-
-			public String getOutputEncoding() {
-				return "UTF-8";
-			}
-
-			public IIndexUpdate getIndexUpdate() {
-				throw new AssertionError("Unexpected method call.");
-			}
-
-			public Locale getLocale() {
-				return Locale.ENGLISH;
-			}
-
-		};
-		ReportPage parent = new TestReportPage("Report", "el_report", null);
-		page = new TestReportPage("Test", "el_group", parent);
+	@Override
+	public void setup() throws Exception {
+		super.setup();
+		rootpage = new TestReportPage("Report", "el_report", null);
+		page = new TestReportPage("Test", "el_group", rootpage);
 	}
 
-	@After
-	public void teardown() throws IOException {
-		output.close();
-		output.assertAllClosed();
+	@Test
+	public void testIsRootPage1() {
+		assertFalse(page.isRootPage());
+	}
+
+	@Test
+	public void testIsRootPage2() {
+		assertTrue(rootpage.isRootPage());
 	}
 
 	@Test
 	public void testGetLink() throws IOException {
-		ReportOutputFolder base = root.subFolder("here");
+		ReportOutputFolder base = rootFolder.subFolder("here");
 		assertEquals("../Test.html", page.getLink(base));
 	}
 

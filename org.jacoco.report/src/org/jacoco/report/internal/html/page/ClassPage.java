@@ -14,54 +14,16 @@ package org.jacoco.report.internal.html.page;
 import java.io.IOException;
 
 import org.jacoco.core.analysis.IClassCoverage;
-import org.jacoco.core.analysis.ICoverageNode;
 import org.jacoco.core.analysis.IMethodCoverage;
-import org.jacoco.core.analysis.ISourceNode;
 import org.jacoco.report.internal.ReportOutputFolder;
 import org.jacoco.report.internal.html.IHTMLReportContext;
 import org.jacoco.report.internal.html.ILinkable;
-import org.jacoco.report.internal.html.resources.Styles;
-import org.jacoco.report.internal.html.table.ITableItem;
 
 /**
  * Page showing coverage information for a class as a table of methods. The
  * methods are linked to the corresponding source file.
  */
 public class ClassPage extends TablePage<IClassCoverage> {
-
-	private class MethodItem implements ITableItem {
-
-		private final IMethodCoverage node;
-
-		MethodItem(final IMethodCoverage node) {
-			this.node = node;
-		}
-
-		public String getLinkLabel() {
-			return context.getLanguageNames().getMethodName(
-					ClassPage.this.getNode().getName(), node.getName(),
-					node.getDesc(), node.getSignature());
-		}
-
-		public String getLinkStyle() {
-			return Styles.EL_METHOD;
-		}
-
-		public String getLink(final ReportOutputFolder base) {
-			if (sourcePage == null) {
-				return null;
-			}
-			final String link = sourcePage.getLink(base);
-			final int first = node.getFirstLine();
-			return first != ISourceNode.UNKNOWN_LINE ? link + "#L" + first
-					: link;
-		}
-
-		public ICoverageNode getNode() {
-			return node;
-		}
-
-	}
 
 	private final ILinkable sourcePage;
 
@@ -91,7 +53,10 @@ public class ClassPage extends TablePage<IClassCoverage> {
 	@Override
 	public void render() throws IOException {
 		for (final IMethodCoverage m : getNode().getMethods()) {
-			addItem(new MethodItem(m));
+			final String label = context.getLanguageNames().getMethodName(
+					getNode().getName(), m.getName(), m.getDesc(),
+					m.getSignature());
+			addItem(new MethodItem(m, label, sourcePage));
 		}
 		super.render();
 	}

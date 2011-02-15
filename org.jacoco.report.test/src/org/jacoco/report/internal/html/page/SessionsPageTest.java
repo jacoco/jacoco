@@ -18,25 +18,11 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
-import java.util.Locale;
 
 import org.jacoco.core.data.ExecutionData;
 import org.jacoco.core.data.SessionInfo;
-import org.jacoco.report.ILanguageNames;
-import org.jacoco.report.JavaNames;
-import org.jacoco.report.MemoryMultiReportOutput;
-import org.jacoco.report.internal.ReportOutputFolder;
 import org.jacoco.report.internal.html.HTMLElement;
-import org.jacoco.report.internal.html.HTMLSupport;
-import org.jacoco.report.internal.html.IHTMLReportContext;
-import org.jacoco.report.internal.html.ILinkable;
-import org.jacoco.report.internal.html.LinkableStub;
 import org.jacoco.report.internal.html.index.ElementIndex;
-import org.jacoco.report.internal.html.index.IIndexUpdate;
-import org.jacoco.report.internal.html.resources.Resources;
-import org.jacoco.report.internal.html.resources.Styles;
-import org.jacoco.report.internal.html.table.Table;
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.w3c.dom.Document;
@@ -44,98 +30,48 @@ import org.w3c.dom.Document;
 /**
  * Unit tests for {@link SessionsPage}.
  */
-public class SessionsPageTest {
+public class SessionsPageTest extends PageTestBase {
 
 	private final List<SessionInfo> noSessions = Collections.emptyList();
 
 	private final Collection<ExecutionData> noExecutionData = Collections
 			.emptyList();
 
-	private MemoryMultiReportOutput output;
-
-	private ReportOutputFolder root;
-
 	private ElementIndex index;
 
-	private IHTMLReportContext context;
-
 	@Before
-	public void setup() {
-		output = new MemoryMultiReportOutput();
-		root = new ReportOutputFolder(output);
-		index = new ElementIndex(root);
-		final Resources resources = new Resources(root);
-		final ILanguageNames names = new JavaNames();
-		context = new IHTMLReportContext() {
-
-			public ILanguageNames getLanguageNames() {
-				return names;
-			}
-
-			public Resources getResources() {
-				return resources;
-			}
-
-			public Table getTable() {
-				throw new AssertionError("Unexpected method call.");
-			}
-
-			public String getFooterText() {
-				return "CustomFooter";
-			}
-
-			public ILinkable getSessionsPage() {
-				return new LinkableStub("sessions.html", "Sessions",
-						Styles.EL_SESSION);
-			}
-
-			public String getOutputEncoding() {
-				return "UTF-8";
-			}
-
-			public IIndexUpdate getIndexUpdate() {
-				return index;
-			}
-
-			public Locale getLocale() {
-				return Locale.ENGLISH;
-			}
-		};
-	}
-
-	@After
-	public void teardown() throws IOException {
-		output.close();
-		output.assertAllClosed();
+	@Override
+	public void setup() throws Exception {
+		super.setup();
+		index = new ElementIndex(rootFolder);
 	}
 
 	@Test
 	public void testGetLinkStyle() {
 		final SessionsPage page = new SessionsPage(noSessions, noExecutionData,
-				index, null, root, context);
+				index, null, rootFolder, context);
 		assertEquals("el_session", page.getLinkStyle());
 	}
 
 	@Test
 	public void testGetFileName() {
 		final SessionsPage page = new SessionsPage(noSessions, noExecutionData,
-				index, null, root, context);
+				index, null, rootFolder, context);
 		assertEquals(".sessions.html", page.getFileName());
 	}
 
 	@Test
 	public void testGetLinkLabel() {
 		final SessionsPage page = new SessionsPage(noSessions, noExecutionData,
-				index, null, root, context);
+				index, null, rootFolder, context);
 		assertEquals("Sessions", page.getLinkLabel());
 	}
 
 	@Test
 	public void testEmptyContent() throws Exception {
 		final SessionsPage page = new SessionsPage(noSessions, noExecutionData,
-				index, null, root, context);
+				index, null, rootFolder, context);
 		page.render();
-		final HTMLSupport support = new HTMLSupport();
 		final Document doc = support.parse(output.getFile(".sessions.html"));
 		assertEquals("No session information available.",
 				support.findStr(doc, "/html/body/p[1]"));
@@ -150,9 +86,8 @@ public class SessionsPageTest {
 		sessions.add(new SessionInfo("Session-B", 0, 0));
 		sessions.add(new SessionInfo("Session-C", 0, 0));
 		final SessionsPage page = new SessionsPage(sessions, noExecutionData,
-				index, null, root, context);
+				index, null, rootFolder, context);
 		page.render();
-		final HTMLSupport support = new HTMLSupport();
 		final Document doc = support.parse(output.getFile(".sessions.html"));
 		assertEquals("el_session", support.findStr(doc,
 				"/html/body/table[1]/tbody/tr[1]/td[1]/span/@class"));
@@ -170,7 +105,7 @@ public class SessionsPageTest {
 		data.add(new ExecutionData(0x1000, "ClassB", new boolean[0]));
 		data.add(new ExecutionData(0x1001, "ClassC", new boolean[0]));
 		data.add(new ExecutionData(0x1002, "ClassA", new boolean[0]));
-		index.addClass(new ReportPage(null, root, context) {
+		index.addClass(new ReportPage(null, rootFolder, context) {
 
 			public String getLinkLabel() {
 				return "Foo";
@@ -191,9 +126,8 @@ public class SessionsPageTest {
 		}, 0x1002);
 
 		final SessionsPage page = new SessionsPage(noSessions, data, index,
-				null, root, context);
+				null, rootFolder, context);
 		page.render();
-		final HTMLSupport support = new HTMLSupport();
 		final Document doc = support.parse(output.getFile(".sessions.html"));
 		assertEquals("el_class", support.findStr(doc,
 				"/html/body/table[1]/tbody/tr[1]/td[1]/a/@class"));

@@ -9,7 +9,7 @@
  *    Marc R. Hoffmann - initial API and implementation
  *    
  *******************************************************************************/
-package org.jacoco.report.internal.html;
+package org.jacoco.report.internal.html.page;
 
 import java.io.IOException;
 import java.io.Reader;
@@ -21,10 +21,8 @@ import org.jacoco.core.analysis.IPackageCoverage;
 import org.jacoco.core.analysis.ISourceFileCoverage;
 import org.jacoco.report.ISourceFileLocator;
 import org.jacoco.report.internal.ReportOutputFolder;
-import org.jacoco.report.internal.html.page.ClassPage;
-import org.jacoco.report.internal.html.page.ReportPage;
-import org.jacoco.report.internal.html.page.SourceFilePage;
-import org.jacoco.report.internal.html.page.TablePage;
+import org.jacoco.report.internal.html.IHTMLReportContext;
+import org.jacoco.report.internal.html.ILinkable;
 
 /**
  * Page showing coverage information for a Java package. The page contains a

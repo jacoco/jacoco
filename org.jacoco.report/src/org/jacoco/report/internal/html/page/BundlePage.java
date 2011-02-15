@@ -14,33 +14,36 @@ package org.jacoco.report.internal.html.page;
 import java.io.IOException;
 
 import org.jacoco.core.analysis.IBundleCoverage;
+import org.jacoco.core.analysis.ICoverageNode;
 import org.jacoco.core.analysis.IPackageCoverage;
 import org.jacoco.report.ISourceFileLocator;
 import org.jacoco.report.internal.ReportOutputFolder;
 import org.jacoco.report.internal.html.IHTMLReportContext;
-import org.jacoco.report.internal.html.PackagePage;
 
 /**
  * Page showing coverage information for a bundle. The page contains a table
  * with all packages of the bundle.
  */
-public class BundlePage extends TablePage<IBundleCoverage> {
+public class BundlePage extends TablePage<ICoverageNode> {
 
 	private final ISourceFileLocator locator;
+
+	private IBundleCoverage bundle;
 
 	/**
 	 * Creates a new visitor in the given context.
 	 * 
-	 * @param node
+	 * @param bundle
 	 * @param parent
 	 * @param locator
 	 * @param folder
 	 * @param context
 	 */
-	public BundlePage(final IBundleCoverage node, final ReportPage parent,
+	public BundlePage(final IBundleCoverage bundle, final ReportPage parent,
 			final ISourceFileLocator locator, final ReportOutputFolder folder,
 			final IHTMLReportContext context) {
-		super(node, parent, folder, context);
+		super(bundle.getPlainCopy(), parent, folder, context);
+		this.bundle = bundle;
 		this.locator = locator;
 	}
 
@@ -48,10 +51,12 @@ public class BundlePage extends TablePage<IBundleCoverage> {
 	public void render() throws IOException {
 		renderPackages();
 		super.render();
+		// Don't keep the bundle structure in memory
+		bundle = null;
 	}
 
 	private void renderPackages() throws IOException {
-		for (final IPackageCoverage p : getNode().getPackages()) {
+		for (final IPackageCoverage p : bundle.getPackages()) {
 			final String packagename = p.getName();
 			final String foldername = packagename.length() == 0 ? "default"
 					: packagename.replace('/', '.');

@@ -15,36 +15,18 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertSame;
 
 import java.io.IOException;
-import java.util.Locale;
 
 import org.jacoco.core.analysis.CoverageNodeImpl;
 import org.jacoco.core.analysis.ICoverageNode;
 import org.jacoco.core.analysis.ICoverageNode.ElementType;
-import org.jacoco.report.ILanguageNames;
-import org.jacoco.report.MemoryMultiReportOutput;
-import org.jacoco.report.internal.ReportOutputFolder;
 import org.jacoco.report.internal.html.HTMLElement;
-import org.jacoco.report.internal.html.IHTMLReportContext;
-import org.jacoco.report.internal.html.ILinkable;
-import org.jacoco.report.internal.html.LinkableStub;
-import org.jacoco.report.internal.html.index.IIndexUpdate;
-import org.jacoco.report.internal.html.resources.Resources;
-import org.jacoco.report.internal.html.resources.Styles;
-import org.jacoco.report.internal.html.table.Table;
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
 /**
- * Unit tests for {@link ReportPage}.
+ * Unit tests for {@link NodePage}.
  */
-public class NodePageTest {
-
-	private MemoryMultiReportOutput output;
-
-	private ReportOutputFolder root;
-
-	private IHTMLReportContext context;
+public class NodePageTest extends PageTestBase {
 
 	private CoverageNodeImpl node;
 
@@ -52,8 +34,8 @@ public class NodePageTest {
 
 	private class TestNodePage extends NodePage<ICoverageNode> {
 
-		protected TestNodePage(ICoverageNode node) {
-			super(node, null, root, NodePageTest.this.context);
+		protected TestNodePage(ICoverageNode node, ReportPage parent) {
+			super(node, parent, rootFolder, NodePageTest.this.context);
 		}
 
 		@Override
@@ -68,53 +50,11 @@ public class NodePageTest {
 	}
 
 	@Before
-	public void setup() {
-		output = new MemoryMultiReportOutput();
-		root = new ReportOutputFolder(output);
-		final Resources resources = new Resources(root);
-		context = new IHTMLReportContext() {
-
-			public ILanguageNames getLanguageNames() {
-				throw new AssertionError("Unexpected method call.");
-			}
-
-			public Resources getResources() {
-				return resources;
-			}
-
-			public Table getTable() {
-				throw new AssertionError("Unexpected method call.");
-			}
-
-			public String getFooterText() {
-				return "CustomFooter";
-			}
-
-			public ILinkable getSessionsPage() {
-				return new LinkableStub("sessions.html", "Sessions",
-						Styles.EL_SESSION);
-			}
-
-			public String getOutputEncoding() {
-				return "UTF-8";
-			}
-
-			public IIndexUpdate getIndexUpdate() {
-				throw new AssertionError("Unexpected method call.");
-			}
-
-			public Locale getLocale() {
-				return Locale.ENGLISH;
-			}
-		};
+	@Override
+	public void setup() throws Exception {
+		super.setup();
 		node = new CoverageNodeImpl(ElementType.GROUP, "Test");
-		page = new TestNodePage(node);
-	}
-
-	@After
-	public void teardown() throws IOException {
-		output.close();
-		output.assertAllClosed();
+		page = new TestNodePage(node, null);
 	}
 
 	@Test
@@ -128,8 +68,14 @@ public class NodePageTest {
 	}
 
 	@Test
-	public void testGetLinkStyle() throws IOException {
-		assertEquals("el_group", page.getLinkStyle());
+	public void testGetLinkStyle1() throws IOException {
+		assertEquals("el_report", page.getLinkStyle());
+	}
+
+	@Test
+	public void testGetLinkStyle2() throws IOException {
+		final TestNodePage group = new TestNodePage(node, page);
+		assertEquals("el_group", group.getLinkStyle());
 	}
 
 }

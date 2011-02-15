@@ -15,6 +15,7 @@ import org.jacoco.core.analysis.ICoverageNode;
 import org.jacoco.report.internal.ReportOutputFolder;
 import org.jacoco.report.internal.html.IHTMLReportContext;
 import org.jacoco.report.internal.html.resources.Resources;
+import org.jacoco.report.internal.html.resources.Styles;
 import org.jacoco.report.internal.html.table.ITableItem;
 
 /**
@@ -49,7 +50,11 @@ public abstract class NodePage<NodeType extends ICoverageNode> extends
 	// === ILinkable ===
 
 	public String getLinkStyle() {
-		return Resources.getElementStyle(node.getElementType());
+		if (isRootPage()) {
+			return Styles.EL_REPORT;
+		} else {
+			return Resources.getElementStyle(node.getElementType());
+		}
 	}
 
 	public String getLinkLabel() {

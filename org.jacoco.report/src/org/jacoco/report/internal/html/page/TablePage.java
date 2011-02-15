@@ -29,7 +29,7 @@ import org.jacoco.report.internal.html.table.ITableItem;
  *            type of the node represented by this page
  */
 public abstract class TablePage<NodeType extends ICoverageNode> extends
-		NodePage<NodeType> implements ITableItem {
+		NodePage<NodeType> {
 
 	private final List<ITableItem> items = new ArrayList<ITableItem>();
 

@@ -14,24 +14,10 @@ package org.jacoco.report.internal.html.page;
 import static org.junit.Assert.assertEquals;
 
 import java.io.FileInputStream;
-import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
-import java.util.Locale;
 
 import org.jacoco.core.internal.analysis.SourceFileCoverageImpl;
-import org.jacoco.report.ILanguageNames;
-import org.jacoco.report.MemoryMultiReportOutput;
-import org.jacoco.report.internal.ReportOutputFolder;
-import org.jacoco.report.internal.html.HTMLSupport;
-import org.jacoco.report.internal.html.IHTMLReportContext;
-import org.jacoco.report.internal.html.ILinkable;
-import org.jacoco.report.internal.html.LinkableStub;
-import org.jacoco.report.internal.html.index.IIndexUpdate;
-import org.jacoco.report.internal.html.resources.Resources;
-import org.jacoco.report.internal.html.resources.Styles;
-import org.jacoco.report.internal.html.table.Table;
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.w3c.dom.Document;
@@ -39,66 +25,18 @@ import org.w3c.dom.Document;
 /**
  * Unit tests for {@link SourceFilePage}.
  */
-public class SourceFilePageTest {
-
-	private MemoryMultiReportOutput output;
-
-	private ReportOutputFolder root;
-
-	private IHTMLReportContext context;
+public class SourceFilePageTest extends PageTestBase {
 
 	private Reader sourceReader;
 
 	@Before
-	public void setup() throws IOException {
-		output = new MemoryMultiReportOutput();
-		root = new ReportOutputFolder(output);
-		final Resources resources = new Resources(root);
-		context = new IHTMLReportContext() {
-
-			public ILanguageNames getLanguageNames() {
-				throw new AssertionError("Unexpected method call.");
-			}
-
-			public Resources getResources() {
-				return resources;
-			}
-
-			public Table getTable() {
-				throw new AssertionError("Unexpected method call.");
-			}
-
-			public String getFooterText() {
-				return "CustomFooter";
-			}
-
-			public ILinkable getSessionsPage() {
-				return new LinkableStub("sessions.html", "Sessions",
-						Styles.EL_SESSION);
-			}
-
-			public String getOutputEncoding() {
-				return "UTF-8";
-			}
-
-			public IIndexUpdate getIndexUpdate() {
-				throw new AssertionError("Unexpected method call.");
-			}
-
-			public Locale getLocale() {
-				return Locale.ENGLISH;
-			}
-		};
+	@Override
+	public void setup() throws Exception {
+		super.setup();
 		sourceReader = new InputStreamReader(
 				new FileInputStream(
 						"./src/org/jacoco/report/internal/html/page/SourceFilePageTest.java"),
 				"UTF-8");
-	}
-
-	@After
-	public void teardown() throws IOException {
-		output.close();
-		output.assertAllClosed();
 	}
 
 	@Test
@@ -106,10 +44,9 @@ public class SourceFilePageTest {
 		final SourceFileCoverageImpl node = new SourceFileCoverageImpl(
 				"SourceFilePageTest.java", "org/jacoco/report/internal/html");
 		final SourceFilePage page = new SourceFilePage(node, sourceReader,
-				null, root, context);
+				null, rootFolder, context);
 		page.render();
 
-		final HTMLSupport support = new HTMLSupport();
 		final Document result = support.parse(output
 				.getFile("SourceFilePageTest.java.html"));
 

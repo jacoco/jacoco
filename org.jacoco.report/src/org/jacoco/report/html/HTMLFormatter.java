@@ -212,12 +212,7 @@ public class HTMLFormatter implements IHTMLReportContext {
 			public void visitBundle(final IBundleCoverage bundle,
 					final ISourceFileLocator locator) throws IOException {
 				final BundlePage page = new BundlePage(bundle, null, locator,
-						root, HTMLFormatter.this) {
-					@Override
-					public String getLinkStyle() {
-						return Styles.EL_REPORT;
-					}
-				};
+						root, HTMLFormatter.this);
 				createSessionsPage(page);
 				page.render();
 			}

@@ -26,7 +26,7 @@ import org.jacoco.report.internal.html.resources.Styles;
 /**
  * Creates a highlighted output of a source file.
  */
-class SourceHighlighter {
+final class SourceHighlighter {
 
 	/** Number of characters reserved for the line number column */
 	private static final int LINENR_WIDTH = 5;
