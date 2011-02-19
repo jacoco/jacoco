@@ -24,7 +24,7 @@ import org.apache.tools.ant.TaskContainer;
 import org.apache.tools.ant.UnknownElement;
 
 /**
- * Container task to run Java/Junit tasks with the JaCoCo agent jar. Coverage
+ * Container task to run Java/JUnit tasks with the JaCoCo agent jar. Coverage
  * will only be applied if all of the following are true:
  * <ul>
  * <li>Exactly one sub task may be present</li>
@@ -155,7 +155,7 @@ public class CoverageTask extends AbstractCoverageTask implements TaskContainer 
 		/**
 		 * @param taskname
 		 *            Task type to enhance
-		 * @return <code>true</code> iff this enhancer is capable of enhacing
+		 * @return <code>true</code> if this enhancer is capable of enhancing
 		 *         the requested task type
 		 */
 		public boolean supportsTask(String taskname);
