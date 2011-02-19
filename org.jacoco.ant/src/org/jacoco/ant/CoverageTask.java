@@ -6,6 +6,7 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *
  * Contributors:
+ *    Evgeny Mandrikov - TestNG support
  *    Brock Janiczak - initial API and implementation
  *    
  *******************************************************************************/
@@ -16,12 +17,7 @@ import static java.lang.String.format;
 import java.util.ArrayList;
 import java.util.Collection;
 
-import org.apache.tools.ant.BuildException;
-import org.apache.tools.ant.Project;
-import org.apache.tools.ant.RuntimeConfigurable;
-import org.apache.tools.ant.Task;
-import org.apache.tools.ant.TaskContainer;
-import org.apache.tools.ant.UnknownElement;
+import org.apache.tools.ant.*;
 
 /**
  * Container task to run Java/JUnit tasks with the JaCoCo agent jar. Coverage
@@ -43,6 +39,7 @@ public class CoverageTask extends AbstractCoverageTask implements TaskContainer 
 	public CoverageTask() {
 		taskEnhancers.add(new JavaLikeTaskEnhancer("java"));
 		taskEnhancers.add(new JavaLikeTaskEnhancer("junit"));
+		taskEnhancers.add(new TestNGTaskEnhancer("testng"));
 	}
 
 	/**
@@ -97,6 +94,23 @@ public class CoverageTask extends AbstractCoverageTask implements TaskContainer 
 		}
 
 		childTask.execute();
+	}
+
+	/**
+	 * Task enhancer for TestNG. TestNG task always run in a forked VM and
+	 * has nested jvmargs elements
+	 */
+	private class TestNGTaskEnhancer extends JavaLikeTaskEnhancer {
+
+		public TestNGTaskEnhancer(final String supportedTaskName) {
+			super(supportedTaskName);
+		}
+
+		@Override
+		public void enhanceTask(final Task task) {
+			addJvmArgs((UnknownElement) task);
+		}
+
 	}
 
 	/**
