@@ -99,8 +99,9 @@ public class CoverageTransformer implements ClassFileTransformer {
 		if (src.indexOf('|') != -1) {
 			final IllegalArgumentException ex = new IllegalArgumentException("Usage of '|' as a list separator for JaCoCo agent options is deprecated and will not work in future versions - use ':' instead.");
 			logger.logExeption(ex);
+			return src.replace('|', ':');
 		}
-		return src.replace(':', '|');
+		return src;
 	}
 
 	private static String toVMName(String srcName) {
