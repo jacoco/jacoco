@@ -78,14 +78,14 @@ public class CoverageTransformerTest {
 
 	@Test
 	public void testFilterIncludedClassPositive() {
-		options.setIncludes("org.jacoco.core.*|org.jacoco.agent.rt.*");
+		options.setIncludes("org.jacoco.core.*:org.jacoco.agent.rt.*");
 		CoverageTransformer t = createTransformer();
 		assertTrue(t.filter(classLoader, "org/jacoco/core/Foo"));
 	}
 
 	@Test
 	public void testFilterIncludedClassNegative() {
-		options.setIncludes("org.jacoco.core.*|org.jacoco.agent.rt.*");
+		options.setIncludes("org.jacoco.core.*:org.jacoco.agent.rt.*");
 		CoverageTransformer t = createTransformer();
 		assertFalse(t.filter(classLoader, "org/jacoco/report/Foo"));
 	}

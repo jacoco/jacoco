@@ -166,7 +166,7 @@
     <tr>
       <td><code>includes</code></td>
       <td>A list of class names that should be included in execution analysis.
-          The list entries are separated by a vertical bar (<code>|</code>) and
+          The list entries are separated by a colon (<code>:</code>) and
           may use wildcard characters (<code>*</code> and <code>?</code>).
           Except for performance optimization or technical corner cases this
           option is normally not required. 
@@ -176,7 +176,7 @@
     <tr>
       <td><code>excludes</code></td>
       <td>A list of class names that should be excluded from execution analysis.
-          The list entries are separated by a vertical bar (<code>|</code>) and
+          The list entries are separated by a colon (<code>:</code>) and
           may use wildcard characters (<code>*</code> and <code>?</code>).
           Except for performance optimization or technical corner cases this
           option is normally not required. 
@@ -186,8 +186,8 @@
     <tr>
       <td><code>exclclassloader</code></td>
       <td>A list of class loader names, that should be excluded from execution
-          analysis. The list entries are separated by a vertical bar
-          (<code>|</code>) and may use wildcard characters (<code>*</code> and
+          analysis. The list entries are separated by a colon
+          (<code>:</code>) and may use wildcard characters (<code>*</code> and
           <code>?</code>). This option might be required in case of special
           frameworks that conflict with JaCoCo code instrumentation, in
           particular class loaders that do not have access to the Java runtime
