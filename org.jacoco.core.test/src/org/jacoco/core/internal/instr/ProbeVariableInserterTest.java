@@ -12,14 +12,17 @@
 package org.jacoco.core.internal.instr;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 
 import java.util.Arrays;
 
+import org.jacoco.core.internal.flow.LabelInfo;
 import org.junit.Test;
 import org.objectweb.asm.Label;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.commons.EmptyVisitor;
+import org.objectweb.asm.tree.FrameNode;
 
 /**
  * Unit tests for {@link ProbeVariableInserter}.
@@ -153,39 +156,113 @@ public class ProbeVariableInserterTest {
 
 	@Test
 	public void testVisitFrame() {
-		class Recorder extends EmptyVisitor {
-			int nLocal;
-			Object[] local;
-
-			@Override
-			public void visitFrame(final int type, final int nLocal,
-					final Object[] local, final int nStack, final Object[] stack) {
-				this.nLocal = nLocal;
-				this.local = local;
-			}
-		}
-		final Recorder rec = new Recorder();
+		final FrameRecorder rec = new FrameRecorder();
 		ProbeVariableInserter i = new ProbeVariableInserter(0, "(J)V", rec);
 
 		// The first (implicit) frame must not be modified:
 		i.visitFrame(Opcodes.F_NEW, 2, new Object[] { "LFoo;", Opcodes.LONG },
-				0, null);
-		assertEquals(2, rec.nLocal);
+				0, new Object[0]);
 		assertEquals(Arrays.asList((Object) "LFoo;", Opcodes.LONG),
-				Arrays.asList(rec.local));
+				rec.frame.local);
 
 		// Starting from the second frame on the probe variable is inserted:
 		i.visitFrame(Opcodes.F_NEW, 3, new Object[] { "LFoo;", Opcodes.LONG,
-				"Ljava/lang/String;" }, 0, null);
-		assertEquals(4, rec.nLocal);
+				"Ljava/lang/String;" }, 0, new Object[0]);
 		assertEquals(Arrays.asList((Object) "LFoo;", Opcodes.LONG, "[Z",
-				"Ljava/lang/String;"), Arrays.asList(rec.local));
+				"Ljava/lang/String;"), rec.frame.local);
 	}
 
 	@Test(expected = IllegalStateException.class)
 	public void testVisitFrameNegative() {
 		ProbeVariableInserter i = new ProbeVariableInserter(0, "(J)V", delegate);
 		i.visitFrame(Opcodes.F_SAME, 0, null, 0, null);
+	}
+
+	@Test
+	public void testInsertProbeFrame() {
+		final FrameRecorder rec = new FrameRecorder();
+		ProbeVariableInserter i = new ProbeVariableInserter(0, "(J)V", rec);
+
+		// The first (implicit) frame:
+		i.visitFrame(Opcodes.F_NEW, 2, new Object[] { "LFoo;", Opcodes.LONG },
+				0, new Object[0]);
+
+		// There must be a label which is a multi-jump target:
+		Label label = new Label();
+		LabelInfo.setTarget(label);
+		LabelInfo.setTarget(label);
+		i.visitLabel(label);
+
+		// Insert a frame for this label:
+		i.visitFrame(Opcodes.F_NEW, 3, new Object[] { "LFoo;", Opcodes.LONG,
+				"Ljava/lang/String;" }, 0, new Object[0]);
+
+		// Insert this frame again:
+		rec.frame = null;
+		i.insertProbeFrame(label);
+
+		assertEquals(Arrays.asList((Object) "LFoo;", Opcodes.LONG, "[Z",
+				"Ljava/lang/String;"), rec.frame.local);
+	}
+
+	@Test
+	public void testInsertProbeFrameNoFrameForLabel() {
+		final FrameRecorder rec = new FrameRecorder();
+		ProbeVariableInserter i = new ProbeVariableInserter(0, "(J)V", rec);
+
+		// The first (implicit) frame:
+		i.visitFrame(Opcodes.F_NEW, 2, new Object[] { "LFoo;", Opcodes.LONG },
+				0, new Object[0]);
+
+		// There must be a label which is a multi-jump target:
+		Label label = new Label();
+		LabelInfo.setTarget(label);
+		LabelInfo.setTarget(label);
+		i.visitLabel(label);
+
+		// Insert a frame for this label:
+		i.visitFrame(Opcodes.F_NEW, 3, new Object[] { "LFoo;", Opcodes.LONG,
+				"Ljava/lang/String;" }, 0, new Object[0]);
+
+		// Try to insert a frame for a different label:
+		rec.frame = null;
+		i.insertProbeFrame(new Label());
+		assertNull(rec.frame);
+	}
+
+	@Test
+	public void testInsertProbeFrameNoMultiTarget() {
+		final FrameRecorder rec = new FrameRecorder();
+		ProbeVariableInserter i = new ProbeVariableInserter(0, "(J)V", rec);
+
+		// The first (implicit) frame:
+		i.visitFrame(Opcodes.F_NEW, 2, new Object[] { "LFoo;", Opcodes.LONG },
+				0, new Object[0]);
+
+		// The frame for this label isn't required:
+		Label label = new Label();
+		i.visitLabel(label);
+
+		// Insert a frame for this label:
+		i.visitFrame(Opcodes.F_NEW, 3, new Object[] { "LFoo;", Opcodes.LONG,
+				"Ljava/lang/String;" }, 0, new Object[0]);
+
+		// Inserting a frame for the label shouldn't work:
+		rec.frame = null;
+		i.insertProbeFrame(label);
+		assertNull(rec.frame);
+	}
+
+	private static class FrameRecorder extends EmptyVisitor {
+
+		FrameNode frame;
+
+		@Override
+		public void visitFrame(final int type, final int nLocal,
+				final Object[] local, final int nStack, final Object[] stack) {
+			assertEquals(Opcodes.F_NEW, type);
+			this.frame = new FrameNode(type, nLocal, local, nStack, stack);
+		}
 	}
 
 }

@@ -11,6 +11,9 @@
  *******************************************************************************/
 package org.jacoco.core.internal.instr;
 
+import java.util.ArrayList;
+import java.util.Collection;
+
 import org.jacoco.core.internal.flow.IMethodProbesVisitor;
 import org.jacoco.core.internal.flow.LabelInfo;
 import org.objectweb.asm.Label;
@@ -28,6 +31,8 @@ class MethodInstrumenter extends ProbeVariableInserter implements
 
 	private int accessorStackSize;
 
+	private Collection<JumpProbe> jumpProbes;
+
 	/**
 	 * Create a new instrumenter instance for the given method.
 	 * 
@@ -44,6 +49,7 @@ class MethodInstrumenter extends ProbeVariableInserter implements
 			final String desc, final IProbeArrayStrategy probeArrayStrategy) {
 		super(access, desc, mv);
 		this.probeArrayStrategy = probeArrayStrategy;
+		this.jumpProbes = null;
 	}
 
 	@Override
@@ -60,6 +66,8 @@ class MethodInstrumenter extends ProbeVariableInserter implements
 
 	@Override
 	public void visitMaxs(final int maxStack, final int maxLocals) {
+		insertJumpProbes();
+
 		// Max stack size of the probe code is 3 which can add to the
 		// original stack size depending on the probe locations. The accessor
 		// stack size is an absolute maximum, as the accessor code is inserted
@@ -107,92 +115,28 @@ class MethodInstrumenter extends ProbeVariableInserter implements
 			insertProbe(probeId);
 			mv.visitJumpInsn(Opcodes.GOTO, label);
 		} else {
-			final Label l = new Label();
-			mv.visitJumpInsn(getNegation(opcode), l);
-			insertProbe(probeId);
-			mv.visitJumpInsn(Opcodes.GOTO, label);
-			mv.visitLabel(l);
+			final JumpProbe probe = new JumpProbe(label, probeId);
+			addJumpProbe(probe);
+			mv.visitJumpInsn(opcode, probe.getIntermediate());
 		}
-	}
-
-	private int getNegation(final int opcode) {
-		switch (opcode) {
-		case Opcodes.IFEQ:
-			return Opcodes.IFNE;
-		case Opcodes.IFNE:
-			return Opcodes.IFEQ;
-		case Opcodes.IFLT:
-			return Opcodes.IFGE;
-		case Opcodes.IFGE:
-			return Opcodes.IFLT;
-		case Opcodes.IFGT:
-			return Opcodes.IFLE;
-		case Opcodes.IFLE:
-			return Opcodes.IFGT;
-		case Opcodes.IF_ICMPEQ:
-			return Opcodes.IF_ICMPNE;
-		case Opcodes.IF_ICMPNE:
-			return Opcodes.IF_ICMPEQ;
-		case Opcodes.IF_ICMPLT:
-			return Opcodes.IF_ICMPGE;
-		case Opcodes.IF_ICMPGE:
-			return Opcodes.IF_ICMPLT;
-		case Opcodes.IF_ICMPGT:
-			return Opcodes.IF_ICMPLE;
-		case Opcodes.IF_ICMPLE:
-			return Opcodes.IF_ICMPGT;
-		case Opcodes.IF_ACMPEQ:
-			return Opcodes.IF_ACMPNE;
-		case Opcodes.IF_ACMPNE:
-			return Opcodes.IF_ACMPEQ;
-		case Opcodes.IFNULL:
-			return Opcodes.IFNONNULL;
-		case Opcodes.IFNONNULL:
-			return Opcodes.IFNULL;
-		}
-		throw new AssertionError(opcode);
 	}
 
 	public void visitTableSwitchInsnWithProbes(final int min, final int max,
 			final Label dflt, final Label[] labels) {
-		// 1. Calculate intermediate labels:
 		LabelInfo.resetDone(dflt);
 		LabelInfo.resetDone(labels);
 		final Label newDflt = createIntermediate(dflt);
 		final Label[] newLabels = createIntermediates(labels);
 		mv.visitTableSwitchInsn(min, max, newDflt, newLabels);
-
-		// 2. Insert probes:
-		insertIntermediateProbes(dflt, labels);
 	}
 
 	public void visitLookupSwitchInsnWithProbes(final Label dflt,
 			final int[] keys, final Label[] labels) {
-		// 1. Calculate intermediate labels:
 		LabelInfo.resetDone(dflt);
 		LabelInfo.resetDone(labels);
 		final Label newDflt = createIntermediate(dflt);
 		final Label[] newLabels = createIntermediates(labels);
 		mv.visitLookupSwitchInsn(newDflt, keys, newLabels);
-
-		// 2. Insert probes:
-		insertIntermediateProbes(dflt, labels);
-	}
-
-	private Label createIntermediate(final Label label) {
-		final Label intermediate;
-		if (LabelInfo.getProbeId(label) == LabelInfo.NO_PROBE) {
-			intermediate = label;
-		} else {
-			if (LabelInfo.isDone(label)) {
-				intermediate = LabelInfo.getIntermediateLabel(label);
-			} else {
-				intermediate = new Label();
-				LabelInfo.setIntermediateLabel(label, intermediate);
-				LabelInfo.setDone(label);
-			}
-		}
-		return intermediate;
 	}
 
 	private Label[] createIntermediates(final Label[] labels) {
@@ -203,23 +147,43 @@ class MethodInstrumenter extends ProbeVariableInserter implements
 		return intermediates;
 	}
 
-	private void insertIntermediateProbe(final Label label) {
-		final int probeId = LabelInfo.getProbeId(label);
-		if (probeId != LabelInfo.NO_PROBE && !LabelInfo.isDone(label)) {
-			mv.visitLabel(LabelInfo.getIntermediateLabel(label));
-			insertProbe(probeId);
-			mv.visitJumpInsn(Opcodes.GOTO, label);
-			LabelInfo.setDone(label);
+	private Label createIntermediate(final Label label) {
+		final Label intermediate;
+		if (LabelInfo.getProbeId(label) == LabelInfo.NO_PROBE) {
+			intermediate = label;
+		} else {
+			if (LabelInfo.isDone(label)) {
+				intermediate = LabelInfo.getIntermediateLabel(label);
+			} else {
+				final JumpProbe probe = new JumpProbe(label);
+				addJumpProbe(probe);
+				intermediate = probe.getIntermediate();
+				LabelInfo.setDone(label);
+			}
+		}
+		return intermediate;
+	}
+
+	private void addJumpProbe(final JumpProbe probe) {
+		if (jumpProbes == null) {
+			jumpProbes = new ArrayList<JumpProbe>();
+		}
+		jumpProbes.add(probe);
+	}
+
+	private void insertJumpProbes() {
+		if (jumpProbes != null) {
+			for (final JumpProbe probe : jumpProbes) {
+				insertJumpProbe(probe);
+			}
 		}
 	}
 
-	private void insertIntermediateProbes(final Label dflt, final Label[] labels) {
-		LabelInfo.resetDone(dflt);
-		LabelInfo.resetDone(labels);
-		insertIntermediateProbe(dflt);
-		for (final Label l : labels) {
-			insertIntermediateProbe(l);
-		}
+	private void insertJumpProbe(final JumpProbe probe) {
+		mv.visitLabel(probe.getIntermediate());
+		insertProbeFrame(probe.getTarget());
+		visitProbe(probe.getProbeId());
+		mv.visitJumpInsn(Opcodes.GOTO, probe.getTarget());
 	}
 
 }

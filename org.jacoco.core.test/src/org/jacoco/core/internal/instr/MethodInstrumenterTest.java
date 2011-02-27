@@ -118,97 +118,20 @@ public class MethodInstrumenterTest {
 	}
 
 	@Test
-	public void testVisitJumpInsnWithProbe_IFEQ() {
-		testVisitJumpInsnWithProbe(Opcodes.IFEQ, Opcodes.IFNE);
-	}
-
-	@Test
-	public void testVisitJumpInsnWithProbe_IFNE() {
-		testVisitJumpInsnWithProbe(Opcodes.IFNE, Opcodes.IFEQ);
-	}
-
-	@Test
-	public void testVisitJumpInsnWithProbe_IFLT() {
-		testVisitJumpInsnWithProbe(Opcodes.IFLT, Opcodes.IFGE);
-	}
-
-	@Test
-	public void testVisitJumpInsnWithProbe_IFGE() {
-		testVisitJumpInsnWithProbe(Opcodes.IFGE, Opcodes.IFLT);
-	}
-
-	@Test
-	public void testVisitJumpInsnWithProbe_IFGT() {
-		testVisitJumpInsnWithProbe(Opcodes.IFGT, Opcodes.IFLE);
-	}
-
-	@Test
-	public void testVisitJumpInsnWithProbe_IFLE() {
-		testVisitJumpInsnWithProbe(Opcodes.IFLE, Opcodes.IFGT);
-	}
-
-	@Test
-	public void testVisitJumpInsnWithProbe_IF_ICMPEQ() {
-		testVisitJumpInsnWithProbe(Opcodes.IF_ICMPEQ, Opcodes.IF_ICMPNE);
-	}
-
-	@Test
-	public void testVisitJumpInsnWithProbe_IF_ICMPNE() {
-		testVisitJumpInsnWithProbe(Opcodes.IF_ICMPNE, Opcodes.IF_ICMPEQ);
-	}
-
-	@Test
-	public void testVisitJumpInsnWithProbe_IF_ICMPLT() {
-		testVisitJumpInsnWithProbe(Opcodes.IF_ICMPLT, Opcodes.IF_ICMPGE);
-	}
-
-	@Test
-	public void testVisitJumpInsnWithProbe_IF_ICMPGE() {
-		testVisitJumpInsnWithProbe(Opcodes.IF_ICMPGE, Opcodes.IF_ICMPLT);
-	}
-
-	@Test
-	public void testVisitJumpInsnWithProbe_IF_ICMPGT() {
-		testVisitJumpInsnWithProbe(Opcodes.IF_ICMPGT, Opcodes.IF_ICMPLE);
-	}
-
-	@Test
-	public void testVisitJumpInsnWithProbe_IF_ICMPLE() {
-		testVisitJumpInsnWithProbe(Opcodes.IF_ICMPLE, Opcodes.IF_ICMPGT);
-	}
-
-	@Test
-	public void testVisitJumpInsnWithProbe_IF_ACMPEQ() {
-		testVisitJumpInsnWithProbe(Opcodes.IF_ACMPEQ, Opcodes.IF_ACMPNE);
-	}
-
-	@Test
-	public void testVisitJumpInsnWithProbe_IF_ACMPNE() {
-		testVisitJumpInsnWithProbe(Opcodes.IF_ACMPNE, Opcodes.IF_ACMPEQ);
-	}
-
-	@Test
-	public void testVisitJumpInsnWithProbe_IFNULL() {
-		testVisitJumpInsnWithProbe(Opcodes.IFNULL, Opcodes.IFNONNULL);
-	}
-
-	@Test
-	public void testVisitJumpInsnWithProbe_IFNONNULL() {
-		testVisitJumpInsnWithProbe(Opcodes.IFNONNULL, Opcodes.IFNULL);
-	}
-
-	public void testVisitJumpInsnWithProbe(int opcode, int exOpcode) {
+	public void testVisitJumpInsnWithProbe() {
 		final Label label = new Label();
-		instrumenter.visitJumpInsnWithProbe(opcode, label, 3);
+		instrumenter.visitJumpInsnWithProbe(Opcodes.IFEQ, label, 3);
+		instrumenter.visitMaxs(0, 0);
 
 		final Label l2 = new Label();
-		expected.visitJumpInsn(exOpcode, l2);
+		expected.visitJumpInsn(Opcodes.IFEQ, l2);
+		expected.visitLabel(l2);
 		expected.visitVarInsn(Opcodes.ALOAD, 1);
 		expected.visitInsn(Opcodes.ICONST_3);
 		expected.visitInsn(Opcodes.ICONST_1);
 		expected.visitInsn(Opcodes.BASTORE);
 		expected.visitJumpInsn(Opcodes.GOTO, label);
-		expected.visitLabel(l2);
+		expected.visitMaxs(3, 1);
 
 		assertEquals(expected, actual);
 	}
@@ -222,6 +145,7 @@ public class MethodInstrumenterTest {
 		LabelInfo.setProbeId(L1, 1);
 		instrumenter.visitTableSwitchInsnWithProbes(3, 5, L0, new Label[] { L1,
 				L1, L2 });
+		instrumenter.visitMaxs(0, 0);
 
 		expected.visitTableSwitchInsn(3, 4, L0, new Label[] { L1, L1, L2 });
 		expected.visitLabel(L0);
@@ -236,6 +160,7 @@ public class MethodInstrumenterTest {
 		expected.visitInsn(Opcodes.ICONST_1);
 		expected.visitInsn(Opcodes.BASTORE);
 		expected.visitJumpInsn(Opcodes.GOTO, new Label());
+		expected.visitMaxs(3, 1);
 
 		assertEquals(expected, actual);
 	}
@@ -249,6 +174,7 @@ public class MethodInstrumenterTest {
 		LabelInfo.setProbeId(L1, 1);
 		instrumenter.visitLookupSwitchInsnWithProbes(L0,
 				new int[] { 10, 20, 30 }, new Label[] { L1, L1, L2 });
+		instrumenter.visitMaxs(0, 0);
 
 		expected.visitLookupSwitchInsn(L0, new int[] { 10, 20, 30 },
 				new Label[] { L1, L1, L2 });
@@ -264,6 +190,7 @@ public class MethodInstrumenterTest {
 		expected.visitInsn(Opcodes.ICONST_1);
 		expected.visitInsn(Opcodes.BASTORE);
 		expected.visitJumpInsn(Opcodes.GOTO, new Label());
+		expected.visitMaxs(3, 1);
 
 		assertEquals(expected, actual);
 	}
