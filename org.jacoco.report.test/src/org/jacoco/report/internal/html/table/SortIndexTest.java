@@ -58,6 +58,14 @@ public class SortIndexTest {
 	}
 
 	@Test
+	public void testIncreaseBuffer() {
+		index.init(createList(15));
+		final List<Integer> list = createList(20);
+		index.init(list);
+		assertSequence(list);
+	}
+
+	@Test
 	public void testReverse() {
 		final List<Integer> list = createList(57);
 		Collections.reverse(list);
