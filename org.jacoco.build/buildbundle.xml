@@ -125,7 +125,7 @@
 				append="true"
 				destfile="${result.tmp.coverage.file}"
 				includes="${testscope}"
-				exclClassLoader="sun.reflect.DelegatingClassLoader|org.jacoco.core.test.TargetLoader"
+				exclClassLoader="sun.reflect.DelegatingClassLoader:org.jacoco.core.test.TargetLoader"
 			    sessionid="${manifest.Bundle-SymbolicName}">
 			
 			<junit haltonfailure="true" fork="true" forkmode="once" dir="${source.bundle.dir}" tempdir="${result.tmp.bundle.tmp.dir}">
