@@ -11,10 +11,13 @@
  *******************************************************************************/
 package org.jacoco.core.internal.instr;
 
+import static org.junit.Assert.assertNull;
+
 import org.jacoco.core.runtime.IRuntime;
 import org.jacoco.core.runtime.LoggerRuntime;
 import org.junit.Before;
 import org.junit.Test;
+import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.commons.EmptyVisitor;
 
 /**
@@ -44,6 +47,18 @@ public class ClassInstrumenterTest {
 		instrumenter.visitMethod(InstrSupport.INITMETHOD_ACC,
 				InstrSupport.INITMETHOD_NAME, InstrSupport.INITMETHOD_DESC,
 				null, null);
+	}
+
+	@Test
+	public void testNoMethodVisitor() {
+		instrumenter = new ClassInstrumenter(123, runtime, new EmptyVisitor() {
+			@Override
+			public MethodVisitor visitMethod(int access, String name,
+					String desc, String signature, String[] exceptions) {
+				return null;
+			}
+		});
+		assertNull(instrumenter.visitMethod(0, "foo", "()V", null, null));
 	}
 
 }

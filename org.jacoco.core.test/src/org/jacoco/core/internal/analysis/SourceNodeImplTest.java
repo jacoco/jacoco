@@ -33,6 +33,29 @@ public class SourceNodeImplTest {
 	}
 
 	@Test
+	public void testGetLine() {
+		final SourceNodeImpl node = new SourceNodeImpl(ElementType.CLASS, "Foo");
+		node.ensureCapacity(10, 20);
+		assertEquals(LineImpl.EMPTY, node.getLine(5));
+		assertEquals(LineImpl.EMPTY, node.getLine(15));
+		assertEquals(LineImpl.EMPTY, node.getLine(25));
+	}
+
+	@Test
+	public void testEnsureCapacityUnknown1() {
+		final SourceNodeImpl node = new SourceNodeImpl(ElementType.CLASS, "Foo");
+		node.ensureCapacity(10, ISourceNode.UNKNOWN_LINE);
+		assertEquals(LineImpl.EMPTY, node.getLine(10));
+	}
+
+	@Test
+	public void testEnsureCapacityUnknown2() {
+		final SourceNodeImpl node = new SourceNodeImpl(ElementType.CLASS, "Foo");
+		node.ensureCapacity(ISourceNode.UNKNOWN_LINE, 10);
+		assertEquals(LineImpl.EMPTY, node.getLine(10));
+	}
+
+	@Test
 	public void testIncrementLineUnknown() {
 		final SourceNodeImpl node = new SourceNodeImpl(ElementType.CLASS, "Foo");
 		node.increment(CounterImpl.getInstance(1, 2),
