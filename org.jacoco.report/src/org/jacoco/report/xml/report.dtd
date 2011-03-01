@@ -20,7 +20,7 @@
 -->
 
 <!-- report root node -->
-<!ELEMENT report (sessioninfo*, group*, package*, counter*)>
+<!ELEMENT report (sessioninfo*, (group* | package*), counter*)>
   <!ATTLIST report name CDATA #REQUIRED>
 
 <!-- information about a session which contributed execution data -->
@@ -33,7 +33,7 @@
   <!ATTLIST sessioninfo dump CDATA #REQUIRED>
 
 <!-- representation of a group -->
-<!ELEMENT group ((group* | package*) , counter*)>
+<!ELEMENT group ((group* | package*), counter*)>
   <!-- group name -->
   <!ATTLIST group name CDATA #REQUIRED>
 
