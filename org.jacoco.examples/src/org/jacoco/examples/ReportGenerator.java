@@ -14,8 +14,6 @@ package org.jacoco.examples;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 
 import org.jacoco.core.analysis.Analyzer;
 import org.jacoco.core.analysis.CoverageBuilder;
@@ -35,75 +33,79 @@ import org.jacoco.report.html.HTMLFormatter;
  */
 public class ReportGenerator {
 
-	private static ExecutionDataStore executionDataStore;
-	private static SessionInfoStore sessionInfoStore;
+	private final String title;
+
+	private final File executionDataFile;
+	private final File classesDirectory;
+	private final File sourceDirectory;
+	private final File reportDirectory;
+
+	private ExecutionDataStore executionDataStore;
+	private SessionInfoStore sessionInfoStore;
 
 	/**
-	 * Starts the report generation process
+	 * Create a new generator based for the given project.
 	 * 
-	 * @param args
-	 *            Arguments to the application. This will be the location of the
-	 *            eclipse projects that will be used to generate the report
-	 * @throws Exception
+	 * @param projectDirectory
 	 */
-	public static void main(final String[] args) throws Exception {
-		final List<File> projectDirectories = new ArrayList<File>();
-		for (int i = 0; i < args.length; i++) {
-			projectDirectories.add(new File(args[i]));
-		}
+	public ReportGenerator(final File projectDirectory) {
+		this.title = projectDirectory.getName();
+		this.executionDataFile = new File(projectDirectory, "jacoco.exec");
+		this.classesDirectory = new File(projectDirectory, "bin");
+		this.sourceDirectory = new File(projectDirectory, "src");
+		this.reportDirectory = new File(projectDirectory, "coveragereport");
+	}
 
-		for (final File projectDirectory : projectDirectories) {
-			final File sourceDirectory = new File(projectDirectory, "src");
-			final File classesDirectory = new File(projectDirectory, "bin");
-			final File reportDirectory = new File(projectDirectory, "html");
-			final File executionDataFile = new File(projectDirectory,
-					"jacoco.exec");
+	/**
+	 * Create the report.
+	 * 
+	 * @throws IOException
+	 */
+	public void create() throws IOException {
 
-			// read the jacoco.exec file. Multiple data stores could be merged
-			// at this point
-			loadExecutionData(executionDataFile);
+		// Read the jacoco.exec file. Multiple data stores could be merged
+		// at this point
+		loadExecutionData();
 
-			// create a concrete report visitor based on some supplied
-			// configuration. In this case we use the defaults
-			final IReportVisitor reportVisitor = createReport(reportDirectory);
+		// Run the structure analyzer on a single class folder to build up
+		// the coverage model. The process would be similar if your classes
+		// were in a jar file. Typically you would create a bundle for each
+		// class folder and each jar you want in your report. If you have
+		// more than one bundle you will need to add a grouping node to your
+		// report
+		final IBundleCoverage bundleCoverage = analyzeStructure();
 
-			// Initialise the report with all of the execution and session
-			// information. At this point the report doesn't konw about the
-			// structure of the report being created
-			reportVisitor.visitInfo(sessionInfoStore.getInfos(),
-					executionDataStore.getContents());
-
-			// Run the structure analyzer on a single class folder to build up
-			// the coverage model. The process would be similar if your classes
-			// were in a jar file. Typically you would create a bundle for each
-			// class folder and each jar you want in your report. If you have
-			// more than one bundle you will need to add a grouping node to your
-			// report
-			final IBundleCoverage bundleCoverage = analyzeStructure(
-					projectDirectory.getName(), classesDirectory);
-
-			// Populate the report structure with the bundle coverage
-			// information. Call visitGroup if you need groups in your report
-			reportVisitor.visitBundle(bundleCoverage,
-					new DirectorySourceFileLocator(sourceDirectory, "utf-8"));
-
-			// Signal end of structure information to allow report to write all
-			// information out
-			reportVisitor.visitEnd();
-
-		}
+		createReport(bundleCoverage);
 
 	}
 
-	private static IReportVisitor createReport(final File reportDirectory)
+	private void createReport(final IBundleCoverage bundleCoverage)
 			throws IOException {
+
+		// Create a concrete report visitor based on some supplied
+		// configuration. In this case we use the defaults
 		final HTMLFormatter htmlFormatter = new HTMLFormatter();
-		return htmlFormatter.createVisitor(new FileMultiReportOutput(
-				reportDirectory));
+		final IReportVisitor visitor = htmlFormatter
+				.createVisitor(new FileMultiReportOutput(reportDirectory));
+
+		// Initialize the report with all of the execution and session
+		// information. At this point the report doesn't know about the
+		// structure of the report being created
+		visitor.visitInfo(sessionInfoStore.getInfos(),
+				executionDataStore.getContents());
+
+		// Populate the report structure with the bundle coverage information.
+		// Call visitGroup if you need groups in your report.
+		visitor.visitBundle(bundleCoverage, new DirectorySourceFileLocator(
+				sourceDirectory, "utf-8"));
+
+		// Signal end of structure information to allow report to write all
+		// information out
+		visitor.visitEnd();
+
 	}
 
-	private static void loadExecutionData(final File executionDataFile)
-			throws IOException {
+	private void loadExecutionData() throws IOException {
 		final FileInputStream fis = new FileInputStream(executionDataFile);
 		final ExecutionDataReader executionDataReader = new ExecutionDataReader(
 				fis);
@@ -119,14 +121,30 @@ public class ReportGenerator {
 		fis.close();
 	}
 
-	private static IBundleCoverage analyzeStructure(final String bundleName,
-			final File classesDirectory) throws IOException {
+	private IBundleCoverage analyzeStructure() throws IOException {
 		final CoverageBuilder coverageBuilder = new CoverageBuilder();
 		final Analyzer analyzer = new Analyzer(executionDataStore,
 				coverageBuilder);
 
 		analyzer.analyzeAll(classesDirectory);
 
-		return coverageBuilder.getBundle(bundleName);
+		return coverageBuilder.getBundle(title);
 	}
+
+	/**
+	 * Starts the report generation process
+	 * 
+	 * @param args
+	 *            Arguments to the application. This will be the location of the
+	 *            eclipse projects that will be used to generate reports for
+	 * @throws IOException
+	 */
+	public static void main(final String[] args) throws IOException {
+		for (int i = 0; i < args.length; i++) {
+			final ReportGenerator generator = new ReportGenerator(new File(
+					args[i]));
+			generator.create();
+		}
+	}
+
 }
