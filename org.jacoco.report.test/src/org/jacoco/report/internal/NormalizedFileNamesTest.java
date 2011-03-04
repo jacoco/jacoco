@@ -12,8 +12,8 @@
 package org.jacoco.report.internal;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertSame;
 
-import org.jacoco.report.internal.NormalizedFileNames;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -39,6 +39,14 @@ public class NormalizedFileNamesTest {
 	public void testReplaceIllegalCharacters() {
 		String id = "A/b C;";
 		assertEquals("A_b_C_", nfn.getFileName(id));
+	}
+
+	@Test
+	public void testSameInstance() {
+		// If no normalization is required we should get the same instance.
+		String id = new String("Example.html");
+		assertSame(id, nfn.getFileName(id));
+		assertSame(id, nfn.getFileName(new String("Example.html")));
 	}
 
 	@Test

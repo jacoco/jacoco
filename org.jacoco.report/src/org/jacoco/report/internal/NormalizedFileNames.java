@@ -61,11 +61,17 @@ class NormalizedFileNames {
 
 	private String replaceIllegalChars(final String s) {
 		final StringBuilder sb = new StringBuilder(s.length());
+		boolean modified = false;
 		for (int i = 0; i < s.length(); i++) {
 			final char c = s.charAt(i);
-			sb.append(LEGAL_CHARS.get(c) ? c : '_');
+			if (LEGAL_CHARS.get(c)) {
+				sb.append(c);
+			} else {
+				sb.append('_');
+				modified = true;
+			}
 		}
-		return sb.toString();
+		return modified ? sb.toString() : s;
 	}
 
 	private String ensureUniqueness(final String s) {
