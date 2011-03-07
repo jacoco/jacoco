@@ -485,6 +485,13 @@
 <span class="nr">    5</span>&lt;/classfiles&gt;
 </pre>
 
+<p class="hint">
+  <b>Performance Warning:</b> Although it is technically possible and sometimes
+  convenient to use Ant's <code>zipfileset</code> to specify class or source
+  files, this resource type has poor performance characteristics and comes with
+  an huge memory overhead especially for large scale projects.
+</p>
+
 <p>
   The structure can be refined with a hierarchy of <code>group</code> elements.
   This way the coverage report can reflect different modules of a software
