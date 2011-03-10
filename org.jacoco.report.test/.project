@@ -25,4 +25,11 @@
 		<nature>org.eclipse.pde.PluginNature</nature>
 		<nature>org.eclipse.jdt.core.javanature</nature>
 	</natures>
+	<linkedResources>
+		<link>
+			<name>.settings</name>
+			<type>2</type>
+			<locationURI>WORKSPACE_LOC/org.jacoco.core.test/.settings</locationURI>
+		</link>
+	</linkedResources>
 </projectDescription>

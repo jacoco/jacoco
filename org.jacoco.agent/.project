@@ -31,5 +31,10 @@
 			<type>1</type>
 			<locationURI>WORKSPACE_LOC/org.jacoco.build/result/dist/lib/jacocoagent.jar</locationURI>
 		</link>
+		<link>
+			<name>.settings</name>
+			<type>2</type>
+			<locationURI>WORKSPACE_LOC/org.jacoco.core/.settings</locationURI>
+		</link>
 	</linkedResources>
 </projectDescription>
