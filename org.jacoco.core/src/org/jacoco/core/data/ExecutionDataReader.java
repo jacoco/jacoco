@@ -27,9 +27,11 @@ public class ExecutionDataReader {
 	/** Underlying data input */
 	protected final CompactDataInput in;
 
-	private ISessionInfoVisitor sessionInfoVisitor;
+	private ISessionInfoVisitor sessionInfoVisitor = null;
 
-	private IExecutionDataVisitor executionDataVisitor;
+	private IExecutionDataVisitor executionDataVisitor = null;
+
+	private boolean firstBlock = true;
 
 	/**
 	 * Creates a new reader based on the given input stream input. Depending on
@@ -38,13 +40,9 @@ public class ExecutionDataReader {
 	 * 
 	 * @param input
 	 *            input stream to read execution data from
-	 * @throws IOException
-	 *             if the stream does not have a valid header
 	 */
-	public ExecutionDataReader(final InputStream input) throws IOException {
+	public ExecutionDataReader(final InputStream input) {
 		this.in = new CompactDataInput(input);
-		in.readByte();
-		readHeader();
 	}
 
 	/**
@@ -77,8 +75,14 @@ public class ExecutionDataReader {
 	 */
 	public boolean read() throws IOException {
 		try {
-			while (readBlock(in.readByte())) {
-			}
+			byte type;
+			do {
+				type = in.readByte();
+				if (firstBlock && type != ExecutionDataWriter.BLOCK_HEADER) {
+					throw new IOException("Invalid execution data file.");
+				}
+				firstBlock = false;
+			} while (readBlock(type));
 			return true;
 		} catch (final EOFException e) {
 			return false;

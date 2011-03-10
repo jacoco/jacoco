@@ -14,12 +14,10 @@ package org.jacoco.agent.rt.controller;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
-import java.io.EOFException;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.List;
 import java.util.concurrent.Callable;
-import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 
 import org.jacoco.agent.rt.StubRuntime;
@@ -56,7 +54,10 @@ public class TcpConnectionTest extends ExecutorTestBase {
 		remoteOut.write(0x01);
 		remoteOut.write(0xC0);
 		remoteOut.write(0xCA);
-		new TcpConnection(mockConnection.getSocketA(), runtime).init();
+		final TcpConnection connection = new TcpConnection(
+				mockConnection.getSocketA(), runtime);
+		connection.init();
+		connection.run();
 	}
 
 	@Test(expected = IOException.class)
@@ -100,7 +101,6 @@ public class TcpConnectionTest extends ExecutorTestBase {
 	/**
 	 * Remote endpoint is closed before even a valid header was send.
 	 */
-	@Test(expected = EOFException.class)
 	public void testRemoteCloseWithoutHeader() throws Throwable {
 		final TcpConnection con = new TcpConnection(
 				mockConnection.getSocketA(), runtime);
@@ -115,11 +115,7 @@ public class TcpConnectionTest extends ExecutorTestBase {
 		assertBlocks(f);
 
 		mockConnection.getSocketB().close();
-		try {
-			f.get();
-		} catch (ExecutionException e) {
-			throw e.getCause();
-		}
+		f.get();
 	}
 
 	/**

@@ -131,7 +131,7 @@ public class ExecutionDataReaderWriterTest {
 		buffer.write(ExecutionDataWriter.BLOCK_HEADER);
 		buffer.write(0x12);
 		buffer.write(0x34);
-		createReader();
+		createReader().read();
 	}
 
 	@Test(expected = IOException.class)
@@ -143,12 +143,26 @@ public class ExecutionDataReaderWriterTest {
 		final char version = ExecutionDataWriter.FORMAT_VERSION - 1;
 		buffer.write(version >> 8);
 		buffer.write(version & 0xFF);
-		createReader();
+		createReader().read();
+	}
+
+	@Test(expected = IOException.class)
+	public void testMissingHeader() throws IOException {
+		buffer.reset();
+		writer.visitClassExecution(new ExecutionData(Long.MIN_VALUE, "Sample",
+				createData(0)));
+		createReaderWithVisitors().read();
 	}
 
 	@Test(expected = IOException.class)
 	public void testUnknownBlock() throws IOException {
 		buffer.write(0xff);
+		createReader().read();
+	}
+
+	@Test
+	public void testEmptyFile() throws IOException {
+		buffer = new ByteArrayOutputStream();
 		createReader().read();
 	}
 
