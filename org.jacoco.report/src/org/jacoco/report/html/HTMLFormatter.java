@@ -62,6 +62,8 @@ public class HTMLFormatter implements IHTMLReportContext {
 
 	private String outputEncoding = "UTF-8";
 
+	private int tabWidth = 4;
+
 	private Resources resources;
 
 	private ElementIndex index;
@@ -118,6 +120,16 @@ public class HTMLFormatter implements IHTMLReportContext {
 		this.outputEncoding = outputEncoding;
 	}
 
+	/**
+	 * Sets the number of blank characters that represent a tab in source code.
+	 * 
+	 * @param tabWidth
+	 *            tab width as number of blanks
+	 */
+	public void setTabWidth(final int tabWidth) {
+		this.tabWidth = tabWidth;
+	}
+
 	// === IHTMLReportContext ===
 
 	public ILanguageNames getLanguageNames() {
@@ -170,6 +182,10 @@ public class HTMLFormatter implements IHTMLReportContext {
 
 	public String getOutputEncoding() {
 		return outputEncoding;
+	}
+
+	public int getTabWidth() {
+		return tabWidth;
 	}
 
 	public IIndexUpdate getIndexUpdate() {
