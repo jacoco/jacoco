@@ -12,6 +12,7 @@
 package org.jacoco.report.internal.html.page;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 import java.io.FileInputStream;
 import java.io.InputStreamReader;
@@ -61,12 +62,10 @@ public class SourceFilePageTest extends PageTestBase {
 				support.findStr(result, "/html/head/script/@type"));
 		assertEquals(".resources/prettify.js",
 				support.findStr(result, "/html/head/script/@src"));
-		assertEquals("prettyPrint()",
+		assertEquals("window['PR_TAB_WIDTH']=4;prettyPrint()",
 				support.findStr(result, "/html/body/@onload"));
 
 		// source code
-		assertEquals("L1",
-				support.findStr(result, "/html/body/pre/span[1]/@id"));
+		assertNotNull(support.findStr(result, "/html/body/pre"));
 	}
-
 }

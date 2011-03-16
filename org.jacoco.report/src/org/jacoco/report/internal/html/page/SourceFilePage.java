@@ -11,6 +11,8 @@
  *******************************************************************************/
 package org.jacoco.report.internal.html.page;
 
+import static java.lang.String.format;
+
 import java.io.IOException;
 import java.io.Reader;
 
@@ -27,6 +29,7 @@ import org.jacoco.report.internal.html.resources.Resources;
 public class SourceFilePage extends NodePage<ISourceFileCoverage> {
 
 	private final Reader sourceReader;
+	private int tabWidth;
 
 	/**
 	 * Creates a new page with given information.
@@ -42,6 +45,18 @@ public class SourceFilePage extends NodePage<ISourceFileCoverage> {
 			final ReportOutputFolder folder, final IHTMLReportContext context) {
 		super(sourceFileNode, parent, folder, context);
 		this.sourceReader = sourceReader;
+		setTabWidth(4);
+	}
+
+	/**
+	 * Specifies the number of spaces that are represented by a single tab.
+	 * Default is 4.
+	 * 
+	 * @param width
+	 *            spaces per tab
+	 */
+	public void setTabWidth(final int width) {
+		this.tabWidth = width;
 	}
 
 	@Override
@@ -66,7 +81,8 @@ public class SourceFilePage extends NodePage<ISourceFileCoverage> {
 
 	@Override
 	protected String getOnload() {
-		return "prettyPrint()";
+		return format("window['PR_TAB_WIDTH']=%d;prettyPrint()",
+				Integer.valueOf(tabWidth));
 	}
 
 	@Override

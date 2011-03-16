@@ -14,7 +14,6 @@ package org.jacoco.report.internal.html.page;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.Reader;
-import java.util.Arrays;
 import java.util.Locale;
 
 import org.jacoco.core.analysis.ICounter;
@@ -28,12 +27,7 @@ import org.jacoco.report.internal.html.resources.Styles;
  */
 final class SourceHighlighter {
 
-	/** Number of characters reserved for the line number column */
-	private static final int LINENR_WIDTH = 5;
-
 	private final Locale locale;
-
-	private String tabReplacement;
 
 	private String lang;
 
@@ -45,21 +39,7 @@ final class SourceHighlighter {
 	 */
 	public SourceHighlighter(final Locale locale) {
 		this.locale = locale;
-		setTabWidth(4);
 		lang = "java";
-	}
-
-	/**
-	 * Specifies the number of spaces that are represented by a single tab.
-	 * Default is 4.
-	 * 
-	 * @param width
-	 *            spaces per tab
-	 */
-	public void setTabWidth(final int width) {
-		final char[] blanks = new char[width];
-		Arrays.fill(blanks, ' ');
-		tabReplacement = new String(blanks);
 	}
 
 	/**
@@ -87,35 +67,25 @@ final class SourceHighlighter {
 	 */
 	public void render(final HTMLElement parent, final ISourceNode source,
 			final Reader contents) throws IOException {
-		final HTMLElement pre = parent.pre(Styles.SOURCE + " lang-" + lang);
+		final HTMLElement pre = parent.pre(Styles.SOURCE + " lang-" + lang
+				+ " linenums");
 		final BufferedReader lineBuffer = new BufferedReader(contents);
 		String line;
 		int nr = 0;
 		while ((line = lineBuffer.readLine()) != null) {
 			nr++;
-			renderLineNr(pre, nr);
-			renderCodeLine(pre, line, source.getLine(nr));
+			renderCodeLine(pre, line, source.getLine(nr), nr);
 		}
-	}
-
-	private void renderLineNr(final HTMLElement pre, final int nr)
-			throws IOException {
-		final String linestr = String.valueOf(nr);
-		final HTMLElement linespan = pre.span(Styles.NR, "L" + linestr);
-		for (int i = linestr.length(); i < LINENR_WIDTH; i++) {
-			linespan.text("\u00A0"); // non-breaking space
-		}
-		linespan.text(linestr);
 	}
 
 	private void renderCodeLine(final HTMLElement pre, final String linesrc,
-			final ILine line) throws IOException {
-		highlight(pre, line).text(linesrc.replace("\t", tabReplacement));
+			final ILine line, final int lineNr) throws IOException {
+		highlight(pre, line, lineNr).text(linesrc);
 		pre.text("\n");
 	}
 
-	HTMLElement highlight(final HTMLElement pre, final ILine line)
-			throws IOException {
+	HTMLElement highlight(final HTMLElement pre, final ILine line,
+			final int lineNr) throws IOException {
 		final String style;
 		switch (line.getStatus()) {
 		case ICounter.NOT_COVERED:
@@ -131,26 +101,27 @@ final class SourceHighlighter {
 			return pre;
 		}
 
+		final String lineId = "L" + Integer.toString(lineNr);
 		final ICounter branches = line.getBranchCounter();
 		switch (branches.getStatus()) {
 		case ICounter.NOT_COVERED:
-			return span(pre, style, Styles.BRANCH_NOT_COVERED,
+			return span(pre, lineId, style, Styles.BRANCH_NOT_COVERED,
 					"All %2$d branches missed.", branches);
 		case ICounter.FULLY_COVERED:
-			return span(pre, style, Styles.BRANCH_FULLY_COVERED,
+			return span(pre, lineId, style, Styles.BRANCH_FULLY_COVERED,
 					"All %2$d branches covered.", branches);
 		case ICounter.PARTLY_COVERED:
-			return span(pre, style, Styles.BRANCH_PARTLY_COVERED,
+			return span(pre, lineId, style, Styles.BRANCH_PARTLY_COVERED,
 					"%1$d of %2$d branches missed.", branches);
 		default:
-			return pre.span(style);
+			return pre.span(style, lineId);
 		}
 	}
 
-	private HTMLElement span(final HTMLElement parent, final String style1,
-			final String style2, final String title, final ICounter branches)
-			throws IOException {
-		final HTMLElement span = parent.span(style1 + " " + style2);
+	private HTMLElement span(final HTMLElement parent, final String id,
+			final String style1, final String style2, final String title,
+			final ICounter branches) throws IOException {
+		final HTMLElement span = parent.span(style1 + " " + style2, id);
 		final Integer missed = Integer.valueOf(branches.getMissedCount());
 		final Integer total = Integer.valueOf(branches.getTotalCount());
 		span.attr("title", String.format(locale, title, missed, total));

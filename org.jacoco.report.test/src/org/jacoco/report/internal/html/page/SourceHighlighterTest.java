@@ -57,50 +57,14 @@ public class SourceHighlighterTest {
 	}
 
 	@Test
-	public void testLineNumbering() throws Exception {
-		final String src = "A\nB\nC\nD";
-		sourceHighlighter.render(parent, source, new StringReader(src));
-		html.close();
-		final Document doc = htmlSupport.parse(buffer.toString());
-		assertEquals("\u00A0\u00A0\u00A0\u00A01",
-				htmlSupport.findStr(doc, "//pre/span[1]"));
-		assertEquals("\u00A0\u00A0\u00A0\u00A02",
-				htmlSupport.findStr(doc, "//pre/span[2]"));
-		assertEquals("\u00A0\u00A0\u00A0\u00A03",
-				htmlSupport.findStr(doc, "//pre/span[3]"));
-		assertEquals("\u00A0\u00A0\u00A0\u00A04",
-				htmlSupport.findStr(doc, "//pre/span[4]"));
-	}
-
-	@Test
-	public void testLineIds() throws Exception {
-		final String src = "A\nB\nC\nD";
-		sourceHighlighter.render(parent, source, new StringReader(src));
-		html.close();
-		final Document doc = htmlSupport.parse(buffer.toString());
-		assertEquals("L1", htmlSupport.findStr(doc, "//pre/span[1]/@id"));
-		assertEquals("L2", htmlSupport.findStr(doc, "//pre/span[2]/@id"));
-		assertEquals("L3", htmlSupport.findStr(doc, "//pre/span[3]/@id"));
-		assertEquals("L4", htmlSupport.findStr(doc, "//pre/span[4]/@id"));
-	}
-
-	@Test
 	public void testDefaultTabWidth() throws Exception {
 		final String src = "\tA";
 		sourceHighlighter.render(parent, source, new StringReader(src));
 		html.close();
 		final Document doc = htmlSupport.parse(buffer.toString());
-		assertEquals("    A\n", htmlSupport.findStr(doc, "//pre/text()"));
-	}
 
-	@Test
-	public void testSetTabWidth() throws Exception {
-		final String src = "\tA";
-		sourceHighlighter.setTabWidth(3);
-		sourceHighlighter.render(parent, source, new StringReader(src));
-		html.close();
-		final Document doc = htmlSupport.parse(buffer.toString());
-		assertEquals("   A\n", htmlSupport.findStr(doc, "//pre/text()"));
+		// Assert that we no longer replace tabs with spaces
+		assertEquals("\tA\n", htmlSupport.findStr(doc, "//pre/text()"));
 	}
 
 	@Test
@@ -108,7 +72,7 @@ public class SourceHighlighterTest {
 		sourceHighlighter.render(parent, source, new StringReader(""));
 		html.close();
 		final Document doc = htmlSupport.parse(buffer.toString());
-		assertEquals("source lang-java",
+		assertEquals("source lang-java linenums",
 				htmlSupport.findStr(doc, "//pre/@class"));
 	}
 
@@ -118,7 +82,7 @@ public class SourceHighlighterTest {
 		sourceHighlighter.render(parent, source, new StringReader(""));
 		html.close();
 		final Document doc = htmlSupport.parse(buffer.toString());
-		assertEquals("source lang-scala",
+		assertEquals("source lang-scala linenums",
 				htmlSupport.findStr(doc, "//pre/@class"));
 	}
 
@@ -144,7 +108,7 @@ public class SourceHighlighterTest {
 
 	@Test
 	public void testHighlightNone() throws Exception {
-		sourceHighlighter.highlight(parent, source.getLine(1));
+		sourceHighlighter.highlight(parent, source.getLine(1), 1);
 		html.close();
 		final Document doc = htmlSupport.parse(buffer.toString());
 		assertEquals("", htmlSupport.findStr(doc, "//pre"));
@@ -154,7 +118,7 @@ public class SourceHighlighterTest {
 	public void testHighlightBranchesFC() throws Exception {
 		source.increment(CounterImpl.COUNTER_0_1,
 				CounterImpl.getInstance(0, 5), 1);
-		sourceHighlighter.highlight(parent.pre(null), source.getLine(1));
+		sourceHighlighter.highlight(parent.pre(null), source.getLine(1), 1);
 		html.close();
 		final Document doc = htmlSupport.parse(buffer.toString());
 		assertEquals("fc bfc", htmlSupport.findStr(doc, "//pre/span/@class"));
@@ -166,7 +130,7 @@ public class SourceHighlighterTest {
 	public void testHighlightBranchesPC() throws Exception {
 		source.increment(CounterImpl.COUNTER_0_1,
 				CounterImpl.getInstance(2, 3), 1);
-		sourceHighlighter.highlight(parent.pre(null), source.getLine(1));
+		sourceHighlighter.highlight(parent.pre(null), source.getLine(1), 1);
 		html.close();
 		final Document doc = htmlSupport.parse(buffer.toString());
 		assertEquals("pc bpc", htmlSupport.findStr(doc, "//pre/span/@class"));
@@ -178,7 +142,7 @@ public class SourceHighlighterTest {
 	public void testHighlightBranchesNC() throws Exception {
 		source.increment(CounterImpl.COUNTER_0_1,
 				CounterImpl.getInstance(5, 0), 1);
-		sourceHighlighter.highlight(parent.pre(null), source.getLine(1));
+		sourceHighlighter.highlight(parent.pre(null), source.getLine(1), 1);
 		html.close();
 		final Document doc = htmlSupport.parse(buffer.toString());
 		assertEquals("pc bnc", htmlSupport.findStr(doc, "//pre/span/@class"));
