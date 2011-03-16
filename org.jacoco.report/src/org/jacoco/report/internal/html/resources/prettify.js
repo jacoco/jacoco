@@ -172,8 +172,7 @@ window['_pr_isIE6'] = function () {
    * A class that indicates a section of markup that is not code, e.g. to allow
    * embedding of line numbers within code listings.
    */
-  // [JACOCO] 'nocode' -> 'nr'   
-  var PR_NOCODE = 'nr';
+  var PR_NOCODE = 'nocode';
 
   /** A set of tokens that can precede a regular expression literal in
     * javascript.
@@ -742,8 +741,7 @@ window['_pr_isIE6'] = function () {
         .replace(/\s(\w+)\s*=\s*(?:\"([^\"]*)\"|'([^\']*)'|(\S+))/g,
                  ' $1="$2$3$4"')
         // Then look for the attribute we want.
-        // [JACOCO] nocode -> nr
-        .match(/[cC][lL][aA][sS][sS]=\"[^\"]*\bnr\b/);
+        .match(/[cC][lL][aA][sS][sS]=\"[^\"]*\bnocode\b/);
   }
 
   /**
