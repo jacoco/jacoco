@@ -122,10 +122,15 @@ pre.source {
   font-family:monospace;
 }
 
-pre.source span.nr {
-  color:#c0c0c0;
-  border-right:#d6d3ce 1px solid;
-  padding-right:2pt;
+pre.source ol {
+  margin-bottom: 0px;
+  margin-top: 0px;
+}
+
+pre.source li {
+  border-left: 1px solid #D6D3CE;
+  color: #A0A0A0;
+  padding-left: 0px;
 }
 
 pre.source span.fc {

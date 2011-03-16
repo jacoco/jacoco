@@ -40,16 +40,16 @@
   single branching point:
 </p>
 
-<pre class="source lang-java">
-<span class="nr">    1</span>public static void example() {
-<span class="nr">    2</span>    a();
-<span class="nr">    3</span>    if (cond()) {
-<span class="nr">    4</span>        b();
-<span class="nr">    5</span>    } else {
-<span class="nr">    6</span>        c();
-<span class="nr">    7</span>    }
-<span class="nr">    8</span>    d();
-<span class="nr">    9</span>}
+<pre class="source lang-java linenums">
+public static void example() {
+    a();
+    if (cond()) {
+        b();
+    } else {
+        c();
+    }
+    d();
+}
 </pre>
 
 <p>
@@ -62,16 +62,16 @@
   (also the ASM API uses such symbolic labels):  
 </p>
 
-<pre class="source">
-<span class="nr">     </span>public static example()V
-<span class="nr">     </span>    INVOKESTATIC a()V
-<span class="nr">     </span>    INVOKESTATIC cond()Z
-<span class="nr">     </span>    IFEQ L1
-<span class="nr">     </span>    INVOKESTATIC b()V
-<span class="nr">     </span>    GOTO L2
-<span class="nr">  L1:</span>    INVOKESTATIC c()V
-<span class="nr">  L2:</span>    INVOKESTATIC d()V
-<span class="nr">     </span>    RETURN
+<pre class="source linenums">
+public static example()V
+    INVOKESTATIC a()V
+    INVOKESTATIC cond()Z
+    IFEQ L1
+    INVOKESTATIC b()V
+    GOTO L2
+    INVOKESTATIC c()V
+    INVOKESTATIC d()V
+    RETURN
 </pre>
 
 <p>

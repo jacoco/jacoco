@@ -168,17 +168,17 @@
 </p>
 
 
-<pre class="source lang-java">
-<span class="nr">    1</span>Object access = ...                          // Retrieve instance
-<span class="nr">    2</span>
-<span class="nr">    3</span>Object[] args = new Object[3];
-<span class="nr">    4</span>args[0] = Long.valueOf(8060044182221863588); // class id 
-<span class="nr">    5</span>args[1] = "com/example/MyClass";             // class name
-<span class="nr">    6</span>args[2] = Integer.valueOf(24);               // probe count
-<span class="nr">    7</span>
-<span class="nr">    8</span>access.equals(args);
-<span class="nr">    9</span>
-<span class="nr">   10</span>boolean[] probes = (boolean[]) args[0];
+<pre class="source lang-java linenums">
+Object access = ...                          // Retrieve instance
+
+Object[] args = new Object[3];
+args[0] = Long.valueOf(8060044182221863588); // class id 
+args[1] = "com/example/MyClass";             // class name
+args[2] = Integer.valueOf(24);               // probe count
+
+access.equals(args);
+
+boolean[] probes = (boolean[]) args[0];
 </pre>
 
 <p>
