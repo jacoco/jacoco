@@ -485,7 +485,12 @@ public class ReportTask extends Task {
 
 		public Reader getSourceFile(final String packageName,
 				final String fileName) throws IOException {
-			final Resource r = resources.get(packageName + '/' + fileName);
+			final Resource r;
+			if (packageName.length() > 0) {
+				r = resources.get(packageName + '/' + fileName);
+			} else {
+				r = resources.get(fileName);
+			}
 			if (r == null) {
 				return null;
 			}

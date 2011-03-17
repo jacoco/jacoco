@@ -71,7 +71,7 @@
 					<fileset dir="${temp.dir}" id="*.class" />
 				</classfiles>
 				<sourcefiles>
-					<fileset dir="." id="*.java" />
+					<fileset dir="." includes="*.java" />
 				</sourcefiles>
 			</structure>
 		</jacoco:report>
@@ -182,6 +182,23 @@
 		</jacoco:report>
 		
 		<au:assertFileExists file="${temp.dir}/report.zip"/>
+	</target>
+
+	<target name="testReportHtmlWithSources">
+		<jacoco:report>
+			<structure name="Test">
+				<classfiles>
+					<fileset dir="${org.jacoco.ant.reportTaskTest.classes.dir}" includes="**/*.class"/>
+				</classfiles>
+				<sourcefiles>
+					<fileset dir="../../.." includes="**/*.java" />
+				</sourcefiles>
+            </structure>
+			<html destdir="${temp.dir}"/>
+		</jacoco:report>
+		
+		<au:assertFileExists file="${temp.dir}/org.jacoco.ant/TestTarget.java.html"/>
+		<au:assertFileExists file="${temp.dir}/default/TestTargetInDefault.java.html"/>
 	</target>
 	
 	
