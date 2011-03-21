@@ -30,6 +30,7 @@ public class ClassInstrumenter extends ClassAdapter implements
 		IClassProbesVisitor {
 
 	private static final Object[] STACK_ARRZ = new Object[] { InstrSupport.DATAFIELD_DESC };
+	private static final Object[] NO_LOCALS = new Object[0];
 
 	private final long id;
 
@@ -174,7 +175,7 @@ public class ClassInstrumenter extends ClassAdapter implements
 			// Stack[0]: [Z
 
 			// Return the class' probe array:
-			mv.visitFrame(Opcodes.F_FULL, 0, new Object[0], 1, STACK_ARRZ);
+			mv.visitFrame(Opcodes.F_FULL, 0, NO_LOCALS, 1, STACK_ARRZ);
 			mv.visitLabel(alreadyInitialized);
 			mv.visitInsn(Opcodes.ARETURN);
 
