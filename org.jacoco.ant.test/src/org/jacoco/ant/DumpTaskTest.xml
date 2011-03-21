@@ -53,4 +53,11 @@
 		<au:assertFileDoesntExist file="${exec.file}"/>
 	</target>
 	
+	<target name="testNoDestFile">
+		<au:expectfailure expectedMessage="Destination file is required when dumping execution data">
+			<jacoco:dump dump="true"/>
+		</au:expectfailure>
+		<au:assertFileDoesntExist file="${exec.file}"/>
+	</target>
+	
 </project>
