@@ -71,7 +71,7 @@
 					<fileset dir="${temp.dir}" id="*.class" />
 				</classfiles>
 				<sourcefiles>
-					<fileset dir="." includes="*.java" />
+					<fileset dir="${org.jacoco.ant.reportTaskTest.sources.dir}" includes="**/*.java" />
 				</sourcefiles>
 			</structure>
 		</jacoco:report>
@@ -191,7 +191,7 @@
 					<fileset dir="${org.jacoco.ant.reportTaskTest.classes.dir}" includes="**/*.class"/>
 				</classfiles>
 				<sourcefiles>
-					<fileset dir="../../.." includes="**/*.java" />
+					<fileset dir="${org.jacoco.ant.reportTaskTest.sources.dir}" includes="**/*.java" />
 				</sourcefiles>
             </structure>
 			<html destdir="${temp.dir}"/>
