@@ -11,6 +11,7 @@
  *******************************************************************************/
 package org.jacoco.report;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.fail;
 
@@ -31,7 +32,12 @@ public class DirectorySourceFileLocatorTest {
 
 	@Before
 	public void setup() {
-		locator = new DirectorySourceFileLocator(new File("./src"), "UTF-8");
+		locator = new DirectorySourceFileLocator(new File("./src"), "UTF-8", 4);
+	}
+
+	@Test
+	public void testGetTabWidth() throws IOException {
+		assertEquals(4, locator.getTabWidth());
 	}
 
 	@Test

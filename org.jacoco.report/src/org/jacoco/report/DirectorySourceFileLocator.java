@@ -27,6 +27,8 @@ public class DirectorySourceFileLocator implements ISourceFileLocator {
 
 	private final String encoding;
 
+	private final int tabWidth;
+
 	/**
 	 * Creates a new locator that searches for source files in the given
 	 * directory.
@@ -35,11 +37,15 @@ public class DirectorySourceFileLocator implements ISourceFileLocator {
 	 *            directory to search for source file
 	 * @param encoding
 	 *            encoding of the source files
+	 * @param tabWidth
+	 *            tab width in source files as number of blanks
+	 * 
 	 */
 	public DirectorySourceFileLocator(final File directory,
-			final String encoding) {
+			final String encoding, final int tabWidth) {
 		this.directory = directory;
 		this.encoding = encoding;
+		this.tabWidth = tabWidth;
 	}
 
 	public Reader getSourceFile(final String packageName, final String fileName)
@@ -50,6 +56,10 @@ public class DirectorySourceFileLocator implements ISourceFileLocator {
 			return new InputStreamReader(new FileInputStream(file), encoding);
 		}
 		return null;
+	}
+
+	public int getTabWidth() {
+		return tabWidth;
 	}
 
 }

@@ -47,6 +47,10 @@ public class ReportStructureTestDriver {
 				throws IOException {
 			return null;
 		}
+
+		public int getTabWidth() {
+			return 4;
+		}
 	};
 
 	private final IMethodCoverage methodCoverage;

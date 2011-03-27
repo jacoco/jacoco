@@ -79,11 +79,4 @@ public interface IHTMLReportContext {
 	 */
 	public Locale getLocale();
 
-	/**
-	 * Returns number of blank characters that represent a tab in source code.
-	 * 
-	 * @return tab width as number of blanks
-	 */
-	public int getTabWidth();
-
 }

@@ -170,7 +170,61 @@
 			<contains string="${testReportHtmlEncoding.content}" substring="encoding=&quot;UTF-16&quot;"/>
 		</au:assertTrue>
 	</target>
+
+	<target name="testReportHtmlDefaultTabWidth">
+		<jacoco:report>
+			<structure name="Test">
+				<classfiles>
+					<fileset dir="${org.jacoco.ant.reportTaskTest.classes.dir}" includes="**/*.class"/>
+				</classfiles>
+				<sourcefiles>
+					<fileset dir="${org.jacoco.ant.reportTaskTest.sources.dir}" includes="**/*.java" />
+				</sourcefiles>
+            </structure>
+			<html destdir="${temp.dir}"/>
+		</jacoco:report>
+		
+		<loadfile property="testReportHtmlTabWidth.content" srcfile="${temp.dir}/org.jacoco.ant/TestTarget.java.html"/>
+		<au:assertTrue message="Tab width not set in ${testReportHtmlTabWidth.content}">
+			<contains string="${testReportHtmlTabWidth.content}" substring="window['PR_TAB_WIDTH']=4"/>
+		</au:assertTrue>
+	</target>
 	
+	<target name="testReportHtmlTabWidth">
+		<jacoco:report>
+			<structure name="Test">
+				<classfiles>
+					<fileset dir="${org.jacoco.ant.reportTaskTest.classes.dir}" includes="**/*.class"/>
+				</classfiles>
+				<sourcefiles tabwidth="13">
+					<fileset dir="${org.jacoco.ant.reportTaskTest.sources.dir}" includes="**/*.java" />
+				</sourcefiles>
+            </structure>
+			<html destdir="${temp.dir}"/>
+		</jacoco:report>
+		
+		<loadfile property="testReportHtmlTabWidth.content" srcfile="${temp.dir}/org.jacoco.ant/TestTarget.java.html"/>
+		<au:assertTrue message="Tab width not set in ${testReportHtmlTabWidth.content}">
+			<contains string="${testReportHtmlTabWidth.content}" substring="window['PR_TAB_WIDTH']=13"/>
+		</au:assertTrue>
+	</target>
+	
+	<target name="testReportHtmlInvalidTabWidth">
+		<au:expectfailure expectedMessage="Tab width must be greater than 0">
+			<jacoco:report>
+				<structure name="Test">
+					<classfiles>
+						<fileset dir="${org.jacoco.ant.reportTaskTest.classes.dir}" includes="**/*.class"/>
+					</classfiles>
+					<sourcefiles tabwidth="0">
+						<fileset dir="${org.jacoco.ant.reportTaskTest.sources.dir}" includes="**/*.java" />
+					</sourcefiles>
+				</structure>
+				<html destdir="${temp.dir}"/>
+			</jacoco:report>
+		</au:expectfailure>
+	</target>
+			
 	<target name="testReportHtmlZipFile">
 		<jacoco:report>
 			<structure name="Test">

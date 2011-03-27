@@ -34,4 +34,11 @@ public interface ISourceFileLocator {
 	public Reader getSourceFile(String packageName, String fileName)
 			throws IOException;
 
+	/**
+	 * Returns number of blank characters that represent a tab in source code.
+	 * 
+	 * @return tab width as number of blanks
+	 */
+	public int getTabWidth();
+
 }

@@ -462,12 +462,35 @@
     ear etc.) or folders containing class files. Archives and folders are
     searched recursively for class files.</li>
   <li><code>sourcefiles</code>: Optional container element for Ant resources and
-    resource collections that specify corresponding source files. The element
-    has an optional attribute <code>encoding</code> to specify the character
-    encoding of the source files. If no encoding is given, the platform default
-    is used. If source files are specified, some report formats include
-    highlighted source code.</li>
+    resource collections that specify corresponding source files. If source
+    files are specified, some report formats include highlighted source code.</li>
 </ul>
+
+<p>
+  The <code>sourcefiles</code> element has these optional attributes:
+</p>
+
+<table class="coverage">
+  <thead>
+    <tr>
+      <td>Attribute</td>
+      <td>Description</td>
+      <td>Default</td>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>encoding</code></td>
+      <td>Character encoding of the source files.</td>
+      <td>Platform default encoding</td>
+    </tr>
+    <tr>
+      <td><code>tabwidth</code></td>
+      <td>Number of whitespace characters that represent a tab character.</td>
+      <td>4 characters</td>
+    </tr>
+  </tbody>
+</table>
 
 <p>
   Note that the <code>classfiles</code> and <code>sourcefiles</code> elements

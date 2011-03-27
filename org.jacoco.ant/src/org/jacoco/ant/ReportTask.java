@@ -64,7 +64,9 @@ public class ReportTask extends Task {
 	 */
 	public static class SourceFilesElement extends Union {
 
-		String encoding;
+		String encoding = null;
+
+		int tabWidth = 4;
 
 		/**
 		 * Defines the optional source file encoding. If not set the platform
@@ -75,6 +77,19 @@ public class ReportTask extends Task {
 		 */
 		public void setEncoding(final String encoding) {
 			this.encoding = encoding;
+		}
+
+		/**
+		 * Sets the tab stop width for the source pages. Default value is 4.
+		 * 
+		 * @param tabWidth
+		 *            number of characters per tab stop
+		 */
+		public void setTabwidth(final int tabWidth) {
+			if (tabWidth <= 0) {
+				throw new BuildException("Tab width must be greater than 0");
+			}
+			this.tabWidth = tabWidth;
 		}
 
 	}
@@ -475,8 +490,11 @@ public class ReportTask extends Task {
 
 		private final Map<String, Resource> resources = new HashMap<String, Resource>();
 
+		private final int tabWidth;
+
 		SourceFileCollection(final SourceFilesElement sourceFiles) {
 			encoding = sourceFiles.encoding;
+			tabWidth = sourceFiles.tabWidth;
 			for (final Iterator<?> i = sourceFiles.iterator(); i.hasNext();) {
 				final Resource r = (Resource) i.next();
 				resources.put(r.getName().replace(File.separatorChar, '/'), r);
@@ -499,6 +517,10 @@ public class ReportTask extends Task {
 			} else {
 				return new InputStreamReader(r.getInputStream(), encoding);
 			}
+		}
+
+		public int getTabWidth() {
+			return tabWidth;
 		}
 
 		public boolean isEmpty() {

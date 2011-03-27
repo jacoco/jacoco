@@ -30,20 +30,25 @@ public class SourceFilePage extends NodePage<ISourceFileCoverage> {
 
 	private final Reader sourceReader;
 
+	private final int tabWidth;
+
 	/**
 	 * Creates a new page with given information.
 	 * 
 	 * @param sourceFileNode
 	 * @param sourceReader
+	 * @param tabWidth
 	 * @param parent
 	 * @param folder
 	 * @param context
 	 */
 	public SourceFilePage(final ISourceFileCoverage sourceFileNode,
-			final Reader sourceReader, final ReportPage parent,
-			final ReportOutputFolder folder, final IHTMLReportContext context) {
+			final Reader sourceReader, final int tabWidth,
+			final ReportPage parent, final ReportOutputFolder folder,
+			final IHTMLReportContext context) {
 		super(sourceFileNode, parent, folder, context);
 		this.sourceReader = sourceReader;
+		this.tabWidth = tabWidth;
 	}
 
 	@Override
@@ -69,7 +74,7 @@ public class SourceFilePage extends NodePage<ISourceFileCoverage> {
 	@Override
 	protected String getOnload() {
 		return format("window['PR_TAB_WIDTH']=%d;prettyPrint()",
-				Integer.valueOf(context.getTabWidth()));
+				Integer.valueOf(tabWidth));
 	}
 
 	@Override

@@ -97,7 +97,7 @@ public class ReportGenerator {
 		// Populate the report structure with the bundle coverage information.
 		// Call visitGroup if you need groups in your report.
 		visitor.visitBundle(bundleCoverage, new DirectorySourceFileLocator(
-				sourceDirectory, "utf-8"));
+				sourceDirectory, "utf-8", 4));
 
 		// Signal end of structure information to allow report to write all
 		// information out

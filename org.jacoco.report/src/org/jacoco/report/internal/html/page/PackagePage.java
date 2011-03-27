@@ -64,7 +64,7 @@ public class PackagePage extends TablePage<IPackageCoverage> {
 					.getSourceFile(packagename, sourcename);
 			if (reader != null) {
 				final SourceFilePage sourcePage = new SourceFilePage(s, reader,
-						this, folder, context);
+						locator.getTabWidth(), this, folder, context);
 				sourcePage.render();
 				sourceFiles.put(sourcename, sourcePage);
 			}

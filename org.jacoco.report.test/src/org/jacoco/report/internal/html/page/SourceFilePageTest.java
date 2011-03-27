@@ -44,7 +44,7 @@ public class SourceFilePageTest extends PageTestBase {
 	public void testContents() throws Exception {
 		final SourceFileCoverageImpl node = new SourceFileCoverageImpl(
 				"SourceFilePageTest.java", "org/jacoco/report/internal/html");
-		final SourceFilePage page = new SourceFilePage(node, sourceReader,
+		final SourceFilePage page = new SourceFilePage(node, sourceReader, 4,
 				null, rootFolder, context);
 		page.render();
 
