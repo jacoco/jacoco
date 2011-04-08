@@ -144,6 +144,13 @@
     <asm.version>3.2</asm.version>
     <ant.version>1.7.0</ant.version>
     <junit.version>4.8.2</junit.version>
+
+    <!-- ================== -->
+    <!-- For Sonar analysis -->
+    <!-- ================== -->
+    <!-- See http://jira.codehaus.org/browse/SONAR-2096 -->
+    <sonar.java.source>1.5</sonar.java.source>
+    <sonar.java.target>1.5</sonar.java.target>
   </properties>
 
   <dependencyManagement>
