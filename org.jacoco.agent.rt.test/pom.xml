@@ -37,8 +37,4 @@
       <artifactId>junit</artifactId>
     </dependency>
   </dependencies>
-
-  <build>
-    <testSourceDirectory>src</testSourceDirectory>
-  </build>
 </project>

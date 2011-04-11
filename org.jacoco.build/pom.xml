@@ -211,6 +211,8 @@
   </dependencyManagement>
 
   <build>
+    <sourceDirectory>src</sourceDirectory>
+
     <resources>
       <resource>
         <directory>src</directory>
@@ -420,6 +422,15 @@
         <artifactId>maven-osgi-test-plugin</artifactId>
         <configuration>
           <skipExec>${skipTests}</skipExec>
+        </configuration>
+      </plugin>
+
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-surefire-plugin</artifactId>
+        <configuration>
+          <testSourceDirectory>${project.build.sourceDirectory}</testSourceDirectory>
+          <testClassesDirectory>${project.build.outputDirectory}</testClassesDirectory>
         </configuration>
       </plugin>
 
