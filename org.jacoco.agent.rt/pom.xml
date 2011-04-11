@@ -71,6 +71,7 @@
             <configuration>
               <shadedArtifactAttached>true</shadedArtifactAttached>
               <shadedClassifierName>all</shadedClassifierName>
+              <minimizeJar>true</minimizeJar>
               <relocations>
                 <relocation>
                   <pattern>org.jacoco.agent.rt</pattern>
