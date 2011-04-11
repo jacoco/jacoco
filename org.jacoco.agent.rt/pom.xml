@@ -51,9 +51,8 @@
             </goals>
             <configuration>
               <source>
-              import java.util.Random
-              def number = (new Random()).nextInt(9999)
-              project.properties['rt'] = "rt_" + number
+              def id = Math.abs(new java.util.Random().nextInt())
+              project.properties['rt'] = "rt_" + Integer.toString(id, Character.MAX_RADIX)
               </source>
             </configuration>
           </execution>

@@ -17,8 +17,7 @@ import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Task;
 
 /**
- * This task creates a random identifier and loads it into a property. The
- * identifier is a valid Java identifier.
+ * This task creates a random identifier and loads it into a property.
  */
 public class RandomIdTask extends Task {
 
@@ -36,15 +35,9 @@ public class RandomIdTask extends Task {
 
 	@Override
 	public void execute() throws BuildException {
-		final Random random = new Random();
-		while (true) {
-			final int id = random.nextInt();
-			final String idstr = Integer.toString(id, Character.MAX_RADIX);
-			if (Character.isJavaIdentifierStart(idstr.charAt(0))) {
-				getProject().setNewProperty(name, idstr);
-				break;
-			}
-		}
+		final int id = Math.abs(new Random().nextInt());
+		final String idstr = Integer.toString(id, Character.MAX_RADIX);
+		getProject().setNewProperty(name, idstr);
 	}
 
 }
