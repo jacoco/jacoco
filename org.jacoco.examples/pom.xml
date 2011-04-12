@@ -26,6 +26,8 @@
   <description>JaCoCo API Usage Examples</description>
 
   <build>
+    <sourceDirectory>src</sourceDirectory>
+
     <plugins>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>

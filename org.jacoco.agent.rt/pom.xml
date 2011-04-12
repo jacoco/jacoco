@@ -38,6 +38,8 @@
   </dependencies>
 
   <build>
+    <sourceDirectory>src</sourceDirectory>
+
     <plugins>
       <!-- Generates random number for relocation of packages -->
       <plugin>

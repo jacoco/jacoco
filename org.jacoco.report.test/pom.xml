@@ -39,4 +39,8 @@
       <artifactId>junit</artifactId>
     </dependency>
   </dependencies>
+
+  <build>
+    <sourceDirectory>src</sourceDirectory>
+  </build>
 </project>
