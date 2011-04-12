@@ -71,9 +71,8 @@
       </includes>
     </dependencySet>
     <dependencySet>
-      <outputDirectory>/</outputDirectory>
+      <outputDirectory>/doc</outputDirectory>
       <unpack>true</unpack>
-      <outputFileNameMapping>doc</outputFileNameMapping>
       <useProjectArtifact>false</useProjectArtifact>
       <includes>
         <include>*:org.jacoco.examples</include>
