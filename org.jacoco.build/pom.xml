@@ -488,6 +488,10 @@
                   <banRepositories>true</banRepositories>
                   <banPluginRepositories>true</banPluginRepositories>
                 </requireNoRepositories>
+                <requireReleaseDeps>
+                  <message>No SNAPSHOT versions allowed for dependencies</message>
+                  <onlyWhenRelease>true</onlyWhenRelease>
+                </requireReleaseDeps>
               </rules>
             </configuration>
           </execution>
