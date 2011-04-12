@@ -15,7 +15,7 @@
 <!-- This DTD describes the JaCoCo XML report format. It is identified by the
      following identifiers:
 
-	    PUBID  = "-//JACOCO//DTD Report 1.0//EN"
+        PUBID  = "-//JACOCO//DTD Report 1.0//EN"
         SYSTEM = "report.dtd"
 -->
 
