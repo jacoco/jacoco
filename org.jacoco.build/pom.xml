@@ -104,25 +104,22 @@
     <system>Trac</system>
     <url>https://sourceforge.net/apps/trac/eclemma/</url>
   </issueManagement>
-  <!-- TODO
-  <ciManagement>
-  </ciManagement>
   <distributionManagement>
     <repository>
-      <id></id>
-      <name></name>
-      <url></url>
+      <id>sonatype-nexus-staging</id>
+      <name>Nexus Release Repository</name>
+      <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
     </repository>
     <snapshotRepository>
-      <id></id>
-      <name></name>
-      <url></url>
+      <id>sonatype-nexus-snapshots</id>
+      <name>Sonatype Nexus Snapshots</name>
+      <url>${sonatypeOssDistMgmtSnapshotsUrl}</url>
     </snapshotRepository>
   </distributionManagement>
-  -->
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <sonatypeOssDistMgmtSnapshotsUrl>https://oss.sonatype.org/content/repositories/snapshots/</sonatypeOssDistMgmtSnapshotsUrl>
 
     <maven.build.timestamp.format>yyyy/MM/dd</maven.build.timestamp.format>
     <build.date>${maven.build.timestamp}</build.date>
