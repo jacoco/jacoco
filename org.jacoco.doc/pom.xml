@@ -20,7 +20,8 @@
   </parent>
 
   <artifactId>org.jacoco.doc</artifactId>
-  <packaging>pom</packaging>
+  <!-- set to jar, because otherwise we will receive "Not executing Javadoc as the project is not a Java classpath-capable package" -->
+  <packaging>jar</packaging>
 
   <name>JaCoCo :: Documentation</name>
   <description>JaCoCo Standalone Distribution</description>
@@ -176,7 +177,12 @@
 
   <profiles>
     <profile>
-      <id>release</id>
+      <id>sources</id>
+      <activation>
+        <property>
+          <name>!skip-sources</name>
+        </property>
+      </activation>
       <build>
         <plugins>
           <plugin>
@@ -185,9 +191,9 @@
             <executions>
               <execution>
                 <id>javadoc-aggregate</id>
-                <phase>package</phase>
+                <phase>prepare-package</phase>
                 <goals>
-                  <goal>javadoc</goal>
+                  <goal>jar</goal>
                 </goals>
                 <configuration>
                   <reportOutputDirectory>${project.build.directory}/apidocs</reportOutputDirectory>
@@ -195,6 +201,7 @@
                   <excludePackageNames>*.internal,org.jacoco.ant,org.jacoco.agent.rt</excludePackageNames>
                   <dependencySourceExcludes>
                     <dependencySourceExclude>asm:*</dependencySourceExclude>
+                    <dependencySourceExclude>org.jacoco:org.jacoco.ant-nodeps</dependencySourceExclude>
                   </dependencySourceExcludes>
                   <doctitle>JaCoCo ${project.version} API</doctitle>
                   <use>true</use>

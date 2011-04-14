@@ -297,6 +297,9 @@
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-javadoc-plugin</artifactId>
           <version>2.7</version>
+          <configuration>
+            <quiet>true</quiet>
+          </configuration>
         </plugin>
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
@@ -616,33 +619,15 @@
       </build>
     </profile>
 
-    <!-- This profile is activated when a project is released. -->
     <profile>
-      <id>release</id>
+      <id>sources</id>
+      <activation>
+        <property>
+          <name>!skip-sources</name>
+        </property>
+      </activation>
       <build>
         <plugins>
-          <plugin>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-enforcer-plugin</artifactId>
-            <inherited>false</inherited>
-            <executions>
-              <execution>
-                <id>enforce-sign</id>
-                <phase>verify</phase>
-                <goals>
-                  <goal>enforce</goal>
-                </goals>
-                <configuration>
-                  <rules>
-                    <requireActiveProfile>
-                      <message>You must sign JARs during release.</message>
-                      <profiles>sign</profiles>
-                    </requireActiveProfile>
-                  </rules>
-                </configuration>
-              </execution>
-            </executions>
-          </plugin>
           <!-- Generates jar with sources -->
           <plugin>
             <groupId>org.apache.maven.plugins</groupId>
@@ -679,6 +664,37 @@
                 <goals>
                   <goal>jar</goal>
                 </goals>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+
+    <!-- This profile is activated when a project is released. -->
+    <profile>
+      <id>release</id>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-enforcer-plugin</artifactId>
+            <inherited>false</inherited>
+            <executions>
+              <execution>
+                <id>enforce-sign</id>
+                <phase>verify</phase>
+                <goals>
+                  <goal>enforce</goal>
+                </goals>
+                <configuration>
+                  <rules>
+                    <requireActiveProfile>
+                      <message>You must sign JARs during release.</message>
+                      <profiles>sign</profiles>
+                    </requireActiveProfile>
+                  </rules>
+                </configuration>
               </execution>
             </executions>
           </plugin>
