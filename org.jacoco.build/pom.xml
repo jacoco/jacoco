@@ -299,6 +299,7 @@
           <version>2.7</version>
           <configuration>
             <quiet>true</quiet>
+            <detectOfflineLinks>false</detectOfflineLinks>
           </configuration>
         </plugin>
         <plugin>

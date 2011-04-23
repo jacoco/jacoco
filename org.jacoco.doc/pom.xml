@@ -190,7 +190,7 @@
             <artifactId>maven-javadoc-plugin</artifactId>
             <executions>
               <execution>
-                <id>javadoc-aggregate</id>
+                <id>attach-javadocs</id>
                 <phase>prepare-package</phase>
                 <goals>
                   <goal>jar</goal>
@@ -202,6 +202,7 @@
                   <dependencySourceExcludes>
                     <dependencySourceExclude>asm:*</dependencySourceExclude>
                     <dependencySourceExclude>org.jacoco:org.jacoco.ant-nodeps</dependencySourceExclude>
+                    <dependencySourceExclude>org.jacoco:*.test</dependencySourceExclude>
                   </dependencySourceExcludes>
                   <doctitle>JaCoCo ${project.version} API</doctitle>
                   <windowtitle>JaCoCo ${project.version} API</windowtitle>
