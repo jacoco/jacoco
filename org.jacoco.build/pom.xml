@@ -244,8 +244,6 @@
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-assembly-plugin</artifactId>
-          <!-- There is a bug in versions starting from 2.2-beta-2 to 2.2 : http://jira.codehaus.org/browse/MASSEMBLY-422-->
-          <!-- But we can't use 2.2-beta-1 because of filtering, so version set to 2.2 -->
           <version>2.2</version>
         </plugin>
         <plugin>
@@ -472,6 +470,21 @@
               </manifestEntries>
             </transformer>
           </transformers>
+        </configuration>
+      </plugin>
+
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-assembly-plugin</artifactId>
+        <configuration>
+          <archiverConfig>
+            <!-- Workaround for http://jira.codehaus.org/browse/MASSEMBLY-422 -->
+            <!-- 420(dec) = 644(oct) -->
+            <fileMode>420</fileMode>
+            <!-- 493(dec) = 755(oct) -->
+            <directoryMode>493</directoryMode>
+            <defaultDirectoryMode>493</defaultDirectoryMode>
+          </archiverConfig>
         </configuration>
       </plugin>
 
