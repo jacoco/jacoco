@@ -23,7 +23,7 @@ import org.jacoco.core.test.validation.targets.Stubs.SuperClass;
 public class Target10 extends SuperClass {
 
 	public Target10() {
-		super(t() ? t() : f()); // $line-super$
+		super(t() || f()); // $line-super$
 	}
 
 	public static void main(String[] args) {
