@@ -16,7 +16,7 @@ import java.lang.reflect.Field;
 import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLStreamHandler;
-import java.util.Hashtable;
+import java.util.Map;
 
 import org.jacoco.core.internal.instr.InstrSupport;
 import org.objectweb.asm.MethodVisitor;
@@ -33,7 +33,7 @@ public class URLStreamHandlerRuntime extends AbstractRuntime {
 
 	private final String protocol;
 
-	private Hashtable<String, URLStreamHandler> handlers;
+	private Map<String, URLStreamHandler> handlers;
 
 	/**
 	 * Creates a new runtime.
@@ -48,12 +48,12 @@ public class URLStreamHandlerRuntime extends AbstractRuntime {
 		handlers.put(protocol, handler);
 	}
 
-	private Hashtable<String, URLStreamHandler> getHandlersReference()
+	private Map<String, URLStreamHandler> getHandlersReference()
 			throws Exception {
 		final Field field = URL.class.getDeclaredField("handlers");
 		field.setAccessible(true);
 		@SuppressWarnings("unchecked")
-		final Hashtable<String, URLStreamHandler> handlers = (Hashtable<String, URLStreamHandler>) field
+		final Map<String, URLStreamHandler> handlers = (Map<String, URLStreamHandler>) field
 				.get(null);
 		return handlers;
 	}
