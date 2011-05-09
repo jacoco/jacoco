@@ -33,6 +33,9 @@ public class CoverageNodeImpl implements ICoverageNode {
 	/** Counter for lines, if this element does not have lines. */
 	protected CounterImpl lineCounter;
 
+	/** Counter for complexity. */
+	protected CounterImpl complexityCounter;
+
 	/** Counter for methods. */
 	protected CounterImpl methodCounter;
 
@@ -52,6 +55,7 @@ public class CoverageNodeImpl implements ICoverageNode {
 		this.name = name;
 		this.branchCounter = CounterImpl.COUNTER_0_0;
 		this.instructionCounter = CounterImpl.COUNTER_0_0;
+		this.complexityCounter = CounterImpl.COUNTER_0_0;
 		this.methodCounter = CounterImpl.COUNTER_0_0;
 		this.classCounter = CounterImpl.COUNTER_0_0;
 		this.lineCounter = CounterImpl.COUNTER_0_0;
@@ -67,9 +71,11 @@ public class CoverageNodeImpl implements ICoverageNode {
 		instructionCounter = instructionCounter.increment(child
 				.getInstructionCounter());
 		branchCounter = branchCounter.increment(child.getBranchCounter());
+		lineCounter = lineCounter.increment(child.getLineCounter());
+		complexityCounter = complexityCounter.increment(child
+				.getComplexityCounter());
 		methodCounter = methodCounter.increment(child.getMethodCounter());
 		classCounter = classCounter.increment(child.getClassCounter());
-		lineCounter = lineCounter.increment(child.getLineCounter());
 	}
 
 	/**
@@ -107,6 +113,10 @@ public class CoverageNodeImpl implements ICoverageNode {
 		return lineCounter;
 	}
 
+	public ICounter getComplexityCounter() {
+		return complexityCounter;
+	}
+
 	public ICounter getMethodCounter() {
 		return methodCounter;
 	}
@@ -123,6 +133,8 @@ public class CoverageNodeImpl implements ICoverageNode {
 			return getBranchCounter();
 		case LINE:
 			return getLineCounter();
+		case COMPLEXITY:
+			return getComplexityCounter();
 		case METHOD:
 			return getMethodCounter();
 		case CLASS:
@@ -135,9 +147,10 @@ public class CoverageNodeImpl implements ICoverageNode {
 		final CoverageNodeImpl copy = new CoverageNodeImpl(elementType, name);
 		copy.instructionCounter = CounterImpl.getInstance(instructionCounter);
 		copy.branchCounter = CounterImpl.getInstance(branchCounter);
+		copy.lineCounter = CounterImpl.getInstance(lineCounter);
+		copy.complexityCounter = CounterImpl.getInstance(complexityCounter);
 		copy.methodCounter = CounterImpl.getInstance(methodCounter);
 		copy.classCounter = CounterImpl.getInstance(classCounter);
-		copy.lineCounter = CounterImpl.getInstance(lineCounter);
 		return copy;
 	}
 

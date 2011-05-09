@@ -87,6 +87,7 @@ public class ClassCoverageImplTest {
 		m.increment(
 				covered ? CounterImpl.COUNTER_0_1 : CounterImpl.COUNTER_1_0,
 				CounterImpl.COUNTER_0_0, ISourceNode.UNKNOWN_LINE);
+		m.incrementMethodCounter();
 		return m;
 	}
 

@@ -22,6 +22,7 @@
 
 <h3>New Features</h3>
 <ul>
+  <li>JaCoCo core calculates cyclomatic complexity (Trac #129).</li>
   <li>For HTML reports the tab width can be specified on the
       <code>sourcefiles</code> attribute of the <code>report</code> Ant task
      (Track #152).</li>
@@ -29,8 +30,10 @@
 
 <h3>API Changes</h3>
 <ul>
+  <li><code>ICoverageNode</code> API has been extended for cyclomatic
+      complexity (Trac #129).</li>
   <li>New method <code>getTabWidth()</code> in callback interface 
-      <code>ISourceFileLocator.getTabWidth()</code> (Trac #152).</li>
+      <code>ISourceFileLocator</code> (Trac #152).</li>
 </ul>
 
 <h2>Release 0.5.1 (2011/03/21)</h2>

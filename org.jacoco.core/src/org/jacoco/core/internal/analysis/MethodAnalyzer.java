@@ -257,6 +257,7 @@ public class MethodAnalyzer implements IMethodProbesVisitor {
 					- covered, covered) : CounterImpl.COUNTER_0_0;
 			coverage.increment(instructions, branches, i.getLine());
 		}
+		coverage.incrementMethodCounter();
 	}
 
 	// === nothing to do here ===

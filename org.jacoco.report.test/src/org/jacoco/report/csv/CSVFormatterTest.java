@@ -67,7 +67,7 @@ public class CSVFormatterTest {
 		final List<String> lines = getLines();
 		assertEquals(HEADER, lines.get(0));
 		assertEquals(
-				"group/bundle,org.jacoco.example,FooClass,2,22,3,33,0,0,1,0",
+				"group/bundle,org.jacoco.example,FooClass,2,22,3,33,0,0,0,1",
 				lines.get(1));
 	}
 
@@ -82,10 +82,10 @@ public class CSVFormatterTest {
 		final List<String> lines = getLines();
 		assertEquals(HEADER, lines.get(0));
 		assertEquals(
-				"group/bundle,org.jacoco.example,FooClass,2,22,3,33,0,0,1,0",
+				"group/bundle,org.jacoco.example,FooClass,2,22,3,33,0,0,0,1",
 				lines.get(1));
 		assertEquals(
-				"group/bundle,org.jacoco.example,FooClass,2,22,3,33,0,0,1,0",
+				"group/bundle,org.jacoco.example,FooClass,2,22,3,33,0,0,0,1",
 				lines.get(2));
 	}
 
@@ -94,7 +94,7 @@ public class CSVFormatterTest {
 		driver.sendBundle(visitor);
 		final List<String> lines = getLines();
 		assertEquals(HEADER, lines.get(0));
-		assertEquals("bundle,org.jacoco.example,FooClass,2,22,3,33,0,0,1,0",
+		assertEquals("bundle,org.jacoco.example,FooClass,2,22,3,33,0,0,0,1",
 				lines.get(1));
 	}
 

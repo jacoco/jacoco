@@ -68,6 +68,7 @@ public class ReportStructureTestDriver {
 			{
 				instructionCounter = CounterImpl.getInstance(2, 22);
 				branchCounter = CounterImpl.getInstance(3, 33);
+				methodCounter = CounterImpl.COUNTER_0_1;
 			}
 		};
 
