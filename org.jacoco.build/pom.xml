@@ -145,6 +145,8 @@
     <!-- ================== -->
     <!-- For Sonar analysis -->
     <!-- ================== -->
+    <sonar.skippedModules>org.jacoco.core.test,org.jacoco.report.test,org.jacoco.agent.rt.test,org.jacoco.agent.test,org.jacoco.ant.test</sonar.skippedModules>
+
     <!-- See http://jira.codehaus.org/browse/SONAR-2096 -->
     <sonar.java.source>1.5</sonar.java.source>
     <sonar.java.target>1.5</sonar.java.target>
