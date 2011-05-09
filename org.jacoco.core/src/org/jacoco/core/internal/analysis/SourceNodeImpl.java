@@ -73,7 +73,7 @@ public class SourceNodeImpl extends CoverageNodeImpl implements ISourceNode {
 
 	/**
 	 * Increments all counters by the values of the given child. When
-	 * incrementing the line counter is is assumed that the child refers to the
+	 * incrementing the line counter it is assumed that the child refers to the
 	 * same source file.
 	 * 
 	 * @param child
@@ -83,6 +83,8 @@ public class SourceNodeImpl extends CoverageNodeImpl implements ISourceNode {
 		instructionCounter = instructionCounter.increment(child
 				.getInstructionCounter());
 		branchCounter = branchCounter.increment(child.getBranchCounter());
+		complexityCounter = complexityCounter.increment(child
+				.getComplexityCounter());
 		methodCounter = methodCounter.increment(child.getMethodCounter());
 		classCounter = classCounter.increment(child.getClassCounter());
 		final int firstLine = child.getFirstLine();
