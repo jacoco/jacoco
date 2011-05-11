@@ -101,7 +101,6 @@ public class XMLFormatter {
 
 			@Override
 			protected void handleEnd() throws IOException {
-				super.handleEnd();
 				element.close();
 			}
 		}

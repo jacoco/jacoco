@@ -88,7 +88,30 @@ public class XMLFormatterTest {
 				"/report/group/package/class/@name");
 		assertPathMatches("fooMethod",
 				"/report/group/package/class/method/@name");
+
+		assertPathMatches("1", "count(/report/counter[@type='INSTRUCTION'])");
 		assertPathMatches("10", "report/counter[@type='INSTRUCTION']/@missed");
+		assertPathMatches("15", "report/counter[@type='INSTRUCTION']/@covered");
+
+		assertPathMatches("1", "count(/report/counter[@type='BRANCH'])");
+		assertPathMatches("1", "report/counter[@type='BRANCH']/@missed");
+		assertPathMatches("2", "report/counter[@type='BRANCH']/@covered");
+
+		assertPathMatches("1", "count(/report/counter[@type='COMPLEXITY'])");
+		assertPathMatches("1", "report/counter[@type='COMPLEXITY']/@missed");
+		assertPathMatches("2", "report/counter[@type='COMPLEXITY']/@covered");
+
+		assertPathMatches("1", "count(/report/counter[@type='LINE'])");
+		assertPathMatches("0", "report/counter[@type='LINE']/@missed");
+		assertPathMatches("3", "report/counter[@type='LINE']/@covered");
+
+		assertPathMatches("1", "count(/report/counter[@type='METHOD'])");
+		assertPathMatches("0", "report/counter[@type='METHOD']/@missed");
+		assertPathMatches("1", "report/counter[@type='METHOD']/@covered");
+
+		assertPathMatches("1", "count(/report/counter[@type='CLASS'])");
+		assertPathMatches("0", "report/counter[@type='CLASS']/@missed");
+		assertPathMatches("1", "report/counter[@type='CLASS']/@covered");
 	}
 
 	@Test
@@ -101,7 +124,30 @@ public class XMLFormatterTest {
 		assertPathMatches("org/jacoco/example/FooClass",
 				"/report/package/class/@name");
 		assertPathMatches("fooMethod", "/report/package/class/method/@name");
+
+		assertPathMatches("1", "count(/report/counter[@type='INSTRUCTION'])");
+		assertPathMatches("10", "report/counter[@type='INSTRUCTION']/@missed");
+		assertPathMatches("15", "report/counter[@type='INSTRUCTION']/@covered");
+
+		assertPathMatches("1", "count(/report/counter[@type='BRANCH'])");
+		assertPathMatches("1", "report/counter[@type='BRANCH']/@missed");
 		assertPathMatches("2", "report/counter[@type='BRANCH']/@covered");
+
+		assertPathMatches("1", "count(/report/counter[@type='COMPLEXITY'])");
+		assertPathMatches("1", "report/counter[@type='COMPLEXITY']/@missed");
+		assertPathMatches("2", "report/counter[@type='COMPLEXITY']/@covered");
+
+		assertPathMatches("1", "count(/report/counter[@type='LINE'])");
+		assertPathMatches("0", "report/counter[@type='LINE']/@missed");
+		assertPathMatches("3", "report/counter[@type='LINE']/@covered");
+
+		assertPathMatches("1", "count(/report/counter[@type='METHOD'])");
+		assertPathMatches("0", "report/counter[@type='METHOD']/@missed");
+		assertPathMatches("1", "report/counter[@type='METHOD']/@covered");
+
+		assertPathMatches("1", "count(/report/counter[@type='CLASS'])");
+		assertPathMatches("0", "report/counter[@type='CLASS']/@missed");
+		assertPathMatches("1", "report/counter[@type='CLASS']/@covered");
 	}
 
 	@Test
