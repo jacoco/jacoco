@@ -75,10 +75,6 @@ public abstract class PageTestBase {
 				return "UTF-8";
 			}
 
-			public int getTabWidth() {
-				return 4;
-			}
-
 			public IIndexUpdate getIndexUpdate() {
 				return new IIndexUpdate() {
 					public void addClass(ILinkable link, long classid) {

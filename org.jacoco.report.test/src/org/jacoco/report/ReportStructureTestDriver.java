@@ -64,13 +64,14 @@ public class ReportStructureTestDriver {
 	private final BundleCoverageImpl bundleCoverage;
 
 	public ReportStructureTestDriver() {
-		methodCoverage = new MethodCoverageImpl("fooMethod", "()V", null) {
-			{
-				instructionCounter = CounterImpl.getInstance(2, 22);
-				branchCounter = CounterImpl.getInstance(3, 33);
-				methodCounter = CounterImpl.COUNTER_0_1;
-			}
-		};
+		final MethodCoverageImpl m = new MethodCoverageImpl("fooMethod", "()V",
+				null);
+		m.increment(CounterImpl.getInstance(3, 5), CounterImpl.COUNTER_0_0, 1);
+		m.increment(CounterImpl.getInstance(3, 5),
+				CounterImpl.getInstance(1, 2), 2);
+		m.increment(CounterImpl.getInstance(4, 5), CounterImpl.COUNTER_0_0, 3);
+		m.incrementMethodCounter();
+		methodCoverage = m;
 
 		final ClassCoverageImpl classCoverageImpl = new ClassCoverageImpl(
 				"org/jacoco/example/FooClass", 1001, null, "java/lang/Object",

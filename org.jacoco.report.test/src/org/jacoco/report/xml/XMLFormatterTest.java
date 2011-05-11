@@ -88,7 +88,7 @@ public class XMLFormatterTest {
 				"/report/group/package/class/@name");
 		assertPathMatches("fooMethod",
 				"/report/group/package/class/method/@name");
-		assertPathMatches("2", "report/counter[@type='INSTRUCTION']/@missed");
+		assertPathMatches("10", "report/counter[@type='INSTRUCTION']/@missed");
 	}
 
 	@Test
@@ -101,7 +101,7 @@ public class XMLFormatterTest {
 		assertPathMatches("org/jacoco/example/FooClass",
 				"/report/package/class/@name");
 		assertPathMatches("fooMethod", "/report/package/class/method/@name");
-		assertPathMatches("33", "report/counter[@type='BRANCH']/@covered");
+		assertPathMatches("2", "report/counter[@type='BRANCH']/@covered");
 	}
 
 	@Test

@@ -48,7 +48,8 @@ public class CSVGroupHandlerTest {
 		driver.sendBundle(handler);
 		final BufferedReader reader = getResultReader();
 		reader.readLine();
-		assertEquals("bundle,org.jacoco.example,FooClass,2,22,3,33,0,0,0,1",
+		assertEquals(
+				"bundle,org.jacoco.example,FooClass,10,15,1,2,0,3,1,2,0,1",
 				reader.readLine());
 	}
 
@@ -58,7 +59,7 @@ public class CSVGroupHandlerTest {
 		final BufferedReader reader = getResultReader();
 		reader.readLine();
 		assertEquals(
-				"group/bundle,org.jacoco.example,FooClass,2,22,3,33,0,0,0,1",
+				"group/bundle,org.jacoco.example,FooClass,10,15,1,2,0,3,1,2,0,1",
 				reader.readLine());
 	}
 

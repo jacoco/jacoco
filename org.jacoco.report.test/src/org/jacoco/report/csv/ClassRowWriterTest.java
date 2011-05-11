@@ -62,7 +62,7 @@ public class ClassRowWriterTest {
 	public void TestHeader() throws Exception {
 		BufferedReader reader = getResultReader();
 		assertEquals(
-				"GROUP,PACKAGE,CLASS,INSTRUCTION_MISSED,INSTRUCTION_COVERED,BRANCH_MISSED,BRANCH_COVERED,LINE_MISSED,LINE_COVERED,METHOD_MISSED,METHOD_COVERED",
+				"GROUP,PACKAGE,CLASS,INSTRUCTION_MISSED,INSTRUCTION_COVERED,BRANCH_MISSED,BRANCH_COVERED,LINE_MISSED,LINE_COVERED,COMPLEXITY_MISSED,COMPLEXITY_COVERED,METHOD_MISSED,METHOD_COVERED",
 				reader.readLine());
 	}
 
@@ -74,14 +74,16 @@ public class ClassRowWriterTest {
 				instructionCounter = CounterImpl.getInstance(1, 11);
 				branchCounter = CounterImpl.getInstance(2, 22);
 				lineCounter = CounterImpl.getInstance(3, 33);
-				methodCounter = CounterImpl.getInstance(4, 44);
-				classCounter = CounterImpl.getInstance(5, 55);
+				complexityCounter = CounterImpl.getInstance(4, 44);
+				methodCounter = CounterImpl.getInstance(5, 55);
+				classCounter = CounterImpl.getInstance(6, 66);
 			}
 		};
 		writer.writeRow("group", "test/package", node);
 		BufferedReader reader = getResultReader();
 		reader.readLine();
-		assertEquals("group,test/package,test/package/Foo,1,11,2,22,3,33,4,44",
+		assertEquals(
+				"group,test/package,test/package/Foo,1,11,2,22,3,33,4,44,5,55",
 				reader.readLine());
 	}
 

@@ -91,14 +91,13 @@ public class Table {
 		final List<? extends ITableItem> sortedItems = sort(items);
 		final HTMLElement table = parent.table(Styles.COVERAGETABLE);
 		table.attr("id", "coveragetable");
-		header(table, sortedItems, total, resources, base);
+		header(table, sortedItems, total);
 		footer(table, total, resources, base);
 		body(table, sortedItems, resources, base);
 	}
 
 	private void header(final HTMLElement table,
-			final List<? extends ITableItem> items, final ICoverageNode total,
-			final Resources resources, final ReportOutputFolder base)
+			final List<? extends ITableItem> items, final ICoverageNode total)
 			throws IOException {
 		final HTMLElement tr = table.thead().tr();
 		for (final Column c : columns) {

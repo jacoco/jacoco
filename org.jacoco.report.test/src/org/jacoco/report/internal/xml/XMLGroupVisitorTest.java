@@ -73,7 +73,7 @@ public class XMLGroupVisitorTest {
 		handler.visitEnd();
 		root.close();
 		final Document doc = getDocument();
-		assertEquals("33", support.findStr(doc,
+		assertEquals("2", support.findStr(doc,
 				"//report/counter[@type='BRANCH']/@covered"));
 	}
 

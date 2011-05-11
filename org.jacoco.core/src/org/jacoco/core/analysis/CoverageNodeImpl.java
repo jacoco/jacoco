@@ -30,7 +30,7 @@ public class CoverageNodeImpl implements ICoverageNode {
 	/** Counter for instructions. */
 	protected CounterImpl instructionCounter;
 
-	/** Counter for lines, if this element does not have lines. */
+	/** Counter for lines */
 	protected CounterImpl lineCounter;
 
 	/** Counter for complexity. */

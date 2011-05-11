@@ -38,7 +38,7 @@ import org.junit.Test;
  */
 public class CSVFormatterTest {
 
-	private static final String HEADER = "GROUP,PACKAGE,CLASS,INSTRUCTION_MISSED,INSTRUCTION_COVERED,BRANCH_MISSED,BRANCH_COVERED,LINE_MISSED,LINE_COVERED,METHOD_MISSED,METHOD_COVERED";
+	private static final String HEADER = "GROUP,PACKAGE,CLASS,INSTRUCTION_MISSED,INSTRUCTION_COVERED,BRANCH_MISSED,BRANCH_COVERED,LINE_MISSED,LINE_COVERED,COMPLEXITY_MISSED,COMPLEXITY_COVERED,METHOD_MISSED,METHOD_COVERED";
 
 	private ReportStructureTestDriver driver;
 
@@ -67,7 +67,7 @@ public class CSVFormatterTest {
 		final List<String> lines = getLines();
 		assertEquals(HEADER, lines.get(0));
 		assertEquals(
-				"group/bundle,org.jacoco.example,FooClass,2,22,3,33,0,0,0,1",
+				"group/bundle,org.jacoco.example,FooClass,10,15,1,2,0,3,1,2,0,1",
 				lines.get(1));
 	}
 
@@ -82,10 +82,10 @@ public class CSVFormatterTest {
 		final List<String> lines = getLines();
 		assertEquals(HEADER, lines.get(0));
 		assertEquals(
-				"group/bundle,org.jacoco.example,FooClass,2,22,3,33,0,0,0,1",
+				"group/bundle,org.jacoco.example,FooClass,10,15,1,2,0,3,1,2,0,1",
 				lines.get(1));
 		assertEquals(
-				"group/bundle,org.jacoco.example,FooClass,2,22,3,33,0,0,0,1",
+				"group/bundle,org.jacoco.example,FooClass,10,15,1,2,0,3,1,2,0,1",
 				lines.get(2));
 	}
 
@@ -94,7 +94,8 @@ public class CSVFormatterTest {
 		driver.sendBundle(visitor);
 		final List<String> lines = getLines();
 		assertEquals(HEADER, lines.get(0));
-		assertEquals("bundle,org.jacoco.example,FooClass,2,22,3,33,0,0,0,1",
+		assertEquals(
+				"bundle,org.jacoco.example,FooClass,10,15,1,2,0,3,1,2,0,1",
 				lines.get(1));
 	}
 

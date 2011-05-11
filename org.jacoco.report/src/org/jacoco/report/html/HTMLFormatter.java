@@ -13,6 +13,7 @@ package org.jacoco.report.html;
 
 import static org.jacoco.core.analysis.ICoverageNode.CounterEntity.BRANCH;
 import static org.jacoco.core.analysis.ICoverageNode.CounterEntity.CLASS;
+import static org.jacoco.core.analysis.ICoverageNode.CounterEntity.COMPLEXITY;
 import static org.jacoco.core.analysis.ICoverageNode.CounterEntity.INSTRUCTION;
 import static org.jacoco.core.analysis.ICoverageNode.CounterEntity.LINE;
 import static org.jacoco.core.analysis.ICoverageNode.CounterEntity.METHOD;
@@ -61,8 +62,6 @@ public class HTMLFormatter implements IHTMLReportContext {
 	private String footerText = "";
 
 	private String outputEncoding = "UTF-8";
-
-	private int tabWidth = 4;
 
 	private Resources resources;
 
@@ -120,16 +119,6 @@ public class HTMLFormatter implements IHTMLReportContext {
 		this.outputEncoding = outputEncoding;
 	}
 
-	/**
-	 * Sets the number of blank characters that represent a tab in source code.
-	 * 
-	 * @param tabWidth
-	 *            tab width as number of blanks
-	 */
-	public void setTabWidth(final int tabWidth) {
-		this.tabWidth = tabWidth;
-	}
-
 	// === IHTMLReportContext ===
 
 	public ILanguageNames getLanguageNames() {
@@ -158,6 +147,7 @@ public class HTMLFormatter implements IHTMLReportContext {
 				false);
 		table.add("Cov.", Styles.CTR2, new PercentageColumn(BRANCH, locale),
 				false);
+		addMissedTotalColumns(table, "Cxty", COMPLEXITY);
 		addMissedTotalColumns(table, "Lines", LINE);
 		addMissedTotalColumns(table, "Methods", METHOD);
 		addMissedTotalColumns(table, "Classes", CLASS);
@@ -182,10 +172,6 @@ public class HTMLFormatter implements IHTMLReportContext {
 
 	public String getOutputEncoding() {
 		return outputEncoding;
-	}
-
-	public int getTabWidth() {
-		return tabWidth;
 	}
 
 	public IIndexUpdate getIndexUpdate() {
