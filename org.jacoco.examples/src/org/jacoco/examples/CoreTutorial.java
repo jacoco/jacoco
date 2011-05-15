@@ -155,6 +155,7 @@ public class CoreTutorial {
 			printCounter("branches", cc.getBranchCounter());
 			printCounter("lines", cc.getLineCounter());
 			printCounter("methods", cc.getMethodCounter());
+			printCounter("complexity", cc.getComplexityCounter());
 
 			for (int i = cc.getFirstLine(); i <= cc.getLastLine(); i++) {
 				System.out.printf("Line %s: %s%n", Integer.valueOf(i),

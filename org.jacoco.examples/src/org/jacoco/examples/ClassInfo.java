@@ -45,8 +45,10 @@ public class ClassInfo implements ICoverageVisitor {
 				Integer.valueOf(coverage.getBranchCounter().getTotalCount()));
 		System.out.printf("lines:        %s%n",
 				Integer.valueOf(coverage.getLineCounter().getTotalCount()));
-		System.out.printf("methods:      %s%n%n",
+		System.out.printf("methods:      %s%n",
 				Integer.valueOf(coverage.getMethodCounter().getTotalCount()));
+		System.out.printf("complexity:   %s%n%n", Integer.valueOf(coverage
+				.getComplexityCounter().getTotalCount()));
 	}
 
 	/**
