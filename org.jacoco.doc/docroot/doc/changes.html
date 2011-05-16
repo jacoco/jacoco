@@ -25,21 +25,27 @@
   <li>JaCoCo reports cyclomatic complexity numbers (Trac #129).</li>
   <li>For HTML reports the tab width can be specified on the
       <code>sourcefiles</code> attribute of the <code>report</code> Ant task
-     (Track #152).</li>
+      (Track #152).</li>
 </ul>
 
 <h3>Fixed Bugs</h3>
 <ul>
-  <li>Avoid duplicate counters in XML report (Trac #155).</li>
+  <li>Removed duplicate counters in the root node of XML reports (Trac #155).</li>
+  <li>Avoid <code>StackOverflowException</code> when analyzing methods with very
+      long instruction sequences (Trac #156). Many thanks to Jean-Eric Cuendet
+      for reporting and analyzing this!</li>
 </ul>
 
 <h3>API Changes</h3>
 <ul>
   <li><code>ICoverageNode</code> API has been extended for cyclomatic
       complexity (Trac #129).</li>
-  <li>XML report includes new counter type <code>COMPLEXITY</code> (Trac #129).</li>
+  <li>XML and CSV report includes new counter type <code>COMPLEXITY</code>
+      (Trac #129).</li>
   <li>New method <code>getTabWidth()</code> in callback interface 
-      <code>ISourceFileLocator</code> (Trac #152).</li>
+      <code>ISourceFileLocator</code> instead of
+      <code>HTMLReportFormatter.setTabWidth()</code> which has been removed.
+      (Trac #152).</li>
 </ul>
 
 <h2>Release 0.5.1 (2011/03/21)</h2>

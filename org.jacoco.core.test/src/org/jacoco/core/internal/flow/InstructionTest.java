@@ -66,4 +66,20 @@ public class InstructionTest {
 		assertEquals(1, predecessor.getCoveredBranches());
 	}
 
+	@Test
+	public void testSetCoveredOnLongSequence() {
+		final Instruction first = new Instruction(0);
+		Instruction next = first;
+		for (int i = 0; i < 0x10000; i++) {
+			final Instruction insn = new Instruction(i);
+			insn.setPredecessor(next);
+			next = insn;
+		}
+
+		// The implementation must not cause an StackOverflowError even on very
+		// long sequences:
+		next.setCovered();
+		assertEquals(1, first.getCoveredBranches());
+	}
+
 }
