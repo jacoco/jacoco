@@ -11,6 +11,7 @@
  *******************************************************************************/
 package org.jacoco.core.internal.analysis;
 
+import org.jacoco.core.analysis.IMethodCoverage;
 import org.jacoco.core.internal.flow.IClassProbesVisitor;
 import org.jacoco.core.internal.flow.IMethodProbesVisitor;
 import org.objectweb.asm.AnnotationVisitor;
@@ -82,7 +83,7 @@ public class ClassAnalyzer implements IClassProbesVisitor {
 			@Override
 			public void visitEnd() {
 				super.visitEnd();
-				final MethodCoverageImpl methodCoverage = getCoverage();
+				final IMethodCoverage methodCoverage = getCoverage();
 				if (methodCoverage.getInstructionCounter().getTotalCount() > 0) {
 					// Only consider methods that actually contain code
 					coverage.addMethod(methodCoverage);

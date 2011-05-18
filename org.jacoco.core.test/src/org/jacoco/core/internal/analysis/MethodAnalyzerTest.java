@@ -14,6 +14,7 @@ package org.jacoco.core.internal.analysis;
 import static org.junit.Assert.assertEquals;
 
 import org.jacoco.core.analysis.ILine;
+import org.jacoco.core.analysis.IMethodCoverage;
 import org.jacoco.core.internal.flow.IProbeIdGenerator;
 import org.jacoco.core.internal.flow.LabelFlowAnalyzer;
 import org.jacoco.core.internal.flow.MethodProbesAdapter;
@@ -34,7 +35,7 @@ public class MethodAnalyzerTest implements IProbeIdGenerator {
 
 	private MethodNode method;
 
-	private MethodCoverageImpl result;
+	private IMethodCoverage result;
 
 	@Before
 	public void setup() {

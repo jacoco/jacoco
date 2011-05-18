@@ -15,6 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.jacoco.core.analysis.ICounter;
+import org.jacoco.core.analysis.IMethodCoverage;
 import org.jacoco.core.analysis.ISourceNode;
 import org.jacoco.core.internal.flow.IMethodProbesVisitor;
 import org.jacoco.core.internal.flow.Instruction;
@@ -80,7 +81,7 @@ public class MethodAnalyzer implements IMethodProbesVisitor {
 	 * 
 	 * @return coverage data for this method
 	 */
-	public MethodCoverageImpl getCoverage() {
+	public IMethodCoverage getCoverage() {
 		return coverage;
 	}
 
