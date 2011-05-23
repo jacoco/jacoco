@@ -11,6 +11,7 @@
  *******************************************************************************/
 package org.jacoco.core.analysis;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -25,7 +26,9 @@ import org.jacoco.core.analysis.ICoverageNode.CounterEntity;
  * 
  * @see CounterComparator#on(ICoverageNode.CounterEntity)
  */
-public class NodeComparator implements Comparator<ICoverageNode> {
+public class NodeComparator implements Comparator<ICoverageNode>, Serializable {
+
+	private static final long serialVersionUID = 8550521643608826519L;
 
 	private final Comparator<ICounter> counterComparator;
 

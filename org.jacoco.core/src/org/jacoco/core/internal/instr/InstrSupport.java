@@ -13,7 +13,6 @@ package org.jacoco.core.internal.instr;
 
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
-import org.objectweb.asm.commons.GeneratorAdapter;
 
 /**
  * Constants and utilities for byte code instrumentation.
@@ -66,7 +65,8 @@ public final class InstrSupport {
 
 	/**
 	 * Generates the instruction to push the given int value on the stack.
-	 * Implementation taken from {@link GeneratorAdapter#push(int)}.
+	 * Implementation taken from
+	 * {@link org.objectweb.asm.commons.GeneratorAdapter#push(int)}.
 	 * 
 	 * @param mv
 	 *            visitor to emit the instruction

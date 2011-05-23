@@ -15,13 +15,12 @@ package org.jacoco.report.internal.xml;
 import java.io.IOException;
 
 import org.jacoco.core.analysis.IBundleCoverage;
-import org.jacoco.report.IReportGroupVisitor;
 import org.jacoco.report.ISourceFileLocator;
 import org.jacoco.report.internal.AbstractGroupVisitor;
 
 /**
- * {@link IReportGroupVisitor} that transforms the report structure into XML
- * elements.
+ * A {@link org.jacoco.report.IReportGroupVisitor} that transforms the report
+ * structure into XML elements.
  */
 public class XMLGroupVisitor extends AbstractGroupVisitor {
 

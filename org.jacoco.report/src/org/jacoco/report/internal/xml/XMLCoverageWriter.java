@@ -27,7 +27,7 @@ import org.jacoco.core.analysis.ISourceNode;
 /**
  * Serializes coverage data as XML fragments.
  */
-public class XMLCoverageWriter {
+public final class XMLCoverageWriter {
 
 	/**
 	 * Creates a child element with a name attribute.

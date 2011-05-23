@@ -34,8 +34,6 @@ public class JacocoAgent {
 
 	private final IExceptionLogger logger;
 
-	private IRuntime runtime;
-
 	private IAgentController controller;
 
 	/**
@@ -57,7 +55,7 @@ public class JacocoAgent {
 	 * @param options
 	 *            agent options as text string
 	 */
-	public JacocoAgent(String options, IExceptionLogger logger) {
+	public JacocoAgent(final String options, final IExceptionLogger logger) {
 		this(new AgentOptions(options), logger);
 	}
 
@@ -70,7 +68,7 @@ public class JacocoAgent {
 	 *             internal startup problem
 	 */
 	public void init(final Instrumentation inst) throws Exception {
-		runtime = createRuntime(inst);
+		final IRuntime runtime = createRuntime(inst);
 		String sessionId = options.getSessionId();
 		if (sessionId == null) {
 			sessionId = createSessionId();
@@ -83,7 +81,7 @@ public class JacocoAgent {
 	}
 
 	private IAgentController createAgentController() {
-		OutputMode controllerType = options.getOutput();
+		final OutputMode controllerType = options.getOutput();
 		switch (controllerType) {
 		case file:
 			return new LocalController();
@@ -100,7 +98,7 @@ public class JacocoAgent {
 		String host;
 		try {
 			host = InetAddress.getLocalHost().getHostName();
-		} catch (UnknownHostException e) {
+		} catch (final UnknownHostException e) {
 			host = "unknownhost";
 		}
 		return host + "-" + Integer.toHexString(new Random().nextInt());
@@ -129,7 +127,7 @@ public class JacocoAgent {
 				controller.writeExecutionData();
 			}
 			controller.shutdown();
-		} catch (Exception e) {
+		} catch (final Exception e) {
 			logger.logExeption(e);
 		}
 	}
@@ -147,7 +145,7 @@ public class JacocoAgent {
 
 		final JacocoAgent agent = new JacocoAgent(options,
 				new IExceptionLogger() {
-					public void logExeption(Exception ex) {
+					public void logExeption(final Exception ex) {
 						ex.printStackTrace();
 					}
 				});

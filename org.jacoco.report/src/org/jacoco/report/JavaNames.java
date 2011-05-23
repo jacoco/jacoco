@@ -77,11 +77,11 @@ public class JavaNames implements ILanguageNames {
 	public String getMethodName(final String vmclassname,
 			final String vmmethodname, final String vmdesc,
 			final String vmsignature) {
-		if (vmmethodname.equals("<clinit>")) {
+		if ("<clinit>".equals(vmmethodname)) {
 			return "static {...}";
 		}
 		final StringBuilder result = new StringBuilder();
-		if (vmmethodname.equals("<init>")) {
+		if ("<init>".equals(vmmethodname)) {
 			if (isAnonymous(vmclassname)) {
 				return "{...}";
 			} else {

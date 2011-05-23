@@ -12,7 +12,6 @@
 package org.jacoco.core.internal.flow;
 
 import org.objectweb.asm.ClassAdapter;
-import org.objectweb.asm.ClassVisitor;
 import org.objectweb.asm.Label;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
@@ -20,7 +19,8 @@ import org.objectweb.asm.commons.EmptyVisitor;
 import org.objectweb.asm.commons.JSRInlinerAdapter;
 
 /**
- * A {@link ClassVisitor} that calculates probes for every method.
+ * A {@link org.objectweb.asm.ClassVisitor} that calculates probes for every
+ * method.
  */
 public class ClassProbesAdapter extends ClassAdapter implements
 		IProbeIdGenerator {

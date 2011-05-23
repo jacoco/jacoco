@@ -16,8 +16,8 @@ import java.util.regex.Pattern;
 
 /**
  * Matches strings against <code>?</code>/<code>*</code> wildcard expressions.
- * Multiple expressions can be separated with a colon (:). In this case
- * the expression matches if at least one part matches.
+ * Multiple expressions can be separated with a colon (:). In this case the
+ * expression matches if at least one part matches.
  */
 public class WildcardMatcher {
 
@@ -48,9 +48,9 @@ public class WildcardMatcher {
 		final StringTokenizer st = new StringTokenizer(expression, "?*", true);
 		while (st.hasMoreTokens()) {
 			final String token = st.nextToken();
-			if (token.equals("?")) {
+			if ("?".equals(token)) {
 				regex.append(".?");
-			} else if (token.equals("*")) {
+			} else if ("*".equals(token)) {
 				regex.append(".*");
 			} else {
 				regex.append(Pattern.quote(token));
