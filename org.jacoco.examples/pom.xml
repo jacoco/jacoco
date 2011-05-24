@@ -25,6 +25,10 @@
   <name>JaCoCo :: Examples</name>
   <description>JaCoCo API Usage Examples</description>
 
+  <properties>
+    <maven.deploy.skip>true</maven.deploy.skip>
+  </properties>
+
   <build>
     <sourceDirectory>src</sourceDirectory>
 

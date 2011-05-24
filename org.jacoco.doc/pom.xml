@@ -27,6 +27,8 @@
   <description>JaCoCo Standalone Distribution</description>
 
   <properties>
+    <maven.deploy.skip>true</maven.deploy.skip>
+
     <qualified.bundle.version>${project.version}</qualified.bundle.version>
     <copyright.years>${project.inceptionYear} - 2010</copyright.years>
   </properties>
