@@ -23,7 +23,16 @@ import org.jacoco.core.test.validation.targets.Stubs.SuperClass;
 public class Target10 extends SuperClass {
 
 	public Target10() {
-		super(t() || f()); // $line-super$
+		super(t() ? t() : f()); // $line-super$
+
+		// The following construct causes an VerifyError with the message
+		// "Uninitialized object exists on backward branch" on Oracle 1.6 VMs.
+		// Actually JaCoCo inserts a probe into the conditional jump here which
+		// results in a backward jump.
+		// It is not clear whether the VM implementations are in line with the
+		// latest VM specification update here.
+
+		// super(t() || f());
 	}
 
 	public static void main(String[] args) {
