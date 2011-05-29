@@ -135,7 +135,7 @@
     <tycho.testArgLine>${argLine}</tycho.testArgLine>
 
     <!-- Plugins versions -->
-    <tycho.version>0.11.1</tycho.version>
+    <tycho.version>0.12.0</tycho.version>
 
     <!-- Dependencies versions -->
     <asm.version>3.2</asm.version>
@@ -348,30 +348,30 @@
           <artifactId>maven-toolchains-plugin</artifactId>
           <version>1.0</version>
         </plugin>
-        <!-- Sonatype plugins -->
+        <!-- Tycho plugins -->
         <plugin>
-          <groupId>org.sonatype.tycho</groupId>
+          <groupId>org.eclipse.tycho</groupId>
           <artifactId>tycho-maven-plugin</artifactId>
           <version>${tycho.version}</version>
         </plugin>
         <plugin>
-          <groupId>org.sonatype.tycho</groupId>
+          <groupId>org.eclipse.tycho</groupId>
           <artifactId>target-platform-configuration</artifactId>
           <version>${tycho.version}</version>
         </plugin>
         <plugin>
-          <groupId>org.sonatype.tycho</groupId>
-          <artifactId>maven-osgi-source-plugin</artifactId>
+          <groupId>org.eclipse.tycho</groupId>
+          <artifactId>tycho-source-plugin</artifactId>
           <version>${tycho.version}</version>
         </plugin>
         <plugin>
-          <groupId>org.sonatype.tycho</groupId>
-          <artifactId>maven-osgi-compiler-plugin</artifactId>
+          <groupId>org.eclipse.tycho</groupId>
+          <artifactId>tycho-compiler-plugin</artifactId>
           <version>${tycho.version}</version>
         </plugin>
         <plugin>
-          <groupId>org.sonatype.tycho</groupId>
-          <artifactId>maven-osgi-test-plugin</artifactId>
+          <groupId>org.eclipse.tycho</groupId>
+          <artifactId>tycho-surefire-plugin</artifactId>
           <version>${tycho.version}</version>
         </plugin>
         <!-- Mojo plugins -->
@@ -396,20 +396,20 @@
 
     <plugins>
       <plugin>
-        <groupId>org.sonatype.tycho</groupId>
+        <groupId>org.eclipse.tycho</groupId>
         <artifactId>tycho-maven-plugin</artifactId>
         <extensions>true</extensions>
       </plugin>
       <plugin>
-        <groupId>org.sonatype.tycho</groupId>
+        <groupId>org.eclipse.tycho</groupId>
         <artifactId>target-platform-configuration</artifactId>
         <configuration>
           <resolver>p2</resolver>
         </configuration>
       </plugin>
       <plugin>
-        <groupId>org.sonatype.tycho</groupId>
-        <artifactId>maven-osgi-compiler-plugin</artifactId>
+        <groupId>org.eclipse.tycho</groupId>
+        <artifactId>tycho-compiler-plugin</artifactId>
         <configuration>
           <excludeResources>
             <excludeResource>**/*.properties</excludeResource>
@@ -417,8 +417,8 @@
         </configuration>
       </plugin>
       <plugin>
-        <groupId>org.sonatype.tycho</groupId>
-        <artifactId>maven-osgi-test-plugin</artifactId>
+        <groupId>org.eclipse.tycho</groupId>
+        <artifactId>tycho-surefire-plugin</artifactId>
         <configuration>
           <skipExec>${skipTests}</skipExec>
         </configuration>
@@ -659,8 +659,8 @@
             </executions>
           </plugin>
           <plugin>
-            <groupId>org.sonatype.tycho</groupId>
-            <artifactId>maven-osgi-source-plugin</artifactId>
+            <groupId>org.eclipse.tycho</groupId>
+            <artifactId>tycho-source-plugin</artifactId>
             <executions>
               <execution>
                 <id>attach-sources</id>

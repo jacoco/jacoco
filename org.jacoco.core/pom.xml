@@ -41,7 +41,7 @@
     <sourceDirectory>src</sourceDirectory>
 
     <plugins>
-      <!-- We can't define qualified.bundle.version as a project property, because buildQualifier constructed after reading POM by maven-osgi-packaging-plugin -->
+      <!-- We can't define qualified.bundle.version as a project property, because buildQualifier constructed after reading POM by tycho-packaging-plugin -->
       <!-- but we need it for resource filtering in compliance with Ant build, so here is workaround -->
       <plugin>
         <groupId>org.codehaus.groovy.maven</groupId>
