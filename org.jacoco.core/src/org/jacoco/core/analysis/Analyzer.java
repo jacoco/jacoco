@@ -177,8 +177,11 @@ public class Analyzer {
 			}
 		} else {
 			final InputStream in = new FileInputStream(file);
-			count += analyzeAll(in);
-			in.close();
+			try {
+				count += analyzeAll(in);
+			} finally {
+				in.close();
+			}
 		}
 		return count;
 	}

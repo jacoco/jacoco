@@ -104,10 +104,10 @@ public class ClassProbesAdapter extends ClassAdapter implements
 				super.visitEnd();
 				this.accept(new LabelFlowAnalyzer());
 				if (interfaceType) {
-					final ProbeCounter counter = new ProbeCounter();
+					final ProbeCounter probeCounter = new ProbeCounter();
 					this.accept(new MethodProbesAdapter(
-							EMPTY_METHOD_PROBES_VISITOR, counter));
-					cv.visitTotalProbeCount(counter.count);
+							EMPTY_METHOD_PROBES_VISITOR, probeCounter));
+					cv.visitTotalProbeCount(probeCounter.count);
 				}
 				this.accept(new MethodProbesAdapter(methodProbes,
 						ClassProbesAdapter.this));

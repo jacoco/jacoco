@@ -53,9 +53,9 @@ public class URLStreamHandlerRuntime extends AbstractRuntime {
 		final Field field = URL.class.getDeclaredField("handlers");
 		field.setAccessible(true);
 		@SuppressWarnings("unchecked")
-		final Map<String, URLStreamHandler> handlers = (Map<String, URLStreamHandler>) field
+		final Map<String, URLStreamHandler> map = (Map<String, URLStreamHandler>) field
 				.get(null);
-		return handlers;
+		return map;
 	}
 
 	public void shutdown() {

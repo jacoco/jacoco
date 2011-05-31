@@ -51,6 +51,9 @@ public class NodeComparator implements Comparator<ICoverageNode>, Serializable {
 	public NodeComparator second(final Comparator<ICoverageNode> second) {
 		final Comparator<ICoverageNode> first = this;
 		return new NodeComparator(null, null) {
+
+			private static final long serialVersionUID = -5515272752138802838L;
+
 			@Override
 			public int compare(final ICoverageNode o1, final ICoverageNode o2) {
 				final int result = first.compare(o1, o2);

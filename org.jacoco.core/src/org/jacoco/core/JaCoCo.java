@@ -31,8 +31,11 @@ public final class JaCoCo {
 		try {
 			final InputStream in = JaCoCo.class
 					.getResourceAsStream("jacoco.properties");
-			properties.load(in);
-			in.close();
+			try {
+				properties.load(in);
+			} finally {
+				in.close();
+			}
 		} catch (final IOException e) {
 			throw new AssertionError(e);
 		}
