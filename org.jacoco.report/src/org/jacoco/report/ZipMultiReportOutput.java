@@ -43,7 +43,7 @@ public class ZipMultiReportOutput implements IMultiReportOutput {
 	 *            stream to write file entries to
 	 */
 	public ZipMultiReportOutput(final OutputStream out) {
-		this.zip = new ZipOutputStream(out);
+		this(new ZipOutputStream(out));
 	}
 
 	public OutputStream createFile(final String path) throws IOException {

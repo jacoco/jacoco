@@ -158,6 +158,18 @@ public class BarColumnTest {
 	}
 
 	@Test
+	public void testNoBars() throws Exception {
+		final ITableItem i1 = createItem(00, 00);
+		column.init(Arrays.asList(i1), createNode(00, 00));
+		column.item(td, i1, resources, root);
+		doc.close();
+		final Document doc = support.parse(output.getFile("Test.html"));
+
+		assertEquals("0",
+				support.findStr(doc, "count(/html/body/table/tr[1]/td/img)"));
+	}
+
+	@Test
 	public void testLocale() throws Exception {
 		final BarColumn col = new BarColumn(CounterEntity.LINE, Locale.FRENCH);
 		final ITableItem i1 = createItem(0, 123456);

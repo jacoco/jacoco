@@ -26,7 +26,6 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
-import java.util.zip.ZipOutputStream;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -38,15 +37,12 @@ public class ZipMultiReportOutputTest {
 
 	private ByteArrayOutputStream buffer;
 
-	private ZipOutputStream zip;
-
 	private ZipMultiReportOutput zipOutput;
 
 	@Before
 	public void setup() throws Exception {
 		buffer = new ByteArrayOutputStream();
-		zip = new ZipOutputStream(buffer);
-		zipOutput = new ZipMultiReportOutput(zip);
+		zipOutput = new ZipMultiReportOutput(buffer);
 	}
 
 	@Test
@@ -57,7 +53,7 @@ public class ZipMultiReportOutputTest {
 		out.write(content1);
 		out.close();
 
-		zip.close();
+		zipOutput.close();
 
 		final Map<String, byte[]> entries = readEntries();
 		assertEquals(Collections.singleton("a.txt"), entries.keySet());
@@ -72,7 +68,7 @@ public class ZipMultiReportOutputTest {
 		out.write(content1, 5, 3);
 		out.close();
 
-		zip.close();
+		zipOutput.close();
 
 		final Map<String, byte[]> entries = readEntries();
 		assertEquals(Collections.singleton("b.txt"), entries.keySet());
@@ -87,7 +83,7 @@ public class ZipMultiReportOutputTest {
 		out.flush();
 		out.close();
 
-		zip.close();
+		zipOutput.close();
 
 		final Map<String, byte[]> entries = readEntries();
 		assertEquals(Collections.singleton("b.txt"), entries.keySet());
@@ -108,7 +104,7 @@ public class ZipMultiReportOutputTest {
 		out.write(content2);
 		out.close();
 
-		zip.close();
+		zipOutput.close();
 
 		final Map<String, byte[]> entries = readEntries();
 		assertEquals(
@@ -130,7 +126,7 @@ public class ZipMultiReportOutputTest {
 		out = zipOutput.createFile("readme.txt");
 		out.write(content2);
 
-		zip.close();
+		zipOutput.close();
 
 		final Map<String, byte[]> entries = readEntries();
 		assertEquals(

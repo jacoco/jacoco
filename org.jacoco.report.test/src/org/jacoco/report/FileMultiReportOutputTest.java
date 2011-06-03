@@ -40,6 +40,7 @@ public class FileMultiReportOutputTest {
 		stream.write(2);
 		stream.write(3);
 		stream.close();
+		output.close();
 
 		final InputStream actual = new FileInputStream(new File(
 				folder.getRoot(), "a/b/c/test"));
