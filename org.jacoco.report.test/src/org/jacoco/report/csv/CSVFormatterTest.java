@@ -18,14 +18,9 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
 
-import org.jacoco.core.data.ExecutionData;
-import org.jacoco.core.data.SessionInfo;
 import org.jacoco.report.ILanguageNames;
-import org.jacoco.report.IReportGroupVisitor;
 import org.jacoco.report.IReportVisitor;
 import org.jacoco.report.MemoryOutput;
 import org.jacoco.report.ReportStructureTestDriver;
@@ -73,19 +68,14 @@ public class CSVFormatterTest {
 
 	@Test
 	public void testStructureWithNestedGroups() throws IOException {
-		final List<SessionInfo> sessions = Collections.emptyList();
-		final Collection<ExecutionData> data = Collections.emptyList();
-		visitor.visitInfo(sessions, data);
-		driver.sendGroup((IReportGroupVisitor) visitor);
-		driver.sendGroup((IReportGroupVisitor) visitor);
-		visitor.visitEnd();
+		driver.sendNestedGroups(visitor);
 		final List<String> lines = getLines();
 		assertEquals(HEADER, lines.get(0));
 		assertEquals(
-				"group/bundle,org.jacoco.example,FooClass,10,15,1,2,0,3,1,2,0,1",
+				"report/group1/group/bundle,org.jacoco.example,FooClass,10,15,1,2,0,3,1,2,0,1",
 				lines.get(1));
 		assertEquals(
-				"group/bundle,org.jacoco.example,FooClass,10,15,1,2,0,3,1,2,0,1",
+				"report/bundle,org.jacoco.example,FooClass,10,15,1,2,0,3,1,2,0,1",
 				lines.get(2));
 	}
 

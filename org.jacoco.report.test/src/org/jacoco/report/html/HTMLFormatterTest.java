@@ -51,6 +51,16 @@ public class HTMLFormatterTest {
 	}
 
 	@Test
+	public void testStructureWithNestedGroups() throws IOException {
+		driver.sendNestedGroups(formatter.createVisitor(output));
+		output.assertFile("index.html");
+		output.assertFile("group1/index.html");
+		output.assertFile("group1/group/index.html");
+		output.assertFile("group1/group/bundle/index.html");
+		output.assertFile("bundle/index.html");
+	}
+
+	@Test
 	public void testStructureWithGroup() throws IOException {
 		driver.sendGroup(formatter.createVisitor(output));
 		output.assertFile("index.html");

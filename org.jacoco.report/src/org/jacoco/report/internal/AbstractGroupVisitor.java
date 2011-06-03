@@ -42,6 +42,7 @@ public abstract class AbstractGroupVisitor implements IReportGroupVisitor {
 
 	public final void visitBundle(final IBundleCoverage bundle,
 			final ISourceFileLocator locator) throws IOException {
+		finalizeLastChild();
 		total.increment(bundle);
 		handleBundle(bundle, locator);
 	}
@@ -58,10 +59,7 @@ public abstract class AbstractGroupVisitor implements IReportGroupVisitor {
 
 	public final IReportGroupVisitor visitGroup(final String name)
 			throws IOException {
-		if (lastChild != null) {
-			lastChild.visitEnd();
-			total.increment(lastChild.total);
-		}
+		finalizeLastChild();
 		lastChild = handleGroup(name);
 		return lastChild;
 	}
@@ -82,10 +80,7 @@ public abstract class AbstractGroupVisitor implements IReportGroupVisitor {
 	 * @throws IOException
 	 */
 	public final void visitEnd() throws IOException {
-		if (lastChild != null) {
-			lastChild.visitEnd();
-			total.increment(lastChild.total);
-		}
+		finalizeLastChild();
 		handleEnd();
 	}
 
@@ -95,5 +90,13 @@ public abstract class AbstractGroupVisitor implements IReportGroupVisitor {
 	 * @throws IOException
 	 */
 	protected abstract void handleEnd() throws IOException;
+
+	private void finalizeLastChild() throws IOException {
+		if (lastChild != null) {
+			lastChild.visitEnd();
+			total.increment(lastChild.total);
+			lastChild = null;
+		}
+	}
 
 }

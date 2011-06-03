@@ -77,6 +77,18 @@ public class XMLFormatterTest {
 	}
 
 	@Test
+	public void testStructureWithNestedGroups() throws Exception {
+		final IReportVisitor visitor = formatter.createVisitor(output);
+		visitor.visitInfo(infos, data);
+		driver.sendNestedGroups(visitor);
+		assertPathMatches("report", "/report/@name");
+		assertPathMatches("group1", "/report/group[1]/@name");
+		assertPathMatches("group", "/report/group[1]/group[1]/@name");
+		assertPathMatches("bundle", "/report/group[1]/group[1]/group[1]/@name");
+		assertPathMatches("bundle", "/report/group[2]/@name");
+	}
+
+	@Test
 	public void testStructureWithGroup() throws Exception {
 		final IReportVisitor visitor = formatter.createVisitor(output);
 		visitor.visitInfo(infos, data);

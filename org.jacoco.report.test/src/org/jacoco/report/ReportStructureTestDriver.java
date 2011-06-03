@@ -92,6 +92,16 @@ public class ReportStructureTestDriver {
 				Collections.singleton(packageCoverage));
 	}
 
+	public void sendNestedGroups(IReportVisitor reportVisitor)
+			throws IOException {
+		reportVisitor.visitInfo(sessions, executionData);
+		final IReportGroupVisitor report = reportVisitor.visitGroup("report");
+		final IReportGroupVisitor group1 = report.visitGroup("group1");
+		sendGroup(group1);
+		sendBundle(report);
+		reportVisitor.visitEnd();
+	}
+
 	public void sendGroup(IReportVisitor reportVisitor) throws IOException {
 		reportVisitor.visitInfo(sessions, executionData);
 		final IReportGroupVisitor group = reportVisitor.visitGroup("group");
