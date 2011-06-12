@@ -14,20 +14,15 @@
 
   <parent>
     <groupId>org.jacoco</groupId>
-    <artifactId>org.jacoco.build</artifactId>
+    <artifactId>org.jacoco.tests</artifactId>
     <version>0.5.3-SNAPSHOT</version>
-    <relativePath>../org.jacoco.build</relativePath>
+    <relativePath>../org.jacoco.tests</relativePath>
   </parent>
 
   <artifactId>org.jacoco.agent.test</artifactId>
   <packaging>eclipse-test-plugin</packaging>
 
   <name>JaCoCo :: Test :: Agent</name>
-
-  <properties>
-    <maven.deploy.skip>true</maven.deploy.skip>
-    <maven.javadoc.skip>true</maven.javadoc.skip>
-  </properties>
 
   <!-- Note that Tycho doesn't use those dependencies -->
   <dependencies>
@@ -40,8 +35,4 @@
       <artifactId>junit</artifactId>
     </dependency>
   </dependencies>
-
-  <build>
-    <sourceDirectory>src</sourceDirectory>
-  </build>
 </project>

@@ -18,6 +18,7 @@
   <packaging>pom</packaging>
 
   <name>JaCoCo</name>
+  <description>JaCoCo - Java Code Coverage Library</description>
   <url>http://jacoco.org</url>
   <inceptionYear>2009</inceptionYear>
   <organization>
@@ -85,11 +86,9 @@
     <module>../org.jacoco.ant</module>
     <module>../org.jacoco.ant-nodeps</module>
 
-    <module>../org.jacoco.core.test</module>
-    <module>../org.jacoco.report.test</module>
-    <module>../org.jacoco.agent.rt.test</module>
-    <module>../org.jacoco.agent.test</module>
-    <module>../org.jacoco.ant.test</module>
+    <module>../jacoco-maven-plugin</module>
+
+    <module>../org.jacoco.tests</module>
 
     <module>../org.jacoco.examples</module>
     <module>../org.jacoco.doc</module>
@@ -125,13 +124,8 @@
     <build.date>${maven.build.timestamp}</build.date>
     <jacoco.home.url>http://jacoco.org</jacoco.home.url>
 
-    <!-- This allows to use JaCoCo agent during execution of tests -->
-    <!-- Actually this is a dirty hack, but for now it's appropriate until we don't have jacoco-maven-plugin -->
     <jvm.args></jvm.args>
-    <agent.path>${basedir}/../org.jacoco.agent.rt/target/org.jacoco.agent.rt-${project.version}-all.jar</agent.path>
-    <agent.exclclassloader>sun.reflect.DelegatingClassLoader:org.jacoco.core.test.TargetLoader</agent.exclclassloader>
-    <agent.opts>destfile=${project.build.directory}/jacoco.exec,sessionid=${project.artifactId},exclclassloader=${agent.exclclassloader}</agent.opts>
-    <argLine>-javaagent:${agent.path}=${agent.opts} ${jvm.args}</argLine>
+    <argLine>${jvm.args}</argLine>
     <tycho.testArgLine>${argLine}</tycho.testArgLine>
 
     <!-- Plugins versions -->
