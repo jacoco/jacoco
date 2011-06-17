@@ -1,0 +1,25 @@
+import java.io.*;
+
+File file = new File( basedir, "target/jacoco.exec" );
+if ( !file.isFile() )
+{
+    throw new FileNotFoundException( "Could not find generated dump: " + file );
+}
+
+File xmlReport = new File( basedir, "target/site/jacoco/jacoco.xml" );
+if ( !xmlReport.isFile() )
+{
+    throw new FileNotFoundException( "Could not find generated XML report: " + xmlReport );
+}
+
+File csvReport = new File( basedir, "target/site/jacoco/jacoco.csv" );
+if ( !csvReport.isFile() )
+{
+    throw new FileNotFoundException( "Could not find generated CSV report: " + csvReport );
+}
+
+File htmlReport = new File( basedir, "target/site/jacoco/index.html" );
+if ( !htmlReport.isFile() )
+{
+    throw new FileNotFoundException( "Could not find generated HTML report: " + htmlReport );
+}
