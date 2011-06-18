@@ -1,0 +1,238 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1" />
+  <link rel="stylesheet" href=".resources/doc.css" charset="ISO-8859-1" type="text/css" />
+  <link rel="stylesheet" href="../coverage/.resources/prettify.css" charset="ISO-8859-1" type="text/css" />
+  <link rel="shortcut icon" href=".resources/report.gif" type="image/gif" />
+  <script type="text/javascript" src="../coverage/.resources/prettify.js"></script>
+  <title>JaCoCo - Maven Plug-in</title>
+</head>
+<body onload="prettyPrint()">
+
+<div class="breadcrumb">
+  <a href="../index.html" class="el_report">JaCoCo</a> &gt;
+  <a href="index.html" class="el_group">Documentation</a> &gt;
+  <span class="el_source">Maven Plug-in</span>
+</div>
+<div id="content"> 
+
+<h1>Maven Plug-in</h1>
+
+<p>
+  The JaCoCo <a href="http://maven.apache.org/">Maven</a> plug-in provides the
+  JaCoCo runtime <a href="#agent">agent</a> to your tests and allows basic
+  <a href="#report">report</a> creation.  
+</p>
+
+<p class="hint">
+  If you want to have line number information included in the coverage reports
+  or you want source code highlighting the class files of the test target must
+  be compiled with debug information. 
+</p>
+
+
+<h2>Prerequisites</h2>
+
+<p>
+  The JaCoCo Maven plug-in require
+</p>
+
+<ul>
+  <li>Maven 2.1.0 or higher and</li>
+  <li>Java 1.5 or higher (for both, the Maven runtime and the test executor).</li>
+</ul>
+   
+<p>
+  The Maven plug-in can be included in your build with the following declaration:
+</p>
+
+<pre class="source lang-xml linenums">
+&lt;plugin&gt;
+  &lt;groupId&gt;org.jacoco&lt;/groupId&gt;
+  &lt;artifactId&gt;jacoco-maven-plugin&lt;/artifactId&gt;
+  &lt;version&gt;@qualified.bundle.version@&lt;/version&gt;
+&lt;/plugin&gt;
+</pre>
+
+
+<h2><a name="agent">Goal <code>prepare-agent</code></a></h2>
+
+<p>
+  This goal prepares a property pointing to the
+  <a href="agent.html">JaCoCo runtime agent</a> that can be passed as a VM
+  argument to the application under test. Depending on the project packaging
+  type a property with the following name is set:
+</p>
+
+<ul>
+  <li><code>tycho.testArgLine</code> for the <code>maven-osgi-test-plugin</code></li>
+  <li><code>argLine</code> for the <code>maven-surefire-plugin</code></li>
+</ul>
+
+<p>
+  Resulting coverage information is collected during execution and by default
+  written to a file when the process terminates. 
+</p>
+
+<p>
+  The goal has the following parameters that will be passed to the agent: 
+</p>
+
+<table class="coverage">
+  <thead>
+    <tr>
+      <td>Parameter</td>
+      <td>Description</td>
+      <td>Default</td>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>destfile</code></td>
+      <td>Path to the output file for execution data.</td>
+      <td><code>${project.build.directory}/jacoco.exec</code></td>
+    </tr>
+    <tr>
+      <td><code>append</code></td>
+      <td>If set to <code>true</code> and the execution data file already
+          exists, coverage data is appended to the existing file. If set to
+          <code>false</code>, an existing execution data file will be replaced.
+      </td>
+      <td><code>true</code></td>
+    </tr>    
+    <tr>
+      <td><code>includes</code></td>
+      <td>A list of class names that should be included in execution analysis.
+          The list entries are separated by a colon (<code>:</code>) and
+          may use wildcard characters (<code>*</code> and <code>?</code>).
+          Except for performance optimization or technical corner cases this
+          option is normally not required. 
+      </td>
+      <td><code>*</code> (all classes)</td>
+    </tr>
+    <tr>
+      <td><code>excludes</code></td>
+      <td>A list of class names that should be excluded from execution analysis.
+          The list entries are separated by a colon (<code>:</code>) and
+          may use wildcard characters (<code>*</code> and <code>?</code>).
+          Except for performance optimization or technical corner cases this
+          option is normally not required. 
+      </td>
+      <td><i>empty</i> (no excluded classes)</td>
+    </tr>
+    <tr>
+      <td><code>exclclassloader</code></td>
+      <td>A list of class loader names, that should be excluded from execution
+          analysis. The list entries are separated by a colon
+          (<code>:</code>) and may use wildcard characters (<code>*</code> and
+          <code>?</code>). This option might be required in case of special
+          frameworks that conflict with JaCoCo code instrumentation, in
+          particular class loaders that do not have access to the Java runtime
+          classes. 
+      </td>
+      <td><code>sun.reflect.DelegatingClassLoader</code></td>
+    </tr>
+    <tr>
+      <td><code>sessionid</code></td>
+      <td>A session identifier that is written with the execution data. Without
+          this parameter a random identifier is created by the agent.
+      </td>
+      <td><i>auto-generated</i></td>
+    </tr>  
+    <tr>
+      <td><code>dumponexit</code></td>
+      <td>If set to <code>true</code> coverage data will be written on VM
+          shutdown.
+      </td>
+      <td><code>true</code></td>
+    </tr>
+    <tr>
+      <td><code>output</code></td>
+      <td>Output method to use for writing coverage data. Valid options are:
+        <ul>
+          <li><code>file</code>: At VM termination execution data is written to
+              the file specified in the <code>tofile</code> attribute.</li>
+          <li><code>tcpserver</code>: The agent listens for incoming connections
+              on the TCP port specified by the <code>address</code> and
+              <code>port</code> attribute. Execution data is written to this
+              TCP connection.</li>
+          <li><code>tcpclient</code>: At startup the agent connects to the TCP
+              port specified by the <code>address</code> and <code>port</code>
+              attribute. Execution data is written to this TCP connection.</li>
+        </ul>
+      </td>
+      <td><code>file</code></td>
+    </tr>
+    <tr>
+      <td><code>address</code></td>
+      <td>IP address or hostname to bind to when the output method is
+          <code>tcpserver</code> or connect to when the output method is
+          <code>tcpclient</code>.  In <code>tcpserver</code> mode the value
+          "<code>*</code>" causes the agent to accept connections on any local
+          address.
+      </td>
+      <td><i>loopback interface</i></td>
+    </tr>
+    <tr>
+      <td><code>port</code></td>
+      <td>Port to bind to when the output method is <code>tcpserver</code> or
+          connect to when the output method is <code>tcpclient</code>. In
+          <code>tcpserver</code> mode the port must be available, which means
+          that if multiple JaCoCo agents should run on the same machine,
+          different ports have to be specified.
+      </td>
+      <td><code>6300</code></td>
+    </tr>
+  </tbody>
+</table>
+
+
+<h2><a name="report">Goal <code>report</code></a></h2>
+
+<p>
+  This goal creates a code coverage report for a single project in multiple
+  formats (HTML, XML, and CSV). It has the following parameters:  
+</p>
+
+<table class="coverage">
+  <thead>
+    <tr>
+      <td>Parameter</td>
+      <td>Description</td>
+      <td>Default</td>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>outputDirectory</code></td>
+      <td>Output directory for the reports.</td>
+      <td><code>${project.reporting.outputDirectory}/jacoco</code></td>
+    </tr>
+    <tr>
+      <td><code>outputEncoding</code></td>
+      <td>Encoding of the generated reports..</td>
+      <td><code>${project.reporting.outputEncoding}, otherwise UTF-8</td>
+    </tr>
+    <tr>
+      <td><code>sourceEncoding</code></td>
+      <td>Character encoding of the source files.</td>
+      <td><code>${project.build.sourceEncoding}</code>, otherwise UTF-8</td>
+    </tr>
+    <tr>
+      <td><code>dataFile</code></td>
+      <td>File with execution data.</td>
+      <td><code>${project.build.directory}/jacoco.exec</code></td>
+    </tr>
+  </tbody>
+</table>
+
+</div>
+<div class="footer">
+  <span class="right"><a href="@jacoco.home.url@">JaCoCo</a> @qualified.bundle.version@</span>
+  <a href="license.html">Copyright</a> &copy; @copyright.years@ Mountainminds GmbH &amp; Co. KG and Contributors
+</div>
+
+</body>
+</html>
