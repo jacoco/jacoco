@@ -29,6 +29,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Collections;
+import java.util.Map;
 import java.util.Properties;
 
 /**
@@ -55,22 +56,13 @@ public class JaCoCoAutomationMojo extends AbstractMojo {
   private MavenProject project;
 
   /**
-   * @component
+   * Map of plugin artifacts.
+   *
+   * @parameter expression="${plugin.artifactMap}"
+   * @required
    * @readonly
    */
-  private ArtifactFactory artifactFactory;
-
-  /**
-   * @component
-   * @readonly
-   */
-  private ArtifactResolver artifactResolver;
-
-  /**
-   * @parameter expression="${localRepository}"
-   * @readonly
-   */
-  private ArtifactRepository localRepository;
+  private Map pluginArtifactMap;
 
   /**
    * Path to the output file for execution data.
@@ -172,29 +164,8 @@ public class JaCoCoAutomationMojo extends AbstractMojo {
   }
 
   private File getAgentJarFile() throws MojoExecutionException {
-    Artifact jacocoAgentArtifact;
-    try {
-      jacocoAgentArtifact = artifactFactory.createArtifactWithClassifier("org.jacoco", "org.jacoco.agent.rt", getAgentVersion(), "jar", "all");
-      artifactResolver.resolve(jacocoAgentArtifact, Collections.EMPTY_LIST, localRepository);
-    } catch (ArtifactResolutionException e) {
-      throw new MojoExecutionException("Unable to find JaCoCo agent", e);
-    } catch (ArtifactNotFoundException e) {
-      throw new MojoExecutionException("Unable to find JaCoCo agent", e);
-    } catch (IOException e) {
-      throw new MojoExecutionException("Unable to find JaCoCo agent", e);
-    }
+    Artifact jacocoAgentArtifact = (Artifact) pluginArtifactMap.get("org.jacoco:org.jacoco.agent.rt");
     return jacocoAgentArtifact.getFile();
-  }
-
-  private static String getAgentVersion() throws IOException {
-    Properties properties = new Properties();
-    InputStream stream = JaCoCoAutomationMojo.class.getResourceAsStream("/META-INF/maven/org.jacoco/jacoco-maven-plugin/pom.properties");
-    try {
-      properties.load(stream);
-    } finally {
-      stream.close();
-    }
-    return properties.getProperty("version");
   }
 
   private AgentOptions createAgentOptions() throws MojoExecutionException {
