@@ -65,6 +65,11 @@ public class JaCoCoAutomationMojo extends AbstractMojo {
   private Map pluginArtifactMap;
 
   /**
+   * @parameter
+   */
+  private String propertyName;
+
+  /**
    * Path to the output file for execution data.
    * 
    * @parameter default-value="${project.build.directory}/jacoco.exec"
@@ -151,12 +156,14 @@ public class JaCoCoAutomationMojo extends AbstractMojo {
   private int port;
 
   public void execute() throws MojoExecutionException, MojoFailureException {
-    if (!isEclipseTestPluginPackaging() && !isJarPackaging()) {
+    if (!isEclipseTestPluginPackaging() && !isJarPackaging() && !isPropertyNameSpecified()) {
       return;
     }
 
     String vmArgument = createAgentOptions().getVMArgument(getAgentJarFile());
-    if (isEclipseTestPluginPackaging()) {
+    if (isPropertyNameSpecified()) {
+      setCommandLineForTestPlugin(propertyName, vmArgument);
+    } else if (isEclipseTestPluginPackaging()) {
       setCommandLineForTestPlugin(TYCHO_ARG_LINE, vmArgument);
     } else {
       setCommandLineForTestPlugin(SUREFIRE_ARG_LINE, vmArgument);
@@ -197,6 +204,10 @@ public class JaCoCoAutomationMojo extends AbstractMojo {
     }
     agentOptions.setPort(port);
     return agentOptions;
+  }
+
+  private boolean isPropertyNameSpecified() {
+    return propertyName != null && !"".equals(propertyName);
   }
 
   private boolean isEclipseTestPluginPackaging() {
