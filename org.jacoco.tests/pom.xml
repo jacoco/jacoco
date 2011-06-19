@@ -17,6 +17,7 @@
     <groupId>org.jacoco</groupId>
     <artifactId>org.jacoco.build</artifactId>
     <version>0.5.3-SNAPSHOT</version>
+    <relativePath>../org.jacoco.build</relativePath>
   </parent>
 
   <artifactId>org.jacoco.tests</artifactId>
