@@ -11,6 +11,8 @@
  *******************************************************************************/
 package org.jacoco.agent.rt;
 
+import org.jacoco.agent.rt.controller.MBeanController;
+
 import java.lang.instrument.Instrumentation;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
@@ -89,6 +91,8 @@ public class JacocoAgent {
 			return new TcpServerController(logger);
 		case tcpclient:
 			return new TcpClientController(logger);
+		case mbean:
+			return new MBeanController();
 		default:
 			throw new AssertionError(controllerType);
 		}

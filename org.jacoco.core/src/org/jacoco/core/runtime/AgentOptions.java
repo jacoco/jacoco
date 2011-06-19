@@ -105,7 +105,7 @@ public class AgentOptions {
 		/**
 		 * Value for the {@link AgentOptions#OUTPUT} parameter: The agent
 		 * listens for incoming connections on a TCP port specified by
-		 * {@link AgentOptions#ADDRESS} and {@link AgentOptions#PORT} .
+		 * {@link AgentOptions#ADDRESS} and {@link AgentOptions#PORT}.
 		 */
 		tcpserver,
 
@@ -114,7 +114,13 @@ public class AgentOptions {
 		 * agent connects to a TCP port specified by the
 		 * {@link AgentOptions#ADDRESS} and {@link AgentOptions#PORT} attribute.
 		 */
-		tcpclient
+		tcpclient,
+
+		/**
+		 * Value for the {@link AgentOptions#OUTPUT} parameter: At startup the
+		 * agent creates MBean.
+		 */
+		mbean
 
 	}
 
