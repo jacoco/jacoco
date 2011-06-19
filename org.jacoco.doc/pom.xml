@@ -30,7 +30,7 @@
     <maven.deploy.skip>true</maven.deploy.skip>
 
     <qualified.bundle.version>${project.version}</qualified.bundle.version>
-    <copyright.years>${project.inceptionYear} - 2010</copyright.years>
+    <copyright.years>${project.inceptionYear} - 2011</copyright.years>
   </properties>
 
   <dependencies>

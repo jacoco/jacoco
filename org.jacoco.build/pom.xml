@@ -517,7 +517,7 @@
         <configuration>
           <header>../org.jacoco.build/license-header.txt</header>
           <properties>
-            <years>2009, 2010</years>
+            <years>2009, 2011</years>
           </properties>
           <encoding>${project.build.sourceEncoding}</encoding>
           <strictCheck>true</strictCheck>
