@@ -12,11 +12,6 @@
 package org.jacoco.maven;
 
 import org.apache.maven.artifact.Artifact;
-import org.apache.maven.artifact.factory.ArtifactFactory;
-import org.apache.maven.artifact.repository.ArtifactRepository;
-import org.apache.maven.artifact.resolver.ArtifactNotFoundException;
-import org.apache.maven.artifact.resolver.ArtifactResolutionException;
-import org.apache.maven.artifact.resolver.ArtifactResolver;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
@@ -26,19 +21,23 @@ import org.codehaus.plexus.util.cli.CommandLineUtils;
 import org.jacoco.core.runtime.AgentOptions;
 
 import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.Collections;
 import java.util.Map;
 import java.util.Properties;
 
 /**
+ * Adds or modifies property with settings for JaCoCo Agent.
+ * 
  * @phase initialize
  * @goal prepare-agent
  * @requiresProject true
  * @requiresDependencyResolution runtime
  */
-public class JaCoCoAutomationMojo extends AbstractMojo {
+public class AgentMojo extends AbstractMojo {
+
+  /**
+   * Name of the JaCoCo Agent artifact.
+   */
+  private static final String AGENT_ARTIFACT_NAME = "org.jacoco:org.jacoco.agent.rt";
 
   /**
    * Name of the property used in maven-osgi-test-plugin.
@@ -51,7 +50,10 @@ public class JaCoCoAutomationMojo extends AbstractMojo {
   private static final String SUREFIRE_ARG_LINE = "argLine";
 
   /**
+   * Maven project.
+   * 
    * @parameter expression="${project}"
+   * @readonly
    */
   private MavenProject project;
 
@@ -65,6 +67,9 @@ public class JaCoCoAutomationMojo extends AbstractMojo {
   private Map pluginArtifactMap;
 
   /**
+   * Allows to specify property which will contains settings for JaCoCo Agent.
+   * If not specified, then "argLine" would be used for "jar" packaging and "tycho.testArgLine" for "eclipse-test-plugin".
+   * 
    * @parameter
    */
   private String propertyName;
@@ -162,16 +167,16 @@ public class JaCoCoAutomationMojo extends AbstractMojo {
 
     String vmArgument = createAgentOptions().getVMArgument(getAgentJarFile());
     if (isPropertyNameSpecified()) {
-      setCommandLineForTestPlugin(propertyName, vmArgument);
+      prependProperty(propertyName, vmArgument);
     } else if (isEclipseTestPluginPackaging()) {
-      setCommandLineForTestPlugin(TYCHO_ARG_LINE, vmArgument);
+      prependProperty(TYCHO_ARG_LINE, vmArgument);
     } else {
-      setCommandLineForTestPlugin(SUREFIRE_ARG_LINE, vmArgument);
+      prependProperty(SUREFIRE_ARG_LINE, vmArgument);
     }
   }
 
   private File getAgentJarFile() throws MojoExecutionException {
-    Artifact jacocoAgentArtifact = (Artifact) pluginArtifactMap.get("org.jacoco:org.jacoco.agent.rt");
+    Artifact jacocoAgentArtifact = (Artifact) pluginArtifactMap.get(AGENT_ARTIFACT_NAME);
     return jacocoAgentArtifact.getFile();
   }
 
@@ -218,12 +223,12 @@ public class JaCoCoAutomationMojo extends AbstractMojo {
     return "jar".equals(project.getPackaging());
   }
 
-  private void setCommandLineForTestPlugin(String propertyName, String argLine) {
+  private void prependProperty(String name, String value) {
     Properties projectProperties = project.getProperties();
-    String oldValue = projectProperties.getProperty(propertyName);
-    String newValue = oldValue == null ? argLine : argLine + ' ' + oldValue;
-    getLog().info(propertyName + " set to " + argLine);
-    projectProperties.put(propertyName, newValue);
+    String oldValue = projectProperties.getProperty(name);
+    String newValue = oldValue == null ? value : value + ' ' + oldValue;
+    getLog().info(name + " set to " + value);
+    projectProperties.put(name, newValue);
   }
 
 }

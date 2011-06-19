@@ -37,42 +37,46 @@ import java.util.List;
  * @goal report
  * @requiresProject true
  */
-public class JaCoCoReportMojo extends AbstractMojo {
+public class ReportMojo extends AbstractMojo {
+
+  /**
+   * Maven project.
+   * 
+   * @parameter expression="${project}"
+   * @readonly
+   */
+  private MavenProject project;
 
   /**
    * Output directory for the reports.
    * 
    * @parameter default-value="${project.reporting.outputDirectory}/jacoco"
    */
-  protected File outputDirectory;
+  private File outputDirectory;
 
   /**
    * Encoding of the generated reports.
    * 
    * @parameter expression="${project.reporting.outputEncoding}" default-value="UTF-8" 
    */
-  protected String outputEncoding;
+  private String outputEncoding;
 
   /**
    * Encoding of the source files.
    * 
    * @parameter expression="${project.build.sourceEncoding}" default-value="UTF-8"
    */
-  protected String sourceEncoding;
+  private String sourceEncoding;
 
   /**
    * File with execution data.
    * 
    * @parameter default-value="${project.build.directory}/jacoco.exec"
    */
-  protected File dataFile;
-
-  /**
-   * @parameter expression="${project}"
-   */
-  private MavenProject project;
+  private File dataFile;
 
   private SessionInfoStore sessionInfoStore;
+
   private ExecutionDataStore executionDataStore;
 
   public void execute() throws MojoExecutionException, MojoFailureException {
