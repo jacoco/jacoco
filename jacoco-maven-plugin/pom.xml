@@ -38,8 +38,13 @@
     </dependency>
     <dependency>
       <groupId>org.apache.maven</groupId>
-      <artifactId>maven-core</artifactId>
+      <artifactId>maven-project</artifactId>
       <version>${project.prerequisites.maven}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.codehaus.plexus</groupId>
+      <artifactId>plexus-utils</artifactId>
+      <version>1.5.6</version>
     </dependency>
 
     <dependency>
@@ -91,6 +96,7 @@
 
   <profiles>
     <profile>
+      <!-- To run with different Maven versions use -Dinvoker.mavenHome -->
       <id>run-its</id>
       <build>
         <plugins>

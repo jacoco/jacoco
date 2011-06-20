@@ -210,8 +210,7 @@ public class ReportMojo extends AbstractMojo {
 
 	private List<File> getCompileSourceRoots() {
 		List<File> result = new ArrayList<File>();
-		for (Object path : project.getExecutionProject()
-				.getCompileSourceRoots()) {
+		for (Object path : project.getCompileSourceRoots()) {
 			result.add(resolvePath((String) path));
 		}
 		return result;

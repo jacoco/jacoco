@@ -16,8 +16,7 @@ import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.project.MavenProject;
-import org.codehaus.plexus.util.cli.CommandLineException;
-import org.codehaus.plexus.util.cli.CommandLineUtils;
+import org.codehaus.plexus.util.StringUtils;
 import org.jacoco.core.runtime.AgentOptions;
 
 import java.io.File;
@@ -64,7 +63,7 @@ public class AgentMojo extends AbstractMojo {
 	 * @required
 	 * @readonly
 	 */
-	private Map pluginArtifactMap;
+	private Map<String, Artifact> pluginArtifactMap;
 
 	/**
 	 * Allows to specify property which will contains settings for JaCoCo Agent.
@@ -181,8 +180,8 @@ public class AgentMojo extends AbstractMojo {
 			return;
 		}
 
-		String vmArgument = createAgentOptions().getVMArgument(
-				getAgentJarFile());
+		String vmArgument = StringUtils.quoteAndEscape(createAgentOptions()
+				.getVMArgument(getAgentJarFile()), '"');
 		if (isPropertyNameSpecified()) {
 			prependProperty(propertyName, vmArgument);
 		} else if (isEclipseTestPluginPackaging()) {
@@ -193,7 +192,7 @@ public class AgentMojo extends AbstractMojo {
 	}
 
 	private File getAgentJarFile() throws MojoExecutionException {
-		Artifact jacocoAgentArtifact = (Artifact) pluginArtifactMap
+		Artifact jacocoAgentArtifact = pluginArtifactMap
 				.get(AGENT_ARTIFACT_NAME);
 		return jacocoAgentArtifact.getFile();
 	}
@@ -201,11 +200,6 @@ public class AgentMojo extends AbstractMojo {
 	private AgentOptions createAgentOptions() throws MojoExecutionException {
 		AgentOptions agentOptions = new AgentOptions();
 		String destPath = destfile.getAbsolutePath();
-		try {
-			destPath = CommandLineUtils.quote(destPath);
-		} catch (CommandLineException e) {
-			throw new MojoExecutionException("Failure to use path", e);
-		}
 		agentOptions.setDestfile(destPath);
 		agentOptions.setAppend(append);
 		if (includes != null) {
