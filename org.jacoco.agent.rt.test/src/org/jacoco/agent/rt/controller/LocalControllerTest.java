@@ -24,7 +24,7 @@ import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 
 /**
- * Unit tests for {@link LocalControllerTest}.
+ * Unit tests for {@link LocalController}.
  */
 public class LocalControllerTest {
 
