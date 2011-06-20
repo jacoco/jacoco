@@ -39,11 +39,11 @@ class CSVGroupHandler implements IReportGroupVisitor {
 
 	public void visitBundle(final IBundleCoverage bundle,
 			final ISourceFileLocator locator) throws IOException {
-		final String groupName = appendName(bundle.getName());
+		final String name = appendName(bundle.getName());
 		for (final IPackageCoverage p : bundle.getPackages()) {
 			final String packageName = p.getName();
 			for (final IClassCoverage c : p.getClasses()) {
-				writer.writeRow(groupName, packageName, c);
+				writer.writeRow(name, packageName, c);
 			}
 		}
 	}

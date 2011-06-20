@@ -27,7 +27,7 @@ import java.util.Map;
  *   key1=value1,key2=value2,key3=value3
  * </pre>
  */
-public class AgentOptions {
+public final class AgentOptions {
 
 	/**
 	 * Specifies the output file for execution data. Default is

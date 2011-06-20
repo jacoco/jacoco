@@ -11,17 +11,16 @@
  *******************************************************************************/
 package org.jacoco.agent.rt;
 
-import org.jacoco.agent.rt.controller.MBeanController;
-
 import java.lang.instrument.Instrumentation;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
-import java.util.Random;
 
 import org.jacoco.agent.rt.controller.IAgentController;
 import org.jacoco.agent.rt.controller.LocalController;
+import org.jacoco.agent.rt.controller.MBeanController;
 import org.jacoco.agent.rt.controller.TcpClientController;
 import org.jacoco.agent.rt.controller.TcpServerController;
+import org.jacoco.core.runtime.AbstractRuntime;
 import org.jacoco.core.runtime.AgentOptions;
 import org.jacoco.core.runtime.AgentOptions.OutputMode;
 import org.jacoco.core.runtime.IRuntime;
@@ -105,7 +104,7 @@ public class JacocoAgent {
 		} catch (final UnknownHostException e) {
 			host = "unknownhost";
 		}
-		return host + "-" + Integer.toHexString(new Random().nextInt());
+		return host + "-" + AbstractRuntime.createRandomId();
 	}
 
 	/**

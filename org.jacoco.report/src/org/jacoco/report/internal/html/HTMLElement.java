@@ -42,6 +42,10 @@ public class HTMLElement extends XMLElement {
 		return element;
 	}
 
+	private void classattr(final String classattr) throws IOException {
+		attr("class", classattr);
+	}
+
 	/**
 	 * Creates a 'meta' element.
 	 * 
@@ -138,7 +142,7 @@ public class HTMLElement extends XMLElement {
 	 */
 	public HTMLElement span(final String classattr) throws IOException {
 		final HTMLElement span = span();
-		span.attr("class", classattr);
+		span.classattr(classattr);
 		return span;
 	}
 
@@ -171,7 +175,7 @@ public class HTMLElement extends XMLElement {
 	 */
 	public HTMLElement div(final String classattr) throws IOException {
 		final HTMLElement div = element("div");
-		div.attr("class", classattr);
+		div.classattr(classattr);
 		return div;
 	}
 
@@ -197,7 +201,7 @@ public class HTMLElement extends XMLElement {
 	 */
 	public HTMLElement pre(final String classattr) throws IOException {
 		final HTMLElement pre = element("pre");
-		pre.attr("class", classattr);
+		pre.classattr(classattr);
 		return pre;
 	}
 
@@ -230,7 +234,7 @@ public class HTMLElement extends XMLElement {
 	public HTMLElement a(final String hrefattr, final String classattr)
 			throws IOException {
 		final HTMLElement a = a(hrefattr);
-		a.attr("class", classattr);
+		a.classattr(classattr);
 		return a;
 	}
 
@@ -269,7 +273,7 @@ public class HTMLElement extends XMLElement {
 	 */
 	public HTMLElement table(final String classattr) throws IOException {
 		final HTMLElement table = element("table");
-		table.attr("class", classattr);
+		table.classattr(classattr);
 		table.attr("cellspacing", "0");
 		return table;
 	}
@@ -340,7 +344,7 @@ public class HTMLElement extends XMLElement {
 	 */
 	public HTMLElement td(final String classattr) throws IOException {
 		final HTMLElement td = td();
-		td.attr("class", classattr);
+		td.classattr(classattr);
 		return td;
 	}
 

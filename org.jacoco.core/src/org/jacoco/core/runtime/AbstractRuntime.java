@@ -39,7 +39,7 @@ public abstract class AbstractRuntime implements IRuntime {
 	protected AbstractRuntime() {
 		store = new ExecutionDataStore();
 		access = new ExecutionDataAccess(store);
-		sessionId = generateSessionId();
+		sessionId = createRandomId();
 	}
 
 	/**
@@ -80,8 +80,15 @@ public abstract class AbstractRuntime implements IRuntime {
 		}
 	}
 
-	private String generateSessionId() {
-		return Integer.toHexString(new Random().nextInt());
+	private static final Random RANDOM = new Random();
+
+	/**
+	 * Creates a random session identifier.
+	 * 
+	 * @return random session identifier
+	 */
+	public static String createRandomId() {
+		return Integer.toHexString(RANDOM.nextInt());
 	}
 
 }

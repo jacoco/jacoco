@@ -136,7 +136,7 @@ public class ModifiedSystemClassRuntime extends AbstractRuntime {
 			clazz.getField(accessFieldName);
 		} catch (final NoSuchFieldException e) {
 			throw new RuntimeException(format(
-					"Class %s could not be instrumented.", className));
+					"Class %s could not be instrumented.", className), e);
 		}
 		return new ModifiedSystemClassRuntime(clazz, accessFieldName);
 	}
