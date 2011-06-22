@@ -20,7 +20,7 @@ import org.jacoco.core.runtime.RemoteControlReader;
 import org.jacoco.core.runtime.RemoteControlWriter;
 
 /**
- * This example connects to a coverage from agents that run in output mode
+ * This example connects to a coverage agent that run in output mode
  * <code>tcpserver</code> and requests execution data. The collected data is
  * dumped to a local file.
  */
