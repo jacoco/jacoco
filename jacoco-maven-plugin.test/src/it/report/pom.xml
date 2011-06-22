@@ -19,7 +19,7 @@
     <plugins>
       <plugin>
         <groupId>@project.groupId@</groupId>
-        <artifactId>@project.artifactId@</artifactId>
+        <artifactId>jacoco-maven-plugin</artifactId>
         <version>@project.version@</version>
         <executions>
           <execution>
@@ -43,8 +43,6 @@
         <configuration>
           <source>1.5</source>
           <target>1.5</target>
-          <debug>true</debug>
-          <debuglevel>none</debuglevel>
         </configuration>
       </plugin>
       <plugin>

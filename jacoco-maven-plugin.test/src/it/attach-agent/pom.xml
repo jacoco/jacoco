@@ -3,7 +3,7 @@
   <modelVersion>4.0.0</modelVersion>
 
   <groupId>jacoco</groupId>
-  <artifactId>report</artifactId>
+  <artifactId>attach-agent</artifactId>
   <version>1.0-SNAPSHOT</version>
 
   <dependencies>
@@ -19,19 +19,12 @@
     <plugins>
       <plugin>
         <groupId>@project.groupId@</groupId>
-        <artifactId>@project.artifactId@</artifactId>
+        <artifactId>jacoco-maven-plugin</artifactId>
         <version>@project.version@</version>
         <executions>
           <execution>
             <goals>
               <goal>prepare-agent</goal>
-            </goals>
-          </execution>
-          <execution>
-            <id>report</id>
-            <phase>prepare-package</phase>
-            <goals>
-              <goal>report</goal>
             </goals>
           </execution>
         </executions>
