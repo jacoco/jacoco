@@ -93,6 +93,7 @@
                     <fileset dir="../org.jacoco.ant.test/target" includes="jacoco.exec"/>
                     <fileset dir="../org.jacoco.core.test/target" includes="jacoco.exec"/>
                     <fileset dir="../org.jacoco.report.test/target" includes="jacoco.exec"/>
+                    <fileset dir="../jacoco-maven-plugin.test/target" includes="jacoco.exec"/>
                   </executiondata>
                   <structure name="JaCoCo">
                     <group name="org.jacoco.agent">
@@ -134,6 +135,14 @@
                       </classfiles>
                       <sourcefiles>
                         <fileset dir="../org.jacoco.report/src"/>
+                      </sourcefiles>
+                    </group>
+                    <group name="jacoco-maven-plugin">
+                      <classfiles>
+                        <fileset dir="../jacoco-maven-plugin/target/classes"/>
+                      </classfiles>
+                      <sourcefiles>
+                        <fileset dir="../jacoco-maven-plugin/src/main/java"/>
                       </sourcefiles>
                     </group>
                   </structure>
