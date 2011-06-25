@@ -70,14 +70,14 @@ public class AgentMojo extends AbstractMojo {
 	 * If not specified, then "argLine" would be used for "jar" packaging and
 	 * "tycho.testArgLine" for "eclipse-test-plugin".
 	 * 
-	 * @parameter
+	 * @parameter expression="${jacoco.propertyName}"
 	 */
 	private String propertyName;
 
 	/**
 	 * Path to the output file for execution data.
 	 * 
-	 * @parameter default-value="${project.build.directory}/jacoco.exec"
+	 * @parameter expression="${jacoco.destfile}" default-value="${project.build.directory}/jacoco.exec"
 	 */
 	private File destfile;
 
@@ -86,9 +86,9 @@ public class AgentMojo extends AbstractMojo {
 	 * is appended to the existing file. If set to false, an existing execution
 	 * data file will be replaced.
 	 * 
-	 * @parameter default-value="true"
+	 * @parameter expression="${jacoco.append}"
 	 */
-	private boolean append;
+	private Boolean append;
 
 	/**
 	 * A list of class names that should be included in execution analysis. The
@@ -96,7 +96,7 @@ public class AgentMojo extends AbstractMojo {
 	 * (* and ?). Except for performance optimization or technical corner cases
 	 * this option is normally not required.
 	 * 
-	 * @parameter default-value="*"
+	 * @parameter expression="${jacoco.includes}"
 	 */
 	private String includes;
 
@@ -107,7 +107,7 @@ public class AgentMojo extends AbstractMojo {
 	 * characters (* and ?). Except for performance optimization or technical
 	 * corner cases this option is normally not required.
 	 * 
-	 * @parameter default-value=""
+	 * @parameter expression="${jacoco.excludes}"
 	 */
 	private String excludes;
 
@@ -119,7 +119,7 @@ public class AgentMojo extends AbstractMojo {
 	 * particular class loaders that do not have access to the Java runtime
 	 * classes.
 	 * 
-	 * @parameter @default-value="sun.reflect.DelegatingClassLoader"
+	 * @parameter expression="${jacoco.exclclassloaders}"
 	 */
 	private String exclclassloaders;
 
@@ -127,31 +127,33 @@ public class AgentMojo extends AbstractMojo {
 	 * A session identifier that is written with the execution data. Without
 	 * this parameter a random identifier is created by the agent.
 	 * 
-	 * @parameter
+	 * @parameter expression="${jacoco.sessionid}"
 	 */
 	private String sessionid;
 
 	/**
 	 * If set to true coverage data will be written on VM shutdown.
 	 * 
-	 * @parameter default-value="true"
+	 * @parameter expression="${jacoco.dumponexit}"
 	 */
-	private boolean dumpOnExit;
+	private Boolean dumpOnExit;
 
 	/**
 	 * Output method to use for writing coverage data. Valid options are:
 	 * <ul>
 	 * <li>file: At VM termination execution data is written to the file
-	 * specified in the tofile attribute.</li>
+	 * specified in the {@link #destfile}.</li>
 	 * <li>tcpserver: The agent listens for incoming connections on the TCP port
-	 * specified by the address and port attribute. Execution data is written to
+	 * specified by the {@link #address} and {@link #port}. Execution data is written to
 	 * this TCP connection.</li>
 	 * <li>tcpclient: At startup the agent connects to the TCP port specified by
-	 * the address and port attribute. Execution data is written to this TCP
+	 * the {@link #address} and {@link #port}. Execution data is written to this TCP
 	 * connection.</li>
+	 * <li>mbean: The agent registers an JMX MBean under the name
+	 * <code>org.jacoco:type=Runtime</code>.</li>
 	 * </ul>
 	 * 
-	 * @parameter default-value="file"
+	 * @parameter expression="${jacoco.output}"
 	 */
 	private String output;
 
@@ -160,7 +162,7 @@ public class AgentMojo extends AbstractMojo {
 	 * connect to when the output method is tcpclient. In tcpserver mode the
 	 * value "*" causes the agent to accept connections on any local address.
 	 * 
-	 * @parameter
+	 * @parameter expression="${jacoco.address}"
 	 */
 	private String address;
 
@@ -170,9 +172,9 @@ public class AgentMojo extends AbstractMojo {
 	 * available, which means that if multiple JaCoCo agents should run on the
 	 * same machine, different ports have to be specified.
 	 * 
-	 * @parameter default-value="6300"
+	 * @parameter expression="${jacoco.port}"
 	 */
-	private int port;
+	private Integer port;
 
 	public void execute() throws MojoExecutionException, MojoFailureException {
 		if (!isEclipseTestPluginPackaging() && !isJarPackaging()
@@ -201,7 +203,9 @@ public class AgentMojo extends AbstractMojo {
 		AgentOptions agentOptions = new AgentOptions();
 		String destPath = destfile.getAbsolutePath();
 		agentOptions.setDestfile(destPath);
-		agentOptions.setAppend(append);
+		if (append != null) {
+			agentOptions.setAppend(append);
+		}
 		if (includes != null) {
 			agentOptions.setIncludes(includes);
 		}
@@ -214,12 +218,18 @@ public class AgentMojo extends AbstractMojo {
 		if (sessionid != null) {
 			agentOptions.setSessionId(sessionid);
 		}
-		agentOptions.setDumpOnExit(dumpOnExit);
-		agentOptions.setOutput(output);
+		if (dumpOnExit != null) {
+			agentOptions.setDumpOnExit(dumpOnExit);
+		}
+		if (output != null) {
+			agentOptions.setOutput(output);
+		}
 		if (address != null) {
 			agentOptions.setAddress(address);
 		}
-		agentOptions.setPort(port);
+		if (port != null) {
+			agentOptions.setPort(port);
+		}
 		return agentOptions;
 	}
 
