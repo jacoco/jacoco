@@ -11,10 +11,6 @@
  *******************************************************************************/
 package org.jacoco.maven;
 
-import org.apache.maven.plugin.AbstractMojo;
-import org.apache.maven.plugin.MojoExecutionException;
-import org.apache.maven.plugin.MojoFailureException;
-import org.apache.maven.project.MavenProject;
 import org.jacoco.core.analysis.Analyzer;
 import org.jacoco.core.analysis.CoverageBuilder;
 import org.jacoco.core.analysis.IBundleCoverage;
@@ -32,20 +28,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Generates reports.
+ * Creates a code coverage report for a single project in multiple formats
+ * (HTML, XML, and CSV).
  * 
  * @goal report
  * @requiresProject true
  */
-public class ReportMojo extends AbstractMojo {
-
-	/**
-	 * Maven project.
-	 * 
-	 * @parameter expression="${project}"
-	 * @readonly
-	 */
-	private MavenProject project;
+public class ReportMojo extends AbstractJacocoMojo {
 
 	/**
 	 * Output directory for the reports.
@@ -81,8 +70,15 @@ public class ReportMojo extends AbstractMojo {
 
 	private ExecutionDataStore executionDataStore;
 
-	public void execute() throws MojoExecutionException, MojoFailureException {
-		loadExecutionData();
+	protected void executeMojo() {
+		try {
+			loadExecutionData();
+		} catch (IOException e) {
+			getLog().error(
+					"Unable to read execution data file " + dataFile + ": "
+							+ e.getMessage(), e);
+			return;
+		}
 		try {
 			IReportVisitor visitor = createVisitor();
 			visitor.visitInfo(sessionInfoStore.getInfos(),
@@ -90,11 +86,11 @@ public class ReportMojo extends AbstractMojo {
 			createReport(visitor);
 			visitor.visitEnd();
 		} catch (Exception e) {
-			throw new MojoExecutionException("Error while creating report", e);
+			getLog().error("Error while creating report: " + e.getMessage(), e);
 		}
 	}
 
-	private void loadExecutionData() throws MojoExecutionException {
+	private void loadExecutionData() throws IOException {
 		sessionInfoStore = new SessionInfoStore();
 		executionDataStore = new ExecutionDataStore();
 		FileInputStream in = null;
@@ -104,15 +100,9 @@ public class ReportMojo extends AbstractMojo {
 			reader.setSessionInfoVisitor(sessionInfoStore);
 			reader.setExecutionDataVisitor(executionDataStore);
 			reader.read();
-		} catch (IOException e) {
-			throw new MojoExecutionException(
-					"Unable to read execution data file " + dataFile, e);
 		} finally {
 			if (in != null) {
-				try {
-					in.close();
-				} catch (IOException e) {
-				}
+				in.close();
 			}
 		}
 	}
@@ -137,9 +127,9 @@ public class ReportMojo extends AbstractMojo {
 	private IBundleCoverage createBundle() throws IOException {
 		final CoverageBuilder builder = new CoverageBuilder();
 		final Analyzer analyzer = new Analyzer(executionDataStore, builder);
-		File classesDir = new File(project.getBuild().getOutputDirectory());
+		File classesDir = new File(getProject().getBuild().getOutputDirectory());
 		analyzer.analyzeAll(classesDir);
-		return builder.getBundle(project.getName());
+		return builder.getBundle(getProject().getName());
 	}
 
 	private IReportVisitor createVisitor() throws IOException {
@@ -203,14 +193,14 @@ public class ReportMojo extends AbstractMojo {
 	private File resolvePath(String path) {
 		File file = new File(path);
 		if (!file.isAbsolute()) {
-			file = new File(project.getBasedir(), path);
+			file = new File(getProject().getBasedir(), path);
 		}
 		return file;
 	}
 
 	private List<File> getCompileSourceRoots() {
 		List<File> result = new ArrayList<File>();
-		for (Object path : project.getCompileSourceRoots()) {
+		for (Object path : getProject().getCompileSourceRoots()) {
 			result.add(resolvePath((String) path));
 		}
 		return result;

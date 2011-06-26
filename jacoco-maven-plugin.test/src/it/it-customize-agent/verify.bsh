@@ -24,7 +24,7 @@ String agentOptions = "destfile=" + basedir + "/target/coverage.exec"
     + ",port=9999";
 String buildLog = FileUtils.fileRead( new File( basedir, "build.log" ) );
 if ( buildLog.indexOf( agentOptions ) < 0 ) {
-    throw new RuntimeException( "TODO comment me" );
+    throw new RuntimeException( "Property was not configured" );
 }
 
 File file = new File( basedir, "target/coverage.exec" );

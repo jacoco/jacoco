@@ -15,32 +15,9 @@
 
   <parent>
     <groupId>jacoco</groupId>
-    <artifactId>setup-parent</artifactId>
+    <artifactId>it-multi-module</artifactId>
     <version>1.0-SNAPSHOT</version>
   </parent>
 
-  <artifactId>it-report</artifactId>
-
-  <build>
-    <plugins>
-      <plugin>
-        <groupId>@project.groupId@</groupId>
-        <artifactId>jacoco-maven-plugin</artifactId>
-        <executions>
-          <execution>
-            <goals>
-              <goal>prepare-agent</goal>
-            </goals>
-          </execution>
-          <execution>
-            <id>report</id>
-            <phase>prepare-package</phase>
-            <goals>
-              <goal>report</goal>
-            </goals>
-          </execution>
-        </executions>
-      </plugin>
-    </plugins>
-  </build>
+  <artifactId>child</artifactId>
 </project>

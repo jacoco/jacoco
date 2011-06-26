@@ -12,10 +12,6 @@
 package org.jacoco.maven;
 
 import org.apache.maven.artifact.Artifact;
-import org.apache.maven.plugin.AbstractMojo;
-import org.apache.maven.plugin.MojoExecutionException;
-import org.apache.maven.plugin.MojoFailureException;
-import org.apache.maven.project.MavenProject;
 import org.codehaus.plexus.util.StringUtils;
 import org.jacoco.core.runtime.AgentOptions;
 
@@ -24,14 +20,22 @@ import java.util.Map;
 import java.util.Properties;
 
 /**
- * Adds or modifies property with settings for JaCoCo Agent.
+ * Prepares a property pointing to the JaCoCo runtime agent that can be passed
+ * as a VM argument to the application under test. Depending on the project
+ * packaging type by default a property with the following name is set:
+ * <ul>
+ * <li>tycho.testArgLine for packaging type eclipse-test-plugin and</li>
+ * <li>argLine otherwise.</li>
+ * </ul>
+ * Resulting coverage information is collected during execution and by default
+ * written to a file when the process terminates.
  * 
  * @phase initialize
  * @goal prepare-agent
  * @requiresProject true
  * @requiresDependencyResolution runtime
  */
-public class AgentMojo extends AbstractMojo {
+public class AgentMojo extends AbstractJacocoMojo {
 
 	/**
 	 * Name of the JaCoCo Agent artifact.
@@ -47,14 +51,6 @@ public class AgentMojo extends AbstractMojo {
 	 * Name of the property used in maven-surefire-plugin.
 	 */
 	private static final String SUREFIRE_ARG_LINE = "argLine";
-
-	/**
-	 * Maven project.
-	 * 
-	 * @parameter expression="${project}"
-	 * @readonly
-	 */
-	private MavenProject project;
 
 	/**
 	 * Map of plugin artifacts.
@@ -77,7 +73,8 @@ public class AgentMojo extends AbstractMojo {
 	/**
 	 * Path to the output file for execution data.
 	 * 
-	 * @parameter expression="${jacoco.destfile}" default-value="${project.build.directory}/jacoco.exec"
+	 * @parameter expression="${jacoco.destfile}"
+	 *            default-value="${project.build.directory}/jacoco.exec"
 	 */
 	private File destfile;
 
@@ -144,11 +141,11 @@ public class AgentMojo extends AbstractMojo {
 	 * <li>file: At VM termination execution data is written to the file
 	 * specified in the {@link #destfile}.</li>
 	 * <li>tcpserver: The agent listens for incoming connections on the TCP port
-	 * specified by the {@link #address} and {@link #port}. Execution data is written to
-	 * this TCP connection.</li>
+	 * specified by the {@link #address} and {@link #port}. Execution data is
+	 * written to this TCP connection.</li>
 	 * <li>tcpclient: At startup the agent connects to the TCP port specified by
-	 * the {@link #address} and {@link #port}. Execution data is written to this TCP
-	 * connection.</li>
+	 * the {@link #address} and {@link #port}. Execution data is written to this
+	 * TCP connection.</li>
 	 * <li>mbean: The agent registers an JMX MBean under the name
 	 * <code>org.jacoco:type=Runtime</code>.</li>
 	 * </ul>
@@ -176,12 +173,7 @@ public class AgentMojo extends AbstractMojo {
 	 */
 	private Integer port;
 
-	public void execute() throws MojoExecutionException, MojoFailureException {
-		if (!isEclipseTestPluginPackaging() && !isJarPackaging()
-				&& !isPropertyNameSpecified()) {
-			return;
-		}
-
+	public void executeMojo() {
 		String vmArgument = StringUtils.quoteAndEscape(createAgentOptions()
 				.getVMArgument(getAgentJarFile()), '"');
 		if (isPropertyNameSpecified()) {
@@ -193,13 +185,13 @@ public class AgentMojo extends AbstractMojo {
 		}
 	}
 
-	private File getAgentJarFile() throws MojoExecutionException {
+	private File getAgentJarFile() {
 		Artifact jacocoAgentArtifact = pluginArtifactMap
 				.get(AGENT_ARTIFACT_NAME);
 		return jacocoAgentArtifact.getFile();
 	}
 
-	private AgentOptions createAgentOptions() throws MojoExecutionException {
+	private AgentOptions createAgentOptions() {
 		AgentOptions agentOptions = new AgentOptions();
 		String destPath = destfile.getAbsolutePath();
 		agentOptions.setDestfile(destPath);
@@ -238,15 +230,11 @@ public class AgentMojo extends AbstractMojo {
 	}
 
 	private boolean isEclipseTestPluginPackaging() {
-		return "eclipse-test-plugin".equals(project.getPackaging());
-	}
-
-	private boolean isJarPackaging() {
-		return "jar".equals(project.getPackaging());
+		return "eclipse-test-plugin".equals(getProject().getPackaging());
 	}
 
 	private void prependProperty(String name, String value) {
-		Properties projectProperties = project.getProperties();
+		Properties projectProperties = getProject().getProperties();
 		String oldValue = projectProperties.getProperty(name);
 		String newValue = oldValue == null ? value : value + ' ' + oldValue;
 		getLog().info(name + " set to " + newValue);

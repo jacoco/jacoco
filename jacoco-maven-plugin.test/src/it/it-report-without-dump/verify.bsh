@@ -14,5 +14,5 @@ import org.codehaus.plexus.util.*;
 
 String buildLog = FileUtils.fileRead( new File( basedir, "build.log" ) );
 if ( buildLog.indexOf( "Unable to read execution data file" ) < 0 ) {
-    throw new RuntimeException( "Exception should be thrown from plugin" );
+    throw new RuntimeException( "Error was not printed" );
 }
