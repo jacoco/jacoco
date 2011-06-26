@@ -249,7 +249,7 @@ public class AgentMojo extends AbstractMojo {
 		Properties projectProperties = project.getProperties();
 		String oldValue = projectProperties.getProperty(name);
 		String newValue = oldValue == null ? value : value + ' ' + oldValue;
-		getLog().info(name + " set to " + value);
+		getLog().info(name + " set to " + newValue);
 		projectProperties.put(name, newValue);
 	}
 

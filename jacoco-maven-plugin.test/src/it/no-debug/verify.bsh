@@ -1,8 +1,0 @@
-import java.io.*;
-
-import org.codehaus.plexus.util.*;
-
-String buildLog = FileUtils.fileRead( new File( basedir, "build.log" ) );
-if ( buildLog.indexOf( "with debug information" ) < 0 ) {
-    throw new RuntimeException( "No warning about debug information" );
-}

@@ -37,6 +37,7 @@
               <goal>prepare-agent</goal>
             </goals>
             <configuration>
+              <!-- Enable recording of coverage during execution of maven-invoker-plugin -->
               <propertyName>invoker.mavenOpts</propertyName>
             </configuration>
           </execution>

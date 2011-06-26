@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+   Copyright (c) 2009, 2011 Mountainminds GmbH & Co. KG and Contributors
+   All rights reserved. This program and the accompanying materials
+   are made available under the terms of the Eclipse Public License v1.0
+   which accompanies this distribution, and is available at
+   http://www.eclipse.org/legal/epl-v10.html
+
+   Contributors:
+      Evgeny Mandrikov - initial API and implementation
+-->
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <parent>
+    <groupId>jacoco</groupId>
+    <artifactId>setup-parent</artifactId>
+    <version>1.0-SNAPSHOT</version>
+  </parent>
+
+  <artifactId>it-customize-agent</artifactId>
+
+  <properties>
+    <jacoco.propertyName>coverageAgent</jacoco.propertyName>
+    <jacoco.destfile>${project.build.directory}/coverage.exec</jacoco.destfile>
+    <jacoco.append>false</jacoco.append>
+    <jacoco.includes>*</jacoco.includes>
+    <jacoco.excludes>java.*</jacoco.excludes>
+    <jacoco.exclclassloaders>sun.reflect.DelegatingClassLoader:MyClassLoader</jacoco.exclclassloaders>
+    <jacoco.sessionid>session</jacoco.sessionid>
+    <jacoco.dumponexit>true</jacoco.dumponexit>
+    <jacoco.output>file</jacoco.output>
+    <jacoco.address>localhost</jacoco.address>
+    <jacoco.port>9999</jacoco.port>
+  </properties>
+
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>@project.groupId@</groupId>
+        <artifactId>jacoco-maven-plugin</artifactId>
+        <executions>
+          <execution>
+            <goals>
+              <goal>prepare-agent</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-surefire-plugin</artifactId>
+        <configuration>
+          <argLine>${coverageAgent}</argLine>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
+</project>

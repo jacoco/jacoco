@@ -139,7 +139,7 @@
                     </group>
                     <group name="jacoco-maven-plugin">
                       <classfiles>
-                        <fileset dir="../jacoco-maven-plugin/target/classes"/>
+                        <fileset dir="../jacoco-maven-plugin/target/classes" excludes="**/HelpMojo.class"/>
                       </classfiles>
                       <sourcefiles>
                         <fileset dir="../jacoco-maven-plugin/src/main/java"/>
