@@ -57,7 +57,7 @@
       <outputFileNameMapping>jacocoagent.jar</outputFileNameMapping>
       <useProjectArtifact>false</useProjectArtifact>
       <includes>
-        <include>*:*.agent.rt:*:all</include>
+        <include>*:*.agent:*:runtime</include>
       </includes>
     </dependencySet>
     <dependencySet>

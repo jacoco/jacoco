@@ -48,17 +48,17 @@
     </dependency>
     <dependency>
       <groupId>${project.groupId}</groupId>
+      <artifactId>org.jacoco.agent</artifactId>
+      <version>${project.version}</version>
+      <classifier>runtime</classifier>
+    </dependency>
+    <dependency>
+      <groupId>${project.groupId}</groupId>
       <artifactId>org.jacoco.ant</artifactId>
     </dependency>
     <dependency>
       <groupId>${project.groupId}</groupId>
       <artifactId>org.jacoco.ant-nodeps</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>${project.groupId}</groupId>
-      <artifactId>org.jacoco.agent.rt</artifactId>
-      <version>${project.version}</version>
-      <classifier>all</classifier>
     </dependency>
     <dependency>
       <groupId>${project.groupId}</groupId>

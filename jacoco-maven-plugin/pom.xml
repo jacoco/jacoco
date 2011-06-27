@@ -49,8 +49,8 @@
 
     <dependency>
       <groupId>org.jacoco</groupId>
-      <artifactId>org.jacoco.agent.rt</artifactId>
-      <classifier>all</classifier>
+      <artifactId>org.jacoco.agent</artifactId>
+      <classifier>runtime</classifier>
       <version>${project.version}</version>
     </dependency>
     <dependency>
