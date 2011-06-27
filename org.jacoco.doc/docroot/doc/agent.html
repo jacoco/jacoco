@@ -26,9 +26,9 @@
 </p>
 
 <p class="hint">
-  If you use the <a href="ant.html">JaCoCo Ant tasks</a> you don't have to care
-  about the agent and its options directly. This is transparently handled by the
-  Ant tasks.
+  If you use the <a href="ant.html">JaCoCo Ant tasks</a> or <a href="maven.html">JaCoCo Maven plug-in</a>
+  you don't have to care about the agent and its options directly. This is
+  transparently handled by the them.
 </p>
 
 <p>
@@ -39,7 +39,8 @@
 <ul>
   <li>File System: At JVM termination execution data is written to a local file.</li>
   <li>TCP Socket Server: External tools can connect to the JVM and retrieve execution data over the socket connection. Optional execution data reset and execution data dump on VM exit is possible.</li>
-  <li>TCP Socket Client: At startup the JaCoCo agent connects to a given TCP endpoint. Execution data is written to the socket connection on request. Optional execution data reset and execution data dump on VM exit is possible.</li> 
+  <li>TCP Socket Client: At startup the JaCoCo agent connects to a given TCP endpoint. Execution data is written to the socket connection on request. Optional execution data reset and execution data dump on VM exit is possible.</li>
+  <li>JMX: External tools can connect to the JVM and retrieve execution data over the JMX.</li>
 </ul>
 
 <p>
