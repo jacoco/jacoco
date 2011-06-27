@@ -56,28 +56,32 @@ public class MBeanControllerTest {
 		final MBeanAttributeInfo[] attributes = info.getAttributes();
 		assertEquals(2, attributes.length);
 
-		final MBeanAttributeInfo sessionIdAttribute = attributes[0];
-		assertEquals("SessionId", sessionIdAttribute.getName());
-		assertEquals(String.class.getName(), sessionIdAttribute.getType());
-
-		final MBeanAttributeInfo versionAttribute = attributes[1];
-		assertEquals("Version", versionAttribute.getName());
-		assertEquals(String.class.getName(), versionAttribute.getType());
+		for (MBeanAttributeInfo attribute : attributes) {
+			if ("SessionId".equals(attribute.getName())) {
+				assertEquals(String.class.getName(), attribute.getType());
+			} else if ("Version".equals(attribute.getName())) {
+				assertEquals(String.class.getName(), attribute.getType());
+			} else {
+				fail("Unexpected attribute: " + attribute.getName());
+			}
+		}
 
 		final MBeanOperationInfo[] operations = info.getOperations();
 		assertEquals(2, info.getOperations().length);
 
-		final MBeanOperationInfo resetOperation = operations[0];
-		assertEquals("reset", resetOperation.getName());
-		assertEquals(void.class.getName(), resetOperation.getReturnType());
-		assertEquals(0, resetOperation.getSignature().length);
-
-		final MBeanOperationInfo dumpOperation = operations[1];
-		assertEquals("dump", dumpOperation.getName());
-		assertEquals(byte[].class.getName(), dumpOperation.getReturnType());
-		assertEquals(1, dumpOperation.getSignature().length);
-		assertEquals(boolean.class.getName(),
-				dumpOperation.getSignature()[0].getType());
+		for (MBeanOperationInfo operation : operations) {
+			if ("reset".equals(operation.getName())) {
+				assertEquals(void.class.getName(), operation.getReturnType());
+				assertEquals(0, operation.getSignature().length);
+			} else if ("dump".equals(operation.getName())) {
+				assertEquals(byte[].class.getName(), operation.getReturnType());
+				assertEquals(1, operation.getSignature().length);
+				assertEquals(boolean.class.getName(),
+						operation.getSignature()[0].getType());
+			} else {
+				fail("Unexpected operation: " + operation.getName());
+			}
+		}
 
 		controller.shutdown();
 
