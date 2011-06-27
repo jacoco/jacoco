@@ -21,7 +21,7 @@
   </parent>
 
   <artifactId>jacoco-maven-plugin.test</artifactId>
-  <packaging>pom</packaging>
+  <packaging>jar</packaging>
 
   <name>JaCoCo :: Test :: Maven Plugin</name>
 
@@ -49,7 +49,7 @@
         <artifactId>maven-invoker-plugin</artifactId>
         <version>1.5</version>
         <configuration>
-          <projectsDirectory>src/it</projectsDirectory>
+          <projectsDirectory>it</projectsDirectory>
           <cloneProjectsTo>${project.build.directory}/it</cloneProjectsTo>
           <pomIncludes>
             <pomInclude>*/pom.xml</pomInclude>
@@ -60,7 +60,7 @@
             <goal>clean</goal>
             <goal>install</goal>
           </goals>
-          <settingsFile>src/it/settings.xml</settingsFile>
+          <settingsFile>it/settings.xml</settingsFile>
         </configuration>
         <executions>
           <execution>
