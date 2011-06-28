@@ -23,6 +23,10 @@
 
   <name>JaCoCo :: Test :: Ant</name>
 
+  <properties>
+    <jacoco.includes>org.jacoco.ant.*</jacoco.includes>
+  </properties>
+
   <dependencies>
     <dependency>
       <groupId>${project.groupId}</groupId>

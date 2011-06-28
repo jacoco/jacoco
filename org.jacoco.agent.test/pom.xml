@@ -24,6 +24,10 @@
 
   <name>JaCoCo :: Test :: Agent</name>
 
+  <properties>
+    <jacoco.includes>org.jacoco.agent.*</jacoco.includes>
+  </properties>
+
   <!-- Note that Tycho doesn't use those dependencies -->
   <dependencies>
     <dependency>

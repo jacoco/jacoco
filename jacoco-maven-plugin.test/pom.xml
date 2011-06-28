@@ -25,24 +25,14 @@
 
   <name>JaCoCo :: Test :: Maven Plugin</name>
 
+  <properties>
+    <!-- Enable recording of coverage during execution of maven-invoker-plugin -->
+    <jacoco.propertyName>invoker.mavenOpts</jacoco.propertyName>
+    <jacoco.includes>org.jacoco.maven.*</jacoco.includes>
+  </properties>
+
   <build>
     <plugins>
-      <plugin>
-        <groupId>org.jacoco</groupId>
-        <artifactId>jacoco-maven-plugin</artifactId>
-        <version>${project.version}</version>
-        <executions>
-          <execution>
-            <goals>
-              <goal>prepare-agent</goal>
-            </goals>
-            <configuration>
-              <!-- Enable recording of coverage during execution of maven-invoker-plugin -->
-              <propertyName>invoker.mavenOpts</propertyName>
-            </configuration>
-          </execution>
-        </executions>
-      </plugin>
       <plugin>
         <!-- To run with different Maven versions use -Dinvoker.mavenHome -->
         <groupId>org.apache.maven.plugins</groupId>

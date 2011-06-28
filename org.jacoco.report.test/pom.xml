@@ -24,6 +24,10 @@
 
   <name>JaCoCo :: Test :: Report</name>
 
+  <properties>
+    <jacoco.includes>org.jacoco.report.*</jacoco.includes>
+  </properties>
+
   <!-- Note that Tycho doesn't use those dependencies -->
   <dependencies>
     <dependency>

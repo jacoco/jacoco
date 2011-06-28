@@ -23,6 +23,10 @@
 
   <name>JaCoCo :: Test :: Agent RT</name>
 
+  <properties>
+    <jacoco.includes>org.jacoco.agent.rt.*</jacoco.includes>
+  </properties>
+
   <dependencies>
     <dependency>
       <groupId>${project.groupId}</groupId>
