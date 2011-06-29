@@ -29,7 +29,6 @@
   <properties>
     <maven.deploy.skip>true</maven.deploy.skip>
 
-    <qualified.bundle.version>${project.version}</qualified.bundle.version>
     <copyright.years>${project.inceptionYear} - 2011</copyright.years>
   </properties>
 
@@ -72,6 +71,36 @@
     <sourceDirectory>src</sourceDirectory>
 
     <plugins>
+      <plugin>
+        <groupId>org.eclipse.tycho</groupId>
+        <artifactId>tycho-packaging-plugin</artifactId>
+        <executions>
+          <execution>
+            <goals>
+              <goal>build-qualifier</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+
+      <plugin>
+        <groupId>org.codehaus.groovy.maven</groupId>
+        <artifactId>gmaven-plugin</artifactId>
+        <executions>
+          <execution>
+            <phase>validate</phase>
+            <goals>
+              <goal>execute</goal>
+            </goals>
+            <configuration>
+              <source>
+              project.properties['qualified.bundle.version'] = project.properties['unqualifiedVersion'] + '.' + project.properties['buildQualifier']
+              </source>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-antrun-plugin</artifactId>
@@ -152,6 +181,22 @@
                   <csv destfile="${project.build.directory}/coverage/coverage.csv"/>
                   <xml destfile="${project.build.directory}/coverage/coverage.xml"/>
                 </report>
+
+                <echo message="JUnit report"/>
+                <mkdir dir="${project.build.directory}/junit"/>
+                <junitreport todir="${project.build.directory}/junit">
+                  <fileset dir="../org.jacoco.agent.test/target/surefire-reports" includes="**/*.xml"/>
+                  <fileset dir="../org.jacoco.agent.rt.test/target/surefire-reports" includes="**/*.xml"/>
+                  <fileset dir="../org.jacoco.ant.test/target/surefire-reports" includes="**/*.xml"/>
+                  <fileset dir="../org.jacoco.core.test/target/surefire-reports" includes="**/*.xml"/>
+                  <fileset dir="../org.jacoco.report.test/target/surefire-reports" includes="**/*.xml"/>
+                  <report format="noframes" styledir="junitstyle" todir="${project.build.directory}/junit">
+                    <param name="qualified.bundle.version" expression="${qualified.bundle.version}"/>
+                    <param name="jacoco.home.url" expression="${jacoco.home.url}"/>
+                    <param name="copyright.years" expression="${copyright.years}"/>
+                  </report>
+                </junitreport>
+                <move file="${project.build.directory}/junit/junit-noframes.html" tofile="${project.build.directory}/junit/index.html"/>
               </target>
             </configuration>
           </execution>
@@ -161,6 +206,11 @@
             <groupId>${project.groupId}</groupId>
             <artifactId>org.jacoco.ant</artifactId>
             <version>${project.version}</version>
+          </dependency>
+          <dependency>
+            <groupId>org.apache.ant</groupId>
+            <artifactId>ant-junit</artifactId>
+            <version>1.8.2</version>
           </dependency>
         </dependencies>
       </plugin>
@@ -175,6 +225,7 @@
               <goal>single</goal>
             </goals>
             <configuration>
+              <finalName>jacoco-${qualified.bundle.version}</finalName>
               <appendAssemblyId>false</appendAssemblyId>
               <descriptors>
                 <descriptor>assembly.xml</descriptor>
@@ -215,8 +266,8 @@
                     <dependencySourceExclude>org.jacoco:org.jacoco.ant-nodeps</dependencySourceExclude>
                     <dependencySourceExclude>org.jacoco:*.test</dependencySourceExclude>
                   </dependencySourceExcludes>
-                  <doctitle>JaCoCo ${project.version} API</doctitle>
-                  <windowtitle>JaCoCo ${project.version} API</windowtitle>
+                  <doctitle>JaCoCo ${qualified.bundle.version} API</doctitle>
+                  <windowtitle>JaCoCo ${qualified.bundle.version} API</windowtitle>
                   <use>true</use>
                   <version>false</version>
                   <groups>

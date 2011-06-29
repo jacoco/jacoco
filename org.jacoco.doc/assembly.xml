@@ -22,6 +22,16 @@
       <fileMode>0644</fileMode>
       <directoryMode>0755</directoryMode>
       <filtered>true</filtered>
+      <excludes>
+        <exclude>**/*.gif</exclude>
+      </excludes>
+    </fileSet>
+    <fileSet>
+      <directory>${basedir}/docroot</directory>
+      <outputDirectory>/</outputDirectory>
+      <includes>
+        <include>**/*.gif</include>
+      </includes>
     </fileSet>
     <fileSet>
       <directory>${basedir}/target/apidocs</directory>
@@ -32,6 +42,12 @@
     <fileSet>
       <directory>${basedir}/target/coverage</directory>
       <outputDirectory>/coverage</outputDirectory>
+      <fileMode>0644</fileMode>
+      <directoryMode>0755</directoryMode>
+    </fileSet>
+    <fileSet>
+      <directory>${basedir}/target/junit</directory>
+      <outputDirectory>/test</outputDirectory>
       <fileMode>0644</fileMode>
       <directoryMode>0755</directoryMode>
     </fileSet>
@@ -62,6 +78,7 @@
     </dependencySet>
     <dependencySet>
       <outputDirectory>lib</outputDirectory>
+      <outputFileNameMapping>${artifact.artifactId}-${qualified.bundle.version}.${artifact.extension}</outputFileNameMapping>
       <useProjectArtifact>false</useProjectArtifact>
       <includes>
         <include>${project.groupId}:org.jacoco.core</include>
@@ -69,6 +86,9 @@
         <include>${project.groupId}:org.jacoco.agent</include>
         <include>${project.groupId}:org.jacoco.ant</include>
       </includes>
+      <excludes>
+        <exclude>${project.groupId}:org.jacoco.agent:*:runtime</exclude>
+      </excludes>
     </dependencySet>
     <dependencySet>
       <outputDirectory>/doc</outputDirectory>
