@@ -25,7 +25,7 @@ import javax.management.remote.JMXServiceURL;
  * <code>mbean</code> and requests execution data. The collected data is dumped
  * to a local file.
  */
-public class MBeanClient {
+public final class MBeanClient {
 
 	private static final String DESTFILE = "jacoco-client.exec";
 
@@ -73,4 +73,6 @@ public class MBeanClient {
 		void reset();
 	}
 
+	private MBeanClient() {
+	}
 }

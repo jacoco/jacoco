@@ -46,6 +46,7 @@ public class MBeanController implements IAgentController, IRuntimeMBean {
 	}
 
 	public void writeExecutionData() throws Exception {
+		// nothing to do
 	}
 
 	// === IRuntimeMBean ===

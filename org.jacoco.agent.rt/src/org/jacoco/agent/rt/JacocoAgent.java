@@ -81,7 +81,7 @@ public class JacocoAgent {
 		controller.startup(options, runtime);
 	}
 
-	private IAgentController createAgentController() {
+	IAgentController createAgentController() {
 		final OutputMode controllerType = options.getOutput();
 		switch (controllerType) {
 		case file:

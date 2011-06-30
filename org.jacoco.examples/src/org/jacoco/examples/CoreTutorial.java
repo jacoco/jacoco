@@ -29,7 +29,7 @@ import org.jacoco.core.runtime.LoggerRuntime;
  * will be instrumented and executed. Finally the coverage information will be
  * dumped.
  */
-public class CoreTutorial {
+public final class CoreTutorial {
 
 	/**
 	 * The test target we want to see code coverage for.
@@ -108,7 +108,6 @@ public class CoreTutorial {
 	}
 
 	private void runTutorial() throws Exception {
-
 		final String targetName = TestTarget.class.getName();
 
 		// For instrumentation and runtime we need a IRuntime instance
@@ -172,6 +171,9 @@ public class CoreTutorial {
 	 */
 	public static void main(final String[] args) throws Exception {
 		new CoreTutorial().runTutorial();
+	}
+
+	private CoreTutorial() {
 	}
 
 }

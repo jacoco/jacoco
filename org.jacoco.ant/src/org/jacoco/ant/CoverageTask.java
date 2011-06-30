@@ -54,9 +54,7 @@ public class CoverageTask extends AbstractCoverageTask implements TaskContainer 
 
 		this.childTask = task;
 
-		final UnknownElement unknownElement = (UnknownElement) task;
-
-		final String subTaskTypeName = unknownElement.getTaskType();
+		final String subTaskTypeName = task.getTaskType();
 
 		final TaskEnhancer enhancer = findEnhancerForTask(subTaskTypeName);
 		if (enhancer == null) {
@@ -108,7 +106,7 @@ public class CoverageTask extends AbstractCoverageTask implements TaskContainer 
 
 		@Override
 		public void enhanceTask(final Task task) {
-			addJvmArgs((UnknownElement) task);
+			addJvmArgs(task);
 		}
 
 	}
@@ -141,10 +139,10 @@ public class CoverageTask extends AbstractCoverageTask implements TaskContainer 
 						"Coverage can only be applied on a forked VM");
 			}
 
-			addJvmArgs((UnknownElement) task);
+			addJvmArgs(task);
 		}
 
-		public void addJvmArgs(final UnknownElement task) {
+		public void addJvmArgs(final Task task) {
 			final UnknownElement el = new UnknownElement("jvmarg");
 			el.setTaskName("jvmarg");
 			el.setQName("jvmarg");
@@ -157,7 +155,7 @@ public class CoverageTask extends AbstractCoverageTask implements TaskContainer 
 			task.getRuntimeConfigurableWrapper().addChild(
 					runtimeConfigurableWrapper);
 
-			task.addChild(el);
+			((UnknownElement) task).addChild(el);
 		}
 	}
 

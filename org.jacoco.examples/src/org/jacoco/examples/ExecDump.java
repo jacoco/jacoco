@@ -24,7 +24,7 @@ import org.jacoco.core.data.SessionInfo;
 /**
  * This example reads given execution data files and dumps their content.
  */
-public class ExecDump {
+public final class ExecDump {
 
 	/**
 	 * Reads all execution data files specified as the arguments and dumps the
@@ -76,4 +76,6 @@ public class ExecDump {
 		return count;
 	}
 
+	private ExecDump() {
+	}
 }

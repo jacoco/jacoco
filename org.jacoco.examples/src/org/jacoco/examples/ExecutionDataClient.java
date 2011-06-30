@@ -24,7 +24,7 @@ import org.jacoco.core.runtime.RemoteControlWriter;
  * <code>tcpserver</code> and requests execution data. The collected data is
  * dumped to a local file.
  */
-public class ExecutionDataClient {
+public final class ExecutionDataClient {
 
 	private static final String DESTFILE = "jacoco-client.exec";
 
@@ -60,4 +60,6 @@ public class ExecutionDataClient {
 		localFile.close();
 	}
 
+	private ExecutionDataClient() {
+	}
 }

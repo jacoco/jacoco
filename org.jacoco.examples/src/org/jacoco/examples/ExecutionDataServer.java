@@ -29,7 +29,7 @@ import org.jacoco.core.runtime.RemoteControlWriter;
  * in output mode <code>tcpclient</code>. The collected data is dumped to a
  * local file.
  */
-public class ExecutionDataServer {
+public final class ExecutionDataServer {
 
 	private static final String DESTFILE = "jacoco-server.exec";
 
@@ -102,6 +102,8 @@ public class ExecutionDataServer {
 				fileWriter.visitClassExecution(data);
 			}
 		}
+	}
 
+	private ExecutionDataServer() {
 	}
 }

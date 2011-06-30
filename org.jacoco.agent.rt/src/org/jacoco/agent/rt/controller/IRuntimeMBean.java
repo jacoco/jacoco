@@ -13,16 +13,47 @@ package org.jacoco.agent.rt.controller;
 
 import java.io.IOException;
 
+/**
+ * MBean interface for remote commands to a coverage runtime.
+ */
 public interface IRuntimeMBean {
 
+	/**
+	 * Returns version of JaCoCo.
+	 * 
+	 * @return version of JaCoCo
+	 */
 	String getVersion();
 
+	/**
+	 * Returns current a session identifier.
+	 * 
+	 * @return current session identifier
+	 */
 	String getSessionId();
 
+	/**
+	 * Sets a session identifier.
+	 * 
+	 * @param id
+	 *            new session identifier
+	 */
 	void setSessionId(String id);
 
+	/**
+	 * Returns current execution data.
+	 * 
+	 * @param reset
+	 *            if <code>true</code> the current coverage information is also
+	 *            cleared
+	 * @return dump of current execution data
+	 * @throws IOException
+	 */
 	byte[] dump(boolean reset) throws IOException;
 
+	/**
+	 * Resets all coverage information.
+	 */
 	void reset();
 
 }
