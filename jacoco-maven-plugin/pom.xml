@@ -24,7 +24,7 @@
   <packaging>maven-plugin</packaging>
 
   <name>JaCoCo :: Maven Plugin</name>
-  <description>JaCoCo Maven Plugin</description>
+  <description>The JaCoCo Maven Plugin provides the JaCoCo runtime agent to your tests and allows basic report creation.</description>
 
   <prerequisites>
     <maven>2.1.0</maven>
