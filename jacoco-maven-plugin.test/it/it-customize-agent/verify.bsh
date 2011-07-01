@@ -12,7 +12,7 @@
 import java.io.*;
 import org.codehaus.plexus.util.*;
 
-String agentOptions = "destfile=" + basedir + "/target/coverage.exec"
+String agentOptions = "destfile=" + basedir + File.separator + "target" + File.separator + "coverage.exec"
     + ",append=false"
     + ",includes=*"
     + ",excludes=java.*"

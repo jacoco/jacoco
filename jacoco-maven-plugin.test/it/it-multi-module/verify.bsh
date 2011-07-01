@@ -11,6 +11,11 @@
  *******************************************************************************/
 import java.io.*;
 
+File dump2 = new File( basedir, "skip-child/target/jacoco.exec" );
+if ( dump2.isFile() ) {
+    throw new RuntimeException( "Should not be executed for module 'skip-child', but dump found : " + dump2 );
+}
+
 File file = new File( basedir, "child/target/jacoco.exec" );
 if ( !file.isFile() )
 {
