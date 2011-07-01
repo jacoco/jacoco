@@ -37,7 +37,7 @@ public class SessionInfo implements Comparable<SessionInfo> {
 	 */
 	public SessionInfo(final String id, final long start, final long dump) {
 		if (id == null) {
-			throw new NullPointerException();
+			throw new IllegalArgumentException();
 		}
 		this.id = id;
 		this.start = start;

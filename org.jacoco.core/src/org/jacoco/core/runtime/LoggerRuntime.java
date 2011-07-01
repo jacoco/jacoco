@@ -169,6 +169,7 @@ public class LoggerRuntime extends AbstractRuntime {
 
 		@Override
 		public void flush() {
+			// nothing to do
 		}
 
 		@Override

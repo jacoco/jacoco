@@ -151,9 +151,8 @@ public final class LabelFlowAnalyzer implements MethodVisitor {
 		first = false;
 	}
 
-	// Not relevant:
-
 	public void visitAttribute(final Attribute attr) {
+		// nothing to do
 	}
 
 	public AnnotationVisitor visitAnnotationDefault() {
@@ -162,33 +161,41 @@ public final class LabelFlowAnalyzer implements MethodVisitor {
 
 	public AnnotationVisitor visitAnnotation(final String desc,
 			final boolean visible) {
+		// nothing to do
 		return null;
 	}
 
 	public AnnotationVisitor visitParameterAnnotation(final int parameter,
 			final String desc, final boolean visible) {
+		// nothing to do
 		return null;
 	}
 
 	public void visitLocalVariable(final String name, final String desc,
 			final String signature, final Label start, final Label end,
 			final int index) {
+		// nothing to do
 	}
 
 	public void visitCode() {
+		// nothing to do
 	}
 
 	public void visitLineNumber(final int line, final Label start) {
+		// nothing to do
 	}
 
 	public void visitFrame(final int type, final int nLocal,
 			final Object[] local, final int nStack, final Object[] stack) {
+		// nothing to do
 	}
 
 	public void visitMaxs(final int maxStack, final int maxLocals) {
+		// nothing to do
 	}
 
 	public void visitEnd() {
+		// nothing to do
 	}
 
 }

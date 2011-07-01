@@ -31,21 +31,26 @@ public class ClassProbesAdapter extends ClassAdapter implements
 		class Impl extends EmptyVisitor implements IMethodProbesVisitor {
 
 			public void visitProbe(final int probeId) {
+				// nothing to do
 			}
 
 			public void visitJumpInsnWithProbe(final int opcode,
 					final Label label, final int probeId) {
+				// nothing to do
 			}
 
 			public void visitInsnWithProbe(final int opcode, final int probeId) {
+				// nothing to do
 			}
 
 			public void visitTableSwitchInsnWithProbes(final int min,
 					final int max, final Label dflt, final Label[] labels) {
+				// nothing to do
 			}
 
 			public void visitLookupSwitchInsnWithProbes(final Label dflt,
 					final int[] keys, final Label[] labels) {
+				// nothing to do
 			}
 		}
 		EMPTY_METHOD_PROBES_VISITOR = new Impl();

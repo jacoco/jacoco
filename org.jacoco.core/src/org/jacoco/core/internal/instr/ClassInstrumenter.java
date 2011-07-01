@@ -221,6 +221,7 @@ public class ClassInstrumenter extends ClassAdapter implements
 		}
 
 		public void addMembers(final ClassVisitor delegate) {
+			// nothing to do
 		}
 
 	}

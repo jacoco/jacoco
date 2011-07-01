@@ -20,7 +20,7 @@ import org.junit.Test;
  */
 public class SessionInfoTest {
 
-	@Test(expected = NullPointerException.class)
+	@Test(expected = IllegalArgumentException.class)
 	public void testNullId() {
 		new SessionInfo(null, 1, 2);
 	}

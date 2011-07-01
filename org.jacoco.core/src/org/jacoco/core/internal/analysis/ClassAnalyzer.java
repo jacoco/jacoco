@@ -92,33 +92,38 @@ public class ClassAnalyzer implements IClassProbesVisitor {
 		};
 	}
 
-	// Nothing to do here:
-
 	public void visitTotalProbeCount(final int count) {
+		// nothing to do
 	}
 
 	public AnnotationVisitor visitAnnotation(final String desc,
 			final boolean visible) {
+		// nothing to do
 		return null;
 	}
 
 	public void visitAttribute(final Attribute attr) {
+		// nothing to do
 	}
 
 	public FieldVisitor visitField(final int access, final String name,
 			final String desc, final String signature, final Object value) {
+		// nothing to do
 		return null;
 	}
 
 	public void visitInnerClass(final String name, final String outerName,
 			final String innerName, final int access) {
+		// nothing to do
 	}
 
 	public void visitOuterClass(final String owner, final String name,
 			final String desc) {
+		// nothing to do
 	}
 
 	public void visitEnd() {
+		// nothing to do
 	}
 
 }
