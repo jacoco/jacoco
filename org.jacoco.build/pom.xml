@@ -405,11 +405,6 @@
           <artifactId>gmaven-plugin</artifactId>
           <version>1.0</version>
         </plugin>
-        <plugin>
-          <groupId>com.mycila.maven-license-plugin</groupId>
-          <artifactId>maven-license-plugin</artifactId>
-          <version>1.9.0</version>
-        </plugin>
       </plugins>
     </pluginManagement>
 
@@ -532,36 +527,6 @@
                 </requireReleaseDeps>
               </rules>
             </configuration>
-          </execution>
-        </executions>
-      </plugin>
-
-      <plugin>
-        <groupId>com.mycila.maven-license-plugin</groupId>
-        <artifactId>maven-license-plugin</artifactId>
-        <configuration>
-          <header>../org.jacoco.build/license-header.txt</header>
-          <properties>
-            <years>2009, 2011</years>
-          </properties>
-          <encoding>${project.build.sourceEncoding}</encoding>
-          <strictCheck>true</strictCheck>
-          <!-- TODO should be true - see https://sourceforge.net/apps/trac/eclemma/ticket/134 -->
-          <failIfMissing>false</failIfMissing>
-          <!-- TODO should be false - see https://sourceforge.net/apps/trac/eclemma/ticket/134 -->
-          <quiet>true</quiet>
-          <includes>
-            <include>src/**/*.java</include>
-            <include>src/**/*.xml</include>
-          </includes>
-        </configuration>
-        <executions>
-          <execution>
-            <id>enforce-license-headers</id>
-            <phase>validate</phase>
-            <goals>
-              <goal>check</goal>
-            </goals>
           </execution>
         </executions>
       </plugin>
