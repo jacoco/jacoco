@@ -141,6 +141,11 @@
     <!-- ================== -->
     <sonar.skippedModules>org.jacoco.tests</sonar.skippedModules>
 
+    <sonar.core.codeCoveragePlugin>jacoco</sonar.core.codeCoveragePlugin>
+    <sonar.dynamicAnalysis>reuseReports</sonar.dynamicAnalysis>
+    <sonar.jacoco.reportPath>../${project.artifactId}.test/target/jacoco.exec</sonar.jacoco.reportPath>
+    <sonar.surefire.reportsPath>../${project.artifactId}.test/target/surefire-reports/</sonar.surefire.reportsPath>
+
     <!-- See http://jira.codehaus.org/browse/SONAR-2096 -->
     <sonar.java.source>1.5</sonar.java.source>
     <sonar.java.target>1.5</sonar.java.target>
