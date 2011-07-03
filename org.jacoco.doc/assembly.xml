@@ -34,12 +34,6 @@
       </includes>
     </fileSet>
     <fileSet>
-      <directory>${basedir}/target/apidocs</directory>
-      <outputDirectory>/doc/api</outputDirectory>
-      <fileMode>0644</fileMode>
-      <directoryMode>0755</directoryMode>
-    </fileSet>
-    <fileSet>
       <directory>${basedir}/target/coverage</directory>
       <outputDirectory>/coverage</outputDirectory>
       <fileMode>0644</fileMode>
@@ -96,6 +90,19 @@
       <useProjectArtifact>false</useProjectArtifact>
       <includes>
         <include>*:org.jacoco.examples</include>
+      </includes>
+    </dependencySet>
+    <dependencySet>
+      <outputDirectory>/doc/api</outputDirectory>
+      <unpack>true</unpack>
+      <unpackOptions>
+        <excludes>
+          <exclude>META-INF/</exclude>
+        </excludes>
+      </unpackOptions>
+      <useProjectAttachments>true</useProjectAttachments>
+      <includes>
+        <include>*:org.jacoco.doc:*:javadoc</include>
       </includes>
     </dependencySet>
   </dependencySets>
