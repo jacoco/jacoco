@@ -11,6 +11,15 @@
  *******************************************************************************/
 package org.jacoco.maven;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.Reader;
+import java.util.ArrayList;
+import java.util.List;
+
 import org.jacoco.core.analysis.Analyzer;
 import org.jacoco.core.analysis.CoverageBuilder;
 import org.jacoco.core.analysis.IBundleCoverage;
@@ -18,14 +27,14 @@ import org.jacoco.core.analysis.ICoverageNode;
 import org.jacoco.core.data.ExecutionDataReader;
 import org.jacoco.core.data.ExecutionDataStore;
 import org.jacoco.core.data.SessionInfoStore;
-import org.jacoco.report.*;
+import org.jacoco.report.FileMultiReportOutput;
+import org.jacoco.report.IReportGroupVisitor;
+import org.jacoco.report.IReportVisitor;
+import org.jacoco.report.ISourceFileLocator;
+import org.jacoco.report.MultiReportVisitor;
 import org.jacoco.report.csv.CSVFormatter;
 import org.jacoco.report.html.HTMLFormatter;
 import org.jacoco.report.xml.XMLFormatter;
-
-import java.io.*;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Creates a code coverage report for a single project in multiple formats
@@ -70,22 +79,23 @@ public class ReportMojo extends AbstractJacocoMojo {
 
 	private ExecutionDataStore executionDataStore;
 
+	@Override
 	protected void executeMojo() {
 		try {
 			loadExecutionData();
-		} catch (IOException e) {
+		} catch (final IOException e) {
 			getLog().error(
 					"Unable to read execution data file " + dataFile + ": "
 							+ e.getMessage(), e);
 			return;
 		}
 		try {
-			IReportVisitor visitor = createVisitor();
+			final IReportVisitor visitor = createVisitor();
 			visitor.visitInfo(sessionInfoStore.getInfos(),
 					executionDataStore.getContents());
 			createReport(visitor);
 			visitor.visitEnd();
-		} catch (Exception e) {
+		} catch (final Exception e) {
 			getLog().error("Error while creating report: " + e.getMessage(), e);
 		}
 	}
@@ -96,7 +106,7 @@ public class ReportMojo extends AbstractJacocoMojo {
 		FileInputStream in = null;
 		try {
 			in = new FileInputStream(dataFile);
-			ExecutionDataReader reader = new ExecutionDataReader(in);
+			final ExecutionDataReader reader = new ExecutionDataReader(in);
 			reader.setSessionInfoVisitor(sessionInfoStore);
 			reader.setExecutionDataVisitor(executionDataStore);
 			reader.read();
@@ -116,7 +126,7 @@ public class ReportMojo extends AbstractJacocoMojo {
 		visitor.visitBundle(bundle, locator);
 	}
 
-	private void checkForMissingDebugInformation(ICoverageNode node) {
+	private void checkForMissingDebugInformation(final ICoverageNode node) {
 		if (node.getClassCounter().getTotalCount() > 0
 				&& node.getLineCounter().getTotalCount() == 0) {
 			getLog().warn(
@@ -127,13 +137,14 @@ public class ReportMojo extends AbstractJacocoMojo {
 	private IBundleCoverage createBundle() throws IOException {
 		final CoverageBuilder builder = new CoverageBuilder();
 		final Analyzer analyzer = new Analyzer(executionDataStore, builder);
-		File classesDir = new File(getProject().getBuild().getOutputDirectory());
+		final File classesDir = new File(getProject().getBuild()
+				.getOutputDirectory());
 		analyzer.analyzeAll(classesDir);
 		return builder.getBundle(getProject().getName());
 	}
 
 	private IReportVisitor createVisitor() throws IOException {
-		List<IReportVisitor> visitors = new ArrayList<IReportVisitor>();
+		final List<IReportVisitor> visitors = new ArrayList<IReportVisitor>();
 
 		outputDirectory.mkdirs();
 
@@ -159,24 +170,25 @@ public class ReportMojo extends AbstractJacocoMojo {
 
 	private static class SourceFileCollection implements ISourceFileLocator {
 
-		private List<File> sourceRoots;
-		private String encoding;
+		private final List<File> sourceRoots;
+		private final String encoding;
 
-		public SourceFileCollection(List<File> sourceRoots, String encoding) {
+		public SourceFileCollection(final List<File> sourceRoots,
+				final String encoding) {
 			this.sourceRoots = sourceRoots;
 			this.encoding = encoding;
 		}
 
-		public Reader getSourceFile(String packageName, String fileName)
-				throws IOException {
+		public Reader getSourceFile(final String packageName,
+				final String fileName) throws IOException {
 			final String r;
 			if (packageName.length() > 0) {
 				r = packageName + '/' + fileName;
 			} else {
 				r = fileName;
 			}
-			for (File sourceRoot : sourceRoots) {
-				File file = new File(sourceRoot, r);
+			for (final File sourceRoot : sourceRoots) {
+				final File file = new File(sourceRoot, r);
 				if (file.exists() && file.isFile()) {
 					return new InputStreamReader(new FileInputStream(file),
 							encoding);
@@ -190,7 +202,7 @@ public class ReportMojo extends AbstractJacocoMojo {
 		}
 	}
 
-	private File resolvePath(String path) {
+	private File resolvePath(final String path) {
 		File file = new File(path);
 		if (!file.isAbsolute()) {
 			file = new File(getProject().getBasedir(), path);
@@ -199,8 +211,8 @@ public class ReportMojo extends AbstractJacocoMojo {
 	}
 
 	private List<File> getCompileSourceRoots() {
-		List<File> result = new ArrayList<File>();
-		for (Object path : getProject().getCompileSourceRoots()) {
+		final List<File> result = new ArrayList<File>();
+		for (final Object path : getProject().getCompileSourceRoots()) {
 			result.add(resolvePath((String) path));
 		}
 		return result;

@@ -11,13 +11,13 @@
  *******************************************************************************/
 package org.jacoco.maven;
 
-import org.apache.maven.artifact.Artifact;
-import org.codehaus.plexus.util.StringUtils;
-import org.jacoco.core.runtime.AgentOptions;
-
 import java.io.File;
 import java.util.Map;
 import java.util.Properties;
+
+import org.apache.maven.artifact.Artifact;
+import org.codehaus.plexus.util.StringUtils;
+import org.jacoco.core.runtime.AgentOptions;
 
 /**
  * Prepares a property pointing to the JaCoCo runtime agent that can be passed
@@ -173,9 +173,10 @@ public class AgentMojo extends AbstractJacocoMojo {
 	 */
 	private Integer port;
 
+	@Override
 	public void executeMojo() {
-		String vmArgument = StringUtils.quoteAndEscape(createAgentOptions()
-				.getVMArgument(getAgentJarFile()), '"');
+		final String vmArgument = StringUtils.quoteAndEscape(
+				createAgentOptions().getVMArgument(getAgentJarFile()), '"');
 		if (isPropertyNameSpecified()) {
 			prependProperty(propertyName, vmArgument);
 		} else if (isEclipseTestPluginPackaging()) {
@@ -186,17 +187,17 @@ public class AgentMojo extends AbstractJacocoMojo {
 	}
 
 	private File getAgentJarFile() {
-		Artifact jacocoAgentArtifact = pluginArtifactMap
+		final Artifact jacocoAgentArtifact = pluginArtifactMap
 				.get(AGENT_ARTIFACT_NAME);
 		return jacocoAgentArtifact.getFile();
 	}
 
 	private AgentOptions createAgentOptions() {
-		AgentOptions agentOptions = new AgentOptions();
-		String destPath = destfile.getAbsolutePath();
+		final AgentOptions agentOptions = new AgentOptions();
+		final String destPath = destfile.getAbsolutePath();
 		agentOptions.setDestfile(destPath);
 		if (append != null) {
-			agentOptions.setAppend(append);
+			agentOptions.setAppend(append.booleanValue());
 		}
 		if (includes != null) {
 			agentOptions.setIncludes(includes);
@@ -211,7 +212,7 @@ public class AgentMojo extends AbstractJacocoMojo {
 			agentOptions.setSessionId(sessionid);
 		}
 		if (dumpOnExit != null) {
-			agentOptions.setDumpOnExit(dumpOnExit);
+			agentOptions.setDumpOnExit(dumpOnExit.booleanValue());
 		}
 		if (output != null) {
 			agentOptions.setOutput(output);
@@ -220,7 +221,7 @@ public class AgentMojo extends AbstractJacocoMojo {
 			agentOptions.setAddress(address);
 		}
 		if (port != null) {
-			agentOptions.setPort(port);
+			agentOptions.setPort(port.intValue());
 		}
 		return agentOptions;
 	}
@@ -233,10 +234,11 @@ public class AgentMojo extends AbstractJacocoMojo {
 		return "eclipse-test-plugin".equals(getProject().getPackaging());
 	}
 
-	private void prependProperty(String name, String value) {
-		Properties projectProperties = getProject().getProperties();
-		String oldValue = projectProperties.getProperty(name);
-		String newValue = oldValue == null ? value : value + ' ' + oldValue;
+	private void prependProperty(final String name, final String value) {
+		final Properties projectProperties = getProject().getProperties();
+		final String oldValue = projectProperties.getProperty(name);
+		final String newValue = oldValue == null ? value : value + ' '
+				+ oldValue;
 		getLog().info(name + " set to " + newValue);
 		projectProperties.put(name, newValue);
 	}
