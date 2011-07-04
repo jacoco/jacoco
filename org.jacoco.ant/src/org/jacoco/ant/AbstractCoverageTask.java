@@ -32,6 +32,7 @@ public class AbstractCoverageTask extends Task {
 	 * Create default agent options
 	 */
 	protected AbstractCoverageTask() {
+		super();
 		agentOptions = new AgentOptions();
 		enabled = true;
 	}

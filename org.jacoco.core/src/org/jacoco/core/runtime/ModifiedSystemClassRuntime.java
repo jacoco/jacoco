@@ -53,6 +53,7 @@ public class ModifiedSystemClassRuntime extends AbstractRuntime {
 	 */
 	public ModifiedSystemClassRuntime(final Class<?> systemClass,
 			final String accessFieldName) {
+		super();
 		this.systemClass = systemClass;
 		this.systemClassName = systemClass.getName().replace('.', '/');
 		this.accessFieldName = accessFieldName;

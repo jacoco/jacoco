@@ -152,6 +152,7 @@ public class DumpTask extends Task {
 	private static class Nul extends OutputStream {
 		@Override
 		public void write(final int b) throws IOException {
+			// nothing to do
 		}
 	}
 

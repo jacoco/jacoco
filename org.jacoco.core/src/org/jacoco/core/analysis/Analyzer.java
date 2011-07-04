@@ -155,8 +155,9 @@ public class Analyzer {
 			return 1;
 		case ContentTypeDetector.ZIPFILE:
 			return analyzeArchive(detector.getInputStream());
+		default:
+			return 0;
 		}
-		return 0;
 	}
 
 	/**

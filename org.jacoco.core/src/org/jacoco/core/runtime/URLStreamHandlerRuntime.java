@@ -39,6 +39,7 @@ public class URLStreamHandlerRuntime extends AbstractRuntime {
 	 * Creates a new runtime.
 	 */
 	public URLStreamHandlerRuntime() {
+		super();
 		protocol = PROTOCOLPREFIX + Integer.toHexString(hashCode());
 	}
 

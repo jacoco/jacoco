@@ -45,6 +45,7 @@ public class LoggerRuntime extends AbstractRuntime {
 	 * Creates a new runtime.
 	 */
 	public LoggerRuntime() {
+		super();
 		this.key = Integer.toHexString(hashCode());
 		this.logger = configureLogger();
 		this.handler = new RuntimeHandler();

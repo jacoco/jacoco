@@ -109,6 +109,7 @@ public abstract class ReportPage implements ILinkable {
 	 *             in case of IO problems with the report writer
 	 */
 	protected void headExtra(final HTMLElement head) throws IOException {
+		// nothing to do
 	}
 
 	/**

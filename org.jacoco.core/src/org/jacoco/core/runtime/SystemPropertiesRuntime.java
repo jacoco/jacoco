@@ -34,6 +34,7 @@ public class SystemPropertiesRuntime extends AbstractRuntime {
 	 * Creates a new runtime.
 	 */
 	public SystemPropertiesRuntime() {
+		super();
 		this.key = KEYPREFIX + Integer.toHexString(hashCode());
 	}
 

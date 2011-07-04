@@ -11,13 +11,6 @@
  *******************************************************************************/
 package org.jacoco.report.html;
 
-import static org.jacoco.core.analysis.ICoverageNode.CounterEntity.BRANCH;
-import static org.jacoco.core.analysis.ICoverageNode.CounterEntity.CLASS;
-import static org.jacoco.core.analysis.ICoverageNode.CounterEntity.COMPLEXITY;
-import static org.jacoco.core.analysis.ICoverageNode.CounterEntity.INSTRUCTION;
-import static org.jacoco.core.analysis.ICoverageNode.CounterEntity.LINE;
-import static org.jacoco.core.analysis.ICoverageNode.CounterEntity.METHOD;
-
 import java.io.IOException;
 import java.util.Collection;
 import java.util.List;
@@ -139,18 +132,18 @@ public class HTMLFormatter implements IHTMLReportContext {
 	private Table createTable() {
 		final Table t = new Table();
 		t.add("Element", null, new LabelColumn(), false);
-		t.add("Missed Instructions", Styles.BAR, new BarColumn(INSTRUCTION,
+		t.add("Missed Instructions", Styles.BAR, new BarColumn(CounterEntity.INSTRUCTION,
 				locale), true);
 		t.add("Cov.", Styles.CTR2,
-				new PercentageColumn(INSTRUCTION, locale), false);
-		t.add("Missed Branches", Styles.BAR, new BarColumn(BRANCH, locale),
+				new PercentageColumn(CounterEntity.INSTRUCTION, locale), false);
+		t.add("Missed Branches", Styles.BAR, new BarColumn(CounterEntity.BRANCH, locale),
 				false);
-		t.add("Cov.", Styles.CTR2, new PercentageColumn(BRANCH, locale),
+		t.add("Cov.", Styles.CTR2, new PercentageColumn(CounterEntity.BRANCH, locale),
 				false);
-		addMissedTotalColumns(t, "Cxty", COMPLEXITY);
-		addMissedTotalColumns(t, "Lines", LINE);
-		addMissedTotalColumns(t, "Methods", METHOD);
-		addMissedTotalColumns(t, "Classes", CLASS);
+		addMissedTotalColumns(t, "Cxty", CounterEntity.COMPLEXITY);
+		addMissedTotalColumns(t, "Lines", CounterEntity.LINE);
+		addMissedTotalColumns(t, "Methods", CounterEntity.METHOD);
+		addMissedTotalColumns(t, "Classes", CounterEntity.CLASS);
 		return t;
 	}
 

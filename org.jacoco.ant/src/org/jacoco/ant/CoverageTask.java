@@ -37,6 +37,7 @@ public class CoverageTask extends AbstractCoverageTask implements TaskContainer 
 	 * Creates a new default coverage task
 	 */
 	public CoverageTask() {
+		super();
 		taskEnhancers.add(new JavaLikeTaskEnhancer("java"));
 		taskEnhancers.add(new JavaLikeTaskEnhancer("junit"));
 		taskEnhancers.add(new TestNGTaskEnhancer("testng"));
