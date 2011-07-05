@@ -622,9 +622,9 @@
     <profile>
       <id>sources</id>
       <activation>
-        <property>
-          <name>!skip-sources</name>
-        </property>
+        <file>
+          <exists>src/</exists>
+        </file>
       </activation>
       <build>
         <plugins>

@@ -20,6 +20,7 @@
   </parent>
 
   <artifactId>org.jacoco.agent.rt</artifactId>
+  <!-- do not set packaging to eclipse-plugin, because otherwise maven-shade-plugin will not work -->
 
   <name>JaCoCo :: Agent RT</name>
   <description>JaCoCo Java Agent</description>

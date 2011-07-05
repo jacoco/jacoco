@@ -20,8 +20,8 @@
   </parent>
 
   <artifactId>org.jacoco.doc</artifactId>
-  <!-- set to jar, because otherwise we will receive "Not executing Javadoc as the project is not a Java classpath-capable package" -->
-  <packaging>jar</packaging>
+  <!-- do not set packaging to pom, because otherwise we will receive "Not executing Javadoc as the project is not a Java classpath-capable package" -->
+  <packaging>eclipse-plugin</packaging>
 
   <name>JaCoCo :: Documentation</name>
   <description>JaCoCo Standalone Distribution</description>
@@ -71,18 +71,6 @@
     <sourceDirectory>src</sourceDirectory>
 
     <plugins>
-      <plugin>
-        <groupId>org.eclipse.tycho</groupId>
-        <artifactId>tycho-packaging-plugin</artifactId>
-        <executions>
-          <execution>
-            <goals>
-              <goal>build-qualifier</goal>
-            </goals>
-          </execution>
-        </executions>
-      </plugin>
-
       <plugin>
         <groupId>org.codehaus.groovy.maven</groupId>
         <artifactId>gmaven-plugin</artifactId>
@@ -217,6 +205,51 @@
 
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-javadoc-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>attach-javadocs</id>
+            <phase>prepare-package</phase>
+            <goals>
+              <goal>jar</goal>
+            </goals>
+            <configuration>
+              <reportOutputDirectory>${project.build.directory}/apidocs</reportOutputDirectory>
+              <includeDependencySources>true</includeDependencySources>
+              <excludePackageNames>*.internal,org.jacoco.ant,org.jacoco.agent.rt</excludePackageNames>
+              <dependencySourceExcludes>
+                <dependencySourceExclude>asm:*</dependencySourceExclude>
+                <dependencySourceExclude>org.jacoco:org.jacoco.ant-nodeps</dependencySourceExclude>
+                <dependencySourceExclude>org.jacoco:*.test</dependencySourceExclude>
+              </dependencySourceExcludes>
+              <doctitle>JaCoCo ${qualified.bundle.version} API</doctitle>
+              <windowtitle>JaCoCo ${qualified.bundle.version} API</windowtitle>
+              <use>true</use>
+              <version>false</version>
+              <groups>
+                <!-- Note: using org.jacoco.core.* for packages would omit the org.jacoco.core package but using org.jacoco* will include it. -->
+                <group>
+                  <title>Bundle org.jacoco.core</title>
+                  <packages>org.jacoco.core*</packages>
+                </group>
+                <group>
+                  <title>Bundle org.jacoco.report</title>
+                  <packages>org.jacoco.report*</packages>
+                </group>
+                <group>
+                  <title>Bundle org.jacoco.agent</title>
+                  <packages>org.jacoco.agent*</packages>
+                </group>
+              </groups>
+              <overview>javadoc/overview.html</overview>
+              <stylesheetfile>javadoc/stylesheet.css</stylesheetfile>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-assembly-plugin</artifactId>
         <executions>
           <execution>
@@ -236,63 +269,4 @@
       </plugin>
     </plugins>
   </build>
-
-  <profiles>
-    <profile>
-      <id>sources</id>
-      <activation>
-        <property>
-          <name>!skip-sources</name>
-        </property>
-      </activation>
-      <build>
-        <plugins>
-          <plugin>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-javadoc-plugin</artifactId>
-            <executions>
-              <execution>
-                <id>attach-javadocs</id>
-                <phase>prepare-package</phase>
-                <goals>
-                  <goal>jar</goal>
-                </goals>
-                <configuration>
-                  <reportOutputDirectory>${project.build.directory}/apidocs</reportOutputDirectory>
-                  <includeDependencySources>true</includeDependencySources>
-                  <excludePackageNames>*.internal,org.jacoco.ant,org.jacoco.agent.rt</excludePackageNames>
-                  <dependencySourceExcludes>
-                    <dependencySourceExclude>asm:*</dependencySourceExclude>
-                    <dependencySourceExclude>org.jacoco:org.jacoco.ant-nodeps</dependencySourceExclude>
-                    <dependencySourceExclude>org.jacoco:*.test</dependencySourceExclude>
-                  </dependencySourceExcludes>
-                  <doctitle>JaCoCo ${qualified.bundle.version} API</doctitle>
-                  <windowtitle>JaCoCo ${qualified.bundle.version} API</windowtitle>
-                  <use>true</use>
-                  <version>false</version>
-                  <groups>
-                    <!-- Note: using org.jacoco.core.* for packages would omit the org.jacoco.core package but using org.jacoco* will include it. -->
-                    <group>
-                      <title>Bundle org.jacoco.core</title>
-                      <packages>org.jacoco.core*</packages>
-                    </group>
-                    <group>
-                      <title>Bundle org.jacoco.report</title>
-                      <packages>org.jacoco.report*</packages>
-                    </group>
-                    <group>
-                      <title>Bundle org.jacoco.agent</title>
-                      <packages>org.jacoco.agent*</packages>
-                    </group>
-                  </groups>
-                  <overview>javadoc/overview.html</overview>
-                  <stylesheetfile>javadoc/stylesheet.css</stylesheetfile>
-                </configuration>
-              </execution>
-            </executions>
-          </plugin>
-        </plugins>
-      </build>
-    </profile>
-  </profiles>
 </project>
