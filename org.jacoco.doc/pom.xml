@@ -159,7 +159,7 @@
                         <fileset dir="../jacoco-maven-plugin/target/classes" excludes="**/HelpMojo.class"/>
                       </classfiles>
                       <sourcefiles>
-                        <fileset dir="../jacoco-maven-plugin/src/main/java"/>
+                        <fileset dir="../jacoco-maven-plugin/src"/>
                       </sourcefiles>
                     </group>
                   </structure>
