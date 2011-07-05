@@ -23,13 +23,13 @@
 
   <properties>
     <jacoco.propertyName>coverageAgent</jacoco.propertyName>
-    <jacoco.destfile>${project.build.directory}/coverage.exec</jacoco.destfile>
+    <jacoco.destFile>${project.build.directory}/coverage.exec</jacoco.destFile>
     <jacoco.append>false</jacoco.append>
     <jacoco.includes>*</jacoco.includes>
     <jacoco.excludes>java.*</jacoco.excludes>
-    <jacoco.exclclassloaders>sun.reflect.DelegatingClassLoader:MyClassLoader</jacoco.exclclassloaders>
-    <jacoco.sessionid>session</jacoco.sessionid>
-    <jacoco.dumponexit>true</jacoco.dumponexit>
+    <jacoco.exclClassLoaders>sun.reflect.DelegatingClassLoader:MyClassLoader</jacoco.exclClassLoaders>
+    <jacoco.sessionId>session</jacoco.sessionId>
+    <jacoco.dumpOnExit>true</jacoco.dumpOnExit>
     <jacoco.output>file</jacoco.output>
     <jacoco.address>localhost</jacoco.address>
     <jacoco.port>9999</jacoco.port>

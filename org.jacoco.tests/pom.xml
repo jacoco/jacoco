@@ -48,8 +48,8 @@
         <artifactId>jacoco-maven-plugin</artifactId>
         <version>${project.version}</version>
         <configuration>
-          <exclclassloaders>sun.reflect.DelegatingClassLoader:org.jacoco.core.test.TargetLoader</exclclassloaders>
-          <sessionid>${project.artifactId}</sessionid>
+          <exclClassLoaders>sun.reflect.DelegatingClassLoader:org.jacoco.core.test.TargetLoader</exclClassLoaders>
+          <sessionId>${project.artifactId}</sessionId>
         </configuration>
         <executions>
           <execution>

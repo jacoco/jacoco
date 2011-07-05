@@ -73,10 +73,10 @@ public class AgentMojo extends AbstractJacocoMojo {
 	/**
 	 * Path to the output file for execution data.
 	 * 
-	 * @parameter expression="${jacoco.destfile}"
+	 * @parameter expression="${jacoco.destFile}"
 	 *            default-value="${project.build.directory}/jacoco.exec"
 	 */
-	private File destfile;
+	private File destFile;
 
 	/**
 	 * If set to true and the execution data file already exists, coverage data
@@ -116,22 +116,22 @@ public class AgentMojo extends AbstractJacocoMojo {
 	 * particular class loaders that do not have access to the Java runtime
 	 * classes.
 	 * 
-	 * @parameter expression="${jacoco.exclclassloaders}"
+	 * @parameter expression="${jacoco.exclClassLoaders}"
 	 */
-	private String exclclassloaders;
+	private String exclClassLoaders;
 
 	/**
 	 * A session identifier that is written with the execution data. Without
 	 * this parameter a random identifier is created by the agent.
 	 * 
-	 * @parameter expression="${jacoco.sessionid}"
+	 * @parameter expression="${jacoco.sessionId}"
 	 */
-	private String sessionid;
+	private String sessionId;
 
 	/**
 	 * If set to true coverage data will be written on VM shutdown.
 	 * 
-	 * @parameter expression="${jacoco.dumponexit}"
+	 * @parameter expression="${jacoco.dumpOnExit}"
 	 */
 	private Boolean dumpOnExit;
 
@@ -194,7 +194,7 @@ public class AgentMojo extends AbstractJacocoMojo {
 
 	private AgentOptions createAgentOptions() {
 		final AgentOptions agentOptions = new AgentOptions();
-		final String destPath = destfile.getAbsolutePath();
+		final String destPath = destFile.getAbsolutePath();
 		agentOptions.setDestfile(destPath);
 		if (append != null) {
 			agentOptions.setAppend(append.booleanValue());
@@ -205,11 +205,11 @@ public class AgentMojo extends AbstractJacocoMojo {
 		if (excludes != null) {
 			agentOptions.setExcludes(excludes);
 		}
-		if (exclclassloaders != null) {
-			agentOptions.setExclClassloader(exclclassloaders);
+		if (exclClassLoaders != null) {
+			agentOptions.setExclClassloader(exclClassLoaders);
 		}
-		if (sessionid != null) {
-			agentOptions.setSessionId(sessionid);
+		if (sessionId != null) {
+			agentOptions.setSessionId(sessionId);
 		}
 		if (dumpOnExit != null) {
 			agentOptions.setDumpOnExit(dumpOnExit.booleanValue());
