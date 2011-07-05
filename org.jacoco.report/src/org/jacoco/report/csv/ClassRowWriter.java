@@ -11,12 +11,6 @@
  *******************************************************************************/
 package org.jacoco.report.csv;
 
-import static org.jacoco.core.analysis.ICoverageNode.CounterEntity.BRANCH;
-import static org.jacoco.core.analysis.ICoverageNode.CounterEntity.COMPLEXITY;
-import static org.jacoco.core.analysis.ICoverageNode.CounterEntity.INSTRUCTION;
-import static org.jacoco.core.analysis.ICoverageNode.CounterEntity.LINE;
-import static org.jacoco.core.analysis.ICoverageNode.CounterEntity.METHOD;
-
 import java.io.IOException;
 
 import org.jacoco.core.analysis.IClassCoverage;
@@ -30,8 +24,9 @@ import org.jacoco.report.ILanguageNames;
  */
 class ClassRowWriter {
 
-	private static final CounterEntity[] COUNTERS = { INSTRUCTION, BRANCH,
-			LINE, COMPLEXITY, METHOD };
+	private static final CounterEntity[] COUNTERS = { CounterEntity.INSTRUCTION,
+			CounterEntity.BRANCH, CounterEntity.LINE,
+			CounterEntity.COMPLEXITY, CounterEntity.METHOD };
 
 	private final DelimitedWriter writer;
 
