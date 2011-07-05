@@ -19,38 +19,31 @@
     <fileSet>
       <directory>${basedir}/docroot</directory>
       <outputDirectory>/</outputDirectory>
-      <fileMode>0644</fileMode>
-      <directoryMode>0755</directoryMode>
       <filtered>true</filtered>
-      <excludes>
-        <exclude>**/*.gif</exclude>
-      </excludes>
+      <includes>
+        <include>**/*.html</include>
+      </includes>
     </fileSet>
     <fileSet>
       <directory>${basedir}/docroot</directory>
       <outputDirectory>/</outputDirectory>
-      <includes>
-        <include>**/*.gif</include>
-      </includes>
+      <excludes>
+        <exclude>**/*.html</exclude>
+      </excludes>
     </fileSet>
     <fileSet>
       <directory>${basedir}/target/coverage</directory>
       <outputDirectory>/coverage</outputDirectory>
-      <fileMode>0644</fileMode>
-      <directoryMode>0755</directoryMode>
     </fileSet>
     <fileSet>
       <directory>${basedir}/target/junit</directory>
       <outputDirectory>/test</outputDirectory>
-      <fileMode>0644</fileMode>
-      <directoryMode>0755</directoryMode>
     </fileSet>
   </fileSets>
   <files>
     <file>
       <source>${basedir}/../org.jacoco.report/src/org/jacoco/report/xml/report.dtd</source>
       <outputDirectory>/coverage</outputDirectory>
-      <fileMode>0644</fileMode>
     </file>
   </files>
   <dependencySets>
@@ -59,7 +52,7 @@
       <outputFileNameMapping>jacocoant.jar</outputFileNameMapping>
       <useProjectArtifact>false</useProjectArtifact>
       <includes>
-        <include>*:org.jacoco.ant-nodeps</include>
+        <include>${project.groupId}:org.jacoco.ant-nodeps</include>
       </includes>
     </dependencySet>
     <dependencySet>
@@ -67,7 +60,7 @@
       <outputFileNameMapping>jacocoagent.jar</outputFileNameMapping>
       <useProjectArtifact>false</useProjectArtifact>
       <includes>
-        <include>*:*.agent:*:runtime</include>
+        <include>${project.groupId}:org.jacoco.agent:*:runtime</include>
       </includes>
     </dependencySet>
     <dependencySet>
@@ -89,7 +82,7 @@
       <unpack>true</unpack>
       <useProjectArtifact>false</useProjectArtifact>
       <includes>
-        <include>*:org.jacoco.examples</include>
+        <include>${project.groupId}:org.jacoco.examples</include>
       </includes>
     </dependencySet>
     <dependencySet>
@@ -102,7 +95,7 @@
       </unpackOptions>
       <useProjectAttachments>true</useProjectAttachments>
       <includes>
-        <include>*:org.jacoco.doc:*:javadoc</include>
+        <include>${project.groupId}:org.jacoco.doc:*:javadoc</include>
       </includes>
     </dependencySet>
   </dependencySets>
