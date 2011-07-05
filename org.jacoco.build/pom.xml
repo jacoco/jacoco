@@ -682,17 +682,20 @@
             <inherited>false</inherited>
             <executions>
               <execution>
-                <id>enforce-sign</id>
+                <id>enforce-release-rules</id>
                 <phase>verify</phase>
                 <goals>
                   <goal>enforce</goal>
                 </goals>
                 <configuration>
                   <rules>
+                    <!--
                     <requireActiveProfile>
                       <message>You must sign JARs during release.</message>
                       <profiles>sign</profiles>
                     </requireActiveProfile>
+                    -->
+                    <requireReleaseVersion/>
                   </rules>
                 </configuration>
               </execution>
