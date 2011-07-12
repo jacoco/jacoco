@@ -11,7 +11,7 @@
  *******************************************************************************/
 package org.jacoco.core.internal.data;
 
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertEquals;
 
 import java.io.UnsupportedEncodingException;
 
@@ -23,9 +23,9 @@ import org.junit.Test;
 public class CRC64Test {
 
 	@Test
-	public void test0() throws UnsupportedEncodingException {
+	public void test0() {
 		final long sum = CRC64.checksum(new byte[0]);
-		assertTrue(0L == sum);
+		assertEquals(0L, sum);
 	}
 
 	/**
@@ -36,7 +36,7 @@ public class CRC64Test {
 	@Test
 	public void test1() throws UnsupportedEncodingException {
 		final long sum = CRC64.checksum("IHATEMATH".getBytes("ASCII"));
-		assertTrue(0xE3DCADD69B01ADD1L == sum);
+		assertEquals(0xE3DCADD69B01ADD1L, sum);
 	}
 
 	/**
@@ -45,11 +45,11 @@ public class CRC64Test {
 	 * @throws UnsupportedEncodingException
 	 */
 	@Test
-	public void test2() throws UnsupportedEncodingException {
+	public void test2() {
 		final long sum = CRC64.checksum(new byte[] { (byte) 0xff, (byte) 0xff,
 				(byte) 0xff, (byte) 0xff, (byte) 0xff, (byte) 0xff,
 				(byte) 0xff, (byte) 0xff });
-		assertTrue(0x5300000000000000L == sum);
+		assertEquals(0x5300000000000000L, sum);
 	}
 
 	/**
@@ -61,7 +61,7 @@ public class CRC64Test {
 	public void test3() throws UnsupportedEncodingException {
 		final long sum = CRC64.checksum("JACOCO_JACOCO_JACOCO_JACOCO"
 				.getBytes("ASCII"));
-		assertTrue(0xD8016B38AAD48308L == sum);
+		assertEquals(0xD8016B38AAD48308L, sum);
 	}
 
 }

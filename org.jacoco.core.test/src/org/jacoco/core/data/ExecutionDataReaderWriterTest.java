@@ -21,6 +21,7 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.util.Arrays;
 import java.util.Random;
 
 import org.junit.Before;
@@ -298,10 +299,7 @@ public class ExecutionDataReaderWriterTest {
 
 	private void assertArrayEquals(final boolean[] expected,
 			final boolean[] actual) {
-		assertEquals(expected.length, actual.length, 0.0);
-		for (int i = 0; i < expected.length; i++) {
-			assertTrue(expected[i] == expected[i]);
-		}
+		assertTrue(Arrays.equals(expected, actual));
 	}
 
 	protected ExecutionDataWriter createWriter(OutputStream out)
