@@ -6,6 +6,6 @@ please run the local build (see documentation) first.
 
 The jacocoagent.jar file is created by the build at 
 
-  /org.jacoco.build/result/dist/lib/jacocoagent.jar
+  /org.jacoco.agent/target/classes/jacocoagent.jar
   
 and linked by this project.

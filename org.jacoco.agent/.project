@@ -29,7 +29,7 @@
 		<link>
 			<name>src/jacocoagent.jar</name>
 			<type>1</type>
-			<locationURI>WORKSPACE_LOC/org.jacoco.build/result/dist/lib/jacocoagent.jar</locationURI>
+			<locationURI>WORKSPACE_LOC/org.jacoco.agent/target/classes/jacocoagent.jar</locationURI>
 		</link>
 		<link>
 			<name>.settings</name>
