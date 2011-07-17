@@ -23,7 +23,7 @@
 <p>
   If you want to integrate JaCoCo within your tools you might directly retrieve
   it from the Maven repository. There are two repositories, one for JaCoCo
-  releases, one for snapshot builds.   
+  releases, one for weekly snapshot builds.   
 </p>
 
 <table class="coverage">
@@ -35,15 +35,17 @@
   </thead>
   <tbody>
     <tr>
-      <td>Releases</td>
+      <td>Release</td>
       <td><code>http://repo1.maven.org/maven2/</code> (Central Repository)</td>
     </tr>
     <tr>
-      <td>Snapshots</td>
+      <td>Snapshot</td>
       <td><code>https://oss.sonatype.org/content/repositories/snapshots</code></td>
     </tr>
   </tbody>
 </table>
+
+<h2>Artifacts</h2>
 
 <p>
   JaCoCo is split into several separate projects, the artifact ids are:   
@@ -58,6 +60,11 @@
     </tr>
   </thead>
   <tbody>
+    <tr>
+      <td><code>org.jacoco</code></td>
+      <td><code>jacoco-maven-plugin</code></td>
+      <td>Plug-in for Maven builds</td>
+    </tr>
     <tr>
       <td><code>org.jacoco</code></td>
       <td><code>org.jacoco.agent</code></td>
