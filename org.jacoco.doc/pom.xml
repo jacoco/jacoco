@@ -173,11 +173,11 @@
                 <echo message="JUnit report"/>
                 <mkdir dir="${project.build.directory}/junit"/>
                 <junitreport todir="${project.build.directory}/junit">
-                  <fileset dir="../org.jacoco.agent.test/target/surefire-reports" includes="**/*.xml"/>
-                  <fileset dir="../org.jacoco.agent.rt.test/target/surefire-reports" includes="**/*.xml"/>
-                  <fileset dir="../org.jacoco.ant.test/target/surefire-reports" includes="**/*.xml"/>
-                  <fileset dir="../org.jacoco.core.test/target/surefire-reports" includes="**/*.xml"/>
-                  <fileset dir="../org.jacoco.report.test/target/surefire-reports" includes="**/*.xml"/>
+                  <fileset dir="../org.jacoco.agent.test/target" includes="surefire-reports/**/*.xml"/>
+                  <fileset dir="../org.jacoco.agent.rt.test/target" includes="surefire-reports/**/*.xml"/>
+                  <fileset dir="../org.jacoco.ant.test/target" includes="surefire-reports/**/*.xml"/>
+                  <fileset dir="../org.jacoco.core.test/target" includes="surefire-reports/**/*.xml"/>
+                  <fileset dir="../org.jacoco.report.test/target" includes="surefire-reports/**/*.xml"/>
                   <report format="noframes" styledir="junitstyle" todir="${project.build.directory}/junit">
                     <param name="qualified.bundle.version" expression="${qualified.bundle.version}"/>
                     <param name="jacoco.home.url" expression="${jacoco.home.url}"/>
