@@ -139,7 +139,7 @@
     <!-- ================== -->
     <!-- For Sonar analysis -->
     <!-- ================== -->
-    <sonar.skippedModules>org.jacoco.tests</sonar.skippedModules>
+    <sonar.skippedModules>org.jacoco.tests,org.jacoco.doc</sonar.skippedModules>
 
     <sonar.core.codeCoveragePlugin>jacoco</sonar.core.codeCoveragePlugin>
     <sonar.dynamicAnalysis>reuseReports</sonar.dynamicAnalysis>
