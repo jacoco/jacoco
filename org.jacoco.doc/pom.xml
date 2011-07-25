@@ -94,8 +94,8 @@
         <artifactId>maven-antrun-plugin</artifactId>
         <executions>
           <execution>
-            <id>coverage-reports</id>
-            <phase>package</phase>
+            <id>prepare-reports</id>
+            <phase>prepare-package</phase>
             <goals>
               <goal>run</goal>
             </goals>
