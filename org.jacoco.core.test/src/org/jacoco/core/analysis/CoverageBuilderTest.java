@@ -23,7 +23,6 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-import org.jacoco.core.internal.analysis.BundleCoverageImpl;
 import org.jacoco.core.internal.analysis.ClassCoverageImpl;
 import org.jacoco.core.internal.analysis.CounterImpl;
 import org.jacoco.core.internal.analysis.MethodCoverageImpl;
@@ -182,7 +181,7 @@ public class CoverageBuilderTest {
 		method3.increment(CounterImpl.COUNTER_1_0, CounterImpl.COUNTER_0_0, 1);
 		addClass(3, "Sample3", null, method3);
 
-		BundleCoverageImpl bundle = coverageBuilder.getBundle("testbundle");
+		IBundleCoverage bundle = coverageBuilder.getBundle("testbundle");
 		assertEquals("testbundle", bundle.getName());
 
 		final Collection<IPackageCoverage> packages = bundle.getPackages();

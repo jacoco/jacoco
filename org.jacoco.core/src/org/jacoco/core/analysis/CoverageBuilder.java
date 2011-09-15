@@ -73,7 +73,7 @@ public class CoverageBuilder implements ICoverageVisitor {
 	 *            Name of the bundle
 	 * @return bundle containing all classes and source files
 	 */
-	public BundleCoverageImpl getBundle(final String name) {
+	public IBundleCoverage getBundle(final String name) {
 		return new BundleCoverageImpl(name, classes.values(),
 				sourcefiles.values());
 	}
