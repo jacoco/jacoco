@@ -122,7 +122,7 @@
 
     <maven.build.timestamp.format>yyyy/MM/dd</maven.build.timestamp.format>
     <build.date>${maven.build.timestamp}</build.date>
-    <jacoco.home.url>http://jacoco.org</jacoco.home.url>
+    <jacoco.home.url>http://www.eclemma.org/jacoco</jacoco.home.url>
 
     <jvm.args></jvm.args>
     <argLine>${jvm.args}</argLine>
