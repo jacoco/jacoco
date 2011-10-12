@@ -19,41 +19,33 @@
     <version>1.0-SNAPSHOT</version>
   </parent>
 
-  <artifactId>it-customize-agent</artifactId>
-
-  <properties>
-    <jacoco.propertyName>coverageAgent</jacoco.propertyName>
-    <jacoco.destFile>${project.build.directory}/coverage.exec</jacoco.destFile>
-    <jacoco.append>false</jacoco.append>
-    <jacoco.includes>*</jacoco.includes>
-    <jacoco.excludes>java.*,sun.*</jacoco.excludes>
-    <jacoco.exclClassLoaders>sun.reflect.DelegatingClassLoader:MyClassLoader</jacoco.exclClassLoaders>
-    <jacoco.sessionId>session</jacoco.sessionId>
-    <jacoco.dumpOnExit>true</jacoco.dumpOnExit>
-    <jacoco.output>file</jacoco.output>
-    <jacoco.address>localhost</jacoco.address>
-    <jacoco.port>9999</jacoco.port>
-  </properties>
+  <artifactId>it-includes-excludes</artifactId>
 
   <build>
     <plugins>
       <plugin>
         <groupId>@project.groupId@</groupId>
         <artifactId>jacoco-maven-plugin</artifactId>
+        <configuration>
+          <excludes>
+            <exclude>**/FileUtil*</exclude>
+            <exclude>**/TestUtil*</exclude>
+          </excludes>
+        </configuration>
         <executions>
           <execution>
             <goals>
               <goal>prepare-agent</goal>
             </goals>
           </execution>
+          <execution>
+            <id>report</id>
+            <phase>prepare-package</phase>
+            <goals>
+              <goal>report</goal>
+            </goals>
+          </execution>
         </executions>
-      </plugin>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-surefire-plugin</artifactId>
-        <configuration>
-          <argLine>${coverageAgent}</argLine>
-        </configuration>
       </plugin>
     </plugins>
   </build>

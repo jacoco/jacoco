@@ -12,23 +12,21 @@
 import java.io.*;
 import org.codehaus.plexus.util.*;
 
-String agentOptions = "destfile=" + basedir + File.separator + "target" + File.separator + "coverage.exec"
-    + ",append=false"
-    + ",includes=*"
-    + ",excludes=java.*:sun.*"
-    + ",exclclassloader=sun.reflect.DelegatingClassLoader:MyClassLoader"
-    + ",sessionid=session"
-    + ",dumponexit=true"
-    + ",output=file"
-    + ",address=localhost"
-    + ",port=9999";
+String agentOptions = "excludes=**/FileUtil*:**/TestUtil*";
+
 String buildLog = FileUtils.fileRead( new File( basedir, "build.log" ) );
 if ( buildLog.indexOf( agentOptions ) < 0 ) {
-    throw new RuntimeException( "Property was not configured" );
+    throw new RuntimeException("Include/Exclude was not configured correct" );
 }
 
-File file = new File( basedir, "target/coverage.exec" );
-if ( !file.isFile() )
+File databaseUtilReportFile = new File( basedir, "target/site/jacoco/org.project/DatabaseUtil.html" );
+if ( !databaseUtilReportFile.isFile() )
 {
-    throw new FileNotFoundException( "Could not find generated dump: " + file );
+    throw new FileNotFoundException( "DatabaseUtil should NOT be excluded: " + databaseUtilReportFile );
+}
+
+File testUtilReportFile = new File( basedir, "target/site/jacoco/org.project/TestUtil.html" );
+if ( testUtilReportFile.isFile() )
+{
+    throw new RuntimeException( "TestUtil SHOULD be excluded: " + testUtilReportFile );
 }

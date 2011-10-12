@@ -11,15 +11,12 @@
  *******************************************************************************/
 package org.jacoco.maven;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.Reader;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.codehaus.plexus.util.FileUtils;
+import org.codehaus.plexus.util.StringUtils;
 import org.jacoco.core.analysis.Analyzer;
 import org.jacoco.core.analysis.CoverageBuilder;
 import org.jacoco.core.analysis.IBundleCoverage;
@@ -27,11 +24,7 @@ import org.jacoco.core.analysis.ICoverageNode;
 import org.jacoco.core.data.ExecutionDataReader;
 import org.jacoco.core.data.ExecutionDataStore;
 import org.jacoco.core.data.SessionInfoStore;
-import org.jacoco.report.FileMultiReportOutput;
-import org.jacoco.report.IReportGroupVisitor;
-import org.jacoco.report.IReportVisitor;
-import org.jacoco.report.ISourceFileLocator;
-import org.jacoco.report.MultiReportVisitor;
+import org.jacoco.report.*;
 import org.jacoco.report.csv.CSVFormatter;
 import org.jacoco.report.html.HTMLFormatter;
 import org.jacoco.report.xml.XMLFormatter;
@@ -139,7 +132,13 @@ public class ReportMojo extends AbstractJacocoMojo {
 		final Analyzer analyzer = new Analyzer(executionDataStore, builder);
 		final File classesDir = new File(getProject().getBuild()
 				.getOutputDirectory());
-		analyzer.analyzeAll(classesDir);
+
+		List<File> filesToAnalyze = getFilesToAnalyze(classesDir);
+
+		for (File file : filesToAnalyze) {
+			analyzer.analyzeAll(file);
+		}
+
 		return builder.getBundle(getProject().getName());
 	}
 
@@ -216,6 +215,22 @@ public class ReportMojo extends AbstractJacocoMojo {
 			result.add(resolvePath((String) path));
 		}
 		return result;
+	}
+
+	protected List<File> getFilesToAnalyze(File rootDir) throws IOException {
+		final String includes;
+		if (getIncludes() != null && !getIncludes().isEmpty()) {
+			includes = StringUtils.join(getIncludes().iterator(), ",");
+		} else {
+			includes = "**";
+		}
+		final String excludes;
+		if (getExcludes() != null && !getExcludes().isEmpty()) {
+			excludes = StringUtils.join(getExcludes().iterator(), ",");
+		} else {
+			excludes = "";
+		}
+		return FileUtils.getFiles(rootDir, includes, excludes);
 	}
 
 }

@@ -88,27 +88,6 @@ public class AgentMojo extends AbstractJacocoMojo {
 	private Boolean append;
 
 	/**
-	 * A list of class names that should be included in execution analysis. The
-	 * list entries are separated by a colon (:) and may use wildcard characters
-	 * (* and ?). Except for performance optimization or technical corner cases
-	 * this option is normally not required.
-	 * 
-	 * @parameter expression="${jacoco.includes}"
-	 */
-	private String includes;
-
-	/**
-	 * A list of class names that should be excluded from execution analysis.
-	 * 
-	 * The list entries are separated by a colon (:) and may use wildcard
-	 * characters (* and ?). Except for performance optimization or technical
-	 * corner cases this option is normally not required.
-	 * 
-	 * @parameter expression="${jacoco.excludes}"
-	 */
-	private String excludes;
-
-	/**
 	 * A list of class loader names, that should be excluded from execution
 	 * analysis. The list entries are separated by a colon (:) and may use
 	 * wildcard characters (* and ?). This option might be required in case of
@@ -199,11 +178,15 @@ public class AgentMojo extends AbstractJacocoMojo {
 		if (append != null) {
 			agentOptions.setAppend(append.booleanValue());
 		}
-		if (includes != null) {
-			agentOptions.setIncludes(includes);
+		if (getIncludes() != null && !getIncludes().isEmpty()) {
+			String agentIncludes = StringUtils.join(getIncludes().iterator(),
+					":");
+			agentOptions.setIncludes(agentIncludes);
 		}
-		if (excludes != null) {
-			agentOptions.setExcludes(excludes);
+		if (getExcludes() != null && !getExcludes().isEmpty()) {
+			String agentExcludes = StringUtils.join(getExcludes().iterator(),
+					":");
+			agentOptions.setExcludes(agentExcludes);
 		}
 		if (exclClassLoaders != null) {
 			agentOptions.setExclClassloader(exclClassLoaders);
