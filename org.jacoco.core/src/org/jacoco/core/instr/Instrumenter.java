@@ -17,7 +17,7 @@ import java.io.InputStream;
 import org.jacoco.core.internal.data.CRC64;
 import org.jacoco.core.internal.flow.ClassProbesAdapter;
 import org.jacoco.core.internal.instr.ClassInstrumenter;
-import org.jacoco.core.runtime.IRuntime;
+import org.jacoco.core.runtime.IExecutionDataAccessorGenerator;
 import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.ClassVisitor;
 import org.objectweb.asm.ClassWriter;
@@ -27,7 +27,7 @@ import org.objectweb.asm.ClassWriter;
  */
 public class Instrumenter {
 
-	private final IRuntime runtime;
+	private final IExecutionDataAccessorGenerator accessGenerator;
 
 	/**
 	 * Creates a new instance based on the given runtime.
@@ -35,8 +35,8 @@ public class Instrumenter {
 	 * @param runtime
 	 *            runtime used by the instrumented classes
 	 */
-	public Instrumenter(final IRuntime runtime) {
-		this.runtime = runtime;
+	public Instrumenter(final IExecutionDataAccessorGenerator runtime) {
+		this.accessGenerator = runtime;
 	}
 
 	/**
@@ -50,7 +50,7 @@ public class Instrumenter {
 	 */
 	private ClassVisitor createInstrumentingVisitor(final long classid,
 			final ClassVisitor cv) {
-		return new ClassProbesAdapter(new ClassInstrumenter(classid, runtime,
+		return new ClassProbesAdapter(new ClassInstrumenter(classid, accessGenerator,
 				cv));
 	}
 
