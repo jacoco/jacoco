@@ -20,17 +20,13 @@
 
 <h1>Control Flow Analysis for Java Methods</h1>
 
-<p style="font-weight:bold;">
-  DRAFT - This document does not reflect the current JaCoCo implementation. 
-</p>
-
 <p class="hint">
   Implementing a coverage tool that supports statement (C0) as well as branch
   coverage coverage (C1) requires detailed analysis of the internal control flow
   of Java methods. Due to the architecture of JaCoCo this analysis happens on
-  compiled class files (bytecode). This document defines graph structures for 
-  control flow analysis of Java bytecode and discusses strategies for probe
-  insertion. Marc R. Hoffmann, November 2010
+  the bytecode of compiled class files. This document describes JaCoCo's
+  strategies for inserting probes into the control flow at runtime and analyzing
+  the actual code coverage. Marc R. Hoffmann, November 2011
 </p>
 
 <h2>Control Flow Graphs for Java Bytecode</h2>
@@ -64,23 +60,25 @@ public static void example() {
 
 <pre class="source linenums">
 public static example()V
-    INVOKESTATIC a()V
-    INVOKESTATIC cond()Z
-    IFEQ L1
-    INVOKESTATIC b()V
-    GOTO L2
-    INVOKESTATIC c()V
-    INVOKESTATIC d()V
-    RETURN
+      INVOKESTATIC a()V
+      INVOKESTATIC cond()Z
+      IFEQ L1
+      INVOKESTATIC b()V
+      GOTO L2
+  L1: INVOKESTATIC c()V
+  L2: INVOKESTATIC d()V
+      RETURN
 </pre>
 
 <p>
   The possible control flow in the bytecode above can be represented by a graph.
   The nodes are byte code instruction, the edged of the graph represent the
-  possible control flow between the instructions:
+  possible control flow between the instructions. The control flow of the
+  example is shown in the left box of this diagram:
 </p>
 
-<img src=".resources/flow-1.png" alt="Bytecode contol flow"/>
+<img src=".resources/flow-example.png" alt="Bytecode Control Flow"/>
+
 
 <h3>Flow Edges</h3>
 
@@ -145,18 +143,31 @@ public static example()V
 </table>
 
 <p>
-  For the first implementation approach we ignore edges caused by exceptions
-  and the the method entry. This means we consider SEQUENCE, JUMP and EXIT.
+  The current JaCoCo implementation ignores edges caused by implicit exceptions
+  and the the method entry. This means we consider SEQUENCE, JUMP, EXIT.
 </p>
+
 
 <h2>Probe Insertion Strategy</h2>
 
 <p>
   Probes are additional instructions that can be inserted between existing
-  instructions. Probes record the fact that they have been executed. One can
-  think probes are placed on edges of the control flow graph. Therefore if a
-  probe has been executed we know that the corresponding edge has been visited.
-  From this edge we can conclude to other preceding nodes and edges: 
+  instructions. They do not change the behavior of the method but record the
+  fact that they have been executed. One can think probes are placed on edges of
+  the control flow graph. Theoretically we could insert a probe at every edge of
+  the control flow graph. As a probe implementation itself requires multiple
+  bytecode instructions this would increase the size of the class files several
+  times and significantly slow down execution speed of the instrumented classes.
+  Fortunately this is not required, in fact we only need a few probes per method
+  depending on the control flow of the method. For example a method without any
+  branches requires a single probe only. The reason for this is that starting
+  from a certain probe we can back-trace the execution path and typically get
+  coverage information for multiple instructions.
+</p>
+
+<p>
+  If a probe has been executed we know that the corresponding edge has been
+  visited. From this edge we can conclude to other preceding nodes and edges: 
 </p>
 
 <ul>
@@ -167,22 +178,23 @@ public static example()V
 </ul>
 
 <p>
-  With this observations we only need probes at the following edges:
+  Recursively applying these rules allows to determine the execution status of
+  all instructions of a method &ndash; given that we have probes at the right
+  positions. Therefore JaCoCo inserts probes      
 </p>
 
 <ul>
-  <li>At every EXIT.</li>
-  <li>At every edge where the target instruction is the target of more than one
+  <li>at every method exit (return or throws) and</li>
+  <li>at every edge where the target instruction is the target of more than one
       edge.</li>
 </ul>
 
 <p>
-  Given the example method above we see that <code>INVOKE d()</code> is the only
-  node with more than one incoming edge. So we need to place probes on those
-  edges and another probe on the only exit node:
+  We recall that a probe is simply a small sequence of additional instructions
+  that needs to be inserted at a control flow edge. The following table
+  illustrates how this extra instructions are added in case of different edge
+  types.
 </p>
-
-<img src=".resources/flow-2.png" alt="Probe positions"/>
 
 <table class="coverage">
   <thead>
@@ -190,32 +202,56 @@ public static example()V
       <td>Type</td>
       <td>Before</td>
       <td>After</td>
+      <td>Remarks</td>
     </tr>
   </thead>
   <tbody>
     <tr>
       <td>SEQUENCE</td>
-      <td><img src=".resources/flow-3a.png" alt="SEQUENCE"/></td>
-      <td><img src=".resources/flow-3b.png" alt="SEQUENCE with Probe"/></td>
+      <td><img src=".resources/flow-sequence.png" alt="Sequence"/></td>
+      <td><img src=".resources/flow-sequence-probe.png" alt="Sequence with Probe"/></td>
+      <td>
+        In case of a simple sequence the probe is simply inserted between the
+        two instructions. 
+      </td>
     </tr>
     <tr>
       <td>JUMP (unconditional)</td>
-      <td><img src=".resources/flow-4a.png" alt="JUMP"/></td>
-      <td><img src=".resources/flow-4b.png" alt="JUMP with Probe"/></td>
+      <td><img src=".resources/flow-goto.png" alt="Unconditional Jump"/></td>
+      <td><img src=".resources/flow-goto-probe.png" alt="Unconditional Jump with Probe"/></td>
+      <td>
+        As an unconditional jump is executed in any case, we can also insert the
+        probe just before the GOTO instruction.
+      </td>
     </tr>
     <tr>
       <td>JUMP (conditional)</td>
-      <td><img src=".resources/flow-5a.png" alt="JUMP"/></td>
-      <td><img src=".resources/flow-5b.png" alt="JUMP with Probe"/></td>
+      <td><img src=".resources/flow-cond.png" alt="Conditional Jump"/></td>
+      <td><img src=".resources/flow-cond-probe.png" alt="Conditional Jump with Probe"/></td>
+      <td>
+        Adding a probe to an conditional jump is little bit more tricky. We add
+        a probe to the end of the method and jump to this probe. Then we jump
+        back to the original target.
+      </td>
+    </tr>
+    <tr>
+      <td>EXIT</td>
+      <td><img src=".resources/flow-exit.png" alt="Exit"/></td>
+      <td><img src=".resources/flow-exit-probe.png" alt="Exit with Probe"/></td>
+      <td>
+        As is is the nature of RETURN and THROW statements to actually leave the
+        method we add the probe right before these statements.
+      </td>
     </tr>
   </tbody>
 </table>
 
-<h2>Coverage Analysis</h2>
-
 <p>
-  The execution status of all other edges and instructions can be derived from
-  the status of this probes by recursively applying the rules above. 
+  Now let's see how this rules apply to the example snippet above. We see that
+  <code>INVOKE d()</code> instruction is the only node with more than one
+  incoming edge. So we need to place probes on those edges and another probe on
+  the only exit node. The result is shown the the right box of the diagram
+  above.
 </p>
 
 <h2>Probe Implementation</h2>
@@ -231,7 +267,8 @@ public static example()V
 <p class="hint">
   A <b>probe</b> is a sequence of bytecode instructions that can be inserted
   into a Java method. When the probe is executed, this fact is recorded and can
-  be reported by the coverage runtime.
+  be reported by the coverage runtime. The probe must not change the behavior
+  of the original code.
 </p>
 
 <p>
@@ -340,22 +377,24 @@ BASTORE
   require more than 32,000 probes.
 </p>
 
-<ul>
-  <li>Limitation: Only proves that the probe itself has been executed,
-      assumptions about the surrounding application code is interpolation</li>
-  <li>Probe in every edge of the control flow graph</li>
-  <li>Every exit path known (branch coverage)</li>
-  <li>Block entry known (exceptions within blocks)</li>
-</ul>
+<h2>Performance</h2>
 
-<h2>Refernces</h2>
+<p>
+  The control flow analysis and probe insertion strategy described in this
+  document allows to efficiently record instruction and branch coverage. In
+  total classes instrumented with JaCoCo increase their size by about 30%. Due
+  to the fact that probe execution does not require any method calls, only local
+  instructions, the observed execution time overhead for instrumented
+  applications typically is less than 10%. 
+</p>
+
+<h2>References</h2>
 
 <ul>
-  <li>ASM</li>
+  <li><a href="http://asm.objectweb.org/">ASM byte code library</a> by Eric Bruneton at al.</li>
   <li><a href="http://andrei.gmxhome.de/bytecode/index.html">Bytecode Outline Plug-In</a> by Andrei Loskutov</li>
   <li><a href="http://en.wikipedia.org/wiki/Glossary_of_graph_theory">Wikipedia: Glossary of Graph Theory</a></li>
 </ul>
-
 
 </div>
 <div class="footer">
