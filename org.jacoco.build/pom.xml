@@ -649,6 +649,15 @@
                 <goals>
                   <goal>sign</goal>
                 </goals>
+                <configuration>
+                  <arguments>
+                    <!-- TODO Godin: there is no parameters for TSA in plugin, so we use workaround - see http://jira.codehaus.org/browse/MJARSIGNER-16 -->
+                    <argument>-tsa</argument>
+                    <argument>${jarsigner.tsa}</argument>
+                    <argument>-tsacert</argument>
+                    <argument>${jarsigner.tsacert}</argument>
+                  </arguments>
+                </configuration>
               </execution>
             </executions>
           </plugin>
