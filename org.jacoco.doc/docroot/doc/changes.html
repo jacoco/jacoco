@@ -18,11 +18,27 @@
 
 <h1>Change History</h1>
 
-<h2>Trunk Build @qualified.bundle.version@ (@build.date@)</h2>
+<h2>Release 0.5.4 (2011/11/11)</h2>
 
 <h3>New Features</h3>
 <ul>
-  <li>Maven plug-in : respect includes/excludes properties in Report Mojo (Trac #160).</li>
+  <li>Maven plug-in: Respect <code>includes</code> and <code>excludes</code>
+      properties in report Mojo (Trac #160).</li>
+</ul>
+
+<h3>API Changes</h3>
+<ul>
+  <li><code>Instrumenter</code> now only requires
+      <code>IExecutionDataAccessorGenerator</code> instead of
+      <code>IRuntime</code> (Trac #174).</li>
+  <li>Removed reference to internal implementation classes from
+      <code>CoverageBuilder</code> API.</li>
+</ul>
+
+<h3>Non-functional Changes</h3>
+<ul>
+  <li>Release bundles from now on signed again.</li>
+  <li>Several documentation updates.</li>
 </ul>
 
 <h2>Release 0.5.3 (2011/07/06)</h2>
