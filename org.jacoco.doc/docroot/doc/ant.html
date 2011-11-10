@@ -81,10 +81,15 @@
   Alternatively you might also place the <code>jacocoant.jar</code> in your
   Ant <code><i>ANT_HOME</i>/lib</code> folder. If you use the name space URI
   <code>antlib:org.jacoco.ant</code> for JaCoCo tasks Ant will find them
-  automatically without the <code>taskdef</code> declaration above. Declaring a
-  XML namespace for JaCoCo tasks is optional but always recommended if you mix
-  tasks from different libraries. All subsequent examples use the
-  <code>jacoco</code> prefix declared above.  
+  automatically without the <code>taskdef</code> declaration above.
+</p>
+
+<p class="hint">
+  Declaring a XML namespace for JaCoCo tasks is optional but always recommended
+  if you mix tasks from different libraries. All subsequent examples use the
+  <code>jacoco</code> prefix declared above. If you don't declare a separate
+  namespace the <code>jacoco</code> prefix must be removed from the following
+  examples.
 </p>
 
 <h2><a name="coverage">Task <code>coverage</code></a></h2>
