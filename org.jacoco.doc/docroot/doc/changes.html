@@ -22,8 +22,31 @@
 
 <h3>New Features</h3>
 <ul>
-  <li>Maven plug-in: Respect <code>includes</code> and <code>excludes</code>
-      properties in report Mojo (Trac #160).</li>
+  <li>Maven plug-in: respect <code>includes</code> and <code>excludes</code>
+      properties in report Mojo (Trac #160).
+      <p>
+      Also note that:
+<pre class="source lang-xml">
+&lt;configuration&gt;
+  &lt;includes&gt;org.foo.*:org.bar.*&lt;/includes&gt;
+  &lt;excludes&gt;com.foo.*:com.bar.*&lt;/excludes&gt;
+&lt;/configuration&gt;
+</pre>
+      must be replaced on:
+<pre class="source lang-xml">
+&lt;configuration&gt;
+  &lt;includes&gt;
+    &lt;include>org.foo.*&lt;/include&gt;
+    &lt;include>org.bar.*&lt;/include&gt;
+  &lt;/includes&gt;
+  &lt;excludes&gt;
+    &lt;exclude&gt;com.foo.*&lt;/exclude&gt;
+    &lt;exclude&gt;com.bar.*&lt;/exclude&gt;
+  &lt;/excludes&gt;
+&lt;/configuration&gt;
+</pre>
+      </p>
+  </li>
 </ul>
 
 <h3>API Changes</h3>
