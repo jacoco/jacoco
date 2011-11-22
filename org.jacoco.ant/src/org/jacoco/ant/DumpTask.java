@@ -31,12 +31,13 @@ import org.jacoco.core.runtime.RemoteControlWriter;
  * tcpserver output mode
  */
 public class DumpTask extends Task {
+
 	private boolean dump = true;
-	private boolean reset;
-	private File destfile;
+	private boolean reset = false;
+	private File destfile = null;
 	private String address = AgentOptions.DEFAULT_ADDRESS;
 	private int port = AgentOptions.DEFAULT_PORT;
-	private boolean append;
+	private boolean append = true;
 
 	/**
 	 * Sets the location of the execution data file to write. This parameter is
