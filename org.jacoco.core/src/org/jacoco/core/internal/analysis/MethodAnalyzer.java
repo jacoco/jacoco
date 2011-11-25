@@ -184,11 +184,6 @@ public class MethodAnalyzer implements IMethodProbesVisitor {
 		visitInsn();
 	}
 
-	public void visitTryCatchBlock(final Label start, final Label end,
-			final Label handler, final String type) {
-		visitInsn();
-	}
-
 	public void visitProbe(final int probeId) {
 		addProbe(probeId);
 		lastInsn = null;
@@ -283,6 +278,11 @@ public class MethodAnalyzer implements IMethodProbesVisitor {
 	}
 
 	public void visitCode() {
+		// nothing to do
+	}
+
+	public void visitTryCatchBlock(final Label start, final Label end,
+			final Label handler, final String type) {
 		// nothing to do
 	}
 
