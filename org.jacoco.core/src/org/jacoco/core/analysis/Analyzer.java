@@ -41,7 +41,7 @@ public class Analyzer {
 
 	private final ExecutionDataStore executionData;
 
-	private final ICoverageVisitor structureVisitor;
+	private final ICoverageVisitor coverageVisitor;
 
 	private final StringPool stringPool;
 
@@ -50,13 +50,14 @@ public class Analyzer {
 	 * 
 	 * @param executionData
 	 *            execution data
-	 * @param structureVisitor
-	 *            the output instance that will receive all structure data
+	 * @param coverageVisitor
+	 *            the output instance that will coverage data for every analyzed
+	 *            class
 	 */
 	public Analyzer(final ExecutionDataStore executionData,
-			final ICoverageVisitor structureVisitor) {
+			final ICoverageVisitor coverageVisitor) {
 		this.executionData = executionData;
-		this.structureVisitor = structureVisitor;
+		this.coverageVisitor = coverageVisitor;
 		this.stringPool = new StringPool();
 	}
 
@@ -75,7 +76,7 @@ public class Analyzer {
 			@Override
 			public void visitEnd() {
 				super.visitEnd();
-				structureVisitor.visitCoverage(getCoverage());
+				coverageVisitor.visitCoverage(getCoverage());
 			}
 		};
 		return new ClassProbesAdapter(analyzer);
