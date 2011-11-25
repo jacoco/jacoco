@@ -132,7 +132,7 @@
     <tycho.version>0.13.0</tycho.version>
 
     <!-- Dependencies versions -->
-    <asm.version>3.2</asm.version>
+    <asm.version>3.3.1</asm.version>
     <ant.version>1.7.0</ant.version>
     <junit.version>4.8.2</junit.version>
 
