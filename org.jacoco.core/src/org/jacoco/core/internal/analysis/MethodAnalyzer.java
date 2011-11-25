@@ -94,10 +94,10 @@ public class MethodAnalyzer implements IMethodProbesVisitor {
 
 	public void visitLineNumber(final int line, final Label start) {
 		currentLine = line;
-		if (firstLine > line) {
+		if (firstLine > line || lastLine == ISourceNode.UNKNOWN_LINE) {
 			firstLine = line;
 		}
-		if (lastLine < line || lastLine == ISourceNode.UNKNOWN_LINE) {
+		if (lastLine < line) {
 			lastLine = line;
 		}
 	}
