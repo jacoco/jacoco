@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: JaCoCo Core
 Bundle-SymbolicName: org.jacoco.core
-Bundle-Version: 0.5.5.201112152213
+Bundle-Version: 0.5.6.qualifier
 Bundle-Vendor: Mountainminds GmbH & Co. KG
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
 Require-Bundle: org.objectweb.asm;bundle-version="[3.2.0,4.0.0)"
