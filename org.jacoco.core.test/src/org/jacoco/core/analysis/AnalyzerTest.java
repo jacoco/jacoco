@@ -16,7 +16,11 @@ import static org.junit.Assert.assertTrue;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
@@ -26,12 +30,17 @@ import java.util.zip.ZipOutputStream;
 import org.jacoco.core.data.ExecutionDataStore;
 import org.jacoco.core.test.TargetLoader;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.TemporaryFolder;
 
 /**
  * Unit tests for {@link Analyzer}.
  */
 public class AnalyzerTest {
+
+	@Rule
+	public TemporaryFolder folder = new TemporaryFolder();
 
 	private Analyzer analyzer;
 
@@ -116,6 +125,50 @@ public class AnalyzerTest {
 				new byte[0]));
 		assertEquals(0, count);
 		assertEquals(Collections.emptySet(), classes);
+	}
+
+	@Test
+	public void testAnalyzeAll4() throws IOException {
+		createClassfile("bin1", AnalyzerTest.class);
+		final int count = analyzer.analyzeAll(folder.getRoot());
+		assertEquals(1, count);
+		assertEquals(
+				Collections.singleton("org/jacoco/core/analysis/AnalyzerTest"),
+				classes);
+	}
+
+	@Test
+	public void testAnalyzeAll5() throws IOException {
+		createClassfile("bin1", Analyzer.class);
+		createClassfile("bin2", AnalyzerTest.class);
+		String path = "bin1" + File.pathSeparator + "bin2";
+		final int count = analyzer.analyzeAll(path, folder.getRoot());
+		assertEquals(2, count);
+		assertEquals(
+				new HashSet<String>(Arrays.asList(
+						"org/jacoco/core/analysis/Analyzer",
+						"org/jacoco/core/analysis/AnalyzerTest")), classes);
+	}
+
+	@Test(expected = IOException.class)
+	public void testAnalyzeAll6() throws IOException {
+		File file = new File(folder.getRoot(), "broken.zip");
+		OutputStream out = new FileOutputStream(file);
+		ZipOutputStream zip = new ZipOutputStream(out);
+		zip.putNextEntry(new ZipEntry("brokenentry.txt"));
+		out.write(0x23); // Unexpected data here
+		zip.close();
+		analyzer.analyzeAll(file);
+	}
+
+	private void createClassfile(final String dir, final Class<?> source)
+			throws IOException {
+		File file = new File(folder.getRoot(), dir);
+		file.mkdirs();
+		file = new File(file, "some.class");
+		OutputStream out = new FileOutputStream(file);
+		out.write(TargetLoader.getClassDataAsBytes(source));
+		out.close();
 	}
 
 }
