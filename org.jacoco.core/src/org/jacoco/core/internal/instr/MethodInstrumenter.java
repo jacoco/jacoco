@@ -95,7 +95,7 @@ class MethodInstrumenter extends ProbeVariableInserter implements
 		// Stack[1]: I
 		// Stack[0]: [Z
 
-		visitInsn(Opcodes.BASTORE);
+		mv.visitInsn(Opcodes.BASTORE);
 	}
 
 	// === IMethodProbesVisitor ===
