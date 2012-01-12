@@ -29,7 +29,7 @@
 <h3>IDE</h3>
 
 <p>
-  JaCoCo development is done with the latest Eclipse version 3.6.x. JaCoCo
+  JaCoCo development is done with the latest Eclipse version 3.7.x. JaCoCo
   projects are OSGi bundles, therefore the PDE feature is required. Project
   specific Eclipse settings exist for the projects
 </p>
@@ -47,8 +47,14 @@
 
 <p>
   The minimum JRE version to execute JaCoCo is Java 1.5. However to guarantee
-  compatibility the JaCoCo build scripts enforce the use of a 1.5 JDK for the
-  <code>deliver</code> target.  
+  compatibility JaCoCo builds should only be executed against a 1.5 JDK.  
+</p>
+
+<h3>Build System</h3>
+
+<p>
+  The build is based on <a href="http://maven.apache.org/">Maven</a>. The
+  JaCoCo <a href="build.html">build</a> requires Maven 3.
 </p>
 
 <h3>Third Party Dependencies</h3>
@@ -60,13 +66,12 @@
 <ul>
   <li>Apache Ant 1.7.x</li>
   <li>JUnit 4</li>
-  <li>Objectweb ASM 3.2.x</li>
+  <li>Objectweb ASM 3.3.x</li>
 </ul>
 
 <p>
-  
-  These bundles are included with Eclipse 3.6.x and are not part of the JaCoCo
-  source tree.
+  These bundles are included with the Eclipse 3.7.x PDE feature and are not
+  part of the JaCoCo source tree.
 </p>
 
 <h3>Source Control</h3>
