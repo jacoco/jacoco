@@ -154,6 +154,7 @@ public class ClassInstrumenter extends ClassAdapter implements
 					InstrSupport.INITMETHOD_ACC, InstrSupport.INITMETHOD_NAME,
 					InstrSupport.INITMETHOD_DESC, null, null);
 			mv.visitCode();
+			mv.visitFrame(Opcodes.F_NEW, 0, NO_LOCALS, 0, STACK_ARRZ);
 
 			// Load the value of the static data field:
 			mv.visitFieldInsn(Opcodes.GETSTATIC, className,
@@ -175,7 +176,7 @@ public class ClassInstrumenter extends ClassAdapter implements
 			// Stack[0]: [Z
 
 			// Return the class' probe array:
-			mv.visitFrame(Opcodes.F_FULL, 0, NO_LOCALS, 1, STACK_ARRZ);
+			mv.visitFrame(Opcodes.F_NEW, 0, NO_LOCALS, 1, STACK_ARRZ);
 			mv.visitLabel(alreadyInitialized);
 			mv.visitInsn(Opcodes.ARETURN);
 

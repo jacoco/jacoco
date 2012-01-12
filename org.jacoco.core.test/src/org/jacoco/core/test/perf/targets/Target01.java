@@ -16,6 +16,7 @@ package org.jacoco.core.test.perf.targets;
  */
 public class Target01 implements Runnable {
 
+	@SuppressWarnings("unused")
 	private int c;
 
 	// 4 ^ 0 = 1 times

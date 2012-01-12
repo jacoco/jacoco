@@ -17,6 +17,7 @@ package org.jacoco.core.test.perf.targets;
 public class Target02 implements Runnable {
 
 	public void run() {
+		@SuppressWarnings("unused")
 		int count = 0;
 		for (int i = 0; i < 10000000; i++) {
 			count++;
