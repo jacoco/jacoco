@@ -37,6 +37,7 @@ import org.objectweb.asm.ClassVisitor;
 import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.MethodAdapter;
 import org.objectweb.asm.MethodVisitor;
+import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.util.TraceClassVisitor;
 
 /**
@@ -83,7 +84,17 @@ public class FramesTest {
 	private byte[] calculateFrames(byte[] source) {
 		ClassReader rc = new ClassReader(source);
 		ClassWriter cw = new ClassWriter(ClassWriter.COMPUTE_FRAMES);
-		rc.accept(cw, 0);
+
+		// Adjust Version to 1.6 to enable frames:
+		rc.accept(new ClassAdapter(cw) {
+
+			@Override
+			public void visit(int version, int access, String name,
+					String signature, String superName, String[] interfaces) {
+				super.visit(Opcodes.V1_6, access, name, signature, superName,
+						interfaces);
+			}
+		}, 0);
 		return cw.toByteArray();
 	}
 

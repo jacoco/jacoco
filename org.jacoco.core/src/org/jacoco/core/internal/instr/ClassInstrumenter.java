@@ -40,6 +40,8 @@ public class ClassInstrumenter extends ClassAdapter implements
 
 	private String className;
 
+	private boolean withFrames;
+
 	private int probeCount;
 
 	/**
@@ -66,6 +68,7 @@ public class ClassInstrumenter extends ClassAdapter implements
 			final String signature, final String superName,
 			final String[] interfaces) {
 		this.className = name;
+		withFrames = (version & 0xff) >= Opcodes.V1_6;
 		if ((access & Opcodes.ACC_INTERFACE) == 0) {
 			this.probeArrayStrategy = new ClassTypeStrategy();
 		} else {
@@ -154,7 +157,9 @@ public class ClassInstrumenter extends ClassAdapter implements
 					InstrSupport.INITMETHOD_ACC, InstrSupport.INITMETHOD_NAME,
 					InstrSupport.INITMETHOD_DESC, null, null);
 			mv.visitCode();
-			mv.visitFrame(Opcodes.F_NEW, 0, NO_LOCALS, 0, STACK_ARRZ);
+			if (withFrames) {
+				mv.visitFrame(Opcodes.F_NEW, 0, NO_LOCALS, 0, STACK_ARRZ);
+			}
 
 			// Load the value of the static data field:
 			mv.visitFieldInsn(Opcodes.GETSTATIC, className,
@@ -176,7 +181,9 @@ public class ClassInstrumenter extends ClassAdapter implements
 			// Stack[0]: [Z
 
 			// Return the class' probe array:
-			mv.visitFrame(Opcodes.F_NEW, 0, NO_LOCALS, 1, STACK_ARRZ);
+			if (withFrames) {
+				mv.visitFrame(Opcodes.F_NEW, 0, NO_LOCALS, 1, STACK_ARRZ);
+			}
 			mv.visitLabel(alreadyInitialized);
 			mv.visitInsn(Opcodes.ARETURN);
 
