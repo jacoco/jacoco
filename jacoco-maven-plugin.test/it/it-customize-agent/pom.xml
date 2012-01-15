@@ -25,8 +25,6 @@
     <jacoco.propertyName>coverageAgent</jacoco.propertyName>
     <jacoco.destFile>${project.build.directory}/coverage.exec</jacoco.destFile>
     <jacoco.append>false</jacoco.append>
-    <jacoco.includes>*</jacoco.includes>
-    <jacoco.excludes>java.*,sun.*</jacoco.excludes>
     <jacoco.exclClassLoaders>sun.reflect.DelegatingClassLoader:MyClassLoader</jacoco.exclClassLoaders>
     <jacoco.sessionId>session</jacoco.sessionId>
     <jacoco.dumpOnExit>true</jacoco.dumpOnExit>
@@ -45,6 +43,15 @@
             <goals>
               <goal>prepare-agent</goal>
             </goals>
+            <configuration>
+              <includes>
+                <include>*</include>
+              </includes>
+              <excludes>
+                <exclude>java.*</exclude>
+                <exclude>sun.*</exclude>
+              </excludes>
+            </configuration>
           </execution>
         </executions>
       </plugin>

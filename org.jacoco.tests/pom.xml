@@ -50,6 +50,9 @@
         <configuration>
           <exclClassLoaders>sun.reflect.DelegatingClassLoader:org.jacoco.core.test.TargetLoader</exclClassLoaders>
           <sessionId>${project.artifactId}</sessionId>
+          <includes>
+            <include>${jacoco.includes}</include>
+          </includes>
         </configuration>
         <executions>
           <execution>
