@@ -470,7 +470,8 @@
     searched recursively for class files.</li>
   <li><code>sourcefiles</code>: Optional container element for Ant resources and
     resource collections that specify corresponding source files. If source
-    files are specified, some report formats include highlighted source code.</li>
+    files are specified, some report formats include highlighted source code.
+    Source files can be specified as individual files or as source directories.</li>
 </ul>
 
 <p>
@@ -498,6 +499,12 @@
     </tr>
   </tbody>
 </table>
+
+<p class="hint">
+  <b>Important:</b> Source file resources must always be specified relative to
+  the respective source folder. If directory resources are given, they must
+  directly point to source folders. Otherwise source lookup will not succeed.
+</p>
 
 <p>
   Note that the <code>classfiles</code> and <code>sourcefiles</code> elements

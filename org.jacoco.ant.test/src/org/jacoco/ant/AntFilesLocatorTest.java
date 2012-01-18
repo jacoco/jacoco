@@ -9,7 +9,7 @@
  *    Marc R. Hoffmann - initial API and implementation
  *    
  *******************************************************************************/
-package org.jacoco.report;
+package org.jacoco.ant;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -23,48 +23,50 @@ import java.io.OutputStreamWriter;
 import java.io.Reader;
 import java.io.Writer;
 
+import org.apache.tools.ant.types.Resource;
+import org.apache.tools.ant.types.resources.FileResource;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 
 /**
- * Unit tests for {@link DirectorySourceFileLocator}.
+ * Unit tests for {@link AntFilesLocator}.
  */
-public class DirectorySourceFileLocatorTest {
+public class AntFilesLocatorTest {
 
 	@Rule
-	public final TemporaryFolder sourceFolder = new TemporaryFolder();
+	public final TemporaryFolder folder = new TemporaryFolder();
 
-	private ISourceFileLocator locator;
+	private AntFilesLocator locator;
 
 	@Before
 	public void setup() {
-		locator = new DirectorySourceFileLocator(sourceFolder.getRoot(),
-				"UTF-8", 4);
+		locator = new AntFilesLocator("UTF-8", 4);
 	}
 
 	@Test
 	public void testGetSourceFileNegative() throws IOException {
-		assertNull(locator.getSourceFile("org/jacoco/example",
+		assertNull(locator.getSourceFile("org/jacoco/somewhere",
 				"DoesNotExist.java"));
 	}
 
 	@Test
 	public void testGetSourceFile() throws IOException {
-		createFile("org/jacoco/example/Test.java");
+		locator.add(createFile("org/jacoco/example/Test.java"));
 		final Reader source = locator.getSourceFile("org/jacoco/example",
 				"Test.java");
 		assertContent(source);
 	}
 
-	private void createFile(String path) throws IOException {
-		final File file = new File(sourceFolder.getRoot(), path);
+	private Resource createFile(String path) throws IOException {
+		final File file = new File(folder.getRoot(), path);
 		file.getParentFile().mkdirs();
 		final Writer writer = new OutputStreamWriter(
 				new FileOutputStream(file), "UTF-8");
 		writer.write("Source");
 		writer.close();
+		return new FileResource(folder.getRoot(), path);
 	}
 
 	private void assertContent(Reader source) throws IOException {

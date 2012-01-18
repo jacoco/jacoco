@@ -9,6 +9,7 @@
   
    Contributors:
       Brock Janiczak - initial API and implementation
+      Dominik Stadler - source folder support
       
    $Id: $
 -->
@@ -78,6 +79,24 @@
 		<au:assertLogContains level="warn" text="To enable source code annotation class files for bundle 'root' have to be compiled with debug information."/>
 	</target>
 	
+	<target name="testReportWithSourceDirButNoDebug">
+		<java classname="org.jacoco.ant.RemoveDebugInfos" classpath="${java.class.path}" failonerror="true">
+			<arg value="${org.jacoco.ant.reportTaskTest.classes.dir}/org/jacoco/ant/TestTarget.class" />
+			<arg value="${temp.dir}/TestTarget.class" />
+		</java>
+		<jacoco:report>
+			<structure name="root">
+				<classfiles>
+					<fileset dir="${temp.dir}" id="*.class" />
+				</classfiles>
+				<sourcefiles>
+					<dirset dir="${org.jacoco.ant.reportTaskTest.sources.dir}/.." includes="src" />
+				</sourcefiles>
+			</structure>
+		</jacoco:report>
+		<au:assertLogContains level="warn" text="To enable source code annotation class files for bundle 'root' have to be compiled with debug information."/>
+	</target>
+
 	<!-- HTML Output -->
 	
 	<target name="testReportHtmlNoDestdirOrDestfile">
@@ -189,7 +208,7 @@
 			<contains string="${testReportHtmlTabWidth.content}" substring="window['PR_TAB_WIDTH']=4"/>
 		</au:assertTrue>
 	</target>
-	
+
 	<target name="testReportHtmlTabWidth">
 		<jacoco:report>
 			<structure name="Test">
@@ -208,7 +227,7 @@
 			<contains string="${testReportHtmlTabWidth.content}" substring="window['PR_TAB_WIDTH']=13"/>
 		</au:assertTrue>
 	</target>
-	
+
 	<target name="testReportHtmlInvalidTabWidth">
 		<au:expectfailure expectedMessage="Tab width must be greater than 0">
 			<jacoco:report>
@@ -255,6 +274,22 @@
 		<au:assertFileExists file="${temp.dir}/default/TestTargetInDefault.java.html"/>
 	</target>
 	
+	<target name="testReportHtmlWithSourcesDir">
+		<jacoco:report>
+			<structure name="Test">
+				<classfiles>
+					<fileset dir="${org.jacoco.ant.reportTaskTest.classes.dir}" includes="**/*.class"/>
+				</classfiles>
+				<sourcefiles>
+					<dirset dir="${org.jacoco.ant.reportTaskTest.sources.dir}/.." includes="src" />
+				</sourcefiles>
+            </structure>
+			<html destdir="${temp.dir}"/>
+		</jacoco:report>
+		
+		<au:assertFileExists file="${temp.dir}/org.jacoco.ant/TestTarget.java.html"/>
+		<au:assertFileExists file="${temp.dir}/default/TestTargetInDefault.java.html"/>
+	</target>
 	
 	<!-- CSV Output -->
 

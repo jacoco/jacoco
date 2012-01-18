@@ -18,14 +18,10 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.Reader;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
-import java.util.Map;
 
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
@@ -45,7 +41,6 @@ import org.jacoco.report.FileMultiReportOutput;
 import org.jacoco.report.IMultiReportOutput;
 import org.jacoco.report.IReportGroupVisitor;
 import org.jacoco.report.IReportVisitor;
-import org.jacoco.report.ISourceFileLocator;
 import org.jacoco.report.MultiReportVisitor;
 import org.jacoco.report.ZipMultiReportOutput;
 import org.jacoco.report.csv.CSVFormatter;
@@ -449,8 +444,10 @@ public class ReportTask extends Task {
 			}
 		} else {
 			final IBundleCoverage bundle = createBundle(group);
-			final SourceFileCollection locator = new SourceFileCollection(
-					group.sourcefiles);
+			final SourceFilesElement sourcefiles = group.sourcefiles;
+			final AntResourcesLocator locator = new AntResourcesLocator(
+					sourcefiles.encoding, sourcefiles.tabWidth);
+			locator.addAll(sourcefiles.iterator());
 			if (!locator.isEmpty()) {
 				checkForMissingDebugInformation(bundle);
 			}
@@ -481,50 +478,6 @@ public class ReportTask extends Task {
 			log(format(
 					"To enable source code annotation class files for bundle '%s' have to be compiled with debug information.",
 					node.getName()), Project.MSG_WARN);
-		}
-	}
-
-	private static class SourceFileCollection implements ISourceFileLocator {
-
-		private final String encoding;
-
-		private final Map<String, Resource> resources = new HashMap<String, Resource>();
-
-		private final int tabWidth;
-
-		SourceFileCollection(final SourceFilesElement sourceFiles) {
-			encoding = sourceFiles.encoding;
-			tabWidth = sourceFiles.tabWidth;
-			for (final Iterator<?> i = sourceFiles.iterator(); i.hasNext();) {
-				final Resource r = (Resource) i.next();
-				resources.put(r.getName().replace(File.separatorChar, '/'), r);
-			}
-		}
-
-		public Reader getSourceFile(final String packageName,
-				final String fileName) throws IOException {
-			final Resource r;
-			if (packageName.length() > 0) {
-				r = resources.get(packageName + '/' + fileName);
-			} else {
-				r = resources.get(fileName);
-			}
-			if (r == null) {
-				return null;
-			}
-			if (encoding == null) {
-				return new InputStreamReader(r.getInputStream());
-			} else {
-				return new InputStreamReader(r.getInputStream(), encoding);
-			}
-		}
-
-		public int getTabWidth() {
-			return tabWidth;
-		}
-
-		public boolean isEmpty() {
-			return resources.isEmpty();
 		}
 	}
 

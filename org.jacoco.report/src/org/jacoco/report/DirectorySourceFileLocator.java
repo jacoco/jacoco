@@ -14,20 +14,15 @@ package org.jacoco.report;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.Reader;
+import java.io.InputStream;
 
 /**
  * Locator for source files that picks source files from a given directory in
  * the file system.
  */
-public class DirectorySourceFileLocator implements ISourceFileLocator {
+public class DirectorySourceFileLocator extends InputStreamSourceFileLocator {
 
 	private final File directory;
-
-	private final String encoding;
-
-	private final int tabWidth;
 
 	/**
 	 * Creates a new locator that searches for source files in the given
@@ -36,30 +31,26 @@ public class DirectorySourceFileLocator implements ISourceFileLocator {
 	 * @param directory
 	 *            directory to search for source file
 	 * @param encoding
-	 *            encoding of the source files
+	 *            encoding of the source files, <code>null</code> for platform
+	 *            default encoding
 	 * @param tabWidth
 	 *            tab width in source files as number of blanks
 	 * 
 	 */
 	public DirectorySourceFileLocator(final File directory,
 			final String encoding, final int tabWidth) {
+		super(encoding, tabWidth);
 		this.directory = directory;
-		this.encoding = encoding;
-		this.tabWidth = tabWidth;
 	}
 
-	public Reader getSourceFile(final String packageName, final String fileName)
-			throws IOException {
-		final File dir = new File(directory, packageName);
-		final File file = new File(dir, fileName);
+	@Override
+	protected InputStream getSourceStream(final String path) throws IOException {
+		final File file = new File(directory, path);
 		if (file.exists()) {
-			return new InputStreamReader(new FileInputStream(file), encoding);
+			return new FileInputStream(file);
+		} else {
+			return null;
 		}
-		return null;
-	}
-
-	public int getTabWidth() {
-		return tabWidth;
 	}
 
 }
