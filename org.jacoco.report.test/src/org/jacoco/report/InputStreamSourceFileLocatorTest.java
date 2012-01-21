@@ -58,34 +58,36 @@ public class InputStreamSourceFileLocatorTest {
 	public void testGetSourceFile() throws IOException {
 		ISourceFileLocator locator = new TestLocator("UTF-8", 4);
 		sources.put("org/jacoco/example/Test.java", "ÜÄö".getBytes("UTF-8"));
-		assertContent(locator.getSourceFile("org/jacoco/example", "Test.java"));
+		assertContent("ÜÄö",
+				locator.getSourceFile("org/jacoco/example", "Test.java"));
 	}
 
 	@Test
 	public void testGetSourceFileDefaultPackage() throws IOException {
 		ISourceFileLocator locator = new TestLocator("UTF-8", 4);
 		sources.put("Test.java", "ÜÄö".getBytes("UTF-8"));
-		assertContent(locator.getSourceFile("", "Test.java"));
+		assertContent("ÜÄö", locator.getSourceFile("", "Test.java"));
 	}
 
 	@Test
 	public void testEncoding() throws IOException {
 		ISourceFileLocator locator = new TestLocator("UTF-16", 4);
 		sources.put("Test.java", "ÜÄö".getBytes("UTF-16"));
-		assertContent(locator.getSourceFile("", "Test.java"));
+		assertContent("ÜÄö", locator.getSourceFile("", "Test.java"));
 	}
 
 	@Test
 	public void testDefaultEncoding() throws IOException {
 		ISourceFileLocator locator = new TestLocator(null, 4);
-		sources.put("Test.java", "ÜÄö".getBytes());
-		assertContent(locator.getSourceFile("", "Test.java"));
+		sources.put("Test.java", "Hello World!".getBytes());
+		assertContent("Hello World!", locator.getSourceFile("", "Test.java"));
 	}
 
-	private void assertContent(Reader source) throws IOException {
+	private void assertContent(String expected, Reader source)
+			throws IOException {
 		assertNotNull(source);
 		final BufferedReader buffer = new BufferedReader(source);
-		assertEquals("ÜÄö", buffer.readLine());
+		assertEquals(expected, buffer.readLine());
 		assertNull(buffer.readLine());
 		buffer.close();
 	}
