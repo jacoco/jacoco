@@ -11,7 +11,6 @@
  *******************************************************************************/
 package org.jacoco.core.runtime;
 
-import java.util.StringTokenizer;
 import java.util.regex.Pattern;
 
 /**
@@ -45,15 +44,16 @@ public class WildcardMatcher {
 
 	private static CharSequence toRegex(final String expression) {
 		final StringBuilder regex = new StringBuilder(expression.length() * 2);
-		final StringTokenizer st = new StringTokenizer(expression, "?*", true);
-		while (st.hasMoreTokens()) {
-			final String token = st.nextToken();
-			if ("?".equals(token)) {
+		for (final char c : expression.toCharArray()) {
+			switch (c) {
+			case '?':
 				regex.append(".?");
-			} else if ("*".equals(token)) {
+				break;
+			case '*':
 				regex.append(".*");
-			} else {
-				regex.append(Pattern.quote(token));
+				break;
+			default:
+				regex.append(Pattern.quote(String.valueOf(c)));
 			}
 		}
 		return regex;
