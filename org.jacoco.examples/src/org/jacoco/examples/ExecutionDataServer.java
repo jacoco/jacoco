@@ -18,6 +18,7 @@ import java.net.ServerSocket;
 import java.net.Socket;
 
 import org.jacoco.core.data.ExecutionData;
+import org.jacoco.core.data.ExecutionDataWriter;
 import org.jacoco.core.data.IExecutionDataVisitor;
 import org.jacoco.core.data.ISessionInfoVisitor;
 import org.jacoco.core.data.SessionInfo;
@@ -44,7 +45,7 @@ public final class ExecutionDataServer {
 	 * @throws IOException
 	 */
 	public static void main(final String[] args) throws IOException {
-		final RemoteControlWriter fileWriter = new RemoteControlWriter(
+		final ExecutionDataWriter fileWriter = new ExecutionDataWriter(
 				new FileOutputStream(DESTFILE));
 		final ServerSocket server = new ServerSocket(PORT, 0,
 				InetAddress.getByName(ADDRESS));
@@ -61,9 +62,9 @@ public final class ExecutionDataServer {
 
 		private final RemoteControlReader reader;
 
-		private final RemoteControlWriter fileWriter;
+		private final ExecutionDataWriter fileWriter;
 
-		Handler(final Socket socket, final RemoteControlWriter fileWriter)
+		Handler(final Socket socket, final ExecutionDataWriter fileWriter)
 				throws IOException {
 			this.socket = socket;
 			this.fileWriter = fileWriter;
