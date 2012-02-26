@@ -42,6 +42,19 @@ public class ExecutionDataAccessTest {
 	}
 
 	@Test
+	public void testEqualsPositive() {
+		assertEquals(access, access);
+		assertEquals(access.hashCode(), access.hashCode());
+	}
+
+	@Test
+	public void testEqualsNegative() {
+		final ExecutionDataAccess other = new ExecutionDataAccess(store);
+		assertFalse(access.equals(other));
+		assertFalse(access.hashCode() == other.hashCode());
+	}
+
+	@Test
 	public void testGetExecutionData1() {
 		Object[] args = new Object[] { Long.valueOf(123), "Foo",
 				Integer.valueOf(3) };

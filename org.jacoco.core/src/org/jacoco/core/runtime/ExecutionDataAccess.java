@@ -158,8 +158,15 @@ class ExecutionDataAccess {
 	 */
 	@Override
 	public boolean equals(final Object args) {
-		getExecutionData((Object[]) args);
-		return false;
+		if (args instanceof Object[]) {
+			getExecutionData((Object[]) args);
+		}
+		return super.equals(args);
+	}
+
+	@Override
+	public int hashCode() {
+		return super.hashCode();
 	}
 
 }
