@@ -44,7 +44,7 @@
 
 <!-- representation of a class -->
 <!ELEMENT class (method*, counter*)>
-  <!-- full qualified VM name -->
+  <!-- fully qualified VM name -->
   <!ATTLIST class name CDATA #REQUIRED>
 
 <!-- representation of a method -->
@@ -53,7 +53,7 @@
   <!ATTLIST method name CDATA #REQUIRED>
   <!-- method parameter description -->
   <!ATTLIST method desc CDATA #REQUIRED>
-  <!-- first source line of this method -->
+  <!-- first source line number of this method -->
   <!ATTLIST method line CDATA #IMPLIED>
   
 <!-- representation of a source file -->
@@ -80,5 +80,5 @@
   <!ATTLIST counter type (INSTRUCTION|BRANCH|LINE|COMPLEXITY|METHOD|CLASS) #REQUIRED>
   <!-- number of missed items -->
   <!ATTLIST counter missed CDATA #REQUIRED>
-  <!-- number of total items -->
+  <!-- number of covered items -->
   <!ATTLIST counter covered CDATA #REQUIRED>
