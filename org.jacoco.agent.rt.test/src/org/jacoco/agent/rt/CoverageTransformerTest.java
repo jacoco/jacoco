@@ -98,6 +98,13 @@ public class CoverageTransformerTest {
 	}
 
 	@Test
+	public void testFilterExcludedClassPositiveInner() {
+		options.setExcludes("org.jacoco.example.Foo$Inner");
+		CoverageTransformer t = createTransformer();
+		assertFalse(t.filter(classLoader, "org/jacoco/example/Foo$Inner"));
+	}
+
+	@Test
 	public void testFilterExcludedClassNegative() {
 		options.setExcludes("*Test");
 		CoverageTransformer t = createTransformer();
