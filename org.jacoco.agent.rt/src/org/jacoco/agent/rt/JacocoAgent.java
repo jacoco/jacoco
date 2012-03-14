@@ -55,6 +55,8 @@ public class JacocoAgent {
 	 * 
 	 * @param options
 	 *            agent options as text string
+	 * @param logger
+	 *            logger used by this agent
 	 */
 	public JacocoAgent(final String options, final IExceptionLogger logger) {
 		this(new AgentOptions(options), logger);
@@ -81,7 +83,12 @@ public class JacocoAgent {
 		controller.startup(options, runtime);
 	}
 
-	IAgentController createAgentController() {
+	/**
+	 * Create controller implementation as given by the agent options.
+	 * 
+	 * @return configured controller implementation
+	 */
+	protected IAgentController createAgentController() {
 		final OutputMode controllerType = options.getOutput();
 		switch (controllerType) {
 		case file:
@@ -142,6 +149,8 @@ public class JacocoAgent {
 	 *            agent options
 	 * @param inst
 	 *            instrumentation callback provided by the JVM
+	 * @throws Exception
+	 *             in case initialization fails
 	 */
 	public static void premain(final String options, final Instrumentation inst)
 			throws Exception {

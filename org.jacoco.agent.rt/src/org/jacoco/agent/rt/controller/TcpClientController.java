@@ -34,6 +34,12 @@ public class TcpClientController implements IAgentController {
 
 	private Thread worker;
 
+	/**
+	 * New controller instance.
+	 * 
+	 * @param logger
+	 *            logger to use in case of exceptions is spawned threads
+	 */
 	public TcpClientController(final IExceptionLogger logger) {
 		this.logger = logger;
 	}
@@ -47,7 +53,7 @@ public class TcpClientController implements IAgentController {
 			public void run() {
 				try {
 					connection.run();
-				} catch (IOException e) {
+				} catch (final IOException e) {
 					logger.logExeption(e);
 				}
 			}

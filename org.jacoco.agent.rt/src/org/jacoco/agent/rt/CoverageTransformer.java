@@ -19,7 +19,7 @@ import java.security.ProtectionDomain;
 
 import org.jacoco.core.instr.Instrumenter;
 import org.jacoco.core.runtime.AgentOptions;
-import org.jacoco.core.runtime.IRuntime;
+import org.jacoco.core.runtime.IExecutionDataAccessorGenerator;
 import org.jacoco.core.runtime.WildcardMatcher;
 
 /**
@@ -44,19 +44,33 @@ public class CoverageTransformer implements ClassFileTransformer {
 
 	private final WildcardMatcher exclClassloader;
 
-	public CoverageTransformer(IRuntime runtime, AgentOptions options,
-			final IExceptionLogger logger) {
-		this.instrumenter = new Instrumenter(runtime);
+	/**
+	 * New transformer with the given delegates.
+	 * 
+	 * @param generator
+	 *            generator for runtime specific access code
+	 * @param options
+	 *            configuration options for the generator
+	 * @param logger
+	 *            logger for exceptions during instrumentation
+	 */
+	public CoverageTransformer(final IExecutionDataAccessorGenerator generator,
+			final AgentOptions options, final IExceptionLogger logger) {
+		this.instrumenter = new Instrumenter(generator);
 		this.logger = logger;
 		// Class names will be reported in VM notation:
-		includes = new WildcardMatcher(toWildcard(toVMName(options.getIncludes())));
-		excludes = new WildcardMatcher(toWildcard(toVMName(options.getExcludes())));
-		exclClassloader = new WildcardMatcher(toWildcard(options.getExclClassloader()));
+		includes = new WildcardMatcher(
+				toWildcard(toVMName(options.getIncludes())));
+		excludes = new WildcardMatcher(
+				toWildcard(toVMName(options.getExcludes())));
+		exclClassloader = new WildcardMatcher(
+				toWildcard(options.getExclClassloader()));
 	}
 
-	public byte[] transform(ClassLoader loader, String classname,
-			Class<?> classBeingRedefined, ProtectionDomain protectionDomain,
-			byte[] classfileBuffer) throws IllegalClassFormatException {
+	public byte[] transform(final ClassLoader loader, final String classname,
+			final Class<?> classBeingRedefined,
+			final ProtectionDomain protectionDomain,
+			final byte[] classfileBuffer) throws IllegalClassFormatException {
 
 		if (!filter(loader, classname)) {
 			return null;
@@ -64,7 +78,7 @@ public class CoverageTransformer implements ClassFileTransformer {
 
 		try {
 			return instrumenter.instrument(classfileBuffer);
-		} catch (Throwable t) {
+		} catch (final Throwable t) {
 			final String msg = "Error while instrumenting class %s.";
 			final IllegalClassFormatException ex = new IllegalClassFormatException(
 					format(msg, classname));
@@ -79,9 +93,11 @@ public class CoverageTransformer implements ClassFileTransformer {
 	 * 
 	 * @param loader
 	 *            loader for the class
+	 * @param classname
+	 *            VM name of the class to check
 	 * @return <code>true</code> if the class should be instrumented
 	 */
-	protected boolean filter(ClassLoader loader, String classname) {
+	protected boolean filter(final ClassLoader loader, final String classname) {
 		// Don't instrument classes of the bootstrap loader:
 		return loader != null &&
 
@@ -94,16 +110,17 @@ public class CoverageTransformer implements ClassFileTransformer {
 		!excludes.matches(classname);
 	}
 
-	private String toWildcard(String src) {
+	private String toWildcard(final String src) {
 		if (src.indexOf('|') != -1) {
-			final IllegalArgumentException ex = new IllegalArgumentException("Usage of '|' as a list separator for JaCoCo agent options is deprecated and will not work in future versions - use ':' instead.");
+			final IllegalArgumentException ex = new IllegalArgumentException(
+					"Usage of '|' as a list separator for JaCoCo agent options is deprecated and will not work in future versions - use ':' instead.");
 			logger.logExeption(ex);
 			return src.replace('|', ':');
 		}
 		return src;
 	}
 
-	private static String toVMName(String srcName) {
+	private static String toVMName(final String srcName) {
 		return srcName.replace('.', '/');
 	}
 

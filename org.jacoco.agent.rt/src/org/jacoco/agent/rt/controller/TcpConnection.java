@@ -35,7 +35,7 @@ class TcpConnection implements IRemoteCommandVisitor {
 
 	private boolean initialized;
 
-	public TcpConnection(Socket socket, IRuntime runtime) {
+	public TcpConnection(final Socket socket, final IRuntime runtime) {
 		this.socket = socket;
 		this.runtime = runtime;
 		this.initialized = false;
@@ -50,12 +50,15 @@ class TcpConnection implements IRemoteCommandVisitor {
 
 	/**
 	 * Processes all requests for this session until the socket is closed.
+	 * 
+	 * @throws IOException
+	 *             in case of problems whith the connection
 	 */
 	public void run() throws IOException {
 		try {
 			while (reader.read()) {
 			}
-		} catch (SocketException e) {
+		} catch (final SocketException e) {
 			// If the local socket is closed while polling for commands the
 			// SocketException is expected.
 			if (!socket.isClosed()) {
@@ -91,7 +94,7 @@ class TcpConnection implements IRemoteCommandVisitor {
 
 	// === IRemoteCommandVisitor ===
 
-	public void visitDumpCommand(boolean dump, boolean reset)
+	public void visitDumpCommand(final boolean dump, final boolean reset)
 			throws IOException {
 		if (dump) {
 			runtime.collect(writer, writer, reset);

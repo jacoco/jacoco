@@ -11,17 +11,17 @@
  *******************************************************************************/
 package org.jacoco.agent.rt.controller;
 
-import org.jacoco.core.JaCoCo;
-import org.jacoco.core.data.ExecutionDataWriter;
-import org.jacoco.core.runtime.AgentOptions;
-import org.jacoco.core.runtime.IRuntime;
-
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.lang.management.ManagementFactory;
 
 import javax.management.ObjectName;
 import javax.management.StandardMBean;
+
+import org.jacoco.core.JaCoCo;
+import org.jacoco.core.data.ExecutionDataWriter;
+import org.jacoco.core.runtime.AgentOptions;
+import org.jacoco.core.runtime.IRuntime;
 
 /**
  * Controller that registers MBean. This controller does not use agent options.
@@ -32,7 +32,7 @@ public class MBeanController implements IAgentController, IRuntimeMBean {
 
 	private IRuntime runtime;
 
-	public void startup(AgentOptions options, IRuntime runtime)
+	public void startup(final AgentOptions options, final IRuntime runtime)
 			throws Exception {
 		this.runtime = runtime;
 		ManagementFactory.getPlatformMBeanServer().registerMBean(
@@ -59,13 +59,13 @@ public class MBeanController implements IAgentController, IRuntimeMBean {
 		return runtime.getSessionId();
 	}
 
-	public void setSessionId(String id) {
+	public void setSessionId(final String id) {
 		runtime.setSessionId(id);
 	}
 
-	public byte[] dump(boolean reset) throws IOException {
-		ByteArrayOutputStream output = new ByteArrayOutputStream();
-		ExecutionDataWriter writer = new ExecutionDataWriter(output);
+	public byte[] dump(final boolean reset) throws IOException {
+		final ByteArrayOutputStream output = new ByteArrayOutputStream();
+		final ExecutionDataWriter writer = new ExecutionDataWriter(output);
 		runtime.collect(writer, writer, reset);
 		return output.toByteArray();
 	}

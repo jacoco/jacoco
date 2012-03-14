@@ -28,18 +28,26 @@ public interface IAgentController {
 	 *            Options used to configure the agent controller
 	 * @param runtime
 	 *            Coverage runtime this agent controller will be connected to
+	 * @throws Exception
+	 *             in case startup fails
 	 */
 	public void startup(final AgentOptions options, final IRuntime runtime)
 			throws Exception;
 
 	/**
 	 * Shutdown the agent controller and clean up any resources it has created.
+	 * 
+	 * @throws Exception
+	 *             in case shutdown fails
 	 */
 	public void shutdown() throws Exception;
 
 	/**
 	 * Write all execution data in the runtime to a location determined by the
 	 * agent controller. This method should only be called by the Agent
+	 * 
+	 * @throws Exception
+	 *             in case writing fails
 	 */
 	public void writeExecutionData() throws Exception;
 

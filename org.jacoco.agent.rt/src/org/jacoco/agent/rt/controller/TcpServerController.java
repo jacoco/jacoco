@@ -38,6 +38,12 @@ public class TcpServerController implements IAgentController {
 
 	private Thread worker;
 
+	/**
+	 * New controller instance.
+	 * 
+	 * @param logger
+	 *            logger to use in case of exceptions is spawned threads
+	 */
 	public TcpServerController(final IExceptionLogger logger) {
 		this.logger = logger;
 	}
@@ -55,7 +61,7 @@ public class TcpServerController implements IAgentController {
 						}
 						connection.init();
 						connection.run();
-					} catch (IOException e) {
+					} catch (final IOException e) {
 						// If the serverSocket is closed while accepting
 						// connections a SocketException is expected.
 						if (!serverSocket.isClosed()) {
@@ -103,8 +109,8 @@ public class TcpServerController implements IAgentController {
 	/**
 	 * Returns the {@link InetAddress} object to open the server socket on.
 	 * 
-	 * @param options
-	 *            agent options
+	 * @param address
+	 *            address specified as a string
 	 * @return address to open the server socket
 	 * @throws UnknownHostException
 	 */
