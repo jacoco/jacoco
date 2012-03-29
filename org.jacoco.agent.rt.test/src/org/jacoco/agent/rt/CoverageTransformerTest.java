@@ -129,8 +129,7 @@ public class CoverageTransformerTest {
 			assertEquals("Error while instrumenting class org.jacoco.Sample.",
 					e.getMessage());
 		}
-		recorder.assertException(IllegalClassFormatException.class,
-				"Error while instrumenting class org.jacoco.Sample.");
+		recorder.assertException(ArrayIndexOutOfBoundsException.class, "8");
 		recorder.clear();
 	}
 
