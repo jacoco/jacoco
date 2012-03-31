@@ -34,8 +34,7 @@ public final class InstrSupport {
 	 * class.
 	 */
 	public static final int DATAFIELD_ACC = Opcodes.ACC_SYNTHETIC
-			| Opcodes.ACC_PRIVATE | Opcodes.ACC_STATIC | Opcodes.ACC_FINAL
-			| Opcodes.ACC_TRANSIENT;
+			| Opcodes.ACC_PRIVATE | Opcodes.ACC_STATIC | Opcodes.ACC_TRANSIENT;
 
 	/**
 	 * Data type of the field that stores coverage information for a class (

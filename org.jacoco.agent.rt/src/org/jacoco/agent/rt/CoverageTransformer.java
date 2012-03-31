@@ -19,7 +19,7 @@ import java.security.ProtectionDomain;
 
 import org.jacoco.core.instr.Instrumenter;
 import org.jacoco.core.runtime.AgentOptions;
-import org.jacoco.core.runtime.IExecutionDataAccessorGenerator;
+import org.jacoco.core.runtime.IRuntime;
 import org.jacoco.core.runtime.WildcardMatcher;
 
 /**
@@ -34,9 +34,11 @@ public class CoverageTransformer implements ClassFileTransformer {
 		AGENT_PREFIX = toVMName(name.substring(0, name.lastIndexOf('.')));
 	}
 
-	private final IExceptionLogger logger;
+	private final IRuntime runtime;
 
 	private final Instrumenter instrumenter;
+
+	private final IExceptionLogger logger;
 
 	private final WildcardMatcher includes;
 
@@ -47,16 +49,17 @@ public class CoverageTransformer implements ClassFileTransformer {
 	/**
 	 * New transformer with the given delegates.
 	 * 
-	 * @param generator
-	 *            generator for runtime specific access code
+	 * @param runtime
+	 *            coverage runtime
 	 * @param options
 	 *            configuration options for the generator
 	 * @param logger
 	 *            logger for exceptions during instrumentation
 	 */
-	public CoverageTransformer(final IExecutionDataAccessorGenerator generator,
+	public CoverageTransformer(final IRuntime runtime,
 			final AgentOptions options, final IExceptionLogger logger) {
-		this.instrumenter = new Instrumenter(generator);
+		this.runtime = runtime;
+		this.instrumenter = new Instrumenter(runtime);
 		this.logger = logger;
 		// Class names will be reported in VM notation:
 		includes = new WildcardMatcher(
@@ -77,6 +80,11 @@ public class CoverageTransformer implements ClassFileTransformer {
 		}
 
 		try {
+			if (classBeingRedefined != null) {
+				// For redefined classes we must clear the execution data
+				// reference as probes might have changed.
+				runtime.disconnect(classBeingRedefined);
+			}
 			return instrumenter.instrument(classfileBuffer);
 		} catch (final Exception ex) {
 			// Report this, as the exception is ignored by the JVM:

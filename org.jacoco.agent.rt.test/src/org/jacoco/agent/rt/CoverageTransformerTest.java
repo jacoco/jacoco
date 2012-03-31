@@ -17,8 +17,12 @@ import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.lang.instrument.IllegalClassFormatException;
 
+import org.jacoco.core.JaCoCo;
 import org.jacoco.core.runtime.AgentOptions;
 import org.junit.After;
 import org.junit.Before;
@@ -35,11 +39,14 @@ public class CoverageTransformerTest {
 
 	private ClassLoader classLoader;
 
+	private StubRuntime runtime;
+
 	@Before
 	public void setup() {
 		recorder = new ExceptionRecorder();
 		options = new AgentOptions();
 		classLoader = getClass().getClassLoader();
+		runtime = new StubRuntime();
 	}
 
 	@After
@@ -122,19 +129,42 @@ public class CoverageTransformerTest {
 	public void testTransformFailure() {
 		CoverageTransformer t = createTransformer();
 		try {
-			t.transform(classLoader, "org.jacoco.Sample", null, null,
-					new byte[0]);
+			t.transform(classLoader, "org.jacoco.Sample", null, null, null);
 			fail("IllegalClassFormatException expected.");
 		} catch (IllegalClassFormatException e) {
 			assertEquals("Error while instrumenting class org.jacoco.Sample.",
 					e.getMessage());
 		}
-		recorder.assertException(ArrayIndexOutOfBoundsException.class, "8");
+		recorder.assertException(NullPointerException.class, null);
 		recorder.clear();
 	}
 
+	@Test
+	public void testRedefinedClass() throws Exception {
+		CoverageTransformer t = createTransformer();
+		// Just pick any non-system class outside our namespace
+		final Class<?> target = JaCoCo.class;
+		t.transform(classLoader, target.getName(), target, null,
+				getClassData(target));
+		runtime.assertDisconnected(target);
+	}
+
 	private CoverageTransformer createTransformer() {
-		return new CoverageTransformer(new StubRuntime(), options, recorder);
+		return new CoverageTransformer(runtime, options, recorder);
+	}
+
+	private static byte[] getClassData(Class<?> clazz) throws IOException {
+		final String resource = "/" + clazz.getName().replace('.', '/')
+				+ ".class";
+		final InputStream in = clazz.getResourceAsStream(resource);
+		final ByteArrayOutputStream out = new ByteArrayOutputStream();
+		byte[] buffer = new byte[0x100];
+		int len;
+		while ((len = in.read(buffer)) != -1) {
+			out.write(buffer, 0, len);
+		}
+		in.close();
+		return out.toByteArray();
 	}
 
 }

@@ -11,6 +11,7 @@
  *******************************************************************************/
 package org.jacoco.agent.rt;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 
 import java.util.Arrays;
@@ -23,6 +24,8 @@ import org.objectweb.asm.MethodVisitor;
  * Stub {@link IRuntime} implementation for unit testing only.
  */
 public class StubRuntime extends AbstractRuntime {
+
+	private Class<?> disconnected;
 
 	public StubRuntime() {
 		setSessionId("stubid");
@@ -40,6 +43,11 @@ public class StubRuntime extends AbstractRuntime {
 	public void shutdown() {
 	}
 
+	@Override
+	public void disconnect(Class<?> type) throws Exception {
+		this.disconnected = type;
+	}
+
 	public void fillProbes() {
 		final boolean[] data = store.get(0x12345678).getData();
 		Arrays.fill(data, true);
@@ -49,6 +57,10 @@ public class StubRuntime extends AbstractRuntime {
 		final boolean[] data = store.get(0x12345678).getData();
 		assertFalse(data[0]);
 		assertFalse(data[1]);
+	}
+
+	public void assertDisconnected(Class<?> expected) {
+		assertEquals(expected, disconnected);
 	}
 
 }

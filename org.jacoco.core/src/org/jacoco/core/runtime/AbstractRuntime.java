@@ -11,12 +11,14 @@
  *******************************************************************************/
 package org.jacoco.core.runtime;
 
+import java.lang.reflect.Field;
 import java.util.Random;
 
 import org.jacoco.core.data.ExecutionDataStore;
 import org.jacoco.core.data.IExecutionDataVisitor;
 import org.jacoco.core.data.ISessionInfoVisitor;
 import org.jacoco.core.data.SessionInfo;
+import org.jacoco.core.internal.instr.InstrSupport;
 
 /**
  * Base {@link IRuntime} implementation.
@@ -77,6 +79,15 @@ public abstract class AbstractRuntime implements IRuntime {
 		synchronized (store) {
 			store.reset();
 			setStartTimeStamp();
+		}
+	}
+
+	public void disconnect(final Class<?> type) throws Exception {
+		if (!type.isInterface()) {
+			final Field dataField = type
+					.getDeclaredField(InstrSupport.DATAFIELD_NAME);
+			dataField.setAccessible(true);
+			dataField.set(null, null);
 		}
 	}
 
