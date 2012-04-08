@@ -39,10 +39,8 @@
     </dependency>
     <dependency>
       <groupId>org.apache.ant</groupId>
-      <artifactId>antunit</artifactId>
-      <version>1.2-alpha</version>
-      <scope>system</scope>
-      <systemPath>${basedir}/lib/ant-antunit-1.2alpha.jar</systemPath>
+      <artifactId>ant-antunit</artifactId>
+      <version>1.2</version>
     </dependency>
     <dependency>
       <groupId>org.apache.ant</groupId>
