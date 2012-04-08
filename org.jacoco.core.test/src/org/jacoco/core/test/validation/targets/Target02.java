@@ -112,7 +112,7 @@ public class Target02 implements Runnable {
 
 		// 10. Not (both cases)
 		for (boolean b : new boolean[] { true, false }) {
-			nop(b); // $line-notTF$
+			nop(!b); // $line-notTF$
 		}
 
 	}

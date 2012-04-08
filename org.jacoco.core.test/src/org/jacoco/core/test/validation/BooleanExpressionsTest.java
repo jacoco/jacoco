@@ -78,7 +78,7 @@ public class BooleanExpressionsTest extends ValidationTestBase {
 		assertLine("notF", ICounter.PARTLY_COVERED, 1, 1);
 
 		// 10. Not (both cases)
-		assertLine("notTF", ICounter.FULLY_COVERED);
+		assertLine("notTF", ICounter.FULLY_COVERED, 0, 2);
 
 	}
 
