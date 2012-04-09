@@ -129,7 +129,7 @@
     <tycho.testArgLine>${argLine}</tycho.testArgLine>
 
     <!-- Plugins versions -->
-    <tycho.version>0.14.1</tycho.version>
+    <tycho.version>0.13.0</tycho.version>
 
     <!-- Dependencies versions -->
     <asm.version>3.3.1</asm.version>
