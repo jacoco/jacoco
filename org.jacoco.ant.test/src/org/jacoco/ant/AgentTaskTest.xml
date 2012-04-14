@@ -44,5 +44,17 @@
 			<jacoco:agent/>
 		</au:expectfailure>
 	</target>
+
+	<target name="testCoverageAgentWithEmptyProperty">
+		<au:expectfailure expectedMessage="Property is mandatory">
+			<jacoco:agent property=""/>
+		</au:expectfailure>
+	</target>
+
+	<target name="testCoverageAgentReuseAgentJar">
+		<jacoco:agent property="agent1"/>
+		<jacoco:agent property="agent2"/>
+		<au:assertEquals expected="${agent1}" actual="${agent2}"/>
+	</target>
 	
 </project>

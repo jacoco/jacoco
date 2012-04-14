@@ -49,6 +49,15 @@
 			</jacoco:report>
 		</au:expectfailure>
 	</target>
+
+	<target name="testReportWithExecutiondataFiles">
+		<jacoco:report>
+			<executiondata>
+				<fileset dir="${basedir}/data" includes="*.exec"/>
+			</executiondata>
+			<structure name="root"/>
+		</jacoco:report>
+	</target>
 	
 	<target name="testReportInvalidExecutiondataFile">
 		<au:expectfailure expectedMessage="Unable to read execution data file doesnotexist.exec">
