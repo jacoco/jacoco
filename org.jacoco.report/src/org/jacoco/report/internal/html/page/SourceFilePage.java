@@ -59,8 +59,8 @@ public class SourceFilePage extends NodePage<ISourceFileCoverage> {
 	}
 
 	@Override
-	protected void headExtra(final HTMLElement head) throws IOException {
-		super.headExtra(head);
+	protected void head(final HTMLElement head) throws IOException {
+		super.head(head);
 		head.link(
 				"stylesheet",
 				context.getResources().getLink(folder,

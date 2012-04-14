@@ -83,7 +83,7 @@ final class SortIndex<T> {
 
 	/**
 	 * Returns the sorted position of the element with the given index in the
-	 * items list provided to the {@link #init(List)} method.
+	 * items list provided to the init() method.
 	 * 
 	 * @param idx
 	 *            index of a element of the list

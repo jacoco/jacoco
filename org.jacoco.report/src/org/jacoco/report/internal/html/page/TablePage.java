@@ -61,8 +61,8 @@ public abstract class TablePage<NodeType extends ICoverageNode> extends
 	}
 
 	@Override
-	protected void headExtra(final HTMLElement head) throws IOException {
-		super.headExtra(head);
+	protected void head(final HTMLElement head) throws IOException {
+		super.head(head);
 		head.script("text/javascript",
 				context.getResources().getLink(folder, Resources.SORT_SCRIPT));
 	}
