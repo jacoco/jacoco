@@ -17,7 +17,12 @@ import static java.lang.String.format;
 import java.util.ArrayList;
 import java.util.Collection;
 
-import org.apache.tools.ant.*;
+import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.Project;
+import org.apache.tools.ant.RuntimeConfigurable;
+import org.apache.tools.ant.Task;
+import org.apache.tools.ant.TaskContainer;
+import org.apache.tools.ant.UnknownElement;
 
 /**
  * Container task to run Java/JUnit tasks with the JaCoCo agent jar. Coverage
@@ -50,7 +55,8 @@ public class CoverageTask extends AbstractCoverageTask implements TaskContainer 
 	public void addTask(final Task task) {
 		if (childTask != null) {
 			throw new BuildException(
-					"Only one child task can be supplied to the coverge task");
+					"Only one child task can be supplied to the coverge task",
+					getLocation());
 		}
 
 		this.childTask = task;
@@ -60,12 +66,12 @@ public class CoverageTask extends AbstractCoverageTask implements TaskContainer 
 		final TaskEnhancer enhancer = findEnhancerForTask(subTaskTypeName);
 		if (enhancer == null) {
 			throw new BuildException(format(
-					"%s is not a valid child of the coverage task.",
-					subTaskTypeName));
+					"%s is not a valid child of the coverage task",
+					subTaskTypeName), getLocation());
 		}
 
 		if (isEnabled()) {
-			log(format("Enhancing %s with coverage.", childTask.getTaskName()));
+			log(format("Enhancing %s with coverage", childTask.getTaskName()));
 			enhancer.enhanceTask(task);
 		}
 
@@ -89,15 +95,16 @@ public class CoverageTask extends AbstractCoverageTask implements TaskContainer 
 	public void execute() throws BuildException {
 		if (childTask == null) {
 			throw new BuildException(
-					"A child task must be supplied for the coverage task");
+					"A child task must be supplied for the coverage task",
+					getLocation());
 		}
 
 		childTask.execute();
 	}
 
 	/**
-	 * Task enhancer for TestNG. TestNG task always run in a forked VM and
-	 * has nested jvmargs elements
+	 * Task enhancer for TestNG. TestNG task always run in a forked VM and has
+	 * nested jvmargs elements
 	 */
 	private class TestNGTaskEnhancer extends JavaLikeTaskEnhancer {
 
@@ -137,7 +144,8 @@ public class CoverageTask extends AbstractCoverageTask implements TaskContainer 
 
 			if (forkValue == null || !Project.toBoolean(forkValue)) {
 				throw new BuildException(
-						"Coverage can only be applied on a forked VM");
+						"Coverage can only be applied on a forked VM",
+						getLocation());
 			}
 
 			addJvmArgs(task);

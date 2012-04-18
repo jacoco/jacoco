@@ -32,7 +32,7 @@
 	</target>
 	
 	<target name="testMergeToDirectory">
-		<au:expectfailure expectedMessage="Unable to write to destination file">
+		<au:expectfailure expectedMessage="Unable to write merged file ${temp.dir}">
 			<jacoco:merge destfile="${temp.dir}"/>
 		</au:expectfailure>
 	</target>
@@ -40,7 +40,6 @@
 	<target name="testMergeEmptySet">
 		<jacoco:merge destfile="${exec.file}"/>
 		
-		<au:assertLogContains text="0 files merged"/>
 		<au:assertFileExists file="${exec.file}"/>
 	</target>
 	
@@ -49,19 +48,23 @@
 			<fileset dir="${basedir}/data" includes="*.exec"/>
 		</jacoco:merge>
 		
-		<au:assertLogContains text="2 files merged"/>
+		<property name="sample1.file" location="${basedir}/data/sample1.exec"/>
+		<property name="sample2.file" location="${basedir}/data/sample2.exec"/>
+		<au:assertLogContains text="Loading execution data file ${sample1.file}"/>
+		<au:assertLogContains text="Loading execution data file ${sample2.file}"/>
 		<au:assertFileExists file="${exec.file}"/>
 	</target>
 	
 	<target name="testMergeBadFiles">
-		<au:expectfailure expectedMessage="Unable to read sample.bad">
+		<property name="bad.file" location="${basedir}/data/sample.bad"/>
+		<au:expectfailure expectedMessage="Unable to read ${bad.file}">
 		<jacoco:merge destfile="${exec.file}">
-			<fileset dir="${basedir}/data" includes="sample.bad"/>
+			<file file="${basedir}/data/sample.bad"/>
 		</jacoco:merge>
 		</au:expectfailure>
 	</target>
 	
-	<target name="testMergeDirecotry">
+	<target name="testMergeDirectory">
 		<jacoco:merge destfile="${exec.file}">
 			<dirset dir="${basedir}/data"/>
 		</jacoco:merge>

@@ -11,6 +11,8 @@
  *******************************************************************************/
 package org.jacoco.ant;
 
+import static java.lang.String.format;
+
 import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -20,7 +22,6 @@ import java.io.OutputStream;
 import java.util.Iterator;
 
 import org.apache.tools.ant.BuildException;
-import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.types.Resource;
 import org.apache.tools.ant.types.ResourceCollection;
@@ -63,11 +64,8 @@ public class MergeTask extends Task {
 	@Override
 	public void execute() throws BuildException {
 		if (destfile == null) {
-			throw new BuildException("Destination file must be supplied");
-		}
-
-		if (destfile.exists() && (!destfile.canWrite() || !destfile.isFile())) {
-			throw new BuildException("Unable to write to destination file");
+			throw new BuildException("Destination file must be supplied",
+					getLocation());
 		}
 
 		final SessionInfoStore infoStore = new SessionInfoStore();
@@ -86,8 +84,8 @@ public class MergeTask extends Task {
 			infoStore.accept(dataWriter);
 			dataStore.accept(dataWriter);
 		} catch (final IOException e) {
-			throw new BuildException(String.format(
-					"Unable to write merged file %s", destfile.getName()), e);
+			throw new BuildException(format("Unable to write merged file %s",
+					destfile.getAbsolutePath()), e, getLocation());
 		} finally {
 			FileUtils.close(outputStream);
 		}
@@ -96,8 +94,6 @@ public class MergeTask extends Task {
 
 	private void loadSourceFiles(final SessionInfoStore infoStore,
 			final ExecutionDataStore dataStore) {
-		int numFilesMerged = 0;
-
 		final Iterator<?> resourceIterator = files.iterator();
 		while (resourceIterator.hasNext()) {
 			final Resource resource = (Resource) resourceIterator.next();
@@ -106,8 +102,7 @@ public class MergeTask extends Task {
 				continue;
 			}
 
-			log(String.format("Merging %s", resource.getName()),
-					Project.MSG_DEBUG);
+			log(format("Loading execution data file %s", resource));
 
 			InputStream resourceStream = null;
 			try {
@@ -117,18 +112,13 @@ public class MergeTask extends Task {
 				reader.setSessionInfoVisitor(infoStore);
 				reader.setExecutionDataVisitor(dataStore);
 				reader.read();
-
-				numFilesMerged++;
 			} catch (final IOException e) {
-				throw new BuildException(String.format("Unable to read %s",
-						resource.getName()), e);
+				throw new BuildException(format("Unable to read %s", resource),
+						e, getLocation());
 			} finally {
 				FileUtils.close(resourceStream);
 			}
 		}
-
-		log(String.format("%d files merged", Integer.valueOf(numFilesMerged)),
-				Project.MSG_INFO);
 	}
 
 }

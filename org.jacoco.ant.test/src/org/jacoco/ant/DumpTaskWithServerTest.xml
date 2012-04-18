@@ -47,19 +47,28 @@
 	
 	<target name="testDump">
 		<jacoco:dump dump="true" destfile="${exec.file}"/>
+		
 		<au:assertFileExists file="${exec.file}"/>
+		<au:assertLogContains text="Dumping execution data to ${exec.file}"/>
 	</target>
 	
 	<target name="testNoDumpOrReset">
 		<jacoco:dump dump="false" reset="false"/>
+
+		<au:assertLogDoesntContain text="Dumping execution data to"/>
 	</target>
 
 	<target name="testResetOnly">
 		<jacoco:dump dump="false" reset="true"/>
+		
+		<au:assertLogDoesntContain text="Dumping execution data to"/>
 	</target>
 	
 	<target name="testNoDumpWithFileSet">
 		<jacoco:dump dump="false" destfile="${exec.file}"/>
+		
+		<au:assertLogDoesntContain text="Dumping execution data to"/>
 		<au:assertFileDoesntExist file="${exec.file}"/>
 	</target>
+	
 </project>

@@ -11,6 +11,8 @@
  *******************************************************************************/
 package org.jacoco.ant;
 
+import static java.lang.String.format;
+
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -31,6 +33,13 @@ import org.jacoco.core.runtime.RemoteControlWriter;
  * tcpserver output mode
  */
 public class DumpTask extends Task {
+
+	private static OutputStream NUL = new OutputStream() {
+		@Override
+		public void write(final int b) throws IOException {
+			// nothing to do
+		}
+	};
 
 	private boolean dump = true;
 	private boolean reset = false;
@@ -68,10 +77,6 @@ public class DumpTask extends Task {
 	 *            Port to connect to
 	 */
 	public void setPort(final int port) {
-		if (port <= 0) {
-			throw new BuildException("Invalid port value");
-		}
-
 		this.port = port;
 	}
 
@@ -112,49 +117,60 @@ public class DumpTask extends Task {
 	@Override
 	public void execute() throws BuildException {
 
+		if (port <= 0) {
+			throw new BuildException("Invalid port value", getLocation());
+		}
+		if (dump && destfile == null) {
+			throw new BuildException(
+					"Destination file is required when dumping execution data",
+					getLocation());
+		}
+
 		OutputStream output = null;
 
 		try {
 
-			if (dump) {
-				if (destfile == null) {
-					throw new BuildException(
-							"Destination file is required when dumping execution data");
-				}
-				FileUtils.getFileUtils().createNewFile(destfile, true);
-				output = new FileOutputStream(destfile, append);
-			} else {
-				output = new Nul();
-			}
-
+			// 1. Open socket connection
 			final Socket socket = new Socket(InetAddress.getByName(address),
 					port);
+			log(format("Connecting to %s", socket.getRemoteSocketAddress()));
 			final RemoteControlWriter remoteWriter = new RemoteControlWriter(
 					socket.getOutputStream());
 			final RemoteControlReader remoteReader = new RemoteControlReader(
 					socket.getInputStream());
+
+			// 2. Open file output
+			output = openOutputStream();
 			final ExecutionDataWriter outputWriter = new ExecutionDataWriter(
 					output);
 			remoteReader.setSessionInfoVisitor(outputWriter);
 			remoteReader.setExecutionDataVisitor(outputWriter);
 
+			// 3. Request dump
 			remoteWriter.visitDumpCommand(dump, reset);
-			// Read session and/or execution data
 			remoteReader.read();
 
 			socket.close();
+
 		} catch (final IOException e) {
-			throw new BuildException("Unable to dump coverage data", e);
+			throw new BuildException("Unable to dump coverage data", e,
+					getLocation());
 		} finally {
 			FileUtils.close(output);
 		}
 	}
 
-	private static class Nul extends OutputStream {
-		@Override
-		public void write(final int b) throws IOException {
-			// nothing to do
+	private OutputStream openOutputStream() throws IOException {
+		OutputStream output;
+		if (dump) {
+			log(format("Dumping execution data to %s",
+					destfile.getAbsolutePath()));
+			FileUtils.getFileUtils().createNewFile(destfile, true);
+			output = new FileOutputStream(destfile, append);
+		} else {
+			output = NUL;
 		}
+		return output;
 	}
 
 }

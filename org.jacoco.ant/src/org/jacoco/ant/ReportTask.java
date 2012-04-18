@@ -155,7 +155,7 @@ public class ReportTask extends Task {
 	/**
 	 * Formatter Element for HTML reports.
 	 */
-	public static class HTMLFormatterElement implements IFormatterElement {
+	public class HTMLFormatterElement implements IFormatterElement {
 
 		private File destdir;
 
@@ -224,7 +224,8 @@ public class ReportTask extends Task {
 			if (destfile != null) {
 				if (destdir != null) {
 					throw new BuildException(
-							"Either destination directory or file must be supplied, not both");
+							"Either destination directory or file must be supplied, not both",
+							getLocation());
 				}
 				final FileOutputStream stream = new FileOutputStream(destfile);
 				output = new ZipMultiReportOutput(stream);
@@ -232,7 +233,8 @@ public class ReportTask extends Task {
 			} else {
 				if (destdir == null) {
 					throw new BuildException(
-							"Destination directory or file must be supplied for html report");
+							"Destination directory or file must be supplied for html report",
+							getLocation());
 				}
 				output = new FileMultiReportOutput(destdir);
 			}
@@ -248,7 +250,7 @@ public class ReportTask extends Task {
 	/**
 	 * Formatter Element for CSV reports.
 	 */
-	public static class CSVFormatterElement implements IFormatterElement {
+	public class CSVFormatterElement implements IFormatterElement {
 
 		private File destfile;
 
@@ -267,7 +269,8 @@ public class ReportTask extends Task {
 		public IReportVisitor createVisitor() throws IOException {
 			if (destfile == null) {
 				throw new BuildException(
-						"Destination file must be supplied for csv report");
+						"Destination file must be supplied for csv report",
+						getLocation());
 			}
 			final CSVFormatter formatter = new CSVFormatter();
 			formatter.setOutputEncoding(encoding);
@@ -289,7 +292,7 @@ public class ReportTask extends Task {
 	/**
 	 * Formatter Element for XML reports.
 	 */
-	public static class XMLFormatterElement implements IFormatterElement {
+	public class XMLFormatterElement implements IFormatterElement {
 
 		private File destfile;
 
@@ -318,7 +321,8 @@ public class ReportTask extends Task {
 		public IReportVisitor createVisitor() throws IOException {
 			if (destfile == null) {
 				throw new BuildException(
-						"Destination file must be supplied for xml report");
+						"Destination file must be supplied for xml report",
+						getLocation());
 			}
 			final XMLFormatter formatter = new XMLFormatter();
 			formatter.setOutputEncoding(encoding);
@@ -398,7 +402,8 @@ public class ReportTask extends Task {
 			createReport(visitor, structure);
 			visitor.visitEnd();
 		} catch (final IOException e) {
-			throw new BuildException("Error while creating report.", e);
+			throw new BuildException("Error while creating report", e,
+					getLocation());
 		}
 	}
 
@@ -407,6 +412,7 @@ public class ReportTask extends Task {
 		executionDataStore = new ExecutionDataStore();
 		for (final Iterator<?> i = executiondataElement.iterator(); i.hasNext();) {
 			final Resource resource = (Resource) i.next();
+			log(format("Loading execution data file %s", resource));
 			InputStream in = null;
 			try {
 				in = new BufferedInputStream(resource.getInputStream());
@@ -415,8 +421,9 @@ public class ReportTask extends Task {
 				reader.setExecutionDataVisitor(executionDataStore);
 				reader.read();
 			} catch (final IOException e) {
-				throw new BuildException("Unable to read execution data file "
-						+ resource.getName(), e);
+				throw new BuildException(format(
+						"Unable to read execution data file %s", resource), e,
+						getLocation());
 			} finally {
 				FileUtils.close(in);
 			}
@@ -434,7 +441,8 @@ public class ReportTask extends Task {
 	private void createReport(final IReportGroupVisitor visitor,
 			final GroupElement group) throws IOException {
 		if (group.name == null) {
-			throw new BuildException("Group name must be supplied");
+			throw new BuildException("Group name must be supplied",
+					getLocation());
 		}
 		if (group.children.size() > 0) {
 			final IReportGroupVisitor groupVisitor = visitor
@@ -444,6 +452,9 @@ public class ReportTask extends Task {
 			}
 		} else {
 			final IBundleCoverage bundle = createBundle(group);
+			log(format("Writing group \"%s\" with %s classes",
+					bundle.getName(),
+					Integer.valueOf(bundle.getClassCounter().getTotalCount())));
 			final SourceFilesElement sourcefiles = group.sourcefiles;
 			final AntResourcesLocator locator = new AntResourcesLocator(
 					sourcefiles.encoding, sourcefiles.tabWidth);
@@ -476,7 +487,7 @@ public class ReportTask extends Task {
 		if (node.getClassCounter().getTotalCount() > 0
 				&& node.getLineCounter().getTotalCount() == 0) {
 			log(format(
-					"To enable source code annotation class files for bundle '%s' have to be compiled with debug information.",
+					"To enable source code annotation class files for bundle '%s' have to be compiled with debug information",
 					node.getName()), Project.MSG_WARN);
 		}
 	}

@@ -59,8 +59,9 @@
 		</jacoco:report>
 	</target>
 	
-	<target name="testReportInvalidExecutiondataFile">
-		<au:expectfailure expectedMessage="Unable to read execution data file doesnotexist.exec">
+	<target name="testReportInvalidExecutionDataFile">
+		<property name="doesnotexist.file" location="doesnotexist.exec"/>
+		<au:expectfailure expectedMessage="Unable to read execution data file ${doesnotexist.file}">
 			<jacoco:report>
 				<executiondata>
 					<file file="doesnotexist.exec"/>
@@ -85,7 +86,7 @@
 				</sourcefiles>
 			</structure>
 		</jacoco:report>
-		<au:assertLogContains level="warn" text="To enable source code annotation class files for bundle 'root' have to be compiled with debug information."/>
+		<au:assertLogContains level="warn" text="To enable source code annotation class files for bundle 'root' have to be compiled with debug information"/>
 	</target>
 	
 	<target name="testReportWithSourceDirButNoDebug">
@@ -103,7 +104,7 @@
 				</sourcefiles>
 			</structure>
 		</jacoco:report>
-		<au:assertLogContains level="warn" text="To enable source code annotation class files for bundle 'root' have to be compiled with debug information."/>
+		<au:assertLogContains level="warn" text="To enable source code annotation class files for bundle 'root' have to be compiled with debug information"/>
 	</target>
 
 	<!-- HTML Output -->
@@ -337,6 +338,15 @@
 		</au:expectfailure>
 	</target>
 
+	<target name="testReportXmlInvalidDestfile">
+		<au:expectfailure expectedMessage="Error while creating report">
+			<jacoco:report>
+				<structure name="root"/>
+				<xml destfile="${temp.dir}"/>
+			</jacoco:report>
+		</au:expectfailure>
+	</target>
+	
 	<target name="testReportXmlEncoding">
 		<property name="testReportXmlEncoding.destfile" location="${temp.dir}/report.xml"/>
 		<jacoco:report>

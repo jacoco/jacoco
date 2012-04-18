@@ -49,7 +49,7 @@ public class AgentTask extends AbstractCoverageTask {
 	@Override
 	public void execute() throws BuildException {
 		if (property == null || property.length() == 0) {
-			throw new BuildException("Property is mandatory");
+			throw new BuildException("Property is mandatory", getLocation());
 		}
 		final String jvmArg = isEnabled() ? getLaunchingArgument() : "";
 

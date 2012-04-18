@@ -196,7 +196,8 @@ public class AbstractCoverageTask extends Task {
 
 			return agentFile;
 		} catch (final IOException e) {
-			throw new BuildException("Unable to extract agent jar", e);
+			throw new BuildException("Unable to extract agent jar", e,
+					getLocation());
 		}
 	}
 
