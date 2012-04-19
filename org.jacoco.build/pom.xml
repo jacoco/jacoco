@@ -14,7 +14,7 @@
 
   <groupId>org.jacoco</groupId>
   <artifactId>org.jacoco.build</artifactId>
-  <version>0.5.7.201204190339</version>
+  <version>0.5.8-SNAPSHOT</version>
   <packaging>pom</packaging>
 
   <name>JaCoCo</name>
@@ -95,9 +95,9 @@
   </modules>
 
   <scm>
-    <connection>scm:svn:https://eclemma.svn.sourceforge.net/svnroot/eclemma/jacoco/tags/v0.5.7/org.jacoco.build</connection>
-    <developerConnection>scm:svn:https://eclemma.svn.sourceforge.net/svnroot/eclemma/jacoco/tags/v0.5.7/org.jacoco.build</developerConnection>
-    <url>https://eclemma.svn.sourceforge.net/svnroot/eclemma/jacoco/tags/v0.5.7/org.jacoco.build</url>
+    <connection>scm:svn:https://eclemma.svn.sourceforge.net/svnroot/eclemma/jacoco/trunk/org.jacoco.build</connection>
+    <developerConnection>scm:svn:https://eclemma.svn.sourceforge.net/svnroot/eclemma/jacoco/trunk/org.jacoco.build</developerConnection>
+    <url>https://eclemma.svn.sourceforge.net/svnroot/eclemma/jacoco/trunk/org.jacoco.build</url>
   </scm>
   <issueManagement>
     <system>Trac</system>
