@@ -20,10 +20,10 @@
 	  can be itegrated into an existing build in three simple steps.
 	</description>
 
-	<property name="src.dir" location="./src" />
-	<property name="result.dir" location="./result" />
+	<property name="src.dir" location="./src/main/java" />
+	<property name="result.dir" location="./target" />
 	<property name="result.classes.dir" location="${result.dir}/classes" />
-	<property name="result.report.dir" location="${result.dir}/report" />
+	<property name="result.report.dir" location="${result.dir}/site/jacoco" />
 	<property name="result.exec.file" location="${result.dir}/jacoco.exec" />
 
 	<!-- Step 1: Import JaCoCo Ant tasks -->
@@ -37,14 +37,20 @@
 
 	<target name="compile">
 		<mkdir dir="${result.classes.dir}" />
-		<javac srcdir="${src.dir}" destdir="${result.classes.dir}" debug="true" />
+		<javac srcdir="${src.dir}" destdir="${result.classes.dir}" debug="true" includeantruntime="false" />
 	</target>
 
 	<target name="test" depends="compile">
 		<!-- Step 2: Wrap test execution with the JaCoCo coverage task -->
 		<jacoco:coverage destfile="${result.exec.file}">
-			<java classname="org.jacoco.examples.parser.ExpressionParserTest" fork="true">
+			<java classname="org.jacoco.examples.parser.Main" fork="true">
 				<classpath path="${result.classes.dir}" />
+				<arg value="2 * 3 + 4"/>
+				<arg value="2 + 3 * 4"/>
+				<arg value="(2 + 3) * 4"/>
+				<arg value="2 * 2 * 2 * 2"/>
+				<arg value="1 + 2 + 3 + 4"/>
+				<arg value="2 * 3 + 2 * 5"/>
 			</java>
 		</jacoco:coverage>
 	</target>

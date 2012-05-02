@@ -17,8 +17,8 @@
   <includeBaseDirectory>false</includeBaseDirectory>
   <fileSets>
     <fileSet>
-      <directory>${basedir}/ant</directory>
-      <outputDirectory>/examples/ant</outputDirectory>
+      <directory>${basedir}/build</directory>
+      <outputDirectory>/examples/build</outputDirectory>
       <fileMode>0644</fileMode>
       <directoryMode>0755</directoryMode>
     </fileSet>

@@ -13,25 +13,14 @@ package org.jacoco.examples.parser;
 
 import java.io.IOException;
 
-public class ExpressionParserTest {
-
-	private static void runTest(final String expression, final double expected)
-			throws IOException {
-		final ExpressionParser parser = new ExpressionParser(expression);
-		final double actual = parser.parse().evaluate();
-		System.out.println(expression + " evaluates to " + actual);
-		if (actual != expected) {
-			throw new AssertionError("But expected was " + expected);
-		}
-	}
+public class Main {
 
 	public static void main(final String[] args) throws IOException {
-		runTest("2 * 3 + 4", 10);
-		runTest("2 + 3 * 4", 14);
-		runTest("(2 + 3) * 4", 20);
-		runTest("2 * 2 * 2 * 2", 16);
-		runTest("1 + 2 + 3 + 4", 10);
-		runTest("2 * 3 + 2 * 5", 16);
+		for (String expression : args) {
+			ExpressionParser parser = new ExpressionParser(expression);
+			double result = parser.parse().evaluate();
+			System.out.printf("%s = %s%n", expression, result);
+		}
 	}
 
 }
