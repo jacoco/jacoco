@@ -9,8 +9,6 @@
   
    Contributors:
       Marc R. Hoffmann - initial API and implementation
-      
-   $Id: $
 -->
 
 <project name="Example Ant Build with JaCoCo" default="rebuild" xmlns:jacoco="antlib:org.jacoco.ant">

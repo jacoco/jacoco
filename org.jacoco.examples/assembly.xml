@@ -21,6 +21,7 @@
       <outputDirectory>/examples/build</outputDirectory>
       <fileMode>0644</fileMode>
       <directoryMode>0755</directoryMode>
+      <filtered>true</filtered>
     </fileSet>
     <fileSet>
       <directory>${basedir}/src/org/jacoco/examples</directory>
