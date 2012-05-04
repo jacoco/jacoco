@@ -53,7 +53,8 @@
 
 <h3>Features</h3>
 <ul>
-  <li>Statement (C0) and branch (C1) coverage analysis.</li>
+  <li>Coverage <a href="counters.html">analysis</a> of instructions (C0),
+      branches (C1), lines, methods, types and cyclomatic complexity.</li>
   <li>Based on Java byte code and therefore works also without source files.</li>
   <li>Simple integration through <a href="agent.html">Java agent</a> based
       on-the-fly instrumentation. Other integration scenarios like custom class
@@ -65,9 +66,10 @@
   <li>Several report formats (HTML, XML, CSV).</li>
   <li>Remote protocol to request execution data dumps from the coverage agent at
       any point in time.</li>
-  <li>Several <a href="ant.html">Ant task</a> to collect and manage execution
+  <li><a href="ant.html">Ant tasks</a> to collect and manage execution
       data and create structured coverage reports.</li>
-  <li>Planned: Better reporting of Exception within blocks.</li>
+  <li><a href="maven.html">Maven plug-in</a> to collect coverage information
+      in Maven builds.</li>
 </ul>
 
 <h3>Non-Functional Characteristics</h3>
@@ -77,8 +79,10 @@
       projects.</li>
   <li>Lightweight implementation with minimal dependencies on external libraries
       and system resources.</li>
-  <li>Fully documented API (<a href="api/index.html">JavaDoc</a>) including
-      descriptions of the basic concepts.</li>
+  <li>Comprehensive documentation.</li>
+  <li>Fully documented APIs (<a href="api/index.html">JavaDoc</a>) and
+      <a href="api.html">examples</a> for <a href="integrations.html">integration</a>
+      with other tools.</li>
   <li>Regression <a href="../test/index.html">tests</a> with full functional
       test <a href="../coverage/index.html">coverage</a> based on
       <a href="http://junit.org/">JUnit</a> test cases.</li>
