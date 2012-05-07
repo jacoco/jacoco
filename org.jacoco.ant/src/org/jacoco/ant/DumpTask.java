@@ -34,7 +34,7 @@ import org.jacoco.core.runtime.RemoteControlWriter;
  */
 public class DumpTask extends Task {
 
-	private static OutputStream NUL = new OutputStream() {
+	private static final OutputStream NUL = new OutputStream() {
 		@Override
 		public void write(final int b) throws IOException {
 			// nothing to do

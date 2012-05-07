@@ -11,9 +11,7 @@
  *******************************************************************************/
 package org.jacoco.core;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.Properties;
+import java.util.ResourceBundle;
 
 /**
  * Static Meta information about JaCoCo.
@@ -27,20 +25,10 @@ public final class JaCoCo {
 	public static final String HOMEURL;
 
 	static {
-		final Properties properties = new Properties();
-		try {
-			final InputStream in = JaCoCo.class
-					.getResourceAsStream("jacoco.properties");
-			try {
-				properties.load(in);
-			} finally {
-				in.close();
-			}
-		} catch (final IOException e) {
-			throw new AssertionError(e);
-		}
-		VERSION = properties.getProperty("VERSION");
-		HOMEURL = properties.getProperty("HOMEURL");
+		final ResourceBundle bundle = ResourceBundle
+				.getBundle("org.jacoco.core.jacoco");
+		VERSION = bundle.getString("VERSION");
+		HOMEURL = bundle.getString("HOMEURL");
 	}
 
 	private JaCoCo() {

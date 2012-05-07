@@ -14,6 +14,7 @@ package org.jacoco.report.internal;
 import java.util.BitSet;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 
@@ -76,11 +77,11 @@ class NormalizedFileNames {
 
 	private String ensureUniqueness(final String s) {
 		String unique = s;
-		String lower = unique.toLowerCase();
+		String lower = unique.toLowerCase(Locale.ENGLISH);
 		int idx = 1;
 		while (usedNames.contains(lower)) {
 			unique = s + '~' + idx++;
-			lower = unique.toLowerCase();
+			lower = unique.toLowerCase(Locale.ENGLISH);
 		}
 		usedNames.add(lower);
 		return unique;

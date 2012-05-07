@@ -28,8 +28,7 @@ public class LabelColumn implements IColumnRenderer {
 
 	private static final Comparator<ITableItem> COMPARATOR = new Comparator<ITableItem>() {
 		public int compare(final ITableItem i1, final ITableItem i2) {
-			return i1.getLinkLabel().toLowerCase()
-					.compareTo(i2.getLinkLabel().toLowerCase());
+			return i1.getLinkLabel().compareToIgnoreCase(i2.getLinkLabel());
 		}
 	};
 
