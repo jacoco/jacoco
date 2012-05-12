@@ -1,5 +1,6 @@
 <?xml version="1.0"?>
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="1.0"
+        xmlns="http://www.w3.org/1999/xhtml"
         xmlns:stringutils="xalan://org.apache.tools.ant.util.StringUtils"
         exclude-result-prefixes="stringutils">
 <xsl:output method="xml" indent="yes" encoding="UTF-8"

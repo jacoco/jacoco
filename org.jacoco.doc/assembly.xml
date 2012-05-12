@@ -25,6 +25,14 @@
       </includes>
     </fileSet>
     <fileSet>
+      <directory>${basedir}/target/generated-resources/xml/xslt</directory>
+      <outputDirectory>/doc</outputDirectory>
+      <filtered>true</filtered>
+      <includes>
+        <include>*.html</include>
+      </includes>
+    </fileSet>
+    <fileSet>
       <directory>${basedir}/docroot</directory>
       <outputDirectory>/</outputDirectory>
       <excludes>

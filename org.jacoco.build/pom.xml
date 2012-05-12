@@ -399,6 +399,11 @@
           <artifactId>build-helper-maven-plugin</artifactId>
           <version>1.5</version>
         </plugin>
+        <plugin>
+          <groupId>org.codehaus.mojo</groupId>
+          <artifactId>xml-maven-plugin</artifactId>
+          <version>1.0</version>
+        </plugin>
         <!-- Third-party plugins -->
         <plugin>
           <groupId>org.codehaus.groovy.maven</groupId>
