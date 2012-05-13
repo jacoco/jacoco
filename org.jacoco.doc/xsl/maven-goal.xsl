@@ -15,7 +15,7 @@
 	xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:xdoc="http://maven.apache.org/XDOC/2.0"
 	xmlns="http://www.w3.org/1999/xhtml" exclude-result-prefixes="xdoc">
 
-	<xsl:output method="xml" indent="yes" encoding="ISO-8859-1"
+	<xsl:output method="xml" indent="yes" encoding="UTF-8"
 		doctype-public="-//W3C//DTD XHTML 1.0 Strict//EN" doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd" />
 
 	<xsl:param name="qualified.bundle.version" />
@@ -25,8 +25,8 @@
 	<xsl:template match="/">
 		<html>
 			<head>
-				<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1" />
-				<link rel="stylesheet" href=".resources/doc.css" charset="ISO-8859-1"
+				<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+				<link rel="stylesheet" href=".resources/doc.css" charset="UTF-8"
 					type="text/css" />
 				<link rel="shortcut icon" href=".resources/report.gif" type="image/gif" />
 				<title>
