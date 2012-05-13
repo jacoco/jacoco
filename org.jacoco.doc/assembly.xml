@@ -27,7 +27,7 @@
     <fileSet>
       <directory>${basedir}/target/generated-resources/xml/xslt</directory>
       <outputDirectory>/doc</outputDirectory>
-      <filtered>true</filtered>
+      <filtered>false</filtered>
       <includes>
         <include>*.html</include>
       </includes>

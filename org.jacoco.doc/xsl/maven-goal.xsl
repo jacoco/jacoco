@@ -12,16 +12,18 @@
 -->
 
 <xsl:stylesheet version="1.0"
-	xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-	xmlns:xdoc="http://maven.apache.org/XDOC/2.0"
-	xmlns="http://www.w3.org/1999/xhtml"
-	exclude-result-prefixes="xdoc">
+	xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:xdoc="http://maven.apache.org/XDOC/2.0"
+	xmlns="http://www.w3.org/1999/xhtml" exclude-result-prefixes="xdoc">
 
 	<xsl:output method="xml" indent="yes" encoding="ISO-8859-1"
 		doctype-public="-//W3C//DTD XHTML 1.0 Strict//EN" doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd" />
 
+	<xsl:param name="qualified.bundle.version" />
+	<xsl:param name="jacoco.home.url" />
+	<xsl:param name="copyright.years" />
+
 	<xsl:template match="/">
-	    <html>
+		<html>
 			<head>
 				<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1" />
 				<link rel="stylesheet" href=".resources/doc.css" charset="ISO-8859-1"
@@ -49,12 +51,14 @@
 				</div>
 				<div class="footer">
 					<span class="right">
-						<a href="@jacoco.home.url@">JaCoCo</a>
-						@qualified.bundle.version@
+						<a href="{$jacoco.home.url}">JaCoCo</a>
+						&#160;
+						<xsl:value-of select="$qualified.bundle.version" />
 					</span>
-					<a href="license.html">Copyright</a>
-					<xsl:text disable-output-escaping="yes">&amp;copy;</xsl:text>
-					@copyright.years@ Mountainminds GmbH &amp; Co. KG and Contributors
+					<a href="../doc/license.html">Copyright</a>
+					&#169;
+					<xsl:value-of select="$copyright.years" />
+					Mountainminds GmbH &amp; Co. KG and Contributors
 				</div>
 			</body>
 		</html>
@@ -117,7 +121,7 @@
 	</xsl:template>
 
 	<xsl:template match="xdoc:br">
-		<br/>
+		<br />
 	</xsl:template>
 
 	<xsl:template match="xdoc:ul">
