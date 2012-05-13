@@ -11,7 +11,12 @@
  *******************************************************************************/
 package org.jacoco.maven;
 
-import java.io.*;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.Reader;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -30,7 +35,11 @@ import org.jacoco.core.analysis.ICoverageNode;
 import org.jacoco.core.data.ExecutionDataReader;
 import org.jacoco.core.data.ExecutionDataStore;
 import org.jacoco.core.data.SessionInfoStore;
-import org.jacoco.report.*;
+import org.jacoco.report.FileMultiReportOutput;
+import org.jacoco.report.IReportGroupVisitor;
+import org.jacoco.report.IReportVisitor;
+import org.jacoco.report.ISourceFileLocator;
+import org.jacoco.report.MultiReportVisitor;
 import org.jacoco.report.csv.CSVFormatter;
 import org.jacoco.report.html.HTMLFormatter;
 import org.jacoco.report.xml.XMLFormatter;
@@ -41,6 +50,7 @@ import org.jacoco.report.xml.XMLFormatter;
  * 
  * @goal report
  * @requiresProject true
+ * @threadSafe
  */
 public class ReportMojo extends AbstractMavenReport {
 
@@ -125,11 +135,11 @@ public class ReportMojo extends AbstractMavenReport {
 		return "jacoco/index";
 	}
 
-	public String getName(Locale locale) {
+	public String getName(final Locale locale) {
 		return "JaCoCo";
 	}
 
-	public String getDescription(Locale locale) {
+	public String getDescription(final Locale locale) {
 		return "JaCoCo Test Coverage Report.";
 	}
 
@@ -162,7 +172,7 @@ public class ReportMojo extends AbstractMavenReport {
 	}
 
 	@Override
-	public void setReportOutputDirectory(File reportOutputDirectory) {
+	public void setReportOutputDirectory(final File reportOutputDirectory) {
 		if (reportOutputDirectory != null
 				&& !reportOutputDirectory.getAbsolutePath().endsWith("jacoco")) {
 			outputDirectory = new File(reportOutputDirectory, "jacoco");
@@ -196,14 +206,15 @@ public class ReportMojo extends AbstractMavenReport {
 		}
 		try {
 			executeReport(Locale.getDefault());
-		} catch (MavenReportException e) {
+		} catch (final MavenReportException e) {
 			throw new MojoExecutionException("An error has occurred in "
 					+ getName(Locale.ENGLISH) + " report generation.", e);
 		}
 	}
 
 	@Override
-	protected void executeReport(Locale locale) throws MavenReportException {
+	protected void executeReport(final Locale locale)
+			throws MavenReportException {
 		try {
 			loadExecutionData();
 		} catch (final IOException e) {
@@ -263,9 +274,9 @@ public class ReportMojo extends AbstractMavenReport {
 		final File classesDir = new File(getProject().getBuild()
 				.getOutputDirectory());
 
-		List<File> filesToAnalyze = getFilesToAnalyze(classesDir);
+		final List<File> filesToAnalyze = getFilesToAnalyze(classesDir);
 
-		for (File file : filesToAnalyze) {
+		for (final File file : filesToAnalyze) {
 			analyzer.analyzeAll(file);
 		}
 
@@ -347,7 +358,8 @@ public class ReportMojo extends AbstractMavenReport {
 		return result;
 	}
 
-	protected List<File> getFilesToAnalyze(File rootDir) throws IOException {
+	protected List<File> getFilesToAnalyze(final File rootDir)
+			throws IOException {
 		final String includes;
 		if (getIncludes() != null && !getIncludes().isEmpty()) {
 			includes = StringUtils.join(getIncludes().iterator(), ",");

@@ -34,6 +34,7 @@ import org.jacoco.core.runtime.AgentOptions;
  * @goal prepare-agent
  * @requiresProject true
  * @requiresDependencyResolution runtime
+ * @threadSafe
  */
 public class AgentMojo extends AbstractJacocoMojo {
 
@@ -179,13 +180,13 @@ public class AgentMojo extends AbstractJacocoMojo {
 			agentOptions.setAppend(append.booleanValue());
 		}
 		if (getIncludes() != null && !getIncludes().isEmpty()) {
-			String agentIncludes = StringUtils.join(getIncludes().iterator(),
-					":");
+			final String agentIncludes = StringUtils.join(getIncludes()
+					.iterator(), ":");
 			agentOptions.setIncludes(agentIncludes);
 		}
 		if (getExcludes() != null && !getExcludes().isEmpty()) {
-			String agentExcludes = StringUtils.join(getExcludes().iterator(),
-					":");
+			final String agentExcludes = StringUtils.join(getExcludes()
+					.iterator(), ":");
 			agentOptions.setExcludes(agentExcludes);
 		}
 		if (exclClassLoaders != null) {
