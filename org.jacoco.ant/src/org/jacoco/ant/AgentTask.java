@@ -32,15 +32,6 @@ public class AgentTask extends AbstractCoverageTask {
 	}
 
 	/**
-	 * Gets the name of the property to hold the agent JVM options
-	 * 
-	 * @return Name of the property to be populated
-	 */
-	public String getProperty() {
-		return property;
-	}
-
-	/**
 	 * Unpacks a private copy of the JaCoCo agent and populates
 	 * <code>property</code> with the JVM arguments required to use it. The
 	 * value set into the property is only valid for the lifetime of the current

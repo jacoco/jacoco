@@ -142,7 +142,7 @@ public class CoverageTask extends AbstractCoverageTask implements TaskContainer 
 			final String forkValue = (String) configurableWrapper
 					.getAttributeMap().get("fork");
 
-			if (forkValue == null || !Project.toBoolean(forkValue)) {
+			if (!Project.toBoolean(forkValue)) {
 				throw new BuildException(
 						"Coverage can only be applied on a forked VM",
 						getLocation());
