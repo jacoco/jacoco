@@ -59,13 +59,12 @@
     </dependency>
 
     <dependency>
-      <groupId>org.jacoco</groupId>
+      <groupId>${project.groupId}</groupId>
       <artifactId>org.jacoco.agent</artifactId>
       <classifier>runtime</classifier>
-      <version>${project.version}</version>
     </dependency>
     <dependency>
-      <groupId>org.jacoco</groupId>
+      <groupId>${project.groupId}</groupId>
       <artifactId>org.jacoco.core</artifactId>
     </dependency>
     <dependency>
