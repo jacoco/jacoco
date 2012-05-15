@@ -873,6 +873,7 @@
                         <ignore></ignore>
                       </action>
                     </pluginExecution>
+                    <!-- Relates to Trac #158 -->
                     <pluginExecution>
                       <pluginExecutionFilter>
                         <groupId>org.jacoco</groupId>
