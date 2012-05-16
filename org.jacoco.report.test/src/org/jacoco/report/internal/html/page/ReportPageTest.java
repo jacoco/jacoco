@@ -94,6 +94,9 @@ public class ReportPageTest extends PageTestBase {
 		final HTMLSupport support = new HTMLSupport();
 		final Document doc = support.parse(output.getFile("Test.html"));
 
+		// language
+		assertEquals("en", support.findStr(doc, "/html/@lang"));
+
 		// style sheet
 		assertEquals(".resources/report.css", support.findStr(doc,
 				"/html/head/link[@rel='stylesheet']/@href"));

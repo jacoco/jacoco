@@ -72,6 +72,7 @@ public abstract class ReportPage implements ILinkable {
 	public void render() throws IOException {
 		final HTMLDocument doc = new HTMLDocument(
 				folder.createFile(getFileName()), context.getOutputEncoding());
+		doc.attr("lang", context.getLocale().getLanguage());
 		head(doc.head());
 		body(doc.body());
 		doc.close();

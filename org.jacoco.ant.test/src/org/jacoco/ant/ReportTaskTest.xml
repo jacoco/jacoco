@@ -81,8 +81,8 @@
 				<classfiles>
 					<fileset dir="${temp.dir}" id="*.class" />
 				</classfiles>
-				<sourcefiles>
-					<fileset dir="${org.jacoco.ant.reportTaskTest.sources.dir}" includes="**/*.java" />
+				<sourcefiles encoding="UTF-8">
+					<fileset dir="${org.jacoco.ant.reportTaskTest.sources.dir}" />
 				</sourcefiles>
 			</structure>
 		</jacoco:report>
@@ -99,14 +99,25 @@
 				<classfiles>
 					<fileset dir="${temp.dir}" id="*.class" />
 				</classfiles>
-				<sourcefiles>
-					<dirset dir="${org.jacoco.ant.reportTaskTest.sources.dir}/.." includes="src" />
+				<sourcefiles encoding="UTF-8">
+					<dirset file="${org.jacoco.ant.reportTaskTest.sources.dir}" />
 				</sourcefiles>
 			</structure>
 		</jacoco:report>
 		<au:assertLogContains level="warn" text="To enable source code annotation class files for bundle 'root' have to be compiled with debug information"/>
 	</target>
 
+	<target name="testReportWithSourceButNoClasses">
+		<jacoco:report>
+			<structure name="root">
+				<sourcefiles encoding="UTF-8">
+					<fileset dir="${org.jacoco.ant.reportTaskTest.sources.dir}" />
+				</sourcefiles>
+			</structure>
+		</jacoco:report>
+		<au:assertLogDoesntContain level="warn" text="source code annotation"/>
+	</target>
+	
 	<!-- HTML Output -->
 	
 	<target name="testReportHtmlNoDestdirOrDestfile">
@@ -206,8 +217,8 @@
 				<classfiles>
 					<fileset dir="${org.jacoco.ant.reportTaskTest.classes.dir}" includes="**/*.class"/>
 				</classfiles>
-				<sourcefiles>
-					<fileset dir="${org.jacoco.ant.reportTaskTest.sources.dir}" includes="**/*.java" />
+				<sourcefiles encoding="UTF-8">
+					<fileset dir="${org.jacoco.ant.reportTaskTest.sources.dir}" />
 				</sourcefiles>
             </structure>
 			<html destdir="${temp.dir}"/>
@@ -225,8 +236,8 @@
 				<classfiles>
 					<fileset dir="${org.jacoco.ant.reportTaskTest.classes.dir}" includes="**/*.class"/>
 				</classfiles>
-				<sourcefiles tabwidth="13">
-					<fileset dir="${org.jacoco.ant.reportTaskTest.sources.dir}" includes="**/*.java" />
+				<sourcefiles encoding="UTF-8" tabwidth="13">
+					<fileset dir="${org.jacoco.ant.reportTaskTest.sources.dir}" />
 				</sourcefiles>
             </structure>
 			<html destdir="${temp.dir}"/>
@@ -245,8 +256,8 @@
 					<classfiles>
 						<fileset dir="${org.jacoco.ant.reportTaskTest.classes.dir}" includes="**/*.class"/>
 					</classfiles>
-					<sourcefiles tabwidth="0">
-						<fileset dir="${org.jacoco.ant.reportTaskTest.sources.dir}" includes="**/*.java" />
+					<sourcefiles encoding="UTF-8" tabwidth="0">
+						<fileset dir="${org.jacoco.ant.reportTaskTest.sources.dir}" />
 					</sourcefiles>
 				</structure>
 				<html destdir="${temp.dir}"/>
@@ -273,8 +284,8 @@
 				<classfiles>
 					<fileset dir="${org.jacoco.ant.reportTaskTest.classes.dir}" includes="**/*.class"/>
 				</classfiles>
-				<sourcefiles>
-					<fileset dir="${org.jacoco.ant.reportTaskTest.sources.dir}" includes="**/*.java" />
+				<sourcefiles encoding="UTF-8">
+					<fileset dir="${org.jacoco.ant.reportTaskTest.sources.dir}" />
 				</sourcefiles>
             </structure>
 			<html destdir="${temp.dir}"/>
@@ -290,7 +301,7 @@
 				<classfiles>
 					<fileset dir="${org.jacoco.ant.reportTaskTest.classes.dir}" includes="**/*.class"/>
 				</classfiles>
-				<sourcefiles>
+				<sourcefiles encoding="UTF-8">
 					<dirset dir="${org.jacoco.ant.reportTaskTest.sources.dir}/.." includes="src" />
 				</sourcefiles>
             </structure>
@@ -299,6 +310,46 @@
 		
 		<au:assertFileExists file="${temp.dir}/org.jacoco.ant/TestTarget.java.html"/>
 		<au:assertFileExists file="${temp.dir}/default/TestTargetInDefault.java.html"/>
+	</target>
+	
+	<target name="testReportHtmlWithSourceEncoding">
+		<mkdir dir="${temp.dir}/org/jacoco/ant"/>
+		<echo file="${temp.dir}/org/jacoco/ant/TestTarget.java" encoding="UTF-16">Source Code</echo>
+		<jacoco:report>
+			<structure name="Test">
+				<classfiles>
+					<fileset dir="${org.jacoco.ant.reportTaskTest.classes.dir}" includes="**/*.class"/>
+				</classfiles>
+				<sourcefiles encoding="UTF-16">
+					<fileset dir="${temp.dir}" />
+				</sourcefiles>
+            </structure>
+			<html destdir="${temp.dir}"/>
+		</jacoco:report>
+		
+		<loadfile property="testReportHtmlWithSourceEncoding.content" srcfile="${temp.dir}/org.jacoco.ant/TestTarget.java.html" encoding="UTF-8"/>
+		<au:assertTrue message="Report does not contain expected text.">
+			<contains string="${testReportHtmlWithSourceEncoding.content}" substring="Source Code"/>
+		</au:assertTrue>
+	</target>
+
+	<target name="testReportHtmlLocale">
+		<jacoco:report>
+			<structure name="Test">
+				<classfiles>
+					<fileset dir="${org.jacoco.ant.reportTaskTest.classes.dir}" includes="**/*.class"/>
+				</classfiles>
+				<sourcefiles encoding="UTF-8">
+					<fileset dir="${org.jacoco.ant.reportTaskTest.sources.dir}" />
+				</sourcefiles>
+            </structure>
+			<html destdir="${temp.dir}" locale="gr"/>
+		</jacoco:report>
+		
+		<loadfile property="testReportHtmlLocale.content" srcfile="${temp.dir}/org.jacoco.ant/TestTarget.java.html" encoding="UTF-8"/>
+		<au:assertTrue message="Report does not contain expected language tag.">
+			<contains string="${testReportHtmlLocale.content}" substring="lang=&quot;gr&quot;"/>
+		</au:assertTrue>
 	</target>
 	
 	<!-- CSV Output -->
