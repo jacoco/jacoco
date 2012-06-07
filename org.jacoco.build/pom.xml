@@ -616,6 +616,20 @@
       </build>
     </profile>
 
+    <!-- This profile is used to launch tests with compilation into specific bytecode version. -->
+    <profile>
+      <id>bytecode</id>
+      <activation>
+        <property>
+          <name>bytecode.version</name>
+        </property>
+      </activation>
+      <properties>
+        <maven.compiler.source>${bytecode.version}</maven.compiler.source>
+        <maven.compiler.target>${bytecode.version}</maven.compiler.target>
+      </properties>
+    </profile>
+
     <profile>
       <id>jdk16</id>
       <activation>
