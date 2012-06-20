@@ -97,7 +97,12 @@ public class ClassInstrumenter extends ClassAdapter implements
 		if (mv == null) {
 			return null;
 		}
-		return new MethodInstrumenter(mv, access, desc, probeArrayStrategy);
+		final ProbeInserter probeVariableInserter = new ProbeInserter(access,
+				desc, mv, probeArrayStrategy);
+		final LazyFrameTracker frameTracker = new LazyFrameTracker(
+				probeVariableInserter, className);
+		return new MethodInstrumenter(frameTracker, probeVariableInserter,
+				frameTracker);
 	}
 
 	public void visitTotalProbeCount(final int count) {
@@ -135,9 +140,10 @@ public class ClassInstrumenter extends ClassAdapter implements
 
 	private class ClassTypeStrategy implements IProbeArrayStrategy {
 
-		public int pushInstance(final MethodVisitor mv) {
+		public int storeInstance(final MethodVisitor mv, final int variable) {
 			mv.visitMethodInsn(Opcodes.INVOKESTATIC, className,
 					InstrSupport.INITMETHOD_NAME, InstrSupport.INITMETHOD_DESC);
+			mv.visitVarInsn(Opcodes.ASTORE, variable);
 			return 1;
 		}
 
@@ -223,9 +229,11 @@ public class ClassInstrumenter extends ClassAdapter implements
 
 	private class InterfaceTypeStrategy implements IProbeArrayStrategy {
 
-		public int pushInstance(final MethodVisitor mv) {
-			return accessorGenerator.generateDataAccessor(id, className,
-					probeCount, mv);
+		public int storeInstance(final MethodVisitor mv, final int variable) {
+			final int maxStack = accessorGenerator.generateDataAccessor(id,
+					className, probeCount, mv);
+			mv.visitVarInsn(Opcodes.ASTORE, variable);
+			return maxStack;
 		}
 
 		public void addMembers(final ClassVisitor delegate) {

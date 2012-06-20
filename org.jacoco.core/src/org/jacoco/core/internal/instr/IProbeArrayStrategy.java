@@ -22,13 +22,15 @@ import org.objectweb.asm.MethodVisitor;
 interface IProbeArrayStrategy {
 
 	/**
-	 * Creates code that pushes the probe array instance on the operand stack.
+	 * Creates code that stores the probe array instance in the given variable.
 	 * 
 	 * @param mv
 	 *            visitor to create code
+	 * @param variable
+	 *            variable index to store probe array to
 	 * @return maximum stack size required by the generated code
 	 */
-	int pushInstance(MethodVisitor mv);
+	int storeInstance(MethodVisitor mv, int variable);
 
 	/**
 	 * Adds additional class members required by this strategy.

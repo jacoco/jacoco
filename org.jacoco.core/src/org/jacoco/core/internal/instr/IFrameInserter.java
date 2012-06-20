@@ -9,25 +9,18 @@
  *    Marc R. Hoffmann - initial API and implementation
  *    
  *******************************************************************************/
-package org.jacoco.core.test.validation.targets;
-
-import static org.jacoco.core.test.validation.targets.Stubs.f;
-import static org.jacoco.core.test.validation.targets.Stubs.t;
-
-import org.jacoco.core.test.validation.targets.Stubs.SuperClass;
+package org.jacoco.core.internal.instr;
 
 /**
- * This test target has a constructor containing control structures before the
- * superclass constructor is called.
+ * Internal interface for insertion of additional stackmap frame in the
+ * instruction sequence of a method.
  */
-public class Target10 extends SuperClass {
+interface IFrameInserter {
 
-	public Target10() {
-		super(t() || f()); // $line-super$
-	}
-
-	public static void main(String[] args) {
-		new Target10();
-	}
+	/**
+	 * Inserts an additional frame reflecting the current locals and stack
+	 * types.
+	 */
+	void insertFrame();
 
 }

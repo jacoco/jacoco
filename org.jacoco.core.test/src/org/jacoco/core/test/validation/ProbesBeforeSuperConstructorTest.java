@@ -32,7 +32,7 @@ public class ProbesBeforeSuperConstructorTest extends ValidationTestBase {
 	@Test
 	public void testCoverageResult() {
 
-		assertLine("super", ICounter.PARTLY_COVERED, 1, 1);
+		assertLine("super", ICounter.PARTLY_COVERED, 3, 1);
 
 	}
 
