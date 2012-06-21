@@ -229,9 +229,12 @@ public static example()V
       <td><img src=".resources/flow-cond.png" alt="Conditional Jump"/></td>
       <td><img src=".resources/flow-cond-probe.png" alt="Conditional Jump with Probe"/></td>
       <td>
-        Adding a probe to an conditional jump is little bit more tricky. We add
-        a probe to the end of the method and jump to this probe. Then we jump
-        back to the original target.
+        Adding a probe to an conditional jump is little bit more tricky. We
+        invert the semantic of the opcode and add the probe right after the
+        conditional jump. With a subsequent <code>GOTO</code> instruction we
+        jump to the original target. Note that this approach will not introduce
+        a backward jump, which would cause trouble with the Java verifier if we
+        have an uninitialized object on the stack.
       </td>
     </tr>
     <tr>
