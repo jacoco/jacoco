@@ -148,9 +148,16 @@ public final class AgentOptions {
 	 */
 	public static final int DEFAULT_PORT = 6300;
 
+	/**
+	 * Specifies where the agent dumps all class files it encounters. The
+	 * location is specified as a relative path to the working directory.
+	 * Default is <code>null</code> (no dumps).
+	 */
+	public static final String CLASSDUMPDIR = "classdumpdir";
+
 	private static final Collection<String> VALID_OPTIONS = Arrays.asList(
 			DESTFILE, APPEND, INCLUDES, EXCLUDES, EXCLCLASSLOADER, SESSIONID,
-			DUMPONEXIT, OUTPUT, ADDRESS, PORT);
+			DUMPONEXIT, OUTPUT, ADDRESS, PORT, CLASSDUMPDIR);
 
 	private final Map<String, String> options;
 
@@ -413,6 +420,26 @@ public final class AgentOptions {
 	 */
 	public void setOutput(final OutputMode output) {
 		setOption(OUTPUT, output.name());
+	}
+
+	/**
+	 * Returns the location of the directory where class files should be dumped
+	 * to.
+	 * 
+	 * @return dump location or <code>null</code> (no dumps)
+	 */
+	public String getClassDumpDir() {
+		return getOption(CLASSDUMPDIR, null);
+	}
+
+	/**
+	 * Sets the directory where class files should be dumped to.
+	 * 
+	 * @param location
+	 *            dump location or <code>null</code> (no dumps)
+	 */
+	public void setClassDumpDir(final String location) {
+		setOption(CLASSDUMPDIR, location);
 	}
 
 	private void setOption(final String key, final int value) {

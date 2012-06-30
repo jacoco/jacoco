@@ -31,6 +31,7 @@
     <jacoco.output>file</jacoco.output>
     <jacoco.address>localhost</jacoco.address>
     <jacoco.port>9999</jacoco.port>
+    <jacoco.classDumpDir>${project.build.directory}/classdumps</jacoco.classDumpDir>
   </properties>
 
   <build>

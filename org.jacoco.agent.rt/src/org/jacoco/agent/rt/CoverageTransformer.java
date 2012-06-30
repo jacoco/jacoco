@@ -46,6 +46,8 @@ public class CoverageTransformer implements ClassFileTransformer {
 
 	private final WildcardMatcher exclClassloader;
 
+	private final ClassFileDumper classFileDumper;
+
 	/**
 	 * New transformer with the given delegates.
 	 * 
@@ -68,6 +70,7 @@ public class CoverageTransformer implements ClassFileTransformer {
 				toWildcard(toVMName(options.getExcludes())));
 		exclClassloader = new WildcardMatcher(
 				toWildcard(options.getExclClassloader()));
+		classFileDumper = new ClassFileDumper(options.getClassDumpDir());
 	}
 
 	public byte[] transform(final ClassLoader loader, final String classname,
@@ -80,6 +83,7 @@ public class CoverageTransformer implements ClassFileTransformer {
 		}
 
 		try {
+			classFileDumper.dump(classname, classfileBuffer);
 			if (classBeingRedefined != null) {
 				// For redefined classes we must clear the execution data
 				// reference as probes might have changed.

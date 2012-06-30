@@ -153,6 +153,16 @@ public class AgentMojo extends AbstractJacocoMojo {
 	 */
 	private Integer port;
 
+	/**
+	 * If a directory is specified for this parameter the JaCoCo agent dumps all
+	 * class files it processes to the given location. This can be useful for
+	 * debugging purposes or in case of dynamically created classes for example
+	 * when scripting engines are used.
+	 * 
+	 * @parameter expression="${jacoco.classDumpDir}"
+	 */
+	private File classDumpDir;
+
 	@Override
 	public void executeMojo() {
 		final String vmArgument = StringUtils.quoteAndEscape(
@@ -174,8 +184,7 @@ public class AgentMojo extends AbstractJacocoMojo {
 
 	private AgentOptions createAgentOptions() {
 		final AgentOptions agentOptions = new AgentOptions();
-		final String destPath = destFile.getAbsolutePath();
-		agentOptions.setDestfile(destPath);
+		agentOptions.setDestfile(destFile.getAbsolutePath());
 		if (append != null) {
 			agentOptions.setAppend(append.booleanValue());
 		}
@@ -206,6 +215,9 @@ public class AgentMojo extends AbstractJacocoMojo {
 		}
 		if (port != null) {
 			agentOptions.setPort(port.intValue());
+		}
+		if (classDumpDir != null) {
+			agentOptions.setClassDumpDir(classDumpDir.getAbsolutePath());
 		}
 		return agentOptions;
 	}

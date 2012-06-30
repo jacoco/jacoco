@@ -45,9 +45,10 @@ public class AgentOptionsTest {
 		assertNull(options.getSessionId());
 		assertTrue(options.getDumpOnExit());
 		assertEquals(6300, options.getPort());
-		assertEquals(null, options.getAddress());
+		assertNull(options.getAddress());
 		assertEquals(AgentOptions.OutputMode.file, options.getOutput());
 		assertEquals("", options.toString());
+		assertNull(options.getClassDumpDir());
 	}
 
 	@Test
@@ -270,6 +271,20 @@ public class AgentOptionsTest {
 	@Test(expected = IllegalArgumentException.class)
 	public void testInvalidPortOptionValue() {
 		new AgentOptions("port=-1234");
+	}
+
+	@Test
+	public void testGetClassDumpDir() {
+		AgentOptions options = new AgentOptions("classdumpdir=target/dump");
+		assertEquals("target/dump", options.getClassDumpDir());
+	}
+
+	@Test
+	public void testSetClassDumpDir() {
+		AgentOptions options = new AgentOptions();
+		options.setClassDumpDir("target/dump");
+		assertEquals("target/dump", options.getClassDumpDir());
+		assertEquals("classdumpdir=target/dump", options.toString());
 	}
 
 	@Test

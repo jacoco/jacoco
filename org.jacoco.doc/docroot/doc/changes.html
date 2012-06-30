@@ -20,11 +20,18 @@
 
 <h2>Trunk Build @qualified.bundle.version@ (@build.date@)</h2>
 
+<h3>New Features</h3>
+<ul>
+  <li>Support for parallel Maven builds (Trac #191).</li>
+  <li>New agent option <code>classdumpdir</code> to dump all class files seen
+      by the JaCoCo agent to disk. This option is also available for Ant and
+      Maven (Trac #208).</li>
+</ul>
+
 <h3>Non-functional Changes</h3>
 <ul>
   <li>Documentation now includes Maven example and Maven goal documentation
       (Trac #201, #202).</li>
-  <li>Support for parallel Maven builds (Trac #191).</li>
   <li>Reworked instrumentation strategy to avoid verifier error "Uninitialized
       object exists on backward branch" with certain Java 7 class files
       (Trac #154).</li>

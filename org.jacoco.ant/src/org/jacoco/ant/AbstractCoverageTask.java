@@ -172,6 +172,17 @@ public class AbstractCoverageTask extends Task {
 	}
 
 	/**
+	 * Sets the directory where all class files seen by the agent should be
+	 * dumped to.
+	 * 
+	 * @param dir
+	 *            dump output location
+	 */
+	public void setClassdumpdir(final File dir) {
+		agentOptions.setClassDumpDir(dir.getAbsolutePath());
+	}
+
+	/**
 	 * Creates JVM argument to launch with the specified JaCoCo agent jar and
 	 * the current options
 	 * 
