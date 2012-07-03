@@ -135,7 +135,9 @@ public class CoverageTransformerTest {
 			assertEquals("Error while instrumenting class org.jacoco.Sample.",
 					e.getMessage());
 		}
-		recorder.assertException(NullPointerException.class, null);
+		recorder.assertException(IllegalClassFormatException.class,
+				"Error while instrumenting class org.jacoco.Sample.",
+				NullPointerException.class);
 		recorder.clear();
 	}
 

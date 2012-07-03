@@ -91,10 +91,10 @@ public class CoverageTransformer implements ClassFileTransformer {
 			}
 			return instrumenter.instrument(classfileBuffer);
 		} catch (final Exception ex) {
-			// Report this, as the exception is ignored by the JVM:
-			logger.logExeption(ex);
 			final IllegalClassFormatException wrapper = new IllegalClassFormatException(
 					format("Error while instrumenting class %s.", classname));
+			// Report this, as the exception is ignored by the JVM:
+			logger.logExeption(wrapper);
 			throw (IllegalClassFormatException) wrapper.initCause(ex);
 		}
 	}

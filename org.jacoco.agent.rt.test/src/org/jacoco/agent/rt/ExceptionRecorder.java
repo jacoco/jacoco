@@ -42,10 +42,25 @@ public class ExceptionRecorder implements IExceptionLogger {
 		assertEquals(Collections.singletonList(message), getMessages());
 	}
 
+	public void assertException(final Class<? extends Throwable> type,
+			final String message, final Class<? extends Throwable> causetype) {
+		assertEquals(Collections.singletonList(type), getTypes());
+		assertEquals(Collections.singletonList(message), getMessages());
+		assertEquals(Collections.singletonList(causetype), getCauseTypes());
+	}
+
 	private List<Class<?>> getTypes() {
 		final List<Class<?>> types = new ArrayList<Class<?>>();
 		for (Exception e : exceptions) {
 			types.add(e.getClass());
+		}
+		return types;
+	}
+
+	private List<Class<?>> getCauseTypes() {
+		final List<Class<?>> types = new ArrayList<Class<?>>();
+		for (Exception e : exceptions) {
+			types.add(e.getCause().getClass());
 		}
 		return types;
 	}
