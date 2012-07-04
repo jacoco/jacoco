@@ -236,10 +236,13 @@ class ProbeInserter extends MethodAdapter implements IProbeInserter {
 		}
 
 		if (inserted) {
-			final Object[] newLocal = new Object[nLocal + 1];
-			for (int i = 0; i <= nLocal; i++) {
+			final int n = Math.max(nLocal, variableIdx) + 1;
+			final Object[] newLocal = new Object[n];
+			for (int i = 0; i < n; i++) {
 				if (i < variableIdx) {
-					newLocal[i] = local[i];
+					// For dead code it is possible to specify less locals than
+					// we have method parameters.
+					newLocal[i] = i < nLocal ? local[i] : Opcodes.TOP;
 					continue;
 				}
 				if (i > variableIdx) {
@@ -248,7 +251,7 @@ class ProbeInserter extends MethodAdapter implements IProbeInserter {
 				}
 				newLocal[i] = InstrSupport.DATAFIELD_DESC;
 			}
-			mv.visitFrame(type, nLocal + 1, newLocal, nStack, stack);
+			mv.visitFrame(type, n, newLocal, nStack, stack);
 		} else {
 			mv.visitFrame(type, nLocal, local, nStack, stack);
 		}
