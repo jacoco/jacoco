@@ -31,15 +31,15 @@
 <h3>Fixed Bugs</h3>
 <ul>
   <li>Allow instrumentation of classes with dead code (SF #3538112).</li>
+  <li>Reworked instrumentation strategy to avoid verifier error "Uninitialized
+      object exists on backward branch" with certain Java 7 class files
+      (Trac #154).</li>
 </ul>
 
 <h3>Non-functional Changes</h3>
 <ul>
   <li>Documentation now includes Maven example and Maven goal documentation
       (Trac #201, #202).</li>
-  <li>Reworked instrumentation strategy to avoid verifier error "Uninitialized
-      object exists on backward branch" with certain Java 7 class files
-      (Trac #154).</li>
 </ul>
 
 <h2>Release 0.5.7 (2012/04/19)</h2>
