@@ -97,8 +97,9 @@ public class ClassInstrumenter extends ClassAdapter implements
 		if (mv == null) {
 			return null;
 		}
+		final MethodVisitor frameEliminator = new DuplicateFrameEliminator(mv);
 		final ProbeInserter probeVariableInserter = new ProbeInserter(access,
-				desc, mv, probeArrayStrategy);
+				desc, frameEliminator, probeArrayStrategy);
 		final LazyFrameTracker frameTracker = new LazyFrameTracker(
 				probeVariableInserter, className);
 		return new MethodInstrumenter(frameTracker, probeVariableInserter,

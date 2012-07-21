@@ -11,7 +11,7 @@
  *******************************************************************************/
 package org.jacoco.core.test.validation;
 
-import static junit.framework.Assert.assertEquals;
+import static org.junit.Assert.assertEquals;
 
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -71,9 +71,12 @@ public class FramesTest {
 	}
 
 	private void testFrames(Class<?> target) throws IOException {
+		testFrames(TargetLoader.getClassDataAsBytes(target));
+	}
+
+	private void testFrames(byte[] source) throws IOException {
 		IRuntime runtime = new SystemPropertiesRuntime();
 		Instrumenter instrumenter = new Instrumenter(runtime);
-		byte[] source = TargetLoader.getClassDataAsBytes(target);
 		source = calculateFrames(source);
 		byte[] actual = instrumenter.instrument(source);
 		byte[] expected = calculateFrames(actual);
