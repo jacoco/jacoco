@@ -887,7 +887,6 @@
                         <ignore></ignore>
                       </action>
                     </pluginExecution>
-                    <!-- Relates to Trac #158 -->
                     <pluginExecution>
                       <pluginExecutionFilter>
                         <groupId>org.jacoco</groupId>
@@ -895,6 +894,19 @@
                         <versionRange>[0.5.3,)</versionRange>
                         <goals>
                           <goal>prepare-agent</goal>
+                        </goals>
+                      </pluginExecutionFilter>
+                      <action>
+                        <ignore></ignore>
+                      </action>
+                    </pluginExecution>
+                    <pluginExecution>
+                      <pluginExecutionFilter>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-enforcer-plugin</artifactId>
+                        <versionRange>[1.0.0,)</versionRange>
+                        <goals>
+                          <goal>enforce</goal>
                         </goals>
                       </pluginExecutionFilter>
                       <action>
