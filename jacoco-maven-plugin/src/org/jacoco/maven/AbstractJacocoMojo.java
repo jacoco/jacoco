@@ -31,8 +31,8 @@ public abstract class AbstractJacocoMojo extends AbstractMojo {
 
 	/**
 	 * A list of class files to include in instrumentation/analysis/reports. May
-	 * use wildcard characters (* and ?). When not specified - everything will
-	 * be included.
+	 * use wildcard characters (* and ?). When not specified everything will be
+	 * included.
 	 * 
 	 * @parameter
 	 */
@@ -40,7 +40,8 @@ public abstract class AbstractJacocoMojo extends AbstractMojo {
 
 	/**
 	 * A list of class files to exclude from instrumentation/analysis/reports.
-	 * May use wildcard characters (* and ?).
+	 * May use wildcard characters (* and ?). When not specified nothing will be
+	 * excluded.
 	 * 
 	 * @parameter
 	 */
@@ -78,11 +79,22 @@ public abstract class AbstractJacocoMojo extends AbstractMojo {
 		return project;
 	}
 
+	/**
+	 * Returns the list of class files to include.
+	 * 
+	 * @return class files to include, may contain wildcard characters
+	 */
 	protected List<String> getIncludes() {
 		return includes;
 	}
 
+	/**
+	 * Returns the list of class files to exclude.
+	 * 
+	 * @return class files to exclude, may contain wildcard characters
+	 */
 	protected List<String> getExcludes() {
 		return excludes;
 	}
+
 }

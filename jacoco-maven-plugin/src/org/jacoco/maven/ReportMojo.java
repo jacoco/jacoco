@@ -89,17 +89,16 @@ public class ReportMojo extends AbstractMavenReport {
 	private File dataFile;
 
 	/**
-	 * A list of class files to include in instrumentation/analysis/reports. May
-	 * use wildcard characters (* and ?). When not specified - everything will
-	 * be included.
+	 * A list of class files to include in the report. May use wildcard
+	 * characters (* and ?). When not specified everything will be included.
 	 * 
 	 * @parameter
 	 */
 	private List<String> includes;
 
 	/**
-	 * A list of class files to exclude from instrumentation/analysis/reports.
-	 * May use wildcard characters (* and ?).
+	 * A list of class files to exclude from the report. May use wildcard
+	 * characters (* and ?). When not specified nothing will be excluded.
 	 * 
 	 * @parameter
 	 */
@@ -163,10 +162,20 @@ public class ReportMojo extends AbstractMavenReport {
 		return siteRenderer;
 	}
 
+	/**
+	 * Returns the list of class files to include in the report.
+	 * 
+	 * @return class files to include, may contain wildcard characters
+	 */
 	protected List<String> getIncludes() {
 		return includes;
 	}
 
+	/**
+	 * Returns the list of class files to exclude from the report.
+	 * 
+	 * @return class files to exclude, may contain wildcard characters
+	 */
 	protected List<String> getExcludes() {
 		return excludes;
 	}
@@ -358,8 +367,7 @@ public class ReportMojo extends AbstractMavenReport {
 		return result;
 	}
 
-	protected List<File> getFilesToAnalyze(final File rootDir)
-			throws IOException {
+	private List<File> getFilesToAnalyze(final File rootDir) throws IOException {
 		final String includes;
 		if (getIncludes() != null && !getIncludes().isEmpty()) {
 			includes = StringUtils.join(getIncludes().iterator(), ",");
@@ -372,7 +380,10 @@ public class ReportMojo extends AbstractMavenReport {
 		} else {
 			excludes = "";
 		}
-		return FileUtils.getFiles(rootDir, includes, excludes);
+		@SuppressWarnings("unchecked")
+		final List<File> files = FileUtils
+				.getFiles(rootDir, includes, excludes);
+		return files;
 	}
 
 }
