@@ -334,7 +334,7 @@ class FrameTracker extends MethodAdapter implements IFrameInserter {
 				push("[I");
 				break;
 			case Opcodes.T_LONG:
-				push("[L");
+				push("[J");
 				break;
 			default:
 				throw new IllegalArgumentException();

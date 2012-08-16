@@ -1303,7 +1303,7 @@ public class FrameTrackerTest {
 	public void NEWARRAY_long() {
 		before.locals().stack(INTEGER);
 		mv.visitIntInsn(NEWARRAY, T_LONG);
-		after.locals().stack("[L");
+		after.locals().stack("[J");
 	}
 
 	@Test(expected = IllegalArgumentException.class)
