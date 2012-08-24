@@ -139,8 +139,8 @@ public class CoverageTask extends AbstractCoverageTask implements TaskContainer 
 			final RuntimeConfigurable configurableWrapper = task
 					.getRuntimeConfigurableWrapper();
 
-			final String forkValue = (String) configurableWrapper
-					.getAttributeMap().get("fork");
+			final String forkValue = getProject().replaceProperties(
+					(String) configurableWrapper.getAttributeMap().get("fork"));
 
 			if (!Project.toBoolean(forkValue)) {
 				throw new BuildException(

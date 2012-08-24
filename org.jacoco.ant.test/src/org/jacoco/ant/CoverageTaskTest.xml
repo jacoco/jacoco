@@ -65,6 +65,19 @@
 		<au:assertFileExists file="${exec.file}"/>
 		<au:assertLogContains text="Target executed"/>
 	</target>
+
+	<target name="testCoverageOfForkedJavaWithVariable">
+		<property name="trueProperty" value="true"/>
+		<jacoco:coverage destfile="${exec.file}">
+			<java classname="org.jacoco.ant.TestTarget" fork="${trueProperty}" failonerror="true">
+				<classpath path="${org.jacoco.ant.coverageTaskTest.classes.dir}"/>
+			</java>
+		</jacoco:coverage>
+		
+		<au:assertLogContains text="Enhancing java with coverage"/>
+		<au:assertFileExists file="${exec.file}"/>
+		<au:assertLogContains text="Target executed"/>
+	</target>
 	
 	<target name="testCoverageOfForkedJavaDisabled">
 		<jacoco:coverage enabled="false" destfile="${exec.file}">
