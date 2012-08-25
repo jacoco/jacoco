@@ -19,7 +19,9 @@ import org.objectweb.asm.commons.JSRInlinerAdapter;
  * This method visitor fixes two potential issues with Java byte code:
  * 
  * <ul>
- * <li>Remove JSR instructions by inlining subroutines.</li>
+ * <li>Remove JSR/RET instructions by inlining subroutines which are deprecated
+ * since Java 6. The RET statement complicates control flow analysis as the jump
+ * target is not explicitly given.</li>
  * <li>Remove code attributes line number and local variable name if they point
  * to invalid offsets which some tools create. When writing out such invalid
  * labels with ASM class files do not verify any more.</li>
