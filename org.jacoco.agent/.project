@@ -29,12 +29,12 @@
 		<link>
 			<name>src/jacocoagent.jar</name>
 			<type>1</type>
-			<locationURI>WORKSPACE_LOC/org.jacoco.agent/target/classes/jacocoagent.jar</locationURI>
+			<locationURI>PARENT-1-PROJECT_LOC/org.jacoco.agent/target/classes/jacocoagent.jar</locationURI>
 		</link>
 		<link>
 			<name>.settings</name>
 			<type>2</type>
-			<locationURI>WORKSPACE_LOC/org.jacoco.core/.settings</locationURI>
+			<locationURI>PARENT-1-PROJECT_LOC/org.jacoco.core/.settings</locationURI>
 		</link>
 	</linkedResources>
 </projectDescription>

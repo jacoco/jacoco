@@ -18,7 +18,7 @@
 		<link>
 			<name>.settings</name>
 			<type>2</type>
-			<locationURI>WORKSPACE_LOC/org.jacoco.core.test/.settings</locationURI>
+			<locationURI>PARENT-1-PROJECT_LOC/org.jacoco.core.test/.settings</locationURI>
 		</link>
 	</linkedResources>
 </projectDescription>
