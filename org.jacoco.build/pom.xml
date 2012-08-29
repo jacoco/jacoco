@@ -95,13 +95,13 @@
   </modules>
 
   <scm>
-    <connection>scm:svn:https://eclemma.svn.sourceforge.net/svnroot/eclemma/jacoco/trunk/org.jacoco.build</connection>
-    <developerConnection>scm:svn:https://eclemma.svn.sourceforge.net/svnroot/eclemma/jacoco/trunk/org.jacoco.build</developerConnection>
-    <url>https://eclemma.svn.sourceforge.net/svnroot/eclemma/jacoco/trunk/org.jacoco.build</url>
+    <connection>https://github.com/jacoco/jacoco.git</connection>
+    <developerConnection>https://github.com/jacoco/jacoco.git</developerConnection>
+    <url>https://github.com/jacoco/jacoco</url>
   </scm>
   <issueManagement>
-    <system>Trac</system>
-    <url>https://sourceforge.net/apps/trac/eclemma/</url>
+    <system>Github</system>
+    <url>https://github.com/jacoco/jacoco/issues</url>
   </issueManagement>
   <distributionManagement>
     <repository>
@@ -322,7 +322,6 @@
           <artifactId>maven-release-plugin</artifactId>
           <version>2.1</version>
           <configuration>
-            <tagBase>https://eclemma.svn.sourceforge.net/svnroot/eclemma/jacoco/tags</tagBase>
             <autoVersionSubmodules>true</autoVersionSubmodules>
             <mavenExecutorId>forked-path</mavenExecutorId> 
             <useReleaseProfile>false</useReleaseProfile>
