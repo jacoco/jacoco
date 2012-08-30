@@ -95,12 +95,12 @@
   </modules>
 
   <scm>
-    <connection>https://github.com/jacoco/jacoco.git</connection>
-    <developerConnection>https://github.com/jacoco/jacoco.git</developerConnection>
+    <connection>scm:git:git://github.com/jacoco/jacoco.git</connection>
+    <developerConnection>scm:git:ssh://git@github.com:jacoco/jacoco.git</developerConnection>
     <url>https://github.com/jacoco/jacoco</url>
   </scm>
   <issueManagement>
-    <system>Github</system>
+    <system>GitHub</system>
     <url>https://github.com/jacoco/jacoco/issues</url>
   </issueManagement>
   <distributionManagement>
@@ -921,4 +921,5 @@
       </build>
     </profile>
   </profiles>
+
 </project>
