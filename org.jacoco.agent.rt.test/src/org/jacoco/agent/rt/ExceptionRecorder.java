@@ -12,65 +12,45 @@
 package org.jacoco.agent.rt;
 
 import static org.junit.Assert.assertEquals;
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import static org.junit.Assert.assertNull;
 
 /**
  * {@link IExceptionLogger} implementation for testing purposes.
  */
 public class ExceptionRecorder implements IExceptionLogger {
 
-	private final List<Exception> exceptions = new ArrayList<Exception>();
+	private Class<?> exceptionType;
+	private String message;
+	private Class<?> causeType;
 
 	public void logExeption(Exception ex) {
-		exceptions.add(ex);
+		assertNull("multiple exeptions", exceptionType);
+		exceptionType = ex.getClass();
+		message = ex.getMessage();
+		causeType = ex.getCause() == null ? null : ex.getCause().getClass();
 	}
 
 	public void clear() {
-		exceptions.clear();
+		exceptionType = null;
+		message = null;
+		causeType = null;
 	}
 
-	public void assertEmpty() {
-		assertEquals(Collections.emptyList(), getTypes());
+	public void assertNoException() {
+		assertNull(exceptionType);
 	}
 
-	public void assertException(final Class<? extends Throwable> type,
+	public void assertException(final Class<? extends Throwable> exceptionType,
 			final String message) {
-		assertEquals(Collections.singletonList(type), getTypes());
-		assertEquals(Collections.singletonList(message), getMessages());
+		assertEquals(exceptionType, this.exceptionType);
+		assertEquals(message, this.message);
 	}
 
-	public void assertException(final Class<? extends Throwable> type,
-			final String message, final Class<? extends Throwable> causetype) {
-		assertEquals(Collections.singletonList(type), getTypes());
-		assertEquals(Collections.singletonList(message), getMessages());
-		assertEquals(Collections.singletonList(causetype), getCauseTypes());
-	}
-
-	private List<Class<?>> getTypes() {
-		final List<Class<?>> types = new ArrayList<Class<?>>();
-		for (Exception e : exceptions) {
-			types.add(e.getClass());
-		}
-		return types;
-	}
-
-	private List<Class<?>> getCauseTypes() {
-		final List<Class<?>> types = new ArrayList<Class<?>>();
-		for (Exception e : exceptions) {
-			types.add(e.getCause().getClass());
-		}
-		return types;
-	}
-
-	private List<String> getMessages() {
-		final List<String> messages = new ArrayList<String>();
-		for (Exception e : exceptions) {
-			messages.add(e.getMessage());
-		}
-		return messages;
+	public void assertException(final Class<? extends Throwable> exceptionType,
+			final String message, final Class<? extends Throwable> causeType) {
+		assertEquals(exceptionType, this.exceptionType);
+		assertEquals(message, this.message);
+		assertEquals(causeType, this.causeType);
 	}
 
 }

@@ -51,7 +51,7 @@ public class CoverageTransformerTest {
 
 	@After
 	public void teardown() {
-		recorder.assertEmpty();
+		recorder.assertNoException();
 	}
 
 	@Test

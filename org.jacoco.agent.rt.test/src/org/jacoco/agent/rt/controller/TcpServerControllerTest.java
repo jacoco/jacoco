@@ -71,7 +71,7 @@ public class TcpServerControllerTest {
 	public void testShutdownWithoutConnection() throws Exception {
 		serverSocket.waitForAccept();
 		controller.shutdown();
-		logger.assertEmpty();
+		logger.assertNoException();
 	}
 
 	@Test
@@ -79,7 +79,7 @@ public class TcpServerControllerTest {
 		serverSocket.waitForAccept();
 		new ExecutionDataWriter(serverSocket.connect().getOutputStream());
 		controller.shutdown();
-		logger.assertEmpty();
+		logger.assertNoException();
 	}
 
 	@Test
@@ -109,7 +109,7 @@ public class TcpServerControllerTest {
 		assertEquals(1, infos.size());
 		assertEquals("stubid", infos.get(0).getId());
 
-		logger.assertEmpty();
+		logger.assertNoException();
 		controller.shutdown();
 	}
 

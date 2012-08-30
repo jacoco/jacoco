@@ -70,14 +70,14 @@ public class TcpClientControllerTest {
 	public void testShutdown() throws Exception {
 		controller.shutdown();
 		assertFalse(remoteReader.read());
-		logger.assertEmpty();
+		logger.assertNoException();
 	}
 
 	@Test
 	public void testRemoteClose() throws Exception {
 		remoteSocket.close();
 		controller.shutdown();
-		logger.assertEmpty();
+		logger.assertNoException();
 	}
 
 	@Test
@@ -106,7 +106,7 @@ public class TcpClientControllerTest {
 		assertEquals(1, infos.size());
 		assertEquals("stubid", infos.get(0).getId());
 
-		logger.assertEmpty();
+		logger.assertNoException();
 		controller.shutdown();
 	}
 
