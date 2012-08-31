@@ -48,6 +48,7 @@ public class FileMultiReportOutputTest {
 		assertEquals(2, actual.read());
 		assertEquals(3, actual.read());
 		assertEquals(-1, actual.read());
+		actual.close();
 	}
 
 	@Test(expected = IOException.class)

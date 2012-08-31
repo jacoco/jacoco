@@ -161,16 +161,14 @@ public class DumpTask extends Task {
 	}
 
 	private OutputStream openOutputStream() throws IOException {
-		OutputStream output;
 		if (dump) {
 			log(format("Dumping execution data to %s",
 					destfile.getAbsolutePath()));
 			FileUtils.getFileUtils().createNewFile(destfile, true);
-			output = new FileOutputStream(destfile, append);
+			return new FileOutputStream(destfile, append);
 		} else {
-			output = NUL;
+			return NUL;
 		}
-		return output;
 	}
 
 }
