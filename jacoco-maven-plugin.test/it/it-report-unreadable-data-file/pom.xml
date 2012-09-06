@@ -8,6 +8,7 @@
 
    Contributors:
       Evgeny Mandrikov - initial API and implementation
+      Abraham Lin - add setup for denying read access to data file
 -->
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
@@ -19,10 +20,30 @@
     <version>1.0-SNAPSHOT</version>
   </parent>
 
-  <artifactId>it-report-without-dump</artifactId>
+  <artifactId>it-report-unreadable-data-file</artifactId>
 
   <build>
     <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-antrun-plugin</artifactId>
+        <version>1.7</version>
+        <executions>
+          <execution>
+            <id>setup</id>
+            <phase>test</phase>
+            <goals>
+              <goal>run</goal>
+            </goals>
+            <configuration>
+              <target>
+                <touch file="${project.build.directory}/jacoco.exec" />
+                <chmod file="${project.build.directory}/jacoco.exec" perm="ugo-r" />
+              </target>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
       <plugin>
         <groupId>@project.groupId@</groupId>
         <artifactId>jacoco-maven-plugin</artifactId>

@@ -20,6 +20,13 @@
 
 <h2>Trunk Build @qualified.bundle.version@ (@build.date@)</h2>
 
+<h3>New Features</h3>
+<ul>
+  <li>jacoco-maven-plugin now skips report generation if the execution data file is
+      missing. This avoids printing stack traces when no JVM is forked because there
+      are no tests to run (SF #3563431, GitHub #19).</li>
+</ul>
+
 <h2>Release 0.5.10 (2012/08/31)</h2>
 
 <h3>Fixed Bugs</h3>
