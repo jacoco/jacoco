@@ -11,8 +11,8 @@
  *******************************************************************************/
 package org.jacoco.core.internal.instr;
 
+import org.objectweb.asm.Handle;
 import org.objectweb.asm.Label;
-import org.objectweb.asm.MethodAdapter;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.Type;
@@ -22,7 +22,7 @@ import org.objectweb.asm.Type;
  * With insertFrame() additional frames can then be added. The adapter is only
  * intended to be used with class file versions >= {@link Opcodes#V1_6}.
  */
-class FrameTracker extends MethodAdapter implements IFrameInserter {
+class FrameTracker extends MethodVisitor implements IFrameInserter {
 
 	private final String owner;
 
@@ -32,7 +32,7 @@ class FrameTracker extends MethodAdapter implements IFrameInserter {
 	private int stackSize;
 
 	public FrameTracker(final MethodVisitor mv, final String owner) {
-		super(mv);
+		super(Opcodes.ASM4, mv);
 		this.owner = owner;
 		local = new Object[8];
 		localSize = 0;
@@ -457,6 +457,17 @@ class FrameTracker extends MethodAdapter implements IFrameInserter {
 	}
 
 	@Override
+	public void visitInvokeDynamicInsn(final String name, final String desc,
+			final Handle bsm, final Object... bsmArgs) {
+		for (final Type t : Type.getArgumentTypes(desc)) {
+			pop(t);
+		}
+		push(Type.getReturnType(desc));
+
+		mv.visitInvokeDynamicInsn(name, desc, bsm, bsmArgs);
+	}
+
+	@Override
 	public void visitLdcInsn(final Object cst) {
 		if (cst instanceof Integer) {
 			push(Opcodes.INTEGER);
@@ -517,7 +528,7 @@ class FrameTracker extends MethodAdapter implements IFrameInserter {
 
 	@Override
 	public void visitTableSwitchInsn(final int min, final int max,
-			final Label dflt, final Label[] labels) {
+			final Label dflt, final Label... labels) {
 		pop(1);
 		mv.visitTableSwitchInsn(min, max, dflt, labels);
 	}

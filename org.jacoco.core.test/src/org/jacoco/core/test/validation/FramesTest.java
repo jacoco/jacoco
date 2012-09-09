@@ -31,11 +31,9 @@ import org.jacoco.core.test.validation.targets.Target07;
 import org.jacoco.core.test.validation.targets.Target08;
 import org.jacoco.core.test.validation.targets.Target10;
 import org.junit.Test;
-import org.objectweb.asm.ClassAdapter;
 import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.ClassVisitor;
 import org.objectweb.asm.ClassWriter;
-import org.objectweb.asm.MethodAdapter;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.util.TraceClassVisitor;
@@ -51,9 +49,9 @@ public class FramesTest {
 	 * track of the actual stack sizes. For test assertions we need to replace
 	 * max stack sizes with constant value.
 	 */
-	private static class MaxStackEliminator extends ClassAdapter {
+	private static class MaxStackEliminator extends ClassVisitor {
 		public MaxStackEliminator(ClassVisitor cv) {
-			super(cv);
+			super(Opcodes.ASM4, cv);
 		}
 
 		@Override
@@ -61,7 +59,7 @@ public class FramesTest {
 				String signature, String[] exceptions) {
 			final MethodVisitor mv = super.visitMethod(access, name, desc,
 					signature, exceptions);
-			return new MethodAdapter(mv) {
+			return new MethodVisitor(Opcodes.ASM4, mv) {
 				@Override
 				public void visitMaxs(int maxStack, int maxLocals) {
 					super.visitMaxs(-1, maxLocals);
@@ -89,7 +87,7 @@ public class FramesTest {
 		ClassWriter cw = new ClassWriter(ClassWriter.COMPUTE_FRAMES);
 
 		// Adjust Version to 1.6 to enable frames:
-		rc.accept(new ClassAdapter(cw) {
+		rc.accept(new ClassVisitor(Opcodes.ASM4, cw) {
 
 			@Override
 			public void visit(int version, int access, String name,

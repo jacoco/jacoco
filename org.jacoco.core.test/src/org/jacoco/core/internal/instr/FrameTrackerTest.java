@@ -18,8 +18,10 @@ import org.jacoco.core.instr.MethodRecorder;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.objectweb.asm.Handle;
 import org.objectweb.asm.Label;
 import org.objectweb.asm.MethodVisitor;
+import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.Type;
 import org.objectweb.asm.tree.MethodNode;
 
@@ -65,21 +67,23 @@ public class FrameTrackerTest {
 
 	@After
 	public void verify() {
-		MethodRecorder actual = new MethodRecorder() {
+		MethodRecorder actual = new MethodRecorder();
+		MethodVisitor noLabels = new MethodVisitor(Opcodes.ASM4,
+				actual.getVisitor()) {
 			@Override
 			public void visitLabel(Label label) {
 				// Ignore labels inserted by the tracker
 			}
 		};
-		FrameTracker tracker = new FrameTracker(actual, "Test");
+		FrameTracker tracker = new FrameTracker(noLabels, "Test");
 		before.accept(tracker);
 		mv.instructions.accept(tracker);
 		tracker.insertFrame();
 
 		MethodRecorder expected = new MethodRecorder();
-		before.accept(expected);
-		mv.instructions.accept(expected);
-		after.accept(expected);
+		before.accept(expected.getVisitor());
+		mv.instructions.accept(expected.getVisitor());
+		after.accept(expected.getVisitor());
 
 		assertEquals(expected, actual);
 	}
@@ -903,6 +907,14 @@ public class FrameTrackerTest {
 	public void INSTANCEOF() {
 		before.locals().stack("java/lang/String");
 		mv.visitTypeInsn(INSTANCEOF, "java/lang/String");
+		after.locals().stack(INTEGER);
+	}
+
+	@Test
+	public void INVOKEDYNAMIC() {
+		before.locals().stack("java/lang/String");
+		mv.visitInvokeDynamicInsn("foo", "(Ljava/lang/String;)I", new Handle(0,
+				null, null, null));
 		after.locals().stack(INTEGER);
 	}
 

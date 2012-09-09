@@ -11,18 +11,17 @@
  *******************************************************************************/
 package org.jacoco.core.internal.instr;
 
-import org.jacoco.core.internal.flow.IMethodProbesVisitor;
+import org.jacoco.core.internal.flow.MethodProbesVisitor;
 import org.jacoco.core.internal.flow.LabelInfo;
 import org.objectweb.asm.Label;
-import org.objectweb.asm.MethodAdapter;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
 
 /**
  * This method adapter inserts probes as requested by the
- * {@link IMethodProbesVisitor} events.
+ * {@link MethodProbesVisitor} events.
  */
-class MethodInstrumenter extends MethodAdapter implements IMethodProbesVisitor {
+class MethodInstrumenter extends MethodProbesVisitor {
 
 	private final IProbeInserter probeInserter;
 	private final IFrameInserter frameInserter;
@@ -47,15 +46,18 @@ class MethodInstrumenter extends MethodAdapter implements IMethodProbesVisitor {
 
 	// === IMethodProbesVisitor ===
 
+	@Override
 	public void visitProbe(final int probeId) {
 		probeInserter.insertProbe(probeId);
 	}
 
+	@Override
 	public void visitInsnWithProbe(final int opcode, final int probeId) {
 		probeInserter.insertProbe(probeId);
 		mv.visitInsn(opcode);
 	}
 
+	@Override
 	public void visitJumpInsnWithProbe(final int opcode, final Label label,
 			final int probeId) {
 		if (opcode == Opcodes.GOTO) {
@@ -109,6 +111,7 @@ class MethodInstrumenter extends MethodAdapter implements IMethodProbesVisitor {
 		throw new IllegalArgumentException();
 	}
 
+	@Override
 	public void visitTableSwitchInsnWithProbes(final int min, final int max,
 			final Label dflt, final Label[] labels) {
 		// 1. Calculate intermediate labels:
@@ -122,6 +125,7 @@ class MethodInstrumenter extends MethodAdapter implements IMethodProbesVisitor {
 		insertIntermediateProbes(dflt, labels);
 	}
 
+	@Override
 	public void visitLookupSwitchInsnWithProbes(final Label dflt,
 			final int[] keys, final Label[] labels) {
 		// 1. Calculate intermediate labels:

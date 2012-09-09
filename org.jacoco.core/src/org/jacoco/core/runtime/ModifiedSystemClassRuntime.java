@@ -19,7 +19,6 @@ import java.lang.instrument.Instrumentation;
 import java.lang.reflect.Field;
 import java.security.ProtectionDomain;
 
-import org.objectweb.asm.ClassAdapter;
 import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.ClassVisitor;
 import org.objectweb.asm.ClassWriter;
@@ -156,7 +155,7 @@ public class ModifiedSystemClassRuntime extends AbstractRuntime {
 			final String accessFieldName) {
 		final ClassReader reader = new ClassReader(source);
 		final ClassWriter writer = new ClassWriter(reader, 0);
-		reader.accept(new ClassAdapter(writer) {
+		reader.accept(new ClassVisitor(Opcodes.ASM4, writer) {
 
 			@Override
 			public void visitEnd() {

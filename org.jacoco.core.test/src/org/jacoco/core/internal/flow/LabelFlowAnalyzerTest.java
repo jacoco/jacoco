@@ -301,6 +301,13 @@ public class LabelFlowAnalyzerTest {
 	}
 
 	@Test
+	public void testInvokeDynamicInsn() {
+		analyzer.visitInvokeDynamicInsn("foo", "()V", null);
+		assertTrue(analyzer.successor);
+		assertFalse(analyzer.first);
+	}
+
+	@Test
 	public void testJumpInsn() {
 		testJumpInsn(IFEQ, true);
 		testJumpInsn(IFNE, true);

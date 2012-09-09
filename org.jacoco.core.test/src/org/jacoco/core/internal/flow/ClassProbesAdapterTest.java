@@ -18,24 +18,23 @@ import org.objectweb.asm.ClassVisitor;
 import org.objectweb.asm.Label;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
-import org.objectweb.asm.commons.EmptyVisitor;
 
 /**
  * Unit tests for {@link ClassProbesAdapter}.
  */
 public class ClassProbesAdapterTest {
 
-	private static class MockVisitor extends EmptyVisitor implements
-			IClassProbesVisitor {
+	private static class MockVisitor extends ClassProbesVisitor {
 
 		int count;
 
 		@Override
-		public IMethodProbesVisitor visitMethod(int access, String name,
+		public MethodProbesVisitor visitMethod(int access, String name,
 				String desc, String signature, String[] exceptions) {
 			return null;
 		}
 
+		@Override
 		public void visitTotalProbeCount(int count) {
 			this.count = count;
 		}
@@ -56,24 +55,28 @@ public class ClassProbesAdapterTest {
 	public void testVisitClassMethods() {
 		final MockVisitor mv = new MockVisitor() {
 			@Override
-			public IMethodProbesVisitor visitMethod(int access, String name,
+			public MethodProbesVisitor visitMethod(int access, String name,
 					String desc, String signature, String[] exceptions) {
-				class MockMethodVisitor extends EmptyVisitor implements
-						IMethodProbesVisitor {
+				class MockMethodVisitor extends MethodProbesVisitor {
+					@Override
 					public void visitProbe(int probeId) {
 					}
 
+					@Override
 					public void visitJumpInsnWithProbe(int opcode, Label label,
 							int probeId) {
 					}
 
+					@Override
 					public void visitInsnWithProbe(int opcode, int probeId) {
 					}
 
+					@Override
 					public void visitTableSwitchInsnWithProbes(int min,
 							int max, Label dflt, Label[] labels) {
 					}
 
+					@Override
 					public void visitLookupSwitchInsnWithProbes(Label dflt,
 							int[] keys, Label[] labels) {
 					}
@@ -96,24 +99,28 @@ public class ClassProbesAdapterTest {
 	public void testVisitInterfaceMethod() {
 		final MockVisitor mv = new MockVisitor() {
 			@Override
-			public IMethodProbesVisitor visitMethod(int access, String name,
+			public MethodProbesVisitor visitMethod(int access, String name,
 					String desc, String signature, String[] exceptions) {
-				class MockMethodVisitor extends EmptyVisitor implements
-						IMethodProbesVisitor {
+				class MockMethodVisitor extends MethodProbesVisitor {
+					@Override
 					public void visitProbe(int probeId) {
 					}
 
+					@Override
 					public void visitJumpInsnWithProbe(int opcode, Label label,
 							int probeId) {
 					}
 
+					@Override
 					public void visitInsnWithProbe(int opcode, int probeId) {
 					}
 
+					@Override
 					public void visitTableSwitchInsnWithProbes(int min,
 							int max, Label dflt, Label[] labels) {
 					}
 
+					@Override
 					public void visitLookupSwitchInsnWithProbes(Label dflt,
 							int[] keys, Label[] labels) {
 					}

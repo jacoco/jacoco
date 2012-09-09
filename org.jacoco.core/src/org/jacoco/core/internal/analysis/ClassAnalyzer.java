@@ -12,17 +12,14 @@
 package org.jacoco.core.internal.analysis;
 
 import org.jacoco.core.analysis.IMethodCoverage;
-import org.jacoco.core.internal.flow.IClassProbesVisitor;
-import org.jacoco.core.internal.flow.IMethodProbesVisitor;
-import org.objectweb.asm.AnnotationVisitor;
-import org.objectweb.asm.Attribute;
-import org.objectweb.asm.FieldVisitor;
+import org.jacoco.core.internal.flow.ClassProbesVisitor;
+import org.jacoco.core.internal.flow.MethodProbesVisitor;
 import org.objectweb.asm.Opcodes;
 
 /**
  * Analyzes the structure of a class.
  */
-public class ClassAnalyzer implements IClassProbesVisitor {
+public class ClassAnalyzer extends ClassProbesVisitor {
 
 	private final long classid;
 	private final boolean executionData[];
@@ -57,6 +54,7 @@ public class ClassAnalyzer implements IClassProbesVisitor {
 		return coverage;
 	}
 
+	@Override
 	public void visit(final int version, final int access, final String name,
 			final String signature, final String superName,
 			final String[] interfaces) {
@@ -65,13 +63,14 @@ public class ClassAnalyzer implements IClassProbesVisitor {
 				stringPool.get(interfaces));
 	}
 
+	@Override
 	public void visitSource(final String source, final String debug) {
 		this.coverage.setSourceFileName(stringPool.get(source));
 	}
 
-	public IMethodProbesVisitor visitMethod(final int access,
-			final String name, final String desc, final String signature,
-			final String[] exceptions) {
+	@Override
+	public MethodProbesVisitor visitMethod(final int access, final String name,
+			final String desc, final String signature, final String[] exceptions) {
 
 		// TODO: Use filter hook
 		if ((access & Opcodes.ACC_SYNTHETIC) != 0) {
@@ -92,37 +91,8 @@ public class ClassAnalyzer implements IClassProbesVisitor {
 		};
 	}
 
+	@Override
 	public void visitTotalProbeCount(final int count) {
-		// nothing to do
-	}
-
-	public AnnotationVisitor visitAnnotation(final String desc,
-			final boolean visible) {
-		// nothing to do
-		return null;
-	}
-
-	public void visitAttribute(final Attribute attr) {
-		// nothing to do
-	}
-
-	public FieldVisitor visitField(final int access, final String name,
-			final String desc, final String signature, final Object value) {
-		// nothing to do
-		return null;
-	}
-
-	public void visitInnerClass(final String name, final String outerName,
-			final String innerName, final int access) {
-		// nothing to do
-	}
-
-	public void visitOuterClass(final String owner, final String name,
-			final String desc) {
-		// nothing to do
-	}
-
-	public void visitEnd() {
 		// nothing to do
 	}
 

@@ -11,18 +11,36 @@
  *******************************************************************************/
 package org.jacoco.core.internal.flow;
 
-import org.objectweb.asm.AnnotationVisitor;
-import org.objectweb.asm.Attribute;
+import org.objectweb.asm.Handle;
 import org.objectweb.asm.Label;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
+import org.objectweb.asm.tree.MethodNode;
 
 /**
  * Method visitor to collect flow related information about the {@link Label}s
  * within a class. It calculates the properties "multitarget" and "successor"
  * that can afterwards be obtained via {@link LabelInfo}.
  */
-public final class LabelFlowAnalyzer implements MethodVisitor {
+public final class LabelFlowAnalyzer extends MethodVisitor {
+
+	/**
+	 * Marks all labels of the method with control flow information.
+	 * 
+	 * @param method
+	 *            Method to mark labels
+	 */
+	public static void markLabels(final MethodNode method) {
+		// We do not use the accept() method as ASM resets labels after every
+		// call to accept()
+		final MethodVisitor lfa = new LabelFlowAnalyzer();
+		if (method.tryCatchBlocks != null) {
+			for (int i = method.tryCatchBlocks.size(); --i >= 0;) {
+				method.tryCatchBlocks.get(i).accept(lfa);
+			}
+		}
+		method.instructions.accept(lfa);
+	}
 
 	/**
 	 * <code>true</code> if the current instruction is a potential successor of
@@ -36,6 +54,14 @@ public final class LabelFlowAnalyzer implements MethodVisitor {
 	 */
 	boolean first = true;
 
+	/**
+	 * Create new instance.
+	 */
+	public LabelFlowAnalyzer() {
+		super(Opcodes.ASM4);
+	}
+
+	@Override
 	public void visitTryCatchBlock(final Label start, final Label end,
 			final Label handler, final String type) {
 		// Enforce probes at the beginning and end of the block:
@@ -43,6 +69,7 @@ public final class LabelFlowAnalyzer implements MethodVisitor {
 		LabelInfo.setTarget(handler);
 	}
 
+	@Override
 	public void visitJumpInsn(final int opcode, final Label label) {
 		LabelInfo.setTarget(label);
 		if (opcode == Opcodes.JSR) {
@@ -52,6 +79,7 @@ public final class LabelFlowAnalyzer implements MethodVisitor {
 		first = false;
 	}
 
+	@Override
 	public void visitLabel(final Label label) {
 		if (first) {
 			LabelInfo.setTarget(label);
@@ -61,11 +89,13 @@ public final class LabelFlowAnalyzer implements MethodVisitor {
 		}
 	}
 
+	@Override
 	public void visitTableSwitchInsn(final int min, final int max,
-			final Label dflt, final Label[] labels) {
+			final Label dflt, final Label... labels) {
 		visitSwitchInsn(dflt, labels);
 	}
 
+	@Override
 	public void visitLookupSwitchInsn(final Label dflt, final int[] keys,
 			final Label[] labels) {
 		visitSwitchInsn(dflt, labels);
@@ -89,6 +119,7 @@ public final class LabelFlowAnalyzer implements MethodVisitor {
 		}
 	}
 
+	@Override
 	public void visitInsn(final int opcode) {
 		switch (opcode) {
 		case Opcodes.RET:
@@ -109,93 +140,61 @@ public final class LabelFlowAnalyzer implements MethodVisitor {
 		first = false;
 	}
 
+	@Override
 	public void visitIntInsn(final int opcode, final int operand) {
 		successor = true;
 		first = false;
 	}
 
+	@Override
 	public void visitVarInsn(final int opcode, final int var) {
 		successor = true;
 		first = false;
 	}
 
+	@Override
 	public void visitTypeInsn(final int opcode, final String type) {
 		successor = true;
 		first = false;
 	}
 
+	@Override
 	public void visitFieldInsn(final int opcode, final String owner,
 			final String name, final String desc) {
 		successor = true;
 		first = false;
 	}
 
+	@Override
 	public void visitMethodInsn(final int opcode, final String owner,
 			final String name, final String desc) {
 		successor = true;
 		first = false;
 	}
 
+	@Override
+	public void visitInvokeDynamicInsn(final String name, final String desc,
+			final Handle bsm, final Object... bsmArgs) {
+		successor = true;
+		first = false;
+	}
+
+	@Override
 	public void visitLdcInsn(final Object cst) {
 		successor = true;
 		first = false;
 	}
 
+	@Override
 	public void visitIincInsn(final int var, final int increment) {
 		successor = true;
 		first = false;
 	}
 
+	@Override
 	public void visitMultiANewArrayInsn(final String desc, final int dims) {
 		successor = true;
 		first = false;
-	}
-
-	public void visitAttribute(final Attribute attr) {
-		// nothing to do
-	}
-
-	public AnnotationVisitor visitAnnotationDefault() {
-		return null;
-	}
-
-	public AnnotationVisitor visitAnnotation(final String desc,
-			final boolean visible) {
-		// nothing to do
-		return null;
-	}
-
-	public AnnotationVisitor visitParameterAnnotation(final int parameter,
-			final String desc, final boolean visible) {
-		// nothing to do
-		return null;
-	}
-
-	public void visitLocalVariable(final String name, final String desc,
-			final String signature, final Label start, final Label end,
-			final int index) {
-		// nothing to do
-	}
-
-	public void visitCode() {
-		// nothing to do
-	}
-
-	public void visitLineNumber(final int line, final Label start) {
-		// nothing to do
-	}
-
-	public void visitFrame(final int type, final int nLocal,
-			final Object[] local, final int nStack, final Object[] stack) {
-		// nothing to do
-	}
-
-	public void visitMaxs(final int maxStack, final int maxLocals) {
-		// nothing to do
-	}
-
-	public void visitEnd() {
-		// nothing to do
 	}
 
 }

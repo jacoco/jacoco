@@ -15,6 +15,8 @@ import static org.junit.Assert.assertEquals;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.objectweb.asm.util.Printer;
+import org.objectweb.asm.util.Textifier;
 import org.objectweb.asm.util.TraceMethodVisitor;
 
 /**
@@ -22,11 +24,13 @@ import org.objectweb.asm.util.TraceMethodVisitor;
  */
 public class InstrSupportTest {
 
+	private Printer printer;
 	private TraceMethodVisitor trace;
 
 	@Before
 	public void setup() {
-		trace = new TraceMethodVisitor();
+		printer = new Textifier();
+		trace = new TraceMethodVisitor(printer);
 	}
 
 	@Test
@@ -108,8 +112,8 @@ public class InstrSupportTest {
 	}
 
 	private void assertInstruction(String expected) {
-		assertEquals(1, trace.text.size());
-		assertEquals(expected, trace.text.get(0).toString().trim());
+		assertEquals(1, printer.getText().size());
+		assertEquals(expected, printer.getText().get(0).toString().trim());
 	}
 
 }
