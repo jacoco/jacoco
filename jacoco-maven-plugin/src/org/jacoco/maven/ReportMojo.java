@@ -235,7 +235,9 @@ public class ReportMojo extends AbstractMavenReport {
 			getLog().error(
 					"Unable to read execution data file " + dataFile + ": "
 							+ e.getMessage(), e);
-			return;
+			throw new MavenReportException(
+					"Unable to read execution data file " + dataFile + ": "
+							+ e.getMessage(), e);
 		}
 		try {
 			final IReportVisitor visitor = createVisitor();
