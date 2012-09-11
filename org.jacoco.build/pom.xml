@@ -367,6 +367,10 @@
           <groupId>org.eclipse.tycho</groupId>
           <artifactId>target-platform-configuration</artifactId>
           <version>${tycho.version}</version>
+          <configuration>
+            <resolver>p2</resolver>
+            <pomDependencies>consider</pomDependencies>
+          </configuration>
         </plugin>
         <plugin>
           <groupId>org.eclipse.tycho</groupId>
@@ -422,9 +426,6 @@
       <plugin>
         <groupId>org.eclipse.tycho</groupId>
         <artifactId>target-platform-configuration</artifactId>
-        <configuration>
-          <resolver>p2</resolver>
-        </configuration>
       </plugin>
       <plugin>
         <groupId>org.eclipse.tycho</groupId>
