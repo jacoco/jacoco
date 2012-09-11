@@ -201,6 +201,11 @@ public class ReportMojo extends AbstractMavenReport {
 			getLog().info("Skipping JaCoCo execution");
 			return false;
 		}
+		if (!dataFile.exists()) {
+			getLog().info(
+					"Skipping JaCoCo execution due to missing execution data file");
+			return false;
+		}
 		return true;
 	}
 
@@ -230,7 +235,9 @@ public class ReportMojo extends AbstractMavenReport {
 			getLog().error(
 					"Unable to read execution data file " + dataFile + ": "
 							+ e.getMessage(), e);
-			return;
+			throw new MavenReportException(
+					"Unable to read execution data file " + dataFile + ": "
+							+ e.getMessage(), e);
 		}
 		try {
 			final IReportVisitor visitor = createVisitor();
