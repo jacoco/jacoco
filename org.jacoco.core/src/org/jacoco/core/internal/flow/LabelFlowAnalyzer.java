@@ -16,6 +16,7 @@ import org.objectweb.asm.Label;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.tree.MethodNode;
+import org.objectweb.asm.tree.TryCatchBlockNode;
 
 /**
  * Method visitor to collect flow related information about the {@link Label}s
@@ -36,7 +37,7 @@ public final class LabelFlowAnalyzer extends MethodVisitor {
 		final MethodVisitor lfa = new LabelFlowAnalyzer();
 		if (method.tryCatchBlocks != null) {
 			for (int i = method.tryCatchBlocks.size(); --i >= 0;) {
-				method.tryCatchBlocks.get(i).accept(lfa);
+				((TryCatchBlockNode) method.tryCatchBlocks.get(i)).accept(lfa);
 			}
 		}
 		method.instructions.accept(lfa);
