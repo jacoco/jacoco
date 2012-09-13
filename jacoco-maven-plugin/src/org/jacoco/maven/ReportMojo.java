@@ -232,10 +232,9 @@ public class ReportMojo extends AbstractMavenReport {
 		try {
 			loadExecutionData();
 		} catch (final IOException e) {
-			getLog().error(
+			throw new MavenReportException(
 					"Unable to read execution data file " + dataFile + ": "
 							+ e.getMessage(), e);
-			return;
 		}
 		try {
 			final IReportVisitor visitor = createVisitor();
@@ -244,7 +243,8 @@ public class ReportMojo extends AbstractMavenReport {
 			createReport(visitor);
 			visitor.visitEnd();
 		} catch (final Exception e) {
-			getLog().error("Error while creating report: " + e.getMessage(), e);
+			throw new MavenReportException(
+					"Error while creating report: " + e.getMessage(), e);
 		}
 	}
 
