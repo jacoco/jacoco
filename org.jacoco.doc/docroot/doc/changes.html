@@ -20,6 +20,13 @@
 
 <h2>Trunk Build @qualified.bundle.version@ (@build.date@)</h2>
 
+<h3>Fixed Bugs</h3>
+<ul>
+  <li>Maven plugin should skip creation of report if the execution data file is
+      missing. This avoids appearance of stack traces in case when JVM was not forked,
+      e.g. if there are no tests to run (SF #3563431, GitHub #19).</li>
+</ul>
+
 <h2>Release 0.5.10 (2012/08/31)</h2>
 
 <h3>Fixed Bugs</h3>

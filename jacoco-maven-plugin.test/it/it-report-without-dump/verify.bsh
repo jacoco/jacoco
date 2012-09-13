@@ -13,6 +13,6 @@ import java.io.*;
 import org.codehaus.plexus.util.*;
 
 String buildLog = FileUtils.fileRead( new File( basedir, "build.log" ) );
-if ( buildLog.indexOf( "Unable to read execution data file" ) < 0 ) {
-    throw new RuntimeException( "Error was not printed" );
+if ( buildLog.indexOf( "Skipping JaCoCo execution due to missing execution data file" ) < 0 ) {
+    throw new RuntimeException( "Execution was not skipped" );
 }

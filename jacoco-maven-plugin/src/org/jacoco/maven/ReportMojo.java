@@ -201,6 +201,11 @@ public class ReportMojo extends AbstractMavenReport {
 			getLog().info("Skipping JaCoCo execution");
 			return false;
 		}
+		if (!dataFile.exists()) {
+			getLog().info(
+				"Skipping JaCoCo execution due to missing execution data file");
+			return false;
+		}
 		return true;
 	}
 
