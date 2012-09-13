@@ -8,5 +8,5 @@ Bundle-Vendor: Mountainminds GmbH & Co. KG and Contributors
 Require-Bundle: org.apache.ant;bundle-version="[1.7.0,2.0.0)",
  org.jacoco.agent,
  org.jacoco.core,
- org.jacoco.report,
- org.objectweb.asm;bundle-version="[3.2.0,4.0.0)"
+ org.jacoco.report
+Import-Package: org.objectweb.asm;version="[3.2.0,4.0.0)"
