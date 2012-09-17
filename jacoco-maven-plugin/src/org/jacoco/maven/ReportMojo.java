@@ -49,7 +49,6 @@ import org.jacoco.report.xml.XMLFormatter;
  * (HTML, XML, and CSV).
  * 
  * @goal report
- * @phase prepare-package
  * @requiresProject true
  * @threadSafe
  */
