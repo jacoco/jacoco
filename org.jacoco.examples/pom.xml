@@ -29,6 +29,13 @@
     <maven.deploy.skip>true</maven.deploy.skip>
   </properties>
 
+  <dependencies>
+    <dependency>
+      <groupId>org.ow2.asm</groupId>
+      <artifactId>asm-all</artifactId>
+    </dependency>
+  </dependencies>
+
   <build>
     <sourceDirectory>src</sourceDirectory>
 
