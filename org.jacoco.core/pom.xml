@@ -28,12 +28,8 @@
   <!-- Note that Tycho doesn't use those dependencies, but we need to declare them for consumers -->
   <dependencies>
     <dependency>
-      <groupId>asm</groupId>
-      <artifactId>asm</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>asm</groupId>
-      <artifactId>asm-commons</artifactId>
+      <groupId>org.ow2.asm</groupId>
+      <artifactId>asm-all</artifactId>
     </dependency>
   </dependencies>
 
