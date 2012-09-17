@@ -49,6 +49,7 @@ import org.jacoco.report.xml.XMLFormatter;
  * (HTML, XML, and CSV).
  * 
  * @goal report
+ * @phase prepare-package
  * @requiresProject true
  * @threadSafe
  */
@@ -203,7 +204,7 @@ public class ReportMojo extends AbstractMavenReport {
 		}
 		if (!dataFile.exists()) {
 			getLog().info(
-				"Skipping JaCoCo execution due to missing execution data file");
+					"Skipping JaCoCo execution due to missing execution data file");
 			return false;
 		}
 		return true;
