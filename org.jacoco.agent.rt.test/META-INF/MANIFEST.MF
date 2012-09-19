@@ -6,4 +6,5 @@ Bundle-Version: 0.5.4.qualifier
 Bundle-Vendor: Mountainminds GmbH & Co. KG
 Fragment-Host: org.jacoco.agent.rt
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
-Require-Bundle: org.junit;bundle-version="[4.8.0,5.0.0)"
+Import-Package: org.junit;version="[4.8.0,5.0.0)",
+ org.junit.rules;version="[4.8.0,5.0.0)"

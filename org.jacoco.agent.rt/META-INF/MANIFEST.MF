@@ -5,5 +5,8 @@ Bundle-SymbolicName: org.jacoco.agent.rt
 Bundle-Version: 0.5.4.qualifier
 Bundle-Vendor: Mountainminds GmbH & Co. KG
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
-Require-Bundle: org.jacoco.core,
- org.objectweb.asm.all;bundle-version="[4.0.0,4.1.0)"
+Import-Package: org.jacoco.core,
+ org.jacoco.core.data,
+ org.jacoco.core.instr,
+ org.jacoco.core.runtime,
+ org.objectweb.asm;version="[4.0.0,4.1.0)"
