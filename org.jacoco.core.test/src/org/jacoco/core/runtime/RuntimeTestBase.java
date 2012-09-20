@@ -32,9 +32,9 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.objectweb.asm.ClassWriter;
+import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.Type;
-import org.objectweb.asm.commons.EmptyVisitor;
 import org.objectweb.asm.commons.GeneratorAdapter;
 import org.objectweb.asm.commons.Method;
 
@@ -142,7 +142,8 @@ public abstract class RuntimeTestBase {
 	@Test
 	public void testNoLocalVariablesInDataAccessor()
 			throws InstantiationException, IllegalAccessException {
-		runtime.generateDataAccessor(1001, "Target", 5, new EmptyVisitor() {
+		runtime.generateDataAccessor(1001, "Target", 5, new MethodVisitor(
+				Opcodes.ASM4) {
 			@Override
 			public void visitVarInsn(int opcode, int var) {
 				fail("No usage of local variables allowed.");

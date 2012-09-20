@@ -12,16 +12,16 @@
 package org.jacoco.core.internal.flow;
 
 import org.objectweb.asm.Label;
-import org.objectweb.asm.MethodAdapter;
+import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
 
 /**
  * Adapter that creates additional visitor events for probes to be inserted into
  * a method.
  */
-public final class MethodProbesAdapter extends MethodAdapter {
+public final class MethodProbesAdapter extends MethodVisitor {
 
-	private final IMethodProbesVisitor probesVisitor;
+	private final MethodProbesVisitor probesVisitor;
 
 	private final IProbeIdGenerator idGenerator;
 
@@ -33,9 +33,9 @@ public final class MethodProbesAdapter extends MethodAdapter {
 	 * @param idGenerator
 	 *            generator for unique probe ids
 	 */
-	public MethodProbesAdapter(final IMethodProbesVisitor probesVisitor,
+	public MethodProbesAdapter(final MethodProbesVisitor probesVisitor,
 			final IProbeIdGenerator idGenerator) {
-		super(probesVisitor);
+		super(Opcodes.ASM4, probesVisitor);
 		this.probesVisitor = probesVisitor;
 		this.idGenerator = idGenerator;
 	}
@@ -88,7 +88,7 @@ public final class MethodProbesAdapter extends MethodAdapter {
 
 	@Override
 	public void visitTableSwitchInsn(final int min, final int max,
-			final Label dflt, final Label[] labels) {
+			final Label dflt, final Label... labels) {
 		if (markLabels(dflt, labels)) {
 			probesVisitor
 					.visitTableSwitchInsnWithProbes(min, max, dflt, labels);

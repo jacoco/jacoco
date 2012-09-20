@@ -11,9 +11,10 @@
  *******************************************************************************/
 package org.jacoco.core.internal.instr;
 
+import org.objectweb.asm.Handle;
 import org.objectweb.asm.Label;
-import org.objectweb.asm.MethodAdapter;
 import org.objectweb.asm.MethodVisitor;
+import org.objectweb.asm.Opcodes;
 
 /**
  * Eliminates consecutive stackmap frame definitions which causes ASM to create
@@ -21,12 +22,12 @@ import org.objectweb.asm.MethodVisitor;
  * contains additional stackmap frames at unexpected offsets, which is case for
  * some class files compiled with ECJ.
  */
-class DuplicateFrameEliminator extends MethodAdapter {
+class DuplicateFrameEliminator extends MethodVisitor {
 
 	private boolean instruction;
 
 	public DuplicateFrameEliminator(final MethodVisitor mv) {
-		super(mv);
+		super(Opcodes.ASM4, mv);
 		instruction = true;
 	}
 
@@ -78,6 +79,13 @@ class DuplicateFrameEliminator extends MethodAdapter {
 	}
 
 	@Override
+	public void visitInvokeDynamicInsn(final String name, final String desc,
+			final Handle bsm, final Object... bsmArgs) {
+		instruction = true;
+		mv.visitInvokeDynamicInsn(name, desc, bsm, bsmArgs);
+	}
+
+	@Override
 	public void visitJumpInsn(final int opcode, final Label label) {
 		instruction = true;
 		mv.visitJumpInsn(opcode, label);
@@ -97,7 +105,7 @@ class DuplicateFrameEliminator extends MethodAdapter {
 
 	@Override
 	public void visitTableSwitchInsn(final int min, final int max,
-			final Label dflt, final Label[] labels) {
+			final Label dflt, final Label... labels) {
 		instruction = true;
 		mv.visitTableSwitchInsn(min, max, dflt, labels);
 	}

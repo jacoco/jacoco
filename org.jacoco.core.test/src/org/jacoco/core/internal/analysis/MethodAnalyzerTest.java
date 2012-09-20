@@ -553,7 +553,7 @@ public class MethodAnalyzerTest implements IProbeIdGenerator {
 	}
 
 	private void runMethodAnalzer() {
-		method.accept(new LabelFlowAnalyzer());
+		LabelFlowAnalyzer.markLabels(method);
 		final MethodAnalyzer analyzer = new MethodAnalyzer("doit", "()V", null,
 				probes);
 		method.accept(new MethodProbesAdapter(analyzer, this));

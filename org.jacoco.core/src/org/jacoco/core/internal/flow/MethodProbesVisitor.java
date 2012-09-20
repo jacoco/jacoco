@@ -13,12 +13,30 @@ package org.jacoco.core.internal.flow;
 
 import org.objectweb.asm.Label;
 import org.objectweb.asm.MethodVisitor;
+import org.objectweb.asm.Opcodes;
 
 /**
  * A {@link MethodVisitor} with additional methods to get probe insertion
  * information.
  */
-public interface IMethodProbesVisitor extends MethodVisitor {
+public abstract class MethodProbesVisitor extends MethodVisitor {
+
+	/**
+	 * New visitor instance without delegate visitor.
+	 */
+	public MethodProbesVisitor() {
+		this(null);
+	}
+
+	/**
+	 * New visitor instance that delegates to the given visitor.
+	 * 
+	 * @param mv
+	 *            optional next visitor in chain
+	 */
+	public MethodProbesVisitor(final MethodVisitor mv) {
+		super(Opcodes.ASM4, mv);
+	}
 
 	/**
 	 * Visits an unconditional probe that should be inserted at the current
@@ -27,7 +45,7 @@ public interface IMethodProbesVisitor extends MethodVisitor {
 	 * @param probeId
 	 *            id of the probe to insert
 	 */
-	public void visitProbe(int probeId);
+	public abstract void visitProbe(int probeId);
 
 	/**
 	 * Visits a jump instruction. A probe with the given id should be inserted
@@ -47,7 +65,8 @@ public interface IMethodProbesVisitor extends MethodVisitor {
 	 *            id of the probe
 	 * @see MethodVisitor#visitJumpInsn(int, Label)
 	 */
-	void visitJumpInsnWithProbe(int opcode, Label label, int probeId);
+	public abstract void visitJumpInsnWithProbe(int opcode, Label label,
+			int probeId);
 
 	/**
 	 * Visits a zero operand instruction with a probe. This event is used only
@@ -62,7 +81,7 @@ public interface IMethodProbesVisitor extends MethodVisitor {
 	 *            id of the probe
 	 * @see MethodVisitor#visitInsn(int)
 	 */
-	void visitInsnWithProbe(int opcode, int probeId);
+	public abstract void visitInsnWithProbe(int opcode, int probeId);
 
 	/**
 	 * Visits a TABLESWITCH instruction with optional probes for each target
@@ -83,8 +102,8 @@ public interface IMethodProbesVisitor extends MethodVisitor {
 	 *            <code>min + i</code> key.
 	 * @see MethodVisitor#visitTableSwitchInsn(int, int, Label, Label[])
 	 */
-	public void visitTableSwitchInsnWithProbes(int min, int max, Label dflt,
-			Label[] labels);
+	public abstract void visitTableSwitchInsnWithProbes(int min, int max,
+			Label dflt, Label[] labels);
 
 	/**
 	 * Visits a LOOKUPSWITCH instruction with optional probes for each target
@@ -103,7 +122,7 @@ public interface IMethodProbesVisitor extends MethodVisitor {
 	 *            <code>keys[i]</code> key.
 	 * @see MethodVisitor#visitLookupSwitchInsn(Label, int[], Label[])
 	 */
-	public void visitLookupSwitchInsnWithProbes(Label dflt, int[] keys,
-			Label[] labels);
+	public abstract void visitLookupSwitchInsnWithProbes(Label dflt,
+			int[] keys, Label[] labels);
 
 }

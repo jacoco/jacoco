@@ -5,9 +5,11 @@ Bundle-SymbolicName: org.jacoco.report
 Bundle-Version: 0.5.11.qualifier
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
 Bundle-Vendor: Mountainminds GmbH & Co. KG
-Require-Bundle: org.jacoco.core,
- org.objectweb.asm;bundle-version="[3.2.0,4.0.0)"
 Export-Package: org.jacoco.report,
  org.jacoco.report.csv,
  org.jacoco.report.html,
  org.jacoco.report.xml
+Import-Package: org.jacoco.core,
+ org.jacoco.core.analysis,
+ org.jacoco.core.data,
+ org.objectweb.asm;version="[4.0.0,4.1.0)"

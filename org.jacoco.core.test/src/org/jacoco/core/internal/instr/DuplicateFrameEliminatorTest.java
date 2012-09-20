@@ -17,6 +17,7 @@ import org.jacoco.core.instr.MethodRecorder;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.objectweb.asm.Handle;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.tree.AbstractInsnNode;
@@ -24,6 +25,7 @@ import org.objectweb.asm.tree.FieldInsnNode;
 import org.objectweb.asm.tree.IincInsnNode;
 import org.objectweb.asm.tree.InsnNode;
 import org.objectweb.asm.tree.IntInsnNode;
+import org.objectweb.asm.tree.InvokeDynamicInsnNode;
 import org.objectweb.asm.tree.JumpInsnNode;
 import org.objectweb.asm.tree.LabelNode;
 import org.objectweb.asm.tree.LdcInsnNode;
@@ -47,7 +49,7 @@ public class DuplicateFrameEliminatorTest {
 	public void setup() {
 		actual = new MethodRecorder();
 		expected = new MethodRecorder();
-		eliminator = new DuplicateFrameEliminator(actual);
+		eliminator = new DuplicateFrameEliminator(actual.getVisitor());
 	}
 
 	@After
@@ -60,7 +62,7 @@ public class DuplicateFrameEliminatorTest {
 		frame(eliminator);
 		frame(eliminator);
 
-		frame(expected);
+		frame(expected.getVisitor());
 	}
 
 	@Test
@@ -94,6 +96,12 @@ public class DuplicateFrameEliminatorTest {
 	public void testMethodInsn() {
 		testInstructionBetweenFrames(new MethodInsnNode(Opcodes.INVOKEVIRTUAL,
 				"Foo", "run", "()V"));
+	}
+
+	@Test
+	public void testInvokeDynamicInsn() {
+		testInstructionBetweenFrames(new InvokeDynamicInsnNode("foo", "()V",
+				new Handle(0, null, null, null)));
 	}
 
 	@Test
@@ -135,9 +143,9 @@ public class DuplicateFrameEliminatorTest {
 		node.accept(eliminator);
 		frame(eliminator);
 
-		frame(expected);
-		node.accept(expected);
-		frame(expected);
+		frame(expected.getVisitor());
+		node.accept(expected.getVisitor());
+		frame(expected.getVisitor());
 	}
 
 	private void frame(MethodVisitor mv) {

@@ -11,47 +11,93 @@
  *******************************************************************************/
 package org.jacoco.core.internal.flow;
 
-import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 
-import java.lang.reflect.InvocationHandler;
-import java.lang.reflect.Method;
-import java.lang.reflect.Proxy;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Arrays;
 
+import org.jacoco.core.instr.MethodRecorder;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.objectweb.asm.Label;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
+import org.objectweb.asm.util.Printer;
 
 /**
  * Unit tests for {@link MethodProbesAdapter}.
  */
-public class MethodProbesAdapterTest implements IProbeIdGenerator,
-		InvocationHandler {
+public class MethodProbesAdapterTest implements IProbeIdGenerator {
 
 	private Label label;
 
 	private int id;
 
-	private List<String> methodName;
+	private MethodRecorder expected, actual;
 
-	private List<Object[]> methodArgs;
+	private MethodProbesVisitor expectedVisitor;
 
 	private MethodVisitor adapter;
+
+	private static class TraceAdapter extends MethodProbesVisitor {
+
+		private final Printer printer;
+
+		TraceAdapter(MethodRecorder recorder) {
+			super(recorder.getVisitor());
+			printer = recorder.getPrinter();
+		}
+
+		@Override
+		public void visitProbe(int probeId) {
+			rec("visitProbe", Integer.valueOf(probeId));
+		}
+
+		@Override
+		public void visitInsnWithProbe(int opcode, int probeId) {
+			rec("visitInsnWithProbe", Integer.valueOf(opcode),
+					Integer.valueOf(probeId));
+		}
+
+		@Override
+		public void visitJumpInsnWithProbe(int opcode, Label label, int probeId) {
+			rec("visitJumpInsnWithProbe", Integer.valueOf(opcode), label,
+					Integer.valueOf(probeId));
+		}
+
+		@Override
+		public void visitTableSwitchInsnWithProbes(int min, int max,
+				Label dflt, Label[] labels) {
+			rec("visitTableSwitchInsnWithProbes", Integer.valueOf(min),
+					Integer.valueOf(max), dflt, labels);
+		}
+
+		@Override
+		public void visitLookupSwitchInsnWithProbes(Label dflt, int[] keys,
+				Label[] labels) {
+			rec("visitLookupSwitchInsnWithProbes", dflt, keys, labels);
+		}
+
+		private void rec(String name, Object... args) {
+			printer.text.add(name + Arrays.asList(args));
+		}
+
+	}
 
 	@Before
 	public void setup() {
 		label = new Label();
 		id = 1000;
-		methodName = new ArrayList<String>();
-		methodArgs = new ArrayList<Object[]>();
-		IMethodProbesVisitor probesVistor = (IMethodProbesVisitor) Proxy
-				.newProxyInstance(getClass().getClassLoader(),
-						new Class[] { IMethodProbesVisitor.class }, this);
-		adapter = new MethodProbesAdapter(probesVistor, this);
+		expected = new MethodRecorder();
+		expectedVisitor = new TraceAdapter(expected);
+		actual = new MethodRecorder();
+		MethodProbesVisitor actualVisitor = new TraceAdapter(actual);
+		adapter = new MethodProbesAdapter(actualVisitor, this);
+	}
+
+	@After
+	public void verify() {
+		assertEquals(expected, actual);
 	}
 
 	@Test
@@ -61,34 +107,29 @@ public class MethodProbesAdapterTest implements IProbeIdGenerator,
 
 		adapter.visitLabel(label);
 
-		assertEquals(2, methodName.size());
-		assertMethodCall(0, "visitProbe", Integer.valueOf(1000));
-		assertMethodCall(1, "visitLabel", label);
+		expectedVisitor.visitProbe(1000);
+		expectedVisitor.visitLabel(label);
 	}
 
 	@Test
 	public void testVisitProbe2() {
 		adapter.visitLabel(label);
 
-		assertEquals(1, methodName.size());
-		assertMethodCall(0, "visitLabel", label);
+		expectedVisitor.visitLabel(label);
 	}
 
 	@Test
 	public void testVisitInsn1() {
 		adapter.visitInsn(Opcodes.RETURN);
 
-		assertEquals(1, methodName.size());
-		assertMethodCall(0, "visitInsnWithProbe",
-				Integer.valueOf(Opcodes.RETURN), Integer.valueOf(1000));
+		expectedVisitor.visitInsnWithProbe(Opcodes.RETURN, 1000);
 	}
 
 	@Test
 	public void testVisitInsn2() {
 		adapter.visitInsn(Opcodes.IADD);
 
-		assertEquals(1, methodName.size());
-		assertMethodCall(0, "visitInsn", Integer.valueOf(Opcodes.IADD));
+		expectedVisitor.visitInsn(Opcodes.IADD);
 	}
 
 	@Test
@@ -98,18 +139,14 @@ public class MethodProbesAdapterTest implements IProbeIdGenerator,
 
 		adapter.visitJumpInsn(Opcodes.IFLT, label);
 
-		assertEquals(1, methodName.size());
-		assertMethodCall(0, "visitJumpInsnWithProbe",
-				Integer.valueOf(Opcodes.IFLT), label, Integer.valueOf(1000));
+		expectedVisitor.visitJumpInsnWithProbe(Opcodes.IFLT, label, 1000);
 	}
 
 	@Test
 	public void testVisitJumpInsn2() {
 		adapter.visitJumpInsn(Opcodes.IFLT, label);
 
-		assertEquals(1, methodName.size());
-		assertMethodCall(0, "visitJumpInsn", Integer.valueOf(Opcodes.IFLT),
-				label);
+		expectedVisitor.visitJumpInsn(Opcodes.IFLT, label);
 	}
 
 	@Test
@@ -121,9 +158,7 @@ public class MethodProbesAdapterTest implements IProbeIdGenerator,
 		final Label[] labels = new Label[] { label, label };
 		adapter.visitLookupSwitchInsn(label, keys, labels);
 
-		assertEquals(1, methodName.size());
-		assertMethodCall(0, "visitLookupSwitchInsnWithProbes", label, keys,
-				labels);
+		expectedVisitor.visitLookupSwitchInsnWithProbes(label, keys, labels);
 		assertEquals(1000, LabelInfo.getProbeId(label));
 	}
 
@@ -137,9 +172,7 @@ public class MethodProbesAdapterTest implements IProbeIdGenerator,
 		final Label[] labels = new Label[] { label2, label };
 		adapter.visitLookupSwitchInsn(label, keys, labels);
 
-		assertEquals(1, methodName.size());
-		assertMethodCall(0, "visitLookupSwitchInsnWithProbes", label, keys,
-				labels);
+		expectedVisitor.visitLookupSwitchInsnWithProbes(label, keys, labels);
 		assertEquals(LabelInfo.NO_PROBE, LabelInfo.getProbeId(label));
 		assertEquals(1000, LabelInfo.getProbeId(label2));
 	}
@@ -150,8 +183,7 @@ public class MethodProbesAdapterTest implements IProbeIdGenerator,
 		final Label[] labels = new Label[] { label, label };
 		adapter.visitLookupSwitchInsn(label, keys, labels);
 
-		assertEquals(1, methodName.size());
-		assertMethodCall(0, "visitLookupSwitchInsn", label, keys, labels);
+		expectedVisitor.visitLookupSwitchInsn(label, keys, labels);
 	}
 
 	@Test
@@ -162,9 +194,7 @@ public class MethodProbesAdapterTest implements IProbeIdGenerator,
 		final Label[] labels = new Label[] { label, label };
 		adapter.visitTableSwitchInsn(0, 1, label, labels);
 
-		assertEquals(1, methodName.size());
-		assertMethodCall(0, "visitTableSwitchInsnWithProbes",
-				Integer.valueOf(0), Integer.valueOf(1), label, labels);
+		expectedVisitor.visitTableSwitchInsnWithProbes(0, 1, label, labels);
 		assertEquals(1000, LabelInfo.getProbeId(label));
 	}
 
@@ -177,9 +207,7 @@ public class MethodProbesAdapterTest implements IProbeIdGenerator,
 		final Label[] labels = new Label[] { label2, label };
 		adapter.visitTableSwitchInsn(0, 1, label, labels);
 
-		assertEquals(1, methodName.size());
-		assertMethodCall(0, "visitTableSwitchInsnWithProbes",
-				Integer.valueOf(0), Integer.valueOf(1), label, labels);
+		expectedVisitor.visitTableSwitchInsnWithProbes(0, 1, label, labels);
 		assertEquals(LabelInfo.NO_PROBE, LabelInfo.getProbeId(label));
 		assertEquals(1000, LabelInfo.getProbeId(label2));
 	}
@@ -189,29 +217,13 @@ public class MethodProbesAdapterTest implements IProbeIdGenerator,
 		final Label[] labels = new Label[] { label, label };
 		adapter.visitTableSwitchInsn(0, 1, label, labels);
 
-		assertEquals(1, methodName.size());
-		assertMethodCall(0, "visitTableSwitchInsn", Integer.valueOf(0),
-				Integer.valueOf(1), label, labels);
-	}
-
-	private void assertMethodCall(int idx, String name, Object... params) {
-		assertEquals(name, methodName.get(idx));
-		assertArrayEquals(params, methodArgs.get(idx));
+		expectedVisitor.visitTableSwitchInsn(0, 1, label, labels);
 	}
 
 	// === IProbeIdGenerator ===
 
 	public int nextId() {
 		return id++;
-	}
-
-	// === InvocationHandler ===
-
-	public Object invoke(Object proxy, Method method, Object[] args)
-			throws Throwable {
-		methodName.add(method.getName());
-		methodArgs.add(args);
-		return null;
 	}
 
 }

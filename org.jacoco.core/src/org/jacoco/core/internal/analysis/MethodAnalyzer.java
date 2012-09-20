@@ -17,18 +17,17 @@ import java.util.List;
 import org.jacoco.core.analysis.ICounter;
 import org.jacoco.core.analysis.IMethodCoverage;
 import org.jacoco.core.analysis.ISourceNode;
-import org.jacoco.core.internal.flow.IMethodProbesVisitor;
 import org.jacoco.core.internal.flow.Instruction;
 import org.jacoco.core.internal.flow.LabelInfo;
-import org.objectweb.asm.AnnotationVisitor;
-import org.objectweb.asm.Attribute;
+import org.jacoco.core.internal.flow.MethodProbesVisitor;
+import org.objectweb.asm.Handle;
 import org.objectweb.asm.Label;
 
 /**
- * A {@link IMethodProbesVisitor} that analyzes which statements and branches of
+ * A {@link MethodProbesVisitor} that analyzes which statements and branches of
  * a method has been executed based on given probe data.
  */
-public class MethodAnalyzer implements IMethodProbesVisitor {
+public class MethodAnalyzer extends MethodProbesVisitor {
 
 	private final boolean[] executionData;
 
@@ -71,6 +70,7 @@ public class MethodAnalyzer implements IMethodProbesVisitor {
 	 */
 	public MethodAnalyzer(final String name, final String desc,
 			final String signature, final boolean[] executionData) {
+		super();
 		this.executionData = executionData;
 		this.coverage = new MethodCoverageImpl(name, desc, signature);
 	}
@@ -85,6 +85,7 @@ public class MethodAnalyzer implements IMethodProbesVisitor {
 		return coverage;
 	}
 
+	@Override
 	public void visitLabel(final Label label) {
 		currentLabel.add(label);
 		if (!LabelInfo.isSuccessor(label)) {
@@ -92,6 +93,7 @@ public class MethodAnalyzer implements IMethodProbesVisitor {
 		}
 	}
 
+	@Override
 	public void visitLineNumber(final int line, final Label start) {
 		currentLine = line;
 		if (firstLine > line || lastLine == ISourceNode.UNKNOWN_LINE) {
@@ -118,50 +120,67 @@ public class MethodAnalyzer implements IMethodProbesVisitor {
 		lastInsn = insn;
 	}
 
+	@Override
 	public void visitInsn(final int opcode) {
 		visitInsn();
 	}
 
+	@Override
 	public void visitIntInsn(final int opcode, final int operand) {
 		visitInsn();
 	}
 
+	@Override
 	public void visitVarInsn(final int opcode, final int var) {
 		visitInsn();
 	}
 
+	@Override
 	public void visitTypeInsn(final int opcode, final String type) {
 		visitInsn();
 	}
 
+	@Override
 	public void visitFieldInsn(final int opcode, final String owner,
 			final String name, final String desc) {
 		visitInsn();
 	}
 
+	@Override
 	public void visitMethodInsn(final int opcode, final String owner,
 			final String name, final String desc) {
 		visitInsn();
 	}
 
+	@Override
+	public void visitInvokeDynamicInsn(final String name, final String desc,
+			final Handle bsm, final Object... bsmArgs) {
+		visitInsn();
+	}
+
+	@Override
 	public void visitJumpInsn(final int opcode, final Label label) {
 		visitInsn();
 		jumps.add(new Jump(lastInsn, label));
 	}
 
+	@Override
 	public void visitLdcInsn(final Object cst) {
 		visitInsn();
 	}
 
+	@Override
 	public void visitIincInsn(final int var, final int increment) {
 		visitInsn();
 	}
 
+	@Override
 	public void visitTableSwitchInsn(final int min, final int max,
-			final Label dflt, final Label[] labels) {
+			final Label dflt, final Label... labels) {
 		visitSwitchInsn(dflt, labels);
 	}
 
+	@Override
 	public void visitLookupSwitchInsn(final Label dflt, final int[] keys,
 			final Label[] labels) {
 		visitSwitchInsn(dflt, labels);
@@ -180,31 +199,37 @@ public class MethodAnalyzer implements IMethodProbesVisitor {
 		}
 	}
 
+	@Override
 	public void visitMultiANewArrayInsn(final String desc, final int dims) {
 		visitInsn();
 	}
 
+	@Override
 	public void visitProbe(final int probeId) {
 		addProbe(probeId);
 		lastInsn = null;
 	}
 
+	@Override
 	public void visitJumpInsnWithProbe(final int opcode, final Label label,
 			final int probeId) {
 		visitInsn();
 		addProbe(probeId);
 	}
 
+	@Override
 	public void visitInsnWithProbe(final int opcode, final int probeId) {
 		visitInsn();
 		addProbe(probeId);
 	}
 
+	@Override
 	public void visitTableSwitchInsnWithProbes(final int min, final int max,
 			final Label dflt, final Label[] labels) {
 		visitSwitchInsnWithProbes(dflt, labels);
 	}
 
+	@Override
 	public void visitLookupSwitchInsnWithProbes(final Label dflt,
 			final int[] keys, final Label[] labels) {
 		visitSwitchInsnWithProbes(dflt, labels);
@@ -233,6 +258,7 @@ public class MethodAnalyzer implements IMethodProbesVisitor {
 		}
 	}
 
+	@Override
 	public void visitEnd() {
 		// Wire jumps:
 		for (final Jump j : jumps) {
@@ -254,51 +280,6 @@ public class MethodAnalyzer implements IMethodProbesVisitor {
 			coverage.increment(instrCounter, branchCounter, i.getLine());
 		}
 		coverage.incrementMethodCounter();
-	}
-
-	public AnnotationVisitor visitAnnotationDefault() {
-		// nothing to do
-		return null;
-	}
-
-	public AnnotationVisitor visitAnnotation(final String desc,
-			final boolean visible) {
-		// nothing to do
-		return null;
-	}
-
-	public AnnotationVisitor visitParameterAnnotation(final int parameter,
-			final String desc, final boolean visible) {
-		// nothing to do
-		return null;
-	}
-
-	public void visitAttribute(final Attribute attr) {
-		// nothing to do
-	}
-
-	public void visitCode() {
-		// nothing to do
-	}
-
-	public void visitTryCatchBlock(final Label start, final Label end,
-			final Label handler, final String type) {
-		// nothing to do
-	}
-
-	public void visitFrame(final int type, final int nLocal,
-			final Object[] local, final int nStack, final Object[] stack) {
-		// nothing to do
-	}
-
-	public void visitLocalVariable(final String name, final String desc,
-			final String signature, final Label start, final Label end,
-			final int index) {
-		// nothing to do
-	}
-
-	public void visitMaxs(final int maxStack, final int maxLocals) {
-		// nothing to do
 	}
 
 	private void addProbe(final int probeId) {
