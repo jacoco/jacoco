@@ -64,12 +64,9 @@ public class CoverageTransformer implements ClassFileTransformer {
 		this.instrumenter = new Instrumenter(runtime);
 		this.logger = logger;
 		// Class names will be reported in VM notation:
-		includes = new WildcardMatcher(
-				toWildcard(toVMName(options.getIncludes())));
-		excludes = new WildcardMatcher(
-				toWildcard(toVMName(options.getExcludes())));
-		exclClassloader = new WildcardMatcher(
-				toWildcard(options.getExclClassloader()));
+		includes = new WildcardMatcher(toVMName(options.getIncludes()));
+		excludes = new WildcardMatcher(toVMName(options.getExcludes()));
+		exclClassloader = new WildcardMatcher(options.getExclClassloader());
 		classFileDumper = new ClassFileDumper(options.getClassDumpDir());
 	}
 
@@ -120,16 +117,6 @@ public class CoverageTransformer implements ClassFileTransformer {
 		includes.matches(classname) &&
 
 		!excludes.matches(classname);
-	}
-
-	private String toWildcard(final String src) {
-		if (src.indexOf('|') != -1) {
-			final IllegalArgumentException ex = new IllegalArgumentException(
-					"Usage of '|' as a list separator for JaCoCo agent options is deprecated and will not work in future versions - use ':' instead.");
-			logger.logExeption(ex);
-			return src.replace('|', ':');
-		}
-		return src;
 	}
 
 	private static String toVMName(final String srcName) {

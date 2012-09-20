@@ -23,17 +23,24 @@
 <h3>New Features</h3>
 <ul>
   <li>Full support for Java 7 including INVOKEDYNAMIC as JaCoCo is now based
-      on ASM 4.0 (Issue #5).</li>
+      on ASM 4.0 (GitHub #5).</li>
 </ul>
 
 <h3>Fixed Bugs</h3>
 <ul>
   <li>Maven plugin should skip creation of report if the execution data file is
-      missing. This avoids appearance of stack traces in case when JVM was not forked,
-      e.g. if there are no tests to run (SF #3563431, GitHub #19).</li>
-  <li>Maven plugin should fail if unable to read execution data file or create report
-      (GitHub #19).</li>
+      missing. This avoids appearance of stack traces in case when JVM was not
+      forked, e.g. if there are no tests to run (SF #3563431, GitHub #19).</li>
+  <li>Maven plugin should fail if unable to read execution data file or create
+      report (GitHub #19).</li>
 </ul>
+
+<h3>API Changes</h3>
+<ul>
+  <li>Only colon as separator character supported in agent parameters. The
+      deprecated pipe character is no longer supported.</li>
+</ul>
+
 
 <h2>Release 0.5.10 (2012/08/31)</h2>
 
