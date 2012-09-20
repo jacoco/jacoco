@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+  <link rel="stylesheet" href=".resources/doc.css" charset="UTF-8" type="text/css" />
+  <link rel="shortcut icon" href=".resources/report.gif" type="image/gif" />
+  <title>JaCoCo - FAQ</title>
+</head>
+<body>
+
+<div class="breadcrumb">
+  <a href="../index.html" class="el_report">JaCoCo</a> &gt;
+  <a href="index.html" class="el_group">Documentation</a> &gt;
+  <span class="el_source">FAQ</span>
+</div>
+<div id="content"> 
+
+<h1>FAQ</h1>
+
+<p>
+  This is a compilation of questions that have been asked by JaCoCo users
+  before.
+</p>
+
+<h3>Does JaCoCo have a plug-in for [Eclipse|Netbeans|Whatever...]?</h3>
+<p>
+  See <a href="integrations.html">this list</a> for current integrations with
+  various tools.
+<p>
+
+<h3>Why do I get the error "Can't add different class with same name"?</h3>
+<p>
+  For coverage report generation all classes within a group must have unique
+  names. You get this error during report generation if JaCoCo is supplied with
+  multiple different class files with the same name. To fix this remove those
+  duplicate classes or create separate reports or report groups for each version.
+<p>
+
+<h3>Why does the coverage report not show line coverage figures?</h3>
+<p>
+  JaCoCo is based on class files analysis. To calculate line coverage the class
+  files must contain line number information. For this class files must be
+  compiled with debug information.
+</p>
+
+<h3>Why does the coverage report coverage report not show highlighted source code?</h3>
+<p>
+  Make sure the following prerequisites are fulfilled to get source code
+  highlighting in JaCoCo coverage reports:
+</p>
+<ul>
+  <li>Class files must be compiled with debug information to contain line numbers.</li>
+  <li>Source files must be properly supplied at report generation time. I.e.
+      specified source folders must be the direct parent of the folders that
+      define the Java packages.</li>
+</ul>
+
+<h3>Why does a class show as not covered although it has been executed?</h3>
+<p>
+  First make sure execution data has been collected. For this select the
+  <i>Sessions</i> link on the top right corner of the HTML report and check
+  whether the class in question is listed. If it is listed but not linked the
+  class at execution time is a different class file. Make sure you're using the
+  exact same class file at runtime as for report generation.
+</p>
+
+<h3>Why are Java interface types not shown in the coverage reports?</h3>
+<p>
+  Java interface methods do not contain code, therefore code coverage cannot
+  be evaluated. Indeed code coverage is recorded for the implementation classes.
+  The same applies to abstract methods in abstract classes.
+</p>
+
+</div>
+<div class="footer">
+  <span class="right"><a href="@jacoco.home.url@">JaCoCo</a> @qualified.bundle.version@</span>
+  <a href="license.html">Copyright</a> &copy; @copyright.years@ Mountainminds GmbH &amp; Co. KG and Contributors
+</div>
+
+</body>
+</html>
