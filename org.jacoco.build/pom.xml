@@ -132,7 +132,7 @@
     <tycho.version>0.13.0</tycho.version>
 
     <!-- Dependencies versions -->
-    <asm.version>3.3.1</asm.version>
+    <asm.version>4.0</asm.version>
     <ant.version>1.7.0</ant.version>
     <junit.version>4.8.2</junit.version>
 
@@ -192,13 +192,8 @@
       </dependency>
       <!-- Third-party dependencies -->
       <dependency>
-        <groupId>asm</groupId>
-        <artifactId>asm</artifactId>
-        <version>${asm.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>asm</groupId>
-        <artifactId>asm-commons</artifactId>
+        <groupId>org.ow2.asm</groupId>
+        <artifactId>asm-all</artifactId>
         <version>${asm.version}</version>
       </dependency>
       <dependency>
@@ -372,6 +367,10 @@
           <groupId>org.eclipse.tycho</groupId>
           <artifactId>target-platform-configuration</artifactId>
           <version>${tycho.version}</version>
+          <configuration>
+            <resolver>p2</resolver>
+            <pomDependencies>consider</pomDependencies>
+          </configuration>
         </plugin>
         <plugin>
           <groupId>org.eclipse.tycho</groupId>
@@ -427,9 +426,6 @@
       <plugin>
         <groupId>org.eclipse.tycho</groupId>
         <artifactId>target-platform-configuration</artifactId>
-        <configuration>
-          <resolver>p2</resolver>
-        </configuration>
       </plugin>
       <plugin>
         <groupId>org.eclipse.tycho</groupId>

@@ -14,12 +14,31 @@ package org.jacoco.core.instr;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 
+import org.objectweb.asm.MethodVisitor;
+import org.objectweb.asm.util.Printer;
+import org.objectweb.asm.util.Textifier;
 import org.objectweb.asm.util.TraceMethodVisitor;
 
 /**
  * Recorder of method events for test verification.
  */
-public class MethodRecorder extends TraceMethodVisitor {
+public class MethodRecorder {
+
+	private final Printer printer;
+	private final MethodVisitor visitor;
+
+	public MethodRecorder() {
+		printer = new Textifier();
+		visitor = new TraceMethodVisitor(printer);
+	}
+
+	public Printer getPrinter() {
+		return printer;
+	}
+
+	public MethodVisitor getVisitor() {
+		return visitor;
+	}
 
 	@Override
 	public boolean equals(Object obj) {
@@ -27,20 +46,20 @@ public class MethodRecorder extends TraceMethodVisitor {
 			return false;
 		}
 		MethodRecorder that = (MethodRecorder) obj;
-		return text.equals(that.text);
+		return printer.getText().equals(that.printer.getText());
 	}
 
 	@Override
 	public int hashCode() {
-		return text.hashCode();
+		return printer.getText().hashCode();
 	}
 
 	@Override
 	public String toString() {
 		StringWriter buffer = new StringWriter();
-		PrintWriter printer = new PrintWriter(buffer);
-		print(printer);
-		printer.flush();
+		PrintWriter writer = new PrintWriter(buffer);
+		printer.print(writer);
+		writer.flush();
 		return buffer.toString();
 	}
 }

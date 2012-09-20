@@ -12,14 +12,37 @@
 package org.jacoco.core.internal.flow;
 
 import org.objectweb.asm.ClassVisitor;
+import org.objectweb.asm.Opcodes;
 
 /**
  * A {@link ClassVisitor} with additional methods to get probe insertion
  * information for each method
  */
-public interface IClassProbesVisitor extends ClassVisitor {
+public abstract class ClassProbesVisitor extends ClassVisitor {
 
-	public IMethodProbesVisitor visitMethod(int access, String name,
+	/**
+	 * New visitor instance without delegate visitor.
+	 */
+	public ClassProbesVisitor() {
+		this(null);
+	}
+
+	/**
+	 * New visitor instance that delegates to the given visitor.
+	 * 
+	 * @param cv
+	 *            optional next visitor in chain
+	 */
+	public ClassProbesVisitor(final ClassVisitor cv) {
+		super(Opcodes.ASM4, cv);
+	}
+
+	/**
+	 * When visiting a method we need a {@link MethodProbesVisitor} to handle
+	 * the probes of that method.
+	 */
+	@Override
+	public abstract MethodProbesVisitor visitMethod(int access, String name,
 			String desc, String signature, String[] exceptions);
 
 	/**
@@ -31,6 +54,6 @@ public interface IClassProbesVisitor extends ClassVisitor {
 	 * @param count
 	 *            total number of probes
 	 */
-	public void visitTotalProbeCount(int count);
+	public abstract void visitTotalProbeCount(int count);
 
 }

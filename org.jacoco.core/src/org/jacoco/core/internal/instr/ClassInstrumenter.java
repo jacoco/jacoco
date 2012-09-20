@@ -13,10 +13,9 @@ package org.jacoco.core.internal.instr;
 
 import static java.lang.String.format;
 
-import org.jacoco.core.internal.flow.IClassProbesVisitor;
-import org.jacoco.core.internal.flow.IMethodProbesVisitor;
+import org.jacoco.core.internal.flow.ClassProbesVisitor;
+import org.jacoco.core.internal.flow.MethodProbesVisitor;
 import org.jacoco.core.runtime.IExecutionDataAccessorGenerator;
-import org.objectweb.asm.ClassAdapter;
 import org.objectweb.asm.ClassVisitor;
 import org.objectweb.asm.FieldVisitor;
 import org.objectweb.asm.Label;
@@ -26,8 +25,7 @@ import org.objectweb.asm.Opcodes;
 /**
  * Adapter that instruments a class for coverage tracing.
  */
-public class ClassInstrumenter extends ClassAdapter implements
-		IClassProbesVisitor {
+public class ClassInstrumenter extends ClassProbesVisitor {
 
 	private static final Object[] STACK_ARRZ = new Object[] { InstrSupport.DATAFIELD_DESC };
 	private static final Object[] NO_LOCALS = new Object[0];
@@ -85,14 +83,13 @@ public class ClassInstrumenter extends ClassAdapter implements
 	}
 
 	@Override
-	public IMethodProbesVisitor visitMethod(final int access,
-			final String name, final String desc, final String signature,
-			final String[] exceptions) {
+	public MethodProbesVisitor visitMethod(final int access, final String name,
+			final String desc, final String signature, final String[] exceptions) {
 
 		assertNotInstrumented(name, InstrSupport.INITMETHOD_NAME);
 
-		final MethodVisitor mv = super.visitMethod(access, name, desc,
-				signature, exceptions);
+		final MethodVisitor mv = cv.visitMethod(access, name, desc, signature,
+				exceptions);
 
 		if (mv == null) {
 			return null;
@@ -106,6 +103,7 @@ public class ClassInstrumenter extends ClassAdapter implements
 				frameTracker);
 	}
 
+	@Override
 	public void visitTotalProbeCount(final int count) {
 		probeCount = count;
 	}

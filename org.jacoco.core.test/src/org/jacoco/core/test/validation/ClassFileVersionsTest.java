@@ -11,7 +11,7 @@
  *******************************************************************************/
 package org.jacoco.core.test.validation;
 
-import static junit.framework.Assert.assertEquals;
+import static org.junit.Assert.assertEquals;
 import static org.objectweb.asm.Opcodes.ACC_PUBLIC;
 import static org.objectweb.asm.Opcodes.ACC_SUPER;
 import static org.objectweb.asm.Opcodes.ALOAD;
@@ -30,9 +30,10 @@ import org.jacoco.core.runtime.IRuntime;
 import org.jacoco.core.runtime.SystemPropertiesRuntime;
 import org.junit.Test;
 import org.objectweb.asm.ClassReader;
+import org.objectweb.asm.ClassVisitor;
 import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.MethodVisitor;
-import org.objectweb.asm.commons.EmptyVisitor;
+import org.objectweb.asm.Opcodes;
 
 /**
  * Test class inserted stackmap frames for different class file versions.
@@ -86,12 +87,12 @@ public class ClassFileVersionsTest {
 
 	private void assertFrames(byte[] source, boolean expected) {
 		final boolean[] hasFrames = new boolean[] { false };
-		new ClassReader(source).accept(new EmptyVisitor() {
+		new ClassReader(source).accept(new ClassVisitor(Opcodes.ASM4) {
 
 			@Override
 			public MethodVisitor visitMethod(int access, String name,
 					String desc, String signature, String[] exceptions) {
-				return new EmptyVisitor() {
+				return new MethodVisitor(Opcodes.ASM4) {
 
 					@Override
 					public void visitFrame(int type, int nLocal,
