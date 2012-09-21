@@ -39,9 +39,9 @@
 
 <h3>Why does the coverage report not show line coverage figures?</h3>
 <p>
-  JaCoCo is based on class files analysis. To calculate line coverage the class
-  files must contain line number information. For this class files must be
-  compiled with debug information.
+  JaCoCo is based on class files analysis. To calculate line coverage class
+  files must contain line number attributes. For this your code must be compiled
+  with debug information.
 </p>
 
 <h3>Why does the coverage report coverage report not show highlighted source code?</h3>
@@ -62,7 +62,9 @@
   <i>Sessions</i> link on the top right corner of the HTML report and check
   whether the class in question is listed. If it is listed but not linked the
   class at execution time is a different class file. Make sure you're using the
-  exact same class file at runtime as for report generation.
+  exact same class file at runtime as for report generation. Note that some
+  tools (e.g. EJB containers, mocking frameworks) might modify your class files
+  at runtime.
 </p>
 
 <h3>Why are Java interface types not shown in the coverage reports?</h3>
@@ -70,6 +72,15 @@
   Java interface methods do not contain code, therefore code coverage cannot
   be evaluated. Indeed code coverage is recorded for the implementation classes.
   The same applies to abstract methods in abstract classes.
+</p>
+
+<h3>Can I collect coverage information without stopping the JVM?</h3>
+<p>
+  The JaCoCo <a href="agent.html">agent</a> can be configured for remote control
+  via TCP/IP sockets. This allows to collect execution data at any point in time
+  from a running JVM. The <a href="ant.html#dump"><code>dump</code></a> Ant task
+  can be used to request dumps. The remote control feature also allows you to
+  reset execution data.
 </p>
 
 </div>
