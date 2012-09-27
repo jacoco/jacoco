@@ -13,15 +13,13 @@ package org.jacoco.core.internal.flow;
 
 import static org.junit.Assert.assertEquals;
 
-import java.util.List;
-
+import org.jacoco.core.instr.MethodRecorder;
 import org.junit.Before;
 import org.junit.Test;
 import org.objectweb.asm.Label;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.tree.MethodNode;
-import org.objectweb.asm.util.TraceMethodVisitor;
 
 /**
  * Unit tests for {@link MethodSanitizer}.
@@ -144,9 +142,9 @@ public class MethodSanitizerTest {
 		assertEquals(dump(expected), dump(actual));
 	}
 
-	private List<?> dump(MethodNode node) {
-		final TraceMethodVisitor trace = new TraceMethodVisitor();
-		node.accept(trace);
-		return trace.getText();
+	private MethodRecorder dump(MethodNode node) {
+		MethodRecorder rec = new MethodRecorder();
+		node.accept(rec.getVisitor());
+		return rec;
 	}
 }

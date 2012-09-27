@@ -11,20 +11,20 @@
  *******************************************************************************/
 package org.jacoco.core.internal.instr;
 
-import org.objectweb.asm.MethodAdapter;
 import org.objectweb.asm.MethodVisitor;
+import org.objectweb.asm.Opcodes;
 
 /**
  * Internal wrapper for the FrameTracker which activates frame tracking lazily
  * when the first frame is reported.
  */
-class LazyFrameTracker extends MethodAdapter implements IFrameInserter {
+class LazyFrameTracker extends MethodVisitor implements IFrameInserter {
 
 	private final String owner;
 	private FrameTracker tracker;
 
 	public LazyFrameTracker(final MethodVisitor mv, final String owner) {
-		super(mv);
+		super(Opcodes.ASM4, mv);
 		this.owner = owner;
 		this.tracker = null;
 	}

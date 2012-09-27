@@ -16,6 +16,7 @@ import java.io.IOException;
 import java.net.InetAddress;
 import java.net.Socket;
 
+import org.jacoco.core.data.ExecutionDataWriter;
 import org.jacoco.core.runtime.RemoteControlReader;
 import org.jacoco.core.runtime.RemoteControlWriter;
 
@@ -40,7 +41,7 @@ public final class ExecutionDataClient {
 	 */
 	public static void main(final String[] args) throws IOException {
 		final FileOutputStream localFile = new FileOutputStream(DESTFILE);
-		final RemoteControlWriter localWriter = new RemoteControlWriter(
+		final ExecutionDataWriter localWriter = new ExecutionDataWriter(
 				localFile);
 
 		// Open a socket to the coverage agent:

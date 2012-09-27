@@ -11,42 +11,46 @@
  *******************************************************************************/
 package org.jacoco.core.internal.flow;
 
-import org.objectweb.asm.ClassAdapter;
+import org.objectweb.asm.ClassVisitor;
 import org.objectweb.asm.Label;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
-import org.objectweb.asm.commons.EmptyVisitor;
 
 /**
  * A {@link org.objectweb.asm.ClassVisitor} that calculates probes for every
  * method.
  */
-public class ClassProbesAdapter extends ClassAdapter implements
+public class ClassProbesAdapter extends ClassVisitor implements
 		IProbeIdGenerator {
 
-	private static final IMethodProbesVisitor EMPTY_METHOD_PROBES_VISITOR;
+	private static final MethodProbesVisitor EMPTY_METHOD_PROBES_VISITOR;
 
 	static {
-		class Impl extends EmptyVisitor implements IMethodProbesVisitor {
+		class Impl extends MethodProbesVisitor {
 
+			@Override
 			public void visitProbe(final int probeId) {
 				// nothing to do
 			}
 
+			@Override
 			public void visitJumpInsnWithProbe(final int opcode,
 					final Label label, final int probeId) {
 				// nothing to do
 			}
 
+			@Override
 			public void visitInsnWithProbe(final int opcode, final int probeId) {
 				// nothing to do
 			}
 
+			@Override
 			public void visitTableSwitchInsnWithProbes(final int min,
 					final int max, final Label dflt, final Label[] labels) {
 				// nothing to do
 			}
 
+			@Override
 			public void visitLookupSwitchInsnWithProbes(final Label dflt,
 					final int[] keys, final Label[] labels) {
 				// nothing to do
@@ -63,7 +67,7 @@ public class ClassProbesAdapter extends ClassAdapter implements
 		}
 	}
 
-	private final IClassProbesVisitor cv;
+	private final ClassProbesVisitor cv;
 
 	private int counter = 0;
 
@@ -75,8 +79,8 @@ public class ClassProbesAdapter extends ClassAdapter implements
 	 * @param cv
 	 *            instance to delegate to
 	 */
-	public ClassProbesAdapter(final IClassProbesVisitor cv) {
-		super(cv);
+	public ClassProbesAdapter(final ClassProbesVisitor cv) {
+		super(Opcodes.ASM4, cv);
 		this.cv = cv;
 	}
 
@@ -91,8 +95,8 @@ public class ClassProbesAdapter extends ClassAdapter implements
 	@Override
 	public final MethodVisitor visitMethod(final int access, final String name,
 			final String desc, final String signature, final String[] exceptions) {
-		final IMethodProbesVisitor methodProbes;
-		final IMethodProbesVisitor mv = cv.visitMethod(access, name, desc,
+		final MethodProbesVisitor methodProbes;
+		final MethodProbesVisitor mv = cv.visitMethod(access, name, desc,
 				signature, exceptions);
 		if (mv == null) {
 			// We need to visit the method in any case, otherwise probe ids
@@ -107,11 +111,14 @@ public class ClassProbesAdapter extends ClassAdapter implements
 			@Override
 			public void visitEnd() {
 				super.visitEnd();
-				this.accept(new LabelFlowAnalyzer());
+				LabelFlowAnalyzer.markLabels(this);
 				if (interfaceType) {
 					final ProbeCounter probeCounter = new ProbeCounter();
-					this.accept(new MethodProbesAdapter(
-							EMPTY_METHOD_PROBES_VISITOR, probeCounter));
+					final MethodProbesAdapter adapter = new MethodProbesAdapter(
+							EMPTY_METHOD_PROBES_VISITOR, probeCounter);
+					// We do not use the accept() method as ASM resets labels
+					// after every call to accept()
+					instructions.accept(adapter);
 					cv.visitTotalProbeCount(probeCounter.count);
 				}
 				this.accept(new MethodProbesAdapter(methodProbes,

@@ -11,8 +11,8 @@
  *******************************************************************************/
 package org.jacoco.core.internal.instr;
 
+import org.objectweb.asm.Handle;
 import org.objectweb.asm.Label;
-import org.objectweb.asm.MethodAdapter;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.Type;
@@ -26,7 +26,7 @@ import org.objectweb.asm.tree.LineNumberNode;
  * addition the probe array has to be retrieved at the beginning of the method
  * and stored in a local variable.
  */
-class ProbeInserter extends MethodAdapter implements IProbeInserter {
+class ProbeInserter extends MethodVisitor implements IProbeInserter {
 
 	private final IProbeArrayStrategy arrayStrategy;
 
@@ -60,7 +60,7 @@ class ProbeInserter extends MethodAdapter implements IProbeInserter {
 	 */
 	ProbeInserter(final int access, final String desc, final MethodVisitor mv,
 			final IProbeArrayStrategy arrayStrategy) {
-		super(mv);
+		super(Opcodes.ASM4, mv);
 		this.arrayStrategy = arrayStrategy;
 		int idx = (Opcodes.ACC_STATIC & access) == 0 ? 1 : 0;
 		int pos = idx;
@@ -177,6 +177,13 @@ class ProbeInserter extends MethodAdapter implements IProbeInserter {
 	}
 
 	@Override
+	public void visitInvokeDynamicInsn(final String name, final String desc,
+			final Handle bsm, final Object... bsmArgs) {
+		checkLoad();
+		mv.visitInvokeDynamicInsn(name, desc, bsm, bsmArgs);
+	}
+
+	@Override
 	public final void visitJumpInsn(final int opcode, final Label label) {
 		checkLoad();
 		mv.visitJumpInsn(opcode, label);
@@ -190,7 +197,7 @@ class ProbeInserter extends MethodAdapter implements IProbeInserter {
 
 	@Override
 	public final void visitTableSwitchInsn(final int min, final int max,
-			final Label dflt, final Label[] labels) {
+			final Label dflt, final Label... labels) {
 		checkLoad();
 		mv.visitTableSwitchInsn(min, max, dflt, labels);
 	}

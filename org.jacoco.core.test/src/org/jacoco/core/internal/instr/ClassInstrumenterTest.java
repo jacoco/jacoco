@@ -17,8 +17,9 @@ import org.jacoco.core.runtime.IRuntime;
 import org.jacoco.core.runtime.LoggerRuntime;
 import org.junit.Before;
 import org.junit.Test;
+import org.objectweb.asm.ClassVisitor;
 import org.objectweb.asm.MethodVisitor;
-import org.objectweb.asm.commons.EmptyVisitor;
+import org.objectweb.asm.Opcodes;
 
 /**
  * Unit tests for {@link ClassInstrumenter}.
@@ -32,7 +33,9 @@ public class ClassInstrumenterTest {
 	@Before
 	public void setup() {
 		runtime = new LoggerRuntime();
-		instrumenter = new ClassInstrumenter(123, runtime, new EmptyVisitor());
+		instrumenter = new ClassInstrumenter(123, runtime, new ClassVisitor(
+				Opcodes.ASM4) {
+		});
 	}
 
 	@Test(expected = IllegalStateException.class)
@@ -51,7 +54,8 @@ public class ClassInstrumenterTest {
 
 	@Test
 	public void testNoMethodVisitor() {
-		instrumenter = new ClassInstrumenter(123, runtime, new EmptyVisitor() {
+		instrumenter = new ClassInstrumenter(123, runtime, new ClassVisitor(
+				Opcodes.ASM4) {
 			@Override
 			public MethodVisitor visitMethod(int access, String name,
 					String desc, String signature, String[] exceptions) {
