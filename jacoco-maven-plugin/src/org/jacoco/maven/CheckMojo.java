@@ -14,16 +14,10 @@ package org.jacoco.maven;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.util.List;
 
 import org.apache.maven.plugin.MojoExecutionException;
-import org.codehaus.plexus.util.FileUtils;
-import org.codehaus.plexus.util.StringUtils;
-import org.jacoco.core.analysis.Analyzer;
-import org.jacoco.core.analysis.CoverageBuilder;
 import org.jacoco.core.analysis.IBundleCoverage;
 import org.jacoco.core.analysis.ICounter;
-import org.jacoco.core.analysis.ICoverageNode;
 import org.jacoco.core.analysis.ICoverageNode.CounterEntity;
 import org.jacoco.core.data.ExecutionDataReader;
 import org.jacoco.core.data.ExecutionDataStore;
@@ -104,8 +98,8 @@ public class CheckMojo extends AbstractJacocoMojo {
 				this.handleFailure();
 			}
 		} catch (final IOException e) {
-			throw new MojoExecutionException(
-					"Error while checking coverage: " + e.getMessage(), e);
+			throw new MojoExecutionException("Error while checking coverage: "
+					+ e.getMessage(), e);
 		}
 	}
 
@@ -126,18 +120,19 @@ public class CheckMojo extends AbstractJacocoMojo {
 		}
 	}
 
-	private boolean check()
-			throws IOException {
-		final IBundleCoverage bundle = createBundle();
-		checkForMissingDebugInformation(bundle);
+	private boolean check() throws IOException {
+		final FileFilter fileFilter = new FileFilter(this.getIncludes(),
+				this.getExcludes());
+		final BundleCreator creator = new BundleCreator(this.getProject(),
+				fileFilter);
+		final IBundleCoverage bundle = creator.createBundle(executionDataStore);
 
 		boolean passed = true;
 
 		for (final CounterEntity entity : CounterEntity.values()) {
-			passed = this.checkCounter(
-					entity,
-					bundle.getCounter(entity),
-					check.getRate(entity)) && passed;
+			passed = this.checkCounter(entity, bundle.getCounter(entity),
+					check.getRate(entity))
+					&& passed;
 		}
 
 		return passed;
@@ -145,16 +140,14 @@ public class CheckMojo extends AbstractJacocoMojo {
 
 	@SuppressWarnings("boxing")
 	private boolean checkCounter(final CounterEntity entity,
-			final ICounter counter,
-			final double checkRate) {
+			final ICounter counter, final double checkRate) {
 		boolean passed = true;
 
 		final double rate = counter.getCoveredRatio() * 100;
 
 		if (rate < checkRate) {
-			this.getLog()
-					.warn(String.format(INSUFFICIENT_COVERAGE, entity.name(),
-							rate,
+			this.getLog().warn(
+					String.format(INSUFFICIENT_COVERAGE, entity.name(), rate,
 							checkRate));
 			passed = false;
 		}
@@ -168,47 +161,4 @@ public class CheckMojo extends AbstractJacocoMojo {
 			this.getLog().warn(CHECK_FAILED);
 		}
 	}
-
-	private void checkForMissingDebugInformation(final ICoverageNode node) {
-		if (node.getClassCounter().getTotalCount() > 0
-				&& node.getLineCounter().getTotalCount() == 0) {
-			getLog().warn(
-					"To enable source code annotation class files have to be compiled with debug information.");
-		}
-	}
-
-	private IBundleCoverage createBundle() throws IOException {
-		final CoverageBuilder builder = new CoverageBuilder();
-		final Analyzer analyzer = new Analyzer(executionDataStore, builder);
-		final File classesDir = new File(getProject().getBuild()
-				.getOutputDirectory());
-
-		final List<File> filesToAnalyze = getFilesToAnalyze(classesDir);
-
-		for (final File file : filesToAnalyze) {
-			analyzer.analyzeAll(file);
-		}
-
-		return builder.getBundle(getProject().getName());
-	}
-
-	private List<File> getFilesToAnalyze(final File rootDir) throws IOException {
-		final String includes;
-		if (getIncludes() != null && !getIncludes().isEmpty()) {
-			includes = StringUtils.join(getIncludes().iterator(), ",");
-		} else {
-			includes = "**";
-		}
-		final String excludes;
-		if (getExcludes() != null && !getExcludes().isEmpty()) {
-			excludes = StringUtils.join(getExcludes().iterator(), ",");
-		} else {
-			excludes = "";
-		}
-		@SuppressWarnings("unchecked")
-		final List<File> files = FileUtils
-				.getFiles(rootDir, includes, excludes);
-		return files;
-	}
-
 }
