@@ -2,11 +2,11 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: JaCoCo Agent Runtime Implementation
 Bundle-SymbolicName: org.jacoco.agent.rt
-Bundle-Version: 0.5.4.qualifier
+Bundle-Version: 0.6.0.201210061924
 Bundle-Vendor: Mountainminds GmbH & Co. KG
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
-Import-Package: org.jacoco.core,
- org.jacoco.core.data,
- org.jacoco.core.instr,
- org.jacoco.core.runtime,
+Import-Package: org.jacoco.core;bundle-version="[0.6.0,0.6.1)",
+ org.jacoco.core.data;bundle-version="[0.6.0,0.6.1)",
+ org.jacoco.core.instr;bundle-version="[0.6.0,0.6.1)",
+ org.jacoco.core.runtime;bundle-version="[0.6.0,0.6.1)",
  org.objectweb.asm;version="[4.0.0,4.1.0)"

@@ -2,14 +2,14 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: JaCoCo Report
 Bundle-SymbolicName: org.jacoco.report
-Bundle-Version: 0.5.11.qualifier
+Bundle-Version: 0.6.0.201210061924
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
 Bundle-Vendor: Mountainminds GmbH & Co. KG
-Export-Package: org.jacoco.report,
- org.jacoco.report.csv,
- org.jacoco.report.html,
- org.jacoco.report.xml
-Import-Package: org.jacoco.core,
- org.jacoco.core.analysis,
- org.jacoco.core.data,
+Export-Package: org.jacoco.report;version="0.6.0",
+ org.jacoco.report.csv;version="0.6.0",
+ org.jacoco.report.html;version="0.6.0",
+ org.jacoco.report.xml;version="0.6.0"
+Import-Package: org.jacoco.core;bundle-version="[0.6.0,0.6.1)",
+ org.jacoco.core.analysis;bundle-version="[0.6.0,0.6.1)",
+ org.jacoco.core.data;bundle-version="[0.6.0,0.6.1)",
  org.objectweb.asm;version="[4.0.0,4.1.0)"
