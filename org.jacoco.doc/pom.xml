@@ -217,8 +217,10 @@
               <reportOutputDirectory>${project.build.directory}/apidocs</reportOutputDirectory>
               <includeDependencySources>true</includeDependencySources>
               <excludePackageNames>*.internal,org.jacoco.ant,org.jacoco.agent.rt</excludePackageNames>
+              <dependencySourceIncludes>
+                <dependencySourceInclude>org.jacoco:*</dependencySourceInclude>
+              </dependencySourceIncludes>
               <dependencySourceExcludes>
-                <dependencySourceExclude>asm:*</dependencySourceExclude>
                 <dependencySourceExclude>org.jacoco:org.jacoco.ant-nodeps</dependencySourceExclude>
                 <dependencySourceExclude>org.jacoco:*.test</dependencySourceExclude>
               </dependencySourceExcludes>
@@ -247,7 +249,7 @@
           </execution>
         </executions>
       </plugin>
-      
+
       <plugin>
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>xml-maven-plugin</artifactId>
