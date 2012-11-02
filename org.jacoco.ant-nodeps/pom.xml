@@ -50,6 +50,14 @@
             <goals>
               <goal>shade</goal>
             </goals>
+            <configuration>
+              <relocations>
+                <relocation>
+                  <pattern>org.objectweb.asm</pattern>
+                  <shadedPattern>org.jacoco.asm</shadedPattern>
+                </relocation>
+              </relocations>
+            </configuration>
           </execution>
         </executions>
       </plugin>
