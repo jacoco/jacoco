@@ -18,6 +18,14 @@ package org.jacoco.core.internal.instr;
 interface IFrameInserter {
 
 	/**
+	 * Empty implementation.
+	 */
+	static final IFrameInserter NOP = new IFrameInserter() {
+		public void insertFrame() {
+		}
+	};
+
+	/**
 	 * Inserts an additional frame reflecting the current locals and stack
 	 * types.
 	 */

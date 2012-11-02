@@ -31,13 +31,26 @@ class FrameTracker extends MethodVisitor implements IFrameInserter {
 	private Object[] stack;
 	private int stackSize;
 
-	public FrameTracker(final MethodVisitor mv, final String owner) {
+	public FrameTracker(final String owner, final int access,
+			final String name, final String desc, final MethodVisitor mv) {
 		super(Opcodes.ASM4, mv);
 		this.owner = owner;
 		local = new Object[8];
 		localSize = 0;
 		stack = new Object[8];
 		stackSize = 0;
+
+		if ((access & Opcodes.ACC_STATIC) == 0) {
+			if ("<init>".equals(name)) {
+				set(localSize, Opcodes.UNINITIALIZED_THIS);
+			} else {
+				set(localSize, owner);
+			}
+		}
+		for (final Type t : Type.getArgumentTypes(desc)) {
+			set(localSize, t);
+		}
+
 	}
 
 	public void insertFrame() {
@@ -605,6 +618,35 @@ class FrameTracker extends MethodVisitor implements IFrameInserter {
 		}
 		localSize = Math.max(localSize, pos + 1);
 		local[pos] = type;
+	}
+
+	private void set(final int pos, final Type type) {
+		switch (type.getSort()) {
+		case Type.BOOLEAN:
+		case Type.BYTE:
+		case Type.CHAR:
+		case Type.INT:
+		case Type.SHORT:
+			set(pos, Opcodes.INTEGER);
+			break;
+		case Type.FLOAT:
+			set(pos, Opcodes.FLOAT);
+			break;
+		case Type.LONG:
+			set(pos, Opcodes.LONG);
+			set(pos + 1, Opcodes.TOP);
+			break;
+		case Type.DOUBLE:
+			set(pos, Opcodes.DOUBLE);
+			set(pos + 1, Opcodes.TOP);
+			break;
+		case Type.ARRAY:
+		case Type.OBJECT:
+			set(pos, type.getInternalName());
+			break;
+		default:
+			throw new AssertionError(type);
+		}
 	}
 
 	private Object get(final int pos) {
