@@ -11,14 +11,10 @@
  *******************************************************************************/
 package org.jacoco.core.internal.instr;
 
-import org.objectweb.asm.Handle;
 import org.objectweb.asm.Label;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.Type;
-import org.objectweb.asm.tree.InsnList;
-import org.objectweb.asm.tree.LabelNode;
-import org.objectweb.asm.tree.LineNumberNode;
 
 /**
  * Internal utility to add probes into the control flow of a method. The code
@@ -36,14 +32,8 @@ class ProbeInserter extends MethodVisitor implements IProbeInserter {
 	/** Index the inserted variable. */
 	private final int variableIdx;
 
-	/** Indicated whether the probe variable has already been inserted. */
-	private boolean inserted;
-
 	/** Maximum stack usage of the code to access the probe array. */
 	private int accessorStackSize;
-
-	/** Labels and line numbers preceding the first real instruction. */
-	private final InsnList prolog;
 
 	/**
 	 * Creates a new {@link ProbeInserter}.
@@ -70,13 +60,10 @@ class ProbeInserter extends MethodVisitor implements IProbeInserter {
 		}
 		variableIdx = idx;
 		variable = pos;
-		inserted = false;
-		prolog = new InsnList();
 	}
 
 	public void insertProbe(final int id) {
 
-		checkLoad();
 		// For a probe we set the corresponding position in the boolean[] array
 		// to true.
 
@@ -98,41 +85,19 @@ class ProbeInserter extends MethodVisitor implements IProbeInserter {
 		mv.visitInsn(Opcodes.BASTORE);
 	}
 
-	private void checkLoad() {
-		if (!inserted) {
-			accessorStackSize = arrayStrategy.storeInstance(mv, variable);
-			prolog.accept(mv);
-			inserted = true;
-		}
-	}
-
 	@Override
-	public final void visitLabel(final Label label) {
-		if (!inserted) {
-			prolog.add(new LabelNode(label));
-		} else {
-			mv.visitLabel(label);
-		}
-	}
-
-	@Override
-	public void visitLineNumber(final int line, final Label start) {
-		if (!inserted) {
-			prolog.add(new LineNumberNode(line, new LabelNode(start)));
-		} else {
-			mv.visitLineNumber(line, start);
-		}
+	public void visitCode() {
+		accessorStackSize = arrayStrategy.storeInstance(mv, variable);
+		mv.visitCode();
 	}
 
 	@Override
 	public final void visitVarInsn(final int opcode, final int var) {
-		checkLoad();
 		mv.visitVarInsn(opcode, map(var));
 	}
 
 	@Override
 	public final void visitIincInsn(final int var, final int increment) {
-		checkLoad();
 		mv.visitIincInsn(map(var), increment);
 	}
 
@@ -140,79 +105,13 @@ class ProbeInserter extends MethodVisitor implements IProbeInserter {
 	public final void visitLocalVariable(final String name, final String desc,
 			final String signature, final Label start, final Label end,
 			final int index) {
-		checkLoad();
 		mv.visitLocalVariable(name, desc, signature, start, end, map(index));
-	}
-
-	@Override
-	public final void visitInsn(final int opcode) {
-		checkLoad();
-		mv.visitInsn(opcode);
-	}
-
-	@Override
-	public final void visitIntInsn(final int opcode, final int operand) {
-		checkLoad();
-		mv.visitIntInsn(opcode, operand);
-	}
-
-	@Override
-	public final void visitTypeInsn(final int opcode, final String type) {
-		checkLoad();
-		mv.visitTypeInsn(opcode, type);
 	}
 
 	@Override
 	public final void visitFieldInsn(final int opcode, final String owner,
 			final String name, final String desc) {
-		checkLoad();
 		mv.visitFieldInsn(opcode, owner, name, desc);
-	}
-
-	@Override
-	public final void visitMethodInsn(final int opcode, final String owner,
-			final String name, final String desc) {
-		checkLoad();
-		mv.visitMethodInsn(opcode, owner, name, desc);
-	}
-
-	@Override
-	public void visitInvokeDynamicInsn(final String name, final String desc,
-			final Handle bsm, final Object... bsmArgs) {
-		checkLoad();
-		mv.visitInvokeDynamicInsn(name, desc, bsm, bsmArgs);
-	}
-
-	@Override
-	public final void visitJumpInsn(final int opcode, final Label label) {
-		checkLoad();
-		mv.visitJumpInsn(opcode, label);
-	}
-
-	@Override
-	public final void visitLdcInsn(final Object cst) {
-		checkLoad();
-		mv.visitLdcInsn(cst);
-	}
-
-	@Override
-	public final void visitTableSwitchInsn(final int min, final int max,
-			final Label dflt, final Label... labels) {
-		checkLoad();
-		mv.visitTableSwitchInsn(min, max, dflt, labels);
-	}
-
-	@Override
-	public final void visitLookupSwitchInsn(final Label dflt, final int[] keys,
-			final Label[] labels) {
-		checkLoad();
-		mv.visitLookupSwitchInsn(dflt, keys, labels);
-	}
-
-	@Override
-	public final void visitMultiANewArrayInsn(final String desc, final int dims) {
-		checkLoad();
-		mv.visitMultiANewArrayInsn(desc, dims);
 	}
 
 	@Override
@@ -242,28 +141,22 @@ class ProbeInserter extends MethodVisitor implements IProbeInserter {
 					"ClassReader.accept() should be called with EXPAND_FRAMES flag");
 		}
 
-		if (inserted) {
-			final int n = Math.max(nLocal, variableIdx) + 1;
-			final Object[] newLocal = new Object[n];
-			for (int i = 0; i < n; i++) {
-				if (i < variableIdx) {
-					// For dead code it is possible to specify less locals than
-					// we have method parameters.
-					newLocal[i] = i < nLocal ? local[i] : Opcodes.TOP;
-					continue;
-				}
-				if (i > variableIdx) {
-					newLocal[i] = local[i - 1];
-					continue;
-				}
-				newLocal[i] = InstrSupport.DATAFIELD_DESC;
+		final int n = Math.max(nLocal, variableIdx) + 1;
+		final Object[] newLocal = new Object[n];
+		for (int i = 0; i < n; i++) {
+			if (i < variableIdx) {
+				// For dead code it is possible to specify less locals than
+				// we have method parameters.
+				newLocal[i] = i < nLocal ? local[i] : Opcodes.TOP;
+				continue;
 			}
-			mv.visitFrame(type, n, newLocal, nStack, stack);
-		} else {
-			mv.visitFrame(type, nLocal, local, nStack, stack);
+			if (i > variableIdx) {
+				newLocal[i] = local[i - 1];
+				continue;
+			}
+			newLocal[i] = InstrSupport.DATAFIELD_DESC;
 		}
-
-		checkLoad();
+		mv.visitFrame(type, n, newLocal, nStack, stack);
 	}
 
 }
