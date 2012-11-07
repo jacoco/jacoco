@@ -15,7 +15,7 @@
   <parent>
     <groupId>org.jacoco</groupId>
     <artifactId>org.jacoco.build</artifactId>
-    <version>0.5.11-SNAPSHOT</version>
+    <version>0.6.1-SNAPSHOT</version>
     <relativePath>../org.jacoco.build</relativePath>
   </parent>
 
@@ -217,8 +217,10 @@
               <reportOutputDirectory>${project.build.directory}/apidocs</reportOutputDirectory>
               <includeDependencySources>true</includeDependencySources>
               <excludePackageNames>*.internal,org.jacoco.ant,org.jacoco.agent.rt</excludePackageNames>
+              <dependencySourceIncludes>
+                <dependencySourceInclude>org.jacoco:*</dependencySourceInclude>
+              </dependencySourceIncludes>
               <dependencySourceExcludes>
-                <dependencySourceExclude>asm:*</dependencySourceExclude>
                 <dependencySourceExclude>org.jacoco:org.jacoco.ant-nodeps</dependencySourceExclude>
                 <dependencySourceExclude>org.jacoco:*.test</dependencySourceExclude>
               </dependencySourceExcludes>
@@ -247,7 +249,7 @@
           </execution>
         </executions>
       </plugin>
-      
+
       <plugin>
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>xml-maven-plugin</artifactId>
@@ -305,6 +307,31 @@
               <descriptors>
                 <descriptor>assembly.xml</descriptor>
               </descriptors>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-enforcer-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>enforce-distribution-size</id>
+            <goals>
+              <goal>enforce</goal>
+            </goals>
+            <phase>verify</phase>
+            <configuration>
+              <rules>
+                <requireFilesSize>
+                  <maxsize>2500000</maxsize>
+                  <minsize>2300000</minsize>
+                  <files>
+                    <file>${project.build.directory}/jacoco-${qualified.bundle.version}.zip</file>
+                  </files>
+                </requireFilesSize>
+              </rules>
             </configuration>
           </execution>
         </executions>

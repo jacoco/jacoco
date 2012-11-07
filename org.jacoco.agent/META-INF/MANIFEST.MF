@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: JaCoCo Agent
 Bundle-SymbolicName: org.jacoco.agent
-Bundle-Version: 0.5.11.qualifier
+Bundle-Version: 0.6.1.qualifier
 Bundle-Vendor: Mountainminds GmbH & Co. KG
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
-Export-Package: org.jacoco.agent
+Export-Package: org.jacoco.agent;version="0.6.1"
