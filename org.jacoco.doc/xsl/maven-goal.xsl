@@ -9,6 +9,7 @@
   
    Contributors:
       Marc R. Hoffmann - initial API and implementation
+      Kyle Lieber - implementation of CheckMojo
 -->
 
 <xsl:stylesheet version="1.0"
