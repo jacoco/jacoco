@@ -41,7 +41,6 @@ public class CheckConfiguration {
 	 *            percent of instructions covered
 	 */
 	public void setInstructionRatio(final Double ratio) {
-		System.out.println("setting ratio to " + ratio);
 		this.configuration.put(CounterEntity.INSTRUCTION, ratio);
 	}
 
