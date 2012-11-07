@@ -7,7 +7,8 @@
  *
  * Contributors:
  *    Evgeny Mandrikov - initial API and implementation
- *
+ *    Kyle Lieber - implementation of CheckMojo
+ *    
  *******************************************************************************/
 package org.jacoco.maven;
 

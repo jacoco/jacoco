@@ -40,12 +40,12 @@
             <configuration>
               <haltOnFailure>false</haltOnFailure>
               <check>
-                <classRate>100</classRate>
-                <instructionRate>100</instructionRate>
-                <methodRate>100</methodRate>
-                <branchRate>100</branchRate>
-                <complexityRate>100</complexityRate>
-                <lineRate>100</lineRate>
+                <classRatio>100</classRatio>
+                <instructionRatio>100</instructionRatio>
+                <methodRatio>100</methodRatio>
+                <branchRatio>100</branchRatio>
+                <complexityRatio>100</complexityRatio>
+                <lineRatio>100</lineRatio>
               </check>
             </configuration>
           </execution>

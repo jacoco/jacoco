@@ -7,108 +7,106 @@
  *
  * Contributors:
  *    Evgeny Mandrikov - initial API and implementation
- *
+ *    Kyle Lieber - implementation of CheckMojo
+ *    
  *******************************************************************************/
 package org.jacoco.maven;
+
+import java.util.HashMap;
+import java.util.Map;
 
 import org.jacoco.core.analysis.ICoverageNode.CounterEntity;
 
 /**
- * Used in the configuration of the "check" goal for specifying minimum rates of
- * coverage.
+ * Used in the configuration of the "check" goal for specifying minimum ratios
+ * of coverage.
  */
 public class CheckConfiguration {
 
-	private double instructionRate;
-	private double branchRate;
-	private double lineRate;
-	private double complexityRate;
-	private double methodRate;
-	private double classRate;
+	private final double DEFAULT_RATIO = 0;
+
+	private final Map<CounterEntity, Double> configuration;
+
+	/**
+	 * Construct a new CheckConfiguration instance.
+	 */
+	public CheckConfiguration() {
+		this.configuration = new HashMap<CounterEntity, Double>();
+	}
 
 	/**
 	 * Set the minimum allowed code coverage for instructions.
 	 * 
-	 * @param instructionRate
+	 * @param ratio
 	 *            percent of instructions covered
 	 */
-	public void setInstructionRate(final double instructionRate) {
-		this.instructionRate = instructionRate;
+	public void setInstructionRatio(final Double ratio) {
+		System.out.println("setting ratio to " + ratio);
+		this.configuration.put(CounterEntity.INSTRUCTION, ratio);
 	}
 
 	/**
 	 * Set the minimum allowed code coverage for branches.
 	 * 
-	 * @param branchRate
+	 * @param ratio
 	 *            percent of branches covered
 	 */
-	public void setBranchRate(final double branchRate) {
-		this.branchRate = branchRate;
+	public void setBranchRatio(final Double ratio) {
+		this.configuration.put(CounterEntity.BRANCH, ratio);
 	}
 
 	/**
 	 * Set the minimum allowed code coverage for lines.
 	 * 
-	 * @param lineRate
+	 * @param ratio
 	 *            percent of lines covered
 	 */
-	public void setLineRate(final double lineRate) {
-		this.lineRate = lineRate;
+	public void setLineRatio(final Double ratio) {
+		this.configuration.put(CounterEntity.LINE, ratio);
 	}
 
 	/**
 	 * Set the minimum allowed code coverage for complexity.
 	 * 
-	 * @param complexityRate
+	 * @param ratio
 	 *            percent of complexities covered
 	 */
-	public void setComplexityRate(final double complexityRate) {
-		this.complexityRate = complexityRate;
+	public void setComplexityRatio(final Double ratio) {
+		this.configuration.put(CounterEntity.COMPLEXITY, ratio);
 	}
 
 	/**
 	 * Set the minimum allowed code coverage for methods.
 	 * 
-	 * @param methodRate
+	 * @param ratio
 	 *            percent of methods covered
 	 */
-	public void setMethodRate(final double methodRate) {
-		this.methodRate = methodRate;
+	public void setMethodRatio(final Double ratio) {
+		this.configuration.put(CounterEntity.METHOD, ratio);
 	}
 
 	/**
 	 * Set the minimum allowed code coverage for classes.
 	 * 
-	 * @param classRate
+	 * @param ratio
 	 *            percent of classes covered
 	 */
-	public void setClassRate(final double classRate) {
-		this.classRate = classRate;
+	public void setClassRatio(final Double ratio) {
+		this.configuration.put(CounterEntity.CLASS, ratio);
 	}
 
 	/**
-	 * Get the rate for the given CounterEntity
+	 * Get the ratio for the given CounterEntity
 	 * 
 	 * @param entity
 	 *            the counter type
 	 * @return minimum percent covered for given CounterEntity
 	 */
-	public double getRate(final CounterEntity entity) {
-		double rate = 0;
-
-		if (CounterEntity.INSTRUCTION.equals(entity)) {
-			rate = this.instructionRate;
-		} else if (CounterEntity.BRANCH.equals(entity)) {
-			rate = this.branchRate;
-		} else if (CounterEntity.LINE.equals(entity)) {
-			rate = this.lineRate;
-		} else if (CounterEntity.COMPLEXITY.equals(entity)) {
-			rate = this.complexityRate;
-		} else if (CounterEntity.METHOD.equals(entity)) {
-			rate = this.methodRate;
-		} else if (CounterEntity.CLASS.equals(entity)) {
-			rate = this.classRate;
+	public double getRatio(final CounterEntity entity) {
+		double ratio = DEFAULT_RATIO;
+		if (this.configuration.get(entity) != null) {
+			ratio = this.configuration.get(entity).doubleValue();
 		}
-		return rate;
+		return ratio;
 	}
 }

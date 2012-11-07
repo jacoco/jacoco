@@ -7,7 +7,8 @@
  *
  * Contributors:
  *    Evgeny Mandrikov - initial API and implementation
- *
+ *    Kyle Lieber - implementation of CheckMojo
+ *    
  *******************************************************************************/
 package org.jacoco.maven;
 
@@ -32,6 +33,11 @@ import org.jacoco.core.data.SessionInfoStore;
  * @threadSafe
  */
 public class CheckMojo extends AbstractJacocoMojo {
+
+	private static final String MSG_SKIPPING = "Skipping JaCoCo execution due to missing execution data file";
+
+	private static final String ERROR_UNABLE_TO_READ = "Unable to read execution data file %s: %s";
+	private static final String ERROR_CHECKING_COVERAGE = "Error while checking coverage: %s";
 
 	private static final String INSUFFICIENT_COVERAGE = "Insufficient code coverage for %s: %2$.2f%% < %3$.2f%%";
 	private static final String CHECK_FAILED = "Coverage checks have not been met. See report for details.";
@@ -67,8 +73,7 @@ public class CheckMojo extends AbstractJacocoMojo {
 
 	private boolean canCheckCoverage() {
 		if (!dataFile.exists()) {
-			getLog().info(
-					"Skipping JaCoCo execution due to missing execution data file");
+			getLog().info(MSG_SKIPPING);
 			return false;
 		}
 		return true;
@@ -87,9 +92,8 @@ public class CheckMojo extends AbstractJacocoMojo {
 		try {
 			loadExecutionData();
 		} catch (final IOException e) {
-			throw new MojoExecutionException(
-					"Unable to read execution data file " + dataFile + ": "
-							+ e.getMessage(), e);
+			throw new MojoExecutionException(String.format(
+					ERROR_UNABLE_TO_READ, dataFile, e.getMessage()), e);
 		}
 		try {
 			if (check()) {
@@ -98,8 +102,8 @@ public class CheckMojo extends AbstractJacocoMojo {
 				this.handleFailure();
 			}
 		} catch (final IOException e) {
-			throw new MojoExecutionException("Error while checking coverage: "
-					+ e.getMessage(), e);
+			throw new MojoExecutionException(String.format(
+					ERROR_CHECKING_COVERAGE, e.getMessage()), e);
 		}
 	}
 
@@ -131,24 +135,23 @@ public class CheckMojo extends AbstractJacocoMojo {
 
 		for (final CounterEntity entity : CounterEntity.values()) {
 			passed = this.checkCounter(entity, bundle.getCounter(entity),
-					check.getRate(entity))
+					check.getRatio(entity))
 					&& passed;
 		}
 
 		return passed;
 	}
 
-	@SuppressWarnings("boxing")
 	private boolean checkCounter(final CounterEntity entity,
-			final ICounter counter, final double checkRate) {
+			final ICounter counter, final double checkRatio) {
 		boolean passed = true;
 
-		final double rate = counter.getCoveredRatio() * 100;
+		final double ratio = counter.getCoveredRatio() * 100;
 
-		if (rate < checkRate) {
+		if (ratio < checkRatio) {
 			this.getLog().warn(
-					String.format(INSUFFICIENT_COVERAGE, entity.name(), rate,
-							checkRate));
+					String.format(INSUFFICIENT_COVERAGE, entity.name(),
+							Double.valueOf(ratio), Double.valueOf(checkRatio)));
 			passed = false;
 		}
 		return passed;
