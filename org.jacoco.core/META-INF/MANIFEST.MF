@@ -11,6 +11,6 @@ Export-Package: org.jacoco.core;version="0.6.1",
  org.jacoco.core.instr;version="0.6.1",
  org.jacoco.core.internal.analysis;version="0.6.1"; x-internal=true,
  org.jacoco.core.runtime;version="0.6.1"
-Import-Package: org.objectweb.asm;version="[4.0.0,4.1.0)",
- org.objectweb.asm.tree;version="[4.0.0,4.1.0)",
- org.objectweb.asm.commons;version="[4.0.0,4.1.0)"
+Import-Package: org.objectweb.asm;version="[4.1.0,4.2.0)",
+ org.objectweb.asm.tree;version="[4.1.0,4.2.0)",
+ org.objectweb.asm.commons;version="[4.1.0,4.2.0)"

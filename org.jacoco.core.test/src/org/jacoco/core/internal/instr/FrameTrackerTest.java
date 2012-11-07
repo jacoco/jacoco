@@ -75,7 +75,8 @@ public class FrameTrackerTest {
 				// Ignore labels inserted by the tracker
 			}
 		};
-		FrameTracker tracker = new FrameTracker(noLabels, "Test");
+		FrameTracker tracker = new FrameTracker("Test", ACC_STATIC, "test",
+				"()V", noLabels);
 		before.accept(tracker);
 		mv.instructions.accept(tracker);
 		tracker.insertFrame();
@@ -90,44 +91,98 @@ public class FrameTrackerTest {
 
 	@Test(expected = IllegalArgumentException.class)
 	public void testVisitFrameIllegalFrameType() {
-		FrameTracker tracker = new FrameTracker(null, "Test");
+		FrameTracker tracker = new FrameTracker("Test", ACC_STATIC, "test",
+				"()V", null);
 		tracker.visitFrame(F_APPEND, 0, null, 0, null);
 	}
 
 	@Test(expected = IllegalArgumentException.class)
 	public void testVisitInsnIllegalOpcode() {
-		FrameTracker tracker = new FrameTracker(null, "Test");
+		FrameTracker tracker = new FrameTracker("Test", ACC_STATIC, "test",
+				"()V", null);
 		tracker.visitInsn(GOTO);
 	}
 
 	@Test(expected = IllegalArgumentException.class)
 	public void testVisitIntInsnIllegalOpcode() {
-		FrameTracker tracker = new FrameTracker(null, "Test");
+		FrameTracker tracker = new FrameTracker("Test", ACC_STATIC, "test",
+				"()V", null);
 		tracker.visitIntInsn(NOP, 0);
 	}
 
 	@Test(expected = IllegalArgumentException.class)
 	public void testVisitVarInsnIllegalOpcode() {
-		FrameTracker tracker = new FrameTracker(null, "Test");
+		FrameTracker tracker = new FrameTracker("Test", ACC_STATIC, "test",
+				"()V", null);
 		tracker.visitVarInsn(NOP, 0);
 	}
 
 	@Test(expected = IllegalArgumentException.class)
 	public void testVisitTypeInsnIllegalOpcode() {
-		FrameTracker tracker = new FrameTracker(null, "Test");
+		FrameTracker tracker = new FrameTracker("Test", ACC_STATIC, "test",
+				"()V", null);
 		tracker.visitTypeInsn(NOP, "A");
 	}
 
 	@Test(expected = IllegalArgumentException.class)
 	public void testVisitFieldInsnIllegalOpcode() {
-		FrameTracker tracker = new FrameTracker(null, "Test");
+		FrameTracker tracker = new FrameTracker("Test", ACC_STATIC, "test",
+				"()V", null);
 		tracker.visitFieldInsn(NOP, "A", "x", "I");
 	}
 
 	@Test(expected = IllegalArgumentException.class)
 	public void testVisitJumpInsnIllegalOpcode() {
-		FrameTracker tracker = new FrameTracker(null, "Test");
+		FrameTracker tracker = new FrameTracker("Test", ACC_STATIC, "test",
+				"()V", null);
 		tracker.visitJumpInsn(NOP, new Label());
+	}
+
+	@Test
+	public void testArgumentsConstructor() {
+		FrameBuilder expectedFrame = new FrameBuilder();
+		expectedFrame.locals(UNINITIALIZED_THIS);
+		testArguments(0, "<init>", "()V", expectedFrame);
+	}
+
+	@Test
+	public void testArgumentsStatic() {
+		FrameBuilder expectedFrame = new FrameBuilder();
+		testArguments(Opcodes.ACC_STATIC, "test", "()V", expectedFrame);
+	}
+
+	@Test
+	public void testArgumentsStaticIJZ() {
+		FrameBuilder expectedFrame = new FrameBuilder();
+		expectedFrame.locals(INTEGER, LONG, INTEGER);
+		testArguments(Opcodes.ACC_STATIC, "test", "(IJZ)V", expectedFrame);
+	}
+
+	@Test
+	public void testArgumentsStaticLArr() {
+		FrameBuilder expectedFrame = new FrameBuilder();
+		expectedFrame.locals("Foo", "[[S");
+		testArguments(Opcodes.ACC_STATIC, "test", "(LFoo;[[S)V", expectedFrame);
+	}
+
+	@Test
+	public void testArgumentsFD() {
+		FrameBuilder expectedFrame = new FrameBuilder();
+		expectedFrame.locals("Test", FLOAT, DOUBLE);
+		testArguments(0, "test", "(FD)V", expectedFrame);
+	}
+
+	private void testArguments(int access, String name, String desc,
+			FrameBuilder expectedFrame) {
+		MethodRecorder actual = new MethodRecorder();
+		FrameTracker tracker = new FrameTracker("Test", access, name, desc,
+				actual.getVisitor());
+		tracker.insertFrame();
+
+		MethodRecorder expected = new MethodRecorder();
+		expectedFrame.accept(expected.getVisitor());
+
+		assertEquals(expected, actual);
 	}
 
 	@Test
@@ -144,13 +199,6 @@ public class FrameTrackerTest {
 		mv.visitInsn(NOP);
 		after.locals("A", "B", "C", "D", "E").stack("AA", "BB", "CC", "DD",
 				"EE");
-	}
-
-	@Test
-	public void AALOAD() {
-		before.locals().stack("[Ljava/lang/String;", INTEGER);
-		mv.visitInsn(AALOAD);
-		after.locals().stack("java/lang/String");
 	}
 
 	@Test
@@ -1130,7 +1178,8 @@ public class FrameTrackerTest {
 
 	@Test(expected = IllegalArgumentException.class)
 	public void LDC_invalidType() {
-		FrameTracker tracker = new FrameTracker(null, "Test");
+		FrameTracker tracker = new FrameTracker("Test", ACC_STATIC, "test",
+				"()V", null);
 		tracker.visitLdcInsn(Byte.valueOf((byte) 123));
 	}
 
@@ -1320,7 +1369,8 @@ public class FrameTrackerTest {
 
 	@Test(expected = IllegalArgumentException.class)
 	public void NEWARRAY_invalidOperand() {
-		FrameTracker tracker = new FrameTracker(null, "Test");
+		FrameTracker tracker = new FrameTracker("Test", ACC_STATIC, "test",
+				"()V", null);
 		tracker.visitIntInsn(NEWARRAY, -1);
 	}
 

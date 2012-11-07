@@ -97,10 +97,15 @@ public class ClassInstrumenter extends ClassProbesVisitor {
 		final MethodVisitor frameEliminator = new DuplicateFrameEliminator(mv);
 		final ProbeInserter probeVariableInserter = new ProbeInserter(access,
 				desc, frameEliminator, probeArrayStrategy);
-		final LazyFrameTracker frameTracker = new LazyFrameTracker(
-				probeVariableInserter, className);
-		return new MethodInstrumenter(frameTracker, probeVariableInserter,
-				frameTracker);
+		if (withFrames) {
+			final FrameTracker frameTracker = new FrameTracker(className,
+					access, name, desc, probeVariableInserter);
+			return new MethodInstrumenter(frameTracker, probeVariableInserter,
+					frameTracker);
+		} else {
+			return new MethodInstrumenter(probeVariableInserter,
+					probeVariableInserter, IFrameInserter.NOP);
+		}
 	}
 
 	@Override
@@ -162,9 +167,6 @@ public class ClassInstrumenter extends ClassProbesVisitor {
 					InstrSupport.INITMETHOD_ACC, InstrSupport.INITMETHOD_NAME,
 					InstrSupport.INITMETHOD_DESC, null, null);
 			mv.visitCode();
-			if (withFrames) {
-				mv.visitFrame(Opcodes.F_NEW, 0, NO_LOCALS, 0, STACK_ARRZ);
-			}
 
 			// Load the value of the static data field:
 			mv.visitFieldInsn(Opcodes.GETSTATIC, className,

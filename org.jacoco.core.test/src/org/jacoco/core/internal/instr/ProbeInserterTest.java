@@ -18,8 +18,6 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.objectweb.asm.ClassVisitor;
-import org.objectweb.asm.Handle;
-import org.objectweb.asm.Label;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
 
@@ -63,7 +61,6 @@ public class ProbeInserterTest {
 				actualVisitor, arrayStrategy);
 		pi.insertProbe(0);
 
-		expectedVisitor.visitLdcInsn("init");
 		expectedVisitor.visitVarInsn(Opcodes.ALOAD, 0);
 		expectedVisitor.visitInsn(Opcodes.ICONST_0);
 		expectedVisitor.visitInsn(Opcodes.ICONST_1);
@@ -76,7 +73,6 @@ public class ProbeInserterTest {
 				arrayStrategy);
 		pi.insertProbe(0);
 
-		expectedVisitor.visitLdcInsn("init");
 		expectedVisitor.visitVarInsn(Opcodes.ALOAD, 1);
 		expectedVisitor.visitInsn(Opcodes.ICONST_0);
 		expectedVisitor.visitInsn(Opcodes.ICONST_1);
@@ -89,7 +85,6 @@ public class ProbeInserterTest {
 				actualVisitor, arrayStrategy);
 		pi.insertProbe(0);
 
-		expectedVisitor.visitLdcInsn("init");
 		expectedVisitor.visitVarInsn(Opcodes.ALOAD, 4);
 		expectedVisitor.visitInsn(Opcodes.ICONST_0);
 		expectedVisitor.visitInsn(Opcodes.ICONST_1);
@@ -102,7 +97,6 @@ public class ProbeInserterTest {
 				arrayStrategy);
 		pi.insertProbe(0);
 
-		expectedVisitor.visitLdcInsn("init");
 		expectedVisitor.visitVarInsn(Opcodes.ALOAD, 5);
 		expectedVisitor.visitInsn(Opcodes.ICONST_0);
 		expectedVisitor.visitInsn(Opcodes.ICONST_1);
@@ -110,47 +104,12 @@ public class ProbeInserterTest {
 	}
 
 	@Test
-	public void testVisitProlog() {
-		ProbeInserter pi = new ProbeInserter(0, "(I)V", actualVisitor,
-				arrayStrategy);
-		Label label = new Label();
-		pi.visitLabel(label);
-		pi.visitLineNumber(123, label);
-		pi.visitFrame(Opcodes.F_NEW, 1, new Object[] { "I" }, 0, new Object[0]);
-		pi.visitInsn(Opcodes.NOP);
-
-		expectedVisitor.visitFrame(Opcodes.F_NEW, 1, new Object[] { "I" }, 0,
-				new Object[0]);
-		expectedVisitor.visitLdcInsn("init");
-		expectedVisitor.visitLabel(label);
-		expectedVisitor.visitLineNumber(123, label);
-		expectedVisitor.visitInsn(Opcodes.NOP);
-	}
-
-	@Test
-	public void testVisitLabel() {
+	public void testVisitCode() {
 		ProbeInserter pi = new ProbeInserter(0, "()V", actualVisitor,
 				arrayStrategy);
-		Label label = new Label();
-		pi.visitInsn(Opcodes.NOP);
-		pi.visitLabel(label);
+		pi.visitCode();
 
 		expectedVisitor.visitLdcInsn("init");
-		expectedVisitor.visitInsn(Opcodes.NOP);
-		expectedVisitor.visitLabel(label);
-	}
-
-	@Test
-	public void testVisitLineNumber() {
-		ProbeInserter pi = new ProbeInserter(0, "()V", actualVisitor,
-				arrayStrategy);
-		Label label = new Label();
-		pi.visitInsn(Opcodes.NOP);
-		pi.visitLineNumber(123, label);
-
-		expectedVisitor.visitLdcInsn("init");
-		expectedVisitor.visitInsn(Opcodes.NOP);
-		expectedVisitor.visitLineNumber(123, label);
 	}
 
 	@Test
@@ -164,7 +123,6 @@ public class ProbeInserterTest {
 		pi.visitVarInsn(Opcodes.ISTORE, 3);
 		pi.visitVarInsn(Opcodes.FSTORE, 4);
 
-		expectedVisitor.visitLdcInsn("init");
 		// Argument variables stay at the same position:
 		expectedVisitor.visitVarInsn(Opcodes.ALOAD, 0);
 		expectedVisitor.visitVarInsn(Opcodes.ILOAD, 1);
@@ -185,7 +143,6 @@ public class ProbeInserterTest {
 		pi.visitIincInsn(3, 103);
 		pi.visitIincInsn(4, 104);
 
-		expectedVisitor.visitLdcInsn("init");
 		// Argument variables stay at the same position:
 		expectedVisitor.visitIincInsn(0, 100);
 		expectedVisitor.visitIincInsn(1, 101);
@@ -207,7 +164,6 @@ public class ProbeInserterTest {
 		pi.visitLocalVariable(null, null, null, null, null, 3);
 		pi.visitLocalVariable(null, null, null, null, null, 4);
 
-		expectedVisitor.visitLdcInsn("init");
 		// Argument variables stay at the same position:
 		expectedVisitor.visitLocalVariable(null, null, null, null, null, 0);
 		expectedVisitor.visitLocalVariable(null, null, null, null, null, 1);
@@ -219,119 +175,13 @@ public class ProbeInserterTest {
 	}
 
 	@Test
-	public void testVisitIntInsn() {
-		ProbeInserter pi = new ProbeInserter(0, "()V", actualVisitor,
-				arrayStrategy);
-		pi.visitIntInsn(Opcodes.BIPUSH, 15);
-
-		expectedVisitor.visitLdcInsn("init");
-		expectedVisitor.visitIntInsn(Opcodes.BIPUSH, 15);
-	}
-
-	@Test
-	public void testVisitTypeInsn() {
-		ProbeInserter pi = new ProbeInserter(0, "()V", actualVisitor,
-				arrayStrategy);
-		pi.visitTypeInsn(Opcodes.NEW, "Foo");
-
-		expectedVisitor.visitLdcInsn("init");
-		expectedVisitor.visitTypeInsn(Opcodes.NEW, "Foo");
-	}
-
-	@Test
-	public void testVisitFieldInsn() {
-		ProbeInserter pi = new ProbeInserter(0, "()V", actualVisitor,
-				arrayStrategy);
-		pi.visitFieldInsn(Opcodes.GETFIELD, "Foo", "i", "I");
-
-		expectedVisitor.visitLdcInsn("init");
-		expectedVisitor.visitFieldInsn(Opcodes.GETFIELD, "Foo", "i", "I");
-	}
-
-	@Test
-	public void testVisitMethodInsn() {
-		ProbeInserter pi = new ProbeInserter(0, "()V", actualVisitor,
-				arrayStrategy);
-		pi.visitMethodInsn(Opcodes.INVOKEINTERFACE, "Foo", "doit", "()V");
-
-		expectedVisitor.visitLdcInsn("init");
-		expectedVisitor.visitMethodInsn(Opcodes.INVOKEINTERFACE, "Foo", "doit",
-				"()V");
-	}
-
-	@Test
-	public void testInvokeDynamicInsn() {
-		ProbeInserter pi = new ProbeInserter(0, "()V", actualVisitor,
-				arrayStrategy);
-		Handle handle = new Handle(0, null, null, null);
-		pi.visitInvokeDynamicInsn("foo", "()V", handle);
-
-		expectedVisitor.visitLdcInsn("init");
-		expectedVisitor.visitInvokeDynamicInsn("foo", "()V", handle);
-	}
-
-	@Test
-	public void testVisitJumpInsn() {
-		ProbeInserter pi = new ProbeInserter(0, "()V", actualVisitor,
-				arrayStrategy);
-		Label label = new Label();
-		pi.visitJumpInsn(Opcodes.GOTO, label);
-
-		expectedVisitor.visitLdcInsn("init");
-		expectedVisitor.visitJumpInsn(Opcodes.GOTO, label);
-	}
-
-	@Test
-	public void testVisitLdcInsn() {
-		ProbeInserter pi = new ProbeInserter(0, "()V", actualVisitor,
-				arrayStrategy);
-		pi.visitLdcInsn("JaCoCo");
-
-		expectedVisitor.visitLdcInsn("init");
-		expectedVisitor.visitLdcInsn("JaCoCo");
-	}
-
-	@Test
-	public void testVisitTableSwitchInsn() {
-		ProbeInserter pi = new ProbeInserter(0, "()V", actualVisitor,
-				arrayStrategy);
-		Label dflt = new Label();
-		pi.visitTableSwitchInsn(0, 1, dflt, new Label[0]);
-
-		expectedVisitor.visitLdcInsn("init");
-		expectedVisitor.visitTableSwitchInsn(0, 1, dflt, new Label[0]);
-	}
-
-	@Test
-	public void testVisitLookupSwitchInsn() {
-		ProbeInserter pi = new ProbeInserter(0, "()V", actualVisitor,
-				arrayStrategy);
-		Label dflt = new Label();
-		pi.visitLookupSwitchInsn(dflt, new int[0], new Label[0]);
-
-		expectedVisitor.visitLdcInsn("init");
-		expectedVisitor.visitLookupSwitchInsn(dflt, new int[0], new Label[0]);
-	}
-
-	@Test
-	public void testVisitMultiANewArrayInsn() {
-		ProbeInserter pi = new ProbeInserter(0, "()V", actualVisitor,
-				arrayStrategy);
-		pi.visitMultiANewArrayInsn("[[[I", 3);
-
-		expectedVisitor.visitLdcInsn("init");
-		expectedVisitor.visitMultiANewArrayInsn("[[[I", 3);
-	}
-
-	@Test
 	public void testVisitMaxs1() {
 		ProbeInserter pi = new ProbeInserter(0, "(II)V", actualVisitor,
 				arrayStrategy);
-		pi.visitInsn(Opcodes.NOP);
+		pi.visitCode();
 		pi.visitMaxs(0, 8);
 
 		expectedVisitor.visitLdcInsn("init");
-		expectedVisitor.visitInsn(Opcodes.NOP);
 		expectedVisitor.visitMaxs(5, 9);
 	}
 
@@ -339,11 +189,10 @@ public class ProbeInserterTest {
 	public void testVisitMaxs2() {
 		ProbeInserter pi = new ProbeInserter(0, "(II)V", actualVisitor,
 				arrayStrategy);
-		pi.visitInsn(Opcodes.NOP);
+		pi.visitCode();
 		pi.visitMaxs(10, 8);
 
 		expectedVisitor.visitLdcInsn("init");
-		expectedVisitor.visitInsn(Opcodes.NOP);
 		expectedVisitor.visitMaxs(13, 9);
 	}
 
@@ -352,20 +201,9 @@ public class ProbeInserterTest {
 		ProbeInserter pi = new ProbeInserter(0, "(J)V", actualVisitor,
 				arrayStrategy);
 
-		pi.visitFrame(Opcodes.F_NEW, 2, new Object[] { "Foo", Opcodes.LONG },
-				0, new Object[0]);
-		pi.visitInsn(Opcodes.NOP);
 		pi.visitFrame(Opcodes.F_NEW, 3, new Object[] { "Foo", Opcodes.LONG,
 				"java/lang/String" }, 0, new Object[0]);
 
-		// The first (implicit) frame must not be modified:
-		expectedVisitor.visitFrame(Opcodes.F_NEW, 2, new Object[] { "Foo",
-				Opcodes.LONG }, 0, new Object[0]);
-
-		expectedVisitor.visitLdcInsn("init");
-		expectedVisitor.visitInsn(Opcodes.NOP);
-
-		// Starting from the second frame on the probe variable is inserted:
 		expectedVisitor.visitFrame(Opcodes.F_NEW, 4, new Object[] { "Foo",
 				Opcodes.LONG, "[Z", "java/lang/String" }, 0, new Object[0]);
 	}
@@ -375,10 +213,6 @@ public class ProbeInserterTest {
 		ProbeInserter pi = new ProbeInserter(0, "(J)V", actualVisitor,
 				arrayStrategy);
 
-		pi.visitFrame(Opcodes.F_NEW, 2, new Object[] { "Foo", Opcodes.LONG },
-				0, new Object[0]);
-		pi.visitInsn(Opcodes.RETURN);
-
 		// Such sequences are generated by ASM to replace dead code, see
 		// http://asm.ow2.org/doc/developer-guide.html#deadcode
 		pi.visitFrame(Opcodes.F_NEW, 0, new Object[] {}, 1,
@@ -386,12 +220,6 @@ public class ProbeInserterTest {
 		pi.visitInsn(Opcodes.NOP);
 		pi.visitInsn(Opcodes.NOP);
 		pi.visitInsn(Opcodes.ATHROW);
-
-		// The first (implicit) frame must not be modified:
-		expectedVisitor.visitFrame(Opcodes.F_NEW, 2, new Object[] { "Foo",
-				Opcodes.LONG }, 0, new Object[0]);
-		expectedVisitor.visitLdcInsn("init");
-		expectedVisitor.visitInsn(Opcodes.RETURN);
 
 		// The locals in this frame are filled with TOP up to the probe variable
 		expectedVisitor.visitFrame(Opcodes.F_NEW, 3, new Object[] {
