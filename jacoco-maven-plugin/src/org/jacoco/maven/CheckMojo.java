@@ -44,8 +44,27 @@ public class CheckMojo extends AbstractJacocoMojo {
 	private static final String CHECK_SUCCESS = "All coverage checks have been met.";
 
 	/**
+	 * <p>
 	 * Check configuration. Used to specify minimum coverage percentages that
-	 * must be met.
+	 * must be met. Defaults to 0% if a percentage ratio is not specified.
+	 * </p>
+	 * 
+	 * <p>
+	 * Example requiring 100% coverage for class, instruction, method, branch,
+	 * complexity, and line:
+	 * </p>
+	 * 
+	 * <pre>
+	 * {@code
+	 * <check>
+	 *   <classRatio>100</classRatio>
+	 *   <instructionRatio>100</instructionRatio>
+	 *   <methodRatio>100</methodRatio>
+	 *   <branchRatio>100</branchRatio>
+	 *   <complexityRatio>100</complexityRatio>
+	 *   <lineRatio>100</lineRatio>
+	 * </check>}
+	 * </pre>
 	 * 
 	 * @parameter
 	 * @required

@@ -119,6 +119,12 @@
 			<xsl:apply-templates />
 		</code>
 	</xsl:template>
+	
+	<xsl:template match="xdoc:pre">
+		<pre>
+			<xsl:apply-templates />
+		</pre>
+	</xsl:template>
 
 	<xsl:template match="xdoc:br">
 		<br />
