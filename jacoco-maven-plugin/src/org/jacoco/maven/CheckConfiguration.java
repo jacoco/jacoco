@@ -102,10 +102,7 @@ public class CheckConfiguration {
 	 * @return minimum percent covered for given CounterEntity
 	 */
 	public double getRatio(final CounterEntity entity) {
-		double ratio = DEFAULT_RATIO;
-		if (this.configuration.get(entity) != null) {
-			ratio = this.configuration.get(entity).doubleValue();
-		}
-		return ratio;
+		final Double ratio = this.configuration.get(entity);
+		return ratio == null ? DEFAULT_RATIO : ratio.doubleValue();
 	}
 }
