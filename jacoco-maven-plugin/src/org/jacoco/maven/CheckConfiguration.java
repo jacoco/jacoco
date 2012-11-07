@@ -23,7 +23,7 @@ import org.jacoco.core.analysis.ICoverageNode.CounterEntity;
  */
 public class CheckConfiguration {
 
-	private final double DEFAULT_RATIO = 0;
+	private static final double DEFAULT_RATIO = 0;
 
 	private final Map<CounterEntity, Double> configuration;
 
