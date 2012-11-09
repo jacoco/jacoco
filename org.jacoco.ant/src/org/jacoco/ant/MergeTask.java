@@ -71,28 +71,11 @@ public class MergeTask extends Task {
 		final SessionInfoStore infoStore = new SessionInfoStore();
 		final ExecutionDataStore dataStore = new ExecutionDataStore();
 
-		loadSourceFiles(infoStore, dataStore);
-
-		OutputStream outputStream = null;
-		try {
-			FileUtils.getFileUtils().createNewFile(destfile, true);
-
-			outputStream = new BufferedOutputStream(new FileOutputStream(
-					destfile));
-			final ExecutionDataWriter dataWriter = new ExecutionDataWriter(
-					outputStream);
-			infoStore.accept(dataWriter);
-			dataStore.accept(dataWriter);
-		} catch (final IOException e) {
-			throw new BuildException(format("Unable to write merged file %s",
-					destfile.getAbsolutePath()), e, getLocation());
-		} finally {
-			FileUtils.close(outputStream);
-		}
-
+		load(infoStore, dataStore);
+		save(infoStore, dataStore);
 	}
 
-	private void loadSourceFiles(final SessionInfoStore infoStore,
+	private void load(final SessionInfoStore infoStore,
 			final ExecutionDataStore dataStore) {
 		final Iterator<?> resourceIterator = files.iterator();
 		while (resourceIterator.hasNext()) {
@@ -118,6 +101,28 @@ public class MergeTask extends Task {
 			} finally {
 				FileUtils.close(resourceStream);
 			}
+		}
+	}
+
+	private void save(final SessionInfoStore infoStore,
+			final ExecutionDataStore dataStore) {
+		log(format("Writing merged execution data to %s",
+				destfile.getAbsolutePath()));
+		OutputStream outputStream = null;
+		try {
+			FileUtils.getFileUtils().createNewFile(destfile, true);
+
+			outputStream = new BufferedOutputStream(new FileOutputStream(
+					destfile));
+			final ExecutionDataWriter dataWriter = new ExecutionDataWriter(
+					outputStream);
+			infoStore.accept(dataWriter);
+			dataStore.accept(dataWriter);
+		} catch (final IOException e) {
+			throw new BuildException(format("Unable to write merged file %s",
+					destfile.getAbsolutePath()), e, getLocation());
+		} finally {
+			FileUtils.close(outputStream);
 		}
 	}
 

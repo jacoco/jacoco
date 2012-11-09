@@ -52,6 +52,7 @@
 		<property name="sample2.file" location="${basedir}/data/sample2.exec"/>
 		<au:assertLogContains text="Loading execution data file ${sample1.file}"/>
 		<au:assertLogContains text="Loading execution data file ${sample2.file}"/>
+		<au:assertLogContains text="Writing merged execution data to ${exec.file}"/>
 		<au:assertFileExists file="${exec.file}"/>
 	</target>
 	
