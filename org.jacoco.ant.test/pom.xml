@@ -30,7 +30,7 @@
   <dependencies>
     <dependency>
       <groupId>${project.groupId}</groupId>
-      <artifactId>org.jacoco.ant-nodeps</artifactId>
+      <artifactId>org.jacoco.ant</artifactId>
       <version>${project.version}</version>
     </dependency>
     <dependency>
