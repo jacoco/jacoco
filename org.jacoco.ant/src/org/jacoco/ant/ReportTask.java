@@ -13,7 +13,6 @@ package org.jacoco.ant;
 
 import static java.lang.String.format;
 
-import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -34,7 +33,7 @@ import org.jacoco.core.analysis.Analyzer;
 import org.jacoco.core.analysis.CoverageBuilder;
 import org.jacoco.core.analysis.IBundleCoverage;
 import org.jacoco.core.analysis.ICoverageNode;
-import org.jacoco.core.data.ExecutionDataReader;
+import org.jacoco.core.data.ExecFileLoader;
 import org.jacoco.core.data.ExecutionDataStore;
 import org.jacoco.core.data.SessionInfoStore;
 import org.jacoco.report.FileMultiReportOutput;
@@ -408,18 +407,14 @@ public class ReportTask extends Task {
 	}
 
 	private void loadExecutionData() {
-		sessionInfoStore = new SessionInfoStore();
-		executionDataStore = new ExecutionDataStore();
+		final ExecFileLoader loader = new ExecFileLoader();
 		for (final Iterator<?> i = executiondataElement.iterator(); i.hasNext();) {
 			final Resource resource = (Resource) i.next();
 			log(format("Loading execution data file %s", resource));
 			InputStream in = null;
 			try {
-				in = new BufferedInputStream(resource.getInputStream());
-				final ExecutionDataReader reader = new ExecutionDataReader(in);
-				reader.setSessionInfoVisitor(sessionInfoStore);
-				reader.setExecutionDataVisitor(executionDataStore);
-				reader.read();
+				in = resource.getInputStream();
+				loader.load(in);
 			} catch (final IOException e) {
 				throw new BuildException(format(
 						"Unable to read execution data file %s", resource), e,
@@ -428,6 +423,8 @@ public class ReportTask extends Task {
 				FileUtils.close(in);
 			}
 		}
+		sessionInfoStore = loader.getSessionInfoStore();
+		executionDataStore = loader.getExecutionDataStore();
 	}
 
 	private IReportVisitor createVisitor() throws IOException {

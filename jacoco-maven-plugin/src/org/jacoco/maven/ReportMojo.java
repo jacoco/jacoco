@@ -29,7 +29,7 @@ import org.apache.maven.reporting.AbstractMavenReport;
 import org.apache.maven.reporting.MavenReportException;
 import org.jacoco.core.analysis.IBundleCoverage;
 import org.jacoco.core.analysis.ICoverageNode;
-import org.jacoco.core.data.ExecutionDataReader;
+import org.jacoco.core.data.ExecFileLoader;
 import org.jacoco.core.data.ExecutionDataStore;
 import org.jacoco.core.data.SessionInfoStore;
 import org.jacoco.report.FileMultiReportOutput;
@@ -226,40 +226,30 @@ public class ReportMojo extends AbstractMavenReport {
 	@Override
 	protected void executeReport(final Locale locale)
 			throws MavenReportException {
-		try {
-			loadExecutionData();
-		} catch (final IOException e) {
-			throw new MavenReportException(
-					"Unable to read execution data file " + dataFile + ": "
-							+ e.getMessage(), e);
-		}
+		loadExecutionData();
 		try {
 			final IReportVisitor visitor = createVisitor();
 			visitor.visitInfo(sessionInfoStore.getInfos(),
 					executionDataStore.getContents());
 			createReport(visitor);
 			visitor.visitEnd();
-		} catch (final Exception e) {
+		} catch (final IOException e) {
 			throw new MavenReportException("Error while creating report: "
 					+ e.getMessage(), e);
 		}
 	}
 
-	private void loadExecutionData() throws IOException {
-		sessionInfoStore = new SessionInfoStore();
-		executionDataStore = new ExecutionDataStore();
-		FileInputStream in = null;
+	private void loadExecutionData() throws MavenReportException {
+		final ExecFileLoader loader = new ExecFileLoader();
 		try {
-			in = new FileInputStream(dataFile);
-			final ExecutionDataReader reader = new ExecutionDataReader(in);
-			reader.setSessionInfoVisitor(sessionInfoStore);
-			reader.setExecutionDataVisitor(executionDataStore);
-			reader.read();
-		} finally {
-			if (in != null) {
-				in.close();
-			}
+			loader.load(dataFile);
+		} catch (final IOException e) {
+			throw new MavenReportException(
+					"Unable to read execution data file " + dataFile + ": "
+							+ e.getMessage(), e);
 		}
+		sessionInfoStore = loader.getSessionInfoStore();
+		executionDataStore = loader.getExecutionDataStore();
 	}
 
 	private void createReport(final IReportGroupVisitor visitor)

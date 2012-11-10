@@ -27,10 +27,8 @@ import org.apache.tools.ant.types.Resource;
 import org.apache.tools.ant.types.ResourceCollection;
 import org.apache.tools.ant.types.resources.Union;
 import org.apache.tools.ant.util.FileUtils;
-import org.jacoco.core.data.ExecutionDataReader;
-import org.jacoco.core.data.ExecutionDataStore;
+import org.jacoco.core.data.ExecFileLoader;
 import org.jacoco.core.data.ExecutionDataWriter;
-import org.jacoco.core.data.SessionInfoStore;
 
 /**
  * Task for merging a set of execution data store files into a single file
@@ -68,15 +66,13 @@ public class MergeTask extends Task {
 					getLocation());
 		}
 
-		final SessionInfoStore infoStore = new SessionInfoStore();
-		final ExecutionDataStore dataStore = new ExecutionDataStore();
+		final ExecFileLoader loader = new ExecFileLoader();
 
-		load(infoStore, dataStore);
-		save(infoStore, dataStore);
+		load(loader);
+		save(loader);
 	}
 
-	private void load(final SessionInfoStore infoStore,
-			final ExecutionDataStore dataStore) {
+	private void load(final ExecFileLoader loader) {
 		final Iterator<?> resourceIterator = files.iterator();
 		while (resourceIterator.hasNext()) {
 			final Resource resource = (Resource) resourceIterator.next();
@@ -90,11 +86,7 @@ public class MergeTask extends Task {
 			InputStream resourceStream = null;
 			try {
 				resourceStream = resource.getInputStream();
-				final ExecutionDataReader reader = new ExecutionDataReader(
-						resourceStream);
-				reader.setSessionInfoVisitor(infoStore);
-				reader.setExecutionDataVisitor(dataStore);
-				reader.read();
+				loader.load(resourceStream);
 			} catch (final IOException e) {
 				throw new BuildException(format("Unable to read %s", resource),
 						e, getLocation());
@@ -104,8 +96,7 @@ public class MergeTask extends Task {
 		}
 	}
 
-	private void save(final SessionInfoStore infoStore,
-			final ExecutionDataStore dataStore) {
+	private void save(final ExecFileLoader loader) {
 		log(format("Writing merged execution data to %s",
 				destfile.getAbsolutePath()));
 		OutputStream outputStream = null;
@@ -116,8 +107,8 @@ public class MergeTask extends Task {
 					destfile));
 			final ExecutionDataWriter dataWriter = new ExecutionDataWriter(
 					outputStream);
-			infoStore.accept(dataWriter);
-			dataStore.accept(dataWriter);
+			loader.getSessionInfoStore().accept(dataWriter);
+			loader.getExecutionDataStore().accept(dataWriter);
 		} catch (final IOException e) {
 			throw new BuildException(format("Unable to write merged file %s",
 					destfile.getAbsolutePath()), e, getLocation());

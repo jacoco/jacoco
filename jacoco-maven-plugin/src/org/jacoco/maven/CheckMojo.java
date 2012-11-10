@@ -13,16 +13,14 @@
 package org.jacoco.maven;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 
 import org.apache.maven.plugin.MojoExecutionException;
 import org.jacoco.core.analysis.IBundleCoverage;
 import org.jacoco.core.analysis.ICounter;
 import org.jacoco.core.analysis.ICoverageNode.CounterEntity;
-import org.jacoco.core.data.ExecutionDataReader;
+import org.jacoco.core.data.ExecFileLoader;
 import org.jacoco.core.data.ExecutionDataStore;
-import org.jacoco.core.data.SessionInfoStore;
 
 /**
  * Checks that the code coverage metrics are being met.
@@ -86,8 +84,6 @@ public class CheckMojo extends AbstractJacocoMojo {
 	 */
 	private File dataFile;
 
-	private SessionInfoStore sessionInfoStore;
-
 	private ExecutionDataStore executionDataStore;
 
 	private boolean canCheckCoverage() {
@@ -127,20 +123,9 @@ public class CheckMojo extends AbstractJacocoMojo {
 	}
 
 	private void loadExecutionData() throws IOException {
-		sessionInfoStore = new SessionInfoStore();
-		executionDataStore = new ExecutionDataStore();
-		FileInputStream in = null;
-		try {
-			in = new FileInputStream(dataFile);
-			final ExecutionDataReader reader = new ExecutionDataReader(in);
-			reader.setSessionInfoVisitor(sessionInfoStore);
-			reader.setExecutionDataVisitor(executionDataStore);
-			reader.read();
-		} finally {
-			if (in != null) {
-				in.close();
-			}
-		}
+		final ExecFileLoader loader = new ExecFileLoader();
+		loader.load(dataFile);
+		executionDataStore = loader.getExecutionDataStore();
 	}
 
 	private boolean check() throws IOException {
