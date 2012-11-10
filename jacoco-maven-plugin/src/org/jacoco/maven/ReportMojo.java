@@ -228,7 +228,7 @@ public class ReportMojo extends AbstractMavenReport {
 			throws MavenReportException {
 		loadExecutionData();
 		try {
-			final IReportVisitor visitor = createVisitor();
+			final IReportVisitor visitor = createVisitor(locale);
 			visitor.visitInfo(sessionInfoStore.getInfos(),
 					executionDataStore.getContents());
 			createReport(visitor);
@@ -274,7 +274,8 @@ public class ReportMojo extends AbstractMavenReport {
 		}
 	}
 
-	private IReportVisitor createVisitor() throws IOException {
+	private IReportVisitor createVisitor(final Locale locale)
+			throws IOException {
 		final List<IReportVisitor> visitors = new ArrayList<IReportVisitor>();
 
 		outputDirectory.mkdirs();
@@ -284,15 +285,14 @@ public class ReportMojo extends AbstractMavenReport {
 		visitors.add(xmlFormatter.createVisitor(new FileOutputStream(new File(
 				outputDirectory, "jacoco.xml"))));
 
-		final CSVFormatter formatter = new CSVFormatter();
-		formatter.setOutputEncoding(outputEncoding);
-		visitors.add(formatter.createVisitor(new FileOutputStream(new File(
+		final CSVFormatter csvFormatter = new CSVFormatter();
+		csvFormatter.setOutputEncoding(outputEncoding);
+		visitors.add(csvFormatter.createVisitor(new FileOutputStream(new File(
 				outputDirectory, "jacoco.csv"))));
 
 		final HTMLFormatter htmlFormatter = new HTMLFormatter();
-		// formatter.setFooterText(footer);
 		htmlFormatter.setOutputEncoding(outputEncoding);
-		// formatter.setLocale(locale);
+		htmlFormatter.setLocale(locale);
 		visitors.add(htmlFormatter.createVisitor(new FileMultiReportOutput(
 				outputDirectory)));
 
