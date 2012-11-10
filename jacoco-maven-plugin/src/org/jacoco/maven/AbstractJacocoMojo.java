@@ -14,6 +14,8 @@ package org.jacoco.maven;
 import java.util.List;
 
 import org.apache.maven.plugin.AbstractMojo;
+import org.apache.maven.plugin.MojoExecutionException;
+import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.project.MavenProject;
 
 /**
@@ -54,7 +56,8 @@ public abstract class AbstractJacocoMojo extends AbstractMojo {
 	 */
 	private boolean skip;
 
-	public final void execute() {
+	public final void execute() throws MojoExecutionException,
+			MojoFailureException {
 		if ("pom".equals(project.getPackaging())) {
 			getLog().info(
 					"Skipping JaCoCo for project with packaging type 'pom'");
@@ -69,8 +72,17 @@ public abstract class AbstractJacocoMojo extends AbstractMojo {
 
 	/**
 	 * Executes Mojo.
+	 * 
+	 * @throws MojoExecutionException
+	 *             if an unexpected problem occurs. Throwing this exception
+	 *             causes a "BUILD ERROR" message to be displayed.
+	 * @throws MojoFailureException
+	 *             if an expected problem (such as a compilation failure)
+	 *             occurs. Throwing this exception causes a "BUILD FAILURE"
+	 *             message to be displayed.
 	 */
-	protected abstract void executeMojo();
+	protected abstract void executeMojo() throws MojoExecutionException,
+			MojoFailureException;
 
 	/**
 	 * @return Maven project

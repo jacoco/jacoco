@@ -7,6 +7,7 @@
  *
  * Contributors:
  *    Evgeny Mandrikov - initial API and implementation
+ *	  Kyle Lieber - implementation of CheckMojo
  *
  *******************************************************************************/
 package org.jacoco.maven;
@@ -26,10 +27,6 @@ import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.project.MavenProject;
 import org.apache.maven.reporting.AbstractMavenReport;
 import org.apache.maven.reporting.MavenReportException;
-import org.codehaus.plexus.util.FileUtils;
-import org.codehaus.plexus.util.StringUtils;
-import org.jacoco.core.analysis.Analyzer;
-import org.jacoco.core.analysis.CoverageBuilder;
 import org.jacoco.core.analysis.IBundleCoverage;
 import org.jacoco.core.analysis.ICoverageNode;
 import org.jacoco.core.data.ExecutionDataReader;
@@ -203,7 +200,7 @@ public class ReportMojo extends AbstractMavenReport {
 		}
 		if (!dataFile.exists()) {
 			getLog().info(
-				"Skipping JaCoCo execution due to missing execution data file");
+					"Skipping JaCoCo execution due to missing execution data file");
 			return false;
 		}
 		return true;
@@ -243,8 +240,8 @@ public class ReportMojo extends AbstractMavenReport {
 			createReport(visitor);
 			visitor.visitEnd();
 		} catch (final Exception e) {
-			throw new MavenReportException(
-					"Error while creating report: " + e.getMessage(), e);
+			throw new MavenReportException("Error while creating report: "
+					+ e.getMessage(), e);
 		}
 	}
 
@@ -267,7 +264,12 @@ public class ReportMojo extends AbstractMavenReport {
 
 	private void createReport(final IReportGroupVisitor visitor)
 			throws IOException {
-		final IBundleCoverage bundle = createBundle();
+		final FileFilter fileFilter = new FileFilter(this.getIncludes(),
+				this.getExcludes());
+		final BundleCreator creator = new BundleCreator(this.getProject(),
+				fileFilter);
+		final IBundleCoverage bundle = creator.createBundle(executionDataStore);
+
 		final SourceFileCollection locator = new SourceFileCollection(
 				getCompileSourceRoots(), sourceEncoding);
 		checkForMissingDebugInformation(bundle);
@@ -280,21 +282,6 @@ public class ReportMojo extends AbstractMavenReport {
 			getLog().warn(
 					"To enable source code annotation class files have to be compiled with debug information.");
 		}
-	}
-
-	private IBundleCoverage createBundle() throws IOException {
-		final CoverageBuilder builder = new CoverageBuilder();
-		final Analyzer analyzer = new Analyzer(executionDataStore, builder);
-		final File classesDir = new File(getProject().getBuild()
-				.getOutputDirectory());
-
-		final List<File> filesToAnalyze = getFilesToAnalyze(classesDir);
-
-		for (final File file : filesToAnalyze) {
-			analyzer.analyzeAll(file);
-		}
-
-		return builder.getBundle(getProject().getName());
 	}
 
 	private IReportVisitor createVisitor() throws IOException {
@@ -371,24 +358,4 @@ public class ReportMojo extends AbstractMavenReport {
 		}
 		return result;
 	}
-
-	private List<File> getFilesToAnalyze(final File rootDir) throws IOException {
-		final String includes;
-		if (getIncludes() != null && !getIncludes().isEmpty()) {
-			includes = StringUtils.join(getIncludes().iterator(), ",");
-		} else {
-			includes = "**";
-		}
-		final String excludes;
-		if (getExcludes() != null && !getExcludes().isEmpty()) {
-			excludes = StringUtils.join(getExcludes().iterator(), ",");
-		} else {
-			excludes = "";
-		}
-		@SuppressWarnings("unchecked")
-		final List<File> files = FileUtils
-				.getFiles(rootDir, includes, excludes);
-		return files;
-	}
-
 }

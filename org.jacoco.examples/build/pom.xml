@@ -9,6 +9,7 @@
   
    Contributors:
       Marc R. Hoffmann - initial API and implementation
+      Kyle Lieber - implementation of CheckMojo
 -->
 
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
@@ -50,6 +51,22 @@
 						<goals>
 							<goal>report</goal>
 						</goals>
+					</execution>
+					<execution>
+						<id>check</id>
+						<goals>
+							<goal>check</goal>
+						</goals>
+            <configuration>
+              <check>
+                <classRatio>100</classRatio>
+                <instructionRatio>90</instructionRatio>
+                <methodRatio>95</methodRatio>
+                <branchRatio>85</branchRatio>
+                <complexityRatio>85</complexityRatio>
+                <lineRatio>90</lineRatio>
+              </check>
+            </configuration>
 					</execution>
 				</executions>
 			</plugin>

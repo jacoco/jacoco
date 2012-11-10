@@ -9,6 +9,7 @@
   
    Contributors:
       Marc R. Hoffmann - initial API and implementation
+      Kyle Lieber - implementation of CheckMojo
 -->
 
 <xsl:stylesheet version="1.0"
@@ -118,6 +119,12 @@
 		<code>
 			<xsl:apply-templates />
 		</code>
+	</xsl:template>
+	
+	<xsl:template match="xdoc:pre">
+		<pre>
+			<xsl:apply-templates />
+		</pre>
 	</xsl:template>
 
 	<xsl:template match="xdoc:br">
