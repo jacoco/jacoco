@@ -16,6 +16,7 @@ import java.io.File;
 import java.io.IOException;
 
 import org.apache.maven.plugin.MojoExecutionException;
+import org.apache.maven.plugin.MojoFailureException;
 import org.jacoco.core.analysis.IBundleCoverage;
 import org.jacoco.core.analysis.ICounter;
 import org.jacoco.core.analysis.ICoverageNode.CounterEntity;
@@ -101,6 +102,11 @@ public class CheckMojo extends AbstractJacocoMojo {
 			return;
 		}
 		executeCheck();
+	}
+
+	@Override
+	protected void skipMojo() throws MojoExecutionException,
+			MojoFailureException {
 	}
 
 	private void executeCheck() throws MojoExecutionException {

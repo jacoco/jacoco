@@ -61,10 +61,12 @@ public abstract class AbstractJacocoMojo extends AbstractMojo {
 		if ("pom".equals(project.getPackaging())) {
 			getLog().info(
 					"Skipping JaCoCo for project with packaging type 'pom'");
+			skipMojo();
 			return;
 		}
 		if (skip) {
 			getLog().info("Skipping JaCoCo execution");
+			skipMojo();
 			return;
 		}
 		executeMojo();
@@ -82,6 +84,20 @@ public abstract class AbstractJacocoMojo extends AbstractMojo {
 	 *             message to be displayed.
 	 */
 	protected abstract void executeMojo() throws MojoExecutionException,
+			MojoFailureException;
+
+	/**
+	 * Some code might need to be called in the Mojo even if it's skipped.
+	 * 
+	 * @throws MojoExecutionException
+	 *             if an unexpected problem occurs. Throwing this exception
+	 *             causes a "BUILD ERROR" message to be displayed.
+	 * @throws MojoFailureException
+	 *             if an expected problem (such as a compilation failure)
+	 *             occurs. Throwing this exception causes a "BUILD FAILURE"
+	 *             message to be displayed.
+	 */
+	protected abstract void skipMojo() throws MojoExecutionException,
 			MojoFailureException;
 
 	/**
