@@ -37,6 +37,15 @@
   duplicate classes or create separate reports or report groups for each version.
 <p>
 
+<h3>Code with exceptions shows no coverage. Why?</h3>
+<p>
+  JaCoCo determines code execution with so called probes. Probes are inserted
+  into the control flow at certain positions. Code is considered as executed
+  when a subsequent probe has been executed. In case of exceptions such a
+  sequence of instructions is aborted somewhere in the middle and not marked as
+  executed. 
+</p>
+
 <h3>Why does the coverage report not show line coverage figures?</h3>
 <p>
   JaCoCo is based on class files analysis. To calculate line coverage class
