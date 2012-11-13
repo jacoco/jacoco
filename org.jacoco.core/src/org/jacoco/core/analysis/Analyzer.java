@@ -45,6 +45,8 @@ public class Analyzer {
 
 	private final StringPool stringPool;
 
+	private final ICoverageFilter coverageFilter;
+
 	/**
 	 * Creates a new analyzer reporting to the given output.
 	 * 
@@ -59,6 +61,8 @@ public class Analyzer {
 		this.executionData = executionData;
 		this.coverageVisitor = coverageVisitor;
 		this.stringPool = new StringPool();
+		// TODO: Pass this in as an argument
+		this.coverageFilter = new ExclusionsCoverageFilter();
 	}
 
 	/**
@@ -72,7 +76,7 @@ public class Analyzer {
 		final ExecutionData data = executionData.get(classid);
 		final boolean[] classExec = data == null ? null : data.getData();
 		final ClassAnalyzer analyzer = new ClassAnalyzer(classid, classExec,
-				stringPool) {
+				stringPool, coverageFilter) {
 			@Override
 			public void visitEnd() {
 				super.visitEnd();
@@ -89,9 +93,11 @@ public class Analyzer {
 	 *            reader with class definitions
 	 */
 	public void analyzeClass(final ClassReader reader) {
-		final ClassVisitor visitor = createAnalyzingVisitor(CRC64
-				.checksum(reader.b));
-		reader.accept(visitor, 0);
+		if (coverageFilter.includeClass(reader.getClassName())) {
+			final ClassVisitor visitor = createAnalyzingVisitor(CRC64
+					.checksum(reader.b));
+			reader.accept(visitor, 0);
+		}
 	}
 
 	/**

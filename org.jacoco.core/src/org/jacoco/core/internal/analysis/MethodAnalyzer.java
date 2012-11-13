@@ -15,6 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.jacoco.core.analysis.ICounter;
+import org.jacoco.core.analysis.ICoverageFilter;
 import org.jacoco.core.analysis.IMethodCoverage;
 import org.jacoco.core.analysis.ISourceNode;
 import org.jacoco.core.internal.flow.Instruction;
@@ -30,6 +31,8 @@ import org.objectweb.asm.Label;
 public class MethodAnalyzer extends MethodProbesVisitor {
 
 	private final boolean[] executionData;
+
+	private final ICoverageFilter coverageFilter;
 
 	private final MethodCoverageImpl coverage;
 
@@ -67,11 +70,15 @@ public class MethodAnalyzer extends MethodProbesVisitor {
 	 * @param executionData
 	 *            recorded probe date of the containing class or
 	 *            <code>null</code> if the class is not executed at all
+	 * @param coverageFilter
+	 *            filter which restricts the coverage data
 	 */
 	public MethodAnalyzer(final String name, final String desc,
-			final String signature, final boolean[] executionData) {
+			final String signature, final boolean[] executionData,
+			final ICoverageFilter coverageFilter) {
 		super();
 		this.executionData = executionData;
+		this.coverageFilter = coverageFilter;
 		this.coverage = new MethodCoverageImpl(name, desc, signature);
 	}
 
@@ -105,19 +112,21 @@ public class MethodAnalyzer extends MethodProbesVisitor {
 	}
 
 	private void visitInsn() {
-		final Instruction insn = new Instruction(currentLine);
-		instructions.add(insn);
-		if (lastInsn != null) {
-			insn.setPredecessor(lastInsn);
-		}
-		final int labelCount = currentLabel.size();
-		if (labelCount > 0) {
-			for (int i = labelCount; --i >= 0;) {
-				LabelInfo.setInstruction(currentLabel.get(i), insn);
+		if (coverageFilter.enabled()) {
+			final Instruction insn = new Instruction(currentLine);
+			instructions.add(insn);
+			if (lastInsn != null) {
+				insn.setPredecessor(lastInsn);
 			}
-			currentLabel.clear();
+			final int labelCount = currentLabel.size();
+			if (labelCount > 0) {
+				for (int i = labelCount; --i >= 0;) {
+					LabelInfo.setInstruction(currentLabel.get(i), insn);
+				}
+				currentLabel.clear();
+			}
+			lastInsn = insn;
 		}
-		lastInsn = insn;
 	}
 
 	@Override
@@ -160,8 +169,10 @@ public class MethodAnalyzer extends MethodProbesVisitor {
 
 	@Override
 	public void visitJumpInsn(final int opcode, final Label label) {
-		visitInsn();
-		jumps.add(new Jump(lastInsn, label));
+		if (coverageFilter.enabled()) {
+			visitInsn();
+			jumps.add(new Jump(lastInsn, label));
+		}
 	}
 
 	@Override
@@ -187,14 +198,16 @@ public class MethodAnalyzer extends MethodProbesVisitor {
 	}
 
 	private void visitSwitchInsn(final Label dflt, final Label[] labels) {
-		visitInsn();
-		LabelInfo.resetDone(labels);
-		jumps.add(new Jump(lastInsn, dflt));
-		LabelInfo.setDone(dflt);
-		for (final Label l : labels) {
-			if (!LabelInfo.isDone(l)) {
-				jumps.add(new Jump(lastInsn, l));
-				LabelInfo.setDone(l);
+		if (coverageFilter.enabled()) {
+			visitInsn();
+			LabelInfo.resetDone(labels);
+			jumps.add(new Jump(lastInsn, dflt));
+			LabelInfo.setDone(dflt);
+			for (final Label l : labels) {
+				if (!LabelInfo.isDone(l)) {
+					jumps.add(new Jump(lastInsn, l));
+					LabelInfo.setDone(l);
+				}
 			}
 		}
 	}
@@ -250,7 +263,9 @@ public class MethodAnalyzer extends MethodProbesVisitor {
 		final int id = LabelInfo.getProbeId(label);
 		if (!LabelInfo.isDone(label)) {
 			if (id == LabelInfo.NO_PROBE) {
-				jumps.add(new Jump(lastInsn, label));
+				if (coverageFilter.enabled()) {
+					jumps.add(new Jump(lastInsn, label));
+				}
 			} else {
 				addProbe(id);
 			}
@@ -283,9 +298,11 @@ public class MethodAnalyzer extends MethodProbesVisitor {
 	}
 
 	private void addProbe(final int probeId) {
-		lastInsn.addBranch();
-		if (executionData != null && executionData[probeId]) {
-			coveredProbes.add(lastInsn);
+		if (coverageFilter.enabled()) {
+			lastInsn.addBranch();
+			if (executionData != null && executionData[probeId]) {
+				coveredProbes.add(lastInsn);
+			}
 		}
 	}
 

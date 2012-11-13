@@ -11,6 +11,7 @@
  *******************************************************************************/
 package org.jacoco.core.internal.analysis;
 
+import org.jacoco.core.analysis.ICoverageFilter;
 import org.jacoco.core.analysis.IMethodCoverage;
 import org.jacoco.core.internal.flow.ClassProbesVisitor;
 import org.jacoco.core.internal.flow.MethodProbesVisitor;
@@ -24,6 +25,7 @@ public class ClassAnalyzer extends ClassProbesVisitor {
 	private final long classid;
 	private final boolean executionData[];
 	private final StringPool stringPool;
+	private final ICoverageFilter coverageFilter;
 
 	private ClassCoverageImpl coverage;
 
@@ -36,12 +38,15 @@ public class ClassAnalyzer extends ClassProbesVisitor {
 	 *            execution data for this class or <code>null</code>
 	 * @param stringPool
 	 *            shared pool to minimize the number of {@link String} instances
+	 * @param coverageFilter
+	 *            filter which restricts the coverage data
 	 */
 	public ClassAnalyzer(final long classid, final boolean[] executionData,
-			final StringPool stringPool) {
+			final StringPool stringPool, final ICoverageFilter coverageFilter) {
 		this.classid = classid;
 		this.executionData = executionData;
 		this.stringPool = stringPool;
+		this.coverageFilter = coverageFilter;
 	}
 
 	/**
@@ -77,8 +82,9 @@ public class ClassAnalyzer extends ClassProbesVisitor {
 			return null;
 		}
 
-		return new MethodAnalyzer(stringPool.get(name), stringPool.get(desc),
-				stringPool.get(signature), executionData) {
+		final MethodProbesVisitor visitor = new MethodAnalyzer(
+				stringPool.get(name), stringPool.get(desc),
+				stringPool.get(signature), executionData, coverageFilter) {
 			@Override
 			public void visitEnd() {
 				super.visitEnd();
@@ -89,6 +95,8 @@ public class ClassAnalyzer extends ClassProbesVisitor {
 				}
 			}
 		};
+
+		return coverageFilter.getVisitor(visitor);
 	}
 
 	@Override
