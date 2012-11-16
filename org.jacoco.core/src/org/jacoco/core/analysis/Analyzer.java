@@ -7,6 +7,7 @@
  *
  * Contributors:
  *    Marc R. Hoffmann - initial API and implementation
+ *    Martin Hare Robertson - filters
  *    
  *******************************************************************************/
 package org.jacoco.core.analysis;
@@ -48,7 +49,8 @@ public class Analyzer {
 	private final ICoverageFilter coverageFilter;
 
 	/**
-	 * Creates a new analyzer reporting to the given output.
+	 * Creates a new analyzer reporting to the given output. This constructor
+	 * uses a default filter which includes all coverage data.
 	 * 
 	 * @param executionData
 	 *            execution data
@@ -58,11 +60,27 @@ public class Analyzer {
 	 */
 	public Analyzer(final ExecutionDataStore executionData,
 			final ICoverageVisitor coverageVisitor) {
+		this(executionData, coverageVisitor, new ICoverageFilter.NoFilter());
+	}
+
+	/**
+	 * Creates a new analyzer reporting to the given output.
+	 * 
+	 * @param executionData
+	 *            execution data
+	 * @param coverageVisitor
+	 *            the output instance that will coverage data for every analyzed
+	 *            class
+	 * @param coverageFilter
+	 *            the filter to apply during this coverage
+	 */
+	public Analyzer(final ExecutionDataStore executionData,
+			final ICoverageVisitor coverageVisitor,
+			final ICoverageFilter coverageFilter) {
 		this.executionData = executionData;
 		this.coverageVisitor = coverageVisitor;
 		this.stringPool = new StringPool();
-		// TODO: Pass this in as an argument
-		this.coverageFilter = new ExclusionsCoverageFilter();
+		this.coverageFilter = coverageFilter;
 	}
 
 	/**

@@ -7,6 +7,7 @@
  *
  * Contributors:
  *    Marc R. Hoffmann - initial API and implementation
+ *    Martin Hare Robertson - filters
  *    
  *******************************************************************************/
 package org.jacoco.core.internal.analysis;
@@ -15,6 +16,7 @@ import static org.junit.Assert.assertEquals;
 
 import java.util.ArrayList;
 
+import org.jacoco.core.analysis.ICoverageFilter;
 import org.jacoco.core.analysis.ILine;
 import org.jacoco.core.analysis.IMethodCoverage;
 import org.jacoco.core.internal.flow.IProbeIdGenerator;
@@ -555,7 +557,7 @@ public class MethodAnalyzerTest implements IProbeIdGenerator {
 	private void runMethodAnalzer() {
 		LabelFlowAnalyzer.markLabels(method);
 		final MethodAnalyzer analyzer = new MethodAnalyzer("doit", "()V", null,
-				probes);
+				probes, new ICoverageFilter.NoFilter());
 		method.accept(new MethodProbesAdapter(analyzer, this));
 		result = analyzer.getCoverage();
 	}
