@@ -11,12 +11,13 @@
  *******************************************************************************/
 package org.jacoco.core.analysis;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileReader;
 import java.io.IOException;
 import java.util.LinkedList;
-import java.util.List;
+import java.util.Queue;
 
-import org.apache.commons.io.FileUtils;
 import org.jacoco.core.internal.flow.MethodProbesVisitor;
 import org.objectweb.asm.Label;
 
@@ -25,7 +26,18 @@ import org.objectweb.asm.Label;
  */
 public class CommentExclusionsCoverageFilter implements ICoverageFilter {
 
+	private final String baseDir;
+
+	/**
+	 * @param baseDir
+	 *            Base directory which contains Java source code.
+	 */
+	public CommentExclusionsCoverageFilter(final String baseDir) {
+		this.baseDir = baseDir;
+	}
+
 	private boolean enabled = true;
+	private Queue<Directive> directives;
 
 	public boolean enabled() {
 		return enabled;
@@ -41,18 +53,37 @@ public class CommentExclusionsCoverageFilter implements ICoverageFilter {
 		public final boolean coverageOn;
 	}
 
-	private final List<Directive> directives = new LinkedList<Directive>();
-
 	public boolean includeClass(final String className) {
-		enabled = true;
-		directives.clear();
 
-		final File sourceFile = new File("src", className + ".java");
+		// Assume coverage is enabled at the start of each class
+		enabled = true;
+
+		// Parse all the directives
+		final File sourceFile = new File(baseDir, className + ".java");
+		directives = parseSourceDirectives(sourceFile);
+
+		return true;
+	}
+
+	/**
+	 * Parse the provided sourceFile searching for source directives.
+	 * 
+	 * @param sourceFile
+	 * @return Queue of directives in the order that they appeared in the source
+	 *         file - poll() will return the directive which appeared closest to
+	 *         the start of the file.
+	 */
+	protected static Queue<Directive> parseSourceDirectives(
+			final File sourceFile) {
+		final Queue<Directive> directives = new LinkedList<Directive>();
+
 		if (sourceFile.exists() && sourceFile.canRead()) {
 			try {
-				final List<String> lines = FileUtils.readLines(sourceFile);
+				final BufferedReader sourceReader = new BufferedReader(
+						new FileReader(sourceFile));
 				int lineNum = 1;
-				for (final String line : lines) {
+				String line;
+				while ((line = sourceReader.readLine()) != null) {
 					if (line.trim().equals("///JACOCO:OFF")) {
 						directives.add(new Directive(lineNum, false));
 					} else if (line.trim().equals("///JACOCO:ON")) {
@@ -65,7 +96,7 @@ public class CommentExclusionsCoverageFilter implements ICoverageFilter {
 			}
 		}
 
-		return true;
+		return directives;
 	}
 
 	public MethodProbesVisitor getVisitor(final MethodProbesVisitor delegate) {
@@ -84,7 +115,7 @@ public class CommentExclusionsCoverageFilter implements ICoverageFilter {
 		private LineNumberVisitor(final MethodProbesVisitor delegate) {
 			super(delegate);
 			this.delegate = delegate;
-			this.nextDirective = directives.remove(0);
+			this.nextDirective = directives.remove();
 		}
 
 		@Override
@@ -92,12 +123,7 @@ public class CommentExclusionsCoverageFilter implements ICoverageFilter {
 
 			if ((nextDirective != null) && (nextDirective.lineNum <= line)) {
 				enabled = nextDirective.coverageOn;
-
-				if (directives.size() > 0) {
-					nextDirective = directives.remove(0);
-				} else {
-					nextDirective = null;
-				}
+				nextDirective = directives.poll();
 			}
 
 			super.visitLineNumber(line, start);
