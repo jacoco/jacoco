@@ -57,7 +57,8 @@ public class AnalyzerTest {
 	@Before
 	public void setup() {
 		analyzer = new Analyzer(new ExecutionDataStore(),
-				new EmptyStructureVisitor());
+				new EmptyStructureVisitor(),
+				new CommentExclusionsCoverageFilter());
 	}
 
 	@Test

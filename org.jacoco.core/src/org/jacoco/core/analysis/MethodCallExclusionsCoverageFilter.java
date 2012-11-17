@@ -31,7 +31,7 @@ import org.objectweb.asm.Opcodes;
  * Runtime.getRuntime().equals(&quot;jacoco.on&quot;);
  * </pre>
  */
-public class ExclusionsCoverageFilter implements ICoverageFilter {
+public class MethodCallExclusionsCoverageFilter implements ICoverageFilter {
 
 	boolean pendingCoverageEnabled = true;
 	boolean coverageEnabled = true;
