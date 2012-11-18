@@ -21,7 +21,6 @@
 
   <artifactId>org.jacoco.doc</artifactId>
   <!-- do not set packaging to pom, because otherwise we will receive "Not executing Javadoc as the project is not a Java classpath-capable package" -->
-  <packaging>eclipse-plugin</packaging>
 
   <name>JaCoCo :: Documentation</name>
   <description>JaCoCo Standalone Distribution</description>
@@ -71,24 +70,6 @@
     <sourceDirectory>src</sourceDirectory>
 
     <plugins>
-      <plugin>
-        <groupId>org.codehaus.groovy.maven</groupId>
-        <artifactId>gmaven-plugin</artifactId>
-        <executions>
-          <execution>
-            <phase>validate</phase>
-            <goals>
-              <goal>execute</goal>
-            </goals>
-            <configuration>
-              <source>
-              project.properties['qualified.bundle.version'] = project.properties['unqualifiedVersion'] + '.' + project.properties['buildQualifier']
-              </source>
-            </configuration>
-          </execution>
-        </executions>
-      </plugin>
-
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-antrun-plugin</artifactId>

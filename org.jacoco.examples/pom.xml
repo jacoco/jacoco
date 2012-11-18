@@ -20,7 +20,6 @@
   </parent>
 
   <artifactId>org.jacoco.examples</artifactId>
-  <packaging>eclipse-plugin</packaging>
 
   <name>JaCoCo :: Examples</name>
   <description>JaCoCo API Usage Examples</description>

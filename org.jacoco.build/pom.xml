@@ -32,11 +32,6 @@
     </license>
   </licenses>
 
-  <prerequisites>
-    <!-- Tycho works only with Maven 3.x -->
-    <maven>3.0</maven>
-  </prerequisites>
-
   <developers>
     <developer>
       <id>mtnminds</id>
@@ -120,16 +115,11 @@
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <sonatypeOssDistMgmtSnapshotsUrl>https://oss.sonatype.org/content/repositories/snapshots/</sonatypeOssDistMgmtSnapshotsUrl>
 
-    <maven.build.timestamp.format>yyyy/MM/dd</maven.build.timestamp.format>
-    <build.date>${maven.build.timestamp}</build.date>
+    <maven.build.timestamp.format>yyyyMMddhhmm</maven.build.timestamp.format>
     <jacoco.home.url>http://www.eclemma.org/jacoco</jacoco.home.url>
 
     <jvm.args></jvm.args>
     <argLine>${jvm.args}</argLine>
-    <tycho.testArgLine>${argLine}</tycho.testArgLine>
-
-    <!-- Plugins versions -->
-    <tycho.version>0.13.0</tycho.version>
 
     <!-- Dependencies versions -->
     <asm.version>4.1</asm.version>
@@ -360,47 +350,12 @@
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-site-plugin</artifactId>
-          <version>3.0-beta-3</version>
+          <version>3.2</version>
         </plugin>
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-toolchains-plugin</artifactId>
           <version>1.0</version>
-        </plugin>
-        <!-- Tycho plugins -->
-        <plugin>
-          <groupId>org.eclipse.tycho</groupId>
-          <artifactId>tycho-maven-plugin</artifactId>
-          <version>${tycho.version}</version>
-        </plugin>
-        <plugin>
-          <groupId>org.eclipse.tycho</groupId>
-          <artifactId>target-platform-configuration</artifactId>
-          <version>${tycho.version}</version>
-          <configuration>
-            <resolver>p2</resolver>
-            <pomDependencies>consider</pomDependencies>
-          </configuration>
-        </plugin>
-        <plugin>
-          <groupId>org.eclipse.tycho</groupId>
-          <artifactId>tycho-packaging-plugin</artifactId>
-          <version>${tycho.version}</version>
-        </plugin>
-        <plugin>
-          <groupId>org.eclipse.tycho</groupId>
-          <artifactId>tycho-source-plugin</artifactId>
-          <version>${tycho.version}</version>
-        </plugin>
-        <plugin>
-          <groupId>org.eclipse.tycho</groupId>
-          <artifactId>tycho-compiler-plugin</artifactId>
-          <version>${tycho.version}</version>
-        </plugin>
-        <plugin>
-          <groupId>org.eclipse.tycho</groupId>
-          <artifactId>tycho-surefire-plugin</artifactId>
-          <version>${tycho.version}</version>
         </plugin>
         <!-- Mojo plugins -->
         <plugin>
@@ -428,32 +383,6 @@
     </pluginManagement>
 
     <plugins>
-      <plugin>
-        <groupId>org.eclipse.tycho</groupId>
-        <artifactId>tycho-maven-plugin</artifactId>
-        <extensions>true</extensions>
-      </plugin>
-      <plugin>
-        <groupId>org.eclipse.tycho</groupId>
-        <artifactId>target-platform-configuration</artifactId>
-      </plugin>
-      <plugin>
-        <groupId>org.eclipse.tycho</groupId>
-        <artifactId>tycho-compiler-plugin</artifactId>
-        <configuration>
-          <excludeResources>
-            <excludeResource>**/*.properties</excludeResource>
-          </excludeResources>
-        </configuration>
-      </plugin>
-      <plugin>
-        <groupId>org.eclipse.tycho</groupId>
-        <artifactId>tycho-surefire-plugin</artifactId>
-        <configuration>
-          <skipExec>${skipTests}</skipExec>
-        </configuration>
-      </plugin>
-
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-surefire-plugin</artifactId>
@@ -583,6 +512,45 @@
           </execution>
         </executions>
       </plugin>
+
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>build-helper-maven-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>parse-version</id>
+            <phase>validate</phase>
+            <goals>
+              <goal>parse-version</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <groupId>org.codehaus.groovy.maven</groupId>
+        <artifactId>gmaven-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>parse-version</id>
+            <phase>validate</phase>
+            <goals>
+              <goal>execute</goal>
+            </goals>
+            <configuration>
+              <source>
+                major = project.properties['parsedVersion.majorVersion']
+                minor = project.properties['parsedVersion.minorVersion']
+                incremental = project.properties['parsedVersion.incrementalVersion']
+                qualifier = "${maven.build.timestamp}"
+                project.properties['buildQualifier'] = qualifier
+                project.properties['unqualifiedVersion'] = major + '.' + minor + '.' + incremental
+                project.properties['qualified.bundle.version'] = project.properties['unqualifiedVersion'] + '.' + project.properties['buildQualifier']
+                project.properties['build.date'] = qualifier.substring(0, 4) + '/' + qualifier.substring(4, 6) + '/' + qualifier.substring(6, 8)
+              </source>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
     </plugins>
   </build>
 
@@ -696,6 +664,52 @@
     </profile>
 
     <profile>
+      <id>manifest</id>
+      <activation>
+        <file>
+          <exists>META-INF/MANIFEST.MF</exists>
+        </file>
+      </activation>
+      <properties>
+        <bundle-manifest>${project.build.directory}/META-INF/MANIFEST.MF</bundle-manifest>
+      </properties>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-antrun-plugin</artifactId>
+            <executions>
+              <execution>
+                <id>translate-qualifier</id>
+                <phase>generate-resources</phase>
+                <configuration>
+                  <target>
+                    <copy file="META-INF/MANIFEST.MF" tofile="${bundle-manifest}" overwrite="true"/>
+                    <replace file="${bundle-manifest}">
+                      <replacefilter token=".qualifier" value=".${buildQualifier}"/>
+                    </replace>
+                  </target>
+                </configuration>
+                <goals>
+                  <goal>run</goal>
+                </goals>
+              </execution>
+            </executions>
+          </plugin>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-jar-plugin</artifactId>
+            <configuration>
+              <archive>
+                <manifestFile>${bundle-manifest}</manifestFile>
+              </archive>
+            </configuration>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+
+    <profile>
       <id>sources</id>
       <activation>
         <file>
@@ -714,18 +728,6 @@
                 <phase>verify</phase>
                 <goals>
                   <goal>jar-no-fork</goal>
-                </goals>
-              </execution>
-            </executions>
-          </plugin>
-          <plugin>
-            <groupId>org.eclipse.tycho</groupId>
-            <artifactId>tycho-source-plugin</artifactId>
-            <executions>
-              <execution>
-                <id>attach-sources</id>
-                <goals>
-                  <goal>plugin-source</goal>
                 </goals>
               </execution>
             </executions>
@@ -816,24 +818,6 @@
       </build>
     </profile>
 
-    <!-- This profile is activated only during build and allows to use p2 repository without bothering our consumers and in compliance with rules for repo1 -->
-    <profile>
-      <id>tycho</id>
-      <activation>
-        <file>
-          <!-- This employs that the basedir expression is only recognized by Maven 3.x (see MNG-2363) -->
-          <exists>${basedir}</exists>
-        </file>
-      </activation>
-      <repositories>
-        <repository>
-          <id>jacoco-thirdparty</id>
-          <layout>p2</layout>
-          <url>http://download.eclipse.org/releases/helios</url>
-        </repository>
-      </repositories>
-    </profile>
-
     <!-- This profile is active only when used from Eclipse m2e and is used only to store settings. -->
     <profile>
       <id>m2e</id>
@@ -873,19 +857,6 @@
                         <versionRange>[1.0,)</versionRange>
                         <goals>
                           <goal>execute</goal>
-                        </goals>
-                      </pluginExecutionFilter>
-                      <action>
-                        <ignore></ignore>
-                      </action>
-                    </pluginExecution>
-                    <pluginExecution>
-                      <pluginExecutionFilter>
-                        <groupId>org.eclipse.tycho</groupId>
-                        <artifactId>tycho-packaging-plugin</artifactId>
-                        <versionRange>[0.13.0,)</versionRange>
-                        <goals>
-                          <goal>validate-id</goal>
                         </goals>
                       </pluginExecutionFilter>
                       <action>

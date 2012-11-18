@@ -20,7 +20,6 @@
   </parent>
 
   <artifactId>org.jacoco.agent</artifactId>
-  <packaging>eclipse-plugin</packaging>
 
   <name>JaCoCo :: Agent</name>
   <description>JaCoCo Agent</description>
