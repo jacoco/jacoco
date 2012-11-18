@@ -18,6 +18,7 @@ import java.io.IOException;
 import java.util.LinkedList;
 import java.util.Queue;
 
+import org.jacoco.core.analysis.CommentExclusionsCoverageFilter.IDirectivesParser.Directive;
 import org.jacoco.core.internal.flow.MethodProbesVisitor;
 import org.objectweb.asm.Label;
 
@@ -26,93 +27,127 @@ import org.objectweb.asm.Label;
  */
 public class CommentExclusionsCoverageFilter implements ICoverageFilter {
 
-	private final String baseDir;
-
 	/**
-	 * @param baseDir
-	 *            Base directory which contains Java source code.
+	 * Parser of coverage directives
 	 */
-	public CommentExclusionsCoverageFilter(final String baseDir) {
-		this.baseDir = baseDir;
+	public static interface IDirectivesParser {
+
+		/**
+		 * Data class representing a directive
+		 */
+		public static class Directive {
+			/**
+			 * @param lineNum
+			 * @param coverageOn
+			 */
+			public Directive(final int lineNum, final boolean coverageOn) {
+				this.lineNum = lineNum;
+				this.coverageOn = coverageOn;
+			}
+
+			/**
+			 * Line number of the directive
+			 */
+			public final int lineNum;
+			/**
+			 * Whether to switch coverage on/off
+			 */
+			public final boolean coverageOn;
+		}
+
+		/**
+		 * Return coverage directives associated with the specified className
+		 * 
+		 * @param className
+		 * @return Queue of directives in the order which they apply.
+		 */
+		public Queue<Directive> parseDirectives(String className);
 	}
 
-	private boolean enabled = true;
+	private final IDirectivesParser parser;
+
 	private Queue<Directive> directives;
+	private boolean enabled = true;
+
+	/**
+	 * @param parser
+	 *            Interface for parsing source directives.
+	 */
+	public CommentExclusionsCoverageFilter(final IDirectivesParser parser) {
+		this.parser = parser;
+	}
 
 	public boolean enabled() {
 		return enabled;
 	}
 
-	private static class Directive {
-		public Directive(final int lineNum, final boolean coverageOn) {
-			this.lineNum = lineNum;
-			this.coverageOn = coverageOn;
-		}
-
-		public final int lineNum;
-		public final boolean coverageOn;
-	}
-
 	public boolean includeClass(final String className) {
-
-		// Assume coverage is enabled at the start of each class
 		enabled = true;
 
-		// Parse all the directives
-		final File sourceFile = new File(baseDir, className + ".java");
-		directives = parseSourceDirectives(sourceFile);
-
+		directives = parser.parseDirectives(className);
 		return true;
 	}
 
 	/**
-	 * Parse the provided sourceFile searching for source directives.
-	 * 
-	 * @param sourceFile
-	 * @return Queue of directives in the order that they appeared in the source
-	 *         file - poll() will return the directive which appeared closest to
-	 *         the start of the file.
+	 * Parser for directives in source code
 	 */
-	protected static Queue<Directive> parseSourceDirectives(
-			final File sourceFile) {
-		final Queue<Directive> directives = new LinkedList<Directive>();
+	public static class SourceFileDirectivesParser implements IDirectivesParser {
+		private final String baseDir;
 
-		if (sourceFile.exists() && sourceFile.canRead()) {
-			try {
-				final BufferedReader sourceReader = new BufferedReader(
-						new FileReader(sourceFile));
-				int lineNum = 1;
-				String line;
-				while ((line = sourceReader.readLine()) != null) {
-					if (line.trim().equals("///JACOCO:OFF")) {
-						directives.add(new Directive(lineNum, false));
-					} else if (line.trim().equals("///JACOCO:ON")) {
-						directives.add(new Directive(lineNum, true));
-					}
-					lineNum++;
-				}
-			} catch (final IOException e) {
-				throw new RuntimeException(e);
-			}
+		/**
+		 * @param baseDir
+		 *            Base directory to look for source code within
+		 */
+		public SourceFileDirectivesParser(final String baseDir) {
+			this.baseDir = baseDir;
 		}
 
-		return directives;
+		public Queue<Directive> parseDirectives(final String className) {
+
+			final File sourceFile = new File(baseDir, className + ".java");
+
+			final Queue<Directive> directives = new LinkedList<Directive>();
+
+			if (sourceFile.exists() && sourceFile.canRead()) {
+				try {
+					final BufferedReader sourceReader = new BufferedReader(
+							new FileReader(sourceFile));
+					int lineNum = 1;
+					String line;
+					while ((line = sourceReader.readLine()) != null) {
+						if (line.trim().equals("///JACOCO:OFF")) {
+							directives.add(new Directive(lineNum, false));
+						} else if (line.trim().equals("///JACOCO:ON")) {
+							directives.add(new Directive(lineNum, true));
+						}
+						lineNum++;
+					}
+				} catch (final IOException e) {
+					throw new RuntimeException(e);
+				}
+			}
+
+			return directives;
+		}
+
 	}
 
 	public MethodProbesVisitor getVisitor(final MethodProbesVisitor delegate) {
+
 		if (directives.size() == 0) {
 			return delegate;
 		} else {
-			return new LineNumberVisitor(delegate);
+			return new LineNumberMethodVisitor(delegate);
 		}
 	}
 
-	private class LineNumberVisitor extends MethodProbesVisitor {
+	private class LineNumberMethodVisitor extends MethodProbesVisitor {
 
 		private final MethodProbesVisitor delegate;
+
 		private Directive nextDirective;
 
-		private LineNumberVisitor(final MethodProbesVisitor delegate) {
+		private LineNumberMethodVisitor(final MethodProbesVisitor delegate) {
 			super(delegate);
 			this.delegate = delegate;
 			this.nextDirective = directives.remove();
