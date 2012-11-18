@@ -16,6 +16,8 @@ import java.util.Map;
 import java.util.Properties;
 
 import org.apache.maven.artifact.Artifact;
+import org.apache.maven.plugin.MojoExecutionException;
+import org.apache.maven.plugin.MojoFailureException;
 import org.codehaus.plexus.util.StringUtils;
 import org.jacoco.core.runtime.AgentOptions;
 
@@ -163,10 +165,7 @@ public class AgentMojo extends AbstractJacocoMojo {
 	 */
 	private File classDumpDir;
 
-	@Override
-	public void executeMojo() {
-		final String vmArgument = StringUtils.quoteAndEscape(
-				createAgentOptions().getVMArgument(getAgentJarFile()), '"');
+	private void prependVmArgumentProperty(final String vmArgument) {
 		if (isPropertyNameSpecified()) {
 			prependProperty(propertyName, vmArgument);
 		} else if (isEclipseTestPluginPackaging()) {
@@ -174,6 +173,20 @@ public class AgentMojo extends AbstractJacocoMojo {
 		} else {
 			prependProperty(SUREFIRE_ARG_LINE, vmArgument);
 		}
+	}
+
+	@Override
+	public void executeMojo() {
+		final String vmArgument = StringUtils.quoteAndEscape(
+				createAgentOptions().getVMArgument(getAgentJarFile()), '"');
+		prependVmArgumentProperty(vmArgument);
+	}
+
+	@Override
+	protected void skipMojo() throws MojoExecutionException,
+			MojoFailureException {
+		/* To make sure the property is defined. */
+		prependVmArgumentProperty("");
 	}
 
 	private File getAgentJarFile() {
