@@ -19,7 +19,8 @@ import java.util.LinkedList;
 import java.util.Queue;
 
 import org.jacoco.core.analysis.CommentExclusionsCoverageFilter.IDirectivesParser.Directive;
-import org.jacoco.core.internal.flow.MethodProbesVisitor;
+import org.jacoco.core.analysis.ICoverageFilterStatus.ICoverageFilter;
+import org.jacoco.core.internal.flow.MethodProbesBaseAdapter;
 import org.objectweb.asm.Label;
 
 /**
@@ -132,7 +133,8 @@ public class CommentExclusionsCoverageFilter implements ICoverageFilter {
 
 	}
 
-	public MethodProbesVisitor getVisitor(final MethodProbesVisitor delegate) {
+	public MethodProbesBaseAdapter visitMethod(
+			final MethodProbesBaseAdapter delegate) {
 
 		if (directives.size() == 0) {
 			return delegate;
@@ -141,13 +143,12 @@ public class CommentExclusionsCoverageFilter implements ICoverageFilter {
 		}
 	}
 
-	private class LineNumberMethodVisitor extends MethodProbesVisitor {
-
-		private final MethodProbesVisitor delegate;
+	private class LineNumberMethodVisitor extends MethodProbesBaseAdapter {
 
 		private Directive nextDirective;
+		private final MethodProbesBaseAdapter delegate;
 
-		private LineNumberMethodVisitor(final MethodProbesVisitor delegate) {
+		private LineNumberMethodVisitor(final MethodProbesBaseAdapter delegate) {
 			super(delegate);
 			this.delegate = delegate;
 			this.nextDirective = directives.remove();
@@ -155,43 +156,29 @@ public class CommentExclusionsCoverageFilter implements ICoverageFilter {
 
 		@Override
 		public void visitLineNumber(final int line, final Label start) {
+			boolean insertProbe = false;
+
+			if ((nextDirective != null) && (nextDirective.lineNum <= line)) {
+				if (enabled != nextDirective.coverageOn) {
+					insertProbe = true;
+				}
+			}
+
+			super.visitLineNumber(line, start);
+
+			if (insertProbe) {
+				delegate.visitProbe();
+			}
 
 			if ((nextDirective != null) && (nextDirective.lineNum <= line)) {
 				enabled = nextDirective.coverageOn;
 				nextDirective = directives.poll();
 			}
-
-			super.visitLineNumber(line, start);
-		}
-
-		// --- Simple methods that pass on to the delegate ---
-
-		@Override
-		public void visitProbe(final int probeId) {
-			delegate.visitProbe(probeId);
 		}
 
 		@Override
-		public void visitJumpInsnWithProbe(final int opcode, final Label label,
-				final int probeId) {
-			delegate.visitJumpInsnWithProbe(opcode, label, probeId);
-		}
-
-		@Override
-		public void visitInsnWithProbe(final int opcode, final int probeId) {
-			delegate.visitInsnWithProbe(opcode, probeId);
-		}
-
-		@Override
-		public void visitTableSwitchInsnWithProbes(final int min,
-				final int max, final Label dflt, final Label[] labels) {
-			delegate.visitTableSwitchInsnWithProbes(min, max, dflt, labels);
-		}
-
-		@Override
-		public void visitLookupSwitchInsnWithProbes(final Label dflt,
-				final int[] keys, final Label[] labels) {
-			delegate.visitLookupSwitchInsnWithProbes(dflt, keys, labels);
+		public void visitProbe() {
+			delegate.visitProbe();
 		}
 	}
 }

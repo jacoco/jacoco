@@ -7,6 +7,7 @@
  *
  * Contributors:
  *    Marc R. Hoffmann - initial API and implementation
+ *    Martin Hare Robertson - filters
  *    
  *******************************************************************************/
 package org.jacoco.core.instr;
@@ -14,6 +15,7 @@ package org.jacoco.core.instr;
 import java.io.IOException;
 import java.io.InputStream;
 
+import org.jacoco.core.analysis.ICoverageFilterStatus.ICoverageFilter;
 import org.jacoco.core.internal.data.CRC64;
 import org.jacoco.core.internal.flow.ClassProbesAdapter;
 import org.jacoco.core.internal.instr.ClassInstrumenter;
@@ -28,6 +30,7 @@ import org.objectweb.asm.ClassWriter;
 public class Instrumenter {
 
 	private final IExecutionDataAccessorGenerator accessGenerator;
+	private final ICoverageFilter coverageFilter;
 
 	/**
 	 * Creates a new instance based on the given runtime.
@@ -36,7 +39,21 @@ public class Instrumenter {
 	 *            runtime used by the instrumented classes
 	 */
 	public Instrumenter(final IExecutionDataAccessorGenerator runtime) {
+		this(runtime, new ICoverageFilter.NoFilter());
+	}
+
+	/**
+	 * Creates a new instance based on the given runtime.
+	 * 
+	 * @param runtime
+	 *            runtime used by the instrumented classes
+	 * @param coverageFilter
+	 *            the filter to apply during this coverage
+	 */
+	public Instrumenter(final IExecutionDataAccessorGenerator runtime,
+			final ICoverageFilter coverageFilter) {
 		this.accessGenerator = runtime;
+		this.coverageFilter = coverageFilter;
 	}
 
 	/**
@@ -50,8 +67,8 @@ public class Instrumenter {
 	 */
 	private ClassVisitor createInstrumentingVisitor(final long classid,
 			final ClassVisitor cv) {
-		return new ClassProbesAdapter(new ClassInstrumenter(classid, accessGenerator,
-				cv));
+		return new ClassProbesAdapter(new ClassInstrumenter(classid,
+				accessGenerator, cv), coverageFilter);
 	}
 
 	/**
@@ -63,11 +80,15 @@ public class Instrumenter {
 	 * 
 	 */
 	public byte[] instrument(final ClassReader reader) {
-		final ClassWriter writer = new ClassWriter(reader, 0);
-		final ClassVisitor visitor = createInstrumentingVisitor(
-				CRC64.checksum(reader.b), writer);
-		reader.accept(visitor, ClassReader.EXPAND_FRAMES);
-		return writer.toByteArray();
+		if (coverageFilter.includeClass(reader.getClassName())) {
+			final ClassWriter writer = new ClassWriter(reader, 0);
+			final ClassVisitor visitor = createInstrumentingVisitor(
+					CRC64.checksum(reader.b), writer);
+			reader.accept(visitor, ClassReader.EXPAND_FRAMES);
+			return writer.toByteArray();
+		} else {
+			return null;
+		}
 	}
 
 	/**

@@ -16,7 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.jacoco.core.analysis.ICounter;
-import org.jacoco.core.analysis.ICoverageFilter;
+import org.jacoco.core.analysis.ICoverageFilterStatus;
 import org.jacoco.core.analysis.IMethodCoverage;
 import org.jacoco.core.analysis.ISourceNode;
 import org.jacoco.core.internal.flow.Instruction;
@@ -33,7 +33,7 @@ public class MethodAnalyzer extends MethodProbesVisitor {
 
 	private final boolean[] executionData;
 
-	private final ICoverageFilter coverageFilter;
+	private final ICoverageFilterStatus coverageFilterStatus;
 
 	private final MethodCoverageImpl coverage;
 
@@ -71,15 +71,15 @@ public class MethodAnalyzer extends MethodProbesVisitor {
 	 * @param executionData
 	 *            recorded probe date of the containing class or
 	 *            <code>null</code> if the class is not executed at all
-	 * @param coverageFilter
+	 * @param coverageFilterStatus
 	 *            filter which restricts the coverage data
 	 */
 	public MethodAnalyzer(final String name, final String desc,
 			final String signature, final boolean[] executionData,
-			final ICoverageFilter coverageFilter) {
+			final ICoverageFilterStatus coverageFilterStatus) {
 		super();
 		this.executionData = executionData;
-		this.coverageFilter = coverageFilter;
+		this.coverageFilterStatus = coverageFilterStatus;
 		this.coverage = new MethodCoverageImpl(name, desc, signature);
 	}
 
@@ -113,21 +113,19 @@ public class MethodAnalyzer extends MethodProbesVisitor {
 	}
 
 	private void visitInsn() {
-		if (coverageFilter.enabled()) {
-			final Instruction insn = new Instruction(currentLine);
-			instructions.add(insn);
-			if (lastInsn != null) {
-				insn.setPredecessor(lastInsn);
-			}
-			final int labelCount = currentLabel.size();
-			if (labelCount > 0) {
-				for (int i = labelCount; --i >= 0;) {
-					LabelInfo.setInstruction(currentLabel.get(i), insn);
-				}
-				currentLabel.clear();
-			}
-			lastInsn = insn;
+		final Instruction insn = new Instruction(currentLine);
+		instructions.add(insn);
+		if (lastInsn != null) {
+			insn.setPredecessor(lastInsn);
 		}
+		final int labelCount = currentLabel.size();
+		if (labelCount > 0) {
+			for (int i = labelCount; --i >= 0;) {
+				LabelInfo.setInstruction(currentLabel.get(i), insn);
+			}
+			currentLabel.clear();
+		}
+		lastInsn = insn;
 	}
 
 	@Override
@@ -170,10 +168,8 @@ public class MethodAnalyzer extends MethodProbesVisitor {
 
 	@Override
 	public void visitJumpInsn(final int opcode, final Label label) {
-		if (coverageFilter.enabled()) {
-			visitInsn();
-			jumps.add(new Jump(lastInsn, label));
-		}
+		visitInsn();
+		jumps.add(new Jump(lastInsn, label));
 	}
 
 	@Override
@@ -199,16 +195,14 @@ public class MethodAnalyzer extends MethodProbesVisitor {
 	}
 
 	private void visitSwitchInsn(final Label dflt, final Label[] labels) {
-		if (coverageFilter.enabled()) {
-			visitInsn();
-			LabelInfo.resetDone(labels);
-			jumps.add(new Jump(lastInsn, dflt));
-			LabelInfo.setDone(dflt);
-			for (final Label l : labels) {
-				if (!LabelInfo.isDone(l)) {
-					jumps.add(new Jump(lastInsn, l));
-					LabelInfo.setDone(l);
-				}
+		visitInsn();
+		LabelInfo.resetDone(labels);
+		jumps.add(new Jump(lastInsn, dflt));
+		LabelInfo.setDone(dflt);
+		for (final Label l : labels) {
+			if (!LabelInfo.isDone(l)) {
+				jumps.add(new Jump(lastInsn, l));
+				LabelInfo.setDone(l);
 			}
 		}
 	}
@@ -264,9 +258,7 @@ public class MethodAnalyzer extends MethodProbesVisitor {
 		final int id = LabelInfo.getProbeId(label);
 		if (!LabelInfo.isDone(label)) {
 			if (id == LabelInfo.NO_PROBE) {
-				if (coverageFilter.enabled()) {
-					jumps.add(new Jump(lastInsn, label));
-				}
+				jumps.add(new Jump(lastInsn, label));
 			} else {
 				addProbe(id);
 			}
@@ -299,9 +291,12 @@ public class MethodAnalyzer extends MethodProbesVisitor {
 	}
 
 	private void addProbe(final int probeId) {
-		if (coverageFilter.enabled()) {
+		if (lastInsn != null) {
 			lastInsn.addBranch();
-			if (executionData != null && executionData[probeId]) {
+			if (!coverageFilterStatus.enabled()) {
+				// Coverage disabled: Assume is covered
+				coveredProbes.add(lastInsn);
+			} else if (executionData != null && executionData[probeId]) {
 				coveredProbes.add(lastInsn);
 			}
 		}

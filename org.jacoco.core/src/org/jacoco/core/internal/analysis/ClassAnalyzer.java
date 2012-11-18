@@ -12,7 +12,7 @@
  *******************************************************************************/
 package org.jacoco.core.internal.analysis;
 
-import org.jacoco.core.analysis.ICoverageFilter;
+import org.jacoco.core.analysis.ICoverageFilterStatus.ICoverageFilter;
 import org.jacoco.core.analysis.IMethodCoverage;
 import org.jacoco.core.internal.flow.ClassProbesVisitor;
 import org.jacoco.core.internal.flow.MethodProbesVisitor;
@@ -83,8 +83,7 @@ public class ClassAnalyzer extends ClassProbesVisitor {
 			return null;
 		}
 
-		final MethodProbesVisitor visitor = new MethodAnalyzer(
-				stringPool.get(name), stringPool.get(desc),
+		return new MethodAnalyzer(stringPool.get(name), stringPool.get(desc),
 				stringPool.get(signature), executionData, coverageFilter) {
 			@Override
 			public void visitEnd() {
@@ -96,8 +95,6 @@ public class ClassAnalyzer extends ClassProbesVisitor {
 				}
 			}
 		};
-
-		return coverageFilter.getVisitor(visitor);
 	}
 
 	@Override

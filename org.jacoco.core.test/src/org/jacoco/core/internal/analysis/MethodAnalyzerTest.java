@@ -15,8 +15,13 @@ package org.jacoco.core.internal.analysis;
 import static org.junit.Assert.assertEquals;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.Queue;
 
-import org.jacoco.core.analysis.ICoverageFilter;
+import org.jacoco.core.analysis.CommentExclusionsCoverageFilter;
+import org.jacoco.core.analysis.CommentExclusionsCoverageFilter.IDirectivesParser;
+import org.jacoco.core.analysis.CommentExclusionsCoverageFilter.IDirectivesParser.Directive;
+import org.jacoco.core.analysis.ICoverageFilterStatus.ICoverageFilter;
 import org.jacoco.core.analysis.ILine;
 import org.jacoco.core.analysis.IMethodCoverage;
 import org.jacoco.core.internal.flow.IProbeIdGenerator;
@@ -42,12 +47,15 @@ public class MethodAnalyzerTest implements IProbeIdGenerator {
 
 	private IMethodCoverage result;
 
+	private Queue<Directive> coverageDirectives;
+
 	@Before
 	public void setup() {
 		nextProbeId = 0;
 		method = new MethodNode();
 		method.tryCatchBlocks = new ArrayList<TryCatchBlockNode>();
 		probes = new boolean[32];
+		coverageDirectives = new LinkedList<Directive>();
 	}
 
 	public int nextId() {
@@ -92,6 +100,35 @@ public class MethodAnalyzerTest implements IProbeIdGenerator {
 
 		assertLine(1001, 0, 1, 0, 0);
 		assertLine(1002, 0, 1, 0, 0);
+	}
+
+	@Test
+	public void testLinearSequenceCoverageDisabled() {
+		createLinearSequence();
+		coverageDirectives.add(new Directive(1001, false));
+		runMethodAnalzerWithCoverageDirectivesFilter();
+
+		assertLine(1001, 0, 1, 0, 0);
+		assertLine(1002, 0, 1, 0, 0);
+	}
+
+	@Test
+	public void testLinearSequenceCoveragePartiallyDisabled() {
+		createLinearSequence();
+		coverageDirectives.add(new Directive(1002, false));
+		runMethodAnalzerWithCoverageDirectivesFilter();
+
+		assertLine(1001, 1, 0, 0, 0);
+		assertLine(1002, 0, 1, 0, 0);
+	}
+
+	@Test
+	public void testLinearSequenceCoverageNoDirectives() {
+		createLinearSequence();
+		runMethodAnalzerWithCoverageDirectivesFilter();
+
+		assertLine(1001, 1, 0, 0, 0);
+		assertLine(1002, 1, 0, 0, 0);
 	}
 
 	// === Scenario: simple if branch ===
@@ -149,6 +186,31 @@ public class MethodAnalyzerTest implements IProbeIdGenerator {
 		probes[0] = true;
 		probes[1] = true;
 		runMethodAnalzer();
+
+		assertLine(1001, 0, 2, 0, 2);
+		assertLine(1002, 0, 2, 0, 0);
+		assertLine(1003, 0, 2, 0, 0);
+	}
+
+	@Test
+	public void testIfBranchCoverageDisabled() {
+		createIfBranch();
+		coverageDirectives.add(new Directive(1001, false));
+		runMethodAnalzerWithCoverageDirectivesFilter();
+		assertEquals(3, nextProbeId);
+
+		assertLine(1001, 0, 2, 0, 2);
+		assertLine(1002, 0, 2, 0, 0);
+		assertLine(1003, 0, 2, 0, 0);
+	}
+
+	@Test
+	public void testIfBranchElseCoverageDisabled() {
+		createIfBranch();
+		probes[0] = true;
+		coverageDirectives.add(new Directive(1003, false));
+		runMethodAnalzerWithCoverageDirectivesFilter();
+		assertEquals(3, nextProbeId);
 
 		assertLine(1001, 0, 2, 0, 2);
 		assertLine(1002, 0, 2, 0, 0);
@@ -213,6 +275,29 @@ public class MethodAnalyzerTest implements IProbeIdGenerator {
 		assertLine(1001, 0, 2, 0, 2);
 		assertLine(1002, 0, 1, 0, 0);
 		assertLine(1003, 0, 1, 0, 0);
+	}
+
+	@Test
+	public void testIfBranchMergeCoverageDisabled() {
+		createIfBranchMerge();
+		coverageDirectives.add(new Directive(1001, false));
+		runMethodAnalzerWithCoverageDirectivesFilter();
+
+		assertLine(1001, 0, 2, 0, 2);
+		assertLine(1002, 0, 1, 0, 0);
+		assertLine(1003, 0, 1, 0, 0);
+	}
+
+	@Test
+	public void testIfBranchMergeCoverageSkipIf() {
+		createIfBranchMerge();
+		coverageDirectives.add(new Directive(1001, false));
+		coverageDirectives.add(new Directive(1003, true));
+		runMethodAnalzerWithCoverageDirectivesFilter();
+
+		assertLine(1001, 0, 2, 0, 2);
+		assertLine(1002, 0, 1, 0, 0);
+		assertLine(1003, 1, 0, 0, 0);
 	}
 
 	// === Scenario: branch which jump backwards ===
@@ -555,10 +640,30 @@ public class MethodAnalyzerTest implements IProbeIdGenerator {
 	}
 
 	private void runMethodAnalzer() {
+		runMethodAnalzer(new ICoverageFilter.NoFilter());
+	}
+
+	private void runMethodAnalzerWithCoverageDirectivesFilter() {
+		IDirectivesParser parser = new IDirectivesParser() {
+			public Queue<Directive> parseDirectives(String className) {
+				return coverageDirectives;
+			}
+		};
+		ICoverageFilter filter = new CommentExclusionsCoverageFilter(parser);
+		runMethodAnalzer(filter);
+	}
+
+	private void runMethodAnalzer(ICoverageFilter filter) {
 		LabelFlowAnalyzer.markLabels(method);
 		final MethodAnalyzer analyzer = new MethodAnalyzer("doit", "()V", null,
-				probes, new ICoverageFilter.NoFilter());
-		method.accept(new MethodProbesAdapter(analyzer, this));
+				probes, filter);
+
+		// Signal to the filter that a new class is being visited
+		filter.includeClass("TestClass");
+
+		// Run the analysis
+		method.accept(filter
+				.visitMethod(new MethodProbesAdapter(analyzer, this)));
 		result = analyzer.getCoverage();
 	}
 

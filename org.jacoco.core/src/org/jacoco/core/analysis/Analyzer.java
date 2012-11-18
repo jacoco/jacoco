@@ -20,6 +20,7 @@ import java.util.StringTokenizer;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
+import org.jacoco.core.analysis.ICoverageFilterStatus.ICoverageFilter;
 import org.jacoco.core.data.ExecutionData;
 import org.jacoco.core.data.ExecutionDataStore;
 import org.jacoco.core.internal.analysis.ClassAnalyzer;
@@ -101,7 +102,7 @@ public class Analyzer {
 				coverageVisitor.visitCoverage(getCoverage());
 			}
 		};
-		return new ClassProbesAdapter(analyzer);
+		return new ClassProbesAdapter(analyzer, coverageFilter);
 	}
 
 	/**
