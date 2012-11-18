@@ -12,8 +12,7 @@
 package org.jacoco.core.analysis;
 
 import org.jacoco.core.internal.flow.MethodProbesBaseAdapter;
-import org.jacoco.core.internal.flow.MethodProbesVisitor;
-import org.objectweb.asm.MethodVisitor;
+import org.objectweb.asm.ClassVisitor;
 
 /**
  * Restricted interface to an {@link ICoverageFilter} which can only return the
@@ -39,9 +38,18 @@ public interface ICoverageFilterStatus {
 
 		/**
 		 * @param delegate
-		 * @return A {@link MethodVisitor} that wraps the provided delegate or
-		 *         simply returns the provided {@link MethodProbesVisitor}
-		 *         instance if no extra processing is required.
+		 * @return A {@link ClassVisitor} that wraps the provided delegate or
+		 *         simply returns the provided {@link ClassVisitor} instance if
+		 *         no extra processing is required.
+		 */
+		public ClassVisitor visitClass(ClassVisitor delegate);
+
+		/**
+		 * @param delegate
+		 * @return A {@link MethodProbesBaseAdapter} that wraps the provided
+		 *         delegate or simply returns the provided
+		 *         {@link MethodProbesBaseAdapter} instance if no extra
+		 *         processing is required.
 		 */
 		public MethodProbesBaseAdapter visitMethod(
 				MethodProbesBaseAdapter delegate);
@@ -61,6 +69,10 @@ public interface ICoverageFilterStatus {
 
 			public boolean enabled() {
 				return true;
+			}
+
+			public ClassVisitor visitClass(final ClassVisitor delegate) {
+				return delegate;
 			}
 		}
 	}

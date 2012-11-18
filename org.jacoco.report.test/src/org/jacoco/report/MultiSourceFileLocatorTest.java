@@ -20,6 +20,7 @@ import java.io.Reader;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.jacoco.core.data.ISourceFileLocator;
 import org.junit.Before;
 import org.junit.Test;
 

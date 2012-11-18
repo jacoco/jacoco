@@ -12,16 +12,18 @@
 package org.jacoco.core.analysis;
 
 import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
 import java.io.IOException;
+import java.io.Reader;
 import java.util.LinkedList;
 import java.util.Queue;
 
 import org.jacoco.core.analysis.CommentExclusionsCoverageFilter.IDirectivesParser.Directive;
 import org.jacoco.core.analysis.ICoverageFilterStatus.ICoverageFilter;
+import org.jacoco.core.data.ISourceFileLocator;
 import org.jacoco.core.internal.flow.MethodProbesBaseAdapter;
+import org.objectweb.asm.ClassVisitor;
 import org.objectweb.asm.Label;
+import org.objectweb.asm.Opcodes;
 
 /**
  * Turn coverage on/off using ///JACOCO:OFF and ///JACOCO:ON directives.
@@ -59,16 +61,20 @@ public class CommentExclusionsCoverageFilter implements ICoverageFilter {
 		/**
 		 * Return coverage directives associated with the specified className
 		 * 
-		 * @param className
+		 * @param packageName
+		 * @param sourceFilename
 		 * @return Queue of directives in the order which they apply.
 		 */
-		public Queue<Directive> parseDirectives(String className);
+		public Queue<Directive> parseDirectives(String packageName,
+				String sourceFilename);
 	}
 
 	private final IDirectivesParser parser;
 
 	private Queue<Directive> directives;
 	private boolean enabled = true;
+	private String packageName;
+	private String sourceFilename;
 
 	/**
 	 * @param parser
@@ -85,47 +91,81 @@ public class CommentExclusionsCoverageFilter implements ICoverageFilter {
 	public boolean includeClass(final String className) {
 		enabled = true;
 
-		directives = parser.parseDirectives(className);
+		if (className.indexOf('/') > -1) {
+			this.packageName = className.substring(0,
+					className.lastIndexOf('/'));
+		} else {
+			this.packageName = "";
+		}
+
 		return true;
+	}
+
+	public ClassVisitor visitClass(final ClassVisitor delegate) {
+		return new SourcefileClassVisitor(delegate);
+	}
+
+	/**
+	 * Simple Visitor for storing the source filename
+	 */
+	public class SourcefileClassVisitor extends ClassVisitor {
+		/**
+		 * @param cv
+		 */
+		public SourcefileClassVisitor(final ClassVisitor cv) {
+			super(Opcodes.ASM4, cv);
+		}
+
+		@Override
+		public void visitSource(final String source, final String debug) {
+			sourceFilename = source;
+			directives = parser.parseDirectives(packageName, sourceFilename);
+			super.visitSource(source, debug);
+		}
 	}
 
 	/**
 	 * Parser for directives in source code
 	 */
 	public static class SourceFileDirectivesParser implements IDirectivesParser {
-		private final String baseDir;
+		private final ISourceFileLocator sourceLocator;
 
 		/**
-		 * @param baseDir
-		 *            Base directory to look for source code within
+		 * @param sourceLocator
+		 *            Object for locating source code
 		 */
-		public SourceFileDirectivesParser(final String baseDir) {
-			this.baseDir = baseDir;
+		public SourceFileDirectivesParser(final ISourceFileLocator sourceLocator) {
+			this.sourceLocator = sourceLocator;
 		}
 
-		public Queue<Directive> parseDirectives(final String className) {
-
-			final File sourceFile = new File(baseDir, className + ".java");
-
+		public Queue<Directive> parseDirectives(final String packageName,
+				final String sourceFilename) {
 			final Queue<Directive> directives = new LinkedList<Directive>();
 
-			if (sourceFile.exists() && sourceFile.canRead()) {
-				try {
-					final BufferedReader sourceReader = new BufferedReader(
-							new FileReader(sourceFile));
-					int lineNum = 1;
-					String line;
-					while ((line = sourceReader.readLine()) != null) {
-						if (line.trim().equals("///JACOCO:OFF")) {
-							directives.add(new Directive(lineNum, false));
-						} else if (line.trim().equals("///JACOCO:ON")) {
-							directives.add(new Directive(lineNum, true));
+			try {
+				final Reader sourceReader = sourceLocator.getSourceFile(
+						packageName, sourceFilename);
+
+				if (sourceReader != null) {
+					final BufferedReader bufSourceReader = new BufferedReader(
+							sourceReader);
+					try {
+						int lineNum = 1;
+						String line;
+						while ((line = bufSourceReader.readLine()) != null) {
+							if (line.trim().equals("///JACOCO:OFF")) {
+								directives.add(new Directive(lineNum, false));
+							} else if (line.trim().equals("///JACOCO:ON")) {
+								directives.add(new Directive(lineNum, true));
+							}
+							lineNum++;
 						}
-						lineNum++;
+					} finally {
+						bufSourceReader.close();
 					}
-				} catch (final IOException e) {
-					throw new RuntimeException(e);
 				}
+			} catch (final IOException e) {
+				throw new RuntimeException(e);
 			}
 
 			return directives;

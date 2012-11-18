@@ -84,7 +84,8 @@ public class Instrumenter {
 			final ClassWriter writer = new ClassWriter(reader, 0);
 			final ClassVisitor visitor = createInstrumentingVisitor(
 					CRC64.checksum(reader.b), writer);
-			reader.accept(visitor, ClassReader.EXPAND_FRAMES);
+			reader.accept(coverageFilter.visitClass(visitor),
+					ClassReader.EXPAND_FRAMES);
 			return writer.toByteArray();
 		} else {
 			return null;

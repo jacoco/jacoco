@@ -29,6 +29,7 @@ import org.jacoco.core.internal.flow.LabelFlowAnalyzer;
 import org.jacoco.core.internal.flow.MethodProbesAdapter;
 import org.junit.Before;
 import org.junit.Test;
+import org.objectweb.asm.ClassVisitor;
 import org.objectweb.asm.Label;
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.tree.MethodNode;
@@ -645,7 +646,8 @@ public class MethodAnalyzerTest implements IProbeIdGenerator {
 
 	private void runMethodAnalzerWithCoverageDirectivesFilter() {
 		IDirectivesParser parser = new IDirectivesParser() {
-			public Queue<Directive> parseDirectives(String className) {
+			public Queue<Directive> parseDirectives(String packageName,
+					String sourceFilename) {
 				return coverageDirectives;
 			}
 		};
@@ -659,7 +661,11 @@ public class MethodAnalyzerTest implements IProbeIdGenerator {
 				probes, filter);
 
 		// Signal to the filter that a new class is being visited
-		filter.includeClass("TestClass");
+		filter.includeClass("org/test/TestClass");
+		ClassVisitor filterVisitor = filter.visitClass(null);
+		if (filterVisitor != null) {
+			filterVisitor.visitSource("TestClass.java", null);
+		}
 
 		// Run the analysis
 		method.accept(filter

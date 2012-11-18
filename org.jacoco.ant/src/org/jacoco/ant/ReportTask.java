@@ -7,6 +7,7 @@
  *
  * Contributors:
  *    Marc R. Hoffmann - initial API and implementation
+ *    Martin Hare Robertson - filters
  *    
  *******************************************************************************/
 package org.jacoco.ant;
@@ -30,8 +31,11 @@ import org.apache.tools.ant.types.resources.FileResource;
 import org.apache.tools.ant.types.resources.Union;
 import org.apache.tools.ant.util.FileUtils;
 import org.jacoco.core.analysis.Analyzer;
+import org.jacoco.core.analysis.CommentExclusionsCoverageFilter;
+import org.jacoco.core.analysis.CommentExclusionsCoverageFilter.IDirectivesParser;
 import org.jacoco.core.analysis.CoverageBuilder;
 import org.jacoco.core.analysis.IBundleCoverage;
+import org.jacoco.core.analysis.ICoverageFilterStatus.ICoverageFilter;
 import org.jacoco.core.analysis.ICoverageNode;
 import org.jacoco.core.data.ExecFileLoader;
 import org.jacoco.core.data.ExecutionDataStore;
@@ -448,14 +452,14 @@ public class ReportTask extends Task {
 				createReport(groupVisitor, child);
 			}
 		} else {
-			final IBundleCoverage bundle = createBundle(group);
-			log(format("Writing group \"%s\" with %s classes",
-					bundle.getName(),
-					Integer.valueOf(bundle.getClassCounter().getTotalCount())));
 			final SourceFilesElement sourcefiles = group.sourcefiles;
 			final AntResourcesLocator locator = new AntResourcesLocator(
 					sourcefiles.encoding, sourcefiles.tabWidth);
 			locator.addAll(sourcefiles.iterator());
+			final IBundleCoverage bundle = createBundle(group, locator);
+			log(format("Writing group \"%s\" with %s classes",
+					bundle.getName(),
+					Integer.valueOf(bundle.getClassCounter().getTotalCount())));
 			if (!locator.isEmpty()) {
 				checkForMissingDebugInformation(bundle);
 			}
@@ -463,10 +467,19 @@ public class ReportTask extends Task {
 		}
 	}
 
-	private IBundleCoverage createBundle(final GroupElement group)
-			throws IOException {
+	private IBundleCoverage createBundle(final GroupElement group,
+			final AntResourcesLocator locator) throws IOException {
 		final CoverageBuilder builder = new CoverageBuilder();
-		final Analyzer analyzer = new Analyzer(executionDataStore, builder);
+		final Analyzer analyzer;
+		if (locator.isEmpty()) {
+			analyzer = new Analyzer(executionDataStore, builder);
+		} else {
+			final IDirectivesParser parser = new CommentExclusionsCoverageFilter.SourceFileDirectivesParser(
+					locator);
+			final ICoverageFilter filter = new CommentExclusionsCoverageFilter(
+					parser);
+			analyzer = new Analyzer(executionDataStore, builder, filter);
+		}
 		for (final Iterator<?> i = group.classfiles.iterator(); i.hasNext();) {
 			final Resource resource = (Resource) i.next();
 			if (resource.isDirectory() && resource instanceof FileResource) {

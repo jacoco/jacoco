@@ -14,6 +14,7 @@ package org.jacoco.report;
 import java.io.IOException;
 
 import org.jacoco.core.analysis.IBundleCoverage;
+import org.jacoco.core.data.ISourceFileLocator;
 
 /**
  * Output-Interface for hierarchical report structures. To allow sequential

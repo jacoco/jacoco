@@ -115,7 +115,7 @@ public class Analyzer {
 		if (coverageFilter.includeClass(reader.getClassName())) {
 			final ClassVisitor visitor = createAnalyzingVisitor(CRC64
 					.checksum(reader.b));
-			reader.accept(visitor, 0);
+			reader.accept(coverageFilter.visitClass(visitor), 0);
 		}
 	}
 

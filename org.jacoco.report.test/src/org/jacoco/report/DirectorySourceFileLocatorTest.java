@@ -23,6 +23,7 @@ import java.io.OutputStreamWriter;
 import java.io.Reader;
 import java.io.Writer;
 
+import org.jacoco.core.data.ISourceFileLocator;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
