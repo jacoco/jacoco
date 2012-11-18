@@ -71,7 +71,7 @@ public class CommentExclusionsCoverageFilter implements ICoverageFilter {
 
 	private final IDirectivesParser parser;
 
-	private Queue<Directive> directives;
+	private Queue<Directive> directives = new LinkedList<Directive>();
 	private boolean enabled = true;
 	private String packageName;
 	private String sourceFilename;
