@@ -31,8 +31,8 @@
 
   <dependencies>
     <dependency>
-      <groupId>org.ow2.asm</groupId>
-      <artifactId>asm-all</artifactId>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>org.jacoco.report</artifactId>
     </dependency>
   </dependencies>
 
