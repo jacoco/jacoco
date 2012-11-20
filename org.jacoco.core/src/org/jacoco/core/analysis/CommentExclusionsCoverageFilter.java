@@ -20,7 +20,7 @@ import java.util.Queue;
 import org.jacoco.core.analysis.CommentExclusionsCoverageFilter.IDirectivesParser.Directive;
 import org.jacoco.core.analysis.ICoverageFilterStatus.ICoverageFilter;
 import org.jacoco.core.data.ISourceFileLocator;
-import org.jacoco.core.internal.flow.MethodProbesBaseAdapter;
+import org.jacoco.core.internal.flow.MethodProbesVisitor;
 import org.objectweb.asm.ClassVisitor;
 import org.objectweb.asm.Label;
 import org.objectweb.asm.Opcodes;
@@ -72,6 +72,7 @@ public class CommentExclusionsCoverageFilter implements ICoverageFilter {
 	private final IDirectivesParser parser;
 
 	private Queue<Directive> directives = new LinkedList<Directive>();
+	private Directive nextDirective;
 	private boolean enabled = true;
 	private String packageName;
 	private String sourceFilename;
@@ -120,6 +121,7 @@ public class CommentExclusionsCoverageFilter implements ICoverageFilter {
 		public void visitSource(final String source, final String debug) {
 			sourceFilename = source;
 			directives = parser.parseDirectives(packageName, sourceFilename);
+			nextDirective = directives.poll();
 			super.visitSource(source, debug);
 		}
 	}
@@ -173,52 +175,61 @@ public class CommentExclusionsCoverageFilter implements ICoverageFilter {
 
 	}
 
-	public MethodProbesBaseAdapter visitMethod(
-			final MethodProbesBaseAdapter delegate) {
-
-		if (directives.size() == 0) {
+	public MethodProbesVisitor visitMethod(final MethodProbesVisitor delegate) {
+		if ((directives.size() == 0) && (nextDirective == null)) {
 			return delegate;
 		} else {
 			return new LineNumberMethodVisitor(delegate);
 		}
 	}
 
-	private class LineNumberMethodVisitor extends MethodProbesBaseAdapter {
+	private class LineNumberMethodVisitor extends MethodProbesVisitor {
 
-		private Directive nextDirective;
-		private final MethodProbesBaseAdapter delegate;
+		private final MethodProbesVisitor delegate;
 
-		private LineNumberMethodVisitor(final MethodProbesBaseAdapter delegate) {
+		private LineNumberMethodVisitor(final MethodProbesVisitor delegate) {
 			super(delegate);
 			this.delegate = delegate;
-			this.nextDirective = directives.remove();
 		}
 
 		@Override
 		public void visitLineNumber(final int line, final Label start) {
-			boolean insertProbe = false;
-
-			if ((nextDirective != null) && (nextDirective.lineNum <= line)) {
-				if (enabled != nextDirective.coverageOn) {
-					insertProbe = true;
-				}
-			}
-
-			super.visitLineNumber(line, start);
-
-			if (insertProbe) {
-				delegate.visitProbe();
-			}
-
 			if ((nextDirective != null) && (nextDirective.lineNum <= line)) {
 				enabled = nextDirective.coverageOn;
 				nextDirective = directives.poll();
 			}
+
+			super.visitLineNumber(line, start);
+		}
+
+		// --- Simple methods that pass on to the delegate ---
+
+		@Override
+		public void visitProbe(final int probeId) {
+			delegate.visitProbe(probeId);
 		}
 
 		@Override
-		public void visitProbe() {
-			delegate.visitProbe();
+		public void visitJumpInsnWithProbe(final int opcode, final Label label,
+				final int probeId) {
+			delegate.visitJumpInsnWithProbe(opcode, label, probeId);
+		}
+
+		@Override
+		public void visitInsnWithProbe(final int opcode, final int probeId) {
+			delegate.visitInsnWithProbe(opcode, probeId);
+		}
+
+		@Override
+		public void visitTableSwitchInsnWithProbes(final int min,
+				final int max, final Label dflt, final Label[] labels) {
+			delegate.visitTableSwitchInsnWithProbes(min, max, dflt, labels);
+		}
+
+		@Override
+		public void visitLookupSwitchInsnWithProbes(final Label dflt,
+				final int[] keys, final Label[] labels) {
+			delegate.visitLookupSwitchInsnWithProbes(dflt, keys, labels);
 		}
 	}
 }

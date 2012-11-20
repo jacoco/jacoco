@@ -12,7 +12,6 @@
  *******************************************************************************/
 package org.jacoco.core.internal.flow;
 
-import org.jacoco.core.analysis.ICoverageFilterStatus.ICoverageFilter;
 import org.objectweb.asm.ClassVisitor;
 import org.objectweb.asm.Label;
 import org.objectweb.asm.MethodVisitor;
@@ -75,21 +74,15 @@ public class ClassProbesAdapter extends ClassVisitor implements
 
 	private boolean interfaceType;
 
-	private final ICoverageFilter coverageFilter;
-
 	/**
 	 * Creates a new adapter that delegates to the given visitor.
 	 * 
 	 * @param cv
 	 *            instance to delegate to
-	 * @param coverageFilter
-	 *            the filter to apply during this coverage
 	 */
-	public ClassProbesAdapter(final ClassProbesVisitor cv,
-			final ICoverageFilter coverageFilter) {
+	public ClassProbesAdapter(final ClassProbesVisitor cv) {
 		super(Opcodes.ASM4, cv);
 		this.cv = cv;
-		this.coverageFilter = coverageFilter;
 	}
 
 	@Override
@@ -126,12 +119,12 @@ public class ClassProbesAdapter extends ClassVisitor implements
 							EMPTY_METHOD_PROBES_VISITOR, probeCounter);
 					// We do not use the accept() method as ASM resets labels
 					// after every call to accept()
-					instructions.accept(coverageFilter.visitMethod(adapter));
+					instructions.accept(adapter);
 					cv.visitTotalProbeCount(probeCounter.count);
 				}
 				final MethodProbesAdapter adapter = new MethodProbesAdapter(
 						methodProbes, ClassProbesAdapter.this);
-				this.accept(coverageFilter.visitMethod(adapter));
+				this.accept(adapter);
 			}
 		};
 	}

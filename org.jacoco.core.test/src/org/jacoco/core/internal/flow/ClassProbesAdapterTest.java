@@ -13,7 +13,6 @@ package org.jacoco.core.internal.flow;
 
 import static org.junit.Assert.assertEquals;
 
-import org.jacoco.core.analysis.ICoverageFilterStatus.ICoverageFilter;
 import org.junit.Test;
 import org.objectweb.asm.ClassVisitor;
 import org.objectweb.asm.Label;
@@ -44,8 +43,7 @@ public class ClassProbesAdapterTest {
 	@Test
 	public void testProbeCounter() {
 		final MockVisitor mv = new MockVisitor();
-		final ClassProbesAdapter adapter = new ClassProbesAdapter(mv,
-				new ICoverageFilter.NoFilter());
+		final ClassProbesAdapter adapter = new ClassProbesAdapter(mv);
 		assertEquals(0, adapter.nextId());
 		assertEquals(1, adapter.nextId());
 		assertEquals(2, adapter.nextId());
@@ -86,8 +84,7 @@ public class ClassProbesAdapterTest {
 				return new MockMethodVisitor();
 			}
 		};
-		final ClassProbesAdapter adapter = new ClassProbesAdapter(mv,
-				new ICoverageFilter.NoFilter());
+		final ClassProbesAdapter adapter = new ClassProbesAdapter(mv);
 		adapter.visit(Opcodes.V1_5, 0, "Foo", null, "java/lang/Object", null);
 		writeMethod(adapter);
 		writeMethod(adapter);
@@ -131,8 +128,7 @@ public class ClassProbesAdapterTest {
 				return new MockMethodVisitor();
 			}
 		};
-		final ClassProbesAdapter adapter = new ClassProbesAdapter(mv,
-				new ICoverageFilter.NoFilter());
+		final ClassProbesAdapter adapter = new ClassProbesAdapter(mv);
 		adapter.visit(Opcodes.V1_5, Opcodes.ACC_INTERFACE, "Foo", null,
 				"java/lang/Object", null);
 		writeMethod(adapter);
@@ -145,8 +141,7 @@ public class ClassProbesAdapterTest {
 	@Test
 	public void testVisitMethodNullMethodVisitor() {
 		final MockVisitor mv = new MockVisitor();
-		final ClassProbesAdapter adapter = new ClassProbesAdapter(mv,
-				new ICoverageFilter.NoFilter());
+		final ClassProbesAdapter adapter = new ClassProbesAdapter(mv);
 		writeMethod(adapter);
 		writeMethod(adapter);
 		writeMethod(adapter);

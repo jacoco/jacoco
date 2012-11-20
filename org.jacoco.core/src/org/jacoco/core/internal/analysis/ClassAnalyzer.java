@@ -83,8 +83,9 @@ public class ClassAnalyzer extends ClassProbesVisitor {
 			return null;
 		}
 
-		return new MethodAnalyzer(stringPool.get(name), stringPool.get(desc),
-				stringPool.get(signature), executionData, coverageFilter) {
+		final MethodAnalyzer visitor = new MethodAnalyzer(stringPool.get(name),
+				stringPool.get(desc), stringPool.get(signature), executionData,
+				coverageFilter) {
 			@Override
 			public void visitEnd() {
 				super.visitEnd();
@@ -95,6 +96,7 @@ public class ClassAnalyzer extends ClassProbesVisitor {
 				}
 			}
 		};
+		return coverageFilter.visitMethod(visitor);
 	}
 
 	@Override

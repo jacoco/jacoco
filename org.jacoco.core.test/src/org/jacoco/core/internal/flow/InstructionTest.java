@@ -25,7 +25,7 @@ public class InstructionTest {
 
 	@Before
 	public void setup() {
-		instruction = new Instruction(123);
+		instruction = new Instruction(123, true);
 	}
 
 	@Test
@@ -48,14 +48,14 @@ public class InstructionTest {
 
 	@Test
 	public void testSetPredecessor() {
-		final Instruction predecessor = new Instruction(122);
+		final Instruction predecessor = new Instruction(122, true);
 		instruction.setPredecessor(predecessor);
 		assertEquals(1, predecessor.getBranches());
 	}
 
 	@Test
 	public void testSetCovered() {
-		final Instruction predecessor = new Instruction(122);
+		final Instruction predecessor = new Instruction(122, true);
 		instruction.setPredecessor(predecessor);
 		instruction.setCovered();
 		assertEquals(1, instruction.getCoveredBranches());
@@ -68,10 +68,10 @@ public class InstructionTest {
 
 	@Test
 	public void testSetCoveredOnLongSequence() {
-		final Instruction first = new Instruction(0);
+		final Instruction first = new Instruction(0, true);
 		Instruction next = first;
 		for (int i = 0; i < 0x10000; i++) {
-			final Instruction insn = new Instruction(i);
+			final Instruction insn = new Instruction(i, true);
 			insn.setPredecessor(next);
 			next = insn;
 		}

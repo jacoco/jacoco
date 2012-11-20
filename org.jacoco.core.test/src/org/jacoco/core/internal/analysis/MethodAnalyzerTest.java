@@ -198,7 +198,7 @@ public class MethodAnalyzerTest implements IProbeIdGenerator {
 		createIfBranch();
 		coverageDirectives.add(new Directive(1001, false));
 		runMethodAnalzerWithCoverageDirectivesFilter();
-		assertEquals(3, nextProbeId);
+		assertEquals(2, nextProbeId);
 
 		assertLine(1001, 0, 2, 0, 2);
 		assertLine(1002, 0, 2, 0, 0);
@@ -211,9 +211,9 @@ public class MethodAnalyzerTest implements IProbeIdGenerator {
 		probes[0] = true;
 		coverageDirectives.add(new Directive(1003, false));
 		runMethodAnalzerWithCoverageDirectivesFilter();
-		assertEquals(3, nextProbeId);
+		assertEquals(2, nextProbeId);
 
-		assertLine(1001, 0, 2, 0, 2);
+		assertLine(1001, 0, 2, 1, 1);
 		assertLine(1002, 0, 2, 0, 0);
 		assertLine(1003, 0, 2, 0, 0);
 	}
@@ -668,8 +668,8 @@ public class MethodAnalyzerTest implements IProbeIdGenerator {
 		}
 
 		// Run the analysis
-		method.accept(filter
-				.visitMethod(new MethodProbesAdapter(analyzer, this)));
+		method.accept(new MethodProbesAdapter(filter.visitMethod(analyzer),
+				this));
 		result = analyzer.getCoverage();
 	}
 

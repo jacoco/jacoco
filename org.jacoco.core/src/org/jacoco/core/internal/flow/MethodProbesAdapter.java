@@ -13,13 +13,14 @@
 package org.jacoco.core.internal.flow;
 
 import org.objectweb.asm.Label;
+import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
 
 /**
  * Adapter that creates additional visitor events for probes to be inserted into
  * a method.
  */
-public final class MethodProbesAdapter extends MethodProbesBaseAdapter {
+public final class MethodProbesAdapter extends MethodVisitor {
 
 	private final MethodProbesVisitor probesVisitor;
 
@@ -35,14 +36,9 @@ public final class MethodProbesAdapter extends MethodProbesBaseAdapter {
 	 */
 	public MethodProbesAdapter(final MethodProbesVisitor probesVisitor,
 			final IProbeIdGenerator idGenerator) {
-		super(probesVisitor);
+		super(Opcodes.ASM4, probesVisitor);
 		this.probesVisitor = probesVisitor;
 		this.idGenerator = idGenerator;
-	}
-
-	@Override
-	public void visitProbe() {
-		probesVisitor.visitProbe(idGenerator.nextId());
 	}
 
 	@Override

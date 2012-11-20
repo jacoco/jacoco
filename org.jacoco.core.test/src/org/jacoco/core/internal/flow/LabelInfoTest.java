@@ -122,7 +122,7 @@ public class LabelInfoTest {
 
 	@Test
 	public void testSetInstruction() {
-		final Instruction instruction = new Instruction(123);
+		final Instruction instruction = new Instruction(123, true);
 		LabelInfo.setInstruction(label, instruction);
 		assertSame(instruction, LabelInfo.getInstruction(label));
 	}

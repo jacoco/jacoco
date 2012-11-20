@@ -102,7 +102,7 @@ public class Analyzer {
 				coverageVisitor.visitCoverage(getCoverage());
 			}
 		};
-		return new ClassProbesAdapter(analyzer, coverageFilter);
+		return new ClassProbesAdapter(analyzer);
 	}
 
 	/**

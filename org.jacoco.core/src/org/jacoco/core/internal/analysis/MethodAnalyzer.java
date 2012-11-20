@@ -113,7 +113,8 @@ public class MethodAnalyzer extends MethodProbesVisitor {
 	}
 
 	private void visitInsn() {
-		final Instruction insn = new Instruction(currentLine);
+		final Instruction insn = new Instruction(currentLine,
+				coverageFilterStatus.enabled());
 		instructions.add(insn);
 		if (lastInsn != null) {
 			insn.setPredecessor(lastInsn);
@@ -281,10 +282,24 @@ public class MethodAnalyzer extends MethodProbesVisitor {
 		for (final Instruction i : instructions) {
 			final int total = i.getBranches();
 			final int covered = i.getCoveredBranches();
-			final ICounter instrCounter = covered == 0 ? CounterImpl.COUNTER_1_0
-					: CounterImpl.COUNTER_0_1;
-			final ICounter branchCounter = total > 1 ? CounterImpl.getInstance(
-					total - covered, covered) : CounterImpl.COUNTER_0_0;
+			final boolean coverageEnabled = i.isCoverageEnabled();
+			final ICounter instrCounter;
+			if (!coverageEnabled || (covered > 0)) {
+				instrCounter = CounterImpl.COUNTER_0_1;
+			} else {
+				instrCounter = CounterImpl.COUNTER_1_0;
+			}
+			final ICounter branchCounter;
+			if (total > 1) {
+				if (!coverageEnabled) {
+					branchCounter = CounterImpl.getInstance(0, total);
+				} else {
+					branchCounter = CounterImpl.getInstance(total - covered,
+							covered);
+				}
+			} else {
+				branchCounter = CounterImpl.COUNTER_0_0;
+			}
 			coverage.increment(instrCounter, branchCounter, i.getLine());
 		}
 		coverage.incrementMethodCounter();
@@ -293,10 +308,7 @@ public class MethodAnalyzer extends MethodProbesVisitor {
 	private void addProbe(final int probeId) {
 		if (lastInsn != null) {
 			lastInsn.addBranch();
-			if (!coverageFilterStatus.enabled()) {
-				// Coverage disabled: Assume is covered
-				coveredProbes.add(lastInsn);
-			} else if (executionData != null && executionData[probeId]) {
+			if (executionData != null && executionData[probeId]) {
 				coveredProbes.add(lastInsn);
 			}
 		}

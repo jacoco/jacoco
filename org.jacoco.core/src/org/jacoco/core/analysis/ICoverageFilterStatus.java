@@ -11,7 +11,7 @@
  *******************************************************************************/
 package org.jacoco.core.analysis;
 
-import org.jacoco.core.internal.flow.MethodProbesBaseAdapter;
+import org.jacoco.core.internal.flow.MethodProbesVisitor;
 import org.objectweb.asm.ClassVisitor;
 
 /**
@@ -45,14 +45,13 @@ public interface ICoverageFilterStatus {
 		public ClassVisitor visitClass(ClassVisitor delegate);
 
 		/**
-		 * @param delegate
-		 * @return A {@link MethodProbesBaseAdapter} that wraps the provided
+		 * @param visitor
+		 * @return A {@link MethodProbesVisitor} that wraps the provided
 		 *         delegate or simply returns the provided
-		 *         {@link MethodProbesBaseAdapter} instance if no extra
-		 *         processing is required.
+		 *         {@link MethodProbesVisitor} instance if no extra processing
+		 *         is required.
 		 */
-		public MethodProbesBaseAdapter visitMethod(
-				MethodProbesBaseAdapter delegate);
+		public MethodProbesVisitor visitMethod(MethodProbesVisitor visitor);
 
 		/**
 		 * Simple {@link ICoverageFilter} which doesn't filter anything out.
@@ -62,9 +61,9 @@ public interface ICoverageFilterStatus {
 				return true;
 			}
 
-			public MethodProbesBaseAdapter visitMethod(
-					final MethodProbesBaseAdapter delegate) {
-				return delegate;
+			public MethodProbesVisitor visitMethod(
+					final MethodProbesVisitor visitor) {
+				return visitor;
 			}
 
 			public boolean enabled() {
