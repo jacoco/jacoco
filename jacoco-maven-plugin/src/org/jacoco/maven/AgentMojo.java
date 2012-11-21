@@ -233,8 +233,26 @@ public class AgentMojo extends AbstractJacocoMojo {
 	private void prependProperty(final String name, final String value) {
 		final Properties projectProperties = getProject().getProperties();
 		final String oldValue = projectProperties.getProperty(name);
-		final String newValue = oldValue == null ? value : value + ' '
-				+ oldValue;
+		final String newValue;
+
+		if (oldValue != null) {
+			final String agent = String.format("-javaagent:%s",
+					getAgentJarFile());
+			final int start = oldValue.indexOf(agent);
+			if (start >= 0) {
+				final String before = oldValue.substring(0, start);
+				final int end = oldValue.indexOf(' ', start);
+				final String after = end >= 0
+						? oldValue.substring(end)
+						: "";
+				newValue = before + value + after;
+			} else {
+				newValue = value + ' ' + oldValue;
+			}
+		} else {
+			newValue = value;
+		}
+
 		getLog().info(name + " set to " + newValue);
 		projectProperties.put(name, newValue);
 	}
