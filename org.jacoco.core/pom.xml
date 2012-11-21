@@ -20,12 +20,10 @@
   </parent>
 
   <artifactId>org.jacoco.core</artifactId>
-  <packaging>eclipse-plugin</packaging>
 
   <name>JaCoCo :: Core</name>
   <description>JaCoCo Core</description>
 
-  <!-- Note that Tycho doesn't use those dependencies, but we need to declare them for consumers -->
   <dependencies>
     <dependency>
       <groupId>org.ow2.asm</groupId>
@@ -35,27 +33,5 @@
 
   <build>
     <sourceDirectory>src</sourceDirectory>
-
-    <plugins>
-      <!-- We can't define qualified.bundle.version as a project property, because buildQualifier constructed after reading POM by tycho-packaging-plugin -->
-      <!-- but we need it for resource filtering in compliance with Ant build, so here is workaround -->
-      <plugin>
-        <groupId>org.codehaus.groovy.maven</groupId>
-        <artifactId>gmaven-plugin</artifactId>
-        <executions>
-          <execution>
-            <phase>validate</phase>
-            <goals>
-              <goal>execute</goal>
-            </goals>
-            <configuration>
-              <source>
-              project.properties['qualified.bundle.version'] = project.properties['unqualifiedVersion'] + '.' + project.properties['buildQualifier']
-              </source>
-            </configuration>
-          </execution>
-        </executions>
-      </plugin>
-    </plugins>
   </build>
 </project>

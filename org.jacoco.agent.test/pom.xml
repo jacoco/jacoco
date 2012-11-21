@@ -20,7 +20,6 @@
   </parent>
 
   <artifactId>org.jacoco.agent.test</artifactId>
-  <packaging>eclipse-test-plugin</packaging>
 
   <name>JaCoCo :: Test :: Agent</name>
 
@@ -28,7 +27,6 @@
     <jacoco.includes>org.jacoco.agent.*</jacoco.includes>
   </properties>
 
-  <!-- Note that Tycho doesn't use those dependencies -->
   <dependencies>
     <dependency>
       <groupId>${project.groupId}</groupId>
