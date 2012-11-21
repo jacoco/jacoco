@@ -20,12 +20,10 @@
   </parent>
 
   <artifactId>org.jacoco.ant</artifactId>
-  <packaging>eclipse-plugin</packaging>
 
   <name>JaCoCo :: Ant</name>
   <description>JaCoCo Ant Tasks</description>
 
-  <!-- Note that Tycho doesn't use those dependencies, but we need to declare them for consumers -->
   <dependencies>
     <dependency>
       <groupId>${project.groupId}</groupId>
