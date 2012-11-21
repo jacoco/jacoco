@@ -167,6 +167,15 @@ public class AgentMojo extends AbstractJacocoMojo {
 	public void executeMojo() {
 		final String vmArgument = StringUtils.quoteAndEscape(
 				createAgentOptions().getVMArgument(getAgentJarFile()), '"');
+		prependProperty(vmArgument);
+	}
+
+	@Override
+	protected void skipMojo() {
+		prependProperty("");
+	}
+
+	private void prependProperty(String vmArgument) {
 		if (isPropertyNameSpecified()) {
 			prependProperty(propertyName, vmArgument);
 		} else if (isEclipseTestPluginPackaging()) {

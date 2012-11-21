@@ -61,10 +61,12 @@ public abstract class AbstractJacocoMojo extends AbstractMojo {
 		if ("pom".equals(project.getPackaging())) {
 			getLog().info(
 					"Skipping JaCoCo for project with packaging type 'pom'");
+			skipMojo();
 			return;
 		}
 		if (skip) {
 			getLog().info("Skipping JaCoCo execution");
+			skipMojo();
 			return;
 		}
 		executeMojo();
@@ -83,6 +85,12 @@ public abstract class AbstractJacocoMojo extends AbstractMojo {
 	 */
 	protected abstract void executeMojo() throws MojoExecutionException,
 			MojoFailureException;
+
+	/**
+	 * Skips Mojo.
+	 */
+	protected void skipMojo() {
+	}
 
 	/**
 	 * @return Maven project
