@@ -109,8 +109,8 @@ public class MethodAnalyzerTest implements IProbeIdGenerator {
 		coverageDirectives.add(new Directive(1001, false));
 		runMethodAnalzerWithCoverageDirectivesFilter();
 
-		assertLine(1001, 0, 1, 0, 0);
-		assertLine(1002, 0, 1, 0, 0);
+		assertLine(1001, 0, 0, 0, 0);
+		assertLine(1002, 0, 0, 0, 0);
 	}
 
 	@Test
@@ -120,7 +120,7 @@ public class MethodAnalyzerTest implements IProbeIdGenerator {
 		runMethodAnalzerWithCoverageDirectivesFilter();
 
 		assertLine(1001, 1, 0, 0, 0);
-		assertLine(1002, 0, 1, 0, 0);
+		assertLine(1002, 0, 0, 0, 0);
 	}
 
 	@Test
@@ -200,9 +200,9 @@ public class MethodAnalyzerTest implements IProbeIdGenerator {
 		runMethodAnalzerWithCoverageDirectivesFilter();
 		assertEquals(2, nextProbeId);
 
-		assertLine(1001, 0, 2, 0, 2);
-		assertLine(1002, 0, 2, 0, 0);
-		assertLine(1003, 0, 2, 0, 0);
+		assertLine(1001, 0, 0, 0, 0);
+		assertLine(1002, 0, 0, 0, 0);
+		assertLine(1003, 0, 0, 0, 0);
 	}
 
 	@Test
@@ -215,7 +215,7 @@ public class MethodAnalyzerTest implements IProbeIdGenerator {
 
 		assertLine(1001, 0, 2, 1, 1);
 		assertLine(1002, 0, 2, 0, 0);
-		assertLine(1003, 0, 2, 0, 0);
+		assertLine(1003, 0, 0, 0, 0);
 	}
 
 	// === Scenario: branch which merges back ===
@@ -284,9 +284,9 @@ public class MethodAnalyzerTest implements IProbeIdGenerator {
 		coverageDirectives.add(new Directive(1001, false));
 		runMethodAnalzerWithCoverageDirectivesFilter();
 
-		assertLine(1001, 0, 2, 0, 2);
-		assertLine(1002, 0, 1, 0, 0);
-		assertLine(1003, 0, 1, 0, 0);
+		assertLine(1001, 0, 0, 0, 0);
+		assertLine(1002, 0, 0, 0, 0);
+		assertLine(1003, 0, 0, 0, 0);
 	}
 
 	@Test
@@ -296,8 +296,8 @@ public class MethodAnalyzerTest implements IProbeIdGenerator {
 		coverageDirectives.add(new Directive(1003, true));
 		runMethodAnalzerWithCoverageDirectivesFilter();
 
-		assertLine(1001, 0, 2, 0, 2);
-		assertLine(1002, 0, 1, 0, 0);
+		assertLine(1001, 0, 0, 0, 0);
+		assertLine(1002, 0, 0, 0, 0);
 		assertLine(1003, 1, 0, 0, 0);
 	}
 

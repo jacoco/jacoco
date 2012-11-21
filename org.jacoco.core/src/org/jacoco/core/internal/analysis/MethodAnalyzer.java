@@ -284,7 +284,9 @@ public class MethodAnalyzer extends MethodProbesVisitor {
 			final int covered = i.getCoveredBranches();
 			final boolean coverageEnabled = i.isCoverageEnabled();
 			final ICounter instrCounter;
-			if (!coverageEnabled || (covered > 0)) {
+			if (!coverageEnabled) {
+				instrCounter = CounterImpl.COUNTER_0_0;
+			} else if (covered > 0) {
 				instrCounter = CounterImpl.COUNTER_0_1;
 			} else {
 				instrCounter = CounterImpl.COUNTER_1_0;
@@ -292,7 +294,7 @@ public class MethodAnalyzer extends MethodProbesVisitor {
 			final ICounter branchCounter;
 			if (total > 1) {
 				if (!coverageEnabled) {
-					branchCounter = CounterImpl.getInstance(0, total);
+					branchCounter = CounterImpl.getInstance(0, 0);
 				} else {
 					branchCounter = CounterImpl.getInstance(total - covered,
 							covered);
