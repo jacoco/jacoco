@@ -14,6 +14,7 @@ package org.jacoco.maven;
 
 import java.io.File;
 import java.io.IOException;
+import java.math.BigDecimal;
 
 import org.apache.maven.plugin.MojoExecutionException;
 import org.jacoco.core.analysis.IBundleCoverage;
@@ -155,10 +156,14 @@ public class CheckMojo extends AbstractJacocoMojo {
 		if (ratio < checkRatio) {
 			this.getLog().warn(
 					String.format(INSUFFICIENT_COVERAGE, entity.name(),
-							Double.valueOf(ratio), Double.valueOf(checkRatio)));
+							truncate(ratio), truncate(checkRatio)));
 			passed = false;
 		}
 		return passed;
+	}
+
+	private BigDecimal truncate(final double value) {
+		return new BigDecimal(value).setScale(2, BigDecimal.ROUND_FLOOR);
 	}
 
 	private void handleFailure() throws MojoExecutionException {
