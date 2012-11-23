@@ -94,29 +94,34 @@ public class ClassProbesAdapter extends ClassVisitor implements
 	}
 
 	@Override
-	public final MethodVisitor visitMethod(final int access, final String name,
-			final String desc, final String signature, final String[] exceptions) {
-		final MethodVisitor preMv = cv.preVisitMethod(access, name, desc,
-				signature, exceptions);
-		final MethodProbesVisitor methodProbes;
-		final MethodProbesVisitor mv = cv.visitMethod(access, name, desc,
-				signature, exceptions);
-		if (mv == null) {
-			// We need to visit the method in any case, otherwise probe ids
-			// are not reproducible
-			methodProbes = EMPTY_METHOD_PROBES_VISITOR;
-		} else {
-			methodProbes = mv;
-		}
-		return new MethodSanitizer(null, access, name, desc, signature,
-				exceptions) {
+	public final MethodVisitor visitMethod(final int cvAccess,
+			final String cvName, final String cvDesc, final String cvSignature,
+			final String[] cvExceptions) {
+
+		return new MethodSanitizer(null, cvAccess, cvName, cvDesc, cvSignature,
+				cvExceptions) {
 
 			@Override
 			public void visitEnd() {
 				super.visitEnd();
 
+				final MethodVisitor preMv = cv.preVisitMethod(cvAccess, cvName,
+						cvDesc, cvSignature, cvExceptions);
+
 				if (preMv != null) {
 					this.accept(preMv);
+				}
+
+				final MethodProbesVisitor methodProbes;
+				final MethodProbesVisitor mv = cv.visitMethod(cvAccess, cvName,
+						cvDesc, cvSignature, cvExceptions);
+				if (mv == null) {
+					// We need to visit the method in any case, otherwise probe
+					// ids
+					// are not reproducible
+					methodProbes = EMPTY_METHOD_PROBES_VISITOR;
+				} else {
+					methodProbes = mv;
 				}
 
 				LabelFlowAnalyzer.markLabels(this);
