@@ -115,13 +115,13 @@ public class EmptyConstructorCoverageFilter implements ICoverageFilter {
 
 		@Override
 		public void visitCode() {
-			methodState = State.NOT_EMPTY;
+			// methodState = State.NOT_EMPTY;
 			super.visitCode();
 		}
 
 		@Override
 		public void visitEnd() {
-			methodState = State.NOT_EMPTY;
+			// methodState = State.NOT_EMPTY;
 			super.visitEnd();
 		}
 
@@ -166,7 +166,7 @@ public class EmptyConstructorCoverageFilter implements ICoverageFilter {
 
 		@Override
 		public void visitLabel(final Label label) {
-			methodState = State.NOT_EMPTY;
+			// methodState = State.NOT_EMPTY;
 			super.visitLabel(label);
 		}
 
@@ -178,7 +178,7 @@ public class EmptyConstructorCoverageFilter implements ICoverageFilter {
 
 		@Override
 		public void visitLineNumber(final int line, final Label start) {
-			methodState = State.NOT_EMPTY;
+			// methodState = State.NOT_EMPTY;
 			super.visitLineNumber(line, start);
 		}
 
@@ -186,7 +186,7 @@ public class EmptyConstructorCoverageFilter implements ICoverageFilter {
 		public void visitLocalVariable(final String name, final String desc,
 				final String signature, final Label start, final Label end,
 				final int index) {
-			methodState = State.NOT_EMPTY;
+			// methodState = State.NOT_EMPTY;
 			super.visitLocalVariable(name, desc, signature, start, end, index);
 		}
 
@@ -199,7 +199,7 @@ public class EmptyConstructorCoverageFilter implements ICoverageFilter {
 
 		@Override
 		public void visitMaxs(final int maxStack, final int maxLocals) {
-			methodState = State.NOT_EMPTY;
+			// methodState = State.NOT_EMPTY;
 			super.visitMaxs(maxStack, maxLocals);
 		}
 
