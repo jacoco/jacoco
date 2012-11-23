@@ -16,6 +16,8 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.StringTokenizer;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
@@ -81,7 +83,15 @@ public class Analyzer {
 		this.executionData = executionData;
 		this.coverageVisitor = coverageVisitor;
 		this.stringPool = new StringPool();
-		this.coverageFilter = coverageFilter;
+
+		final List<ICoverageFilter> filters = new ArrayList<ICoverageFilter>();
+		filters.add(new ImplicitEnumMethodsCoverageFilter());
+		filters.add(new EmptyConstructorCoverageFilter());
+		if (coverageFilter != null) {
+			filters.add(coverageFilter);
+		}
+
+		this.coverageFilter = new CompositeCoverageFilter(filters);
 	}
 
 	/**

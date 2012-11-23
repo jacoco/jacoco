@@ -29,6 +29,12 @@ public class ClassProbesAdapterTest {
 		int count;
 
 		@Override
+		public MethodVisitor preVisitMethod(int access, String name,
+				String desc, String signature, String[] exceptions) {
+			return null;
+		}
+
+		@Override
 		public MethodProbesVisitor visitMethod(int access, String name,
 				String desc, String signature, String[] exceptions) {
 			return null;

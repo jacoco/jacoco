@@ -23,6 +23,7 @@ import org.jacoco.core.data.ISourceFileLocator;
 import org.jacoco.core.internal.flow.MethodProbesVisitor;
 import org.objectweb.asm.ClassVisitor;
 import org.objectweb.asm.Label;
+import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
 
 /**
@@ -74,7 +75,7 @@ public class CommentExclusionsCoverageFilter implements ICoverageFilter {
 	private Queue<Directive> directives = new LinkedList<Directive>();
 	private Directive nextDirective;
 	private boolean enabled = true;
-	private String packageName;
+	private String packageName = "";
 	private String sourceFilename;
 
 	/**
@@ -175,7 +176,13 @@ public class CommentExclusionsCoverageFilter implements ICoverageFilter {
 
 	}
 
-	public MethodProbesVisitor visitMethod(final MethodProbesVisitor delegate) {
+	public MethodVisitor preVisitMethod(final String name,
+			final String signature, final MethodVisitor delegate) {
+		return delegate;
+	}
+
+	public MethodProbesVisitor visitMethod(final String name,
+			final String signature, final MethodProbesVisitor delegate) {
 		if ((directives.size() == 0) && (nextDirective == null)) {
 			return delegate;
 		} else {

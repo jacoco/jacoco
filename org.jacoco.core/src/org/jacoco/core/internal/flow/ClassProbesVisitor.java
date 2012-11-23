@@ -12,6 +12,7 @@
 package org.jacoco.core.internal.flow;
 
 import org.objectweb.asm.ClassVisitor;
+import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
 
 /**
@@ -36,6 +37,17 @@ public abstract class ClassProbesVisitor extends ClassVisitor {
 	public ClassProbesVisitor(final ClassVisitor cv) {
 		super(Opcodes.ASM4, cv);
 	}
+
+	/**
+	 * @param access
+	 * @param name
+	 * @param desc
+	 * @param signature
+	 * @param exceptions
+	 * @return
+	 */
+	public abstract MethodVisitor preVisitMethod(int access, String name,
+			String desc, String signature, String[] exceptions);
 
 	/**
 	 * When visiting a method we need a {@link MethodProbesVisitor} to handle

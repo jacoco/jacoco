@@ -668,8 +668,8 @@ public class MethodAnalyzerTest implements IProbeIdGenerator {
 		}
 
 		// Run the analysis
-		method.accept(new MethodProbesAdapter(filter.visitMethod(analyzer),
-				this));
+		method.accept(new MethodProbesAdapter(filter.visitMethod("doit", "()V",
+				analyzer), this));
 		result = analyzer.getCoverage();
 	}
 

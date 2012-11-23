@@ -96,6 +96,8 @@ public class ClassProbesAdapter extends ClassVisitor implements
 	@Override
 	public final MethodVisitor visitMethod(final int access, final String name,
 			final String desc, final String signature, final String[] exceptions) {
+		final MethodVisitor preMv = cv.preVisitMethod(access, name, desc,
+				signature, exceptions);
 		final MethodProbesVisitor methodProbes;
 		final MethodProbesVisitor mv = cv.visitMethod(access, name, desc,
 				signature, exceptions);
@@ -112,6 +114,11 @@ public class ClassProbesAdapter extends ClassVisitor implements
 			@Override
 			public void visitEnd() {
 				super.visitEnd();
+
+				if (preMv != null) {
+					this.accept(preMv);
+				}
+
 				LabelFlowAnalyzer.markLabels(this);
 				if (interfaceType) {
 					final ProbeCounter probeCounter = new ProbeCounter();

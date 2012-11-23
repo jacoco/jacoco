@@ -84,6 +84,12 @@ public class ClassInstrumenter extends ClassProbesVisitor {
 	}
 
 	@Override
+	public MethodVisitor preVisitMethod(final int access, final String name,
+			final String desc, final String signature, final String[] exceptions) {
+		return null;
+	}
+
+	@Override
 	public MethodProbesVisitor visitMethod(final int access, final String name,
 			final String desc, final String signature, final String[] exceptions) {
 

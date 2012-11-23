@@ -13,6 +13,7 @@ package org.jacoco.core.analysis;
 
 import org.jacoco.core.internal.flow.MethodProbesVisitor;
 import org.objectweb.asm.ClassVisitor;
+import org.objectweb.asm.MethodVisitor;
 
 /**
  * Restricted interface to an {@link ICoverageFilter} which can only return the
@@ -45,13 +46,32 @@ public interface ICoverageFilterStatus {
 		public ClassVisitor visitClass(ClassVisitor delegate);
 
 		/**
-		 * @param visitor
+		 * @param name
+		 *            Method name
+		 * @param signature
+		 *            Method signature
+		 * @param delegate
+		 *            may be null
+		 * @return A {@link MethodVisitor} that wraps the provided delegate or
+		 *         simply returns the provided {@link MethodVisitor} instance if
+		 *         no extra processing is required.
+		 */
+		public MethodVisitor preVisitMethod(final String name,
+				final String signature, MethodVisitor delegate);
+
+		/**
+		 * @param name
+		 *            Method name
+		 * @param signature
+		 *            Method signature
+		 * @param delegate
 		 * @return A {@link MethodProbesVisitor} that wraps the provided
 		 *         delegate or simply returns the provided
 		 *         {@link MethodProbesVisitor} instance if no extra processing
 		 *         is required.
 		 */
-		public MethodProbesVisitor visitMethod(MethodProbesVisitor visitor);
+		public MethodProbesVisitor visitMethod(String name, String signature,
+				MethodProbesVisitor delegate);
 
 		/**
 		 * Simple {@link ICoverageFilter} which doesn't filter anything out.
@@ -61,17 +81,24 @@ public interface ICoverageFilterStatus {
 				return true;
 			}
 
-			public MethodProbesVisitor visitMethod(
+			public ClassVisitor visitClass(final ClassVisitor delegate) {
+				return delegate;
+			}
+
+			public MethodVisitor preVisitMethod(final String name,
+					final String signature, final MethodVisitor delegate) {
+				return delegate;
+			}
+
+			public MethodProbesVisitor visitMethod(final String name,
+					final String signature,
+
 					final MethodProbesVisitor visitor) {
 				return visitor;
 			}
 
 			public boolean enabled() {
 				return true;
-			}
-
-			public ClassVisitor visitClass(final ClassVisitor delegate) {
-				return delegate;
 			}
 		}
 	}

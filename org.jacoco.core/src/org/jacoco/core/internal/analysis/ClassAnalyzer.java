@@ -16,6 +16,7 @@ import org.jacoco.core.analysis.ICoverageFilterStatus.ICoverageFilter;
 import org.jacoco.core.analysis.IMethodCoverage;
 import org.jacoco.core.internal.flow.ClassProbesVisitor;
 import org.jacoco.core.internal.flow.MethodProbesVisitor;
+import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
 
 /**
@@ -75,6 +76,12 @@ public class ClassAnalyzer extends ClassProbesVisitor {
 	}
 
 	@Override
+	public MethodVisitor preVisitMethod(final int access, final String name,
+			final String desc, final String signature, final String[] exceptions) {
+		return coverageFilter.preVisitMethod(name, signature, null);
+	}
+
+	@Override
 	public MethodProbesVisitor visitMethod(final int access, final String name,
 			final String desc, final String signature, final String[] exceptions) {
 
@@ -96,7 +103,8 @@ public class ClassAnalyzer extends ClassProbesVisitor {
 				}
 			}
 		};
-		return coverageFilter.visitMethod(visitor);
+
+		return coverageFilter.visitMethod(name, desc, visitor);
 	}
 
 	@Override
