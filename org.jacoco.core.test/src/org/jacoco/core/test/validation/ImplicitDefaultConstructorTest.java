@@ -26,13 +26,13 @@ public class ImplicitDefaultConstructorTest extends ValidationTestBase {
 
 	@Override
 	protected void run(final Class<?> targetClass) throws Exception {
-		targetClass.newInstance();
+		// Implicit default constructor is ignored
 	}
 
 	@Test
 	public void testCoverageResult() {
 
-		assertLine("classdef", ICounter.FULLY_COVERED);
+		assertLine("classdef", ICounter.EMPTY);
 
 	}
 

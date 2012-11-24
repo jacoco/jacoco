@@ -48,7 +48,7 @@ public class CompositeCoverageFilter implements ICoverageFilter {
 		final Iterator<ICoverageFilter> iterator = filters.iterator();
 		while (iterator.hasNext()) {
 			final ICoverageFilter filter = iterator.next();
-			include = include && filter.enabled();
+			include = include && filter.includeClass(className);
 		}
 		return include;
 	}
@@ -64,23 +64,23 @@ public class CompositeCoverageFilter implements ICoverageFilter {
 	}
 
 	public MethodVisitor preVisitMethod(final String name,
-			final String signature, final MethodVisitor delegate) {
+			final String desc, final MethodVisitor delegate) {
 		MethodVisitor visitor = delegate;
 		final Iterator<ICoverageFilter> iterator = filters.iterator();
 		while (iterator.hasNext()) {
 			final ICoverageFilter filter = iterator.next();
-			visitor = filter.preVisitMethod(name, signature, visitor);
+			visitor = filter.preVisitMethod(name, desc, visitor);
 		}
 		return visitor;
 	}
 
 	public MethodProbesVisitor visitMethod(final String name,
-			final String signature, final MethodProbesVisitor delegate) {
+			final String desc, final MethodProbesVisitor delegate) {
 		MethodProbesVisitor visitor = delegate;
 		final Iterator<ICoverageFilter> iterator = filters.iterator();
 		while (iterator.hasNext()) {
 			final ICoverageFilter filter = iterator.next();
-			visitor = filter.visitMethod(name, signature, visitor);
+			visitor = filter.visitMethod(name, desc, visitor);
 		}
 		return visitor;
 	}

@@ -78,7 +78,7 @@ public class ClassAnalyzer extends ClassProbesVisitor {
 	@Override
 	public MethodVisitor preVisitMethod(final int access, final String name,
 			final String desc, final String signature, final String[] exceptions) {
-		return coverageFilter.preVisitMethod(name, signature, null);
+		return coverageFilter.preVisitMethod(name, desc, null);
 	}
 
 	@Override
@@ -111,5 +111,4 @@ public class ClassAnalyzer extends ClassProbesVisitor {
 	public void visitTotalProbeCount(final int count) {
 		// nothing to do
 	}
-
 }

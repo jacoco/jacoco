@@ -7,6 +7,7 @@
  *
  * Contributors:
  *    Marc R. Hoffmann - initial API and implementation
+ *    Martin Hare Robertson - filters
  *    
  *******************************************************************************/
 package org.jacoco.core.test.validation;
@@ -34,7 +35,7 @@ public class PrivateEmptyDefaultConstructorTest extends ValidationTestBase {
 	public void testCoverageResult() {
 
 		assertLine("classdef", ICounter.EMPTY);
-		assertLine("constructor", ICounter.NOT_COVERED);
+		assertLine("constructor", ICounter.EMPTY);
 
 	}
 

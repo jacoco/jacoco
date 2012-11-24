@@ -177,12 +177,12 @@ public class CommentExclusionsCoverageFilter implements ICoverageFilter {
 	}
 
 	public MethodVisitor preVisitMethod(final String name,
-			final String signature, final MethodVisitor delegate) {
+			final String desc, final MethodVisitor delegate) {
 		return delegate;
 	}
 
 	public MethodProbesVisitor visitMethod(final String name,
-			final String signature, final MethodProbesVisitor delegate) {
+			final String desc, final MethodProbesVisitor delegate) {
 		if ((directives.size() == 0) && (nextDirective == null)) {
 			return delegate;
 		} else {

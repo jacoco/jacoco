@@ -109,7 +109,7 @@ public class ClassProbesAdapter extends ClassVisitor implements
 						cvDesc, cvSignature, cvExceptions);
 
 				if (preMv != null) {
-					this.accept(preMv);
+					instructions.accept(preMv);
 				}
 
 				final MethodProbesVisitor methodProbes;

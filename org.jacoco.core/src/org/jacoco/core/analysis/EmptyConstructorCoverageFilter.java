@@ -45,10 +45,10 @@ public class EmptyConstructorCoverageFilter implements ICoverageFilter {
 		return delegate;
 	}
 
-	public MethodVisitor preVisitMethod(final String name,
-			final String signature, final MethodVisitor delegate) {
+	public MethodVisitor preVisitMethod(final String name, final String desc,
+			final MethodVisitor delegate) {
 		methodState = State.START;
-		if ("<init>".equals(name) && "()V".equals(signature)) {
+		if ("<init>".equals(name) && "()V".equals(desc)) {
 			return new EmptyMethodVisitor(delegate);
 		} else {
 			return delegate;
@@ -238,7 +238,7 @@ public class EmptyConstructorCoverageFilter implements ICoverageFilter {
 	}
 
 	public MethodProbesVisitor visitMethod(final String name,
-			final String signature, final MethodProbesVisitor delegate) {
+			final String desc, final MethodProbesVisitor delegate) {
 		if (methodState == State.EMPTY) {
 			enabled = false;
 		} else {

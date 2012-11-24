@@ -48,7 +48,7 @@ public interface ICoverageFilterStatus {
 		/**
 		 * @param name
 		 *            Method name
-		 * @param signature
+		 * @param desc
 		 *            Method signature
 		 * @param delegate
 		 *            may be null
@@ -57,12 +57,12 @@ public interface ICoverageFilterStatus {
 		 *         no extra processing is required.
 		 */
 		public MethodVisitor preVisitMethod(final String name,
-				final String signature, MethodVisitor delegate);
+				final String desc, MethodVisitor delegate);
 
 		/**
 		 * @param name
 		 *            Method name
-		 * @param signature
+		 * @param desc
 		 *            Method signature
 		 * @param delegate
 		 * @return A {@link MethodProbesVisitor} that wraps the provided
@@ -70,7 +70,7 @@ public interface ICoverageFilterStatus {
 		 *         {@link MethodProbesVisitor} instance if no extra processing
 		 *         is required.
 		 */
-		public MethodProbesVisitor visitMethod(String name, String signature,
+		public MethodProbesVisitor visitMethod(String name, String desc,
 				MethodProbesVisitor delegate);
 
 		/**
@@ -86,12 +86,12 @@ public interface ICoverageFilterStatus {
 			}
 
 			public MethodVisitor preVisitMethod(final String name,
-					final String signature, final MethodVisitor delegate) {
+					final String desc, final MethodVisitor delegate) {
 				return delegate;
 			}
 
 			public MethodProbesVisitor visitMethod(final String name,
-					final String signature,
+					final String desc,
 
 					final MethodProbesVisitor visitor) {
 				return visitor;

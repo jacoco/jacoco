@@ -48,26 +48,25 @@ public class ImplicitEnumMethodsCoverageFilter implements ICoverageFilter {
 		public void visit(final int version, final int access,
 				final String name, final String signature,
 				final String superName, final String[] interfaces) {
-			isEnum = ((access | Opcodes.ACC_ENUM) == 1);
+			isEnum = ((access | Opcodes.ACC_ENUM) != 0);
 			super.visit(version, access, name, signature, superName, interfaces);
 		}
 	}
 
-	public MethodVisitor preVisitMethod(final String name,
-			final String signature, final MethodVisitor delegate) {
+	public MethodVisitor preVisitMethod(final String name, final String desc,
+			final MethodVisitor delegate) {
 		return delegate;
 	}
 
 	public MethodProbesVisitor visitMethod(final String name,
-			final String signature, final MethodProbesVisitor delegate) {
+			final String desc, final MethodProbesVisitor delegate) {
 		if (isEnum) {
 			if ("values".equals(name)) {
-				if (("()[L" + className + ";").equals(signature)) {
+				if (("()[L" + className + ";").equals(desc)) {
 					enabled = false;
 				}
 			} else if ("valueOf".equals(name)) {
-				if (("(Ljava/lang/String;)L" + className + ";")
-						.equals(signature)) {
+				if (("(Ljava/lang/String;)L" + className + ";").equals(desc)) {
 					enabled = false;
 				}
 			} else {
