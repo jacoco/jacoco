@@ -301,6 +301,9 @@ public class SynchronizedExitCoverageFilter implements ICoverageFilter {
 		@Override
 		public void visitInsnWithProbe(final int opcode, final int probeId) {
 			delegate.visitInsnWithProbe(opcode, probeId);
+			if (!enabled && (opcode == Opcodes.ATHROW)) {
+				enabled = true;
+			}
 		}
 
 		@Override
