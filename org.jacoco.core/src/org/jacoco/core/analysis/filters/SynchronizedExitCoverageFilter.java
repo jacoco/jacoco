@@ -32,7 +32,7 @@ import org.objectweb.asm.Opcodes;
 public class SynchronizedExitCoverageFilter implements ICoverageFilter {
 
 	private static enum State {
-		START, HANDLER, ALOAD, MONITEREXIT;
+		START, HANDLER, MONITEREXIT;
 	}
 
 	private final LinkedList<Boolean> handlerEnabled = new LinkedList<Boolean>();
@@ -53,6 +53,7 @@ public class SynchronizedExitCoverageFilter implements ICoverageFilter {
 
 	public MethodVisitor preVisitMethod(final String name, final String desc,
 			final MethodVisitor delegate) {
+		enabled = true;
 		handlerEnabled.clear();
 		return new SyncAnalyzerVisitor(delegate);
 	}
@@ -85,8 +86,9 @@ public class SynchronizedExitCoverageFilter implements ICoverageFilter {
 
 		@Override
 		public void visitVarInsn(final int opcode, final int var) {
-			if ((syncExitState == State.HANDLER) && (opcode == Opcodes.ALOAD)) {
-				syncExitState = State.ALOAD;
+			if (((syncExitState == State.HANDLER) || (syncExitState == State.MONITEREXIT))
+					&& ((opcode == Opcodes.ALOAD) || (opcode == Opcodes.ASTORE))) {
+				// Ignore
 			} else {
 				syncExitState = State.START;
 			}
@@ -95,7 +97,7 @@ public class SynchronizedExitCoverageFilter implements ICoverageFilter {
 
 		@Override
 		public void visitInsn(final int opcode) {
-			if ((syncExitState == State.ALOAD)
+			if ((syncExitState == State.HANDLER)
 					&& Opcodes.MONITOREXIT == opcode) {
 				syncExitState = State.MONITEREXIT;
 			} else if ((syncExitState == State.MONITEREXIT)
@@ -155,7 +157,7 @@ public class SynchronizedExitCoverageFilter implements ICoverageFilter {
 		@Override
 		public void visitFrame(final int type, final int nLocal,
 				final Object[] local, final int nStack, final Object[] stack) {
-			syncExitState = State.START;
+			// syncExitState = State.START;
 			super.visitFrame(type, nLocal, local, nStack, stack);
 		}
 
