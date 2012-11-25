@@ -16,9 +16,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.jacoco.core.analysis.ICounter;
-import org.jacoco.core.analysis.ICoverageFilterStatus;
 import org.jacoco.core.analysis.IMethodCoverage;
 import org.jacoco.core.analysis.ISourceNode;
+import org.jacoco.core.analysis.filters.ICoverageFilterStatus;
 import org.jacoco.core.internal.flow.Instruction;
 import org.jacoco.core.internal.flow.LabelInfo;
 import org.jacoco.core.internal.flow.MethodProbesVisitor;

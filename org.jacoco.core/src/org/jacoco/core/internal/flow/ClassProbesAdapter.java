@@ -16,6 +16,7 @@ import org.objectweb.asm.ClassVisitor;
 import org.objectweb.asm.Label;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
+import org.objectweb.asm.tree.TryCatchBlockNode;
 
 /**
  * A {@link org.objectweb.asm.ClassVisitor} that calculates probes for every
@@ -109,6 +110,12 @@ public class ClassProbesAdapter extends ClassVisitor implements
 						cvDesc, cvSignature, cvExceptions);
 
 				if (preMv != null) {
+					final int n = tryCatchBlocks == null ? 0 : tryCatchBlocks
+							.size();
+					for (int i = 0; i < n; ++i) {
+						((TryCatchBlockNode) tryCatchBlocks.get(i))
+								.accept(preMv);
+					}
 					instructions.accept(preMv);
 				}
 

@@ -9,7 +9,7 @@
  *    Martin Hare Robertson - initial API and implementation
  *    
  *******************************************************************************/
-package org.jacoco.core.analysis;
+package org.jacoco.core.analysis.filters;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -17,8 +17,8 @@ import java.io.Reader;
 import java.util.LinkedList;
 import java.util.Queue;
 
-import org.jacoco.core.analysis.CommentExclusionsCoverageFilter.IDirectivesParser.Directive;
-import org.jacoco.core.analysis.ICoverageFilterStatus.ICoverageFilter;
+import org.jacoco.core.analysis.filters.CommentExclusionsCoverageFilter.IDirectivesParser.Directive;
+import org.jacoco.core.analysis.filters.ICoverageFilterStatus.ICoverageFilter;
 import org.jacoco.core.data.ISourceFileLocator;
 import org.jacoco.core.internal.flow.MethodProbesVisitor;
 import org.objectweb.asm.ClassVisitor;

@@ -12,7 +12,7 @@
  *******************************************************************************/
 package org.jacoco.core.internal.analysis;
 
-import org.jacoco.core.analysis.ICoverageFilterStatus.ICoverageFilter;
+import org.jacoco.core.analysis.filters.ICoverageFilterStatus.ICoverageFilter;
 import org.jacoco.core.analysis.IMethodCoverage;
 import org.jacoco.core.internal.flow.ClassProbesVisitor;
 import org.jacoco.core.internal.flow.MethodProbesVisitor;

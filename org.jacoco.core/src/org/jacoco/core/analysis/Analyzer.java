@@ -22,7 +22,11 @@ import java.util.StringTokenizer;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
-import org.jacoco.core.analysis.ICoverageFilterStatus.ICoverageFilter;
+import org.jacoco.core.analysis.filters.CompositeCoverageFilter;
+import org.jacoco.core.analysis.filters.EmptyConstructorCoverageFilter;
+import org.jacoco.core.analysis.filters.ICoverageFilterStatus.ICoverageFilter;
+import org.jacoco.core.analysis.filters.ImplicitEnumMethodsCoverageFilter;
+import org.jacoco.core.analysis.filters.SynchronizedExitCoverageFilter;
 import org.jacoco.core.data.ExecutionData;
 import org.jacoco.core.data.ExecutionDataStore;
 import org.jacoco.core.internal.analysis.ClassAnalyzer;
@@ -87,6 +91,7 @@ public class Analyzer {
 		final List<ICoverageFilter> filters = new ArrayList<ICoverageFilter>();
 		filters.add(new ImplicitEnumMethodsCoverageFilter());
 		filters.add(new EmptyConstructorCoverageFilter());
+		filters.add(new SynchronizedExitCoverageFilter());
 		if (coverageFilter != null) {
 			filters.add(coverageFilter);
 		}
