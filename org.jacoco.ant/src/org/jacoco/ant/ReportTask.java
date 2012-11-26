@@ -7,6 +7,7 @@
  *
  * Contributors:
  *    Marc R. Hoffmann - initial API and implementation
+ *    Martin Hare Robertson - check coverage
  *    
  *******************************************************************************/
 package org.jacoco.ant;
@@ -330,6 +331,65 @@ public class ReportTask extends Task {
 
 	}
 
+	/**
+	 * Formatter Element for HTML reports.
+	 */
+	public class CheckCoverageElement {
+
+		private int instructions = -1;
+
+		private int insCovered = 0;
+		private int insMissed = 0;
+
+		/**
+		 * Sets the percentage of instructions required
+		 * 
+		 * @param instructions
+		 */
+		public void setInstructions(final int instructions) {
+			this.instructions = instructions;
+		}
+
+		/**
+		 * Add coverage data from this bundle
+		 * 
+		 * @param bundle
+		 */
+		public void visitBundle(final IBundleCoverage bundle) {
+			insCovered += bundle.getInstructionCounter().getCoveredCount();
+			insMissed += bundle.getInstructionCounter().getMissedCount();
+		}
+
+		/**
+		 * Check that required coverage has been reached
+		 */
+		public void visitEnd() {
+			if (instructions == -1) {
+				throw new BuildException("No instruction target set");
+			} else {
+				final int insTotal = insCovered + insMissed;
+				final double insTarget = instructions;
+				final double insActual;
+				if (insTotal > 0) {
+					final double insFraction = ((double) insCovered / (double) insTotal);
+					insActual = (int) (insFraction / 100.0);
+				} else {
+					insActual = 100.0;
+				}
+
+				if (insActual < insTarget) {
+					@SuppressWarnings("boxing")
+					final String error = String.format(
+							"Coverage requirements not met: %.2f < %.2f",
+							insActual, insTarget);
+					System.out.println(error);
+					throw new BuildException(error);
+				}
+				System.out.println("Coverage requirements met.");
+			}
+		}
+	}
+
 	private final Union executiondataElement = new Union();
 
 	private SessionInfoStore sessionInfoStore;
@@ -339,6 +399,8 @@ public class ReportTask extends Task {
 	private final GroupElement structure = new GroupElement();
 
 	private final List<IFormatterElement> formatters = new ArrayList<IFormatterElement>();
+
+	private CheckCoverageElement checkcoverageElement;
 
 	/**
 	 * Returns the nested resource collection for execution data files.
@@ -391,6 +453,16 @@ public class ReportTask extends Task {
 		return element;
 	}
 
+	/**
+	 * Creates a new Check Coverage report element.
+	 * 
+	 * @return Check Coverage report element
+	 */
+	public CheckCoverageElement createCheckcoverage() {
+		checkcoverageElement = new CheckCoverageElement();
+		return checkcoverageElement;
+	}
+
 	@Override
 	public void execute() throws BuildException {
 		loadExecutionData();
@@ -403,6 +475,9 @@ public class ReportTask extends Task {
 		} catch (final IOException e) {
 			throw new BuildException("Error while creating report", e,
 					getLocation());
+		}
+		if (checkcoverageElement != null) {
+			checkcoverageElement.visitEnd();
 		}
 	}
 
@@ -460,6 +535,10 @@ public class ReportTask extends Task {
 				checkForMissingDebugInformation(bundle);
 			}
 			visitor.visitBundle(bundle, locator);
+
+			if (checkcoverageElement != null) {
+				checkcoverageElement.visitBundle(bundle);
+			}
 		}
 	}
 
