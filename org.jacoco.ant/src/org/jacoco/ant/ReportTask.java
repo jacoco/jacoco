@@ -424,12 +424,12 @@ public class ReportTask extends Task {
 					if (actual < target[ii]) {
 						error += String
 								.format(description[ii]
-										+ " coverage requirements not met: %.2f < %.2f\n",
+										+ " coverage requirement not met: %.2f < %.2f\n",
 										actual, target[ii]);
 						failCount++;
 					} else {
 						System.out.println(description[ii]
-								+ " coverage requirements met.");
+								+ " coverage requirement met.");
 						passCount++;
 					}
 				}
