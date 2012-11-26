@@ -336,18 +336,46 @@ public class ReportTask extends Task {
 	 */
 	public class CheckCoverageElement {
 
-		private int instructions = -1;
+		private static final double NO_TARGET = -1;
+
+		private double instructions = NO_TARGET;
+		private double branches = NO_TARGET;
+		private double lines = NO_TARGET;
 
 		private int insCovered = 0;
-		private int insMissed = 0;
+		private int insTotal = 0;
+
+		private int branchCovered = 0;
+		private int branchTotal = 0;
+
+		private int lineCovered = 0;
+		private int lineTotal = 0;
 
 		/**
 		 * Sets the percentage of instructions required
 		 * 
 		 * @param instructions
 		 */
-		public void setInstructions(final int instructions) {
+		public void setInstructions(final double instructions) {
 			this.instructions = instructions;
+		}
+
+		/**
+		 * Sets the percentage of branches required
+		 * 
+		 * @param branches
+		 */
+		public void setBranches(final double branches) {
+			this.branches = branches;
+		}
+
+		/**
+		 * Sets the percentage of lines required
+		 * 
+		 * @param lines
+		 */
+		public void setLines(final double lines) {
+			this.lines = lines;
 		}
 
 		/**
@@ -357,35 +385,61 @@ public class ReportTask extends Task {
 		 */
 		public void visitBundle(final IBundleCoverage bundle) {
 			insCovered += bundle.getInstructionCounter().getCoveredCount();
-			insMissed += bundle.getInstructionCounter().getMissedCount();
+			insTotal += bundle.getInstructionCounter().getTotalCount();
+
+			branchCovered += bundle.getBranchCounter().getCoveredCount();
+			branchTotal += bundle.getBranchCounter().getTotalCount();
+
+			lineCovered += bundle.getLineCounter().getCoveredCount();
+			lineTotal += bundle.getLineCounter().getTotalCount();
 		}
 
 		/**
 		 * Check that required coverage has been reached
 		 */
+		@SuppressWarnings("boxing")
 		public void visitEnd() {
-			if (instructions == -1) {
-				throw new BuildException("No instruction target set");
-			} else {
-				final int insTotal = insCovered + insMissed;
-				final double insTarget = instructions;
-				final double insActual;
-				if (insTotal > 0) {
-					final double insFraction = ((double) insCovered / (double) insTotal);
-					insActual = (int) (insFraction / 100.0);
-				} else {
-					insActual = 100.0;
-				}
+			String error = "";
+			int failCount = 0;
+			int passCount = 0;
 
-				if (insActual < insTarget) {
-					@SuppressWarnings("boxing")
-					final String error = String.format(
-							"Coverage requirements not met: %.2f < %.2f",
-							insActual, insTarget);
-					System.out.println(error);
-					throw new BuildException(error);
+			final int[] covered = new int[] { insCovered, branchCovered,
+					lineCovered };
+			final int[] total = new int[] { insTotal, branchTotal, lineTotal };
+			final double[] target = new double[] { instructions, branches,
+					lines };
+			final String[] description = new String[] { "Instructions",
+					"Branches", "Lines" };
+
+			for (int ii = 0; ii < 3; ii++) {
+				if (target[ii] != NO_TARGET) {
+					final double actual;
+					if (total[ii] > 0) {
+						final double fraction = ((double) covered[ii] / (double) total[ii]);
+						actual = (int) (fraction / 100.0);
+					} else {
+						actual = 100.0;
+					}
+
+					if (actual < target[ii]) {
+						error += String
+								.format(description[ii]
+										+ " coverage requirements not met: %.2f < %.2f\n",
+										actual, target[ii]);
+						failCount++;
+					} else {
+						System.out.println(description[ii]
+								+ " coverage requirements met.");
+						passCount++;
+					}
 				}
-				System.out.println("Coverage requirements met.");
+			}
+
+			if ((failCount == 0) && (passCount == 0)) {
+				throw new BuildException("No coverage target set");
+			} else if (failCount > 0) {
+				System.out.println(error);
+				throw new BuildException(error);
 			}
 		}
 	}
