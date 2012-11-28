@@ -7,7 +7,6 @@
  *
  * Contributors:
  *    Marc R. Hoffmann - initial API and implementation
- *    Martin Hare Robertson - filters
  *    
  *******************************************************************************/
 package org.jacoco.core.internal.flow;

@@ -12,19 +12,20 @@
 package org.jacoco.core.analysis.filters;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 import java.io.IOException;
 import java.io.Reader;
 import java.io.StringReader;
 import java.util.Queue;
 
-import org.jacoco.core.analysis.filters.CommentExclusionsCoverageFilter.IDirectivesParser.Directive;
-import org.jacoco.core.analysis.filters.CommentExclusionsCoverageFilter.SourceFileDirectivesParser;
+import org.jacoco.core.analysis.IDirectivesParser;
+import org.jacoco.core.analysis.IDirectivesParser.Directive;
 import org.jacoco.core.data.ISourceFileLocator;
 import org.junit.Test;
 
 public class SourceFileDirectiveParserTest {
-	@SuppressWarnings("boxing")
 	@Test
 	public void testSourceParsing() {
 		ISourceFileLocator locator = new ISourceFileLocator() {
@@ -38,16 +39,16 @@ public class SourceFileDirectiveParserTest {
 						+ "  ///JACOCO:ON   \n");
 			}
 		};
-		SourceFileDirectivesParser parser = new SourceFileDirectivesParser(
+		IDirectivesParser.SourceFileDirectivesParser parser = new IDirectivesParser.SourceFileDirectivesParser(
 				locator);
 		Queue<Directive> directives = parser.parseDirectives(null, null);
 
 		assertEquals(2, directives.size());
 		assertEquals(2, directives.peek().lineNum);
-		assertEquals(false, directives.peek().coverageOn);
+		assertFalse(directives.peek().coverageOn);
 		directives.poll();
 		assertEquals(4, directives.peek().lineNum);
-		assertEquals(true, directives.peek().coverageOn);
+		assertTrue(directives.peek().coverageOn);
 	}
 
 	@Test
@@ -62,7 +63,7 @@ public class SourceFileDirectiveParserTest {
 				return null;
 			}
 		};
-		SourceFileDirectivesParser parser = new SourceFileDirectivesParser(
+		IDirectivesParser.SourceFileDirectivesParser parser = new IDirectivesParser.SourceFileDirectivesParser(
 				locator);
 		Queue<Directive> directives = parser.parseDirectives(null, null);
 

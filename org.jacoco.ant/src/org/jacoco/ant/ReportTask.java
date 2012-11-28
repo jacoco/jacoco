@@ -33,10 +33,8 @@ import org.apache.tools.ant.util.FileUtils;
 import org.jacoco.core.analysis.Analyzer;
 import org.jacoco.core.analysis.CoverageBuilder;
 import org.jacoco.core.analysis.IBundleCoverage;
-import org.jacoco.core.analysis.filters.CommentExclusionsCoverageFilter;
-import org.jacoco.core.analysis.filters.CommentExclusionsCoverageFilter.IDirectivesParser;
-import org.jacoco.core.analysis.filters.ICoverageFilterStatus.ICoverageFilter;
 import org.jacoco.core.analysis.ICoverageNode;
+import org.jacoco.core.analysis.IDirectivesParser;
 import org.jacoco.core.data.ExecFileLoader;
 import org.jacoco.core.data.ExecutionDataStore;
 import org.jacoco.core.data.SessionInfoStore;
@@ -474,11 +472,9 @@ public class ReportTask extends Task {
 		if (locator.isEmpty()) {
 			analyzer = new Analyzer(executionDataStore, builder);
 		} else {
-			final IDirectivesParser parser = new CommentExclusionsCoverageFilter.SourceFileDirectivesParser(
+			final IDirectivesParser parser = new IDirectivesParser.SourceFileDirectivesParser(
 					locator);
-			final ICoverageFilter filter = new CommentExclusionsCoverageFilter(
-					parser);
-			analyzer = new Analyzer(executionDataStore, builder, filter);
+			analyzer = new Analyzer(executionDataStore, builder, parser);
 		}
 		for (final Iterator<?> i = group.classfiles.iterator(); i.hasNext();) {
 			final Resource resource = (Resource) i.next();

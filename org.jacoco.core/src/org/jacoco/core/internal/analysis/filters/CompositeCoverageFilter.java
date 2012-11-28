@@ -9,12 +9,12 @@
  *    Martin Hare Robertson - initial API and implementation
  *    
  *******************************************************************************/
-package org.jacoco.core.analysis.filters;
+package org.jacoco.core.internal.analysis.filters;
 
 import java.util.Iterator;
 import java.util.List;
 
-import org.jacoco.core.analysis.filters.ICoverageFilterStatus.ICoverageFilter;
+import org.jacoco.core.internal.analysis.filters.ICoverageFilterStatus.ICoverageFilter;
 import org.jacoco.core.internal.flow.MethodProbesVisitor;
 import org.objectweb.asm.ClassVisitor;
 import org.objectweb.asm.MethodVisitor;

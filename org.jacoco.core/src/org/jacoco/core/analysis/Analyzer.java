@@ -22,16 +22,17 @@ import java.util.StringTokenizer;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
-import org.jacoco.core.analysis.filters.CompositeCoverageFilter;
-import org.jacoco.core.analysis.filters.EmptyConstructorCoverageFilter;
-import org.jacoco.core.analysis.filters.ICoverageFilterStatus.ICoverageFilter;
-import org.jacoco.core.analysis.filters.ImplicitEnumMethodsCoverageFilter;
-import org.jacoco.core.analysis.filters.SynchronizedExitCoverageFilter;
 import org.jacoco.core.data.ExecutionData;
 import org.jacoco.core.data.ExecutionDataStore;
 import org.jacoco.core.internal.analysis.ClassAnalyzer;
 import org.jacoco.core.internal.analysis.ContentTypeDetector;
 import org.jacoco.core.internal.analysis.StringPool;
+import org.jacoco.core.internal.analysis.filters.CommentExclusionsCoverageFilter;
+import org.jacoco.core.internal.analysis.filters.CompositeCoverageFilter;
+import org.jacoco.core.internal.analysis.filters.EmptyConstructorCoverageFilter;
+import org.jacoco.core.internal.analysis.filters.ICoverageFilterStatus.ICoverageFilter;
+import org.jacoco.core.internal.analysis.filters.ImplicitEnumMethodsCoverageFilter;
+import org.jacoco.core.internal.analysis.filters.SynchronizedExitCoverageFilter;
 import org.jacoco.core.internal.data.CRC64;
 import org.jacoco.core.internal.flow.ClassProbesAdapter;
 import org.objectweb.asm.ClassReader;
@@ -67,7 +68,7 @@ public class Analyzer {
 	 */
 	public Analyzer(final ExecutionDataStore executionData,
 			final ICoverageVisitor coverageVisitor) {
-		this(executionData, coverageVisitor, new ICoverageFilter.NoFilter());
+		this(executionData, coverageVisitor, null);
 	}
 
 	/**
@@ -78,12 +79,13 @@ public class Analyzer {
 	 * @param coverageVisitor
 	 *            the output instance that will coverage data for every analyzed
 	 *            class
-	 * @param coverageFilter
-	 *            the filter to apply during this coverage
+	 * @param directivesParser
+	 *            the parser for loading source directives or null if source
+	 *            directives should be ignored
 	 */
 	public Analyzer(final ExecutionDataStore executionData,
 			final ICoverageVisitor coverageVisitor,
-			final ICoverageFilter coverageFilter) {
+			final IDirectivesParser directivesParser) {
 		this.executionData = executionData;
 		this.coverageVisitor = coverageVisitor;
 		this.stringPool = new StringPool();
@@ -92,8 +94,8 @@ public class Analyzer {
 		filters.add(new ImplicitEnumMethodsCoverageFilter());
 		filters.add(new EmptyConstructorCoverageFilter());
 		filters.add(new SynchronizedExitCoverageFilter());
-		if (coverageFilter != null) {
-			filters.add(coverageFilter);
+		if (directivesParser != null) {
+			filters.add(new CommentExclusionsCoverageFilter(directivesParser));
 		}
 
 		this.coverageFilter = new CompositeCoverageFilter(filters);

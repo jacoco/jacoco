@@ -14,6 +14,7 @@ package org.jacoco.core.internal.flow;
 import org.objectweb.asm.ClassVisitor;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
+import org.objectweb.asm.Type;
 
 /**
  * A {@link ClassVisitor} with additional methods to get probe insertion
@@ -40,11 +41,25 @@ public abstract class ClassProbesVisitor extends ClassVisitor {
 
 	/**
 	 * @param access
+	 *            the method's access flags (see {@link Opcodes}). This
+	 *            parameter also indicates if the method is synthetic and/or
+	 *            deprecated.
 	 * @param name
+	 *            the method's name.
 	 * @param desc
+	 *            the method's descriptor (see {@link Type Type}).
 	 * @param signature
+	 *            the method's signature. May be <tt>null</tt> if the method
+	 *            parameters, return type and exceptions do not use generic
+	 *            types.
 	 * @param exceptions
-	 * @return
+	 *            the internal names of the method's exception classes (see
+	 *            {@link Type#getInternalName() getInternalName}). May be
+	 *            <tt>null</tt>.
+	 * @return an object to visit the byte code of the method <b>before</b>
+	 *         {@link #visitMethod} is called, or <tt>null</tt> if this class
+	 *         visitor is not interested in pre-visiting the code of this
+	 *         method.
 	 */
 	public abstract MethodVisitor preVisitMethod(int access, String name,
 			String desc, String signature, String[] exceptions);

@@ -18,12 +18,12 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Queue;
 
-import org.jacoco.core.analysis.filters.CommentExclusionsCoverageFilter;
-import org.jacoco.core.analysis.filters.CommentExclusionsCoverageFilter.IDirectivesParser;
-import org.jacoco.core.analysis.filters.CommentExclusionsCoverageFilter.IDirectivesParser.Directive;
-import org.jacoco.core.analysis.filters.ICoverageFilterStatus.ICoverageFilter;
+import org.jacoco.core.analysis.IDirectivesParser;
+import org.jacoco.core.analysis.IDirectivesParser.Directive;
 import org.jacoco.core.analysis.ILine;
 import org.jacoco.core.analysis.IMethodCoverage;
+import org.jacoco.core.internal.analysis.filters.CommentExclusionsCoverageFilter;
+import org.jacoco.core.internal.analysis.filters.ICoverageFilterStatus.ICoverageFilter;
 import org.jacoco.core.internal.flow.IProbeIdGenerator;
 import org.jacoco.core.internal.flow.LabelFlowAnalyzer;
 import org.jacoco.core.internal.flow.MethodProbesAdapter;
