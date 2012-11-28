@@ -58,8 +58,13 @@ public class MethodCoverageImpl extends SourceNodeImpl implements
 	 * branches have been incremented for this method coverage node.
 	 */
 	public void incrementMethodCounter() {
-		final ICounter base = this.instructionCounter.getCoveredCount() == 0 ? CounterImpl.COUNTER_1_0
-				: CounterImpl.COUNTER_0_1;
+		final ICounter base;
+		if ((this.instructionCounter.getCoveredCount() == 0)
+				&& (this.instructionCounter.getTotalCount() > 0)) {
+			base = CounterImpl.COUNTER_1_0;
+		} else {
+			base = CounterImpl.COUNTER_0_1;
+		}
 		this.methodCounter = this.methodCounter.increment(base);
 		this.complexityCounter = this.complexityCounter.increment(base);
 	}

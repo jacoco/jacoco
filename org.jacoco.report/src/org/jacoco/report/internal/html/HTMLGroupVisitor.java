@@ -15,7 +15,7 @@ import java.io.IOException;
 
 import org.jacoco.core.analysis.IBundleCoverage;
 import org.jacoco.core.analysis.ICoverageNode;
-import org.jacoco.report.ISourceFileLocator;
+import org.jacoco.core.data.ISourceFileLocator;
 import org.jacoco.report.internal.AbstractGroupVisitor;
 import org.jacoco.report.internal.ReportOutputFolder;
 import org.jacoco.report.internal.html.page.BundlePage;

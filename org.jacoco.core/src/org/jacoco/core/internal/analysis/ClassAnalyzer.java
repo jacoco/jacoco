@@ -7,13 +7,16 @@
  *
  * Contributors:
  *    Marc R. Hoffmann - initial API and implementation
+ *    Martin Hare Robertson - filters
  *    
  *******************************************************************************/
 package org.jacoco.core.internal.analysis;
 
 import org.jacoco.core.analysis.IMethodCoverage;
+import org.jacoco.core.internal.analysis.filters.ICoverageFilterStatus.ICoverageFilter;
 import org.jacoco.core.internal.flow.ClassProbesVisitor;
 import org.jacoco.core.internal.flow.MethodProbesVisitor;
+import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
 
 /**
@@ -24,6 +27,7 @@ public class ClassAnalyzer extends ClassProbesVisitor {
 	private final long classid;
 	private final boolean executionData[];
 	private final StringPool stringPool;
+	private final ICoverageFilter coverageFilter;
 
 	private ClassCoverageImpl coverage;
 
@@ -36,12 +40,15 @@ public class ClassAnalyzer extends ClassProbesVisitor {
 	 *            execution data for this class or <code>null</code>
 	 * @param stringPool
 	 *            shared pool to minimize the number of {@link String} instances
+	 * @param coverageFilter
+	 *            filter which restricts the coverage data
 	 */
 	public ClassAnalyzer(final long classid, final boolean[] executionData,
-			final StringPool stringPool) {
+			final StringPool stringPool, final ICoverageFilter coverageFilter) {
 		this.classid = classid;
 		this.executionData = executionData;
 		this.stringPool = stringPool;
+		this.coverageFilter = coverageFilter;
 	}
 
 	/**
@@ -69,6 +76,12 @@ public class ClassAnalyzer extends ClassProbesVisitor {
 	}
 
 	@Override
+	public MethodVisitor preVisitMethod(final int access, final String name,
+			final String desc, final String signature, final String[] exceptions) {
+		return coverageFilter.preVisitMethod(name, desc, null);
+	}
+
+	@Override
 	public MethodProbesVisitor visitMethod(final int access, final String name,
 			final String desc, final String signature, final String[] exceptions) {
 
@@ -77,8 +90,9 @@ public class ClassAnalyzer extends ClassProbesVisitor {
 			return null;
 		}
 
-		return new MethodAnalyzer(stringPool.get(name), stringPool.get(desc),
-				stringPool.get(signature), executionData) {
+		final MethodAnalyzer visitor = new MethodAnalyzer(stringPool.get(name),
+				stringPool.get(desc), stringPool.get(signature), executionData,
+				coverageFilter) {
 			@Override
 			public void visitEnd() {
 				super.visitEnd();
@@ -89,11 +103,12 @@ public class ClassAnalyzer extends ClassProbesVisitor {
 				}
 			}
 		};
+
+		return coverageFilter.visitMethod(name, desc, visitor);
 	}
 
 	@Override
 	public void visitTotalProbeCount(final int count) {
 		// nothing to do
 	}
-
 }

@@ -16,6 +16,8 @@ import java.io.Reader;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.jacoco.core.data.ISourceFileLocator;
+
 /**
  * Locator that searches source files in multiple {@link ISourceFileLocator}
  * instances. For each lookup request the first locator that returns a

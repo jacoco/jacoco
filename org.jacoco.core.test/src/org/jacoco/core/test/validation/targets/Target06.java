@@ -7,17 +7,19 @@
  *
  * Contributors:
  *    Marc R. Hoffmann - initial API and implementation
+ *    Martin Hare Robertson - filters
  *    
  *******************************************************************************/
 package org.jacoco.core.test.validation.targets;
 
 /**
- * This test target is a class with a implicit default constructor.
+ * This test target is a class with a implicit default constructor and another
+ * method which isn't blank.
  */
 public class Target06 { // $line-classdef$
 
 	public static void main(String[] args) {
-		new Target06();
+		System.setProperty("noop", "noop");
 	}
 
 }

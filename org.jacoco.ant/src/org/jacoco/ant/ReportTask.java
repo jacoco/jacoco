@@ -7,6 +7,7 @@
  *
  * Contributors:
  *    Marc R. Hoffmann - initial API and implementation
+ *    Martin Hare Robertson - filters
  *    
  *******************************************************************************/
 package org.jacoco.ant;
@@ -33,6 +34,7 @@ import org.jacoco.core.analysis.Analyzer;
 import org.jacoco.core.analysis.CoverageBuilder;
 import org.jacoco.core.analysis.IBundleCoverage;
 import org.jacoco.core.analysis.ICoverageNode;
+import org.jacoco.core.analysis.IDirectivesParser;
 import org.jacoco.core.data.ExecFileLoader;
 import org.jacoco.core.data.ExecutionDataStore;
 import org.jacoco.core.data.SessionInfoStore;
@@ -51,6 +53,42 @@ import org.jacoco.report.xml.XMLFormatter;
  * refinement.
  */
 public class ReportTask extends Task {
+
+	/**
+	 * Options container element
+	 */
+	public static class Options {
+
+		/**
+		 * Source directives option. Used to enable use of source directives.
+		 */
+		public static class SourceDirectives {
+			boolean requirecomment = true;
+
+			/**
+			 * Set whether source directives require a comment. The deafault is
+			 * that they do.
+			 * 
+			 * @param requirecomment
+			 */
+			public void setRequirecomment(final boolean requirecomment) {
+				this.requirecomment = requirecomment;
+			}
+		}
+
+		SourceDirectives sourcedirectivesElement;
+
+		/**
+		 * Returns the source directives element that enables use of source
+		 * directives
+		 * 
+		 * @return source directives element
+		 */
+		public SourceDirectives createSourcedirectives() {
+			sourcedirectivesElement = new SourceDirectives();
+			return sourcedirectivesElement;
+		}
+	}
 
 	/**
 	 * The source files are specified in a resource collection with additional
@@ -330,6 +368,8 @@ public class ReportTask extends Task {
 
 	}
 
+	private final Options options = new Options();
+
 	private final Union executiondataElement = new Union();
 
 	private SessionInfoStore sessionInfoStore;
@@ -339,6 +379,15 @@ public class ReportTask extends Task {
 	private final GroupElement structure = new GroupElement();
 
 	private final List<IFormatterElement> formatters = new ArrayList<IFormatterElement>();
+
+	/**
+	 * Returns the options element.
+	 * 
+	 * @return options element
+	 */
+	public Options createOptions() {
+		return options;
+	}
 
 	/**
 	 * Returns the nested resource collection for execution data files.
@@ -448,14 +497,14 @@ public class ReportTask extends Task {
 				createReport(groupVisitor, child);
 			}
 		} else {
-			final IBundleCoverage bundle = createBundle(group);
-			log(format("Writing group \"%s\" with %s classes",
-					bundle.getName(),
-					Integer.valueOf(bundle.getClassCounter().getTotalCount())));
 			final SourceFilesElement sourcefiles = group.sourcefiles;
 			final AntResourcesLocator locator = new AntResourcesLocator(
 					sourcefiles.encoding, sourcefiles.tabWidth);
 			locator.addAll(sourcefiles.iterator());
+			final IBundleCoverage bundle = createBundle(group, locator);
+			log(format("Writing group \"%s\" with %s classes",
+					bundle.getName(),
+					Integer.valueOf(bundle.getClassCounter().getTotalCount())));
 			if (!locator.isEmpty()) {
 				checkForMissingDebugInformation(bundle);
 			}
@@ -463,10 +512,17 @@ public class ReportTask extends Task {
 		}
 	}
 
-	private IBundleCoverage createBundle(final GroupElement group)
-			throws IOException {
+	private IBundleCoverage createBundle(final GroupElement group,
+			final AntResourcesLocator locator) throws IOException {
 		final CoverageBuilder builder = new CoverageBuilder();
-		final Analyzer analyzer = new Analyzer(executionDataStore, builder);
+		final Analyzer analyzer;
+		if (locator.isEmpty() || (options.sourcedirectivesElement == null)) {
+			analyzer = new Analyzer(executionDataStore, builder);
+		} else {
+			final IDirectivesParser parser = new IDirectivesParser.SourceFileDirectivesParser(
+					locator);
+			analyzer = new Analyzer(executionDataStore, builder, parser);
+		}
 		for (final Iterator<?> i = group.classfiles.iterator(); i.hasNext();) {
 			final Resource resource = (Resource) i.next();
 			if (resource.isDirectory() && resource instanceof FileResource) {

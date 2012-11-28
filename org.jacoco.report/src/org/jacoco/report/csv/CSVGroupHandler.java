@@ -16,8 +16,8 @@ import java.io.IOException;
 import org.jacoco.core.analysis.IBundleCoverage;
 import org.jacoco.core.analysis.IClassCoverage;
 import org.jacoco.core.analysis.IPackageCoverage;
+import org.jacoco.core.data.ISourceFileLocator;
 import org.jacoco.report.IReportGroupVisitor;
-import org.jacoco.report.ISourceFileLocator;
 
 /**
  * Report visitor that handles coverage information for groups.

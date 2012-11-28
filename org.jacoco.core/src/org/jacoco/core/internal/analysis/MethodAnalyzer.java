@@ -7,6 +7,7 @@
  *
  * Contributors:
  *    Marc R. Hoffmann - initial API and implementation
+ *    Martin Hare Robertson - filters
  *    
  *******************************************************************************/
 package org.jacoco.core.internal.analysis;
@@ -17,6 +18,7 @@ import java.util.List;
 import org.jacoco.core.analysis.ICounter;
 import org.jacoco.core.analysis.IMethodCoverage;
 import org.jacoco.core.analysis.ISourceNode;
+import org.jacoco.core.internal.analysis.filters.ICoverageFilterStatus;
 import org.jacoco.core.internal.flow.Instruction;
 import org.jacoco.core.internal.flow.LabelInfo;
 import org.jacoco.core.internal.flow.MethodProbesVisitor;
@@ -30,6 +32,8 @@ import org.objectweb.asm.Label;
 public class MethodAnalyzer extends MethodProbesVisitor {
 
 	private final boolean[] executionData;
+
+	private final ICoverageFilterStatus coverageFilterStatus;
 
 	private final MethodCoverageImpl coverage;
 
@@ -67,11 +71,15 @@ public class MethodAnalyzer extends MethodProbesVisitor {
 	 * @param executionData
 	 *            recorded probe date of the containing class or
 	 *            <code>null</code> if the class is not executed at all
+	 * @param coverageFilterStatus
+	 *            filter which restricts the coverage data
 	 */
 	public MethodAnalyzer(final String name, final String desc,
-			final String signature, final boolean[] executionData) {
+			final String signature, final boolean[] executionData,
+			final ICoverageFilterStatus coverageFilterStatus) {
 		super();
 		this.executionData = executionData;
+		this.coverageFilterStatus = coverageFilterStatus;
 		this.coverage = new MethodCoverageImpl(name, desc, signature);
 	}
 
@@ -105,7 +113,8 @@ public class MethodAnalyzer extends MethodProbesVisitor {
 	}
 
 	private void visitInsn() {
-		final Instruction insn = new Instruction(currentLine);
+		final Instruction insn = new Instruction(currentLine,
+				coverageFilterStatus.enabled());
 		instructions.add(insn);
 		if (lastInsn != null) {
 			insn.setPredecessor(lastInsn);
@@ -273,19 +282,37 @@ public class MethodAnalyzer extends MethodProbesVisitor {
 		for (final Instruction i : instructions) {
 			final int total = i.getBranches();
 			final int covered = i.getCoveredBranches();
-			final ICounter instrCounter = covered == 0 ? CounterImpl.COUNTER_1_0
-					: CounterImpl.COUNTER_0_1;
-			final ICounter branchCounter = total > 1 ? CounterImpl.getInstance(
-					total - covered, covered) : CounterImpl.COUNTER_0_0;
+			final boolean coverageEnabled = i.isCoverageEnabled();
+			final ICounter instrCounter;
+			if (!coverageEnabled) {
+				instrCounter = CounterImpl.COUNTER_0_0;
+			} else if (covered > 0) {
+				instrCounter = CounterImpl.COUNTER_0_1;
+			} else {
+				instrCounter = CounterImpl.COUNTER_1_0;
+			}
+			final ICounter branchCounter;
+			if (total > 1) {
+				if (!coverageEnabled) {
+					branchCounter = CounterImpl.getInstance(0, 0);
+				} else {
+					branchCounter = CounterImpl.getInstance(total - covered,
+							covered);
+				}
+			} else {
+				branchCounter = CounterImpl.COUNTER_0_0;
+			}
 			coverage.increment(instrCounter, branchCounter, i.getLine());
 		}
 		coverage.incrementMethodCounter();
 	}
 
 	private void addProbe(final int probeId) {
-		lastInsn.addBranch();
-		if (executionData != null && executionData[probeId]) {
-			coveredProbes.add(lastInsn);
+		if (lastInsn != null) {
+			lastInsn.addBranch();
+			if (executionData != null && executionData[probeId]) {
+				coveredProbes.add(lastInsn);
+			}
 		}
 	}
 

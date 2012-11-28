@@ -7,12 +7,13 @@
  *
  * Contributors:
  *    Marc R. Hoffmann - initial API and implementation
+ *    Martin Hare Robertson - filters
  *    
  *******************************************************************************/
 package org.jacoco.core.internal.instr;
 
-import org.jacoco.core.internal.flow.MethodProbesVisitor;
 import org.jacoco.core.internal.flow.LabelInfo;
+import org.jacoco.core.internal.flow.MethodProbesVisitor;
 import org.objectweb.asm.Label;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;

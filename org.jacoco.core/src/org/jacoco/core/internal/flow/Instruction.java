@@ -19,6 +19,8 @@ public class Instruction {
 
 	private final int line;
 
+	private final boolean coverageEnabled;
+
 	private int branches;
 
 	private int coveredBranches;
@@ -30,9 +32,12 @@ public class Instruction {
 	 * 
 	 * @param line
 	 *            source line this instruction belongs to
+	 * @param coverageEnabled
+	 *            whether coverage is enabled for this instruction
 	 */
-	public Instruction(final int line) {
+	public Instruction(final int line, final boolean coverageEnabled) {
 		this.line = line;
+		this.coverageEnabled = coverageEnabled;
 		this.branches = 0;
 		this.coveredBranches = 0;
 	}
@@ -93,6 +98,13 @@ public class Instruction {
 	 */
 	public int getCoveredBranches() {
 		return coveredBranches;
+	}
+
+	/**
+	 * @return true if the coverage is enabled
+	 */
+	public boolean isCoverageEnabled() {
+		return coverageEnabled;
 	}
 
 }

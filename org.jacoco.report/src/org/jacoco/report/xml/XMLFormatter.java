@@ -18,9 +18,9 @@ import java.util.List;
 
 import org.jacoco.core.analysis.IBundleCoverage;
 import org.jacoco.core.data.ExecutionData;
+import org.jacoco.core.data.ISourceFileLocator;
 import org.jacoco.core.data.SessionInfo;
 import org.jacoco.report.IReportVisitor;
-import org.jacoco.report.ISourceFileLocator;
 import org.jacoco.report.internal.AbstractGroupVisitor;
 import org.jacoco.report.internal.xml.XMLCoverageWriter;
 import org.jacoco.report.internal.xml.XMLDocument;

@@ -50,8 +50,8 @@ public class Instrumenter {
 	 */
 	private ClassVisitor createInstrumentingVisitor(final long classid,
 			final ClassVisitor cv) {
-		return new ClassProbesAdapter(new ClassInstrumenter(classid, accessGenerator,
-				cv));
+		return new ClassProbesAdapter(new ClassInstrumenter(classid,
+				accessGenerator, cv));
 	}
 
 	/**

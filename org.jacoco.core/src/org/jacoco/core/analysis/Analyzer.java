@@ -7,6 +7,7 @@
  *
  * Contributors:
  *    Marc R. Hoffmann - initial API and implementation
+ *    Martin Hare Robertson - filters
  *    
  *******************************************************************************/
 package org.jacoco.core.analysis;
@@ -15,6 +16,8 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.StringTokenizer;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
@@ -24,6 +27,12 @@ import org.jacoco.core.data.ExecutionDataStore;
 import org.jacoco.core.internal.analysis.ClassAnalyzer;
 import org.jacoco.core.internal.analysis.ContentTypeDetector;
 import org.jacoco.core.internal.analysis.StringPool;
+import org.jacoco.core.internal.analysis.filters.CommentExclusionsCoverageFilter;
+import org.jacoco.core.internal.analysis.filters.CompositeCoverageFilter;
+import org.jacoco.core.internal.analysis.filters.EmptyConstructorCoverageFilter;
+import org.jacoco.core.internal.analysis.filters.ICoverageFilterStatus.ICoverageFilter;
+import org.jacoco.core.internal.analysis.filters.ImplicitEnumMethodsCoverageFilter;
+import org.jacoco.core.internal.analysis.filters.SynchronizedExitCoverageFilter;
 import org.jacoco.core.internal.data.CRC64;
 import org.jacoco.core.internal.flow.ClassProbesAdapter;
 import org.objectweb.asm.ClassReader;
@@ -45,8 +54,11 @@ public class Analyzer {
 
 	private final StringPool stringPool;
 
+	private final ICoverageFilter coverageFilter;
+
 	/**
-	 * Creates a new analyzer reporting to the given output.
+	 * Creates a new analyzer reporting to the given output. This constructor
+	 * uses a default filter which includes all coverage data.
 	 * 
 	 * @param executionData
 	 *            execution data
@@ -56,9 +68,37 @@ public class Analyzer {
 	 */
 	public Analyzer(final ExecutionDataStore executionData,
 			final ICoverageVisitor coverageVisitor) {
+		this(executionData, coverageVisitor, null);
+	}
+
+	/**
+	 * Creates a new analyzer reporting to the given output.
+	 * 
+	 * @param executionData
+	 *            execution data
+	 * @param coverageVisitor
+	 *            the output instance that will coverage data for every analyzed
+	 *            class
+	 * @param directivesParser
+	 *            the parser for loading source directives or null if source
+	 *            directives should be ignored
+	 */
+	public Analyzer(final ExecutionDataStore executionData,
+			final ICoverageVisitor coverageVisitor,
+			final IDirectivesParser directivesParser) {
 		this.executionData = executionData;
 		this.coverageVisitor = coverageVisitor;
 		this.stringPool = new StringPool();
+
+		final List<ICoverageFilter> filters = new ArrayList<ICoverageFilter>();
+		filters.add(new ImplicitEnumMethodsCoverageFilter());
+		filters.add(new EmptyConstructorCoverageFilter());
+		filters.add(new SynchronizedExitCoverageFilter());
+		if (directivesParser != null) {
+			filters.add(new CommentExclusionsCoverageFilter(directivesParser));
+		}
+
+		this.coverageFilter = new CompositeCoverageFilter(filters);
 	}
 
 	/**
@@ -72,7 +112,7 @@ public class Analyzer {
 		final ExecutionData data = executionData.get(classid);
 		final boolean[] classExec = data == null ? null : data.getData();
 		final ClassAnalyzer analyzer = new ClassAnalyzer(classid, classExec,
-				stringPool) {
+				stringPool, coverageFilter) {
 			@Override
 			public void visitEnd() {
 				super.visitEnd();
@@ -89,9 +129,11 @@ public class Analyzer {
 	 *            reader with class definitions
 	 */
 	public void analyzeClass(final ClassReader reader) {
-		final ClassVisitor visitor = createAnalyzingVisitor(CRC64
-				.checksum(reader.b));
-		reader.accept(visitor, 0);
+		if (coverageFilter.includeClass(reader.getClassName())) {
+			final ClassVisitor visitor = createAnalyzingVisitor(CRC64
+					.checksum(reader.b));
+			reader.accept(coverageFilter.visitClass(visitor), 0);
+		}
 	}
 
 	/**

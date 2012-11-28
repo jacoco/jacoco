@@ -292,7 +292,6 @@
 		</jacoco:report>
 		
 		<au:assertFileExists file="${temp.dir}/org.jacoco.ant/TestTarget.java.html"/>
-		<au:assertFileExists file="${temp.dir}/default/TestTargetInDefault.java.html"/>
 	</target>
 	
 	<target name="testReportHtmlWithSourcesDir">
@@ -309,7 +308,6 @@
 		</jacoco:report>
 		
 		<au:assertFileExists file="${temp.dir}/org.jacoco.ant/TestTarget.java.html"/>
-		<au:assertFileExists file="${temp.dir}/default/TestTargetInDefault.java.html"/>
 	</target>
 	
 	<target name="testReportHtmlWithSourceEncoding">

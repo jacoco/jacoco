@@ -16,8 +16,8 @@ import java.io.IOException;
 import org.jacoco.core.analysis.CoverageNodeImpl;
 import org.jacoco.core.analysis.IBundleCoverage;
 import org.jacoco.core.analysis.ICoverageNode.ElementType;
+import org.jacoco.core.data.ISourceFileLocator;
 import org.jacoco.report.IReportGroupVisitor;
-import org.jacoco.report.ISourceFileLocator;
 
 /**
  * Internal base visitor to calculate group counter summaries for hierarchical

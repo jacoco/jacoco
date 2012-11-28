@@ -7,6 +7,7 @@
  *
  * Contributors:
  *    Marc R. Hoffmann - initial API and implementation
+ *    Martin Hare Robertson - filters
  *    
  *******************************************************************************/
 package org.jacoco.core.internal.flow;
@@ -15,6 +16,7 @@ import org.objectweb.asm.ClassVisitor;
 import org.objectweb.asm.Label;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
+import org.objectweb.asm.tree.TryCatchBlockNode;
 
 /**
  * A {@link org.objectweb.asm.ClassVisitor} that calculates probes for every
@@ -93,24 +95,42 @@ public class ClassProbesAdapter extends ClassVisitor implements
 	}
 
 	@Override
-	public final MethodVisitor visitMethod(final int access, final String name,
-			final String desc, final String signature, final String[] exceptions) {
-		final MethodProbesVisitor methodProbes;
-		final MethodProbesVisitor mv = cv.visitMethod(access, name, desc,
-				signature, exceptions);
-		if (mv == null) {
-			// We need to visit the method in any case, otherwise probe ids
-			// are not reproducible
-			methodProbes = EMPTY_METHOD_PROBES_VISITOR;
-		} else {
-			methodProbes = mv;
-		}
-		return new MethodSanitizer(null, access, name, desc, signature,
-				exceptions) {
+	public final MethodVisitor visitMethod(final int cvAccess,
+			final String cvName, final String cvDesc, final String cvSignature,
+			final String[] cvExceptions) {
+
+		return new MethodSanitizer(null, cvAccess, cvName, cvDesc, cvSignature,
+				cvExceptions) {
 
 			@Override
 			public void visitEnd() {
 				super.visitEnd();
+
+				final MethodVisitor preMv = cv.preVisitMethod(cvAccess, cvName,
+						cvDesc, cvSignature, cvExceptions);
+
+				if (preMv != null) {
+					final int n = tryCatchBlocks == null ? 0 : tryCatchBlocks
+							.size();
+					for (int i = 0; i < n; ++i) {
+						((TryCatchBlockNode) tryCatchBlocks.get(i))
+								.accept(preMv);
+					}
+					instructions.accept(preMv);
+				}
+
+				final MethodProbesVisitor methodProbes;
+				final MethodProbesVisitor mv = cv.visitMethod(cvAccess, cvName,
+						cvDesc, cvSignature, cvExceptions);
+				if (mv == null) {
+					// We need to visit the method in any case, otherwise probe
+					// ids
+					// are not reproducible
+					methodProbes = EMPTY_METHOD_PROBES_VISITOR;
+				} else {
+					methodProbes = mv;
+				}
+
 				LabelFlowAnalyzer.markLabels(this);
 				if (interfaceType) {
 					final ProbeCounter probeCounter = new ProbeCounter();
@@ -121,8 +141,9 @@ public class ClassProbesAdapter extends ClassVisitor implements
 					instructions.accept(adapter);
 					cv.visitTotalProbeCount(probeCounter.count);
 				}
-				this.accept(new MethodProbesAdapter(methodProbes,
-						ClassProbesAdapter.this));
+				final MethodProbesAdapter adapter = new MethodProbesAdapter(
+						methodProbes, ClassProbesAdapter.this);
+				this.accept(adapter);
 			}
 		};
 	}

@@ -7,6 +7,7 @@
  *
  * Contributors:
  *    Marc R. Hoffmann - initial API and implementation
+ *    Martin Hare Robertson - filters
  *    
  *******************************************************************************/
 package org.jacoco.core.internal.instr;
@@ -83,6 +84,12 @@ public class ClassInstrumenter extends ClassProbesVisitor {
 	}
 
 	@Override
+	public MethodVisitor preVisitMethod(final int access, final String name,
+			final String desc, final String signature, final String[] exceptions) {
+		return null;
+	}
+
+	@Override
 	public MethodProbesVisitor visitMethod(final int access, final String name,
 			final String desc, final String signature, final String[] exceptions) {
 
@@ -97,6 +104,7 @@ public class ClassInstrumenter extends ClassProbesVisitor {
 		final MethodVisitor frameEliminator = new DuplicateFrameEliminator(mv);
 		final ProbeInserter probeVariableInserter = new ProbeInserter(access,
 				desc, frameEliminator, probeArrayStrategy);
+
 		if (withFrames) {
 			final FrameTracker frameTracker = new FrameTracker(className,
 					access, name, desc, probeVariableInserter);
