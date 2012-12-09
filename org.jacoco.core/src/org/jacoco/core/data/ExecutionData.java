@@ -100,18 +100,52 @@ public final class ExecutionData {
 	/**
 	 * Merges the given execution data into the probe data of this object. I.e.
 	 * a probe entry in this object is marked as executed (<code>true</code>) if
-	 * this probe or the corresponding other probe was executed. The probe array
-	 * of the other object is not modified.
+	 * this probe or the corresponding other probe was executed. So the result
+	 * is
+	 * 
+	 * <pre>
+	 * A or B
+	 * </pre>
+	 * 
+	 * The probe array of the other object is not modified.
 	 * 
 	 * @param other
+	 *            execution data to merge
 	 */
 	public void merge(final ExecutionData other) {
+		merge(other, true);
+	}
+
+	/**
+	 * Merges the given execution data into the probe data of this object. A
+	 * probe in this object is set to the value of <code>flag</code> if the
+	 * corresponding other probe was executed. For <code>flag==true</code> this
+	 * corresponds to
+	 * 
+	 * <pre>
+	 * A or B
+	 * </pre>
+	 * 
+	 * For <code>flag==true</code> this can be considered as a subtraction
+	 * 
+	 * <pre>
+	 * A and not B
+	 * </pre>
+	 * 
+	 * The probe array of the other object is not modified.
+	 * 
+	 * @param other
+	 *            execution data to merge
+	 * @param flag
+	 *            merge mode
+	 */
+	public void merge(final ExecutionData other, final boolean flag) {
 		assertCompatibility(other.getId(), other.getName(),
 				other.getData().length);
 		final boolean[] otherData = other.getData();
 		for (int i = 0; i < data.length; i++) {
 			if (otherData[i]) {
-				data[i] = true;
+				data[i] = flag;
 			}
 		}
 	}
