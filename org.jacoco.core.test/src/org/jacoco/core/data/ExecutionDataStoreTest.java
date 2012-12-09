@@ -142,6 +142,52 @@ public class ExecutionDataStoreTest implements IExecutionDataVisitor {
 	}
 
 	@Test
+	public void testSubtract() {
+		final boolean[] data1 = new boolean[] { false, true, false, true };
+		store.put(new ExecutionData(1000, "Sample", data1));
+		final boolean[] data2 = new boolean[] { false, false, true, true };
+		store.subtract(new ExecutionData(1000, "Sample", data2));
+
+		final boolean[] result = store.get(1000).getData();
+		assertFalse(result[0]);
+		assertTrue(result[1]);
+		assertFalse(result[2]);
+		assertFalse(result[3]);
+	}
+
+	@Test
+	public void testSubtractOtherId() {
+		final boolean[] data1 = new boolean[] { false, true };
+		store.put(new ExecutionData(1000, "Sample1", data1));
+		final boolean[] data2 = new boolean[] { true, true };
+		store.subtract(new ExecutionData(2000, "Sample2", data2));
+
+		final boolean[] result = store.get(1000).getData();
+		assertFalse(result[0]);
+		assertTrue(result[1]);
+
+		assertNull(store.get(2000));
+	}
+
+	@Test
+	public void testSubtractStore() {
+		final boolean[] data1 = new boolean[] { false, true, false, true };
+		store.put(new ExecutionData(1000, "Sample", data1));
+
+		final ExecutionDataStore store2 = new ExecutionDataStore();
+		final boolean[] data2 = new boolean[] { false, false, true, true };
+		store2.put(new ExecutionData(1000, "Sample", data2));
+
+		store.subtract(store2);
+
+		final boolean[] result = store.get(1000).getData();
+		assertFalse(result[0]);
+		assertTrue(result[1]);
+		assertFalse(result[2]);
+		assertFalse(result[3]);
+	}
+
+	@Test
 	public void testReset() throws InstantiationException,
 			IllegalAccessException {
 		final boolean[] data1 = new boolean[] { true, true, false };

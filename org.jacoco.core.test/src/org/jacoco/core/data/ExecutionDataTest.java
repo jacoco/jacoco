@@ -75,6 +75,27 @@ public class ExecutionDataTest {
 	}
 
 	@Test
+	public void testMergeSubtract() {
+		final ExecutionData a = new ExecutionData(5, "Example", new boolean[] {
+				false, true, false, true });
+		final ExecutionData b = new ExecutionData(5, "Example", new boolean[] {
+				false, false, true, true });
+		a.merge(b, false);
+
+		// b is subtracted from a:
+		assertFalse(a.getData()[0]);
+		assertTrue(a.getData()[1]);
+		assertFalse(a.getData()[2]);
+		assertFalse(a.getData()[3]);
+
+		// b must not be modified:
+		assertFalse(b.getData()[0]);
+		assertFalse(b.getData()[1]);
+		assertTrue(b.getData()[2]);
+		assertTrue(b.getData()[3]);
+	}
+
+	@Test
 	public void testAssertCompatibility() {
 		final ExecutionData a = new ExecutionData(5, "Example",
 				new boolean[] { true });
