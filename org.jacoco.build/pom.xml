@@ -79,7 +79,6 @@
     <module>../org.jacoco.agent.rt</module>
     <module>../org.jacoco.agent</module>
     <module>../org.jacoco.ant</module>
-    <module>../org.jacoco.ant-nodeps</module>
 
     <module>../jacoco-maven-plugin</module>
 
@@ -177,7 +176,8 @@
       </dependency>
       <dependency>
         <groupId>${project.groupId}</groupId>
-        <artifactId>org.jacoco.ant-nodeps</artifactId>
+        <artifactId>org.jacoco.ant</artifactId>
+        <classifier>nodeps</classifier>
         <version>${project.version}</version>
       </dependency>
       <!-- Third-party dependencies -->
