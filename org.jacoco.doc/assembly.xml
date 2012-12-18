@@ -60,7 +60,7 @@
       <outputFileNameMapping>jacocoant.jar</outputFileNameMapping>
       <useProjectArtifact>false</useProjectArtifact>
       <includes>
-        <include>${project.groupId}:org.jacoco.ant-nodeps</include>
+        <include>${project.groupId}:org.jacoco.ant:jar:nodeps</include>
       </includes>
     </dependencySet>
     <dependencySet>
