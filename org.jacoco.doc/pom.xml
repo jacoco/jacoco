@@ -307,7 +307,7 @@
               <rules>
                 <requireFilesSize>
                   <maxsize>2400000</maxsize>
-                  <minsize>2200000</minsize>
+                  <minsize>2100000</minsize>
                   <files>
                     <file>${project.build.directory}/jacoco-${qualified.bundle.version}.zip</file>
                   </files>
