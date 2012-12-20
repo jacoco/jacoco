@@ -48,7 +48,7 @@ public class SessionInfoTest {
 
 	@Test
 	public void testToString() {
-		assertEquals("SessionInfo [id]",
+		assertEquals("SessionInfo[id]",
 				new SessionInfo("id", 1000, 2000).toString());
 	}
 

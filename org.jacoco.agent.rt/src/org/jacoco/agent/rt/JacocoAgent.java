@@ -25,6 +25,7 @@ import org.jacoco.core.runtime.AgentOptions;
 import org.jacoco.core.runtime.AgentOptions.OutputMode;
 import org.jacoco.core.runtime.IRuntime;
 import org.jacoco.core.runtime.ModifiedSystemClassRuntime;
+import org.jacoco.core.runtime.RuntimeData;
 
 /**
  * The agent which is referred as the <code>Premain-Class</code>.
@@ -72,15 +73,16 @@ public class JacocoAgent {
 	 */
 	public void init(final Instrumentation inst) throws Exception {
 		final IRuntime runtime = createRuntime(inst);
+		final RuntimeData data = new RuntimeData();
 		String sessionId = options.getSessionId();
 		if (sessionId == null) {
 			sessionId = createSessionId();
 		}
-		runtime.setSessionId(sessionId);
-		runtime.startup();
+		data.setSessionId(sessionId);
+		runtime.startup(data);
 		inst.addTransformer(new CoverageTransformer(runtime, options, logger));
 		controller = createAgentController();
-		controller.startup(options, runtime);
+		controller.startup(options, data);
 	}
 
 	/**

@@ -22,9 +22,11 @@ import org.jacoco.core.analysis.IClassCoverage;
 import org.jacoco.core.analysis.ICounter;
 import org.jacoco.core.analysis.IMethodCoverage;
 import org.jacoco.core.data.ExecutionDataStore;
+import org.jacoco.core.data.SessionInfoStore;
 import org.jacoco.core.instr.Instrumenter;
 import org.jacoco.core.internal.analysis.CounterImpl;
 import org.jacoco.core.runtime.IRuntime;
+import org.jacoco.core.runtime.RuntimeData;
 import org.jacoco.core.runtime.SystemPropertiesRuntime;
 import org.jacoco.core.test.TargetLoader;
 import org.junit.After;
@@ -41,14 +43,16 @@ public class CyclomaticComplexityTest {
 		public void test(int arg);
 	}
 
+	private RuntimeData data;
 	private IRuntime runtime;
 	private ClassReader reader;
 	private Target target;
 
 	@Before
 	public void setup() throws Exception {
+		data = new RuntimeData();
 		runtime = new SystemPropertiesRuntime();
-		runtime.startup();
+		runtime.startup(data);
 	}
 
 	@After
@@ -258,7 +262,7 @@ public class CyclomaticComplexityTest {
 	private ICounter analyze() {
 		final CoverageBuilder builder = new CoverageBuilder();
 		final ExecutionDataStore store = new ExecutionDataStore();
-		runtime.collect(store, null, false);
+		data.collect(store, new SessionInfoStore(), false);
 		final Analyzer analyzer = new Analyzer(store, builder);
 		analyzer.analyzeClass(reader);
 		final Collection<IClassCoverage> classes = builder.getClasses();

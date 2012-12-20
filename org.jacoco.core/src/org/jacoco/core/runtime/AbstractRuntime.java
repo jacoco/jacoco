@@ -14,10 +14,6 @@ package org.jacoco.core.runtime;
 import java.lang.reflect.Field;
 import java.util.Random;
 
-import org.jacoco.core.data.ExecutionDataStore;
-import org.jacoco.core.data.IExecutionDataVisitor;
-import org.jacoco.core.data.ISessionInfoVisitor;
-import org.jacoco.core.data.SessionInfo;
 import org.jacoco.core.internal.instr.InstrSupport;
 
 /**
@@ -25,62 +21,8 @@ import org.jacoco.core.internal.instr.InstrSupport;
  */
 public abstract class AbstractRuntime implements IRuntime {
 
-	/** store for execution data */
-	protected final ExecutionDataStore store;
-
-	/** access for this runtime instance */
-	protected final ExecutionDataAccess access;
-
-	private long startTimeStamp;
-
-	private String sessionId;
-
-	/**
-	 * Creates a new runtime.
-	 */
-	protected AbstractRuntime() {
-		store = new ExecutionDataStore();
-		access = new ExecutionDataAccess(store);
-		sessionId = createRandomId();
-	}
-
-	/**
-	 * Subclasses need to call this method in their {@link #startup()}
-	 * implementation to record the timestamp of session startup.
-	 */
-	protected final void setStartTimeStamp() {
-		startTimeStamp = System.currentTimeMillis();
-	}
-
-	public void setSessionId(final String id) {
-		sessionId = id;
-	}
-
-	public String getSessionId() {
-		return sessionId;
-	}
-
-	public final void collect(final IExecutionDataVisitor executionDataVisitor,
-			final ISessionInfoVisitor sessionInfoVisitor, final boolean reset) {
-		synchronized (store) {
-			if (sessionInfoVisitor != null) {
-				final SessionInfo info = new SessionInfo(sessionId,
-						startTimeStamp, System.currentTimeMillis());
-				sessionInfoVisitor.visitSessionInfo(info);
-			}
-			store.accept(executionDataVisitor);
-			if (reset) {
-				reset();
-			}
-		}
-	}
-
-	public final void reset() {
-		synchronized (store) {
-			store.reset();
-			setStartTimeStamp();
-		}
-	}
+	/** access to the runtime data */
+	protected RuntimeData data;
 
 	public void disconnect(final Class<?> type) throws Exception {
 		if (!type.isInterface()) {
@@ -89,6 +31,13 @@ public abstract class AbstractRuntime implements IRuntime {
 			dataField.setAccessible(true);
 			dataField.set(null, null);
 		}
+	}
+
+	/**
+	 * Subclasses must call this method when overwriting it.
+	 */
+	public void startup(final RuntimeData data) throws Exception {
+		this.data = data;
 	}
 
 	private static final Random RANDOM = new Random();

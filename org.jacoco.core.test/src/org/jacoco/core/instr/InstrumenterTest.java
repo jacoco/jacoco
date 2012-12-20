@@ -19,6 +19,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
 
+import org.jacoco.core.runtime.RuntimeData;
 import org.jacoco.core.runtime.SystemPropertiesRuntime;
 import org.jacoco.core.test.TargetLoader;
 import org.junit.After;
@@ -55,10 +56,10 @@ public class InstrumenterTest {
 	private Instrumenter instrumenter;
 
 	@Before
-	public void setup() {
+	public void setup() throws Exception {
 		runtime = new SystemPropertiesRuntime();
 		instrumenter = new Instrumenter(runtime);
-		runtime.startup();
+		runtime.startup(new RuntimeData());
 	}
 
 	@After

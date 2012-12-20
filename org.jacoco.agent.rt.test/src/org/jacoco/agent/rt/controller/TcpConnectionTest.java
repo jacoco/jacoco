@@ -12,6 +12,7 @@
 package org.jacoco.agent.rt.controller;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import java.io.IOException;
@@ -20,13 +21,13 @@ import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.concurrent.Future;
 
-import org.jacoco.agent.rt.StubRuntime;
 import org.jacoco.core.data.ExecutionDataStore;
 import org.jacoco.core.data.ExecutionDataWriter;
 import org.jacoco.core.data.SessionInfo;
 import org.jacoco.core.data.SessionInfoStore;
 import org.jacoco.core.runtime.RemoteControlReader;
 import org.jacoco.core.runtime.RemoteControlWriter;
+import org.jacoco.core.runtime.RuntimeData;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -37,14 +38,14 @@ public class TcpConnectionTest extends ExecutorTestBase {
 
 	private MockSocketConnection mockConnection;
 
-	private StubRuntime runtime;
+	private RuntimeData data;
 
 	@Before
 	@Override
 	public void setup() throws Exception {
 		super.setup();
 		mockConnection = new MockSocketConnection();
-		runtime = new StubRuntime();
+		data = new RuntimeData();
 	}
 
 	@Test(expected = IOException.class)
@@ -55,7 +56,7 @@ public class TcpConnectionTest extends ExecutorTestBase {
 		remoteOut.write(0xC0);
 		remoteOut.write(0xCA);
 		final TcpConnection connection = new TcpConnection(
-				mockConnection.getSocketA(), runtime);
+				mockConnection.getSocketA(), data);
 		connection.init();
 		connection.run();
 	}
@@ -66,7 +67,7 @@ public class TcpConnectionTest extends ExecutorTestBase {
 				.getOutputStream();
 		new ExecutionDataWriter(remoteOut);
 		final TcpConnection con = new TcpConnection(
-				mockConnection.getSocketA(), runtime);
+				mockConnection.getSocketA(), data);
 		con.init();
 		remoteOut.write(123);
 		con.run();
@@ -82,7 +83,7 @@ public class TcpConnectionTest extends ExecutorTestBase {
 		new ExecutionDataWriter(remoteOut);
 
 		final TcpConnection con = new TcpConnection(
-				mockConnection.getSocketA(), runtime);
+				mockConnection.getSocketA(), data);
 		con.init();
 
 		final Future<Void> f = executor.submit(new Callable<Void>() {
@@ -103,7 +104,7 @@ public class TcpConnectionTest extends ExecutorTestBase {
 	 */
 	public void testRemoteCloseWithoutHeader() throws Throwable {
 		final TcpConnection con = new TcpConnection(
-				mockConnection.getSocketA(), runtime);
+				mockConnection.getSocketA(), data);
 
 		final Future<Void> f = executor.submit(new Callable<Void>() {
 			public Void call() throws Exception {
@@ -130,7 +131,7 @@ public class TcpConnectionTest extends ExecutorTestBase {
 		new ExecutionDataWriter(remoteOut);
 
 		final TcpConnection con = new TcpConnection(
-				mockConnection.getSocketA(), runtime);
+				mockConnection.getSocketA(), data);
 		con.init();
 
 		final Future<Void> f = executor.submit(new Callable<Void>() {
@@ -148,11 +149,14 @@ public class TcpConnectionTest extends ExecutorTestBase {
 
 	@Test
 	public void testRemoteDump() throws Exception {
+		data.getExecutionData(Long.valueOf(0x12345678), "Foo", 42);
+		data.setSessionId("stubid");
+
 		final RemoteControlWriter remoteWriter = new RemoteControlWriter(
 				mockConnection.getSocketB().getOutputStream());
 
 		final TcpConnection con = new TcpConnection(
-				mockConnection.getSocketA(), runtime);
+				mockConnection.getSocketA(), data);
 		con.init();
 
 		final Future<Void> f = executor.submit(new Callable<Void>() {
@@ -173,10 +177,13 @@ public class TcpConnectionTest extends ExecutorTestBase {
 
 	@Test
 	public void testLocalDump() throws Exception {
+		data.getExecutionData(Long.valueOf(0x12345678), "Foo", 42);
+		data.setSessionId("stubid");
+
 		new RemoteControlWriter(mockConnection.getSocketB().getOutputStream());
 
 		final TcpConnection con = new TcpConnection(
-				mockConnection.getSocketA(), runtime);
+				mockConnection.getSocketA(), data);
 		con.init();
 
 		final Future<Void> f = executor.submit(new Callable<Void>() {
@@ -198,7 +205,7 @@ public class TcpConnectionTest extends ExecutorTestBase {
 	@Test
 	public void testLocalDumpWithoutInit() throws Exception {
 		final TcpConnection con = new TcpConnection(
-				mockConnection.getSocketA(), runtime);
+				mockConnection.getSocketA(), data);
 		// Must not write any data as we're not initialized:
 		con.writeExecutionData();
 
@@ -226,13 +233,13 @@ public class TcpConnectionTest extends ExecutorTestBase {
 
 	@Test
 	public void testRemoteReset() throws Exception {
-		runtime.fillProbes();
+		data.getExecutionData(Long.valueOf(123), "Foo", 1).getProbes()[0] = true;
 
 		final RemoteControlWriter remoteWriter = new RemoteControlWriter(
 				mockConnection.getSocketB().getOutputStream());
 
 		final TcpConnection con = new TcpConnection(
-				mockConnection.getSocketA(), runtime);
+				mockConnection.getSocketA(), data);
 		con.init();
 
 		final Future<Void> f = executor.submit(new Callable<Void>() {
@@ -257,9 +264,11 @@ public class TcpConnectionTest extends ExecutorTestBase {
 		assertTrue(remoteReader.read());
 		assertTrue(infoStore.getInfos().isEmpty());
 		assertTrue(execStore.getContents().isEmpty());
-		runtime.assertNoProbes();
+		assertFalse(data.getExecutionData(Long.valueOf(123), "Foo", 1)
+				.getProbes()[0]);
 
 		con.close();
 		f.get();
 	}
+
 }

@@ -43,8 +43,9 @@ public class URLStreamHandlerRuntime extends AbstractRuntime {
 		protocol = PROTOCOLPREFIX + Integer.toHexString(hashCode());
 	}
 
-	public void startup() throws Exception {
-		setStartTimeStamp();
+	@Override
+	public void startup(final RuntimeData data) throws Exception {
+		super.startup(data);
 		handlers = getHandlersReference();
 		handlers.put(protocol, handler);
 	}
@@ -77,8 +78,7 @@ public class URLStreamHandlerRuntime extends AbstractRuntime {
 		// connection.equals(args);
 		// final byte[] probedata = (byte[]) args[0];
 
-		ExecutionDataAccess.generateArgumentArray(classid, classname,
-				probecount, mv);
+		RuntimeData.generateArgumentArray(classid, classname, probecount, mv);
 		mv.visitInsn(Opcodes.DUP);
 
 		// Stack[1]: [Ljava/lang/Object;
@@ -141,7 +141,7 @@ public class URLStreamHandlerRuntime extends AbstractRuntime {
 
 		@Override
 		public boolean equals(final Object obj) {
-			return access.equals(obj);
+			return data.equals(obj);
 		}
 	};
 

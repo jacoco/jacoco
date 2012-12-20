@@ -22,9 +22,11 @@ import org.jacoco.core.analysis.ICounter;
 import org.jacoco.core.analysis.ILine;
 import org.jacoco.core.analysis.ISourceFileCoverage;
 import org.jacoco.core.data.ExecutionDataStore;
+import org.jacoco.core.data.SessionInfoStore;
 import org.jacoco.core.instr.Instrumenter;
 import org.jacoco.core.internal.analysis.CounterImpl;
 import org.jacoco.core.runtime.IRuntime;
+import org.jacoco.core.runtime.RuntimeData;
 import org.jacoco.core.runtime.SystemPropertiesRuntime;
 import org.jacoco.core.test.TargetLoader;
 import org.junit.Before;
@@ -68,13 +70,14 @@ public abstract class ValidationTestBase {
 
 	private ExecutionDataStore execute(final ClassReader reader)
 			throws Exception {
+		RuntimeData data = new RuntimeData();
 		IRuntime runtime = new SystemPropertiesRuntime();
-		runtime.startup();
+		runtime.startup(data);
 		final byte[] bytes = new Instrumenter(runtime).instrument(reader);
 		final TargetLoader loader = new TargetLoader(target, bytes);
 		run(loader.getTargetClass());
 		final ExecutionDataStore store = new ExecutionDataStore();
-		runtime.collect(store, null, false);
+		data.collect(store, new SessionInfoStore(), false);
 		runtime.shutdown();
 		return store;
 	}

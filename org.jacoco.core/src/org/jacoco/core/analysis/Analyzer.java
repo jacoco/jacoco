@@ -70,8 +70,8 @@ public class Analyzer {
 	 */
 	private ClassVisitor createAnalyzingVisitor(final long classid) {
 		final ExecutionData data = executionData.get(classid);
-		final boolean[] classExec = data == null ? null : data.getData();
-		final ClassAnalyzer analyzer = new ClassAnalyzer(classid, classExec,
+		final boolean[] probes = data == null ? null : data.getProbes();
+		final ClassAnalyzer analyzer = new ClassAnalyzer(classid, probes,
 				stringPool) {
 			@Override
 			public void visitEnd() {

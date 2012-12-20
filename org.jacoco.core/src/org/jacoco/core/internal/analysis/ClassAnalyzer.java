@@ -22,7 +22,7 @@ import org.objectweb.asm.Opcodes;
 public class ClassAnalyzer extends ClassProbesVisitor {
 
 	private final long classid;
-	private final boolean executionData[];
+	private final boolean probes[];
 	private final StringPool stringPool;
 
 	private ClassCoverageImpl coverage;
@@ -32,15 +32,15 @@ public class ClassAnalyzer extends ClassProbesVisitor {
 	 * 
 	 * @param classid
 	 *            id of the class
-	 * @param executionData
+	 * @param probes
 	 *            execution data for this class or <code>null</code>
 	 * @param stringPool
 	 *            shared pool to minimize the number of {@link String} instances
 	 */
-	public ClassAnalyzer(final long classid, final boolean[] executionData,
+	public ClassAnalyzer(final long classid, final boolean[] probes,
 			final StringPool stringPool) {
 		this.classid = classid;
-		this.executionData = executionData;
+		this.probes = probes;
 		this.stringPool = stringPool;
 	}
 
@@ -78,7 +78,7 @@ public class ClassAnalyzer extends ClassProbesVisitor {
 		}
 
 		return new MethodAnalyzer(stringPool.get(name), stringPool.get(desc),
-				stringPool.get(signature), executionData) {
+				stringPool.get(signature), probes) {
 			@Override
 			public void visitEnd() {
 				super.visitEnd();
