@@ -86,6 +86,7 @@
 
     <module>../org.jacoco.examples</module>
     <module>../org.jacoco.doc</module>
+    <module>../jacoco</module>
   </modules>
 
   <scm>

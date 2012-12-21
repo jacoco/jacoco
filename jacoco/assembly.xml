@@ -17,7 +17,7 @@
   <includeBaseDirectory>false</includeBaseDirectory>
   <fileSets>
     <fileSet>
-      <directory>${basedir}/docroot</directory>
+      <directory>${basedir}/../org.jacoco.doc/docroot</directory>
       <outputDirectory>/</outputDirectory>
       <filtered>true</filtered>
       <includes>
@@ -25,7 +25,7 @@
       </includes>
     </fileSet>
     <fileSet>
-      <directory>${basedir}/target/generated-resources/xml/xslt</directory>
+      <directory>${basedir}/../org.jacoco.doc/target/generated-resources/xml/xslt</directory>
       <outputDirectory>/doc</outputDirectory>
       <filtered>false</filtered>
       <includes>
@@ -33,18 +33,18 @@
       </includes>
     </fileSet>
     <fileSet>
-      <directory>${basedir}/docroot</directory>
+      <directory>${basedir}/../org.jacoco.doc/docroot</directory>
       <outputDirectory>/</outputDirectory>
       <excludes>
         <exclude>**/*.html</exclude>
       </excludes>
     </fileSet>
     <fileSet>
-      <directory>${basedir}/target/coverage</directory>
+      <directory>${basedir}/../org.jacoco.doc/target/coverage</directory>
       <outputDirectory>/coverage</outputDirectory>
     </fileSet>
     <fileSet>
-      <directory>${basedir}/target/junit</directory>
+      <directory>${basedir}/../org.jacoco.doc/target/junit</directory>
       <outputDirectory>/test</outputDirectory>
     </fileSet>
   </fileSets>
@@ -83,6 +83,7 @@
       </includes>
       <excludes>
         <exclude>${project.groupId}:org.jacoco.agent:*:runtime</exclude>
+        <exclude>${project.groupId}:org.jacoco.ant:*:nodeps</exclude>
       </excludes>
     </dependencySet>
     <dependencySet>
@@ -96,12 +97,12 @@
     <dependencySet>
       <outputDirectory>/doc/api</outputDirectory>
       <unpack>true</unpack>
+      <useProjectArtifact>false</useProjectArtifact>
       <unpackOptions>
         <excludes>
           <exclude>META-INF/</exclude>
         </excludes>
       </unpackOptions>
-      <useProjectAttachments>true</useProjectAttachments>
       <includes>
         <include>${project.groupId}:org.jacoco.doc:*:javadoc</include>
       </includes>
