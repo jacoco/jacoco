@@ -30,4 +30,9 @@ public class JaCoCoTest {
 		assertNotNull(JaCoCo.HOMEURL);
 	}
 
+	@Test
+	public void testRUNTIMEPACKAGE() {
+		assertNotNull(JaCoCo.RUNTIMEPACKAGE);
+	}
+
 }

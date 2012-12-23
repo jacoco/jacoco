@@ -21,13 +21,17 @@ import org.jacoco.core.runtime.AgentOptions;
 import org.jacoco.core.runtime.AgentOptions.OutputMode;
 import org.junit.Test;
 
-public class JacocoAgentTest {
+/**
+ * Unit tests for {@link Agent}.
+ */
+public class AgentTest {
+
 	@Test
 	public void shouldCreateController() {
 		AgentOptions options = new AgentOptions();
 
 		options.setOutput(OutputMode.file);
-		JacocoAgent agent = new JacocoAgent(options, null);
+		Agent agent = new Agent(options, null);
 		assertTrue(agent.createAgentController() instanceof LocalController);
 
 		options.setOutput(OutputMode.tcpserver);
@@ -40,9 +44,4 @@ public class JacocoAgentTest {
 		assertTrue(agent.createAgentController() instanceof MBeanController);
 	}
 
-	@Test
-	public void shouldParseOptions() {
-		JacocoAgent agent = new JacocoAgent("output=file", null);
-		assertTrue(agent.createAgentController() instanceof LocalController);
-	}
 }

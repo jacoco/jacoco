@@ -11,7 +11,6 @@
  *******************************************************************************/
 package org.jacoco.agent.rt;
 
-import java.lang.instrument.Instrumentation;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 
@@ -23,20 +22,48 @@ import org.jacoco.agent.rt.controller.TcpServerController;
 import org.jacoco.core.runtime.AbstractRuntime;
 import org.jacoco.core.runtime.AgentOptions;
 import org.jacoco.core.runtime.AgentOptions.OutputMode;
-import org.jacoco.core.runtime.IRuntime;
-import org.jacoco.core.runtime.ModifiedSystemClassRuntime;
 import org.jacoco.core.runtime.RuntimeData;
 
 /**
- * The agent which is referred as the <code>Premain-Class</code>.
+ * The agent manages the life cycle of JaCoCo runtime.
  */
-public class JacocoAgent {
+public class Agent {
+
+	private static Agent singleton;
+
+	/**
+	 * Returns a global instance which is already started. If the method is
+	 * called the first time the instance is created with the given options.
+	 * 
+	 * @param options
+	 *            options to configure the instance
+	 * @return global instance
+	 * @throws Exception
+	 *             in case of startup failures of the corresponding controller
+	 */
+	public static synchronized Agent getInstance(final AgentOptions options)
+			throws Exception {
+		if (singleton == null) {
+			final Agent agent = new Agent(options, IExceptionLogger.SYSTEM_ERR);
+			agent.startup();
+			Runtime.getRuntime().addShutdownHook(new Thread() {
+				@Override
+				public void run() {
+					agent.shutdown();
+				}
+			});
+			singleton = agent;
+		}
+		return singleton;
+	}
 
 	private final AgentOptions options;
 
 	private final IExceptionLogger logger;
 
 	private IAgentController controller;
+
+	private final RuntimeData data;
 
 	/**
 	 * Creates a new agent with the given agent options.
@@ -46,43 +73,49 @@ public class JacocoAgent {
 	 * @param logger
 	 *            logger used by this agent
 	 */
-	public JacocoAgent(final AgentOptions options, final IExceptionLogger logger) {
+	public Agent(final AgentOptions options, final IExceptionLogger logger) {
 		this.options = options;
 		this.logger = logger;
+		this.data = new RuntimeData();
 	}
 
 	/**
-	 * Creates a new agent with the given agent options string.
+	 * Returns the runtime data object created by this agent
 	 * 
-	 * @param options
-	 *            agent options as text string
-	 * @param logger
-	 *            logger used by this agent
+	 * @return runtime data for this agent instance
 	 */
-	public JacocoAgent(final String options, final IExceptionLogger logger) {
-		this(new AgentOptions(options), logger);
+	public RuntimeData getData() {
+		return data;
 	}
 
 	/**
 	 * Initializes this agent.
 	 * 
-	 * @param inst
-	 *            instrumentation services
 	 * @throws Exception
 	 *             internal startup problem
 	 */
-	public void init(final Instrumentation inst) throws Exception {
-		final IRuntime runtime = createRuntime(inst);
-		final RuntimeData data = new RuntimeData();
+	public void startup() throws Exception {
 		String sessionId = options.getSessionId();
 		if (sessionId == null) {
 			sessionId = createSessionId();
 		}
 		data.setSessionId(sessionId);
-		runtime.startup(data);
-		inst.addTransformer(new CoverageTransformer(runtime, options, logger));
 		controller = createAgentController();
 		controller.startup(options, data);
+	}
+
+	/**
+	 * Shutdown the agent again.
+	 */
+	public void shutdown() {
+		try {
+			if (options.getDumpOnExit()) {
+				controller.writeExecutionData();
+			}
+			controller.shutdown();
+		} catch (final Exception e) {
+			logger.logExeption(e);
+		}
 	}
 
 	/**
@@ -90,7 +123,7 @@ public class JacocoAgent {
 	 * 
 	 * @return configured controller implementation
 	 */
-	protected IAgentController createAgentController() {
+	IAgentController createAgentController() {
 		final OutputMode controllerType = options.getOutput();
 		switch (controllerType) {
 		case file:
@@ -114,64 +147,6 @@ public class JacocoAgent {
 			host = "unknownhost";
 		}
 		return host + "-" + AbstractRuntime.createRandomId();
-	}
-
-	/**
-	 * Creates the specific coverage runtime implementation.
-	 * 
-	 * @param inst
-	 *            instrumentation services
-	 * @return coverage runtime instance
-	 * @throws Exception
-	 *             creation problem
-	 */
-	protected IRuntime createRuntime(final Instrumentation inst)
-			throws Exception {
-		return ModifiedSystemClassRuntime.createFor(inst, "java/util/UUID");
-	}
-
-	/**
-	 * Shutdown the agent again.
-	 */
-	public void shutdown() {
-		try {
-			if (options.getDumpOnExit()) {
-				controller.writeExecutionData();
-			}
-			controller.shutdown();
-		} catch (final Exception e) {
-			logger.logExeption(e);
-		}
-	}
-
-	/**
-	 * This method is called by the JVM to initialize Java agents.
-	 * 
-	 * @param options
-	 *            agent options
-	 * @param inst
-	 *            instrumentation callback provided by the JVM
-	 * @throws Exception
-	 *             in case initialization fails
-	 */
-	public static void premain(final String options, final Instrumentation inst)
-			throws Exception {
-
-		final JacocoAgent agent = new JacocoAgent(options,
-				new IExceptionLogger() {
-					public void logExeption(final Exception ex) {
-						ex.printStackTrace();
-					}
-				});
-
-		agent.init(inst);
-
-		Runtime.getRuntime().addShutdownHook(new Thread() {
-			@Override
-			public void run() {
-				agent.shutdown();
-			}
-		});
 	}
 
 }

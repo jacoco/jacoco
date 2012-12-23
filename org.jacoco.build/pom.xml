@@ -117,6 +117,8 @@
 
     <maven.build.timestamp.format>yyyyMMddhhmm</maven.build.timestamp.format>
     <jacoco.home.url>http://www.eclemma.org/jacoco</jacoco.home.url>
+    <!-- TODO: create random id -->
+    <jacoco.runtime.package.name>org.jacoco.agent.rt_xxxxxx</jacoco.runtime.package.name>
 
     <jvm.args></jvm.args>
     <argLine>${jvm.args}</argLine>

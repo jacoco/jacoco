@@ -17,6 +17,7 @@ import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 import java.io.File;
+import java.util.Properties;
 
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -44,11 +45,12 @@ public class AgentOptionsTest {
 				options.getExclClassloader());
 		assertNull(options.getSessionId());
 		assertTrue(options.getDumpOnExit());
-		assertEquals(6300, options.getPort());
-		assertNull(options.getAddress());
 		assertEquals(AgentOptions.OutputMode.file, options.getOutput());
-		assertEquals("", options.toString());
+		assertNull(options.getAddress());
+		assertEquals(6300, options.getPort());
 		assertNull(options.getClassDumpDir());
+
+		assertEquals("", options.toString());
 	}
 
 	@Test
@@ -59,8 +61,38 @@ public class AgentOptionsTest {
 
 	@Test
 	public void testNullOptions() {
-		AgentOptions options = new AgentOptions(null);
+		AgentOptions options = new AgentOptions((String) null);
 		assertEquals("", options.toString());
+	}
+
+	@Test
+	public void testPropertiesOptions() {
+		Properties properties = new Properties();
+		properties.put("jacoco.destfile", "/target/test/test.exec");
+		properties.put("jacoco.append", "false");
+		properties.put("jacoco.includes", "org.*:com.*");
+		properties.put("jacoco.excludes", "*Test");
+		properties.put("jacoco.exclclassloader", "org.jacoco.test.TestLoader");
+		properties.put("jacoco.sessionid", "testsession");
+		properties.put("jacoco.dumponexit", "false");
+		properties.put("jacoco.output", "tcpserver");
+		properties.put("jacoco.address", "remotehost");
+		properties.put("jacoco.port", "1234");
+		properties.put("jacoco.classdumpdir", "target/dump");
+
+		AgentOptions options = new AgentOptions(properties);
+
+		assertEquals("/target/test/test.exec", options.getDestfile());
+		assertFalse(options.getAppend());
+		assertEquals("org.*:com.*", options.getIncludes());
+		assertEquals("*Test", options.getExcludes());
+		assertEquals("org.jacoco.test.TestLoader", options.getExclClassloader());
+		assertEquals("testsession", options.getSessionId());
+		assertFalse(options.getDumpOnExit());
+		assertEquals(AgentOptions.OutputMode.tcpserver, options.getOutput());
+		assertEquals("remotehost", options.getAddress());
+		assertEquals(1234, options.getPort());
+		assertEquals("target/dump", options.getClassDumpDir());
 	}
 
 	@Test
@@ -123,8 +155,8 @@ public class AgentOptionsTest {
 
 	@Test
 	public void testGetIncludes() {
-		AgentOptions options = new AgentOptions("includes=org.*|com.*");
-		assertEquals("org.*|com.*", options.getIncludes());
+		AgentOptions options = new AgentOptions("includes=org.*:com.*");
+		assertEquals("org.*:com.*", options.getIncludes());
 	}
 
 	@Test
