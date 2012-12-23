@@ -11,7 +11,7 @@
       Marc R. Hoffmann - initial API and implementation
 -->
 
-<project name="Example Ant Build with JaCoCo" default="rebuild" xmlns:jacoco="antlib:org.jacoco.ant">
+<project name="Example Ant Build with JaCoCo Offline Instrumentation" default="rebuild" xmlns:jacoco="antlib:org.jacoco.ant">
 	
 	<description>
 	  Example Ant build file that demonstrates how a JaCoCo coverage report
@@ -21,6 +21,7 @@
 	<property name="src.dir" location="./src/main/java" />
 	<property name="result.dir" location="./target" />
 	<property name="result.classes.dir" location="${result.dir}/classes" />
+	<property name="result.classes.instr.dir" location="${result.dir}/classes-instr" />
 	<property name="result.report.dir" location="${result.dir}/site/jacoco" />
 	<property name="result.exec.file" location="${result.dir}/jacoco.exec" />
 
@@ -38,23 +39,35 @@
 		<javac srcdir="${src.dir}" destdir="${result.classes.dir}" debug="true" includeantruntime="false" />
 	</target>
 
-	<target name="test" depends="compile">
-		<!-- Step 2: Wrap test execution with the JaCoCo coverage task -->
-		<jacoco:coverage destfile="${result.exec.file}">
-			<java classname="org.jacoco.examples.parser.Main" fork="true">
-				<classpath path="${result.classes.dir}" />
-				<arg value="2 * 3 + 4"/>
-				<arg value="2 + 3 * 4"/>
-				<arg value="(2 + 3) * 4"/>
-				<arg value="2 * 2 * 2 * 2"/>
-				<arg value="1 + 2 + 3 + 4"/>
-				<arg value="2 * 3 + 2 * 5"/>
-			</java>
-		</jacoco:coverage>
+	<target name="instrument" depends="compile">
+		<!-- Step 2: Instrument class files -->
+		<jacoco:instrument destdir="${result.classes.instr.dir}">
+			<fileset dir="${result.classes.dir}" includes="**/*.class" />
+		</jacoco:instrument>
+	</target>
+
+	
+	<target name="test" depends="instrument">
+		<!-- Step 3: Run tests with instrumented classes -->
+		<java classname="org.jacoco.examples.parser.Main" fork="true">
+			<!-- jacocoagent.jar must be on the classpath --> 
+			<classpath>
+				<pathelement path="../../../lib/jacocoagent.jar"/>
+				<pathelement path="${result.classes.instr.dir}" />
+			</classpath>
+			<!-- Agent is configured with system properties -->
+			<sysproperty key="jacoco.destfile" file="${result.exec.file}"/>
+			<arg value="2 * 3 + 4"/>
+			<arg value="2 + 3 * 4"/>
+			<arg value="(2 + 3) * 4"/>
+			<arg value="2 * 2 * 2 * 2"/>
+			<arg value="1 + 2 + 3 + 4"/>
+			<arg value="2 * 3 + 2 * 5"/>
+		</java>
 	</target>
 
 	<target name="report" depends="test">
-		<!-- Step 3: Create coverage report -->
+		<!-- Step 4: Create coverage report -->
 		<jacoco:report>
 
 			<!-- This task needs the collected execution data and ... -->
@@ -79,6 +92,6 @@
 		</jacoco:report>
 	</target>
 
-	<target name="rebuild" depends="clean,compile,test,report" />
+	<target name="rebuild" depends="clean,compile,instrument,test,report" />
 
 </project>

@@ -50,8 +50,8 @@ public class Instrumenter {
 	 */
 	private ClassVisitor createInstrumentingVisitor(final long classid,
 			final ClassVisitor cv) {
-		return new ClassProbesAdapter(new ClassInstrumenter(classid, accessGenerator,
-				cv));
+		return new ClassProbesAdapter(new ClassInstrumenter(classid,
+				accessGenerator, cv));
 	}
 
 	/**
@@ -59,7 +59,7 @@ public class Instrumenter {
 	 * 
 	 * @param reader
 	 *            definition of the class as ASM reader
-	 * @return instrumented definition or <code>null</code>
+	 * @return instrumented definition
 	 * 
 	 */
 	public byte[] instrument(final ClassReader reader) {
@@ -75,7 +75,7 @@ public class Instrumenter {
 	 * 
 	 * @param buffer
 	 *            definition of the class
-	 * @return instrumented definition or <code>null</code>
+	 * @return instrumented definition
 	 * 
 	 */
 	public byte[] instrument(final byte[] buffer) {
@@ -87,7 +87,7 @@ public class Instrumenter {
 	 * 
 	 * @param input
 	 *            stream to read class definition from
-	 * @return instrumented definition or <code>null</code>
+	 * @return instrumented definition
 	 * @throws IOException
 	 *             if reading data from the stream fails
 	 * 

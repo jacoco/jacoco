@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- 
+   Copyright (c) 2009, 2012 Mountainminds GmbH & Co. KG and Contributors
+   All rights reserved. This program and the accompanying materials
+   are made available under the terms of the Eclipse Public License v1.0
+   which accompanies this distribution, and is available at
+   http://www.eclipse.org/legal/epl-v10.html
+  
+   Contributors:
+      Brock Janiczak - initial API and implementation
+      
+   $Id: $
+-->
+
+<project name="JaCoCo Instrument Task Tests" xmlns:au="antlib:org.apache.ant.antunit" xmlns:jacoco="antlib:org.jacoco.ant">
+
+	<target name="setUp">
+		<tempfile property="temp.dir" prefix="jacocoTest" destdir="${java.io.tmpdir}" />
+		<mkdir dir="${temp.dir}"/>
+		<property name="exec.file" location="${temp.dir}/exec.file" />
+	</target>
+
+	<target name="tearDown">
+		<delete dir="${temp.dir}" quiet="false" failonerror="true"/>
+	</target>
+	
+	<target name="testInstrumentNoDestination">
+		<au:expectfailure expectedMessage="Destination directory must be supplied">
+			<jacoco:instrument/>
+		</au:expectfailure>
+	</target>
+
+	<target name="testInstrumentInvalidClassFile">
+		<mkdir dir="${temp.dir}/output"/>
+		<property name="broken.file" location="${temp.dir}/broken.class"/>
+		<echo file="${broken.file}">Not a class.</echo>
+		<au:expectfailure expectedMessage="Error while instrumenting ${broken.file}">
+			<jacoco:instrument destdir="${temp.dir}/output">
+				<fileset dir="${temp.dir}" includes="broken.class"/>
+			</jacoco:instrument>
+		</au:expectfailure>
+		<au:assertFileDoesntExist file="${temp.dir}/output/broken.class" />
+	</target>
+
+	<target name="testInstrumentIgnoreDirectories">
+		<jacoco:instrument destdir="${temp.dir}">
+			<dirset dir="${org.jacoco.ant.instrumentTaskTest.classes.dir}" includes="**"/>
+		</jacoco:instrument>
+	</target>
+	
+	<target name="testInstrumentAndRun">
+		<jacoco:instrument destdir="${temp.dir}">
+			<fileset dir="${org.jacoco.ant.instrumentTaskTest.classes.dir}" includes="**/*.class"/>
+		</jacoco:instrument>
+		<au:assertLogContains text="Instrumented 12 classes to ${temp.dir}"/>
+		<au:assertFileExists file="${temp.dir}/org/jacoco/ant/InstrumentTaskTest.class" />
+
+		<java classname="org.jacoco.ant.TestTarget" failonerror="true" fork="true">
+			<sysproperty key="jacoco.destfile" file="${temp.dir}/test.exec"/>
+			<classpath>
+				<pathelement path="${org.jacoco.ant.instrumentTaskTest.agent.file}"/>
+				<pathelement path="${temp.dir}"/>
+			</classpath>
+		</java>
+		<au:assertFileExists file="${temp.dir}/test.exec" />
+	</target>
+	
+</project>
