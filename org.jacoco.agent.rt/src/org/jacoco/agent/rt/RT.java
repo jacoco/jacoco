@@ -23,13 +23,8 @@ public class RT {
 	private static final RuntimeData data;
 
 	static {
-		try {
-			final Agent agent = Agent.getInstance(new AgentOptions(
-					System.getProperties()));
-			data = agent.getData();
-		} catch (final Exception e) {
-			throw new RuntimeException("Error while creating JaCoCo Runtime", e);
-		}
+		final AgentOptions options = new AgentOptions(System.getProperties());
+		data = Agent.getInstance(options).getData();
 	}
 
 	/**

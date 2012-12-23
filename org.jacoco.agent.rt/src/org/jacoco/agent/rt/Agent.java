@@ -38,11 +38,8 @@ public class Agent {
 	 * @param options
 	 *            options to configure the instance
 	 * @return global instance
-	 * @throws Exception
-	 *             in case of startup failures of the corresponding controller
 	 */
-	public static synchronized Agent getInstance(final AgentOptions options)
-			throws Exception {
+	public static synchronized Agent getInstance(final AgentOptions options) {
 		if (singleton == null) {
 			final Agent agent = new Agent(options, IExceptionLogger.SYSTEM_ERR);
 			agent.startup();
@@ -91,17 +88,19 @@ public class Agent {
 	/**
 	 * Initializes this agent.
 	 * 
-	 * @throws Exception
-	 *             internal startup problem
 	 */
-	public void startup() throws Exception {
-		String sessionId = options.getSessionId();
-		if (sessionId == null) {
-			sessionId = createSessionId();
+	public void startup() {
+		try {
+			String sessionId = options.getSessionId();
+			if (sessionId == null) {
+				sessionId = createSessionId();
+			}
+			data.setSessionId(sessionId);
+			controller = createAgentController();
+			controller.startup(options, data);
+		} catch (final Exception e) {
+			logger.logExeption(e);
 		}
-		data.setSessionId(sessionId);
-		controller = createAgentController();
-		controller.startup(options, data);
 	}
 
 	/**
