@@ -14,7 +14,7 @@
 
   <groupId>org.jacoco</groupId>
   <artifactId>org.jacoco.build</artifactId>
-  <version>0.6.1-SNAPSHOT</version>
+  <version>0.6.2-SNAPSHOT</version>
   <packaging>pom</packaging>
 
   <name>JaCoCo</name>
@@ -373,6 +373,11 @@
         </plugin>
         <plugin>
           <groupId>org.codehaus.mojo</groupId>
+          <artifactId>buildnumber-maven-plugin</artifactId>
+          <version>1.2</version>
+        </plugin>
+        <plugin>
+          <groupId>org.codehaus.mojo</groupId>
           <artifactId>xml-maven-plugin</artifactId>
           <version>1.0</version>
         </plugin>
@@ -529,6 +534,7 @@
           </execution>
         </executions>
       </plugin>
+
       <plugin>
         <groupId>org.codehaus.groovy.maven</groupId>
         <artifactId>gmaven-plugin</artifactId>
@@ -553,6 +559,25 @@
             </configuration>
           </execution>
         </executions>
+      </plugin>
+
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>buildnumber-maven-plugin</artifactId>
+        <executions>
+          <execution>
+            <phase>validate</phase>
+            <goals>
+              <goal>create</goal>
+            </goals>
+          </execution>
+        </executions>
+        <configuration>
+          <doCheck>false</doCheck>
+          <doUpdate>false</doUpdate>
+          <getRevisionOnlyOnce>true</getRevisionOnlyOnce>
+          <revisionOnScmFailure>0</revisionOnScmFailure>
+        </configuration>
       </plugin>
     </plugins>
   </build>
@@ -705,6 +730,9 @@
             <configuration>
               <archive>
                 <manifestFile>${bundle-manifest}</manifestFile>
+                <manifestEntries>
+                  <Eclipse-SourceReferences>scm:git:git://github.com/jacoco/jacoco.git;path="${project.artifactId}";commitId=${buildNumber}</Eclipse-SourceReferences>
+                </manifestEntries>
               </archive>
             </configuration>
           </plugin>
