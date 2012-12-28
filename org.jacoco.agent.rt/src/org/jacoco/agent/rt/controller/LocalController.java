@@ -19,7 +19,7 @@ import java.io.OutputStream;
 
 import org.jacoco.core.data.ExecutionDataWriter;
 import org.jacoco.core.runtime.AgentOptions;
-import org.jacoco.core.runtime.IRuntime;
+import org.jacoco.core.runtime.RuntimeData;
 
 /**
  * Local only agent controller that will write coverage data to the filesystem.
@@ -31,13 +31,13 @@ import org.jacoco.core.runtime.IRuntime;
  */
 public class LocalController implements IAgentController {
 
-	private IRuntime runtime;
+	private RuntimeData data;
 
 	private OutputStream output;
 
-	public final void startup(final AgentOptions options, final IRuntime runtime)
+	public final void startup(final AgentOptions options, final RuntimeData data)
 			throws IOException {
-		this.runtime = runtime;
+		this.data = data;
 		final File destFile = new File(options.getDestfile()).getAbsoluteFile();
 		final File folder = destFile.getParentFile();
 		if (folder != null) {
@@ -49,7 +49,7 @@ public class LocalController implements IAgentController {
 
 	public void writeExecutionData() throws IOException {
 		final ExecutionDataWriter writer = new ExecutionDataWriter(output);
-		runtime.collect(writer, writer, false);
+		data.collect(writer, writer, false);
 	}
 
 	public void shutdown() throws IOException {

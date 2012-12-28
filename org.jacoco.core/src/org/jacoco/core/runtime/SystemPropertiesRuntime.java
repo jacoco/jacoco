@@ -55,17 +55,17 @@ public class SystemPropertiesRuntime extends AbstractRuntime {
 
 		// Stack[0]: Ljava/lang/Object;
 
-		ExecutionDataAccess.generateAccessCall(classid, classname, probecount,
-				mv);
+		RuntimeData.generateAccessCall(classid, classname, probecount, mv);
 
 		// Stack[0]: [Z
 
 		return 6; // Maximum local stack size is 3
 	}
 
-	public void startup() {
-		setStartTimeStamp();
-		System.getProperties().put(key, access);
+	@Override
+	public void startup(final RuntimeData data) throws Exception {
+		super.startup(data);
+		System.getProperties().put(key, data);
 	}
 
 	public void shutdown() {

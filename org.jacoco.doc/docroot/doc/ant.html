@@ -28,7 +28,10 @@
   <a href="#agent"><code>agent</code></a>,
   <a href="#dump"><code>dump</code></a> and
   <a href="#merge"><code>merge</code></a>. Reports in different formats are
-  creates with the <a href="#report"><code>report</code></a> task.  
+  creates with the <a href="#report"><code>report</code></a> task. For 
+  <a href="offline.html">offline instrumentation</a> the task
+  <a href="#instrument"><code>instrument</code></a> can be used to prepare class
+  files.  
 </p>
 
 <p class="hint">
@@ -690,6 +693,43 @@
       <td><code>encoding</code></td>
       <td>Encoding of the generated CSV document.</td>
       <td><code>UTF-8</code></td>
+    </tr>
+  </tbody>
+</table>
+
+
+<h2><a name="instrument">Task <code>instrument</code></a></h2>
+
+<p>
+  This task is used for <a href="offline.html">offline instrumentation</a> of
+  class files. The task takes a set of class files and writes instrumented
+  versions to a specified location. 
+</p>
+
+<pre class="source lang-xml linenums">
+&lt;jacoco:instrument destfile="target/classes-instr"&gt;
+    &lt;fileset dir="target/classes" includes="**/*.class"/&gt;
+&lt;/jacoco:instrument&gt;
+</pre>
+
+<p>
+  The task definition can contain any number of resource collection types and
+  has the following mandatory attribute: 
+</p>
+
+<table class="coverage">
+  <thead>
+    <tr>
+      <td>Attribute</td>
+      <td>Description</td>
+      <td>Default</td>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>destdir</code></td>
+      <td>Directory location to write the instrumented class files to.</td>
+      <td><i>none (required)</i></td>
     </tr>
   </tbody>
 </table>

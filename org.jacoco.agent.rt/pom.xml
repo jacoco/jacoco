@@ -42,26 +42,6 @@
     <sourceDirectory>src</sourceDirectory>
 
     <plugins>
-      <!-- Generates random number for relocation of packages -->
-      <plugin>
-        <groupId>org.codehaus.groovy.maven</groupId>
-        <artifactId>gmaven-plugin</artifactId>
-        <executions>
-          <execution>
-            <phase>validate</phase>
-            <goals>
-              <goal>execute</goal>
-            </goals>
-            <configuration>
-              <source>
-              def id = Math.abs(new java.util.Random().nextInt())
-              project.properties['rt'] = "rt_" + Integer.toString(id, Character.MAX_RADIX)
-              </source>
-            </configuration>
-          </execution>
-        </executions>
-      </plugin>
-
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-shade-plugin</artifactId>
@@ -78,21 +58,21 @@
               <relocations>
                 <relocation>
                   <pattern>org.jacoco.agent.rt</pattern>
-                  <shadedPattern>org.jacoco.agent.${rt}</shadedPattern>
+                  <shadedPattern>${jacoco.runtime.package.name}</shadedPattern>
                 </relocation>
                 <relocation>
                   <pattern>org.jacoco.core</pattern>
-                  <shadedPattern>org.jacoco.agent.${rt}.core</shadedPattern>
+                  <shadedPattern>${jacoco.runtime.package.name}.core</shadedPattern>
                 </relocation>
                 <relocation>
                   <pattern>org.objectweb.asm</pattern>
-                  <shadedPattern>org.jacoco.agent.${rt}.asm</shadedPattern>
+                  <shadedPattern>${jacoco.runtime.package.name}.asm</shadedPattern>
                 </relocation>
               </relocations>
               <transformers>
                 <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
                   <manifestEntries>
-                    <Premain-Class>org.jacoco.agent.${rt}.JacocoAgent</Premain-Class>
+                    <Premain-Class>${jacoco.runtime.package.name}.PreMain</Premain-Class>
                   </manifestEntries>
                 </transformer>
               </transformers>

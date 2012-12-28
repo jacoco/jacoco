@@ -13,11 +13,12 @@ package org.jacoco.core.runtime;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertSame;
+import static org.junit.Assert.assertTrue;
 
 import java.util.concurrent.Callable;
 
-import org.jacoco.core.data.ExecutionDataStore;
 import org.jacoco.core.test.TargetLoader;
 import org.junit.Before;
 import org.junit.Test;
@@ -27,45 +28,85 @@ import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.Type;
 
 /**
- * Unit tests for {@link ExecutionDataAccess}.
+ * Unit tests for {@link RuntimeData}.
+ * 
  */
-public class ExecutionDataAccessTest {
+public class RuntimeDataTest {
 
-	private ExecutionDataStore store;
-
-	private Object access;
+	private RuntimeData data;
+	private TestStorage storage;
 
 	@Before
 	public void setup() {
-		store = new ExecutionDataStore();
-		access = new ExecutionDataAccess(store);
+		data = new RuntimeData();
+		storage = new TestStorage();
 	}
 
 	@Test
-	public void testEqualsPositive() {
-		assertEquals(access, access);
-		assertEquals(access.hashCode(), access.hashCode());
+	public void testGetSetSessionId() {
+		assertNotNull(data.getSessionId());
+		data.setSessionId("test-id");
+		assertEquals("test-id", data.getSessionId());
 	}
 
 	@Test
-	public void testEqualsNegative() {
-		final ExecutionDataAccess other = new ExecutionDataAccess(store);
-		assertFalse(access.equals(other));
-		assertFalse(access.hashCode() == other.hashCode());
-	}
-
-	@Test
-	public void testGetExecutionData1() {
+	public void testGetProbes() {
 		Object[] args = new Object[] { Long.valueOf(123), "Foo",
 				Integer.valueOf(3) };
-		access.equals(args);
+		data.equals(args);
+
+		assertEquals(3, ((boolean[]) args[0]).length);
+
+		data.collect(storage, storage, false);
 		boolean[] data = (boolean[]) args[0];
 		assertEquals(3, data.length, 0.0);
 		assertFalse(data[0]);
 		assertFalse(data[1]);
 		assertFalse(data[2]);
-		assertSame(store.get(123).getData(), data);
-		assertEquals("Foo", store.get(123).getName());
+		assertSame(storage.getData(123).getProbes(), data);
+		assertEquals("Foo", storage.getData(123).getName());
+	}
+
+	@Test
+	public void testCollectEmpty() {
+		data.collect(storage, storage, false);
+		storage.assertSize(0);
+	}
+
+	@Test
+	public void testCollectWithReset() {
+		data.setSessionId("testsession");
+		boolean[] probes = data.getExecutionData(Long.valueOf(123), "Foo", 1)
+				.getProbes();
+		probes[0] = true;
+
+		data.collect(storage, storage, true);
+
+		assertFalse(probes[0]);
+		assertEquals("testsession", storage.getSessionInfo().getId());
+	}
+
+	@Test
+	public void testCollectWithoutReset() {
+		data.setSessionId("testsession");
+		boolean[] probes = data.getExecutionData(Long.valueOf(123), "Foo", 1)
+				.getProbes();
+		probes[0] = true;
+
+		data.collect(storage, storage, false);
+
+		assertTrue(probes[0]);
+		assertEquals("testsession", storage.getSessionInfo().getId());
+	}
+
+	@Test
+	public void testEquals() {
+		assertTrue(data.equals(data));
+	}
+
+	@Test
+	public void testHashCode() {
+		assertEquals(System.identityHashCode(data), data.hashCode());
 	}
 
 	@Test
@@ -90,7 +131,7 @@ public class ExecutionDataAccessTest {
 		mv = writer.visitMethod(Opcodes.ACC_PUBLIC, "call",
 				"()Ljava/lang/Object;", null, new String[0]);
 		mv.visitCode();
-		ExecutionDataAccess.generateArgumentArray(1000, "Sample", 15, mv);
+		RuntimeData.generateArgumentArray(1000, "Sample", 15, mv);
 		mv.visitInsn(Opcodes.ARETURN);
 		mv.visitMaxs(5, 1);
 		mv.visitEnd();
@@ -108,8 +149,8 @@ public class ExecutionDataAccessTest {
 
 	@Test
 	public void testGenerateAccessCall() throws Exception {
-		final boolean[] data = store.get(Long.valueOf(1234), "Sample", 5)
-				.getData();
+		final boolean[] probes = data.getExecutionData(Long.valueOf(1234),
+				"Sample", 5).getProbes();
 
 		final ClassWriter writer = new ClassWriter(0);
 		writer.visit(Opcodes.V1_5, Opcodes.ACC_PUBLIC, "Sample", null,
@@ -138,7 +179,7 @@ public class ExecutionDataAccessTest {
 		mv.visitVarInsn(Opcodes.ALOAD, 0);
 		mv.visitFieldInsn(Opcodes.GETFIELD, "Sample", "access",
 				"Ljava/lang/Object;");
-		ExecutionDataAccess.generateAccessCall(1234, "Sample", 5, mv);
+		RuntimeData.generateAccessCall(1234, "Sample", 5, mv);
 		mv.visitInsn(Opcodes.ARETURN);
 		mv.visitMaxs(6, 1);
 		mv.visitEnd();
@@ -150,8 +191,8 @@ public class ExecutionDataAccessTest {
 		final TargetLoader loader = new TargetLoader("Sample",
 				writer.toByteArray());
 		Callable<?> callable = (Callable<?>) loader.getTargetClass()
-				.getConstructor(Object.class).newInstance(access);
-		assertSame(data, callable.call());
+				.getConstructor(Object.class).newInstance(data);
+		assertSame(probes, callable.call());
 	}
 
 }

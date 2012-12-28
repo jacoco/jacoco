@@ -28,10 +28,10 @@ public class ExecutionDataTest {
 		final ExecutionData e = new ExecutionData(5, "Example", 3);
 		assertEquals(5, e.getId());
 		assertEquals("Example", e.getName());
-		assertEquals(3, e.getData().length);
-		assertFalse(e.getData()[0]);
-		assertFalse(e.getData()[1]);
-		assertFalse(e.getData()[2]);
+		assertEquals(3, e.getProbes().length);
+		assertFalse(e.getProbes()[0]);
+		assertFalse(e.getProbes()[1]);
+		assertFalse(e.getProbes()[2]);
 	}
 
 	@Test
@@ -40,7 +40,7 @@ public class ExecutionDataTest {
 		final ExecutionData e = new ExecutionData(5, "Example", data);
 		assertEquals(5, e.getId());
 		assertEquals("Example", e.getName());
-		assertSame(data, e.getData());
+		assertSame(data, e.getProbes());
 	}
 
 	@Test
@@ -48,9 +48,9 @@ public class ExecutionDataTest {
 		final ExecutionData e = new ExecutionData(5, "Example", new boolean[] {
 				true, false, true });
 		e.reset();
-		assertFalse(e.getData()[0]);
-		assertFalse(e.getData()[1]);
-		assertFalse(e.getData()[2]);
+		assertFalse(e.getProbes()[0]);
+		assertFalse(e.getProbes()[1]);
+		assertFalse(e.getProbes()[2]);
 	}
 
 	@Test
@@ -62,16 +62,16 @@ public class ExecutionDataTest {
 		a.merge(b);
 
 		// b is merged into a:
-		assertFalse(a.getData()[0]);
-		assertTrue(a.getData()[1]);
-		assertTrue(a.getData()[2]);
-		assertTrue(a.getData()[3]);
+		assertFalse(a.getProbes()[0]);
+		assertTrue(a.getProbes()[1]);
+		assertTrue(a.getProbes()[2]);
+		assertTrue(a.getProbes()[3]);
 
 		// b must not be modified:
-		assertFalse(b.getData()[0]);
-		assertFalse(b.getData()[1]);
-		assertTrue(b.getData()[2]);
-		assertTrue(b.getData()[3]);
+		assertFalse(b.getProbes()[0]);
+		assertFalse(b.getProbes()[1]);
+		assertTrue(b.getProbes()[2]);
+		assertTrue(b.getProbes()[3]);
 	}
 
 	@Test
@@ -83,16 +83,16 @@ public class ExecutionDataTest {
 		a.merge(b, false);
 
 		// b is subtracted from a:
-		assertFalse(a.getData()[0]);
-		assertTrue(a.getData()[1]);
-		assertFalse(a.getData()[2]);
-		assertFalse(a.getData()[3]);
+		assertFalse(a.getProbes()[0]);
+		assertTrue(a.getProbes()[1]);
+		assertFalse(a.getProbes()[2]);
+		assertFalse(a.getProbes()[3]);
 
 		// b must not be modified:
-		assertFalse(b.getData()[0]);
-		assertFalse(b.getData()[1]);
-		assertTrue(b.getData()[2]);
-		assertTrue(b.getData()[3]);
+		assertFalse(b.getProbes()[0]);
+		assertFalse(b.getProbes()[1]);
+		assertTrue(b.getProbes()[2]);
+		assertTrue(b.getProbes()[3]);
 	}
 
 	@Test
@@ -127,7 +127,7 @@ public class ExecutionDataTest {
 	public void testToString() {
 		final ExecutionData a = new ExecutionData(Long.MAX_VALUE, "Example",
 				new boolean[] { true });
-		assertEquals("ExecutionData [name=Example, id=7fffffffffffffff]",
+		assertEquals("ExecutionData[name=Example, id=7fffffffffffffff]",
 				a.toString());
 	}
 

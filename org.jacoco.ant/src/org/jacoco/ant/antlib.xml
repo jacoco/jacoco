@@ -19,4 +19,5 @@
    <taskdef name="report" classname="org.jacoco.ant.ReportTask"/>
    <taskdef name="merge" classname="org.jacoco.ant.MergeTask"/>
    <taskdef name="dump" classname="org.jacoco.ant.DumpTask"/>
+   <taskdef name="instrument" classname="org.jacoco.ant.InstrumentTask"/>
 </antlib>

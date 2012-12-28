@@ -20,9 +20,11 @@ import org.jacoco.core.analysis.CoverageBuilder;
 import org.jacoco.core.analysis.IClassCoverage;
 import org.jacoco.core.analysis.ICounter;
 import org.jacoco.core.data.ExecutionDataStore;
+import org.jacoco.core.data.SessionInfoStore;
 import org.jacoco.core.instr.Instrumenter;
 import org.jacoco.core.runtime.IRuntime;
 import org.jacoco.core.runtime.LoggerRuntime;
+import org.jacoco.core.runtime.RuntimeData;
 
 /**
  * Example usage of the JaCoCo core API. In this tutorial a single target class
@@ -122,7 +124,8 @@ public final class CoreTutorial {
 
 		// Now we're ready to run our instrumented class and need to startup the
 		// runtime first:
-		runtime.startup();
+		final RuntimeData data = new RuntimeData();
+		runtime.startup(data);
 
 		// In this tutorial we use a special class loader to directly load the
 		// instrumented class definition from a byte[] instances.
@@ -137,7 +140,8 @@ public final class CoreTutorial {
 		// At the end of test execution we collect execution data and shutdown
 		// the runtime:
 		final ExecutionDataStore executionData = new ExecutionDataStore();
-		runtime.collect(executionData, null, false);
+		final SessionInfoStore sessionInfos = new SessionInfoStore();
+		data.collect(executionData, sessionInfos, false);
 		runtime.shutdown();
 
 		// Together with the original class definition we can calculate coverage

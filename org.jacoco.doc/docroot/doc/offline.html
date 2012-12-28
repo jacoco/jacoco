@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+  <link rel="stylesheet" href=".resources/doc.css" charset="UTF-8" type="text/css" />
+  <link rel="shortcut icon" href=".resources/report.gif" type="image/gif" />
+  <title>JaCoCo - Offline Instrumentation</title>
+</head>
+<body>
+
+<div class="breadcrumb">
+  <a href="../index.html" class="el_report">JaCoCo</a> &gt;
+  <a href="index.html" class="el_group">Documentation</a> &gt;
+  <span class="el_source">Offline Instrumentation</span>
+</div>
+<div id="content"> 
+
+<h1>Offline Instrumentation</h1>
+
+<p>
+  One of the main benefits of JaCoCo is the Java agent, which instruments
+  classes on-the-fly. This simplifies code coverage analysis a lot as no
+  pre-instrumentation and classpath tweaking is required. However, there can be
+  situations where on-the-fly instrumentation is not suitable, for example:
+</p>
+<ul>
+  <li>Runtime environments that do not support Java agents.</li>
+  <li>Deployments where it is not possible to configure JVM options.</li>
+  <li>Bytecode needs to be converted for another VM like the Android Dalvik VM.</li>
+  <li>Conflicts with other agents that do dynamic classfile transformation.</li>
+</ul>
+
+<p>
+  For such scenarios class files can be pre-instrumented with JaCoCo, for
+  example with the <a href="ant.html#instrument"><code>instrument</code></a>
+  Ant task. At runtime the pre-instrumented classes needs be on the classpath
+  instead of the original classes. In addition <code>jacocoagent.jar</code> must
+  be put on the classpath.
+</p>
+
+<h2>Configuration</h2>
+<p>
+  In offline mode the JaCoCo runtime can be configured with the same set of
+  properties which are available for the <a href="agent.html">agent</a>, except
+  for the <code>includes</code>/<code>excludes</code> options as the class files
+  are already instrumented. There are two different ways to provide the
+  configuration:
+</p>
+
+<ul>
+  <li><b>Configuration File:</b> If a file <code>jacoco-agent.properties</code>
+      is supplied on the classpath options are loaded from this file. The file
+      has to be formatted in the
+      <a href="http://docs.oracle.com/javase/7/docs/api/java/util/Properties.html#load%28java.io.Reader%29">Java
+      properties file format</a>.</li>
+  <li><b>System Properties:</b> Options can also be supplied as Java system
+      properties. In this case the options have to be prefixed with
+      "<code>jacoco-agent.</code>". For example the location of the
+      <code>*.exec</code> file can be configured with the system property
+      "<code>jacoco-agent.destfile</code>".</li>
+</ul>
+
+<h2>Class Loading and Initialization</h2>
+<p>
+  Unlike with on-the-fly instrumentation offline instrumented classes get a
+  direct dependency on the JaCoCo runtime. Therefore
+  <code>jacocoagent.jar</code> has to be on the classpath and accessible by the
+  instrumented classes. The proper location for <code>jacocoagent.jar</code>
+  might depend on your deployment scenario. The first instrumented class loaded
+  will trigger the initialization of the JaCoCo runtime. If no instrumented
+  class is loaded the JaCoCo runtime will not get started at all.   
+</p>
+
+<h2>Using Pre-Instrumented Classes With the Java Agent</h2>
+<p>
+  It is possible to also use offline-instrumented classes with the JaCoCo Java
+  agent. In this case the configuration is taken from the agent options. The
+  agent must be configured in a way that pre-instrumented classes are excluded,
+  e.g. with "<code>excludes=*</code>". Otherwise it will result in error
+  messages on the console if the agent instruments such classes again. 
+</p>
+
+<h2>Execution Data Collection</h2>
+<p>
+  If <code>jacocoagent.jar</code> is used on the classpath it will collect
+  execution data the same way as used as a <a href="agent.html">Java agent</a>.
+  Depending on the <code>output</code> configuration execution data can be
+  collected via a remote connection or is written to the file system when the
+  JVM terminates. For the latter it is required that e.g. a <code>java</code>
+  task is executed with <code>fork="true"</code>.
+</p>
+
+<h2>Report Generation</h2>
+<p>
+  Based on the collected <code>*.exec</code> files reports can be created the
+  same way as for execution data collected with the Java agent. Note that for
+  report generation the original class files have to be supplied, not the
+  instrumented copies.
+</p>
+
+</div>
+<div class="footer">
+  <span class="right"><a href="@jacoco.home.url@">JaCoCo</a> @qualified.bundle.version@</span>
+  <a href="license.html">Copyright</a> &copy; @copyright.years@ Mountainminds GmbH &amp; Co. KG and Contributors
+</div>
+
+</body>
+</html>

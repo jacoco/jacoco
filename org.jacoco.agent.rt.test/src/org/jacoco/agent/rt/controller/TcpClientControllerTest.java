@@ -21,13 +21,13 @@ import java.net.Socket;
 import java.util.List;
 
 import org.jacoco.agent.rt.ExceptionRecorder;
-import org.jacoco.agent.rt.StubRuntime;
 import org.jacoco.core.data.ExecutionDataStore;
 import org.jacoco.core.data.SessionInfo;
 import org.jacoco.core.data.SessionInfoStore;
 import org.jacoco.core.runtime.AgentOptions;
 import org.jacoco.core.runtime.RemoteControlReader;
 import org.jacoco.core.runtime.RemoteControlWriter;
+import org.jacoco.core.runtime.RuntimeData;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -40,13 +40,13 @@ public class TcpClientControllerTest {
 
 	private IAgentController controller;
 
-	private StubRuntime runtime;
-
 	private Socket remoteSocket;
 
 	private RemoteControlWriter remoteWriter;
 
 	private RemoteControlReader remoteReader;
+
+	private RuntimeData data;
 
 	@Before
 	public void setup() throws Exception {
@@ -61,8 +61,8 @@ public class TcpClientControllerTest {
 				return con.getSocketA();
 			}
 		};
-		runtime = new StubRuntime();
-		controller.startup(new AgentOptions(), runtime);
+		data = new RuntimeData();
+		controller.startup(new AgentOptions(), data);
 		remoteReader = new RemoteControlReader(remoteSocket.getInputStream());
 	}
 
@@ -91,6 +91,9 @@ public class TcpClientControllerTest {
 
 	@Test
 	public void testWriteExecutionData() throws Exception {
+		data.getExecutionData(Long.valueOf(0x12345678), "Foo", 42);
+		data.setSessionId("stubid");
+
 		controller.writeExecutionData();
 
 		final ExecutionDataStore execStore = new ExecutionDataStore();
