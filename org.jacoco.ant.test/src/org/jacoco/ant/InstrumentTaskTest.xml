@@ -34,7 +34,8 @@
 	<target name="testInstrumentInvalidClassFile">
 		<mkdir dir="${temp.dir}/output"/>
 		<property name="broken.file" location="${temp.dir}/broken.class"/>
-		<echo file="${broken.file}">Not a class.</echo>
+		<copy file="${org.jacoco.ant.instrumentTaskTest.classes.dir}/TestTargetInDefault.class" tofile="${broken.file}"/>
+		<truncate file="${broken.file}" length="8"/>
 		<au:expectfailure expectedMessage="Error while instrumenting ${broken.file}">
 			<jacoco:instrument destdir="${temp.dir}/output">
 				<fileset dir="${temp.dir}" includes="broken.class"/>
