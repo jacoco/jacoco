@@ -103,18 +103,18 @@ public final class ExecutionDataStore implements IExecutionDataVisitor {
 	 *            class identifier
 	 * @param name
 	 *            VM name of the class
-	 * @param dataLength
+	 * @param probecount
 	 *            probe data length
 	 * @return execution data
 	 */
 	public ExecutionData get(final Long id, final String name,
-			final int dataLength) {
+			final int probecount) {
 		ExecutionData entry = entries.get(id);
 		if (entry == null) {
-			entry = new ExecutionData(id.longValue(), name, dataLength);
+			entry = new ExecutionData(id.longValue(), name, probecount);
 			entries.put(id, entry);
 		} else {
-			entry.assertCompatibility(id.longValue(), name, dataLength);
+			entry.assertCompatibility(id.longValue(), name, probecount);
 		}
 		return entry;
 	}

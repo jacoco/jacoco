@@ -76,8 +76,7 @@ public class LoggerRuntime extends AbstractRuntime {
 
 		// 1. Create parameter array:
 
-		ExecutionDataAccess.generateArgumentArray(classid, classname,
-				probecount, mv);
+		RuntimeData.generateArgumentArray(classid, classname, probecount, mv);
 
 		// Stack[0]: [Ljava/lang/Object;
 
@@ -150,8 +149,9 @@ public class LoggerRuntime extends AbstractRuntime {
 		return 5; // Maximum local stack size is 5
 	}
 
-	public void startup() {
-		setStartTimeStamp();
+	@Override
+	public void startup(final RuntimeData data) throws Exception {
+		super.startup(data);
 		this.logger.addHandler(handler);
 	}
 
@@ -164,7 +164,7 @@ public class LoggerRuntime extends AbstractRuntime {
 		@Override
 		public void publish(final LogRecord record) {
 			if (key.equals(record.getMessage())) {
-				access.getExecutionData(record.getParameters());
+				data.getProbes(record.getParameters());
 			}
 		}
 

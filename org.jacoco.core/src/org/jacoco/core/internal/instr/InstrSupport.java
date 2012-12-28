@@ -60,8 +60,6 @@ public final class InstrSupport {
 	public static final int INITMETHOD_ACC = Opcodes.ACC_SYNTHETIC
 			| Opcodes.ACC_PRIVATE | Opcodes.ACC_STATIC | Opcodes.ACC_FINAL;
 
-	// === Utilities ===
-
 	/**
 	 * Generates the instruction to push the given int value on the stack.
 	 * Implementation taken from

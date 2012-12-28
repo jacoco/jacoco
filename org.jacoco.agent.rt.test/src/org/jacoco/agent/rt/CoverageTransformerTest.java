@@ -23,10 +23,12 @@ import java.io.InputStream;
 import java.lang.instrument.IllegalClassFormatException;
 
 import org.jacoco.core.JaCoCo;
+import org.jacoco.core.runtime.AbstractRuntime;
 import org.jacoco.core.runtime.AgentOptions;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.objectweb.asm.MethodVisitor;
 
 /**
  * Unit tests for {@link CoverageTransformer}.
@@ -167,6 +169,32 @@ public class CoverageTransformerTest {
 		}
 		in.close();
 		return out.toByteArray();
+	}
+
+	private static class StubRuntime extends AbstractRuntime {
+
+		private Class<?> disconnected;
+
+		public StubRuntime() {
+		}
+
+		public int generateDataAccessor(long classid, String classname,
+				int probecount, MethodVisitor mv) {
+			return 0;
+		}
+
+		public void shutdown() {
+		}
+
+		@Override
+		public void disconnect(Class<?> type) throws Exception {
+			this.disconnected = type;
+		}
+
+		public void assertDisconnected(Class<?> expected) {
+			assertEquals(expected, disconnected);
+		}
+
 	}
 
 }

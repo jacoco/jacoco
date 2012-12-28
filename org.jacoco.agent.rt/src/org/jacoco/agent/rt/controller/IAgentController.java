@@ -12,7 +12,7 @@
 package org.jacoco.agent.rt.controller;
 
 import org.jacoco.core.runtime.AgentOptions;
-import org.jacoco.core.runtime.IRuntime;
+import org.jacoco.core.runtime.RuntimeData;
 
 /**
  * Common interface for different implementations that control execution data
@@ -26,12 +26,12 @@ public interface IAgentController {
 	 * 
 	 * @param options
 	 *            Options used to configure the agent controller
-	 * @param runtime
-	 *            Coverage runtime this agent controller will be connected to
+	 * @param data
+	 *            Execution data for this agent
 	 * @throws Exception
 	 *             in case startup fails
 	 */
-	public void startup(final AgentOptions options, final IRuntime runtime)
+	public void startup(final AgentOptions options, final RuntimeData data)
 			throws Exception;
 
 	/**

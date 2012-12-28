@@ -25,7 +25,6 @@ import java.net.UnknownHostException;
 import java.util.List;
 
 import org.jacoco.agent.rt.ExceptionRecorder;
-import org.jacoco.agent.rt.StubRuntime;
 import org.jacoco.core.data.ExecutionDataStore;
 import org.jacoco.core.data.ExecutionDataWriter;
 import org.jacoco.core.data.SessionInfo;
@@ -33,6 +32,7 @@ import org.jacoco.core.data.SessionInfoStore;
 import org.jacoco.core.runtime.AgentOptions;
 import org.jacoco.core.runtime.RemoteControlReader;
 import org.jacoco.core.runtime.RemoteControlWriter;
+import org.jacoco.core.runtime.RuntimeData;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -45,16 +45,15 @@ public class TcpServerControllerTest {
 
 	private AgentOptions options;
 
-	private StubRuntime runtime;
-
 	private MockServerSocket serverSocket;
 
 	private TcpServerController controller;
 
+	private RuntimeData data;
+
 	@Before
 	public void setup() throws Exception {
 		options = new AgentOptions();
-		runtime = new StubRuntime();
 		logger = new ExceptionRecorder();
 		serverSocket = new MockServerSocket();
 		controller = new TcpServerController(logger) {
@@ -64,7 +63,8 @@ public class TcpServerControllerTest {
 				return serverSocket;
 			}
 		};
-		controller.startup(options, runtime);
+		data = new RuntimeData();
+		controller.startup(options, data);
 	}
 
 	@Test
@@ -84,6 +84,9 @@ public class TcpServerControllerTest {
 
 	@Test
 	public void testWriteExecutionData() throws Exception {
+		data.getExecutionData(Long.valueOf(0x12345678), "Foo", 42);
+		data.setSessionId("stubid");
+
 		final Socket socket = serverSocket.connect();
 		final RemoteControlWriter remoteWriter = new RemoteControlWriter(
 				socket.getOutputStream());

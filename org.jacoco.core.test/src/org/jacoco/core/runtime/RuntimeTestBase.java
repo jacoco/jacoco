@@ -11,21 +11,11 @@
  *******************************************************************************/
 package org.jacoco.core.runtime;
 
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
-import java.util.HashMap;
-import java.util.Map;
-
-import org.jacoco.core.data.ExecutionData;
-import org.jacoco.core.data.IExecutionDataVisitor;
-import org.jacoco.core.data.ISessionInfoVisitor;
-import org.jacoco.core.data.SessionInfo;
 import org.jacoco.core.internal.instr.InstrSupport;
 import org.jacoco.core.test.TargetLoader;
 import org.junit.After;
@@ -43,6 +33,8 @@ import org.objectweb.asm.commons.Method;
  */
 public abstract class RuntimeTestBase {
 
+	private RuntimeData data;
+
 	private IRuntime runtime;
 
 	private TestStorage storage;
@@ -51,8 +43,9 @@ public abstract class RuntimeTestBase {
 
 	@Before
 	public void setup() throws Exception {
+		data = new RuntimeData();
 		runtime = createRuntime();
-		runtime.startup();
+		runtime.startup(data);
 		storage = new TestStorage();
 	}
 
@@ -62,81 +55,11 @@ public abstract class RuntimeTestBase {
 	}
 
 	@Test
-	public void testGetSetSessionId() {
-		assertNotNull(runtime.getSessionId());
-		runtime.setSessionId("test-id");
-		assertEquals("test-id", runtime.getSessionId());
-	}
-
-	@Test
-	public void testCollectEmpty() {
-		runtime.collect(storage, null, false);
-		storage.assertSize(0);
-	}
-
-	@Test
 	public void testDataAccessor() throws InstantiationException,
 			IllegalAccessException {
 		ITarget t = generateAndInstantiateClass(1234);
-		runtime.collect(storage, null, false);
+		data.collect(storage, storage, false);
 		storage.assertData(1234, t.get());
-	}
-
-	@Test
-	public void testReset() throws InstantiationException,
-			IllegalAccessException {
-		final ITarget target = generateAndInstantiateClass(1000);
-		target.a();
-		target.b();
-
-		runtime.reset();
-
-		final boolean[] data = target.get();
-		assertFalse(data[0]);
-		assertFalse(data[1]);
-	}
-
-	@Test
-	public void testCollectAndReset() throws InstantiationException,
-			IllegalAccessException {
-		final ITarget target = generateAndInstantiateClass(1001);
-		target.a();
-		target.b();
-
-		runtime.collect(storage, null, true);
-
-		final boolean[] data = target.get();
-		storage.assertSize(1);
-		storage.assertData(1001, data);
-		assertFalse(data[0]);
-		assertFalse(data[1]);
-	}
-
-	@Test
-	public void testSessionInfo() throws Exception {
-		final SessionInfo[] info = new SessionInfo[1];
-		final ISessionInfoVisitor visitor = new ISessionInfoVisitor() {
-			public void visitSessionInfo(SessionInfo i) {
-				info[0] = i;
-			}
-		};
-		runtime.setSessionId("test-session");
-		final long t1 = System.currentTimeMillis();
-		runtime.startup();
-		runtime.collect(storage, visitor, true);
-		final long t2 = System.currentTimeMillis();
-		assertNotNull(info[0]);
-		assertEquals("test-session", info[0].getId());
-		assertTrue(info[0].getStartTimeStamp() >= t1);
-		assertTrue(info[0].getDumpTimeStamp() <= t2);
-
-		info[0] = null;
-		runtime.collect(storage, visitor, true);
-		final long t3 = System.currentTimeMillis();
-		assertNotNull(info[0]);
-		assertEquals("test-session", info[0].getId());
-		assertTrue(info[0].getStartTimeStamp() >= t2);
-		assertTrue(info[0].getDumpTimeStamp() <= t3);
 	}
 
 	@Test
@@ -155,9 +78,9 @@ public abstract class RuntimeTestBase {
 	public void testExecutionRecording() throws InstantiationException,
 			IllegalAccessException {
 		generateAndInstantiateClass(1001).a();
-		runtime.collect(storage, null, false);
+		data.collect(storage, storage, false);
 		storage.assertSize(1);
-		final boolean[] data = storage.getData(1001);
+		final boolean[] data = storage.getData(1001).getProbes();
 		assertTrue(data[0]);
 		assertFalse(data[1]);
 	}
@@ -167,9 +90,9 @@ public abstract class RuntimeTestBase {
 			IllegalAccessException {
 		generateAndInstantiateClass(1001).a();
 		generateAndInstantiateClass(1001).b();
-		runtime.collect(storage, null, false);
+		data.collect(storage, storage, false);
 		storage.assertSize(1);
-		final boolean[] data = storage.getData(1001);
+		final boolean[] data = storage.getData(1001).getProbes();
 		assertTrue(data[0]);
 		assertTrue(data[1]);
 	}
@@ -180,9 +103,9 @@ public abstract class RuntimeTestBase {
 		target.a();
 		runtime.disconnect(target.getClass());
 		assertNull(target.get());
-		runtime.collect(storage, null, false);
+		data.collect(storage, storage, false);
 		storage.assertSize(1);
-		final boolean[] data = storage.getData(1001);
+		final boolean[] data = storage.getData(1001).getProbes();
 		assertTrue(data[0]);
 	}
 
@@ -196,10 +119,6 @@ public abstract class RuntimeTestBase {
 	 * Creates a new class with the given id, loads this class and instantiates
 	 * it. The constructor of the generated class will request the probe array
 	 * from the runtime under test.
-	 * 
-	 * @param classid
-	 * @throws InstantiationException
-	 * @throws IllegalAccessException
 	 */
 	private ITarget generateAndInstantiateClass(int classid)
 			throws InstantiationException, IllegalAccessException {
@@ -300,30 +219,6 @@ public abstract class RuntimeTestBase {
 		 * The implementation will mark probe 1 as executed
 		 */
 		void b();
-
-	}
-
-	private static class TestStorage implements IExecutionDataVisitor {
-
-		private final Map<Long, boolean[]> data = new HashMap<Long, boolean[]>();
-
-		public void assertSize(int size) {
-			assertEquals(size, data.size(), 0.0);
-		}
-
-		public boolean[] getData(long classId) {
-			return data.get(Long.valueOf(classId));
-		}
-
-		public void assertData(long classId, boolean[] expected) {
-			assertSame(expected, getData(classId));
-		}
-
-		// === ICoverageDataVisitor ===
-
-		public void visitClassExecution(final ExecutionData ed) {
-			data.put(Long.valueOf(ed.getId()), ed.getData());
-		}
 
 	}
 

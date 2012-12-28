@@ -216,7 +216,7 @@ public class ExecutionDataReaderWriterTest {
 		writer.visitClassExecution(new ExecutionData(Long.MIN_VALUE, "Sample",
 				data));
 		assertFalse(createReaderWithVisitors().read());
-		assertArrayEquals(data, store.get(Long.MIN_VALUE).getData());
+		assertArrayEquals(data, store.get(Long.MIN_VALUE).getProbes());
 	}
 
 	@Test
@@ -225,7 +225,7 @@ public class ExecutionDataReaderWriterTest {
 		writer.visitClassExecution(new ExecutionData(Long.MAX_VALUE, "Sample",
 				data));
 		assertFalse(createReaderWithVisitors().read());
-		assertArrayEquals(data, store.get(Long.MAX_VALUE).getData());
+		assertArrayEquals(data, store.get(Long.MAX_VALUE).getProbes());
 	}
 
 	@Test
@@ -233,7 +233,7 @@ public class ExecutionDataReaderWriterTest {
 		final boolean[] data = createData(0);
 		writer.visitClassExecution(new ExecutionData(3, "Sample", data));
 		assertFalse(createReaderWithVisitors().read());
-		assertArrayEquals(data, store.get(3).getData());
+		assertArrayEquals(data, store.get(3).getProbes());
 	}
 
 	@Test
@@ -241,7 +241,7 @@ public class ExecutionDataReaderWriterTest {
 		final boolean[] data = createData(5);
 		writer.visitClassExecution(new ExecutionData(3, "Sample", data));
 		assertFalse(createReaderWithVisitors().read());
-		assertArrayEquals(data, store.get(3).getData());
+		assertArrayEquals(data, store.get(3).getProbes());
 	}
 
 	@Test
@@ -251,8 +251,8 @@ public class ExecutionDataReaderWriterTest {
 		writer.visitClassExecution(new ExecutionData(333, "Sample", data1));
 		writer.visitClassExecution(new ExecutionData(-45, "Sample", data2));
 		assertFalse(createReaderWithVisitors().read());
-		assertArrayEquals(data1, store.get(333).getData());
-		assertArrayEquals(data2, store.get(-45).getData());
+		assertArrayEquals(data1, store.get(333).getProbes());
+		assertArrayEquals(data2, store.get(-45).getProbes());
 	}
 
 	@Test
@@ -260,7 +260,7 @@ public class ExecutionDataReaderWriterTest {
 		final boolean[] data = createData(117);
 		writer.visitClassExecution(new ExecutionData(123, "Sample", data));
 		assertFalse(createReaderWithVisitors().read());
-		assertArrayEquals(data, store.get(123).getData());
+		assertArrayEquals(data, store.get(123).getProbes());
 	}
 
 	@Test(expected = RuntimeException.class)

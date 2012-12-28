@@ -16,7 +16,7 @@ import java.net.Socket;
 
 import org.jacoco.agent.rt.IExceptionLogger;
 import org.jacoco.core.runtime.AgentOptions;
-import org.jacoco.core.runtime.IRuntime;
+import org.jacoco.core.runtime.RuntimeData;
 
 /**
  * Controller that connects to a TCP port. This controller uses the following
@@ -44,10 +44,10 @@ public class TcpClientController implements IAgentController {
 		this.logger = logger;
 	}
 
-	public void startup(final AgentOptions options, final IRuntime runtime)
+	public void startup(final AgentOptions options, final RuntimeData data)
 			throws IOException {
 		final Socket socket = createSocket(options);
-		connection = new TcpConnection(socket, runtime);
+		connection = new TcpConnection(socket, data);
 		connection.init();
 		worker = new Thread(new Runnable() {
 			public void run() {

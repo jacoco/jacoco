@@ -18,6 +18,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Properties;
 
 /**
  * Utility to create and parse options for the runtime agent. Options are
@@ -194,6 +195,22 @@ public final class AgentOptions {
 			}
 
 			validateAll();
+		}
+	}
+
+	/**
+	 * New instance read from the given {@link Properties} object.
+	 * 
+	 * @param properties
+	 *            {@link Properties} object to read configuration options from
+	 */
+	public AgentOptions(final Properties properties) {
+		this();
+		for (final String key : VALID_OPTIONS) {
+			final String value = properties.getProperty(key);
+			if (value != null) {
+				setOption(key, value);
+			}
 		}
 	}
 

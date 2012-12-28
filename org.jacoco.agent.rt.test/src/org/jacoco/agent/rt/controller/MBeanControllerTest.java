@@ -12,38 +12,43 @@
 package org.jacoco.agent.rt.controller;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
-import org.jacoco.agent.rt.StubRuntime;
+import java.io.ByteArrayInputStream;
+import java.lang.management.ManagementFactory;
+import java.util.List;
+
+import javax.management.InstanceNotFoundException;
+import javax.management.MBeanAttributeInfo;
+import javax.management.MBeanInfo;
+import javax.management.MBeanOperationInfo;
+import javax.management.ObjectName;
+
 import org.jacoco.core.JaCoCo;
 import org.jacoco.core.data.ExecutionDataReader;
 import org.jacoco.core.data.ExecutionDataStore;
 import org.jacoco.core.data.SessionInfo;
 import org.jacoco.core.data.SessionInfoStore;
 import org.jacoco.core.runtime.AgentOptions;
+import org.jacoco.core.runtime.RuntimeData;
 import org.junit.Before;
 import org.junit.Test;
-
-import java.io.ByteArrayInputStream;
-import java.lang.management.ManagementFactory;
-import java.util.List;
-
-import javax.management.*;
 
 /**
  * Unit tests for {@link MBeanController}.
  */
 public class MBeanControllerTest {
 
-	private StubRuntime runtime;
+	private RuntimeData data;
 
 	private MBeanController controller;
 
 	@Before
 	public void setup() throws Exception {
-		runtime = new StubRuntime();
+		data = new RuntimeData();
 		controller = new MBeanController();
-		controller.startup(new AgentOptions(), runtime);
+		controller.startup(new AgentOptions(), data);
 	}
 
 	@Test
@@ -94,6 +99,9 @@ public class MBeanControllerTest {
 
 	@Test
 	public void testDump() throws Exception {
+		data.getExecutionData(Long.valueOf(0x12345678), "Foo", 42);
+		data.setSessionId("stubid");
+
 		final byte[] dump = controller.dump(false);
 		final ByteArrayInputStream input = new ByteArrayInputStream(dump);
 
@@ -116,7 +124,7 @@ public class MBeanControllerTest {
 	@Test
 	public void testDumpWithReset() throws Exception {
 		controller.dump(true);
-		runtime.assertNoProbes();
+		assertNoProbes();
 
 		controller.shutdown();
 	}
@@ -124,13 +132,15 @@ public class MBeanControllerTest {
 	@Test
 	public void testReset() throws Exception {
 		controller.reset();
-		runtime.assertNoProbes();
+		assertNoProbes();
 
 		controller.shutdown();
 	}
 
 	@Test
 	public void testGetSessionId() throws Exception {
+		data.setSessionId("stubid");
+
 		assertEquals("stubid", controller.getSessionId());
 
 		controller.shutdown();
@@ -139,7 +149,7 @@ public class MBeanControllerTest {
 	@Test
 	public void testSetSessionId() throws Exception {
 		controller.setSessionId("newid");
-		assertEquals("newid", runtime.getSessionId());
+		assertEquals("newid", data.getSessionId());
 
 		controller.shutdown();
 	}
@@ -149,5 +159,11 @@ public class MBeanControllerTest {
 		assertEquals(JaCoCo.VERSION, controller.getVersion());
 
 		controller.shutdown();
+	}
+
+	private void assertNoProbes() {
+		ExecutionDataStore store = new ExecutionDataStore();
+		data.collect(store, new SessionInfoStore(), false);
+		assertTrue(store.getContents().isEmpty());
 	}
 }

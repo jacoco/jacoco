@@ -18,6 +18,15 @@ package org.jacoco.agent.rt;
 public interface IExceptionLogger {
 
 	/**
+	 * Default implementation which dumps the stack trace to System.err.
+	 */
+	IExceptionLogger SYSTEM_ERR = new IExceptionLogger() {
+		public void logExeption(final Exception ex) {
+			ex.printStackTrace();
+		}
+	};
+
+	/**
 	 * Logs the given exception.
 	 * 
 	 * @param ex

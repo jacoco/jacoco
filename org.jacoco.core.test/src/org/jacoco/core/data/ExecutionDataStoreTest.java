@@ -55,7 +55,7 @@ public class ExecutionDataStoreTest implements IExecutionDataVisitor {
 		final boolean[] probes = new boolean[] { false, false, true };
 		store.put(new ExecutionData(1000, "Sample", probes));
 		final ExecutionData data = store.get(1000);
-		assertSame(probes, data.getData());
+		assertSame(probes, data.getProbes());
 		store.accept(this);
 		assertEquals(Collections.singletonMap(Long.valueOf(1000), data),
 				dataOutput);
@@ -91,10 +91,10 @@ public class ExecutionDataStoreTest implements IExecutionDataVisitor {
 		final ExecutionData data = store.get(id, "Sample", 3);
 		assertEquals(1000, data.getId());
 		assertEquals("Sample", data.getName());
-		assertEquals(3, data.getData().length);
-		assertFalse(data.getData()[0]);
-		assertFalse(data.getData()[1]);
-		assertFalse(data.getData()[2]);
+		assertEquals(3, data.getProbes().length);
+		assertFalse(data.getProbes()[0]);
+		assertFalse(data.getProbes()[1]);
+		assertFalse(data.getProbes()[2]);
 		assertSame(data, store.get(id, "Sample", 3));
 	}
 
@@ -126,7 +126,7 @@ public class ExecutionDataStoreTest implements IExecutionDataVisitor {
 		final boolean[] data2 = new boolean[] { false, true, true, false };
 		store.visitClassExecution(new ExecutionData(1000, "Sample", data2));
 
-		final boolean[] result = store.get(1000).getData();
+		final boolean[] result = store.get(1000).getProbes();
 		assertFalse(result[0]);
 		assertTrue(result[1]);
 		assertTrue(result[2]);
@@ -148,7 +148,7 @@ public class ExecutionDataStoreTest implements IExecutionDataVisitor {
 		final boolean[] data2 = new boolean[] { false, false, true, true };
 		store.subtract(new ExecutionData(1000, "Sample", data2));
 
-		final boolean[] result = store.get(1000).getData();
+		final boolean[] result = store.get(1000).getProbes();
 		assertFalse(result[0]);
 		assertTrue(result[1]);
 		assertFalse(result[2]);
@@ -162,7 +162,7 @@ public class ExecutionDataStoreTest implements IExecutionDataVisitor {
 		final boolean[] data2 = new boolean[] { true, true };
 		store.subtract(new ExecutionData(2000, "Sample2", data2));
 
-		final boolean[] result = store.get(1000).getData();
+		final boolean[] result = store.get(1000).getProbes();
 		assertFalse(result[0]);
 		assertTrue(result[1]);
 
@@ -180,7 +180,7 @@ public class ExecutionDataStoreTest implements IExecutionDataVisitor {
 
 		store.subtract(store2);
 
-		final boolean[] result = store.get(1000).getData();
+		final boolean[] result = store.get(1000).getProbes();
 		assertFalse(result[0]);
 		assertTrue(result[1]);
 		assertFalse(result[2]);
@@ -193,7 +193,7 @@ public class ExecutionDataStoreTest implements IExecutionDataVisitor {
 		final boolean[] data1 = new boolean[] { true, true, false };
 		store.put(new ExecutionData(1000, "Sample", data1));
 		store.reset();
-		final boolean[] data2 = store.get(1000).getData();
+		final boolean[] data2 = store.get(1000).getProbes();
 		assertNotNull(data2);
 		assertFalse(data2[0]);
 		assertFalse(data2[1]);

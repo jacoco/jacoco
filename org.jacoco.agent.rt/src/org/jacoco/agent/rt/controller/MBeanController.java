@@ -21,7 +21,7 @@ import javax.management.StandardMBean;
 import org.jacoco.core.JaCoCo;
 import org.jacoco.core.data.ExecutionDataWriter;
 import org.jacoco.core.runtime.AgentOptions;
-import org.jacoco.core.runtime.IRuntime;
+import org.jacoco.core.runtime.RuntimeData;
 
 /**
  * Controller that registers MBean. This controller does not use agent options.
@@ -30,11 +30,11 @@ public class MBeanController implements IAgentController, IRuntimeMBean {
 
 	private static final String OBJECT_NAME = "org.jacoco:type=Runtime";
 
-	private IRuntime runtime;
+	private RuntimeData data;
 
-	public void startup(final AgentOptions options, final IRuntime runtime)
+	public void startup(final AgentOptions options, final RuntimeData data)
 			throws Exception {
-		this.runtime = runtime;
+		this.data = data;
 		ManagementFactory.getPlatformMBeanServer().registerMBean(
 				new StandardMBean(this, IRuntimeMBean.class),
 				new ObjectName(OBJECT_NAME));
@@ -56,22 +56,22 @@ public class MBeanController implements IAgentController, IRuntimeMBean {
 	}
 
 	public String getSessionId() {
-		return runtime.getSessionId();
+		return data.getSessionId();
 	}
 
 	public void setSessionId(final String id) {
-		runtime.setSessionId(id);
+		data.setSessionId(id);
 	}
 
 	public byte[] dump(final boolean reset) throws IOException {
 		final ByteArrayOutputStream output = new ByteArrayOutputStream();
 		final ExecutionDataWriter writer = new ExecutionDataWriter(output);
-		runtime.collect(writer, writer, reset);
+		data.collect(writer, writer, reset);
 		return output.toByteArray();
 	}
 
 	public void reset() {
-		runtime.reset();
+		data.reset();
 	}
 
 }
