@@ -82,15 +82,14 @@ public class InstrumentTask extends Task {
 			final Resource resource) {
 		InputStream input = null;
 		OutputStream output = null;
+		final File file = new File(destdir, resource.getName());
+		file.getParentFile().mkdirs();
 		try {
 			input = resource.getInputStream();
-			final byte[] buffer = instrumenter.instrument(input);
-			final File file = new File(destdir, resource.getName());
-			file.getParentFile().mkdirs();
 			output = new FileOutputStream(file);
-			output.write(buffer);
-			return 1;
+			return instrumenter.instrumentAll(input, output);
 		} catch (final Exception e) {
+			file.delete();
 			throw new BuildException(format("Error while instrumenting %s",
 					resource), e, getLocation());
 		} finally {
@@ -98,5 +97,4 @@ public class InstrumentTask extends Task {
 			FileUtils.close(output);
 		}
 	}
-
 }

@@ -702,8 +702,10 @@
 
 <p>
   This task is used for <a href="offline.html">offline instrumentation</a> of
-  class files. The task takes a set of class files and writes instrumented
-  versions to a specified location. 
+  class files. The task takes a set of files and writes instrumented
+  versions to a specified location. The task takes any file type as input. Java
+  class files are instrumented. Archives are searched recursively for class files
+  which then get instrumented. All other files are copied without modification.
 </p>
 
 <pre class="source lang-xml linenums">
@@ -728,7 +730,7 @@
   <tbody>
     <tr>
       <td><code>destdir</code></td>
-      <td>Directory location to write the instrumented class files to.</td>
+      <td>Directory location to write the instrumented files to.</td>
       <td><i>none (required)</i></td>
     </tr>
   </tbody>

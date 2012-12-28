@@ -12,12 +12,19 @@
 package org.jacoco.core.instr;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.io.OutputStream;
 import java.io.Serializable;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipInputStream;
+import java.util.zip.ZipOutputStream;
 
 import org.jacoco.core.runtime.RuntimeData;
 import org.jacoco.core.runtime.SystemPropertiesRuntime;
@@ -70,21 +77,61 @@ public class InstrumenterTest {
 	@Test
 	public void testSerialization() throws Exception {
 		// Create instrumented instance:
-		final byte[] bytes = instrumenter.instrument(TargetLoader
+		byte[] bytes = instrumenter.instrument(TargetLoader
 				.getClassData(SerializationTarget.class));
-		final TargetLoader loader = new TargetLoader(SerializationTarget.class,
-				bytes);
-		final Object obj1 = loader.getTargetClass()
+		TargetLoader loader = new TargetLoader(SerializationTarget.class, bytes);
+		Object obj1 = loader.getTargetClass()
 				.getConstructor(String.class, Integer.TYPE)
 				.newInstance("Hello", Integer.valueOf(42));
 
 		// Serialize instrumented instance:
-		final ByteArrayOutputStream buffer = new ByteArrayOutputStream();
+		ByteArrayOutputStream buffer = new ByteArrayOutputStream();
 		new ObjectOutputStream(buffer).writeObject(obj1);
 
 		// Deserialize with original class definition:
-		final Object obj2 = new ObjectInputStream(new ByteArrayInputStream(
+		Object obj2 = new ObjectInputStream(new ByteArrayInputStream(
 				buffer.toByteArray())).readObject();
 		assertEquals("Hello42", obj2.toString());
 	}
+
+	@Test
+	public void testInstrumentAll_Class() throws IOException {
+		InputStream in = TargetLoader.getClassData(getClass());
+		OutputStream out = new ByteArrayOutputStream();
+
+		int count = instrumenter.instrumentAll(in, out);
+
+		assertEquals(1, count);
+	}
+
+	@Test
+	public void testInstrumentAll_Archive() throws IOException {
+		ByteArrayOutputStream buffer = new ByteArrayOutputStream();
+		ZipOutputStream zipout = new ZipOutputStream(buffer);
+		zipout.putNextEntry(new ZipEntry("Test.class"));
+		zipout.write(TargetLoader.getClassDataAsBytes(getClass()));
+		zipout.finish();
+		ByteArrayOutputStream out = new ByteArrayOutputStream();
+
+		int count = instrumenter.instrumentAll(
+				new ByteArrayInputStream(buffer.toByteArray()), out);
+
+		assertEquals(1, count);
+		ZipInputStream zipin = new ZipInputStream(new ByteArrayInputStream(
+				out.toByteArray()));
+		assertEquals("Test.class", zipin.getNextEntry().getName());
+		assertNull(zipin.getNextEntry());
+	}
+
+	@Test
+	public void testInstrumentAll_Other() throws IOException {
+		InputStream in = new ByteArrayInputStream("text".getBytes());
+		ByteArrayOutputStream out = new ByteArrayOutputStream();
+
+		int count = instrumenter.instrumentAll(in, out);
+
+		assertEquals(0, count);
+		assertEquals("text", new String(out.toByteArray()));
+	}
+
 }
