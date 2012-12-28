@@ -199,8 +199,7 @@ public final class AgentOptions {
 	}
 
 	/**
-	 * New instance read from the given {@link Properties} object. All keys are
-	 * prefixed with <code>jacoco.</code>.
+	 * New instance read from the given {@link Properties} object.
 	 * 
 	 * @param properties
 	 *            {@link Properties} object to read configuration options from
@@ -208,7 +207,7 @@ public final class AgentOptions {
 	public AgentOptions(final Properties properties) {
 		this();
 		for (final String key : VALID_OPTIONS) {
-			final String value = properties.getProperty("jacoco." + key);
+			final String value = properties.getProperty(key);
 			if (value != null) {
 				setOption(key, value);
 			}

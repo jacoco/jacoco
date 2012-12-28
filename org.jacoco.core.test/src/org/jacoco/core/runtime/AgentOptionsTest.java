@@ -68,17 +68,17 @@ public class AgentOptionsTest {
 	@Test
 	public void testPropertiesOptions() {
 		Properties properties = new Properties();
-		properties.put("jacoco.destfile", "/target/test/test.exec");
-		properties.put("jacoco.append", "false");
-		properties.put("jacoco.includes", "org.*:com.*");
-		properties.put("jacoco.excludes", "*Test");
-		properties.put("jacoco.exclclassloader", "org.jacoco.test.TestLoader");
-		properties.put("jacoco.sessionid", "testsession");
-		properties.put("jacoco.dumponexit", "false");
-		properties.put("jacoco.output", "tcpserver");
-		properties.put("jacoco.address", "remotehost");
-		properties.put("jacoco.port", "1234");
-		properties.put("jacoco.classdumpdir", "target/dump");
+		properties.put("destfile", "/target/test/test.exec");
+		properties.put("append", "false");
+		properties.put("includes", "org.*:com.*");
+		properties.put("excludes", "*Test");
+		properties.put("exclclassloader", "org.jacoco.test.TestLoader");
+		properties.put("sessionid", "testsession");
+		properties.put("dumponexit", "false");
+		properties.put("output", "tcpserver");
+		properties.put("address", "remotehost");
+		properties.put("port", "1234");
+		properties.put("classdumpdir", "target/dump");
 
 		AgentOptions options = new AgentOptions(properties);
 

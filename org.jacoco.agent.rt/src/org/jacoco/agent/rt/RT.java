@@ -11,6 +11,8 @@
  *******************************************************************************/
 package org.jacoco.agent.rt;
 
+import java.util.Properties;
+
 import org.jacoco.core.runtime.AgentOptions;
 import org.jacoco.core.runtime.RuntimeData;
 
@@ -21,10 +23,12 @@ import org.jacoco.core.runtime.RuntimeData;
 public class RT {
 
 	private static final RuntimeData data;
+	private static final String CONFIG_RESOURCE = "/jacoco-agent.properties";
 
 	static {
-		final AgentOptions options = new AgentOptions(System.getProperties());
-		data = Agent.getInstance(options).getData();
+		final Properties config = ConfigLoader.load(
+				CONFIG_RESOURCE, System.getProperties());
+		data = Agent.getInstance(new AgentOptions(config)).getData();
 	}
 
 	/**

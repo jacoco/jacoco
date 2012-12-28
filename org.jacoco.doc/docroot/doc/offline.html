@@ -41,13 +41,25 @@
 
 <h2>Configuration</h2>
 <p>
-  In offline mode the JaCoCo runtime can be configured with Java System
-  properties. The same set of properties as for the
-  <a href="agent.html">agent</a> is available, but prefixed with
-  "<code>jacoco.</code>". For example the location of the <code>*.exec</code>
-  file can be configured with the system property
-  "<code>jacoco.destfile</code>". 
+  In offline mode the JaCoCo runtime can be configured with the same set of
+  properties which are available for the <a href="agent.html">agent</a>, except
+  for the <code>includes</code>/<code>excludes</code> options as the class files
+  are already instrumented. There are two different ways to provide the
+  configuration:
 </p>
+
+<ul>
+  <li><b>Configuration File:</b> If a file <code>jacoco-agent.properties</code>
+      is supplied on the classpath options are loaded from this file. The file
+      has to be formatted in the
+      <a href="http://docs.oracle.com/javase/7/docs/api/java/util/Properties.html#load%28java.io.Reader%29">Java
+      properties file format</a>.</li>
+  <li><b>System Properties:</b> Options can also be supplied as Java system
+      properties. In this case the options have to be prefixed with
+      "<code>jacoco-agent.</code>". For example the location of the
+      <code>*.exec</code> file can be configured with the system property
+      "<code>jacoco-agent.destfile</code>".</li>
+</ul>
 
 <h2>Class Loading and Initialization</h2>
 <p>
@@ -65,8 +77,8 @@
   It is possible to also use offline-instrumented classes with the JaCoCo Java
   agent. In this case the configuration is taken from the agent options. The
   agent must be configured in a way that pre-instrumented classes are excluded,
-  e.g. with <code>excludes=*</code>. Otherwise it will result in error messages
-  on the console if the agent instruments such classes again. 
+  e.g. with "<code>excludes=*</code>". Otherwise it will result in error
+  messages on the console if the agent instruments such classes again. 
 </p>
 
 <h2>Execution Data Collection</h2>

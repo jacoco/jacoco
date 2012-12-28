@@ -8,7 +8,7 @@
    http://www.eclipse.org/legal/epl-v10.html
   
    Contributors:
-      Brock Janiczak - initial API and implementation
+      Marc R. Hoffmann - initial API and implementation
       
    $Id: $
 -->
@@ -49,7 +49,24 @@
 		</jacoco:instrument>
 	</target>
 	
-	<target name="testInstrumentAndRun">
+	<target name="testInstrumentAndRunWithConfigFile">
+		<jacoco:instrument destdir="${temp.dir}">
+			<fileset dir="${org.jacoco.ant.instrumentTaskTest.classes.dir}" includes="**/*.class"/>
+		</jacoco:instrument>
+		<au:assertLogContains text="Instrumented 12 classes to ${temp.dir}"/>
+		<au:assertFileExists file="${temp.dir}/org/jacoco/ant/InstrumentTaskTest.class" />
+
+		<echo file="${temp.dir}/jacoco-agent.properties">destfile=${temp.dir}/test.exec</echo>
+		<java classname="org.jacoco.ant.TestTarget" failonerror="true" fork="true">
+			<classpath>
+				<pathelement path="${org.jacoco.ant.instrumentTaskTest.agent.file}"/>
+				<pathelement path="${temp.dir}"/>
+			</classpath>
+		</java>
+		<au:assertFileExists file="${temp.dir}/test.exec" />
+	</target>
+	
+	<target name="testInstrumentAndRunWithSystemProperties">
 		<jacoco:instrument destdir="${temp.dir}">
 			<fileset dir="${org.jacoco.ant.instrumentTaskTest.classes.dir}" includes="**/*.class"/>
 		</jacoco:instrument>
@@ -57,7 +74,7 @@
 		<au:assertFileExists file="${temp.dir}/org/jacoco/ant/InstrumentTaskTest.class" />
 
 		<java classname="org.jacoco.ant.TestTarget" failonerror="true" fork="true">
-			<sysproperty key="jacoco.destfile" file="${temp.dir}/test.exec"/>
+			<sysproperty key="jacoco-agent.destfile" file="${temp.dir}/test.exec"/>
 			<classpath>
 				<pathelement path="${org.jacoco.ant.instrumentTaskTest.agent.file}"/>
 				<pathelement path="${temp.dir}"/>
