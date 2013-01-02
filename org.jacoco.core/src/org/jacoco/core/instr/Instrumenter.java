@@ -13,7 +13,12 @@ package org.jacoco.core.instr;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipInputStream;
+import java.util.zip.ZipOutputStream;
 
+import org.jacoco.core.internal.ContentTypeDetector;
 import org.jacoco.core.internal.data.CRC64;
 import org.jacoco.core.internal.flow.ClassProbesAdapter;
 import org.jacoco.core.internal.instr.ClassInstrumenter;
@@ -90,10 +95,82 @@ public class Instrumenter {
 	 * @return instrumented definition
 	 * @throws IOException
 	 *             if reading data from the stream fails
-	 * 
 	 */
 	public byte[] instrument(final InputStream input) throws IOException {
 		return instrument(new ClassReader(input));
 	}
 
+	/**
+	 * Creates a instrumented version of the given class file.
+	 * 
+	 * @param input
+	 *            stream to read class definition from
+	 * @param output
+	 *            stream to write the instrumented version of the class to
+	 * @throws IOException
+	 *             if reading data from the stream fails
+	 */
+	public void instrument(final InputStream input, final OutputStream output)
+			throws IOException {
+		output.write(instrument(new ClassReader(input)));
+	}
+
+	/**
+	 * Creates a instrumented version of the given archive, i.e. with all class
+	 * files contained in this archive instrumented. Contained resources which
+	 * are no class files or archive files are copied as is.
+	 * 
+	 * @param input
+	 *            stream to read archive from
+	 * @param output
+	 *            stream to write the instrumented version of the class to
+	 * @return number of instrumented classes
+	 * @throws IOException
+	 *             if reading data from the stream fails
+	 */
+	public int instrumentArchive(final InputStream input,
+			final OutputStream output) throws IOException {
+		final ZipInputStream zipin = new ZipInputStream(input);
+		final ZipOutputStream zipout = new ZipOutputStream(output);
+		ZipEntry entry;
+		int count = 0;
+		while ((entry = zipin.getNextEntry()) != null) {
+			zipout.putNextEntry(entry);
+			count += instrumentAll(zipin, zipout);
+		}
+		zipout.closeEntry();
+		return count;
+	}
+
+	/**
+	 * Creates a instrumented version of the given resource depending on its
+	 * type. Class files and the content of archive files are instrumented. All
+	 * other files are copied without modification.
+	 * 
+	 * @param input
+	 *            stream to contents from
+	 * @param output
+	 *            stream to write the instrumented version of the contents
+	 * @return number of instrumented classes
+	 * @throws IOException
+	 *             if reading data from the stream fails
+	 */
+	public int instrumentAll(final InputStream input, final OutputStream output)
+			throws IOException {
+		final ContentTypeDetector detector = new ContentTypeDetector(input);
+		switch (detector.getType()) {
+		case ContentTypeDetector.CLASSFILE:
+			instrument(detector.getInputStream(), output);
+			return 1;
+		case ContentTypeDetector.ZIPFILE:
+			return instrumentArchive(detector.getInputStream(), output);
+		default:
+			final byte[] buffer = new byte[1024];
+			int len;
+			while ((len = detector.getInputStream().read(buffer)) != -1) {
+				output.write(buffer, 0, len);
+			}
+			return 0;
+		}
+	}
 }
