@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-   Copyright (c) 2009, 2012 Mountainminds GmbH & Co. KG and Contributors
+   Copyright (c) 2009, 2013 Mountainminds GmbH & Co. KG and Contributors
    All rights reserved. This program and the accompanying materials
    are made available under the terms of the Eclipse Public License v1.0
    which accompanies this distribution, and is available at
@@ -117,6 +117,7 @@
 
     <maven.build.timestamp.format>yyyyMMddhhmm</maven.build.timestamp.format>
     <jacoco.home.url>http://www.eclemma.org/jacoco</jacoco.home.url>
+    <copyright.years>${project.inceptionYear}, 2013</copyright.years>
 
     <jvm.args></jvm.args>
     <argLine>${jvm.args}</argLine>
@@ -497,7 +498,7 @@
                 <fileset dir="${basedir}" includes="**/*.java,**/*.xml,**/*.bsh" excludes="target/**" id="missinglicense.fileset">
                   <not>
                     <and>
-                      <contains text="Copyright (c) 2009, 2012 Mountainminds GmbH &amp; Co. KG and Contributors"/>
+                      <contains text="Copyright (c) 2009, 2013 Mountainminds GmbH &amp; Co. KG and Contributors"/>
                       <contains text="All rights reserved. This program and the accompanying materials"/>
                       <contains text="are made available under the terms of the Eclipse Public License v1.0"/>
                       <contains text="which accompanies this distribution, and is available at"/>
