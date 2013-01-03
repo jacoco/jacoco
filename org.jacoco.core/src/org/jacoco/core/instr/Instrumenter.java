@@ -135,10 +135,11 @@ public class Instrumenter {
 		ZipEntry entry;
 		int count = 0;
 		while ((entry = zipin.getNextEntry()) != null) {
-			zipout.putNextEntry(entry);
+			zipout.putNextEntry(new ZipEntry(entry.getName()));
 			count += instrumentAll(zipin, zipout);
+			zipout.closeEntry();
 		}
-		zipout.closeEntry();
+		zipout.finish();
 		return count;
 	}
 
