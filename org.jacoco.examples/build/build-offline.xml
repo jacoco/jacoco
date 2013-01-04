@@ -56,7 +56,7 @@
 				<pathelement path="${result.classes.instr.dir}" />
 			</classpath>
 			<!-- Agent is configured with system properties -->
-			<sysproperty key="jacoco.destfile" file="${result.exec.file}"/>
+			<sysproperty key="jacoco-agent.destfile" file="${result.exec.file}"/>
 			<arg value="2 * 3 + 4"/>
 			<arg value="2 + 3 * 4"/>
 			<arg value="(2 + 3) * 4"/>
