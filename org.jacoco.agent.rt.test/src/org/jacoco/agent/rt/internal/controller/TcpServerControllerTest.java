@@ -25,7 +25,6 @@ import java.net.UnknownHostException;
 import java.util.List;
 
 import org.jacoco.agent.rt.internal.ExceptionRecorder;
-import org.jacoco.agent.rt.internal.controller.TcpServerController;
 import org.jacoco.core.data.ExecutionDataStore;
 import org.jacoco.core.data.ExecutionDataWriter;
 import org.jacoco.core.data.SessionInfo;
@@ -99,7 +98,7 @@ public class TcpServerControllerTest {
 		remoteReader.read();
 
 		// Now the actual test starts:
-		controller.writeExecutionData();
+		controller.writeExecutionData(false);
 
 		final ExecutionDataStore execStore = new ExecutionDataStore();
 		remoteReader.setExecutionDataVisitor(execStore);

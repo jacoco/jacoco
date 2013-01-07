@@ -30,7 +30,7 @@ final class ConfigLoader {
 		final Properties result = new Properties();
 
 		// 1. Try to load resource
-		final InputStream file = RT.class.getResourceAsStream(resource);
+		final InputStream file = Offline.class.getResourceAsStream(resource);
 		if (file != null) {
 			try {
 				result.load(file);

@@ -44,6 +44,10 @@
     </dependency>
     <dependency>
       <groupId>${project.groupId}</groupId>
+      <artifactId>org.jacoco.agent.rt</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>${project.groupId}</groupId>
       <artifactId>org.jacoco.agent</artifactId>
       <version>${project.version}</version>
       <classifier>runtime</classifier>
@@ -196,7 +200,7 @@
             <configuration>
               <reportOutputDirectory>${project.build.directory}/apidocs</reportOutputDirectory>
               <includeDependencySources>true</includeDependencySources>
-              <excludePackageNames>*.internal,org.jacoco.ant,org.jacoco.agent.rt</excludePackageNames>
+              <excludePackageNames>*.internal,org.jacoco.ant</excludePackageNames>
               <dependencySourceIncludes>
                 <dependencySourceInclude>org.jacoco:*</dependencySourceInclude>
               </dependencySourceIncludes>
@@ -220,6 +224,10 @@
                 <group>
                   <title>Bundle org.jacoco.agent</title>
                   <packages>org.jacoco.agent*</packages>
+                </group>
+                <group>
+                  <title>JaCoCo Runtime</title>
+                  <packages>org.jacoco.agent.rt:com.vladium.emma.rt</packages>
                 </group>
               </groups>
               <overview>javadoc/overview.html</overview>

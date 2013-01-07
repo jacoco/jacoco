@@ -20,7 +20,7 @@ import org.jacoco.core.runtime.RuntimeData;
  * The API for classes instrumented in "offline" mode. The agent configuration
  * is provided through system properties prefixed with <code>jacoco.</code>.
  */
-public class RT {
+public class Offline {
 
 	private static final RuntimeData data;
 	private static final String CONFIG_RESOURCE = "/jacoco-agent.properties";

@@ -21,7 +21,6 @@ import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.concurrent.Future;
 
-import org.jacoco.agent.rt.internal.controller.TcpConnection;
 import org.jacoco.core.data.ExecutionDataStore;
 import org.jacoco.core.data.ExecutionDataWriter;
 import org.jacoco.core.data.SessionInfo;
@@ -196,7 +195,7 @@ public class TcpConnectionTest extends ExecutorTestBase {
 
 		assertBlocks(f);
 
-		con.writeExecutionData();
+		con.writeExecutionData(false);
 		readAndAssertData();
 
 		con.close();
@@ -208,7 +207,7 @@ public class TcpConnectionTest extends ExecutorTestBase {
 		final TcpConnection con = new TcpConnection(
 				mockConnection.getSocketA(), data);
 		// Must not write any data as we're not initialized:
-		con.writeExecutionData();
+		con.writeExecutionData(false);
 
 		assertEquals(0, mockConnection.getSocketB().getInputStream()
 				.available());

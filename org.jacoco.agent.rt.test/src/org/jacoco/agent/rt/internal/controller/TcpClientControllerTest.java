@@ -21,8 +21,6 @@ import java.net.Socket;
 import java.util.List;
 
 import org.jacoco.agent.rt.internal.ExceptionRecorder;
-import org.jacoco.agent.rt.internal.controller.IAgentController;
-import org.jacoco.agent.rt.internal.controller.TcpClientController;
 import org.jacoco.core.data.ExecutionDataStore;
 import org.jacoco.core.data.SessionInfo;
 import org.jacoco.core.data.SessionInfoStore;
@@ -96,7 +94,7 @@ public class TcpClientControllerTest {
 		data.getExecutionData(Long.valueOf(0x12345678), "Foo", 42);
 		data.setSessionId("stubid");
 
-		controller.writeExecutionData();
+		controller.writeExecutionData(false);
 
 		final ExecutionDataStore execStore = new ExecutionDataStore();
 		remoteReader.setExecutionDataVisitor(execStore);

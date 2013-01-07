@@ -68,8 +68,8 @@ public class TcpClientController implements IAgentController {
 		worker.join();
 	}
 
-	public void writeExecutionData() throws IOException {
-		connection.writeExecutionData();
+	public void writeExecutionData(final boolean reset) throws IOException {
+		connection.writeExecutionData(reset);
 	}
 
 	/**

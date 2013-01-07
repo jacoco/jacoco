@@ -16,7 +16,6 @@ import static org.junit.Assert.assertTrue;
 import java.io.File;
 import java.io.IOException;
 
-import org.jacoco.agent.rt.internal.controller.LocalController;
 import org.jacoco.core.runtime.AgentOptions;
 import org.jacoco.core.runtime.RuntimeData;
 import org.junit.Rule;
@@ -39,7 +38,7 @@ public class LocalControllerTest {
 
 		LocalController controller = new LocalController();
 		controller.startup(options, new RuntimeData());
-		controller.writeExecutionData();
+		controller.writeExecutionData(false);
 		controller.shutdown();
 
 		assertTrue("Execution data file should be created", destFile.exists());

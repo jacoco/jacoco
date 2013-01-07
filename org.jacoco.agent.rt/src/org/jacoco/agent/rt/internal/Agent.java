@@ -11,14 +11,19 @@
  *******************************************************************************/
 package org.jacoco.agent.rt.internal;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 
+import org.jacoco.agent.rt.IAgent;
 import org.jacoco.agent.rt.internal.controller.IAgentController;
 import org.jacoco.agent.rt.internal.controller.LocalController;
 import org.jacoco.agent.rt.internal.controller.MBeanController;
 import org.jacoco.agent.rt.internal.controller.TcpClientController;
 import org.jacoco.agent.rt.internal.controller.TcpServerController;
+import org.jacoco.core.JaCoCo;
+import org.jacoco.core.data.ExecutionDataWriter;
 import org.jacoco.core.runtime.AbstractRuntime;
 import org.jacoco.core.runtime.AgentOptions;
 import org.jacoco.core.runtime.AgentOptions.OutputMode;
@@ -27,7 +32,7 @@ import org.jacoco.core.runtime.RuntimeData;
 /**
  * The agent manages the life cycle of JaCoCo runtime.
  */
-public class Agent {
+public class Agent implements IAgent {
 
 	private static Agent singleton;
 
@@ -50,6 +55,21 @@ public class Agent {
 				}
 			});
 			singleton = agent;
+		}
+		return singleton;
+	}
+
+	/**
+	 * Returns a global instance which is already started. If a agent has not
+	 * been initialized before this method will fail.
+	 * 
+	 * @return global instance
+	 * @throws IllegalStateException
+	 *             if no Agent has been started yet
+	 */
+	public static synchronized Agent getInstance() throws IllegalStateException {
+		if (singleton == null) {
+			throw new IllegalStateException("JaCoCo agent not started.");
 		}
 		return singleton;
 	}
@@ -109,7 +129,7 @@ public class Agent {
 	public void shutdown() {
 		try {
 			if (options.getDumpOnExit()) {
-				controller.writeExecutionData();
+				controller.writeExecutionData(false);
 			}
 			controller.shutdown();
 		} catch (final Exception e) {
@@ -146,6 +166,40 @@ public class Agent {
 			host = "unknownhost";
 		}
 		return host + "-" + AbstractRuntime.createRandomId();
+	}
+
+	// === IAgent Implementation ===
+
+	public String getVersion() {
+		return JaCoCo.VERSION;
+	}
+
+	public String getSessionId() {
+		return data.getSessionId();
+	}
+
+	public void setSessionId(final String id) {
+		data.setSessionId(id);
+	}
+
+	public void reset() {
+		data.reset();
+	}
+
+	public byte[] getExecutionData(final boolean reset) {
+		final ByteArrayOutputStream buffer = new ByteArrayOutputStream();
+		try {
+			final ExecutionDataWriter writer = new ExecutionDataWriter(buffer);
+			data.collect(writer, writer, reset);
+		} catch (final IOException e) {
+			// Must not happen with ByteArrayOutputStream
+			throw new AssertionError(e);
+		}
+		return buffer.toByteArray();
+	}
+
+	public void dump(final boolean reset) throws IOException {
+		controller.writeExecutionData(reset);
 	}
 
 }

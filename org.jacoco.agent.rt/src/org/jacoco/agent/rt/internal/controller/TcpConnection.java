@@ -73,11 +73,13 @@ class TcpConnection implements IRemoteCommandVisitor {
 	 * Dumps the current execution data if the connection is already initialized
 	 * and the underlying socket is still open.
 	 * 
+	 * @param reset
+	 *            if <code>true</code> execution data is cleared afterwards
 	 * @throws IOException
 	 */
-	public void writeExecutionData() throws IOException {
+	public void writeExecutionData(final boolean reset) throws IOException {
 		if (initialized && !socket.isClosed()) {
-			visitDumpCommand(true, false);
+			visitDumpCommand(true, reset);
 		}
 	}
 

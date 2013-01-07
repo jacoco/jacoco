@@ -11,6 +11,8 @@
  *******************************************************************************/
 package org.jacoco.agent.rt.internal.controller;
 
+import java.io.IOException;
+
 import org.jacoco.core.runtime.AgentOptions;
 import org.jacoco.core.runtime.RuntimeData;
 
@@ -46,9 +48,11 @@ public interface IAgentController {
 	 * Write all execution data in the runtime to a location determined by the
 	 * agent controller. This method should only be called by the Agent
 	 * 
-	 * @throws Exception
+	 * @param reset
+	 *            if <code>true</code> execution data is cleared afterwards
+	 * @throws IOException
 	 *             in case writing fails
 	 */
-	public void writeExecutionData() throws Exception;
+	public void writeExecutionData(boolean reset) throws IOException;
 
 }

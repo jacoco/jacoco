@@ -86,9 +86,9 @@ public class TcpServerController implements IAgentController {
 		worker.join();
 	}
 
-	public void writeExecutionData() throws IOException {
+	public void writeExecutionData(final boolean reset) throws IOException {
 		if (connection != null) {
-			connection.writeExecutionData();
+			connection.writeExecutionData(reset);
 		}
 	}
 

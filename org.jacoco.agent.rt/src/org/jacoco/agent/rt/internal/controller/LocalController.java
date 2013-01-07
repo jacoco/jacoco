@@ -47,9 +47,9 @@ public class LocalController implements IAgentController {
 				options.getAppend()));
 	}
 
-	public void writeExecutionData() throws IOException {
+	public void writeExecutionData(final boolean reset) throws IOException {
 		final ExecutionDataWriter writer = new ExecutionDataWriter(output);
-		data.collect(writer, writer, false);
+		data.collect(writer, writer, reset);
 	}
 
 	public void shutdown() throws IOException {

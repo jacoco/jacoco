@@ -45,7 +45,7 @@ public class MBeanController implements IAgentController, IRuntimeMBean {
 				new ObjectName(OBJECT_NAME));
 	}
 
-	public void writeExecutionData() throws Exception {
+	public void writeExecutionData(final boolean reset) {
 		// nothing to do
 	}
 
