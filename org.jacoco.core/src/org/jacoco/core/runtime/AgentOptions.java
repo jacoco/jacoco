@@ -115,13 +115,7 @@ public final class AgentOptions {
 		 * agent connects to a TCP port specified by the
 		 * {@link AgentOptions#ADDRESS} and {@link AgentOptions#PORT} attribute.
 		 */
-		tcpclient,
-
-		/**
-		 * Value for the {@link AgentOptions#OUTPUT} parameter: At startup the
-		 * agent creates MBean.
-		 */
-		mbean
+		tcpclient
 
 	}
 
@@ -156,9 +150,15 @@ public final class AgentOptions {
 	 */
 	public static final String CLASSDUMPDIR = "classdumpdir";
 
+	/**
+	 * Specifies whether the agent should expose functionality via JMX under the
+	 * name "org.jacoco:type=Runtime". Default is <code>false</code>.
+	 */
+	public static final String JMX = "jmx";
+
 	private static final Collection<String> VALID_OPTIONS = Arrays.asList(
 			DESTFILE, APPEND, INCLUDES, EXCLUDES, EXCLCLASSLOADER, SESSIONID,
-			DUMPONEXIT, OUTPUT, ADDRESS, PORT, CLASSDUMPDIR);
+			DUMPONEXIT, OUTPUT, ADDRESS, PORT, CLASSDUMPDIR, JMX);
 
 	private final Map<String, String> options;
 
@@ -457,6 +457,25 @@ public final class AgentOptions {
 	 */
 	public void setClassDumpDir(final String location) {
 		setOption(CLASSDUMPDIR, location);
+	}
+
+	/**
+	 * Returns whether the agent exposes functionality via JMX.
+	 * 
+	 * @return <code>true</code>, when JMX is enabled
+	 */
+	public boolean getJmx() {
+		return getOption(JMX, false);
+	}
+
+	/**
+	 * Sets whether the agent should exposes functionality via JMX.
+	 * 
+	 * @param jmx
+	 *            <code>true</code> if JMX should be enabled
+	 */
+	public void setJmx(final boolean jmx) {
+		setOption(JMX, jmx);
 	}
 
 	private void setOption(final String key, final int value) {

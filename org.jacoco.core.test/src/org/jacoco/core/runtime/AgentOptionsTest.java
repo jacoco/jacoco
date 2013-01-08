@@ -49,6 +49,7 @@ public class AgentOptionsTest {
 		assertNull(options.getAddress());
 		assertEquals(6300, options.getPort());
 		assertNull(options.getClassDumpDir());
+		assertFalse(options.getJmx());
 
 		assertEquals("", options.toString());
 	}
@@ -79,6 +80,7 @@ public class AgentOptionsTest {
 		properties.put("address", "remotehost");
 		properties.put("port", "1234");
 		properties.put("classdumpdir", "target/dump");
+		properties.put("jmx", "true");
 
 		AgentOptions options = new AgentOptions(properties);
 
@@ -93,6 +95,7 @@ public class AgentOptionsTest {
 		assertEquals("remotehost", options.getAddress());
 		assertEquals(1234, options.getPort());
 		assertEquals("target/dump", options.getClassDumpDir());
+		assertTrue(options.getJmx());
 	}
 
 	@Test
@@ -317,6 +320,19 @@ public class AgentOptionsTest {
 		options.setClassDumpDir("target/dump");
 		assertEquals("target/dump", options.getClassDumpDir());
 		assertEquals("classdumpdir=target/dump", options.toString());
+	}
+
+	@Test
+	public void testGetJmx() {
+		AgentOptions options = new AgentOptions("jmx=true");
+		assertTrue(options.getJmx());
+	}
+
+	@Test
+	public void testSetJmx() {
+		AgentOptions options = new AgentOptions();
+		options.setJmx(true);
+		assertTrue(options.getJmx());
 	}
 
 	@Test

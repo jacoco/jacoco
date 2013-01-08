@@ -16,14 +16,19 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
+import java.lang.management.ManagementFactory;
+
+import javax.management.InstanceNotFoundException;
+import javax.management.MBeanServer;
+import javax.management.ObjectName;
 
 import org.jacoco.agent.rt.internal.controller.IAgentController;
 import org.jacoco.agent.rt.internal.controller.LocalController;
-import org.jacoco.agent.rt.internal.controller.MBeanController;
 import org.jacoco.agent.rt.internal.controller.TcpClientController;
 import org.jacoco.agent.rt.internal.controller.TcpServerController;
 import org.jacoco.core.JaCoCo;
@@ -73,10 +78,6 @@ public class AgentTest implements IExceptionLogger {
 
 		options.setOutput(OutputMode.tcpclient);
 		assertEquals(TcpClientController.class, agent.createAgentController()
-				.getClass());
-
-		options.setOutput(OutputMode.mbean);
-		assertEquals(MBeanController.class, agent.createAgentController()
 				.getClass());
 	}
 
@@ -245,6 +246,35 @@ public class AgentTest implements IExceptionLogger {
 		agent.dump(true);
 
 		assertTrue(called[0]);
+	}
+
+	@Test
+	public void testJmx() throws Exception {
+		options.setJmx(true);
+		Agent agent = new Agent(options, this);
+
+		agent.startup();
+
+		ObjectName objectName = new ObjectName("org.jacoco:type=Runtime");
+		final MBeanServer server = ManagementFactory.getPlatformMBeanServer();
+		assertEquals(JaCoCo.VERSION, server.getAttribute(objectName, "Version"));
+
+		agent.shutdown();
+
+		try {
+			server.getMBeanInfo(objectName);
+			fail("InstanceNotFoundException expected");
+		} catch (InstanceNotFoundException expected) {
+		}
+	}
+
+	@Test(expected = InstanceNotFoundException.class)
+	public void testNoJmx() throws Exception {
+		Agent agent = new Agent(options, this);
+		agent.startup();
+
+		ObjectName objectName = new ObjectName("org.jacoco:type=Runtime");
+		ManagementFactory.getPlatformMBeanServer().getMBeanInfo(objectName);
 	}
 
 	// === IExceptionLogger ===
