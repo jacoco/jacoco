@@ -469,7 +469,7 @@ public final class AgentOptions {
 	}
 
 	/**
-	 * Sets whether the agent should exposes functionality via JMX.
+	 * Sets whether the agent should expose functionality via JMX.
 	 * 
 	 * @param jmx
 	 *            <code>true</code> if JMX should be enabled
