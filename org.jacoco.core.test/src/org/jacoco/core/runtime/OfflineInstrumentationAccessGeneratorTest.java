@@ -70,7 +70,7 @@ public class OfflineInstrumentationAccessGeneratorTest {
 		expected.getVisitor().visitLdcInsn(Long.valueOf(987654321));
 		expected.getVisitor().visitLdcInsn("foo/Bar");
 		expected.getVisitor().visitIntInsn(Opcodes.BIPUSH, 17);
-		String rtname = JaCoCo.RUNTIMEPACKAGE.replace('.', '/') + "/RT";
+		String rtname = JaCoCo.RUNTIMEPACKAGE.replace('.', '/') + "/Offline";
 		expected.getVisitor().visitMethodInsn(Opcodes.INVOKESTATIC, rtname,
 				"getProbes", "(JLjava/lang/String;I)[Z");
 

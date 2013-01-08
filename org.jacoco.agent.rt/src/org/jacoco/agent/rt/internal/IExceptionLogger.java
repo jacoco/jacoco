@@ -9,27 +9,29 @@
  *    Marc R. Hoffmann - initial API and implementation
  *    
  *******************************************************************************/
-package org.jacoco.agent.rt;
-
-import org.jacoco.agent.rt.internal.Agent;
+package org.jacoco.agent.rt.internal;
 
 /**
- * Entry point to access the JaCoCo agent runtime.
+ * At several places exception might occur that should be reported. For
+ * testability these exceptions are emitted against this interface.
  */
-public final class RT {
-
-	private RT() {
-	}
+public interface IExceptionLogger {
 
 	/**
-	 * Returns the agent instance of the JaCoCo runtime in this JVM.
-	 * 
-	 * @return agent instance
-	 * @throws IllegalStateException
-	 *             if no Agent has been started yet
+	 * Default implementation which dumps the stack trace to System.err.
 	 */
-	public static IAgent getAgent() throws IllegalStateException {
-		return Agent.getInstance();
-	}
+	IExceptionLogger SYSTEM_ERR = new IExceptionLogger() {
+		public void logExeption(final Exception ex) {
+			ex.printStackTrace();
+		}
+	};
+
+	/**
+	 * Logs the given exception.
+	 * 
+	 * @param ex
+	 *            exception to log
+	 */
+	public void logExeption(Exception ex);
 
 }

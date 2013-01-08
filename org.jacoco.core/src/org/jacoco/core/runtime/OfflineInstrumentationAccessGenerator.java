@@ -31,7 +31,7 @@ public class OfflineInstrumentationAccessGenerator implements
 	 * Creates a new instance for offline instrumentation.
 	 */
 	public OfflineInstrumentationAccessGenerator() {
-		this(JaCoCo.RUNTIMEPACKAGE.replace('.', '/') + "/RT");
+		this(JaCoCo.RUNTIMEPACKAGE.replace('.', '/') + "/Offline");
 	}
 
 	/**
