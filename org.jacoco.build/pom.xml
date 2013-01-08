@@ -806,6 +806,10 @@
                     </requireActiveProfile>
                     -->
                     <requireReleaseVersion/>
+                    <requireProperty>
+                      <property>buildNumber</property>
+                      <regex>[0-9a-f]{40}</regex>
+                    </requireProperty>
                   </rules>
                 </configuration>
               </execution>
