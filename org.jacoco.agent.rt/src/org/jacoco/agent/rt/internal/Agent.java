@@ -13,13 +13,16 @@ package org.jacoco.agent.rt.internal;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.lang.management.ManagementFactory;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
+
+import javax.management.ObjectName;
+import javax.management.StandardMBean;
 
 import org.jacoco.agent.rt.IAgent;
 import org.jacoco.agent.rt.internal.controller.IAgentController;
 import org.jacoco.agent.rt.internal.controller.LocalController;
-import org.jacoco.agent.rt.internal.controller.MBeanController;
 import org.jacoco.agent.rt.internal.controller.TcpClientController;
 import org.jacoco.agent.rt.internal.controller.TcpServerController;
 import org.jacoco.core.JaCoCo;
@@ -33,6 +36,8 @@ import org.jacoco.core.runtime.RuntimeData;
  * The agent manages the life cycle of JaCoCo runtime.
  */
 public class Agent implements IAgent {
+
+	private static final String JMX_NAME = "org.jacoco:type=Runtime";
 
 	private static Agent singleton;
 
@@ -118,6 +123,11 @@ public class Agent implements IAgent {
 			data.setSessionId(sessionId);
 			controller = createAgentController();
 			controller.startup(options, data);
+			if (options.getJmx()) {
+				ManagementFactory.getPlatformMBeanServer().registerMBean(
+						new StandardMBean(this, IAgent.class),
+						new ObjectName(JMX_NAME));
+			}
 		} catch (final Exception e) {
 			logger.logExeption(e);
 		}
@@ -132,6 +142,10 @@ public class Agent implements IAgent {
 				controller.writeExecutionData(false);
 			}
 			controller.shutdown();
+			if (options.getJmx()) {
+				ManagementFactory.getPlatformMBeanServer().unregisterMBean(
+						new ObjectName(JMX_NAME));
+			}
 		} catch (final Exception e) {
 			logger.logExeption(e);
 		}
@@ -151,8 +165,6 @@ public class Agent implements IAgent {
 			return new TcpServerController(logger);
 		case tcpclient:
 			return new TcpClientController(logger);
-		case mbean:
-			return new MBeanController();
 		default:
 			throw new AssertionError(controllerType);
 		}
