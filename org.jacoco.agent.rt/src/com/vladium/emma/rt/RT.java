@@ -12,10 +12,14 @@
 package com.vladium.emma.rt;
 
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
 
 /**
  * Compatibility layer for the EMMA runtime which allows to trigger dumps
- * through EMMA APIs.
+ * through EMMA APIs. Note that even this class emulates an EMMA API the files
+ * written are in JaCoCo execution data format.
  * 
  * @deprecated Use {@link org.jacoco.agent.rt.IAgent} instead.
  */
@@ -26,38 +30,44 @@ public final class RT {
 	}
 
 	/**
-	 * Triggers an execution data dump for the configured output without
-	 * performing a reset.
+	 * Writes the current execution data to the given file in JaCoCo execution
+	 * data format.
 	 * 
 	 * @param outFile
-	 *            ignored
+	 *            file to write execution data to
 	 * @param merge
-	 *            ignored
+	 *            if <code>true</code>, execution data is appended to an
+	 *            existing file
 	 * @param stopDataCollection
 	 *            ignored
-	 * @throws Exception
-	 * @see org.jacoco.agent.rt.IAgent#dump(boolean)
+	 * @throws IOException
+	 *             in case of problems with the file output
 	 */
 	@SuppressWarnings("unused")
 	public static void dumpCoverageData(final File outFile,
 			final boolean merge, final boolean stopDataCollection)
-			throws Exception {
-		org.jacoco.agent.rt.RT.getAgent().dump(false);
+			throws IOException {
+		final OutputStream out = new FileOutputStream(outFile, merge);
+		try {
+			out.write(org.jacoco.agent.rt.RT.getAgent().getExecutionData(false));
+		} finally {
+			out.close();
+		}
 	}
 
 	/**
-	 * Triggers an execution data dump for the configured output without
-	 * performing a reset.
+	 * Writes the current execution data to the given file in JaCoCo execution
+	 * data format. If the file already exists new data is appended.
 	 * 
 	 * @param outFile
-	 *            ignored
+	 *            file to write execution data to
 	 * @param stopDataCollection
 	 *            ignored
-	 * @throws Exception
-	 * @see org.jacoco.agent.rt.IAgent#dump(boolean)
+	 * @throws IOException
+	 *             in case of problems with the file output
 	 */
 	public static synchronized void dumpCoverageData(final File outFile,
-			final boolean stopDataCollection) throws Exception {
+			final boolean stopDataCollection) throws IOException {
 		dumpCoverageData(outFile, true, stopDataCollection);
 	}
 
