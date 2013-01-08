@@ -11,6 +11,7 @@
  *******************************************************************************/
 package org.jacoco.agent.rt.internal.controller;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 import java.io.File;
@@ -31,6 +32,20 @@ public class LocalControllerTest {
 	public TemporaryFolder folder = new TemporaryFolder();
 
 	@Test
+	public void testCreateDestFileOnStartup() throws Exception {
+		File destFile = folder.newFile("jacoco.exec");
+		AgentOptions options = new AgentOptions();
+		options.setDestfile(destFile.getAbsolutePath());
+
+		LocalController controller = new LocalController();
+		controller.startup(options, new RuntimeData());
+
+		assertTrue("Execution data file should be created", destFile.exists());
+		assertEquals("Execution data file should be empty", 0,
+				destFile.length());
+	}
+
+	@Test
 	public void testWriteData() throws Exception {
 		File destFile = folder.newFile("jacoco.exec");
 		AgentOptions options = new AgentOptions();
@@ -42,6 +57,8 @@ public class LocalControllerTest {
 		controller.shutdown();
 
 		assertTrue("Execution data file should be created", destFile.exists());
+		assertTrue("Execution data file should have contents",
+				destFile.length() > 0);
 	}
 
 	@Test(expected = IOException.class)

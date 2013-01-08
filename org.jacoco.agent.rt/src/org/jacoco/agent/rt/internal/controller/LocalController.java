@@ -11,7 +11,6 @@
  *******************************************************************************/
 package org.jacoco.agent.rt.internal.controller;
 
-import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -33,27 +32,39 @@ public class LocalController implements IAgentController {
 
 	private RuntimeData data;
 
-	private OutputStream output;
+	private File destFile;
+
+	private boolean append;
 
 	public final void startup(final AgentOptions options, final RuntimeData data)
 			throws IOException {
 		this.data = data;
-		final File destFile = new File(options.getDestfile()).getAbsoluteFile();
+		this.destFile = new File(options.getDestfile()).getAbsoluteFile();
+		this.append = options.getAppend();
 		final File folder = destFile.getParentFile();
 		if (folder != null) {
 			folder.mkdirs();
 		}
-		output = new BufferedOutputStream(new FileOutputStream(destFile,
-				options.getAppend()));
+		// Make sure we can write to the file:
+		openFile().close();
 	}
 
 	public void writeExecutionData(final boolean reset) throws IOException {
-		final ExecutionDataWriter writer = new ExecutionDataWriter(output);
-		data.collect(writer, writer, reset);
+		final OutputStream output = openFile();
+		try {
+			final ExecutionDataWriter writer = new ExecutionDataWriter(output);
+			data.collect(writer, writer, reset);
+		} finally {
+			output.close();
+		}
 	}
 
 	public void shutdown() throws IOException {
-		output.close();
+		// Nothing to do
+	}
+
+	private OutputStream openFile() throws IOException {
+		return new FileOutputStream(destFile, append);
 	}
 
 }
