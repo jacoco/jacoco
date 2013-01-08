@@ -549,7 +549,7 @@
           <doCheck>false</doCheck>
           <doUpdate>false</doUpdate>
           <getRevisionOnlyOnce>true</getRevisionOnlyOnce>
-          <revisionOnScmFailure>0</revisionOnScmFailure>
+          <revisionOnScmFailure>0000000</revisionOnScmFailure>
         </configuration>
       </plugin>
 
