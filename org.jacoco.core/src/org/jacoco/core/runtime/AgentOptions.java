@@ -88,6 +88,7 @@ public final class AgentOptions {
 	 * @see OutputMode#file
 	 * @see OutputMode#tcpserver
 	 * @see OutputMode#tcpclient
+	 * @see OutputMode#none
 	 */
 	public static final String OUTPUT = "output";
 
@@ -115,7 +116,13 @@ public final class AgentOptions {
 		 * agent connects to a TCP port specified by the
 		 * {@link AgentOptions#ADDRESS} and {@link AgentOptions#PORT} attribute.
 		 */
-		tcpclient
+		tcpclient,
+
+		/**
+		 * Value for the {@link AgentOptions#OUTPUT} parameter: Do not produce
+		 * any output.
+		 */
+		none
 
 	}
 
