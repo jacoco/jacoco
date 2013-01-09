@@ -23,6 +23,7 @@ import javax.management.StandardMBean;
 import org.jacoco.agent.rt.IAgent;
 import org.jacoco.agent.rt.internal.controller.IAgentController;
 import org.jacoco.agent.rt.internal.controller.LocalController;
+import org.jacoco.agent.rt.internal.controller.NopController;
 import org.jacoco.agent.rt.internal.controller.TcpClientController;
 import org.jacoco.agent.rt.internal.controller.TcpServerController;
 import org.jacoco.core.JaCoCo;
@@ -165,6 +166,8 @@ public class Agent implements IAgent {
 			return new TcpServerController(logger);
 		case tcpclient:
 			return new TcpClientController(logger);
+		case none:
+			return new NopController();
 		default:
 			throw new AssertionError(controllerType);
 		}
