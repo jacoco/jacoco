@@ -29,7 +29,7 @@ import javax.management.ObjectName;
 
 import org.jacoco.agent.rt.internal.controller.IAgentController;
 import org.jacoco.agent.rt.internal.controller.LocalController;
-import org.jacoco.agent.rt.internal.controller.NopController;
+import org.jacoco.agent.rt.internal.controller.NoneController;
 import org.jacoco.agent.rt.internal.controller.TcpClientController;
 import org.jacoco.agent.rt.internal.controller.TcpServerController;
 import org.jacoco.core.JaCoCo;
@@ -82,7 +82,7 @@ public class AgentTest implements IExceptionLogger {
 				.getClass());
 
 		options.setOutput(OutputMode.none);
-		assertEquals(NopController.class, agent.createAgentController()
+		assertEquals(NoneController.class, agent.createAgentController()
 				.getClass());
 	}
 

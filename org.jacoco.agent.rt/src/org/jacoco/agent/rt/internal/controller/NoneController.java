@@ -17,7 +17,7 @@ import org.jacoco.core.runtime.RuntimeData;
 /**
  * Controller that does nothing.
  */
-public class NopController implements IAgentController {
+public class NoneController implements IAgentController {
 
 	public final void startup(final AgentOptions options, final RuntimeData data) {
 		// Nothing to do
