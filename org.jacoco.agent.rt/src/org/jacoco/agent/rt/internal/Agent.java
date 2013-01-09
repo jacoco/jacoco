@@ -21,11 +21,11 @@ import javax.management.ObjectName;
 import javax.management.StandardMBean;
 
 import org.jacoco.agent.rt.IAgent;
-import org.jacoco.agent.rt.internal.controller.IAgentController;
-import org.jacoco.agent.rt.internal.controller.LocalController;
-import org.jacoco.agent.rt.internal.controller.NoneController;
-import org.jacoco.agent.rt.internal.controller.TcpClientController;
-import org.jacoco.agent.rt.internal.controller.TcpServerController;
+import org.jacoco.agent.rt.internal.output.FileOutput;
+import org.jacoco.agent.rt.internal.output.IAgentOutput;
+import org.jacoco.agent.rt.internal.output.NoneOutput;
+import org.jacoco.agent.rt.internal.output.TcpClientOutput;
+import org.jacoco.agent.rt.internal.output.TcpServerOutput;
 import org.jacoco.core.JaCoCo;
 import org.jacoco.core.data.ExecutionDataWriter;
 import org.jacoco.core.runtime.AbstractRuntime;
@@ -84,7 +84,7 @@ public class Agent implements IAgent {
 
 	private final IExceptionLogger logger;
 
-	private IAgentController controller;
+	private IAgentOutput output;
 
 	private final RuntimeData data;
 
@@ -122,8 +122,8 @@ public class Agent implements IAgent {
 				sessionId = createSessionId();
 			}
 			data.setSessionId(sessionId);
-			controller = createAgentController();
-			controller.startup(options, data);
+			output = createAgentOutput();
+			output.startup(options, data);
 			if (options.getJmx()) {
 				ManagementFactory.getPlatformMBeanServer().registerMBean(
 						new StandardMBean(this, IAgent.class),
@@ -140,9 +140,9 @@ public class Agent implements IAgent {
 	public void shutdown() {
 		try {
 			if (options.getDumpOnExit()) {
-				controller.writeExecutionData(false);
+				output.writeExecutionData(false);
 			}
-			controller.shutdown();
+			output.shutdown();
 			if (options.getJmx()) {
 				ManagementFactory.getPlatformMBeanServer().unregisterMBean(
 						new ObjectName(JMX_NAME));
@@ -153,21 +153,21 @@ public class Agent implements IAgent {
 	}
 
 	/**
-	 * Create controller implementation as given by the agent options.
+	 * Create output implementation as given by the agent options.
 	 * 
 	 * @return configured controller implementation
 	 */
-	IAgentController createAgentController() {
+	IAgentOutput createAgentOutput() {
 		final OutputMode controllerType = options.getOutput();
 		switch (controllerType) {
 		case file:
-			return new LocalController();
+			return new FileOutput();
 		case tcpserver:
-			return new TcpServerController(logger);
+			return new TcpServerOutput(logger);
 		case tcpclient:
-			return new TcpClientController(logger);
+			return new TcpClientOutput(logger);
 		case none:
-			return new NoneController();
+			return new NoneOutput();
 		default:
 			throw new AssertionError(controllerType);
 		}
@@ -214,7 +214,7 @@ public class Agent implements IAgent {
 	}
 
 	public void dump(final boolean reset) throws IOException {
-		controller.writeExecutionData(reset);
+		output.writeExecutionData(reset);
 	}
 
 }

@@ -10,7 +10,7 @@
  *    Marc R. Hoffmann - migration to mock socket
  *    
  *******************************************************************************/
-package org.jacoco.agent.rt.internal.controller;
+package org.jacoco.agent.rt.internal.output;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
@@ -25,6 +25,7 @@ import java.net.UnknownHostException;
 import java.util.List;
 
 import org.jacoco.agent.rt.internal.ExceptionRecorder;
+import org.jacoco.agent.rt.internal.output.TcpServerOutput;
 import org.jacoco.core.data.ExecutionDataStore;
 import org.jacoco.core.data.ExecutionDataWriter;
 import org.jacoco.core.data.SessionInfo;
@@ -37,9 +38,9 @@ import org.junit.Before;
 import org.junit.Test;
 
 /**
- * Unit tests for {@link TcpServerController}.
+ * Unit tests for {@link TcpServerOutput}.
  */
-public class TcpServerControllerTest {
+public class TcpServerOutputTest {
 
 	private ExceptionRecorder logger;
 
@@ -47,7 +48,7 @@ public class TcpServerControllerTest {
 
 	private MockServerSocket serverSocket;
 
-	private TcpServerController controller;
+	private TcpServerOutput controller;
 
 	private RuntimeData data;
 
@@ -56,7 +57,7 @@ public class TcpServerControllerTest {
 		options = new AgentOptions();
 		logger = new ExceptionRecorder();
 		serverSocket = new MockServerSocket();
-		controller = new TcpServerController(logger) {
+		controller = new TcpServerOutput(logger) {
 			@Override
 			protected ServerSocket createServerSocket(AgentOptions options)
 					throws IOException {

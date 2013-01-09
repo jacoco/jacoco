@@ -9,7 +9,7 @@
  *    Brock Janiczak - initial API and implementation
  *    
  *******************************************************************************/
-package org.jacoco.agent.rt.internal.controller;
+package org.jacoco.agent.rt.internal.output;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -17,6 +17,7 @@ import static org.junit.Assert.assertTrue;
 import java.io.File;
 import java.io.IOException;
 
+import org.jacoco.agent.rt.internal.output.FileOutput;
 import org.jacoco.core.runtime.AgentOptions;
 import org.jacoco.core.runtime.RuntimeData;
 import org.junit.Rule;
@@ -24,9 +25,9 @@ import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 
 /**
- * Unit tests for {@link LocalController}.
+ * Unit tests for {@link FileOutput}.
  */
-public class LocalControllerTest {
+public class FileOutputTest {
 
 	@Rule
 	public TemporaryFolder folder = new TemporaryFolder();
@@ -37,7 +38,7 @@ public class LocalControllerTest {
 		AgentOptions options = new AgentOptions();
 		options.setDestfile(destFile.getAbsolutePath());
 
-		LocalController controller = new LocalController();
+		FileOutput controller = new FileOutput();
 		controller.startup(options, new RuntimeData());
 
 		assertTrue("Execution data file should be created", destFile.exists());
@@ -51,7 +52,7 @@ public class LocalControllerTest {
 		AgentOptions options = new AgentOptions();
 		options.setDestfile(destFile.getAbsolutePath());
 
-		LocalController controller = new LocalController();
+		FileOutput controller = new FileOutput();
 		controller.startup(options, new RuntimeData());
 		controller.writeExecutionData(false);
 		controller.shutdown();
@@ -65,7 +66,7 @@ public class LocalControllerTest {
 	public void testInvalidDestFile() throws Exception {
 		AgentOptions options = new AgentOptions();
 		options.setDestfile(folder.newFolder("folder").getAbsolutePath());
-		LocalController controller = new LocalController();
+		FileOutput controller = new FileOutput();
 
 		// Startup should fail as the file can not be created:
 		controller.startup(options, new RuntimeData());

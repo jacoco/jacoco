@@ -9,7 +9,7 @@
  *    Brock Janiczak - initial API and implementation
  *    
  *******************************************************************************/
-package org.jacoco.agent.rt.internal.controller;
+package org.jacoco.agent.rt.internal.output;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -21,14 +21,14 @@ import org.jacoco.core.runtime.AgentOptions;
 import org.jacoco.core.runtime.RuntimeData;
 
 /**
- * Local only agent controller that will write coverage data to the filesystem.
- * This controller uses the following agent options:
+ * Local only agent output that will write coverage data to the filesystem. This
+ * controller uses the following agent options:
  * <ul>
  * <li>destfile</li>
  * <li>append</li>
  * </ul>
  */
-public class LocalController implements IAgentController {
+public class FileOutput implements IAgentOutput {
 
 	private RuntimeData data;
 

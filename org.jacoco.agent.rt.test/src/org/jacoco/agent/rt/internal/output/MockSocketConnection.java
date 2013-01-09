@@ -9,7 +9,7 @@
  *    Marc R. Hoffmann - initial API and implementation
  *
  *******************************************************************************/
-package org.jacoco.agent.rt.internal.controller;
+package org.jacoco.agent.rt.internal.output;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -25,8 +25,8 @@ import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 /**
- * Simulates the two connected {@link Socket} objects. No physical connection is
- * established for this. The the behavior including the (inconsistent) exception
+ * Simulates two connected {@link Socket} objects. No physical connection is
+ * established for this. The behavior includes the (inconsistent) exception
  * messages have been derived from Sun JDK 1.5.0_18-b02.
  */
 public class MockSocketConnection {

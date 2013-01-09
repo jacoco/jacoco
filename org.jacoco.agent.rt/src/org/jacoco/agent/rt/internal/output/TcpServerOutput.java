@@ -9,7 +9,7 @@
  *    Marc R. Hoffmann - initial API and implementation
  *    
  *******************************************************************************/
-package org.jacoco.agent.rt.internal.controller;
+package org.jacoco.agent.rt.internal.output;
 
 import java.io.IOException;
 import java.net.InetAddress;
@@ -21,14 +21,14 @@ import org.jacoco.core.runtime.AgentOptions;
 import org.jacoco.core.runtime.RuntimeData;
 
 /**
- * Controller that opens TCP server socket. This controller uses the following
- * agent options:
+ * Output that opens TCP server socket. This controller uses the following agent
+ * options:
  * <ul>
  * <li>address</li>
  * <li>port</li>
  * </ul>
  */
-public class TcpServerController implements IAgentController {
+public class TcpServerOutput implements IAgentOutput {
 
 	private TcpConnection connection;
 
@@ -44,7 +44,7 @@ public class TcpServerController implements IAgentController {
 	 * @param logger
 	 *            logger to use in case of exceptions is spawned threads
 	 */
-	public TcpServerController(final IExceptionLogger logger) {
+	public TcpServerOutput(final IExceptionLogger logger) {
 		this.logger = logger;
 	}
 
