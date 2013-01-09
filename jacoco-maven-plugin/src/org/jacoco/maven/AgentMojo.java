@@ -163,6 +163,13 @@ public class AgentMojo extends AbstractJacocoMojo {
 	 */
 	private File classDumpDir;
 
+	/**
+	 * If set to true the agent exposes functionality via JMX.
+	 * 
+	 * @parameter expression="${jacoco.jmx}"
+	 */
+	private Boolean jmx;
+
 	@Override
 	public void executeMojo() {
 		final String vmArgument = StringUtils.quoteAndEscape(
@@ -175,7 +182,7 @@ public class AgentMojo extends AbstractJacocoMojo {
 		prependProperty("");
 	}
 
-	private void prependProperty(String vmArgument) {
+	private void prependProperty(final String vmArgument) {
 		if (isPropertyNameSpecified()) {
 			prependProperty(propertyName, vmArgument);
 		} else if (isEclipseTestPluginPackaging()) {
@@ -227,6 +234,9 @@ public class AgentMojo extends AbstractJacocoMojo {
 		}
 		if (classDumpDir != null) {
 			agentOptions.setClassDumpDir(classDumpDir.getAbsolutePath());
+		}
+		if (jmx != null) {
+			agentOptions.setJmx(jmx.booleanValue());
 		}
 		return agentOptions;
 	}

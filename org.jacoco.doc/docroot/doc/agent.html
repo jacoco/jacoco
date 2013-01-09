@@ -26,9 +26,9 @@
 </p>
 
 <p class="hint">
-  If you use the <a href="ant.html">JaCoCo Ant tasks</a> or <a href="maven.html">JaCoCo Maven plug-in</a>
-  you don't have to care about the agent and its options directly. This is
-  transparently handled by the them.
+  If you use the <a href="ant.html">JaCoCo Ant tasks</a> or
+  <a href="maven.html">JaCoCo Maven plug-in</a> you don't have to care about the
+  agent and its options directly. This is transparently handled by the them.
 </p>
 
 <p>
@@ -37,10 +37,15 @@
 </p>
 
 <ul>
-  <li>File System: At JVM termination execution data is written to a local file.</li>
-  <li>TCP Socket Server: External tools can connect to the JVM and retrieve execution data over the socket connection. Optional execution data reset and execution data dump on VM exit is possible.</li>
-  <li>TCP Socket Client: At startup the JaCoCo agent connects to a given TCP endpoint. Execution data is written to the socket connection on request. Optional execution data reset and execution data dump on VM exit is possible.</li>
-  <li>JMX: External tools can connect to the JVM and retrieve execution data over the JMX.</li>
+  <li>File System: At JVM termination execution data is written to a local
+      file.</li>
+  <li>TCP Socket Server: External tools can connect to the JVM and retrieve
+      execution data over the socket connection. Optional execution data reset
+      and execution data dump on VM exit is possible.</li>
+  <li>TCP Socket Client: At startup the JaCoCo agent connects to a given TCP
+      endpoint. Execution data is written to the socket connection on request.
+      Optional execution data reset and execution data dump on VM exit is
+      possible.</li>
 </ul>
 
 <p>
@@ -140,8 +145,6 @@
           <li><code>tcpclient</code>: At startup the agent connects to the TCP
               port specified by the <code>address</code> and <code>port</code>
               attribute. Execution data is written to this TCP connection.</li>
-          <li><code>mbean</code>: The agent registers an JMX MBean under the
-              name <code>org.jacoco:type=Runtime</code>.</li>
         </ul>
         Please see the security considerations below. 
       </td>
@@ -176,6 +179,15 @@
       </td>
       <td><i>no dumps</i></td>
     </tr>
+    <tr>
+      <td><code>jmx</code></td>
+      <td>If set to <code>true</code> the agent exposes
+          <a href="./api/org/jacoco/agent/rt/IAgent.html">functionality</a> via
+          JMX under the name <code>org.jacoco:type=Runtime</code>. Please see
+          the security considerations below. 
+      </td>
+      <td><code>false</code></td>
+    </tr>
   </tbody>
 </table>
 
@@ -183,11 +195,11 @@
 
 <p>
   The ports and connections opened in <code>tcpserver</code> and
-  <code>tcpclient</code> mode do not provide any authentication mechanism. If
-  you run JaCoCo on production systems make sure that no untrusted sources have
-  access to the TCP server port, or JaCoCo TCP clients only connect to trusted
-  targets. Otherwise internal information of the application might be revealed
-  or DOS attacks are possible. 
+  <code>tcpclient</code> mode and the JMX interface do not provide any
+  authentication mechanism. If you run JaCoCo on production systems make sure
+  that no untrusted sources have access to the TCP server port, or JaCoCo TCP
+  clients only connect to trusted targets. Otherwise internal information of the
+  application might be revealed or DOS attacks are possible. 
 </p>
 
 </div>

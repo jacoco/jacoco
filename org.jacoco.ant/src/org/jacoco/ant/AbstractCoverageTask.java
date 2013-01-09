@@ -183,6 +183,16 @@ public class AbstractCoverageTask extends Task {
 	}
 
 	/**
+	 * Sets whether the agent should expose functionality via JMX.
+	 * 
+	 * @param jmx
+	 *            <code>true</code> if JMX should be enabled
+	 */
+	public void setJmx(final boolean jmx) {
+		agentOptions.setJmx(jmx);
+	}
+
+	/**
 	 * Creates JVM argument to launch with the specified JaCoCo agent jar and
 	 * the current options
 	 * 
