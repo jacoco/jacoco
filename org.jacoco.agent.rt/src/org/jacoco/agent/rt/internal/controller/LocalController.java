@@ -64,7 +64,10 @@ public class LocalController implements IAgentController {
 	}
 
 	private OutputStream openFile() throws IOException {
-		return new FileOutputStream(destFile, append);
+		final FileOutputStream file = new FileOutputStream(destFile, append);
+		// Avoid concurrent writes from different agents running in parallel:
+		file.getChannel().lock();
+		return file;
 	}
 
 }
