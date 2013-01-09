@@ -126,8 +126,6 @@ public class AgentMojo extends AbstractJacocoMojo {
 	 * <li>tcpclient: At startup the agent connects to the TCP port specified by
 	 * the {@link #address} and {@link #port}. Execution data is written to this
 	 * TCP connection.</li>
-	 * <li>mbean: The agent registers an JMX MBean under the name
-	 * <code>org.jacoco:type=Runtime</code>.</li>
 	 * </ul>
 	 * 
 	 * @parameter expression="${jacoco.output}"
