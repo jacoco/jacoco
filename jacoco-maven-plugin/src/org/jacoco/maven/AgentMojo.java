@@ -126,6 +126,7 @@ public class AgentMojo extends AbstractJacocoMojo {
 	 * <li>tcpclient: At startup the agent connects to the TCP port specified by
 	 * the {@link #address} and {@link #port}. Execution data is written to this
 	 * TCP connection.</li>
+	 * <li>none: Do not produce any output.</li>
 	 * </ul>
 	 * 
 	 * @parameter expression="${jacoco.output}"
