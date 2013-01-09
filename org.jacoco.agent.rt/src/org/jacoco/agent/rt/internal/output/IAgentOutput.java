@@ -9,7 +9,7 @@
  *    Brock Janiczak - initial API and implementation
  *    
  *******************************************************************************/
-package org.jacoco.agent.rt.internal.controller;
+package org.jacoco.agent.rt.internal.output;
 
 import java.io.IOException;
 
@@ -17,10 +17,10 @@ import org.jacoco.core.runtime.AgentOptions;
 import org.jacoco.core.runtime.RuntimeData;
 
 /**
- * Common interface for different implementations that control execution data
+ * Common interface for different implementations that outputs execution data
  * dumps.
  */
-public interface IAgentController {
+public interface IAgentOutput {
 
 	/**
 	 * Configure the agent controller with the supplied options and connect it

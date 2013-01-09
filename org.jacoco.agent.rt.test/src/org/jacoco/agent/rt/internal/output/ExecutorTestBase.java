@@ -9,7 +9,7 @@
  *    Marc R. Hoffmann - initial API and implementation
  *
  *******************************************************************************/
-package org.jacoco.agent.rt.internal.controller;
+package org.jacoco.agent.rt.internal.output;
 
 import static org.junit.Assert.fail;
 

@@ -9,7 +9,7 @@
  *    Marc R. Hoffmann - initial API and implementation
  *    
  *******************************************************************************/
-package org.jacoco.agent.rt.internal.controller;
+package org.jacoco.agent.rt.internal.output;
 
 import java.io.IOException;
 import java.net.Socket;
