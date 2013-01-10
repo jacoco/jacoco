@@ -9,15 +9,15 @@
  *    Mandrikov Evgeny - initial API and implementation
  *
  *******************************************************************************/
-package org.jacoco.agent.rt.internal.controller;
+package org.jacoco.agent.rt.internal.output;
 
 import org.jacoco.core.runtime.AgentOptions;
 import org.jacoco.core.runtime.RuntimeData;
 
 /**
- * Controller that does nothing.
+ * Output that does nothing.
  */
-public class NoneController implements IAgentController {
+public class NoneOutput implements IAgentOutput {
 
 	public final void startup(final AgentOptions options, final RuntimeData data) {
 		// Nothing to do

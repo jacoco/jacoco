@@ -27,11 +27,11 @@ import javax.management.InstanceNotFoundException;
 import javax.management.MBeanServer;
 import javax.management.ObjectName;
 
-import org.jacoco.agent.rt.internal.controller.IAgentController;
-import org.jacoco.agent.rt.internal.controller.LocalController;
-import org.jacoco.agent.rt.internal.controller.NoneController;
-import org.jacoco.agent.rt.internal.controller.TcpClientController;
-import org.jacoco.agent.rt.internal.controller.TcpServerController;
+import org.jacoco.agent.rt.internal.output.IAgentOutput;
+import org.jacoco.agent.rt.internal.output.FileOutput;
+import org.jacoco.agent.rt.internal.output.NoneOutput;
+import org.jacoco.agent.rt.internal.output.TcpClientOutput;
+import org.jacoco.agent.rt.internal.output.TcpServerOutput;
 import org.jacoco.core.JaCoCo;
 import org.jacoco.core.data.ExecutionDataReader;
 import org.jacoco.core.data.ExecutionDataStore;
@@ -70,19 +70,19 @@ public class AgentTest implements IExceptionLogger {
 		Agent agent = new Agent(options, this);
 
 		options.setOutput(OutputMode.file);
-		assertEquals(LocalController.class, agent.createAgentController()
+		assertEquals(FileOutput.class, agent.createAgentOutput()
 				.getClass());
 
 		options.setOutput(OutputMode.tcpserver);
-		assertEquals(TcpServerController.class, agent.createAgentController()
+		assertEquals(TcpServerOutput.class, agent.createAgentOutput()
 				.getClass());
 
 		options.setOutput(OutputMode.tcpclient);
-		assertEquals(TcpClientController.class, agent.createAgentController()
+		assertEquals(TcpClientOutput.class, agent.createAgentOutput()
 				.getClass());
 
 		options.setOutput(OutputMode.none);
-		assertEquals(NoneController.class, agent.createAgentController()
+		assertEquals(NoneOutput.class, agent.createAgentOutput()
 				.getClass());
 	}
 
@@ -106,8 +106,8 @@ public class AgentTest implements IExceptionLogger {
 		final Exception expected = new Exception();
 		Agent agent = new Agent(options, this) {
 			@Override
-			IAgentController createAgentController() {
-				return new IAgentController() {
+			IAgentOutput createAgentOutput() {
+				return new IAgentOutput() {
 					public void startup(AgentOptions options, RuntimeData data) {
 					}
 
@@ -231,8 +231,8 @@ public class AgentTest implements IExceptionLogger {
 		final boolean[] called = new boolean[1];
 		Agent agent = new Agent(options, this) {
 			@Override
-			IAgentController createAgentController() {
-				return new IAgentController() {
+			IAgentOutput createAgentOutput() {
+				return new IAgentOutput() {
 					public void startup(AgentOptions options, RuntimeData data) {
 					}
 
