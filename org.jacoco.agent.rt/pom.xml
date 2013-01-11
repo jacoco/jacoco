@@ -57,7 +57,7 @@
               <minimizeJar>true</minimizeJar>
               <relocations>
                 <relocation>
-                  <pattern>org.jacoco.agent.rt</pattern>
+                  <pattern>org.jacoco.agent.rt.internal</pattern>
                   <shadedPattern>${jacoco.runtime.package.name}</shadedPattern>
                 </relocation>
                 <relocation>

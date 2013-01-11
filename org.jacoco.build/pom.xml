@@ -549,7 +549,7 @@
           <doCheck>false</doCheck>
           <doUpdate>false</doUpdate>
           <getRevisionOnlyOnce>true</getRevisionOnlyOnce>
-          <revisionOnScmFailure>0</revisionOnScmFailure>
+          <revisionOnScmFailure>0000000</revisionOnScmFailure>
         </configuration>
       </plugin>
 
@@ -574,7 +574,7 @@
                 project.properties['qualified.bundle.version'] = project.properties['unqualifiedVersion'] + '.' + project.properties['buildQualifier']
                 project.properties['build.date'] = qualifier.substring(0, 4) + '/' + qualifier.substring(4, 6) + '/' + qualifier.substring(6, 8)
                 buildNumber = project.properties['buildNumber']
-                project.properties['jacoco.runtime.package.name'] = "org.jacoco.agent.rt_" + buildNumber.substring(buildNumber.length() - 7, buildNumber.length())
+                project.properties['jacoco.runtime.package.name'] = "org.jacoco.agent.rt.internal_" + buildNumber.substring(buildNumber.length() - 7, buildNumber.length())
               </source>
             </configuration>
           </execution>
@@ -806,6 +806,10 @@
                     </requireActiveProfile>
                     -->
                     <requireReleaseVersion/>
+                    <requireProperty>
+                      <property>buildNumber</property>
+                      <regex>[0-9a-f]{40}</regex>
+                    </requireProperty>
                   </rules>
                 </configuration>
               </execution>

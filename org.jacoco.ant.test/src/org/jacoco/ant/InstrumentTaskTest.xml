@@ -57,8 +57,8 @@
 		<au:assertLogContains text="Instrumented 12 classes to ${temp.dir}"/>
 		<au:assertFileExists file="${temp.dir}/org/jacoco/ant/InstrumentTaskTest.class" />
 
-		<echo file="${temp.dir}/jacoco-agent.properties">destfile=${temp.dir}/test.exec</echo>
-		<java classname="org.jacoco.ant.TestTarget" failonerror="true" fork="true">
+		<echo file="${temp.dir}/jacoco-agent.properties">destfile=test.exec</echo>
+		<java classname="org.jacoco.ant.TestTarget" failonerror="true" fork="true" dir="${temp.dir}">
 			<classpath>
 				<pathelement path="${org.jacoco.ant.instrumentTaskTest.agent.file}"/>
 				<pathelement path="${temp.dir}"/>

@@ -6,30 +6,29 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *
  * Contributors:
- *    Marc R. Hoffmann - initial API and implementation
- *    
+ *    Mandrikov Evgeny - initial API and implementation
+ *
  *******************************************************************************/
-package org.jacoco.agent.rt;
+package org.jacoco.agent.rt.internal.controller;
 
-import org.jacoco.agent.rt.internal.Agent;
+import org.jacoco.core.runtime.AgentOptions;
+import org.jacoco.core.runtime.RuntimeData;
 
 /**
- * Entry point to access the JaCoCo agent runtime.
+ * Controller that does nothing.
  */
-public final class RT {
+public class NoneController implements IAgentController {
 
-	private RT() {
+	public final void startup(final AgentOptions options, final RuntimeData data) {
+		// Nothing to do
 	}
 
-	/**
-	 * Returns the agent instance of the JaCoCo runtime in this JVM.
-	 * 
-	 * @return agent instance
-	 * @throws IllegalStateException
-	 *             if no Agent has been started yet
-	 */
-	public static IAgent getAgent() throws IllegalStateException {
-		return Agent.getInstance();
+	public void writeExecutionData(final boolean reset) {
+		// Nothing to do
+	}
+
+	public void shutdown() {
+		// Nothing to do
 	}
 
 }

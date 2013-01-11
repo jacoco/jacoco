@@ -126,8 +126,7 @@ public class AgentMojo extends AbstractJacocoMojo {
 	 * <li>tcpclient: At startup the agent connects to the TCP port specified by
 	 * the {@link #address} and {@link #port}. Execution data is written to this
 	 * TCP connection.</li>
-	 * <li>mbean: The agent registers an JMX MBean under the name
-	 * <code>org.jacoco:type=Runtime</code>.</li>
+	 * <li>none: Do not produce any output.</li>
 	 * </ul>
 	 * 
 	 * @parameter expression="${jacoco.output}"
@@ -163,6 +162,13 @@ public class AgentMojo extends AbstractJacocoMojo {
 	 */
 	private File classDumpDir;
 
+	/**
+	 * If set to true the agent exposes functionality via JMX.
+	 * 
+	 * @parameter expression="${jacoco.jmx}"
+	 */
+	private Boolean jmx;
+
 	@Override
 	public void executeMojo() {
 		final String vmArgument = StringUtils.quoteAndEscape(
@@ -175,7 +181,7 @@ public class AgentMojo extends AbstractJacocoMojo {
 		prependProperty("");
 	}
 
-	private void prependProperty(String vmArgument) {
+	private void prependProperty(final String vmArgument) {
 		if (isPropertyNameSpecified()) {
 			prependProperty(propertyName, vmArgument);
 		} else if (isEclipseTestPluginPackaging()) {
@@ -227,6 +233,9 @@ public class AgentMojo extends AbstractJacocoMojo {
 		}
 		if (classDumpDir != null) {
 			agentOptions.setClassDumpDir(classDumpDir.getAbsolutePath());
+		}
+		if (jmx != null) {
+			agentOptions.setJmx(jmx.booleanValue());
 		}
 		return agentOptions;
 	}
