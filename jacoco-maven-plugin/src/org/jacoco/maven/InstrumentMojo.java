@@ -28,7 +28,7 @@ import java.util.List;
 
 /**
  * Performs Offline Instrumentation. Note that after execution of test you must
- * restore original classes with help of "restore" mojo.
+ * restore original classes with help of "restore-instrumented-classes" goal.
  * 
  * @phase process-classes
  * @goal instrument

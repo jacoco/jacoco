@@ -22,7 +22,7 @@ import java.io.IOException;
  * Restores original classes as they were before Offline Instrumentation.
  * 
  * @phase prepare-package
- * @goal restore
+ * @goal restore-instrumented-classes
  * @requiresProject true
  * @since 0.6.2
  */

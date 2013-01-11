@@ -51,7 +51,7 @@
           <execution>
             <id>restore-instrumented-classes</id>
             <goals>
-              <goal>restore</goal>
+              <goal>restore-instrumented-classes</goal>
             </goals>
           </execution>
           <execution>
