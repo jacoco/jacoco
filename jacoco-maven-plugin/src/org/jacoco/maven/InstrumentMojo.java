@@ -47,10 +47,8 @@ public class InstrumentMojo extends AbstractJacocoMojo {
 
 		final List<String> fileNames;
 		try {
-			final FileFilter fileFilter = new FileFilter(this.getIncludes(),
-					this.getExcludes());
-			fileNames = FileUtils.getFileNames(classesDir,
-					fileFilter.getIncludes(), fileFilter.getExcludes(), false);
+			fileNames = new FileFilter(this.getIncludes(),
+					this.getExcludes()).getFileNames(classesDir);
 		} catch (final IOException e1) {
 			throw new MojoExecutionException(
 					"Unable to get list of files to instrument.", e1);

@@ -8,14 +8,17 @@
  * Contributors:
  *    Evgeny Mandrikov - initial API and implementation
  *    Kyle Lieber - implementation of CheckMojo
- *    
+ *
  *******************************************************************************/
 package org.jacoco.maven;
 
-import java.util.List;
-
 import org.apache.commons.collections.CollectionUtils;
+import org.codehaus.plexus.util.FileUtils;
 import org.codehaus.plexus.util.StringUtils;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.List;
 
 /**
  * A file filter using includes/excludes patterns.
@@ -39,6 +42,20 @@ public class FileFilter {
 	public FileFilter(final List<String> includes, final List<String> excludes) {
 		this.includes = includes;
 		this.excludes = excludes;
+	}
+
+	/**
+	 * Returns a list of files.
+	 * 
+	 * @param directory
+	 *            the directory to scan
+	 * @return a list of files
+	 * @throws IOException
+	 */
+	@SuppressWarnings("unchecked")
+	public List<String> getFileNames(final File directory) throws IOException {
+		return FileUtils.getFileNames(directory, getIncludes(), getExcludes(),
+				false);
 	}
 
 	/**
