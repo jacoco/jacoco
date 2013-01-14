@@ -29,6 +29,7 @@
       <scope>test</scope>
     </dependency>
     <dependency>
+      <!-- must be on the classpath -->
       <groupId>org.jacoco</groupId>
       <artifactId>org.jacoco.agent</artifactId>
       <classifier>runtime</classifier>
