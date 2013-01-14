@@ -37,9 +37,18 @@ import java.util.List;
  */
 public class InstrumentMojo extends AbstractJacocoMojo {
 
+	private static final String WARNING = "The preferred way for code " +
+			"coverage analysis with JaCoCo is on-the-fly instrumentation. " +
+			"Offline instrumentation has several drawbacks and should only " +
+			"be used if a specific scenario explicitly requires this mode. " +
+			"Please consult documentation about offline instrumentation " +
+			"before using this mode.";
+
 	@Override
 	public void executeMojo() throws MojoExecutionException,
 			MojoFailureException {
+		getLog().warn(WARNING);
+
 		final File originalClassesDir = new File(getProject().getBuild()
 				.getDirectory(), "generated-classes/jacoco");
 		final File classesDir = new File(getProject().getBuild()

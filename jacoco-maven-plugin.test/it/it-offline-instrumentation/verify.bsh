@@ -9,6 +9,8 @@
  *    Evgeny Mandrikov - initial API and implementation
  *
  *******************************************************************************/
+import java.io.*;
+import org.codehaus.plexus.util.*;
 
 File file = new File( basedir, "target/generated-classes/jacoco/Example.class" );
 if ( !file.isFile() ) {
@@ -19,4 +21,9 @@ file = new File( basedir, "target/coverage.exec" );
 if ( !file.isFile() )
 {
     throw new FileNotFoundException( "Could not find generated dump: " + file );
+}
+
+String buildLog = FileUtils.fileRead( new File( basedir, "build.log" ) );
+if ( buildLog.indexOf( "The preferred way for code coverage analysis with JaCoCo is on-the-fly instrumentation." ) < 0 ) {
+    throw new RuntimeException( "No warning about offline instrumentation" );
 }
