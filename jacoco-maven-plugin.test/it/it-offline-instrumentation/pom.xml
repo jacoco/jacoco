@@ -20,6 +20,12 @@
   </parent>
 
   <artifactId>it-offline-instrumentation</artifactId>
+  <packaging>pom</packaging>
+
+  <modules>
+    <module>child</module>
+    <module>child-without-main-classes</module>
+  </modules>
 
   <dependencies>
     <dependency>

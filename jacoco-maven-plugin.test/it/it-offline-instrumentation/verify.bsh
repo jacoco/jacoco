@@ -12,12 +12,16 @@
 import java.io.*;
 import org.codehaus.plexus.util.*;
 
-File file = new File( basedir, "target/generated-classes/jacoco/Example.class" );
+File file = new File( basedir, "child/target/generated-classes/jacoco/Example.class" );
 if ( !file.isFile() ) {
     throw new RuntimeException( "Could not find backup of instrumented class: " + file );
 }
+file = new File( basedir, "child/target/generated-classes/jacoco/DoNotInstrument.class" );
+if ( file.isFile() ) {
+    throw new RuntimeException( "Excluded file should not be instrumented: " + file );
+}
 
-file = new File( basedir, "target/coverage.exec" );
+file = new File( basedir, "child/target/coverage.exec" );
 if ( !file.isFile() )
 {
     throw new FileNotFoundException( "Could not find generated dump: " + file );

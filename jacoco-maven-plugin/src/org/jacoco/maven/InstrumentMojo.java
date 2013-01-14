@@ -49,8 +49,13 @@ public class InstrumentMojo extends AbstractJacocoMojo {
 			MojoFailureException {
 		final File originalClassesDir = new File(getProject().getBuild()
 				.getDirectory(), "generated-classes/jacoco");
+		originalClassesDir.mkdirs();
 		final File classesDir = new File(getProject().getBuild()
 				.getOutputDirectory());
+		if (!classesDir.isDirectory()) {
+			getLog().info("skip non existing outputDirectory " + classesDir);
+			return;
+		}
 
 		final List<String> fileNames;
 		try {
