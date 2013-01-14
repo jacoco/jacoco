@@ -707,6 +707,14 @@
 
 <h2><a name="instrument">Task <code>instrument</code></a></h2>
 
+<p class="hint">
+  <b>Warning:</b> The preferred way for code coverage analysis with JaCoCo is
+  on-the-fly instrumentation. Offline instrumentation has several drawbacks and
+  should only be used if a specific scenario explicitly requires this mode.
+  Please consult <a href="offline.html">documentation</a> about offline
+  instrumentation before using this mode.
+</p>
+
 <p>
   This task is used for <a href="offline.html">offline instrumentation</a> of
   class files. The task takes a set of files and writes instrumented
