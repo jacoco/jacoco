@@ -19,7 +19,7 @@ import java.io.File;
 import java.io.IOException;
 
 /**
- * Restores original classes as they were before Offline Instrumentation.
+ * Restores original classes as they were before offline instrumentation.
  * 
  * @phase prepare-package
  * @goal restore-instrumented-classes

@@ -27,7 +27,7 @@ import java.io.OutputStream;
 import java.util.List;
 
 /**
- * Performs Offline Instrumentation. Note that after execution of test you must
+ * Performs offline instrumentation. Note that after execution of test you must
  * restore original classes with help of "restore-instrumented-classes" goal.
  * 
  * @phase process-classes
