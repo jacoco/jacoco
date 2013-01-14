@@ -29,6 +29,13 @@ import java.util.List;
 /**
  * Performs offline instrumentation. Note that after execution of test you must
  * restore original classes with help of "restore-instrumented-classes" goal.
+ * <p>
+ * <b>Warning:</b> The preferred way for code coverage analysis with JaCoCo is
+ * on-the-fly instrumentation. Offline instrumentation has several drawbacks and
+ * should only be used if a specific scenario explicitly requires this mode.
+ * Please consult <a href="offline.html">documentation</a> about offline
+ * instrumentation before using this mode.
+ * </p>
  * 
  * @phase process-classes
  * @goal instrument
@@ -37,18 +44,9 @@ import java.util.List;
  */
 public class InstrumentMojo extends AbstractJacocoMojo {
 
-	private static final String WARNING = "The preferred way for code " +
-			"coverage analysis with JaCoCo is on-the-fly instrumentation. " +
-			"Offline instrumentation has several drawbacks and should only " +
-			"be used if a specific scenario explicitly requires this mode. " +
-			"Please consult documentation about offline instrumentation " +
-			"before using this mode.";
-
 	@Override
 	public void executeMojo() throws MojoExecutionException,
 			MojoFailureException {
-		getLog().warn(WARNING);
-
 		final File originalClassesDir = new File(getProject().getBuild()
 				.getDirectory(), "generated-classes/jacoco");
 		final File classesDir = new File(getProject().getBuild()
