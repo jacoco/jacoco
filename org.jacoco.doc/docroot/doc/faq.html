@@ -27,7 +27,7 @@
 <p>
   See <a href="integrations.html">this list</a> for current integrations with
   various tools.
-<p>
+</p>
 
 <h3>Why do I get the error "Can't add different class with same name"?</h3>
 <p>
@@ -35,7 +35,7 @@
   names. You get this error during report generation if JaCoCo is supplied with
   multiple different class files with the same name. To fix this remove those
   duplicate classes or create separate reports or report groups for each version.
-<p>
+</p>
 
 <h3>Code with exceptions shows no coverage. Why?</h3>
 <p>
@@ -90,6 +90,19 @@
   from a running JVM. The <a href="ant.html#dump"><code>dump</code></a> Ant task
   can be used to request dumps. The remote control feature also allows you to
   reset execution data.
+</p>
+
+<h3>My code uses reflection. Why does it fail when I execute it with JaCoCo?</h3>
+<p>
+  To collect execution data JaCoCo instruments the classes under test which adds
+  two members to the classes: A private static field <code>$jacocoData</code>
+  and a private static method <code>$jacocoInit()</code>. Both members are
+  marked as synthetic.
+</p>
+<p>
+  Please change your code to ignore synthetic members. This is a good practice
+  anyways as also the Java compiler creates synthetic members in certain
+  situation.
 </p>
 
 </div>
