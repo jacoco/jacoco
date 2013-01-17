@@ -14,8 +14,9 @@
 <project name="Example Ant Build with JaCoCo Offline Instrumentation" default="rebuild" xmlns:jacoco="antlib:org.jacoco.ant">
 	
 	<description>
-	  Example Ant build file that demonstrates how a JaCoCo coverage report
-	  can be itegrated into an existing build in three simple steps.
+	  Example Ant build file that demonstrates how JaCoCo can be used with
+	  offline instrumentation. This requires preprocessing of the class files
+	  before the test is launched and adding the JaCoCo agent to the classpath.
 	</description>
 
 	<property name="src.dir" location="./src/main/java" />
