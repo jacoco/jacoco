@@ -138,6 +138,13 @@ public class FrameTrackerTest {
 		tracker.visitJumpInsn(NOP, new Label());
 	}
 
+	@Test(expected = IllegalStateException.class)
+	public void testInvalidFrame() {
+		FrameTracker tracker = new FrameTracker("Test", ACC_STATIC, "test",
+				"()V", null);
+		tracker.visitInsn(POP);
+	}
+
 	@Test
 	public void testArgumentsConstructor() {
 		FrameBuilder expectedFrame = new FrameBuilder();
@@ -1371,6 +1378,7 @@ public class FrameTrackerTest {
 	public void NEWARRAY_invalidOperand() {
 		FrameTracker tracker = new FrameTracker("Test", ACC_STATIC, "test",
 				"()V", null);
+		tracker.visitFrame(NEW, 0, new Object[0], 1, new Object[] { INTEGER });
 		tracker.visitIntInsn(NEWARRAY, -1);
 	}
 

@@ -599,11 +599,20 @@ class FrameTracker extends MethodVisitor implements IFrameInserter {
 
 	private Object pop() {
 		stackSize--;
+		assertValidFrames(stackSize);
 		return stack[stackSize];
 	}
 
 	private void pop(final int count) {
 		stackSize -= count;
+		assertValidFrames(stackSize);
+	}
+
+	private void assertValidFrames(final int stackSize) {
+		if (stackSize < 0) {
+			throw new IllegalStateException(
+					"Missing or invalid stackmap frames.");
+		}
 	}
 
 	private void pop(final Type type) {
