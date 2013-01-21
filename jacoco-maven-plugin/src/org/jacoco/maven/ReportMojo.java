@@ -45,6 +45,7 @@ import org.jacoco.report.xml.XMLFormatter;
  * Creates a code coverage report for a single project in multiple formats
  * (HTML, XML, and CSV).
  * 
+ * @phase prepare-package
  * @goal report
  * @requiresProject true
  * @threadSafe
