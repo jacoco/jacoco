@@ -20,7 +20,7 @@
     <version>1.0-SNAPSHOT</version>
   </parent>
 
-  <artifactId>it-check-fails-hault</artifactId>
+  <artifactId>it-check-fails-multi-class</artifactId>
 
   <build>
     <plugins>
@@ -42,12 +42,19 @@
               <check>
                 <overall>
                   <classRatio>100</classRatio>
-                  <instructionRatio>100</instructionRatio>
-                  <methodRatio>100</methodRatio>
-                  <branchRatio>100</branchRatio>
-                  <complexityRatio>100</complexityRatio>
-                  <lineRatio>100</lineRatio>
+                  <instructionRatio>75</instructionRatio>
+                  <methodRatio>75</methodRatio>
+                  <branchRatio>75</branchRatio>
+                  <complexityRatio>75</complexityRatio>
+                  <lineRatio>75</lineRatio>
                 </overall>
+                <eachClass>
+                  <instructionRatio>75</instructionRatio>
+                  <methodRatio>75</methodRatio>
+                  <branchRatio>75</branchRatio>
+                  <complexityRatio>75</complexityRatio>
+                  <lineRatio>75</lineRatio>
+                </eachClass>
               </check>
             </configuration>
           </execution>

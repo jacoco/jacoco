@@ -15,11 +15,14 @@ package org.jacoco.maven;
 import java.io.File;
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.util.Collection;
 
 import org.apache.maven.plugin.MojoExecutionException;
 import org.jacoco.core.analysis.IBundleCoverage;
+import org.jacoco.core.analysis.IClassCoverage;
 import org.jacoco.core.analysis.ICounter;
 import org.jacoco.core.analysis.ICoverageNode.CounterEntity;
+import org.jacoco.core.analysis.IPackageCoverage;
 import org.jacoco.core.data.ExecFileLoader;
 import org.jacoco.core.data.ExecutionDataStore;
 
@@ -42,33 +45,42 @@ public class CheckMojo extends AbstractJacocoMojo {
 	private static final String CHECK_FAILED = "Coverage checks have not been met. See report for details.";
 	private static final String CHECK_SUCCESS = "All coverage checks have been met.";
 
-	/**
-	 * <p>
-	 * Check configuration. Used to specify minimum coverage percentages that
-	 * must be met. Defaults to 0% if a percentage ratio is not specified.
-	 * </p>
-	 * 
-	 * <p>
-	 * Example requiring 100% coverage for class, instruction, method, branch,
-	 * complexity, and line:
-	 * </p>
-	 * 
-	 * <pre>
-	 * {@code
-	 * <check>
-	 *   <classRatio>100</classRatio>
-	 *   <instructionRatio>100</instructionRatio>
-	 *   <methodRatio>100</methodRatio>
-	 *   <branchRatio>100</branchRatio>
-	 *   <complexityRatio>100</complexityRatio>
-	 *   <lineRatio>100</lineRatio>
-	 * </check>}
-	 * </pre>
-	 * 
-	 * @parameter
-	 * @required
-	 */
-	private CheckConfiguration check;
+    /**
+     * <p>
+     * Check configuration. Used to specify minimum coverage percentages that
+     * must be met. Defaults to 0% if a percentage ratio is not specified.
+     * </p>
+     *
+     * <p>
+     * Example requiring minimum 75% coverage, instruction, method, branch
+     * complexity and line overall, for each class minimum 60%
+     * </p>
+     *
+     * <pre>
+     * {@code
+     * <check>
+     *     <overall>
+     *          <classRatio>100</classRatio>
+     *          <instructionRatio>75</instructionRatio>
+     *          <methodRatio>75</methodRatio>
+     *          <branchRatio>75</branchRatio>
+     *          <complexityRatio>75</complexityRatio>
+     *          <lineRatio>75</lineRatio>
+     *      </overall>
+     *      <eachClass>
+     *          <instructionRatio>60</instructionRatio>
+     *          <methodRatio>60</methodRatio>
+     *          <branchRatio>60</branchRatio>
+     *          <complexityRatio>60</complexityRatio>
+     *          <lineRatio>60</lineRatio>
+     *      </eachClass>
+     * </check>}
+     * </pre>
+     *
+     * @parameter
+     * @required
+     */
+    private CheckList check;
 
 	/**
 	 * Halt the build if any of the checks fail.
@@ -138,27 +150,52 @@ public class CheckMojo extends AbstractJacocoMojo {
 
 		boolean passed = true;
 
-		for (final CounterEntity entity : CounterEntity.values()) {
-			passed = this.checkCounter(entity, bundle.getCounter(entity),
-					check.getRatio(entity))
-					&& passed;
-		}
+        CheckConfiguration overall = check.getOverall();
+        CheckConfiguration classLevel = check.getEachClass();
+        if (classLevel!=null){
+            Collection<IPackageCoverage> packages = bundle.getPackages();
+            for (IPackageCoverage aPackage : packages) {
+                Collection<IClassCoverage> classes = aPackage.getClasses();
+                for (IClassCoverage aClass : classes) {
+                    for (final CounterEntity entity : CounterEntity.values()) {
+                        passed = this.checkCounter("Class "+aClass.getName(),entity, aClass.getCounter(entity),
+                                classLevel.getRatio(entity))
+                                && passed;
+                    }
+
+                }
+            }
+        }
+
+        if (overall!=null){
+            for (final CounterEntity entity : CounterEntity.values()) {
+                passed = this.checkCounter("Project "+this.getProject().getArtifactId(),entity, bundle.getCounter(entity),
+                        overall.getRatio(entity))
+                        && passed;
+            }
+        }
 
 		return passed;
 	}
 
-	private boolean checkCounter(final CounterEntity entity,
+	private boolean checkCounter(final String name, final CounterEntity entity,
 			final ICounter counter, final double checkRatio) {
 		boolean passed = true;
 
 		final double ratio = counter.getCoveredRatio() * 100;
 
-		if (ratio < checkRatio) {
-			this.getLog().warn(
-					String.format(INSUFFICIENT_COVERAGE, entity.name(),
-							truncate(ratio), truncate(checkRatio)));
-			passed = false;
-		}
+        if (ratio < checkRatio) {
+            String message = name + " : " +
+                    String.format(INSUFFICIENT_COVERAGE, entity.name(),
+                            truncate(ratio), truncate(checkRatio));
+            if (haltOnFailure){
+                this.getLog().error(message);
+            }
+            else{
+                this.getLog().warn(message);
+            }
+            passed = false;
+        }
 		return passed;
 	}
 
