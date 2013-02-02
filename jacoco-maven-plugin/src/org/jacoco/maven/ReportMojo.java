@@ -7,7 +7,7 @@
  *
  * Contributors:
  *    Evgeny Mandrikov - initial API and implementation
- *	  Kyle Lieber - implementation of CheckMojo
+ *    Kyle Lieber - implementation of CheckMojo
  *
  *******************************************************************************/
 package org.jacoco.maven;
@@ -45,7 +45,7 @@ import org.jacoco.report.xml.XMLFormatter;
  * Creates a code coverage report for a single project in multiple formats
  * (HTML, XML, and CSV).
  * 
- * @phase prepare-package
+ * @phase verify
  * @goal report
  * @requiresProject true
  * @threadSafe
