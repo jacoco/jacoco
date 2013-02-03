@@ -3,7 +3,7 @@
 
   <groupId>org.jacoco</groupId>
   <artifactId>root</artifactId>
-  <version>0.6.2.201302030002</version>
+  <version>0.6.3-SNAPSHOT</version>
   <packaging>pom</packaging>
 
   <modules>
