@@ -19,33 +19,36 @@
 <h1>Mission</h1>
 
 <p class="intro">
-  JaCoCo should become the standard backend technology for code coverage
-  analysis in Java VM based environments. The focus is providing a lightweight,
-  flexible and well documented library for integration with various build and
-  development tools. 
+  JaCoCo should provide the standard technology for code coverage analysis in
+  Java VM based environments. The focus is providing a lightweight, flexible and
+  well documented library for integration with various build and development
+  tools. 
 </p>
 
 <p>
   There are several open source coverage technologies for Java available. While
   implementing the Eclipse plug-in <a href="http://www.eclemma.org/">EclEmma</a>
   the observation was that none of them are really designed for integration.
-  Most of them are specifically fit to a particular tool (Ant tasks, command line, IDE
-  plug-in) and do not offer a documented API that allows embedding in different
-  contexts. One of the best and widely used available open source tools is
-  <a href="http://emma.sourceforge.net/">EMMA</a>. While EclEmma is based on it
-  the EMMA library is not actively maintained any more by the original author.
-  Due to the lack of regression tests maintenance and feature additions will
-  become very difficult.
+  Most of them are specifically fit to a particular tool (Ant tasks, command
+  line, IDE plug-in) and do not offer a documented API that allows embedding in
+  different contexts. Two of the best and widely used available open source
+  tools are <a href="http://emma.sourceforge.net/">EMMA</a> and
+  <a href="http://cobertura.sourceforge.net/">Cobertura</a>. Both tools are not
+  actively maintained by the original authors any more and do not support the
+  current Java versions. Due to the lack of regression tests maintenance and
+  feature additions is difficult.
 </p>
 
 <p>
-  JaCoCo should become the standard backend technology for code coverage
-  analysis in Java VM based environments. The focus is providing a lightweight,
-  flexible and well documented library for integration with various build and
-  development tools. <a href="ant.html">Ant tasks</a>, a 
+  Therefore we started the JaCoCo project to provide a new standard technology
+  for code coverage analysis in Java VM based environments. The focus is
+  providing a lightweight, flexible and well documented library for integration
+  with various build and development tools. <a href="ant.html">Ant tasks</a>, a 
   <a href="maven.html">Maven plug-in</a> and the
   <a href="http://www.eclemma.org/">EclEmma Eclipse plug-in</a> are provided as
-  reference usage scenarios.
+  reference usage scenarios. Also many other tool vendors and Open Source
+  projects have <a href="integrations.html">integrated</a> JaCoCo into their
+  tools.
 </p>
 
 <h2>Product Definition</h2>
@@ -60,15 +63,16 @@
       loaders are possible through the API.</li>
   <li>Framework agnostic: Smoothly integrates with Java VM based applications
       like plain Java programs, OSGi frameworks, web containers or EJB servers.</li>
+  <li>Compatible with all released Java class file versions.</li>
   <li>Support for different
       <a href="http://en.wikipedia.org/wiki/List_of_JVM_languages">JVM languages</a>.</li>
   <li>Several report formats (HTML, XML, CSV).</li>
-  <li>Remote protocol to request execution data dumps from the coverage agent at
-      any point in time.</li>
+  <li>Remote protocol and JMX control to request execution data dumps from the
+      coverage agent at any point in time.</li>
   <li><a href="ant.html">Ant tasks</a> to collect and manage execution
       data and create structured coverage reports.</li>
   <li><a href="maven.html">Maven plug-in</a> to collect coverage information
-      in Maven builds.</li>
+      and create reports in Maven builds.</li>
 </ul>
 
 <h3>Non-Functional Characteristics</h3>
