@@ -51,14 +51,14 @@
             <goal>install</goal>
           </goals>
           <settingsFile>it/settings.xml</settingsFile>
+          <extraArtifacts>
+            <extraArtifact>org.jacoco:org.jacoco.agent:${project.version}:jar:runtime</extraArtifact>
+          </extraArtifacts>
         </configuration>
         <executions>
           <execution>
             <goals>
-              <!--
-              Don't use goal "install", because first of all - we don't need it,
-              and it causes failure of deployment - see http://jira.codehaus.org/browse/MINVOKER-107
-              -->
+              <goal>install</goal>
               <goal>run</goal>
             </goals>
           </execution>

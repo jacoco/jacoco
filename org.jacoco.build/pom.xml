@@ -283,7 +283,7 @@
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-invoker-plugin</artifactId>
-          <version>1.5</version>
+          <version>1.8</version>
         </plugin>
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
@@ -477,6 +477,10 @@
                   <message>No SNAPSHOT versions allowed for dependencies</message>
                   <onlyWhenRelease>true</onlyWhenRelease>
                 </requireReleaseDeps>
+                <requireMavenVersion>
+                  <!-- Maven 3.0.3 contains bug - see http://jira.codehaus.org/browse/MINVOKER-107 -->
+                  <version>[2.2.1,3.0.0),[3.0.4,)</version>
+                </requireMavenVersion>
               </rules>
             </configuration>
           </execution>
