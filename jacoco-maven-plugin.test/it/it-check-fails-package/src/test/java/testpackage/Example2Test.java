@@ -10,26 +10,15 @@
  *    Kyle Lieber - implementation of CheckMojo
  *
  *******************************************************************************/
-package org.jacoco.maven;
+package testpackage;
 
-public class CheckList {
+import org.junit.Test;
 
-    /*
-    * * @param overall
-    */
-    private CheckConfiguration overall=null;
+public class Example2Test {
 
-    /*
-    *  @param eachClass
-    */
-    private CheckConfiguration eachClass =null;
-
-
-    public CheckConfiguration getOverall() {
-        return overall;
+    @Test
+    public void test() {
+        new Example2();
     }
 
-    public CheckConfiguration getEachClass() {
-        return eachClass;
-    }
 }

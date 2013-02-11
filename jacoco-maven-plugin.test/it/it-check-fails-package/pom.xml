@@ -20,7 +20,7 @@
     <version>1.0-SNAPSHOT</version>
   </parent>
 
-  <artifactId>it-check-fails-multi-class</artifactId>
+  <artifactId>it-check-fails-package</artifactId>
 
   <build>
     <plugins>
@@ -40,16 +40,14 @@
             </goals>
             <configuration>
               <check>
-                <classRatio>100</classRatio>
-                <instructionRatio>75</instructionRatio>
-                <methodRatio>75</methodRatio>
-                <branchRatio>75</branchRatio>
-                <complexityRatio>75</complexityRatio>
-                <lineRatio>75</lineRatio>
                 <rules>
                   <rule>
-                    <name>Class Coverage Rule</name>
+                    <name>Class Check Rule</name>
                     <element>class</element>
+                  </rule>
+                  <rule>
+                    <name>Package Check Rule</name>
+                    <element>package</element>
                     <instructionRatio>75</instructionRatio>
                     <methodRatio>75</methodRatio>
                     <branchRatio>75</branchRatio>

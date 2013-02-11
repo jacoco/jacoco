@@ -18,9 +18,10 @@ import java.math.BigDecimal;
 import java.util.Collection;
 
 import org.apache.maven.plugin.MojoExecutionException;
+import org.apache.maven.plugin.logging.Log;
 import org.jacoco.core.analysis.IBundleCoverage;
-import org.jacoco.core.analysis.IClassCoverage;
 import org.jacoco.core.analysis.ICounter;
+import org.jacoco.core.analysis.ICoverageNode;
 import org.jacoco.core.analysis.ICoverageNode.CounterEntity;
 import org.jacoco.core.analysis.IPackageCoverage;
 import org.jacoco.core.data.ExecFileLoader;
@@ -41,7 +42,7 @@ public class CheckMojo extends AbstractJacocoMojo {
 	private static final String ERROR_UNABLE_TO_READ = "Unable to read execution data file %s: %s";
 	private static final String ERROR_CHECKING_COVERAGE = "Error while checking coverage: %s";
 
-	private static final String INSUFFICIENT_COVERAGE = "Insufficient code coverage for %s: %2$.2f%% < %3$.2f%%";
+	private static final String INSUFFICIENT_COVERAGE = "%s %s : Insufficient code coverage for %s: %4$.2f%% < %5$.2f%%";
 	private static final String CHECK_FAILED = "Coverage checks have not been met. See report for details.";
 	private static final String CHECK_SUCCESS = "All coverage checks have been met.";
 
@@ -59,28 +60,30 @@ public class CheckMojo extends AbstractJacocoMojo {
      * <pre>
      * {@code
      * <check>
-     *     <overall>
-     *          <classRatio>100</classRatio>
-     *          <instructionRatio>75</instructionRatio>
-     *          <methodRatio>75</methodRatio>
-     *          <branchRatio>75</branchRatio>
-     *          <complexityRatio>75</complexityRatio>
-     *          <lineRatio>75</lineRatio>
-     *      </overall>
-     *      <eachClass>
-     *          <instructionRatio>60</instructionRatio>
-     *          <methodRatio>60</methodRatio>
-     *          <branchRatio>60</branchRatio>
-     *          <complexityRatio>60</complexityRatio>
-     *          <lineRatio>60</lineRatio>
-     *      </eachClass>
+     *      <classRatio>100</classRatio>
+     *      <instructionRatio>75</instructionRatio>
+     *      <methodRatio>75</methodRatio>
+     *      <branchRatio>75</branchRatio>
+     *      <complexityRatio>75</complexityRatio>
+     *      <lineRatio>75</lineRatio>
+     *      <rules>
+     *          <rule>
+     *              <element>class</element>
+     *              <name>Class Checks</name>
+         *          <instructionRatio>60</instructionRatio>
+         *          <methodRatio>60</methodRatio>
+         *          <branchRatio>60</branchRatio>
+         *          <complexityRatio>60</complexityRatio>
+         *          <lineRatio>60</lineRatio>
+     *          </rule>
+     *      </rules>
      * </check>}
      * </pre>
      *
      * @parameter
      * @required
      */
-    private CheckList check;
+    private Configuration check=new Configuration();
 
 	/**
 	 * Halt the build if any of the checks fail.
@@ -147,52 +150,73 @@ public class CheckMojo extends AbstractJacocoMojo {
 		final BundleCreator creator = new BundleCreator(this.getProject(),
 				fileFilter);
 		final IBundleCoverage bundle = creator.createBundle(executionDataStore);
-
-		boolean passed = true;
-
-        CheckConfiguration overall = check.getOverall();
-        CheckConfiguration classLevel = check.getEachClass();
-        if (classLevel!=null){
-            Collection<IPackageCoverage> packages = bundle.getPackages();
-            for (IPackageCoverage aPackage : packages) {
-                Collection<IClassCoverage> classes = aPackage.getClasses();
-                for (IClassCoverage aClass : classes) {
-                    for (final CounterEntity entity : CounterEntity.values()) {
-                        passed = this.checkCounter("Class "+aClass.getName(),entity, aClass.getCounter(entity),
-                                classLevel.getRatio(entity))
-                                && passed;
-                    }
-
-                }
+		int totalFailureCount = checkNodeCoverage("project", check, bundle);
+        if (check.hasRules()){
+            RuleList rules = check.getRules();
+            for (Rule rule : rules) {
+                totalFailureCount += checkRuleCompliance(rule,bundle);
             }
-        }
 
-        if (overall!=null){
-            for (final CounterEntity entity : CounterEntity.values()) {
-                passed = this.checkCounter("Project "+this.getProject().getArtifactId(),entity, bundle.getCounter(entity),
-                        overall.getRatio(entity))
-                        && passed;
-            }
         }
-
-		return passed;
+		return totalFailureCount==0;
 	}
 
-	private boolean checkCounter(final String name, final CounterEntity entity,
+    private int checkRuleCompliance(Rule rule,IBundleCoverage bundle) {
+        Collection<IPackageCoverage> packages = bundle.getPackages();
+        int ruleFailureCount = checkNodeCoverage("package",rule,packages);
+        for (IPackageCoverage packageCoverage : packages) {
+            ruleFailureCount += checkNodeCoverage("class", rule, packageCoverage.getClasses());
+        }
+        logRuleSummaryMessage(ruleFailureCount, rule.getName());
+        return ruleFailureCount;
+    }
+
+    private void logRuleSummaryMessage(int ruleFailureCount, String name) {
+        if (ruleFailureCount>0){
+            getLog().info(String.format("%s coverage check failure(s) against [%s] ",ruleFailureCount, name));
+        }
+        else{
+            getLog().info(String.format("Passed [%s] coverage check successfully ", name));
+        }
+    }
+
+
+    private int checkNodeCoverage( String nodeType,Rule rule, Collection<? extends ICoverageNode> coverageNodes) {
+        int failureCount=0;
+        for (ICoverageNode coverageNode : coverageNodes) {
+            if (rule.matches(nodeType,coverageNode.getName()))
+            {
+                failureCount+=checkNodeCoverage(nodeType, rule, coverageNode);
+            }
+        }
+        return failureCount;
+    }
+
+    private int checkNodeCoverage(String nodeType, AbstractRule rule, ICoverageNode coverageNode) {
+        int failureCount=0;
+        for (final CounterEntity entity : CounterEntity.values()) {
+            boolean passed = this.checkCounter(nodeType,coverageNode.getName().replace('/','.'),entity, coverageNode.getCounter(entity),
+                    rule.getRatio(entity));
+            failureCount=passed?failureCount:failureCount+1;
+        }
+        return failureCount;
+    }
+
+    private boolean checkCounter(final String type, final String nameOfType, final CounterEntity entity,
 			final ICounter counter, final double checkRatio) {
 		boolean passed = true;
 
 		final double ratio = counter.getCoveredRatio() * 100;
 
         if (ratio < checkRatio) {
-            String message = name + " : " +
-                    String.format(INSUFFICIENT_COVERAGE, entity.name(),
+            String message = String.format(INSUFFICIENT_COVERAGE, type, nameOfType, entity.name(),
                             truncate(ratio), truncate(checkRatio));
+            Log log = this.getLog();
             if (haltOnFailure){
-                this.getLog().error(message);
+                log.error(message);
             }
             else{
-                this.getLog().warn(message);
+                log.warn(message);
             }
             passed = false;
         }

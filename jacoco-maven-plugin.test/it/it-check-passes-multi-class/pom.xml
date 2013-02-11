@@ -40,14 +40,12 @@
             </goals>
             <configuration>
               <check>
-                <overall>
-                  <classRatio>100</classRatio>
-                  <instructionRatio>75</instructionRatio>
-                  <methodRatio>75</methodRatio>
-                  <branchRatio>75</branchRatio>
-                  <complexityRatio>75</complexityRatio>
-                  <lineRatio>75</lineRatio>
-                </overall>
+                <classRatio>100</classRatio>
+                <instructionRatio>75</instructionRatio>
+                <methodRatio>75</methodRatio>
+                <branchRatio>75</branchRatio>
+                <complexityRatio>75</complexityRatio>
+                <lineRatio>75</lineRatio>
               </check>
             </configuration>
           </execution>
