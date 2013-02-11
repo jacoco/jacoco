@@ -21,8 +21,3 @@ if ( buildLog.indexOf( "Coverage checks have not been met." ) < 0 ) {
 if ( buildLog.indexOf( "Insufficient code coverage for" ) < 0 ) {
     throw new RuntimeException( "Should have displayed insufficient code coverage messages." );
 }
-
-if ( buildLog.indexOf( "BUILD FAILURE" ) < 0 ) {
-    throw new RuntimeException( "Build failed but it should have succeeded." );
-}
-
