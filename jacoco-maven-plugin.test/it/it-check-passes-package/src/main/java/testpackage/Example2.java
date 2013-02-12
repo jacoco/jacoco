@@ -8,28 +8,14 @@
  * Contributors:
  *    Evgeny Mandrikov - initial API and implementation
  *    Kyle Lieber - implementation of CheckMojo
- *    
+ *
  *******************************************************************************/
-package org.jacoco.maven;
+package testpackage;
 
+public class Example2 {
 
-import java.util.ArrayList;
-import java.util.List;
+  public void sayHola() {
+    System.out.println("Hola");
+  }
 
-/**
- * Used in the configuration of the "check" goal for specifying minimum ratios
- * of coverage and rules which in turn can define min ratios.
- */
-public class Configuration extends AbstractRule{
-
-    private List<Rule> rules;
-
-    public Configuration(){
-        rules=new ArrayList<Rule>();
-        setName("Project Coverage");
-    }
-
-    public List<Rule> getRules(){
-        return rules;
-    }
 }

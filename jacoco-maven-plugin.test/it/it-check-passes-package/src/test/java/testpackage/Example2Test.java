@@ -10,18 +10,15 @@
  *    Kyle Lieber - implementation of CheckMojo
  *
  *******************************************************************************/
-package org.jacoco.maven;
+package testpackage;
 
-import java.util.ArrayList;
-import java.util.List;
+import org.junit.Test;
 
-/**
- * Contains list of rules
- */
-public class RuleList extends ArrayList<Rule> {
+public class Example2Test {
 
-    public void addRule(Rule rule)
-    {
-        this.add(rule);
+    @Test
+    public void test() {
+        new Example2();
     }
+
 }

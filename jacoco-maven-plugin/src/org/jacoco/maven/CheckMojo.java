@@ -18,7 +18,6 @@ import java.math.BigDecimal;
 import java.util.Collection;
 
 import org.apache.maven.plugin.MojoExecutionException;
-import org.apache.maven.plugin.logging.Log;
 import org.jacoco.core.analysis.IBundleCoverage;
 import org.jacoco.core.analysis.ICounter;
 import org.jacoco.core.analysis.ICoverageNode;
@@ -60,6 +59,7 @@ public class CheckMojo extends AbstractJacocoMojo {
      * <pre>
      * {@code
      * <check>
+     *      <name>Min Project Coverage Rule</name>
      *      <classRatio>100</classRatio>
      *      <instructionRatio>75</instructionRatio>
      *      <methodRatio>75</methodRatio>
@@ -69,7 +69,7 @@ public class CheckMojo extends AbstractJacocoMojo {
      *      <rules>
      *          <rule>
      *              <element>class</element>
-     *              <name>Class Checks</name>
+     *              <name>Class Check Rule</name>
          *          <instructionRatio>60</instructionRatio>
          *          <methodRatio>60</methodRatio>
          *          <branchRatio>60</branchRatio>
@@ -151,40 +151,41 @@ public class CheckMojo extends AbstractJacocoMojo {
 				fileFilter);
 		final IBundleCoverage bundle = creator.createBundle(executionDataStore);
 		int totalFailureCount = checkNodeCoverage("project", check, bundle);
-        if (check.hasRules()){
-            RuleList rules = check.getRules();
-            for (Rule rule : rules) {
-                totalFailureCount += checkRuleCompliance(rule,bundle);
-            }
-
+        logIfFailed(totalFailureCount, check.getName());
+        Collection<Rule> rules = check.getRules();
+        for (Rule rule : rules) {
+            totalFailureCount += checkRuleCompliance(rule,bundle);
         }
 		return totalFailureCount==0;
 	}
 
-    private int checkRuleCompliance(Rule rule,IBundleCoverage bundle) {
-        Collection<IPackageCoverage> packages = bundle.getPackages();
+    private int checkRuleCompliance(final Rule rule,final IBundleCoverage bundle) {
+        final Collection<IPackageCoverage> packages = bundle.getPackages();
         int ruleFailureCount = checkNodeCoverage("package",rule,packages);
         for (IPackageCoverage packageCoverage : packages) {
             ruleFailureCount += checkNodeCoverage("class", rule, packageCoverage.getClasses());
         }
-        logRuleSummaryMessage(ruleFailureCount, rule.getName());
+        logIfFailed(ruleFailureCount, rule.getName());
         return ruleFailureCount;
     }
 
-    private void logRuleSummaryMessage(int ruleFailureCount, String name) {
+    private void logIfFailed(final int ruleFailureCount, final String name) {
         if (ruleFailureCount>0){
-            getLog().info(String.format("%s coverage check failure(s) against [%s] ",ruleFailureCount, name));
-        }
-        else{
-            getLog().info(String.format("Passed [%s] coverage check successfully ", name));
+            String message = String.format("Failed rule : %s, %s failure(s)", name, ruleFailureCount);
+            if (haltOnFailure) {
+                getLog().error(message);
+            }
+            else {
+                getLog().warn(message);
+            }
         }
     }
 
 
-    private int checkNodeCoverage( String nodeType,Rule rule, Collection<? extends ICoverageNode> coverageNodes) {
+    private int checkNodeCoverage(final String nodeType,Rule rule, final Collection<? extends ICoverageNode> coverageNodes) {
         int failureCount=0;
         for (ICoverageNode coverageNode : coverageNodes) {
-            if (rule.matches(nodeType,coverageNode.getName()))
+            if (rule.ruleApplies(nodeType, coverageNode.getName()))
             {
                 failureCount+=checkNodeCoverage(nodeType, rule, coverageNode);
             }
@@ -192,7 +193,7 @@ public class CheckMojo extends AbstractJacocoMojo {
         return failureCount;
     }
 
-    private int checkNodeCoverage(String nodeType, AbstractRule rule, ICoverageNode coverageNode) {
+    private int checkNodeCoverage(final String nodeType, final AbstractRule rule, final ICoverageNode coverageNode) {
         int failureCount=0;
         for (final CounterEntity entity : CounterEntity.values()) {
             boolean passed = this.checkCounter(nodeType,coverageNode.getName().replace('/','.'),entity, coverageNode.getCounter(entity),
@@ -211,13 +212,7 @@ public class CheckMojo extends AbstractJacocoMojo {
         if (ratio < checkRatio) {
             String message = String.format(INSUFFICIENT_COVERAGE, type, nameOfType, entity.name(),
                             truncate(ratio), truncate(checkRatio));
-            Log log = this.getLog();
-            if (haltOnFailure){
-                log.error(message);
-            }
-            else{
-                log.warn(message);
-            }
+            getLog().warn(message);
             passed = false;
         }
 		return passed;

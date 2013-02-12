@@ -8,28 +8,12 @@
  * Contributors:
  *    Evgeny Mandrikov - initial API and implementation
  *    Kyle Lieber - implementation of CheckMojo
- *    
+ *
  *******************************************************************************/
-package org.jacoco.maven;
+import java.io.*;
+import org.codehaus.plexus.util.*;
 
-
-import java.util.ArrayList;
-import java.util.List;
-
-/**
- * Used in the configuration of the "check" goal for specifying minimum ratios
- * of coverage and rules which in turn can define min ratios.
- */
-public class Configuration extends AbstractRule{
-
-    private List<Rule> rules;
-
-    public Configuration(){
-        rules=new ArrayList<Rule>();
-        setName("Project Coverage");
-    }
-
-    public List<Rule> getRules(){
-        return rules;
-    }
+String buildLog = FileUtils.fileRead( new File( basedir, "build.log" ) );
+if ( buildLog.indexOf( "All coverage checks have been met." ) < 0 ) {
+    throw new RuntimeException( "Coverage checks were not met." );
 }

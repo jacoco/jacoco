@@ -17,18 +17,40 @@ import org.jacoco.core.analysis.ICoverageNode;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Base class for both Configuration and Rule
+ */
 public class AbstractRule {
     private static final double DEFAULT_RATIO = 0;
 
     private final Map<ICoverageNode.CounterEntity, Double> configuration;
-
+    private String name;
 
     /**
      * Construct a new CheckConfiguration instance.
      */
     public AbstractRule() {
         this.configuration = new HashMap<ICoverageNode.CounterEntity, Double>();
+        name="no name";
     }
+
+    /**
+     * Get the name for this rule
+     */
+    public String getName() {
+        return name;
+    }
+
+    /**
+     * Sets a name for this rule
+     * @param name
+     *          name for this rule
+     *
+     */
+    public void setName(final String name) {
+        this.name = name;
+    }
+
 
     /**
      * Set the minimum allowed code coverage for instructions.
@@ -99,7 +121,7 @@ public class AbstractRule {
      */
     public double getRatio(final ICoverageNode.CounterEntity entity) {
         final Double ratio = this.configuration.get(entity);
-        return ratio == null ? DEFAULT_RATIO : ratio.doubleValue();
+        return ratio == null ? DEFAULT_RATIO : ratio;
     }
 
 

@@ -23,8 +23,8 @@ public class RuleTest {
     {
         Rule rule=new Rule();
         rule.setElement("class");
-        Assert.assertTrue(rule.matches("class","test"));
-        Assert.assertTrue(rule.matches("class","package/test/test"));
+        Assert.assertTrue(rule.ruleApplies("class", "test"));
+        Assert.assertTrue(rule.ruleApplies("class", "package/test/test"));
     }
 
     @Test
@@ -32,8 +32,8 @@ public class RuleTest {
     {
         Rule rule=new Rule();
         rule.getIncludes().add("*");
-        Assert.assertTrue(rule.matches("class","test"));
-        Assert.assertTrue(rule.matches("class","package/test/test"));
+        Assert.assertTrue(rule.ruleApplies("class", "test"));
+        Assert.assertTrue(rule.ruleApplies("class", "package/test/test"));
     }
 
     @Test
@@ -42,10 +42,12 @@ public class RuleTest {
         Rule rule=new Rule();
         Set<String> includes = rule.getIncludes();
         includes.add("package/sub/*");
-        Assert.assertTrue(rule.matches("class","package/sub/Test"));
-        Assert.assertFalse(rule.matches("class","package/another/Test"));
+        Assert.assertTrue(rule.ruleApplies("class", "package/sub/Test"));
+        Assert.assertFalse(rule.ruleApplies("class", "package/another/Test"));
         includes.add("package/another/*");
-        Assert.assertTrue(rule.matches("class","package/sub/Test"));
-        Assert.assertTrue(rule.matches("class","package/another/Test"));
+        Assert.assertTrue(rule.ruleApplies("class", "package/sub/Test"));
+        Assert.assertTrue(rule.ruleApplies("class", "package/another/Test"));
+        Assert.assertFalse(rule.ruleApplies("package", "package/another/Test"));
+        Assert.assertFalse(rule.ruleApplies("package", "package/another/Test"));
     }
 }

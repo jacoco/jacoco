@@ -21,47 +21,36 @@ import java.util.Set;
 
 
 public class Rule extends AbstractRule {
-    private String name;
     private String element;
-    /**
-     * pattern to consider for this rule
-     *
-     * @parameter
-     */
+
     private Set<String> includes;
+
     private List<WildcardMatcher> includeWildCardMatcher;
 
-    public Rule()
-    {
+    public Rule() {
         includes=new HashSet<String>();
-        name="no name";
         element="class";
     }
 
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public void setElement(String element)
+    /**
+     * Set the element type this rule applies to
+     * @param element
+     *          The element type rule applies e.g. class or package
+     */
+    public void setElement(final String element)
     {
         this.element=element;
     }
 
+    /**
+     * The element type this rule applies to
+     */
     public String getElement(){
         return element;
     }
 
-    private boolean hasIncludes() {
-        return includes!=null && includes.size()>0;
-    }
-
-    private void initWildCardMatcher(){
-        if (includeWildCardMatcher==null || includes.size()!=includeWildCardMatcher.size())
-        {
+    private void initWildCardMatcher() {
+        if (includeWildCardMatcher==null || includes.size()!=includeWildCardMatcher.size()) {
             includeWildCardMatcher=new ArrayList<WildcardMatcher>();
             for (String include : includes) {
                 includeWildCardMatcher.add(new WildcardMatcher(include));
@@ -69,11 +58,17 @@ public class Rule extends AbstractRule {
         }
     }
 
-    public boolean matches(String elemenType,String elementName) {
-        if (!this.element.equals(elemenType)){
+    /**
+     *
+     * @param element The element type to check
+     * @param elementName  The name of the element
+     * @return  true if the rule applies to this element type and elementname
+     */
+    public boolean ruleApplies(final String element, final String elementName) {
+        if (!this.element.equals(element)){
             return false;
         }
-        if (!hasIncludes()){
+        if (includes.isEmpty()){
             return true;
         }
         initWildCardMatcher();
@@ -86,6 +81,10 @@ public class Rule extends AbstractRule {
         return false;
     }
 
+    /**
+     * Get the includes filter set for this rule
+     * @return A set of includes filter
+     */
     public Set<String> getIncludes() {
         return includes;
     }
