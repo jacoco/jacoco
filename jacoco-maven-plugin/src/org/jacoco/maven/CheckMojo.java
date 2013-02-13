@@ -70,11 +70,11 @@ public class CheckMojo extends AbstractJacocoMojo {
      *          <rule>
      *              <element>class</element>
      *              <name>Class Check Rule</name>
-         *          <instructionRatio>60</instructionRatio>
-         *          <methodRatio>60</methodRatio>
-         *          <branchRatio>60</branchRatio>
-         *          <complexityRatio>60</complexityRatio>
-         *          <lineRatio>60</lineRatio>
+     *          	<instructionRatio>60</instructionRatio>
+     *          	<methodRatio>60</methodRatio>
+     *          	<branchRatio>60</branchRatio>
+     *          	<complexityRatio>60</complexityRatio>
+     *          	<lineRatio>60</lineRatio>
      *          </rule>
      *      </rules>
      * </check>}
@@ -83,7 +83,7 @@ public class CheckMojo extends AbstractJacocoMojo {
      * @parameter
      * @required
      */
-    private Configuration check=new Configuration();
+    private CheckConfiguration check=new CheckConfiguration();
 
 	/**
 	 * Halt the build if any of the checks fail.

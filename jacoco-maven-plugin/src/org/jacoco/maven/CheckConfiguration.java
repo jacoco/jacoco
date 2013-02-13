@@ -20,11 +20,11 @@ import java.util.List;
  * Used in the configuration of the "check" goal for specifying minimum ratios
  * of coverage and rules which in turn can define min ratios.
  */
-public class Configuration extends AbstractRule{
+public class CheckConfiguration extends AbstractRule{
 
     private List<Rule> rules;
 
-    public Configuration(){
+    public CheckConfiguration(){
         rules=new ArrayList<Rule>();
         setName("Project Coverage");
     }
