@@ -48,13 +48,32 @@
                 <lineRatio>75</lineRatio>
                 <rules>
                   <rule>
-                    <name>Class Coverage Rule</name>
+                    <name>Min Line for Classes</name>
                     <element>class</element>
-                    <instructionRatio>75</instructionRatio>
-                    <methodRatio>75</methodRatio>
-                    <branchRatio>75</branchRatio>
-                    <complexityRatio>75</complexityRatio>
-                    <lineRatio>75</lineRatio>
+                    <counterEntity>line</counterEntity>
+                    <counterProperty>coveredRatio</counterProperty>
+                    <minimum>75</minimum>
+                  </rule>
+                  <rule>
+                    <name>Min Line for Classes</name>
+                    <element>class</element>
+                    <counterEntity>branch</counterEntity>
+                    <counterProperty>coveredRatio</counterProperty>
+                    <minimum>75</minimum>
+                  </rule>
+                  <rule>
+                    <name>Min Method Ratio for Classes</name>
+                    <element>class</element>
+                    <counterEntity>method</counterEntity>
+                    <counterProperty>coveredRatio</counterProperty>
+                    <minimum>75</minimum>
+                  </rule>
+                  <rule>
+                    <name>Min Instruction for Classes</name>
+                    <element>class</element>
+                    <counterEntity>instruction</counterEntity>
+                    <counterProperty>coveredRatio</counterProperty>
+                    <minimum>75</minimum>
                   </rule>
                 </rules>
               </check>

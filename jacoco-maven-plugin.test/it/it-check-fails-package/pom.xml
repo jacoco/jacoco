@@ -42,17 +42,18 @@
               <check>
                 <rules>
                   <rule>
-                    <name>Class Check Rule</name>
+                    <name>Min Line Coverage for Classes</name>
                     <element>class</element>
+                    <counterEntity>line</counterEntity>
+                    <counterProperty>coveredRatio</counterProperty>
+                    <minimum>10</minimum>
                   </rule>
                   <rule>
-                    <name>Package Check Rule</name>
+                    <name>Min Line Coverage for Package</name>
                     <element>package</element>
-                    <instructionRatio>75</instructionRatio>
-                    <methodRatio>75</methodRatio>
-                    <branchRatio>75</branchRatio>
-                    <complexityRatio>75</complexityRatio>
-                    <lineRatio>75</lineRatio>
+                    <counterEntity>line</counterEntity>
+                    <counterProperty>coveredRatio</counterProperty>
+                    <minimum>70</minimum>
                   </rule>
                 </rules>
               </check>

@@ -12,80 +12,130 @@
  *******************************************************************************/
 package org.jacoco.maven;
 
-import org.jacoco.core.runtime.WildcardMatcher;
+import static org.jacoco.core.analysis.ICoverageNode.CounterEntity;
+import static org.jacoco.core.analysis.ICoverageNode.ElementType;
+import org.jacoco.core.analysis.ICoverageNode;
 
 import java.util.ArrayList;
-import java.util.HashSet;
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
-import java.util.Set;
 
 
-public class Rule extends AbstractRule {
-    private String element;
+public class Rule {
 
-    private Set<String> includes;
-
-    private List<WildcardMatcher> includeWildCardMatcher;
-
-    public Rule() {
-        includes=new HashSet<String>();
-        element="class";
-    }
+    private static Collection<String> ACCEPTED_COUNTER_PROPERTIES = Arrays.asList("coveredRatio");
+    private static Collection<String> ACCEPTED_ELEMENTS = Arrays.asList("class","package");
+    private static List<String> ACCEPTED_COUNTER_ENTITIES = Arrays.asList("instruction","branch","line","complexity","method","class");
 
     /**
-     * Set the element type this rule applies to
-     * @param element
-     *          The element type rule applies e.g. class or package
+     * Name for this rule
      */
-    public void setElement(final String element)
-    {
-        this.element=element;
-    }
+    private String name;
 
     /**
-     * The element type this rule applies to
+     * Element this rule applies to
      */
-    public String getElement(){
-        return element;
-    }
+    private ElementType element;
 
-    private void initWildCardMatcher() {
-        if (includeWildCardMatcher==null || includes.size()!=includeWildCardMatcher.size()) {
-            includeWildCardMatcher=new ArrayList<WildcardMatcher>();
-            for (String include : includes) {
-                includeWildCardMatcher.add(new WildcardMatcher(include));
-            }
+    /**
+     * The counterEntity covered by this rule
+     */
+    private CounterEntity counterEntity;
+
+    /**
+     * The counterProperty that is being checked by the rule
+     */
+    private String counterProperty;
+
+    /**
+     *  The minimum value required
+     */
+    private double minimum=-1d;
+
+    /**
+     * Sets the counterProperty for this rule
+     * @param counterProperty The counterProperty to check against
+     * @throws RuntimeException if the value is not supported (so it can reported by maven plugin)
+     */
+    public void setCounterProperty(String counterProperty) {
+        if (ACCEPTED_COUNTER_PROPERTIES.contains(counterProperty)) {
+            this.counterProperty=counterProperty;
+        }
+        else {
+            throw new RuntimeException(String.format("Invalid counterProperty '%s', accepted values are %s",counterProperty,ACCEPTED_COUNTER_PROPERTIES)) ;
         }
     }
 
     /**
-     *
+     * Sets the element for this rule
+     * @param element The element name
+     * @throws RuntimeException if the value is not supported (so it can reported by maven plugin)
+     */
+    public void setElement(String element) {
+        if (ACCEPTED_ELEMENTS.contains(element)) {
+            this.element=ICoverageNode.ElementType.valueOf(element.toUpperCase());
+        }
+        else {
+            throw new RuntimeException(String.format("Invalid element '%s', accepted values are %s",element, ACCEPTED_ELEMENTS)) ;
+        }
+    }
+
+    /**
+     * Sets the counterEntity for this rule
+     * @param counterEntity The element name
+     * @throws RuntimeException if the value is not supported (so it can reported by maven plugin)
+     */
+    public void setCounterEntity(String counterEntity) {
+        if (ACCEPTED_COUNTER_ENTITIES.contains(counterEntity)) {
+            this.counterEntity=ICoverageNode.CounterEntity.valueOf(counterEntity.toUpperCase());
+        }
+        else {
+            throw new RuntimeException(String.format("Invalid counterEntity '%s', accepted values are %s",counterEntity, ACCEPTED_COUNTER_ENTITIES)) ;
+        }
+    }
+
+    /**
+     * Check the rule should apply to the element.
      * @param element The element type to check
-     * @param elementName  The name of the element
-     * @return  true if the rule applies to this element type and elementname
+     * @return  true if the rule applies to this element type
      */
-    public boolean ruleApplies(final String element, final String elementName) {
-        if (!this.element.equals(element)){
-            return false;
-        }
-        if (includes.isEmpty()){
-            return true;
-        }
-        initWildCardMatcher();
-        for (WildcardMatcher wildcardMatcher : includeWildCardMatcher) {
-            if (wildcardMatcher.matches(elementName))
-            {
-                return true;
-            }
-        }
-        return false;
+    public boolean ruleApplies(final ICoverageNode.ElementType element) {
+        return this.element.equals(element);
+    }
+
+    public String getName() {
+        return this.name;
+    }
+
+    public CounterEntity getCounterEntity() {
+        return this.counterEntity;
+    }
+
+
+    public double getMinimum() {
+        return this.minimum;
     }
 
     /**
-     * Get the includes filter set for this rule
-     * @return A set of includes filter
+     * Checks this rule and gets a list of errors for this rule.
+     * @return  list of error messages, empty list if the rule is valid.
      */
-    public Set<String> getIncludes() {
-        return includes;
+    public List<String> getRuleErrorMessages() {
+        ArrayList<String> errorMessages=new ArrayList<String>();
+        if (this.counterProperty==null) {
+            errorMessages.add("'counterProperty' must be defined");
+        }
+        if (this.element==null ) {
+            errorMessages.add("'element' must be defined");
+        }
+        if (this.counterEntity==null) {
+            errorMessages.add("'counterEntity' must be defined");
+        }
+        if (this.minimum<0 || this.minimum>100) {
+            errorMessages.add("Value for 'minimum' for  must be between 0 and 100");
+        }
+        return errorMessages;
     }
+
 }
