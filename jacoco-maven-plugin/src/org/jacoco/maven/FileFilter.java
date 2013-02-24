@@ -12,13 +12,13 @@
  *******************************************************************************/
 package org.jacoco.maven;
 
-import org.apache.commons.collections.CollectionUtils;
-import org.codehaus.plexus.util.FileUtils;
-import org.codehaus.plexus.util.StringUtils;
-
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
+
+import org.apache.commons.collections.CollectionUtils;
+import org.codehaus.plexus.util.FileUtils;
+import org.codehaus.plexus.util.StringUtils;
 
 /**
  * A file filter using includes/excludes patterns.
@@ -51,6 +51,7 @@ public class FileFilter {
 	 *            the directory to scan
 	 * @return a list of files
 	 * @throws IOException
+	 *             if file system access fails
 	 */
 	@SuppressWarnings("unchecked")
 	public List<String> getFileNames(final File directory) throws IOException {

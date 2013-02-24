@@ -82,8 +82,7 @@ public final class AgentOptions {
 	public static final String DUMPONEXIT = "dumponexit";
 
 	/**
-	 * Specifies the output mode. Default is
-	 * <code>{@link OutputMode#file}</code>.
+	 * Specifies the output mode. Default is {@link OutputMode#file}.
 	 * 
 	 * @see OutputMode#file
 	 * @see OutputMode#tcpserver
@@ -388,6 +387,7 @@ public final class AgentOptions {
 	 * or the port to connect to when output is <code>tcpclient</code>
 	 * 
 	 * @param port
+	 *            port to listen on or connect to
 	 */
 	public void setPort(final int port) {
 		validatePort(port);
@@ -407,7 +407,8 @@ public final class AgentOptions {
 
 	/**
 	 * Sets the hostname or IP address to listen to when output is
-	 * <code>tcpserver</cose> or connect to when output is <code>tcpclient</code>
+	 * <code>tcpserver</code> or connect to when output is
+	 * <code>tcpclient</code>
 	 * 
 	 * @param address
 	 *            Hostname or IP address

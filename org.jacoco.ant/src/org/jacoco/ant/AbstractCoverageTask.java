@@ -166,6 +166,7 @@ public class AbstractCoverageTask extends Task {
 	 * to when the output method is tcp client. Default is <code>6300</code>
 	 * 
 	 * @param port
+	 *            port to bind to or connect to
 	 */
 	public void setPort(final int port) {
 		agentOptions.setPort(port);

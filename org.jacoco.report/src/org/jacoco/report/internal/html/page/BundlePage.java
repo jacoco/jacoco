@@ -34,10 +34,15 @@ public class BundlePage extends TablePage<ICoverageNode> {
 	 * Creates a new visitor in the given context.
 	 * 
 	 * @param bundle
+	 *            coverage date for the bundle
 	 * @param parent
+	 *            optional hierarchical parent
 	 * @param locator
+	 *            source locator
 	 * @param folder
+	 *            base folder for this bundle
 	 * @param context
+	 *            settings context
 	 */
 	public BundlePage(final IBundleCoverage bundle, final ReportPage parent,
 			final ISourceFileLocator locator, final ReportOutputFolder folder,

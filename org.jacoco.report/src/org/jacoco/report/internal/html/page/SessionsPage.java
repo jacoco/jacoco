@@ -56,11 +56,17 @@ public class SessionsPage extends ReportPage {
 	 * Creates a new page page to display session information.
 	 * 
 	 * @param sessionInfos
+	 *            session info objects
 	 * @param executionData
+	 *            execution data objects
 	 * @param index
+	 *            index for cross-linking
 	 * @param parent
+	 *            optional hierarchical parent
 	 * @param folder
+	 *            base folder to create this page in
 	 * @param context
+	 *            settings context
 	 */
 	public SessionsPage(final List<SessionInfo> sessionInfos,
 			final Collection<ExecutionData> executionData,
@@ -70,7 +76,7 @@ public class SessionsPage extends ReportPage {
 		this.sessionInfos = sessionInfos;
 		this.executionData = new ArrayList<ExecutionData>(executionData);
 		this.index = index;
-		dateFormat = DateFormat.getDateTimeInstance(DateFormat.DEFAULT,
+		this.dateFormat = DateFormat.getDateTimeInstance(DateFormat.DEFAULT,
 				DateFormat.DEFAULT, context.getLocale());
 		final ILanguageNames names = context.getLanguageNames();
 		Collections.sort(this.executionData, new Comparator<ExecutionData>() {

@@ -16,7 +16,7 @@ import static java.lang.String.format;
 import java.io.IOException;
 import java.io.Reader;
 
-import org.jacoco.core.analysis.ISourceFileCoverage;
+import org.jacoco.core.analysis.ISourceNode;
 import org.jacoco.report.internal.ReportOutputFolder;
 import org.jacoco.report.internal.html.HTMLElement;
 import org.jacoco.report.internal.html.IHTMLReportContext;
@@ -26,7 +26,7 @@ import org.jacoco.report.internal.html.resources.Resources;
  * Page showing the content of a source file with numbered and highlighted
  * source lines.
  */
-public class SourceFilePage extends NodePage<ISourceFileCoverage> {
+public class SourceFilePage extends NodePage<ISourceNode> {
 
 	private final Reader sourceReader;
 
@@ -36,13 +36,19 @@ public class SourceFilePage extends NodePage<ISourceFileCoverage> {
 	 * Creates a new page with given information.
 	 * 
 	 * @param sourceFileNode
+	 *            coverage data for this source file
 	 * @param sourceReader
+	 *            reader for the source code
 	 * @param tabWidth
+	 *            number of character per tab
 	 * @param parent
+	 *            optional hierarchical parent
 	 * @param folder
+	 *            base folder for this page
 	 * @param context
+	 *            settings context
 	 */
-	public SourceFilePage(final ISourceFileCoverage sourceFileNode,
+	public SourceFilePage(final ISourceNode sourceFileNode,
 			final Reader sourceReader, final int tabWidth,
 			final ReportPage parent, final ReportOutputFolder folder,
 			final IHTMLReportContext context) {

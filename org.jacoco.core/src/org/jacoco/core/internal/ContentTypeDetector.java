@@ -45,6 +45,7 @@ public class ContentTypeDetector {
 	 * @param in
 	 *            input to read the header from
 	 * @throws IOException
+	 *             if the stream can't be read
 	 */
 	public ContentTypeDetector(final InputStream in) throws IOException {
 		if (in.markSupported()) {

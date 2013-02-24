@@ -52,6 +52,7 @@ public class RemoteControlReader extends ExecutionDataReader {
 	 * Sets an listener for agent commands.
 	 * 
 	 * @param visitor
+	 *            visitor to retrieve agent commands
 	 */
 	public void setRemoteCommandVisitor(final IRemoteCommandVisitor visitor) {
 		this.remoteCommandVisitor = visitor;

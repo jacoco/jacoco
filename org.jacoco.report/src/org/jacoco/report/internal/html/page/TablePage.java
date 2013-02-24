@@ -55,6 +55,7 @@ public abstract class TablePage<NodeType extends ICoverageNode> extends
 	 * is rendered.
 	 * 
 	 * @param item
+	 *            table item to add
 	 */
 	public void addItem(final ITableItem item) {
 		items.add(item);

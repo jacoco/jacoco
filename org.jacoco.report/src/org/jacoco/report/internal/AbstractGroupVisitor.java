@@ -51,8 +51,11 @@ public abstract class AbstractGroupVisitor implements IReportGroupVisitor {
 	 * Called to handle the given bundle in a specific way.
 	 * 
 	 * @param bundle
+	 *            analyzed bundle
 	 * @param locator
+	 *            source locator
 	 * @throws IOException
+	 *             if the report can't be written
 	 */
 	protected abstract void handleBundle(IBundleCoverage bundle,
 			ISourceFileLocator locator) throws IOException;
@@ -68,8 +71,10 @@ public abstract class AbstractGroupVisitor implements IReportGroupVisitor {
 	 * Called to handle a group with the given name in a specific way.
 	 * 
 	 * @param name
+	 *            name of the group
 	 * @return created child group
 	 * @throws IOException
+	 *             if the report can't be written
 	 */
 	protected abstract AbstractGroupVisitor handleGroup(final String name)
 			throws IOException;
@@ -78,6 +83,7 @@ public abstract class AbstractGroupVisitor implements IReportGroupVisitor {
 	 * Must be called at the end of every group.
 	 * 
 	 * @throws IOException
+	 *             if the report can't be written
 	 */
 	public final void visitEnd() throws IOException {
 		finalizeLastChild();
@@ -88,6 +94,7 @@ public abstract class AbstractGroupVisitor implements IReportGroupVisitor {
 	 * Called to handle the end of this group in a specific way.
 	 * 
 	 * @throws IOException
+	 *             if the report can't be written
 	 */
 	protected abstract void handleEnd() throws IOException;
 

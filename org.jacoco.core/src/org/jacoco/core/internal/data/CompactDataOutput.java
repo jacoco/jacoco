@@ -41,6 +41,7 @@ public class CompactDataOutput extends DataOutputStream {
 	 * @param value
 	 *            value to write
 	 * @throws IOException
+	 *             if thrown by the underlying stream
 	 */
 	public void writeVarInt(final int value) throws IOException {
 		if ((value & 0xFFFFFF80) == 0) {
@@ -58,6 +59,7 @@ public class CompactDataOutput extends DataOutputStream {
 	 * @param value
 	 *            boolean array
 	 * @throws IOException
+	 *             if thrown by the underlying stream
 	 */
 	public void writeBooleanArray(final boolean[] value) throws IOException {
 		writeVarInt(value.length);

@@ -38,7 +38,7 @@ public class CompactDataInput extends DataInputStream {
 	 * 
 	 * @return read value
 	 * @throws IOException
-	 *             might be thrown by the underlying stream
+	 *             if thrown by the underlying stream
 	 */
 	public int readVarInt() throws IOException {
 		final int value = 0xFF & readByte();
@@ -53,6 +53,7 @@ public class CompactDataInput extends DataInputStream {
 	 * 
 	 * @return boolean array
 	 * @throws IOException
+	 *             if thrown by the underlying stream
 	 */
 	public boolean[] readBooleanArray() throws IOException {
 		final boolean[] value = new boolean[readVarInt()];

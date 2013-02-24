@@ -51,6 +51,7 @@ public final class BundleCreator {
 	 *            the execution data.
 	 * @return the coverage data.
 	 * @throws IOException
+	 *             if class files can't be read
 	 */
 	public IBundleCoverage createBundle(
 			final ExecutionDataStore executionDataStore) throws IOException {

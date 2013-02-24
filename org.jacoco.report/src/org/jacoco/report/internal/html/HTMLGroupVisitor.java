@@ -38,9 +38,13 @@ public class HTMLGroupVisitor extends AbstractGroupVisitor {
 	 * Create a new group handler.
 	 * 
 	 * @param parent
+	 *            optional hierarchical parent
 	 * @param folder
+	 *            base folder for this group
 	 * @param context
+	 *            settings context
 	 * @param name
+	 *            group name
 	 */
 	public HTMLGroupVisitor(final ReportPage parent,
 			final ReportOutputFolder folder, final IHTMLReportContext context,

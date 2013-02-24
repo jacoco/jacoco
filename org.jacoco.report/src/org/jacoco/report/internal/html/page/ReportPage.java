@@ -68,6 +68,7 @@ public abstract class ReportPage implements ILinkable {
 	 * must be called at most once.
 	 * 
 	 * @throws IOException
+	 *             if the page can't be written
 	 */
 	public void render() throws IOException {
 		final HTMLDocument doc = new HTMLDocument(

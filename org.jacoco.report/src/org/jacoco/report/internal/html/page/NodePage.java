@@ -37,7 +37,7 @@ public abstract class NodePage<NodeType extends ICoverageNode> extends
 	 * @param parent
 	 *            optional hierarchical parent
 	 * @param folder
-	 *            base folder to create this report in
+	 *            base folder to create this page in
 	 * @param context
 	 *            settings context
 	 */

@@ -31,11 +31,15 @@ public class ClassPage extends TablePage<IClassCoverage> {
 	 * Creates a new visitor in the given context.
 	 * 
 	 * @param classNode
+	 *            coverage data for this class
 	 * @param parent
+	 *            optional hierarchical parent
 	 * @param sourcePage
 	 *            corresponding source page or <code>null</code>
 	 * @param folder
+	 *            base folder to create this page in
 	 * @param context
+	 *            settings context
 	 */
 	public ClassPage(final IClassCoverage classNode, final ReportPage parent,
 			final ILinkable sourcePage, final ReportOutputFolder folder,

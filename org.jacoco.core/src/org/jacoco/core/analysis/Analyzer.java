@@ -110,6 +110,7 @@ public class Analyzer {
 	 * @param input
 	 *            stream to read class definition from
 	 * @throws IOException
+	 *             if the stream can't be read
 	 */
 	public void analyzeClass(final InputStream input) throws IOException {
 		analyzeClass(new ClassReader(input));
@@ -123,6 +124,7 @@ public class Analyzer {
 	 *            ZIP archive data
 	 * @return number of class files found
 	 * @throws IOException
+	 *             if the stream can't be read
 	 */
 	public int analyzeArchive(final InputStream input) throws IOException {
 		final ZipInputStream zip = new ZipInputStream(input);
@@ -147,6 +149,7 @@ public class Analyzer {
 	 *            input data
 	 * @return number of class files found
 	 * @throws IOException
+	 *             if the stream can't be read
 	 */
 	public int analyzeAll(final InputStream input) throws IOException {
 		final ContentTypeDetector detector = new ContentTypeDetector(input);
@@ -170,6 +173,7 @@ public class Analyzer {
 	 *            file or folder to look for class files
 	 * @return number of class files found
 	 * @throws IOException
+	 *             if the file can't be read
 	 */
 	public int analyzeAll(final File file) throws IOException {
 		int count = 0;
@@ -200,6 +204,7 @@ public class Analyzer {
 	 *            entries
 	 * @return number of class files found
 	 * @throws IOException
+	 *             if a file can't be read
 	 */
 	public int analyzeAll(final String path, final File basedir)
 			throws IOException {

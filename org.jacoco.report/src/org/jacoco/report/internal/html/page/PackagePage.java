@@ -36,10 +36,15 @@ public class PackagePage extends TablePage<IPackageCoverage> {
 	 * Creates a new visitor in the given context.
 	 * 
 	 * @param node
+	 *            coverage data for this package
 	 * @param parent
+	 *            optional hierarchical parent
 	 * @param locator
+	 *            source locator
 	 * @param folder
+	 *            base folder to create this page in
 	 * @param context
+	 *            settings context
 	 */
 	public PackagePage(final IPackageCoverage node, final ReportPage parent,
 			final ISourceFileLocator locator, final ReportOutputFolder folder,

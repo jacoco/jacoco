@@ -31,6 +31,7 @@ public class FileMultiReportOutput implements IMultiReportOutput {
 	 * Creates a new instance for document output in the given base directory.
 	 * 
 	 * @param basedir
+	 *            base directory
 	 */
 	public FileMultiReportOutput(final File basedir) {
 		this.basedir = basedir;

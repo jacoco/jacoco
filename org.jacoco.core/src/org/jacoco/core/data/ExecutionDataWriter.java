@@ -60,6 +60,7 @@ public class ExecutionDataWriter implements ISessionInfoVisitor,
 	 * Writes an file header to identify the stream and its protocol version.
 	 * 
 	 * @throws IOException
+	 *             if the header can't be written
 	 */
 	private void writeHeader() throws IOException {
 		out.writeByte(BLOCK_HEADER);
@@ -71,6 +72,7 @@ public class ExecutionDataWriter implements ISessionInfoVisitor,
 	 * Flushes the underlying stream.
 	 * 
 	 * @throws IOException
+	 *             if the underlying stream can't be flushed
 	 */
 	public void flush() throws IOException {
 		out.flush();

@@ -49,6 +49,7 @@ public class ExecutionDataReader {
 	 * Sets an listener for session information.
 	 * 
 	 * @param visitor
+	 *            visitor to retrieve session info events
 	 */
 	public void setSessionInfoVisitor(final ISessionInfoVisitor visitor) {
 		this.sessionInfoVisitor = visitor;
@@ -58,6 +59,7 @@ public class ExecutionDataReader {
 	 * Sets an listener for execution data.
 	 * 
 	 * @param visitor
+	 *            visitor to retrieve execution data events
 	 */
 	public void setExecutionDataVisitor(final IExecutionDataVisitor visitor) {
 		this.executionDataVisitor = visitor;

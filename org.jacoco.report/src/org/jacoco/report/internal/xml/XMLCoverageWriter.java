@@ -40,6 +40,8 @@ public final class XMLCoverageWriter {
 	 *            value of the name attribute
 	 * @return child element
 	 * @throws IOException
+	 *             if XML can't be written to the underlying output
+	 * 
 	 */
 	public static XMLElement createChild(final XMLElement parent,
 			final String tagname, final String name) throws IOException {
@@ -56,6 +58,7 @@ public final class XMLCoverageWriter {
 	 * @param element
 	 *            container element for the bundle data
 	 * @throws IOException
+	 *             if XML can't be written to the underlying output
 	 */
 	public static void writeBundle(final IBundleCoverage bundle,
 			final XMLElement element) throws IOException {
@@ -113,6 +116,7 @@ public final class XMLCoverageWriter {
 	 * @param parent
 	 *            container for the counter elements
 	 * @throws IOException
+	 *             if XML can't be written to the underlying output
 	 */
 	public static void writeCounters(final ICoverageNode node,
 			final XMLElement parent) throws IOException {
