@@ -50,8 +50,8 @@ public final class CRC64 {
 	 */
 	public static long checksum(final byte[] data) {
 		long sum = 0;
-		for (int i = 0; i < data.length; i++) {
-			final int lookupidx = ((int) sum ^ data[i]) & 0xff;
+		for (final byte b : data) {
+			final int lookupidx = ((int) sum ^ b) & 0xff;
 			sum = (sum >>> 8) ^ LOOKUPTABLE[lookupidx];
 		}
 		return sum;

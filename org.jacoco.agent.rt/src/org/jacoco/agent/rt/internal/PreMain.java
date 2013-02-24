@@ -23,6 +23,10 @@ import org.jacoco.core.runtime.ModifiedSystemClassRuntime;
  */
 public class PreMain {
 
+	private PreMain() {
+		// no instances
+	}
+
 	/**
 	 * This method is called by the JVM to initialize Java agents.
 	 * 

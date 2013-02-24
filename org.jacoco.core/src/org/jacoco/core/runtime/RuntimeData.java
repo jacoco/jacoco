@@ -164,13 +164,6 @@ public class RuntimeData {
 		return super.equals(args);
 	}
 
-	@Override
-	public int hashCode() {
-		// As we overwrite the equals method we need to overwrite here too,
-		// otherwise we get a bad warning by Sonar
-		return super.hashCode();
-	}
-
 	/**
 	 * Generates code that creates the argument array for the
 	 * {@link #getProbes(Object[])} method. The array instance is left on the

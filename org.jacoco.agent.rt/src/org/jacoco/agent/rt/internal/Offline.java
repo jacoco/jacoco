@@ -26,9 +26,13 @@ public class Offline {
 	private static final String CONFIG_RESOURCE = "/jacoco-agent.properties";
 
 	static {
-		final Properties config = ConfigLoader.load(
-				CONFIG_RESOURCE, System.getProperties());
+		final Properties config = ConfigLoader.load(CONFIG_RESOURCE,
+				System.getProperties());
 		data = Agent.getInstance(new AgentOptions(config)).getData();
+	}
+
+	private Offline() {
+		// no instances
 	}
 
 	/**
