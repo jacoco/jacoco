@@ -29,9 +29,6 @@ class ProbeInserter extends MethodVisitor implements IProbeInserter {
 	/** Position of the inserted variable. */
 	private final int variable;
 
-	/** Index the inserted variable. */
-	private final int variableIdx;
-
 	/** Maximum stack usage of the code to access the probe array. */
 	private int accessorStackSize;
 
@@ -52,13 +49,10 @@ class ProbeInserter extends MethodVisitor implements IProbeInserter {
 			final IProbeArrayStrategy arrayStrategy) {
 		super(Opcodes.ASM4, mv);
 		this.arrayStrategy = arrayStrategy;
-		int idx = (Opcodes.ACC_STATIC & access) == 0 ? 1 : 0;
-		int pos = idx;
+		int pos = (Opcodes.ACC_STATIC & access) == 0 ? 1 : 0;
 		for (final Type t : Type.getArgumentTypes(desc)) {
-			idx++;
 			pos += t.getSize();
 		}
-		variableIdx = idx;
 		variable = pos;
 	}
 
@@ -109,12 +103,6 @@ class ProbeInserter extends MethodVisitor implements IProbeInserter {
 	}
 
 	@Override
-	public final void visitFieldInsn(final int opcode, final String owner,
-			final String name, final String desc) {
-		mv.visitFieldInsn(opcode, owner, name, desc);
-	}
-
-	@Override
 	public void visitMaxs(final int maxStack, final int maxLocals) {
 		// Max stack size of the probe code is 3 which can add to the
 		// original stack size depending on the probe locations. The accessor
@@ -141,22 +129,30 @@ class ProbeInserter extends MethodVisitor implements IProbeInserter {
 					"ClassReader.accept() should be called with EXPAND_FRAMES flag");
 		}
 
-		final int n = Math.max(nLocal, variableIdx) + 1;
-		final Object[] newLocal = new Object[n];
-		for (int i = 0; i < n; i++) {
-			if (i < variableIdx) {
-				// For dead code it is possible to specify less locals than
-				// we have method parameters.
-				newLocal[i] = i < nLocal ? local[i] : Opcodes.TOP;
-				continue;
+		final Object[] newLocal = new Object[Math.max(nLocal, variable) + 1];
+		int idx = 0; // Arrays index for existing locals
+		int newIdx = 0; // Array index for new locals
+		int pos = 0; // Current variable position
+		while (idx < nLocal || pos <= variable) {
+			if (pos == variable) {
+				newLocal[newIdx++] = InstrSupport.DATAFIELD_DESC;
+				pos++;
+			} else {
+				if (idx < nLocal) {
+					final Object t = local[idx++];
+					newLocal[newIdx++] = t;
+					pos++;
+					if (t == Opcodes.LONG || t == Opcodes.DOUBLE) {
+						pos++;
+					}
+				} else {
+					// Fill unused slots with TOP
+					newLocal[newIdx++] = Opcodes.TOP;
+					pos++;
+				}
 			}
-			if (i > variableIdx) {
-				newLocal[i] = local[i - 1];
-				continue;
-			}
-			newLocal[i] = InstrSupport.DATAFIELD_DESC;
 		}
-		mv.visitFrame(type, n, newLocal, nStack, stack);
+		mv.visitFrame(type, newIdx, newLocal, nStack, stack);
 	}
 
 }
