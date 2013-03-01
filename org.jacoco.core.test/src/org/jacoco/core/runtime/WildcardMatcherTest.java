@@ -62,4 +62,11 @@ public class WildcardMatcherTest {
 		assertTrue(new WildcardMatcher("*Test:*Foo").matches("UnitTest"));
 	}
 
+	@Test
+	public void testDollar() {
+		assertTrue(new WildcardMatcher("*$*").matches("java/util/Map$Entry"));
+		assertTrue(new WildcardMatcher("*$$$*")
+				.matches("org/example/Enity$$$generated123"));
+	}
+
 }
