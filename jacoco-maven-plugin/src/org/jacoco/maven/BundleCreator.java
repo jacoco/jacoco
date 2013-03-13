@@ -14,6 +14,7 @@ package org.jacoco.maven;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
@@ -78,14 +79,12 @@ public final class BundleCreator {
 		final File classesDir = new File(this.project.getBuild()
 				.getOutputDirectory());
 
-		@SuppressWarnings("unchecked")
-		final List<File> filesToAnalyze = FileUtils.getFiles(classesDir,
-				fileFilter.getIncludes(), fileFilter.getExcludes());
+		final List<File> filesToAnalyze = new ArrayList<File>();
+		addDirToFileList(classesDir, filesToAnalyze);
 
 		if (additionalClassesDirs != null) {
-			for (final File f : additionalClassesDirs) {
-				filesToAnalyze.addAll(FileUtils.getFiles(f,
-						fileFilter.getIncludes(), fileFilter.getExcludes()));
+			for (final File file : additionalClassesDirs) {
+				addDirToFileList(file, filesToAnalyze);
 			}
 		}
 
@@ -94,5 +93,18 @@ public final class BundleCreator {
 		}
 
 		return builder.getBundle(this.project.getName());
+	}
+
+	private void addDirToFileList(final File classesDir,
+			final List<File> filesToAnalyze) throws IOException {
+		if (doesDirectoryExist(classesDir)) {
+			filesToAnalyze.addAll(FileUtils.getFiles(classesDir,
+					fileFilter.getIncludes(), fileFilter.getExcludes()));
+		}
+	}
+
+	private boolean doesDirectoryExist(final File classesDir) {
+		return classesDir != null && classesDir.exists()
+				&& classesDir.isDirectory();
 	}
 }

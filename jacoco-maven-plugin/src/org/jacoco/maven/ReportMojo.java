@@ -84,7 +84,7 @@ public class ReportMojo extends AbstractMavenReport {
 	 * 
 	 * @parameter default-value="${project.build.directory}/jacoco.exec"
 	 */
-	private File dataFile;
+	protected File dataFile;
 
 	/**
 	 * A list of class files to include in the report. May use wildcard
@@ -107,7 +107,7 @@ public class ReportMojo extends AbstractMavenReport {
 	 * 
 	 * @parameter expression="${jacoco.skip}" default-value="false"
 	 */
-	private boolean skip;
+	protected boolean skip;
 
 	/**
 	 * Maven project.
@@ -115,7 +115,7 @@ public class ReportMojo extends AbstractMavenReport {
 	 * @parameter expression="${project}"
 	 * @readonly
 	 */
-	private MavenProject project;
+	protected MavenProject project;
 
 	/**
 	 * Doxia Site Renderer.
@@ -130,7 +130,7 @@ public class ReportMojo extends AbstractMavenReport {
 	 * 
 	 * @parameter
 	 */
-	private List<File> sourceFolders;
+	protected List<String> sourceFolders;
 
 	/**
 	 * A list of class folders in addition to the current projects class folder
@@ -138,7 +138,7 @@ public class ReportMojo extends AbstractMavenReport {
 	 * 
 	 * @parameter
 	 */
-	private List<File> classFolders;
+	protected List<String> classFolders;
 
 	private SessionInfoStore sessionInfoStore;
 
@@ -275,8 +275,14 @@ public class ReportMojo extends AbstractMavenReport {
 				this.getExcludes());
 		final BundleCreator creator = new BundleCreator(this.getProject(),
 				fileFilter);
+
+		final List<File> classFoldersList = new ArrayList<File>();
+		for (final String folder : classFolders) {
+			classFoldersList.add(new File(folder));
+		}
+
 		final IBundleCoverage bundle = creator.createBundle(executionDataStore,
-				classFolders);
+				classFoldersList);
 
 		final SourceFileCollection locator = new SourceFileCollection(
 				getCompileSourceRoots(), sourceEncoding);
@@ -366,7 +372,9 @@ public class ReportMojo extends AbstractMavenReport {
 		}
 
 		if (sourceFolders != null) {
-			result.addAll(sourceFolders);
+			for (final String dir : sourceFolders) {
+				result.add(new File(dir));
+			}
 		}
 
 		return result;
