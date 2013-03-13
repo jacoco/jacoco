@@ -20,8 +20,8 @@ import org.apache.maven.project.MavenProject;
 import org.apache.maven.reporting.MavenReportException;
 
 /**
- * Creates a code coverage report for a single project in multiple formats
- * (HTML, XML, and CSV).
+ * Creates a code coverage report from an exec file appended to from multiple
+ * reactor projects (HTML, XML, and CSV).
  * 
  * @goal pom-report
  * @aggregate
