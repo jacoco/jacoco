@@ -84,7 +84,7 @@ public class ReportMojo extends AbstractMavenReport {
 	 * 
 	 * @parameter default-value="${project.build.directory}/jacoco.exec"
 	 */
-	private File dataFile;
+	protected File dataFile;
 
 	/**
 	 * A list of class files to include in the report. May use wildcard
@@ -123,6 +123,22 @@ public class ReportMojo extends AbstractMavenReport {
 	 * @component
 	 */
 	private Renderer siteRenderer;
+
+	/**
+	 * A list of source folders in addition to the current projects source
+	 * folder to be scanned for source files.
+	 * 
+	 * @parameter
+	 */
+	private List<String> sourceFolders;
+
+	/**
+	 * A list of class folders in addition to the current projects class folder
+	 * to be scanned for class files.
+	 * 
+	 * @parameter
+	 */
+	private List<String> classFolders;
 
 	private SessionInfoStore sessionInfoStore;
 
@@ -259,7 +275,16 @@ public class ReportMojo extends AbstractMavenReport {
 				this.getExcludes());
 		final BundleCreator creator = new BundleCreator(this.getProject(),
 				fileFilter);
-		final IBundleCoverage bundle = creator.createBundle(executionDataStore);
+
+		final List<File> classFoldersList = new ArrayList<File>();
+		if (classFolders != null) {
+			for (final String folder : classFolders) {
+				classFoldersList.add(new File(folder));
+			}
+		}
+
+		final IBundleCoverage bundle = creator.createBundle(executionDataStore,
+				classFoldersList);
 
 		final SourceFileCollection locator = new SourceFileCollection(
 				getCompileSourceRoots(), sourceEncoding);
@@ -347,6 +372,30 @@ public class ReportMojo extends AbstractMavenReport {
 		for (final Object path : getProject().getCompileSourceRoots()) {
 			result.add(resolvePath((String) path));
 		}
+
+		if (sourceFolders != null) {
+			for (final String dir : sourceFolders) {
+				result.add(new File(dir));
+			}
+		}
+
 		return result;
 	}
+
+	public List<String> getSourceFolders() {
+		return sourceFolders;
+	}
+
+	public void setSourceFolders(final List<String> sourceFolders) {
+		this.sourceFolders = sourceFolders;
+	}
+
+	public List<String> getClassFolders() {
+		return classFolders;
+	}
+
+	public void setClassFolders(final List<String> classFolders) {
+		this.classFolders = classFolders;
+	}
+
 }
