@@ -23,11 +23,8 @@ import org.apache.maven.reporting.MavenReportException;
  * Creates a code coverage report for a single project in multiple formats
  * (HTML, XML, and CSV).
  * 
- * @phase verify
  * @goal pom-report
- * @requiresProject true
- * @aggregator
- * @threadSafe
+ * @aggregate
  */
 public class ReportPomMojo extends ReportMojo {
 
@@ -43,7 +40,7 @@ public class ReportPomMojo extends ReportMojo {
 	public boolean canGenerateReport() {
 		if (!"pom".equals(project.getPackaging())) {
 			getLog().info(
-					"Skipping JaCoCo for project with packaging type 'pom'");
+					"Skipping JaCoCo since this is not of packaging type 'pom'");
 			return false;
 		}
 		if (skip) {

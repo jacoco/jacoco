@@ -277,8 +277,10 @@ public class ReportMojo extends AbstractMavenReport {
 				fileFilter);
 
 		final List<File> classFoldersList = new ArrayList<File>();
-		for (final String folder : classFolders) {
-			classFoldersList.add(new File(folder));
+		if (classFolders != null) {
+			for (final String folder : classFolders) {
+				classFoldersList.add(new File(folder));
+			}
 		}
 
 		final IBundleCoverage bundle = creator.createBundle(executionDataStore,
