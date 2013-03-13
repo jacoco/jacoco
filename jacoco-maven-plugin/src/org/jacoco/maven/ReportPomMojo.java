@@ -29,6 +29,21 @@ import org.apache.maven.reporting.MavenReportException;
 public class ReportPomMojo extends ReportMojo {
 
 	/**
+	 * Flag used to suppress execution.
+	 * 
+	 * @parameter expression="${jacoco.skip}" default-value="false"
+	 */
+	private boolean skip;
+
+	/**
+	 * Maven project.
+	 * 
+	 * @parameter expression="${project}"
+	 * @readonly
+	 */
+	private MavenProject project;
+
+	/**
 	 * The projects in the reactor.
 	 * 
 	 * @parameter expression="${reactorProjects}"
@@ -58,9 +73,12 @@ public class ReportPomMojo extends ReportMojo {
 	@Override
 	protected void executeReport(final Locale locale)
 			throws MavenReportException {
+		List<String> sourceFolders = super.getSourceFolders();
 		if (sourceFolders == null) {
 			sourceFolders = new ArrayList<String>();
 		}
+
+		List<String> classFolders = super.getClassFolders();
 		if (classFolders == null) {
 			classFolders = new ArrayList<String>();
 		}
@@ -70,6 +88,8 @@ public class ReportPomMojo extends ReportMojo {
 			classFolders.add(reactor.getBuild().getOutputDirectory());
 		}
 
+		setSourceFolders(sourceFolders);
+		setClassFolders(classFolders);
 		super.executeReport(locale);
 	}
 }

@@ -107,7 +107,7 @@ public class ReportMojo extends AbstractMavenReport {
 	 * 
 	 * @parameter expression="${jacoco.skip}" default-value="false"
 	 */
-	protected boolean skip;
+	private boolean skip;
 
 	/**
 	 * Maven project.
@@ -115,7 +115,7 @@ public class ReportMojo extends AbstractMavenReport {
 	 * @parameter expression="${project}"
 	 * @readonly
 	 */
-	protected MavenProject project;
+	private MavenProject project;
 
 	/**
 	 * Doxia Site Renderer.
@@ -130,7 +130,7 @@ public class ReportMojo extends AbstractMavenReport {
 	 * 
 	 * @parameter
 	 */
-	protected List<String> sourceFolders;
+	private List<String> sourceFolders;
 
 	/**
 	 * A list of class folders in addition to the current projects class folder
@@ -138,7 +138,7 @@ public class ReportMojo extends AbstractMavenReport {
 	 * 
 	 * @parameter
 	 */
-	protected List<String> classFolders;
+	private List<String> classFolders;
 
 	private SessionInfoStore sessionInfoStore;
 
@@ -381,4 +381,21 @@ public class ReportMojo extends AbstractMavenReport {
 
 		return result;
 	}
+
+	public List<String> getSourceFolders() {
+		return sourceFolders;
+	}
+
+	public void setSourceFolders(final List<String> sourceFolders) {
+		this.sourceFolders = sourceFolders;
+	}
+
+	public List<String> getClassFolders() {
+		return classFolders;
+	}
+
+	public void setClassFolders(final List<String> classFolders) {
+		this.classFolders = classFolders;
+	}
+
 }
