@@ -365,9 +365,10 @@ public class ReportMojo extends AbstractMavenReport {
 			result.add(resolvePath((String) path));
 		}
 
-		for (final File path : sourceFolders) {
-			result.add(path);
+		if (sourceFolders != null) {
+			result.addAll(sourceFolders);
 		}
+
 		return result;
 	}
 }
