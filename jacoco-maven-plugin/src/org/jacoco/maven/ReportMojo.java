@@ -124,6 +124,22 @@ public class ReportMojo extends AbstractMavenReport {
 	 */
 	private Renderer siteRenderer;
 
+	/**
+	 * A list of source folders in addition to the current projects source
+	 * folder to be scanned for source files.
+	 * 
+	 * @parameter
+	 */
+	private List<File> sourceFolders;
+
+	/**
+	 * A list of class folders in addition to the current projects class folder
+	 * to be scanned for class files.
+	 * 
+	 * @parameter
+	 */
+	private List<File> classFolders;
+
 	private SessionInfoStore sessionInfoStore;
 
 	private ExecutionDataStore executionDataStore;
@@ -259,7 +275,8 @@ public class ReportMojo extends AbstractMavenReport {
 				this.getExcludes());
 		final BundleCreator creator = new BundleCreator(this.getProject(),
 				fileFilter);
-		final IBundleCoverage bundle = creator.createBundle(executionDataStore);
+		final IBundleCoverage bundle = creator.createBundle(executionDataStore,
+				classFolders);
 
 		final SourceFileCollection locator = new SourceFileCollection(
 				getCompileSourceRoots(), sourceEncoding);
@@ -346,6 +363,10 @@ public class ReportMojo extends AbstractMavenReport {
 		final List<File> result = new ArrayList<File>();
 		for (final Object path : getProject().getCompileSourceRoots()) {
 			result.add(resolvePath((String) path));
+		}
+
+		for (final File path : sourceFolders) {
+			result.add(path);
 		}
 		return result;
 	}

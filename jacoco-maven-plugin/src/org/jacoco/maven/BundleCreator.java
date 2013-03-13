@@ -14,6 +14,7 @@ package org.jacoco.maven;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Collection;
 import java.util.List;
 
 import org.apache.maven.project.MavenProject;
@@ -55,6 +56,23 @@ public final class BundleCreator {
 	 */
 	public IBundleCoverage createBundle(
 			final ExecutionDataStore executionDataStore) throws IOException {
+		return createBundle(executionDataStore, null);
+	}
+
+	/**
+	 * Create an IBundleCoverage for the given ExecutionDataStore.
+	 * 
+	 * @param executionDataStore
+	 *            the execution data.
+	 * @param additionalClassesDirs
+	 *            additional class dirs to be scanned for class files
+	 * @return the coverage data.
+	 * @throws IOException
+	 *             if class files can't be read
+	 */
+	public IBundleCoverage createBundle(
+			final ExecutionDataStore executionDataStore,
+			final Collection<File> additionalClassesDirs) throws IOException {
 		final CoverageBuilder builder = new CoverageBuilder();
 		final Analyzer analyzer = new Analyzer(executionDataStore, builder);
 		final File classesDir = new File(this.project.getBuild()
@@ -63,6 +81,13 @@ public final class BundleCreator {
 		@SuppressWarnings("unchecked")
 		final List<File> filesToAnalyze = FileUtils.getFiles(classesDir,
 				fileFilter.getIncludes(), fileFilter.getExcludes());
+
+		if (additionalClassesDirs != null) {
+			for (final File f : additionalClassesDirs) {
+				filesToAnalyze.addAll(FileUtils.getFiles(f,
+						fileFilter.getIncludes(), fileFilter.getExcludes()));
+			}
+		}
 
 		for (final File file : filesToAnalyze) {
 			analyzer.analyzeAll(file);
