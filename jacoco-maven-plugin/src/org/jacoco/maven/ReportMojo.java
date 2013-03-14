@@ -194,6 +194,13 @@ public class ReportMojo extends AbstractMavenReport {
 		return excludes;
 	}
 
+	/**
+	 * @param dataFile
+	 */
+	protected void setDataFile(final File dataFile) {
+		this.dataFile = dataFile;
+	}
+
 	@Override
 	public void setReportOutputDirectory(final File reportOutputDirectory) {
 		if (reportOutputDirectory != null
