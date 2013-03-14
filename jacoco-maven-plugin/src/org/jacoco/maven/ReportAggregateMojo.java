@@ -110,34 +110,34 @@ public class ReportAggregateMojo extends ReportMojo {
 	}
 
 	private void concatenateExecFiles() {
+		FileOutputStream fos = null;
 		try {
-			FileOutputStream fos = null;
-			try {
+			if (!destFile.getParentFile().exists()) {
+				destFile.getParentFile().mkdirs();
+			}
 
-				if (!destFile.getParentFile().exists()) {
-					destFile.getParentFile().mkdirs();
-				}
+			fos = new FileOutputStream(destFile);
 
-				fos = new FileOutputStream(destFile);
-
-				for (final MavenProject reactor : reactorProjects) {
-					if (reactor != getProject()) {
-						final File input = new File(reactor.getBasedir(),
-								reactorDataFile);
-						if (input.exists() && input.isFile()) {
-							concatenateFile(fos, input);
-						}
+			for (final MavenProject reactor : reactorProjects) {
+				if (reactor != getProject()) {
+					final File input = new File(reactor.getBasedir(),
+							reactorDataFile);
+					if (input.exists() && input.isFile()) {
+						concatenateFile(fos, input);
 					}
-
-				}
-			} finally {
-				if (fos != null) {
-					fos.close();
 				}
 			}
 		} catch (final IOException e) {
 			throw new RuntimeException(
 					"Failed to concatenate jacoco.exec files", e);
+		} finally {
+			if (fos != null) {
+				try {
+					fos.close();
+				} catch (final IOException e) {
+					throw new RuntimeException("Failed to close file", e);
+				}
+			}
 		}
 	}
 
