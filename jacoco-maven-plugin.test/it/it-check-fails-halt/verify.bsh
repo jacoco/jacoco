@@ -7,7 +7,7 @@
  *
  * Contributors:
  *    Evgeny Mandrikov - initial API and implementation
- *    Kyle Lieber - implementation of CheckMojo
+ *    Kyle Lieber - implementation of CheckMojo 
  *
  *******************************************************************************/
 import java.io.*;
@@ -18,6 +18,6 @@ if ( buildLog.indexOf( "Coverage checks have not been met." ) < 0 ) {
     throw new RuntimeException( "Coverage checks should not have been met." );
 }
 
-if ( buildLog.indexOf( "Insufficient code coverage for" ) < 0 ) {
+if ( buildLog.indexOf( "methods missed count is 1, but expected maximum is 0" ) < 0 ) {
     throw new RuntimeException( "Should have displayed insufficient code coverage messages." );
 }

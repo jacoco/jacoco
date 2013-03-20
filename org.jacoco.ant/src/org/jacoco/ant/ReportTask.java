@@ -42,6 +42,10 @@ import org.jacoco.report.IReportGroupVisitor;
 import org.jacoco.report.IReportVisitor;
 import org.jacoco.report.MultiReportVisitor;
 import org.jacoco.report.ZipMultiReportOutput;
+import org.jacoco.report.check.IViolationsOutput;
+import org.jacoco.report.check.Limit;
+import org.jacoco.report.check.Rule;
+import org.jacoco.report.check.RulesChecker;
 import org.jacoco.report.csv.CSVFormatter;
 import org.jacoco.report.html.HTMLFormatter;
 import org.jacoco.report.xml.XMLFormatter;
@@ -145,16 +149,18 @@ public class ReportTask extends Task {
 	/**
 	 * Interface for child elements that define formatters.
 	 */
-	private interface IFormatterElement {
+	private abstract class FormatterElement {
 
-		IReportVisitor createVisitor() throws IOException;
+		abstract IReportVisitor createVisitor() throws IOException;
 
+		void finish() {
+		}
 	}
 
 	/**
-	 * Formatter Element for HTML reports.
+	 * Formatter element for HTML reports.
 	 */
-	public class HTMLFormatterElement implements IFormatterElement {
+	public class HTMLFormatterElement extends FormatterElement {
 
 		private File destdir;
 
@@ -218,6 +224,7 @@ public class ReportTask extends Task {
 			this.locale = locale;
 		}
 
+		@Override
 		public IReportVisitor createVisitor() throws IOException {
 			final IMultiReportOutput output;
 			if (destfile != null) {
@@ -247,9 +254,9 @@ public class ReportTask extends Task {
 	}
 
 	/**
-	 * Formatter Element for CSV reports.
+	 * Formatter element for CSV reports.
 	 */
-	public class CSVFormatterElement implements IFormatterElement {
+	public class CSVFormatterElement extends FormatterElement {
 
 		private File destfile;
 
@@ -265,6 +272,7 @@ public class ReportTask extends Task {
 			this.destfile = destfile;
 		}
 
+		@Override
 		public IReportVisitor createVisitor() throws IOException {
 			if (destfile == null) {
 				throw new BuildException(
@@ -289,9 +297,9 @@ public class ReportTask extends Task {
 	}
 
 	/**
-	 * Formatter Element for XML reports.
+	 * Formatter element for XML reports.
 	 */
-	public class XMLFormatterElement implements IFormatterElement {
+	public class XMLFormatterElement extends FormatterElement {
 
 		private File destfile;
 
@@ -317,6 +325,7 @@ public class ReportTask extends Task {
 			this.encoding = encoding;
 		}
 
+		@Override
 		public IReportVisitor createVisitor() throws IOException {
 			if (destfile == null) {
 				throw new BuildException(
@@ -330,6 +339,78 @@ public class ReportTask extends Task {
 
 	}
 
+	/**
+	 * Formatter element for coverage checks.
+	 */
+	public class CheckFormatterElement extends FormatterElement implements
+			IViolationsOutput {
+
+		private final List<Rule> rules = new ArrayList<Rule>();
+		private boolean violations = false;
+		private boolean failOnViolation = true;
+		private String violationsPropery = null;
+
+		/**
+		 * Creates and adds a new rule.
+		 * 
+		 * @return new rule
+		 */
+		public Rule createRule() {
+			final Rule rule = new Rule();
+			rules.add(rule);
+			return rule;
+		}
+
+		/**
+		 * Sets whether the build should fail in case of a violation. Default is
+		 * <code>true</code>.
+		 * 
+		 * @param flag
+		 *            if <code>true</code> the build fails on violation
+		 */
+		public void setFailOnViolation(final boolean flag) {
+			this.failOnViolation = flag;
+		}
+
+		/**
+		 * Sets the name of a property to append the violation messages to.
+		 * 
+		 * @param property
+		 *            name of a property
+		 */
+		public void setViolationsProperty(final String property) {
+			this.violationsPropery = property;
+		}
+
+		@Override
+		public IReportVisitor createVisitor() throws IOException {
+			final RulesChecker formatter = new RulesChecker();
+			formatter.setRules(rules);
+			return formatter.createVisitor(this);
+		}
+
+		public void onViolation(final ICoverageNode node, final Rule rule,
+				final Limit limit, final String message) {
+			log(message, Project.MSG_ERR);
+			violations = true;
+			if (violationsPropery != null) {
+				final String old = getProject().getProperty(violationsPropery);
+				final String value = old == null ? message : String.format(
+						"%s\n%s", old, message);
+				getProject().setProperty(violationsPropery, value);
+			}
+		}
+
+		@Override
+		void finish() {
+			if (violations && failOnViolation) {
+				throw new BuildException(
+						"Coverage check failed due to violated rules.",
+						getLocation());
+			}
+		}
+	}
+
 	private final Union executiondataElement = new Union();
 
 	private SessionInfoStore sessionInfoStore;
@@ -338,7 +419,7 @@ public class ReportTask extends Task {
 
 	private final GroupElement structure = new GroupElement();
 
-	private final List<IFormatterElement> formatters = new ArrayList<IFormatterElement>();
+	private final List<FormatterElement> formatters = new ArrayList<FormatterElement>();
 
 	/**
 	 * Returns the nested resource collection for execution data files.
@@ -381,6 +462,17 @@ public class ReportTask extends Task {
 	}
 
 	/**
+	 * Creates a new coverage check element.
+	 * 
+	 * @return coverage check element
+	 */
+	public CheckFormatterElement createCheck() {
+		final CheckFormatterElement element = new CheckFormatterElement();
+		formatters.add(element);
+		return element;
+	}
+
+	/**
 	 * Creates a new XML report element.
 	 * 
 	 * @return CSV report element
@@ -400,6 +492,9 @@ public class ReportTask extends Task {
 					executionDataStore.getContents());
 			createReport(visitor, structure);
 			visitor.visitEnd();
+			for (final FormatterElement f : formatters) {
+				f.finish();
+			}
 		} catch (final IOException e) {
 			throw new BuildException("Error while creating report", e,
 					getLocation());
@@ -429,7 +524,7 @@ public class ReportTask extends Task {
 
 	private IReportVisitor createVisitor() throws IOException {
 		final List<IReportVisitor> visitors = new ArrayList<IReportVisitor>();
-		for (final IFormatterElement f : formatters) {
+		for (final FormatterElement f : formatters) {
 			visitors.add(f.createVisitor());
 		}
 		return new MultiReportVisitor(visitors);

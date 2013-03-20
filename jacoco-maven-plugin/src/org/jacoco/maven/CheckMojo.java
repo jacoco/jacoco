@@ -8,20 +8,26 @@
  * Contributors:
  *    Evgeny Mandrikov - initial API and implementation
  *    Kyle Lieber - implementation of CheckMojo
+ *    Marc Hoffmann - redesign using report APIs
  *    
  *******************************************************************************/
 package org.jacoco.maven;
 
 import java.io.File;
 import java.io.IOException;
-import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.apache.maven.plugin.MojoExecutionException;
 import org.jacoco.core.analysis.IBundleCoverage;
-import org.jacoco.core.analysis.ICounter;
-import org.jacoco.core.analysis.ICoverageNode.CounterEntity;
+import org.jacoco.core.analysis.ICoverageNode;
 import org.jacoco.core.data.ExecFileLoader;
 import org.jacoco.core.data.ExecutionDataStore;
+import org.jacoco.report.IReportVisitor;
+import org.jacoco.report.check.IViolationsOutput;
+import org.jacoco.report.check.Limit;
+import org.jacoco.report.check.Rule;
+import org.jacoco.report.check.RulesChecker;
 
 /**
  * Checks that the code coverage metrics are being met.
@@ -31,44 +37,75 @@ import org.jacoco.core.data.ExecutionDataStore;
  * @requiresProject true
  * @threadSafe
  */
-public class CheckMojo extends AbstractJacocoMojo {
+public class CheckMojo extends AbstractJacocoMojo implements IViolationsOutput {
 
 	private static final String MSG_SKIPPING = "Skipping JaCoCo execution due to missing execution data file";
-
-	private static final String ERROR_UNABLE_TO_READ = "Unable to read execution data file %s: %s";
-	private static final String ERROR_CHECKING_COVERAGE = "Error while checking coverage: %s";
-
-	private static final String INSUFFICIENT_COVERAGE = "Insufficient code coverage for %s: %2$.2f%% < %3$.2f%%";
-	private static final String CHECK_FAILED = "Coverage checks have not been met. See report for details.";
 	private static final String CHECK_SUCCESS = "All coverage checks have been met.";
+	private static final String CHECK_FAILED = "Coverage checks have not been met. See log for details.";
 
 	/**
 	 * <p>
-	 * Check configuration. Used to specify minimum coverage percentages that
-	 * must be met. Defaults to 0% if a percentage ratio is not specified.
+	 * Check configuration used to specify rules on element types (BUNDLE,
+	 * PACKAGE, CLASS, SOURCEFILE or METHOD) with a list of limits. Each limit
+	 * applies to a certain counter (INSTRUCTION, LINE, BRANCH, COMPLEXITY,
+	 * METHOD, CLASS) and defines a minimum or maximum for the corresponding
+	 * value (TOTALCOUNT, COVEREDCOUNT, MISSEDCOUNT, COVEREDRATIO, MISSEDRATIO).
 	 * </p>
 	 * 
 	 * <p>
-	 * Example requiring 100% coverage for class, instruction, method, branch,
-	 * complexity, and line:
+	 * This example requires an overall instruction coverage of 80% and no class
+	 * must be missed:
 	 * </p>
 	 * 
 	 * <pre>
 	 * {@code
-	 * <check>
-	 *   <classRatio>100</classRatio>
-	 *   <instructionRatio>100</instructionRatio>
-	 *   <methodRatio>100</methodRatio>
-	 *   <branchRatio>100</branchRatio>
-	 *   <complexityRatio>100</complexityRatio>
-	 *   <lineRatio>100</lineRatio>
-	 * </check>}
+	 * <rules>
+	 *   <rule>
+	 *     <element>BUNDLE</element>
+	 *     <limits>
+	 *       <limit>
+	 *         <counter>INSTRUCTION</counter>
+	 *         <value>COVEREDRATIO</value>
+	 *         <minimum>0.80</minimum>
+	 *       </limit>
+	 *       <limit>
+	 *         <counter>CLASS</counter>
+	 *         <value>MISSEDCOUNT</value>
+	 *         <maximum>0</maximum>
+	 *       </limit>
+	 *     </limits>
+	 *   </rule>
+	 * </rules>}
+	 * </pre>
+	 * 
+	 * <p>
+	 * This example requires a line coverage minimum of 50% for every class
+	 * except test classes:
+	 * </p>
+	 * 
+	 * <pre>
+	 * {@code
+	 * <rules>
+	 *   <rule>
+	 *     <element>CLASS</element>
+	 *     <excludes>
+	 *       <exclude>*Test</exclude>
+	 *     </excludes>
+	 *     <limits>
+	 *       <limit>
+	 *         <entity>LINE</entity>
+	 *         <value>COVEREDRATIO</value>
+	 *         <minimum>0.50</minimum>
+	 *       </limit>
+	 *     </limits>
+	 *   </rule>
+	 * </rules>}
 	 * </pre>
 	 * 
 	 * @parameter
 	 * @required
 	 */
-	private CheckConfiguration check;
+	private List<RuleConfiguration> rules;
 
 	/**
 	 * Halt the build if any of the checks fail.
@@ -85,7 +122,7 @@ public class CheckMojo extends AbstractJacocoMojo {
 	 */
 	private File dataFile;
 
-	private ExecutionDataStore executionDataStore;
+	private boolean violations;
 
 	private boolean canCheckCoverage() {
 		if (!dataFile.exists()) {
@@ -105,72 +142,58 @@ public class CheckMojo extends AbstractJacocoMojo {
 	}
 
 	private void executeCheck() throws MojoExecutionException {
-		try {
-			loadExecutionData();
-		} catch (final IOException e) {
-			throw new MojoExecutionException(String.format(
-					ERROR_UNABLE_TO_READ, dataFile, e.getMessage()), e);
+		final IBundleCoverage bundle = loadBundle();
+		violations = false;
+
+		final RulesChecker checker = new RulesChecker();
+		final List<Rule> checkerrules = new ArrayList<Rule>();
+		for (final RuleConfiguration r : rules) {
+			checkerrules.add(r.rule);
 		}
+		checker.setRules(checkerrules);
+
+		final IReportVisitor visitor = checker.createVisitor(this);
 		try {
-			if (check()) {
-				this.getLog().info(CHECK_SUCCESS);
+			visitor.visitBundle(bundle, null);
+		} catch (final IOException e) {
+			throw new MojoExecutionException(
+					"Error while checking code coverage: " + e.getMessage(), e);
+		}
+		if (violations) {
+			if (this.haltOnFailure) {
+				throw new MojoExecutionException(CHECK_FAILED);
 			} else {
-				this.handleFailure();
+				this.getLog().warn(CHECK_FAILED);
 			}
-		} catch (final IOException e) {
-			throw new MojoExecutionException(String.format(
-					ERROR_CHECKING_COVERAGE, e.getMessage()), e);
+		} else {
+			this.getLog().info(CHECK_SUCCESS);
 		}
 	}
 
-	private void loadExecutionData() throws IOException {
-		final ExecFileLoader loader = new ExecFileLoader();
-		loader.load(dataFile);
-		executionDataStore = loader.getExecutionDataStore();
-	}
-
-	private boolean check() throws IOException {
+	private IBundleCoverage loadBundle() throws MojoExecutionException {
 		final FileFilter fileFilter = new FileFilter(this.getIncludes(),
 				this.getExcludes());
-		final BundleCreator creator = new BundleCreator(this.getProject(),
+		final BundleCreator creator = new BundleCreator(getProject(),
 				fileFilter);
-		final IBundleCoverage bundle = creator.createBundle(executionDataStore);
-
-		boolean passed = true;
-
-		for (final CounterEntity entity : CounterEntity.values()) {
-			passed = this.checkCounter(entity, bundle.getCounter(entity),
-					check.getRatio(entity))
-					&& passed;
-		}
-
-		return passed;
-	}
-
-	private boolean checkCounter(final CounterEntity entity,
-			final ICounter counter, final double checkRatio) {
-		boolean passed = true;
-
-		final double ratio = counter.getCoveredRatio() * 100;
-
-		if (ratio < checkRatio) {
-			this.getLog().warn(
-					String.format(INSUFFICIENT_COVERAGE, entity.name(),
-							truncate(ratio), truncate(checkRatio)));
-			passed = false;
-		}
-		return passed;
-	}
-
-	private BigDecimal truncate(final double value) {
-		return new BigDecimal(value).setScale(2, BigDecimal.ROUND_FLOOR);
-	}
-
-	private void handleFailure() throws MojoExecutionException {
-		if (this.haltOnFailure) {
-			throw new MojoExecutionException(CHECK_FAILED);
-		} else {
-			this.getLog().warn(CHECK_FAILED);
+		try {
+			final ExecutionDataStore executionData = loadExecutionData();
+			return creator.createBundle(executionData);
+		} catch (final IOException e) {
+			throw new MojoExecutionException(
+					"Error while reading code coverage: " + e.getMessage(), e);
 		}
 	}
+
+	private ExecutionDataStore loadExecutionData() throws IOException {
+		final ExecFileLoader loader = new ExecFileLoader();
+		loader.load(dataFile);
+		return loader.getExecutionDataStore();
+	}
+
+	public void onViolation(final ICoverageNode node, final Rule rule,
+			final Limit limit, final String message) {
+		this.getLog().warn(message);
+		violations = true;
+	}
+
 }

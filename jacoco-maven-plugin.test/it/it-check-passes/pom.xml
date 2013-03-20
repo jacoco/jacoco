@@ -39,14 +39,23 @@
               <goal>check</goal>
             </goals>
             <configuration>
-              <check>
-                <classRatio>100</classRatio>
-                <instructionRatio>100</instructionRatio>
-                <methodRatio>100</methodRatio>
-                <branchRatio>100</branchRatio>
-                <complexityRatio>100</complexityRatio>
-                <lineRatio>100</lineRatio>
-              </check>
+              <rules>
+                <rule>
+                  <element>BUNDLE</element>
+                  <limits>
+                    <limit>
+                      <counter>INSTRUCTION</counter>
+                      <value>COVEREDRATIO</value>
+                      <minimum>0.90</minimum>
+                    </limit>
+                    <limit>
+                      <counter>CLASS</counter>
+                      <value>MISSEDCOUNT</value>
+                      <maximum>0</maximum>
+                    </limit>
+                  </limits>
+                </rule>
+              </rules>
             </configuration>
           </execution>
         </executions>

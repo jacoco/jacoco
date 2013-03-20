@@ -14,76 +14,63 @@ package org.jacoco.core.analysis;
 import java.io.Serializable;
 import java.util.Comparator;
 
+import org.jacoco.core.analysis.ICounter.CounterValue;
 import org.jacoco.core.analysis.ICoverageNode.CounterEntity;
 
 /**
  * Collection of comparators to compare {@link ICounter} objects by different
  * criteria.
  */
-public abstract class CounterComparator implements Comparator<ICounter>,
-		Serializable {
+public class CounterComparator implements Comparator<ICounter>, Serializable {
 
 	private static final long serialVersionUID = -3777463066252746748L;
 
 	/**
 	 * Compares the absolute number of total items.
 	 */
-	public static final CounterComparator TOTALITEMS = new CounterComparator() {
-
-		private static final long serialVersionUID = 8824120489765405662L;
-
-		public int compare(final ICounter c1, final ICounter c2) {
-			return c1.getTotalCount() - c2.getTotalCount();
-		}
-	};
+	public static final CounterComparator TOTALITEMS = new CounterComparator(
+			CounterValue.TOTALCOUNT);
 
 	/**
 	 * Compares the absolute number of covered items.
 	 */
-	public static final CounterComparator COVEREDITEMS = new CounterComparator() {
-
-		private static final long serialVersionUID = 1L;
-
-		public int compare(final ICounter c1, final ICounter c2) {
-			return c1.getCoveredCount() - c2.getCoveredCount();
-		}
-	};
+	public static final CounterComparator COVEREDITEMS = new CounterComparator(
+			CounterValue.COVEREDCOUNT);
 
 	/**
 	 * Compares the absolute number of missed items.
 	 */
-	public static final CounterComparator MISSEDITEMS = new CounterComparator() {
-
-		private static final long serialVersionUID = -2991039557556551206L;
-
-		public int compare(final ICounter c1, final ICounter c2) {
-			return c1.getMissedCount() - c2.getMissedCount();
-		}
-	};
+	public static final CounterComparator MISSEDITEMS = new CounterComparator(
+			CounterValue.MISSEDCOUNT);
 
 	/**
 	 * Compares the ratio of covered items.
 	 */
-	public static final CounterComparator COVEREDRATIO = new CounterComparator() {
-
-		private static final long serialVersionUID = 7897690710299613918L;
-
-		public int compare(final ICounter c1, final ICounter c2) {
-			return Double.compare(c1.getCoveredRatio(), c2.getCoveredRatio());
-		}
-	};
+	public static final CounterComparator COVEREDRATIO = new CounterComparator(
+			CounterValue.COVEREDRATIO);
 
 	/**
 	 * Compares the ratio of missed items.
 	 */
-	public static final CounterComparator MISSEDRATIO = new CounterComparator() {
+	public static final CounterComparator MISSEDRATIO = new CounterComparator(
+			CounterValue.MISSEDRATIO);
 
-		private static final long serialVersionUID = -5014193668057469357L;
+	private final CounterValue value;
+	private final boolean reverse;
 
-		public int compare(final ICounter c1, final ICounter c2) {
-			return Double.compare(c1.getMissedRatio(), c2.getMissedRatio());
-		}
-	};
+	private CounterComparator(final CounterValue value) {
+		this(value, false);
+	}
+
+	private CounterComparator(final CounterValue value, final boolean reverse) {
+		this.value = value;
+		this.reverse = reverse;
+	}
+
+	public int compare(final ICounter c1, final ICounter c2) {
+		final int cmp = Double.compare(c1.getValue(value), c2.getValue(value));
+		return reverse ? -cmp : cmp;
+	}
 
 	/**
 	 * Creates a new version of this comparator that sorts in reverse order.
@@ -91,15 +78,7 @@ public abstract class CounterComparator implements Comparator<ICounter>,
 	 * @return reverse comparator
 	 */
 	public CounterComparator reverse() {
-		final CounterComparator original = this;
-		return new CounterComparator() {
-
-			private static final long serialVersionUID = 7703349549732801967L;
-
-			public int compare(final ICounter o1, final ICounter o2) {
-				return original.compare(o2, o1);
-			}
-		};
+		return new CounterComparator(value, !reverse);
 	}
 
 	/**

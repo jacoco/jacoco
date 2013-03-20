@@ -53,6 +53,11 @@ public class ClassRowWriterTest {
 					String vmmethodname, String vmdesc, String vmsignature) {
 				throw new AssertionError();
 			}
+
+			public String getQualifiedMethodName(String vmclassname,
+					String vmmethodname, String vmdesc, String vmsignature) {
+				throw new AssertionError();
+			}
 		};
 		result = new StringWriter();
 		writer = new ClassRowWriter(new DelimitedWriter(result), names);

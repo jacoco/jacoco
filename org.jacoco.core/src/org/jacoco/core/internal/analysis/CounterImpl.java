@@ -147,6 +147,23 @@ public abstract class CounterImpl implements ICounter {
 
 	// === ICounter implementation ===
 
+	public double getValue(final CounterValue value) {
+		switch (value) {
+		case TOTALCOUNT:
+			return getTotalCount();
+		case MISSEDCOUNT:
+			return getMissedCount();
+		case COVEREDCOUNT:
+			return getCoveredCount();
+		case MISSEDRATIO:
+			return getMissedRatio();
+		case COVEREDRATIO:
+			return getCoveredRatio();
+		default:
+			throw new AssertionError(value);
+		}
+	}
+
 	public int getTotalCount() {
 		return missed + covered;
 	}
