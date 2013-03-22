@@ -22,6 +22,11 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 import java.io.Serializable;
+import java.util.jar.JarInputStream;
+import java.util.jar.JarOutputStream;
+import java.util.jar.Pack200;
+import java.util.zip.GZIPInputStream;
+import java.util.zip.GZIPOutputStream;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
@@ -105,7 +110,7 @@ public class InstrumenterTest {
 	}
 
 	@Test
-	public void testInstrumentAll_Archive() throws IOException {
+	public void testInstrumentAll_Zip() throws IOException {
 		ByteArrayOutputStream buffer = new ByteArrayOutputStream();
 		ZipOutputStream zipout = new ZipOutputStream(buffer);
 		zipout.putNextEntry(new ZipEntry("Test.class"));
@@ -119,6 +124,37 @@ public class InstrumenterTest {
 		assertEquals(1, count);
 		ZipInputStream zipin = new ZipInputStream(new ByteArrayInputStream(
 				out.toByteArray()));
+		assertEquals("Test.class", zipin.getNextEntry().getName());
+		assertNull(zipin.getNextEntry());
+	}
+
+	@Test
+	public void testInstrumentAll_Pack200() throws IOException {
+		ByteArrayOutputStream jarbuffer = new ByteArrayOutputStream();
+		ZipOutputStream zipout = new ZipOutputStream(jarbuffer);
+		zipout.putNextEntry(new ZipEntry("Test.class"));
+		zipout.write(TargetLoader.getClassDataAsBytes(getClass()));
+		zipout.finish();
+
+		ByteArrayOutputStream pack200buffer = new ByteArrayOutputStream();
+		GZIPOutputStream gzipOutput = new GZIPOutputStream(pack200buffer);
+		Pack200.newPacker().pack(
+				new JarInputStream(new ByteArrayInputStream(
+						jarbuffer.toByteArray())), gzipOutput);
+		gzipOutput.finish();
+
+		ByteArrayOutputStream out = new ByteArrayOutputStream();
+		int count = instrumenter.instrumentAll(new ByteArrayInputStream(
+				pack200buffer.toByteArray()), out);
+
+		jarbuffer.reset();
+		Pack200.newUnpacker()
+				.unpack(new GZIPInputStream(new ByteArrayInputStream(
+						out.toByteArray())), new JarOutputStream(jarbuffer));
+
+		assertEquals(1, count);
+		ZipInputStream zipin = new ZipInputStream(new ByteArrayInputStream(
+				jarbuffer.toByteArray()));
 		assertEquals("Test.class", zipin.getNextEntry().getName());
 		assertNull(zipin.getNextEntry());
 	}

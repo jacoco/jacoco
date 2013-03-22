@@ -17,10 +17,13 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
+import java.util.jar.JarInputStream;
+import java.util.jar.Pack200;
+import java.util.zip.GZIPOutputStream;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
-import org.jacoco.core.internal.ContentTypeDetector;
 import org.jacoco.core.test.TargetLoader;
 import org.junit.Test;
 
@@ -113,6 +116,34 @@ public class ContentTypeDetectorTest {
 		zip.close();
 		initData(buffer.toByteArray());
 		assertEquals(ContentTypeDetector.ZIPFILE, detector.getType());
+		assertContent();
+	}
+
+	@Test
+	public void testPack200File() throws IOException {
+		final ByteArrayOutputStream zipbuffer = new ByteArrayOutputStream();
+		final ZipOutputStream zip = new ZipOutputStream(zipbuffer);
+		zip.putNextEntry(new ZipEntry("hello.txt"));
+		zip.write("Hello Zip!".getBytes());
+		zip.close();
+
+		final ByteArrayOutputStream pack200buffer = new ByteArrayOutputStream();
+		Pack200.newPacker().pack(
+				new JarInputStream(new ByteArrayInputStream(
+						zipbuffer.toByteArray())), pack200buffer);
+		initData(pack200buffer.toByteArray());
+		assertEquals(ContentTypeDetector.PACK200FILE, detector.getType());
+		assertContent();
+	}
+
+	@Test
+	public void testGZipFile() throws IOException {
+		final ByteArrayOutputStream buffer = new ByteArrayOutputStream();
+		final OutputStream gz = new GZIPOutputStream(buffer);
+		gz.write("Hello gz!".getBytes());
+		gz.close();
+		initData(buffer.toByteArray());
+		assertEquals(ContentTypeDetector.GZFILE, detector.getType());
 		assertContent();
 	}
 

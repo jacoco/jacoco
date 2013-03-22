@@ -485,8 +485,8 @@
 
 <ul>
   <li><code>classfiles</code>: Container element for Ant resources and resource
-    collections that can specify Java class files, ZIP archive files (jar, war,
-    ear etc.) or folders containing class files. Archives and folders are
+    collections that can specify Java class files, archive files (jar, war, ear
+    etc. or Pack200) or folders containing class files. Archives and folders are
     searched recursively for class files.</li>
   <li><code>sourcefiles</code>: Optional container element for Ant resources and
     resource collections that specify corresponding source files. If source
@@ -719,8 +719,9 @@
   This task is used for <a href="offline.html">offline instrumentation</a> of
   class files. The task takes a set of files and writes instrumented
   versions to a specified location. The task takes any file type as input. Java
-  class files are instrumented. Archives are searched recursively for class files
-  which then get instrumented. All other files are copied without modification.
+  class files are instrumented. Archives (jar, war, ear etc. or Pack200) are
+  searched recursively for class files which then get instrumented. All other
+  files are copied without modification.
 </p>
 
 <pre class="source lang-xml linenums">
