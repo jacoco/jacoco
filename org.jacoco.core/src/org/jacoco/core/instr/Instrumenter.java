@@ -11,14 +11,18 @@
  *******************************************************************************/
 package org.jacoco.core.instr;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.zip.GZIPInputStream;
+import java.util.zip.GZIPOutputStream;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
 
 import org.jacoco.core.internal.ContentTypeDetector;
+import org.jacoco.core.internal.Pack200Streams;
 import org.jacoco.core.internal.data.CRC64;
 import org.jacoco.core.internal.flow.ClassProbesAdapter;
 import org.jacoco.core.internal.instr.ClassInstrumenter;
@@ -127,20 +131,12 @@ public class Instrumenter {
 	 * @return number of instrumented classes
 	 * @throws IOException
 	 *             if reading data from the stream fails
+	 * @deprecated Use {@link #instrumentAll(InputStream, OutputStream)} instead
 	 */
+	@Deprecated
 	public int instrumentArchive(final InputStream input,
 			final OutputStream output) throws IOException {
-		final ZipInputStream zipin = new ZipInputStream(input);
-		final ZipOutputStream zipout = new ZipOutputStream(output);
-		ZipEntry entry;
-		int count = 0;
-		while ((entry = zipin.getNextEntry()) != null) {
-			zipout.putNextEntry(new ZipEntry(entry.getName()));
-			count += instrumentAll(zipin, zipout);
-			zipout.closeEntry();
-		}
-		zipout.finish();
-		return count;
+		return instrumentZip(input, output);
 	}
 
 	/**
@@ -164,14 +160,55 @@ public class Instrumenter {
 			instrument(detector.getInputStream(), output);
 			return 1;
 		case ContentTypeDetector.ZIPFILE:
-			return instrumentArchive(detector.getInputStream(), output);
+			return instrumentZip(detector.getInputStream(), output);
+		case ContentTypeDetector.GZFILE:
+			return instrumentGzip(detector.getInputStream(), output);
+		case ContentTypeDetector.PACK200FILE:
+			return instrumentPack200(detector.getInputStream(), output);
 		default:
-			final byte[] buffer = new byte[1024];
-			int len;
-			while ((len = detector.getInputStream().read(buffer)) != -1) {
-				output.write(buffer, 0, len);
-			}
-			return 0;
+			return copy(detector, output);
 		}
 	}
+
+	private int instrumentZip(final InputStream input, final OutputStream output)
+			throws IOException {
+		final ZipInputStream zipin = new ZipInputStream(input);
+		final ZipOutputStream zipout = new ZipOutputStream(output);
+		ZipEntry entry;
+		int count = 0;
+		while ((entry = zipin.getNextEntry()) != null) {
+			zipout.putNextEntry(new ZipEntry(entry.getName()));
+			count += instrumentAll(zipin, zipout);
+			zipout.closeEntry();
+		}
+		zipout.finish();
+		return count;
+	}
+
+	private int instrumentGzip(final InputStream input,
+			final OutputStream output) throws IOException {
+		final GZIPOutputStream gzout = new GZIPOutputStream(output);
+		final int count = instrumentAll(new GZIPInputStream(input), gzout);
+		gzout.finish();
+		return count;
+	}
+
+	private int instrumentPack200(final InputStream input,
+			final OutputStream output) throws IOException {
+		final ByteArrayOutputStream buffer = new ByteArrayOutputStream();
+		final int count = instrumentAll(Pack200Streams.unpack(input), buffer);
+		Pack200Streams.pack(buffer.toByteArray(), output);
+		return count;
+	}
+
+	private int copy(final ContentTypeDetector input, final OutputStream output)
+			throws IOException {
+		final byte[] buffer = new byte[1024];
+		int len;
+		while ((len = input.getInputStream().read(buffer)) != -1) {
+			output.write(buffer, 0, len);
+		}
+		return 0;
+	}
+
 }
