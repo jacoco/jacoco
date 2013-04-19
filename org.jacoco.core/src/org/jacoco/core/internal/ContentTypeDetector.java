@@ -31,6 +31,12 @@ public class ContentTypeDetector {
 	/** File type ZIP archive */
 	public static final int ZIPFILE = 0x504b0304;
 
+	/** File type GZIP compressed Data */
+	public static final int GZFILE = 0x1f8b0000;
+
+	/** File type Pack200 archive */
+	public static final int PACK200FILE = 0xcafed00d;
+
 	private static final int BUFFER_SIZE = 8;
 
 	private final InputStream in;
@@ -59,9 +65,12 @@ public class ContentTypeDetector {
 	}
 
 	private static int determineType(final InputStream in) throws IOException {
-		switch (readInt(in)) {
+		final int header = readInt(in);
+		switch (header) {
 		case ZIPFILE:
 			return ZIPFILE;
+		case PACK200FILE:
+			return PACK200FILE;
 		case CLASSFILE:
 			// also verify version to distinguish from Mach Object files:
 			switch (readInt(in)) {
@@ -74,6 +83,9 @@ public class ContentTypeDetector {
 			case Opcodes.V1_7:
 				return CLASSFILE;
 			}
+		}
+		if ((header & 0xffff0000) == GZFILE) {
+			return GZFILE;
 		}
 		return UNKNOWN;
 	}
