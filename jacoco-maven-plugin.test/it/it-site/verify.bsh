@@ -31,3 +31,18 @@ File csvReportFile = new File( basedir, "target/site/jacoco/jacoco.csv" );
 if ( !csvReportFile.isFile() ) {
     throw new RuntimeException( "CSV report was not created" );
 }
+
+String html = FileUtils.fileRead( new File( basedir, "target/site/jacoco/default/ExampleTest.html" ) );
+if ( html.indexOf( "<span class=\"el_class\">ExampleTest</span>" ) < 0 ) {
+    throw new RuntimeException( "No test code coverage in html." );
+}
+
+String csv = FileUtils.fileRead( new File( basedir, "target/site/jacoco/jacoco.csv" ) );
+if ( csv.indexOf( ",ExampleTest," ) < 0 ) {
+    throw new RuntimeException( "No test code coverage in csv." );
+}
+
+String xml = FileUtils.fileRead( new File( basedir, "target/site/jacoco/jacoco.xml" ) );
+if ( xml.indexOf( "<class name=\"ExampleTest\">" ) < 0 ) {
+    throw new RuntimeException( "No test code coverage in xml." );
+}

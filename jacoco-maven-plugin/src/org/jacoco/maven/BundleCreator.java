@@ -57,17 +57,47 @@ public final class BundleCreator {
 			final ExecutionDataStore executionDataStore) throws IOException {
 		final CoverageBuilder builder = new CoverageBuilder();
 		final Analyzer analyzer = new Analyzer(executionDataStore, builder);
-		final File classesDir = new File(this.project.getBuild()
-				.getOutputDirectory());
 
-		@SuppressWarnings("unchecked")
-		final List<File> filesToAnalyze = FileUtils.getFiles(classesDir,
-				fileFilter.getIncludes(), fileFilter.getExcludes());
-
-		for (final File file : filesToAnalyze) {
+		for (final File file : getFilesToAnalyze()) {
 			analyzer.analyzeAll(file);
 		}
 
 		return builder.getBundle(this.project.getName());
+	}
+
+	/**
+	 * Get files to analyze in classes and test-classes directories.
+	 * 
+	 * @return list of files.
+	 * @throws IOException
+	 *             if class files can't be read
+	 */
+	private List<File> getFilesToAnalyze() throws IOException {
+		final List<File> filesToAnalyze = getFilesToAnalyze(this.project
+				.getBuild().getOutputDirectory());
+		final List<File> testFilesToAnalyze = getFilesToAnalyze(this.project
+				.getBuild().getTestOutputDirectory());
+		filesToAnalyze.addAll(testFilesToAnalyze);
+
+		return filesToAnalyze;
+	}
+
+	/**
+	 * Get files to analyze in specified directories.
+	 * 
+	 * @param directory
+	 *            is searched.
+	 * @return list of files.
+	 * @throws IOException
+	 *             if class files can't be read
+	 */
+	private List<File> getFilesToAnalyze(final String directory)
+			throws IOException {
+		@SuppressWarnings("unchecked")
+		final List<File> filesToAnalyze = FileUtils.getFiles(
+				new File(directory), fileFilter.getIncludes(),
+				fileFilter.getExcludes());
+
+		return filesToAnalyze;
 	}
 }
