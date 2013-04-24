@@ -32,6 +32,14 @@ public final class BundleCreator {
 	private final FileFilter fileFilter;
 
 	/**
+	 * Report the coverage of test code.
+	 * 
+	 * @parameter expression="${project.build.reportTestcode}"
+	 *            default-value="false"
+	 */
+	private boolean reportTestcode;
+
+	/**
 	 * Construct a new BundleCreator given the MavenProject and FileFilter.
 	 * 
 	 * @param project
@@ -42,6 +50,23 @@ public final class BundleCreator {
 	public BundleCreator(final MavenProject project, final FileFilter fileFilter) {
 		this.project = project;
 		this.fileFilter = fileFilter;
+	}
+
+	/**
+	 * Construct a new BundleCreator given the MavenProject and FileFilter.
+	 * 
+	 * @param project
+	 *            the MavenProject
+	 * @param fileFilter
+	 *            the FileFilter
+	 * @param reportTestcode
+	 *            is whether the coverage of test code is reported.
+	 */
+	public BundleCreator(final MavenProject project,
+			final FileFilter fileFilter, final boolean reportTestcode) {
+		this.project = project;
+		this.fileFilter = fileFilter;
+		this.reportTestcode = reportTestcode;
 	}
 
 	/**
@@ -57,17 +82,49 @@ public final class BundleCreator {
 			final ExecutionDataStore executionDataStore) throws IOException {
 		final CoverageBuilder builder = new CoverageBuilder();
 		final Analyzer analyzer = new Analyzer(executionDataStore, builder);
-		final File classesDir = new File(this.project.getBuild()
-				.getOutputDirectory());
 
-		@SuppressWarnings("unchecked")
-		final List<File> filesToAnalyze = FileUtils.getFiles(classesDir,
-				fileFilter.getIncludes(), fileFilter.getExcludes());
-
-		for (final File file : filesToAnalyze) {
+		for (final File file : getFilesToAnalyze()) {
 			analyzer.analyzeAll(file);
 		}
 
 		return builder.getBundle(this.project.getName());
+	}
+
+	/**
+	 * Get files to analyze in classes and test-classes directories.
+	 * 
+	 * @return list of files.
+	 * @throws IOException
+	 *             if class files can't be read
+	 */
+	private List<File> getFilesToAnalyze() throws IOException {
+		final List<File> filesToAnalyze = getFilesToAnalyze(this.project
+				.getBuild().getOutputDirectory());
+		if (reportTestcode) {
+			final List<File> testFilesToAnalyze = getFilesToAnalyze(this.project
+					.getBuild().getTestOutputDirectory());
+			filesToAnalyze.addAll(testFilesToAnalyze);
+		}
+
+		return filesToAnalyze;
+	}
+
+	/**
+	 * Get files to analyze in specified directories.
+	 * 
+	 * @param directory
+	 *            is searched.
+	 * @return list of files.
+	 * @throws IOException
+	 *             if class files can't be read
+	 */
+	private List<File> getFilesToAnalyze(final String directory)
+			throws IOException {
+		@SuppressWarnings("unchecked")
+		final List<File> filesToAnalyze = FileUtils.getFiles(
+				new File(directory), fileFilter.getIncludes(),
+				fileFilter.getExcludes());
+
+		return filesToAnalyze;
 	}
 }
