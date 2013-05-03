@@ -87,6 +87,14 @@ public class ReportMojo extends AbstractMavenReport {
 	private File dataFile;
 
 	/**
+	 * Report the coverage of test code.
+	 * 
+	 * @parameter expression="${project.build.reportTestcode}"
+	 *            default-value="false"
+	 */
+	private boolean reportTestcode;
+
+	/**
 	 * A list of class files to include in the report. May use wildcard
 	 * characters (* and ?). When not specified everything will be included.
 	 * 
@@ -258,7 +266,7 @@ public class ReportMojo extends AbstractMavenReport {
 		final FileFilter fileFilter = new FileFilter(this.getIncludes(),
 				this.getExcludes());
 		final BundleCreator creator = new BundleCreator(this.getProject(),
-				fileFilter);
+				fileFilter, reportTestcode);
 		final IBundleCoverage bundle = creator.createBundle(executionDataStore);
 
 		final SourceFileCollection locator = new SourceFileCollection(
@@ -344,9 +352,28 @@ public class ReportMojo extends AbstractMavenReport {
 
 	private List<File> getCompileSourceRoots() {
 		final List<File> result = new ArrayList<File>();
-		for (final Object path : getProject().getCompileSourceRoots()) {
+		result.addAll(getSourceRoots(getProject().getCompileSourceRoots()));
+		if (reportTestcode) {
+			result.addAll(getSourceRoots(getProject()
+					.getTestCompileSourceRoots()));
+		}
+
+		return result;
+	}
+
+	/**
+	 * Gets sources roots.
+	 * 
+	 * @param root
+	 *            is root of source.
+	 * @return list of source files.
+	 */
+	private List<File> getSourceRoots(final List<?> root) {
+		final List<File> result = new ArrayList<File>();
+		for (final Object path : root) {
 			result.add(resolvePath((String) path));
 		}
+
 		return result;
 	}
 }
