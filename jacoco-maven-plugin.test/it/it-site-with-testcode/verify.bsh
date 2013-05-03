@@ -1,0 +1,38 @@
+/*******************************************************************************
+ * Copyright (c) 2009, 2013 Mountainminds GmbH & Co. KG and Contributors
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *    Evgeny Mandrikov - initial API and implementation
+ *
+ *******************************************************************************/
+import java.io.*;
+import org.codehaus.plexus.util.*;
+
+String html_index = FileUtils.fileRead( new File( basedir, "target/site/jacoco/default/index.html" ) );
+if ( html_index.indexOf( "<a href=\"ExampleTest.html\" class=\"el_class\">ExampleTest</a>" ) < 0 ) {
+    throw new RuntimeException( "No test code coverage in index.html." );
+}
+
+String html_testcode = FileUtils.fileRead( new File( basedir, "target/site/jacoco/default/ExampleTest.html" ) );
+if ( html_testcode.indexOf( "<a href=\"ExampleTest.java.html#L14\" class=\"el_method\">ExampleTest()</a>" ) < 0 ) {
+    throw new RuntimeException( "No test code coverage html." );
+}
+
+File html_testcode_src = new File( basedir, "target/site/jacoco/default/ExampleTest.html" );
+if ( !html_testcode_src.isFile() ) {
+    throw new RuntimeException( "No test code source html." );
+}
+
+String csv = FileUtils.fileRead( new File( basedir, "target/site/jacoco/jacoco.csv" ) );
+if ( csv.indexOf( ",ExampleTest," ) < 0 ) {
+    throw new RuntimeException( "No test code coverage in csv." );
+}
+
+String xml = FileUtils.fileRead( new File( basedir, "target/site/jacoco/jacoco.xml" ) );
+if ( xml.indexOf( "<class name=\"ExampleTest\">" ) < 0 ) {
+    throw new RuntimeException( "No test code coverage in xml." );
+}
