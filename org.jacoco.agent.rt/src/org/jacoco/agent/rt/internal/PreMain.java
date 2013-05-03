@@ -21,7 +21,7 @@ import org.jacoco.core.runtime.ModifiedSystemClassRuntime;
  * The agent which is referred as the <code>Premain-Class</code>. The agent
  * configuration is provided with the agent parameters in the command line.
  */
-public class PreMain {
+public final class PreMain {
 
 	private PreMain() {
 		// no instances

@@ -20,15 +20,15 @@ import org.jacoco.core.runtime.RuntimeData;
  * The API for classes instrumented in "offline" mode. The agent configuration
  * is provided through system properties prefixed with <code>jacoco.</code>.
  */
-public class Offline {
+public final class Offline {
 
-	private static final RuntimeData data;
+	private static final RuntimeData DATA;
 	private static final String CONFIG_RESOURCE = "/jacoco-agent.properties";
 
 	static {
 		final Properties config = ConfigLoader.load(CONFIG_RESOURCE,
 				System.getProperties());
-		data = Agent.getInstance(new AgentOptions(config)).getData();
+		DATA = Agent.getInstance(new AgentOptions(config)).getData();
 	}
 
 	private Offline() {
@@ -48,7 +48,7 @@ public class Offline {
 	 */
 	public static boolean[] getProbes(final long classid,
 			final String classname, final int probecount) {
-		return data.getExecutionData(Long.valueOf(classid), classname,
+		return DATA.getExecutionData(Long.valueOf(classid), classname,
 				probecount).getProbes();
 	}
 

@@ -96,7 +96,7 @@ public class Agent implements IAgent {
 	 * @param logger
 	 *            logger used by this agent
 	 */
-	public Agent(final AgentOptions options, final IExceptionLogger logger) {
+	Agent(final AgentOptions options, final IExceptionLogger logger) {
 		this.options = options;
 		this.logger = logger;
 		this.data = new RuntimeData();
