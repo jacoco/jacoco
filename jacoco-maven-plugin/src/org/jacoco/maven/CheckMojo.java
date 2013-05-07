@@ -160,8 +160,10 @@ public class CheckMojo extends AbstractJacocoMojo {
 							truncate(ratio), truncate(checkRatio)));
 			passed = false;
 		} else {
-			getLog().info(
-					String.format(COVERAGE_INFO, entity.name(), truncate(ratio)));
+			if (!Double.isNaN(ratio) && !Double.isInfinite(ratio)) {
+				getLog().info(
+						String.format(COVERAGE_INFO, entity.name(), truncate(ratio)));
+				}
 		}
 		return passed;
 	}
