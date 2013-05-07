@@ -11,8 +11,13 @@
  *******************************************************************************/
 package org.jacoco.maven;
 
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.LineNumberReader;
+import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
@@ -50,6 +55,16 @@ public abstract class AbstractJacocoMojo extends AbstractMojo {
 	private List<String> excludes;
 
 	/**
+	 * Name of file that contains a list of class files to exclude from
+	 * instrumentation/analysis/reports. May use wildcard characters (* and ?).
+	 * When not specified nothing will be excluded. If excludeFile is specified,
+	 * the value of excludesList will be ignored
+	 * 
+	 * @parameter
+	 */
+	private String excludeFile;
+
+	/**
 	 * Flag used to suppress execution.
 	 * 
 	 * @parameter expression="${jacoco.skip}" default-value="false"
@@ -69,7 +84,38 @@ public abstract class AbstractJacocoMojo extends AbstractMojo {
 			skipMojo();
 			return;
 		}
+		loadReferenceData();
 		executeMojo();
+	}
+
+	private void loadReferenceData() throws MojoExecutionException {
+		// load exclude list
+		if (!StringUtils.isEmpty(excludeFile)) {
+			getLog().debug("Reading exclude file " + excludeFile);
+			excludes = new ArrayList<String>();
+			LineNumberReader reader = null;
+			try {
+				reader = new LineNumberReader(new FileReader(excludeFile));
+				String line = null;
+				while ((line = reader.readLine()) != null) {
+					final String cleanLine = line.trim();
+					if (!StringUtils.isEmpty(cleanLine)) {
+						excludes.add(cleanLine);
+					}
+				}
+			} catch (final IOException e) {
+				throw new MojoExecutionException("Cannot load file "
+						+ excludeFile, e);
+			} finally {
+				if (reader != null) {
+					try {
+						reader.close();
+					} catch (final IOException e) {
+						getLog().warn("Cannot close file " + excludeFile, e);
+					}
+				}
+			}
+		}
 	}
 
 	/**
@@ -114,6 +160,9 @@ public abstract class AbstractJacocoMojo extends AbstractMojo {
 	 * @return class files to exclude, may contain wildcard characters
 	 */
 	protected List<String> getExcludes() {
+		if (getLog().isDebugEnabled()) {
+			getLog().debug("Using exclude list: " + excludes);
+		}
 		return excludes;
 	}
 
