@@ -166,7 +166,8 @@ public class Instrumenter {
 		case ContentTypeDetector.PACK200FILE:
 			return instrumentPack200(detector.getInputStream(), output);
 		default:
-			return copy(detector, output);
+			copy(detector.getInputStream(), output);
+			return 0;
 		}
 	}
 
@@ -201,14 +202,13 @@ public class Instrumenter {
 		return count;
 	}
 
-	private int copy(final ContentTypeDetector input, final OutputStream output)
+	private void copy(final InputStream input, final OutputStream output)
 			throws IOException {
 		final byte[] buffer = new byte[1024];
 		int len;
-		while ((len = input.getInputStream().read(buffer)) != -1) {
+		while ((len = input.read(buffer)) != -1) {
 			output.write(buffer, 0, len);
 		}
-		return 0;
 	}
 
 }

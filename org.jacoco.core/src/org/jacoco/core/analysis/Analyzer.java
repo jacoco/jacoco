@@ -17,7 +17,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.StringTokenizer;
 import java.util.zip.GZIPInputStream;
-import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
 import org.jacoco.core.data.ExecutionData;
@@ -218,11 +217,7 @@ public class Analyzer {
 	private int analyzeZip(final InputStream input) throws IOException {
 		final ZipInputStream zip = new ZipInputStream(input);
 		int count = 0;
-		while (true) {
-			final ZipEntry entry = zip.getNextEntry();
-			if (entry == null) {
-				break;
-			}
+		while (zip.getNextEntry() != null) {
 			count += analyzeAll(zip);
 		}
 		return count;
