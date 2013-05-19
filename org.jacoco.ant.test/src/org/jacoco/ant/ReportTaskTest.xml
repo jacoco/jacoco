@@ -411,6 +411,45 @@
 			<contains string="${testReportXmlEncoding.content}" substring="encoding=&quot;UTF-16&quot;"/>
 		</au:assertTrue>
 	</target>
+	
+	<!-- Check Coverage -->
+	
+	<target name="testReportCheckCoverageNoTarget">
+		<au:expectfailure expectedMessage="No coverage target set">
+			<jacoco:report>
+				<structure name="Test">
+					<classfiles>
+						<fileset dir="${org.jacoco.ant.reportTaskTest.classes.dir}" includes="**/TestTarget.class"/>
+					</classfiles>
+	            </structure>
+				<checkcoverage />
+			</jacoco:report>
+		</au:expectfailure>
+	</target>
+	
+	<target name="testReportCheckCoverageAllTargetsFail">
+		<au:expectfailure expectedMessage="coverage requirement not met">
+			<jacoco:report>
+				<structure name="Test">
+					<classfiles>
+						<fileset dir="${org.jacoco.ant.reportTaskTest.classes.dir}" includes="**/TestTarget.class"/>
+					</classfiles>
+	            </structure>
+				<checkcoverage instructions="100.0" branches="100.0" lines="100.0"/>
+			</jacoco:report>
+		</au:expectfailure>
+	</target>
+	
+	<target name="testReportCheckCoverageAllTargetsPass">
+		<jacoco:report>
+			<structure name="Test">
+				<classfiles>
+					<fileset dir="${org.jacoco.ant.reportTaskTest.classes.dir}" includes="**/TestTarget.class"/>
+				</classfiles>
+            </structure>
+			<checkcoverage instructions="0.0" branches="0.0" lines="0.0"/>
+		</jacoco:report>
+	</target>
 
 	
 </project>

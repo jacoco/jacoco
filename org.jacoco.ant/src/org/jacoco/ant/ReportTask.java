@@ -7,6 +7,7 @@
  *
  * Contributors:
  *    Marc R. Hoffmann - initial API and implementation
+ *    Martin Hare Robertson - check coverage
  *    
  *******************************************************************************/
 package org.jacoco.ant;
@@ -330,6 +331,119 @@ public class ReportTask extends Task {
 
 	}
 
+	/**
+	 * Formatter Element for HTML reports.
+	 */
+	public class CheckCoverageElement {
+
+		private static final double NO_TARGET = -1;
+
+		private double instructions = NO_TARGET;
+		private double branches = NO_TARGET;
+		private double lines = NO_TARGET;
+
+		private int insCovered = 0;
+		private int insTotal = 0;
+
+		private int branchCovered = 0;
+		private int branchTotal = 0;
+
+		private int lineCovered = 0;
+		private int lineTotal = 0;
+
+		/**
+		 * Sets the percentage of instructions required
+		 * 
+		 * @param instructions
+		 */
+		public void setInstructions(final double instructions) {
+			this.instructions = instructions;
+		}
+
+		/**
+		 * Sets the percentage of branches required
+		 * 
+		 * @param branches
+		 */
+		public void setBranches(final double branches) {
+			this.branches = branches;
+		}
+
+		/**
+		 * Sets the percentage of lines required
+		 * 
+		 * @param lines
+		 */
+		public void setLines(final double lines) {
+			this.lines = lines;
+		}
+
+		/**
+		 * Add coverage data from this bundle
+		 * 
+		 * @param bundle
+		 */
+		public void visitBundle(final IBundleCoverage bundle) {
+			insCovered += bundle.getInstructionCounter().getCoveredCount();
+			insTotal += bundle.getInstructionCounter().getTotalCount();
+
+			branchCovered += bundle.getBranchCounter().getCoveredCount();
+			branchTotal += bundle.getBranchCounter().getTotalCount();
+
+			lineCovered += bundle.getLineCounter().getCoveredCount();
+			lineTotal += bundle.getLineCounter().getTotalCount();
+		}
+
+		/**
+		 * Check that required coverage has been reached
+		 */
+		@SuppressWarnings("boxing")
+		public void visitEnd() {
+			String error = "";
+			int failCount = 0;
+			int passCount = 0;
+
+			final int[] covered = new int[] { insCovered, branchCovered,
+					lineCovered };
+			final int[] total = new int[] { insTotal, branchTotal, lineTotal };
+			final double[] target = new double[] { instructions, branches,
+					lines };
+			final String[] description = new String[] { "Instructions",
+					"Branches", "Lines" };
+
+			for (int ii = 0; ii < 3; ii++) {
+				if (target[ii] != NO_TARGET) {
+					final double actual;
+					if (total[ii] > 0) {
+						final double fraction = ((double) covered[ii] / (double) total[ii]);
+						actual = (int) (fraction / 100.0);
+					} else {
+						actual = 100.0;
+					}
+
+					if (actual < target[ii]) {
+						error += String
+								.format(description[ii]
+										+ " coverage requirement not met: %.2f < %.2f\n",
+										actual, target[ii]);
+						failCount++;
+					} else {
+						System.out.println(description[ii]
+								+ " coverage requirement met.");
+						passCount++;
+					}
+				}
+			}
+
+			if ((failCount == 0) && (passCount == 0)) {
+				throw new BuildException("No coverage target set");
+			} else if (failCount > 0) {
+				System.out.println(error);
+				throw new BuildException(error);
+			}
+		}
+	}
+
 	private final Union executiondataElement = new Union();
 
 	private SessionInfoStore sessionInfoStore;
@@ -339,6 +453,8 @@ public class ReportTask extends Task {
 	private final GroupElement structure = new GroupElement();
 
 	private final List<IFormatterElement> formatters = new ArrayList<IFormatterElement>();
+
+	private CheckCoverageElement checkcoverageElement;
 
 	/**
 	 * Returns the nested resource collection for execution data files.
@@ -391,6 +507,16 @@ public class ReportTask extends Task {
 		return element;
 	}
 
+	/**
+	 * Creates a new Check Coverage report element.
+	 * 
+	 * @return Check Coverage report element
+	 */
+	public CheckCoverageElement createCheckcoverage() {
+		checkcoverageElement = new CheckCoverageElement();
+		return checkcoverageElement;
+	}
+
 	@Override
 	public void execute() throws BuildException {
 		loadExecutionData();
@@ -403,6 +529,9 @@ public class ReportTask extends Task {
 		} catch (final IOException e) {
 			throw new BuildException("Error while creating report", e,
 					getLocation());
+		}
+		if (checkcoverageElement != null) {
+			checkcoverageElement.visitEnd();
 		}
 	}
 
@@ -460,6 +589,10 @@ public class ReportTask extends Task {
 				checkForMissingDebugInformation(bundle);
 			}
 			visitor.visitBundle(bundle, locator);
+
+			if (checkcoverageElement != null) {
+				checkcoverageElement.visitBundle(bundle);
+			}
 		}
 	}
 
