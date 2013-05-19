@@ -39,6 +39,7 @@ public class CheckMojo extends AbstractJacocoMojo {
 	private static final String ERROR_CHECKING_COVERAGE = "Error while checking coverage: %s";
 
 	private static final String INSUFFICIENT_COVERAGE = "Insufficient code coverage for %s: %2$.2f%% < %3$.2f%%";
+	private static final String COVERAGE_INFO = "Code coverage for %s: %2$.2f%%";
 	private static final String CHECK_FAILED = "Coverage checks have not been met. See report for details.";
 	private static final String CHECK_SUCCESS = "All coverage checks have been met.";
 
@@ -158,6 +159,11 @@ public class CheckMojo extends AbstractJacocoMojo {
 					String.format(INSUFFICIENT_COVERAGE, entity.name(),
 							truncate(ratio), truncate(checkRatio)));
 			passed = false;
+		} else {
+			if (!Double.isNaN(ratio) && !Double.isInfinite(ratio)) {
+				getLog().info(
+						String.format(COVERAGE_INFO, entity.name(), truncate(ratio)));
+				}
 		}
 		return passed;
 	}
