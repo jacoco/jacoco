@@ -13,6 +13,7 @@ package org.jacoco.core.instr;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
+import static org.junit.Assert.fail;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -31,6 +32,7 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
 
+import org.jacoco.core.analysis.AnalyzerTest;
 import org.jacoco.core.runtime.RuntimeData;
 import org.jacoco.core.runtime.SystemPropertiesRuntime;
 import org.jacoco.core.test.TargetLoader;
@@ -80,10 +82,49 @@ public class InstrumenterTest {
 	}
 
 	@Test
+	public void testInstrumentClass() throws Exception {
+		byte[] bytes = instrumenter.instrument(
+				TargetLoader.getClassDataAsBytes(InstrumenterTest.class),
+				"Test");
+		TargetLoader loader = new TargetLoader(InstrumenterTest.class, bytes);
+		Class<?> clazz = loader.getTargetClass();
+		assertEquals("org.jacoco.core.instr.InstrumenterTest", clazz.getName());
+	}
+
+	@Test
+	public void testInstrumentBrokenClass1() throws IOException {
+		final byte[] brokenclass = TargetLoader
+				.getClassDataAsBytes(AnalyzerTest.class);
+		brokenclass[10] = 0x23;
+		try {
+			instrumenter.instrument(brokenclass, "Broken");
+			fail();
+		} catch (IOException e) {
+			assertEquals("Error while instrumenting class Broken.",
+					e.getMessage());
+		}
+	}
+
+	@Test
+	public void testInstrumentBrokenClass2() throws IOException {
+		final byte[] brokenclass = TargetLoader
+				.getClassDataAsBytes(AnalyzerTest.class);
+		brokenclass[10] = 0x23;
+		try {
+			instrumenter.instrument(new ByteArrayInputStream(brokenclass),
+					"Broken");
+			fail();
+		} catch (IOException e) {
+			assertEquals("Error while instrumenting class Broken.",
+					e.getMessage());
+		}
+	}
+
+	@Test
 	public void testSerialization() throws Exception {
 		// Create instrumented instance:
-		byte[] bytes = instrumenter.instrument(TargetLoader
-				.getClassData(SerializationTarget.class));
+		byte[] bytes = instrumenter.instrument(
+				TargetLoader.getClassData(SerializationTarget.class), "Test");
 		TargetLoader loader = new TargetLoader(SerializationTarget.class, bytes);
 		Object obj1 = loader.getTargetClass()
 				.getConstructor(String.class, Integer.TYPE)
@@ -104,7 +145,7 @@ public class InstrumenterTest {
 		InputStream in = TargetLoader.getClassData(getClass());
 		OutputStream out = new ByteArrayOutputStream();
 
-		int count = instrumenter.instrumentAll(in, out);
+		int count = instrumenter.instrumentAll(in, out, "Test");
 
 		assertEquals(1, count);
 	}
@@ -119,13 +160,36 @@ public class InstrumenterTest {
 		ByteArrayOutputStream out = new ByteArrayOutputStream();
 
 		int count = instrumenter.instrumentAll(
-				new ByteArrayInputStream(buffer.toByteArray()), out);
+				new ByteArrayInputStream(buffer.toByteArray()), out, "Test");
 
 		assertEquals(1, count);
 		ZipInputStream zipin = new ZipInputStream(new ByteArrayInputStream(
 				out.toByteArray()));
 		assertEquals("Test.class", zipin.getNextEntry().getName());
 		assertNull(zipin.getNextEntry());
+	}
+
+	@Test
+	public void testInstrumentAll_BrokenClassFileInZip() throws IOException {
+		ByteArrayOutputStream buffer = new ByteArrayOutputStream();
+		ZipOutputStream zipout = new ZipOutputStream(buffer);
+		zipout.putNextEntry(new ZipEntry("Test.class"));
+		final byte[] brokenclass = TargetLoader.getClassDataAsBytes(getClass());
+		brokenclass[10] = 0x23;
+		zipout.write(brokenclass);
+		zipout.finish();
+		ByteArrayOutputStream out = new ByteArrayOutputStream();
+
+		try {
+			instrumenter.instrumentAll(
+					new ByteArrayInputStream(buffer.toByteArray()), out,
+					"test.zip");
+			fail();
+		} catch (IOException e) {
+			assertEquals(
+					"Error while instrumenting class test.zip@Test.class.",
+					e.getMessage());
+		}
 	}
 
 	@Test
@@ -145,7 +209,7 @@ public class InstrumenterTest {
 
 		ByteArrayOutputStream out = new ByteArrayOutputStream();
 		int count = instrumenter.instrumentAll(new ByteArrayInputStream(
-				pack200buffer.toByteArray()), out);
+				pack200buffer.toByteArray()), out, "Test");
 
 		jarbuffer.reset();
 		Pack200.newUnpacker()
@@ -164,7 +228,7 @@ public class InstrumenterTest {
 		InputStream in = new ByteArrayInputStream("text".getBytes());
 		ByteArrayOutputStream out = new ByteArrayOutputStream();
 
-		int count = instrumenter.instrumentAll(in, out);
+		int count = instrumenter.instrumentAll(in, out, "Test");
 
 		assertEquals(0, count);
 		assertEquals("text", new String(out.toByteArray()));

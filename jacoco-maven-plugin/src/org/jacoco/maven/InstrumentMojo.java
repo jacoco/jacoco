@@ -11,13 +11,6 @@
  *******************************************************************************/
 package org.jacoco.maven;
 
-import org.apache.maven.plugin.MojoExecutionException;
-import org.apache.maven.plugin.MojoFailureException;
-import org.codehaus.plexus.util.FileUtils;
-import org.codehaus.plexus.util.IOUtil;
-import org.jacoco.core.instr.Instrumenter;
-import org.jacoco.core.runtime.OfflineInstrumentationAccessGenerator;
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -25,6 +18,13 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.List;
+
+import org.apache.maven.plugin.MojoExecutionException;
+import org.apache.maven.plugin.MojoFailureException;
+import org.codehaus.plexus.util.FileUtils;
+import org.codehaus.plexus.util.IOUtil;
+import org.jacoco.core.instr.Instrumenter;
+import org.jacoco.core.runtime.OfflineInstrumentationAccessGenerator;
 
 /**
  * Performs offline instrumentation. Note that after execution of test you must
@@ -59,8 +59,8 @@ public class InstrumentMojo extends AbstractJacocoMojo {
 
 		final List<String> fileNames;
 		try {
-			fileNames = new FileFilter(this.getIncludes(),
-					this.getExcludes()).getFileNames(classesDir);
+			fileNames = new FileFilter(this.getIncludes(), this.getExcludes())
+					.getFileNames(classesDir);
 		} catch (final IOException e1) {
 			throw new MojoExecutionException(
 					"Unable to get list of files to instrument.", e1);
@@ -78,7 +78,7 @@ public class InstrumentMojo extends AbstractJacocoMojo {
 					FileUtils.copyFile(source, backup);
 					input = new FileInputStream(backup);
 					output = new FileOutputStream(source);
-					instrumenter.instrument(input, output);
+					instrumenter.instrument(input, output, source.getPath());
 				} catch (final IOException e2) {
 					throw new MojoExecutionException(
 							"Unable to instrument file.", e2);

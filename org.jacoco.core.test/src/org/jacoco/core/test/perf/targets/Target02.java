@@ -11,17 +11,20 @@
  *******************************************************************************/
 package org.jacoco.core.test.perf.targets;
 
+import java.util.concurrent.Callable;
+
 /**
  * Simple Loop.
  */
-public class Target02 implements Runnable {
+public class Target02 implements Callable<Void> {
 
-	public void run() {
+	public Void call() throws Exception {
 		@SuppressWarnings("unused")
 		int count = 0;
 		for (int i = 0; i < 10000000; i++) {
 			count++;
 		}
+		return null;
 	}
 
 }

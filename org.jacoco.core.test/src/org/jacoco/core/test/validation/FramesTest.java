@@ -76,7 +76,7 @@ public class FramesTest {
 		IRuntime runtime = new SystemPropertiesRuntime();
 		Instrumenter instrumenter = new Instrumenter(runtime);
 		source = calculateFrames(source);
-		byte[] actual = instrumenter.instrument(source);
+		byte[] actual = instrumenter.instrument(source, "TestTarget");
 		byte[] expected = calculateFrames(actual);
 
 		assertEquals(dump(expected), dump(actual));

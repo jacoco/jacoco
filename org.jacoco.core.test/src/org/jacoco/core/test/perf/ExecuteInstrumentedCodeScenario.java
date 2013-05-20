@@ -11,6 +11,8 @@
  *******************************************************************************/
 package org.jacoco.core.test.perf;
 
+import java.util.concurrent.Callable;
+
 import org.jacoco.core.instr.Instrumenter;
 import org.jacoco.core.runtime.IRuntime;
 import org.jacoco.core.runtime.LoggerRuntime;
@@ -24,16 +26,17 @@ import org.objectweb.asm.ClassReader;
  */
 public class ExecuteInstrumentedCodeScenario extends TimedScenario {
 
-	private final Class<? extends Runnable> target;
+	private final Class<? extends Callable<Void>> target;
 
 	protected ExecuteInstrumentedCodeScenario(String description,
-			Class<? extends Runnable> target) {
+			Class<? extends Callable<Void>> target) {
 		super(description);
 		this.target = target;
 	}
 
 	@Override
-	protected Runnable getInstrumentedRunnable() throws Exception {
+	@SuppressWarnings("unchecked")
+	protected Callable<Void> getInstrumentedCallable() throws Exception {
 		ClassReader reader = new ClassReader(TargetLoader.getClassData(target));
 		IRuntime runtime = new LoggerRuntime();
 		runtime.startup(new RuntimeData());
@@ -41,11 +44,11 @@ public class ExecuteInstrumentedCodeScenario extends TimedScenario {
 		final byte[] instrumentedBuffer = instr.instrument(reader);
 		final TargetLoader loader = new TargetLoader(target, instrumentedBuffer);
 
-		return (Runnable) loader.newTargetInstance();
+		return (Callable<Void>) loader.newTargetInstance();
 	}
 
 	@Override
-	protected Runnable getReferenceRunnable() throws Exception {
+	protected Callable<Void> getReferenceCallable() throws Exception {
 		return target.newInstance();
 	}
 

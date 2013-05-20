@@ -139,7 +139,7 @@ public class CoverageTransformerTest {
 		}
 		recorder.assertException(IllegalClassFormatException.class,
 				"Error while instrumenting class org.jacoco.Sample.",
-				NullPointerException.class);
+				IOException.class);
 		recorder.clear();
 	}
 
