@@ -51,20 +51,6 @@ public final class BundleCreator {
 	 * 
 	 * @param executionDataStore
 	 *            the execution data.
-	 * @return the coverage data.
-	 * @throws IOException
-	 *             if class files can't be read
-	 */
-	public IBundleCoverage createBundle(
-			final ExecutionDataStore executionDataStore) throws IOException {
-		return createBundle(executionDataStore, null);
-	}
-
-	/**
-	 * Create an IBundleCoverage for the given ExecutionDataStore.
-	 * 
-	 * @param executionDataStore
-	 *            the execution data.
 	 * @param additionalClassesDirs
 	 *            additional class dirs to be scanned for class files
 	 * @return the coverage data.
