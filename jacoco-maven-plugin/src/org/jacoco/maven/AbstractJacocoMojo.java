@@ -58,7 +58,7 @@ public abstract class AbstractJacocoMojo extends AbstractMojo {
 
 	public final void execute() throws MojoExecutionException,
 			MojoFailureException {
-		if ("pom".equals(project.getPackaging())) {
+		if (!goalCanExecuteOnPom() && "pom".equals(project.getPackaging())) {
 			getLog().info(
 					"Skipping JaCoCo for project with packaging type 'pom'");
 			skipMojo();
@@ -70,6 +70,15 @@ public abstract class AbstractJacocoMojo extends AbstractMojo {
 			return;
 		}
 		executeMojo();
+	}
+
+	/**
+	 * Allows concrete goal to choose to execute on pom packaging types
+	 * 
+	 * @return if this goal can execute on pom package types
+	 */
+	protected boolean goalCanExecuteOnPom() {
+		return false;
 	}
 
 	/**

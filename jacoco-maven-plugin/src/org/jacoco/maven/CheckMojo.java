@@ -15,8 +15,11 @@ package org.jacoco.maven;
 import java.io.File;
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.apache.maven.plugin.MojoExecutionException;
+import org.apache.maven.project.MavenProject;
 import org.jacoco.core.analysis.IBundleCoverage;
 import org.jacoco.core.analysis.ICounter;
 import org.jacoco.core.analysis.ICoverageNode.CounterEntity;
@@ -87,6 +90,14 @@ public class CheckMojo extends AbstractJacocoMojo {
 
 	private ExecutionDataStore executionDataStore;
 
+	/**
+	 * The projects in the reactor.
+	 * 
+	 * @parameter expression="${reactorProjects}"
+	 * @readonly
+	 */
+	private List<MavenProject> reactorProjects;
+
 	private boolean canCheckCoverage() {
 		if (!dataFile.exists()) {
 			getLog().info(MSG_SKIPPING);
@@ -134,7 +145,18 @@ public class CheckMojo extends AbstractJacocoMojo {
 				this.getExcludes());
 		final BundleCreator creator = new BundleCreator(this.getProject(),
 				fileFilter);
-		final IBundleCoverage bundle = creator.createBundle(executionDataStore);
+
+		final List<File> classDirs = new ArrayList<File>();
+		for (final MavenProject reactor : reactorProjects) {
+			if (reactor != getProject()) {
+				final File classDir = new File(reactor.getBuild()
+						.getOutputDirectory());
+				classDirs.add(classDir);
+			}
+		}
+
+		final IBundleCoverage bundle = creator.createBundle(executionDataStore,
+				classDirs);
 
 		boolean passed = true;
 
@@ -172,5 +194,10 @@ public class CheckMojo extends AbstractJacocoMojo {
 		} else {
 			this.getLog().warn(CHECK_FAILED);
 		}
+	}
+
+	@Override
+	protected boolean goalCanExecuteOnPom() {
+		return true;
 	}
 }
