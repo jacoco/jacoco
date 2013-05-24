@@ -108,64 +108,42 @@ public class Limit {
 	 * @return configured minimum value, or <code>null</code> if no minimum is
 	 *         given
 	 */
-	public BigDecimal getMinimum() {
-		return minimum;
+	public String getMinimum() {
+		return minimum == null ? null : minimum.toPlainString();
 	}
 
 	/**
-	 * Sets allowed minimum value. Coverage ratios are given in the range from
-	 * 0.0 to 1.0.
+	 * Sets allowed minimum value as decimal string representation. The given
+	 * precision is also considered in error messages. Coverage ratios are given
+	 * in the range from 0.0 to 1.0.
 	 * 
 	 * @param minimum
 	 *            allowed minimum or <code>null</code>, if no minimum should be
 	 *            checked
-	 */
-	public void setMinimum(final BigDecimal minimum) {
-		this.minimum = minimum;
-	}
-
-	/**
-	 * Sets allowed minimum value as String representation.
-	 * 
-	 * @param minimum
-	 *            allowed minimum or <code>null</code>, if no minimum should be
-	 *            checked
-	 * @see Limit#setMinimum(BigDecimal)
 	 */
 	public void setMinimum(final String minimum) {
-		setMinimum(minimum == null ? null : new BigDecimal(minimum));
+		this.minimum = minimum == null ? null : new BigDecimal(minimum);
 	}
 
 	/**
 	 * @return configured maximum value, or <code>null</code> if no maximum is
 	 *         given
 	 */
-	public BigDecimal getMaximum() {
-		return maximum;
+	public String getMaximum() {
+		return maximum == null ? null : maximum.toPlainString();
 	}
 
 	/**
-	 * Sets allowed maximum value as String representation.
+	 * Sets allowed maximum value as decimal string representation. The given
+	 * precision is also considered in error messages. Coverage ratios are given
+	 * in the range from 0.0 to 1.0.
 	 * 
 	 * @param maximum
 	 *            allowed maximum or <code>null</code>, if no maximum should be
 	 *            checked
-	 * @see #setMaximum(BigDecimal)
 	 */
 	public void setMaximum(final String maximum) {
-		setMaximum(maximum == null ? null : new BigDecimal(maximum));
-	}
-
-	/**
-	 * Sets allowed maximum value. Coverage ratios are given in the range from
-	 * 0.0 to 1.0.
-	 * 
-	 * @param maximum
-	 *            allowed maximum or <code>null</code>, if no maximum should be
-	 *            checked
-	 */
-	public void setMaximum(final BigDecimal maximum) {
-		this.maximum = maximum;
+		this.maximum = maximum == null ? null : new BigDecimal(maximum);
 	}
 
 	String check(final ICoverageNode node) {

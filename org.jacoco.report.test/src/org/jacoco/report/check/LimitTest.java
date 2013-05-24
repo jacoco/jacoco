@@ -14,8 +14,6 @@ package org.jacoco.report.check;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 
-import java.math.BigDecimal;
-
 import org.jacoco.core.analysis.CoverageNodeImpl;
 import org.jacoco.core.analysis.ICounter.CounterValue;
 import org.jacoco.core.analysis.ICoverageNode.CounterEntity;
@@ -190,7 +188,7 @@ public class LimitTest {
 	@Test
 	public void testMin1() {
 		limit.setMinimum("0.35");
-		assertEquals(new BigDecimal("0.35"), limit.getMinimum());
+		assertEquals("0.35", limit.getMinimum());
 		assertNull(limit.check(new TestNode() {
 			{
 				instructionCounter = CounterImpl.getInstance(65, 35);
@@ -201,7 +199,7 @@ public class LimitTest {
 	@Test
 	public void testMin2() {
 		limit.setMinimum("0.35");
-		assertEquals(new BigDecimal("0.35"), limit.getMinimum());
+		assertEquals("0.35", limit.getMinimum());
 		assertNull(limit.check(new TestNode() {
 			{
 				instructionCounter = CounterImpl.getInstance(64, 36);
@@ -212,7 +210,7 @@ public class LimitTest {
 	@Test
 	public void testMin3() {
 		limit.setMinimum("0.3500");
-		assertEquals(new BigDecimal("0.3500"), limit.getMinimum());
+		assertEquals("0.3500", limit.getMinimum());
 		assertEquals(
 				"instructions covered ratio is 0.3400, but expected minimum is 0.3500",
 				limit.check(new TestNode() {
@@ -225,7 +223,7 @@ public class LimitTest {
 	@Test
 	public void testMin4() {
 		limit.setMinimum("0.35");
-		assertEquals(new BigDecimal("0.35"), limit.getMinimum());
+		assertEquals("0.35", limit.getMinimum());
 		assertEquals(
 				"instructions covered ratio is 0.34, but expected minimum is 0.35",
 				limit.check(new TestNode() {
@@ -240,7 +238,7 @@ public class LimitTest {
 	public void testMin5() {
 		limit.setMinimum("10000");
 		limit.setValue(CounterValue.MISSEDCOUNT);
-		assertEquals(new BigDecimal("10000"), limit.getMinimum());
+		assertEquals("10000", limit.getMinimum());
 		assertEquals(
 				"instructions missed count is 9990, but expected minimum is 10000",
 				limit.check(new TestNode() {
@@ -253,7 +251,7 @@ public class LimitTest {
 	@Test
 	public void testMin6() {
 		limit.setMinimum("12345");
-		assertEquals(new BigDecimal("12345"), limit.getMinimum());
+		assertEquals("12345", limit.getMinimum());
 		assertEquals(
 				"instructions covered ratio is 0, but expected minimum is 12345",
 				limit.check(new TestNode() {
@@ -274,7 +272,7 @@ public class LimitTest {
 	public void testMax1() {
 		limit.setMaximum("12345678");
 		limit.setValue(CounterValue.MISSEDCOUNT);
-		assertEquals(new BigDecimal("12345678"), limit.getMaximum());
+		assertEquals("12345678", limit.getMaximum());
 		assertNull(limit.check(new TestNode() {
 			{
 				instructionCounter = CounterImpl.getInstance(12345678, 0);
@@ -285,7 +283,7 @@ public class LimitTest {
 	@Test
 	public void testMax2() {
 		limit.setMaximum("0.999");
-		assertEquals(new BigDecimal("0.999"), limit.getMaximum());
+		assertEquals("0.999", limit.getMaximum());
 		assertNull(limit.check(new TestNode() {
 			{
 				instructionCounter = CounterImpl.getInstance(1, 99);
@@ -296,7 +294,7 @@ public class LimitTest {
 	@Test
 	public void testMax3() {
 		limit.setMaximum("0.999");
-		assertEquals(new BigDecimal("0.999"), limit.getMaximum());
+		assertEquals("0.999", limit.getMaximum());
 		assertEquals(
 				"instructions covered ratio is 1.000, but expected maximum is 0.999",
 				limit.check(new TestNode() {
@@ -309,7 +307,7 @@ public class LimitTest {
 	@Test
 	public void testMax4() {
 		limit.setMaximum("0.999");
-		assertEquals(new BigDecimal("0.999"), limit.getMaximum());
+		assertEquals("0.999", limit.getMaximum());
 		assertEquals(
 				"instructions covered ratio is 1.000, but expected maximum is 0.999",
 				limit.check(new TestNode() {
