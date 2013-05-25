@@ -716,9 +716,9 @@
 
 <pre class="source lang-xml linenums">
 &lt;check&gt;
-    &lt;rule elementtype="PACKAGE"&gt;
-        &lt;limit entity="LINE" value="COVEREDRATIO" minimum="0.80"/&gt;
-        &lt;limit entity="CLASS" value="MISSEDCOUNT" maximum="0"/&gt;
+    &lt;rule element="PACKAGE"&gt;
+        &lt;limit counter="LINE" value="COVEREDRATIO" minimum="0.80"/&gt;
+        &lt;limit counter="CLASS" value="MISSEDCOUNT" maximum="0"/&gt;
     &lt;/rule&gt;
 &lt;/check&gt;
 </pre>
@@ -749,7 +749,7 @@
     <tr>
       <td><code>violationsproperty</code></td>
       <td>The name of an Ant property which is filled with the violation
-          messages.</code></td>
+          messages.</td>
       <td><i>none</i></td>
     </tr>
   </tbody>
@@ -790,7 +790,7 @@
     </tr>
     <tr>
       <td><code>limits</code></td>
-      <td>List of limits to check.</code></td>
+      <td>List of limits to check.</td>
       <td><i>none</i></td>
     </tr>
   </tbody>
@@ -823,17 +823,19 @@
       <td>The counter value that should be checked. Possible options are
       <code>TOTALCOUNT</code>, <code>MISSEDCOUNT</code>,
       <code>COVEREDCOUNT</code>, <code>MISSEDRATIO</code> and
-      <code>COVEREDRATIO</code>.
+      <code>COVEREDRATIO</code>.</td>
       <td><code>COVEREDRATIO</code></td>
     </tr>
     <tr>
       <td><code>minimum</code></td>
-      <td>Expected minmimum value.</code></td>
+      <td>Expected minmimum value. If the minimum refers to a ratio the range is
+          from 0.0 to 1.0 where the number of decimal places will also determine
+          the precision in error messages.</td>
       <td><i>none</i></td>
     </tr>
     <tr>
       <td><code>maximum</code></td>
-      <td>Expected maximum value.</code></td>
+      <td>Expected maximum value.</td>
       <td><i>none</i></td>
     </tr>
   </tbody>

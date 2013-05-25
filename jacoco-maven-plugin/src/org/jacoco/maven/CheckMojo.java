@@ -50,6 +50,9 @@ public class CheckMojo extends AbstractJacocoMojo implements IViolationsOutput {
 	 * applies to a certain counter (INSTRUCTION, LINE, BRANCH, COMPLEXITY,
 	 * METHOD, CLASS) and defines a minimum or maximum for the corresponding
 	 * value (TOTALCOUNT, COVEREDCOUNT, MISSEDCOUNT, COVEREDRATIO, MISSEDRATIO).
+	 * If a limit refers to a ratio the range is from 0.0 to 1.0 where the
+	 * number of decimal places will also determine the precision in error
+	 * messages.
 	 * </p>
 	 * 
 	 * <p>
@@ -93,7 +96,7 @@ public class CheckMojo extends AbstractJacocoMojo implements IViolationsOutput {
 	 *     </excludes>
 	 *     <limits>
 	 *       <limit>
-	 *         <entity>LINE</entity>
+	 *         <counter>LINE</counter>
 	 *         <value>COVEREDRATIO</value>
 	 *         <minimum>0.50</minimum>
 	 *       </limit>
