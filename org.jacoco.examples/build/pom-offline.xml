@@ -67,11 +67,13 @@
               <rules>
                 <rule>
                   <element>BUNDLE</element>
-                  <limit>
-                    <counter>COMPLEXITY</counter>
-                    <value>MISSEDRATIO</value>
-                    <minimum>0.85</minimum>
-                  </limit>
+                  <limits>
+                    <limit>
+                      <counter>COMPLEXITY</counter>
+                      <value>COVEREDRATIO</value>
+                      <minimum>0.60</minimum>
+                    </limit>
+                  </limits>
                 </rule>
               </rules>
             </configuration>
