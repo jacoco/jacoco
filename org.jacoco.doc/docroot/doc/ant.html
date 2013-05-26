@@ -704,6 +704,142 @@
   </tbody>
 </table>
 
+<h3>Element <code>check</code></h3>
+
+<p>
+  This report type does not actually create a report. It checks coverage
+  counters and reports violations of configured rules. Every rule is applied to
+  elements of a given type (class, package, bundle, etc.) and has a list of
+  limits which are checked for every element. The following example checks that
+  for every package the line coverage is at least 80% and no class is missed:
+</p>
+
+<pre class="source lang-xml linenums">
+&lt;check&gt;
+    &lt;rule element="PACKAGE"&gt;
+        &lt;limit counter="LINE" value="COVEREDRATIO" minimum="0.80"/&gt;
+        &lt;limit counter="CLASS" value="MISSEDCOUNT" maximum="0"/&gt;
+    &lt;/rule&gt;
+&lt;/check&gt;
+</pre>
+
+<p>
+  The <code>check</code> element has the following attributes:
+</p>
+
+<table class="coverage">
+  <thead>
+    <tr>
+      <td>Attribute</td>
+      <td>Description</td>
+      <td>Default</td>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>rules</code></td>
+      <td>List of rules to check.</td>
+      <td><i>none</i></td>
+    </tr>
+    <tr>
+      <td><code>failonviolation</code></td>
+      <td>Specifies whether build should fail in case of rule violations.</td>
+      <td><code>true</code></td>
+    </tr>
+    <tr>
+      <td><code>violationsproperty</code></td>
+      <td>The name of an Ant property which is filled with the violation
+          messages.</td>
+      <td><i>none</i></td>
+    </tr>
+  </tbody>
+</table>
+
+<p>
+  Within the <code>check</code> element any number of <code>rule</code> elements
+  can be nested:
+</p>
+
+<table class="coverage">
+  <thead>
+    <tr>
+      <td>Attribute</td>
+      <td>Description</td>
+      <td>Default</td>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>element</code></td>
+      <td>The elements this rule applies to. Possible values are
+          <code>BUNLDE</code>, <code>PACKAGE</code>, <code>CLASS</code>,
+          <code>SOURCEFILE</code> and <code>METHOD</code>.</td>
+      <td><code>BUNLDE</code></td>
+    </tr>
+    <tr>
+      <td><code>includes</code></td>
+      <td>A list of element names that should be checked. The list entries are
+          separated by a colon (:) and may use wildcard characters (* and ?).</td>
+      <td><code>*</code></td>
+    </tr>
+    <tr>
+      <td><code>excludes</code></td>
+      <td>A list of element names that should not be checked. The list entries
+          are separated by a colon (:) and may use wildcard characters (* and ?).</td>
+      <td><i>empty (no excludes)</i></td>
+    </tr>
+    <tr>
+      <td><code>limits</code></td>
+      <td>List of limits to check.</td>
+      <td><i>none</i></td>
+    </tr>
+  </tbody>
+</table>
+
+<p>
+  Within the <code>rule</code> element any number of <code>limit</code> elements
+  can be nested:
+</p>
+
+<table class="coverage">
+  <thead>
+    <tr>
+      <td>Attribute</td>
+      <td>Description</td>
+      <td>Default</td>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>counter</code></td>
+      <td>The <a href="counters.html">counter</a> which should be checked.
+          Possible options are <code>INSTRUCTION</code>, <code>LINE</code>,
+          <code>BRANCH</code>, <code>COMPLEXITY</code>, <code>METHOD</code> and
+          <code>CLASS</code>.</td>
+      <td><code>INSTRUCTION</code></td>
+    </tr>
+    <tr>
+      <td><code>value</code></td>
+      <td>The counter value that should be checked. Possible options are
+      <code>TOTALCOUNT</code>, <code>MISSEDCOUNT</code>,
+      <code>COVEREDCOUNT</code>, <code>MISSEDRATIO</code> and
+      <code>COVEREDRATIO</code>.</td>
+      <td><code>COVEREDRATIO</code></td>
+    </tr>
+    <tr>
+      <td><code>minimum</code></td>
+      <td>Expected minmimum value. If the minimum refers to a ratio the range is
+          from 0.0 to 1.0 where the number of decimal places will also determine
+          the precision in error messages.</td>
+      <td><i>none</i></td>
+    </tr>
+    <tr>
+      <td><code>maximum</code></td>
+      <td>Expected maximum value.</td>
+      <td><i>none</i></td>
+    </tr>
+  </tbody>
+</table>
 
 <h2><a name="instrument">Task <code>instrument</code></a></h2>
 

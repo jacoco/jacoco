@@ -153,4 +153,11 @@ public class JavaNamesTest {
 				"<init>", "()V", null));
 	}
 
+	@Test
+	public void testGetQualifiedMethodName() {
+		assertEquals("java.util.List.add(int, java.lang.Object)",
+				names.getQualifiedMethodName("java/util/List", "add",
+						"(ILjava/lang/Object;)V", null));
+	}
+
 }

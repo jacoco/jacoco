@@ -23,6 +23,9 @@
 <h3>New Features</h3>
 <ul>
   <li>Support for archives in Pack200 format (GitHub #91).</li>
+  <li>The coverage check has been reworked to allow checks on all counter values
+      on all element types (GitHub #106).</li>
+  <li>Coverage checks are now also available in Ant (GitHub #106).</li>
 </ul>
 
 <h3>Fixed Bugs</h3>
@@ -30,6 +33,13 @@
   <li>Fixed inconsistent stackmap frames when instrumenting class files produced
       by certain tools like ProGuard (GitHub #85).</li>
 </ul>
+
+<h3>API Changes</h3>
+<ul>
+  <li>The configuration of the Maven check goal has been reworked to support
+      checks on any element type (GitHub #106).</li>
+</ul>
+
 
 <h2>Release 0.6.2 (2013/02/03)</h2>
 

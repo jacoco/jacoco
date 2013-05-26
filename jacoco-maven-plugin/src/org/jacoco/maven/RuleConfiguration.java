@@ -1,0 +1,71 @@
+/*******************************************************************************
+ * Copyright (c) 2009, 2013 Mountainminds GmbH & Co. KG and Contributors
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *    Evgeny Mandrikov - initial API and implementation
+ *    Kyle Lieber - implementation of CheckMojo
+ *    Marc Hoffmann - redesign using report APIs
+ *    
+ *******************************************************************************/
+package org.jacoco.maven;
+
+import java.util.List;
+
+import org.codehaus.plexus.util.StringUtils;
+import org.jacoco.core.analysis.ICoverageNode.ElementType;
+import org.jacoco.report.check.Limit;
+import org.jacoco.report.check.Rule;
+
+/**
+ * Wrapper for {@link Rule} objects to allow Maven style includes/excludes lists
+ * 
+ */
+public class RuleConfiguration {
+
+	final Rule rule;
+
+	/**
+	 * Create a new configuration instance.
+	 */
+	public RuleConfiguration() {
+		rule = new Rule();
+	}
+
+	/**
+	 * @param element
+	 *            element type this rule applies to
+	 */
+	public void setElement(final ElementType element) {
+		rule.setElement(element);
+	}
+
+	/**
+	 * @param includes
+	 *            includes patterns
+	 */
+	public void setIncludes(final List<String> includes) {
+		rule.setIncludes(StringUtils.join(includes.iterator(), ":"));
+	}
+
+	/**
+	 * 
+	 * @param excludes
+	 *            excludes patterns
+	 */
+	public void setExcludes(final List<String> excludes) {
+		rule.setExcludes(StringUtils.join(excludes.iterator(), ":"));
+	}
+
+	/**
+	 * @param limits
+	 *            list of {@link Limit}s configured for this rule
+	 */
+	public void setLimits(final List<Limit> limits) {
+		rule.setLimits(limits);
+	}
+
+}

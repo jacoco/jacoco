@@ -411,6 +411,74 @@
 			<contains string="${testReportXmlEncoding.content}" substring="encoding=&quot;UTF-16&quot;"/>
 		</au:assertTrue>
 	</target>
+	
+	<!-- Coverage Check -->
+
+	<target name="testReportCheckOk">
+		<jacoco:report>
+			<structure name="Test">
+				<classfiles>
+					<fileset dir="${org.jacoco.ant.reportTaskTest.classes.dir}" includes="**/*.class"/>
+				</classfiles>
+				<sourcefiles encoding="UTF-8">
+					<fileset dir="${org.jacoco.ant.reportTaskTest.sources.dir}" />
+				</sourcefiles>
+            </structure>
+			<check>
+				<rule element="CLASS">
+					<limit counter="METHOD" value="MISSEDCOUNT" maximum="100"/>
+				</rule>
+			</check>
+		</jacoco:report>
+	</target>
+
+	<target name="testReportCheckFailed">
+		<au:expectfailure expectedMessage="Coverage check failed due to violated rules.">
+			<jacoco:report>
+				<structure name="Test">
+					<classfiles>
+						<fileset dir="${org.jacoco.ant.reportTaskTest.classes.dir}" includes="**/*.class"/>
+					</classfiles>
+					<sourcefiles encoding="UTF-8">
+						<fileset dir="${org.jacoco.ant.reportTaskTest.sources.dir}" />
+					</sourcefiles>
+            	</structure>
+				<check>
+					<rule element="BUNDLE">
+						<limit counter="INSTRUCTION" value="COVEREDRATIO" minimum="0.90"/>
+					</rule>
+				</check>
+			</jacoco:report>
+		</au:expectfailure>
+		<au:assertLogContains level="error" text="instructions covered ratio is 0.00, but expected minimum is 0.90"/>
+	</target>
+
+	<target name="testReportCheckSetPropertyOnly">
+		<jacoco:report>
+			<structure name="Test">
+				<classfiles>
+					<fileset dir="${org.jacoco.ant.reportTaskTest.classes.dir}" includes="**/*.class"/>
+				</classfiles>
+				<sourcefiles encoding="UTF-8">
+					<fileset dir="${org.jacoco.ant.reportTaskTest.sources.dir}" />
+				</sourcefiles>
+           	</structure>
+			<check failonviolation="false" violationsproperty="violation">
+				<rule element="BUNDLE">
+					<limit counter="METHOD" value="COVEREDRATIO" minimum="0.50"/>
+					<limit counter="INSTRUCTION" value="COVEREDRATIO" minimum="0.90"/>
+				</rule>
+			</check>
+		</jacoco:report>
+		<au:assertLogContains level="error" text="methods covered ratio is 0.00, but expected minimum is 0.50"/>
+		<au:assertLogContains level="error" text="instructions covered ratio is 0.00, but expected minimum is 0.90"/>
+		<au:assertTrue message="Property is not set">
+			<contains string="${violation}" substring="methods covered ratio is 0.00, but expected minimum is 0.50"/>
+		</au:assertTrue>
+		<au:assertTrue message="Property is not set">
+			<contains string="${violation}" substring="instructions covered ratio is 0.00, but expected minimum is 0.90"/>
+		</au:assertTrue>
+	</target>
 
 	
 </project>
