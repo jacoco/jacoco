@@ -18,6 +18,27 @@ package org.jacoco.core.analysis;
 public interface ICounter {
 
 	/**
+	 * Different values provided by a counter.
+	 */
+	public enum CounterValue {
+
+		/** Total number of items */
+		TOTALCOUNT,
+
+		/** Number of missed items */
+		MISSEDCOUNT,
+
+		/** Number of covered items */
+		COVEREDCOUNT,
+
+		/** Ratio of missed to total items */
+		MISSEDRATIO,
+
+		/** Ratio of covered to total items */
+		COVEREDRATIO
+	}
+
+	/**
 	 * Status flag for no items (value is 0x00).
 	 */
 	public static final int EMPTY = 0x00;
@@ -36,6 +57,15 @@ public interface ICounter {
 	 * Status flag when items are partly covered (value is 0x03).
 	 */
 	public static final int PARTLY_COVERED = NOT_COVERED | FULLY_COVERED;
+
+	/**
+	 * Returns the counter value of the given type.
+	 * 
+	 * @param value
+	 *            value type to return
+	 * @return counter value
+	 */
+	public double getValue(CounterValue value);
 
 	/**
 	 * Returns the total count of items.

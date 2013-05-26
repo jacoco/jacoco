@@ -77,6 +77,19 @@ public class JavaNames implements ILanguageNames {
 	public String getMethodName(final String vmclassname,
 			final String vmmethodname, final String vmdesc,
 			final String vmsignature) {
+		return getMethodName(vmclassname, vmmethodname, vmdesc, false);
+	}
+
+	public String getQualifiedMethodName(final String vmclassname,
+			final String vmmethodname, final String vmdesc,
+			final String vmsignature) {
+		return getQualifiedClassName(vmclassname) + "."
+				+ getMethodName(vmclassname, vmmethodname, vmdesc, true);
+	}
+
+	private String getMethodName(final String vmclassname,
+			final String vmmethodname, final String vmdesc,
+			final boolean qualifiedParams) {
 		if ("<clinit>".equals(vmmethodname)) {
 			return "static {...}";
 		}
@@ -99,7 +112,11 @@ public class JavaNames implements ILanguageNames {
 			} else {
 				comma = true;
 			}
-			result.append(getShortTypeName(arg));
+			if (qualifiedParams) {
+				result.append(getQualifiedClassName(arg.getClassName()));
+			} else {
+				result.append(getShortTypeName(arg));
+			}
 		}
 		result.append(')');
 		return result.toString();

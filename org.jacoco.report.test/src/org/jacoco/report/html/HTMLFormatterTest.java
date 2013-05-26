@@ -119,6 +119,10 @@ public class HTMLFormatterTest {
 				return null;
 			}
 
+			public String getQualifiedMethodName(String vmclassname,
+					String vmmethodname, String vmdesc, String vmsignature) {
+				return null;
+			}
 		};
 		formatter.setLanguageNames(names);
 		assertSame(names, formatter.getLanguageNames());

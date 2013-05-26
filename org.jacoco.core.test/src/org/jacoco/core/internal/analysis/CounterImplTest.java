@@ -15,9 +15,9 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotSame;
 import static org.junit.Assert.assertSame;
-import static org.junit.Assert.assertTrue;
 
 import org.jacoco.core.analysis.ICounter;
+import org.jacoco.core.analysis.ICounter.CounterValue;
 import org.junit.Test;
 
 /**
@@ -29,16 +29,22 @@ public class CounterImplTest {
 	public void testGetInstance1() {
 		ICounter c = CounterImpl.getInstance(0, 0);
 		assertEquals(0, c.getTotalCount());
+		assertEquals(0.0, c.getValue(CounterValue.TOTALCOUNT), 0.0);
 		assertEquals(0, c.getMissedCount());
+		assertEquals(0.0, c.getValue(CounterValue.MISSEDCOUNT), 0.0);
 		assertEquals(0, c.getCoveredCount());
+		assertEquals(0.0, c.getValue(CounterValue.COVEREDCOUNT), 0.0);
 	}
 
 	@Test
 	public void testGetInstance2() {
 		ICounter c = CounterImpl.getInstance(33, 15);
 		assertEquals(48, c.getTotalCount());
+		assertEquals(48.0, c.getValue(CounterValue.TOTALCOUNT), 0.0);
 		assertEquals(33, c.getMissedCount());
+		assertEquals(33.0, c.getValue(CounterValue.MISSEDCOUNT), 0.0);
 		assertEquals(15, c.getCoveredCount());
+		assertEquals(15.0, c.getValue(CounterValue.COVEREDCOUNT), 0.0);
 	}
 
 	@Test
@@ -46,8 +52,11 @@ public class CounterImplTest {
 		ICounter c = CounterImpl.getInstance(15, 12);
 		ICounter copy = CounterImpl.getInstance(c);
 		assertEquals(27, copy.getTotalCount());
+		assertEquals(27.0, c.getValue(CounterValue.TOTALCOUNT), 0.0);
 		assertEquals(15, copy.getMissedCount());
+		assertEquals(15.0, c.getValue(CounterValue.MISSEDCOUNT), 0.0);
 		assertEquals(12, copy.getCoveredCount());
+		assertEquals(12.0, c.getValue(CounterValue.COVEREDCOUNT), 0.0);
 	}
 
 	@Test
@@ -84,36 +93,42 @@ public class CounterImplTest {
 	public void testGetCoveredRatio1() {
 		ICounter c = CounterImpl.getInstance(30, 10);
 		assertEquals(0.25, c.getCoveredRatio(), 0.0);
+		assertEquals(0.25, c.getValue(CounterValue.COVEREDRATIO), 0.0);
 	}
 
 	@Test
 	public void testGetCoveredRatio2() {
 		ICounter c = CounterImpl.getInstance(20, 0);
 		assertEquals(0.0, c.getCoveredRatio(), 0.0);
+		assertEquals(0.0, c.getValue(CounterValue.COVEREDRATIO), 0.0);
 	}
 
 	@Test
 	public void testGetCoveredRatio3() {
 		ICounter c = CounterImpl.getInstance(0, 0);
-		assertTrue(Double.isNaN(c.getCoveredRatio()));
+		assertEquals(Double.NaN, c.getCoveredRatio(), 0.0);
+		assertEquals(Double.NaN, c.getValue(CounterValue.COVEREDRATIO), 0.0);
 	}
 
 	@Test
 	public void testGetMissedRatio1() {
 		ICounter c = CounterImpl.getInstance(10, 30);
 		assertEquals(0.25, c.getMissedRatio(), 0.0);
+		assertEquals(0.25, c.getValue(CounterValue.MISSEDRATIO), 0.0);
 	}
 
 	@Test
 	public void testGetMissedRatio2() {
 		ICounter c = CounterImpl.getInstance(0, 20);
 		assertEquals(0.0, c.getMissedRatio(), 0.0);
+		assertEquals(0.0, c.getValue(CounterValue.MISSEDRATIO), 0.0);
 	}
 
 	@Test
 	public void testGetMissedRatio3() {
 		ICounter c = CounterImpl.getInstance(0, 0);
-		assertTrue(Double.isNaN(c.getMissedRatio()));
+		assertEquals(Double.NaN, c.getMissedRatio(), 0.0);
+		assertEquals(Double.NaN, c.getValue(CounterValue.MISSEDRATIO), 0.0);
 	}
 
 	@Test

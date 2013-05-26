@@ -75,6 +75,15 @@ public class CounterComparatorTest {
 	}
 
 	@Test
+	public void testReverseReverseComparator() {
+		final Comparator<ICounter> cmp = CounterComparator.TOTALITEMS.reverse()
+				.reverse();
+		assertCmpGreater(cmp, 21, 5, 19, 6);
+		assertCmpEquals(cmp, 20, 5, 19, 6);
+		assertCmpLess(cmp, 19, 5, 19, 6);
+	}
+
+	@Test
 	public void testNodeComparator1() {
 		ICoverageNode d1 = new MockNode(18);
 		ICoverageNode d2 = new MockNode(15);

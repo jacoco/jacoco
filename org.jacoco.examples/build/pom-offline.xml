@@ -64,14 +64,18 @@
               <goal>check</goal>
             </goals>
             <configuration>
-              <check>
-                <classRatio>100</classRatio>
-                <instructionRatio>90</instructionRatio>
-                <methodRatio>95</methodRatio>
-                <branchRatio>85</branchRatio>
-                <complexityRatio>85</complexityRatio>
-                <lineRatio>90</lineRatio>
-              </check>
+              <rules>
+                <rule>
+                  <element>BUNDLE</element>
+                  <limits>
+                    <limit>
+                      <counter>COMPLEXITY</counter>
+                      <value>COVEREDRATIO</value>
+                      <minimum>0.60</minimum>
+                    </limit>
+                  </limits>
+                </rule>
+              </rules>
             </configuration>
           </execution>
         </executions>
