@@ -11,21 +11,24 @@
  *******************************************************************************/
 package org.jacoco.core.test.perf.targets;
 
+import java.util.concurrent.Callable;
+
 /**
  * Plain method calls.
  */
-public class Target01 implements Runnable {
+public class Target01 implements Callable<Void> {
 
 	@SuppressWarnings("unused")
 	private int c;
 
 	// 4 ^ 0 = 1 times
-	public void run() {
+	public Void call() throws Exception {
 		m1();
 		m1();
 		m1();
 		m1();
 		c++; // some side effect, otherwise the JIT will remove the method
+		return null;
 	}
 
 	// 4 ^ 1 = 4 times

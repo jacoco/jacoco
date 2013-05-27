@@ -11,6 +11,8 @@
  *******************************************************************************/
 package org.jacoco.core.test.perf;
 
+import java.util.concurrent.Callable;
+
 /**
  * Base class for execution time test scenarios.
  */
@@ -25,8 +27,8 @@ public abstract class TimedScenario implements IPerfScenario {
 	}
 
 	public void run(final IPerfOutput output) throws Exception {
-		final long time = getMinimumTime(getInstrumentedRunnable());
-		final Runnable refRunnable = getReferenceRunnable();
+		final long time = getMinimumTime(getInstrumentedCallable());
+		final Callable<Void> refRunnable = getReferenceCallable();
 		final long reftime;
 		if (refRunnable == null) {
 			reftime = IPerfOutput.NO_REFERENCE;
@@ -42,8 +44,9 @@ public abstract class TimedScenario implements IPerfScenario {
 	 * 
 	 * @param subject
 	 * @return minimum execution time in nano seconds
+	 * @throws Exception
 	 */
-	private long getMinimumTime(final Runnable subject) {
+	private long getMinimumTime(final Callable<Void> subject) throws Exception {
 		long min = Long.MAX_VALUE;
 		for (int i = 0; i < RUNS; i++) {
 			final long t = getTime(subject);
@@ -52,15 +55,16 @@ public abstract class TimedScenario implements IPerfScenario {
 		return min;
 	}
 
-	private long getTime(final Runnable subject) {
+	private long getTime(final Callable<Void> subject) throws Exception {
 		long start = System.nanoTime();
-		subject.run();
+		subject.call();
 		return System.nanoTime() - start;
 	}
 
-	protected abstract Runnable getInstrumentedRunnable() throws Exception;
+	protected abstract Callable<Void> getInstrumentedCallable()
+			throws Exception;
 
-	protected Runnable getReferenceRunnable() throws Exception {
+	protected Callable<Void> getReferenceCallable() throws Exception {
 		return null;
 	}
 

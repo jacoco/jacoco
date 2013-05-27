@@ -13,6 +13,7 @@ package org.jacoco.core.analysis;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -65,7 +66,8 @@ public class AnalyzerTest {
 
 	@Test
 	public void testAnalyzeClass1() throws IOException {
-		analyzer.analyzeClass(TargetLoader.getClassData(AnalyzerTest.class));
+		analyzer.analyzeClass(TargetLoader.getClassData(AnalyzerTest.class),
+				"Test");
 		assertEquals(
 				Collections.singleton("org/jacoco/core/analysis/AnalyzerTest"),
 				classes);
@@ -73,17 +75,30 @@ public class AnalyzerTest {
 
 	@Test
 	public void testAnalyzeClass2() throws IOException {
-		analyzer.analyzeClass(TargetLoader
-				.getClassDataAsBytes(AnalyzerTest.class));
+		analyzer.analyzeClass(
+				TargetLoader.getClassDataAsBytes(AnalyzerTest.class), "Test");
 		assertEquals(
 				Collections.singleton("org/jacoco/core/analysis/AnalyzerTest"),
 				classes);
 	}
 
 	@Test
+	public void testAnalyzeClass_Broken() throws IOException {
+		final byte[] brokenclass = TargetLoader
+				.getClassDataAsBytes(AnalyzerTest.class);
+		brokenclass[10] = 0x23;
+		try {
+			analyzer.analyzeClass(brokenclass, "Broken");
+			fail();
+		} catch (IOException e) {
+			assertEquals("Error while analyzing class Broken.", e.getMessage());
+		}
+	}
+
+	@Test
 	public void testAnalyzeAll_Class() throws IOException {
-		final int count = analyzer.analyzeAll(TargetLoader
-				.getClassData(AnalyzerTest.class));
+		final int count = analyzer.analyzeAll(
+				TargetLoader.getClassData(AnalyzerTest.class), "Test");
 		assertEquals(1, count);
 		assertEquals(
 				Collections.singleton("org/jacoco/core/analysis/AnalyzerTest"),
@@ -98,8 +113,8 @@ public class AnalyzerTest {
 				"org/jacoco/core/analysis/AnalyzerTest.class"));
 		zip.write(TargetLoader.getClassDataAsBytes(AnalyzerTest.class));
 		zip.finish();
-		final int count = analyzer.analyzeAll(new ByteArrayInputStream(buffer
-				.toByteArray()));
+		final int count = analyzer.analyzeAll(
+				new ByteArrayInputStream(buffer.toByteArray()), "Test");
 		assertEquals(1, count);
 		assertEquals(
 				Collections.singleton("org/jacoco/core/analysis/AnalyzerTest"),
@@ -123,7 +138,7 @@ public class AnalyzerTest {
 		gzipOutput.finish();
 
 		final int count = analyzer.analyzeAll(new ByteArrayInputStream(
-				pack200buffer.toByteArray()));
+				pack200buffer.toByteArray()), "Test");
 		assertEquals(1, count);
 		assertEquals(
 				Collections.singleton("org/jacoco/core/analysis/AnalyzerTest"),
@@ -133,7 +148,7 @@ public class AnalyzerTest {
 	@Test
 	public void testAnalyzeAll_Empty() throws IOException {
 		final int count = analyzer.analyzeAll(new ByteArrayInputStream(
-				new byte[0]));
+				new byte[0]), "Test");
 		assertEquals(0, count);
 		assertEquals(Collections.emptySet(), classes);
 	}
@@ -170,6 +185,29 @@ public class AnalyzerTest {
 		out.write(0x23); // Unexpected data here
 		zip.close();
 		analyzer.analyzeAll(file);
+	}
+
+	@Test
+	public void testAnalyzeAll_BrokenClassFileInZip() throws IOException {
+		final ByteArrayOutputStream buffer = new ByteArrayOutputStream();
+		final ZipOutputStream zip = new ZipOutputStream(buffer);
+		zip.putNextEntry(new ZipEntry(
+				"org/jacoco/core/analysis/AnalyzerTest.class"));
+		final byte[] brokenclass = TargetLoader
+				.getClassDataAsBytes(AnalyzerTest.class);
+		brokenclass[10] = 0x23;
+		zip.write(brokenclass);
+		zip.finish();
+
+		try {
+			analyzer.analyzeAll(new ByteArrayInputStream(buffer.toByteArray()),
+					"test.zip");
+			fail();
+		} catch (IOException e) {
+			assertEquals(
+					"Error while analyzing class test.zip@org/jacoco/core/analysis/AnalyzerTest.class.",
+					e.getMessage());
+		}
 	}
 
 	private void createClassfile(final String dir, final Class<?> source)

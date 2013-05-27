@@ -88,7 +88,8 @@ public class InstrumentTask extends Task {
 			try {
 				input = resource.getInputStream();
 				output = new FileOutputStream(file);
-				return instrumenter.instrumentAll(input, output);
+				return instrumenter.instrumentAll(input, output,
+						resource.getName());
 			} finally {
 				FileUtils.close(input);
 				FileUtils.close(output);

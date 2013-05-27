@@ -11,6 +11,8 @@
  *******************************************************************************/
 package org.jacoco.core.test.perf;
 
+import java.util.concurrent.Callable;
+
 import org.jacoco.core.instr.Instrumenter;
 import org.jacoco.core.runtime.LoggerRuntime;
 import org.jacoco.core.test.TargetLoader;
@@ -31,14 +33,15 @@ public class InstrumentationTimeScenario extends TimedScenario {
 	}
 
 	@Override
-	protected Runnable getInstrumentedRunnable() throws Exception {
+	protected Callable<Void> getInstrumentedCallable() throws Exception {
 		final byte[] bytes = TargetLoader.getClassDataAsBytes(target);
 		final Instrumenter instr = new Instrumenter(new LoggerRuntime());
-		return new Runnable() {
-			public void run() {
+		return new Callable<Void>() {
+			public Void call() throws Exception {
 				for (int i = 0; i < count; i++) {
-					instr.instrument(bytes);
+					instr.instrument(bytes, "TestTarget");
 				}
+				return null;
 			}
 		};
 	}

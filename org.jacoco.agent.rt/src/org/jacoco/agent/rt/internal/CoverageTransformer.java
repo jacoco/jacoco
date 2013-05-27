@@ -11,8 +11,6 @@
  *******************************************************************************/
 package org.jacoco.agent.rt.internal;
 
-import static java.lang.String.format;
-
 import java.lang.instrument.ClassFileTransformer;
 import java.lang.instrument.IllegalClassFormatException;
 import java.security.ProtectionDomain;
@@ -86,10 +84,10 @@ public class CoverageTransformer implements ClassFileTransformer {
 				// reference as probes might have changed.
 				runtime.disconnect(classBeingRedefined);
 			}
-			return instrumenter.instrument(classfileBuffer);
+			return instrumenter.instrument(classfileBuffer, classname);
 		} catch (final Exception ex) {
 			final IllegalClassFormatException wrapper = new IllegalClassFormatException(
-					format("Error while instrumenting class %s.", classname));
+					ex.getMessage());
 			wrapper.initCause(ex);
 			// Report this, as the exception is ignored by the JVM:
 			logger.logExeption(wrapper);
