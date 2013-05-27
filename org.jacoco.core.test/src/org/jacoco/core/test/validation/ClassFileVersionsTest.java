@@ -25,6 +25,8 @@ import static org.objectweb.asm.Opcodes.V1_5;
 import static org.objectweb.asm.Opcodes.V1_6;
 import static org.objectweb.asm.Opcodes.V1_7;
 
+import java.io.IOException;
+
 import org.jacoco.core.instr.Instrumenter;
 import org.jacoco.core.runtime.IRuntime;
 import org.jacoco.core.runtime.SystemPropertiesRuntime;
@@ -41,46 +43,46 @@ import org.objectweb.asm.Opcodes;
 public class ClassFileVersionsTest {
 
 	@Test
-	public void test_1_1() {
+	public void test_1_1() throws IOException {
 		testVersion(V1_1, false);
 	}
 
 	@Test
-	public void test_1_2() {
+	public void test_1_2() throws IOException {
 		testVersion(V1_2, false);
 	}
 
 	@Test
-	public void test_1_3() {
+	public void test_1_3() throws IOException {
 		testVersion(V1_3, false);
 	}
 
 	@Test
-	public void test_1_4() {
+	public void test_1_4() throws IOException {
 		testVersion(V1_4, false);
 	}
 
 	@Test
-	public void test_1_5() {
+	public void test_1_5() throws IOException {
 		testVersion(V1_5, false);
 	}
 
 	@Test
-	public void test_1_6() {
+	public void test_1_6() throws IOException {
 		testVersion(V1_6, true);
 	}
 
 	@Test
-	public void test_1_7() {
+	public void test_1_7() throws IOException {
 		testVersion(V1_7, true);
 	}
 
-	private void testVersion(int version, boolean frames) {
+	private void testVersion(int version, boolean frames) throws IOException {
 		final byte[] original = createClass(version);
 
 		IRuntime runtime = new SystemPropertiesRuntime();
 		Instrumenter instrumenter = new Instrumenter(runtime);
-		byte[] instrumented = instrumenter.instrument(original);
+		byte[] instrumented = instrumenter.instrument(original, "TestTarget");
 
 		assertFrames(instrumented, frames);
 	}

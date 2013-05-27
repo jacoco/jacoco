@@ -11,6 +11,8 @@
  *******************************************************************************/
 package org.jacoco.core.test.perf;
 
+import java.util.concurrent.Callable;
+
 import org.jacoco.core.analysis.Analyzer;
 import org.jacoco.core.analysis.IClassCoverage;
 import org.jacoco.core.analysis.ICoverageVisitor;
@@ -33,7 +35,7 @@ public class AnalysisTimeScenario extends TimedScenario {
 	}
 
 	@Override
-	protected Runnable getInstrumentedRunnable() throws Exception {
+	protected Callable<Void> getInstrumentedCallable() throws Exception {
 		final byte[] bytes = TargetLoader.getClassDataAsBytes(target);
 		final ExecutionDataStore executionData = new ExecutionDataStore();
 		ICoverageVisitor visitor = new ICoverageVisitor() {
@@ -41,11 +43,12 @@ public class AnalysisTimeScenario extends TimedScenario {
 			}
 		};
 		final Analyzer analyzer = new Analyzer(executionData, visitor);
-		return new Runnable() {
-			public void run() {
+		return new Callable<Void>() {
+			public Void call() throws Exception {
 				for (int i = 0; i < count; i++) {
-					analyzer.analyzeClass(bytes);
+					analyzer.analyzeClass(bytes, target.getName());
 				}
+				return null;
 			}
 		};
 	}

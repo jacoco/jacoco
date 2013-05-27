@@ -12,6 +12,7 @@
 package org.jacoco.core.test.perf.targets;
 
 import java.util.Random;
+import java.util.concurrent.Callable;
 
 /**
  * "Game of Life" implementation as a more reference scenario. Obviously the
@@ -19,7 +20,7 @@ import java.util.Random;
  * runner targets one class only. Also one could think about more efficient
  * implementations which again is not the focus here.
  */
-public class Target03 implements Runnable {
+public class Target03 implements Callable<Void> {
 
 	private final int width;
 
@@ -130,12 +131,13 @@ public class Target03 implements Runnable {
 		return sb.toString();
 	}
 
-	public void run() {
+	public Void call() throws Exception {
 		clear();
 		randomFill(123, width * height / 2);
 		for (int i = 0; i < 20; i++) {
 			tick();
 		}
+		return null;
 	}
 
 	// Demo

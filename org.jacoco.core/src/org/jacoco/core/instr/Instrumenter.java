@@ -84,11 +84,19 @@ public class Instrumenter {
 	 * 
 	 * @param buffer
 	 *            definition of the class
+	 * @param name
+	 *            a name used for exception messages
 	 * @return instrumented definition
-	 * 
+	 * @throws IOException
+	 *             if the class can't be analyzed
 	 */
-	public byte[] instrument(final byte[] buffer) {
-		return instrument(new ClassReader(buffer));
+	public byte[] instrument(final byte[] buffer, final String name)
+			throws IOException {
+		try {
+			return instrument(new ClassReader(buffer));
+		} catch (final RuntimeException e) {
+			throw instrumentError(name, e);
+		}
 	}
 
 	/**
@@ -96,12 +104,20 @@ public class Instrumenter {
 	 * 
 	 * @param input
 	 *            stream to read class definition from
+	 * @param name
+	 *            a name used for exception messages
 	 * @return instrumented definition
 	 * @throws IOException
-	 *             if reading data from the stream fails
+	 *             if reading data from the stream fails or the class can't be
+	 *             instrumented
 	 */
-	public byte[] instrument(final InputStream input) throws IOException {
-		return instrument(new ClassReader(input));
+	public byte[] instrument(final InputStream input, final String name)
+			throws IOException {
+		try {
+			return instrument(new ClassReader(input));
+		} catch (final RuntimeException e) {
+			throw instrumentError(name, e);
+		}
 	}
 
 	/**
@@ -111,32 +127,27 @@ public class Instrumenter {
 	 *            stream to read class definition from
 	 * @param output
 	 *            stream to write the instrumented version of the class to
+	 * @param name
+	 *            a name used for exception messages
 	 * @throws IOException
-	 *             if reading data from the stream fails
+	 *             if reading data from the stream fails or the class can't be
+	 *             instrumented
 	 */
-	public void instrument(final InputStream input, final OutputStream output)
-			throws IOException {
-		output.write(instrument(new ClassReader(input)));
+	public void instrument(final InputStream input, final OutputStream output,
+			final String name) throws IOException {
+		try {
+			output.write(instrument(new ClassReader(input)));
+		} catch (final RuntimeException e) {
+			throw instrumentError(name, e);
+		}
 	}
 
-	/**
-	 * Creates a instrumented version of the given archive, i.e. with all class
-	 * files contained in this archive instrumented. Contained resources which
-	 * are no class files or archive files are copied as is.
-	 * 
-	 * @param input
-	 *            stream to read archive from
-	 * @param output
-	 *            stream to write the instrumented version of the class to
-	 * @return number of instrumented classes
-	 * @throws IOException
-	 *             if reading data from the stream fails
-	 * @deprecated Use {@link #instrumentAll(InputStream, OutputStream)} instead
-	 */
-	@Deprecated
-	public int instrumentArchive(final InputStream input,
-			final OutputStream output) throws IOException {
-		return instrumentZip(input, output);
+	private IOException instrumentError(final String name,
+			final RuntimeException cause) {
+		final IOException ex = new IOException(String.format(
+				"Error while instrumenting class %s.", name));
+		ex.initCause(cause);
+		return ex;
 	}
 
 	/**
@@ -148,38 +159,41 @@ public class Instrumenter {
 	 *            stream to contents from
 	 * @param output
 	 *            stream to write the instrumented version of the contents
+	 * @param name
+	 *            a name used for exception messages
 	 * @return number of instrumented classes
 	 * @throws IOException
-	 *             if reading data from the stream fails
+	 *             if reading data from the stream fails or a class can't be
+	 *             instrumented
 	 */
-	public int instrumentAll(final InputStream input, final OutputStream output)
-			throws IOException {
+	public int instrumentAll(final InputStream input,
+			final OutputStream output, final String name) throws IOException {
 		final ContentTypeDetector detector = new ContentTypeDetector(input);
 		switch (detector.getType()) {
 		case ContentTypeDetector.CLASSFILE:
-			instrument(detector.getInputStream(), output);
+			instrument(detector.getInputStream(), output, name);
 			return 1;
 		case ContentTypeDetector.ZIPFILE:
-			return instrumentZip(detector.getInputStream(), output);
+			return instrumentZip(detector.getInputStream(), output, name);
 		case ContentTypeDetector.GZFILE:
-			return instrumentGzip(detector.getInputStream(), output);
+			return instrumentGzip(detector.getInputStream(), output, name);
 		case ContentTypeDetector.PACK200FILE:
-			return instrumentPack200(detector.getInputStream(), output);
+			return instrumentPack200(detector.getInputStream(), output, name);
 		default:
 			copy(detector.getInputStream(), output);
 			return 0;
 		}
 	}
 
-	private int instrumentZip(final InputStream input, final OutputStream output)
-			throws IOException {
+	private int instrumentZip(final InputStream input,
+			final OutputStream output, final String name) throws IOException {
 		final ZipInputStream zipin = new ZipInputStream(input);
 		final ZipOutputStream zipout = new ZipOutputStream(output);
 		ZipEntry entry;
 		int count = 0;
 		while ((entry = zipin.getNextEntry()) != null) {
 			zipout.putNextEntry(new ZipEntry(entry.getName()));
-			count += instrumentAll(zipin, zipout);
+			count += instrumentAll(zipin, zipout, name + "@" + entry.getName());
 			zipout.closeEntry();
 		}
 		zipout.finish();
@@ -187,17 +201,18 @@ public class Instrumenter {
 	}
 
 	private int instrumentGzip(final InputStream input,
-			final OutputStream output) throws IOException {
+			final OutputStream output, final String name) throws IOException {
 		final GZIPOutputStream gzout = new GZIPOutputStream(output);
-		final int count = instrumentAll(new GZIPInputStream(input), gzout);
+		final int count = instrumentAll(new GZIPInputStream(input), gzout, name);
 		gzout.finish();
 		return count;
 	}
 
 	private int instrumentPack200(final InputStream input,
-			final OutputStream output) throws IOException {
+			final OutputStream output, final String name) throws IOException {
 		final ByteArrayOutputStream buffer = new ByteArrayOutputStream();
-		final int count = instrumentAll(Pack200Streams.unpack(input), buffer);
+		final int count = instrumentAll(Pack200Streams.unpack(input), buffer,
+				name);
 		Pack200Streams.pack(buffer.toByteArray(), output);
 		return count;
 	}

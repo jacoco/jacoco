@@ -568,7 +568,7 @@ public class ReportTask extends Task {
 				analyzer.analyzeAll(((FileResource) resource).getFile());
 			} else {
 				final InputStream in = resource.getInputStream();
-				analyzer.analyzeAll(in);
+				analyzer.analyzeAll(in, resource.getName());
 				in.close();
 			}
 		}
