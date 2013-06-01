@@ -34,6 +34,21 @@ public class InstrSupportTest {
 	}
 
 	@Test
+	public void testAssertNotIntrumentedPositive() {
+		InstrSupport.assertNotInstrumented("run", "Foo");
+	}
+
+	@Test(expected = IllegalStateException.class)
+	public void testAssertNotIntrumentedField() {
+		InstrSupport.assertNotInstrumented("$jacocoData", "Foo");
+	}
+
+	@Test(expected = IllegalStateException.class)
+	public void testAssertNotIntrumentedMethod() {
+		InstrSupport.assertNotInstrumented("$jacocoInit", "Foo");
+	}
+
+	@Test
 	public void testPushIntM2147483648() {
 		InstrSupport.push(trace, -2147483648);
 		assertInstruction("LDC -2147483648");

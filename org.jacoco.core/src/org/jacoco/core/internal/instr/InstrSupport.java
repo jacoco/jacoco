@@ -11,6 +11,8 @@
  *******************************************************************************/
 package org.jacoco.core.internal.instr;
 
+import static java.lang.String.format;
+
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
 
@@ -59,6 +61,27 @@ public final class InstrSupport {
 	 */
 	public static final int INITMETHOD_ACC = Opcodes.ACC_SYNTHETIC
 			| Opcodes.ACC_PRIVATE | Opcodes.ACC_STATIC | Opcodes.ACC_FINAL;
+
+	/**
+	 * Ensures that the given member does not correspond to a internal member
+	 * created by the instrumentation process. This would mean that the class is
+	 * already instrumented.
+	 * 
+	 * @param member
+	 *            name of the member to check
+	 * @param owner
+	 *            name of the class owning the member
+	 * @throws IllegalStateException
+	 *             thrown if the member has the same name than the
+	 *             instrumentation member
+	 */
+	public static void assertNotInstrumented(final String member,
+			final String owner) throws IllegalStateException {
+		if (member.equals(DATAFIELD_NAME) || member.equals(INITMETHOD_NAME)) {
+			throw new IllegalStateException(format(
+					"Class %s is already instrumented.", owner));
+		}
+	}
 
 	/**
 	 * Generates the instruction to push the given int value on the stack.

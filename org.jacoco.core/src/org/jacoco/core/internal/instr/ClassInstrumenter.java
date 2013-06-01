@@ -11,8 +11,6 @@
  *******************************************************************************/
 package org.jacoco.core.internal.instr;
 
-import static java.lang.String.format;
-
 import org.jacoco.core.internal.flow.ClassProbesVisitor;
 import org.jacoco.core.internal.flow.MethodProbesVisitor;
 import org.jacoco.core.runtime.IExecutionDataAccessorGenerator;
@@ -78,7 +76,7 @@ public class ClassInstrumenter extends ClassProbesVisitor {
 	@Override
 	public FieldVisitor visitField(final int access, final String name,
 			final String desc, final String signature, final Object value) {
-		assertNotInstrumented(name, InstrSupport.DATAFIELD_NAME);
+		InstrSupport.assertNotInstrumented(name, className);
 		return super.visitField(access, name, desc, signature, value);
 	}
 
@@ -86,7 +84,7 @@ public class ClassInstrumenter extends ClassProbesVisitor {
 	public MethodProbesVisitor visitMethod(final int access, final String name,
 			final String desc, final String signature, final String[] exceptions) {
 
-		assertNotInstrumented(name, InstrSupport.INITMETHOD_NAME);
+		InstrSupport.assertNotInstrumented(name, className);
 
 		final MethodVisitor mv = cv.visitMethod(access, name, desc, signature,
 				exceptions);
@@ -117,27 +115,6 @@ public class ClassInstrumenter extends ClassProbesVisitor {
 	public void visitEnd() {
 		probeArrayStrategy.addMembers(cv);
 		super.visitEnd();
-	}
-
-	/**
-	 * Ensures that the given member does not correspond to a internal member
-	 * created by the instrumentation process. This would mean that the class
-	 * has been instrumented twice.
-	 * 
-	 * @param member
-	 *            name of the member to check
-	 * @param instrMember
-	 *            name of a instrumentation member
-	 * @throws IllegalStateException
-	 *             thrown if the member has the same name than the
-	 *             instrumentation member
-	 */
-	private void assertNotInstrumented(final String member,
-			final String instrMember) throws IllegalStateException {
-		if (member.equals(instrMember)) {
-			throw new IllegalStateException(format(
-					"Class %s is already instrumented.", className));
-		}
 	}
 
 	// === probe array strategies ===
