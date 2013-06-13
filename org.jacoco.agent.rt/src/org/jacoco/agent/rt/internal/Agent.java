@@ -15,7 +15,6 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.lang.management.ManagementFactory;
 import java.net.InetAddress;
-import java.net.UnknownHostException;
 
 import javax.management.ObjectName;
 import javax.management.StandardMBean;
@@ -177,7 +176,9 @@ public class Agent implements IAgent {
 		String host;
 		try {
 			host = InetAddress.getLocalHost().getHostName();
-		} catch (final UnknownHostException e) {
+		} catch (final Exception e) {
+			// Also catch platform specific exceptions (like on Android) to
+			// avoid bailing out here
 			host = "unknownhost";
 		}
 		return host + "-" + AbstractRuntime.createRandomId();
