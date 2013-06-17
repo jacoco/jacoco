@@ -34,7 +34,7 @@ public abstract class ClassProbesVisitor extends ClassVisitor {
 	 *            optional next visitor in chain
 	 */
 	public ClassProbesVisitor(final ClassVisitor cv) {
-		super(Opcodes.ASM4, cv);
+		super(Opcodes.ASM5, cv);
 	}
 
 	/**

@@ -24,6 +24,7 @@ import static org.objectweb.asm.Opcodes.V1_4;
 import static org.objectweb.asm.Opcodes.V1_5;
 import static org.objectweb.asm.Opcodes.V1_6;
 import static org.objectweb.asm.Opcodes.V1_7;
+import static org.objectweb.asm.Opcodes.V1_8;
 
 import java.io.IOException;
 
@@ -77,6 +78,11 @@ public class ClassFileVersionsTest {
 		testVersion(V1_7, true);
 	}
 
+	@Test
+	public void test_1_8() throws IOException {
+		testVersion(V1_8, true);
+	}
+
 	private void testVersion(int version, boolean frames) throws IOException {
 		final byte[] original = createClass(version);
 
@@ -89,12 +95,12 @@ public class ClassFileVersionsTest {
 
 	private void assertFrames(byte[] source, boolean expected) {
 		final boolean[] hasFrames = new boolean[] { false };
-		new ClassReader(source).accept(new ClassVisitor(Opcodes.ASM4) {
+		new ClassReader(source).accept(new ClassVisitor(Opcodes.ASM5) {
 
 			@Override
 			public MethodVisitor visitMethod(int access, String name,
 					String desc, String signature, String[] exceptions) {
-				return new MethodVisitor(Opcodes.ASM4) {
+				return new MethodVisitor(Opcodes.ASM5) {
 
 					@Override
 					public void visitFrame(int type, int nLocal,

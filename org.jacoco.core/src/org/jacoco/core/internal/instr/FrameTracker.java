@@ -33,7 +33,7 @@ class FrameTracker extends MethodVisitor implements IFrameInserter {
 
 	public FrameTracker(final String owner, final int access,
 			final String name, final String desc, final MethodVisitor mv) {
-		super(Opcodes.ASM4, mv);
+		super(Opcodes.ASM5, mv);
 		this.owner = owner;
 		local = new Object[8];
 		localSize = 0;

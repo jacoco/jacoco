@@ -27,7 +27,7 @@ class DuplicateFrameEliminator extends MethodVisitor {
 	private boolean instruction;
 
 	public DuplicateFrameEliminator(final MethodVisitor mv) {
-		super(Opcodes.ASM4, mv);
+		super(Opcodes.ASM5, mv);
 		instruction = true;
 	}
 

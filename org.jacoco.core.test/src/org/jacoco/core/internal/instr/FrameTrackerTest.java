@@ -68,7 +68,7 @@ public class FrameTrackerTest {
 	@After
 	public void verify() {
 		MethodRecorder actual = new MethodRecorder();
-		MethodVisitor noLabels = new MethodVisitor(Opcodes.ASM4,
+		MethodVisitor noLabels = new MethodVisitor(Opcodes.ASM5,
 				actual.getVisitor()) {
 			@Override
 			public void visitLabel(Label label) {

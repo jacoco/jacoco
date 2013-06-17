@@ -80,7 +80,7 @@ public class ClassProbesAdapter extends ClassVisitor implements
 	 *            instance to delegate to
 	 */
 	public ClassProbesAdapter(final ClassProbesVisitor cv) {
-		super(Opcodes.ASM4, cv);
+		super(Opcodes.ASM5, cv);
 		this.cv = cv;
 	}
 

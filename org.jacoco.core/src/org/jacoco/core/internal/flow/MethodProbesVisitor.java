@@ -35,7 +35,7 @@ public abstract class MethodProbesVisitor extends MethodVisitor {
 	 *            optional next visitor in chain
 	 */
 	public MethodProbesVisitor(final MethodVisitor mv) {
-		super(Opcodes.ASM4, mv);
+		super(Opcodes.ASM5, mv);
 	}
 
 	/**

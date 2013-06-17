@@ -35,7 +35,7 @@ public final class MethodProbesAdapter extends MethodVisitor {
 	 */
 	public MethodProbesAdapter(final MethodProbesVisitor probesVisitor,
 			final IProbeIdGenerator idGenerator) {
-		super(Opcodes.ASM4, probesVisitor);
+		super(Opcodes.ASM5, probesVisitor);
 		this.probesVisitor = probesVisitor;
 		this.idGenerator = idGenerator;
 	}

@@ -66,7 +66,7 @@ public abstract class RuntimeTestBase {
 	public void testNoLocalVariablesInDataAccessor()
 			throws InstantiationException, IllegalAccessException {
 		runtime.generateDataAccessor(1001, "Target", 5, new MethodVisitor(
-				Opcodes.ASM4) {
+				Opcodes.ASM5) {
 			@Override
 			public void visitVarInsn(int opcode, int var) {
 				fail("No usage of local variables allowed.");

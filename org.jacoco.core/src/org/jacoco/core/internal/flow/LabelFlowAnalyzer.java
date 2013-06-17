@@ -59,7 +59,7 @@ public final class LabelFlowAnalyzer extends MethodVisitor {
 	 * Create new instance.
 	 */
 	public LabelFlowAnalyzer() {
-		super(Opcodes.ASM4);
+		super(Opcodes.ASM5);
 	}
 
 	@Override

@@ -123,7 +123,7 @@
     <argLine>${jvm.args}</argLine>
 
     <!-- Dependencies versions -->
-    <asm.version>4.1</asm.version>
+    <asm.version>5.0-SNAPSHOT</asm.version>
     <ant.version>1.7.1</ant.version>
     <junit.version>4.8.2</junit.version>
 

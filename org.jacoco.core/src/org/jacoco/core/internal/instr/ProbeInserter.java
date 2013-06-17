@@ -47,7 +47,7 @@ class ProbeInserter extends MethodVisitor implements IProbeInserter {
 	 */
 	ProbeInserter(final int access, final String desc, final MethodVisitor mv,
 			final IProbeArrayStrategy arrayStrategy) {
-		super(Opcodes.ASM4, mv);
+		super(Opcodes.ASM5, mv);
 		this.arrayStrategy = arrayStrategy;
 		int pos = (Opcodes.ACC_STATIC & access) == 0 ? 1 : 0;
 		for (final Type t : Type.getArgumentTypes(desc)) {
