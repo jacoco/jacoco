@@ -15,7 +15,7 @@ import java.lang.instrument.Instrumentation;
 
 import org.jacoco.core.runtime.AgentOptions;
 import org.jacoco.core.runtime.IRuntime;
-import org.jacoco.core.runtime.ModifiedSystemClassRuntime;
+import org.jacoco.core.runtime.URLStreamHandlerRuntime;
 
 /**
  * The agent which is referred as the <code>Premain-Class</code>. The agent
@@ -44,15 +44,14 @@ public final class PreMain {
 
 		final Agent agent = Agent.getInstance(agentOptions);
 
-		final IRuntime runtime = createRuntime(inst);
+		final IRuntime runtime = createRuntime();
 		runtime.startup(agent.getData());
 		inst.addTransformer(new CoverageTransformer(runtime, agentOptions,
 				IExceptionLogger.SYSTEM_ERR));
 	}
 
-	private static IRuntime createRuntime(final Instrumentation inst)
-			throws Exception {
-		return ModifiedSystemClassRuntime.createFor(inst, "java/util/UUID");
+	private static IRuntime createRuntime() throws Exception {
+		return new URLStreamHandlerRuntime();
 	}
 
 }
