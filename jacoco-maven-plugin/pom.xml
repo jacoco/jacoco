@@ -46,6 +46,11 @@
       <artifactId>plexus-utils</artifactId>
       <version>1.5.6</version>
     </dependency>
+    <dependency>
+      <groupId>org.apache.maven.shared</groupId>
+      <artifactId>file-management</artifactId>
+      <version>1.2.1</version>
+    </dependency>
 
     <dependency>
       <groupId>org.apache.maven.reporting</groupId>
