@@ -13,12 +13,9 @@ package org.jacoco.ant;
 
 import static java.lang.String.format;
 
-import java.io.BufferedOutputStream;
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
 import java.util.Iterator;
 
 import org.apache.tools.ant.BuildException;
@@ -28,7 +25,6 @@ import org.apache.tools.ant.types.ResourceCollection;
 import org.apache.tools.ant.types.resources.Union;
 import org.apache.tools.ant.util.FileUtils;
 import org.jacoco.core.data.ExecFileLoader;
-import org.jacoco.core.data.ExecutionDataWriter;
 
 /**
  * Task for merging a set of execution data store files into a single file
@@ -99,21 +95,12 @@ public class MergeTask extends Task {
 	private void save(final ExecFileLoader loader) {
 		log(format("Writing merged execution data to %s",
 				destfile.getAbsolutePath()));
-		OutputStream outputStream = null;
 		try {
 			FileUtils.getFileUtils().createNewFile(destfile, true);
-
-			outputStream = new BufferedOutputStream(new FileOutputStream(
-					destfile));
-			final ExecutionDataWriter dataWriter = new ExecutionDataWriter(
-					outputStream);
-			loader.getSessionInfoStore().accept(dataWriter);
-			loader.getExecutionDataStore().accept(dataWriter);
+			loader.save(destfile, false);
 		} catch (final IOException e) {
 			throw new BuildException(format("Unable to write merged file %s",
 					destfile.getAbsolutePath()), e, getLocation());
-		} finally {
-			FileUtils.close(outputStream);
 		}
 	}
 
