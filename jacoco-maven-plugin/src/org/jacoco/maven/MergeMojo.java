@@ -18,9 +18,9 @@ import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.shared.model.fileset.FileSet;
 import org.apache.maven.shared.model.fileset.util.FileSetManager;
 import org.jacoco.core.data.ExecFileLoader;
-import org.jacoco.core.data.ExecutionDataWriter;
 
-import java.io.*;
+import java.io.File;
+import java.io.IOException;
 import java.util.List;
 
 /**
@@ -92,27 +92,15 @@ public class MergeMojo extends AbstractJacocoMojo {
 
     private void save(final ExecFileLoader loader) throws MojoExecutionException {
         getLog().info("Writing merged execution data to " + destFile.getAbsolutePath());
-        OutputStream outputStream = null;
         try {
             File parent = destFile.getParentFile();
             if (!parent.exists()) {
                 parent.mkdirs();
             }
             destFile.createNewFile();
-            outputStream = new BufferedOutputStream(new FileOutputStream(destFile));
-            final ExecutionDataWriter dataWriter = new ExecutionDataWriter(outputStream);
-            loader.getSessionInfoStore().accept(dataWriter);
-            loader.getExecutionDataStore().accept(dataWriter);
+            loader.save(destFile, false);
         } catch (IOException e) {
             throw new MojoExecutionException("Unable to write merged file " + destFile.getAbsolutePath(), e);
-        } finally {
-            if (outputStream != null) {
-                try {
-                    outputStream.close();
-                } catch (IOException e) {
-                    // ignore
-                }
-            }
         }
     }
 
