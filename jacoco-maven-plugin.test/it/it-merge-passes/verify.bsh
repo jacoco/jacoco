@@ -6,8 +6,6 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *
  * Contributors:
- *    Evgeny Mandrikov - initial API and implementation
- *    Kyle Lieber - implementation of CheckMojo
  *    Mads Mohr Christensen - implementation of MergeMojo
  *
  *******************************************************************************/

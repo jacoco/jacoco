@@ -6,8 +6,6 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *
  * Contributors:
- *    Evgeny Mandrikov - initial API and implementation
- *    Brock Janiczak - initial API and implementation (ANT task)
  *    Mads Mohr Christensen - implementation of MergeMojo
  *
  *******************************************************************************/
