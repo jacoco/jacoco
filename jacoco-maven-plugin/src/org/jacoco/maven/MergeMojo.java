@@ -22,7 +22,7 @@ import java.io.IOException;
 import java.util.List;
 
 /**
- * Mojo for merging a set of execution data store files into a single file
+ * Mojo for merging a set of execution data files (*.exec) into a single file
  *
  * @phase generate-resources
  * @goal merge
@@ -42,6 +42,8 @@ public class MergeMojo extends AbstractJacocoMojo {
     private File destFile;
 
     /**
+     * This mojo accepts any number of execution data file sets.
+     *
      * @parameter expression="${jacoco.fileSets}"
      * @required
      */

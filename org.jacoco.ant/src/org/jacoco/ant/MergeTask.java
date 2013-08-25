@@ -27,7 +27,7 @@ import org.apache.tools.ant.util.FileUtils;
 import org.jacoco.core.data.ExecFileLoader;
 
 /**
- * Task for merging a set of execution data store files into a single file
+ * Task for merging a set of execution data files (*.exec) into a single file
  */
 public class MergeTask extends Task {
 
