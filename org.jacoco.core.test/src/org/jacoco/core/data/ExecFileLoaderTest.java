@@ -18,6 +18,8 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.List;
 
 import org.junit.Before;
@@ -41,15 +43,15 @@ public class ExecFileLoaderTest {
 	}
 
 	@Test
-	public void testFile() throws IOException {
+	public void testLoadFile() throws IOException {
 		loader.load(createFile("a"));
 		loader.load(createFile("bb"));
 
-		assertContents();
+		assertLoaderContents("a", "bb");
 	}
 
 	@Test
-	public void testInputStream() throws IOException {
+	public void testLoadInputStream() throws IOException {
 		final FileInputStream in1 = new FileInputStream(createFile("a"));
 		loader.load(in1);
 		in1.close();
@@ -57,17 +59,42 @@ public class ExecFileLoaderTest {
 		loader.load(in2);
 		in2.close();
 
-		assertContents();
+		assertLoaderContents("a", "bb");
 	}
 
 	@Test(expected = IOException.class)
-	public void testBrokenContent() throws IOException {
+	public void testLoadBrokenContent() throws IOException {
 		final File file = new File(sourceFolder.getRoot(), "broken.exec");
 		final FileWriter writer = new FileWriter(file);
 		writer.write("Invalid Content");
 		writer.close();
 
 		loader.load(file);
+	}
+
+	@Test
+	public void testSaveFile() throws IOException {
+		final File file = new File(sourceFolder.getRoot(), "target.exec");
+
+		// Write invalid data to ensure the file is actually overwritten:
+		final OutputStream out = new FileOutputStream(file);
+		out.write("invalid".getBytes());
+		out.close();
+
+		loader.load(createFile("a"));
+		loader.save(file, false);
+
+		assertFileContents(file, "a");
+	}
+
+	@Test
+	public void testSaveFileAppend() throws IOException {
+		final File file = createFile("a");
+
+		loader.load(createFile("bb"));
+		loader.save(file, true);
+
+		assertFileContents(file, "a", "bb");
 	}
 
 	private File createFile(String id) throws IOException {
@@ -81,18 +108,34 @@ public class ExecFileLoaderTest {
 		return file;
 	}
 
-	private void assertContents() {
-		final ExecutionDataStore executionData = loader.getExecutionDataStore();
-		final SessionInfoStore sessionInfos = loader.getSessionInfoStore();
+	private void assertLoaderContents(String... expected) {
+		assertContents(loader.getExecutionDataStore(),
+				loader.getSessionInfoStore(), expected);
+	}
 
-		assertEquals(2, executionData.getContents().size());
-		assertEquals("a", executionData.get(1).getName());
-		assertEquals("bb", executionData.get(2).getName());
+	private void assertFileContents(File file, String... expected)
+			throws IOException {
+		final InputStream in = new FileInputStream(file);
+		final ExecutionDataStore execStore = new ExecutionDataStore();
+		final SessionInfoStore sessionStore = new SessionInfoStore();
+		final ExecutionDataReader reader = new ExecutionDataReader(in);
+		reader.setExecutionDataVisitor(execStore);
+		reader.setSessionInfoVisitor(sessionStore);
+		reader.read();
+		assertContents(execStore, sessionStore, expected);
+	}
 
-		final List<SessionInfo> infos = sessionInfos.getInfos();
-		assertEquals(2, infos.size());
-		assertEquals("a", infos.get(0).getId());
-		assertEquals("bb", infos.get(1).getId());
+	private void assertContents(ExecutionDataStore execStore,
+			SessionInfoStore sessionStore, String... expected) {
+		final List<SessionInfo> infos = sessionStore.getInfos();
+
+		assertEquals(expected.length, execStore.getContents().size());
+		assertEquals(expected.length, infos.size());
+		int idx = 0;
+		for (String id : expected) {
+			assertEquals(id, execStore.get(id.length()).getName());
+			assertEquals(id, infos.get(idx++).getId());
+		}
 	}
 
 }

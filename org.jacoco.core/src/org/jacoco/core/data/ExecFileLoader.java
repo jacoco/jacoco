@@ -12,10 +12,13 @@
 package org.jacoco.core.data;
 
 import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 
 /**
  * Convenience utility for loading *.exec files into a
@@ -63,6 +66,41 @@ public class ExecFileLoader {
 		final InputStream stream = new FileInputStream(file);
 		try {
 			load(stream);
+		} finally {
+			stream.close();
+		}
+	}
+
+	/**
+	 * Saves the current content into the given output stream.
+	 * 
+	 * @param stream
+	 *            stream to save content to
+	 * @throws IOException
+	 *             in case of problems while writing to the stream
+	 */
+	public void save(final OutputStream stream) throws IOException {
+		final ExecutionDataWriter dataWriter = new ExecutionDataWriter(stream);
+		sessionInfos.accept(dataWriter);
+		executionData.accept(dataWriter);
+	}
+
+	/**
+	 * Saves the current content into the given file.
+	 * 
+	 * @param file
+	 *            file to save content to
+	 * @param append
+	 *            <code>true</code> if the content should be appended, otherwise
+	 *            the file is overwritten.
+	 * @throws IOException
+	 *             in case of problems while writing to the stream
+	 */
+	public void save(final File file, final boolean append) throws IOException {
+		final OutputStream stream = new BufferedOutputStream(
+				new FileOutputStream(file, append));
+		try {
+			save(stream);
 		} finally {
 			stream.close();
 		}
