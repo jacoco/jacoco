@@ -12,15 +12,12 @@
 package org.jacoco.examples;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 
 import org.jacoco.core.analysis.Analyzer;
 import org.jacoco.core.analysis.CoverageBuilder;
 import org.jacoco.core.analysis.IBundleCoverage;
-import org.jacoco.core.data.ExecutionDataReader;
-import org.jacoco.core.data.ExecutionDataStore;
-import org.jacoco.core.data.SessionInfoStore;
+import org.jacoco.core.data.ExecFileLoader;
 import org.jacoco.report.DirectorySourceFileLocator;
 import org.jacoco.report.FileMultiReportOutput;
 import org.jacoco.report.IReportVisitor;
@@ -43,8 +40,7 @@ public class ReportGenerator {
 	private final File sourceDirectory;
 	private final File reportDirectory;
 
-	private ExecutionDataStore executionDataStore;
-	private SessionInfoStore sessionInfoStore;
+	private ExecFileLoader execFileLoader;
 
 	/**
 	 * Create a new generator based for the given project.
@@ -66,7 +62,7 @@ public class ReportGenerator {
 	 */
 	public void create() throws IOException {
 
-		// Read the jacoco.exec file. Multiple data stores could be merged
+		// Read the jacoco.exec file. Multiple data files could be merged
 		// at this point
 		loadExecutionData();
 
@@ -94,8 +90,8 @@ public class ReportGenerator {
 		// Initialize the report with all of the execution and session
 		// information. At this point the report doesn't know about the
 		// structure of the report being created
-		visitor.visitInfo(sessionInfoStore.getInfos(),
-				executionDataStore.getContents());
+		visitor.visitInfo(execFileLoader.getSessionInfoStore().getInfos(),
+				execFileLoader.getExecutionDataStore().getContents());
 
 		// Populate the report structure with the bundle coverage information.
 		// Call visitGroup if you need groups in your report.
@@ -109,25 +105,14 @@ public class ReportGenerator {
 	}
 
 	private void loadExecutionData() throws IOException {
-		final FileInputStream fis = new FileInputStream(executionDataFile);
-		final ExecutionDataReader executionDataReader = new ExecutionDataReader(
-				fis);
-		executionDataStore = new ExecutionDataStore();
-		sessionInfoStore = new SessionInfoStore();
-
-		executionDataReader.setExecutionDataVisitor(executionDataStore);
-		executionDataReader.setSessionInfoVisitor(sessionInfoStore);
-
-		while (executionDataReader.read()) {
-		}
-
-		fis.close();
+		execFileLoader = new ExecFileLoader();
+		execFileLoader.load(executionDataFile);
 	}
 
 	private IBundleCoverage analyzeStructure() throws IOException {
 		final CoverageBuilder coverageBuilder = new CoverageBuilder();
-		final Analyzer analyzer = new Analyzer(executionDataStore,
-				coverageBuilder);
+		final Analyzer analyzer = new Analyzer(
+				execFileLoader.getExecutionDataStore(), coverageBuilder);
 
 		analyzer.analyzeAll(classesDirectory);
 
