@@ -91,6 +91,10 @@ public class MergeMojo extends AbstractJacocoMojo {
     }
 
     private void save(final ExecFileLoader loader) throws MojoExecutionException {
+        if (loader.getExecutionDataStore().getContents().isEmpty()) {
+            getLog().info(MSG_SKIPPING);
+            return;
+        }
         getLog().info("Writing merged execution data to " + destFile.getAbsolutePath());
         try {
             File parent = destFile.getParentFile();
