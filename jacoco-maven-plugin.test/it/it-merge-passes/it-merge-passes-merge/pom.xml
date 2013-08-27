@@ -37,13 +37,7 @@
                 <fileSet>
                   <directory>${project.parent.build.directory}</directory>
                   <includes>
-                    <include>jacoco1.exec</include>
-                  </includes>
-                </fileSet>
-                <fileSet>
-                  <directory>${project.parent.build.directory}</directory>
-                  <includes>
-                    <include>jacoco2.exec</include>
+                    <include>*.exec</include>
                   </includes>
                 </fileSet>
               </fileSets>
