@@ -23,7 +23,7 @@ class SessionPump {
 
 	private final CollectorServer collector;
 	private final Socket socket;
-	private String threadName;
+	private final String threadName;
 	private RemoteControlWriter controller;
 	private OutputStream outputStream;
 
@@ -31,10 +31,10 @@ class SessionPump {
 			throws IOException {
 		this.collector = collector;
 		this.socket = accept;
+		this.threadName = socket.getRemoteSocketAddress().toString();
 	}
 
-	public void run(final ThreadGroup group) {
-		threadName = socket.getRemoteSocketAddress().toString();
+	public void run(final ThreadGroup group, final boolean dumpOnExit) {
 		new Thread(group, threadName) {
 			@Override
 			public void run() {
@@ -52,8 +52,10 @@ class SessionPump {
 			@Override
 			public void interrupt() {
 				try {
-					controller.visitDumpCommand(true, false);
-					controller.sendCmdOk();
+					if (dumpOnExit) {
+						controller.visitDumpCommand(true, false);
+						controller.sendCmdOk();
+					}
 					socket.shutdownOutput();
 				} catch (final IOException x) {
 					logErrorMessage(" shutdown failed", x);

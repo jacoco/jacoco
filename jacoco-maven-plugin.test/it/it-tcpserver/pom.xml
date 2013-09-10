@@ -31,19 +31,13 @@
             <id>prepare-agent</id>
             <goals>
               <goal>prepare-agent</goal>
-            </goals>
-          </execution>
-          <execution>
-            <id>start-tcp-server</id>
-            <goals>
               <goal>start-tcpserver-collector</goal>
-            </goals>
-          </execution>
-          <execution>
-            <id>stop-tcp-server</id>
-            <goals>
               <goal>stop-tcpserver-collector</goal>
             </goals>
+            <configuration>
+              <output>tcpclient</output>
+              <port>0</port>
+            </configuration>
           </execution>
           <execution>
             <id>check</id>
@@ -52,11 +46,6 @@
               <goal>check</goal>
             </goals>
             <configuration>
-              <output>tcpclient</output>
-              <address>localhost</address>
-              <port>6300</port>
-              <destFile>/dev/null</destFile>
-              <dumpOnExit>true</dumpOnExit>
               <rules>
                 <rule>
                   <element>BUNDLE</element>

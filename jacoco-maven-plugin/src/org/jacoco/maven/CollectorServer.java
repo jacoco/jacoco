@@ -11,12 +11,10 @@
  *******************************************************************************/
 package org.jacoco.maven;
 
-import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.net.SocketAddress;
 import java.net.SocketException;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
@@ -36,10 +34,10 @@ class CollectorServer implements ISessionInfoVisitor, IExecutionDataVisitor {
 	final private Thread acceptor;
 	final private Log log;
 
-	CollectorServer(final File destFile, final SocketAddress serverAddress,
-			final Log log) throws IOException {
+	CollectorServer(final OutputStream outputStream, final ServerSocket server,
+			final boolean dumpOnExit, final Log log) throws IOException {
 		this.log = log;
-		fileWriter = new ExecutionDataWriter(new FileOutputStream(destFile));
+		fileWriter = new ExecutionDataWriter(outputStream);
 
 		group = new ThreadGroup("jacoco-collector") {
 			@Override
@@ -50,7 +48,6 @@ class CollectorServer implements ISessionInfoVisitor, IExecutionDataVisitor {
 		group.setDaemon(true);
 
 		acceptor = new Thread(group, "acceptor") {
-			final ServerSocket server = new ServerSocket();
 
 			@Override
 			public void run() {
@@ -77,15 +74,13 @@ class CollectorServer implements ISessionInfoVisitor, IExecutionDataVisitor {
 			}
 
 			private void acceptIncoming() throws IOException {
-				server.bind(serverAddress);
-
 				while (true) {
 					final Socket accept = server.accept();
 					logDebugMessage("accepted "
 							+ accept.getRemoteSocketAddress());
 					final SessionPump pump = new SessionPump(
 							CollectorServer.this, accept);
-					pump.run(group);
+					pump.run(group, dumpOnExit);
 				}
 			}
 

@@ -11,6 +11,7 @@
  *******************************************************************************/
 package org.jacoco.maven;
 
+import java.util.Properties;
 import java.util.concurrent.TimeUnit;
 
 import org.apache.maven.plugin.MojoExecutionException;
@@ -23,13 +24,24 @@ import org.apache.maven.plugin.MojoExecutionException;
  * @phase post-integration-test
  */
 public class StopServerCollectorMojo extends AbstractJacocoMojo {
+
 	/**
-	 * Collector name
+	 * Project properties
 	 * 
-	 * @parameter expression="default"
+	 * @parameter expression="${project.properties}"
 	 * @required
+	 * @readonly
 	 */
-	private String name;
+	private Properties projectProperties;
+
+	/**
+	 * Execution Id
+	 * 
+	 * @parameter default-value="${mojoExecution.executionId}"
+	 * @required
+	 * @readonly
+	 */
+	private String executionId;
 
 	/**
 	 * Maximum seconds to wait for socket shutdown
@@ -41,13 +53,19 @@ public class StopServerCollectorMojo extends AbstractJacocoMojo {
 
 	@Override
 	public void executeMojo() throws MojoExecutionException {
-		final Object c = getProject().getProperties().get(
-				"jacoco-collector-server." + name);
-		if (c instanceof CollectorServer) {
-			final CollectorServer server = (CollectorServer) c;
-			server.stop(TimeUnit.SECONDS.toMillis(waitTime));
-		} else {
-			getLog().info("Jacoco Collector " + name + " not found");
+		final CollectorServer collectorServer = getInstance(CollectorServer.class);
+		collectorServer.stop(TimeUnit.SECONDS.toMillis(waitTime));
+	}
+
+	private <T> T getInstance(final Class<T> clss)
+			throws MojoExecutionException {
+		final String instanceName = clss.getCanonicalName() + '#' + executionId;
+		final Object optValue = projectProperties.get(instanceName);
+		if (!clss.isInstance(optValue)) {
+			throw new MojoExecutionException("Property '" + instanceName
+					+ "' (" + optValue + ") is not a "
+					+ clss.getCanonicalName());
 		}
+		return clss.cast(optValue);
 	}
 }
