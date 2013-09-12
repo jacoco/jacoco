@@ -12,32 +12,30 @@
 package org.jacoco.maven;
 
 import java.io.IOException;
-import java.io.OutputStream;
+import java.net.InetSocketAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketException;
-import java.util.concurrent.Executor;
-import java.util.concurrent.Executors;
 
+import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.logging.Log;
 import org.jacoco.core.data.ExecutionData;
 import org.jacoco.core.data.ExecutionDataWriter;
 import org.jacoco.core.data.IExecutionDataVisitor;
 import org.jacoco.core.data.ISessionInfoVisitor;
 import org.jacoco.core.data.SessionInfo;
+import org.jacoco.core.runtime.AgentOptions;
 
-class CollectorServer implements ISessionInfoVisitor, IExecutionDataVisitor {
+class ServerCollector extends AbstractCollector implements ISessionInfoVisitor,
+		IExecutionDataVisitor {
 
-	final private Executor executor = Executors.newSingleThreadExecutor();
-	final private ThreadGroup group;
-	final private ExecutionDataWriter fileWriter;
-	final private Thread acceptor;
-	final private Log log;
+	private final Log log;
+	private final ThreadGroup group;
+	private ExecutionDataWriter fileWriter;
 
-	CollectorServer(final OutputStream outputStream, final ServerSocket server,
-			final boolean dumpOnExit, final Log log) throws IOException {
+	public ServerCollector(final AgentOptions options, final Log log) {
+		super(options);
 		this.log = log;
-		fileWriter = new ExecutionDataWriter(outputStream);
 
 		group = new ThreadGroup("jacoco-collector") {
 			@Override
@@ -46,8 +44,15 @@ class CollectorServer implements ISessionInfoVisitor, IExecutionDataVisitor {
 			}
 		};
 		group.setDaemon(true);
+	}
 
-		acceptor = new Thread(group, "acceptor") {
+	public void startListener() throws MojoExecutionException, IOException {
+		fileWriter = new ExecutionDataWriter(createFileOutputStream());
+		startAcceptorThread(createServerSocket());
+	}
+
+	private void startAcceptorThread(final ServerSocket server) {
+		new Thread(group, "acceptor") {
 
 			@Override
 			public void run() {
@@ -70,7 +75,6 @@ class CollectorServer implements ISessionInfoVisitor, IExecutionDataVisitor {
 					logErrorMessage("shutdown failed", x);
 					super.interrupt();
 				}
-
 			}
 
 			private void acceptIncoming() throws IOException {
@@ -79,8 +83,8 @@ class CollectorServer implements ISessionInfoVisitor, IExecutionDataVisitor {
 					logDebugMessage("accepted "
 							+ accept.getRemoteSocketAddress());
 					final SessionPump pump = new SessionPump(
-							CollectorServer.this, accept);
-					pump.run(group, dumpOnExit);
+							ServerCollector.this, accept);
+					pump.run(group, options.getDumpOnExit());
 				}
 			}
 
@@ -91,8 +95,19 @@ class CollectorServer implements ISessionInfoVisitor, IExecutionDataVisitor {
 			private void logErrorMessage(final String msg, final Exception e) {
 				log.error("jacoco-collector acceptor " + msg, e);
 			}
-		};
-		acceptor.start();
+		}.start();
+	}
+
+	ServerSocket createServerSocket() throws MojoExecutionException {
+		final InetSocketAddress endpoint = getSocketAddress(false);
+		try {
+			final ServerSocket server = new ServerSocket();
+			server.bind(endpoint);
+			return server;
+		} catch (final IOException e) {
+			throw new MojoExecutionException("Can not open server socket "
+					+ endpoint, e);
+		}
 	}
 
 	void stop(final long maxWait) {
@@ -135,9 +150,5 @@ class CollectorServer implements ISessionInfoVisitor, IExecutionDataVisitor {
 		synchronized (fileWriter) {
 			fileWriter.visitClassExecution(data);
 		}
-	}
-
-	void execute(final Runnable runnable) {
-		executor.execute(runnable);
 	}
 }

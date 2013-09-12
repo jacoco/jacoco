@@ -8,16 +8,12 @@
  * Contributors:
  *    Evgeny Mandrikov - initial API and implementation
  *    Kyle Lieber - implementation of CheckMojo
- *    Charles Honton - added goodbye to check integration tests
- *	
+ *
  *******************************************************************************/
-public class Example {
+import java.io.*;
+import org.codehaus.plexus.util.*;
 
-  public void sayHello() {
-    System.out.println("Hello world");
-  }
-
-  public void sayGoodbye() {
-    System.out.println("Goodbye world");
-  }
+String buildLog = FileUtils.fileRead( new File( basedir, "build.log" ) );
+if ( buildLog.indexOf( "All coverage checks have been met." ) < 0 ) {
+    throw new RuntimeException( "Coverage checks were not met." );
 }

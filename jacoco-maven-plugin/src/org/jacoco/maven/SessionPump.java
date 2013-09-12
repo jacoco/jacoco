@@ -21,16 +21,16 @@ import org.jacoco.core.runtime.RemoteControlWriter;
 
 class SessionPump {
 
-	private final CollectorServer collector;
+	private final ServerCollector collector;
 	private final Socket socket;
 	private final String threadName;
 	private RemoteControlWriter controller;
 	private OutputStream outputStream;
 
-	SessionPump(final CollectorServer collector, final Socket accept)
+	SessionPump(final ServerCollector collector, final Socket socket)
 			throws IOException {
 		this.collector = collector;
-		this.socket = accept;
+		this.socket = socket;
 		this.threadName = socket.getRemoteSocketAddress().toString();
 	}
 

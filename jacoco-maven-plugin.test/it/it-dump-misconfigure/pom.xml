@@ -19,7 +19,7 @@
     <version>1.0-SNAPSHOT</version>
   </parent>
 
-  <artifactId>it-tcpserver-misconfigure</artifactId>
+  <artifactId>it-dump-misconfigure</artifactId>
 
   <build>
     <plugins>
@@ -31,7 +31,7 @@
             <id>prepare-agent</id>
             <goals>
               <goal>prepare-agent</goal>
-              <goal>start-tcpserver-collector</goal>
+              <goal>dump</goal>
               </goals>
           </execution>
         </executions>

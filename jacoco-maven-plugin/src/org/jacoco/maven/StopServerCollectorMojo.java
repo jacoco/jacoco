@@ -53,7 +53,7 @@ public class StopServerCollectorMojo extends AbstractJacocoMojo {
 
 	@Override
 	public void executeMojo() throws MojoExecutionException {
-		final CollectorServer collectorServer = getInstance(CollectorServer.class);
+		final ServerCollector collectorServer = getInstance(ServerCollector.class);
 		collectorServer.stop(TimeUnit.SECONDS.toMillis(waitTime));
 	}
 

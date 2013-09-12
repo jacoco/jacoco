@@ -6,17 +6,20 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *
  * Contributors:
- *    Evgeny Mandrikov - initial API and implementation
- *    Kyle Lieber - implementation of CheckMojo
+ *    Chas Honton - initial implementation
  *
  *******************************************************************************/
-import org.junit.Test;
+public class Example {
 
-public class ExampleTest {
+	private static final long TEN_MINUTES = 10 * 1000 * 60;
 
-  @Test
-  public void test() {
-    new Example().sayHello();
-  }
-
+	public static void main(final String[] args) {
+		System.out.println(System.currentTimeMillis()+": Hello ...");
+		try {
+			Thread.sleep(TEN_MINUTES);
+		} catch (final InterruptedException e) {
+			e.printStackTrace();
+		}
+		System.out.println(System.currentTimeMillis()+": ... world");
+	}
 }

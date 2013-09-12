@@ -34,10 +34,11 @@ if ( failsafeOffset < 0 ) {
     throw new RuntimeException( "Failsafe coverage checks were not run." );
 }
 
+if ( buildLog.substring(failsafeOffset).indexOf( "All coverage checks have been met." ) < 0 ) {
+    throw new RuntimeException( "Failsafe coverage checks were not met." );
+}
+
 if ( buildLog.substring(surefireOffset, failsafeOffset).indexOf( "All coverage checks have been met." ) < 0 ) {
     throw new RuntimeException( "Surefire coverage checks were not met." );
 }
 
-if ( buildLog.substring(failsafeOffset).indexOf( "All coverage checks have been met." ) < 0 ) {
-    throw new RuntimeException( "Failsafe coverage checks were not met." );
-}

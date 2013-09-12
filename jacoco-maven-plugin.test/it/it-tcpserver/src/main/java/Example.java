@@ -8,7 +8,7 @@
  * Contributors:
  *    Evgeny Mandrikov - initial API and implementation
  *    Kyle Lieber - implementation of CheckMojo
- *    Charles Honton - added goodbyt to check integration tests
+ *    Charles Honton - added goodbye to check integration tests
  *	
  *******************************************************************************/
 public class Example {

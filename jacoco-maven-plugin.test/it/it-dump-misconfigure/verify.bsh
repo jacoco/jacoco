@@ -6,16 +6,14 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *
  * Contributors:
- *    Charles Honton
+ *    Evgeny Mandrikov - initial API and implementation
+ *    Kyle Lieber - implementation of CheckMojo
  *
  *******************************************************************************/
-import org.junit.Test;
+import java.io.*;
+import org.codehaus.plexus.util.*;
 
-public class ExampleIT {
-
-  @Test
-  public void test() {
-    new Example().sayGoodbye();
-  }
-
+String buildLog = FileUtils.fileRead( new File( basedir, "build.log" ) );
+if ( buildLog.indexOf( "Expecting 'tcpserver' output mode in property" ) < 0 ) {
+    throw new RuntimeException( "Missing misconfiguration exception" );
 }
