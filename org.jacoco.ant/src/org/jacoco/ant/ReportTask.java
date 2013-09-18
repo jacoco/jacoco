@@ -171,6 +171,8 @@ public class ReportTask extends Task {
 
 		private Locale locale = Locale.getDefault();
 
+		private boolean linkToSource = false;
+
 		/**
 		 * Sets the output directory for the report.
 		 * 
@@ -223,6 +225,17 @@ public class ReportTask extends Task {
 			this.locale = locale;
 		}
 
+		/**
+		 * Sets whether or not to link to the source file from the overview.
+		 * Defaults to false (links to the table of methods)
+		 * 
+		 * @param linkToSource
+		 *            link to the source file instead of a table of methods
+		 */
+		public void setLinkToSource(final boolean linkToSource) {
+			this.linkToSource = linkToSource;
+		}
+
 		@Override
 		public IReportVisitor createVisitor() throws IOException {
 			final IMultiReportOutput output;
@@ -247,9 +260,9 @@ public class ReportTask extends Task {
 			formatter.setFooterText(footer);
 			formatter.setOutputEncoding(encoding);
 			formatter.setLocale(locale);
+			formatter.setLinkToSource(linkToSource);
 			return formatter.createVisitor(output);
 		}
-
 	}
 
 	/**

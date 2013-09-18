@@ -34,6 +34,8 @@ public class HTMLGroupVisitor extends AbstractGroupVisitor {
 
 	private final GroupPage page;
 
+	private final boolean linkToSource;
+
 	/**
 	 * Create a new group handler.
 	 * 
@@ -41,17 +43,20 @@ public class HTMLGroupVisitor extends AbstractGroupVisitor {
 	 *            optional hierarchical parent
 	 * @param folder
 	 *            base folder for this group
+	 * @param linkToSource
+	 *            link to source file instead of table of methods
 	 * @param context
 	 *            settings context
 	 * @param name
 	 *            group name
 	 */
 	public HTMLGroupVisitor(final ReportPage parent,
-			final ReportOutputFolder folder, final IHTMLReportContext context,
-			final String name) {
+			final ReportOutputFolder folder, final boolean linkToSource,
+			final IHTMLReportContext context, final String name) {
 		super(name);
 		this.folder = folder;
 		this.context = context;
+		this.linkToSource = linkToSource;
 		page = new GroupPage(total, parent, folder, context);
 	}
 
@@ -68,7 +73,7 @@ public class HTMLGroupVisitor extends AbstractGroupVisitor {
 	protected void handleBundle(final IBundleCoverage bundle,
 			final ISourceFileLocator locator) throws IOException {
 		final BundlePage bundlepage = new BundlePage(bundle, page, locator,
-				folder.subFolder(bundle.getName()), context);
+				folder.subFolder(bundle.getName()), linkToSource, context);
 		bundlepage.render();
 		page.addItem(bundlepage);
 	}
@@ -77,7 +82,7 @@ public class HTMLGroupVisitor extends AbstractGroupVisitor {
 	protected AbstractGroupVisitor handleGroup(final String name)
 			throws IOException {
 		final HTMLGroupVisitor handler = new HTMLGroupVisitor(page,
-				folder.subFolder(name), context, name);
+				folder.subFolder(name), linkToSource, context, name);
 		page.addItem(handler.getPage());
 		return handler;
 	}

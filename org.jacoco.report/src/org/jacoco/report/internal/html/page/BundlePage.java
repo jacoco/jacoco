@@ -30,6 +30,8 @@ public class BundlePage extends TablePage<ICoverageNode> {
 
 	private IBundleCoverage bundle;
 
+	private final boolean linkToSource;
+
 	/**
 	 * Creates a new visitor in the given context.
 	 * 
@@ -41,15 +43,18 @@ public class BundlePage extends TablePage<ICoverageNode> {
 	 *            source locator
 	 * @param folder
 	 *            base folder for this bundle
+	 * @param linkToSource
+	 *            link to source file instead of table of methods
 	 * @param context
 	 *            settings context
 	 */
 	public BundlePage(final IBundleCoverage bundle, final ReportPage parent,
 			final ISourceFileLocator locator, final ReportOutputFolder folder,
-			final IHTMLReportContext context) {
+			final boolean linkToSource, final IHTMLReportContext context) {
 		super(bundle.getPlainCopy(), parent, folder, context);
 		this.bundle = bundle;
 		this.locator = locator;
+		this.linkToSource = linkToSource;
 	}
 
 	@Override
@@ -66,7 +71,7 @@ public class BundlePage extends TablePage<ICoverageNode> {
 			final String foldername = packagename.length() == 0 ? "default"
 					: packagename.replace('/', '.');
 			final PackagePage page = new PackagePage(p, this, locator,
-					folder.subFolder(foldername), context);
+					folder.subFolder(foldername), linkToSource, context);
 			page.render();
 			addItem(page);
 		}
