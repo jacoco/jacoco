@@ -20,8 +20,7 @@ import org.jacoco.core.runtime.AgentOptions;
 import org.jacoco.core.runtime.AgentOptions.OutputMode;
 
 /**
- * Base class for collector mojos ({@link DumpMojo},
- * {@link StartServerCollectorMojo}
+ * Base class for collector mojo ({@link DumpMojo}
  */
 public abstract class AbstractCollectorMojo extends AbstractJacocoMojo {
 
