@@ -12,10 +12,16 @@
 package org.jacoco.maven;
 
 import java.io.File;
+import java.io.IOException;
+import java.net.InetAddress;
+import java.net.InetSocketAddress;
+import java.net.ServerSocket;
+import java.net.UnknownHostException;
 import java.util.Map;
 import java.util.Properties;
 
 import org.apache.maven.artifact.Artifact;
+import org.apache.maven.plugin.MojoExecutionException;
 import org.codehaus.plexus.util.StringUtils;
 import org.jacoco.core.runtime.AgentOptions;
 
@@ -170,7 +176,7 @@ public class AgentMojo extends AbstractJacocoMojo {
 	private Boolean jmx;
 
 	@Override
-	public void executeMojo() {
+	public void executeMojo() throws MojoExecutionException {
 		final String vmArgument = StringUtils.quoteAndEscape(
 				createAgentOptions().getVMArgument(getAgentJarFile()), '"');
 		prependProperty(vmArgument);
@@ -197,7 +203,7 @@ public class AgentMojo extends AbstractJacocoMojo {
 		return jacocoAgentArtifact.getFile();
 	}
 
-	private AgentOptions createAgentOptions() {
+	private AgentOptions createAgentOptions() throws MojoExecutionException {
 		final AgentOptions agentOptions = new AgentOptions();
 		agentOptions.setDestfile(destFile.getAbsolutePath());
 		if (append != null) {
@@ -229,7 +235,7 @@ public class AgentMojo extends AbstractJacocoMojo {
 			agentOptions.setAddress(address);
 		}
 		if (port != null) {
-			agentOptions.setPort(port.intValue());
+			agentOptions.setPort(getPort());
 		}
 		if (classDumpDir != null) {
 			agentOptions.setClassDumpDir(classDumpDir.getAbsolutePath());
@@ -238,6 +244,45 @@ public class AgentMojo extends AbstractJacocoMojo {
 			agentOptions.setJmx(jmx.booleanValue());
 		}
 		return agentOptions;
+	}
+
+	private int getPort() throws MojoExecutionException {
+		int p = port.intValue();
+		if (p == 0) {
+			p = allocatePort(p);
+			setPortProperty(p);
+		}
+		return p;
+	}
+
+	private int allocatePort(int p) throws MojoExecutionException {
+		InetAddress inetAddress = null;
+		if (address != null) {
+			try {
+				inetAddress = InetAddress.getByName(address);
+			} catch (final UnknownHostException e) {
+				throw new MojoExecutionException("Can not resolve " + address,
+						e);
+			}
+		}
+		final InetSocketAddress socketAddress = new InetSocketAddress(
+				inetAddress, p);
+		try {
+			final ServerSocket ss = new ServerSocket();
+			ss.bind(socketAddress, 0);
+			p = ss.getLocalPort();
+			ss.close();
+		} catch (final IOException e) {
+			throw new MojoExecutionException("Can not reserve a port", e);
+		}
+		return p;
+	}
+
+	private void setPortProperty(final int port) {
+		final Properties projectProperties = getProject().getProperties();
+		final String propertyKey = isPropertyNameSpecified() ? propertyName
+				: SUREFIRE_ARG_LINE;
+		projectProperties.put(propertyKey + ".port", Integer.valueOf(port));
 	}
 
 	private boolean isPropertyNameSpecified() {
