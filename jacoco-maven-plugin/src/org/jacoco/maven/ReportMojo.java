@@ -19,6 +19,8 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 
@@ -27,11 +29,23 @@ import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.project.MavenProject;
 import org.apache.maven.reporting.AbstractMavenReport;
 import org.apache.maven.reporting.MavenReportException;
+import org.jacoco.core.analysis.Analyzer;
 import org.jacoco.core.analysis.IBundleCoverage;
 import org.jacoco.core.analysis.ICoverageNode;
+import org.jacoco.core.analysis.ICoverageVisitor;
+import org.jacoco.core.analysis.IMethodCoverage;
 import org.jacoco.core.data.ExecFileLoader;
+import org.jacoco.core.data.ExecutionData;
 import org.jacoco.core.data.ExecutionDataStore;
 import org.jacoco.core.data.SessionInfoStore;
+import org.jacoco.core.internal.analysis.ClassAnalyzer;
+import org.jacoco.core.internal.analysis.MethodAnalyzer;
+import org.jacoco.core.internal.analysis.StringPool;
+import org.jacoco.core.internal.data.CRC64;
+import org.jacoco.core.internal.flow.ClassProbesAdapter;
+import org.jacoco.core.internal.flow.ClassProbesVisitor;
+import org.jacoco.core.internal.flow.MethodProbesVisitor;
+import org.jacoco.core.internal.instr.InstrSupport;
 import org.jacoco.report.FileMultiReportOutput;
 import org.jacoco.report.IReportGroupVisitor;
 import org.jacoco.report.IReportVisitor;
@@ -40,6 +54,9 @@ import org.jacoco.report.MultiReportVisitor;
 import org.jacoco.report.csv.CSVFormatter;
 import org.jacoco.report.html.HTMLFormatter;
 import org.jacoco.report.xml.XMLFormatter;
+import org.objectweb.asm.ClassReader;
+import org.objectweb.asm.ClassVisitor;
+import org.objectweb.asm.Opcodes;
 
 /**
  * Creates a code coverage report for a single project in multiple formats
@@ -108,6 +125,13 @@ public class ReportMojo extends AbstractMavenReport {
 	 * @parameter expression="${jacoco.skip}" default-value="false"
 	 */
 	private boolean skip;
+
+	/**
+	 * Flag used to exclude mixins from coverage analysis.
+	 * 
+	 * @parameter expression="${jacoco.excludeMixins}" default-value="false"
+	 */
+	private boolean excludeMixins;
 
 	/**
 	 * Maven project.
@@ -253,12 +277,16 @@ public class ReportMojo extends AbstractMavenReport {
 		executionDataStore = loader.getExecutionDataStore();
 	}
 
-	private void createReport(final IReportGroupVisitor visitor)
-			throws IOException {
+	private BundleCreator createBundleCreator() {
 		final FileFilter fileFilter = new FileFilter(this.getIncludes(),
 				this.getExcludes());
-		final BundleCreator creator = new BundleCreator(this.getProject(),
-				fileFilter);
+		return excludeMixins ? new SanitizingBundleCreator(this.getProject(),
+				fileFilter) : new BundleCreator(this.getProject(), fileFilter);
+	}
+
+	private void createReport(final IReportGroupVisitor visitor)
+			throws IOException {
+		final BundleCreator creator = createBundleCreator();
 		final IBundleCoverage bundle = creator.createBundle(executionDataStore);
 
 		final SourceFileCollection locator = new SourceFileCollection(
@@ -348,5 +376,122 @@ public class ReportMojo extends AbstractMavenReport {
 			result.add(resolvePath((String) path));
 		}
 		return result;
+	}
+
+	private static final class SanitizingBundleCreator extends BundleCreator {
+		public SanitizingBundleCreator(final MavenProject project,
+				final FileFilter fileFilter) {
+			super(project, fileFilter);
+		}
+
+		@Override
+		protected Analyzer createAnalyzer(
+				final ExecutionDataStore executionDataStore,
+				final ICoverageVisitor coverageVisitor) {
+			return new SanitizingAnalyzer(executionDataStore, coverageVisitor);
+		}
+	}
+
+	private static final class SanitizingAnalyzer extends Analyzer {
+
+		private final ExecutionDataStore executionData;
+		private final ICoverageVisitor coverageVisitor;
+
+		public SanitizingAnalyzer(final ExecutionDataStore executionData,
+				final ICoverageVisitor coverageVisitor) {
+			super(executionData, coverageVisitor);
+			this.executionData = executionData;
+			this.coverageVisitor = coverageVisitor;
+		}
+
+		@Override
+		public void analyzeClass(final ClassReader reader) {
+			final ClassVisitor visitor = createSanitizingVisitor(CRC64
+					.checksum(reader.b));
+			reader.accept(visitor, 0);
+		}
+
+		private ClassVisitor createSanitizingVisitor(final long classid) {
+			final ExecutionData data = executionData.get(classid);
+			final boolean[] probes = data == null ? null : data.getProbes();
+			final StringPool stringPool = new StringPool();
+			final ClassProbesVisitor analyzer = new SanitizingClassAnalyzer(
+					classid, probes, stringPool, coverageVisitor);
+			return new ClassProbesAdapter(analyzer);
+		}
+	}
+
+	private static final class SanitizingClassAnalyzer extends ClassAnalyzer {
+		private final StringPool stringPool;
+		private final boolean[] probes;
+		private final Collection<IMethodCoverage> methodCoveragesToAdd = new ArrayList<IMethodCoverage>();
+		private final ICoverageVisitor coverageVisitor;
+
+		private SanitizingClassAnalyzer(final long classid,
+				final boolean[] probes, final StringPool stringPool,
+				final ICoverageVisitor coverageVisitor) {
+			super(classid, probes, stringPool);
+			this.stringPool = stringPool;
+			this.probes = probes;
+			this.coverageVisitor = coverageVisitor;
+		}
+
+		@Override
+		public MethodProbesVisitor visitMethod(final int access,
+				final String name, final String desc, final String signature,
+				final String[] exceptions) {
+
+			InstrSupport.assertNotInstrumented(name, getCoverage().getName());
+
+			// TODO: Use filter hook
+			if ((access & Opcodes.ACC_SYNTHETIC) != 0) {
+				return null;
+			}
+
+			return new MethodAnalyzer(stringPool.get(name),
+					stringPool.get(desc), stringPool.get(signature), probes) {
+				@Override
+				public void visitEnd() {
+					super.visitEnd();
+					final IMethodCoverage methodCoverage = getCoverage();
+					if (methodCoverage.getInstructionCounter().getTotalCount() > 0) {
+						// Only consider methods that actually contain
+						// code
+						methodCoveragesToAdd.add(methodCoverage);
+					}
+				}
+			};
+		}
+
+		@Override
+		public void visitEnd() {
+			try {
+				visitSanitizedMethods();
+			} finally {
+				super.visitEnd();
+				coverageVisitor.visitCoverage(getCoverage());
+			}
+		}
+
+		private boolean isConstructor(final IMethodCoverage methodCoverage) {
+			return "<init>".equals(methodCoverage.getName());
+		}
+
+		private void visitSanitizedMethods() {
+
+			final Collection<Integer> constructorLines = new HashSet<Integer>();
+			for (final IMethodCoverage methodCoverage : methodCoveragesToAdd) {
+				if (isConstructor(methodCoverage)) {
+					constructorLines.add(Integer.valueOf(methodCoverage
+							.getFirstLine()));
+				}
+			}
+			for (final IMethodCoverage methodCoverage : methodCoveragesToAdd) {
+				if (!constructorLines.contains(Integer.valueOf(methodCoverage
+						.getFirstLine())) || isConstructor(methodCoverage)) {
+					getCoverage().addMethod(methodCoverage);
+				}
+			}
+		}
 	}
 }
