@@ -14,16 +14,13 @@ package org.jacoco.ant;
 import static java.lang.String.format;
 
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.OutputStream;
 import java.net.InetAddress;
 import java.net.Socket;
 
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Task;
-import org.apache.tools.ant.util.FileUtils;
-import org.jacoco.core.data.ExecutionDataWriter;
+import org.jacoco.core.data.ExecFileLoader;
 import org.jacoco.core.runtime.AgentOptions;
 import org.jacoco.core.runtime.RemoteControlReader;
 import org.jacoco.core.runtime.RemoteControlWriter;
@@ -33,13 +30,6 @@ import org.jacoco.core.runtime.RemoteControlWriter;
  * tcpserver output mode
  */
 public class DumpTask extends Task {
-
-	private static final OutputStream NUL = new OutputStream() {
-		@Override
-		public void write(final int b) throws IOException {
-			// nothing to do
-		}
-	};
 
 	private boolean dump = true;
 	private boolean reset = false;
@@ -94,7 +84,7 @@ public class DumpTask extends Task {
 
 	/**
 	 * Sets whether execution data should be downloaded from the remote host.
-	 * Defaults to <code>false</code>
+	 * Defaults to <code>true</code>
 	 * 
 	 * @param dump
 	 *            <code>true</code> to download execution data
@@ -105,7 +95,7 @@ public class DumpTask extends Task {
 
 	/**
 	 * Sets whether a reset command should be sent after the execution data has
-	 * been copied. Defaults to <code>false</code>
+	 * been dumped. Defaults to <code>false</code>
 	 * 
 	 * @param reset
 	 *            <code>true</code> to reset execution data
@@ -126,9 +116,8 @@ public class DumpTask extends Task {
 					getLocation());
 		}
 
-		OutputStream output = null;
-
 		try {
+			final ExecFileLoader loader = new ExecFileLoader();
 
 			// 1. Open socket connection
 			final Socket socket = new Socket(InetAddress.getByName(address),
@@ -138,36 +127,26 @@ public class DumpTask extends Task {
 					socket.getOutputStream());
 			final RemoteControlReader remoteReader = new RemoteControlReader(
 					socket.getInputStream());
+			remoteReader.setSessionInfoVisitor(loader.getSessionInfoStore());
+			remoteReader
+					.setExecutionDataVisitor(loader.getExecutionDataStore());
 
-			// 2. Open file output
-			output = openOutputStream();
-			final ExecutionDataWriter outputWriter = new ExecutionDataWriter(
-					output);
-			remoteReader.setSessionInfoVisitor(outputWriter);
-			remoteReader.setExecutionDataVisitor(outputWriter);
-
-			// 3. Request dump
+			// 2. Request dump
 			remoteWriter.visitDumpCommand(dump, reset);
 			remoteReader.read();
+
+			// 3. Write execution data to file
+			if (dump) {
+				log(format("Dumping execution data to %s",
+						destfile.getAbsolutePath()));
+				loader.save(destfile, append);
+			}
 
 			socket.close();
 
 		} catch (final IOException e) {
 			throw new BuildException("Unable to dump coverage data", e,
 					getLocation());
-		} finally {
-			FileUtils.close(output);
-		}
-	}
-
-	private OutputStream openOutputStream() throws IOException {
-		if (dump) {
-			log(format("Dumping execution data to %s",
-					destfile.getAbsolutePath()));
-			FileUtils.getFileUtils().createNewFile(destfile, true);
-			return new FileOutputStream(destfile, append);
-		} else {
-			return NUL;
 		}
 	}
 

@@ -86,7 +86,9 @@ public class ExecFileLoader {
 	}
 
 	/**
-	 * Saves the current content into the given file.
+	 * Saves the current content into the given file. Parent directories are
+	 * created as needed. Also a files system lock is acquired to avoid
+	 * concurrent write access.
 	 * 
 	 * @param file
 	 *            file to save content to
@@ -97,12 +99,18 @@ public class ExecFileLoader {
 	 *             in case of problems while writing to the stream
 	 */
 	public void save(final File file, final boolean append) throws IOException {
-		final OutputStream stream = new BufferedOutputStream(
-				new FileOutputStream(file, append));
+		final File folder = file.getParentFile();
+		if (folder != null) {
+			folder.mkdirs();
+		}
+		final FileOutputStream fileStream = new FileOutputStream(file, append);
+		// Avoid concurrent writes from other processes:
+		fileStream.getChannel().lock();
+		final OutputStream bufferedStream = new BufferedOutputStream(fileStream);
 		try {
-			save(stream);
+			save(bufferedStream);
 		} finally {
-			stream.close();
+			bufferedStream.close();
 		}
 	}
 

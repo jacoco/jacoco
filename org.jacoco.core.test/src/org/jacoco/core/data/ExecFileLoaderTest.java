@@ -97,6 +97,16 @@ public class ExecFileLoaderTest {
 		assertFileContents(file, "a", "bb");
 	}
 
+	@Test
+	public void testCreateSubfolders() throws IOException {
+		final File file = new File(sourceFolder.getRoot(), "a/b/c/target.exec");
+
+		loader.load(createFile("a"));
+		loader.save(file, true);
+
+		assertFileContents(file, "a");
+	}
+
 	private File createFile(String id) throws IOException {
 		final File file = new File(sourceFolder.getRoot(), id + ".exec");
 		final FileOutputStream out = new FileOutputStream(file);

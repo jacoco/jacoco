@@ -96,7 +96,6 @@ public class MergeTask extends Task {
 		log(format("Writing merged execution data to %s",
 				destfile.getAbsolutePath()));
 		try {
-			FileUtils.getFileUtils().createNewFile(destfile, true);
 			loader.save(destfile, false);
 		} catch (final IOException e) {
 			throw new BuildException(format("Unable to write merged file %s",
