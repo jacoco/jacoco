@@ -21,12 +21,13 @@ import org.codehaus.plexus.util.FileUtils;
 import org.jacoco.core.analysis.Analyzer;
 import org.jacoco.core.analysis.CoverageBuilder;
 import org.jacoco.core.analysis.IBundleCoverage;
+import org.jacoco.core.analysis.ICoverageVisitor;
 import org.jacoco.core.data.ExecutionDataStore;
 
 /**
  * Creates an IBundleCoverage.
  */
-public final class BundleCreator {
+public class BundleCreator {
 
 	private final MavenProject project;
 	private final FileFilter fileFilter;
@@ -45,6 +46,20 @@ public final class BundleCreator {
 	}
 
 	/**
+	 * 
+	 * Factory method for creating an Analyzer
+	 * 
+	 * @param executionDataStore
+	 * @param coverageVisitor
+	 * @return an Analyzer
+	 */
+	protected Analyzer createAnalyzer(
+			final ExecutionDataStore executionDataStore,
+			final ICoverageVisitor coverageVisitor) {
+		return new Analyzer(executionDataStore, coverageVisitor);
+	}
+
+	/**
 	 * Create an IBundleCoverage for the given ExecutionDataStore.
 	 * 
 	 * @param executionDataStore
@@ -56,7 +71,7 @@ public final class BundleCreator {
 	public IBundleCoverage createBundle(
 			final ExecutionDataStore executionDataStore) throws IOException {
 		final CoverageBuilder builder = new CoverageBuilder();
-		final Analyzer analyzer = new Analyzer(executionDataStore, builder);
+		final Analyzer analyzer = createAnalyzer(executionDataStore, builder);
 		final File classesDir = new File(this.project.getBuild()
 				.getOutputDirectory());
 
