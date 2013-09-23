@@ -102,7 +102,7 @@ public abstract class ReportPage implements ILinkable {
 		body.attr("onload", getOnload());
 		final HTMLElement navigation = body.div(Styles.BREADCRUMB);
 		navigation.attr("id", "breadcrumb");
-		infoLinks(navigation.span(Styles.RIGHT));
+		infoLinks(navigation.span(Styles.INFO));
 		breadcrumb(navigation, folder);
 		body.h1().text(getLinkLabel());
 		content(body);
@@ -118,7 +118,15 @@ public abstract class ReportPage implements ILinkable {
 		return null;
 	}
 
-	private void infoLinks(final HTMLElement span) throws IOException {
+	/**
+	 * Inserts additional links on the top right corner.
+	 * 
+	 * @param span
+	 *            parent element
+	 * @throws IOException
+	 *             in case of IO problems with the report writer
+	 */
+	protected void infoLinks(final HTMLElement span) throws IOException {
 		span.a(context.getSessionsPage(), folder);
 	}
 
