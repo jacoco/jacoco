@@ -659,6 +659,10 @@ class FrameTracker extends MethodVisitor implements IFrameInserter {
 	}
 
 	private Object get(final int pos) {
+		if (localSize <= pos) {
+			throw new IllegalStateException(
+					"Missing or invalid stackmap frames.");
+		}
 		return local[pos];
 	}
 

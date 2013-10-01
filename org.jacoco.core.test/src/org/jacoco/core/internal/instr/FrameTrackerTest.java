@@ -139,10 +139,17 @@ public class FrameTrackerTest {
 	}
 
 	@Test(expected = IllegalStateException.class)
-	public void testInvalidFrame() {
+	public void testInvalidFrame_StackUnderflow() {
 		FrameTracker tracker = new FrameTracker("Test", ACC_STATIC, "test",
 				"()V", null);
 		tracker.visitInsn(POP);
+	}
+
+	@Test(expected = IllegalStateException.class)
+	public void testInvalidFrame_UndefinedLocal() {
+		FrameTracker tracker = new FrameTracker("Test", ACC_STATIC, "test",
+				"()V", null);
+		tracker.visitVarInsn(ALOAD, 1);
 	}
 
 	@Test
@@ -1377,8 +1384,8 @@ public class FrameTrackerTest {
 	@Test(expected = IllegalArgumentException.class)
 	public void NEWARRAY_invalidOperand() {
 		FrameTracker tracker = new FrameTracker("Test", ACC_STATIC, "test",
-				"()V", null);
-		tracker.visitFrame(NEW, 0, new Object[0], 1, new Object[] { INTEGER });
+				"()V", new MethodNode());
+		tracker.visitFrame(F_NEW, 0, new Object[0], 1, new Object[] { INTEGER });
 		tracker.visitIntInsn(NEWARRAY, -1);
 	}
 
