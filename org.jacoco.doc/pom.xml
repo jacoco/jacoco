@@ -278,6 +278,28 @@
           </transformationSets>
         </configuration>
       </plugin>
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>xml-maven-plugin</artifactId>
+        <executions>
+          <execution>
+            <goals>
+              <goal>validate</goal>
+            </goals>
+          </execution>
+        </executions>
+        <configuration>
+          <validationSets>
+            <validationSet>
+              <dir>.</dir>
+              <includes>
+                <include>docroot/**/*.html</include>
+                <include>target/generated-resources/xml/xslt/*.html</include>
+              </includes>
+            </validationSet>
+          </validationSets>
+        </configuration>
+      </plugin>
     </plugins>
   </build>
 </project>
