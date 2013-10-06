@@ -64,6 +64,8 @@ public class HTMLFormatter implements IHTMLReportContext {
 
 	private Table table;
 
+	private boolean linkToSource;
+
 	/**
 	 * New instance with default settings.
 	 */
@@ -112,6 +114,17 @@ public class HTMLFormatter implements IHTMLReportContext {
 		this.outputEncoding = outputEncoding;
 	}
 
+	/**
+	 * Sets whether or not to link to the source file from the overview.
+	 * Defaults to false (links to the table of methods)
+	 * 
+	 * @param linkToSource
+	 *            link to the source file instead of a table of methods
+	 */
+	public void setLinkToSource(final boolean linkToSource) {
+		this.linkToSource = linkToSource;
+	}
+
 	// === IHTMLReportContext ===
 
 	public ILanguageNames getLanguageNames() {
@@ -132,14 +145,14 @@ public class HTMLFormatter implements IHTMLReportContext {
 	private Table createTable() {
 		final Table t = new Table();
 		t.add("Element", null, new LabelColumn(), false);
-		t.add("Missed Instructions", Styles.BAR, new BarColumn(CounterEntity.INSTRUCTION,
-				locale), true);
-		t.add("Cov.", Styles.CTR2,
-				new PercentageColumn(CounterEntity.INSTRUCTION, locale), false);
-		t.add("Missed Branches", Styles.BAR, new BarColumn(CounterEntity.BRANCH, locale),
-				false);
-		t.add("Cov.", Styles.CTR2, new PercentageColumn(CounterEntity.BRANCH, locale),
-				false);
+		t.add("Missed Instructions", Styles.BAR, new BarColumn(
+				CounterEntity.INSTRUCTION, locale), true);
+		t.add("Cov.", Styles.CTR2, new PercentageColumn(
+				CounterEntity.INSTRUCTION, locale), false);
+		t.add("Missed Branches", Styles.BAR, new BarColumn(
+				CounterEntity.BRANCH, locale), false);
+		t.add("Cov.", Styles.CTR2, new PercentageColumn(CounterEntity.BRANCH,
+				locale), false);
 		addMissedTotalColumns(t, "Cxty", CounterEntity.COMPLEXITY);
 		addMissedTotalColumns(t, "Lines", CounterEntity.LINE);
 		addMissedTotalColumns(t, "Methods", CounterEntity.METHOD);
@@ -207,14 +220,14 @@ public class HTMLFormatter implements IHTMLReportContext {
 			public void visitBundle(final IBundleCoverage bundle,
 					final ISourceFileLocator locator) throws IOException {
 				final BundlePage page = new BundlePage(bundle, null, locator,
-						root, HTMLFormatter.this);
+						root, linkToSource, HTMLFormatter.this);
 				createSessionsPage(page);
 				page.render();
 			}
 
 			public IReportGroupVisitor visitGroup(final String name)
 					throws IOException {
-				groupHandler = new HTMLGroupVisitor(null, root,
+				groupHandler = new HTMLGroupVisitor(null, root, linkToSource,
 						HTMLFormatter.this, name);
 				createSessionsPage(groupHandler.getPage());
 				return groupHandler;

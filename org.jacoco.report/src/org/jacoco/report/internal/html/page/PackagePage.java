@@ -14,7 +14,9 @@ package org.jacoco.report.internal.html.page;
 import java.io.IOException;
 import java.io.Reader;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 import org.jacoco.core.analysis.IClassCoverage;
 import org.jacoco.core.analysis.IPackageCoverage;
@@ -22,7 +24,6 @@ import org.jacoco.core.analysis.ISourceFileCoverage;
 import org.jacoco.report.ISourceFileLocator;
 import org.jacoco.report.internal.ReportOutputFolder;
 import org.jacoco.report.internal.html.IHTMLReportContext;
-import org.jacoco.report.internal.html.ILinkable;
 
 /**
  * Page showing coverage information for a Java package. The page contains a
@@ -31,6 +32,10 @@ import org.jacoco.report.internal.html.ILinkable;
 public class PackagePage extends TablePage<IPackageCoverage> {
 
 	private final ISourceFileLocator locator;
+
+	private final boolean linkToSource;
+
+	private final Set<String> addedSourceFiles;
 
 	/**
 	 * Creates a new visitor in the given context.
@@ -43,25 +48,30 @@ public class PackagePage extends TablePage<IPackageCoverage> {
 	 *            source locator
 	 * @param folder
 	 *            base folder to create this page in
+	 * @param linkToSource
+	 *            link to source file instead of table of methods
 	 * @param context
 	 *            settings context
 	 */
 	public PackagePage(final IPackageCoverage node, final ReportPage parent,
 			final ISourceFileLocator locator, final ReportOutputFolder folder,
-			final IHTMLReportContext context) {
+			final boolean linkToSource, final IHTMLReportContext context) {
 		super(node, parent, folder, context);
 		this.locator = locator;
+		this.linkToSource = linkToSource;
+		this.addedSourceFiles = new HashSet<String>();
 	}
 
 	@Override
 	public void render() throws IOException {
-		final Map<String, ILinkable> sourceFiles = renderSourceFiles();
+		final Map<String, SourceFilePage> sourceFiles = renderSourceFiles();
 		renderClasses(sourceFiles);
 		super.render();
 	}
 
-	private final Map<String, ILinkable> renderSourceFiles() throws IOException {
-		final Map<String, ILinkable> sourceFiles = new HashMap<String, ILinkable>();
+	private final Map<String, SourceFilePage> renderSourceFiles()
+			throws IOException {
+		final Map<String, SourceFilePage> sourceFiles = new HashMap<String, SourceFilePage>();
 		final String packagename = getNode().getName();
 		for (final ISourceFileCoverage s : getNode().getSourceFiles()) {
 			final String sourcename = s.getName();
@@ -78,13 +88,21 @@ public class PackagePage extends TablePage<IPackageCoverage> {
 		return sourceFiles;
 	}
 
-	private void renderClasses(final Map<String, ILinkable> sourceFiles)
+	private void renderClasses(final Map<String, SourceFilePage> sourceFiles)
 			throws IOException {
 		for (final IClassCoverage c : getNode().getClasses()) {
 			final ClassPage page = new ClassPage(c, this, sourceFiles.get(c
 					.getSourceFileName()), folder, context);
 			page.render();
-			addItem(page);
+
+			if (linkToSource && sourceFiles.containsKey(c.getSourceFileName())) {
+				if (!addedSourceFiles.contains(c.getSourceFileName())) {
+					addItem(sourceFiles.get(c.getSourceFileName()));
+					addedSourceFiles.add(c.getSourceFileName());
+				}
+			} else {
+				addItem(page);
+			}
 		}
 	}
 
