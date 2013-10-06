@@ -29,6 +29,7 @@ import org.jacoco.report.internal.html.resources.Styles;
 public class PackagePage extends TablePage<IPackageCoverage> {
 
 	private final PackageSourcePage packageSourcePage;
+	private final boolean sourceCoverageExists;
 
 	/**
 	 * Creates a new visitor in the given context.
@@ -50,11 +51,14 @@ public class PackagePage extends TablePage<IPackageCoverage> {
 		super(node, parent, folder, context);
 		packageSourcePage = new PackageSourcePage(node, parent, locator,
 				folder, context, this);
+		sourceCoverageExists = !node.getSourceFiles().isEmpty();
 	}
 
 	@Override
 	public void render() throws IOException {
-		packageSourcePage.render();
+		if (sourceCoverageExists) {
+			packageSourcePage.render();
+		}
 		renderClasses();
 		super.render();
 	}
@@ -87,8 +91,10 @@ public class PackagePage extends TablePage<IPackageCoverage> {
 
 	@Override
 	protected void infoLinks(final HTMLElement span) throws IOException {
-		final String link = packageSourcePage.getLink(folder);
-		span.a(link, Styles.EL_SOURCE).text("Source Files");
+		if (sourceCoverageExists) {
+			final String link = packageSourcePage.getLink(folder);
+			span.a(link, Styles.EL_SOURCE).text("Source Files");
+		}
 		super.infoLinks(span);
 	}
 

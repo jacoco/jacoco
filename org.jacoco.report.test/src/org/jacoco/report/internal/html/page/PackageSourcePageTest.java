@@ -80,7 +80,7 @@ public class PackageSourcePageTest extends PageTestBase {
 			}
 
 			public String getLink(ReportOutputFolder base) {
-				return "package.html";
+				return "index.html";
 			}
 		};
 	}
@@ -91,11 +91,8 @@ public class PackageSourcePageTest extends PageTestBase {
 				context, packagePageLink);
 		page.render();
 
-		System.out.println(new String(output.getFile("index.source.html"),
-				"UTF-8"));
-
 		final Document doc = support.parse(output.getFile("index.source.html"));
-		assertEquals("package.html",
+		assertEquals("index.html",
 				support.findStr(doc, "/html/body/div[1]/span[1]/a/@href"));
 		assertEquals("el_class",
 				support.findStr(doc, "/html/body/div[1]/span[1]/a/@class"));

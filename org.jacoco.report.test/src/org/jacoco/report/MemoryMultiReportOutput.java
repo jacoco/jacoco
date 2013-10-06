@@ -14,6 +14,7 @@ package org.jacoco.report;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 import java.io.ByteArrayInputStream;
@@ -63,6 +64,10 @@ public class MemoryMultiReportOutput implements IMultiReportOutput {
 	public void assertFile(String path) {
 		assertNotNull(String.format("Missing file %s. Actual files are %s.",
 				path, files.keySet()), files.get(path));
+	}
+
+	public void assertNoFile(String path) {
+		assertNull(String.format("Unexpected file %s.", path), files.get(path));
 	}
 
 	public void assertSingleFile(String path) {

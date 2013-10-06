@@ -32,7 +32,7 @@ import org.jacoco.report.internal.html.resources.Styles;
 public class PackageSourcePage extends TablePage<IPackageCoverage> {
 
 	private final ISourceFileLocator locator;
-	private Map<String, ILinkable> sourceFilePages;
+	private final Map<String, ILinkable> sourceFilePages;
 	private final ILinkable packagePage;
 
 	/**
@@ -58,11 +58,12 @@ public class PackageSourcePage extends TablePage<IPackageCoverage> {
 		super(node, parent, folder, context);
 		this.locator = locator;
 		this.packagePage = packagePage;
+		this.sourceFilePages = new HashMap<String, ILinkable>();
 	}
 
 	@Override
 	public void render() throws IOException {
-		sourceFilePages = renderSourceFilePages();
+		renderSourceFilePages();
 		super.render();
 	}
 
@@ -75,9 +76,7 @@ public class PackageSourcePage extends TablePage<IPackageCoverage> {
 		return sourceFilePages.get(name);
 	}
 
-	private final Map<String, ILinkable> renderSourceFilePages()
-			throws IOException {
-		final Map<String, ILinkable> sourceFiles = new HashMap<String, ILinkable>();
+	private final void renderSourceFilePages() throws IOException {
 		final String packagename = getNode().getName();
 		for (final ISourceFileCoverage s : getNode().getSourceFiles()) {
 			final String sourcename = s.getName();
@@ -89,12 +88,11 @@ public class PackageSourcePage extends TablePage<IPackageCoverage> {
 				final SourceFilePage sourcePage = new SourceFilePage(s, reader,
 						locator.getTabWidth(), this, folder, context);
 				sourcePage.render();
-				sourceFiles.put(sourcename, sourcePage);
+				sourceFilePages.put(sourcename, sourcePage);
 				addItem(sourcePage);
 			}
 
 		}
-		return sourceFiles;
 	}
 
 	@Override
