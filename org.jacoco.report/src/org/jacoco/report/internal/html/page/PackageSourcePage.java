@@ -12,9 +12,12 @@
 package org.jacoco.report.internal.html.page;
 
 import java.io.IOException;
+import java.io.Reader;
+import java.util.HashMap;
+import java.util.Map;
 
-import org.jacoco.core.analysis.IClassCoverage;
 import org.jacoco.core.analysis.IPackageCoverage;
+import org.jacoco.core.analysis.ISourceFileCoverage;
 import org.jacoco.report.ISourceFileLocator;
 import org.jacoco.report.internal.ReportOutputFolder;
 import org.jacoco.report.internal.html.HTMLElement;
@@ -26,10 +29,11 @@ import org.jacoco.report.internal.html.resources.Styles;
  * Page showing coverage information for a Java package. The page contains a
  * table with all classes of the package.
  */
-public class PackagePage extends TablePage<IPackageCoverage> {
+public class PackageSourcePage extends TablePage<IPackageCoverage> {
 
-	private final PackageSourcePage packageSourcePage;
-	private final boolean sourceCoverageExists;
+	private final ISourceFileLocator locator;
+	private final Map<String, ILinkable> sourceFilePages;
+	private final ILinkable packagePage;
 
 	/**
 	 * Creates a new visitor in the given context.
@@ -44,33 +48,50 @@ public class PackagePage extends TablePage<IPackageCoverage> {
 	 *            base folder to create this page in
 	 * @param context
 	 *            settings context
+	 * @param packagePage
+	 *            page listing the classes of this package
 	 */
-	public PackagePage(final IPackageCoverage node, final ReportPage parent,
-			final ISourceFileLocator locator, final ReportOutputFolder folder,
-			final IHTMLReportContext context) {
+	public PackageSourcePage(final IPackageCoverage node,
+			final ReportPage parent, final ISourceFileLocator locator,
+			final ReportOutputFolder folder, final IHTMLReportContext context,
+			final ILinkable packagePage) {
 		super(node, parent, folder, context);
-		packageSourcePage = new PackageSourcePage(node, parent, locator,
-				folder, context, this);
-		sourceCoverageExists = !node.getSourceFiles().isEmpty();
+		this.locator = locator;
+		this.packagePage = packagePage;
+		this.sourceFilePages = new HashMap<String, ILinkable>();
 	}
 
 	@Override
 	public void render() throws IOException {
-		if (sourceCoverageExists) {
-			packageSourcePage.render();
-		}
-		renderClasses();
+		renderSourceFilePages();
 		super.render();
 	}
 
-	private void renderClasses() throws IOException {
-		for (final IClassCoverage c : getNode().getClasses()) {
-			final ILinkable sourceFilePage = packageSourcePage
-					.getSourceFilePage(c.getSourceFileName());
-			final ClassPage page = new ClassPage(c, this, sourceFilePage,
-					folder, context);
-			page.render();
-			addItem(page);
+	/**
+	 * Returns the link to the source file page of the source file with the
+	 * given name. If no source file was located, <code>null</code> is
+	 * returned..
+	 */
+	ILinkable getSourceFilePage(final String name) {
+		return sourceFilePages.get(name);
+	}
+
+	private final void renderSourceFilePages() throws IOException {
+		final String packagename = getNode().getName();
+		for (final ISourceFileCoverage s : getNode().getSourceFiles()) {
+			final String sourcename = s.getName();
+			final Reader reader = locator
+					.getSourceFile(packagename, sourcename);
+			if (reader == null) {
+				addItem(new SourceFileItem(s));
+			} else {
+				final SourceFilePage sourcePage = new SourceFilePage(s, reader,
+						locator.getTabWidth(), this, folder, context);
+				sourcePage.render();
+				sourceFilePages.put(sourcename, sourcePage);
+				addItem(sourcePage);
+			}
+
 		}
 	}
 
@@ -81,7 +102,7 @@ public class PackagePage extends TablePage<IPackageCoverage> {
 
 	@Override
 	protected String getFileName() {
-		return "index.html";
+		return "index.source.html";
 	}
 
 	@Override
@@ -91,10 +112,8 @@ public class PackagePage extends TablePage<IPackageCoverage> {
 
 	@Override
 	protected void infoLinks(final HTMLElement span) throws IOException {
-		if (sourceCoverageExists) {
-			final String link = packageSourcePage.getLink(folder);
-			span.a(link, Styles.EL_SOURCE).text("Source Files");
-		}
+		final String link = packagePage.getLink(folder);
+		span.a(link, Styles.EL_CLASS).text("Classes");
 		super.infoLinks(span);
 	}
 
