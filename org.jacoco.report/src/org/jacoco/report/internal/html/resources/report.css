@@ -13,6 +13,13 @@ h1 {
   padding:2px 4px 2px 4px;
 }
 
+.breadcrumb .info {
+  float:right;
+}
+
+.breadcrumb .info a {
+  margin-left:8px;
+}
 
 .el_report {
   padding-left:18px;
