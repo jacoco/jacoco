@@ -19,7 +19,12 @@
     <version>1.0-SNAPSHOT</version>
   </parent>
 
-  <artifactId>it-two-executions</artifactId>
+  <artifactId>it-multiple-executions</artifactId>
+
+  <properties>
+    <!-- Make sure we actually prepend existing args-->
+    <argLine>-Da=1 -Da=2</argLine>
+  </properties>
 
   <build>
     <plugins>
@@ -33,7 +38,7 @@
               <goal>prepare-agent</goal>
             </goals>
             <configuration>
-              <destFile>${project.build.directory}/first.exec</destFile>
+              <destFile>${project.build.directory}/nospace.exec</destFile>
             </configuration>
           </execution>
           <execution>
@@ -42,7 +47,16 @@
               <goal>prepare-agent</goal>
             </goals>
             <configuration>
-              <destFile>${project.build.directory}/second.exec</destFile>
+              <destFile>${project.build.directory}/with space.exec</destFile>
+            </configuration>
+          </execution>
+          <execution>
+            <id>third</id>
+            <goals>
+              <goal>prepare-agent</goal>
+            </goals>
+            <configuration>
+              <destFile>${project.build.directory}/third.exec</destFile>
             </configuration>
           </execution>
         </executions>

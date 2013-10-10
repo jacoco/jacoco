@@ -12,14 +12,27 @@
 import java.io.*;
 import org.codehaus.plexus.util.*;
 
-File file = new File( basedir, "target/first.exec" );
+File file = new File( basedir, "target/nospace.exec" );
 if ( file.isFile() )
 {
     throw new FileNotFoundException( "Found unwanted dump: " + file );
 }
 
-file = new File( basedir, "target/second.exec" );
+File file = new File( basedir, "target/with space.exec" );
+if ( file.isFile() )
+{
+    throw new FileNotFoundException( "Found unwanted dump: " + file );
+}
+
+file = new File( basedir, "target/third.exec" );
 if ( !file.isFile() )
 {
     throw new FileNotFoundException( "Could not find generated dump: " + file );
 }
+
+String argLine = "-Da=1 -Da=2";
+String buildLog = FileUtils.fileRead( new File( basedir, "build.log" ) );
+if ( buildLog.indexOf( argLine ) < 0 ) {
+    throw new RuntimeException( "Original argLine was overwritten" );
+}
+

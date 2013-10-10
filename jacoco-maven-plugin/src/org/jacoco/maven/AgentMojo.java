@@ -165,15 +165,17 @@ public class AgentMojo extends AbstractJacocoMojo {
 
 	@Override
 	public void executeMojo() {
-		final String vmArgument = StringUtils.quoteAndEscape(
-				createAgentOptions().getVMArgument(getAgentJarFile()), '"');
-		if (isPropertyNameSpecified()) {
-			prependProperty(propertyName, vmArgument);
-		} else if (isEclipseTestPluginPackaging()) {
-			prependProperty(TYCHO_ARG_LINE, vmArgument);
+		final String name = getEffectivePropertyName();
+		final Properties projectProperties = getProject().getProperties();
+		String value = projectProperties.getProperty(name);
+		if (value == null) {
+			value = "";
 		} else {
-			prependProperty(SUREFIRE_ARG_LINE, vmArgument);
+			value = removeAgent(value);
 		}
+		value = prependAgent(value);
+		getLog().info(name + " set to " + value);
+		projectProperties.setProperty(name, value);
 	}
 
 	private File getAgentJarFile() {
@@ -222,6 +224,16 @@ public class AgentMojo extends AbstractJacocoMojo {
 		return agentOptions;
 	}
 
+	private String getEffectivePropertyName() {
+		if (isPropertyNameSpecified()) {
+			return propertyName;
+		}
+		if (isEclipseTestPluginPackaging()) {
+			return TYCHO_ARG_LINE;
+		}
+		return SUREFIRE_ARG_LINE;
+	}
+
 	private boolean isPropertyNameSpecified() {
 		return propertyName != null && !"".equals(propertyName);
 	}
@@ -230,31 +242,41 @@ public class AgentMojo extends AbstractJacocoMojo {
 		return "eclipse-test-plugin".equals(getProject().getPackaging());
 	}
 
-	private void prependProperty(final String name, final String value) {
-		final Properties projectProperties = getProject().getProperties();
-		final String oldValue = projectProperties.getProperty(name);
-		final String newValue;
-
-		if (oldValue != null) {
-			final String agent = String.format("-javaagent:%s",
-					getAgentJarFile());
-			final int start = oldValue.indexOf(agent);
-			if (start >= 0) {
-				final String before = oldValue.substring(0, start);
-				final int end = oldValue.indexOf(' ', start);
-				final String after = end >= 0
-						? oldValue.substring(end)
-						: "";
-				newValue = before + value + after;
-			} else {
-				newValue = value + ' ' + oldValue;
-			}
-		} else {
-			newValue = value;
+	private String prependAgent(final String value) {
+		final String agent = StringUtils.quoteAndEscape(createAgentOptions()
+				.getVMArgument(getAgentJarFile()), '"');
+		final StringBuilder result = new StringBuilder(agent);
+		if (value.length() > 0) {
+			result.append(' ').append(value);
 		}
+		return result.toString();
+	}
 
-		getLog().info(name + " set to " + newValue);
-		projectProperties.put(name, newValue);
+	private String removeAgent(final String value) {
+		// Plain agent string to search for:
+		final String plainAgent = StringUtils.escape(new AgentOptions()
+				.getVMArgument(getAgentJarFile()));
+		final int startIdx = value.indexOf(plainAgent);
+		if (startIdx == -1) {
+			return value;
+		}
+		final StringBuilder result = new StringBuilder(value);
+		if (startIdx > 0 && value.charAt(startIdx - 1) == '"') {
+			removePart(result, startIdx - 1, "\" ");
+		} else {
+			removePart(result, startIdx, " ");
+		}
+		return result.toString();
+	}
+
+	private void removePart(final StringBuilder s, final int startIdx,
+			final String endMarker) {
+		final int endIdx = s.indexOf(endMarker, startIdx);
+		if (endIdx == -1) {
+			s.delete(startIdx, s.length());
+		} else {
+			s.delete(startIdx, endIdx + endMarker.length());
+		}
 	}
 
 }
