@@ -1,0 +1,38 @@
+/*******************************************************************************
+ * Copyright (c) 2009, 2013 Mountainminds GmbH & Co. KG and Contributors
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *    Evgeny Mandrikov - initial API and implementation
+ *
+ *******************************************************************************/
+import java.io.*;
+import org.codehaus.plexus.util.*;
+
+File file = new File( basedir, "target/nospace.exec" );
+if ( file.isFile() )
+{
+    throw new FileNotFoundException( "Found unwanted dump: " + file );
+}
+
+File file = new File( basedir, "target/with space.exec" );
+if ( file.isFile() )
+{
+    throw new FileNotFoundException( "Found unwanted dump: " + file );
+}
+
+file = new File( basedir, "target/third.exec" );
+if ( !file.isFile() )
+{
+    throw new FileNotFoundException( "Could not find generated dump: " + file );
+}
+
+String argLine = "-Da=1 -Da=2";
+String buildLog = FileUtils.fileRead( new File( basedir, "build.log" ) );
+if ( buildLog.indexOf( argLine ) < 0 ) {
+    throw new RuntimeException( "Original argLine was overwritten" );
+}
+
