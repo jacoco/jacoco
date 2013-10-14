@@ -57,13 +57,20 @@ public class ReportMojo extends AbstractMavenReport {
 	 * relevant if the goal is run from the command line or from the default
 	 * build lifecycle. If the goal is run indirectly as part of a site
 	 * generation, the output directory configured in the Maven Site Plugin is
-	 * used instead.
+	 * used instead extended by the basename of the output directory.
 	 * 
 	 * @parameter default-value="${project.reporting.outputDirectory}/jacoco"
 	 */
 	private File outputDirectory;
-
-	/**
+        
+        /**
+         * Name of the report during site generation. Ignored for the run during phase <tt>verify</tt>.
+         *
+         * @parameter default-value="JaCoCo"
+         */
+        private String reportName;
+	
+        /**
 	 * Encoding of the generated reports.
 	 * 
 	 * @parameter expression="${project.reporting.outputEncoding}"
@@ -129,15 +136,15 @@ public class ReportMojo extends AbstractMavenReport {
 	private ExecutionDataStore executionDataStore;
 
 	public String getOutputName() {
-		return "jacoco/index";
+                return outputDirectory.getName() + "/index";
 	}
 
 	public String getName(final Locale locale) {
-		return "JaCoCo";
+		return reportName;
 	}
 
 	public String getDescription(final Locale locale) {
-		return "JaCoCo Test Coverage Report.";
+		return getName(locale) + " Test Coverage Report.";
 	}
 
 	@Override
@@ -180,9 +187,10 @@ public class ReportMojo extends AbstractMavenReport {
 
 	@Override
 	public void setReportOutputDirectory(final File reportOutputDirectory) {
+                String lowerName = outputDirectory.getName().toLowerCase(Locale.ENGLISH);
 		if (reportOutputDirectory != null
-				&& !reportOutputDirectory.getAbsolutePath().endsWith("jacoco")) {
-			outputDirectory = new File(reportOutputDirectory, "jacoco");
+				&& !reportOutputDirectory.getAbsolutePath().endsWith(lowerName)) {
+			outputDirectory = new File(reportOutputDirectory, lowerName);
 		} else {
 			outputDirectory = reportOutputDirectory;
 		}
