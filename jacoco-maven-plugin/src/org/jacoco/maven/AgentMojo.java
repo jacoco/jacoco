@@ -181,6 +181,11 @@ public class AgentMojo extends AbstractJacocoMojo {
 		prependProperty("");
 	}
 
+    // allow use in pom projects to enable usage in multi-projects
+    protected boolean isPomProjectAllowable() {
+        return true;
+    }
+
 	private void prependProperty(final String vmArgument) {
 		if (isPropertyNameSpecified()) {
 			prependProperty(propertyName, vmArgument);

@@ -58,7 +58,7 @@ public abstract class AbstractJacocoMojo extends AbstractMojo {
 
 	public final void execute() throws MojoExecutionException,
 			MojoFailureException {
-		if ("pom".equals(project.getPackaging())) {
+		if ("pom".equals(project.getPackaging()) && !isPomProjectAllowable()) {
 			getLog().info(
 					"Skipping JaCoCo for project with packaging type 'pom'");
 			skipMojo();
@@ -71,6 +71,13 @@ public abstract class AbstractJacocoMojo extends AbstractMojo {
 		}
 		executeMojo();
 	}
+
+    /**
+     * Allows sub-classes to indicate whether they are allowed from a pom packaged project.
+     */
+    protected boolean isPomProjectAllowable() {
+        return false;
+    }
 
 	/**
 	 * Executes Mojo.
