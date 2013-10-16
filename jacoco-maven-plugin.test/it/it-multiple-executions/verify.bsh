@@ -30,7 +30,7 @@ if ( !file.isFile() )
     throw new FileNotFoundException( "Could not find generated dump: " + file );
 }
 
-String argLine = "-Da=1 -Da=2";
+String argLine = "\"-Da=\\\"1\\\"\" -Db=2";
 String buildLog = FileUtils.fileRead( new File( basedir, "build.log" ) );
 if ( buildLog.indexOf( argLine ) < 0 ) {
     throw new RuntimeException( "Original argLine was overwritten" );

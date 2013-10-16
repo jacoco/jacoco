@@ -171,12 +171,13 @@ public class AgentMojo extends AbstractJacocoMojo {
 
 	@Override
 	public void executeMojo() {
-		modifyProperty(true);
-	}
-
-	@Override
-	protected void skipMojo() {
-		modifyProperty(false);
+		final String name = getEffectivePropertyName();
+		final Properties projectProperties = getProject().getProperties();
+		final String oldValue = projectProperties.getProperty(name);
+		final String newValue = createAgentOptions().prependVMArguments(
+				oldValue, getAgentJarFile());
+		getLog().info(name + " set to " + newValue);
+		projectProperties.setProperty(name, newValue);
 	}
 
 	private File getAgentJarFile() {
@@ -228,22 +229,6 @@ public class AgentMojo extends AbstractJacocoMojo {
 		return agentOptions;
 	}
 
-	private void modifyProperty(final boolean prepend) {
-		final String name = getEffectivePropertyName();
-		final Properties projectProperties = getProject().getProperties();
-		String value = projectProperties.getProperty(name);
-		if (value == null) {
-			value = "";
-		} else {
-			value = removeAgent(value);
-		}
-		if (prepend) {
-			value = prependAgent(value);
-		}
-		getLog().info(name + " set to " + value);
-		projectProperties.setProperty(name, value);
-	}
-
 	private String getEffectivePropertyName() {
 		if (isPropertyNameSpecified()) {
 			return propertyName;
@@ -260,43 +245,6 @@ public class AgentMojo extends AbstractJacocoMojo {
 
 	private boolean isEclipseTestPluginPackaging() {
 		return "eclipse-test-plugin".equals(getProject().getPackaging());
-	}
-
-	private String prependAgent(final String value) {
-		final String agent = StringUtils.quoteAndEscape(createAgentOptions()
-				.getVMArgument(getAgentJarFile()), '"');
-		final StringBuilder result = new StringBuilder(agent);
-		if (value.length() > 0) {
-			result.append(' ').append(value);
-		}
-		return result.toString();
-	}
-
-	private String removeAgent(final String value) {
-		// Plain agent string to search for:
-		final String plainAgent = StringUtils.escape(new AgentOptions()
-				.getVMArgument(getAgentJarFile()));
-		final int startIdx = value.indexOf(plainAgent);
-		if (startIdx == -1) {
-			return value;
-		}
-		final StringBuilder result = new StringBuilder(value);
-		if (startIdx > 0 && value.charAt(startIdx - 1) == '"') {
-			removePart(result, startIdx - 1, "\" ");
-		} else {
-			removePart(result, startIdx, " ");
-		}
-		return result.toString();
-	}
-
-	private void removePart(final StringBuilder s, final int startIdx,
-			final String endMarker) {
-		final int endIdx = s.indexOf(endMarker, startIdx);
-		if (endIdx == -1) {
-			s.delete(startIdx, s.length());
-		} else {
-			s.delete(startIdx, endIdx + endMarker.length());
-		}
 	}
 
 }

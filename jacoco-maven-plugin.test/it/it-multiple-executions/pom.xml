@@ -23,7 +23,7 @@
 
   <properties>
     <!-- Make sure we actually prepend existing args-->
-    <argLine>-Da=1 -Da=2</argLine>
+    <argLine>"-Da=\"1\"" -Db=2</argLine>
   </properties>
 
   <build>
@@ -48,6 +48,7 @@
             </goals>
             <configuration>
               <destFile>${project.build.directory}/with space.exec</destFile>
+              <sessionId>"my" session</sessionId>
             </configuration>
           </execution>
           <execution>
