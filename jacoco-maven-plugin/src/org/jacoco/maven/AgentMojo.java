@@ -171,24 +171,13 @@ public class AgentMojo extends AbstractJacocoMojo {
 
 	@Override
 	public void executeMojo() {
-		final String vmArgument = StringUtils.quoteAndEscape(
-				createAgentOptions().getVMArgument(getAgentJarFile()), '"');
-		prependProperty(vmArgument);
-	}
-
-	@Override
-	protected void skipMojo() {
-		prependProperty("");
-	}
-
-	private void prependProperty(final String vmArgument) {
-		if (isPropertyNameSpecified()) {
-			prependProperty(propertyName, vmArgument);
-		} else if (isEclipseTestPluginPackaging()) {
-			prependProperty(TYCHO_ARG_LINE, vmArgument);
-		} else {
-			prependProperty(SUREFIRE_ARG_LINE, vmArgument);
-		}
+		final String name = getEffectivePropertyName();
+		final Properties projectProperties = getProject().getProperties();
+		final String oldValue = projectProperties.getProperty(name);
+		final String newValue = createAgentOptions().prependVMArguments(
+				oldValue, getAgentJarFile());
+		getLog().info(name + " set to " + newValue);
+		projectProperties.setProperty(name, newValue);
 	}
 
 	private File getAgentJarFile() {
@@ -240,21 +229,22 @@ public class AgentMojo extends AbstractJacocoMojo {
 		return agentOptions;
 	}
 
+	private String getEffectivePropertyName() {
+		if (isPropertyNameSpecified()) {
+			return propertyName;
+		}
+		if (isEclipseTestPluginPackaging()) {
+			return TYCHO_ARG_LINE;
+		}
+		return SUREFIRE_ARG_LINE;
+	}
+
 	private boolean isPropertyNameSpecified() {
 		return propertyName != null && !"".equals(propertyName);
 	}
 
 	private boolean isEclipseTestPluginPackaging() {
 		return "eclipse-test-plugin".equals(getProject().getPackaging());
-	}
-
-	private void prependProperty(final String name, final String value) {
-		final Properties projectProperties = getProject().getProperties();
-		final String oldValue = projectProperties.getProperty(name);
-		final String newValue = oldValue == null ? value : value + ' '
-				+ oldValue;
-		getLog().info(name + " set to " + newValue);
-		projectProperties.put(name, newValue);
 	}
 
 }

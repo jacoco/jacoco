@@ -336,7 +336,7 @@ public class AgentOptionsTest {
 	}
 
 	@Test
-	public void testVMArgsWithNoOptions() {
+	public void testGetVMArgumentWithNoOptions() {
 		AgentOptions options = new AgentOptions();
 		String vmArgument = options.getVMArgument(defaultAgentJarFile);
 
@@ -346,7 +346,7 @@ public class AgentOptionsTest {
 	}
 
 	@Test
-	public void testVMArgsWithOneOption() {
+	public void testGetVMArgumentWithOneOption() {
 		AgentOptions options = new AgentOptions();
 		options.setAppend(true);
 
@@ -358,7 +358,7 @@ public class AgentOptionsTest {
 	}
 
 	@Test
-	public void testVMArgsWithOptions() {
+	public void testGetVMArgumentWithOptions() {
 		AgentOptions options = new AgentOptions();
 		options.setAppend(true);
 		options.setDestfile("some test.exec");
@@ -367,6 +367,42 @@ public class AgentOptionsTest {
 		assertEquals(String.format(
 				"-javaagent:%s=destfile=some test.exec,append=true",
 				defaultAgentJarFile.toString()), vmArgument);
+	}
+
+	@Test
+	public void testGetQuotedVMArgument() {
+		AgentOptions options = new AgentOptions();
+		options.setSessionId("my session");
+
+		String vmArgument = options.getQuotedVMArgument(defaultAgentJarFile);
+
+		assertEquals(String.format("\"-javaagent:%s=sessionid=my session\"",
+				defaultAgentJarFile.toString()), vmArgument);
+	}
+
+	@Test
+	public void testPrependVMArguments() {
+		AgentOptions options = new AgentOptions();
+
+		String vmArgument = options.prependVMArguments("a b c",
+				defaultAgentJarFile);
+
+		assertEquals(
+				String.format("-javaagent:%s= a b c",
+						defaultAgentJarFile.toString()), vmArgument);
+	}
+
+	@Test
+	public void testPrependVMArgumentsReplace() {
+		AgentOptions options = new AgentOptions();
+
+		String vmArgument = options.prependVMArguments(String.format(
+				"a b -javaagent:%s=append=false c", defaultAgentJarFile),
+				defaultAgentJarFile);
+
+		assertEquals(
+				String.format("-javaagent:%s= a b c",
+						defaultAgentJarFile.toString()), vmArgument);
 	}
 
 }
