@@ -13,11 +13,8 @@ package org.jacoco.agent.rt.internal;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.lang.management.ManagementFactory;
 import java.net.InetAddress;
-
-import javax.management.ObjectName;
-import javax.management.StandardMBean;
+import java.util.concurrent.Callable;
 
 import org.jacoco.agent.rt.IAgent;
 import org.jacoco.agent.rt.internal.output.FileOutput;
@@ -36,8 +33,6 @@ import org.jacoco.core.runtime.RuntimeData;
  * The agent manages the life cycle of JaCoCo runtime.
  */
 public class Agent implements IAgent {
-
-	private static final String JMX_NAME = "org.jacoco:type=Runtime";
 
 	private static Agent singleton;
 
@@ -83,9 +78,11 @@ public class Agent implements IAgent {
 
 	private final IExceptionLogger logger;
 
+	private final RuntimeData data;
+
 	private IAgentOutput output;
 
-	private final RuntimeData data;
+	private Callable<Void> jmxRegistration;
 
 	/**
 	 * Creates a new agent with the given agent options.
@@ -124,9 +121,7 @@ public class Agent implements IAgent {
 			output = createAgentOutput();
 			output.startup(options, data);
 			if (options.getJmx()) {
-				ManagementFactory.getPlatformMBeanServer().registerMBean(
-						new StandardMBean(this, IAgent.class),
-						new ObjectName(JMX_NAME));
+				jmxRegistration = new JmxRegistration(this);
 			}
 		} catch (final Exception e) {
 			logger.logExeption(e);
@@ -142,9 +137,8 @@ public class Agent implements IAgent {
 				output.writeExecutionData(false);
 			}
 			output.shutdown();
-			if (options.getJmx()) {
-				ManagementFactory.getPlatformMBeanServer().unregisterMBean(
-						new ObjectName(JMX_NAME));
+			if (jmxRegistration != null) {
+				jmxRegistration.call();
 			}
 		} catch (final Exception e) {
 			logger.logExeption(e);
