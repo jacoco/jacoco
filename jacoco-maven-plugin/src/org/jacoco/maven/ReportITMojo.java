@@ -16,15 +16,15 @@ import java.io.File;
 import java.util.Locale;
 
 /**
- * Creates a code coverage report for tests of a single project in multiple formats
+ * Creates a code coverage report for integration tests of a single project in multiple formats
  * (HTML, XML, and CSV).
  *
  * @phase verify
- * @goal report
+ * @goal report-integration
  * @requiresProject true
  * @threadSafe
  */
-public class ReportMojo extends AbstractReportMojo {
+public class ReportITMojo extends AbstractReportMojo {
 
 	/**
 	 * Output directory for the reports. Note that this parameter is only
@@ -33,14 +33,14 @@ public class ReportMojo extends AbstractReportMojo {
 	 * generation, the output directory configured in the Maven Site Plugin is
 	 * used instead.
 	 *
-	 * @parameter default-value="${project.reporting.outputDirectory}/jacoco"
+	 * @parameter default-value="${project.reporting.outputDirectory}/jacoco-it"
 	 */
 	private File outputDirectory;
 
 	/**
 	 * File with execution data.
 	 *
-	 * @parameter default-value="${project.build.directory}/jacoco.exec"
+	 * @parameter default-value="${project.build.directory}/jacoco-it.exec"
 	 */
 	private File dataFile;
 
@@ -52,8 +52,8 @@ public class ReportMojo extends AbstractReportMojo {
 	@Override
 	public void setReportOutputDirectory(final File reportOutputDirectory) {
 		if (reportOutputDirectory != null
-				&& !reportOutputDirectory.getAbsolutePath().endsWith("jacoco")) {
-			outputDirectory = new File(reportOutputDirectory, "jacoco");
+				&& !reportOutputDirectory.getAbsolutePath().endsWith("jacoco-it")) {
+			outputDirectory = new File(reportOutputDirectory, "jacoco-it");
 		} else {
 			outputDirectory = reportOutputDirectory;
 		}
@@ -70,10 +70,10 @@ public class ReportMojo extends AbstractReportMojo {
         }
 
         public String getOutputName() {
-            return "jacoco/index";
+            return "jacoco-it/index";
         }
 
         public String getName(final Locale locale) {
-            return "JaCoCo";
+            return "JaCoCo IT";
         }
 }
