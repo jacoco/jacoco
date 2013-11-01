@@ -74,6 +74,6 @@ public class ReportMojo extends AbstractReportMojo {
         }
 
         public String getName(final Locale locale) {
-            return "JaCoCo";
+            return "JaCoCo Test";
         }
 }

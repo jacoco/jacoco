@@ -100,7 +100,7 @@ public abstract class AbstractReportMojo extends AbstractMavenReport {
     public abstract String getName(final Locale locale);
 
     public String getDescription(final Locale locale) {
-        return "JaCoCo Test Coverage Report.";
+        return getName(locale) + " Coverage Report.";
     }
 
     @Override
