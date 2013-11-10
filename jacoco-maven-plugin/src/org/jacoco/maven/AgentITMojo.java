@@ -29,6 +29,7 @@ import java.io.File;
  * @requiresProject true
  * @requiresDependencyResolution runtime
  * @threadSafe
+ * @since 0.6.4
  */
 public class AgentITMojo extends AbstractAgentMojo {
 
