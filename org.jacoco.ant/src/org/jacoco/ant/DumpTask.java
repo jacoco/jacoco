@@ -120,9 +120,10 @@ public class DumpTask extends Task {
 			final ExecFileLoader loader = new ExecFileLoader();
 
 			// 1. Open socket connection
-			final Socket socket = new Socket(InetAddress.getByName(address),
-					port);
-			log(format("Connecting to %s", socket.getRemoteSocketAddress()));
+			final InetAddress inetAddress = InetAddress.getByName(address);
+			log(format("Connecting to %s:%s", inetAddress,
+					Integer.valueOf(port)));
+			final Socket socket = new Socket(inetAddress, port);
 			final RemoteControlWriter remoteWriter = new RemoteControlWriter(
 					socket.getOutputStream());
 			final RemoteControlReader remoteReader = new RemoteControlReader(

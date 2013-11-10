@@ -86,10 +86,11 @@ public class DumpMojo extends AbstractJacocoMojo {
 			final ExecFileLoader loader = new ExecFileLoader();
 
 			// 1. Open socket connection
-			final Socket socket = new Socket(InetAddress.getByName(address),
-					port);
+			final InetAddress inetAddress = InetAddress.getByName(address);
 			getLog().info(
-					format("Connecting to %s", socket.getRemoteSocketAddress()));
+					format("Connecting to %s:%s", inetAddress,
+							Integer.valueOf(port)));
+			final Socket socket = new Socket(inetAddress, port);
 			final RemoteControlWriter remoteWriter = new RemoteControlWriter(
 					socket.getOutputStream());
 			final RemoteControlReader remoteReader = new RemoteControlReader(
