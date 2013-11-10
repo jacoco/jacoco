@@ -36,6 +36,7 @@ import org.jacoco.report.check.RulesChecker;
  * @phase verify
  * @requiresProject true
  * @threadSafe
+ * @since 0.6.1
  */
 public class CheckMojo extends AbstractJacocoMojo implements IViolationsOutput {
 

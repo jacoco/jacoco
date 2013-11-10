@@ -49,6 +49,7 @@ import org.jacoco.report.xml.XMLFormatter;
  * @goal report
  * @requiresProject true
  * @threadSafe
+ * @since 0.5.3
  */
 public class ReportMojo extends AbstractMavenReport {
 

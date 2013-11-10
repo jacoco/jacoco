@@ -51,6 +51,7 @@ import org.jacoco.core.runtime.AgentOptions;
  * @requiresProject true
  * @requiresDependencyResolution runtime
  * @threadSafe
+ * @since 0.5.3
  */
 public class AgentMojo extends AbstractJacocoMojo {
 

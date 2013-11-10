@@ -28,6 +28,7 @@ import org.jacoco.core.data.ExecFileLoader;
  * @goal merge
  * @requiresProject true
  * @threadSafe
+ * @since 0.6.4
  */
 public class MergeMojo extends AbstractJacocoMojo {
 
