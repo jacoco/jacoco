@@ -31,15 +31,20 @@
             <id>prepare-agent</id>
             <goals>
               <goal>prepare-agent</goal>
-              <goal>dump</goal>
             </goals>
             <configuration>
               <output>tcpserver</output>
             </configuration>
           </execution>
           <execution>
+            <id>dump</id>
+            <phase>integration-test</phase>
+            <goals>
+              <goal>dump</goal>
+            </goals>
+          </execution>
+          <execution>
             <id>check</id>
-            <phase>post-integration-test</phase>
             <goals>
               <goal>check</goal>
             </goals>
@@ -49,16 +54,10 @@
                   <element>BUNDLE</element>
                   <limits>
                     <limit>
-                      <counter>INSTRUCTION</counter>
-                      <value>COVEREDRATIO</value>
-                      <maximum>0.1</maximum>
-                    </limit>
-                    <limit>
                       <counter>CLASS</counter>
-                      <value>MISSEDCOUNT</value>
-                      <maximum>2</maximum>
-                      <minimum>2</minimum>
-                      </limit>
+                      <value>COVEREDCOUNT</value>
+                      <minimum>1</minimum>
+                    </limit>
                   </limits>
                 </rule>
               </rules>
@@ -67,27 +66,40 @@
         </executions>
       </plugin>
       <plugin>
-        <groupId>org.codehaus.mojo</groupId>
-        <artifactId>exec-maven-plugin</artifactId>
-        <version>1.2.1</version>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-antrun-plugin</artifactId>
+        <version>1.6</version>
         <executions>
           <execution>
-            <phase>test</phase>
+            <id>launch-server</id>
+            <phase>pre-integration-test</phase>
             <goals>
-              <goal>exec</goal>
+              <goal>run</goal>
             </goals>
-          </execution>          
+            <configuration>
+              <target>
+                <java classname="Server" spawn="true" fork="true">
+                  <classpath refid="maven.runtime.classpath"/>
+                  <jvmarg value="${argLine}"/>
+                  <arg value="${project.build.directory}/term.txt"/>
+                </java>
+              </target>
+            </configuration>
+          </execution>
+          <execution>
+            <id>stop-server</id>
+            <phase>post-integration-test</phase>
+            <goals>
+              <goal>run</goal>
+            </goals>
+            <configuration>
+              <target>
+                <touch file="${project.build.directory}/term.txt" />
+              </target>
+            </configuration>
+          </execution>
         </executions>
-        <configuration>
-          <executable>java</executable>
-          <arguments>
-            <argument>-classpath</argument>
-            <classpath/>
-            <argument>Launch</argument>
-            <argument>${argLine}</argument>
-          </arguments>
-        </configuration>
-      </plugin>      
+      </plugin>
     </plugins>
   </build>
 </project>
