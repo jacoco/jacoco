@@ -25,12 +25,21 @@ import org.jacoco.core.runtime.RemoteControlReader;
 import org.jacoco.core.runtime.RemoteControlWriter;
 
 /**
+ * <p>
  * Request a dump over TCP/IP from a JaCoCo agent running in
  * <code>tcpserver</code> mode.
+ * </p>
+ * 
+ * <p>
+ * Note concerning parallel builds: While the dump goal as such is thread safe,
+ * it has to be considered that TCP/IP server ports of the agents are a shared
+ * resource.
+ * </p>
  * 
  * @goal dump
- * 
  * @phase post-integration-test
+ * @threadSafe
+ * @since 0.6.4
  */
 public class DumpMojo extends AbstractJacocoMojo {
 
