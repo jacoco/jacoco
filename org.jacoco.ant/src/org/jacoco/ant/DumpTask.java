@@ -15,6 +15,7 @@ import static java.lang.String.format;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InterruptedIOException;
 import java.net.InetAddress;
 import java.net.Socket;
 
@@ -36,6 +37,7 @@ public class DumpTask extends Task {
 	private File destfile = null;
 	private String address = AgentOptions.DEFAULT_ADDRESS;
 	private int port = AgentOptions.DEFAULT_PORT;
+	private int retryCount = 10;
 	private boolean append = true;
 
 	/**
@@ -68,6 +70,17 @@ public class DumpTask extends Task {
 	 */
 	public void setPort(final int port) {
 		this.port = port;
+	}
+
+	/**
+	 * Number of retries which the goal will attempt to establish a connection.
+	 * This can be used to wait until the target JVM is successfully launched.
+	 * 
+	 * @param retryCount
+	 *            number of retries
+	 */
+	public void setRetryCount(final int retryCount) {
+		this.retryCount = retryCount;
 	}
 
 	/**
@@ -120,10 +133,7 @@ public class DumpTask extends Task {
 			final ExecFileLoader loader = new ExecFileLoader();
 
 			// 1. Open socket connection
-			final InetAddress inetAddress = InetAddress.getByName(address);
-			log(format("Connecting to %s:%s", inetAddress,
-					Integer.valueOf(port)));
-			final Socket socket = new Socket(inetAddress, port);
+			final Socket socket = tryConnect();
 			final RemoteControlWriter remoteWriter = new RemoteControlWriter(
 					socket.getOutputStream());
 			final RemoteControlReader remoteReader = new RemoteControlReader(
@@ -148,6 +158,28 @@ public class DumpTask extends Task {
 		} catch (final IOException e) {
 			throw new BuildException("Unable to dump coverage data", e,
 					getLocation());
+		}
+	}
+
+	private Socket tryConnect() throws IOException {
+		final InetAddress inetAddress = InetAddress.getByName(address);
+		int count = 0;
+		while (true) {
+			try {
+				log(format("Connecting to %s:%s", inetAddress,
+						Integer.valueOf(port)));
+				return new Socket(inetAddress, port);
+			} catch (final IOException e) {
+				if (++count > retryCount) {
+					throw e;
+				}
+				log(e.getMessage());
+				try {
+					Thread.sleep(1000);
+				} catch (final InterruptedException ie) {
+					throw new InterruptedIOException();
+				}
+			}
 		}
 	}
 

@@ -15,6 +15,7 @@ import static java.lang.String.format;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InterruptedIOException;
 import java.net.InetAddress;
 import java.net.Socket;
 
@@ -80,17 +81,21 @@ public class DumpMojo extends AbstractJacocoMojo {
 	 */
 	private int port;
 
+	/**
+	 * Number of retries which the goal will attempt to establish a connection.
+	 * This can be used to wait until the target JVM is successfully launched.
+	 * 
+	 * @parameter expression="${jacoco.retryCount}" default-value="10"
+	 */
+	private int retryCount;
+
 	@Override
 	public void executeMojo() throws MojoExecutionException {
 		try {
 			final ExecFileLoader loader = new ExecFileLoader();
 
 			// 1. Open socket connection
-			final InetAddress inetAddress = InetAddress.getByName(address);
-			getLog().info(
-					format("Connecting to %s:%s", inetAddress,
-							Integer.valueOf(port)));
-			final Socket socket = new Socket(inetAddress, port);
+			final Socket socket = tryConnect();
 			final RemoteControlWriter remoteWriter = new RemoteControlWriter(
 					socket.getOutputStream());
 			final RemoteControlReader remoteReader = new RemoteControlReader(
@@ -115,6 +120,29 @@ public class DumpMojo extends AbstractJacocoMojo {
 
 		} catch (final IOException e) {
 			throw new MojoExecutionException("Unable to dump coverage data", e);
+		}
+	}
+
+	private Socket tryConnect() throws IOException {
+		final InetAddress inetAddress = InetAddress.getByName(address);
+		int count = 0;
+		while (true) {
+			try {
+				getLog().info(
+						format("Connecting to %s:%s", inetAddress,
+								Integer.valueOf(port)));
+				return new Socket(inetAddress, port);
+			} catch (final IOException e) {
+				if (++count > retryCount) {
+					throw e;
+				}
+				getLog().info(e.getMessage());
+				try {
+					Thread.sleep(1000);
+				} catch (final InterruptedException ie) {
+					throw new InterruptedIOException();
+				}
+			}
 		}
 	}
 
