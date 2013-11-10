@@ -23,6 +23,7 @@ import java.util.Locale;
  * @goal report
  * @requiresProject true
  * @threadSafe
+ * @since 0.5.3
  */
 public class ReportMojo extends AbstractReportMojo {
 
