@@ -123,7 +123,7 @@
     <argLine>${jvm.args}</argLine>
 
     <!-- Dependencies versions -->
-    <asm.version>5.0_ALPHA</asm.version>
+    <asm.version>5.0_BETA</asm.version>
     <ant.version>1.7.1</ant.version>
     <junit.version>4.8.2</junit.version>
 
@@ -470,8 +470,7 @@
               <rules>
                 <requireNoRepositories>
                   <message>The rules for repo1.maven.org are that pom.xml files should not include repository definitions.</message>
-                  <!-- TODO: Temporarily disabled to fetch ASM 5.0 ALPHA -->
-                  <banRepositories>false</banRepositories>
+                  <banRepositories>true</banRepositories>
                   <banPluginRepositories>true</banPluginRepositories>
                 </requireNoRepositories>
                 <requireReleaseDeps>
@@ -587,14 +586,6 @@
       </plugin>
     </plugins>
   </build>
-
-  <repositories>
-    <repository>
-      <id>ow2</id>
-      <name>OW2 Repo for ASM 5.0-ALPHA</name>
-      <url>http://repository.ow2.org/nexus/content/repositories/releases/</url>
-    </repository>
-  </repositories>
 
   <profiles>
     <!-- This profile is used to launch tests with different JDK versions. -->
