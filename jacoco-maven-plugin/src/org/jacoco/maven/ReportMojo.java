@@ -7,7 +7,6 @@
  *
  * Contributors:
  *    Evgeny Mandrikov - initial API and implementation
- *    Kyle Lieber - implementation of CheckMojo
  *
  *******************************************************************************/
 package org.jacoco.maven;
@@ -60,21 +59,21 @@ public class ReportMojo extends AbstractReportMojo {
 		}
 	}
 
-        @Override
-        protected File getDataFile() {
-            return dataFile;
-        }
+	@Override
+	protected File getDataFile() {
+		return dataFile;
+	}
 
-        @Override
-        protected File getOutputDirectoryFile() {
-            return outputDirectory;
-        }
+	@Override
+	protected File getOutputDirectoryFile() {
+		return outputDirectory;
+	}
 
-        public String getOutputName() {
-            return "jacoco/index";
-        }
+	public String getOutputName() {
+		return "jacoco/index";
+	}
 
-        public String getName(final Locale locale) {
-            return "JaCoCo Test";
-        }
+	public String getName(final Locale locale) {
+		return "JaCoCo Test";
+	}
 }

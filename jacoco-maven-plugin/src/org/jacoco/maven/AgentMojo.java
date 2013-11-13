@@ -57,11 +57,11 @@ public class AgentMojo extends AbstractAgentMojo {
 	 */
 	private File destFile;
 
-        /**
-         * @return the destFile
-         */
-        protected File getDestFile() {
-            return destFile;
-        }
+	/**
+	 * @return the destFile
+	 */
+	protected File getDestFile() {
+		return destFile;
+	}
 
 }
