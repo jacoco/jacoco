@@ -28,7 +28,7 @@
 	
 	<target name="testNoServer">
 		<au:expectfailure expectedMessage="Unable to dump coverage data">
-			<jacoco:dump dump="true" destfile="${exec.file}"/>
+			<jacoco:dump dump="true" destfile="${exec.file}" retryCount="0"/>
 		</au:expectfailure>
 		<au:assertFileDoesntExist file="${exec.file}"/>
 	</target>
