@@ -40,6 +40,7 @@ import org.jacoco.core.runtime.OfflineInstrumentationAccessGenerator;
  * @phase process-classes
  * @goal instrument
  * @requiresProject true
+ * @threadSafe
  * @since 0.6.2
  */
 public class InstrumentMojo extends AbstractJacocoMojo {
