@@ -9,6 +9,7 @@ Import-Package: org.jacoco.core.analysis;bundle-version="[0.6.4,0.6.5)",
  org.jacoco.core.data;bundle-version="[0.6.4,0.6.5)",
  org.jacoco.core.instr;bundle-version="[0.6.4,0.6.5)",
  org.jacoco.core.runtime;bundle-version="[0.6.4,0.6.5)",
+ org.jacoco.core.tools,
  org.jacoco.report;bundle-version="[0.6.4,0.6.5)",
  org.jacoco.report.html;bundle-version="[0.6.4,0.6.5)",
  org.objectweb.asm;version="[4.1.0,4.2.0)"

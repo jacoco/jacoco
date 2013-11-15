@@ -9,7 +9,7 @@
  *    Marc R. Hoffmann - initial API and implementation
  *    
  *******************************************************************************/
-package org.jacoco.core.data;
+package org.jacoco.core.tools;
 
 import static org.junit.Assert.assertEquals;
 
@@ -22,6 +22,13 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.List;
 
+import org.jacoco.core.data.ExecutionData;
+import org.jacoco.core.data.ExecutionDataReader;
+import org.jacoco.core.data.ExecutionDataStore;
+import org.jacoco.core.data.ExecutionDataWriter;
+import org.jacoco.core.data.SessionInfo;
+import org.jacoco.core.data.SessionInfoStore;
+import org.jacoco.core.tools.ExecFileLoader;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
