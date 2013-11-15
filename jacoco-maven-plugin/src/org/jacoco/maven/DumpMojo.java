@@ -103,11 +103,9 @@ public class DumpMojo extends AbstractJacocoMojo {
 		try {
 			final ExecFileLoader loader = new ExecFileLoader();
 
-			Socket socket = null;
+			final Socket socket = tryConnect();
 			try {
-
-				// 1. Open socket connection
-				socket = tryConnect();
+				// 1. Get streams from socket
 				final RemoteControlWriter remoteWriter = new RemoteControlWriter(
 						socket.getOutputStream());
 				final RemoteControlReader remoteReader = new RemoteControlReader(
@@ -122,9 +120,7 @@ public class DumpMojo extends AbstractJacocoMojo {
 				remoteReader.read();
 
 			} finally {
-				if (socket != null) {
-					socket.close();
-				}
+				socket.close();
 			}
 
 			// 3. Write execution data to file
