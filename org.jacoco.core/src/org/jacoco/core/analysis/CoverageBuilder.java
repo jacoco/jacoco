@@ -16,6 +16,8 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.jacoco.core.analysis.filter.CoverageFilters;
+import org.jacoco.core.analysis.filter.ICoverageFilter;
 import org.jacoco.core.internal.analysis.BundleCoverageImpl;
 import org.jacoco.core.internal.analysis.SourceFileCoverageImpl;
 
@@ -39,13 +41,26 @@ public class CoverageBuilder implements ICoverageVisitor {
 
 	private final Map<String, ISourceFileCoverage> sourcefiles;
 
+	private final ICoverageFilter filter;
+
 	/**
 	 * Create a new builder.
 	 * 
 	 */
 	public CoverageBuilder() {
+		this(CoverageFilters.ALLOW_ALL);
+	}
+
+	/**
+	 * Create a new builder with a filter.
+	 * 
+	 * @param filter
+	 *            filter for coverage
+	 */
+	public CoverageBuilder(final ICoverageFilter filter) {
 		this.classes = new HashMap<String, IClassCoverage>();
 		this.sourcefiles = new HashMap<String, ISourceFileCoverage>();
+		this.filter = filter;
 	}
 
 	/**
@@ -82,7 +97,8 @@ public class CoverageBuilder implements ICoverageVisitor {
 
 	public void visitCoverage(final IClassCoverage coverage) {
 		// Only consider classes that actually contain code:
-		if (coverage.getInstructionCounter().getTotalCount() > 0) {
+		if (coverage.getInstructionCounter().getTotalCount() > 0
+				&& filter.shouldInclude(coverage)) {
 			final String name = coverage.getName();
 			final IClassCoverage dup = classes.put(name, coverage);
 			if (dup != null && dup.getId() != coverage.getId()) {

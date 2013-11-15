@@ -32,7 +32,11 @@ import org.apache.tools.ant.util.FileUtils;
 import org.jacoco.core.analysis.Analyzer;
 import org.jacoco.core.analysis.CoverageBuilder;
 import org.jacoco.core.analysis.IBundleCoverage;
+import org.jacoco.core.analysis.IClassCoverage;
 import org.jacoco.core.analysis.ICoverageNode;
+import org.jacoco.core.analysis.filter.CoverageFilters;
+import org.jacoco.core.analysis.filter.ICoverageFilter;
+import org.jacoco.core.analysis.filter.MultiCoverageFilter;
 import org.jacoco.core.data.ExecFileLoader;
 import org.jacoco.core.data.ExecutionDataStore;
 import org.jacoco.core.data.SessionInfoStore;
@@ -143,6 +147,126 @@ public class ReportTask extends Task {
 			return sourcefiles;
 		}
 
+	}
+
+	/**
+	 * Container element for coverage filters.
+	 */
+	public class FilterElement {
+		private String includeClassRegex;
+
+		private String excludeClassRegex;
+
+		private String includePackageRegex;
+
+		private String excludePackageRegex;
+
+		private boolean onlyClassesWithSource;
+
+		/**
+		 * Sets the regex that class names must match to be included in the
+		 * report.
+		 * 
+		 * @param includeClassRegex
+		 *            regex (null for no filtering)
+		 */
+		public void setIncludeClassRegex(final String includeClassRegex) {
+			this.includeClassRegex = includeClassRegex;
+		}
+
+		/**
+		 * Sets the regex that will exclude classes where their class name
+		 * matches.
+		 * 
+		 * @param excludeClassRegex
+		 *            regex (null for no filtering)
+		 */
+		public void setExcludeClassRegex(final String excludeClassRegex) {
+			this.excludeClassRegex = excludeClassRegex;
+		}
+
+		/**
+		 * Sets the regex that package names must match to be included in the
+		 * report.
+		 * 
+		 * @param includePackageRegex
+		 *            regex (null for no filtering)
+		 */
+		public void setIncludePackageRegex(final String includePackageRegex) {
+			this.includePackageRegex = includePackageRegex;
+		}
+
+		/**
+		 * Sets the regex that will exclude classes where their package name
+		 * matches.
+		 * 
+		 * @param excludePackageRegex
+		 *            regex (null for no filtering)
+		 */
+		public void setExcludePackageRegex(final String excludePackageRegex) {
+			this.excludePackageRegex = excludePackageRegex;
+		}
+
+		/**
+		 * Sets whether or not to only include classes with source code
+		 * available.
+		 * 
+		 * @param onlyClassesWithSource
+		 *            onlyClassesWithSource (defaults to false, include all
+		 *            classes)
+		 */
+		public void setOnlyClassesWithSource(final boolean onlyClassesWithSource) {
+			this.onlyClassesWithSource = onlyClassesWithSource;
+		}
+
+		/**
+		 * Returns the filter for the coverage report.
+		 * 
+		 * @param locator
+		 *            locator for source files
+		 * 
+		 * @return filter for coverage report
+		 */
+		public ICoverageFilter createFilter(final AntResourcesLocator locator) {
+			final List<ICoverageFilter> filters = new ArrayList<ICoverageFilter>();
+
+			if (includeClassRegex != null) {
+				filters.add(CoverageFilters
+						.includeClassRegex(includeClassRegex));
+			}
+
+			if (excludeClassRegex != null) {
+				filters.add(CoverageFilters
+						.excludeClassRegex(excludeClassRegex));
+			}
+
+			if (includePackageRegex != null) {
+				filters.add(CoverageFilters
+						.includePackageRegex(includePackageRegex));
+			}
+
+			if (excludePackageRegex != null) {
+				filters.add(CoverageFilters
+						.excludePackageRegex(excludePackageRegex));
+			}
+
+			if (onlyClassesWithSource) {
+				final ICoverageFilter hasSourceFileFilter = new ICoverageFilter() {
+					public boolean shouldInclude(final IClassCoverage coverage) {
+						try {
+							return locator.getSourceFile(
+									coverage.getPackageName(),
+									coverage.getSourceFileName()) != null;
+						} catch (final IOException e) {
+							return false;
+						}
+					}
+				};
+				filters.add(hasSourceFileFilter);
+			}
+
+			return new MultiCoverageFilter(filters);
+		}
 	}
 
 	/**
@@ -418,6 +542,8 @@ public class ReportTask extends Task {
 
 	private final GroupElement structure = new GroupElement();
 
+	private final FilterElement filter = new FilterElement();
+
 	private final List<FormatterElement> formatters = new ArrayList<FormatterElement>();
 
 	/**
@@ -436,6 +562,15 @@ public class ReportTask extends Task {
 	 */
 	public GroupElement createStructure() {
 		return structure;
+	}
+
+	/**
+	 * Returns the filter element that filters the coverage report.
+	 * 
+	 * @return filter element
+	 */
+	public FilterElement createFilter() {
+		return filter;
 	}
 
 	/**
@@ -542,14 +677,15 @@ public class ReportTask extends Task {
 				createReport(groupVisitor, child);
 			}
 		} else {
-			final IBundleCoverage bundle = createBundle(group);
-			log(format("Writing group \"%s\" with %s classes",
-					bundle.getName(),
-					Integer.valueOf(bundle.getClassCounter().getTotalCount())));
 			final SourceFilesElement sourcefiles = group.sourcefiles;
 			final AntResourcesLocator locator = new AntResourcesLocator(
 					sourcefiles.encoding, sourcefiles.tabWidth);
 			locator.addAll(sourcefiles.iterator());
+			final IBundleCoverage bundle = createBundle(group,
+					filter.createFilter(locator));
+			log(format("Writing group \"%s\" with %s classes",
+					bundle.getName(),
+					Integer.valueOf(bundle.getClassCounter().getTotalCount())));
 			if (!locator.isEmpty()) {
 				checkForMissingDebugInformation(bundle);
 			}
@@ -557,9 +693,9 @@ public class ReportTask extends Task {
 		}
 	}
 
-	private IBundleCoverage createBundle(final GroupElement group)
-			throws IOException {
-		final CoverageBuilder builder = new CoverageBuilder();
+	private IBundleCoverage createBundle(final GroupElement group,
+			final ICoverageFilter filter) throws IOException {
+		final CoverageBuilder builder = new CoverageBuilder(filter);
 		final Analyzer analyzer = new Analyzer(executionDataStore, builder);
 		for (final Iterator<?> i = group.classfiles.iterator(); i.hasNext();) {
 			final Resource resource = (Resource) i.next();
