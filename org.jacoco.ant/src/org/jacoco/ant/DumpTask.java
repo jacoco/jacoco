@@ -11,20 +11,14 @@
  *******************************************************************************/
 package org.jacoco.ant;
 
-import static java.lang.String.format;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.InterruptedIOException;
-import java.net.InetAddress;
-import java.net.Socket;
 
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Task;
-import org.jacoco.core.data.ExecFileLoader;
 import org.jacoco.core.runtime.AgentOptions;
-import org.jacoco.core.runtime.RemoteControlReader;
-import org.jacoco.core.runtime.RemoteControlWriter;
+import org.jacoco.core.tools.DumpHelper;
 
 /**
  * Ant task for remotely controlling an application that is running with the
@@ -128,69 +122,18 @@ public class DumpTask extends Task {
 					"Destination file is required when dumping execution data",
 					getLocation());
 		}
-
+		final DumpHelper dumpHelper = new DumpHelper(
+				address, port, destfile, retryCount, dump, reset, append) {
+			@Override
+			protected void logging(String format) {
+				log(format);
+			}
+		};
 		try {
-
-			final ExecFileLoader loader = new ExecFileLoader();
-
-			final Socket socket = tryConnect();
-			try {
-				// 1. Get streams from socket
-				final RemoteControlWriter remoteWriter = new RemoteControlWriter(
-						socket.getOutputStream());
-				final RemoteControlReader remoteReader = new RemoteControlReader(
-						socket.getInputStream());
-				remoteReader
-						.setSessionInfoVisitor(loader.getSessionInfoStore());
-				remoteReader.setExecutionDataVisitor(loader
-						.getExecutionDataStore());
-
-				// 2. Request dump
-				remoteWriter.visitDumpCommand(dump, reset);
-				remoteReader.read();
-
-			} finally {
-				socket.close();
-			}
-
-			// 3. Write execution data to file
-			if (dump) {
-				log(format("Dumping execution data to %s",
-						destfile.getAbsolutePath()));
-				loader.save(destfile, append);
-			}
-
-
+			dumpHelper.execute();
 		} catch (final IOException e) {
 			throw new BuildException("Unable to dump coverage data", e,
 					getLocation());
 		}
 	}
-
-	private Socket tryConnect() throws IOException {
-		final InetAddress inetAddress = InetAddress.getByName(address);
-		int count = 0;
-		while (true) {
-			try {
-				log(format("Connecting to %s:%s", inetAddress,
-						Integer.valueOf(port)));
-				return new Socket(inetAddress, port);
-			} catch (final IOException e) {
-				if (++count > retryCount) {
-					throw e;
-				}
-				log(e.getMessage());
-				sleep();
-			}
-		}
-	}
-
-	private void sleep() throws InterruptedIOException {
-		try {
-			Thread.sleep(1000);
-		} catch (final InterruptedException ie) {
-			throw new InterruptedIOException();
-		}
-	}
-
 }
