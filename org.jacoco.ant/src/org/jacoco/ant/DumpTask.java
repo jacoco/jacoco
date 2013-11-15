@@ -132,19 +132,29 @@ public class DumpTask extends Task {
 		try {
 			final ExecFileLoader loader = new ExecFileLoader();
 
-			// 1. Open socket connection
-			final Socket socket = tryConnect();
-			final RemoteControlWriter remoteWriter = new RemoteControlWriter(
-					socket.getOutputStream());
-			final RemoteControlReader remoteReader = new RemoteControlReader(
-					socket.getInputStream());
-			remoteReader.setSessionInfoVisitor(loader.getSessionInfoStore());
-			remoteReader
-					.setExecutionDataVisitor(loader.getExecutionDataStore());
+			Socket socket = null;
+			try {
 
-			// 2. Request dump
-			remoteWriter.visitDumpCommand(dump, reset);
-			remoteReader.read();
+				// 1. Open socket connection
+				socket = tryConnect();
+				final RemoteControlWriter remoteWriter = new RemoteControlWriter(
+						socket.getOutputStream());
+				final RemoteControlReader remoteReader = new RemoteControlReader(
+						socket.getInputStream());
+				remoteReader
+						.setSessionInfoVisitor(loader.getSessionInfoStore());
+				remoteReader.setExecutionDataVisitor(loader
+						.getExecutionDataStore());
+
+				// 2. Request dump
+				remoteWriter.visitDumpCommand(dump, reset);
+				remoteReader.read();
+
+			} finally {
+				if (socket != null) {
+					socket.close();
+				}
+			}
 
 			// 3. Write execution data to file
 			if (dump) {
