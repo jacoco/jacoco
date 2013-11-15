@@ -153,12 +153,16 @@ public class DumpMojo extends AbstractJacocoMojo {
 					throw e;
 				}
 				getLog().info(e.getMessage());
-				try {
-					Thread.sleep(1000);
-				} catch (final InterruptedException ie) {
-					throw new InterruptedIOException();
-				}
+				sleep();
 			}
+		}
+	}
+
+	private void sleep() throws InterruptedIOException {
+		try {
+			Thread.sleep(1000);
+		} catch (final InterruptedException ie) {
+			throw new InterruptedIOException();
 		}
 	}
 

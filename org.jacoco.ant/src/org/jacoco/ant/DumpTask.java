@@ -184,12 +184,16 @@ public class DumpTask extends Task {
 					throw e;
 				}
 				log(e.getMessage());
-				try {
-					Thread.sleep(1000);
-				} catch (final InterruptedException ie) {
-					throw new InterruptedIOException();
-				}
+				sleep();
 			}
+		}
+	}
+
+	private void sleep() throws InterruptedIOException {
+		try {
+			Thread.sleep(1000);
+		} catch (final InterruptedException ie) {
+			throw new InterruptedIOException();
 		}
 	}
 
