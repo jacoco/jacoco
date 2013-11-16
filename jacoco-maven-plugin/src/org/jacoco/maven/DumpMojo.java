@@ -15,14 +15,11 @@ import static java.lang.String.format;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.InterruptedIOException;
 import java.net.InetAddress;
-import java.net.Socket;
 
 import org.apache.maven.plugin.MojoExecutionException;
-import org.jacoco.core.data.ExecFileLoader;
-import org.jacoco.core.runtime.RemoteControlReader;
-import org.jacoco.core.runtime.RemoteControlWriter;
+import org.jacoco.core.tools.ExecDumpClient;
+import org.jacoco.core.tools.ExecFileLoader;
 
 /**
  * <p>
@@ -100,30 +97,26 @@ public class DumpMojo extends AbstractJacocoMojo {
 
 	@Override
 	public void executeMojo() throws MojoExecutionException {
-		try {
-			final ExecFileLoader loader = new ExecFileLoader();
-
-			final Socket socket = tryConnect();
-			try {
-				// 1. Get streams from socket
-				final RemoteControlWriter remoteWriter = new RemoteControlWriter(
-						socket.getOutputStream());
-				final RemoteControlReader remoteReader = new RemoteControlReader(
-						socket.getInputStream());
-				remoteReader
-						.setSessionInfoVisitor(loader.getSessionInfoStore());
-				remoteReader.setExecutionDataVisitor(loader
-						.getExecutionDataStore());
-
-				// 2. Request dump
-				remoteWriter.visitDumpCommand(dump, reset);
-				remoteReader.read();
-
-			} finally {
-				socket.close();
+		final ExecDumpClient client = new ExecDumpClient() {
+			@Override
+			protected void onConnecting(final InetAddress address,
+					final int port) {
+				getLog().info(
+						format("Connecting to %s:%s", address,
+								Integer.valueOf(port)));
 			}
 
-			// 3. Write execution data to file
+			@Override
+			protected void onConnectionFailure(final IOException exception) {
+				getLog().info(exception.getMessage());
+			}
+		};
+		client.setDump(dump);
+		client.setReset(reset);
+		client.setRetryCount(retryCount);
+
+		try {
+			final ExecFileLoader loader = client.dump(address, port);
 			if (dump) {
 				getLog().info(
 						format("Dumping execution data to %s",
@@ -132,33 +125,6 @@ public class DumpMojo extends AbstractJacocoMojo {
 			}
 		} catch (final IOException e) {
 			throw new MojoExecutionException("Unable to dump coverage data", e);
-		}
-	}
-
-	private Socket tryConnect() throws IOException {
-		final InetAddress inetAddress = InetAddress.getByName(address);
-		int count = 0;
-		while (true) {
-			try {
-				getLog().info(
-						format("Connecting to %s:%s", inetAddress,
-								Integer.valueOf(port)));
-				return new Socket(inetAddress, port);
-			} catch (final IOException e) {
-				if (++count > retryCount) {
-					throw e;
-				}
-				getLog().info(e.getMessage());
-				sleep();
-			}
-		}
-	}
-
-	private void sleep() throws InterruptedIOException {
-		try {
-			Thread.sleep(1000);
-		} catch (final InterruptedException ie) {
-			throw new InterruptedIOException();
 		}
 	}
 
