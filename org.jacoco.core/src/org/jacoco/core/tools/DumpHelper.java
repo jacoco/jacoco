@@ -14,9 +14,9 @@ package org.jacoco.core.tools;
 import java.io.File;
 import java.io.IOException;
 import java.io.InterruptedIOException;
-import static java.lang.String.format;
 import java.net.InetAddress;
 import java.net.Socket;
+
 import org.jacoco.core.data.ExecFileLoader;
 import org.jacoco.core.runtime.RemoteControlReader;
 import org.jacoco.core.runtime.RemoteControlWriter;
@@ -114,7 +114,7 @@ public abstract class DumpHelper {
 
 		// 3. Write execution data to file
 		if (dump) {
-			logging(format("Dumping execution data to %s",
+			logging(String.format("Dumping execution data to %s",
 					destFile.getAbsolutePath()));
 			loader.save(destFile, append);
 		}
@@ -127,7 +127,7 @@ public abstract class DumpHelper {
 		int count = 0;
 		while (true) {
 			try {
-				logging(format("Connecting to %s:%s", inetAddress,
+				logging(String.format("Connecting to %s:%s", inetAddress,
 						Integer.valueOf(port)));
 				return new Socket(inetAddress, port);
 			} catch (final IOException e) {
