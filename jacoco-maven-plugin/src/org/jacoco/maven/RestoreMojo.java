@@ -11,12 +11,12 @@
  *******************************************************************************/
 package org.jacoco.maven;
 
+import java.io.File;
+import java.io.IOException;
+
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 import org.codehaus.plexus.util.FileUtils;
-
-import java.io.File;
-import java.io.IOException;
 
 /**
  * Restores original classes as they were before offline instrumentation.
@@ -24,6 +24,7 @@ import java.io.IOException;
  * @phase prepare-package
  * @goal restore-instrumented-classes
  * @requiresProject true
+ * @threadSafe
  * @since 0.6.2
  */
 public class RestoreMojo extends AbstractJacocoMojo {
