@@ -36,6 +36,8 @@
     <developer>
       <id>mtnminds</id>
       <name>Marc R. Hoffmann</name>
+      <email>hoffmann@mountainminds.com</email>
+      <timezone>+1</timezone>
       <roles>
         <role>Project Lead</role>
       </roles>
@@ -59,6 +61,15 @@
       <timezone>+3</timezone>
       <roles>
         <role>Build and release manager</role>
+      </roles>
+    </developer>
+    <developer>
+      <id>mfriedenhagen</id>
+      <name>Mirko Friedenhagen</name>
+      <email>mfriedenhagen@gmail.com</email>
+      <timezone>+1</timezone>
+      <roles>
+        <role>Developer</role>
       </roles>
     </developer>
   </developers>
