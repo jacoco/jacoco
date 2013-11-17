@@ -181,7 +181,8 @@ public abstract class AbstractReportMojo extends AbstractMavenReport {
 		loadExecutionData();
 		try {
 			final IReportVisitor visitor = createVisitor(locale);
-			visitor.visitInfo(sessionInfoStore.getInfos(), executionDataStore.getContents());
+			visitor.visitInfo(sessionInfoStore.getInfos(),
+					executionDataStore.getContents());
 			createReport(visitor);
 			visitor.visitEnd();
 		} catch (final IOException e) {
@@ -203,16 +204,20 @@ public abstract class AbstractReportMojo extends AbstractMavenReport {
 	}
 
 	protected void createReport(final IReportGroupVisitor visitor) throws IOException {
-		final FileFilter fileFilter = new FileFilter(this.getIncludes(), this.getExcludes());
-		final BundleCreator creator = new BundleCreator(this.getProject(), fileFilter);
+		final FileFilter fileFilter = new FileFilter(this.getIncludes(),
+				this.getExcludes());
+		final BundleCreator creator = new BundleCreator(this.getProject(),
+				fileFilter);
 		final IBundleCoverage bundle = creator.createBundle(executionDataStore);
-		final SourceFileCollection locator = new SourceFileCollection(getCompileSourceRoots(), sourceEncoding);
+		final SourceFileCollection locator = new SourceFileCollection(
+				getCompileSourceRoots(), sourceEncoding);
 		checkForMissingDebugInformation(bundle);
 		visitor.visitBundle(bundle, locator);
 	}
 
 	protected void checkForMissingDebugInformation(final ICoverageNode node) {
-		if (node.getClassCounter().getTotalCount() > 0 && node.getLineCounter().getTotalCount() == 0) {
+		if (node.getClassCounter().getTotalCount() > 0
+				&& node.getLineCounter().getTotalCount() == 0) {
 			getLog().warn("To enable source code annotation class files have to be compiled with debug information.");
 		}
 	}
@@ -222,14 +227,17 @@ public abstract class AbstractReportMojo extends AbstractMavenReport {
 		getOutputDirectoryFile().mkdirs();
 		final XMLFormatter xmlFormatter = new XMLFormatter();
 		xmlFormatter.setOutputEncoding(outputEncoding);
-		visitors.add(xmlFormatter.createVisitor(new FileOutputStream(new File(getOutputDirectoryFile(), "jacoco.xml"))));
+		visitors.add(xmlFormatter.createVisitor(new FileOutputStream(
+				new File(getOutputDirectoryFile(), "jacoco.xml"))));
 		final CSVFormatter csvFormatter = new CSVFormatter();
 		csvFormatter.setOutputEncoding(outputEncoding);
-		visitors.add(csvFormatter.createVisitor(new FileOutputStream(new File(getOutputDirectoryFile(), "jacoco.csv"))));
+		visitors.add(csvFormatter.createVisitor(new FileOutputStream(
+				new File(getOutputDirectoryFile(), "jacoco.csv"))));
 		final HTMLFormatter htmlFormatter = new HTMLFormatter();
 		htmlFormatter.setOutputEncoding(outputEncoding);
 		htmlFormatter.setLocale(locale);
-		visitors.add(htmlFormatter.createVisitor(new FileMultiReportOutput(getOutputDirectoryFile())));
+		visitors.add(htmlFormatter.createVisitor(
+				new FileMultiReportOutput(getOutputDirectoryFile())));
 		return new MultiReportVisitor(visitors);
 	}
 
