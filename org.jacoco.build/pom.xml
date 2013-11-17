@@ -510,7 +510,7 @@
             </goals>
             <configuration>
               <target>
-                <fileset dir="${basedir}" includes="**/*.java,**/*.xml,**/*.bsh" excludes="target/**" id="missinglicense.fileset">
+                <fileset dir="${basedir}" includes="**/*.java,**/*.xml,**/*.bsh" excludes="target/**,nb-configuration.xml" id="missinglicense.fileset">
                   <not>
                     <and>
                       <contains text="Copyright (c) 2009, 2013 Mountainminds GmbH &amp; Co. KG and Contributors"/>
