@@ -90,6 +90,7 @@
     <module>../org.jacoco.agent.rt</module>
     <module>../org.jacoco.agent</module>
     <module>../org.jacoco.ant</module>
+    <module>../org.jacoco.cli</module>
 
     <module>../jacoco-maven-plugin</module>
 
@@ -136,6 +137,7 @@
     <!-- Dependencies versions -->
     <asm.version>4.1</asm.version>
     <ant.version>1.7.1</ant.version>
+    <args4j.version>2.0.16</args4j.version>
     <junit.version>4.8.2</junit.version>
 
     <!-- ================== -->
@@ -193,7 +195,17 @@
         <classifier>nodeps</classifier>
         <version>${project.version}</version>
       </dependency>
+      <dependency>
+        <groupId>${project.groupId}</groupId>
+        <artifactId>org.jacoco.cli</artifactId>
+        <version>${project.version}</version>
+      </dependency>
       <!-- Third-party dependencies -->
+      <dependency>
+        <groupId>args4j</groupId>
+        <artifactId>args4j</artifactId>
+        <version>${args4j.version}</version>
+      </dependency>
       <dependency>
         <groupId>org.ow2.asm</groupId>
         <artifactId>asm-all</artifactId>
