@@ -115,6 +115,7 @@ final class CommandLineSupport {
 					current.append(c);
 				}
 				mode = M_PARSEARGUMENT;
+				break;
 			}
 		}
 		addArgument(args, current);

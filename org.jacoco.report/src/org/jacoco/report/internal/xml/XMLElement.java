@@ -124,6 +124,7 @@ public class XMLElement {
 				break;
 			default:
 				writer.write(c);
+				break;
 			}
 		}
 	}

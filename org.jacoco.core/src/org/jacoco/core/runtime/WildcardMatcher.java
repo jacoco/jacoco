@@ -54,6 +54,7 @@ public class WildcardMatcher {
 				break;
 			default:
 				regex.append(Pattern.quote(String.valueOf(c)));
+				break;
 			}
 		}
 		return regex;
