@@ -34,18 +34,27 @@
 <h2>Example</h2>
 
 <p>
-  The JaCoCo distribution contains a simple example how code coverage can be
-  added to a Maven project. This <a href="examples/build/pom.xml">POM file</a>
-  for a JAR project runs JUnit tests during the phase <tt>test</tt> using the
+  The JaCoCo distribution contains two simple examples how code coverage can be
+  added to a Maven project.
+</p>
+<ul>
+  <li>
+  This <a href="examples/build/sample/pom.xml">POM file</a> for a JAR project 
+  runs JUnit tests during the phase <tt>test</tt> using the
   <a href="http://maven.apache.org/surefire/maven-surefire-plugin/">maven-surefire-plugin</a>
-  as well as integration tests using the
+  </li>
+  <li>
+  This <a href="examples/build/sample-including-integration-report/pom.xml">POM file</a>
+  for a JAR project runs integration tests using the
   <a href="http://maven.apache.org/surefire/maven-failsafe-plugin/">maven-failsafe-plugin</a>
-  for code coverage and creates two coverage reports
+  for code coverage as well and creates two coverage reports
   (<tt>target/site/jacoco/index.html</tt> and
   <tt>target/site/jacoco-it/index.html</tt>).
-  The complete example is located in the <code>./doc/examples/build</code>
+  </li>
+  <li>The complete examples are located in the <code>./doc/examples/build</code>
   folder of the distribution.
-</p>
+  </li>
+</ul>
 
 
 <h2>Prerequisites</h2>
