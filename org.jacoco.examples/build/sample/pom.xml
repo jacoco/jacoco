@@ -45,21 +45,9 @@
             </goals>
           </execution>
           <execution>
-            <id>default-prepare-agent-integration</id>
-            <goals>
-              <goal>prepare-agent-integration</goal>
-            </goals>
-          </execution>
-          <execution>
             <id>default-report</id>
             <goals>
               <goal>report</goal>
-            </goals>
-          </execution>
-          <execution>
-            <id>default-report-integration</id>
-            <goals>
-              <goal>report-integration</goal>
             </goals>
           </execution>
           <execution>
@@ -89,20 +77,6 @@
         <artifactId>maven-surefire-plugin</artifactId>
         <version>2.16</version>
       </plugin>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-failsafe-plugin</artifactId>
-        <version>2.16</version>
-        <executions>
-          <execution>
-            <id>default-integration-test</id>
-            <goals>
-              <goal>integration-test</goal>
-            </goals>
-          </execution>
-        </executions>
-      </plugin>
     </plugins>
   </build>
-
 </project>
