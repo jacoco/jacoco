@@ -92,10 +92,10 @@
     <module>../org.jacoco.ant</module>
 
     <module>../jacoco-maven-plugin</module>
+    <module>../org.jacoco.examples</module>
 
     <module>../org.jacoco.tests</module>
-
-    <module>../org.jacoco.examples</module>
+    
     <module>../org.jacoco.doc</module>
     <module>../jacoco</module>
   </modules>
@@ -192,6 +192,13 @@
         <artifactId>org.jacoco.ant</artifactId>
         <classifier>nodeps</classifier>
         <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>${project.groupId}</groupId>
+        <artifactId>org.jacoco.examples</artifactId>
+        <version>${project.version}</version>
+        <scope>test</scope>
+        <type>zip</type>
       </dependency>
       <!-- Third-party dependencies -->
       <dependency>

@@ -34,12 +34,27 @@
 <h2>Example</h2>
 
 <p>
-  The JaCoCo distribution contains a simple example how code coverage can be
-  added to a Maven project. This <a href="examples/build/pom.xml">POM file</a>
-  for a JAR project runs JUnit tests under code coverage and creates a coverage
-  report. The complete example is located in the <code>./doc/examples/build</code>
-  folder of the distribution.
+  The JaCoCo distribution contains two simple examples how code coverage can be
+  added to a Maven project.
 </p>
+<ul>
+  <li>
+  This <a href="examples/build/sample/pom.xml">POM file</a> for a JAR project 
+  runs JUnit tests during the phase <tt>test</tt> using the
+  <a href="http://maven.apache.org/surefire/maven-surefire-plugin/">maven-surefire-plugin</a>
+  </li>
+  <li>
+  This <a href="examples/build/sample-including-integration-report/pom.xml">POM file</a>
+  for a JAR project runs integration tests using the
+  <a href="http://maven.apache.org/surefire/maven-failsafe-plugin/">maven-failsafe-plugin</a>
+  for code coverage as well and creates two coverage reports
+  (<tt>target/site/jacoco/index.html</tt> and
+  <tt>target/site/jacoco-it/index.html</tt>).
+  </li>
+  <li>The complete examples are located in the <code>./doc/examples/build</code>
+  folder of the distribution.
+  </li>
+</ul>
 
 
 <h2>Prerequisites</h2>
@@ -88,8 +103,10 @@ mvn help:describe -Dplugin=org.jacoco:jacoco-maven-plugin -Ddetail
 <ul>
   <li><a href="help-mojo.html">help</a></li>
   <li><a href="prepare-agent-mojo.html">prepare-agent</a></li>
+  <li><a href="prepare-agent-integration-mojo.html">prepare-agent-integration</a></li>
   <li><a href="merge-mojo.html">merge</a></li>
   <li><a href="report-mojo.html">report</a></li>
+  <li><a href="report-integration-mojo.html">report-integration</a></li>
   <li><a href="check-mojo.html">check</a></li>
   <li><a href="dump-mojo.html">dump</a></li>
   <li><a href="instrument-mojo.html">instrument</a></li>
