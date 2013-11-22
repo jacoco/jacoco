@@ -12,6 +12,7 @@
 package org.jacoco.examples;
 
 import java.io.InputStream;
+import java.io.PrintStream;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -39,9 +40,7 @@ public final class CoreTutorial {
 	public static class TestTarget implements Runnable {
 
 		public void run() {
-			final int n = 7;
-			final String status = isPrime(n) ? "prime" : "not prime";
-			System.out.printf("%s is %s%n", Integer.valueOf(n), status);
+			isPrime(7);
 		}
 
 		private boolean isPrime(final int n) {
@@ -86,30 +85,25 @@ public final class CoreTutorial {
 
 	}
 
-	private InputStream getTargetClass(final String name) {
-		final String resource = '/' + name.replace('.', '/') + ".class";
-		return getClass().getResourceAsStream(resource);
+	private final PrintStream out;
+
+	/**
+	 * Creates a new example instance printing to the given stream.
+	 * 
+	 * @param out
+	 *            stream for outputs
+	 */
+	public CoreTutorial(final PrintStream out) {
+		this.out = out;
 	}
 
-	private void printCounter(final String unit, final ICounter counter) {
-		final Integer missed = Integer.valueOf(counter.getMissedCount());
-		final Integer total = Integer.valueOf(counter.getTotalCount());
-		System.out.printf("%s of %s %s missed%n", missed, total, unit);
-	}
-
-	private String getColor(final int status) {
-		switch (status) {
-		case ICounter.NOT_COVERED:
-			return "red";
-		case ICounter.PARTLY_COVERED:
-			return "yellow";
-		case ICounter.FULLY_COVERED:
-			return "green";
-		}
-		return "";
-	}
-
-	private void runTutorial() throws Exception {
+	/**
+	 * Run this example.
+	 * 
+	 * @throws Exception
+	 *             in case of errors
+	 */
+	public void execute() throws Exception {
 		final String targetName = TestTarget.class.getName();
 
 		// For instrumentation and runtime we need a IRuntime instance
@@ -152,7 +146,7 @@ public final class CoreTutorial {
 
 		// Let's dump some metrics and line coverage information:
 		for (final IClassCoverage cc : coverageBuilder.getClasses()) {
-			System.out.printf("Coverage of class %s%n", cc.getName());
+			out.printf("Coverage of class %s%n", cc.getName());
 
 			printCounter("instructions", cc.getInstructionCounter());
 			printCounter("branches", cc.getBranchCounter());
@@ -161,23 +155,45 @@ public final class CoreTutorial {
 			printCounter("complexity", cc.getComplexityCounter());
 
 			for (int i = cc.getFirstLine(); i <= cc.getLastLine(); i++) {
-				System.out.printf("Line %s: %s%n", Integer.valueOf(i),
-						getColor(cc.getLine(i).getStatus()));
+				out.printf("Line %s: %s%n", Integer.valueOf(i), getColor(cc
+						.getLine(i).getStatus()));
 			}
 		}
 	}
 
-	/**
-	 * Execute the example.
-	 * 
-	 * @param args
-	 * @throws Exception
-	 */
-	public static void main(final String[] args) throws Exception {
-		new CoreTutorial().runTutorial();
+	private InputStream getTargetClass(final String name) {
+		final String resource = '/' + name.replace('.', '/') + ".class";
+		return getClass().getResourceAsStream(resource);
 	}
 
-	private CoreTutorial() {
+	private void printCounter(final String unit, final ICounter counter) {
+		final Integer missed = Integer.valueOf(counter.getMissedCount());
+		final Integer total = Integer.valueOf(counter.getTotalCount());
+		out.printf("%s of %s %s missed%n", missed, total, unit);
+	}
+
+	private String getColor(final int status) {
+		switch (status) {
+		case ICounter.NOT_COVERED:
+			return "red";
+		case ICounter.PARTLY_COVERED:
+			return "yellow";
+		case ICounter.FULLY_COVERED:
+			return "green";
+		}
+		return "";
+	}
+
+	/**
+	 * Entry point to run this examples as a Java application.
+	 * 
+	 * @param args
+	 *            list of program arguments
+	 * @throws Exception
+	 *             in case of errors
+	 */
+	public static void main(final String[] args) throws Exception {
+		new CoreTutorial(System.out).execute();
 	}
 
 }

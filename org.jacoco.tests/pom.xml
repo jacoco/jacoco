@@ -31,7 +31,8 @@
     <module>../org.jacoco.agent.rt.test</module>
     <module>../org.jacoco.agent.test</module>
     <module>../org.jacoco.ant.test</module>
-    <module>../jacoco-maven-plugin.test</module>
+    <!-- <module>../jacoco-maven-plugin.test</module> -->
+    <module>../org.jacoco.examples.test</module>
   </modules>
 
   <properties>
@@ -53,6 +54,9 @@
           <includes>
             <include>${jacoco.includes}</include>
           </includes>
+          <excludes>
+            <exclude>${jacoco.excludes}</exclude>
+          </excludes>
         </configuration>
         <executions>
           <execution>
