@@ -193,6 +193,11 @@
         <classifier>nodeps</classifier>
         <version>${project.version}</version>
       </dependency>
+      <dependency>
+        <groupId>${project.groupId}</groupId>
+        <artifactId>org.jacoco.examples</artifactId>
+        <version>${project.version}</version>
+      </dependency>
       <!-- Third-party dependencies -->
       <dependency>
         <groupId>org.ow2.asm</groupId>
