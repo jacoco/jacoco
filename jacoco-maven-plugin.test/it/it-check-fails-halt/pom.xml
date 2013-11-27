@@ -20,7 +20,7 @@
     <version>1.0-SNAPSHOT</version>
   </parent>
 
-  <artifactId>it-check-fails-hault</artifactId>
+  <artifactId>it-check-fails-halt</artifactId>
 
   <build>
     <plugins>
@@ -40,7 +40,7 @@
             </goals>
             <configuration>
               <rules>
-                <rule>
+                <rule implementation="org.jacoco.maven.RuleConfiguration">
                   <element>CLASS</element>
                   <includes>
                     <include>Example</include>
