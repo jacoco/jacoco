@@ -38,4 +38,88 @@
       <artifactId>junit</artifactId>
     </dependency>
   </dependencies>
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-dependency-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>default-unpack</id>
+            <phase>package</phase>
+            <goals>
+              <goal>unpack</goal>
+            </goals>
+            <configuration>
+              <artifactItems>
+                <artifactItem>
+                  <groupId>${project.groupId}</groupId>
+                  <artifactId>org.jacoco.examples</artifactId>
+                  <version>${project.version}</version>
+                  <type>zip</type>
+                  <overWrite>true</overWrite>
+                  <outputDirectory>${project.build.directory}/build</outputDirectory>
+                </artifactItem>
+              </artifactItems>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-invoker-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>test-pom</id>
+            <goals>
+              <goal>install</goal>
+              <goal>run</goal>
+            </goals>
+            <configuration>
+              <cloneProjectsTo>${project.build.directory}/it</cloneProjectsTo>
+              <postBuildHookScript>../../../src/test/resources/verify</postBuildHookScript>
+              <goals>
+                <goal>verify</goal>
+              </goals>
+            </configuration>
+          </execution>
+          <execution>
+            <id>test-pom-it</id>
+            <goals>
+              <goal>install</goal>
+              <goal>run</goal>
+            </goals>
+            <configuration>
+              <cloneProjectsTo>${project.build.directory}/it-it</cloneProjectsTo>
+              <postBuildHookScript>../../../src/test/resources/verify-it</postBuildHookScript>
+              <goals>
+                <!-- this is probably a hack! -->
+                <goal>-f pom-it.xml</goal>
+                <goal>verify</goal>
+              </goals>
+            </configuration>
+          </execution>
+          <execution>
+            <id>test-pom-offline</id>
+            <goals>
+              <goal>install</goal>
+              <goal>run</goal>
+            </goals>
+            <configuration>
+              <cloneProjectsTo>${project.build.directory}/it-offline</cloneProjectsTo>
+              <postBuildHookScript>../../../src/test/resources/verify-offline</postBuildHookScript>
+              <goals>
+                <!-- this is probably a hack! -->
+                <goal>-f pom-offline.xml</goal>
+                <goal>verify</goal>
+              </goals>
+            </configuration>
+          </execution>
+        </executions>
+        <configuration>
+          <projectsDirectory>${project.build.directory}/build/examples</projectsDirectory>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
 </project>
