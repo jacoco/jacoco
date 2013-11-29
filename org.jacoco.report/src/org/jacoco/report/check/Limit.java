@@ -79,12 +79,13 @@ public class Limit {
 
 	/**
 	 * Sets the counter entity to check.
-	 * 
+	 * @todo: use ElementType directly once Maven 3 is required.
+	 *
 	 * @param entity
 	 *            counter entity to check
 	 */
-	public void setCounter(final CounterEntity entity) {
-		this.entity = entity;
+	public void setCounter(final String entity) {
+		this.entity = CounterEntity.valueOf(entity);
 	}
 
 	/**
@@ -96,12 +97,13 @@ public class Limit {
 
 	/**
 	 * Sets the value to check.
-	 * 
+	 * @todo: use ElementType directly once Maven 3 is required.
+	 *
 	 * @param value
 	 *            value to check
 	 */
-	public void setValue(final CounterValue value) {
-		this.value = value;
+	public void setValue(final String value) {
+		this.value = CounterValue.valueOf(value);
 	}
 
 	/**

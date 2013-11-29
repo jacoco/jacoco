@@ -27,7 +27,7 @@
   <description>The JaCoCo Maven Plugin provides the JaCoCo runtime agent to your tests and allows basic report creation.</description>
 
   <prerequisites>
-    <maven>2.1.0</maven>
+    <maven>2.2.1</maven>
   </prerequisites>
 
   <dependencies>

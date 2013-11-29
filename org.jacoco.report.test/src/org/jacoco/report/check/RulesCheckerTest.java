@@ -46,7 +46,7 @@ public class RulesCheckerTest implements IViolationsOutput {
 	public void testSetRules() throws IOException {
 		Rule rule = new Rule();
 		Limit limit = rule.createLimit();
-		limit.setValue(CounterValue.MISSEDCOUNT);
+		limit.setValue(CounterValue.MISSEDCOUNT.name());
 		limit.setMaximum("5");
 		checker.setRules(Arrays.asList(rule));
 		driver.sendGroup(checker.createVisitor(this));
@@ -60,7 +60,7 @@ public class RulesCheckerTest implements IViolationsOutput {
 		Rule rule = new Rule();
 		rule.setElement(ElementType.CLASS);
 		Limit limit = rule.createLimit();
-		limit.setValue(CounterValue.MISSEDCOUNT);
+		limit.setValue(CounterValue.MISSEDCOUNT.name());
 		limit.setMaximum("5");
 		checker.setRules(Arrays.asList(rule));
 

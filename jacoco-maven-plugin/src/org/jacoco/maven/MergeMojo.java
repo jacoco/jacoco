@@ -13,7 +13,7 @@ package org.jacoco.maven;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.List;
+import java.util.ArrayList;
 
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
@@ -48,7 +48,7 @@ public class MergeMojo extends AbstractJacocoMojo {
 	 * @parameter expression="${jacoco.fileSets}"
 	 * @required
 	 */
-	private List<FileSet> fileSets;
+	private ArrayList<FileSet> fileSets;
 
 	@Override
 	protected void executeMojo() throws MojoExecutionException,

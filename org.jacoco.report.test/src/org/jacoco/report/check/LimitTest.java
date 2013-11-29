@@ -43,7 +43,7 @@ public class LimitTest {
 
 	@Test
 	public void testTotalCount() {
-		limit.setValue(CounterValue.TOTALCOUNT);
+		limit.setValue(CounterValue.TOTALCOUNT.name());
 		limit.setMaximum("-1");
 		assertEquals(CounterValue.TOTALCOUNT, limit.getValue());
 		assertEquals(
@@ -53,7 +53,7 @@ public class LimitTest {
 
 	@Test
 	public void testMissedCount() {
-		limit.setValue(CounterValue.MISSEDCOUNT);
+		limit.setValue(CounterValue.MISSEDCOUNT.name());
 		limit.setMaximum("-1");
 		assertEquals(CounterValue.MISSEDCOUNT, limit.getValue());
 		assertEquals(
@@ -63,7 +63,7 @@ public class LimitTest {
 
 	@Test
 	public void testCoveredCount() {
-		limit.setValue(CounterValue.COVEREDCOUNT);
+		limit.setValue(CounterValue.COVEREDCOUNT.name());
 		limit.setMaximum("-1");
 		assertEquals(CounterValue.COVEREDCOUNT, limit.getValue());
 		assertEquals(
@@ -73,7 +73,7 @@ public class LimitTest {
 
 	@Test
 	public void testMissedRatio() {
-		limit.setValue(CounterValue.MISSEDRATIO);
+		limit.setValue(CounterValue.MISSEDRATIO.name());
 		limit.setMaximum("-1");
 		assertEquals(CounterValue.MISSEDRATIO, limit.getValue());
 		assertEquals(
@@ -87,7 +87,7 @@ public class LimitTest {
 
 	@Test
 	public void testCoveredRatio() {
-		limit.setValue(CounterValue.COVEREDRATIO);
+		limit.setValue(CounterValue.COVEREDRATIO.name());
 		limit.setMaximum("-1");
 		assertEquals(CounterValue.COVEREDRATIO, limit.getValue());
 		assertEquals(
@@ -101,8 +101,8 @@ public class LimitTest {
 
 	@Test
 	public void testInstruction() {
-		limit.setValue(CounterValue.TOTALCOUNT);
-		limit.setCounter(CounterEntity.INSTRUCTION);
+		limit.setValue(CounterValue.TOTALCOUNT.name());
+		limit.setCounter(CounterEntity.INSTRUCTION.name());
 		limit.setMaximum("-1");
 		assertEquals(CounterEntity.INSTRUCTION, limit.getEntity());
 		assertEquals(
@@ -112,8 +112,8 @@ public class LimitTest {
 
 	@Test
 	public void testBranch() {
-		limit.setValue(CounterValue.TOTALCOUNT);
-		limit.setCounter(CounterEntity.BRANCH);
+		limit.setValue(CounterValue.TOTALCOUNT.name());
+		limit.setCounter(CounterEntity.BRANCH.name());
 		limit.setMaximum("-1");
 		assertEquals(CounterEntity.BRANCH, limit.getEntity());
 		assertEquals("branches total count is 0, but expected maximum is -1",
@@ -122,8 +122,8 @@ public class LimitTest {
 
 	@Test
 	public void testLine() {
-		limit.setValue(CounterValue.TOTALCOUNT);
-		limit.setCounter(CounterEntity.LINE);
+		limit.setValue(CounterValue.TOTALCOUNT.name());
+		limit.setCounter(CounterEntity.LINE.name());
 		limit.setMaximum("-1");
 		assertEquals(CounterEntity.LINE, limit.getEntity());
 		assertEquals("lines total count is 0, but expected maximum is -1",
@@ -132,8 +132,8 @@ public class LimitTest {
 
 	@Test
 	public void testComlexity() {
-		limit.setValue(CounterValue.TOTALCOUNT);
-		limit.setCounter(CounterEntity.COMPLEXITY);
+		limit.setValue(CounterValue.TOTALCOUNT.name());
+		limit.setCounter(CounterEntity.COMPLEXITY.name());
 		limit.setMaximum("-1");
 		assertEquals(CounterEntity.COMPLEXITY, limit.getEntity());
 		assertEquals("complexity total count is 0, but expected maximum is -1",
@@ -142,8 +142,8 @@ public class LimitTest {
 
 	@Test
 	public void testClass() {
-		limit.setValue(CounterValue.TOTALCOUNT);
-		limit.setCounter(CounterEntity.CLASS);
+		limit.setValue(CounterValue.TOTALCOUNT.name());
+		limit.setCounter(CounterEntity.CLASS.name());
 		limit.setMaximum("-1");
 		assertEquals(CounterEntity.CLASS, limit.getEntity());
 		assertEquals("classes total count is 0, but expected maximum is -1",
@@ -152,8 +152,8 @@ public class LimitTest {
 
 	@Test
 	public void testMethod() {
-		limit.setValue(CounterValue.TOTALCOUNT);
-		limit.setCounter(CounterEntity.METHOD);
+		limit.setValue(CounterValue.TOTALCOUNT.name());
+		limit.setCounter(CounterEntity.METHOD.name());
 		limit.setMaximum("-1");
 		assertEquals(CounterEntity.METHOD, limit.getEntity());
 		assertEquals("methods total count is 0, but expected maximum is -1",
@@ -237,7 +237,7 @@ public class LimitTest {
 	@Test
 	public void testMin5() {
 		limit.setMinimum("10000");
-		limit.setValue(CounterValue.MISSEDCOUNT);
+		limit.setValue(CounterValue.MISSEDCOUNT.name());
 		assertEquals("10000", limit.getMinimum());
 		assertEquals(
 				"instructions missed count is 9990, but expected minimum is 10000",
@@ -271,7 +271,7 @@ public class LimitTest {
 	@Test
 	public void testMax1() {
 		limit.setMaximum("12345678");
-		limit.setValue(CounterValue.MISSEDCOUNT);
+		limit.setValue(CounterValue.MISSEDCOUNT.name());
 		assertEquals("12345678", limit.getMaximum());
 		assertNull(limit.check(new TestNode() {
 			{
