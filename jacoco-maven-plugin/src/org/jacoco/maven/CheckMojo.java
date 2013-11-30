@@ -54,6 +54,10 @@ public class CheckMojo extends AbstractJacocoMojo implements IViolationsOutput {
 	 * If a limit refers to a ratio the range is from 0.0 to 1.0 where the
 	 * number of decimal places will also determine the precision in error
 	 * messages.
+	 *
+	 * Note that you <b>must</b> use <tt>implmentation</tt> hints for
+	 * <tt>rule</tt> and <tt>limit</tt> when using Maven 2, with Maven 3 you
+	 * do not need to specify the attributes.
 	 * </p>
 	 * 
 	 * <p>
@@ -64,15 +68,15 @@ public class CheckMojo extends AbstractJacocoMojo implements IViolationsOutput {
 	 * <pre>
 	 * {@code
 	 * <rules>
-	 *   <rule>
+	 *   <rule implementation="org.jacoco.maven.RuleConfiguration">
 	 *     <element>BUNDLE</element>
 	 *     <limits>
-	 *       <limit>
+	 *       <limit implementation="org.jacoco.report.check.Limit">
 	 *         <counter>INSTRUCTION</counter>
 	 *         <value>COVEREDRATIO</value>
 	 *         <minimum>0.80</minimum>
 	 *       </limit>
-	 *       <limit>
+	 *       <limit implementation="org.jacoco.report.check.Limit">
 	 *         <counter>CLASS</counter>
 	 *         <value>MISSEDCOUNT</value>
 	 *         <maximum>0</maximum>

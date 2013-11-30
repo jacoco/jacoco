@@ -13,7 +13,7 @@ package org.jacoco.maven;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.List;
+import java.util.ArrayList;
 
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
@@ -44,11 +44,25 @@ public class MergeMojo extends AbstractJacocoMojo {
 
 	/**
 	 * This mojo accepts any number of execution data file sets.
-	 * 
+	 *
+	 * Note that you need an <tt>implmentation</tt> hint on
+	 * <tt>fileset</tt> with Maven 2 (not needed with Maven 3):
+	 *
+	 * <pre>
+	 * {@code
+	 * <fileSets>
+	 *   <fileSet implementation="org.apache.maven.shared.model.fileset.FileSet">
+	 *     <directory>${project.parent.build.directory}</directory>
+	 *     <includes>
+	 *       <include>*.exec</include>
+	 *     </includes>
+	 *   </fileSet>
+	 * </fileSets>}
+	 * </pre>
 	 * @parameter expression="${jacoco.fileSets}"
 	 * @required
 	 */
-	private List<FileSet> fileSets;
+	private ArrayList<FileSet> fileSets;
 
 	@Override
 	protected void executeMojo() throws MojoExecutionException,

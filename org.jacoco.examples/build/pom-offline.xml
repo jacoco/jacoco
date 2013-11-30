@@ -38,6 +38,11 @@
     </dependency>
   </dependencies>
 
+  <properties>
+    <maven.compiler.source>1.5</maven.compiler.source>
+    <maven.compiler.target>1.5</maven.compiler.target>
+  </properties>
+
   <build>
     <plugins>
       <plugin>
@@ -71,10 +76,12 @@
             </goals>
             <configuration>
               <rules>
-                <rule>
+                <!-- implmentation is needed only for Maven 2 -->
+                <rule implementation="org.jacoco.maven.RuleConfiguration">
                   <element>BUNDLE</element>
                   <limits>
-                    <limit>
+                    <!-- implmentation is needed only for Maven 2 -->
+                    <limit implementation="org.jacoco.report.check.Limit">
                       <counter>COMPLEXITY</counter>
                       <value>COVEREDRATIO</value>
                       <minimum>0.60</minimum>
