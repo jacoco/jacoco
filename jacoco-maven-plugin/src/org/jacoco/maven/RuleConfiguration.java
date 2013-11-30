@@ -38,7 +38,7 @@ public class RuleConfiguration {
 	/**
 	 * @param element
 	 *            element type this rule applies to
-	 * @todo: use ElementType directly once Maven 3 is required.
+	 * TODO: use ElementType directly once Maven 3 is required.
 	 */
 	public void setElement(final String element) {
 		rule.setElement(ElementType.valueOf(element));
