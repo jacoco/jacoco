@@ -55,7 +55,7 @@ public class CheckMojo extends AbstractJacocoMojo implements IViolationsOutput {
 	 * number of decimal places will also determine the precision in error
 	 * messages.
 	 *
-	 * Note that you <b>must</b> use <tt>implmentation</tt> hints for
+	 * Note that you <b>must</b> use <tt>implementation</tt> hints for
 	 * <tt>rule</tt> and <tt>limit</tt> when using Maven 2, with Maven 3 you
 	 * do not need to specify the attributes.
 	 * </p>
