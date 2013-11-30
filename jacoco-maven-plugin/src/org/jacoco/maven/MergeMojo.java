@@ -45,20 +45,22 @@ public class MergeMojo extends AbstractJacocoMojo {
 	/**
 	 * This mojo accepts any number of execution data file sets.
 	 *
-	 * Note that you need an <tt>implmentation</tt> hint on
+	 * Note that you need an <tt>implementation</tt> hint on
 	 * <tt>fileset</tt> with Maven 2 (not needed with Maven 3):
 	 *
 	 * <pre>
-	 * {@code
-	 * <fileSets>
-	 *   <fileSet implementation="org.apache.maven.shared.model.fileset.FileSet">
-	 *     <directory>${project.parent.build.directory}</directory>
-	 *     <includes>
-	 *       <include>*.exec</include>
-	 *     </includes>
-	 *   </fileSet>
-	 * </fileSets>}
+	 * <code>
+	 * &lt;fileSets&gt;
+	 *   &lt;fileSet implementation="org.apache.maven.shared.model.fileset.FileSet"&gt;
+	 *     &lt;directory&gt;${project.parent.build.directory}&lt;/directory&gt;
+	 *     &lt;includes&gt;
+	 *       &lt;include&gt;*.exec&lt;/include&gt;
+	 *     &lt;/includes&gt;
+	 *   &lt;/fileSet&gt;
+	 * &lt;/fileSets&gt;
+	 * </code>
 	 * </pre>
+	 *
 	 * @parameter expression="${jacoco.fileSets}"
 	 * @required
 	 */
