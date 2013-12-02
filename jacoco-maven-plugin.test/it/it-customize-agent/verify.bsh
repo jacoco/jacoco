@@ -23,6 +23,9 @@ String agentOptions = "destfile=" + basedir + File.separator + "target" + File.s
     + ",address=localhost"
     + ",port=9999"
     + ",classdumpdir=" + basedir + File.separator + "target" + File.separator + "classdumps";
+
+//backslashes will be escaped
+agentOptions = agentOptions.replace("\\","\\\\");
 String buildLog = FileUtils.fileRead( new File( basedir, "build.log" ) );
 if ( buildLog.indexOf( agentOptions ) < 0 ) {
     throw new RuntimeException( "Property was not configured, expected " + agentOptions );
