@@ -47,7 +47,7 @@ public class ConsoleOutput extends ExternalResource {
 	}
 
 	public static Matcher<String> containsLine(String line) {
-		return containsString(String.format("%s\n", line));
+		return containsString(String.format("%s%n", line));
 	}
 
 	public static Matcher<String> isEmpty() {
