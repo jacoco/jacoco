@@ -2,16 +2,16 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: JaCoCo Core
 Bundle-SymbolicName: org.jacoco.core
-Bundle-Version: 0.6.4.201312101107
+Bundle-Version: 0.6.5.qualifier
 Bundle-Vendor: Mountainminds GmbH & Co. KG
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
-Export-Package: org.jacoco.core;version="0.6.4",
- org.jacoco.core.analysis;version="0.6.4",
- org.jacoco.core.data;version="0.6.4",
- org.jacoco.core.instr;version="0.6.4",
- org.jacoco.core.internal.analysis;version="0.6.4";x-internal=true,
- org.jacoco.core.runtime;version="0.6.4",
- org.jacoco.core.tools;version="0.6.4"
+Export-Package: org.jacoco.core;version="0.6.5",
+ org.jacoco.core.analysis;version="0.6.5",
+ org.jacoco.core.data;version="0.6.5",
+ org.jacoco.core.instr;version="0.6.5",
+ org.jacoco.core.internal.analysis;version="0.6.5";x-internal=true,
+ org.jacoco.core.runtime;version="0.6.5",
+ org.jacoco.core.tools;version="0.6.5"
 Import-Package: org.objectweb.asm;version="[4.1.0,4.2.0)",
  org.objectweb.asm.tree;version="[4.1.0,4.2.0)",
  org.objectweb.asm.commons;version="[4.1.0,4.2.0)"
