@@ -147,7 +147,10 @@ public abstract class AbstractReportMojo extends AbstractMavenReport {
 		if ("pom".equals(project.getPackaging())) {
 			getLog().info("Skipping JaCoCo for project with packaging type 'pom'");
 			return false;
-		}
+		}else if ("ear".equals(project.getPackaging())){
+            getLog().info("Skipping JaCoCo for project with packaging type 'ear'");
+            return false;
+        }
 		if (skip) {
 			getLog().info("Skipping JaCoCo execution");
 			return false;
