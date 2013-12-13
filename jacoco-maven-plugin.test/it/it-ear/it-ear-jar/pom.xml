@@ -16,37 +16,9 @@
 
   <parent>
     <groupId>jacoco</groupId>
-    <artifactId>setup-parent</artifactId>
+    <artifactId>it-ear-pom</artifactId>
     <version>1.0-SNAPSHOT</version>
   </parent>
 
-  <artifactId>it-ear-pom</artifactId>
-  <packaging>pom</packaging>
-
-  <build>
-    <plugins>
-      <plugin>
-        <groupId>@project.groupId@</groupId>
-        <artifactId>jacoco-maven-plugin</artifactId>
-        <executions>
-          <execution>
-            <id>default-prepare-agent</id>
-            <goals>
-              <goal>prepare-agent</goal>
-            </goals>
-          </execution>
-          <execution>
-            <id>default-report</id>
-            <goals>
-              <goal>report</goal>
-            </goals>
-          </execution>
-        </executions>
-      </plugin>
-    </plugins>
-  </build>
-  <modules>
-    <module>it-ear-jar</module>
-    <module>it-ear-ear</module>
-  </modules>
+  <artifactId>it-ear-jar</artifactId>
 </project>
