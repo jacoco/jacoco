@@ -18,8 +18,12 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
+import java.util.Set;
+
 import org.apache.maven.doxia.siterenderer.Renderer;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.project.MavenProject;
@@ -42,8 +46,11 @@ import org.jacoco.report.xml.XMLFormatter;
 /**
  *
  * @author Mirko Friedenhagen
+ * @author Lukasz Pielak
  */
 public abstract class AbstractReportMojo extends AbstractMavenReport {
+
+    private static final Set<String> SKIPPED_PACKAGINGS = new HashSet(Arrays.asList("pom", "ear"));
 
 	/**
 	 * Encoding of the generated reports.
@@ -144,10 +151,10 @@ public abstract class AbstractReportMojo extends AbstractMavenReport {
 
 	@Override
 	public boolean canGenerateReport() {
-		if ("pom".equals(project.getPackaging())) {
-			getLog().info("Skipping JaCoCo for project with packaging type 'pom'");
-			return false;
-		}
+        if (SKIPPED_PACKAGINGS.contains(project.getPackaging())) {
+            getLog().info(String.format("Skipping JaCoCo for project with packaging type '%s'", project.getPackaging()));
+            return false;
+        }
 		if (skip) {
 			getLog().info("Skipping JaCoCo execution");
 			return false;
