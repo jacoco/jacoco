@@ -156,6 +156,11 @@ public abstract class AbstractReportMojo extends AbstractMavenReport {
 			getLog().info("Skipping JaCoCo execution due to missing execution data file");
 			return false;
 		}
+		final File classesDirectory = new File(getProject().getBuild().getOutputDirectory());
+		if (!classesDirectory.exists()) {
+			getLog().info("Skipping JaCoCo execution due to missing classes directory.");
+			return false;
+		}
 		return true;
 	}
 
