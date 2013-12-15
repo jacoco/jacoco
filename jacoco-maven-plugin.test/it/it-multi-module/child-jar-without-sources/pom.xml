@@ -7,8 +7,7 @@
    http://www.eclipse.org/legal/epl-v10.html
 
    Contributors:
-      Evgeny Mandrikov - initial API and implementation
-      Kyle Lieber - implementation of CheckMojo
+      Mirko Friedenhagen
 -->
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
@@ -16,9 +15,10 @@
 
   <parent>
     <groupId>jacoco</groupId>
-    <artifactId>it-ear-pom</artifactId>
+    <artifactId>it-multi-module</artifactId>
     <version>1.0-SNAPSHOT</version>
   </parent>
 
-  <artifactId>it-ear-jar</artifactId>
+  <!-- report should not choke when target/classes does not exist. -->
+  <artifactId>child-jar-without-sources</artifactId>
 </project>
