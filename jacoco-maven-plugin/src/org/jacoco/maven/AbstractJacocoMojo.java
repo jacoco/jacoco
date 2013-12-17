@@ -58,14 +58,9 @@ public abstract class AbstractJacocoMojo extends AbstractMojo {
 
 	public final void execute() throws MojoExecutionException,
 			MojoFailureException {
-		if ("pom".equals(project.getPackaging())) {
-			getLog().info(
-					"Skipping JaCoCo for project with packaging type 'pom'");
-			skipMojo();
-			return;
-		}
 		if (skip) {
-			getLog().info("Skipping JaCoCo execution");
+			getLog().info(
+					"Skipping JaCoCo execution because property jacoco.skip is set.");
 			skipMojo();
 			return;
 		}

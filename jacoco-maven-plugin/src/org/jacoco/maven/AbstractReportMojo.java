@@ -144,21 +144,22 @@ public abstract class AbstractReportMojo extends AbstractMavenReport {
 
 	@Override
 	public boolean canGenerateReport() {
-		if ("pom".equals(project.getPackaging())) {
-			getLog().info("Skipping JaCoCo for project with packaging type 'pom'");
-			return false;
-		}
 		if (skip) {
-			getLog().info("Skipping JaCoCo execution");
+			getLog().info(
+					"Skipping JaCoCo execution because property jacoco.skip is set.");
 			return false;
 		}
 		if (!getDataFile().exists()) {
-			getLog().info("Skipping JaCoCo execution due to missing execution data file");
+			getLog().info(
+					"Skipping JaCoCo execution due to missing execution data file:" +
+					getDataFile());
 			return false;
 		}
 		final File classesDirectory = new File(getProject().getBuild().getOutputDirectory());
 		if (!classesDirectory.exists()) {
-			getLog().info("Skipping JaCoCo execution due to missing classes directory.");
+			getLog().info(
+					"Skipping JaCoCo execution due to missing classes directory:" +
+					classesDirectory);
 			return false;
 		}
 		return true;
