@@ -24,6 +24,7 @@
 
   <modules>
     <module>child</module>
+    <module>child-jar-without-sources</module>
     <module>skip-child</module>
   </modules>
 
