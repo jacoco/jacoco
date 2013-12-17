@@ -22,92 +22,92 @@
 
 <h3>Fixed Bugs</h3>
 <ul>
-  <li>Skip jacoco instrumentation for mvn modules with package type ear (GitHub #169).</li>
+  <li>Skip jacoco instrumentation for mvn modules with package type ear (GitHub <a href="https://github.com/jacoco/jacoco/issues/169">#169</a>).</li>
 </ul>
 
 <h2>Release 0.6.4 (2013/12/10)</h2>
 
 <h3>New Features</h3>
 <ul>
-  <li>Support for Android <i>Strict Mode</i> (GitHub #113).</li>
-  <li>New dump Mojo for Maven plug-in (GitHub #107).</li>
+  <li>Support for Android <i>Strict Mode</i> (GitHub <a href="https://github.com/jacoco/jacoco/issues/113">#113</a>).</li>
+  <li>New dump Mojo for Maven plug-in (GitHub <a href="https://github.com/jacoco/jacoco/issues/107">#107</a>).</li>
   <li>New merge Mojo for Maven plug-in, contributed by Mads Mohr Christensen
-      (GitHub #126).</li>
+      (GitHub <a href="https://github.com/jacoco/jacoco/issues/126">#126</a>).</li>
   <li>Additional list of source files for every package in HTML report
-      (GitHub #142).</li>
+      (GitHub <a href="https://github.com/jacoco/jacoco/issues/142">#142</a>).</li>
   <li>Additional report-integration and prepare-agent-integration goals for
-      integration tests. (GitHub #152, #161).</li>
+      integration tests. (GitHub <a href="https://github.com/jacoco/jacoco/issues/152">#152</a>, <a href="https://github.com/jacoco/jacoco/issues/161">#161</a>).</li>
 </ul>
 
 <h3>Fixed Bugs</h3>
 <ul>
   <li>Multiple executions of Maven goal "prepare-agent" should not lead to
-      incorrect configuration (GitHub #40).</li>
+      incorrect configuration (GitHub <a href="https://github.com/jacoco/jacoco/issues/40">#40</a>).</li>
   <li>Avoid direct dependency on java.lang.management APIs to allow usage on
-      Android (GitHub #150).</li>
-  <li>All JaCoCo Maven goals are marked as thread-safe (GitHub #133).</li>
+      Android (GitHub <a href="https://github.com/jacoco/jacoco/issues/150">#150</a>).</li>
+  <li>All JaCoCo Maven goals are marked as thread-safe (GitHub <a href="https://github.com/jacoco/jacoco/issues/133">#133</a>).</li>
   <li>check and merge goal failures in jacoco-maven-plugin with Maven 2.2.1
-      due to incompatible configuration (GitHub #129).</li>
+      due to incompatible configuration (GitHub <a href="https://github.com/jacoco/jacoco/issues/129">#129</a>).</li>
 </ul>
 
 <h3>API Changes</h3>
 <ul>
   <li>New API package <code>org.jacoco.core.tools</code> for shared high-level
-      tools. (GitHub #159).</li>
+      tools. (GitHub <a href="https://github.com/jacoco/jacoco/issues/159">#159</a>).</li>
 </ul>
 
 <h2>Release 0.6.3 (2013/06/03)</h2>
 
 <h3>New Features</h3>
 <ul>
-  <li>Support for archives in Pack200 format (GitHub #91).</li>
+  <li>Support for archives in Pack200 format (GitHub <a href="https://github.com/jacoco/jacoco/issues/91">#91</a>).</li>
   <li>The coverage check has been reworked to allow checks on all counter values
-      on all element types (GitHub #106).</li>
-  <li>Coverage checks are now also available in Ant (GitHub #106).</li>
+      on all element types (GitHub <a href="https://github.com/jacoco/jacoco/issues/106">#106</a>).</li>
+  <li>Coverage checks are now also available in Ant (GitHub <a href="https://github.com/jacoco/jacoco/issues/106">#106</a>).</li>
 </ul>
 
 <h3>Fixed Bugs</h3>
 <ul>
   <li>Fixed inconsistent stackmap frames when instrumenting class files produced
-      by certain tools like ProGuard (GitHub #85).</li>
+      by certain tools like ProGuard (GitHub <a href="https://github.com/jacoco/jacoco/issues/85">#85</a>).</li>
 </ul>
 
 <h3>Non-functional Changes</h3>
 <ul>
   <li>More context information when exceptions occur during analysis or
-      instrumentation (GitHub #104).</li>
+      instrumentation (GitHub <a href="https://github.com/jacoco/jacoco/issues/104">#104</a>).</li>
   <li>If analysis is performed on offline instrumented classes - which is an
-      build configuration error - an exception is now thrown (GitHub #108).</li>
+      build configuration error - an exception is now thrown (GitHub <a href="https://github.com/jacoco/jacoco/issues/108">#108</a>).</li>
 </ul>
 
 <h3>API Changes</h3>
 <ul>
   <li>The configuration of the Maven check goal has been reworked to support
-      checks on any element type (GitHub #106).</li>
+      checks on any element type (GitHub <a href="https://github.com/jacoco/jacoco/issues/106">#106</a>).</li>
   <li><code>Analyzer</code> and <code>Instrumenter</code> expect resource name
-      as additional parameter for better error messages (GitHub #104).</li>
+      as additional parameter for better error messages (GitHub <a href="https://github.com/jacoco/jacoco/issues/104">#104</a>).</li>
 </ul>
 
 <h2>Release 0.6.2 (2013/02/03)</h2>
 
 <h3>New Features</h3>
 <ul>
-  <li>Support for offline instrumentation (GitHub #4, #64).</li>
+  <li>Support for offline instrumentation (GitHub <a href="https://github.com/jacoco/jacoco/issues/4">#4</a>, <a href="https://github.com/jacoco/jacoco/issues/64">#64</a>).</li>
   <li>JaCoCo agent exposes runtime API for direct integration with application
-      under test (GitHub #61).</li>
+      under test (GitHub <a href="https://github.com/jacoco/jacoco/issues/61">#61</a>).</li>
   <li>Support for parallel test execution: Different agents can now safely write
-      to the same <code>*.exec</code> file (GitHub #52).</li>
+      to the same <code>*.exec</code> file (GitHub <a href="https://github.com/jacoco/jacoco/issues/52">#52</a>).</li>
   <li>New output mode 'none' can be used when agent is only controlled via JMX
-      or its new runtime API (GitHub #63).</li>
-  <li>Better error message in case of invalid stackmap frames (GitHub #73).</li>
+      or its new runtime API (GitHub <a href="https://github.com/jacoco/jacoco/issues/63">#63</a>).</li>
+  <li>Better error message in case of invalid stackmap frames (GitHub <a href="https://github.com/jacoco/jacoco/issues/73">#73</a>).</li>
   <li>jacoco-maven-plugin: default phase for goal "report" - "verify"
-      (GitHub #72).</li>
+      (GitHub <a href="https://github.com/jacoco/jacoco/issues/72">#72</a>).</li>
 </ul>
 
 <h3>Non-functional Changes</h3>
 <ul>
   <li>For every build the corresponding Git commit hash is included as
-      <code>Eclipse-SourceReferences</code> manifest headers (GitHub #7, #59).</li>
+      <code>Eclipse-SourceReferences</code> manifest headers (GitHub <a href="https://github.com/jacoco/jacoco/issues/7">#7</a>, <a href="https://github.com/jacoco/jacoco/issues/59">#59</a>).</li>
   <li>Adjust saturation of red source highlighting in HTML reports to make
       JaCoCo reports more accessible to red/green blind users.</li>
 </ul>
@@ -116,28 +116,28 @@
 <ul>
   <li>The <code>output</code> mode <code>mbean</code> of the agent has been
       dropped in favor of the new boolean option <code>jmx</code>. This allows
-      to combine JMX access with any other output mode (GitHub #62).</li>
+      to combine JMX access with any other output mode (GitHub <a href="https://github.com/jacoco/jacoco/issues/62">#62</a>).</li>
 </ul>
 
 <h2>Release 0.6.1 (2012/12/23)</h2>
 
 <h3>New Features</h3>
 <ul>
-  <li>Add a coverage check Mojo, contributed by Kyle Lieber (GitHub #6).</li>
+  <li>Add a coverage check Mojo, contributed by Kyle Lieber (GitHub <a href="https://github.com/jacoco/jacoco/issues/6">#6</a>).</li>
 </ul>
 
 <h3>Fixed Bugs</h3>
 <ul>
-  <li>jacocoant.jar should not conflict with ASM 3.x (GitHub #39).</li>
+  <li>jacocoant.jar should not conflict with ASM 3.x (GitHub <a href="https://github.com/jacoco/jacoco/issues/39">#39</a>).</li>
   <li>Agent Mojo should set empty property, if execution was skipped
-      (GitHub #44).</li>
+      (GitHub <a href="https://github.com/jacoco/jacoco/issues/44">#44</a>).</li>
 </ul>
 
 <h3>Non-functional Changes</h3>
 <ul>
-  <li>Upgrade to ASM 4.1 (GitHub #37).</li>
+  <li>Upgrade to ASM 4.1 (GitHub <a href="https://github.com/jacoco/jacoco/issues/37">#37</a>).</li>
   <li>Log location of merged execution data file in Ant <code>merge</code> task
-      (GitHub #29).</li>
+      (GitHub <a href="https://github.com/jacoco/jacoco/issues/29">#29</a>).</li>
 </ul>
 
 <h2>Release 0.6.0 (2012/10/06)</h2>
@@ -145,16 +145,16 @@
 <h3>New Features</h3>
 <ul>
   <li>Full support for Java 7 including INVOKEDYNAMIC as JaCoCo is now based
-      on ASM 4.0 (GitHub #5).</li>
+      on ASM 4.0 (GitHub <a href="https://github.com/jacoco/jacoco/issues/5">#5</a>).</li>
 </ul>
 
 <h3>Fixed Bugs</h3>
 <ul>
   <li>Maven plugin should skip creation of report if the execution data file is
       missing. This avoids appearance of stack traces in case when JVM was not
-      forked, e.g. if there are no tests to run (SF #3563431, GitHub #19).</li>
+      forked, e.g. if there are no tests to run (SF #3563431, GitHub <a href="https://github.com/jacoco/jacoco/issues/19">#19</a>).</li>
   <li>Maven plugin should fail if unable to read execution data file or create
-      report (GitHub #19).</li>
+      report (GitHub <a href="https://github.com/jacoco/jacoco/issues/19">#19</a>).</li>
 </ul>
 
 <h3>API Changes</h3>
