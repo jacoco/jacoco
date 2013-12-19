@@ -14,6 +14,7 @@ package org.jacoco.core.internal.instr;
 import static org.junit.Assert.assertEquals;
 import static org.objectweb.asm.Opcodes.*;
 
+import org.jacoco.core.JaCoCo;
 import org.jacoco.core.instr.MethodRecorder;
 import org.junit.After;
 import org.junit.Before;
@@ -68,7 +69,7 @@ public class FrameTrackerTest {
 	@After
 	public void verify() {
 		MethodRecorder actual = new MethodRecorder();
-		MethodVisitor noLabels = new MethodVisitor(Opcodes.ASM4,
+		MethodVisitor noLabels = new MethodVisitor(JaCoCo.ASM_API_VERSION,
 				actual.getVisitor()) {
 			@Override
 			public void visitLabel(Label label) {

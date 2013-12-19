@@ -11,9 +11,9 @@
  *******************************************************************************/
 package org.jacoco.core.internal.flow;
 
+import org.jacoco.core.JaCoCo;
 import org.objectweb.asm.Label;
 import org.objectweb.asm.MethodVisitor;
-import org.objectweb.asm.Opcodes;
 
 /**
  * A {@link MethodVisitor} with additional methods to get probe insertion
@@ -35,7 +35,7 @@ public abstract class MethodProbesVisitor extends MethodVisitor {
 	 *            optional next visitor in chain
 	 */
 	public MethodProbesVisitor(final MethodVisitor mv) {
-		super(Opcodes.ASM4, mv);
+		super(JaCoCo.ASM_API_VERSION, mv);
 	}
 
 	/**

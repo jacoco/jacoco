@@ -13,13 +13,13 @@ package org.jacoco.core.internal.instr;
 
 import static org.junit.Assert.assertNull;
 
+import org.jacoco.core.JaCoCo;
 import org.jacoco.core.runtime.IRuntime;
 import org.jacoco.core.runtime.LoggerRuntime;
 import org.junit.Before;
 import org.junit.Test;
 import org.objectweb.asm.ClassVisitor;
 import org.objectweb.asm.MethodVisitor;
-import org.objectweb.asm.Opcodes;
 
 /**
  * Unit tests for {@link ClassInstrumenter}.
@@ -34,7 +34,7 @@ public class ClassInstrumenterTest {
 	public void setup() {
 		runtime = new LoggerRuntime();
 		instrumenter = new ClassInstrumenter(123, runtime, new ClassVisitor(
-				Opcodes.ASM4) {
+				JaCoCo.ASM_API_VERSION) {
 		});
 	}
 
@@ -55,7 +55,7 @@ public class ClassInstrumenterTest {
 	@Test
 	public void testNoMethodVisitor() {
 		instrumenter = new ClassInstrumenter(123, runtime, new ClassVisitor(
-				Opcodes.ASM4) {
+				JaCoCo.ASM_API_VERSION) {
 			@Override
 			public MethodVisitor visitMethod(int access, String name,
 					String desc, String signature, String[] exceptions) {

@@ -11,6 +11,7 @@
  *******************************************************************************/
 package org.jacoco.core.internal.flow;
 
+import org.jacoco.core.JaCoCo;
 import org.objectweb.asm.ClassVisitor;
 import org.objectweb.asm.Label;
 import org.objectweb.asm.MethodVisitor;
@@ -80,7 +81,7 @@ public class ClassProbesAdapter extends ClassVisitor implements
 	 *            instance to delegate to
 	 */
 	public ClassProbesAdapter(final ClassProbesVisitor cv) {
-		super(Opcodes.ASM4, cv);
+		super(JaCoCo.ASM_API_VERSION, cv);
 		this.cv = cv;
 	}
 

@@ -17,6 +17,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 
+import org.jacoco.core.JaCoCo;
 import org.jacoco.core.instr.Instrumenter;
 import org.jacoco.core.runtime.IRuntime;
 import org.jacoco.core.runtime.SystemPropertiesRuntime;
@@ -51,7 +52,7 @@ public class FramesTest {
 	 */
 	private static class MaxStackEliminator extends ClassVisitor {
 		public MaxStackEliminator(ClassVisitor cv) {
-			super(Opcodes.ASM4, cv);
+			super(JaCoCo.ASM_API_VERSION, cv);
 		}
 
 		@Override
@@ -59,7 +60,7 @@ public class FramesTest {
 				String signature, String[] exceptions) {
 			final MethodVisitor mv = super.visitMethod(access, name, desc,
 					signature, exceptions);
-			return new MethodVisitor(Opcodes.ASM4, mv) {
+			return new MethodVisitor(JaCoCo.ASM_API_VERSION, mv) {
 				@Override
 				public void visitMaxs(int maxStack, int maxLocals) {
 					super.visitMaxs(-1, maxLocals);
@@ -87,7 +88,7 @@ public class FramesTest {
 		ClassWriter cw = new ClassWriter(ClassWriter.COMPUTE_FRAMES);
 
 		// Adjust Version to 1.6 to enable frames:
-		rc.accept(new ClassVisitor(Opcodes.ASM4, cw) {
+		rc.accept(new ClassVisitor(JaCoCo.ASM_API_VERSION, cw) {
 
 			@Override
 			public void visit(int version, int access, String name,

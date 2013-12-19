@@ -11,10 +11,10 @@
  *******************************************************************************/
 package org.jacoco.core.internal.instr;
 
+import org.jacoco.core.JaCoCo;
 import org.objectweb.asm.Handle;
 import org.objectweb.asm.Label;
 import org.objectweb.asm.MethodVisitor;
-import org.objectweb.asm.Opcodes;
 
 /**
  * Eliminates consecutive stackmap frame definitions which causes ASM to create
@@ -27,7 +27,7 @@ class DuplicateFrameEliminator extends MethodVisitor {
 	private boolean instruction;
 
 	public DuplicateFrameEliminator(final MethodVisitor mv) {
-		super(Opcodes.ASM4, mv);
+		super(JaCoCo.ASM_API_VERSION, mv);
 		instruction = true;
 	}
 
