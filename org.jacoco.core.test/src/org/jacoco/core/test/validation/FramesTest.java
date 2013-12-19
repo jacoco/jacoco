@@ -30,7 +30,9 @@ import org.jacoco.core.test.validation.targets.Target05;
 import org.jacoco.core.test.validation.targets.Target06;
 import org.jacoco.core.test.validation.targets.Target07;
 import org.jacoco.core.test.validation.targets.Target08;
+import org.jacoco.core.test.validation.targets.Target09;
 import org.jacoco.core.test.validation.targets.Target10;
+import org.jacoco.core.test.validation.targets.Target11;
 import org.junit.Test;
 import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.ClassVisitor;
@@ -149,8 +151,18 @@ public class FramesTest {
 	}
 
 	@Test
+	public void testTarget09() throws IOException {
+		testFrames(Target09.class);
+	}
+
+	@Test
 	public void testTarget10() throws IOException {
 		testFrames(Target10.class);
+	}
+
+	@Test
+	public void testTarget11() throws IOException {
+		testFrames(Target11.class);
 	}
 
 }
