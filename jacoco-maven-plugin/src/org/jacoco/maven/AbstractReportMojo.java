@@ -110,9 +110,6 @@ public abstract class AbstractReportMojo extends AbstractMavenReport {
 	}
 
 	@Override
-	protected abstract String getOutputDirectory();
-
-	@Override
 	protected MavenProject getProject() {
 		return project;
 	}
