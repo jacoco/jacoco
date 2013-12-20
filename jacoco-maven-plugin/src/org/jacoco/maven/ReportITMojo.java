@@ -62,12 +62,12 @@ public class ReportITMojo extends AbstractReportMojo {
 	}
 
 	@Override
-	protected File getDataFile() {
+	File getDataFile() {
 		return dataFile;
 	}
 
 	@Override
-	protected File getOutputDirectoryFile() {
+	File getOutputDirectoryFile() {
 		return outputDirectory;
 	}
 

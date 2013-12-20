@@ -28,15 +28,15 @@ public abstract class AbstractAgentMojo extends AbstractJacocoMojo {
 	/**
 	 * Name of the JaCoCo Agent artifact.
 	 */
-	protected static final String AGENT_ARTIFACT_NAME = "org.jacoco:org.jacoco.agent";
+	static final String AGENT_ARTIFACT_NAME = "org.jacoco:org.jacoco.agent";
 	/**
 	 * Name of the property used in maven-osgi-test-plugin.
 	 */
-	protected static final String TYCHO_ARG_LINE = "tycho.testArgLine";
+	static final String TYCHO_ARG_LINE = "tycho.testArgLine";
 	/**
 	 * Name of the property used in maven-surefire-plugin.
 	 */
-	protected static final String SUREFIRE_ARG_LINE = "argLine";
+	static final String SUREFIRE_ARG_LINE = "argLine";
 	/**
 	 * Map of plugin artifacts.
 	 * 
@@ -44,7 +44,7 @@ public abstract class AbstractAgentMojo extends AbstractJacocoMojo {
 	 * @required
 	 * @readonly
 	 */
-	protected Map<String, Artifact> pluginArtifactMap;
+	Map<String, Artifact> pluginArtifactMap;
 	/**
 	 * Allows to specify property which will contains settings for JaCoCo Agent.
 	 * If not specified, then "argLine" would be used for "jar" packaging and
@@ -52,7 +52,7 @@ public abstract class AbstractAgentMojo extends AbstractJacocoMojo {
 	 * 
 	 * @parameter expression="${jacoco.propertyName}"
 	 */
-	protected String propertyName;
+	String propertyName;
 	/**
 	 * If set to true and the execution data file already exists, coverage data
 	 * is appended to the existing file. If set to false, an existing execution
@@ -60,7 +60,7 @@ public abstract class AbstractAgentMojo extends AbstractJacocoMojo {
 	 * 
 	 * @parameter expression="${jacoco.append}"
 	 */
-	protected Boolean append;
+	Boolean append;
 	/**
 	 * A list of class loader names, that should be excluded from execution
 	 * analysis. The list entries are separated by a colon (:) and may use
@@ -71,20 +71,20 @@ public abstract class AbstractAgentMojo extends AbstractJacocoMojo {
 	 * 
 	 * @parameter expression="${jacoco.exclClassLoaders}"
 	 */
-	protected String exclClassLoaders;
+	String exclClassLoaders;
 	/**
 	 * A session identifier that is written with the execution data. Without
 	 * this parameter a random identifier is created by the agent.
 	 * 
 	 * @parameter expression="${jacoco.sessionId}"
 	 */
-	protected String sessionId;
+	String sessionId;
 	/**
 	 * If set to true coverage data will be written on VM shutdown.
 	 * 
 	 * @parameter expression="${jacoco.dumpOnExit}"
 	 */
-	protected Boolean dumpOnExit;
+	Boolean dumpOnExit;
 	/**
 	 * Output method to use for writing coverage data. Valid options are:
 	 * <ul>
@@ -100,7 +100,7 @@ public abstract class AbstractAgentMojo extends AbstractJacocoMojo {
 	 * 
 	 * @parameter expression="${jacoco.output}"
 	 */
-	protected String output;
+	String output;
 	/**
 	 * IP address or hostname to bind to when the output method is tcpserver or
 	 * connect to when the output method is tcpclient. In tcpserver mode the
@@ -108,7 +108,7 @@ public abstract class AbstractAgentMojo extends AbstractJacocoMojo {
 	 * 
 	 * @parameter expression="${jacoco.address}"
 	 */
-	protected String address;
+	String address;
 	/**
 	 * Port to bind to when the output method is tcpserver or connect to when
 	 * the output method is tcpclient. In tcpserver mode the port must be
@@ -117,7 +117,7 @@ public abstract class AbstractAgentMojo extends AbstractJacocoMojo {
 	 * 
 	 * @parameter expression="${jacoco.port}"
 	 */
-	protected Integer port;
+	Integer port;
 	/**
 	 * If a directory is specified for this parameter the JaCoCo agent dumps all
 	 * class files it processes to the given location. This can be useful for
@@ -126,13 +126,13 @@ public abstract class AbstractAgentMojo extends AbstractJacocoMojo {
 	 * 
 	 * @parameter expression="${jacoco.classDumpDir}"
 	 */
-	protected File classDumpDir;
+	File classDumpDir;
 	/**
 	 * If set to true the agent exposes functionality via JMX.
 	 * 
 	 * @parameter expression="${jacoco.jmx}"
 	 */
-	protected Boolean jmx;
+	Boolean jmx;
 
 	@Override
 	public void executeMojo() {
@@ -145,13 +145,13 @@ public abstract class AbstractAgentMojo extends AbstractJacocoMojo {
 		projectProperties.setProperty(name, newValue);
 	}
 
-	protected File getAgentJarFile() {
+	File getAgentJarFile() {
 		final Artifact jacocoAgentArtifact = pluginArtifactMap
 				.get(AGENT_ARTIFACT_NAME);
 		return jacocoAgentArtifact.getFile();
 	}
 
-	protected AgentOptions createAgentOptions() {
+	AgentOptions createAgentOptions() {
 		final AgentOptions agentOptions = new AgentOptions();
 		agentOptions.setDestfile(getDestFile().getAbsolutePath());
 		if (append != null) {
@@ -194,7 +194,7 @@ public abstract class AbstractAgentMojo extends AbstractJacocoMojo {
 		return agentOptions;
 	}
 
-	protected String getEffectivePropertyName() {
+	String getEffectivePropertyName() {
 		if (isPropertyNameSpecified()) {
 			return propertyName;
 		}
@@ -204,17 +204,17 @@ public abstract class AbstractAgentMojo extends AbstractJacocoMojo {
 		return SUREFIRE_ARG_LINE;
 	}
 
-	protected boolean isPropertyNameSpecified() {
+	boolean isPropertyNameSpecified() {
 		return propertyName != null && !"".equals(propertyName);
 	}
 
-	protected boolean isEclipseTestPluginPackaging() {
+	boolean isEclipseTestPluginPackaging() {
 		return "eclipse-test-plugin".equals(getProject().getPackaging());
 	}
 
 	/**
 	 * @return the destFile
 	 */
-	protected abstract File getDestFile();
+	abstract File getDestFile();
 
 }
