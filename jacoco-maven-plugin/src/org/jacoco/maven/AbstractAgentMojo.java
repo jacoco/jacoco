@@ -20,8 +20,8 @@ import org.codehaus.plexus.util.StringUtils;
 import org.jacoco.core.runtime.AgentOptions;
 
 /**
- * 
- * @author Mirko Friedenhagen
+ * Base class for preparing a property pointing to the JaCoCo runtime agent that
+ * can be passed as a VM argument to the application under test.
  */
 public abstract class AbstractAgentMojo extends AbstractJacocoMojo {
 

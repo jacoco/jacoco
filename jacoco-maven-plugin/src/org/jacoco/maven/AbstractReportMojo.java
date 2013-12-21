@@ -41,8 +41,8 @@ import org.jacoco.report.html.HTMLFormatter;
 import org.jacoco.report.xml.XMLFormatter;
 
 /**
- * 
- * @author Mirko Friedenhagen
+ * Base class for creating a code coverage report for tests of a single project
+ * in multiple formats (HTML, XML, and CSV).
  */
 public abstract class AbstractReportMojo extends AbstractMavenReport {
 
