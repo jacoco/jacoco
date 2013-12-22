@@ -40,7 +40,7 @@ import org.jacoco.report.check.RulesChecker;
  */
 public class CheckMojo extends AbstractJacocoMojo implements IViolationsOutput {
 
-	private static final String MSG_SKIPPING = "Skipping JaCoCo execution due to missing execution data file";
+	private static final String MSG_SKIPPING = "Skipping JaCoCo execution due to missing execution data file:";
 	private static final String CHECK_SUCCESS = "All coverage checks have been met.";
 	private static final String CHECK_FAILED = "Coverage checks have not been met. See log for details.";
 
@@ -134,7 +134,14 @@ public class CheckMojo extends AbstractJacocoMojo implements IViolationsOutput {
 
 	private boolean canCheckCoverage() {
 		if (!dataFile.exists()) {
-			getLog().info(MSG_SKIPPING);
+			getLog().info(MSG_SKIPPING + dataFile);
+			return false;
+		}
+		final File classesDirectory = new File(getProject().getBuild().getOutputDirectory());
+		if (!classesDirectory.exists()) {
+			getLog().info(
+					"Skipping JaCoCo execution due to missing classes directory:" +
+					classesDirectory);
 			return false;
 		}
 		return true;
