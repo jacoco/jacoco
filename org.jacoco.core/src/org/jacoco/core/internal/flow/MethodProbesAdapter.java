@@ -11,6 +11,7 @@
  *******************************************************************************/
 package org.jacoco.core.internal.flow;
 
+import org.jacoco.core.JaCoCo;
 import org.objectweb.asm.Label;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
@@ -35,7 +36,7 @@ public final class MethodProbesAdapter extends MethodVisitor {
 	 */
 	public MethodProbesAdapter(final MethodProbesVisitor probesVisitor,
 			final IProbeIdGenerator idGenerator) {
-		super(Opcodes.ASM4, probesVisitor);
+		super(JaCoCo.ASM_API_VERSION, probesVisitor);
 		this.probesVisitor = probesVisitor;
 		this.idGenerator = idGenerator;
 	}

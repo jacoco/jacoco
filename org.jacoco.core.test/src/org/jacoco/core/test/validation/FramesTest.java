@@ -17,6 +17,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 
+import org.jacoco.core.JaCoCo;
 import org.jacoco.core.instr.Instrumenter;
 import org.jacoco.core.runtime.IRuntime;
 import org.jacoco.core.runtime.SystemPropertiesRuntime;
@@ -29,7 +30,9 @@ import org.jacoco.core.test.validation.targets.Target05;
 import org.jacoco.core.test.validation.targets.Target06;
 import org.jacoco.core.test.validation.targets.Target07;
 import org.jacoco.core.test.validation.targets.Target08;
+import org.jacoco.core.test.validation.targets.Target09;
 import org.jacoco.core.test.validation.targets.Target10;
+import org.jacoco.core.test.validation.targets.Target11;
 import org.junit.Test;
 import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.ClassVisitor;
@@ -51,7 +54,7 @@ public class FramesTest {
 	 */
 	private static class MaxStackEliminator extends ClassVisitor {
 		public MaxStackEliminator(ClassVisitor cv) {
-			super(Opcodes.ASM4, cv);
+			super(JaCoCo.ASM_API_VERSION, cv);
 		}
 
 		@Override
@@ -59,7 +62,7 @@ public class FramesTest {
 				String signature, String[] exceptions) {
 			final MethodVisitor mv = super.visitMethod(access, name, desc,
 					signature, exceptions);
-			return new MethodVisitor(Opcodes.ASM4, mv) {
+			return new MethodVisitor(JaCoCo.ASM_API_VERSION, mv) {
 				@Override
 				public void visitMaxs(int maxStack, int maxLocals) {
 					super.visitMaxs(-1, maxLocals);
@@ -87,7 +90,7 @@ public class FramesTest {
 		ClassWriter cw = new ClassWriter(ClassWriter.COMPUTE_FRAMES);
 
 		// Adjust Version to 1.6 to enable frames:
-		rc.accept(new ClassVisitor(Opcodes.ASM4, cw) {
+		rc.accept(new ClassVisitor(JaCoCo.ASM_API_VERSION, cw) {
 
 			@Override
 			public void visit(int version, int access, String name,
@@ -148,8 +151,18 @@ public class FramesTest {
 	}
 
 	@Test
+	public void testTarget09() throws IOException {
+		testFrames(Target09.class);
+	}
+
+	@Test
 	public void testTarget10() throws IOException {
 		testFrames(Target10.class);
+	}
+
+	@Test
+	public void testTarget11() throws IOException {
+		testFrames(Target11.class);
 	}
 
 }

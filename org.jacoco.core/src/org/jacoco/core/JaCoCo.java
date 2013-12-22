@@ -13,6 +13,8 @@ package org.jacoco.core;
 
 import java.util.ResourceBundle;
 
+import org.objectweb.asm.Opcodes;
+
 /**
  * Static Meta information about JaCoCo.
  */
@@ -26,6 +28,9 @@ public final class JaCoCo {
 
 	/** Name of the runtime package of this build */
 	public static final String RUNTIMEPACKAGE;
+
+	/** ASM API version */
+	public static final int ASM_API_VERSION = Opcodes.ASM4;
 
 	static {
 		final ResourceBundle bundle = ResourceBundle

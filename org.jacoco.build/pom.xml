@@ -677,6 +677,31 @@
         <jvm.args>-XX:-FailOverToOldVerifier -Xverify:all</jvm.args>
       </properties>
     </profile>
+    
+    <profile>
+      <id>jdk18</id>
+      <activation>
+        <property>
+          <name>jdk.version</name>
+          <value>1.8</value>
+        </property>
+      </activation>
+      <properties>
+        <jvm.args>-XX:-FailOverToOldVerifier -Xverify:all</jvm.args>
+      </properties>
+      <build>
+        <plugins>
+          <!-- Temporary workaround for jira.codehaus.org/browse/MPLUGIN-244 -->
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-javadoc-plugin</artifactId>
+            <configuration>
+              <additionalparam>-Xdoclint:none</additionalparam>
+            </configuration>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
 
     <profile>
       <id>sign</id>

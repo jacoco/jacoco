@@ -15,9 +15,9 @@ import java.io.File;
 import java.util.Locale;
 
 /**
- * Creates a code coverage report for tests of a single project in multiple formats
- * (HTML, XML, and CSV).
- *
+ * Creates a code coverage report for tests of a single project in multiple
+ * formats (HTML, XML, and CSV).
+ * 
  * @phase verify
  * @goal report
  * @requiresProject true
@@ -32,14 +32,14 @@ public class ReportMojo extends AbstractReportMojo {
 	 * build lifecycle. If the goal is run indirectly as part of a site
 	 * generation, the output directory configured in the Maven Site Plugin is
 	 * used instead.
-	 *
+	 * 
 	 * @parameter default-value="${project.reporting.outputDirectory}/jacoco"
 	 */
 	private File outputDirectory;
 
 	/**
 	 * File with execution data.
-	 *
+	 * 
 	 * @parameter default-value="${project.build.directory}/jacoco.exec"
 	 */
 	private File dataFile;
@@ -60,19 +60,21 @@ public class ReportMojo extends AbstractReportMojo {
 	}
 
 	@Override
-	protected File getDataFile() {
+	File getDataFile() {
 		return dataFile;
 	}
 
 	@Override
-	protected File getOutputDirectoryFile() {
+	File getOutputDirectoryFile() {
 		return outputDirectory;
 	}
 
+	@Override
 	public String getOutputName() {
 		return "jacoco/index";
 	}
 
+	@Override
 	public String getName(final Locale locale) {
 		return "JaCoCo Test";
 	}

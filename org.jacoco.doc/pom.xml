@@ -93,6 +93,7 @@
                     <fileset dir="../org.jacoco.agent.rt.test/target" includes="jacoco.exec"/>
                     <fileset dir="../org.jacoco.ant.test/target" includes="jacoco.exec"/>
                     <fileset dir="../org.jacoco.core.test/target" includes="jacoco.exec"/>
+                    <fileset dir="../org.jacoco.examples.test/target" includes="jacoco.exec"/>
                     <fileset dir="../org.jacoco.report.test/target" includes="jacoco.exec"/>
                     <fileset dir="../jacoco-maven-plugin.test/target" includes="jacoco.exec"/>
                   </executiondata>
@@ -130,6 +131,14 @@
                         <fileset dir="../org.jacoco.core/src"/>
                       </sourcefiles>
                     </group>
+                    <group name="org.jacoco.examples">
+                      <classfiles>
+                        <fileset dir="../org.jacoco.examples/target/classes"/>
+                      </classfiles>
+                      <sourcefiles>
+                        <fileset dir="../org.jacoco.examples/src"/>
+                      </sourcefiles>
+                    </group>
                     <group name="org.jacoco.report">
                       <classfiles>
                         <fileset dir="../org.jacoco.report/target/classes"/>
@@ -162,6 +171,7 @@
                   <fileset dir="../org.jacoco.ant.test/target" includes="surefire-reports/**/*.xml"/>
                   <fileset dir="../org.jacoco.core.test/target" includes="surefire-reports/**/*.xml"/>
                   <fileset dir="../org.jacoco.report.test/target" includes="surefire-reports/**/*.xml"/>
+                  <fileset dir="../org.jacoco.examples.test/target" includes="surefire-reports/**/*.xml"/>
                   <report format="noframes" styledir="xsl" todir="${project.build.directory}/junit">
                     <param name="qualified.bundle.version" expression="${qualified.bundle.version}"/>
                     <param name="jacoco.home.url" expression="${jacoco.home.url}"/>

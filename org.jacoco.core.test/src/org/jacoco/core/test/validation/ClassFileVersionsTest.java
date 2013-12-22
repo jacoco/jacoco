@@ -27,6 +27,7 @@ import static org.objectweb.asm.Opcodes.V1_7;
 
 import java.io.IOException;
 
+import org.jacoco.core.JaCoCo;
 import org.jacoco.core.instr.Instrumenter;
 import org.jacoco.core.runtime.IRuntime;
 import org.jacoco.core.runtime.SystemPropertiesRuntime;
@@ -35,7 +36,6 @@ import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.ClassVisitor;
 import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.MethodVisitor;
-import org.objectweb.asm.Opcodes;
 
 /**
  * Test class inserted stackmap frames for different class file versions.
@@ -89,23 +89,24 @@ public class ClassFileVersionsTest {
 
 	private void assertFrames(byte[] source, boolean expected) {
 		final boolean[] hasFrames = new boolean[] { false };
-		new ClassReader(source).accept(new ClassVisitor(Opcodes.ASM4) {
-
-			@Override
-			public MethodVisitor visitMethod(int access, String name,
-					String desc, String signature, String[] exceptions) {
-				return new MethodVisitor(Opcodes.ASM4) {
+		new ClassReader(source).accept(
+				new ClassVisitor(JaCoCo.ASM_API_VERSION) {
 
 					@Override
-					public void visitFrame(int type, int nLocal,
-							Object[] local, int nStack, Object[] stack) {
-						hasFrames[0] = true;
+					public MethodVisitor visitMethod(int access, String name,
+							String desc, String signature, String[] exceptions) {
+						return new MethodVisitor(JaCoCo.ASM_API_VERSION) {
+
+							@Override
+							public void visitFrame(int type, int nLocal,
+									Object[] local, int nStack, Object[] stack) {
+								hasFrames[0] = true;
+							}
+
+						};
 					}
 
-				};
-			}
-
-		}, 0);
+				}, 0);
 		assertEquals(Boolean.valueOf(expected), Boolean.valueOf(hasFrames[0]));
 	}
 

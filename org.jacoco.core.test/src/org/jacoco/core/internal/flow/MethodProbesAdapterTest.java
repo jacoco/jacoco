@@ -14,6 +14,7 @@ package org.jacoco.core.internal.flow;
 import static org.junit.Assert.assertEquals;
 
 import java.util.Arrays;
+import java.util.List;
 
 import org.jacoco.core.instr.MethodRecorder;
 import org.junit.After;
@@ -79,7 +80,9 @@ public class MethodProbesAdapterTest implements IProbeIdGenerator {
 		}
 
 		private void rec(String name, Object... args) {
-			printer.text.add(name + Arrays.asList(args));
+			@SuppressWarnings("unchecked")
+			final List<Object> text = printer.text;
+			text.add(name + Arrays.asList(args));
 		}
 
 	}

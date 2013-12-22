@@ -11,6 +11,7 @@
  *******************************************************************************/
 package org.jacoco.core.internal.instr;
 
+import org.jacoco.core.JaCoCo;
 import org.objectweb.asm.Label;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
@@ -47,7 +48,7 @@ class ProbeInserter extends MethodVisitor implements IProbeInserter {
 	 */
 	ProbeInserter(final int access, final String desc, final MethodVisitor mv,
 			final IProbeArrayStrategy arrayStrategy) {
-		super(Opcodes.ASM4, mv);
+		super(JaCoCo.ASM_API_VERSION, mv);
 		this.arrayStrategy = arrayStrategy;
 		int pos = (Opcodes.ACC_STATIC & access) == 0 ? 1 : 0;
 		for (final Type t : Type.getArgumentTypes(desc)) {

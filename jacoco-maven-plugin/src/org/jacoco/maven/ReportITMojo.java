@@ -16,9 +16,9 @@ import java.io.File;
 import java.util.Locale;
 
 /**
- * Creates a code coverage report for integration tests of a single project in multiple formats
- * (HTML, XML, and CSV).
- *
+ * Creates a code coverage report for integration tests of a single project in
+ * multiple formats (HTML, XML, and CSV).
+ * 
  * @phase verify
  * @goal report-integration
  * @requiresProject true
@@ -33,14 +33,14 @@ public class ReportITMojo extends AbstractReportMojo {
 	 * build lifecycle. If the goal is run indirectly as part of a site
 	 * generation, the output directory configured in the Maven Site Plugin is
 	 * used instead.
-	 *
+	 * 
 	 * @parameter default-value="${project.reporting.outputDirectory}/jacoco-it"
 	 */
 	private File outputDirectory;
 
 	/**
 	 * File with execution data.
-	 *
+	 * 
 	 * @parameter default-value="${project.build.directory}/jacoco-it.exec"
 	 */
 	private File dataFile;
@@ -53,28 +53,31 @@ public class ReportITMojo extends AbstractReportMojo {
 	@Override
 	public void setReportOutputDirectory(final File reportOutputDirectory) {
 		if (reportOutputDirectory != null
-				&& !reportOutputDirectory.getAbsolutePath().endsWith("jacoco-it")) {
+				&& !reportOutputDirectory.getAbsolutePath().endsWith(
+						"jacoco-it")) {
 			outputDirectory = new File(reportOutputDirectory, "jacoco-it");
 		} else {
 			outputDirectory = reportOutputDirectory;
 		}
 	}
 
-        @Override
-        protected File getDataFile() {
-            return dataFile;
-        }
+	@Override
+	File getDataFile() {
+		return dataFile;
+	}
 
-        @Override
-        protected File getOutputDirectoryFile() {
-            return outputDirectory;
-        }
+	@Override
+	File getOutputDirectoryFile() {
+		return outputDirectory;
+	}
 
-        public String getOutputName() {
-            return "jacoco-it/index";
-        }
+	@Override
+	public String getOutputName() {
+		return "jacoco-it/index";
+	}
 
-        public String getName(final Locale locale) {
-            return "JaCoCo IT";
-        }
+	@Override
+	public String getName(final Locale locale) {
+		return "JaCoCo IT";
+	}
 }

@@ -15,14 +15,17 @@ package org.jacoco.maven;
 import java.io.File;
 
 /**
- * Prepares a property pointing to the JaCoCo runtime agent that can be passed as a VM argument to the application under test for
- * integration tests. Depending on the project packaging type by default a property with the following name is set:
+ * Prepares a property pointing to the JaCoCo runtime agent that can be passed
+ * as a VM argument to the application under test for integration tests.
+ * Depending on the project packaging type by default a property with the
+ * following name is set:
  * <ul>
  * <li>tycho.testArgLine for packaging type eclipse-test-plugin and</li>
  * <li>argLine otherwise.</li>
  * </ul>
- * Resulting coverage information is collected during execution and by default written to a file when the process terminates.
- *
+ * Resulting coverage information is collected during execution and by default
+ * written to a file when the process terminates.
+ * 
  * @phase pre-integration-test
  * @goal prepare-agent-integration
  * @requiresProject true
@@ -34,7 +37,7 @@ public class AgentITMojo extends AbstractAgentMojo {
 
 	/**
 	 * Path to the output file for execution data.
-	 *
+	 * 
 	 * @parameter expression="${jacoco.destFile}"
 	 *            default-value="${project.build.directory}/jacoco-it.exec"
 	 */
@@ -43,7 +46,8 @@ public class AgentITMojo extends AbstractAgentMojo {
 	/**
 	 * @return the destFile
 	 */
-	protected File getDestFile() {
+	@Override
+	File getDestFile() {
 		return destFile;
 	}
 

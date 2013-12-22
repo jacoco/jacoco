@@ -11,6 +11,7 @@
  *******************************************************************************/
 package org.jacoco.core.internal.instr;
 
+import org.jacoco.core.JaCoCo;
 import org.objectweb.asm.Handle;
 import org.objectweb.asm.Label;
 import org.objectweb.asm.MethodVisitor;
@@ -33,7 +34,7 @@ class FrameTracker extends MethodVisitor implements IFrameInserter {
 
 	public FrameTracker(final String owner, final int access,
 			final String name, final String desc, final MethodVisitor mv) {
-		super(Opcodes.ASM4, mv);
+		super(JaCoCo.ASM_API_VERSION, mv);
 		this.owner = owner;
 		local = new Object[8];
 		localSize = 0;
