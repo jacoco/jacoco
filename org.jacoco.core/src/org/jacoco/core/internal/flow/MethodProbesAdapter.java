@@ -15,6 +15,7 @@ import org.jacoco.core.JaCoCo;
 import org.objectweb.asm.Label;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
+import org.objectweb.asm.commons.AnalyzerAdapter;
 
 /**
  * Adapter that creates additional visitor events for probes to be inserted into
@@ -25,6 +26,8 @@ public final class MethodProbesAdapter extends MethodVisitor {
 	private final MethodProbesVisitor probesVisitor;
 
 	private final IProbeIdGenerator idGenerator;
+
+	private AnalyzerAdapter analyzer;
 
 	/**
 	 * Create a new adapter instance.
@@ -39,6 +42,17 @@ public final class MethodProbesAdapter extends MethodVisitor {
 		super(JaCoCo.ASM_API_VERSION, probesVisitor);
 		this.probesVisitor = probesVisitor;
 		this.idGenerator = idGenerator;
+	}
+
+	/**
+	 * If an analyzer is set {@link IFrame} handles are calculated and emitted
+	 * to the probes methods.
+	 * 
+	 * @param analyzer
+	 *            optional analyzer to set
+	 */
+	public void setAnalyzer(final AnalyzerAdapter analyzer) {
+		this.analyzer = analyzer;
 	}
 
 	@Override
@@ -71,9 +85,27 @@ public final class MethodProbesAdapter extends MethodVisitor {
 	public void visitJumpInsn(final int opcode, final Label label) {
 		if (LabelInfo.isMultiTarget(label)) {
 			probesVisitor.visitJumpInsnWithProbe(opcode, label,
-					idGenerator.nextId());
+					idGenerator.nextId(), frame(jumpPopCount(opcode)));
 		} else {
 			probesVisitor.visitJumpInsn(opcode, label);
+		}
+	}
+
+	private int jumpPopCount(final int opcode) {
+		switch (opcode) {
+		case Opcodes.GOTO:
+			return 0;
+		case Opcodes.IFEQ:
+		case Opcodes.IFNE:
+		case Opcodes.IFLT:
+		case Opcodes.IFGE:
+		case Opcodes.IFGT:
+		case Opcodes.IFLE:
+		case Opcodes.IFNULL:
+		case Opcodes.IFNONNULL:
+			return 1;
+		default: // IF_CMPxx and IF_ACMPxx
+			return 2;
 		}
 	}
 
@@ -81,7 +113,8 @@ public final class MethodProbesAdapter extends MethodVisitor {
 	public void visitLookupSwitchInsn(final Label dflt, final int[] keys,
 			final Label[] labels) {
 		if (markLabels(dflt, labels)) {
-			probesVisitor.visitLookupSwitchInsnWithProbes(dflt, keys, labels);
+			probesVisitor.visitLookupSwitchInsnWithProbes(dflt, keys, labels,
+					frame(1));
 		} else {
 			probesVisitor.visitLookupSwitchInsn(dflt, keys, labels);
 		}
@@ -91,8 +124,8 @@ public final class MethodProbesAdapter extends MethodVisitor {
 	public void visitTableSwitchInsn(final int min, final int max,
 			final Label dflt, final Label... labels) {
 		if (markLabels(dflt, labels)) {
-			probesVisitor
-					.visitTableSwitchInsnWithProbes(min, max, dflt, labels);
+			probesVisitor.visitTableSwitchInsnWithProbes(min, max, dflt,
+					labels, frame(1));
 		} else {
 			probesVisitor.visitTableSwitchInsn(min, max, dflt, labels);
 		}
@@ -107,13 +140,17 @@ public final class MethodProbesAdapter extends MethodVisitor {
 		}
 		LabelInfo.setDone(dflt);
 		for (final Label l : labels) {
-			if (!LabelInfo.isDone(l) && LabelInfo.isMultiTarget(l)) {
+			if (LabelInfo.isMultiTarget(l) && !LabelInfo.isDone(l)) {
 				LabelInfo.setProbeId(l, idGenerator.nextId());
 				probe = true;
 			}
 			LabelInfo.setDone(l);
 		}
 		return probe;
+	}
+
+	private IFrame frame(final int popCount) {
+		return FrameSnapshot.create(analyzer, popCount);
 	}
 
 }

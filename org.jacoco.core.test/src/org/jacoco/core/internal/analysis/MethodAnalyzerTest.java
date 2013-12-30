@@ -556,7 +556,9 @@ public class MethodAnalyzerTest implements IProbeIdGenerator {
 		LabelFlowAnalyzer.markLabels(method);
 		final MethodAnalyzer analyzer = new MethodAnalyzer("doit", "()V", null,
 				probes);
-		method.accept(new MethodProbesAdapter(analyzer, this));
+		final MethodProbesAdapter probesAdapter = new MethodProbesAdapter(
+				analyzer, this);
+		method.accept(probesAdapter);
 		result = analyzer.getCoverage();
 	}
 

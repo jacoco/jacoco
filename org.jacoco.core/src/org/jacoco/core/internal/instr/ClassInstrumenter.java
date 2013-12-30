@@ -95,15 +95,8 @@ public class ClassInstrumenter extends ClassProbesVisitor {
 		final MethodVisitor frameEliminator = new DuplicateFrameEliminator(mv);
 		final ProbeInserter probeVariableInserter = new ProbeInserter(access,
 				desc, frameEliminator, probeArrayStrategy);
-		if (withFrames) {
-			final FrameTracker frameTracker = new FrameTracker(className,
-					access, name, desc, probeVariableInserter);
-			return new MethodInstrumenter(frameTracker, probeVariableInserter,
-					frameTracker);
-		} else {
-			return new MethodInstrumenter(probeVariableInserter,
-					probeVariableInserter, IFrameInserter.NOP);
-		}
+		return new MethodInstrumenter(probeVariableInserter,
+				probeVariableInserter);
 	}
 
 	@Override

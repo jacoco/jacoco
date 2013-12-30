@@ -9,26 +9,21 @@
  *    Marc R. Hoffmann - initial API and implementation
  *    
  *******************************************************************************/
-package org.jacoco.core.internal.instr;
+package org.jacoco.core.internal.flow;
+
+import org.objectweb.asm.MethodVisitor;
 
 /**
- * Internal interface for insertion of additional stackmap frame in the
- * instruction sequence of a method.
+ * Representation of the current stackmap frame content.
  */
-interface IFrameInserter {
+public interface IFrame {
 
 	/**
-	 * Empty implementation.
+	 * Emits a frame event with the current content to the given visitor.
+	 * 
+	 * @param mv
+	 *            method visitor to emit frame event to
 	 */
-	static final IFrameInserter NOP = new IFrameInserter() {
-		public void insertFrame() {
-		}
-	};
-
-	/**
-	 * Inserts an additional frame reflecting the current locals and stack
-	 * types.
-	 */
-	void insertFrame();
+	void accept(final MethodVisitor mv);
 
 }

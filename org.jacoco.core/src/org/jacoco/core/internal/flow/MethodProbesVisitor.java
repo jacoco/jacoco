@@ -63,10 +63,14 @@ public abstract class MethodProbesVisitor extends MethodVisitor {
 	 *            instruction may jump.
 	 * @param probeId
 	 *            id of the probe
+	 * @param frame
+	 *            stackmap frame status after the execution of the jump
+	 *            instruction. The instance is only valid with the call of this
+	 *            method.
 	 * @see MethodVisitor#visitJumpInsn(int, Label)
 	 */
 	public abstract void visitJumpInsnWithProbe(int opcode, Label label,
-			int probeId);
+			int probeId, IFrame frame);
 
 	/**
 	 * Visits a zero operand instruction with a probe. This event is used only
@@ -100,10 +104,14 @@ public abstract class MethodProbesVisitor extends MethodVisitor {
 	 *            beginnings of the handler blocks. <code>labels[i]</code> is
 	 *            the beginning of the handler block for the
 	 *            <code>min + i</code> key.
+	 * @param frame
+	 *            stackmap frame status after the execution of the switch
+	 *            instruction. The instance is only valid with the call of this
+	 *            method.
 	 * @see MethodVisitor#visitTableSwitchInsn(int, int, Label, Label[])
 	 */
 	public abstract void visitTableSwitchInsnWithProbes(int min, int max,
-			Label dflt, Label[] labels);
+			Label dflt, Label[] labels, IFrame frame);
 
 	/**
 	 * Visits a LOOKUPSWITCH instruction with optional probes for each target
@@ -120,9 +128,13 @@ public abstract class MethodProbesVisitor extends MethodVisitor {
 	 *            beginnings of the handler blocks. <code>labels[i]</code> is
 	 *            the beginning of the handler block for the
 	 *            <code>keys[i]</code> key.
+	 * @param frame
+	 *            stackmap frame status after the execution of the switch
+	 *            instruction. The instance is only valid with the call of this
+	 *            method.
 	 * @see MethodVisitor#visitLookupSwitchInsn(Label, int[], Label[])
 	 */
 	public abstract void visitLookupSwitchInsnWithProbes(Label dflt,
-			int[] keys, Label[] labels);
+			int[] keys, Label[] labels, IFrame frame);
 
 }

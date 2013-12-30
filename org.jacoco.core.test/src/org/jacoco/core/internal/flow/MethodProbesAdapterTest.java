@@ -23,6 +23,7 @@ import org.junit.Test;
 import org.objectweb.asm.Label;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
+import org.objectweb.asm.commons.AnalyzerAdapter;
 import org.objectweb.asm.util.Printer;
 
 /**
@@ -39,6 +40,8 @@ public class MethodProbesAdapterTest implements IProbeIdGenerator {
 	private MethodProbesVisitor expectedVisitor;
 
 	private MethodVisitor adapter;
+
+	private IFrame frame;
 
 	private static class TraceAdapter extends MethodProbesVisitor {
 
@@ -61,22 +64,26 @@ public class MethodProbesAdapterTest implements IProbeIdGenerator {
 		}
 
 		@Override
-		public void visitJumpInsnWithProbe(int opcode, Label label, int probeId) {
+		public void visitJumpInsnWithProbe(int opcode, Label label,
+				int probeId, IFrame frame) {
 			rec("visitJumpInsnWithProbe", Integer.valueOf(opcode), label,
 					Integer.valueOf(probeId));
+			frame.accept(this);
 		}
 
 		@Override
 		public void visitTableSwitchInsnWithProbes(int min, int max,
-				Label dflt, Label[] labels) {
+				Label dflt, Label[] labels, IFrame frame) {
 			rec("visitTableSwitchInsnWithProbes", Integer.valueOf(min),
 					Integer.valueOf(max), dflt, labels);
+			frame.accept(this);
 		}
 
 		@Override
 		public void visitLookupSwitchInsnWithProbes(Label dflt, int[] keys,
-				Label[] labels) {
+				Label[] labels, IFrame frame) {
 			rec("visitLookupSwitchInsnWithProbes", dflt, keys, labels);
+			frame.accept(this);
 		}
 
 		private void rec(String name, Object... args) {
@@ -95,7 +102,17 @@ public class MethodProbesAdapterTest implements IProbeIdGenerator {
 		expectedVisitor = new TraceAdapter(expected);
 		actual = new MethodRecorder();
 		MethodProbesVisitor actualVisitor = new TraceAdapter(actual);
-		adapter = new MethodProbesAdapter(actualVisitor, this);
+		MethodProbesAdapter probesAdapter = new MethodProbesAdapter(
+				actualVisitor, this);
+		final AnalyzerAdapter analyzer = new AnalyzerAdapter("Foo", 0, "doit",
+				"()V", probesAdapter);
+		probesAdapter.setAnalyzer(analyzer);
+		adapter = analyzer;
+		frame = new IFrame() {
+
+			public void accept(MethodVisitor mv) {
+			}
+		};
 	}
 
 	@After
@@ -116,6 +133,16 @@ public class MethodProbesAdapterTest implements IProbeIdGenerator {
 
 	@Test
 	public void testVisitProbe2() {
+		LabelInfo.setTarget(label);
+		LabelInfo.setTarget(label);
+
+		adapter.visitLabel(label);
+
+		expectedVisitor.visitLabel(label);
+	}
+
+	@Test
+	public void testVisitProbe3() {
 		adapter.visitLabel(label);
 
 		expectedVisitor.visitLabel(label);
@@ -130,8 +157,12 @@ public class MethodProbesAdapterTest implements IProbeIdGenerator {
 
 	@Test
 	public void testVisitInsn2() {
+		adapter.visitInsn(Opcodes.ICONST_0);
+		adapter.visitInsn(Opcodes.ICONST_0);
 		adapter.visitInsn(Opcodes.IADD);
 
+		expectedVisitor.visitInsn(Opcodes.ICONST_0);
+		expectedVisitor.visitInsn(Opcodes.ICONST_0);
 		expectedVisitor.visitInsn(Opcodes.IADD);
 	}
 
@@ -140,16 +171,53 @@ public class MethodProbesAdapterTest implements IProbeIdGenerator {
 		LabelInfo.setTarget(label);
 		LabelInfo.setTarget(label);
 
-		adapter.visitJumpInsn(Opcodes.IFLT, label);
+		adapter.visitJumpInsn(Opcodes.GOTO, label);
 
-		expectedVisitor.visitJumpInsnWithProbe(Opcodes.IFLT, label, 1000);
+		expectedVisitor
+				.visitJumpInsnWithProbe(Opcodes.GOTO, label, 1000, frame);
+		expectedVisitor.visitFrame(Opcodes.F_FULL, 1, new Object[] { "Foo" },
+				0, null);
 	}
 
 	@Test
 	public void testVisitJumpInsn2() {
+		LabelInfo.setTarget(label);
+		LabelInfo.setTarget(label);
+
+		adapter.visitInsn(Opcodes.ICONST_0);
 		adapter.visitJumpInsn(Opcodes.IFLT, label);
 
+		expectedVisitor.visitInsn(Opcodes.ICONST_0);
+		expectedVisitor
+				.visitJumpInsnWithProbe(Opcodes.IFLT, label, 1000, frame);
+		expectedVisitor.visitFrame(Opcodes.F_FULL, 1, new Object[] { "Foo" },
+				0, null);
+	}
+
+	@Test
+	public void testVisitJumpInsn3() {
+		adapter.visitInsn(Opcodes.ICONST_0);
+		adapter.visitJumpInsn(Opcodes.IFLT, label);
+
+		expectedVisitor.visitInsn(Opcodes.ICONST_0);
 		expectedVisitor.visitJumpInsn(Opcodes.IFLT, label);
+	}
+
+	@Test
+	public void testVisitJumpInsn4() {
+		LabelInfo.setTarget(label);
+		LabelInfo.setTarget(label);
+
+		adapter.visitInsn(Opcodes.ICONST_0);
+		adapter.visitInsn(Opcodes.ICONST_0);
+		adapter.visitJumpInsn(Opcodes.IF_ICMPEQ, label);
+
+		expectedVisitor.visitInsn(Opcodes.ICONST_0);
+		expectedVisitor.visitInsn(Opcodes.ICONST_0);
+		expectedVisitor.visitJumpInsnWithProbe(Opcodes.IF_ICMPEQ, label, 1000,
+				frame);
+		expectedVisitor.visitFrame(Opcodes.F_FULL, 1, new Object[] { "Foo" },
+				0, null);
 	}
 
 	@Test
@@ -159,9 +227,14 @@ public class MethodProbesAdapterTest implements IProbeIdGenerator {
 
 		final int[] keys = new int[] { 0, 1 };
 		final Label[] labels = new Label[] { label, label };
+		adapter.visitInsn(Opcodes.ICONST_0);
 		adapter.visitLookupSwitchInsn(label, keys, labels);
 
-		expectedVisitor.visitLookupSwitchInsnWithProbes(label, keys, labels);
+		expectedVisitor.visitInsn(Opcodes.ICONST_0);
+		expectedVisitor.visitLookupSwitchInsnWithProbes(label, keys, labels,
+				frame);
+		expectedVisitor.visitFrame(Opcodes.F_FULL, 1, new Object[] { "Foo" },
+				0, null);
 		assertEquals(1000, LabelInfo.getProbeId(label));
 	}
 
@@ -173,9 +246,14 @@ public class MethodProbesAdapterTest implements IProbeIdGenerator {
 
 		final int[] keys = new int[] { 0, 1 };
 		final Label[] labels = new Label[] { label2, label };
+		adapter.visitInsn(Opcodes.ICONST_0);
 		adapter.visitLookupSwitchInsn(label, keys, labels);
 
-		expectedVisitor.visitLookupSwitchInsnWithProbes(label, keys, labels);
+		expectedVisitor.visitInsn(Opcodes.ICONST_0);
+		expectedVisitor.visitLookupSwitchInsnWithProbes(label, keys, labels,
+				frame);
+		expectedVisitor.visitFrame(Opcodes.F_FULL, 1, new Object[] { "Foo" },
+				0, null);
 		assertEquals(LabelInfo.NO_PROBE, LabelInfo.getProbeId(label));
 		assertEquals(1000, LabelInfo.getProbeId(label2));
 	}
@@ -184,8 +262,10 @@ public class MethodProbesAdapterTest implements IProbeIdGenerator {
 	public void testVisitLookupSwitchInsn3() {
 		final int[] keys = new int[] { 0, 1 };
 		final Label[] labels = new Label[] { label, label };
+		adapter.visitInsn(Opcodes.ICONST_0);
 		adapter.visitLookupSwitchInsn(label, keys, labels);
 
+		expectedVisitor.visitInsn(Opcodes.ICONST_0);
 		expectedVisitor.visitLookupSwitchInsn(label, keys, labels);
 	}
 
@@ -195,9 +275,14 @@ public class MethodProbesAdapterTest implements IProbeIdGenerator {
 		LabelInfo.setTarget(label);
 
 		final Label[] labels = new Label[] { label, label };
+		adapter.visitInsn(Opcodes.ICONST_0);
 		adapter.visitTableSwitchInsn(0, 1, label, labels);
 
-		expectedVisitor.visitTableSwitchInsnWithProbes(0, 1, label, labels);
+		expectedVisitor.visitInsn(Opcodes.ICONST_0);
+		expectedVisitor.visitTableSwitchInsnWithProbes(0, 1, label, labels,
+				frame);
+		expectedVisitor.visitFrame(Opcodes.F_FULL, 1, new Object[] { "Foo" },
+				0, null);
 		assertEquals(1000, LabelInfo.getProbeId(label));
 	}
 
@@ -208,9 +293,14 @@ public class MethodProbesAdapterTest implements IProbeIdGenerator {
 		LabelInfo.setTarget(label2);
 
 		final Label[] labels = new Label[] { label2, label };
+		adapter.visitInsn(Opcodes.ICONST_0);
 		adapter.visitTableSwitchInsn(0, 1, label, labels);
 
-		expectedVisitor.visitTableSwitchInsnWithProbes(0, 1, label, labels);
+		expectedVisitor.visitInsn(Opcodes.ICONST_0);
+		expectedVisitor.visitTableSwitchInsnWithProbes(0, 1, label, labels,
+				frame);
+		expectedVisitor.visitFrame(Opcodes.F_FULL, 1, new Object[] { "Foo" },
+				0, null);
 		assertEquals(LabelInfo.NO_PROBE, LabelInfo.getProbeId(label));
 		assertEquals(1000, LabelInfo.getProbeId(label2));
 	}
@@ -218,8 +308,10 @@ public class MethodProbesAdapterTest implements IProbeIdGenerator {
 	@Test
 	public void testVisitTableSwitchInsn3() {
 		final Label[] labels = new Label[] { label, label };
+		adapter.visitInsn(Opcodes.ICONST_0);
 		adapter.visitTableSwitchInsn(0, 1, label, labels);
 
+		expectedVisitor.visitInsn(Opcodes.ICONST_0);
 		expectedVisitor.visitTableSwitchInsn(0, 1, label, labels);
 	}
 

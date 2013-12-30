@@ -17,6 +17,7 @@ import java.util.List;
 import org.jacoco.core.analysis.ICounter;
 import org.jacoco.core.analysis.IMethodCoverage;
 import org.jacoco.core.analysis.ISourceNode;
+import org.jacoco.core.internal.flow.IFrame;
 import org.jacoco.core.internal.flow.Instruction;
 import org.jacoco.core.internal.flow.LabelInfo;
 import org.jacoco.core.internal.flow.MethodProbesVisitor;
@@ -212,7 +213,7 @@ public class MethodAnalyzer extends MethodProbesVisitor {
 
 	@Override
 	public void visitJumpInsnWithProbe(final int opcode, final Label label,
-			final int probeId) {
+			final int probeId, final IFrame frame) {
 		visitInsn();
 		addProbe(probeId);
 	}
@@ -225,13 +226,13 @@ public class MethodAnalyzer extends MethodProbesVisitor {
 
 	@Override
 	public void visitTableSwitchInsnWithProbes(final int min, final int max,
-			final Label dflt, final Label[] labels) {
+			final Label dflt, final Label[] labels, final IFrame frame) {
 		visitSwitchInsnWithProbes(dflt, labels);
 	}
 
 	@Override
 	public void visitLookupSwitchInsnWithProbes(final Label dflt,
-			final int[] keys, final Label[] labels) {
+			final int[] keys, final Label[] labels, final IFrame frame) {
 		visitSwitchInsnWithProbes(dflt, labels);
 	}
 

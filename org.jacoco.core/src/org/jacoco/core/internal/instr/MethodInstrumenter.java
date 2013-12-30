@@ -11,8 +11,9 @@
  *******************************************************************************/
 package org.jacoco.core.internal.instr;
 
-import org.jacoco.core.internal.flow.MethodProbesVisitor;
+import org.jacoco.core.internal.flow.IFrame;
 import org.jacoco.core.internal.flow.LabelInfo;
+import org.jacoco.core.internal.flow.MethodProbesVisitor;
 import org.objectweb.asm.Label;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
@@ -24,7 +25,6 @@ import org.objectweb.asm.Opcodes;
 class MethodInstrumenter extends MethodProbesVisitor {
 
 	private final IProbeInserter probeInserter;
-	private final IFrameInserter frameInserter;
 
 	/**
 	 * Create a new instrumenter instance for the given method.
@@ -33,15 +33,11 @@ class MethodInstrumenter extends MethodProbesVisitor {
 	 *            next method visitor in the chain
 	 * @param probeInserter
 	 *            call-back to insert probes where required
-	 * @param frameInserter
-	 *            call-back to insert additional frames where required
 	 */
 	public MethodInstrumenter(final MethodVisitor mv,
-			final IProbeInserter probeInserter,
-			final IFrameInserter frameInserter) {
+			final IProbeInserter probeInserter) {
 		super(mv);
 		this.probeInserter = probeInserter;
-		this.frameInserter = frameInserter;
 	}
 
 	// === IMethodProbesVisitor ===
@@ -59,7 +55,7 @@ class MethodInstrumenter extends MethodProbesVisitor {
 
 	@Override
 	public void visitJumpInsnWithProbe(final int opcode, final Label label,
-			final int probeId) {
+			final int probeId, final IFrame frame) {
 		if (opcode == Opcodes.GOTO) {
 			probeInserter.insertProbe(probeId);
 			mv.visitJumpInsn(Opcodes.GOTO, label);
@@ -69,7 +65,7 @@ class MethodInstrumenter extends MethodProbesVisitor {
 			probeInserter.insertProbe(probeId);
 			mv.visitJumpInsn(Opcodes.GOTO, label);
 			mv.visitLabel(intermediate);
-			frameInserter.insertFrame();
+			frame.accept(mv);
 		}
 	}
 
@@ -113,7 +109,7 @@ class MethodInstrumenter extends MethodProbesVisitor {
 
 	@Override
 	public void visitTableSwitchInsnWithProbes(final int min, final int max,
-			final Label dflt, final Label[] labels) {
+			final Label dflt, final Label[] labels, final IFrame frame) {
 		// 1. Calculate intermediate labels:
 		LabelInfo.resetDone(dflt);
 		LabelInfo.resetDone(labels);
@@ -122,12 +118,12 @@ class MethodInstrumenter extends MethodProbesVisitor {
 		mv.visitTableSwitchInsn(min, max, newDflt, newLabels);
 
 		// 2. Insert probes:
-		insertIntermediateProbes(dflt, labels);
+		insertIntermediateProbes(dflt, labels, frame);
 	}
 
 	@Override
 	public void visitLookupSwitchInsnWithProbes(final Label dflt,
-			final int[] keys, final Label[] labels) {
+			final int[] keys, final Label[] labels, final IFrame frame) {
 		// 1. Calculate intermediate labels:
 		LabelInfo.resetDone(dflt);
 		LabelInfo.resetDone(labels);
@@ -136,7 +132,7 @@ class MethodInstrumenter extends MethodProbesVisitor {
 		mv.visitLookupSwitchInsn(newDflt, keys, newLabels);
 
 		// 2. Insert probes:
-		insertIntermediateProbes(dflt, labels);
+		insertIntermediateProbes(dflt, labels, frame);
 	}
 
 	private Label[] createIntermediates(final Label[] labels) {
@@ -163,23 +159,24 @@ class MethodInstrumenter extends MethodProbesVisitor {
 		return intermediate;
 	}
 
-	private void insertIntermediateProbe(final Label label) {
+	private void insertIntermediateProbe(final Label label, final IFrame frame) {
 		final int probeId = LabelInfo.getProbeId(label);
 		if (probeId != LabelInfo.NO_PROBE && !LabelInfo.isDone(label)) {
 			mv.visitLabel(LabelInfo.getIntermediateLabel(label));
-			frameInserter.insertFrame();
+			frame.accept(mv);
 			probeInserter.insertProbe(probeId);
 			mv.visitJumpInsn(Opcodes.GOTO, label);
 			LabelInfo.setDone(label);
 		}
 	}
 
-	private void insertIntermediateProbes(final Label dflt, final Label[] labels) {
+	private void insertIntermediateProbes(final Label dflt,
+			final Label[] labels, final IFrame frame) {
 		LabelInfo.resetDone(dflt);
 		LabelInfo.resetDone(labels);
-		insertIntermediateProbe(dflt);
+		insertIntermediateProbe(dflt, frame);
 		for (final Label l : labels) {
-			insertIntermediateProbe(l);
+			insertIntermediateProbe(l, frame);
 		}
 	}
 

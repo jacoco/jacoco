@@ -14,6 +14,7 @@ package org.jacoco.core.internal.instr;
 import static org.junit.Assert.assertEquals;
 
 import org.jacoco.core.instr.MethodRecorder;
+import org.jacoco.core.internal.flow.IFrame;
 import org.jacoco.core.internal.flow.LabelInfo;
 import org.junit.Before;
 import org.junit.Test;
@@ -32,6 +33,8 @@ public class MethodInstrumenterTest {
 
 	private MethodVisitor expectedVisitor;
 
+	private IFrame frame;
+
 	@Before
 	public void setup() {
 		actual = new MethodRecorder();
@@ -43,14 +46,13 @@ public class MethodInstrumenterTest {
 				actual.getVisitor().visitLdcInsn("Probe " + id);
 			}
 		};
-		final IFrameInserter frameInserter = new IFrameInserter() {
-
-			public void insertFrame() {
-				actual.getVisitor().visitLdcInsn("Frame");
+		instrumenter = new MethodInstrumenter(actual.getVisitor(),
+				probeInserter);
+		frame = new IFrame() {
+			public void accept(MethodVisitor mv) {
+				mv.visitFrame(Opcodes.F_FULL, 0, null, 0, null);
 			}
 		};
-		instrumenter = new MethodInstrumenter(actual.getVisitor(),
-				probeInserter, frameInserter);
 	}
 
 	void sampleReturn() {
@@ -79,7 +81,7 @@ public class MethodInstrumenterTest {
 	@Test
 	public void testVisitJumpInsnWithProbe_GOTO() {
 		final Label label = new Label();
-		instrumenter.visitJumpInsnWithProbe(Opcodes.GOTO, label, 3);
+		instrumenter.visitJumpInsnWithProbe(Opcodes.GOTO, label, 3, frame);
 
 		expectedVisitor.visitLdcInsn("Probe 3");
 		expectedVisitor.visitJumpInsn(Opcodes.GOTO, label);
@@ -174,14 +176,14 @@ public class MethodInstrumenterTest {
 
 	private void testVisitJumpInsnWithProbe(int opcodeOrig, int opcodeInstr) {
 		final Label label = new Label();
-		instrumenter.visitJumpInsnWithProbe(opcodeOrig, label, 3);
+		instrumenter.visitJumpInsnWithProbe(opcodeOrig, label, 3, frame);
 
 		final Label l2 = new Label();
 		expectedVisitor.visitJumpInsn(opcodeInstr, l2);
 		expectedVisitor.visitLdcInsn("Probe 3");
 		expectedVisitor.visitJumpInsn(Opcodes.GOTO, label);
 		expectedVisitor.visitLabel(l2);
-		expectedVisitor.visitLdcInsn("Frame");
+		expectedVisitor.visitFrame(Opcodes.F_FULL, 0, null, 0, null);
 
 		assertEquals(expected, actual);
 	}
@@ -194,16 +196,16 @@ public class MethodInstrumenterTest {
 		LabelInfo.setProbeId(L0, 0);
 		LabelInfo.setProbeId(L1, 1);
 		instrumenter.visitTableSwitchInsnWithProbes(3, 5, L0, new Label[] { L1,
-				L1, L2 });
+				L1, L2 }, frame);
 
 		expectedVisitor.visitTableSwitchInsn(3, 4, L0,
 				new Label[] { L1, L1, L2 });
 		expectedVisitor.visitLabel(L0);
-		expectedVisitor.visitLdcInsn("Frame");
+		expectedVisitor.visitFrame(Opcodes.F_FULL, 0, null, 0, null);
 		expectedVisitor.visitLdcInsn("Probe 0");
 		expectedVisitor.visitJumpInsn(Opcodes.GOTO, new Label());
 		expectedVisitor.visitLabel(L1);
-		expectedVisitor.visitLdcInsn("Frame");
+		expectedVisitor.visitFrame(Opcodes.F_FULL, 0, null, 0, null);
 		expectedVisitor.visitLdcInsn("Probe 1");
 		expectedVisitor.visitJumpInsn(Opcodes.GOTO, new Label());
 
@@ -218,16 +220,16 @@ public class MethodInstrumenterTest {
 		LabelInfo.setProbeId(L0, 0);
 		LabelInfo.setProbeId(L1, 1);
 		instrumenter.visitLookupSwitchInsnWithProbes(L0,
-				new int[] { 10, 20, 30 }, new Label[] { L1, L1, L2 });
+				new int[] { 10, 20, 30 }, new Label[] { L1, L1, L2 }, frame);
 
 		expectedVisitor.visitLookupSwitchInsn(L0, new int[] { 10, 20, 30 },
 				new Label[] { L1, L1, L2 });
 		expectedVisitor.visitLabel(L0);
-		expectedVisitor.visitLdcInsn("Frame");
+		expectedVisitor.visitFrame(Opcodes.F_FULL, 0, null, 0, null);
 		expectedVisitor.visitLdcInsn("Probe 0");
 		expectedVisitor.visitJumpInsn(Opcodes.GOTO, new Label());
 		expectedVisitor.visitLabel(L1);
-		expectedVisitor.visitLdcInsn("Frame");
+		expectedVisitor.visitFrame(Opcodes.F_FULL, 0, null, 0, null);
 		expectedVisitor.visitLdcInsn("Probe 1");
 		expectedVisitor.visitJumpInsn(Opcodes.GOTO, new Label());
 
