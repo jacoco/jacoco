@@ -36,10 +36,8 @@ public final class LabelFlowAnalyzer extends MethodVisitor {
 		// We do not use the accept() method as ASM resets labels after every
 		// call to accept()
 		final MethodVisitor lfa = new LabelFlowAnalyzer();
-		if (method.tryCatchBlocks != null) {
-			for (int i = method.tryCatchBlocks.size(); --i >= 0;) {
-				((TryCatchBlockNode) method.tryCatchBlocks.get(i)).accept(lfa);
-			}
+		for (int i = method.tryCatchBlocks.size(); --i >= 0;) {
+			((TryCatchBlockNode) method.tryCatchBlocks.get(i)).accept(lfa);
 		}
 		method.instructions.accept(lfa);
 	}
