@@ -122,6 +122,17 @@ public class AnalyzerTest {
 	}
 
 	@Test
+	public void testAnalyzeAll_EmptyZipEntry() throws IOException {
+		final ByteArrayOutputStream buffer = new ByteArrayOutputStream();
+		final ZipOutputStream zip = new ZipOutputStream(buffer);
+		zip.putNextEntry(new ZipEntry("empty.txt"));
+		zip.finish();
+		final int count = analyzer.analyzeAll(
+				new ByteArrayInputStream(buffer.toByteArray()), "Test");
+		assertEquals(0, count);
+	}
+
+	@Test
 	public void testAnalyzeAll_Pack200() throws IOException {
 		final ByteArrayOutputStream zipbuffer = new ByteArrayOutputStream();
 		final ZipOutputStream zip = new ZipOutputStream(zipbuffer);
