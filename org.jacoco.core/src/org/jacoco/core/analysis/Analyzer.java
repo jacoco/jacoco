@@ -68,13 +68,24 @@ public class Analyzer {
 	 * 
 	 * @param classid
 	 *            id of the class calculated with {@link CRC64}
+	 * @param className
+	 *            VM name of the class
 	 * @return ASM visitor to write class definition to
 	 */
-	private ClassVisitor createAnalyzingVisitor(final long classid) {
+	private ClassVisitor createAnalyzingVisitor(final long classid,
+			final String className) {
 		final ExecutionData data = executionData.get(classid);
-		final boolean[] probes = data == null ? null : data.getProbes();
-		final ClassAnalyzer analyzer = new ClassAnalyzer(classid, probes,
-				stringPool) {
+		final boolean[] probes;
+		final boolean noMatch;
+		if (data == null) {
+			probes = null;
+			noMatch = executionData.contains(className);
+		} else {
+			probes = data.getProbes();
+			noMatch = false;
+		}
+		final ClassAnalyzer analyzer = new ClassAnalyzer(classid, noMatch,
+				probes, stringPool) {
 			@Override
 			public void visitEnd() {
 				super.visitEnd();
@@ -91,8 +102,8 @@ public class Analyzer {
 	 *            reader with class definitions
 	 */
 	public void analyzeClass(final ClassReader reader) {
-		final ClassVisitor visitor = createAnalyzingVisitor(CRC64
-				.checksum(reader.b));
+		final ClassVisitor visitor = createAnalyzingVisitor(
+				CRC64.checksum(reader.b), reader.getClassName());
 		reader.accept(visitor, 0);
 	}
 

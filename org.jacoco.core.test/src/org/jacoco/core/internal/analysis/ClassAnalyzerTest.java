@@ -25,7 +25,7 @@ public class ClassAnalyzerTest {
 
 	@Before
 	public void setup() {
-		analyzer = new ClassAnalyzer(0x0000, null, new StringPool());
+		analyzer = new ClassAnalyzer(0x0000, false, null, new StringPool());
 		analyzer.visit(Opcodes.V1_5, Opcodes.ACC_PUBLIC, "Foo", null,
 				"java/lang/Object", null);
 	}

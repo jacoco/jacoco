@@ -13,7 +13,9 @@ package org.jacoco.core.data;
 
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * In-memory data store for execution data. The data can be added through its
@@ -26,6 +28,8 @@ import java.util.Map;
 public final class ExecutionDataStore implements IExecutionDataVisitor {
 
 	private final Map<Long, ExecutionData> entries = new HashMap<Long, ExecutionData>();
+
+	private final Set<String> names = new HashSet<String>();
 
 	/**
 	 * Adds the given {@link ExecutionData} object into the store. If there is
@@ -44,6 +48,7 @@ public final class ExecutionDataStore implements IExecutionDataVisitor {
 		final ExecutionData entry = entries.get(id);
 		if (entry == null) {
 			entries.put(id, data);
+			names.add(data.getName());
 		} else {
 			entry.merge(data);
 		}
@@ -96,6 +101,19 @@ public final class ExecutionDataStore implements IExecutionDataVisitor {
 	}
 
 	/**
+	 * Checks whether execution data for classes with the given name are
+	 * contained in the store.
+	 * 
+	 * @param name
+	 *            VM name
+	 * @return <code>true</code> if at least one class with the name is
+	 *         contained.
+	 */
+	public boolean contains(final String name) {
+		return names.contains(name);
+	}
+
+	/**
 	 * Returns the coverage data for the class with the given identifier. If
 	 * there is no data available under the given id a new entry is created.
 	 * 
@@ -113,6 +131,7 @@ public final class ExecutionDataStore implements IExecutionDataVisitor {
 		if (entry == null) {
 			entry = new ExecutionData(id.longValue(), name, probecount);
 			entries.put(id, entry);
+			names.add(name);
 		} else {
 			entry.assertCompatibility(id.longValue(), name, probecount);
 		}

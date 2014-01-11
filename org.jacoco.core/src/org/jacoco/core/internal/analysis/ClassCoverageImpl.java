@@ -23,6 +23,7 @@ import org.jacoco.core.analysis.IMethodCoverage;
 public class ClassCoverageImpl extends SourceNodeImpl implements IClassCoverage {
 
 	private final long id;
+	private final boolean noMatch;
 	private final String signature;
 	private final String superName;
 	private final String[] interfaces;
@@ -36,6 +37,9 @@ public class ClassCoverageImpl extends SourceNodeImpl implements IClassCoverage 
 	 *            vm name of the class
 	 * @param id
 	 *            class identifier
+	 * @param noMatch
+	 *            <code>true</code>, if class id does not match with execution
+	 *            data
 	 * @param signature
 	 *            vm signature of the class
 	 * @param superName
@@ -44,10 +48,11 @@ public class ClassCoverageImpl extends SourceNodeImpl implements IClassCoverage 
 	 *            vm names of interfaces of this class
 	 */
 	public ClassCoverageImpl(final String name, final long id,
-			final String signature, final String superName,
-			final String[] interfaces) {
+			final boolean noMatch, final String signature,
+			final String superName, final String[] interfaces) {
 		super(ElementType.CLASS, name);
 		this.id = id;
+		this.noMatch = noMatch;
 		this.signature = signature;
 		this.superName = superName;
 		this.interfaces = interfaces;
@@ -85,6 +90,10 @@ public class ClassCoverageImpl extends SourceNodeImpl implements IClassCoverage 
 
 	public long getId() {
 		return id;
+	}
+
+	public boolean isNoMatch() {
+		return noMatch;
 	}
 
 	public String getSignature() {

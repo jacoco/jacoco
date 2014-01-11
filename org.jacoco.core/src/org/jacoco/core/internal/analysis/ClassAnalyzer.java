@@ -24,6 +24,7 @@ import org.objectweb.asm.Opcodes;
 public class ClassAnalyzer extends ClassProbesVisitor {
 
 	private final long classid;
+	private final boolean noMatch;
 	private final boolean probes[];
 	private final StringPool stringPool;
 
@@ -34,14 +35,18 @@ public class ClassAnalyzer extends ClassProbesVisitor {
 	 * 
 	 * @param classid
 	 *            id of the class
+	 * @param noMatch
+	 *            <code>true</code> if class id does not match with execution
+	 *            data
 	 * @param probes
 	 *            execution data for this class or <code>null</code>
 	 * @param stringPool
 	 *            shared pool to minimize the number of {@link String} instances
 	 */
-	public ClassAnalyzer(final long classid, final boolean[] probes,
-			final StringPool stringPool) {
+	public ClassAnalyzer(final long classid, final boolean noMatch,
+			final boolean[] probes, final StringPool stringPool) {
 		this.classid = classid;
+		this.noMatch = noMatch;
 		this.probes = probes;
 		this.stringPool = stringPool;
 	}
@@ -61,7 +66,7 @@ public class ClassAnalyzer extends ClassProbesVisitor {
 			final String signature, final String superName,
 			final String[] interfaces) {
 		this.coverage = new ClassCoverageImpl(stringPool.get(name), classid,
-				stringPool.get(signature), stringPool.get(superName),
+				noMatch, stringPool.get(signature), stringPool.get(superName),
 				stringPool.get(interfaces));
 	}
 

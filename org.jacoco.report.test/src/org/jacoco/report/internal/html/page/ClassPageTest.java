@@ -35,8 +35,8 @@ public class ClassPageTest extends PageTestBase {
 	@Override
 	public void setup() throws Exception {
 		super.setup();
-		node = new ClassCoverageImpl("org/jacoco/example/Foo", 123, null,
-				"java/lang/Object", null);
+		node = new ClassCoverageImpl("org/jacoco/example/Foo", 123, false,
+				null, "java/lang/Object", null);
 		node.addMethod(new MethodCoverageImpl("a", "()V", null));
 		node.addMethod(new MethodCoverageImpl("b", "()V", null));
 		node.addMethod(new MethodCoverageImpl("c", "()V", null));
@@ -66,8 +66,8 @@ public class ClassPageTest extends PageTestBase {
 
 	@Test
 	public void testGetFileNameDefault() throws IOException {
-		IClassCoverage defaultNode = new ClassCoverageImpl("Foo", 123, null,
-				"java/lang/Object", null);
+		IClassCoverage defaultNode = new ClassCoverageImpl("Foo", 123, false,
+				null, "java/lang/Object", null);
 		page = new ClassPage(defaultNode, null, null, rootFolder, context);
 		assertEquals("Foo.html", page.getFileName());
 	}

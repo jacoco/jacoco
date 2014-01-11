@@ -74,7 +74,7 @@ public class ClassRowWriterTest {
 	@Test
 	public void TestRow() throws Exception {
 		IClassCoverage node = new ClassCoverageImpl("test/package/Foo", 123,
-				null, "java/lang/Object", null) {
+				false, null, "java/lang/Object", null) {
 			{
 				instructionCounter = CounterImpl.getInstance(1, 11);
 				branchCounter = CounterImpl.getInstance(2, 22);
