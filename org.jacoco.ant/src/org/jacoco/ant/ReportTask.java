@@ -18,6 +18,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
@@ -32,6 +33,7 @@ import org.apache.tools.ant.util.FileUtils;
 import org.jacoco.core.analysis.Analyzer;
 import org.jacoco.core.analysis.CoverageBuilder;
 import org.jacoco.core.analysis.IBundleCoverage;
+import org.jacoco.core.analysis.IClassCoverage;
 import org.jacoco.core.analysis.ICoverageNode;
 import org.jacoco.core.data.ExecutionDataStore;
 import org.jacoco.core.data.SessionInfoStore;
@@ -543,9 +545,6 @@ public class ReportTask extends Task {
 			}
 		} else {
 			final IBundleCoverage bundle = createBundle(group);
-			log(format("Writing group \"%s\" with %s classes",
-					bundle.getName(),
-					Integer.valueOf(bundle.getClassCounter().getTotalCount())));
 			final SourceFilesElement sourcefiles = group.sourcefiles;
 			final AntResourcesLocator locator = new AntResourcesLocator(
 					sourcefiles.encoding, sourcefiles.tabWidth);
@@ -571,14 +570,32 @@ public class ReportTask extends Task {
 				in.close();
 			}
 		}
-		return builder.getBundle(group.name);
+		final IBundleCoverage bundle = builder.getBundle(group.name);
+		logBundleInfo(bundle, builder.getNoMatchClasses());
+		return bundle;
+	}
+
+	private void logBundleInfo(final IBundleCoverage bundle,
+			final Collection<IClassCoverage> nomatch) {
+		log(format("Writing bundle '%s' with %s classes", bundle.getName(),
+				Integer.valueOf(bundle.getClassCounter().getTotalCount())));
+		if (!nomatch.isEmpty()) {
+			log(format(
+					"Classes in bundle '%s' do no match with execution data. "
+							+ "For report generation the same class files must be used as at runtime.",
+					bundle.getName()), Project.MSG_WARN);
+			for (final IClassCoverage c : nomatch) {
+				log(format("Execution data for class %s does not match.",
+						c.getName()), Project.MSG_WARN);
+			}
+		}
 	}
 
 	private void checkForMissingDebugInformation(final ICoverageNode node) {
 		if (node.getClassCounter().getTotalCount() > 0
 				&& node.getLineCounter().getTotalCount() == 0) {
 			log(format(
-					"To enable source code annotation class files for bundle '%s' have to be compiled with debug information",
+					"To enable source code annotation class files for bundle '%s' have to be compiled with debug information.",
 					node.getName()), Project.MSG_WARN);
 		}
 	}
