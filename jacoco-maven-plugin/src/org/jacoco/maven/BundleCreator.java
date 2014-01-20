@@ -12,15 +12,20 @@
  *******************************************************************************/
 package org.jacoco.maven;
 
+import static java.lang.String.format;
+
 import java.io.File;
 import java.io.IOException;
+import java.util.Collection;
 import java.util.List;
 
+import org.apache.maven.plugin.logging.Log;
 import org.apache.maven.project.MavenProject;
 import org.codehaus.plexus.util.FileUtils;
 import org.jacoco.core.analysis.Analyzer;
 import org.jacoco.core.analysis.CoverageBuilder;
 import org.jacoco.core.analysis.IBundleCoverage;
+import org.jacoco.core.analysis.IClassCoverage;
 import org.jacoco.core.data.ExecutionDataStore;
 
 /**
@@ -30,6 +35,7 @@ public final class BundleCreator {
 
 	private final MavenProject project;
 	private final FileFilter fileFilter;
+	private final Log log;
 
 	/**
 	 * Construct a new BundleCreator given the MavenProject and FileFilter.
@@ -38,10 +44,14 @@ public final class BundleCreator {
 	 *            the MavenProject
 	 * @param fileFilter
 	 *            the FileFilter
+	 * @param log
+	 *            for log output
 	 */
-	public BundleCreator(final MavenProject project, final FileFilter fileFilter) {
+	public BundleCreator(final MavenProject project,
+			final FileFilter fileFilter, final Log log) {
 		this.project = project;
 		this.fileFilter = fileFilter;
+		this.log = log;
 	}
 
 	/**
@@ -68,6 +78,28 @@ public final class BundleCreator {
 			analyzer.analyzeAll(file);
 		}
 
-		return builder.getBundle(this.project.getName());
+		final IBundleCoverage bundle = builder
+				.getBundle(this.project.getName());
+		logBundleInfo(bundle, builder.getNoMatchClasses());
+
+		return bundle;
 	}
+
+	private void logBundleInfo(final IBundleCoverage bundle,
+			final Collection<IClassCoverage> nomatch) {
+		log.info(format("Analyzed bundle '%s' with %s classes",
+				bundle.getName(),
+				Integer.valueOf(bundle.getClassCounter().getTotalCount())));
+		if (!nomatch.isEmpty()) {
+			log.warn(format(
+					"Classes in bundle '%s' do no match with execution data. "
+							+ "For report generation the same class files must be used as at runtime.",
+					bundle.getName()));
+			for (final IClassCoverage c : nomatch) {
+				log.warn(format("Execution data for class %s does not match.",
+						c.getName()));
+			}
+		}
+	}
+
 }
