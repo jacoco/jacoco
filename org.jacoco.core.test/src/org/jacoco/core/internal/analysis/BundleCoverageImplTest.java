@@ -80,10 +80,10 @@ public class BundleCoverageImplTest {
 
 	@Test
 	public void testGroupByPackage() {
-		ClassCoverageImpl ca = new ClassCoverageImpl("p1/A", 1, null,
+		ClassCoverageImpl ca = new ClassCoverageImpl("p1/A", 1, false, null,
 				"java/lang/Object", new String[0]);
 		ca.setSourceFileName("A.java");
-		ClassCoverageImpl cb = new ClassCoverageImpl("p2/B", 2, null,
+		ClassCoverageImpl cb = new ClassCoverageImpl("p2/B", 2, false, null,
 				"java/lang/Object", new String[0]);
 		cb.setSourceFileName("B.java");
 		ISourceFileCoverage sb = new SourceFileCoverageImpl("B.java", "p2");

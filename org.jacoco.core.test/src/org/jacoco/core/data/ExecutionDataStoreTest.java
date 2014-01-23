@@ -46,6 +46,7 @@ public class ExecutionDataStoreTest implements IExecutionDataVisitor {
 	@Test
 	public void testEmpty() {
 		assertNull(store.get(123));
+		assertFalse(store.contains("org/jacoco/example/Foo"));
 		store.accept(this);
 		assertEquals(Collections.emptyMap(), dataOutput);
 	}
@@ -56,6 +57,7 @@ public class ExecutionDataStoreTest implements IExecutionDataVisitor {
 		store.put(new ExecutionData(1000, "Sample", probes));
 		final ExecutionData data = store.get(1000);
 		assertSame(probes, data.getProbes());
+		assertTrue(store.contains("Sample"));
 		store.accept(this);
 		assertEquals(Collections.singletonMap(Long.valueOf(1000), data),
 				dataOutput);
@@ -96,6 +98,7 @@ public class ExecutionDataStoreTest implements IExecutionDataVisitor {
 		assertFalse(data.getProbes()[1]);
 		assertFalse(data.getProbes()[2]);
 		assertSame(data, store.get(id, "Sample", 3));
+		assertTrue(store.contains("Sample"));
 	}
 
 	@Test(expected = IllegalStateException.class)

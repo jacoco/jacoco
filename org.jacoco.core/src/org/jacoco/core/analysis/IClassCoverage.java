@@ -30,6 +30,16 @@ public interface IClassCoverage extends ISourceNode {
 	public long getId();
 
 	/**
+	 * Returns if the the analyzed class does match the execution data provided.
+	 * More precisely if execution data is available for a class with the same
+	 * qualified name but with a different class id.
+	 * 
+	 * @return <code>true</code> if this class does not match to the provided
+	 *         execution data.
+	 */
+	public boolean isNoMatch();
+
+	/**
 	 * Returns the VM signature of the class.
 	 * 
 	 * @return VM signature of the class (may be <code>null</code>)

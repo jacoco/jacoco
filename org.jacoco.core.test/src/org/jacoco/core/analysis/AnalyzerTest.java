@@ -12,6 +12,8 @@
 package org.jacoco.core.analysis;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
@@ -23,8 +25,9 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Set;
+import java.util.Map;
 import java.util.jar.JarInputStream;
 import java.util.jar.Pack200;
 import java.util.zip.GZIPOutputStream;
@@ -32,6 +35,7 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
 import org.jacoco.core.data.ExecutionDataStore;
+import org.jacoco.core.internal.data.CRC64;
 import org.jacoco.core.test.TargetLoader;
 import org.junit.Before;
 import org.junit.Rule;
@@ -48,38 +52,61 @@ public class AnalyzerTest {
 
 	private Analyzer analyzer;
 
-	private final Set<String> classes = new HashSet<String>();
+	private Map<String, IClassCoverage> classes;
+
+	private ExecutionDataStore executionData;
 
 	private class EmptyStructureVisitor implements ICoverageVisitor {
 
 		public void visitCoverage(IClassCoverage coverage) {
 			final String name = coverage.getName();
-			assertTrue("Class already processed: " + name, classes.add(name));
+			assertNull("Class already processed: " + name,
+					classes.put(name, coverage));
 		}
 	}
 
 	@Before
 	public void setup() {
-		analyzer = new Analyzer(new ExecutionDataStore(),
-				new EmptyStructureVisitor());
+		classes = new HashMap<String, IClassCoverage>();
+		executionData = new ExecutionDataStore();
+		analyzer = new Analyzer(executionData, new EmptyStructureVisitor());
 	}
 
 	@Test
-	public void testAnalyzeClass1() throws IOException {
+	public void testAnalyzeClassFromStream() throws IOException {
 		analyzer.analyzeClass(TargetLoader.getClassData(AnalyzerTest.class),
 				"Test");
-		assertEquals(
-				Collections.singleton("org/jacoco/core/analysis/AnalyzerTest"),
-				classes);
+		assertClasses("org/jacoco/core/analysis/AnalyzerTest");
 	}
 
 	@Test
-	public void testAnalyzeClass2() throws IOException {
+	public void testAnalyzeClassFromByteArray() throws IOException {
 		analyzer.analyzeClass(
 				TargetLoader.getClassDataAsBytes(AnalyzerTest.class), "Test");
-		assertEquals(
-				Collections.singleton("org/jacoco/core/analysis/AnalyzerTest"),
-				classes);
+		assertClasses("org/jacoco/core/analysis/AnalyzerTest");
+		assertFalse(classes.get("org/jacoco/core/analysis/AnalyzerTest")
+				.isNoMatch());
+	}
+
+	@Test
+	public void testAnalyzeClassIdMatch() throws IOException {
+		final byte[] bytes = TargetLoader
+				.getClassDataAsBytes(AnalyzerTest.class);
+		executionData.get(Long.valueOf(CRC64.checksum(bytes)),
+				"org/jacoco/core/analysis/AnalyzerTest", 100);
+		analyzer.analyzeClass(bytes, "Test");
+		assertFalse(classes.get("org/jacoco/core/analysis/AnalyzerTest")
+				.isNoMatch());
+	}
+
+	@Test
+	public void testAnalyzeClassNoIdMatch() throws IOException {
+		executionData.get(Long.valueOf(0),
+				"org/jacoco/core/analysis/AnalyzerTest", 100);
+		analyzer.analyzeClass(
+				TargetLoader.getClassDataAsBytes(AnalyzerTest.class), "Test");
+		assertTrue(classes.get("org/jacoco/core/analysis/AnalyzerTest")
+				.isNoMatch());
 	}
 
 	@Test
@@ -100,9 +127,7 @@ public class AnalyzerTest {
 		final int count = analyzer.analyzeAll(
 				TargetLoader.getClassData(AnalyzerTest.class), "Test");
 		assertEquals(1, count);
-		assertEquals(
-				Collections.singleton("org/jacoco/core/analysis/AnalyzerTest"),
-				classes);
+		assertClasses("org/jacoco/core/analysis/AnalyzerTest");
 	}
 
 	@Test
@@ -116,9 +141,7 @@ public class AnalyzerTest {
 		final int count = analyzer.analyzeAll(
 				new ByteArrayInputStream(buffer.toByteArray()), "Test");
 		assertEquals(1, count);
-		assertEquals(
-				Collections.singleton("org/jacoco/core/analysis/AnalyzerTest"),
-				classes);
+		assertClasses("org/jacoco/core/analysis/AnalyzerTest");
 	}
 
 	@Test
@@ -151,9 +174,7 @@ public class AnalyzerTest {
 		final int count = analyzer.analyzeAll(new ByteArrayInputStream(
 				pack200buffer.toByteArray()), "Test");
 		assertEquals(1, count);
-		assertEquals(
-				Collections.singleton("org/jacoco/core/analysis/AnalyzerTest"),
-				classes);
+		assertClasses("org/jacoco/core/analysis/AnalyzerTest");
 	}
 
 	@Test
@@ -161,7 +182,7 @@ public class AnalyzerTest {
 		final int count = analyzer.analyzeAll(new ByteArrayInputStream(
 				new byte[0]), "Test");
 		assertEquals(0, count);
-		assertEquals(Collections.emptySet(), classes);
+		assertEquals(Collections.emptyMap(), classes);
 	}
 
 	@Test
@@ -169,9 +190,7 @@ public class AnalyzerTest {
 		createClassfile("bin1", AnalyzerTest.class);
 		final int count = analyzer.analyzeAll(folder.getRoot());
 		assertEquals(1, count);
-		assertEquals(
-				Collections.singleton("org/jacoco/core/analysis/AnalyzerTest"),
-				classes);
+		assertClasses("org/jacoco/core/analysis/AnalyzerTest");
 	}
 
 	@Test
@@ -181,10 +200,8 @@ public class AnalyzerTest {
 		String path = "bin1" + File.pathSeparator + "bin2";
 		final int count = analyzer.analyzeAll(path, folder.getRoot());
 		assertEquals(2, count);
-		assertEquals(
-				new HashSet<String>(Arrays.asList(
-						"org/jacoco/core/analysis/Analyzer",
-						"org/jacoco/core/analysis/AnalyzerTest")), classes);
+		assertClasses("org/jacoco/core/analysis/Analyzer",
+				"org/jacoco/core/analysis/AnalyzerTest");
 	}
 
 	@Test(expected = IOException.class)
@@ -229,6 +246,11 @@ public class AnalyzerTest {
 		OutputStream out = new FileOutputStream(file);
 		out.write(TargetLoader.getClassDataAsBytes(source));
 		out.close();
+	}
+
+	private void assertClasses(String... classNames) {
+		assertEquals(new HashSet<String>(Arrays.asList(classNames)),
+				classes.keySet());
 	}
 
 }

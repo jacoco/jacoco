@@ -21,13 +21,18 @@
 <h2>Snapshot Build @qualified.bundle.version@ (@build.date@)</h2>
 
 <h3>New Features</h3>
+<ul>
+  <li>Warnings are logged during report generation if different versions of
+      classes are used than at runtime (GitHub <a href="https://github.com/jacoco/jacoco/issues/185">#185</a>).</li>
+</ul>
 
 <h3>Fixed Bugs</h3>
 <ul>
   <li>Skip jacoco instrumentation for mvn modules with package type ear (GitHub <a href="https://github.com/jacoco/jacoco/issues/169">#169</a>).</li>
-  <li>Align skip conditions and messages for Maven goals and give reasons (GitHub <a href="https://github.com/jacoco/jacoco/issues/171">#171</a>).
-  This includes removal of the specific skip condition for packages e.g. POMs and instead checks existence of <tt>target/classes</tt> in appropriate
-  goals.</li>
+  <li>Align skip conditions and messages for Maven goals and give reasons. This
+      includes removal of the specific skip condition for packages e.g. POMs and
+      instead checks existence of <tt>target/classes</tt> in appropriate goals
+      (GitHub <a href="https://github.com/jacoco/jacoco/issues/171">#171</a>).</li>
 </ul>
 
 <h3>API Changes</h3>

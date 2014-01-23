@@ -11,6 +11,7 @@
  *******************************************************************************/
 package org.jacoco.core.analysis;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
@@ -76,6 +77,22 @@ public class CoverageBuilder implements ICoverageVisitor {
 	public IBundleCoverage getBundle(final String name) {
 		return new BundleCoverageImpl(name, classes.values(),
 				sourcefiles.values());
+	}
+
+	/**
+	 * Returns all classes for which execution data does not match.
+	 * 
+	 * @see IClassCoverage#isNoMatch()
+	 * @return collection of classes with non-matching execution data
+	 */
+	public Collection<IClassCoverage> getNoMatchClasses() {
+		final Collection<IClassCoverage> result = new ArrayList<IClassCoverage>();
+		for (final IClassCoverage c : classes.values()) {
+			if (c.isNoMatch()) {
+				result.add(c);
+			}
+		}
+		return result;
 	}
 
 	// === IStructureVisitor ===

@@ -74,8 +74,8 @@ public class ReportStructureTestDriver {
 		methodCoverage = m;
 
 		final ClassCoverageImpl classCoverageImpl = new ClassCoverageImpl(
-				"org/jacoco/example/FooClass", 1001, null, "java/lang/Object",
-				new String[0]);
+				"org/jacoco/example/FooClass", 1001, false, null,
+				"java/lang/Object", new String[0]);
 		classCoverageImpl.setSourceFileName("FooClass.java");
 		classCoverageImpl.addMethod(methodCoverage);
 		classCoverage = classCoverageImpl;
