@@ -22,6 +22,10 @@ if ( dump2.isFile() ) {
     throw new RuntimeException( "Should not be executed for module 'skip-child', but dump found : " + dump2 );
 }
 
+if ( !buildLog.contains( "argLine set to empty" ) ) {
+    throw new RuntimeException( "Property not set to empty when skipping." );
+}
+
 File file = new File( basedir, "child/target/jacoco.exec" );
 if ( !file.isFile() )
 {
