@@ -892,6 +892,13 @@
       <td>Directory location to write the instrumented files to.</td>
       <td><i>none (required)</i></td>
     </tr>
+    <tr>
+      <td><code>removesignatures</code></td>
+      <td>If set to <code>true</code> all signature related information is 
+          stripped from JARs. This is typically necessary as instrumentation
+          breaks the signatures of the original class files.</td>
+      <td><code>true</code></td>
+    </tr>
   </tbody>
 </table>
 

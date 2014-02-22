@@ -37,6 +37,8 @@ public class InstrumentTask extends Task {
 
 	private final Union files = new Union();
 
+	private boolean removesignatures = true;
+
 	/**
 	 * Sets the location of the instrumented classes.
 	 * 
@@ -45,6 +47,16 @@ public class InstrumentTask extends Task {
 	 */
 	public void setDestdir(final File destdir) {
 		this.destdir = destdir;
+	}
+
+	/**
+	 * Sets whether signatures should be removed from JAR files.
+	 * 
+	 * @param removesignatures
+	 *            <code>true</code> if signatures should be removed
+	 */
+	public void setRemovesignatures(final boolean removesignatures) {
+		this.removesignatures = removesignatures;
 	}
 
 	/**
@@ -66,6 +78,7 @@ public class InstrumentTask extends Task {
 		int total = 0;
 		final Instrumenter instrumenter = new Instrumenter(
 				new OfflineInstrumentationAccessGenerator());
+		instrumenter.setRemoveSignatures(removesignatures);
 		final Iterator<?> resourceIterator = files.iterator();
 		while (resourceIterator.hasNext()) {
 			final Resource resource = (Resource) resourceIterator.next();

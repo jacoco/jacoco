@@ -234,4 +234,42 @@ public class InstrumenterTest {
 		assertEquals("text", new String(out.toByteArray()));
 	}
 
+	@Test
+	public void testInstrumentAll_RemoveSignatures() throws IOException {
+		ByteArrayOutputStream buffer = new ByteArrayOutputStream();
+		ZipOutputStream zipout = new ZipOutputStream(buffer);
+		zipout.putNextEntry(new ZipEntry("META-INF/MANIFEST.MF"));
+		zipout.putNextEntry(new ZipEntry("META-INF/ALIAS.SF"));
+		zipout.finish();
+		ByteArrayOutputStream out = new ByteArrayOutputStream();
+
+		int count = instrumenter.instrumentAll(
+				new ByteArrayInputStream(buffer.toByteArray()), out, "Test");
+
+		assertEquals(0, count);
+		ZipInputStream zipin = new ZipInputStream(new ByteArrayInputStream(
+				out.toByteArray()));
+		assertEquals("META-INF/MANIFEST.MF", zipin.getNextEntry().getName());
+		assertNull(zipin.getNextEntry());
+	}
+
+	@Test
+	public void testInstrumentAll_KeepSignatures() throws IOException {
+		ByteArrayOutputStream buffer = new ByteArrayOutputStream();
+		ZipOutputStream zipout = new ZipOutputStream(buffer);
+		zipout.putNextEntry(new ZipEntry("META-INF/ALIAS.SF"));
+		zipout.finish();
+		ByteArrayOutputStream out = new ByteArrayOutputStream();
+
+		instrumenter.setRemoveSignatures(false);
+		int count = instrumenter.instrumentAll(
+				new ByteArrayInputStream(buffer.toByteArray()), out, "Test");
+
+		assertEquals(0, count);
+		ZipInputStream zipin = new ZipInputStream(new ByteArrayInputStream(
+				out.toByteArray()));
+		assertEquals("META-INF/ALIAS.SF", zipin.getNextEntry().getName());
+		assertNull(zipin.getNextEntry());
+	}
+
 }

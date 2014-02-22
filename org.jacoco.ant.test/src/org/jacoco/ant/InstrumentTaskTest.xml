@@ -50,6 +50,48 @@
 		</jacoco:instrument>
 	</target>
 	
+	<target name="testInstrumentRemoveSignatures">
+		<property name="lib.dir" location="${temp.dir}/lib"/>
+		<property name="instr.dir" location="${temp.dir}/instr"/>
+		<mkdir dir="${lib.dir}"/>
+		<mkdir dir="${instr.dir}"/>
+		
+		<jar destfile="${lib.dir}/test.jar">
+			<fileset dir="${org.jacoco.ant.instrumentTaskTest.classes.dir}" includes="**/*.class"/>
+		</jar>
+		<signjar jar="${lib.dir}/test.jar" keystore="${basedir}/data/keystore.jks" alias="test" storepass="password"/>
+		
+		<jacoco:instrument destdir="${instr.dir}">
+			<fileset dir="${lib.dir}" includes="*.jar"/>
+		</jacoco:instrument>
+		<au:assertLogContains text="Instrumented 12 classes to ${temp.dir}"/>
+
+		<unzip src="${instr.dir}/test.jar" dest="${instr.dir}"/>
+		<au:assertFileDoesntExist file="${instr.dir}/META-INF/TEST.RSA" />
+		<au:assertFileDoesntExist file="${instr.dir}/META-INF/TEST.SF" />
+	</target>	
+
+	<target name="testInstrumentKeepSignatures">
+		<property name="lib.dir" location="${temp.dir}/lib"/>
+		<property name="instr.dir" location="${temp.dir}/instr"/>
+		<mkdir dir="${lib.dir}"/>
+		<mkdir dir="${instr.dir}"/>
+		
+		<jar destfile="${lib.dir}/test.jar">
+			<fileset dir="${org.jacoco.ant.instrumentTaskTest.classes.dir}" includes="**/*.class"/>
+		</jar>
+		<signjar jar="${lib.dir}/test.jar" keystore="${basedir}/data/keystore.jks" alias="test" storepass="password"/>
+		
+		<jacoco:instrument destdir="${instr.dir}" removesignatures="false">
+			<fileset dir="${lib.dir}" includes="*.jar"/>
+		</jacoco:instrument>
+		<au:assertLogContains text="Instrumented 12 classes to ${temp.dir}"/>
+
+		<unzip src="${instr.dir}/test.jar" dest="${instr.dir}"/>
+		<au:assertFileExists file="${instr.dir}/META-INF/TEST.RSA" />
+		<au:assertFileExists file="${instr.dir}/META-INF/TEST.SF" />
+	</target>	
+	
 	<target name="testInstrumentAndRunWithConfigFile">
 		<jacoco:instrument destdir="${temp.dir}">
 			<fileset dir="${org.jacoco.ant.instrumentTaskTest.classes.dir}" includes="**/*.class"/>
