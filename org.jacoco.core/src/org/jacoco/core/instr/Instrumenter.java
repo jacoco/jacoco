@@ -26,6 +26,7 @@ import org.jacoco.core.internal.Pack200Streams;
 import org.jacoco.core.internal.data.CRC64;
 import org.jacoco.core.internal.flow.ClassProbesAdapter;
 import org.jacoco.core.internal.instr.ClassInstrumenter;
+import org.jacoco.core.internal.instr.SignatureRemover;
 import org.jacoco.core.runtime.IExecutionDataAccessorGenerator;
 import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.ClassVisitor;
@@ -38,6 +39,8 @@ public class Instrumenter {
 
 	private final IExecutionDataAccessorGenerator accessGenerator;
 
+	private final SignatureRemover signatureRemover;
+
 	/**
 	 * Creates a new instance based on the given runtime.
 	 * 
@@ -46,6 +49,20 @@ public class Instrumenter {
 	 */
 	public Instrumenter(final IExecutionDataAccessorGenerator runtime) {
 		this.accessGenerator = runtime;
+		this.signatureRemover = new SignatureRemover();
+	}
+
+	/**
+	 * Determines whether signatures should be removed from JAR files. This is
+	 * typically necessary as instrumentation modifies the class files and
+	 * therefore invalidates existing JAR signatures. Default is
+	 * <code>true</code>.
+	 * 
+	 * @param flag
+	 *            <code>true</code> if signatures should be removed
+	 */
+	public void setRemoveSignatures(final boolean flag) {
+		signatureRemover.setActive(flag);
 	}
 
 	/**
@@ -192,8 +209,15 @@ public class Instrumenter {
 		ZipEntry entry;
 		int count = 0;
 		while ((entry = zipin.getNextEntry()) != null) {
-			zipout.putNextEntry(new ZipEntry(entry.getName()));
-			count += instrumentAll(zipin, zipout, name + "@" + entry.getName());
+			final String entryName = entry.getName();
+			if (signatureRemover.removeEntry(entryName)) {
+				continue;
+			}
+
+			zipout.putNextEntry(new ZipEntry(entryName));
+			if (!signatureRemover.filterEntry(entryName, zipin, zipout)) {
+				count += instrumentAll(zipin, zipout, name + "@" + entryName);
+			}
 			zipout.closeEntry();
 		}
 		zipout.finish();
