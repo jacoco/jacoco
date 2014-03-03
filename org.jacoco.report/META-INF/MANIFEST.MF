@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: JaCoCo Report
 Bundle-SymbolicName: org.jacoco.report
-Bundle-Version: 0.6.5.qualifier
+Bundle-Version: 0.6.5.201403032054
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
 Bundle-Vendor: Mountainminds GmbH & Co. KG
 Export-Package: org.jacoco.report;version="0.6.5",
