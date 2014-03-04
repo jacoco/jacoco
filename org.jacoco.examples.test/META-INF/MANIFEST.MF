@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: JaCoCo Examples Tests
 Bundle-SymbolicName: org.jacoco.examples.test
-Bundle-Version: 0.6.5.201403032054
+Bundle-Version: 0.6.6.qualifier
 Bundle-Vendor: Mountainminds GmbH & Co. KG
 Fragment-Host: org.jacoco.examples
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
