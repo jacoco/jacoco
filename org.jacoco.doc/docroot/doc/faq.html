@@ -29,6 +29,14 @@
   various tools.
 </p>
 
+<h3>What Java versions are supported by JaCoCo?</h3>
+<p>
+  JaCoCo supports Java class files from version 1.0 to 1.7. However the minimum
+  JRE version required by the JaCoCo runtime (e.g. the agent) and the JaCoCo
+  tools is 1.5. Also note that class files under test from version 1.6 and above
+  have to contain valid stackmap frames.
+</p>
+
 <h3>Why do I get the error "Can't add different class with same name"?</h3>
 <p>
   For coverage report generation all classes within a group must have unique
@@ -43,7 +51,7 @@
   into the control flow at certain positions. Code is considered as executed
   when a subsequent probe has been executed. In case of exceptions such a
   sequence of instructions is aborted somewhere in the middle and not marked as
-  executed. 
+  executed.
 </p>
 
 <h3>Why does the coverage report not show line coverage figures?</h3>
