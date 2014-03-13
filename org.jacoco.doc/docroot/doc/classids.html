@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+  <link rel="stylesheet" href=".resources/doc.css" charset="UTF-8" type="text/css" />
+  <link rel="shortcut icon" href=".resources/report.gif" type="image/gif" />
+  <title>JaCoCo - Class Ids</title>
+</head>
+<body>
+
+<div class="breadcrumb">
+  <a href="../index.html" class="el_report">JaCoCo</a> &gt;
+  <a href="index.html" class="el_group">Documentation</a> &gt;
+  <span class="el_source">Class Ids</span>
+</div>
+<div id="content"> 
+
+<h1>Class Ids</h1>
+
+<p>
+  As JaCoCo's class identifiers are sometimes causing confusion this chapter
+  answers the concepts and common issues with class ids in FAQ style format.
+</p>
+
+<h3>What are class ids and how are they created?</h3>
+<p>
+  Class ids are 64-bit integer values, for example
+  <code>0x638e104737889183</code> in hex notation. Their calculation is
+  considered an implementation detail of JaCoCo. Currently ids are created with
+  a CRC64 checksum of the raw class file.
+</p>
+
+<h3>What are class ids used for?</h3>
+<p>
+  Class ids are used to unambiguously identify Java classes. At runtime execution
+  data is sampled for every loaded class and typically stored to
+  <code>*.exec</code> files. At analysis time &mdash; for example for report
+  generation &mdash; the class ids are used to relate analyzed classes with the
+  execution data.
+</p>
+
+<h3>What are the advantages of JaCoCo class ids?</h3>
+<p>
+  The concept of class ids allows distinguishing different versions of classes,
+  for example when multiple versions of an application are deployed to an
+  application server or different versions of libraries are included.
+</p>
+<p>
+  Also class ids are the prerequisite for JaCoCo's minimal runtime-overhead and
+  small <code>*.exec</code> files even for very large applications under test.
+</p>
+
+<h3>What is the disadvantage of JaCoCo class ids?</h3>
+<p>
+  The fact that class ids identify a specific version of a class causes problems
+  in setups where different classes are used at runtime and at analysis time.
+</p>
+
+<h3>What happens if different classes are used at runtime and at analysis time?</h3>
+<p>
+  In this case execution data cannot be related to the analyzed classes. As a
+  consequence such classes are reported with 0% coverage.
+</p>
+
+<h3>How can I detect that I have a problem with class ids?</h3>
+<p>
+  The typical symptom of class id mismatch is classes not shown as covered
+  although they have been executed during the test. This situation can be easily
+  detected e.g. in the HTML report: Open the <i>Sessions</i> page with the link
+  on the top-right corner. You see a list of all classes where execution data
+  has been collected for. Find the class in questions and check whether the
+  entry has a link to the corresponding coverage report page. If the entry is
+  not linked this means there is a class id mismatch between the class used at
+  runtime and the class provided to create the report.
+</p>
+
+<h3>What can cause different class ids?</h3>
+<p>
+  Class ids are identical for the exact same class file only (byte-by-byte).
+  There is a couple of reasons why you might get different class files. First
+  compiling Java source files will result in different class files if you use
+  a different tool chain:
+</p>
+<ul>
+  <li>Different compiler vendor (e.g. Eclipse vs. Oracle JDK)</li>
+  <li>Different compiler versions</li>
+  <li>Different compiler settings (e.g. debug vs. non-debug) </li>
+</ul>
+<p>
+  Also post-processing class files (obfuscation, AspectJ, etc.) will typically
+  change the class files. JaCoCo will work well if you simply use the same class
+  files for runtime as well as for analysis. So the tool chain to create these
+  class files does not matter.
+</p>
+<p>
+  Even if the class files on the file system are the same there is possible that
+  classes seen by the JaCoCo runtime agent are different anyways. This typically
+  happens when another Java agent is configured <i>before</i> the JaCoCo agent
+  or special class loaders pre-process the class files. Typical candidates are:
+</p>
+<ul>
+  <li>Mocking frameworks</li>
+  <li>Application servers</li>
+  <li>Persistence frameworks</li>
+</ul>
+
+<h3>What workarounds exist to deal with runtime-modified classes?</h3>
+<p>
+  If classes get modified at runtime in your setup there are some workarounds to
+  make JaCoCo work anyways:
+</p>
+<ul>
+  <li>If you use another Java agent make sure the <a href="agent.html">JaCoCo
+      agent</a> is specified at first in the command line. This way the JaCoCo
+      agent should see the original class files.</li>
+  <li>Specify the <code>classdumpdir</code> option of the
+      <a href="agent.html">JaCoCo agent</a> and use the dumped classes at report
+      generation. Note that only loaded classes will be dumped, i.e. classes not
+      executed at all will not show-up in your report as not covered.</li>
+  <li>Use <a href="offline.html">offline instrumentation</a> before you run your
+      tests. This way classes get instrumented by JaCoCo before any runtime
+      modification can take place. Note that in this case the report has to be
+      generated with the <i>original</i> classes, not with instrumented ones.</li>
+</ul>
+
+<h3>Why can't JaCoCo simply use the class name to identify classes?</h3>
+<p>
+  To understand why JaCoCo can't rely on class names we need to have a look at
+  the way how JaCoCo measures code coverage.
+</p>
+<p>
+  JaCoCo tracks execution with so called <i>probes</i>. Probes are additional
+  byte code instructions inserted in the original class file which will note
+  when they are executed and report this to the JaCoCo runtime. This process is
+  called <i>instrumentation</i>. To keep the runtime overhead minimal, only a
+  few probes are inserted at "strategic" places. These probe positions are
+  determined by <a href="flow.html">analyzing the control flow</a> of all
+  methods of a class. As a result every instrumented class produces a list of
+  <code>n</code> boolean flags indicating whether the probe has been executed or
+  not. A JaCoCo <code>*.exec</code> file simply stores a boolean array per
+  class id.
+</p>
+<p>
+  At analysis time, for example for report generation, the <code>*.exec</code>
+  file is used to get information about probe execution status. But as probes
+  are stored in a plain boolean array there is no information like corresponding
+  methods or lines. To retrieve this information we need the original class
+  files and perform the exact same control flow analysis than at instrumentation
+  time. Because this is a deterministic process we get the same probe positions.
+  With this information we can now interfere the execution status of every
+  single instruction and branch of a method. Using the debug information
+  embedded in the class files we can also calculate line coverage.
+</p>
+<p>
+  If we would use just slightly different classes at analysis time than at
+  runtime &mdash; e.g. different method ordering or additional branches &mdash;
+  we would end-up with different probes. For example the probe at index
+  <code>i</code> would be in method <code>a()</code> and not in method
+  <b>b()</b>. Obviously this will create random coverage results.
+</p>
+
+<h3>Why do I get an error when I try to analyze multiple versions of the same
+    class with a group?</h3>
+<p>
+  JaCoCo always analyzes a set of class as a group. The group is used to
+  aggregate data for source files and packages (both can contain multiple
+  classes). Within the reporting API classes are identified by their fully
+  qualified name (e.g. to create stable file names in the HTML reports).
+  Therefore it is not possible to include two different classes with the same
+  name within a group. Anyhow it is possible to analyze different versions of
+  class files in separate groups, for example the <a href="ant.html#report">Ant
+  report task</a> can be configured with multiple groups.
+</p>
+
+</div>
+<div class="footer">
+  <span class="right"><a href="@jacoco.home.url@">JaCoCo</a> @qualified.bundle.version@</span>
+  <a href="license.html">Copyright</a> &copy; @copyright.years@ Mountainminds GmbH &amp; Co. KG and Contributors
+</div>
+
+</body>
+</html>
