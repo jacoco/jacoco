@@ -19,6 +19,7 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.jar.Manifest;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -110,7 +111,14 @@ public class SignatureRemoverTest {
 				+ "Name: org/jacoco/example/B.class\r\n" //
 				+ "OtherInfo: keep this\r\n" //
 				+ "\r\n";
-		assertEquals(expected, out.toString("ISO-8859-1"));
+		assertEquals(
+				createManifest(expected.getBytes("ISO-8859-1")),
+				createManifest(out.toByteArray()));
 	}
 
+	private static Manifest createManifest(final byte[] bytes)
+			throws IOException {
+		return new Manifest(
+				new ByteArrayInputStream(bytes));
+	}
 }
