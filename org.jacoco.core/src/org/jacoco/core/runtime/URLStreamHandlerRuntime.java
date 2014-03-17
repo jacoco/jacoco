@@ -90,14 +90,15 @@ public class URLStreamHandlerRuntime extends AbstractRuntime {
 		mv.visitInsn(Opcodes.ACONST_NULL);
 		mv.visitLdcInsn("");
 		mv.visitMethodInsn(Opcodes.INVOKESPECIAL, "java/net/URL", "<init>",
-				"(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V");
+				"(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V",
+				false);
 
 		// Stack[2]: [Ljava/net/URL;
 		// Stack[1]: [Ljava/lang/Object;
 		// Stack[0]: [Ljava/lang/Object;
 
 		mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "java/net/URL",
-				"openConnection", "()Ljava/net/URLConnection;");
+				"openConnection", "()Ljava/net/URLConnection;", false);
 
 		// Stack[2]: [Ljava/net/URLConnection;
 		// Stack[1]: [Ljava/lang/Object;
@@ -110,7 +111,7 @@ public class URLStreamHandlerRuntime extends AbstractRuntime {
 		// Stack[0]: [Ljava/lang/Object;
 
 		mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "java/lang/Object", "equals",
-				"(Ljava/lang/Object;)Z");
+				"(Ljava/lang/Object;)Z", false);
 
 		// Stack[1]: Z;
 		// Stack[0]: [Ljava/lang/Object;

@@ -95,7 +95,7 @@ public class DuplicateFrameEliminatorTest {
 	@Test
 	public void testMethodInsn() {
 		testInstructionBetweenFrames(new MethodInsnNode(Opcodes.INVOKEVIRTUAL,
-				"Foo", "run", "()V"));
+				"Foo", "run", "()V", false));
 	}
 
 	@Test

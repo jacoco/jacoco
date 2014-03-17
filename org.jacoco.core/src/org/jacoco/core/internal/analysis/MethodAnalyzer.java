@@ -149,7 +149,7 @@ public class MethodAnalyzer extends MethodProbesVisitor {
 
 	@Override
 	public void visitMethodInsn(final int opcode, final String owner,
-			final String name, final String desc) {
+			final String name, final String desc, final boolean itf) {
 		visitInsn();
 	}
 

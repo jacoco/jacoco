@@ -73,9 +73,9 @@ class DuplicateFrameEliminator extends MethodVisitor {
 
 	@Override
 	public void visitMethodInsn(final int opcode, final String owner,
-			final String name, final String desc) {
+			final String name, final String desc, final boolean itf) {
 		instruction = true;
-		mv.visitMethodInsn(opcode, owner, name, desc);
+		mv.visitMethodInsn(opcode, owner, name, desc, itf);
 	}
 
 	@Override

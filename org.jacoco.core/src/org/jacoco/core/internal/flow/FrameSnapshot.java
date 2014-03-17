@@ -48,9 +48,9 @@ class FrameSnapshot implements IFrame {
 		if (analyzer == null || analyzer.locals == null) {
 			return NOP;
 		}
-		@SuppressWarnings("unchecked")
-		final List<Object> locals = analyzer.locals, stack = analyzer.stack;
-		return new FrameSnapshot(reduce(locals, 0), reduce(stack, popCount));
+		final Object[] locals = reduce(analyzer.locals, 0);
+		final Object[] stack = reduce(analyzer.stack, popCount);
+		return new FrameSnapshot(locals, stack);
 	}
 
 	/**

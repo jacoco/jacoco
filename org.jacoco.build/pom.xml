@@ -134,7 +134,7 @@
     <argLine>${jvm.args}</argLine>
 
     <!-- Dependencies versions -->
-    <asm.version>4.1</asm.version>
+    <asm.version>5.0</asm.version>
     <ant.version>1.7.1</ant.version>
     <junit.version>4.8.2</junit.version>
 
@@ -201,7 +201,7 @@
       <!-- Third-party dependencies -->
       <dependency>
         <groupId>org.ow2.asm</groupId>
-        <artifactId>asm-all</artifactId>
+        <artifactId>asm-debug-all</artifactId>
         <version>${asm.version}</version>
       </dependency>
       <dependency>
