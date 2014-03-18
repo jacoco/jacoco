@@ -116,7 +116,8 @@ public class ClassInstrumenter extends ClassProbesVisitor {
 
 		public int storeInstance(final MethodVisitor mv, final int variable) {
 			mv.visitMethodInsn(Opcodes.INVOKESTATIC, className,
-					InstrSupport.INITMETHOD_NAME, InstrSupport.INITMETHOD_DESC);
+					InstrSupport.INITMETHOD_NAME, InstrSupport.INITMETHOD_DESC,
+					false);
 			mv.visitVarInsn(Opcodes.ASTORE, variable);
 			return 1;
 		}

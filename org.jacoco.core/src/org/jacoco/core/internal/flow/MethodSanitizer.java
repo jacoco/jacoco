@@ -11,6 +11,7 @@
  *******************************************************************************/
 package org.jacoco.core.internal.flow;
 
+import org.jacoco.core.JaCoCo;
 import org.objectweb.asm.Label;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.commons.JSRInlinerAdapter;
@@ -32,7 +33,8 @@ class MethodSanitizer extends JSRInlinerAdapter {
 	MethodSanitizer(final MethodVisitor mv, final int access,
 			final String name, final String desc, final String signature,
 			final String[] exceptions) {
-		super(mv, access, name, desc, signature, exceptions);
+		super(JaCoCo.ASM_API_VERSION, mv, access, name, desc, signature,
+				exceptions);
 	}
 
 	@Override

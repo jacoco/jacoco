@@ -295,7 +295,7 @@ public class LabelFlowAnalyzerTest {
 
 	@Test
 	public void testMethodInsn() {
-		analyzer.visitMethodInsn(INVOKEVIRTUAL, "Foo", "doit", "()V");
+		analyzer.visitMethodInsn(INVOKEVIRTUAL, "Foo", "doit", "()V", false);
 		assertTrue(analyzer.successor);
 		assertFalse(analyzer.first);
 	}

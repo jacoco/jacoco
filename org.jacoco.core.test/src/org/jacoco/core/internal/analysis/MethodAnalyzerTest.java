@@ -257,7 +257,8 @@ public class MethodAnalyzerTest implements IProbeIdGenerator {
 		method.visitLabel(l1);
 		method.visitLineNumber(1001, l1);
 		method.visitVarInsn(Opcodes.ALOAD, 0);
-		method.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "Foo", "test", "()Z");
+		method.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "Foo", "test", "()Z",
+				false);
 		method.visitJumpInsn(Opcodes.IFEQ, l1);
 		final Label l2 = new Label();
 		method.visitLabel(l2);
@@ -512,7 +513,7 @@ public class MethodAnalyzerTest implements IProbeIdGenerator {
 		method.visitLineNumber(1001, l1);
 		method.visitVarInsn(Opcodes.ALOAD, 0);
 		method.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "java/lang/Throwable",
-				"printStackTrace", "()V");
+				"printStackTrace", "()V", false);
 		method.visitLabel(l2);
 		method.visitJumpInsn(Opcodes.GOTO, l4);
 		method.visitLabel(l3);

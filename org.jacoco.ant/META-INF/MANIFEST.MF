@@ -17,4 +17,4 @@ Import-Package: org.jacoco.agent;bundle-version="[0.6.6,0.6.7)",
  org.jacoco.report.csv;bundle-version="[0.6.6,0.6.7)",
  org.jacoco.report.html;bundle-version="[0.6.6,0.6.7)",
  org.jacoco.report.xml;bundle-version="[0.6.6,0.6.7)",
- org.objectweb.asm;version="[4.1.0,4.2.0)"
+ org.objectweb.asm;version="[5.0.0,5.1.0)"

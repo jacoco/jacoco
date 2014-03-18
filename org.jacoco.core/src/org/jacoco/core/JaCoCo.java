@@ -30,7 +30,7 @@ public final class JaCoCo {
 	public static final String RUNTIMEPACKAGE;
 
 	/** ASM API version */
-	public static final int ASM_API_VERSION = Opcodes.ASM4;
+	public static final int ASM_API_VERSION = Opcodes.ASM5;
 
 	static {
 		final ResourceBundle bundle = ResourceBundle
