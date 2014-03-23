@@ -32,8 +32,6 @@ public class CoverageTransformer implements ClassFileTransformer {
 		AGENT_PREFIX = toVMName(name.substring(0, name.lastIndexOf('.')));
 	}
 
-	private final IRuntime runtime;
-
 	private final Instrumenter instrumenter;
 
 	private final IExceptionLogger logger;
@@ -58,7 +56,6 @@ public class CoverageTransformer implements ClassFileTransformer {
 	 */
 	public CoverageTransformer(final IRuntime runtime,
 			final AgentOptions options, final IExceptionLogger logger) {
-		this.runtime = runtime;
 		this.instrumenter = new Instrumenter(runtime);
 		this.logger = logger;
 		// Class names will be reported in VM notation:
@@ -73,17 +70,17 @@ public class CoverageTransformer implements ClassFileTransformer {
 			final ProtectionDomain protectionDomain,
 			final byte[] classfileBuffer) throws IllegalClassFormatException {
 
+		if (classBeingRedefined != null) {
+			// We do not support class retransformation.
+			return null;
+		}
+
 		if (!filter(loader, classname)) {
 			return null;
 		}
 
 		try {
 			classFileDumper.dump(classname, classfileBuffer);
-			if (classBeingRedefined != null) {
-				// For redefined classes we must clear the execution data
-				// reference as probes might have changed.
-				runtime.disconnect(classBeingRedefined);
-			}
 			return instrumenter.instrument(classfileBuffer, classname);
 		} catch (final Exception ex) {
 			final IllegalClassFormatException wrapper = new IllegalClassFormatException(

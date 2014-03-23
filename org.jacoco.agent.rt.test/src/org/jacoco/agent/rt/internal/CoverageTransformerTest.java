@@ -148,9 +148,8 @@ public class CoverageTransformerTest {
 		CoverageTransformer t = createTransformer();
 		// Just pick any non-system class outside our namespace
 		final Class<?> target = JaCoCo.class;
-		t.transform(classLoader, target.getName(), target, null,
-				getClassData(target));
-		runtime.assertDisconnected(target);
+		assertNull(t.transform(classLoader, target.getName(), target, null,
+				getClassData(target)));
 	}
 
 	private CoverageTransformer createTransformer() {
@@ -173,8 +172,6 @@ public class CoverageTransformerTest {
 
 	private static class StubRuntime extends AbstractRuntime {
 
-		private Class<?> disconnected;
-
 		public StubRuntime() {
 		}
 
@@ -184,15 +181,6 @@ public class CoverageTransformerTest {
 		}
 
 		public void shutdown() {
-		}
-
-		@Override
-		public void disconnect(Class<?> type) throws Exception {
-			this.disconnected = type;
-		}
-
-		public void assertDisconnected(Class<?> expected) {
-			assertEquals(expected, disconnected);
 		}
 
 	}
