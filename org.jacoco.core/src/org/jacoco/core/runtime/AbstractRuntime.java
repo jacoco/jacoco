@@ -11,10 +11,7 @@
  *******************************************************************************/
 package org.jacoco.core.runtime;
 
-import java.lang.reflect.Field;
 import java.util.Random;
-
-import org.jacoco.core.internal.instr.InstrSupport;
 
 /**
  * Base {@link IRuntime} implementation.
@@ -23,15 +20,6 @@ public abstract class AbstractRuntime implements IRuntime {
 
 	/** access to the runtime data */
 	protected RuntimeData data;
-
-	public void disconnect(final Class<?> type) throws Exception {
-		if (!type.isInterface()) {
-			final Field dataField = type
-					.getDeclaredField(InstrSupport.DATAFIELD_NAME);
-			dataField.setAccessible(true);
-			dataField.set(null, null);
-		}
-	}
 
 	/**
 	 * Subclasses must call this method when overwriting it.

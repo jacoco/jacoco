@@ -12,7 +12,6 @@
 package org.jacoco.core.runtime;
 
 import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
@@ -96,24 +95,6 @@ public abstract class RuntimeTestBase {
 		final boolean[] data = storage.getData(1001).getProbes();
 		assertTrue(data[0]);
 		assertTrue(data[1]);
-	}
-
-	@Test
-	public void testDisconnect() throws Exception {
-		final ITarget target = generateAndInstantiateClass(1001);
-		target.a();
-		runtime.disconnect(target.getClass());
-		assertNull(target.get());
-		data.collect(storage, storage, false);
-		storage.assertSize(1);
-		final boolean[] data = storage.getData(1001).getProbes();
-		assertTrue(data[0]);
-	}
-
-	@Test
-	public void testDisconnectInterface() throws Exception {
-		// No effect:
-		runtime.disconnect(ITarget.class);
 	}
 
 	/**
