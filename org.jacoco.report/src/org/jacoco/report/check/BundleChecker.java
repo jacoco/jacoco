@@ -34,7 +34,7 @@ class BundleChecker {
 	private final Collection<Rule> bundleRules;
 	private final Collection<Rule> packageRules;
 	private final Collection<Rule> classRules;
-	private final ArrayList<Rule> sourceFileRules;
+	private final Collection<Rule> sourceFileRules;
 	private final Collection<Rule> methodRules;
 
 	private final boolean traversePackages;

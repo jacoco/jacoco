@@ -131,8 +131,7 @@ public class Table {
 	private List<? extends ITableItem> sort(
 			final List<? extends ITableItem> items) {
 		if (defaultComparator != null) {
-			final ArrayList<ITableItem> result = new ArrayList<ITableItem>(
-					items);
+			final List<ITableItem> result = new ArrayList<ITableItem>(items);
 			Collections.sort(result, defaultComparator);
 			return result;
 		}
