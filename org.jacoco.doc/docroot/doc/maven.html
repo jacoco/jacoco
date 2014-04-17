@@ -31,6 +31,16 @@
   be compiled with debug information.
 </p>
 
+<p class="hint">
+  When using the <tt>maven-surefire-plugin</tt> or <tt>maven-failsafe-plugin</tt>
+  you <b>must not</b> use a
+  <a href="http://maven.apache.org/surefire/maven-surefire-plugin/test-mojo.html#forkCount">
+  <tt>forkCount</tt></a> of <tt>0</tt> or set the
+  <a href="http://maven.apache.org/surefire/maven-surefire-plugin/test-mojo.html#forkMode">
+  <tt>forkMode</tt></a> to <tt>never</tt> as this would prevent the execution of
+  the tests with the <tt>javaagent</tt> set and no coverage would be recorded.
+</p>
+
 <h2>Example</h2>
 
 <ul>
