@@ -86,8 +86,8 @@ public class InstrumenterTest {
 		byte[] bytes = instrumenter.instrument(
 				TargetLoader.getClassDataAsBytes(InstrumenterTest.class),
 				"Test");
-		TargetLoader loader = new TargetLoader(InstrumenterTest.class, bytes);
-		Class<?> clazz = loader.getTargetClass();
+		TargetLoader loader = new TargetLoader();
+		Class<?> clazz = loader.add(InstrumenterTest.class, bytes);
 		assertEquals("org.jacoco.core.instr.InstrumenterTest", clazz.getName());
 	}
 
@@ -125,8 +125,8 @@ public class InstrumenterTest {
 		// Create instrumented instance:
 		byte[] bytes = instrumenter.instrument(
 				TargetLoader.getClassData(SerializationTarget.class), "Test");
-		TargetLoader loader = new TargetLoader(SerializationTarget.class, bytes);
-		Object obj1 = loader.getTargetClass()
+		TargetLoader loader = new TargetLoader();
+		Object obj1 = loader.add(SerializationTarget.class, bytes)
 				.getConstructor(String.class, Integer.TYPE)
 				.newInstance("Hello", Integer.valueOf(42));
 

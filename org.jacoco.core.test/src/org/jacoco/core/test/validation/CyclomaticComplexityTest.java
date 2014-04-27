@@ -255,8 +255,8 @@ public class CyclomaticComplexityTest {
 			throws Exception {
 		reader = new ClassReader(TargetLoader.getClassData(clazz));
 		final byte[] bytes = new Instrumenter(runtime).instrument(reader);
-		final TargetLoader loader = new TargetLoader(clazz, bytes);
-		target = (Target) loader.getTargetClass().newInstance();
+		final TargetLoader loader = new TargetLoader();
+		target = (Target) loader.add(clazz, bytes).newInstance();
 	}
 
 	private ICounter analyze() {

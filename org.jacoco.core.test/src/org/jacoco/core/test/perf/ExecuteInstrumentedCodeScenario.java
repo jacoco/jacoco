@@ -42,9 +42,10 @@ public class ExecuteInstrumentedCodeScenario extends TimedScenario {
 		runtime.startup(new RuntimeData());
 		final Instrumenter instr = new Instrumenter(runtime);
 		final byte[] instrumentedBuffer = instr.instrument(reader);
-		final TargetLoader loader = new TargetLoader(target, instrumentedBuffer);
+		final TargetLoader loader = new TargetLoader();
 
-		return (Callable<Void>) loader.newTargetInstance();
+		return (Callable<Void>) loader.add(target, instrumentedBuffer)
+				.newInstance();
 	}
 
 	@Override

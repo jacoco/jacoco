@@ -137,9 +137,9 @@ public class RuntimeDataTest {
 		mv.visitEnd();
 
 		writer.visitEnd();
-		final TargetLoader loader = new TargetLoader("Sample",
-				writer.toByteArray());
-		Callable<?> callable = (Callable<?>) loader.newTargetInstance();
+		final TargetLoader loader = new TargetLoader();
+		Callable<?> callable = (Callable<?>) loader.add("Sample",
+				writer.toByteArray()).newInstance();
 		final Object[] args = (Object[]) callable.call();
 		assertEquals(3, args.length, 0.0);
 		assertEquals(Long.valueOf(1000), args[0]);
@@ -188,9 +188,9 @@ public class RuntimeDataTest {
 				null, null);
 
 		writer.visitEnd();
-		final TargetLoader loader = new TargetLoader("Sample",
-				writer.toByteArray());
-		Callable<?> callable = (Callable<?>) loader.getTargetClass()
+		final TargetLoader loader = new TargetLoader();
+		Callable<?> callable = (Callable<?>) loader
+				.add("Sample", writer.toByteArray())
 				.getConstructor(Object.class).newInstance(data);
 		assertSame(probes, callable.call());
 	}

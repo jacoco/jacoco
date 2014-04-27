@@ -157,8 +157,7 @@ public class ModifiedSystemClassRuntimeTest extends RuntimeTestBase {
 	private static void verifyInstrumentedClass(String name, byte[] source)
 			throws Exception {
 		name = name.replace('/', '.');
-		final Class<?> targetClass = new TargetLoader(name, source)
-				.getTargetClass();
+		final Class<?> targetClass = new TargetLoader().add(name, source);
 
 		// Check added field:
 		final Field f = targetClass.getField("$jacocoAccess");

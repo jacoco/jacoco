@@ -55,12 +55,15 @@ public abstract class ValidationTestBase {
 
 	protected Source source;
 
+	protected TargetLoader loader;
+
 	protected ValidationTestBase(final Class<?> target) {
 		this.target = target;
 	}
 
 	@Before
 	public void setup() throws Exception {
+		loader = new TargetLoader();
 		final ClassReader reader = new ClassReader(
 				TargetLoader.getClassData(target));
 		final ExecutionDataStore store = execute(reader);
@@ -74,8 +77,7 @@ public abstract class ValidationTestBase {
 		IRuntime runtime = new SystemPropertiesRuntime();
 		runtime.startup(data);
 		final byte[] bytes = new Instrumenter(runtime).instrument(reader);
-		final TargetLoader loader = new TargetLoader(target, bytes);
-		run(loader.getTargetClass());
+		run(loader.add(target, bytes));
 		final ExecutionDataStore store = new ExecutionDataStore();
 		data.collect(store, new SessionInfoStore(), false);
 		runtime.shutdown();

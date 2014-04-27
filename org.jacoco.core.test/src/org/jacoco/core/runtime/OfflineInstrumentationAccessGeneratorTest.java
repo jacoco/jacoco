@@ -128,9 +128,9 @@ public class OfflineInstrumentationAccessGeneratorTest {
 
 		writer.visitEnd();
 
-		final TargetLoader loader = new TargetLoader(
-				className.replace('/', '.'), writer.toByteArray());
-		return (ITarget) loader.newTargetInstance();
+		final TargetLoader loader = new TargetLoader();
+		return (ITarget) loader.add(className.replace('/', '.'),
+				writer.toByteArray()).newInstance();
 	}
 
 	/**

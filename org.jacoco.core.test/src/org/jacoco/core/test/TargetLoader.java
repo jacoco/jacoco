@@ -14,30 +14,32 @@ package org.jacoco.core.test;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Loads a single class from a byte array.
  */
 public class TargetLoader extends ClassLoader {
 
-	private final String sourcename;
+	private final Map<String, byte[]> classes;
 
-	private final byte[] bytes;
-
-	private final Class<?> clazz;
-
-	public TargetLoader(final String name, final byte[] bytes) {
+	public TargetLoader() {
 		super(TargetLoader.class.getClassLoader());
-		this.sourcename = name;
-		this.bytes = bytes;
-		clazz = load(name);
+		this.classes = new HashMap<String, byte[]>();
 	}
 
-	public TargetLoader(final Class<?> source, final byte[] bytes) {
-		super(TargetLoader.class.getClassLoader());
-		this.sourcename = source.getName();
-		this.bytes = bytes;
-		clazz = load(source.getName());
+	public Class<?> add(final String name, final byte[] bytes) {
+		this.classes.put(name, bytes);
+		return load(name);
+	}
+
+	public Class<?> add(final Class<?> name, final byte[] bytes) {
+		return add(name.getName(), bytes);
+	}
+
+	public Class<?> add(final Class<?> source) throws IOException {
+		return add(source.getName(), getClassDataAsBytes(source));
 	}
 
 	private Class<?> load(final String sourcename) {
@@ -47,15 +49,6 @@ public class TargetLoader extends ClassLoader {
 			// must not happen
 			throw new RuntimeException(e);
 		}
-	}
-
-	public Class<?> getTargetClass() {
-		return clazz;
-	}
-
-	public Object newTargetInstance() throws InstantiationException,
-			IllegalAccessException {
-		return clazz.newInstance();
 	}
 
 	public static InputStream getClassData(Class<?> clazz) {
@@ -79,7 +72,8 @@ public class TargetLoader extends ClassLoader {
 	@Override
 	protected synchronized Class<?> loadClass(String name, boolean resolve)
 			throws ClassNotFoundException {
-		if (sourcename.equals(name)) {
+		final byte[] bytes = classes.get(name);
+		if (bytes != null) {
 			Class<?> c = defineClass(name, bytes, 0, bytes.length);
 			if (resolve) {
 				resolveClass(c);
