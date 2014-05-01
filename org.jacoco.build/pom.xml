@@ -922,7 +922,7 @@
                       <pluginExecutionFilter>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-antrun-plugin</artifactId>
-                        <versionRange>[1.6,)</versionRange>
+                        <versionRange>[0,)</versionRange>
                         <goals>
                           <goal>run</goal>
                         </goals>
@@ -933,9 +933,36 @@
                     </pluginExecution>
                     <pluginExecution>
                       <pluginExecutionFilter>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-invoker-plugin</artifactId>
+                        <versionRange>[0,)</versionRange>
+                        <goals>
+                          <goal>install</goal>
+                        </goals>
+                      </pluginExecutionFilter>
+                      <action>
+                        <ignore></ignore>
+                      </action>
+                    </pluginExecution>
+                    <pluginExecution>
+                      <pluginExecutionFilter>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-dependency-plugin</artifactId>
+                        <versionRange>[0,)</versionRange>
+                        <goals>
+                          <goal>unpack</goal>
+                          <goal>copy-dependencies</goal>
+                        </goals>
+                      </pluginExecutionFilter>
+                      <action>
+                        <ignore></ignore>
+                      </action>
+                    </pluginExecution>
+                    <pluginExecution>
+                      <pluginExecutionFilter>
                         <groupId>org.codehaus.groovy.maven</groupId>
                         <artifactId>gmaven-plugin</artifactId>
-                        <versionRange>[1.0,)</versionRange>
+                        <versionRange>[0,)</versionRange>
                         <goals>
                           <goal>execute</goal>
                         </goals>
@@ -946,9 +973,22 @@
                     </pluginExecution>
                     <pluginExecution>
                       <pluginExecutionFilter>
+                        <groupId>org.codehaus.mojo</groupId>
+                        <artifactId>xml-maven-plugin</artifactId>
+                        <versionRange>[0,)</versionRange>
+                        <goals>
+                          <goal>transform</goal>
+                        </goals>
+                      </pluginExecutionFilter>
+                      <action>
+                        <ignore></ignore>
+                      </action>
+                    </pluginExecution>
+                    <pluginExecution>
+                      <pluginExecutionFilter>
                         <groupId>org.jacoco</groupId>
                         <artifactId>jacoco-maven-plugin</artifactId>
-                        <versionRange>[0.5.3,)</versionRange>
+                        <versionRange>[0,)</versionRange>
                         <goals>
                           <goal>prepare-agent</goal>
                         </goals>
@@ -961,7 +1001,7 @@
                       <pluginExecutionFilter>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-enforcer-plugin</artifactId>
-                        <versionRange>[1.0.0,)</versionRange>
+                        <versionRange>[0,)</versionRange>
                         <goals>
                           <goal>enforce</goal>
                         </goals>
@@ -974,7 +1014,7 @@
                       <pluginExecutionFilter>
                         <groupId>org.codehaus.mojo</groupId>
                         <artifactId>build-helper-maven-plugin</artifactId>
-                        <versionRange>[1.5,)</versionRange>
+                        <versionRange>[0,)</versionRange>
                         <goals>
                           <goal>parse-version</goal>
                         </goals>

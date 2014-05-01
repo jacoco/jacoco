@@ -112,6 +112,17 @@
       &lt;jdkHome&gt;/usr/lib/jvm/sun-jdk-1.7&lt;/jdkHome&gt;
     &lt;/configuration&gt;
   &lt;/toolchain&gt;
+  &lt;toolchain&gt;
+    &lt;type&gt;jdk&lt;/type&gt;
+    &lt;provides&gt;
+      &lt;id&gt;java18&lt;/id&gt;
+      &lt;version&gt;1.8&lt;/version&gt;
+      &lt;vendor&gt;sun&lt;/vendor&gt;
+    &lt;/provides&gt;
+    &lt;configuration&gt;
+      &lt;jdkHome&gt;/usr/lib/jvm/sun-jdk-1.8&lt;/jdkHome&gt;
+    &lt;/configuration&gt;
+  &lt;/toolchain&gt;
 &lt;/toolchains&gt;
 </pre>
 
@@ -140,9 +151,10 @@
 </p>
 
 <ul>
-  <li>Maven with 1.5 JRE: <code>mvn clean install -Djdk.version=1.5 -Dbytecode.version=1.5</code></li>
-  <li>Maven with 1.6 JRE: <code>mvn clean install -Djdk.version=1.6 -Dbytecode.version=1.6</code></li>
-  <li>Maven with 1.7 JRE: <code>mvn clean install -Djdk.version=1.7 -Dbytecode.version=1.7</code></li>
+  <li>Maven with 1.5 JDK: <code>mvn clean install -Djdk.version=1.5 -Dbytecode.version=1.5</code></li>
+  <li>Maven with 1.6 JDK: <code>mvn clean install -Djdk.version=1.6 -Dbytecode.version=1.6</code></li>
+  <li>Maven with 1.7 JDK: <code>mvn clean install -Djdk.version=1.7 -Dbytecode.version=1.7</code></li>
+  <li>Maven with 1.8 JDK: <code>mvn clean install -Djdk.version=1.8 -Dbytecode.version=1.8</code></li>
 </ul>
 
 
