@@ -111,25 +111,6 @@ public class ClassProbesAdapterTest {
 	}
 
 	@Test
-	public void testVisitInterfaceMethod() {
-		final MockClassVisitor cv = new MockClassVisitor() {
-			@Override
-			public MethodProbesVisitor visitMethod(int access, String name,
-					String desc, String signature, String[] exceptions) {
-				return new MockMethodVisitor();
-			}
-		};
-		final ClassProbesAdapter adapter = new ClassProbesAdapter(cv, false);
-		adapter.visit(Opcodes.V1_5, Opcodes.ACC_INTERFACE, "Foo", null,
-				"java/lang/Object", null);
-		writeMethod(adapter);
-
-		assertEquals(1, cv.count);
-		adapter.visitEnd();
-		assertEquals(1, cv.count);
-	}
-
-	@Test
 	public void testVisitMethodNullMethodVisitor() {
 		final MockClassVisitor cv = new MockClassVisitor();
 		final ClassProbesAdapter adapter = new ClassProbesAdapter(cv, false);

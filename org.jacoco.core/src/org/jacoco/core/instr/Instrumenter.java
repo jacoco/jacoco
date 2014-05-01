@@ -23,9 +23,10 @@ import java.util.zip.ZipOutputStream;
 
 import org.jacoco.core.internal.ContentTypeDetector;
 import org.jacoco.core.internal.Pack200Streams;
-import org.jacoco.core.internal.data.CRC64;
 import org.jacoco.core.internal.flow.ClassProbesAdapter;
 import org.jacoco.core.internal.instr.ClassInstrumenter;
+import org.jacoco.core.internal.instr.IProbeArrayStrategy;
+import org.jacoco.core.internal.instr.ProbeArrayStrategyFactory;
 import org.jacoco.core.internal.instr.SignatureRemover;
 import org.jacoco.core.runtime.IExecutionDataAccessorGenerator;
 import org.objectweb.asm.ClassReader;
@@ -37,7 +38,7 @@ import org.objectweb.asm.ClassWriter;
  */
 public class Instrumenter {
 
-	private final IExecutionDataAccessorGenerator accessGenerator;
+	private final IExecutionDataAccessorGenerator accessorGenerator;
 
 	private final SignatureRemover signatureRemover;
 
@@ -48,7 +49,7 @@ public class Instrumenter {
 	 *            runtime used by the instrumented classes
 	 */
 	public Instrumenter(final IExecutionDataAccessorGenerator runtime) {
-		this.accessGenerator = runtime;
+		this.accessorGenerator = runtime;
 		this.signatureRemover = new SignatureRemover();
 	}
 
@@ -66,21 +67,6 @@ public class Instrumenter {
 	}
 
 	/**
-	 * Creates a ASM adapter for a class with the given id.
-	 * 
-	 * @param classid
-	 *            id of the class calculated with {@link CRC64}
-	 * @param cv
-	 *            next class visitor in the chain
-	 * @return new visitor to write class definition to
-	 */
-	private ClassVisitor createInstrumentingVisitor(final long classid,
-			final ClassVisitor cv) {
-		return new ClassProbesAdapter(new ClassInstrumenter(classid,
-				accessGenerator, cv), true);
-	}
-
-	/**
 	 * Creates a instrumented version of the given class if possible.
 	 * 
 	 * @param reader
@@ -90,8 +76,10 @@ public class Instrumenter {
 	 */
 	public byte[] instrument(final ClassReader reader) {
 		final ClassWriter writer = new ClassWriter(reader, 0);
-		final ClassVisitor visitor = createInstrumentingVisitor(
-				CRC64.checksum(reader.b), writer);
+		final IProbeArrayStrategy strategy = ProbeArrayStrategyFactory
+				.createFor(reader, accessorGenerator);
+		final ClassVisitor visitor = new ClassProbesAdapter(
+				new ClassInstrumenter(strategy, writer), true);
 		reader.accept(visitor, ClassReader.EXPAND_FRAMES);
 		return writer.toByteArray();
 	}

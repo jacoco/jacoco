@@ -15,7 +15,6 @@ import org.jacoco.core.JaCoCo;
 import org.objectweb.asm.ClassVisitor;
 import org.objectweb.asm.Label;
 import org.objectweb.asm.MethodVisitor;
-import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.commons.AnalyzerAdapter;
 
 /**
@@ -62,14 +61,6 @@ public class ClassProbesAdapter extends ClassVisitor implements
 		EMPTY_METHOD_PROBES_VISITOR = new Impl();
 	}
 
-	private static class ProbeCounter implements IProbeIdGenerator {
-		int count = 0;
-
-		public int nextId() {
-			return count++;
-		}
-	}
-
 	private final ClassProbesVisitor cv;
 
 	private final boolean trackFrames;
@@ -77,8 +68,6 @@ public class ClassProbesAdapter extends ClassVisitor implements
 	private int counter = 0;
 
 	private String name;
-
-	private boolean interfaceType;
 
 	/**
 	 * Creates a new adapter that delegates to the given visitor.
@@ -100,7 +89,6 @@ public class ClassProbesAdapter extends ClassVisitor implements
 			final String signature, final String superName,
 			final String[] interfaces) {
 		this.name = name;
-		this.interfaceType = (access & Opcodes.ACC_INTERFACE) != 0;
 		super.visit(version, access, name, signature, superName, interfaces);
 	}
 
@@ -124,15 +112,6 @@ public class ClassProbesAdapter extends ClassVisitor implements
 			public void visitEnd() {
 				super.visitEnd();
 				LabelFlowAnalyzer.markLabels(this);
-				if (interfaceType) {
-					final ProbeCounter probeCounter = new ProbeCounter();
-					final MethodProbesAdapter adapter = new MethodProbesAdapter(
-							EMPTY_METHOD_PROBES_VISITOR, probeCounter);
-					// We do not use the accept() method as ASM resets labels
-					// after every call to accept()
-					instructions.accept(adapter);
-					cv.visitTotalProbeCount(probeCounter.count);
-				}
 				final MethodProbesAdapter probesAdapter = new MethodProbesAdapter(
 						methodProbes, ClassProbesAdapter.this);
 				if (trackFrames) {
@@ -150,9 +129,7 @@ public class ClassProbesAdapter extends ClassVisitor implements
 
 	@Override
 	public void visitEnd() {
-		if (!interfaceType) {
-			cv.visitTotalProbeCount(counter);
-		}
+		cv.visitTotalProbeCount(counter);
 		super.visitEnd();
 	}
 

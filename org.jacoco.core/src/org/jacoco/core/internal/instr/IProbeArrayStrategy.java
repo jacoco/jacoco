@@ -19,7 +19,7 @@ import org.objectweb.asm.MethodVisitor;
  * type. This abstraction is required as we need to follow a different strategy
  * depending on whether the instrumented type is a class or interface.
  */
-interface IProbeArrayStrategy {
+public interface IProbeArrayStrategy {
 
 	/**
 	 * Creates code that stores the probe array instance in the given variable.
@@ -33,11 +33,14 @@ interface IProbeArrayStrategy {
 	int storeInstance(MethodVisitor mv, int variable);
 
 	/**
-	 * Adds additional class members required by this strategy.
+	 * Adds additional class members required by this strategy. This method is
+	 * called after all original members of the class has been processed.
 	 * 
-	 * @param delegate
+	 * @param cv
 	 *            visitor to create fields and classes
+	 * @param probeCount
+	 *            total number of probes required for this class
 	 */
-	void addMembers(ClassVisitor delegate);
+	void addMembers(ClassVisitor cv, int probeCount);
 
 }

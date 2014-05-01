@@ -45,7 +45,7 @@ public class ProbeInserterTest {
 				return 5;
 			}
 
-			public void addMembers(ClassVisitor delegate) {
+			public void addMembers(ClassVisitor delegate, int probeCount) {
 			}
 		};
 	}
