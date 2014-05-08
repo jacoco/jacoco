@@ -14,7 +14,7 @@
 
   <groupId>org.jacoco</groupId>
   <artifactId>org.jacoco.build</artifactId>
-  <version>0.7.1-SNAPSHOT</version>
+  <version>0.7.1.201405082137</version>
   <packaging>pom</packaging>
 
   <name>JaCoCo</name>
