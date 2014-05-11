@@ -118,7 +118,7 @@ public class CheckMojo extends AbstractJacocoMojo implements IViolationsOutput {
 	/**
 	 * Halt the build if any of the checks fail.
 	 * 
-	 * @parameter expression="${jacoco.haltOnFailure}" default-value="true"
+	 * @parameter property="jacoco.haltOnFailure" default-value="true"
 	 * @required
 	 */
 	private boolean haltOnFailure;

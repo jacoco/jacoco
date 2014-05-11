@@ -26,7 +26,7 @@ public abstract class AbstractJacocoMojo extends AbstractMojo {
 	/**
 	 * Maven project.
 	 * 
-	 * @parameter expression="${project}"
+	 * @parameter property="project"
 	 * @readonly
 	 */
 	private MavenProject project;
@@ -52,7 +52,7 @@ public abstract class AbstractJacocoMojo extends AbstractMojo {
 	/**
 	 * Flag used to suppress execution.
 	 * 
-	 * @parameter expression="${jacoco.skip}" default-value="false"
+	 * @parameter property="jacoco.skip" default-value="false"
 	 */
 	private boolean skip;
 

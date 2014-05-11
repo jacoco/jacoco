@@ -52,7 +52,7 @@ public class AgentMojo extends AbstractAgentMojo {
 	/**
 	 * Path to the output file for execution data.
 	 * 
-	 * @parameter expression="${jacoco.destFile}"
+	 * @parameter property="jacoco.destFile"
 	 *            default-value="${project.build.directory}/jacoco.exec"
 	 */
 	private File destFile;

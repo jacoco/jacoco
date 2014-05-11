@@ -49,14 +49,14 @@ public abstract class AbstractReportMojo extends AbstractMavenReport {
 	/**
 	 * Encoding of the generated reports.
 	 * 
-	 * @parameter expression="${project.reporting.outputEncoding}"
+	 * @parameter property="project.reporting.outputEncoding"
 	 *            default-value="UTF-8"
 	 */
 	String outputEncoding;
 	/**
 	 * Encoding of the source files.
 	 * 
-	 * @parameter expression="${project.build.sourceEncoding}"
+	 * @parameter property="project.build.sourceEncoding"
 	 *            default-value="UTF-8"
 	 */
 	String sourceEncoding;
@@ -77,13 +77,13 @@ public abstract class AbstractReportMojo extends AbstractMavenReport {
 	/**
 	 * Flag used to suppress execution.
 	 * 
-	 * @parameter expression="${jacoco.skip}" default-value="false"
+	 * @parameter property="jacoco.skip" default-value="false"
 	 */
 	boolean skip;
 	/**
 	 * Maven project.
 	 * 
-	 * @parameter expression="${project}"
+	 * @parameter property="project"
 	 * @readonly
 	 */
 	MavenProject project;

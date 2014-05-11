@@ -37,7 +37,7 @@ public class MergeMojo extends AbstractJacocoMojo {
 	/**
 	 * Path to the output file for execution data.
 	 * 
-	 * @parameter expression="${jacoco.destFile}"
+	 * @parameter property="jacoco.destFile"
 	 *            default-value="${project.build.directory}/jacoco.exec"
 	 */
 	private File destFile;
@@ -61,7 +61,7 @@ public class MergeMojo extends AbstractJacocoMojo {
 	 * </code>
 	 * </pre>
 	 * 
-	 * @parameter expression="${jacoco.fileSets}"
+	 * @parameter property="jacoco.fileSets"
 	 * @required
 	 */
 	private List<FileSet> fileSets;

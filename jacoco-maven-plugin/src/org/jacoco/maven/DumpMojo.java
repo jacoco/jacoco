@@ -43,7 +43,7 @@ public class DumpMojo extends AbstractJacocoMojo {
 	/**
 	 * Path to the output file for execution data.
 	 * 
-	 * @parameter expression="${jacoco.destFile}"
+	 * @parameter property="jacoco.destFile"
 	 *            default-value="${project.build.directory}/jacoco.exec"
 	 */
 	private File destFile;
@@ -53,14 +53,14 @@ public class DumpMojo extends AbstractJacocoMojo {
 	 * is appended to the existing file. If set to false, an existing execution
 	 * data file will be replaced.
 	 * 
-	 * @parameter expression="${jacoco.append}" default-value="true"
+	 * @parameter property="jacoco.append" default-value="true"
 	 */
 	private boolean append;
 
 	/**
 	 * Sets whether execution data should be downloaded from the remote host.
 	 * 
-	 * @parameter expression="${jacoco.dump}" default-value="true"
+	 * @parameter property="jacoco.dump" default-value="true"
 	 */
 	private boolean dump;
 
@@ -68,14 +68,14 @@ public class DumpMojo extends AbstractJacocoMojo {
 	 * Sets whether a reset command should be sent after the execution data has
 	 * been dumped.
 	 * 
-	 * @parameter expression="${jacoco.reset}" default-value="false"
+	 * @parameter property="jacoco.reset" default-value="false"
 	 */
 	private boolean reset;
 
 	/**
 	 * IP address or hostname to connect to.
 	 * 
-	 * @parameter expression="${jacoco.address}"
+	 * @parameter property="jacoco.address"
 	 */
 	private String address;
 
@@ -83,7 +83,7 @@ public class DumpMojo extends AbstractJacocoMojo {
 	 * Port number to connect to. If multiple JaCoCo agents should run on the
 	 * same machine, different ports have to be specified for the agents.
 	 * 
-	 * @parameter expression="${jacoco.port}" default-value="6300"
+	 * @parameter property="jacoco.port" default-value="6300"
 	 */
 	private int port;
 
@@ -91,7 +91,7 @@ public class DumpMojo extends AbstractJacocoMojo {
 	 * Number of retries which the goal will attempt to establish a connection.
 	 * This can be used to wait until the target JVM is successfully launched.
 	 * 
-	 * @parameter expression="${jacoco.retryCount}" default-value="10"
+	 * @parameter property="jacoco.retryCount" default-value="10"
 	 */
 	private int retryCount;
 
