@@ -2,10 +2,10 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: JaCoCo Report Tests
 Bundle-SymbolicName: org.jacoco.report.test
-Bundle-Version: 0.7.1.201405082137
+Bundle-Version: 0.7.2.qualifier
 Fragment-Host: org.jacoco.report
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
 Bundle-Vendor: Mountainminds GmbH & Co. KG
-Import-Package: org.jacoco.core.internal.analysis;bundle-version="[0.7.1,0.7.2)",
+Import-Package: org.jacoco.core.internal.analysis;bundle-version="[0.7.2,0.7.3)",
  org.junit;version="[4.8.0,5.0.0)",
  org.junit.rules;version="[4.8.0,5.0.0)"
