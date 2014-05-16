@@ -86,7 +86,9 @@
 </p>
 
 <blockquote>
+  <p>
   v(G) = E - N + 2
+  </p>
 </blockquote>
 
 <p>
@@ -96,7 +98,9 @@
 </p>
 
 <blockquote>
+  <p>
   v(G) = B - D + 1
+  </p>
 </blockquote>
 
 <p>
@@ -130,6 +134,15 @@
   <li>Full coverage: All instructions in the line have been executed (green
       background)</li>
 </ul>
+
+<p>
+  Depending on source formatting a single line of a source code may refer to
+  multiple methods or multiple classes. Therefore the line count of methods
+  cannot be simply added to obtain the total number for the containing class.
+  The same holds true for the lines of multiple classes within a single source
+  file. JaCoCo calculates line coverage for classes and source file based on the
+  actual source lines covered.
+</p>
 
 <h2>Methods</h2>
 
