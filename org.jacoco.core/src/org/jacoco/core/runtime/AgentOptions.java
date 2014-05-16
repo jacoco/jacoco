@@ -72,6 +72,13 @@ public final class AgentOptions {
 	public static final String EXCLCLASSLOADER = "exclclassloader";
 
 	/**
+	 * Specifies whether also classes from the bootstrap classloader should be
+	 * instrumented. Use this feature with caution, it needs heavy
+	 * includes/excludes tuning. Default is <code>false</code>.
+	 */
+	public static final String INCLUDEBOOTSTRAPCLASSES = "includebootstrapclasses";
+
+	/**
 	 * Specifies a session identifier that is written with the execution data.
 	 * Without this parameter a random identifier is created by the agent.
 	 */
@@ -165,8 +172,9 @@ public final class AgentOptions {
 	public static final String JMX = "jmx";
 
 	private static final Collection<String> VALID_OPTIONS = Arrays.asList(
-			DESTFILE, APPEND, INCLUDES, EXCLUDES, EXCLCLASSLOADER, SESSIONID,
-			DUMPONEXIT, OUTPUT, ADDRESS, PORT, CLASSDUMPDIR, JMX);
+			DESTFILE, APPEND, INCLUDES, EXCLUDES, EXCLCLASSLOADER,
+			INCLUDEBOOTSTRAPCLASSES, SESSIONID, DUMPONEXIT, OUTPUT, ADDRESS,
+			PORT, CLASSDUMPDIR, JMX);
 
 	private final Map<String, String> options;
 
@@ -335,6 +343,27 @@ public final class AgentOptions {
 	}
 
 	/**
+	 * Returns whether classes from the bootstrap classloader should be
+	 * instrumented.
+	 * 
+	 * @return <code>true</code> if coverage data will be written on VM exit
+	 */
+	public boolean getIncludeBootstrapClasses() {
+		return getOption(INCLUDEBOOTSTRAPCLASSES, false);
+	}
+
+	/**
+	 * Sets whether classes from the bootstrap classloader should be
+	 * instrumented.
+	 * 
+	 * @param enabled
+	 *            <code>true</code> if bootstrap classes should be instrumented
+	 */
+	public void setIncludeBootstrapClasses(final boolean enabled) {
+		setOption(INCLUDEBOOTSTRAPCLASSES, enabled);
+	}
+
+	/**
 	 * Returns the session identifier.
 	 * 
 	 * @return session identifier
@@ -354,7 +383,7 @@ public final class AgentOptions {
 	}
 
 	/**
-	 * Returns whether coverage data should be dumped on exit
+	 * Returns whether coverage data should be dumped on exit.
 	 * 
 	 * @return <code>true</code> if coverage data will be written on VM exit
 	 */
@@ -363,7 +392,7 @@ public final class AgentOptions {
 	}
 
 	/**
-	 * Sets whether coverage data should be dumped on exit
+	 * Sets whether coverage data should be dumped on exit.
 	 * 
 	 * @param dumpOnExit
 	 *            <code>true</code> if coverage data should be written on VM

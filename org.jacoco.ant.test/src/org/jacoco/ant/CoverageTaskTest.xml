@@ -18,7 +18,7 @@
 	<target name="setUp">
 		<tempfile property="temp.dir" prefix="jacocoTest" destdir="${java.io.tmpdir}" />
 		<mkdir dir="${temp.dir}"/>
-		<property name="exec.file" location="${temp.dir}/exec.file" />
+		<property name="exec.file" location="${temp.dir}/jacoco.exec" />
 	</target>
 
 	<target name="tearDown">
@@ -141,5 +141,22 @@
 		
 		<au:assertLogDoesntContain text="Target executed"/>
 	</target>
-	
+
+	<target name="testIncludeBootstrapClasses">
+		<jacoco:coverage destfile="${exec.file}" includebootstrapclasses="true" includes="java/sql/*">
+			<java classname="org.jacoco.ant.TestTarget" fork="true" failonerror="true">
+				<classpath path="${org.jacoco.ant.coverageTaskTest.classes.dir}"/>
+			</java>
+		</jacoco:coverage>
+		
+		<au:assertLogContains text="Enhancing java with coverage"/>
+		<au:assertFileExists file="${exec.file}"/>
+		<au:assertLogContains text="Target executed"/>
+		
+		<java classname="org.jacoco.ant.DumpExecClassNames" classpath="${java.class.path}" failonerror="true">
+			<arg value="${exec.file}" />
+		</java>
+		<au:assertLogContains text="java/sql/Timestamp"/>
+	</target>
+
 </project>
