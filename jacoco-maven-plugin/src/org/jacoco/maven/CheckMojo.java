@@ -130,6 +130,13 @@ public class CheckMojo extends AbstractJacocoMojo implements IViolationsOutput {
 	 */
 	private File dataFile;
 
+  /**
+   * Directory where the class are seek.
+   *
+   * @parameter default-value="${project.build.outputDirectory}/"
+   */
+  private File classesDirectory;
+
 	private boolean violations;
 
 	private boolean canCheckCoverage() {
@@ -137,9 +144,7 @@ public class CheckMojo extends AbstractJacocoMojo implements IViolationsOutput {
 			getLog().info(MSG_SKIPPING + dataFile);
 			return false;
 		}
-		final File classesDirectory = new File(getProject().getBuild()
-				.getOutputDirectory());
-		if (!classesDirectory.exists()) {
+		if (classesDirectory == null || !classesDirectory.exists()) {
 			getLog().info(
 					"Skipping JaCoCo execution due to missing classes directory:"
 							+ classesDirectory);
@@ -190,7 +195,7 @@ public class CheckMojo extends AbstractJacocoMojo implements IViolationsOutput {
 		final FileFilter fileFilter = new FileFilter(this.getIncludes(),
 				this.getExcludes());
 		final BundleCreator creator = new BundleCreator(getProject(),
-				fileFilter, getLog());
+				classesDirectory, fileFilter, getLog());
 		try {
 			final ExecutionDataStore executionData = loadExecutionData();
 			return creator.createBundle(executionData);

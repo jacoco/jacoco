@@ -34,10 +34,8 @@ public class RestoreMojo extends AbstractJacocoMojo {
 			MojoFailureException {
 		final File originalClassesDir = new File(getProject().getBuild()
 				.getDirectory(), "generated-classes/jacoco");
-		final File classesDir = new File(getProject().getBuild()
-				.getOutputDirectory());
 		try {
-			FileUtils.copyDirectoryStructure(originalClassesDir, classesDir);
+			FileUtils.copyDirectoryStructure(originalClassesDir, getClassesDirectory());
 		} catch (final IOException e) {
 			throw new MojoFailureException("Unable to restore classes.", e);
 		}

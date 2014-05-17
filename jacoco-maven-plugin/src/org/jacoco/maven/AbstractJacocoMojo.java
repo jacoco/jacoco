@@ -11,6 +11,7 @@
  *******************************************************************************/
 package org.jacoco.maven;
 
+import java.io.File;
 import java.util.List;
 
 import org.apache.maven.plugin.AbstractMojo;
@@ -48,6 +49,13 @@ public abstract class AbstractJacocoMojo extends AbstractMojo {
 	 * @parameter
 	 */
 	private List<String> excludes;
+
+  /**
+   * Directory where the class are seek.
+   *
+   * @parameter default-value="${project.build.outputDirectory}/"
+   */
+  private File classesDirectory;
 
 	/**
 	 * Flag used to suppress execution.
@@ -112,4 +120,7 @@ public abstract class AbstractJacocoMojo extends AbstractMojo {
 		return excludes;
 	}
 
+  public File getClassesDirectory() {
+    return classesDirectory;
+  }
 }
