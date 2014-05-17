@@ -74,6 +74,12 @@ public abstract class AbstractReportMojo extends AbstractMavenReport {
 	 * @parameter
 	 */
 	List<String> excludes;
+  /**
+   * Directory where the class are seek.
+   *
+   * @parameter default-value="${project.build.outputDirectory}/"
+   */
+  private File classesDirectory;
 	/**
 	 * Flag used to suppress execution.
 	 * 
@@ -137,6 +143,10 @@ public abstract class AbstractReportMojo extends AbstractMavenReport {
 		return excludes;
 	}
 
+  public File getClassesDirectory() {
+    return classesDirectory;
+  }
+
 	@Override
 	public abstract void setReportOutputDirectory(
 			final File reportOutputDirectory);
@@ -154,9 +164,8 @@ public abstract class AbstractReportMojo extends AbstractMavenReport {
 							+ getDataFile());
 			return false;
 		}
-		final File classesDirectory = new File(getProject().getBuild()
-				.getOutputDirectory());
-		if (!classesDirectory.exists()) {
+
+		if (classesDirectory == null || !classesDirectory.exists()) {
 			getLog().info(
 					"Skipping JaCoCo execution due to missing classes directory:"
 							+ classesDirectory);
@@ -215,7 +224,7 @@ public abstract class AbstractReportMojo extends AbstractMavenReport {
 		final FileFilter fileFilter = new FileFilter(this.getIncludes(),
 				this.getExcludes());
 		final BundleCreator creator = new BundleCreator(this.getProject(),
-				fileFilter, getLog());
+				classesDirectory, fileFilter, getLog());
 		final IBundleCoverage bundle = creator.createBundle(executionDataStore);
 		final SourceFileCollection locator = new SourceFileCollection(
 				getCompileSourceRoots(), sourceEncoding);

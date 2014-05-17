@@ -34,6 +34,7 @@ import org.jacoco.core.data.ExecutionDataStore;
 public final class BundleCreator {
 
 	private final MavenProject project;
+  private final File classesDir;
 	private final FileFilter fileFilter;
 	private final Log log;
 
@@ -47,9 +48,10 @@ public final class BundleCreator {
 	 * @param log
 	 *            for log output
 	 */
-	public BundleCreator(final MavenProject project,
+	public BundleCreator(final MavenProject project, final File classesDir,
 			final FileFilter fileFilter, final Log log) {
 		this.project = project;
+    this.classesDir = classesDir;
 		this.fileFilter = fileFilter;
 		this.log = log;
 	}
@@ -67,8 +69,6 @@ public final class BundleCreator {
 			final ExecutionDataStore executionDataStore) throws IOException {
 		final CoverageBuilder builder = new CoverageBuilder();
 		final Analyzer analyzer = new Analyzer(executionDataStore, builder);
-		final File classesDir = new File(this.project.getBuild()
-				.getOutputDirectory());
 
 		@SuppressWarnings("unchecked")
 		final List<File> filesToAnalyze = FileUtils.getFiles(classesDir,

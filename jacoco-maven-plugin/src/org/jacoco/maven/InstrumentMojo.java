@@ -51,19 +51,17 @@ public class InstrumentMojo extends AbstractJacocoMojo {
 		final File originalClassesDir = new File(getProject().getBuild()
 				.getDirectory(), "generated-classes/jacoco");
 		originalClassesDir.mkdirs();
-		final File classesDir = new File(
-				getProject().getBuild().getOutputDirectory());
-		if (!classesDir.exists()) {
+		if (getClassesDirectory() == null || !getClassesDirectory().exists()) {
 			getLog().info(
 					"Skipping JaCoCo execution due to missing classes directory:" +
-					classesDir);
+          getClassesDirectory());
 			return;
 		}
 
 		final List<String> fileNames;
 		try {
 			fileNames = new FileFilter(this.getIncludes(), this.getExcludes())
-					.getFileNames(classesDir);
+					.getFileNames(getClassesDirectory());
 		} catch (final IOException e1) {
 			throw new MojoExecutionException(
 					"Unable to get list of files to instrument.", e1);
@@ -73,7 +71,7 @@ public class InstrumentMojo extends AbstractJacocoMojo {
 				new OfflineInstrumentationAccessGenerator());
 		for (final String fileName : fileNames) {
 			if (fileName.endsWith(".class")) {
-				final File source = new File(classesDir, fileName);
+				final File source = new File(getClassesDirectory(), fileName);
 				final File backup = new File(originalClassesDir, fileName);
 				InputStream input = null;
 				OutputStream output = null;

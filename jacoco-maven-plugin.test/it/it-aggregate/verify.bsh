@@ -1,0 +1,65 @@
+/*******************************************************************************
+ * Copyright (c) 2009, 2014 Mountainminds GmbH & Co. KG and Contributors
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *    Evgeny Mandrikov - initial API and implementation
+ *
+ *******************************************************************************/
+import java.io.*;
+import org.codehaus.plexus.util.*;
+
+String buildLog = FileUtils.fileRead( new File( basedir, "build.log" ) );
+
+File file = new File( basedir, "childA/target/jacoco.exec" );
+ if ( !file.isFile() )
+ {
+     throw new FileNotFoundException( "Could not find generated dump: " + file );
+ }
+
+File file = new File( basedir, "childB/target/jacoco.exec" );
+ if ( !file.isFile() )
+ {
+     throw new FileNotFoundException( "Could not find generated dump: " + file );
+ }
+
+
+File xmlReport = new File( basedir, "childA/target/site/jacoco/jacoco.xml" );
+if ( !xmlReport.isFile() )
+{
+    throw new FileNotFoundException( "Could not find generated XML report: " + xmlReport );
+}
+
+File csvReport = new File( basedir, "childA/target/site/jacoco/jacoco.csv" );
+if ( !csvReport.isFile() )
+{
+    throw new FileNotFoundException( "Could not find generated CSV report: " + csvReport );
+}
+
+File htmlReport = new File( basedir, "childA/target/site/jacoco/index.html" );
+if ( !htmlReport.isFile() )
+{
+    throw new FileNotFoundException( "Could not find generated HTML report: " + htmlReport );
+}
+
+
+File xmlReport = new File( basedir, "childB/target/site/jacoco/jacoco.xml" );
+if ( !xmlReport.isFile() )
+{
+    throw new FileNotFoundException( "Could not find generated XML report: " + xmlReport );
+}
+
+File csvReport = new File( basedir, "childB/target/site/jacoco/jacoco.csv" );
+if ( !csvReport.isFile() )
+{
+    throw new FileNotFoundException( "Could not find generated CSV report: " + csvReport );
+}
+
+File htmlReport = new File( basedir, "childB/target/site/jacoco/index.html" );
+if ( !htmlReport.isFile() )
+{
+    throw new FileNotFoundException( "Could not find generated HTML report: " + htmlReport );
+}
