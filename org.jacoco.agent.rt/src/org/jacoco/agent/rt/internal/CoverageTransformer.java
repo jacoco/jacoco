@@ -42,6 +42,8 @@ public class CoverageTransformer implements ClassFileTransformer {
 
 	private final WildcardMatcher exclClassloader;
 
+	private final boolean includeBootclasspath;
+
 	private final ClassFileDumper classFileDumper;
 
 	/**
@@ -63,6 +65,7 @@ public class CoverageTransformer implements ClassFileTransformer {
 		excludes = new WildcardMatcher(toVMName(options.getExcludes()));
 		exclClassloader = new WildcardMatcher(options.getExclClassloader());
 		classFileDumper = new ClassFileDumper(options.getClassDumpDir());
+		includeBootclasspath = options.getIncludeBootclasspath();
 	}
 
 	public byte[] transform(final ClassLoader loader, final String classname,
@@ -102,12 +105,16 @@ public class CoverageTransformer implements ClassFileTransformer {
 	 * @return <code>true</code> if the class should be instrumented
 	 */
 	protected boolean filter(final ClassLoader loader, final String classname) {
-		// Don't instrument classes of the bootstrap loader:
-		return loader != null &&
+		if (loader == null) {
+			if (!includeBootclasspath) {
+				return false;
+			}
+		} else if (exclClassloader.matches(loader.getClass().getName())) {
+			return false;
+		}
 
-		!classname.startsWith(AGENT_PREFIX) &&
 
-		!exclClassloader.matches(loader.getClass().getName()) &&
+		return !classname.startsWith(AGENT_PREFIX) &&
 
 		includes.matches(classname) &&
 
