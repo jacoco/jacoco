@@ -123,11 +123,11 @@ public class AbstractCoverageTask extends Task {
 	 * Sets whether classes from the bootstrap classloader should be
 	 * instrumented.
 	 * 
-	 * @param enabled
+	 * @param include
 	 *            <code>true</code> if bootstrap classes should be instrumented
 	 */
-	public void setIncludeBootstrapClasses(final boolean enabled) {
-		agentOptions.setIncludeBootstrapClasses(enabled);
+	public void setInclBootstrapClasses(final boolean include) {
+		agentOptions.setInclBootstrapClasses(include);
 	}
 
 	/**

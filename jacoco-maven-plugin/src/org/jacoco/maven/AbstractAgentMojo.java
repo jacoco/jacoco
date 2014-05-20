@@ -77,9 +77,9 @@ public abstract class AbstractAgentMojo extends AbstractJacocoMojo {
 	 * instrumented. Use this feature with caution, it needs heavy
 	 * includes/excludes tuning.
 	 * 
-	 * @parameter property="jacoco.includebootstrapclasses"
+	 * @parameter property="jacoco.inclBootstrapClasses"
 	 */
-	Boolean includebootstrapclasses;
+	Boolean inclBootstrapClasses;
 	/**
 	 * A session identifier that is written with the execution data. Without
 	 * this parameter a random identifier is created by the agent.
@@ -186,8 +186,8 @@ public abstract class AbstractAgentMojo extends AbstractJacocoMojo {
 		if (exclClassLoaders != null) {
 			agentOptions.setExclClassloader(exclClassLoaders);
 		}
-		if (includebootstrapclasses != null) {
-			agentOptions.setIncludeBootstrapClasses(includebootstrapclasses
+		if (inclBootstrapClasses != null) {
+			agentOptions.setInclBootstrapClasses(inclBootstrapClasses
 					.booleanValue());
 		}
 		if (sessionId != null) {

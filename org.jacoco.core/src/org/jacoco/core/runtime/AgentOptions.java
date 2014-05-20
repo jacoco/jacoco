@@ -76,7 +76,7 @@ public final class AgentOptions {
 	 * instrumented. Use this feature with caution, it needs heavy
 	 * includes/excludes tuning. Default is <code>false</code>.
 	 */
-	public static final String INCLUDEBOOTSTRAPCLASSES = "includebootstrapclasses";
+	public static final String INCLBOOTSTRAPCLASSES = "inclbootstrapclasses";
 
 	/**
 	 * Specifies a session identifier that is written with the execution data.
@@ -173,8 +173,8 @@ public final class AgentOptions {
 
 	private static final Collection<String> VALID_OPTIONS = Arrays.asList(
 			DESTFILE, APPEND, INCLUDES, EXCLUDES, EXCLCLASSLOADER,
-			INCLUDEBOOTSTRAPCLASSES, SESSIONID, DUMPONEXIT, OUTPUT, ADDRESS,
-			PORT, CLASSDUMPDIR, JMX);
+			INCLBOOTSTRAPCLASSES, SESSIONID, DUMPONEXIT, OUTPUT, ADDRESS, PORT,
+			CLASSDUMPDIR, JMX);
 
 	private final Map<String, String> options;
 
@@ -348,19 +348,19 @@ public final class AgentOptions {
 	 * 
 	 * @return <code>true</code> if coverage data will be written on VM exit
 	 */
-	public boolean getIncludeBootstrapClasses() {
-		return getOption(INCLUDEBOOTSTRAPCLASSES, false);
+	public boolean getInclBootstrapClasses() {
+		return getOption(INCLBOOTSTRAPCLASSES, false);
 	}
 
 	/**
 	 * Sets whether classes from the bootstrap classloader should be
 	 * instrumented.
 	 * 
-	 * @param enabled
+	 * @param include
 	 *            <code>true</code> if bootstrap classes should be instrumented
 	 */
-	public void setIncludeBootstrapClasses(final boolean enabled) {
-		setOption(INCLUDEBOOTSTRAPCLASSES, enabled);
+	public void setInclBootstrapClasses(final boolean include) {
+		setOption(INCLBOOTSTRAPCLASSES, include);
 	}
 
 	/**

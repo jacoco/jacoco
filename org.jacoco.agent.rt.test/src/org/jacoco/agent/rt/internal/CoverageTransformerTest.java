@@ -65,14 +65,14 @@ public class CoverageTransformerTest {
 
 	@Test
 	public void testFilterIncludesBootstrapClassesPositive() {
-		options.setIncludeBootstrapClasses(true);
+		options.setInclBootstrapClasses(true);
 		CoverageTransformer t = createTransformer();
 		assertTrue(t.filter(null, "java/util/TreeSet"));
 	}
 
 	@Test
 	public void testFilterIncludesBootstrapClassesNegative() {
-		options.setIncludeBootstrapClasses(false);
+		options.setInclBootstrapClasses(false);
 		CoverageTransformer t = createTransformer();
 		assertFalse(t.filter(null, "java/util/TreeSet"));
 	}

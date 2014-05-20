@@ -65,7 +65,7 @@ public class CoverageTransformer implements ClassFileTransformer {
 		excludes = new WildcardMatcher(toVMName(options.getExcludes()));
 		exclClassloader = new WildcardMatcher(options.getExclClassloader());
 		classFileDumper = new ClassFileDumper(options.getClassDumpDir());
-		includeBootstrapClasses = options.getIncludeBootstrapClasses();
+		includeBootstrapClasses = options.getInclBootstrapClasses();
 	}
 
 	public byte[] transform(final ClassLoader loader, final String classname,

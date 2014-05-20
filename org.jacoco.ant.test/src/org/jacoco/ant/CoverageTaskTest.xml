@@ -142,8 +142,8 @@
 		<au:assertLogDoesntContain text="Target executed"/>
 	</target>
 
-	<target name="testIncludeBootstrapClasses">
-		<jacoco:coverage destfile="${exec.file}" includebootstrapclasses="true" includes="java/sql/*">
+	<target name="testInclBootstrapClasses">
+		<jacoco:coverage destfile="${exec.file}" inclbootstrapclasses="true" includes="java/sql/*">
 			<java classname="org.jacoco.ant.TestTarget" fork="true" failonerror="true">
 				<classpath path="${org.jacoco.ant.coverageTaskTest.classes.dir}"/>
 			</java>
