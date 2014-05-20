@@ -84,6 +84,12 @@ public final class AgentOptions {
 	public static final String DUMPONEXIT = "dumponexit";
 
 	/**
+	 * Specifies whether the agent will accept to instrument classes from the
+	 * bootclasspath. Default is <code>false</code>.
+	 */
+	public static final String INLUDEBOOTCLASSPATH = "bootclasspath";
+
+	/**
 	 * Specifies the output mode. Default is {@link OutputMode#file}.
 	 * 
 	 * @see OutputMode#file
@@ -166,7 +172,8 @@ public final class AgentOptions {
 
 	private static final Collection<String> VALID_OPTIONS = Arrays.asList(
 			DESTFILE, APPEND, INCLUDES, EXCLUDES, EXCLCLASSLOADER, SESSIONID,
-			DUMPONEXIT, OUTPUT, ADDRESS, PORT, CLASSDUMPDIR, JMX);
+			DUMPONEXIT, OUTPUT, ADDRESS, PORT, CLASSDUMPDIR, JMX,
+			INLUDEBOOTCLASSPATH);
 
 	private final Map<String, String> options;
 
@@ -371,6 +378,26 @@ public final class AgentOptions {
 	 */
 	public void setDumpOnExit(final boolean dumpOnExit) {
 		setOption(DUMPONEXIT, dumpOnExit);
+	}
+
+	/**
+	 * Retruns whether classes from the bootclasspath should be considered for
+	 * instrumentation.
+	 * @return <code>true</code> if classes from the bootclasspath should be
+	 * considered for instrumentation.
+	 */
+	public boolean getIncludeBootclasspath() {
+		return getOption(INLUDEBOOTCLASSPATH, false);
+	}
+
+	/**
+	 * Sets whether classes from the bootclasspath should be considered for
+	 * instrumentation.
+	 * @param includeBootclasspath <code>true</code> if classes from the
+	 * bootclasspath should be considered for instrumentation.
+	 */
+	public void setIncludeBootclasspath(final boolean includeBootclasspath) {
+		setOption(INLUDEBOOTCLASSPATH, includeBootclasspath);
 	}
 
 	/**

@@ -50,6 +50,7 @@ public class AgentOptionsTest {
 		assertEquals(6300, options.getPort());
 		assertNull(options.getClassDumpDir());
 		assertFalse(options.getJmx());
+		assertFalse(options.getIncludeBootclasspath());
 
 		assertEquals("", options.toString());
 	}
@@ -81,6 +82,7 @@ public class AgentOptionsTest {
 		properties.put("port", "1234");
 		properties.put("classdumpdir", "target/dump");
 		properties.put("jmx", "true");
+		properties.put("includebootclasspath", "true");
 
 		AgentOptions options = new AgentOptions(properties);
 
@@ -96,6 +98,7 @@ public class AgentOptionsTest {
 		assertEquals(1234, options.getPort());
 		assertEquals("target/dump", options.getClassDumpDir());
 		assertTrue(options.getJmx());
+		assertTrue(options.getIncludeBootclasspath());
 	}
 
 	@Test
@@ -333,6 +336,19 @@ public class AgentOptionsTest {
 		AgentOptions options = new AgentOptions();
 		options.setJmx(true);
 		assertTrue(options.getJmx());
+	}
+
+	@Test
+	public void testGetIncludeBootclsspath() {
+		AgentOptions options = new AgentOptions("includebootclasspath=true");
+		assertTrue(options.getIncludeBootclasspath());
+	}
+
+	@Test
+	public void testSetIncludeBootclsspath() {
+		AgentOptions options = new AgentOptions();
+		options.setIncludeBootclasspath(true);
+		assertTrue(options.getIncludeBootclasspath());
 	}
 
 	@Test
