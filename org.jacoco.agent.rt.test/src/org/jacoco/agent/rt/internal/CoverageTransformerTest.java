@@ -64,9 +64,17 @@ public class CoverageTransformerTest {
 	}
 
 	@Test
-	public void testFilterSystemClass() {
+	public void testFilterIncludesBootstrapClassesPositive() {
+		options.setInclBootstrapClasses(true);
 		CoverageTransformer t = createTransformer();
-		assertFalse(t.filter(null, "org/example/Foo"));
+		assertTrue(t.filter(null, "java/util/TreeSet"));
+	}
+
+	@Test
+	public void testFilterIncludesBootstrapClassesNegative() {
+		options.setInclBootstrapClasses(false);
+		CoverageTransformer t = createTransformer();
+		assertFalse(t.filter(null, "java/util/TreeSet"));
 	}
 
 	@Test

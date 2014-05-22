@@ -43,6 +43,7 @@ public class AgentOptionsTest {
 		assertEquals("", options.getExcludes());
 		assertEquals("sun.reflect.DelegatingClassLoader",
 				options.getExclClassloader());
+		assertFalse(options.getInclBootstrapClasses());
 		assertNull(options.getSessionId());
 		assertTrue(options.getDumpOnExit());
 		assertEquals(AgentOptions.OutputMode.file, options.getOutput());
@@ -74,6 +75,7 @@ public class AgentOptionsTest {
 		properties.put("includes", "org.*:com.*");
 		properties.put("excludes", "*Test");
 		properties.put("exclclassloader", "org.jacoco.test.TestLoader");
+		properties.put("inclbootstrapclasses", "true");
 		properties.put("sessionid", "testsession");
 		properties.put("dumponexit", "false");
 		properties.put("output", "tcpserver");
@@ -89,6 +91,7 @@ public class AgentOptionsTest {
 		assertEquals("org.*:com.*", options.getIncludes());
 		assertEquals("*Test", options.getExcludes());
 		assertEquals("org.jacoco.test.TestLoader", options.getExclClassloader());
+		assertTrue(options.getInclBootstrapClasses());
 		assertEquals("testsession", options.getSessionId());
 		assertFalse(options.getDumpOnExit());
 		assertEquals(AgentOptions.OutputMode.tcpserver, options.getOutput());
@@ -182,6 +185,34 @@ public class AgentOptionsTest {
 		options.setExcludes("org.jacoco.test.*");
 		assertEquals("org.jacoco.test.*", options.getExcludes());
 		assertEquals("excludes=org.jacoco.test.*", options.toString());
+	}
+
+	@Test
+	public void testGetIncludeBootstrapClassesTrue() {
+		AgentOptions options = new AgentOptions("inclbootstrapclasses=true");
+		assertTrue(options.getInclBootstrapClasses());
+	}
+
+	@Test
+	public void testGetIncludeBootstrapClassesFalse() {
+		AgentOptions options = new AgentOptions("inclbootstrapclasses=false");
+		assertFalse(options.getInclBootstrapClasses());
+	}
+
+	@Test
+	public void testSetIncludeBootstrapClassesTrue() {
+		AgentOptions options = new AgentOptions();
+		options.setInclBootstrapClasses(true);
+		assertTrue(options.getInclBootstrapClasses());
+		assertEquals("inclbootstrapclasses=true", options.toString());
+	}
+
+	@Test
+	public void testSetIncludeBootstrapClassesFalse() {
+		AgentOptions options = new AgentOptions();
+		options.setInclBootstrapClasses(false);
+		assertFalse(options.getInclBootstrapClasses());
+		assertEquals("inclbootstrapclasses=false", options.toString());
 	}
 
 	@Test

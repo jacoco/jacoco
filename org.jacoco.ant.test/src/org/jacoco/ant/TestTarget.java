@@ -31,6 +31,10 @@ public class TestTarget {
 	}
 
 	public static void main(String[] args) throws Exception {
+
+		// Load some class from the bootstrap classloader:
+		new java.sql.Timestamp(0);
+
 		System.out.println("Target executed");
 
 		// Wait for termination file to turn up
