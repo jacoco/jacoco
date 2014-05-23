@@ -87,13 +87,18 @@ public abstract class AbstractReportMojo extends AbstractMavenReport {
 	 */
 	MavenProject project;
 	/**
+	 * A list of binary paths to check for class files
+	 * 
+	 * @parameter
+	 */
+	List<String> binaryPaths;
+	/**
 	 * A list of file paths to the root of the compiled source files involved in
 	 * the test execution
 	 * 
 	 * @parameter
-	 * 
 	 */
-	List<File> compiledSourcePaths;
+	List<String> sourcePaths;
 	/**
 	 * Doxia Site Renderer.
 	 * 
@@ -144,15 +149,6 @@ public abstract class AbstractReportMojo extends AbstractMavenReport {
 		return excludes;
 	}
 
-	/**
-	 * Returns the compiled source paths to use for the report generation
-	 * 
-	 * @return
-	 */
-	public List<File> getCompiledSourcePaths() {
-		return compiledSourcePaths;
-	}
-
 	@Override
 	public abstract void setReportOutputDirectory(
 			final File reportOutputDirectory);
@@ -170,15 +166,60 @@ public abstract class AbstractReportMojo extends AbstractMavenReport {
 							+ getDataFile());
 			return false;
 		}
-		final File classesDirectory = new File(getProject().getBuild()
-				.getOutputDirectory());
-		if (!classesDirectory.exists()) {
+
+		final List<String> outputDirectories = getOutputDirectories();
+		final List<File> resolvedOutputDirectories = availableOutputDirectories();
+
+		// final File classesDirectory = new File(getProject().getBuild()
+		// .getOutputDirectory());
+		if (resolvedOutputDirectories == null
+				|| resolvedOutputDirectories.size() < 1) {
+			final StringBuffer directories = new StringBuffer();
+			if (outputDirectories != null && outputDirectories.size() > 0) {
+				for (final String dir : outputDirectories) {
+					if (directories.length() > 0) {
+						directories.append(",");
+					}
+					directories.append(dir);
+				}
+			} else {
+				directories
+						.append(getProject().getBuild().getOutputDirectory());
+			}
+			final String prefix = outputDirectories != null
+					&& outputDirectories.size() > 1 ? "directories"
+					: "directory";
 			getLog().info(
-					"Skipping JaCoCo execution due to missing classes directory:"
-							+ classesDirectory);
+					"Skipping JaCoCo execution due to missing classes "
+							+ prefix + ":" + directories.toString());
 			return false;
 		}
 		return true;
+	}
+
+	private List<String> getOutputDirectories() {
+		final List<String> directories = new ArrayList<String>();
+		directories.addAll(this.binaryPaths);
+		if (directories.size() < 1) {
+			directories.add(getProject().getBuild().getOutputDirectory());
+		}
+		return directories;
+	}
+
+	private List<File> availableOutputDirectories() {
+		final List<String> directories = getOutputDirectories();
+		final List<File> available = new ArrayList<File>();
+
+		for (final String directory : directories) {
+			if (directory != null && directory.length() > 0) {
+				final File file = new File(directory);
+				if (file.exists() && file.isDirectory()) {
+					available.add(file);
+				}
+			}
+		}
+
+		return available;
 	}
 
 	/**
@@ -232,7 +273,8 @@ public abstract class AbstractReportMojo extends AbstractMavenReport {
 				this.getExcludes());
 		final BundleCreator creator = new BundleCreator(this.getProject(),
 				fileFilter, getLog());
-		final IBundleCoverage bundle = creator.createBundle(executionDataStore);
+		final IBundleCoverage bundle = creator.createBundle(executionDataStore,
+				availableOutputDirectories());
 		final SourceFileCollection locator = new SourceFileCollection(
 				getCompileSourceRoots(), sourceEncoding);
 		checkForMissingDebugInformation(bundle);
@@ -278,8 +320,10 @@ public abstract class AbstractReportMojo extends AbstractMavenReport {
 		final List<File> result = new ArrayList<File>();
 
 		// get roots from configuration
-		if(this.compiledSourcePaths != null && this.compiledSourcePaths.size() > 0) {
-			result.addAll(this.compiledSourcePaths);
+		if (this.sourcePaths != null && this.sourcePaths.size() > 0) {
+			for (final Object path : this.sourcePaths) {
+				result.add(resolvePath((String) path));
+			}
 		}
 
 		// if empty (no alternate roots), then get roots from project

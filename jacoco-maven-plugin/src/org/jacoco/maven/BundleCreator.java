@@ -17,6 +17,7 @@ import static java.lang.String.format;
 import java.io.File;
 import java.io.IOException;
 import java.util.Collection;
+import java.util.LinkedList;
 import java.util.List;
 
 import org.apache.maven.plugin.logging.Log;
@@ -27,6 +28,8 @@ import org.jacoco.core.analysis.CoverageBuilder;
 import org.jacoco.core.analysis.IBundleCoverage;
 import org.jacoco.core.analysis.IClassCoverage;
 import org.jacoco.core.data.ExecutionDataStore;
+
+import edu.emory.mathcs.backport.java.util.Collections;
 
 /**
  * Creates an IBundleCoverage.
@@ -65,14 +68,44 @@ public final class BundleCreator {
 	 */
 	public IBundleCoverage createBundle(
 			final ExecutionDataStore executionDataStore) throws IOException {
-		final CoverageBuilder builder = new CoverageBuilder();
-		final Analyzer analyzer = new Analyzer(executionDataStore, builder);
+
 		final File classesDir = new File(this.project.getBuild()
 				.getOutputDirectory());
 
 		@SuppressWarnings("unchecked")
-		final List<File> filesToAnalyze = FileUtils.getFiles(classesDir,
-				fileFilter.getIncludes(), fileFilter.getExcludes());
+		final List<File> defaultClassdirList = Collections.singletonList(classesDir);
+
+		return createBundle(executionDataStore, defaultClassdirList);
+	}
+
+	/**
+	 * Create an IBundleCoverage for the given ExecutionDataStore.
+	 * 
+	 * @param executionDataStore
+	 *            the execution data.
+	 * @param classDirs
+	 *            the class directories to use for class coverage
+	 * @return the coverage data.
+	 * @throws IOException
+	 *             if class files can't be read
+	 */
+	public IBundleCoverage createBundle(
+			final ExecutionDataStore executionDataStore,
+			final List<File> classDirs) throws IOException {
+
+		final CoverageBuilder builder = new CoverageBuilder();
+		final Analyzer analyzer = new Analyzer(executionDataStore, builder);
+
+		final List<File> filesToAnalyze = new LinkedList<File>();
+		for (final File classDir : classDirs) {
+			@SuppressWarnings("unchecked")
+			final List<File> files = FileUtils.getFiles(classDir,
+					fileFilter.getIncludes(), fileFilter.getExcludes());
+			if (files != null && files.size() > 0) {
+				filesToAnalyze.addAll(files);
+			}
+
+		}
 
 		for (final File file : filesToAnalyze) {
 			analyzer.analyzeAll(file);
@@ -83,6 +116,7 @@ public final class BundleCreator {
 		logBundleInfo(bundle, builder.getNoMatchClasses());
 
 		return bundle;
+
 	}
 
 	private void logBundleInfo(final IBundleCoverage bundle,
