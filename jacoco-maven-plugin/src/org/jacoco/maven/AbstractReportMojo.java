@@ -56,8 +56,7 @@ public abstract class AbstractReportMojo extends AbstractMavenReport {
 	/**
 	 * Encoding of the source files.
 	 * 
-	 * @parameter property="project.build.sourceEncoding"
-	 *            default-value="UTF-8"
+	 * @parameter property="project.build.sourceEncoding" default-value="UTF-8"
 	 */
 	String sourceEncoding;
 	/**
@@ -87,6 +86,14 @@ public abstract class AbstractReportMojo extends AbstractMavenReport {
 	 * @readonly
 	 */
 	MavenProject project;
+	/**
+	 * A list of file paths to the root of the compiled source files involved in
+	 * the test execution
+	 * 
+	 * @parameter
+	 * 
+	 */
+	List<File> compiledSourcePaths;
 	/**
 	 * Doxia Site Renderer.
 	 * 
@@ -135,6 +142,15 @@ public abstract class AbstractReportMojo extends AbstractMavenReport {
 	 */
 	List<String> getExcludes() {
 		return excludes;
+	}
+
+	/**
+	 * Returns the compiled source paths to use for the report generation
+	 * 
+	 * @return
+	 */
+	public List<File> getCompiledSourcePaths() {
+		return compiledSourcePaths;
 	}
 
 	@Override
@@ -260,8 +276,17 @@ public abstract class AbstractReportMojo extends AbstractMavenReport {
 
 	List<File> getCompileSourceRoots() {
 		final List<File> result = new ArrayList<File>();
-		for (final Object path : getProject().getCompileSourceRoots()) {
-			result.add(resolvePath((String) path));
+
+		// get roots from configuration
+		if(this.compiledSourcePaths != null && this.compiledSourcePaths.size() > 0) {
+			result.addAll(this.compiledSourcePaths);
+		}
+
+		// if empty (no alternate roots), then get roots from project
+		if (result.size() < 1) {
+			for (final Object path : getProject().getCompileSourceRoots()) {
+				result.add(resolvePath((String) path));
+			}
 		}
 		return result;
 	}
