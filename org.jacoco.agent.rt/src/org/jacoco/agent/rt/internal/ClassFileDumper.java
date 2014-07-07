@@ -16,6 +16,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 
+import org.jacoco.core.internal.data.CRC64;
+
 /**
  * Internal dumper for class files.
  */
@@ -62,7 +64,9 @@ class ClassFileDumper {
 				localname = name;
 			}
 			outputdir.mkdirs();
-			final File file = new File(outputdir, localname + ".class");
+			final Long id = Long.valueOf(CRC64.checksum(contents));
+			final File file = new File(outputdir, String.format(
+					"%s.%016x.class", localname, id));
 			final OutputStream out = new FileOutputStream(file);
 			out.write(contents);
 			out.close();

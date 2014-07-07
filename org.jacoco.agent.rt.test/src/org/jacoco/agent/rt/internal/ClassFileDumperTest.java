@@ -19,7 +19,6 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
-import org.jacoco.agent.rt.internal.ClassFileDumper;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -45,7 +44,8 @@ public class ClassFileDumperTest {
 		final File location = new File(folder.getRoot(), "classes");
 		final ClassFileDumper dumper = new ClassFileDumper(location.toString());
 		dumper.dump("org/jacoco/examples/Foo$Inner", contents);
-		assertContents(location, "org/jacoco/examples/Foo$Inner.class");
+		assertContents(location,
+				"org/jacoco/examples/Foo$Inner.aff06045a340cd62.class");
 	}
 
 	@Test
@@ -53,7 +53,7 @@ public class ClassFileDumperTest {
 		final File location = new File(folder.getRoot(), "classes");
 		final ClassFileDumper dumper = new ClassFileDumper(location.toString());
 		dumper.dump("Main", contents);
-		assertContents(location, "Main.class");
+		assertContents(location, "Main.aff06045a340cd62.class");
 	}
 
 	@Test
