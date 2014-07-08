@@ -46,24 +46,45 @@
 <h3>JRE/JDK</h3>
 
 <p>
-  The minimum JRE version to execute JaCoCo is Java 1.5. However to guarantee
-  compatibility JaCoCo builds should only be executed against a 1.5 JDK.  
+  The minimum JRE version to execute JaCoCo is Java 1.5. To guarantee
+  compatibility JaCoCo builds should always be executed against Java 1.5 JDK. In
+  addition we run builds with 1.6, 1.7 and 1.8 JDKs. 
 </p>
 
-<h3>Build System</h3>
+<h3>Build</h3>
 
 <p>
-  The build is based on <a href="http://maven.apache.org/">Maven</a>. The
-  JaCoCo <a href="build.html">build</a> requires Maven 3.
+  The JaCoCo build is based on <a href="http://maven.apache.org/">Maven 3</a>.
+  We have a <a href="https://jacoco.ci.cloudbees.com/">continuous build</a>
+  which is kindly provided by <a href="http://www.cloudbees.com/">CloudBees</a>.
+  Continuous builds from the master branch are directly published to the
+  <a href="repo.html">snapshot repository</a>.
 </p>
-
-<h3>Source Encoding</h3>
 
 <p>
-  All source files and HTML documents are encoded in UTF-8 unless an alternative
-  encoding is required by the file format specification. For example Java
-  property files are always encoded in ISO-8859-1.
+  We do also use
+  <a href="http://nemo.sonarqube.org/dashboard/index/org.jacoco:org.jacoco.build">continuous inspection</a>
+  with <a href="http://www.sonarqube.org/">SonarQube</a>.
 </p>
+
+<h3>Source Rules</h3>
+
+<ul>
+  <li>
+    <b>Encoding:</b> All source files and HTML documents are encoded in UTF-8
+    unless an alternative encoding is required by the file format specification.
+    For example Java property files are always encoded in ISO-8859-1.
+  </li>
+  <li>
+    <b>Formatting:</b> The Eclipse project settings define auto-formatter
+    settings for all Java classes. Make sure you apply the Eclipse formatter to
+    source files before committing.
+  </li>
+  <li>
+    <b>Warnings:</b> The Eclipse project settings define several compiler
+    warnings. JaCoCo projects must not show any Eclipse warnings.
+  </li>
+</ul>
 
 <h3>Source Control</h3>
 
