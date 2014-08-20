@@ -104,4 +104,17 @@ public class Stubs {
 		throw new StubException();
 	}
 
+	/**
+	 * Directly executes the given runnable.
+	 */
+	public static void exec(Runnable task) {
+		task.run();
+	}
+
+	/**
+	 * Never executes the given runnable.
+	 */
+	public static void noexec(Runnable task) {
+	}
+
 }

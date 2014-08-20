@@ -20,13 +20,20 @@
 
 <h2>Snapshot Build @qualified.bundle.version@ (@build.date@)</h2>
 
+<h3>Fixed Bugs</h3>
+<ul>
+  <li>Do not ignore synthetic lambda methods to get code coverage for Java 8
+      lambda expressions
+      (GitHub <a href="https://github.com/jacoco/jacoco/issues/232">#232</a>).</li>
+</ul>
+
 <h3>New Features</h3>
 <ul>
   <li>New configuration option for the JaCoCo agent
       <code>inclbootstrapclasses</code> to also instrument classes from the
-      bootstrap class loader.
+      bootstrap class loader
       (GitHub <a href="https://github.com/jacoco/jacoco/issues/49">#49</a>).</li>
-  <li>Agent uses unique file names to dump class files.
+  <li>Agent uses unique file names to dump class files
       (GitHub <a href="https://github.com/jacoco/jacoco/issues/225">#225</a>).</li>
 </ul>
 

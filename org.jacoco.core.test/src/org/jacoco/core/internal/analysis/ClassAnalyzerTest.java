@@ -11,6 +11,14 @@
  *******************************************************************************/
 package org.jacoco.core.internal.analysis;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+
+import java.util.Collection;
+
+import org.jacoco.core.analysis.IMethodCoverage;
+import org.jacoco.core.internal.flow.MethodProbesVisitor;
 import org.jacoco.core.internal.instr.InstrSupport;
 import org.junit.Before;
 import org.junit.Test;
@@ -42,6 +50,50 @@ public class ClassAnalyzerTest {
 		analyzer.visitMethod(InstrSupport.INITMETHOD_ACC,
 				InstrSupport.INITMETHOD_NAME, InstrSupport.INITMETHOD_DESC,
 				null, null);
+	}
+
+	@Test
+	public void testMethodFilter_Empty() {
+		final MethodProbesVisitor mv = analyzer.visitMethod(0, "foo", "()V",
+				null, null);
+		mv.visitEnd();
+		Collection<IMethodCoverage> methods = analyzer.getCoverage()
+				.getMethods();
+		assertEquals(0, methods.size());
+	}
+
+	@Test
+	public void testMethodFilter_NonSynthetic() {
+		final MethodProbesVisitor mv = analyzer.visitMethod(0, "foo", "()V",
+				null, null);
+		mv.visitCode();
+		mv.visitInsn(Opcodes.RETURN);
+		mv.visitEnd();
+		Collection<IMethodCoverage> methods = analyzer.getCoverage()
+				.getMethods();
+		assertEquals(1, methods.size());
+	}
+
+	@Test
+	public void testMethodFilter_Synthetic() {
+		final MethodProbesVisitor mv = analyzer.visitMethod(
+				Opcodes.ACC_SYNTHETIC, "foo", "()V", null, null);
+		assertNull(mv);
+		Collection<IMethodCoverage> methods = analyzer.getCoverage()
+				.getMethods();
+		assertTrue(methods.isEmpty());
+	}
+
+	@Test
+	public void testMethodFilter_Lambda() {
+		final MethodProbesVisitor mv = analyzer.visitMethod(
+				Opcodes.ACC_SYNTHETIC, "lambda$1", "()V", null, null);
+		mv.visitCode();
+		mv.visitInsn(Opcodes.RETURN);
+		mv.visitEnd();
+		Collection<IMethodCoverage> methods = analyzer.getCoverage()
+				.getMethods();
+		assertEquals(1, methods.size());
 	}
 
 }

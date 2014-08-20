@@ -81,8 +81,7 @@ public class ClassAnalyzer extends ClassProbesVisitor {
 
 		InstrSupport.assertNotInstrumented(name, coverage.getName());
 
-		// TODO: Use filter hook
-		if ((access & Opcodes.ACC_SYNTHETIC) != 0) {
+		if (isMethodFiltered(access, name)) {
 			return null;
 		}
 
@@ -98,6 +97,12 @@ public class ClassAnalyzer extends ClassProbesVisitor {
 				}
 			}
 		};
+	}
+
+	// TODO: Use filter hook in future
+	private boolean isMethodFiltered(final int access, final String name) {
+		return (access & Opcodes.ACC_SYNTHETIC) != 0
+				&& !name.startsWith("lambda$");
 	}
 
 	@Override
