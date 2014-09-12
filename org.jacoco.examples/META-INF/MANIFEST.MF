@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: JaCoCo API Usage Examples
 Bundle-SymbolicName: org.jacoco.examples
-Bundle-Version: 0.7.2.qualifier
+Bundle-Version: 0.7.2.201409121644
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
 Bundle-Vendor: Mountainminds GmbH & Co. KG
 Import-Package: org.jacoco.core.analysis;bundle-version="[0.7.2,0.7.3)",
