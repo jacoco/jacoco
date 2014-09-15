@@ -56,8 +56,7 @@ public abstract class AbstractReportMojo extends AbstractMavenReport {
 	/**
 	 * Encoding of the source files.
 	 * 
-	 * @parameter property="project.build.sourceEncoding"
-	 *            default-value="UTF-8"
+	 * @parameter property="project.build.sourceEncoding" default-value="UTF-8"
 	 */
 	String sourceEncoding;
 	/**
@@ -74,6 +73,13 @@ public abstract class AbstractReportMojo extends AbstractMavenReport {
 	 * @parameter
 	 */
 	List<String> excludes;
+	/**
+	 * A list of class folders in addition to the current projects class folder
+	 * to be scanned for class files.
+	 * 
+	 * @parameter
+	 */
+	private List<String> classFolders;
 	/**
 	 * Flag used to suppress execution.
 	 * 
@@ -216,7 +222,16 @@ public abstract class AbstractReportMojo extends AbstractMavenReport {
 				this.getExcludes());
 		final BundleCreator creator = new BundleCreator(this.getProject(),
 				fileFilter, getLog());
-		final IBundleCoverage bundle = creator.createBundle(executionDataStore);
+
+		final List<File> classFoldersList = new ArrayList<File>();
+		if (classFolders != null) {
+			for (final String folder : classFolders) {
+				classFoldersList.add(new File(folder));
+			}
+		}
+
+		final IBundleCoverage bundle = creator.createBundle(executionDataStore,
+				classFoldersList);
 		final SourceFileCollection locator = new SourceFileCollection(
 				getCompileSourceRoots(), sourceEncoding);
 		checkForMissingDebugInformation(bundle);
@@ -303,5 +318,13 @@ public abstract class AbstractReportMojo extends AbstractMavenReport {
 	abstract File getDataFile();
 
 	abstract File getOutputDirectoryFile();
+
+	public List<String> getClassFolders() {
+		return classFolders;
+	}
+
+	public void setClassFolders(final List<String> classFolders) {
+		this.classFolders = classFolders;
+	}
 
 }

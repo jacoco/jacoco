@@ -12,7 +12,13 @@
 package org.jacoco.maven;
 
 import java.io.File;
+import java.util.List;
 import java.util.Locale;
+
+import org.apache.maven.doxia.siterenderer.Renderer;
+import org.apache.maven.project.MavenProject;
+import org.jacoco.core.data.ExecutionDataStore;
+import org.jacoco.core.data.SessionInfoStore;
 
 /**
  * Creates a code coverage report for tests of a single project in multiple
@@ -42,11 +48,111 @@ public class ReportMojo extends AbstractReportMojo {
 	 * 
 	 * @parameter default-value="${project.build.directory}/jacoco.exec"
 	 */
-	private File dataFile;
+	protected File dataFile;
+
+	/**
+	 * A list of class files to include in the report. May use wildcard
+	 * characters (* and ?). When not specified everything will be included.
+	 * 
+	 * @parameter
+	 */
+	private List<String> includes;
+
+	/**
+	 * A list of class files to exclude from the report. May use wildcard
+	 * characters (* and ?). When not specified nothing will be excluded.
+	 * 
+	 * @parameter
+	 */
+	private List<String> excludes;
+
+	/**
+	 * Maven project.
+	 * 
+	 * @parameter expression="${project}"
+	 * @readonly
+	 */
+	private MavenProject project;
+
+	/**
+	 * Doxia Site Renderer.
+	 * 
+	 * @component
+	 */
+	private Renderer siteRenderer;
+
+	/**
+	 * A list of source folders in addition to the current projects source
+	 * folder to be scanned for source files.
+	 * 
+	 * @parameter
+	 */
+	private List<String> sourceFolders;
+
+	private SessionInfoStore sessionInfoStore;
+
+	private ExecutionDataStore executionDataStore;
+
+	@Override
+	public String getOutputName() {
+		return "jacoco/index";
+	}
+
+	@Override
+	public String getName(final Locale locale) {
+		return "JaCoCo";
+	}
+
+	@Override
+	public String getDescription(final Locale locale) {
+		return "JaCoCo Test Coverage Report.";
+	}
+
+	@Override
+	public boolean isExternalReport() {
+		return true;
+	}
 
 	@Override
 	protected String getOutputDirectory() {
 		return outputDirectory.getAbsolutePath();
+	}
+
+	@Override
+	protected MavenProject getProject() {
+		return project;
+	}
+
+	@Override
+	protected Renderer getSiteRenderer() {
+		return siteRenderer;
+	}
+
+	/**
+	 * Returns the list of class files to include in the report.
+	 * 
+	 * @return class files to include, may contain wildcard characters
+	 */
+	@Override
+	protected List<String> getIncludes() {
+		return includes;
+	}
+
+	/**
+	 * Returns the list of class files to exclude from the report.
+	 * 
+	 * @return class files to exclude, may contain wildcard characters
+	 */
+	@Override
+	protected List<String> getExcludes() {
+		return excludes;
+	}
+
+	/**
+	 * @param dataFile
+	 */
+	protected void setDataFile(final File dataFile) {
+		this.dataFile = dataFile;
 	}
 
 	@Override
@@ -69,13 +175,12 @@ public class ReportMojo extends AbstractReportMojo {
 		return outputDirectory;
 	}
 
-	@Override
-	public String getOutputName() {
-		return "jacoco/index";
+	public List<String> getSourceFolders() {
+		return sourceFolders;
 	}
 
-	@Override
-	public String getName(final Locale locale) {
-		return "JaCoCo Test";
+	public void setSourceFolders(final List<String> sourceFolders) {
+		this.sourceFolders = sourceFolders;
 	}
+
 }

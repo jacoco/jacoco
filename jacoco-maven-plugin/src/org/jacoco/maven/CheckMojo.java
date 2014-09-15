@@ -19,6 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.maven.plugin.MojoExecutionException;
+import org.apache.maven.project.MavenProject;
 import org.jacoco.core.analysis.IBundleCoverage;
 import org.jacoco.core.analysis.ICoverageNode;
 import org.jacoco.core.data.ExecutionDataStore;
@@ -132,6 +133,14 @@ public class CheckMojo extends AbstractJacocoMojo implements IViolationsOutput {
 
 	private boolean violations;
 
+	/**
+	 * The projects in the reactor.
+	 * 
+	 * @parameter expression="${reactorProjects}"
+	 * @readonly
+	 */
+	private List<MavenProject> reactorProjects;
+
 	private boolean canCheckCoverage() {
 		if (!dataFile.exists()) {
 			getLog().info(MSG_SKIPPING + dataFile);
@@ -193,7 +202,15 @@ public class CheckMojo extends AbstractJacocoMojo implements IViolationsOutput {
 				fileFilter, getLog());
 		try {
 			final ExecutionDataStore executionData = loadExecutionData();
-			return creator.createBundle(executionData);
+			final List<File> classDirs = new ArrayList<File>();
+			for (final MavenProject reactor : reactorProjects) {
+				if (reactor != getProject()) {
+					final File classDir = new File(reactor.getBuild()
+							.getOutputDirectory());
+					classDirs.add(classDir);
+				}
+			}
+			return creator.createBundle(executionData, classDirs);
 		} catch (final IOException e) {
 			throw new MojoExecutionException(
 					"Error while reading code coverage: " + e.getMessage(), e);
@@ -212,4 +229,8 @@ public class CheckMojo extends AbstractJacocoMojo implements IViolationsOutput {
 		violations = true;
 	}
 
+	@Override
+	protected boolean goalCanExecuteOnPom() {
+		return true;
+	}
 }

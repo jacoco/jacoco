@@ -16,6 +16,7 @@ import static java.lang.String.format;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
@@ -59,20 +60,28 @@ public final class BundleCreator {
 	 * 
 	 * @param executionDataStore
 	 *            the execution data.
+	 * @param additionalClassesDirs
+	 *            additional class dirs to be scanned for class files
 	 * @return the coverage data.
 	 * @throws IOException
 	 *             if class files can't be read
 	 */
 	public IBundleCoverage createBundle(
-			final ExecutionDataStore executionDataStore) throws IOException {
+			final ExecutionDataStore executionDataStore,
+			final Collection<File> additionalClassesDirs) throws IOException {
 		final CoverageBuilder builder = new CoverageBuilder();
 		final Analyzer analyzer = new Analyzer(executionDataStore, builder);
 		final File classesDir = new File(this.project.getBuild()
 				.getOutputDirectory());
 
-		@SuppressWarnings("unchecked")
-		final List<File> filesToAnalyze = FileUtils.getFiles(classesDir,
-				fileFilter.getIncludes(), fileFilter.getExcludes());
+		final List<File> filesToAnalyze = new ArrayList<File>();
+		addDirToFileList(classesDir, filesToAnalyze);
+
+		if (additionalClassesDirs != null) {
+			for (final File file : additionalClassesDirs) {
+				addDirToFileList(file, filesToAnalyze);
+			}
+		}
 
 		for (final File file : filesToAnalyze) {
 			analyzer.analyzeAll(file);
@@ -102,4 +111,16 @@ public final class BundleCreator {
 		}
 	}
 
+	private void addDirToFileList(final File classesDir,
+			final List<File> filesToAnalyze) throws IOException {
+		if (doesDirectoryExist(classesDir)) {
+			filesToAnalyze.addAll(FileUtils.getFiles(classesDir,
+					fileFilter.getIncludes(), fileFilter.getExcludes()));
+		}
+	}
+
+	private boolean doesDirectoryExist(final File classesDir) {
+		return classesDir != null && classesDir.exists()
+				&& classesDir.isDirectory();
+	}
 }
