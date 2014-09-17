@@ -29,17 +29,19 @@ import org.junit.Test;
 /**
  * Unit tests for {@link Limit}.
  */
-public class RulesCheckerTest implements IViolationsOutput {
+public class RulesCheckerTest implements ICheckerOutput {
 
 	private RulesChecker checker;
 	private ReportStructureTestDriver driver;
-	private List<String> messages;
+	private List<String> violationMessages;
+    private List<String> conformanceMessages;
 
 	@Before
 	public void setup() {
 		checker = new RulesChecker();
 		driver = new ReportStructureTestDriver();
-		messages = new ArrayList<String>();
+		violationMessages = new ArrayList<String>();
+        conformanceMessages = new ArrayList<String>();
 	}
 
 	@Test
@@ -52,7 +54,7 @@ public class RulesCheckerTest implements IViolationsOutput {
 		driver.sendGroup(checker.createVisitor(this));
 		assertEquals(
 				Arrays.asList("Rule violated for bundle bundle: instructions missed count is 10, but expected maximum is 5"),
-				messages);
+                violationMessages);
 	}
 
 	@Test
@@ -92,12 +94,17 @@ public class RulesCheckerTest implements IViolationsOutput {
 		driver.sendGroup(checker.createVisitor(this));
 		assertEquals(
 				Arrays.asList("Rule violated for class MyClass: instructions missed count is 10, but expected maximum is 5"),
-				messages);
+                violationMessages);
 	}
 
 	public void onViolation(ICoverageNode node, Rule rule, Limit limit,
 			String message) {
-		messages.add(message);
+		violationMessages.add(message);
 	}
+
+    @Override
+    public void onConformance(ICoverageNode node, Rule rule, Limit limit, String message) {
+        conformanceMessages.add(message);
+    }
 
 }

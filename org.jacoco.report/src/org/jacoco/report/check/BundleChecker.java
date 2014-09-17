@@ -29,7 +29,7 @@ import org.jacoco.report.ILanguageNames;
 class BundleChecker {
 
 	private final ILanguageNames names;
-	private final IViolationsOutput output;
+	private final ICheckerOutput output;
 
 	private final Collection<Rule> bundleRules;
 	private final Collection<Rule> packageRules;
@@ -43,7 +43,7 @@ class BundleChecker {
 	private final boolean traverseMethods;
 
 	public BundleChecker(final Collection<Rule> rules,
-			final ILanguageNames names, final IViolationsOutput output) {
+			final ILanguageNames names, final ICheckerOutput output) {
 		this.names = names;
 		this.output = output;
 		this.bundleRules = new ArrayList<Rule>();
@@ -139,12 +139,18 @@ class BundleChecker {
 
 	private void checkLimit(final ICoverageNode node, final String elementtype,
 			final String typename, final Rule rule, final Limit limit) {
-		final String message = limit.check(node);
-		if (message != null) {
+		final Limit.CheckResult result = limit.check(node);
+        if (result == null) {
+            return;
+        }
+		if (result.isViolation()) {
 			output.onViolation(node, rule, limit, String.format(
 					"Rule violated for %s %s: %s", elementtype, typename,
-					message));
-		}
+					result.getMessage()));
+		} else {
+            output.onConformance(node, rule, limit,
+                    String.format("Rule conforms for %s %s: %s", elementtype, typename, result.getMessage()));
+        }
 	}
 
 }

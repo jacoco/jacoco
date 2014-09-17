@@ -37,17 +37,19 @@ import org.junit.Test;
 /**
  * Unit tests for {@link BundleChecker}.
  */
-public class BundleCheckerTest implements IViolationsOutput {
+public class BundleCheckerTest implements ICheckerOutput {
 
 	private List<Rule> rules;
 	private ILanguageNames names;
-	private List<String> messages;
+	private List<String> violationMessages;
+    private List<String> conformanceMessages;
 
 	@Before
 	public void setup() {
 		rules = new ArrayList<Rule>();
 		names = new JavaNames();
-		messages = new ArrayList<String>();
+		violationMessages = new ArrayList<String>();
+        conformanceMessages = new ArrayList<String>();
 	}
 
 	@Test
@@ -95,7 +97,7 @@ public class BundleCheckerTest implements IViolationsOutput {
 		addRule(ElementType.GROUP);
 		final BundleChecker checker = new BundleChecker(rules, names, this);
 		checker.checkBundle(createBundle());
-		assertEquals(Collections.emptyList(), messages);
+		assertEquals(Collections.emptyList(), violationMessages);
 	}
 
 	@Test
@@ -107,7 +109,7 @@ public class BundleCheckerTest implements IViolationsOutput {
 		rules.add(rule);
 		final BundleChecker checker = new BundleChecker(rules, names, this);
 		checker.checkBundle(createBundle());
-		assertEquals(Collections.emptyList(), messages);
+		assertEquals(Collections.emptyList(), violationMessages);
 	}
 
 	@Test
@@ -115,7 +117,7 @@ public class BundleCheckerTest implements IViolationsOutput {
 		addRule(ElementType.BUNDLE).setExcludes("*");
 		final BundleChecker checker = new BundleChecker(rules, names, this);
 		checker.checkBundle(createBundle());
-		assertEquals(Collections.emptyList(), messages);
+		assertEquals(Collections.emptyList(), violationMessages);
 	}
 
 	private Rule addRule(ElementType elementType) {
@@ -150,12 +152,17 @@ public class BundleCheckerTest implements IViolationsOutput {
 	}
 
 	private void assertMessage(String expected) {
-		assertEquals(Collections.singletonList(expected), messages);
+		assertEquals(Collections.singletonList(expected), violationMessages);
 	}
 
 	public void onViolation(ICoverageNode node, Rule rule, Limit limit,
 			String message) {
-		messages.add(message);
+		violationMessages.add(message);
 	}
+
+    @Override
+    public void onConformance(ICoverageNode node, Rule rule, Limit limit, String message) {
+        conformanceMessages.add(message);
+    }
 
 }

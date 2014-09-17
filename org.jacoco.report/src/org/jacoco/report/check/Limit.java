@@ -148,27 +148,59 @@ public class Limit {
 		this.maximum = maximum == null ? null : new BigDecimal(maximum);
 	}
 
-	String check(final ICoverageNode node) {
+	CheckResult check(final ICoverageNode node) {
 		final double d = node.getCounter(entity).getValue(value);
 		if (Double.isNaN(d)) {
 			return null;
 		}
 		final BigDecimal bd = BigDecimal.valueOf(d);
 		if (minimum != null && minimum.compareTo(bd) > 0) {
-			return message("minimum", bd, minimum, RoundingMode.FLOOR);
+			return new CheckResult(true, violationMessage("minimum", bd, minimum, RoundingMode.FLOOR));
 		}
 		if (maximum != null && maximum.compareTo(bd) < 0) {
-			return message("maximum", bd, maximum, RoundingMode.CEILING);
+			return new CheckResult(true, violationMessage("maximum", bd, maximum, RoundingMode.CEILING));
 		}
-		return null;
+		return new CheckResult(false, reportMessage(bd));
 	}
 
-	private String message(final String minmax, final BigDecimal v,
-			final BigDecimal ref, final RoundingMode mode) {
+	private String violationMessage(final String minmax, final BigDecimal v,
+                                    final BigDecimal ref, final RoundingMode mode) {
 		final BigDecimal rounded = v.setScale(ref.scale(), mode);
 		return String.format("%s %s is %s, but expected %s is %s",
-				ENTITY_NAMES.get(entity), VALUE_NAMES.get(value),
+				getEntityName(), getValueName(),
 				rounded.toPlainString(), minmax, ref.toPlainString());
 	}
+
+    private String reportMessage(final BigDecimal v) {
+        return String.format("%s %s is %s", getEntityName(), getValueName(), v.toPlainString());
+    }
+
+    private String getEntityName() {
+        return ENTITY_NAMES.get(entity);
+    }
+
+    private String getValueName() {
+        return VALUE_NAMES.get(value);
+    }
+
+    public static class CheckResult {
+
+        private final boolean violation;
+        private final String message;
+
+        private CheckResult(boolean violation, String message) {
+            this.violation = violation;
+            this.message = message;
+        }
+
+        public boolean isViolation() {
+            return violation;
+        }
+
+        public String getMessage() {
+            return message;
+        }
+
+    }
 
 }

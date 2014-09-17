@@ -44,7 +44,7 @@ import org.jacoco.report.IReportGroupVisitor;
 import org.jacoco.report.IReportVisitor;
 import org.jacoco.report.MultiReportVisitor;
 import org.jacoco.report.ZipMultiReportOutput;
-import org.jacoco.report.check.IViolationsOutput;
+import org.jacoco.report.check.ICheckerOutput;
 import org.jacoco.report.check.Limit;
 import org.jacoco.report.check.Rule;
 import org.jacoco.report.check.RulesChecker;
@@ -344,7 +344,7 @@ public class ReportTask extends Task {
 	 * Formatter element for coverage checks.
 	 */
 	public class CheckFormatterElement extends FormatterElement implements
-			IViolationsOutput {
+            ICheckerOutput {
 
 		private final List<Rule> rules = new ArrayList<Rule>();
 		private boolean violations = false;
@@ -402,7 +402,12 @@ public class ReportTask extends Task {
 			}
 		}
 
-		@Override
+        @Override
+        public void onConformance(ICoverageNode node, Rule rule, Limit limit, String message) {
+            log(message, Project.MSG_VERBOSE);
+        }
+
+        @Override
 		void finish() {
 			if (violations && failOnViolation) {
 				throw new BuildException(
