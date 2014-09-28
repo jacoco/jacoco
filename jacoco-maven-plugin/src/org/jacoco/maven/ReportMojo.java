@@ -51,22 +51,6 @@ public class ReportMojo extends AbstractReportMojo {
 	protected File dataFile;
 
 	/**
-	 * A list of class files to include in the report. May use wildcard
-	 * characters (* and ?). When not specified everything will be included.
-	 * 
-	 * @parameter
-	 */
-	private List<String> includes;
-
-	/**
-	 * A list of class files to exclude from the report. May use wildcard
-	 * characters (* and ?). When not specified nothing will be excluded.
-	 * 
-	 * @parameter
-	 */
-	private List<String> excludes;
-
-	/**
 	 * Maven project.
 	 * 
 	 * @parameter expression="${project}"
@@ -126,26 +110,6 @@ public class ReportMojo extends AbstractReportMojo {
 	@Override
 	protected Renderer getSiteRenderer() {
 		return siteRenderer;
-	}
-
-	/**
-	 * Returns the list of class files to include in the report.
-	 * 
-	 * @return class files to include, may contain wildcard characters
-	 */
-	@Override
-	protected List<String> getIncludes() {
-		return includes;
-	}
-
-	/**
-	 * Returns the list of class files to exclude from the report.
-	 * 
-	 * @return class files to exclude, may contain wildcard characters
-	 */
-	@Override
-	protected List<String> getExcludes() {
-		return excludes;
 	}
 
 	/**
