@@ -43,7 +43,7 @@
 	<target name="instrument" depends="compile">
 		<!-- Step 2: Instrument class files -->
 		<jacoco:instrument destdir="${result.classes.instr.dir}">
-			<fileset dir="${result.classes.dir}" includes="**/*.class" />
+			<fileset dir="${result.classes.dir}" />
 		</jacoco:instrument>
 	</target>
 
