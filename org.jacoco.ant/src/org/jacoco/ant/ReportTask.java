@@ -42,10 +42,11 @@ import org.jacoco.report.FileMultiReportOutput;
 import org.jacoco.report.IMultiReportOutput;
 import org.jacoco.report.IReportGroupVisitor;
 import org.jacoco.report.IReportVisitor;
+import org.jacoco.report.JavaNames;
 import org.jacoco.report.MultiReportVisitor;
 import org.jacoco.report.ZipMultiReportOutput;
+import org.jacoco.report.check.CheckResult;
 import org.jacoco.report.check.ICheckerOutput;
-import org.jacoco.report.check.Limit;
 import org.jacoco.report.check.Rule;
 import org.jacoco.report.check.RulesChecker;
 import org.jacoco.report.csv.CSVFormatter;
@@ -343,8 +344,7 @@ public class ReportTask extends Task {
 	/**
 	 * Formatter element for coverage checks.
 	 */
-	public class CheckFormatterElement extends FormatterElement implements
-            ICheckerOutput {
+	public class CheckFormatterElement extends FormatterElement implements ICheckerOutput {
 
 		private final List<Rule> rules = new ArrayList<Rule>();
 		private boolean violations = false;
@@ -390,21 +390,21 @@ public class ReportTask extends Task {
 			return formatter.createVisitor(this);
 		}
 
-		public void onViolation(final ICoverageNode node, final Rule rule,
-				final Limit limit, final String message) {
-			log(message, Project.MSG_ERR);
-			violations = true;
-			if (violationsPropery != null) {
-				final String old = getProject().getProperty(violationsPropery);
-				final String value = old == null ? message : String.format(
-						"%s\n%s", old, message);
-				getProject().setProperty(violationsPropery, value);
-			}
-		}
-
         @Override
-        public void onConformance(ICoverageNode node, Rule rule, Limit limit, String message) {
-            log(message, Project.MSG_VERBOSE);
+        public void onResult(CheckResult result) {
+            String message = result.createMessage();
+            if (result.getResult() == CheckResult.Result.OK) {
+                log(message, Project.MSG_VERBOSE);
+            } else {
+                log(message, Project.MSG_ERR);
+                violations = true;
+                if (violationsPropery != null) {
+                    final String old = getProject().getProperty(violationsPropery);
+                    final String value = old == null ? message : String.format(
+                            "%s\n%s", old, message);
+                    getProject().setProperty(violationsPropery, value);
+                }
+            }
         }
 
         @Override
@@ -415,7 +415,8 @@ public class ReportTask extends Task {
 						getLocation());
 			}
 		}
-	}
+
+    }
 
 	private final Union executiondataElement = new Union();
 

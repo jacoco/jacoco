@@ -63,6 +63,13 @@ public class RulesChecker {
 		this.languageNames = languageNames;
 	}
 
+    /**
+     * @return The implementation for language name display for message formatting.
+     */
+    public ILanguageNames getLanguageNames() {
+        return languageNames;
+    }
+
 	/**
 	 * Creates a new visitor to process the configured checks.
 	 * 

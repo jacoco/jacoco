@@ -9,6 +9,7 @@
  *    Evgeny Mandrikov - initial API and implementation
  *    Kyle Lieber - implementation of CheckMojo
  *    Marc Hoffmann - redesign using report APIs
+ *    Håvard Nesvold - initial implementation of 'verbose' mode
  *
  *******************************************************************************/
 package org.jacoco.maven;
@@ -20,12 +21,12 @@ import java.util.List;
 
 import org.apache.maven.plugin.MojoExecutionException;
 import org.jacoco.core.analysis.IBundleCoverage;
-import org.jacoco.core.analysis.ICoverageNode;
 import org.jacoco.core.data.ExecutionDataStore;
 import org.jacoco.core.tools.ExecFileLoader;
 import org.jacoco.report.IReportVisitor;
+import org.jacoco.report.JavaNames;
+import org.jacoco.report.check.CheckResult;
 import org.jacoco.report.check.ICheckerOutput;
-import org.jacoco.report.check.Limit;
 import org.jacoco.report.check.Rule;
 import org.jacoco.report.check.RulesChecker;
 
@@ -213,16 +214,16 @@ public class CheckMojo extends AbstractJacocoMojo implements ICheckerOutput {
 		return loader.getExecutionDataStore();
 	}
 
-	public void onViolation(final ICoverageNode node, final Rule rule,
-			final Limit limit, final String message) {
-		this.getLog().warn(message);
-		violations = true;
-	}
-
-    public void onConformance(final ICoverageNode node, final Rule rule,
-                              final Limit limit, final String message) {
-        if (verbose) {
-            this.getLog().info(message);
+    @Override
+    public void onResult(final CheckResult result) {
+        String message = result.createMessage();
+        if (result.getResult() == CheckResult.Result.OK) {
+            if (verbose) {
+                this.getLog().info(message);
+            }
+        } else {
+            this.getLog().warn(message);
+            violations = true;
         }
     }
 

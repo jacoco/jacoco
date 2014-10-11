@@ -12,7 +12,6 @@
 package org.jacoco.report.check;
 
 import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
@@ -148,59 +147,31 @@ public class Limit {
 		this.maximum = maximum == null ? null : new BigDecimal(maximum);
 	}
 
-	CheckResult check(final ICoverageNode node) {
+    CheckResult check(final ICoverageNode node) {
+        return check(node, node.getName());
+    }
+
+	CheckResult check(final ICoverageNode node, final String elementName) {
 		final double d = node.getCounter(entity).getValue(value);
 		if (Double.isNaN(d)) {
 			return null;
 		}
 		final BigDecimal bd = BigDecimal.valueOf(d);
 		if (minimum != null && minimum.compareTo(bd) > 0) {
-			return new CheckResult(true, violationMessage("minimum", bd, minimum, RoundingMode.FLOOR));
+            return CheckResult.tooLow(node, this, elementName);
 		}
 		if (maximum != null && maximum.compareTo(bd) < 0) {
-			return new CheckResult(true, violationMessage("maximum", bd, maximum, RoundingMode.CEILING));
+			return CheckResult.tooHigh(node, this, elementName);
 		}
-		return new CheckResult(false, reportMessage(bd));
+		return CheckResult.ok(node, this, elementName);
 	}
 
-	private String violationMessage(final String minmax, final BigDecimal v,
-                                    final BigDecimal ref, final RoundingMode mode) {
-		final BigDecimal rounded = v.setScale(ref.scale(), mode);
-		return String.format("%s %s is %s, but expected %s is %s",
-				getEntityName(), getValueName(),
-				rounded.toPlainString(), minmax, ref.toPlainString());
-	}
-
-    private String reportMessage(final BigDecimal v) {
-        return String.format("%s %s is %s", getEntityName(), getValueName(), v.toPlainString());
-    }
-
-    private String getEntityName() {
+    String getEntityName() {
         return ENTITY_NAMES.get(entity);
     }
 
-    private String getValueName() {
+    String getValueName() {
         return VALUE_NAMES.get(value);
-    }
-
-    public static class CheckResult {
-
-        private final boolean violation;
-        private final String message;
-
-        private CheckResult(boolean violation, String message) {
-            this.violation = violation;
-            this.message = message;
-        }
-
-        public boolean isViolation() {
-            return violation;
-        }
-
-        public String getMessage() {
-            return message;
-        }
-
     }
 
 }

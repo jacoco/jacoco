@@ -12,7 +12,6 @@
 package org.jacoco.report.check;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
@@ -20,6 +19,7 @@ import org.jacoco.core.analysis.CoverageNodeImpl;
 import org.jacoco.core.analysis.ICounter.CounterValue;
 import org.jacoco.core.analysis.ICoverageNode.CounterEntity;
 import org.jacoco.core.internal.analysis.CounterImpl;
+import org.jacoco.report.JavaNames;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -49,7 +49,7 @@ public class LimitTest {
 		limit.setMaximum("-1");
 		assertEquals(CounterValue.TOTALCOUNT, limit.getValue());
 		assertEquals(
-				"instructions total count is 0, but expected maximum is -1",
+				"Rule violated for CLASS Foo: instructions total count is 0, but expected maximum is -1",
 				limitCheckViolationMessage(new TestNode()));
 	}
 
@@ -59,7 +59,7 @@ public class LimitTest {
 		limit.setMaximum("-1");
 		assertEquals(CounterValue.MISSEDCOUNT, limit.getValue());
 		assertEquals(
-				"instructions missed count is 0, but expected maximum is -1",
+				"Rule violated for CLASS Foo: instructions missed count is 0, but expected maximum is -1",
 				limitCheckViolationMessage(new TestNode()));
 	}
 
@@ -69,7 +69,7 @@ public class LimitTest {
 		limit.setMaximum("-1");
 		assertEquals(CounterValue.COVEREDCOUNT, limit.getValue());
 		assertEquals(
-				"instructions covered count is 0, but expected maximum is -1",
+				"Rule violated for CLASS Foo: instructions covered count is 0, but expected maximum is -1",
                 limitCheckViolationMessage(new TestNode()));
 	}
 
@@ -79,7 +79,7 @@ public class LimitTest {
 		limit.setMaximum("-1");
 		assertEquals(CounterValue.MISSEDRATIO, limit.getValue());
 		assertEquals(
-				"instructions missed ratio is 0, but expected maximum is -1",
+				"Rule violated for CLASS Foo: instructions missed ratio is 0, but expected maximum is -1",
 				limitCheckViolationMessage(new TestNode() {
                     {
                         instructionCounter = CounterImpl.COUNTER_0_1;
@@ -93,7 +93,7 @@ public class LimitTest {
 		limit.setMaximum("-1");
 		assertEquals(CounterValue.COVEREDRATIO, limit.getValue());
 		assertEquals(
-				"instructions covered ratio is 0, but expected maximum is -1",
+				"Rule violated for CLASS Foo: instructions covered ratio is 0, but expected maximum is -1",
 				limitCheckViolationMessage(new TestNode() {
                     {
                         instructionCounter = CounterImpl.COUNTER_1_0;
@@ -108,7 +108,7 @@ public class LimitTest {
 		limit.setMaximum("-1");
 		assertEquals(CounterEntity.INSTRUCTION, limit.getEntity());
 		assertEquals(
-				"instructions total count is 0, but expected maximum is -1",
+				"Rule violated for CLASS Foo: instructions total count is 0, but expected maximum is -1",
                 limitCheckViolationMessage(new TestNode()));
 	}
 
@@ -118,7 +118,7 @@ public class LimitTest {
 		limit.setCounter(CounterEntity.BRANCH.name());
 		limit.setMaximum("-1");
 		assertEquals(CounterEntity.BRANCH, limit.getEntity());
-		assertEquals("branches total count is 0, but expected maximum is -1",
+		assertEquals("Rule violated for CLASS Foo: branches total count is 0, but expected maximum is -1",
                 limitCheckViolationMessage(new TestNode()));
 	}
 
@@ -128,17 +128,17 @@ public class LimitTest {
 		limit.setCounter(CounterEntity.LINE.name());
 		limit.setMaximum("-1");
 		assertEquals(CounterEntity.LINE, limit.getEntity());
-		assertEquals("lines total count is 0, but expected maximum is -1",
+		assertEquals("Rule violated for CLASS Foo: lines total count is 0, but expected maximum is -1",
                 limitCheckViolationMessage(new TestNode()));
 	}
 
 	@Test
-	public void testComlexity() {
+	public void testComplexity() {
 		limit.setValue(CounterValue.TOTALCOUNT.name());
 		limit.setCounter(CounterEntity.COMPLEXITY.name());
 		limit.setMaximum("-1");
 		assertEquals(CounterEntity.COMPLEXITY, limit.getEntity());
-		assertEquals("complexity total count is 0, but expected maximum is -1",
+		assertEquals("Rule violated for CLASS Foo: complexity total count is 0, but expected maximum is -1",
                 limitCheckViolationMessage(new TestNode()));
 	}
 
@@ -148,7 +148,7 @@ public class LimitTest {
 		limit.setCounter(CounterEntity.CLASS.name());
 		limit.setMaximum("-1");
 		assertEquals(CounterEntity.CLASS, limit.getEntity());
-		assertEquals("classes total count is 0, but expected maximum is -1",
+		assertEquals("Rule violated for CLASS Foo: classes total count is 0, but expected maximum is -1",
                 limitCheckViolationMessage(new TestNode()));
 	}
 
@@ -158,7 +158,7 @@ public class LimitTest {
 		limit.setCounter(CounterEntity.METHOD.name());
 		limit.setMaximum("-1");
 		assertEquals(CounterEntity.METHOD, limit.getEntity());
-		assertEquals("methods total count is 0, but expected maximum is -1",
+		assertEquals("Rule violated for CLASS Foo: methods total count is 0, but expected maximum is -1",
                 limitCheckViolationMessage(new TestNode()));
 	}
 
@@ -173,11 +173,11 @@ public class LimitTest {
 
 	@Test
 	public void testNoLimits() {
-		assertFalse(limit.check(new TestNode() {
+		assertEquals(CheckResult.Result.OK, limit.check(new TestNode() {
             {
                 instructionCounter = CounterImpl.getInstance(1000, 0);
             }
-        }).isViolation());
+        }).getResult());
 	}
 
 	@Test
@@ -191,34 +191,34 @@ public class LimitTest {
 	public void testMin1() {
 		limit.setMinimum("0.35");
 		assertEquals("0.35", limit.getMinimum());
-		assertFalse(limit.check(new TestNode() {
+		assertEquals(CheckResult.Result.OK, limit.check(new TestNode() {
             {
                 instructionCounter = CounterImpl.getInstance(65, 35);
             }
-        }).isViolation());
+        }).getResult());
 	}
 
     @Test
-    public void testReportMessage() {
+    public void testMessageWhenConformant() {
         limit.setMinimum("0.35");
         assertEquals("0.35", limit.getMinimum());
-        assertEquals("instructions covered ratio is 0.35",
+        assertEquals("Rule conforms for CLASS Foo: instructions covered ratio is 0.35",
                 limit.check(new TestNode() {
             {
                 instructionCounter = CounterImpl.getInstance(65, 35);
             }
-        }).getMessage());
+        }).createMessage());
     }
 
 	@Test
 	public void testMin2() {
 		limit.setMinimum("0.35");
 		assertEquals("0.35", limit.getMinimum());
-		assertFalse(limit.check(new TestNode() {
+		assertEquals(CheckResult.Result.OK, limit.check(new TestNode() {
             {
                 instructionCounter = CounterImpl.getInstance(64, 36);
             }
-        }).isViolation());
+        }).getResult());
 	}
 
 	@Test
@@ -226,7 +226,7 @@ public class LimitTest {
 		limit.setMinimum("0.3500");
 		assertEquals("0.3500", limit.getMinimum());
 		assertEquals(
-				"instructions covered ratio is 0.3400, but expected minimum is 0.3500",
+				"Rule violated for CLASS Foo: instructions covered ratio is 0.3400, but expected minimum is 0.3500",
 				limitCheckViolationMessage(new TestNode() {
                     {
                         instructionCounter = CounterImpl.getInstance(66, 34);
@@ -239,7 +239,7 @@ public class LimitTest {
 		limit.setMinimum("0.35");
 		assertEquals("0.35", limit.getMinimum());
 		assertEquals(
-				"instructions covered ratio is 0.34, but expected minimum is 0.35",
+				"Rule violated for CLASS Foo: instructions covered ratio is 0.34, but expected minimum is 0.35",
 				limitCheckViolationMessage(new TestNode() {
                     {
                         instructionCounter = CounterImpl.getInstance(65001,
@@ -254,7 +254,7 @@ public class LimitTest {
 		limit.setValue(CounterValue.MISSEDCOUNT.name());
 		assertEquals("10000", limit.getMinimum());
 		assertEquals(
-				"instructions missed count is 9990, but expected minimum is 10000",
+				"Rule violated for CLASS Foo: instructions missed count is 9990, but expected minimum is 10000",
 				limitCheckViolationMessage(new TestNode() {
                     {
                         instructionCounter = CounterImpl.getInstance(9990, 0);
@@ -267,7 +267,7 @@ public class LimitTest {
 		limit.setMinimum("12345");
 		assertEquals("12345", limit.getMinimum());
 		assertEquals(
-				"instructions covered ratio is 0, but expected minimum is 12345",
+				"Rule violated for CLASS Foo: instructions covered ratio is 0, but expected minimum is 12345",
 				limitCheckViolationMessage(new TestNode() {
                     {
                         instructionCounter = CounterImpl.getInstance(1, 999);
@@ -287,22 +287,22 @@ public class LimitTest {
 		limit.setMaximum("12345678");
 		limit.setValue(CounterValue.MISSEDCOUNT.name());
 		assertEquals("12345678", limit.getMaximum());
-		assertFalse(limit.check(new TestNode() {
+		assertEquals(CheckResult.Result.OK, limit.check(new TestNode() {
             {
                 instructionCounter = CounterImpl.getInstance(12345678, 0);
             }
-        }).isViolation());
+        }).getResult());
 	}
 
 	@Test
 	public void testMax2() {
 		limit.setMaximum("0.999");
 		assertEquals("0.999", limit.getMaximum());
-		assertFalse(limit.check(new TestNode() {
+		assertEquals(CheckResult.Result.OK, limit.check(new TestNode() {
             {
                 instructionCounter = CounterImpl.getInstance(1, 99);
             }
-        }).isViolation());
+        }).getResult());
 	}
 
 	@Test
@@ -310,7 +310,7 @@ public class LimitTest {
 		limit.setMaximum("0.999");
 		assertEquals("0.999", limit.getMaximum());
 		assertEquals(
-				"instructions covered ratio is 1.000, but expected maximum is 0.999",
+				"Rule violated for CLASS Foo: instructions covered ratio is 1.000, but expected maximum is 0.999",
 				limitCheckViolationMessage(new TestNode() {
                     {
                         instructionCounter = CounterImpl.getInstance(0, 1);
@@ -323,7 +323,7 @@ public class LimitTest {
 		limit.setMaximum("0.999");
 		assertEquals("0.999", limit.getMaximum());
 		assertEquals(
-				"instructions covered ratio is 1.000, but expected maximum is 0.999",
+				"Rule violated for CLASS Foo: instructions covered ratio is 1.000, but expected maximum is 0.999",
 				limitCheckViolationMessage(new TestNode() {
                     {
                         instructionCounter = CounterImpl.getInstance(999,
@@ -334,10 +334,10 @@ public class LimitTest {
 
     private String limitCheckViolationMessage(TestNode testNode) {
         String message = null;
-        Limit.CheckResult checkResult = limit.check(testNode);
+        CheckResult checkResult = limit.check(testNode);
         if (checkResult != null) {
-            assertTrue(checkResult.isViolation());
-            message = checkResult.getMessage();
+            assertTrue(checkResult.getResult() == CheckResult.Result.TOO_HIGH || checkResult.getResult() == CheckResult.Result.TOO_LOW);
+            message = checkResult.createMessage();
         }
         return message;
     }

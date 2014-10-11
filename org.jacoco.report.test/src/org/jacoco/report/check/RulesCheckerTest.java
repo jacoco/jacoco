@@ -19,7 +19,6 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.jacoco.core.analysis.ICounter.CounterValue;
-import org.jacoco.core.analysis.ICoverageNode;
 import org.jacoco.core.analysis.ICoverageNode.ElementType;
 import org.jacoco.report.ILanguageNames;
 import org.jacoco.report.ReportStructureTestDriver;
@@ -53,7 +52,7 @@ public class RulesCheckerTest implements ICheckerOutput {
 		checker.setRules(Arrays.asList(rule));
 		driver.sendGroup(checker.createVisitor(this));
 		assertEquals(
-				Arrays.asList("Rule violated for bundle bundle: instructions missed count is 10, but expected maximum is 5"),
+				Arrays.asList("Rule violated for BUNDLE bundle: instructions missed count is 10, but expected maximum is 5"),
                 violationMessages);
 	}
 
@@ -93,18 +92,18 @@ public class RulesCheckerTest implements ICheckerOutput {
 
 		driver.sendGroup(checker.createVisitor(this));
 		assertEquals(
-				Arrays.asList("Rule violated for class MyClass: instructions missed count is 10, but expected maximum is 5"),
+				Arrays.asList("Rule violated for CLASS MyClass: instructions missed count is 10, but expected maximum is 5"),
                 violationMessages);
 	}
 
-	public void onViolation(ICoverageNode node, Rule rule, Limit limit,
-			String message) {
-		violationMessages.add(message);
-	}
-
     @Override
-    public void onConformance(ICoverageNode node, Rule rule, Limit limit, String message) {
-        conformanceMessages.add(message);
+    public void onResult(CheckResult result) {
+        String message = result.createMessage();
+        if (result.getResult() == CheckResult.Result.OK) {
+            conformanceMessages.add(message);
+        } else {
+            violationMessages.add(message);
+        }
     }
 
 }

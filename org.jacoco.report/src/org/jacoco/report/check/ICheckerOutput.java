@@ -7,44 +7,23 @@
  *
  * Contributors:
  *    Marc R. Hoffmann - initial API and implementation
+ *    Håvard Nesvold - refactored to also accommodate output from successful checks
  *    
  *******************************************************************************/
 package org.jacoco.report.check;
 
-import org.jacoco.core.analysis.ICoverageNode;
-
 /**
- * Call-back interface which is used to report rule violations / conformance to.
+ * Call-back interface which is used to report rule checks to.
  * 
  */
 public interface ICheckerOutput {
 
-	/**
-	 * Called for every rule violation.
-	 * 
-	 * @param node
-	 *            node which violates a rule
-	 * @param rule
-	 *            rule which is violated
-	 * @param limit
-	 *            limit which is violated
-	 * @param message
-	 *            readable message describing this violation
-	 */
-	void onViolation(ICoverageNode node, Rule rule, Limit limit, String message);
-
     /**
-     * Called for every conformant rule
+     * Called for every check;
      *
-     * @param node
-     *            node which conforms to a rule
-     * @param rule
-     *            rule which has been checked
-     * @param limit
-     *            limit which is upheld
-     * @param message
-     *            readable message describing the checked rule
+     * @param result
+     *            the result of the checked rule.
      */
-    void onConformance(ICoverageNode node, Rule rule, Limit limit, String message);
+    void onResult(CheckResult result);
 
 }
