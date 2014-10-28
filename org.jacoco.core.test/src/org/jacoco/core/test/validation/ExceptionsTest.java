@@ -50,7 +50,7 @@ public class ExceptionsTest extends ValidationTestBase {
 		assertLine("noExceptionTryCatch.tryBlock", ICounter.FULLY_COVERED);
 		assertLine("noExceptionTryCatch.catchBlock", ICounter.NOT_COVERED);
 
-		// 4. Try/Catch Block Without a Implicit Exception Thrown
+		// 4. Try/Catch Block With Exception Thrown Implicitly
 		// As always with implicit exceptions we don't see when a block aborts
 		// somewhere in the middle.
 		assertLine("implicitExceptionTryCatch.beforeBlock",
