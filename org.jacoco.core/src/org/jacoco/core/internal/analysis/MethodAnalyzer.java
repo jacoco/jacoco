@@ -97,12 +97,28 @@ public class MethodAnalyzer extends MethodProbesVisitor {
 	@Override
 	public void visitLineNumber(final int line, final Label start) {
 		currentLine = line;
-		if (firstLine > line || lastLine == ISourceNode.UNKNOWN_LINE) {
+		updateFirstLine(line);
+		updateLastLine(line);
+	}
+
+	private void updateFirstLine(final int line) {
+		if (lineIsBeforeFirstLine(line)) {
 			firstLine = line;
 		}
-		if (lastLine < line) {
+	}
+
+	private boolean lineIsBeforeFirstLine(final int line) {
+		return firstLine > line || firstLine == ISourceNode.UNKNOWN_LINE;
+	}
+
+	private void updateLastLine(final int line) {
+		if (lineIsAfterLastLine(line)) {
 			lastLine = line;
 		}
+	}
+
+	private boolean lineIsAfterLastLine(final int line) {
+		return lastLine < line;
 	}
 
 	private void visitInstruction() {
