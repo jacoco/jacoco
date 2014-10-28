@@ -209,10 +209,10 @@ public class MethodAnalyzer extends MethodProbesVisitor {
 		LabelInfo.resetDone(labels);
 		jumps.add(new Jump(lastInstruction, dflt));
 		LabelInfo.setDone(dflt);
-		for (final Label l : labels) {
-			if (!LabelInfo.isDone(l)) {
-				jumps.add(new Jump(lastInstruction, l));
-				LabelInfo.setDone(l);
+		for (final Label label : labels) {
+			if (!LabelInfo.isDone(label)) {
+				jumps.add(new Jump(lastInstruction, label));
+				LabelInfo.setDone(label);
 			}
 		}
 	}
