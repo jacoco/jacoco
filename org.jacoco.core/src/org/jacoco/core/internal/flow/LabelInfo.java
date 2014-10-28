@@ -76,7 +76,7 @@ public final class LabelInfo {
 	/**
 	 * Checks whether multiple control paths lead to a label. Control flow path
 	 * to a certain label are: jump targets, exception handlers and normal
-	 * control flow from its predecessor instruction (unless this a
+	 * control flow from its predecessor instruction (unless this is an
 	 * unconditional jump or method exit).
 	 * 
 	 * @param label
