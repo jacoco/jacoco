@@ -63,8 +63,13 @@ public final class LabelFlowAnalyzer extends MethodVisitor {
 	@Override
 	public void visitTryCatchBlock(final Label start, final Label end,
 			final Label handler, final String type) {
-		// Enforce probes at the beginning and end of the block:
+		// Enforce probe at the beginning of the block. Assuming the start of
+		// the block already is successor of some other code, adding a target
+		// makes the start a multitarget. However, if the start of the block
+		// also is the start of the method, no probe will be added.
 		LabelInfo.setTarget(start);
+
+		// Mark exception handler as possible target of the block
 		LabelInfo.setTarget(handler);
 	}
 
