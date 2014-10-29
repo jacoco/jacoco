@@ -61,7 +61,7 @@ public class ClassProbesAdapter extends ClassVisitor implements
 		EMPTY_METHOD_PROBES_VISITOR = new Impl();
 	}
 
-	private final ClassProbesVisitor cv;
+	private final ClassProbesVisitor classProbesVisitor;
 
 	private final boolean trackFrames;
 
@@ -72,15 +72,15 @@ public class ClassProbesAdapter extends ClassVisitor implements
 	/**
 	 * Creates a new adapter that delegates to the given visitor.
 	 * 
-	 * @param cv
+	 * @param classProbesVisitor
 	 *            instance to delegate to
 	 * @param trackFrames
 	 *            if <code>true</code> stackmap frames are tracked and provided
 	 */
-	public ClassProbesAdapter(final ClassProbesVisitor cv,
+	public ClassProbesAdapter(final ClassProbesVisitor classProbesVisitor,
 			final boolean trackFrames) {
-		super(JaCoCo.ASM_API_VERSION, cv);
-		this.cv = cv;
+		super(JaCoCo.ASM_API_VERSION, classProbesVisitor);
+		this.classProbesVisitor = classProbesVisitor;
 		this.trackFrames = trackFrames;
 	}
 
@@ -95,15 +95,15 @@ public class ClassProbesAdapter extends ClassVisitor implements
 	@Override
 	public final MethodVisitor visitMethod(final int access, final String name,
 			final String desc, final String signature, final String[] exceptions) {
-		final MethodProbesVisitor methodProbes;
-		final MethodProbesVisitor mv = cv.visitMethod(access, name, desc,
-				signature, exceptions);
+		final MethodProbesVisitor methodProbesVisitor;
+		final MethodProbesVisitor mv = classProbesVisitor.visitMethod(access,
+				name, desc, signature, exceptions);
 		if (mv == null) {
 			// We need to visit the method in any case, otherwise probe ids
 			// are not reproducible
-			methodProbes = EMPTY_METHOD_PROBES_VISITOR;
+			methodProbesVisitor = EMPTY_METHOD_PROBES_VISITOR;
 		} else {
-			methodProbes = mv;
+			methodProbesVisitor = mv;
 		}
 		return new MethodSanitizer(null, access, name, desc, signature,
 				exceptions) {
@@ -113,7 +113,7 @@ public class ClassProbesAdapter extends ClassVisitor implements
 				super.visitEnd();
 				LabelFlowAnalyzer.markLabels(this);
 				final MethodProbesAdapter probesAdapter = new MethodProbesAdapter(
-						methodProbes, ClassProbesAdapter.this);
+						methodProbesVisitor, ClassProbesAdapter.this);
 				if (trackFrames) {
 					final AnalyzerAdapter analyzer = new AnalyzerAdapter(
 							ClassProbesAdapter.this.name, access, name, desc,
@@ -129,7 +129,7 @@ public class ClassProbesAdapter extends ClassVisitor implements
 
 	@Override
 	public void visitEnd() {
-		cv.visitTotalProbeCount(counter);
+		classProbesVisitor.visitTotalProbeCount(counter);
 		super.visitEnd();
 	}
 
