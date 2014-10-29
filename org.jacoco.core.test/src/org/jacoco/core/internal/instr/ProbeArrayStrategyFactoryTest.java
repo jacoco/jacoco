@@ -183,7 +183,7 @@ public class ProbeArrayStrategyFactoryTest {
 		}
 
 		@Override
-		public FieldVisitor visitField(int access, String name, String desc,
+		public FieldVisitor visitField(int access, String name, String descriptor,
 				String signature, Object value) {
 			assertNull(fieldName);
 			fieldAccess = access;
@@ -192,7 +192,7 @@ public class ProbeArrayStrategyFactoryTest {
 		}
 
 		@Override
-		public MethodVisitor visitMethod(int access, String name, String desc,
+		public MethodVisitor visitMethod(int access, String name, String descriptor,
 				String signature, String[] exceptions) {
 			assertNull(methodName);
 			methodAccess = access;

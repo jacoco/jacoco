@@ -69,7 +69,7 @@ public class ClassProbesAdapterTest {
 
 		@Override
 		public MethodProbesVisitor visitMethod(int access, String name,
-				String desc, String signature, String[] exceptions) {
+				String descriptor, String signature, String[] exceptions) {
 			return null;
 		}
 
@@ -95,7 +95,7 @@ public class ClassProbesAdapterTest {
 		final MockClassVisitor cv = new MockClassVisitor() {
 			@Override
 			public MethodProbesVisitor visitMethod(int access, String name,
-					String desc, String signature, String[] exceptions) {
+					String descriptor, String signature, String[] exceptions) {
 				return new MockMethodVisitor();
 			}
 		};
@@ -128,7 +128,7 @@ public class ClassProbesAdapterTest {
 		final MockClassVisitor cv = new MockClassVisitor() {
 			@Override
 			public MethodProbesVisitor visitMethod(int access, String name,
-					String desc, String signature, String[] exceptions) {
+					String descriptor, String signature, String[] exceptions) {
 				return mv;
 			}
 		};
@@ -144,7 +144,7 @@ public class ClassProbesAdapterTest {
 		final MockClassVisitor cv = new MockClassVisitor() {
 			@Override
 			public MethodProbesVisitor visitMethod(int access, String name,
-					String desc, String signature, String[] exceptions) {
+					String descriptor, String signature, String[] exceptions) {
 				return mv;
 			}
 		};

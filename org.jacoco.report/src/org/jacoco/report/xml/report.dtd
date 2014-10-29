@@ -51,7 +51,7 @@
 <!ELEMENT method (counter*)>
   <!-- method name -->
   <!ATTLIST method name CDATA #REQUIRED>
-  <!-- method parameter description -->
+  <!-- method descriptor -->
   <!ATTLIST method desc CDATA #REQUIRED>
   <!-- first source line number of this method -->
   <!ATTLIST method line CDATA #IMPLIED>

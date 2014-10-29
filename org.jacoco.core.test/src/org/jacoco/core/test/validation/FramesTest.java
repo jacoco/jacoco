@@ -58,9 +58,9 @@ public class FramesTest {
 		}
 
 		@Override
-		public MethodVisitor visitMethod(int access, String name, String desc,
+		public MethodVisitor visitMethod(int access, String name, String descriptor,
 				String signature, String[] exceptions) {
-			final MethodVisitor mv = super.visitMethod(access, name, desc,
+			final MethodVisitor mv = super.visitMethod(access, name, descriptor,
 					signature, exceptions);
 			return new MethodVisitor(JaCoCo.ASM_API_VERSION, mv) {
 				@Override
