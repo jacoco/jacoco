@@ -58,14 +58,14 @@ public interface ILanguageNames {
 	 *            vm name of a containing class
 	 * @param vmmethodname
 	 *            vm name of the method
-	 * @param vmdesc
+	 * @param vmdescriptor
 	 *            vm parameter description of the method
 	 * @param vmsignature
 	 *            vm signature of the method (may be <code>null</code>)
 	 * @return language specific notation for the method
 	 */
 	public String getMethodName(String vmclassname, String vmmethodname,
-			String vmdesc, String vmsignature);
+			String vmdescriptor, String vmsignature);
 
 	/**
 	 * Calculates the language specific fully qualified name of a method.
@@ -74,13 +74,13 @@ public interface ILanguageNames {
 	 *            vm name of a containing class
 	 * @param vmmethodname
 	 *            vm name of the method
-	 * @param vmdesc
+	 * @param vmdescriptor
 	 *            vm parameter description of the method
 	 * @param vmsignature
 	 *            vm signature of the method (may be <code>null</code>)
 	 * @return language specific notation for the method
 	 */
 	public String getQualifiedMethodName(String vmclassname,
-			String vmmethodname, String vmdesc, String vmsignature);
+			String vmmethodname, String vmdescriptor, String vmsignature);
 
 }

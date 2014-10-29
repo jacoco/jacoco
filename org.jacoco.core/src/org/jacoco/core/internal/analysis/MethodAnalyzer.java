@@ -53,7 +53,7 @@ public class MethodAnalyzer extends MethodProbesVisitor {
 	private final List<Jump> jumps = new ArrayList<Jump>();
 
 	/** Last instruction in byte code sequence */
-	private Instruction lastInsn;
+	private Instruction lastInstruction;
 
 	/**
 	 * New Method analyzer for the given probe data.
@@ -90,7 +90,7 @@ public class MethodAnalyzer extends MethodProbesVisitor {
 	public void visitLabel(final Label label) {
 		currentLabel.add(label);
 		if (!LabelInfo.isSuccessor(label)) {
-			lastInsn = null;
+			lastInstruction = null;
 		}
 	}
 
@@ -105,74 +105,74 @@ public class MethodAnalyzer extends MethodProbesVisitor {
 		}
 	}
 
-	private void visitInsn() {
-		final Instruction insn = new Instruction(currentLine);
-		instructions.add(insn);
-		if (lastInsn != null) {
-			insn.setPredecessor(lastInsn);
+	private void visitInstruction() {
+		final Instruction instruction = new Instruction(currentLine);
+		instructions.add(instruction);
+		if (lastInstruction != null) {
+			instruction.setPredecessor(lastInstruction);
 		}
 		final int labelCount = currentLabel.size();
 		if (labelCount > 0) {
 			for (int i = labelCount; --i >= 0;) {
-				LabelInfo.setInstruction(currentLabel.get(i), insn);
+				LabelInfo.setInstruction(currentLabel.get(i), instruction);
 			}
 			currentLabel.clear();
 		}
-		lastInsn = insn;
+		lastInstruction = instruction;
 	}
 
 	@Override
 	public void visitInsn(final int opcode) {
-		visitInsn();
+		visitInstruction();
 	}
 
 	@Override
 	public void visitIntInsn(final int opcode, final int operand) {
-		visitInsn();
+		visitInstruction();
 	}
 
 	@Override
 	public void visitVarInsn(final int opcode, final int var) {
-		visitInsn();
+		visitInstruction();
 	}
 
 	@Override
 	public void visitTypeInsn(final int opcode, final String type) {
-		visitInsn();
+		visitInstruction();
 	}
 
 	@Override
 	public void visitFieldInsn(final int opcode, final String owner,
 			final String name, final String desc) {
-		visitInsn();
+		visitInstruction();
 	}
 
 	@Override
 	public void visitMethodInsn(final int opcode, final String owner,
 			final String name, final String desc, final boolean itf) {
-		visitInsn();
+		visitInstruction();
 	}
 
 	@Override
 	public void visitInvokeDynamicInsn(final String name, final String desc,
 			final Handle bsm, final Object... bsmArgs) {
-		visitInsn();
+		visitInstruction();
 	}
 
 	@Override
 	public void visitJumpInsn(final int opcode, final Label label) {
-		visitInsn();
-		jumps.add(new Jump(lastInsn, label));
+		visitInstruction();
+		jumps.add(new Jump(lastInstruction, label));
 	}
 
 	@Override
 	public void visitLdcInsn(final Object cst) {
-		visitInsn();
+		visitInstruction();
 	}
 
 	@Override
 	public void visitIincInsn(final int var, final int increment) {
-		visitInsn();
+		visitInstruction();
 	}
 
 	@Override
@@ -188,39 +188,39 @@ public class MethodAnalyzer extends MethodProbesVisitor {
 	}
 
 	private void visitSwitchInsn(final Label dflt, final Label[] labels) {
-		visitInsn();
+		visitInstruction();
 		LabelInfo.resetDone(labels);
-		jumps.add(new Jump(lastInsn, dflt));
+		jumps.add(new Jump(lastInstruction, dflt));
 		LabelInfo.setDone(dflt);
-		for (final Label l : labels) {
-			if (!LabelInfo.isDone(l)) {
-				jumps.add(new Jump(lastInsn, l));
-				LabelInfo.setDone(l);
+		for (final Label label : labels) {
+			if (!LabelInfo.isDone(label)) {
+				jumps.add(new Jump(lastInstruction, label));
+				LabelInfo.setDone(label);
 			}
 		}
 	}
 
 	@Override
 	public void visitMultiANewArrayInsn(final String desc, final int dims) {
-		visitInsn();
+		visitInstruction();
 	}
 
 	@Override
 	public void visitProbe(final int probeId) {
 		addProbe(probeId);
-		lastInsn = null;
+		lastInstruction = null;
 	}
 
 	@Override
 	public void visitJumpInsnWithProbe(final int opcode, final Label label,
 			final int probeId, final IFrame frame) {
-		visitInsn();
+		visitInstruction();
 		addProbe(probeId);
 	}
 
 	@Override
 	public void visitInsnWithProbe(final int opcode, final int probeId) {
-		visitInsn();
+		visitInstruction();
 		addProbe(probeId);
 	}
 
@@ -238,12 +238,12 @@ public class MethodAnalyzer extends MethodProbesVisitor {
 
 	private void visitSwitchInsnWithProbes(final Label dflt,
 			final Label[] labels) {
-		visitInsn();
+		visitInstruction();
 		LabelInfo.resetDone(dflt);
 		LabelInfo.resetDone(labels);
 		visitSwitchTarget(dflt);
-		for (final Label l : labels) {
-			visitSwitchTarget(l);
+		for (final Label label : labels) {
+			visitSwitchTarget(label);
 		}
 	}
 
@@ -251,7 +251,7 @@ public class MethodAnalyzer extends MethodProbesVisitor {
 		final int id = LabelInfo.getProbeId(label);
 		if (!LabelInfo.isDone(label)) {
 			if (id == LabelInfo.NO_PROBE) {
-				jumps.add(new Jump(lastInsn, label));
+				jumps.add(new Jump(lastInstruction, label));
 			} else {
 				addProbe(id);
 			}
@@ -284,9 +284,9 @@ public class MethodAnalyzer extends MethodProbesVisitor {
 	}
 
 	private void addProbe(final int probeId) {
-		lastInsn.addBranch();
+		lastInstruction.addBranch();
 		if (probes != null && probes[probeId]) {
-			coveredProbes.add(lastInsn);
+			coveredProbes.add(lastInstruction);
 		}
 	}
 
