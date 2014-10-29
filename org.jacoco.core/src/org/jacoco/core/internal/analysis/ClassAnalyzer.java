@@ -77,7 +77,7 @@ public class ClassAnalyzer extends ClassProbesVisitor {
 
 	@Override
 	public MethodProbesVisitor visitMethod(final int access, final String name,
-			final String desc, final String signature, final String[] exceptions) {
+			final String descriptor, final String signature, final String[] exceptions) {
 
 		InstrSupport.assertNotInstrumented(name, coverage.getName());
 
@@ -85,7 +85,7 @@ public class ClassAnalyzer extends ClassProbesVisitor {
 			return null;
 		}
 
-		return new MethodAnalyzer(stringPool.get(name), stringPool.get(desc),
+		return new MethodAnalyzer(stringPool.get(name), stringPool.get(descriptor),
 				stringPool.get(signature), probes) {
 			@Override
 			public void visitEnd() {
@@ -107,9 +107,9 @@ public class ClassAnalyzer extends ClassProbesVisitor {
 
 	@Override
 	public FieldVisitor visitField(final int access, final String name,
-			final String desc, final String signature, final Object value) {
+			final String descriptor, final String signature, final Object value) {
 		InstrSupport.assertNotInstrumented(name, coverage.getName());
-		return super.visitField(access, name, desc, signature, value);
+		return super.visitField(access, name, descriptor, signature, value);
 	}
 
 	@Override
