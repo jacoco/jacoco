@@ -66,7 +66,7 @@ public class CoverageBuilderTest {
 		assertEquals(1, methods.size());
 		IMethodCoverage m = methods.iterator().next();
 		assertEquals("doit", m.getName());
-		assertEquals("()V", m.getDesc());
+		assertEquals("()V", m.getDescriptor());
 		assertEquals(1, m.getMethodCounter().getTotalCount());
 		assertEquals(0, m.getMethodCounter().getCoveredCount());
 		assertEquals(3, m.getLineCounter().getTotalCount());
@@ -98,7 +98,7 @@ public class CoverageBuilderTest {
 		assertEquals(1, methods.size());
 		IMethodCoverage m = methods.iterator().next();
 		assertEquals("doit", m.getName());
-		assertEquals("()V", m.getDesc());
+		assertEquals("()V", m.getDescriptor());
 		assertEquals(1, m.getMethodCounter().getTotalCount());
 		assertEquals(1, m.getMethodCounter().getCoveredCount());
 		assertEquals(3, m.getLineCounter().getTotalCount());

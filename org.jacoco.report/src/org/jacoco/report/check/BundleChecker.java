@@ -121,7 +121,7 @@ class BundleChecker {
 
 	private void check(final IMethodCoverage method, final String className) {
 		final String name = names.getQualifiedMethodName(className,
-				method.getName(), method.getDesc(), method.getSignature());
+				method.getName(), method.getDescriptor(), method.getSignature());
 		checkRules(method, methodRules, "method", name);
 	}
 

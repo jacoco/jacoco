@@ -58,7 +58,7 @@ public class ClassPage extends TablePage<IClassCoverage> {
 	public void render() throws IOException {
 		for (final IMethodCoverage m : getNode().getMethods()) {
 			final String label = context.getLanguageNames().getMethodName(
-					getNode().getName(), m.getName(), m.getDesc(),
+					getNode().getName(), m.getName(), m.getDescriptor(),
 					m.getSignature());
 			addItem(new MethodItem(m, label, sourcePage));
 		}

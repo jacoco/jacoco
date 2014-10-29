@@ -92,7 +92,7 @@ public final class XMLCoverageWriter {
 	private static void writeMethod(final IMethodCoverage m,
 			final XMLElement parent) throws IOException {
 		final XMLElement element = createChild(parent, "method", m.getName());
-		element.attr("desc", m.getDesc());
+		element.attr("desc", m.getDescriptor());
 		final int line = m.getFirstLine();
 		if (line != -1) {
 			element.attr("line", line);

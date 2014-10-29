@@ -56,10 +56,11 @@ public class ClassProbesAdapter extends ClassVisitor implements
 
 	@Override
 	public final MethodVisitor visitMethod(final int access, final String name,
-			final String desc, final String signature, final String[] exceptions) {
+			final String descriptor, final String signature,
+			final String[] exceptions) {
 		final MethodProbesVisitor methodProbesVisitor;
 		final MethodProbesVisitor mv = classProbesVisitor.visitMethod(access,
-				name, desc, signature, exceptions);
+				name, descriptor, signature, exceptions);
 		if (mv == null) {
 			// We need to visit the method in any case, otherwise probe ids
 			// are not reproducible
@@ -67,7 +68,7 @@ public class ClassProbesAdapter extends ClassVisitor implements
 		} else {
 			methodProbesVisitor = mv;
 		}
-		return new MethodSanitizer(null, access, name, desc, signature,
+		return new MethodSanitizer(null, access, name, descriptor, signature,
 				exceptions) {
 
 			@Override
