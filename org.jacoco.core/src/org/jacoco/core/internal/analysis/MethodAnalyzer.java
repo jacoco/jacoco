@@ -97,12 +97,28 @@ public class MethodAnalyzer extends MethodProbesVisitor {
 	@Override
 	public void visitLineNumber(final int line, final Label start) {
 		currentLine = line;
-		if (firstLine > line || lastLine == ISourceNode.UNKNOWN_LINE) {
+		updateFirstLine(line);
+		updateLastLine(line);
+	}
+
+	private void updateFirstLine(final int line) {
+		if (lineIsBeforeFirstLine(line)) {
 			firstLine = line;
 		}
-		if (lastLine < line) {
+	}
+
+	private boolean lineIsBeforeFirstLine(final int line) {
+		return firstLine > line || firstLine == ISourceNode.UNKNOWN_LINE;
+	}
+
+	private void updateLastLine(final int line) {
+		if (lineIsAfterLastLine(line)) {
 			lastLine = line;
 		}
+	}
+
+	private boolean lineIsAfterLastLine(final int line) {
+		return lastLine < line;
 	}
 
 	private void visitInsn() {
@@ -111,14 +127,15 @@ public class MethodAnalyzer extends MethodProbesVisitor {
 		if (lastInsn != null) {
 			insn.setPredecessor(lastInsn);
 		}
-		final int labelCount = currentLabel.size();
-		if (labelCount > 0) {
-			for (int i = labelCount; --i >= 0;) {
-				LabelInfo.setInstruction(currentLabel.get(i), insn);
-			}
-			currentLabel.clear();
-		}
+		setLabelsForInstruction(insn);
 		lastInsn = insn;
+	}
+
+	private void setLabelsForInstruction(final Instruction instruction) {
+		for (int i = currentLabel.size(); --i >= 0;) {
+			LabelInfo.setInstruction(currentLabel.get(i), instruction);
+		}
+		currentLabel.clear();
 	}
 
 	@Override
@@ -261,26 +278,39 @@ public class MethodAnalyzer extends MethodProbesVisitor {
 
 	@Override
 	public void visitEnd() {
-		// Wire jumps:
-		for (final Jump j : jumps) {
-			LabelInfo.getInstruction(j.target).setPredecessor(j.source);
+		wireJumps();
+		propagateProbeValues();
+		reportResult();
+	}
+
+	private void wireJumps() {
+		for (final Jump jump : jumps) {
+			LabelInfo.getInstruction(jump.target).setPredecessor(jump.source);
 		}
-		// Propagate probe values:
-		for (final Instruction p : coveredProbes) {
-			p.setCovered();
+	}
+
+	private void propagateProbeValues() {
+		for (final Instruction probe : coveredProbes) {
+			probe.setCovered();
 		}
-		// Report result:
+	}
+
+	private void reportResult() {
 		coverage.ensureCapacity(firstLine, lastLine);
-		for (final Instruction i : instructions) {
-			final int total = i.getBranches();
-			final int covered = i.getCoveredBranches();
-			final ICounter instrCounter = covered == 0 ? CounterImpl.COUNTER_1_0
-					: CounterImpl.COUNTER_0_1;
-			final ICounter branchCounter = total > 1 ? CounterImpl.getInstance(
-					total - covered, covered) : CounterImpl.COUNTER_0_0;
-			coverage.increment(instrCounter, branchCounter, i.getLine());
+		for (final Instruction instruction : instructions) {
+			reportInstructionCoverage(instruction);
 		}
 		coverage.incrementMethodCounter();
+	}
+
+	private void reportInstructionCoverage(final Instruction instruction) {
+		final int total = instruction.getBranches();
+		final int covered = instruction.getCoveredBranches();
+		final ICounter instrCounter = covered == 0 ? CounterImpl.COUNTER_1_0
+				: CounterImpl.COUNTER_0_1;
+		final ICounter branchCounter = total > 1 ? CounterImpl.getInstance(
+				total - covered, covered) : CounterImpl.COUNTER_0_0;
+		coverage.increment(instrCounter, branchCounter, instruction.getLine());
 	}
 
 	private void addProbe(final int probeId) {
