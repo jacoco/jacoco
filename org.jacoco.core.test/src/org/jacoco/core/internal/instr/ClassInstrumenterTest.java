@@ -53,7 +53,7 @@ public class ClassInstrumenterTest implements IProbeArrayStrategy {
 				JaCoCo.ASM_API_VERSION) {
 			@Override
 			public MethodVisitor visitMethod(int access, String name,
-					String desc, String signature, String[] exceptions) {
+					String descriptor, String signature, String[] exceptions) {
 				return null;
 			}
 		});

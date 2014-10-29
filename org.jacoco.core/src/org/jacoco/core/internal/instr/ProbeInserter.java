@@ -38,7 +38,7 @@ class ProbeInserter extends MethodVisitor implements IProbeInserter {
 	 * 
 	 * @param access
 	 *            access flags of the adapted method.
-	 * @param desc
+	 * @param descriptor
 	 *            the method's descriptor
 	 * @param mv
 	 *            the method visitor to which this adapter delegates calls
@@ -46,12 +46,12 @@ class ProbeInserter extends MethodVisitor implements IProbeInserter {
 	 *            callback to create the code that retrieves the reference to
 	 *            the probe array
 	 */
-	ProbeInserter(final int access, final String desc, final MethodVisitor mv,
+	ProbeInserter(final int access, final String descriptor, final MethodVisitor mv,
 			final IProbeArrayStrategy arrayStrategy) {
 		super(JaCoCo.ASM_API_VERSION, mv);
 		this.arrayStrategy = arrayStrategy;
 		int pos = (Opcodes.ACC_STATIC & access) == 0 ? 1 : 0;
-		for (final Type t : Type.getArgumentTypes(desc)) {
+		for (final Type t : Type.getArgumentTypes(descriptor)) {
 			pos += t.getSize();
 		}
 		variable = pos;
@@ -97,10 +97,10 @@ class ProbeInserter extends MethodVisitor implements IProbeInserter {
 	}
 
 	@Override
-	public final void visitLocalVariable(final String name, final String desc,
+	public final void visitLocalVariable(final String name, final String descriptor,
 			final String signature, final Label start, final Label end,
 			final int index) {
-		mv.visitLocalVariable(name, desc, signature, start, end, map(index));
+		mv.visitLocalVariable(name, descriptor, signature, start, end, map(index));
 	}
 
 	@Override

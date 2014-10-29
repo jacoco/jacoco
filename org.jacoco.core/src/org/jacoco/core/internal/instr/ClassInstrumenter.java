@@ -51,18 +51,18 @@ public class ClassInstrumenter extends ClassProbesVisitor {
 
 	@Override
 	public FieldVisitor visitField(final int access, final String name,
-			final String desc, final String signature, final Object value) {
+			final String descriptor, final String signature, final Object value) {
 		InstrSupport.assertNotInstrumented(name, className);
-		return super.visitField(access, name, desc, signature, value);
+		return super.visitField(access, name, descriptor, signature, value);
 	}
 
 	@Override
 	public MethodProbesVisitor visitMethod(final int access, final String name,
-			final String desc, final String signature, final String[] exceptions) {
+			final String descriptor, final String signature, final String[] exceptions) {
 
 		InstrSupport.assertNotInstrumented(name, className);
 
-		final MethodVisitor mv = cv.visitMethod(access, name, desc, signature,
+		final MethodVisitor mv = cv.visitMethod(access, name, descriptor, signature,
 				exceptions);
 
 		if (mv == null) {
@@ -70,7 +70,7 @@ public class ClassInstrumenter extends ClassProbesVisitor {
 		}
 		final MethodVisitor frameEliminator = new DuplicateFrameEliminator(mv);
 		final ProbeInserter probeVariableInserter = new ProbeInserter(access,
-				desc, frameEliminator, probeArrayStrategy);
+				descriptor, frameEliminator, probeArrayStrategy);
 		return new MethodInstrumenter(probeVariableInserter,
 				probeVariableInserter);
 	}

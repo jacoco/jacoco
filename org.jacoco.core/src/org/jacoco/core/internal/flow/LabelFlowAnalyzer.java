@@ -164,20 +164,20 @@ public final class LabelFlowAnalyzer extends MethodVisitor {
 
 	@Override
 	public void visitFieldInsn(final int opcode, final String owner,
-			final String name, final String desc) {
+			final String name, final String descriptor) {
 		successor = true;
 		first = false;
 	}
 
 	@Override
 	public void visitMethodInsn(final int opcode, final String owner,
-			final String name, final String desc, final boolean itf) {
+			final String name, final String descriptor, final boolean itf) {
 		successor = true;
 		first = false;
 	}
 
 	@Override
-	public void visitInvokeDynamicInsn(final String name, final String desc,
+	public void visitInvokeDynamicInsn(final String name, final String descriptor,
 			final Handle bsm, final Object... bsmArgs) {
 		successor = true;
 		first = false;
@@ -196,7 +196,7 @@ public final class LabelFlowAnalyzer extends MethodVisitor {
 	}
 
 	@Override
-	public void visitMultiANewArrayInsn(final String desc, final int dims) {
+	public void visitMultiANewArrayInsn(final String descriptor, final int dimensions) {
 		successor = true;
 		first = false;
 	}

@@ -43,7 +43,7 @@ public abstract class ClassProbesVisitor extends ClassVisitor {
 	 */
 	@Override
 	public abstract MethodProbesVisitor visitMethod(int access, String name,
-			String desc, String signature, String[] exceptions);
+			String descriptor, String signature, String[] exceptions);
 
 	/**
 	 * Reports the total number of encountered probes. For classes this method

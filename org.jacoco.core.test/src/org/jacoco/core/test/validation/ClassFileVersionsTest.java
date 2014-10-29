@@ -100,7 +100,7 @@ public class ClassFileVersionsTest {
 
 					@Override
 					public MethodVisitor visitMethod(int access, String name,
-							String desc, String signature, String[] exceptions) {
+							String descriptor, String signature, String[] exceptions) {
 						return new MethodVisitor(JaCoCo.ASM_API_VERSION) {
 
 							@Override

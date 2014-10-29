@@ -20,7 +20,7 @@ import org.jacoco.core.analysis.IMethodCoverage;
 public class MethodCoverageImpl extends SourceNodeImpl implements
 		IMethodCoverage {
 
-	private final String desc;
+	private final String descriptor;
 
 	private final String signature;
 
@@ -29,15 +29,15 @@ public class MethodCoverageImpl extends SourceNodeImpl implements
 	 * 
 	 * @param name
 	 *            name of the method
-	 * @param desc
-	 *            parameter description
+	 * @param descriptor
+	 *            method descriptor
 	 * @param signature
 	 *            generic signature or <code>null</code>
 	 */
-	public MethodCoverageImpl(final String name, final String desc,
+	public MethodCoverageImpl(final String name, final String descriptor,
 			final String signature) {
 		super(ElementType.METHOD, name);
-		this.desc = desc;
+		this.descriptor = descriptor;
 		this.signature = signature;
 	}
 
@@ -66,8 +66,8 @@ public class MethodCoverageImpl extends SourceNodeImpl implements
 
 	// === IMethodCoverage implementation ===
 
-	public String getDesc() {
-		return desc;
+	public String getDescriptor() {
+		return descriptor;
 	}
 
 	public String getSignature() {

@@ -29,7 +29,7 @@ public class MethodCoverageImplTest {
 				"<T:Ljava/lang/Object;>()Ljava/util/Set<TT;>;");
 		assertEquals(ICoverageNode.ElementType.METHOD, node.getElementType());
 		assertEquals("emptySet", node.getName());
-		assertEquals("()Ljava/util/Set;", node.getDesc());
+		assertEquals("()Ljava/util/Set;", node.getDescriptor());
 		assertEquals("<T:Ljava/lang/Object;>()Ljava/util/Set<TT;>;",
 				node.getSignature());
 	}

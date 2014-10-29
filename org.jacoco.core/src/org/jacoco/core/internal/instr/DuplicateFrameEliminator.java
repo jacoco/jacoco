@@ -66,23 +66,23 @@ class DuplicateFrameEliminator extends MethodVisitor {
 
 	@Override
 	public void visitFieldInsn(final int opcode, final String owner,
-			final String name, final String desc) {
+			final String name, final String descriptor) {
 		instruction = true;
-		mv.visitFieldInsn(opcode, owner, name, desc);
+		mv.visitFieldInsn(opcode, owner, name, descriptor);
 	}
 
 	@Override
 	public void visitMethodInsn(final int opcode, final String owner,
-			final String name, final String desc, final boolean itf) {
+			final String name, final String descriptor, final boolean itf) {
 		instruction = true;
-		mv.visitMethodInsn(opcode, owner, name, desc, itf);
+		mv.visitMethodInsn(opcode, owner, name, descriptor, itf);
 	}
 
 	@Override
-	public void visitInvokeDynamicInsn(final String name, final String desc,
+	public void visitInvokeDynamicInsn(final String name, final String descriptor,
 			final Handle bsm, final Object... bsmArgs) {
 		instruction = true;
-		mv.visitInvokeDynamicInsn(name, desc, bsm, bsmArgs);
+		mv.visitInvokeDynamicInsn(name, descriptor, bsm, bsmArgs);
 	}
 
 	@Override
@@ -118,9 +118,9 @@ class DuplicateFrameEliminator extends MethodVisitor {
 	}
 
 	@Override
-	public void visitMultiANewArrayInsn(final String desc, final int dims) {
+	public void visitMultiANewArrayInsn(final String descriptor, final int dimensions) {
 		instruction = true;
-		mv.visitMultiANewArrayInsn(desc, dims);
+		mv.visitMultiANewArrayInsn(descriptor, dimensions);
 	}
 
 }

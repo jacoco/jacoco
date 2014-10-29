@@ -31,21 +31,21 @@ import org.objectweb.asm.commons.JSRInlinerAdapter;
 class MethodSanitizer extends JSRInlinerAdapter {
 
 	MethodSanitizer(final MethodVisitor mv, final int access,
-			final String name, final String desc, final String signature,
+			final String name, final String descriptor, final String signature,
 			final String[] exceptions) {
-		super(JaCoCo.ASM_API_VERSION, mv, access, name, desc, signature,
+		super(JaCoCo.ASM_API_VERSION, mv, access, name, descriptor, signature,
 				exceptions);
 	}
 
 	@Override
-	public void visitLocalVariable(final String name, final String desc,
+	public void visitLocalVariable(final String name, final String descriptor,
 			final String signature, final Label start, final Label end,
 			final int index) {
 		// Here we rely on the usage of the info fields by the tree API. If the
 		// labels have been properly used before the info field contains a
 		// reference to the LabelNode, otherwise null.
 		if (start.info != null && end.info != null) {
-			super.visitLocalVariable(name, desc, signature, start, end, index);
+			super.visitLocalVariable(name, descriptor, signature, start, end, index);
 		}
 	}
 
