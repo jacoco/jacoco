@@ -69,7 +69,7 @@ public final class LabelFlowAnalyzer extends MethodVisitor {
 		// also is the start of the method, no probe will be added.
 		LabelInfo.setTarget(start);
 
-		// Enforce probe at the end of the block:
+		// Mark exception handler as possible target of the block
 		LabelInfo.setTarget(handler);
 	}
 
