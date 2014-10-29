@@ -127,14 +127,15 @@ public class MethodAnalyzer extends MethodProbesVisitor {
 		if (lastInstruction != null) {
 			instruction.setPredecessor(lastInstruction);
 		}
-		final int labelCount = currentLabel.size();
-		if (labelCount > 0) {
-			for (int i = labelCount; --i >= 0;) {
-				LabelInfo.setInstruction(currentLabel.get(i), instruction);
-			}
-			currentLabel.clear();
-		}
+		setLabelsForInstruction(instruction);
 		lastInstruction = instruction;
+	}
+
+	private void setLabelsForInstruction(final Instruction instruction) {
+		for (int i = currentLabel.size(); --i >= 0;) {
+			LabelInfo.setInstruction(currentLabel.get(i), instruction);
+		}
+		currentLabel.clear();
 	}
 
 	@Override
