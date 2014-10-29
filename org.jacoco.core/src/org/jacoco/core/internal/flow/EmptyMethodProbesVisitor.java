@@ -2,6 +2,9 @@ package org.jacoco.core.internal.flow;
 
 import org.objectweb.asm.Label;
 
+/**
+ * This method probes visitor does nothing.
+ */
 public class EmptyMethodProbesVisitor extends MethodProbesVisitor {
 	private static final MethodProbesVisitor INSTANCE = new EmptyMethodProbesVisitor();
 
@@ -33,6 +36,9 @@ public class EmptyMethodProbesVisitor extends MethodProbesVisitor {
 		// nothing to do
 	}
 
+	/**
+	 * @return the only instance of this class
+	 */
 	public static MethodProbesVisitor getInstance() {
 		return INSTANCE;
 	}
