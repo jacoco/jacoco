@@ -61,7 +61,7 @@ public class MethodAnalyzer extends MethodProbesVisitor {
 	 * @param name
 	 *            method name
 	 * @param desc
-	 *            description of the method
+	 *            method descriptor
 	 * @param signature
 	 *            optional parameterized signature
 	 * 

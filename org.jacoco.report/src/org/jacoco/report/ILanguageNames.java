@@ -59,7 +59,7 @@ public interface ILanguageNames {
 	 * @param vmmethodname
 	 *            vm name of the method
 	 * @param vmdesc
-	 *            vm parameter description of the method
+	 *            vm method descriptor
 	 * @param vmsignature
 	 *            vm signature of the method (may be <code>null</code>)
 	 * @return language specific notation for the method
@@ -75,7 +75,7 @@ public interface ILanguageNames {
 	 * @param vmmethodname
 	 *            vm name of the method
 	 * @param vmdesc
-	 *            vm parameter description of the method
+	 *            vm method descriptor
 	 * @param vmsignature
 	 *            vm signature of the method (may be <code>null</code>)
 	 * @return language specific notation for the method
