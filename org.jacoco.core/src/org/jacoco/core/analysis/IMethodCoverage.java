@@ -18,9 +18,9 @@ package org.jacoco.core.analysis;
 public interface IMethodCoverage extends ISourceNode {
 
 	/**
-	 * Returns the parameter description of the method.
+	 * Returns the descriptor of the method.
 	 * 
-	 * @return parameter description
+	 * @return descriptor
 	 */
 	public String getDesc();
 

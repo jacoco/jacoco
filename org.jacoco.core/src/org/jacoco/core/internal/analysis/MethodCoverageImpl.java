@@ -30,7 +30,7 @@ public class MethodCoverageImpl extends SourceNodeImpl implements
 	 * @param name
 	 *            name of the method
 	 * @param desc
-	 *            parameter description
+	 *            method descriptor
 	 * @param signature
 	 *            generic signature or <code>null</code>
 	 */
