@@ -13,7 +13,6 @@ package org.jacoco.core.internal.flow;
 
 import org.jacoco.core.JaCoCo;
 import org.objectweb.asm.ClassVisitor;
-import org.objectweb.asm.Label;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.commons.AnalyzerAdapter;
 
@@ -23,43 +22,6 @@ import org.objectweb.asm.commons.AnalyzerAdapter;
  */
 public class ClassProbesAdapter extends ClassVisitor implements
 		IProbeIdGenerator {
-
-	private static final MethodProbesVisitor EMPTY_METHOD_PROBES_VISITOR;
-
-	static {
-		class Impl extends MethodProbesVisitor {
-
-			@Override
-			public void visitProbe(final int probeId) {
-				// nothing to do
-			}
-
-			@Override
-			public void visitJumpInsnWithProbe(final int opcode,
-					final Label label, final int probeId, final IFrame frame) {
-				// nothing to do
-			}
-
-			@Override
-			public void visitInsnWithProbe(final int opcode, final int probeId) {
-				// nothing to do
-			}
-
-			@Override
-			public void visitTableSwitchInsnWithProbes(final int min,
-					final int max, final Label dflt, final Label[] labels,
-					final IFrame frame) {
-				// nothing to do
-			}
-
-			@Override
-			public void visitLookupSwitchInsnWithProbes(final Label dflt,
-					final int[] keys, final Label[] labels, final IFrame frame) {
-				// nothing to do
-			}
-		}
-		EMPTY_METHOD_PROBES_VISITOR = new Impl();
-	}
 
 	private final ClassProbesVisitor cv;
 
@@ -101,7 +63,7 @@ public class ClassProbesAdapter extends ClassVisitor implements
 		if (mv == null) {
 			// We need to visit the method in any case, otherwise probe ids
 			// are not reproducible
-			methodProbes = EMPTY_METHOD_PROBES_VISITOR;
+			methodProbes = EmptyMethodProbesVisitor.getInstance();
 		} else {
 			methodProbes = mv;
 		}
