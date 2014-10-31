@@ -31,26 +31,30 @@ public class ExceptionsTest extends ValidationTestBase {
 	}
 
 	@Test
-	public void testCoverageResult() {
-
-		// 1. Implicit Exception
+	public void testImplicitException() {
 		// Currently no coverage at all, as we don't see when a block aborts
 		// somewhere in the middle.
 		assertLine("implicitException.before", ICounter.NOT_COVERED);
 		assertLine("implicitException.exception", ICounter.NOT_COVERED);
 		assertLine("implicitException.after", ICounter.NOT_COVERED);
+	}
 
-		// 2. Explicit Exception
+	@Test
+	public void testExplicitException() {
 		// Full coverage, as we recognize throw statements as block boundaries.
 		assertLine("explicitException.before", ICounter.FULLY_COVERED);
 		assertLine("explicitException.throw", ICounter.FULLY_COVERED);
+	}
 
-		// 3. Try/Catch Block Without Exception Thrown
+	@Test
+	public void testTryCatchBlockWithoutException() {
 		assertLine("noExceptionTryCatch.beforeBlock", ICounter.FULLY_COVERED);
 		assertLine("noExceptionTryCatch.tryBlock", ICounter.FULLY_COVERED);
 		assertLine("noExceptionTryCatch.catchBlock", ICounter.NOT_COVERED);
+	}
 
-		// 4. Try/Catch Block With Exception Thrown Implicitly
+	@Test
+	public void testTryCatchBlockWithImplicitException() {
 		// As always with implicit exceptions we don't see when a block aborts
 		// somewhere in the middle.
 		assertLine("implicitExceptionTryCatch.beforeBlock",
@@ -60,23 +64,29 @@ public class ExceptionsTest extends ValidationTestBase {
 		assertLine("implicitExceptionTryCatch.after", ICounter.NOT_COVERED);
 		assertLine("implicitExceptionTryCatch.catchBlock",
 				ICounter.FULLY_COVERED);
+	}
 
-		// 5. Try/Catch Block With Exception Thrown Explicitly
+	@Test
+	public void testTryCatchBlockWithExplicitException() {
 		assertLine("explicitExceptionTryCatch.beforeBlock",
 				ICounter.FULLY_COVERED);
 		assertLine("explicitExceptionTryCatch.before", ICounter.FULLY_COVERED);
 		assertLine("explicitExceptionTryCatch.throw", ICounter.FULLY_COVERED);
 		assertLine("explicitExceptionTryCatch.catchBlock",
 				ICounter.FULLY_COVERED);
+	}
 
-		// 6. Finally Block Without Exception Thrown
-		// Finally block is yellow as the exception path is missing.
+	@Test
+	public void testFinallyBlockWithoutException() {
+		// Finally block is yellow as the non-exception path is missing.
 		assertLine("noExceptionFinally.beforeBlock", ICounter.FULLY_COVERED);
 		assertLine("noExceptionFinally.tryBlock", ICounter.FULLY_COVERED);
 		assertLine("noExceptionFinally.finallyBlock", ICounter.PARTLY_COVERED);
+	}
 
-		// 7. Finally Block With Implicit Exception
-		// Finally block is yellow as the non-exception path is missing.
+	@Test
+	public void testFinallyBlockWithImplicitException() {
+		// Finally block is partly covered as the non-exception path is missing.
 		assertLine("implicitExceptionFinally.beforeBlock",
 				ICounter.FULLY_COVERED);
 		assertLine("implicitExceptionFinally.before", ICounter.NOT_COVERED);
@@ -84,15 +94,15 @@ public class ExceptionsTest extends ValidationTestBase {
 		assertLine("implicitExceptionFinally.after", ICounter.NOT_COVERED);
 		assertLine("implicitExceptionFinally.finallyBlock",
 				ICounter.PARTLY_COVERED);
+	}
 
-		// 8. Finally Block With Exception Thrown Explicitly
+	@Test
+	public void testFinallyBlockWithExplicitException() {
 		assertLine("explicitExceptionFinally.beforeBlock",
 				ICounter.FULLY_COVERED);
 		assertLine("explicitExceptionFinally.before", ICounter.FULLY_COVERED);
 		assertLine("explicitExceptionFinally.throw", ICounter.FULLY_COVERED);
 		assertLine("explicitExceptionFinally.finallyBlock",
 				ICounter.FULLY_COVERED);
-
 	}
-
 }
