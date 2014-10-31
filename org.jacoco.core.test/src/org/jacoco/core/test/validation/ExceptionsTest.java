@@ -70,13 +70,13 @@ public class ExceptionsTest extends ValidationTestBase {
 				ICounter.FULLY_COVERED);
 
 		// 6. Finally Block Without Exception Thrown
-		// Finally block is yellow as the exception path is missing.
+		// Finally block is partly covered as the exception path is missing.
 		assertLine("noExceptionFinally.beforeBlock", ICounter.FULLY_COVERED);
 		assertLine("noExceptionFinally.tryBlock", ICounter.FULLY_COVERED);
 		assertLine("noExceptionFinally.finallyBlock", ICounter.PARTLY_COVERED);
 
 		// 7. Finally Block With Implicit Exception
-		// Finally block is yellow as the non-exception path is missing.
+		// Finally block is partly covered as the non-exception path is missing.
 		assertLine("implicitExceptionFinally.beforeBlock",
 				ICounter.FULLY_COVERED);
 		assertLine("implicitExceptionFinally.before", ICounter.NOT_COVERED);
