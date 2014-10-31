@@ -78,7 +78,7 @@ public class ExceptionsTest extends ValidationTestBase {
 
 	@Test
 	public void testFinallyBlockWithoutException() {
-		// Finally block is yellow as the non-exception path is missing.
+		// Finally block is partly covered as the non-exception path is missing.
 		assertLine("noExceptionFinally.beforeBlock", ICounter.FULLY_COVERED);
 		assertLine("noExceptionFinally.tryBlock", ICounter.FULLY_COVERED);
 		assertLine("noExceptionFinally.finallyBlock", ICounter.PARTLY_COVERED);
