@@ -45,7 +45,9 @@ public abstract class MethodProbesVisitor extends MethodVisitor {
 	 * @param probeId
 	 *            id of the probe to insert
 	 */
-	public abstract void visitProbe(int probeId);
+	@SuppressWarnings("unused")
+	public void visitProbe(final int probeId) {
+	}
 
 	/**
 	 * Visits a jump instruction. A probe with the given id should be inserted
@@ -69,8 +71,10 @@ public abstract class MethodProbesVisitor extends MethodVisitor {
 	 *            method.
 	 * @see MethodVisitor#visitJumpInsn(int, Label)
 	 */
-	public abstract void visitJumpInsnWithProbe(int opcode, Label label,
-			int probeId, IFrame frame);
+	@SuppressWarnings("unused")
+	public void visitJumpInsnWithProbe(final int opcode, final Label label,
+			final int probeId, final IFrame frame) {
+	}
 
 	/**
 	 * Visits a zero operand instruction with a probe. This event is used only
@@ -85,7 +89,9 @@ public abstract class MethodProbesVisitor extends MethodVisitor {
 	 *            id of the probe
 	 * @see MethodVisitor#visitInsn(int)
 	 */
-	public abstract void visitInsnWithProbe(int opcode, int probeId);
+	@SuppressWarnings("unused")
+	public void visitInsnWithProbe(final int opcode, final int probeId) {
+	}
 
 	/**
 	 * Visits a TABLESWITCH instruction with optional probes for each target
@@ -110,8 +116,10 @@ public abstract class MethodProbesVisitor extends MethodVisitor {
 	 *            method.
 	 * @see MethodVisitor#visitTableSwitchInsn(int, int, Label, Label[])
 	 */
-	public abstract void visitTableSwitchInsnWithProbes(int min, int max,
-			Label dflt, Label[] labels, IFrame frame);
+	@SuppressWarnings("unused")
+	public void visitTableSwitchInsnWithProbes(final int min, final int max,
+			final Label dflt, final Label[] labels, final IFrame frame) {
+	}
 
 	/**
 	 * Visits a LOOKUPSWITCH instruction with optional probes for each target
@@ -134,7 +142,9 @@ public abstract class MethodProbesVisitor extends MethodVisitor {
 	 *            method.
 	 * @see MethodVisitor#visitLookupSwitchInsn(Label, int[], Label[])
 	 */
-	public abstract void visitLookupSwitchInsnWithProbes(Label dflt,
-			int[] keys, Label[] labels, IFrame frame);
+	@SuppressWarnings("unused")
+	public void visitLookupSwitchInsnWithProbes(final Label dflt,
+			final int[] keys, final Label[] labels, final IFrame frame) {
+	}
 
 }

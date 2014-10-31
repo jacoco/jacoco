@@ -31,17 +31,9 @@ public class ClassProbesAdapterTest {
 		boolean frame = false;
 
 		@Override
-		public void visitProbe(int probeId) {
-		}
-
-		@Override
 		public void visitJumpInsnWithProbe(int opcode, Label label,
 				int probeId, IFrame frame) {
 			frame.accept(this);
-		}
-
-		@Override
-		public void visitInsnWithProbe(int opcode, int probeId) {
 		}
 
 		@Override
