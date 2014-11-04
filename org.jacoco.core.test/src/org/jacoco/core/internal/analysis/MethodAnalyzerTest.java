@@ -279,6 +279,7 @@ public class MethodAnalyzerTest implements IProbeIdGenerator {
 	public void testJumpToFirstCovered1() {
 		createJumpToFirst();
 		probes[0] = true;
+		probes[1] = true;
 		runMethodAnalzer();
 
 		assertLine(1001, 0, 3, 1, 1);
@@ -290,6 +291,7 @@ public class MethodAnalyzerTest implements IProbeIdGenerator {
 		createJumpToFirst();
 		probes[0] = true;
 		probes[1] = true;
+		probes[2] = true;
 		runMethodAnalzer();
 
 		assertLine(1001, 0, 3, 0, 2);
@@ -530,6 +532,7 @@ public class MethodAnalyzerTest implements IProbeIdGenerator {
 		probes[0] = true;
 		probes[1] = true;
 		probes[2] = true;
+		probes[3] = true;
 		runMethodAnalzer();
 		assertEquals(CounterImpl.getInstance(0, 5),
 				result.getInstructionCounter());

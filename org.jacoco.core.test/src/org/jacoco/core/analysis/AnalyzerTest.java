@@ -93,7 +93,7 @@ public class AnalyzerTest {
 		final byte[] bytes = TargetLoader
 				.getClassDataAsBytes(AnalyzerTest.class);
 		executionData.get(Long.valueOf(CRC64.checksum(bytes)),
-				"org/jacoco/core/analysis/AnalyzerTest", 100);
+				"org/jacoco/core/analysis/AnalyzerTest", 300);
 		analyzer.analyzeClass(bytes, "Test");
 		assertFalse(classes.get("org/jacoco/core/analysis/AnalyzerTest")
 				.isNoMatch());

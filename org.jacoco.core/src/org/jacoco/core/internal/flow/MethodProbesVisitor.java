@@ -14,6 +14,7 @@ package org.jacoco.core.internal.flow;
 import org.jacoco.core.JaCoCo;
 import org.objectweb.asm.Label;
 import org.objectweb.asm.MethodVisitor;
+import org.objectweb.asm.Type;
 
 /**
  * A {@link MethodVisitor} with additional methods to get probe insertion
@@ -74,6 +75,33 @@ public abstract class MethodProbesVisitor extends MethodVisitor {
 	@SuppressWarnings("unused")
 	public void visitJumpInsnWithProbe(final int opcode, final Label label,
 			final int probeId, final IFrame frame) {
+	}
+
+	/**
+	 * Visits a method instruction. A method instruction is an instruction that
+	 * invokes a method. A probe with the given id should be inserted in a way
+	 * that it is executed whenever the method instruction is executed.
+	 * 
+	 * @param opcode
+	 *            the opcode of the instruction to be visited. This opcode is
+	 *            either INVOKEVIRTUAL, INVOKESPECIAL, INVOKESTATIC or
+	 *            INVOKEINTERFACE.
+	 * @param owner
+	 *            the internal name of the method's owner class (see
+	 *            {@link Type#getInternalName() getInternalName}).
+	 * @param name
+	 *            the method's name.
+	 * @param desc
+	 *            the method's descriptor (see {@link Type Type}).
+	 * @param itf
+	 *            if the method's owner class is an interface.
+	 * @param probeId
+	 *            id of the probe
+	 */
+	@SuppressWarnings("unused")
+	public void visitMethodInsnWithProbe(final int opcode, final String owner,
+			final String name, final String desc, final boolean itf,
+			final int probeId) {
 	}
 
 	/**
