@@ -54,4 +54,33 @@ public class ConfigLoaderTest {
 		assertEquals("testid", config.get("sessionid"));
 	}
 
+	@Test
+	public void testEnvironmentVariableReplacement() {
+		Properties system = new Properties();
+		system.setProperty("jacoco-agent.output", "mbean");
+		system.setProperty("output", "tcpserver"); // no prefix
+		system.setProperty("jacoco-agent.sessionid", "testid");
+		Properties config = ConfigLoader.load(
+				"/org/jacoco/agent/rt/agent-test.properties", system);
+
+		assertEquals("mbean", config.get("output"));
+		assertEquals("testid", config.get("sessionid"));
+	}
+
+	@Test
+	public void testEscpaingDollarCharacter() {
+		Properties system = new Properties();
+		system.setProperty("user.home", "/user/home");
+		system.setProperty("java.version", "1.2.3");
+
+		Properties config = ConfigLoader.load(
+				"/org/jacoco/agent/rt/agent-env-test.properties",
+				new Properties());
+
+		assertEquals("/user/home/coverage/unit-test-agent-1.2.3.exec",
+				config.get("destfile"));
+		assertEquals("${ my test { }", config.get("destfile2"));
+		assertEquals("${mytest", config.get("destfile3"));
+	}
+
 }
