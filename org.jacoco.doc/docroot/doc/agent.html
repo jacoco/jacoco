@@ -73,7 +73,10 @@
   <tbody>
     <tr>
       <td><code>destfile</code></td>
-      <td>Path to the output file for execution data.</td>
+      <td>Path to the output file for execution data.<br />Starting with version
+          0.7.x ${user.home}/path or ${java.io.tmpdir}/path can be used to adapt
+          the output path at startup time (offline and online instrumentation).
+      </td>
       <td><code>jacoco.exec</code></td>
     </tr>
     <tr>
@@ -145,7 +148,9 @@
       <td>Output method to use for writing coverage data. Valid options are:
         <ul>
           <li><code>file</code>: At VM termination execution data is written to
-              the file specified in the <code>destfile</code> attribute.</li>
+              the file specified in the <code>destfile</code> attribute.
+              Starting with version 0.7.x ${user.home}/path or ${java.io.tmpdir}/path
+              can be used to adapt the output path at startup time.</li>
           <li><code>tcpserver</code>: The agent listens for incoming connections
               on the TCP port specified by the <code>address</code> and
               <code>port</code> attribute. Execution data is written to this
