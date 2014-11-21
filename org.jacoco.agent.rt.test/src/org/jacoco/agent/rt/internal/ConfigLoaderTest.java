@@ -72,15 +72,27 @@ public class ConfigLoaderTest {
 	public void testSystemPropertiesEscpaingDollarCharacter() {
 		Properties system = new Properties();
 		system.setProperty("user.home", "/user/gerrit");
-		system.setProperty("java.version", "1.2.3");
+		system.setProperty("jacoco-agent.replaceproperties", "true");
 
 		setSystemPropAndAssertEquals(system, "\\\\${ my test \\{ \\}",
-				"\\${ my test { }");
+				"\\\\${ my test \\{ \\}");
 		setSystemPropAndAssertEquals(system, "${mytest", "${mytest");
 		setSystemPropAndAssertEquals(system, "$${user.home}", "$/user/gerrit");
-		setSystemPropAndAssertEquals(system, "\\${user.home}", "${user.home}");
+		setSystemPropAndAssertEquals(system, "\\${user.home}", "\\/user/gerrit");
 		setSystemPropAndAssertEquals(system, "${user.home}/test/path",
 				"/user/gerrit/test/path");
+	}
+
+	@Test
+	public void testSystemPropertiesNoPropertiesReplacement() {
+		Properties system = new Properties();
+		system.setProperty("user.home", "/user/gerrit");
+		system.setProperty("jacoco-agent.replaceproperties", "false");
+
+		setSystemPropAndAssertEquals(system, "$${user.home}", "$${user.home}");
+		setSystemPropAndAssertEquals(system, "\\${user.home}", "\\${user.home}");
+		setSystemPropAndAssertEquals(system, "${user.home}/test/path",
+				"${user.home}/test/path");
 	}
 
 	/**

@@ -73,10 +73,7 @@
   <tbody>
     <tr>
       <td><code>destfile</code></td>
-      <td>Path to the output file for execution data.<br />Starting with version
-          0.7.3 ${user.home}/path or ${java.io.tmpdir}/path can be used to adapt
-          the output path at VM startup time (offline and online instrumentation).
-      </td>
+      <td>Path to the output file for execution data. See also <code>replaceproperties</code> enabling system property replacement.</td>
       <td><code>jacoco.exec</code></td>
     </tr>
     <tr>
@@ -148,9 +145,9 @@
       <td>Output method to use for writing coverage data. Valid options are:
         <ul>
           <li><code>file</code>: At VM termination execution data is written to
-              the file specified in the <code>destfile</code> attribute.
-              Starting with version 0.7.3 ${user.home}/path or ${java.io.tmpdir}/path
-              can be used to adapt the output path at VM startup time.</li>
+              the file specified in the <code>destfile</code> attribute. See
+              also <code>replaceproperties</code> enabling system property
+              replacement.</li>
           <li><code>tcpserver</code>: The agent listens for incoming connections
               on the TCP port specified by the <code>address</code> and
               <code>port</code> attribute. Execution data is written to this
@@ -202,6 +199,16 @@
       </td>
       <td><code>false</code></td>
     </tr>
+    <tr>
+      <td><code>replaceproperties</code></td>
+      <td>If set to <code>true</code> the agent replaces 
+          <code>${system-property-name}</code> occurrences by the value of Java 
+          system property with key &quot;system-property-name&quot;. If the
+          property does not exist an empty string is used. Introduced in version 0.7.3.
+          See below for Details
+      </td>
+      <td><code>false</code></td>
+    </tr>
   </tbody>
 </table>
 
@@ -214,6 +221,26 @@
   that no untrusted sources have access to the TCP server port, or JaCoCo TCP
   clients only connect to trusted targets. Otherwise internal information of the
   application might be revealed or DOS attacks are possible. 
+</p>
+
+<h2>Replacing System properties in Agent configuration</h2>
+
+<p>
+   Examples adapting the output path at VM startup time:
+   <ul>
+      <li><code>${user.home}/path</code></li> 
+      <li><code>${java.io.tmpdir}/path</code></li>
+   </ul>
+   The replacement is only performed if <code>replaceproperties</code> is set 
+   to <code>true</code>. System properties are replaced in
+   <code>jacoco-agent.*</code> that override any agent properties specified
+   in <code>jacoco-agent.properties</code>. The functionality works in
+   offline- and online-instrumentation mode.
+   
+   <p>If enabled only occurrences matching the following regular expression are replaced
+          <code>\$\{[A-Za-z.-]+\}</code>. No escaping mechanism has been
+          implemented as backslash &quot;\&quot; is a path separator on Windows and dollar
+          &quot;$&quot; occurs in filenames of anonymous classes.</p>
 </p>
 
 </div>
