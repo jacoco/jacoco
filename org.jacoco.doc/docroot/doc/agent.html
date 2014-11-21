@@ -223,24 +223,28 @@
   application might be revealed or DOS attacks are possible. 
 </p>
 
-<h2>Replacing System properties in Agent configuration</h2>
+<h2>Replacing system properties in Agent configuration</h2>
 
 <p>
-   Examples adapting the output path at VM startup time:
-   <ul>
-      <li><code>${user.home}/path</code></li> 
-      <li><code>${java.io.tmpdir}/path</code></li>
-   </ul>
-   The replacement is only performed if <code>replaceproperties</code> is set 
-   to <code>true</code>. System properties are replaced in
-   <code>jacoco-agent.*</code> that override any agent properties specified
-   in <code>jacoco-agent.properties</code>. The functionality works in
-   offline- and online-instrumentation mode.
-   
-   <p>If enabled only occurrences matching the following regular expression are replaced
-          <code>\$\{[A-Za-z.-]+\}</code>. No escaping mechanism has been
-          implemented as backslash &quot;\&quot; is a path separator on Windows and dollar
-          &quot;$&quot; occurs in filenames of anonymous classes.</p>
+  Example file <code>jacoco-agent.properties</code> for the agent's
+  <code>destfile</code>:
+
+   <pre><code>
+    replaceproperties=true
+    destfile=${user.home}/coverage-data/coverage.exec
+   </code></pre>
+
+   By default the replacement feature is disabled. The first line in the
+   example above enables it. Once enabled replacement is applied to all
+   Jacoco agent properties. Java's system properties can be used to override
+   the compile time configuration by adding
+   <code>-Djacoco-agent.replacementproperties=true</code> or
+   <code>-Djacoco-agent.destfile=${java.io.tempdir}/coverage.exec</code>
+   to Java's command line.<br/>
+   A regular expression <code>\$\{[A-Za-z_0-9.-]+\}</code> is used to
+   recognize and replace all occurrences. No escaping mechanism has been
+   implemented because backslash &quot;\&quot; is a path separator on Windows
+   and dollar &quot;$&quot; occurs in filenames of anonymous or inner classes.
 </p>
 
 </div>
