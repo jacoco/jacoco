@@ -54,7 +54,7 @@ final class ConfigLoader {
 		if (Boolean.parseBoolean(result.getProperty("replaceproperties",
 				"false"))) {
 			final Pattern replacementPattern = Pattern
-					.compile("\\$\\{([A-Za-z.-_]+)\\}");
+					.compile("\\$\\{([A-Za-z_0-9.-]+)\\}");
 			for (final Map.Entry<Object, Object> entry : result.entrySet()) {
 				final String value = (String) entry.getValue();
 				final Matcher m = replacementPattern.matcher(value);
