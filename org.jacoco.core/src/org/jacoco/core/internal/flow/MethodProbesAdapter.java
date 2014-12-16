@@ -17,6 +17,9 @@ import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.commons.AnalyzerAdapter;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * Adapter that creates additional visitor events for probes to be inserted into
  * a method.
@@ -28,6 +31,8 @@ public final class MethodProbesAdapter extends MethodVisitor {
 	private final IProbeIdGenerator idGenerator;
 
 	private AnalyzerAdapter analyzer;
+
+	private Map<Label, Label> tryCatchProbeLabels = new HashMap<Label, Label>();
 
 	/**
 	 * Create a new adapter instance.
@@ -56,8 +61,27 @@ public final class MethodProbesAdapter extends MethodVisitor {
 	}
 
 	@Override
+	public void visitTryCatchBlock(Label start, final Label end,
+			final Label handler, final String type) {
+		// If a probe will be inserted before the start label, we'll need to use a
+		// different label for the try-catch block.
+		if (tryCatchProbeLabels.containsKey(start)) {
+			start = tryCatchProbeLabels.get(start);
+		} else if (LabelInfo.isMultiTarget(start) && LabelInfo.isSuccessor(start)) {
+			Label probeLabel = new Label();
+			LabelInfo.setSuccessor(probeLabel);
+			tryCatchProbeLabels.put(start, probeLabel);
+			start = probeLabel;
+		}
+		probesVisitor.visitTryCatchBlock(start, end, handler, type);
+	}
+
+	@Override
 	public void visitLabel(final Label label) {
 		if (LabelInfo.isMultiTarget(label) && LabelInfo.isSuccessor(label)) {
+			if (tryCatchProbeLabels.containsKey(label)) {
+				probesVisitor.visitLabel(tryCatchProbeLabels.get(label));
+			}
 			probesVisitor.visitProbe(idGenerator.nextId());
 		}
 		probesVisitor.visitLabel(label);

@@ -312,6 +312,58 @@ public class MethodProbesAdapterTest implements IProbeIdGenerator {
 		expectedVisitor.visitTableSwitchInsn(0, 1, label, labels);
 	}
 
+	@Test
+	public void testVisitTryCatchBlockNoProbe() {
+		Label start = new Label();
+		Label end = new Label();
+		Label handler = new Label();
+
+		adapter.visitTryCatchBlock(start, end, handler, "java/lang/Exception");
+		adapter.visitLabel(start);
+
+		expectedVisitor.visitTryCatchBlock(start, end, handler, "java/lang/Exception");
+		expectedVisitor.visitLabel(start);
+	}
+
+	@Test
+	public void testVisitTryCatchBlockWithProbe() {
+		Label target = new Label();
+		LabelInfo.setSuccessor(target);
+		LabelInfo.setTarget(target);
+		Label end = new Label();
+		Label handler = new Label();
+		Label start = new Label();
+
+		adapter.visitTryCatchBlock(target, end, handler, "java/lang/Exception");
+		adapter.visitLabel(target);
+
+		expectedVisitor.visitTryCatchBlock(start, end, handler, "java/lang/Exception");
+		expectedVisitor.visitLabel(start);
+		expectedVisitor.visitProbe(1000);
+		expectedVisitor.visitLabel(target);
+	}
+
+	@Test
+	public void testVisitMultipleTryCatchBlocksWithProbe() {
+		Label target = new Label();
+		LabelInfo.setSuccessor(target);
+		LabelInfo.setTarget(target);
+		Label end = new Label();
+		Label handler1 = new Label();
+		Label handler2 = new Label();
+		Label start = new Label();
+
+		adapter.visitTryCatchBlock(target, end, handler1, "java/lang/Exception");
+		adapter.visitTryCatchBlock(target, end, handler2, "java/io/IOException");
+		adapter.visitLabel(target);
+
+		expectedVisitor.visitTryCatchBlock(start, end, handler1, "java/lang/Exception");
+		expectedVisitor.visitTryCatchBlock(start, end, handler2, "java/io/IOException");
+		expectedVisitor.visitLabel(start);
+		expectedVisitor.visitProbe(1000);
+		expectedVisitor.visitLabel(target);
+	}
+
 	// === IProbeIdGenerator ===
 
 	public int nextId() {
