@@ -55,4 +55,20 @@ public class ConfigLoaderTest {
 		assertEquals("testid", config.get("sessionid"));
 	}
 
+	@Test
+	public void testSubstituteProperties() {
+		Properties system = new Properties();
+		system.setProperty("user.home", "/home/jacoco");
+		system.setProperty("java.version", "1.5.0");
+		Properties config = ConfigLoader.load(
+				"/org/jacoco/agent/rt/internal/agent-subst-test.properties",
+				system);
+
+		assertEquals("no$replace}", config.get("key0"));
+		assertEquals("/home/jacoco/coverage/jacoco-1.5.0.exec",
+				config.get("key1"));
+		assertEquals("$/home/jacoco", config.get("key2"));
+		assertEquals("/home/jacoco}}", config.get("key3"));
+		assertEquals("${does.not.exist}", config.get("key4"));
+	}
 }

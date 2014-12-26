@@ -61,6 +61,16 @@
       "<code>jacoco-agent.destfile</code>".</li>
 </ul>
 
+<p>
+  In both cases configuration values may contain variables in the format
+  <code>${<i>name</i>}</code> which are resolved with system property values
+  at runtime. For example: 
+</p>
+
+<pre class="source">
+destfile=${user.home}/jacoco.exec
+</pre>
+
 <h2>Class Loading and Initialization</h2>
 <p>
   Unlike with on-the-fly instrumentation offline instrumented classes get a
