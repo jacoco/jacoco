@@ -73,7 +73,7 @@
   <tbody>
     <tr>
       <td><code>destfile</code></td>
-      <td>Path to the output file for execution data.</td>
+      <td>Path to the output file for execution data. See also <code>replaceproperties</code> enabling system property replacement.</td>
       <td><code>jacoco.exec</code></td>
     </tr>
     <tr>
@@ -145,7 +145,9 @@
       <td>Output method to use for writing coverage data. Valid options are:
         <ul>
           <li><code>file</code>: At VM termination execution data is written to
-              the file specified in the <code>destfile</code> attribute.</li>
+              the file specified in the <code>destfile</code> attribute. See
+              also <code>replaceproperties</code> enabling system property
+              replacement.</li>
           <li><code>tcpserver</code>: The agent listens for incoming connections
               on the TCP port specified by the <code>address</code> and
               <code>port</code> attribute. Execution data is written to this
@@ -197,6 +199,16 @@
       </td>
       <td><code>false</code></td>
     </tr>
+    <tr>
+      <td><code>replaceproperties</code></td>
+      <td>If set to <code>true</code> the agent replaces 
+          <code>${system-property-name}</code> occurrences by the value of Java 
+          system property with key &quot;system-property-name&quot;. If the
+          property does not exist an empty string is used. Introduced in version 0.7.3.
+          Also see section about replacing system properties below.
+      </td>
+      <td><code>false</code></td>
+    </tr>
   </tbody>
 </table>
 
@@ -209,6 +221,30 @@
   that no untrusted sources have access to the TCP server port, or JaCoCo TCP
   clients only connect to trusted targets. Otherwise internal information of the
   application might be revealed or DOS attacks are possible. 
+</p>
+
+<h2>Replacing system properties in Agent configuration</h2>
+
+<p>
+  Example file <code>jacoco-agent.properties</code> for the agent's
+  <code>destfile</code>:
+
+   <pre><code>
+    replaceproperties=true
+    destfile=${user.home}/coverage-data/coverage.exec
+   </code></pre>
+
+   By default the replacement feature is disabled. The first line in the
+   example above enables it. Once enabled replacement is applied to all
+   Jacoco agent properties. Java's system properties can be used to override
+   the compile time configuration by adding
+   <code>-Djacoco-agent.replacementproperties=true</code> or
+   <code>-Djacoco-agent.destfile=${java.io.tempdir}/coverage.exec</code>
+   to Java's command line.<br/>
+   A regular expression <code>\$\{[A-Za-z_0-9.-]+\}</code> is used to
+   recognize and replace all occurrences. No escaping mechanism has been
+   implemented because backslash &quot;\&quot; is a path separator on Windows
+   and dollar &quot;$&quot; occurs in filenames of anonymous or inner classes.
 </p>
 
 </div>

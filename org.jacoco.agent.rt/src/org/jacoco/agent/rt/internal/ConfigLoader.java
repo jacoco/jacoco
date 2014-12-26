@@ -15,6 +15,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Map;
 import java.util.Properties;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Internal utility to load runtime configuration from a classpath resource and
@@ -45,6 +47,37 @@ final class ConfigLoader {
 			if (keystr.startsWith(SYS_PREFIX)) {
 				result.put(keystr.substring(SYS_PREFIX.length()),
 						entry.getValue());
+			}
+		}
+
+		// 3. Perform environment variable replacement
+		if (Boolean.parseBoolean(result.getProperty("replaceproperties",
+				"false"))) {
+			final Pattern replacementPattern = Pattern
+					.compile("\\$\\{([A-Za-z_0-9.-]+)\\}");
+			for (final Map.Entry<Object, Object> entry : result.entrySet()) {
+				final String value = (String) entry.getValue();
+				final Matcher m = replacementPattern.matcher(value);
+				if (m.find()) {
+					final StringBuffer sb = new StringBuffer(value.length() * 2);
+					int offset = 0;
+					do {
+						final String propertyName = m.group(1);
+						if (propertyName != null) {
+							sb.append(value, offset, m.start());
+							// replace match by system property
+							sb.append(system.getProperty(propertyName, ""));
+						} else {
+							// keep original string
+							sb.append(value, offset, m.end());
+						}
+						offset = m.end();
+					} while (m.find());
+					if (offset < value.length()) {
+						sb.append(value, offset, value.length());
+					}
+					entry.setValue(sb.toString());
+				}
 			}
 		}
 
