@@ -19,7 +19,6 @@ import java.util.List;
 
 import org.jacoco.core.analysis.IBundleCoverage;
 import org.jacoco.core.analysis.IClassCoverage;
-import org.jacoco.core.analysis.ICoverageNode;
 import org.jacoco.core.analysis.ICoverageNode.ElementType;
 import org.jacoco.core.analysis.IPackageCoverage;
 import org.jacoco.core.analysis.ISourceFileCoverage;
@@ -37,17 +36,19 @@ import org.junit.Test;
 /**
  * Unit tests for {@link BundleChecker}.
  */
-public class BundleCheckerTest implements IViolationsOutput {
+public class BundleCheckerTest implements ICheckerOutput {
 
 	private List<Rule> rules;
 	private ILanguageNames names;
-	private List<String> messages;
+	private List<String> violationMessages;
+    private List<String> conformanceMessages;
 
 	@Before
 	public void setup() {
 		rules = new ArrayList<Rule>();
 		names = new JavaNames();
-		messages = new ArrayList<String>();
+		violationMessages = new ArrayList<String>();
+        conformanceMessages = new ArrayList<String>();
 	}
 
 	@Test
@@ -55,7 +56,7 @@ public class BundleCheckerTest implements IViolationsOutput {
 		addRule(ElementType.BUNDLE);
 		final BundleChecker checker = new BundleChecker(rules, names, this);
 		checker.checkBundle(createBundle());
-		assertMessage("Rule violated for bundle Test: instructions covered ratio is 0.50, but expected minimum is 0.75");
+		assertMessage("Rule violated for BUNDLE Test: instructions covered ratio is 0.50, but expected minimum is 0.75");
 	}
 
 	@Test
@@ -63,7 +64,7 @@ public class BundleCheckerTest implements IViolationsOutput {
 		addRule(ElementType.PACKAGE);
 		final BundleChecker checker = new BundleChecker(rules, names, this);
 		checker.checkBundle(createBundle());
-		assertMessage("Rule violated for package org.jacoco.example: instructions covered ratio is 0.50, but expected minimum is 0.75");
+		assertMessage("Rule violated for PACKAGE org.jacoco.example: instructions covered ratio is 0.50, but expected minimum is 0.75");
 	}
 
 	@Test
@@ -71,7 +72,7 @@ public class BundleCheckerTest implements IViolationsOutput {
 		addRule(ElementType.SOURCEFILE);
 		final BundleChecker checker = new BundleChecker(rules, names, this);
 		checker.checkBundle(createBundle());
-		assertMessage("Rule violated for source file org/jacoco/example/FooClass.java: instructions covered ratio is 0.50, but expected minimum is 0.75");
+		assertMessage("Rule violated for SOURCEFILE org/jacoco/example/FooClass.java: instructions covered ratio is 0.50, but expected minimum is 0.75");
 	}
 
 	@Test
@@ -79,7 +80,7 @@ public class BundleCheckerTest implements IViolationsOutput {
 		addRule(ElementType.CLASS);
 		final BundleChecker checker = new BundleChecker(rules, names, this);
 		checker.checkBundle(createBundle());
-		assertMessage("Rule violated for class org.jacoco.example.FooClass: instructions covered ratio is 0.50, but expected minimum is 0.75");
+		assertMessage("Rule violated for CLASS org.jacoco.example.FooClass: instructions covered ratio is 0.50, but expected minimum is 0.75");
 	}
 
 	@Test
@@ -87,7 +88,7 @@ public class BundleCheckerTest implements IViolationsOutput {
 		addRule(ElementType.METHOD);
 		final BundleChecker checker = new BundleChecker(rules, names, this);
 		checker.checkBundle(createBundle());
-		assertMessage("Rule violated for method org.jacoco.example.FooClass.fooMethod(): instructions covered ratio is 0.50, but expected minimum is 0.75");
+		assertMessage("Rule violated for METHOD org.jacoco.example.FooClass.fooMethod(): instructions covered ratio is 0.50, but expected minimum is 0.75");
 	}
 
 	@Test
@@ -95,7 +96,7 @@ public class BundleCheckerTest implements IViolationsOutput {
 		addRule(ElementType.GROUP);
 		final BundleChecker checker = new BundleChecker(rules, names, this);
 		checker.checkBundle(createBundle());
-		assertEquals(Collections.emptyList(), messages);
+		assertEquals(Collections.emptyList(), violationMessages);
 	}
 
 	@Test
@@ -107,7 +108,7 @@ public class BundleCheckerTest implements IViolationsOutput {
 		rules.add(rule);
 		final BundleChecker checker = new BundleChecker(rules, names, this);
 		checker.checkBundle(createBundle());
-		assertEquals(Collections.emptyList(), messages);
+		assertEquals(Collections.emptyList(), violationMessages);
 	}
 
 	@Test
@@ -115,7 +116,7 @@ public class BundleCheckerTest implements IViolationsOutput {
 		addRule(ElementType.BUNDLE).setExcludes("*");
 		final BundleChecker checker = new BundleChecker(rules, names, this);
 		checker.checkBundle(createBundle());
-		assertEquals(Collections.emptyList(), messages);
+		assertEquals(Collections.emptyList(), violationMessages);
 	}
 
 	private Rule addRule(ElementType elementType) {
@@ -150,12 +151,17 @@ public class BundleCheckerTest implements IViolationsOutput {
 	}
 
 	private void assertMessage(String expected) {
-		assertEquals(Collections.singletonList(expected), messages);
+		assertEquals(Collections.singletonList(expected), violationMessages);
 	}
 
-	public void onViolation(ICoverageNode node, Rule rule, Limit limit,
-			String message) {
-		messages.add(message);
-	}
+    @Override
+    public void onResult(CheckResult result) {
+        String message = result.createMessage();
+        if (result.getResult() == CheckResult.Result.OK) {
+            conformanceMessages.add(message);
+        } else {
+            violationMessages.add(message);
+        }
+    }
 
 }

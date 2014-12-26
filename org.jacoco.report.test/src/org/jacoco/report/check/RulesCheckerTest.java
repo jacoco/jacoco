@@ -19,7 +19,6 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.jacoco.core.analysis.ICounter.CounterValue;
-import org.jacoco.core.analysis.ICoverageNode;
 import org.jacoco.core.analysis.ICoverageNode.ElementType;
 import org.jacoco.report.ILanguageNames;
 import org.jacoco.report.ReportStructureTestDriver;
@@ -29,17 +28,19 @@ import org.junit.Test;
 /**
  * Unit tests for {@link Limit}.
  */
-public class RulesCheckerTest implements IViolationsOutput {
+public class RulesCheckerTest implements ICheckerOutput {
 
 	private RulesChecker checker;
 	private ReportStructureTestDriver driver;
-	private List<String> messages;
+	private List<String> violationMessages;
+    private List<String> conformanceMessages;
 
 	@Before
 	public void setup() {
 		checker = new RulesChecker();
 		driver = new ReportStructureTestDriver();
-		messages = new ArrayList<String>();
+		violationMessages = new ArrayList<String>();
+        conformanceMessages = new ArrayList<String>();
 	}
 
 	@Test
@@ -51,8 +52,8 @@ public class RulesCheckerTest implements IViolationsOutput {
 		checker.setRules(Arrays.asList(rule));
 		driver.sendGroup(checker.createVisitor(this));
 		assertEquals(
-				Arrays.asList("Rule violated for bundle bundle: instructions missed count is 10, but expected maximum is 5"),
-				messages);
+				Arrays.asList("Rule violated for BUNDLE bundle: instructions missed count is 10, but expected maximum is 5"),
+                violationMessages);
 	}
 
 	@Test
@@ -91,13 +92,18 @@ public class RulesCheckerTest implements IViolationsOutput {
 
 		driver.sendGroup(checker.createVisitor(this));
 		assertEquals(
-				Arrays.asList("Rule violated for class MyClass: instructions missed count is 10, but expected maximum is 5"),
-				messages);
+				Arrays.asList("Rule violated for CLASS MyClass: instructions missed count is 10, but expected maximum is 5"),
+                violationMessages);
 	}
 
-	public void onViolation(ICoverageNode node, Rule rule, Limit limit,
-			String message) {
-		messages.add(message);
-	}
+    @Override
+    public void onResult(CheckResult result) {
+        String message = result.createMessage();
+        if (result.getResult() == CheckResult.Result.OK) {
+            conformanceMessages.add(message);
+        } else {
+            violationMessages.add(message);
+        }
+    }
 
 }

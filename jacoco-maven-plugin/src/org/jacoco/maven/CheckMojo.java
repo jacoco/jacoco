@@ -9,7 +9,8 @@
  *    Evgeny Mandrikov - initial API and implementation
  *    Kyle Lieber - implementation of CheckMojo
  *    Marc Hoffmann - redesign using report APIs
- *    
+ *    Håvard Nesvold - initial implementation of 'verbose' mode
+ *
  *******************************************************************************/
 package org.jacoco.maven;
 
@@ -20,25 +21,25 @@ import java.util.List;
 
 import org.apache.maven.plugin.MojoExecutionException;
 import org.jacoco.core.analysis.IBundleCoverage;
-import org.jacoco.core.analysis.ICoverageNode;
 import org.jacoco.core.data.ExecutionDataStore;
 import org.jacoco.core.tools.ExecFileLoader;
 import org.jacoco.report.IReportVisitor;
-import org.jacoco.report.check.IViolationsOutput;
-import org.jacoco.report.check.Limit;
+import org.jacoco.report.JavaNames;
+import org.jacoco.report.check.CheckResult;
+import org.jacoco.report.check.ICheckerOutput;
 import org.jacoco.report.check.Rule;
 import org.jacoco.report.check.RulesChecker;
 
 /**
  * Checks that the code coverage metrics are being met.
- * 
+ *
  * @goal check
  * @phase verify
  * @requiresProject true
  * @threadSafe
  * @since 0.6.1
  */
-public class CheckMojo extends AbstractJacocoMojo implements IViolationsOutput {
+public class CheckMojo extends AbstractJacocoMojo implements ICheckerOutput {
 
 	private static final String MSG_SKIPPING = "Skipping JaCoCo execution due to missing execution data file:";
 	private static final String CHECK_SUCCESS = "All coverage checks have been met.";
@@ -54,17 +55,17 @@ public class CheckMojo extends AbstractJacocoMojo implements IViolationsOutput {
 	 * If a limit refers to a ratio the range is from 0.0 to 1.0 where the
 	 * number of decimal places will also determine the precision in error
 	 * messages.
-	 * 
+	 *
 	 * Note that you <b>must</b> use <tt>implementation</tt> hints for
 	 * <tt>rule</tt> and <tt>limit</tt> when using Maven 2, with Maven 3 you do
 	 * not need to specify the attributes.
 	 * </p>
-	 * 
+	 *
 	 * <p>
 	 * This example requires an overall instruction coverage of 80% and no class
 	 * must be missed:
 	 * </p>
-	 * 
+	 *
 	 * <pre>
 	 * {@code
 	 * <rules>
@@ -85,12 +86,12 @@ public class CheckMojo extends AbstractJacocoMojo implements IViolationsOutput {
 	 *   </rule>
 	 * </rules>}
 	 * </pre>
-	 * 
+	 *
 	 * <p>
 	 * This example requires a line coverage minimum of 50% for every class
 	 * except test classes:
 	 * </p>
-	 * 
+	 *
 	 * <pre>
 	 * {@code
 	 * <rules>
@@ -109,7 +110,7 @@ public class CheckMojo extends AbstractJacocoMojo implements IViolationsOutput {
 	 *   </rule>
 	 * </rules>}
 	 * </pre>
-	 * 
+	 *
 	 * @parameter
 	 * @required
 	 */
@@ -117,15 +118,22 @@ public class CheckMojo extends AbstractJacocoMojo implements IViolationsOutput {
 
 	/**
 	 * Halt the build if any of the checks fail.
-	 * 
+	 *
 	 * @parameter property="jacoco.haltOnFailure" default-value="true"
 	 * @required
 	 */
 	private boolean haltOnFailure;
 
+    /**
+     * Log coverage info even when there are no violations.
+     *
+     * @parameter property="jacoco.verbose" default-value="false"
+     */
+    private boolean verbose;
+
 	/**
 	 * File with execution data.
-	 * 
+	 *
 	 * @parameter default-value="${project.build.directory}/jacoco.exec"
 	 */
 	private File dataFile;
@@ -206,10 +214,17 @@ public class CheckMojo extends AbstractJacocoMojo implements IViolationsOutput {
 		return loader.getExecutionDataStore();
 	}
 
-	public void onViolation(final ICoverageNode node, final Rule rule,
-			final Limit limit, final String message) {
-		this.getLog().warn(message);
-		violations = true;
-	}
+    @Override
+    public void onResult(final CheckResult result) {
+        String message = result.createMessage();
+        if (result.getResult() == CheckResult.Result.OK) {
+            if (verbose) {
+                this.getLog().info(message);
+            }
+        } else {
+            this.getLog().warn(message);
+            violations = true;
+        }
+    }
 
 }

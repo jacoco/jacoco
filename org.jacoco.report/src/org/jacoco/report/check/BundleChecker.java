@@ -29,7 +29,7 @@ import org.jacoco.report.ILanguageNames;
 class BundleChecker {
 
 	private final ILanguageNames names;
-	private final IViolationsOutput output;
+	private final ICheckerOutput output;
 
 	private final Collection<Rule> bundleRules;
 	private final Collection<Rule> packageRules;
@@ -43,7 +43,7 @@ class BundleChecker {
 	private final boolean traverseMethods;
 
 	public BundleChecker(final Collection<Rule> rules,
-			final ILanguageNames names, final IViolationsOutput output) {
+			final ILanguageNames names, final ICheckerOutput output) {
 		this.names = names;
 		this.output = output;
 		this.bundleRules = new ArrayList<Rule>();
@@ -79,7 +79,7 @@ class BundleChecker {
 
 	public void checkBundle(final IBundleCoverage bundleCoverage) {
 		final String name = bundleCoverage.getName();
-		checkRules(bundleCoverage, bundleRules, "bundle", name);
+		checkRules(bundleCoverage, bundleRules, name);
 		if (traversePackages) {
 			for (final IPackageCoverage p : bundleCoverage.getPackages()) {
 				check(p);
@@ -89,7 +89,7 @@ class BundleChecker {
 
 	private void check(final IPackageCoverage packageCoverage) {
 		final String name = names.getPackageName(packageCoverage.getName());
-		checkRules(packageCoverage, packageRules, "package", name);
+		checkRules(packageCoverage, packageRules, name);
 		if (traverseClasses) {
 			for (final IClassCoverage c : packageCoverage.getClasses()) {
 				check(c);
@@ -105,7 +105,7 @@ class BundleChecker {
 	private void check(final IClassCoverage classCoverage) {
 		final String name = names
 				.getQualifiedClassName(classCoverage.getName());
-		checkRules(classCoverage, classRules, "class", name);
+		checkRules(classCoverage, classRules, name);
 		if (traverseMethods) {
 			for (final IMethodCoverage m : classCoverage.getMethods()) {
 				check(m, classCoverage.getName());
@@ -116,35 +116,33 @@ class BundleChecker {
 	private void check(final ISourceFileCoverage sourceFile) {
 		final String name = sourceFile.getPackageName() + "/"
 				+ sourceFile.getName();
-		checkRules(sourceFile, sourceFileRules, "source file", name);
+		checkRules(sourceFile, sourceFileRules, name);
 	}
 
 	private void check(final IMethodCoverage method, final String className) {
 		final String name = names.getQualifiedMethodName(className,
 				method.getName(), method.getDesc(), method.getSignature());
-		checkRules(method, methodRules, "method", name);
+		checkRules(method, methodRules, name);
 	}
 
 	private void checkRules(final ICoverageNode node,
-			final Collection<Rule> rules, final String typename,
+			final Collection<Rule> rules,
 			final String elementname) {
-		for (final Rule rule : rules) {
+        for (final Rule rule : rules) {
 			if (rule.matches(elementname)) {
 				for (final Limit limit : rule.getLimits()) {
-					checkLimit(node, typename, elementname, rule, limit);
+					checkLimit(node, limit, elementname);
 				}
 			}
 		}
 	}
 
-	private void checkLimit(final ICoverageNode node, final String elementtype,
-			final String typename, final Rule rule, final Limit limit) {
-		final String message = limit.check(node);
-		if (message != null) {
-			output.onViolation(node, rule, limit, String.format(
-					"Rule violated for %s %s: %s", elementtype, typename,
-					message));
-		}
+	private void checkLimit(final ICoverageNode node, final Limit limit, String elementName) {
+		final CheckResult result = limit.check(node, elementName);
+        if (result == null) {
+            return;
+        }
+        output.onResult(result);
 	}
 
 }

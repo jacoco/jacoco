@@ -27,7 +27,7 @@ import org.jacoco.report.JavaNames;
 
 /**
  * Formatter which checks a set of given rules and reports violations to a
- * {@link IViolationsOutput} instance.
+ * {@link ICheckerOutput} instance.
  */
 public class RulesChecker {
 
@@ -63,6 +63,13 @@ public class RulesChecker {
 		this.languageNames = languageNames;
 	}
 
+    /**
+     * @return The implementation for language name display for message formatting.
+     */
+    public ILanguageNames getLanguageNames() {
+        return languageNames;
+    }
+
 	/**
 	 * Creates a new visitor to process the configured checks.
 	 * 
@@ -70,7 +77,7 @@ public class RulesChecker {
 	 *            call-back to report violations to
 	 * @return visitor to emit the report data to
 	 */
-	public IReportVisitor createVisitor(final IViolationsOutput output) {
+	public IReportVisitor createVisitor(final ICheckerOutput output) {
 		final BundleChecker bundleChecker = new BundleChecker(rules,
 				languageNames, output);
 		return new IReportVisitor() {
