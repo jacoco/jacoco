@@ -48,9 +48,10 @@ public class ConfigLoaderTest {
 		system.setProperty("output", "tcpserver"); // no prefix
 		system.setProperty("jacoco-agent.sessionid", "testid");
 		Properties config = ConfigLoader.load(
-				"/org/jacoco/agent/rt/agent-test.properties", system);
+				"/org/jacoco/agent/rt/internal/agent-test.properties", system);
 
 		assertEquals("mbean", config.get("output"));
+		assertEquals("3333", config.get("port"));
 		assertEquals("testid", config.get("sessionid"));
 	}
 
