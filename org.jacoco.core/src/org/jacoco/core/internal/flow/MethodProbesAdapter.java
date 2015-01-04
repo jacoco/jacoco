@@ -11,14 +11,14 @@
  *******************************************************************************/
 package org.jacoco.core.internal.flow;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.jacoco.core.JaCoCo;
 import org.objectweb.asm.Label;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.commons.AnalyzerAdapter;
-
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * Adapter that creates additional visitor events for probes to be inserted into
@@ -32,7 +32,7 @@ public final class MethodProbesAdapter extends MethodVisitor {
 
 	private AnalyzerAdapter analyzer;
 
-	private Map<Label, Label> tryCatchProbeLabels = new HashMap<Label, Label>();
+	private final Map<Label, Label> tryCatchProbeLabels;
 
 	/**
 	 * Create a new adapter instance.
@@ -47,6 +47,7 @@ public final class MethodProbesAdapter extends MethodVisitor {
 		super(JaCoCo.ASM_API_VERSION, probesVisitor);
 		this.probesVisitor = probesVisitor;
 		this.idGenerator = idGenerator;
+		this.tryCatchProbeLabels = new HashMap<Label, Label>();
 	}
 
 	/**
@@ -63,12 +64,14 @@ public final class MethodProbesAdapter extends MethodVisitor {
 	@Override
 	public void visitTryCatchBlock(Label start, final Label end,
 			final Label handler, final String type) {
-		// If a probe will be inserted before the start label, we'll need to use a
-		// different label for the try-catch block.
+		// If it is not the direct start of a method we insert an extra probe at
+		// the beginning of every try/catch block. To ensure that the probe
+		// itsel is still within the try/catch block, we introduce a new start
+		// label.
 		if (tryCatchProbeLabels.containsKey(start)) {
 			start = tryCatchProbeLabels.get(start);
-		} else if (LabelInfo.isMultiTarget(start) && LabelInfo.isSuccessor(start)) {
-			Label probeLabel = new Label();
+		} else if (LabelInfo.isSuccessor(start)) {
+			final Label probeLabel = new Label();
 			LabelInfo.setSuccessor(probeLabel);
 			tryCatchProbeLabels.put(start, probeLabel);
 			start = probeLabel;
@@ -78,11 +81,14 @@ public final class MethodProbesAdapter extends MethodVisitor {
 
 	@Override
 	public void visitLabel(final Label label) {
-		if (LabelInfo.isMultiTarget(label) && LabelInfo.isSuccessor(label)) {
-			if (tryCatchProbeLabels.containsKey(label)) {
-				probesVisitor.visitLabel(tryCatchProbeLabels.get(label));
-			}
+		final Label tryCatchStartLabel = tryCatchProbeLabels.get(label);
+		if (tryCatchStartLabel != null) {
+			probesVisitor.visitLabel(tryCatchStartLabel);
 			probesVisitor.visitProbe(idGenerator.nextId());
+		} else {
+			if (LabelInfo.isMultiTarget(label) && LabelInfo.isSuccessor(label)) {
+				probesVisitor.visitProbe(idGenerator.nextId());
+			}
 		}
 		probesVisitor.visitLabel(label);
 	}

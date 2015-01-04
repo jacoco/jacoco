@@ -321,7 +321,8 @@ public class MethodProbesAdapterTest implements IProbeIdGenerator {
 		adapter.visitTryCatchBlock(start, end, handler, "java/lang/Exception");
 		adapter.visitLabel(start);
 
-		expectedVisitor.visitTryCatchBlock(start, end, handler, "java/lang/Exception");
+		expectedVisitor.visitTryCatchBlock(start, end, handler,
+				"java/lang/Exception");
 		expectedVisitor.visitLabel(start);
 	}
 
@@ -329,7 +330,6 @@ public class MethodProbesAdapterTest implements IProbeIdGenerator {
 	public void testVisitTryCatchBlockWithProbe() {
 		Label target = new Label();
 		LabelInfo.setSuccessor(target);
-		LabelInfo.setTarget(target);
 		Label end = new Label();
 		Label handler = new Label();
 		Label start = new Label();
@@ -337,7 +337,8 @@ public class MethodProbesAdapterTest implements IProbeIdGenerator {
 		adapter.visitTryCatchBlock(target, end, handler, "java/lang/Exception");
 		adapter.visitLabel(target);
 
-		expectedVisitor.visitTryCatchBlock(start, end, handler, "java/lang/Exception");
+		expectedVisitor.visitTryCatchBlock(start, end, handler,
+				"java/lang/Exception");
 		expectedVisitor.visitLabel(start);
 		expectedVisitor.visitProbe(1000);
 		expectedVisitor.visitLabel(target);
@@ -347,7 +348,6 @@ public class MethodProbesAdapterTest implements IProbeIdGenerator {
 	public void testVisitMultipleTryCatchBlocksWithProbe() {
 		Label target = new Label();
 		LabelInfo.setSuccessor(target);
-		LabelInfo.setTarget(target);
 		Label end = new Label();
 		Label handler1 = new Label();
 		Label handler2 = new Label();
@@ -357,8 +357,10 @@ public class MethodProbesAdapterTest implements IProbeIdGenerator {
 		adapter.visitTryCatchBlock(target, end, handler2, "java/io/IOException");
 		adapter.visitLabel(target);
 
-		expectedVisitor.visitTryCatchBlock(start, end, handler1, "java/lang/Exception");
-		expectedVisitor.visitTryCatchBlock(start, end, handler2, "java/io/IOException");
+		expectedVisitor.visitTryCatchBlock(start, end, handler1,
+				"java/lang/Exception");
+		expectedVisitor.visitTryCatchBlock(start, end, handler2,
+				"java/io/IOException");
 		expectedVisitor.visitLabel(start);
 		expectedVisitor.visitProbe(1000);
 		expectedVisitor.visitLabel(target);
