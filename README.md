@@ -1,5 +1,3 @@
-
-
 JaCoCo Java Code Coverage Library
 =================================
 
