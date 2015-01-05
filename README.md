@@ -1,7 +1,7 @@
 JaCoCo Java Code Coverage Library
 =================================
 
-[![Maven Central](https://maven-badges.herokuapp.com/maven-central/org.jacoco/org.jacoco.core/badge.svg)](https://maven-badges.herokuapp.com/maven-central/org.jacoco/org.jacoco.core)
+[![Maven Central](https://maven-badges.herokuapp.com/maven-central/org.jacoco/org.jacoco.core/badge.svg)](http://search.maven.org/#search|ga|1|g%3Aorg.jacoco)
 
 
 JaCoCo is a free Java code coverage library distributed under the Eclipse Public
