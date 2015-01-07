@@ -15,16 +15,12 @@ package org.jacoco.maven;
 import java.io.File;
 
 /**
- * Prepares a property pointing to the JaCoCo runtime agent that can be passed
- * as a VM argument to the application under test for integration tests.
- * Depending on the project packaging type by default a property with the
- * following name is set:
+ * Same as <code>prepare-agent</code>, but provides default values suitable for
+ * integration-tests:
  * <ul>
- * <li>tycho.testArgLine for packaging type eclipse-test-plugin and</li>
- * <li>argLine otherwise.</li>
+ * <li>bound to <code>pre-integration-test</code> phase</li>
+ * <li>different <code>destFile</code></li>
  * </ul>
- * Resulting coverage information is collected during execution and by default
- * written to a file when the process terminates.
  * 
  * @phase pre-integration-test
  * @goal prepare-agent-integration

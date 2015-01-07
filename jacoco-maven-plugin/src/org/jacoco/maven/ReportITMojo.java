@@ -16,8 +16,12 @@ import java.io.File;
 import java.util.Locale;
 
 /**
- * Creates a code coverage report for integration tests of a single project in
- * multiple formats (HTML, XML, and CSV).
+ * Same as <code>report</code>, but provides default values suitable for
+ * integration-tests:
+ * <ul>
+ * <li>bound to <code>report-integration</code> phase</li>
+ * <li>different <code>dataFile</code></li>
+ * </ul>
  * 
  * @phase verify
  * @goal report-integration
