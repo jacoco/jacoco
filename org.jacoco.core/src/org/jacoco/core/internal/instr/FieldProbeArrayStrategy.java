@@ -27,12 +27,12 @@ class FieldProbeArrayStrategy implements IProbeArrayStrategy {
 	/**
 	 * Frame stack with a single boolean array.
 	 */
-	public static final Object[] FRAME_STACK_ARRZ = new Object[] { InstrSupport.DATAFIELD_DESC };
+	private static final Object[] FRAME_STACK_ARRZ = new Object[] { InstrSupport.DATAFIELD_DESC };
 
 	/**
 	 * Empty frame locals.
 	 */
-	public static final Object[] FRAME_LOCALS_EMPTY = new Object[0];
+	private static final Object[] FRAME_LOCALS_EMPTY = new Object[0];
 
 	private final String className;
 	private final long classId;

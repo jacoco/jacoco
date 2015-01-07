@@ -537,13 +537,7 @@ public class ReportTask extends Task {
 			throw new BuildException("Group name must be supplied",
 					getLocation());
 		}
-		if (group.children.size() > 0) {
-			final IReportGroupVisitor groupVisitor = visitor
-					.visitGroup(group.name);
-			for (final GroupElement child : group.children) {
-				createReport(groupVisitor, child);
-			}
-		} else {
+		if (group.children.isEmpty()) {
 			final IBundleCoverage bundle = createBundle(group);
 			final SourceFilesElement sourcefiles = group.sourcefiles;
 			final AntResourcesLocator locator = new AntResourcesLocator(
@@ -553,6 +547,12 @@ public class ReportTask extends Task {
 				checkForMissingDebugInformation(bundle);
 			}
 			visitor.visitBundle(bundle, locator);
+		} else {
+			final IReportGroupVisitor groupVisitor = visitor
+					.visitGroup(group.name);
+			for (final GroupElement child : group.children) {
+				createReport(groupVisitor, child);
+			}
 		}
 	}
 
