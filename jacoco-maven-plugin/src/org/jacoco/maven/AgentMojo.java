@@ -26,14 +26,25 @@ import java.io.File;
  * </ul>
  * 
  * <p>
- * Note that these properties must not be overwritten by the test configuration,
- * otherwise the JaCoCo agent cannot be attached. If you need custom parameters
- * please append them. For example:
+ * If your project already uses the argLine to configure the
+ * surefire-maven-plugin, be sure that argLine defined as a property, rather
+ * than as part of the plugin configuration. For example:
  * </p>
  * 
  * <pre>
- *   &lt;argLine&gt;${argLine} -your -extra -arguments&lt;/argLine&gt;
+ *   &lt;properties&gt;
+ *     &lt;argLine&gt;-your -extra -arguments&lt;/argLine&gt;
+ *   &lt;/properties&gt;
+ *   ...
+ *   &lt;plugin&gt;
+ *     &lt;groupId&gt;org.apache.maven.plugins&lt;/groupId&gt;
+ *     &lt;artifactId&gt;maven-surefire-plugin&lt;/artifactId&gt;
+ *     &lt;configuration&gt;
+ *       &lt;!-- Do not define argLine here! --&gt;
+ *     &lt;/configuration&gt;
+ *   &lt;/plugin&gt;
  * </pre>
+ * 
  * 
  * <p>
  * Resulting coverage information is collected during execution and by default
