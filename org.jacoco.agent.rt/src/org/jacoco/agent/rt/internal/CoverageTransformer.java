@@ -13,6 +13,7 @@ package org.jacoco.agent.rt.internal;
 
 import java.lang.instrument.ClassFileTransformer;
 import java.lang.instrument.IllegalClassFormatException;
+import java.security.CodeSource;
 import java.security.ProtectionDomain;
 
 import org.jacoco.core.instr.Instrumenter;
@@ -73,8 +74,13 @@ public class CoverageTransformer implements ClassFileTransformer {
 			final ProtectionDomain protectionDomain,
 			final byte[] classfileBuffer) throws IllegalClassFormatException {
 
+		// We do not support class retransformation:
 		if (classBeingRedefined != null) {
-			// We do not support class retransformation.
+			return null;
+		}
+
+		// We exclude dynamically created non-bootstrap classes.
+		if (loader != null && !hasSourceLocation(protectionDomain)) {
 			return null;
 		}
 
@@ -96,6 +102,25 @@ public class CoverageTransformer implements ClassFileTransformer {
 	}
 
 	/**
+	 * Checks whether this protection domain is associated with a source
+	 * location.
+	 * 
+	 * @param protectionDomain
+	 *            protection domain to check (or <code>null</code>)
+	 * @return <code>true</code> if a source location is defined
+	 */
+	boolean hasSourceLocation(final ProtectionDomain protectionDomain) {
+		if (protectionDomain == null) {
+			return false;
+		}
+		final CodeSource codeSource = protectionDomain.getCodeSource();
+		if (codeSource == null) {
+			return false;
+		}
+		return codeSource.getLocation() != null;
+	}
+
+	/**
 	 * Checks whether this class should be instrumented.
 	 * 
 	 * @param loader
@@ -104,11 +129,12 @@ public class CoverageTransformer implements ClassFileTransformer {
 	 *            VM name of the class to check
 	 * @return <code>true</code> if the class should be instrumented
 	 */
-	protected boolean filter(final ClassLoader loader, final String classname) {
-		if (!includeBootstrapClasses) {
-			if (loader == null) {
+	boolean filter(final ClassLoader loader, final String classname) {
+		if (loader == null) {
+			if (!includeBootstrapClasses) {
 				return false;
 			}
+		} else {
 			if (exclClassloader.matches(loader.getClass().getName())) {
 				return false;
 			}
