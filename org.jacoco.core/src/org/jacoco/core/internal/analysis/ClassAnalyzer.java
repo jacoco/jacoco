@@ -25,7 +25,7 @@ public class ClassAnalyzer extends ClassProbesVisitor {
 
 	private final long classid;
 	private final boolean noMatch;
-	private final boolean probes[];
+	private final boolean[] probes;
 	private final StringPool stringPool;
 
 	private ClassCoverageImpl coverage;
