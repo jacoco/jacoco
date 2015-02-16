@@ -31,6 +31,8 @@ public final class LabelInfo {
 
 	private boolean successor = false;
 
+	private boolean methodInvocationLine = false;
+
 	private boolean done = false;
 
 	private int probeid = NO_PROBE;
@@ -102,6 +104,43 @@ public final class LabelInfo {
 	public static boolean isSuccessor(final Label label) {
 		final LabelInfo info = get(label);
 		return info == null ? false : info.successor;
+	}
+
+	/**
+	 * Mark a given label as the beginning of a line with method invocations.
+	 * 
+	 * @param label
+	 *            label to mark
+	 */
+	public static void setMethodInvocationLine(final Label label) {
+		create(label).methodInvocationLine = true;
+	}
+
+	/**
+	 * Checks whether the a given label has been marked as a line with method
+	 * invocations.
+	 * 
+	 * @param label
+	 *            label to check
+	 * @return <code>true</code> if the label represents a line with method
+	 *         invocations
+	 */
+	public static boolean isMethodInvocationLine(final Label label) {
+		final LabelInfo info = get(label);
+		return info == null ? false : info.methodInvocationLine;
+	}
+
+	/**
+	 * Determines whether the given label needs a probe to be inserted before.
+	 * 
+	 * @param label
+	 *            label to test
+	 * @return <code>true</code> if a probe should be inserted before
+	 */
+	public static boolean needsProbe(final Label label) {
+		final LabelInfo info = get(label);
+		return info != null && info.successor
+				&& (info.multiTarget || info.methodInvocationLine);
 	}
 
 	/**

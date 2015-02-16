@@ -68,8 +68,7 @@ public final class MethodProbesAdapter extends MethodVisitor {
 		// a different label for the try-catch block.
 		if (tryCatchProbeLabels.containsKey(start)) {
 			start = tryCatchProbeLabels.get(start);
-		} else if (LabelInfo.isMultiTarget(start)
-				&& LabelInfo.isSuccessor(start)) {
+		} else if (LabelInfo.needsProbe(start)) {
 			final Label probeLabel = new Label();
 			LabelInfo.setSuccessor(probeLabel);
 			tryCatchProbeLabels.put(start, probeLabel);
@@ -80,7 +79,7 @@ public final class MethodProbesAdapter extends MethodVisitor {
 
 	@Override
 	public void visitLabel(final Label label) {
-		if (LabelInfo.isMultiTarget(label) && LabelInfo.isSuccessor(label)) {
+		if (LabelInfo.needsProbe(label)) {
 			if (tryCatchProbeLabels.containsKey(label)) {
 				probesVisitor.visitLabel(tryCatchProbeLabels.get(label));
 			}

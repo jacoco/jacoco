@@ -37,6 +37,7 @@ public class LabelInfoTest {
 	public void testDefaults() {
 		assertFalse(LabelInfo.isMultiTarget(label));
 		assertFalse(LabelInfo.isSuccessor(label));
+		assertFalse(LabelInfo.isMethodInvocationLine(label));
 		assertFalse(LabelInfo.isDone(label));
 		assertEquals(LabelInfo.NO_PROBE, LabelInfo.getProbeId(label));
 		assertNull(LabelInfo.getIntermediateLabel(label));
@@ -87,6 +88,42 @@ public class LabelInfoTest {
 		LabelInfo.setSuccessor(label);
 		assertTrue(LabelInfo.isMultiTarget(label));
 		assertTrue(LabelInfo.isSuccessor(label));
+	}
+
+	@Test
+	public void testMethodInvocationLine() {
+		LabelInfo.setMethodInvocationLine(label);
+		assertTrue(LabelInfo.isMethodInvocationLine(label));
+	}
+
+	@Test
+	public void testNeedsProbe() {
+		testNeedsProbe(false, false, false, false);
+		testNeedsProbe(true, false, false, false);
+		testNeedsProbe(false, true, false, false);
+		testNeedsProbe(true, true, false, false);
+		testNeedsProbe(false, false, true, false);
+		testNeedsProbe(true, false, true, true);
+		testNeedsProbe(false, true, true, true);
+		testNeedsProbe(true, true, true, true);
+	}
+
+	private void testNeedsProbe(boolean multitarget,
+			boolean methodinvocationline, boolean successor, boolean expected) {
+		if (multitarget) {
+			LabelInfo.setTarget(label);
+			LabelInfo.setTarget(label);
+		}
+		if (methodinvocationline) {
+			LabelInfo.setMethodInvocationLine(label);
+		}
+		if (successor) {
+			LabelInfo.setSuccessor(label);
+		}
+		assertTrue(expected == LabelInfo.needsProbe(label));
+
+		// Reset:
+		label = new Label();
 	}
 
 	@Test
