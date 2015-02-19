@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: JaCoCo Ant Tasks Tests
 Bundle-SymbolicName: org.jacoco.ant.test
-Bundle-Version: 0.7.3.qualifier
+Bundle-Version: 0.7.3.201502191951
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
 Bundle-Vendor: Mountainminds GmbH & Co. KG and Contributors
 Fragment-Host: org.jacoco.ant
