@@ -34,10 +34,8 @@ public class ExceptionsTest extends ValidationTestBase {
 	public void testCoverageResult() {
 
 		// 1. Implicit Exception
-		// Currently no coverage at all, as we don't see when a block aborts
-		// somewhere in the middle.
-		assertLine("implicitException.before", ICounter.NOT_COVERED);
-		assertLine("implicitException.exception", ICounter.NOT_COVERED);
+		assertLine("implicitException.before", ICounter.FULLY_COVERED);
+		assertLine("implicitException.exception", ICounter.FULLY_COVERED);
 		assertLine("implicitException.after", ICounter.NOT_COVERED);
 
 		// 2. Explicit Exception
@@ -51,12 +49,11 @@ public class ExceptionsTest extends ValidationTestBase {
 		assertLine("noExceptionTryCatch.catchBlock", ICounter.NOT_COVERED);
 
 		// 4. Try/Catch Block With Exception Thrown Implicitly
-		// As always with implicit exceptions we don't see when a block aborts
-		// somewhere in the middle.
 		assertLine("implicitExceptionTryCatch.beforeBlock",
 				ICounter.FULLY_COVERED);
-		assertLine("implicitExceptionTryCatch.before", ICounter.NOT_COVERED);
-		assertLine("implicitExceptionTryCatch.exception", ICounter.NOT_COVERED);
+		assertLine("implicitExceptionTryCatch.before", ICounter.FULLY_COVERED);
+		assertLine("implicitExceptionTryCatch.exception",
+				ICounter.FULLY_COVERED);
 		assertLine("implicitExceptionTryCatch.after", ICounter.NOT_COVERED);
 		assertLine("implicitExceptionTryCatch.catchBlock",
 				ICounter.FULLY_COVERED);
@@ -70,17 +67,17 @@ public class ExceptionsTest extends ValidationTestBase {
 				ICounter.FULLY_COVERED);
 
 		// 6. Finally Block Without Exception Thrown
-		// Finally block is yellow as the exception path is missing.
+		// Finally block is partly covered as the exception path is missing.
 		assertLine("noExceptionFinally.beforeBlock", ICounter.FULLY_COVERED);
 		assertLine("noExceptionFinally.tryBlock", ICounter.FULLY_COVERED);
 		assertLine("noExceptionFinally.finallyBlock", ICounter.PARTLY_COVERED);
 
 		// 7. Finally Block With Implicit Exception
-		// Finally block is yellow as the non-exception path is missing.
+		// Finally block is partly covered as the non-exception path is missing.
 		assertLine("implicitExceptionFinally.beforeBlock",
 				ICounter.FULLY_COVERED);
-		assertLine("implicitExceptionFinally.before", ICounter.NOT_COVERED);
-		assertLine("implicitExceptionFinally.exception", ICounter.NOT_COVERED);
+		assertLine("implicitExceptionFinally.before", ICounter.FULLY_COVERED);
+		assertLine("implicitExceptionFinally.exception", ICounter.FULLY_COVERED);
 		assertLine("implicitExceptionFinally.after", ICounter.NOT_COVERED);
 		assertLine("implicitExceptionFinally.finallyBlock",
 				ICounter.PARTLY_COVERED);

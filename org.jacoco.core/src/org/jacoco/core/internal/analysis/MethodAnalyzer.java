@@ -207,21 +207,29 @@ public class MethodAnalyzer extends MethodProbesVisitor {
 
 	@Override
 	public void visitProbe(final int probeId) {
-		addProbe(probeId);
+		addProbeWithBranch(probeId);
 		lastInsn = null;
+	}
+
+	@Override
+	public void visitMethodInsnWithProbe(final int opcode, final String owner,
+			final String name, final String desc, final boolean itf,
+			final int probeId) {
+		visitInsn();
+		addProbeWithoutBranch(probeId);
 	}
 
 	@Override
 	public void visitJumpInsnWithProbe(final int opcode, final Label label,
 			final int probeId, final IFrame frame) {
 		visitInsn();
-		addProbe(probeId);
+		addProbeWithBranch(probeId);
 	}
 
 	@Override
 	public void visitInsnWithProbe(final int opcode, final int probeId) {
 		visitInsn();
-		addProbe(probeId);
+		addProbeWithBranch(probeId);
 	}
 
 	@Override
@@ -253,7 +261,7 @@ public class MethodAnalyzer extends MethodProbesVisitor {
 			if (id == LabelInfo.NO_PROBE) {
 				jumps.add(new Jump(lastInsn, label));
 			} else {
-				addProbe(id);
+				addProbeWithBranch(id);
 			}
 			LabelInfo.setDone(label);
 		}
@@ -283,11 +291,19 @@ public class MethodAnalyzer extends MethodProbesVisitor {
 		coverage.incrementMethodCounter();
 	}
 
-	private void addProbe(final int probeId) {
-		lastInsn.addBranch();
+	private void addProbeWithBranch(final int probeId) {
+		addBranch();
+		addProbeWithoutBranch(probeId);
+	}
+
+	private void addProbeWithoutBranch(final int probeId) {
 		if (probes != null && probes[probeId]) {
 			coveredProbes.add(lastInsn);
 		}
+	}
+
+	private void addBranch() {
+		lastInsn.addBranch();
 	}
 
 	private static class Jump {
@@ -300,5 +316,4 @@ public class MethodAnalyzer extends MethodProbesVisitor {
 			this.target = target;
 		}
 	}
-
 }

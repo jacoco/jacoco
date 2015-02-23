@@ -54,6 +54,14 @@ class MethodInstrumenter extends MethodProbesVisitor {
 	}
 
 	@Override
+	public void visitMethodInsnWithProbe(final int opcode, final String owner,
+			final String name, final String desc, final boolean itf,
+			final int probeId) {
+		probeInserter.insertProbe(probeId);
+		mv.visitMethodInsn(opcode, owner, name, desc, itf);
+	}
+
+	@Override
 	public void visitJumpInsnWithProbe(final int opcode, final Label label,
 			final int probeId, final IFrame frame) {
 		if (opcode == Opcodes.GOTO) {
@@ -179,5 +187,4 @@ class MethodInstrumenter extends MethodProbesVisitor {
 			insertIntermediateProbe(l, frame);
 		}
 	}
-
 }
