@@ -330,6 +330,7 @@ public class MethodProbesAdapterTest implements IProbeIdGenerator {
 	public void testVisitTryCatchBlockWithProbe() {
 		Label target = new Label();
 		LabelInfo.setSuccessor(target);
+		LabelInfo.setTarget(target);
 		Label end = new Label();
 		Label handler = new Label();
 		Label start = new Label();
@@ -348,6 +349,7 @@ public class MethodProbesAdapterTest implements IProbeIdGenerator {
 	public void testVisitMultipleTryCatchBlocksWithProbe() {
 		Label target = new Label();
 		LabelInfo.setSuccessor(target);
+		LabelInfo.setTarget(target);
 		Label end = new Label();
 		Label handler1 = new Label();
 		Label handler2 = new Label();

@@ -32,7 +32,13 @@ public final class LabelFlowAnalyzer extends MethodVisitor {
 	 *            Method to mark labels
 	 */
 	public static void markLabels(final MethodNode method) {
-		method.instructions.accept(new LabelFlowAnalyzer());
+		// We do not use the accept() method as ASM resets labels after every
+		// call to accept()
+		final MethodVisitor lfa = new LabelFlowAnalyzer();
+		for (int i = method.tryCatchBlocks.size(); --i >= 0;) {
+			method.tryCatchBlocks.get(i).accept(lfa);
+		}
+		method.instructions.accept(lfa);
 	}
 
 	/**
@@ -52,6 +58,19 @@ public final class LabelFlowAnalyzer extends MethodVisitor {
 	 */
 	public LabelFlowAnalyzer() {
 		super(JaCoCo.ASM_API_VERSION);
+	}
+
+	@Override
+	public void visitTryCatchBlock(final Label start, final Label end,
+			final Label handler, final String type) {
+		// Enforce probe at the beginning of the block. Assuming the start of
+		// the block already is successor of some other code, adding a target
+		// makes the start a multitarget. However, if the start of the block
+		// also is the start of the method, no probe will be added.
+		LabelInfo.setTarget(start);
+
+		// Mark exception handler as possible target of the block
+		LabelInfo.setTarget(handler);
 	}
 
 	@Override

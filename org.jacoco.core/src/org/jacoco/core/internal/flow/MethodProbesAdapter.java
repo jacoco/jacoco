@@ -64,13 +64,12 @@ public final class MethodProbesAdapter extends MethodVisitor {
 	@Override
 	public void visitTryCatchBlock(Label start, final Label end,
 			final Label handler, final String type) {
-		// If it is not the direct start of a method we insert an extra probe at
-		// the beginning of every try/catch block. To ensure that the probe
-		// itsel is still within the try/catch block, we introduce a new start
-		// label.
+		// If a probe will be inserted before the start label, we'll need to use
+		// a different label for the try-catch block.
 		if (tryCatchProbeLabels.containsKey(start)) {
 			start = tryCatchProbeLabels.get(start);
-		} else if (LabelInfo.isSuccessor(start)) {
+		} else if (LabelInfo.isMultiTarget(start)
+				&& LabelInfo.isSuccessor(start)) {
 			final Label probeLabel = new Label();
 			LabelInfo.setSuccessor(probeLabel);
 			tryCatchProbeLabels.put(start, probeLabel);
@@ -81,14 +80,11 @@ public final class MethodProbesAdapter extends MethodVisitor {
 
 	@Override
 	public void visitLabel(final Label label) {
-		final Label tryCatchStartLabel = tryCatchProbeLabels.get(label);
-		if (tryCatchStartLabel != null) {
-			probesVisitor.visitLabel(tryCatchStartLabel);
-			probesVisitor.visitProbe(idGenerator.nextId());
-		} else {
-			if (LabelInfo.isMultiTarget(label) && LabelInfo.isSuccessor(label)) {
-				probesVisitor.visitProbe(idGenerator.nextId());
+		if (LabelInfo.isMultiTarget(label) && LabelInfo.isSuccessor(label)) {
+			if (tryCatchProbeLabels.containsKey(label)) {
+				probesVisitor.visitLabel(tryCatchProbeLabels.get(label));
 			}
+			probesVisitor.visitProbe(idGenerator.nextId());
 		}
 		probesVisitor.visitLabel(label);
 	}

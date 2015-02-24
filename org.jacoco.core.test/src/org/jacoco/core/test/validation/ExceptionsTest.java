@@ -61,7 +61,17 @@ public class ExceptionsTest extends ValidationTestBase {
 		assertLine("implicitExceptionTryCatch.catchBlock",
 				ICounter.FULLY_COVERED);
 
-		// 5. Try/Catch Block With Exception Thrown Explicitly
+		// 5. Try/Catch Block With Exception Thrown Implicitly After Condition
+		// As the try/catch block is entered at one branch of the condition
+		// should be marked as executed
+		assertLine("implicitExceptionTryCatchAfterCondition.condition",
+				ICounter.FULLY_COVERED, 1, 1);
+		assertLine("implicitExceptionTryCatchAfterCondition.exception",
+				ICounter.NOT_COVERED);
+		assertLine("implicitExceptionTryCatchAfterCondition.catchBlock",
+				ICounter.FULLY_COVERED);
+
+		// 6. Try/Catch Block With Exception Thrown Explicitly
 		assertLine("explicitExceptionTryCatch.beforeBlock",
 				ICounter.FULLY_COVERED);
 		assertLine("explicitExceptionTryCatch.before", ICounter.FULLY_COVERED);
@@ -69,13 +79,13 @@ public class ExceptionsTest extends ValidationTestBase {
 		assertLine("explicitExceptionTryCatch.catchBlock",
 				ICounter.FULLY_COVERED);
 
-		// 6. Finally Block Without Exception Thrown
+		// 7. Finally Block Without Exception Thrown
 		// Finally block is yellow as the exception path is missing.
 		assertLine("noExceptionFinally.beforeBlock", ICounter.FULLY_COVERED);
 		assertLine("noExceptionFinally.tryBlock", ICounter.FULLY_COVERED);
 		assertLine("noExceptionFinally.finallyBlock", ICounter.PARTLY_COVERED);
 
-		// 7. Finally Block With Implicit Exception
+		// 8. Finally Block With Implicit Exception
 		// Finally block is yellow as the non-exception path is missing.
 		assertLine("implicitExceptionFinally.beforeBlock",
 				ICounter.FULLY_COVERED);
@@ -85,7 +95,7 @@ public class ExceptionsTest extends ValidationTestBase {
 		assertLine("implicitExceptionFinally.finallyBlock",
 				ICounter.PARTLY_COVERED);
 
-		// 8. Finally Block With Exception Thrown Explicitly
+		// 9. Finally Block With Exception Thrown Explicitly
 		assertLine("explicitExceptionFinally.beforeBlock",
 				ICounter.FULLY_COVERED);
 		assertLine("explicitExceptionFinally.before", ICounter.FULLY_COVERED);
