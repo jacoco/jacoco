@@ -118,6 +118,10 @@
         </executions>
         <configuration>
           <projectsDirectory>${project.build.directory}/build/examples</projectsDirectory>
+          <properties>
+            <maven.compiler.source>${maven.compiler.source}</maven.compiler.source>
+            <maven.compiler.target>${maven.compiler.target}</maven.compiler.target>
+          </properties>
         </configuration>
       </plugin>
     </plugins>
