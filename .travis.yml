@@ -1,1 +1,6 @@
 language: java
+
+# Skip "install" stage:
+install: true
+
+script: mvn -V -B clean verify
