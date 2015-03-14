@@ -4,3 +4,11 @@ language: java
 install: true
 
 script: mvn -V -B clean verify
+
+# Use container-based infrastructure:
+sudo: false
+
+# Keep Maven local repository between builds:
+cache:
+  directories:
+    - '$HOME/.m2/repository'
