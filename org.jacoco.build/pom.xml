@@ -130,6 +130,9 @@
     <jacoco.home.url>http://www.eclemma.org/jacoco</jacoco.home.url>
     <copyright.years>${project.inceptionYear}, 2015</copyright.years>
 
+    <maven.compiler.source>1.5</maven.compiler.source>
+    <maven.compiler.target>1.5</maven.compiler.target>
+
     <jvm.args></jvm.args>
     <argLine>${jvm.args}</argLine>
 
