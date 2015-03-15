@@ -16,7 +16,7 @@ import java.lang.instrument.IllegalClassFormatException;
 import java.security.CodeSource;
 import java.security.ProtectionDomain;
 
-import org.jacoco.core.instr.Instrumenter;
+import org.jacoco.core.internal.instr.NewInstrumenter;
 import org.jacoco.core.runtime.AgentOptions;
 import org.jacoco.core.runtime.IRuntime;
 import org.jacoco.core.runtime.WildcardMatcher;
@@ -33,7 +33,7 @@ public class CoverageTransformer implements ClassFileTransformer {
 		AGENT_PREFIX = toVMName(name.substring(0, name.lastIndexOf('.')));
 	}
 
-	private final Instrumenter instrumenter;
+	private final NewInstrumenter instrumenter;
 
 	private final IExceptionLogger logger;
 
@@ -59,7 +59,7 @@ public class CoverageTransformer implements ClassFileTransformer {
 	 */
 	public CoverageTransformer(final IRuntime runtime,
 			final AgentOptions options, final IExceptionLogger logger) {
-		this.instrumenter = new Instrumenter(runtime);
+		this.instrumenter = new NewInstrumenter(runtime);
 		this.logger = logger;
 		// Class names will be reported in VM notation:
 		includes = new WildcardMatcher(toVMName(options.getIncludes()));
@@ -90,7 +90,7 @@ public class CoverageTransformer implements ClassFileTransformer {
 
 		try {
 			classFileDumper.dump(classname, classfileBuffer);
-			return instrumenter.instrument(classfileBuffer, classname);
+			return instrumenter.instrument(loader, classfileBuffer, classname);
 		} catch (final Exception ex) {
 			final IllegalClassFormatException wrapper = new IllegalClassFormatException(
 					ex.getMessage());
