@@ -90,7 +90,7 @@ public class CoverageTransformer implements ClassFileTransformer {
 
 		try {
 			classFileDumper.dump(classname, classfileBuffer);
-			return instrumenter.instrument(classfileBuffer, classname);
+			return instrumenter.instrument(classfileBuffer, classname, loader);
 		} catch (final Exception ex) {
 			final IllegalClassFormatException wrapper = new IllegalClassFormatException(
 					ex.getMessage());
