@@ -22,6 +22,7 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
+import java.util.StringTokenizer;
 
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
@@ -221,8 +222,8 @@ public class ReportTask extends Task {
 		 * @param locale
 		 *            text locale
 		 */
-		public void setLocale(final Locale locale) {
-			this.locale = locale;
+		public void setLocale(final String locale) {
+			this.locale = parseLocale(locale);
 		}
 
 		@Override
@@ -598,6 +599,23 @@ public class ReportTask extends Task {
 					"To enable source code annotation class files for bundle '%s' have to be compiled with debug information.",
 					node.getName()), Project.MSG_WARN);
 		}
+	}
+
+	/**
+	 * Splits a given underscore "_" separated string and creates a Locale. This
+	 * method is implemented as the method Locale.forLanguageTag() was not
+	 * available in Java 5.
+	 * 
+	 * @param locale
+	 *            String representation of a Locate
+	 * @return Locale instance
+	 */
+	static Locale parseLocale(final String locale) {
+		final StringTokenizer st = new StringTokenizer(locale, "_");
+		final String language = st.hasMoreTokens() ? st.nextToken() : "";
+		final String country = st.hasMoreTokens() ? st.nextToken() : "";
+		final String variant = st.hasMoreTokens() ? st.nextToken() : "";
+		return new Locale(language, country, variant);
 	}
 
 }
