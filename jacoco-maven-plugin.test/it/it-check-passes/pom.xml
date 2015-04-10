@@ -40,11 +40,11 @@
             </goals>
             <configuration>
               <rules>
-                <!-- implmentation is needed only for Maven 2 -->
+                <!-- implementation is needed only for Maven 2 -->
                 <rule implementation="org.jacoco.maven.RuleConfiguration">
                   <element>BUNDLE</element>
                   <limits>
-                    <!-- implmentation is needed only for Maven 2 -->
+                    <!-- implementation is needed only for Maven 2 -->
                     <limit implementation="org.jacoco.report.check.Limit">
                       <counter>INSTRUCTION</counter>
                       <value>COVEREDRATIO</value>
