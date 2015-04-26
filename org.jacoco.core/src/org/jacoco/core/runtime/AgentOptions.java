@@ -39,6 +39,11 @@ public final class AgentOptions {
 	public static final String DESTFILE = "destfile";
 
 	/**
+	 * Default value for the "destfile" agent option.
+	 */
+	public static final String DEFAULT_DESTFILE = "jacoco.exec";
+
+	/**
 	 * Specifies whether execution data should be appended to the output file.
 	 * Default is <code>true</code>.
 	 */
@@ -247,7 +252,7 @@ public final class AgentOptions {
 	 * @return output file location
 	 */
 	public String getDestfile() {
-		return getOption(DESTFILE, "jacoco.exec");
+		return getOption(DESTFILE, DEFAULT_DESTFILE);
 	}
 
 	/**

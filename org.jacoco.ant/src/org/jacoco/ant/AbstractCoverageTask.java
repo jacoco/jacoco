@@ -18,6 +18,7 @@ import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Task;
 import org.jacoco.agent.AgentJar;
 import org.jacoco.core.runtime.AgentOptions;
+import org.jacoco.core.runtime.AgentOptions.OutputMode;
 
 /**
  * Base class for all coverage tasks that require agent options
@@ -25,6 +26,8 @@ import org.jacoco.core.runtime.AgentOptions;
 public class AbstractCoverageTask extends Task {
 
 	private final AgentOptions agentOptions;
+
+	private File destfile;
 
 	private boolean enabled;
 
@@ -34,6 +37,7 @@ public class AbstractCoverageTask extends Task {
 	protected AbstractCoverageTask() {
 		super();
 		agentOptions = new AgentOptions();
+		destfile = new File(AgentOptions.DEFAULT_DESTFILE);
 		enabled = true;
 	}
 
@@ -55,23 +59,14 @@ public class AbstractCoverageTask extends Task {
 	}
 
 	/**
-	 * Gets the currently configured agent options for this task
-	 * 
-	 * @return Configured agent options
-	 */
-	public AgentOptions getAgentOptions() {
-		return agentOptions;
-	}
-
-	/**
-	 * Sets the location to write coverage execution data. Default is current
-	 * working directory
+	 * Sets the location to write coverage execution data to. Default is
+	 * <code>jacoco.exec</code>.
 	 * 
 	 * @param file
-	 *            Location to write coverage execution data
+	 *            Location to write coverage execution data to
 	 */
 	public void setDestfile(final File file) {
-		agentOptions.setDestfile(file.getAbsolutePath());
+		destfile = file;
 	}
 
 	/**
@@ -211,7 +206,14 @@ public class AbstractCoverageTask extends Task {
 	 * @return JVM Argument to pass to new VM
 	 */
 	protected String getLaunchingArgument() {
-		return getAgentOptions().getVMArgument(getAgentFile());
+		return prepareAgentOptions().getVMArgument(getAgentFile());
+	}
+
+	private AgentOptions prepareAgentOptions() {
+		if (OutputMode.file.equals(agentOptions.getOutput())) {
+			agentOptions.setDestfile(destfile.getAbsolutePath());
+		}
+		return agentOptions;
 	}
 
 	private File getAgentFile() {
