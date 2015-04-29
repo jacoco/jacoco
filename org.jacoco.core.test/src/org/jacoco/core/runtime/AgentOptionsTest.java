@@ -37,7 +37,7 @@ public class AgentOptionsTest {
 	@Test
 	public void testDefaults() {
 		AgentOptions options = new AgentOptions();
-		assertEquals("jacoco.exec", options.getDestfile());
+		assertEquals(AgentOptions.DEFAULT_DESTFILE, options.getDestfile());
 		assertTrue(options.getAppend());
 		assertEquals("*", options.getIncludes());
 		assertEquals("", options.getExcludes());
@@ -47,8 +47,8 @@ public class AgentOptionsTest {
 		assertNull(options.getSessionId());
 		assertTrue(options.getDumpOnExit());
 		assertEquals(AgentOptions.OutputMode.file, options.getOutput());
-		assertNull(options.getAddress());
-		assertEquals(6300, options.getPort());
+		assertEquals(AgentOptions.DEFAULT_ADDRESS, options.getAddress());
+		assertEquals(AgentOptions.DEFAULT_PORT, options.getPort());
 		assertNull(options.getClassDumpDir());
 		assertFalse(options.getJmx());
 
