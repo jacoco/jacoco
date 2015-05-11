@@ -26,9 +26,9 @@ import java.io.File;
  * </ul>
  * 
  * <p>
- * If your project already uses the argLine to configure the
- * surefire-maven-plugin, be sure that argLine defined as a property, rather
- * than as part of the plugin configuration. For example:
+ * If your project already defines VM arguments for test execution, be sure that
+ * the VM arguments are defined as a property, rather than as part of the plugin
+ * configuration. For example in case of maven-surefire-plugin:
  * </p>
  * 
  * <pre>
@@ -44,7 +44,6 @@ import java.io.File;
  *     &lt;/configuration&gt;
  *   &lt;/plugin&gt;
  * </pre>
- * 
  * 
  * <p>
  * Resulting coverage information is collected during execution and by default
