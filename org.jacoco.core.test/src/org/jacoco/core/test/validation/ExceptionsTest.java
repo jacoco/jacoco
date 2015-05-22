@@ -36,7 +36,7 @@ public class ExceptionsTest extends ValidationTestBase {
 		// 1. Implicit Exception
 		// Currently no coverage at all, as we don't see when a block aborts
 		// somewhere in the middle.
-		assertLine("implicitException.before", ICounter.NOT_COVERED);
+		assertLine("implicitException.before", ICounter.FULLY_COVERED);
 		assertLine("implicitException.exception", ICounter.NOT_COVERED);
 		assertLine("implicitException.after", ICounter.NOT_COVERED);
 
@@ -55,7 +55,7 @@ public class ExceptionsTest extends ValidationTestBase {
 		// somewhere in the middle.
 		assertLine("implicitExceptionTryCatch.beforeBlock",
 				ICounter.FULLY_COVERED);
-		assertLine("implicitExceptionTryCatch.before", ICounter.NOT_COVERED);
+		assertLine("implicitExceptionTryCatch.before", ICounter.FULLY_COVERED);
 		assertLine("implicitExceptionTryCatch.exception", ICounter.NOT_COVERED);
 		assertLine("implicitExceptionTryCatch.after", ICounter.NOT_COVERED);
 		assertLine("implicitExceptionTryCatch.catchBlock",
@@ -89,7 +89,7 @@ public class ExceptionsTest extends ValidationTestBase {
 		// Finally block is yellow as the non-exception path is missing.
 		assertLine("implicitExceptionFinally.beforeBlock",
 				ICounter.FULLY_COVERED);
-		assertLine("implicitExceptionFinally.before", ICounter.NOT_COVERED);
+		assertLine("implicitExceptionFinally.before", ICounter.FULLY_COVERED);
 		assertLine("implicitExceptionFinally.exception", ICounter.NOT_COVERED);
 		assertLine("implicitExceptionFinally.after", ICounter.NOT_COVERED);
 		assertLine("implicitExceptionFinally.finallyBlock",
