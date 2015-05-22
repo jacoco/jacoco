@@ -31,6 +31,7 @@ import org.jacoco.core.internal.instr.IProbeArrayStrategy;
 import org.jacoco.core.internal.instr.ProbeArrayStrategyFactory;
 import org.jacoco.core.internal.instr.SignatureRemover;
 import org.jacoco.core.runtime.IExecutionDataAccessorGenerator;
+import org.jacoco.core.runtime.RuntimeData;
 import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.ClassVisitor;
 import org.objectweb.asm.ClassWriter;
@@ -77,11 +78,11 @@ public class Instrumenter {
 	 * 
 	 */
 	public byte[] instrument(final ClassReader reader) {
-		return instrument(reader, null);
+		return instrument(reader, null, null);
 	}
 
 	public byte[] instrument(final ClassReader reader,
-			final ClassLoader classLoader) {
+			final ClassLoader classLoader, final RuntimeData runtimeData) {
 		final ClassWriter writer = new ClassWriter(reader, 0);
 		final IProbeArrayStrategy strategy;
 		if (classLoader == null) {
@@ -90,7 +91,7 @@ public class Instrumenter {
 		} else {
 			final long classId = CRC64.checksum(reader.b);
 			strategy = new CompanionClassStrategy(reader.getClassName(),
-					classId, accessorGenerator, classLoader);
+					classId, classLoader, runtimeData);
 		}
 		final ClassVisitor visitor = new ClassProbesAdapter(
 				new ClassInstrumenter(strategy, writer), true);
@@ -111,13 +112,14 @@ public class Instrumenter {
 	 */
 	public byte[] instrument(final byte[] buffer, final String name)
 			throws IOException {
-		return instrument(buffer, name, null);
+		return instrument(buffer, name, null, null);
 	}
 
 	public byte[] instrument(final byte[] buffer, final String name,
-			final ClassLoader classLoader) throws IOException {
+			final ClassLoader classLoader, final RuntimeData runtimeData)
+			throws IOException {
 		try {
-			return instrument(new ClassReader(buffer), classLoader);
+			return instrument(new ClassReader(buffer), classLoader, runtimeData);
 		} catch (final RuntimeException e) {
 			throw instrumentError(name, e);
 		}

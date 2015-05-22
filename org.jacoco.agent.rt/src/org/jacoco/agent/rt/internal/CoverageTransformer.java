@@ -19,6 +19,7 @@ import java.security.ProtectionDomain;
 import org.jacoco.core.instr.Instrumenter;
 import org.jacoco.core.runtime.AgentOptions;
 import org.jacoco.core.runtime.IRuntime;
+import org.jacoco.core.runtime.RuntimeData;
 import org.jacoco.core.runtime.WildcardMatcher;
 
 /**
@@ -32,6 +33,8 @@ public class CoverageTransformer implements ClassFileTransformer {
 		final String name = CoverageTransformer.class.getName();
 		AGENT_PREFIX = toVMName(name.substring(0, name.lastIndexOf('.')));
 	}
+
+	private final RuntimeData runtimeData;
 
 	private final Instrumenter instrumenter;
 
@@ -58,7 +61,9 @@ public class CoverageTransformer implements ClassFileTransformer {
 	 *            logger for exceptions during instrumentation
 	 */
 	public CoverageTransformer(final IRuntime runtime,
-			final AgentOptions options, final IExceptionLogger logger) {
+			final AgentOptions options, final RuntimeData runtimeData,
+			final IExceptionLogger logger) {
+		this.runtimeData = runtimeData;
 		this.instrumenter = new Instrumenter(runtime);
 		this.logger = logger;
 		// Class names will be reported in VM notation:
@@ -90,7 +95,8 @@ public class CoverageTransformer implements ClassFileTransformer {
 
 		try {
 			classFileDumper.dump(classname, classfileBuffer);
-			return instrumenter.instrument(classfileBuffer, classname, loader);
+			return instrumenter.instrument(classfileBuffer, classname, loader,
+					runtimeData);
 		} catch (final Exception ex) {
 			final IllegalClassFormatException wrapper = new IllegalClassFormatException(
 					ex.getMessage());

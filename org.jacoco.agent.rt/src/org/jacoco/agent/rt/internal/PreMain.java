@@ -47,7 +47,7 @@ public final class PreMain {
 		final IRuntime runtime = createRuntime(inst);
 		runtime.startup(agent.getData());
 		inst.addTransformer(new CoverageTransformer(runtime, agentOptions,
-				IExceptionLogger.SYSTEM_ERR));
+				agent.getData(), IExceptionLogger.SYSTEM_ERR));
 	}
 
 	private static IRuntime createRuntime(final Instrumentation inst)
