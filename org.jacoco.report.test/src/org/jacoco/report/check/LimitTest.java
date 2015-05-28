@@ -14,10 +14,10 @@ package org.jacoco.report.check;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 
-import org.jacoco.core.analysis.CoverageNodeImpl;
 import org.jacoco.core.analysis.ICounter.CounterValue;
 import org.jacoco.core.analysis.ICoverageNode.CounterEntity;
 import org.jacoco.core.internal.analysis.CounterImpl;
+import org.jacoco.core.internal.analysis.CoverageNodeImpl;
 import org.junit.Before;
 import org.junit.Test;
 
