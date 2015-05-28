@@ -15,6 +15,7 @@ import org.jacoco.core.JaCoCo;
 import org.objectweb.asm.Label;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.commons.JSRInlinerAdapter;
+import org.objectweb.asm.tree.LabelNode;
 
 /**
  * This method visitor fixes two potential issues with Java byte code:
@@ -35,6 +36,16 @@ class MethodSanitizer extends JSRInlinerAdapter {
 			final String[] exceptions) {
 		super(JaCoCo.ASM_API_VERSION, mv, access, name, desc, signature,
 				exceptions);
+	}
+
+	// TODO(Godin):
+	// otherwise, if default implementation is used, labels will be changed
+	@Override
+	protected LabelNode getLabelNode(Label l) {
+		if (!(l.info instanceof LabelNode)) {
+			l.info = new LabelNode(l);
+		}
+		return (LabelNode) l.info;
 	}
 
 	@Override

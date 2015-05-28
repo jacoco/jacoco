@@ -27,7 +27,9 @@ import org.jacoco.core.internal.Pack200Streams;
 import org.jacoco.core.internal.analysis.ClassAnalyzer;
 import org.jacoco.core.internal.analysis.StringPool;
 import org.jacoco.core.internal.data.CRC64;
+import org.jacoco.core.internal.flow.CharacterRangeTableAttribute;
 import org.jacoco.core.internal.flow.ClassProbesAdapter;
+import org.objectweb.asm.Attribute;
 import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.ClassVisitor;
 
@@ -104,7 +106,7 @@ public class Analyzer {
 	public void analyzeClass(final ClassReader reader) {
 		final ClassVisitor visitor = createAnalyzingVisitor(
 				CRC64.checksum(reader.b), reader.getClassName());
-		reader.accept(visitor, 0);
+		reader.accept(visitor, new Attribute[]{new CharacterRangeTableAttribute()}, 0);
 	}
 
 	/**

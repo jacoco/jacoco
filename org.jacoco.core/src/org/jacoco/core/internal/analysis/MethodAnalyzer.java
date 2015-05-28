@@ -17,10 +17,12 @@ import java.util.List;
 import org.jacoco.core.analysis.ICounter;
 import org.jacoco.core.analysis.IMethodCoverage;
 import org.jacoco.core.analysis.ISourceNode;
+import org.jacoco.core.internal.flow.CharacterRangeTableAttribute;
 import org.jacoco.core.internal.flow.IFrame;
 import org.jacoco.core.internal.flow.Instruction;
 import org.jacoco.core.internal.flow.LabelInfo;
 import org.jacoco.core.internal.flow.MethodProbesVisitor;
+import org.objectweb.asm.Attribute;
 import org.objectweb.asm.Handle;
 import org.objectweb.asm.Label;
 
@@ -91,6 +93,19 @@ public class MethodAnalyzer extends MethodProbesVisitor {
 		currentLabel.add(label);
 		if (!LabelInfo.isSuccessor(label)) {
 			lastInsn = null;
+		}
+	}
+
+	@Override
+	public void visitAttribute(Attribute attr) {
+		if (attr instanceof CharacterRangeTableAttribute) {
+			CharacterRangeTableAttribute characterRangeTableAttribute = (CharacterRangeTableAttribute) attr;
+			for (CharacterRangeTableAttribute.Entry entry : characterRangeTableAttribute.entries) {
+				if ((entry.flags & CharacterRangeTableAttribute.CRT_BRANCH_FLAGS) != 0) {
+					LabelInfo.setPos(entry.startLabel, entry.charStart,
+							entry.charEnd);
+				}
+			}
 		}
 	}
 
@@ -214,6 +229,25 @@ public class MethodAnalyzer extends MethodProbesVisitor {
 	@Override
 	public void visitJumpInsnWithProbe(final int opcode, final Label label,
 			final int probeId, final IFrame frame) {
+
+		if (probes != null && !probes[probeId]) {
+			final int labelCount = currentLabel.size();
+			if (labelCount > 0) {
+				for (int i = labelCount; --i >= 0;) {
+					Label curLabel = currentLabel.get(i);
+					int charStart = LabelInfo.getCharStart(curLabel);
+					int charEnd = LabelInfo.getCharEnd(curLabel);
+					// TODO(Godin): not all branches are presented in
+					// CharacterRangeTableAttribute, for example "for-each"
+					// loops
+					System.out.println("branch not taken "
+							+ CharacterRangeTableAttribute.decodePos(charStart)
+							+ "-"
+							+ CharacterRangeTableAttribute.decodePos(charEnd));
+				}
+			}
+		}
+
 		visitInsn();
 		addProbe(probeId);
 	}
