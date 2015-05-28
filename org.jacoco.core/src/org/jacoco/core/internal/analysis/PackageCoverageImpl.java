@@ -13,7 +13,6 @@ package org.jacoco.core.internal.analysis;
 
 import java.util.Collection;
 
-import org.jacoco.core.analysis.CoverageNodeImpl;
 import org.jacoco.core.analysis.IClassCoverage;
 import org.jacoco.core.analysis.IPackageCoverage;
 import org.jacoco.core.analysis.ISourceFileCoverage;

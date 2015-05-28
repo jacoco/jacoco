@@ -13,9 +13,9 @@ package org.jacoco.report.internal;
 
 import java.io.IOException;
 
-import org.jacoco.core.analysis.CoverageNodeImpl;
 import org.jacoco.core.analysis.IBundleCoverage;
 import org.jacoco.core.analysis.ICoverageNode.ElementType;
+import org.jacoco.core.internal.analysis.CoverageNodeImpl;
 import org.jacoco.report.IReportGroupVisitor;
 import org.jacoco.report.ISourceFileLocator;
 

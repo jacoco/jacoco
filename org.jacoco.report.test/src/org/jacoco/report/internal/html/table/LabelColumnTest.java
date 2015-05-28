@@ -16,9 +16,9 @@ import static org.junit.Assert.assertTrue;
 
 import java.io.IOException;
 
-import org.jacoco.core.analysis.CoverageNodeImpl;
 import org.jacoco.core.analysis.ICoverageNode;
 import org.jacoco.core.analysis.ICoverageNode.ElementType;
+import org.jacoco.core.internal.analysis.CoverageNodeImpl;
 import org.jacoco.report.MemoryMultiReportOutput;
 import org.jacoco.report.internal.ReportOutputFolder;
 import org.jacoco.report.internal.html.HTMLDocument;

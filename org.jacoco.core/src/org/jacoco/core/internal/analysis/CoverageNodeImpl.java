@@ -9,11 +9,12 @@
  *    Marc R. Hoffmann - initial API and implementation
  *    
  *******************************************************************************/
-package org.jacoco.core.analysis;
+package org.jacoco.core.internal.analysis;
 
 import java.util.Collection;
 
-import org.jacoco.core.internal.analysis.CounterImpl;
+import org.jacoco.core.analysis.ICounter;
+import org.jacoco.core.analysis.ICoverageNode;
 
 /**
  * Base implementation for coverage data nodes.
