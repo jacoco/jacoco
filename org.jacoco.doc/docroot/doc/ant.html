@@ -137,7 +137,10 @@
   In addition the <code>junit</code> task should declare
   <code>forkmode="once"</code> to avoid starting a new JVM for every single test
   case and decreasing execution performance dramatically (unless this is
-  required by the nature of the test cases).
+  required by the nature of the test cases). Note that
+  <code>forkmode="perTest"</code> or <code>forkmode="perBatch"</code> should not
+  be combined with <code>append="false"</code> as the execution data file is
+  overwritten with the execution of every test.
 </p>
 
 <p>
