@@ -122,10 +122,12 @@ public class ExecutionDataReader {
 		if (in.readChar() != ExecutionDataWriter.MAGIC_NUMBER) {
 			throw new IOException("Invalid execution data file.");
 		}
-		final char version = in.readChar();
-		if (version != ExecutionDataWriter.FORMAT_VERSION) {
-			throw new IOException(format("Incompatible version %x.",
-					Integer.valueOf(version)));
+		final char padded_version = in.readChar();
+		if (padded_version != ExecutionDataWriter.PADDED_FORMAT_VERSION) {
+			final int version = padded_version
+				- ExecutionDataWriter.FORMAT_VERSION_PAD;
+			throw new IncompatibleExecFileVersionException(
+				ExecutionDataWriter.FORMAT_VERSION, version);
 		}
 	}
 
