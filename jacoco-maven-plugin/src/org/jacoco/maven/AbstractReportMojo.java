@@ -21,6 +21,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
+import edu.emory.mathcs.backport.java.util.Arrays;
+import edu.emory.mathcs.backport.java.util.Collections;
 import org.apache.maven.doxia.siterenderer.Renderer;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.project.MavenProject;
@@ -45,6 +47,20 @@ import org.jacoco.report.xml.XMLFormatter;
  * in multiple formats (HTML, XML, and CSV).
  */
 public abstract class AbstractReportMojo extends AbstractMavenReport {
+
+	/**
+	 * Get the reactor projects, for multi-module builds this should contain all module projects.
+	 *
+	 * @parameter property="reactorProjects"
+	 */
+	private List<MavenProject> reactorProjects = Arrays.asList(new MavenProject[0]);
+
+	/**
+	 * Whether we are enabling mutli-module support (ie use reactor projects instead of this project).
+	 *
+	 * @parameter
+	 */
+	private boolean enableMultiModules = false;
 
 	/**
 	 * Encoding of the generated reports.
@@ -154,12 +170,32 @@ public abstract class AbstractReportMojo extends AbstractMavenReport {
 							+ getDataFile());
 			return false;
 		}
+		if (enableMultiModules) {
+			List<String> withoutClassDirectory = new ArrayList<String>();
+			for (MavenProject reactorProject : reactorProjects) {
+				File classesDirectory = new File(reactorProject.getBuild().getOutputDirectory());
+				if (!classesDirectory.exists()) {
+					withoutClassDirectory.add(classesDirectory.toString());
+				}
+			}
+			final int found = reactorProjects.size() - withoutClassDirectory.size();
+			if (found == 0) {
+				getLog().info("Skipping JaCoCo execution due to missing classes directories: "
+					+ withoutClassDirectory);
+				return false;
+			}
+			getLog().info("Class directories found in " + found + " of " + reactorProjects.size() + " modules");
+			return true;
+		}
 		final File classesDirectory = new File(getProject().getBuild()
 				.getOutputDirectory());
 		if (!classesDirectory.exists()) {
 			getLog().info(
 					"Skipping JaCoCo execution due to missing classes directory:"
 							+ classesDirectory);
+			if (reactorProjects.size() != 1) {
+			  getLog().warn("Project appears to be multi-module build, but support has not been enabled");
+			}
 			return false;
 		}
 		return true;
@@ -216,9 +252,14 @@ public abstract class AbstractReportMojo extends AbstractMavenReport {
 				this.getExcludes());
 		final BundleCreator creator = new BundleCreator(this.getProject(),
 				fileFilter, getLog());
-		final IBundleCoverage bundle = creator.createBundle(executionDataStore);
+		final IBundleCoverage bundle = enableMultiModules
+						? creator.createBundle(reactorProjects, executionDataStore)
+						: creator.createBundle(executionDataStore);
+		final List<File> compileSourceRoots = enableMultiModules
+						? getCompileSourceRoots(projectsWithOutputDirectories())
+						: getCompileSourceRoots();
 		final SourceFileCollection locator = new SourceFileCollection(
-				getCompileSourceRoots(), sourceEncoding);
+				compileSourceRoots, sourceEncoding);
 		checkForMissingDebugInformation(bundle);
 		visitor.visitBundle(bundle, locator);
 	}
@@ -250,18 +291,35 @@ public abstract class AbstractReportMojo extends AbstractMavenReport {
 		return new MultiReportVisitor(visitors);
 	}
 
-	File resolvePath(final String path) {
+	File resolvePath(final MavenProject project, final String path) {
 		File file = new File(path);
 		if (!file.isAbsolute()) {
-			file = new File(getProject().getBasedir(), path);
+			file = new File(project.getBasedir(), path);
 		}
 		return file;
 	}
 
+	List<MavenProject> projectsWithOutputDirectories() {
+		final List<MavenProject> result = new ArrayList<MavenProject>();
+		for (MavenProject reactorProject : reactorProjects) {
+			File classesDirectory = new File(reactorProject.getBuild().getOutputDirectory());
+			if (classesDirectory.exists()) {
+				result.add(reactorProject);
+			}
+		}
+		return result;
+	}
+
 	List<File> getCompileSourceRoots() {
+		return getCompileSourceRoots(Collections.singletonList(getProject()));
+	}
+
+	List<File> getCompileSourceRoots(List<MavenProject> projects) {
 		final List<File> result = new ArrayList<File>();
-		for (final Object path : getProject().getCompileSourceRoots()) {
-			result.add(resolvePath((String) path));
+		for (final MavenProject project : projects) {
+			for (final Object path : project.getCompileSourceRoots()) {
+				result.add(resolvePath(project, (String) path));
+			}
 		}
 		return result;
 	}

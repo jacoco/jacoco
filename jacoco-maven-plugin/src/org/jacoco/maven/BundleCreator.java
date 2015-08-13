@@ -16,7 +16,9 @@ import static java.lang.String.format;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 import org.apache.maven.plugin.logging.Log;
@@ -65,14 +67,35 @@ public final class BundleCreator {
 	 */
 	public IBundleCoverage createBundle(
 			final ExecutionDataStore executionDataStore) throws IOException {
+		return createBundle(Collections.singletonList(project), executionDataStore);
+	}
+
+	/**
+	 * Create an IBundleCoverage for the given reactor projects and ExecutionDataStore.
+	 *
+	 * @param reactorProjects
+	 *            the list of all reactor project
+	 * @param executionDataStore
+	 *            the execution data.
+	 * @return the coverage data.
+	 * @throws IOException
+	 *             if class files can't be read
+	 */
+	public IBundleCoverage createBundle(
+			final List<MavenProject> reactorProjects,
+			final ExecutionDataStore executionDataStore) throws IOException {
 		final CoverageBuilder builder = new CoverageBuilder();
 		final Analyzer analyzer = new Analyzer(executionDataStore, builder);
-		final File classesDir = new File(this.project.getBuild()
-				.getOutputDirectory());
-
-		@SuppressWarnings("unchecked")
-		final List<File> filesToAnalyze = FileUtils.getFiles(classesDir,
-				fileFilter.getIncludes(), fileFilter.getExcludes());
+		final List<File> filesToAnalyze = new ArrayList<File>();
+		for (MavenProject reactorProject : reactorProjects) {
+			File classesDir = new File(reactorProject.getBuild().getOutputDirectory());
+			if (classesDir.exists()) {
+				@SuppressWarnings("unchecked")
+				List files = FileUtils.getFiles(classesDir,
+								fileFilter.getIncludes(), fileFilter.getExcludes());
+				filesToAnalyze.addAll(files);
+			}
+		}
 
 		for (final File file : filesToAnalyze) {
 			analyzer.analyzeAll(file);
