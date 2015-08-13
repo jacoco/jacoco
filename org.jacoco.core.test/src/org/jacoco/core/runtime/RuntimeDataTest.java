@@ -18,6 +18,7 @@ import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
 
 import java.util.concurrent.Callable;
+import java.util.concurrent.atomic.AtomicIntegerArray;
 
 import org.jacoco.core.test.TargetLoader;
 import org.junit.Before;
@@ -55,15 +56,15 @@ public class RuntimeDataTest {
 				Integer.valueOf(3) };
 		data.equals(args);
 
-		assertEquals(3, ((boolean[]) args[0]).length);
+		assertEquals(3, ((AtomicIntegerArray) args[0]).length());
 
 		data.collect(storage, storage, false);
-		boolean[] data = (boolean[]) args[0];
-		assertEquals(3, data.length, 0.0);
-		assertFalse(data[0]);
-		assertFalse(data[1]);
-		assertFalse(data[2]);
-		assertSame(storage.getData(123).getProbes(), data);
+		AtomicIntegerArray data = (AtomicIntegerArray) args[0];
+		assertEquals(3, data.length(), 0.0);
+		assertFalse(data.get(0) != 0);
+		assertFalse(data.get(1) != 0);
+		assertFalse(data.get(2) != 0);
+		assertSame(storage.getData(123).getAtomicProbes(), data);
 		assertEquals("Foo", storage.getData(123).getName());
 	}
 
@@ -76,26 +77,26 @@ public class RuntimeDataTest {
 	@Test
 	public void testCollectWithReset() {
 		data.setSessionId("testsession");
-		boolean[] probes = data.getExecutionData(Long.valueOf(123), "Foo", 1)
-				.getProbes();
-		probes[0] = true;
+		AtomicIntegerArray probes = data.getExecutionData(Long.valueOf(123),
+				"Foo", 1).getAtomicProbes();
+		probes.set(0, 1);
 
 		data.collect(storage, storage, true);
 
-		assertFalse(probes[0]);
+		assertFalse(probes.get(0) != 0);
 		assertEquals("testsession", storage.getSessionInfo().getId());
 	}
 
 	@Test
 	public void testCollectWithoutReset() {
 		data.setSessionId("testsession");
-		boolean[] probes = data.getExecutionData(Long.valueOf(123), "Foo", 1)
+		int[] probes = data.getExecutionData(Long.valueOf(123), "Foo", 1)
 				.getProbes();
-		probes[0] = true;
+		probes[0] = 1;
 
 		data.collect(storage, storage, false);
 
-		assertTrue(probes[0]);
+		assertTrue(probes[0] != 0);
 		assertEquals("testsession", storage.getSessionInfo().getId());
 	}
 
@@ -149,8 +150,8 @@ public class RuntimeDataTest {
 
 	@Test
 	public void testGenerateAccessCall() throws Exception {
-		final boolean[] probes = data.getExecutionData(Long.valueOf(1234),
-				"Sample", 5).getProbes();
+		final AtomicIntegerArray probes = data.getExecutionData(
+				Long.valueOf(1234), "Sample", 5).getAtomicProbes();
 
 		final ClassWriter writer = new ClassWriter(0);
 		writer.visit(Opcodes.V1_5, Opcodes.ACC_PUBLIC, "Sample", null,
@@ -192,7 +193,6 @@ public class RuntimeDataTest {
 		Callable<?> callable = (Callable<?>) loader
 				.add("Sample", writer.toByteArray())
 				.getConstructor(Object.class).newInstance(data);
-		assertSame(probes, callable.call());
+		assertEquals(probes, callable.call());
 	}
-
 }

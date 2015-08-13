@@ -63,8 +63,10 @@ public class ProbeInserterTest {
 
 		expectedVisitor.visitVarInsn(Opcodes.ALOAD, 0);
 		expectedVisitor.visitInsn(Opcodes.ICONST_0);
-		expectedVisitor.visitInsn(Opcodes.ICONST_1);
-		expectedVisitor.visitInsn(Opcodes.BASTORE);
+		expectedVisitor.visitMethodInsn(Opcodes.INVOKEVIRTUAL,
+				"java/util/concurrent/atomic/AtomicIntegerArray",
+				"incrementAndGet", "(I)I", false);
+		expectedVisitor.visitInsn(Opcodes.POP);
 	}
 
 	@Test
@@ -75,8 +77,10 @@ public class ProbeInserterTest {
 
 		expectedVisitor.visitVarInsn(Opcodes.ALOAD, 1);
 		expectedVisitor.visitInsn(Opcodes.ICONST_0);
-		expectedVisitor.visitInsn(Opcodes.ICONST_1);
-		expectedVisitor.visitInsn(Opcodes.BASTORE);
+		expectedVisitor.visitMethodInsn(Opcodes.INVOKEVIRTUAL,
+				"java/util/concurrent/atomic/AtomicIntegerArray",
+				"incrementAndGet", "(I)I", false);
+		expectedVisitor.visitInsn(Opcodes.POP);
 	}
 
 	@Test
@@ -87,8 +91,10 @@ public class ProbeInserterTest {
 
 		expectedVisitor.visitVarInsn(Opcodes.ALOAD, 4);
 		expectedVisitor.visitInsn(Opcodes.ICONST_0);
-		expectedVisitor.visitInsn(Opcodes.ICONST_1);
-		expectedVisitor.visitInsn(Opcodes.BASTORE);
+		expectedVisitor.visitMethodInsn(Opcodes.INVOKEVIRTUAL,
+				"java/util/concurrent/atomic/AtomicIntegerArray",
+				"incrementAndGet", "(I)I", false);
+		expectedVisitor.visitInsn(Opcodes.POP);
 	}
 
 	@Test
@@ -99,8 +105,10 @@ public class ProbeInserterTest {
 
 		expectedVisitor.visitVarInsn(Opcodes.ALOAD, 5);
 		expectedVisitor.visitInsn(Opcodes.ICONST_0);
-		expectedVisitor.visitInsn(Opcodes.ICONST_1);
-		expectedVisitor.visitInsn(Opcodes.BASTORE);
+		expectedVisitor.visitMethodInsn(Opcodes.INVOKEVIRTUAL,
+				"java/util/concurrent/atomic/AtomicIntegerArray",
+				"incrementAndGet", "(I)I", false);
+		expectedVisitor.visitInsn(Opcodes.POP);
 	}
 
 	@Test
@@ -193,7 +201,7 @@ public class ProbeInserterTest {
 		pi.visitMaxs(10, 8);
 
 		expectedVisitor.visitLdcInsn("init");
-		expectedVisitor.visitMaxs(13, 9);
+		expectedVisitor.visitMaxs(12, 9);
 	}
 
 	@Test
@@ -205,7 +213,8 @@ public class ProbeInserterTest {
 				"java/lang/String" }, 0, new Object[0]);
 
 		expectedVisitor.visitFrame(Opcodes.F_NEW, 4, new Object[] { "Foo",
-				Opcodes.LONG, "[Z", "java/lang/String" }, 0, new Object[0]);
+				Opcodes.LONG, "java/util/concurrent/atomic/AtomicIntegerArray",
+				"java/lang/String" }, 0, new Object[0]);
 	}
 
 	@Test
@@ -215,8 +224,12 @@ public class ProbeInserterTest {
 
 		pi.visitFrame(Opcodes.F_NEW, 0, new Object[] {}, 0, new Object[0]);
 
-		expectedVisitor.visitFrame(Opcodes.F_NEW, 1, new Object[] { "[Z" }, 0,
-				new Object[0]);
+		expectedVisitor
+				.visitFrame(
+						Opcodes.F_NEW,
+						1,
+						new Object[] { "java/util/concurrent/atomic/AtomicIntegerArray" },
+						0, new Object[0]);
 	}
 
 	@Test
@@ -227,7 +240,8 @@ public class ProbeInserterTest {
 		pi.visitFrame(Opcodes.F_NEW, 2, new Object[] { Opcodes.DOUBLE, "Foo" },
 				0, new Object[0]);
 
-		expectedVisitor.visitFrame(Opcodes.F_NEW, 3, new Object[] { "[Z",
+		expectedVisitor.visitFrame(Opcodes.F_NEW, 3, new Object[] {
+				"java/util/concurrent/atomic/AtomicIntegerArray",
 				Opcodes.DOUBLE, "Foo" }, 0, new Object[0]);
 	}
 
@@ -239,8 +253,10 @@ public class ProbeInserterTest {
 		pi.visitFrame(Opcodes.F_NEW, 0, new Object[] {}, 0, new Object[] {});
 
 		// The locals in this frame are filled with TOP up to the probe variable
-		expectedVisitor.visitFrame(Opcodes.F_NEW, 2, new Object[] {
-				Opcodes.TOP, "[Z", }, 0, new Object[] {});
+		expectedVisitor.visitFrame(Opcodes.F_NEW, 2,
+				new Object[] { Opcodes.TOP,
+						"java/util/concurrent/atomic/AtomicIntegerArray", }, 0,
+				new Object[] {});
 	}
 
 	@Test
@@ -252,7 +268,9 @@ public class ProbeInserterTest {
 
 		// The locals in this frame are filled with TOP up to the probe variable
 		expectedVisitor.visitFrame(Opcodes.F_NEW, 3, new Object[] {
-				Opcodes.TOP, Opcodes.TOP, "[Z", }, 0, new Object[] {});
+				Opcodes.TOP, Opcodes.TOP,
+				"java/util/concurrent/atomic/AtomicIntegerArray", }, 0,
+				new Object[] {});
 	}
 
 	@Test
@@ -265,8 +283,9 @@ public class ProbeInserterTest {
 
 		// The locals in this frame are filled with TOP up to the probe variable
 		expectedVisitor.visitFrame(Opcodes.F_NEW, 5, new Object[] {
-				Opcodes.DOUBLE, Opcodes.TOP, Opcodes.TOP, Opcodes.TOP, "[Z", },
-				0, new Object[] {});
+				Opcodes.DOUBLE, Opcodes.TOP, Opcodes.TOP, Opcodes.TOP,
+				"java/util/concurrent/atomic/AtomicIntegerArray", }, 0,
+				new Object[] {});
 	}
 
 	@Test(expected = IllegalArgumentException.class)

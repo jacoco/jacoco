@@ -12,7 +12,8 @@
 package org.jacoco.core.runtime;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertSame;
+
+import java.util.concurrent.atomic.AtomicIntegerArray;
 
 import org.jacoco.core.JaCoCo;
 import org.jacoco.core.instr.MethodRecorder;
@@ -34,17 +35,17 @@ public class OfflineInstrumentationAccessGeneratorTest {
 
 	private IExecutionDataAccessorGenerator generator;
 
-	private static boolean[] probes;
+	private static AtomicIntegerArray probes;
 
 	// runtime stub
-	public static boolean[] getProbes(final long classid,
+	public static AtomicIntegerArray getAtomicProbes(final long classid,
 			final String classname, final int probecount) {
 		return probes;
 	}
 
 	@BeforeClass
 	public static void setupClass() {
-		probes = new boolean[3];
+		probes = new AtomicIntegerArray(3);
 	}
 
 	@Before
@@ -56,7 +57,7 @@ public class OfflineInstrumentationAccessGeneratorTest {
 	@Test
 	public void testRuntimeAccess() throws Exception {
 		ITarget target = generateAndInstantiateClass(123);
-		assertSame(probes, target.get());
+		assertEquals(probes, target.get());
 	}
 
 	@Test
@@ -71,8 +72,13 @@ public class OfflineInstrumentationAccessGeneratorTest {
 		expected.getVisitor().visitLdcInsn("foo/Bar");
 		expected.getVisitor().visitIntInsn(Opcodes.BIPUSH, 17);
 		String rtname = JaCoCo.RUNTIMEPACKAGE.replace('.', '/') + "/Offline";
-		expected.getVisitor().visitMethodInsn(Opcodes.INVOKESTATIC, rtname,
-				"getProbes", "(JLjava/lang/String;I)[Z", false);
+		expected.getVisitor()
+				.visitMethodInsn(
+						Opcodes.INVOKESTATIC,
+						rtname,
+						"getAtomicProbes",
+						"(JLjava/lang/String;I)Ljava/util/concurrent/atomic/AtomicIntegerArray;",
+						false);
 
 		assertEquals(expected, actual);
 	}
@@ -110,18 +116,19 @@ public class OfflineInstrumentationAccessGeneratorTest {
 		final int size = generator.generateDataAccessor(classid, className, 2,
 				gen);
 		gen.putStatic(classType, InstrSupport.DATAFIELD_NAME,
-				Type.getObjectType(InstrSupport.DATAFIELD_DESC));
+				Type.getObjectType(InstrSupport.DATAFIELD_CLASS));
 		gen.returnValue();
 		gen.visitMaxs(size + 1, 0);
 		gen.visitEnd();
 
 		// get()
 		gen = new GeneratorAdapter(writer.visitMethod(Opcodes.ACC_PUBLIC,
-				"get", "()[Z", null, new String[0]), Opcodes.ACC_PUBLIC, "get",
-				"()[Z");
+				"get", "()Ljava/util/concurrent/atomic/AtomicIntegerArray;",
+				null, new String[0]), Opcodes.ACC_PUBLIC, "get",
+				"()Ljava/util/concurrent/atomic/AtomicIntegerArray;");
 		gen.visitCode();
 		gen.getStatic(classType, InstrSupport.DATAFIELD_NAME,
-				Type.getObjectType(InstrSupport.DATAFIELD_DESC));
+				Type.getObjectType(InstrSupport.DATAFIELD_CLASS));
 		gen.returnValue();
 		gen.visitMaxs(1, 0);
 		gen.visitEnd();
@@ -143,7 +150,7 @@ public class OfflineInstrumentationAccessGeneratorTest {
 		 * 
 		 * @return the probe array
 		 */
-		boolean[] get();
+		AtomicIntegerArray get();
 
 	}
 

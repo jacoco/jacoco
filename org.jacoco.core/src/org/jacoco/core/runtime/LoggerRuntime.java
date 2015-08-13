@@ -68,7 +68,7 @@ public class LoggerRuntime extends AbstractRuntime {
 		// args[1] = classname;
 		// args[2] = Integer.valueOf(probecount);
 		// Logger.getLogger(CHANNEL).log(Level.INFO, key, args);
-		// final byte[] probedata = (byte[]) args[0];
+		// final AtomicIntegerArray probedata = (AtomicIntegerArray) args[0];
 		//
 		// Note that local variable 'args' is used at two places. As were not
 		// allowed to allocate local variables we have to keep this value with
@@ -146,9 +146,9 @@ public class LoggerRuntime extends AbstractRuntime {
 
 		mv.visitInsn(Opcodes.ICONST_0);
 		mv.visitInsn(Opcodes.AALOAD);
-		mv.visitTypeInsn(Opcodes.CHECKCAST, InstrSupport.DATAFIELD_DESC);
+		mv.visitTypeInsn(Opcodes.CHECKCAST, InstrSupport.DATAFIELD_CLASS);
 
-		// Stack[0]: [Z
+		// Stack[0]: [Ljava/util/concurrent/atomic/AtomicIntegerArray;
 
 		return 5; // Maximum local stack size is 5
 	}
@@ -168,7 +168,7 @@ public class LoggerRuntime extends AbstractRuntime {
 		@Override
 		public void publish(final LogRecord record) {
 			if (key.equals(record.getMessage())) {
-				data.getProbes(record.getParameters());
+				data.getAtomicProbes(record.getParameters());
 			}
 		}
 

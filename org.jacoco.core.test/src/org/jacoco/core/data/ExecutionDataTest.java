@@ -11,9 +11,9 @@
  *******************************************************************************/
 package org.jacoco.core.data;
 
+import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
@@ -29,104 +29,100 @@ public class ExecutionDataTest {
 		assertEquals(5, e.getId());
 		assertEquals("Example", e.getName());
 		assertEquals(3, e.getProbes().length);
-		assertFalse(e.getProbes()[0]);
-		assertFalse(e.getProbes()[1]);
-		assertFalse(e.getProbes()[2]);
+		assertFalse(e.getProbes()[0] != 0);
+		assertFalse(e.getProbes()[1] != 0);
+		assertFalse(e.getProbes()[2] != 0);
 	}
 
 	@Test
 	public void testGetters() {
-		final boolean[] data = new boolean[0];
+		final int[] data = new int[0];
 		final ExecutionData e = new ExecutionData(5, "Example", data);
 		assertEquals(5, e.getId());
 		assertEquals("Example", e.getName());
-		assertSame(data, e.getProbes());
+		assertArrayEquals(data, e.getProbes());
 	}
 
 	@Test
 	public void testReset() {
-		final ExecutionData e = new ExecutionData(5, "Example", new boolean[] {
-				true, false, true });
+		final ExecutionData e = new ExecutionData(5, "Example", new int[] { 1,
+				0, 1 });
 		e.reset();
-		assertFalse(e.getProbes()[0]);
-		assertFalse(e.getProbes()[1]);
-		assertFalse(e.getProbes()[2]);
+		assertFalse(e.getProbes()[0] != 0);
+		assertFalse(e.getProbes()[1] != 0);
+		assertFalse(e.getProbes()[2] != 0);
 	}
 
 	@Test
 	public void testMerge() {
-		final ExecutionData a = new ExecutionData(5, "Example", new boolean[] {
-				false, true, false, true });
-		final ExecutionData b = new ExecutionData(5, "Example", new boolean[] {
-				false, false, true, true });
+		final ExecutionData a = new ExecutionData(5, "Example", new int[] { 0,
+				1, 0, 1 });
+		final ExecutionData b = new ExecutionData(5, "Example", new int[] { 0,
+				0, 1, 1 });
 		a.merge(b);
 
 		// b is merged into a:
-		assertFalse(a.getProbes()[0]);
-		assertTrue(a.getProbes()[1]);
-		assertTrue(a.getProbes()[2]);
-		assertTrue(a.getProbes()[3]);
+		assertFalse(a.getProbes()[0] != 0);
+		assertTrue(a.getProbes()[1] != 0);
+		assertTrue(a.getProbes()[2] != 0);
+		assertTrue(a.getProbes()[3] != 0);
 
 		// b must not be modified:
-		assertFalse(b.getProbes()[0]);
-		assertFalse(b.getProbes()[1]);
-		assertTrue(b.getProbes()[2]);
-		assertTrue(b.getProbes()[3]);
+		assertFalse(b.getProbes()[0] != 0);
+		assertFalse(b.getProbes()[1] != 0);
+		assertTrue(b.getProbes()[2] != 0);
+		assertTrue(b.getProbes()[3] != 0);
 	}
 
 	@Test
 	public void testMergeSubtract() {
-		final ExecutionData a = new ExecutionData(5, "Example", new boolean[] {
-				false, true, false, true });
-		final ExecutionData b = new ExecutionData(5, "Example", new boolean[] {
-				false, false, true, true });
+		final ExecutionData a = new ExecutionData(5, "Example", new int[] { 0,
+				1, 0, 1 });
+		final ExecutionData b = new ExecutionData(5, "Example", new int[] { 0,
+				0, 1, 1 });
 		a.merge(b, false);
 
 		// b is subtracted from a:
-		assertFalse(a.getProbes()[0]);
-		assertTrue(a.getProbes()[1]);
-		assertFalse(a.getProbes()[2]);
-		assertFalse(a.getProbes()[3]);
+		assertFalse(a.getProbes()[0] != 0);
+		assertTrue(a.getProbes()[1] != 0);
+		assertFalse(a.getProbes()[2] != 0);
+		assertFalse(a.getProbes()[3] != 0);
 
 		// b must not be modified:
-		assertFalse(b.getProbes()[0]);
-		assertFalse(b.getProbes()[1]);
-		assertTrue(b.getProbes()[2]);
-		assertTrue(b.getProbes()[3]);
+		assertFalse(b.getProbes()[0] != 0);
+		assertFalse(b.getProbes()[1] != 0);
+		assertTrue(b.getProbes()[2] != 0);
+		assertTrue(b.getProbes()[3] != 0);
 	}
 
 	@Test
 	public void testAssertCompatibility() {
-		final ExecutionData a = new ExecutionData(5, "Example",
-				new boolean[] { true });
+		final ExecutionData a = new ExecutionData(5, "Example", new int[] { 1 });
 		a.assertCompatibility(5, "Example", 1);
 	}
 
 	@Test(expected = IllegalStateException.class)
 	public void testAssertCompatibilityNegative1() {
-		final ExecutionData a = new ExecutionData(5, "Example",
-				new boolean[] { true });
+		final ExecutionData a = new ExecutionData(5, "Example", new int[] { 1 });
 		a.assertCompatibility(55, "Example", 1);
 	}
 
 	@Test(expected = IllegalStateException.class)
 	public void testAssertCompatibilityNegative2() {
-		final ExecutionData a = new ExecutionData(5, "Example",
-				new boolean[] { true });
+		final ExecutionData a = new ExecutionData(5, "Example", new int[] { 1 });
 		a.assertCompatibility(5, "Exxxample", 1);
 	}
 
 	@Test(expected = IllegalStateException.class)
 	public void testAssertCompatibilityNegative3() {
-		final ExecutionData a = new ExecutionData(5, "Example",
-				new boolean[] { true });
+		final ExecutionData a = new ExecutionData(5, "Example", new int[] { 1 });
 		a.assertCompatibility(5, "Example", 3);
 	}
 
 	@Test
 	public void testToString() {
 		final ExecutionData a = new ExecutionData(Long.MAX_VALUE, "Example",
-				new boolean[] { true });
+				new int[] { 1 });
 		assertEquals("ExecutionData[name=Example, id=7fffffffffffffff]",
 				a.toString());
 	}

@@ -16,6 +16,7 @@ import static org.junit.Assert.assertSame;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicIntegerArray;
 
 import org.jacoco.core.data.ExecutionData;
 import org.jacoco.core.data.IExecutionDataVisitor;
@@ -40,8 +41,8 @@ class TestStorage implements IExecutionDataVisitor, ISessionInfoVisitor {
 		return info;
 	}
 
-	public void assertData(long classId, boolean[] expected) {
-		assertSame(expected, getData(classId).getProbes());
+	public void assertData(long classId, AtomicIntegerArray is) {
+		assertSame(is, getData(classId).getAtomicProbes());
 	}
 
 	// === ICoverageDataVisitor ===

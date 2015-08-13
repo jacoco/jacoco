@@ -145,7 +145,7 @@ public class ExecutionDataReader {
 		}
 		final long id = in.readLong();
 		final String name = in.readUTF();
-		final boolean[] probes = in.readBooleanArray();
+		final int[] probes = in.readIntArray();
 		executionDataVisitor.visitClassExecution(new ExecutionData(id, name,
 				probes));
 	}

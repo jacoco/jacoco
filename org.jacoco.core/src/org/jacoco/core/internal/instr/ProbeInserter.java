@@ -59,25 +59,24 @@ class ProbeInserter extends MethodVisitor implements IProbeInserter {
 
 	public void insertProbe(final int id) {
 
-		// For a probe we set the corresponding position in the boolean[] array
-		// to true.
+		// For a probe we increment the corresponding position in the
+		// AtomicIntegerArray.
 
 		mv.visitVarInsn(Opcodes.ALOAD, variable);
 
-		// Stack[0]: [Z
+		// Stack[0]: Ljava/util/concurrent/atomic/AtomicIntegerArray;
 
 		InstrSupport.push(mv, id);
 
 		// Stack[1]: I
-		// Stack[0]: [Z
+		// Stack[0]: Ljava/util/concurrent/atomic/AtomicIntegerArray;
 
-		mv.visitInsn(Opcodes.ICONST_1);
+		mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL,
+				"java/util/concurrent/atomic/AtomicIntegerArray",
+				"incrementAndGet", "(I)I", false);
 
-		// Stack[2]: I
-		// Stack[1]: I
-		// Stack[0]: [Z
-
-		mv.visitInsn(Opcodes.BASTORE);
+		// Stack[0]: I
+		mv.visitInsn(Opcodes.POP);
 	}
 
 	@Override
@@ -105,11 +104,11 @@ class ProbeInserter extends MethodVisitor implements IProbeInserter {
 
 	@Override
 	public void visitMaxs(final int maxStack, final int maxLocals) {
-		// Max stack size of the probe code is 3 which can add to the
+		// Max stack size of the probe code is 2 which can add to the
 		// original stack size depending on the probe locations. The accessor
 		// stack size is an absolute maximum, as the accessor code is inserted
 		// at the very beginning of each method when the stack size is empty.
-		final int increasedStack = Math.max(maxStack + 3, accessorStackSize);
+		final int increasedStack = Math.max(maxStack + 2, accessorStackSize);
 		mv.visitMaxs(increasedStack, maxLocals + 1);
 	}
 
@@ -136,7 +135,7 @@ class ProbeInserter extends MethodVisitor implements IProbeInserter {
 		int pos = 0; // Current variable position
 		while (idx < nLocal || pos <= variable) {
 			if (pos == variable) {
-				newLocal[newIdx++] = InstrSupport.DATAFIELD_DESC;
+				newLocal[newIdx++] = InstrSupport.DATAFIELD_CLASS;
 				pos++;
 			} else {
 				if (idx < nLocal) {

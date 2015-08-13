@@ -57,7 +57,7 @@ public class SystemPropertiesRuntime extends AbstractRuntime {
 
 		RuntimeData.generateAccessCall(classid, classname, probecount, mv);
 
-		// Stack[0]: [Z
+		// Stack[0]: [Ljava/util/concurrent/atomic/AtomicIntegerArray;
 
 		return 6; // Maximum local stack size is 3
 	}

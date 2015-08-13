@@ -47,10 +47,16 @@ public final class InstrSupport {
 			| Opcodes.ACC_PUBLIC | Opcodes.ACC_STATIC | Opcodes.ACC_FINAL;
 
 	/**
-	 * Data type of the field that stores coverage information for a class (
-	 * <code>boolean[]</code>).
+	 * Class name that stores coverage information for a class (
+	 * <code>AtomicIntegerArray</code>).
 	 */
-	public static final String DATAFIELD_DESC = "[Z";
+	public static final String DATAFIELD_CLASS = "java/util/concurrent/atomic/AtomicIntegerArray";
+
+	/**
+	 * Data type of the field that stores coverage information for a class (
+	 * <code>AtomicIntegerArray</code>).
+	 */
+	public static final String DATAFIELD_DESC = "Ljava/util/concurrent/atomic/AtomicIntegerArray;";
 
 	// === Init Method ===
 
@@ -62,7 +68,7 @@ public final class InstrSupport {
 	/**
 	 * Descriptor of the initialization method.
 	 */
-	public static final String INITMETHOD_DESC = "()[Z";
+	public static final String INITMETHOD_DESC = "()" + DATAFIELD_DESC;
 
 	/**
 	 * Access modifiers of the initialization method.

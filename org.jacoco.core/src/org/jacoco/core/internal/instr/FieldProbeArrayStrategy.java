@@ -25,9 +25,9 @@ import org.objectweb.asm.Opcodes;
 class FieldProbeArrayStrategy implements IProbeArrayStrategy {
 
 	/**
-	 * Frame stack with a single boolean array.
+	 * Frame stack with a single AtomicIntegerArray array.
 	 */
-	private static final Object[] FRAME_STACK_ARRZ = new Object[] { InstrSupport.DATAFIELD_DESC };
+	private static final Object[] FRAME_STACK_ARRZ = new Object[] { InstrSupport.DATAFIELD_CLASS };
 
 	/**
 	 * Empty frame locals.
@@ -77,21 +77,23 @@ class FieldProbeArrayStrategy implements IProbeArrayStrategy {
 		// Load the value of the static data field:
 		mv.visitFieldInsn(Opcodes.GETSTATIC, className,
 				InstrSupport.DATAFIELD_NAME, InstrSupport.DATAFIELD_DESC);
+		// Stack[0]: Ljava/util/concurrent/atomic/AtomicIntegerArray;
+
 		mv.visitInsn(Opcodes.DUP);
 
-		// Stack[1]: [Z
-		// Stack[0]: [Z
+		// Stack[1]: Ljava/util/concurrent/atomic/AtomicIntegerArray;
+		// Stack[0]: Ljava/util/concurrent/atomic/AtomicIntegerArray;
 
 		// Skip initialization when we already have a data array:
 		final Label alreadyInitialized = new Label();
 		mv.visitJumpInsn(Opcodes.IFNONNULL, alreadyInitialized);
 
-		// Stack[0]: [Z
+		// Stack[0]: Ljava/util/concurrent/atomic/AtomicIntegerArray;
 
 		mv.visitInsn(Opcodes.POP);
 		final int size = genInitializeDataField(mv, probeCount);
 
-		// Stack[0]: [Z
+		// Stack[0]: Ljava/util/concurrent/atomic/AtomicIntegerArray;
 
 		// Return the class' probe array:
 		if (withFrames) {
@@ -109,7 +111,8 @@ class FieldProbeArrayStrategy implements IProbeArrayStrategy {
 	 * Generates the byte code to initialize the static coverage data field
 	 * within this class.
 	 * 
-	 * The code will push the [Z data array on the operand stack.
+	 * The code will push the Ljava/util/concurrent/atomic/AtomicIntegerArray;
+	 * data array on the operand stack.
 	 * 
 	 * @param mv
 	 *            generator to emit code to
@@ -119,17 +122,17 @@ class FieldProbeArrayStrategy implements IProbeArrayStrategy {
 		final int size = accessorGenerator.generateDataAccessor(classId,
 				className, probeCount, mv);
 
-		// Stack[0]: [Z
+		// Stack[0]: Ljava/util/concurrent/atomic/AtomicIntegerArray;
 
 		mv.visitInsn(Opcodes.DUP);
 
-		// Stack[1]: [Z
-		// Stack[0]: [Z
+		// Stack[1]: Ljava/util/concurrent/atomic/AtomicIntegerArray;
+		// Stack[0]: Ljava/util/concurrent/atomic/AtomicIntegerArray;
 
 		mv.visitFieldInsn(Opcodes.PUTSTATIC, className,
 				InstrSupport.DATAFIELD_NAME, InstrSupport.DATAFIELD_DESC);
 
-		// Stack[0]: [Z
+		// Stack[0]: Ljava/util/concurrent/atomic/AtomicIntegerArray;
 
 		return Math.max(size, 2); // Maximum local stack size is 2
 	}

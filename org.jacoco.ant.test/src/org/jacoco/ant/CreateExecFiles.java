@@ -39,7 +39,7 @@ public class CreateExecFiles {
 		out = new FileOutputStream(BASE_LOCATION + "nomatch.exec");
 		ExecutionDataWriter writer = new ExecutionDataWriter(out);
 		writer.visitClassExecution(new ExecutionData(0,
-				"org/jacoco/ant/TestTarget", new boolean[0]));
+				"org/jacoco/ant/TestTarget", new int[0]));
 		out.close();
 	}
 

@@ -212,7 +212,7 @@ public class ExecutionDataReaderWriterTest {
 
 	@Test
 	public void testMinClassId() throws IOException {
-		final boolean[] data = createData(0);
+		final int[] data = createData(0);
 		writer.visitClassExecution(new ExecutionData(Long.MIN_VALUE, "Sample",
 				data));
 		assertFalse(createReaderWithVisitors().read());
@@ -221,7 +221,7 @@ public class ExecutionDataReaderWriterTest {
 
 	@Test
 	public void testMaxClassId() throws IOException {
-		final boolean[] data = createData(0);
+		final int[] data = createData(0);
 		writer.visitClassExecution(new ExecutionData(Long.MAX_VALUE, "Sample",
 				data));
 		assertFalse(createReaderWithVisitors().read());
@@ -230,7 +230,7 @@ public class ExecutionDataReaderWriterTest {
 
 	@Test
 	public void testEmptyClass() throws IOException {
-		final boolean[] data = createData(0);
+		final int[] data = createData(0);
 		writer.visitClassExecution(new ExecutionData(3, "Sample", data));
 		assertFalse(createReaderWithVisitors().read());
 		assertArrayEquals(data, store.get(3).getProbes());
@@ -238,7 +238,7 @@ public class ExecutionDataReaderWriterTest {
 
 	@Test
 	public void testOneClass() throws IOException {
-		final boolean[] data = createData(5);
+		final int[] data = createData(5);
 		writer.visitClassExecution(new ExecutionData(3, "Sample", data));
 		assertFalse(createReaderWithVisitors().read());
 		assertArrayEquals(data, store.get(3).getProbes());
@@ -246,8 +246,8 @@ public class ExecutionDataReaderWriterTest {
 
 	@Test
 	public void testTwoClasses() throws IOException {
-		final boolean[] data1 = createData(5);
-		final boolean[] data2 = createData(7);
+		final int[] data1 = createData(5);
+		final int[] data2 = createData(7);
 		writer.visitClassExecution(new ExecutionData(333, "Sample", data1));
 		writer.visitClassExecution(new ExecutionData(-45, "Sample", data2));
 		assertFalse(createReaderWithVisitors().read());
@@ -257,7 +257,7 @@ public class ExecutionDataReaderWriterTest {
 
 	@Test
 	public void testBigClass() throws IOException {
-		final boolean[] data = createData(117);
+		final int[] data = createData(117);
 		writer.visitClassExecution(new ExecutionData(123, "Sample", data));
 		assertFalse(createReaderWithVisitors().read());
 		assertArrayEquals(data, store.get(123).getProbes());
@@ -289,16 +289,15 @@ public class ExecutionDataReaderWriterTest {
 		return reader;
 	}
 
-	private boolean[] createData(final int probeCount) {
-		final boolean[] data = new boolean[random.nextInt(probeCount + 1)];
+	private int[] createData(final int probeCount) {
+		final int[] data = new int[random.nextInt(probeCount + 1)];
 		for (int j = 0; j < data.length; j++) {
-			data[j] = random.nextBoolean();
+			data[j] = random.nextBoolean() ? random.nextInt() : 0;
 		}
 		return data;
 	}
 
-	private void assertArrayEquals(final boolean[] expected,
-			final boolean[] actual) {
+	private void assertArrayEquals(final int[] expected, final int[] actual) {
 		assertTrue(Arrays.equals(expected, actual));
 	}
 

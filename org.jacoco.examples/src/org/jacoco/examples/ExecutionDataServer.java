@@ -47,6 +47,7 @@ public final class ExecutionDataServer {
 	public static void main(final String[] args) throws IOException {
 		final ExecutionDataWriter fileWriter = new ExecutionDataWriter(
 				new FileOutputStream(DESTFILE));
+		@SuppressWarnings("resource")
 		final ServerSocket server = new ServerSocket(PORT, 0,
 				InetAddress.getByName(ADDRESS));
 		while (true) {

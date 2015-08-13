@@ -15,7 +15,7 @@ import org.objectweb.asm.MethodVisitor;
 
 /**
  * The instrumented classes need a piece of code that obtains a
- * <code>boolean[]</code> instance from the runtime. The mechanism is runtime
+ * <code>int[]</code> instance from the runtime. The mechanism is runtime
  * specific and therefore abstracted by this interface. Implementations are
  * provided by {@link IRuntime} implementations and are used by the
  * instrumentation process.
@@ -29,9 +29,9 @@ public interface IExecutionDataAccessorGenerator {
 	 * initialization. This method can be called at any time even outside the
 	 * target VM.
 	 * 
-	 * The generated code must push a <code>boolean[]</code> instance to the
-	 * operand stack. Except this result object the generated code must not make
-	 * any assumptions about the structure of the embedding method or class. The
+	 * The generated code must push a <code>int[]</code> instance to the operand
+	 * stack. Except this result object the generated code must not make any
+	 * assumptions about the structure of the embedding method or class. The
 	 * generated code must not use or allocate local variables.
 	 * 
 	 * @param classid

@@ -135,17 +135,17 @@ public class RuntimeData {
 	 * Return value:
 	 * 
 	 * <ul>
-	 * <li>args[0]: probe array (<code>boolean[]</code>)
+	 * <li>args[0]: probe array (<code>AtomicIntegerArray</code>)
 	 * </ul>
 	 * 
 	 * @param args
 	 *            parameter array of length 3
 	 */
-	public void getProbes(final Object[] args) {
+	public void getAtomicProbes(final Object[] args) {
 		final Long classid = (Long) args[0];
 		final String name = (String) args[1];
 		final int probecount = ((Integer) args[2]).intValue();
-		args[0] = getExecutionData(classid, name, probecount).getProbes();
+		args[0] = getExecutionData(classid, name, probecount).getAtomicProbes();
 	}
 
 	/**
@@ -159,15 +159,15 @@ public class RuntimeData {
 	@Override
 	public boolean equals(final Object args) {
 		if (args instanceof Object[]) {
-			getProbes((Object[]) args);
+			getAtomicProbes((Object[]) args);
 		}
 		return super.equals(args);
 	}
 
 	/**
 	 * Generates code that creates the argument array for the
-	 * {@link #getProbes(Object[])} method. The array instance is left on the
-	 * operand stack. The generated code requires a stack size of 5.
+	 * {@link #getAtomicProbes(Object[])} method. The array instance is left on
+	 * the operand stack. The generated code requires a stack size of 5.
 	 * 
 	 * @param classid
 	 *            class identifier
@@ -210,8 +210,8 @@ public class RuntimeData {
 	 * Generates the code that calls a {@link RuntimeData} instance through the
 	 * JRE API method {@link Object#equals(Object)}. The code pops a
 	 * {@link Object} instance from the stack and pushes the probe array of type
-	 * <code>boolean[]</code> on the operand stack. The generated code requires
-	 * a stack size of 6.
+	 * <code>AtomicIntegerArray</code> on the operand stack. The generated code
+	 * requires a stack size of 6.
 	 * 
 	 * @param classid
 	 *            class identifier
@@ -246,9 +246,9 @@ public class RuntimeData {
 		mv.visitInsn(Opcodes.ICONST_0);
 		mv.visitInsn(Opcodes.AALOAD);
 
-		// stack[0]: [Z
+		// stack[0]: [Ljava/util/concurrent/atomic/AtomicIntegerArray;
 
-		mv.visitTypeInsn(Opcodes.CHECKCAST, InstrSupport.DATAFIELD_DESC);
+		mv.visitTypeInsn(Opcodes.CHECKCAST, InstrSupport.DATAFIELD_CLASS);
 	}
 
 }

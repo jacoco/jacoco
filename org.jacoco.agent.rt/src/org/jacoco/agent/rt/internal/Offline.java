@@ -12,6 +12,7 @@
 package org.jacoco.agent.rt.internal;
 
 import java.util.Properties;
+import java.util.concurrent.atomic.AtomicIntegerArray;
 
 import org.jacoco.core.runtime.AgentOptions;
 import org.jacoco.core.runtime.RuntimeData;
@@ -46,10 +47,10 @@ public final class Offline {
 	 *            probe count for this class
 	 * @return probe array instance for this class
 	 */
-	public static boolean[] getProbes(final long classid,
+	public static AtomicIntegerArray getAtomicProbes(final long classid,
 			final String classname, final int probecount) {
 		return DATA.getExecutionData(Long.valueOf(classid), classname,
-				probecount).getProbes();
+				probecount).getAtomicProbes();
 	}
 
 }

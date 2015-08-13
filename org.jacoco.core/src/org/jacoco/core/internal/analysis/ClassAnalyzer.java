@@ -25,7 +25,7 @@ public class ClassAnalyzer extends ClassProbesVisitor {
 
 	private final long classid;
 	private final boolean noMatch;
-	private final boolean[] probes;
+	private final int[] probes;
 	private final StringPool stringPool;
 
 	private ClassCoverageImpl coverage;
@@ -44,7 +44,7 @@ public class ClassAnalyzer extends ClassProbesVisitor {
 	 *            shared pool to minimize the number of {@link String} instances
 	 */
 	public ClassAnalyzer(final long classid, final boolean noMatch,
-			final boolean[] probes, final StringPool stringPool) {
+			final int[] probes, final StringPool stringPool) {
 		this.classid = classid;
 		this.noMatch = noMatch;
 		this.probes = probes;

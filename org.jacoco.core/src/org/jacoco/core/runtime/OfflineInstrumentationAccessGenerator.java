@@ -50,8 +50,9 @@ public class OfflineInstrumentationAccessGenerator implements
 		mv.visitLdcInsn(Long.valueOf(classid));
 		mv.visitLdcInsn(classname);
 		InstrSupport.push(mv, probecount);
-		mv.visitMethodInsn(Opcodes.INVOKESTATIC, runtimeClassName, "getProbes",
-				"(JLjava/lang/String;I)[Z", false);
+		mv.visitMethodInsn(Opcodes.INVOKESTATIC, runtimeClassName,
+				"getAtomicProbes", "(JLjava/lang/String;I)"
+						+ InstrSupport.DATAFIELD_DESC, false);
 		return 4;
 	}
 

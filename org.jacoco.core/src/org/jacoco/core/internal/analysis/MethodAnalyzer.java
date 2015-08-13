@@ -30,7 +30,7 @@ import org.objectweb.asm.Label;
  */
 public class MethodAnalyzer extends MethodProbesVisitor {
 
-	private final boolean[] probes;
+	private final int[] probes;
 
 	private final MethodCoverageImpl coverage;
 
@@ -70,7 +70,7 @@ public class MethodAnalyzer extends MethodProbesVisitor {
 	 *            <code>null</code> if the class is not executed at all
 	 */
 	public MethodAnalyzer(final String name, final String desc,
-			final String signature, final boolean[] probes) {
+			final String signature, final int[] probes) {
 		super();
 		this.probes = probes;
 		this.coverage = new MethodCoverageImpl(name, desc, signature);
@@ -285,7 +285,7 @@ public class MethodAnalyzer extends MethodProbesVisitor {
 
 	private void addProbe(final int probeId) {
 		lastInsn.addBranch();
-		if (probes != null && probes[probeId]) {
+		if (probes != null && probes[probeId] != 0) {
 			coveredProbes.add(lastInsn);
 		}
 	}

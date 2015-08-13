@@ -102,9 +102,9 @@ public class SessionsPageTest extends PageTestBase {
 	@Test
 	public void testExecutionDataContent() throws Exception {
 		final Collection<ExecutionData> data = new ArrayList<ExecutionData>();
-		data.add(new ExecutionData(0x1000, "ClassB", new boolean[0]));
-		data.add(new ExecutionData(0x1001, "ClassC", new boolean[0]));
-		data.add(new ExecutionData(0x1002, "ClassA", new boolean[0]));
+		data.add(new ExecutionData(0x1000, "ClassB", new int[0]));
+		data.add(new ExecutionData(0x1001, "ClassC", new int[0]));
+		data.add(new ExecutionData(0x1002, "ClassA", new int[0]));
 		index.addClass(new ReportPage(null, rootFolder, context) {
 
 			public String getLinkLabel() {

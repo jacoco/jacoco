@@ -76,7 +76,7 @@ public class URLStreamHandlerRuntime extends AbstractRuntime {
 		// args[1] = classname;
 		// args[2] = Integer.valueOf(probecount);
 		// connection.equals(args);
-		// final byte[] probedata = (byte[]) args[0];
+		// final AtomicIntegerArray probedata = (AtomicIntegerArray) args[0];
 
 		RuntimeData.generateArgumentArray(classid, classname, probecount, mv);
 		mv.visitInsn(Opcodes.DUP);
@@ -122,7 +122,7 @@ public class URLStreamHandlerRuntime extends AbstractRuntime {
 
 		mv.visitInsn(Opcodes.ICONST_0);
 		mv.visitInsn(Opcodes.AALOAD);
-		mv.visitTypeInsn(Opcodes.CHECKCAST, InstrSupport.DATAFIELD_DESC);
+		mv.visitTypeInsn(Opcodes.CHECKCAST, InstrSupport.DATAFIELD_CLASS);
 
 		return 7;
 	}

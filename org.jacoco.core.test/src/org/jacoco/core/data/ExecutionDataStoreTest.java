@@ -11,6 +11,7 @@
  *******************************************************************************/
 package org.jacoco.core.data;
 
+import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
@@ -53,10 +54,10 @@ public class ExecutionDataStoreTest implements IExecutionDataVisitor {
 
 	@Test
 	public void testPut() {
-		final boolean[] probes = new boolean[] { false, false, true };
+		final int[] probes = new int[] { 0, 0, 1 };
 		store.put(new ExecutionData(1000, "Sample", probes));
 		final ExecutionData data = store.get(1000);
-		assertSame(probes, data.getProbes());
+		assertArrayEquals(probes, data.getProbes());
 		assertTrue(store.contains("Sample"));
 		store.accept(this);
 		assertEquals(Collections.singletonMap(Long.valueOf(1000), data),
@@ -65,7 +66,7 @@ public class ExecutionDataStoreTest implements IExecutionDataVisitor {
 
 	@Test
 	public void testGetContents() {
-		final boolean[] probes = new boolean[] {};
+		final int[] probes = new int[] {};
 		final ExecutionData a = new ExecutionData(1000, "A", probes);
 		store.put(a);
 		final ExecutionData aa = new ExecutionData(1000, "A", probes);
@@ -82,7 +83,7 @@ public class ExecutionDataStoreTest implements IExecutionDataVisitor {
 	@Test
 	public void testGetWithoutCreate() {
 		final ExecutionData data = new ExecutionData(1000, "Sample",
-				new boolean[] {});
+				new int[] {});
 		store.put(data);
 		assertSame(data, store.get(1000));
 	}
@@ -94,113 +95,113 @@ public class ExecutionDataStoreTest implements IExecutionDataVisitor {
 		assertEquals(1000, data.getId());
 		assertEquals("Sample", data.getName());
 		assertEquals(3, data.getProbes().length);
-		assertFalse(data.getProbes()[0]);
-		assertFalse(data.getProbes()[1]);
-		assertFalse(data.getProbes()[2]);
+		assertFalse(data.getProbes()[0] != 0);
+		assertFalse(data.getProbes()[1] != 0);
+		assertFalse(data.getProbes()[2] != 0);
 		assertSame(data, store.get(id, "Sample", 3));
 		assertTrue(store.contains("Sample"));
 	}
 
 	@Test(expected = IllegalStateException.class)
 	public void testGetNegative1() {
-		final boolean[] data = new boolean[] { false, false, true };
+		final int[] data = new int[] { 0, 0, 1 };
 		store.put(new ExecutionData(1000, "Sample", data));
 		store.get(Long.valueOf(1000), "Other", 3);
 	}
 
 	@Test(expected = IllegalStateException.class)
 	public void testGetNegative2() {
-		final boolean[] data = new boolean[] { false, false, true };
+		final int[] data = new int[] { 0, 0, 1 };
 		store.put(new ExecutionData(1000, "Sample", data));
 		store.get(Long.valueOf(1000), "Sample", 4);
 	}
 
 	@Test(expected = IllegalStateException.class)
 	public void testPutNegative() {
-		final boolean[] data = new boolean[0];
+		final int[] data = new int[0];
 		store.put(new ExecutionData(1000, "Sample1", data));
 		store.put(new ExecutionData(1000, "Sample2", data));
 	}
 
 	@Test
 	public void testMerge() {
-		final boolean[] data1 = new boolean[] { false, true, false, true };
+		final int[] data1 = new int[] { 0, 5, 0, 5 };
 		store.visitClassExecution(new ExecutionData(1000, "Sample", data1));
-		final boolean[] data2 = new boolean[] { false, true, true, false };
+		final int[] data2 = new int[] { 0, 5, 5, 0 };
 		store.visitClassExecution(new ExecutionData(1000, "Sample", data2));
 
-		final boolean[] result = store.get(1000).getProbes();
-		assertFalse(result[0]);
-		assertTrue(result[1]);
-		assertTrue(result[2]);
-		assertTrue(result[3]);
+		final int[] result = store.get(1000).getProbes();
+		assertFalse(result[0] != 0);
+		assertTrue(result[1] != 0);
+		assertTrue(result[2] != 0);
+		assertTrue(result[3] != 0);
 	}
 
 	@Test(expected = IllegalStateException.class)
 	public void testMergeNegative() {
-		final boolean[] data1 = new boolean[] { false, false };
+		final int[] data1 = new int[] { 0, 0 };
 		store.visitClassExecution(new ExecutionData(1000, "Sample", data1));
-		final boolean[] data2 = new boolean[] { false, false, false };
+		final int[] data2 = new int[] { 0, 0, 0 };
 		store.visitClassExecution(new ExecutionData(1000, "Sample", data2));
 	}
 
 	@Test
 	public void testSubtract() {
-		final boolean[] data1 = new boolean[] { false, true, false, true };
+		final int[] data1 = new int[] { 0, 4, 4, 4 };
 		store.put(new ExecutionData(1000, "Sample", data1));
-		final boolean[] data2 = new boolean[] { false, false, true, true };
+		final int[] data2 = new int[] { 0, 0, 4, 4 };
 		store.subtract(new ExecutionData(1000, "Sample", data2));
 
-		final boolean[] result = store.get(1000).getProbes();
-		assertFalse(result[0]);
-		assertTrue(result[1]);
-		assertFalse(result[2]);
-		assertFalse(result[3]);
+		final int[] result = store.get(1000).getProbes();
+		assertFalse(result[0] != 0);
+		assertTrue(result[1] != 0);
+		assertFalse(result[2] != 0);
+		assertFalse(result[3] != 0);
 	}
 
 	@Test
 	public void testSubtractOtherId() {
-		final boolean[] data1 = new boolean[] { false, true };
+		final int[] data1 = new int[] { 0, 3 };
 		store.put(new ExecutionData(1000, "Sample1", data1));
-		final boolean[] data2 = new boolean[] { true, true };
+		final int[] data2 = new int[] { 3, 3 };
 		store.subtract(new ExecutionData(2000, "Sample2", data2));
 
-		final boolean[] result = store.get(1000).getProbes();
-		assertFalse(result[0]);
-		assertTrue(result[1]);
+		final int[] result = store.get(1000).getProbes();
+		assertFalse(result[0] != 0);
+		assertTrue(result[1] != 0);
 
 		assertNull(store.get(2000));
 	}
 
 	@Test
 	public void testSubtractStore() {
-		final boolean[] data1 = new boolean[] { false, true, false, true };
+		final int[] data1 = new int[] { 0, 2, 0, 1 };
 		store.put(new ExecutionData(1000, "Sample", data1));
 
 		final ExecutionDataStore store2 = new ExecutionDataStore();
-		final boolean[] data2 = new boolean[] { false, false, true, true };
+		final int[] data2 = new int[] { 0, 0, 1, 1 };
 		store2.put(new ExecutionData(1000, "Sample", data2));
 
 		store.subtract(store2);
 
-		final boolean[] result = store.get(1000).getProbes();
-		assertFalse(result[0]);
-		assertTrue(result[1]);
-		assertFalse(result[2]);
-		assertFalse(result[3]);
+		final int[] result = store.get(1000).getProbes();
+		assertFalse(result[0] != 0);
+		assertTrue(result[1] != 0);
+		assertFalse(result[2] != 0);
+		assertFalse(result[3] != 0);
 	}
 
 	@Test
 	public void testReset() throws InstantiationException,
 			IllegalAccessException {
-		final boolean[] data1 = new boolean[] { true, true, false };
+		final int[] data1 = new int[] { 1, 1, 0 };
 		store.put(new ExecutionData(1000, "Sample", data1));
 		store.reset();
-		final boolean[] data2 = store.get(1000).getProbes();
+		final int[] data2 = store.get(1000).getProbes();
 		assertNotNull(data2);
-		assertFalse(data2[0]);
-		assertFalse(data2[1]);
-		assertFalse(data2[2]);
+		assertFalse(data2[0] != 0);
+		assertFalse(data2[1] != 0);
+		assertFalse(data2[2] != 0);
 	}
 
 	// === IExecutionDataOutput ===

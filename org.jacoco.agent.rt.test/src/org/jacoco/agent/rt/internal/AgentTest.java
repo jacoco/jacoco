@@ -22,13 +22,14 @@ import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
 import java.lang.management.ManagementFactory;
+import java.util.concurrent.atomic.AtomicIntegerArray;
 
 import javax.management.InstanceNotFoundException;
 import javax.management.MBeanServer;
 import javax.management.ObjectName;
 
-import org.jacoco.agent.rt.internal.output.IAgentOutput;
 import org.jacoco.agent.rt.internal.output.FileOutput;
+import org.jacoco.agent.rt.internal.output.IAgentOutput;
 import org.jacoco.agent.rt.internal.output.NoneOutput;
 import org.jacoco.agent.rt.internal.output.TcpClientOutput;
 import org.jacoco.agent.rt.internal.output.TcpServerOutput;
@@ -70,8 +71,7 @@ public class AgentTest implements IExceptionLogger {
 		Agent agent = new Agent(options, this);
 
 		options.setOutput(OutputMode.file);
-		assertEquals(FileOutput.class, agent.createAgentOutput()
-				.getClass());
+		assertEquals(FileOutput.class, agent.createAgentOutput().getClass());
 
 		options.setOutput(OutputMode.tcpserver);
 		assertEquals(TcpServerOutput.class, agent.createAgentOutput()
@@ -82,8 +82,7 @@ public class AgentTest implements IExceptionLogger {
 				.getClass());
 
 		options.setOutput(OutputMode.none);
-		assertEquals(NoneOutput.class, agent.createAgentOutput()
-				.getClass());
+		assertEquals(NoneOutput.class, agent.createAgentOutput().getClass());
 	}
 
 	@Test
@@ -186,14 +185,14 @@ public class AgentTest implements IExceptionLogger {
 	public void testReset() {
 		Agent agent = new Agent(options, this);
 
-		boolean[] probes = agent.getData()
+		AtomicIntegerArray atomicProbes = agent.getData()
 				.getExecutionData(Long.valueOf(0x12345678), "Foo", 1)
-				.getProbes();
-		probes[0] = true;
+				.getAtomicProbes();
+		atomicProbes.set(0, 1);
 
 		agent.reset();
 
-		assertFalse(probes[0]);
+		assertFalse(atomicProbes.get(0) != 0);
 	}
 
 	@Test
@@ -202,15 +201,15 @@ public class AgentTest implements IExceptionLogger {
 		Agent agent = new Agent(options, this);
 		agent.startup();
 
-		boolean[] probes = agent.getData()
+		AtomicIntegerArray atomicProbes = agent.getData()
 				.getExecutionData(Long.valueOf(0x12345678), "Foo", 1)
-				.getProbes();
-		probes[0] = true;
+				.getAtomicProbes();
+		atomicProbes.set(0, 1);
 
 		byte[] data = agent.getExecutionData(true);
 
 		// ensure reset has been executed
-		assertFalse(probes[0]);
+		assertFalse(atomicProbes.get(0) != 0);
 
 		ExecutionDataStore execStore = new ExecutionDataStore();
 		SessionInfoStore sessionStore = new SessionInfoStore();
