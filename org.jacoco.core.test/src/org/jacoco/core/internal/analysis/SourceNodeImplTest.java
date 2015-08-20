@@ -58,121 +58,124 @@ public class SourceNodeImplTest {
 	@Test
 	public void testIncrementLineUnknown() {
 		final SourceNodeImpl node = new SourceNodeImpl(ElementType.CLASS, "Foo");
-		node.increment(CounterImpl.getInstance(1, 2),
-				CounterImpl.getInstance(3, 4), ISourceNode.UNKNOWN_LINE);
-		assertEquals(CounterImpl.getInstance(1, 2),
+		node.increment(CounterImpl.getInstance(1, 2, 2),
+				CounterImpl.getInstance(3, 4, 4), ISourceNode.UNKNOWN_LINE);
+		assertEquals(CounterImpl.getInstance(1, 2, 2),
 				node.getInstructionCounter());
-		assertEquals(CounterImpl.getInstance(3, 4), node.getBranchCounter());
+		assertEquals(CounterImpl.getInstance(3, 4, 4), node.getBranchCounter());
 		assertEquals(CounterImpl.COUNTER_0_0, node.getLineCounter());
 	}
 
 	@Test
 	public void testIncrementLines() {
 		final SourceNodeImpl node = new SourceNodeImpl(ElementType.CLASS, "Foo");
-		node.increment(CounterImpl.getInstance(1, 1), CounterImpl.COUNTER_0_0,
-				10);
-		node.increment(CounterImpl.getInstance(2, 2), CounterImpl.COUNTER_0_0,
-				12);
+		node.increment(CounterImpl.getInstance(1, 1, 1),
+				CounterImpl.COUNTER_0_0, 10);
+		node.increment(CounterImpl.getInstance(2, 2, 2),
+				CounterImpl.COUNTER_0_0, 12);
 
-		assertEquals(CounterImpl.getInstance(1, 1), node.getLine(10)
+		assertEquals(CounterImpl.getInstance(1, 1, 1), node.getLine(10)
 				.getInstructionCounter());
 		assertEquals(CounterImpl.COUNTER_0_0, node.getLine(11)
 				.getInstructionCounter());
-		assertEquals(CounterImpl.getInstance(2, 2), node.getLine(12)
+		assertEquals(CounterImpl.getInstance(2, 2, 2), node.getLine(12)
 				.getInstructionCounter());
 	}
 
 	@Test
 	public void testIncrementLine1_1() {
-		testIncrementLine(0, 0, 0, 0, 0, 0);
+		testIncrementLine(0, 0, 0, 0, 0, 0, 0, 0, 0);
 	}
 
 	@Test
 	public void testIncrementLine1_2() {
-		testIncrementLine(0, 0, 5, 0, 1, 0);
+		testIncrementLine(0, 0, 0, 5, 0, 0, 1, 0, 0);
 	}
 
 	@Test
 	public void testIncrementLine1_3() {
-		testIncrementLine(0, 0, 0, 5, 0, 1);
+		testIncrementLine(0, 0, 0, 0, 5, 5, 0, 1, 5);
 	}
 
 	@Test
 	public void testIncrementLine1_4() {
-		testIncrementLine(0, 0, 5, 5, 0, 1);
+		testIncrementLine(0, 0, 0, 5, 5, 5, 0, 1, 5);
 	}
 
 	@Test
 	public void testIncrementLine2_1() {
-		testIncrementLine(3, 0, 0, 0, 1, 0);
+		testIncrementLine(3, 0, 0, 0, 0, 0, 1, 0, 0);
 	}
 
 	@Test
 	public void testIncrementLine2_2() {
-		testIncrementLine(3, 0, 5, 0, 1, 0);
+		testIncrementLine(3, 0, 0, 5, 0, 0, 1, 0, 0);
 	}
 
 	@Test
 	public void testIncrementLine2_3() {
-		testIncrementLine(3, 0, 0, 5, 0, 1);
+		testIncrementLine(3, 0, 0, 0, 5, 5, 0, 1, 5);
 	}
 
 	@Test
 	public void testIncrementLine2_4() {
-		testIncrementLine(3, 0, 5, 5, 0, 1);
+		testIncrementLine(3, 0, 0, 5, 5, 5, 0, 1, 5);
 	}
 
 	@Test
 	public void testIncrementLine3_1() {
-		testIncrementLine(0, 3, 0, 0, 0, 1);
+		testIncrementLine(0, 3, 3, 0, 0, 0, 0, 1, 3);
 	}
 
 	@Test
 	public void testIncrementLine3_2() {
-		testIncrementLine(0, 3, 5, 0, 0, 1);
+		testIncrementLine(0, 3, 3, 5, 0, 0, 0, 1, 3);
 	}
 
 	@Test
 	public void testIncrementLine3_3() {
-		testIncrementLine(0, 3, 0, 5, 0, 1);
+		testIncrementLine(0, 3, 3, 0, 5, 5, 0, 1, 5);
 	}
 
 	@Test
 	public void testIncrementLine3_4() {
-		testIncrementLine(0, 3, 5, 5, 0, 1);
+		testIncrementLine(0, 3, 3, 5, 5, 5, 0, 1, 5);
 	}
 
 	@Test
 	public void testIncrementLine4_1() {
-		testIncrementLine(3, 3, 0, 0, 0, 1);
+		testIncrementLine(3, 3, 3, 0, 0, 0, 0, 1, 3);
 	}
 
 	@Test
 	public void testIncrementLine4_2() {
-		testIncrementLine(3, 3, 5, 0, 0, 1);
+		testIncrementLine(3, 3, 3, 5, 0, 0, 0, 1, 3);
 	}
 
 	@Test
 	public void testIncrementLine4_3() {
-		testIncrementLine(3, 3, 0, 5, 0, 1);
+		testIncrementLine(3, 3, 3, 0, 5, 5, 0, 1, 5);
 	}
 
 	@Test
 	public void testIncrementLine4_4() {
-		testIncrementLine(3, 3, 5, 5, 0, 1);
+		testIncrementLine(3, 3, 3, 5, 5, 5, 0, 1, 5);
 	}
 
-	private void testIncrementLine(int mi1, int ci1, int mi2, int ci2,
-			int expectedMissedLines, int expectedCoveredLines) {
+	private void testIncrementLine(int mi1, int ci1, int hi1, int mi2, int ci2,
+			int hi2, int expectedMissedLines, int expectedCoveredLines,
+			int expectedHitLines) {
 		final SourceNodeImpl node = new SourceNodeImpl(ElementType.CLASS, "Foo");
-		node.increment(CounterImpl.getInstance(mi1, ci1),
+		node.increment(CounterImpl.getInstance(mi1, ci1, hi1),
 				CounterImpl.COUNTER_0_0, 33);
-		node.increment(CounterImpl.getInstance(mi2, ci2),
+		node.increment(CounterImpl.getInstance(mi2, ci2, hi2),
 				CounterImpl.COUNTER_0_0, 33);
 		assertEquals(CounterImpl.getInstance(expectedMissedLines,
-				expectedCoveredLines), node.getLineCounter());
-		assertEquals(CounterImpl.getInstance(mi1 + mi2, ci1 + ci2), node
-				.getLine(33).getInstructionCounter());
+				expectedCoveredLines, expectedHitLines),
+				node.getLineCounter());
+		assertEquals(
+				CounterImpl.getInstance(mi1 + mi2, ci1
+						+ ci2, Math.max(hi1, hi2)), node.getLine(33).getInstructionCounter());
 	}
 
 	@Test
@@ -181,18 +184,20 @@ public class SourceNodeImplTest {
 		final SourceNodeImpl child = new SourceNodeImpl(ElementType.CLASS,
 				"Foo") {
 			{
-				this.instructionCounter = CounterImpl.getInstance(1, 11);
-				this.branchCounter = CounterImpl.getInstance(2, 22);
-				this.methodCounter = CounterImpl.getInstance(3, 33);
-				this.classCounter = CounterImpl.getInstance(4, 44);
+				this.instructionCounter = CounterImpl.getInstance(1, 11, 11);
+				this.branchCounter = CounterImpl.getInstance(2, 22, 22);
+				this.methodCounter = CounterImpl.getInstance(3, 33, 33);
+				this.classCounter = CounterImpl.getInstance(4, 44, 44);
 			}
 		};
 		node.increment(child);
-		assertEquals(CounterImpl.getInstance(1, 11),
+		assertEquals(CounterImpl.getInstance(1, 11, 11),
 				node.getInstructionCounter());
-		assertEquals(CounterImpl.getInstance(2, 22), node.getBranchCounter());
-		assertEquals(CounterImpl.getInstance(3, 33), node.getMethodCounter());
-		assertEquals(CounterImpl.getInstance(4, 44), node.getClassCounter());
+		assertEquals(CounterImpl.getInstance(2, 22, 22),
+				node.getBranchCounter());
+		assertEquals(CounterImpl.getInstance(3, 33, 33),
+				node.getMethodCounter());
+		assertEquals(CounterImpl.getInstance(4, 44, 44), node.getClassCounter());
 	}
 
 	@Test
@@ -201,16 +206,17 @@ public class SourceNodeImplTest {
 
 		final SourceNodeImpl child = new SourceNodeImpl(ElementType.CLASS,
 				"Foo");
-		child.increment(CounterImpl.getInstance(1, 11),
-				CounterImpl.getInstance(3, 33), 5);
+		child.increment(CounterImpl.getInstance(1, 11, 11),
+				CounterImpl.getInstance(3, 33, 33), 5);
 
 		node.increment(child);
 		node.increment(child);
 
-		assertEquals(CounterImpl.getInstance(2, 22),
+		assertEquals(CounterImpl.getInstance(2, 22, 22),
 				node.getInstructionCounter());
-		assertEquals(CounterImpl.getInstance(6, 66), node.getBranchCounter());
-		assertEquals(CounterImpl.getInstance(0, 1), node.getLineCounter());
+		assertEquals(CounterImpl.getInstance(6, 66, 66),
+				node.getBranchCounter());
+		assertEquals(CounterImpl.getInstance(0, 1, 11), node.getLineCounter());
 	}
 
 }

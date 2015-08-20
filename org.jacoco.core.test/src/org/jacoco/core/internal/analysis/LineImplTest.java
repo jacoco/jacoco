@@ -39,138 +39,179 @@ public class LineImplTest {
 
 	@Test
 	public void testIncrement1() {
-		line = line.increment(CounterImpl.getInstance(1, 2),
-				CounterImpl.getInstance(3, 4));
-		assertEquals(CounterImpl.getInstance(1, 2),
+		line = line.increment(CounterImpl.getInstance(1, 2, 4),
+				CounterImpl.getInstance(3, 4, 6));
+		assertEquals(CounterImpl.getInstance(1, 2, 4),
 				line.getInstructionCounter());
-		assertEquals(CounterImpl.getInstance(3, 4), line.getBranchCounter());
+		assertEquals(CounterImpl.getInstance(3, 4, 6), line.getBranchCounter());
 	}
 
 	@Test
 	public void testIncrement2() {
-		line = line.increment(CounterImpl.getInstance(1, 2),
-				CounterImpl.getInstance(3, 4000));
-		assertEquals(CounterImpl.getInstance(1, 2),
+		line = line.increment(CounterImpl.getInstance(1, 2, 2),
+				CounterImpl.getInstance(3, 4000, 4001));
+		assertEquals(CounterImpl.getInstance(1, 2, 2),
 				line.getInstructionCounter());
-		assertEquals(CounterImpl.getInstance(3, 4000), line.getBranchCounter());
+		assertEquals(CounterImpl.getInstance(3, 4000, 4001),
+				line.getBranchCounter());
 	}
 
 	@Test
 	public void testIncrement3() {
-		line = line.increment(CounterImpl.getInstance(1, 2),
-				CounterImpl.getInstance(3000, 4000));
-		assertEquals(CounterImpl.getInstance(1, 2),
+		line = line.increment(CounterImpl.getInstance(1, 2, 2),
+				CounterImpl.getInstance(3000, 4000, 8000));
+		assertEquals(CounterImpl.getInstance(1, 2, 2),
 				line.getInstructionCounter());
-		assertEquals(CounterImpl.getInstance(3000, 4000),
+		assertEquals(CounterImpl.getInstance(3000, 4000, 8000),
 				line.getBranchCounter());
 	}
 
 	@Test
 	public void testIncrement4() {
-		line = line.increment(CounterImpl.getInstance(1, 2000),
-				CounterImpl.getInstance(3000, 4000));
-		assertEquals(CounterImpl.getInstance(1, 2000),
+		line = line.increment(CounterImpl.getInstance(1, 2000, 6000),
+				CounterImpl.getInstance(3000, 4000, 12000));
+		assertEquals(CounterImpl.getInstance(1, 2000, 6000),
 				line.getInstructionCounter());
-		assertEquals(CounterImpl.getInstance(3000, 4000),
+		assertEquals(CounterImpl.getInstance(3000, 4000, 12000),
 				line.getBranchCounter());
 	}
 
 	@Test
 	public void testIncrement5() {
-		line = line.increment(CounterImpl.getInstance(1000, 2000),
-				CounterImpl.getInstance(3000, 4000));
-		assertEquals(CounterImpl.getInstance(1000, 2000),
+		line = line.increment(CounterImpl.getInstance(1000, 2000, 4000),
+				CounterImpl.getInstance(3000, 4000, 8000));
+		assertEquals(CounterImpl.getInstance(1000, 2000, 4000),
 				line.getInstructionCounter());
-		assertEquals(CounterImpl.getInstance(3000, 4000),
+		assertEquals(CounterImpl.getInstance(3000, 4000, 8000),
 				line.getBranchCounter());
 	}
 
 	@Test
 	public void testGetStatus1() {
-		line = line.increment(CounterImpl.getInstance(1, 0),
-				CounterImpl.getInstance(0, 0));
+		line = line.increment(CounterImpl.getInstance(1, 0, 0),
+				CounterImpl.getInstance(0, 0, 0));
 		assertEquals(ICounter.NOT_COVERED, line.getStatus());
 	}
 
 	@Test
 	public void testGetStatus2() {
-		line = line.increment(CounterImpl.getInstance(0, 0),
-				CounterImpl.getInstance(1, 0));
+		line = line.increment(CounterImpl.getInstance(0, 0, 0),
+				CounterImpl.getInstance(1, 0, 0));
 		assertEquals(ICounter.NOT_COVERED, line.getStatus());
 	}
 
 	@Test
 	public void testGetStatus3() {
-		line = line.increment(CounterImpl.getInstance(0, 1),
-				CounterImpl.getInstance(0, 0));
+		line = line.increment(CounterImpl.getInstance(0, 1, 3),
+				CounterImpl.getInstance(0, 0, 0));
 		assertEquals(ICounter.FULLY_COVERED, line.getStatus());
 	}
 
 	@Test
 	public void testGetStatus4() {
-		line = line.increment(CounterImpl.getInstance(0, 0),
-				CounterImpl.getInstance(0, 1));
+		line = line.increment(CounterImpl.getInstance(0, 0, 0),
+				CounterImpl.getInstance(0, 1, 3));
 		assertEquals(ICounter.FULLY_COVERED, line.getStatus());
 	}
 
 	@Test
 	public void testGetStatus5() {
-		line = line.increment(CounterImpl.getInstance(1, 1),
-				CounterImpl.getInstance(0, 0));
+		line = line.increment(CounterImpl.getInstance(1, 1, 3),
+				CounterImpl.getInstance(0, 0, 0));
 		assertEquals(ICounter.PARTLY_COVERED, line.getStatus());
 	}
 
 	@Test
 	public void testGetStatus6() {
-		line = line.increment(CounterImpl.getInstance(0, 1),
-				CounterImpl.getInstance(1, 1));
+		line = line.increment(CounterImpl.getInstance(0, 1, 3),
+				CounterImpl.getInstance(1, 1, 3));
 		assertEquals(ICounter.PARTLY_COVERED, line.getStatus());
 	}
 
 	@Test
 	public void testHashCode() {
-		line = line.increment(CounterImpl.getInstance(111, 222),
-				CounterImpl.getInstance(333, 444));
+		line = line.increment(CounterImpl.getInstance(111, 222, 222),
+				CounterImpl.getInstance(333, 444, 444));
 		LineImpl line2 = LineImpl.EMPTY;
-		line2 = line2.increment(CounterImpl.getInstance(111, 222),
-				CounterImpl.getInstance(333, 444));
+		line2 = line2.increment(CounterImpl.getInstance(111, 222, 222),
+				CounterImpl.getInstance(333, 444, 444));
 		assertEquals(line.hashCode(), line2.hashCode());
 	}
 
 	@Test
 	public void testEquals1() {
-		line = line.increment(CounterImpl.getInstance(111, 222),
-				CounterImpl.getInstance(333, 444));
+		line = line.increment(CounterImpl.getInstance(111, 222, 222),
+				CounterImpl.getInstance(333, 444, 444));
 		LineImpl line2 = LineImpl.EMPTY;
-		line2 = line2.increment(CounterImpl.getInstance(111, 222),
-				CounterImpl.getInstance(333, 444));
+		line2 = line2.increment(CounterImpl.getInstance(111, 222, 222),
+				CounterImpl.getInstance(333, 444, 444));
 		assertEquals(line, line2);
 	}
 
 	@Test
 	public void testEquals2() {
-		line = line.increment(CounterImpl.getInstance(111, 222),
-				CounterImpl.getInstance(333, 444));
+		line = line.increment(CounterImpl.getInstance(111, 222, 333),
+				CounterImpl.getInstance(333, 444, 555));
 		assertFalse(line.equals(new Object()));
 	}
 
 	@Test
-	public void testEquals3() {
-		line = line.increment(CounterImpl.getInstance(111, 222),
-				CounterImpl.getInstance(333, 444));
+	public void testEquals3a() {
+		line = line.increment(CounterImpl.getInstance(111, 222, 333),
+				CounterImpl.getInstance(333, 444, 555));
 		LineImpl line2 = LineImpl.EMPTY;
-		line2 = line2.increment(CounterImpl.getInstance(111, 2220),
-				CounterImpl.getInstance(333, 444));
+		line2 = line2.increment(CounterImpl.getInstance(111, 2220, 333),
+				CounterImpl.getInstance(333, 444, 555));
 		assertFalse(line.equals(line2));
 	}
 
 	@Test
-	public void testEquals4() {
-		line = line.increment(CounterImpl.getInstance(111, 222),
-				CounterImpl.getInstance(333, 4440));
+	public void testEquals3b() {
+		line = line.increment(CounterImpl.getInstance(111, 222, 333),
+				CounterImpl.getInstance(333, 444, 555));
 		LineImpl line2 = LineImpl.EMPTY;
-		line2 = line2.increment(CounterImpl.getInstance(111, 222),
-				CounterImpl.getInstance(333, 444));
+		line2 = line2.increment(CounterImpl.getInstance(1110, 222, 333),
+				CounterImpl.getInstance(333, 444, 555));
+		assertFalse(line.equals(line2));
+	}
+
+	@Test
+	public void testEquals3c() {
+		line = line.increment(CounterImpl.getInstance(111, 222, 333),
+				CounterImpl.getInstance(333, 444, 555));
+		LineImpl line2 = LineImpl.EMPTY;
+		line2 = line2.increment(CounterImpl.getInstance(111, 222, 3330),
+				CounterImpl.getInstance(333, 444, 555));
+		assertFalse(line.equals(line2));
+	}
+
+	@Test
+	public void testEquals4a() {
+		line = line.increment(CounterImpl.getInstance(111, 222, 222),
+				CounterImpl.getInstance(333, 4440, 555));
+		LineImpl line2 = LineImpl.EMPTY;
+		line2 = line2.increment(CounterImpl.getInstance(111, 222, 222),
+				CounterImpl.getInstance(333, 444, 555));
+		assertFalse(line.equals(line2));
+	}
+
+	@Test
+	public void testEquals4b() {
+		line = line.increment(CounterImpl.getInstance(111, 222, 222),
+				CounterImpl.getInstance(3330, 444, 555));
+		LineImpl line2 = LineImpl.EMPTY;
+		line2 = line2.increment(CounterImpl.getInstance(111, 222, 222),
+				CounterImpl.getInstance(333, 444, 555));
+		assertFalse(line.equals(line2));
+	}
+
+	@Test
+	public void testEquals4c() {
+		line = line.increment(CounterImpl.getInstance(111, 222, 222),
+				CounterImpl.getInstance(333, 444, 5550));
+		LineImpl line2 = LineImpl.EMPTY;
+		line2 = line2.increment(CounterImpl.getInstance(111, 222, 222),
+				CounterImpl.getInstance(333, 444, 555));
 		assertFalse(line.equals(line2));
 	}
 

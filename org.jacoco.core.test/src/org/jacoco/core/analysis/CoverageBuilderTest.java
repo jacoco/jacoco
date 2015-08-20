@@ -48,7 +48,7 @@ public class CoverageBuilderTest {
 		method.increment(CounterImpl.COUNTER_1_0, CounterImpl.COUNTER_0_0, 6);
 		method.increment(CounterImpl.COUNTER_1_0, CounterImpl.COUNTER_0_0, 7);
 		method.increment(CounterImpl.COUNTER_1_0, CounterImpl.COUNTER_0_0, 8);
-		method.incrementMethodCounter();
+		method.incrementMethodCounter(0);
 		addClass(123L, false, "Sample", null, method);
 
 		final Collection<IClassCoverage> classes = coverageBuilder.getClasses();
@@ -80,7 +80,7 @@ public class CoverageBuilderTest {
 		method.increment(CounterImpl.COUNTER_0_1, CounterImpl.COUNTER_0_0, 6);
 		method.increment(CounterImpl.COUNTER_0_1, CounterImpl.COUNTER_0_0, 7);
 		method.increment(CounterImpl.COUNTER_0_1, CounterImpl.COUNTER_0_0, 8);
-		method.incrementMethodCounter();
+		method.incrementMethodCounter(1);
 		addClass(123L, false, "Sample", null, method);
 
 		final Collection<IClassCoverage> classes = coverageBuilder.getClasses();

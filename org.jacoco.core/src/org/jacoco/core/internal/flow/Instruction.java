@@ -19,6 +19,8 @@ public class Instruction {
 
 	private final int line;
 
+	private int hits;
+
 	private int branches;
 
 	private int coveredBranches;
@@ -33,6 +35,7 @@ public class Instruction {
 	 */
 	public Instruction(final int line) {
 		this.line = line;
+		this.hits = 0;
 		this.branches = 0;
 		this.coveredBranches = 0;
 	}
@@ -58,6 +61,25 @@ public class Instruction {
 	}
 
 	/**
+	 * Merge the total number of hits at this instruction
+	 * 
+	 * @param hits
+	 *            the number of hits at this instruction
+	 */
+	public void mergeHits(final int hits) {
+		this.hits = Math.max(this.hits, hits);
+	}
+
+	/**
+	 * Returns the total number of hits on this instruction.
+	 * 
+	 * @return total number of hits on this instruction.
+	 */
+	public int getHits() {
+		return hits;
+	}
+
+	/**
 	 * Marks one branch of this instruction as covered. Also recursively marks
 	 * all predecessor instructions as covered if this is the first covered
 	 * branch.
@@ -65,6 +87,9 @@ public class Instruction {
 	public void setCovered() {
 		Instruction i = this;
 		while (i != null && i.coveredBranches++ == 0) {
+			if (i != this) {
+				i.hits += this.hits;
+			}
 			i = i.predecessor;
 		}
 	}

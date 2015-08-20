@@ -271,21 +271,28 @@ public class MethodAnalyzer extends MethodProbesVisitor {
 		}
 		// Report result:
 		coverage.ensureCapacity(firstLine, lastLine);
+		int methodHits = 0;
 		for (final Instruction i : instructions) {
+			final int hits = i.getHits();
+			if (hits > 0) {
+				methodHits = methodHits == 0 ? hits : Math
+						.min(methodHits, hits);
+			}
 			final int total = i.getBranches();
 			final int covered = i.getCoveredBranches();
 			final ICounter instrCounter = covered == 0 ? CounterImpl.COUNTER_1_0
-					: CounterImpl.COUNTER_0_1;
+					: CounterImpl.COUNTER_0_1.increment(0, 0, hits - 1);
 			final ICounter branchCounter = total > 1 ? CounterImpl.getInstance(
-					total - covered, covered) : CounterImpl.COUNTER_0_0;
+					total - covered, covered, hits) : CounterImpl.COUNTER_0_0;
 			coverage.increment(instrCounter, branchCounter, i.getLine());
 		}
-		coverage.incrementMethodCounter();
+		coverage.incrementMethodCounter(methodHits);
 	}
 
 	private void addProbe(final int probeId) {
 		lastInsn.addBranch();
 		if (probes != null && probes[probeId] != 0) {
+			lastInsn.mergeHits(probes[probeId]);
 			coveredProbes.add(lastInsn);
 		}
 	}

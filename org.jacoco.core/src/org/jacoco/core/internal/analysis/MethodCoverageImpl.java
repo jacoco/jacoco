@@ -49,19 +49,29 @@ public class MethodCoverageImpl extends SourceNodeImpl implements
 		if (branches.getTotalCount() > 1) {
 			final int c = Math.max(0, branches.getCoveredCount() - 1);
 			final int m = Math.max(0, branches.getTotalCount() - c - 1);
-			this.complexityCounter = this.complexityCounter.increment(m, c);
+			this.complexityCounter = this.complexityCounter.increment(m, c, 0);
 		}
 	}
 
 	/**
 	 * This method must be called exactly once after all instructions and
 	 * branches have been incremented for this method coverage node.
+	 * 
+	 * @param methodHits
+	 *            the number of time the method was entered
 	 */
-	public void incrementMethodCounter() {
-		final ICounter base = this.instructionCounter.getCoveredCount() == 0 ? CounterImpl.COUNTER_1_0
-				: CounterImpl.COUNTER_0_1;
-		this.methodCounter = this.methodCounter.increment(base);
-		this.complexityCounter = this.complexityCounter.increment(base);
+	public void incrementMethodCounter(final int methodHits) {
+		if (this.instructionCounter.getCoveredCount() == 0) {
+			this.complexityCounter = this.complexityCounter
+					.increment(CounterImpl.COUNTER_1_0);
+			this.methodCounter = this.methodCounter
+					.increment(CounterImpl.COUNTER_1_0);
+		} else {
+			this.complexityCounter = this.complexityCounter
+					.increment(CounterImpl.getInstance(0, 1, 0));
+			this.methodCounter = this.methodCounter.increment(CounterImpl
+					.getInstance(0, 1, methodHits));
+		}
 	}
 
 	// === IMethodCoverage implementation ===

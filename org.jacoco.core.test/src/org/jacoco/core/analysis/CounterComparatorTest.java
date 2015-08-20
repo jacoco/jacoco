@@ -119,13 +119,13 @@ public class CounterComparatorTest {
 	}
 
 	private CounterImpl ctr(int missed, int covered) {
-		return CounterImpl.getInstance(missed, covered);
+		return CounterImpl.getInstance(missed, covered, 0);
 	}
 
 	private static final class MockNode extends CoverageNodeImpl {
 		MockNode(int total) {
 			super(GROUP, "mock");
-			instructionCounter = CounterImpl.getInstance(total, 0);
+			instructionCounter = CounterImpl.getInstance(total, 0, 0);
 		}
 	}
 

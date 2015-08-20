@@ -34,51 +34,51 @@ public class BooleanExpressionsTest extends ValidationTestBase {
 	public void testCoverageResult() {
 
 		// 1. Boolean comparison result (one case)
-		assertLine("booleancmp1", ICounter.PARTLY_COVERED, 1, 1);
+		assertLine("booleancmp1", ICounter.PARTLY_COVERED, 1, 1, 1);
 
 		// 2. Boolean comparison result (both cases)
-		assertLine("booleancmp2", ICounter.FULLY_COVERED, 0, 2);
+		assertLine("booleancmp2", ICounter.FULLY_COVERED, 0, 2, 1);
 
 		// 3. And
-		assertLine("andFF", ICounter.FULLY_COVERED, 1, 1);
-		assertLine("andFT", ICounter.FULLY_COVERED, 1, 1);
-		assertLine("andTF", ICounter.FULLY_COVERED, 1, 1);
-		assertLine("andTT", ICounter.FULLY_COVERED, 1, 1);
+		assertLine("andFF", ICounter.FULLY_COVERED, 1, 1, 1);
+		assertLine("andFT", ICounter.FULLY_COVERED, 1, 1, 1);
+		assertLine("andTF", ICounter.FULLY_COVERED, 1, 1, 1);
+		assertLine("andTT", ICounter.FULLY_COVERED, 1, 1, 1);
 
 		// 4. Conditional And
-		assertLine("conditionalandFF", ICounter.PARTLY_COVERED, 3, 1);
-		assertLine("conditionalandFT", ICounter.PARTLY_COVERED, 3, 1);
-		assertLine("conditionalandTF", ICounter.FULLY_COVERED, 2, 2);
-		assertLine("conditionalandTT", ICounter.FULLY_COVERED, 2, 2);
+		assertLine("conditionalandFF", ICounter.PARTLY_COVERED, 3, 1, 1);
+		assertLine("conditionalandFT", ICounter.PARTLY_COVERED, 3, 1, 1);
+		assertLine("conditionalandTF", ICounter.FULLY_COVERED, 2, 2, 1);
+		assertLine("conditionalandTT", ICounter.FULLY_COVERED, 2, 2, 1);
 
 		// 5. Or
-		assertLine("orFF", ICounter.FULLY_COVERED, 1, 1);
-		assertLine("orFT", ICounter.FULLY_COVERED, 1, 1);
-		assertLine("orTF", ICounter.FULLY_COVERED, 1, 1);
-		assertLine("orTT", ICounter.FULLY_COVERED, 1, 1);
+		assertLine("orFF", ICounter.FULLY_COVERED, 1, 1, 1);
+		assertLine("orFT", ICounter.FULLY_COVERED, 1, 1, 1);
+		assertLine("orTF", ICounter.FULLY_COVERED, 1, 1, 1);
+		assertLine("orTT", ICounter.FULLY_COVERED, 1, 1, 1);
 
 		// 6. Conditional Or
-		assertLine("conditionalorFF", ICounter.FULLY_COVERED, 2, 2);
-		assertLine("conditionalorFT", ICounter.FULLY_COVERED, 2, 2);
-		assertLine("conditionalorTF", ICounter.PARTLY_COVERED, 3, 1);
-		assertLine("conditionalorTT", ICounter.PARTLY_COVERED, 3, 1);
+		assertLine("conditionalorFF", ICounter.FULLY_COVERED, 2, 2, 1);
+		assertLine("conditionalorFT", ICounter.FULLY_COVERED, 2, 2, 1);
+		assertLine("conditionalorTF", ICounter.PARTLY_COVERED, 3, 1, 1);
+		assertLine("conditionalorTT", ICounter.PARTLY_COVERED, 3, 1, 1);
 
 		// 7. Exclusive Or
-		assertLine("xorFF", ICounter.FULLY_COVERED, 1, 1);
-		assertLine("xorFT", ICounter.FULLY_COVERED, 1, 1);
-		assertLine("xorTF", ICounter.FULLY_COVERED, 1, 1);
-		assertLine("xorTT", ICounter.FULLY_COVERED, 1, 1);
+		assertLine("xorFF", ICounter.FULLY_COVERED, 1, 1, 1);
+		assertLine("xorFT", ICounter.FULLY_COVERED, 1, 1, 1);
+		assertLine("xorTF", ICounter.FULLY_COVERED, 1, 1, 1);
+		assertLine("xorTT", ICounter.FULLY_COVERED, 1, 1, 1);
 
 		// 8. Conditional Operator
-		assertLine("condT", ICounter.PARTLY_COVERED, 1, 1);
-		assertLine("condF", ICounter.PARTLY_COVERED, 1, 1);
+		assertLine("condT", ICounter.PARTLY_COVERED, 1, 1, 1);
+		assertLine("condF", ICounter.PARTLY_COVERED, 1, 1, 1);
 
 		// 9. Not (one case)
-		assertLine("notT", ICounter.PARTLY_COVERED, 1, 1);
-		assertLine("notF", ICounter.PARTLY_COVERED, 1, 1);
+		assertLine("notT", ICounter.PARTLY_COVERED, 1, 1, 1);
+		assertLine("notF", ICounter.PARTLY_COVERED, 1, 1, 1);
 
 		// 10. Not (both cases)
-		assertLine("notTF", ICounter.FULLY_COVERED, 0, 2);
+		assertLine("notTF", ICounter.FULLY_COVERED, 0, 2, 1);
 
 	}
 

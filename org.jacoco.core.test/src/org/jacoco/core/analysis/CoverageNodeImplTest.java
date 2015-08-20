@@ -54,31 +54,37 @@ public class CoverageNodeImplTest {
 				"sample");
 		ICoverageNode child = new CoverageNodeImpl(ElementType.GROUP, "sample") {
 			{
-				instructionCounter = CounterImpl.getInstance(1, 41);
-				branchCounter = CounterImpl.getInstance(10, 15);
-				lineCounter = CounterImpl.getInstance(5, 3);
-				complexityCounter = CounterImpl.getInstance(4, 2);
-				methodCounter = CounterImpl.getInstance(1, 21);
-				classCounter = CounterImpl.getInstance(1, 11);
+				instructionCounter = CounterImpl.getInstance(1, 41, 41);
+				branchCounter = CounterImpl.getInstance(10, 15, 15);
+				lineCounter = CounterImpl.getInstance(5, 3, 3);
+				complexityCounter = CounterImpl.getInstance(4, 2, 2);
+				methodCounter = CounterImpl.getInstance(1, 21, 21);
+				classCounter = CounterImpl.getInstance(1, 11, 11);
 			}
 		};
 		parent.increment(child);
-		assertEquals(CounterImpl.getInstance(1, 41),
+		assertEquals(CounterImpl.getInstance(1, 41, 41),
 				parent.getCounter(INSTRUCTION));
-		assertEquals(CounterImpl.getInstance(1, 41),
+		assertEquals(CounterImpl.getInstance(1, 41, 41),
 				parent.getInstructionCounter());
-		assertEquals(CounterImpl.getInstance(10, 15), parent.getCounter(BRANCH));
-		assertEquals(CounterImpl.getInstance(10, 15), parent.getBranchCounter());
-		assertEquals(CounterImpl.getInstance(5, 3), parent.getCounter(LINE));
-		assertEquals(CounterImpl.getInstance(5, 3), parent.getLineCounter());
-		assertEquals(CounterImpl.getInstance(4, 2),
+		assertEquals(CounterImpl.getInstance(10, 15, 15),
+				parent.getCounter(BRANCH));
+		assertEquals(CounterImpl.getInstance(10, 15, 15),
+				parent.getBranchCounter());
+		assertEquals(CounterImpl.getInstance(5, 3, 3), parent.getCounter(LINE));
+		assertEquals(CounterImpl.getInstance(5, 3, 3), parent.getLineCounter());
+		assertEquals(CounterImpl.getInstance(4, 2, 2),
 				parent.getCounter(COMPLEXITY));
-		assertEquals(CounterImpl.getInstance(4, 2),
+		assertEquals(CounterImpl.getInstance(4, 2, 2),
 				parent.getComplexityCounter());
-		assertEquals(CounterImpl.getInstance(1, 21), parent.getCounter(METHOD));
-		assertEquals(CounterImpl.getInstance(1, 21), parent.getMethodCounter());
-		assertEquals(CounterImpl.getInstance(1, 11), parent.getCounter(CLASS));
-		assertEquals(CounterImpl.getInstance(1, 11), parent.getClassCounter());
+		assertEquals(CounterImpl.getInstance(1, 21, 21),
+				parent.getCounter(METHOD));
+		assertEquals(CounterImpl.getInstance(1, 21, 21),
+				parent.getMethodCounter());
+		assertEquals(CounterImpl.getInstance(1, 11, 11),
+				parent.getCounter(CLASS));
+		assertEquals(CounterImpl.getInstance(1, 11, 11),
+				parent.getClassCounter());
 	}
 
 	@Test
@@ -87,40 +93,42 @@ public class CoverageNodeImplTest {
 				"sample");
 		ICoverageNode child1 = new CoverageNodeImpl(ElementType.GROUP, "sample") {
 			{
-				branchCounter = CounterImpl.getInstance(5, 2);
+				branchCounter = CounterImpl.getInstance(5, 2, 2);
 			}
 		};
 		ICoverageNode child2 = new CoverageNodeImpl(ElementType.GROUP, "sample") {
 			{
-				branchCounter = CounterImpl.getInstance(3, 3);
+				branchCounter = CounterImpl.getInstance(3, 3, 3);
 			}
 		};
 		parent.increment(Arrays.asList(child1, child2));
-		assertEquals(CounterImpl.getInstance(8, 5), parent.getBranchCounter());
+		assertEquals(CounterImpl.getInstance(8, 5, 5),
+				parent.getBranchCounter());
 	}
 
 	@Test
 	public void testGetPlainCopy() {
 		ICoverageNode node = new CoverageNodeImpl(ElementType.CLASS, "Sample") {
 			{
-				classCounter = CounterImpl.getInstance(1, 1);
-				methodCounter = CounterImpl.getInstance(2, 2);
-				branchCounter = CounterImpl.getInstance(3, 3);
-				instructionCounter = CounterImpl.getInstance(4, 4);
-				lineCounter = CounterImpl.getInstance(5, 5);
-				complexityCounter = CounterImpl.getInstance(6, 6);
+				classCounter = CounterImpl.getInstance(1, 1, 1);
+				methodCounter = CounterImpl.getInstance(2, 2, 2);
+				branchCounter = CounterImpl.getInstance(3, 3, 3);
+				instructionCounter = CounterImpl.getInstance(4, 4, 4);
+				lineCounter = CounterImpl.getInstance(5, 5, 5);
+				complexityCounter = CounterImpl.getInstance(6, 6, 6);
 			}
 		};
 		ICoverageNode copy = node.getPlainCopy();
 		assertEquals(ElementType.CLASS, copy.getElementType());
 		assertEquals("Sample", copy.getName());
-		assertEquals(CounterImpl.getInstance(1, 1), copy.getClassCounter());
-		assertEquals(CounterImpl.getInstance(2, 2), copy.getMethodCounter());
-		assertEquals(CounterImpl.getInstance(3, 3), copy.getBranchCounter());
-		assertEquals(CounterImpl.getInstance(4, 4),
+		assertEquals(CounterImpl.getInstance(1, 1, 1), copy.getClassCounter());
+		assertEquals(CounterImpl.getInstance(2, 2, 2), copy.getMethodCounter());
+		assertEquals(CounterImpl.getInstance(3, 3, 3), copy.getBranchCounter());
+		assertEquals(CounterImpl.getInstance(4, 4, 4),
 				copy.getInstructionCounter());
-		assertEquals(CounterImpl.getInstance(5, 5), copy.getLineCounter());
-		assertEquals(CounterImpl.getInstance(6, 6), copy.getComplexityCounter());
+		assertEquals(CounterImpl.getInstance(5, 5, 5), copy.getLineCounter());
+		assertEquals(CounterImpl.getInstance(6, 6, 6),
+				copy.getComplexityCounter());
 	}
 
 	@Test

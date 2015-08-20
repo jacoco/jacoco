@@ -109,20 +109,19 @@ public abstract class ValidationTestBase {
 	}
 
 	protected void assertLine(final String tag, final int missedBranches,
-			final int coveredBranches) {
+			final int coveredBranches, int hitBranches) {
 		final int nr = source.getLineNumber(tag);
 		final ILine line = sourceCoverage.getLine(nr);
 		final String msg = String.format("Branches in line %s: %s",
 				Integer.valueOf(nr), source.getLine(nr));
-		assertEquals(msg + " branches",
-				CounterImpl.getInstance(missedBranches, coveredBranches),
-				line.getBranchCounter());
+		assertEquals(msg + " branches", CounterImpl.getInstance(missedBranches,
+				coveredBranches, hitBranches), line.getBranchCounter());
 	}
 
 	protected void assertLine(final String tag, final int status,
-			final int missedBranches, final int coveredBranches) {
+			final int missedBranches, final int coveredBranches, int hitBranches) {
 		assertLine(tag, status);
-		assertLine(tag, missedBranches, coveredBranches);
+		assertLine(tag, missedBranches, coveredBranches, hitBranches);
 	}
 
 }

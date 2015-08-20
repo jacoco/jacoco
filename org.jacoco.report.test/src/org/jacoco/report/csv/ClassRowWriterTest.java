@@ -76,12 +76,12 @@ public class ClassRowWriterTest {
 		IClassCoverage node = new ClassCoverageImpl("test/package/Foo", 123,
 				false, null, "java/lang/Object", null) {
 			{
-				instructionCounter = CounterImpl.getInstance(1, 11);
-				branchCounter = CounterImpl.getInstance(2, 22);
-				lineCounter = CounterImpl.getInstance(3, 33);
-				complexityCounter = CounterImpl.getInstance(4, 44);
-				methodCounter = CounterImpl.getInstance(5, 55);
-				classCounter = CounterImpl.getInstance(6, 66);
+				instructionCounter = CounterImpl.getInstance(1, 11, 11);
+				branchCounter = CounterImpl.getInstance(2, 22, 22);
+				lineCounter = CounterImpl.getInstance(3, 33, 33);
+				complexityCounter = CounterImpl.getInstance(4, 44, 44);
+				methodCounter = CounterImpl.getInstance(5, 55, 55);
+				classCounter = CounterImpl.getInstance(6, 66, 66);
 			}
 		};
 		writer.writeRow("group", "test/package", node);

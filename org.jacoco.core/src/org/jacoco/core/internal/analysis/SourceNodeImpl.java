@@ -126,26 +126,32 @@ public class SourceNodeImpl extends CoverageNodeImpl implements ISourceNode {
 		final LineImpl l = getLine(line);
 		final int oldTotal = l.getInstructionCounter().getTotalCount();
 		final int oldCovered = l.getInstructionCounter().getCoveredCount();
-		lines[line - offset] = l.increment(instructions, branches);
+		lines[line - offset] = l.mergeIncrement(instructions, branches);
 
 		// Increment line counter:
+		int missedAdj = 0;
+		int coveredAdj = 0;
+		int hitAdj = 0;
 		if (instructions.getTotalCount() > 0) {
 			if (instructions.getCoveredCount() == 0) {
 				if (oldTotal == 0) {
-					lineCounter = lineCounter
-							.increment(CounterImpl.COUNTER_1_0);
+					missedAdj = 1;
 				}
 			} else {
 				if (oldTotal == 0) {
-					lineCounter = lineCounter
-							.increment(CounterImpl.COUNTER_0_1);
+					coveredAdj = 1;
 				} else {
 					if (oldCovered == 0) {
-						lineCounter = lineCounter.increment(-1, +1);
+						missedAdj = -1;
+						coveredAdj = +1;
 					}
 				}
+				hitAdj = Math.max(lineCounter.getHitCount(),
+						instructions.getHitCount())
+						- lineCounter.getHitCount();
 			}
 		}
+		lineCounter = lineCounter.increment(missedAdj, coveredAdj, hitAdj);
 	}
 
 	// === ISourceNode implementation ===

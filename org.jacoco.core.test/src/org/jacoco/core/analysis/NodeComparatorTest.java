@@ -65,15 +65,16 @@ public class NodeComparatorTest {
 	private static final class MockNode extends CoverageNodeImpl {
 		MockNode(int total) {
 			super(GROUP, "mock");
-			instructionCounter = CounterImpl.getInstance(total, 0);
+			instructionCounter = CounterImpl.getInstance(total, 0, 0);
 		}
 	}
 
 	private static final class MockLineData extends CoverageNodeImpl {
 		MockLineData(int totalInstruction, int totalLine) {
 			super(GROUP, "mock");
-			instructionCounter = CounterImpl.getInstance(totalInstruction, 0);
-			lineCounter = CounterImpl.getInstance(totalLine, 0);
+			instructionCounter = CounterImpl
+					.getInstance(totalInstruction, 0, 0);
+			lineCounter = CounterImpl.getInstance(totalLine, 0, 0);
 		}
 	}
 }

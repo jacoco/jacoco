@@ -117,7 +117,7 @@ public class SourceHighlighterTest {
 	@Test
 	public void testHighlightBranchesFC() throws Exception {
 		source.increment(CounterImpl.COUNTER_0_1,
-				CounterImpl.getInstance(0, 5), 1);
+				CounterImpl.getInstance(0, 5, 5), 1);
 		sourceHighlighter.highlight(parent.pre(null), source.getLine(1), 1);
 		html.close();
 		final Document doc = htmlSupport.parse(buffer.toString());
@@ -129,7 +129,7 @@ public class SourceHighlighterTest {
 	@Test
 	public void testHighlightBranchesPC() throws Exception {
 		source.increment(CounterImpl.COUNTER_0_1,
-				CounterImpl.getInstance(2, 3), 1);
+				CounterImpl.getInstance(2, 3, 3), 1);
 		sourceHighlighter.highlight(parent.pre(null), source.getLine(1), 1);
 		html.close();
 		final Document doc = htmlSupport.parse(buffer.toString());
@@ -141,7 +141,7 @@ public class SourceHighlighterTest {
 	@Test
 	public void testHighlightBranchesNC() throws Exception {
 		source.increment(CounterImpl.COUNTER_0_1,
-				CounterImpl.getInstance(5, 0), 1);
+				CounterImpl.getInstance(5, 0, 0), 1);
 		sourceHighlighter.highlight(parent.pre(null), source.getLine(1), 1);
 		html.close();
 		final Document doc = htmlSupport.parse(buffer.toString());

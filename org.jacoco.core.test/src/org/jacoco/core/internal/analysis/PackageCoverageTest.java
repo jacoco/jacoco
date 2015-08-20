@@ -50,10 +50,10 @@ public class PackageCoverageTest {
 				"org/jacoco/test/Sample", 0, false, null, "java/lang/Object",
 				new String[0]) {
 			{
-				classCounter = CounterImpl.getInstance(9, 0);
-				methodCounter = CounterImpl.getInstance(9, 0);
-				branchCounter = CounterImpl.getInstance(9, 0);
-				instructionCounter = CounterImpl.getInstance(9, 0);
+				classCounter = CounterImpl.getInstance(9, 0, 0);
+				methodCounter = CounterImpl.getInstance(9, 0, 0);
+				branchCounter = CounterImpl.getInstance(9, 0, 0);
+				instructionCounter = CounterImpl.getInstance(9, 0, 0);
 			}
 		};
 		classnode.setSourceFileName("Sample.java");
@@ -61,19 +61,19 @@ public class PackageCoverageTest {
 		final ISourceFileCoverage sourceFile = new SourceFileCoverageImpl(
 				"Sample.java", "org/jacoco/test/Sample") {
 			{
-				classCounter = CounterImpl.getInstance(1, 0);
-				methodCounter = CounterImpl.getInstance(2, 0);
-				branchCounter = CounterImpl.getInstance(3, 0);
-				instructionCounter = CounterImpl.getInstance(4, 0);
+				classCounter = CounterImpl.getInstance(1, 0, 0);
+				methodCounter = CounterImpl.getInstance(2, 0, 0);
+				branchCounter = CounterImpl.getInstance(3, 0, 0);
+				instructionCounter = CounterImpl.getInstance(4, 0, 0);
 			}
 		};
 		PackageCoverageImpl data = new PackageCoverageImpl("org/jacoco/test",
 				Collections.singleton((IClassCoverage) classnode),
 				Collections.singleton(sourceFile));
-		assertEquals(CounterImpl.getInstance(1, 0), data.getClassCounter());
-		assertEquals(CounterImpl.getInstance(2, 0), data.getMethodCounter());
-		assertEquals(CounterImpl.getInstance(3, 0), data.getBranchCounter());
-		assertEquals(CounterImpl.getInstance(4, 0),
+		assertEquals(CounterImpl.getInstance(1, 0, 0), data.getClassCounter());
+		assertEquals(CounterImpl.getInstance(2, 0, 0), data.getMethodCounter());
+		assertEquals(CounterImpl.getInstance(3, 0, 0), data.getBranchCounter());
+		assertEquals(CounterImpl.getInstance(4, 0, 0),
 				data.getInstructionCounter());
 	}
 
@@ -84,22 +84,22 @@ public class PackageCoverageTest {
 				"org/jacoco/test/Sample", 0, false, null, "java/lang/Object",
 				new String[0]) {
 			{
-				classCounter = CounterImpl.getInstance(1, 0);
-				methodCounter = CounterImpl.getInstance(2, 0);
-				branchCounter = CounterImpl.getInstance(3, 0);
-				instructionCounter = CounterImpl.getInstance(4, 0);
+				classCounter = CounterImpl.getInstance(1, 0, 0);
+				methodCounter = CounterImpl.getInstance(2, 0, 0);
+				branchCounter = CounterImpl.getInstance(3, 0, 0);
+				instructionCounter = CounterImpl.getInstance(4, 0, 0);
 			}
 		};
 		final Collection<ISourceFileCoverage> sourceFiles = Collections
 				.emptySet();
 		PackageCoverageImpl data = new PackageCoverageImpl("org/jacoco/test",
 				Collections.singleton((IClassCoverage) classnode), sourceFiles);
-		assertEquals(CounterImpl.getInstance(1, 0), data.getClassCounter());
-		assertEquals(CounterImpl.getInstance(2, 0), data.getMethodCounter());
-		assertEquals(CounterImpl.getInstance(3, 0), data.getBranchCounter());
-		assertEquals(CounterImpl.getInstance(4, 0),
+		assertEquals(CounterImpl.getInstance(1, 0, 0), data.getClassCounter());
+		assertEquals(CounterImpl.getInstance(2, 0, 0), data.getMethodCounter());
+		assertEquals(CounterImpl.getInstance(3, 0, 0), data.getBranchCounter());
+		assertEquals(CounterImpl.getInstance(4, 0, 0),
 				data.getInstructionCounter());
-		assertEquals(CounterImpl.getInstance(0, 0), data.getLineCounter());
+		assertEquals(CounterImpl.getInstance(0, 0, 0), data.getLineCounter());
 	}
 
 }

@@ -173,7 +173,7 @@ public class LimitTest {
 	public void testNoLimits() {
 		assertNull(limit.check(new TestNode() {
 			{
-				instructionCounter = CounterImpl.getInstance(1000, 0);
+				instructionCounter = CounterImpl.getInstance(1000, 0, 0);
 			}
 		}));
 	}
@@ -191,7 +191,7 @@ public class LimitTest {
 		assertEquals("0.35", limit.getMinimum());
 		assertNull(limit.check(new TestNode() {
 			{
-				instructionCounter = CounterImpl.getInstance(65, 35);
+				instructionCounter = CounterImpl.getInstance(65, 35, 35);
 			}
 		}));
 	}
@@ -202,7 +202,7 @@ public class LimitTest {
 		assertEquals("0.35", limit.getMinimum());
 		assertNull(limit.check(new TestNode() {
 			{
-				instructionCounter = CounterImpl.getInstance(64, 36);
+				instructionCounter = CounterImpl.getInstance(64, 36, 36);
 			}
 		}));
 	}
@@ -215,7 +215,8 @@ public class LimitTest {
 				"instructions covered ratio is 0.3400, but expected minimum is 0.3500",
 				limit.check(new TestNode() {
 					{
-						instructionCounter = CounterImpl.getInstance(66, 34);
+						instructionCounter = CounterImpl
+								.getInstance(66, 34, 34);
 					}
 				}));
 	}
@@ -229,7 +230,7 @@ public class LimitTest {
 				limit.check(new TestNode() {
 					{
 						instructionCounter = CounterImpl.getInstance(65001,
-								34999);
+								34999, 34999);
 					}
 				}));
 	}
@@ -243,7 +244,8 @@ public class LimitTest {
 				"instructions missed count is 9990, but expected minimum is 10000",
 				limit.check(new TestNode() {
 					{
-						instructionCounter = CounterImpl.getInstance(9990, 0);
+						instructionCounter = CounterImpl
+								.getInstance(9990, 0, 0);
 					}
 				}));
 	}
@@ -256,7 +258,8 @@ public class LimitTest {
 				"instructions covered ratio is 0, but expected minimum is 12345",
 				limit.check(new TestNode() {
 					{
-						instructionCounter = CounterImpl.getInstance(1, 999);
+						instructionCounter = CounterImpl.getInstance(1, 999,
+								999);
 					}
 				}));
 	}
@@ -275,7 +278,7 @@ public class LimitTest {
 		assertEquals("12345678", limit.getMaximum());
 		assertNull(limit.check(new TestNode() {
 			{
-				instructionCounter = CounterImpl.getInstance(12345678, 0);
+				instructionCounter = CounterImpl.getInstance(12345678, 0, 0);
 			}
 		}));
 	}
@@ -286,7 +289,7 @@ public class LimitTest {
 		assertEquals("0.999", limit.getMaximum());
 		assertNull(limit.check(new TestNode() {
 			{
-				instructionCounter = CounterImpl.getInstance(1, 99);
+				instructionCounter = CounterImpl.getInstance(1, 99, 99);
 			}
 		}));
 	}
@@ -299,7 +302,7 @@ public class LimitTest {
 				"instructions covered ratio is 1.000, but expected maximum is 0.999",
 				limit.check(new TestNode() {
 					{
-						instructionCounter = CounterImpl.getInstance(0, 1);
+						instructionCounter = CounterImpl.getInstance(0, 1, 1);
 					}
 				}));
 	}
@@ -313,7 +316,7 @@ public class LimitTest {
 				limit.check(new TestNode() {
 					{
 						instructionCounter = CounterImpl.getInstance(999,
-								999001);
+								999001, 999001);
 					}
 				}));
 	}
