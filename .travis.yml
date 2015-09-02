@@ -3,8 +3,6 @@ language: java
 # Skip "install" stage:
 install: true
 
-script: mvn -V -B clean verify
-
 # Use container-based infrastructure:
 sudo: false
 
@@ -12,3 +10,17 @@ sudo: false
 cache:
   directories:
     - '$HOME/.m2/repository'
+
+env:
+  - JDK=6
+  - JDK=7
+  - JDK=8
+  - JDK=8-ea
+  - JDK=9-ea
+
+matrix:
+  allow_failures:
+    - env: JDK=8-ea
+    - env: JDK=9-ea
+
+script: ./.travis.sh
