@@ -25,14 +25,20 @@ function install_jdk {
 
   tar -xzf /tmp/jdk/$FILENAME -C /tmp/jdk/$JDK --strip-components 1
 
-  export JAVA_HOME="/tmp/jdk/$JDK"
-  export JDK_HOME="${JAVA_HOME}"
-  export JAVAC="${JAVA_HOME}/bin/javac"
-  export PATH="${JAVA_HOME}/bin:${PATH}"
+  if [ -z "${2+false}" ]
+  then
+    export JAVA_HOME="/tmp/jdk/$JDK"
+    export JDK_HOME="${JAVA_HOME}"
+    export JAVAC="${JAVA_HOME}/bin/javac"
+    export PATH="${JAVA_HOME}/bin:${PATH}"
+  fi
 }
 
 source $HOME/.jdk_switcher_rc
 case "$JDK" in
+5)
+  install_jdk $JDK5_URL false
+  ;;
 6)
   jdk_switcher use openjdk6
   ;;
@@ -50,6 +56,9 @@ esac
 # Build:
 # TODO(Godin): see https://github.com/jacoco/jacoco/issues/300 about "bytecode.version"
 case "$JDK" in
+5)
+  mvn -V -B -e verify -Djdk.version=1.5 --toolchains=./.travis/toolchains.xml
+  ;;
 6)
   mvn -V -B -e verify -Dbytecode.version=1.6
   ;;
@@ -67,5 +76,9 @@ case "$JDK" in
   mvn -V -B -e verify -Dbytecode.version=1.9 \
     -Dmaven.javadoc.skip -pl !jacoco \
     -DargLine=-Djava.locale.providers=JRE,SPI
+  ;;
+*)
+  echo "Incorrect JDK [$JDK]"
+  exit 1;
   ;;
 esac
