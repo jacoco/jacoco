@@ -57,7 +57,13 @@ esac
 # TODO(Godin): see https://github.com/jacoco/jacoco/issues/300 about "bytecode.version"
 case "$JDK" in
 5)
-  mvn -V -B -e verify -Djdk.version=1.5 --toolchains=./.travis/toolchains.xml
+  if [[ ${TRAVIS_PULL_REQUEST} == 'false' && ${TRAVIS_BRANCH} == 'master' ]]
+  then
+    # goal "deploy:deploy" used directly instead of "deploy" phase to avoid pollution of Maven repository by "install" phase
+    mvn -V -B -e -f org.jacoco.build verify deploy:deploy -DdeployAtEnd -Djdk.version=1.5 --toolchains=./.travis/toolchains.xml --settings=./.travis/settings.xml
+  else
+    mvn -V -B -e verify -Djdk.version=1.5 --toolchains=./.travis/toolchains.xml
+  fi
   ;;
 6)
   mvn -V -B -e verify -Dbytecode.version=1.6
