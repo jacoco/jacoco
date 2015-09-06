@@ -66,6 +66,7 @@ case "$JDK" in
   then
     # goal "deploy:deploy" used directly instead of "deploy" phase to avoid pollution of Maven repository by "install" phase
     mvn -V -B -e -f org.jacoco.build verify deploy:deploy -DdeployAtEnd -Djdk.version=1.5 --toolchains=./.travis/toolchains.xml --settings=./.travis/settings.xml
+    ./.travis/deploy-gh-pages.sh
   else
     mvn -V -B -e verify -Djdk.version=1.5 --toolchains=./.travis/toolchains.xml
   fi
