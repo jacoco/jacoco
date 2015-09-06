@@ -53,6 +53,11 @@ case "$JDK" in
   ;;
 esac
 
+# Do not use "~/.mavenrc" set by Travis (https://github.com/travis-ci/travis-ci/issues/3893),
+# because it prevents execution of JaCoCo during integration tests for jacoco-maven-plugin,
+# and "-XMaxPermSize" not supported by JDK 9
+export MAVEN_SKIP_RC=true
+
 # Build:
 # TODO(Godin): see https://github.com/jacoco/jacoco/issues/300 about "bytecode.version"
 case "$JDK" in
@@ -75,8 +80,6 @@ case "$JDK" in
   mvn -V -B -e verify -Dbytecode.version=1.8
   ;;
 9-ea)
-  # "-XMaxPermSize" not supported by JDK 9, so remove it from MAVEN_OPTS set by Travis (https://github.com/travis-ci/travis-ci/issues/3893)
-  echo "export MAVEN_OPTS='-Dmaven.repo.local=$HOME/.m2/repository'" > ~/.mavenrc
   # see https://bugs.openjdk.java.net/browse/JDK-8131041 about "java.locale.providers"
   # TODO(Godin): maven-javadoc-plugin doesn't work well due to modularization of JDK 9 - skip it and hence distribution
   mvn -V -B -e verify -Dbytecode.version=1.9 \
