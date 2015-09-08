@@ -18,6 +18,8 @@ import java.io.IOException;
 import java.io.InputStream;
 
 import org.jacoco.core.internal.data.CompactDataInput;
+import org.jacoco.core.internal.instr.IProbeArray;
+import org.jacoco.core.internal.instr.ProbeArrayService;
 
 /**
  * Deserialization of execution data from binary streams.
@@ -145,7 +147,7 @@ public class ExecutionDataReader {
 		}
 		final long id = in.readLong();
 		final String name = in.readUTF();
-		final int[] probes = in.readIntArray();
+		final IProbeArray<?> probes = ProbeArrayService.read(in);
 		executionDataVisitor.visitClassExecution(new ExecutionData(id, name,
 				probes));
 	}

@@ -76,8 +76,9 @@ public class EmpiricalBigOWorkloadTest {
 				attributeMap, new RemoteControlWriter(baos),
 				new RemoteControlReader(bais));
 
-		assertArrayEquals(new byte[] { 1, -64, -64, 16, 8, 64, 1, 1 },
+		assertArrayEquals(new byte[] { 1, -64, -64, 16, 9, 64, 1, 1 },
 				baos.toByteArray());
 		assertEquals(0, result.getExecutionDataStore().getContents().size());
 	}
+
 }

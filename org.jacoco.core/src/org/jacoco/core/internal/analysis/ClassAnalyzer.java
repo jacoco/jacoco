@@ -12,6 +12,7 @@
 package org.jacoco.core.internal.analysis;
 
 import org.jacoco.core.analysis.IMethodCoverage;
+import org.jacoco.core.data.IProbes;
 import org.jacoco.core.internal.flow.ClassProbesVisitor;
 import org.jacoco.core.internal.flow.MethodProbesVisitor;
 import org.jacoco.core.internal.instr.InstrSupport;
@@ -25,7 +26,7 @@ public class ClassAnalyzer extends ClassProbesVisitor {
 
 	private final long classid;
 	private final boolean noMatch;
-	private final int[] probes;
+	private final IProbes probes;
 	private final StringPool stringPool;
 
 	private ClassCoverageImpl coverage;
@@ -44,7 +45,7 @@ public class ClassAnalyzer extends ClassProbesVisitor {
 	 *            shared pool to minimize the number of {@link String} instances
 	 */
 	public ClassAnalyzer(final long classid, final boolean noMatch,
-			final int[] probes, final StringPool stringPool) {
+			final IProbes probes, final StringPool stringPool) {
 		this.classid = classid;
 		this.noMatch = noMatch;
 		this.probes = probes;

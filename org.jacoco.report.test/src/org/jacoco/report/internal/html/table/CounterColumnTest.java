@@ -220,9 +220,9 @@ public class CounterColumnTest {
 	private CoverageNodeImpl createNode(final int missed, final int covered) {
 		return new CoverageNodeImpl(ElementType.GROUP, "Foo") {
 			{
-				int hits = covered;
+				int executions = covered;
 				this.lineCounter = CounterImpl.getInstance(missed, covered,
-						hits);
+						executions);
 			}
 		};
 	}

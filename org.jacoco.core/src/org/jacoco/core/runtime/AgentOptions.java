@@ -22,6 +22,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
+import org.jacoco.core.internal.instr.ProbeMode;
+
 /**
  * Utility to create and parse options for the runtime agent. Options are
  * represented as a string in the following format:
@@ -176,10 +178,15 @@ public final class AgentOptions {
 	 */
 	public static final String JMX = "jmx";
 
+	/**
+	 * Specifies how coverage should be collected by the probes.
+	 */
+	public static final String PROBE = "probe";
+
 	private static final Collection<String> VALID_OPTIONS = Arrays.asList(
 			DESTFILE, APPEND, INCLUDES, EXCLUDES, EXCLCLASSLOADER,
 			INCLBOOTSTRAPCLASSES, SESSIONID, DUMPONEXIT, OUTPUT, ADDRESS, PORT,
-			CLASSDUMPDIR, JMX);
+			CLASSDUMPDIR, JMX, PROBE);
 
 	private final Map<String, String> options;
 
@@ -238,6 +245,7 @@ public final class AgentOptions {
 	private void validateAll() {
 		validatePort(getPort());
 		getOutput();
+		getProbe();
 	}
 
 	private void validatePort(final int port) {
@@ -520,6 +528,36 @@ public final class AgentOptions {
 	 */
 	public void setJmx(final boolean jmx) {
 		setOption(JMX, jmx);
+	}
+
+	/**
+	 * Returns whether the probe mode the agent will use.
+	 * 
+	 * @return Probe mode
+	 */
+	public ProbeMode getProbe() {
+		final String value = options.get(PROBE);
+		return value == null ? ProbeMode.exists : ProbeMode.valueOf(value);
+	}
+
+	/**
+	 * Sets the probe mode
+	 * 
+	 * @param probe
+	 *            Probe mode
+	 */
+	public void setProbe(final ProbeMode probe) {
+		setOption(PROBE, probe.name());
+	}
+
+	/**
+	 * Sets the probe mode
+	 * 
+	 * @param probe
+	 *            Probe mode
+	 */
+	public void setProbe(final String probe) {
+		setProbe(ProbeMode.valueOf(probe));
 	}
 
 	private void setOption(final String key, final int value) {

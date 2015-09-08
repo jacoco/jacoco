@@ -117,15 +117,15 @@ public class ClassEmpiricalBigOImpl implements IClassEmpiricalBigO {
 
 		Fit[] fitArray = new Fit[lastLine - firstLine + 1];
 		for (int i = firstLine; i <= lastLine; i++) {
-			int[] hitCounts = new int[lineArray.length];
+			int[] execCounts = new int[lineArray.length];
 			for (int idx = 0; idx < ccs.length; idx++) {
 				lineArray[idx] = ccs[idx].getLine(i);
-				hitCounts[idx] = lineArray[idx].getInstructionCounter()
-						.getHitCount();
+				execCounts[idx] = lineArray[idx].getInstructionCounter()
+						.getExecutionCount();
 			}
 
 			SortedSet<Fit> fitSet = FitCalculator.calcFitSet(fitTypes,
-					ccs[0].getName() + ": Line " + i, xValues, hitCounts);
+					ccs[0].getName() + ": Line " + i, xValues, execCounts);
 
 			// save fit
 			fitArray[i - firstLine] = fitSet.isEmpty() ? null : fitSet.first();

@@ -84,7 +84,8 @@ public abstract class MethodProbesVisitor extends MethodVisitor {
 	 * @param opcode
 	 *            the opcode of the instruction to be visited. This opcode is
 	 *            either IRETURN, LRETURN, FRETURN, DRETURN, ARETURN, RETURN or
-	 *            ATHROW.
+	 *            ATHROW. This also applies to MONITORENTER and MONITOREXIT, as
+	 *            after we switch mode serial vs. parallel.
 	 * @param probeId
 	 *            id of the probe
 	 * @see MethodVisitor#visitInsn(int)

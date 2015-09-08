@@ -22,7 +22,7 @@
 	</target>
 
 	<target name="tearDown">
-		<delete dir="${temp.dir}" quiet="false" failonerror="true"/>
+		<!--<delete dir="${temp.dir}" quiet="false" failonerror="true"/>-->
 	</target>
 	
 	<target name="testInstrumentNoDestination">

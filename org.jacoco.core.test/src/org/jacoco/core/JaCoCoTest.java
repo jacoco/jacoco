@@ -13,12 +13,22 @@ package org.jacoco.core;
 
 import static org.junit.Assert.assertNotNull;
 
+import java.lang.reflect.Constructor;
+
 import org.junit.Test;
 
 /**
  * Unit tests for {@link JaCoCo}.
  */
 public class JaCoCoTest {
+
+	@Test
+	public void testConstructor() throws Exception {
+		Constructor<JaCoCo> constructor = JaCoCo.class.getDeclaredConstructor();
+		constructor.setAccessible(true);
+		constructor.newInstance();
+		// all's well if no exceptions thrown so far
+	}
 
 	@Test
 	public void testVERSION() {

@@ -69,9 +69,6 @@ public class EmpiricalBigOBuilderTest {
 
 	@Test(expected = IllegalArgumentException.class)
 	public void testVisitXAxis_null() {
-		EmpiricalBigOWorkloadStore store = new EmpiricalBigOWorkloadStore(
-				"ATTRIBUTE");
-		XAxisValues xAxisValues = new XAxisValues(store, "ATTRIBUTE");
 		EmpiricalBigOBuilder instance = new EmpiricalBigOBuilder(
 				FitType.values(), "ATTRIBUTE");
 

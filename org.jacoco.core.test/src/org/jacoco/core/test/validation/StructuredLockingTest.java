@@ -151,6 +151,12 @@ public class StructuredLockingTest {
 			return super.init(src);
 		}
 
+		private VarInsnNode backupToLockNumber(final AbstractInsnNode insn) {
+			AbstractInsnNode prev = insn.getPrevious().getPrevious()
+					.getPrevious().getPrevious().getPrevious();
+			return (VarInsnNode) prev;
+		}
+
 		@Override
 		public void execute(AbstractInsnNode insn,
 				Interpreter<BasicValue> interpreter) throws AnalyzerException {
@@ -158,11 +164,11 @@ public class StructuredLockingTest {
 			switch (insn.getOpcode()) {
 			case Opcodes.MONITORENTER:
 				// Lock is stored in a local variable:
-				enter(((VarInsnNode) insn.getPrevious()).var);
+				enter((backupToLockNumber(insn)).var);
 				break;
 			case Opcodes.MONITOREXIT:
 				// Lock is stored in a local variable:
-				exit(((VarInsnNode) insn.getPrevious()).var);
+				exit((backupToLockNumber(insn)).var);
 				break;
 			}
 		}

@@ -19,7 +19,9 @@ public class Instruction {
 
 	private final int line;
 
-	private int hits;
+	private int executions;
+
+	private int parallelExecutions;
 
 	private int branches;
 
@@ -35,7 +37,8 @@ public class Instruction {
 	 */
 	public Instruction(final int line) {
 		this.line = line;
-		this.hits = 0;
+		this.executions = 0;
+		this.parallelExecutions = 0;
 		this.branches = 0;
 		this.coveredBranches = 0;
 	}
@@ -61,22 +64,23 @@ public class Instruction {
 	}
 
 	/**
-	 * Merge the total number of hits at this instruction
+	 * Add to the total number of executions at this instruction
 	 * 
-	 * @param hits
-	 *            the number of hits at this instruction
+	 * @param executions
+	 *            the number of executions at this instruction
 	 */
-	public void mergeHits(final int hits) {
-		this.hits = Math.max(this.hits, hits);
+	public void addExecutions(final int executions) {
+		this.executions += executions;
 	}
 
 	/**
-	 * Returns the total number of hits on this instruction.
+	 * Add to the total number of parallel executions at this instruction
 	 * 
-	 * @return total number of hits on this instruction.
+	 * @param parallelExecutions
+	 *            the number of parallel executions at this instruction
 	 */
-	public int getHits() {
-		return hits;
+	public void addParallelExecutions(final int parallelExecutions) {
+		this.parallelExecutions += parallelExecutions;
 	}
 
 	/**
@@ -88,7 +92,8 @@ public class Instruction {
 		Instruction i = this;
 		while (i != null && i.coveredBranches++ == 0) {
 			if (i != this) {
-				i.hits += this.hits;
+				i.executions += this.executions;
+				i.parallelExecutions += this.parallelExecutions;
 			}
 			i = i.predecessor;
 		}
@@ -119,6 +124,24 @@ public class Instruction {
 	 */
 	public int getCoveredBranches() {
 		return coveredBranches;
+	}
+
+	/**
+	 * Returns the total number of executions on this instruction.
+	 * 
+	 * @return total number of executions on this instruction.
+	 */
+	public int getExecutions() {
+		return executions;
+	}
+
+	/**
+	 * Returns the total number of parallel executions on this instruction.
+	 * 
+	 * @return total number of parallel executions on this instruction.
+	 */
+	public int getParallelExecutions() {
+		return parallelExecutions;
 	}
 
 }

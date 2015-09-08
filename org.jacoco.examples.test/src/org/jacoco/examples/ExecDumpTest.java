@@ -21,6 +21,8 @@ import java.io.IOException;
 import org.jacoco.core.data.ExecutionData;
 import org.jacoco.core.data.ExecutionDataWriter;
 import org.jacoco.core.data.SessionInfo;
+import org.jacoco.core.internal.instr.IProbeArray;
+import org.jacoco.core.internal.instr.ProbeArrayService;
 import org.junit.Rule;
 import org.junit.Test;
 
@@ -40,7 +42,7 @@ public class ExecDumpTest {
 		new ExecDump(console.stream).execute(args);
 
 		console.expect(containsLine("exec file: " + file));
-		console.expect(containsLine("CLASS ID         HITS/PROBES   CLASS NAME"));
+		console.expect(containsLine("CLASS ID         EXECS/PROBES  CLASS NAME"));
 		console.expect(containsString("Session \"testid\":"));
 		console.expect(containsLine("0000000000001234    2 of   3   foo/MyClass"));
 	}
@@ -50,8 +52,11 @@ public class ExecDumpTest {
 		final FileOutputStream out = new FileOutputStream(f);
 		final ExecutionDataWriter writer = new ExecutionDataWriter(out);
 		writer.visitSessionInfo(new SessionInfo("testid", 1, 2));
+		IProbeArray<?> probeArray = ProbeArrayService.newProbeArray(3);
+		probeArray.increment(1);
+		probeArray.increment(2);
 		writer.visitClassExecution(new ExecutionData(0x1234, "foo/MyClass",
-				new int[] { 0, 1, 1 }));
+				ProbeArrayService.newProbeArray(probeArray)));
 		writer.flush();
 		out.close();
 		return f.getPath();

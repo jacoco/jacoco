@@ -89,6 +89,7 @@ public class SourceNodeImpl extends CoverageNodeImpl implements ISourceNode {
 		classCounter = classCounter.increment(child.getClassCounter());
 		final int firstLine = child.getFirstLine();
 		if (firstLine != UNKNOWN_LINE) {
+			lineCounter = lineCounter.increment(child.getLineCounter());
 			final int lastLine = child.getLastLine();
 			ensureCapacity(firstLine, lastLine);
 			for (int i = firstLine; i <= lastLine; i++) {
@@ -114,44 +115,47 @@ public class SourceNodeImpl extends CoverageNodeImpl implements ISourceNode {
 	public void increment(final ICounter instructions, final ICounter branches,
 			final int line) {
 		if (line != UNKNOWN_LINE) {
+
+			// Increment line counter:
+			final LineImpl l = getLine(line);
+			final int oldTotal = l.getInstructionCounter().getTotalCount();
+			final int oldCovered = l.getInstructionCounter().getCoveredCount();
+			final int oldExec = l.getInstructionCounter().getExecutionCount();
+
 			incrementLine(instructions, branches, line);
+
+			int missedAdj = 0;
+			int coveredAdj = 0;
+			if (instructions.getTotalCount() > 0) {
+				if (instructions.getCoveredCount() == 0) {
+					if (oldTotal == 0) {
+						missedAdj = 1;
+					}
+				} else {
+					if (oldTotal == 0) {
+						coveredAdj = 1;
+					} else {
+						if (oldCovered == 0) {
+							missedAdj = -1;
+							coveredAdj = +1;
+						}
+					}
+				}
+			}
+			final int execAdj = Math.max(oldExec,
+					instructions.getExecutionCount())
+					- oldExec;
+			lineCounter = lineCounter.increment(missedAdj, coveredAdj, execAdj);
 		}
 		instructionCounter = instructionCounter.increment(instructions);
 		branchCounter = branchCounter.increment(branches);
+
 	}
 
 	private void incrementLine(final ICounter instructions,
 			final ICounter branches, final int line) {
 		ensureCapacity(line, line);
-		final LineImpl l = getLine(line);
-		final int oldTotal = l.getInstructionCounter().getTotalCount();
-		final int oldCovered = l.getInstructionCounter().getCoveredCount();
-		lines[line - offset] = l.mergeIncrement(instructions, branches);
-
-		// Increment line counter:
-		int missedAdj = 0;
-		int coveredAdj = 0;
-		int hitAdj = 0;
-		if (instructions.getTotalCount() > 0) {
-			if (instructions.getCoveredCount() == 0) {
-				if (oldTotal == 0) {
-					missedAdj = 1;
-				}
-			} else {
-				if (oldTotal == 0) {
-					coveredAdj = 1;
-				} else {
-					if (oldCovered == 0) {
-						missedAdj = -1;
-						coveredAdj = +1;
-					}
-				}
-				hitAdj = Math.max(lineCounter.getHitCount(),
-						instructions.getHitCount())
-						- lineCounter.getHitCount();
-			}
-		}
-		lineCounter = lineCounter.increment(missedAdj, coveredAdj, hitAdj);
+		lines[line - offset] = getLine(line).increment(instructions, branches);
 	}
 
 	// === ISourceNode implementation ===

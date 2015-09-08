@@ -91,7 +91,7 @@ public class ClassCoverageImplTest {
 		data.addMethod(createMethod(true));
 		assertEquals(CounterImpl.COUNTER_0_1, data.getInstructionCounter());
 		assertEquals(CounterImpl.COUNTER_0_1, data.getMethodCounter());
-		assertEquals(CounterImpl.COUNTER_0_1, data.getClassCounter());
+		assertEquals(CounterImpl.getInstance(0, 1, 0), data.getClassCounter());
 	}
 
 	private MethodCoverageImpl createMethod(boolean covered) {

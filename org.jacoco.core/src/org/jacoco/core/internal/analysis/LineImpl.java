@@ -49,10 +49,10 @@ public abstract class LineImpl implements ILine {
 
 	private static LineImpl getInstance(final CounterImpl instructions,
 			final CounterImpl branches) {
-		final int ih = instructions.getHitCount();
+		final int ih = instructions.getExecutionCount();
 		final int im = instructions.getMissedCount();
 		final int ic = instructions.getCoveredCount();
-		final int bh = branches.getHitCount();
+		final int bh = branches.getExecutionCount();
 		final int bm = branches.getMissedCount();
 		final int bc = branches.getCoveredCount();
 		if (ih == ic && im <= SINGLETON_INS_LIMIT && ic <= SINGLETON_INS_LIMIT
@@ -78,14 +78,6 @@ public abstract class LineImpl implements ILine {
 			this.branches = this.branches.increment(branches);
 			return this;
 		}
-
-		@Override
-		public LineImpl mergeIncrement(final ICounter instructions,
-				final ICounter branches) {
-			this.instructions = this.instructions.mergeIncrement(instructions);
-			this.branches = this.branches.mergeIncrement(branches);
-			return this;
-		}
 	}
 
 	/**
@@ -103,13 +95,6 @@ public abstract class LineImpl implements ILine {
 				final ICounter branches) {
 			return getInstance(this.instructions.increment(instructions),
 					this.branches.increment(branches));
-		}
-
-		@Override
-		public LineImpl mergeIncrement(final ICounter instructions,
-				final ICounter branches) {
-			return getInstance(this.instructions.mergeIncrement(instructions),
-					this.branches.mergeIncrement(branches));
 		}
 	}
 
@@ -134,18 +119,6 @@ public abstract class LineImpl implements ILine {
 	 * @return instance with new counter values
 	 */
 	public abstract LineImpl increment(final ICounter instructions,
-			final ICounter branches);
-
-	/**
-	 * Adds the given counters to this line, merging the hits.
-	 * 
-	 * @param instructions
-	 *            instructions to add
-	 * @param branches
-	 *            branches to add
-	 * @return instance with new counter values
-	 */
-	public abstract LineImpl mergeIncrement(final ICounter instructions,
 			final ICounter branches);
 
 	// === ILine implementation ===

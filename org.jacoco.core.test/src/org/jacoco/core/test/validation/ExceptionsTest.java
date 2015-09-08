@@ -65,7 +65,7 @@ public class ExceptionsTest extends ValidationTestBase {
 		// As the try/catch block is entered at one branch of the condition
 		// should be marked as executed
 		assertLine("implicitExceptionTryCatchAfterCondition.condition",
-				ICounter.FULLY_COVERED, 1, 1, 1);
+				ICounter.FULLY_COVERED, 1, 1);
 		assertLine("implicitExceptionTryCatchAfterCondition.exception",
 				ICounter.NOT_COVERED);
 		assertLine("implicitExceptionTryCatchAfterCondition.catchBlock",

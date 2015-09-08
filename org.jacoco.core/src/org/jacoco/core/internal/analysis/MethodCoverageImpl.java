@@ -45,6 +45,7 @@ public class MethodCoverageImpl extends SourceNodeImpl implements
 	public void increment(final ICounter instructions, final ICounter branches,
 			final int line) {
 		super.increment(instructions, branches, line);
+
 		// Additionally increment complexity counter:
 		if (branches.getTotalCount() > 1) {
 			final int c = Math.max(0, branches.getCoveredCount() - 1);
@@ -57,10 +58,10 @@ public class MethodCoverageImpl extends SourceNodeImpl implements
 	 * This method must be called exactly once after all instructions and
 	 * branches have been incremented for this method coverage node.
 	 * 
-	 * @param methodHits
-	 *            the number of time the method was entered
+	 * @param methodExecutions
+	 *            the number of times method entry was detected
 	 */
-	public void incrementMethodCounter(final int methodHits) {
+	public void incrementMethodCounter(final int methodExecutions) {
 		if (this.instructionCounter.getCoveredCount() == 0) {
 			this.complexityCounter = this.complexityCounter
 					.increment(CounterImpl.COUNTER_1_0);
@@ -70,7 +71,7 @@ public class MethodCoverageImpl extends SourceNodeImpl implements
 			this.complexityCounter = this.complexityCounter
 					.increment(CounterImpl.getInstance(0, 1, 0));
 			this.methodCounter = this.methodCounter.increment(CounterImpl
-					.getInstance(0, 1, methodHits));
+					.getInstance(0, 1, methodExecutions));
 		}
 	}
 

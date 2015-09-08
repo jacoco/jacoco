@@ -91,7 +91,7 @@ public class EmpiricalBigOAnalysisPrinter {
 
 	private static String makeCounterString(final ICounter[] counters,
 			final CounterValue counterValueEnum) {
-		if (counterValueEnum != CounterValue.TOTALHITCOUNT) {
+		if (counterValueEnum != CounterValue.TOTALEXECCOUNT) {
 			return Integer.toString((int) counters[0]
 					.getValue(counterValueEnum));
 		}
@@ -110,13 +110,13 @@ public class EmpiricalBigOAnalysisPrinter {
 			final ICounter[] counters) {
 		final String missed = makeCounterString(counters,
 				CounterValue.MISSEDCOUNT);
-		final String covered = makeCounterString(counters,
-				CounterValue.COVEREDCOUNT);
-		final String hits = makeCounterString(counters,
-				CounterValue.TOTALHITCOUNT);
-		out.printf("%s of %s %s missed", missed, covered, unit);
+		final String total = makeCounterString(counters,
+				CounterValue.TOTALCOUNT);
+		final String executions = makeCounterString(counters,
+				CounterValue.TOTALEXECCOUNT);
+		out.printf("%s of %s %s missed", missed, total, unit);
 		if (!unit.contains("complexity")) {
-			out.printf(", with %s hits", hits);
+			out.printf(", with %s executions", executions);
 		}
 		out.println();
 	}

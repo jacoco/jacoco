@@ -16,5 +16,6 @@
 			<attribute name="maven.pomderived" value="true"/>
 		</attributes>
 	</classpathentry>
+	<classpathentry kind="lib" path="gbc"/>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>

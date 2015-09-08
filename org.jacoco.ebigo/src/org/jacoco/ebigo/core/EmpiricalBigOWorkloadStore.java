@@ -100,8 +100,9 @@ public class EmpiricalBigOWorkloadStore {
 	 *            This object is the 'key' of the workload in the store.
 	 * @param workload
 	 *            the workload to add to the store.
-	 * @return
-	 */
+	 * @return the previous value associated with <tt>attributes</tt>, or
+     *         <tt>null</tt> if there was no mapping for <tt>attributes</tt>.
+ 	 */
 	public EmpiricalBigOWorkload put(final WorkloadAttributeMap attributes,
 			final EmpiricalBigOWorkload workload) {
 		validateRequiredAttriubtes(attributes);

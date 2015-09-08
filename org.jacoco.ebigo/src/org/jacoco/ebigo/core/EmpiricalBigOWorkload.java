@@ -29,10 +29,10 @@ import org.jacoco.core.runtime.RemoteControlWriter;
 import static org.jacoco.ebigo.internal.util.ValidationUtils.*;
 
 /**
- * Contains coverage (incl. hits) information from a single workload applied to
- * the software under test, and the attribute value(s) associated with this
- * workload. When performing an Empirical Big-O fit to an attribute, the X-value
- * identifying this workload comes for that attribute's value.
+ * Contains execution information from a single workload applied to the software
+ * under test, and the attribute value(s) associated with this workload. When
+ * performing an Empirical Big-O fit to an attribute, the X-value identifying
+ * this workload comes for that attribute's value.
  * 
  * @author Omer Azmon
  */
@@ -100,7 +100,8 @@ public class EmpiricalBigOWorkload {
 	 *            the directory to place the workload
 	 * @param localFileName
 	 *            the file name minus the extension.
-	 * @throws IOException on any failure to write
+	 * @throws IOException
+	 *             on any failure to write
 	 */
 	public void write(File resultsDir, String localFileName) throws IOException {
 		PrintStream mapPrinter = new PrintStream(new FileOutputStream(new File(
@@ -133,7 +134,8 @@ public class EmpiricalBigOWorkload {
 			String localFileName) throws IOException {
 		BufferedReader mapReader = new BufferedReader(new FileReader(new File(
 				resultsDir, localFileName + ".map")));
-		WorkloadAttributeMapBuilder builder = WorkloadAttributeMapBuilder.create();
+		WorkloadAttributeMapBuilder builder = WorkloadAttributeMapBuilder
+				.create();
 		try {
 			for (;;) {
 				String line = mapReader.readLine();
@@ -171,7 +173,8 @@ public class EmpiricalBigOWorkload {
 	 *            the file name of both workload files (with .map, and .exec
 	 *            extensions)
 	 * @return a workload from desk.
-	 * @throws IOException on any failure to read
+	 * @throws IOException
+	 *             on any failure to read
 	 */
 	public static EmpiricalBigOWorkload read(File resultsDir,
 			String localFileName) throws IOException {
@@ -207,12 +210,13 @@ public class EmpiricalBigOWorkload {
 	 *            a JaCoCo remote control reader to receive the data.
 	 * @return a workload from a running instance JaCoCo that is running in
 	 *         server mode.
-	 * @throws IOException on any failure to read
+	 * @throws IOException
+	 *             on any failure to read
 	 */
 	public static EmpiricalBigOWorkload readRemote(
 			WorkloadAttributeMap attributeMap, RemoteControlWriter writer,
 			RemoteControlReader reader) throws IOException {
-		
+
 		SessionInfoStore sessionInfoStore = new SessionInfoStore();
 		reader.setSessionInfoVisitor(sessionInfoStore);
 		ExecutionDataStore executionDataStore = new ExecutionDataStore();

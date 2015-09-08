@@ -98,6 +98,8 @@ public final class MethodProbesAdapter extends MethodVisitor {
 		case Opcodes.ARETURN:
 		case Opcodes.RETURN:
 		case Opcodes.ATHROW:
+		case Opcodes.MONITORENTER:
+		case Opcodes.MONITOREXIT:
 			probesVisitor.visitInsnWithProbe(opcode, idGenerator.nextId());
 			break;
 		default:

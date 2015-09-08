@@ -39,7 +39,7 @@ public class ClassEmpiricalBigOImplTest {
 		IClassCoverage[] ccs = new IClassCoverage[2];
 		ccs[0] = makeEmptyClassCoverage(123L, "Sample", false);
 		ccs[1] = makeClassCoverage(123L, "Sample", 2, false);
-		ClassEmpiricalBigOImpl instance = new ClassEmpiricalBigOImpl(ccs);
+		new ClassEmpiricalBigOImpl(ccs);
 	}
 
 	@Test
@@ -97,13 +97,13 @@ public class ClassEmpiricalBigOImplTest {
 		return coverage;
 	}
 
-	private ClassCoverageImpl makeClassCoverage(long id, String name, int hits,
-			boolean nomatch) {
+	private ClassCoverageImpl makeClassCoverage(long id, String name,
+			int executions, boolean nomatch) {
 		final ClassCoverageImpl coverage = new ClassCoverageImpl(name, id,
 				nomatch, null, "java/lang/Object", new String[0]);
-		coverage.increment(CounterImpl.getInstance(0, 1, hits),
+		coverage.increment(CounterImpl.getInstance(0, 1, executions),
 				CounterImpl.COUNTER_0_1, 6);
-		coverage.increment(CounterImpl.getInstance(0, 1, hits),
+		coverage.increment(CounterImpl.getInstance(0, 1, executions),
 				CounterImpl.COUNTER_0_1, 7);
 		coverage.increment(CounterImpl.getInstance(0, 1, 0),
 				CounterImpl.COUNTER_0_1, 8);

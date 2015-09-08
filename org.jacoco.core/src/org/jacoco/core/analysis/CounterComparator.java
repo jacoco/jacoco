@@ -26,10 +26,10 @@ public class CounterComparator implements Comparator<ICounter>, Serializable {
 	private static final long serialVersionUID = -3777463066252746748L;
 
 	/**
-	 * Compares the absolute number of total item hits.
+	 * Compares the absolute number of total item executions.
 	 */
-	public static final CounterComparator TOTALHITCOUNT = new CounterComparator(
-			CounterValue.TOTALHITCOUNT);
+	public static final CounterComparator TOTALEXECCOUNT = new CounterComparator(
+			CounterValue.TOTALEXECCOUNT);
 
 	/**
 	 * Compares the absolute number of total items.

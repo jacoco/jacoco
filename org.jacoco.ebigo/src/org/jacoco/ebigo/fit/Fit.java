@@ -71,50 +71,50 @@ public class Fit {
 		switch (type) {
 		case Log:
 			if (0 == slope)
-				return String.format("%.3g", intercept);
+				return String.format("%.2f", intercept);
 			if (1 == slope && 0 == intercept)
 				return String.format("ln(x)");
 			if (1 == slope)
-				return String.format("%.3g + ln(x)", intercept);
+				return String.format("%.2f + ln(x)", intercept);
 			if (0 == intercept)
-				return String.format("%.3g ln(x)", slope);
-			return String.format("%.3g + %.3g ln(x)", intercept, slope);
+				return String.format("%.2f ln(x)", slope);
+			return String.format("%.2f + %.2f ln(x)", intercept, slope);
 		case Linear:
 			if (0 == slope)
-				return String.format("%.3g", intercept);
+				return String.format("%.2f", intercept);
 			if (1 == slope && 0 == intercept)
 				return "x";
 			if (1 == slope)
-				return String.format("%.3g + x", intercept);
+				return String.format("%.2f + x", intercept);
 			if (0 == intercept)
-				return String.format("%.3gx", slope);
-			return String.format("%.3g + %.3gx", intercept, slope);
+				return String.format("%.2fx", slope);
+			return String.format("%.2f + %.2fx", intercept, slope);
 		case PowerLaw:
 			if (0 == intercept)
-				return String.format("%.3g", 0D);
+				return String.format("%.2f", 0D);
 			if (0 == slope)
-				return String.format("%.3g", intercept);
+				return String.format("%.2f", intercept);
 			if (1 == intercept && 1 == slope)
 				return "x";
 			if (1 == slope)
-				return String.format("%.3gx", intercept);
+				return String.format("%.2fx", intercept);
 			if (1 == intercept)
-				return String.format("x^%.3g", slope);
-			return String.format("%.3gx^%.3g", intercept, slope);
+				return String.format("x^%.2f", slope);
+			return String.format("%.2fx^%.2f", intercept, slope);
 		case Exp:
 			if (0 == intercept)
-				return String.format("%.3g", 0D);
+				return String.format("%.2f", 0D);
 			if (0 == slope)
-				return String.format("%.3g", intercept);
+				return String.format("%.2f", intercept);
 			if (1 == intercept && 1 == slope)
 				return "e^x";
 			if (1 == intercept)
-				return String.format("e^(%.3gx)", slope);
+				return String.format("e^(%.2fx)", slope);
 			if (1 == slope)
-				return String.format("%.3ge^x", intercept);
-			return String.format("%.3ge^(%.3gx)", intercept, slope);
+				return String.format("%.2fe^x", intercept);
+			return String.format("%.2fe^(%.2fx)", intercept, slope);
 		default:
-			return String.format("%s(%.3g, %.3g)", type.name(), intercept,
+			return String.format("%s(%.2f, %.2f)", type.name(), intercept,
 					slope);
 		}
 	}
@@ -147,7 +147,7 @@ public class Fit {
 				return "1";
 			if (1 == slope)
 				return "n";
-			return String.format("n^%.3g", slope);
+			return String.format("n^%.2f", slope);
 		case Exp:
 			if (0 == intercept)
 				return String.format("0");
@@ -155,7 +155,7 @@ public class Fit {
 				return "1";
 			return String.format("e^n");
 		default:
-			return String.format("%s(%g,%g)", type.name(), intercept, slope);
+			return String.format("%s(%f,%f)", type.name(), intercept, slope);
 		}
 	}
 

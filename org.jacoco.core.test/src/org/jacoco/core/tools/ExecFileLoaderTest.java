@@ -28,6 +28,7 @@ import org.jacoco.core.data.ExecutionDataStore;
 import org.jacoco.core.data.ExecutionDataWriter;
 import org.jacoco.core.data.SessionInfo;
 import org.jacoco.core.data.SessionInfoStore;
+import org.jacoco.core.internal.instr.ProbeArrayService;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -118,7 +119,8 @@ public class ExecFileLoaderTest {
 		final FileOutputStream out = new FileOutputStream(file);
 		final ExecutionDataWriter writer = new ExecutionDataWriter(out);
 		final int value = id.length();
-		writer.visitClassExecution(new ExecutionData(value, id, new int[0]));
+		writer.visitClassExecution(new ExecutionData(value, id,
+				ProbeArrayService.newProbeArray(0)));
 		writer.visitSessionInfo(new SessionInfo(id, value, value));
 		out.close();
 		return file;

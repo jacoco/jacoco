@@ -11,7 +11,11 @@
  *******************************************************************************/
 package org.jacoco.core.test.validation;
 
+import static org.junit.Assert.assertSame;
+
 import org.jacoco.core.analysis.ICounter;
+import org.jacoco.core.internal.instr.ProbeArrayService;
+import org.jacoco.core.internal.instr.ProbeMode;
 import org.jacoco.core.test.validation.targets.Target01;
 import org.junit.Test;
 
@@ -32,89 +36,89 @@ public class ControlStructuresTest extends ValidationTestBase {
 
 	@Test
 	public void testCoverageResult() {
+		assertSame(ProbeMode.exists, ProbeArrayService.getProbeMode());
 
 		// 1. Direct unconditional execution
 		assertLine("unconditional", ICounter.FULLY_COVERED);
 
 		// 2. Missed if block
-		assertLine("iffalse", ICounter.FULLY_COVERED, 1, 1, 1);
+		assertLine("iffalse", ICounter.FULLY_COVERED, 1, 1);
 		assertLine("missedif", ICounter.NOT_COVERED);
 		assertLine("executedelse", ICounter.FULLY_COVERED);
 
 		// 3. Executed if block
-		assertLine("iftrue", ICounter.FULLY_COVERED, 1, 1, 1);
+		assertLine("iftrue", ICounter.FULLY_COVERED, 1, 1);
 		assertLine("executedif", ICounter.FULLY_COVERED);
 		assertLine("missedelse", ICounter.NOT_COVERED);
 
 		// 4. Missed while block
 		// ECJ and javac produce different status here
-		assertLine("whilefalse", 1, 1, 1);
+		assertLine("whilefalse", 1, 1);
 		assertLine("missedwhile", ICounter.NOT_COVERED);
 
 		// 5. Always true while block
-		assertLine("whiletrue", ICounter.FULLY_COVERED, 1, 1, 1);
+		assertLine("whiletrue", ICounter.FULLY_COVERED, 1, 1);
 
 		// 6. Executed while block
-		assertLine("whiletruefalse", ICounter.FULLY_COVERED, 0, 2, 3);
+		assertLine("whiletruefalse", ICounter.FULLY_COVERED, 0, 2);
 		assertLine("executedwhile", ICounter.FULLY_COVERED);
 
 		// 7. Executed do while block
 		assertLine("executeddowhile", ICounter.FULLY_COVERED);
 
 		// 8. Missed for block
-		assertLine("missedforincrementer", ICounter.PARTLY_COVERED, 1, 1, 1);
+		assertLine("missedforincrementer", ICounter.PARTLY_COVERED, 1, 1);
 		assertLine("missedfor", ICounter.NOT_COVERED);
 
 		// 9. Executed for block
-		assertLine("executedforincrementer", ICounter.FULLY_COVERED, 0, 2, 1);
+		assertLine("executedforincrementer", ICounter.FULLY_COVERED, 0, 2);
 		assertLine("executedfor", ICounter.FULLY_COVERED);
 
 		// 10. Missed for each block
-		assertLine("missedforeachincrementer", ICounter.PARTLY_COVERED, 1, 1, 1);
+		assertLine("missedforeachincrementer", ICounter.PARTLY_COVERED, 1, 1);
 		assertLine("missedforeach", ICounter.NOT_COVERED);
 
 		// 11. Executed for each block
-		assertLine("executedforeachincrementer", ICounter.FULLY_COVERED, 0, 2,
-				1);
+		assertLine("executedforeachincrementer", ICounter.FULLY_COVERED, 0, 2);
 		assertLine("executedforeach", ICounter.FULLY_COVERED);
 
 		// 12. Table switch with hit
-		assertLine("tswitch1", ICounter.FULLY_COVERED, 3, 1, 1);
+		assertLine("tswitch1", ICounter.FULLY_COVERED, 3, 1);
 		assertLine("tswitch1case1", ICounter.NOT_COVERED);
 		assertLine("tswitch1case2", ICounter.FULLY_COVERED);
 		assertLine("tswitch1case3", ICounter.NOT_COVERED);
 		assertLine("tswitch1default", ICounter.NOT_COVERED);
 
 		// 13. Continued table switch with hit
-		assertLine("tswitch2", ICounter.FULLY_COVERED, 3, 1, 1);
+		assertLine("tswitch2", ICounter.FULLY_COVERED, 3, 1);
 		assertLine("tswitch2case1", ICounter.NOT_COVERED);
 		assertLine("tswitch2case2", ICounter.FULLY_COVERED);
 		assertLine("tswitch2case3", ICounter.FULLY_COVERED);
 		assertLine("tswitch2default", ICounter.FULLY_COVERED);
 
 		// 14. Table switch without hit
-		assertLine("tswitch2", ICounter.FULLY_COVERED, 3, 1, 1);
+		assertLine("tswitch2", ICounter.FULLY_COVERED, 3, 1);
 		assertLine("tswitch3case1", ICounter.NOT_COVERED);
 		assertLine("tswitch3case2", ICounter.NOT_COVERED);
 		assertLine("tswitch3case3", ICounter.NOT_COVERED);
 		assertLine("tswitch3default", ICounter.FULLY_COVERED);
 
 		// 15. Lookup switch with hit
-		assertLine("lswitch1", ICounter.FULLY_COVERED, 3, 1, 1);
+		assertLine("lswitch1", ICounter.FULLY_COVERED, 3, 1);
 		assertLine("lswitch1case1", ICounter.NOT_COVERED);
 		assertLine("lswitch1case2", ICounter.FULLY_COVERED);
 		assertLine("lswitch1case3", ICounter.NOT_COVERED);
 		assertLine("lswitch1default", ICounter.NOT_COVERED);
 
 		// 16. Continued lookup switch with hit
-		assertLine("lswitch2", ICounter.FULLY_COVERED, 3, 1, 1);
+		assertLine("lswitch2", ICounter.FULLY_COVERED, 3, 1);
 		assertLine("lswitch2case1", ICounter.NOT_COVERED);
 		assertLine("lswitch2case2", ICounter.FULLY_COVERED);
 		assertLine("lswitch2case3", ICounter.FULLY_COVERED);
 		assertLine("lswitch2default", ICounter.FULLY_COVERED);
 
 		// 17. Lookup switch without hit
-		assertLine("lswitch3", ICounter.FULLY_COVERED, 3, 1, 1);
+		assertLine("lswitch3", ICounter.FULLY_COVERED, 3, 1);
 		assertLine("lswitch3case1", ICounter.NOT_COVERED);
 		assertLine("lswitch3case2", ICounter.NOT_COVERED);
 		assertLine("lswitch3case3", ICounter.NOT_COVERED);

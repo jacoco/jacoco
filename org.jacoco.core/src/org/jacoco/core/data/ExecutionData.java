@@ -13,13 +13,13 @@ package org.jacoco.core.data;
 
 import static java.lang.String.format;
 
-import java.util.concurrent.atomic.AtomicIntegerArray;
-import java.util.function.IntBinaryOperator;
+import org.jacoco.core.internal.instr.IProbeArray;
+import org.jacoco.core.internal.instr.ProbeArrayService;
 
 /**
  * Execution data for a single Java class. While instances are immutable care
- * has to be taken about the probe data array of type <code>boolean[]</code>
- * which can be modified.
+ * has to be taken about the probe data array of type
+ * <code>{@literal IProbeArray<?>}</code> which can be modified.
  */
 public final class ExecutionData {
 
@@ -27,7 +27,7 @@ public final class ExecutionData {
 
 	private final String name;
 
-	private final AtomicIntegerArray atomicProbes;
+	private final IProbeArray<?> probes;
 
 	/**
 	 * Creates a new {@link ExecutionData} object with the given probe data.
@@ -39,10 +39,11 @@ public final class ExecutionData {
 	 * @param probes
 	 *            probe data
 	 */
-	public ExecutionData(final long id, final String name, final int[] probes) {
+	public ExecutionData(final long id, final String name,
+			final IProbeArray<?> probes) {
 		this.id = id;
 		this.name = name;
-		this.atomicProbes = new AtomicIntegerArray(probes);
+		this.probes = probes;
 	}
 
 	/**
@@ -59,7 +60,7 @@ public final class ExecutionData {
 	public ExecutionData(final long id, final String name, final int probeCount) {
 		this.id = id;
 		this.name = name;
-		this.atomicProbes = new AtomicIntegerArray(probeCount);
+		this.probes = ProbeArrayService.newProbeArray(probeCount);
 	}
 
 	/**
@@ -87,31 +88,15 @@ public final class ExecutionData {
 	 * 
 	 * @return probe data
 	 */
-	public int[] getProbes() {
-		final int[] probes = new int[atomicProbes.length()];
-		for (int ix = 0; ix < probes.length; ix++) {
-			probes[ix] = atomicProbes.get(ix);
-		}
+	public IProbeArray<?> getProbes() {
 		return probes;
-	}
-
-	/**
-	 * Returns the execution data probes. A value of <code>true</code> indicates
-	 * that the corresponding probe was executed.
-	 * 
-	 * @return probe data
-	 */
-	public AtomicIntegerArray getAtomicProbes() {
-		return atomicProbes;
 	}
 
 	/**
 	 * Sets all probes to <code>0</code>.
 	 */
 	public void reset() {
-		for (int ix = 0; ix < atomicProbes.length(); ix++) {
-			atomicProbes.set(ix, 0);
-		}
+		probes.reset();
 	}
 
 	/**
@@ -157,27 +142,37 @@ public final class ExecutionData {
 	 *            merge mode
 	 */
 	public void merge(final ExecutionData other, final boolean flag) {
-		assertCompatibility(other.getId(), other.getName(), other
-				.getAtomicProbes().length());
-		final AtomicIntegerArray otherData = other.getAtomicProbes();
-		for (int i = 0; i < atomicProbes.length(); i++) {
-			final int otherValue = otherData.get(i);
-			if (otherValue > 0) {
-				atomicProbes.accumulateAndGet(i, otherValue,
-						new IntBinaryOperator() {
+		assertCompatibility(other.getId(), other.getName(), other.probes);
+		probes.merge(other.probes, flag);
+	}
 
-							public int applyAsInt(final int left,
-									final int right) {
-								if (flag) {
-									return left + right;
-								} else {
-									final int sum = left - right;
-									return sum > 0 ? sum : 0;
-								}
-							}
-						});
-			}
+	/**
+	 * Asserts that this execution data object is compatible with the given
+	 * parameters. The purpose of this check is to detect a very unlikely class
+	 * id collision.
+	 * 
+	 * @param id
+	 *            other class id, must be the same
+	 * @param name
+	 *            other name, must be equal to this name
+	 * @param other
+	 *            probe data, must be the same type and length as for this data
+	 * @throws IllegalStateException
+	 *             if the given parameters do not match this instance
+	 */
+	public void assertCompatibility(final long id, final String name,
+			final IProbeArray<?> other) throws IllegalStateException {
+		if (this.id != id) {
+			throw new IllegalStateException(format(
+					"Different ids (%016x and %016x).", Long.valueOf(this.id),
+					Long.valueOf(id)));
 		}
+		if (!this.name.equals(name)) {
+			throw new IllegalStateException(format(
+					"Different class names %s and %s for id %016x.", this.name,
+					name, Long.valueOf(id)));
+		}
+		probes.assertCompatibility(other);
 	}
 
 	/**
@@ -206,7 +201,7 @@ public final class ExecutionData {
 					"Different class names %s and %s for id %016x.", this.name,
 					name, Long.valueOf(id)));
 		}
-		if (this.atomicProbes.length() != probecount) {
+		if (probes.length() != probecount) {
 			throw new IllegalStateException(format(
 					"Incompatible execution data for class %s with id %016x.",
 					name, Long.valueOf(id)));

@@ -141,6 +141,22 @@ public abstract class AbstractAgentMojo extends AbstractJacocoMojo {
 	 * @parameter property="jacoco.jmx"
 	 */
 	Boolean jmx;
+	/**
+	 * Probe method to use for collecting coverage data. Valid options are:
+	 * <ul>
+	 * <li>exists: This is the long time probe style of JaCoCo. All that is
+	 * collected is the existence of coverage, that is, has an instruction been
+	 * executed at least once.</li>
+	 * <li>count: This probe mode collects a count of the number of times an
+	 * instruction has been executed.</li>
+	 * <li>parallel: This probe mode collects a count of the number of times an
+	 * instruction has been executed, and the number of times an instruction has
+	 * been executed by a thread holding no monitors.</li>
+	 * </ul>
+	 *
+	 * @parameter property="jacoco.probe"
+	 */
+	String probe;
 
 	@Override
 	public void executeMojo() {
@@ -210,6 +226,9 @@ public abstract class AbstractAgentMojo extends AbstractJacocoMojo {
 		}
 		if (jmx != null) {
 			agentOptions.setJmx(jmx.booleanValue());
+		}
+		if (probe != null) {
+			agentOptions.setProbe(probe);
 		}
 		return agentOptions;
 	}

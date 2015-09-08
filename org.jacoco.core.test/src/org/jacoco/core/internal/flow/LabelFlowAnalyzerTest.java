@@ -249,8 +249,8 @@ public class LabelFlowAnalyzerTest {
 		testInsn(RETURN, false);
 		testInsn(ARRAYLENGTH, true);
 		testInsn(ATHROW, false);
-		testInsn(MONITORENTER, true);
-		testInsn(MONITOREXIT, true);
+		testInsn(MONITORENTER, false);
+		testInsn(MONITOREXIT, false);
 	}
 
 	private void testInsn(int opcode, boolean expected) {
