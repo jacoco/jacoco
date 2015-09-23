@@ -22,7 +22,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
-import org.jacoco.core.internal.instr.ProbeMode;
+import org.jacoco.core.data.ProbeMode;
 
 /**
  * Utility to create and parse options for the runtime agent. Options are

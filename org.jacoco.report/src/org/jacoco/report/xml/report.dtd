@@ -69,10 +69,14 @@
   <!ATTLIST line mi CDATA #IMPLIED>
   <!-- number of covered instructions -->
   <!ATTLIST line ci CDATA #IMPLIED>
+  <!-- number of instructions executions -->
+  <!ATTLIST line ei CDATA #IMPLIED>
   <!-- number of missed branches -->
   <!ATTLIST line mb CDATA #IMPLIED>
   <!-- number of covered branches -->
   <!ATTLIST line cb CDATA #IMPLIED>
+  <!-- number of instructions parallel executions -->
+  <!ATTLIST line ep CDATA #IMPLIED>
 
 <!-- coverage data counter for different metrics -->
 <!ELEMENT counter EMPTY>
@@ -82,3 +86,7 @@
   <!ATTLIST counter missed CDATA #REQUIRED>
   <!-- number of covered items -->
   <!ATTLIST counter covered CDATA #REQUIRED>
+  <!-- execution count : only when ProbeMode was set to count or parallelCount -->
+  <!ATTLIST counter executed CDATA #IMPLIED>
+  <!-- parallel execution count : only when ProbeMode was set to parallelCount -->
+  <!ATTLIST counter executedParallel CDATA #IMPLIED>

@@ -19,23 +19,37 @@ import java.io.EOFException;
 import java.io.IOException;
 import java.util.concurrent.atomic.AtomicIntegerArray;
 
+import org.jacoco.core.data.ProbeMode;
 import org.jacoco.core.internal.data.CompactDataInput;
 import org.junit.Test;
 
 public class ProbeArrayServiceTest {
 
 	@Test
-	public void configDefaulkt() {
+	public void configDefault() {
 		ProbeArrayService.reset();
 		ProbeArrayService.configure(null);
 		assertEquals(ProbeMode.exists, ProbeArrayService.getProbeMode());
+		assertEquals(ProbeMode.exists, ProbeArrayService.newProbeArray(3)
+				.getProbeMode());
 	}
 
 	@Test
-	public void configGood() {
+	public void configGoodCount() {
+		ProbeArrayService.reset();
+		ProbeArrayService.configure(ProbeMode.count);
+		assertEquals(ProbeMode.count, ProbeArrayService.getProbeMode());
+		assertEquals(ProbeMode.count, ProbeArrayService.newProbeArray(3)
+				.getProbeMode());
+	}
+
+	@Test
+	public void configGoodParallel() {
 		ProbeArrayService.reset();
 		ProbeArrayService.configure(ProbeMode.parallelcount);
 		assertEquals(ProbeMode.parallelcount, ProbeArrayService.getProbeMode());
+		assertEquals(ProbeMode.parallelcount, ProbeArrayService
+				.newProbeArray(3).getProbeMode());
 	}
 
 	@Test
@@ -177,7 +191,7 @@ public class ProbeArrayServiceTest {
 		assertTrue(result instanceof ProbeIntArray);
 		assertEquals(1, result.length());
 		assertTrue(result.isProbeCovered(0));
-		assertEquals(3, result.getCoverageProbe(0));
+		assertEquals(3, result.getExecutionProbe(0));
 	}
 
 	@Test
@@ -201,8 +215,8 @@ public class ProbeArrayServiceTest {
 		assertTrue(result instanceof ProbeDoubleIntArray);
 		assertEquals(1, result.length());
 		assertTrue(result.isProbeCovered(0));
-		assertEquals(3, result.getCoverageProbe(0));
-		assertEquals(4, result.getParallelCoverageProbe(0));
+		assertEquals(3, result.getExecutionProbe(0));
+		assertEquals(4, result.getParallelExecutionProbe(0));
 	}
 
 	@Test(expected = IOException.class)

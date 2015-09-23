@@ -13,15 +13,15 @@
 /**
  * <p>
  * Empirical-Big-O calculation and analysis. The empirical Big-O information is calculated
- * with an {@linkorg.jacoco.ebigo.analysis.EmpiricalBigOAnalyzer} instance from class files
+ * with an {@link org.jacoco.ebigo.analysis.EmpiricalBigOAnalyzer} instance from class files
  * (target) and
- * {@linkplain org.jacoco.ebigo.analysis.IEmpiricalBigOVisitor execution and big-O data}
+ * {@link org.jacoco.ebigo.analysis.IEmpiricalBigOVisitor execution and big-O data}
  * (actual).
  * </p>
  *
  * <p>
  * The {@link org.jacoco.ebigo.analysis.IEmpiricalBigOVisitor} ends up with the X-axis values
- * detected for the whole sample, and a {@link org.jacoco.core.analysis.IClassEmpiricalBigO} 
+ * detected for the whole sample, and a {@link org.jacoco.ebigo.analysis.IClassEmpiricalBigO} 
  * for each class analyzed that contains the empirical big-O data for the class, and each 
  * method and line in the class. 
  * </p>

@@ -60,7 +60,7 @@ public class ExecFileLoader {
 	}
 
 	/**
-	 * Reads all data from given input stream.
+	 * Reads all data from given file.
 	 * 
 	 * @param file
 	 *            file to read data from

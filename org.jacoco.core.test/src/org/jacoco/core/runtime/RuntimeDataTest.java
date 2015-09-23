@@ -20,10 +20,10 @@ import static org.junit.Assert.assertTrue;
 import java.util.concurrent.Callable;
 import java.util.concurrent.atomic.AtomicIntegerArray;
 
+import org.jacoco.core.data.ProbeMode;
 import org.jacoco.core.internal.instr.IProbeArray;
 import org.jacoco.core.internal.instr.ProbeArrayService;
 import org.jacoco.core.internal.instr.ProbeDoubleIntArray;
-import org.jacoco.core.internal.instr.ProbeMode;
 import org.jacoco.core.test.TargetLoader;
 import org.junit.AfterClass;
 import org.junit.Before;

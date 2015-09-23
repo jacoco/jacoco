@@ -13,6 +13,7 @@ package org.jacoco.core.internal.instr;
 
 import static org.junit.Assert.assertEquals;
 
+import org.jacoco.core.data.ProbeMode;
 import org.jacoco.core.instr.MethodRecorder;
 import org.junit.After;
 import org.junit.Before;

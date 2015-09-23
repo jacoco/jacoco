@@ -111,5 +111,4 @@ public abstract class AbstractJacocoMojo extends AbstractMojo {
 	protected List<String> getExcludes() {
 		return excludes;
 	}
-
 }

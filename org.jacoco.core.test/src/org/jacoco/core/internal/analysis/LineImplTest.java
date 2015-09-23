@@ -22,6 +22,7 @@ import org.junit.Test;
  * Unit tests for {@link LineImplTest}.
  */
 public class LineImplTest {
+	private static final double DELTA = 0.00000001D;
 
 	private LineImpl line;
 
@@ -34,23 +35,24 @@ public class LineImplTest {
 	public void testEMPTY() {
 		assertEquals(CounterImpl.COUNTER_0_0, line.getInstructionCounter());
 		assertEquals(CounterImpl.COUNTER_0_0, line.getBranchCounter());
+		assertEquals(0.0, line.getParallelPercent(), DELTA);
 		assertEquals(ICounter.EMPTY, line.getStatus());
 	}
 
 	@Test
 	public void testIncrement1() {
-		line = line.increment(CounterImpl.getInstance(1, 2, 4),
-				CounterImpl.getInstance(3, 4, 6));
-		assertEquals(CounterImpl.getInstance(1, 2, 4),
+		line = line.increment(CounterImpl.getInstance(1, 2, 6),
+				CounterImpl.getInstance(3, 4, 4));
+		assertEquals(CounterImpl.getInstance(1, 2, 6),
 				line.getInstructionCounter());
-		assertEquals(CounterImpl.getInstance(3, 4, 6), line.getBranchCounter());
+		assertEquals(CounterImpl.getInstance(3, 4, 4), line.getBranchCounter());
 	}
 
 	@Test
 	public void testIncrement2() {
-		line = line.increment(CounterImpl.getInstance(1, 2, 2),
+		line = line.increment(CounterImpl.getInstance(1, 2, 8002),
 				CounterImpl.getInstance(3, 4000, 4001));
-		assertEquals(CounterImpl.getInstance(1, 2, 2),
+		assertEquals(CounterImpl.getInstance(1, 2, 8002),
 				line.getInstructionCounter());
 		assertEquals(CounterImpl.getInstance(3, 4000, 4001),
 				line.getBranchCounter());
@@ -126,6 +128,28 @@ public class LineImplTest {
 		line = line.increment(CounterImpl.getInstance(0, 1, 3),
 				CounterImpl.getInstance(1, 1, 3));
 		assertEquals(ICounter.PARTLY_COVERED, line.getStatus());
+	}
+
+	@Test
+	public void testParallelPercent1() {
+		line = line.increment(CounterImpl.getInstance(1, 2, 0),
+				CounterImpl.getInstance(3, 4, 4));
+		assertEquals(0, line.getParallelPercent(), DELTA);
+	}
+
+	@Test
+	public void testParallelPercent2() {
+		line = line.increment(CounterImpl.getInstance(1, 2, 6),
+				CounterImpl.getInstance(3, 4, 0));
+		assertEquals(0, line.getParallelPercent(), DELTA);
+	}
+
+	@Test
+	public void testParallelPercent3() {
+		line = line.increment(CounterImpl.getInstance(1, 2, 6),
+				CounterImpl.getInstance(3, 4, 4));
+		assertEquals((double) 400 / (double) 6, line.getParallelPercent(),
+				DELTA);
 	}
 
 	@Test

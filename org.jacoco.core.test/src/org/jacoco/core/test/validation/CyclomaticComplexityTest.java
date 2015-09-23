@@ -14,10 +14,12 @@ package org.jacoco.core.test.validation;
 import static org.jacoco.core.test.validation.targets.Stubs.nop;
 import static org.junit.Assert.assertEquals;
 
+import java.io.IOException;
 import java.util.Collection;
 
 import org.jacoco.core.analysis.Analyzer;
 import org.jacoco.core.analysis.CoverageBuilder;
+import org.jacoco.core.analysis.IAnalyzer;
 import org.jacoco.core.analysis.IClassCoverage;
 import org.jacoco.core.analysis.ICounter;
 import org.jacoco.core.analysis.IMethodCoverage;
@@ -256,14 +258,14 @@ public class CyclomaticComplexityTest {
 		reader = new ClassReader(TargetLoader.getClassData(clazz));
 		final byte[] bytes = new Instrumenter(runtime).instrument(reader);
 		final TargetLoader loader = new TargetLoader();
-		target = (Target) loader.add(clazz, bytes).newInstance();
+		target = loader.add(clazz, bytes).newInstance();
 	}
 
-	private ICounter analyze() {
+	private ICounter analyze() throws IOException {
 		final CoverageBuilder builder = new CoverageBuilder();
 		final ExecutionDataStore store = new ExecutionDataStore();
 		data.collect(store, new SessionInfoStore(), false);
-		final Analyzer analyzer = new Analyzer(store, builder);
+		final IAnalyzer analyzer = new Analyzer(store, builder);
 		analyzer.analyzeClass(reader);
 		final Collection<IClassCoverage> classes = builder.getClasses();
 		assertEquals(1, classes.size(), 0.0);

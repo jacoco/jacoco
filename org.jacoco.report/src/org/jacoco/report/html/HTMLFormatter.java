@@ -19,6 +19,7 @@ import java.util.Locale;
 import org.jacoco.core.analysis.IBundleCoverage;
 import org.jacoco.core.analysis.ICoverageNode.CounterEntity;
 import org.jacoco.core.data.ExecutionData;
+import org.jacoco.core.data.ProbeMode;
 import org.jacoco.core.data.SessionInfo;
 import org.jacoco.report.ILanguageNames;
 import org.jacoco.report.IMultiReportOutput;
@@ -39,7 +40,10 @@ import org.jacoco.report.internal.html.resources.Resources;
 import org.jacoco.report.internal.html.resources.Styles;
 import org.jacoco.report.internal.html.table.BarColumn;
 import org.jacoco.report.internal.html.table.CounterColumn;
+import org.jacoco.report.internal.html.table.EBigOColumn;
 import org.jacoco.report.internal.html.table.LabelColumn;
+import org.jacoco.report.internal.html.table.ParallelPercentageBarColumn;
+import org.jacoco.report.internal.html.table.ParallelPercentageColumn;
 import org.jacoco.report.internal.html.table.PercentageColumn;
 import org.jacoco.report.internal.html.table.Table;
 
@@ -122,28 +126,42 @@ public class HTMLFormatter implements IHTMLReportContext {
 		return resources;
 	}
 
-	public Table getTable() {
+	public Table getTable(final ProbeMode probeMode, final boolean containsEBigO) {
 		if (table == null) {
-			table = createTable();
+			table = createTable(probeMode, containsEBigO);
 		}
 		return table;
 	}
 
-	private Table createTable() {
+	private Table createTable(final ProbeMode probeMode,
+			final boolean containsEBigO) {
 		final Table t = new Table();
 		t.add("Element", null, new LabelColumn(), false);
-		t.add("Missed Instructions", Styles.BAR, new BarColumn(CounterEntity.INSTRUCTION,
-				locale), true);
-		t.add("Cov.", Styles.CTR2,
-				new PercentageColumn(CounterEntity.INSTRUCTION, locale), false);
-		t.add("Missed Branches", Styles.BAR, new BarColumn(CounterEntity.BRANCH, locale),
-				false);
-		t.add("Cov.", Styles.CTR2, new PercentageColumn(CounterEntity.BRANCH, locale),
-				false);
+		t.add("Missed Instructions", Styles.BAR, new BarColumn(
+				CounterEntity.INSTRUCTION, locale), true);
+		t.add("Cov.", Styles.CTR2, new PercentageColumn(
+				CounterEntity.INSTRUCTION, locale), false);
+		t.add("Missed Branches", Styles.BAR, new BarColumn(
+				CounterEntity.BRANCH, locale), false);
+		t.add("Cov.", Styles.CTR2, new PercentageColumn(CounterEntity.BRANCH,
+				locale), false);
 		addMissedTotalColumns(t, "Cxty", CounterEntity.COMPLEXITY);
 		addMissedTotalColumns(t, "Lines", CounterEntity.LINE);
 		addMissedTotalColumns(t, "Methods", CounterEntity.METHOD);
 		addMissedTotalColumns(t, "Classes", CounterEntity.CLASS);
+		switch (probeMode == null ? ProbeMode.exists : probeMode) {
+		case parallelcount:
+			t.add("Parallel Percent", Styles.BAR,
+					new ParallelPercentageBarColumn(locale), false);
+			t.add("Pct.", Styles.CTR2, new ParallelPercentageColumn(locale),
+					false);
+			/* fall thru */
+		case count:
+			if (containsEBigO) {
+				t.add("E-BigO", null, new EBigOColumn(), false);
+			}
+			break;
+		}
 		return t;
 	}
 

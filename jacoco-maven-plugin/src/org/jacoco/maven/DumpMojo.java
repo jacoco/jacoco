@@ -43,8 +43,8 @@ public class DumpMojo extends AbstractJacocoMojo {
 	/**
 	 * Path to the output file for execution data.
 	 * 
-	 * @parameter property="jacoco.destFile"
-	 *            default-value="${project.build.directory}/jacoco.exec"
+	 * @parameter property="jacoco.destFile "default-value=
+	 *            "${project.build.directory}/jacoco.exec"
 	 */
 	private File destFile;
 

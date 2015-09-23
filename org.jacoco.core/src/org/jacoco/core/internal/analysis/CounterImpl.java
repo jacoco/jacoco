@@ -28,7 +28,7 @@ public abstract class CounterImpl implements ICounter {
 		for (int i = 0; i <= SINGLETON_LIMIT; i++) {
 			SINGLETONS[i] = new CounterImpl[SINGLETON_LIMIT + 1];
 			for (int j = 0; j <= SINGLETON_LIMIT; j++) {
-				SINGLETONS[i][j] = new Fix(i, j, j);
+				SINGLETONS[i][j] = new Fix(i, j, 0);
 			}
 		}
 	}
@@ -90,7 +90,7 @@ public abstract class CounterImpl implements ICounter {
 	public static CounterImpl getInstance(final int missed, final int covered,
 			final int executions) {
 		if (missed <= SINGLETON_LIMIT && covered <= SINGLETON_LIMIT
-				&& executions == covered) {
+				&& executions == 0) {
 			return SINGLETONS[missed][covered];
 		} else {
 			return new Var(missed, covered, executions);

@@ -20,7 +20,11 @@ import java.util.Map;
  * @author Omer Azmon
  */
 public class WorkloadAttributeMapBuilder {
-	private Map<String, Integer> attributeMap = new HashMap<String, Integer>();
+	/**
+	 * The attribute that is used when no other is specified, but on is required
+	 */
+	public static final String DEFAULT_ATTRIBUTE = "DEFAULT";
+	private final Map<String, Integer> attributeMap = new HashMap<String, Integer>();
 
 	/**
 	 * Create a builder instance.
@@ -28,7 +32,22 @@ public class WorkloadAttributeMapBuilder {
 	 * @return this builder
 	 */
 	public static WorkloadAttributeMapBuilder create() {
-		WorkloadAttributeMapBuilder builder = new WorkloadAttributeMapBuilder();
+		final WorkloadAttributeMapBuilder builder = new WorkloadAttributeMapBuilder();
+		return builder;
+	}
+
+	/**
+	 * Create a builder instance and invoke the <code>add</code> method on the
+	 * builder with the default attribute.
+	 * 
+	 * @param value
+	 *            the value of the attribute
+	 * @return this builder
+	 */
+	public static WorkloadAttributeMapBuilder create(
+			final int value) {
+		final WorkloadAttributeMapBuilder builder = new WorkloadAttributeMapBuilder();
+		builder.add(DEFAULT_ATTRIBUTE, value);
 		return builder;
 	}
 
@@ -44,7 +63,7 @@ public class WorkloadAttributeMapBuilder {
 	 */
 	public static WorkloadAttributeMapBuilder create(final String attribute,
 			final int value) {
-		WorkloadAttributeMapBuilder builder = new WorkloadAttributeMapBuilder();
+		final WorkloadAttributeMapBuilder builder = new WorkloadAttributeMapBuilder();
 		builder.add(attribute, value);
 		return builder;
 	}

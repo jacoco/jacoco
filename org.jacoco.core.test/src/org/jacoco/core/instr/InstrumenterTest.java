@@ -35,9 +35,9 @@ import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
 
 import org.jacoco.core.analysis.AnalyzerTest;
+import org.jacoco.core.data.ProbeMode;
 import org.jacoco.core.internal.instr.ProbeArrayService;
 import org.jacoco.core.internal.instr.ProbeDoubleIntArray;
-import org.jacoco.core.internal.instr.ProbeMode;
 import org.jacoco.core.runtime.RuntimeData;
 import org.jacoco.core.runtime.SystemPropertiesRuntime;
 import org.jacoco.core.test.TargetLoader;

@@ -19,6 +19,7 @@ import java.util.concurrent.atomic.AtomicIntegerArray;
 import java.util.function.IntBinaryOperator;
 
 import org.jacoco.core.JaCoCo;
+import org.jacoco.core.data.ProbeMode;
 import org.jacoco.core.internal.data.CompactDataInput;
 import org.jacoco.core.internal.data.CompactDataOutput;
 import org.jacoco.core.runtime.IExecutionDataAccessorGenerator;
@@ -40,13 +41,17 @@ public final class ProbeDoubleIntArray implements
 
 	// NOTE!!! THIS MUST BE DONE THIS WAY AS THE AGENT DOES A REWRITE OF ITS
 	// OBJECTS INTO A SAFE SPACE
-	private static final String DATAFIELD_CLASS = ProbeDoubleIntArray.class
-			.getName().replace('.', '/');
+	private static final String DATAFIELD_CLASS = JaCoCo.RUNTIMEPACKAGE
+			.replace('.', '/') + "/core/internal/instr/ProbeDoubleIntArray";
 	private static final String DATAFIELD_DESC = "L" + DATAFIELD_CLASS + ";";
 	private static final String INITMETHOD_DESC = "()" + DATAFIELD_DESC;
 
 	public byte getTypeId() {
 		return PROBE_TYPE_ID;
+	}
+
+	public ProbeMode getProbeMode() {
+		return ProbeMode.parallelcount;
 	}
 
 	public String getDatafieldClass() {
@@ -204,6 +209,20 @@ public final class ProbeDoubleIntArray implements
 		return new ProbeDoubleIntArray(size);
 	}
 
+	public ProbeDoubleIntArray copy() {
+		final AtomicIntegerArray newProbes = new AtomicIntegerArray(
+				probes.length());
+		for (int ix = 0; ix < probes.length(); ix++) {
+			newProbes.set(ix, probes.get(ix));
+		}
+		final AtomicIntegerArray newParallelProbes = new AtomicIntegerArray(
+				parallelProbes.length());
+		for (int ix = 0; ix < parallelProbes.length(); ix++) {
+			newParallelProbes.set(ix, parallelProbes.get(ix));
+		}
+		return new ProbeDoubleIntArray(newProbes, newParallelProbes);
+	}
+
 	public int length() {
 		return probes.length();
 	}
@@ -232,11 +251,11 @@ public final class ProbeDoubleIntArray implements
 		return probes.get(index) > 0;
 	}
 
-	public int getCoverageProbe(final int index) {
+	public int getExecutionProbe(final int index) {
 		return probes.get(index);
 	}
 
-	public int getParallelCoverageProbe(final int index) {
+	public int getParallelExecutionProbe(final int index) {
 		return parallelProbes.get(index);
 	}
 
@@ -306,15 +325,15 @@ public final class ProbeDoubleIntArray implements
 		final ProbeDoubleIntArray that = (ProbeDoubleIntArray) obj;
 		for (int ix = 0; ix < length(); ix++) {
 			{
-				final int thisElement = this.getCoverageProbe(ix);
-				final int thatElement = that.getCoverageProbe(ix);
+				final int thisElement = this.getExecutionProbe(ix);
+				final int thatElement = that.getExecutionProbe(ix);
 				if (thisElement != thatElement) {
 					return false;
 				}
 			}
 			{
-				final int thisElement = this.getParallelCoverageProbe(ix);
-				final int thatElement = that.getParallelCoverageProbe(ix);
+				final int thisElement = this.getParallelExecutionProbe(ix);
+				final int thatElement = that.getParallelExecutionProbe(ix);
 				if (thisElement != thatElement) {
 					return false;
 				}
@@ -328,8 +347,8 @@ public final class ProbeDoubleIntArray implements
 		final int[] probes = new int[length()];
 		final int[] parallelProbes = new int[length()];
 		for (int ix = 0; ix < length(); ix++) {
-			probes[ix] = this.getCoverageProbe(ix);
-			parallelProbes[ix] = this.getParallelCoverageProbe(ix);
+			probes[ix] = this.getExecutionProbe(ix);
+			parallelProbes[ix] = this.getParallelExecutionProbe(ix);
 		}
 		return "ProbeDoubleIntArray" + Arrays.toString(probes) + ", "
 				+ Arrays.toString(parallelProbes);

@@ -105,9 +105,6 @@ public final class FitCalculator {
 	 * 
 	 * @param fitTypes
 	 *            the curve types (plural) to fit
-	 * @param name
-	 *            a String to identify this fit in error message. Usually the
-	 *            location in the code that is being fit.
 	 * @param xs
 	 *            the X axis values
 	 * @param ys
@@ -121,7 +118,7 @@ public final class FitCalculator {
 	 *             if fitType, loc, xs, or ys are null; if the number of X's and
 	 *             Y's don't match; there are 3 or less points (X's and Y's)
 	 */
-	public static SortedSet<Fit> calcFitSet(final FitType[] fitTypes, final String name,
+	public static SortedSet<Fit> calcFitSet(final FitType[] fitTypes,
 			final int[] xs, final int[] ys) {
 		SortedFitSet fitSet = new SortedFitSet();
 		for (FitType fitType : fitTypes) {

@@ -18,10 +18,12 @@ import org.jacoco.core.analysis.ICounter;
 import org.jacoco.core.analysis.IMethodCoverage;
 import org.jacoco.core.analysis.ISourceNode;
 import org.jacoco.core.data.IProbes;
+import org.jacoco.core.data.ProbeMode;
 import org.jacoco.core.internal.flow.IFrame;
 import org.jacoco.core.internal.flow.Instruction;
 import org.jacoco.core.internal.flow.LabelInfo;
 import org.jacoco.core.internal.flow.MethodProbesVisitor;
+import org.jacoco.core.internal.instr.ProbeArrayService;
 import org.objectweb.asm.Handle;
 import org.objectweb.asm.Label;
 
@@ -74,7 +76,9 @@ public class MethodAnalyzer extends MethodProbesVisitor {
 			final String signature, final IProbes probes) {
 		super();
 		this.probes = probes;
-		this.coverage = new MethodCoverageImpl(name, desc, signature);
+		final ProbeMode probeMode = probes == null ? ProbeMode.exists : probes
+				.getProbeMode();
+		this.coverage = new MethodCoverageImpl(name, desc, signature, probeMode);
 	}
 
 	/**
@@ -291,7 +295,13 @@ public class MethodAnalyzer extends MethodProbesVisitor {
 	}
 
 	private int getMethodExecutions() {
-		return instructions.isEmpty() ? 0 : instructions.get(0).getExecutions();
+		switch (ProbeArrayService.getProbeMode()) {
+		case exists:
+			return 0;
+		default:
+			return instructions.isEmpty() ? 0 : instructions.get(0)
+					.getExecutions();
+		}
 	}
 
 	@Override
@@ -304,9 +314,9 @@ public class MethodAnalyzer extends MethodProbesVisitor {
 	private void addProbe(final int probeId) {
 		lastInsn.addBranch();
 		if (probes != null && probes.isProbeCovered(probeId)) {
-			lastInsn.addExecutions(probes.getCoverageProbe(probeId));
+			lastInsn.addExecutions(probes.getExecutionProbe(probeId));
 			lastInsn.addParallelExecutions(probes
-					.getParallelCoverageProbe(probeId));
+					.getParallelExecutionProbe(probeId));
 			coveredProbes.add(lastInsn);
 		}
 	}

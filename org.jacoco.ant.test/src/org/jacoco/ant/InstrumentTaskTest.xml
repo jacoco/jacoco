@@ -126,4 +126,23 @@
 		<au:assertFileExists file="${temp.dir}/test.exec" />
 	</target>
 	
+	<target name="testInstrumentAndRunWithParallelProbe">
+		<!-- <jacoco:instrument destdir="${temp.dir}"> -->
+		<jacoco:instrument destdir="${temp.dir}" probe="parallelcount">
+			<fileset dir="${org.jacoco.ant.instrumentTaskTest.classes.dir}" includes="**/*.class"/>
+		</jacoco:instrument>
+		<au:assertLogContains text="Instrumented 15 classes to ${temp.dir} in mode 'parallelcount'"/>
+		<au:assertFileExists file="${temp.dir}/org/jacoco/ant/InstrumentTaskTest.class" />
+
+		<java classname="org.jacoco.ant.TestTarget" failonerror="true" fork="true">
+			<sysproperty key="jacoco-agent.destfile" file="${temp.dir}/test.exec"/>
+			<sysproperty key="jacoco-agent.probe" value="parallelcount"/>
+			<classpath>
+				<pathelement path="${org.jacoco.ant.instrumentTaskTest.agent.file}"/>
+				<pathelement path="${temp.dir}"/>
+			</classpath>
+		</java>
+		<au:assertFileExists file="${temp.dir}/test.exec" />
+	</target>
+	
 </project>

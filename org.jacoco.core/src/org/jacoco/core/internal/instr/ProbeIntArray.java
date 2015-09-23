@@ -18,6 +18,7 @@ import java.util.Arrays;
 import java.util.concurrent.atomic.AtomicIntegerArray;
 import java.util.function.IntBinaryOperator;
 
+import org.jacoco.core.data.ProbeMode;
 import org.jacoco.core.internal.data.CompactDataInput;
 import org.jacoco.core.internal.data.CompactDataOutput;
 import org.jacoco.core.runtime.IExecutionDataAccessorGenerator;
@@ -42,6 +43,10 @@ public final class ProbeIntArray implements IProbeArray<AtomicIntegerArray> {
 
 	public byte getTypeId() {
 		return PROBE_TYPE_ID;
+	}
+
+	public ProbeMode getProbeMode() {
+		return ProbeMode.count;
 	}
 
 	public String getDatafieldClass() {
@@ -196,6 +201,15 @@ public final class ProbeIntArray implements IProbeArray<AtomicIntegerArray> {
 		return new ProbeIntArray((AtomicIntegerArray) object);
 	}
 
+	public ProbeIntArray copy() {
+		final AtomicIntegerArray newProbes = new AtomicIntegerArray(
+				probes.length());
+		for (int ix = 0; ix < probes.length(); ix++) {
+			newProbes.set(ix, probes.get(ix));
+		}
+		return new ProbeIntArray(newProbes);
+	}
+
 	public int length() {
 		return probes.length();
 	}
@@ -218,11 +232,11 @@ public final class ProbeIntArray implements IProbeArray<AtomicIntegerArray> {
 		return probes.get(index) > 0;
 	}
 
-	public int getCoverageProbe(final int index) {
+	public int getExecutionProbe(final int index) {
 		return probes.get(index);
 	}
 
-	public int getParallelCoverageProbe(final int index) {
+	public int getParallelExecutionProbe(final int index) {
 		return 0;
 	}
 
@@ -279,7 +293,7 @@ public final class ProbeIntArray implements IProbeArray<AtomicIntegerArray> {
 		int result = 1;
 		result = prime * result;
 		for (int ix = 0; ix < length(); ix++) {
-			final int element = getCoverageProbe(ix);
+			final int element = getExecutionProbe(ix);
 			final int elementHash = element ^ (element >>> 32);
 			result = prime * result + elementHash;
 		}
@@ -299,8 +313,8 @@ public final class ProbeIntArray implements IProbeArray<AtomicIntegerArray> {
 		}
 		final ProbeIntArray that = (ProbeIntArray) obj;
 		for (int ix = 0; ix < length(); ix++) {
-			final int thisElement = this.getCoverageProbe(ix);
-			final int thatElement = that.getCoverageProbe(ix);
+			final int thisElement = this.getExecutionProbe(ix);
+			final int thatElement = that.getExecutionProbe(ix);
 			if (thisElement != thatElement) {
 				return false;
 			}
@@ -312,7 +326,7 @@ public final class ProbeIntArray implements IProbeArray<AtomicIntegerArray> {
 	public String toString() {
 		final int[] probes = new int[length()];
 		for (int ix = 0; ix < length(); ix++) {
-			probes[ix] = this.getCoverageProbe(ix);
+			probes[ix] = this.getExecutionProbe(ix);
 		}
 		return "ProbeIntArray" + Arrays.toString(probes);
 	}

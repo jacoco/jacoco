@@ -40,7 +40,7 @@ import org.objectweb.asm.ClassVisitor;
  * the execution data for the classes to analyze. The {@link Analyzer} offers
  * several methods to analyze classes from a variety of sources.
  */
-public class Analyzer {
+public class Analyzer implements IAnalyzer {
 
 	private final ExecutionDataStore executionData;
 
@@ -96,28 +96,12 @@ public class Analyzer {
 		return new ClassProbesAdapter(analyzer, false);
 	}
 
-	/**
-	 * Analyzes the class given as a ASM reader.
-	 * 
-	 * @param reader
-	 *            reader with class definitions
-	 */
 	public void analyzeClass(final ClassReader reader) {
 		final ClassVisitor visitor = createAnalyzingVisitor(
 				CRC64.checksum(reader.b), reader.getClassName());
 		reader.accept(visitor, 0);
 	}
 
-	/**
-	 * Analyzes the class definition from a given in-memory buffer.
-	 * 
-	 * @param buffer
-	 *            class definitions
-	 * @param name
-	 *            a name used for exception messages
-	 * @throws IOException
-	 *             if the class can't be analyzed
-	 */
 	public void analyzeClass(final byte[] buffer, final String name)
 			throws IOException {
 		try {
@@ -127,16 +111,6 @@ public class Analyzer {
 		}
 	}
 
-	/**
-	 * Analyzes the class definition from a given input stream.
-	 * 
-	 * @param input
-	 *            stream to read class definition from
-	 * @param name
-	 *            a name used for exception messages
-	 * @throws IOException
-	 *             if the stream can't be read or the class can't be analyzed
-	 */
 	public void analyzeClass(final InputStream input, final String name)
 			throws IOException {
 		try {
@@ -154,20 +128,6 @@ public class Analyzer {
 		return ex;
 	}
 
-	/**
-	 * Analyzes all classes found in the given input stream. The input stream
-	 * may either represent a single class file, a ZIP archive, a Pack200
-	 * archive or a gzip stream that is searched recursively for class files.
-	 * All other content types are ignored.
-	 * 
-	 * @param input
-	 *            input data
-	 * @param name
-	 *            a name used for exception messages
-	 * @return number of class files found
-	 * @throws IOException
-	 *             if the stream can't be read or a class can't be analyzed
-	 */
 	public int analyzeAll(final InputStream input, final String name)
 			throws IOException {
 		final ContentTypeDetector detector = new ContentTypeDetector(input);
@@ -186,17 +146,6 @@ public class Analyzer {
 		}
 	}
 
-	/**
-	 * Analyzes all class files contained in the given file or folder. Class
-	 * files as well as ZIP files are considered. Folders are searched
-	 * recursively.
-	 * 
-	 * @param file
-	 *            file or folder to look for class files
-	 * @return number of class files found
-	 * @throws IOException
-	 *             if the file can't be read or a class can't be analyzed
-	 */
 	public int analyzeAll(final File file) throws IOException {
 		int count = 0;
 		if (file.isDirectory()) {
@@ -214,20 +163,6 @@ public class Analyzer {
 		return count;
 	}
 
-	/**
-	 * Analyzes all classes from the given class path. Directories containing
-	 * class files as well as archive files are considered.
-	 * 
-	 * @param path
-	 *            path definition
-	 * @param basedir
-	 *            optional base directory, if <code>null</code> the current
-	 *            working directory is used as the base for relative path
-	 *            entries
-	 * @return number of class files found
-	 * @throws IOException
-	 *             if a file can't be read or a class can't be analyzed
-	 */
 	public int analyzeAll(final String path, final File basedir)
 			throws IOException {
 		int count = 0;

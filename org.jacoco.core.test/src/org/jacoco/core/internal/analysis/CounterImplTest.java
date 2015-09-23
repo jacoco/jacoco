@@ -67,8 +67,8 @@ public class CounterImplTest {
 
 	@Test
 	public void testFixInstance() {
-		ICounter c1 = CounterImpl.getInstance(30, 30, 30);
-		ICounter c2 = CounterImpl.getInstance(30, 30, 30);
+		ICounter c1 = CounterImpl.getInstance(30, 30, 0);
+		ICounter c2 = CounterImpl.getInstance(30, 30, 0);
 		assertSame(c1, c2);
 	}
 

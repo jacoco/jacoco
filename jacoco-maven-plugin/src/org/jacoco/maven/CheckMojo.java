@@ -21,8 +21,7 @@ import java.util.List;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.jacoco.core.analysis.IBundleCoverage;
 import org.jacoco.core.analysis.ICoverageNode;
-import org.jacoco.core.data.ExecutionDataStore;
-import org.jacoco.core.tools.ExecFileLoader;
+import org.jacoco.core.tools.IFetcherStyleProperties;
 import org.jacoco.report.IReportVisitor;
 import org.jacoco.report.check.IViolationsOutput;
 import org.jacoco.report.check.Limit;
@@ -38,7 +37,8 @@ import org.jacoco.report.check.RulesChecker;
  * @threadSafe
  * @since 0.6.1
  */
-public class CheckMojo extends AbstractJacocoMojo implements IViolationsOutput {
+public class CheckMojo extends AbstractJacocoMojo implements IViolationsOutput,
+		IFetcherStyleProperties {
 
 	private static final String MSG_SKIPPING = "Skipping JaCoCo execution due to missing execution data file:";
 	private static final String CHECK_SUCCESS = "All coverage checks have been met.";
@@ -130,6 +130,20 @@ public class CheckMojo extends AbstractJacocoMojo implements IViolationsOutput {
 	 */
 	private File dataFile;
 
+	/**
+	 * Is E-BigO style analysis enabled. Defaults to 'false'
+	 * 
+	 * @parameter property="jacoco.ebigo" default-value="false"
+	 */
+	private boolean eBigOEnabled;
+
+	/**
+	 * The X-Axis attribute to use for EBigO analysis. Defaults to 'DEFAULT'
+	 * 
+	 * @parameter property="jacoco.ebigoAttribute" default-value="DEFAULT"
+	 */
+	private String eBigOAttribute;
+
 	private boolean violations;
 
 	private boolean canCheckCoverage() {
@@ -192,24 +206,26 @@ public class CheckMojo extends AbstractJacocoMojo implements IViolationsOutput {
 		final BundleCreator creator = new BundleCreator(getProject(),
 				fileFilter, getLog());
 		try {
-			final ExecutionDataStore executionData = loadExecutionData();
-			return creator.createBundle(executionData);
+			return creator.createBundle(MavenCoverageFetcherFactory.newFetcher(this,
+					dataFile));
 		} catch (final IOException e) {
 			throw new MojoExecutionException(
 					"Error while reading code coverage: " + e.getMessage(), e);
 		}
 	}
 
-	private ExecutionDataStore loadExecutionData() throws IOException {
-		final ExecFileLoader loader = new ExecFileLoader();
-		loader.load(dataFile);
-		return loader.getExecutionDataStore();
-	}
-
 	public void onViolation(final ICoverageNode node, final Rule rule,
 			final Limit limit, final String message) {
 		this.getLog().warn(message);
 		violations = true;
+	}
+
+	public String getEBigOAttribute() {
+		return eBigOAttribute;
+	}
+
+	public boolean isEBigOEnabled() {
+		return eBigOEnabled;
 	}
 
 }

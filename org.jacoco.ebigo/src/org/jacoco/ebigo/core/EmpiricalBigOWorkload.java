@@ -11,6 +11,8 @@
  *******************************************************************************/
 package org.jacoco.ebigo.core;
 
+import static org.jacoco.ebigo.internal.util.ValidationUtils.validateNotNull;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
@@ -26,7 +28,6 @@ import org.jacoco.core.data.ExecutionDataWriter;
 import org.jacoco.core.data.SessionInfoStore;
 import org.jacoco.core.runtime.RemoteControlReader;
 import org.jacoco.core.runtime.RemoteControlWriter;
-import static org.jacoco.ebigo.internal.util.ValidationUtils.*;
 
 /**
  * Contains execution information from a single workload applied to the software
@@ -103,20 +104,21 @@ public class EmpiricalBigOWorkload {
 	 * @throws IOException
 	 *             on any failure to write
 	 */
-	public void write(File resultsDir, String localFileName) throws IOException {
-		PrintStream mapPrinter = new PrintStream(new FileOutputStream(new File(
-				resultsDir, localFileName + ".map")));
-		for (Entry<String, Integer> entry : attributeMap.entrySet()) {
+	public void write(final File resultsDir, final String localFileName)
+			throws IOException {
+		final PrintStream mapPrinter = new PrintStream(new FileOutputStream(
+				new File(resultsDir, localFileName + ".map")));
+		for (final Entry<String, Integer> entry : attributeMap.entrySet()) {
 			mapPrinter.print(entry.getKey());
 			mapPrinter.print('=');
 			mapPrinter.println(entry.getValue());
 		}
 		mapPrinter.close();
 
-		FileOutputStream localFileStream = new FileOutputStream(new File(
+		final FileOutputStream localFileStream = new FileOutputStream(new File(
 				resultsDir, localFileName + ".exec"));
 		try {
-			ExecutionDataWriter localWriter = new ExecutionDataWriter(
+			final ExecutionDataWriter localWriter = new ExecutionDataWriter(
 					localFileStream);
 			sessionInfoStore.accept(localWriter);
 			executionDataStore.accept(localWriter);
@@ -130,29 +132,32 @@ public class EmpiricalBigOWorkload {
 	}
 
 	// For read
-	private static WorkloadAttributeMap readattributeMap(File resultsDir,
-			String localFileName) throws IOException {
-		BufferedReader mapReader = new BufferedReader(new FileReader(new File(
-				resultsDir, localFileName + ".map")));
-		WorkloadAttributeMapBuilder builder = WorkloadAttributeMapBuilder
+	private static WorkloadAttributeMap readattributeMap(final File resultsDir,
+			final String localFileName) throws IOException {
+		final BufferedReader mapReader = new BufferedReader(new FileReader(
+				new File(resultsDir, localFileName + ".map")));
+		final WorkloadAttributeMapBuilder builder = WorkloadAttributeMapBuilder
 				.create();
 		try {
 			for (;;) {
 				String line = mapReader.readLine();
-				if (line == null)
+				if (line == null) {
 					break;
+				}
 
 				line = line.trim();
-				if (line.startsWith("#"))
+				if (line.startsWith("#")) {
 					continue;
+				}
 
-				String[] parts = line.split("[=]", 2);
-				if (parts.length != 2)
+				final String[] parts = line.split("[=]", 2);
+				if (parts.length != 2) {
 					continue;
+				}
 
 				try {
-					String key = parts[0].trim();
-					Integer value = Integer.parseInt(parts[1].trim());
+					final String key = parts[0].trim();
+					final Integer value = Integer.parseInt(parts[1].trim());
 					builder.add(key, value);
 				} catch (IllegalArgumentException ex) {
 					throw new IOException("Bad attribute map entry", ex);
@@ -176,15 +181,15 @@ public class EmpiricalBigOWorkload {
 	 * @throws IOException
 	 *             on any failure to read
 	 */
-	public static EmpiricalBigOWorkload read(File resultsDir,
-			String localFileName) throws IOException {
+	public static EmpiricalBigOWorkload read(final File resultsDir,
+			final String localFileName) throws IOException {
 
-		WorkloadAttributeMap attributeMap = readattributeMap(resultsDir,
+		final WorkloadAttributeMap attributeMap = readattributeMap(resultsDir,
 				localFileName);
 
-		ExecutionDataStore executionDataStore = new ExecutionDataStore();
-		SessionInfoStore sessionInfoStore = new SessionInfoStore();
-		FileInputStream localFileStream = new FileInputStream(new File(
+		final ExecutionDataStore executionDataStore = new ExecutionDataStore();
+		final SessionInfoStore sessionInfoStore = new SessionInfoStore();
+		final FileInputStream localFileStream = new FileInputStream(new File(
 				resultsDir, localFileName + ".exec"));
 		final ExecutionDataReader reader = new ExecutionDataReader(
 				localFileStream);
@@ -214,12 +219,13 @@ public class EmpiricalBigOWorkload {
 	 *             on any failure to read
 	 */
 	public static EmpiricalBigOWorkload readRemote(
-			WorkloadAttributeMap attributeMap, RemoteControlWriter writer,
-			RemoteControlReader reader) throws IOException {
+			final WorkloadAttributeMap attributeMap,
+			final RemoteControlWriter writer, final RemoteControlReader reader)
+			throws IOException {
 
-		SessionInfoStore sessionInfoStore = new SessionInfoStore();
+		final SessionInfoStore sessionInfoStore = new SessionInfoStore();
 		reader.setSessionInfoVisitor(sessionInfoStore);
-		ExecutionDataStore executionDataStore = new ExecutionDataStore();
+		final ExecutionDataStore executionDataStore = new ExecutionDataStore();
 		reader.setExecutionDataVisitor(executionDataStore);
 
 		// Send a dump command and read the response:

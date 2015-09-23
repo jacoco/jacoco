@@ -64,6 +64,15 @@ public final class ExecutionData {
 	}
 
 	/**
+	 * Returns a deep copy of this execution data
+	 * 
+	 * @return a deep copy of this execution data
+	 */
+	public ExecutionData deepCopy() {
+		return new ExecutionData(id, name, probes.copy());
+	}
+
+	/**
 	 * Return the unique identifier for this class. The identifier is the CRC64
 	 * checksum of the raw class file definition.
 	 * 

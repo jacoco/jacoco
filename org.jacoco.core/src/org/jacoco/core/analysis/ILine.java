@@ -44,4 +44,12 @@ public interface ILine {
 	 */
 	public int getStatus();
 
+	/**
+	 * Get the percent of instruction executions with no monitor (lock) being
+	 * held by the executing thread. Also known as parallel percent. This value
+	 * is predictive of elastic scalability.
+	 * 
+	 * @return the parallel percent.
+	 */
+	public double getParallelPercent();
 }

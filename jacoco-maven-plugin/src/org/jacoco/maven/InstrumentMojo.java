@@ -23,7 +23,9 @@ import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 import org.codehaus.plexus.util.FileUtils;
 import org.codehaus.plexus.util.IOUtil;
+import org.jacoco.core.data.ProbeMode;
 import org.jacoco.core.instr.Instrumenter;
+import org.jacoco.core.internal.instr.ProbeArrayService;
 import org.jacoco.core.runtime.OfflineInstrumentationAccessGenerator;
 
 /**
@@ -45,18 +47,35 @@ import org.jacoco.core.runtime.OfflineInstrumentationAccessGenerator;
  */
 public class InstrumentMojo extends AbstractJacocoMojo {
 
+	/**
+	 * Probe method to use for collecting coverage data. Valid options are:
+	 * <ul>
+	 * <li>exists: This is the long time probe style of JaCoCo. All that is
+	 * collected is the existence of coverage, that is, has an instruction been
+	 * executed at least once.</li>
+	 * <li>count: This probe mode collects a count of the number of times an
+	 * instruction has been executed.</li>
+	 * <li>parallel: This probe mode collects a count of the number of times an
+	 * instruction has been executed, and the number of times an instruction has
+	 * been executed by a thread holding no monitors.</li>
+	 * </ul>
+	 *
+	 * @parameter property="jacoco.probe" default-value="exists"
+	 */
+	ProbeMode probe;
+
 	@Override
 	public void executeMojo() throws MojoExecutionException,
 			MojoFailureException {
 		final File originalClassesDir = new File(getProject().getBuild()
 				.getDirectory(), "generated-classes/jacoco");
 		originalClassesDir.mkdirs();
-		final File classesDir = new File(
-				getProject().getBuild().getOutputDirectory());
+		final File classesDir = new File(getProject().getBuild()
+				.getOutputDirectory());
 		if (!classesDir.exists()) {
 			getLog().info(
-					"Skipping JaCoCo execution due to missing classes directory:" +
-					classesDir);
+					"Skipping JaCoCo execution due to missing classes directory:"
+							+ classesDir);
 			return;
 		}
 
@@ -69,6 +88,8 @@ public class InstrumentMojo extends AbstractJacocoMojo {
 					"Unable to get list of files to instrument.", e1);
 		}
 
+		ProbeArrayService.reset();
+		ProbeArrayService.configure(this.probe);
 		final Instrumenter instrumenter = new Instrumenter(
 				new OfflineInstrumentationAccessGenerator());
 		for (final String fileName : fileNames) {

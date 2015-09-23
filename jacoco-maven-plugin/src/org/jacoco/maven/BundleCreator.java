@@ -22,11 +22,11 @@ import java.util.List;
 import org.apache.maven.plugin.logging.Log;
 import org.apache.maven.project.MavenProject;
 import org.codehaus.plexus.util.FileUtils;
-import org.jacoco.core.analysis.Analyzer;
 import org.jacoco.core.analysis.CoverageBuilder;
+import org.jacoco.core.analysis.IAnalyzer;
 import org.jacoco.core.analysis.IBundleCoverage;
 import org.jacoco.core.analysis.IClassCoverage;
-import org.jacoco.core.data.ExecutionDataStore;
+import org.jacoco.core.tools.ICoverageFetcherStyle;
 
 /**
  * Creates an IBundleCoverage.
@@ -57,31 +57,27 @@ public final class BundleCreator {
 	/**
 	 * Create an IBundleCoverage for the given ExecutionDataStore.
 	 * 
-	 * @param executionDataStore
-	 *            the execution data.
+	 * @param fetcher
+	 *            the fetch that know how to get the execution data.
 	 * @return the coverage data.
 	 * @throws IOException
 	 *             if class files can't be read
 	 */
-	public IBundleCoverage createBundle(
-			final ExecutionDataStore executionDataStore) throws IOException {
-		final CoverageBuilder builder = new CoverageBuilder();
-		final Analyzer analyzer = new Analyzer(executionDataStore, builder);
+	public IBundleCoverage createBundle(final ICoverageFetcherStyle fetcher)
+			throws IOException {
 		final File classesDir = new File(this.project.getBuild()
 				.getOutputDirectory());
-
 		@SuppressWarnings("unchecked")
 		final List<File> filesToAnalyze = FileUtils.getFiles(classesDir,
 				fileFilter.getIncludes(), fileFilter.getExcludes());
-
+		final CoverageBuilder builder = fetcher.newCoverageBuilder();
+		final IAnalyzer analyzer = fetcher.newAnalyzer(builder);
 		for (final File file : filesToAnalyze) {
 			analyzer.analyzeAll(file);
 		}
-
 		final IBundleCoverage bundle = builder
 				.getBundle(this.project.getName());
 		logBundleInfo(bundle, builder.getNoMatchClasses());
-
 		return bundle;
 	}
 

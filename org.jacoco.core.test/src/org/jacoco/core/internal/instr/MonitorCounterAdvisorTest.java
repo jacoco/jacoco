@@ -17,6 +17,7 @@ import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 import org.jacoco.core.JaCoCo;
+import org.jacoco.core.data.ProbeMode;
 import org.jacoco.core.internal.flow.MethodProbesVisitor;
 import org.junit.After;
 import org.junit.Test;

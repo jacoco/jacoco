@@ -16,6 +16,7 @@ import static java.lang.String.format;
 import java.io.IOException;
 import java.util.Arrays;
 
+import org.jacoco.core.data.ProbeMode;
 import org.jacoco.core.internal.data.CompactDataInput;
 import org.jacoco.core.internal.data.CompactDataOutput;
 import org.jacoco.core.runtime.IExecutionDataAccessorGenerator;
@@ -40,6 +41,10 @@ public final class ProbeBooleanArray implements IProbeArray<boolean[]> {
 
 	public byte getTypeId() {
 		return PROBE_TYPE_ID;
+	}
+
+	public ProbeMode getProbeMode() {
+		return ProbeMode.exists;
 	}
 
 	public String getDatafieldClass() {
@@ -192,6 +197,10 @@ public final class ProbeBooleanArray implements IProbeArray<boolean[]> {
 		return new ProbeBooleanArray((boolean[]) object);
 	}
 
+	public ProbeBooleanArray copy() {
+		return new ProbeBooleanArray(probes.clone());
+	}
+
 	public int length() {
 		return probes.length;
 	}
@@ -212,11 +221,11 @@ public final class ProbeBooleanArray implements IProbeArray<boolean[]> {
 		return probes[index];
 	}
 
-	public int getCoverageProbe(final int index) {
-		return 1;
+	public int getExecutionProbe(final int index) {
+		return 0;
 	}
 
-	public int getParallelCoverageProbe(final int index) {
+	public int getParallelExecutionProbe(final int index) {
 		return 0;
 	}
 

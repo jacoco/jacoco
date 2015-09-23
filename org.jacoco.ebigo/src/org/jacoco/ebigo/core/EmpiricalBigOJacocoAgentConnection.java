@@ -68,9 +68,52 @@ public class EmpiricalBigOJacocoAgentConnection {
 	 */
 	public EmpiricalBigOWorkload fetchWorkloadCoverage(
 			final WorkloadAttributeMap attributeMap) throws IOException {
-		EmpiricalBigOWorkload workload = EmpiricalBigOWorkload.readRemote(
-				attributeMap, writer, reader);
+		final EmpiricalBigOWorkload workload = EmpiricalBigOWorkload
+				.readRemote(attributeMap, writer, reader);
 		return workload;
+	}
+
+	/**
+	 * Collect workload coverage information. The coverage information is since
+	 * the agent has started or the last reset. One should invoke the @{code
+	 * reset} method of this class just before starting a workload to ensure the
+	 * purity of the coverage data. The attribute used is the
+	 * {@code WorkloadAttributeMapBuilder.DEFAULT_ATTRIBUTE}
+	 * 
+	 * @param attributeValue
+	 *            the value of the attribute named
+	 * @return the workload
+	 * @throws IOException
+	 *             on any communication failure
+	 */
+	public EmpiricalBigOWorkload fetchWorkloadCoverage(final int attributeValue)
+			throws IOException {
+		final WorkloadAttributeMap attributeMap = WorkloadAttributeMapBuilder
+				.create(attributeValue).build();
+		return fetchWorkloadCoverage(attributeMap);
+	}
+
+	/**
+	 * Collect workload coverage information. The coverage information is since
+	 * the agent has started or the last reset. One should invoke the @{code
+	 * reset} method of this class just before starting a workload to ensure the
+	 * purity of the coverage data.
+	 * 
+	 * @param attributeName
+	 *            the name of a single X-axis attribute that will be associated
+	 *            with this workload.
+	 * @param attributeValue
+	 *            the value of the attribute named
+	 * @return the workload
+	 * @throws IOException
+	 *             on any communication failure
+	 */
+	public EmpiricalBigOWorkload fetchWorkloadCoverage(
+			final String attributeName, final int attributeValue)
+			throws IOException {
+		final WorkloadAttributeMap attributeMap = WorkloadAttributeMapBuilder
+				.create(attributeName, attributeValue).build();
+		return fetchWorkloadCoverage(attributeMap);
 	}
 
 	/**

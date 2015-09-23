@@ -9,11 +9,15 @@
  *    Omer Azmon - initial API and implementation
  *    
  *******************************************************************************/
-package org.jacoco.core.internal.instr;
+package org.jacoco.core.data;
 
 import java.util.HashMap;
 import java.util.Map;
 
+import org.jacoco.core.internal.instr.IProbeArray;
+import org.jacoco.core.internal.instr.ProbeBooleanArray;
+import org.jacoco.core.internal.instr.ProbeDoubleIntArray;
+import org.jacoco.core.internal.instr.ProbeIntArray;
 import org.jacoco.core.runtime.AgentOptions;
 
 /**
@@ -42,7 +46,7 @@ public enum ProbeMode {
 	 */
 	parallelcount(ProbeDoubleIntArray.class);
 
-	private static Map<Byte, IProbeArray<?>> idMap = makeIdMap();
+	private static final Map<Byte, IProbeArray<?>> idMap = makeIdMap();
 
 	private static Map<Byte, IProbeArray<?>> makeIdMap() {
 		final Map<Byte, IProbeArray<?>> idMap = new HashMap<Byte, IProbeArray<?>>();

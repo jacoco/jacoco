@@ -11,6 +11,8 @@
  *******************************************************************************/
 package org.jacoco.ebigo.fit;
 
+import org.jacoco.core.analysis.EBigOFunction;
+
 /**
  * The curve type to which the fitting is done
  * 
@@ -18,13 +20,17 @@ package org.jacoco.ebigo.fit;
  */
 public enum FitType {
 	// In Preference Order (in case two have same match)
-	Log(true, false), Linear(false, false), PowerLaw(true, true), Exp(false,
-			true);
+	Logarithmic(EBigOFunction.Type.Logarithmic, true, false), //
+	Linear(EBigOFunction.Type.Linear, false, false), //
+	PowerLaw(EBigOFunction.Type.PowerLaw, true, true), //
+	Exponential(EBigOFunction.Type.Exponential, false, true);
 
-	private boolean doLogX;
-	private boolean doLogY;
+	private final EBigOFunction.Type type;
+	private final boolean doLogX;
+	private final boolean doLogY;
 
-	FitType(boolean doLogX, boolean doLogY) {
+	FitType(EBigOFunction.Type type, boolean doLogX, boolean doLogY) {
+		this.type = type;
 		this.doLogX = doLogX;
 		this.doLogY = doLogY;
 	}
@@ -34,7 +40,7 @@ public enum FitType {
 	 * 
 	 * @return <code>true</code> if logarithmic; <code>false</code> if linear.
 	 */
-	public boolean isDoLogX() {
+	public final boolean isDoLogX() {
 		return doLogX;
 	}
 
@@ -43,7 +49,16 @@ public enum FitType {
 	 * 
 	 * @return <code>true</code> if logarithmic; <code>false</code> if linear.
 	 */
-	public boolean isDoLogY() {
+	public final boolean isDoLogY() {
 		return doLogY;
+	}
+
+	/**
+	 * Get the E-Big-O function type associated with this fit.
+	 * 
+	 * @return the E-Big-O function type associated with this fit.
+	 */
+	public final EBigOFunction.Type getType() {
+		return this.type;
 	}
 }

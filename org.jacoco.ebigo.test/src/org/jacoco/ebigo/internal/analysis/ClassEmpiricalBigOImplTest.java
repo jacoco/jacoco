@@ -13,14 +13,13 @@ package org.jacoco.ebigo.internal.analysis;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
 
+import org.jacoco.core.analysis.EBigOFunction;
 import org.jacoco.core.analysis.IClassCoverage;
 import org.jacoco.core.internal.analysis.ClassCoverageImpl;
 import org.jacoco.core.internal.analysis.CounterImpl;
-import org.jacoco.ebigo.fit.Fit;
 import org.jacoco.ebigo.fit.FitType;
 import org.junit.Test;
 
@@ -31,7 +30,6 @@ public class ClassEmpiricalBigOImplTest {
 		IClassCoverage[] ccs = new IClassCoverage[0];
 		ClassEmpiricalBigOImpl instance = new ClassEmpiricalBigOImpl(ccs);
 		assertSame(ccs, instance.getMatchedCoverageClasses());
-		assertNull(instance.getLineFits());
 	}
 
 	@Test(expected = IllegalArgumentException.class)
@@ -48,7 +46,7 @@ public class ClassEmpiricalBigOImplTest {
 		ClassEmpiricalBigOImpl instance = new ClassEmpiricalBigOImpl(ccs);
 		boolean result = instance.analyze(FitType.values(), new int[0]);
 		assertFalse(result);
-		assertEquals(0, instance.getLineFits().length);
+		assertEquals(0, instance.getMatchedCoverageClasses().length);
 	}
 
 	@Test
@@ -64,7 +62,9 @@ public class ClassEmpiricalBigOImplTest {
 		ClassEmpiricalBigOImpl instance = new ClassEmpiricalBigOImpl(ccs);
 		boolean result = instance.analyze(FitType.values(), xValues);
 		assertFalse(result);
-		assertEquals(0, instance.getLineFits().length);
+		IClassCoverage classCoverage = instance.getMatchedCoverageClasses()[0];
+		assertEquals(0,
+				classCoverage.getLastLine() - classCoverage.getFirstLine());
 	}
 
 	@Test
@@ -80,13 +80,16 @@ public class ClassEmpiricalBigOImplTest {
 		ClassEmpiricalBigOImpl instance = new ClassEmpiricalBigOImpl(ccs);
 		boolean result = instance.analyze(FitType.values(), xValues);
 		assertTrue(result);
-		assertEquals(3, instance.getLineFits().length);
-		Fit[] lineFits = instance.getLineFits();
-		assertEquals(FitType.Linear, lineFits[0].type);
-		assertEquals(5, lineFits[0].n);
-		assertEquals(1, lineFits[0].slope, 0.00001);
-		assertEquals(0, lineFits[0].intercept, 0.00001);
-		assertNull(lineFits[2]);
+		IClassCoverage classCoverage = instance.getMatchedCoverageClasses()[0];
+		assertEquals(2,
+				classCoverage.getLastLine() - classCoverage.getFirstLine());
+		final int first = classCoverage.getFirstLine();
+		EBigOFunction eBigOFunction = classCoverage.getLineEBigOFunction(first);
+		assertEquals(EBigOFunction.Type.Linear, eBigOFunction.getType());
+		assertEquals(1, eBigOFunction.getSlope(), 0.00001);
+		assertEquals(0, eBigOFunction.getIntercept(), 0.00001);
+		assertEquals(EBigOFunction.Type.Undefined, classCoverage
+				.getLineEBigOFunction(first + 2).getType());
 	}
 
 	private ClassCoverageImpl makeEmptyClassCoverage(long id, String name,

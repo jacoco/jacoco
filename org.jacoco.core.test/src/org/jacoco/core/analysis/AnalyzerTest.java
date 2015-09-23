@@ -50,7 +50,7 @@ public class AnalyzerTest {
 	@Rule
 	public TemporaryFolder folder = new TemporaryFolder();
 
-	private Analyzer analyzer;
+	private IAnalyzer analyzer;
 
 	private Map<String, IClassCoverage> classes;
 

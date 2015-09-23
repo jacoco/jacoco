@@ -13,6 +13,7 @@ package org.jacoco.ebigo.internal.util;
 
 import static org.junit.Assert.assertEquals;
 
+import java.lang.reflect.Constructor;
 import java.util.Arrays;
 import java.util.Collection;
 
@@ -36,6 +37,15 @@ public class ValidationUtilTest {
 						{ "name", null, "name is null" }, //
 						{ null, null, "null is null" } //
 				});
+	}
+
+	@Test
+	public void testDefaultConstructor() throws Exception {
+		Constructor<ValidationUtils> constructor = ValidationUtils.class
+				.getDeclaredConstructor();
+		constructor.setAccessible(true);
+		constructor.newInstance();
+		// Does not throw is all we test
 	}
 
 	public ValidationUtilTest(final String name, final Object value,

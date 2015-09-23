@@ -25,7 +25,6 @@ import java.util.Random;
 
 import org.jacoco.core.internal.instr.IProbeArray;
 import org.jacoco.core.internal.instr.ProbeArrayService;
-import org.jacoco.core.internal.instr.ProbeMode;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;

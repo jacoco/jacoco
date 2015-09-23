@@ -12,6 +12,7 @@
 package org.jacoco.core.internal.analysis;
 
 import org.jacoco.core.analysis.CoverageNodeImpl;
+import org.jacoco.core.analysis.EBigOFunction;
 import org.jacoco.core.analysis.ICounter;
 import org.jacoco.core.analysis.ILine;
 import org.jacoco.core.analysis.ISourceNode;
@@ -26,6 +27,13 @@ public class SourceNodeImpl extends CoverageNodeImpl implements ISourceNode {
 	/** first line number in {@link #lines} */
 	private int offset;
 
+	private boolean hasEBigO;
+	private EBigOFunction eBigOFunction;
+	private EBigOFunction[] lineEBigOFunctions;
+
+	/** first line number in {@link #lineEBigOFunctions} */
+	private int eBigOOffset;
+
 	/**
 	 * Create a new source node implementation instance.
 	 * 
@@ -38,6 +46,10 @@ public class SourceNodeImpl extends CoverageNodeImpl implements ISourceNode {
 		super(elementType, name);
 		lines = null;
 		offset = UNKNOWN_LINE;
+		hasEBigO = false;
+		eBigOFunction = EBigOFunction.UNDEFINED;
+		lineEBigOFunctions = null;
+		eBigOOffset = UNKNOWN_LINE;
 	}
 
 	/**
@@ -69,6 +81,9 @@ public class SourceNodeImpl extends CoverageNodeImpl implements ISourceNode {
 				lines = newLines;
 			}
 		}
+		if (lineEBigOFunctions != null) {
+			ensureEBigOCapacityInternal();
+		}
 	}
 
 	/**
@@ -87,6 +102,7 @@ public class SourceNodeImpl extends CoverageNodeImpl implements ISourceNode {
 				.getComplexityCounter());
 		methodCounter = methodCounter.increment(child.getMethodCounter());
 		classCounter = classCounter.increment(child.getClassCounter());
+		mergeProbeMode(child);
 		final int firstLine = child.getFirstLine();
 		if (firstLine != UNKNOWN_LINE) {
 			lineCounter = lineCounter.increment(child.getLineCounter());
@@ -158,6 +174,67 @@ public class SourceNodeImpl extends CoverageNodeImpl implements ISourceNode {
 		lines[line - offset] = getLine(line).increment(instructions, branches);
 	}
 
+	/**
+	 * Set the results of an E-Big-O analysis on this node
+	 * 
+	 * @param eBigOFunction
+	 *            the results of an E-Big-O analysis on this noe
+	 */
+	public void setEBigOFunction(final EBigOFunction eBigOFunction) {
+		this.eBigOFunction = eBigOFunction;
+		this.hasEBigO = true;
+		this.containsEBigO = true;
+	}
+
+	/**
+	 * Make sure that the internal buffer can keep E-BigO function lines from
+	 * first to last. While the buffer is also incremented automatically, this
+	 * method allows optimization in case the total range in known in advance.
+	 * 
+	 * @param first
+	 *            first line number or {@link ISourceNode#UNKNOWN_LINE}
+	 * @param last
+	 *            last line number or {@link ISourceNode#UNKNOWN_LINE}
+	 */
+	public void ensureEBigOCapacity(final int first, final int last) {
+		if (first == UNKNOWN_LINE || last == UNKNOWN_LINE) {
+			return;
+		}
+		ensureCapacity(first, last);
+		ensureEBigOCapacityInternal();
+	}
+
+	private void ensureEBigOCapacityInternal() {
+		if (lineEBigOFunctions != null
+				&& lineEBigOFunctions.length == lines.length) {
+			return;
+		}
+
+		final EBigOFunction[] newLineEBigOFunctions = new EBigOFunction[lines.length];
+		if (lineEBigOFunctions != null) {
+			System.arraycopy(lineEBigOFunctions, 0, newLineEBigOFunctions,
+					eBigOOffset - offset, lineEBigOFunctions.length);
+		}
+		eBigOOffset = offset;
+		lineEBigOFunctions = newLineEBigOFunctions;
+	}
+
+	/**
+	 * Set the results of an E-Big-O analysis on a line of this node
+	 * 
+	 * @param lineEBigOFunction
+	 *            the results of an E-Big-O analysis
+	 * @param line
+	 *            the line to set
+	 */
+	public void setLineEBigOFunction(final EBigOFunction lineEBigOFunction,
+			final int line) {
+		ensureEBigOCapacity(line, line);
+		lineEBigOFunctions[line - offset] = lineEBigOFunction;
+		this.hasEBigO = true;
+		this.containsEBigO = true;
+	}
+
 	// === ISourceNode implementation ===
 
 	public int getFirstLine() {
@@ -174,6 +251,23 @@ public class SourceNodeImpl extends CoverageNodeImpl implements ISourceNode {
 		}
 		final LineImpl line = lines[nr - offset];
 		return line == null ? LineImpl.EMPTY : line;
+	}
+
+	public boolean hasEBigO() {
+		return hasEBigO;
+	}
+
+	public EBigOFunction getEBigOFunction() {
+		return eBigOFunction;
+	}
+
+	public EBigOFunction getLineEBigOFunction(final int nr) {
+		if (lineEBigOFunctions == null || nr < getFirstLine()
+				|| (nr - offset) >= lineEBigOFunctions.length) {
+			return EBigOFunction.UNDEFINED;
+		}
+		final EBigOFunction eBigOFunction = lineEBigOFunctions[nr - offset];
+		return eBigOFunction == null ? EBigOFunction.UNDEFINED : eBigOFunction;
 	}
 
 }

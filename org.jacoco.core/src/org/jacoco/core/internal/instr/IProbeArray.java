@@ -141,6 +141,13 @@ public interface IProbeArray<T> extends IProbes {
 	 */
 	public IProbeArray<T> newProbeArray(Object dataObject);
 
+	/**
+	 * Returns a deep copy of the object.
+	 * 
+	 * @return the copy
+	 */
+	public IProbeArray<T> copy();
+
 	// ProbeArray
 	/**
 	 * Increment a probe. The method is used by the byte code to increment a

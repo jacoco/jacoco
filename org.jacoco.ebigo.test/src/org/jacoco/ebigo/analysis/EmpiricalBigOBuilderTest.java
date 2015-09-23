@@ -18,27 +18,32 @@ import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
 
 import org.jacoco.core.analysis.IClassCoverage;
+import org.jacoco.core.analysis.ISourceNode;
+import org.jacoco.core.data.ProbeMode;
 import org.jacoco.core.internal.analysis.ClassCoverageImpl;
+import org.jacoco.core.internal.analysis.CounterImpl;
+import org.jacoco.core.internal.analysis.MethodCoverageImpl;
 import org.jacoco.ebigo.core.EmpiricalBigOWorkloadStore;
+import org.jacoco.ebigo.core.WorkloadAttributeMapBuilder;
 import org.jacoco.ebigo.fit.FitType;
 import org.jacoco.ebigo.internal.analysis.ClassEmpiricalBigOImpl;
 import org.junit.Test;
 
 public class EmpiricalBigOBuilderTest {
 
-	@Test(expected = IllegalArgumentException.class)
-	public void constructor_nullFitType() {
-		new EmpiricalBigOBuilder(null, null);
+	@Test
+	public void constructor_nullFitTypeAndAttribute() {
+		EmpiricalBigOBuilder instance = new EmpiricalBigOBuilder(null, null);
+		assertArrayEquals(FitType.values(), instance.getFitTypes());
+		assertEquals(WorkloadAttributeMapBuilder.DEFAULT_ATTRIBUTE,
+				instance.getAttributeName());
 	}
 
-	@Test(expected = IllegalArgumentException.class)
+	@Test
 	public void constructor_enptyFitType() {
-		new EmpiricalBigOBuilder(new FitType[0], null);
-	}
-
-	@Test(expected = IllegalArgumentException.class)
-	public void constructor_nullAttribute() {
-		new EmpiricalBigOBuilder(FitType.values(), null);
+		EmpiricalBigOBuilder instance = new EmpiricalBigOBuilder(
+				new FitType[0], null);
+		assertArrayEquals(FitType.values(), instance.getFitTypes());
 	}
 
 	@Test
@@ -69,6 +74,7 @@ public class EmpiricalBigOBuilderTest {
 
 	@Test(expected = IllegalArgumentException.class)
 	public void testVisitXAxis_null() {
+
 		EmpiricalBigOBuilder instance = new EmpiricalBigOBuilder(
 				FitType.values(), "ATTRIBUTE");
 
@@ -77,6 +83,7 @@ public class EmpiricalBigOBuilderTest {
 
 	@Test(expected = IllegalStateException.class)
 	public void testVisitXAxisTwice() {
+
 		EmpiricalBigOWorkloadStore store = new EmpiricalBigOWorkloadStore(
 				"ATTRIBUTE");
 		XAxisValues xAxisValues = new XAxisValues(store, "ATTRIBUTE");
@@ -89,6 +96,7 @@ public class EmpiricalBigOBuilderTest {
 
 	@Test
 	public void testVisitEmpiricalBigO_emptyClassList() {
+
 		IClassEmpiricalBigO empiricalBigO = new ClassEmpiricalBigOImpl(
 				new IClassCoverage[0]);
 		EmpiricalBigOBuilder instance = new EmpiricalBigOBuilder(
@@ -105,8 +113,11 @@ public class EmpiricalBigOBuilderTest {
 
 	@Test
 	public void testVisitEmpiricalBigO_hasClassList() {
-		IClassCoverage[] ccs = new IClassCoverage[1];
-		ccs[0] = new ClassCoverageImpl("Sample", 123L, false, "", null, null);
+
+		ClassCoverageImpl cc = new ClassCoverageImpl("Sample", 123L, false, "",
+				null, null);
+		cc.addMethod(createMethod(true));
+		IClassCoverage[] ccs = new IClassCoverage[] { cc };
 		IClassEmpiricalBigO empiricalBigO = new ClassEmpiricalBigOImpl(ccs);
 		EmpiricalBigOBuilder instance = new EmpiricalBigOBuilder(
 				FitType.values(), "ATTRIBUTE");
@@ -122,8 +133,11 @@ public class EmpiricalBigOBuilderTest {
 
 	@Test
 	public void testVisitEmpiricalBigO_addExactDup() {
-		IClassCoverage[] ccs = new IClassCoverage[1];
-		ccs[0] = new ClassCoverageImpl("Sample", 123L, false, "", null, null);
+
+		ClassCoverageImpl cc = new ClassCoverageImpl("Sample", 123L, false, "",
+				null, null);
+		cc.addMethod(createMethod(true));
+		IClassCoverage[] ccs = new IClassCoverage[] { cc };
 		IClassEmpiricalBigO empiricalBigO = new ClassEmpiricalBigOImpl(ccs);
 		EmpiricalBigOBuilder instance = new EmpiricalBigOBuilder(
 				FitType.values(), "ATTRIBUTE");
@@ -138,14 +152,19 @@ public class EmpiricalBigOBuilderTest {
 
 	}
 
-	@Test(expected = IllegalArgumentException.class)
+	@Test(expected = IllegalStateException.class)
 	public void testVisitEmpiricalBigO_addDifferentDup() {
-		IClassCoverage[] ccs1 = new IClassCoverage[1];
-		ccs1[0] = new ClassCoverageImpl("Sample", 123L, false, "", null, null);
+
+		ClassCoverageImpl cc1 = new ClassCoverageImpl("Sample", 123L, false,
+				"", null, null);
+		cc1.addMethod(createMethod(true));
+		IClassCoverage[] ccs1 = new IClassCoverage[] { cc1 };
 		IClassEmpiricalBigO empiricalBigO1 = new ClassEmpiricalBigOImpl(ccs1);
 
-		IClassCoverage[] ccs2 = new IClassCoverage[1];
-		ccs2[0] = new ClassCoverageImpl("Sample", 222L, false, "", null, null);
+		ClassCoverageImpl cc2 = new ClassCoverageImpl("Sample", 222L, false,
+				"", null, null);
+		cc2.addMethod(createMethod(true));
+		IClassCoverage[] ccs2 = new IClassCoverage[] { cc2 };
 		IClassEmpiricalBigO empiricalBigO2 = new ClassEmpiricalBigOImpl(ccs2);
 
 		EmpiricalBigOBuilder instance = new EmpiricalBigOBuilder(
@@ -160,4 +179,15 @@ public class EmpiricalBigOBuilderTest {
 		assertEquals(1, instance.getClasses().size());
 
 	}
+
+	private MethodCoverageImpl createMethod(boolean covered) {
+		final MethodCoverageImpl m = new MethodCoverageImpl("sample", "()V",
+				null, ProbeMode.exists);
+		m.increment(
+				covered ? CounterImpl.COUNTER_0_1 : CounterImpl.COUNTER_1_0,
+				CounterImpl.COUNTER_0_0, ISourceNode.UNKNOWN_LINE);
+		m.incrementMethodCounter(0);
+		return m;
+	}
+
 }

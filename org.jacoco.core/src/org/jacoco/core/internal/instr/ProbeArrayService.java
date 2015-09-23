@@ -13,6 +13,7 @@ package org.jacoco.core.internal.instr;
 
 import java.io.IOException;
 
+import org.jacoco.core.data.ProbeMode;
 import org.jacoco.core.internal.data.CompactDataInput;
 import org.jacoco.core.runtime.IExecutionDataAccessorGenerator;
 import org.objectweb.asm.ClassVisitor;

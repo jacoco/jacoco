@@ -16,6 +16,7 @@ import java.io.IOException;
 import java.io.PrintStream;
 
 import org.jacoco.core.analysis.Analyzer;
+import org.jacoco.core.analysis.IAnalyzer;
 import org.jacoco.core.analysis.IClassCoverage;
 import org.jacoco.core.analysis.ICoverageVisitor;
 import org.jacoco.core.data.ExecutionDataStore;
@@ -27,7 +28,7 @@ import org.jacoco.core.data.ExecutionDataStore;
 public final class ClassInfo implements ICoverageVisitor {
 
 	private final PrintStream out;
-	private final Analyzer analyzer;
+	private final IAnalyzer analyzer;
 
 	/**
 	 * Creates a new example instance printing to the given stream.

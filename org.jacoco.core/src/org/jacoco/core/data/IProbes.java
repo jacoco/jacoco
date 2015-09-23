@@ -19,6 +19,13 @@ package org.jacoco.core.data;
 public interface IProbes {
 
 	/**
+	 * Get the type of this probe
+	 * 
+	 * @return the type of this probe
+	 */
+	public ProbeMode getProbeMode();
+
+	/**
 	 * Returns the number of probes in this object
 	 * 
 	 * @return the number of probes in this object
@@ -33,7 +40,7 @@ public interface IProbes {
 	 * 
 	 * @return {@code true} if it does; Otherwise, {@code false}.
 	 */
-	public boolean isProbeCovered(int index);
+	public boolean isProbeCovered(final int index);
 
 	/**
 	 * Get a coverage count of a probe.
@@ -43,7 +50,7 @@ public interface IProbes {
 	 * 
 	 * @return the coverage count of the probe.
 	 */
-	public int getCoverageProbe(int index);
+	public int getExecutionProbe(final int index);
 
 	/**
 	 * Get a parallel coverage probes.
@@ -53,6 +60,6 @@ public interface IProbes {
 	 * 
 	 * @return the parallel coverage count of the probe.
 	 */
-	public int getParallelCoverageProbe(int index);
+	public int getParallelExecutionProbe(final int index);
 
 }

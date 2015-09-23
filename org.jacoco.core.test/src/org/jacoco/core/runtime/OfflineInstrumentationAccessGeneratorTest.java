@@ -16,12 +16,12 @@ import static org.junit.Assert.assertEquals;
 import java.util.concurrent.atomic.AtomicIntegerArray;
 
 import org.jacoco.core.JaCoCo;
+import org.jacoco.core.data.ProbeMode;
 import org.jacoco.core.instr.MethodRecorder;
 import org.jacoco.core.internal.instr.IProbeArray;
 import org.jacoco.core.internal.instr.InstrSupport;
 import org.jacoco.core.internal.instr.ProbeArrayService;
 import org.jacoco.core.internal.instr.ProbeDoubleIntArray;
-import org.jacoco.core.internal.instr.ProbeMode;
 import org.jacoco.core.test.TargetLoader;
 import org.junit.AfterClass;
 import org.junit.Before;

@@ -13,9 +13,9 @@ package org.jacoco.core.runtime;
 
 import java.util.concurrent.atomic.AtomicIntegerArray;
 
+import org.jacoco.core.data.ProbeMode;
 import org.jacoco.core.internal.instr.ProbeArrayService;
 import org.jacoco.core.internal.instr.ProbeDoubleIntArray;
-import org.jacoco.core.internal.instr.ProbeMode;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 

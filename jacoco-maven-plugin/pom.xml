@@ -74,6 +74,10 @@
     </dependency>
     <dependency>
       <groupId>${project.groupId}</groupId>
+      <artifactId>org.jacoco.ebigo</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>${project.groupId}</groupId>
       <artifactId>org.jacoco.report</artifactId>
     </dependency>
   </dependencies>

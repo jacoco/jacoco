@@ -13,11 +13,13 @@ package org.jacoco.core.data;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotSame;
 import static org.junit.Assert.assertTrue;
 
 import org.jacoco.core.internal.instr.IProbeArray;
 import org.jacoco.core.internal.instr.ProbeArrayService;
-import org.jacoco.core.internal.instr.ProbeMode;
+import org.jacoco.core.internal.instr.ProbeBooleanArray;
+import org.jacoco.core.internal.instr.ProbeIntArray;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -167,6 +169,33 @@ public class ExecutionDataTest {
 			a.assertCompatibility(5, "Example", 3);
 		}
 
+		@Test(expected = IllegalStateException.class)
+		public void testAssertCompatibilityNegative4() {
+			final ExecutionData a = new ExecutionData(5, "Example",
+					createProbes(new int[] { 1 }));
+			a.assertCompatibility(55, "Example", createProbes(new int[] { 1 }));
+		}
+
+		@Test(expected = IllegalStateException.class)
+		public void testAssertCompatibilityNegative5() {
+			final ExecutionData a = new ExecutionData(5, "Example",
+					createProbes(new int[] { 1 }));
+			a.assertCompatibility(5, "Exxxample", createProbes(new int[] { 1 }));
+		}
+
+		@Test(expected = IllegalArgumentException.class)
+		public void testAssertCompatibilityNegative6() {
+			final ExecutionData a = new ExecutionData(5, "Example",
+					createProbes(new int[] { 1 }));
+			IProbeArray<?> probeArray;
+			if (ProbeArrayService.getProbeMode() == ProbeMode.exists) {
+				probeArray = new ProbeIntArray(2);
+			} else {
+				probeArray = new ProbeBooleanArray(2);
+			}
+			a.assertCompatibility(5, "Example", probeArray);
+		}
+
 		@Test
 		public void testToString() {
 			final ExecutionData a = new ExecutionData(Long.MAX_VALUE,
@@ -175,8 +204,19 @@ public class ExecutionDataTest {
 					a.toString());
 		}
 
+		@Test
+		public void testDeepCopy() {
+			final ExecutionData a = new ExecutionData(Long.MAX_VALUE,
+					"Example", createProbes(new int[] { 1 }));
+			final ExecutionData result = a.deepCopy();
+			assertEquals(a.getId(), result.getId());
+			assertEquals(a.getName(), result.getName());
+			assertNotSame(a.getProbes(), result.getProbes());
+			assertEquals(a.getProbes(), result.getProbes());
+		}
+
 		private IProbeArray<?> createProbes(int[] data) {
-			IProbeArray<?> probes = ProbeArrayService
+			final IProbeArray<?> probes = ProbeArrayService
 					.newProbeArray(data.length);
 			for (int i = 0; i < data.length; i++) {
 				for (int j = data[i]; j > 0; j--) {

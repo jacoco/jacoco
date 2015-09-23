@@ -17,6 +17,7 @@ import java.util.Properties;
 
 import org.apache.maven.artifact.Artifact;
 import org.codehaus.plexus.util.StringUtils;
+import org.jacoco.core.data.ProbeMode;
 import org.jacoco.core.runtime.AgentOptions;
 
 /**
@@ -154,9 +155,9 @@ public abstract class AbstractAgentMojo extends AbstractJacocoMojo {
 	 * been executed by a thread holding no monitors.</li>
 	 * </ul>
 	 *
-	 * @parameter property="jacoco.probe"
+	 * @parameter property="jacoco.probe" default-value="exists"
 	 */
-	String probe;
+	ProbeMode probe;
 
 	@Override
 	public void executeMojo() {
@@ -185,7 +186,7 @@ public abstract class AbstractAgentMojo extends AbstractJacocoMojo {
 
 	AgentOptions createAgentOptions() {
 		final AgentOptions agentOptions = new AgentOptions();
-		agentOptions.setDestfile(getDestFile().getAbsolutePath());
+		agentOptions.setDestfile(getDestfile().getAbsolutePath());
 		if (append != null) {
 			agentOptions.setAppend(append.booleanValue());
 		}
@@ -251,9 +252,5 @@ public abstract class AbstractAgentMojo extends AbstractJacocoMojo {
 		return "eclipse-test-plugin".equals(getProject().getPackaging());
 	}
 
-	/**
-	 * @return the destFile
-	 */
-	abstract File getDestFile();
-
+	abstract File getDestfile();
 }

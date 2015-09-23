@@ -17,12 +17,12 @@ import java.util.ArrayList;
 
 import org.jacoco.core.analysis.ILine;
 import org.jacoco.core.analysis.IMethodCoverage;
+import org.jacoco.core.data.ProbeMode;
 import org.jacoco.core.internal.flow.IProbeIdGenerator;
 import org.jacoco.core.internal.flow.LabelFlowAnalyzer;
 import org.jacoco.core.internal.flow.MethodProbesAdapter;
 import org.jacoco.core.internal.instr.IProbeArray;
 import org.jacoco.core.internal.instr.ProbeArrayService;
-import org.jacoco.core.internal.instr.ProbeMode;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
@@ -561,7 +561,7 @@ public class MethodAnalyzerTest implements IProbeIdGenerator {
 		probes.increment(2);
 		runMethodAnalzer();
 		assertEquals(3, nextProbeId);
-		assertEquals(CounterImpl.getInstance(0, 5, 5),
+		assertEquals(CounterImpl.getInstance(0, 5, 0),
 				result.getInstructionCounter());
 
 		assertLine(1001, 0, 3, 3, 0, 0, 0);
@@ -582,8 +582,8 @@ public class MethodAnalyzerTest implements IProbeIdGenerator {
 	// TODO: remove at the end
 	private void assertLine(int nr, int insnMissed, int insnCovered,
 			int branchesMissed, int branchesCovered) {
-		assertLine(nr, insnMissed, insnCovered, insnCovered, branchesMissed,
-				branchesCovered, branchesCovered);
+		assertLine(nr, insnMissed, insnCovered, 0, branchesMissed,
+				branchesCovered, 0);
 	}
 
 	private void assertLine(int nr, int insnMissed, int insnCovered,
@@ -591,10 +591,10 @@ public class MethodAnalyzerTest implements IProbeIdGenerator {
 			int branchesExecs) {
 		final ILine line = result.getLine(nr);
 		assertEquals("Instructions in line " + nr,
-				CounterImpl.getInstance(insnMissed, insnCovered, insnExecs),
+				CounterImpl.getInstance(insnMissed, insnCovered, 0),
 				line.getInstructionCounter());
-		assertEquals("Branches in line " + nr, CounterImpl.getInstance(
-				branchesMissed, branchesCovered, branchesExecs),
+		assertEquals("Branches in line " + nr,
+				CounterImpl.getInstance(branchesMissed, branchesCovered, 0),
 				line.getBranchCounter());
 	}
 }

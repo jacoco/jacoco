@@ -18,6 +18,7 @@ import java.io.StringWriter;
 import java.util.Locale;
 
 import org.jacoco.core.analysis.ICoverageNode.ElementType;
+import org.jacoco.core.data.ProbeMode;
 import org.jacoco.core.internal.analysis.CounterImpl;
 import org.jacoco.core.internal.analysis.SourceNodeImpl;
 import org.jacoco.report.internal.html.HTMLDocument;
@@ -53,7 +54,7 @@ public class SourceHighlighterTest {
 		html = new HTMLDocument(buffer, "UTF-8");
 		html.head().title();
 		parent = html.body();
-		sourceHighlighter = new SourceHighlighter(Locale.US);
+		sourceHighlighter = new SourceHighlighter(Locale.US, ProbeMode.exists);
 	}
 
 	@Test

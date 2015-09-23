@@ -35,7 +35,7 @@ public abstract class LineImpl implements ILine {
 				for (int k = 0; k <= SINGLETON_BRA_LIMIT; k++) {
 					SINGLETONS[i][j][k] = new LineImpl[SINGLETON_BRA_LIMIT + 1];
 					for (int l = 0; l <= SINGLETON_BRA_LIMIT; l++) {
-						SINGLETONS[i][j][k][l] = new Fix(j, i, j, l, k, l);
+						SINGLETONS[i][j][k][l] = new Fix(j, i, 0, l, k, 0);
 					}
 				}
 			}
@@ -125,6 +125,15 @@ public abstract class LineImpl implements ILine {
 
 	public int getStatus() {
 		return instructions.getStatus() | branches.getStatus();
+	}
+
+	public double getParallelPercent() {
+		final int instructionExecutionCount = instructions.getExecutionCount();
+		if (instructionExecutionCount == 0) {
+			return 0D;
+		}
+		final int parallelExecutionCount = branches.getExecutionCount();
+		return 100.0D * parallelExecutionCount / instructionExecutionCount;
 	}
 
 	public ICounter getInstructionCounter() {

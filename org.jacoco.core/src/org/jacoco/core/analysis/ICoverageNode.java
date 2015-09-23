@@ -11,6 +11,8 @@
  *******************************************************************************/
 package org.jacoco.core.analysis;
 
+import org.jacoco.core.data.ProbeMode;
+
 /**
  * Interface for hierarchical coverage data nodes with different coverage
  * counters.
@@ -121,6 +123,32 @@ public interface ICoverageNode {
 	 * @return counter for classes
 	 */
 	public ICounter getClassCounter();
+
+	/**
+	 * Returns the mode of the probe use to create this node
+	 * 
+	 * @return the mode of the probe use to create this node
+	 */
+	public ProbeMode getProbeMode();
+
+	/**
+	 * Get the percent of instruction executions with no monitor (lock) being
+	 * held by the executing thread. Also known as parallel percent. This value
+	 * is predictive of elastic scalability.
+	 * 
+	 * @return the parallel percent, if parallel percent is available to
+	 *         <code>parallelcount</code>. Otherwise, zero is returned.
+	 */
+	public double getParallelPercent();
+
+	/**
+	 * Has any EBigOFunction been set here, on ANY child node or ANY line of any
+	 * child.
+	 * 
+	 * @return {@code true} if any EBigOFunction been set; Otherwise,
+	 *         {@code false}
+	 */
+	public boolean containsEBigO();
 
 	/**
 	 * Generic access to the the counters.

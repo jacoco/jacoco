@@ -39,11 +39,8 @@ public class AgentITMojo extends AbstractAgentMojo {
 	 */
 	private File destFile;
 
-	/**
-	 * @return the destFile
-	 */
 	@Override
-	File getDestFile() {
+	public File getDestfile() {
 		return destFile;
 	}
 

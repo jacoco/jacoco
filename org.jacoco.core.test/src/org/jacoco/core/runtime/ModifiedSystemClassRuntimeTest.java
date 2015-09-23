@@ -25,9 +25,9 @@ import java.lang.reflect.Modifier;
 import java.util.concurrent.atomic.AtomicIntegerArray;
 import java.util.jar.JarFile;
 
+import org.jacoco.core.data.ProbeMode;
 import org.jacoco.core.internal.instr.ProbeArrayService;
 import org.jacoco.core.internal.instr.ProbeDoubleIntArray;
-import org.jacoco.core.internal.instr.ProbeMode;
 import org.jacoco.core.test.TargetLoader;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
