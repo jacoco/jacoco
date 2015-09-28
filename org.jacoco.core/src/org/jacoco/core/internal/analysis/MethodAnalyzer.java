@@ -17,10 +17,13 @@ import java.util.List;
 import org.jacoco.core.analysis.ICounter;
 import org.jacoco.core.analysis.IMethodCoverage;
 import org.jacoco.core.analysis.ISourceNode;
+import org.jacoco.core.data.IProbes;
+import org.jacoco.core.data.ProbeMode;
 import org.jacoco.core.internal.flow.IFrame;
 import org.jacoco.core.internal.flow.Instruction;
 import org.jacoco.core.internal.flow.LabelInfo;
 import org.jacoco.core.internal.flow.MethodProbesVisitor;
+import org.jacoco.core.internal.instr.ProbeArrayService;
 import org.objectweb.asm.Handle;
 import org.objectweb.asm.Label;
 
@@ -30,7 +33,7 @@ import org.objectweb.asm.Label;
  */
 public class MethodAnalyzer extends MethodProbesVisitor {
 
-	private final int[] probes;
+	private final IProbes probes;
 
 	private final MethodCoverageImpl coverage;
 
@@ -70,10 +73,12 @@ public class MethodAnalyzer extends MethodProbesVisitor {
 	 *            <code>null</code> if the class is not executed at all
 	 */
 	public MethodAnalyzer(final String name, final String desc,
-			final String signature, final int[] probes) {
+			final String signature, final IProbes probes) {
 		super();
 		this.probes = probes;
-		this.coverage = new MethodCoverageImpl(name, desc, signature);
+		final ProbeMode probeMode = probes == null ? ProbeMode.exists : probes
+				.getProbeMode();
+		this.coverage = new MethodCoverageImpl(name, desc, signature, probeMode);
 	}
 
 	/**
@@ -259,8 +264,7 @@ public class MethodAnalyzer extends MethodProbesVisitor {
 		}
 	}
 
-	@Override
-	public void visitEnd() {
+	private void endInstructionProcessing() {
 		// Wire jumps:
 		for (final Jump j : jumps) {
 			LabelInfo.getInstruction(j.target).setPredecessor(j.source);
@@ -269,30 +273,50 @@ public class MethodAnalyzer extends MethodProbesVisitor {
 		for (final Instruction p : coveredProbes) {
 			p.setCovered();
 		}
+	}
+
+	private void propogateToLine() {
 		// Report result:
 		coverage.ensureCapacity(firstLine, lastLine);
-		int methodHits = 0;
 		for (final Instruction i : instructions) {
-			final int hits = i.getHits();
-			if (hits > 0) {
-				methodHits = methodHits == 0 ? hits : Math
-						.min(methodHits, hits);
-			}
-			final int total = i.getBranches();
-			final int covered = i.getCoveredBranches();
-			final ICounter instrCounter = covered == 0 ? CounterImpl.COUNTER_1_0
-					: CounterImpl.COUNTER_0_1.increment(0, 0, hits - 1);
-			final ICounter branchCounter = total > 1 ? CounterImpl.getInstance(
-					total - covered, covered, hits) : CounterImpl.COUNTER_0_0;
+			final int totalBranches = i.getBranches();
+			final int coveredBranches = i.getCoveredBranches();
+
+			final ICounter instrCounter = coveredBranches == 0 ? CounterImpl.COUNTER_1_0
+					: CounterImpl.getInstance(0, 1, i.getExecutions());
+
+			final ICounter branchCounter = totalBranches <= 1 ? CounterImpl
+					.getInstance(0, 0, i.getParallelExecutions()) : CounterImpl
+					.getInstance(totalBranches - coveredBranches,
+							coveredBranches, i.getParallelExecutions());
+
 			coverage.increment(instrCounter, branchCounter, i.getLine());
 		}
-		coverage.incrementMethodCounter(methodHits);
+	}
+
+	private int getMethodExecutions() {
+		switch (ProbeArrayService.getProbeMode()) {
+		case exists:
+			return 0;
+		default:
+			return instructions.isEmpty() ? 0 : instructions.get(0)
+					.getExecutions();
+		}
+	}
+
+	@Override
+	public void visitEnd() {
+		endInstructionProcessing();
+		propogateToLine();
+		coverage.incrementMethodCounter(getMethodExecutions());
 	}
 
 	private void addProbe(final int probeId) {
 		lastInsn.addBranch();
-		if (probes != null && probes[probeId] != 0) {
-			lastInsn.mergeHits(probes[probeId]);
+		if (probes != null && probes.isProbeCovered(probeId)) {
+			lastInsn.addExecutions(probes.getExecutionProbe(probeId));
+			lastInsn.addParallelExecutions(probes
+					.getParallelExecutionProbe(probeId));
 			coveredProbes.add(lastInsn);
 		}
 	}

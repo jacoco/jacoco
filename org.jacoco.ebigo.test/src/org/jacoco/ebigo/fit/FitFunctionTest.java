@@ -34,31 +34,32 @@ public class FitFunctionTest {
 	@Parameters
 	public static Collection<?> data() {
 		return Arrays.asList(new Object[][] { //
-				{ FitType.Log, 0, 0, "0.00", "0" }, //
-						{ FitType.Log, 1, 0, "ln(x)", "ln(n)" }, //
-						{ FitType.Log, 2, 0, "2.00 ln(x)", "ln(n)" }, //
-						{ FitType.Log, 0, 1, "1.00", "1" }, //
-						{ FitType.Log, 1, 1, "1.00 + ln(x)", "ln(n)" }, //
-						{ FitType.Log, 2, 1, "1.00 + 2.00 ln(x)", "ln(n)" }, //
-						{ FitType.Linear, 0, 0, "0.00", "0" }, //
+						{ FitType.Logarithmic, 0, 0, "0.00", "1" }, //
+						{ FitType.Logarithmic, 1, 0, "ln(x)", "ln(n)" }, //
+						{ FitType.Logarithmic, 2, 0, "2.00 ln(x)", "ln(n)" }, //
+						{ FitType.Logarithmic, 0, 1, "1.00", "1" }, //
+						{ FitType.Logarithmic, 1, 1, "1.00 + ln(x)", "ln(n)" }, //
+						{ FitType.Logarithmic, 2, 1, "1.00 + 2.00 ln(x)",
+								"ln(n)" }, //
+						{ FitType.Linear, 0, 0, "0.00", "1" }, //
 						{ FitType.Linear, 1, 0, "x", "n" }, //
 						{ FitType.Linear, 2, 0, "2.00x", "n" }, //
 						{ FitType.Linear, 0, 1, "1.00", "1" }, //
 						{ FitType.Linear, 1, 1, "1.00 + x", "n" }, //
 						{ FitType.Linear, 2, 1, "1.00 + 2.00x", "n" }, //
-						{ FitType.PowerLaw, 0, 0, "0.00", "0" }, //
+						{ FitType.PowerLaw, 0, 0, "0.00", "1" }, //
 						{ FitType.PowerLaw, 0, 1, "1.00", "1" }, //
 						{ FitType.PowerLaw, 1, 1, "x", "n" }, //
 						{ FitType.PowerLaw, 1, 2, "2.00x", "n" }, //
 						{ FitType.PowerLaw, 2, 1, "x^2.00", "n^2.00" }, //
 						{ FitType.PowerLaw, 2, 2, "2.00x^2.00", "n^2.00" }, //
-						{ FitType.Exp, 0, 0, "0.00", "0" }, //
-						{ FitType.Exp, 0, 1, "1.00", "1" }, //
-						{ FitType.Exp, 0, 2, "2.00", "1" }, //
-						{ FitType.Exp, 1, 1, "e^x", "e^n" }, //
-						{ FitType.Exp, 1, 2, "2.00e^x", "e^n" }, //
-						{ FitType.Exp, 2, 1, "e^(2.00x)", "e^n" }, //
-						{ FitType.Exp, 2, 2, "2.00e^(2.00x)", "e^n" }, //
+						{ FitType.Exponential, 0, 0, "0.00", "1" }, //
+						{ FitType.Exponential, 0, 1, "1.00", "1" }, //
+						{ FitType.Exponential, 0, 2, "2.00", "1" }, //
+						{ FitType.Exponential, 1, 1, "e^x", "e^n" }, //
+						{ FitType.Exponential, 1, 2, "2.00e^x", "e^n" }, //
+						{ FitType.Exponential, 2, 1, "e^(2.00x)", "e^n" }, //
+						{ FitType.Exponential, 2, 2, "2.00e^(2.00x)", "e^n" }, //
 				});
 	}
 

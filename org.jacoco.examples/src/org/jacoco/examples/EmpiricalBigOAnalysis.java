@@ -20,32 +20,38 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.UnknownHostException;
 
-import org.jacoco.ebigo.analysis.EmpiricalBigOAnalyzer;
-import org.jacoco.ebigo.analysis.EmpiricalBigOBuilder;
 import org.jacoco.ebigo.core.EmpiricalBigOJacocoAgentConnection;
-import org.jacoco.ebigo.core.EmpiricalBigOWorkload;
 import org.jacoco.ebigo.core.EmpiricalBigOWorkloadStore;
-import org.jacoco.ebigo.core.WorkloadAttributeMap;
-import org.jacoco.ebigo.core.WorkloadAttributeMapBuilder;
-import org.jacoco.ebigo.fit.FitType;
 
 /**
  * This example performs an Empirical Big-O analysis. It sets up a client
  * connection to a JaCoCo agent installed in some web application server. It
  * runs 5 samples measuring the coverage of each independently. The samples are
  * of 1 to 5, respectively. The results are then analyzed and dumped.
+ * <p>
+ * The example does not include the service under test, nor show the instrument
+ * instrumentation by the agent.
+ * <p>
+ * The agent 'probemode' attribute must be set to 'count' or 'parallelcount' for
+ * the results to be available.
+ *
  * 
  * @author Omer Azmon
  */
 public class EmpiricalBigOAnalysis {
 	private static final String JACOCO_HOST = "127.0.0.1";
 	private static final int JACOCO_PORT = 8081;
-	private static final String SERVLET_URL = "http://localhost/jacoco-ebigo-test-service/buggy";
-	private static final File RESULTS_DIR = new File(
-			"target/jacoco-ebigo-results/raw");
+	private static final String SERVLET_URL = "http://localhost/somepath";
+	private static final File SOURCE_DIR = new File("src/main/java");
+	private static final File CLASS_DIR = new File("target/classes");
+	private static final File OUTPUT_DIR = new File("target/jacoco/report");
+	private static final String BUNDLE_NAME = "EmpiricalBigO Example";
 	private static final String X_AXIS_ATTRIUBTE = "REQUESTS";
 
+	/** The connection to the remote Jacoco Agent */
 	private EmpiricalBigOJacocoAgentConnection connection;
+
+	/** Where we keep the results of each work load we run */
 	private EmpiricalBigOWorkloadStore workloadStore;
 
 	/**
@@ -61,8 +67,6 @@ public class EmpiricalBigOAnalysis {
 	public void initEmpiricalBigO() throws UnknownHostException, IOException {
 		connection = new EmpiricalBigOJacocoAgentConnection(JACOCO_HOST,
 				JACOCO_PORT);
-		// Setup results directory
-		RESULTS_DIR.mkdirs();
 		workloadStore = new EmpiricalBigOWorkloadStore(X_AXIS_ATTRIUBTE);
 	}
 
@@ -143,17 +147,8 @@ public class EmpiricalBigOAnalysis {
 	 *             on any failure
 	 */
 	public void fetchWorkloadCoverage(final int sampleSize) throws IOException {
-		final WorkloadAttributeMap attributeMap = WorkloadAttributeMapBuilder
-				.create(X_AXIS_ATTRIUBTE, sampleSize).build();
-
-		final EmpiricalBigOWorkload workload = connection
-				.fetchWorkloadCoverage(attributeMap);
-
-		final String fileName = "workload-" + X_AXIS_ATTRIUBTE.toLowerCase()
-				+ "-" + sampleSize;
-		workload.write(RESULTS_DIR, fileName);
-
-		workloadStore.put(attributeMap, workload);
+		workloadStore.put(connection.fetchWorkloadCoverage(X_AXIS_ATTRIUBTE,
+				sampleSize));
 	}
 
 	/**
@@ -164,15 +159,9 @@ public class EmpiricalBigOAnalysis {
 	 *             on any failures
 	 */
 	public void analyzeAndDumpResults() throws IOException {
-
-		final File classfileRootDirectory = new File("projectbase/classes");
-		final EmpiricalBigOAnalyzer analyzer = new EmpiricalBigOAnalyzer(
-				workloadStore, classfileRootDirectory);
-		final EmpiricalBigOBuilder visitor = new EmpiricalBigOBuilder(
-				FitType.values(), X_AXIS_ATTRIUBTE);
-		analyzer.analyzeAll(visitor);
-
-		EmpiricalBigOAnalysisPrinter.dump(visitor);
+		final EmpiricalBigOReportGenerator reportGenerator = new EmpiricalBigOReportGenerator(
+				SOURCE_DIR, CLASS_DIR, OUTPUT_DIR);
+		reportGenerator.generateReports(workloadStore, BUNDLE_NAME);
 	}
 
 	/**

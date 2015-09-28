@@ -17,11 +17,14 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
+import org.jacoco.core.analysis.EBigOFunction;
+import org.jacoco.core.analysis.EBigOFunction.Type;
 import org.jacoco.core.analysis.IClassCoverage;
 import org.jacoco.core.analysis.IMethodCoverage;
 import org.jacoco.core.analysis.IPackageCoverage;
 import org.jacoco.core.analysis.ISourceFileCoverage;
 import org.jacoco.core.data.ExecutionData;
+import org.jacoco.core.data.ProbeMode;
 import org.jacoco.core.data.SessionInfo;
 import org.jacoco.core.internal.analysis.BundleCoverageImpl;
 import org.jacoco.core.internal.analysis.ClassCoverageImpl;
@@ -65,11 +68,11 @@ public class ReportStructureTestDriver {
 
 	public ReportStructureTestDriver() {
 		final MethodCoverageImpl m = new MethodCoverageImpl("fooMethod", "()V",
-				null);
-		m.increment(CounterImpl.getInstance(3, 5, 5), CounterImpl.COUNTER_0_0,
-				1);
+				null, ProbeMode.parallelcount);
 		m.increment(CounterImpl.getInstance(3, 5, 5),
-				CounterImpl.getInstance(1, 2, 2), 2);
+				CounterImpl.getInstance(0, 0, 5), 1);
+		m.increment(CounterImpl.getInstance(3, 5, 5),
+				CounterImpl.getInstance(1, 2, 3), 2);
 		m.increment(CounterImpl.getInstance(4, 5, 5), CounterImpl.COUNTER_0_0,
 				3);
 		m.incrementMethodCounter(1);
@@ -80,6 +83,12 @@ public class ReportStructureTestDriver {
 				"java/lang/Object", new String[0]);
 		classCoverageImpl.setSourceFileName("FooClass.java");
 		classCoverageImpl.addMethod(methodCoverage);
+		classCoverageImpl.setLineEBigOFunction(new EBigOFunction(Type.Linear,
+				2, 3), 1);
+		classCoverageImpl.setLineEBigOFunction(new EBigOFunction(Type.PowerLaw,
+				2, 3), 2);
+		classCoverageImpl.setLineEBigOFunction(new EBigOFunction(
+				Type.Exponential, 2, 3), 3);
 		classCoverage = classCoverageImpl;
 
 		final SourceFileCoverageImpl sourceFileCoverageImpl = new SourceFileCoverageImpl(

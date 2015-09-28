@@ -16,14 +16,13 @@ import static org.junit.Assert.assertSame;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.atomic.AtomicIntegerArray;
 
 import org.jacoco.core.data.ExecutionData;
 import org.jacoco.core.data.IExecutionDataVisitor;
 import org.jacoco.core.data.ISessionInfoVisitor;
 import org.jacoco.core.data.SessionInfo;
 
-class TestStorage implements IExecutionDataVisitor, ISessionInfoVisitor {
+class TestStorage<T> implements IExecutionDataVisitor, ISessionInfoVisitor {
 
 	private final Map<Long, ExecutionData> data = new HashMap<Long, ExecutionData>();
 
@@ -41,8 +40,8 @@ class TestStorage implements IExecutionDataVisitor, ISessionInfoVisitor {
 		return info;
 	}
 
-	public void assertData(long classId, AtomicIntegerArray is) {
-		assertSame(is, getData(classId).getAtomicProbes());
+	public void assertData(long classId, T is) {
+		assertSame(is, getData(classId).getProbes().getProbesObject());
 	}
 
 	// === ICoverageDataVisitor ===

@@ -15,9 +15,13 @@ import static org.jacoco.ebigo.internal.util.ValidationUtils.validateNotNull;
 
 import java.util.SortedSet;
 
+import org.jacoco.core.analysis.EBigOFunction;
 import org.jacoco.core.analysis.IClassCoverage;
-import org.jacoco.core.analysis.ILine;
+import org.jacoco.core.analysis.IMethodCoverage;
 import org.jacoco.core.analysis.ISourceNode;
+import org.jacoco.core.internal.analysis.ClassCoverageImpl;
+import org.jacoco.core.internal.analysis.MethodCoverageImpl;
+import org.jacoco.core.internal.analysis.SourceNodeImpl;
 import org.jacoco.ebigo.analysis.IClassEmpiricalBigO;
 import org.jacoco.ebigo.fit.Fit;
 import org.jacoco.ebigo.fit.FitCalculator;
@@ -29,17 +33,16 @@ import org.jacoco.ebigo.fit.FitType;
  * @author Omer Azmon
  */
 public class ClassEmpiricalBigOImpl implements IClassEmpiricalBigO {
-	private static final Fit[] EMPTY_FIT_ARRAY = new Fit[0];
 
-	private static void validateClassCoverage(IClassCoverage[] ccs) {
+	private static void validateClassCoverage(final IClassCoverage[] ccs) {
 		validateNotNull("ccs", ccs);
 
 		if (ccs.length < 1) {
 			return;
 		}
 
-		int firstLine = ccs[0].getFirstLine();
-		int lastLine = ccs[0].getLastLine();
+		final int firstLine = ccs[0].getFirstLine();
+		final int lastLine = ccs[0].getLastLine();
 
 		// handle line count mismatch
 		for (int idx = 1; idx < ccs.length; idx++) {
@@ -53,7 +56,6 @@ public class ClassEmpiricalBigOImpl implements IClassEmpiricalBigO {
 	}
 
 	private final IClassCoverage[] ccs;
-	private Fit[] lineFits;
 
 	/**
 	 * Construct
@@ -62,10 +64,9 @@ public class ClassEmpiricalBigOImpl implements IClassEmpiricalBigO {
 	 *            the array of IClassCoverage object in X-axis order. One per
 	 *            workload.
 	 */
-	public ClassEmpiricalBigOImpl(IClassCoverage[] ccs) {
+	public ClassEmpiricalBigOImpl(final IClassCoverage[] ccs) {
 		validateClassCoverage(ccs);
 		this.ccs = ccs;
-		this.lineFits = null;
 	}
 
 	/**
@@ -76,15 +77,6 @@ public class ClassEmpiricalBigOImpl implements IClassEmpiricalBigO {
 	 */
 	public IClassCoverage[] getMatchedCoverageClasses() {
 		return ccs;
-	}
-
-	/*
-	 * Returns the array of best fits. One per line in the class.
-	 * 
-	 * @return the array of best fits.
-	 */
-	public Fit[] getLineFits() {
-		return lineFits;
 	}
 
 	/**
@@ -102,37 +94,75 @@ public class ClassEmpiricalBigOImpl implements IClassEmpiricalBigO {
 		validateNotNull("xValues", xValues);
 
 		if (ccs.length < 1) {
-			lineFits = EMPTY_FIT_ARRAY;
 			return false;
 		}
 
-		final ILine[] lineArray = new ILine[ccs.length];
+		// Add E-BigO to the class
+		calcNodeFit(fitTypes, xValues, ccs);
 
-		int firstLine = ccs[0].getFirstLine();
-		int lastLine = ccs[0].getLastLine();
+		final int firstLine = ccs[0].getFirstLine();
+		final int lastLine = ccs[0].getLastLine();
 		if (firstLine == ISourceNode.UNKNOWN_LINE) {
-			lineFits = EMPTY_FIT_ARRAY;
 			return false;
 		}
 
-		Fit[] fitArray = new Fit[lastLine - firstLine + 1];
+		final int[] execCounts = new int[ccs.length];
 		for (int i = firstLine; i <= lastLine; i++) {
-			int[] hitCounts = new int[lineArray.length];
 			for (int idx = 0; idx < ccs.length; idx++) {
-				lineArray[idx] = ccs[idx].getLine(i);
-				hitCounts[idx] = lineArray[idx].getInstructionCounter()
-						.getHitCount();
+				execCounts[idx] = ccs[idx].getLine(i).getInstructionCounter()
+						.getExecutionCount();
 			}
 
-			SortedSet<Fit> fitSet = FitCalculator.calcFitSet(fitTypes,
-					ccs[0].getName() + ": Line " + i, xValues, hitCounts);
-
-			// save fit
-			fitArray[i - firstLine] = fitSet.isEmpty() ? null : fitSet.first();
+			final SortedSet<Fit> fitSet = FitCalculator.calcFitSet(fitTypes,
+					xValues, execCounts);
+			final EBigOFunction func = fitSet.isEmpty() ? EBigOFunction.UNDEFINED
+					: fitSet.first().getEBigOFunction();
+			for (int idx = 0; idx < ccs.length; idx++) {
+				((ClassCoverageImpl) ccs[idx]).setLineEBigOFunction(func, i);
+			}
 		}
 
-		lineFits = fitArray;
+		// For each method in class, add E-BigO
+		final MethodCoverageSetIterator methodSetIterator = new MethodCoverageSetIterator(
+				ccs);
+		while (methodSetIterator.hasNext()) {
+			final IMethodCoverage[] methodSet = methodSetIterator.next();
+			calcNodeFit(fitTypes, xValues, methodSet);
+
+			final int firstMethodLine = methodSet[0].getFirstLine();
+			final int lastMethodLine = methodSet[0].getLastLine();
+			if (firstMethodLine == ISourceNode.UNKNOWN_LINE) {
+				continue;
+			}
+			for (int i = firstMethodLine; i <= lastMethodLine; i++) {
+				for (int idx = 0; idx < methodSet.length; idx++) {
+					((MethodCoverageImpl) methodSet[idx]).setLineEBigOFunction(
+							ccs[0].getLineEBigOFunction(i), i);
+				}
+			}
+		}
+
+		// sourceFiles are handled when class in incremented into source file
 
 		return true;
+	}
+
+	private void calcNodeFit(final FitType[] fitTypes, final int[] xValues,
+			final ISourceNode[] nodes) {
+
+		final int[] execCounts = new int[nodes.length];
+		for (int idx = 0; idx < nodes.length; idx++) {
+			execCounts[idx] = nodes[idx].getInstructionCounter()
+					.getExecutionCount();
+		}
+
+		final SortedSet<Fit> fitSet = FitCalculator.calcFitSet(fitTypes,
+				xValues, execCounts);
+		final EBigOFunction func = fitSet.isEmpty() ? EBigOFunction.UNDEFINED
+				: fitSet.first().getEBigOFunction();
+
+		for (int idx = 0; idx < ccs.length; idx++) {
+			((SourceNodeImpl) nodes[idx]).setEBigOFunction(func);
+		}
 	}
 }

@@ -28,8 +28,8 @@ public class CounterImplTest {
 	@Test
 	public void testGetInstance1() {
 		ICounter c = CounterImpl.getInstance(0, 0, 0);
-		assertEquals(0, c.getHitCount());
-		assertEquals(0.0, c.getValue(CounterValue.TOTALHITCOUNT), 0.0);
+		assertEquals(0, c.getExecutionCount());
+		assertEquals(0.0, c.getValue(CounterValue.TOTALEXECCOUNT), 0.0);
 		assertEquals(0, c.getTotalCount());
 		assertEquals(0.0, c.getValue(CounterValue.TOTALCOUNT), 0.0);
 		assertEquals(0, c.getMissedCount());
@@ -41,8 +41,8 @@ public class CounterImplTest {
 	@Test
 	public void testGetInstance2() {
 		ICounter c = CounterImpl.getInstance(33, 15, 45);
-		assertEquals(45, c.getHitCount());
-		assertEquals(45.0, c.getValue(CounterValue.TOTALHITCOUNT), 0.0);
+		assertEquals(45, c.getExecutionCount());
+		assertEquals(45.0, c.getValue(CounterValue.TOTALEXECCOUNT), 0.0);
 		assertEquals(48, c.getTotalCount());
 		assertEquals(48.0, c.getValue(CounterValue.TOTALCOUNT), 0.0);
 		assertEquals(33, c.getMissedCount());
@@ -55,8 +55,8 @@ public class CounterImplTest {
 	public void testGetInstance3() {
 		ICounter c = CounterImpl.getInstance(15, 12, 24);
 		ICounter copy = CounterImpl.getInstance(c);
-		assertEquals(24, c.getHitCount());
-		assertEquals(24.0, c.getValue(CounterValue.TOTALHITCOUNT), 0.0);
+		assertEquals(24, c.getExecutionCount());
+		assertEquals(24.0, c.getValue(CounterValue.TOTALEXECCOUNT), 0.0);
 		assertEquals(27, copy.getTotalCount());
 		assertEquals(27.0, c.getValue(CounterValue.TOTALCOUNT), 0.0);
 		assertEquals(15, copy.getMissedCount());
@@ -67,8 +67,8 @@ public class CounterImplTest {
 
 	@Test
 	public void testFixInstance() {
-		ICounter c1 = CounterImpl.getInstance(30, 30, 30);
-		ICounter c2 = CounterImpl.getInstance(30, 30, 30);
+		ICounter c1 = CounterImpl.getInstance(30, 30, 0);
+		ICounter c2 = CounterImpl.getInstance(30, 30, 0);
 		assertSame(c1, c2);
 	}
 
@@ -83,7 +83,7 @@ public class CounterImplTest {
 	public void testIncrement1() {
 		CounterImpl c = CounterImpl.getInstance(1, 1, 1);
 		c = c.increment(CounterImpl.getInstance(2, 1, 1));
-		assertEquals(2, c.getHitCount());
+		assertEquals(2, c.getExecutionCount());
 		assertEquals(3, c.getMissedCount());
 		assertEquals(2, c.getCoveredCount());
 	}
@@ -92,7 +92,7 @@ public class CounterImplTest {
 	public void testIncrement2() {
 		CounterImpl c = CounterImpl.getInstance(31, 5, 10);
 		c = c.increment(CounterImpl.getInstance(7, 3, 3));
-		assertEquals(13, c.getHitCount());
+		assertEquals(13, c.getExecutionCount());
 		assertEquals(38, c.getMissedCount());
 		assertEquals(8, c.getCoveredCount());
 	}

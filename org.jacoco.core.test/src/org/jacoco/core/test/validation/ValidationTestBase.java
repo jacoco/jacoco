@@ -13,10 +13,12 @@ package org.jacoco.core.test.validation;
 
 import static org.junit.Assert.assertEquals;
 
+import java.io.IOException;
 import java.util.Collection;
 
 import org.jacoco.core.analysis.Analyzer;
 import org.jacoco.core.analysis.CoverageBuilder;
+import org.jacoco.core.analysis.IAnalyzer;
 import org.jacoco.core.analysis.IClassCoverage;
 import org.jacoco.core.analysis.ICounter;
 import org.jacoco.core.analysis.ILine;
@@ -76,8 +78,7 @@ public abstract class ValidationTestBase {
 		RuntimeData data = new RuntimeData();
 		IRuntime runtime = new SystemPropertiesRuntime();
 		runtime.startup(data);
-		final byte[] bytes = new Instrumenter(runtime).instrument(reader);
-		run(loader.add(target, bytes));
+		run(loader.add(target, new Instrumenter(runtime).instrument(reader)));
 		final ExecutionDataStore store = new ExecutionDataStore();
 		data.collect(store, new SessionInfoStore(), false);
 		runtime.shutdown();
@@ -87,9 +88,9 @@ public abstract class ValidationTestBase {
 	protected abstract void run(final Class<?> targetClass) throws Exception;
 
 	private void analyze(final ClassReader reader,
-			final ExecutionDataStore store) {
+			final ExecutionDataStore store) throws IOException {
 		final CoverageBuilder builder = new CoverageBuilder();
-		final Analyzer analyzer = new Analyzer(store, builder);
+		final IAnalyzer analyzer = new Analyzer(store, builder);
 		analyzer.analyzeClass(reader);
 		final Collection<IClassCoverage> classes = builder.getClasses();
 		assertEquals(1, classes.size(), 0.0);
@@ -109,19 +110,20 @@ public abstract class ValidationTestBase {
 	}
 
 	protected void assertLine(final String tag, final int missedBranches,
-			final int coveredBranches, int hitBranches) {
+			final int coveredBranches) {
 		final int nr = source.getLineNumber(tag);
 		final ILine line = sourceCoverage.getLine(nr);
 		final String msg = String.format("Branches in line %s: %s",
 				Integer.valueOf(nr), source.getLine(nr));
-		assertEquals(msg + " branches", CounterImpl.getInstance(missedBranches,
-				coveredBranches, hitBranches), line.getBranchCounter());
+		assertEquals(msg + " branches",
+				CounterImpl.getInstance(missedBranches, coveredBranches, 0),
+				line.getBranchCounter());
 	}
 
 	protected void assertLine(final String tag, final int status,
-			final int missedBranches, final int coveredBranches, int hitBranches) {
+			final int missedBranches, final int coveredBranches) {
 		assertLine(tag, status);
-		assertLine(tag, missedBranches, coveredBranches, hitBranches);
+		assertLine(tag, missedBranches, coveredBranches);
 	}
 
 }

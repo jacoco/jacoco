@@ -12,7 +12,6 @@
 package org.jacoco.ebigo.analysis;
 
 import org.jacoco.core.analysis.IClassCoverage;
-import org.jacoco.ebigo.fit.Fit;
 
 /**
  * Empirical big-o data of a single class containing methods. The name of this
@@ -29,13 +28,4 @@ public interface IClassEmpiricalBigO {
 	 * @return workload coverage classes f this class
 	 */
 	public IClassCoverage[] getMatchedCoverageClasses();
-
-	/**
-	 * Returns the {@code Fit[]} array of fit results for each line in the class
-	 * coverage objects.
-	 * 
-	 * @return an array of fit results for each line in the class coverage
-	 *         objects.
-	 */
-	public Fit[] getLineFits();
 }

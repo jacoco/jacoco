@@ -43,6 +43,18 @@ public class ReportMojo extends AbstractReportMojo {
 	 * @parameter default-value="${project.build.directory}/jacoco.exec"
 	 */
 	private File dataFile;
+	/**
+	 * Is E-BigO style analysis enabled. Defaults to 'false'
+	 * 
+	 * @parameter property="jacoco.ebigo" default-value="false"
+	 */
+	private boolean ebigoEnabled;
+	/**
+	 * The X-Axis attribute to use for EBigO analysis. Defaults to 'DEFAULT'
+	 * 
+	 * @parameter property="jacoco.ebigoAttribute" default-value="DEFAULT"
+	 */
+	private String ebigoAttribute;
 
 	@Override
 	protected String getOutputDirectory() {
@@ -60,12 +72,12 @@ public class ReportMojo extends AbstractReportMojo {
 	}
 
 	@Override
-	File getDataFile() {
+	public File getDataFile() {
 		return dataFile;
 	}
 
 	@Override
-	File getOutputDirectoryFile() {
+	public File getOutputDirectoryFile() {
 		return outputDirectory;
 	}
 
@@ -77,5 +89,15 @@ public class ReportMojo extends AbstractReportMojo {
 	@Override
 	public String getName(final Locale locale) {
 		return "JaCoCo Test";
+	}
+
+	@Override
+	public boolean isEBigOEnabled() {
+		return ebigoEnabled;
+	}
+
+	@Override
+	public String getEBigOAttribute() {
+		return ebigoAttribute;
 	}
 }

@@ -18,6 +18,7 @@ import java.util.Map;
 
 import org.jacoco.core.analysis.Analyzer;
 import org.jacoco.core.analysis.CoverageBuilder;
+import org.jacoco.core.analysis.IAnalyzer;
 import org.jacoco.core.analysis.IClassCoverage;
 import org.jacoco.core.analysis.ICounter;
 import org.jacoco.core.data.ExecutionDataStore;
@@ -141,7 +142,7 @@ public final class CoreTutorial {
 		// Together with the original class definition we can calculate coverage
 		// information:
 		final CoverageBuilder coverageBuilder = new CoverageBuilder();
-		final Analyzer analyzer = new Analyzer(executionData, coverageBuilder);
+		final IAnalyzer analyzer = new Analyzer(executionData, coverageBuilder);
 		analyzer.analyzeClass(getTargetClass(targetName), targetName);
 
 		// Let's dump some metrics and line coverage information:

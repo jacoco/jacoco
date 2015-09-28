@@ -38,7 +38,7 @@ public class SortedFitTest {
 		SortedFitSet instance = new SortedFitSet();
 		instance.add(makeFit(FitType.Linear, 3));
 		instance.add(makeFit(FitType.PowerLaw, 2));
-		instance.add(makeFit(FitType.Exp, 1));
+		instance.add(makeFit(FitType.Exponential, 1));
 		assertEquals(3, instance.size());
 		assertEquals(1, (int) instance.first().confidence);
 	}

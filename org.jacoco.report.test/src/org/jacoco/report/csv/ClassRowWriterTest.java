@@ -18,6 +18,7 @@ import java.io.StringReader;
 import java.io.StringWriter;
 
 import org.jacoco.core.analysis.IClassCoverage;
+import org.jacoco.core.data.ProbeMode;
 import org.jacoco.core.internal.analysis.ClassCoverageImpl;
 import org.jacoco.core.internal.analysis.CounterImpl;
 import org.jacoco.report.ILanguageNames;
@@ -60,7 +61,8 @@ public class ClassRowWriterTest {
 			}
 		};
 		result = new StringWriter();
-		writer = new ClassRowWriter(new DelimitedWriter(result), names);
+		writer = new ClassRowWriter(new DelimitedWriter(result), names,
+				ProbeMode.exists);
 	}
 
 	@Test

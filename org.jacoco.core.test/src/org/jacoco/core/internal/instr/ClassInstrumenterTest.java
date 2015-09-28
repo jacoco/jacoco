@@ -36,15 +36,15 @@ public class ClassInstrumenterTest implements IProbeArrayStrategy {
 	@Test(expected = IllegalStateException.class)
 	public void testInstrumentInstrumentedClass1() {
 		instrumenter.visitField(InstrSupport.DATAFIELD_ACC,
-				InstrSupport.DATAFIELD_NAME, InstrSupport.DATAFIELD_DESC, null,
-				null);
+				InstrSupport.DATAFIELD_NAME,
+				ProbeArrayService.getDatafieldDesc(), null, null);
 	}
 
 	@Test(expected = IllegalStateException.class)
 	public void testInstrumentInstrumentedClass2() {
 		instrumenter.visitMethod(InstrSupport.INITMETHOD_ACC,
-				InstrSupport.INITMETHOD_NAME, InstrSupport.INITMETHOD_DESC,
-				null, null);
+				InstrSupport.INITMETHOD_NAME,
+				ProbeArrayService.getDatafieldDesc(), null, null);
 	}
 
 	@Test

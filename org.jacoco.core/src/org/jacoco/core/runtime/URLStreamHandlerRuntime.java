@@ -18,7 +18,7 @@ import java.net.URLConnection;
 import java.net.URLStreamHandler;
 import java.util.Map;
 
-import org.jacoco.core.internal.instr.InstrSupport;
+import org.jacoco.core.internal.instr.ProbeArrayService;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
 
@@ -76,7 +76,7 @@ public class URLStreamHandlerRuntime extends AbstractRuntime {
 		// args[1] = classname;
 		// args[2] = Integer.valueOf(probecount);
 		// connection.equals(args);
-		// final AtomicIntegerArray probedata = (AtomicIntegerArray) args[0];
+		// final {datafieldClass} probedata = ({datafieldClass}) args[0];
 
 		RuntimeData.generateArgumentArray(classid, classname, probecount, mv);
 		mv.visitInsn(Opcodes.DUP);
@@ -122,7 +122,8 @@ public class URLStreamHandlerRuntime extends AbstractRuntime {
 
 		mv.visitInsn(Opcodes.ICONST_0);
 		mv.visitInsn(Opcodes.AALOAD);
-		mv.visitTypeInsn(Opcodes.CHECKCAST, InstrSupport.DATAFIELD_CLASS);
+		mv.visitTypeInsn(Opcodes.CHECKCAST,
+				ProbeArrayService.getDatafieldClass());
 
 		return 7;
 	}

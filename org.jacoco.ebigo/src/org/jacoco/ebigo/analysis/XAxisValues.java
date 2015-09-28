@@ -49,7 +49,7 @@ public class XAxisValues {
 		// Build the map
 		xAxisMap = new TreeMap<Integer, WorkloadAttributeMap>();
 		for (WorkloadAttributeMap attribute : store.keySet()) {
-			Integer value = attribute.get(attributeName);
+			final Integer value = attribute.get(attributeName);
 			xAxisMap.put(value, attribute);
 		}
 	}
@@ -82,9 +82,9 @@ public class XAxisValues {
 	 * @return the X-values in ascending order.
 	 */
 	public int[] getXValues() {
-		int[] xValues = new int[xAxisMap.size()];
+		final int[] xValues = new int[xAxisMap.size()];
 		int idx = 0;
-		for (Integer key : xAxisMap.keySet()) {
+		for (final Integer key : xAxisMap.keySet()) {
 			xValues[idx++] = key;
 		}
 		return xValues;

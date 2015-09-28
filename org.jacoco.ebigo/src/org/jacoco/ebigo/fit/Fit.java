@@ -11,6 +11,8 @@
  *******************************************************************************/
 package org.jacoco.ebigo.fit;
 
+import org.jacoco.core.analysis.EBigOFunction;
+
 /**
  * The result of an attempt to fit a set of points to a curve. The fitting is
  * done by the <code>FitCalcluator</code> class methods. All fits are using
@@ -56,7 +58,7 @@ public class Fit {
 	 * @param fitType
 	 *            The curve type to which the fitting was done
 	 */
-	public Fit(FitType fitType) {
+	public Fit(final FitType fitType) {
 		this.type = fitType;
 		this.n = 0; // number of pairs
 	}
@@ -69,52 +71,52 @@ public class Fit {
 	 */
 	public String getFitFunction() {
 		switch (type) {
-		case Log:
+		case Logarithmic:
 			if (0 == slope)
-				return String.format("%.3g", intercept);
+				return String.format("%.2f", intercept);
 			if (1 == slope && 0 == intercept)
 				return String.format("ln(x)");
 			if (1 == slope)
-				return String.format("%.3g + ln(x)", intercept);
+				return String.format("%.2f + ln(x)", intercept);
 			if (0 == intercept)
-				return String.format("%.3g ln(x)", slope);
-			return String.format("%.3g + %.3g ln(x)", intercept, slope);
+				return String.format("%.2f ln(x)", slope);
+			return String.format("%.2f + %.2f ln(x)", intercept, slope);
 		case Linear:
 			if (0 == slope)
-				return String.format("%.3g", intercept);
+				return String.format("%.2f", intercept);
 			if (1 == slope && 0 == intercept)
 				return "x";
 			if (1 == slope)
-				return String.format("%.3g + x", intercept);
+				return String.format("%.2f + x", intercept);
 			if (0 == intercept)
-				return String.format("%.3gx", slope);
-			return String.format("%.3g + %.3gx", intercept, slope);
+				return String.format("%.2fx", slope);
+			return String.format("%.2f + %.2fx", intercept, slope);
 		case PowerLaw:
 			if (0 == intercept)
-				return String.format("%.3g", 0D);
+				return String.format("%.2f", 0D);
 			if (0 == slope)
-				return String.format("%.3g", intercept);
+				return String.format("%.2f", intercept);
 			if (1 == intercept && 1 == slope)
 				return "x";
 			if (1 == slope)
-				return String.format("%.3gx", intercept);
+				return String.format("%.2fx", intercept);
 			if (1 == intercept)
-				return String.format("x^%.3g", slope);
-			return String.format("%.3gx^%.3g", intercept, slope);
-		case Exp:
+				return String.format("x^%.2f", slope);
+			return String.format("%.2fx^%.2f", intercept, slope);
+		case Exponential:
 			if (0 == intercept)
-				return String.format("%.3g", 0D);
+				return String.format("%.2f", 0D);
 			if (0 == slope)
-				return String.format("%.3g", intercept);
+				return String.format("%.2f", intercept);
 			if (1 == intercept && 1 == slope)
 				return "e^x";
 			if (1 == intercept)
-				return String.format("e^(%.3gx)", slope);
+				return String.format("e^(%.2fx)", slope);
 			if (1 == slope)
-				return String.format("%.3ge^x", intercept);
-			return String.format("%.3ge^(%.3gx)", intercept, slope);
+				return String.format("%.2fe^x", intercept);
+			return String.format("%.2fe^(%.2fx)", intercept, slope);
 		default:
-			return String.format("%s(%.3g, %.3g)", type.name(), intercept,
+			return String.format("%s(%.2f, %.2f)", type.name(), intercept,
 					slope);
 		}
 	}
@@ -128,35 +130,32 @@ public class Fit {
 	 */
 	public String getOrderFunction() {
 		switch (type) {
-		case Log:
-			if (0 == slope && intercept == 0)
-				return String.format("0");
-			if (0 == slope)
-				return String.format("1");
-			return String.format("ln(n)", intercept);
+		case Logarithmic:
+			return 0 == slope ? "1" : "ln(n)";
 		case Linear:
-			if (0 == slope && intercept == 0)
-				return String.format("0");
-			if (0 == slope)
-				return "1";
-			return "n";
+			return 0 == slope ? "1" : "n";
 		case PowerLaw:
-			if (0 == intercept)
-				return String.format("0");
-			if (0 == slope)
+			if (0 == intercept || 0 == slope)
 				return "1";
 			if (1 == slope)
 				return "n";
-			return String.format("n^%.3g", slope);
-		case Exp:
-			if (0 == intercept)
-				return String.format("0");
-			if (0 == slope)
+			return String.format("n^%.2f", slope);
+		case Exponential:
+			if (0 == intercept || 0 == slope)
 				return "1";
-			return String.format("e^n");
+			return "e^n";
 		default:
-			return String.format("%s(%g,%g)", type.name(), intercept, slope);
+			return String.format("%s(%f,%f)", type.name(), intercept, slope);
 		}
+	}
+
+	/**
+	 * Returns the E-Big-O function object resulting from this fit.
+	 * 
+	 * @return the E-Big-O function object resulting from this fit.
+	 */
+	public EBigOFunction getEBigOFunction() {
+		return new EBigOFunction(type.getType(), slope, intercept);
 	}
 
 	@Override

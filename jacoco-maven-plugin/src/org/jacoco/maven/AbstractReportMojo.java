@@ -28,9 +28,8 @@ import org.apache.maven.reporting.AbstractMavenReport;
 import org.apache.maven.reporting.MavenReportException;
 import org.jacoco.core.analysis.IBundleCoverage;
 import org.jacoco.core.analysis.ICoverageNode;
-import org.jacoco.core.data.ExecutionDataStore;
-import org.jacoco.core.data.SessionInfoStore;
-import org.jacoco.core.tools.ExecFileLoader;
+import org.jacoco.core.tools.ICoverageFetcherStyle;
+import org.jacoco.core.tools.IFetcherStyleProperties;
 import org.jacoco.report.FileMultiReportOutput;
 import org.jacoco.report.IReportGroupVisitor;
 import org.jacoco.report.IReportVisitor;
@@ -44,7 +43,8 @@ import org.jacoco.report.xml.XMLFormatter;
  * Base class for creating a code coverage report for tests of a single project
  * in multiple formats (HTML, XML, and CSV).
  */
-public abstract class AbstractReportMojo extends AbstractMavenReport {
+public abstract class AbstractReportMojo extends AbstractMavenReport implements
+		IFetcherStyleProperties {
 
 	/**
 	 * Encoding of the generated reports.
@@ -56,8 +56,7 @@ public abstract class AbstractReportMojo extends AbstractMavenReport {
 	/**
 	 * Encoding of the source files.
 	 * 
-	 * @parameter property="project.build.sourceEncoding"
-	 *            default-value="UTF-8"
+	 * @parameter property="project.build.sourceEncoding" default-value="UTF-8"
 	 */
 	String sourceEncoding;
 	/**
@@ -93,8 +92,6 @@ public abstract class AbstractReportMojo extends AbstractMavenReport {
 	 * @component
 	 */
 	Renderer siteRenderer;
-	SessionInfoStore sessionInfoStore;
-	ExecutionDataStore executionDataStore;
 
 	public abstract String getOutputName();
 
@@ -167,7 +164,7 @@ public abstract class AbstractReportMojo extends AbstractMavenReport {
 
 	/**
 	 * This method is called when the report generation is invoked directly as a
-	 * standalone Mojo.
+	 * stand-alone Mojo.
 	 */
 	@Override
 	public void execute() throws MojoExecutionException {
@@ -185,12 +182,18 @@ public abstract class AbstractReportMojo extends AbstractMavenReport {
 	@Override
 	protected void executeReport(final Locale locale)
 			throws MavenReportException {
-		loadExecutionData();
 		try {
+			final ICoverageFetcherStyle fetcher = MavenCoverageFetcherFactory
+					.newFetcher(this, getDataFile());
+			final FileFilter fileFilter = new FileFilter(getIncludes(),
+					getExcludes());
+			final BundleCreator creator = new BundleCreator(getProject(),
+					fileFilter, getLog());
+			final IBundleCoverage bundle = creator.createBundle(fetcher);
 			final IReportVisitor visitor = createVisitor(locale);
-			visitor.visitInfo(sessionInfoStore.getInfos(),
-					executionDataStore.getContents());
-			createReport(visitor);
+			visitor.visitInfo(fetcher.getSessionInfoStore().getInfos(), fetcher
+					.getExecutionDataStore().getContents());
+			createReport(visitor, bundle);
 			visitor.visitEnd();
 		} catch (final IOException e) {
 			throw new MavenReportException("Error while creating report: "
@@ -198,25 +201,8 @@ public abstract class AbstractReportMojo extends AbstractMavenReport {
 		}
 	}
 
-	void loadExecutionData() throws MavenReportException {
-		final ExecFileLoader loader = new ExecFileLoader();
-		try {
-			loader.load(getDataFile());
-		} catch (final IOException e) {
-			throw new MavenReportException(
-					"Unable to read execution data file " + getDataFile()
-							+ ": " + e.getMessage(), e);
-		}
-		sessionInfoStore = loader.getSessionInfoStore();
-		executionDataStore = loader.getExecutionDataStore();
-	}
-
-	void createReport(final IReportGroupVisitor visitor) throws IOException {
-		final FileFilter fileFilter = new FileFilter(this.getIncludes(),
-				this.getExcludes());
-		final BundleCreator creator = new BundleCreator(this.getProject(),
-				fileFilter, getLog());
-		final IBundleCoverage bundle = creator.createBundle(executionDataStore);
+	void createReport(final IReportGroupVisitor visitor,
+			final IBundleCoverage bundle) throws IOException {
 		final SourceFileCollection locator = new SourceFileCollection(
 				getCompileSourceRoots(), sourceEncoding);
 		checkForMissingDebugInformation(bundle);
@@ -300,8 +286,23 @@ public abstract class AbstractReportMojo extends AbstractMavenReport {
 		}
 	}
 
-	abstract File getDataFile();
+	/**
+	 * Returns the {@code File} from the execution data is read.
+	 * 
+	 * @return the {@code File} to which the execution data is written and from
+	 *         which it is read.
+	 */
+	public abstract File getDataFile();
 
-	abstract File getOutputDirectoryFile();
+	/**
+	 * Returns the directory where the reports will be written
+	 * 
+	 * @return the directory where the reports will be written
+	 */
+	public abstract File getOutputDirectoryFile();
+
+	public abstract boolean isEBigOEnabled();
+
+	public abstract String getEBigOAttribute();
 
 }

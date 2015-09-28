@@ -16,7 +16,7 @@ import java.util.logging.Level;
 import java.util.logging.LogRecord;
 import java.util.logging.Logger;
 
-import org.jacoco.core.internal.instr.InstrSupport;
+import org.jacoco.core.internal.instr.ProbeArrayService;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
 
@@ -68,7 +68,7 @@ public class LoggerRuntime extends AbstractRuntime {
 		// args[1] = classname;
 		// args[2] = Integer.valueOf(probecount);
 		// Logger.getLogger(CHANNEL).log(Level.INFO, key, args);
-		// final AtomicIntegerArray probedata = (AtomicIntegerArray) args[0];
+		// final {datafieldClass} probedata = {datafieldClass} args[0];
 		//
 		// Note that local variable 'args' is used at two places. As were not
 		// allowed to allocate local variables we have to keep this value with
@@ -146,9 +146,10 @@ public class LoggerRuntime extends AbstractRuntime {
 
 		mv.visitInsn(Opcodes.ICONST_0);
 		mv.visitInsn(Opcodes.AALOAD);
-		mv.visitTypeInsn(Opcodes.CHECKCAST, InstrSupport.DATAFIELD_CLASS);
+		mv.visitTypeInsn(Opcodes.CHECKCAST,
+				ProbeArrayService.getDatafieldClass());
 
-		// Stack[0]: [Ljava/util/concurrent/atomic/AtomicIntegerArray;
+		// Stack[0]: {datafieldDesc}
 
 		return 5; // Maximum local stack size is 5
 	}
@@ -168,7 +169,7 @@ public class LoggerRuntime extends AbstractRuntime {
 		@Override
 		public void publish(final LogRecord record) {
 			if (key.equals(record.getMessage())) {
-				data.getAtomicProbes(record.getParameters());
+				data.getProbesObject(record.getParameters());
 			}
 		}
 

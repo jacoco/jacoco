@@ -21,6 +21,10 @@ import java.util.List;
 import java.util.Map.Entry;
 import java.util.Set;
 
+import org.jacoco.core.data.ExecutionData;
+import org.jacoco.core.data.ExecutionDataStore;
+import org.jacoco.core.data.SessionInfo;
+import org.jacoco.core.data.SessionInfoStore;
 import org.jacoco.ebigo.analysis.XAxisValues;
 
 /**
@@ -32,6 +36,13 @@ public class EmpiricalBigOWorkloadStore {
 	private final ArrayList<String> requiredAttributes;
 	private final HashMap<WorkloadAttributeMap, EmpiricalBigOWorkload> actualMap;
 
+	/**
+	 * Construct a new workload store with the default attribute
+	 */
+	public EmpiricalBigOWorkloadStore() {
+		this(WorkloadAttributeMapBuilder.DEFAULT_ATTRIBUTE);
+	}
+	
 	/**
 	 * Construct a new workload store
 	 * 
@@ -48,7 +59,7 @@ public class EmpiricalBigOWorkloadStore {
 			throw new IllegalArgumentException(
 					"Must have at least one attribute");
 		}
-		int moreLength = moreRequiredAttributes == null ? 0
+		final int moreLength = moreRequiredAttributes == null ? 0
 				: moreRequiredAttributes.length;
 		this.requiredAttributes = new ArrayList<String>(1 + moreLength);
 		this.requiredAttributes.add(requiredAttribute);
@@ -63,9 +74,13 @@ public class EmpiricalBigOWorkloadStore {
 		return Collections.unmodifiableList(requiredAttributes);
 	}
 
+	public String getDefaultAttribute() {
+		return requiredAttributes.get(0);
+	}
+
 	private void validateRequiredAttriubtes(final WorkloadAttributeMap map) {
 		validateNotNull("map", map);
-		for (String attribute : requiredAttributes) {
+		for (final String attribute : requiredAttributes) {
 			if (!map.containsKey(attribute)) {
 				throw new IllegalArgumentException(
 						"Missing required attribute: " + attribute);
@@ -75,9 +90,9 @@ public class EmpiricalBigOWorkloadStore {
 
 	private void validateNotDup(final WorkloadAttributeMap map) {
 		validateNotNull("map", map);
-		for (Entry<String, Integer> attributeEntry : map.entrySet()) {
-			for (WorkloadAttributeMap attribute : actualMap.keySet()) {
-				Integer value = attribute.get(attributeEntry.getKey());
+		for (final Entry<String, Integer> attributeEntry : map.entrySet()) {
+			for (final WorkloadAttributeMap attribute : actualMap.keySet()) {
+				final Integer value = attribute.get(attributeEntry.getKey());
 				if (value != null
 						&& value.intValue() == attributeEntry.getValue()
 								.intValue()) {
@@ -95,15 +110,13 @@ public class EmpiricalBigOWorkloadStore {
 	/**
 	 * Add a workload to this store.
 	 * 
-	 * @param attributes
-	 *            the attributes associated with this workload and their values.
-	 *            This object is the 'key' of the workload in the store.
 	 * @param workload
 	 *            the workload to add to the store.
-	 * @return
+	 * @return the previous value associated with <tt>attributes</tt>, or
+	 *         <tt>null</tt> if there was no mapping for <tt>attributes</tt>.
 	 */
-	public EmpiricalBigOWorkload put(final WorkloadAttributeMap attributes,
-			final EmpiricalBigOWorkload workload) {
+	public EmpiricalBigOWorkload put(final EmpiricalBigOWorkload workload) {
+		final WorkloadAttributeMap attributes = workload.getattributeMap();
 		validateRequiredAttriubtes(attributes);
 		validateNotDup(attributes);
 		return actualMap.put(attributes, workload);
@@ -158,4 +171,42 @@ public class EmpiricalBigOWorkloadStore {
 	public XAxisValues getXAxisValues(final String attributeName) {
 		return new XAxisValues(this, attributeName);
 	}
+
+	/**
+	 * Returns an merged execution data store from all the workload data
+	 * currently in this store.
+	 * 
+	 * @return an merged execution data store.
+	 */
+	public ExecutionDataStore getMergedExecutionDataStore() {
+		final ExecutionDataStore store = new ExecutionDataStore();
+		for (final WorkloadAttributeMap key : keySet()) {
+			final EmpiricalBigOWorkload workload = get(key);
+			for (final ExecutionData data : workload.getExecutionDataStore()
+					.getContents()) {
+				// As we don't want to change the data in this store
+				// While producing the summary
+				store.put(data.deepCopy());
+			}
+		}
+		return store;
+	}
+
+	/**
+	 * Returns an merged session info store from all the workload data currently
+	 * in this store.
+	 * 
+	 * @return an merged session info store.
+	 */
+	public SessionInfoStore getMergedSessionInfoStore() {
+		final SessionInfoStore store = new SessionInfoStore();
+		for (final WorkloadAttributeMap key : keySet()) {
+			final EmpiricalBigOWorkload workload = get(key);
+			for (final SessionInfo info : workload.getSessionInfo().getInfos()) {
+				store.visitSessionInfo(info);
+			}
+		}
+		return store;
+	}
+
 }

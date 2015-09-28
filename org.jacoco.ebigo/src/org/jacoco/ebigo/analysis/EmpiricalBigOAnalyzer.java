@@ -13,19 +13,24 @@ package org.jacoco.ebigo.analysis;
 
 import static org.jacoco.ebigo.internal.util.ValidationUtils.validateNotNull;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.jacoco.core.analysis.Analyzer;
 import org.jacoco.core.analysis.CoverageBuilder;
+import org.jacoco.core.analysis.IAnalyzer;
 import org.jacoco.core.analysis.IClassCoverage;
 import org.jacoco.ebigo.core.EmpiricalBigOWorkloadStore;
 import org.jacoco.ebigo.core.WorkloadAttributeMap;
-import org.jacoco.ebigo.internal.analysis.ClassCoverageIterators;
+import org.jacoco.ebigo.internal.analysis.ClassCoverageSetIterator;
 import org.jacoco.ebigo.internal.analysis.ClassEmpiricalBigOImpl;
+import org.objectweb.asm.ClassReader;
 
 /**
  * Perform an Empirical Big-O analysis on workload execution data together with
@@ -35,15 +40,15 @@ import org.jacoco.ebigo.internal.analysis.ClassEmpiricalBigOImpl;
  * {@link IEmpiricalBigOVisitor} instance. In addition the
  * {@link EmpiricalBigOAnalyzer} requires a {@link EmpiricalBigOWorkloadStore}
  * instance that holds the execution data for the classes to analyze.
- * <p>
- * TODO: The {@link EmpiricalBigOAnalyzer} offers several methods to analyze
- * classes from a variety of sources.
  * 
  * @author Omer Azmon
  */
-public class EmpiricalBigOAnalyzer {
+public class EmpiricalBigOAnalyzer implements IAnalyzer {
+	private static final int MAX_SOURCE_FILE_BYTES = 250000;
 	private final EmpiricalBigOWorkloadStore workloadData;
-	private final File classFiles;
+	private final IEmpiricalBigOVisitor visitor;
+	private final String attributeName;
+	private final XAxisValues xAxisMap;
 
 	/**
 	 * Creates a new Empirical Big-O analyzer reporting to the given output.
@@ -51,8 +56,8 @@ public class EmpiricalBigOAnalyzer {
 	 * @param store
 	 *            the data store containing the workload execution data to
 	 *            analyze
-	 * @param classFiles
-	 *            file or folder to look for class files
+	 * @param visitor
+	 *            the object to receive the results of the analysis
 	 * @throws FileNotFoundException
 	 *             if {@code classFiles} not found
 	 * @throws IllegalArgumentException
@@ -60,23 +65,19 @@ public class EmpiricalBigOAnalyzer {
 	 *             calculate a trend (require 4 or more)
 	 */
 	public EmpiricalBigOAnalyzer(final EmpiricalBigOWorkloadStore store,
-			final File classFiles) throws FileNotFoundException {
+			IEmpiricalBigOVisitor visitor) throws FileNotFoundException {
 		validateNotNull("store", store);
+		validateNotNull("visitor", visitor);
 		if (store.size() < 3) {
 			throw new IllegalArgumentException(
 					"Workload Store does not have enough workloads to calculate a trend (require 4 or more).");
 		}
 		this.workloadData = store;
-		validateclassFiles(classFiles);
-		this.classFiles = classFiles;
-	}
-
-	private static void validateclassFiles(final File classFiles)
-			throws FileNotFoundException {
-		validateNotNull("classFiles", classFiles);
-		if (!classFiles.exists()) {
-			throw new FileNotFoundException(classFiles.getAbsolutePath());
-		}
+		this.visitor = visitor;
+		this.attributeName = visitor.getAttributeName();
+		validateNotNull("attributeName", attributeName);
+		this.xAxisMap = workloadData.getXAxisValues(attributeName);
+		this.visitor.visitXAxis(xAxisMap);
 	}
 
 	/**
@@ -88,62 +89,147 @@ public class EmpiricalBigOAnalyzer {
 		return workloadData;
 	}
 
-	/**
-	 * Returns the file or folder to look for class files.
-	 * 
-	 * @return the file or folder to look for class files.
-	 */
-	public File getClassFiles() {
-		return classFiles;
+	public void analyzeClass(final ClassReader reader) throws IOException {
+		CoverageSetBuilder setBuilder = new CoverageSetBuilder() {
+
+			@Override
+			public void analyzeClassData(IAnalyzer analyzer) throws IOException {
+				analyzer.analyzeClass(reader);
+			}
+
+		};
+		analyzeEBigO(setBuilder.newCoverageBuilderSet());
 	}
 
-	private List<CoverageBuilder> analyzeAllWorkloadCoverage(
-			final XAxisValues xAxisMap, final String attributeName,
-			final File classFiles) throws IOException {
-		List<CoverageBuilder> analyzerList = new ArrayList<CoverageBuilder>(
-				workloadData.size());
-		WorkloadAttributeMap[] xKeys = xAxisMap.getXKeys();
-		for (int keyIdx = 0; keyIdx < workloadData.size(); keyIdx++) {
-			CoverageBuilder coverageVisitor = new CoverageBuilder();
-			Analyzer analyzer = new Analyzer(workloadData.get(xKeys[keyIdx])
-					.getExecutionDataStore(), coverageVisitor);
-			analyzer.analyzeAll(classFiles);
-			analyzerList.add(coverageVisitor);
+	public void analyzeClass(final byte[] buffer, final String name)
+			throws IOException {
+		CoverageSetBuilder setBuilder = new CoverageSetBuilder() {
+
+			@Override
+			public void analyzeClassData(IAnalyzer analyzer) throws IOException {
+				analyzer.analyzeClass(buffer, name);
+			}
+
+		};
+		analyzeEBigO(setBuilder.newCoverageBuilderSet());
+	}
+
+	public void analyzeClass(final InputStream input, final String name)
+			throws IOException {
+		CoverageSetBuilder setBuilder = new CoverageSetBuilder() {
+			private InputStream markableInputStream = ensureMarkSupported(input);
+
+			@Override
+			public void analyzeClassData(IAnalyzer analyzer) throws IOException {
+				markableInputStream.mark(MAX_SOURCE_FILE_BYTES);
+				analyzer.analyzeClass(input, name);
+				markableInputStream.reset();
+			}
+
+		};
+		analyzeEBigO(setBuilder.newCoverageBuilderSet());
+	}
+
+	public int analyzeAll(final InputStream input, final String name)
+			throws IOException {
+		CoverageSetBuilder setBuilder = new CoverageSetBuilder() {
+			private InputStream markableInputStream = ensureMarkSupported(input);
+
+			@Override
+			public void analyzeClassData(IAnalyzer analyzer) throws IOException {
+				markableInputStream.mark(MAX_SOURCE_FILE_BYTES);
+				analyzer.analyzeAll(input, name);
+				markableInputStream.reset();
+			}
+
+		};
+		return analyzeEBigO(setBuilder.newCoverageBuilderSet());
+	}
+
+	public int analyzeAll(final String path, final File basedir)
+			throws IOException {
+		CoverageSetBuilder setBuilder = new CoverageSetBuilder() {
+
+			@Override
+			public void analyzeClassData(IAnalyzer analyzer) throws IOException {
+				analyzer.analyzeAll(path, basedir);
+			}
+
+		};
+		return analyzeEBigO(setBuilder.newCoverageBuilderSet());
+	}
+
+	public int analyzeAll(final File classFiles) throws IOException {
+		validateclassFiles(classFiles);
+		CoverageSetBuilder setBuilder = new CoverageSetBuilder() {
+
+			@Override
+			public void analyzeClassData(IAnalyzer analyzer) throws IOException {
+				analyzer.analyzeAll(classFiles);
+			}
+
+		};
+		return analyzeEBigO(setBuilder.newCoverageBuilderSet());
+	}
+
+	private static byte[] toByteArray(final InputStream input)
+			throws IOException {
+		final ByteArrayOutputStream output = new ByteArrayOutputStream();
+		final byte[] buffer = new byte[4096];
+		int n = 0;
+		while (-1 != (n = input.read(buffer))) {
+			output.write(buffer, 0, n);
 		}
-		return analyzerList;
+		return output.toByteArray();
 	}
 
-	/**
-	 * Analyzes all class files contained in the given file or folder. Class
-	 * files as well as ZIP files are considered. Folders are searched
-	 * recursively.
-	 * 
-	 * @param visitor
-	 *            the object to receive the results of the analysis
-	 * 
-	 * @return number of class files found
-	 * @throws IOException
-	 *             if the file can't be read or a class can't be analyzed
-	 */
-	public int analyzeAll(IEmpiricalBigOVisitor visitor) throws IOException {
-		final String attributeName = visitor.getAttributeName();
+	private InputStream ensureMarkSupported(InputStream stream)
+			throws IOException {
+		if (stream.markSupported()) {
+			return stream;
+		}
+		return new ByteArrayInputStream(toByteArray(stream));
+	}
 
-		XAxisValues xAxisMap = workloadData.getXAxisValues(attributeName);
-		visitor.visitXAxis(xAxisMap);
+	private abstract class CoverageSetBuilder {
+		private List<CoverageBuilder> newCoverageBuilderSet()
+				throws IOException {
+			final List<CoverageBuilder> analyzerList = new ArrayList<CoverageBuilder>(
+					workloadData.size());
+			final WorkloadAttributeMap[] xKeys = xAxisMap.getXKeys();
+			for (int keyIdx = 0; keyIdx < workloadData.size(); keyIdx++) {
+				final CoverageBuilder coverageBuilder = new CoverageBuilder();
+				final IAnalyzer analyzer = new Analyzer(workloadData.get(
+						xKeys[keyIdx]).getExecutionDataStore(), coverageBuilder);
+				analyzeClassData(analyzer);
+				analyzerList.add(coverageBuilder);
+			}
+			return analyzerList;
+		}
 
-		validateNotNull("attributeName", attributeName);
+		public abstract void analyzeClassData(IAnalyzer analyzer)
+				throws IOException;
+	}
 
-		List<CoverageBuilder> analyzerList = analyzeAllWorkloadCoverage(
-				xAxisMap, attributeName, classFiles);
+	private static void validateclassFiles(final File classFiles)
+			throws FileNotFoundException {
+		validateNotNull("classFiles", classFiles);
+		if (!classFiles.exists()) {
+			throw new FileNotFoundException(classFiles.getAbsolutePath());
+		}
+	}
 
+	private int analyzeEBigO(final List<CoverageBuilder> coverageBuilderSet) {
 		int classCount = 0;
 
-		int[] xValues = xAxisMap.getXValues();
-		final ClassCoverageIterators ccsIterators = new ClassCoverageIterators(
-				analyzerList);
-		while (ccsIterators.hasNext()) {
-			final IClassCoverage[] ccs = ccsIterators.next();
-			final ClassEmpiricalBigOImpl classEmpiricalBigO = new ClassEmpiricalBigOImpl(ccs);
+		final int[] xValues = xAxisMap.getXValues();
+		final ClassCoverageSetIterator classCoverageSetIterators = new ClassCoverageSetIterator(
+				coverageBuilderSet);
+
+		while (classCoverageSetIterators.hasNext()) {
+			final IClassCoverage[] ccs = classCoverageSetIterators.next();
+			final ClassEmpiricalBigOImpl classEmpiricalBigO = new ClassEmpiricalBigOImpl(
+					ccs);
 			classEmpiricalBigO.analyze(visitor.getFitTypes(), xValues);
 			visitor.visitEmpiricalBigO(classEmpiricalBigO);
 			classCount++;

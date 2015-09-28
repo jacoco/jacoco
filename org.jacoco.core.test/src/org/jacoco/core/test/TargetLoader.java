@@ -29,12 +29,12 @@ public class TargetLoader extends ClassLoader {
 		this.classes = new HashMap<String, byte[]>();
 	}
 
-	public Class<?> add(final String name, final byte[] bytes) {
+	public <T> Class<T> add(final String name, final byte[] bytes) {
 		this.classes.put(name, bytes);
 		return load(name);
 	}
 
-	public Class<?> add(final Class<?> name, final byte[] bytes) {
+	public <T> Class<T> add(final Class<T> name, final byte[] bytes) {
 		return add(name.getName(), bytes);
 	}
 
@@ -42,9 +42,10 @@ public class TargetLoader extends ClassLoader {
 		return add(source.getName(), getClassDataAsBytes(source));
 	}
 
-	private Class<?> load(final String sourcename) {
+	@SuppressWarnings("unchecked")
+	private <T> Class<T> load(final String sourcename) {
 		try {
-			return loadClass(sourcename);
+			return (Class<T>) loadClass(sourcename);
 		} catch (ClassNotFoundException e) {
 			// must not happen
 			throw new RuntimeException(e);

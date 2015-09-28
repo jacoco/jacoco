@@ -22,7 +22,6 @@ import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
 import java.lang.management.ManagementFactory;
-import java.util.concurrent.atomic.AtomicIntegerArray;
 
 import javax.management.InstanceNotFoundException;
 import javax.management.MBeanServer;
@@ -37,6 +36,7 @@ import org.jacoco.core.JaCoCo;
 import org.jacoco.core.data.ExecutionDataReader;
 import org.jacoco.core.data.ExecutionDataStore;
 import org.jacoco.core.data.SessionInfoStore;
+import org.jacoco.core.internal.instr.IProbeArray;
 import org.jacoco.core.runtime.AgentOptions;
 import org.jacoco.core.runtime.AgentOptions.OutputMode;
 import org.jacoco.core.runtime.RuntimeData;
@@ -185,14 +185,14 @@ public class AgentTest implements IExceptionLogger {
 	public void testReset() {
 		Agent agent = new Agent(options, this);
 
-		AtomicIntegerArray atomicProbes = agent.getData()
+		IProbeArray<?> probes = agent.getData()
 				.getExecutionData(Long.valueOf(0x12345678), "Foo", 1)
-				.getAtomicProbes();
-		atomicProbes.set(0, 1);
+				.getProbes();
+		probes.increment(0);
 
 		agent.reset();
 
-		assertFalse(atomicProbes.get(0) != 0);
+		assertFalse(probes.isProbeCovered(0));
 	}
 
 	@Test
@@ -201,15 +201,15 @@ public class AgentTest implements IExceptionLogger {
 		Agent agent = new Agent(options, this);
 		agent.startup();
 
-		AtomicIntegerArray atomicProbes = agent.getData()
+		IProbeArray<?> probes = agent.getData()
 				.getExecutionData(Long.valueOf(0x12345678), "Foo", 1)
-				.getAtomicProbes();
-		atomicProbes.set(0, 1);
+				.getProbes();
+		probes.increment(0);
 
 		byte[] data = agent.getExecutionData(true);
 
 		// ensure reset has been executed
-		assertFalse(atomicProbes.get(0) != 0);
+		assertFalse(probes.isProbeCovered(0));
 
 		ExecutionDataStore execStore = new ExecutionDataStore();
 		SessionInfoStore sessionStore = new SessionInfoStore();

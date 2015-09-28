@@ -22,6 +22,7 @@ import java.io.FilterOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.lang.reflect.Constructor;
 import java.util.jar.JarInputStream;
 import java.util.jar.JarOutputStream;
 import java.util.jar.Pack200;
@@ -36,6 +37,15 @@ import org.junit.Test;
  * Unit tests for {@link Pack200Streams}.
  */
 public class Pack200StreamsTest {
+
+	@Test
+	public void testConstructor() throws Exception {
+		Constructor<Pack200Streams> constructor = Pack200Streams.class
+				.getDeclaredConstructor();
+		constructor.setAccessible(true);
+		constructor.newInstance();
+		// all's well if no exceptions thrown so far
+	}
 
 	@Test
 	public void testPack() throws IOException {

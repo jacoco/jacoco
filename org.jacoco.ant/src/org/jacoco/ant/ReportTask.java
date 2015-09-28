@@ -31,14 +31,15 @@ import org.apache.tools.ant.types.Resource;
 import org.apache.tools.ant.types.resources.FileResource;
 import org.apache.tools.ant.types.resources.Union;
 import org.apache.tools.ant.util.FileUtils;
-import org.jacoco.core.analysis.Analyzer;
 import org.jacoco.core.analysis.CoverageBuilder;
+import org.jacoco.core.analysis.IAnalyzer;
 import org.jacoco.core.analysis.IBundleCoverage;
 import org.jacoco.core.analysis.IClassCoverage;
 import org.jacoco.core.analysis.ICoverageNode;
 import org.jacoco.core.data.ExecutionDataStore;
 import org.jacoco.core.data.SessionInfoStore;
-import org.jacoco.core.tools.ExecFileLoader;
+import org.jacoco.core.tools.ICoverageFetcherStyle;
+import org.jacoco.core.tools.IFetcherStyleProperties;
 import org.jacoco.report.FileMultiReportOutput;
 import org.jacoco.report.IMultiReportOutput;
 import org.jacoco.report.IReportGroupVisitor;
@@ -56,7 +57,7 @@ import org.jacoco.report.xml.XMLFormatter;
 /**
  * Task for coverage report generation.
  */
-public class ReportTask extends Task {
+public class ReportTask extends Task implements IFetcherStyleProperties {
 
 	/**
 	 * The source files are specified in a resource collection with additional
@@ -423,6 +424,10 @@ public class ReportTask extends Task {
 
 	private final List<FormatterElement> formatters = new ArrayList<FormatterElement>();
 
+	private String eBigOAttribute;
+
+	private boolean eBigOEnabled;
+
 	/**
 	 * Returns the nested resource collection for execution data files.
 	 * 
@@ -485,14 +490,45 @@ public class ReportTask extends Task {
 		return element;
 	}
 
+	public String getEBigOAttribute() {
+		return this.eBigOAttribute;
+	}
+
+	/**
+	 * Set the Empirical Big-O X-Axis attribute to use. Default is "DEFAULT".
+	 * 
+	 * @param eBigOAttribute
+	 *            the Empirical Big-O X-Axis attribute to use
+	 */
+	public void setEBigOAttribute(final String eBigOAttribute) {
+		this.eBigOAttribute = eBigOAttribute;
+	}
+
+	/**
+	 * Enable/Disable performing Empirical Big-O analysis in report. This
+	 * requires multiple workloads (at least 4)
+	 * 
+	 * @param enabled
+	 *            {@code true} if enabled.
+	 */
+	public void setEBigOEnabled(final boolean enabled) {
+		this.eBigOEnabled = enabled;
+	}
+
+	public boolean isEBigOEnabled() {
+		return this.eBigOEnabled;
+	}
+
 	@Override
 	public void execute() throws BuildException {
-		loadExecutionData();
+		final ICoverageFetcherStyle fetcher = AntCoverageFetcherFactory
+				.newFetcher(this);
 		try {
+			loadExecutionData(fetcher);
 			final IReportVisitor visitor = createVisitor();
 			visitor.visitInfo(sessionInfoStore.getInfos(),
 					executionDataStore.getContents());
-			createReport(visitor, structure);
+			createReport(visitor, fetcher, structure);
 			visitor.visitEnd();
 			for (final FormatterElement f : formatters) {
 				f.finish();
@@ -503,25 +539,35 @@ public class ReportTask extends Task {
 		}
 	}
 
-	private void loadExecutionData() {
-		final ExecFileLoader loader = new ExecFileLoader();
+	private void loadExecutionData(final ICoverageFetcherStyle fetcher) {
 		for (final Iterator<?> i = executiondataElement.iterator(); i.hasNext();) {
 			final Resource resource = (Resource) i.next();
 			log(format("Loading execution data file %s", resource));
-			InputStream in = null;
 			try {
-				in = resource.getInputStream();
-				loader.load(in);
+				if (resource instanceof FileResource) {
+					fetcher.loadExecutionData(((FileResource) resource)
+							.getFile());
+				} else {
+					InputStream in = null;
+					try {
+						in = resource.getInputStream();
+						fetcher.loadExecutionData(in);
+					} finally {
+						FileUtils.close(in);
+					}
+				}
 			} catch (final IOException e) {
 				throw new BuildException(format(
 						"Unable to read execution data file %s", resource), e,
 						getLocation());
-			} finally {
-				FileUtils.close(in);
+			} catch (final UnsupportedOperationException e) {
+				throw new BuildException(
+						format("Reading execution data file %s is not supported by the current reporting style",
+								resource), e, getLocation());
 			}
 		}
-		sessionInfoStore = loader.getSessionInfoStore();
-		executionDataStore = loader.getExecutionDataStore();
+		sessionInfoStore = fetcher.getSessionInfoStore();
+		executionDataStore = fetcher.getExecutionDataStore();
 	}
 
 	private IReportVisitor createVisitor() throws IOException {
@@ -533,13 +579,14 @@ public class ReportTask extends Task {
 	}
 
 	private void createReport(final IReportGroupVisitor visitor,
-			final GroupElement group) throws IOException {
+			final ICoverageFetcherStyle fetcher, final GroupElement group)
+			throws IOException {
 		if (group.name == null) {
 			throw new BuildException("Group name must be supplied",
 					getLocation());
 		}
 		if (group.children.isEmpty()) {
-			final IBundleCoverage bundle = createBundle(group);
+			final IBundleCoverage bundle = createBundle(fetcher, group);
 			final SourceFilesElement sourcefiles = group.sourcefiles;
 			final AntResourcesLocator locator = new AntResourcesLocator(
 					sourcefiles.encoding, sourcefiles.tabWidth);
@@ -552,15 +599,15 @@ public class ReportTask extends Task {
 			final IReportGroupVisitor groupVisitor = visitor
 					.visitGroup(group.name);
 			for (final GroupElement child : group.children) {
-				createReport(groupVisitor, child);
+				createReport(groupVisitor, fetcher, child);
 			}
 		}
 	}
 
-	private IBundleCoverage createBundle(final GroupElement group)
-			throws IOException {
-		final CoverageBuilder builder = new CoverageBuilder();
-		final Analyzer analyzer = new Analyzer(executionDataStore, builder);
+	private IBundleCoverage createBundle(final ICoverageFetcherStyle fetcher,
+			final GroupElement group) throws IOException {
+		final CoverageBuilder builder = fetcher.newCoverageBuilder();
+		final IAnalyzer analyzer = fetcher.newAnalyzer(builder);
 		for (final Iterator<?> i = group.classfiles.iterator(); i.hasNext();) {
 			final Resource resource = (Resource) i.next();
 			if (resource.isDirectory() && resource instanceof FileResource) {
@@ -617,5 +664,4 @@ public class ReportTask extends Task {
 		final String variant = st.hasMoreTokens() ? st.nextToken() : "";
 		return new Locale(language, country, variant);
 	}
-
 }

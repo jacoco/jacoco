@@ -21,6 +21,7 @@ import java.util.List;
 
 import org.jacoco.core.data.ExecutionData;
 import org.jacoco.core.data.SessionInfo;
+import org.jacoco.core.internal.instr.ProbeArrayService;
 import org.jacoco.report.internal.html.HTMLElement;
 import org.jacoco.report.internal.html.index.ElementIndex;
 import org.junit.Before;
@@ -102,9 +103,12 @@ public class SessionsPageTest extends PageTestBase {
 	@Test
 	public void testExecutionDataContent() throws Exception {
 		final Collection<ExecutionData> data = new ArrayList<ExecutionData>();
-		data.add(new ExecutionData(0x1000, "ClassB", new int[0]));
-		data.add(new ExecutionData(0x1001, "ClassC", new int[0]));
-		data.add(new ExecutionData(0x1002, "ClassA", new int[0]));
+		data.add(new ExecutionData(0x1000, "ClassB", ProbeArrayService
+				.newProbeArray(0)));
+		data.add(new ExecutionData(0x1001, "ClassC", ProbeArrayService
+				.newProbeArray(0)));
+		data.add(new ExecutionData(0x1002, "ClassA", ProbeArrayService
+				.newProbeArray(0)));
 		index.addClass(new ReportPage(null, rootFolder, context) {
 
 			public String getLinkLabel() {

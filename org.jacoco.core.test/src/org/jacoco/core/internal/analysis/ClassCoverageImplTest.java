@@ -19,6 +19,7 @@ import java.util.Collections;
 
 import org.jacoco.core.analysis.ICoverageNode;
 import org.jacoco.core.analysis.ISourceNode;
+import org.jacoco.core.data.ProbeMode;
 import org.junit.Test;
 
 /**
@@ -91,16 +92,16 @@ public class ClassCoverageImplTest {
 		data.addMethod(createMethod(true));
 		assertEquals(CounterImpl.COUNTER_0_1, data.getInstructionCounter());
 		assertEquals(CounterImpl.COUNTER_0_1, data.getMethodCounter());
-		assertEquals(CounterImpl.COUNTER_0_1, data.getClassCounter());
+		assertEquals(CounterImpl.getInstance(0, 1, 0), data.getClassCounter());
 	}
 
 	private MethodCoverageImpl createMethod(boolean covered) {
 		final MethodCoverageImpl m = new MethodCoverageImpl("sample", "()V",
-				null);
+				null, ProbeMode.exists);
 		m.increment(
 				covered ? CounterImpl.COUNTER_0_1 : CounterImpl.COUNTER_1_0,
 				CounterImpl.COUNTER_0_0, ISourceNode.UNKNOWN_LINE);
-		m.incrementMethodCounter(1);
+		m.incrementMethodCounter(0);
 		return m;
 	}
 

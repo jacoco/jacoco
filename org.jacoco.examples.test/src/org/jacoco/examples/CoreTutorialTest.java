@@ -30,9 +30,9 @@ public class CoreTutorialTest {
 
 		console.expect(containsLine("0 of 3 methods missed"));
 		console.expect(containsLine("1 of 5 complexity missed"));
-		console.expect(containsLine("Line 46: "));
-		console.expect(containsLine("Line 47: green"));
-		console.expect(containsLine("Line 48: yellow"));
-		console.expect(containsLine("Line 49: red"));
+		console.expect(containsLine("Line 47: "));
+		console.expect(containsLine("Line 48: green"));
+		console.expect(containsLine("Line 49: yellow"));
+		console.expect(containsLine("Line 50: red"));
 	}
 }

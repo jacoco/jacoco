@@ -72,7 +72,7 @@ public class ClassCoverageImpl extends SourceNodeImpl implements IClassCoverage 
 		// As class is considered as covered when at least one method is
 		// covered:
 		if (methodCounter.getCoveredCount() > 0) {
-			this.classCounter = CounterImpl.COUNTER_0_1;
+			this.classCounter = CounterImpl.getInstance(0, 1, 0);
 		}
 	}
 

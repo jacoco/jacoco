@@ -13,6 +13,7 @@ package org.jacoco.report.internal.html;
 
 import java.util.Locale;
 
+import org.jacoco.core.data.ProbeMode;
 import org.jacoco.report.ILanguageNames;
 import org.jacoco.report.internal.html.index.IIndexUpdate;
 import org.jacoco.report.internal.html.resources.Resources;
@@ -40,9 +41,13 @@ public interface IHTMLReportContext {
 	/**
 	 * Returns a table for rendering coverage nodes.
 	 * 
+	 * @param probeMode
+	 *            the probe mode for reporting.
+	 * @param containsEBigO
+	 *            {@code true} if should report on Empirical Big-O
 	 * @return table for rendering
 	 */
-	public Table getTable();
+	public Table getTable(final ProbeMode probeMode, final boolean containsEBigO);
 
 	/**
 	 * Returns a string of textual information to include in every page footer.

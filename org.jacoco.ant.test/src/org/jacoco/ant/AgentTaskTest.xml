@@ -19,7 +19,7 @@
 		<jacoco:agent property="jacocoagent" append="false" destfile="test.exec"
 			exclClassLoader="EvilClassLoader" includes="org.example.*"
 		    excludes="*Test" sessionid="testid" dumponexit="false"
-			output="file" address="remotehost" port="1234"
+			output="file" address="remotehost" port="1234" probe="exists" jmx="false"
 			classdumpdir="target/dump"/>
 		<au:assertPropertySet name="jacocoagent"/>
 		<au:assertPropertyContains name="jacocoagent" value="-javaagent:"/>
@@ -34,6 +34,8 @@
 		<au:assertPropertyContains name="jacocoagent" value="output=file"/>
 		<au:assertPropertyContains name="jacocoagent" value="address=remotehost"/>
 		<au:assertPropertyContains name="jacocoagent" value="port=1234"/>
+		<au:assertPropertyContains name="jacocoagent" value="probe=exists"/>
+		<au:assertPropertyContains name="jacocoagent" value="jmx=false"/>
 		<property name="dump.dir" location="target/dump"/>
 		<au:assertPropertyContains name="jacocoagent" value="classdumpdir=${dump.dir}"/>
 	</target>

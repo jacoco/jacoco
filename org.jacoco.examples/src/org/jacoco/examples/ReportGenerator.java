@@ -16,6 +16,7 @@ import java.io.IOException;
 
 import org.jacoco.core.analysis.Analyzer;
 import org.jacoco.core.analysis.CoverageBuilder;
+import org.jacoco.core.analysis.IAnalyzer;
 import org.jacoco.core.analysis.IBundleCoverage;
 import org.jacoco.core.tools.ExecFileLoader;
 import org.jacoco.report.DirectorySourceFileLocator;
@@ -111,7 +112,7 @@ public class ReportGenerator {
 
 	private IBundleCoverage analyzeStructure() throws IOException {
 		final CoverageBuilder coverageBuilder = new CoverageBuilder();
-		final Analyzer analyzer = new Analyzer(
+		final IAnalyzer analyzer = new Analyzer(
 				execFileLoader.getExecutionDataStore(), coverageBuilder);
 
 		analyzer.analyzeAll(classesDirectory);

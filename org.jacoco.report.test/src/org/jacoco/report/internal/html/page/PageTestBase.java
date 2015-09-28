@@ -14,6 +14,7 @@ package org.jacoco.report.internal.html.page;
 import java.io.IOException;
 import java.util.Locale;
 
+import org.jacoco.core.data.ProbeMode;
 import org.jacoco.report.ILanguageNames;
 import org.jacoco.report.JavaNames;
 import org.jacoco.report.MemoryMultiReportOutput;
@@ -58,7 +59,7 @@ public abstract class PageTestBase {
 				return resources;
 			}
 
-			public Table getTable() {
+			public Table getTable(ProbeMode probeMode, boolean containsEBigO) {
 				return table;
 			}
 

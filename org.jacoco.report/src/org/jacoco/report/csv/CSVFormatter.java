@@ -18,6 +18,7 @@ import java.util.Collection;
 import java.util.List;
 
 import org.jacoco.core.data.ExecutionData;
+import org.jacoco.core.data.ProbeMode;
 import org.jacoco.core.data.SessionInfo;
 import org.jacoco.report.ILanguageNames;
 import org.jacoco.report.IReportVisitor;
@@ -32,6 +33,8 @@ public class CSVFormatter {
 	private ILanguageNames languageNames = new JavaNames();
 
 	private String outputEncoding = "UTF-8";
+
+	private ProbeMode probeMode = ProbeMode.exists;
 
 	/**
 	 * Sets the implementation for language name display. Java language names
@@ -64,6 +67,16 @@ public class CSVFormatter {
 	}
 
 	/**
+	 * Set the probe mode used in reporting
+	 * 
+	 * @param probeMode
+	 *            the probe mode used in reporting
+	 */
+	public void setProbeMode(final ProbeMode probeMode) {
+		this.probeMode = probeMode;
+	}
+
+	/**
 	 * Creates a new visitor to write a report to the given stream.
 	 * 
 	 * @param output
@@ -77,7 +90,7 @@ public class CSVFormatter {
 		final DelimitedWriter writer = new DelimitedWriter(
 				new OutputStreamWriter(output, outputEncoding));
 		final ClassRowWriter rowWriter = new ClassRowWriter(writer,
-				languageNames);
+				languageNames, probeMode);
 		class Visitor extends CSVGroupHandler implements IReportVisitor {
 			Visitor() {
 				super(rowWriter);

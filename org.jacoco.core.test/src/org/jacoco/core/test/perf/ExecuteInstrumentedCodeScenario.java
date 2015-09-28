@@ -35,7 +35,6 @@ public class ExecuteInstrumentedCodeScenario extends TimedScenario {
 	}
 
 	@Override
-	@SuppressWarnings("unchecked")
 	protected Callable<Void> getInstrumentedCallable() throws Exception {
 		ClassReader reader = new ClassReader(TargetLoader.getClassData(target));
 		IRuntime runtime = new LoggerRuntime();
@@ -44,8 +43,7 @@ public class ExecuteInstrumentedCodeScenario extends TimedScenario {
 		final byte[] instrumentedBuffer = instr.instrument(reader);
 		final TargetLoader loader = new TargetLoader();
 
-		return (Callable<Void>) loader.add(target, instrumentedBuffer)
-				.newInstance();
+		return loader.add(target, instrumentedBuffer).newInstance();
 	}
 
 	@Override

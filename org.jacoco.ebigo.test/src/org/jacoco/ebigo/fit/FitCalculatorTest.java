@@ -15,6 +15,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
+import java.lang.reflect.Constructor;
 import java.util.Iterator;
 import java.util.SortedSet;
 
@@ -22,6 +23,15 @@ import org.junit.Test;
 
 public class FitCalculatorTest {
 	private static final double DELTA = 0.0001;
+
+	@Test
+	public void testDefaultConstructor() throws Exception {
+		Constructor<FitCalculator> constructor = FitCalculator.class
+				.getDeclaredConstructor();
+		constructor.setAccessible(true);
+		constructor.newInstance();
+		// Does not throw is all we test
+	}
 
 	@Test(expected = IllegalArgumentException.class)
 	public void tooFewXs() {
@@ -61,8 +71,9 @@ public class FitCalculatorTest {
 		final int[] X_VALUES = { 1, 2, 3, 4, 5 };
 		final int[] Y_VALUES = { 3, 9, 19, 33, 51 };
 
-		Fit fit = FitCalculator.calcSingleFit(FitType.Log, X_VALUES, Y_VALUES);
-		assertEquals(FitType.Log, fit.type);
+		Fit fit = FitCalculator.calcSingleFit(FitType.Logarithmic, X_VALUES,
+				Y_VALUES);
+		assertEquals(FitType.Logarithmic, fit.type);
 		assertEquals(5, fit.n);
 		assertEquals(27.749304290636864, fit.slope, DELTA);
 		assertEquals(0.02815830244860937, fit.intercept, DELTA);
@@ -105,8 +116,9 @@ public class FitCalculatorTest {
 		final int[] X_VALUES = { 1, 2, 3, 4, 5 };
 		final int[] Y_VALUES = { 3, 9, 19, 33, 51 };
 
-		Fit fit = FitCalculator.calcSingleFit(FitType.Exp, X_VALUES, Y_VALUES);
-		assertEquals(FitType.Exp, fit.type);
+		Fit fit = FitCalculator.calcSingleFit(FitType.Exponential, X_VALUES,
+				Y_VALUES);
+		assertEquals(FitType.Exponential, fit.type);
 		assertEquals(5, fit.n);
 		assertEquals(0.6965709672242694, fit.slope, DELTA);
 		assertEquals(0.6440089061995071, fit.intercept, DELTA);
@@ -120,12 +132,12 @@ public class FitCalculatorTest {
 		final int[] Y_VALUES = { 3, 9, 19, 33, 51 };
 
 		SortedSet<Fit> fitSet = FitCalculator.calcFitSet(FitType.values(),
-				"test location", X_VALUES, Y_VALUES);
+				X_VALUES, Y_VALUES);
 		Iterator<Fit> iterator = fitSet.iterator();
 		assertEquals(FitType.PowerLaw, iterator.next().type);
-		assertEquals(FitType.Exp, iterator.next().type);
+		assertEquals(FitType.Exponential, iterator.next().type);
 		assertEquals(FitType.Linear, iterator.next().type);
-		assertEquals(FitType.Log, iterator.next().type);
+		assertEquals(FitType.Logarithmic, iterator.next().type);
 		assertFalse(iterator.hasNext());
 	}
 
@@ -135,7 +147,7 @@ public class FitCalculatorTest {
 		final int[] Y_VALUES = { 1, 1, 1, 1, 1 };
 
 		SortedSet<Fit> fitSet = FitCalculator.calcFitSet(FitType.values(),
-				"test location", X_VALUES, Y_VALUES);
+				X_VALUES, Y_VALUES);
 		assertTrue(fitSet.isEmpty());
 	}
 }

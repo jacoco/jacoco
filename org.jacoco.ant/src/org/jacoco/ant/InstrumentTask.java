@@ -25,7 +25,9 @@ import org.apache.tools.ant.types.Resource;
 import org.apache.tools.ant.types.ResourceCollection;
 import org.apache.tools.ant.types.resources.Union;
 import org.apache.tools.ant.util.FileUtils;
+import org.jacoco.core.data.ProbeMode;
 import org.jacoco.core.instr.Instrumenter;
+import org.jacoco.core.internal.instr.ProbeArrayService;
 import org.jacoco.core.runtime.OfflineInstrumentationAccessGenerator;
 
 /**
@@ -38,6 +40,8 @@ public class InstrumentTask extends Task {
 	private final Union files = new Union();
 
 	private boolean removesignatures = true;
+
+	private ProbeMode probeMode = ProbeMode.exists;
 
 	/**
 	 * Sets the location of the instrumented classes.
@@ -60,6 +64,17 @@ public class InstrumentTask extends Task {
 	}
 
 	/**
+	 * Sets the probe mode to use form instrumentation. Default is
+	 * <code>exists</code>
+	 * 
+	 * @param probeMode
+	 *            Probe mode to use for instrumentation
+	 */
+	public void setProbe(final ProbeMode probeMode) {
+		this.probeMode = probeMode != null ? probeMode : ProbeMode.exists;
+	}
+
+	/**
 	 * This task accepts any number of class file resources.
 	 * 
 	 * @param resources
@@ -75,6 +90,9 @@ public class InstrumentTask extends Task {
 			throw new BuildException("Destination directory must be supplied",
 					getLocation());
 		}
+		ProbeArrayService.reset();
+		ProbeArrayService.configure(this.probeMode);
+
 		int total = 0;
 		final Instrumenter instrumenter = new Instrumenter(
 				new OfflineInstrumentationAccessGenerator());
@@ -87,8 +105,9 @@ public class InstrumentTask extends Task {
 			}
 			total += instrument(instrumenter, resource);
 		}
-		log(format("Instrumented %s classes to %s", Integer.valueOf(total),
-				destdir.getAbsolutePath()));
+		log(format("Instrumented %s classes to %s in mode '%s'",
+				Integer.valueOf(total), destdir.getAbsolutePath(),
+				ProbeArrayService.getProbeMode()));
 	}
 
 	private int instrument(final Instrumenter instrumenter,

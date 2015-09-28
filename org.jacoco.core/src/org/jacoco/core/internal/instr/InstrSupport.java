@@ -46,29 +46,12 @@ public final class InstrSupport {
 	public static final int DATAFIELD_INTF_ACC = Opcodes.ACC_SYNTHETIC
 			| Opcodes.ACC_PUBLIC | Opcodes.ACC_STATIC | Opcodes.ACC_FINAL;
 
-	/**
-	 * Class name that stores coverage information for a class (
-	 * <code>AtomicIntegerArray</code>).
-	 */
-	public static final String DATAFIELD_CLASS = "java/util/concurrent/atomic/AtomicIntegerArray";
-
-	/**
-	 * Data type of the field that stores coverage information for a class (
-	 * <code>AtomicIntegerArray</code>).
-	 */
-	public static final String DATAFIELD_DESC = "Ljava/util/concurrent/atomic/AtomicIntegerArray;";
-
 	// === Init Method ===
 
 	/**
 	 * Name of the initialization method.
 	 */
 	public static final String INITMETHOD_NAME = "$jacocoInit";
-
-	/**
-	 * Descriptor of the initialization method.
-	 */
-	public static final String INITMETHOD_DESC = "()" + DATAFIELD_DESC;
 
 	/**
 	 * Access modifiers of the initialization method.

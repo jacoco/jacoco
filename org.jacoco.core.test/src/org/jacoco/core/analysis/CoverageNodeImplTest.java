@@ -18,10 +18,12 @@ import static org.jacoco.core.analysis.ICoverageNode.CounterEntity.INSTRUCTION;
 import static org.jacoco.core.analysis.ICoverageNode.CounterEntity.LINE;
 import static org.jacoco.core.analysis.ICoverageNode.CounterEntity.METHOD;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 
 import java.util.Arrays;
 
 import org.jacoco.core.analysis.ICoverageNode.ElementType;
+import org.jacoco.core.data.ProbeMode;
 import org.jacoco.core.internal.analysis.CounterImpl;
 import org.junit.Test;
 
@@ -29,6 +31,7 @@ import org.junit.Test;
  * Unit tests for {@link CoverageNodeImpl}.
  */
 public class CoverageNodeImplTest {
+	private static final double DELTA = 0.00000001D;
 
 	@Test
 	public void testProperties() {
@@ -107,6 +110,125 @@ public class CoverageNodeImplTest {
 	}
 
 	@Test
+	public void testProbeMode_initial() {
+		CoverageNodeImpl node = new CoverageNodeImpl(ElementType.GROUP,
+				"sample");
+		assertNull(node.getProbeMode());
+	}
+
+	@Test
+	public void testProbeMode_incrementFromNull() {
+		CoverageNodeImpl node = new CoverageNodeImpl(ElementType.GROUP,
+				"sample");
+		ICoverageNode child = new CoverageNodeImpl(ElementType.CLASS, "sample") {
+			{
+				probeMode = ProbeMode.parallelcount;
+			}
+		};
+		node.increment(child);
+		assertEquals(ProbeMode.parallelcount, node.getProbeMode());
+	}
+
+	@Test
+	public void testProbeMode_increment1() {
+		probeModeTest(ProbeMode.exists, ProbeMode.exists, ProbeMode.exists);
+	}
+
+	@Test
+	public void testProbeMode_increment2() {
+		probeModeTest(ProbeMode.exists, ProbeMode.count, ProbeMode.exists);
+	}
+
+	@Test
+	public void testProbeMode_increment3() {
+		probeModeTest(ProbeMode.exists, ProbeMode.parallelcount,
+				ProbeMode.exists);
+	}
+
+	@Test
+	public void testProbeMode_increment4() {
+		probeModeTest(ProbeMode.count, ProbeMode.exists, ProbeMode.exists);
+	}
+
+	@Test
+	public void testProbeMode_increment5() {
+		probeModeTest(ProbeMode.count, ProbeMode.count, ProbeMode.count);
+	}
+
+	@Test
+	public void testProbeMode_increment6() {
+		probeModeTest(ProbeMode.count, ProbeMode.parallelcount, ProbeMode.count);
+	}
+
+	@Test
+	public void testProbeMode_increment7() {
+		probeModeTest(ProbeMode.parallelcount, ProbeMode.exists,
+				ProbeMode.exists);
+	}
+
+	@Test
+	public void testProbeMode_increment8() {
+		probeModeTest(ProbeMode.parallelcount, ProbeMode.count, ProbeMode.count);
+	}
+
+	@Test
+	public void testProbeMode_increment9() {
+		probeModeTest(ProbeMode.parallelcount, ProbeMode.parallelcount,
+				ProbeMode.parallelcount);
+	}
+
+	private void probeModeTest(final ProbeMode parentMode,
+			final ProbeMode childMode, final ProbeMode expectedMode) {
+		CoverageNodeImpl node = new CoverageNodeImpl(ElementType.GROUP,
+				"sample") {
+			{
+				probeMode = parentMode;
+			}
+		};
+		ICoverageNode child = new CoverageNodeImpl(ElementType.CLASS, "sample") {
+			{
+				probeMode = childMode;
+			}
+		};
+		node.increment(child);
+		assertEquals(expectedMode, node.getProbeMode());
+	}
+
+	@Test
+	public void testParallelPercent1() {
+		ICoverageNode node = new CoverageNodeImpl(ElementType.GROUP, "sample") {
+			{
+				instructionCounter = CounterImpl.getInstance(1, 41, 0);
+				branchCounter = CounterImpl.getInstance(10, 15, 15);
+			}
+		};
+		assertEquals(0, node.getParallelPercent(), DELTA);
+	}
+
+	@Test
+	public void testParallelPercent2() {
+		ICoverageNode node = new CoverageNodeImpl(ElementType.GROUP, "sample") {
+			{
+				instructionCounter = CounterImpl.getInstance(1, 41, 41);
+				branchCounter = CounterImpl.getInstance(10, 15, 0);
+			}
+		};
+		assertEquals(0, node.getParallelPercent(), DELTA);
+	}
+
+	@Test
+	public void testParallelPercent3() {
+		ICoverageNode node = new CoverageNodeImpl(ElementType.GROUP, "sample") {
+			{
+				instructionCounter = CounterImpl.getInstance(1, 41, 41);
+				branchCounter = CounterImpl.getInstance(10, 15, 15);
+			}
+		};
+		assertEquals((double) 1500 / (double) 41, node.getParallelPercent(),
+				DELTA);
+	}
+
+	@Test
 	public void testGetPlainCopy() {
 		ICoverageNode node = new CoverageNodeImpl(ElementType.CLASS, "Sample") {
 			{
@@ -116,6 +238,7 @@ public class CoverageNodeImplTest {
 				instructionCounter = CounterImpl.getInstance(4, 4, 4);
 				lineCounter = CounterImpl.getInstance(5, 5, 5);
 				complexityCounter = CounterImpl.getInstance(6, 6, 6);
+				probeMode = ProbeMode.parallelcount;
 			}
 		};
 		ICoverageNode copy = node.getPlainCopy();
@@ -129,6 +252,7 @@ public class CoverageNodeImplTest {
 		assertEquals(CounterImpl.getInstance(5, 5, 5), copy.getLineCounter());
 		assertEquals(CounterImpl.getInstance(6, 6, 6),
 				copy.getComplexityCounter());
+		assertEquals(ProbeMode.parallelcount, copy.getProbeMode());
 	}
 
 	@Test

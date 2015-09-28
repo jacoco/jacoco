@@ -14,6 +14,7 @@ package org.jacoco.core.test.perf;
 import java.util.concurrent.Callable;
 
 import org.jacoco.core.analysis.Analyzer;
+import org.jacoco.core.analysis.IAnalyzer;
 import org.jacoco.core.analysis.IClassCoverage;
 import org.jacoco.core.analysis.ICoverageVisitor;
 import org.jacoco.core.data.ExecutionDataStore;
@@ -42,7 +43,7 @@ public class AnalysisTimeScenario extends TimedScenario {
 			public void visitCoverage(IClassCoverage coverage) {
 			}
 		};
-		final Analyzer analyzer = new Analyzer(executionData, visitor);
+		final IAnalyzer analyzer = new Analyzer(executionData, visitor);
 		return new Callable<Void>() {
 			public Void call() throws Exception {
 				for (int i = 0; i < count; i++) {

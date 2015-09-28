@@ -23,6 +23,7 @@ import org.jacoco.core.analysis.IMethodCoverage;
 import org.jacoco.core.analysis.IPackageCoverage;
 import org.jacoco.core.analysis.ISourceFileCoverage;
 import org.jacoco.core.analysis.ISourceNode;
+import org.jacoco.core.data.ProbeMode;
 
 /**
  * Serializes coverage data as XML fragments.
@@ -125,7 +126,22 @@ public final class XMLCoverageWriter {
 			if (counter.getTotalCount() > 0) {
 				final XMLElement counterNode = parent.element("counter");
 				counterNode.attr("type", counterEntity.name());
-				writeCounter(counterNode, "missed", "covered", counter);
+				switch (counterEntity) {
+				case COMPLEXITY:
+					writeCounter(false, counterNode, "missed", "covered",
+							"executed", counter);
+					break;
+				case BRANCH:
+					writeCounter(
+							node.getProbeMode() == ProbeMode.parallelcount,
+							counterNode, "missed", "covered",
+							"executedParallel", counter);
+					break;
+				default:
+					writeCounter(node.getProbeMode() != ProbeMode.exists,
+							counterNode, "missed", "covered", "executed",
+							counter);
+				}
 				counterNode.close();
 			}
 		}
@@ -139,17 +155,23 @@ public final class XMLCoverageWriter {
 			if (line.getStatus() != ICounter.EMPTY) {
 				final XMLElement element = parent.element("line");
 				element.attr("nr", nr);
-				writeCounter(element, "mi", "ci", line.getInstructionCounter());
-				writeCounter(element, "mb", "cb", line.getBranchCounter());
+				writeCounter(source.getProbeMode() != ProbeMode.exists,
+						element, "mi", "ci", "ei", line.getInstructionCounter());
+				writeCounter(source.getProbeMode() == ProbeMode.parallelcount,
+						element, "mb", "cb", "ep", line.getBranchCounter());
 			}
 		}
 	}
 
-	private static void writeCounter(final XMLElement element,
-			final String missedattr, final String coveredattr,
+	private static void writeCounter(final boolean showExecCount,
+			final XMLElement element, final String missedattr,
+			final String coveredattr, final String executedattr,
 			final ICounter counter) throws IOException {
 		element.attr(missedattr, counter.getMissedCount());
 		element.attr(coveredattr, counter.getCoveredCount());
+		if (showExecCount) {
+			element.attr(executedattr, counter.getExecutionCount());
+		}
 	}
 
 	private XMLCoverageWriter() {

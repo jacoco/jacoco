@@ -11,6 +11,6 @@
  *******************************************************************************/
 
 /**
- * Meta information about JaCoCo.
+ * Assembling execution workload results into a form ready for analysis.
  */
 package org.jacoco.core;

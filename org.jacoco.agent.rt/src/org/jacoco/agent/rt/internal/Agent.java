@@ -24,6 +24,7 @@ import org.jacoco.agent.rt.internal.output.TcpClientOutput;
 import org.jacoco.agent.rt.internal.output.TcpServerOutput;
 import org.jacoco.core.JaCoCo;
 import org.jacoco.core.data.ExecutionDataWriter;
+import org.jacoco.core.internal.instr.ProbeArrayService;
 import org.jacoco.core.runtime.AbstractRuntime;
 import org.jacoco.core.runtime.AgentOptions;
 import org.jacoco.core.runtime.AgentOptions.OutputMode;
@@ -46,6 +47,7 @@ public class Agent implements IAgent {
 	 */
 	public static synchronized Agent getInstance(final AgentOptions options) {
 		if (singleton == null) {
+			ProbeArrayService.configure(options.getProbe());
 			final Agent agent = new Agent(options, IExceptionLogger.SYSTEM_ERR);
 			agent.startup();
 			Runtime.getRuntime().addShutdownHook(new Thread() {

@@ -1,0 +1,45 @@
+/*******************************************************************************
+ * Copyright (c) 2009, 2015 Mountainminds GmbH & Co. KG and Contributors
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *    Evgeny Mandrikov - initial API and implementation
+ *
+ *******************************************************************************/
+import java.io.*;
+import org.codehaus.plexus.util.*;
+
+String agentOptions = "excludes=**/FileUtil*:**/TestUtil*";
+
+String buildLog = FileUtils.fileRead( new File( basedir, "build.log" ) );
+if ( buildLog.indexOf( agentOptions ) < 0 ) {
+    throw new RuntimeException("Include/Exclude was not configured correct" );
+}
+if ( buildLog.indexOf( "probe=parallelcount" ) < 0 ) {
+    throw new RuntimeException("Probe mode was not configured correct" );
+}
+
+File databaseUtilReportFile = new File( basedir, "target/site/jacoco/org.project/DatabaseUtil.html" );
+if ( !databaseUtilReportFile.isFile() )
+{
+    throw new FileNotFoundException( "DatabaseUtil should NOT be excluded: " + databaseUtilReportFile );
+}
+
+String databaseUtilReport = FileUtils.fileRead( databaseUtilReportFile );
+if ( databaseUtilReport.indexOf("Parallel") < 0)
+{
+    throw new FileNotFoundException( "Parallel Percent was not configured to appear in report" );
+}
+if ( databaseUtilReport.indexOf("E-BigO") < 0)
+{
+    throw new FileNotFoundException( "Empirical Big-O was not configured to appear in report" );
+}
+
+File testUtilReportFile = new File( basedir, "target/site/jacoco/org.project/TestUtil.html" );
+if ( testUtilReportFile.isFile() )
+{
+    throw new RuntimeException( "TestUtil SHOULD be excluded: " + testUtilReportFile );
+}

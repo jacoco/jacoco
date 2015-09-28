@@ -31,16 +31,16 @@ public class ClassCoverageIteratorsTest {
 
 	@Test(expected = IllegalArgumentException.class)
 	public void testConstructorWithNullArg() {
-		new ClassCoverageIterators(null);
+		new ClassCoverageSetIterator(null);
 	}
 
 	@Test(expected = IllegalArgumentException.class)
 	public void testConstructorWithEmptyList() {
-		new ClassCoverageIterators(new ArrayList<CoverageBuilder>());
+		new ClassCoverageSetIterator(new ArrayList<CoverageBuilder>());
 	}
 
 	private void assertNextThrowsNoSuchElementException(
-			ClassCoverageIterators instance) {
+			ClassCoverageSetIterator instance) {
 		try {
 			instance.next();
 			Assert.fail("Failed to throw NoSuchElementException");
@@ -53,7 +53,7 @@ public class ClassCoverageIteratorsTest {
 		List<CoverageBuilder> list = new ArrayList<CoverageBuilder>();
 		list.add(new CoverageBuilder());
 
-		ClassCoverageIterators instance = new ClassCoverageIterators(list);
+		ClassCoverageSetIterator instance = new ClassCoverageSetIterator(list);
 
 		assertFalse(instance.hasNext());
 		assertNextThrowsNoSuchElementException(instance);
@@ -67,7 +67,7 @@ public class ClassCoverageIteratorsTest {
 
 		list.add(builder);
 
-		ClassCoverageIterators instance = new ClassCoverageIterators(list);
+		ClassCoverageSetIterator instance = new ClassCoverageSetIterator(list);
 
 		assertTrue(instance.hasNext());
 		IClassCoverage[] coverages = instance.next();
@@ -86,7 +86,7 @@ public class ClassCoverageIteratorsTest {
 
 		list.add(builder);
 
-		ClassCoverageIterators instance = new ClassCoverageIterators(list);
+		ClassCoverageSetIterator instance = new ClassCoverageSetIterator(list);
 
 		assertTrue(instance.hasNext());
 		IClassCoverage[] coverages = instance.next();
@@ -113,7 +113,7 @@ public class ClassCoverageIteratorsTest {
 		addClassCoverage(124L, "Sample2", false, builder2);
 		list.add(builder2);
 
-		ClassCoverageIterators instance = new ClassCoverageIterators(list);
+		ClassCoverageSetIterator instance = new ClassCoverageSetIterator(list);
 
 		assertFalse(instance.hasNext());
 		assertNextThrowsNoSuchElementException(instance);
@@ -133,7 +133,7 @@ public class ClassCoverageIteratorsTest {
 		addClassCoverage(124L, "Sample3", false, builder2);
 		list.add(builder2);
 
-		ClassCoverageIterators instance = new ClassCoverageIterators(list);
+		ClassCoverageSetIterator instance = new ClassCoverageSetIterator(list);
 
 		assertTrue(instance.hasNext());
 		IClassCoverage[] coverages = instance.next();
@@ -162,7 +162,7 @@ public class ClassCoverageIteratorsTest {
 		addClassCoverage(124L, "Sample3", false, builder2);
 		list.add(builder2);
 
-		ClassCoverageIterators instance = new ClassCoverageIterators(list);
+		ClassCoverageSetIterator instance = new ClassCoverageSetIterator(list);
 
 		assertTrue(instance.hasNext());
 		IClassCoverage[] coverages = instance.next();

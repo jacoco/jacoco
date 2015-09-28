@@ -56,9 +56,9 @@ public class XAxisValuesTest {
 				.create("KEY", 20).add("EXTRA", 2).build();
 		WorkloadAttributeMap attributes3 = WorkloadAttributeMapBuilder
 				.create("KEY", 30).add("EXTRA", 1).build();
-		store.put(attributes1, makeWorkload(attributes1));
-		store.put(attributes2, makeWorkload(attributes2));
-		store.put(attributes3, makeWorkload(attributes3));
+		store.put(makeWorkload(attributes1));
+		store.put(makeWorkload(attributes2));
+		store.put(makeWorkload(attributes3));
 
 		XAxisValues instance = new XAxisValues(store, "KEY");
 		assertEquals(3, instance.size());
