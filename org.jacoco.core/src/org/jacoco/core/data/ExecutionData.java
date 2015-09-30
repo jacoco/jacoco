@@ -97,7 +97,7 @@ public final class ExecutionData {
 	 * 
 	 * @return probe data
 	 */
-	public IProbeArray<?> getProbes() {
+	public IProbes getProbes() {
 		return probes;
 	}
 

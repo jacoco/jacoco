@@ -13,6 +13,7 @@ package org.jacoco.agent.rt.internal;
 
 import java.util.Properties;
 
+import org.jacoco.core.internal.instr.IProbeArray;
 import org.jacoco.core.runtime.AgentOptions;
 import org.jacoco.core.runtime.RuntimeData;
 
@@ -48,9 +49,9 @@ public final class Offline {
 	 */
 	public static Object getProbesObject(final long classid,
 			final String classname, final int probecount) {
-		return DATA
-				.getExecutionData(Long.valueOf(classid), classname, probecount)
-				.getProbes().getProbesObject();
+		final IProbeArray<?> probes = (IProbeArray<?>) DATA.getExecutionData(
+				Long.valueOf(classid), classname, probecount).getProbes();
+		return probes.getProbesObject();
 	}
 
 }

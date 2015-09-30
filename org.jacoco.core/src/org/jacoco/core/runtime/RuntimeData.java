@@ -16,6 +16,7 @@ import org.jacoco.core.data.ExecutionDataStore;
 import org.jacoco.core.data.IExecutionDataVisitor;
 import org.jacoco.core.data.ISessionInfoVisitor;
 import org.jacoco.core.data.SessionInfo;
+import org.jacoco.core.internal.instr.IProbeArray;
 import org.jacoco.core.internal.instr.InstrSupport;
 import org.jacoco.core.internal.instr.ProbeArrayService;
 import org.objectweb.asm.MethodVisitor;
@@ -146,8 +147,9 @@ public class RuntimeData {
 		final Long classid = (Long) args[0];
 		final String name = (String) args[1];
 		final int probecount = ((Integer) args[2]).intValue();
-		args[0] = getExecutionData(classid, name, probecount).getProbes()
-				.getProbesObject();
+		final IProbeArray<?> probes = (IProbeArray<?>) getExecutionData(
+				classid, name, probecount).getProbes();
+		args[0] = probes.getProbesObject();
 	}
 
 	/**

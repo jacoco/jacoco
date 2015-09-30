@@ -263,7 +263,8 @@ public class ExecutionDataReaderWriterTest {
 			writer.visitClassExecution(new ExecutionData(Long.MIN_VALUE,
 					"Sample", data));
 			assertFalse(createReaderWithVisitors().read());
-			assertArrayEquals(data, store.get(Long.MIN_VALUE).getProbes());
+			assertArrayEquals(data, (IProbeArray<?>) store.get(Long.MIN_VALUE)
+					.getProbes());
 		}
 
 		@Test
@@ -272,7 +273,8 @@ public class ExecutionDataReaderWriterTest {
 			writer.visitClassExecution(new ExecutionData(Long.MAX_VALUE,
 					"Sample", data));
 			assertFalse(createReaderWithVisitors().read());
-			assertArrayEquals(data, store.get(Long.MAX_VALUE).getProbes());
+			assertArrayEquals(data, (IProbeArray<?>) store.get(Long.MAX_VALUE)
+					.getProbes());
 		}
 
 		@Test
@@ -280,7 +282,7 @@ public class ExecutionDataReaderWriterTest {
 			final IProbeArray<?> data = createData(0);
 			writer.visitClassExecution(new ExecutionData(3, "Sample", data));
 			assertFalse(createReaderWithVisitors().read());
-			assertArrayEquals(data, store.get(3).getProbes());
+			assertArrayEquals(data, (IProbeArray<?>) store.get(3).getProbes());
 		}
 
 		@Test
@@ -288,7 +290,7 @@ public class ExecutionDataReaderWriterTest {
 			final IProbeArray<?> data = createData(5);
 			writer.visitClassExecution(new ExecutionData(3, "Sample", data));
 			assertFalse(createReaderWithVisitors().read());
-			assertArrayEquals(data, store.get(3).getProbes());
+			assertArrayEquals(data, (IProbeArray<?>) store.get(3).getProbes());
 		}
 
 		@Test
@@ -298,8 +300,10 @@ public class ExecutionDataReaderWriterTest {
 			writer.visitClassExecution(new ExecutionData(333, "Sample", data1));
 			writer.visitClassExecution(new ExecutionData(-45, "Sample", data2));
 			assertFalse(createReaderWithVisitors().read());
-			assertArrayEquals(data1, store.get(333).getProbes());
-			assertArrayEquals(data2, store.get(-45).getProbes());
+			assertArrayEquals(data1, (IProbeArray<?>) store.get(333)
+					.getProbes());
+			assertArrayEquals(data2, (IProbeArray<?>) store.get(-45)
+					.getProbes());
 		}
 
 		@Test
@@ -307,7 +311,7 @@ public class ExecutionDataReaderWriterTest {
 			final IProbeArray<?> data = createData(117);
 			writer.visitClassExecution(new ExecutionData(123, "Sample", data));
 			assertFalse(createReaderWithVisitors().read());
-			assertArrayEquals(data, store.get(123).getProbes());
+			assertArrayEquals(data, (IProbeArray<?>) store.get(123).getProbes());
 		}
 
 		@Test(expected = RuntimeException.class)

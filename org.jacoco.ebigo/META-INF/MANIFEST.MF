@@ -5,14 +5,13 @@ Bundle-SymbolicName: org.jacoco.ebigo
 Bundle-Version: 0.7.6.qualifier
 Bundle-Vendor: Mountainminds GmbH & Co. KG
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
-Export-Package: org.jacoco.core;version="0.7.6",
- org.jacoco.core.analysis;version="0.7.6",
+Export-Package: org.jacoco.ebigo.core;version="0.7.6",
+ org.jacoco.ebigo.core.analysis;version="0.7.6",
+ org.jacoco.ebigo.core.fit;version="0.7.6",
+ org.jacoco.core.tools;version="0.7.6"
+Import-Package: org.jacoco.core.analysis;version="0.7.6",
  org.jacoco.core.data;version="0.7.6",
- org.jacoco.core.instr;version="0.7.6",
  org.jacoco.core.internal.analysis;version="0.7.6";x-internal=true,
  org.jacoco.core.runtime;version="0.7.6",
- org.jacoco.core.tools;version="0.7.6"
-Import-Package: org.objectweb.asm;version="[5.0.1,5.1.0)",
- org.objectweb.asm.tree;version="[5.0.1,5.1.0)",
- org.objectweb.asm.commons;version="[5.0.1,5.1.0)",
- org.apache.commons.commons-math3;version=[3.5,)"
+ org.jacoco.core.tools;version="0.7.6",
+ org.apache.commons.commons-math3;version="[3.5,)"

@@ -185,7 +185,7 @@ public class AgentTest implements IExceptionLogger {
 	public void testReset() {
 		Agent agent = new Agent(options, this);
 
-		IProbeArray<?> probes = agent.getData()
+		IProbeArray<?> probes = (IProbeArray<?>) agent.getData()
 				.getExecutionData(Long.valueOf(0x12345678), "Foo", 1)
 				.getProbes();
 		probes.increment(0);
@@ -201,7 +201,7 @@ public class AgentTest implements IExceptionLogger {
 		Agent agent = new Agent(options, this);
 		agent.startup();
 
-		IProbeArray<?> probes = agent.getData()
+		IProbeArray<?> probes = (IProbeArray<?>) agent.getData()
 				.getExecutionData(Long.valueOf(0x12345678), "Foo", 1)
 				.getProbes();
 		probes.increment(0);

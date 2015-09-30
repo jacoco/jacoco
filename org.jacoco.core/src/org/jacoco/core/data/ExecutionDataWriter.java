@@ -16,6 +16,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 
 import org.jacoco.core.internal.data.CompactDataOutput;
+import org.jacoco.core.internal.instr.IProbeArray;
 
 /**
  * Serialization of execution data into binary streams.
@@ -94,7 +95,8 @@ public class ExecutionDataWriter implements ISessionInfoVisitor,
 			out.writeByte(BLOCK_EXECUTIONDATA);
 			out.writeLong(data.getId());
 			out.writeUTF(data.getName());
-			data.getProbes().write(out);
+			final IProbeArray<?> probes = (IProbeArray<?>) data.getProbes();
+			probes.write(out);
 		} catch (final IOException e) {
 			throw new RuntimeException(e);
 		}

@@ -26,8 +26,8 @@ import org.apache.tools.ant.types.ResourceCollection;
 import org.apache.tools.ant.types.resources.Union;
 import org.apache.tools.ant.util.FileUtils;
 import org.jacoco.core.data.ProbeMode;
+import org.jacoco.core.instr.InstrumentationConfig;
 import org.jacoco.core.instr.Instrumenter;
-import org.jacoco.core.internal.instr.ProbeArrayService;
 import org.jacoco.core.runtime.OfflineInstrumentationAccessGenerator;
 
 /**
@@ -90,8 +90,8 @@ public class InstrumentTask extends Task {
 			throw new BuildException("Destination directory must be supplied",
 					getLocation());
 		}
-		ProbeArrayService.reset();
-		ProbeArrayService.configure(this.probeMode);
+		InstrumentationConfig.reset();
+		InstrumentationConfig.configure(this.probeMode);
 
 		int total = 0;
 		final Instrumenter instrumenter = new Instrumenter(
@@ -107,7 +107,7 @@ public class InstrumentTask extends Task {
 		}
 		log(format("Instrumented %s classes to %s in mode '%s'",
 				Integer.valueOf(total), destdir.getAbsolutePath(),
-				ProbeArrayService.getProbeMode()));
+				InstrumentationConfig.getProbeMode()));
 	}
 
 	private int instrument(final Instrumenter instrumenter,

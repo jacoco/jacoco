@@ -82,7 +82,8 @@ public abstract class RuntimeTestBase<T> {
 		generateAndInstantiateClass(1001).a();
 		data.collect(storage, storage, false);
 		storage.assertSize(1);
-		final IProbeArray<?> data = storage.getData(1001).getProbes();
+		final IProbeArray<?> data = (IProbeArray<?>) storage.getData(1001)
+				.getProbes();
 		assertTrue(data.isProbeCovered(0));
 		assertFalse(data.isProbeCovered(1));
 	}
@@ -94,7 +95,8 @@ public abstract class RuntimeTestBase<T> {
 		generateAndInstantiateClass(1001).b();
 		data.collect(storage, storage, false);
 		storage.assertSize(1);
-		final IProbeArray<?> data = storage.getData(1001).getProbes();
+		final IProbeArray<?> data = (IProbeArray<?>) storage.getData(1001)
+				.getProbes();
 		assertTrue(data.isProbeCovered(0));
 		assertTrue(data.isProbeCovered(1));
 	}

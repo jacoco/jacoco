@@ -114,7 +114,9 @@ public class RuntimeDataTest {
 			assertFalse(data.isProbeCovered(0));
 			assertFalse(data.isProbeCovered(1));
 			assertFalse(data.isProbeCovered(2));
-			assertSame(storage.getData(123).getProbes().getProbesObject(),
+			assertSame(
+					((IProbeArray<?>) storage.getData(123).getProbes())
+							.getProbesObject(),
 					data.getProbesObject());
 			assertEquals("Foo", storage.getData(123).getName());
 		}
@@ -128,8 +130,8 @@ public class RuntimeDataTest {
 		@Test
 		public void testCollectWithReset() {
 			data.setSessionId("testsession");
-			IProbeArray<?> probes = data.getExecutionData(Long.valueOf(123),
-					"Foo", 1).getProbes();
+			IProbeArray<?> probes = (IProbeArray<?>) data.getExecutionData(
+					Long.valueOf(123), "Foo", 1).getProbes();
 			probes.increment(0);
 
 			data.collect(storage, storage, true);
@@ -141,8 +143,8 @@ public class RuntimeDataTest {
 		@Test
 		public void testCollectWithoutReset() {
 			data.setSessionId("testsession");
-			IProbeArray<?> probes = data.getExecutionData(Long.valueOf(123),
-					"Foo", 1).getProbes();
+			IProbeArray<?> probes = (IProbeArray<?>) data.getExecutionData(
+					Long.valueOf(123), "Foo", 1).getProbes();
 			probes.increment(0);
 
 			data.collect(storage, storage, false);
@@ -201,8 +203,9 @@ public class RuntimeDataTest {
 
 		@Test
 		public void testGenerateAccessCall() throws Exception {
-			final IProbeArray<?> probes = data.getExecutionData(
-					Long.valueOf(1234), "Sample", 5).getProbes();
+			final IProbeArray<?> probes = (IProbeArray<?>) data
+					.getExecutionData(Long.valueOf(1234), "Sample", 5)
+					.getProbes();
 
 			final ClassWriter writer = new ClassWriter(0);
 			writer.visit(Opcodes.V1_5, Opcodes.ACC_PUBLIC, "Sample", null,

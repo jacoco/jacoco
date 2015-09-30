@@ -178,7 +178,8 @@ public class ExecutionDataStoreTest {
 			final IProbeArray<?> data2 = createProbes(new int[] { 0, 5, 5, 0 });
 			store.visitClassExecution(new ExecutionData(1000, "Sample", data2));
 
-			final IProbeArray<?> result = store.get(1000).getProbes();
+			final IProbeArray<?> result = (IProbeArray<?>) store.get(1000)
+					.getProbes();
 			assertFalse(result.isProbeCovered(0));
 			assertTrue(result.isProbeCovered(1));
 			assertTrue(result.isProbeCovered(2));
@@ -200,7 +201,8 @@ public class ExecutionDataStoreTest {
 			final IProbeArray<?> data2 = createProbes(new int[] { 0, 0, 4, 4 });
 			store.subtract(new ExecutionData(1000, "Sample", data2));
 
-			final IProbeArray<?> result = store.get(1000).getProbes();
+			final IProbeArray<?> result = (IProbeArray<?>) store.get(1000)
+					.getProbes();
 			assertFalse(result.isProbeCovered(0));
 			assertTrue(result.isProbeCovered(1));
 			assertFalse(result.isProbeCovered(2));
@@ -214,7 +216,8 @@ public class ExecutionDataStoreTest {
 			final IProbeArray<?> data2 = createProbes(new int[] { 3, 3 });
 			store.subtract(new ExecutionData(2000, "Sample2", data2));
 
-			final IProbeArray<?> result = store.get(1000).getProbes();
+			final IProbeArray<?> result = (IProbeArray<?>) store.get(1000)
+					.getProbes();
 			assertFalse(result.isProbeCovered(0));
 			assertTrue(result.isProbeCovered(1));
 
@@ -232,7 +235,8 @@ public class ExecutionDataStoreTest {
 
 			store.subtract(store2);
 
-			final IProbeArray<?> result = store.get(1000).getProbes();
+			final IProbeArray<?> result = (IProbeArray<?>) store.get(1000)
+					.getProbes();
 			assertFalse(result.isProbeCovered(0));
 			assertTrue(result.isProbeCovered(1));
 			assertFalse(result.isProbeCovered(2));
@@ -245,7 +249,8 @@ public class ExecutionDataStoreTest {
 			final IProbeArray<?> data1 = createProbes(new int[] { 1, 1, 0 });
 			store.put(new ExecutionData(1000, "Sample", data1));
 			store.reset();
-			final IProbeArray<?> data2 = store.get(1000).getProbes();
+			final IProbeArray<?> data2 = (IProbeArray<?>) store.get(1000)
+					.getProbes();
 			assertNotNull(data2);
 			assertFalse(data2.isProbeCovered(0));
 			assertFalse(data2.isProbeCovered(1));

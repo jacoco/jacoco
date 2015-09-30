@@ -24,8 +24,8 @@ import org.apache.maven.plugin.MojoFailureException;
 import org.codehaus.plexus.util.FileUtils;
 import org.codehaus.plexus.util.IOUtil;
 import org.jacoco.core.data.ProbeMode;
+import org.jacoco.core.instr.InstrumentationConfig;
 import org.jacoco.core.instr.Instrumenter;
-import org.jacoco.core.internal.instr.ProbeArrayService;
 import org.jacoco.core.runtime.OfflineInstrumentationAccessGenerator;
 
 /**
@@ -88,8 +88,8 @@ public class InstrumentMojo extends AbstractJacocoMojo {
 					"Unable to get list of files to instrument.", e1);
 		}
 
-		ProbeArrayService.reset();
-		ProbeArrayService.configure(this.probe);
+		InstrumentationConfig.reset();
+		InstrumentationConfig.configure(this.probe);
 		final Instrumenter instrumenter = new Instrumenter(
 				new OfflineInstrumentationAccessGenerator());
 		for (final String fileName : fileNames) {

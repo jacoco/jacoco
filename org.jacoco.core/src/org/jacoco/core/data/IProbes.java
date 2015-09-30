@@ -33,6 +33,16 @@ public interface IProbes {
 	public int length();
 
 	/**
+	 * Increment a probe. The method is for external users that are manipulating
+	 * execution data.
+	 * 
+	 * @param probeId
+	 *            the probe id must be between zero and the number of probes
+	 *            given at construction.
+	 */
+	public void increment(final int probeId);
+
+	/**
 	 * Does a probe have coverage.
 	 * 
 	 * @param index

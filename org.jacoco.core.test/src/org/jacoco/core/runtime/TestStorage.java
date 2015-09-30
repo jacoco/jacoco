@@ -21,6 +21,7 @@ import org.jacoco.core.data.ExecutionData;
 import org.jacoco.core.data.IExecutionDataVisitor;
 import org.jacoco.core.data.ISessionInfoVisitor;
 import org.jacoco.core.data.SessionInfo;
+import org.jacoco.core.internal.instr.IProbeArray;
 
 class TestStorage<T> implements IExecutionDataVisitor, ISessionInfoVisitor {
 
@@ -41,7 +42,9 @@ class TestStorage<T> implements IExecutionDataVisitor, ISessionInfoVisitor {
 	}
 
 	public void assertData(long classId, T is) {
-		assertSame(is, getData(classId).getProbes().getProbesObject());
+		assertSame(is,
+				((IProbeArray<?>) getData(classId).getProbes())
+						.getProbesObject());
 	}
 
 	// === ICoverageDataVisitor ===

@@ -17,7 +17,7 @@ import java.io.OutputStream;
 
 import org.jacoco.core.data.ExecutionData;
 import org.jacoco.core.data.ExecutionDataWriter;
-import org.jacoco.core.internal.instr.ProbeArrayService;
+import org.jacoco.core.instr.InstrumentationConfig;
 
 /**
  * Utility class to create exec files required for some Ant tests.
@@ -40,7 +40,8 @@ public class CreateExecFiles {
 		out = new FileOutputStream(BASE_LOCATION + "nomatch.exec");
 		ExecutionDataWriter writer = new ExecutionDataWriter(out);
 		writer.visitClassExecution(new ExecutionData(0,
-				"org/jacoco/ant/TestTarget", ProbeArrayService.newProbeArray(0)));
+				"org/jacoco/ant/TestTarget", InstrumentationConfig
+						.getProbeMode().getProbeZeroInstance()));
 		out.close();
 	}
 

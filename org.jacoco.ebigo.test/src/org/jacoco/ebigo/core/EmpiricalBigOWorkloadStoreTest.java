@@ -138,8 +138,8 @@ public class EmpiricalBigOWorkloadStoreTest {
 
 		{ // store are merged
 			IProbeArray<?> expectedProbe = createIntProbe(new int[] { 4, 4, 4 });
-			IProbeArray<?> actualProbe = instance.getMergedExecutionDataStore()
-					.get(1L).getProbes();
+			IProbeArray<?> actualProbe = (IProbeArray<?>) instance
+					.getMergedExecutionDataStore().get(1L).getProbes();
 			assertEquals(expectedProbe, actualProbe);
 		}
 

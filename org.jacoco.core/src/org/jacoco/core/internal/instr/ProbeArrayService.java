@@ -22,10 +22,9 @@ import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.Type;
 
 /**
- * An Java SPI service for providers that create different types of data
- * collection probes. By using this abstraction we can continue to use by
- * default boolean[], but provide more advanced features to those that choose
- * so.
+ * An Java service for providers that create different types of data collection
+ * probes. By using this abstraction we can continue to use by default
+ * boolean[], but provide more advanced features to those that choose so.
  * <p>
  * Implementations of the service must {@code implement IProbeArray} interface,
  * and be published in @{code

@@ -13,7 +13,6 @@ package org.jacoco.ebigo.tools;
 
 import java.io.File;
 import java.io.IOException;
-import java.net.UnknownHostException;
 
 import org.jacoco.core.runtime.AgentOptions;
 import org.jacoco.ebigo.core.EmpiricalBigOJacocoAgentConnection;
