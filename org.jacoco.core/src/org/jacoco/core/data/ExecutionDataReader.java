@@ -74,8 +74,11 @@ public class ExecutionDataReader {
 	 *         stream has been reached.
 	 * @throws IOException
 	 *             might be thrown by the underlying input stream
+	 * @throws IncompatibleExecDataVersionException
+	 *             incompatible data version from different JaCoCo release
 	 */
-	public boolean read() throws IOException {
+	public boolean read() throws IOException,
+			IncompatibleExecDataVersionException {
 		try {
 			byte type;
 			do {
@@ -124,8 +127,7 @@ public class ExecutionDataReader {
 		}
 		final char version = in.readChar();
 		if (version != ExecutionDataWriter.FORMAT_VERSION) {
-			throw new IOException(format("Incompatible version %x.",
-					Integer.valueOf(version)));
+			throw new IncompatibleExecDataVersionException(version);
 		}
 	}
 
