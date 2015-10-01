@@ -24,7 +24,14 @@ public class ExecutionDataWriter implements ISessionInfoVisitor,
 		IExecutionDataVisitor {
 
 	/** File format version, will be incremented for each incompatible change. */
-	public static final char FORMAT_VERSION = 0x1007;
+	public static final int FORMAT_VERSION = 0x7;
+
+	/** Padding for the on-disk file format version. */
+	public static final char FORMAT_VERSION_PAD = 0x1000;
+
+	/** On-disk file format version */
+	public static final char PADDED_FORMAT_VERSION =
+		(char) FORMAT_VERSION_PAD + FORMAT_VERSION;
 
 	/** Magic number in header for file format identification. */
 	public static final char MAGIC_NUMBER = 0xC0C0;
@@ -65,7 +72,7 @@ public class ExecutionDataWriter implements ISessionInfoVisitor,
 	private void writeHeader() throws IOException {
 		out.writeByte(BLOCK_HEADER);
 		out.writeChar(MAGIC_NUMBER);
-		out.writeChar(FORMAT_VERSION);
+		out.writeChar(PADDED_FORMAT_VERSION);
 	}
 
 	/**

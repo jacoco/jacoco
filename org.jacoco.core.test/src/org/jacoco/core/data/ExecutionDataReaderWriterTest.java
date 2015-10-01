@@ -113,7 +113,7 @@ public class ExecutionDataReaderWriterTest {
 		assertEquals(0x01, 0xFF & header[0]);
 		assertEquals(0xC0, 0xFF & header[1]);
 		assertEquals(0xC0, 0xFF & header[2]);
-		final char version = ExecutionDataWriter.FORMAT_VERSION;
+		final char version = ExecutionDataWriter.PADDED_FORMAT_VERSION;
 		assertEquals(version >> 8, 0xFF & header[3]);
 		assertEquals(version & 0xFF, 0xFF & header[4]);
 	}
@@ -141,7 +141,7 @@ public class ExecutionDataReaderWriterTest {
 		buffer.write(ExecutionDataWriter.BLOCK_HEADER);
 		buffer.write(0xC0);
 		buffer.write(0xC0);
-		final char version = ExecutionDataWriter.FORMAT_VERSION - 1;
+		final char version = ExecutionDataWriter.PADDED_FORMAT_VERSION - 1;
 		buffer.write(version >> 8);
 		buffer.write(version & 0xFF);
 		createReader().read();
