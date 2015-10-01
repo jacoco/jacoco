@@ -13,11 +13,6 @@
  *******************************************************************************/
 package org.jacoco.maven;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-
 import org.apache.maven.plugin.MojoExecutionException;
 import org.jacoco.core.analysis.IBundleCoverage;
 import org.jacoco.core.analysis.ICoverageNode;
@@ -28,6 +23,11 @@ import org.jacoco.report.check.IViolationsOutput;
 import org.jacoco.report.check.Limit;
 import org.jacoco.report.check.Rule;
 import org.jacoco.report.check.RulesChecker;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Checks that the code coverage metrics are being met.
@@ -190,10 +190,11 @@ public class CheckMojo extends AbstractJacocoMojo implements IViolationsOutput {
 		final FileFilter fileFilter = new FileFilter(this.getIncludes(),
 				this.getExcludes());
 		final BundleCreator creator = new BundleCreator(getProject(),
-				fileFilter, getLog());
+				fileFilter, getLog(), getProject().getName());
 		try {
 			final ExecutionDataStore executionData = loadExecutionData();
-			return creator.createBundle(executionData);
+			return creator.createBundleOfDirectory(executionData,
+					getProject().getBuild().getOutputDirectory());
 		} catch (final IOException e) {
 			throw new MojoExecutionException(
 					"Error while reading code coverage: " + e.getMessage(), e);

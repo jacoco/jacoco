@@ -12,13 +12,6 @@
  *******************************************************************************/
 package org.jacoco.maven;
 
-import static java.lang.String.format;
-
-import java.io.File;
-import java.io.IOException;
-import java.util.Collection;
-import java.util.List;
-
 import org.apache.maven.plugin.logging.Log;
 import org.apache.maven.project.MavenProject;
 import org.codehaus.plexus.util.FileUtils;
@@ -28,6 +21,13 @@ import org.jacoco.core.analysis.IBundleCoverage;
 import org.jacoco.core.analysis.IClassCoverage;
 import org.jacoco.core.data.ExecutionDataStore;
 
+import java.io.File;
+import java.io.IOException;
+import java.util.Collection;
+import java.util.List;
+
+import static java.lang.String.format;
+
 /**
  * Creates an IBundleCoverage.
  */
@@ -36,9 +36,11 @@ public final class BundleCreator {
 	private final MavenProject project;
 	private final FileFilter fileFilter;
 	private final Log log;
+	private final String bundleName;
 
 	/**
-	 * Construct a new BundleCreator given the MavenProject and FileFilter.
+	 * Construct a new BundleCreator given the MavenProject and FileFilter and a
+	 * specific Bundle name.
 	 * 
 	 * @param project
 	 *            the MavenProject
@@ -46,29 +48,35 @@ public final class BundleCreator {
 	 *            the FileFilter
 	 * @param log
 	 *            for log output
+	 * @param name
+	 *            of the Bundle
 	 */
 	public BundleCreator(final MavenProject project,
-			final FileFilter fileFilter, final Log log) {
+			final FileFilter fileFilter, final Log log, final String name) {
 		this.project = project;
 		this.fileFilter = fileFilter;
 		this.log = log;
+		this.bundleName = name;
 	}
 
 	/**
-	 * Create an IBundleCoverage for the given ExecutionDataStore.
+	 * Create an IBundleCoverage for the given ExecutionDataStore for the code
+	 * in directory.
 	 * 
 	 * @param executionDataStore
 	 *            the execution data.
+	 * @param directory
+	 *            the directory containing the classes
 	 * @return the coverage data.
 	 * @throws IOException
 	 *             if class files can't be read
 	 */
-	public IBundleCoverage createBundle(
-			final ExecutionDataStore executionDataStore) throws IOException {
+	public IBundleCoverage createBundleOfDirectory(
+			final ExecutionDataStore executionDataStore, final String directory)
+					throws IOException {
 		final CoverageBuilder builder = new CoverageBuilder();
 		final Analyzer analyzer = new Analyzer(executionDataStore, builder);
-		final File classesDir = new File(this.project.getBuild()
-				.getOutputDirectory());
+		final File classesDir = new File(directory);
 
 		@SuppressWarnings("unchecked")
 		final List<File> filesToAnalyze = FileUtils.getFiles(classesDir,
@@ -79,7 +87,7 @@ public final class BundleCreator {
 		}
 
 		final IBundleCoverage bundle = builder
-				.getBundle(this.project.getName());
+				.getBundle(bundleName);
 		logBundleInfo(bundle, builder.getNoMatchClasses());
 
 		return bundle;
