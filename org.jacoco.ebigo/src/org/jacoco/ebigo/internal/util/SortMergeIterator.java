@@ -9,7 +9,7 @@
  *    Omer Azmon - initial API and implementation
  *    
  *******************************************************************************/
-package org.jacoco.ebigo.internal.analysis;
+package org.jacoco.ebigo.internal.util;
 
 import java.lang.reflect.Array;
 import java.lang.reflect.ParameterizedType;
@@ -162,4 +162,15 @@ public class SortMergeIterator<T> implements Iterator<T[]> {
 		findNextMatchingSet();
 		return thisSet;
 	}
+
+	/**
+	 * Not Supported HERE
+	 * 
+	 * @throws UnsupportedOperationException unconditionally
+	 */
+	public void remove() {
+		throw new UnsupportedOperationException();
+	}
+
+
 }

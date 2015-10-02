@@ -16,7 +16,6 @@ import static java.lang.String.format;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.concurrent.atomic.AtomicIntegerArray;
-import java.util.function.IntBinaryOperator;
 
 import org.jacoco.core.data.ProbeMode;
 import org.jacoco.core.internal.data.CompactDataInput;
@@ -246,19 +245,10 @@ public final class ProbeIntArray implements IProbeArray<AtomicIntegerArray> {
 		for (int i = 0; i < this.probes.length(); i++) {
 			final int otherValue = other.probes.get(i);
 			if (otherValue > 0) {
-				this.probes.accumulateAndGet(i, otherValue,
-						new IntBinaryOperator() {
-
-							public int applyAsInt(final int left,
-									final int right) {
-								if (flag) {
-									return left + right;
-								} else {
-									final int sum = left - right;
-									return sum > 0 ? sum : 0;
-								}
-							}
-						});
+				final int thisValue = this.probes.get(i);
+				final int newValue = flag ? thisValue + otherValue //
+				: thisValue - otherValue;
+				this.probes.set(i, newValue > 0 ? newValue : 0);
 			}
 		}
 	}
