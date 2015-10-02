@@ -303,8 +303,8 @@ public abstract class AbstractReportMojo extends AbstractMavenReport {
 					throws IOException {
 		final FileFilter fileFilter = new FileFilter(this.getIncludes(),
 				this.getExcludes());
-		final BundleCreator creator = new BundleCreator(this.getProject(),
-				fileFilter, getLog(), reportName);
+		final BundleCreator creator = new BundleCreator(fileFilter,
+				getLog(), reportName);
 
 		final IBundleCoverage bundle = creator
 				.createBundleOfDirectory(executionDataStore, directory);

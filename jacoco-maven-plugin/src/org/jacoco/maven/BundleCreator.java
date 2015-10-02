@@ -13,7 +13,6 @@
 package org.jacoco.maven;
 
 import org.apache.maven.plugin.logging.Log;
-import org.apache.maven.project.MavenProject;
 import org.codehaus.plexus.util.FileUtils;
 import org.jacoco.core.analysis.Analyzer;
 import org.jacoco.core.analysis.CoverageBuilder;
@@ -33,7 +32,6 @@ import static java.lang.String.format;
  */
 public final class BundleCreator {
 
-	private final MavenProject project;
 	private final FileFilter fileFilter;
 	private final Log log;
 	private final String bundleName;
@@ -41,9 +39,6 @@ public final class BundleCreator {
 	/**
 	 * Construct a new BundleCreator given the MavenProject and FileFilter and a
 	 * specific Bundle name.
-	 * 
-	 * @param project
-	 *            the MavenProject
 	 * @param fileFilter
 	 *            the FileFilter
 	 * @param log
@@ -51,9 +46,8 @@ public final class BundleCreator {
 	 * @param name
 	 *            of the Bundle
 	 */
-	public BundleCreator(final MavenProject project,
-			final FileFilter fileFilter, final Log log, final String name) {
-		this.project = project;
+	public BundleCreator(final FileFilter fileFilter,
+			final Log log, final String name) {
 		this.fileFilter = fileFilter;
 		this.log = log;
 		this.bundleName = name;

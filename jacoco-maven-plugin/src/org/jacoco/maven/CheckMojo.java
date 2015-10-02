@@ -189,8 +189,8 @@ public class CheckMojo extends AbstractJacocoMojo implements IViolationsOutput {
 	private IBundleCoverage loadBundle() throws MojoExecutionException {
 		final FileFilter fileFilter = new FileFilter(this.getIncludes(),
 				this.getExcludes());
-		final BundleCreator creator = new BundleCreator(getProject(),
-				fileFilter, getLog(), getProject().getName());
+		final BundleCreator creator = new BundleCreator(fileFilter,
+				getLog(), getProject().getName());
 		try {
 			final ExecutionDataStore executionData = loadExecutionData();
 			return creator.createBundleOfDirectory(executionData,
