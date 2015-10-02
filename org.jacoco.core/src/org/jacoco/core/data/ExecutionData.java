@@ -36,14 +36,19 @@ public final class ExecutionData {
 	 *            class identifier
 	 * @param name
 	 *            VM name
-	 * @param probes
-	 *            probe data
+	 * @param dataObject
+	 *            probe data must be an IProbeArray or the internal object of
+	 *            one of the supported probe types.
 	 */
 	public ExecutionData(final long id, final String name,
-			final IProbeArray<?> probes) {
+			final Object dataObject) {
 		this.id = id;
 		this.name = name;
-		this.probes = probes;
+		if (dataObject instanceof IProbeArray) {
+			this.probes = (IProbeArray<?>) dataObject;
+		} else {
+			this.probes = ProbeArrayService.newProbeArray(dataObject);
+		}
 	}
 
 	/**
