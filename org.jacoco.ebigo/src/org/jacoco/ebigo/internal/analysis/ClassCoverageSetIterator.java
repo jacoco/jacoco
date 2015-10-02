@@ -18,6 +18,7 @@ import java.util.List;
 
 import org.jacoco.core.analysis.CoverageBuilder;
 import org.jacoco.core.analysis.IClassCoverage;
+import org.jacoco.ebigo.internal.util.SortMergeIterator;
 
 /**
  * Helps the Empirical Big-O analysis walk through multiple coverage analysis in

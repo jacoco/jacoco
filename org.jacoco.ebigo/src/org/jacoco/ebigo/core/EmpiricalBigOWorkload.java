@@ -160,7 +160,9 @@ public class EmpiricalBigOWorkload {
 					final Integer value = Integer.parseInt(parts[1].trim());
 					builder.add(key, value);
 				} catch (IllegalArgumentException ex) {
-					throw new IOException("Bad attribute map entry", ex);
+					IOException e = new IOException("Bad attribute map entry");
+					e.initCause(ex);
+					throw e;
 				}
 			}
 		} finally {

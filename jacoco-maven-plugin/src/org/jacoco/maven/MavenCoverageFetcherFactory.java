@@ -47,8 +47,11 @@ public final class MavenCoverageFetcherFactory {
 		try {
 			dataFetcher.loadExecutionData(dataFile);
 		} catch (final IOException e) {
-			throw new IOException("Unable to read execution data files in "
-					+ dataFile + ": " + e.getMessage(), e);
+			final IOException ex = new IOException(
+					"Unable to read execution data files in " + dataFile + ": "
+							+ e.getMessage());
+			ex.initCause(e);
+			throw ex;
 		}
 		return dataFetcher;
 	}
