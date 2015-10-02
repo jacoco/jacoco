@@ -26,6 +26,7 @@ import java.util.Locale;
  * @phase verify
  * @goal report-integration
  * @requiresProject true
+ * @requiresDependencyResolution runtime
  * @threadSafe
  * @since 0.6.4
  */

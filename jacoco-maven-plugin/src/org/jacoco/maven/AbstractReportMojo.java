@@ -7,10 +7,12 @@
  *
  * Contributors:
  *    Evgeny Mandrikov - initial API and implementation
+ *    Cristiano Costantini - maven plugin reporting options
  *
  *******************************************************************************/
 package org.jacoco.maven;
 
+import org.apache.maven.artifact.Artifact;
 import org.apache.maven.doxia.siterenderer.Renderer;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.project.MavenProject;
@@ -37,8 +39,10 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 /**
  * Base class for creating a code coverage report for tests of a single project
@@ -61,15 +65,17 @@ public abstract class AbstractReportMojo extends AbstractMavenReport {
 	String sourceEncoding;
 
 	/**
-	 * TODO
+	 * A list of artifacts, selected from the project runtime dependencies, that
+	 * will be included into the report. The projects are specified with
+	 * [groupId]:artifactId.
 	 * 
 	 * @parameter
 	 */
-	List<String> artifacts;
+	List<String> includeArtifacts;
 	/**
-	 * TODO
+	 * Flag used to include test sources in report.
 	 * 
-	 * @parameter
+	 * @parameter property="jacoco.tests.include" default-value="false"
 	 */
 	boolean includeTests;
 
@@ -97,19 +103,19 @@ public abstract class AbstractReportMojo extends AbstractMavenReport {
 	/**
 	 * Flag used enable generation of CSV report
 	 * 
-	 * @parameter property="jacoco.report.csv" default-value="false"
+	 * @parameter property="jacoco.report.csv" default-value="true"
 	 */
 	boolean csvReport;
 	/**
 	 * Flag used enable generation of XML report
 	 * 
-	 * @parameter property="jacoco.report.xml" default-value="false"
+	 * @parameter property="jacoco.report.xml" default-value="true"
 	 */
 	boolean xmlReport;
 	/**
 	 * Flag used enable generation of HTML report
 	 * 
-	 * @parameter property="jacoco.report.html" default-value="false"
+	 * @parameter property="jacoco.report.html" default-value="true"
 	 */
 	boolean htmlReport;
 
@@ -247,38 +253,62 @@ public abstract class AbstractReportMojo extends AbstractMavenReport {
 
 	void createReport(final IReportGroupVisitor visitor) throws IOException {
 
-		if (includeTests || (artifacts != null && artifacts.size() > 0)) {
+		if (includeTests
+				|| (includeArtifacts != null && includeArtifacts.size() > 0)) {
 			final IReportGroupVisitor groupVisitor = visitor
 					.visitGroup(getProject().getName());
 
-			createBundleReport(groupVisitor,
+			createProjectReport(groupVisitor,
 					getProject().getName() + " - Main",
 					getProject().getBuild().getOutputDirectory());
 
 			if (includeTests) {
-				createBundleReport(groupVisitor,
+				createProjectReport(groupVisitor,
 						getProject().getName() + " - Tests",
 						getProject().getBuild().getTestOutputDirectory());
 			}
-			for (final String artifact : artifacts) {
-				createDependencyReport(groupVisitor, null);
+
+			if (includeArtifacts != null && includeArtifacts.size() > 0) {
+				final Map<String, Artifact> artifactsMap = createArtifactsMap();
+				for (final String includeArtifact : includeArtifacts) {
+					createDependencyReport(groupVisitor,
+							artifactsMap.get(includeArtifact));
+				}
 			}
 		} else {
-			createBundleReport(visitor, getProject().getName(),
+			createProjectReport(visitor, getProject().getName(),
 					getProject().getBuild().getOutputDirectory());
 		}
-
 	}
 
-	private void createBundleReport(final IReportGroupVisitor visitor,
+	private Map<String, Artifact> createArtifactsMap() {
+		final Map<String, Artifact> artifactsMap = new HashMap<String, Artifact>();
+		for (final Object obj : getProject().getArtifacts()) {
+			if (obj instanceof Artifact) {
+				final Artifact artifact = (Artifact) obj;
+				artifactsMap.put(
+						artifact.getGroupId() + ":" + artifact.getArtifactId(),
+						artifact);
+				if (!artifactsMap.containsKey(":" + artifact.getArtifactId())) {
+					artifactsMap.put(":" + artifact.getArtifactId(),
+							artifact);
+				}
+			}
+		}
+		return artifactsMap;
+	}
+
+	private void createProjectReport(final IReportGroupVisitor visitor,
 			final String reportName, final String directory)
 					throws IOException {
 		final FileFilter fileFilter = new FileFilter(this.getIncludes(),
 				this.getExcludes());
 		final BundleCreator creator = new BundleCreator(this.getProject(),
 				fileFilter, getLog(), reportName);
+
 		final IBundleCoverage bundle = creator
 				.createBundleOfDirectory(executionDataStore, directory);
+
 		final SourceFileCollection locator = new SourceFileCollection(
 				getCompileSourceRoots(), sourceEncoding);
 		checkForMissingDebugInformation(bundle);
@@ -286,19 +316,21 @@ public abstract class AbstractReportMojo extends AbstractMavenReport {
 	}
 
 	private void createDependencyReport(final IReportGroupVisitor visitor,
-			final Object dependency)
+			final Artifact artifact)
 					throws IOException {
-		System.out.println("TODO: generate report for dependency");
-		// final FileFilter fileFilter = new FileFilter(this.getIncludes(),
-		// this.getExcludes());
-		// final BundleCreator creator = new BundleCreator(this.getProject(),
-		// fileFilter, getLog());
-		// final IBundleCoverage bundle =
-		// creator.createBundle(executionDataStore);
-		// final SourceFileCollection locator = new SourceFileCollection(
-		// getCompileSourceRoots(), sourceEncoding);
-		// checkForMissingDebugInformation(bundle);
-		// visitor.visitBundle(bundle, locator);
+
+		final String artifactCoordinates = artifact.getGroupId() + ":"
+				+ artifact.getArtifactId() + ":" + artifact.getVersion();
+		final ArtifactBundleCreator creator = new ArtifactBundleCreator(
+				getLog(),
+				artifactCoordinates);
+		final IBundleCoverage bundle = creator.createBundleOfArtifact(
+				executionDataStore, artifact);
+
+		final ISourceFileLocator locator = new MavenSourcesArtifactLocator(
+				artifact, sourceEncoding);
+		checkForMissingDebugInformation(bundle);
+		visitor.visitBundle(bundle, locator);
 	}
 
 	void checkForMissingDebugInformation(final ICoverageNode node) {
