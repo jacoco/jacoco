@@ -1,0 +1,8 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: JaCoCo Annotations
+Bundle-SymbolicName: org.jacoco.annotations
+Bundle-Version: 0.7.5.201505241946
+Bundle-Vendor: Mountainminds GmbH & Co. KG
+Bundle-RequiredExecutionEnvironment: J2SE-1.5
+Export-Package: org.jacoco.annotations;version="0.7.5",
