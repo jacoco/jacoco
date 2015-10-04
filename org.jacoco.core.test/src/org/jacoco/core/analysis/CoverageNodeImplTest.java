@@ -156,4 +156,28 @@ public class CoverageNodeImplTest {
 		assertEquals("Test [CLASS TREAT_AS_FULLY_COVERED]", node.toString());
 	}
 
+        /** All branches are fully covered when the not is treated
+          * as fully covered, even if in reality some child
+          * branches are missed.
+          */
+	@Test
+	public void testCoveredCountIsNumberOfBranches() {
+		CoverageNodeImpl parent = new CoverageNodeImpl(ElementType.GROUP,
+				"sample");
+		ICoverageNode child = new CoverageNodeImpl(ElementType.GROUP, "sample") {
+			{
+				instructionCounter = CounterImpl.getInstance(1, 41);
+				branchCounter = CounterImpl.getInstance(10, 15);
+				lineCounter = CounterImpl.getInstance(5, 3);
+				complexityCounter = CounterImpl.getInstance(4, 2);
+				methodCounter = CounterImpl.getInstance(1, 21);
+				classCounter = CounterImpl.getInstance(1, 11);
+			}
+		};
+                parent.setTreatAsFullyCovered(true);
+		parent.increment(child);
+		ICounter branch =  parent.getCounter(BRANCH);
+                assertEquals(ICounter.FULLY_COVERED, branch.getStatus());
+		assertEquals(CounterImpl.getInstance(0,25), branch);
+	}
 }

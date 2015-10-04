@@ -109,7 +109,11 @@ public class CoverageNodeImpl implements ICoverageNode {
 	}
 
 	public ICounter getBranchCounter() {
-		return branchCounter;
+		if (this.treatAsFullyCovered) {
+			return this.branchCounter.treatAsFullyCovered();
+		} else {
+			return this.branchCounter;
+		}
 	}
 
 	public ICounter getLineCounter() {
