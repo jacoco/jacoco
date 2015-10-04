@@ -18,6 +18,8 @@ import static org.jacoco.core.analysis.ICoverageNode.CounterEntity.INSTRUCTION;
 import static org.jacoco.core.analysis.ICoverageNode.CounterEntity.LINE;
 import static org.jacoco.core.analysis.ICoverageNode.CounterEntity.METHOD;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 import java.util.Arrays;
 
@@ -127,6 +129,31 @@ public class CoverageNodeImplTest {
 	public void testToString() {
 		CoverageNodeImpl node = new CoverageNodeImpl(ElementType.CLASS, "Test");
 		assertEquals("Test [CLASS]", node.toString());
+	}
+
+        /** Default behaviour is to only report as executed code that 
+          * is executed.
+          */
+        @Test
+        public void testTreatAsFullyCoveredInitialValueIsFalse()
+        {
+		CoverageNodeImpl node = new CoverageNodeImpl(ElementType.CLASS, "Test");
+                assertFalse(node.isTreatedAsFullyCovered());
+        }
+
+        @Test
+        public void testTreatAsFullyCoveredCanBeSet()
+        {
+		CoverageNodeImpl node = new CoverageNodeImpl(ElementType.CLASS, "Test");
+                node.setTreatAsFullyCovered(true);
+                assertTrue(node.isTreatedAsFullyCovered());
+        }
+
+	@Test
+	public void testToStringWhenTreatingAsFullyCovered() {
+		CoverageNodeImpl node = new CoverageNodeImpl(ElementType.CLASS, "Test");
+                node.setTreatAsFullyCovered(true);
+		assertEquals("Test [CLASS TREAT_AS_FULLY_COVERED]", node.toString());
 	}
 
 }

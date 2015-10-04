@@ -141,4 +141,22 @@ public interface ICoverageNode {
 	 */
 	public ICoverageNode getPlainCopy();
 
+	/**
+	 * Should all branches be considered as covered even if they are not
+	 * executed?
+	 * 
+	 * @param treateAsFullyCovered
+	 *            true to treat all branches as executed.
+	 */
+	public void setTreatAsFullyCovered(boolean treatAsFullyCovered);
+
+	/**
+	 * Should the node be considered fully covered even if not everything is
+	 * executed.?
+	 * 
+	 * @return true if all branches are treated as executed, even if they are
+	 *         not.
+	 */
+	public boolean isTreatedAsFullyCovered();
+
 }
