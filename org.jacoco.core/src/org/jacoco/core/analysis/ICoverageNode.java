@@ -145,7 +145,7 @@ public interface ICoverageNode {
 	 * Should all branches be considered as covered even if they are not
 	 * executed?
 	 * 
-	 * @param treateAsFullyCovered
+	 * @param treatAsFullyCovered
 	 *            true to treat all branches as executed.
 	 */
 	public void setTreatAsFullyCovered(boolean treatAsFullyCovered);

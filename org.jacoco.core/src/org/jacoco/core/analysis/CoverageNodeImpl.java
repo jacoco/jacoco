@@ -104,32 +104,44 @@ public class CoverageNodeImpl implements ICoverageNode {
 		return name;
 	}
 
-	public ICounter getInstructionCounter() {
-		return instructionCounter;
-	}
-
-	public ICounter getBranchCounter() {
+	/**
+	 * Get the counter after treatments have been applied. Treatments include
+	 * being fully countered.
+	 * 
+	 * @param counter
+	 *            Counter to treat.
+	 * @return New counter that has had the treaments applied to counter.
+	 */
+	private ICounter getTreatedCounter(final ICounter counter) {
 		if (this.treatAsFullyCovered) {
-			return this.branchCounter.treatAsFullyCovered();
+			return counter.treatAsFullyCovered();
 		} else {
-			return this.branchCounter;
+			return counter;
 		}
 	}
 
+	public ICounter getInstructionCounter() {
+		return this.getTreatedCounter(instructionCounter);
+	}
+
+	public ICounter getBranchCounter() {
+		return this.getTreatedCounter(this.branchCounter);
+	}
+
 	public ICounter getLineCounter() {
-		return lineCounter;
+		return this.getTreatedCounter(lineCounter);
 	}
 
 	public ICounter getComplexityCounter() {
-		return complexityCounter;
+		return this.getTreatedCounter(complexityCounter);
 	}
 
 	public ICounter getMethodCounter() {
-		return methodCounter;
+		return this.getTreatedCounter(methodCounter);
 	}
 
 	public ICounter getClassCounter() {
-		return classCounter;
+		return this.getTreatedCounter(classCounter);
 	}
 
 	public ICounter getCounter(final CounterEntity entity) {
