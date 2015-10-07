@@ -31,6 +31,8 @@ import org.jacoco.report.internal.html.resources.Resources;
  */
 public class ParallelPercentageColumn implements IColumnRenderer {
 
+	private static final double ROUND_DOWN = 0.000004;
+
 	private final NumberFormat percentageFormat;
 
 	private final Comparator<ITableItem> comparator;
@@ -44,7 +46,7 @@ public class ParallelPercentageColumn implements IColumnRenderer {
 	 */
 	public ParallelPercentageColumn(final Locale locale) {
 		this.percentageFormat = DecimalFormat.getPercentInstance(locale);
-		this.percentageFormat.setMaximumFractionDigits(2);
+		this.percentageFormat.setMaximumFractionDigits(3);
 		comparator = new TableItemComparator(new Comparator<ICoverageNode>() {
 
 			public int compare(final ICoverageNode o1, final ICoverageNode o2) {
@@ -72,7 +74,11 @@ public class ParallelPercentageColumn implements IColumnRenderer {
 
 	private void cell(final HTMLElement td, final ICoverageNode node)
 			throws IOException {
-		td.text(percentageFormat.format(node.getParallelPercent() / 100));
+		double parallelPercent = (node.getParallelPercent() / 100) - ROUND_DOWN;
+		if (parallelPercent < 0) {
+			parallelPercent = 0;
+		}
+		td.text(percentageFormat.format(parallelPercent));
 	}
 
 	public Comparator<ITableItem> getComparator() {

@@ -29,6 +29,8 @@ import org.jacoco.report.internal.html.resources.Styles;
  */
 final class SourceHighlighter {
 
+	private static final double ROUND_DOWN = 0.0004;
+
 	private final Locale locale;
 
 	private final ProbeMode probeMode;
@@ -149,7 +151,15 @@ final class SourceHighlighter {
 			return;
 		}
 
-		final double parallelPct = line.getParallelPercent();
+		final double parallelPct;
+		{
+			double pp = line.getParallelPercent() - ROUND_DOWN;
+			if (pp < 0) {
+				pp = 0;
+			}
+			parallelPct = pp;
+		}
+
 		final int status = line.getStatus();
 		final boolean showPP = status != ICounter.EMPTY
 				&& status != ICounter.NOT_COVERED;
@@ -165,9 +175,9 @@ final class SourceHighlighter {
 		}
 		final HTMLElement span = pre.span(style);
 		if (showPP) {
-			span.text(String.format("%6.2f%%", new Double(parallelPct)));
+			span.text(String.format("%7.3f%%", new Double(parallelPct)));
 		} else {
-			span.text("       ");
+			span.text("        ");
 		}
 	}
 
