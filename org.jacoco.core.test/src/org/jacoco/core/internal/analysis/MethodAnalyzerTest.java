@@ -15,8 +15,10 @@ import static org.junit.Assert.assertEquals;
 
 import java.util.ArrayList;
 
+import org.jacoco.core.analysis.ICounter;
 import org.jacoco.core.analysis.ILine;
 import org.jacoco.core.analysis.IMethodCoverage;
+import org.jacoco.core.internal.annotations.Annotations;
 import org.jacoco.core.internal.flow.IProbeIdGenerator;
 import org.jacoco.core.internal.flow.LabelFlowAnalyzer;
 import org.jacoco.core.internal.flow.MethodProbesAdapter;
@@ -551,6 +553,36 @@ public class MethodAnalyzerTest implements IProbeIdGenerator {
 		assertLine(1001, 0, 3, 0, 0);
 		assertLine(1002, 0, 1, 0, 0);
 		assertLine(1004, 0, 1, 0, 0);
+	}
+
+	/**
+	 * When the annotation {@link TreatAsCovered} is added to a method, it will
+	 * be considered executed event when it is not.
+	 */
+	@Test
+	public void testTreatAscoveredMakesNotExecutedBranchesCovered() {
+		createLinearSequence();
+		probes[0] = false;
+		LabelFlowAnalyzer.markLabels(method);
+		final MethodAnalyzer analyzer = new MethodAnalyzer("doit", "()V", null,
+				probes);
+		analyzer.visitAnnotation(Annotations.treatAsCoveredId, true);
+		final MethodProbesAdapter probesAdapter = new MethodProbesAdapter(
+				analyzer, this);
+		method.accept(probesAdapter);
+
+		ICounter methodCounter = analyzer.getCoverage().getMethodCounter();
+		assertEquals(0, methodCounter.getMissedCount());
+
+		ICounter linesCounter = analyzer.getCoverage().getLineCounter();
+		assertEquals(0, linesCounter.getMissedCount());
+
+		ICounter branchesCounter = analyzer.getCoverage().getBranchCounter();
+		assertEquals(0, branchesCounter.getMissedCount());
+
+		ICounter instructionsCounter = analyzer.getCoverage()
+				.getInstructionCounter();
+		assertEquals(0, instructionsCounter.getMissedCount());
 	}
 
 	private void runMethodAnalzer() {
