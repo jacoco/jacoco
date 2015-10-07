@@ -19,6 +19,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 
+import org.jacoco.core.analysis.IBundleCoverage;
 import org.jacoco.core.analysis.IClassCoverage;
 import org.jacoco.core.analysis.ICoverageNode;
 import org.jacoco.core.analysis.IPackageCoverage;
@@ -37,7 +38,7 @@ public class BundleCoverageImplTest {
 		Collection<IPackageCoverage> packages = Collections
 				.singleton((IPackageCoverage) new PackageCoverageImpl("p1",
 						classes, sourcefiles));
-		BundleCoverageImpl bundle = new BundleCoverageImpl("testbundle",
+		IBundleCoverage bundle = new BundleCoverageImpl("testbundle",
 				packages);
 		assertEquals(ICoverageNode.ElementType.BUNDLE, bundle.getElementType());
 		assertEquals("testbundle", bundle.getName());
@@ -68,7 +69,7 @@ public class BundleCoverageImplTest {
 				lineCounter = CounterImpl.getInstance(5, 0, 0);
 			}
 		};
-		BundleCoverageImpl bundle = new BundleCoverageImpl("testbundle",
+		IBundleCoverage bundle = new BundleCoverageImpl("testbundle",
 				Arrays.asList(p1, p2));
 		assertEquals(CounterImpl.getInstance(2, 0, 0), bundle.getClassCounter());
 		assertEquals(CounterImpl.getInstance(4, 0, 0),
@@ -90,7 +91,7 @@ public class BundleCoverageImplTest {
 		cb.setSourceFileName("B.java");
 		ISourceFileCoverage sb = new SourceFileCoverageImpl("B.java", "p2");
 		ISourceFileCoverage sc = new SourceFileCoverageImpl("C.java", "p3");
-		BundleCoverageImpl bundle = new BundleCoverageImpl("bundle",
+		IBundleCoverage bundle = new BundleCoverageImpl("bundle",
 				Arrays.asList((IClassCoverage) ca, (IClassCoverage) cb),
 				Arrays.asList(sb, sc));
 

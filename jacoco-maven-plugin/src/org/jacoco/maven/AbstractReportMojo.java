@@ -26,6 +26,9 @@ import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.project.MavenProject;
 import org.apache.maven.reporting.AbstractMavenReport;
 import org.apache.maven.reporting.MavenReportException;
+import org.codehaus.plexus.util.FileUtils;
+import org.jacoco.core.analysis.CoverageBuilder;
+import org.jacoco.core.analysis.IAnalyzer;
 import org.jacoco.core.analysis.IBundleCoverage;
 import org.jacoco.core.analysis.ICoverageNode;
 import org.jacoco.core.tools.ICoverageFetcherStyle;
@@ -179,6 +182,15 @@ public abstract class AbstractReportMojo extends AbstractMavenReport implements
 		}
 	}
 
+	@SuppressWarnings("unchecked")
+	private List<File> makeListOfFileToAnalyze(final FileFilter fileFilter)
+			throws IOException {
+		final File classesDir = new File(this.project.getBuild()
+				.getOutputDirectory());
+		return FileUtils.getFiles(classesDir, fileFilter.getIncludes(),
+				fileFilter.getExcludes());
+	}
+
 	@Override
 	protected void executeReport(final Locale locale)
 			throws MavenReportException {
@@ -187,9 +199,15 @@ public abstract class AbstractReportMojo extends AbstractMavenReport implements
 					.newFetcher(this, getDataFile());
 			final FileFilter fileFilter = new FileFilter(getIncludes(),
 					getExcludes());
-			final BundleCreator creator = new BundleCreator(getProject(),
-					fileFilter, getLog());
-			final IBundleCoverage bundle = creator.createBundle(fetcher);
+			final MavenLoggingBridge log = new MavenLoggingBridge(getLog());
+			final CoverageBuilder builder = fetcher.newCoverageBuilder();
+			final IAnalyzer analyzer = fetcher.newAnalyzer(builder);
+			for (final File file : makeListOfFileToAnalyze(fileFilter)) {
+				analyzer.analyzeAll(file);
+			}
+			final IBundleCoverage bundle = builder.getBundle(this.project
+					.getName());
+			bundle.logCoverageInfo(builder.getNoMatchClasses(), log);
 			final IReportVisitor visitor = createVisitor(locale);
 			visitor.visitInfo(fetcher.getSessionInfoStore().getInfos(), fetcher
 					.getExecutionDataStore().getContents());

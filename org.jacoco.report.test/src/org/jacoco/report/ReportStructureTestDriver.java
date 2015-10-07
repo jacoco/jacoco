@@ -19,6 +19,7 @@ import java.util.List;
 
 import org.jacoco.core.analysis.EBigOFunction;
 import org.jacoco.core.analysis.EBigOFunction.Type;
+import org.jacoco.core.analysis.IBundleCoverage;
 import org.jacoco.core.analysis.IClassCoverage;
 import org.jacoco.core.analysis.IMethodCoverage;
 import org.jacoco.core.analysis.IPackageCoverage;
@@ -64,7 +65,7 @@ public class ReportStructureTestDriver {
 
 	private final IPackageCoverage packageCoverage;
 
-	private final BundleCoverageImpl bundleCoverage;
+	private final IBundleCoverage bundleCoverage;
 
 	public ReportStructureTestDriver() {
 		final MethodCoverageImpl m = new MethodCoverageImpl("fooMethod", "()V",

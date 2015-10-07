@@ -19,8 +19,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.maven.plugin.MojoExecutionException;
+import org.codehaus.plexus.util.FileUtils;
+import org.jacoco.core.analysis.CoverageBuilder;
+import org.jacoco.core.analysis.IAnalyzer;
 import org.jacoco.core.analysis.IBundleCoverage;
 import org.jacoco.core.analysis.ICoverageNode;
+import org.jacoco.core.tools.ICoverageFetcherStyle;
 import org.jacoco.core.tools.IFetcherStyleProperties;
 import org.jacoco.report.IReportVisitor;
 import org.jacoco.report.check.IViolationsOutput;
@@ -200,14 +204,30 @@ public class CheckMojo extends AbstractJacocoMojo implements IViolationsOutput,
 		}
 	}
 
+	@SuppressWarnings("unchecked")
+	private List<File> makeListOfFileToAnalyze() throws IOException {
+		final FileFilter fileFilter = new FileFilter(getIncludes(),
+				getExcludes());
+		final File classesDir = new File(getProject().getBuild()
+				.getOutputDirectory());
+		return FileUtils.getFiles(classesDir, fileFilter.getIncludes(),
+				fileFilter.getExcludes());
+	}
+
 	private IBundleCoverage loadBundle() throws MojoExecutionException {
-		final FileFilter fileFilter = new FileFilter(this.getIncludes(),
-				this.getExcludes());
-		final BundleCreator creator = new BundleCreator(getProject(),
-				fileFilter, getLog());
 		try {
-			return creator.createBundle(MavenCoverageFetcherFactory.newFetcher(this,
-					dataFile));
+			final ICoverageFetcherStyle fetcher = MavenCoverageFetcherFactory
+					.newFetcher(this, dataFile);
+			final CoverageBuilder builder = fetcher.newCoverageBuilder();
+			final IAnalyzer analyzer = fetcher.newAnalyzer(builder);
+			for (final File file : makeListOfFileToAnalyze()) {
+				analyzer.analyzeAll(file);
+			}
+			final IBundleCoverage bundle = builder.getBundle(getProject()
+					.getName());
+			bundle.logCoverageInfo(builder.getNoMatchClasses(),
+					new MavenLoggingBridge(getLog()));
+			return bundle;
 		} catch (final IOException e) {
 			throw new MojoExecutionException(
 					"Error while reading code coverage: " + e.getMessage(), e);

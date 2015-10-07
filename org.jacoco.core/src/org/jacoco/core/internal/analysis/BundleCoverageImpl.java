@@ -11,6 +11,8 @@
  *******************************************************************************/
 package org.jacoco.core.internal.analysis;
 
+import static java.lang.String.format;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -24,6 +26,7 @@ import org.jacoco.core.analysis.IBundleCoverage;
 import org.jacoco.core.analysis.IClassCoverage;
 import org.jacoco.core.analysis.IPackageCoverage;
 import org.jacoco.core.analysis.ISourceFileCoverage;
+import org.jacoco.core.tools.LoggingBridge;
 
 /**
  * Implementation of {@link IBundleCoverage}.
@@ -111,6 +114,33 @@ public class BundleCoverageImpl extends CoverageNodeImpl implements
 
 	public Collection<IPackageCoverage> getPackages() {
 		return packages;
+	}
+
+	public void logCoverageInfo(
+			final Collection<IClassCoverage> noMatchClasses,
+			final LoggingBridge log) {
+		log.info(format("Analyzed bundle '%s' with %s classes", getName(),
+				Integer.valueOf(getClassCounter().getTotalCount())));
+		if (!noMatchClasses.isEmpty()) {
+			log.warning(format(
+					"Classes in bundle '%s' do no match with execution data. "
+							+ "For report generation the same class files must be used as at runtime.",
+					getName()));
+			for (final IClassCoverage c : noMatchClasses) {
+				log.warning(format(
+						"Execution data for class %s does not match.",
+						c.getName()));
+			}
+		}
+	}
+
+	public void logMissingDebugInformation(final LoggingBridge log) {
+		if (getClassCounter().getTotalCount() > 0
+				&& getLineCounter().getTotalCount() == 0) {
+			log.warning(format(
+					"To enable source code annotation class files for bundle '%s' have to be compiled with debug information.",
+					getName()));
+		}
 	}
 
 }
