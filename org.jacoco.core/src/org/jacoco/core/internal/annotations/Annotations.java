@@ -16,7 +16,7 @@ import org.jacoco.annotations.TreatAsCovered;
 
 /** Detect JaCoCo annotations. */
 public class Annotations {
-	private static final String treatAsCoveredId = "L"
+	public static final String treatAsCoveredId = "L"
 			+ TreatAsCovered.class.getName().replaceAll("\\.", "/") + ";";
 
 	/**
