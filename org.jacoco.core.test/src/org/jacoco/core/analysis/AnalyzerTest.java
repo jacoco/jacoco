@@ -15,7 +15,6 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -40,6 +39,7 @@ import org.jacoco.core.test.TargetLoader;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 import org.junit.rules.TemporaryFolder;
 
 /**
@@ -49,6 +49,9 @@ public class AnalyzerTest {
 
 	@Rule
 	public TemporaryFolder folder = new TemporaryFolder();
+
+	@Rule
+	public ExpectedException expected = ExpectedException.none();
 
 	private Analyzer analyzer;
 
@@ -111,15 +114,13 @@ public class AnalyzerTest {
 
 	@Test
 	public void testAnalyzeClass_Broken() throws IOException {
+		expected.expect(IOException.class);
+		expected.expectMessage("Error while analyzing Broken.class.");
+
 		final byte[] brokenclass = TargetLoader
 				.getClassDataAsBytes(AnalyzerTest.class);
 		brokenclass[10] = 0x23;
-		try {
-			analyzer.analyzeClass(brokenclass, "Broken");
-			fail();
-		} catch (IOException e) {
-			assertEquals("Error while analyzing class Broken.", e.getMessage());
-		}
+		analyzer.analyzeClass(brokenclass, "Broken.class");
 	}
 
 	@Test
@@ -217,6 +218,9 @@ public class AnalyzerTest {
 
 	@Test
 	public void testAnalyzeAll_BrokenClassFileInZip() throws IOException {
+		expected.expect(IOException.class);
+		expected.expectMessage("Error while analyzing test.zip@org/jacoco/core/analysis/AnalyzerTest.class.");
+
 		final ByteArrayOutputStream buffer = new ByteArrayOutputStream();
 		final ZipOutputStream zip = new ZipOutputStream(buffer);
 		zip.putNextEntry(new ZipEntry(
@@ -227,15 +231,8 @@ public class AnalyzerTest {
 		zip.write(brokenclass);
 		zip.finish();
 
-		try {
-			analyzer.analyzeAll(new ByteArrayInputStream(buffer.toByteArray()),
-					"test.zip");
-			fail();
-		} catch (IOException e) {
-			assertEquals(
-					"Error while analyzing class test.zip@org/jacoco/core/analysis/AnalyzerTest.class.",
-					e.getMessage());
-		}
+		analyzer.analyzeAll(new ByteArrayInputStream(buffer.toByteArray()),
+				"test.zip");
 	}
 
 	private void createClassfile(final String dir, final Class<?> source)
