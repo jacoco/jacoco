@@ -17,6 +17,7 @@ import java.io.StringReader;
 import java.io.StringWriter;
 import java.util.Locale;
 
+import org.jacoco.core.analysis.EBigOFunction;
 import org.jacoco.core.analysis.ICoverageNode.ElementType;
 import org.jacoco.core.data.ProbeMode;
 import org.jacoco.core.internal.analysis.CounterImpl;
@@ -149,6 +150,113 @@ public class SourceHighlighterTest {
 		assertEquals("pc bnc", htmlSupport.findStr(doc, "//pre/span/@class"));
 		assertEquals("All 5 branches missed.",
 				htmlSupport.findStr(doc, "//pre/span/@title"));
+	}
+
+	@Test
+	public void testHighlightEBigO_none() throws Exception {
+		highlightEBigOTester(new EBigOFunction(EBigOFunction.Type.Undefined, 2,
+				2), "e", "       ");
+	}
+
+	@Test
+	public void testHighlightEBigO_log() throws Exception {
+		highlightEBigOTester(new EBigOFunction(EBigOFunction.Type.Logarithmic,
+				2, 2), "e efc", "log(n) ");
+	}
+
+	@Test
+	public void testHighlightEBigO_linear() throws Exception {
+		highlightEBigOTester(
+				new EBigOFunction(EBigOFunction.Type.Linear, 2, 2), "e efc",
+				"n      ");
+	}
+
+	@Test
+	public void testHighlightEBigO_powerlaw() throws Exception {
+		highlightEBigOTester(new EBigOFunction(EBigOFunction.Type.PowerLaw, 2,
+				2), "e epc", "n^2.00 ");
+	}
+
+	@Test
+	public void testHighlightEBigO_exp() throws Exception {
+		highlightEBigOTester(new EBigOFunction(EBigOFunction.Type.Exponential,
+				1, 1), "e enc", "2^n    ");
+	}
+
+	public void highlightEBigOTester(EBigOFunction ebigo, String expectedClass,
+			String expectedText) throws Exception {
+		sourceHighlighter.addEBigO(parent.pre(null), ebigo);
+		html.close();
+		final Document doc = htmlSupport.parse(buffer.toString());
+		assertEquals(expectedClass,
+				htmlSupport.findStr(doc, "//pre/span/@class"));
+		assertEquals(expectedText, htmlSupport.findStr(doc, "//pre/span"));
+	}
+
+	@Test
+	public void testParallelPct_noCoverage() throws Exception {
+		source.increment(CounterImpl.getInstance(1, 0, 0),
+				CounterImpl.getInstance(0, 0, 0), 1);
+		SourceHighlighter parallelHighlighter = new SourceHighlighter(
+				Locale.US, ProbeMode.parallelcount);
+		parallelHighlighter.addParallelPercentPrefix(parent.pre(null),
+				source.getLine(1));
+		html.close();
+		final Document doc = htmlSupport.parse(buffer.toString());
+		assertEquals("e", htmlSupport.findStr(doc, "//pre/span/@class"));
+		assertEquals("        ", htmlSupport.findStr(doc, "//pre/span"));
+	}
+
+	@Test
+	public void testParallelPct_emptyCoverage() throws Exception {
+		SourceHighlighter parallelHighlighter = new SourceHighlighter(
+				Locale.US, ProbeMode.parallelcount);
+		parallelHighlighter.addParallelPercentPrefix(parent.pre(null),
+				source.getLine(1));
+		html.close();
+		final Document doc = htmlSupport.parse(buffer.toString());
+		assertEquals("e", htmlSupport.findStr(doc, "//pre/span/@class"));
+		assertEquals("        ", htmlSupport.findStr(doc, "//pre/span"));
+	}
+
+	@Test
+	public void testParallelPct_ZeroExec_ZeroPct() throws Exception {
+		parallelPctTester(0, 0, "e enc", "  0.000%");
+	}
+
+	@Test
+	public void testParallelPct_ZeroPct() throws Exception {
+		parallelPctTester(15, 0, "e enc", "  0.000%");
+	}
+
+	@Test
+	public void testParallelPct_veryLowPct() throws Exception {
+		parallelPctTester(15, 5, "e enc", " 33.333%");
+	}
+
+	@Test
+	public void testParallelPct_lowPct() throws Exception {
+		parallelPctTester(15, 10, "e epc", " 66.666%");
+	}
+
+	@Test
+	public void testParallelPct_highPct() throws Exception {
+		parallelPctTester(15, 15, "e efc", "100.000%");
+	}
+
+	public void parallelPctTester(int totalExec, int parallelExec,
+			String expectedClass, String expectedText) throws Exception {
+		source.increment(CounterImpl.getInstance(0, 5, totalExec),
+				CounterImpl.getInstance(0, 1, parallelExec), 1);
+		SourceHighlighter parallelHighlighter = new SourceHighlighter(
+				Locale.US, ProbeMode.parallelcount);
+		parallelHighlighter.addParallelPercentPrefix(parent.pre(null),
+				source.getLine(1));
+		html.close();
+		final Document doc = htmlSupport.parse(buffer.toString());
+		assertEquals(expectedClass,
+				htmlSupport.findStr(doc, "//pre/span/@class"));
+		assertEquals(expectedText, htmlSupport.findStr(doc, "//pre/span"));
 	}
 
 }

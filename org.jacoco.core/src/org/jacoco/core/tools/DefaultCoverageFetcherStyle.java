@@ -25,18 +25,12 @@ import org.jacoco.core.data.SessionInfoStore;
  * Implements the coverage fetch for the standard behavior of JaCoCo.
  */
 public class DefaultCoverageFetcherStyle implements ICoverageFetcherStyle {
-	@SuppressWarnings("unused")
-	private final IFetcherStyleProperties properties;
 	private final ExecFileLoader loader;
 
 	/**
 	 * Construct a default style instance.
-	 * 
-	 * @param properties
-	 *            the properties needed for the style operations
 	 */
-	public DefaultCoverageFetcherStyle(final IFetcherStyleProperties properties) {
-		this.properties = properties;
+	public DefaultCoverageFetcherStyle() {
 		this.loader = new ExecFileLoader();
 	}
 

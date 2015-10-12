@@ -30,6 +30,10 @@
       <artifactId>org.jacoco.core</artifactId>
     </dependency>
     <dependency>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>org.jacoco.ebigo</artifactId>
+    </dependency>
+    <dependency>
       <groupId>org.ow2.asm</groupId>
       <artifactId>asm-debug-all</artifactId>
     </dependency>

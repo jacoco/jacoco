@@ -25,18 +25,13 @@ import org.junit.Test;
 
 public class DefaultCoverageFetcherStyleTest {
 
-	private static final String EBIGO_ATTRIBUTE = "DEFAULT";
-	private static final boolean EBIGO_ENABLED = false;
 	private static final File DATA_FILE = new File(
 			DefaultCoverageFetcherStyle.class.getResource("sample.exec")
 					.getPath());
-	private static final IFetcherStyleProperties PROPERTIES = new TestIEBigOProperties(
-			EBIGO_ATTRIBUTE, EBIGO_ENABLED);
 
 	@Test
 	public void testConstructor() {
-		DefaultCoverageFetcherStyle instance = new DefaultCoverageFetcherStyle(
-				PROPERTIES);
+		DefaultCoverageFetcherStyle instance = new DefaultCoverageFetcherStyle();
 		assertEquals(0, instance.getExecutionDataStore().getContents().size());
 		assertEquals(0, instance.getSessionInfoStore().getInfos().size());
 	}
@@ -45,17 +40,13 @@ public class DefaultCoverageFetcherStyleTest {
 	public void testLoadExecutionData_badExecData() throws IOException {
 		File badDataFile = File.createTempFile("jacoco", ".exec");
 		badDataFile.delete();
-		IFetcherStyleProperties badProperties = new TestIEBigOProperties(
-				EBIGO_ATTRIBUTE, EBIGO_ENABLED);
-		DefaultCoverageFetcherStyle instance = new DefaultCoverageFetcherStyle(
-				badProperties);
+		DefaultCoverageFetcherStyle instance = new DefaultCoverageFetcherStyle();
 		instance.loadExecutionData(badDataFile);
 	}
 
 	@Test
 	public void testLoadExecutionData() throws IOException {
-		DefaultCoverageFetcherStyle instance = new DefaultCoverageFetcherStyle(
-				PROPERTIES);
+		DefaultCoverageFetcherStyle instance = new DefaultCoverageFetcherStyle();
 		instance.loadExecutionData(DATA_FILE);
 		ExecutionDataStore executionDataStore = instance
 				.getExecutionDataStore();
@@ -64,38 +55,16 @@ public class DefaultCoverageFetcherStyleTest {
 
 	@Test
 	public void testNewCoverageBuilder() throws IOException {
-		DefaultCoverageFetcherStyle instance = new DefaultCoverageFetcherStyle(
-				PROPERTIES);
+		DefaultCoverageFetcherStyle instance = new DefaultCoverageFetcherStyle();
 		CoverageBuilder coverageBuilder = instance.newCoverageBuilder();
 		assertEquals(CoverageBuilder.class, coverageBuilder.getClass());
 	}
 
 	@Test
 	public void testNewAnalyzer() {
-		DefaultCoverageFetcherStyle instance = new DefaultCoverageFetcherStyle(
-				PROPERTIES);
+		DefaultCoverageFetcherStyle instance = new DefaultCoverageFetcherStyle();
 		CoverageBuilder coverageBuilder = instance.newCoverageBuilder();
 		IAnalyzer analyzer = instance.newAnalyzer(coverageBuilder);
 		assertEquals(Analyzer.class, analyzer.getClass());
-	}
-
-	private static class TestIEBigOProperties implements IFetcherStyleProperties {
-		private final String eBigOAttribute;
-		private final boolean eBigOEnabled;
-
-		public TestIEBigOProperties(String eBigOAttribute,
-				boolean eBigOEnabled) {
-			this.eBigOAttribute = eBigOAttribute;
-			this.eBigOEnabled = eBigOEnabled;
-		}
-
-		public String getEBigOAttribute() {
-			return eBigOAttribute;
-		}
-
-		public boolean isEBigOEnabled() {
-			return eBigOEnabled;
-		}
-
 	}
 }

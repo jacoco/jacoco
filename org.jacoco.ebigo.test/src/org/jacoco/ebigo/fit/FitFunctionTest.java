@@ -35,12 +35,12 @@ public class FitFunctionTest {
 	public static Collection<?> data() {
 		return Arrays.asList(new Object[][] { //
 						{ FitType.Logarithmic, 0, 0, "0.00", "1" }, //
-						{ FitType.Logarithmic, 1, 0, "ln(x)", "ln(n)" }, //
-						{ FitType.Logarithmic, 2, 0, "2.00 ln(x)", "ln(n)" }, //
+						{ FitType.Logarithmic, 1, 0, "ln(x)", "log(n)" }, //
+						{ FitType.Logarithmic, 2, 0, "2.00 ln(x)", "log(n)" }, //
 						{ FitType.Logarithmic, 0, 1, "1.00", "1" }, //
-						{ FitType.Logarithmic, 1, 1, "1.00 + ln(x)", "ln(n)" }, //
+						{ FitType.Logarithmic, 1, 1, "1.00 + ln(x)", "log(n)" }, //
 						{ FitType.Logarithmic, 2, 1, "1.00 + 2.00 ln(x)",
-								"ln(n)" }, //
+								"log(n)" }, //
 						{ FitType.Linear, 0, 0, "0.00", "1" }, //
 						{ FitType.Linear, 1, 0, "x", "n" }, //
 						{ FitType.Linear, 2, 0, "2.00x", "n" }, //
@@ -56,10 +56,10 @@ public class FitFunctionTest {
 						{ FitType.Exponential, 0, 0, "0.00", "1" }, //
 						{ FitType.Exponential, 0, 1, "1.00", "1" }, //
 						{ FitType.Exponential, 0, 2, "2.00", "1" }, //
-						{ FitType.Exponential, 1, 1, "e^x", "e^n" }, //
-						{ FitType.Exponential, 1, 2, "2.00e^x", "e^n" }, //
-						{ FitType.Exponential, 2, 1, "e^(2.00x)", "e^n" }, //
-						{ FitType.Exponential, 2, 2, "2.00e^(2.00x)", "e^n" }, //
+						{ FitType.Exponential, 1, 1, "e^x", "2^n" }, //
+						{ FitType.Exponential, 1, 2, "2.00e^x", "2^n" }, //
+						{ FitType.Exponential, 2, 1, "e^(2.00x)", "2^n" }, //
+						{ FitType.Exponential, 2, 2, "2.00e^(2.00x)", "2^n" }, //
 				});
 	}
 

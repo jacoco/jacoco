@@ -116,7 +116,6 @@ public final class ProbeDoubleIntArray implements
 		mv.visitEnd();
 	}
 
-	// TODO
 	private int genInitializeDataField(final MethodVisitor mv,
 			final long classId, final String className,
 			final IExecutionDataAccessorGenerator accessorGenerator,

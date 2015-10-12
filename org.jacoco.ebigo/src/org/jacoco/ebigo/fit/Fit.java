@@ -131,7 +131,7 @@ public class Fit {
 	public String getOrderFunction() {
 		switch (type) {
 		case Logarithmic:
-			return 0 == slope ? "1" : "ln(n)";
+			return 0 == slope ? "1" : "log(n)";
 		case Linear:
 			return 0 == slope ? "1" : "n";
 		case PowerLaw:
@@ -143,7 +143,7 @@ public class Fit {
 		case Exponential:
 			if (0 == intercept || 0 == slope)
 				return "1";
-			return "e^n";
+			return "2^n";
 		default:
 			return String.format("%s(%f,%f)", type.name(), intercept, slope);
 		}

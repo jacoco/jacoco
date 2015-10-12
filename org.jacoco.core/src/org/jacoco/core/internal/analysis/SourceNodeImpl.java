@@ -28,7 +28,6 @@ public class SourceNodeImpl extends CoverageNodeImpl implements ISourceNode {
 	private int offset;
 
 	private boolean hasEBigO;
-	private EBigOFunction eBigOFunction;
 	private EBigOFunction[] lineEBigOFunctions;
 
 	/** first line number in {@link #lineEBigOFunctions} */
@@ -47,7 +46,6 @@ public class SourceNodeImpl extends CoverageNodeImpl implements ISourceNode {
 		lines = null;
 		offset = UNKNOWN_LINE;
 		hasEBigO = false;
-		eBigOFunction = EBigOFunction.UNDEFINED;
 		lineEBigOFunctions = null;
 		eBigOOffset = UNKNOWN_LINE;
 	}
@@ -103,6 +101,11 @@ public class SourceNodeImpl extends CoverageNodeImpl implements ISourceNode {
 		methodCounter = methodCounter.increment(child.getMethodCounter());
 		classCounter = classCounter.increment(child.getClassCounter());
 		mergeProbeMode(child);
+		containsEBigO |= child.containsEBigO();
+		if (eBigOFunction.compareTo(child.getEBigOFunction()) < 0) {
+			setEBigOFunction(child.getEBigOFunction());
+		}
+
 		final int firstLine = child.getFirstLine();
 		if (firstLine != UNKNOWN_LINE) {
 			lineCounter = lineCounter.increment(child.getLineCounter());
@@ -174,16 +177,10 @@ public class SourceNodeImpl extends CoverageNodeImpl implements ISourceNode {
 		lines[line - offset] = getLine(line).increment(instructions, branches);
 	}
 
-	/**
-	 * Set the results of an E-Big-O analysis on this node
-	 * 
-	 * @param eBigOFunction
-	 *            the results of an E-Big-O analysis on this noe
-	 */
+	@Override
 	public void setEBigOFunction(final EBigOFunction eBigOFunction) {
-		this.eBigOFunction = eBigOFunction;
+		super.setEBigOFunction(eBigOFunction);
 		this.hasEBigO = true;
-		this.containsEBigO = true;
 	}
 
 	/**
@@ -255,10 +252,6 @@ public class SourceNodeImpl extends CoverageNodeImpl implements ISourceNode {
 
 	public boolean hasEBigO() {
 		return hasEBigO;
-	}
-
-	public EBigOFunction getEBigOFunction() {
-		return eBigOFunction;
 	}
 
 	public EBigOFunction getLineEBigOFunction(final int nr) {

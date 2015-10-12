@@ -49,6 +49,9 @@ public class CoverageNodeImpl implements ICoverageNode {
 	/** Here or any child has EBigO data */
 	protected boolean containsEBigO;
 
+	/** The function of the worst case of any child */
+	protected EBigOFunction eBigOFunction;
+
 	/**
 	 * Creates a new coverage data node.
 	 * 
@@ -68,6 +71,7 @@ public class CoverageNodeImpl implements ICoverageNode {
 		this.lineCounter = CounterImpl.COUNTER_0_0;
 		probeMode = null;
 		containsEBigO = false;
+		eBigOFunction = EBigOFunction.UNDEFINED;
 	}
 
 	/**
@@ -86,7 +90,22 @@ public class CoverageNodeImpl implements ICoverageNode {
 		methodCounter = methodCounter.increment(child.getMethodCounter());
 		classCounter = classCounter.increment(child.getClassCounter());
 		mergeProbeMode(child);
+
 		containsEBigO |= child.containsEBigO();
+		if (eBigOFunction.compareTo(child.getEBigOFunction()) < 0) {
+			setEBigOFunction(child.getEBigOFunction());
+		}
+	}
+
+	/**
+	 * Set the results of an E-Big-O analysis on this node
+	 * 
+	 * @param eBigOFunction
+	 *            the results of an E-Big-O analysis on this noe
+	 */
+	public void setEBigOFunction(final EBigOFunction eBigOFunction) {
+		this.eBigOFunction = eBigOFunction;
+		this.containsEBigO = true;
 	}
 
 	/**
@@ -177,6 +196,10 @@ public class CoverageNodeImpl implements ICoverageNode {
 
 	public boolean containsEBigO() {
 		return containsEBigO;
+	}
+
+	public EBigOFunction getEBigOFunction() {
+		return eBigOFunction;
 	}
 
 	public ICounter getCounter(final CounterEntity entity) {

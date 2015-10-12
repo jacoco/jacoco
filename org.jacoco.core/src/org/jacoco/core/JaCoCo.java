@@ -37,7 +37,12 @@ public final class JaCoCo {
 				.getBundle("org.jacoco.core.jacoco");
 		VERSION = bundle.getString("VERSION");
 		HOMEURL = bundle.getString("HOMEURL");
-		RUNTIMEPACKAGE = bundle.getString("RUNTIMEPACKAGE");
+		final String runtimepackage = bundle.getString("RUNTIMEPACKAGE");
+		// This is so when we run Unit Tests in an IDE, this value is not yet
+		// updated.
+		RUNTIMEPACKAGE = runtimepackage != null
+				&& !runtimepackage.equals("$jacoco.runtime.package.name$") ? runtimepackage
+				: "org.jacoco";
 	}
 
 	private JaCoCo() {

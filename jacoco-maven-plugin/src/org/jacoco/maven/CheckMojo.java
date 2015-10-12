@@ -16,16 +16,12 @@ package org.jacoco.maven;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.apache.maven.plugin.MojoExecutionException;
-import org.codehaus.plexus.util.FileUtils;
-import org.jacoco.core.analysis.CoverageBuilder;
-import org.jacoco.core.analysis.IAnalyzer;
 import org.jacoco.core.analysis.IBundleCoverage;
 import org.jacoco.core.analysis.ICoverageNode;
-import org.jacoco.core.tools.ICoverageFetcherStyle;
-import org.jacoco.core.tools.IFetcherStyleProperties;
 import org.jacoco.report.IReportVisitor;
 import org.jacoco.report.check.IViolationsOutput;
 import org.jacoco.report.check.Limit;
@@ -41,10 +37,8 @@ import org.jacoco.report.check.RulesChecker;
  * @threadSafe
  * @since 0.6.1
  */
-public class CheckMojo extends AbstractJacocoMojo implements IViolationsOutput,
-		IFetcherStyleProperties {
+public class CheckMojo extends AbstractJacocoMojo implements IViolationsOutput {
 
-	private static final String MSG_SKIPPING = "Skipping JaCoCo execution due to missing execution data file:";
 	private static final String CHECK_SUCCESS = "All coverage checks have been met.";
 	private static final String CHECK_FAILED = "Coverage checks have not been met. See log for details.";
 
@@ -150,33 +144,42 @@ public class CheckMojo extends AbstractJacocoMojo implements IViolationsOutput,
 
 	private boolean violations;
 
-	private boolean canCheckCoverage() {
-		if (!dataFile.exists()) {
-			getLog().info(MSG_SKIPPING + dataFile);
-			return false;
-		}
-		final File classesDirectory = new File(getProject().getBuild()
-				.getOutputDirectory());
-		if (!classesDirectory.exists()) {
-			getLog().info(
-					"Skipping JaCoCo execution due to missing classes directory:"
-							+ classesDirectory);
-			return false;
-		}
-		return true;
+	private final MavenReportGenerator reportGenerator;
+
+	/**
+	 * 
+	 */
+	public CheckMojo() {
+		this.reportGenerator = new MavenReportGenerator(this);
 	}
 
 	@Override
 	public void executeMojo() throws MojoExecutionException,
 			MojoExecutionException {
-		if (!canCheckCoverage()) {
-			return;
+		reportGenerator.setName(getProject().getName());
+
+		reportGenerator.setDataFile(dataFile);
+
+		reportGenerator.setClassesDirectories(Arrays
+				.asList(new File[] { new File(getProject().getBuild()
+						.getOutputDirectory()) }));
+		reportGenerator.setExcludes(getExcludes());
+		reportGenerator.setIncludes(getIncludes());
+
+		reportGenerator.setEBigOAttribute(eBigOEnabled ? eBigOAttribute : null);
+
+		final IBundleCoverage bundle;
+		try {
+			bundle = reportGenerator.prepReport();
+		} catch (final IOException e) {
+			throw new MojoExecutionException("Error while creating report: "
+					+ e.getMessage(), e);
 		}
-		executeCheck();
+		executeCheck(bundle);
 	}
 
-	private void executeCheck() throws MojoExecutionException {
-		final IBundleCoverage bundle = loadBundle();
+	private void executeCheck(final IBundleCoverage bundle)
+			throws MojoExecutionException {
 		violations = false;
 
 		final RulesChecker checker = new RulesChecker();
@@ -204,48 +207,9 @@ public class CheckMojo extends AbstractJacocoMojo implements IViolationsOutput,
 		}
 	}
 
-	@SuppressWarnings("unchecked")
-	private List<File> makeListOfFileToAnalyze() throws IOException {
-		final FileFilter fileFilter = new FileFilter(getIncludes(),
-				getExcludes());
-		final File classesDir = new File(getProject().getBuild()
-				.getOutputDirectory());
-		return FileUtils.getFiles(classesDir, fileFilter.getIncludes(),
-				fileFilter.getExcludes());
-	}
-
-	private IBundleCoverage loadBundle() throws MojoExecutionException {
-		try {
-			final ICoverageFetcherStyle fetcher = MavenCoverageFetcherFactory
-					.newFetcher(this, dataFile);
-			final CoverageBuilder builder = fetcher.newCoverageBuilder();
-			final IAnalyzer analyzer = fetcher.newAnalyzer(builder);
-			for (final File file : makeListOfFileToAnalyze()) {
-				analyzer.analyzeAll(file);
-			}
-			final IBundleCoverage bundle = builder.getBundle(getProject()
-					.getName());
-			bundle.logCoverageInfo(builder.getNoMatchClasses(),
-					new MavenLoggingBridge(getLog()));
-			return bundle;
-		} catch (final IOException e) {
-			throw new MojoExecutionException(
-					"Error while reading code coverage: " + e.getMessage(), e);
-		}
-	}
-
 	public void onViolation(final ICoverageNode node, final Rule rule,
 			final Limit limit, final String message) {
 		this.getLog().warn(message);
 		violations = true;
 	}
-
-	public String getEBigOAttribute() {
-		return eBigOAttribute;
-	}
-
-	public boolean isEBigOEnabled() {
-		return eBigOEnabled;
-	}
-
 }

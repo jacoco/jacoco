@@ -22,6 +22,7 @@ import java.net.UnknownHostException;
 
 import org.jacoco.ebigo.core.EmpiricalBigOJacocoAgentConnection;
 import org.jacoco.ebigo.core.EmpiricalBigOWorkloadStore;
+import org.jacoco.ebigo.core.IEBigOConnection;
 
 /**
  * This example performs an Empirical Big-O analysis. It sets up a client
@@ -49,7 +50,7 @@ public class EmpiricalBigOAnalysis {
 	private static final String X_AXIS_ATTRIUBTE = "REQUESTS";
 
 	/** The connection to the remote Jacoco Agent */
-	private EmpiricalBigOJacocoAgentConnection connection;
+	private IEBigOConnection connection;
 
 	/** Where we keep the results of each work load we run */
 	private EmpiricalBigOWorkloadStore workloadStore;

@@ -49,7 +49,7 @@ public class SourceFileCoverageImplTest {
 
 		node.increment(child);
 
-		assertEquals(EBigOFunction.UNDEFINED, node.getEBigOFunction());
+		assertEquals(ebigo, node.getEBigOFunction());
 		assertEquals(lineEbigo, node.getLineEBigOFunction(5));
 	}
 

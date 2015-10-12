@@ -104,7 +104,7 @@ final class SourceHighlighter {
 		addParallelPercentPrefix(pre, line);
 	}
 
-	private void addEBigO(final HTMLElement pre, final EBigOFunction ebigo)
+	void addEBigO(final HTMLElement pre, final EBigOFunction ebigo)
 			throws IOException {
 
 		if (ebigo == null) {
@@ -144,8 +144,8 @@ final class SourceHighlighter {
 		span.text(buffer.toString());
 	}
 
-	private void addParallelPercentPrefix(final HTMLElement pre,
-			final ILine line) throws IOException {
+	void addParallelPercentPrefix(final HTMLElement pre, final ILine line)
+			throws IOException {
 
 		if (ProbeMode.parallelcount != probeMode) {
 			return;

@@ -26,7 +26,7 @@ import org.jacoco.core.runtime.RemoteControlWriter;
  * 
  * @author Omer Azmon
  */
-public class EmpiricalBigOJacocoAgentConnection {
+public class EmpiricalBigOJacocoAgentConnection implements IEBigOConnection {
 
 	private final Socket socket;
 	private final RemoteControlWriter writer;
@@ -53,19 +53,6 @@ public class EmpiricalBigOJacocoAgentConnection {
 		reader = new RemoteControlReader(socket.getInputStream());
 	}
 
-	/**
-	 * Collect workload coverage information. The coverage information is since
-	 * the agent has started or the last reset. One should invoke the @{code
-	 * reset} method of this class just before starting a workload to ensure the
-	 * purity of the coverage data.
-	 * 
-	 * @param attributeMap
-	 *            a map of X-axis attributes and values that will be associated
-	 *            with this workload.
-	 * @return the workload
-	 * @throws IOException
-	 *             on any communication failure
-	 */
 	public EmpiricalBigOWorkload fetchWorkloadCoverage(
 			final WorkloadAttributeMap attributeMap) throws IOException {
 		final EmpiricalBigOWorkload workload = EmpiricalBigOWorkload
@@ -73,19 +60,6 @@ public class EmpiricalBigOJacocoAgentConnection {
 		return workload;
 	}
 
-	/**
-	 * Collect workload coverage information. The coverage information is since
-	 * the agent has started or the last reset. One should invoke the @{code
-	 * reset} method of this class just before starting a workload to ensure the
-	 * purity of the coverage data. The attribute used is the
-	 * {@code WorkloadAttributeMapBuilder.DEFAULT_ATTRIBUTE}
-	 * 
-	 * @param attributeValue
-	 *            the value of the attribute named
-	 * @return the workload
-	 * @throws IOException
-	 *             on any communication failure
-	 */
 	public EmpiricalBigOWorkload fetchWorkloadCoverage(final int attributeValue)
 			throws IOException {
 		final WorkloadAttributeMap attributeMap = WorkloadAttributeMapBuilder
@@ -93,21 +67,6 @@ public class EmpiricalBigOJacocoAgentConnection {
 		return fetchWorkloadCoverage(attributeMap);
 	}
 
-	/**
-	 * Collect workload coverage information. The coverage information is since
-	 * the agent has started or the last reset. One should invoke the @{code
-	 * reset} method of this class just before starting a workload to ensure the
-	 * purity of the coverage data.
-	 * 
-	 * @param attributeName
-	 *            the name of a single X-axis attribute that will be associated
-	 *            with this workload.
-	 * @param attributeValue
-	 *            the value of the attribute named
-	 * @return the workload
-	 * @throws IOException
-	 *             on any communication failure
-	 */
 	public EmpiricalBigOWorkload fetchWorkloadCoverage(
 			final String attributeName, final int attributeValue)
 			throws IOException {
@@ -116,24 +75,11 @@ public class EmpiricalBigOJacocoAgentConnection {
 		return fetchWorkloadCoverage(attributeMap);
 	}
 
-	/**
-	 * Reset all coverage counters in the agent to zero.
-	 * 
-	 * @throws IOException
-	 *             on any communication failure
-	 */
-	public final void resetCoverage() throws IOException {
+	public void resetCoverage() throws IOException {
 		writer.visitDumpCommand(false, true);
 		reader.read();
 	}
 
-	/**
-	 * Close the connection. Once closed, it cannot be reopened. A new
-	 * connection must be established.
-	 * 
-	 * @throws IOException
-	 *             on any failure to close the underlying socket
-	 */
 	public final void close() throws IOException {
 		socket.close();
 	}

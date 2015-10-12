@@ -20,7 +20,6 @@ import org.jacoco.core.analysis.IAnalyzer;
 import org.jacoco.core.data.ExecutionDataStore;
 import org.jacoco.core.data.SessionInfoStore;
 import org.jacoco.core.tools.ICoverageFetcherStyle;
-import org.jacoco.core.tools.IFetcherStyleProperties;
 import org.jacoco.ebigo.analysis.EmpiricalBigOAnalyzer;
 import org.jacoco.ebigo.analysis.EmpiricalBigOBuilder;
 import org.jacoco.ebigo.core.EmpiricalBigOWorkloadStore;
@@ -39,8 +38,8 @@ public class EBigOCoverageFetcherStyle implements ICoverageFetcherStyle {
 	 * @param properties
 	 *            the properties needed for the style operations
 	 */
-	public EBigOCoverageFetcherStyle(final IFetcherStyleProperties properties) {
-		loader = new EmpiricalBigOFileLoader(properties.getEBigOAttribute());
+	public EBigOCoverageFetcherStyle(final String eBigOAttribute) {
+		loader = new EmpiricalBigOFileLoader(eBigOAttribute);
 	}
 
 	public void loadExecutionData(File dataFile) throws IOException {

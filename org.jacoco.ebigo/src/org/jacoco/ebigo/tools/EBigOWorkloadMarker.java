@@ -17,6 +17,7 @@ import java.io.IOException;
 import org.jacoco.core.runtime.AgentOptions;
 import org.jacoco.ebigo.core.EmpiricalBigOJacocoAgentConnection;
 import org.jacoco.ebigo.core.EmpiricalBigOWorkload;
+import org.jacoco.ebigo.core.IEBigOConnection;
 import org.jacoco.ebigo.core.WorkloadAttributeMapBuilder;
 
 /**
@@ -63,7 +64,7 @@ public final class EBigOWorkloadMarker {
 	private String ebigoAttribute;
 
 	/** The connection to the remote Jacoco Agent */
-	private EmpiricalBigOJacocoAgentConnection connection;
+	private IEBigOConnection connection;
 
 	private EBigOWorkloadMarker() {
 		this.hostname = System.getProperty("jacoco.hostname", "localhost");
@@ -71,15 +72,14 @@ public final class EBigOWorkloadMarker {
 				Integer.toString(AgentOptions.DEFAULT_PORT)));
 		this.projectBuildDir = System.getProperty("project.build.directory",
 				"target");
-		this.destfile = projectBuildDir + "/"
-				+ System.getProperty("jacoco.destfile", "jacoco.exec");
+		this.destfile = System.getProperty("jacoco.destfile", "jacoco.exec");
 		this.ebigoAttribute = System.getProperty("jacoco.ebigoAttribute",
 				WorkloadAttributeMapBuilder.DEFAULT_ATTRIBUTE);
 	}
 
 	// We are doing this like this because we need late connection initiation
 	// So user has a chance to change attributes before connection
-	private EmpiricalBigOJacocoAgentConnection getConnection()
+	private IEBigOConnection getConnection()
 			throws IOException {
 		if (connection == null) {
 			synchronized (EBigOWorkloadMarker.class) {
@@ -135,7 +135,7 @@ public final class EBigOWorkloadMarker {
 	}
 
 	private File getResultsFile(int value) {
-		File resultsDir = new File(destfile);
+		File resultsDir = new File(projectBuildDir, destfile);
 		String localFileName = "jacoco";
 		if (!resultsDir.exists()) {
 			resultsDir.mkdirs();
@@ -202,7 +202,7 @@ public final class EBigOWorkloadMarker {
 			} catch (IOException e) {
 				// Ignore
 			}
-			instance = null;
 		}
+		instance = null;
 	}
 }

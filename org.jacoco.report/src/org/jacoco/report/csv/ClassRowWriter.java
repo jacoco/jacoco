@@ -44,7 +44,7 @@ class ClassRowWriter {
 	 * @param languageNames
 	 *            converter for Java identifiers
 	 * @param probeMode
-	 *            TODO
+	 *            determine what data to output (exists, count, parallelcount)
 	 * @throws IOException
 	 *             in case of problems with the writer
 	 */

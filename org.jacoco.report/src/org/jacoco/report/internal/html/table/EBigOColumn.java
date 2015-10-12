@@ -17,7 +17,6 @@ import java.util.List;
 
 import org.jacoco.core.analysis.EBigOFunction;
 import org.jacoco.core.analysis.ICoverageNode;
-import org.jacoco.core.analysis.ISourceNode;
 import org.jacoco.report.internal.ReportOutputFolder;
 import org.jacoco.report.internal.html.HTMLElement;
 import org.jacoco.report.internal.html.resources.Resources;
@@ -31,22 +30,17 @@ public class EBigOColumn implements IColumnRenderer {
 	private static final Comparator<ITableItem> COMPARATOR = new Comparator<ITableItem>() {
 		public int compare(final ITableItem i1, final ITableItem i2) {
 			final ICoverageNode node1 = i1.getNode();
-			final ISourceNode sourceNode1 = (ISourceNode) (node1 instanceof ISourceNode ? node1
-					: null);
 			final ICoverageNode node2 = i2.getNode();
-			final ISourceNode sourceNode2 = (ISourceNode) (node2 instanceof ISourceNode ? node2
-					: null);
-			if (sourceNode1 == sourceNode2) {
+			if (node1 == node2) {
 				return 0;
 			}
-			if (sourceNode1 == null) {
+			if (node1 == null) {
 				return 1;
 			}
-			if (sourceNode2 == null) {
+			if (node2 == null) {
 				return -1;
 			}
-			return sourceNode1.getEBigOFunction().compareTo(
-					sourceNode1.getEBigOFunction());
+			return node1.getEBigOFunction().compareTo(node1.getEBigOFunction());
 		}
 	};
 
@@ -69,11 +63,7 @@ public class EBigOColumn implements IColumnRenderer {
 
 	private void cell(final HTMLElement td, final ICoverageNode node)
 			throws IOException {
-		if (node instanceof ISourceNode) {
-			addEBigO(td, ((ISourceNode) node).getEBigOFunction());
-		} else {
-			td.text("");
-		}
+		addEBigO(td, node.getEBigOFunction());
 	}
 
 	private void addEBigO(final HTMLElement td, final EBigOFunction ebigo)

@@ -54,16 +54,6 @@ public interface ISourceNode extends ICoverageNode {
 	public boolean hasEBigO();
 
 	/**
-	 * Returns the results of an E-Big-O analysis this node. This value is
-	 * populated by the optional Empirical-Big-O analysis step.
-	 * 
-	 * @return the results of an E-Big-O analysis on this node. If the analysis
-	 *         failed or was not performed the function returned will have a
-	 *         type of <code>Undefined</code>
-	 */
-	public EBigOFunction getEBigOFunction();
-
-	/**
 	 * Returns the results of an E-Big-O analysis a line in this node. This
 	 * value is populated by the optional Empirical-Big-O analysis step.
 	 * 

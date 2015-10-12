@@ -20,7 +20,6 @@ import org.jacoco.core.analysis.CoverageBuilder;
 import org.jacoco.core.analysis.IAnalyzer;
 import org.jacoco.core.data.ExecutionDataStore;
 import org.jacoco.core.data.SessionInfoStore;
-import org.jacoco.core.tools.IFetcherStyleProperties;
 import org.jacoco.ebigo.analysis.EmpiricalBigOAnalyzer;
 import org.jacoco.ebigo.analysis.EmpiricalBigOBuilder;
 import org.jacoco.ebigo.core.EmpiricalBigOWorkload;
@@ -33,17 +32,14 @@ import org.junit.Test;
 public class EBigOCoverageFetcherStyleTest {
 
 	private static final String EBIGO_ATTRIBUTE = "DEFAULT";
-	private static final boolean EBIGO_ENABLED = false;
 	private static final File DATA_FILE = new File(
 			EBigOCoverageFetcherStyle.class.getResource("sample.exec")
 					.getPath()).getParentFile();
-	private static final IFetcherStyleProperties PROPERTIES = new TestFetcherStyleProperties(
-			EBIGO_ATTRIBUTE, EBIGO_ENABLED);
 
 	@Test
 	public void testConstructor() {
 		EBigOCoverageFetcherStyle instance = new EBigOCoverageFetcherStyle(
-				PROPERTIES);
+				EBIGO_ATTRIBUTE);
 		assertEquals(0, instance.getExecutionDataStore().getContents().size());
 		assertEquals(0, instance.getSessionInfoStore().getInfos().size());
 	}
@@ -54,10 +50,8 @@ public class EBigOCoverageFetcherStyleTest {
 		badDataDir.delete();
 		badDataDir.mkdirs();
 		badDataDir.deleteOnExit();
-		IFetcherStyleProperties badProperties = new TestFetcherStyleProperties(
-				EBIGO_ATTRIBUTE, EBIGO_ENABLED);
 		EBigOCoverageFetcherStyle instance = new EBigOCoverageFetcherStyle(
-				badProperties);
+				EBIGO_ATTRIBUTE);
 		instance.loadExecutionData(badDataDir);
 		Assert.assertEquals(0, instance.getExecutionDataStore().getContents()
 				.size());
@@ -68,7 +62,7 @@ public class EBigOCoverageFetcherStyleTest {
 	@Test
 	public void testLoadExecutionData() throws IOException {
 		EBigOCoverageFetcherStyle instance = new EBigOCoverageFetcherStyle(
-				PROPERTIES);
+				EBIGO_ATTRIBUTE);
 		instance.loadExecutionData(DATA_FILE);
 		Assert.assertNotNull(instance.getExecutionDataStore());
 		Assert.assertNotNull(instance.getSessionInfoStore());
@@ -92,7 +86,7 @@ public class EBigOCoverageFetcherStyleTest {
 	}
 
 	private EBigOCoverageFetcherStyle newTestFetcher() {
-		return new EBigOCoverageFetcherStyle(PROPERTIES) {
+		return new EBigOCoverageFetcherStyle(EBIGO_ATTRIBUTE) {
 			@Override
 			public void loadExecutionData(File dataFile) throws IOException {
 				super.loadExecutionData(dataFile);
@@ -117,26 +111,5 @@ public class EBigOCoverageFetcherStyleTest {
 				return;
 			}
 		};
-	}
-
-	private static class TestFetcherStyleProperties implements
-			IFetcherStyleProperties {
-		private final String eBigOAttribute;
-		private final boolean eBigOEnabled;
-
-		public TestFetcherStyleProperties(String eBigOAttribute,
-				boolean eBigOEnabled) {
-			this.eBigOAttribute = eBigOAttribute;
-			this.eBigOEnabled = eBigOEnabled;
-		}
-
-		public String getEBigOAttribute() {
-			return eBigOAttribute;
-		}
-
-		public boolean isEBigOEnabled() {
-			return eBigOEnabled;
-		}
-
 	}
 }

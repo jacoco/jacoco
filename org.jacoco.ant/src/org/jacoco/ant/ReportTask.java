@@ -36,9 +36,10 @@ import org.jacoco.core.analysis.IBundleCoverage;
 import org.jacoco.core.analysis.ICoverageNode;
 import org.jacoco.core.data.ExecutionDataStore;
 import org.jacoco.core.data.SessionInfoStore;
+import org.jacoco.core.tools.DefaultCoverageFetcherStyle;
 import org.jacoco.core.tools.ICoverageFetcherStyle;
-import org.jacoco.core.tools.IFetcherStyleProperties;
 import org.jacoco.core.tools.LoggingBridge;
+import org.jacoco.ebigo.tools.EBigOCoverageFetcherStyle;
 import org.jacoco.report.FileMultiReportOutput;
 import org.jacoco.report.IMultiReportOutput;
 import org.jacoco.report.IReportGroupVisitor;
@@ -56,7 +57,7 @@ import org.jacoco.report.xml.XMLFormatter;
 /**
  * Task for coverage report generation.
  */
-public class ReportTask extends Task implements IFetcherStyleProperties {
+public class ReportTask extends Task {
 
 	/**
 	 * The source files are specified in a resource collection with additional
@@ -489,6 +490,13 @@ public class ReportTask extends Task implements IFetcherStyleProperties {
 		return element;
 	}
 
+	/**
+	 * Returns the Empirical EBigO Attribute used for X-Axis. If {@code null},
+	 * the value will default to
+	 * {@code WorkloadAttributeMapBuilder.DEFAULT_ATTRIBUTE}
+	 * 
+	 * @return the Empirical EBigO Attribute used for X-Axis
+	 */
 	public String getEBigOAttribute() {
 		return this.eBigOAttribute;
 	}
@@ -514,14 +522,19 @@ public class ReportTask extends Task implements IFetcherStyleProperties {
 		this.eBigOEnabled = enabled;
 	}
 
+	/**
+	 * Returns if EBigO mode of analysis is required.
+	 *
+	 * @return {@code true} if EBigO mode of analysis is required.
+	 */
 	public boolean isEBigOEnabled() {
 		return this.eBigOEnabled;
 	}
 
 	@Override
 	public void execute() throws BuildException {
-		final ICoverageFetcherStyle fetcher = AntCoverageFetcherFactory
-				.newFetcher(this);
+		final ICoverageFetcherStyle fetcher = !eBigOEnabled ? new DefaultCoverageFetcherStyle()
+				: new EBigOCoverageFetcherStyle(eBigOAttribute);
 		try {
 			loadExecutionData(fetcher);
 			final IReportVisitor visitor = createVisitor();

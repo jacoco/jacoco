@@ -151,6 +151,16 @@ public interface ICoverageNode {
 	public boolean containsEBigO();
 
 	/**
+	 * Returns the results of an E-Big-O analysis this node. This value is
+	 * populated by the optional Empirical-Big-O analysis step.
+	 * 
+	 * @return the results of an E-Big-O analysis on this node. If the analysis
+	 *         failed or was not performed the function returned will have a
+	 *         type of <code>Undefined</code>
+	 */
+	public EBigOFunction getEBigOFunction();
+
+	/**
 	 * Generic access to the the counters.
 	 * 
 	 * @param entity
