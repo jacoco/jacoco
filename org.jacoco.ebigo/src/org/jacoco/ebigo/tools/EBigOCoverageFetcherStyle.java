@@ -35,8 +35,8 @@ public class EBigOCoverageFetcherStyle implements ICoverageFetcherStyle {
 	/**
 	 * Construct a E-BigO style instance.
 	 * 
-	 * @param properties
-	 *            the properties needed for the style operations
+	 * @param eBigOAttribute
+	 *            The attribute to use in the each workload as the X-Axis
 	 */
 	public EBigOCoverageFetcherStyle(final String eBigOAttribute) {
 		loader = new EmpiricalBigOFileLoader(eBigOAttribute);
@@ -74,7 +74,8 @@ public class EBigOCoverageFetcherStyle implements ICoverageFetcherStyle {
 
 	public IAnalyzer newAnalyzer(CoverageBuilder builder) throws IOException {
 		if (builder instanceof EmpiricalBigOBuilder) {
-			EmpiricalBigOWorkloadStore workloadStore = loader.getWorkloadstore();
+			EmpiricalBigOWorkloadStore workloadStore = loader
+					.getWorkloadstore();
 			EmpiricalBigOBuilder ebigoBuilder = (EmpiricalBigOBuilder) builder;
 			return new EmpiricalBigOAnalyzer(workloadStore, ebigoBuilder);
 		}
