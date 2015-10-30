@@ -16,26 +16,24 @@ import org.jacoco.core.test.validation.ValidationTestBase;
 import org.junit.Test;
 
 /**
- * Tests for different lambda expressions.
+ * Tests a constant with a lambda value in an interface.
  */
-public class LambdaExpressionsTest extends ValidationTestBase {
+public class LambdaInInterfaceTest extends ValidationTestBase {
 
-	public LambdaExpressionsTest() {
-		super(LambdaExpressionsTarget.class);
+	public LambdaInInterfaceTest() {
+		super(LambdaInInterfaceTarget.class);
 	}
 
 	@Override
 	protected void run(final Class<?> targetClass) throws Exception {
-		final Object instance = targetClass.newInstance();
-		((Runnable) instance).run();
+		((Runnable) targetClass.getField("RUN").get(null)).run();
 	}
 
 	@Test
 	public void testCoverageResult() {
 
-		// Coverage of lambda bodies
-		assertLine("executedlambdabody", ICounter.FULLY_COVERED);
-		assertLine("notexecutedlambdabody", ICounter.NOT_COVERED);
+		// Coverage of lambda body
+		assertLine("lambdabody", ICounter.FULLY_COVERED);
 
 	}
 
