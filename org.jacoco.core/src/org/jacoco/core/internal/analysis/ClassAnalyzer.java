@@ -23,56 +23,39 @@ import org.objectweb.asm.Opcodes;
  */
 public class ClassAnalyzer extends ClassProbesVisitor {
 
-	private final long classid;
-	private final boolean noMatch;
+	private final ClassCoverageImpl coverage;
 	private final boolean[] probes;
 	private final StringPool stringPool;
-
-	private ClassCoverageImpl coverage;
 
 	/**
 	 * Creates a new analyzer that builds coverage data for a class.
 	 * 
-	 * @param classid
-	 *            id of the class
-	 * @param noMatch
-	 *            <code>true</code> if class id does not match with execution
-	 *            data
+	 * @param coverage
+	 *            coverage node for the analyzed class data
 	 * @param probes
 	 *            execution data for this class or <code>null</code>
 	 * @param stringPool
 	 *            shared pool to minimize the number of {@link String} instances
 	 */
-	public ClassAnalyzer(final long classid, final boolean noMatch,
+	public ClassAnalyzer(final ClassCoverageImpl coverage,
 			final boolean[] probes, final StringPool stringPool) {
-		this.classid = classid;
-		this.noMatch = noMatch;
+		this.coverage = coverage;
 		this.probes = probes;
 		this.stringPool = stringPool;
-	}
-
-	/**
-	 * Returns the coverage data for this class after this visitor has been
-	 * processed.
-	 * 
-	 * @return coverage data for this class
-	 */
-	public ClassCoverageImpl getCoverage() {
-		return coverage;
 	}
 
 	@Override
 	public void visit(final int version, final int access, final String name,
 			final String signature, final String superName,
 			final String[] interfaces) {
-		this.coverage = new ClassCoverageImpl(stringPool.get(name), classid,
-				noMatch, stringPool.get(signature), stringPool.get(superName),
-				stringPool.get(interfaces));
+		coverage.setSignature(stringPool.get(signature));
+		coverage.setSuperName(stringPool.get(superName));
+		coverage.setInterfaces(stringPool.get(interfaces));
 	}
 
 	@Override
 	public void visitSource(final String source, final String debug) {
-		this.coverage.setSourceFileName(stringPool.get(source));
+		coverage.setSourceFileName(stringPool.get(source));
 	}
 
 	@Override

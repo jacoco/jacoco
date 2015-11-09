@@ -237,7 +237,7 @@ public class CoverageBuilderTest {
 	private void addClass(long id, boolean nomatch, String name, String source,
 			MethodCoverageImpl... methods) {
 		final ClassCoverageImpl coverage = new ClassCoverageImpl(name, id,
-				nomatch, null, "java/lang/Object", new String[0]);
+				nomatch);
 		coverage.setSourceFileName(source);
 		for (MethodCoverageImpl m : methods) {
 			coverage.addMethod(m);

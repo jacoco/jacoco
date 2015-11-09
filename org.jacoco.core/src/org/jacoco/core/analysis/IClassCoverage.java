@@ -55,7 +55,7 @@ public interface IClassCoverage extends ISourceNode {
 	public String getSuperName();
 
 	/**
-	 * Returns the VM names of implemented/extended interfaces
+	 * Returns the VM names of implemented/extended interfaces.
 	 * 
 	 * @return VM names of implemented/extended interfaces
 	 */

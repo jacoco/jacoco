@@ -25,6 +25,7 @@ import org.jacoco.core.data.ExecutionDataStore;
 import org.jacoco.core.internal.ContentTypeDetector;
 import org.jacoco.core.internal.Pack200Streams;
 import org.jacoco.core.internal.analysis.ClassAnalyzer;
+import org.jacoco.core.internal.analysis.ClassCoverageImpl;
 import org.jacoco.core.internal.analysis.StringPool;
 import org.jacoco.core.internal.data.CRC64;
 import org.jacoco.core.internal.flow.ClassProbesAdapter;
@@ -84,12 +85,14 @@ public class Analyzer {
 			probes = data.getProbes();
 			noMatch = false;
 		}
-		final ClassAnalyzer analyzer = new ClassAnalyzer(classid, noMatch,
-				probes, stringPool) {
+		final ClassCoverageImpl coverage = new ClassCoverageImpl(className,
+				classid, noMatch);
+		final ClassAnalyzer analyzer = new ClassAnalyzer(coverage, probes,
+				stringPool) {
 			@Override
 			public void visitEnd() {
 				super.visitEnd();
-				coverageVisitor.visitCoverage(getCoverage());
+				coverageVisitor.visitCoverage(coverage);
 			}
 		};
 		return new ClassProbesAdapter(analyzer, false);

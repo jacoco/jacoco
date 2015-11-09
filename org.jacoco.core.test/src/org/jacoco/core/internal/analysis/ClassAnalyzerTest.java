@@ -15,9 +15,6 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
-import java.util.Collection;
-
-import org.jacoco.core.analysis.IMethodCoverage;
 import org.jacoco.core.internal.flow.MethodProbesVisitor;
 import org.jacoco.core.internal.instr.InstrSupport;
 import org.junit.Before;
@@ -30,10 +27,12 @@ import org.objectweb.asm.Opcodes;
 public class ClassAnalyzerTest {
 
 	private ClassAnalyzer analyzer;
+	private ClassCoverageImpl coverage;
 
 	@Before
 	public void setup() {
-		analyzer = new ClassAnalyzer(0x0000, false, null, new StringPool());
+		coverage = new ClassCoverageImpl("Foo", 0x0000, false);
+		analyzer = new ClassAnalyzer(coverage, null, new StringPool());
 		analyzer.visit(Opcodes.V1_5, Opcodes.ACC_PUBLIC, "Foo", null,
 				"java/lang/Object", null);
 	}
@@ -57,9 +56,7 @@ public class ClassAnalyzerTest {
 		final MethodProbesVisitor mv = analyzer.visitMethod(0, "foo", "()V",
 				null, null);
 		mv.visitEnd();
-		Collection<IMethodCoverage> methods = analyzer.getCoverage()
-				.getMethods();
-		assertEquals(0, methods.size());
+		assertEquals(0, coverage.getMethods().size());
 	}
 
 	@Test
@@ -69,9 +66,7 @@ public class ClassAnalyzerTest {
 		mv.visitCode();
 		mv.visitInsn(Opcodes.RETURN);
 		mv.visitEnd();
-		Collection<IMethodCoverage> methods = analyzer.getCoverage()
-				.getMethods();
-		assertEquals(1, methods.size());
+		assertEquals(1, coverage.getMethods().size());
 	}
 
 	@Test
@@ -79,9 +74,7 @@ public class ClassAnalyzerTest {
 		final MethodProbesVisitor mv = analyzer.visitMethod(
 				Opcodes.ACC_SYNTHETIC, "foo", "()V", null, null);
 		assertNull(mv);
-		Collection<IMethodCoverage> methods = analyzer.getCoverage()
-				.getMethods();
-		assertTrue(methods.isEmpty());
+		assertTrue(coverage.getMethods().isEmpty());
 	}
 
 	@Test
@@ -91,9 +84,7 @@ public class ClassAnalyzerTest {
 		mv.visitCode();
 		mv.visitInsn(Opcodes.RETURN);
 		mv.visitEnd();
-		Collection<IMethodCoverage> methods = analyzer.getCoverage()
-				.getMethods();
-		assertEquals(1, methods.size());
+		assertEquals(1, coverage.getMethods().size());
 	}
 
 }

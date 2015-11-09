@@ -30,8 +30,7 @@ public class PackageCoverageTest {
 	public void testProperties() {
 		Collection<IClassCoverage> classes = Collections
 				.singleton((IClassCoverage) new ClassCoverageImpl(
-						"org/jacoco/test/Sample", 0, false, null,
-						"java/lang/Object", new String[0]));
+						"org/jacoco/test/Sample", 0, false));
 		Collection<ISourceFileCoverage> sourceFiles = Collections
 				.singleton((ISourceFileCoverage) new SourceFileCoverageImpl(
 						"Sample.java", "org/jacoco/test/Sample"));
@@ -47,8 +46,7 @@ public class PackageCoverageTest {
 	public void testCountersWithSources() {
 		// Classes with source reference will not considered for counters:
 		final ClassCoverageImpl classnode = new ClassCoverageImpl(
-				"org/jacoco/test/Sample", 0, false, null, "java/lang/Object",
-				new String[0]) {
+				"org/jacoco/test/Sample", 0, false) {
 			{
 				classCounter = CounterImpl.getInstance(9, 0);
 				methodCounter = CounterImpl.getInstance(9, 0);
@@ -81,8 +79,7 @@ public class PackageCoverageTest {
 	public void testCountersWithoutSources() {
 		// Classes without source reference will be considered for counters:
 		final ClassCoverageImpl classnode = new ClassCoverageImpl(
-				"org/jacoco/test/Sample", 0, false, null, "java/lang/Object",
-				new String[0]) {
+				"org/jacoco/test/Sample", 0, false) {
 			{
 				classCounter = CounterImpl.getInstance(1, 0);
 				methodCounter = CounterImpl.getInstance(2, 0);

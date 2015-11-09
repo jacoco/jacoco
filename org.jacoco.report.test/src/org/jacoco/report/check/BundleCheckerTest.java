@@ -134,8 +134,7 @@ public class BundleCheckerTest implements IViolationsOutput {
 		m.incrementMethodCounter();
 
 		final ClassCoverageImpl c = new ClassCoverageImpl(
-				"org/jacoco/example/FooClass", 1001, false, null,
-				"java/lang/Object", new String[0]);
+				"org/jacoco/example/FooClass", 1001, false);
 		c.setSourceFileName("FooClass.java");
 		c.addMethod(m);
 

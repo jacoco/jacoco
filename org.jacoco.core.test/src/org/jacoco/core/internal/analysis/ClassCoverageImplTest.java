@@ -11,6 +11,7 @@
  *******************************************************************************/
 package org.jacoco.core.internal.analysis;
 
+import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -19,6 +20,7 @@ import java.util.Collections;
 
 import org.jacoco.core.analysis.ICoverageNode;
 import org.jacoco.core.analysis.ISourceNode;
+import org.junit.Before;
 import org.junit.Test;
 
 /**
@@ -26,72 +28,88 @@ import org.junit.Test;
  */
 public class ClassCoverageImplTest {
 
+	private ClassCoverageImpl node;
+
+	@Before
+	public void setup() {
+		node = new ClassCoverageImpl("Sample", 12345, false);
+	}
+
 	@Test
-	public void testProperties() {
-		ClassCoverageImpl data = new ClassCoverageImpl("Sample", 12345, false,
-				"LSample;", "java/lang/Object", new String[0]);
-		data.setSourceFileName("Sample.java");
-		assertEquals(ICoverageNode.ElementType.CLASS, data.getElementType());
-		assertEquals("Sample", data.getName());
-		assertEquals(12345, data.getId());
-		assertFalse(data.isNoMatch());
-		assertEquals("LSample;", data.getSignature());
-		assertEquals("java/lang/Object", data.getSuperName());
-		assertEquals(0, data.getInterfaceNames().length);
-		assertEquals("Sample.java", data.getSourceFileName());
-		assertEquals(Collections.emptyList(), data.getMethods());
+	public void testDefaults() {
+		assertEquals(ICoverageNode.ElementType.CLASS, node.getElementType());
+		assertEquals("Sample", node.getName());
+		assertEquals(12345, node.getId());
+		assertFalse(node.isNoMatch());
+		assertEquals(Collections.emptyList(), node.getMethods());
+	}
+
+	@Test
+	public void testSignature() {
+		node.setSignature("LSample;");
+		assertEquals("LSample;", node.getSignature());
+	}
+
+	@Test
+	public void testSuperName() {
+		node.setSuperName("java/lang/Object");
+		assertEquals("java/lang/Object", node.getSuperName());
+	}
+
+	@Test
+	public void testInterfaces() {
+		node.setInterfaces(new String[] { "A", "B" });
+		assertArrayEquals(new String[] { "A", "B" }, node.getInterfaceNames());
+	}
+
+	@Test
+	public void testSourceFileName() {
+		node.setSourceFileName("Sample.java");
+		assertEquals("Sample.java", node.getSourceFileName());
 	}
 
 	@Test
 	public void testNoMatch() {
-		ClassCoverageImpl data = new ClassCoverageImpl("Sample", 12345, true,
-				"LSample;", "java/lang/Object", new String[0]);
-		assertTrue(data.isNoMatch());
+		ClassCoverageImpl node = new ClassCoverageImpl("Sample", 12345, true);
+		assertTrue(node.isNoMatch());
 	}
 
 	@Test
 	public void testGetPackageName1() {
-		ClassCoverageImpl data = new ClassCoverageImpl("ClassInDefaultPackage",
-				0, false, null, "java/lang/Object", new String[0]);
-		assertEquals("", data.getPackageName());
+		ClassCoverageImpl node = new ClassCoverageImpl("ClassInDefaultPackage",
+				0, false);
+		assertEquals("", node.getPackageName());
 	}
 
 	@Test
 	public void testGetPackageName2() {
 		ClassCoverageImpl data = new ClassCoverageImpl(
-				"org/jacoco/examples/Sample", 0, false, null,
-				"java/lang/Object", new String[0]);
+				"org/jacoco/examples/Sample", 0, false);
 		assertEquals("org/jacoco/examples", data.getPackageName());
 	}
 
 	@Test
 	public void testEmptyClass() {
-		ICoverageNode data = new ClassCoverageImpl("Sample", 0, false, null,
-				"java/lang/Object", new String[0]);
-		assertEquals(CounterImpl.COUNTER_0_0, data.getInstructionCounter());
-		assertEquals(CounterImpl.COUNTER_0_0, data.getBranchCounter());
-		assertEquals(CounterImpl.COUNTER_0_0, data.getMethodCounter());
-		assertEquals(CounterImpl.COUNTER_1_0, data.getClassCounter());
+		assertEquals(CounterImpl.COUNTER_0_0, node.getInstructionCounter());
+		assertEquals(CounterImpl.COUNTER_0_0, node.getBranchCounter());
+		assertEquals(CounterImpl.COUNTER_0_0, node.getMethodCounter());
+		assertEquals(CounterImpl.COUNTER_1_0, node.getClassCounter());
 	}
 
 	@Test
 	public void testAddMethodMissed() {
-		ClassCoverageImpl data = new ClassCoverageImpl("Sample", 0, false,
-				null, "java/lang/Object", new String[0]);
-		data.addMethod(createMethod(false));
-		assertEquals(CounterImpl.COUNTER_1_0, data.getInstructionCounter());
-		assertEquals(CounterImpl.COUNTER_1_0, data.getMethodCounter());
-		assertEquals(CounterImpl.COUNTER_1_0, data.getClassCounter());
+		node.addMethod(createMethod(false));
+		assertEquals(CounterImpl.COUNTER_1_0, node.getInstructionCounter());
+		assertEquals(CounterImpl.COUNTER_1_0, node.getMethodCounter());
+		assertEquals(CounterImpl.COUNTER_1_0, node.getClassCounter());
 	}
 
 	@Test
 	public void testAddMethodCovered() {
-		ClassCoverageImpl data = new ClassCoverageImpl("Sample", 0, false,
-				null, "java/lang/Object", new String[0]);
-		data.addMethod(createMethod(true));
-		assertEquals(CounterImpl.COUNTER_0_1, data.getInstructionCounter());
-		assertEquals(CounterImpl.COUNTER_0_1, data.getMethodCounter());
-		assertEquals(CounterImpl.COUNTER_0_1, data.getClassCounter());
+		node.addMethod(createMethod(true));
+		assertEquals(CounterImpl.COUNTER_0_1, node.getInstructionCounter());
+		assertEquals(CounterImpl.COUNTER_0_1, node.getMethodCounter());
+		assertEquals(CounterImpl.COUNTER_0_1, node.getClassCounter());
 	}
 
 	private MethodCoverageImpl createMethod(boolean covered) {
