@@ -135,8 +135,8 @@ public class ExecutionDataReaderWriterTest {
 		createReader().read();
 	}
 
-	@Test(expected = IOException.class)
-	public void testInvalidHeaderVersion() throws IOException {
+	@Test(expected = IncompatibleExecDataVersionException.class)
+	public void testInvalidVersion() throws IOException {
 		buffer = new ByteArrayOutputStream();
 		buffer.write(ExecutionDataWriter.BLOCK_HEADER);
 		buffer.write(0xC0);
