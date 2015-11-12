@@ -435,5 +435,13 @@ public class AgentOptionsTest {
 				String.format("-javaagent:%s= a b c",
 						defaultAgentJarFile.toString()), vmArgument);
 	}
+	
+	@Test // issue #358
+	public void testDestFileWithComma() {
+		AgentOptions options = new AgentOptions();
+
+		AgentOptions options = new AgentOptions("destfile=build/jacoco/foo, bar.exec");
+		assertEquals("build/jacoco/foo, bar.exec", options.getDestfile());
+	}
 
 }
