@@ -534,10 +534,6 @@ public final class AgentOptions {
 	}
 
 	private void setOption(final String key, final String value) {
-		if (value.contains(",")) {
-			throw new IllegalArgumentException(format(
-					"Invalid character in option argument \"%s\"", value));
-		}
 		options.put(key, value);
 	}
 
