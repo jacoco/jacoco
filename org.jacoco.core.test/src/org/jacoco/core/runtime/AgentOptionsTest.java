@@ -329,12 +329,6 @@ public class AgentOptionsTest {
 	}
 
 	@Test(expected = IllegalArgumentException.class)
-	public void testInvalidOptionValue() {
-		AgentOptions options = new AgentOptions();
-		options.setDestfile("invalid,name.exec");
-	}
-
-	@Test(expected = IllegalArgumentException.class)
 	public void testInvalidPortOptionValue() {
 		new AgentOptions("port=-1234");
 	}
