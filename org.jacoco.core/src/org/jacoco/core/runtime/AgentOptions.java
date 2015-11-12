@@ -21,6 +21,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
+import java.util.regex.Pattern;
 
 /**
  * Utility to create and parse options for the runtime agent. Options are
@@ -104,6 +105,8 @@ public final class AgentOptions {
 	 * @see OutputMode#none
 	 */
 	public static final String OUTPUT = "output";
+	
+	private static final Pattern OPTION_SPLIT = Pattern.compile(",(?=[a-z]+=)");
 
 	/**
 	 * Possible values for {@link AgentOptions#OUTPUT}.
@@ -199,7 +202,7 @@ public final class AgentOptions {
 	public AgentOptions(final String optionstr) {
 		this();
 		if (optionstr != null && optionstr.length() > 0) {
-			for (final String entry : optionstr.split(",")) {
+			for (final String entry : OPTION_SPLIT.split(optionstr)) {
 				final int pos = entry.indexOf('=');
 				if (pos == -1) {
 					throw new IllegalArgumentException(format(
