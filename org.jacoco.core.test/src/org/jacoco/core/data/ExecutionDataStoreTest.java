@@ -64,6 +64,20 @@ public class ExecutionDataStoreTest implements IExecutionDataVisitor {
 	}
 
 	@Test
+	public void testReentrantAccept() {
+		final boolean[] probes = new boolean[] { false, false, true };
+		store.put(new ExecutionData(1000, "Sample0", probes));
+		store.put(new ExecutionData(1001, "Sample1", probes));
+		store.accept(new IExecutionDataVisitor() {
+			public void visitClassExecution(ExecutionData data) {
+				store.put(new ExecutionData(1002, "Sample2", probes));
+				ExecutionDataStoreTest.this.visitClassExecution(data);
+			}
+		});
+		assertEquals(2, dataOutput.size());
+	}
+
+	@Test
 	public void testGetContents() {
 		final boolean[] probes = new boolean[] {};
 		final ExecutionData a = new ExecutionData(1000, "A", probes);

@@ -11,6 +11,7 @@
  *******************************************************************************/
 package org.jacoco.core.data;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -154,7 +155,7 @@ public final class ExecutionDataStore implements IExecutionDataVisitor {
 	 * @return current contents
 	 */
 	public Collection<ExecutionData> getContents() {
-		return entries.values();
+		return new ArrayList<ExecutionData>(entries.values());
 	}
 
 	/**
@@ -164,7 +165,7 @@ public final class ExecutionDataStore implements IExecutionDataVisitor {
 	 *            interface to write content to
 	 */
 	public void accept(final IExecutionDataVisitor visitor) {
-		for (final ExecutionData data : entries.values()) {
+		for (final ExecutionData data : getContents()) {
 			visitor.visitClassExecution(data);
 		}
 	}
