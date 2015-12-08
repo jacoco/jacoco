@@ -6,28 +6,24 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *
  * Contributors:
- *    Marc R. Hoffmann - initial API and implementation
- *    
+ * Marc R. Hoffmann - initial API and implementation
+ * Ivan Hristov - added support for MongoDB export
  *******************************************************************************/
 package org.jacoco.agent.rt.internal;
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.net.InetAddress;
-import java.util.concurrent.Callable;
-
 import org.jacoco.agent.rt.IAgent;
-import org.jacoco.agent.rt.internal.output.FileOutput;
-import org.jacoco.agent.rt.internal.output.IAgentOutput;
-import org.jacoco.agent.rt.internal.output.NoneOutput;
-import org.jacoco.agent.rt.internal.output.TcpClientOutput;
-import org.jacoco.agent.rt.internal.output.TcpServerOutput;
+import org.jacoco.agent.rt.internal.output.*;
 import org.jacoco.core.JaCoCo;
 import org.jacoco.core.data.ExecutionDataWriter;
 import org.jacoco.core.runtime.AbstractRuntime;
 import org.jacoco.core.runtime.AgentOptions;
 import org.jacoco.core.runtime.AgentOptions.OutputMode;
 import org.jacoco.core.runtime.RuntimeData;
+
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.net.InetAddress;
+import java.util.concurrent.Callable;
 
 /**
  * The agent manages the life cycle of JaCoCo runtime.
@@ -145,26 +141,28 @@ public class Agent implements IAgent {
 		}
 	}
 
-	/**
-	 * Create output implementation as given by the agent options.
-	 * 
-	 * @return configured controller implementation
-	 */
-	IAgentOutput createAgentOutput() {
-		final OutputMode controllerType = options.getOutput();
-		switch (controllerType) {
-		case file:
-			return new FileOutput();
-		case tcpserver:
-			return new TcpServerOutput(logger);
-		case tcpclient:
-			return new TcpClientOutput(logger);
-		case none:
-			return new NoneOutput();
-		default:
-			throw new AssertionError(controllerType);
-		}
-	}
+    /**
+     * Create output implementation as given by the agent options.
+     *
+     * @return configured controller implementation
+     */
+    IAgentOutput createAgentOutput() {
+        final OutputMode controllerType = options.getOutput();
+        switch (controllerType) {
+            case mongodb:
+                return new MongoDbOutput();
+            case file:
+                return new FileOutput();
+            case tcpserver:
+                return new TcpServerOutput(logger);
+            case tcpclient:
+                return new TcpClientOutput(logger);
+            case none:
+                return new NoneOutput();
+            default:
+                throw new AssertionError(controllerType);
+        }
+    }
 
 	private String createSessionId() {
 		String host;
