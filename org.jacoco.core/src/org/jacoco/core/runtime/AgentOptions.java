@@ -11,17 +11,11 @@
  *******************************************************************************/
 package org.jacoco.core.runtime;
 
-import static java.lang.String.format;
-
 import java.io.File;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Properties;
+import java.util.*;
 import java.util.regex.Pattern;
+
+import static java.lang.String.format;
 
 /**
  * Utility to create and parse options for the runtime agent. Options are
@@ -138,9 +132,15 @@ public final class AgentOptions {
 		 * Value for the {@link AgentOptions#OUTPUT} parameter: Do not produce
 		 * any output.
 		 */
-		none
+		none,
 
-	}
+        /**
+         * Value for the {@link AgentOptions#OUTPUT} parameter: At time of data dump agent connects
+         * to a MongoDB instance
+         */
+        mongodb
+
+    }
 
 	/**
 	 * The IP address or DNS name the tcpserver binds to or the tcpclient

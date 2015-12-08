@@ -29,6 +29,7 @@
     <jarsigner.skip>true</jarsigner.skip>
     <maven.deploy.skip>true</maven.deploy.skip>
     <maven.javadoc.skip>true</maven.javadoc.skip>
+    <mongodb-driver.version>3.1.1</mongodb-driver.version>
   </properties>
 
   <dependencies>
@@ -36,6 +37,13 @@
       <groupId>${project.groupId}</groupId>
       <artifactId>org.jacoco.core</artifactId>
     </dependency>
+
+    <dependency>
+      <groupId>org.mongodb</groupId>
+      <artifactId>mongodb-driver</artifactId>
+      <version>${mongodb-driver.version}</version>
+    </dependency>
+
   </dependencies>
 
   <build>
