@@ -17,11 +17,7 @@ import java.net.InetAddress;
 import java.util.concurrent.Callable;
 
 import org.jacoco.agent.rt.IAgent;
-import org.jacoco.agent.rt.internal.output.FileOutput;
-import org.jacoco.agent.rt.internal.output.IAgentOutput;
-import org.jacoco.agent.rt.internal.output.NoneOutput;
-import org.jacoco.agent.rt.internal.output.TcpClientOutput;
-import org.jacoco.agent.rt.internal.output.TcpServerOutput;
+import org.jacoco.agent.rt.internal.output.*;
 import org.jacoco.core.JaCoCo;
 import org.jacoco.core.data.ExecutionDataWriter;
 import org.jacoco.core.runtime.AbstractRuntime;
@@ -153,6 +149,9 @@ public class Agent implements IAgent {
 	IAgentOutput createAgentOutput() {
 		final OutputMode controllerType = options.getOutput();
 		switch (controllerType) {
+
+		case httpclient:
+			return new HttpClientOutput();
 		case file:
 			return new FileOutput();
 		case tcpserver:
