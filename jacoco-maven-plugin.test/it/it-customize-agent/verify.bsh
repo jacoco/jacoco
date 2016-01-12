@@ -17,12 +17,15 @@ String agentOptions = "destfile=" + basedir + File.separator + "target" + File.s
     + ",includes=*"
     + ",excludes=java.*:sun.*"
     + ",exclclassloader=sun.reflect.DelegatingClassLoader:MyClassLoader"
+    + ",inclbootstrapclasses=true"
+    + ",inclnolocationclasses=true"
     + ",sessionid=session"
     + ",dumponexit=true"
     + ",output=file"
     + ",address=localhost"
     + ",port=9999"
-    + ",classdumpdir=" + basedir + File.separator + "target" + File.separator + "classdumps";
+    + ",classdumpdir=" + basedir + File.separator + "target" + File.separator + "classdumps"
+    + ",jmx=true";
 
 //backslashes will be escaped
 agentOptions = agentOptions.replace("\\","\\\\");

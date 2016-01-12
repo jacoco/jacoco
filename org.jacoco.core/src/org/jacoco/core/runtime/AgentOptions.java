@@ -85,6 +85,14 @@ public final class AgentOptions {
 	public static final String INCLBOOTSTRAPCLASSES = "inclbootstrapclasses";
 
 	/**
+	 * Specifies whether also classes without a source location should be
+	 * instrumented. Normally such classes are generated at runtime e.g. by
+	 * mocking frameworks and are therefore excluded by default. Default is
+	 * <code>false</code>.
+	 */
+	public static final String INCLNOLOCATIONCLASSES = "inclnolocationclasses";
+
+	/**
 	 * Specifies a session identifier that is written with the execution data.
 	 * Without this parameter a random identifier is created by the agent.
 	 */
@@ -105,7 +113,7 @@ public final class AgentOptions {
 	 * @see OutputMode#none
 	 */
 	public static final String OUTPUT = "output";
-	
+
 	private static final Pattern OPTION_SPLIT = Pattern.compile(",(?=[a-z]+=)");
 
 	/**
@@ -181,8 +189,8 @@ public final class AgentOptions {
 
 	private static final Collection<String> VALID_OPTIONS = Arrays.asList(
 			DESTFILE, APPEND, INCLUDES, EXCLUDES, EXCLCLASSLOADER,
-			INCLBOOTSTRAPCLASSES, SESSIONID, DUMPONEXIT, OUTPUT, ADDRESS, PORT,
-			CLASSDUMPDIR, JMX);
+			INCLBOOTSTRAPCLASSES, INCLNOLOCATIONCLASSES, SESSIONID, DUMPONEXIT,
+			OUTPUT, ADDRESS, PORT, CLASSDUMPDIR, JMX);
 
 	private final Map<String, String> options;
 
@@ -354,7 +362,8 @@ public final class AgentOptions {
 	 * Returns whether classes from the bootstrap classloader should be
 	 * instrumented.
 	 * 
-	 * @return <code>true</code> if coverage data will be written on VM exit
+	 * @return <code>true</code> if classes from the bootstrap classloader
+	 *         should be instrumented
 	 */
 	public boolean getInclBootstrapClasses() {
 		return getOption(INCLBOOTSTRAPCLASSES, false);
@@ -369,6 +378,27 @@ public final class AgentOptions {
 	 */
 	public void setInclBootstrapClasses(final boolean include) {
 		setOption(INCLBOOTSTRAPCLASSES, include);
+	}
+
+	/**
+	 * Returns whether classes without source location should be instrumented.
+	 * 
+	 * @return <code>true</code> if classes without source location should be
+	 *         instrumented
+	 */
+	public boolean getInclNoLocationClasses() {
+		return getOption(INCLNOLOCATIONCLASSES, false);
+	}
+
+	/**
+	 * Sets whether classes without source location should be instrumented.
+	 * 
+	 * @param include
+	 *            <code>true</code> if classes without source location should be
+	 *            instrumented
+	 */
+	public void setInclNoLocationClasses(final boolean include) {
+		setOption(INCLNOLOCATIONCLASSES, include);
 	}
 
 	/**

@@ -126,6 +126,17 @@ public class AbstractCoverageTask extends Task {
 	}
 
 	/**
+	 * Sets whether classes without source location should be instrumented.
+	 * 
+	 * @param include
+	 *            <code>true</code> if classes without source location should be
+	 *            instrumented
+	 */
+	public void setInclNoLocationClasses(final boolean include) {
+		agentOptions.setInclNoLocationClasses(include);
+	}
+
+	/**
 	 * Sets the session identifier. Default is a auto-generated id
 	 * 
 	 * @param id

@@ -45,7 +45,9 @@ public class CoverageTransformer implements ClassFileTransformer {
 
 	private final ClassFileDumper classFileDumper;
 
-	private final boolean includeBootstrapClasses;
+	private final boolean inclBootstrapClasses;
+
+	private final boolean inclNoLocationClasses;
 
 	/**
 	 * New transformer with the given delegates.
@@ -66,7 +68,8 @@ public class CoverageTransformer implements ClassFileTransformer {
 		excludes = new WildcardMatcher(toVMName(options.getExcludes()));
 		exclClassloader = new WildcardMatcher(options.getExclClassloader());
 		classFileDumper = new ClassFileDumper(options.getClassDumpDir());
-		includeBootstrapClasses = options.getInclBootstrapClasses();
+		inclBootstrapClasses = options.getInclBootstrapClasses();
+		inclNoLocationClasses = options.getInclNoLocationClasses();
 	}
 
 	public byte[] transform(final ClassLoader loader, final String classname,
@@ -79,12 +82,7 @@ public class CoverageTransformer implements ClassFileTransformer {
 			return null;
 		}
 
-		// We exclude dynamically created non-bootstrap classes.
-		if (loader != null && !hasSourceLocation(protectionDomain)) {
-			return null;
-		}
-
-		if (!filter(loader, classname)) {
+		if (!filter(loader, classname, protectionDomain)) {
 			return null;
 		}
 
@@ -102,39 +100,26 @@ public class CoverageTransformer implements ClassFileTransformer {
 	}
 
 	/**
-	 * Checks whether this protection domain is associated with a source
-	 * location.
-	 * 
-	 * @param protectionDomain
-	 *            protection domain to check (or <code>null</code>)
-	 * @return <code>true</code> if a source location is defined
-	 */
-	boolean hasSourceLocation(final ProtectionDomain protectionDomain) {
-		if (protectionDomain == null) {
-			return false;
-		}
-		final CodeSource codeSource = protectionDomain.getCodeSource();
-		if (codeSource == null) {
-			return false;
-		}
-		return codeSource.getLocation() != null;
-	}
-
-	/**
 	 * Checks whether this class should be instrumented.
 	 * 
 	 * @param loader
 	 *            loader for the class
 	 * @param classname
 	 *            VM name of the class to check
+	 * @param protectionDomain
+	 *            protection domain for the class
 	 * @return <code>true</code> if the class should be instrumented
 	 */
-	boolean filter(final ClassLoader loader, final String classname) {
+	boolean filter(final ClassLoader loader, final String classname,
+			final ProtectionDomain protectionDomain) {
 		if (loader == null) {
-			if (!includeBootstrapClasses) {
+			if (!inclBootstrapClasses) {
 				return false;
 			}
 		} else {
+			if (!inclNoLocationClasses && !hasSourceLocation(protectionDomain)) {
+				return false;
+			}
 			if (exclClassloader.matches(loader.getClass().getName())) {
 				return false;
 			}
@@ -145,6 +130,25 @@ public class CoverageTransformer implements ClassFileTransformer {
 		includes.matches(classname) &&
 
 		!excludes.matches(classname);
+	}
+
+	/**
+	 * Checks whether this protection domain is associated with a source
+	 * location.
+	 * 
+	 * @param protectionDomain
+	 *            protection domain to check (or <code>null</code>)
+	 * @return <code>true</code> if a source location is defined
+	 */
+	private boolean hasSourceLocation(final ProtectionDomain protectionDomain) {
+		if (protectionDomain == null) {
+			return false;
+		}
+		final CodeSource codeSource = protectionDomain.getCodeSource();
+		if (codeSource == null) {
+			return false;
+		}
+		return codeSource.getLocation() != null;
 	}
 
 	private static String toVMName(final String srcName) {
