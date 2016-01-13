@@ -44,6 +44,7 @@ public class AgentOptionsTest {
 		assertEquals("sun.reflect.DelegatingClassLoader",
 				options.getExclClassloader());
 		assertFalse(options.getInclBootstrapClasses());
+		assertFalse(options.getInclNoLocationClasses());
 		assertNull(options.getSessionId());
 		assertTrue(options.getDumpOnExit());
 		assertEquals(AgentOptions.OutputMode.file, options.getOutput());
@@ -76,6 +77,7 @@ public class AgentOptionsTest {
 		properties.put("excludes", "*Test");
 		properties.put("exclclassloader", "org.jacoco.test.TestLoader");
 		properties.put("inclbootstrapclasses", "true");
+		properties.put("inclnolocationclasses", "true");
 		properties.put("sessionid", "testsession");
 		properties.put("dumponexit", "false");
 		properties.put("output", "tcpserver");
@@ -92,6 +94,7 @@ public class AgentOptionsTest {
 		assertEquals("*Test", options.getExcludes());
 		assertEquals("org.jacoco.test.TestLoader", options.getExclClassloader());
 		assertTrue(options.getInclBootstrapClasses());
+		assertTrue(options.getInclNoLocationClasses());
 		assertEquals("testsession", options.getSessionId());
 		assertFalse(options.getDumpOnExit());
 		assertEquals(AgentOptions.OutputMode.tcpserver, options.getOutput());
@@ -99,6 +102,12 @@ public class AgentOptionsTest {
 		assertEquals(1234, options.getPort());
 		assertEquals("target/dump", options.getClassDumpDir());
 		assertTrue(options.getJmx());
+	}
+
+	@Test
+	public void testEmptyPropertiesOptions() {
+		AgentOptions options = new AgentOptions(new Properties());
+		assertEquals("", options.toString());
 	}
 
 	@Test
@@ -188,19 +197,19 @@ public class AgentOptionsTest {
 	}
 
 	@Test
-	public void testGetIncludeBootstrapClassesTrue() {
+	public void testGetInclBootstrapClassesTrue() {
 		AgentOptions options = new AgentOptions("inclbootstrapclasses=true");
 		assertTrue(options.getInclBootstrapClasses());
 	}
 
 	@Test
-	public void testGetIncludeBootstrapClassesFalse() {
+	public void testGetInclBootstrapClassesFalse() {
 		AgentOptions options = new AgentOptions("inclbootstrapclasses=false");
 		assertFalse(options.getInclBootstrapClasses());
 	}
 
 	@Test
-	public void testSetIncludeBootstrapClassesTrue() {
+	public void testSetInclBootstrapClassesTrue() {
 		AgentOptions options = new AgentOptions();
 		options.setInclBootstrapClasses(true);
 		assertTrue(options.getInclBootstrapClasses());
@@ -208,11 +217,39 @@ public class AgentOptionsTest {
 	}
 
 	@Test
-	public void testSetIncludeBootstrapClassesFalse() {
+	public void testSetInclBootstrapClassesFalse() {
 		AgentOptions options = new AgentOptions();
 		options.setInclBootstrapClasses(false);
 		assertFalse(options.getInclBootstrapClasses());
 		assertEquals("inclbootstrapclasses=false", options.toString());
+	}
+
+	@Test
+	public void testGetInclNoLocationClassesTrue() {
+		AgentOptions options = new AgentOptions("inclnolocationclasses=true");
+		assertTrue(options.getInclNoLocationClasses());
+	}
+
+	@Test
+	public void testGetInclNoLocationClassesFalse() {
+		AgentOptions options = new AgentOptions("inclnolocationclasses=false");
+		assertFalse(options.getInclNoLocationClasses());
+	}
+
+	@Test
+	public void testSetInclNoLocationClassesTrue() {
+		AgentOptions options = new AgentOptions();
+		options.setInclNoLocationClasses(true);
+		assertTrue(options.getInclNoLocationClasses());
+		assertEquals("inclnolocationclasses=true", options.toString());
+	}
+
+	@Test
+	public void testSetInclNoLocationClassesFalse() {
+		AgentOptions options = new AgentOptions();
+		options.setInclNoLocationClasses(false);
+		assertFalse(options.getInclNoLocationClasses());
+		assertEquals("inclnolocationclasses=false", options.toString());
 	}
 
 	@Test
@@ -429,10 +466,12 @@ public class AgentOptionsTest {
 				String.format("-javaagent:%s= a b c",
 						defaultAgentJarFile.toString()), vmArgument);
 	}
-	
-	@Test // issue #358
+
+	@Test
+	// issue #358
 	public void testDestFileWithComma() {
-		AgentOptions options = new AgentOptions("destfile=build/jacoco/foo, bar.exec");
+		AgentOptions options = new AgentOptions(
+				"destfile=build/jacoco/foo, bar.exec");
 		assertEquals("build/jacoco/foo, bar.exec", options.getDestfile());
 	}
 

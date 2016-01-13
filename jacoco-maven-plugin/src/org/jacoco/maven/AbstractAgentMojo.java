@@ -81,6 +81,12 @@ public abstract class AbstractAgentMojo extends AbstractJacocoMojo {
 	 */
 	Boolean inclBootstrapClasses;
 	/**
+	 * Specifies whether classes without source location should be instrumented.
+	 * 
+	 * @parameter property="jacoco.inclNoLocationClasses"
+	 */
+	Boolean inclNoLocationClasses;
+	/**
 	 * A session identifier that is written with the execution data. Without
 	 * this parameter a random identifier is created by the agent.
 	 * 
@@ -188,6 +194,10 @@ public abstract class AbstractAgentMojo extends AbstractJacocoMojo {
 		}
 		if (inclBootstrapClasses != null) {
 			agentOptions.setInclBootstrapClasses(inclBootstrapClasses
+					.booleanValue());
+		}
+		if (inclNoLocationClasses != null) {
+			agentOptions.setInclNoLocationClasses(inclNoLocationClasses
 					.booleanValue());
 		}
 		if (sessionId != null) {
