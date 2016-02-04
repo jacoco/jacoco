@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2015 Mountainminds GmbH & Co. KG and Contributors
+ *  Copyright (c) 2009, 2016 Mountainminds GmbH & Co. KG and Contributors
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -18,6 +18,8 @@ import org.jacoco.core.analysis.IAnalyzer;
 import org.jacoco.core.tools.ICoverageFetcherStyle;
 
 /**
+ * A implementation of ReportGenerator for use in running the report generator
+ * directly from a test, instead of from a maven plugin or ant task.
  */
 public class DirectReportGenerator extends ReportGenerator {
 	private static final File DEFAULT_DATA_FILE = new File("target/jacoco.exec");
@@ -25,15 +27,18 @@ public class DirectReportGenerator extends ReportGenerator {
 	private File dataFile;
 
 	/**
-	 * 
+	 * Constructor
 	 */
 	public DirectReportGenerator() {
 		dataFile = DEFAULT_DATA_FILE;
 	}
 
 	/**
+	 * Set the input data file/directory.
+	 * 
 	 * @param dataFile
-	 * @return
+	 *            the input data file/directory.
+	 * @return this object
 	 */
 	public final DirectReportGenerator setDataFile(final File dataFile) {
 		this.dataFile = dataFile == null ? DEFAULT_DATA_FILE : dataFile;
@@ -41,7 +46,9 @@ public class DirectReportGenerator extends ReportGenerator {
 	}
 
 	/**
-	 * @return
+	 * Get the input data file/directory.
+	 * 
+	 * @return the input data file/directory.
 	 */
 	public File getDataFile() {
 		return dataFile;

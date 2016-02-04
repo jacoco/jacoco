@@ -216,6 +216,14 @@
       <td><code>false</code></td>
     </tr>
     <tr>
+      <td><code>inclnolocationclasses</code></td>
+      <td>Specifies whether also classes without a source location should be
+          instrumented. Normally such classes are generated at runtime e.g. by
+          mocking frameworks and are therefore excluded by default. 
+      </td>
+      <td><code>false</code></td>
+    </tr>
+    <tr>
       <td><code>sessionid</code></td>
       <td>A session identifier that is written with the execution data. Without
           this parameter a random identifier is created by the agent.

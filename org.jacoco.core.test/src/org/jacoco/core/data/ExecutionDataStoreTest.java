@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2015 Mountainminds GmbH & Co. KG and Contributors
+ * Copyright (c) 2009, 2016 Mountainminds GmbH & Co. KG and Contributors
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -113,6 +113,28 @@ public class ExecutionDataStoreTest {
 		}
 
 		@Test
+		public void testGetWithoutCreate() {
+			final ExecutionData data = new ExecutionData(1000, "Sample",
+					createProbes(new int[] {}));
+			store.put(data);
+			assertSame(data, store.get(1000));
+		}
+
+		@Test
+		public void testReentrantAccept() {
+			final IProbes probes = createProbes(new int[] { 0, 0, 1 });
+			store.put(new ExecutionData(1000, "Sample0", probes));
+			store.put(new ExecutionData(1001, "Sample1", probes));
+			store.accept(new IExecutionDataVisitor() {
+				public void visitClassExecution(ExecutionData data) {
+					store.put(new ExecutionData(1002, "Sample2", probes));
+					ExecutionDataStoreTestBase.this.visitClassExecution(data);
+				}
+			});
+			assertEquals(2, dataOutput.size());
+		}
+
+		@Test
 		public void testGetContents() {
 			final IProbeArray<?> probes = createProbes(new int[] {});
 			final ExecutionData a = new ExecutionData(1000, "A", probes);
@@ -126,14 +148,6 @@ public class ExecutionDataStoreTest {
 			final Set<ExecutionData> expected = new HashSet<ExecutionData>(
 					Arrays.asList(a, b));
 			assertEquals(expected, actual);
-		}
-
-		@Test
-		public void testGetWithoutCreate() {
-			final ExecutionData data = new ExecutionData(1000, "Sample",
-					createProbes(new int[] {}));
-			store.put(data);
-			assertSame(data, store.get(1000));
 		}
 
 		@Test

@@ -1,7 +1,7 @@
 License
 =======
 
-Copyright (c) 2009, 2015 Mountainminds GmbH & Co. KG and Contributors
+Copyright (c) 2009, 2016 Mountainminds GmbH & Co. KG and Contributors
 
 The JaCoCo Java Code Coverage Library and all included documentation is made
 available by Mountainminds GmbH & Co. KG, Munich. Except indicated below, the

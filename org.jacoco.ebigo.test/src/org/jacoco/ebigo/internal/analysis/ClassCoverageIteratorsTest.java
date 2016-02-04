@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2015 Mountainminds GmbH & Co. KG and Contributors
+ *  Copyright (c) 2009, 2016 Mountainminds GmbH & Co. KG and Contributors
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -176,7 +176,7 @@ public class ClassCoverageIteratorsTest {
 	private void addClassCoverage(long id, String name, boolean nomatch,
 			CoverageBuilder builder) {
 		final ClassCoverageImpl coverage = new ClassCoverageImpl(name, id,
-				nomatch, null, "java/lang/Object", new String[0]);
+				nomatch);
 		coverage.increment(CounterImpl.COUNTER_1_0, CounterImpl.COUNTER_0_0, 6);
 		coverage.setSourceFileName(null);
 		builder.visitCoverage(coverage);

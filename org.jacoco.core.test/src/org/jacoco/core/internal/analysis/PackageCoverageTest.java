@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2015 Mountainminds GmbH & Co. KG and Contributors
+ * Copyright (c) 2009, 2016 Mountainminds GmbH & Co. KG and Contributors
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -30,8 +30,7 @@ public class PackageCoverageTest {
 	public void testProperties() {
 		Collection<IClassCoverage> classes = Collections
 				.singleton((IClassCoverage) new ClassCoverageImpl(
-						"org/jacoco/test/Sample", 0, false, null,
-						"java/lang/Object", new String[0]));
+						"org/jacoco/test/Sample", 0, false));
 		Collection<ISourceFileCoverage> sourceFiles = Collections
 				.singleton((ISourceFileCoverage) new SourceFileCoverageImpl(
 						"Sample.java", "org/jacoco/test/Sample"));
@@ -47,8 +46,7 @@ public class PackageCoverageTest {
 	public void testCountersWithSources() {
 		// Classes with source reference will not considered for counters:
 		final ClassCoverageImpl classnode = new ClassCoverageImpl(
-				"org/jacoco/test/Sample", 0, false, null, "java/lang/Object",
-				new String[0]) {
+				"org/jacoco/test/Sample", 0, false) {
 			{
 				classCounter = CounterImpl.getInstance(9, 0, 0);
 				methodCounter = CounterImpl.getInstance(9, 0, 0);
@@ -81,8 +79,7 @@ public class PackageCoverageTest {
 	public void testCountersWithoutSources() {
 		// Classes without source reference will be considered for counters:
 		final ClassCoverageImpl classnode = new ClassCoverageImpl(
-				"org/jacoco/test/Sample", 0, false, null, "java/lang/Object",
-				new String[0]) {
+				"org/jacoco/test/Sample", 0, false) {
 			{
 				classCounter = CounterImpl.getInstance(1, 0, 0);
 				methodCounter = CounterImpl.getInstance(2, 0, 0);

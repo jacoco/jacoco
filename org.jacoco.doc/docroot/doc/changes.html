@@ -20,6 +20,39 @@
 
 <h2>Snapshot Build @qualified.bundle.version@ (@build.date@)</h2>
 
+<h3>New Features</h3>
+<ul>
+  <li>New agent option <code>inclnolocationclasses</code> to support execution
+      environments like Android where no source location is provided with classes
+      (GitHub <a href="https://github.com/jacoco/jacoco/issues/288">#288</a>).</li>
+  <li>Improved error message in case of incompatible execution data files.
+      (GitHub <a href="https://github.com/jacoco/jacoco/issues/319">#319</a>).</li>
+  <li>Command line agent options now supports comma in file names. Contributed
+      by Jochen Berger.
+      (GitHub <a href="https://github.com/jacoco/jacoco/issues/358">#358</a>).</li>
+</ul>
+
+<h3>Fixed Bugs</h3>
+<ul>
+  <li>Fix <code>MBeanClient</code> example
+      (GitHub <a href="https://github.com/jacoco/jacoco/issues/333">#333</a>).</li>
+  <li>Avoid <code>ConcurrentModificationException</code> during shutdown
+      (GitHub <a href="https://github.com/jacoco/jacoco/issues/364">#364</a>).</li>
+</ul>
+
+<h3>API Changes</h3>
+<ul>
+  <li>In case of incompatible execution data formats read from another JaCoCo
+  version <code>ExecutionDataReader.read()</code> now throws a 
+  <code>IncompatibleExecDataVersionException</code>.</li>
+</ul>
+
+<h3>Non-functional Changes</h3>
+<ul>
+  <li>JaCoCo now depends on ASM 5.0.4.</li>
+</ul>
+
+
 <h2>Release 0.7.5 (2015/05/24)</h2>
 
 <h3>New Features</h3>

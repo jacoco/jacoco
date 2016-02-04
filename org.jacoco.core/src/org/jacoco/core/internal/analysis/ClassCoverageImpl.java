@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2015 Mountainminds GmbH & Co. KG and Contributors
+ * Copyright (c) 2009, 2016 Mountainminds GmbH & Co. KG and Contributors
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -24,38 +24,28 @@ public class ClassCoverageImpl extends SourceNodeImpl implements IClassCoverage 
 
 	private final long id;
 	private final boolean noMatch;
-	private final String signature;
-	private final String superName;
-	private final String[] interfaces;
 	private final Collection<IMethodCoverage> methods;
+	private String signature;
+	private String superName;
+	private String[] interfaces;
 	private String sourceFileName;
 
 	/**
 	 * Creates a class coverage data object with the given parameters.
 	 * 
 	 * @param name
-	 *            vm name of the class
+	 *            VM name of the class
 	 * @param id
 	 *            class identifier
 	 * @param noMatch
 	 *            <code>true</code>, if class id does not match with execution
 	 *            data
-	 * @param signature
-	 *            vm signature of the class
-	 * @param superName
-	 *            vm name of the superclass of this class
-	 * @param interfaces
-	 *            vm names of interfaces of this class
 	 */
 	public ClassCoverageImpl(final String name, final long id,
-			final boolean noMatch, final String signature,
-			final String superName, final String[] interfaces) {
+			final boolean noMatch) {
 		super(ElementType.CLASS, name);
 		this.id = id;
 		this.noMatch = noMatch;
-		this.signature = signature;
-		this.superName = superName;
-		this.interfaces = interfaces;
 		this.methods = new ArrayList<IMethodCoverage>();
 		this.classCounter = CounterImpl.COUNTER_1_0;
 	}
@@ -74,6 +64,37 @@ public class ClassCoverageImpl extends SourceNodeImpl implements IClassCoverage 
 		if (methodCounter.getCoveredCount() > 0) {
 			this.classCounter = CounterImpl.getInstance(0, 1, 0);
 		}
+	}
+
+	/**
+	 * Sets the VM signature of the class.
+	 * 
+	 * @param signature
+	 *            VM signature of the class (may be <code>null</code>)
+	 */
+	public void setSignature(final String signature) {
+		this.signature = signature;
+	}
+
+	/**
+	 * Sets the VM name of the superclass.
+	 * 
+	 * @param superName
+	 *            VM name of the super class (may be <code>null</code>, i.e.
+	 *            <code>java/lang/Object</code>)
+	 */
+	public void setSuperName(final String superName) {
+		this.superName = superName;
+	}
+
+	/**
+	 * Sets the VM names of implemented/extended interfaces.
+	 * 
+	 * @param interfaces
+	 *            VM names of implemented/extended interfaces
+	 */
+	public void setInterfaces(final String[] interfaces) {
+		this.interfaces = interfaces;
 	}
 
 	/**

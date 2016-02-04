@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2015 Mountainminds GmbH & Co. KG and Contributors
+ * Copyright (c) 2009, 2016 Mountainminds GmbH & Co. KG and Contributors
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -168,6 +168,27 @@ public class CoverageBuilderTest {
 	}
 
 	@Test
+	public void testCreateSourceFileDuplicateClassNameIdentical() {
+		final MethodCoverageImpl method1 = new MethodCoverageImpl("doit",
+				"()V", null);
+		method1.increment(CounterImpl.COUNTER_1_0, CounterImpl.COUNTER_0_0, 3);
+		addClass(123L, false, "Sample", "Sample.java", method1);
+
+		final MethodCoverageImpl method2 = new MethodCoverageImpl("doit",
+				"()V", null);
+		method2.increment(CounterImpl.COUNTER_1_0, CounterImpl.COUNTER_0_0, 3);
+		addClass(123L, false, "Sample", "Sample.java", method2);
+
+		final Collection<ISourceFileCoverage> sourcefiles = coverageBuilder
+				.getSourceFiles();
+		assertEquals(1, sourcefiles.size());
+		ISourceFileCoverage s = sourcefiles.iterator().next();
+
+		assertEquals(1, s.getClassCounter().getTotalCount());
+		assertEquals(0, s.getClassCounter().getCoveredCount());
+	}
+
+	@Test
 	public void testGetBundle() {
 		final MethodCoverageImpl method1 = new MethodCoverageImpl("doit",
 				"()V", null, ProbeMode.exists);
@@ -241,7 +262,7 @@ public class CoverageBuilderTest {
 	private void addClass(long id, boolean nomatch, String name, String source,
 			MethodCoverageImpl... methods) {
 		final ClassCoverageImpl coverage = new ClassCoverageImpl(name, id,
-				nomatch, null, "java/lang/Object", new String[0]);
+				nomatch);
 		coverage.setSourceFileName(source);
 		for (MethodCoverageImpl m : methods) {
 			coverage.addMethod(m);

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-   Copyright (c) 2009, 2015 Mountainminds GmbH & Co. KG and Contributors
+   Copyright (c) 2009, 2016 Mountainminds GmbH & Co. KG and Contributors
    All rights reserved. This program and the accompanying materials
    are made available under the terms of the Eclipse Public License v1.0
    which accompanies this distribution, and is available at
@@ -26,12 +26,15 @@
     <jacoco.destFile>${project.build.directory}/coverage.exec</jacoco.destFile>
     <jacoco.append>false</jacoco.append>
     <jacoco.exclClassLoaders>sun.reflect.DelegatingClassLoader:MyClassLoader</jacoco.exclClassLoaders>
+    <jacoco.inclBootstrapClasses>true</jacoco.inclBootstrapClasses>
+    <jacoco.inclNoLocationClasses>true</jacoco.inclNoLocationClasses>
     <jacoco.sessionId>session</jacoco.sessionId>
     <jacoco.dumpOnExit>true</jacoco.dumpOnExit>
     <jacoco.output>file</jacoco.output>
     <jacoco.address>localhost</jacoco.address>
     <jacoco.port>9999</jacoco.port>
     <jacoco.classDumpDir>${project.build.directory}/classdumps</jacoco.classDumpDir>
+    <jacoco.jmx>true</jacoco.jmx>
     <jacoco.probe>parallelcount</jacoco.probe>
   </properties>
 

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2015 Mountainminds GmbH & Co. KG and Contributors
+ * Copyright (c) 2009, 2016 Mountainminds GmbH & Co. KG and Contributors
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -123,6 +123,17 @@ public class AbstractCoverageTask extends Task {
 	 */
 	public void setInclBootstrapClasses(final boolean include) {
 		agentOptions.setInclBootstrapClasses(include);
+	}
+
+	/**
+	 * Sets whether classes without source location should be instrumented.
+	 * 
+	 * @param include
+	 *            <code>true</code> if classes without source location should be
+	 *            instrumented
+	 */
+	public void setInclNoLocationClasses(final boolean include) {
+		agentOptions.setInclNoLocationClasses(include);
 	}
 
 	/**

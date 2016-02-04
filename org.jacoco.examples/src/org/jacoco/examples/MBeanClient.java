@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2015 Mountainminds GmbH & Co. KG and Contributors
+ * Copyright (c) 2009, 2016 Mountainminds GmbH & Co. KG and Contributors
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -39,36 +39,39 @@ public final class MBeanClient {
 	 */
 	public static void main(final String[] args) throws Exception {
 		// Open connection to the coverage agent:
-		JMXServiceURL url = new JMXServiceURL(SERVICE_URL);
-		JMXConnector jmxc = JMXConnectorFactory.connect(url, null);
-		MBeanServerConnection connection = jmxc.getMBeanServerConnection();
+		final JMXServiceURL url = new JMXServiceURL(SERVICE_URL);
+		final JMXConnector jmxc = JMXConnectorFactory.connect(url, null);
+		final MBeanServerConnection connection = jmxc
+				.getMBeanServerConnection();
 
-		IProxy proxy = (IProxy) MBeanServerInvocationHandler.newProxyInstance(
-				connection, new ObjectName("org.jacoco:type=Runtime"),
-				IProxy.class, false);
+		final IProxy proxy = (IProxy) MBeanServerInvocationHandler
+				.newProxyInstance(connection, new ObjectName(
+						"org.jacoco:type=Runtime"), IProxy.class, false);
 
 		// Retrieve JaCoCo version and session id:
 		System.out.println("Version: " + proxy.getVersion());
 		System.out.println("Session: " + proxy.getSessionId());
 
 		// Retrieve dump and write to file:
-		byte[] dump = proxy.dump(false);
+		final byte[] data = proxy.getExecutionData(false);
 		final FileOutputStream localFile = new FileOutputStream(DESTFILE);
-		localFile.write(dump);
+		localFile.write(data);
 		localFile.close();
 
 		// Close connection:
 		jmxc.close();
 	}
 
-	private interface IProxy {
+	interface IProxy {
 		String getVersion();
 
 		String getSessionId();
 
 		void setSessionId(String id);
 
-		byte[] dump(boolean reset);
+		byte[] getExecutionData(boolean reset);
+
+		void dump(boolean reset);
 
 		void reset();
 	}

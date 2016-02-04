@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2015 Mountainminds GmbH & Co. KG and Contributors
+ *  Copyright (c) 2009, 2016 Mountainminds GmbH & Co. KG and Contributors
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -95,7 +95,7 @@ public class ClassEmpiricalBigOImplTest {
 	private ClassCoverageImpl makeEmptyClassCoverage(long id, String name,
 			boolean nomatch) {
 		final ClassCoverageImpl coverage = new ClassCoverageImpl(name, id,
-				nomatch, null, "java/lang/Object", new String[0]);
+				nomatch);
 		coverage.setSourceFileName(null);
 		return coverage;
 	}
@@ -103,7 +103,7 @@ public class ClassEmpiricalBigOImplTest {
 	private ClassCoverageImpl makeClassCoverage(long id, String name,
 			int executions, boolean nomatch) {
 		final ClassCoverageImpl coverage = new ClassCoverageImpl(name, id,
-				nomatch, null, "java/lang/Object", new String[0]);
+				nomatch);
 		coverage.increment(CounterImpl.getInstance(0, 1, executions),
 				CounterImpl.COUNTER_0_1, 6);
 		coverage.increment(CounterImpl.getInstance(0, 1, executions),

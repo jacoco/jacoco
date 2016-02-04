@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2015 Mountainminds GmbH & Co. KG and Contributors
+ * Copyright (c) 2009, 2016 Mountainminds GmbH & Co. KG and Contributors
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -76,8 +76,11 @@ public class ExecutionDataReader {
 	 *         stream has been reached.
 	 * @throws IOException
 	 *             might be thrown by the underlying input stream
+	 * @throws IncompatibleExecDataVersionException
+	 *             incompatible data version from different JaCoCo release
 	 */
-	public boolean read() throws IOException {
+	public boolean read() throws IOException,
+			IncompatibleExecDataVersionException {
 		try {
 			byte type;
 			do {
@@ -126,8 +129,7 @@ public class ExecutionDataReader {
 		}
 		final char version = in.readChar();
 		if (version != ExecutionDataWriter.FORMAT_VERSION) {
-			throw new IOException(format("Incompatible version %x.",
-					Integer.valueOf(version)));
+			throw new IncompatibleExecDataVersionException(version);
 		}
 	}
 

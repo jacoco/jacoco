@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2015 Mountainminds GmbH & Co. KG and Contributors
+ *  Copyright (c) 2009, 2016 Mountainminds GmbH & Co. KG and Contributors
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -114,8 +114,7 @@ public class EmpiricalBigOBuilderTest {
 	@Test
 	public void testVisitEmpiricalBigO_hasClassList() {
 
-		ClassCoverageImpl cc = new ClassCoverageImpl("Sample", 123L, false, "",
-				null, null);
+		ClassCoverageImpl cc = new ClassCoverageImpl("Sample", 123L, false);
 		cc.addMethod(createMethod(true));
 		IClassCoverage[] ccs = new IClassCoverage[] { cc };
 		IClassEmpiricalBigO empiricalBigO = new ClassEmpiricalBigOImpl(ccs);
@@ -134,8 +133,7 @@ public class EmpiricalBigOBuilderTest {
 	@Test
 	public void testVisitEmpiricalBigO_addExactDup() {
 
-		ClassCoverageImpl cc = new ClassCoverageImpl("Sample", 123L, false, "",
-				null, null);
+		ClassCoverageImpl cc = new ClassCoverageImpl("Sample", 123L, false);
 		cc.addMethod(createMethod(true));
 		IClassCoverage[] ccs = new IClassCoverage[] { cc };
 		IClassEmpiricalBigO empiricalBigO = new ClassEmpiricalBigOImpl(ccs);
@@ -155,14 +153,12 @@ public class EmpiricalBigOBuilderTest {
 	@Test(expected = IllegalStateException.class)
 	public void testVisitEmpiricalBigO_addDifferentDup() {
 
-		ClassCoverageImpl cc1 = new ClassCoverageImpl("Sample", 123L, false,
-				"", null, null);
+		ClassCoverageImpl cc1 = new ClassCoverageImpl("Sample", 123L, false);
 		cc1.addMethod(createMethod(true));
 		IClassCoverage[] ccs1 = new IClassCoverage[] { cc1 };
 		IClassEmpiricalBigO empiricalBigO1 = new ClassEmpiricalBigOImpl(ccs1);
 
-		ClassCoverageImpl cc2 = new ClassCoverageImpl("Sample", 222L, false,
-				"", null, null);
+		ClassCoverageImpl cc2 = new ClassCoverageImpl("Sample", 222L, false);
 		cc2.addMethod(createMethod(true));
 		IClassCoverage[] ccs2 = new IClassCoverage[] { cc2 };
 		IClassEmpiricalBigO empiricalBigO2 = new ClassEmpiricalBigOImpl(ccs2);

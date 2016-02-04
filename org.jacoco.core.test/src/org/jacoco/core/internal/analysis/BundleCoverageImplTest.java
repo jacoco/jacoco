@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2015 Mountainminds GmbH & Co. KG and Contributors
+ * Copyright (c) 2009, 2016 Mountainminds GmbH & Co. KG and Contributors
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -83,11 +83,9 @@ public class BundleCoverageImplTest {
 
 	@Test
 	public void testGroupByPackage() {
-		ClassCoverageImpl ca = new ClassCoverageImpl("p1/A", 1, false, null,
-				"java/lang/Object", new String[0]);
+		ClassCoverageImpl ca = new ClassCoverageImpl("p1/A", 1, false);
 		ca.setSourceFileName("A.java");
-		ClassCoverageImpl cb = new ClassCoverageImpl("p2/B", 2, false, null,
-				"java/lang/Object", new String[0]);
+		ClassCoverageImpl cb = new ClassCoverageImpl("p2/B", 2, false);
 		cb.setSourceFileName("B.java");
 		ISourceFileCoverage sb = new SourceFileCoverageImpl("B.java", "p2");
 		ISourceFileCoverage sc = new SourceFileCoverageImpl("C.java", "p3");

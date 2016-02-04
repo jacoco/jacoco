@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2015 Mountainminds GmbH & Co. KG and Contributors
+ * Copyright (c) 2009, 2016 Mountainminds GmbH & Co. KG and Contributors
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -11,6 +11,7 @@
  *******************************************************************************/
 package org.jacoco.core.data;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -154,7 +155,7 @@ public final class ExecutionDataStore implements IExecutionDataVisitor {
 	 * @return current contents
 	 */
 	public Collection<ExecutionData> getContents() {
-		return entries.values();
+		return new ArrayList<ExecutionData>(entries.values());
 	}
 
 	/**
@@ -164,7 +165,7 @@ public final class ExecutionDataStore implements IExecutionDataVisitor {
 	 *            interface to write content to
 	 */
 	public void accept(final IExecutionDataVisitor visitor) {
-		for (final ExecutionData data : entries.values()) {
+		for (final ExecutionData data : getContents()) {
 			visitor.visitClassExecution(data);
 		}
 	}
