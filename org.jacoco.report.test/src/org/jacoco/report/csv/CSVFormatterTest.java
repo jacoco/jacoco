@@ -20,6 +20,7 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.jacoco.core.data.ProbeMode;
 import org.jacoco.report.ILanguageNames;
 import org.jacoco.report.IReportVisitor;
 import org.jacoco.report.MemoryOutput;
@@ -34,6 +35,7 @@ import org.junit.Test;
 public class CSVFormatterTest {
 
 	private static final String HEADER = "GROUP,PACKAGE,CLASS,INSTRUCTION_MISSED,INSTRUCTION_COVERED,BRANCH_MISSED,BRANCH_COVERED,LINE_MISSED,LINE_COVERED,COMPLEXITY_MISSED,COMPLEXITY_COVERED,METHOD_MISSED,METHOD_COVERED";
+	private static final String EXEC_HEADER = "GROUP,PACKAGE,CLASS,INSTRUCTION_MISSED,INSTRUCTION_COVERED,INSTRUCTION_EXECUTED,BRANCH_MISSED,BRANCH_COVERED,BRANCH_EXECUTED,LINE_MISSED,LINE_COVERED,LINE_EXECUTED,COMPLEXITY_MISSED,COMPLEXITY_COVERED,METHOD_MISSED,METHOD_COVERED,METHOD_EXECUTED";
 
 	private ReportStructureTestDriver driver;
 
@@ -127,6 +129,15 @@ public class CSVFormatterTest {
 		formatter.setLanguageNames(names);
 		assertSame(names, formatter.getLanguageNames());
 		output.close();
+	}
+
+	@Test
+	public void testSetProbeMode() throws Exception {
+		formatter.setProbeMode(ProbeMode.parallelcount);
+		visitor = formatter.createVisitor(output);
+		driver.sendBundle(visitor);
+		final List<String> lines = getLines("UTF-8");
+		assertEquals(EXEC_HEADER, lines.get(0));
 	}
 
 	private List<String> getLines() throws IOException {

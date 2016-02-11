@@ -13,6 +13,8 @@ package org.jacoco.core.internal.instr;
 
 import static org.junit.Assert.assertEquals;
 
+import java.lang.reflect.Constructor;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.objectweb.asm.util.Printer;
@@ -31,6 +33,15 @@ public class InstrSupportTest {
 	public void setup() {
 		printer = new Textifier();
 		trace = new TraceMethodVisitor(printer);
+	}
+
+	@Test
+	public void testConstructor() throws Exception {
+		Constructor<InstrSupport> constructor = InstrSupport.class
+				.getDeclaredConstructor();
+		constructor.setAccessible(true);
+		constructor.newInstance();
+		// all's well if no exceptions thrown so far
 	}
 
 	@Test

@@ -21,7 +21,6 @@ import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.concurrent.Future;
 
-import org.jacoco.agent.rt.internal.output.TcpConnection;
 import org.jacoco.core.data.ExecutionDataStore;
 import org.jacoco.core.data.ExecutionDataWriter;
 import org.jacoco.core.data.SessionInfo;
@@ -234,7 +233,8 @@ public class TcpConnectionTest extends ExecutorTestBase {
 
 	@Test
 	public void testRemoteReset() throws Exception {
-		data.getExecutionData(Long.valueOf(123), "Foo", 1).getProbes()[0] = true;
+		data.getExecutionData(Long.valueOf(123), "Foo", 1).getProbes()
+				.increment(0);
 
 		final RemoteControlWriter remoteWriter = new RemoteControlWriter(
 				mockConnection.getSocketB().getOutputStream());
@@ -266,7 +266,7 @@ public class TcpConnectionTest extends ExecutorTestBase {
 		assertTrue(infoStore.getInfos().isEmpty());
 		assertTrue(execStore.getContents().isEmpty());
 		assertFalse(data.getExecutionData(Long.valueOf(123), "Foo", 1)
-				.getProbes()[0]);
+				.getProbes().isProbeCovered(0));
 
 		con.close();
 		f.get();

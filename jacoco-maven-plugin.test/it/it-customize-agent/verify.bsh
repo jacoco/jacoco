@@ -25,7 +25,8 @@ String agentOptions = "destfile=" + basedir + File.separator + "target" + File.s
     + ",address=localhost"
     + ",port=9999"
     + ",classdumpdir=" + basedir + File.separator + "target" + File.separator + "classdumps"
-    + ",jmx=true";
+    + ",jmx=true"
+    + ",probe=parallelcount";
 
 //backslashes will be escaped
 agentOptions = agentOptions.replace("\\","\\\\");

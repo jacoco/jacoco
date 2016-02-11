@@ -16,9 +16,11 @@ import java.io.IOException;
 import java.io.Reader;
 import java.util.Locale;
 
+import org.jacoco.core.analysis.EBigOFunction;
 import org.jacoco.core.analysis.ICounter;
 import org.jacoco.core.analysis.ILine;
 import org.jacoco.core.analysis.ISourceNode;
+import org.jacoco.core.data.ProbeMode;
 import org.jacoco.report.internal.html.HTMLElement;
 import org.jacoco.report.internal.html.resources.Styles;
 
@@ -29,6 +31,8 @@ final class SourceHighlighter {
 
 	private final Locale locale;
 
+	private final ProbeMode probeMode;
+
 	private String lang;
 
 	/**
@@ -36,9 +40,12 @@ final class SourceHighlighter {
 	 * 
 	 * @param locale
 	 *            locale for tooltip rendering
+	 * @param probeMode
+	 *            the probeMode of the source coverage being rendered
 	 */
-	public SourceHighlighter(final Locale locale) {
+	public SourceHighlighter(final Locale locale, final ProbeMode probeMode) {
 		this.locale = locale;
+		this.probeMode = probeMode;
 		lang = "java";
 	}
 
@@ -69,19 +76,107 @@ final class SourceHighlighter {
 			final Reader contents) throws IOException {
 		final HTMLElement pre = parent.pre(Styles.SOURCE + " lang-" + lang
 				+ " linenums");
+		final boolean hasEBigO = source.hasEBigO();
 		final BufferedReader lineBuffer = new BufferedReader(contents);
 		String line;
 		int nr = 0;
 		while ((line = lineBuffer.readLine()) != null) {
 			nr++;
-			renderCodeLine(pre, line, source.getLine(nr), nr);
+			renderCodeLine(pre, line, source.getLine(nr),
+					(hasEBigO ? source.getLineEBigOFunction(nr) : null), nr);
 		}
 	}
 
 	private void renderCodeLine(final HTMLElement pre, final String linesrc,
-			final ILine line, final int lineNr) throws IOException {
+			final ILine line, final EBigOFunction ebigo, final int lineNr)
+			throws IOException {
+		addExtras(pre, line, ebigo);
 		highlight(pre, line, lineNr).text(linesrc);
 		pre.text("\n");
+	}
+
+	private void addExtras(final HTMLElement pre, final ILine line,
+			final EBigOFunction ebigo) throws IOException {
+
+		addEBigO(pre, ebigo);
+		addParallelPercentPrefix(pre, line);
+	}
+
+	void addEBigO(final HTMLElement pre, final EBigOFunction ebigo)
+			throws IOException {
+
+		if (ebigo == null) {
+			return;
+		}
+
+		final String style;
+		switch (ebigo.getType()) {
+		default:
+			style = "e";
+			break;
+		case Logarithmic:
+			style = "e efc";
+			break;
+		case Linear:
+			style = "e efc";
+			break;
+		case PowerLaw:
+			style = "e epc";
+			break;
+		case Exponential:
+			style = "e enc";
+			break;
+		}
+		final HTMLElement span = pre.span(style);
+		addEBigOText(span, ebigo);
+	}
+
+	private void addEBigOText(final HTMLElement span, final EBigOFunction ebigo)
+			throws IOException {
+		final StringBuffer buffer = new StringBuffer();
+
+		buffer.append(ebigo.getOrderOfMagnitude());
+		while (buffer.length() < 7) {
+			buffer.append(' ');
+		}
+		span.text(buffer.toString());
+	}
+
+	void addParallelPercentPrefix(final HTMLElement pre, final ILine line)
+			throws IOException {
+
+		if (ProbeMode.parallelcount != probeMode) {
+			return;
+		}
+
+		final double parallelPct;
+		{
+			double pp = line.getParallelPercent() - ROUND_DOWN;
+			if (pp < 0) {
+				pp = 0;
+			}
+			parallelPct = pp;
+		}
+
+		final int status = line.getStatus();
+		final boolean showPP = status != ICounter.EMPTY
+				&& status != ICounter.NOT_COVERED;
+		final String style;
+		if (!showPP) {
+			style = "e";
+		} else if (parallelPct > 95.0D) {
+			style = "e efc";
+		} else if (parallelPct > 50.0D) {
+			style = "e epc";
+		} else {
+			style = "e enc";
+		}
+		final HTMLElement span = pre.span(style);
+		if (showPP) {
+			span.text(String.format("%7.3f%%", new Double(parallelPct)));
+		} else {
+			span.text("        ");
+		}
 	}
 
 	HTMLElement highlight(final HTMLElement pre, final ILine line,

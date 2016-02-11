@@ -205,6 +205,28 @@
       </td>
       <td><code>false</code></td>
     </tr>
+    <tr>
+      <td><code>probe</code></td>
+      <td>Selects which probe mode the agent will use. Valid options are:
+        <ul>
+          <li><code>exists</code>: This is the long time probing style of JaCoCo. 
+              What is collected is the <i>existence</i> of coverage, that is, 
+              has an instruction been executed at least once. It is implemented using 
+              a <code>boolean[]</code></li>
+          <li><code>count</code>: This probe mode collects a count of the number 
+              of times an instruction has been executed. It is implemented using an 
+              <code>java.util.concurrent.atomic.AtomicIntegerArray</code>, which 
+              gives thread safety with negligible impact on performance.</li>
+          <li><code>parallelcount</code>: This probe mode collects a count of the 
+              number of times an instruction has been executed, and the number of 
+              times an instruction has been executed while holding no monitors. This 
+              mode provide the data needed to calculate the parallel percent. It is 
+              implemented using an pair of <code>java.util.concurrent.atomic.AtomicIntegerArray</code>, 
+              which gives thread safety with negligible impact on performance./li>
+        </ul>
+      </td>
+      <td><code>exists</code></td>
+    </tr>
   </tbody>
 </table>
 

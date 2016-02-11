@@ -13,12 +13,13 @@ package org.jacoco.core.data;
 
 import static java.lang.String.format;
 
-import java.util.Arrays;
+import org.jacoco.core.internal.instr.IProbeArray;
+import org.jacoco.core.internal.instr.ProbeArrayService;
 
 /**
  * Execution data for a single Java class. While instances are immutable care
- * has to be taken about the probe data array of type <code>boolean[]</code>
- * which can be modified.
+ * has to be taken about the probe data array of type
+ * <code>{@literal IProbeArray<?>}</code> which can be modified.
  */
 public final class ExecutionData {
 
@@ -26,7 +27,7 @@ public final class ExecutionData {
 
 	private final String name;
 
-	private final boolean[] probes;
+	private final IProbeArray<?> probes;
 
 	/**
 	 * Creates a new {@link ExecutionData} object with the given probe data.
@@ -35,14 +36,19 @@ public final class ExecutionData {
 	 *            class identifier
 	 * @param name
 	 *            VM name
-	 * @param probes
-	 *            probe data
+	 * @param dataObject
+	 *            probe data must be an IProbeArray or the internal object of
+	 *            one of the supported probe types.
 	 */
 	public ExecutionData(final long id, final String name,
-			final boolean[] probes) {
+			final Object dataObject) {
 		this.id = id;
 		this.name = name;
-		this.probes = probes;
+		if (dataObject instanceof IProbeArray) {
+			this.probes = (IProbeArray<?>) dataObject;
+		} else {
+			this.probes = ProbeArrayService.newProbeArray(dataObject);
+		}
 	}
 
 	/**
@@ -59,7 +65,16 @@ public final class ExecutionData {
 	public ExecutionData(final long id, final String name, final int probeCount) {
 		this.id = id;
 		this.name = name;
-		this.probes = new boolean[probeCount];
+		this.probes = ProbeArrayService.newProbeArray(probeCount);
+	}
+
+	/**
+	 * Returns a deep copy of this execution data
+	 * 
+	 * @return a deep copy of this execution data
+	 */
+	public ExecutionData deepCopy() {
+		return new ExecutionData(id, name, probes.copy());
 	}
 
 	/**
@@ -87,15 +102,15 @@ public final class ExecutionData {
 	 * 
 	 * @return probe data
 	 */
-	public boolean[] getProbes() {
+	public IProbes getProbes() {
 		return probes;
 	}
 
 	/**
-	 * Sets all probes to <code>false</code>.
+	 * Sets all probes to <code>0</code>.
 	 */
 	public void reset() {
-		Arrays.fill(probes, false);
+		probes.reset();
 	}
 
 	/**
@@ -141,14 +156,37 @@ public final class ExecutionData {
 	 *            merge mode
 	 */
 	public void merge(final ExecutionData other, final boolean flag) {
-		assertCompatibility(other.getId(), other.getName(),
-				other.getProbes().length);
-		final boolean[] otherData = other.getProbes();
-		for (int i = 0; i < probes.length; i++) {
-			if (otherData[i]) {
-				probes[i] = flag;
-			}
+		assertCompatibility(other.getId(), other.getName(), other.probes);
+		probes.merge(other.probes, flag);
+	}
+
+	/**
+	 * Asserts that this execution data object is compatible with the given
+	 * parameters. The purpose of this check is to detect a very unlikely class
+	 * id collision.
+	 * 
+	 * @param id
+	 *            other class id, must be the same
+	 * @param name
+	 *            other name, must be equal to this name
+	 * @param other
+	 *            probe data, must be the same type and length as for this data
+	 * @throws IllegalStateException
+	 *             if the given parameters do not match this instance
+	 */
+	public void assertCompatibility(final long id, final String name,
+			final IProbeArray<?> other) throws IllegalStateException {
+		if (this.id != id) {
+			throw new IllegalStateException(format(
+					"Different ids (%016x and %016x).", Long.valueOf(this.id),
+					Long.valueOf(id)));
 		}
+		if (!this.name.equals(name)) {
+			throw new IllegalStateException(format(
+					"Different class names %s and %s for id %016x.", this.name,
+					name, Long.valueOf(id)));
+		}
+		probes.assertCompatibility(other);
 	}
 
 	/**
@@ -177,7 +215,7 @@ public final class ExecutionData {
 					"Different class names %s and %s for id %016x.", this.name,
 					name, Long.valueOf(id)));
 		}
-		if (this.probes.length != probecount) {
+		if (probes.length() != probecount) {
 			throw new IllegalStateException(format(
 					"Incompatible execution data for class %s with id %016x.",
 					name, Long.valueOf(id)));

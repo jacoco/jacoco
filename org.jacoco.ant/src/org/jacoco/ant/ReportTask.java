@@ -18,7 +18,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
@@ -31,14 +30,16 @@ import org.apache.tools.ant.types.Resource;
 import org.apache.tools.ant.types.resources.FileResource;
 import org.apache.tools.ant.types.resources.Union;
 import org.apache.tools.ant.util.FileUtils;
-import org.jacoco.core.analysis.Analyzer;
 import org.jacoco.core.analysis.CoverageBuilder;
+import org.jacoco.core.analysis.IAnalyzer;
 import org.jacoco.core.analysis.IBundleCoverage;
-import org.jacoco.core.analysis.IClassCoverage;
 import org.jacoco.core.analysis.ICoverageNode;
 import org.jacoco.core.data.ExecutionDataStore;
 import org.jacoco.core.data.SessionInfoStore;
-import org.jacoco.core.tools.ExecFileLoader;
+import org.jacoco.core.tools.DefaultCoverageFetcherStyle;
+import org.jacoco.core.tools.ICoverageFetcherStyle;
+import org.jacoco.core.tools.LoggingBridge;
+import org.jacoco.ebigo.tools.EBigOCoverageFetcherStyle;
 import org.jacoco.report.FileMultiReportOutput;
 import org.jacoco.report.IMultiReportOutput;
 import org.jacoco.report.IReportGroupVisitor;
@@ -423,6 +424,10 @@ public class ReportTask extends Task {
 
 	private final List<FormatterElement> formatters = new ArrayList<FormatterElement>();
 
+	private String eBigOAttribute;
+
+	private boolean eBigOEnabled;
+
 	/**
 	 * Returns the nested resource collection for execution data files.
 	 * 
@@ -485,14 +490,57 @@ public class ReportTask extends Task {
 		return element;
 	}
 
+	/**
+	 * Returns the Empirical EBigO Attribute used for X-Axis. If {@code null},
+	 * the value will default to
+	 * {@code WorkloadAttributeMapBuilder.DEFAULT_ATTRIBUTE}
+	 * 
+	 * @return the Empirical EBigO Attribute used for X-Axis
+	 */
+	public String getEBigOAttribute() {
+		return this.eBigOAttribute;
+	}
+
+	/**
+	 * Set the Empirical Big-O X-Axis attribute to use. Default is "DEFAULT".
+	 * 
+	 * @param eBigOAttribute
+	 *            the Empirical Big-O X-Axis attribute to use
+	 */
+	public void setEBigOAttribute(final String eBigOAttribute) {
+		this.eBigOAttribute = eBigOAttribute;
+	}
+
+	/**
+	 * Enable/Disable performing Empirical Big-O analysis in report. This
+	 * requires multiple workloads (at least 4)
+	 * 
+	 * @param enabled
+	 *            {@code true} if enabled.
+	 */
+	public void setEBigOEnabled(final boolean enabled) {
+		this.eBigOEnabled = enabled;
+	}
+
+	/**
+	 * Returns if EBigO mode of analysis is required.
+	 *
+	 * @return {@code true} if EBigO mode of analysis is required.
+	 */
+	public boolean isEBigOEnabled() {
+		return this.eBigOEnabled;
+	}
+
 	@Override
 	public void execute() throws BuildException {
-		loadExecutionData();
+		final ICoverageFetcherStyle fetcher = !eBigOEnabled ? new DefaultCoverageFetcherStyle()
+				: new EBigOCoverageFetcherStyle(eBigOAttribute);
 		try {
+			loadExecutionData(fetcher);
 			final IReportVisitor visitor = createVisitor();
 			visitor.visitInfo(sessionInfoStore.getInfos(),
 					executionDataStore.getContents());
-			createReport(visitor, structure);
+			createReport(visitor, fetcher, structure);
 			visitor.visitEnd();
 			for (final FormatterElement f : formatters) {
 				f.finish();
@@ -503,25 +551,35 @@ public class ReportTask extends Task {
 		}
 	}
 
-	private void loadExecutionData() {
-		final ExecFileLoader loader = new ExecFileLoader();
+	private void loadExecutionData(final ICoverageFetcherStyle fetcher) {
 		for (final Iterator<?> i = executiondataElement.iterator(); i.hasNext();) {
 			final Resource resource = (Resource) i.next();
 			log(format("Loading execution data file %s", resource));
-			InputStream in = null;
 			try {
-				in = resource.getInputStream();
-				loader.load(in);
+				if (resource instanceof FileResource) {
+					fetcher.loadExecutionData(((FileResource) resource)
+							.getFile());
+				} else {
+					InputStream in = null;
+					try {
+						in = resource.getInputStream();
+						fetcher.loadExecutionData(in);
+					} finally {
+						FileUtils.close(in);
+					}
+				}
 			} catch (final IOException e) {
 				throw new BuildException(format(
 						"Unable to read execution data file %s", resource), e,
 						getLocation());
-			} finally {
-				FileUtils.close(in);
+			} catch (final UnsupportedOperationException e) {
+				throw new BuildException(
+						format("Reading execution data file %s is not supported by the current reporting style",
+								resource), e, getLocation());
 			}
 		}
-		sessionInfoStore = loader.getSessionInfoStore();
-		executionDataStore = loader.getExecutionDataStore();
+		sessionInfoStore = fetcher.getSessionInfoStore();
+		executionDataStore = fetcher.getExecutionDataStore();
 	}
 
 	private IReportVisitor createVisitor() throws IOException {
@@ -533,34 +591,53 @@ public class ReportTask extends Task {
 	}
 
 	private void createReport(final IReportGroupVisitor visitor,
-			final GroupElement group) throws IOException {
+			final ICoverageFetcherStyle fetcher, final GroupElement group)
+			throws IOException {
 		if (group.name == null) {
 			throw new BuildException("Group name must be supplied",
 					getLocation());
 		}
 		if (group.children.isEmpty()) {
-			final IBundleCoverage bundle = createBundle(group);
+			final IBundleCoverage bundle = createBundle(fetcher, group);
 			final SourceFilesElement sourcefiles = group.sourcefiles;
 			final AntResourcesLocator locator = new AntResourcesLocator(
 					sourcefiles.encoding, sourcefiles.tabWidth);
 			locator.addAll(sourcefiles.iterator());
 			if (!locator.isEmpty()) {
-				checkForMissingDebugInformation(bundle);
+				bundle.logMissingDebugInformation(antLoggingBridge);
 			}
 			visitor.visitBundle(bundle, locator);
 		} else {
 			final IReportGroupVisitor groupVisitor = visitor
 					.visitGroup(group.name);
 			for (final GroupElement child : group.children) {
-				createReport(groupVisitor, child);
+				createReport(groupVisitor, fetcher, child);
 			}
 		}
 	}
 
-	private IBundleCoverage createBundle(final GroupElement group)
-			throws IOException {
-		final CoverageBuilder builder = new CoverageBuilder();
-		final Analyzer analyzer = new Analyzer(executionDataStore, builder);
+	private class AntLoggingBridge implements LoggingBridge {
+
+		public void info(final String msg) {
+			ReportTask.this.log(msg, Project.MSG_INFO);
+		}
+
+		public void warning(final String msg) {
+			ReportTask.this.log(msg, Project.MSG_WARN);
+		}
+
+		public void severe(final String msg) {
+			ReportTask.this.log(msg, Project.MSG_ERR);
+		}
+
+	}
+
+	private final AntLoggingBridge antLoggingBridge = new AntLoggingBridge();
+
+	private IBundleCoverage createBundle(final ICoverageFetcherStyle fetcher,
+			final GroupElement group) throws IOException {
+		final CoverageBuilder builder = fetcher.newCoverageBuilder();
+		final IAnalyzer analyzer = fetcher.newAnalyzer(builder);
 		for (final Iterator<?> i = group.classfiles.iterator(); i.hasNext();) {
 			final Resource resource = (Resource) i.next();
 			if (resource.isDirectory() && resource instanceof FileResource) {
@@ -572,33 +649,8 @@ public class ReportTask extends Task {
 			}
 		}
 		final IBundleCoverage bundle = builder.getBundle(group.name);
-		logBundleInfo(bundle, builder.getNoMatchClasses());
+		bundle.logCoverageInfo(builder.getNoMatchClasses(), antLoggingBridge);
 		return bundle;
-	}
-
-	private void logBundleInfo(final IBundleCoverage bundle,
-			final Collection<IClassCoverage> nomatch) {
-		log(format("Writing bundle '%s' with %s classes", bundle.getName(),
-				Integer.valueOf(bundle.getClassCounter().getTotalCount())));
-		if (!nomatch.isEmpty()) {
-			log(format(
-					"Classes in bundle '%s' do no match with execution data. "
-							+ "For report generation the same class files must be used as at runtime.",
-					bundle.getName()), Project.MSG_WARN);
-			for (final IClassCoverage c : nomatch) {
-				log(format("Execution data for class %s does not match.",
-						c.getName()), Project.MSG_WARN);
-			}
-		}
-	}
-
-	private void checkForMissingDebugInformation(final ICoverageNode node) {
-		if (node.getClassCounter().getTotalCount() > 0
-				&& node.getLineCounter().getTotalCount() == 0) {
-			log(format(
-					"To enable source code annotation class files for bundle '%s' have to be compiled with debug information.",
-					node.getName()), Project.MSG_WARN);
-		}
 	}
 
 	/**
@@ -617,5 +669,4 @@ public class ReportTask extends Task {
 		final String variant = st.hasMoreTokens() ? st.nextToken() : "";
 		return new Locale(language, country, variant);
 	}
-
 }

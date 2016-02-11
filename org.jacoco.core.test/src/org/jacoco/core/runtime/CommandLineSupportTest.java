@@ -13,6 +13,7 @@ package org.jacoco.core.runtime;
 
 import static org.junit.Assert.assertEquals;
 
+import java.lang.reflect.Constructor;
 import java.util.Arrays;
 
 import org.junit.Test;
@@ -21,6 +22,14 @@ import org.junit.Test;
  * Unit tests for {@link CommandLineSupport}.
  */
 public class CommandLineSupportTest {
+
+	@Test
+	public void defaultConstructor_noexceptionsthrown() throws Exception {
+		Constructor<CommandLineSupport> constructor = CommandLineSupport.class
+				.getDeclaredConstructor();
+		constructor.setAccessible(true);
+		constructor.newInstance();
+	}
 
 	@Test
 	public void testQuote1() {

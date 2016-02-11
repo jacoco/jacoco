@@ -35,7 +35,7 @@ public abstract class LineImpl implements ILine {
 				for (int k = 0; k <= SINGLETON_BRA_LIMIT; k++) {
 					SINGLETONS[i][j][k] = new LineImpl[SINGLETON_BRA_LIMIT + 1];
 					for (int l = 0; l <= SINGLETON_BRA_LIMIT; l++) {
-						SINGLETONS[i][j][k][l] = new Fix(i, j, k, l);
+						SINGLETONS[i][j][k][l] = new Fix(j, i, 0, l, k, 0);
 					}
 				}
 			}
@@ -49,12 +49,15 @@ public abstract class LineImpl implements ILine {
 
 	private static LineImpl getInstance(final CounterImpl instructions,
 			final CounterImpl branches) {
+		final int ih = instructions.getExecutionCount();
 		final int im = instructions.getMissedCount();
 		final int ic = instructions.getCoveredCount();
+		final int bh = branches.getExecutionCount();
 		final int bm = branches.getMissedCount();
 		final int bc = branches.getCoveredCount();
-		if (im <= SINGLETON_INS_LIMIT && ic <= SINGLETON_INS_LIMIT
-				&& bm <= SINGLETON_BRA_LIMIT && bc <= SINGLETON_BRA_LIMIT) {
+		if (ih == ic && im <= SINGLETON_INS_LIMIT && ic <= SINGLETON_INS_LIMIT
+				&& bh == bc && bm <= SINGLETON_BRA_LIMIT
+				&& bc <= SINGLETON_BRA_LIMIT) {
 			return SINGLETONS[im][ic][bm][bc];
 		}
 		return new Var(instructions, branches);
@@ -81,9 +84,10 @@ public abstract class LineImpl implements ILine {
 	 * Immutable version.
 	 */
 	private static final class Fix extends LineImpl {
-		public Fix(final int im, final int ic, final int bm, final int bc) {
-			super(CounterImpl.getInstance(im, ic), CounterImpl.getInstance(bm,
-					bc));
+		public Fix(final int ih, final int im, final int ic, final int bh,
+				final int bm, final int bc) {
+			super(CounterImpl.getInstance(im, ic, ih), CounterImpl.getInstance(
+					bm, bc, bh));
 		}
 
 		@Override
@@ -121,6 +125,15 @@ public abstract class LineImpl implements ILine {
 
 	public int getStatus() {
 		return instructions.getStatus() | branches.getStatus();
+	}
+
+	public double getParallelPercent() {
+		final int instructionExecutionCount = instructions.getExecutionCount();
+		if (instructionExecutionCount == 0) {
+			return 0D;
+		}
+		final int parallelExecutionCount = branches.getExecutionCount();
+		return 100.0D * parallelExecutionCount / instructionExecutionCount;
 	}
 
 	public ICounter getInstructionCounter() {

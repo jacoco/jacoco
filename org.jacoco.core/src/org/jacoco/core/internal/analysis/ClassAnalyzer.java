@@ -12,6 +12,7 @@
 package org.jacoco.core.internal.analysis;
 
 import org.jacoco.core.analysis.IMethodCoverage;
+import org.jacoco.core.data.IProbes;
 import org.jacoco.core.internal.flow.ClassProbesVisitor;
 import org.jacoco.core.internal.flow.MethodProbesVisitor;
 import org.jacoco.core.internal.instr.InstrSupport;
@@ -24,7 +25,7 @@ import org.objectweb.asm.Opcodes;
 public class ClassAnalyzer extends ClassProbesVisitor {
 
 	private final ClassCoverageImpl coverage;
-	private final boolean[] probes;
+	private final IProbes probes;
 	private final StringPool stringPool;
 
 	/**
@@ -38,10 +39,20 @@ public class ClassAnalyzer extends ClassProbesVisitor {
 	 *            shared pool to minimize the number of {@link String} instances
 	 */
 	public ClassAnalyzer(final ClassCoverageImpl coverage,
-			final boolean[] probes, final StringPool stringPool) {
+			final IProbes probes, final StringPool stringPool) {
 		this.coverage = coverage;
 		this.probes = probes;
 		this.stringPool = stringPool;
+	}
+
+	/**
+	 * Returns the coverage data for this class after this visitor has been
+	 * processed.
+	 * 
+	 * @return coverage data for this class
+	 */
+	public ClassCoverageImpl getCoverage() {
+		return coverage;
 	}
 
 	@Override

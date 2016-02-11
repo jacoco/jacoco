@@ -131,8 +131,59 @@ pre.source span.bpc {
   background-position: 2px center;
 }
 
+pre.source span.bfc:hover {
+ background-color:#80ff80;
+}
+
+pre.source span.bnc {
+  background-image: url(branchnc.gif);
+  background-repeat: no-repeat;
+  background-position: 2px center;
+}
+
+pre.source span.bnc:hover {
+  background-color:#ff8080;
+}
+
+pre.source span.bpc {
+  background-image: url(branchpc.gif);
+  background-repeat: no-repeat;
+  background-position: 2px center;
+}
+
 pre.source span.bpc:hover {
   background-color:#ffff80;
+}
+
+pre.source span.e {
+  white-space:pre;
+  font-family:monospace;
+  font-weight:light;
+  font-size:0.875em;
+}
+
+pre.source span.efc {
+  background-color:#ccffcc;
+}
+
+pre.source span.efc::hover {
+  background-color:#80ff80;
+}
+
+pre.source span.epc {
+  background-color:#ffffcc;
+}
+
+pre.source span.epc::hover {
+  background-color:#ffff80;
+}
+
+pre.source span.enc {
+  background-color:#ffaaaa;
+}
+
+pre.source span.enc::hover {
+  background-color:#ff8080;
 }
 
 table.coverage {
@@ -205,6 +256,18 @@ table.coverage tbody td.ctr2 {
   padding-left:2px;
 }
 
+table.coverage tbody span.efc {
+  background-color:#ccffcc;
+}
+
+table.coverage tbody span.epc {
+  background-color:#ffffcc;
+}
+
+table.coverage tbody span.enc {
+  background-color:#ffaaaa;
+}
+
 table.coverage tfoot td {
   white-space:nowrap;
   padding:2px 6px 2px 6px;
@@ -224,6 +287,18 @@ table.coverage tfoot td.ctr2 {
   text-align:right;
   padding-right:14px;
   padding-left:2px;
+}
+
+table.coverage tfoot span.efc {
+  background-color:#ccffcc;
+}
+
+table.coverage tfoot span.epc {
+  background-color:#ffffcc;
+}
+
+table.coverage tfoot span.enc {
+  background-color:#ffaaaa;
 }
 
 .footer {

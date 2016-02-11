@@ -16,13 +16,12 @@ package org.jacoco.maven;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.apache.maven.plugin.MojoExecutionException;
 import org.jacoco.core.analysis.IBundleCoverage;
 import org.jacoco.core.analysis.ICoverageNode;
-import org.jacoco.core.data.ExecutionDataStore;
-import org.jacoco.core.tools.ExecFileLoader;
 import org.jacoco.report.IReportVisitor;
 import org.jacoco.report.check.IViolationsOutput;
 import org.jacoco.report.check.Limit;
@@ -40,7 +39,6 @@ import org.jacoco.report.check.RulesChecker;
  */
 public class CheckMojo extends AbstractJacocoMojo implements IViolationsOutput {
 
-	private static final String MSG_SKIPPING = "Skipping JaCoCo execution due to missing execution data file:";
 	private static final String CHECK_SUCCESS = "All coverage checks have been met.";
 	private static final String CHECK_FAILED = "Coverage checks have not been met. See log for details.";
 
@@ -142,35 +140,58 @@ public class CheckMojo extends AbstractJacocoMojo implements IViolationsOutput {
 	 */
 	private File dataFile;
 
+	/**
+	 * Is E-BigO style analysis enabled. Defaults to 'false'
+	 * 
+	 * @parameter property="jacoco.ebigo" default-value="false"
+	 */
+	private boolean eBigOEnabled;
+
+	/**
+	 * The X-Axis attribute to use for EBigO analysis. Defaults to 'DEFAULT'
+	 * 
+	 * @parameter property="jacoco.ebigoAttribute" default-value="DEFAULT"
+	 */
+	private String eBigOAttribute;
+
 	private boolean violations;
 
-	private boolean canCheckCoverage() {
-		if (!dataFile.exists()) {
-			getLog().info(MSG_SKIPPING + dataFile);
-			return false;
-		}
-		final File classesDirectory = new File(getProject().getBuild()
-				.getOutputDirectory());
-		if (!classesDirectory.exists()) {
-			getLog().info(
-					"Skipping JaCoCo execution due to missing classes directory:"
-							+ classesDirectory);
-			return false;
-		}
-		return true;
+	private final MavenReportGenerator reportGenerator;
+
+	/**
+	 * 
+	 */
+	public CheckMojo() {
+		this.reportGenerator = new MavenReportGenerator(this);
 	}
 
 	@Override
 	public void executeMojo() throws MojoExecutionException,
 			MojoExecutionException {
-		if (!canCheckCoverage()) {
-			return;
+		reportGenerator.setName(getProject().getName());
+
+		reportGenerator.setDataFile(dataFile);
+
+		reportGenerator.setClassesDirectories(Arrays
+				.asList(new File[] { new File(getProject().getBuild()
+						.getOutputDirectory()) }));
+		reportGenerator.setExcludes(getExcludes());
+		reportGenerator.setIncludes(getIncludes());
+
+		reportGenerator.setEBigOAttribute(eBigOEnabled ? eBigOAttribute : null);
+
+		final IBundleCoverage bundle;
+		try {
+			bundle = reportGenerator.prepReport();
+		} catch (final IOException e) {
+			throw new MojoExecutionException("Error while creating report: "
+					+ e.getMessage(), e);
 		}
-		executeCheck();
+		executeCheck(bundle);
 	}
 
-	private void executeCheck() throws MojoExecutionException {
-		final IBundleCoverage bundle = loadBundle();
+	private void executeCheck(final IBundleCoverage bundle)
+			throws MojoExecutionException {
 		violations = false;
 
 		final RulesChecker checker = new RulesChecker();
@@ -196,26 +217,6 @@ public class CheckMojo extends AbstractJacocoMojo implements IViolationsOutput {
 		} else {
 			this.getLog().info(CHECK_SUCCESS);
 		}
-	}
-
-	private IBundleCoverage loadBundle() throws MojoExecutionException {
-		final FileFilter fileFilter = new FileFilter(this.getIncludes(),
-				this.getExcludes());
-		final BundleCreator creator = new BundleCreator(getProject(),
-				fileFilter, getLog());
-		try {
-			final ExecutionDataStore executionData = loadExecutionData();
-			return creator.createBundle(executionData);
-		} catch (final IOException e) {
-			throw new MojoExecutionException(
-					"Error while reading code coverage: " + e.getMessage(), e);
-		}
-	}
-
-	private ExecutionDataStore loadExecutionData() throws IOException {
-		final ExecFileLoader loader = new ExecFileLoader();
-		loader.load(dataFile);
-		return loader.getExecutionDataStore();
 	}
 
 	public void onViolation(final ICoverageNode node, final Rule rule,

@@ -224,7 +224,7 @@ public class TableTest {
 	private ITableItem createItem(final String name, final int count) {
 		final ICoverageNode node = new CoverageNodeImpl(ElementType.GROUP, name) {
 			{
-				this.classCounter = CounterImpl.getInstance(count, 0);
+				this.classCounter = CounterImpl.getInstance(count, 0, 0);
 			}
 		};
 		return new ITableItem() {
@@ -249,7 +249,7 @@ public class TableTest {
 	private ICoverageNode createTotal(final String name, final int count) {
 		return new CoverageNodeImpl(ElementType.GROUP, name) {
 			{
-				this.classCounter = CounterImpl.getInstance(count, 0);
+				this.classCounter = CounterImpl.getInstance(count, 0, 0);
 			}
 		};
 	}

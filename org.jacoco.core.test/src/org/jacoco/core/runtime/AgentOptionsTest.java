@@ -19,6 +19,7 @@ import static org.junit.Assert.assertTrue;
 import java.io.File;
 import java.util.Properties;
 
+import org.jacoco.core.data.ProbeMode;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -52,6 +53,7 @@ public class AgentOptionsTest {
 		assertEquals(AgentOptions.DEFAULT_PORT, options.getPort());
 		assertNull(options.getClassDumpDir());
 		assertFalse(options.getJmx());
+		assertEquals(ProbeMode.exists, options.getProbe());
 
 		assertEquals("", options.toString());
 	}
@@ -85,6 +87,7 @@ public class AgentOptionsTest {
 		properties.put("port", "1234");
 		properties.put("classdumpdir", "target/dump");
 		properties.put("jmx", "true");
+		properties.put("probe", "count");
 
 		AgentOptions options = new AgentOptions(properties);
 
@@ -102,6 +105,7 @@ public class AgentOptionsTest {
 		assertEquals(1234, options.getPort());
 		assertEquals("target/dump", options.getClassDumpDir());
 		assertTrue(options.getJmx());
+		assertEquals(ProbeMode.count, options.getProbe());
 	}
 
 	@Test
@@ -345,6 +349,37 @@ public class AgentOptionsTest {
 		AgentOptions options = new AgentOptions();
 		options.setAddress("remotehost");
 		assertEquals("remotehost", options.getAddress());
+	}
+
+	@Test
+	public void testGetProbe() {
+		AgentOptions options = new AgentOptions("probe=count");
+		assertEquals(ProbeMode.count, options.getProbe());
+	}
+
+	@Test
+	public void testSetProbe1() {
+		AgentOptions options = new AgentOptions();
+		options.setProbe("count");
+		assertEquals(ProbeMode.count, options.getProbe());
+	}
+
+	@Test
+	public void testSetProbe2() {
+		AgentOptions options = new AgentOptions();
+		options.setProbe(ProbeMode.count);
+		assertEquals(ProbeMode.count, options.getProbe());
+	}
+
+	@Test(expected = IllegalArgumentException.class)
+	public void testInvalidProbe1() {
+		new AgentOptions("probe=foo");
+	}
+
+	@Test(expected = IllegalArgumentException.class)
+	public void testInvalidProbe2() {
+		AgentOptions options = new AgentOptions();
+		options.setProbe("foo");
 	}
 
 	@Test

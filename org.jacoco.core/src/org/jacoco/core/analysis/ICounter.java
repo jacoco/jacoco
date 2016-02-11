@@ -21,6 +21,8 @@ public interface ICounter {
 	 * Different values provided by a counter.
 	 */
 	public enum CounterValue {
+		/** Total number of item executions */
+		TOTALEXECCOUNT,
 
 		/** Total number of items */
 		TOTALCOUNT,
@@ -66,6 +68,13 @@ public interface ICounter {
 	 * @return counter value
 	 */
 	public double getValue(CounterValue value);
+
+	/**
+	 * Returns the total count of item executions.
+	 * 
+	 * @return total count of item executions
+	 */
+	public int getExecutionCount();
 
 	/**
 	 * Returns the total count of items.

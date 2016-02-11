@@ -16,6 +16,7 @@ import java.io.IOException;
 import org.jacoco.core.analysis.IClassCoverage;
 import org.jacoco.core.analysis.ICounter;
 import org.jacoco.core.analysis.ICoverageNode.CounterEntity;
+import org.jacoco.core.data.ProbeMode;
 import org.jacoco.report.ILanguageNames;
 
 /**
@@ -32,6 +33,8 @@ class ClassRowWriter {
 
 	private final ILanguageNames languageNames;
 
+	private final ProbeMode probeMode;
+
 	/**
 	 * Creates a new row writer that writes class information to the given CSV
 	 * writer.
@@ -40,13 +43,17 @@ class ClassRowWriter {
 	 *            writer for csv output
 	 * @param languageNames
 	 *            converter for Java identifiers
+	 * @param probeMode
+	 *            determine what data to output (exists, count, parallelcount)
 	 * @throws IOException
 	 *             in case of problems with the writer
 	 */
 	public ClassRowWriter(final DelimitedWriter writer,
-			final ILanguageNames languageNames) throws IOException {
+			final ILanguageNames languageNames, final ProbeMode probeMode)
+			throws IOException {
 		this.writer = writer;
 		this.languageNames = languageNames;
+		this.probeMode = probeMode;
 		writeHeader();
 	}
 
@@ -55,6 +62,21 @@ class ClassRowWriter {
 		for (final CounterEntity entity : COUNTERS) {
 			writer.write(entity.name() + "_MISSED");
 			writer.write(entity.name() + "_COVERED");
+			switch (entity) {
+			case COMPLEXITY:
+			case CLASS:
+				break;
+			case BRANCH:
+				if (probeMode == ProbeMode.parallelcount) {
+					writer.write(entity.name() + "_EXECUTED");
+				}
+				break;
+			default:
+				if (probeMode != ProbeMode.exists) {
+					writer.write(entity.name() + "_EXECUTED");
+				}
+				break;
+			}
 		}
 		writer.nextLine();
 	}
@@ -68,6 +90,7 @@ class ClassRowWriter {
 	 *            vm name of the package
 	 * @param node
 	 *            class coverage data
+	 * 
 	 * @throws IOException
 	 *             in case of problems with the writer
 	 */
@@ -84,6 +107,21 @@ class ClassRowWriter {
 			final ICounter counter = node.getCounter(entity);
 			writer.write(counter.getMissedCount());
 			writer.write(counter.getCoveredCount());
+			switch (entity) {
+			case CLASS:
+			case COMPLEXITY:
+				break;
+			case BRANCH:
+				if (probeMode == ProbeMode.parallelcount) {
+					writer.write(counter.getExecutionCount());
+				}
+				break;
+			default:
+				if (probeMode != ProbeMode.exists) {
+					writer.write(counter.getExecutionCount());
+				}
+				break;
+			}
 		}
 
 		writer.nextLine();

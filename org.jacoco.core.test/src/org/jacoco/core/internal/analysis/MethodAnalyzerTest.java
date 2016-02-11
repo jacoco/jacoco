@@ -17,10 +17,15 @@ import java.util.ArrayList;
 
 import org.jacoco.core.analysis.ILine;
 import org.jacoco.core.analysis.IMethodCoverage;
+import org.jacoco.core.data.ProbeMode;
 import org.jacoco.core.internal.flow.IProbeIdGenerator;
 import org.jacoco.core.internal.flow.LabelFlowAnalyzer;
 import org.jacoco.core.internal.flow.MethodProbesAdapter;
+import org.jacoco.core.internal.instr.IProbeArray;
+import org.jacoco.core.internal.instr.ProbeArrayService;
+import org.junit.AfterClass;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 import org.objectweb.asm.Label;
 import org.objectweb.asm.Opcodes;
@@ -32,9 +37,20 @@ import org.objectweb.asm.tree.TryCatchBlockNode;
  */
 public class MethodAnalyzerTest implements IProbeIdGenerator {
 
+	@BeforeClass
+	public static void setupProbeMode() {
+		ProbeArrayService.reset();
+		ProbeArrayService.configure(ProbeMode.exists);
+	}
+
+	@AfterClass
+	public static void cleanupProbeMode() {
+		ProbeArrayService.reset();
+	}
+
 	private int nextProbeId;
 
-	private boolean[] probes;
+	private IProbeArray<?> probes;
 
 	private MethodNode method;
 
@@ -45,7 +61,7 @@ public class MethodAnalyzerTest implements IProbeIdGenerator {
 		nextProbeId = 0;
 		method = new MethodNode();
 		method.tryCatchBlocks = new ArrayList<TryCatchBlockNode>();
-		probes = new boolean[32];
+		probes = ProbeArrayService.newProbeArray(32);
 	}
 
 	public int nextId() {
@@ -67,8 +83,8 @@ public class MethodAnalyzerTest implements IProbeIdGenerator {
 		runMethodAnalzer();
 		assertEquals(1, nextProbeId);
 
-		assertLine(1001, 1, 0, 0, 0);
-		assertLine(1002, 1, 0, 0, 0);
+		assertLine(1001, 1, 0, 0, 0, 0, 0);
+		assertLine(1002, 1, 0, 0, 0, 0, 0);
 	}
 
 	@Test
@@ -78,18 +94,18 @@ public class MethodAnalyzerTest implements IProbeIdGenerator {
 		runMethodAnalzer();
 		assertEquals(1, nextProbeId);
 
-		assertLine(1001, 1, 0, 0, 0);
-		assertLine(1002, 1, 0, 0, 0);
+		assertLine(1001, 1, 0, 0, 0, 0, 0);
+		assertLine(1002, 1, 0, 0, 0, 0, 0);
 	}
 
 	@Test
 	public void testLinearSequenceCovered() {
 		createLinearSequence();
-		probes[0] = true;
+		probes.increment(0);
 		runMethodAnalzer();
 
-		assertLine(1001, 0, 1, 0, 0);
-		assertLine(1002, 0, 1, 0, 0);
+		assertLine(1001, 0, 1, 1, 0, 0, 0);
+		assertLine(1002, 0, 1, 1, 0, 0, 0);
 	}
 
 	// === Scenario: simple if branch ===
@@ -114,43 +130,43 @@ public class MethodAnalyzerTest implements IProbeIdGenerator {
 		runMethodAnalzer();
 		assertEquals(2, nextProbeId);
 
-		assertLine(1001, 2, 0, 2, 0);
-		assertLine(1002, 2, 0, 0, 0);
-		assertLine(1003, 2, 0, 0, 0);
+		assertLine(1001, 2, 0, 0, 2, 0, 0);
+		assertLine(1002, 2, 0, 0, 0, 0, 0);
+		assertLine(1003, 2, 0, 0, 0, 0, 0);
 	}
 
 	@Test
 	public void testIfBranchCovered1() {
 		createIfBranch();
-		probes[0] = true;
+		probes.increment(0);
 		runMethodAnalzer();
 
-		assertLine(1001, 0, 2, 1, 1);
-		assertLine(1002, 0, 2, 0, 0);
-		assertLine(1003, 2, 0, 0, 0);
+		assertLine(1001, 0, 2, 2, 1, 1, 0);
+		assertLine(1002, 0, 2, 2, 0, 0, 0);
+		assertLine(1003, 2, 0, 0, 0, 0, 0);
 	}
 
 	@Test
 	public void testIfBranchCovered2() {
 		createIfBranch();
-		probes[1] = true;
+		probes.increment(1);
 		runMethodAnalzer();
 
-		assertLine(1001, 0, 2, 1, 1);
-		assertLine(1002, 2, 0, 0, 0);
-		assertLine(1003, 0, 2, 0, 0);
+		assertLine(1001, 0, 2, 2, 1, 1, 0);
+		assertLine(1002, 2, 0, 0, 0, 0, 0);
+		assertLine(1003, 0, 2, 2, 0, 0, 0);
 	}
 
 	@Test
 	public void testIfBranchCovered3() {
 		createIfBranch();
-		probes[0] = true;
-		probes[1] = true;
+		probes.increment(0);
+		probes.increment(1);
 		runMethodAnalzer();
 
-		assertLine(1001, 0, 2, 0, 2);
-		assertLine(1002, 0, 2, 0, 0);
-		assertLine(1003, 0, 2, 0, 0);
+		assertLine(1001, 0, 2, 2, 0, 2, 0);
+		assertLine(1002, 0, 2, 2, 0, 0, 0);
+		assertLine(1003, 0, 2, 2, 0, 0, 0);
 	}
 
 	// === Scenario: branch which merges back ===
@@ -173,44 +189,44 @@ public class MethodAnalyzerTest implements IProbeIdGenerator {
 		runMethodAnalzer();
 		assertEquals(3, nextProbeId);
 
-		assertLine(1001, 2, 0, 2, 0);
-		assertLine(1002, 1, 0, 0, 0);
-		assertLine(1003, 1, 0, 0, 0);
+		assertLine(1001, 2, 0, 0, 2, 0, 0);
+		assertLine(1002, 1, 0, 0, 0, 0, 0);
+		assertLine(1003, 1, 0, 0, 0, 0, 0);
 	}
 
 	@Test
 	public void testIfBranchMergeCovered1() {
 		createIfBranchMerge();
-		probes[0] = true;
+		probes.increment(0);
 		runMethodAnalzer();
 
-		assertLine(1001, 0, 2, 1, 1);
-		assertLine(1002, 1, 0, 0, 0);
-		assertLine(1003, 1, 0, 0, 0);
+		assertLine(1001, 0, 2, 2, 1, 1, 0);
+		assertLine(1002, 1, 0, 0, 0, 0, 0);
+		assertLine(1003, 1, 0, 0, 0, 0, 0);
 	}
 
 	@Test
 	public void testIfBranchMergeCovered2() {
 		createIfBranchMerge();
-		probes[1] = true;
+		probes.increment(1);
 		runMethodAnalzer();
 
-		assertLine(1001, 0, 2, 1, 1);
-		assertLine(1002, 0, 1, 0, 0);
-		assertLine(1003, 1, 0, 0, 0);
+		assertLine(1001, 0, 2, 2, 1, 1, 0);
+		assertLine(1002, 0, 1, 1, 0, 0, 0);
+		assertLine(1003, 1, 0, 0, 0, 0, 0);
 	}
 
 	@Test
 	public void testIfBranchMergeCovered3() {
 		createIfBranchMerge();
-		probes[0] = true;
-		probes[1] = true;
-		probes[2] = true;
+		probes.increment(0);
+		probes.increment(1);
+		probes.increment(2);
 		runMethodAnalzer();
 
-		assertLine(1001, 0, 2, 0, 2);
-		assertLine(1002, 0, 1, 0, 0);
-		assertLine(1003, 0, 1, 0, 0);
+		assertLine(1001, 0, 2, 2, 0, 2, 0);
+		assertLine(1002, 0, 1, 1, 0, 0, 0);
+		assertLine(1003, 0, 1, 1, 0, 0, 0);
 	}
 
 	// === Scenario: branch which jump backwards ===
@@ -242,7 +258,7 @@ public class MethodAnalyzerTest implements IProbeIdGenerator {
 	@Test
 	public void testJumpBackwardsCovered() {
 		createJumpBackwards();
-		probes[0] = true;
+		probes.increment(0);
 		runMethodAnalzer();
 
 		assertLine(1001, 0, 1, 0, 0);
@@ -257,7 +273,7 @@ public class MethodAnalyzerTest implements IProbeIdGenerator {
 		method.visitLabel(l1);
 		method.visitLineNumber(1001, l1);
 		method.visitVarInsn(Opcodes.ALOAD, 0);
-		method.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "Foo", "test", "()Z",
+		method.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "Foo", "test", "()I",
 				false);
 		method.visitJumpInsn(Opcodes.IFEQ, l1);
 		final Label l2 = new Label();
@@ -279,24 +295,24 @@ public class MethodAnalyzerTest implements IProbeIdGenerator {
 	@Test
 	public void testJumpToFirstCovered1() {
 		createJumpToFirst();
-		probes[0] = true;
+		probes.increment(0);
 		runMethodAnalzer();
 		assertEquals(2, nextProbeId);
 
-		assertLine(1001, 0, 3, 1, 1);
-		assertLine(1002, 1, 0, 0, 0);
+		assertLine(1001, 0, 3, 3, 1, 1, 0);
+		assertLine(1002, 1, 0, 0, 0, 0, 0);
 	}
 
 	@Test
 	public void testJumpToFirstCovered2() {
 		createJumpToFirst();
-		probes[0] = true;
-		probes[1] = true;
+		probes.increment(0);
+		probes.increment(1);
 		runMethodAnalzer();
 		assertEquals(2, nextProbeId);
 
-		assertLine(1001, 0, 3, 0, 2);
-		assertLine(1002, 0, 1, 0, 0);
+		assertLine(1001, 0, 3, 3, 0, 2, 0);
+		assertLine(1002, 0, 1, 1, 0, 0, 0);
 	}
 
 	// === Scenario: table switch ===
@@ -349,54 +365,54 @@ public class MethodAnalyzerTest implements IProbeIdGenerator {
 	@Test
 	public void testTableSwitchCovered1() {
 		createTableSwitch();
-		probes[0] = true;
-		probes[3] = true;
+		probes.increment(0);
+		probes.increment(3);
 		runMethodAnalzer();
 		assertEquals(4, nextProbeId);
 
-		assertLine(1001, 0, 2, 2, 1);
-		assertLine(1002, 0, 2, 0, 0);
-		assertLine(1003, 0, 1, 0, 0);
-		assertLine(1004, 2, 0, 0, 0);
-		assertLine(1005, 1, 0, 0, 0);
-		assertLine(1006, 2, 0, 0, 0);
-		assertLine(1007, 0, 2, 0, 0);
+		assertLine(1001, 0, 2, 2, 2, 1, 0);
+		assertLine(1002, 0, 2, 2, 0, 0, 0);
+		assertLine(1003, 0, 1, 1, 0, 0, 0);
+		assertLine(1004, 2, 0, 0, 0, 0, 0);
+		assertLine(1005, 1, 0, 0, 0, 0, 0);
+		assertLine(1006, 2, 0, 0, 0, 0, 0);
+		assertLine(1007, 0, 2, 2, 0, 0, 0);
 	}
 
 	@Test
 	public void testTableSwitchCovered2() {
 		createTableSwitch();
-		probes[2] = true;
-		probes[3] = true;
+		probes.increment(2);
+		probes.increment(3);
 		runMethodAnalzer();
 		assertEquals(4, nextProbeId);
 
-		assertLine(1001, 0, 2, 2, 1);
-		assertLine(1002, 2, 0, 0, 0);
-		assertLine(1003, 1, 0, 0, 0);
-		assertLine(1004, 2, 0, 0, 0);
-		assertLine(1005, 1, 0, 0, 0);
-		assertLine(1006, 0, 2, 0, 0);
-		assertLine(1007, 0, 2, 0, 0);
+		assertLine(1001, 0, 2, 2, 2, 1, 0);
+		assertLine(1002, 2, 0, 0, 0, 0, 0);
+		assertLine(1003, 1, 0, 0, 0, 0, 0);
+		assertLine(1004, 2, 0, 0, 0, 0, 0);
+		assertLine(1005, 1, 0, 0, 0, 0, 0);
+		assertLine(1006, 0, 2, 2, 0, 0, 0);
+		assertLine(1007, 0, 2, 2, 0, 0, 0);
 	}
 
 	@Test
 	public void testTableSwitchCovered3() {
 		createTableSwitch();
-		probes[0] = true;
-		probes[1] = true;
-		probes[2] = true;
-		probes[3] = true;
+		probes.increment(0);
+		probes.increment(1);
+		probes.increment(2);
+		probes.increment(3);
 		runMethodAnalzer();
 		assertEquals(4, nextProbeId);
 
-		assertLine(1001, 0, 2, 0, 3);
-		assertLine(1002, 0, 2, 0, 0);
-		assertLine(1003, 0, 1, 0, 0);
-		assertLine(1004, 0, 2, 0, 0);
-		assertLine(1005, 0, 1, 0, 0);
-		assertLine(1006, 0, 2, 0, 0);
-		assertLine(1007, 0, 2, 0, 0);
+		assertLine(1001, 0, 2, 2, 0, 3, 0);
+		assertLine(1002, 0, 2, 2, 0, 0, 0);
+		assertLine(1003, 0, 1, 1, 0, 0, 0);
+		assertLine(1004, 0, 2, 2, 0, 0, 0);
+		assertLine(1005, 0, 1, 1, 0, 0, 0);
+		assertLine(1006, 0, 2, 2, 0, 0, 0);
+		assertLine(1007, 0, 2, 2, 0, 0, 0);
 	}
 
 	// === Scenario: table switch with merge ===
@@ -439,66 +455,66 @@ public class MethodAnalyzerTest implements IProbeIdGenerator {
 	@Test
 	public void testTableSwitchMergeNotCovered1() {
 		createTableSwitchMerge();
-		probes[0] = true;
-		probes[4] = true;
+		probes.increment(0);
+		probes.increment(4);
 		runMethodAnalzer();
 		assertEquals(5, nextProbeId);
 
-		assertLine(1001, 0, 2, 0, 0);
-		assertLine(1002, 0, 2, 2, 1);
-		assertLine(1003, 1, 0, 0, 0);
-		assertLine(1004, 1, 0, 0, 0);
-		assertLine(1005, 0, 2, 0, 0);
+		assertLine(1001, 0, 2, 2, 0, 0, 0);
+		assertLine(1002, 0, 2, 2, 2, 1, 0);
+		assertLine(1003, 1, 0, 0, 0, 0, 0);
+		assertLine(1004, 1, 0, 0, 0, 0, 0);
+		assertLine(1005, 0, 2, 2, 0, 0, 0);
 	}
 
 	@Test
 	public void testTableSwitchMergeNotCovered2() {
 		createTableSwitchMerge();
-		probes[1] = true;
-		probes[3] = true;
-		probes[4] = true;
+		probes.increment(1);
+		probes.increment(3);
+		probes.increment(4);
 		runMethodAnalzer();
 		assertEquals(5, nextProbeId);
 
-		assertLine(1001, 0, 2, 0, 0);
-		assertLine(1002, 0, 2, 2, 1);
-		assertLine(1003, 1, 0, 0, 0);
-		assertLine(1004, 0, 1, 0, 0);
-		assertLine(1005, 0, 2, 0, 0);
+		assertLine(1001, 0, 2, 2, 0, 0, 0);
+		assertLine(1002, 0, 2, 2, 2, 1, 0);
+		assertLine(1003, 1, 0, 0, 0, 0, 0);
+		assertLine(1004, 0, 1, 1, 0, 0, 0);
+		assertLine(1005, 0, 2, 2, 0, 0, 0);
 	}
 
 	@Test
 	public void testTableSwitchMergeNotCovered3() {
 		createTableSwitchMerge();
-		probes[2] = true;
-		probes[3] = true;
-		probes[4] = true;
+		probes.increment(2);
+		probes.increment(3);
+		probes.increment(4);
 		runMethodAnalzer();
 		assertEquals(5, nextProbeId);
 
-		assertLine(1001, 0, 2, 0, 0);
-		assertLine(1002, 0, 2, 2, 1);
-		assertLine(1003, 0, 1, 0, 0);
-		assertLine(1004, 0, 1, 0, 0);
-		assertLine(1005, 0, 2, 0, 0);
+		assertLine(1001, 0, 2, 2, 0, 0, 0);
+		assertLine(1002, 0, 2, 2, 2, 1, 0);
+		assertLine(1003, 0, 1, 1, 0, 0, 0);
+		assertLine(1004, 0, 1, 1, 0, 0, 0);
+		assertLine(1005, 0, 2, 2, 0, 0, 0);
 	}
 
 	@Test
 	public void testTableSwitchMergeNotCovered4() {
 		createTableSwitchMerge();
-		probes[0] = true;
-		probes[1] = true;
-		probes[2] = true;
-		probes[3] = true;
-		probes[4] = true;
+		probes.increment(0);
+		probes.increment(1);
+		probes.increment(2);
+		probes.increment(3);
+		probes.increment(4);
 		runMethodAnalzer();
 		assertEquals(5, nextProbeId);
 
-		assertLine(1001, 0, 2, 0, 0);
-		assertLine(1002, 0, 2, 0, 3);
-		assertLine(1003, 0, 1, 0, 0);
-		assertLine(1004, 0, 1, 0, 0);
-		assertLine(1005, 0, 2, 0, 0);
+		assertLine(1001, 0, 2, 4, 0, 0, 0);
+		assertLine(1002, 0, 2, 4, 0, 3, 0);
+		assertLine(1003, 0, 1, 1, 0, 0, 0);
+		assertLine(1004, 0, 1, 1, 0, 0, 0);
+		assertLine(1005, 0, 2, 2, 0, 0, 0);
 	}
 
 	// === Scenario: try/catch block ===
@@ -529,7 +545,7 @@ public class MethodAnalyzerTest implements IProbeIdGenerator {
 		createTryCatchBlock();
 		runMethodAnalzer();
 		assertEquals(3, nextProbeId);
-		assertEquals(CounterImpl.getInstance(5, 0),
+		assertEquals(CounterImpl.getInstance(5, 0, 0),
 				result.getInstructionCounter());
 
 		assertLine(1001, 3, 0, 0, 0);
@@ -540,17 +556,17 @@ public class MethodAnalyzerTest implements IProbeIdGenerator {
 	@Test
 	public void testTryCatchBlockFullyCovered() {
 		createTryCatchBlock();
-		probes[0] = true;
-		probes[1] = true;
-		probes[2] = true;
+		probes.increment(0);
+		probes.increment(1);
+		probes.increment(2);
 		runMethodAnalzer();
 		assertEquals(3, nextProbeId);
-		assertEquals(CounterImpl.getInstance(0, 5),
+		assertEquals(CounterImpl.getInstance(0, 5, 0),
 				result.getInstructionCounter());
 
-		assertLine(1001, 0, 3, 0, 0);
-		assertLine(1002, 0, 1, 0, 0);
-		assertLine(1004, 0, 1, 0, 0);
+		assertLine(1001, 0, 3, 3, 0, 0, 0);
+		assertLine(1002, 0, 1, 1, 0, 0, 0);
+		assertLine(1004, 0, 1, 1, 0, 0, 0);
 	}
 
 	private void runMethodAnalzer() {
@@ -565,13 +581,19 @@ public class MethodAnalyzerTest implements IProbeIdGenerator {
 
 	private void assertLine(int nr, int insnMissed, int insnCovered,
 			int branchesMissed, int branchesCovered) {
-		final ILine line = result.getLine(nr);
-		assertEquals("Instructions in line " + nr,
-				CounterImpl.getInstance(insnMissed, insnCovered),
-				line.getInstructionCounter());
-		assertEquals("Branches in line " + nr,
-				CounterImpl.getInstance(branchesMissed, branchesCovered),
-				line.getBranchCounter());
+		assertLine(nr, insnMissed, insnCovered, 0, branchesMissed,
+				branchesCovered, 0);
 	}
 
+	private void assertLine(int nr, int insnMissed, int insnCovered,
+			int insnExecs, int branchesMissed, int branchesCovered,
+			int branchesExecs) {
+		final ILine line = result.getLine(nr);
+		assertEquals("Instructions in line " + nr,
+				CounterImpl.getInstance(insnMissed, insnCovered, 0),
+				line.getInstructionCounter());
+		assertEquals("Branches in line " + nr,
+				CounterImpl.getInstance(branchesMissed, branchesCovered, 0),
+				line.getBranchCounter());
+	}
 }

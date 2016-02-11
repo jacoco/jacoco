@@ -53,7 +53,7 @@ public class AnalyzerTest {
 	@Rule
 	public ExpectedException expected = ExpectedException.none();
 
-	private Analyzer analyzer;
+	private IAnalyzer analyzer;
 
 	private Map<String, IClassCoverage> classes;
 

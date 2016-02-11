@@ -72,7 +72,7 @@ public class CyclomaticComplexityTest {
 	public void testSimple1() throws Exception {
 		instrument(Simple.class);
 		final ICounter complexity = analyze();
-		assertEquals(CounterImpl.getInstance(1, 0), complexity);
+		assertEquals(CounterImpl.getInstance(1, 0, 0), complexity);
 	}
 
 	@Test
@@ -80,7 +80,7 @@ public class CyclomaticComplexityTest {
 		instrument(Simple.class);
 		target.test(0);
 		final ICounter complexity = analyze();
-		assertEquals(CounterImpl.getInstance(0, 1), complexity);
+		assertEquals(CounterImpl.getInstance(0, 1, 0), complexity);
 	}
 
 	public static class If implements Target {
@@ -95,7 +95,7 @@ public class CyclomaticComplexityTest {
 	public void testIf1() throws Exception {
 		instrument(If.class);
 		final ICounter complexity = analyze();
-		assertEquals(CounterImpl.getInstance(2, 0), complexity);
+		assertEquals(CounterImpl.getInstance(2, 0, 0), complexity);
 	}
 
 	@Test
@@ -103,7 +103,7 @@ public class CyclomaticComplexityTest {
 		instrument(If.class);
 		target.test(0);
 		final ICounter complexity = analyze();
-		assertEquals(CounterImpl.getInstance(1, 1), complexity);
+		assertEquals(CounterImpl.getInstance(1, 1, 0), complexity);
 	}
 
 	@Test
@@ -112,7 +112,7 @@ public class CyclomaticComplexityTest {
 		target.test(0);
 		target.test(1);
 		final ICounter complexity = analyze();
-		assertEquals(CounterImpl.getInstance(0, 2), complexity);
+		assertEquals(CounterImpl.getInstance(0, 2, 0), complexity);
 	}
 
 	public static class TwoIf implements Target {
@@ -130,7 +130,7 @@ public class CyclomaticComplexityTest {
 	public void testTwoIf1() throws Exception {
 		instrument(TwoIf.class);
 		final ICounter complexity = analyze();
-		assertEquals(CounterImpl.getInstance(3, 0), complexity);
+		assertEquals(CounterImpl.getInstance(3, 0, 0), complexity);
 	}
 
 	@Test
@@ -138,7 +138,7 @@ public class CyclomaticComplexityTest {
 		instrument(TwoIf.class);
 		target.test(-1);
 		final ICounter complexity = analyze();
-		assertEquals(CounterImpl.getInstance(2, 1), complexity);
+		assertEquals(CounterImpl.getInstance(2, 1, 0), complexity);
 	}
 
 	@Test
@@ -147,7 +147,7 @@ public class CyclomaticComplexityTest {
 		target.test(-1);
 		target.test(0);
 		final ICounter complexity = analyze();
-		assertEquals(CounterImpl.getInstance(1, 2), complexity);
+		assertEquals(CounterImpl.getInstance(1, 2, 0), complexity);
 	}
 
 	@Test
@@ -156,7 +156,7 @@ public class CyclomaticComplexityTest {
 		target.test(-1);
 		target.test(+1);
 		final ICounter complexity = analyze();
-		assertEquals(CounterImpl.getInstance(0, 3), complexity);
+		assertEquals(CounterImpl.getInstance(0, 3, 0), complexity);
 	}
 
 	public static class NestedIf implements Target {
@@ -174,7 +174,7 @@ public class CyclomaticComplexityTest {
 	public void testNestedIf1() throws Exception {
 		instrument(NestedIf.class);
 		final ICounter complexity = analyze();
-		assertEquals(CounterImpl.getInstance(3, 0), complexity);
+		assertEquals(CounterImpl.getInstance(3, 0, 0), complexity);
 	}
 
 	@Test
@@ -182,7 +182,7 @@ public class CyclomaticComplexityTest {
 		instrument(NestedIf.class);
 		target.test(-1);
 		final ICounter complexity = analyze();
-		assertEquals(CounterImpl.getInstance(2, 1), complexity);
+		assertEquals(CounterImpl.getInstance(2, 1, 0), complexity);
 	}
 
 	@Test
@@ -191,7 +191,7 @@ public class CyclomaticComplexityTest {
 		target.test(-1);
 		target.test(0);
 		final ICounter complexity = analyze();
-		assertEquals(CounterImpl.getInstance(1, 2), complexity);
+		assertEquals(CounterImpl.getInstance(1, 2, 0), complexity);
 	}
 
 	@Test
@@ -201,7 +201,7 @@ public class CyclomaticComplexityTest {
 		target.test(0);
 		target.test(+1);
 		final ICounter complexity = analyze();
-		assertEquals(CounterImpl.getInstance(0, 3), complexity);
+		assertEquals(CounterImpl.getInstance(0, 3, 0), complexity);
 	}
 
 	public static class Switch implements Target {
@@ -221,7 +221,7 @@ public class CyclomaticComplexityTest {
 	public void testSwitch1() throws Exception {
 		instrument(Switch.class);
 		final ICounter complexity = analyze();
-		assertEquals(CounterImpl.getInstance(3, 0), complexity);
+		assertEquals(CounterImpl.getInstance(3, 0, 0), complexity);
 	}
 
 	@Test
@@ -229,7 +229,7 @@ public class CyclomaticComplexityTest {
 		instrument(Switch.class);
 		target.test(0);
 		final ICounter complexity = analyze();
-		assertEquals(CounterImpl.getInstance(2, 1), complexity);
+		assertEquals(CounterImpl.getInstance(2, 1, 0), complexity);
 	}
 
 	@Test
@@ -238,7 +238,7 @@ public class CyclomaticComplexityTest {
 		target.test(0);
 		target.test(1);
 		final ICounter complexity = analyze();
-		assertEquals(CounterImpl.getInstance(1, 2), complexity);
+		assertEquals(CounterImpl.getInstance(1, 2, 0), complexity);
 	}
 
 	@Test
@@ -248,7 +248,7 @@ public class CyclomaticComplexityTest {
 		target.test(1);
 		target.test(2);
 		final ICounter complexity = analyze();
-		assertEquals(CounterImpl.getInstance(0, 3), complexity);
+		assertEquals(CounterImpl.getInstance(0, 3, 0), complexity);
 	}
 
 	private void instrument(final Class<? extends Target> clazz)

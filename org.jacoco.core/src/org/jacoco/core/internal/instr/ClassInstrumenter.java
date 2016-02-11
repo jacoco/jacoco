@@ -69,8 +69,10 @@ public class ClassInstrumenter extends ClassProbesVisitor {
 			return null;
 		}
 		final MethodVisitor frameEliminator = new DuplicateFrameEliminator(mv);
+		final MethodVisitor mvWithAdvice = ProbeArrayService.addProbeAdvisor(
+				frameEliminator, access, name, desc);
 		final ProbeInserter probeVariableInserter = new ProbeInserter(access,
-				desc, frameEliminator, probeArrayStrategy);
+				desc, mvWithAdvice, probeArrayStrategy);
 		return new MethodInstrumenter(probeVariableInserter,
 				probeVariableInserter);
 	}

@@ -54,13 +54,14 @@ public class ExecFileLoader {
 	public void load(final InputStream stream) throws IOException {
 		final ExecutionDataReader reader = new ExecutionDataReader(
 				new BufferedInputStream(stream));
-		reader.setExecutionDataVisitor(executionData);
+		reader.setHeaderVisitor(executionData);
 		reader.setSessionInfoVisitor(sessionInfos);
+		reader.setExecutionDataVisitor(executionData);
 		reader.read();
 	}
 
 	/**
-	 * Reads all data from given input stream.
+	 * Reads all data from given file.
 	 * 
 	 * @param file
 	 *            file to read data from

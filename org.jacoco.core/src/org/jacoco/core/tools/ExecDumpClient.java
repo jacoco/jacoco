@@ -16,6 +16,8 @@ import java.io.InterruptedIOException;
 import java.net.InetAddress;
 import java.net.Socket;
 
+import org.jacoco.core.data.HeaderInfo;
+import org.jacoco.core.data.IHeaderVisitor;
 import org.jacoco.core.runtime.RemoteControlReader;
 import org.jacoco.core.runtime.RemoteControlWriter;
 
@@ -118,6 +120,12 @@ public class ExecDumpClient {
 					socket.getOutputStream());
 			final RemoteControlReader remoteReader = new RemoteControlReader(
 					socket.getInputStream());
+			remoteReader.setHeaderVisitor(new IHeaderVisitor() {
+				public void visitHeaderInfo(final HeaderInfo info) {
+					remoteWriter.visitHeaderInfo(info);
+				}
+			});
+			remoteReader.setHeaderVisitor(loader.getExecutionDataStore());
 			remoteReader.setSessionInfoVisitor(loader.getSessionInfoStore());
 			remoteReader
 					.setExecutionDataVisitor(loader.getExecutionDataStore());

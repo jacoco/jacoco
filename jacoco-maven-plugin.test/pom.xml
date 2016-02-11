@@ -54,6 +54,8 @@
           <extraArtifacts>
             <extraArtifact>org.jacoco:org.jacoco.agent:${project.version}:jar:runtime</extraArtifact>
           </extraArtifacts>
+          <showErrors>true</showErrors>
+ 		  <streamLogs>true</streamLogs>
         </configuration>
         <executions>
           <execution>

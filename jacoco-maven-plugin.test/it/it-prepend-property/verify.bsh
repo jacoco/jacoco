@@ -12,7 +12,7 @@
 import java.io.*;
 import org.codehaus.plexus.util.*;
 
-String agentOptions = "jacoco.exec -ea";
+String agentOptions = "probe=exists -ea";
 String buildLog = FileUtils.fileRead( new File( basedir, "build.log" ) );
 if ( buildLog.indexOf( agentOptions ) < 0 ) {
     throw new RuntimeException( "Property was not configured" );

@@ -145,6 +145,8 @@ public final class LabelFlowAnalyzer extends MethodVisitor {
 		case Opcodes.ARETURN:
 		case Opcodes.RETURN:
 		case Opcodes.ATHROW:
+		case Opcodes.MONITORENTER:
+		case Opcodes.MONITOREXIT:
 			successor = false;
 			break;
 		default:

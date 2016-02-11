@@ -13,6 +13,8 @@ package org.jacoco.core.test.perf;
 
 import java.io.PrintWriter;
 
+import org.jacoco.core.data.ProbeMode;
+import org.jacoco.core.internal.instr.ProbeArrayService;
 import org.jacoco.core.test.perf.targets.Target01;
 import org.jacoco.core.test.perf.targets.Target02;
 import org.jacoco.core.test.perf.targets.Target03;
@@ -42,7 +44,13 @@ public class PerformanceSuite implements IPerfScenario {
 			writer = new PrintWriter(args[0]);
 		}
 		IPerfOutput output = new PerfOutputWriter(writer);
-		new PerformanceSuite().run(output);
+		for (ProbeMode requestedProbeMode : ProbeMode.values()) {
+			ProbeArrayService.reset();
+			ProbeArrayService.configure(requestedProbeMode);
+			writer.println("Using ProbeMode=" + requestedProbeMode.name());
+			new PerformanceSuite().run(output);
+			writer.println();
+		}
 		writer.close();
 	}
 

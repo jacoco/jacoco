@@ -46,23 +46,12 @@ public final class InstrSupport {
 	public static final int DATAFIELD_INTF_ACC = Opcodes.ACC_SYNTHETIC
 			| Opcodes.ACC_PUBLIC | Opcodes.ACC_STATIC | Opcodes.ACC_FINAL;
 
-	/**
-	 * Data type of the field that stores coverage information for a class (
-	 * <code>boolean[]</code>).
-	 */
-	public static final String DATAFIELD_DESC = "[Z";
-
 	// === Init Method ===
 
 	/**
 	 * Name of the initialization method.
 	 */
 	public static final String INITMETHOD_NAME = "$jacocoInit";
-
-	/**
-	 * Descriptor of the initialization method.
-	 */
-	public static final String INITMETHOD_DESC = "()[Z";
 
 	/**
 	 * Access modifiers of the initialization method.

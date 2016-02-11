@@ -27,7 +27,9 @@ public class CounterImplTest {
 
 	@Test
 	public void testGetInstance1() {
-		ICounter c = CounterImpl.getInstance(0, 0);
+		ICounter c = CounterImpl.getInstance(0, 0, 0);
+		assertEquals(0, c.getExecutionCount());
+		assertEquals(0.0, c.getValue(CounterValue.TOTALEXECCOUNT), 0.0);
 		assertEquals(0, c.getTotalCount());
 		assertEquals(0.0, c.getValue(CounterValue.TOTALCOUNT), 0.0);
 		assertEquals(0, c.getMissedCount());
@@ -38,7 +40,9 @@ public class CounterImplTest {
 
 	@Test
 	public void testGetInstance2() {
-		ICounter c = CounterImpl.getInstance(33, 15);
+		ICounter c = CounterImpl.getInstance(33, 15, 45);
+		assertEquals(45, c.getExecutionCount());
+		assertEquals(45.0, c.getValue(CounterValue.TOTALEXECCOUNT), 0.0);
 		assertEquals(48, c.getTotalCount());
 		assertEquals(48.0, c.getValue(CounterValue.TOTALCOUNT), 0.0);
 		assertEquals(33, c.getMissedCount());
@@ -49,8 +53,10 @@ public class CounterImplTest {
 
 	@Test
 	public void testGetInstance3() {
-		ICounter c = CounterImpl.getInstance(15, 12);
+		ICounter c = CounterImpl.getInstance(15, 12, 24);
 		ICounter copy = CounterImpl.getInstance(c);
+		assertEquals(24, c.getExecutionCount());
+		assertEquals(24.0, c.getValue(CounterValue.TOTALEXECCOUNT), 0.0);
 		assertEquals(27, copy.getTotalCount());
 		assertEquals(27.0, c.getValue(CounterValue.TOTALCOUNT), 0.0);
 		assertEquals(15, copy.getMissedCount());
@@ -61,152 +67,168 @@ public class CounterImplTest {
 
 	@Test
 	public void testFixInstance() {
-		ICounter c1 = CounterImpl.getInstance(30, 30);
-		ICounter c2 = CounterImpl.getInstance(30, 30);
+		ICounter c1 = CounterImpl.getInstance(30, 30, 0);
+		ICounter c2 = CounterImpl.getInstance(30, 30, 0);
 		assertSame(c1, c2);
 	}
 
 	@Test
 	public void testVarInstance() {
-		ICounter c1 = CounterImpl.getInstance(31, 30);
-		ICounter c2 = CounterImpl.getInstance(31, 30);
+		ICounter c1 = CounterImpl.getInstance(31, 30, 30);
+		ICounter c2 = CounterImpl.getInstance(31, 30, 30);
 		assertNotSame(c1, c2);
 	}
 
 	@Test
 	public void testIncrement1() {
-		CounterImpl c = CounterImpl.getInstance(1, 1);
-		c = c.increment(CounterImpl.getInstance(2, 1));
+		CounterImpl c = CounterImpl.getInstance(1, 1, 1);
+		c = c.increment(CounterImpl.getInstance(2, 1, 1));
+		assertEquals(2, c.getExecutionCount());
 		assertEquals(3, c.getMissedCount());
 		assertEquals(2, c.getCoveredCount());
 	}
 
 	@Test
 	public void testIncrement2() {
-		CounterImpl c = CounterImpl.getInstance(31, 5);
-		c = c.increment(CounterImpl.getInstance(7, 3));
+		CounterImpl c = CounterImpl.getInstance(31, 5, 10);
+		c = c.increment(CounterImpl.getInstance(7, 3, 3));
+		assertEquals(13, c.getExecutionCount());
 		assertEquals(38, c.getMissedCount());
 		assertEquals(8, c.getCoveredCount());
 	}
 
 	@Test
 	public void testGetCoveredRatio1() {
-		ICounter c = CounterImpl.getInstance(30, 10);
+		ICounter c = CounterImpl.getInstance(30, 10, 10);
 		assertEquals(0.25, c.getCoveredRatio(), 0.0);
 		assertEquals(0.25, c.getValue(CounterValue.COVEREDRATIO), 0.0);
 	}
 
 	@Test
 	public void testGetCoveredRatio2() {
-		ICounter c = CounterImpl.getInstance(20, 0);
+		ICounter c = CounterImpl.getInstance(20, 0, 0);
 		assertEquals(0.0, c.getCoveredRatio(), 0.0);
 		assertEquals(0.0, c.getValue(CounterValue.COVEREDRATIO), 0.0);
 	}
 
 	@Test
 	public void testGetCoveredRatio3() {
-		ICounter c = CounterImpl.getInstance(0, 0);
+		ICounter c = CounterImpl.getInstance(0, 0, 0);
 		assertEquals(Double.NaN, c.getCoveredRatio(), 0.0);
 		assertEquals(Double.NaN, c.getValue(CounterValue.COVEREDRATIO), 0.0);
 	}
 
 	@Test
 	public void testGetMissedRatio1() {
-		ICounter c = CounterImpl.getInstance(10, 30);
+		ICounter c = CounterImpl.getInstance(10, 30, 30);
 		assertEquals(0.25, c.getMissedRatio(), 0.0);
 		assertEquals(0.25, c.getValue(CounterValue.MISSEDRATIO), 0.0);
 	}
 
 	@Test
 	public void testGetMissedRatio2() {
-		ICounter c = CounterImpl.getInstance(0, 20);
+		ICounter c = CounterImpl.getInstance(0, 20, 20);
 		assertEquals(0.0, c.getMissedRatio(), 0.0);
 		assertEquals(0.0, c.getValue(CounterValue.MISSEDRATIO), 0.0);
 	}
 
 	@Test
 	public void testGetMissedRatio3() {
-		ICounter c = CounterImpl.getInstance(0, 0);
+		ICounter c = CounterImpl.getInstance(0, 0, 0);
 		assertEquals(Double.NaN, c.getMissedRatio(), 0.0);
 		assertEquals(Double.NaN, c.getValue(CounterValue.MISSEDRATIO), 0.0);
 	}
 
 	@Test
 	public void testGetMissedStatus1() {
-		ICounter c = CounterImpl.getInstance(0, 0);
+		ICounter c = CounterImpl.getInstance(0, 0, 0);
 		assertEquals(ICounter.EMPTY, c.getStatus());
 	}
 
 	@Test
 	public void testGetMissedStatus2() {
-		ICounter c = CounterImpl.getInstance(5, 0);
+		ICounter c = CounterImpl.getInstance(5, 0, 0);
 		assertEquals(ICounter.NOT_COVERED, c.getStatus());
 	}
 
 	@Test
 	public void testGetMissedStatus3() {
-		ICounter c = CounterImpl.getInstance(0, 5);
+		ICounter c = CounterImpl.getInstance(0, 5, 5);
 		assertEquals(ICounter.FULLY_COVERED, c.getStatus());
 	}
 
 	@Test
 	public void testGetMissedStatus4() {
-		ICounter c = CounterImpl.getInstance(2, 3);
+		ICounter c = CounterImpl.getInstance(2, 3, 3);
 		assertEquals(ICounter.PARTLY_COVERED, c.getStatus());
 	}
 
 	@Test
 	public void testEquals1() {
-		ICounter c1 = CounterImpl.getInstance(300, 123);
-		ICounter c2 = CounterImpl.getInstance(300, 123);
+		ICounter c1 = CounterImpl.getInstance(300, 123, 321);
+		ICounter c2 = CounterImpl.getInstance(300, 123, 321);
 		assertEquals(c1, c2);
 	}
 
 	@Test
 	public void testEquals2() {
-		ICounter c1 = CounterImpl.getInstance(300, 123);
-		ICounter c2 = CounterImpl.getInstance(400, 123);
+		ICounter c1 = CounterImpl.getInstance(300, 123, 321);
+		ICounter c2 = CounterImpl.getInstance(400, 123, 321);
 		assertFalse(c1.equals(c2));
 	}
 
 	@Test
 	public void testEquals3() {
-		ICounter c1 = CounterImpl.getInstance(300, 123);
-		ICounter c2 = CounterImpl.getInstance(300, 124);
+		ICounter c1 = CounterImpl.getInstance(300, 123, 321);
+		ICounter c2 = CounterImpl.getInstance(300, 124, 321);
 		assertFalse(c1.equals(c2));
 	}
 
 	@Test
 	public void testEquals4() {
-		ICounter c = CounterImpl.getInstance(300, 123);
+		ICounter c1 = CounterImpl.getInstance(300, 123, 321);
+		ICounter c2 = CounterImpl.getInstance(300, 123, 322);
+		assertFalse(c1.equals(c2));
+	}
+
+	@Test
+	public void testEquals5() {
+		ICounter c = CounterImpl.getInstance(300, 123, 321);
 		assertFalse(c.equals(new Integer(123)));
 	}
 
 	@Test
 	public void testHashCode1() {
-		ICounter c1 = CounterImpl.getInstance(300, 123);
-		ICounter c2 = CounterImpl.getInstance(300, 123);
+		ICounter c1 = CounterImpl.getInstance(300, 123, 321);
+		ICounter c2 = CounterImpl.getInstance(300, 123, 321);
 		assertEquals(c1.hashCode(), c2.hashCode());
 	}
 
 	@Test
 	public void testHashCode2() {
-		ICounter c1 = CounterImpl.getInstance(300, 123);
-		ICounter c2 = CounterImpl.getInstance(400, 123);
+		ICounter c1 = CounterImpl.getInstance(300, 123, 321);
+		ICounter c2 = CounterImpl.getInstance(400, 123, 321);
 		assertFalse(c1.hashCode() == c2.hashCode());
 	}
 
 	@Test
 	public void testHashCode3() {
-		ICounter c1 = CounterImpl.getInstance(300, 123);
-		ICounter c2 = CounterImpl.getInstance(300, 124);
+		ICounter c1 = CounterImpl.getInstance(300, 123, 321);
+		ICounter c2 = CounterImpl.getInstance(300, 124, 321);
+		assertFalse(c1.hashCode() == c2.hashCode());
+	}
+
+	@Test
+	public void testHashCode4() {
+		ICounter c1 = CounterImpl.getInstance(300, 123, 321);
+		ICounter c2 = CounterImpl.getInstance(300, 123, 322);
 		assertFalse(c1.hashCode() == c2.hashCode());
 	}
 
 	@Test
 	public void testToString() {
-		ICounter c = CounterImpl.getInstance(300, 123);
-		assertEquals("Counter[300/123]", c.toString());
+		ICounter c = CounterImpl.getInstance(300, 123, 321);
+		assertEquals("Counter[300/123/321]", c.toString());
 	}
 
 }

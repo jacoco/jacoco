@@ -211,6 +211,16 @@ public class AbstractCoverageTask extends Task {
 	}
 
 	/**
+	 * Sets the probe method. Default is <code>exists</code>
+	 * 
+	 * @param probe
+	 *            Probe method
+	 */
+	public void setProbe(final String probe) {
+		agentOptions.setProbe(probe);
+	}
+
+	/**
 	 * Creates JVM argument to launch with the specified JaCoCo agent jar and
 	 * the current options
 	 * 
