@@ -29,6 +29,8 @@ import org.jacoco.report.internal.html.resources.Styles;
  */
 final class SourceHighlighter {
 
+	private static final double ROUND_DOWN = 0.0004;
+
 	private final Locale locale;
 
 	private final ProbeMode probeMode;
@@ -74,8 +76,8 @@ final class SourceHighlighter {
 	 */
 	public void render(final HTMLElement parent, final ISourceNode source,
 			final Reader contents) throws IOException {
-		final HTMLElement pre = parent.pre(Styles.SOURCE + " lang-" + lang
-				+ " linenums");
+		final HTMLElement pre = parent
+				.pre(Styles.SOURCE + " lang-" + lang + " linenums");
 		final boolean hasEBigO = source.hasEBigO();
 		final BufferedReader lineBuffer = new BufferedReader(contents);
 		String line;
@@ -89,7 +91,7 @@ final class SourceHighlighter {
 
 	private void renderCodeLine(final HTMLElement pre, final String linesrc,
 			final ILine line, final EBigOFunction ebigo, final int lineNr)
-			throws IOException {
+					throws IOException {
 		addExtras(pre, line, ebigo);
 		highlight(pre, line, lineNr).text(linesrc);
 		pre.text("\n");

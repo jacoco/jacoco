@@ -74,7 +74,7 @@ public class CounterComparator implements Comparator<ICounter>, Serializable {
 	}
 
 	public int compare(final ICounter c1, final ICounter c2) {
-		final int cmp = Double.compare(c1.getValue(value), c2.getValue(value));
+		final int cmp = (int)Math.signum(c1.getValue(value) - c2.getValue(value));
 		return reverse ? -cmp : cmp;
 	}
 

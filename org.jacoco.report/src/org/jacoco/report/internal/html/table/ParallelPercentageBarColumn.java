@@ -50,8 +50,8 @@ public class ParallelPercentageBarColumn implements IColumnRenderer {
 		comparator = new TableItemComparator(new Comparator<ICoverageNode>() {
 
 			public int compare(final ICoverageNode o1, final ICoverageNode o2) {
-				return Double.compare(o1.getParallelPercent(),
-						o2.getParallelPercent());
+				return (int) (o1.getParallelPercent()
+						- o2.getParallelPercent());
 			}
 		});
 	}
@@ -71,7 +71,7 @@ public class ParallelPercentageBarColumn implements IColumnRenderer {
 
 	public void footer(final HTMLElement td, final ICoverageNode total,
 			final Resources resources, final ReportOutputFolder base)
-			throws IOException {
+					throws IOException {
 		final int parallel = total.getBranchCounter().getExecutionCount();
 		final int covered = total.getInstructionCounter().getExecutionCount();
 		td.text(integerFormat.format(parallel)).text(" of ")
@@ -80,7 +80,7 @@ public class ParallelPercentageBarColumn implements IColumnRenderer {
 
 	public void item(final HTMLElement td, final ITableItem item,
 			final Resources resources, final ReportOutputFolder base)
-			throws IOException {
+					throws IOException {
 		if (max > 0) {
 			final int executed = item.getNode().getInstructionCounter()
 					.getExecutionCount();
@@ -93,7 +93,7 @@ public class ParallelPercentageBarColumn implements IColumnRenderer {
 
 	private void bar(final HTMLElement td, final int count, final String image,
 			final Resources resources, final ReportOutputFolder base)
-			throws IOException {
+					throws IOException {
 		final int width = count * WIDTH / max;
 		if (width > 0) {
 			td.img(resources.getLink(base, image), width, 10,

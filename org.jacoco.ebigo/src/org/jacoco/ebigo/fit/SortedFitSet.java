@@ -28,9 +28,9 @@ public class SortedFitSet extends TreeSet<Fit> {
 	 */
 	private static class FitConfidenceComparator implements Comparator<Fit> {
 		public int compare(final Fit left, final Fit right) {
-			int cmp = Double.compare(left.confidence, right.confidence);
-			return cmp != 0 ? cmp : Integer.compare(left.type.ordinal(),
-					right.type.ordinal());
+			int cmp = (int)Math.signum(left.confidence - right.confidence);
+			return cmp != 0 ? cmp : left.type.ordinal() -
+					right.type.ordinal();
 		}
 
 	}

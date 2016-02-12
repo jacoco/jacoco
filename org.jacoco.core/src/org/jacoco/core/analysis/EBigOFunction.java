@@ -170,7 +170,7 @@ public class EBigOFunction implements Comparable<EBigOFunction> {
 		switch (type) {
 		case Exponential:
 		case PowerLaw:
-			return (int) (slope - o.slope);
+			return (int) Math.signum(slope - o.slope);
 		}
 		return 0;
 	}

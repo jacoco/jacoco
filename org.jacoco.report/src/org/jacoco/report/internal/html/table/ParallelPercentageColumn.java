@@ -50,8 +50,8 @@ public class ParallelPercentageColumn implements IColumnRenderer {
 		comparator = new TableItemComparator(new Comparator<ICoverageNode>() {
 
 			public int compare(final ICoverageNode o1, final ICoverageNode o2) {
-				return Double.compare(o1.getParallelPercent(),
-						o2.getParallelPercent());
+				return (int) (o1.getParallelPercent()
+						- o2.getParallelPercent());
 			}
 		});
 	}
@@ -63,13 +63,13 @@ public class ParallelPercentageColumn implements IColumnRenderer {
 
 	public void footer(final HTMLElement td, final ICoverageNode total,
 			final Resources resources, final ReportOutputFolder base)
-			throws IOException {
+					throws IOException {
 		cell(td, total);
 	}
 
 	public void item(final HTMLElement td, final ITableItem item,
 			final Resources resources, final ReportOutputFolder base)
-			throws IOException {
+					throws IOException {
 		cell(td, item.getNode());
 	}
 

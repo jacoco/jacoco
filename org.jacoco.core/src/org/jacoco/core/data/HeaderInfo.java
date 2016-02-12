@@ -37,7 +37,7 @@ public class HeaderInfo implements Comparable<HeaderInfo> {
 	}
 
 	public int compareTo(final HeaderInfo other) {
-		return Character.compare(this.formatVersion, other.formatVersion);
+		return this.formatVersion - other.formatVersion;
 	}
 
 	@Override
