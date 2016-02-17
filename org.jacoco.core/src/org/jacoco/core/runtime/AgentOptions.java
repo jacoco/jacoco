@@ -114,7 +114,8 @@ public final class AgentOptions {
 	 */
 	public static final String OUTPUT = "output";
 
-	private static final Pattern OPTION_SPLIT = Pattern.compile(",(?=[a-z]+=)");
+	private static final Pattern OPTION_SPLIT = Pattern
+			.compile(",(?=[a-zA-Z0-9_\\-]+=)");
 
 	/**
 	 * Possible values for {@link AgentOptions#OUTPUT}.

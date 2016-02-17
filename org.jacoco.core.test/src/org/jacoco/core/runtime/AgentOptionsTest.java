@@ -362,7 +362,7 @@ public class AgentOptionsTest {
 
 	@Test(expected = IllegalArgumentException.class)
 	public void testInvalidOptionKey() {
-		new AgentOptions("destfile=test.exec,something=true");
+		new AgentOptions("destfile=test.exec,Some-thing_1=true");
 	}
 
 	@Test(expected = IllegalArgumentException.class)
@@ -468,11 +468,10 @@ public class AgentOptionsTest {
 	}
 
 	@Test
-	// issue #358
-	public void testDestFileWithComma() {
+	public void testOptionValueWithSpecialCharacters() {
 		AgentOptions options = new AgentOptions(
-				"destfile=build/jacoco/foo, bar.exec");
-		assertEquals("build/jacoco/foo, bar.exec", options.getDestfile());
+				"destfile=build/jacoco/foo, bar-1_0.exec");
+		assertEquals("build/jacoco/foo, bar-1_0.exec", options.getDestfile());
 	}
 
 }
