@@ -19,6 +19,10 @@ public class Instruction {
 
 	private final int line;
 
+	private int executions;
+
+	private int parallelExecutions;
+
 	private int branches;
 
 	private int coveredBranches;
@@ -33,6 +37,8 @@ public class Instruction {
 	 */
 	public Instruction(final int line) {
 		this.line = line;
+		this.executions = 0;
+		this.parallelExecutions = 0;
 		this.branches = 0;
 		this.coveredBranches = 0;
 	}
@@ -58,6 +64,26 @@ public class Instruction {
 	}
 
 	/**
+	 * Add to the total number of executions at this instruction
+	 * 
+	 * @param executions
+	 *            the number of executions at this instruction
+	 */
+	public void addExecutions(final int executions) {
+		this.executions += executions;
+	}
+
+	/**
+	 * Add to the total number of parallel executions at this instruction
+	 * 
+	 * @param parallelExecutions
+	 *            the number of parallel executions at this instruction
+	 */
+	public void addParallelExecutions(final int parallelExecutions) {
+		this.parallelExecutions += parallelExecutions;
+	}
+
+	/**
 	 * Marks one branch of this instruction as covered. Also recursively marks
 	 * all predecessor instructions as covered if this is the first covered
 	 * branch.
@@ -65,6 +91,10 @@ public class Instruction {
 	public void setCovered() {
 		Instruction i = this;
 		while (i != null && i.coveredBranches++ == 0) {
+			if (i != this) {
+				i.executions += this.executions;
+				i.parallelExecutions += this.parallelExecutions;
+			}
 			i = i.predecessor;
 		}
 	}
@@ -94,6 +124,24 @@ public class Instruction {
 	 */
 	public int getCoveredBranches() {
 		return coveredBranches;
+	}
+
+	/**
+	 * Returns the total number of executions on this instruction.
+	 * 
+	 * @return total number of executions on this instruction.
+	 */
+	public int getExecutions() {
+		return executions;
+	}
+
+	/**
+	 * Returns the total number of parallel executions on this instruction.
+	 * 
+	 * @return total number of parallel executions on this instruction.
+	 */
+	public int getParallelExecutions() {
+		return parallelExecutions;
 	}
 
 }

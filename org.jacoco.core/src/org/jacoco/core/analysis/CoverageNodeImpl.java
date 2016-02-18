@@ -13,6 +13,7 @@ package org.jacoco.core.analysis;
 
 import java.util.Collection;
 
+import org.jacoco.core.data.ProbeMode;
 import org.jacoco.core.internal.analysis.CounterImpl;
 
 /**
@@ -42,6 +43,15 @@ public class CoverageNodeImpl implements ICoverageNode {
 	/** Counter for classes. */
 	protected CounterImpl classCounter;
 
+	/** The mode of the probe used to create this node */
+	protected ProbeMode probeMode;
+
+	/** Here or any child has EBigO data */
+	protected boolean containsEBigO;
+
+	/** The function of the worst case of any child */
+	protected EBigOFunction eBigOFunction;
+
 	/**
 	 * Creates a new coverage data node.
 	 * 
@@ -59,6 +69,9 @@ public class CoverageNodeImpl implements ICoverageNode {
 		this.methodCounter = CounterImpl.COUNTER_0_0;
 		this.classCounter = CounterImpl.COUNTER_0_0;
 		this.lineCounter = CounterImpl.COUNTER_0_0;
+		probeMode = null;
+		containsEBigO = false;
+		eBigOFunction = EBigOFunction.UNDEFINED;
 	}
 
 	/**
@@ -76,6 +89,48 @@ public class CoverageNodeImpl implements ICoverageNode {
 				.getComplexityCounter());
 		methodCounter = methodCounter.increment(child.getMethodCounter());
 		classCounter = classCounter.increment(child.getClassCounter());
+		mergeProbeMode(child);
+
+		containsEBigO |= child.containsEBigO();
+		if (eBigOFunction.compareTo(child.getEBigOFunction()) < 0) {
+			setEBigOFunction(child.getEBigOFunction());
+		}
+	}
+
+	/**
+	 * Set the results of an E-Big-O analysis on this node
+	 * 
+	 * @param eBigOFunction
+	 *            the results of an E-Big-O analysis on this noe
+	 */
+	public void setEBigOFunction(final EBigOFunction eBigOFunction) {
+		this.eBigOFunction = eBigOFunction;
+		this.containsEBigO = true;
+	}
+
+	/**
+	 * Merge the probe mode of the child into this node's probe mode.
+	 * 
+	 * @param child
+	 *            probe mode to consider
+	 */
+	protected void mergeProbeMode(final ICoverageNode child) {
+		if (probeMode == null) {
+			probeMode = child.getProbeMode();
+		} else {
+			switch (probeMode) {
+			case exists:
+				break;
+			case count:
+				if (child.getProbeMode() == ProbeMode.exists) {
+					probeMode = ProbeMode.exists;
+				}
+				break;
+			case parallelcount:
+				probeMode = child.getProbeMode();
+				break;
+			}
+		}
 	}
 
 	/**
@@ -91,7 +146,7 @@ public class CoverageNodeImpl implements ICoverageNode {
 		}
 	}
 
-	// === ICoverageDataNode ===
+	// === ICoverageNode ===
 
 	public ElementType getElementType() {
 		return elementType;
@@ -125,6 +180,28 @@ public class CoverageNodeImpl implements ICoverageNode {
 		return classCounter;
 	}
 
+	public ProbeMode getProbeMode() {
+		return probeMode;
+	}
+
+	public double getParallelPercent() {
+		final int instructionExecutionCount = instructionCounter
+				.getExecutionCount();
+		if (instructionExecutionCount == 0) {
+			return 0D;
+		}
+		final int parallelExecutionCount = branchCounter.getExecutionCount();
+		return 100.0D * parallelExecutionCount / instructionExecutionCount;
+	}
+
+	public boolean containsEBigO() {
+		return containsEBigO;
+	}
+
+	public EBigOFunction getEBigOFunction() {
+		return eBigOFunction;
+	}
+
 	public ICounter getCounter(final CounterEntity entity) {
 		switch (entity) {
 		case INSTRUCTION:
@@ -151,6 +228,8 @@ public class CoverageNodeImpl implements ICoverageNode {
 		copy.complexityCounter = CounterImpl.getInstance(complexityCounter);
 		copy.methodCounter = CounterImpl.getInstance(methodCounter);
 		copy.classCounter = CounterImpl.getInstance(classCounter);
+		copy.probeMode = probeMode;
+		copy.containsEBigO = containsEBigO;
 		return copy;
 	}
 

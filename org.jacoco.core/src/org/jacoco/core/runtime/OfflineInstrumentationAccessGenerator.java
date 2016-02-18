@@ -13,6 +13,7 @@ package org.jacoco.core.runtime;
 
 import org.jacoco.core.JaCoCo;
 import org.jacoco.core.internal.instr.InstrSupport;
+import org.jacoco.core.internal.instr.ProbeArrayService;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
 
@@ -50,9 +51,11 @@ public class OfflineInstrumentationAccessGenerator implements
 		mv.visitLdcInsn(Long.valueOf(classid));
 		mv.visitLdcInsn(classname);
 		InstrSupport.push(mv, probecount);
-		mv.visitMethodInsn(Opcodes.INVOKESTATIC, runtimeClassName, "getProbes",
-				"(JLjava/lang/String;I)[Z", false);
+		mv.visitMethodInsn(Opcodes.INVOKESTATIC, runtimeClassName,
+				"getProbesObject", "(JLjava/lang/String;I)Ljava/lang/Object;",
+				false);
+		mv.visitTypeInsn(Opcodes.CHECKCAST,
+				ProbeArrayService.getDatafieldClass());
 		return 4;
 	}
-
 }

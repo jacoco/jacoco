@@ -13,6 +13,7 @@ package org.jacoco.core.internal.instr;
 
 import static org.junit.Assert.assertEquals;
 
+import org.jacoco.core.data.ProbeMode;
 import org.jacoco.core.instr.MethodRecorder;
 import org.junit.After;
 import org.junit.Before;
@@ -34,6 +35,7 @@ public class ProbeInserterTest {
 
 	@Before
 	public void setup() {
+		ProbeArrayService.reset();
 		actual = new MethodRecorder();
 		actualVisitor = actual.getVisitor();
 		expected = new MethodRecorder();
@@ -53,10 +55,12 @@ public class ProbeInserterTest {
 	@After
 	public void verify() {
 		assertEquals(expected, actual);
+		ProbeArrayService.reset();
 	}
 
 	@Test
-	public void testVariableStatic() {
+	public void testVariableStatic_existsMode() {
+		ProbeArrayService.configure(ProbeMode.exists);
 		ProbeInserter pi = new ProbeInserter(Opcodes.ACC_STATIC, "()V",
 				actualVisitor, arrayStrategy);
 		pi.insertProbe(0);
@@ -68,7 +72,37 @@ public class ProbeInserterTest {
 	}
 
 	@Test
-	public void testVariableNonStatic() {
+	public void testVariableStatic_countMode() {
+		ProbeArrayService.configure(ProbeMode.count);
+		ProbeInserter pi = new ProbeInserter(Opcodes.ACC_STATIC, "()V",
+				actualVisitor, arrayStrategy);
+		pi.insertProbe(0);
+
+		expectedVisitor.visitVarInsn(Opcodes.ALOAD, 0);
+		expectedVisitor.visitInsn(Opcodes.ICONST_0);
+		expectedVisitor.visitMethodInsn(Opcodes.INVOKEVIRTUAL,
+				ProbeArrayService.getDatafieldClass(), "incrementAndGet",
+				"(I)I", false);
+		expectedVisitor.visitInsn(Opcodes.POP);
+	}
+
+	@Test
+	public void testVariableStatic_parallelcountMode() {
+		ProbeArrayService.configure(ProbeMode.parallelcount);
+		ProbeInserter pi = new ProbeInserter(Opcodes.ACC_STATIC, "()V",
+				actualVisitor, arrayStrategy);
+		pi.insertProbe(0);
+
+		expectedVisitor.visitVarInsn(Opcodes.ALOAD, 0);
+		expectedVisitor.visitInsn(Opcodes.ICONST_0);
+		expectedVisitor.visitMethodInsn(Opcodes.INVOKEVIRTUAL,
+				ProbeArrayService.getDatafieldClass(), "increment", "(I)V",
+				false);
+	}
+
+	@Test
+	public void testVariableNonStatic_existsMode() {
+		ProbeArrayService.configure(ProbeMode.exists);
 		ProbeInserter pi = new ProbeInserter(0, "()V", actualVisitor,
 				arrayStrategy);
 		pi.insertProbe(0);
@@ -80,7 +114,37 @@ public class ProbeInserterTest {
 	}
 
 	@Test
-	public void testVariableNonStatic_IZObject() {
+	public void testVariableNonStatic_countMode() {
+		ProbeArrayService.configure(ProbeMode.count);
+		ProbeInserter pi = new ProbeInserter(0, "()V", actualVisitor,
+				arrayStrategy);
+		pi.insertProbe(0);
+
+		expectedVisitor.visitVarInsn(Opcodes.ALOAD, 1);
+		expectedVisitor.visitInsn(Opcodes.ICONST_0);
+		expectedVisitor.visitMethodInsn(Opcodes.INVOKEVIRTUAL,
+				ProbeArrayService.getDatafieldClass(), "incrementAndGet",
+				"(I)I", false);
+		expectedVisitor.visitInsn(Opcodes.POP);
+	}
+
+	@Test
+	public void testVariableNonStatic_parallelcountMode() {
+		ProbeArrayService.configure(ProbeMode.parallelcount);
+		ProbeInserter pi = new ProbeInserter(0, "()V", actualVisitor,
+				arrayStrategy);
+		pi.insertProbe(0);
+
+		expectedVisitor.visitVarInsn(Opcodes.ALOAD, 1);
+		expectedVisitor.visitInsn(Opcodes.ICONST_0);
+		expectedVisitor.visitMethodInsn(Opcodes.INVOKEVIRTUAL,
+				ProbeArrayService.getDatafieldClass(), "increment", "(I)V",
+				false);
+	}
+
+	@Test
+	public void testVariableNonStatic_IZObject_existsMode() {
+		ProbeArrayService.configure(ProbeMode.exists);
 		ProbeInserter pi = new ProbeInserter(0, "(IZLjava/lang/Object;)V",
 				actualVisitor, arrayStrategy);
 		pi.insertProbe(0);
@@ -92,7 +156,37 @@ public class ProbeInserterTest {
 	}
 
 	@Test
-	public void testVariableNonStatic_JD() {
+	public void testVariableNonStatic_IZObject_countMode() {
+		ProbeArrayService.configure(ProbeMode.count);
+		ProbeInserter pi = new ProbeInserter(0, "(IZLjava/lang/Object;)V",
+				actualVisitor, arrayStrategy);
+		pi.insertProbe(0);
+
+		expectedVisitor.visitVarInsn(Opcodes.ALOAD, 4);
+		expectedVisitor.visitInsn(Opcodes.ICONST_0);
+		expectedVisitor.visitMethodInsn(Opcodes.INVOKEVIRTUAL,
+				ProbeArrayService.getDatafieldClass(), "incrementAndGet",
+				"(I)I", false);
+		expectedVisitor.visitInsn(Opcodes.POP);
+	}
+
+	@Test
+	public void testVariableNonStatic_IZObject_parallelcountMode() {
+		ProbeArrayService.configure(ProbeMode.parallelcount);
+		ProbeInserter pi = new ProbeInserter(0, "(IZLjava/lang/Object;)V",
+				actualVisitor, arrayStrategy);
+		pi.insertProbe(0);
+
+		expectedVisitor.visitVarInsn(Opcodes.ALOAD, 4);
+		expectedVisitor.visitInsn(Opcodes.ICONST_0);
+		expectedVisitor.visitMethodInsn(Opcodes.INVOKEVIRTUAL,
+				ProbeArrayService.getDatafieldClass(), "increment", "(I)V",
+				false);
+	}
+
+	@Test
+	public void testVariableNonStatic_JD_existsMode() {
+		ProbeArrayService.configure(ProbeMode.exists);
 		ProbeInserter pi = new ProbeInserter(0, "(JD)V", actualVisitor,
 				arrayStrategy);
 		pi.insertProbe(0);
@@ -101,6 +195,35 @@ public class ProbeInserterTest {
 		expectedVisitor.visitInsn(Opcodes.ICONST_0);
 		expectedVisitor.visitInsn(Opcodes.ICONST_1);
 		expectedVisitor.visitInsn(Opcodes.BASTORE);
+	}
+
+	@Test
+	public void testVariableNonStatic_JD_countMode() {
+		ProbeArrayService.configure(ProbeMode.count);
+		ProbeInserter pi = new ProbeInserter(0, "(JD)V", actualVisitor,
+				arrayStrategy);
+		pi.insertProbe(0);
+
+		expectedVisitor.visitVarInsn(Opcodes.ALOAD, 5);
+		expectedVisitor.visitInsn(Opcodes.ICONST_0);
+		expectedVisitor.visitMethodInsn(Opcodes.INVOKEVIRTUAL,
+				ProbeArrayService.getDatafieldClass(), "incrementAndGet",
+				"(I)I", false);
+		expectedVisitor.visitInsn(Opcodes.POP);
+	}
+
+	@Test
+	public void testVariableNonStatic_JD_parallelcountMode() {
+		ProbeArrayService.configure(ProbeMode.parallelcount);
+		ProbeInserter pi = new ProbeInserter(0, "(JD)V", actualVisitor,
+				arrayStrategy);
+		pi.insertProbe(0);
+
+		expectedVisitor.visitVarInsn(Opcodes.ALOAD, 5);
+		expectedVisitor.visitInsn(Opcodes.ICONST_0);
+		expectedVisitor.visitMethodInsn(Opcodes.INVOKEVIRTUAL,
+				ProbeArrayService.getDatafieldClass(), "increment", "(I)V",
+				false);
 	}
 
 	@Test
@@ -205,7 +328,8 @@ public class ProbeInserterTest {
 				"java/lang/String" }, 0, new Object[0]);
 
 		expectedVisitor.visitFrame(Opcodes.F_NEW, 4, new Object[] { "Foo",
-				Opcodes.LONG, "[Z", "java/lang/String" }, 0, new Object[0]);
+				Opcodes.LONG, ProbeArrayService.getDatafieldClass(),
+				"java/lang/String" }, 0, new Object[0]);
 	}
 
 	@Test
@@ -215,7 +339,8 @@ public class ProbeInserterTest {
 
 		pi.visitFrame(Opcodes.F_NEW, 0, new Object[] {}, 0, new Object[0]);
 
-		expectedVisitor.visitFrame(Opcodes.F_NEW, 1, new Object[] { "[Z" }, 0,
+		expectedVisitor.visitFrame(Opcodes.F_NEW, 1,
+				new Object[] { ProbeArrayService.getDatafieldClass() }, 0,
 				new Object[0]);
 	}
 
@@ -227,8 +352,9 @@ public class ProbeInserterTest {
 		pi.visitFrame(Opcodes.F_NEW, 2, new Object[] { Opcodes.DOUBLE, "Foo" },
 				0, new Object[0]);
 
-		expectedVisitor.visitFrame(Opcodes.F_NEW, 3, new Object[] { "[Z",
-				Opcodes.DOUBLE, "Foo" }, 0, new Object[0]);
+		expectedVisitor.visitFrame(Opcodes.F_NEW, 3, new Object[] {
+				ProbeArrayService.getDatafieldClass(), Opcodes.DOUBLE, "Foo" },
+				0, new Object[0]);
 	}
 
 	@Test
@@ -240,7 +366,8 @@ public class ProbeInserterTest {
 
 		// The locals in this frame are filled with TOP up to the probe variable
 		expectedVisitor.visitFrame(Opcodes.F_NEW, 2, new Object[] {
-				Opcodes.TOP, "[Z", }, 0, new Object[] {});
+				Opcodes.TOP, ProbeArrayService.getDatafieldClass(), }, 0,
+				new Object[] {});
 	}
 
 	@Test
@@ -252,7 +379,8 @@ public class ProbeInserterTest {
 
 		// The locals in this frame are filled with TOP up to the probe variable
 		expectedVisitor.visitFrame(Opcodes.F_NEW, 3, new Object[] {
-				Opcodes.TOP, Opcodes.TOP, "[Z", }, 0, new Object[] {});
+				Opcodes.TOP, Opcodes.TOP,
+				ProbeArrayService.getDatafieldClass(), }, 0, new Object[] {});
 	}
 
 	@Test
@@ -265,8 +393,8 @@ public class ProbeInserterTest {
 
 		// The locals in this frame are filled with TOP up to the probe variable
 		expectedVisitor.visitFrame(Opcodes.F_NEW, 5, new Object[] {
-				Opcodes.DOUBLE, Opcodes.TOP, Opcodes.TOP, Opcodes.TOP, "[Z", },
-				0, new Object[] {});
+				Opcodes.DOUBLE, Opcodes.TOP, Opcodes.TOP, Opcodes.TOP,
+				ProbeArrayService.getDatafieldClass(), }, 0, new Object[] {});
 	}
 
 	@Test(expected = IllegalArgumentException.class)

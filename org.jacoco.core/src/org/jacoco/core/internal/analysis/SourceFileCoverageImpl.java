@@ -12,6 +12,7 @@
 package org.jacoco.core.internal.analysis;
 
 import org.jacoco.core.analysis.ISourceFileCoverage;
+import org.jacoco.core.analysis.ISourceNode;
 
 /**
  * Implementation of {@link ISourceFileCoverage}.
@@ -32,6 +33,22 @@ public class SourceFileCoverageImpl extends SourceNodeImpl implements
 	public SourceFileCoverageImpl(final String name, final String packagename) {
 		super(ElementType.SOURCEFILE, name);
 		this.packagename = packagename;
+	}
+
+	@Override
+	public void increment(final ISourceNode child) {
+		super.increment(child);
+
+		// DO NOT COPY overall BigO value, as that requires recalculation
+
+		// copy E-Big-O lines
+		if (child.containsEBigO()) {
+			final int first = child.getFirstLine();
+			final int last = child.getLastLine();
+			for (int line = first; line <= last; line++) {
+				setLineEBigOFunction(child.getLineEBigOFunction(line), line);
+			}
+		}
 	}
 
 	// === ISourceFileCoverage implementation ===

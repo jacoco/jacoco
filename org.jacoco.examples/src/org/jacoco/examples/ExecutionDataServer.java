@@ -49,14 +49,30 @@ public final class ExecutionDataServer {
 				new FileOutputStream(DESTFILE));
 		final ServerSocket server = new ServerSocket(PORT, 0,
 				InetAddress.getByName(ADDRESS));
+		addServerShutdownHook(server);
+
 		while (true) {
 			final Handler handler = new Handler(server.accept(), fileWriter);
 			new Thread(handler).start();
 		}
 	}
 
-	private static class Handler implements Runnable, ISessionInfoVisitor,
-			IExecutionDataVisitor {
+	private static void addServerShutdownHook(final ServerSocket server) {
+		Runtime.getRuntime().addShutdownHook(new Thread() {
+
+			@Override
+			public void run() {
+				try {
+					server.close();
+				} catch (final IOException e) {
+				}
+			}
+
+		});
+	}
+
+	private static class Handler
+			implements Runnable, ISessionInfoVisitor, IExecutionDataVisitor {
 
 		private final Socket socket;
 

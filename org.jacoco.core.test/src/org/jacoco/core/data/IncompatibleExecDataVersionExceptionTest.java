@@ -25,7 +25,8 @@ public class IncompatibleExecDataVersionExceptionTest {
 
 	@Before
 	public void setup() {
-		exception = new IncompatibleExecDataVersionException(0x1234);
+		exception = new IncompatibleExecDataVersionException(
+				ExecutionDataWriter.FORMAT_VERSION, 0x1234);
 	}
 
 	@Test

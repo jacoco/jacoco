@@ -16,15 +16,32 @@ import java.io.IOException;
 import java.io.OutputStream;
 
 import org.jacoco.core.internal.data.CompactDataOutput;
+import org.jacoco.core.internal.instr.IProbeArray;
+import org.jacoco.core.internal.instr.ProbeArrayService;
 
 /**
  * Serialization of execution data into binary streams.
  */
-public class ExecutionDataWriter implements ISessionInfoVisitor,
-		IExecutionDataVisitor {
+public class ExecutionDataWriter
+		implements IHeaderVisitor, ISessionInfoVisitor, IExecutionDataVisitor {
 
-	/** File format version, will be incremented for each incompatible change. */
+	/** The format version before it is determined. */
+	public static final char FORMAT_VERSION_UNKNOWN = 0xFFFF;
+
+	/**
+	 * File format version, will be incremented for each incompatible change.
+	 */
 	public static final char FORMAT_VERSION = 0x1007;
+
+	/**
+	 * File format version, will be incremented for each incompatible change.
+	 */
+	public static final char FORMAT_INT_VERSION = 0x1008;
+
+	/**
+	 * File format version, will be incremented for each incompatible change.
+	 */
+	public static final char FORMAT_DOUBLEINT_VERSION = 0x1009;
 
 	/** Magic number in header for file format identification. */
 	public static final char MAGIC_NUMBER = 0xC0C0;
@@ -41,6 +58,9 @@ public class ExecutionDataWriter implements ISessionInfoVisitor,
 	/** Underlying data output */
 	protected final CompactDataOutput out;
 
+	private char formatVersion;
+	private boolean headerWritten;
+
 	/**
 	 * Creates a new writer based on the given output stream. Depending on the
 	 * nature of the underlying stream output should be buffered as most data is
@@ -53,7 +73,8 @@ public class ExecutionDataWriter implements ISessionInfoVisitor,
 	 */
 	public ExecutionDataWriter(final OutputStream output) throws IOException {
 		this.out = new CompactDataOutput(output);
-		writeHeader();
+		formatVersion = ProbeArrayService.getFormatVersion();
+		headerWritten = false;
 	}
 
 	/**
@@ -62,10 +83,14 @@ public class ExecutionDataWriter implements ISessionInfoVisitor,
 	 * @throws IOException
 	 *             if the header can't be written
 	 */
-	private void writeHeader() throws IOException {
+	protected void writeHeaderIfNeeded() throws IOException {
+		if (headerWritten) {
+			return;
+		}
 		out.writeByte(BLOCK_HEADER);
 		out.writeChar(MAGIC_NUMBER);
-		out.writeChar(FORMAT_VERSION);
+		out.writeChar(formatVersion);
+		headerWritten = true;
 	}
 
 	/**
@@ -78,8 +103,22 @@ public class ExecutionDataWriter implements ISessionInfoVisitor,
 		out.flush();
 	}
 
+	public void visitHeaderInfo(final HeaderInfo info) {
+		if (this.formatVersion == info.getFormatVersion()) {
+			return;
+		}
+		if (headerWritten) {
+			throw new IllegalStateException(
+					"Can't change formatVersion once headers were written. Attempting to change from 0x"
+							+ Integer.toHexString(this.formatVersion) + " to 0x"
+							+ Integer.toHexString(info.getFormatVersion()));
+		}
+		this.formatVersion = info.getFormatVersion();
+	}
+
 	public void visitSessionInfo(final SessionInfo info) {
 		try {
+			writeHeaderIfNeeded();
 			out.writeByte(BLOCK_SESSIONINFO);
 			out.writeUTF(info.getId());
 			out.writeLong(info.getStartTimeStamp());
@@ -91,10 +130,12 @@ public class ExecutionDataWriter implements ISessionInfoVisitor,
 
 	public void visitClassExecution(final ExecutionData data) {
 		try {
+			final IProbeArray<?> probes = (IProbeArray<?>) data.getProbes();
+			writeHeaderIfNeeded();
 			out.writeByte(BLOCK_EXECUTIONDATA);
 			out.writeLong(data.getId());
 			out.writeUTF(data.getName());
-			out.writeBooleanArray(data.getProbes());
+			probes.write(formatVersion, out);
 		} catch (final IOException e) {
 			throw new RuntimeException(e);
 		}
@@ -105,12 +146,17 @@ public class ExecutionDataWriter implements ISessionInfoVisitor,
 	 * file. In any case every execution data file starts with the three bytes
 	 * <code>0x01 0xC0 0xC0</code>.
 	 * 
+	 * @param info
+	 *            the header info to use in creating the file header
+	 * 
 	 * @return first bytes of a execution data file
 	 */
-	public static final byte[] getFileHeader() {
+	public static final byte[] getFileHeader(final HeaderInfo info) {
 		final ByteArrayOutputStream buffer = new ByteArrayOutputStream();
 		try {
-			new ExecutionDataWriter(buffer);
+			final ExecutionDataWriter writer = new ExecutionDataWriter(buffer);
+			writer.visitHeaderInfo(info);
+			writer.writeHeaderIfNeeded();
 		} catch (final IOException e) {
 			// Must not happen with ByteArrayOutputStream
 			throw new AssertionError(e);

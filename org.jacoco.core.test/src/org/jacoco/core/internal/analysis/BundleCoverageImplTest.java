@@ -51,31 +51,31 @@ public class BundleCoverageImplTest {
 		final IPackageCoverage p1 = new PackageCoverageImpl("p1", classes,
 				sourcefiles) {
 			{
-				classCounter = CounterImpl.getInstance(1, 0);
-				methodCounter = CounterImpl.getInstance(2, 0);
-				branchCounter = CounterImpl.getInstance(3, 0);
-				instructionCounter = CounterImpl.getInstance(4, 0);
-				lineCounter = CounterImpl.getInstance(5, 0);
+				classCounter = CounterImpl.getInstance(1, 0, 0);
+				methodCounter = CounterImpl.getInstance(2, 0, 0);
+				branchCounter = CounterImpl.getInstance(3, 0, 0);
+				instructionCounter = CounterImpl.getInstance(4, 0, 0);
+				lineCounter = CounterImpl.getInstance(5, 0, 0);
 			}
 		};
 		final IPackageCoverage p2 = new PackageCoverageImpl("p1", classes,
 				sourcefiles) {
 			{
-				classCounter = CounterImpl.getInstance(1, 0);
-				methodCounter = CounterImpl.getInstance(2, 0);
-				branchCounter = CounterImpl.getInstance(3, 0);
-				instructionCounter = CounterImpl.getInstance(4, 0);
-				lineCounter = CounterImpl.getInstance(5, 0);
+				classCounter = CounterImpl.getInstance(1, 0, 0);
+				methodCounter = CounterImpl.getInstance(2, 0, 0);
+				branchCounter = CounterImpl.getInstance(3, 0, 0);
+				instructionCounter = CounterImpl.getInstance(4, 0, 0);
+				lineCounter = CounterImpl.getInstance(5, 0, 0);
 			}
 		};
 		BundleCoverageImpl bundle = new BundleCoverageImpl("testbundle",
 				Arrays.asList(p1, p2));
-		assertEquals(CounterImpl.getInstance(2, 0), bundle.getClassCounter());
-		assertEquals(CounterImpl.getInstance(4, 0), bundle.getMethodCounter());
-		assertEquals(CounterImpl.getInstance(6, 0), bundle.getBranchCounter());
-		assertEquals(CounterImpl.getInstance(8, 0),
+		assertEquals(CounterImpl.getInstance(2, 0, 0), bundle.getClassCounter());
+		assertEquals(CounterImpl.getInstance(4, 0, 0), bundle.getMethodCounter());
+		assertEquals(CounterImpl.getInstance(6, 0, 0), bundle.getBranchCounter());
+		assertEquals(CounterImpl.getInstance(8, 0, 0), 
 				bundle.getInstructionCounter());
-		assertEquals(CounterImpl.getInstance(10, 0), bundle.getLineCounter());
+		assertEquals(CounterImpl.getInstance(10, 0, 0), bundle.getLineCounter());
 	}
 
 	@Test

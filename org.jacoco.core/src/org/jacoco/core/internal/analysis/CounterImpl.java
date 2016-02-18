@@ -28,7 +28,7 @@ public abstract class CounterImpl implements ICounter {
 		for (int i = 0; i <= SINGLETON_LIMIT; i++) {
 			SINGLETONS[i] = new CounterImpl[SINGLETON_LIMIT + 1];
 			for (int j = 0; j <= SINGLETON_LIMIT; j++) {
-				SINGLETONS[i][j] = new Fix(i, j);
+				SINGLETONS[i][j] = new Fix(i, j, 0);
 			}
 		}
 	}
@@ -46,12 +46,14 @@ public abstract class CounterImpl implements ICounter {
 	 * Mutable version of the counter.
 	 */
 	private static class Var extends CounterImpl {
-		public Var(final int missed, final int covered) {
-			super(missed, covered);
+		public Var(final int missed, final int covered, final int executions) {
+			super(missed, covered, executions);
 		}
 
 		@Override
-		public CounterImpl increment(final int missed, final int covered) {
+		public CounterImpl increment(final int missed, final int covered,
+				final int executions) {
+			this.executions += executions;
 			this.missed += missed;
 			this.covered += covered;
 			return this;
@@ -62,13 +64,15 @@ public abstract class CounterImpl implements ICounter {
 	 * Immutable version of the counter.
 	 */
 	private static class Fix extends CounterImpl {
-		public Fix(final int missed, final int covered) {
-			super(missed, covered);
+		public Fix(final int missed, final int covered, final int executions) {
+			super(missed, covered, executions);
 		}
 
 		@Override
-		public CounterImpl increment(final int missed, final int covered) {
-			return getInstance(this.missed + missed, this.covered + covered);
+		public CounterImpl increment(final int missed, final int covered,
+				final int executions) {
+			return getInstance(this.missed + missed, this.covered + covered,
+					this.executions + executions);
 		}
 	}
 
@@ -79,13 +83,17 @@ public abstract class CounterImpl implements ICounter {
 	 *            number of missed items
 	 * @param covered
 	 *            number of covered items
+	 * @param executions
+	 *            number of executions on items
 	 * @return counter instance
 	 */
-	public static CounterImpl getInstance(final int missed, final int covered) {
-		if (missed <= SINGLETON_LIMIT && covered <= SINGLETON_LIMIT) {
+	public static CounterImpl getInstance(final int missed, final int covered,
+			final int executions) {
+		if (missed <= SINGLETON_LIMIT && covered <= SINGLETON_LIMIT
+				&& executions == 0) {
 			return SINGLETONS[missed][covered];
 		} else {
-			return new Var(missed, covered);
+			return new Var(missed, covered, executions);
 		}
 	}
 
@@ -97,13 +105,17 @@ public abstract class CounterImpl implements ICounter {
 	 * @return counter instance
 	 */
 	public static CounterImpl getInstance(final ICounter counter) {
-		return getInstance(counter.getMissedCount(), counter.getCoveredCount());
+		return getInstance(counter.getMissedCount(), counter.getCoveredCount(),
+				counter.getExecutionCount());
 	}
+
+	/** number of item executions */
+	protected int executions;
 
 	/** number of missed items */
 	protected int missed;
 
-	/** number of covered items */
+	/** number of covered items (items executed at least once) */
 	protected int covered;
 
 	/**
@@ -113,8 +125,12 @@ public abstract class CounterImpl implements ICounter {
 	 *            number of missed items
 	 * @param covered
 	 *            number of covered items
+	 * @param executions
+	 *            number of executions
 	 */
-	protected CounterImpl(final int missed, final int covered) {
+	protected CounterImpl(final int missed, final int covered,
+			final int executions) {
+		this.executions = executions;
 		this.missed = missed;
 		this.covered = covered;
 	}
@@ -129,7 +145,8 @@ public abstract class CounterImpl implements ICounter {
 	 * @return counter instance with incremented values
 	 */
 	public CounterImpl increment(final ICounter counter) {
-		return increment(counter.getMissedCount(), counter.getCoveredCount());
+		return increment(counter.getMissedCount(), counter.getCoveredCount(),
+				counter.getExecutionCount());
 	}
 
 	/**
@@ -141,14 +158,19 @@ public abstract class CounterImpl implements ICounter {
 	 *            number of missed items
 	 * @param covered
 	 *            number of covered items
+	 * @param executions
+	 *            number of executions on items
 	 * @return counter instance with incremented values
 	 */
-	public abstract CounterImpl increment(int missed, int covered);
+	public abstract CounterImpl increment(int missed, int covered,
+			int executions);
 
 	// === ICounter implementation ===
 
 	public double getValue(final CounterValue value) {
 		switch (value) {
+		case TOTALEXECCOUNT:
+			return getExecutionCount();
 		case TOTALCOUNT:
 			return getTotalCount();
 		case MISSEDCOUNT:
@@ -166,6 +188,10 @@ public abstract class CounterImpl implements ICounter {
 
 	public int getTotalCount() {
 		return missed + covered;
+	}
+
+	public int getExecutionCount() {
+		return executions;
 	}
 
 	public int getCoveredCount() {
@@ -196,7 +222,8 @@ public abstract class CounterImpl implements ICounter {
 	public boolean equals(final Object obj) {
 		if (obj instanceof ICounter) {
 			final ICounter that = (ICounter) obj;
-			return this.missed == that.getMissedCount()
+			return this.executions == that.getExecutionCount()
+					&& this.missed == that.getMissedCount()
 					&& this.covered == that.getCoveredCount();
 		} else {
 			return false;
@@ -205,7 +232,12 @@ public abstract class CounterImpl implements ICounter {
 
 	@Override
 	public int hashCode() {
-		return missed ^ covered * 17;
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + covered;
+		result = prime * result + executions;
+		result = prime * result + missed;
+		return result;
 	}
 
 	@Override
@@ -213,6 +245,7 @@ public abstract class CounterImpl implements ICounter {
 		final StringBuilder b = new StringBuilder("Counter["); //$NON-NLS-1$
 		b.append(getMissedCount());
 		b.append('/').append(getCoveredCount());
+		b.append('/').append(getExecutionCount());
 		b.append(']');
 		return b.toString();
 	}

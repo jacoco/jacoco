@@ -71,7 +71,13 @@ final class SortIndex<T> {
 			final Entry entry = new Entry(idx++, i);
 			this.list.add(entry);
 		}
-		Collections.sort(list);
+		try {
+			Collections.sort(list);
+		} catch (final IllegalArgumentException e) {
+			throw new IllegalArgumentException(
+					"Unable to sort using comparator: " + comparator
+							+ " the following list: " + list, e);
+		}
 		if (positions == null || positions.length < items.size()) {
 			positions = new int[items.size()];
 		}

@@ -17,6 +17,7 @@ import java.io.BufferedReader;
 import java.io.StringReader;
 import java.io.StringWriter;
 
+import org.jacoco.core.data.ProbeMode;
 import org.jacoco.report.IReportGroupVisitor;
 import org.jacoco.report.JavaNames;
 import org.jacoco.report.ReportStructureTestDriver;
@@ -38,7 +39,8 @@ public class CSVGroupHandlerTest {
 	public void setup() throws Exception {
 		result = new StringWriter();
 		final DelimitedWriter dw = new DelimitedWriter(result);
-		final ClassRowWriter rw = new ClassRowWriter(dw, new JavaNames());
+		final ClassRowWriter rw = new ClassRowWriter(dw, new JavaNames(),
+				ProbeMode.exists);
 		handler = new CSVGroupHandler(rw);
 		driver = new ReportStructureTestDriver();
 	}

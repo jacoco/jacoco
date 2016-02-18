@@ -20,7 +20,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 
 import org.jacoco.core.data.ExecutionDataReader;
-import org.jacoco.core.data.ExecutionDataReaderWriterTest;
+import org.jacoco.core.data.ExecutionDataReaderWriterTest.ExecutionDataReaderWriterTestBase;
 import org.jacoco.core.data.ExecutionDataWriter;
 import org.junit.Before;
 import org.junit.Test;
@@ -31,14 +31,18 @@ import org.junit.Test;
  * symmetry.
  */
 public class RemoteControlReaderWriterTest extends
-		ExecutionDataReaderWriterTest {
+		ExecutionDataReaderWriterTestBase {
 
 	private RemoteControlWriter writer;
 
+	public RemoteControlReaderWriterTest() {
+		formatVersion = ExecutionDataWriter.FORMAT_VERSION;
+	}
+
 	@Before
 	@Override
-	public void setup() throws IOException {
-		super.setup();
+	public void setupMethod() throws IOException {
+		super.setupMethod();
 		writer = createWriter(buffer);
 	}
 

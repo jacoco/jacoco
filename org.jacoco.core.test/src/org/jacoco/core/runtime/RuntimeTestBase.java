@@ -16,7 +16,9 @@ import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 import org.jacoco.core.JaCoCo;
+import org.jacoco.core.internal.instr.IProbeArray;
 import org.jacoco.core.internal.instr.InstrSupport;
+import org.jacoco.core.internal.instr.ProbeArrayService;
 import org.jacoco.core.test.TargetLoader;
 import org.junit.After;
 import org.junit.Before;
@@ -31,13 +33,13 @@ import org.objectweb.asm.commons.Method;
 /**
  * Abstract test base for {@link IRuntime} implementations.
  */
-public abstract class RuntimeTestBase {
+public abstract class RuntimeTestBase<T> {
 
 	private RuntimeData data;
 
 	private IRuntime runtime;
 
-	private TestStorage storage;
+	private TestStorage<T> storage;
 
 	abstract IRuntime createRuntime();
 
@@ -46,7 +48,7 @@ public abstract class RuntimeTestBase {
 		data = new RuntimeData();
 		runtime = createRuntime();
 		runtime.startup(data);
-		storage = new TestStorage();
+		storage = new TestStorage<T>();
 	}
 
 	@After
@@ -57,7 +59,7 @@ public abstract class RuntimeTestBase {
 	@Test
 	public void testDataAccessor() throws InstantiationException,
 			IllegalAccessException {
-		ITarget t = generateAndInstantiateClass(1234);
+		ITarget<T> t = generateAndInstantiateClass(1234);
 		data.collect(storage, storage, false);
 		storage.assertData(1234, t.get());
 	}
@@ -80,9 +82,10 @@ public abstract class RuntimeTestBase {
 		generateAndInstantiateClass(1001).a();
 		data.collect(storage, storage, false);
 		storage.assertSize(1);
-		final boolean[] data = storage.getData(1001).getProbes();
-		assertTrue(data[0]);
-		assertFalse(data[1]);
+		final IProbeArray<?> data = (IProbeArray<?>) storage.getData(1001)
+				.getProbes();
+		assertTrue(data.isProbeCovered(0));
+		assertFalse(data.isProbeCovered(1));
 	}
 
 	@Test
@@ -92,9 +95,10 @@ public abstract class RuntimeTestBase {
 		generateAndInstantiateClass(1001).b();
 		data.collect(storage, storage, false);
 		storage.assertSize(1);
-		final boolean[] data = storage.getData(1001).getProbes();
-		assertTrue(data[0]);
-		assertTrue(data[1]);
+		final IProbeArray<?> data = (IProbeArray<?>) storage.getData(1001)
+				.getProbes();
+		assertTrue(data.isProbeCovered(0));
+		assertTrue(data.isProbeCovered(1));
 	}
 
 	/**
@@ -102,12 +106,14 @@ public abstract class RuntimeTestBase {
 	 * it. The constructor of the generated class will request the probe array
 	 * from the runtime under test.
 	 */
-	private ITarget generateAndInstantiateClass(int classid)
+	private ITarget<T> generateAndInstantiateClass(int classid)
 			throws InstantiationException, IllegalAccessException {
 
 		final String className = "org/jacoco/test/targets/RuntimeTestTarget_"
 				+ classid;
 		Type classType = Type.getObjectType(className);
+		String dataFieldClass = ProbeArrayService.getDatafieldClass();
+		String dataFieldDesc = ProbeArrayService.getDatafieldDesc();
 
 		final ClassWriter writer = new ClassWriter(0);
 		writer.visit(Opcodes.V1_5, Opcodes.ACC_PUBLIC, className, null,
@@ -115,8 +121,7 @@ public abstract class RuntimeTestBase {
 				new String[] { Type.getInternalName(ITarget.class) });
 
 		writer.visitField(InstrSupport.DATAFIELD_ACC,
-				InstrSupport.DATAFIELD_NAME, InstrSupport.DATAFIELD_DESC, null,
-				null);
+				InstrSupport.DATAFIELD_NAME, dataFieldDesc, null, null);
 
 		// Constructor
 		GeneratorAdapter gen = new GeneratorAdapter(writer.visitMethod(
@@ -130,18 +135,32 @@ public abstract class RuntimeTestBase {
 		final int size = runtime.generateDataAccessor(classid, className, 2,
 				gen);
 		gen.putStatic(classType, InstrSupport.DATAFIELD_NAME,
-				Type.getObjectType(InstrSupport.DATAFIELD_DESC));
+				Type.getObjectType(dataFieldClass));
 		gen.returnValue();
 		gen.visitMaxs(size + 1, 0);
 		gen.visitEnd();
 
-		// get()
+		// T getInternal()
 		gen = new GeneratorAdapter(writer.visitMethod(Opcodes.ACC_PUBLIC,
-				"get", "()[Z", null, new String[0]), Opcodes.ACC_PUBLIC, "get",
-				"()[Z");
+				"getInternal", "()" + ProbeArrayService.getDatafieldDesc(),
+				null, new String[0]), Opcodes.ACC_PUBLIC, "getInternal", "()"
+				+ dataFieldDesc);
 		gen.visitCode();
 		gen.getStatic(classType, InstrSupport.DATAFIELD_NAME,
-				Type.getObjectType(InstrSupport.DATAFIELD_DESC));
+				Type.getObjectType(dataFieldClass));
+		gen.returnValue();
+		gen.visitMaxs(1, 0);
+		gen.visitEnd();
+
+		// Object get()
+		gen = new GeneratorAdapter(writer.visitMethod(Opcodes.ACC_PUBLIC,
+				"get", "()Ljava/lang/Object;", null, new String[0]),
+				Opcodes.ACC_PUBLIC, "get", "()Ljava/lang/Object;");
+		gen.visitCode();
+		gen.visitVarInsn(Opcodes.ALOAD, 0);
+		gen.visitMethodInsn(Opcodes.INVOKEVIRTUAL, className, "getInternal",
+				"()" + dataFieldDesc, false);
+
 		gen.returnValue();
 		gen.visitMaxs(1, 0);
 		gen.visitEnd();
@@ -151,12 +170,10 @@ public abstract class RuntimeTestBase {
 				"()V", null, new String[0]), Opcodes.ACC_PUBLIC, "a", "()V");
 		gen.visitCode();
 		gen.getStatic(classType, InstrSupport.DATAFIELD_NAME,
-				Type.getObjectType(InstrSupport.DATAFIELD_DESC));
-		gen.push(0);
-		gen.push(1);
-		gen.arrayStore(Type.BOOLEAN_TYPE);
+				Type.getObjectType(ProbeArrayService.getDatafieldClass()));
+		ProbeArrayService.insertProbe(gen, -1, 0);
 		gen.returnValue();
-		gen.visitMaxs(3, 0);
+		gen.visitMaxs(4, 0);
 		gen.visitEnd();
 
 		// b()
@@ -164,33 +181,37 @@ public abstract class RuntimeTestBase {
 				"()V", null, new String[0]), Opcodes.ACC_PUBLIC, "b", "()V");
 		gen.visitCode();
 		gen.getStatic(classType, InstrSupport.DATAFIELD_NAME,
-				Type.getObjectType(InstrSupport.DATAFIELD_DESC));
-		gen.push(1);
-		gen.push(1);
-		gen.arrayStore(Type.BOOLEAN_TYPE);
+				Type.getObjectType(ProbeArrayService.getDatafieldClass()));
+		ProbeArrayService.insertProbe(gen, -1, 1);
 		gen.returnValue();
-		gen.visitMaxs(3, 0);
+		gen.visitMaxs(4, 0);
 		gen.visitEnd();
 
 		writer.visitEnd();
 
 		final TargetLoader loader = new TargetLoader();
-		return (ITarget) loader.add(className.replace('/', '.'),
-				writer.toByteArray()).newInstance();
+		@SuppressWarnings("unchecked")
+		ITarget<T> target = (ITarget<T>) loader.add(
+				className.replace('/', '.'), writer.toByteArray())
+				.newInstance();
+		return target;
 	}
 
 	/**
 	 * With this interface we modify and read coverage data of the generated
 	 * class.
+	 * 
+	 * @param <T>
+	 *            the same type as the implemented probe array
 	 */
-	public interface ITarget {
+	public interface ITarget<T> {
 
 		/**
 		 * Returns a reference to the probe array.
 		 * 
 		 * @return the probe array
 		 */
-		boolean[] get();
+		T get();
 
 		/**
 		 * The implementation will mark probe 0 as executed

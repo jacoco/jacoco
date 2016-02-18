@@ -58,32 +58,13 @@ class ProbeInserter extends MethodVisitor implements IProbeInserter {
 	}
 
 	public void insertProbe(final int id) {
-
-		// For a probe we set the corresponding position in the boolean[] array
-		// to true.
-
-		mv.visitVarInsn(Opcodes.ALOAD, variable);
-
-		// Stack[0]: [Z
-
-		InstrSupport.push(mv, id);
-
-		// Stack[1]: I
-		// Stack[0]: [Z
-
-		mv.visitInsn(Opcodes.ICONST_1);
-
-		// Stack[2]: I
-		// Stack[1]: I
-		// Stack[0]: [Z
-
-		mv.visitInsn(Opcodes.BASTORE);
+		ProbeArrayService.insertProbe(mv, variable, id);
 	}
 
 	@Override
 	public void visitCode() {
-		accessorStackSize = arrayStrategy.storeInstance(mv, variable);
 		mv.visitCode();
+		accessorStackSize = arrayStrategy.storeInstance(mv, variable);
 	}
 
 	@Override
@@ -109,7 +90,9 @@ class ProbeInserter extends MethodVisitor implements IProbeInserter {
 		// original stack size depending on the probe locations. The accessor
 		// stack size is an absolute maximum, as the accessor code is inserted
 		// at the very beginning of each method when the stack size is empty.
-		final int increasedStack = Math.max(maxStack + 3, accessorStackSize);
+		final int increasedStack = Math.max(
+				maxStack + ProbeArrayService.incrementProbeStackSize(),
+				accessorStackSize);
 		mv.visitMaxs(increasedStack, maxLocals + 1);
 	}
 
@@ -136,7 +119,7 @@ class ProbeInserter extends MethodVisitor implements IProbeInserter {
 		int pos = 0; // Current variable position
 		while (idx < nLocal || pos <= variable) {
 			if (pos == variable) {
-				newLocal[newIdx++] = InstrSupport.DATAFIELD_DESC;
+				newLocal[newIdx++] = ProbeArrayService.getDatafieldClass();
 				pos++;
 			} else {
 				if (idx < nLocal) {

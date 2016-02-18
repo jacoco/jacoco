@@ -14,6 +14,7 @@ package org.jacoco.core.internal.data;
 import static org.junit.Assert.assertEquals;
 
 import java.io.UnsupportedEncodingException;
+import java.lang.reflect.Constructor;
 
 import org.junit.Test;
 
@@ -21,6 +22,13 @@ import org.junit.Test;
  * Unit tests for {@link CRC64}.
  */
 public class CRC64Test {
+
+	@Test
+	public void testConstructor() throws Exception {
+		Constructor<CRC64> c = CRC64.class.getDeclaredConstructor();
+		c.setAccessible(true);
+		c.newInstance();
+	}
 
 	@Test
 	public void test0() {

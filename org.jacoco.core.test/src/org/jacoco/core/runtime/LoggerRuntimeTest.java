@@ -11,14 +11,76 @@
  *******************************************************************************/
 package org.jacoco.core.runtime;
 
+import java.util.concurrent.atomic.AtomicIntegerArray;
+
+import org.jacoco.core.data.ProbeMode;
+import org.jacoco.core.internal.instr.ProbeArrayService;
+import org.jacoco.core.internal.instr.ProbeDoubleIntArray;
+import org.junit.AfterClass;
+import org.junit.BeforeClass;
+
 /**
  * Unit tests for {@link LoggerRuntime}.
  */
-public class LoggerRuntimeTest extends RuntimeTestBase {
+public class LoggerRuntimeTest {
+	public static class LoggerRuntimeExistsTest extends
+			RuntimeTestBase<boolean[]> {
 
-	@Override
-	IRuntime createRuntime() {
-		return new LoggerRuntime();
+		@BeforeClass
+		public static void setupProbeMode() {
+			ProbeArrayService.reset();
+			ProbeArrayService.configure(ProbeMode.exists);
+		}
+
+		@AfterClass
+		public static void cleanupProbeMode() {
+			ProbeArrayService.reset();
+		}
+
+		@Override
+		IRuntime createRuntime() {
+			return new LoggerRuntime();
+		}
+	}
+
+	public static class LoggerRuntimeCountTest extends
+			RuntimeTestBase<AtomicIntegerArray> {
+
+		@BeforeClass
+		public static void setupProbeMode() {
+			ProbeArrayService.reset();
+			ProbeArrayService.configure(ProbeMode.count);
+		}
+
+		@AfterClass
+		public static void cleanupProbeMode() {
+			ProbeArrayService.reset();
+		}
+
+		@Override
+		IRuntime createRuntime() {
+			return new LoggerRuntime();
+		}
+	}
+
+	public static class LoggerRuntimeParallelTest extends
+			RuntimeTestBase<ProbeDoubleIntArray> {
+
+		@BeforeClass
+		public static void setupProbeMode() {
+			ProbeArrayService.reset();
+			ProbeArrayService.configure(ProbeMode.parallelcount);
+		}
+
+		@AfterClass
+		public static void cleanupProbeMode() {
+			ProbeArrayService.reset();
+		}
+
+		@Override
+		IRuntime createRuntime() {
+			return new LoggerRuntime();
+		}
 	}
 
 }

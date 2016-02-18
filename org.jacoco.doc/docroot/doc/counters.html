@@ -40,7 +40,15 @@
   <i>Instruction coverage</i> provides information about the amount of code that
   has been executed or missed. This metric is completely independent from source
   formatting and always available, even in absence of debug information in the
-  class files.
+  class files. In 'exists' probe mode (the default), JaCoCo tracks with a boolean 
+  value if an instruction has been executed or missed. In 'count' probe mode, 
+  JaCoCo tracks the number of times an instruction has been executed or zero for missed.
+  In 'parallelcount' mode JaCoCo add a second counter that tracks the number of times 
+  an instruction has been executed with monitors off. These additional mode provide 
+  for a sort of static analysis of performance by enabling the calculation of 
+  parallel percent (scalability index) and growth rate at small executions using 
+  an Empirical Big-O analysis (a load index). These additional counters roll-up 
+  just like the coverage-only instruction indicator would.
 </p>
 
 <h2>Branches (C1 Coverage)</h2>

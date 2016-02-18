@@ -33,6 +33,10 @@
       <groupId>${project.groupId}</groupId>
       <artifactId>org.jacoco.report</artifactId>
     </dependency>
+    <dependency>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>org.jacoco.ebigo</artifactId>
+    </dependency>
   </dependencies>
 
   <build>

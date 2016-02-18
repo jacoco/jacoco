@@ -14,6 +14,8 @@ package org.jacoco.core.internal.instr;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 
+import java.lang.reflect.Constructor;
+
 import org.jacoco.core.runtime.IExecutionDataAccessorGenerator;
 import org.jacoco.core.runtime.OfflineInstrumentationAccessGenerator;
 import org.junit.Before;
@@ -39,6 +41,15 @@ public class ProbeArrayStrategyFactoryTest {
 	public void setup() {
 		generator = new OfflineInstrumentationAccessGenerator();
 		cv = new ClassVisitorMock();
+	}
+
+	@Test
+	public void testConstructor() throws Exception {
+		Constructor<ProbeArrayStrategyFactory> constructor = ProbeArrayStrategyFactory.class
+				.getDeclaredConstructor();
+		constructor.setAccessible(true);
+		constructor.newInstance();
+		// all's well if no exceptions thrown so far
 	}
 
 	@Test

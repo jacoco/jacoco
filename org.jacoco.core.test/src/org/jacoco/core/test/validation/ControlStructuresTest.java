@@ -11,7 +11,11 @@
  *******************************************************************************/
 package org.jacoco.core.test.validation;
 
+import static org.junit.Assert.assertSame;
+
 import org.jacoco.core.analysis.ICounter;
+import org.jacoco.core.data.ProbeMode;
+import org.jacoco.core.internal.instr.ProbeArrayService;
 import org.jacoco.core.test.validation.targets.Target01;
 import org.junit.Test;
 
@@ -32,6 +36,7 @@ public class ControlStructuresTest extends ValidationTestBase {
 
 	@Test
 	public void testCoverageResult() {
+		assertSame(ProbeMode.exists, ProbeArrayService.getProbeMode());
 
 		// 1. Direct unconditional execution
 		assertLine("unconditional", ICounter.FULLY_COVERED);

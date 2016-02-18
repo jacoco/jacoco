@@ -30,6 +30,15 @@
   <li>Command line agent options now supports comma in file names. Contributed
       by Jochen Berger.
       (GitHub <a href="https://github.com/jacoco/jacoco/issues/358">#358</a>).</li>
+  <li>Agent can probe coverage information in different modes. Contributed
+      by Omer Azmon.
+      (GitHub <a href="https://github.com/jacoco/jacoco/issues/TBD">#TBD</a>).</li>
+  <li>Reports can consume 'count', or 'parallelcount' probe mode data to produce 
+      Empirical Big-O analysis information. Contributed by Omer Azmon.
+      (GitHub <a href="https://github.com/jacoco/jacoco/issues/TBD">#TBD</a>).</li>
+  <li>Reports can consume 'parallelcount' probe mode data to produce parallel percent 
+      information. Contributed by Omer Azmon.
+      (GitHub <a href="https://github.com/jacoco/jacoco/issues/TBD">#TBD</a>).</li>
 </ul>
 
 <h3>Fixed Bugs</h3>
@@ -38,6 +47,9 @@
       (GitHub <a href="https://github.com/jacoco/jacoco/issues/333">#333</a>).</li>
   <li>Avoid <code>ConcurrentModificationException</code> during shutdown
       (GitHub <a href="https://github.com/jacoco/jacoco/issues/364">#364</a>).</li>
+  <li>Adjust comparators so comply to new Java 7 rules, while maintaining backward 
+      compatability. Contributed by Omer Azmon.
+      (GitHub <a href="https://github.com/jacoco/jacoco/issues/TBD">#TBD</a>).</li>
 </ul>
 
 <h3>API Changes</h3>
@@ -45,6 +57,9 @@
   <li>In case of incompatible execution data formats read from another JaCoCo
   version <code>ExecutionDataReader.read()</code> now throws a 
   <code>IncompatibleExecDataVersionException</code>.</li>
+  <li>Each of the different probe mode produces an different execution data format. 
+  The 'exists' mode is unchanged from the format prior to 0.7.6. This version accepts 
+  data in all three formats, but does not allow merging of data in different formats.</li>
 </ul>
 
 <h3>Non-functional Changes</h3>

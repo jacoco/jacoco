@@ -54,6 +54,10 @@
     </dependency>
     <dependency>
       <groupId>${project.groupId}</groupId>
+      <artifactId>org.jacoco.ebigo</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>${project.groupId}</groupId>
       <artifactId>org.jacoco.ant</artifactId>
     </dependency>
     <dependency>
@@ -93,6 +97,7 @@
                     <fileset dir="../org.jacoco.agent.rt.test/target" includes="jacoco.exec"/>
                     <fileset dir="../org.jacoco.ant.test/target" includes="jacoco.exec"/>
                     <fileset dir="../org.jacoco.core.test/target" includes="jacoco.exec"/>
+                    <fileset dir="../org.jacoco.ebigo.test/target" includes="jacoco.exec"/>
                     <fileset dir="../org.jacoco.examples.test/target" includes="jacoco.exec"/>
                     <fileset dir="../org.jacoco.report.test/target" includes="jacoco.exec"/>
                     <fileset dir="../jacoco-maven-plugin.test/target" includes="jacoco.exec"/>
@@ -129,6 +134,14 @@
                       </classfiles>
                       <sourcefiles>
                         <fileset dir="../org.jacoco.core/src"/>
+                      </sourcefiles>
+                    </group>
+                    <group name="org.jacoco.ebigo">
+                      <classfiles>
+                        <fileset dir="../org.jacoco.ebigo/target/classes"/>
+                      </classfiles>
+                      <sourcefiles>
+                        <fileset dir="../org.jacoco.ebigo/src"/>
                       </sourcefiles>
                     </group>
                     <group name="org.jacoco.examples">
@@ -170,6 +183,7 @@
                   <fileset dir="../org.jacoco.agent.rt.test/target" includes="surefire-reports/**/*.xml"/>
                   <fileset dir="../org.jacoco.ant.test/target" includes="surefire-reports/**/*.xml"/>
                   <fileset dir="../org.jacoco.core.test/target" includes="surefire-reports/**/*.xml"/>
+                  <fileset dir="../org.jacoco.ebigo.test/target" includes="surefire-reports/**/*.xml"/>
                   <fileset dir="../org.jacoco.report.test/target" includes="surefire-reports/**/*.xml"/>
                   <fileset dir="../org.jacoco.examples.test/target" includes="surefire-reports/**/*.xml"/>
                   <report format="noframes" styledir="xsl" todir="${project.build.directory}/junit">
@@ -234,6 +248,10 @@
                 <group>
                   <title>Bundle org.jacoco.agent</title>
                   <packages>org.jacoco.agent*</packages>
+                </group>
+                <group>
+                  <title>Bundle org.jacoco.ebigo</title>
+                  <packages>org.jacoco.ebigo*</packages>
                 </group>
                 <group>
                   <title>JaCoCo Runtime</title>

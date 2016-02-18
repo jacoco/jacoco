@@ -11,12 +11,11 @@
  *******************************************************************************/
 package org.jacoco.core.data;
 
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * In-memory data store for execution data. The data can be added through its
@@ -26,11 +25,14 @@ import java.util.Set;
  * coverage date from multiple runs. A instance of this class is not thread
  * safe.
  */
-public final class ExecutionDataStore implements IExecutionDataVisitor {
+public final class ExecutionDataStore
+		implements IExecutionDataVisitor, IHeaderVisitor {
 
-	private final Map<Long, ExecutionData> entries = new HashMap<Long, ExecutionData>();
+	private final Map<Long, ExecutionData> entries = new ConcurrentHashMap<Long, ExecutionData>();
 
 	private final Set<String> names = new HashSet<String>();
+
+	private char formatVersion = ExecutionDataWriter.FORMAT_VERSION;
 
 	/**
 	 * Adds the given {@link ExecutionData} object into the store. If there is
@@ -45,6 +47,7 @@ public final class ExecutionDataStore implements IExecutionDataVisitor {
 	 * @see ExecutionData#assertCompatibility(long, String, int)
 	 */
 	public void put(final ExecutionData data) throws IllegalStateException {
+		setFormatVersion("During put", data.getProbes().getFormatVersion());
 		final Long id = Long.valueOf(data.getId());
 		final ExecutionData entry = entries.get(id);
 		if (entry == null) {
@@ -53,6 +56,21 @@ public final class ExecutionDataStore implements IExecutionDataVisitor {
 		} else {
 			entry.merge(data);
 		}
+	}
+
+	private void setFormatVersion(final String action,
+			final char formatVersion) {
+		if (!entries.isEmpty()) {
+			if (this.formatVersion == formatVersion) {
+				return;
+			}
+			throw new IllegalStateException(
+					action + " attempting to set format 0x"
+							+ Integer.toHexString(formatVersion)
+							+ " into ExecutionDataStore with data in format 0x"
+							+ Integer.toHexString(this.formatVersion));
+		}
+		this.formatVersion = formatVersion;
 	}
 
 	/**
@@ -68,7 +86,8 @@ public final class ExecutionDataStore implements IExecutionDataVisitor {
 	 *             to a corresponding one, that is already contained
 	 * @see ExecutionData#assertCompatibility(long, String, int)
 	 */
-	public void subtract(final ExecutionData data) throws IllegalStateException {
+	public void subtract(final ExecutionData data)
+			throws IllegalStateException {
 		final Long id = Long.valueOf(data.getId());
 		final ExecutionData entry = entries.get(id);
 		if (entry != null) {
@@ -155,7 +174,7 @@ public final class ExecutionDataStore implements IExecutionDataVisitor {
 	 * @return current contents
 	 */
 	public Collection<ExecutionData> getContents() {
-		return new ArrayList<ExecutionData>(entries.values());
+		return entries.values();
 	}
 
 	/**
@@ -165,14 +184,31 @@ public final class ExecutionDataStore implements IExecutionDataVisitor {
 	 *            interface to write content to
 	 */
 	public void accept(final IExecutionDataVisitor visitor) {
-		for (final ExecutionData data : getContents()) {
+		for (final ExecutionData data : entries.values()) {
 			visitor.visitClassExecution(data);
 		}
+	}
+
+	/**
+	 * Get the current format version of the data in this store.
+	 * 
+	 * @return the current format version of the data in this store. May return
+	 *         <code>ExecutionDataWriter.FORMAT_VERSION_UNKNOWN</code>, if no
+	 *         data has been inserted yet.
+	 */
+	public char getFormatVersion() {
+		return formatVersion;
 	}
 
 	// === IExecutionDataVisitor ===
 
 	public void visitClassExecution(final ExecutionData data) {
 		put(data);
+	}
+
+	// === IExecutionDataVisitor ===
+
+	public void visitHeaderInfo(final HeaderInfo info) {
+		setFormatVersion("During visitHeaderInfo", info.getFormatVersion());
 	}
 }

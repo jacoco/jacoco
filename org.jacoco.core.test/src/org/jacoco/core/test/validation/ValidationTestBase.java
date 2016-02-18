@@ -115,7 +115,7 @@ public abstract class ValidationTestBase {
 		final String msg = String.format("Branches in line %s: %s",
 				Integer.valueOf(nr), source.getLine(nr));
 		assertEquals(msg + " branches",
-				CounterImpl.getInstance(missedBranches, coveredBranches),
+				CounterImpl.getInstance(missedBranches, coveredBranches, 0),
 				line.getBranchCounter());
 	}
 

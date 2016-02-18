@@ -48,11 +48,13 @@ public class RemoteControlWriter extends ExecutionDataWriter implements
 	 *             in case of problems with the remote connection
 	 */
 	public void sendCmdOk() throws IOException {
+		writeHeaderIfNeeded();
 		out.writeByte(RemoteControlWriter.BLOCK_CMDOK);
 	}
 
 	public void visitDumpCommand(final boolean dump, final boolean reset)
 			throws IOException {
+		writeHeaderIfNeeded();
 		out.writeByte(RemoteControlWriter.BLOCK_CMDDUMP);
 		out.writeBoolean(dump);
 		out.writeBoolean(reset);

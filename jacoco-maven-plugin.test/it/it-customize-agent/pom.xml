@@ -35,6 +35,7 @@
     <jacoco.port>9999</jacoco.port>
     <jacoco.classDumpDir>${project.build.directory}/classdumps</jacoco.classDumpDir>
     <jacoco.jmx>true</jacoco.jmx>
+    <jacoco.probe>parallelcount</jacoco.probe>
   </properties>
 
   <build>

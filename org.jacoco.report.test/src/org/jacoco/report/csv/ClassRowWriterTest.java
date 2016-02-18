@@ -18,6 +18,7 @@ import java.io.StringReader;
 import java.io.StringWriter;
 
 import org.jacoco.core.analysis.IClassCoverage;
+import org.jacoco.core.data.ProbeMode;
 import org.jacoco.core.internal.analysis.ClassCoverageImpl;
 import org.jacoco.core.internal.analysis.CounterImpl;
 import org.jacoco.report.ILanguageNames;
@@ -60,7 +61,8 @@ public class ClassRowWriterTest {
 			}
 		};
 		result = new StringWriter();
-		writer = new ClassRowWriter(new DelimitedWriter(result), names);
+		writer = new ClassRowWriter(new DelimitedWriter(result), names,
+				ProbeMode.exists);
 	}
 
 	@Test
@@ -76,12 +78,12 @@ public class ClassRowWriterTest {
 		IClassCoverage node = new ClassCoverageImpl("test/package/Foo", 123,
 				false) {
 			{
-				instructionCounter = CounterImpl.getInstance(1, 11);
-				branchCounter = CounterImpl.getInstance(2, 22);
-				lineCounter = CounterImpl.getInstance(3, 33);
-				complexityCounter = CounterImpl.getInstance(4, 44);
-				methodCounter = CounterImpl.getInstance(5, 55);
-				classCounter = CounterImpl.getInstance(6, 66);
+				instructionCounter = CounterImpl.getInstance(1, 11, 11);
+				branchCounter = CounterImpl.getInstance(2, 22, 22);
+				lineCounter = CounterImpl.getInstance(3, 33, 33);
+				complexityCounter = CounterImpl.getInstance(4, 44, 44);
+				methodCounter = CounterImpl.getInstance(5, 55, 55);
+				classCounter = CounterImpl.getInstance(6, 66, 66);
 			}
 		};
 		writer.writeRow("group", "test/package", node);

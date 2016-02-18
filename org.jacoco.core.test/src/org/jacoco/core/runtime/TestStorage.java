@@ -21,8 +21,9 @@ import org.jacoco.core.data.ExecutionData;
 import org.jacoco.core.data.IExecutionDataVisitor;
 import org.jacoco.core.data.ISessionInfoVisitor;
 import org.jacoco.core.data.SessionInfo;
+import org.jacoco.core.internal.instr.IProbeArray;
 
-class TestStorage implements IExecutionDataVisitor, ISessionInfoVisitor {
+class TestStorage<T> implements IExecutionDataVisitor, ISessionInfoVisitor {
 
 	private final Map<Long, ExecutionData> data = new HashMap<Long, ExecutionData>();
 
@@ -40,8 +41,10 @@ class TestStorage implements IExecutionDataVisitor, ISessionInfoVisitor {
 		return info;
 	}
 
-	public void assertData(long classId, boolean[] expected) {
-		assertSame(expected, getData(classId).getProbes());
+	public void assertData(long classId, T is) {
+		assertSame(is,
+				((IProbeArray<?>) getData(classId).getProbes())
+						.getProbesObject());
 	}
 
 	// === ICoverageDataVisitor ===

@@ -20,19 +20,25 @@ public class IncompatibleExecDataVersionException extends IOException {
 
 	private static final long serialVersionUID = 1L;
 
+	private final int expectedVersion;
 	private final int actualVersion;
 
 	/**
 	 * Creates a new exception to flag version mismatches in execution data.
 	 * 
+	 * @param expectedVersion
+	 *            version expected the exec data
 	 * @param actualVersion
 	 *            version found in the exec data
 	 */
-	public IncompatibleExecDataVersionException(final int actualVersion) {
-		super(String.format("Cannot read execution data version 0x%x. "
-				+ "This version of JaCoCo uses execution data version 0x%x.",
+	public IncompatibleExecDataVersionException(final int expectedVersion,
+			final int actualVersion) {
+		super(String.format(
+				"Cannot read execution data version 0x%x. "
+						+ "This version of JaCoCo uses execution data version 0x%x.",
 				Integer.valueOf(actualVersion),
-				Integer.valueOf(ExecutionDataWriter.FORMAT_VERSION)));
+				Integer.valueOf(expectedVersion)));
+		this.expectedVersion = expectedVersion;
 		this.actualVersion = actualVersion;
 	}
 
@@ -43,7 +49,7 @@ public class IncompatibleExecDataVersionException extends IOException {
 	 * @return expected version in execution data
 	 */
 	public int getExpectedVersion() {
-		return ExecutionDataWriter.FORMAT_VERSION;
+		return expectedVersion;
 	}
 
 	/**

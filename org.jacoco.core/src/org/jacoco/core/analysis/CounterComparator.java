@@ -26,6 +26,12 @@ public class CounterComparator implements Comparator<ICounter>, Serializable {
 	private static final long serialVersionUID = -3777463066252746748L;
 
 	/**
+	 * Compares the absolute number of total item executions.
+	 */
+	public static final CounterComparator TOTALEXECCOUNT = new CounterComparator(
+			CounterValue.TOTALEXECCOUNT);
+
+	/**
 	 * Compares the absolute number of total items.
 	 */
 	public static final CounterComparator TOTALITEMS = new CounterComparator(
@@ -68,7 +74,7 @@ public class CounterComparator implements Comparator<ICounter>, Serializable {
 	}
 
 	public int compare(final ICounter c1, final ICounter c2) {
-		final int cmp = Double.compare(c1.getValue(value), c2.getValue(value));
+		final int cmp = (int)Math.signum(c1.getValue(value) - c2.getValue(value));
 		return reverse ? -cmp : cmp;
 	}
 

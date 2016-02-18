@@ -13,6 +13,8 @@ package org.jacoco.core.analysis;
 
 import java.util.Collection;
 
+import org.jacoco.core.tools.LoggingBridge;
+
 /**
  * Coverage data of a bundle. A bundle groups a collection of packages.
  * 
@@ -26,5 +28,29 @@ public interface IBundleCoverage extends ICoverageNode {
 	 * @return all packages
 	 */
 	public Collection<IPackageCoverage> getPackages();
+
+	/**
+	 * Log missing debug info, if missing. This is so we have common behavior
+	 * among different users, such as Ant, Maven, Direct Generation.
+	 * 
+	 * @param log
+	 *            a standard java logger. Only the info, warning, and severe
+	 *            methods are used.
+	 */
+	public abstract void logMissingDebugInformation(final LoggingBridge log);
+
+	/**
+	 * Log the coverage info. This is so we have common behavior among different
+	 * users, such as Ant, Maven, Direct Generation.
+	 * 
+	 * @param noMatchClasses
+	 *            the no match classes list from CoverageBuilder
+	 * @param log
+	 *            a standard java logger. Only the info, warning, and severe
+	 *            methods are used.
+	 */
+	public abstract void logCoverageInfo(
+			final Collection<IClassCoverage> noMatchClasses,
+			final LoggingBridge log);
 
 }

@@ -90,6 +90,7 @@
     <module>../org.jacoco.agent.rt</module>
     <module>../org.jacoco.agent</module>
     <module>../org.jacoco.ant</module>
+    <module>../org.jacoco.ebigo</module>
 
     <module>../jacoco-maven-plugin</module>
 
@@ -194,6 +195,11 @@
         <groupId>${project.groupId}</groupId>
         <artifactId>org.jacoco.ant</artifactId>
         <classifier>nodeps</classifier>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>${project.groupId}</groupId>
+        <artifactId>org.jacoco.ebigo</artifactId>
         <version>${project.version}</version>
       </dependency>
       <dependency>
@@ -518,7 +524,7 @@
             </goals>
             <configuration>
               <target>
-                <fileset dir="${basedir}" includes="**/*.java,**/*.xml,**/*.bsh" excludes="target/**,.idea/**,nb-configuration.xml" id="missinglicense.fileset">
+                <fileset dir="${basedir}" includes="**/*.java,**/*.xml,**/*.bsh" excludes="target/**,.idea/**,nb-configuration.xml,.settings/**" id="missinglicense.fileset">
                   <not>
                     <and>
                       <contains text="Copyright (c) 2009, 2016 Mountainminds GmbH &amp; Co. KG and Contributors"/>
@@ -826,13 +832,13 @@
                 </goals>
                 <configuration>
                   <rules>
-                    <!--
+                    <!-- 
                     <requireActiveProfile>
                       <message>You must sign JARs during release.</message>
                       <profiles>sign</profiles>
                     </requireActiveProfile>
                     -->
-                    <requireReleaseVersion/>
+                    <requireReleaseVersion />
                     <requireProperty>
                       <property>buildNumber</property>
                       <regex>[0-9a-f]{40}</regex>
@@ -892,7 +898,7 @@
       <build>
         <pluginManagement>
           <plugins>
-            <!--This plugin's configuration is used to store Eclipse m2e settings only. It has no influence on the Maven build itself.-->
+            <!--This plugin's configuration is used to store Eclipse m2e settings only. It has no influence on the Maven build itself. -->
             <plugin>
               <groupId>org.eclipse.m2e</groupId>
               <artifactId>lifecycle-mapping</artifactId>
@@ -999,6 +1005,20 @@
                         <versionRange>[0,)</versionRange>
                         <goals>
                           <goal>parse-version</goal>
+                        </goals>
+                      </pluginExecutionFilter>
+                      <action>
+                        <ignore></ignore>
+                      </action>
+                    </pluginExecution>
+                    <pluginExecution>
+                      <pluginExecutionFilter>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-plugin-plugin</artifactId>
+                        <versionRange>[0,)</versionRange>
+                        <goals>
+                          <goal>descriptor</goal>
+                          <goal>helpmojo</goal>
                         </goals>
                       </pluginExecutionFilter>
                       <action>

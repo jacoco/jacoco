@@ -80,4 +80,19 @@ public class CompactDataOutput extends DataOutputStream {
 		}
 	}
 
+	/**
+	 * Writes a int array.
+	 * 
+	 * @param value
+	 *            int array
+	 * @throws IOException
+	 *             if thrown by the underlying stream
+	 */
+	public void writeIntArray(final int[] value) throws IOException {
+		writeVarInt(value.length);
+		for (final int i : value) {
+			writeVarInt(i);
+		}
+	}
+
 }

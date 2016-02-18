@@ -18,6 +18,8 @@ import java.io.IOException;
 import java.io.InputStream;
 
 import org.jacoco.core.internal.data.CompactDataInput;
+import org.jacoco.core.internal.instr.IProbeArray;
+import org.jacoco.core.internal.instr.ProbeArrayService;
 
 /**
  * Deserialization of execution data from binary streams.
@@ -27,11 +29,15 @@ public class ExecutionDataReader {
 	/** Underlying data input */
 	protected final CompactDataInput in;
 
+	private IHeaderVisitor headerVisitor = null;
+
 	private ISessionInfoVisitor sessionInfoVisitor = null;
 
 	private IExecutionDataVisitor executionDataVisitor = null;
 
 	private boolean firstBlock = true;
+
+	private char formatVersion = ExecutionDataWriter.FORMAT_VERSION_UNKNOWN;
 
 	/**
 	 * Creates a new reader based on the given input stream input. Depending on
@@ -43,6 +49,16 @@ public class ExecutionDataReader {
 	 */
 	public ExecutionDataReader(final InputStream input) {
 		this.in = new CompactDataInput(input);
+	}
+
+	/**
+	 * Sets an listener for header information.
+	 * 
+	 * @param visitor
+	 *            visitor to retrieve header events
+	 */
+	public void setHeaderVisitor(final IHeaderVisitor visitor) {
+		this.headerVisitor = visitor;
 	}
 
 	/**
@@ -66,6 +82,17 @@ public class ExecutionDataReader {
 	}
 
 	/**
+	 * Get the format version being read by this reader.
+	 * 
+	 * @return The format version being read, or
+	 *         ExecutionDataWriter.FORMAT_VERSION_UNKNOWN, if it is yet
+	 *         undetermined.
+	 */
+	public char getFormatVersion() {
+		return formatVersion;
+	}
+
+	/**
 	 * Reads all data and reports it to the corresponding visitors. The stream
 	 * is read until its end or a command confirmation has been sent.
 	 * 
@@ -77,16 +104,17 @@ public class ExecutionDataReader {
 	 * @throws IncompatibleExecDataVersionException
 	 *             incompatible data version from different JaCoCo release
 	 */
-	public boolean read() throws IOException,
-			IncompatibleExecDataVersionException {
+	public boolean read() throws IOException {
 		try {
 			byte type;
 			do {
 				type = in.readByte();
-				if (firstBlock && type != ExecutionDataWriter.BLOCK_HEADER) {
-					throw new IOException("Invalid execution data file.");
+				if (firstBlock) {
+					if (type != ExecutionDataWriter.BLOCK_HEADER) {
+						throw new IOException("Invalid execution data file.");
+					}
+					firstBlock = false;
 				}
-				firstBlock = false;
 			} while (readBlock(type));
 			return true;
 		} catch (final EOFException e) {
@@ -126,8 +154,18 @@ public class ExecutionDataReader {
 			throw new IOException("Invalid execution data file.");
 		}
 		final char version = in.readChar();
-		if (version != ExecutionDataWriter.FORMAT_VERSION) {
-			throw new IncompatibleExecDataVersionException(version);
+		switch (version) {
+		case ExecutionDataWriter.FORMAT_VERSION:
+		case ExecutionDataWriter.FORMAT_INT_VERSION:
+		case ExecutionDataWriter.FORMAT_DOUBLEINT_VERSION:
+			formatVersion = version;
+			break;
+		default:
+			throw new IncompatibleExecDataVersionException(
+					ExecutionDataWriter.FORMAT_VERSION, version);
+		}
+		if (headerVisitor != null) {
+			headerVisitor.visitHeaderInfo(new HeaderInfo(formatVersion));
 		}
 	}
 
@@ -147,7 +185,7 @@ public class ExecutionDataReader {
 		}
 		final long id = in.readLong();
 		final String name = in.readUTF();
-		final boolean[] probes = in.readBooleanArray();
+		final IProbeArray<?> probes = ProbeArrayService.read(formatVersion, in);
 		executionDataVisitor.visitClassExecution(new ExecutionData(id, name,
 				probes));
 	}

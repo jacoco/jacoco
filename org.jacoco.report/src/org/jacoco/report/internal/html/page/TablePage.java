@@ -70,8 +70,9 @@ public abstract class TablePage<NodeType extends ICoverageNode> extends
 
 	@Override
 	protected void content(final HTMLElement body) throws IOException {
-		context.getTable().render(body, items, getNode(),
-				context.getResources(), folder);
+		final ICoverageNode node = getNode();
+		context.getTable(node.getProbeMode(), node.containsEBigO()).render(
+				body, items, getNode(), context.getResources(), folder);
 		// free memory, otherwise we will keep the complete page tree:
 		items.clear();
 	}

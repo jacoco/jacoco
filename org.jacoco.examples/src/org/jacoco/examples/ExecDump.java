@@ -19,6 +19,7 @@ import java.util.Date;
 import org.jacoco.core.data.ExecutionData;
 import org.jacoco.core.data.ExecutionDataReader;
 import org.jacoco.core.data.IExecutionDataVisitor;
+import org.jacoco.core.data.IProbes;
 import org.jacoco.core.data.ISessionInfoVisitor;
 import org.jacoco.core.data.SessionInfo;
 
@@ -56,7 +57,7 @@ public final class ExecDump {
 
 	private void dump(final String file) throws IOException {
 		out.printf("exec file: %s%n", file);
-		out.println("CLASS ID         HITS/PROBES   CLASS NAME");
+		out.println("CLASS ID         EXECS/PROBES  CLASS NAME");
 
 		final FileInputStream in = new FileInputStream(file);
 		final ExecutionDataReader reader = new ExecutionDataReader(in);
@@ -71,8 +72,8 @@ public final class ExecDump {
 			public void visitClassExecution(final ExecutionData data) {
 				out.printf("%016x  %3d of %3d   %s%n",
 						Long.valueOf(data.getId()),
-						Integer.valueOf(getHitCount(data.getProbes())),
-						Integer.valueOf(data.getProbes().length),
+						Integer.valueOf(getExecutionCount(data.getProbes())),
+						Integer.valueOf(data.getProbes().length()),
 						data.getName());
 			}
 		});
@@ -81,10 +82,10 @@ public final class ExecDump {
 		out.println();
 	}
 
-	private int getHitCount(final boolean[] data) {
+	private int getExecutionCount(final IProbes data) {
 		int count = 0;
-		for (final boolean hit : data) {
-			if (hit) {
+		for (int ix = 0; ix < data.length(); ix++) {
+			if (data.isProbeCovered(ix)) {
 				count++;
 			}
 		}

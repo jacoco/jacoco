@@ -23,6 +23,7 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+import org.jacoco.core.data.ProbeMode;
 import org.jacoco.core.internal.analysis.ClassCoverageImpl;
 import org.jacoco.core.internal.analysis.CounterImpl;
 import org.jacoco.core.internal.analysis.MethodCoverageImpl;
@@ -44,11 +45,11 @@ public class CoverageBuilderTest {
 	@Test
 	public void testCreateClassMissed() {
 		final MethodCoverageImpl method = new MethodCoverageImpl("doit", "()V",
-				null);
+				null, ProbeMode.exists);
 		method.increment(CounterImpl.COUNTER_1_0, CounterImpl.COUNTER_0_0, 6);
 		method.increment(CounterImpl.COUNTER_1_0, CounterImpl.COUNTER_0_0, 7);
 		method.increment(CounterImpl.COUNTER_1_0, CounterImpl.COUNTER_0_0, 8);
-		method.incrementMethodCounter();
+		method.incrementMethodCounter(1);
 		addClass(123L, false, "Sample", null, method);
 
 		final Collection<IClassCoverage> classes = coverageBuilder.getClasses();
@@ -76,11 +77,11 @@ public class CoverageBuilderTest {
 	@Test
 	public void testCreateClassCovered() {
 		final MethodCoverageImpl method = new MethodCoverageImpl("doit", "()V",
-				null);
+				null, ProbeMode.exists);
 		method.increment(CounterImpl.COUNTER_0_1, CounterImpl.COUNTER_0_0, 6);
 		method.increment(CounterImpl.COUNTER_0_1, CounterImpl.COUNTER_0_0, 7);
 		method.increment(CounterImpl.COUNTER_0_1, CounterImpl.COUNTER_0_0, 8);
-		method.incrementMethodCounter();
+		method.incrementMethodCounter(1);
 		addClass(123L, false, "Sample", null, method);
 
 		final Collection<IClassCoverage> classes = coverageBuilder.getClasses();
@@ -108,7 +109,7 @@ public class CoverageBuilderTest {
 	@Test
 	public void testIgnoreClassesWithoutCode() {
 		final MethodCoverageImpl method = new MethodCoverageImpl("doit", "()V",
-				null);
+				null, ProbeMode.exists);
 		addClass(123L, false, "Sample", null, method);
 
 		final Collection<IClassCoverage> classes = coverageBuilder.getClasses();
@@ -117,24 +118,26 @@ public class CoverageBuilderTest {
 
 	@Test(expected = IllegalStateException.class)
 	public void testDuplicateClassNameDifferent() {
-		MethodCoverageImpl method = new MethodCoverageImpl("doit", "()V", null);
+		MethodCoverageImpl method = new MethodCoverageImpl("doit", "()V", null,
+				ProbeMode.exists);
 		method.increment(CounterImpl.COUNTER_1_0, CounterImpl.COUNTER_0_0, 3);
 		addClass(123L, false, "Sample", null, method);
 
 		// Add class with different id must fail:
-		method = new MethodCoverageImpl("doit", "()V", null);
+		method = new MethodCoverageImpl("doit", "()V", null, ProbeMode.exists);
 		method.increment(CounterImpl.COUNTER_1_0, CounterImpl.COUNTER_0_0, 3);
 		addClass(345L, false, "Sample", null, method);
 	}
 
 	@Test
 	public void testDuplicateClassNameIdentical() {
-		MethodCoverageImpl method = new MethodCoverageImpl("doit", "()V", null);
+		MethodCoverageImpl method = new MethodCoverageImpl("doit", "()V", null,
+				ProbeMode.exists);
 		method.increment(CounterImpl.COUNTER_1_0, CounterImpl.COUNTER_0_0, 3);
 		addClass(123L, false, "Sample", null, method);
 
 		// Add class with same id:
-		method = new MethodCoverageImpl("doit", "()V", null);
+		method = new MethodCoverageImpl("doit", "()V", null, ProbeMode.exists);
 		method.increment(CounterImpl.COUNTER_1_0, CounterImpl.COUNTER_0_0, 3);
 		addClass(123L, false, "Sample", null, method);
 
@@ -146,12 +149,12 @@ public class CoverageBuilderTest {
 	@Test
 	public void testCreateSourceFile() {
 		final MethodCoverageImpl method1 = new MethodCoverageImpl("doit",
-				"()V", null);
+				"()V", null, ProbeMode.exists);
 		method1.increment(CounterImpl.COUNTER_1_0, CounterImpl.COUNTER_0_0, 3);
 		addClass(123L, false, "Sample", "Sample.java", method1);
 
 		final MethodCoverageImpl method2 = new MethodCoverageImpl("doit",
-				"()V", null);
+				"()V", null, ProbeMode.exists);
 		method2.increment(CounterImpl.COUNTER_1_0, CounterImpl.COUNTER_0_0, 6);
 		addClass(234L, false, "Second", "Sample.java", method2);
 
@@ -188,17 +191,17 @@ public class CoverageBuilderTest {
 	@Test
 	public void testGetBundle() {
 		final MethodCoverageImpl method1 = new MethodCoverageImpl("doit",
-				"()V", null);
+				"()V", null, ProbeMode.exists);
 		method1.increment(CounterImpl.COUNTER_1_0, CounterImpl.COUNTER_0_0, 3);
 		addClass(1, false, "org/jacoco/examples/Sample1", null, method1);
 
 		final MethodCoverageImpl method2 = new MethodCoverageImpl("doit",
-				"()V", null);
+				"()V", null, ProbeMode.exists);
 		method2.increment(CounterImpl.COUNTER_1_0, CounterImpl.COUNTER_0_0, 6);
 		addClass(2, false, "org/jacoco/examples/Sample2", null, method2);
 
 		final MethodCoverageImpl method3 = new MethodCoverageImpl("doit",
-				"()V", null);
+				"()V", null, ProbeMode.exists);
 		method3.increment(CounterImpl.COUNTER_1_0, CounterImpl.COUNTER_0_0, 1);
 		addClass(3, false, "Sample3", null, method3);
 
@@ -228,15 +231,16 @@ public class CoverageBuilderTest {
 
 	@Test
 	public void testGetNoMatchClasses() {
-		MethodCoverageImpl m = new MethodCoverageImpl("doit", "()V", null);
+		MethodCoverageImpl m = new MethodCoverageImpl("doit", "()V", null,
+				ProbeMode.exists);
 		m.increment(CounterImpl.COUNTER_1_0, CounterImpl.COUNTER_0_0, 1);
 		addClass(1, true, "Sample1", null, m);
 
-		m = new MethodCoverageImpl("doit", "()V", null);
+		m = new MethodCoverageImpl("doit", "()V", null, ProbeMode.exists);
 		m.increment(CounterImpl.COUNTER_1_0, CounterImpl.COUNTER_0_0, 2);
 		addClass(2, true, "Sample2", null, m);
 
-		m = new MethodCoverageImpl("doit", "()V", null);
+		m = new MethodCoverageImpl("doit", "()V", null, ProbeMode.exists);
 		m.increment(CounterImpl.COUNTER_1_0, CounterImpl.COUNTER_0_0, 3);
 		addClass(3, false, "Sample3", null, m);
 
