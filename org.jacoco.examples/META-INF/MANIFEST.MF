@@ -2,14 +2,14 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: JaCoCo API Usage Examples
 Bundle-SymbolicName: org.jacoco.examples
-Bundle-Version: 0.7.6.201602180812
+Bundle-Version: 0.7.7.qualifier
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
 Bundle-Vendor: Mountainminds GmbH & Co. KG
-Import-Package: org.jacoco.core.analysis;bundle-version="[0.7.6,0.7.7)",
- org.jacoco.core.data;bundle-version="[0.7.6,0.7.7)",
- org.jacoco.core.instr;bundle-version="[0.7.6,0.7.7)",
- org.jacoco.core.runtime;bundle-version="[0.7.6,0.7.7)",
- org.jacoco.core.tools;bundle-version="[0.7.6,0.7.7)",
- org.jacoco.report;bundle-version="[0.7.6,0.7.7)",
- org.jacoco.report.html;bundle-version="[0.7.6,0.7.7)",
+Import-Package: org.jacoco.core.analysis;bundle-version="[0.7.7,0.7.8)",
+ org.jacoco.core.data;bundle-version="[0.7.7,0.7.8)",
+ org.jacoco.core.instr;bundle-version="[0.7.7,0.7.8)",
+ org.jacoco.core.runtime;bundle-version="[0.7.7,0.7.8)",
+ org.jacoco.core.tools;bundle-version="[0.7.7,0.7.8)",
+ org.jacoco.report;bundle-version="[0.7.7,0.7.8)",
+ org.jacoco.report.html;bundle-version="[0.7.7,0.7.8)",
  org.objectweb.asm;version="[5.0.4,5.1.0)"

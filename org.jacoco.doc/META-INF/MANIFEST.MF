@@ -2,5 +2,5 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: JaCoCo Documentation
 Bundle-SymbolicName: org.jacoco.doc
-Bundle-Version: 0.7.6.201602180812
+Bundle-Version: 0.7.7.qualifier
 Bundle-Vendor: Mountainminds GmbH & Co. KG
