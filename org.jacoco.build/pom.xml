@@ -83,6 +83,10 @@
     </contributor>
   </contributors>
 
+  <prerequisites>
+    <maven>3.0</maven>
+  </prerequisites>
+
   <modules>
     <!-- Order is important: org.jacoco.agent.rt embeds into org.jacoco.agent and JaCoCo Agent used during tests -->
     <module>../org.jacoco.core</module>
@@ -356,7 +360,7 @@
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-shade-plugin</artifactId>
-          <version>1.4</version>
+          <version>2.4.3</version>
         </plugin>
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
@@ -498,7 +502,7 @@
                 </requireReleaseDeps>
                 <requireMavenVersion>
                   <!-- Maven 3.0.3 contains bug - see http://jira.codehaus.org/browse/MINVOKER-107 -->
-                  <version>[2.2.1,3.0.0),[3.0.4,)</version>
+                  <version>[3.0.0,3.0.3),[3.0.4,)</version>
                 </requireMavenVersion>
               </rules>
             </configuration>
