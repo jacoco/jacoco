@@ -66,4 +66,8 @@ public class MergeMojo extends AbstractJacocoMojo {
 			MojoFailureException {
 		new ExecFileMerger(fileSets, destFile, getLog()).merge();
 	}
+
+	protected boolean goalCanExecuteOnPom() {
+		return true;
+	}
 }
