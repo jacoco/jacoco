@@ -56,7 +56,8 @@ public abstract class AbstractReportMojo extends AbstractMavenReport {
 	/**
 	 * Encoding of the source files.
 	 * 
-	 * @parameter property="project.build.sourceEncoding" default-value="UTF-8"
+	 * @parameter property="project.build.sourceEncoding"
+	 *            default-value="UTF-8"
 	 */
 	String sourceEncoding;
 	/**

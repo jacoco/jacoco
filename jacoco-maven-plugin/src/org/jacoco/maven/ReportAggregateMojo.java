@@ -1,32 +1,30 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2014 Mountainminds GmbH & Co. KG and Contributors
+ * Copyright (c) 2009, 2016 Mountainminds GmbH & Co. KG and Contributors
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *
  * Contributors:
- *    Evgeny Mandrikov - initial API and implementation
+ *    John Oliver - initial implementation
  *
  *******************************************************************************/
 package org.jacoco.maven;
 
+import org.apache.maven.plugin.MojoExecutionException;
+import org.apache.maven.project.MavenProject;
+import org.apache.maven.reporting.MavenReportException;
+import org.apache.maven.shared.model.fileset.FileSet;
+
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
-import org.apache.maven.project.MavenProject;
-import org.apache.maven.reporting.MavenReportException;
-
 /**
  * Creates a code coverage report from multiple reactor projects (HTML, XML, and
  * CSV).
- * 
+ *
  * @goal aggregate-report
  * @requiresProject false
  * @aggregator
@@ -35,14 +33,14 @@ public class ReportAggregateMojo extends ReportMojo {
 
 	/**
 	 * Flag used to suppress execution.
-	 * 
+	 *
 	 * @parameter expression="${jacoco.skip}" default-value="false"
 	 */
 	private boolean skip;
 
 	/**
 	 * The projects in the reactor.
-	 * 
+	 *
 	 * @parameter expression="${reactorProjects}"
 	 * @readonly
 	 */
@@ -51,7 +49,7 @@ public class ReportAggregateMojo extends ReportMojo {
 	/**
 	 * The relative path from the root of each reactor that says where the
 	 * jacoco.exec file has been placed.
-	 * 
+	 *
 	 * @parameter default-value="target/jacoco.exec"
 	 * @readonly
 	 */
@@ -59,11 +57,36 @@ public class ReportAggregateMojo extends ReportMojo {
 
 	/**
 	 * Path to the output file for aggregated execution data.
-	 * 
+	 *
 	 * @parameter expression="${jacoco.destFile}"
 	 *            default-value="${project.build.directory}/jacoco.exec"
 	 */
 	private File destFile;
+
+	/**
+	 * This optionally provide a set of jacoco exec files to combine into an aggregated report.
+	 *
+	 * Note that you need an <tt>implementation</tt> hint on <tt>fileset</tt>
+	 * with Maven 2 (not needed with Maven 3):
+	 *
+	 * <pre>
+	 * <code>
+	 * &lt;fileSets&gt;
+	 *   &lt;fileSet implementation="org.apache.maven.shared.model.fileset.FileSet"&gt;
+	 *     &lt;directory&gt;${project.parent.build.directory}&lt;/directory&gt;
+	 *     &lt;includes&gt;
+	 *       &lt;include&gt;*.exec&lt;/include&gt;
+	 *     &lt;/includes&gt;
+	 *   &lt;/fileSet&gt;
+	 * &lt;/fileSets&gt;
+	 * </code>
+	 * </pre>
+	 *
+	 * @parameter property="jacoco.fileSets"
+	 */
+	private List<FileSet> fileSets;
+
+	private ArrayList<String> sourceFolders;
 
 	@Override
 	public boolean canGenerateReport() {
@@ -83,78 +106,70 @@ public class ReportAggregateMojo extends ReportMojo {
 	protected void executeReport(final Locale locale)
 			throws MavenReportException {
 
-		concatenateExecFiles();
-		setDataFile(destFile);
-
-		List<String> sourceFolders = super.getSourceFolders();
-		if (sourceFolders == null) {
-			sourceFolders = new ArrayList<String>();
+		try {
+			concatenateExecFiles();
+		} catch (MojoExecutionException e) {
+			throw new MavenReportException("Failed to combine report exec files", e);
 		}
 
+		detectSourceAndClassFolders();
+
+		super.executeReport(locale);
+	}
+
+	private void detectSourceAndClassFolders() {
 		List<String> classFolders = super.getClassFolders();
 		if (classFolders == null) {
 			classFolders = new ArrayList<String>();
 		}
 
+		sourceFolders = new ArrayList<String>();
 		for (final MavenProject reactor : reactorProjects) {
 			if (reactor != getProject()) {
 				sourceFolders.addAll(reactor.getCompileSourceRoots());
 				classFolders.add(reactor.getBuild().getOutputDirectory());
 			}
 		}
-
-		setSourceFolders(sourceFolders);
 		setClassFolders(classFolders);
-		super.executeReport(locale);
 	}
 
-	private void concatenateExecFiles() {
-		FileOutputStream fos = null;
-		try {
-			if (!destFile.getParentFile().exists()) {
-				destFile.getParentFile().mkdirs();
-			}
+	@Override
+  File getDataFile() {
+    if(destFile== null) {
+      return super.getDataFile();
+    }
+    return destFile;
+  }
 
-			fos = new FileOutputStream(destFile);
+  @Override
+	List<File> getCompileSourceRoots() {
+		final List<File> result = super.getCompileSourceRoots();
+
+		for (String sourceFolder : sourceFolders) {
+			result.add(new File(sourceFolder));
+		}
+
+		return result;
+	}
+
+	private void concatenateExecFiles() throws MojoExecutionException {
+		if(fileSets==null || fileSets.isEmpty()) {
+			fileSets = new ArrayList<FileSet>();
 
 			for (final MavenProject reactor : reactorProjects) {
 				if (reactor != getProject()) {
 					final File input = new File(reactor.getBasedir(),
-							reactorDataFile);
+									reactorDataFile);
 					if (input.exists() && input.isFile()) {
-						concatenateFile(fos, input);
+						FileSet dir = new FileSet();
+						dir.addInclude(input.getName());
+						dir.setDirectory(input.getParent());
+						fileSets.add(dir);
 					}
 				}
 			}
-		} catch (final IOException e) {
-			throw new RuntimeException(
-					"Failed to concatenate jacoco.exec files", e);
-		} finally {
-			if (fos != null) {
-				try {
-					fos.close();
-				} catch (final IOException e) {
-					throw new RuntimeException("Failed to close file", e);
-				}
-			}
 		}
-	}
 
-	private void concatenateFile(final FileOutputStream fos, final File input)
-			throws FileNotFoundException, IOException {
-		FileInputStream fis = null;
-		try {
-			fis = new FileInputStream(input);
-
-			final byte[] buff = new byte[1024];
-			int read = -1;
-			while ((read = fis.read(buff)) != -1) {
-				fos.write(buff, 0, read);
-			}
-		} finally {
-			if (fis != null) {
-				fis.close();
-			}
-		}
+		new ExecFileMerger(fileSets, destFile, getLog()).merge();
 	}
 }

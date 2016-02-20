@@ -12,18 +12,12 @@
 package org.jacoco.maven;
 
 import java.io.File;
-import java.util.List;
 import java.util.Locale;
-
-import org.apache.maven.doxia.siterenderer.Renderer;
-import org.apache.maven.project.MavenProject;
-import org.jacoco.core.data.ExecutionDataStore;
-import org.jacoco.core.data.SessionInfoStore;
 
 /**
  * Creates a code coverage report for tests of a single project in multiple
  * formats (HTML, XML, and CSV).
- * 
+ *
  * @phase verify
  * @goal report
  * @requiresProject true
@@ -38,64 +32,17 @@ public class ReportMojo extends AbstractReportMojo {
 	 * build lifecycle. If the goal is run indirectly as part of a site
 	 * generation, the output directory configured in the Maven Site Plugin is
 	 * used instead.
-	 * 
+	 *
 	 * @parameter default-value="${project.reporting.outputDirectory}/jacoco"
 	 */
 	private File outputDirectory;
 
 	/**
 	 * File with execution data.
-	 * 
+	 *
 	 * @parameter default-value="${project.build.directory}/jacoco.exec"
 	 */
-	protected File dataFile;
-
-	/**
-	 * Maven project.
-	 * 
-	 * @parameter expression="${project}"
-	 * @readonly
-	 */
-	private MavenProject project;
-
-	/**
-	 * Doxia Site Renderer.
-	 * 
-	 * @component
-	 */
-	private Renderer siteRenderer;
-
-	/**
-	 * A list of source folders in addition to the current projects source
-	 * folder to be scanned for source files.
-	 * 
-	 * @parameter
-	 */
-	private List<String> sourceFolders;
-
-	private SessionInfoStore sessionInfoStore;
-
-	private ExecutionDataStore executionDataStore;
-
-	@Override
-	public String getOutputName() {
-		return "jacoco/index";
-	}
-
-	@Override
-	public String getName(final Locale locale) {
-		return "JaCoCo";
-	}
-
-	@Override
-	public String getDescription(final Locale locale) {
-		return "JaCoCo Test Coverage Report.";
-	}
-
-	@Override
-	public boolean isExternalReport() {
-		return true;
-	}
+	private File dataFile;
 
 	@Override
 	protected String getOutputDirectory() {
@@ -103,26 +50,9 @@ public class ReportMojo extends AbstractReportMojo {
 	}
 
 	@Override
-	protected MavenProject getProject() {
-		return project;
-	}
-
-	@Override
-	protected Renderer getSiteRenderer() {
-		return siteRenderer;
-	}
-
-	/**
-	 * @param dataFile
-	 */
-	protected void setDataFile(final File dataFile) {
-		this.dataFile = dataFile;
-	}
-
-	@Override
 	public void setReportOutputDirectory(final File reportOutputDirectory) {
 		if (reportOutputDirectory != null
-				&& !reportOutputDirectory.getAbsolutePath().endsWith("jacoco")) {
+						&& !reportOutputDirectory.getAbsolutePath().endsWith("jacoco")) {
 			outputDirectory = new File(reportOutputDirectory, "jacoco");
 		} else {
 			outputDirectory = reportOutputDirectory;
@@ -139,12 +69,13 @@ public class ReportMojo extends AbstractReportMojo {
 		return outputDirectory;
 	}
 
-	public List<String> getSourceFolders() {
-		return sourceFolders;
+	@Override
+	public String getOutputName() {
+		return "jacoco/index";
 	}
 
-	public void setSourceFolders(final List<String> sourceFolders) {
-		this.sourceFolders = sourceFolders;
+	@Override
+	public String getName(final Locale locale) {
+		return "JaCoCo Test";
 	}
-
 }
