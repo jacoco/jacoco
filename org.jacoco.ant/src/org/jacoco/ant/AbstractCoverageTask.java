@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2014 Mountainminds GmbH & Co. KG and Contributors
+ * Copyright (c) 2009, 2016 Mountainminds GmbH & Co. KG and Contributors
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -18,6 +18,7 @@ import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Task;
 import org.jacoco.agent.AgentJar;
 import org.jacoco.core.runtime.AgentOptions;
+import org.jacoco.core.runtime.AgentOptions.OutputMode;
 
 /**
  * Base class for all coverage tasks that require agent options
@@ -25,6 +26,8 @@ import org.jacoco.core.runtime.AgentOptions;
 public class AbstractCoverageTask extends Task {
 
 	private final AgentOptions agentOptions;
+
+	private File destfile;
 
 	private boolean enabled;
 
@@ -34,6 +37,7 @@ public class AbstractCoverageTask extends Task {
 	protected AbstractCoverageTask() {
 		super();
 		agentOptions = new AgentOptions();
+		destfile = new File(AgentOptions.DEFAULT_DESTFILE);
 		enabled = true;
 	}
 
@@ -55,23 +59,14 @@ public class AbstractCoverageTask extends Task {
 	}
 
 	/**
-	 * Gets the currently configured agent options for this task
-	 * 
-	 * @return Configured agent options
-	 */
-	public AgentOptions getAgentOptions() {
-		return agentOptions;
-	}
-
-	/**
-	 * Sets the location to write coverage execution data. Default is current
-	 * working directory
+	 * Sets the location to write coverage execution data to. Default is
+	 * <code>jacoco.exec</code>.
 	 * 
 	 * @param file
-	 *            Location to write coverage execution data
+	 *            Location to write coverage execution data to
 	 */
 	public void setDestfile(final File file) {
-		agentOptions.setDestfile(file.getAbsolutePath());
+		destfile = file;
 	}
 
 	/**
@@ -128,6 +123,17 @@ public class AbstractCoverageTask extends Task {
 	 */
 	public void setInclBootstrapClasses(final boolean include) {
 		agentOptions.setInclBootstrapClasses(include);
+	}
+
+	/**
+	 * Sets whether classes without source location should be instrumented.
+	 * 
+	 * @param include
+	 *            <code>true</code> if classes without source location should be
+	 *            instrumented
+	 */
+	public void setInclNoLocationClasses(final boolean include) {
+		agentOptions.setInclNoLocationClasses(include);
 	}
 
 	/**
@@ -211,7 +217,14 @@ public class AbstractCoverageTask extends Task {
 	 * @return JVM Argument to pass to new VM
 	 */
 	protected String getLaunchingArgument() {
-		return getAgentOptions().getVMArgument(getAgentFile());
+		return prepareAgentOptions().getVMArgument(getAgentFile());
+	}
+
+	private AgentOptions prepareAgentOptions() {
+		if (OutputMode.file.equals(agentOptions.getOutput())) {
+			agentOptions.setDestfile(destfile.getAbsolutePath());
+		}
+		return agentOptions;
 	}
 
 	private File getAgentFile() {

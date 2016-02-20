@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2014 Mountainminds GmbH & Co. KG and Contributors
+ * Copyright (c) 2009, 2016 Mountainminds GmbH & Co. KG and Contributors
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -12,6 +12,7 @@
 package org.jacoco.core.test.validation.targets;
 
 import static org.jacoco.core.test.validation.targets.Stubs.ex;
+import static org.jacoco.core.test.validation.targets.Stubs.f;
 import static org.jacoco.core.test.validation.targets.Stubs.nop;
 
 import org.jacoco.core.test.validation.targets.Stubs.StubException;
@@ -32,6 +33,7 @@ public class Target03 implements Runnable {
 		}
 		noExceptionTryCatch();
 		implicitExceptionTryCatch();
+		implicitExceptionTryCatchAfterCondition();
 		explicitExceptionTryCatch();
 		noExceptionFinally();
 		try {
@@ -72,6 +74,17 @@ public class Target03 implements Runnable {
 			nop(); // $line-implicitExceptionTryCatch.after$
 		} catch (StubException e) { // $line-implicitExceptionTryCatch.catch$
 			nop(); // $line-implicitExceptionTryCatch.catchBlock$
+		}
+	}
+
+	private void implicitExceptionTryCatchAfterCondition() {
+		if (f()) { // $line-implicitExceptionTryCatchAfterCondition.condition$
+			return;
+		}
+		try {
+			ex(); // $line-implicitExceptionTryCatchAfterCondition.exception$
+		} catch (StubException e) {
+			nop(); // $line-implicitExceptionTryCatchAfterCondition.catchBlock$
 		}
 	}
 

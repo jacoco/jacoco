@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2014 Mountainminds GmbH & Co. KG and Contributors
+ * Copyright (c) 2009, 2016 Mountainminds GmbH & Co. KG and Contributors
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -134,8 +134,7 @@ public class BundleCheckerTest implements IViolationsOutput {
 		m.incrementMethodCounter();
 
 		final ClassCoverageImpl c = new ClassCoverageImpl(
-				"org/jacoco/example/FooClass", 1001, false, null,
-				"java/lang/Object", new String[0]);
+				"org/jacoco/example/FooClass", 1001, false);
 		c.setSourceFileName("FooClass.java");
 		c.addMethod(m);
 

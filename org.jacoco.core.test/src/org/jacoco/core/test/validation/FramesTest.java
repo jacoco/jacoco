@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2014 Mountainminds GmbH & Co. KG and Contributors
+ * Copyright (c) 2009, 2016 Mountainminds GmbH & Co. KG and Contributors
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -33,6 +33,7 @@ import org.jacoco.core.test.validation.targets.Target08;
 import org.jacoco.core.test.validation.targets.Target09;
 import org.jacoco.core.test.validation.targets.Target10;
 import org.jacoco.core.test.validation.targets.Target11;
+import org.jacoco.core.test.validation.targets.Target12;
 import org.junit.Test;
 import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.ClassVisitor;
@@ -163,6 +164,11 @@ public class FramesTest {
 	@Test
 	public void testTarget11() throws IOException {
 		testFrames(Target11.class);
+	}
+
+	@Test
+	public void testTarget12() throws IOException {
+		testFrames(Target12.class);
 	}
 
 }

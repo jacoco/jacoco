@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2014 Mountainminds GmbH & Co. KG and Contributors
+ * Copyright (c) 2009, 2016 Mountainminds GmbH & Co. KG and Contributors
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -54,6 +54,11 @@ public final class LabelFlowAnalyzer extends MethodVisitor {
 	boolean first = true;
 
 	/**
+	 * Label instance of the last line start.
+	 */
+	Label lineStart = null;
+
+	/**
 	 * Create new instance.
 	 */
 	public LabelFlowAnalyzer() {
@@ -63,8 +68,13 @@ public final class LabelFlowAnalyzer extends MethodVisitor {
 	@Override
 	public void visitTryCatchBlock(final Label start, final Label end,
 			final Label handler, final String type) {
-		// Enforce probes at the beginning and end of the block:
+		// Enforce probe at the beginning of the block. Assuming the start of
+		// the block already is successor of some other code, adding a target
+		// makes the start a multitarget. However, if the start of the block
+		// also is the start of the method, no probe will be added.
 		LabelInfo.setTarget(start);
+
+		// Mark exception handler as possible target of the block
 		LabelInfo.setTarget(handler);
 	}
 
@@ -86,6 +96,11 @@ public final class LabelFlowAnalyzer extends MethodVisitor {
 		if (successor) {
 			LabelInfo.setSuccessor(label);
 		}
+	}
+
+	@Override
+	public void visitLineNumber(final int line, final Label start) {
+		lineStart = start;
 	}
 
 	@Override
@@ -169,6 +184,7 @@ public final class LabelFlowAnalyzer extends MethodVisitor {
 			final String name, final String desc, final boolean itf) {
 		successor = true;
 		first = false;
+		markMethodInvocationLine();
 	}
 
 	@Override
@@ -176,6 +192,13 @@ public final class LabelFlowAnalyzer extends MethodVisitor {
 			final Handle bsm, final Object... bsmArgs) {
 		successor = true;
 		first = false;
+		markMethodInvocationLine();
+	}
+
+	private void markMethodInvocationLine() {
+		if (lineStart != null) {
+			LabelInfo.setMethodInvocationLine(lineStart);
+		}
 	}
 
 	@Override

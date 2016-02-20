@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2014 Mountainminds GmbH & Co. KG and Contributors
+ * Copyright (c) 2009, 2016 Mountainminds GmbH & Co. KG and Contributors
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -13,6 +13,7 @@ package org.jacoco.agent.rt.internal;
 
 import java.lang.instrument.ClassFileTransformer;
 import java.lang.instrument.IllegalClassFormatException;
+import java.security.CodeSource;
 import java.security.ProtectionDomain;
 
 import org.jacoco.core.instr.Instrumenter;
@@ -44,7 +45,9 @@ public class CoverageTransformer implements ClassFileTransformer {
 
 	private final ClassFileDumper classFileDumper;
 
-	private final boolean includeBootstrapClasses;
+	private final boolean inclBootstrapClasses;
+
+	private final boolean inclNoLocationClasses;
 
 	/**
 	 * New transformer with the given delegates.
@@ -65,7 +68,8 @@ public class CoverageTransformer implements ClassFileTransformer {
 		excludes = new WildcardMatcher(toVMName(options.getExcludes()));
 		exclClassloader = new WildcardMatcher(options.getExclClassloader());
 		classFileDumper = new ClassFileDumper(options.getClassDumpDir());
-		includeBootstrapClasses = options.getInclBootstrapClasses();
+		inclBootstrapClasses = options.getInclBootstrapClasses();
+		inclNoLocationClasses = options.getInclNoLocationClasses();
 	}
 
 	public byte[] transform(final ClassLoader loader, final String classname,
@@ -73,12 +77,12 @@ public class CoverageTransformer implements ClassFileTransformer {
 			final ProtectionDomain protectionDomain,
 			final byte[] classfileBuffer) throws IllegalClassFormatException {
 
+		// We do not support class retransformation:
 		if (classBeingRedefined != null) {
-			// We do not support class retransformation.
 			return null;
 		}
 
-		if (!filter(loader, classname)) {
+		if (!filter(loader, classname, protectionDomain)) {
 			return null;
 		}
 
@@ -102,11 +106,18 @@ public class CoverageTransformer implements ClassFileTransformer {
 	 *            loader for the class
 	 * @param classname
 	 *            VM name of the class to check
+	 * @param protectionDomain
+	 *            protection domain for the class
 	 * @return <code>true</code> if the class should be instrumented
 	 */
-	protected boolean filter(final ClassLoader loader, final String classname) {
-		if (!includeBootstrapClasses) {
-			if (loader == null) {
+	boolean filter(final ClassLoader loader, final String classname,
+			final ProtectionDomain protectionDomain) {
+		if (loader == null) {
+			if (!inclBootstrapClasses) {
+				return false;
+			}
+		} else {
+			if (!inclNoLocationClasses && !hasSourceLocation(protectionDomain)) {
 				return false;
 			}
 			if (exclClassloader.matches(loader.getClass().getName())) {
@@ -119,6 +130,25 @@ public class CoverageTransformer implements ClassFileTransformer {
 		includes.matches(classname) &&
 
 		!excludes.matches(classname);
+	}
+
+	/**
+	 * Checks whether this protection domain is associated with a source
+	 * location.
+	 * 
+	 * @param protectionDomain
+	 *            protection domain to check (or <code>null</code>)
+	 * @return <code>true</code> if a source location is defined
+	 */
+	private boolean hasSourceLocation(final ProtectionDomain protectionDomain) {
+		if (protectionDomain == null) {
+			return false;
+		}
+		final CodeSource codeSource = protectionDomain.getCodeSource();
+		if (codeSource == null) {
+			return false;
+		}
+		return codeSource.getLocation() != null;
 	}
 
 	private static String toVMName(final String srcName) {

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2014 Mountainminds GmbH & Co. KG and Contributors
+ * Copyright (c) 2009, 2016 Mountainminds GmbH & Co. KG and Contributors
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -21,6 +21,9 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.instrument.IllegalClassFormatException;
+import java.security.CodeSource;
+import java.security.ProtectionDomain;
+import java.security.cert.Certificate;
 
 import org.jacoco.core.JaCoCo;
 import org.jacoco.core.runtime.AbstractRuntime;
@@ -41,6 +44,8 @@ public class CoverageTransformerTest {
 
 	private ClassLoader classLoader;
 
+	private ProtectionDomain protectionDomain;
+
 	private StubRuntime runtime;
 
 	@Before
@@ -48,6 +53,7 @@ public class CoverageTransformerTest {
 		recorder = new ExceptionRecorder();
 		options = new AgentOptions();
 		classLoader = getClass().getClassLoader();
+		protectionDomain = getClass().getProtectionDomain();
 		runtime = new StubRuntime();
 	}
 
@@ -60,86 +66,150 @@ public class CoverageTransformerTest {
 	public void testFilterAgentClass() {
 		CoverageTransformer t = createTransformer();
 		assertFalse(t.filter(classLoader,
-				"org/jacoco/agent/rt/internal/somepkg/SomeClass"));
+				"org/jacoco/agent/rt/internal/somepkg/SomeClass",
+				protectionDomain));
 	}
 
 	@Test
-	public void testFilterIncludesBootstrapClassesPositive() {
+	public void testFilterInclBootstrapClassesPositive() {
 		options.setInclBootstrapClasses(true);
 		CoverageTransformer t = createTransformer();
-		assertTrue(t.filter(null, "java/util/TreeSet"));
+		assertTrue(t.filter(null, "java/util/TreeSet", protectionDomain));
 	}
 
 	@Test
-	public void testFilterIncludesBootstrapClassesNegative() {
+	public void testFilterInclBootstrapClassesNegative() {
 		options.setInclBootstrapClasses(false);
 		CoverageTransformer t = createTransformer();
-		assertFalse(t.filter(null, "java/util/TreeSet"));
+		assertFalse(t.filter(null, "java/util/TreeSet", protectionDomain));
 	}
 
 	@Test
-	public void testFilterClassLoaderPositive() {
+	public void testFilterClassLoaderPositive1() {
+		options.setInclBootstrapClasses(false);
 		options.setExclClassloader("org.jacoco.agent.SomeWhere$*");
 		CoverageTransformer t = createTransformer();
-		assertTrue(t.filter(classLoader, "org/example/Foo"));
+		assertTrue(t.filter(classLoader, "org/example/Foo", protectionDomain));
 	}
 
 	@Test
-	public void testFilterClassLoaderNegative() {
+	public void testFilterClassLoaderPositive2() {
+		options.setInclBootstrapClasses(true);
+		options.setExclClassloader("org.jacoco.agent.SomeWhere$*");
+		CoverageTransformer t = createTransformer();
+		assertTrue(t.filter(classLoader, "org/example/Foo", protectionDomain));
+	}
+
+	@Test
+	public void testFilterClassLoaderNegative1() {
+		options.setInclBootstrapClasses(false);
 		options.setExclClassloader("org.jacoco.agent.rt.internal.CoverageTransformerTest$*");
 		CoverageTransformer t = createTransformer();
 		ClassLoader myClassLoader = new ClassLoader(null) {
 		};
-		assertFalse(t.filter(myClassLoader, "org/example/Foo"));
+		assertFalse(t
+				.filter(myClassLoader, "org/example/Foo", protectionDomain));
+	}
+
+	@Test
+	public void testFilterClassLoaderNegative2() {
+		options.setInclBootstrapClasses(true);
+		options.setExclClassloader("org.jacoco.agent.rt.internal.CoverageTransformerTest$*");
+		CoverageTransformer t = createTransformer();
+		ClassLoader myClassLoader = new ClassLoader(null) {
+		};
+		assertFalse(t
+				.filter(myClassLoader, "org/example/Foo", protectionDomain));
 	}
 
 	@Test
 	public void testFilterIncludedClassPositive() {
 		options.setIncludes("org.jacoco.core.*:org.jacoco.agent.rt.*");
 		CoverageTransformer t = createTransformer();
-		assertTrue(t.filter(classLoader, "org/jacoco/core/Foo"));
+		assertTrue(t.filter(classLoader, "org/jacoco/core/Foo",
+				protectionDomain));
 	}
 
 	@Test
 	public void testFilterIncludedClassNegative() {
 		options.setIncludes("org.jacoco.core.*:org.jacoco.agent.rt.*");
 		CoverageTransformer t = createTransformer();
-		assertFalse(t.filter(classLoader, "org/jacoco/report/Foo"));
+		assertFalse(t.filter(classLoader, "org/jacoco/report/Foo",
+				protectionDomain));
 	}
 
 	@Test
 	public void testFilterExcludedClassPositive() {
 		options.setExcludes("*Test");
 		CoverageTransformer t = createTransformer();
-		assertFalse(t.filter(classLoader, "org/jacoco/core/FooTest"));
+		assertFalse(t.filter(classLoader, "org/jacoco/core/FooTest",
+				protectionDomain));
 	}
 
 	@Test
 	public void testFilterExcludedClassPositiveInner() {
 		options.setExcludes("org.jacoco.example.Foo$Inner");
 		CoverageTransformer t = createTransformer();
-		assertFalse(t.filter(classLoader, "org/jacoco/example/Foo$Inner"));
+		assertFalse(t.filter(classLoader, "org/jacoco/example/Foo$Inner",
+				protectionDomain));
 	}
 
 	@Test
 	public void testFilterExcludedClassNegative() {
 		options.setExcludes("*Test");
 		CoverageTransformer t = createTransformer();
-		assertTrue(t.filter(classLoader, "org/jacoco/core/Foo"));
+		assertTrue(t.filter(classLoader, "org/jacoco/core/Foo",
+				protectionDomain));
 	}
 
 	@Test
-	public void testTransformFiltered() throws IllegalClassFormatException {
+	public void testFilterSourceLocationPositive1() {
 		CoverageTransformer t = createTransformer();
-		assertNull(t.transform(null, "org.jacoco.Sample", null, null,
+		assertFalse(t.filter(classLoader, "org/jacoco/core/Foo", null));
+	}
+
+	@Test
+	public void testFilterSourceLocationPositive2() {
+		CoverageTransformer t = createTransformer();
+		ProtectionDomain pd = new ProtectionDomain(null, null);
+		assertFalse(t.filter(classLoader, "org/jacoco/core/Foo", pd));
+	}
+
+	@Test
+	public void testFilterSourceLocationPositive3() {
+		CoverageTransformer t = createTransformer();
+		CodeSource cs = new CodeSource(null, new Certificate[0]);
+		ProtectionDomain pd = new ProtectionDomain(cs, null);
+		assertFalse(t.filter(classLoader, "org/jacoco/core/Foo", pd));
+	}
+
+	@Test
+	public void testFilterSourceLocationNegative() {
+		options.setInclNoLocationClasses(true);
+		CoverageTransformer t = createTransformer();
+		assertTrue(t.filter(classLoader, "org/jacoco/core/Foo", null));
+	}
+
+	@Test
+	public void testTransformFiltered1() throws IllegalClassFormatException {
+		CoverageTransformer t = createTransformer();
+		assertNull(t.transform(classLoader, "org.jacoco.Sample", null, null,
 				new byte[0]));
+	}
+
+	@Test
+	public void testTransformFiltered2() throws IllegalClassFormatException {
+		CoverageTransformer t = createTransformer();
+		assertNull(t.transform(null, "org.jacoco.Sample", null,
+				protectionDomain, new byte[0]));
 	}
 
 	@Test
 	public void testTransformFailure() {
 		CoverageTransformer t = createTransformer();
 		try {
-			t.transform(classLoader, "org.jacoco.Sample", null, null, null);
+			t.transform(classLoader, "org.jacoco.Sample", null,
+					protectionDomain, null);
 			fail("IllegalClassFormatException expected.");
 		} catch (IllegalClassFormatException e) {
 			assertEquals("Error while instrumenting class org.jacoco.Sample.",
@@ -156,8 +226,8 @@ public class CoverageTransformerTest {
 		CoverageTransformer t = createTransformer();
 		// Just pick any non-system class outside our namespace
 		final Class<?> target = JaCoCo.class;
-		assertNull(t.transform(classLoader, target.getName(), target, null,
-				getClassData(target)));
+		assertNull(t.transform(classLoader, target.getName(), target,
+				protectionDomain, getClassData(target)));
 	}
 
 	private CoverageTransformer createTransformer() {

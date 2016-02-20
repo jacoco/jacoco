@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2014 Mountainminds GmbH & Co. KG and Contributors
+ * Copyright (c) 2009, 2016 Mountainminds GmbH & Co. KG and Contributors
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -59,7 +59,7 @@ public interface ILanguageNames {
 	 * @param vmmethodname
 	 *            vm name of the method
 	 * @param vmdesc
-	 *            vm parameter description of the method
+	 *            vm method descriptor
 	 * @param vmsignature
 	 *            vm signature of the method (may be <code>null</code>)
 	 * @return language specific notation for the method
@@ -75,7 +75,7 @@ public interface ILanguageNames {
 	 * @param vmmethodname
 	 *            vm name of the method
 	 * @param vmdesc
-	 *            vm parameter description of the method
+	 *            vm method descriptor
 	 * @param vmsignature
 	 *            vm signature of the method (may be <code>null</code>)
 	 * @return language specific notation for the method

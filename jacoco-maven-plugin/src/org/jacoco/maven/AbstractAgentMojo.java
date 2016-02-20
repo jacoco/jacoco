@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2014 Mountainminds GmbH & Co. KG and Contributors
+ * Copyright (c) 2009, 2016 Mountainminds GmbH & Co. KG and Contributors
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -80,6 +80,12 @@ public abstract class AbstractAgentMojo extends AbstractJacocoMojo {
 	 * @parameter property="jacoco.inclBootstrapClasses"
 	 */
 	Boolean inclBootstrapClasses;
+	/**
+	 * Specifies whether classes without source location should be instrumented.
+	 * 
+	 * @parameter property="jacoco.inclNoLocationClasses"
+	 */
+	Boolean inclNoLocationClasses;
 	/**
 	 * A session identifier that is written with the execution data. Without
 	 * this parameter a random identifier is created by the agent.
@@ -188,6 +194,10 @@ public abstract class AbstractAgentMojo extends AbstractJacocoMojo {
 		}
 		if (inclBootstrapClasses != null) {
 			agentOptions.setInclBootstrapClasses(inclBootstrapClasses
+					.booleanValue());
+		}
+		if (inclNoLocationClasses != null) {
+			agentOptions.setInclNoLocationClasses(inclNoLocationClasses
 					.booleanValue());
 		}
 		if (sessionId != null) {

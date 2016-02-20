@@ -20,6 +20,102 @@
 
 <h2>Snapshot Build @qualified.bundle.version@ (@build.date@)</h2>
 
+<h3>Non-functional Changes</h3>
+<ul>
+  <li>Require at least Maven 3.0 for build of JaCoCo.</li>
+</ul>
+
+
+<h2>Release 0.7.6 (2016/02/18)</h2>
+
+<h3>New Features</h3>
+<ul>
+  <li>New agent option <code>inclnolocationclasses</code> to support execution
+      environments like Android where no source location is provided with classes
+      (GitHub <a href="https://github.com/jacoco/jacoco/issues/288">#288</a>).</li>
+  <li>Improved error message in case of incompatible execution data files.
+      (GitHub <a href="https://github.com/jacoco/jacoco/issues/319">#319</a>).</li>
+  <li>Command line agent options now supports comma in file names. Contributed
+      by Jochen Berger.
+      (GitHub <a href="https://github.com/jacoco/jacoco/issues/358">#358</a>).</li>
+</ul>
+
+<h3>Fixed Bugs</h3>
+<ul>
+  <li>Fix <code>MBeanClient</code> example
+      (GitHub <a href="https://github.com/jacoco/jacoco/issues/333">#333</a>).</li>
+  <li>Avoid <code>ConcurrentModificationException</code> during shutdown
+      (GitHub <a href="https://github.com/jacoco/jacoco/issues/364">#364</a>).</li>
+</ul>
+
+<h3>API Changes</h3>
+<ul>
+  <li>In case of incompatible execution data formats read from another JaCoCo
+  version <code>ExecutionDataReader.read()</code> now throws a 
+  <code>IncompatibleExecDataVersionException</code>.</li>
+</ul>
+
+<h3>Non-functional Changes</h3>
+<ul>
+  <li>JaCoCo now depends on ASM 5.0.4.</li>
+</ul>
+
+
+<h2>Release 0.7.5 (2015/05/24)</h2>
+
+<h3>New Features</h3>
+<ul>
+  <li>Better detection of coverage in code blocks with implicit exceptions.
+      (GitHub <a href="https://github.com/jacoco/jacoco/issues/310">#310</a>).</li>
+  <li>Added lifecycle-mapping-metadata.xml for M2E
+      (GitHub <a href="https://github.com/jacoco/jacoco/issues/203">#203</a>).</li>
+  <li>Allow locales with country and variant for Ant report task
+      (GitHub <a href="https://github.com/jacoco/jacoco/issues/289">#289</a>).</li>
+</ul>
+
+<h3>Fixed Bugs</h3>
+<ul>
+  <li>For the Ant tasks <code>coverage</code> and <code>agent</code> the
+      <code>destfile</code> attribute is now passed as an absolute path also in
+      the default case
+      (GitHub <a href="https://github.com/jacoco/jacoco/issues/301">#301</a>).</li>
+</ul>
+
+<h3>API Changes</h3>
+<ul>
+  <li>The exec file version has been updated and is not compatible with previous
+      versions.</li>
+</ul>
+
+<h2>Release 0.7.4 (2015/02/26)</h2>
+
+<h3>Fixed Bugs</h3>
+<ul>
+  <li>Restored exec file compatibility with version 0.7.2 by fixing missing
+      probes in case of try/catch blocks which are jump targets.
+      (GitHub <a href="https://github.com/jacoco/jacoco/issues/286">#286</a>).</li>
+</ul>
+
+
+<h2>Release 0.7.3 (2015/02/19)</h2>
+
+<h3>New Features</h3>
+<ul>
+  <li>For offline instrumemtation agent configuration supports system properties
+      replacements. Implementation based on pull request of GitHub user 'debugger'
+      (GitHub <a href="https://github.com/jacoco/jacoco/issues/262">#262</a>).</li>
+  <li>Exclude dynamically generated classes from instrumentation for better
+      interoperability with JMockit, analysis contributed by Rogério Liesenfeld
+      (GitHub <a href="https://github.com/jacoco/jacoco/issues/272">#272</a>).</li>
+</ul>
+
+<h3>Fixed Bugs</h3>
+<ul>
+  <li>Instrumented bytecode now compatible with Android ART runtime, analysis
+      and fix contributed by Allen Hair
+      (GitHub <a href="https://github.com/jacoco/jacoco/issues/265">#265</a>).</li>
+</ul>
+
 <h2>Release 0.7.2 (2014/09/12)</h2>
 
 <h3>Fixed Bugs</h3>

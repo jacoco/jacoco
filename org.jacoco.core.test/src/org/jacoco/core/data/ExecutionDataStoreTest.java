@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2014 Mountainminds GmbH & Co. KG and Contributors
+ * Copyright (c) 2009, 2016 Mountainminds GmbH & Co. KG and Contributors
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -61,6 +61,20 @@ public class ExecutionDataStoreTest implements IExecutionDataVisitor {
 		store.accept(this);
 		assertEquals(Collections.singletonMap(Long.valueOf(1000), data),
 				dataOutput);
+	}
+
+	@Test
+	public void testReentrantAccept() {
+		final boolean[] probes = new boolean[] { false, false, true };
+		store.put(new ExecutionData(1000, "Sample0", probes));
+		store.put(new ExecutionData(1001, "Sample1", probes));
+		store.accept(new IExecutionDataVisitor() {
+			public void visitClassExecution(ExecutionData data) {
+				store.put(new ExecutionData(1002, "Sample2", probes));
+				ExecutionDataStoreTest.this.visitClassExecution(data);
+			}
+		});
+		assertEquals(2, dataOutput.size());
 	}
 
 	@Test

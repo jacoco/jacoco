@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2014 Mountainminds GmbH & Co. KG and Contributors
+ * Copyright (c) 2009, 2016 Mountainminds GmbH & Co. KG and Contributors
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -26,7 +26,7 @@ import org.objectweb.asm.Label;
 
 /**
  * A {@link MethodProbesVisitor} that analyzes which statements and branches of
- * a method has been executed based on given probe data.
+ * a method have been executed based on given probe data.
  */
 public class MethodAnalyzer extends MethodProbesVisitor {
 
@@ -61,7 +61,7 @@ public class MethodAnalyzer extends MethodProbesVisitor {
 	 * @param name
 	 *            method name
 	 * @param desc
-	 *            description of the method
+	 *            method descriptor
 	 * @param signature
 	 *            optional parameterized signature
 	 * 

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2014 Mountainminds GmbH & Co. KG and Contributors
+ * Copyright (c) 2009, 2016 Mountainminds GmbH & Co. KG and Contributors
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -16,8 +16,12 @@ import java.io.File;
 import java.util.Locale;
 
 /**
- * Creates a code coverage report for integration tests of a single project in
- * multiple formats (HTML, XML, and CSV).
+ * Same as <code>report</code>, but provides default values suitable for
+ * integration-tests:
+ * <ul>
+ * <li>bound to <code>report-integration</code> phase</li>
+ * <li>different <code>dataFile</code></li>
+ * </ul>
  * 
  * @phase verify
  * @goal report-integration

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2014 Mountainminds GmbH & Co. KG and Contributors
+ * Copyright (c) 2009, 2016 Mountainminds GmbH & Co. KG and Contributors
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -55,7 +55,19 @@ public class CheckMojo extends AbstractJacocoMojo implements IViolationsOutput {
 	 * If a limit refers to a ratio the range is from 0.0 to 1.0 where the
 	 * number of decimal places will also determine the precision in error
 	 * messages.
+	 * </p>
 	 * 
+	 * <p>
+	 * If not specified the following defaults are assumed:
+	 * </p>
+	 * 
+	 * <ul>
+	 * <li>rule element: BUNDLE</li>
+	 * <li>limit counter: INSTRUCTION</li>
+	 * <li>limit value: COVEREDRATIO</li>
+	 * </ul>
+	 * 
+	 * <p>
 	 * Note that you <b>must</b> use <tt>implementation</tt> hints for
 	 * <tt>rule</tt> and <tt>limit</tt> when using Maven 2, with Maven 3 you do
 	 * not need to specify the attributes.

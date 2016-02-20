@@ -45,13 +45,13 @@
   duplicate classes or create separate reports or report groups for each version.
 </p>
 
-<h3>Code with exceptions shows no coverage. Why?</h3>
+<h3>Source code lines with exceptions show no coverage. Why?</h3>
 <p>
   JaCoCo determines code execution with so called probes. Probes are inserted
   into the control flow at certain positions. Code is considered as executed
   when a subsequent probe has been executed. In case of exceptions such a
-  sequence of instructions is aborted somewhere in the middle and not marked as
-  executed.
+  sequence of instructions is aborted somewhere in the middle and the
+  corresponding line of source code is not marked as covered.
 </p>
 
 <h3>Why does the coverage report not show line coverage figures?</h3>
@@ -94,11 +94,19 @@
 
 <h3>Can I collect coverage information without stopping the JVM?</h3>
 <p>
-  The JaCoCo <a href="agent.html">agent</a> can be configured for remote control
-  via TCP/IP sockets. This allows to collect execution data at any point in time
-  from a running JVM. The <a href="ant.html#dump"><code>dump</code></a> Ant task
-  can be used to request dumps. The remote control feature also allows you to
-  reset execution data.
+  Yes, there are two possible ways: The JaCoCo <a href="agent.html">agent</a>
+  can be configured for remote control via TCP/IP sockets. This allows to
+  collect execution data at any point in time from a running JVM. The
+  <a href="ant.html#dump"><code>dump</code> Ant task</a> or the
+  <a href="dump-mojo.html"><code>dump</code> Maven goal</a> can be used to
+  request dumps. The remote control feature also allows you to reset execution
+  data.
+</p>
+<p>
+  Alternatively the JaCoCo <a href="agent.html">agent</a> can be configured to
+  expose some functionality via JMX (<code>jmx=true</code>). The bean
+  <code><a href="./api/org/jacoco/agent/rt/IAgent.html">org.jacoco:type=Runtime</a></code>
+  provides operations to dump and reset execution data at any point in time.
 </p>
 
 <h3>My code uses reflection. Why does it fail when I execute it with JaCoCo?</h3>
@@ -112,6 +120,25 @@
   Please change your code to ignore synthetic members. This is a good practice
   anyways as also the Java compiler creates synthetic members in certain
   situation.
+</p>
+
+<h3>Why do I get an error while instrumenting certain Java classes?</h3>
+<p>
+  JaCoCo can instrument valid class files only. Class files with syntactical or
+  semantical error will typically lead to exceptions. In certain areas JaCoCo is
+  more restrictive then the JVM: JaCoCo expects valid so-called "stackmap
+  frame" information in class files of version 1.6 or higher. In turn JaCoCo
+  instrumented classes are expected to conform the specification.
+</p>
+<p>
+  Invalid class files are typically created by some frameworks which do not
+  properly adjust stackmap frames when manipulating bytecode.
+</p>
+
+<h3>Does JaCoCo run on the IBM JRE J9 and WebSphere?</h3>
+<p>
+  It does. To make the JaCoCo agent work please set the VM option
+  <code>-Xshareclasses:none</code>.
 </p>
 
 </div>

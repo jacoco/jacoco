@@ -257,6 +257,27 @@ public static example()V
   above.
 </p>
 
+<h2>Additional Probes Between Lines</h2>
+
+<p>
+  The probe insertion strategy described so far does not consider implicit
+  exceptions thrown for example from invoked methods. If the control flow
+  between two probes is interrupted by a exception not explicitly created with
+  a <code>throw</code> statement all instruction in between are considered as
+  not covered. This leads to unexpected results especially when the the block of
+  instructions spans multiple lines of source code.
+</p>
+
+<p>
+  Therefore JaCoCo adds an additional probe between the instructions of two
+  lines whenever the subsequent line contains at least one method invocation.
+  This limits the effect of implicit exceptions from method invocations to
+  single lines of source. The approach only works for class files compiled with
+  debug information (line numbers) and does not consider implicit exceptions
+  from other instructions than method invocations (e.g.
+  <code>NullPointerException</code> or <code>ArrayIndexOutOfBoundsException</code>).
+</p>
+
 <h2>Probe Implementation</h2>
 
 <p>

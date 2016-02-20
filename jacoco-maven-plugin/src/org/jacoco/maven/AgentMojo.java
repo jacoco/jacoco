@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2014 Mountainminds GmbH & Co. KG and Contributors
+ * Copyright (c) 2009, 2016 Mountainminds GmbH & Co. KG and Contributors
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -26,13 +26,23 @@ import java.io.File;
  * </ul>
  * 
  * <p>
- * Note that these properties must not be overwritten by the test configuration,
- * otherwise the JaCoCo agent cannot be attached. If you need custom parameters
- * please append them. For example:
+ * If your project already defines VM arguments for test execution, be sure that
+ * the VM arguments are defined as a property, rather than as part of the plugin
+ * configuration. For example in case of maven-surefire-plugin:
  * </p>
  * 
  * <pre>
- *   &lt;argLine&gt;${argLine} -your -extra -arguments&lt;/argLine&gt;
+ *   &lt;properties&gt;
+ *     &lt;argLine&gt;-your -extra -arguments&lt;/argLine&gt;
+ *   &lt;/properties&gt;
+ *   ...
+ *   &lt;plugin&gt;
+ *     &lt;groupId&gt;org.apache.maven.plugins&lt;/groupId&gt;
+ *     &lt;artifactId&gt;maven-surefire-plugin&lt;/artifactId&gt;
+ *     &lt;configuration&gt;
+ *       &lt;!-- Do not define argLine here! --&gt;
+ *     &lt;/configuration&gt;
+ *   &lt;/plugin&gt;
  * </pre>
  * 
  * <p>

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2014 Mountainminds GmbH & Co. KG and Contributors
+ * Copyright (c) 2009, 2016 Mountainminds GmbH & Co. KG and Contributors
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -31,17 +31,9 @@ public class ClassProbesAdapterTest {
 		boolean frame = false;
 
 		@Override
-		public void visitProbe(int probeId) {
-		}
-
-		@Override
 		public void visitJumpInsnWithProbe(int opcode, Label label,
 				int probeId, IFrame frame) {
 			frame.accept(this);
-		}
-
-		@Override
-		public void visitInsnWithProbe(int opcode, int probeId) {
 		}
 
 		@Override

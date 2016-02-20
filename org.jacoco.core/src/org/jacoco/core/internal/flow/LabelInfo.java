@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2014 Mountainminds GmbH & Co. KG and Contributors
+ * Copyright (c) 2009, 2016 Mountainminds GmbH & Co. KG and Contributors
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -30,6 +30,8 @@ public final class LabelInfo {
 	private boolean multiTarget = false;
 
 	private boolean successor = false;
+
+	private boolean methodInvocationLine = false;
 
 	private boolean done = false;
 
@@ -76,7 +78,7 @@ public final class LabelInfo {
 	/**
 	 * Checks whether multiple control paths lead to a label. Control flow path
 	 * to a certain label are: jump targets, exception handlers and normal
-	 * control flow from its predecessor instruction (unless this a
+	 * control flow from its predecessor instruction (unless this is an
 	 * unconditional jump or method exit).
 	 * 
 	 * @param label
@@ -102,6 +104,43 @@ public final class LabelInfo {
 	public static boolean isSuccessor(final Label label) {
 		final LabelInfo info = get(label);
 		return info == null ? false : info.successor;
+	}
+
+	/**
+	 * Mark a given label as the beginning of a line with method invocations.
+	 * 
+	 * @param label
+	 *            label to mark
+	 */
+	public static void setMethodInvocationLine(final Label label) {
+		create(label).methodInvocationLine = true;
+	}
+
+	/**
+	 * Checks whether the a given label has been marked as a line with method
+	 * invocations.
+	 * 
+	 * @param label
+	 *            label to check
+	 * @return <code>true</code> if the label represents a line with method
+	 *         invocations
+	 */
+	public static boolean isMethodInvocationLine(final Label label) {
+		final LabelInfo info = get(label);
+		return info == null ? false : info.methodInvocationLine;
+	}
+
+	/**
+	 * Determines whether the given label needs a probe to be inserted before.
+	 * 
+	 * @param label
+	 *            label to test
+	 * @return <code>true</code> if a probe should be inserted before
+	 */
+	public static boolean needsProbe(final Label label) {
+		final LabelInfo info = get(label);
+		return info != null && info.successor
+				&& (info.multiTarget || info.methodInvocationLine);
 	}
 
 	/**

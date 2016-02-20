@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2014 Mountainminds GmbH & Co. KG and Contributors
+ * Copyright (c) 2009, 2016 Mountainminds GmbH & Co. KG and Contributors
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -10,6 +10,9 @@
  *    
  *******************************************************************************/
 package org.jacoco.core.internal.flow;
+
+import java.util.HashMap;
+import java.util.Map;
 
 import org.jacoco.core.JaCoCo;
 import org.objectweb.asm.Label;
@@ -29,6 +32,8 @@ public final class MethodProbesAdapter extends MethodVisitor {
 
 	private AnalyzerAdapter analyzer;
 
+	private final Map<Label, Label> tryCatchProbeLabels;
+
 	/**
 	 * Create a new adapter instance.
 	 * 
@@ -42,6 +47,7 @@ public final class MethodProbesAdapter extends MethodVisitor {
 		super(JaCoCo.ASM_API_VERSION, probesVisitor);
 		this.probesVisitor = probesVisitor;
 		this.idGenerator = idGenerator;
+		this.tryCatchProbeLabels = new HashMap<Label, Label>();
 	}
 
 	/**
@@ -56,8 +62,27 @@ public final class MethodProbesAdapter extends MethodVisitor {
 	}
 
 	@Override
+	public void visitTryCatchBlock(Label start, final Label end,
+			final Label handler, final String type) {
+		// If a probe will be inserted before the start label, we'll need to use
+		// a different label for the try-catch block.
+		if (tryCatchProbeLabels.containsKey(start)) {
+			start = tryCatchProbeLabels.get(start);
+		} else if (LabelInfo.needsProbe(start)) {
+			final Label probeLabel = new Label();
+			LabelInfo.setSuccessor(probeLabel);
+			tryCatchProbeLabels.put(start, probeLabel);
+			start = probeLabel;
+		}
+		probesVisitor.visitTryCatchBlock(start, end, handler, type);
+	}
+
+	@Override
 	public void visitLabel(final Label label) {
-		if (LabelInfo.isMultiTarget(label) && LabelInfo.isSuccessor(label)) {
+		if (LabelInfo.needsProbe(label)) {
+			if (tryCatchProbeLabels.containsKey(label)) {
+				probesVisitor.visitLabel(tryCatchProbeLabels.get(label));
+			}
 			probesVisitor.visitProbe(idGenerator.nextId());
 		}
 		probesVisitor.visitLabel(label);

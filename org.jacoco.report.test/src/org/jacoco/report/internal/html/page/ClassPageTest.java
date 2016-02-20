@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2014 Mountainminds GmbH & Co. KG and Contributors
+ * Copyright (c) 2009, 2016 Mountainminds GmbH & Co. KG and Contributors
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -35,8 +35,7 @@ public class ClassPageTest extends PageTestBase {
 	@Override
 	public void setup() throws Exception {
 		super.setup();
-		node = new ClassCoverageImpl("org/jacoco/example/Foo", 123, false,
-				null, "java/lang/Object", null);
+		node = new ClassCoverageImpl("org/jacoco/example/Foo", 123, false);
 		node.addMethod(new MethodCoverageImpl("a", "()V", null));
 		node.addMethod(new MethodCoverageImpl("b", "()V", null));
 		node.addMethod(new MethodCoverageImpl("c", "()V", null));
@@ -66,8 +65,7 @@ public class ClassPageTest extends PageTestBase {
 
 	@Test
 	public void testGetFileNameDefault() throws IOException {
-		IClassCoverage defaultNode = new ClassCoverageImpl("Foo", 123, false,
-				null, "java/lang/Object", null);
+		IClassCoverage defaultNode = new ClassCoverageImpl("Foo", 123, false);
 		page = new ClassPage(defaultNode, null, null, rootFolder, context);
 		assertEquals("Foo.html", page.getFileName());
 	}
