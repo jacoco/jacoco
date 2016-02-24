@@ -11,6 +11,7 @@
  *******************************************************************************/
 
 /**
+ 
  * Meta information about JaCoCo.
  */
 package org.jacoco.core;
