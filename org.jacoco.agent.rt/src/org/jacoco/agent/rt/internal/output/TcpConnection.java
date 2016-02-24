@@ -15,6 +15,7 @@ import java.io.IOException;
 import java.net.Socket;
 import java.net.SocketException;
 
+import org.jacoco.core.runtime.AgentOptions;
 import org.jacoco.core.runtime.IRemoteCommandVisitor;
 import org.jacoco.core.runtime.RemoteControlReader;
 import org.jacoco.core.runtime.RemoteControlWriter;
@@ -25,6 +26,8 @@ import org.jacoco.core.runtime.RuntimeData;
  */
 class TcpConnection implements IRemoteCommandVisitor {
 
+	private AgentOptions options;
+	
 	private final RuntimeData data;
 
 	private final Socket socket;
@@ -34,11 +37,18 @@ class TcpConnection implements IRemoteCommandVisitor {
 	private RemoteControlReader reader;
 
 	private boolean initialized;
-
+	
 	public TcpConnection(final Socket socket, final RuntimeData data) {
 		this.socket = socket;
 		this.data = data;
 		this.initialized = false;
+	}
+
+	public TcpConnection(final AgentOptions options, final Socket socket, final RuntimeData data) {
+		this.socket = socket;
+		this.data = data;
+		this.initialized = false;
+		this.options = options;
 	}
 
 	public void init() throws IOException {
@@ -46,6 +56,10 @@ class TcpConnection implements IRemoteCommandVisitor {
 		this.reader = new RemoteControlReader(socket.getInputStream());
 		this.reader.setRemoteCommandVisitor(this);
 		this.initialized = true;
+		if (options != null && options.getId("Id", 0) > 0) {
+			writer.writeFirstHand(options.getId("Id", 0));
+		}
+		
 	}
 
 	/**
@@ -99,6 +113,9 @@ class TcpConnection implements IRemoteCommandVisitor {
 	public void visitDumpCommand(final boolean dump, final boolean reset)
 			throws IOException {
 		if (dump) {
+			if (options != null && options.getId("Id", 0) > 0) {
+				writer.writeHeader();
+			}
 			data.collect(writer, writer, reset);
 		} else {
 			if (reset) {

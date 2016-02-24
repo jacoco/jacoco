@@ -32,15 +32,37 @@ public class RuntimeData {
 	private long startTimeStamp;
 
 	private String sessionId;
+	
+	private AgentOptions options;
+
+	
+	public RuntimeData(AgentOptions options) {
+		store = new ExecutionDataStore(options);
+		sessionId = "<none>";
+		startTimeStamp = System.currentTimeMillis();
+	}
+
+	public AgentOptions getOptions() {
+		return options;
+	}
+
+	public void setOptions(AgentOptions options) {
+		this.options = options;
+//		this.store.setOptions(options);
+	}
 
 	/**
 	 * Creates a new runtime.
 	 */
 	public RuntimeData() {
+		
 		store = new ExecutionDataStore();
 		sessionId = "<none>";
 		startTimeStamp = System.currentTimeMillis();
+		
 	}
+	
+	
 
 	/**
 	 * Sets a session identifier for this runtime. The identifier is used when

@@ -40,6 +40,14 @@ public class RemoteControlWriter extends ExecutionDataWriter implements
 		super(output);
 	}
 
+	public void writeHeader() throws IOException {
+		super.writeHeader();
+	}
+	
+	public void writeFirstHand(long id) throws IOException {
+		super.writeFirstHand(id);
+	}
+
 	/**
 	 * Sends a confirmation that a commands has been successfully executed and
 	 * the response is completed.

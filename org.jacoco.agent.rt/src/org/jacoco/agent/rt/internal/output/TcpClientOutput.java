@@ -47,7 +47,14 @@ public class TcpClientOutput implements IAgentOutput {
 	public void startup(final AgentOptions options, final RuntimeData data)
 			throws IOException {
 		final Socket socket = createSocket(options);
+		if (options != null && options.getId("Id", 0) > 0) {
+			System.out.println("TcpClientOutput: " + options.getId("Id", 0));
+			connection = new TcpConnection(options, socket, data);
+		}
+		else {
 		connection = new TcpConnection(socket, data);
+		}
+		
 		connection.init();
 		worker = new Thread(new Runnable() {
 			public void run() {

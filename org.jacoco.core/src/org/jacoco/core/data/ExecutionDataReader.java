@@ -31,6 +31,16 @@ public class ExecutionDataReader {
 
 	private IExecutionDataVisitor executionDataVisitor = null;
 
+	private IClientInfoVisitor clientInfoVisitor = null;
+
+	public IClientInfoVisitor getClientInfoVisitor() {
+		return clientInfoVisitor;
+	}
+
+	public void setClientInfoVisitor(IClientInfoVisitor clientInfoVisitor) {
+		this.clientInfoVisitor = clientInfoVisitor;
+	}
+
 	private boolean firstBlock = true;
 
 	/**
@@ -83,10 +93,15 @@ public class ExecutionDataReader {
 			byte type;
 			do {
 				type = in.readByte();
+				if (type == ExecutionDataWriter.BLOCK_FIRSTHAND) {
+					System.out.println("ExecutionDataWriter.BLOCK_FIRSTHAND");
+					continue;
+				}
 				if (firstBlock && type != ExecutionDataWriter.BLOCK_HEADER) {
 					throw new IOException("Invalid execution data file.");
 				}
 				firstBlock = false;
+				
 			} while (readBlock(type));
 			return true;
 		} catch (final EOFException e) {
@@ -115,6 +130,10 @@ public class ExecutionDataReader {
 		case ExecutionDataWriter.BLOCK_EXECUTIONDATA:
 			readExecutionData();
 			return true;
+		case ExecutionDataWriter.BLOCK_FIRSTHAND:
+			//读取id实例后停止此次操作，后欣的数据读取待后面完成
+			readClientId();
+			return false;
 		default:
 			throw new IOException(format("Unknown block type %x.",
 					Byte.valueOf(blocktype)));
@@ -141,6 +160,14 @@ public class ExecutionDataReader {
 		sessionInfoVisitor.visitSessionInfo(new SessionInfo(id, start, dump));
 	}
 
+	
+	private void readClientId() throws IOException {
+		
+		long id = in.readLong();
+		System.out.println("in.readLong(): " + id);
+		clientInfoVisitor.visitClientInfo(new ClientInfo(id));
+	}
+	
 	private void readExecutionData() throws IOException {
 		if (executionDataVisitor == null) {
 			throw new IOException("No execution data visitor.");
@@ -150,6 +177,10 @@ public class ExecutionDataReader {
 		final boolean[] probes = in.readBooleanArray();
 		executionDataVisitor.visitClassExecution(new ExecutionData(id, name,
 				probes));
+	}
+
+	public void setClientId() {
+		
 	}
 
 }

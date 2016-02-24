@@ -162,6 +162,8 @@ public final class AgentOptions {
 	 */
 	public static final String DEFAULT_ADDRESS = null;
 
+	public static final String DEFAULT_ID = "Id";
+
 	/**
 	 * The port the tcpserver binds to or the tcpclient connects to. In
 	 * tcpserver mode the port must be available, which means that if multiple
@@ -419,6 +421,13 @@ public final class AgentOptions {
 	 */
 	public void setSessionId(final String id) {
 		setOption(SESSIONID, id);
+	}
+	
+	public long getId(final String key, final long defaultValue) {
+		
+		final String value = options.get(key);
+		System.out.println("options.get(key): " + options.get(key));
+		return value == null ? defaultValue : Long.parseLong(value);
 	}
 
 	/**

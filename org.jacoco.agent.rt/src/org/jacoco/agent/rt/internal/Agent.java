@@ -95,7 +95,13 @@ public class Agent implements IAgent {
 	Agent(final AgentOptions options, final IExceptionLogger logger) {
 		this.options = options;
 		this.logger = logger;
-		this.data = new RuntimeData();
+		
+		if (options.getId("Id", 0) > 0) {
+			this.data = new RuntimeData(options);
+		}
+		else {
+			this.data = new RuntimeData();
+		}
 	}
 
 	/**

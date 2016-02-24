@@ -18,6 +18,8 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+import org.jacoco.core.runtime.AgentOptions;
+
 /**
  * In-memory data store for execution data. The data can be added through its
  * {@link IExecutionDataVisitor} interface. If execution data is provided
@@ -31,6 +33,24 @@ public final class ExecutionDataStore implements IExecutionDataVisitor {
 	private final Map<Long, ExecutionData> entries = new HashMap<Long, ExecutionData>();
 
 	private final Set<String> names = new HashSet<String>();
+	
+	private AgentOptions options;
+	
+	public ExecutionDataStore(AgentOptions options) {
+		this.options = options;
+	}
+	
+	public ExecutionDataStore() {
+	}
+	
+	
+	public AgentOptions getOptions() {
+		return options;
+	}
+
+	public void setOptions(AgentOptions options) {
+		this.options = options;
+	}
 
 	/**
 	 * Adds the given {@link ExecutionData} object into the store. If there is
@@ -165,8 +185,32 @@ public final class ExecutionDataStore implements IExecutionDataVisitor {
 	 *            interface to write content to
 	 */
 	public void accept(final IExecutionDataVisitor visitor) {
-		for (final ExecutionData data : getContents()) {
-			visitor.visitClassExecution(data);
+		
+		if (options != null && options.getId("Id", 0) > 0){
+			for (final ExecutionData data : getContents()) {
+				//此处增加对ExecutionData 对象中probes[] 集合的判断，如果全部为false 则不写出到客户端，否则写
+				
+					if (data != null && data.getProbes() != null && data.getProbes().length > 0) {
+						
+						int length = data.getProbes().length;
+						boolean isExec = false;
+						for (int i=0;i<length;i++) {
+							if (data.getProbes()[i]) {
+								isExec = true;
+								break;
+							}
+						}
+						if (isExec) {
+							visitor.visitClassExecution(data);
+						}
+				}
+			}
+					
+		}
+		else {
+			for (final ExecutionData data : getContents()) {
+				visitor.visitClassExecution(data);
+			}
 		}
 	}
 

@@ -38,6 +38,9 @@ public class ExecutionDataWriter implements ISessionInfoVisitor,
 	/** Block identifier for execution data of a single class. */
 	public static final byte BLOCK_EXECUTIONDATA = 0x11;
 
+	/** Block identifier for file headers. */
+	public static final byte BLOCK_FIRSTHAND = 0x21;
+
 	/** Underlying data output */
 	protected final CompactDataOutput out;
 
@@ -62,7 +65,7 @@ public class ExecutionDataWriter implements ISessionInfoVisitor,
 	 * @throws IOException
 	 *             if the header can't be written
 	 */
-	private void writeHeader() throws IOException {
+	protected void writeHeader() throws IOException {
 		out.writeByte(BLOCK_HEADER);
 		out.writeChar(MAGIC_NUMBER);
 		out.writeChar(FORMAT_VERSION);
@@ -89,6 +92,21 @@ public class ExecutionDataWriter implements ISessionInfoVisitor,
 		}
 	}
 
+	/**
+	 * Writes an id.
+	 * 
+	 * @throws IOException
+	 *             if the header can't be written
+	 */
+	protected void writeFirstHand(long id) throws IOException {
+		
+		
+		out.writeByte(BLOCK_FIRSTHAND);
+		out.writeLong(id);
+		out.flush();
+		System.out.println("writeFirstHand" );
+	}
+	
 	public void visitClassExecution(final ExecutionData data) {
 		try {
 			out.writeByte(BLOCK_EXECUTIONDATA);
