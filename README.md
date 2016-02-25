@@ -8,9 +8,7 @@ JaCoCo is a free Java code coverage library distributed under the Eclipse Public
 License. Check the [project homepage](http://www.eclemma.org/jacoco)
 for downloads, documentation and feedback.
 
-Please use our [mailing list](https://groups.google.com/forum/?fromgroups=#!forum/jacoco)
-for questions regarding JaCoCo which are not already covered by the
-[extensive documentation](http://www.eclemma.org/jacoco/trunk/doc/).
 
-Note: We do not answer general questions in the project's issue tracker. Please use our [mailing list](https://groups.google.com/forum/?fromgroups=#!forum/jacoco) for this.
+此fork的版本主要是为了实现多次读写jacoco数据的能力，并且每次读取的数据，仅仅为被覆盖的类数据（类关联的探针列表中有某个或是某个几个被置位了），
+同时增加了jacoco客户端的Id标识，用来区分不同的应用关联的用例组的不同
 -------------------------------------------------------------------------
