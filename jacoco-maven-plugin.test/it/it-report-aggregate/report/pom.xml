@@ -20,7 +20,8 @@
   </parent>
 
   <artifactId>report</artifactId>
-
+  <name>Aggregate Report</name>
+  
   <dependencies>
     <dependency>
       <groupId>jacoco</groupId>

@@ -10,3 +10,12 @@
  *
  *******************************************************************************/
 
+File reportChild1 = new File( basedir, "report/target/site/jacoco/child1/index.html" );
+if ( !reportChild1.isFile() ) {
+    throw new RuntimeException( "Report for child1 was not created." );
+}
+
+File reportChild2 = new File( basedir, "report/target/site/jacoco/child2/index.html" );
+if ( !reportChild2.isFile() ) {
+    throw new RuntimeException( "Report for child2 was not created." );
+}

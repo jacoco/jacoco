@@ -56,8 +56,7 @@ public abstract class AbstractReportMojo extends AbstractMavenReport {
 	/**
 	 * Encoding of the source files.
 	 * 
-	 * @parameter property="project.build.sourceEncoding"
-	 *            default-value="UTF-8"
+	 * @parameter property="project.build.sourceEncoding" default-value="UTF-8"
 	 */
 	String sourceEncoding;
 	/**
@@ -218,7 +217,7 @@ public abstract class AbstractReportMojo extends AbstractMavenReport {
 				fileFilter, getLog());
 		final IBundleCoverage bundle = creator.createBundle(executionDataStore);
 		final SourceFileCollection locator = new SourceFileCollection(
-				getCompileSourceRoots(), sourceEncoding);
+				getCompileSourceRoots(getProject()), sourceEncoding);
 		checkForMissingDebugInformation(bundle);
 		visitor.visitBundle(bundle, locator);
 	}
@@ -250,23 +249,23 @@ public abstract class AbstractReportMojo extends AbstractMavenReport {
 		return new MultiReportVisitor(visitors);
 	}
 
-	File resolvePath(final String path) {
+	static File resolvePath(final MavenProject project, final String path) {
 		File file = new File(path);
 		if (!file.isAbsolute()) {
-			file = new File(getProject().getBasedir(), path);
+			file = new File(project.getBasedir(), path);
 		}
 		return file;
 	}
 
-	List<File> getCompileSourceRoots() {
+	static List<File> getCompileSourceRoots(final MavenProject project) {
 		final List<File> result = new ArrayList<File>();
-		for (final Object path : getProject().getCompileSourceRoots()) {
-			result.add(resolvePath((String) path));
+		for (final Object path : project.getCompileSourceRoots()) {
+			result.add(resolvePath(project, (String) path));
 		}
 		return result;
 	}
 
-	private static class SourceFileCollection implements ISourceFileLocator {
+	static class SourceFileCollection implements ISourceFileLocator {
 
 		private final List<File> sourceRoots;
 		private final String encoding;

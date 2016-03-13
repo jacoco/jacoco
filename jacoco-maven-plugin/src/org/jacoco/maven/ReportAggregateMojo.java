@@ -11,12 +11,18 @@
  *******************************************************************************/
 package org.jacoco.maven;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.List;
 import java.util.Locale;
 
 import org.apache.maven.model.Dependency;
 import org.apache.maven.project.MavenProject;
 import org.apache.maven.reporting.MavenReportException;
+import org.jacoco.core.analysis.IBundleCoverage;
+import org.jacoco.core.tools.ExecFileLoader;
+import org.jacoco.report.IReportGroupVisitor;
+import org.jacoco.report.IReportVisitor;
 
 /**
  * Creates a structured code coverage report from multiple projects (HTML, XML,
@@ -51,25 +57,72 @@ public class ReportAggregateMojo extends ReportMojo {
 	@Override
 	protected void executeReport(final Locale locale)
 			throws MavenReportException {
+		loadExecutionData();
+		try {
+			final IReportVisitor visitor = createVisitor(locale);
+			visitor.visitInfo(sessionInfoStore.getInfos(),
+					executionDataStore.getContents());
+			createReport(visitor);
+			visitor.visitEnd();
+		} catch (final IOException e) {
+			throw new MavenReportException("Error while creating report: "
+					+ e.getMessage(), e);
+		}
+	}
+
+	@Override
+	void createReport(final IReportGroupVisitor visitor) throws IOException {
+		final IReportGroupVisitor group = visitor.visitGroup(getProject()
+				.getName());
 		for (final Object dependencyObject : getProject().getDependencies()) {
 			final Dependency dependency = (Dependency) dependencyObject;
 			final MavenProject project = findProjectFromReactor(dependency);
 			if (project != null) {
-				// TODO Collect projects with source and class files
-				// TODO Collect projects with exec files
-				getLog().info("project: " + project.getArtifactId());
-				getLog().info(
-						"compiledSourceRoots: "
-								+ project.getCompileSourceRoots());
-				getLog().info(
-						"targetDirectory: " + project.getBuild().getDirectory());
-				getLog().info(
-						"jacoco.destFile: "
-								+ project.getProperties().getProperty(
-										"jacoco.destFile"));
+				createReportForProject(project, group);
 			}
-			// TODO generate structures report
 		}
+	}
+
+	void createReportForProject(final MavenProject project,
+			final IReportGroupVisitor visitor) throws IOException {
+
+		final FileFilter fileFilter = new FileFilter(this.getIncludes(),
+				this.getExcludes());
+		final BundleCreator creator = new BundleCreator(project, fileFilter,
+				getLog());
+		final IBundleCoverage bundle = creator.createBundle(executionDataStore);
+		// TODO use source encoding of target project
+		final SourceFileCollection locator = new SourceFileCollection(
+				getCompileSourceRoots(project), sourceEncoding);
+		checkForMissingDebugInformation(bundle);
+		visitor.visitBundle(bundle, locator);
+	}
+
+	@Override
+	void loadExecutionData() throws MavenReportException {
+		final ExecFileLoader loader = new ExecFileLoader();
+		for (final Object dependencyObject : getProject().getDependencies()) {
+			final Dependency dependency = (Dependency) dependencyObject;
+			final MavenProject project = findProjectFromReactor(dependency);
+			if (project != null) {
+				// TODO Use configured location from project
+				// TODO Clarify when to include exec data from integration tests
+				final File execFile = new File(project.getBuild()
+						.getDirectory(), "jacoco.exec");
+				if (execFile.exists()) {
+					getLog().info("Loading execution data file " + execFile);
+					try {
+						loader.load(execFile);
+					} catch (final IOException e) {
+						throw new MavenReportException(
+								"Unable to read execution data file "
+										+ execFile + ": " + e.getMessage(), e);
+					}
+				}
+			}
+		}
+		sessionInfoStore = loader.getSessionInfoStore();
+		executionDataStore = loader.getExecutionDataStore();
 	}
 
 	private MavenProject findProjectFromReactor(final Dependency d) {
@@ -82,4 +135,5 @@ public class ReportAggregateMojo extends ReportMojo {
 		}
 		return null;
 	}
+
 }
