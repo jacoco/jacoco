@@ -27,8 +27,7 @@ class AntFilesLocator extends InputStreamSourceFileLocator {
 
 	private final Map<String, Resource> resources;
 
-	public AntFilesLocator(final String encoding,
-			final int tabWidth) {
+	public AntFilesLocator(final String encoding, final int tabWidth) {
 		super(encoding, tabWidth);
 		this.resources = new HashMap<String, Resource>();
 	}
@@ -44,7 +43,8 @@ class AntFilesLocator extends InputStreamSourceFileLocator {
 	}
 
 	@Override
-	protected InputStream getSourceStream(final String path) throws IOException {
+	protected InputStream getSourceStream(String path) throws IOException {
+		path = path.replace('\\', '/');
 		final Resource file = resources.get(path);
 		if (file == null) {
 			return null;

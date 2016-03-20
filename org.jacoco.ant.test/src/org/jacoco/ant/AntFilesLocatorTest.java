@@ -59,11 +59,19 @@ public class AntFilesLocatorTest {
 		assertContent(source);
 	}
 
+	@Test
+	public void testCanGetResourceWithWrongSlashes() throws IOException {
+		locator.add(createFile("org/jacoco/example/Test.notjava"));
+		final Reader source = locator.getSourceFile("",
+				"org\\jacoco/example/Test.notjava");
+		assertContent(source);
+	}
+
 	private Resource createFile(String path) throws IOException {
 		final File file = new File(folder.getRoot(), path);
 		file.getParentFile().mkdirs();
-		final Writer writer = new OutputStreamWriter(
-				new FileOutputStream(file), "UTF-8");
+		final Writer writer = new OutputStreamWriter(new FileOutputStream(file),
+				"UTF-8");
 		writer.write("Source");
 		writer.close();
 		return new FileResource(folder.getRoot(), path);

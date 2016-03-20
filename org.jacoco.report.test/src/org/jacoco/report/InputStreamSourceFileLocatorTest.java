@@ -27,7 +27,7 @@ import org.junit.Test;
 
 public class InputStreamSourceFileLocatorTest {
 
-	private Map<String, byte[]> sources = new HashMap<String, byte[]>();
+	private final Map<String, byte[]> sources = new HashMap<String, byte[]>();
 
 	class TestLocator extends InputStreamSourceFileLocator {
 
@@ -67,6 +67,29 @@ public class InputStreamSourceFileLocatorTest {
 		ISourceFileLocator locator = new TestLocator("UTF-8", 4);
 		sources.put("Test.java", "ÜÄö".getBytes("UTF-8"));
 		assertContent("ÜÄö", locator.getSourceFile("", "Test.java"));
+	}
+
+	@Test
+	public void testGetNonJavaSourceFile() throws IOException {
+		ISourceFileLocator locator = new TestLocator("UTF-8", 4);
+		sources.put("org/jacoco/example/Test.notjava", "ÜÄö".getBytes("UTF-8"));
+		assertContent("ÜÄö", locator.getSourceFile("some/package/we/dont/know",
+				"org/jacoco/example/Test.notjava"));
+	}
+
+	@Test
+	public void testGetJavaSourceFileNegative() throws IOException {
+		ISourceFileLocator locator = new TestLocator("UTF-8", 4);
+		sources.put("org/jacoco/example/Test.java", "ÜÄö".getBytes("UTF-8"));
+		assertNull(locator.getSourceFile("some/package/we/dont/know",
+				"org/jacoco/example/Test.java"));
+	}
+
+	@Test
+	public void testGetSourceFileDefaultPackageNegative() throws IOException {
+		ISourceFileLocator locator = new TestLocator("UTF-8", 4);
+		sources.put("org/jacoco/example/Test.java", "ÜÄö".getBytes("UTF-8"));
+		assertNull(locator.getSourceFile("", "Test.java"));
 	}
 
 	@Test

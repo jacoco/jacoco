@@ -46,7 +46,12 @@ public abstract class InputStreamSourceFileLocator implements
 			throws IOException {
 		final InputStream in;
 		if (packageName.length() > 0) {
-			in = getSourceStream(packageName + "/" + fileName);
+			InputStream temp;
+			temp = getSourceStream(packageName + "/" + fileName);
+			if (temp == null && !fileName.endsWith(".java")) {
+				temp = getSourceStream(fileName);
+			}
+			in = temp;
 		} else {
 			in = getSourceStream(fileName);
 		}
