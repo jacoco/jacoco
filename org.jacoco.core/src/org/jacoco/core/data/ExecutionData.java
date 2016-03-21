@@ -99,6 +99,20 @@ public final class ExecutionData {
 	}
 
 	/**
+	 * Checks whether any probe has been hit.
+	 * 
+	 * @return <code>true</code>, if at least one probe has been hit
+	 */
+	public boolean hasHits() {
+		for (final boolean p : probes) {
+			if (p) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	/**
 	 * Merges the given execution data into the probe data of this object. I.e.
 	 * a probe entry in this object is marked as executed (<code>true</code>) if
 	 * this probe or the corresponding other probe was executed. So the result
@@ -189,4 +203,5 @@ public final class ExecutionData {
 		return String.format("ExecutionData[name=%s, id=%016x]", name,
 				Long.valueOf(id));
 	}
+
 }
