@@ -11,9 +11,13 @@
  *******************************************************************************/
 package package1;
 
-public class Example1 {
+import org.junit.Test;
 
-  public void a() {
+public class Example1bTest {
+
+  @Test
+  public void test() {
+    new Example1b().b();
   }
 
 }

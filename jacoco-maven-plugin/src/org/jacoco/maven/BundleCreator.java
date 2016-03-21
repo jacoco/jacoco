@@ -66,16 +66,18 @@ public final class BundleCreator {
 	public IBundleCoverage createBundle(
 			final ExecutionDataStore executionDataStore) throws IOException {
 		final CoverageBuilder builder = new CoverageBuilder();
-		final Analyzer analyzer = new Analyzer(executionDataStore, builder);
 		final File classesDir = new File(this.project.getBuild()
 				.getOutputDirectory());
 
-		@SuppressWarnings("unchecked")
-		final List<File> filesToAnalyze = FileUtils.getFiles(classesDir,
-				fileFilter.getIncludes(), fileFilter.getExcludes());
+		if (classesDir.isDirectory()) {
+			@SuppressWarnings("unchecked")
+			final List<File> filesToAnalyze = FileUtils.getFiles(classesDir,
+					fileFilter.getIncludes(), fileFilter.getExcludes());
 
-		for (final File file : filesToAnalyze) {
-			analyzer.analyzeAll(file);
+			final Analyzer analyzer = new Analyzer(executionDataStore, builder);
+			for (final File file : filesToAnalyze) {
+				analyzer.analyzeAll(file);
+			}
 		}
 
 		final IBundleCoverage bundle = builder

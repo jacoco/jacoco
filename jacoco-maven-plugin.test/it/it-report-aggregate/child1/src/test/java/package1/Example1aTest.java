@@ -13,11 +13,11 @@ package package1;
 
 import org.junit.Test;
 
-public class Example1Test {
+public class Example1aTest {
 
   @Test
   public void test() {
-    new Example1().a();
+    new Example1a().a();
   }
 
 }
