@@ -13,6 +13,8 @@
 package org.jacoco.maven;
 
 import java.io.File;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Locale;
 
 /**
@@ -66,8 +68,8 @@ public class ReportITMojo extends AbstractReportMojo {
 	}
 
 	@Override
-	File getDataFile() {
-		return dataFile;
+	List<File> getDataFiles() {
+		return Arrays.asList( dataFile );
 	}
 
 	@Override
