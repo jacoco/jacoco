@@ -147,6 +147,13 @@ public abstract class AbstractAgentMojo extends AbstractJacocoMojo {
 	 * @parameter property="jacoco.jmx"
 	 */
 	Boolean jmx;
+	/**
+	 * If set to true all execution data will be forwarded to report-aggregate
+	 * goal
+	 * 
+	 * @parameter property="jacoco.aggregate"
+	 */
+	Boolean aggregate;
 
 	@Override
 	public void executeMojo() {
@@ -157,6 +164,10 @@ public abstract class AbstractAgentMojo extends AbstractJacocoMojo {
 				oldValue, getAgentJarFile());
 		getLog().info(name + " set to " + newValue);
 		projectProperties.setProperty(name, newValue);
+		if (aggregate != null && aggregate.booleanValue()) {
+			getLog().info("Acumulating test result: " + getDestFile());
+			ReportAggregateMojo.accumulate(getDestFile());
+		}
 	}
 
 	@Override

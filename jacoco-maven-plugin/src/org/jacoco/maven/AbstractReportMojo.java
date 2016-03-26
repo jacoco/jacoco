@@ -18,6 +18,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 
@@ -56,8 +57,7 @@ public abstract class AbstractReportMojo extends AbstractMavenReport {
 	/**
 	 * Encoding of the source files.
 	 * 
-	 * @parameter property="project.build.sourceEncoding"
-	 *            default-value="UTF-8"
+	 * @parameter property="project.build.sourceEncoding" default-value="UTF-8"
 	 */
 	String sourceEncoding;
 	/**
@@ -148,21 +148,39 @@ public abstract class AbstractReportMojo extends AbstractMavenReport {
 					"Skipping JaCoCo execution because property jacoco.skip is set.");
 			return false;
 		}
-		if (!getDataFile().exists()) {
-			getLog().info(
-					"Skipping JaCoCo execution due to missing execution data file:"
-							+ getDataFile());
+		if (getDataFiles().isEmpty()) {
+			getLog().info("Skipping JaCoCo no data file configured");
 			return false;
 		}
-		final File classesDirectory = new File(getProject().getBuild()
-				.getOutputDirectory());
-		if (!classesDirectory.exists()) {
-			getLog().info(
-					"Skipping JaCoCo execution due to missing classes directory:"
-							+ classesDirectory);
+
+		for (final File dataFile : getDataFiles()) {
+			if (!dataFile.exists()) {
+				getLog().info(
+						"Skipping JaCoCo execution due to missing execution data file:"
+								+ dataFile);
+				return false;
+			}
+		}
+		final List<File> classesDirectories = getClassesDirectories();
+		if (classesDirectories.isEmpty()) {
+			getLog().info("Skipping JaCoCo no data file configured");
 			return false;
+		}
+
+		for (final File classesDirectory : classesDirectories) {
+			if (!classesDirectory.exists()) {
+				getLog().info(
+						"Skipping JaCoCo execution due to missing classes directory:"
+								+ classesDirectory);
+				return false;
+			}
 		}
 		return true;
+	}
+
+	List<File> getClassesDirectories() {
+		return Arrays
+				.asList(new File(getProject().getBuild().getOutputDirectory()));
 	}
 
 	/**
@@ -200,12 +218,18 @@ public abstract class AbstractReportMojo extends AbstractMavenReport {
 
 	void loadExecutionData() throws MavenReportException {
 		final ExecFileLoader loader = new ExecFileLoader();
-		try {
-			loader.load(getDataFile());
-		} catch (final IOException e) {
-			throw new MavenReportException(
-					"Unable to read execution data file " + getDataFile()
-							+ ": " + e.getMessage(), e);
+		for (final File dataFile : getDataFiles()) {
+			if (dataFile.exists()) {
+				try {
+					loader.load(dataFile);
+				} catch (final IOException e) {
+					throw new MavenReportException(
+							"Unable to read execution data file "
+									+ getDataFiles()
+									+ ": " + e.getMessage(),
+							e);
+				}
+			}
 		}
 		sessionInfoStore = loader.getSessionInfoStore();
 		executionDataStore = loader.getExecutionDataStore();
@@ -214,7 +238,8 @@ public abstract class AbstractReportMojo extends AbstractMavenReport {
 	void createReport(final IReportGroupVisitor visitor) throws IOException {
 		final FileFilter fileFilter = new FileFilter(this.getIncludes(),
 				this.getExcludes());
-		final BundleCreator creator = new BundleCreator(this.getProject(),
+		final BundleCreator creator = new BundleCreator(
+				this.getProject().getName(), getClassesDirectories(),
 				fileFilter, getLog());
 		final IBundleCoverage bundle = creator.createBundle(executionDataStore);
 		final SourceFileCollection locator = new SourceFileCollection(
@@ -250,10 +275,10 @@ public abstract class AbstractReportMojo extends AbstractMavenReport {
 		return new MultiReportVisitor(visitors);
 	}
 
-	File resolvePath(final String path) {
+	File resolvePath(final MavenProject project, final String path) {
 		File file = new File(path);
 		if (!file.isAbsolute()) {
-			file = new File(getProject().getBasedir(), path);
+			file = new File(project.getBasedir(), path);
 		}
 		return file;
 	}
@@ -261,7 +286,7 @@ public abstract class AbstractReportMojo extends AbstractMavenReport {
 	List<File> getCompileSourceRoots() {
 		final List<File> result = new ArrayList<File>();
 		for (final Object path : getProject().getCompileSourceRoots()) {
-			result.add(resolvePath((String) path));
+			result.add(resolvePath(getProject(), (String) path));
 		}
 		return result;
 	}
@@ -300,7 +325,7 @@ public abstract class AbstractReportMojo extends AbstractMavenReport {
 		}
 	}
 
-	abstract File getDataFile();
+	abstract List<File> getDataFiles();
 
 	abstract File getOutputDirectoryFile();
 

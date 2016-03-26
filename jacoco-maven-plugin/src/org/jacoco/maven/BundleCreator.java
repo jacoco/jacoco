@@ -16,11 +16,11 @@ import static java.lang.String.format;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
 import org.apache.maven.plugin.logging.Log;
-import org.apache.maven.project.MavenProject;
 import org.codehaus.plexus.util.FileUtils;
 import org.jacoco.core.analysis.Analyzer;
 import org.jacoco.core.analysis.CoverageBuilder;
@@ -33,25 +33,47 @@ import org.jacoco.core.data.ExecutionDataStore;
  */
 public final class BundleCreator {
 
-	private final MavenProject project;
+	private final String projectName;
 	private final FileFilter fileFilter;
 	private final Log log;
+	private final List<File> classesDirectories;
 
 	/**
 	 * Construct a new BundleCreator given the MavenProject and FileFilter.
 	 * 
-	 * @param project
-	 *            the MavenProject
+	 * @param projectName
+	 *            the MavenProject name
+	 * @param classesDirectories
+	 *            the directories to scan for classes
 	 * @param fileFilter
 	 *            the FileFilter
 	 * @param log
 	 *            for log output
 	 */
-	public BundleCreator(final MavenProject project,
+	public BundleCreator(final String projectName,
+			final List<File> classesDirectories,
 			final FileFilter fileFilter, final Log log) {
-		this.project = project;
+		this.projectName = projectName;
+		this.classesDirectories = classesDirectories;
 		this.fileFilter = fileFilter;
 		this.log = log;
+	}
+
+	/**
+	 * Construct a new BundleCreator given the MavenProject and FileFilter.
+	 * 
+	 * @param projectName
+	 *            the MavenProject name
+	 * @param classesDirectory
+	 *            the directory to scan for classes
+	 * @param fileFilter
+	 *            the FileFilter
+	 * @param log
+	 *            for log output
+	 */
+	public BundleCreator(final String projectName, final File classesDirectory,
+			final FileFilter fileFilter, final Log log) {
+		this(projectName, Arrays.asList(classesDirectory), fileFilter, log);
 	}
 
 	/**
@@ -67,19 +89,17 @@ public final class BundleCreator {
 			final ExecutionDataStore executionDataStore) throws IOException {
 		final CoverageBuilder builder = new CoverageBuilder();
 		final Analyzer analyzer = new Analyzer(executionDataStore, builder);
-		final File classesDir = new File(this.project.getBuild()
-				.getOutputDirectory());
+		for (final File classesDir : classesDirectories) {
+			@SuppressWarnings("unchecked")
+			final List<File> filesToAnalyze = FileUtils.getFiles(classesDir,
+					fileFilter.getIncludes(), fileFilter.getExcludes());
 
-		@SuppressWarnings("unchecked")
-		final List<File> filesToAnalyze = FileUtils.getFiles(classesDir,
-				fileFilter.getIncludes(), fileFilter.getExcludes());
-
-		for (final File file : filesToAnalyze) {
-			analyzer.analyzeAll(file);
+			for (final File file : filesToAnalyze) {
+				analyzer.analyzeAll(file);
+			}
 		}
 
-		final IBundleCoverage bundle = builder
-				.getBundle(this.project.getName());
+		final IBundleCoverage bundle = builder.getBundle(this.projectName);
 		logBundleInfo(bundle, builder.getNoMatchClasses());
 
 		return bundle;
