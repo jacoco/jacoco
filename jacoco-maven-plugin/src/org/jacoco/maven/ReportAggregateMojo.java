@@ -56,7 +56,7 @@ public class ReportAggregateMojo extends ReportMojo {
 	/**
 	 * The projects in the reactor.
 	 * 
-	 * @parameter expression="${reactorProjects}"
+	 * @parameter property="reactorProjects"
 	 * @readonly
 	 */
 	private List<MavenProject> reactorProjects;
