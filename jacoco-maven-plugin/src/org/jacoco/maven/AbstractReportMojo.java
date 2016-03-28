@@ -95,10 +95,6 @@ public abstract class AbstractReportMojo extends AbstractMavenReport {
 	SessionInfoStore sessionInfoStore;
 	ExecutionDataStore executionDataStore;
 
-	public abstract String getOutputName();
-
-	public abstract String getName(final Locale locale);
-
 	public String getDescription(final Locale locale) {
 		return getName(locale) + " Coverage Report.";
 	}
@@ -135,10 +131,6 @@ public abstract class AbstractReportMojo extends AbstractMavenReport {
 	List<String> getExcludes() {
 		return excludes;
 	}
-
-	@Override
-	public abstract void setReportOutputDirectory(
-			final File reportOutputDirectory);
 
 	@Override
 	public boolean canGenerateReport() {

@@ -69,12 +69,10 @@ public class ReportMojo extends AbstractReportMojo {
 		return outputDirectory;
 	}
 
-	@Override
 	public String getOutputName() {
 		return "jacoco/index";
 	}
 
-	@Override
 	public String getName(final Locale locale) {
 		return "JaCoCo Test";
 	}
