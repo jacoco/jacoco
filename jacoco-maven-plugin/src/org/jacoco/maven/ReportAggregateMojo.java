@@ -106,7 +106,6 @@ public class ReportAggregateMojo extends ReportMojo {
 		// TODO use source encoding of target project
 		final SourceFileCollection locator = new SourceFileCollection(
 				getCompileSourceRoots(project), sourceEncoding);
-		checkForMissingDebugInformation(bundle);
 		visitor.visitBundle(bundle, locator);
 	}
 

@@ -27,7 +27,6 @@ import org.apache.maven.project.MavenProject;
 import org.apache.maven.reporting.AbstractMavenReport;
 import org.apache.maven.reporting.MavenReportException;
 import org.jacoco.core.analysis.IBundleCoverage;
-import org.jacoco.core.analysis.ICoverageNode;
 import org.jacoco.core.data.ExecutionDataStore;
 import org.jacoco.core.data.SessionInfoStore;
 import org.jacoco.core.tools.ExecFileLoader;
@@ -210,16 +209,7 @@ public abstract class AbstractReportMojo extends AbstractMavenReport {
 		final IBundleCoverage bundle = creator.createBundle(executionDataStore);
 		final SourceFileCollection locator = new SourceFileCollection(
 				getCompileSourceRoots(getProject()), sourceEncoding);
-		checkForMissingDebugInformation(bundle);
 		visitor.visitBundle(bundle, locator);
-	}
-
-	void checkForMissingDebugInformation(final ICoverageNode node) {
-		if (node.getClassCounter().getTotalCount() > 0
-				&& node.getLineCounter().getTotalCount() == 0) {
-			getLog().warn(
-					"To enable source code annotation class files have to be compiled with debug information.");
-		}
 	}
 
 	IReportVisitor createVisitor(final Locale locale) throws IOException {
