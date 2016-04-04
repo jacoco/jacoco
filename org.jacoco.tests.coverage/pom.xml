@@ -102,7 +102,7 @@
   <properties>
     <maven.deploy.skip>true</maven.deploy.skip>
     <jacoco.includes>**/*.class</jacoco.includes>
-    <jacoco.excludes></jacoco.excludes>
+    <jacoco.excludes>**/HelpMojo.class</jacoco.excludes>
   </properties>
 
   <build>
