@@ -27,9 +27,6 @@ import org.apache.maven.project.MavenProject;
 import org.apache.maven.reporting.AbstractMavenReport;
 import org.apache.maven.reporting.MavenReportException;
 import org.jacoco.core.analysis.IBundleCoverage;
-import org.jacoco.core.data.ExecutionDataStore;
-import org.jacoco.core.data.SessionInfoStore;
-import org.jacoco.core.tools.ExecFileLoader;
 import org.jacoco.report.FileMultiReportOutput;
 import org.jacoco.report.IReportGroupVisitor;
 import org.jacoco.report.IReportVisitor;
@@ -52,12 +49,14 @@ public abstract class AbstractReportMojo extends AbstractMavenReport {
 	 *            default-value="UTF-8"
 	 */
 	String outputEncoding;
+
 	/**
 	 * Encoding of the source files.
 	 * 
 	 * @parameter property="project.build.sourceEncoding" default-value="UTF-8"
 	 */
 	String sourceEncoding;
+
 	/**
 	 * A list of class files to include in the report. May use wildcard
 	 * characters (* and ?). When not specified everything will be included.
@@ -65,6 +64,7 @@ public abstract class AbstractReportMojo extends AbstractMavenReport {
 	 * @parameter
 	 */
 	List<String> includes;
+
 	/**
 	 * A list of class files to exclude from the report. May use wildcard
 	 * characters (* and ?). When not specified nothing will be excluded.
@@ -72,12 +72,14 @@ public abstract class AbstractReportMojo extends AbstractMavenReport {
 	 * @parameter
 	 */
 	List<String> excludes;
+
 	/**
 	 * Flag used to suppress execution.
 	 * 
 	 * @parameter property="jacoco.skip" default-value="false"
 	 */
 	boolean skip;
+
 	/**
 	 * Maven project.
 	 * 
@@ -85,14 +87,13 @@ public abstract class AbstractReportMojo extends AbstractMavenReport {
 	 * @readonly
 	 */
 	MavenProject project;
+
 	/**
 	 * Doxia Site Renderer.
 	 * 
 	 * @component
 	 */
 	Renderer siteRenderer;
-	SessionInfoStore sessionInfoStore;
-	ExecutionDataStore executionDataStore;
 
 	public String getDescription(final Locale locale) {
 		return getName(locale) + " Coverage Report.";
@@ -175,38 +176,28 @@ public abstract class AbstractReportMojo extends AbstractMavenReport {
 	@Override
 	protected void executeReport(final Locale locale)
 			throws MavenReportException {
-		loadExecutionData();
 		try {
+			final BundleCreator creator = new BundleCreator(getLog());
+			loadExecutionData(creator);
 			final IReportVisitor visitor = createVisitor(locale);
-			visitor.visitInfo(sessionInfoStore.getInfos(),
-					executionDataStore.getContents());
-			createReport(visitor);
+			visitor.visitInfo(creator.getSessionInfos(),
+					creator.getExecutionData());
+			createReport(visitor, creator);
 			visitor.visitEnd();
 		} catch (final IOException e) {
 			throw new MavenReportException("Error while creating report: "
 					+ e.getMessage(), e);
 		}
 	}
-
-	void loadExecutionData() throws MavenReportException {
-		final ExecFileLoader loader = new ExecFileLoader();
-		try {
-			loader.load(getDataFile());
-		} catch (final IOException e) {
-			throw new MavenReportException(
-					"Unable to read execution data file " + getDataFile()
-							+ ": " + e.getMessage(), e);
-		}
-		sessionInfoStore = loader.getSessionInfoStore();
-		executionDataStore = loader.getExecutionDataStore();
+	
+	void loadExecutionData(final BundleCreator creator) throws IOException {
+		creator.loadExecutionData(getDataFile());
 	}
 
-	void createReport(final IReportGroupVisitor visitor) throws IOException {
-		final FileFilter fileFilter = new FileFilter(this.getIncludes(),
-				this.getExcludes());
-		final BundleCreator creator = new BundleCreator(this.getProject(),
-				fileFilter, getLog());
-		final IBundleCoverage bundle = creator.createBundle(executionDataStore);
+	void createReport(final IReportGroupVisitor visitor,
+			final BundleCreator creator) throws IOException {
+		final IBundleCoverage bundle = creator.createBundle(getProject(),
+				this.getIncludes(), this.getExcludes());
 		final SourceFileCollection locator = new SourceFileCollection(
 				getCompileSourceRoots(getProject()), sourceEncoding);
 		visitor.visitBundle(bundle, locator);

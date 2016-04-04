@@ -21,67 +21,90 @@ import java.util.List;
 
 import org.apache.maven.plugin.logging.Log;
 import org.apache.maven.project.MavenProject;
-import org.codehaus.plexus.util.FileUtils;
 import org.jacoco.core.analysis.Analyzer;
 import org.jacoco.core.analysis.CoverageBuilder;
 import org.jacoco.core.analysis.IBundleCoverage;
 import org.jacoco.core.analysis.IClassCoverage;
-import org.jacoco.core.data.ExecutionDataStore;
+import org.jacoco.core.data.ExecutionData;
+import org.jacoco.core.data.SessionInfo;
+import org.jacoco.core.tools.ExecFileLoader;
 
 /**
- * Creates an IBundleCoverage.
+ * Creates IBundleCoverage instances. Execution data has to be loaded before
+ * coverage can be calculated.
  */
 public final class BundleCreator {
 
-	private final MavenProject project;
-	private final FileFilter fileFilter;
 	private final Log log;
+	private final ExecFileLoader loader;
 
 	/**
 	 * Construct a new BundleCreator given the MavenProject and FileFilter.
 	 * 
-	 * @param project
-	 *            the MavenProject
-	 * @param fileFilter
-	 *            the FileFilter
 	 * @param log
 	 *            for log output
 	 */
-	public BundleCreator(final MavenProject project,
-			final FileFilter fileFilter, final Log log) {
-		this.project = project;
-		this.fileFilter = fileFilter;
+	public BundleCreator(final Log log) {
 		this.log = log;
+		this.loader = new ExecFileLoader();
 	}
 
 	/**
-	 * Create an IBundleCoverage for the given ExecutionDataStore.
+	 * Loads the given execution data file.
 	 * 
-	 * @param executionDataStore
-	 *            the execution data.
+	 * @param execFile
+	 *            execution data file to load
+	 * @throws IOException
+	 *             if the file can't be loaded
+	 */
+	public void loadExecutionData(final File execFile) throws IOException {
+		loader.load(execFile);
+	}
+
+	/**
+	 * @return all session infos loaded from execution data files
+	 */
+	public List<SessionInfo> getSessionInfos() {
+		return loader.getSessionInfoStore().getInfos();
+	}
+
+	/**
+	 * @return all execution data loaded from execution data files
+	 */
+	public Collection<ExecutionData> getExecutionData() {
+		return loader.getExecutionDataStore().getContents();
+	}
+
+	/**
+	 * Create an IBundleCoverage for the given project.
+	 * 
+	 * @param project
+	 *            the MavenProject
+	 * @param includes
+	 *            list of includes patterns
+	 * @param excludes
+	 *            list of excludes patterns
 	 * @return the coverage data.
 	 * @throws IOException
 	 *             if class files can't be read
 	 */
-	public IBundleCoverage createBundle(
-			final ExecutionDataStore executionDataStore) throws IOException {
+	public IBundleCoverage createBundle(final MavenProject project,
+			final List<String> includes, final List<String> excludes)
+			throws IOException {
 		final CoverageBuilder builder = new CoverageBuilder();
-		final File classesDir = new File(this.project.getBuild()
+		final File classesDir = new File(project.getBuild()
 				.getOutputDirectory());
 
 		if (classesDir.isDirectory()) {
-			@SuppressWarnings("unchecked")
-			final List<File> filesToAnalyze = FileUtils.getFiles(classesDir,
-					fileFilter.getIncludes(), fileFilter.getExcludes());
-
-			final Analyzer analyzer = new Analyzer(executionDataStore, builder);
-			for (final File file : filesToAnalyze) {
+			final Analyzer analyzer = new Analyzer(
+					loader.getExecutionDataStore(), builder);
+			final FileFilter filter = new FileFilter(includes, excludes);
+			for (final File file : filter.getFiles(classesDir)) {
 				analyzer.analyzeAll(file);
 			}
 		}
 
-		final IBundleCoverage bundle = builder
-				.getBundle(this.project.getName());
+		final IBundleCoverage bundle = builder.getBundle(project.getName());
 		logBundleInfo(bundle, builder.getNoMatchClasses());
 
 		return bundle;

@@ -45,7 +45,7 @@ public class FileFilter {
 	}
 
 	/**
-	 * Returns a list of files.
+	 * Returns a list of file names.
 	 * 
 	 * @param directory
 	 *            the directory to scan
@@ -57,6 +57,20 @@ public class FileFilter {
 	public List<String> getFileNames(final File directory) throws IOException {
 		return FileUtils.getFileNames(directory, getIncludes(), getExcludes(),
 				false);
+	}
+
+	/**
+	 * Returns a list of files.
+	 * 
+	 * @param directory
+	 *            the directory to scan
+	 * @return a list of files
+	 * @throws IOException
+	 *             if file system access fails
+	 */
+	@SuppressWarnings("unchecked")
+	public List<File> getFiles(final File directory) throws IOException {
+		return FileUtils.getFiles(directory, getIncludes(), getExcludes());
 	}
 
 	/**
