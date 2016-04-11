@@ -12,12 +12,7 @@
 package org.jacoco.maven;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.Reader;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
@@ -26,15 +21,8 @@ import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.project.MavenProject;
 import org.apache.maven.reporting.AbstractMavenReport;
 import org.apache.maven.reporting.MavenReportException;
-import org.jacoco.core.analysis.IBundleCoverage;
-import org.jacoco.report.FileMultiReportOutput;
 import org.jacoco.report.IReportGroupVisitor;
 import org.jacoco.report.IReportVisitor;
-import org.jacoco.report.ISourceFileLocator;
-import org.jacoco.report.MultiReportVisitor;
-import org.jacoco.report.csv.CSVFormatter;
-import org.jacoco.report.html.HTMLFormatter;
-import org.jacoco.report.xml.XMLFormatter;
 
 /**
  * Base class for creating a code coverage report for tests of a single project
@@ -177,99 +165,37 @@ public abstract class AbstractReportMojo extends AbstractMavenReport {
 	protected void executeReport(final Locale locale)
 			throws MavenReportException {
 		try {
-			final BundleCreator creator = new BundleCreator(getLog());
-			loadExecutionData(creator);
-			final IReportVisitor visitor = createVisitor(locale);
-			visitor.visitInfo(creator.getSessionInfos(),
-					creator.getExecutionData());
-			createReport(visitor, creator);
+			final ReportSupport support = new ReportSupport(getLog());
+			loadExecutionData(support);
+			final IReportVisitor visitor = createVisitor(support, locale);
+			createReport(visitor, support);
 			visitor.visitEnd();
 		} catch (final IOException e) {
 			throw new MavenReportException("Error while creating report: "
 					+ e.getMessage(), e);
 		}
 	}
-	
-	void loadExecutionData(final BundleCreator creator) throws IOException {
-		creator.loadExecutionData(getDataFile());
+
+	void loadExecutionData(final ReportSupport support) throws IOException {
+		support.loadExecutionData(getDataFile());
 	}
 
 	void createReport(final IReportGroupVisitor visitor,
-			final BundleCreator creator) throws IOException {
-		final IBundleCoverage bundle = creator.createBundle(getProject(),
-				this.getIncludes(), this.getExcludes());
-		final SourceFileCollection locator = new SourceFileCollection(
-				getCompileSourceRoots(getProject()), sourceEncoding);
-		visitor.visitBundle(bundle, locator);
+			final ReportSupport support) throws IOException {
+		support.processProject(visitor, getProject(), getIncludes(),
+				getExcludes(), sourceEncoding);
 	}
 
-	IReportVisitor createVisitor(final Locale locale) throws IOException {
-		final List<IReportVisitor> visitors = new ArrayList<IReportVisitor>();
+	IReportVisitor createVisitor(final ReportSupport support,
+			final Locale locale) throws IOException {
 		getOutputDirectoryFile().mkdirs();
-		final XMLFormatter xmlFormatter = new XMLFormatter();
-		xmlFormatter.setOutputEncoding(outputEncoding);
-		visitors.add(xmlFormatter.createVisitor(new FileOutputStream(new File(
-				getOutputDirectoryFile(), "jacoco.xml"))));
-		final CSVFormatter csvFormatter = new CSVFormatter();
-		csvFormatter.setOutputEncoding(outputEncoding);
-		visitors.add(csvFormatter.createVisitor(new FileOutputStream(new File(
-				getOutputDirectoryFile(), "jacoco.csv"))));
-		final HTMLFormatter htmlFormatter = new HTMLFormatter();
-		htmlFormatter.setOutputEncoding(outputEncoding);
-		htmlFormatter.setLocale(locale);
-		visitors.add(htmlFormatter.createVisitor(new FileMultiReportOutput(
-				getOutputDirectoryFile())));
-		return new MultiReportVisitor(visitors);
-	}
-
-	static File resolvePath(final MavenProject project, final String path) {
-		File file = new File(path);
-		if (!file.isAbsolute()) {
-			file = new File(project.getBasedir(), path);
-		}
-		return file;
-	}
-
-	static List<File> getCompileSourceRoots(final MavenProject project) {
-		final List<File> result = new ArrayList<File>();
-		for (final Object path : project.getCompileSourceRoots()) {
-			result.add(resolvePath(project, (String) path));
-		}
-		return result;
-	}
-
-	static class SourceFileCollection implements ISourceFileLocator {
-
-		private final List<File> sourceRoots;
-		private final String encoding;
-
-		public SourceFileCollection(final List<File> sourceRoots,
-				final String encoding) {
-			this.sourceRoots = sourceRoots;
-			this.encoding = encoding;
-		}
-
-		public Reader getSourceFile(final String packageName,
-				final String fileName) throws IOException {
-			final String r;
-			if (packageName.length() > 0) {
-				r = packageName + '/' + fileName;
-			} else {
-				r = fileName;
-			}
-			for (final File sourceRoot : sourceRoots) {
-				final File file = new File(sourceRoot, r);
-				if (file.exists() && file.isFile()) {
-					return new InputStreamReader(new FileInputStream(file),
-							encoding);
-				}
-			}
-			return null;
-		}
-
-		public int getTabWidth() {
-			return 4;
-		}
+		support.addXmlFormatter(getOutputDirectoryFile(), "jacoco.xml",
+				outputEncoding);
+		support.addCsvFormatter(getOutputDirectoryFile(), "jacoco.csv",
+				outputEncoding);
+		support.addHtmlFormatter(getOutputDirectoryFile(), outputEncoding,
+				locale);
+		return support.initRootVisitor();
 	}
 
 	abstract File getDataFile();

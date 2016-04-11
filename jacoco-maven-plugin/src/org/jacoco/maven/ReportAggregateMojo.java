@@ -20,7 +20,6 @@ import java.util.List;
 import org.apache.maven.artifact.Artifact;
 import org.apache.maven.model.Dependency;
 import org.apache.maven.project.MavenProject;
-import org.jacoco.core.analysis.IBundleCoverage;
 import org.jacoco.report.IReportGroupVisitor;
 
 /**
@@ -68,28 +67,17 @@ public class ReportAggregateMojo extends ReportMojo {
 
 	@Override
 	void createReport(final IReportGroupVisitor visitor,
-			final BundleCreator creator) throws IOException {
+			final ReportSupport support) throws IOException {
 		final IReportGroupVisitor group = visitor.visitGroup(getProject()
 				.getName());
 		for (final MavenProject dependency : findDependencies(Artifact.SCOPE_COMPILE)) {
-			createReportForProject(dependency, group, creator);
+			support.processProject(group, dependency, getIncludes(), getExcludes(),
+			sourceEncoding);
 		}
 	}
 
-	void createReportForProject(final MavenProject project,
-			final IReportGroupVisitor visitor, final BundleCreator creator)
-			throws IOException {
-
-		final IBundleCoverage bundle = creator.createBundle(project,
-				this.getIncludes(), this.getExcludes());
-		// TODO use source encoding of target project
-		final SourceFileCollection locator = new SourceFileCollection(
-				getCompileSourceRoots(project), sourceEncoding);
-		visitor.visitBundle(bundle, locator);
-	}
-
 	@Override
-	void loadExecutionData(final BundleCreator creator) throws IOException {
+	void loadExecutionData(final ReportSupport support) throws IOException {
 		for (final MavenProject dependency : findDependencies(
 				Artifact.SCOPE_COMPILE, Artifact.SCOPE_TEST)) {
 			// TODO Use configured location from project
@@ -97,8 +85,7 @@ public class ReportAggregateMojo extends ReportMojo {
 			final File execFile = new File(
 					dependency.getBuild().getDirectory(), "jacoco.exec");
 			if (execFile.exists()) {
-				getLog().info("Loading execution data file " + execFile);
-				creator.loadExecutionData(execFile);
+				support.loadExecutionData(execFile);
 			}
 		}
 	}

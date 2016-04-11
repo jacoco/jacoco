@@ -19,13 +19,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.maven.plugin.MojoExecutionException;
-import org.jacoco.core.analysis.IBundleCoverage;
 import org.jacoco.core.analysis.ICoverageNode;
 import org.jacoco.report.IReportVisitor;
 import org.jacoco.report.check.IViolationsOutput;
 import org.jacoco.report.check.Limit;
 import org.jacoco.report.check.Rule;
-import org.jacoco.report.check.RulesChecker;
 
 /**
  * Checks that the code coverage metrics are being met.
@@ -170,17 +168,20 @@ public class CheckMojo extends AbstractJacocoMojo implements IViolationsOutput {
 	private void executeCheck() throws MojoExecutionException {
 		violations = false;
 
-		final RulesChecker checker = new RulesChecker();
+		final ReportSupport support = new ReportSupport(getLog());
+
 		final List<Rule> checkerrules = new ArrayList<Rule>();
 		for (final RuleConfiguration r : rules) {
 			checkerrules.add(r.rule);
 		}
-		checker.setRules(checkerrules);
+		support.addRulesChecker(checkerrules, this);
 
-		final IReportVisitor visitor = checker.createVisitor(this);
 		try {
-			final IBundleCoverage bundle = loadBundle();
-			visitor.visitBundle(bundle, null);
+			final IReportVisitor visitor = support.initRootVisitor();
+			support.loadExecutionData(dataFile);
+			support.processProject(visitor, getProject(), this.getIncludes(),
+					this.getExcludes());
+			visitor.visitEnd();
 		} catch (final IOException e) {
 			throw new MojoExecutionException(
 					"Error while checking code coverage: " + e.getMessage(), e);
@@ -194,13 +195,6 @@ public class CheckMojo extends AbstractJacocoMojo implements IViolationsOutput {
 		} else {
 			this.getLog().info(CHECK_SUCCESS);
 		}
-	}
-
-	private IBundleCoverage loadBundle() throws IOException {
-		final BundleCreator creator = new BundleCreator(getLog());
-		creator.loadExecutionData(dataFile);
-		return creator.createBundle(getProject(), this.getIncludes(),
-				this.getExcludes());
 	}
 
 	public void onViolation(final ICoverageNode node, final Rule rule,
