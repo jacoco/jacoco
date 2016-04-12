@@ -50,6 +50,24 @@ import org.jacoco.report.IReportGroupVisitor;
 public class ReportAggregateMojo extends AbstractReportMojo {
 
 	/**
+	 * A list of execution data files to include in the report from each
+	 * project. May use wildcard characters (* and ?). When not specified all
+	 * *.exec files from the target folder will be included.
+	 * 
+	 * @parameter default-value="target/*.exec"
+	 */
+	List<String> dataFileIncludes;
+
+	/**
+	 * A list of execution data files to exclude from the report. May use
+	 * wildcard characters (* and ?). When not specified nothing will be
+	 * excluded.
+	 * 
+	 * @parameter
+	 */
+	List<String> dataFileExcludes;
+
+	/**
 	 * Output directory for the reports. Note that this parameter is only
 	 * relevant if the goal is run from the command line or from the default
 	 * build lifecycle. If the goal is run indirectly as part of a site
@@ -81,13 +99,11 @@ public class ReportAggregateMojo extends AbstractReportMojo {
 
 	@Override
 	void loadExecutionData(final ReportSupport support) throws IOException {
+		final FileFilter filter = new FileFilter(dataFileIncludes,
+				dataFileExcludes);
 		for (final MavenProject dependency : findDependencies(
 				Artifact.SCOPE_COMPILE, Artifact.SCOPE_TEST)) {
-			// TODO Use configured location from project
-			// TODO Clarify when to include exec data from integration tests
-			final File execFile = new File(
-					dependency.getBuild().getDirectory(), "jacoco.exec");
-			if (execFile.exists()) {
+			for (final File execFile : filter.getFiles(dependency.getBasedir())) {
 				support.loadExecutionData(execFile);
 			}
 		}

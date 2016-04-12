@@ -9,10 +9,30 @@
  *    Marc R. Hoffmann, Jan Wloka - initial API and implementation
  *
  *******************************************************************************/
+import org.codehaus.plexus.util.*;
+
+String buildLog = FileUtils.fileRead( new File( basedir, "build.log" ) );
+
+if ( buildLog.indexOf( "/child1/target/jacoco.exec" ) < 0 ) {
+    throw new RuntimeException( "Execution data from child1 was not loaded." );
+}
+
+if ( buildLog.indexOf( "/child1-test/target/jacoco.exec" ) < 0 ) {
+    throw new RuntimeException( "Execution data from child1-test was not loaded." );
+}
+
+if ( buildLog.indexOf( "/child2/target/jacoco.exec" ) < 0 ) {
+    throw new RuntimeException( "Execution data from child2 was not loaded." );
+}
 
 File reportChild1 = new File( basedir, "report/target/site/jacoco-aggregate/child1/index.html" );
 if ( !reportChild1.isFile() ) {
     throw new RuntimeException( "Report for child1 was not created." );
+}
+
+File reportChild1test = new File( basedir, "report/target/site/jacoco-aggregate/child1-test/index.html" );
+if ( reportChild1test.isFile() ) {
+    throw new RuntimeException( "Report for child1-test should not be created." );
 }
 
 File reportChild2 = new File( basedir, "report/target/site/jacoco-aggregate/child2/index.html" );
