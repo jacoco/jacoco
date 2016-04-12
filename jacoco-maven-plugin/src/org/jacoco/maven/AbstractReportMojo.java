@@ -11,7 +11,6 @@
  *******************************************************************************/
 package org.jacoco.maven;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.List;
 import java.util.Locale;
@@ -127,22 +126,22 @@ public abstract class AbstractReportMojo extends AbstractMavenReport {
 					"Skipping JaCoCo execution because property jacoco.skip is set.");
 			return false;
 		}
-		if (!getDataFile().exists()) {
+		if (!canGenerateReportRegardingDataFiles()) {
 			getLog().info(
-					"Skipping JaCoCo execution due to missing execution data file:"
-							+ getDataFile());
+					"Skipping JaCoCo execution due to missing execution data file.");
 			return false;
 		}
-		final File classesDirectory = new File(getProject().getBuild()
-				.getOutputDirectory());
-		if (!classesDirectory.exists()) {
+		if (!canGenerateReportRegardingClassesDirectory()) {
 			getLog().info(
-					"Skipping JaCoCo execution due to missing classes directory:"
-							+ classesDirectory);
+					"Skipping JaCoCo execution due to missing classes directory.");
 			return false;
 		}
 		return true;
 	}
+
+	abstract boolean canGenerateReportRegardingDataFiles();
+
+	abstract boolean canGenerateReportRegardingClassesDirectory();
 
 	/**
 	 * This method is called when the report generation is invoked directly as a
@@ -167,7 +166,8 @@ public abstract class AbstractReportMojo extends AbstractMavenReport {
 		try {
 			final ReportSupport support = new ReportSupport(getLog());
 			loadExecutionData(support);
-			final IReportVisitor visitor = createVisitor(support, locale);
+			addFormatters(support, locale);
+			final IReportVisitor visitor = support.initRootVisitor();
 			createReport(visitor, support);
 			visitor.visitEnd();
 		} catch (final IOException e) {
@@ -176,30 +176,13 @@ public abstract class AbstractReportMojo extends AbstractMavenReport {
 		}
 	}
 
-	void loadExecutionData(final ReportSupport support) throws IOException {
-		support.loadExecutionData(getDataFile());
-	}
+	abstract void loadExecutionData(final ReportSupport support)
+			throws IOException;
 
-	void createReport(final IReportGroupVisitor visitor,
-			final ReportSupport support) throws IOException {
-		support.processProject(visitor, getProject(), getIncludes(),
-				getExcludes(), sourceEncoding);
-	}
+	abstract void addFormatters(final ReportSupport support, final Locale locale)
+			throws IOException;
 
-	IReportVisitor createVisitor(final ReportSupport support,
-			final Locale locale) throws IOException {
-		getOutputDirectoryFile().mkdirs();
-		support.addXmlFormatter(getOutputDirectoryFile(), "jacoco.xml",
-				outputEncoding);
-		support.addCsvFormatter(getOutputDirectoryFile(), "jacoco.csv",
-				outputEncoding);
-		support.addHtmlFormatter(getOutputDirectoryFile(), outputEncoding,
-				locale);
-		return support.initRootVisitor();
-	}
-
-	abstract File getDataFile();
-
-	abstract File getOutputDirectoryFile();
+	abstract void createReport(final IReportGroupVisitor visitor,
+			final ReportSupport support) throws IOException;
 
 }

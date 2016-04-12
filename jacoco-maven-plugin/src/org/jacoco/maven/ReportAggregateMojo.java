@@ -16,6 +16,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Locale;
 
 import org.apache.maven.artifact.Artifact;
 import org.apache.maven.model.Dependency;
@@ -46,7 +47,19 @@ import org.jacoco.report.IReportGroupVisitor;
  * @goal report-aggregate
  * @since 0.7.7
  */
-public class ReportAggregateMojo extends ReportMojo {
+public class ReportAggregateMojo extends AbstractReportMojo {
+
+	/**
+	 * Output directory for the reports. Note that this parameter is only
+	 * relevant if the goal is run from the command line or from the default
+	 * build lifecycle. If the goal is run indirectly as part of a site
+	 * generation, the output directory configured in the Maven Site Plugin is
+	 * used instead.
+	 * 
+	 * @parameter 
+	 *            default-value="${project.reporting.outputDirectory}/jacoco-aggregate"
+	 */
+	private File outputDirectory;
 
 	/**
 	 * The projects in the reactor.
@@ -57,23 +70,13 @@ public class ReportAggregateMojo extends ReportMojo {
 	private List<MavenProject> reactorProjects;
 
 	@Override
-	public boolean canGenerateReport() {
-		if (skip) {
-			getLog().info("Skipping JaCoCo execution");
-			return false;
-		}
+	boolean canGenerateReportRegardingDataFiles() {
 		return true;
 	}
 
 	@Override
-	void createReport(final IReportGroupVisitor visitor,
-			final ReportSupport support) throws IOException {
-		final IReportGroupVisitor group = visitor.visitGroup(getProject()
-				.getName());
-		for (final MavenProject dependency : findDependencies(Artifact.SCOPE_COMPILE)) {
-			support.processProject(group, dependency, getIncludes(), getExcludes(),
-			sourceEncoding);
-		}
+	boolean canGenerateReportRegardingClassesDirectory() {
+		return true;
 	}
 
 	@Override
@@ -88,6 +91,47 @@ public class ReportAggregateMojo extends ReportMojo {
 				support.loadExecutionData(execFile);
 			}
 		}
+	}
+
+	@Override
+	void addFormatters(final ReportSupport support, final Locale locale)
+			throws IOException {
+		support.addAllFormatters(outputDirectory, outputEncoding, locale);
+	}
+
+	@Override
+	void createReport(final IReportGroupVisitor visitor,
+			final ReportSupport support) throws IOException {
+		final IReportGroupVisitor group = visitor.visitGroup(getProject()
+				.getArtifactId());
+		for (final MavenProject dependency : findDependencies(Artifact.SCOPE_COMPILE)) {
+			support.processProject(group, dependency, getIncludes(),
+					getExcludes(), sourceEncoding);
+		}
+	}
+
+	@Override
+	protected String getOutputDirectory() {
+		return outputDirectory.getAbsolutePath();
+	}
+
+	@Override
+	public void setReportOutputDirectory(final File reportOutputDirectory) {
+		if (reportOutputDirectory != null
+				&& !reportOutputDirectory.getAbsolutePath().endsWith(
+						"jacoco-it")) {
+			outputDirectory = new File(reportOutputDirectory, "jacoco-it");
+		} else {
+			outputDirectory = reportOutputDirectory;
+		}
+	}
+
+	public String getOutputName() {
+		return "jacoco-it/index";
+	}
+
+	public String getName(final Locale locale) {
+		return "JaCoCo IT";
 	}
 
 	private List<MavenProject> findDependencies(final String... scopes) {

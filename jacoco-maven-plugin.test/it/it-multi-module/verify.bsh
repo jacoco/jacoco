@@ -13,7 +13,7 @@ import java.io.*;
 import org.codehaus.plexus.util.*;
 
 String buildLog = FileUtils.fileRead( new File( basedir, "build.log" ) );
-if ( buildLog.indexOf( "Skipping JaCoCo execution due to missing classes directory:" ) < 0 ) {
+if ( buildLog.indexOf( "Skipping JaCoCo execution due to missing classes directory." ) < 0 ) {
     throw new RuntimeException( "Execution should be skipped when target/classes does not exist." );
 }
 

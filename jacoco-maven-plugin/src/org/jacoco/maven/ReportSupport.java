@@ -87,20 +87,18 @@ final class ReportSupport {
 		loader.load(execFile);
 	}
 
-	public void addXmlFormatter(final File targetdir, final String filename,
-			final String encoding) throws IOException {
+	public void addXmlFormatter(final File targetfile, final String encoding)
+			throws IOException {
 		final XMLFormatter xml = new XMLFormatter();
 		xml.setOutputEncoding(encoding);
-		formatters.add(xml.createVisitor(new FileOutputStream(new File(
-				targetdir, filename))));
+		formatters.add(xml.createVisitor(new FileOutputStream(targetfile)));
 	}
 
-	public void addCsvFormatter(final File targetdir, final String filename,
-			final String encoding) throws IOException {
+	public void addCsvFormatter(final File targetfile, final String encoding)
+			throws IOException {
 		final CSVFormatter csv = new CSVFormatter();
 		csv.setOutputEncoding(encoding);
-		formatters.add(csv.createVisitor(new FileOutputStream(new File(
-				targetdir, filename))));
+		formatters.add(csv.createVisitor(new FileOutputStream(targetfile)));
 	}
 
 	public void addHtmlFormatter(final File targetdir, final String encoding,
@@ -110,6 +108,14 @@ final class ReportSupport {
 		htmlFormatter.setLocale(locale);
 		formatters.add(htmlFormatter.createVisitor(new FileMultiReportOutput(
 				targetdir)));
+	}
+
+	public void addAllFormatters(final File targetdir, final String encoding,
+			final Locale locale) throws IOException {
+		targetdir.mkdirs();
+		addXmlFormatter(new File(targetdir, "jacoco.xml"), encoding);
+		addCsvFormatter(new File(targetdir, "jacoco.csv"), encoding);
+		addHtmlFormatter(targetdir, encoding, locale);
 	}
 
 	public void addRulesChecker(final List<Rule> rules,
@@ -190,7 +196,8 @@ final class ReportSupport {
 			}
 		}
 
-		final IBundleCoverage bundle = builder.getBundle(project.getName());
+		final IBundleCoverage bundle = builder.getBundle(project
+				.getArtifactId());
 		logBundleInfo(bundle, builder.getNoMatchClasses());
 
 		visitor.visitBundle(bundle, locator);
