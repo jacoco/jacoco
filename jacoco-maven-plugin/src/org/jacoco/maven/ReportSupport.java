@@ -102,20 +102,23 @@ final class ReportSupport {
 	}
 
 	public void addHtmlFormatter(final File targetdir, final String encoding,
-			final Locale locale) throws IOException {
+			final String footer, final Locale locale) throws IOException {
 		final HTMLFormatter htmlFormatter = new HTMLFormatter();
 		htmlFormatter.setOutputEncoding(encoding);
 		htmlFormatter.setLocale(locale);
+		if (footer != null) {
+			htmlFormatter.setFooterText(footer);
+		}
 		formatters.add(htmlFormatter.createVisitor(new FileMultiReportOutput(
 				targetdir)));
 	}
 
 	public void addAllFormatters(final File targetdir, final String encoding,
-			final Locale locale) throws IOException {
+			final String footer, final Locale locale) throws IOException {
 		targetdir.mkdirs();
 		addXmlFormatter(new File(targetdir, "jacoco.xml"), encoding);
 		addCsvFormatter(new File(targetdir, "jacoco.csv"), encoding);
-		addHtmlFormatter(targetdir, encoding, locale);
+		addHtmlFormatter(targetdir, encoding, footer, locale);
 	}
 
 	public void addRulesChecker(final List<Rule> rules,
@@ -150,8 +153,8 @@ final class ReportSupport {
 	public void processProject(final IReportGroupVisitor visitor,
 			final MavenProject project, final List<String> includes,
 			final List<String> excludes) throws IOException {
-		processProject(visitor, project, includes, excludes,
-				new NoSourceLocator());
+		processProject(visitor, project.getArtifactId(), project, includes,
+				excludes, new NoSourceLocator());
 	}
 
 	/**
@@ -160,6 +163,8 @@ final class ReportSupport {
 	 * 
 	 * @param visitor
 	 *            group visitor to emit the project's coverage to
+	 * @param bundeName
+	 *            name for this project in the report
 	 * @param project
 	 *            the MavenProject
 	 * @param includes
@@ -172,17 +177,17 @@ final class ReportSupport {
 	 *             if class files can't be read
 	 */
 	public void processProject(final IReportGroupVisitor visitor,
-			final MavenProject project, final List<String> includes,
-			final List<String> excludes, final String srcEncoding)
-			throws IOException {
-		processProject(visitor, project, includes, excludes,
+			final String bundeName, final MavenProject project,
+			final List<String> includes, final List<String> excludes,
+			final String srcEncoding) throws IOException {
+		processProject(visitor, bundeName, project, includes, excludes,
 				new SourceFileCollection(project, srcEncoding));
 	}
 
 	private void processProject(final IReportGroupVisitor visitor,
-			final MavenProject project, final List<String> includes,
-			final List<String> excludes, final ISourceFileLocator locator)
-			throws IOException {
+			final String bundeName, final MavenProject project,
+			final List<String> includes, final List<String> excludes,
+			final ISourceFileLocator locator) throws IOException {
 		final CoverageBuilder builder = new CoverageBuilder();
 		final File classesDir = new File(project.getBuild()
 				.getOutputDirectory());
@@ -196,8 +201,7 @@ final class ReportSupport {
 			}
 		}
 
-		final IBundleCoverage bundle = builder.getBundle(project
-				.getArtifactId());
+		final IBundleCoverage bundle = builder.getBundle(bundeName);
 		logBundleInfo(bundle, builder.getNoMatchClasses());
 
 		visitor.visitBundle(bundle, locator);

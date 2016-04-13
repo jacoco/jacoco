@@ -70,13 +70,14 @@ public class ReportITMojo extends AbstractReportMojo {
 	@Override
 	void addFormatters(final ReportSupport support, final Locale locale)
 			throws IOException {
-		support.addAllFormatters(outputDirectory, outputEncoding, locale);
+		support.addAllFormatters(outputDirectory, outputEncoding, footer,
+				locale);
 	}
 
 	@Override
 	void createReport(final IReportGroupVisitor visitor,
 			final ReportSupport support) throws IOException {
-		support.processProject(visitor, getProject(), getIncludes(),
+		support.processProject(visitor, title, getProject(), getIncludes(),
 				getExcludes(), sourceEncoding);
 	}
 

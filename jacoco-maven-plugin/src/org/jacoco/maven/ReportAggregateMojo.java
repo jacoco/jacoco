@@ -112,17 +112,17 @@ public class ReportAggregateMojo extends AbstractReportMojo {
 	@Override
 	void addFormatters(final ReportSupport support, final Locale locale)
 			throws IOException {
-		support.addAllFormatters(outputDirectory, outputEncoding, locale);
+		support.addAllFormatters(outputDirectory, outputEncoding, footer,
+				locale);
 	}
 
 	@Override
 	void createReport(final IReportGroupVisitor visitor,
 			final ReportSupport support) throws IOException {
-		final IReportGroupVisitor group = visitor.visitGroup(getProject()
-				.getArtifactId());
+		final IReportGroupVisitor group = visitor.visitGroup(title);
 		for (final MavenProject dependency : findDependencies(Artifact.SCOPE_COMPILE)) {
-			support.processProject(group, dependency, getIncludes(),
-					getExcludes(), sourceEncoding);
+			support.processProject(group, dependency.getArtifactId(),
+					dependency, getIncludes(), getExcludes(), sourceEncoding);
 		}
 	}
 
@@ -147,7 +147,7 @@ public class ReportAggregateMojo extends AbstractReportMojo {
 	}
 
 	public String getName(final Locale locale) {
-		return "JaCoCo IT";
+		return "JaCoCo Aggregate";
 	}
 
 	private List<MavenProject> findDependencies(final String... scopes) {

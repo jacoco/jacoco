@@ -118,6 +118,10 @@
             <goals>
               <goal>report-aggregate</goal>
             </goals>
+            <configuration>
+              <title>JaCoCo</title>
+              <footer>Code Coverage Report for JaCoCo ${project.version}</footer>
+            </configuration>
           </execution>
         </executions>
       </plugin>

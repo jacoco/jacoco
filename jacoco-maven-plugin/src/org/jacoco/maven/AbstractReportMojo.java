@@ -38,6 +38,20 @@ public abstract class AbstractReportMojo extends AbstractMavenReport {
 	String outputEncoding;
 
 	/**
+	 * Name of the root node HTML report pages.
+	 * 
+	 * @parameter default-value="${project.name}"
+	 */
+	String title;
+
+	/**
+	 * Footer text used in HTML report pages.
+	 * 
+	 * @parameter
+	 */
+	String footer;
+
+	/**
 	 * Encoding of the source files.
 	 * 
 	 * @parameter property="project.build.sourceEncoding" default-value="UTF-8"
