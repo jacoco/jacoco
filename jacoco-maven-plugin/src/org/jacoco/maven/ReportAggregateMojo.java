@@ -135,15 +135,16 @@ public class ReportAggregateMojo extends AbstractReportMojo {
 	public void setReportOutputDirectory(final File reportOutputDirectory) {
 		if (reportOutputDirectory != null
 				&& !reportOutputDirectory.getAbsolutePath().endsWith(
-						"jacoco-it")) {
-			outputDirectory = new File(reportOutputDirectory, "jacoco-it");
+						"jacoco-aggregate")) {
+			outputDirectory = new File(reportOutputDirectory,
+					"jacoco-aggregate");
 		} else {
 			outputDirectory = reportOutputDirectory;
 		}
 	}
 
 	public String getOutputName() {
-		return "jacoco-it/index";
+		return "jacoco-aggregate/index";
 	}
 
 	public String getName(final Locale locale) {
