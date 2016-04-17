@@ -90,13 +90,15 @@ public class ExecutionDataWriter implements ISessionInfoVisitor,
 	}
 
 	public void visitClassExecution(final ExecutionData data) {
-		try {
-			out.writeByte(BLOCK_EXECUTIONDATA);
-			out.writeLong(data.getId());
-			out.writeUTF(data.getName());
-			out.writeBooleanArray(data.getProbes());
-		} catch (final IOException e) {
-			throw new RuntimeException(e);
+		if (data.hasHits()) {
+			try {
+				out.writeByte(BLOCK_EXECUTIONDATA);
+				out.writeLong(data.getId());
+				out.writeUTF(data.getName());
+				out.writeBooleanArray(data.getProbes());
+			} catch (final IOException e) {
+				throw new RuntimeException(e);
+			}
 		}
 	}
 

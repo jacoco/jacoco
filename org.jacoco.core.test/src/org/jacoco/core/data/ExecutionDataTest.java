@@ -54,6 +54,22 @@ public class ExecutionDataTest {
 	}
 
 	@Test
+	public void testHasHits() {
+		final boolean[] probes = new boolean[] { false, false, false };
+		final ExecutionData e = new ExecutionData(5, "Example", probes);
+		assertFalse(e.hasHits());
+		probes[1] = true;
+		assertTrue(e.hasHits());
+	}
+
+	@Test
+	public void testHasHits_empty() {
+		final boolean[] probes = new boolean[] {};
+		final ExecutionData e = new ExecutionData(5, "Example", probes);
+		assertFalse(e.hasHits());
+	}
+
+	@Test
 	public void testMerge() {
 		final ExecutionData a = new ExecutionData(5, "Example", new boolean[] {
 				false, true, false, true });

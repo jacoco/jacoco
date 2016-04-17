@@ -21,8 +21,6 @@ import java.net.Socket;
 import java.util.List;
 
 import org.jacoco.agent.rt.internal.ExceptionRecorder;
-import org.jacoco.agent.rt.internal.output.IAgentOutput;
-import org.jacoco.agent.rt.internal.output.TcpClientOutput;
 import org.jacoco.core.data.ExecutionDataStore;
 import org.jacoco.core.data.SessionInfo;
 import org.jacoco.core.data.SessionInfoStore;
@@ -93,7 +91,7 @@ public class TcpClientOutputTest {
 
 	@Test
 	public void testWriteExecutionData() throws Exception {
-		data.getExecutionData(Long.valueOf(0x12345678), "Foo", 42);
+		data.getExecutionData(Long.valueOf(0x12345678), "Foo", 42).getProbes()[0] = true;
 		data.setSessionId("stubid");
 
 		controller.writeExecutionData(false);

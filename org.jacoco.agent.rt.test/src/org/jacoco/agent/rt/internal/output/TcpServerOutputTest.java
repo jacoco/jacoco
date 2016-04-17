@@ -25,7 +25,6 @@ import java.net.UnknownHostException;
 import java.util.List;
 
 import org.jacoco.agent.rt.internal.ExceptionRecorder;
-import org.jacoco.agent.rt.internal.output.TcpServerOutput;
 import org.jacoco.core.data.ExecutionDataStore;
 import org.jacoco.core.data.ExecutionDataWriter;
 import org.jacoco.core.data.SessionInfo;
@@ -85,7 +84,7 @@ public class TcpServerOutputTest {
 
 	@Test
 	public void testWriteExecutionData() throws Exception {
-		data.getExecutionData(Long.valueOf(0x12345678), "Foo", 42);
+		data.getExecutionData(Long.valueOf(0x12345678), "Foo", 42).getProbes()[0] = true;
 		data.setSessionId("stubid");
 
 		final Socket socket = serverSocket.connect();
