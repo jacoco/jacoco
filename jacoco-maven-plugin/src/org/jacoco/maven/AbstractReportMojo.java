@@ -41,6 +41,7 @@ public abstract class AbstractReportMojo extends AbstractMavenReport {
 	 * Name of the root node HTML report pages.
 	 * 
 	 * @parameter default-value="${project.name}"
+	 * @since 0.7.7
 	 */
 	String title;
 
@@ -48,6 +49,7 @@ public abstract class AbstractReportMojo extends AbstractMavenReport {
 	 * Footer text used in HTML report pages.
 	 * 
 	 * @parameter
+	 * @since 0.7.7
 	 */
 	String footer;
 
