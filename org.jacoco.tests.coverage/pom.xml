@@ -101,6 +101,7 @@
 
   <properties>
     <maven.deploy.skip>true</maven.deploy.skip>
+    <!-- Analyze class files only to exclude shaded agent JAR from report -->
     <jacoco.includes>**/*.class</jacoco.includes>
     <jacoco.excludes>**/HelpMojo.class</jacoco.excludes>
   </properties>
