@@ -25,12 +25,12 @@ import org.jacoco.report.IReportGroupVisitor;
 
 /**
  * <p>
- * Creates a structured code coverage report from multiple projects (HTML, XML,
- * and CSV). The report is created from all modules this project depends on.
- * From those projects class and source files as well as JaCoCo execution data
- * files will be collected. This also allows to create coverage reports when
- * tests are in separate projects than the code under test, for example in case
- * of integration tests.
+ * Creates a structured code coverage report (HTML, XML, and CSV) from multiple
+ * projects within reactor. The report is created from all modules this project
+ * depends on. From those projects class and source files as well as JaCoCo
+ * execution data files will be collected. This also allows to create coverage
+ * reports when tests are in separate projects than the code under test, for
+ * example in case of integration tests.
  * </p>
  * 
  * <p>
