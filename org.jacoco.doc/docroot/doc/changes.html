@@ -20,6 +20,12 @@
 
 <h2>Snapshot Build @qualified.bundle.version@ (@build.date@)</h2>
 
+<h3>Fixed Bugs</h3>
+<ul>
+  <li>Don't suppress EOF errors in case of truncated execution data files
+      (GitHub <a href="https://github.com/jacoco/jacoco/issues/397">#397</a>).</li>
+</ul>
+
 <h3>Non-functional Changes</h3>
 <ul>
   <li>Empty probe arrays are not written to execution data files any more. This

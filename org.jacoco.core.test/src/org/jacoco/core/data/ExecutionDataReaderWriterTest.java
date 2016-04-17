@@ -19,6 +19,7 @@ import static org.junit.Assert.fail;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.EOFException;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.Arrays;
@@ -87,17 +88,17 @@ public class ExecutionDataReaderWriterTest {
 
 	@Test
 	public void testCustomBlocks() throws IOException {
-		buffer.write(-22);
-		buffer.write(-33);
+		buffer.write(0x55);
+		buffer.write(0x66);
 		final ExecutionDataReader reader = new ExecutionDataReader(
 				new ByteArrayInputStream(buffer.toByteArray())) {
 
 			@Override
 			protected boolean readBlock(byte blocktype) throws IOException {
 				switch (blocktype) {
-				case -22:
+				case 0x55:
 					return true;
-				case -33:
+				case 0x66:
 					return false;
 				}
 				return super.readBlock(blocktype);
@@ -161,9 +162,19 @@ public class ExecutionDataReaderWriterTest {
 		createReader().read();
 	}
 
+	@Test(expected = EOFException.class)
+	public void testTruncatedFile() throws IOException {
+		writer.visitClassExecution(new ExecutionData(Long.MIN_VALUE, "Sample",
+				createData(8)));
+		final byte[] content = buffer.toByteArray();
+		buffer.reset();
+		buffer.write(content, 0, content.length - 1);
+		createReaderWithVisitors().read();
+	}
+
 	@Test
 	public void testEmptyFile() throws IOException {
-		buffer = new ByteArrayOutputStream();
+		buffer.reset();
 		createReader().read();
 	}
 

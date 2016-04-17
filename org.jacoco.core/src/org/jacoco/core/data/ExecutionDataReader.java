@@ -13,7 +13,6 @@ package org.jacoco.core.data;
 
 import static java.lang.String.format;
 
-import java.io.EOFException;
 import java.io.IOException;
 import java.io.InputStream;
 
@@ -79,19 +78,19 @@ public class ExecutionDataReader {
 	 */
 	public boolean read() throws IOException,
 			IncompatibleExecDataVersionException {
-		try {
-			byte type;
-			do {
-				type = in.readByte();
-				if (firstBlock && type != ExecutionDataWriter.BLOCK_HEADER) {
-					throw new IOException("Invalid execution data file.");
-				}
-				firstBlock = false;
-			} while (readBlock(type));
-			return true;
-		} catch (final EOFException e) {
-			return false;
-		}
+		byte type;
+		do {
+			int i = in.read();
+			if (i == -1) {
+				return false; // EOF
+			}
+			type = (byte) i;
+			if (firstBlock && type != ExecutionDataWriter.BLOCK_HEADER) {
+				throw new IOException("Invalid execution data file.");
+			}
+			firstBlock = false;
+		} while (readBlock(type));
+		return true;
 	}
 
 	/**
