@@ -17,12 +17,13 @@ import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
-import java.lang.instrument.ClassDefinition;
 import java.lang.instrument.ClassFileTransformer;
 import java.lang.instrument.Instrumentation;
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationHandler;
+import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
-import java.util.jar.JarFile;
+import java.lang.reflect.Proxy;
 
 import org.jacoco.core.test.TargetLoader;
 import org.junit.Test;
@@ -40,7 +41,7 @@ public class ModifiedSystemClassRuntimeTest extends RuntimeTestBase {
 
 	@Test(expected = RuntimeException.class)
 	public void testCreateForNegative() throws Exception {
-		InstrumentationMock inst = new InstrumentationMock();
+		Instrumentation inst = newInstrumentationMock();
 		ModifiedSystemClassRuntime.createFor(inst, TARGET_CLASS_NAME);
 	}
 
@@ -49,13 +50,26 @@ public class ModifiedSystemClassRuntimeTest extends RuntimeTestBase {
 
 	private static final String TARGET_CLASS_NAME = "org/jacoco/core/runtime/ModifiedSystemClassRuntimeTest";
 
-	private static class InstrumentationMock implements Instrumentation {
+	/**
+	 * Note that we use Proxy here to mock {@link Instrumentation}, because JDK 9 adds new method "addModule",
+	 * whose parameter depends on class "java.lang.reflect.Module" introduced in JDK 9.
+	 */
+	private Instrumentation newInstrumentationMock() {
+		return (Instrumentation) Proxy.newProxyInstance(
+				getClass().getClassLoader(),
+				new Class[] { Instrumentation.class },
+				new MyInvocationHandler());
+	}
 
+	private static class MyInvocationHandler implements InvocationHandler {
 		boolean added = false;
 
 		boolean removed = false;
 
-		public void addTransformer(ClassFileTransformer transformer) {
+		/**
+		 * {@link Instrumentation#addTransformer(ClassFileTransformer)}
+		 */
+		void addTransformer(ClassFileTransformer transformer) {
 			assertFalse(added);
 			added = true;
 			try {
@@ -63,7 +77,7 @@ public class ModifiedSystemClassRuntimeTest extends RuntimeTestBase {
 				final byte[] data = TargetLoader
 						.getClassDataAsBytes(ModifiedSystemClassRuntimeTest.class);
 				verifyInstrumentedClass(TARGET_CLASS_NAME,
-						transformer.transform(null, TARGET_CLASS_NAME, null,
+						transformer.transform((ClassLoader) null, TARGET_CLASS_NAME, null,
 								null, data));
 
 				// Other classes will not be instrumented:
@@ -74,84 +88,29 @@ public class ModifiedSystemClassRuntimeTest extends RuntimeTestBase {
 			}
 		}
 
-		public boolean removeTransformer(ClassFileTransformer transformer) {
+		/**
+		 * {@link Instrumentation#removeTransformer(ClassFileTransformer)}
+		 */
+		boolean removeTransformer() {
 			assertTrue(added);
 			assertFalse(removed);
 			removed = true;
 			return true;
 		}
 
-		public Class<?>[] getAllLoadedClasses() {
+		public Object invoke(Object proxy, Method method, Object[] args)
+				throws Throwable {
+			if (args.length == 1) {
+				if ("removeTransformer".equals(method.getName())) {
+					return removeTransformer();
+				} else if ("addTransformer".equals(method.getName())) {
+					addTransformer((ClassFileTransformer) args[0]);
+					return null;
+				}
+			}
 			fail();
 			return null;
 		}
-
-		public Class<?>[] getInitiatedClasses(ClassLoader loader) {
-			fail();
-			return null;
-		}
-
-		public long getObjectSize(Object objectToSize) {
-			fail();
-			return 0;
-		}
-
-		public boolean isRedefineClassesSupported() {
-			fail();
-			return false;
-		}
-
-		public void redefineClasses(ClassDefinition[] definitions) {
-			fail();
-		}
-
-		// JDK 1.6 Methods:
-
-		@SuppressWarnings("unused")
-		public void addTransformer(ClassFileTransformer transformer,
-				boolean canRetransform) {
-			fail();
-		}
-
-		@SuppressWarnings("unused")
-		public void appendToBootstrapClassLoaderSearch(JarFile jarfile) {
-			fail();
-		}
-
-		@SuppressWarnings("unused")
-		public void appendToSystemClassLoaderSearch(JarFile jarfile) {
-			fail();
-		}
-
-		@SuppressWarnings("unused")
-		public boolean isModifiableClass(Class<?> theClass) {
-			fail();
-			return false;
-		}
-
-		@SuppressWarnings("unused")
-		public boolean isNativeMethodPrefixSupported() {
-			fail();
-			return false;
-		}
-
-		@SuppressWarnings("unused")
-		public boolean isRetransformClassesSupported() {
-			fail();
-			return false;
-		}
-
-		@SuppressWarnings("unused")
-		public void retransformClasses(Class<?>... classes) {
-			fail();
-		}
-
-		@SuppressWarnings("unused")
-		public void setNativeMethodPrefix(ClassFileTransformer transformer,
-				String prefix) {
-			fail();
-		}
-
 	}
 
 	private static void verifyInstrumentedClass(String name, byte[] source)
