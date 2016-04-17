@@ -19,15 +19,15 @@
     <version>1.0-SNAPSHOT</version>
   </parent>
 
-    <artifactId>it-report-aggregate</artifactId>
-    <packaging>pom</packaging>
+  <artifactId>it-report-aggregate</artifactId>
+  <packaging>pom</packaging>
 
-    <modules>
-        <module>child1</module>
-        <module>child1-test</module>
-        <module>child2</module>
-        <module>report</module>
-    </modules>
+  <modules>
+    <module>child1</module>
+    <module>child1-test</module>
+    <module>child2</module>
+    <module>report</module>
+  </modules>
 
   <build>
     <plugins>
