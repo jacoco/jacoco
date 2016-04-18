@@ -45,6 +45,8 @@ import org.jacoco.report.IReportGroupVisitor;
  * </ul>
  * 
  * @goal report-aggregate
+ * @requiresProject true
+ * @threadSafe
  * @since 0.7.7
  */
 public class ReportAggregateMojo extends AbstractReportMojo {
