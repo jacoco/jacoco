@@ -19,15 +19,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.maven.plugin.MojoExecutionException;
-import org.jacoco.core.analysis.IBundleCoverage;
 import org.jacoco.core.analysis.ICoverageNode;
-import org.jacoco.core.data.ExecutionDataStore;
-import org.jacoco.core.tools.ExecFileLoader;
 import org.jacoco.report.IReportVisitor;
 import org.jacoco.report.check.IViolationsOutput;
 import org.jacoco.report.check.Limit;
 import org.jacoco.report.check.Rule;
-import org.jacoco.report.check.RulesChecker;
 
 /**
  * Checks that the code coverage metrics are being met.
@@ -170,19 +166,22 @@ public class CheckMojo extends AbstractJacocoMojo implements IViolationsOutput {
 	}
 
 	private void executeCheck() throws MojoExecutionException {
-		final IBundleCoverage bundle = loadBundle();
 		violations = false;
 
-		final RulesChecker checker = new RulesChecker();
+		final ReportSupport support = new ReportSupport(getLog());
+
 		final List<Rule> checkerrules = new ArrayList<Rule>();
 		for (final RuleConfiguration r : rules) {
 			checkerrules.add(r.rule);
 		}
-		checker.setRules(checkerrules);
+		support.addRulesChecker(checkerrules, this);
 
-		final IReportVisitor visitor = checker.createVisitor(this);
 		try {
-			visitor.visitBundle(bundle, null);
+			final IReportVisitor visitor = support.initRootVisitor();
+			support.loadExecutionData(dataFile);
+			support.processProject(visitor, getProject(), this.getIncludes(),
+					this.getExcludes());
+			visitor.visitEnd();
 		} catch (final IOException e) {
 			throw new MojoExecutionException(
 					"Error while checking code coverage: " + e.getMessage(), e);
@@ -196,26 +195,6 @@ public class CheckMojo extends AbstractJacocoMojo implements IViolationsOutput {
 		} else {
 			this.getLog().info(CHECK_SUCCESS);
 		}
-	}
-
-	private IBundleCoverage loadBundle() throws MojoExecutionException {
-		final FileFilter fileFilter = new FileFilter(this.getIncludes(),
-				this.getExcludes());
-		final BundleCreator creator = new BundleCreator(getProject(),
-				fileFilter, getLog());
-		try {
-			final ExecutionDataStore executionData = loadExecutionData();
-			return creator.createBundle(executionData);
-		} catch (final IOException e) {
-			throw new MojoExecutionException(
-					"Error while reading code coverage: " + e.getMessage(), e);
-		}
-	}
-
-	private ExecutionDataStore loadExecutionData() throws IOException {
-		final ExecFileLoader loader = new ExecFileLoader();
-		loader.load(dataFile);
-		return loader.getExecutionDataStore();
 	}
 
 	public void onViolation(final ICoverageNode node, final Rule rule,

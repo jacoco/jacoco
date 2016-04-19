@@ -1,0 +1,6 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: JaCoCo Coverage Report
+Bundle-SymbolicName: org.jacoco.tests.coverage
+Bundle-Version: 0.7.7.qualifier
+Bundle-Vendor: Mountainminds GmbH & Co. KG

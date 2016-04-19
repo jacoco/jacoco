@@ -33,6 +33,7 @@
     <module>../org.jacoco.ant.test</module>
     <module>../jacoco-maven-plugin.test</module>
     <module>../org.jacoco.examples.test</module>
+    <module>../org.jacoco.tests.coverage</module>
   </modules>
 
   <properties>

@@ -13,7 +13,10 @@
 package org.jacoco.maven;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.Locale;
+
+import org.jacoco.report.IReportGroupVisitor;
 
 /**
  * Same as <code>report</code>, but provides default values suitable for
@@ -50,6 +53,35 @@ public class ReportITMojo extends AbstractReportMojo {
 	private File dataFile;
 
 	@Override
+	boolean canGenerateReportRegardingDataFiles() {
+		return dataFile.exists();
+	}
+
+	@Override
+	boolean canGenerateReportRegardingClassesDirectory() {
+		return new File(getProject().getBuild().getOutputDirectory()).exists();
+	}
+
+	@Override
+	void loadExecutionData(final ReportSupport support) throws IOException {
+		support.loadExecutionData(dataFile);
+	}
+
+	@Override
+	void addFormatters(final ReportSupport support, final Locale locale)
+			throws IOException {
+		support.addAllFormatters(outputDirectory, outputEncoding, footer,
+				locale);
+	}
+
+	@Override
+	void createReport(final IReportGroupVisitor visitor,
+			final ReportSupport support) throws IOException {
+		support.processProject(visitor, title, getProject(), getIncludes(),
+				getExcludes(), sourceEncoding);
+	}
+
+	@Override
 	protected String getOutputDirectory() {
 		return outputDirectory.getAbsolutePath();
 	}
@@ -65,22 +97,10 @@ public class ReportITMojo extends AbstractReportMojo {
 		}
 	}
 
-	@Override
-	File getDataFile() {
-		return dataFile;
-	}
-
-	@Override
-	File getOutputDirectoryFile() {
-		return outputDirectory;
-	}
-
-	@Override
 	public String getOutputName() {
 		return "jacoco-it/index";
 	}
 
-	@Override
 	public String getName(final Locale locale) {
 		return "JaCoCo IT";
 	}

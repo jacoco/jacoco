@@ -13,7 +13,7 @@ import java.io.*;
 import org.codehaus.plexus.util.*;
 
 String projectReportsPage = FileUtils.fileRead( new File( basedir, "target/site/project-reports.html" ) );
-if ( projectReportsPage.indexOf( "JaCoCo Test Coverage Report." ) < 0 ) {
+if ( projectReportsPage.indexOf( "JaCoCo Coverage Report." ) < 0 ) {
     throw new RuntimeException( "project-reports.html does not contain link to JaCoCo report" );
 }
 

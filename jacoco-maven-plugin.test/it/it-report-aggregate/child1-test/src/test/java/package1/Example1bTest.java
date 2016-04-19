@@ -6,13 +6,18 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *
  * Contributors:
- *    Evgeny Mandrikov - initial API and implementation
+ *    Marc R. Hoffmann, Jan Wloka - initial API and implementation
  *
  *******************************************************************************/
-import java.io.*;
-import org.codehaus.plexus.util.*;
+package package1;
 
-String buildLog = FileUtils.fileRead( new File( basedir, "build.log" ) );
-if ( buildLog.indexOf( "Invalid execution data file." ) < 0 ) {
-    throw new RuntimeException( "Error was not printed" );
+import org.junit.Test;
+
+public class Example1bTest {
+
+  @Test
+  public void test() {
+    new Example1b().b();
+  }
+
 }

@@ -85,84 +85,6 @@
             </goals>
             <configuration>
               <target>
-                <typedef resource="org/jacoco/ant/antlib.xml"/>
-                <echo message="Coverage report"/>
-                <report>
-                  <executiondata>
-                    <fileset dir="../org.jacoco.agent.test/target" includes="jacoco.exec"/>
-                    <fileset dir="../org.jacoco.agent.rt.test/target" includes="jacoco.exec"/>
-                    <fileset dir="../org.jacoco.ant.test/target" includes="jacoco.exec"/>
-                    <fileset dir="../org.jacoco.core.test/target" includes="jacoco.exec"/>
-                    <fileset dir="../org.jacoco.examples.test/target" includes="jacoco.exec"/>
-                    <fileset dir="../org.jacoco.report.test/target" includes="jacoco.exec"/>
-                    <fileset dir="../jacoco-maven-plugin.test/target" includes="jacoco.exec"/>
-                  </executiondata>
-                  <structure name="JaCoCo">
-                    <group name="org.jacoco.agent">
-                      <classfiles>
-                        <!-- Process class files only, ignore jacocoagent.jar -->
-                        <fileset dir="../org.jacoco.agent/target/classes" includes="**/*.class"/>
-                      </classfiles>
-                      <sourcefiles>
-                        <fileset dir="../org.jacoco.agent/src"/>
-                      </sourcefiles>
-                    </group>
-                    <group name="org.jacoco.agent.rt">
-                      <classfiles>
-                        <fileset dir="../org.jacoco.agent.rt/target/classes"/>
-                      </classfiles>
-                      <sourcefiles>
-                        <fileset dir="../org.jacoco.agent.rt/src"/>
-                      </sourcefiles>
-                    </group>
-                    <group name="org.jacoco.ant">
-                      <classfiles>
-                        <fileset dir="../org.jacoco.ant/target/classes"/>
-                      </classfiles>
-                      <sourcefiles>
-                        <fileset dir="../org.jacoco.ant/src"/>
-                      </sourcefiles>
-                    </group>
-                    <group name="org.jacoco.core">
-                      <classfiles>
-                        <fileset dir="../org.jacoco.core/target/classes"/>
-                      </classfiles>
-                      <sourcefiles>
-                        <fileset dir="../org.jacoco.core/src"/>
-                      </sourcefiles>
-                    </group>
-                    <group name="org.jacoco.examples">
-                      <classfiles>
-                        <fileset dir="../org.jacoco.examples/target/classes"/>
-                      </classfiles>
-                      <sourcefiles>
-                        <fileset dir="../org.jacoco.examples/src"/>
-                      </sourcefiles>
-                    </group>
-                    <group name="org.jacoco.report">
-                      <classfiles>
-                        <fileset dir="../org.jacoco.report/target/classes"/>
-                      </classfiles>
-                      <sourcefiles>
-                        <fileset dir="../org.jacoco.report/src"/>
-                      </sourcefiles>
-                    </group>
-                    <group name="jacoco-maven-plugin">
-                      <classfiles>
-                        <fileset dir="../jacoco-maven-plugin/target/classes" excludes="**/HelpMojo.class"/>
-                      </classfiles>
-                      <sourcefiles>
-                        <fileset dir="../jacoco-maven-plugin/src"/>
-                      </sourcefiles>
-                    </group>
-                  </structure>
-                  <html destdir="${project.build.directory}/coverage"
-                        footer="Code Coverage Report for JaCoCo ${project.version}"
-                        locale="en"/>
-                  <csv destfile="${project.build.directory}/coverage/coverage.csv"/>
-                  <xml destfile="${project.build.directory}/coverage/coverage.xml"/>
-                </report>
-
                 <echo message="JUnit report"/>
                 <mkdir dir="${project.build.directory}/junit"/>
                 <junitreport todir="${project.build.directory}/junit">
@@ -184,11 +106,6 @@
           </execution>
         </executions>
         <dependencies>
-          <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>org.jacoco.ant</artifactId>
-            <version>${project.version}</version>
-          </dependency>
           <dependency>
             <groupId>org.apache.ant</groupId>
             <artifactId>ant-junit</artifactId>

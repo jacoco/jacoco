@@ -11,13 +11,7 @@
  *******************************************************************************/
 package org.jacoco.maven;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.Reader;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
@@ -26,19 +20,8 @@ import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.project.MavenProject;
 import org.apache.maven.reporting.AbstractMavenReport;
 import org.apache.maven.reporting.MavenReportException;
-import org.jacoco.core.analysis.IBundleCoverage;
-import org.jacoco.core.analysis.ICoverageNode;
-import org.jacoco.core.data.ExecutionDataStore;
-import org.jacoco.core.data.SessionInfoStore;
-import org.jacoco.core.tools.ExecFileLoader;
-import org.jacoco.report.FileMultiReportOutput;
 import org.jacoco.report.IReportGroupVisitor;
 import org.jacoco.report.IReportVisitor;
-import org.jacoco.report.ISourceFileLocator;
-import org.jacoco.report.MultiReportVisitor;
-import org.jacoco.report.csv.CSVFormatter;
-import org.jacoco.report.html.HTMLFormatter;
-import org.jacoco.report.xml.XMLFormatter;
 
 /**
  * Base class for creating a code coverage report for tests of a single project
@@ -53,13 +36,30 @@ public abstract class AbstractReportMojo extends AbstractMavenReport {
 	 *            default-value="UTF-8"
 	 */
 	String outputEncoding;
+
+	/**
+	 * Name of the root node HTML report pages.
+	 * 
+	 * @parameter default-value="${project.name}"
+	 * @since 0.7.7
+	 */
+	String title;
+
+	/**
+	 * Footer text used in HTML report pages.
+	 * 
+	 * @parameter
+	 * @since 0.7.7
+	 */
+	String footer;
+
 	/**
 	 * Encoding of the source files.
 	 * 
-	 * @parameter property="project.build.sourceEncoding"
-	 *            default-value="UTF-8"
+	 * @parameter property="project.build.sourceEncoding" default-value="UTF-8"
 	 */
 	String sourceEncoding;
+
 	/**
 	 * A list of class files to include in the report. May use wildcard
 	 * characters (* and ?). When not specified everything will be included.
@@ -67,6 +67,7 @@ public abstract class AbstractReportMojo extends AbstractMavenReport {
 	 * @parameter
 	 */
 	List<String> includes;
+
 	/**
 	 * A list of class files to exclude from the report. May use wildcard
 	 * characters (* and ?). When not specified nothing will be excluded.
@@ -74,12 +75,14 @@ public abstract class AbstractReportMojo extends AbstractMavenReport {
 	 * @parameter
 	 */
 	List<String> excludes;
+
 	/**
 	 * Flag used to suppress execution.
 	 * 
 	 * @parameter property="jacoco.skip" default-value="false"
 	 */
 	boolean skip;
+
 	/**
 	 * Maven project.
 	 * 
@@ -87,18 +90,13 @@ public abstract class AbstractReportMojo extends AbstractMavenReport {
 	 * @readonly
 	 */
 	MavenProject project;
+
 	/**
 	 * Doxia Site Renderer.
 	 * 
 	 * @component
 	 */
 	Renderer siteRenderer;
-	SessionInfoStore sessionInfoStore;
-	ExecutionDataStore executionDataStore;
-
-	public abstract String getOutputName();
-
-	public abstract String getName(final Locale locale);
 
 	public String getDescription(final Locale locale) {
 		return getName(locale) + " Coverage Report.";
@@ -138,32 +136,28 @@ public abstract class AbstractReportMojo extends AbstractMavenReport {
 	}
 
 	@Override
-	public abstract void setReportOutputDirectory(
-			final File reportOutputDirectory);
-
-	@Override
 	public boolean canGenerateReport() {
 		if (skip) {
 			getLog().info(
 					"Skipping JaCoCo execution because property jacoco.skip is set.");
 			return false;
 		}
-		if (!getDataFile().exists()) {
+		if (!canGenerateReportRegardingDataFiles()) {
 			getLog().info(
-					"Skipping JaCoCo execution due to missing execution data file:"
-							+ getDataFile());
+					"Skipping JaCoCo execution due to missing execution data file.");
 			return false;
 		}
-		final File classesDirectory = new File(getProject().getBuild()
-				.getOutputDirectory());
-		if (!classesDirectory.exists()) {
+		if (!canGenerateReportRegardingClassesDirectory()) {
 			getLog().info(
-					"Skipping JaCoCo execution due to missing classes directory:"
-							+ classesDirectory);
+					"Skipping JaCoCo execution due to missing classes directory.");
 			return false;
 		}
 		return true;
 	}
+
+	abstract boolean canGenerateReportRegardingDataFiles();
+
+	abstract boolean canGenerateReportRegardingClassesDirectory();
 
 	/**
 	 * This method is called when the report generation is invoked directly as a
@@ -185,12 +179,12 @@ public abstract class AbstractReportMojo extends AbstractMavenReport {
 	@Override
 	protected void executeReport(final Locale locale)
 			throws MavenReportException {
-		loadExecutionData();
 		try {
-			final IReportVisitor visitor = createVisitor(locale);
-			visitor.visitInfo(sessionInfoStore.getInfos(),
-					executionDataStore.getContents());
-			createReport(visitor);
+			final ReportSupport support = new ReportSupport(getLog());
+			loadExecutionData(support);
+			addFormatters(support, locale);
+			final IReportVisitor visitor = support.initRootVisitor();
+			createReport(visitor, support);
 			visitor.visitEnd();
 		} catch (final IOException e) {
 			throw new MavenReportException("Error while creating report: "
@@ -198,110 +192,13 @@ public abstract class AbstractReportMojo extends AbstractMavenReport {
 		}
 	}
 
-	void loadExecutionData() throws MavenReportException {
-		final ExecFileLoader loader = new ExecFileLoader();
-		try {
-			loader.load(getDataFile());
-		} catch (final IOException e) {
-			throw new MavenReportException(
-					"Unable to read execution data file " + getDataFile()
-							+ ": " + e.getMessage(), e);
-		}
-		sessionInfoStore = loader.getSessionInfoStore();
-		executionDataStore = loader.getExecutionDataStore();
-	}
+	abstract void loadExecutionData(final ReportSupport support)
+			throws IOException;
 
-	void createReport(final IReportGroupVisitor visitor) throws IOException {
-		final FileFilter fileFilter = new FileFilter(this.getIncludes(),
-				this.getExcludes());
-		final BundleCreator creator = new BundleCreator(this.getProject(),
-				fileFilter, getLog());
-		final IBundleCoverage bundle = creator.createBundle(executionDataStore);
-		final SourceFileCollection locator = new SourceFileCollection(
-				getCompileSourceRoots(), sourceEncoding);
-		checkForMissingDebugInformation(bundle);
-		visitor.visitBundle(bundle, locator);
-	}
+	abstract void addFormatters(final ReportSupport support, final Locale locale)
+			throws IOException;
 
-	void checkForMissingDebugInformation(final ICoverageNode node) {
-		if (node.getClassCounter().getTotalCount() > 0
-				&& node.getLineCounter().getTotalCount() == 0) {
-			getLog().warn(
-					"To enable source code annotation class files have to be compiled with debug information.");
-		}
-	}
-
-	IReportVisitor createVisitor(final Locale locale) throws IOException {
-		final List<IReportVisitor> visitors = new ArrayList<IReportVisitor>();
-		getOutputDirectoryFile().mkdirs();
-		final XMLFormatter xmlFormatter = new XMLFormatter();
-		xmlFormatter.setOutputEncoding(outputEncoding);
-		visitors.add(xmlFormatter.createVisitor(new FileOutputStream(new File(
-				getOutputDirectoryFile(), "jacoco.xml"))));
-		final CSVFormatter csvFormatter = new CSVFormatter();
-		csvFormatter.setOutputEncoding(outputEncoding);
-		visitors.add(csvFormatter.createVisitor(new FileOutputStream(new File(
-				getOutputDirectoryFile(), "jacoco.csv"))));
-		final HTMLFormatter htmlFormatter = new HTMLFormatter();
-		htmlFormatter.setOutputEncoding(outputEncoding);
-		htmlFormatter.setLocale(locale);
-		visitors.add(htmlFormatter.createVisitor(new FileMultiReportOutput(
-				getOutputDirectoryFile())));
-		return new MultiReportVisitor(visitors);
-	}
-
-	File resolvePath(final String path) {
-		File file = new File(path);
-		if (!file.isAbsolute()) {
-			file = new File(getProject().getBasedir(), path);
-		}
-		return file;
-	}
-
-	List<File> getCompileSourceRoots() {
-		final List<File> result = new ArrayList<File>();
-		for (final Object path : getProject().getCompileSourceRoots()) {
-			result.add(resolvePath((String) path));
-		}
-		return result;
-	}
-
-	private static class SourceFileCollection implements ISourceFileLocator {
-
-		private final List<File> sourceRoots;
-		private final String encoding;
-
-		public SourceFileCollection(final List<File> sourceRoots,
-				final String encoding) {
-			this.sourceRoots = sourceRoots;
-			this.encoding = encoding;
-		}
-
-		public Reader getSourceFile(final String packageName,
-				final String fileName) throws IOException {
-			final String r;
-			if (packageName.length() > 0) {
-				r = packageName + '/' + fileName;
-			} else {
-				r = fileName;
-			}
-			for (final File sourceRoot : sourceRoots) {
-				final File file = new File(sourceRoot, r);
-				if (file.exists() && file.isFile()) {
-					return new InputStreamReader(new FileInputStream(file),
-							encoding);
-				}
-			}
-			return null;
-		}
-
-		public int getTabWidth() {
-			return 4;
-		}
-	}
-
-	abstract File getDataFile();
-
-	abstract File getOutputDirectoryFile();
+	abstract void createReport(final IReportGroupVisitor visitor,
+			final ReportSupport support) throws IOException;
 
 }
