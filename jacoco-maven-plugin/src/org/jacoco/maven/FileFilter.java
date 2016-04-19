@@ -53,7 +53,6 @@ public class FileFilter {
 	 * @throws IOException
 	 *             if file system access fails
 	 */
-	@SuppressWarnings("unchecked")
 	public List<String> getFileNames(final File directory) throws IOException {
 		return FileUtils.getFileNames(directory, getIncludes(), getExcludes(),
 				false);
@@ -68,7 +67,6 @@ public class FileFilter {
 	 * @throws IOException
 	 *             if file system access fails
 	 */
-	@SuppressWarnings("unchecked")
 	public List<File> getFiles(final File directory) throws IOException {
 		return FileUtils.getFiles(directory, getIncludes(), getExcludes());
 	}
