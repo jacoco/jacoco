@@ -200,7 +200,7 @@ public class CoverageTransformerTest {
 	@Test
 	public void testTransformFiltered2() throws IllegalClassFormatException {
 		CoverageTransformer t = createTransformer();
-		assertNull(t.transform(null, "org.jacoco.Sample", null,
+		assertNull(t.transform((ClassLoader) null, "org.jacoco.Sample", null,
 				protectionDomain, new byte[0]));
 	}
 
