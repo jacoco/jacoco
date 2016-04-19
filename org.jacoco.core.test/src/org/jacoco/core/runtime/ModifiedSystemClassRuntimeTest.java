@@ -51,13 +51,13 @@ public class ModifiedSystemClassRuntimeTest extends RuntimeTestBase {
 	private static final String TARGET_CLASS_NAME = "org/jacoco/core/runtime/ModifiedSystemClassRuntimeTest";
 
 	/**
-	 * Note that we use Proxy here to mock {@link Instrumentation}, because JDK 9 adds new method "addModule",
-	 * whose parameter depends on class "java.lang.reflect.Module" introduced in JDK 9.
+	 * Note that we use Proxy here to mock {@link Instrumentation}, because JDK
+	 * 9 adds new method "addModule", whose parameter depends on class
+	 * "java.lang.reflect.Module" introduced in JDK 9.
 	 */
 	private Instrumentation newInstrumentationMock() {
-		return (Instrumentation) Proxy.newProxyInstance(
-				getClass().getClassLoader(),
-				new Class[] { Instrumentation.class },
+		return (Instrumentation) Proxy.newProxyInstance(getClass()
+				.getClassLoader(), new Class[] { Instrumentation.class },
 				new MyInvocationHandler());
 	}
 
@@ -77,8 +77,8 @@ public class ModifiedSystemClassRuntimeTest extends RuntimeTestBase {
 				final byte[] data = TargetLoader
 						.getClassDataAsBytes(ModifiedSystemClassRuntimeTest.class);
 				verifyInstrumentedClass(TARGET_CLASS_NAME,
-						transformer.transform((ClassLoader) null, TARGET_CLASS_NAME, null,
-								null, data));
+						transformer.transform((ClassLoader) null,
+								TARGET_CLASS_NAME, null, null, data));
 
 				// Other classes will not be instrumented:
 				assertNull(transformer.transform(getClass().getClassLoader(),
@@ -91,11 +91,11 @@ public class ModifiedSystemClassRuntimeTest extends RuntimeTestBase {
 		/**
 		 * {@link Instrumentation#removeTransformer(ClassFileTransformer)}
 		 */
-		boolean removeTransformer() {
+		Boolean removeTransformer() {
 			assertTrue(added);
 			assertFalse(removed);
 			removed = true;
-			return true;
+			return Boolean.TRUE;
 		}
 
 		public Object invoke(Object proxy, Method method, Object[] args)
