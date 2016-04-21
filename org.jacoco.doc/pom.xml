@@ -36,11 +36,29 @@
     </dependency>
     <dependency>
       <groupId>${project.groupId}</groupId>
+      <artifactId>org.jacoco.core.test</artifactId>
+      <version>${project.version}</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>${project.groupId}</groupId>
       <artifactId>org.jacoco.report</artifactId>
     </dependency>
     <dependency>
       <groupId>${project.groupId}</groupId>
+      <artifactId>org.jacoco.report.test</artifactId>
+      <version>${project.version}</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>${project.groupId}</groupId>
       <artifactId>org.jacoco.agent</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>org.jacoco.agent.test</artifactId>
+      <version>${project.version}</version>
+      <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>${project.groupId}</groupId>
@@ -48,9 +66,9 @@
     </dependency>
     <dependency>
       <groupId>${project.groupId}</groupId>
-      <artifactId>org.jacoco.agent</artifactId>
+      <artifactId>org.jacoco.agent.rt.test</artifactId>
       <version>${project.version}</version>
-      <classifier>runtime</classifier>
+      <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>${project.groupId}</groupId>
@@ -58,14 +76,31 @@
     </dependency>
     <dependency>
       <groupId>${project.groupId}</groupId>
-      <artifactId>org.jacoco.ant</artifactId>
-      <classifier>nodeps</classifier>
+      <artifactId>org.jacoco.ant.test</artifactId>
+      <version>${project.version}</version>
+      <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>${project.groupId}</groupId>
       <artifactId>org.jacoco.examples</artifactId>
       <version>${project.version}</version>
-      <type>zip</type>
+    </dependency>
+    <dependency>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>org.jacoco.examples.test</artifactId>
+      <version>${project.version}</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>jacoco-maven-plugin</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>jacoco-maven-plugin.test</artifactId>
+      <version>${project.version}</version>
+      <scope>test</scope>
     </dependency>
   </dependencies>
 
@@ -73,6 +108,32 @@
     <sourceDirectory>src</sourceDirectory>
 
     <plugins>
+      <plugin>
+        <groupId>org.jacoco</groupId>
+        <artifactId>jacoco-maven-plugin</artifactId>
+        <version>${project.version}</version>
+        <executions>
+          <execution>
+            <id>report-aggregate</id>
+            <phase>prepare-package</phase>
+            <goals>
+              <goal>report-aggregate</goal>
+            </goals>
+            <configuration>
+              <title>JaCoCo</title>
+              <footer>Code Coverage Report for JaCoCo ${project.version}</footer>
+              <includes>
+                <!-- Analyze class files only to exclude shaded agent JAR from report -->
+                <include>**/*.class</include>
+              </includes>
+              <excludes>
+                <exclude>**/HelpMojo.class</exclude>
+              </excludes>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-antrun-plugin</artifactId>
@@ -127,7 +188,7 @@
             <configuration>
               <reportOutputDirectory>${project.build.directory}/apidocs</reportOutputDirectory>
               <includeDependencySources>true</includeDependencySources>
-              <excludePackageNames>*.internal,org.jacoco.ant</excludePackageNames>
+              <excludePackageNames>*.internal,org.jacoco.ant,org.jacoco.maven,org.jacoco.examples</excludePackageNames>
               <dependencySourceIncludes>
                 <dependencySourceInclude>org.jacoco:*</dependencySourceInclude>
               </dependencySourceIncludes>

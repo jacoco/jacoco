@@ -40,7 +40,7 @@
       </excludes>
     </fileSet>
     <fileSet>
-      <directory>${basedir}/../org.jacoco.tests.coverage/target/site/jacoco-aggregate</directory>
+      <directory>${basedir}/../org.jacoco.doc/target/site/jacoco-aggregate</directory>
       <outputDirectory>/coverage</outputDirectory>
     </fileSet>
     <fileSet>
