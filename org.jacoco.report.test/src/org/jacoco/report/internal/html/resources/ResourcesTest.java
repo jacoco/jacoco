@@ -42,7 +42,7 @@ public class ResourcesTest {
 	@Test
 	public void testGetLink() {
 		ReportOutputFolder base = root.subFolder("f1").subFolder("f2");
-		assertEquals("../../.resources/test.png",
+		assertEquals("../../jacoco-resources/test.png",
 				resources.getLink(base, "test.png"));
 
 	}
@@ -50,25 +50,25 @@ public class ResourcesTest {
 	@Test
 	public void testCopyResources() throws IOException {
 		resources.copyResources();
-		output.assertFile(".resources/branchfc.gif");
-		output.assertFile(".resources/branchnc.gif");
-		output.assertFile(".resources/branchpc.gif");
-		output.assertFile(".resources/bundle.gif");
-		output.assertFile(".resources/class.gif");
-		output.assertFile(".resources/down.gif");
-		output.assertFile(".resources/greenbar.gif");
-		output.assertFile(".resources/group.gif");
-		output.assertFile(".resources/method.gif");
-		output.assertFile(".resources/package.gif");
-		output.assertFile(".resources/prettify.css");
-		output.assertFile(".resources/prettify.js");
-		output.assertFile(".resources/redbar.gif");
-		output.assertFile(".resources/report.css");
-		output.assertFile(".resources/report.gif");
-		output.assertFile(".resources/class.gif");
-		output.assertFile(".resources/sort.js");
-		output.assertFile(".resources/source.gif");
-		output.assertFile(".resources/up.gif");
+		output.assertFile("jacoco-resources/branchfc.gif");
+		output.assertFile("jacoco-resources/branchnc.gif");
+		output.assertFile("jacoco-resources/branchpc.gif");
+		output.assertFile("jacoco-resources/bundle.gif");
+		output.assertFile("jacoco-resources/class.gif");
+		output.assertFile("jacoco-resources/down.gif");
+		output.assertFile("jacoco-resources/greenbar.gif");
+		output.assertFile("jacoco-resources/group.gif");
+		output.assertFile("jacoco-resources/method.gif");
+		output.assertFile("jacoco-resources/package.gif");
+		output.assertFile("jacoco-resources/prettify.css");
+		output.assertFile("jacoco-resources/prettify.js");
+		output.assertFile("jacoco-resources/redbar.gif");
+		output.assertFile("jacoco-resources/report.css");
+		output.assertFile("jacoco-resources/report.gif");
+		output.assertFile("jacoco-resources/class.gif");
+		output.assertFile("jacoco-resources/sort.js");
+		output.assertFile("jacoco-resources/source.gif");
+		output.assertFile("jacoco-resources/up.gif");
 	}
 
 	@Test

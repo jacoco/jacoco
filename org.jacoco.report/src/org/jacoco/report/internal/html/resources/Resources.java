@@ -51,7 +51,7 @@ public class Resources {
 	 *            root folder of the report
 	 */
 	public Resources(final ReportOutputFolder root) {
-		folder = root.subFolder(".resources");
+		folder = root.subFolder("jacoco-resources");
 	}
 
 	/**

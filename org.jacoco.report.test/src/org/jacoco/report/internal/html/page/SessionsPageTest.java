@@ -57,7 +57,7 @@ public class SessionsPageTest extends PageTestBase {
 	public void testGetFileName() {
 		final SessionsPage page = new SessionsPage(noSessions, noExecutionData,
 				index, null, rootFolder, context);
-		assertEquals(".sessions.html", page.getFileName());
+		assertEquals("jacoco-sessions.html", page.getFileName());
 	}
 
 	@Test
@@ -72,7 +72,8 @@ public class SessionsPageTest extends PageTestBase {
 		final SessionsPage page = new SessionsPage(noSessions, noExecutionData,
 				index, null, rootFolder, context);
 		page.render();
-		final Document doc = support.parse(output.getFile(".sessions.html"));
+		final Document doc = support.parse(output
+				.getFile("jacoco-sessions.html"));
 		assertEquals("No session information available.",
 				support.findStr(doc, "/html/body/p[1]"));
 		assertEquals("No execution data available.",
@@ -88,7 +89,8 @@ public class SessionsPageTest extends PageTestBase {
 		final SessionsPage page = new SessionsPage(sessions, noExecutionData,
 				index, null, rootFolder, context);
 		page.render();
-		final Document doc = support.parse(output.getFile(".sessions.html"));
+		final Document doc = support.parse(output
+				.getFile("jacoco-sessions.html"));
 		assertEquals("el_session", support.findStr(doc,
 				"/html/body/table[1]/tbody/tr[1]/td[1]/span/@class"));
 		assertEquals("Session-A", support.findStr(doc,
@@ -128,7 +130,8 @@ public class SessionsPageTest extends PageTestBase {
 		final SessionsPage page = new SessionsPage(noSessions, data, index,
 				null, rootFolder, context);
 		page.render();
-		final Document doc = support.parse(output.getFile(".sessions.html"));
+		final Document doc = support.parse(output
+				.getFile("jacoco-sessions.html"));
 		assertEquals("el_class", support.findStr(doc,
 				"/html/body/table[1]/tbody/tr[1]/td[1]/a/@class"));
 		assertEquals("Foo.html", support.findStr(doc,

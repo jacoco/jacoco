@@ -146,7 +146,7 @@ public class SessionsPage extends ReportPage {
 
 	@Override
 	protected String getFileName() {
-		return ".sessions.html";
+		return "jacoco-sessions.html";
 	}
 
 	public String getLinkStyle() {

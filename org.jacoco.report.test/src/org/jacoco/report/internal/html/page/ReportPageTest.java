@@ -98,7 +98,7 @@ public class ReportPageTest extends PageTestBase {
 		assertEquals("en", support.findStr(doc, "/html/@lang"));
 
 		// style sheet
-		assertEquals(".resources/report.css", support.findStr(doc,
+		assertEquals("jacoco-resources/report.css", support.findStr(doc,
 				"/html/head/link[@rel='stylesheet']/@href"));
 
 		// bread crumb
