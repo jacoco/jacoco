@@ -1,0 +1,7 @@
+install:
+  - curl -LsS "http://www.apache.org/dyn/closer.cgi?action=download&filename=maven/maven-3/3.3.9/binaries/apache-maven-3.3.9-bin.zip" > apache-maven-3.3.9-bin.zip
+  - unzip apache-maven-3.3.9-bin.zip
+  - SET PATH=%CD%\apache-maven-3.3.9\bin;%PATH%
+
+build_script:
+  - mvn -V -B -e verify -Dbytecode.version=1.8
