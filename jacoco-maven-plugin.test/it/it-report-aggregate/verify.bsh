@@ -13,15 +13,15 @@ import org.codehaus.plexus.util.*;
 
 String buildLog = FileUtils.fileRead( new File( basedir, "build.log" ) );
 
-if ( buildLog.indexOf( "/child1/target/jacoco.exec" ) < 0 ) {
+if ( buildLog.indexOf( "/child1/target/jacoco.exec".replace('/', File.separatorChar) ) < 0 ) {
     throw new RuntimeException( "Execution data from child1 was not loaded." );
 }
 
-if ( buildLog.indexOf( "/child1-test/target/jacoco.exec" ) < 0 ) {
+if ( buildLog.indexOf( "/child1-test/target/jacoco.exec".replace('/', File.separatorChar) ) < 0 ) {
     throw new RuntimeException( "Execution data from child1-test was not loaded." );
 }
 
-if ( buildLog.indexOf( "/child2/target/jacoco.exec" ) < 0 ) {
+if ( buildLog.indexOf( "/child2/target/jacoco.exec".replace('/', File.separatorChar) ) < 0 ) {
     throw new RuntimeException( "Execution data from child2 was not loaded." );
 }
 
