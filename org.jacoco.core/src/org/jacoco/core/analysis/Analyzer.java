@@ -149,7 +149,7 @@ public class Analyzer {
 	}
 
 	private IOException analyzerError(final String location,
-			final RuntimeException cause) {
+			final Exception cause) {
 		final IOException ex = new IOException(String.format(
 				"Error while analyzing %s.", location));
 		ex.initCause(cause);
@@ -172,7 +172,12 @@ public class Analyzer {
 	 */
 	public int analyzeAll(final InputStream input, final String location)
 			throws IOException {
-		final ContentTypeDetector detector = new ContentTypeDetector(input);
+		final ContentTypeDetector detector;
+		try {
+			detector = new ContentTypeDetector(input);
+		} catch (IOException e) {
+			throw analyzerError(location, e);
+		}
 		switch (detector.getType()) {
 		case ContentTypeDetector.CLASSFILE:
 			analyzeClass(detector.getInputStream(), location);
@@ -233,7 +238,8 @@ public class Analyzer {
 	public int analyzeAll(final String path, final File basedir)
 			throws IOException {
 		int count = 0;
-		final StringTokenizer st = new StringTokenizer(path, File.pathSeparator);
+		final StringTokenizer st = new StringTokenizer(path,
+				File.pathSeparator);
 		while (st.hasMoreTokens()) {
 			count += analyzeAll(new File(basedir, st.nextToken()));
 		}
@@ -245,20 +251,41 @@ public class Analyzer {
 		final ZipInputStream zip = new ZipInputStream(input);
 		ZipEntry entry;
 		int count = 0;
-		while ((entry = zip.getNextEntry()) != null) {
+		while ((entry = nextEntry(zip, location)) != null) {
 			count += analyzeAll(zip, location + "@" + entry.getName());
 		}
 		return count;
 	}
 
+	private ZipEntry nextEntry(ZipInputStream input, String location)
+			throws IOException {
+		try {
+			return input.getNextEntry();
+		} catch (IOException e) {
+			throw analyzerError(location, e);
+		}
+	}
+
 	private int analyzeGzip(final InputStream input, final String location)
 			throws IOException {
-		return analyzeAll(new GZIPInputStream(input), location);
+		GZIPInputStream gzipInputStream;
+		try {
+			gzipInputStream = new GZIPInputStream(input);
+		} catch (IOException e) {
+			throw analyzerError(location, e);
+		}
+		return analyzeAll(gzipInputStream, location);
 	}
 
 	private int analyzePack200(final InputStream input, final String location)
 			throws IOException {
-		return analyzeAll(Pack200Streams.unpack(input), location);
+		InputStream unpackedInput;
+		try {
+			unpackedInput = Pack200Streams.unpack(input);
+		} catch (IOException e) {
+			throw analyzerError(location, e);
+		}
+		return analyzeAll(unpackedInput, location);
 	}
 
 }
