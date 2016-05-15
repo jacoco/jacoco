@@ -4,4 +4,8 @@ install:
   - SET PATH=%CD%\apache-maven-3.3.9\bin;%PATH%
 
 build_script:
-  - mvn -V -B -e verify -Dbytecode.version=1.8
+  # Maven 3.3.9 requires Java >= 7, but generation of Javadocs requires Java <= 6 (https://github.com/jacoco/jacoco/issues/110)
+  - mvn -V -B -e verify -Pno-java8-validation -Djdk.version=1.6 --toolchains=.travis\appveyor-toolchains.xml
+
+artifacts:
+  - path: jacoco\target\*.zip
