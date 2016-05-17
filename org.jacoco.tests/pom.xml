@@ -38,6 +38,7 @@
   <properties>
     <maven.deploy.skip>true</maven.deploy.skip>
     <maven.javadoc.skip>true</maven.javadoc.skip>
+    <sonar.skip>true</sonar.skip>
   </properties>
 
   <build>
