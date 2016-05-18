@@ -18,11 +18,25 @@
 
 <h1>Development Environment</h1>
 
+<h2>Project Hosting</h2>
+
 <p>
-  JaCoCo is currently hosted at
-  <a href="https://github.com/jacoco/jacoco">GitHub</a>. This document provides
-  an overview of the local and shared tools used for JaCoCo development.
+  The JaCoCo project is hosted on
+  <a href="https://github.com/jacoco/jacoco">GitHub</a> and can be cloned from
+  this URL:
 </p>
+
+<pre>
+  https://github.com/jacoco/jacoco.git
+</pre>
+
+<p>
+  We also track all
+  <a href="https://github.com/jacoco/jacoco/issues">issues</a> and
+  <a href="https://github.com/jacoco/jacoco/pulls">pull requests</a>
+  on the GitHub project.
+</p>
+
 
 <h3>IDE</h3>
 
@@ -30,7 +44,8 @@
   JaCoCo development is done with the latest version of
   <a href="http://www.eclipse.org/">Eclipse</a>. Please make sure to install
   the <a href="http://www.eclipse.org/m2e/">m2e plug-in</a> to get all
-  dependencies resolved properly.
+  dependencies resolved properly. The source tree is organized as a list of
+  Eclipse projects that can be imported in a Eclipse workspace.
 </p>
 
 <p>  
@@ -43,70 +58,64 @@
   <li><code>org.jacoco.core.test</code></li>
 </ul>
 
+<p>
+  These settings specify various compiler warnings and the standard Eclipse
+  source formatting rules.
+</p>
+
 <h3>JRE/JDK</h3>
 
 <p>
-  The minimum JRE version to execute JaCoCo is Java 1.5. To guarantee
+  The minimum supported JRE version for JaCoCo is Java 1.5. To guarantee
   compatibility JaCoCo builds should always be executed against Java 1.5 JDK. In
-  addition we run builds with 1.6, 1.7 and 1.8 JDKs. 
+  addition we run builds with 1.6, 1.7, 1.8 and 1.9 JDKs.
 </p>
 
 <h3>Build</h3>
 
 <p>
   The JaCoCo build is based on <a href="http://maven.apache.org/">Maven 3</a>.
-  We have a <a href="https://jacoco.ci.cloudbees.com/">continuous build</a>
-  which is kindly provided by <a href="http://www.cloudbees.com/">CloudBees</a>.
-  Continuous builds from the master branch are directly published to the
-  <a href="repo.html">snapshot repository</a>.
+  See the <a href="build.html">build description</a> for details.
 </p>
+
+<h3>Continuous Integration</h3>
 
 <p>
-  We do also use
-  <a href="http://nemo.sonarqube.org/dashboard/index/org.jacoco:org.jacoco.build">continuous inspection</a>
-  with <a href="http://www.sonarqube.org/">SonarQube</a>.
+  We have a list of CI tools directly integrated with our source repository:
 </p>
-
-<h3>Source Rules</h3>
 
 <ul>
-  <li>
-    <b>Encoding:</b> All source files and HTML documents are encoded in UTF-8
-    unless an alternative encoding is required by the file format specification.
-    For example Java property files are always encoded in ISO-8859-1.
-  </li>
-  <li>
-    <b>Formatting:</b> The Eclipse project settings define auto-formatter
-    settings for all Java classes. Make sure you apply the Eclipse formatter to
-    source files before committing.
-  </li>
-  <li>
-    <b>Warnings:</b> The Eclipse project settings define several compiler
-    warnings. JaCoCo projects must not show any Eclipse warnings.
-  </li>
+  <li><a href="https://travis-ci.org/jacoco/jacoco/">Travis CI</a></li>
+  <li><a href="https://ci.appveyor.com/project/JaCoCo/jacoco">AppVeyor</a></li>
 </ul>
 
-<h3>Source Control</h3>
-
 <p>
-  The JaCoCo source code is maintained in a Git repository at
-  <a href="https://github.com/jacoco/jacoco">GitHub</a> and can be cloned from
+  CI builds run for master and every pull request.
 </p>
 
-<pre>
-  https://github.com/jacoco/jacoco.git
-</pre>
+<h3>Development Build Artifacts</h3>
 
 <p>
-  The source tree is organized as a plain list of Eclipse projects that can be
-  imported in a Eclipse workspace.
+  Beside the <a href="http://search.maven.org/#search|ga|1|g%3Aorg.jacoco"> JaCoCo releases</a>
+  the following build artifacts are automatically available during the
+  development cycle:
 </p>
 
-<h3>Issue Tracking</h3>
+<ul>
+  <li><b>Master:</b> The current master is available through the Maven
+    <a href="repo.html">snapshot repository</a>.</li>
+  <li><b>Pull Requests:</b> For every pull request the
+    <a href="https://ci.appveyor.com/project/JaCoCo/jacoco">AppVeyor builds</a>
+    provide the corresponding all-in-one zip for download. To access the
+    artifacts follow the check <code>continuous-integration/appveyor/branch</code>
+    on the corresponding GitHub pull request page.</li>
+</ul>
+
+<h3>Continuous Inspection</h3>
 
 <p>
-  This GitHub <a href="https://github.com/jacoco/jacoco/issues">issue tracker</a>
-  is used for bug and enhancement tracking.
+  We track quality issues with our source code with
+  <a href="http://nemo.sonarqube.org/dashboard/index/org.jacoco:org.jacoco.build">SonarQube</a>.
 </p>
 
 <h3>Communication</h3>
