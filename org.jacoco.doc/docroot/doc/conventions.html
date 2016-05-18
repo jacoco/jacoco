@@ -26,8 +26,14 @@
 <h2>Consistent Source Tree</h2>
 
 <p>
-  Update your sources and run the build locally before every check-in. Commit
-  only if the build succeeds.  
+  Follow the existing coding style and formatting rules. The projects contain
+  auto-formatting rules for the Eclipse IDE.
+</p>
+
+<p>
+  Update your local branches and run the build locally before every push. Push
+  only if the build succeeds and the configured compiler settings do not show
+  any warnings in the Eclipse IDE.
 </p>
 
 <p>
@@ -38,7 +44,7 @@
 </p>
 
 <ul>
-  <li>Corresponding JavaDoc.</li>
+  <li>Corresponding JavaDoc, every public type and member requires JavaDoc.</li>
   <li>Documentation referring to the modified concepts, interfaces or
     implementation.</li>
   <li>New features, bug fixes and modified behavior should be enlisted in the
@@ -126,6 +132,41 @@
     license notice</a>. The initial contributor should be listed. In case of
     significant changes or additions additional contributors should also
     be listed. 
+  </li>
+</ul>
+
+<h2>Contribution process</h2>
+
+<p>
+  All changes on the JaCoCo code base are handled via
+  <a href="https://github.com/jacoco/jacoco/pulls">GitHub pull requests</a> and
+  always reviewed by a second developer. This applies for external contributors
+  as well as for project members. Beside functional correctness every pull
+  request needs to fulfill the conventions above.
+</p>
+
+<p>
+  For external contributors the following recommendations will help the project
+  to incorporate their precious work:
+</p>
+
+<ul>
+  <li>
+    <b>Get in touch</b>: Before you start a bigger contribution
+    please get in touch through our <a href="support.html">mailing list</a> to
+    make sure the JaCoCo project considers this in scope and the approach fits
+    in the overall architecture.
+  </li>
+  <li>
+    <b>Clear scope</b>: We track and review every semantical change through a
+    separate pull request. Pull requests handling various topics ("I fixed this
+    and that") are typically difficult in handling and are therefore declined.
+  </li>
+  <li>
+    <b>No technical debt</b>: We are committed to maintain JaCoCo in the long
+    run with on a high quality level. Therefore we will not accept contributions
+    as long as they add technical debt to the project (e.g. lack of tests or
+    design issues).
   </li>
 </ul>
 
