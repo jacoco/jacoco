@@ -103,6 +103,9 @@ public class ReportAggregateMojo extends AbstractReportMojo {
 	void loadExecutionData(final ReportSupport support) throws IOException {
 		final FileFilter filter = new FileFilter(dataFileIncludes,
 				dataFileExcludes);
+		for (final File execFile : filter.getFiles(getProject().getBasedir())) {
+			support.loadExecutionData(execFile);
+		}
 		for (final MavenProject dependency : findDependencies(
 				Artifact.SCOPE_COMPILE, Artifact.SCOPE_TEST)) {
 			for (final File execFile : filter.getFiles(dependency.getBasedir())) {
@@ -122,6 +125,9 @@ public class ReportAggregateMojo extends AbstractReportMojo {
 	void createReport(final IReportGroupVisitor visitor,
 			final ReportSupport support) throws IOException {
 		final IReportGroupVisitor group = visitor.visitGroup(title);
+		support.processProject(group, getProject().getArtifactId(),
+				getProject(), getIncludes(), getExcludes(), sourceEncoding);
+
 		for (final MavenProject dependency : findDependencies(Artifact.SCOPE_COMPILE)) {
 			support.processProject(group, dependency.getArtifactId(),
 					dependency, getIncludes(), getExcludes(), sourceEncoding);
