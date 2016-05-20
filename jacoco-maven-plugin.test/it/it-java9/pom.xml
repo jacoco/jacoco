@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+   Copyright (c) 2009, 2016 Mountainminds GmbH & Co. KG and Contributors
+   All rights reserved. This program and the accompanying materials
+   are made available under the terms of the Eclipse Public License v1.0
+   which accompanies this distribution, and is available at
+   http://www.eclipse.org/legal/epl-v10.html
+
+   Contributors:
+      Evgeny Mandrikov - initial API and implementation
+-->
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <parent>
+    <groupId>jacoco</groupId>
+    <artifactId>setup-parent</artifactId>
+    <version>1.0-SNAPSHOT</version>
+    <relativePath>../setup-parent</relativePath>
+  </parent>
+
+  <artifactId>it-java9</artifactId>
+
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <configuration>
+          <target>1.9</target>
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>@project.groupId@</groupId>
+        <artifactId>jacoco-maven-plugin</artifactId>
+        <executions>
+          <execution>
+            <goals>
+              <goal>prepare-agent</goal>
+              <goal>report</goal>
+            </goals>
+          </execution>
+          <execution>
+            <id>check</id>
+            <goals>
+              <goal>check</goal>
+            </goals>
+            <configuration>
+              <rules>
+                <!-- implementation is needed only for Maven 2 -->
+                <rule implementation="org.jacoco.maven.RuleConfiguration">
+                  <limits>
+                    <!-- implementation is needed only for Maven 2 -->
+                    <limit implementation="org.jacoco.report.check.Limit">
+                      <counter>INSTRUCTION</counter>
+                      <value>COVEREDCOUNT</value>
+                      <minimum>8</minimum>
+                      <maximum>8</maximum>
+                    </limit>
+                  </limits>
+                </rule>
+              </rules>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+  </build>
+</project>

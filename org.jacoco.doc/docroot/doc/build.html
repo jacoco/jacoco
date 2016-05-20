@@ -21,14 +21,12 @@
 <h1>Build</h1>
 
 <p>
-  The JaCoCo build is fully based on <a href="http://maven.apache.org/">Maven</a>
-  and its extension <a href="http://www.eclipse.org/tycho/">Tycho</a> to build
-  OSGi bundles based on the declations in their <code>MANIFEST.MF</code> file
-  ("manfest-first" approach). The build can be locally executed on every machine
-  with a proper <a href="environment.html">environment setup</a>. In particular
-  you need a <a href="http://maven.apache.org/">Maven 3</a> installation. 
-  Developers are encouraged to run the build before every commit to ensure
-  consistency of the source tree.
+  The JaCoCo build is based on <a href="http://maven.apache.org/">Maven</a> and
+  can be locally executed on every machine with a proper
+  <a href="environment.html">environment setup</a>. In particular you need a
+  <a href="http://maven.apache.org/">Maven 3</a> installation.  Developers are
+  encouraged to run the build before every commit to ensure consistency of the
+  source tree.
 </p>
 
 
@@ -50,7 +48,7 @@
 </p>
 
 <pre>
-  ./org.jacoco.doc/target/jacoco-<i>x.y.z.qualifier</i>.zip
+  ./jacoco/target/jacoco-<i>x.y.z.qualifier</i>.zip
 </pre>
 
 
@@ -123,6 +121,17 @@
       &lt;jdkHome&gt;/usr/lib/jvm/sun-jdk-1.8&lt;/jdkHome&gt;
     &lt;/configuration&gt;
   &lt;/toolchain&gt;
+  &lt;toolchain&gt;
+    &lt;type&gt;jdk&lt;/type&gt;
+    &lt;provides&gt;
+      &lt;id&gt;java19&lt;/id&gt;
+      &lt;version&gt;1.9&lt;/version&gt;
+      &lt;vendor&gt;sun&lt;/vendor&gt;
+    &lt;/provides&gt;
+    &lt;configuration&gt;
+      &lt;jdkHome&gt;/usr/lib/jvm/sun-jdk-1.9&lt;/jdkHome&gt;
+    &lt;/configuration&gt;
+  &lt;/toolchain&gt;
 &lt;/toolchains&gt;
 </pre>
 
@@ -155,6 +164,7 @@
   <li>Maven with 1.6 JDK: <code>mvn clean install -Djdk.version=1.6 -Dbytecode.version=1.6</code></li>
   <li>Maven with 1.7 JDK: <code>mvn clean install -Djdk.version=1.7 -Dbytecode.version=1.7</code></li>
   <li>Maven with 1.8 JDK: <code>mvn clean install -Djdk.version=1.8 -Dbytecode.version=1.8</code></li>
+  <li>Maven with 1.9 JDK: <code>mvn clean install -Djdk.version=1.9 -Dbytecode.version=1.9</code></li>
 </ul>
 
 

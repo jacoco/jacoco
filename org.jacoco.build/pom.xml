@@ -146,12 +146,8 @@
     <junit.version>4.8.2</junit.version>
 
     <!-- ================== -->
-    <!-- For Sonar analysis -->
+    <!-- For SonarQube analysis -->
     <!-- ================== -->
-    <sonar.skippedModules>org.jacoco.tests,org.jacoco.doc</sonar.skippedModules>
-
-    <sonar.core.codeCoveragePlugin>jacoco</sonar.core.codeCoveragePlugin>
-    <sonar.dynamicAnalysis>reuseReports</sonar.dynamicAnalysis>
     <sonar.jacoco.reportPath>../${project.artifactId}.test/target/jacoco.exec</sonar.jacoco.reportPath>
     <sonar.surefire.reportsPath>../${project.artifactId}.test/target/surefire-reports/</sonar.surefire.reportsPath>
 

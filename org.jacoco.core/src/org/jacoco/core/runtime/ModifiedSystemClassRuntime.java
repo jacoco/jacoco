@@ -20,6 +20,7 @@ import java.lang.reflect.Field;
 import java.security.ProtectionDomain;
 
 import org.jacoco.core.JaCoCo;
+import org.jacoco.core.internal.Java9Support;
 import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.ClassVisitor;
 import org.objectweb.asm.ClassWriter;
@@ -154,7 +155,7 @@ public class ModifiedSystemClassRuntime extends AbstractRuntime {
 	 */
 	public static byte[] instrument(final byte[] source,
 			final String accessFieldName) {
-		final ClassReader reader = new ClassReader(source);
+		final ClassReader reader = new ClassReader(Java9Support.downgradeIfRequired(source));
 		final ClassWriter writer = new ClassWriter(reader, 0);
 		reader.accept(new ClassVisitor(JaCoCo.ASM_API_VERSION, writer) {
 
