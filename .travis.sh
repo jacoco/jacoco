@@ -83,7 +83,7 @@ case "$JDK" in
 9-ea)
   # see https://bugs.openjdk.java.net/browse/JDK-8131041 about "java.locale.providers"
   # TODO(Godin): maven-javadoc-plugin doesn't work well due to modularization of JDK 9 - skip it and hence distribution
-  mvn -V -B -e verify -Dbytecode.version=1.9 \
+  mvn -V -B -e verify -Dbytecode.version=1.8 \
     -Dmaven.javadoc.skip -pl !jacoco \
     -DargLine=-Djava.locale.providers=JRE,SPI
   ;;
