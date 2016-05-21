@@ -20,6 +20,7 @@ import java.util.Locale;
 
 import org.apache.maven.artifact.Artifact;
 import org.apache.maven.model.Dependency;
+import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.project.MavenProject;
 import org.jacoco.report.IReportGroupVisitor;
 
@@ -91,7 +92,7 @@ public class ReportAggregateMojo extends AbstractReportMojo {
 
 	@Override
 	boolean canGenerateReportRegardingDataFiles() {
-		return true;
+		return executionDataFilesCount() > 1;
 	}
 
 	@Override
@@ -103,11 +104,30 @@ public class ReportAggregateMojo extends AbstractReportMojo {
 	void loadExecutionData(final ReportSupport support) throws IOException {
 		final FileFilter filter = new FileFilter(dataFileIncludes,
 				dataFileExcludes);
+		for (final File execFile : filter.getFiles(getProject().getBasedir())) {
+			support.loadExecutionData(execFile);
+		}
 		for (final MavenProject dependency : findDependencies(
 				Artifact.SCOPE_COMPILE, Artifact.SCOPE_TEST)) {
 			for (final File execFile : filter.getFiles(dependency.getBasedir())) {
 				support.loadExecutionData(execFile);
 			}
+		}
+	}
+
+	private int executionDataFilesCount() {
+		final FileFilter filter = new FileFilter(dataFileIncludes,
+				dataFileExcludes);
+		try {
+			int count = filter.getFiles(getProject().getBasedir()).size();
+			for (final MavenProject dependency : findDependencies(
+					Artifact.SCOPE_COMPILE, Artifact.SCOPE_TEST)) {
+				count += filter.getFiles(dependency.getBasedir()).size();
+			}
+			return count;
+		} catch (IOException e) {
+		  throw new RuntimeException(
+					"Unable to determine number of executing data files", e);
 		}
 	}
 
@@ -122,6 +142,9 @@ public class ReportAggregateMojo extends AbstractReportMojo {
 	void createReport(final IReportGroupVisitor visitor,
 			final ReportSupport support) throws IOException {
 		final IReportGroupVisitor group = visitor.visitGroup(title);
+		support.processProject(group, getProject().getArtifactId(),
+				getProject(), getIncludes(), getExcludes(), sourceEncoding);
+
 		for (final MavenProject dependency : findDependencies(Artifact.SCOPE_COMPILE)) {
 			support.processProject(group, dependency.getArtifactId(),
 					dependency, getIncludes(), getExcludes(), sourceEncoding);
