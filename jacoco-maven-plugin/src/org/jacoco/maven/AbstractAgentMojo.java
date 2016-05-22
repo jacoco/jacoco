@@ -16,6 +16,7 @@ import java.util.Map;
 import java.util.Properties;
 
 import org.apache.maven.artifact.Artifact;
+import org.apache.maven.plugins.annotations.Parameter;
 import org.codehaus.plexus.util.StringUtils;
 import org.jacoco.core.runtime.AgentOptions;
 
@@ -39,27 +40,22 @@ public abstract class AbstractAgentMojo extends AbstractJacocoMojo {
 	static final String SUREFIRE_ARG_LINE = "argLine";
 	/**
 	 * Map of plugin artifacts.
-	 * 
-	 * @parameter property="plugin.artifactMap"
-	 * @required
-	 * @readonly
 	 */
+	@Parameter(property = "plugin.artifactMap", required = true, readonly = true)
 	Map<String, Artifact> pluginArtifactMap;
 	/**
 	 * Allows to specify property which will contains settings for JaCoCo Agent.
 	 * If not specified, then "argLine" would be used for "jar" packaging and
 	 * "tycho.testArgLine" for "eclipse-test-plugin".
-	 * 
-	 * @parameter property="jacoco.propertyName"
 	 */
+	@Parameter(property = "jacoco.propertyName")
 	String propertyName;
 	/**
 	 * If set to true and the execution data file already exists, coverage data
 	 * is appended to the existing file. If set to false, an existing execution
 	 * data file will be replaced.
-	 * 
-	 * @parameter property="jacoco.append"
 	 */
+	@Parameter(property = "jacoco.append")
 	Boolean append;
 	/**
 	 * A list of class loader names, that should be excluded from execution
@@ -68,36 +64,31 @@ public abstract class AbstractAgentMojo extends AbstractJacocoMojo {
 	 * special frameworks that conflict with JaCoCo code instrumentation, in
 	 * particular class loaders that do not have access to the Java runtime
 	 * classes.
-	 * 
-	 * @parameter property="jacoco.exclClassLoaders"
 	 */
+	@Parameter(property = "jacoco.exclClassLoaders")
 	String exclClassLoaders;
 	/**
 	 * Specifies whether also classes from the bootstrap classloader should be
 	 * instrumented. Use this feature with caution, it needs heavy
 	 * includes/excludes tuning.
-	 * 
-	 * @parameter property="jacoco.inclBootstrapClasses"
 	 */
+	@Parameter(property = "jacoco.inclBootstrapClasses")
 	Boolean inclBootstrapClasses;
 	/**
 	 * Specifies whether classes without source location should be instrumented.
-	 * 
-	 * @parameter property="jacoco.inclNoLocationClasses"
 	 */
+	@Parameter(property = "jacoco.inclNoLocationClasses")
 	Boolean inclNoLocationClasses;
 	/**
 	 * A session identifier that is written with the execution data. Without
 	 * this parameter a random identifier is created by the agent.
-	 * 
-	 * @parameter property="jacoco.sessionId"
 	 */
+	@Parameter(property = "jacoco.sessionId")
 	String sessionId;
 	/**
 	 * If set to true coverage data will be written on VM shutdown.
-	 * 
-	 * @parameter property="jacoco.dumpOnExit"
 	 */
+	@Parameter(property = "jacoco.dumpOnExit")
 	Boolean dumpOnExit;
 	/**
 	 * Output method to use for writing coverage data. Valid options are:
@@ -111,41 +102,36 @@ public abstract class AbstractAgentMojo extends AbstractJacocoMojo {
 	 * TCP connection.</li>
 	 * <li>none: Do not produce any output.</li>
 	 * </ul>
-	 * 
-	 * @parameter property="jacoco.output"
 	 */
+	@Parameter(property = "jacoco.output")
 	String output;
 	/**
 	 * IP address or hostname to bind to when the output method is tcpserver or
 	 * connect to when the output method is tcpclient. In tcpserver mode the
 	 * value "*" causes the agent to accept connections on any local address.
-	 * 
-	 * @parameter property="jacoco.address"
 	 */
+	@Parameter(property = "jacoco.address")
 	String address;
 	/**
 	 * Port to bind to when the output method is tcpserver or connect to when
 	 * the output method is tcpclient. In tcpserver mode the port must be
 	 * available, which means that if multiple JaCoCo agents should run on the
 	 * same machine, different ports have to be specified.
-	 * 
-	 * @parameter property="jacoco.port"
 	 */
+	@Parameter(property = "jacoco.port")
 	Integer port;
 	/**
 	 * If a directory is specified for this parameter the JaCoCo agent dumps all
 	 * class files it processes to the given location. This can be useful for
 	 * debugging purposes or in case of dynamically created classes for example
 	 * when scripting engines are used.
-	 * 
-	 * @parameter property="jacoco.classDumpDir"
 	 */
+	@Parameter(property = "jacoco.classDumpDir")
 	File classDumpDir;
 	/**
 	 * If set to true the agent exposes functionality via JMX.
-	 * 
-	 * @parameter property="jacoco.jmx"
 	 */
+	@Parameter(property = "jacoco.jmx")
 	Boolean jmx;
 
 	@Override

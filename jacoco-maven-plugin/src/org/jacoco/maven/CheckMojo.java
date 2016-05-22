@@ -19,6 +19,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.maven.plugin.MojoExecutionException;
+import org.apache.maven.plugins.annotations.LifecyclePhase;
+import org.apache.maven.plugins.annotations.Mojo;
+import org.apache.maven.plugins.annotations.Parameter;
 import org.jacoco.core.analysis.ICoverageNode;
 import org.jacoco.report.IReportVisitor;
 import org.jacoco.report.check.IViolationsOutput;
@@ -28,12 +31,9 @@ import org.jacoco.report.check.Rule;
 /**
  * Checks that the code coverage metrics are being met.
  * 
- * @goal check
- * @phase verify
- * @requiresProject true
- * @threadSafe
  * @since 0.6.1
  */
+@Mojo(name = "check", defaultPhase = LifecyclePhase.VERIFY, threadSafe = true)
 public class CheckMojo extends AbstractJacocoMojo implements IViolationsOutput {
 
 	private static final String MSG_SKIPPING = "Skipping JaCoCo execution due to missing execution data file:";
@@ -117,25 +117,20 @@ public class CheckMojo extends AbstractJacocoMojo implements IViolationsOutput {
 	 *   </rule>
 	 * </rules>}
 	 * </pre>
-	 * 
-	 * @parameter
-	 * @required
 	 */
+	@Parameter(required = true)
 	private List<RuleConfiguration> rules;
 
 	/**
 	 * Halt the build if any of the checks fail.
-	 * 
-	 * @parameter property="jacoco.haltOnFailure" default-value="true"
-	 * @required
 	 */
+	@Parameter(property = "jacoco.haltOnFailure", defaultValue = "true", required = true)
 	private boolean haltOnFailure;
 
 	/**
 	 * File with execution data.
-	 * 
-	 * @parameter default-value="${project.build.directory}/jacoco.exec"
 	 */
+	@Parameter(defaultValue = "${project.build.directory}/jacoco.exec")
 	private File dataFile;
 
 	private boolean violations;

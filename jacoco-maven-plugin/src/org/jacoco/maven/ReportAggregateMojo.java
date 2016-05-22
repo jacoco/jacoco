@@ -20,6 +20,8 @@ import java.util.Locale;
 
 import org.apache.maven.artifact.Artifact;
 import org.apache.maven.model.Dependency;
+import org.apache.maven.plugins.annotations.Mojo;
+import org.apache.maven.plugins.annotations.Parameter;
 import org.apache.maven.project.MavenProject;
 import org.jacoco.report.IReportGroupVisitor;
 
@@ -44,29 +46,25 @@ import org.jacoco.report.IReportGroupVisitor;
  * <li><code>test</code>: Only execution data is considered for the report.</li>
  * </ul>
  * 
- * @goal report-aggregate
- * @requiresProject true
- * @threadSafe
  * @since 0.7.7
  */
+@Mojo(name = "report-aggregate", threadSafe = true)
 public class ReportAggregateMojo extends AbstractReportMojo {
 
 	/**
 	 * A list of execution data files to include in the report from each
 	 * project. May use wildcard characters (* and ?). When not specified all
 	 * *.exec files from the target folder will be included.
-	 * 
-	 * @parameter default-value="target/*.exec"
 	 */
+	@Parameter(defaultValue = "target/*.exec")
 	List<String> dataFileIncludes;
 
 	/**
 	 * A list of execution data files to exclude from the report. May use
 	 * wildcard characters (* and ?). When not specified nothing will be
 	 * excluded.
-	 * 
-	 * @parameter
 	 */
+	@Parameter
 	List<String> dataFileExcludes;
 
 	/**
@@ -75,18 +73,14 @@ public class ReportAggregateMojo extends AbstractReportMojo {
 	 * build lifecycle. If the goal is run indirectly as part of a site
 	 * generation, the output directory configured in the Maven Site Plugin is
 	 * used instead.
-	 * 
-	 * @parameter 
-	 *            default-value="${project.reporting.outputDirectory}/jacoco-aggregate"
 	 */
+	@Parameter(defaultValue = "${project.reporting.outputDirectory}/jacoco-aggregate")
 	private File outputDirectory;
 
 	/**
 	 * The projects in the reactor.
-	 * 
-	 * @parameter property="reactorProjects"
-	 * @readonly
 	 */
+	@Parameter(property = "reactorProjects", readonly = true)
 	private List<MavenProject> reactorProjects;
 
 	@Override

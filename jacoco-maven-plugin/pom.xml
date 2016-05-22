@@ -76,6 +76,14 @@
       <groupId>${project.groupId}</groupId>
       <artifactId>org.jacoco.report</artifactId>
     </dependency>
+
+    <dependency>
+      <groupId>org.apache.maven.plugin-tools</groupId>
+      <artifactId>maven-plugin-annotations</artifactId>
+      <version>3.4</version>
+      <!-- annotations are needed only to build the plugin: -->
+      <scope>provided</scope>
+    </dependency>
   </dependencies>
 
   <build>
@@ -106,7 +114,15 @@
         <artifactId>maven-plugin-plugin</artifactId>
         <executions>
           <execution>
+            <id>default-descriptor</id>
+            <phase>process-classes</phase>
+            <goals>
+              <goal>descriptor</goal>
+            </goals>
+          </execution>
+          <execution>
             <id>help-mojo</id>
+            <phase>process-classes</phase>
             <goals>
               <goal>helpmojo</goal>
             </goals>

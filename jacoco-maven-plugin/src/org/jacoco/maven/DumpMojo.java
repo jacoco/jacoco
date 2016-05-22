@@ -18,6 +18,9 @@ import java.io.IOException;
 import java.net.InetAddress;
 
 import org.apache.maven.plugin.MojoExecutionException;
+import org.apache.maven.plugins.annotations.LifecyclePhase;
+import org.apache.maven.plugins.annotations.Mojo;
+import org.apache.maven.plugins.annotations.Parameter;
 import org.jacoco.core.tools.ExecDumpClient;
 import org.jacoco.core.tools.ExecFileLoader;
 
@@ -33,66 +36,56 @@ import org.jacoco.core.tools.ExecFileLoader;
  * resource.
  * </p>
  * 
- * @goal dump
- * @phase post-integration-test
- * @threadSafe
  * @since 0.6.4
  */
+@Mojo(name = "dump", defaultPhase = LifecyclePhase.POST_INTEGRATION_TEST, threadSafe = true)
 public class DumpMojo extends AbstractJacocoMojo {
 
 	/**
 	 * Path to the output file for execution data.
-	 * 
-	 * @parameter property="jacoco.destFile"
-	 *            default-value="${project.build.directory}/jacoco.exec"
 	 */
+	@Parameter(property = "jacoco.destFile", defaultValue = "${project.build.directory}/jacoco.exec")
 	private File destFile;
 
 	/**
 	 * If set to true and the execution data file already exists, coverage data
 	 * is appended to the existing file. If set to false, an existing execution
 	 * data file will be replaced.
-	 * 
-	 * @parameter property="jacoco.append" default-value="true"
 	 */
+	@Parameter(property = "jacoco.append", defaultValue = "true")
 	private boolean append;
 
 	/**
 	 * Sets whether execution data should be downloaded from the remote host.
-	 * 
-	 * @parameter property="jacoco.dump" default-value="true"
 	 */
+	@Parameter(property = "jacoco.dump", defaultValue = "true")
 	private boolean dump;
 
 	/**
 	 * Sets whether a reset command should be sent after the execution data has
 	 * been dumped.
-	 * 
-	 * @parameter property="jacoco.reset" default-value="false"
 	 */
+	@Parameter(property = "jacoco.reset", defaultValue = "false")
 	private boolean reset;
 
 	/**
 	 * IP address or hostname to connect to.
-	 * 
-	 * @parameter property="jacoco.address"
 	 */
+	@Parameter(property = "jacoco.address")
 	private String address;
 
 	/**
 	 * Port number to connect to. If multiple JaCoCo agents should run on the
 	 * same machine, different ports have to be specified for the agents.
-	 * 
-	 * @parameter property="jacoco.port" default-value="6300"
 	 */
+	@Parameter(property = "jacoco.port", defaultValue = "6300")
 	private int port;
 
 	/**
 	 * Number of retries which the goal will attempt to establish a connection.
 	 * This can be used to wait until the target JVM is successfully launched.
-	 * 
-	 * @parameter property="jacoco.retryCount" default-value="10"
 	 */
+	@Parameter(property = "jacoco.retryCount", defaultValue = "10")
 	private int retryCount;
 
 	@Override

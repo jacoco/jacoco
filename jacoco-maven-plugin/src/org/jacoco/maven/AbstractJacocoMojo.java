@@ -16,6 +16,7 @@ import java.util.List;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
+import org.apache.maven.plugins.annotations.Parameter;
 import org.apache.maven.project.MavenProject;
 
 /**
@@ -25,35 +26,30 @@ public abstract class AbstractJacocoMojo extends AbstractMojo {
 
 	/**
 	 * Maven project.
-	 * 
-	 * @parameter property="project"
-	 * @readonly
 	 */
+	@Parameter(property = "project", readonly = true)
 	private MavenProject project;
 
 	/**
 	 * A list of class files to include in instrumentation/analysis/reports. May
 	 * use wildcard characters (* and ?). When not specified everything will be
 	 * included.
-	 * 
-	 * @parameter
 	 */
+	@Parameter
 	private List<String> includes;
 
 	/**
 	 * A list of class files to exclude from instrumentation/analysis/reports.
 	 * May use wildcard characters (* and ?). When not specified nothing will be
 	 * excluded.
-	 * 
-	 * @parameter
 	 */
+	@Parameter
 	private List<String> excludes;
 
 	/**
 	 * Flag used to suppress execution.
-	 * 
-	 * @parameter property="jacoco.skip" default-value="false"
 	 */
+	@Parameter(property = "jacoco.skip", defaultValue = "false")
 	private boolean skip;
 
 	public final void execute() throws MojoExecutionException,

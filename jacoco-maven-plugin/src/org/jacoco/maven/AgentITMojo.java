@@ -14,6 +14,11 @@ package org.jacoco.maven;
 
 import java.io.File;
 
+import org.apache.maven.plugins.annotations.LifecyclePhase;
+import org.apache.maven.plugins.annotations.Mojo;
+import org.apache.maven.plugins.annotations.Parameter;
+import org.apache.maven.plugins.annotations.ResolutionScope;
+
 /**
  * Same as <code>prepare-agent</code>, but provides default values suitable for
  * integration-tests:
@@ -22,21 +27,15 @@ import java.io.File;
  * <li>different <code>destFile</code></li>
  * </ul>
  * 
- * @phase pre-integration-test
- * @goal prepare-agent-integration
- * @requiresProject true
- * @requiresDependencyResolution runtime
- * @threadSafe
  * @since 0.6.4
  */
+@Mojo(name = "prepare-agent-integration", defaultPhase = LifecyclePhase.PRE_INTEGRATION_TEST, requiresDependencyResolution = ResolutionScope.RUNTIME, threadSafe = true)
 public class AgentITMojo extends AbstractAgentMojo {
 
 	/**
 	 * Path to the output file for execution data.
-	 * 
-	 * @parameter property="jacoco.destFile"
-	 *            default-value="${project.build.directory}/jacoco-it.exec"
 	 */
+	@Parameter(property = "jacoco.destFile", defaultValue = "${project.build.directory}/jacoco-it.exec")
 	private File destFile;
 
 	/**
