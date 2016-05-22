@@ -17,6 +17,8 @@ import java.util.Locale;
 
 import org.apache.maven.doxia.siterenderer.Renderer;
 import org.apache.maven.plugin.MojoExecutionException;
+import org.apache.maven.plugins.annotations.Component;
+import org.apache.maven.plugins.annotations.Parameter;
 import org.apache.maven.project.MavenProject;
 import org.apache.maven.reporting.AbstractMavenReport;
 import org.apache.maven.reporting.MavenReportException;
@@ -31,71 +33,62 @@ public abstract class AbstractReportMojo extends AbstractMavenReport {
 
 	/**
 	 * Encoding of the generated reports.
-	 * 
-	 * @parameter property="project.reporting.outputEncoding"
-	 *            default-value="UTF-8"
 	 */
+	@Parameter(property = "project.reporting.outputEncoding", defaultValue = "UTF-8")
 	String outputEncoding;
 
 	/**
 	 * Name of the root node HTML report pages.
-	 * 
-	 * @parameter default-value="${project.name}"
+	 *
 	 * @since 0.7.7
 	 */
+	@Parameter(defaultValue = "${project.name}")
 	String title;
 
 	/**
 	 * Footer text used in HTML report pages.
-	 * 
-	 * @parameter
+	 *
 	 * @since 0.7.7
 	 */
+	@Parameter
 	String footer;
 
 	/**
 	 * Encoding of the source files.
-	 * 
-	 * @parameter property="project.build.sourceEncoding" default-value="UTF-8"
 	 */
+	@Parameter(property = "project.build.sourceEncoding", defaultValue = "UTF-8")
 	String sourceEncoding;
 
 	/**
 	 * A list of class files to include in the report. May use wildcard
 	 * characters (* and ?). When not specified everything will be included.
-	 * 
-	 * @parameter
 	 */
+	@Parameter
 	List<String> includes;
 
 	/**
 	 * A list of class files to exclude from the report. May use wildcard
 	 * characters (* and ?). When not specified nothing will be excluded.
-	 * 
-	 * @parameter
 	 */
+	@Parameter
 	List<String> excludes;
 
 	/**
 	 * Flag used to suppress execution.
-	 * 
-	 * @parameter property="jacoco.skip" default-value="false"
 	 */
+	@Parameter(property = "jacoco.skip", defaultValue = "false")
 	boolean skip;
 
 	/**
 	 * Maven project.
-	 * 
-	 * @parameter property="project"
-	 * @readonly
 	 */
+	@Parameter(property = "project", readonly = true)
 	MavenProject project;
 
 	/**
 	 * Doxia Site Renderer.
-	 * 
-	 * @component
 	 */
+	@Component
 	Renderer siteRenderer;
 
 	public String getDescription(final Locale locale) {

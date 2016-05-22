@@ -13,6 +13,11 @@ package org.jacoco.maven;
 
 import java.io.File;
 
+import org.apache.maven.plugins.annotations.LifecyclePhase;
+import org.apache.maven.plugins.annotations.Mojo;
+import org.apache.maven.plugins.annotations.Parameter;
+import org.apache.maven.plugins.annotations.ResolutionScope;
+
 /**
  * <p>
  * Prepares a property pointing to the JaCoCo runtime agent that can be passed
@@ -50,21 +55,15 @@ import java.io.File;
  * written to a file when the process terminates.
  * </p>
  * 
- * @phase initialize
- * @goal prepare-agent
- * @requiresProject true
- * @requiresDependencyResolution runtime
- * @threadSafe
  * @since 0.5.3
  */
+@Mojo(name = "prepare-agent", defaultPhase = LifecyclePhase.INITIALIZE, requiresDependencyResolution = ResolutionScope.RUNTIME, threadSafe = true)
 public class AgentMojo extends AbstractAgentMojo {
 
 	/**
 	 * Path to the output file for execution data.
-	 * 
-	 * @parameter property="jacoco.destFile"
-	 *            default-value="${project.build.directory}/jacoco.exec"
 	 */
+	@Parameter(property = "jacoco.destFile", defaultValue = "${project.build.directory}/jacoco.exec")
 	private File destFile;
 
 	/**

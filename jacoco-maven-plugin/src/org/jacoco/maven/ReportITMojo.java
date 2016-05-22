@@ -16,6 +16,9 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Locale;
 
+import org.apache.maven.plugins.annotations.LifecyclePhase;
+import org.apache.maven.plugins.annotations.Mojo;
+import org.apache.maven.plugins.annotations.Parameter;
 import org.jacoco.report.IReportGroupVisitor;
 
 /**
@@ -26,12 +29,9 @@ import org.jacoco.report.IReportGroupVisitor;
  * <li>different <code>dataFile</code></li>
  * </ul>
  * 
- * @phase verify
- * @goal report-integration
- * @requiresProject true
- * @threadSafe
  * @since 0.6.4
  */
+@Mojo(name = "report-integration", defaultPhase = LifecyclePhase.VERIFY, threadSafe = true)
 public class ReportITMojo extends AbstractReportMojo {
 
 	/**
@@ -40,16 +40,14 @@ public class ReportITMojo extends AbstractReportMojo {
 	 * build lifecycle. If the goal is run indirectly as part of a site
 	 * generation, the output directory configured in the Maven Site Plugin is
 	 * used instead.
-	 * 
-	 * @parameter default-value="${project.reporting.outputDirectory}/jacoco-it"
 	 */
+	@Parameter(defaultValue = "${project.reporting.outputDirectory}/jacoco-it")
 	private File outputDirectory;
 
 	/**
 	 * File with execution data.
-	 * 
-	 * @parameter default-value="${project.build.directory}/jacoco-it.exec"
 	 */
+	@Parameter(defaultValue = "${project.build.directory}/jacoco-it.exec")
 	private File dataFile;
 
 	@Override

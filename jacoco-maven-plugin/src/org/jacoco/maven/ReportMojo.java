@@ -15,18 +15,18 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Locale;
 
+import org.apache.maven.plugins.annotations.LifecyclePhase;
+import org.apache.maven.plugins.annotations.Mojo;
+import org.apache.maven.plugins.annotations.Parameter;
 import org.jacoco.report.IReportGroupVisitor;
 
 /**
  * Creates a code coverage report for tests of a single project in multiple
  * formats (HTML, XML, and CSV).
  * 
- * @phase verify
- * @goal report
- * @requiresProject true
- * @threadSafe
  * @since 0.5.3
  */
+@Mojo(name = "report", defaultPhase = LifecyclePhase.VERIFY, threadSafe = true)
 public class ReportMojo extends AbstractReportMojo {
 
 	/**
@@ -35,16 +35,14 @@ public class ReportMojo extends AbstractReportMojo {
 	 * build lifecycle. If the goal is run indirectly as part of a site
 	 * generation, the output directory configured in the Maven Site Plugin is
 	 * used instead.
-	 * 
-	 * @parameter default-value="${project.reporting.outputDirectory}/jacoco"
 	 */
+	@Parameter(defaultValue = "${project.reporting.outputDirectory}/jacoco")
 	private File outputDirectory;
 
 	/**
 	 * File with execution data.
-	 * 
-	 * @parameter default-value="${project.build.directory}/jacoco.exec"
 	 */
+	@Parameter(defaultValue = "${project.build.directory}/jacoco.exec")
 	private File dataFile;
 
 	@Override

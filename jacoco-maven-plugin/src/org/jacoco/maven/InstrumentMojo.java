@@ -21,6 +21,8 @@ import java.util.List;
 
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
+import org.apache.maven.plugins.annotations.LifecyclePhase;
+import org.apache.maven.plugins.annotations.Mojo;
 import org.codehaus.plexus.util.FileUtils;
 import org.codehaus.plexus.util.IOUtil;
 import org.jacoco.core.instr.Instrumenter;
@@ -37,12 +39,9 @@ import org.jacoco.core.runtime.OfflineInstrumentationAccessGenerator;
  * offline instrumentation before using this mode.
  * </p>
  * 
- * @phase process-classes
- * @goal instrument
- * @requiresProject true
- * @threadSafe
  * @since 0.6.2
  */
+@Mojo(name = "instrument", defaultPhase = LifecyclePhase.PROCESS_CLASSES, threadSafe = true)
 public class InstrumentMojo extends AbstractJacocoMojo {
 
 	@Override
