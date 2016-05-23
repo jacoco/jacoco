@@ -78,7 +78,7 @@ public class SourceTest {
 
 	@Test
 	public void testGetSourceFor() throws IOException {
-		final Source s = Source.getSourceFor(SourceTest.class);
+		final Source s = Source.getSourceFor("src", SourceTest.class);
 		// Here we are. $line-testGetSourceFor$
 		final String l = s.getLine(s.getLineNumber("testGetSourceFor"));
 		assertTrue(l, l.contains("Here we are."));

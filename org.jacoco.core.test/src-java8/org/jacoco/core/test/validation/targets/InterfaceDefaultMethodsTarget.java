@@ -9,7 +9,7 @@
  *    Marc R. Hoffmann - initial API and implementation
  *    
  *******************************************************************************/
-package org.jacoco.core.test.validation.java8;
+package org.jacoco.core.test.validation.targets;
 
 import static org.jacoco.core.test.validation.targets.Stubs.i1;
 

@@ -47,6 +47,8 @@ public abstract class ValidationTestBase {
 		STATUS_NAME[ICounter.PARTLY_COVERED] = "PARTLY_COVERED";
 	}
 
+	protected final String srcFolder;
+
 	protected final Class<?> target;
 
 	protected IClassCoverage classCoverage;
@@ -57,8 +59,13 @@ public abstract class ValidationTestBase {
 
 	protected TargetLoader loader;
 
-	protected ValidationTestBase(final Class<?> target) {
+	protected ValidationTestBase(final String srcFolder, final Class<?> target) {
+		this.srcFolder = srcFolder;
 		this.target = target;
+	}
+
+	protected ValidationTestBase(final Class<?> target) {
+		this("src", target);
 	}
 
 	@Before
@@ -68,7 +75,7 @@ public abstract class ValidationTestBase {
 				TargetLoader.getClassData(target));
 		final ExecutionDataStore store = execute(reader);
 		analyze(reader, store);
-		source = Source.getSourceFor(target);
+		source = Source.getSourceFor(srcFolder, target);
 	}
 
 	private ExecutionDataStore execute(final ClassReader reader)

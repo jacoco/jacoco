@@ -9,34 +9,31 @@
  *    Marc R. Hoffmann - initial API and implementation
  *    
  *******************************************************************************/
-package org.jacoco.core.test.validation.java8;
+package org.jacoco.core.test.validation;
 
 import org.jacoco.core.analysis.ICounter;
-import org.jacoco.core.test.validation.ValidationTestBase;
+import org.jacoco.core.test.validation.targets.InterfaceDefaultMethodsTarget;
 import org.junit.Test;
 
 /**
- * Tests for different lambda expressions.
+ * Tests of static initializer in interfaces.
  */
-public class LambdaExpressionsTest extends ValidationTestBase {
+public class InterfaceDefaultMethodsTest extends ValidationTestBase {
 
-	public LambdaExpressionsTest() {
-		super(LambdaExpressionsTarget.class);
+	public InterfaceDefaultMethodsTest() {
+		super("src-java8", InterfaceDefaultMethodsTarget.class);
 	}
 
 	@Override
 	protected void run(final Class<?> targetClass) throws Exception {
-		final Object instance = targetClass.newInstance();
-		((Runnable) instance).run();
+		loader.add(InterfaceDefaultMethodsTarget.Impl.class).newInstance();
 	}
 
 	@Test
 	public void testCoverageResult() {
-
-		// Coverage of lambda bodies
-		assertLine("executedlambdabody", ICounter.FULLY_COVERED);
-		assertLine("notexecutedlambdabody", ICounter.NOT_COVERED);
-
+		assertLine("clinit", ICounter.FULLY_COVERED);
+		assertLine("m1", ICounter.FULLY_COVERED);
+		assertLine("m2", ICounter.NOT_COVERED);
 	}
 
 }

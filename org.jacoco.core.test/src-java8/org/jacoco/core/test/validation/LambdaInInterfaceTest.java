@@ -9,31 +9,32 @@
  *    Marc R. Hoffmann - initial API and implementation
  *    
  *******************************************************************************/
-package org.jacoco.core.test.validation.java8;
+package org.jacoco.core.test.validation;
 
 import org.jacoco.core.analysis.ICounter;
-import org.jacoco.core.test.validation.ValidationTestBase;
+import org.jacoco.core.test.validation.targets.LambdaInInterfaceTarget;
 import org.junit.Test;
 
 /**
- * Tests of static initializer in interfaces.
+ * Tests a constant with a lambda value in an interface.
  */
-public class InterfaceDefaultMethodsTest extends ValidationTestBase {
+public class LambdaInInterfaceTest extends ValidationTestBase {
 
-	public InterfaceDefaultMethodsTest() {
-		super(InterfaceDefaultMethodsTarget.class);
+	public LambdaInInterfaceTest() {
+		super("src-java8", LambdaInInterfaceTarget.class);
 	}
 
 	@Override
 	protected void run(final Class<?> targetClass) throws Exception {
-		loader.add(InterfaceDefaultMethodsTarget.Impl.class).newInstance();
+		((Runnable) targetClass.getField("RUN").get(null)).run();
 	}
 
 	@Test
 	public void testCoverageResult() {
-		assertLine("clinit", ICounter.FULLY_COVERED);
-		assertLine("m1", ICounter.FULLY_COVERED);
-		assertLine("m2", ICounter.NOT_COVERED);
+
+		// Coverage of lambda body
+		assertLine("lambdabody", ICounter.FULLY_COVERED);
+
 	}
 
 }
