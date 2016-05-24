@@ -32,8 +32,27 @@ import org.apache.maven.plugins.annotations.ResolutionScope;
  * 
  * <p>
  * If your project already defines VM arguments for test execution, be sure that
- * the VM arguments are defined as a property, rather than as part of the plugin
- * configuration. For example in case of maven-surefire-plugin:
+ * they will include property defined by JaCoCo.
+ * </p>
+ *
+ * <p>
+ * One of the ways to do this in case of maven-surefore-plugin - is to use
+ * syntax for <a href="http://maven.apache.org/surefire/maven-surefire-plugin/faq.html#late-property-evaluation">late property evaluation</a>:
+ * </p>
+ * 
+ * <pre>
+ *   &lt;plugin&gt;
+ *     &lt;groupId&gt;org.apache.maven.plugins&lt;/groupId&gt;
+ *     &lt;artifactId&gt;maven-surefire-plugin&lt;/artifactId&gt;
+ *     &lt;configuration&gt;
+ *       &lt;argLine&gt;@{argLine} -your -extra -arguments&lt;/argLine&gt;
+ *     &lt;/configuration&gt;
+ *   &lt;/plugin&gt;
+ * </pre>
+ * 
+ * <p>
+ * Another way is to define "argLine" as a Maven property rather than
+ * as part of the configuration of maven-surefire-plugin:
  * </p>
  * 
  * <pre>
@@ -45,7 +64,7 @@ import org.apache.maven.plugins.annotations.ResolutionScope;
  *     &lt;groupId&gt;org.apache.maven.plugins&lt;/groupId&gt;
  *     &lt;artifactId&gt;maven-surefire-plugin&lt;/artifactId&gt;
  *     &lt;configuration&gt;
- *       &lt;!-- Do not define argLine here! --&gt;
+ *       &lt;!-- no argLine here --&gt;
  *     &lt;/configuration&gt;
  *   &lt;/plugin&gt;
  * </pre>
