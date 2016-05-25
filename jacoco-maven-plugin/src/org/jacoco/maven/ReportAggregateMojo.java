@@ -57,7 +57,7 @@ public class ReportAggregateMojo extends AbstractReportMojo {
 	 * project. May use wildcard characters (* and ?). When not specified all
 	 * *.exec files from the target folder will be included.
 	 */
-	@Parameter(defaultValue = "target/*.exec")
+	@Parameter
 	List<String> dataFileIncludes;
 
 	/**
@@ -96,6 +96,11 @@ public class ReportAggregateMojo extends AbstractReportMojo {
 
 	@Override
 	void loadExecutionData(final ReportSupport support) throws IOException {
+		// https://issues.apache.org/jira/browse/MNG-5440
+		if (dataFileIncludes == null) {
+			dataFileIncludes = Arrays.asList("target/*.exec");
+		}
+
 		final FileFilter filter = new FileFilter(dataFileIncludes,
 				dataFileExcludes);
 		loadExecutionData(support, filter, getProject().getBasedir());
