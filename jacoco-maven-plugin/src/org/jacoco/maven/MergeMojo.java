@@ -50,7 +50,7 @@ public class MergeMojo extends AbstractJacocoMojo {
 	 * <code>
 	 * &lt;fileSets&gt;
 	 *   &lt;fileSet implementation="org.apache.maven.shared.model.fileset.FileSet"&gt;
-	 *     &lt;directory&gt;${project.parent.build.directory}&lt;/directory&gt;
+	 *     &lt;directory&gt;${project.build.directory}&lt;/directory&gt;
 	 *     &lt;includes&gt;
 	 *       &lt;include&gt;*.exec&lt;/include&gt;
 	 *     &lt;/includes&gt;
