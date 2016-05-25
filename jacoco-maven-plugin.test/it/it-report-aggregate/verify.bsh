@@ -10,19 +10,24 @@
  *
  *******************************************************************************/
 import org.codehaus.plexus.util.*;
+import java.util.regex.*;
 
 String buildLog = FileUtils.fileRead( new File( basedir, "build.log" ) );
 
-if ( buildLog.indexOf( "/child1/target/jacoco.exec".replace('/', File.separatorChar) ) < 0 ) {
+if ( !Pattern.compile( "Loading execution data file \\S*child1.target.jacoco.exec").matcher( buildLog ).find() ) {
     throw new RuntimeException( "Execution data from child1 was not loaded." );
 }
 
-if ( buildLog.indexOf( "/child1-test/target/jacoco.exec".replace('/', File.separatorChar) ) < 0 ) {
+if ( !Pattern.compile( "Loading execution data file \\S*child1-test.target.jacoco.exec").matcher( buildLog ).find() ) {
     throw new RuntimeException( "Execution data from child1-test was not loaded." );
 }
 
-if ( buildLog.indexOf( "/child2/target/jacoco.exec".replace('/', File.separatorChar) ) < 0 ) {
+if ( !Pattern.compile( "Loading execution data file \\S*child2.target.jacoco.exec").matcher( buildLog ).find() ) {
     throw new RuntimeException( "Execution data from child2 was not loaded." );
+}
+
+if ( !Pattern.compile( "Loading execution data file \\S*report.target.jacoco.exec").matcher( buildLog ).find() ) {
+    throw new RuntimeException( "Execution data from report was not loaded." );
 }
 
 File reportChild1 = new File( basedir, "report/target/site/jacoco-aggregate/child1/index.html" );

@@ -30,14 +30,15 @@ import org.jacoco.report.IReportGroupVisitor;
  * Creates a structured code coverage report (HTML, XML, and CSV) from multiple
  * projects within reactor. The report is created from all modules this project
  * depends on. From those projects class and source files as well as JaCoCo
- * execution data files will be collected. This also allows to create coverage
+ * execution data files will be collected. In addition execution data is
+ * collected from the project itself. This also allows to create coverage
  * reports when tests are in separate projects than the code under test, for
  * example in case of integration tests.
  * </p>
  * 
  * <p>
  * Using the dependency scope allows to distinguish projects which contribute
- * execution data but should not be part of the report itself:
+ * execution data but should not become part of the report:
  * </p>
  * 
  * <ul>
@@ -97,11 +98,17 @@ public class ReportAggregateMojo extends AbstractReportMojo {
 	void loadExecutionData(final ReportSupport support) throws IOException {
 		final FileFilter filter = new FileFilter(dataFileIncludes,
 				dataFileExcludes);
+		loadExecutionData(support, filter, getProject().getBasedir());
 		for (final MavenProject dependency : findDependencies(
 				Artifact.SCOPE_COMPILE, Artifact.SCOPE_TEST)) {
-			for (final File execFile : filter.getFiles(dependency.getBasedir())) {
-				support.loadExecutionData(execFile);
-			}
+			loadExecutionData(support, filter, dependency.getBasedir());
+		}
+	}
+
+	private void loadExecutionData(final ReportSupport support,
+			final FileFilter filter, final File basedir) throws IOException {
+		for (final File execFile : filter.getFiles(basedir)) {
+			support.loadExecutionData(execFile);
 		}
 	}
 
