@@ -101,7 +101,7 @@ public class DuplicateFrameEliminatorTest {
 	@Test
 	public void testInvokeDynamicInsn() {
 		testInstructionBetweenFrames(new InvokeDynamicInsnNode("foo", "()V",
-				new Handle(0, null, null, null)));
+				new Handle(0, null, null, null, false)));
 	}
 
 	@Test
