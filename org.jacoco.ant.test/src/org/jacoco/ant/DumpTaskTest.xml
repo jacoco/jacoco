@@ -35,7 +35,12 @@
 	
 	<target name="testUnknownHost">
 		<au:expectfailure expectedMessage="Unable to dump coverage data">
-			<jacoco:dump dump="false" address="nosuchhost"/>
+			<!--
+			Note that malformed literal IPv6 address is used
+			to cause UnknownHostException from java.net.InetAddress.getByName
+			without DNS request.
+			-->
+			<jacoco:dump dump="false" address="[nosuchhost]"/>
 		</au:expectfailure>
 		<au:assertFileDoesntExist file="${exec.file}"/>
 	</target>
