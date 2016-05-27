@@ -12,4 +12,4 @@ Import-Package: org.jacoco.core.analysis;bundle-version="[0.7.7,0.7.8)",
  org.jacoco.core.tools;bundle-version="[0.7.7,0.7.8)",
  org.jacoco.report;bundle-version="[0.7.7,0.7.8)",
  org.jacoco.report.html;bundle-version="[0.7.7,0.7.8)",
- org.objectweb.asm;version="[5.0.4,5.1.0)"
+ org.objectweb.asm;version="[5.1.0,5.2.0)"
