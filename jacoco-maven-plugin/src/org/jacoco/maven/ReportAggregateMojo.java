@@ -86,7 +86,7 @@ public class ReportAggregateMojo extends AbstractReportMojo {
 
 	@Override
 	boolean canGenerateReportRegardingDataFiles() {
-		return true;
+		return executionDataFilesCount() > 0;
 	}
 
 	@Override
@@ -107,6 +107,22 @@ public class ReportAggregateMojo extends AbstractReportMojo {
 		for (final MavenProject dependency : findDependencies(
 				Artifact.SCOPE_COMPILE, Artifact.SCOPE_TEST)) {
 			loadExecutionData(support, filter, dependency.getBasedir());
+		}
+	}
+
+	private int executionDataFilesCount() {
+		final FileFilter filter = new FileFilter(dataFileIncludes,
+				dataFileExcludes);
+		try {
+			int count = 0;
+			for (final MavenProject dependency : findDependencies(
+					Artifact.SCOPE_COMPILE, Artifact.SCOPE_TEST)) {
+				count += filter.getFiles(dependency.getBasedir()).size();
+			}
+			return count;
+		} catch (IOException e) {
+			throw new RuntimeException(
+					"Unable to determine number of executing data files", e);
 		}
 	}
 
