@@ -25,6 +25,7 @@
 
   <properties>
     <jacoco.includes>org.jacoco.ant.*</jacoco.includes>
+    <skipTests>true</skipTests>
   </properties>
 
   <dependencies>
