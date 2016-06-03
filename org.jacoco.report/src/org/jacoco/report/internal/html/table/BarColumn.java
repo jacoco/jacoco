@@ -25,6 +25,7 @@ import org.jacoco.core.analysis.ICoverageNode.CounterEntity;
 import org.jacoco.report.internal.ReportOutputFolder;
 import org.jacoco.report.internal.html.HTMLElement;
 import org.jacoco.report.internal.html.resources.Resources;
+import org.jacoco.report.internal.html.resources.Styles;
 
 /**
  * Column with a graphical bar that represents the total amount of items in with
@@ -58,6 +59,10 @@ public class BarColumn implements IColumnRenderer {
 		this.comparator = new TableItemComparator(CounterComparator.MISSEDITEMS
 				.reverse().on(entity)
 				.second(CounterComparator.TOTALITEMS.reverse().on(entity)));
+	}
+
+	public String getStyle(final boolean border) {
+		return border ? Styles.CELL_L_BORDER : Styles.CELL_L;
 	}
 
 	public boolean init(final List<? extends ITableItem> items,

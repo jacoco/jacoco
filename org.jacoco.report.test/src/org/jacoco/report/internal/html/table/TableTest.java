@@ -262,6 +262,10 @@ public class TableTest {
 			this.comparator = new TableItemComparator(comparator);
 		}
 
+		public String getStyle(boolean border) {
+			return null;
+		}
+
 		public boolean init(List<? extends ITableItem> items,
 				ICoverageNode total) {
 			return true;

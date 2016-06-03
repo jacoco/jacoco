@@ -19,6 +19,7 @@ import org.jacoco.core.analysis.ICoverageNode;
 import org.jacoco.report.internal.ReportOutputFolder;
 import org.jacoco.report.internal.html.HTMLElement;
 import org.jacoco.report.internal.html.resources.Resources;
+import org.jacoco.report.internal.html.resources.Styles;
 
 /**
  * Column for the item label. The implementation is stateless, instances might
@@ -31,6 +32,10 @@ public class LabelColumn implements IColumnRenderer {
 			return i1.getLinkLabel().compareToIgnoreCase(i2.getLinkLabel());
 		}
 	};
+
+	public String getStyle(final boolean border) {
+		return border ? Styles.CELL_L_BORDER : Styles.CELL_L;
+	}
 
 	public boolean init(final List<? extends ITableItem> items,
 			final ICoverageNode total) {

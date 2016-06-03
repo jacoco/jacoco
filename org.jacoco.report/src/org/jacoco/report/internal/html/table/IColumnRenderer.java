@@ -28,6 +28,15 @@ import org.jacoco.report.internal.html.resources.Resources;
 public interface IColumnRenderer {
 
 	/**
+	 * Returns the style used for the cells of this column.
+	 * 
+	 * @param border
+	 *            if a border should be shown to the left
+	 * @return CSS style
+	 */
+	public String getStyle(boolean border);
+
+	/**
 	 * Initializes the column before any output method is called.
 	 * 
 	 * @param items

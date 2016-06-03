@@ -25,6 +25,7 @@ import org.jacoco.core.analysis.ICoverageNode.CounterEntity;
 import org.jacoco.report.internal.ReportOutputFolder;
 import org.jacoco.report.internal.html.HTMLElement;
 import org.jacoco.report.internal.html.resources.Resources;
+import org.jacoco.report.internal.html.resources.Styles;
 
 /**
  * Column that prints the counter values of entities for each item and a summary
@@ -115,6 +116,10 @@ public abstract class CounterColumn implements IColumnRenderer {
 		this.entity = entity;
 		this.integerFormat = DecimalFormat.getIntegerInstance(locale);
 		this.comparator = new TableItemComparator(comparator);
+	}
+
+	public String getStyle(final boolean border) {
+		return border ? Styles.CELL_R_BORDER : Styles.CELL_R;
 	}
 
 	public boolean init(final List<? extends ITableItem> items,
