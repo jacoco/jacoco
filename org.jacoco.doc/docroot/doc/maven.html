@@ -103,6 +103,33 @@
 mvn help:describe -Dplugin=org.jacoco:jacoco-maven-plugin -Ddetail
 </pre>
 
+<p>
+  Usage of plugin together with <tt>maven-site-plugin</tt> without
+  <a href="https://maven.apache.org/plugins/maven-site-plugin/examples/configuring-reports.html#Selecting_Reports_from_a_Plugin:_Configuring_Report_Sets">explicit selection of reports</a>
+  might lead to generation of redundant aggregate reports.
+  Specify <tt>reportSets</tt> explicitly to avoid this:
+</p>
+<pre class="source lang-xml linenums">
+&lt;project&gt;
+  &lt;reporting&gt;
+    &lt;plugins&gt;
+      &lt;plugin&gt;
+        &lt;groupId&gt;org.jacoco&lt;/groupId&gt;
+        &lt;artifactId&gt;jacoco-maven-plugin&lt;/artifactId&gt;
+        &lt;reportSets&gt;
+          &lt;reportSet&gt;
+            &lt;reports&gt;
+              &lt;!-- select non-aggregate reports --&gt;
+              &lt;report&gt;report&lt;/report&gt;
+            &lt;/reports&gt;
+          &lt;/reportSet&gt;
+        &lt;/reportSets&gt;
+      &lt;/plugin&gt;
+    &lt;/plugins&gt;
+  &lt;/reporting&gt;
+&lt;/project&gt;
+</pre>
+
 <h2>Goals</h2>
 
 <p>
