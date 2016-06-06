@@ -91,7 +91,7 @@
       <unpack>true</unpack>
       <useProjectArtifact>false</useProjectArtifact>
       <includes>
-        <include>${project.groupId}:org.jacoco.examples</include>
+        <include>${project.groupId}:org.jacoco.examples:zip</include>
       </includes>
     </dependencySet>
     <dependencySet>
