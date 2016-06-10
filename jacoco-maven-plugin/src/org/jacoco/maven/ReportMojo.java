@@ -42,7 +42,7 @@ public class ReportMojo extends AbstractReportMojo {
 	/**
 	 * File with execution data.
 	 */
-	@Parameter(defaultValue = "${project.build.directory}/jacoco.exec")
+	@Parameter(property = "jacoco.dataFile", defaultValue = "${project.build.directory}/jacoco.exec")
 	private File dataFile;
 
 	@Override

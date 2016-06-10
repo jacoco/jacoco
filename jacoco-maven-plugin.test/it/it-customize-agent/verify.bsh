@@ -39,3 +39,9 @@ if ( !file.isFile() )
 {
     throw new FileNotFoundException( "Could not find generated dump: " + file );
 }
+
+File reportDir = new File( basedir, "target/site/jacoco" );
+if ( !reportDir.isDirectory() )
+{
+    throw new RuntimeException( "Could not find generated report" );
+}

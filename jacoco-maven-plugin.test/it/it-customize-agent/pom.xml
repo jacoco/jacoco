@@ -35,6 +35,8 @@
     <jacoco.port>9999</jacoco.port>
     <jacoco.classDumpDir>${project.build.directory}/classdumps</jacoco.classDumpDir>
     <jacoco.jmx>true</jacoco.jmx>
+
+    <jacoco.dataFile>${jacoco.destFile}</jacoco.dataFile>
   </properties>
 
   <build>
@@ -46,6 +48,7 @@
           <execution>
             <goals>
               <goal>prepare-agent</goal>
+              <goal>report</goal>
             </goals>
             <configuration>
               <includes>
