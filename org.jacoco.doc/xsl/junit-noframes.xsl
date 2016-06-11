@@ -37,8 +37,8 @@
     <html>
         <head>
             <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-            <link rel="stylesheet" href="../doc/.resources/doc.css" charset="UTF-8" type="text/css" />
-            <link rel="shortcut icon" href="../doc/.resources/report.gif" type="image/gif" />
+            <link rel="stylesheet" href="../doc/resources/doc.css" charset="UTF-8" type="text/css" />
+            <link rel="shortcut icon" href="../doc/resources/report.gif" type="image/gif" />
             <title>JaCoCo - JUnit Test Results</title>
             
     <style type="text/css">

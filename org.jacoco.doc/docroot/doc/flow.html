@@ -3,9 +3,9 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en">
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-  <link rel="stylesheet" href=".resources/doc.css" charset="UTF-8" type="text/css" />
+  <link rel="stylesheet" href="resources/doc.css" charset="UTF-8" type="text/css" />
   <link rel="stylesheet" href="../coverage/jacoco-resources/prettify.css" charset="UTF-8" type="text/css" />
-  <link rel="shortcut icon" href=".resources/report.gif" type="image/gif" />
+  <link rel="shortcut icon" href="resources/report.gif" type="image/gif" />
   <script type="text/javascript" src="../coverage/jacoco-resources/prettify.js"></script>
   <title>JaCoCo - Control Flow Analysis</title>
 </head>
@@ -77,7 +77,7 @@ public static example()V
   example is shown in the left box of this diagram:
 </p>
 
-<img src=".resources/flow-example.png" alt="Bytecode Control Flow"/>
+<img src="resources/flow-example.png" alt="Bytecode Control Flow"/>
 
 
 <h3>Flow Edges</h3>
@@ -208,8 +208,8 @@ public static example()V
   <tbody>
     <tr>
       <td>SEQUENCE</td>
-      <td><img src=".resources/flow-sequence.png" alt="Sequence"/></td>
-      <td><img src=".resources/flow-sequence-probe.png" alt="Sequence with Probe"/></td>
+      <td><img src="resources/flow-sequence.png" alt="Sequence"/></td>
+      <td><img src="resources/flow-sequence-probe.png" alt="Sequence with Probe"/></td>
       <td>
         In case of a simple sequence the probe is simply inserted between the
         two instructions. 
@@ -217,8 +217,8 @@ public static example()V
     </tr>
     <tr>
       <td>JUMP (unconditional)</td>
-      <td><img src=".resources/flow-goto.png" alt="Unconditional Jump"/></td>
-      <td><img src=".resources/flow-goto-probe.png" alt="Unconditional Jump with Probe"/></td>
+      <td><img src="resources/flow-goto.png" alt="Unconditional Jump"/></td>
+      <td><img src="resources/flow-goto-probe.png" alt="Unconditional Jump with Probe"/></td>
       <td>
         As an unconditional jump is executed in any case, we can also insert the
         probe just before the GOTO instruction.
@@ -226,8 +226,8 @@ public static example()V
     </tr>
     <tr>
       <td>JUMP (conditional)</td>
-      <td><img src=".resources/flow-cond.png" alt="Conditional Jump"/></td>
-      <td><img src=".resources/flow-cond-probe.png" alt="Conditional Jump with Probe"/></td>
+      <td><img src="resources/flow-cond.png" alt="Conditional Jump"/></td>
+      <td><img src="resources/flow-cond-probe.png" alt="Conditional Jump with Probe"/></td>
       <td>
         Adding a probe to an conditional jump is little bit more tricky. We
         invert the semantic of the opcode and add the probe right after the
@@ -239,8 +239,8 @@ public static example()V
     </tr>
     <tr>
       <td>EXIT</td>
-      <td><img src=".resources/flow-exit.png" alt="Exit"/></td>
-      <td><img src=".resources/flow-exit-probe.png" alt="Exit with Probe"/></td>
+      <td><img src="resources/flow-exit.png" alt="Exit"/></td>
+      <td><img src="resources/flow-exit-probe.png" alt="Exit with Probe"/></td>
       <td>
         As is is the nature of RETURN and THROW statements to actually leave the
         method we add the probe right before these statements.
