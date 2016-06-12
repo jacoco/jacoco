@@ -27,9 +27,9 @@
 		<html>
 			<head>
 				<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-				<link rel="stylesheet" href=".resources/doc.css" charset="UTF-8"
+				<link rel="stylesheet" href="resources/doc.css" charset="UTF-8"
 					type="text/css" />
-				<link rel="shortcut icon" href=".resources/report.gif" type="image/gif" />
+				<link rel="shortcut icon" href="resources/report.gif" type="image/gif" />
 				<title>
 					JaCoCo -
 					<xsl:value-of select="xdoc:document/xdoc:properties/xdoc:title" />

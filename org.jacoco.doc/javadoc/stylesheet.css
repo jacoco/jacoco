@@ -45,7 +45,7 @@ h1 {
 a[href^='http://'], a[href^='https://'] {
 	display:inline-block;
 	padding-left:15px;
-	background:transparent url(../.resources/extern.gif) center left no-repeat;
+	background:transparent url(../resources/extern.gif) center left no-repeat;
 }
 
 hr {
