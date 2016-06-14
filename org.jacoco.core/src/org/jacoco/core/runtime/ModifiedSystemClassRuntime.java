@@ -29,7 +29,7 @@ import org.objectweb.asm.Opcodes;
 
 /**
  * This {@link IRuntime} implementation works with a modified system class. A
- * new static method is added to a bootstrap class that will be used by
+ * new static field is added to a bootstrap class that will be used by
  * instrumented classes. As the system class itself needs to be instrumented
  * this runtime requires a Java agent.
  */
@@ -84,7 +84,7 @@ public class ModifiedSystemClassRuntime extends AbstractRuntime {
 
 	/**
 	 * Creates a new {@link ModifiedSystemClassRuntime} using the given class as
-	 * the data container. Members are creates with internal default names. The
+	 * the data container. Member is created with internal default name. The
 	 * given class must not have been loaded before by the agent.
 	 * 
 	 * @param inst
@@ -144,8 +144,7 @@ public class ModifiedSystemClassRuntime extends AbstractRuntime {
 	}
 
 	/**
-	 * Adds the static access method and data field to the given class
-	 * definition.
+	 * Adds the static data field to the given class definition.
 	 * 
 	 * @param source
 	 *            class definition source
