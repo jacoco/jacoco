@@ -71,7 +71,7 @@ public final class ProbeArrayStrategyFactory {
 		return reader.readShort(6);
 	}
 
-	private static ProbeCounter getProbeCounter(final ClassReader reader) {
+	static ProbeCounter getProbeCounter(final ClassReader reader) {
 		final ProbeCounter counter = new ProbeCounter();
 		reader.accept(new ClassProbesAdapter(counter, false), 0);
 		return counter;

@@ -11,14 +11,17 @@
  *******************************************************************************/
 package org.jacoco.agent.rt.internal;
 
+import java.io.IOException;
 import java.lang.instrument.ClassFileTransformer;
 import java.lang.instrument.IllegalClassFormatException;
 import java.security.CodeSource;
 import java.security.ProtectionDomain;
 
 import org.jacoco.core.instr.Instrumenter;
+import org.jacoco.core.internal.instr.Companions;
 import org.jacoco.core.runtime.AgentOptions;
 import org.jacoco.core.runtime.IRuntime;
+import org.jacoco.core.runtime.RuntimeData;
 import org.jacoco.core.runtime.WildcardMatcher;
 
 /**
@@ -32,6 +35,10 @@ public class CoverageTransformer implements ClassFileTransformer {
 		final String name = CoverageTransformer.class.getName();
 		AGENT_PREFIX = toVMName(name.substring(0, name.lastIndexOf('.')));
 	}
+
+	private final RuntimeData runtimeData;
+
+	private final Companions companions;
 
 	private final Instrumenter instrumenter;
 
@@ -60,8 +67,11 @@ public class CoverageTransformer implements ClassFileTransformer {
 	 *            logger for exceptions during instrumentation
 	 */
 	public CoverageTransformer(final IRuntime runtime,
-			final AgentOptions options, final IExceptionLogger logger) {
+			final RuntimeData runtimeData, final AgentOptions options,
+			final IExceptionLogger logger) {
 		this.instrumenter = new Instrumenter(runtime);
+		this.runtimeData = runtimeData;
+		this.companions = new Companions(runtimeData);
 		this.logger = logger;
 		// Class names will be reported in VM notation:
 		includes = new WildcardMatcher(toVMName(options.getIncludes()));
@@ -88,7 +98,7 @@ public class CoverageTransformer implements ClassFileTransformer {
 
 		try {
 			classFileDumper.dump(classname, classfileBuffer);
-			return instrumenter.instrument(classfileBuffer, classname);
+			return instrument(loader, classname, classfileBuffer);
 		} catch (final Exception ex) {
 			final IllegalClassFormatException wrapper = new IllegalClassFormatException(
 					ex.getMessage());
@@ -96,6 +106,22 @@ public class CoverageTransformer implements ClassFileTransformer {
 			// Report this, as the exception is ignored by the JVM:
 			logger.logExeption(wrapper);
 			throw wrapper;
+		}
+	}
+
+	private byte[] instrument(final ClassLoader classLoader,
+			final String className, final byte[] buffer) throws IOException {
+		try {
+			if (classLoader == null) {
+				// fallback to old strategies for the bootstrap classes
+				return instrumenter.instrument(buffer, className);
+			}
+			return companions.instrument(classLoader, className, buffer);
+		} catch (final RuntimeException e) {
+			final IOException ex = new IOException(String.format(
+					"Error while instrumenting class %s.", className));
+			ex.initCause(e);
+			throw ex;
 		}
 	}
 

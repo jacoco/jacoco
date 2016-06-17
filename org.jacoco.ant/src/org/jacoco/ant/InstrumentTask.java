@@ -76,6 +76,7 @@ public class InstrumentTask extends Task {
 					getLocation());
 		}
 		int total = 0;
+		// FIXME(Godin): use OfflineInstrumentationCompanionAccessGenerator
 		final Instrumenter instrumenter = new Instrumenter(
 				new OfflineInstrumentationAccessGenerator());
 		instrumenter.setRemoveSignatures(removesignatures);
