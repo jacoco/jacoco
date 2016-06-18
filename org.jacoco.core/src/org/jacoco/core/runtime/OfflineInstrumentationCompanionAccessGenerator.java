@@ -30,7 +30,7 @@ import org.objectweb.asm.Opcodes;
 public class OfflineInstrumentationCompanionAccessGenerator
 		implements IExecutionDataAccessorGenerator {
 
-	private final OfflineInstrumentationAccessGenerator generator;
+	private final String runtimeClassName;
 
 	private String companionName;
 
@@ -49,22 +49,8 @@ public class OfflineInstrumentationCompanionAccessGenerator
 
 	OfflineInstrumentationCompanionAccessGenerator(
 			final String runtimeClassName) {
-		this.generator = new OfflineInstrumentationAccessGenerator(
-				runtimeClassName);
+		this.runtimeClassName = runtimeClassName;
 		newCompanion();
-	}
-
-	private void newCompanion() {
-		instrumented.clear();
-		companionName = Companions.COMPANION_NAME
-				+ UUID.randomUUID().toString().replace('-', '_');
-
-		cw = new ClassWriter(0);
-		cw.visit(Opcodes.V1_1,
-				Opcodes.ACC_SYNTHETIC | Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL,
-				companionName, null, "java/lang/Object", null);
-		mv = cw.visitMethod(Opcodes.ACC_STATIC, "<clinit>", "()V", null, null);
-		mv.visitCode();
 	}
 
 	public int generateDataAccessor(final long classid, final String classname,
@@ -72,22 +58,14 @@ public class OfflineInstrumentationCompanionAccessGenerator
 		if (instrumented.size() == Companions.FIELDS_PER_CLASS) {
 			throw new UnsupportedOperationException();
 		}
-
 		final String fieldName = "p" + Long.toString(classid);
-
 		if (instrumented.add(classname)) {
 			cw.visitField(
 					Opcodes.ACC_PUBLIC | Opcodes.ACC_STATIC
 							| Opcodes.ACC_TRANSIENT | Opcodes.ACC_FINAL,
 					fieldName, InstrSupport.DATAFIELD_DESC, null, null);
-
-			generator.generateDataAccessor(classid, classname, probecount,
-					this.mv);
-
-			this.mv.visitFieldInsn(Opcodes.PUTSTATIC, companionName, fieldName,
-					InstrSupport.DATAFIELD_DESC);
+			generateInitializer(fieldName, classid, classname, probecount);
 		}
-
 		mv.visitFieldInsn(Opcodes.GETSTATIC, companionName, fieldName,
 				InstrSupport.DATAFIELD_DESC);
 		return 1;
@@ -111,6 +89,31 @@ public class OfflineInstrumentationCompanionAccessGenerator
 	 */
 	public String getClassName() {
 		return companionName;
+	}
+
+	private void newCompanion() {
+		instrumented.clear();
+		companionName = Companions.COMPANION_NAME
+				+ UUID.randomUUID().toString().replace('-', '_');
+
+		cw = new ClassWriter(0);
+		cw.visit(Opcodes.V1_1,
+				Opcodes.ACC_SYNTHETIC | Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL,
+				companionName, null, "java/lang/Object", null);
+		mv = cw.visitMethod(Opcodes.ACC_STATIC, "<clinit>", "()V", null, null);
+		mv.visitCode();
+	}
+
+	private void generateInitializer(final String fieldName, final long
+			classId, final String className, final int probeCount) {
+		mv.visitLdcInsn(Long.valueOf(classId));
+		mv.visitLdcInsn(className);
+		InstrSupport.push(this.mv, probeCount);
+		mv.visitMethodInsn(Opcodes.INVOKESTATIC, runtimeClassName,
+				"getProbes", "(JLjava/lang/String;I)[Z", false);
+		mv.visitFieldInsn(Opcodes.PUTSTATIC, companionName, fieldName,
+				InstrSupport.DATAFIELD_DESC);
+		// Maximum local stack size is 4
 	}
 
 	/**
