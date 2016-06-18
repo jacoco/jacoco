@@ -11,6 +11,7 @@
  *******************************************************************************/
 package org.jacoco.core.runtime;
 
+import org.jacoco.core.internal.instr.Companions;
 import org.jacoco.core.internal.instr.InstrSupport;
 import org.jacoco.core.test.TargetLoader;
 import org.junit.Before;
@@ -22,6 +23,7 @@ import org.objectweb.asm.Type;
 import org.objectweb.asm.commons.GeneratorAdapter;
 import org.objectweb.asm.commons.Method;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertSame;
 
 /**
@@ -53,14 +55,29 @@ public class OfflineInstrumentationCompanionAccessGeneratorTest {
 
 	@Test
 	public void testRuntimeAccess() throws Exception {
-		ITarget target = create();
+		final TargetLoader targetLoader = new TargetLoader();
+		final ITarget target = (ITarget) targetLoader.add("Target0", create(0))
+				.newInstance();
+		targetLoader.add(generator.getClassName(),
+				generator.getClassDefinition());
 		assertSame(probes, target.get());
 	}
 
-	private ITarget create()
-			throws IllegalAccessException, InstantiationException {
-		final String className = "Test";
+	@Test
+	public void testLimit() throws Exception {
+		for (int i = 0; i < Companions.FIELDS_PER_CLASS; i++) {
+			create(i);
+		}
+		assertEquals(Companions.FIELDS_PER_CLASS,
+				generator.getNumberOfInstrumentedClasses());
+		new TargetLoader().add(generator.getClassName(),
+				generator.getClassDefinition());
+		assertEquals(0, generator.getNumberOfInstrumentedClasses());
+	}
 
+	private byte[] create(final int classId)
+			throws IllegalAccessException, InstantiationException {
+		final String className = "Target" + classId;
 		final ClassWriter writer = new ClassWriter(0);
 		writer.visit(Opcodes.V1_5, Opcodes.ACC_PUBLIC, className, null,
 				"java/lang/Object",
@@ -85,17 +102,14 @@ public class OfflineInstrumentationCompanionAccessGeneratorTest {
 						InstrSupport.INITMETHOD_DESC, null, new String[0]),
 				Opcodes.ACC_PUBLIC, "get", InstrSupport.INITMETHOD_DESC);
 		gen.visitCode();
-		generator.generateDataAccessor(0, className, 3, gen);
+		generator.generateDataAccessor(classId, className, 3, gen);
 		gen.returnValue();
 		gen.visitMaxs(2, 0);
 		gen.visitEnd();
 
 		writer.visitEnd();
 
-		final TargetLoader targetLoader = new TargetLoader();
-		targetLoader.add(generator.getClassName(), generator.getClassDefinition());
-		return (ITarget) targetLoader.add(className, writer.toByteArray())
-				.newInstance();
+		return writer.toByteArray();
 	}
 
 	public interface ITarget {

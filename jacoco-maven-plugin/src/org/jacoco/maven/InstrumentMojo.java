@@ -26,6 +26,7 @@ import org.apache.maven.plugins.annotations.Mojo;
 import org.codehaus.plexus.util.FileUtils;
 import org.codehaus.plexus.util.IOUtil;
 import org.jacoco.core.instr.Instrumenter;
+import org.jacoco.core.internal.instr.Companions;
 import org.jacoco.core.runtime.OfflineInstrumentationCompanionAccessGenerator;
 
 /**
@@ -89,9 +90,22 @@ public class InstrumentMojo extends AbstractJacocoMojo {
 					IOUtil.close(input);
 					IOUtil.close(output);
 				}
+
+				if (generator
+						.getNumberOfInstrumentedClasses() == Companions.FIELDS_PER_CLASS) {
+					saveCompanionClass(classesDir, generator);
+				}
 			}
 		}
 
+		if (generator.getNumberOfInstrumentedClasses() != 0) {
+			saveCompanionClass(classesDir, generator);
+		}
+	}
+
+	private void saveCompanionClass(final File classesDir,
+			final OfflineInstrumentationCompanionAccessGenerator generator)
+					throws MojoExecutionException {
 		FileOutputStream output = null;
 		try {
 			output = new FileOutputStream(

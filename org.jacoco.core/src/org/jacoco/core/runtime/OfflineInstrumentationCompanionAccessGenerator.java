@@ -32,13 +32,13 @@ public class OfflineInstrumentationCompanionAccessGenerator
 
 	private final OfflineInstrumentationAccessGenerator generator;
 
-	private final String companionName;
+	private String companionName;
 
 	private final Set<String> instrumented = new HashSet<String>();
 
-	private final ClassWriter cw;
+	private ClassWriter cw;
 
-	private final MethodVisitor mv;
+	private MethodVisitor mv;
 
 	/**
 	 * Creates a new instance for offline instrumentation.
@@ -49,15 +49,15 @@ public class OfflineInstrumentationCompanionAccessGenerator
 
 	OfflineInstrumentationCompanionAccessGenerator(
 			final String runtimeClassName) {
-		this(runtimeClassName, Companions.COMPANION_NAME
-				+ UUID.randomUUID().toString().replace('-', '_'));
-	}
-
-	OfflineInstrumentationCompanionAccessGenerator(
-			final String runtimeClassName, final String companionName) {
 		this.generator = new OfflineInstrumentationAccessGenerator(
 				runtimeClassName);
-		this.companionName = companionName;
+		newCompanion();
+	}
+
+	private void newCompanion() {
+		instrumented.clear();
+		companionName = Companions.COMPANION_NAME
+				+ UUID.randomUUID().toString().replace('-', '_');
 
 		cw = new ClassWriter(0);
 		cw.visit(Opcodes.V1_1,
@@ -94,6 +94,17 @@ public class OfflineInstrumentationCompanionAccessGenerator
 	}
 
 	/**
+	 * Returns the number of instrumented classes since last invocation of
+	 * {@link #getClassDefinition()}.
+	 * 
+	 * @return number of instrumented classes since last invocation of
+	 *         {@link #getClassDefinition()}
+	 */
+	public int getNumberOfInstrumentedClasses() {
+		return instrumented.size();
+	}
+
+	/**
 	 * Returns the name of generated "companion" class.
 	 *
 	 * @return name of generated "companion" class
@@ -112,7 +123,9 @@ public class OfflineInstrumentationCompanionAccessGenerator
 		mv.visitMaxs(4, 0);
 		mv.visitEnd();
 		cw.visitEnd();
-		return cw.toByteArray();
+		final byte[] result = cw.toByteArray();
+		newCompanion();
+		return result;
 	}
 
 }
