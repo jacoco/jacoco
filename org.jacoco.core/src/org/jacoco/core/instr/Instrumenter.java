@@ -15,6 +15,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.LinkedList;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
 import java.util.zip.ZipEntry;
@@ -30,6 +31,7 @@ import org.jacoco.core.internal.instr.IProbeArrayStrategy;
 import org.jacoco.core.internal.instr.ProbeArrayStrategyFactory;
 import org.jacoco.core.internal.instr.SignatureRemover;
 import org.jacoco.core.runtime.IExecutionDataAccessorGenerator;
+import org.jacoco.core.runtime.OfflineInstrumentationCompanionAccessGenerator;
 import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.ClassVisitor;
 import org.objectweb.asm.ClassWriter;
@@ -39,9 +41,10 @@ import org.objectweb.asm.ClassWriter;
  */
 public class Instrumenter {
 
-	private final IExecutionDataAccessorGenerator accessorGenerator;
-
 	private final SignatureRemover signatureRemover;
+
+	private final LinkedList<IExecutionDataAccessorGenerator> generators =
+			new LinkedList<IExecutionDataAccessorGenerator>();
 
 	/**
 	 * Creates a new instance based on the given runtime.
@@ -50,7 +53,7 @@ public class Instrumenter {
 	 *            runtime used by the instrumented classes
 	 */
 	public Instrumenter(final IExecutionDataAccessorGenerator runtime) {
-		this.accessorGenerator = runtime;
+		this.generators.addLast(runtime);
 		this.signatureRemover = new SignatureRemover();
 	}
 
@@ -78,7 +81,7 @@ public class Instrumenter {
 	public byte[] instrument(final ClassReader reader) {
 		final ClassWriter writer = new ClassWriter(reader, 0);
 		final IProbeArrayStrategy strategy = ProbeArrayStrategyFactory
-				.createFor(reader, accessorGenerator);
+				.createFor(reader, generators.getLast());
 		final ClassVisitor visitor = new ClassProbesAdapter(
 				new ClassInstrumenter(strategy, writer), true);
 		reader.accept(visitor, ClassReader.EXPAND_FRAMES);
@@ -200,6 +203,12 @@ public class Instrumenter {
 
 	private int instrumentZip(final InputStream input,
 			final OutputStream output, final String name) throws IOException {
+		if (generators.getLast() instanceof
+				OfflineInstrumentationCompanionAccessGenerator) {
+			generators
+					.addLast(new
+							OfflineInstrumentationCompanionAccessGenerator());
+		}
 		final ZipInputStream zipin = new ZipInputStream(input);
 		final ZipOutputStream zipout = new ZipOutputStream(output);
 		ZipEntry entry;
@@ -215,6 +224,20 @@ public class Instrumenter {
 				count += instrumentAll(zipin, zipout, name + "@" + entryName);
 			}
 			zipout.closeEntry();
+		}
+		if (generators.getLast() instanceof
+				OfflineInstrumentationCompanionAccessGenerator) {
+			OfflineInstrumentationCompanionAccessGenerator companionGenerator =
+					(OfflineInstrumentationCompanionAccessGenerator) generators
+							.getLast();
+			if (companionGenerator.getNumberOfInstrumentedClasses() != 0) {
+				zipout.putNextEntry(
+						new ZipEntry(companionGenerator.getClassName() +
+								".class"));
+				zipout.write(companionGenerator.getClassDefinition());
+				zipout.closeEntry();
+			}
+			generators.removeLast();
 		}
 		zipout.finish();
 		return count;
