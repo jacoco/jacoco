@@ -120,7 +120,7 @@ public class Companions {
 		if (probeCount == 0) {
 			return buffer;
 		}
-		final long classId = CRC64.checksum(buffer);
+		final long classId = CRC64.checksum(reader.b);
 		final IProbeArrayStrategy strategy = createStrategyFor(classLoader,
 				classId, className, probeCount);
 		final ClassWriter writer = new ClassWriter(reader, 0);
