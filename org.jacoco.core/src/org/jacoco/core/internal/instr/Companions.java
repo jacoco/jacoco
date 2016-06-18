@@ -30,7 +30,7 @@ import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.Type;
 
 /**
- * Instrumentation with creation of "companion" class in "online" mode, which
+ * Instrumentation with creation of "companion" classes in "online" mode, which
  * will hold state of instrumented classes. This allows to avoid addition of
  * members to classes.
  */
@@ -176,7 +176,7 @@ public class Companions {
 		return new IProbeArrayStrategy() {
 			public int storeInstance(MethodVisitor mv, int variable) {
 				mv.visitFieldInsn(Opcodes.GETSTATIC, companionName,
-						getFieldName(fieldId), InstrSupport.DATAFIELD_DESC);
+						fieldNameFor(fieldId), InstrSupport.DATAFIELD_DESC);
 				mv.visitVarInsn(Opcodes.ASTORE, variable);
 				return 1;
 			}
@@ -202,12 +202,13 @@ public class Companions {
 				"nextSlot", Type.INT_TYPE.getDescriptor(), null, null);
 
 		final Label[] labels = new Label[FIELDS_PER_CLASS];
-		for (int i = 0; i < FIELDS_PER_CLASS; i++) {
-			labels[i] = new Label();
+		for (int fieldId = 0; fieldId < FIELDS_PER_CLASS; fieldId++) {
+			labels[fieldId] = new Label();
 			cw.visitField(
 					Opcodes.ACC_PUBLIC | Opcodes.ACC_STATIC
 							| Opcodes.ACC_TRANSIENT,
-					getFieldName(i), InstrSupport.DATAFIELD_DESC, null, null);
+					fieldNameFor(fieldId), InstrSupport.DATAFIELD_DESC, null,
+					null);
 		}
 
 		// void initialize(int field, boolean[] probes)
@@ -221,10 +222,10 @@ public class Companions {
 		mv.visitVarInsn(Opcodes.ALOAD, 1);
 		mv.visitVarInsn(Opcodes.ILOAD, 0);
 		mv.visitTableSwitchInsn(0, labels.length - 1, end, labels);
-		for (int i = 0; i < labels.length; i++) {
-			mv.visitLabel(labels[i]);
-			mv.visitFieldInsn(Opcodes.PUTSTATIC, className, getFieldName(i),
-					InstrSupport.DATAFIELD_DESC);
+		for (int fieldId = 0; fieldId < labels.length; fieldId++) {
+			mv.visitLabel(labels[fieldId]);
+			mv.visitFieldInsn(Opcodes.PUTSTATIC, className,
+					fieldNameFor(fieldId), InstrSupport.DATAFIELD_DESC);
 			mv.visitInsn(Opcodes.RETURN);
 		}
 		mv.visitLabel(end);
@@ -235,7 +236,7 @@ public class Companions {
 				"java/lang/IllegalArgumentException", "<init>", "()V", false);
 		mv.visitInsn(Opcodes.ATHROW);
 		mv.visitEnd();
-		mv.visitLocalVariable("field", "I", null, start, end, 0);
+		mv.visitLocalVariable("fieldId", "I", null, start, end, 0);
 		mv.visitLocalVariable("probes", InstrSupport.DATAFIELD_DESC, null,
 				start, end, 1);
 		mv.visitMaxs(2, 2);
@@ -245,7 +246,7 @@ public class Companions {
 		return cw.toByteArray();
 	}
 
-	private static String getFieldName(int fieldId) {
+	private static String fieldNameFor(int fieldId) {
 		return "p" + fieldId;
 	}
 

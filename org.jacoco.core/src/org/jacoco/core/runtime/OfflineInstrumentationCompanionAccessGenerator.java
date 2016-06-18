@@ -23,7 +23,7 @@ import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
 
 /**
- * Strategy that creates "companion" class in "offline" mode, which will hold
+ * Strategy that creates "companion" classes in "offline" mode, which will hold
  * state of instrumented classes. This allows to avoid addition of members to
  * classes.
  */
