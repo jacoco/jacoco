@@ -24,6 +24,7 @@ import org.jacoco.core.runtime.RuntimeData;
 import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.ClassVisitor;
 import org.objectweb.asm.ClassWriter;
+import org.objectweb.asm.Label;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.Type;
@@ -52,24 +53,41 @@ public class Companions {
 
 	public static final String COMPANION_NAME = InstrSupport.DATAFIELD_NAME;
 
+	private static final String INIT_METHOD_NAME = InstrSupport.INITMETHOD_NAME;
+
 	/**
-	 * https://docs.oracle.com/javase/specs/jvms/se7/html/jvms-4.html
+	 * https://docs.oracle.com/javase/specs/jvms/se7/html/jvms-4.html#jvms-4.11
 	 */
-	public static final int FIELDS_PER_CLASS = 65000;
+	public static final int FIELDS_PER_CLASS = 8000;
 
 	static class Companion {
+		private int lastId = -1;
 
-		final WeakReference<Class<?>> cls;
+		// TODO(Godin):
+		// we can utilize ReferenceQueue to cleanup unused probe arrays
+		// https://github.com/jacoco/jacoco/issues/134
+		WeakReference<Class<?>> cls;
 
 		int usedFields;
 
-		Companion(Class<?> cls) {
-			// TODO(Godin):
-			// we can utilize ReferenceQueue to cleanup unused probe arrays
-			// https://github.com/jacoco/jacoco/issues/134
-			this.cls = new WeakReference<Class<?>>(cls);
+		void defineNew(final ClassLoader classLoader) {
+			usedFields = 0;
+			lastId++;
+			final byte[] definition = createCompanionClass(getName());
+			try {
+				cls = new WeakReference<Class<?>>(
+						(Class<?>) DEFINE_CLASS.invoke(classLoader, getName(),
+								definition, 0, definition.length));
+			} catch (IllegalAccessException e) {
+				throw new RuntimeException(e);
+			} catch (InvocationTargetException e) {
+				throw new RuntimeException(e);
+			}
 		}
 
+		String getName() {
+			return COMPANION_NAME + lastId;
+		}
 	}
 
 	private final Map<ClassLoader, Companion> companions = new WeakHashMap<ClassLoader, Companion>();
@@ -120,48 +138,45 @@ public class Companions {
 	private IProbeArrayStrategy createStrategyFor(final ClassLoader classLoader,
 			final long classId, final String className, final int probeCount) {
 		final Class<?> cls;
-		final String field;
+		final String companionName;
+		final int fieldId;
 		synchronized (companions) {
 			Companion companion = companions.get(classLoader);
 			if (companion == null) {
-				final byte[] definition = createCompanionClass();
-				try {
-					cls = (Class<?>) DEFINE_CLASS.invoke(classLoader,
-							COMPANION_NAME, definition, 0, definition.length);
-					companion = new Companion(cls);
-				} catch (IllegalAccessException e) {
-					throw new RuntimeException(e);
-				} catch (InvocationTargetException e) {
-					throw new RuntimeException(e);
-				}
+				companion = new Companion();
+				companion.defineNew(classLoader);
 				companions.put(classLoader, companion);
-			} else {
-				cls = companion.cls.get();
-				// if class loader is alive, then class is also alive
-				assert cls != null;
+			} else if (companion.usedFields == FIELDS_PER_CLASS) {
+				companion.defineNew(classLoader);
 			}
 
-			if (companion.usedFields == FIELDS_PER_CLASS) {
-				throw new UnsupportedOperationException();
-			}
-			field = "p" + companion.usedFields;
+			cls = companion.cls.get();
+			// if class loader is alive, then class is also alive
+			assert cls != null;
+			companionName = companion.getName();
+			fieldId = companion.usedFields;
 			companion.usedFields++;
 		}
 
 		final boolean[] probes = runtimeData
 				.getExecutionData(classId, className, probeCount).getProbes();
 		try {
-			cls.getField(field).set(null, probes);
+			// TODO(Godin): can cache "getMethod", if we'll use same strategy as
+			// for access of runtime data - via "equals" method
+			cls.getMethod(INIT_METHOD_NAME, int.class, boolean[].class)
+					.invoke(null, fieldId, probes);
 		} catch (IllegalAccessException e) {
 			throw new RuntimeException();
-		} catch (NoSuchFieldException e) {
-			throw new RuntimeException();
+		} catch (NoSuchMethodException e) {
+			throw new RuntimeException(e);
+		} catch (InvocationTargetException e) {
+			throw new RuntimeException(e.getCause());
 		}
 
 		return new IProbeArrayStrategy() {
 			public int storeInstance(MethodVisitor mv, int variable) {
-				mv.visitFieldInsn(Opcodes.GETSTATIC, COMPANION_NAME, field,
-						InstrSupport.DATAFIELD_DESC);
+				mv.visitFieldInsn(Opcodes.GETSTATIC, companionName,
+						getFieldName(fieldId), InstrSupport.DATAFIELD_DESC);
 				mv.visitVarInsn(Opcodes.ASTORE, variable);
 				return 1;
 			}
@@ -172,26 +187,66 @@ public class Companions {
 		};
 	}
 
-	private byte[] createCompanionClass() {
+	/**
+	 * @return bytecode of generated "companion" class
+	 */
+	private static byte[] createCompanionClass(final String className) {
 		final ClassWriter cw = new ClassWriter(0);
 
 		cw.visit(Opcodes.V1_1,
 				Opcodes.ACC_SYNTHETIC | Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL,
-				COMPANION_NAME, null, "java/lang/Object", null);
+				className, null, "java/lang/Object", null);
 
 		cw.visitField(
 				Opcodes.ACC_PUBLIC | Opcodes.ACC_STATIC | Opcodes.ACC_TRANSIENT,
 				"nextSlot", Type.INT_TYPE.getDescriptor(), null, null);
 
+		final Label[] labels = new Label[FIELDS_PER_CLASS];
 		for (int i = 0; i < FIELDS_PER_CLASS; i++) {
+			labels[i] = new Label();
 			cw.visitField(
 					Opcodes.ACC_PUBLIC | Opcodes.ACC_STATIC
 							| Opcodes.ACC_TRANSIENT,
-					"p" + i, InstrSupport.DATAFIELD_DESC, null, null);
+					getFieldName(i), InstrSupport.DATAFIELD_DESC, null, null);
 		}
 
+		// void initialize(int field, boolean[] probes)
+		MethodVisitor mv = cw.visitMethod(
+				Opcodes.ACC_PUBLIC | Opcodes.ACC_STATIC, INIT_METHOD_NAME,
+				"(I[Z)V", null, null);
+		mv.visitCode();
+		final Label start = new Label();
+		final Label end = new Label();
+		mv.visitLabel(start);
+		mv.visitVarInsn(Opcodes.ALOAD, 1);
+		mv.visitVarInsn(Opcodes.ILOAD, 0);
+		mv.visitTableSwitchInsn(0, labels.length - 1, end, labels);
+		for (int i = 0; i < labels.length; i++) {
+			mv.visitLabel(labels[i]);
+			mv.visitFieldInsn(Opcodes.PUTSTATIC, className, getFieldName(i),
+					InstrSupport.DATAFIELD_DESC);
+			mv.visitInsn(Opcodes.RETURN);
+		}
+		mv.visitLabel(end);
+		mv.visitInsn(Opcodes.POP);
+		mv.visitTypeInsn(Opcodes.NEW, "java/lang/IllegalArgumentException");
+		mv.visitInsn(Opcodes.DUP);
+		mv.visitMethodInsn(Opcodes.INVOKESPECIAL,
+				"java/lang/IllegalArgumentException", "<init>", "()V", false);
+		mv.visitInsn(Opcodes.ATHROW);
+		mv.visitEnd();
+		mv.visitLocalVariable("field", "I", null, start, end, 0);
+		mv.visitLocalVariable("probes", InstrSupport.DATAFIELD_DESC, null,
+				start, end, 1);
+		mv.visitMaxs(2, 2);
+
 		cw.visitEnd();
+
 		return cw.toByteArray();
+	}
+
+	private static String getFieldName(int fieldId) {
+		return "p" + fieldId;
 	}
 
 }

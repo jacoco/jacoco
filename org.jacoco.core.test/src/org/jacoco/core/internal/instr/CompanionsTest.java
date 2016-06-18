@@ -27,36 +27,46 @@ import java.security.cert.CertificateEncodingException;
 import java.security.cert.CertificateException;
 
 import org.jacoco.core.runtime.RuntimeData;
-import org.jacoco.core.test.TargetLoader;
 import org.junit.Test;
+import org.objectweb.asm.ClassWriter;
+import org.objectweb.asm.MethodVisitor;
+import org.objectweb.asm.Opcodes;
 
 /**
  * Unit test for {@link Companions}.
  */
 public class CompanionsTest {
 
+	private final Loader classLoader = new Loader();
+	private final ProtectionDomain protectionDomain = new ProtectionDomain(
+			new CodeSource(null, new Certificate[] { new CertificateMock() }),
+			null);
+	private final RuntimeData runtimeData = new RuntimeData();
+	private final Companions companions = new Companions(runtimeData);
+
 	@Test
 	public void test() throws IOException, ClassNotFoundException {
-		final Loader classLoader = new Loader();
-		final CodeSource codeSource = new CodeSource(null,
-				new Certificate[] { new CertificateMock() });
-		final ProtectionDomain protectionDomain = new ProtectionDomain(
-				codeSource, null);
-		classLoader.define(Target.class, protectionDomain);
+		assertFalse(classLoader.hasClass(Companions.COMPANION_NAME + "0"));
+		for (int i = 0; i < Companions.FIELDS_PER_CLASS; i++) {
+			define(i);
+		}
+		assertTrue(classLoader.hasClass(Companions.COMPANION_NAME + "0"));
+		assertFalse(classLoader.hasClass(Companions.COMPANION_NAME + "1"));
+		define(Companions.FIELDS_PER_CLASS);
+		assertTrue(classLoader.hasClass(Companions.COMPANION_NAME + "1"));
+	}
 
-		final RuntimeData runtimeData = new RuntimeData();
-		final Companions companions = new Companions(runtimeData);
-
-		assertFalse(classLoader.hasClass(Companions.COMPANION_NAME));
-		companions.instrument(classLoader, Target.class.getName(), TargetLoader.getClassDataAsBytes(Target.class));
-		assertTrue(classLoader.hasClass(Companions.COMPANION_NAME));
+	private void define(final int id) {
+		final String className = "test/Target" + id;
+		final byte[] bytes = companions.instrument(classLoader, className,
+				create(className));
+		classLoader.define(className, bytes, protectionDomain);
 	}
 
 	private static class Loader extends ClassLoader {
-		public void define(final Class<?> source,
-				final ProtectionDomain protectionDomain) throws IOException {
-			final byte[] bytes = TargetLoader.getClassDataAsBytes(source);
-			defineClass(source.getName(), bytes, 0, bytes.length,
+		public void define(final String className, final byte[] bytes,
+				final ProtectionDomain protectionDomain) {
+			defineClass(className.replace('/', '.'), bytes, 0, bytes.length,
 					protectionDomain);
 		}
 
@@ -69,7 +79,19 @@ public class CompanionsTest {
 		}
 	}
 
-	private static class Target {
+	private static byte[] create(final String className) {
+		final ClassWriter cw = new ClassWriter(0);
+
+		cw.visit(Opcodes.V1_1,
+				Opcodes.ACC_SYNTHETIC | Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL,
+				className, null, "java/lang/Object", null);
+		MethodVisitor mv = cw.visitMethod(0, "m", "()V", null, null);
+		mv.visitCode();
+		mv.visitInsn(Opcodes.RETURN);
+		mv.visitEnd();
+		cw.visitEnd();
+
+		return cw.toByteArray();
 	}
 
 	private static class CertificateMock extends Certificate {
