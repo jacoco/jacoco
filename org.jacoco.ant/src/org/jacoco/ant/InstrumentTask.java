@@ -16,6 +16,7 @@ import static java.lang.String.format;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
+import java.io.IOException;
 import java.io.OutputStream;
 import java.util.Iterator;
 
@@ -26,7 +27,8 @@ import org.apache.tools.ant.types.ResourceCollection;
 import org.apache.tools.ant.types.resources.Union;
 import org.apache.tools.ant.util.FileUtils;
 import org.jacoco.core.instr.Instrumenter;
-import org.jacoco.core.runtime.OfflineInstrumentationAccessGenerator;
+import org.jacoco.core.internal.instr.Companions;
+import org.jacoco.core.runtime.OfflineInstrumentationCompanionAccessGenerator;
 
 /**
  * Task for offline instrumentation of class files.
@@ -76,9 +78,9 @@ public class InstrumentTask extends Task {
 					getLocation());
 		}
 		int total = 0;
-		// FIXME(Godin): use OfflineInstrumentationCompanionAccessGenerator
-		final Instrumenter instrumenter = new Instrumenter(
-				new OfflineInstrumentationAccessGenerator());
+		final OfflineInstrumentationCompanionAccessGenerator generator =
+				new OfflineInstrumentationCompanionAccessGenerator();
+		final Instrumenter instrumenter = new Instrumenter(generator);
 		instrumenter.setRemoveSignatures(removesignatures);
 		final Iterator<?> resourceIterator = files.iterator();
 		while (resourceIterator.hasNext()) {
@@ -87,6 +89,13 @@ public class InstrumentTask extends Task {
 				continue;
 			}
 			total += instrument(instrumenter, resource);
+			if (generator
+					.getNumberOfInstrumentedClasses() == Companions.FIELDS_PER_CLASS) {
+				saveCompanionClass(destdir, generator);
+			}
+		}
+		if (generator.getNumberOfInstrumentedClasses() != 0) {
+			saveCompanionClass(destdir, generator);
 		}
 		log(format("Instrumented %s classes to %s", Integer.valueOf(total),
 				destdir.getAbsolutePath()));
@@ -114,4 +123,19 @@ public class InstrumentTask extends Task {
 					resource), e, getLocation());
 		}
 	}
+
+	private void saveCompanionClass(final File destDir,
+			final OfflineInstrumentationCompanionAccessGenerator generator) {
+		FileOutputStream output = null;
+		try {
+			output = new FileOutputStream(
+					new File(destDir, generator.getClassName() + ".class"));
+			output.write(generator.getClassDefinition());
+		} catch (final IOException e) {
+			throw new BuildException("Unable to create file.", e);
+		} finally {
+			FileUtils.close(output);
+		}
+	}
+
 }
