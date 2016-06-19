@@ -65,6 +65,15 @@ public class InstrumenterTest {
 
 	}
 
+	private static int CLINIT() {
+		return 42;
+	}
+
+	interface InterfaceTarget {
+		@SuppressWarnings("unused")
+		int CLINIT = CLINIT();
+	}
+
 	private SystemPropertiesRuntime runtime;
 
 	private Instrumenter instrumenter;
@@ -89,6 +98,24 @@ public class InstrumenterTest {
 		TargetLoader loader = new TargetLoader();
 		Class<?> clazz = loader.add(InstrumenterTest.class, bytes);
 		assertEquals("org.jacoco.core.instr.InstrumenterTest", clazz.getName());
+
+		try {
+			instrumenter.instrument(bytes, "Test");
+			fail("IOException expected");
+		} catch (IOException e) {
+			assertEquals("Error while instrumenting class Test.",
+					e.getMessage());
+			assertEquals(e.getCause().getMessage(),
+					"Class org/jacoco/core/instr/InstrumenterTest is already instrumented.");
+		}
+	}
+
+	@Test
+	public void testInstrumentInterface() throws Exception {
+		final byte[] bytes = instrumenter.instrument(
+				TargetLoader.getClassDataAsBytes(InterfaceTarget.class),
+				"Test");
+		instrumenter.instrument(bytes, "Test");
 	}
 
 	@Test

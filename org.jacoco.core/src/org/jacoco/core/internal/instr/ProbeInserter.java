@@ -87,6 +87,14 @@ class ProbeInserter extends MethodVisitor implements IProbeInserter {
 	}
 
 	@Override
+	public void visitFieldInsn(int opcode, String owner, String name, String desc) {
+		if (owner.startsWith(Companions.COMPANION_NAME)) {
+			throw new IllegalStateException("Already instrumented.");
+		}
+		mv.visitFieldInsn(opcode, owner, name, desc);
+	}
+
+	@Override
 	public final void visitVarInsn(final int opcode, final int var) {
 		mv.visitVarInsn(opcode, map(var));
 	}

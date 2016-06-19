@@ -14,6 +14,7 @@ package org.jacoco.core.instr;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
+import static org.junit.Assert.fail;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -59,6 +60,40 @@ public class OfflineInstrumenterTest {
         assertEquals("Test.class", zipin.getNextEntry().getName());
         assertNotNull(zipin.getNextEntry());
         assertNull(zipin.getNextEntry());
+    }
+
+    @Test
+    public void testInstrumentClass() throws IOException {
+        final byte[] bytes = instrumenter.instrument(
+                TargetLoader.getClassDataAsBytes(OfflineInstrumenterTest.class),
+                "Test");
+        try {
+            instrumenter.instrument(bytes, "Test");
+            fail("IOException expected");
+        } catch (IOException e) {
+            assertEquals("Error while instrumenting class Test.",
+                    e.getMessage());
+            assertEquals("Already instrumented.", e.getCause().getMessage());
+        }
+    }
+
+    /**
+     * Stricter than without "companion" classes - see
+     * {@link InstrumenterTest#testInstrumentInterface()}.
+     */
+    @Test
+    public void testInstrumentInterface() throws IOException {
+        final byte[] bytes = instrumenter.instrument(
+                TargetLoader.getClassDataAsBytes(InstrumenterTest.InterfaceTarget.class),
+                "Test");
+        try {
+            instrumenter.instrument(bytes, "Test");
+            fail("IOException expected");
+        } catch (IOException e) {
+            assertEquals("Error while instrumenting class Test.",
+                    e.getMessage());
+            assertEquals("Already instrumented.", e.getCause().getMessage());
+        }
     }
 
 }
