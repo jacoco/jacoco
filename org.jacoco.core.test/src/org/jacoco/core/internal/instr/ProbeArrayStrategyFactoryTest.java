@@ -16,6 +16,7 @@ import static org.junit.Assert.assertNull;
 
 import org.jacoco.core.runtime.IExecutionDataAccessorGenerator;
 import org.jacoco.core.runtime.OfflineInstrumentationAccessGenerator;
+import org.jacoco.core.runtime.OfflineInstrumentationCompanionAccessGenerator;
 import org.junit.Before;
 import org.junit.Test;
 import org.objectweb.asm.ClassReader;
@@ -39,6 +40,14 @@ public class ProbeArrayStrategyFactoryTest {
 	public void setup() {
 		generator = new OfflineInstrumentationAccessGenerator();
 		cv = new ClassVisitorMock();
+	}
+
+	@Test
+	public void testCompanion() {
+		generator = new OfflineInstrumentationCompanionAccessGenerator();
+		test(Opcodes.V1_1, 0, false, true);
+		assertNoDataField();
+		assertNoInitMethod();
 	}
 
 	@Test
