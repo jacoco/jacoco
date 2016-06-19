@@ -19,6 +19,7 @@ import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.plugins.annotations.LifecyclePhase;
 import org.apache.maven.plugins.annotations.Mojo;
 import org.codehaus.plexus.util.FileUtils;
+import org.jacoco.core.internal.instr.Companions;
 
 /**
  * Restores original classes as they were before offline instrumentation.
@@ -38,6 +39,20 @@ public class RestoreMojo extends AbstractJacocoMojo {
 		try {
 			FileUtils.copyDirectoryStructure(originalClassesDir, classesDir);
 		} catch (final IOException e) {
+			throw new MojoFailureException("Unable to restore classes.", e);
+		}
+
+		if (!classesDir.isDirectory()) {
+			return;
+		}
+		try {
+			for (final File file : FileUtils.getFiles(classesDir,
+					Companions.COMPANION_NAME + "*.class", "")) {
+				if (!file.delete()) {
+					throw new MojoFailureException("Unable to remove " + file);
+				}
+			}
+		} catch (IOException e) {
 			throw new MojoFailureException("Unable to restore classes.", e);
 		}
 	}
