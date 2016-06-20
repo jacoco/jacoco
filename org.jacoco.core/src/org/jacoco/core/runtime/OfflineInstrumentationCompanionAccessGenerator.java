@@ -58,7 +58,7 @@ public class OfflineInstrumentationCompanionAccessGenerator
 		if (instrumented.size() == Companions.FIELDS_PER_CLASS) {
 			throw new UnsupportedOperationException();
 		}
-		final String fieldName = "p" + Long.toString(classid);
+		final String fieldName = fieldNameFor(classid);
 		if (instrumented.add(classname)) {
 			cw.visitField(
 					Opcodes.ACC_PUBLIC | Opcodes.ACC_STATIC
@@ -129,6 +129,13 @@ public class OfflineInstrumentationCompanionAccessGenerator
 		final byte[] result = cw.toByteArray();
 		newCompanion();
 		return result;
+	}
+
+	/**
+	 * https://docs.oracle.com/javase/specs/jvms/se7/html/jvms-4.html#jvms-4.2.2
+	 */
+	static String fieldNameFor(long classId) {
+		return "p" + Long.toHexString(classId);
 	}
 
 }

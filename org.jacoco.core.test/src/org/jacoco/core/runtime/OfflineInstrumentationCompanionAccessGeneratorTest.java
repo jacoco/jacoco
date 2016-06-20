@@ -75,6 +75,13 @@ public class OfflineInstrumentationCompanionAccessGeneratorTest {
 		assertEquals(0, generator.getNumberOfInstrumentedClasses());
 	}
 
+	@Test
+	public void testFieldName() throws Exception {
+		assertEquals("pffffffffffffffff",
+				OfflineInstrumentationCompanionAccessGenerator
+						.fieldNameFor(-1));
+	}
+
 	private byte[] create(final int classId)
 			throws IllegalAccessException, InstantiationException {
 		final String className = "Target" + classId;

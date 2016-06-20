@@ -247,6 +247,7 @@ public class Companions {
 	}
 
 	private static String fieldNameFor(int fieldId) {
+		assert fieldId >= 0;
 		return "p" + fieldId;
 	}
 
