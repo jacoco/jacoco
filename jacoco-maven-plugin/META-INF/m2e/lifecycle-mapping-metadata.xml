@@ -18,6 +18,7 @@
           <goal>merge</goal>
           <goal>report</goal>
           <goal>report-integration</goal>
+          <goal>report-aggregate</goal>
           <goal>check</goal>
           <goal>dump</goal>
           <goal>instrument</goal>
