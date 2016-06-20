@@ -34,7 +34,7 @@ import org.junit.Test;
  */
 public class OfflineInstrumenterTest {
 
-    private Instrumenter instrumenter;
+	private Instrumenter instrumenter;
 
 	@Before
 	public void setup() {
@@ -42,58 +42,60 @@ public class OfflineInstrumenterTest {
 				new OfflineInstrumentationCompanionAccessGenerator());
 	}
 
-    @Test
-    public void testInstrumentAll_Zip() throws IOException {
-        ByteArrayOutputStream buffer = new ByteArrayOutputStream();
-        ZipOutputStream zipout = new ZipOutputStream(buffer);
-        zipout.putNextEntry(new ZipEntry("Test.class"));
-        zipout.write(TargetLoader.getClassDataAsBytes(getClass()));
-        zipout.finish();
-        ByteArrayOutputStream out = new ByteArrayOutputStream();
+	@Test
+	public void testInstrumentAll_Zip() throws IOException {
+		final ByteArrayOutputStream buffer = new ByteArrayOutputStream();
+		final ZipOutputStream zipout = new ZipOutputStream(buffer);
+		zipout.putNextEntry(new ZipEntry("Test.class"));
+		zipout.write(TargetLoader.getClassDataAsBytes(getClass()));
+		zipout.finish();
+		final ByteArrayOutputStream out = new ByteArrayOutputStream();
 
-        int count = instrumenter.instrumentAll(
-                new ByteArrayInputStream(buffer.toByteArray()), out, "Test");
+		final int count = instrumenter.instrumentAll(
+				new ByteArrayInputStream(buffer.toByteArray()), out, "Test");
 
-        assertEquals(1, count);
-        ZipInputStream zipin = new ZipInputStream(new ByteArrayInputStream(
-                out.toByteArray()));
-        assertEquals("Test.class", zipin.getNextEntry().getName());
-        assertNotNull(zipin.getNextEntry());
-        assertNull(zipin.getNextEntry());
-    }
+		assertEquals(1, count);
+		final ZipInputStream zipin = new ZipInputStream(
+				new ByteArrayInputStream(out.toByteArray()));
+		assertEquals("Test.class", zipin.getNextEntry().getName());
+		assertNotNull(zipin.getNextEntry());
+		assertNull(zipin.getNextEntry());
+	}
 
-    @Test
-    public void testInstrumentClass() throws IOException {
-        final byte[] bytes = instrumenter.instrument(
-                TargetLoader.getClassDataAsBytes(OfflineInstrumenterTest.class),
-                "Test");
-        try {
-            instrumenter.instrument(bytes, "Test");
-            fail("IOException expected");
-        } catch (IOException e) {
-            assertEquals("Error while instrumenting class Test.",
-                    e.getMessage());
-            assertEquals("Already instrumented.", e.getCause().getMessage());
-        }
-    }
+	@Test
+	public void testInstrumentClass() throws IOException {
+		final byte[] bytes = instrumenter.instrument(
+				TargetLoader.getClassDataAsBytes(OfflineInstrumenterTest.class),
+				"Test");
+		try {
+			instrumenter.instrument(bytes, "Test");
+			fail("IOException expected");
+		} catch (IOException e) {
+			assertEquals("Error while instrumenting class Test.",
+					e.getMessage());
+			assertEquals("Already instrumented.", e.getCause().getMessage());
+		}
+	}
 
-    /**
-     * Stricter than without "companion" classes - see
-     * {@link InstrumenterTest#testInstrumentInterface()}.
-     */
-    @Test
-    public void testInstrumentInterface() throws IOException {
-        final byte[] bytes = instrumenter.instrument(
-                TargetLoader.getClassDataAsBytes(InstrumenterTest.InterfaceTarget.class),
-                "Test");
-        try {
-            instrumenter.instrument(bytes, "Test");
-            fail("IOException expected");
-        } catch (IOException e) {
-            assertEquals("Error while instrumenting class Test.",
-                    e.getMessage());
-            assertEquals("Already instrumented.", e.getCause().getMessage());
-        }
-    }
+	/**
+	 * Stricter than without "companion" classes - see
+	 * {@link InstrumenterTest#testInstrumentInterface()}.
+	 */
+	@Test
+	public void testInstrumentInterface() throws IOException {
+		final byte[] bytes = instrumenter
+				.instrument(
+						TargetLoader.getClassDataAsBytes(
+								InstrumenterTest.InterfaceTarget.class),
+				"Test");
+		try {
+			instrumenter.instrument(bytes, "Test");
+			fail("IOException expected");
+		} catch (IOException e) {
+			assertEquals("Error while instrumenting class Test.",
+					e.getMessage());
+			assertEquals("Already instrumented.", e.getCause().getMessage());
+		}
+	}
 
 }
