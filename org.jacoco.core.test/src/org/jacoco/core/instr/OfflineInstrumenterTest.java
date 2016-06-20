@@ -25,6 +25,7 @@ import java.util.zip.ZipOutputStream;
 
 import org.jacoco.core.runtime.OfflineInstrumentationCompanionAccessGenerator;
 import org.jacoco.core.test.TargetLoader;
+import org.jacoco.core.test.validation.targets.Target04;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -83,11 +84,8 @@ public class OfflineInstrumenterTest {
 	 */
 	@Test
 	public void testInstrumentInterface() throws IOException {
-		final byte[] bytes = instrumenter
-				.instrument(
-						TargetLoader.getClassDataAsBytes(
-								InstrumenterTest.InterfaceTarget.class),
-				"Test");
+		final byte[] bytes = instrumenter.instrument(
+				TargetLoader.getClassDataAsBytes(Target04.class), "Test");
 		try {
 			instrumenter.instrument(bytes, "Test");
 			fail("IOException expected");

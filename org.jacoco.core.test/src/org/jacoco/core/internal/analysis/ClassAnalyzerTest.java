@@ -17,6 +17,7 @@ import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 import org.jacoco.core.internal.flow.MethodProbesVisitor;
+import org.jacoco.core.internal.instr.Companions;
 import org.jacoco.core.internal.instr.InstrSupport;
 import org.junit.Before;
 import org.junit.Test;
@@ -55,8 +56,8 @@ public class ClassAnalyzerTest {
 	@Test
 	public void testAnalyzeInstrumentedClass3() {
 		try {
-			analyzer.visitMethod(0, "foo", "()V", null, null)
-					.visitFieldInsn(Opcodes.GETSTATIC, "$jacocoData", "", "");
+			analyzer.visitMethod(0, "foo", "()V", null, null).visitFieldInsn(
+					Opcodes.GETSTATIC, Companions.COMPANION_NAME, "", "");
 			fail("IllegalStateException expected");
 		} catch (final IllegalStateException e) {
 			assertEquals("Class Foo is instrumented.", e.getMessage());

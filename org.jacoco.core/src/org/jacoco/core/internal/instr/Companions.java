@@ -51,6 +51,9 @@ public class Companions {
 		}
 	}
 
+	/**
+	 * Prefix for the names of generated classes.
+	 */
 	public static final String COMPANION_NAME = InstrSupport.DATAFIELD_NAME;
 
 	private static final String INIT_METHOD_NAME = InstrSupport.INITMETHOD_NAME;
@@ -94,6 +97,12 @@ public class Companions {
 
 	private final RuntimeData runtimeData;
 
+	/**
+	 * Creates a new instance for "online" instrumentation.
+	 * 
+	 * @param runtimeData
+	 *            execution data
+	 */
 	public Companions(final RuntimeData runtimeData) {
 		this.runtimeData = runtimeData;
 	}

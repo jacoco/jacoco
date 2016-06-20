@@ -41,12 +41,19 @@ public class OfflineInstrumentationCompanionAccessGenerator
 	private MethodVisitor mv;
 
 	/**
-	 * Creates a new instance for offline instrumentation.
+	 * Creates a new instance for "offline" instrumentation.
 	 */
 	public OfflineInstrumentationCompanionAccessGenerator() {
 		this(JaCoCo.RUNTIMEPACKAGE.replace('.', '/') + "/Offline");
 	}
 
+	/**
+	 * Creates a new instance with the given runtime class name for testing
+	 * purposes.
+	 *
+	 * @param runtimeClassName
+	 *            VM name of the runtime class
+	 */
 	OfflineInstrumentationCompanionAccessGenerator(
 			final String runtimeClassName) {
 		this.runtimeClassName = runtimeClassName;

@@ -36,6 +36,7 @@ import org.jacoco.core.analysis.AnalyzerTest;
 import org.jacoco.core.runtime.RuntimeData;
 import org.jacoco.core.runtime.SystemPropertiesRuntime;
 import org.jacoco.core.test.TargetLoader;
+import org.jacoco.core.test.validation.targets.Target04;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -63,15 +64,6 @@ public class InstrumenterTest {
 			return text + nr;
 		}
 
-	}
-
-	private static int CLINIT() {
-		return 42;
-	}
-
-	interface InterfaceTarget {
-		@SuppressWarnings("unused")
-		int CLINIT = CLINIT();
 	}
 
 	private SystemPropertiesRuntime runtime;
@@ -113,8 +105,7 @@ public class InstrumenterTest {
 	@Test
 	public void testInstrumentInterface() throws Exception {
 		final byte[] bytes = instrumenter.instrument(
-				TargetLoader.getClassDataAsBytes(InterfaceTarget.class),
-				"Test");
+				TargetLoader.getClassDataAsBytes(Target04.class), "Test");
 		instrumenter.instrument(bytes, "Test");
 	}
 

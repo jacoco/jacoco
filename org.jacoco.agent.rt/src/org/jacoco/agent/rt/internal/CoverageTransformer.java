@@ -61,6 +61,8 @@ public class CoverageTransformer implements ClassFileTransformer {
 	 * 
 	 * @param runtime
 	 *            coverage runtime
+	 * @param runtimeData
+	 *            execution data
 	 * @param options
 	 *            configuration options for the generator
 	 * @param logger
