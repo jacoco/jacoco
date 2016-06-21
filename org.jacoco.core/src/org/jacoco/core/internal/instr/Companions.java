@@ -170,8 +170,12 @@ public class Companions {
 		final boolean[] probes = runtimeData
 				.getExecutionData(classId, className, probeCount).getProbes();
 		try {
-			// TODO(Godin): can cache "getMethod", if we'll use same strategy as
-			// for access of runtime data - via "equals" method
+			// (Godin): There is possibility to get rid of usage of
+			// reflection below - "clinit" can create an instance of a class
+			// and store it in a static field, so that we can hold weak
+			// reference on instance instead of class and can communicate
+			// with it using "equals" method. However so far there is no
+			// evidences that this optimization is required.
 			cls.getMethod(INIT_METHOD_NAME, int.class, boolean[].class)
 					.invoke(null, fieldId, probes);
 		} catch (IllegalAccessException e) {
