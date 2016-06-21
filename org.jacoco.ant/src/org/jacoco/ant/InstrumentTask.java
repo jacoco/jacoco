@@ -27,7 +27,7 @@ import org.apache.tools.ant.types.ResourceCollection;
 import org.apache.tools.ant.types.resources.Union;
 import org.apache.tools.ant.util.FileUtils;
 import org.jacoco.core.instr.Instrumenter;
-import org.jacoco.core.internal.instr.Companions;
+import org.jacoco.core.runtime.IClassFileWriter;
 import org.jacoco.core.runtime.OfflineInstrumentationCompanionAccessGenerator;
 
 /**
@@ -78,8 +78,22 @@ public class InstrumentTask extends Task {
 					getLocation());
 		}
 		int total = 0;
-		final OfflineInstrumentationCompanionAccessGenerator generator =
-				new OfflineInstrumentationCompanionAccessGenerator();
+		final OfflineInstrumentationCompanionAccessGenerator generator = new OfflineInstrumentationCompanionAccessGenerator(
+				new IClassFileWriter() {
+					public void write(final String name, final byte[] bytes) {
+						FileOutputStream output = null;
+						try {
+							output = new FileOutputStream(
+									new File(destdir, name + ".class"));
+							output.write(bytes);
+						} catch (final IOException e) {
+							throw new BuildException("Unable to create file.",
+									e);
+						} finally {
+							FileUtils.close(output);
+						}
+					}
+				});
 		final Instrumenter instrumenter = new Instrumenter(generator);
 		instrumenter.setRemoveSignatures(removesignatures);
 		final Iterator<?> resourceIterator = files.iterator();
@@ -89,14 +103,8 @@ public class InstrumentTask extends Task {
 				continue;
 			}
 			total += instrument(instrumenter, resource);
-			if (generator
-					.getNumberOfInstrumentedClasses() == Companions.FIELDS_PER_CLASS) {
-				saveCompanionClass(destdir, generator);
-			}
 		}
-		if (generator.getNumberOfInstrumentedClasses() != 0) {
-			saveCompanionClass(destdir, generator);
-		}
+		generator.end();
 		log(format("Instrumented %s classes to %s", Integer.valueOf(total),
 				destdir.getAbsolutePath()));
 	}
@@ -121,20 +129,6 @@ public class InstrumentTask extends Task {
 			file.delete();
 			throw new BuildException(format("Error while instrumenting %s",
 					resource), e, getLocation());
-		}
-	}
-
-	private void saveCompanionClass(final File destDir,
-			final OfflineInstrumentationCompanionAccessGenerator generator) {
-		FileOutputStream output = null;
-		try {
-			output = new FileOutputStream(
-					new File(destDir, generator.getClassName() + ".class"));
-			output.write(generator.getClassDefinition());
-		} catch (final IOException e) {
-			throw new BuildException("Unable to create file.", e);
-		} finally {
-			FileUtils.close(output);
 		}
 	}
 

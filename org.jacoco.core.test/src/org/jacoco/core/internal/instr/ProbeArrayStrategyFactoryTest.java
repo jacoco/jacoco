@@ -44,7 +44,7 @@ public class ProbeArrayStrategyFactoryTest {
 
 	@Test
 	public void testCompanion() {
-		generator = new OfflineInstrumentationCompanionAccessGenerator();
+		generator = new OfflineInstrumentationCompanionAccessGenerator(null);
 		test(Opcodes.V1_1, 0, false, true);
 		assertNoDataField();
 		assertNoInitMethod();

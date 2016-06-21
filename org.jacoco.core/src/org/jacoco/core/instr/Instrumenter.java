@@ -30,6 +30,7 @@ import org.jacoco.core.internal.instr.ClassInstrumenter;
 import org.jacoco.core.internal.instr.IProbeArrayStrategy;
 import org.jacoco.core.internal.instr.ProbeArrayStrategyFactory;
 import org.jacoco.core.internal.instr.SignatureRemover;
+import org.jacoco.core.runtime.IClassFileWriter;
 import org.jacoco.core.runtime.IExecutionDataAccessorGenerator;
 import org.jacoco.core.runtime.OfflineInstrumentationCompanionAccessGenerator;
 import org.objectweb.asm.ClassReader;
@@ -203,14 +204,25 @@ public class Instrumenter {
 
 	private int instrumentZip(final InputStream input,
 			final OutputStream output, final String name) throws IOException {
-		if (generators.getLast() instanceof
-				OfflineInstrumentationCompanionAccessGenerator) {
-			generators
-					.addLast(new
-							OfflineInstrumentationCompanionAccessGenerator());
-		}
 		final ZipInputStream zipin = new ZipInputStream(input);
 		final ZipOutputStream zipout = new ZipOutputStream(output);
+		if (generators
+				.getLast() instanceof OfflineInstrumentationCompanionAccessGenerator) {
+			generators
+					.addLast(new OfflineInstrumentationCompanionAccessGenerator(
+							new IClassFileWriter() {
+								public void write(final String name,
+										final byte[] bytes) {
+									try {
+										zipout.putNextEntry(new ZipEntry(name));
+										zipout.write(bytes);
+										zipout.closeEntry();
+									} catch (IOException e) {
+										throw new RuntimeException(e);
+									}
+								}
+							}));
+		}
 		ZipEntry entry;
 		int count = 0;
 		while ((entry = zipin.getNextEntry()) != null) {
@@ -230,13 +242,7 @@ public class Instrumenter {
 			OfflineInstrumentationCompanionAccessGenerator companionGenerator =
 					(OfflineInstrumentationCompanionAccessGenerator) generators
 							.getLast();
-			if (companionGenerator.getNumberOfInstrumentedClasses() != 0) {
-				zipout.putNextEntry(
-						new ZipEntry(companionGenerator.getClassName() +
-								".class"));
-				zipout.write(companionGenerator.getClassDefinition());
-				zipout.closeEntry();
-			}
+			companionGenerator.end();
 			generators.removeLast();
 		}
 		zipout.finish();

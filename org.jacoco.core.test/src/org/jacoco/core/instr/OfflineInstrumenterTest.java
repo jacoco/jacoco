@@ -40,7 +40,7 @@ public class OfflineInstrumenterTest {
 	@Before
 	public void setup() {
 		instrumenter = new Instrumenter(
-				new OfflineInstrumentationCompanionAccessGenerator());
+				new OfflineInstrumentationCompanionAccessGenerator(null));
 	}
 
 	@Test

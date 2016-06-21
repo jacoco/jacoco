@@ -26,7 +26,7 @@ import org.apache.maven.plugins.annotations.Mojo;
 import org.codehaus.plexus.util.FileUtils;
 import org.codehaus.plexus.util.IOUtil;
 import org.jacoco.core.instr.Instrumenter;
-import org.jacoco.core.internal.instr.Companions;
+import org.jacoco.core.runtime.IClassFileWriter;
 import org.jacoco.core.runtime.OfflineInstrumentationCompanionAccessGenerator;
 
 /**
@@ -69,8 +69,21 @@ public class InstrumentMojo extends AbstractJacocoMojo {
 					"Unable to get list of files to instrument.", e1);
 		}
 
-		final OfflineInstrumentationCompanionAccessGenerator generator =
-				new OfflineInstrumentationCompanionAccessGenerator();
+		final OfflineInstrumentationCompanionAccessGenerator generator = new OfflineInstrumentationCompanionAccessGenerator(
+				new IClassFileWriter() {
+					public void write(final String name, final byte[] bytes) {
+						FileOutputStream output = null;
+						try {
+							output = new FileOutputStream(
+									new File(classesDir, name + ".class"));
+							output.write(bytes);
+						} catch (final IOException e) {
+							throw new RuntimeException(e);
+						} finally {
+							IOUtil.close(output);
+						}
+					}
+				});
 		final Instrumenter instrumenter = new Instrumenter(generator);
 		for (final String fileName : fileNames) {
 			if (fileName.endsWith(".class")) {
@@ -90,32 +103,9 @@ public class InstrumentMojo extends AbstractJacocoMojo {
 					IOUtil.close(input);
 					IOUtil.close(output);
 				}
-
-				if (generator
-						.getNumberOfInstrumentedClasses() == Companions.FIELDS_PER_CLASS) {
-					saveCompanionClass(classesDir, generator);
-				}
 			}
 		}
-
-		if (generator.getNumberOfInstrumentedClasses() != 0) {
-			saveCompanionClass(classesDir, generator);
-		}
-	}
-
-	private void saveCompanionClass(final File classesDir,
-			final OfflineInstrumentationCompanionAccessGenerator generator)
-					throws MojoExecutionException {
-		FileOutputStream output = null;
-		try {
-			output = new FileOutputStream(
-					new File(classesDir, generator.getClassName() + ".class"));
-			output.write(generator.getClassDefinition());
-		} catch (final IOException e) {
-			throw new MojoExecutionException("Unable to create file.", e);
-		} finally {
-			IOUtil.close(output);
-		}
+		generator.end();
 	}
 
 }

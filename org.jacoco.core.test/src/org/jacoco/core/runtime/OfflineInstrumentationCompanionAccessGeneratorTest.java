@@ -50,7 +50,8 @@ public class OfflineInstrumentationCompanionAccessGeneratorTest {
 	@Before
 	public void setup() {
 		String name = getClass().getName().replace('.', '/');
-		generator = new OfflineInstrumentationCompanionAccessGenerator(name);
+		generator = new OfflineInstrumentationCompanionAccessGenerator(name,
+				null);
 	}
 
 	@Test

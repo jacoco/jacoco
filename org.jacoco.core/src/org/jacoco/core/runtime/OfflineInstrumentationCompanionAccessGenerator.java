@@ -32,6 +32,8 @@ public class OfflineInstrumentationCompanionAccessGenerator
 
 	private final OfflineInstrumentationAccessGenerator generator;
 
+	private final IClassFileWriter classFileWriter;
+
 	private String companionName;
 
 	private final Set<String> instrumented = new HashSet<String>();
@@ -43,8 +45,10 @@ public class OfflineInstrumentationCompanionAccessGenerator
 	/**
 	 * Creates a new instance for "offline" instrumentation.
 	 */
-	public OfflineInstrumentationCompanionAccessGenerator() {
-		this(JaCoCo.RUNTIMEPACKAGE.replace('.', '/') + "/Offline");
+	public OfflineInstrumentationCompanionAccessGenerator(
+			final IClassFileWriter classFileWriter) {
+		this(JaCoCo.RUNTIMEPACKAGE.replace('.', '/') + "/Offline",
+				classFileWriter);
 	}
 
 	/**
@@ -55,15 +59,19 @@ public class OfflineInstrumentationCompanionAccessGenerator
 	 *            VM name of the runtime class
 	 */
 	OfflineInstrumentationCompanionAccessGenerator(
-			final String runtimeClassName) {
-		this.generator = new OfflineInstrumentationAccessGenerator(runtimeClassName);
+			final String runtimeClassName,
+			final IClassFileWriter classFileWriter) {
+		this.generator = new OfflineInstrumentationAccessGenerator(
+				runtimeClassName);
+		this.classFileWriter = classFileWriter;
 		newCompanion();
 	}
 
 	public int generateDataAccessor(final long classid, final String classname,
 			final int probecount, final MethodVisitor mv) {
 		if (instrumented.size() == Companions.FIELDS_PER_CLASS) {
-			throw new UnsupportedOperationException();
+			classFileWriter.write(getClassName(), getClassDefinition());
+			newCompanion();
 		}
 		final String fieldName = fieldNameFor(classid);
 		if (instrumented.add(classname)) {
@@ -88,7 +96,7 @@ public class OfflineInstrumentationCompanionAccessGenerator
 	 * @return number of instrumented classes since last invocation of
 	 *         {@link #getClassDefinition()}
 	 */
-	public int getNumberOfInstrumentedClasses() {
+	int getNumberOfInstrumentedClasses() {
 		return instrumented.size();
 	}
 
@@ -119,7 +127,7 @@ public class OfflineInstrumentationCompanionAccessGenerator
 	 *
 	 * @return bytecode of generated "companion" class
 	 */
-	public byte[] getClassDefinition() {
+	byte[] getClassDefinition() {
 		mv.visitInsn(Opcodes.RETURN);
 		mv.visitMaxs(OfflineInstrumentationAccessGenerator.STACK_SIZE, 0);
 		mv.visitEnd();
@@ -127,6 +135,12 @@ public class OfflineInstrumentationCompanionAccessGenerator
 		final byte[] result = cw.toByteArray();
 		newCompanion();
 		return result;
+	}
+
+	public void end() {
+		if (instrumented.size() != 0) {
+			classFileWriter.write(getClassName(), getClassDefinition());
+		}
 	}
 
 	/**

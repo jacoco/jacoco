@@ -108,7 +108,7 @@ public class AnalyzerTest {
 	public void testAnalyzeClass_instrumented_with_companion()
 			throws IOException {
 		final Instrumenter instrumenter = new Instrumenter(
-				new OfflineInstrumentationCompanionAccessGenerator());
+				new OfflineInstrumentationCompanionAccessGenerator(null));
 		final byte[] bytes = instrumenter.instrument(
 				TargetLoader.getClassDataAsBytes(AnalyzerTest.class), "Test");
 		try {
@@ -130,7 +130,7 @@ public class AnalyzerTest {
 	public void testAnalyzeClass_instrumented_interface_with_companion()
 			throws IOException {
 		final Instrumenter instrumenter = new Instrumenter(
-				new OfflineInstrumentationCompanionAccessGenerator());
+				new OfflineInstrumentationCompanionAccessGenerator(null));
 		final byte[] bytes = instrumenter.instrument(
 				TargetLoader.getClassDataAsBytes(Target04.class), "Test");
 		try {
