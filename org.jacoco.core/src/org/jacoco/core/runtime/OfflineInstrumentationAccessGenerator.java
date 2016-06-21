@@ -25,6 +25,11 @@ import org.objectweb.asm.Opcodes;
 public class OfflineInstrumentationAccessGenerator implements
 		IExecutionDataAccessorGenerator {
 
+	/**
+	 * Stack size required for a generated code.
+	 */
+	static final int STACK_SIZE = 4;
+
 	private final String runtimeClassName;
 
 	/**
@@ -52,7 +57,7 @@ public class OfflineInstrumentationAccessGenerator implements
 		InstrSupport.push(mv, probecount);
 		mv.visitMethodInsn(Opcodes.INVOKESTATIC, runtimeClassName, "getProbes",
 				"(JLjava/lang/String;I)[Z", false);
-		return 4;
+		return STACK_SIZE;
 	}
 
 }

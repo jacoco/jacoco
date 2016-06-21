@@ -30,7 +30,7 @@ import org.objectweb.asm.Opcodes;
 public class OfflineInstrumentationCompanionAccessGenerator
 		implements IExecutionDataAccessorGenerator {
 
-	private final String runtimeClassName;
+	private final OfflineInstrumentationAccessGenerator generator;
 
 	private String companionName;
 
@@ -56,7 +56,7 @@ public class OfflineInstrumentationCompanionAccessGenerator
 	 */
 	OfflineInstrumentationCompanionAccessGenerator(
 			final String runtimeClassName) {
-		this.runtimeClassName = runtimeClassName;
+		this.generator = new OfflineInstrumentationAccessGenerator(runtimeClassName);
 		newCompanion();
 	}
 
@@ -71,7 +71,10 @@ public class OfflineInstrumentationCompanionAccessGenerator
 					Opcodes.ACC_PUBLIC | Opcodes.ACC_STATIC
 							| Opcodes.ACC_TRANSIENT | Opcodes.ACC_FINAL,
 					fieldName, InstrSupport.DATAFIELD_DESC, null, null);
-			generateInitializer(fieldName, classid, classname, probecount);
+			generator.generateDataAccessor(classid, classname, probecount,
+					this.mv);
+			this.mv.visitFieldInsn(Opcodes.PUTSTATIC, companionName, fieldName,
+					InstrSupport.DATAFIELD_DESC);
 		}
 		mv.visitFieldInsn(Opcodes.GETSTATIC, companionName, fieldName,
 				InstrSupport.DATAFIELD_DESC);
@@ -111,18 +114,6 @@ public class OfflineInstrumentationCompanionAccessGenerator
 		mv.visitCode();
 	}
 
-	private void generateInitializer(final String fieldName, final long
-			classId, final String className, final int probeCount) {
-		mv.visitLdcInsn(Long.valueOf(classId));
-		mv.visitLdcInsn(className);
-		InstrSupport.push(this.mv, probeCount);
-		mv.visitMethodInsn(Opcodes.INVOKESTATIC, runtimeClassName,
-				"getProbes", "(JLjava/lang/String;I)[Z", false);
-		mv.visitFieldInsn(Opcodes.PUTSTATIC, companionName, fieldName,
-				InstrSupport.DATAFIELD_DESC);
-		// Maximum local stack size is 4
-	}
-
 	/**
 	 * Returns the bytecode of generated "companion" class.
 	 *
@@ -130,7 +121,7 @@ public class OfflineInstrumentationCompanionAccessGenerator
 	 */
 	public byte[] getClassDefinition() {
 		mv.visitInsn(Opcodes.RETURN);
-		mv.visitMaxs(4, 0);
+		mv.visitMaxs(OfflineInstrumentationAccessGenerator.STACK_SIZE, 0);
 		mv.visitEnd();
 		cw.visitEnd();
 		final byte[] result = cw.toByteArray();
