@@ -12,7 +12,9 @@
 package org.jacoco.core.internal.instr;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 
 import org.jacoco.core.runtime.IExecutionDataAccessorGenerator;
 import org.jacoco.core.runtime.OfflineInstrumentationAccessGenerator;
@@ -92,9 +94,13 @@ public class ProbeArrayStrategyFactoryTest {
 
 	@Test
 	public void testClass8() {
-		test(Opcodes.V1_8, 0, false, true);
+		final IProbeArrayStrategy strategy = test(Opcodes.V1_8, 0, false, true);
 		assertDataField(InstrSupport.DATAFIELD_ACC);
 		assertInitMethod(true);
+
+		final ClassVisitorMock cv = new ClassVisitorMock();
+		strategy.storeInstance(cv.visitMethod(0, null, null, null, null), 0);
+		assertFalse(cv.interfaceMethod);
 	}
 
 	@Test
@@ -120,9 +126,14 @@ public class ProbeArrayStrategyFactoryTest {
 
 	@Test
 	public void testInterface8() {
-		test(Opcodes.V1_8, Opcodes.ACC_INTERFACE, false, true);
+		final IProbeArrayStrategy strategy = test(Opcodes.V1_8,
+				Opcodes.ACC_INTERFACE, false, true);
 		assertDataField(InstrSupport.DATAFIELD_INTF_ACC);
 		assertInitMethod(true);
+
+		final ClassVisitorMock cv = new ClassVisitorMock();
+		strategy.storeInstance(cv.visitMethod(0, null, null, null, null), 0);
+		assertTrue(cv.interfaceMethod);
 	}
 
 	@Test
@@ -177,6 +188,7 @@ public class ProbeArrayStrategyFactoryTest {
 		private String methodName;
 
 		private boolean frames;
+		private boolean interfaceMethod;
 
 		ClassVisitorMock() {
 			super(Opcodes.ASM5);
@@ -202,6 +214,12 @@ public class ProbeArrayStrategyFactoryTest {
 				public void visitFrame(int type, int nLocal, Object[] local,
 						int nStack, Object[] stack) {
 					frames = true;
+				}
+
+				@Override
+				public void visitMethodInsn(int opcode, String owner,
+						String name, String desc, boolean itf) {
+					interfaceMethod = itf;
 				}
 			};
 		}
