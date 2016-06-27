@@ -132,6 +132,8 @@ public class ReportAggregateMojo extends AbstractReportMojo {
 			support.processProject(group, dependency.getArtifactId(),
 					dependency, getIncludes(), getExcludes(), sourceEncoding);
 		}
+		support.processProject(group, getProject().getArtifactId(),
+				getProject(), getIncludes(), getExcludes(), sourceEncoding);
 	}
 
 	@Override
