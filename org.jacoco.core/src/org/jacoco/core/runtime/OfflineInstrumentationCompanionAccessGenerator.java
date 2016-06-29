@@ -19,6 +19,7 @@ import org.jacoco.core.JaCoCo;
 import org.jacoco.core.internal.instr.Companions;
 import org.jacoco.core.internal.instr.InstrSupport;
 import org.objectweb.asm.ClassWriter;
+import org.objectweb.asm.Label;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
 
@@ -39,8 +40,6 @@ public class OfflineInstrumentationCompanionAccessGenerator
 	private final Set<String> instrumented = new HashSet<String>();
 
 	private ClassWriter cw;
-
-	private MethodVisitor mv;
 
 	/**
 	 * Creates a new instance for "offline" instrumentation.
@@ -75,18 +74,53 @@ public class OfflineInstrumentationCompanionAccessGenerator
 		}
 		final String fieldName = fieldNameFor(classid);
 		if (instrumented.add(classname)) {
-			cw.visitField(
-					Opcodes.ACC_PUBLIC | Opcodes.ACC_STATIC
-							| Opcodes.ACC_TRANSIENT | Opcodes.ACC_FINAL,
-					fieldName, InstrSupport.DATAFIELD_DESC, null, null);
-			generator.generateDataAccessor(classid, classname, probecount,
-					this.mv);
-			this.mv.visitFieldInsn(Opcodes.PUTSTATIC, companionName, fieldName,
-					InstrSupport.DATAFIELD_DESC);
+			gen(classid, classname, probecount, fieldName);
 		}
+		mv.visitMethodInsn(Opcodes.INVOKESTATIC, companionName, fieldName, InstrSupport.INITMETHOD_DESC, false);
+		return 1;
+	}
+
+	private void gen(final long classid, final String classname,
+			final int probecount, final String fieldName) {
+		cw.visitField(Opcodes.ACC_PUBLIC | Opcodes.ACC_STATIC
+				| Opcodes.ACC_TRANSIENT | Opcodes.ACC_FINAL, fieldName,
+				InstrSupport.DATAFIELD_DESC, null, null);
+
+		final MethodVisitor mv = cw.visitMethod(Opcodes.ACC_PUBLIC
+				| Opcodes.ACC_STATIC, fieldName, InstrSupport.INITMETHOD_DESC,
+				null, null);
+		mv.visitCode();
+
+		// Load the value of the static data field:
 		mv.visitFieldInsn(Opcodes.GETSTATIC, companionName, fieldName,
 				InstrSupport.DATAFIELD_DESC);
-		return 1;
+		mv.visitInsn(Opcodes.DUP);
+		// Stack[1]: [Z
+		// Stack[0]: [Z
+
+		// Skip initialization when we already have a data array:
+		final Label alreadyInitialized = new Label();
+		mv.visitJumpInsn(Opcodes.IFNONNULL, alreadyInitialized);
+		// Stack[0]: [Z
+
+		mv.visitInsn(Opcodes.POP);
+		int size = generator.generateDataAccessor(classid, classname,
+				probecount, mv);
+		// Stack[0]: [Z
+
+		mv.visitInsn(Opcodes.DUP);
+		// Stack[1]: [Z
+		// Stack[0]: [Z
+
+		mv.visitFieldInsn(Opcodes.PUTSTATIC, companionName, fieldName,
+				InstrSupport.DATAFIELD_DESC);
+		// Stack[0]: [Z
+
+		mv.visitLabel(alreadyInitialized);
+		mv.visitInsn(Opcodes.ARETURN);
+
+		mv.visitMaxs(Math.max(size, 2), 0);
+		mv.visitEnd();
 	}
 
 	/**
@@ -118,8 +152,6 @@ public class OfflineInstrumentationCompanionAccessGenerator
 		cw.visit(Opcodes.V1_1,
 				Opcodes.ACC_SYNTHETIC | Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL,
 				companionName, null, "java/lang/Object", null);
-		mv = cw.visitMethod(Opcodes.ACC_STATIC, "<clinit>", "()V", null, null);
-		mv.visitCode();
 	}
 
 	/**
@@ -128,9 +160,6 @@ public class OfflineInstrumentationCompanionAccessGenerator
 	 * @return bytecode of generated "companion" class
 	 */
 	byte[] getClassDefinition() {
-		mv.visitInsn(Opcodes.RETURN);
-		mv.visitMaxs(OfflineInstrumentationAccessGenerator.STACK_SIZE, 0);
-		mv.visitEnd();
 		cw.visitEnd();
 		final byte[] result = cw.toByteArray();
 		newCompanion();

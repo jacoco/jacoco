@@ -35,10 +35,13 @@ public class OfflineInstrumentationCompanionAccessGeneratorTest {
 
 	private OfflineInstrumentationCompanionAccessGenerator generator;
 
+	private static int access;
+
 	// runtime stub
 	@SuppressWarnings("unused")
 	public static boolean[] getProbes(final long classid,
 			final String classname, final int probecount) {
+		access++;
 		return probes;
 	}
 
@@ -57,11 +60,18 @@ public class OfflineInstrumentationCompanionAccessGeneratorTest {
 	@Test
 	public void testRuntimeAccess() throws Exception {
 		final TargetLoader targetLoader = new TargetLoader();
-		final ITarget target = (ITarget) targetLoader.add("Target0", create(0))
-				.newInstance();
+		final ITarget target1 = (ITarget) targetLoader
+				.add("Target1", create(1)).newInstance();
+		final ITarget target2 = (ITarget) targetLoader
+				.add("Target2", create(2)).newInstance();
 		targetLoader.add(generator.getClassName(),
 				generator.getClassDefinition());
-		assertSame(probes, target.get());
+
+		assertSame(probes, target1.get());
+		assertEquals(1, access);
+
+		assertSame(probes, target2.get());
+		assertEquals(2, access);
 	}
 
 	@Test

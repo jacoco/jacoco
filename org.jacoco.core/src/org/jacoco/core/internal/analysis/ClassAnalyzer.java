@@ -75,10 +75,22 @@ public class ClassAnalyzer extends ClassProbesVisitor {
 			public void visitFieldInsn(final int opcode, final String owner,
 					final String name, final String desc) {
 				if (owner.startsWith(Companions.COMPANION_NAME)) {
+					// "online" mode
 					throw new IllegalStateException("Class "
 							+ coverage.getName() + " is instrumented.");
 				}
 				super.visitFieldInsn(opcode, owner, name, desc);
+			}
+
+			@Override
+			public void visitMethodInsn(int opcode, String owner, String name,
+					String desc, boolean itf) {
+				if (owner.startsWith(Companions.COMPANION_NAME)) {
+					// "offline" mode
+					throw new IllegalStateException("Class "
+							+ coverage.getName() + " is instrumented.");
+				}
+				super.visitMethodInsn(opcode, owner, name, desc, itf);
 			}
 
 			@Override

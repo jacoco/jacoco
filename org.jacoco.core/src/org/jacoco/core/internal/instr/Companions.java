@@ -61,7 +61,7 @@ public class Companions {
 	/**
 	 * https://docs.oracle.com/javase/specs/jvms/se7/html/jvms-4.html#jvms-4.11
 	 */
-	public static final int FIELDS_PER_CLASS = 5000;
+	public static final int FIELDS_PER_CLASS = 8000;
 
 	static class Companion {
 		private int lastId = -1;
