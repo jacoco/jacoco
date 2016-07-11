@@ -36,8 +36,12 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
 import org.jacoco.core.data.ExecutionDataStore;
+import org.jacoco.core.instr.Instrumenter;
 import org.jacoco.core.internal.data.CRC64;
+import org.jacoco.core.runtime.OfflineInstrumentationAccessGenerator;
+import org.jacoco.core.runtime.OfflineInstrumentationCompanionAccessGenerator;
 import org.jacoco.core.test.TargetLoader;
+import org.jacoco.core.test.validation.targets.Target04;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -71,6 +75,73 @@ public class AnalyzerTest {
 		classes = new HashMap<String, IClassCoverage>();
 		executionData = new ExecutionDataStore();
 		analyzer = new Analyzer(executionData, new EmptyStructureVisitor());
+	}
+
+	@Test
+	public void testAnalyzeClass_instrumented() throws IOException {
+		final Instrumenter instrumenter = new Instrumenter(
+				new OfflineInstrumentationAccessGenerator());
+		final byte[] bytes = instrumenter.instrument(
+				TargetLoader.getClassDataAsBytes(AnalyzerTest.class), "Test");
+		try {
+			analyzer.analyzeClass(bytes, "Test");
+			fail("IOException expected");
+		} catch (final IOException e) {
+			assertEquals("Error while analyzing Test.", e.getMessage());
+			// TODO(Godin): misleading message
+			assertEquals(
+					"Class org/jacoco/core/analysis/AnalyzerTest is already instrumented.",
+					e.getCause().getMessage());
+		}
+	}
+
+	@Test
+	public void testAnalyzeClass_instrumented_interface() throws IOException {
+		final Instrumenter instrumenter = new Instrumenter(
+				new OfflineInstrumentationAccessGenerator());
+		final byte[] bytes = instrumenter.instrument(
+				TargetLoader.getClassDataAsBytes(Target04.class), "Test");
+		analyzer.analyzeClass(bytes, "Test");
+	}
+
+	@Test
+	public void testAnalyzeClass_instrumented_with_companion()
+			throws IOException {
+		final Instrumenter instrumenter = new Instrumenter(
+				new OfflineInstrumentationCompanionAccessGenerator(null));
+		final byte[] bytes = instrumenter.instrument(
+				TargetLoader.getClassDataAsBytes(AnalyzerTest.class), "Test");
+		try {
+			analyzer.analyzeClass(bytes, "Test");
+			fail("IOException expected");
+		} catch (final IOException e) {
+			assertEquals("Error while analyzing Test.", e.getMessage());
+			assertEquals(
+					"Class org/jacoco/core/analysis/AnalyzerTest is instrumented.",
+					e.getCause().getMessage());
+		}
+	}
+
+	/**
+	 * Stricter than without "companion" classes - see
+	 * {@link #testAnalyzeClass_instrumented_interface()}.
+	 */
+	@Test
+	public void testAnalyzeClass_instrumented_interface_with_companion()
+			throws IOException {
+		final Instrumenter instrumenter = new Instrumenter(
+				new OfflineInstrumentationCompanionAccessGenerator(null));
+		final byte[] bytes = instrumenter.instrument(
+				TargetLoader.getClassDataAsBytes(Target04.class), "Test");
+		try {
+			analyzer.analyzeClass(bytes, "Test");
+			fail("IOException expected");
+		} catch (final IOException e) {
+			assertEquals("Error while analyzing Test.", e.getMessage());
+			assertEquals(
+					"Class org/jacoco/core/test/validation/targets/Target04 is instrumented.",
+					e.getCause().getMessage());
+		}
 	}
 
 	@Test

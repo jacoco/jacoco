@@ -16,6 +16,7 @@ import static java.lang.String.format;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
+import java.io.IOException;
 import java.io.OutputStream;
 import java.util.Iterator;
 
@@ -26,7 +27,8 @@ import org.apache.tools.ant.types.ResourceCollection;
 import org.apache.tools.ant.types.resources.Union;
 import org.apache.tools.ant.util.FileUtils;
 import org.jacoco.core.instr.Instrumenter;
-import org.jacoco.core.runtime.OfflineInstrumentationAccessGenerator;
+import org.jacoco.core.runtime.IClassFileWriter;
+import org.jacoco.core.runtime.OfflineInstrumentationCompanionAccessGenerator;
 
 /**
  * Task for offline instrumentation of class files.
@@ -76,8 +78,23 @@ public class InstrumentTask extends Task {
 					getLocation());
 		}
 		int total = 0;
-		final Instrumenter instrumenter = new Instrumenter(
-				new OfflineInstrumentationAccessGenerator());
+		final OfflineInstrumentationCompanionAccessGenerator generator = new OfflineInstrumentationCompanionAccessGenerator(
+				new IClassFileWriter() {
+					public void write(final String name, final byte[] bytes) {
+						FileOutputStream output = null;
+						try {
+							output = new FileOutputStream(
+									new File(destdir, name + ".class"));
+							output.write(bytes);
+						} catch (final IOException e) {
+							throw new BuildException("Unable to create file.",
+									e);
+						} finally {
+							FileUtils.close(output);
+						}
+					}
+				});
+		final Instrumenter instrumenter = new Instrumenter(generator);
 		instrumenter.setRemoveSignatures(removesignatures);
 		final Iterator<?> resourceIterator = files.iterator();
 		while (resourceIterator.hasNext()) {
@@ -87,6 +104,7 @@ public class InstrumentTask extends Task {
 			}
 			total += instrument(instrumenter, resource);
 		}
+		generator.end();
 		log(format("Instrumented %s classes to %s", Integer.valueOf(total),
 				destdir.getAbsolutePath()));
 	}
@@ -113,4 +131,5 @@ public class InstrumentTask extends Task {
 					resource), e, getLocation());
 		}
 	}
+
 }

@@ -26,7 +26,8 @@ import org.apache.maven.plugins.annotations.Mojo;
 import org.codehaus.plexus.util.FileUtils;
 import org.codehaus.plexus.util.IOUtil;
 import org.jacoco.core.instr.Instrumenter;
-import org.jacoco.core.runtime.OfflineInstrumentationAccessGenerator;
+import org.jacoco.core.runtime.IClassFileWriter;
+import org.jacoco.core.runtime.OfflineInstrumentationCompanionAccessGenerator;
 
 /**
  * Performs offline instrumentation. Note that after execution of test you must
@@ -68,8 +69,22 @@ public class InstrumentMojo extends AbstractJacocoMojo {
 					"Unable to get list of files to instrument.", e1);
 		}
 
-		final Instrumenter instrumenter = new Instrumenter(
-				new OfflineInstrumentationAccessGenerator());
+		final OfflineInstrumentationCompanionAccessGenerator generator = new OfflineInstrumentationCompanionAccessGenerator(
+				new IClassFileWriter() {
+					public void write(final String name, final byte[] bytes) {
+						FileOutputStream output = null;
+						try {
+							output = new FileOutputStream(
+									new File(classesDir, name + ".class"));
+							output.write(bytes);
+						} catch (final IOException e) {
+							throw new RuntimeException(e);
+						} finally {
+							IOUtil.close(output);
+						}
+					}
+				});
+		final Instrumenter instrumenter = new Instrumenter(generator);
 		for (final String fileName : fileNames) {
 			if (fileName.endsWith(".class")) {
 				final File source = new File(classesDir, fileName);
@@ -90,6 +105,7 @@ public class InstrumentMojo extends AbstractJacocoMojo {
 				}
 			}
 		}
+		generator.end();
 	}
 
 }

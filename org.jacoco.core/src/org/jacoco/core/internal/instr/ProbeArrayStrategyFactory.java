@@ -14,6 +14,7 @@ package org.jacoco.core.internal.instr;
 import org.jacoco.core.internal.data.CRC64;
 import org.jacoco.core.internal.flow.ClassProbesAdapter;
 import org.jacoco.core.runtime.IExecutionDataAccessorGenerator;
+import org.jacoco.core.runtime.OfflineInstrumentationCompanionAccessGenerator;
 import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.Opcodes;
 
@@ -44,6 +45,13 @@ public final class ProbeArrayStrategyFactory {
 		final long classId = CRC64.checksum(reader.b);
 		final boolean withFrames = version >= Opcodes.V1_6;
 
+		if (accessorGenerator instanceof
+				OfflineInstrumentationCompanionAccessGenerator) {
+			final ProbeCounter counter = getProbeCounter(reader);
+			return new LocalProbeArrayStrategy(className, classId,
+					counter.getCount(), accessorGenerator);
+		}
+
 		if (isInterface(reader)) {
 			final ProbeCounter counter = getProbeCounter(reader);
 			if (counter.getCount() == 0) {
@@ -71,7 +79,7 @@ public final class ProbeArrayStrategyFactory {
 		return reader.readShort(6);
 	}
 
-	private static ProbeCounter getProbeCounter(final ClassReader reader) {
+	static ProbeCounter getProbeCounter(final ClassReader reader) {
 		final ProbeCounter counter = new ProbeCounter();
 		reader.accept(new ClassProbesAdapter(counter, false), 0);
 		return counter;

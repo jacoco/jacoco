@@ -231,7 +231,7 @@ public class CoverageTransformerTest {
 	}
 
 	private CoverageTransformer createTransformer() {
-		return new CoverageTransformer(runtime, options, recorder);
+		return new CoverageTransformer(runtime, null, options, recorder);
 	}
 
 	private static byte[] getClassData(Class<?> clazz) throws IOException {

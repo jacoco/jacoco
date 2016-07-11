@@ -36,6 +36,7 @@ import org.jacoco.core.analysis.AnalyzerTest;
 import org.jacoco.core.runtime.RuntimeData;
 import org.jacoco.core.runtime.SystemPropertiesRuntime;
 import org.jacoco.core.test.TargetLoader;
+import org.jacoco.core.test.validation.targets.Target04;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -89,6 +90,23 @@ public class InstrumenterTest {
 		TargetLoader loader = new TargetLoader();
 		Class<?> clazz = loader.add(InstrumenterTest.class, bytes);
 		assertEquals("org.jacoco.core.instr.InstrumenterTest", clazz.getName());
+
+		try {
+			instrumenter.instrument(bytes, "Test");
+			fail("IOException expected");
+		} catch (IOException e) {
+			assertEquals("Error while instrumenting class Test.",
+					e.getMessage());
+			assertEquals(e.getCause().getMessage(),
+					"Class org/jacoco/core/instr/InstrumenterTest is already instrumented.");
+		}
+	}
+
+	@Test
+	public void testInstrumentInterface() throws Exception {
+		final byte[] bytes = instrumenter.instrument(
+				TargetLoader.getClassDataAsBytes(Target04.class), "Test");
+		instrumenter.instrument(bytes, "Test");
 	}
 
 	@Test

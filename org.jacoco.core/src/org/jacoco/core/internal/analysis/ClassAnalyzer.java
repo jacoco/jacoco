@@ -14,6 +14,7 @@ package org.jacoco.core.internal.analysis;
 import org.jacoco.core.analysis.IMethodCoverage;
 import org.jacoco.core.internal.flow.ClassProbesVisitor;
 import org.jacoco.core.internal.flow.MethodProbesVisitor;
+import org.jacoco.core.internal.instr.Companions;
 import org.jacoco.core.internal.instr.InstrSupport;
 import org.objectweb.asm.FieldVisitor;
 import org.objectweb.asm.Opcodes;
@@ -70,6 +71,28 @@ public class ClassAnalyzer extends ClassProbesVisitor {
 
 		return new MethodAnalyzer(stringPool.get(name), stringPool.get(desc),
 				stringPool.get(signature), probes) {
+			@Override
+			public void visitFieldInsn(final int opcode, final String owner,
+					final String name, final String desc) {
+				if (owner.startsWith(Companions.COMPANION_NAME)) {
+					// "online" mode
+					throw new IllegalStateException("Class "
+							+ coverage.getName() + " is instrumented.");
+				}
+				super.visitFieldInsn(opcode, owner, name, desc);
+			}
+
+			@Override
+			public void visitMethodInsn(int opcode, String owner, String name,
+					String desc, boolean itf) {
+				if (owner.startsWith(Companions.COMPANION_NAME)) {
+					// "offline" mode
+					throw new IllegalStateException("Class "
+							+ coverage.getName() + " is instrumented.");
+				}
+				super.visitMethodInsn(opcode, owner, name, desc, itf);
+			}
+
 			@Override
 			public void visitEnd() {
 				super.visitEnd();
