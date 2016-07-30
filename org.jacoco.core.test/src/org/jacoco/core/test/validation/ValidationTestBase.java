@@ -13,6 +13,7 @@ package org.jacoco.core.test.validation;
 
 import static org.junit.Assert.assertEquals;
 
+import java.io.IOException;
 import java.util.Collection;
 
 import org.jacoco.core.analysis.Analyzer;
@@ -30,7 +31,6 @@ import org.jacoco.core.runtime.RuntimeData;
 import org.jacoco.core.runtime.SystemPropertiesRuntime;
 import org.jacoco.core.test.TargetLoader;
 import org.junit.Before;
-import org.objectweb.asm.ClassReader;
 
 /**
  * Base class for validation tests. It executes the given class under code
@@ -71,20 +71,20 @@ public abstract class ValidationTestBase {
 	@Before
 	public void setup() throws Exception {
 		loader = new TargetLoader();
-		final ClassReader reader = new ClassReader(
-				TargetLoader.getClassData(target));
-		final ExecutionDataStore store = execute(reader);
-		analyze(reader, store);
+		final byte[] bytes = TargetLoader.getClassDataAsBytes(target);
+		final ExecutionDataStore store = execute(bytes);
+		analyze(bytes, store);
 		source = Source.getSourceFor(srcFolder, target);
 	}
 
-	private ExecutionDataStore execute(final ClassReader reader)
-			throws Exception {
+	private ExecutionDataStore execute(final byte[] bytes) throws Exception {
 		RuntimeData data = new RuntimeData();
 		IRuntime runtime = new SystemPropertiesRuntime();
 		runtime.startup(data);
-		final byte[] bytes = new Instrumenter(runtime).instrument(reader);
-		run(loader.add(target, bytes));
+
+		final byte[] instrumented = new Instrumenter(runtime).instrument(bytes,
+				"TestTarget");
+		run(loader.add(target, instrumented));
 		final ExecutionDataStore store = new ExecutionDataStore();
 		data.collect(store, new SessionInfoStore(), false);
 		runtime.shutdown();
@@ -93,11 +93,11 @@ public abstract class ValidationTestBase {
 
 	protected abstract void run(final Class<?> targetClass) throws Exception;
 
-	private void analyze(final ClassReader reader,
-			final ExecutionDataStore store) {
+	private void analyze(final byte[] bytes, final ExecutionDataStore store)
+			throws IOException {
 		final CoverageBuilder builder = new CoverageBuilder();
 		final Analyzer analyzer = new Analyzer(store, builder);
-		analyzer.analyzeClass(reader);
+		analyzer.analyzeClass(bytes, "TestTarget");
 		final Collection<IClassCoverage> classes = builder.getClasses();
 		assertEquals(1, classes.size(), 0.0);
 		classCoverage = classes.iterator().next();

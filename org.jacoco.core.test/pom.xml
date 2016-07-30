@@ -37,7 +37,7 @@
       <artifactId>junit</artifactId>
     </dependency>
   </dependencies>
-  
+
   <profiles>
     <profile>
       <id>java8-validation</id>
@@ -73,11 +73,15 @@
     <profile>
       <id>java9-validation</id>
       <activation>
+        <!-- for some reason activation should be presented here, even if already defined in parent -->
         <property>
           <name>bytecode.version</name>
           <value>1.9</value>
         </property>
       </activation>
+      <properties>
+        <maven.compiler.target>1.9</maven.compiler.target>
+      </properties>
       <build>
         <plugins>
           <plugin>

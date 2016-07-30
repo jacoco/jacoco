@@ -14,6 +14,7 @@ package org.jacoco.core.test.validation;
 import static org.jacoco.core.test.validation.targets.Stubs.nop;
 import static org.junit.Assert.assertEquals;
 
+import java.io.IOException;
 import java.util.Collection;
 
 import org.jacoco.core.analysis.Analyzer;
@@ -32,7 +33,6 @@ import org.jacoco.core.test.TargetLoader;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import org.objectweb.asm.ClassReader;
 
 /**
  * Various tests for cyclomatic complexity of methods.
@@ -45,7 +45,7 @@ public class CyclomaticComplexityTest {
 
 	private RuntimeData data;
 	private IRuntime runtime;
-	private ClassReader reader;
+	private byte[] bytes;
 	private Target target;
 
 	@Before
@@ -253,18 +253,19 @@ public class CyclomaticComplexityTest {
 
 	private void instrument(final Class<? extends Target> clazz)
 			throws Exception {
-		reader = new ClassReader(TargetLoader.getClassData(clazz));
-		final byte[] bytes = new Instrumenter(runtime).instrument(reader);
+		bytes = TargetLoader.getClassDataAsBytes(clazz);
+		final byte[] instrumented = new Instrumenter(runtime).instrument(bytes,
+				"TestTarget");
 		final TargetLoader loader = new TargetLoader();
-		target = (Target) loader.add(clazz, bytes).newInstance();
+		target = (Target) loader.add(clazz, instrumented).newInstance();
 	}
 
-	private ICounter analyze() {
+	private ICounter analyze() throws IOException {
 		final CoverageBuilder builder = new CoverageBuilder();
 		final ExecutionDataStore store = new ExecutionDataStore();
 		data.collect(store, new SessionInfoStore(), false);
 		final Analyzer analyzer = new Analyzer(store, builder);
-		analyzer.analyzeClass(reader);
+		analyzer.analyzeClass(bytes, "TestTarget");
 		final Collection<IClassCoverage> classes = builder.getClasses();
 		assertEquals(1, classes.size(), 0.0);
 		final IClassCoverage classCoverage = classes.iterator().next();
