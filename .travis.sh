@@ -52,6 +52,9 @@ case "$JDK" in
 9-ea)
   install_jdk $JDK9_EA_URL
   ;;
+9-ea-stable)
+  install_jdk $JDK9_EA_STABLE_URL
+  ;;
 esac
 
 # Do not use "~/.mavenrc" set by Travis (https://github.com/travis-ci/travis-ci/issues/3893),
@@ -81,9 +84,9 @@ case "$JDK" in
 8 | 8-ea)
   mvn -V -B -e verify -Dbytecode.version=1.8
   ;;
-9-ea)
+9-ea | 9-ea-stable)
   # see https://bugs.openjdk.java.net/browse/JDK-8131041 about "java.locale.providers"
-  mvn -V -B -e verify -Dbytecode.version=1.8 \
+  mvn -V -B -e verify -Dbytecode.version=1.9 \
     -DargLine=-Djava.locale.providers=JRE,SPI
   ;;
 *)

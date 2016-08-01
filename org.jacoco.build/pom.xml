@@ -654,6 +654,24 @@
         <maven.compiler.target>${bytecode.version}</maven.compiler.target>
       </properties>
     </profile>
+    <profile>
+      <id>java9-validation</id>
+      <activation>
+        <property>
+          <name>bytecode.version</name>
+          <value>1.9</value>
+        </property>
+      </activation>
+      <properties>
+        <!--
+        Compile into bytecode version 8 by default,
+        because maven-shade-plugin and maven-plugin-plugin are unable to proceess bytecode version 9,
+        this is overridden for tests
+        -->
+        <maven.compiler.source>1.8</maven.compiler.source>
+        <maven.compiler.target>1.8</maven.compiler.target>
+      </properties>
+    </profile>
 
     <profile>
       <id>jdk16</id>
@@ -687,6 +705,19 @@
         <property>
           <name>jdk.version</name>
           <value>1.8</value>
+        </property>
+      </activation>
+      <properties>
+        <jvm.args>-XX:-FailOverToOldVerifier -Xverify:all</jvm.args>
+      </properties>
+    </profile>
+
+    <profile>
+      <id>jdk9</id>
+      <activation>
+        <property>
+          <name>jdk.version</name>
+          <value>1.9</value>
         </property>
       </activation>
       <properties>
