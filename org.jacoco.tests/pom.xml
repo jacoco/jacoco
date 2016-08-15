@@ -50,7 +50,7 @@
         <artifactId>jacoco-maven-plugin</artifactId>
         <version>${project.version}</version>
         <configuration>
-          <exclClassLoaders>sun.reflect.DelegatingClassLoader:org.jacoco.core.test.TargetLoader</exclClassLoaders>
+          <exclClassLoaders>sun.reflect.DelegatingClassLoader:org.jacoco.core.test.TargetLoader:org.jacoco.core.test.InstrumentingLoader</exclClassLoaders>
           <sessionId>${project.artifactId}</sessionId>
           <includes>
             <include>${jacoco.includes}</include>

@@ -70,7 +70,7 @@ public class ClassInstrumenter extends ClassProbesVisitor {
 		}
 		final MethodVisitor frameEliminator = new DuplicateFrameEliminator(mv);
 		final ProbeInserter probeVariableInserter = new ProbeInserter(access,
-				desc, frameEliminator, probeArrayStrategy);
+				name, desc, frameEliminator, probeArrayStrategy);
 		return new MethodInstrumenter(probeVariableInserter,
 				probeVariableInserter);
 	}

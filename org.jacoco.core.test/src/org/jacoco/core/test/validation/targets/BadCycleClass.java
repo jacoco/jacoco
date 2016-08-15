@@ -6,33 +6,39 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *
  * Contributors:
- *    Marc R. Hoffmann - initial API and implementation
- *    
+ *    Evgeny Mandrikov - initial API and implementation
+ *
  *******************************************************************************/
 package org.jacoco.core.test.validation.targets;
 
-import static org.jacoco.core.test.validation.targets.Stubs.i1;
+public class BadCycleClass {
 
-/**
- * This test target is an interface with a class initializer and default methods.
- */
-public interface InterfaceDefaultMethodsTarget {
+	public static class Base {
+		static final Child b = new Child();
 
-	public static final int CONST = i1(); // $line-clinit$
-
-	default void m1() {
-		return; // $line-m1$
-	}
-
-	default void m2() {
-		return; // $line-m2$
-	}
-
-	public class Impl implements InterfaceDefaultMethodsTarget {
-
-		public Impl() {
-			m1();
+		static {
+			b.someMethod();
 		}
+	}
+
+	public static class Child extends Base {
+
+		static {
+			Stubs.nop("child clinit"); // $line-3$
+		}
+
+		public Child() {
+			Stubs.nop("child init"); // $line-1$
+		}
+
+		void someMethod() {
+			Stubs.nop("child someMethod"); // $line-2$
+		}
+
+	}
+
+	public static void main(String[] args) {
+		new Child();
 	}
 
 }

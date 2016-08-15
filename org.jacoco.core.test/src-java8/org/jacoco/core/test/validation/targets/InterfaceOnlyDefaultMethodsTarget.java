@@ -6,19 +6,17 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *
  * Contributors:
- *    Marc R. Hoffmann - initial API and implementation
- *    
+ *    Evgeny Mandrikov - initial API and implementation
+ *
  *******************************************************************************/
 package org.jacoco.core.test.validation.targets;
 
-import static org.jacoco.core.test.validation.targets.Stubs.i1;
-
 /**
- * This test target is an interface with a class initializer and default methods.
+ * This test target is an interface with only default methods.
  */
-public interface InterfaceDefaultMethodsTarget {
+public interface InterfaceOnlyDefaultMethodsTarget {
 
-	public static final int CONST = i1(); // $line-clinit$
+	// no <clinit>, only default methods:
 
 	default void m1() {
 		return; // $line-m1$
@@ -28,7 +26,7 @@ public interface InterfaceDefaultMethodsTarget {
 		return; // $line-m2$
 	}
 
-	public class Impl implements InterfaceDefaultMethodsTarget {
+	public class Impl implements InterfaceOnlyDefaultMethodsTarget {
 
 		public Impl() {
 			m1();

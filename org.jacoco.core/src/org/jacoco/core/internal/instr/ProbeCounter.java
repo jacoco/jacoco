@@ -30,7 +30,7 @@ class ProbeCounter extends ClassProbesVisitor {
 	@Override
 	public MethodProbesVisitor visitMethod(final int access, final String name,
 			final String desc, final String signature, final String[] exceptions) {
-		if (!"<clinit>".equals(name)) {
+		if (!InstrSupport.CLINIT_NAME.equals(name)) {
 			methods = true;
 		}
 		return null;

@@ -26,11 +26,13 @@ public interface IProbeArrayStrategy {
 	 * 
 	 * @param mv
 	 *            visitor to create code
+	 * @param clinit
+	 *            true in case of {@code <clinit>} method
 	 * @param variable
 	 *            variable index to store probe array to
 	 * @return maximum stack size required by the generated code
 	 */
-	int storeInstance(MethodVisitor mv, int variable);
+	int storeInstance(MethodVisitor mv, boolean clinit, int variable);
 
 	/**
 	 * Adds additional class members required by this strategy. This method is
