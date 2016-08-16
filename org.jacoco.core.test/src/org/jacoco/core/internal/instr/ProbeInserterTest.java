@@ -39,9 +39,8 @@ public class ProbeInserterTest {
 		expected = new MethodRecorder();
 		expectedVisitor = expected.getVisitor();
 		arrayStrategy = new IProbeArrayStrategy() {
-
-			public int storeInstance(MethodVisitor mv, int variable) {
-				mv.visitLdcInsn("init");
+			public int storeInstance(MethodVisitor mv, boolean clinit, int variable) {
+				mv.visitLdcInsn(clinit ? "clinit" : "init");
 				return 5;
 			}
 
@@ -57,7 +56,7 @@ public class ProbeInserterTest {
 
 	@Test
 	public void testVariableStatic() {
-		ProbeInserter pi = new ProbeInserter(Opcodes.ACC_STATIC, "()V",
+		ProbeInserter pi = new ProbeInserter(Opcodes.ACC_STATIC, "m", "()V",
 				actualVisitor, arrayStrategy);
 		pi.insertProbe(0);
 
@@ -69,7 +68,7 @@ public class ProbeInserterTest {
 
 	@Test
 	public void testVariableNonStatic() {
-		ProbeInserter pi = new ProbeInserter(0, "()V", actualVisitor,
+		ProbeInserter pi = new ProbeInserter(0, "m", "()V", actualVisitor,
 				arrayStrategy);
 		pi.insertProbe(0);
 
@@ -81,7 +80,7 @@ public class ProbeInserterTest {
 
 	@Test
 	public void testVariableNonStatic_IZObject() {
-		ProbeInserter pi = new ProbeInserter(0, "(IZLjava/lang/Object;)V",
+		ProbeInserter pi = new ProbeInserter(0, "m", "(IZLjava/lang/Object;)V",
 				actualVisitor, arrayStrategy);
 		pi.insertProbe(0);
 
@@ -93,7 +92,7 @@ public class ProbeInserterTest {
 
 	@Test
 	public void testVariableNonStatic_JD() {
-		ProbeInserter pi = new ProbeInserter(0, "(JD)V", actualVisitor,
+		ProbeInserter pi = new ProbeInserter(0, "m", "(JD)V", actualVisitor,
 				arrayStrategy);
 		pi.insertProbe(0);
 
@@ -105,7 +104,7 @@ public class ProbeInserterTest {
 
 	@Test
 	public void testVisitCode() {
-		ProbeInserter pi = new ProbeInserter(0, "()V", actualVisitor,
+		ProbeInserter pi = new ProbeInserter(0, "m", "()V", actualVisitor,
 				arrayStrategy);
 		pi.visitCode();
 
@@ -113,8 +112,17 @@ public class ProbeInserterTest {
 	}
 
 	@Test
+	public void testVisitClinit() {
+		ProbeInserter pi = new ProbeInserter(0, "<clinit>", "()V",
+				actualVisitor, arrayStrategy);
+		pi.visitCode();
+
+		expectedVisitor.visitLdcInsn("clinit");
+	}
+
+	@Test
 	public void testVisitVarIns() {
-		ProbeInserter pi = new ProbeInserter(0, "(II)V", actualVisitor,
+		ProbeInserter pi = new ProbeInserter(0, "m", "(II)V", actualVisitor,
 				arrayStrategy);
 
 		pi.visitVarInsn(Opcodes.ALOAD, 0);
@@ -135,7 +143,7 @@ public class ProbeInserterTest {
 
 	@Test
 	public void testVisitIincInsn() {
-		ProbeInserter pi = new ProbeInserter(0, "(II)V", actualVisitor,
+		ProbeInserter pi = new ProbeInserter(0, "m", "(II)V", actualVisitor,
 				arrayStrategy);
 		pi.visitIincInsn(0, 100);
 		pi.visitIincInsn(1, 101);
@@ -155,7 +163,7 @@ public class ProbeInserterTest {
 
 	@Test
 	public void testVisitLocalVariable() {
-		ProbeInserter pi = new ProbeInserter(0, "(II)V", actualVisitor,
+		ProbeInserter pi = new ProbeInserter(0, "m", "(II)V", actualVisitor,
 				arrayStrategy);
 
 		pi.visitLocalVariable(null, null, null, null, null, 0);
@@ -176,7 +184,7 @@ public class ProbeInserterTest {
 
 	@Test
 	public void testVisitMaxs1() {
-		ProbeInserter pi = new ProbeInserter(0, "(II)V", actualVisitor,
+		ProbeInserter pi = new ProbeInserter(0, "m", "(II)V", actualVisitor,
 				arrayStrategy);
 		pi.visitCode();
 		pi.visitMaxs(0, 8);
@@ -187,7 +195,7 @@ public class ProbeInserterTest {
 
 	@Test
 	public void testVisitMaxs2() {
-		ProbeInserter pi = new ProbeInserter(0, "(II)V", actualVisitor,
+		ProbeInserter pi = new ProbeInserter(0, "m", "(II)V", actualVisitor,
 				arrayStrategy);
 		pi.visitCode();
 		pi.visitMaxs(10, 8);
@@ -198,7 +206,7 @@ public class ProbeInserterTest {
 
 	@Test
 	public void testVisitFrame() {
-		ProbeInserter pi = new ProbeInserter(0, "(J)V", actualVisitor,
+		ProbeInserter pi = new ProbeInserter(0, "m", "(J)V", actualVisitor,
 				arrayStrategy);
 
 		pi.visitFrame(Opcodes.F_NEW, 3, new Object[] { "Foo", Opcodes.LONG,
@@ -210,7 +218,7 @@ public class ProbeInserterTest {
 
 	@Test
 	public void testVisitFrameNoLocals() {
-		ProbeInserter pi = new ProbeInserter(Opcodes.ACC_STATIC, "()V",
+		ProbeInserter pi = new ProbeInserter(Opcodes.ACC_STATIC, "m", "()V",
 				actualVisitor, arrayStrategy);
 
 		pi.visitFrame(Opcodes.F_NEW, 0, new Object[] {}, 0, new Object[0]);
@@ -221,7 +229,7 @@ public class ProbeInserterTest {
 
 	@Test
 	public void testVisitFrameProbeAt0() {
-		ProbeInserter pi = new ProbeInserter(Opcodes.ACC_STATIC, "()V",
+		ProbeInserter pi = new ProbeInserter(Opcodes.ACC_STATIC, "m", "()V",
 				actualVisitor, arrayStrategy);
 
 		pi.visitFrame(Opcodes.F_NEW, 2, new Object[] { Opcodes.DOUBLE, "Foo" },
@@ -233,7 +241,7 @@ public class ProbeInserterTest {
 
 	@Test
 	public void testFillOneWord() {
-		ProbeInserter pi = new ProbeInserter(Opcodes.ACC_STATIC, "(I)V",
+		ProbeInserter pi = new ProbeInserter(Opcodes.ACC_STATIC, "m", "(I)V",
 				actualVisitor, arrayStrategy);
 
 		pi.visitFrame(Opcodes.F_NEW, 0, new Object[] {}, 0, new Object[] {});
@@ -245,7 +253,7 @@ public class ProbeInserterTest {
 
 	@Test
 	public void testFillTwoWord() {
-		ProbeInserter pi = new ProbeInserter(Opcodes.ACC_STATIC, "(J)V",
+		ProbeInserter pi = new ProbeInserter(Opcodes.ACC_STATIC, "m", "(J)V",
 				actualVisitor, arrayStrategy);
 
 		pi.visitFrame(Opcodes.F_NEW, 0, new Object[] {}, 0, new Object[] {});
@@ -257,7 +265,7 @@ public class ProbeInserterTest {
 
 	@Test
 	public void testFillPartly() {
-		ProbeInserter pi = new ProbeInserter(Opcodes.ACC_STATIC, "(DIJ)V",
+		ProbeInserter pi = new ProbeInserter(Opcodes.ACC_STATIC, "m", "(DIJ)V",
 				actualVisitor, arrayStrategy);
 
 		pi.visitFrame(Opcodes.F_NEW, 1, new Object[] { Opcodes.DOUBLE }, 0,
@@ -271,7 +279,7 @@ public class ProbeInserterTest {
 
 	@Test(expected = IllegalArgumentException.class)
 	public void testVisitFrame_invalidType() {
-		ProbeInserter pi = new ProbeInserter(0, "()V", actualVisitor,
+		ProbeInserter pi = new ProbeInserter(0, "m", "()V", actualVisitor,
 				arrayStrategy);
 		pi.visitFrame(Opcodes.F_SAME, 0, null, 0, null);
 	}

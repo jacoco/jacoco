@@ -6,8 +6,8 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *
  * Contributors:
- *    Marc R. Hoffmann - initial API and implementation
- *    
+ *    Evgeny Mandrikov - initial API and implementation
+ *
  *******************************************************************************/
 package org.jacoco.core.internal.instr;
 
@@ -18,11 +18,11 @@ import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
 
 /**
- * The strategy for regular classes and Java 8 interfaces which adds a static
- * field to hold the probe array and a static initialization method requesting
- * the probe array from the runtime.
+ * This strategy for Java 8 interfaces adds a static method requesting the probe
+ * array from the runtime, a static field to hold the probe array and adds code
+ * for its initialization into interface initialization method.
  */
-class FieldProbeArrayStrategy implements IProbeArrayStrategy {
+class InterfaceFieldProbeArrayStrategy implements IProbeArrayStrategy {
 
 	/**
 	 * Frame stack with a single boolean array.
@@ -36,39 +36,63 @@ class FieldProbeArrayStrategy implements IProbeArrayStrategy {
 
 	private final String className;
 	private final long classId;
-	private final boolean withFrames;
-	private final boolean isInterface;
-	private final int fieldAccess;
+	private final int probeCount;
 	private final IExecutionDataAccessorGenerator accessorGenerator;
 
-	FieldProbeArrayStrategy(final String className, final long classId,
-			final boolean withFrames, final boolean isInterface,
-			final int fieldAccess,
+	private boolean seenClinit = false;
+
+	InterfaceFieldProbeArrayStrategy(final String className, final long classId,
+			final int probeCount,
 			final IExecutionDataAccessorGenerator accessorGenerator) {
 		this.className = className;
 		this.classId = classId;
-		this.withFrames = withFrames;
-		this.isInterface = isInterface;
-		this.fieldAccess = fieldAccess;
+		this.probeCount = probeCount;
 		this.accessorGenerator = accessorGenerator;
 	}
 
-	public int storeInstance(final MethodVisitor mv, final int variable) {
-		mv.visitMethodInsn(Opcodes.INVOKESTATIC, className,
-				InstrSupport.INITMETHOD_NAME, InstrSupport.INITMETHOD_DESC,
-				isInterface);
-		mv.visitVarInsn(Opcodes.ASTORE, variable);
-		return 1;
+	public int storeInstance(final MethodVisitor mv, final boolean clinit,
+			final int variable) {
+		if (clinit) {
+			final int maxStack = accessorGenerator.generateDataAccessor(classId,
+					className, probeCount, mv);
+
+			// Stack[0]: [Z
+
+			mv.visitInsn(Opcodes.DUP);
+
+			// Stack[1]: [Z
+			// Stack[0]: [Z
+
+			mv.visitFieldInsn(Opcodes.PUTSTATIC, className,
+					InstrSupport.DATAFIELD_NAME, InstrSupport.DATAFIELD_DESC);
+
+			// Stack[0]: [Z
+
+			mv.visitVarInsn(Opcodes.ASTORE, variable);
+
+			seenClinit = true;
+			return Math.max(maxStack, 2);
+		} else {
+			mv.visitMethodInsn(Opcodes.INVOKESTATIC, className,
+					InstrSupport.INITMETHOD_NAME, InstrSupport.INITMETHOD_DESC,
+					true);
+			mv.visitVarInsn(Opcodes.ASTORE, variable);
+			return 1;
+		}
 	}
 
 	public void addMembers(final ClassVisitor cv, final int probeCount) {
 		createDataField(cv);
 		createInitMethod(cv, probeCount);
+		if (!seenClinit) {
+			createClinitMethod(cv, probeCount);
+		}
 	}
 
 	private void createDataField(final ClassVisitor cv) {
-		cv.visitField(fieldAccess, InstrSupport.DATAFIELD_NAME,
-				InstrSupport.DATAFIELD_DESC, null, null);
+		cv.visitField(InstrSupport.DATAFIELD_INTF_ACC,
+				InstrSupport.DATAFIELD_NAME, InstrSupport.DATAFIELD_DESC, null,
+				null);
 	}
 
 	private void createInitMethod(final ClassVisitor cv, final int probeCount) {
@@ -92,15 +116,14 @@ class FieldProbeArrayStrategy implements IProbeArrayStrategy {
 		// Stack[0]: [Z
 
 		mv.visitInsn(Opcodes.POP);
-		final int size = genInitializeDataField(mv, probeCount);
+		final int size = accessorGenerator.generateDataAccessor(classId,
+				className, probeCount, mv);
 
 		// Stack[0]: [Z
 
 		// Return the class' probe array:
-		if (withFrames) {
-			mv.visitFrame(Opcodes.F_NEW, 0, FRAME_LOCALS_EMPTY, 1,
-					FRAME_STACK_ARRZ);
-		}
+		mv.visitFrame(Opcodes.F_NEW, 0, FRAME_LOCALS_EMPTY, 1,
+				FRAME_STACK_ARRZ);
 		mv.visitLabel(alreadyInitialized);
 		mv.visitInsn(Opcodes.ARETURN);
 
@@ -108,33 +131,24 @@ class FieldProbeArrayStrategy implements IProbeArrayStrategy {
 		mv.visitEnd();
 	}
 
-	/**
-	 * Generates the byte code to initialize the static coverage data field
-	 * within this class.
-	 * 
-	 * The code will push the [Z data array on the operand stack.
-	 * 
-	 * @param mv
-	 *            generator to emit code to
-	 */
-	private int genInitializeDataField(final MethodVisitor mv,
+	private void createClinitMethod(final ClassVisitor cv,
 			final int probeCount) {
-		final int size = accessorGenerator.generateDataAccessor(classId,
+		final MethodVisitor mv = cv.visitMethod(InstrSupport.CLINIT_ACC,
+				InstrSupport.CLINIT_NAME, InstrSupport.CLINIT_DESC, null, null);
+		mv.visitCode();
+
+		final int maxStack = accessorGenerator.generateDataAccessor(classId,
 				className, probeCount, mv);
 
-		// Stack[0]: [Z
-
-		mv.visitInsn(Opcodes.DUP);
-
-		// Stack[1]: [Z
 		// Stack[0]: [Z
 
 		mv.visitFieldInsn(Opcodes.PUTSTATIC, className,
 				InstrSupport.DATAFIELD_NAME, InstrSupport.DATAFIELD_DESC);
 
-		// Stack[0]: [Z
+		mv.visitInsn(Opcodes.RETURN);
 
-		return Math.max(size, 2); // Maximum local stack size is 2
+		mv.visitMaxs(maxStack, 0);
+		mv.visitEnd();
 	}
 
 }

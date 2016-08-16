@@ -6,32 +6,31 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *
  * Contributors:
- *    Marc R. Hoffmann - initial API and implementation
- *    
+ *    Evgeny Mandrikov - initial API and implementation
+ *
  *******************************************************************************/
 package org.jacoco.core.test.validation;
 
 import org.jacoco.core.analysis.ICounter;
-import org.jacoco.core.test.validation.targets.InterfaceDefaultMethodsTarget;
+import org.jacoco.core.test.validation.targets.InterfaceOnlyDefaultMethodsTarget;
 import org.junit.Test;
 
 /**
- * Tests of static initializer and default methods in interfaces.
+ * Tests of default methods in interfaces.
  */
-public class InterfaceDefaultMethodsTest extends ValidationTestBase {
+public class InterfaceOnlyDefaultMethodsTest extends ValidationTestBase {
 
-	public InterfaceDefaultMethodsTest() {
-		super("src-java8", InterfaceDefaultMethodsTarget.class);
+	public InterfaceOnlyDefaultMethodsTest() {
+		super("src-java8", InterfaceOnlyDefaultMethodsTarget.class);
 	}
 
 	@Override
 	protected void run(final Class<?> targetClass) throws Exception {
-		loader.add(InterfaceDefaultMethodsTarget.Impl.class).newInstance();
+		loader.add(InterfaceOnlyDefaultMethodsTarget.Impl.class).newInstance();
 	}
 
 	@Test
 	public void testCoverageResult() {
-		assertLine("clinit", ICounter.FULLY_COVERED);
 		assertLine("m1", ICounter.FULLY_COVERED);
 		assertLine("m2", ICounter.NOT_COVERED);
 	}

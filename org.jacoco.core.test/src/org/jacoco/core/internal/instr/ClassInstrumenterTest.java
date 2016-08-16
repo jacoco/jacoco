@@ -62,7 +62,7 @@ public class ClassInstrumenterTest implements IProbeArrayStrategy {
 
 	// === IProbeArrayStrategy ===
 
-	public int storeInstance(MethodVisitor mv, int variable) {
+	public int storeInstance(MethodVisitor mv, boolean clinit, int variable) {
 		return 0;
 	}
 

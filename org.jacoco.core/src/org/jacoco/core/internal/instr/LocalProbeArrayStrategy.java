@@ -38,7 +38,8 @@ class LocalProbeArrayStrategy implements IProbeArrayStrategy {
 		this.accessorGenerator = accessorGenerator;
 	}
 
-	public int storeInstance(final MethodVisitor mv, final int variable) {
+	public int storeInstance(final MethodVisitor mv, final boolean clinit,
+			final int variable) {
 		final int maxStack = accessorGenerator.generateDataAccessor(classId,
 				className, probeCount, mv);
 		mv.visitVarInsn(Opcodes.ASTORE, variable);
