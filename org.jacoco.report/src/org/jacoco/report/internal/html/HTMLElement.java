@@ -203,8 +203,8 @@ public class HTMLElement extends XMLElement {
 	 */
 	public HTMLElement input(final String classattr, final String idattr) throws IOException {
 		final HTMLElement input = element("input");
-        input.classattr(classattr);
-        input.attr("id", idattr);
+		input.classattr(classattr);
+		input.attr("id", idattr);
 		return input;
 	}
 
