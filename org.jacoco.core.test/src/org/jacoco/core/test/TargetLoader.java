@@ -58,7 +58,11 @@ public class TargetLoader extends ClassLoader {
 	}
 
 	public static byte[] getClassDataAsBytes(Class<?> clazz) throws IOException {
-		InputStream in = getClassData(clazz);
+		return getClassDataAsBytes(getClassData(clazz));
+	}
+
+	public static byte[] getClassDataAsBytes(InputStream in) throws
+			IOException {
 		ByteArrayOutputStream out = new ByteArrayOutputStream();
 		byte[] buffer = new byte[0x100];
 		int len;

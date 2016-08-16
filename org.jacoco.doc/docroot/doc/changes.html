@@ -29,6 +29,10 @@
 
 <h3>Fixed Bugs</h3>
 <ul>
+  <li>Fix instrumentation to not violate Java Virtual Machine Specification regarding
+      initialization of final fields, otherwise <code>IllegalAccessError</code>
+      will be thrown starting from OpenJDK 9 EA b127
+      (GitHub <a href="https://github.com/jacoco/jacoco/issues/434">#434</a>).</li>
   <li>Fix instrumentation of interfaces with default methods to not create incorrect
       constant pool entries, which lead to <code>IncompatibleClassChangeError</code>
       starting from OpenJDK 9 EA b122

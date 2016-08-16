@@ -20,7 +20,8 @@ import org.objectweb.asm.MethodVisitor;
  */
 class NoneProbeArrayStrategy implements IProbeArrayStrategy {
 
-	public int storeInstance(final MethodVisitor mv, final int variable) {
+	public int storeInstance(final MethodVisitor mv, final boolean clinit,
+			final int variable) {
 		throw new UnsupportedOperationException();
 	}
 
