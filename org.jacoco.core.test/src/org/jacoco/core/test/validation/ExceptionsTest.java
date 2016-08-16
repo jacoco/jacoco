@@ -103,6 +103,13 @@ public class ExceptionsTest extends ValidationTestBase {
 		assertLine("explicitExceptionFinally.finallyBlock",
 				ICounter.FULLY_COVERED);
 
+		// TODO(Godin): why fully covered? it looks strange, but the same in
+		// already presented cases above:
+		assertLine("implicitExceptionAfterBranch.if", ICounter.FULLY_COVERED, 1,
+				1);
+		assertLine("implicitExceptionAfterBranch.ifbody", ICounter.NOT_COVERED);
+		assertLine("implicitExceptionAfterBranch.exception",
+				ICounter.NOT_COVERED);
 	}
 
 }

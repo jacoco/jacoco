@@ -137,6 +137,9 @@ public final class LabelInfo {
 	 *            label to test
 	 * @return <code>true</code> if a probe should be inserted before
 	 */
+	// TODO(Godin): IMO misleading method name since it is not always used,
+	// e.g. not in
+	// org.jacoco.core.internal.flow.MethodProbesAdapter.visitJumpInsn()
 	public static boolean needsProbe(final Label label) {
 		final LabelInfo info = get(label);
 		return info != null && info.successor

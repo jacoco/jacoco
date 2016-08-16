@@ -44,6 +44,10 @@ public class Target03 implements Runnable {
 			implicitExceptionFinally();
 		} catch (StubException e) {
 		}
+		try {
+			implicitExceptionAfterBranch();
+		} catch (StubException e) {
+		}
 	}
 
 	private void implicitException() {
@@ -126,6 +130,13 @@ public class Target03 implements Runnable {
 		} finally { // $line-explicitExceptionFinally.finally$
 			nop(); // $line-explicitExceptionFinally.finallyBlock$
 		}
+	}
+
+	private void implicitExceptionAfterBranch() {
+		if (f()) { // $line-implicitExceptionAfterBranch.if$
+			return; // $line-implicitExceptionAfterBranch.ifbody$
+		}
+		ex(); // $line-implicitExceptionAfterBranch.exception$
 	}
 
 	public static void main(String[] args) {
