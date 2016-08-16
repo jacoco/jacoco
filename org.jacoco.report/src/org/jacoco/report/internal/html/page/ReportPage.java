@@ -90,8 +90,8 @@ public abstract class ReportPage implements ILinkable {
 	protected void head(final HTMLElement head) throws IOException {
 		head.meta("Content-Type", "text/html;charset=UTF-8");
 		head.link("stylesheet",
-				context.getResources().getLink(folder, Resources.STYLESHEET),
-				"text/css");
+                context.getResources().getLink(folder, Resources.STYLESHEET),
+                "text/css");
 		head.link("shortcut icon",
 				context.getResources().getLink(folder, "report.gif"),
 				"image/gif");
@@ -104,7 +104,11 @@ public abstract class ReportPage implements ILinkable {
 		navigation.attr("id", "breadcrumb");
 		infoLinks(navigation.span(Styles.INFO));
 		breadcrumb(navigation, folder);
-		body.h1().text(getLinkLabel());
+        body.h1().text(getLinkLabel());
+		HTMLElement filterInput = body.input("", "filter-input");
+		filterInput.attr("type", "text");
+		filterInput.attr("oninput", "filterTable('filter-input')");
+
 		content(body);
 		footer(body);
 	}
@@ -127,7 +131,7 @@ public abstract class ReportPage implements ILinkable {
 	 *             in case of IO problems with the report writer
 	 */
 	protected void infoLinks(final HTMLElement span) throws IOException {
-		span.a(context.getSessionsPage(), folder);
+        span.a(context.getSessionsPage(), folder);
 	}
 
 	private void breadcrumb(final HTMLElement div, final ReportOutputFolder base)

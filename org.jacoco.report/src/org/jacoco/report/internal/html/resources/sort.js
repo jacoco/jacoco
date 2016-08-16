@@ -140,8 +140,23 @@
       }
     }
   }
+
+  function filterTable(id) {
+    var elementsToFilter = document.querySelectorAll('tbody td[id^="a"]');
+    var filterValue = document.querySelector('#' + id).value;
+    [].forEach.call(elementsToFilter, function(cl) {
+      if(cl.innerText.indexOf(filterValue) == -1) {
+        var row = cl.parentNode;
+        row.style.display = 'none';
+
+      } else {
+        var row = cl.parentNode;
+        row.style.display = 'table-row';
+      }
+    });
+  }
   
   window['initialSort'] = initialSort;
   window['toggleSort'] = toggleSort;
-
+  window['filterTable'] = filterTable;
 })();
