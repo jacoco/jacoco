@@ -29,6 +29,9 @@
 
 <h3>Fixed Bugs</h3>
 <ul>
+  <li>Do not add useless members into Java 8 interfaces that have only interface
+      initialization and abstract methods
+      (GitHub <a href="https://github.com/jacoco/jacoco/issues/441">#441</a>).</li>
   <li>Fix instrumentation to not violate Java Virtual Machine Specification regarding
       initialization of final fields, otherwise <code>IllegalAccessError</code>
       will be thrown starting from OpenJDK 9 EA b127
