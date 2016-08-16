@@ -24,11 +24,6 @@ public class ImplicitFieldInitializationTest extends ValidationTestBase {
 		super(Target08.class);
 	}
 
-	@Override
-	protected void run(final Class<?> targetClass) throws Exception {
-		targetClass.newInstance();
-	}
-
 	@Test
 	public void testCoverageResult() {
 

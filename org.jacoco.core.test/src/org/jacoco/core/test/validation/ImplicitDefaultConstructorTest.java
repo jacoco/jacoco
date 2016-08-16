@@ -24,11 +24,6 @@ public class ImplicitDefaultConstructorTest extends ValidationTestBase {
 		super(Target06.class);
 	}
 
-	@Override
-	protected void run(final Class<?> targetClass) throws Exception {
-		targetClass.newInstance();
-	}
-
 	@Test
 	public void testCoverageResult() {
 

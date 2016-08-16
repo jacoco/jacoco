@@ -24,12 +24,6 @@ public class PrivateEmptyDefaultConstructorTest extends ValidationTestBase {
 		super(Target07.class);
 	}
 
-	@Override
-	protected void run(final Class<?> targetClass) throws Exception {
-		// Force class initialization
-		targetClass.getField("CONST").get(null);
-	}
-
 	@Test
 	public void testCoverageResult() {
 

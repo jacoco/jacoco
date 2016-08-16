@@ -24,12 +24,6 @@ public class ClassInitializerTest extends ValidationTestBase {
 		super(Target05.class);
 	}
 
-	@Override
-	protected void run(final Class<?> targetClass) throws Exception {
-		// Force class initialization
-		targetClass.getField("CONST1").get(null);
-	}
-
 	@Test
 	public void testCoverageResult() {
 

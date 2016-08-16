@@ -25,11 +25,6 @@ public class FieldInitializationInTwoConstructorsTest extends
 		super(Target09.class);
 	}
 
-	@Override
-	protected void run(final Class<?> targetClass) throws Exception {
-		targetClass.newInstance();
-	}
-
 	@Test
 	public void testCoverageResult() {
 

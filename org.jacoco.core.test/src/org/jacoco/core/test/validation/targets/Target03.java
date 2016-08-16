@@ -20,9 +20,10 @@ import org.jacoco.core.test.validation.targets.Stubs.StubException;
 /**
  * This target produces exception based control flow examples.
  */
-public class Target03 implements Runnable {
+public class Target03 {
 
-	public void run() {
+	public static void main(String[] args) {
+
 		try {
 			implicitException();
 		} catch (StubException e) {
@@ -46,18 +47,18 @@ public class Target03 implements Runnable {
 		}
 	}
 
-	private void implicitException() {
+	private static void implicitException() {
 		nop(); // $line-implicitException.before$
 		ex(); // $line-implicitException.exception$
 		nop(); // $line-implicitException.after$
 	}
 
-	private void explicitException() {
+	private static void explicitException() {
 		nop(); // $line-explicitException.before$
 		throw new StubException(); // $line-explicitException.throw$
 	}
 
-	private void noExceptionTryCatch() {
+	private static void noExceptionTryCatch() {
 		nop(); // $line-noExceptionTryCatch.beforeBlock$
 		try {
 			nop(); // $line-noExceptionTryCatch.tryBlock$
@@ -66,7 +67,7 @@ public class Target03 implements Runnable {
 		}
 	}
 
-	private void implicitExceptionTryCatch() {
+	private static void implicitExceptionTryCatch() {
 		nop(); // $line-implicitExceptionTryCatch.beforeBlock$
 		try {
 			nop(); // $line-implicitExceptionTryCatch.before$
@@ -77,7 +78,7 @@ public class Target03 implements Runnable {
 		}
 	}
 
-	private void implicitExceptionTryCatchAfterCondition() {
+	private static void implicitExceptionTryCatchAfterCondition() {
 		if (f()) { // $line-implicitExceptionTryCatchAfterCondition.condition$
 			return;
 		}
@@ -88,7 +89,7 @@ public class Target03 implements Runnable {
 		}
 	}
 
-	private void explicitExceptionTryCatch() {
+	private static void explicitExceptionTryCatch() {
 		nop(); // $line-explicitExceptionTryCatch.beforeBlock$
 		try {
 			nop(); // $line-explicitExceptionTryCatch.before$
@@ -98,7 +99,7 @@ public class Target03 implements Runnable {
 		}
 	}
 
-	private void noExceptionFinally() {
+	private static void noExceptionFinally() {
 		nop(); // $line-noExceptionFinally.beforeBlock$
 		try {
 			nop(); // $line-noExceptionFinally.tryBlock$
@@ -107,7 +108,7 @@ public class Target03 implements Runnable {
 		}
 	}
 
-	private void implicitExceptionFinally() {
+	private static void implicitExceptionFinally() {
 		nop(); // $line-implicitExceptionFinally.beforeBlock$
 		try {
 			nop(); // $line-implicitExceptionFinally.before$
@@ -118,7 +119,7 @@ public class Target03 implements Runnable {
 		}
 	}
 
-	private void explicitExceptionFinally() {
+	private static void explicitExceptionFinally() {
 		nop(); // $line-explicitExceptionFinally.beforeBlock$
 		try {
 			nop(); // $line-explicitExceptionFinally.before$
@@ -126,10 +127,6 @@ public class Target03 implements Runnable {
 		} finally { // $line-explicitExceptionFinally.finally$
 			nop(); // $line-explicitExceptionFinally.finallyBlock$
 		}
-	}
-
-	public static void main(String[] args) {
-		new Target03().run();
 	}
 
 }

@@ -18,11 +18,10 @@ import static org.jacoco.core.test.validation.targets.Stubs.nop;
 /**
  * This test target contains different lambda expressions.
  */
-public class LambdaExpressionsTarget implements Runnable {
+public class LambdaExpressionsTarget {
 
-	@Override
-	public void run() {
-		
+	public static void main(String[] args) {
+
 		exec(() -> {
 			nop(); // $line-executedlambdabody$
 		});
@@ -30,11 +29,7 @@ public class LambdaExpressionsTarget implements Runnable {
 		noexec(() -> {
 			nop(); // $line-notexecutedlambdabody$
 		});
-		
-	}
 
-	public static void main(String[] args) {
-		new LambdaExpressionsTarget().run();
 	}
 
 }

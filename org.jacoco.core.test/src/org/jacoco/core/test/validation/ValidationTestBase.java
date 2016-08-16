@@ -12,23 +12,19 @@
 package org.jacoco.core.test.validation;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 
 import java.io.IOException;
-import java.util.Collection;
 
 import org.jacoco.core.analysis.Analyzer;
 import org.jacoco.core.analysis.CoverageBuilder;
-import org.jacoco.core.analysis.IClassCoverage;
 import org.jacoco.core.analysis.ICounter;
 import org.jacoco.core.analysis.ILine;
 import org.jacoco.core.analysis.ISourceFileCoverage;
+import org.jacoco.core.data.ExecutionData;
 import org.jacoco.core.data.ExecutionDataStore;
-import org.jacoco.core.data.SessionInfoStore;
-import org.jacoco.core.instr.Instrumenter;
 import org.jacoco.core.internal.analysis.CounterImpl;
-import org.jacoco.core.runtime.IRuntime;
-import org.jacoco.core.runtime.RuntimeData;
-import org.jacoco.core.runtime.SystemPropertiesRuntime;
+import org.jacoco.core.test.InstrumentingLoader;
 import org.jacoco.core.test.TargetLoader;
 import org.junit.Before;
 
@@ -51,13 +47,9 @@ public abstract class ValidationTestBase {
 
 	protected final Class<?> target;
 
-	protected IClassCoverage classCoverage;
-
 	protected ISourceFileCoverage sourceCoverage;
 
 	protected Source source;
-
-	protected TargetLoader loader;
 
 	protected ValidationTestBase(final String srcFolder, final Class<?> target) {
 		this.srcFolder = srcFolder;
@@ -70,40 +62,44 @@ public abstract class ValidationTestBase {
 
 	@Before
 	public void setup() throws Exception {
-		loader = new TargetLoader();
-		final byte[] bytes = TargetLoader.getClassDataAsBytes(target);
-		final ExecutionDataStore store = execute(bytes);
-		analyze(bytes, store);
+		final ExecutionDataStore store = execute();
+		analyze(store);
 		source = Source.getSourceFor(srcFolder, target);
 	}
 
-	private ExecutionDataStore execute(final byte[] bytes) throws Exception {
-		RuntimeData data = new RuntimeData();
-		IRuntime runtime = new SystemPropertiesRuntime();
-		runtime.startup(data);
-
-		final byte[] instrumented = new Instrumenter(runtime).instrument(bytes,
-				"TestTarget");
-		run(loader.add(target, instrumented));
-		final ExecutionDataStore store = new ExecutionDataStore();
-		data.collect(store, new SessionInfoStore(), false);
-		runtime.shutdown();
-		return store;
+	private ExecutionDataStore execute() throws Exception {
+		InstrumentingLoader loader = new InstrumentingLoader(target);
+		run(loader.loadClass(target.getName()));
+		return loader.collect();
 	}
 
-	protected abstract void run(final Class<?> targetClass) throws Exception;
+	protected void run(final Class<?> targetClass) throws Exception {
+		targetClass.getMethod("main", String[].class).invoke(null,
+				(Object) new String[0]);
+	}
 
-	private void analyze(final byte[] bytes, final ExecutionDataStore store)
-			throws IOException {
+	private void analyze(final ExecutionDataStore store) throws IOException {
 		final CoverageBuilder builder = new CoverageBuilder();
 		final Analyzer analyzer = new Analyzer(store, builder);
-		analyzer.analyzeClass(bytes, "TestTarget");
-		final Collection<IClassCoverage> classes = builder.getClasses();
-		assertEquals(1, classes.size(), 0.0);
-		classCoverage = classes.iterator().next();
-		final Collection<ISourceFileCoverage> files = builder.getSourceFiles();
-		assertEquals(1, files.size(), 0.0);
-		sourceCoverage = files.iterator().next();
+		for (ExecutionData data : store.getContents()) {
+			analyze(analyzer, data);
+		}
+
+		String srcName = target.getName().replace('.', '/') + ".java";
+		for (ISourceFileCoverage file : builder.getSourceFiles()) {
+			if (srcName.equals(file.getPackageName() + "/" + file.getName())) {
+				sourceCoverage = file;
+				return;
+			}
+		}
+		fail("No source node found for " + srcName);
+	}
+
+	private void analyze(final Analyzer analyzer, final ExecutionData data)
+			throws IOException {
+		final byte[] bytes = TargetLoader.getClassDataAsBytes(
+				target.getClassLoader(), data.getName());
+		analyzer.analyzeClass(bytes, data.getName());
 	}
 
 	protected void assertLine(final String tag, final int status) {

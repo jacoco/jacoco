@@ -16,20 +16,16 @@ import static org.jacoco.core.test.validation.targets.Stubs.nop;
 /**
  * This target uses synchronized blocks which compile to try/catch statements.
  */
-public class Target12 implements Runnable {
+public class Target12 {
 
-	public void run() {
-		simple();
-		nested();
-	}
-
-	void simple() {
-		synchronized (this) {
+	static void simple() {
+		Object lock1 = new Object();
+		synchronized (lock1) {
 			nop();
 		}
 	}
 
-	void nested() {
+	static void nested() {
 		Object lock1 = new Object();
 		synchronized (lock1) {
 			nop();
@@ -43,7 +39,8 @@ public class Target12 implements Runnable {
 	}
 
 	public static void main(String[] args) {
-		new Target12().run();
+		simple();
+		nested();
 	}
 
 }
