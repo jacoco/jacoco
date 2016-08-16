@@ -13,6 +13,7 @@ package org.jacoco.core.internal.instr;
 
 import org.jacoco.core.internal.flow.ClassProbesVisitor;
 import org.jacoco.core.internal.flow.MethodProbesVisitor;
+import org.objectweb.asm.Opcodes;
 
 /**
  * Internal class to remember the total number of probes required for a class.
@@ -30,7 +31,8 @@ class ProbeCounter extends ClassProbesVisitor {
 	@Override
 	public MethodProbesVisitor visitMethod(final int access, final String name,
 			final String desc, final String signature, final String[] exceptions) {
-		if (!InstrSupport.CLINIT_NAME.equals(name)) {
+		if (!InstrSupport.CLINIT_NAME.equals(name)
+				&& (access & Opcodes.ACC_ABSTRACT) == 0) {
 			methods = true;
 		}
 		return null;
@@ -46,8 +48,8 @@ class ProbeCounter extends ClassProbesVisitor {
 	}
 
 	/**
-	 * @return <code>true</code> if the class has other methods than a static
-	 *         initializer
+	 * @return <code>true</code> if the class has non-abstract methods other
+	 *         than a static initializer
 	 */
 	boolean hasMethods() {
 		return methods;

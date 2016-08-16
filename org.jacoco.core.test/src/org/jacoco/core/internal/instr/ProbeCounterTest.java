@@ -18,6 +18,7 @@ import static org.junit.Assert.assertTrue;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.objectweb.asm.Opcodes;
 
 /**
  * Unit tests for {@link ProbeCounter}.
@@ -46,6 +47,12 @@ public class ProbeCounterTest {
 	@Test
 	public void testVisitClinitMethod() {
 		assertNull(counter.visitMethod(0, "<clinit>", null, null, null));
+		assertFalse(counter.hasMethods());
+	}
+
+	@Test
+	public void testVisitAbstractMethod() {
+		counter.visitMethod(Opcodes.ACC_ABSTRACT, "foo", null, null, null);
 		assertFalse(counter.hasMethods());
 	}
 
