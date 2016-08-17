@@ -26,13 +26,11 @@ public class BadCycleInterfaceTest extends ValidationTestBase {
 
 	@Test
 	public void test() throws Exception {
-		if (System.getProperty("java.version").startsWith("9-ea")) {
+		if (!System.getProperty("java.version").startsWith("9-ea")) {
 			// JDK-9042842
-			assertLine("childclinit", ICounter.NOT_COVERED);
-		} else {
 			assertLine("baseclinit", ICounter.FULLY_COVERED);
-			assertLine("childclinit", ICounter.FULLY_COVERED);
 		}
+		assertLine("childclinit", ICounter.FULLY_COVERED);
 		assertLine("childdefault", ICounter.FULLY_COVERED);
 		assertLine("childstatic", ICounter.FULLY_COVERED);
 	}
