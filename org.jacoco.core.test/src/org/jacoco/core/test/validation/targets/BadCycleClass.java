@@ -24,15 +24,15 @@ public class BadCycleClass {
 	public static class Child extends Base {
 
 		static {
-			Stubs.nop("child clinit"); // $line-childclinit$
+			Stubs.logEvent("childclinit"); // $line-childclinit$
 		}
 
 		public Child() {
-			Stubs.nop("child init"); // $line-childinit$
+			Stubs.logEvent("childinit"); // $line-childinit$
 		}
 
 		void someMethod() {
-			Stubs.nop("child someMethod"); // $line-childsomeMethod$
+			Stubs.logEvent("childsomeMethod"); // $line-childsomeMethod$
 		}
 
 	}

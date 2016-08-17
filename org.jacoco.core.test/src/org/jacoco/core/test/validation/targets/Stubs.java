@@ -11,6 +11,9 @@
  *******************************************************************************/
 package org.jacoco.core.test.validation.targets;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Collection of stub methods that are called from the coverage targets. *
  */
@@ -115,6 +118,26 @@ public class Stubs {
 	 * Never executes the given runnable.
 	 */
 	public static void noexec(Runnable task) {
+	}
+
+	/**
+	 * List of logged events. Using a static member here works as this class is
+	 * loaded in a new class loader for every test case.
+	 */
+	private static List<String> events = new ArrayList<String>();
+
+	/**
+	 * Records a event with the given id for later verification.
+	 */
+	public static void logEvent(String id) {
+		events.add(id);
+	}
+
+	/**
+	 * Returns a list of all recorded events in the sequence of recording.
+	 */
+	public static List<String> getLogEvents() {
+		return events;
 	}
 
 }

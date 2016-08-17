@@ -30,12 +30,18 @@ public class BadCycleInterfaceTest extends ValidationTestBase {
 			// JDK-9042842
 			assertLine("baseclinit", ICounter.EMPTY);
 			assertLine("childdefault", ICounter.NOT_COVERED);
+			assertLogEvents("childclinit", "childstaticmethod");
 		} else {
 			assertLine("baseclinit", ICounter.FULLY_COVERED);
 			assertLine("childdefault", ICounter.FULLY_COVERED);
+
+			// The cycle causes a default method to be called before the static
+			// initializer of a interface:
+			assertLogEvents("baseclinit", "childdefaultmethod", "childclinit",
+					"childstaticmethod");
 		}
 		assertLine("childclinit", ICounter.FULLY_COVERED);
 		assertLine("childstatic", ICounter.FULLY_COVERED);
-	}
 
+	}
 }
