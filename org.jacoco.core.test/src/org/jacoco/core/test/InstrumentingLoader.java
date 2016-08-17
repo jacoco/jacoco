@@ -48,12 +48,6 @@ public final class InstrumentingLoader extends ClassLoader {
 				target.getClassLoader());
 	}
 
-	public InstrumentingLoader() throws Exception {
-		this(new SystemPropertiesRuntime(),
-				"org.jacoco.core.test.validation.targets.",
-				InstrumentingLoader.class.getClassLoader());
-	}
-
 	@Override
 	protected synchronized Class<?> loadClass(String name, boolean resolve)
 			throws ClassNotFoundException {
