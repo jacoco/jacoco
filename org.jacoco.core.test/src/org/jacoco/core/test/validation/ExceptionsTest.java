@@ -24,12 +24,6 @@ public class ExceptionsTest extends ValidationTestBase {
 		super(Target03.class);
 	}
 
-	@Override
-	protected void run(final Class<?> targetClass) throws Exception {
-		final Object instance = targetClass.newInstance();
-		((Runnable) instance).run();
-	}
-
 	@Test
 	public void testCoverageResult() {
 

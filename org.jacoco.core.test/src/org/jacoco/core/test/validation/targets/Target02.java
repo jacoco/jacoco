@@ -20,9 +20,9 @@ import static org.jacoco.core.test.validation.targets.Stubs.t;
 /**
  * This target exercises boolean expressions.
  */
-public class Target02 implements Runnable {
+public class Target02 {
 
-	public void run() {
+	public static void main(String[] args) {
 
 		// 1. Boolean comparison result (one case)
 		nop(i2() > 3); // $line-booleancmp1$
@@ -115,10 +115,6 @@ public class Target02 implements Runnable {
 			nop(!b); // $line-notTF$
 		}
 
-	}
-
-	public static void main(String[] args) {
-		new Target02().run();
 	}
 
 }

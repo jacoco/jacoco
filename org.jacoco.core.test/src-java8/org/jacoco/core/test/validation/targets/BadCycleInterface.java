@@ -16,7 +16,7 @@ public class BadCycleInterface {
 	public interface Base {
 		static final Object BASE_CONST = new Child() {
 			{
-				Stubs.nop("base clinit"); // $line-1$
+				Stubs.nop("base clinit"); // $line-baseclinit$
 			}
 		}.childDefaultMethod();
 
@@ -27,17 +27,17 @@ public class BadCycleInterface {
 	public interface Child extends Base {
 		static final Object CHILD_CONST = new Object() {
 			{
-				Stubs.nop("child clinit"); // $line-3$
+				Stubs.nop("child clinit"); // $line-childclinit$
 			}
 		};
 
 		default Object childDefaultMethod() {
-			Stubs.nop("child default method"); // $line-2$
+			Stubs.nop("child default method"); // $line-childdefault$
 			return null;
 		}
 
 		static void childStaticMethod() {
-			Stubs.nop("child static method"); // $line-4$
+			Stubs.nop("child static method"); // $line-childstatic$
 		}
 	}
 

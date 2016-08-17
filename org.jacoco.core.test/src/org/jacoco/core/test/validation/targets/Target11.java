@@ -18,16 +18,14 @@ import static org.jacoco.core.test.validation.targets.Stubs.nop;
  * This test target needs an explicit initial frame as the first instruction
  * already is a jump target.
  */
-public class Target11 implements Runnable {
+public class Target11 {
 
-	public void run() {
+	public static void main(String[] args) {
+
 		do {
 			nop(); // $line-dowhilebody$
 		} while (f());
-	}
 
-	public static void main(String[] args) {
-		new Target11().run();
 	}
 
 }

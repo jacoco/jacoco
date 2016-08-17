@@ -19,8 +19,6 @@ public class Target07 { // $line-classdef$
 	private Target07() {
 	} // $line-constructor$
 
-	public static final int CONST = 42;
-
 	public static void main(String[] args) {
 	}
 

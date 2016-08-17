@@ -18,7 +18,7 @@ import org.junit.Test;
 /**
  * Test of "bad cycles" with interfaces.
  */
-public class BadCycleInterfaceTest extends BadCycleTestBase {
+public class BadCycleInterfaceTest extends ValidationTestBase {
 
 	public BadCycleInterfaceTest() throws Exception {
 		super("src-java8", BadCycleInterface.class);
@@ -26,18 +26,16 @@ public class BadCycleInterfaceTest extends BadCycleTestBase {
 
 	@Test
 	public void test() throws Exception {
-		loader.loadClass(BadCycleInterface.Child.class.getName())
-				.getMethod("childStaticMethod").invoke(null);
-
-		analyze(BadCycleInterface.Child.class);
-
 		if (System.getProperty("java.version").startsWith("9-ea")) {
 			// JDK-9042842
-			assertLine("2", ICounter.NOT_COVERED);
+			assertLine("baseclinit", ICounter.EMPTY);
+			assertLine("childdefault", ICounter.NOT_COVERED);
 		} else {
-			assertLine("2", ICounter.FULLY_COVERED);
+			assertLine("baseclinit", ICounter.FULLY_COVERED);
+			assertLine("childdefault", ICounter.FULLY_COVERED);
 		}
-		assertLine("4", ICounter.FULLY_COVERED);
+		assertLine("childclinit", ICounter.FULLY_COVERED);
+		assertLine("childstatic", ICounter.FULLY_COVERED);
 	}
 
 }

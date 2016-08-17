@@ -24,11 +24,6 @@ public class InterfaceOnlyDefaultMethodsTest extends ValidationTestBase {
 		super("src-java8", InterfaceOnlyDefaultMethodsTarget.class);
 	}
 
-	@Override
-	protected void run(final Class<?> targetClass) throws Exception {
-		loader.add(InterfaceOnlyDefaultMethodsTarget.Impl.class).newInstance();
-	}
-
 	@Test
 	public void testCoverageResult() {
 		assertLine("m1", ICounter.FULLY_COVERED);

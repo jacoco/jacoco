@@ -24,11 +24,6 @@ public class ProbesBeforeSuperConstructorTest extends ValidationTestBase {
 		super(Target10.class);
 	}
 
-	@Override
-	protected void run(final Class<?> targetClass) throws Exception {
-		targetClass.newInstance();
-	}
-
 	@Test
 	public void testCoverageResult() {
 

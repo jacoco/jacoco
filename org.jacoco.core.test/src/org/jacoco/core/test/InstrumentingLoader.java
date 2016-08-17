@@ -12,7 +12,6 @@
 package org.jacoco.core.test;
 
 import java.io.IOException;
-import java.io.InputStream;
 
 import org.jacoco.core.data.ExecutionDataStore;
 import org.jacoco.core.data.SessionInfoStore;
@@ -21,31 +20,47 @@ import org.jacoco.core.runtime.IRuntime;
 import org.jacoco.core.runtime.RuntimeData;
 import org.jacoco.core.runtime.SystemPropertiesRuntime;
 
+/**
+ * Class loader which loads classes from another class loader and instruments
+ * them.
+ */
 public final class InstrumentingLoader extends ClassLoader {
 
-	private final RuntimeData data;
 	private final IRuntime runtime;
+	private final String scope;
+	private final ClassLoader delegate;
 
-	public InstrumentingLoader() throws Exception {
-		data = new RuntimeData();
-		runtime = new SystemPropertiesRuntime();
+	private final RuntimeData data;
+	private final Instrumenter instrumenter;
+
+	public InstrumentingLoader(IRuntime runtime, String scope,
+			ClassLoader delegate) throws Exception {
+		this.runtime = runtime;
+		this.scope = scope;
+		this.delegate = delegate;
+		this.data = new RuntimeData();
 		runtime.startup(data);
+		this.instrumenter = new Instrumenter(runtime);
+	}
+
+	public InstrumentingLoader(Class<?> target) throws Exception {
+		this(new SystemPropertiesRuntime(), target.getPackage().getName(),
+				target.getClassLoader());
 	}
 
 	@Override
 	protected synchronized Class<?> loadClass(String name, boolean resolve)
 			throws ClassNotFoundException {
-		if (name.startsWith("org.jacoco.core.test.validation.targets.")) {
+		if (name.startsWith(scope)) {
 			final byte[] bytes;
 			try {
-				bytes = getClassBytes(name);
+				bytes = TargetLoader.getClassDataAsBytes(delegate, name);
 			} catch (IOException e) {
 				throw new ClassNotFoundException("Unable to load", e);
 			}
 			final byte[] instrumented;
 			try {
-				instrumented = new Instrumenter(runtime).instrument(bytes,
-						name);
+				instrumented = instrumenter.instrument(bytes, name);
 			} catch (IOException e) {
 				throw new ClassNotFoundException("Unable to instrument", e);
 			}
@@ -57,12 +72,6 @@ public final class InstrumentingLoader extends ClassLoader {
 			return c;
 		}
 		return super.loadClass(name, resolve);
-	}
-
-	public byte[] getClassBytes(String name) throws IOException {
-		final String resource = "/" + name.replace('.', '/') + ".class";
-		final InputStream in = getClass().getResourceAsStream(resource);
-		return TargetLoader.getClassDataAsBytes(in);
 	}
 
 	public ExecutionDataStore collect() {

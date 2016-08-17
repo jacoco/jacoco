@@ -18,7 +18,7 @@ import org.junit.Test;
 /**
  * Test of "bad cycles" with classes.
  */
-public class BadCycleClassTest extends BadCycleTestBase {
+public class BadCycleClassTest extends ValidationTestBase {
 
 	public BadCycleClassTest() throws Exception {
 		super(BadCycleClass.class);
@@ -26,12 +26,9 @@ public class BadCycleClassTest extends BadCycleTestBase {
 
 	@Test
 	public void test() throws Exception {
-		loader.loadClass(BadCycleClass.Child.class.getName()).newInstance();
-
-		analyze(BadCycleClass.Child.class);
-		assertLine("1", ICounter.FULLY_COVERED);
-		assertLine("2", ICounter.FULLY_COVERED);
-		assertLine("3", ICounter.FULLY_COVERED);
+		assertLine("childinit", ICounter.FULLY_COVERED);
+		assertLine("childsomeMethod", ICounter.FULLY_COVERED);
+		assertLine("childclinit", ICounter.FULLY_COVERED);
 	}
 
 }

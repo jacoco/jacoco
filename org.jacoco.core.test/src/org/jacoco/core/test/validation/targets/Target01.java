@@ -21,9 +21,9 @@ import java.util.Collections;
 /**
  * This target exercises a set of common Java control structures.
  */
-public class Target01 implements Runnable {
+public class Target01 {
 
-	public void run() {
+	public static void main(String[] args) {
 
 		// 1. Unconditional execution
 		nop(); // $line-unconditional$
@@ -194,7 +194,7 @@ public class Target01 implements Runnable {
 
 	}
 
-	private void runReturn() {
+	private static void runReturn() {
 
 		// 20. Return statement
 		if (t()) {
@@ -204,13 +204,9 @@ public class Target01 implements Runnable {
 
 	}
 
-	private void runImplicitReturn() {
+	private static void runImplicitReturn() {
 
 		// 21. Implicit return
 	} // $line-implicitreturn$
-
-	public static void main(String[] args) {
-		new Target01().run();
-	}
 
 }

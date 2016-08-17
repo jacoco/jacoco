@@ -24,12 +24,6 @@ public class BooleanExpressionsTest extends ValidationTestBase {
 		super(Target02.class);
 	}
 
-	@Override
-	protected void run(final Class<?> targetClass) throws Exception {
-		final Object instance = targetClass.newInstance();
-		((Runnable) instance).run();
-	}
-
 	@Test
 	public void testCoverageResult() {
 

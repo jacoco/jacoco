@@ -24,12 +24,6 @@ public class LambdaExpressionsTest extends ValidationTestBase {
 		super("src-java8", LambdaExpressionsTarget.class);
 	}
 
-	@Override
-	protected void run(final Class<?> targetClass) throws Exception {
-		final Object instance = targetClass.newInstance();
-		((Runnable) instance).run();
-	}
-
 	@Test
 	public void testCoverageResult() {
 
