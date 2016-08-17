@@ -18,7 +18,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Loads a single class from a byte array.
+ * Loads given classes from a byte arrays.
  */
 public class TargetLoader extends ClassLoader {
 
@@ -36,10 +36,6 @@ public class TargetLoader extends ClassLoader {
 
 	public Class<?> add(final Class<?> name, final byte[] bytes) {
 		return add(name.getName(), bytes);
-	}
-
-	public Class<?> add(final Class<?> source) throws IOException {
-		return add(source.getName(), getClassDataAsBytes(source));
 	}
 
 	private Class<?> load(final String sourcename) {
