@@ -15,6 +15,8 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 
 import java.io.IOException;
+import java.lang.reflect.Method;
+import java.util.Arrays;
 
 import org.jacoco.core.analysis.Analyzer;
 import org.jacoco.core.analysis.CoverageBuilder;
@@ -26,6 +28,7 @@ import org.jacoco.core.data.ExecutionDataStore;
 import org.jacoco.core.internal.analysis.CounterImpl;
 import org.jacoco.core.test.InstrumentingLoader;
 import org.jacoco.core.test.TargetLoader;
+import org.jacoco.core.test.validation.targets.Stubs;
 import org.junit.Before;
 
 /**
@@ -37,19 +40,21 @@ public abstract class ValidationTestBase {
 	private static final String[] STATUS_NAME = new String[4];
 
 	{
-		STATUS_NAME[ICounter.EMPTY] = "NO_CODE";
+		STATUS_NAME[ICounter.EMPTY] = "EMPTY";
 		STATUS_NAME[ICounter.NOT_COVERED] = "NOT_COVERED";
 		STATUS_NAME[ICounter.FULLY_COVERED] = "FULLY_COVERED";
 		STATUS_NAME[ICounter.PARTLY_COVERED] = "PARTLY_COVERED";
 	}
 
-	protected final String srcFolder;
+	private final String srcFolder;
 
-	protected final Class<?> target;
+	private final Class<?> target;
 
-	protected ISourceFileCoverage sourceCoverage;
+	private ISourceFileCoverage sourceCoverage;
 
-	protected Source source;
+	private Source source;
+
+	private InstrumentingLoader loader;
 
 	protected ValidationTestBase(final String srcFolder, final Class<?> target) {
 		this.srcFolder = srcFolder;
@@ -68,7 +73,7 @@ public abstract class ValidationTestBase {
 	}
 
 	private ExecutionDataStore execute() throws Exception {
-		InstrumentingLoader loader = new InstrumentingLoader(target);
+		loader = new InstrumentingLoader(target);
 		run(loader.loadClass(target.getName()));
 		return loader.collect();
 	}
@@ -126,6 +131,12 @@ public abstract class ValidationTestBase {
 			final int missedBranches, final int coveredBranches) {
 		assertLine(tag, status);
 		assertLine(tag, missedBranches, coveredBranches);
+	}
+
+	protected void assertLogEvents(String... events) throws Exception {
+		final Method getter = Class.forName(Stubs.class.getName(), false,
+				loader).getMethod("getLogEvents");
+		assertEquals("Log events", Arrays.asList(events), getter.invoke(null));
 	}
 
 }

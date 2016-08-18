@@ -29,6 +29,11 @@ public class BadCycleClassTest extends ValidationTestBase {
 		assertLine("childinit", ICounter.FULLY_COVERED);
 		assertLine("childsomeMethod", ICounter.FULLY_COVERED);
 		assertLine("childclinit", ICounter.FULLY_COVERED);
+
+		// The cycle causes a constructor and instance method to be called
+		// before the static initializer of a class:
+		assertLogEvents("childinit", "childsomeMethod", "childclinit",
+				"childinit");
 	}
 
 }
