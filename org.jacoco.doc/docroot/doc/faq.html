@@ -141,6 +141,14 @@
   <code>-Xshareclasses:none</code>.
 </p>
 
+<h3>Why do I get an error "<code>ClassNotFoundException: org.jacoco.agent[...]Offline</code>"?</h3>
+<p>
+  If you use <a href="offline.html">offline instrumentation</a> the instrumented
+  classes get a direct dependency on the JaCoCo runtime. Therefore
+  <code>jacocoagent.jar</code> of the same JaCoCo version must be on the
+  classpath and accessible from by the instrumented classes. 
+</p>
+
 </div>
 <div class="footer">
   <span class="right"><a href="@jacoco.home.url@">JaCoCo</a> @qualified.bundle.version@</span>
