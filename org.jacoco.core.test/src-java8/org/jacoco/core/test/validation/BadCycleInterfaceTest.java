@@ -26,22 +26,23 @@ public class BadCycleInterfaceTest extends ValidationTestBase {
 
 	@Test
 	public void test() throws Exception {
-		if (System.getProperty("java.version").startsWith("9-ea")) {
-			// JDK-9042842
-			assertLine("baseclinit", ICounter.EMPTY);
-			assertLine("childdefault", ICounter.NOT_COVERED);
-			assertLogEvents("childclinit", "childstaticmethod");
-		} else {
+		if (System.getProperty("java.version").startsWith("1.8")) {
+			// Incorrect interpetation of JVMS 5.5 in JDK 8 causes a default
+			// method to be called before the static initializer of an interface
+			// (see JDK-8098557 and JDK-8164302):
 			assertLine("baseclinit", ICounter.FULLY_COVERED);
 			assertLine("childdefault", ICounter.FULLY_COVERED);
 
-			// The cycle causes a default method to be called before the static
-			// initializer of a interface:
 			assertLogEvents("baseclinit", "childdefaultmethod", "childclinit",
 					"childstaticmethod");
+		} else {
+			// This shouldn't happen with JDK 9 (see also JDK-8043275):
+			assertLine("baseclinit", ICounter.EMPTY);
+			assertLine("childdefault", ICounter.NOT_COVERED);
+			assertLogEvents("childclinit", "childstaticmethod");
 		}
 		assertLine("childclinit", ICounter.FULLY_COVERED);
 		assertLine("childstatic", ICounter.FULLY_COVERED);
-
 	}
+
 }
