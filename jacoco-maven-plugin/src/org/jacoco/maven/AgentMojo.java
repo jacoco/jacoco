@@ -36,7 +36,7 @@ import org.apache.maven.plugins.annotations.ResolutionScope;
  * </p>
  *
  * <p>
- * One of the ways to do this in case of maven-surefore-plugin - is to use
+ * One of the ways to do this in case of maven-surefire-plugin - is to use
  * syntax for <a href="http://maven.apache.org/surefire/maven-surefire-plugin/faq.html#late-property-evaluation">late property evaluation</a>:
  * </p>
  * 
