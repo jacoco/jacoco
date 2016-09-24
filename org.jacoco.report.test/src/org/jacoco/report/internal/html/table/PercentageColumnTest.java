@@ -98,6 +98,16 @@ public class PercentageColumnTest {
 	}
 
 	@Test
+	public void testRounding() throws Exception {
+		final ITableItem item = createItem(1, 199);
+		column.item(td, item, resources, root);
+		doc.close();
+		final Document doc = support.parse(output.getFile("Test.html"));
+		assertEquals("99%",
+				support.findStr(doc, "/html/body/table/tr/td[1]/text()"));
+	}
+
+	@Test
 	public void testLocale() throws Exception {
 		IColumnRenderer column = new PercentageColumn(CounterEntity.LINE,
 				Locale.FRENCH);
