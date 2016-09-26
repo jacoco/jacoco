@@ -12,7 +12,8 @@
 package org.jacoco.report.internal.html.table;
 
 import java.io.IOException;
-import java.text.DecimalFormat;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.text.NumberFormat;
 import java.util.Comparator;
 import java.util.List;
@@ -50,7 +51,7 @@ public class PercentageColumn implements IColumnRenderer {
 	 */
 	public PercentageColumn(final CounterEntity entity, final Locale locale) {
 		this.entity = entity;
-		this.percentageFormat = DecimalFormat.getPercentInstance(locale);
+		this.percentageFormat = NumberFormat.getPercentInstance(locale);
 		comparator = new TableItemComparator(
 				CounterComparator.MISSEDRATIO.on(entity));
 	}
@@ -79,8 +80,19 @@ public class PercentageColumn implements IColumnRenderer {
 		if (total == 0) {
 			td.text("n/a");
 		} else {
-			td.text(percentageFormat.format(counter.getCoveredRatio()));
+			td.text(format(counter.getCoveredRatio()));
 		}
+	}
+
+	/**
+	 * Ratio 199/(1+199)=0.995 must be displayed as "99%", not as "100%".
+	 * Unfortunately {@link NumberFormat} uses {@link RoundingMode#HALF_EVEN} by
+	 * default and ability to change available only starting from JDK 6, so
+	 * perform rounding using {@link RoundingMode#FLOOR} before formatting.
+	 */
+	private String format(double ratio) {
+		return percentageFormat.format(
+				BigDecimal.valueOf(ratio).setScale(2, RoundingMode.FLOOR));
 	}
 
 	public Comparator<ITableItem> getComparator() {

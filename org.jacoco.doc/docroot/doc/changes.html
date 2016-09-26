@@ -29,6 +29,10 @@
 
 <h3>Fixed Bugs</h3>
 <ul>
+  <li>Use <code>RoundingMode#FLOOR</code> instead of
+      <code>RoundingMode#HALF_EVEN</code> for percentages in HTML report, so that
+      "99.5" is displayed as "99%", not as "100%"
+      (GitHub <a href="https://github.com/jacoco/jacoco/issues/452">#452</a>).</li>
   <li>Do not add useless members into Java 8 interfaces that have only interface
       initialization and abstract methods
       (GitHub <a href="https://github.com/jacoco/jacoco/issues/441">#441</a>).</li>
