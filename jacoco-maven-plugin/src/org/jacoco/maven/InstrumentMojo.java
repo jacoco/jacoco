@@ -50,8 +50,13 @@ public class InstrumentMojo extends AbstractJacocoMojo {
 		final File originalClassesDir = new File(getProject().getBuild()
 				.getDirectory(), "generated-classes/jacoco");
 		originalClassesDir.mkdirs();
-		final File classesDir = new File(
-				getProject().getBuild().getOutputDirectory());
+
+		if (instrumentedClasses != null) {
+			getLog().info("Using custom instrumentation directory:" + instrumentedClasses);
+		}
+
+		final File classesDir = new File(instrumentedClasses == null ?
+				getProject().getBuild().getOutputDirectory() : instrumentedClasses);
 		if (!classesDir.exists()) {
 			getLog().info(
 					"Skipping JaCoCo execution due to missing classes directory:" +

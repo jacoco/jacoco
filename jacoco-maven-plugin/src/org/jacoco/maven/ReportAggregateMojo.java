@@ -130,7 +130,7 @@ public class ReportAggregateMojo extends AbstractReportMojo {
 		final IReportGroupVisitor group = visitor.visitGroup(title);
 		for (final MavenProject dependency : findDependencies(Artifact.SCOPE_COMPILE)) {
 			support.processProject(group, dependency.getArtifactId(),
-					dependency, getIncludes(), getExcludes(), sourceEncoding);
+					dependency, getIncludes(), getExcludes(), sourceEncoding, instrumentedClasses);
 		}
 	}
 

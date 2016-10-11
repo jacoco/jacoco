@@ -52,7 +52,7 @@ public class ReportMojo extends AbstractReportMojo {
 
 	@Override
 	boolean canGenerateReportRegardingClassesDirectory() {
-		return new File(getProject().getBuild().getOutputDirectory()).exists();
+		return new File(instrumentedClasses == null ? getProject().getBuild().getOutputDirectory() : instrumentedClasses).exists();
 	}
 
 	@Override
@@ -71,7 +71,7 @@ public class ReportMojo extends AbstractReportMojo {
 	void createReport(final IReportGroupVisitor visitor,
 			final ReportSupport support) throws IOException {
 		support.processProject(visitor, title, getProject(), getIncludes(),
-				getExcludes(), sourceEncoding);
+				getExcludes(), sourceEncoding, instrumentedClasses);
 	}
 
 	@Override

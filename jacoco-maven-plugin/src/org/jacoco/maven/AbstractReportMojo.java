@@ -80,6 +80,12 @@ public abstract class AbstractReportMojo extends AbstractMavenReport {
 	boolean skip;
 
 	/**
+	 * The custom location for instrumented classes.
+	 */
+	@Parameter(property = "instrumentedClasses")
+	protected String instrumentedClasses;
+
+	/**
 	 * Maven project.
 	 */
 	@Parameter(property = "project", readonly = true)

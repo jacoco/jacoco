@@ -30,7 +30,7 @@ import org.jacoco.report.check.Rule;
 
 /**
  * Checks that the code coverage metrics are being met.
- * 
+ *
  * @since 0.6.1
  */
 @Mojo(name = "check", defaultPhase = LifecyclePhase.VERIFY, threadSafe = true)
@@ -175,7 +175,7 @@ public class CheckMojo extends AbstractJacocoMojo implements IViolationsOutput {
 			final IReportVisitor visitor = support.initRootVisitor();
 			support.loadExecutionData(dataFile);
 			support.processProject(visitor, getProject(), this.getIncludes(),
-					this.getExcludes());
+					this.getExcludes(), instrumentedClasses);
 			visitor.visitEnd();
 		} catch (final IOException e) {
 			throw new MojoExecutionException(
