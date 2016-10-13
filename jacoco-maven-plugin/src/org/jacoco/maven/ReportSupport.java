@@ -51,7 +51,7 @@ import org.jacoco.report.xml.XMLFormatter;
  * <ol>
  * <li>Create an instance</li>
  * <li>Load one or multiple exec files with <code>loadExecutionData()</code></li>
- * <li>Add one ore multiple formatters with <code>addXXX()</code> methods</li>
+ * <li>Add one or multiple formatters with <code>addXXX()</code> methods</li>
  * <li>Create the root visitor with <code>initRootVisitor()</code></li>
  * <li>Process one or multiple projects with <code>processProject()</code></li>
  * </ol>
