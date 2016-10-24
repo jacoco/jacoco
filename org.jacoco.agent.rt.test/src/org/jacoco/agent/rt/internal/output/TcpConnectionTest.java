@@ -22,6 +22,7 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.Future;
 
 import org.jacoco.agent.rt.internal.output.TcpConnection;
+import org.jacoco.core.data.ExecutionData;
 import org.jacoco.core.data.ExecutionDataStore;
 import org.jacoco.core.data.ExecutionDataWriter;
 import org.jacoco.core.data.SessionInfo;
@@ -150,7 +151,8 @@ public class TcpConnectionTest extends ExecutorTestBase {
 
 	@Test
 	public void testRemoteDump() throws Exception {
-		data.getExecutionData(Long.valueOf(0x12345678), "Foo", 42);
+	    ExecutionData execData = data.getExecutionData(Long.valueOf(0x12345678), "Foo", 42);
+	    execData.getProbes()[0] = true;
 		data.setSessionId("stubid");
 
 		final RemoteControlWriter remoteWriter = new RemoteControlWriter(
@@ -178,11 +180,12 @@ public class TcpConnectionTest extends ExecutorTestBase {
 
 	@Test
 	public void testLocalDump() throws Exception {
-		data.getExecutionData(Long.valueOf(0x12345678), "Foo", 42);
+	    ExecutionData execData = data.getExecutionData(Long.valueOf(0x12345678), "Foo", 42);
+		execData.getProbes()[0] = true;
 		data.setSessionId("stubid");
 
 		new RemoteControlWriter(mockConnection.getSocketB().getOutputStream());
-
+ 
 		final TcpConnection con = new TcpConnection(
 				mockConnection.getSocketA(), data);
 		con.init();

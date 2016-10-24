@@ -23,6 +23,7 @@ import java.util.List;
 import org.jacoco.agent.rt.internal.ExceptionRecorder;
 import org.jacoco.agent.rt.internal.output.IAgentOutput;
 import org.jacoco.agent.rt.internal.output.TcpClientOutput;
+import org.jacoco.core.data.ExecutionData;
 import org.jacoco.core.data.ExecutionDataStore;
 import org.jacoco.core.data.SessionInfo;
 import org.jacoco.core.data.SessionInfoStore;
@@ -91,9 +92,15 @@ public class TcpClientOutputTest {
 		logger.assertException(IOException.class, "No session info visitor.");
 	}
 
+	/**
+	 * 这个方法因为增加了对ExecutionData 中的探针集合数值的判断，所以此方法不对了
+	 * @throws Exception
+	 */
 	@Test
 	public void testWriteExecutionData() throws Exception {
-		data.getExecutionData(Long.valueOf(0x12345678), "Foo", 42);
+	    
+	    ExecutionData execData = data.getExecutionData(Long.valueOf(0x12345678), "Foo", 42);
+	    execData.getProbes()[0] = true;
 		data.setSessionId("stubid");
 
 		controller.writeExecutionData(false);
@@ -106,13 +113,13 @@ public class TcpClientOutputTest {
 		remoteReader.read();
 
 		assertEquals("Foo", execStore.get(0x12345678).getName());
-
 		final List<SessionInfo> infos = infoStore.getInfos();
 		assertEquals(1, infos.size());
 		assertEquals("stubid", infos.get(0).getId());
 
 		logger.assertNoException();
 		controller.shutdown();
+		
 	}
 
 }

@@ -159,7 +159,7 @@ public class MockSocketConnectionTest extends ExecutorTestBase {
 
 		assertBlocks(f);
 		out.write(123);
-		assertEquals(123, f.get().byteValue());
+		assertEquals(123, f.get().intValue());
 	}
 
 	@Test
@@ -182,7 +182,7 @@ public class MockSocketConnectionTest extends ExecutorTestBase {
 		assertBlocks(f);
 		b.close();
 
-		assertEquals(-1, f.get().byteValue());
+		assertEquals(-1, f.get().intValue());
 	}
 
 }

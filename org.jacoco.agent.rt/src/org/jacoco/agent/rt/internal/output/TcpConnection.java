@@ -113,9 +113,11 @@ class TcpConnection implements IRemoteCommandVisitor {
 	public void visitDumpCommand(final boolean dump, final boolean reset)
 			throws IOException {
 		if (dump) {
-			if (options != null && options.getId("Id", 0) > 0) {
-				writer.writeHeader();
-			}
+//			if (options != null && options.getId("Id", 0) > 0) {
+		    //每次发起数据的读取动作，都同时写出数据头,在ExecutionDataReader 中进行操作，排除对writer.writeHeader();的操作
+//			writer.writeHeader();
+//			}
+			
 			data.collect(writer, writer, reset);
 		} else {
 			if (reset) {

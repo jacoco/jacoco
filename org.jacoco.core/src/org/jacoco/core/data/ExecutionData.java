@@ -44,6 +44,21 @@ public final class ExecutionData {
 		this.name = name;
 		this.probes = probes;
 	}
+	
+	
+	/**
+     * Checks whether any probe has been hit.
+     * 
+     * @return <code>true</code>, if at least one probe has been hit
+     */
+    public boolean hasHits() {
+        for (final boolean p : probes) {
+            if (p) {
+                return true;
+            }
+        }
+        return false;
+    }
 
 	/**
 	 * Creates a new {@link ExecutionData} object with the given probe data

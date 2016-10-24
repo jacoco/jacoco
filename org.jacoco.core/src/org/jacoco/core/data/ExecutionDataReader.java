@@ -42,8 +42,21 @@ public class ExecutionDataReader {
 	}
 
 	private boolean firstBlock = true;
-
+	
 	/**
+	 * 是否是新的client
+	 */
+	private boolean isNewClient = false;
+	
+	public boolean isNewClient() {
+        return isNewClient;
+    }
+
+    public void setNewClient(boolean isNewClient) {
+        this.isNewClient = isNewClient;
+    }
+
+    /**
 	 * Creates a new reader based on the given input stream input. Depending on
 	 * the nature of the underlying stream input should be buffered as most data
 	 * is read in single bytes.
@@ -92,15 +105,27 @@ public class ExecutionDataReader {
 		try {
 			byte type;
 			do {
-				type = in.readByte();
+//				type = in.readByte();
+				
+				int i = in.read();
+	            if (i == -1) {
+	                return false; // EOF
+	            }
+	            type = (byte) i;
+				
 				if (type == ExecutionDataWriter.BLOCK_FIRSTHAND) {
 					System.out.println("ExecutionDataWriter.BLOCK_FIRSTHAND");
 					continue;
 				}
-				if (firstBlock && type != ExecutionDataWriter.BLOCK_HEADER) {
-					throw new IOException("Invalid execution data file.");
+				
+				//如果不是初次建立的client，那么将直接读取数据，而不判断第一个字符是否是ExecutionDataWriter.BLOCK_HEADER
+				if (!isNewClient) {
+				    
+				    if (firstBlock && type != ExecutionDataWriter.BLOCK_HEADER) {
+	                    throw new IOException("Invalid execution data file.");
+	                }
+	                firstBlock = false;
 				}
-				firstBlock = false;
 				
 			} while (readBlock(type));
 			return true;
@@ -131,7 +156,7 @@ public class ExecutionDataReader {
 			readExecutionData();
 			return true;
 		case ExecutionDataWriter.BLOCK_FIRSTHAND:
-			//读取id实例后停止此次操作，后欣的数据读取待后面完成
+			//读取id实例后停止此次操作，后续的数据读取待后面完成
 			readClientId();
 			return false;
 		default:

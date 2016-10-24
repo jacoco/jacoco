@@ -186,32 +186,33 @@ public final class ExecutionDataStore implements IExecutionDataVisitor {
 	 */
 	public void accept(final IExecutionDataVisitor visitor) {
 		
-		if (options != null && options.getId("Id", 0) > 0){
-			for (final ExecutionData data : getContents()) {
-				//此处增加对ExecutionData 对象中probes[] 集合的判断，如果全部为false 则不写出到客户端，否则写
-				
-					if (data != null && data.getProbes() != null && data.getProbes().length > 0) {
-						
-						int length = data.getProbes().length;
-						boolean isExec = false;
-						for (int i=0;i<length;i++) {
-							if (data.getProbes()[i]) {
-								isExec = true;
-								break;
-							}
-						}
-						if (isExec) {
-							visitor.visitClassExecution(data);
-						}
-				}
-			}
-					
-		}
-		else {
+	    //增加了对ExecutionData 数据的判断
+//		if (options != null && options.getId("Id", 0) > 0){
+//			for (final ExecutionData data : getContents()) {
+//				//此处增加对ExecutionData 对象中probes[] 集合的判断，如果全部为false 则不写出到客户端，否则写
+//				
+//					if (data != null && data.getProbes() != null && data.getProbes().length > 0) {
+//						
+//						int length = data.getProbes().length;
+//						boolean isExec = false;
+//						for (int i=0;i<length;i++) {
+//							if (data.getProbes()[i]) {
+//								isExec = true;
+//								break;
+//							}
+//						}
+//						if (isExec) {
+//							visitor.visitClassExecution(data);
+//						}
+//				}
+//			}
+//					
+//		}
+//		else {
 			for (final ExecutionData data : getContents()) {
 				visitor.visitClassExecution(data);
 			}
-		}
+//		}
 	}
 
 	// === IExecutionDataVisitor ===

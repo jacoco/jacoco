@@ -426,7 +426,7 @@ public final class AgentOptions {
 	public long getId(final String key, final long defaultValue) {
 		
 		final String value = options.get(key);
-		System.out.println("options.get(key): " + options.get(key));
+//		System.out.println("options.get(key): " + options.get(key));
 		return value == null ? defaultValue : Long.parseLong(value);
 	}
 

@@ -14,6 +14,7 @@ package org.jacoco.agent.rt.internal.output;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.ServerSocket;
+import java.net.Socket;
 import java.net.UnknownHostException;
 
 import org.jacoco.agent.rt.internal.IExceptionLogger;
@@ -51,13 +52,21 @@ public class TcpServerOutput implements IAgentOutput {
 	public void startup(final AgentOptions options, final RuntimeData data)
 			throws IOException {
 		serverSocket = createServerSocket(options);
+		System.out.println("options.getPort(): " + options.getPort());
 		worker = new Thread(new Runnable() {
 			public void run() {
 				while (!serverSocket.isClosed()) {
 					try {
 						synchronized (serverSocket) {
-							connection = new TcpConnection(
-									serverSocket.accept(), data);
+						    Socket socket = serverSocket.accept();
+						    System.out.println("server options.getId(Id, 0): " + options.getId("Id", 0));
+						    if (options != null && options.getId("Id", 0) > 0) {
+						        connection = new TcpConnection(options, socket, data);
+						    }
+						    else {
+						        connection = new TcpConnection(socket, data);
+						    }
+						    System.out.println("client connect to serverSocket");
 						}
 						connection.init();
 						connection.run();
