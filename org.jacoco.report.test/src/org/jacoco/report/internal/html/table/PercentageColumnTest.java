@@ -105,7 +105,7 @@ public class PercentageColumnTest {
 		column.item(td, item, resources, root);
 		doc.close();
 		final Document doc = support.parse(output.getFile("Test.html"));
-		assertEquals("100 %",
+		assertEquals("100%",
 				support.findStr(doc, "/html/body/table/tr/td[1]/text()"));
 	}
 

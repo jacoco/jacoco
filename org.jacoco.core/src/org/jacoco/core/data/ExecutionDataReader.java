@@ -105,7 +105,6 @@ public class ExecutionDataReader {
 		try {
 			byte type;
 			do {
-//				type = in.readByte();
 				
 				int i = in.read();
 	            if (i == -1) {
@@ -117,6 +116,12 @@ public class ExecutionDataReader {
 					System.out.println("ExecutionDataWriter.BLOCK_FIRSTHAND");
 					continue;
 				}
+				
+				//解决心跳文件，服务端可以发送心跳消息来检测客户端是否存在了
+				if (type == ExecutionDataWriter.BLOCK_HEART) {
+                    System.out.println("ExecutionDataWriter.BLOCK_HEART");
+                    continue;
+                }
 				
 				//如果不是初次建立的client，那么将直接读取数据，而不判断第一个字符是否是ExecutionDataWriter.BLOCK_HEADER
 				if (!isNewClient) {
@@ -159,6 +164,10 @@ public class ExecutionDataReader {
 			//读取id实例后停止此次操作，后续的数据读取待后面完成
 			readClientId();
 			return false;
+		case ExecutionDataWriter.BLOCK_HEART:
+            //心跳要持续读取
+            readHeart();
+            return true;
 		default:
 			throw new IOException(format("Unknown block type %x.",
 					Byte.valueOf(blocktype)));
@@ -192,6 +201,16 @@ public class ExecutionDataReader {
 		System.out.println("in.readLong(): " + id);
 		clientInfoVisitor.visitClientInfo(new ClientInfo(id));
 	}
+	
+	/**
+	 * 心跳，为了检测当前的client是否存在了
+	 * @throws IOException
+	 */
+	private void readHeart() throws IOException {
+        
+        long id = in.readLong();
+        System.out.println("in.readLong(): " + id);
+    }
 	
 	private void readExecutionData() throws IOException {
 		if (executionDataVisitor == null) {

@@ -21,7 +21,7 @@ public class SocketClientData implements IClientInfoVisitor {
 	public void setInfo(ClientInfo info) {
 		this.info = info;
 	}
-	@Override
+	
 	public void visitClientInfo(ClientInfo info) {
 		this.info = info;
 	}

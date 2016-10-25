@@ -40,6 +40,9 @@ public class ExecutionDataWriter implements ISessionInfoVisitor,
 
 	/** Block identifier for file headers. */
 	public static final byte BLOCK_FIRSTHAND = 0x21;
+	
+	/** Block identifier for BLOCK_HEART. */
+    public static final byte BLOCK_HEART = 0x31;
 
 	/** Underlying data output */
 	protected final CompactDataOutput out;
