@@ -20,7 +20,7 @@
   <packaging>jar</packaging>
 
   <name>JaCoCo Maven plug-in example</name>
-  <url>http://www.eclemma.org/jacoco</url>
+  <url>http://www.jacoco.org/jacoco</url>
 
   <dependencies>
     <dependency>

@@ -131,7 +131,7 @@
     <sonatypeOssDistMgmtSnapshotsUrl>https://oss.sonatype.org/content/repositories/snapshots/</sonatypeOssDistMgmtSnapshotsUrl>
 
     <maven.build.timestamp.format>yyyyMMddhhmm</maven.build.timestamp.format>
-    <jacoco.home.url>http://www.eclemma.org/jacoco</jacoco.home.url>
+    <jacoco.home.url>http://www.jacoco.org/jacoco</jacoco.home.url>
     <copyright.years>${project.inceptionYear}, 2016</copyright.years>
 
     <maven.compiler.source>1.5</maven.compiler.source>
