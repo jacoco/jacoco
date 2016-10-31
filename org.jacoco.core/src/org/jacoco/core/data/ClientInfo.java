@@ -13,15 +13,23 @@ package org.jacoco.core.data;
 
 public class ClientInfo {
 	private long id;
+	private int type;
 	
-	public long getId() {
+	public int getType() {
+        return type;
+    }
+    public void setType(int type) {
+        this.type = type;
+    }
+    public long getId() {
 		return id;
 	}
 	public void setId(long id) {
 		this.id = id;
 	}
-	public ClientInfo(long id) {
+	public ClientInfo(long id, int type) {
 		this.id = id;
+		this.type = type;
 	}
 	
 	

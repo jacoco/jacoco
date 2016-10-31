@@ -44,8 +44,8 @@ public class RemoteControlWriter extends ExecutionDataWriter implements
 		super.writeHeader();
 	}
 	
-	public void writeFirstHand(long id) throws IOException {
-		super.writeFirstHand(id);
+	public void writeFirstHand(long id, int type) throws IOException {
+		super.writeFirstHand(id, type);
 	}
 
 	/**
