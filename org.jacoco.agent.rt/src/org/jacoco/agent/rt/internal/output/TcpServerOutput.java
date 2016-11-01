@@ -53,14 +53,14 @@ public class TcpServerOutput implements IAgentOutput {
 			throws IOException {
 		serverSocket = createServerSocket(options);
 		System.out.println("options.getPort(): " + options.getPort());
-		System.out.println("server options.getId(DEFAULT_ID, 0): " + options.getId(AgentOptions.DEFAULT_ID, 0));
 		worker = new Thread(new Runnable() {
 			public void run() {
 				while (!serverSocket.isClosed()) {
 					try {
 						synchronized (serverSocket) {
 						    Socket socket = serverSocket.accept();
-						    if (options != null && options.getId(AgentOptions.DEFAULT_ID, 0) > 0) {
+						    System.out.println("server options.getId(Id, 0): " + options.getId("Id", 0));
+						    if (options != null && options.getId("Id", 0) > 0) {
 						        connection = new TcpConnection(options, socket, data);
 						    }
 						    else {

@@ -198,9 +198,8 @@ public class ExecutionDataReader {
 	private void readClientId() throws IOException {
 		
 		long id = in.readLong();
-		int type = in.readInt();
 		System.out.println("in.readLong(): " + id);
-		clientInfoVisitor.visitClientInfo(new ClientInfo(id, type));
+		clientInfoVisitor.visitClientInfo(new ClientInfo(id));
 	}
 	
 	/**

@@ -162,9 +162,7 @@ public final class AgentOptions {
 	 */
 	public static final String DEFAULT_ADDRESS = null;
 
-	public static final String DEFAULT_ID = "id";
-	
-	public static final String DEFAULT_TYPE = "type";
+	public static final String DEFAULT_ID = "Id";
 
 	/**
 	 * The port the tcpserver binds to or the tcpclient connects to. In
@@ -195,7 +193,7 @@ public final class AgentOptions {
 	private static final Collection<String> VALID_OPTIONS = Arrays.asList(
 			DESTFILE, APPEND, INCLUDES, EXCLUDES, EXCLCLASSLOADER,
 			INCLBOOTSTRAPCLASSES, INCLNOLOCATIONCLASSES, SESSIONID, DUMPONEXIT,
-			OUTPUT, ADDRESS, PORT, CLASSDUMPDIR, JMX, DEFAULT_ID, DEFAULT_TYPE);
+			OUTPUT, ADDRESS, PORT, CLASSDUMPDIR, JMX, DEFAULT_ID);
 
 	private final Map<String, String> options;
 
@@ -428,16 +426,9 @@ public final class AgentOptions {
 	public long getId(final String key, final long defaultValue) {
 		
 		final String value = options.get(key);
-		System.out.println("options.get(key): " + key + " -- " + options.get(key));
+//		System.out.println("options.get(key): " + options.get(key));
 		return value == null ? defaultValue : Long.parseLong(value);
 	}
-	
-	public int getType(final String key, final int defaultValue) {
-        
-        final String value = options.get(key);
-        System.out.println("options.get(key): " + key + " -- " + options.get(key));
-        return value == null ? defaultValue : Integer.parseInt(value);
-    }
 
 	/**
 	 * Returns whether coverage data should be dumped on exit.

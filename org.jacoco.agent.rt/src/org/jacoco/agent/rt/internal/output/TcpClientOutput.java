@@ -48,8 +48,8 @@ public class TcpClientOutput implements IAgentOutput {
 			throws IOException {
 		final Socket socket = createSocket(options);
 		
-		System.out.println("TcpClientOutput: " + options.getId(AgentOptions.DEFAULT_ID, 0));
-		if (options != null && options.getId(AgentOptions.DEFAULT_ID, 0) > 0) {
+		System.out.println("TcpClientOutput: " + options.getId("Id", 0));
+		if (options != null && options.getId("Id", 0) > 0) {
 			connection = new TcpConnection(options, socket, data);
 		}
 		else {

@@ -96,7 +96,7 @@ public class Agent implements IAgent {
 		this.options = options;
 		this.logger = logger;
 		
-		if (options.getId(AgentOptions.DEFAULT_ID, 0) > 0) {
+		if (options.getId("Id", 0) > 0) {
 			this.data = new RuntimeData(options);
 		}
 		else {
