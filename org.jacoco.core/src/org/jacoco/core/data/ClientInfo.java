@@ -13,8 +13,7 @@ package org.jacoco.core.data;
 
 public class ClientInfo {
 	private long id;
-	
-	public long getId() {
+    public long getId() {
 		return id;
 	}
 	public void setId(long id) {

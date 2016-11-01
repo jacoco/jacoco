@@ -162,7 +162,8 @@ public final class AgentOptions {
 	 */
 	public static final String DEFAULT_ADDRESS = null;
 
-	public static final String DEFAULT_ID = "Id";
+	public static final String DEFAULT_ID = "id";
+	
 
 	/**
 	 * The port the tcpserver binds to or the tcpclient connects to. In
@@ -426,7 +427,7 @@ public final class AgentOptions {
 	public long getId(final String key, final long defaultValue) {
 		
 		final String value = options.get(key);
-//		System.out.println("options.get(key): " + options.get(key));
+		System.out.println("options.get(key): " + key + " -- " + options.get(key));
 		return value == null ? defaultValue : Long.parseLong(value);
 	}
 
