@@ -1,0 +1,130 @@
+/*******************************************************************************
+ * Copyright (c) 2009, 2017 Mountainminds GmbH & Co. KG and Contributors
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *    Marc R. Hoffmann - initial API and implementation
+ *
+ *******************************************************************************/
+package org.jacoco.cli.internal.commands;
+
+import static org.junit.Assert.assertArrayEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.util.HashSet;
+import java.util.Set;
+
+import org.jacoco.cli.internal.CommandTestBase;
+import org.junit.Rule;
+import org.junit.Test;
+import org.junit.rules.TemporaryFolder;
+import org.objectweb.asm.ClassReader;
+import org.objectweb.asm.ClassVisitor;
+import org.objectweb.asm.FieldVisitor;
+import org.objectweb.asm.Opcodes;
+
+/**
+ * Unit tests for {@link Instrument}.
+ */
+public class InstrumentTest extends CommandTestBase {
+
+	@Rule
+	public TemporaryFolder tmp = new TemporaryFolder();
+
+	@Test
+	public void shouldPrintUsage_whenNoArgumentsGiven() throws Exception {
+		execute("instrument");
+		assertFailure();
+		assertContains("Option \"-destdir\" is required", err);
+		assertContains(
+				"Usage: java -jar jacococli.jar instrument [<sourcefiles> ...]",
+				err);
+	}
+
+	@Test
+	public void shouldInstrumentClassFiles() throws Exception {
+		File destdir = tmp.getRoot();
+
+		execute("instrument", "-destdir", destdir.getAbsolutePath(),
+				getClassPath());
+
+		assertOk();
+		assertContains("[INFO] 11 classes instrumented to "
+				+ destdir.getAbsolutePath(), out);
+
+		// non class-file resources are copied:
+		assertTrue(new File(destdir, "about.html").isFile());
+
+		assertInstrumented(new File(destdir,
+				"org/jacoco/cli/internal/commands/InstrumentTest.class"));
+	}
+
+	@Test
+	public void shouldNotInstrumentAnything_whenNoSourceIsGiven()
+			throws Exception {
+		File destdir = tmp.getRoot();
+
+		execute("instrument", "-destdir", destdir.getAbsolutePath());
+
+		assertOk();
+		assertArrayEquals(new String[0], destdir.list());
+	}
+
+	@Test
+	public void shouldNotCreateTargetFile_whenSourceClassFileIsBroken()
+			throws Exception {
+		File srcdir = new File(tmp.getRoot(), "src");
+		srcdir.mkdir();
+		File destdir = new File(tmp.getRoot(), "sdest");
+		destdir.mkdir();
+
+		OutputStream out = new FileOutputStream(
+				new File(srcdir, "Broken.class"));
+		out.write((byte) 0xca);
+		out.write((byte) 0xfe);
+		out.write((byte) 0xba);
+		out.write((byte) 0xbe);
+		out.write((byte) 0x00);
+		out.write((byte) 0x00);
+		out.write((byte) 0x00);
+		out.write((byte) 50);
+		out.close();
+
+		try {
+			execute("instrument", "-destdir", destdir.getAbsolutePath(),
+					srcdir.getAbsolutePath());
+			fail("exception expected");
+		} catch (IOException expected) {
+		}
+
+		assertFalse(new File(destdir, "Broken.class").exists());
+	}
+
+	private void assertInstrumented(File classfile) throws IOException {
+		InputStream in = new FileInputStream(classfile);
+		ClassReader reader = new ClassReader(in);
+		in.close();
+		final Set<String> fields = new HashSet<String>();
+		reader.accept(new ClassVisitor(Opcodes.ASM5) {
+			@Override
+			public FieldVisitor visitField(int access, String name, String desc,
+					String signature, Object value) {
+				fields.add(name);
+				return null;
+			}
+		}, 0);
+		assertTrue(fields.contains("$jacocoData"));
+	}
+
+}
