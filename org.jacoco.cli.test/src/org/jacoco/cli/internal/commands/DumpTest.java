@@ -1,0 +1,120 @@
+/*******************************************************************************
+ * Copyright (c) 2009, 2017 Mountainminds GmbH & Co. KG and Contributors
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *    Marc R. Hoffmann - initial API and implementation
+ *
+ *******************************************************************************/
+package org.jacoco.cli.internal.commands;
+
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
+
+import java.io.File;
+import java.io.IOException;
+import java.net.InetAddress;
+import java.net.ServerSocket;
+import java.net.Socket;
+
+import org.jacoco.cli.internal.CommandTestBase;
+import org.jacoco.core.runtime.IRemoteCommandVisitor;
+import org.jacoco.core.runtime.RemoteControlReader;
+import org.jacoco.core.runtime.RemoteControlWriter;
+import org.junit.Rule;
+import org.junit.Test;
+import org.junit.rules.TemporaryFolder;
+
+/**
+ * Unit tests for {@link Dump}.
+ */
+public class DumpTest extends CommandTestBase {
+
+	@Rule
+	public TemporaryFolder tmp = new TemporaryFolder();
+
+	@Test
+	public void shouldPrintUsage_whenNoArgumentsGiven() throws Exception {
+		execute("dump");
+		assertFailure();
+		assertContains("Option \"-destfile\" is required", err);
+		assertContains("java -jar jacococli.jar dump [-address <address>]",
+				err);
+	}
+
+	@Test
+	public void shouldWriteDump() throws Exception {
+
+		File execfile = new File(tmp.getRoot(), "jacoco.exec");
+		int port = startMockServer();
+
+		execute("dump", "-destfile", execfile.getAbsolutePath(), "-port",
+				String.valueOf(port));
+
+		assertOk();
+		assertContains("[INFO] Connecting to ", out);
+		assertContains("[INFO] Writing execution data to "
+				+ execfile.getAbsolutePath(), out);
+		assertTrue(execfile.exists());
+	}
+
+	@Test
+	public void shouldLogConnectionError() throws Exception {
+
+		File execfile = new File(tmp.getRoot(), "jacoco.exec");
+		int port = unusedPort();
+
+		try {
+			execute("dump", "-destfile", execfile.getAbsolutePath(), "-port",
+					String.valueOf(port), "-retry", "1");
+			fail("IOException expected");
+		} catch (IOException ignore) {
+		}
+
+		assertContains("[WARN] Connection refused", err);
+	}
+
+	private int startMockServer() throws IOException {
+		final ServerSocket serverSocket = new ServerSocket(0, 0,
+				InetAddress.getByName(null));
+		new Thread() {
+			@Override
+			public void run() {
+				try {
+					serveRequest(serverSocket.accept());
+				} catch (IOException e) {
+					throw new RuntimeException(e);
+				}
+			}
+		}.start();
+		return serverSocket.getLocalPort();
+	}
+
+	private void serveRequest(Socket socket) throws IOException {
+		final RemoteControlWriter writer = new RemoteControlWriter(
+				socket.getOutputStream());
+		final RemoteControlReader reader = new RemoteControlReader(
+				socket.getInputStream());
+		reader.setRemoteCommandVisitor(new IRemoteCommandVisitor() {
+
+			public void visitDumpCommand(boolean dump, boolean reset)
+					throws IOException {
+				writer.sendCmdOk();
+			}
+		});
+		while (reader.read()) {
+		}
+	}
+
+	private int unusedPort() throws IOException {
+		final ServerSocket serverSocket = new ServerSocket(0, 0,
+				InetAddress.getByName(null));
+		final int port = serverSocket.getLocalPort();
+		serverSocket.close();
+		return port;
+	}
+
+}

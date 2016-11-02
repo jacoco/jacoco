@@ -31,8 +31,9 @@
     <module>../org.jacoco.agent.rt.test</module>
     <module>../org.jacoco.agent.test</module>
     <module>../org.jacoco.ant.test</module>
-    <module>../jacoco-maven-plugin.test</module>
+    <module>../org.jacoco.cli.test</module>
     <module>../org.jacoco.examples.test</module>
+    <module>../jacoco-maven-plugin.test</module>
   </modules>
 
   <properties>

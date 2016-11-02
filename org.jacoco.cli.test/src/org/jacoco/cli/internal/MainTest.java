@@ -1,0 +1,67 @@
+/*******************************************************************************
+ * Copyright (c) 2009, 2017 Mountainminds GmbH & Co. KG and Contributors
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *    Marc R. Hoffmann - initial API and implementation
+ *
+ *******************************************************************************/
+package org.jacoco.cli.internal;
+
+import org.junit.Test;
+
+/**
+ * Unit tests for {@link Main}.
+ */
+public class MainTest extends CommandTestBase {
+
+	@Test
+	public void shouldPrintUsage_whenNoArgumentsGiven() throws Exception {
+		execute();
+
+		assertFailure();
+		assertNoOutput(out);
+		assertContains("Argument \"<command>\" is required", err);
+		assertContains("Usage: java -jar jacococli.jar -help | <command>", err);
+		assertContains("Command line interface for JaCoCo.", err);
+	}
+
+	@Test
+	public void shouldPrintErrorMessage_whenInvalidCommandIsGiven()
+			throws Exception {
+		execute("foo");
+
+		assertFailure();
+		assertNoOutput(out);
+		assertContains("\"foo\" is not a valid value for \"<command>\"", err);
+		assertContains("Usage: java -jar jacococli.jar -help | <command>", err);
+	}
+
+	@Test
+	public void shouldPrintGeneralHelp_whenHelpOptionIsGiven()
+			throws Exception {
+		execute("-help");
+
+		assertOk();
+		assertNoOutput(err);
+		assertContains("Usage: java -jar jacococli.jar -help | <command>", out);
+		assertContains("<command> : dump|instrument|merge|report", out);
+	}
+
+	@Test
+	public void shouldPrintCommandHelp_whenHelpOptionIsGiven()
+			throws Exception {
+		execute("dump", "-help");
+
+		assertOk();
+		assertNoOutput(err);
+		assertContains("Usage: java -jar jacococli.jar dump", out);
+		assertContains(
+				"Request execution data from a JaCoCo agent running in 'tcpserver' output mode.",
+				out);
+	}
+
+}
