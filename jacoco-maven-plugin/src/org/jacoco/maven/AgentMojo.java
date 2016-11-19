@@ -24,12 +24,12 @@ import org.apache.maven.plugins.annotations.ResolutionScope;
  * as a VM argument to the application under test. Depending on the project
  * packaging type by default a property with the following name is set:
  * </p>
- * 
+ *
  * <ul>
  * <li>tycho.testArgLine for packaging type eclipse-test-plugin and</li>
  * <li>argLine otherwise.</li>
  * </ul>
- * 
+ *
  * <p>
  * If your project already defines VM arguments for test execution, be sure that
  * they will include property defined by JaCoCo.
@@ -38,8 +38,9 @@ import org.apache.maven.plugins.annotations.ResolutionScope;
  * <p>
  * One of the ways to do this in case of maven-surefire-plugin - is to use
  * syntax for <a href="http://maven.apache.org/surefire/maven-surefire-plugin/faq.html#late-property-evaluation">late property evaluation</a>:
+ *
  * </p>
- * 
+ *
  * <pre>
  *   &lt;plugin&gt;
  *     &lt;groupId&gt;org.apache.maven.plugins&lt;/groupId&gt;
@@ -49,12 +50,12 @@ import org.apache.maven.plugins.annotations.ResolutionScope;
  *     &lt;/configuration&gt;
  *   &lt;/plugin&gt;
  * </pre>
- * 
+ *
  * <p>
  * Another way is to define "argLine" as a Maven property rather than
  * as part of the configuration of maven-surefire-plugin:
  * </p>
- * 
+ *
  * <pre>
  *   &lt;properties&gt;
  *     &lt;argLine&gt;-your -extra -arguments&lt;/argLine&gt;
@@ -68,12 +69,32 @@ import org.apache.maven.plugins.annotations.ResolutionScope;
  *     &lt;/configuration&gt;
  *   &lt;/plugin&gt;
  * </pre>
- * 
+ *
+ * For a multi-module maven project using maven-surefire-plugin with custom {@code argLine}
+ * and not running JaCoCo runtime agent in all modules, you can set an empty {@code argLine} property.
+ * This will prevent the build from failing with message {@code Error: Could not find or load main class @{argLine}}.
+ * This is required because undeclared property is not expanded to empty string during <a href="http://maven.apache.org/surefire/maven-surefire-plugin/faq.html#late-property-evaluation"> late property evaluation</a> in
+ * maven-surefire-plugin.
+ *
+ * <pre>
+ *   &lt;properties&gt;
+ *     &lt;argLine&gt;&lt;/argLine&gt;
+ *   &lt;/properties&gt;
+ *   ...
+ *   &lt;plugin&gt;
+ *     &lt;groupId&gt;org.apache.maven.plugins&lt;/groupId&gt;
+ *     &lt;artifactId&gt;maven-surefire-plugin&lt;/artifactId&gt;
+ *     &lt;configuration&gt;
+ *       &lt;argLine&gt;-your -extra -arguments @{argLine}&lt;/argLine&gt;
+ *     &lt;/configuration&gt;
+ *   &lt;/plugin&gt;
+ * </pre>
+ *
  * <p>
  * Resulting coverage information is collected during execution and by default
  * written to a file when the process terminates.
  * </p>
- * 
+ *
  * @since 0.5.3
  */
 @Mojo(name = "prepare-agent", defaultPhase = LifecyclePhase.INITIALIZE, requiresDependencyResolution = ResolutionScope.RUNTIME, threadSafe = true)
