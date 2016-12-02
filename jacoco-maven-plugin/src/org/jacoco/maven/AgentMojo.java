@@ -51,6 +51,11 @@ import org.apache.maven.plugins.annotations.ResolutionScope;
  * </pre>
  * 
  * <p>
+ * You can define empty property to avoid JVM startup error <code>Could not find or load main class @{argLine}</code>
+ * when using late property evaluation and jacoco-maven-plugin not executed.
+ * </p>
+ * 
+ * <p>
  * Another way is to define "argLine" as a Maven property rather than
  * as part of the configuration of maven-surefire-plugin:
  * </p>
@@ -68,27 +73,7 @@ import org.apache.maven.plugins.annotations.ResolutionScope;
  *     &lt;/configuration&gt;
  *   &lt;/plugin&gt;
  * </pre>
- *
- * For a multi-module maven project using maven-surefire-plugin with custom {@code argLine}
- * and not running JaCoCo runtime agent in all modules, you can set an empty {@code argLine} property.
- * This will prevent the build from failing with message {@code Error: Could not find or load main class @{argLine}}.
- * This is required because undeclared property is not expanded to empty string during <a href="http://maven.apache.org/surefire/maven-surefire-plugin/faq.html#late-property-evaluation"> late property evaluation</a> in
- * maven-surefire-plugin.
- *
- * <pre>
- *   &lt;properties&gt;
- *     &lt;argLine&gt;&lt;/argLine&gt;
- *   &lt;/properties&gt;
- *   ...
- *   &lt;plugin&gt;
- *     &lt;groupId&gt;org.apache.maven.plugins&lt;/groupId&gt;
- *     &lt;artifactId&gt;maven-surefire-plugin&lt;/artifactId&gt;
- *     &lt;configuration&gt;
- *       &lt;argLine&gt;-your -extra -arguments @{argLine}&lt;/argLine&gt;
- *     &lt;/configuration&gt;
- *   &lt;/plugin&gt;
- * </pre>
- *
+ * 
  * <p>
  * Resulting coverage information is collected during execution and by default
  * written to a file when the process terminates.
