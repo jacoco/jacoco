@@ -51,6 +51,11 @@ import org.apache.maven.plugins.annotations.ResolutionScope;
  * </pre>
  * 
  * <p>
+ * You can define empty property to avoid JVM startup error <code>Could not find or load main class @{argLine}</code>
+ * when using late property evaluation and jacoco-maven-plugin not executed.
+ * </p>
+ * 
+ * <p>
  * Another way is to define "argLine" as a Maven property rather than
  * as part of the configuration of maven-surefire-plugin:
  * </p>
