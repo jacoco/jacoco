@@ -106,7 +106,9 @@ public class RuntimeData {
 			final SessionInfo info = new SessionInfo(sessionId, startTimeStamp,
 					System.currentTimeMillis());
 			sessionInfoVisitor.visitSessionInfo(info);
+			System.out.println("Begin store.accept(executionDataVisitor)................... ");
 			store.accept(executionDataVisitor);
+			System.out.println("End store.accept(executionDataVisitor)................... ");
 			if (reset) {
 				reset();
 			}

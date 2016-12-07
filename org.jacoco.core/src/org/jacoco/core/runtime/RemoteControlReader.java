@@ -64,6 +64,7 @@ public class RemoteControlReader extends ExecutionDataReader {
 		}
 		final boolean dump = in.readBoolean();
 		final boolean reset = in.readBoolean();
+		
 		remoteCommandVisitor.visitDumpCommand(dump, reset);
 	}
 

@@ -46,7 +46,7 @@ public class ExecutionDataReader {
 	/**
 	 * 是否是新的client
 	 */
-	private boolean isNewClient = false;
+	private boolean isNewClient = true;
 	
 	public boolean isNewClient() {
         return isNewClient;
@@ -106,9 +106,13 @@ public class ExecutionDataReader {
 			byte type;
 			do {
 				
+			    
 				int i = in.read();
+				
 	            if (i == -1) {
+	                System.out.println("EOF =========================");
 	                return false; // EOF
+	                
 	            }
 	            type = (byte) i;
 				
@@ -123,8 +127,10 @@ public class ExecutionDataReader {
                     continue;
                 }
 				
+				//client在第一次握手链接时，将会发送一个BLOCK_HEADER数据，然后就不在发送此数据了。
+				//第一次应该读取数据BLOCK_HEADER，后面不读取
 				//如果不是初次建立的client，那么将直接读取数据，而不判断第一个字符是否是ExecutionDataWriter.BLOCK_HEADER
-				if (!isNewClient) {
+				if (isNewClient) {
 				    
 				    if (firstBlock && type != ExecutionDataWriter.BLOCK_HEADER) {
 	                    throw new IOException("Invalid execution data file.");
@@ -135,6 +141,8 @@ public class ExecutionDataReader {
 			} while (readBlock(type));
 			return true;
 		} catch (final EOFException e) {
+		    System.out.println("===============================");
+		    e.printStackTrace();
 			return false;
 		}
 	}

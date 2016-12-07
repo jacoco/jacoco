@@ -57,6 +57,7 @@ public class RemoteControlWriter extends ExecutionDataWriter implements
 	 */
 	public void sendCmdOk() throws IOException {
 		out.writeByte(RemoteControlWriter.BLOCK_CMDOK);
+		out.flush();
 	}
 
 	public void visitDumpCommand(final boolean dump, final boolean reset)

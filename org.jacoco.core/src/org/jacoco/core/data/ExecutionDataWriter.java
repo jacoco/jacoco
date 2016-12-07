@@ -72,6 +72,7 @@ public class ExecutionDataWriter implements ISessionInfoVisitor,
 		out.writeByte(BLOCK_HEADER);
 		out.writeChar(MAGIC_NUMBER);
 		out.writeChar(FORMAT_VERSION);
+		flush();
 	}
 
 	/**
@@ -116,6 +117,7 @@ public class ExecutionDataWriter implements ISessionInfoVisitor,
                 out.writeLong(data.getId());
                 out.writeUTF(data.getName());
                 out.writeBooleanArray(data.getProbes());
+                out.flush();
             } catch (final IOException e) {
                 throw new RuntimeException(e);
             }

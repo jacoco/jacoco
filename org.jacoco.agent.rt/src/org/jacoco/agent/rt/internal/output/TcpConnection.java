@@ -72,6 +72,7 @@ class TcpConnection implements IRemoteCommandVisitor {
 		try {
 			while (reader.read()) {
 			}
+			System.out.println("End read, connection exception!!!");
 		} catch (final SocketException e) {
 			// If the local socket is closed while polling for commands the
 			// SocketException is expected.

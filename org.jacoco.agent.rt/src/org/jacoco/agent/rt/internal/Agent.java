@@ -158,8 +158,10 @@ public class Agent implements IAgent {
 	 */
 	IAgentOutput createAgentOutput() {
 		final OutputMode controllerType = options.getOutput();
+		 System.out.println("options.getOutput()=========\n " + options.getOutput());
 		switch (controllerType) {
 		case file:
+		   
 			return new FileOutput();
 		case tcpserver:
 			return new TcpServerOutput(logger);
