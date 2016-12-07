@@ -14,26 +14,27 @@
 
   <parent>
     <groupId>org.jacoco</groupId>
-    <artifactId>org.jacoco.build</artifactId>
-    <version>0.7.7</version>
-    <relativePath>../org.jacoco.build</relativePath>
+    <artifactId>org.jacoco.tests</artifactId>
+    <version>0.7.7-SNAPSHOT</version>
+    <relativePath>../org.jacoco.tests</relativePath>
   </parent>
 
-  <artifactId>org.jacoco.core</artifactId>
+  <artifactId>org.jacoco.report.test</artifactId>
 
-  <name>JaCoCo :: Core</name>
-  <description>JaCoCo Core</description>
+  <name>JaCoCo :: Test :: Report</name>
+
+  <properties>
+    <jacoco.includes>org.jacoco.report.*</jacoco.includes>
+  </properties>
 
   <dependencies>
     <dependency>
-      <groupId>org.ow2.asm</groupId>
-      <artifactId>asm-debug-all</artifactId>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>org.jacoco.report</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
     </dependency>
   </dependencies>
-
-
-
-  <build>
-    <sourceDirectory>src</sourceDirectory>
-  </build>
 </project>

@@ -5,16 +5,15 @@
 			<attribute name="maven.pomderived" value="true"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="con" path="org.eclipse.m2e.MAVEN2_CLASSPATH_CONTAINER">
-		<attributes>
-			<attribute name="maven.pomderived" value="true"/>
-		</attributes>
-	</classpathentry>
 	<classpathentry including="**/*.java" kind="src" output="target/classes" path="src">
 		<attributes>
 			<attribute name="optional" value="true"/>
 			<attribute name="maven.pomderived" value="true"/>
 		</attributes>
 	</classpathentry>
+	<classpathentry combineaccessrules="false" kind="src" path="/org.jacoco.agent.rt"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/org.jacoco.core"/>
+	<classpathentry kind="lib" path="C:/Users/chm/.m2/repository/asm/asm/3.0/asm-3.0.jar"/>
+	<classpathentry kind="lib" path="C:/Users/chm/.m2/repository/junit/junit/4.11/junit-4.11.jar"/>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>

@@ -5,14 +5,24 @@
 			<attribute name="maven.pomderived" value="true"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="con" path="org.eclipse.m2e.MAVEN2_CLASSPATH_CONTAINER">
+	<classpathentry kind="src" output="target/classes" path="src">
+		<attributes>
+			<attribute name="optional" value="true"/>
+			<attribute name="maven.pomderived" value="true"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry combineaccessrules="false" kind="src" path="/org.jacoco.agent"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/org.jacoco.core"/>
+	<classpathentry kind="lib" path="D:/apache-maven-3.1.1/lib/maven-core-3.1.1.jar"/>
+	<classpathentry kind="lib" path="D:/apache-maven-3.1.1/lib/maven-artifact-3.1.1.jar"/>
+	<classpathentry kind="lib" path="C:/Users/chm/.m2/repository/org/codehaus/plexus/plexus-utils/3.0.8/plexus-utils-3.0.8.jar"/>
+	<classpathentry excluding="**" kind="src" output="target/classes" path="META-INF">
 		<attributes>
 			<attribute name="maven.pomderived" value="true"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry including="**/*.java" kind="src" output="target/classes" path="src">
+	<classpathentry kind="con" path="org.eclipse.m2e.MAVEN2_CLASSPATH_CONTAINER">
 		<attributes>
-			<attribute name="optional" value="true"/>
 			<attribute name="maven.pomderived" value="true"/>
 		</attributes>
 	</classpathentry>

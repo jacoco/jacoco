@@ -15,26 +15,49 @@
   <parent>
     <groupId>org.jacoco</groupId>
     <artifactId>org.jacoco.tests</artifactId>
-    <version>0.7.7</version>
+    <version>0.7.7-SNAPSHOT</version>
     <relativePath>../org.jacoco.tests</relativePath>
   </parent>
 
-  <artifactId>org.jacoco.agent.test</artifactId>
+  <artifactId>org.jacoco.core.test</artifactId>
 
-  <name>JaCoCo :: Test :: Agent</name>
+  <name>JaCoCo :: Test :: Core</name>
 
   <properties>
-    <jacoco.includes>org.jacoco.agent.*</jacoco.includes>
+    <jacoco.includes>org.jacoco.core.*</jacoco.includes>
   </properties>
 
   <dependencies>
     <dependency>
       <groupId>${project.groupId}</groupId>
-      <artifactId>org.jacoco.agent</artifactId>
+      <artifactId>org.jacoco.core</artifactId>
     </dependency>
     <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
     </dependency>
   </dependencies>
+  
+  <profiles>
+    <profile>
+      <id>no-java8-validation</id>
+      <activation>
+        <jdk>(,1.8)</jdk>
+      </activation>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-compiler-plugin</artifactId>
+            <configuration>
+              <excludes>
+                <exclude>org/jacoco/core/test/validation/java8/*.java</exclude>
+              </excludes>
+            </configuration>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+  </profiles>
+  
 </project>

@@ -72,7 +72,12 @@ class TcpConnection implements IRemoteCommandVisitor {
 		try {
 			while (reader.read()) {
 			}
-			System.out.println("End read, connection exception!!!");
+			
+			//只有链接中断的时候才会结束
+			if(options != null && options.getId(AgentOptions.DEFAULT_ID, 0) > 0) {
+			    System.out.println("End read, connection exception!!!");
+			    throw new IOException("ThreadingTest client disconnection");
+			}
 		} catch (final SocketException e) {
 			// If the local socket is closed while polling for commands the
 			// SocketException is expected.
@@ -83,6 +88,9 @@ class TcpConnection implements IRemoteCommandVisitor {
 			close();
 		}
 	}
+	
+	
+	
 
 	/**
 	 * Dumps the current execution data if the connection is already initialized

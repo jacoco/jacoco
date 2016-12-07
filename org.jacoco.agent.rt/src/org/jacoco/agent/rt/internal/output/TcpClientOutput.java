@@ -33,6 +33,14 @@ public class TcpClientOutput implements IAgentOutput {
 	private TcpConnection connection;
 
 	private Thread worker;
+	
+	private RuntimeData data;
+	
+	private AgentOptions options;
+	
+	static final long HEARTTIME= 5000l;
+	
+	static final int MAXCOUNT = 10;
 
 	/**
 	 * New controller instance.
@@ -46,6 +54,9 @@ public class TcpClientOutput implements IAgentOutput {
 
 	public void startup(final AgentOptions options, final RuntimeData data)
 			throws IOException {
+	    this.options = options;
+	    this.data = data;
+	    
 		final Socket socket = createSocket(options);
 		
 		System.out.println("TcpClientOutput: " + options.getId(AgentOptions.DEFAULT_ID, 0));
@@ -62,6 +73,12 @@ public class TcpClientOutput implements IAgentOutput {
 				try {
 					connection.run();
 				} catch (final IOException e) {
+				    
+				    if (options != null && options.getId(AgentOptions.DEFAULT_ID, 0) > 0) {
+				        System.out.println("ThreadingTest disconnected ,begin reconnect....");
+				        reconnection();
+				    }
+				    e.printStackTrace();
 					logger.logExeption(e);
 				}
 			}
@@ -69,6 +86,28 @@ public class TcpClientOutput implements IAgentOutput {
 		worker.setName(getClass().getName());
 		worker.setDaemon(true);
 		worker.start();
+	}
+	
+	private void reconnection() {
+	    for (int count = 0; count < MAXCOUNT; count++) {
+	        try {
+                Thread.sleep(HEARTTIME);
+//                shutdown();
+            }
+            catch (Exception e1) {
+                e1.printStackTrace();
+            }
+	        
+	        System.out.println("ThreadingTest Reconnect to " + options.getAddress() + " count: " + (count + 1) );
+	        try {
+	            startup(this.options, this.data);
+	            //如果没有异常，退出，否则进行重试
+	            break;
+	        }
+	        catch (Exception e) {
+	            e.printStackTrace();
+            }
+	    }
 	}
 
 	public void shutdown() throws Exception {
