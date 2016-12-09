@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: JaCoCo Agent Tests
 Bundle-SymbolicName: org.jacoco.agent.test
-Bundle-Version: 0.7.8.qualifier
+Bundle-Version: 0.7.8.201612092310
 Fragment-Host: org.jacoco.agent
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
 Bundle-Vendor: Mountainminds GmbH & Co. KG
