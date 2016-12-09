@@ -26,7 +26,6 @@
   <description>JaCoCo Java Agent</description>
 
   <properties>
-    <jarsigner.skip>true</jarsigner.skip>
     <maven.deploy.skip>true</maven.deploy.skip>
     <maven.javadoc.skip>true</maven.javadoc.skip>
   </properties>

@@ -25,10 +25,6 @@
   <name>JaCoCo :: Distribution</name>
   <description>JaCoCo Standalone Distribution</description>
 
-  <properties>
-    <jarsigner.skip>true</jarsigner.skip>
-  </properties>
-
   <dependencies>
     <dependency>
       <groupId>${project.groupId}</groupId>
