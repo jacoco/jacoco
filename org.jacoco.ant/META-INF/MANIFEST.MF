@@ -2,19 +2,19 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: JaCoCo Ant Tasks
 Bundle-SymbolicName: org.jacoco.ant
-Bundle-Version: 0.7.8.201612092310
+Bundle-Version: 0.7.9.qualifier
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
 Bundle-Vendor: Mountainminds GmbH & Co. KG and Contributors
 Require-Bundle: org.apache.ant;bundle-version="[1.7.0,2.0.0)"
-Import-Package: org.jacoco.agent;bundle-version="[0.7.8,0.7.9)",
- org.jacoco.core.analysis;bundle-version="[0.7.8,0.7.9)",
- org.jacoco.core.data;bundle-version="[0.7.8,0.7.9)",
- org.jacoco.core.instr;bundle-version="[0.7.8,0.7.9)",
- org.jacoco.core.runtime;bundle-version="[0.7.8,0.7.9)",
- org.jacoco.core.tools;bundle-version="[0.7.8,0.7.9)",
- org.jacoco.report;bundle-version="[0.7.8,0.7.9)",
- org.jacoco.report.check;bundle-version="[0.7.8,0.7.9)",
- org.jacoco.report.csv;bundle-version="[0.7.8,0.7.9)",
- org.jacoco.report.html;bundle-version="[0.7.8,0.7.9)",
- org.jacoco.report.xml;bundle-version="[0.7.8,0.7.9)",
+Import-Package: org.jacoco.agent;bundle-version="[0.7.9,0.7.10)",
+ org.jacoco.core.analysis;bundle-version="[0.7.9,0.7.10)",
+ org.jacoco.core.data;bundle-version="[0.7.9,0.7.10)",
+ org.jacoco.core.instr;bundle-version="[0.7.9,0.7.10)",
+ org.jacoco.core.runtime;bundle-version="[0.7.9,0.7.10)",
+ org.jacoco.core.tools;bundle-version="[0.7.9,0.7.10)",
+ org.jacoco.report;bundle-version="[0.7.9,0.7.10)",
+ org.jacoco.report.check;bundle-version="[0.7.9,0.7.10)",
+ org.jacoco.report.csv;bundle-version="[0.7.9,0.7.10)",
+ org.jacoco.report.html;bundle-version="[0.7.9,0.7.10)",
+ org.jacoco.report.xml;bundle-version="[0.7.9,0.7.10)",
  org.objectweb.asm;version="[5.1.0,5.2.0)"
