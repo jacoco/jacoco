@@ -142,7 +142,7 @@ public class ExecutionDataReaderWriterTest {
 		buffer.write(ExecutionDataWriter.BLOCK_HEADER);
 		buffer.write(0xC0);
 		buffer.write(0xC0);
-		final char version = ExecutionDataWriter.FORMAT_VERSION - 1;
+		final char version = (char) (ExecutionDataWriter.FORMAT_VERSION - 1);
 		buffer.write(version >> 8);
 		buffer.write(version & 0xFF);
 		createReader().read();
