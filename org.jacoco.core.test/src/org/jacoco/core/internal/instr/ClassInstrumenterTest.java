@@ -13,7 +13,6 @@ package org.jacoco.core.internal.instr;
 
 import static org.junit.Assert.assertNull;
 
-import org.jacoco.core.JaCoCo;
 import org.junit.Before;
 import org.junit.Test;
 import org.objectweb.asm.ClassVisitor;
@@ -29,7 +28,7 @@ public class ClassInstrumenterTest implements IProbeArrayStrategy {
 	@Before
 	public void setup() {
 		instrumenter = new ClassInstrumenter(this, new ClassVisitor(
-				JaCoCo.ASM_API_VERSION) {
+				InstrSupport.ASM_API_VERSION) {
 		});
 	}
 
@@ -50,7 +49,7 @@ public class ClassInstrumenterTest implements IProbeArrayStrategy {
 	@Test
 	public void testNoMethodVisitor() {
 		instrumenter = new ClassInstrumenter(this, new ClassVisitor(
-				JaCoCo.ASM_API_VERSION) {
+				InstrSupport.ASM_API_VERSION) {
 			@Override
 			public MethodVisitor visitMethod(int access, String name,
 					String desc, String signature, String[] exceptions) {

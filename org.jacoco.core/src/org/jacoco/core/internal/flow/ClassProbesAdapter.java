@@ -11,7 +11,7 @@
  *******************************************************************************/
 package org.jacoco.core.internal.flow;
 
-import org.jacoco.core.JaCoCo;
+import org.jacoco.core.internal.instr.InstrSupport;
 import org.objectweb.asm.ClassVisitor;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.commons.AnalyzerAdapter;
@@ -44,7 +44,7 @@ public class ClassProbesAdapter extends ClassVisitor implements
 	 */
 	public ClassProbesAdapter(final ClassProbesVisitor cv,
 			final boolean trackFrames) {
-		super(JaCoCo.ASM_API_VERSION, cv);
+		super(InstrSupport.ASM_API_VERSION, cv);
 		this.cv = cv;
 		this.trackFrames = trackFrames;
 	}

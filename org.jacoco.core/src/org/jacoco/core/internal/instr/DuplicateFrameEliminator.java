@@ -11,7 +11,6 @@
  *******************************************************************************/
 package org.jacoco.core.internal.instr;
 
-import org.jacoco.core.JaCoCo;
 import org.objectweb.asm.Handle;
 import org.objectweb.asm.Label;
 import org.objectweb.asm.MethodVisitor;
@@ -27,7 +26,7 @@ class DuplicateFrameEliminator extends MethodVisitor {
 	private boolean instruction;
 
 	public DuplicateFrameEliminator(final MethodVisitor mv) {
-		super(JaCoCo.ASM_API_VERSION, mv);
+		super(InstrSupport.ASM_API_VERSION, mv);
 		instruction = true;
 	}
 
