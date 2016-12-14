@@ -11,7 +11,7 @@
  *******************************************************************************/
 package org.jacoco.core.internal.flow;
 
-import org.jacoco.core.JaCoCo;
+import org.jacoco.core.internal.instr.InstrSupport;
 import org.objectweb.asm.Label;
 import org.objectweb.asm.MethodVisitor;
 
@@ -35,7 +35,7 @@ public abstract class MethodProbesVisitor extends MethodVisitor {
 	 *            optional next visitor in chain
 	 */
 	public MethodProbesVisitor(final MethodVisitor mv) {
-		super(JaCoCo.ASM_API_VERSION, mv);
+		super(InstrSupport.ASM_API_VERSION, mv);
 	}
 
 	/**

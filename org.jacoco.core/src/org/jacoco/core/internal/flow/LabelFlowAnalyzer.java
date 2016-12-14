@@ -11,7 +11,7 @@
  *******************************************************************************/
 package org.jacoco.core.internal.flow;
 
-import org.jacoco.core.JaCoCo;
+import org.jacoco.core.internal.instr.InstrSupport;
 import org.objectweb.asm.Handle;
 import org.objectweb.asm.Label;
 import org.objectweb.asm.MethodVisitor;
@@ -62,7 +62,7 @@ public final class LabelFlowAnalyzer extends MethodVisitor {
 	 * Create new instance.
 	 */
 	public LabelFlowAnalyzer() {
-		super(JaCoCo.ASM_API_VERSION);
+		super(InstrSupport.ASM_API_VERSION);
 	}
 
 	@Override

@@ -11,7 +11,7 @@
  *******************************************************************************/
 package org.jacoco.core.internal.flow;
 
-import org.jacoco.core.JaCoCo;
+import org.jacoco.core.internal.instr.InstrSupport;
 import org.objectweb.asm.ClassVisitor;
 
 /**
@@ -34,7 +34,7 @@ public abstract class ClassProbesVisitor extends ClassVisitor {
 	 *            optional next visitor in chain
 	 */
 	public ClassProbesVisitor(final ClassVisitor cv) {
-		super(JaCoCo.ASM_API_VERSION, cv);
+		super(InstrSupport.ASM_API_VERSION, cv);
 	}
 
 	/**
