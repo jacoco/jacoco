@@ -24,7 +24,12 @@ public class ExecutionDataWriter implements ISessionInfoVisitor,
 		IExecutionDataVisitor {
 
 	/** File format version, will be incremented for each incompatible change. */
-	public static final char FORMAT_VERSION = 0x1007;
+	public static final char FORMAT_VERSION;
+
+	static {
+		// Runtime initialize to ensure javac does not inline the value.
+		FORMAT_VERSION = 0x1007;
+	}
 
 	/** Magic number in header for file format identification. */
 	public static final char MAGIC_NUMBER = 0xC0C0;
