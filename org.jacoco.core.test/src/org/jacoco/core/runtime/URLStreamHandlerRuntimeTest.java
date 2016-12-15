@@ -11,6 +11,9 @@
  *******************************************************************************/
 package org.jacoco.core.runtime;
 
+import org.junit.Assume;
+import org.junit.BeforeClass;
+
 /**
  * Unit tests for {@link URLStreamHandlerRuntime}.
  */
@@ -19,6 +22,13 @@ public class URLStreamHandlerRuntimeTest extends RuntimeTestBase {
 	@Override
 	IRuntime createRuntime() {
 		return new URLStreamHandlerRuntime();
+	}
+
+	@BeforeClass
+	public static void checkJDK() {
+		final boolean jdk9 = System.getProperty("java.version")
+				.startsWith("9-");
+		Assume.assumeTrue(!jdk9);
 	}
 
 }
