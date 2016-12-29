@@ -103,8 +103,8 @@ public class AsmBugTest {
 	}
 
 	/**
-	 * Adds code that triggers invocation of
-	 * {@link org.objectweb.asm.MethodWriter#resizeInstructions()} during
+	 * Adds code that triggers usage of
+	 * {@link org.objectweb.asm.MethodWriter#INSERTED_FRAMES} during
 	 * instrumentation.
 	 */
 	private static void addCauseOfResizeInstructions(final MethodVisitor mv) {
