@@ -22,6 +22,9 @@
 
 <h3>Fixed Bugs</h3>
 <ul>
+  <li>Do not recompute frames in case of large methods, otherwise
+      <code>java.lang.ClassNotFoundException</code> might be thrown
+      (GitHub <a href="https://github.com/jacoco/jacoco/issues/177">#177</a>).</li>
   <li><code>ExecutionDataWriter.FORMAT_VERSION</code> is not a compile-time constant
       (GitHub <a href="https://github.com/jacoco/jacoco/issues/474">#474</a>).</li>
 </ul>
@@ -30,6 +33,11 @@
 <ul>
   <li><code>JaCoCo.ASM_API_VERSION</code> removed
       (GitHub <a href="https://github.com/jacoco/jacoco/issues/474">#474</a>).</li>
+</ul>
+
+<h3>Non-functional Changes</h3>
+<ul>
+  <li>JaCoCo now depends on ASM 5.2.</li>
 </ul>
 
 <h2>Release 0.7.8 (2016/12/09)</h2>
