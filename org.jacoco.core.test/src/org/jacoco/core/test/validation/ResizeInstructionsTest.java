@@ -56,7 +56,8 @@ public class ResizeInstructionsTest {
 			@Override
 			protected String getCommonSuperClass(final String type1,
 					final String type2) {
-				computedCommonSuperClass = true;
+				computedCommonSuperClass |= className.equals(type1)
+						|| className.equals(type2);
 				return "java/lang/Object";
 			}
 		};
