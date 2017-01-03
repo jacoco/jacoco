@@ -17,6 +17,7 @@ import org.jacoco.core.instr.Instrumenter;
 import org.jacoco.core.runtime.IRuntime;
 import org.jacoco.core.runtime.RuntimeData;
 import org.jacoco.core.runtime.SystemPropertiesRuntime;
+import org.jacoco.core.test.TargetLoader;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -71,23 +72,11 @@ public class ResizeInstructionsTest {
 		cw.visitEnd();
 		final byte[] original = cw.toByteArray();
 		assertTrue(computedCommonSuperClass);
+		new TargetLoader().add(className, original);
 
-		load(className, original);
-		instrumenter.instrument(original, className);
-	}
-
-	private static void load(final String className, final byte[] bytes)
-			throws ClassNotFoundException {
-		new ClassLoader() {
-			@Override
-			protected Class<?> loadClass(final String name,
-					final boolean resolve) throws ClassNotFoundException {
-				if (name.equals(className)) {
-					return defineClass(name, bytes, 0, bytes.length);
-				}
-				return super.loadClass(name, resolve);
-			}
-		}.loadClass(className);
+		final byte[] instrumented = instrumenter.instrument(original,
+				className);
+		new TargetLoader().add(className, instrumented);
 	}
 
 	/**
