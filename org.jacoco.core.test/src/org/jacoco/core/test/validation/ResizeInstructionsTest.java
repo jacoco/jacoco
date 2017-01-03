@@ -11,7 +11,7 @@
  *******************************************************************************/
 package org.jacoco.core.test.validation;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 import org.jacoco.core.instr.Instrumenter;
 import org.jacoco.core.runtime.IRuntime;
@@ -70,7 +70,7 @@ public class ResizeInstructionsTest {
 		mv.visitEnd();
 		cw.visitEnd();
 		final byte[] original = cw.toByteArray();
-		assertEquals(true, computedCommonSuperClass);
+		assertTrue(computedCommonSuperClass);
 
 		load(className, original);
 		instrumenter.instrument(original, className);
