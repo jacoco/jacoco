@@ -23,6 +23,7 @@ import org.jacoco.core.instr.Instrumenter;
 import org.jacoco.core.runtime.IRuntime;
 import org.jacoco.core.runtime.RuntimeData;
 import org.jacoco.core.runtime.SystemPropertiesRuntime;
+import org.jacoco.core.test.TargetLoader;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -90,16 +91,8 @@ public class AsmBugTest {
 	private static int run(final String className, final byte[] bytes)
 			throws ClassNotFoundException, NoSuchMethodException,
 			InvocationTargetException, IllegalAccessException {
-		return (Integer) new ClassLoader() {
-			@Override
-			public Class<?> loadClass(String name)
-					throws ClassNotFoundException {
-				if (className.equals(name)) {
-					return defineClass(name, bytes, 0, bytes.length);
-				}
-				return super.loadClass(name);
-			}
-		}.loadClass(className).getMethod("run").invoke(null);
+		return (Integer) new TargetLoader().add(className, bytes)
+				.getMethod("run").invoke(null);
 	}
 
 	/**
