@@ -25,6 +25,10 @@ public class Target03 {
 	public static void main(String[] args) {
 
 		try {
+			implicitNullPointerException(null);
+		} catch (NullPointerException e) {
+		}
+		try {
 			implicitException();
 		} catch (StubException e) {
 		}
@@ -45,6 +49,12 @@ public class Target03 {
 			implicitExceptionFinally();
 		} catch (StubException e) {
 		}
+	}
+
+	private static void implicitNullPointerException(int[] a) {
+		nop(); // $line-implicitNullPointerException.before$
+		a[0] = 0; // $line-implicitNullPointerException.exception$
+		nop(); // $line-implicitNullPointerException.after$
 	}
 
 	private static void implicitException() {
