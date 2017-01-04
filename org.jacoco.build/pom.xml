@@ -400,6 +400,12 @@
           <artifactId>gmaven-plugin</artifactId>
           <version>1.0</version>
         </plugin>
+        <plugin>
+          <groupId>org.apache.felix</groupId>
+          <artifactId>maven-bundle-plugin</artifactId>
+          <!-- newer versions require Java 7 -->
+          <version>2.5.4</version>
+        </plugin>
       </plugins>
     </pluginManagement>
 
@@ -443,15 +449,6 @@
               </excludes>
             </filter>
           </filters>
-          <transformers>
-            <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
-              <manifestEntries>
-                <Implementation-Title>${project.description}</Implementation-Title>
-                <Implementation-Vendor>${project.organization.name}</Implementation-Vendor>
-                <Implementation-Version>${project.version}</Implementation-Version>
-              </manifestEntries>
-            </transformer>
-          </transformers>
         </configuration>
       </plugin>
 
@@ -598,6 +595,28 @@
           </execution>
         </executions>
       </plugin>
+
+      <plugin>
+        <groupId>org.apache.felix</groupId>
+        <artifactId>maven-bundle-plugin</artifactId>
+        <configuration>
+          <instructions>
+            <Bundle-Version>${qualified.bundle.version}</Bundle-Version>
+            <Bundle-Name>${project.description}</Bundle-Name>
+            <Export-Package>
+              !about.html,
+              *.internal*;x-internal:=true;version="${version;===;${Bundle-Version}}",
+              *;version="${version;===;${Bundle-Version}}"
+            </Export-Package>
+            <Import-Package>
+              org.jacoco.*;version="${range;[===,==+);${Bundle-Version}}",
+              org.objectweb.asm.*;version="${range;[===,=+);${asm.version}}"
+            </Import-Package>
+            <Bundle-RequiredExecutionEnvironment>J2SE-1.5</Bundle-RequiredExecutionEnvironment>
+            <Eclipse-SourceReferences>scm:git:git://github.com/jacoco/jacoco.git;path="${project.artifactId}";commitId=${buildNumber}</Eclipse-SourceReferences>
+          </instructions>
+        </configuration>
+      </plugin>
     </plugins>
   </build>
 
@@ -718,55 +737,6 @@
       <properties>
         <jvm.args>-XX:-FailOverToOldVerifier -Xverify:all</jvm.args>
       </properties>
-    </profile>
-
-    <profile>
-      <id>manifest</id>
-      <activation>
-        <file>
-          <exists>META-INF/MANIFEST.MF</exists>
-        </file>
-      </activation>
-      <properties>
-        <bundle-manifest>${project.build.directory}/META-INF/MANIFEST.MF</bundle-manifest>
-      </properties>
-      <build>
-        <plugins>
-          <plugin>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-antrun-plugin</artifactId>
-            <executions>
-              <execution>
-                <id>translate-qualifier</id>
-                <phase>generate-resources</phase>
-                <configuration>
-                  <target>
-                    <copy file="META-INF/MANIFEST.MF" tofile="${bundle-manifest}" overwrite="true"/>
-                    <replace file="${bundle-manifest}">
-                      <replacefilter token=".qualifier" value=".${buildQualifier}"/>
-                    </replace>
-                  </target>
-                </configuration>
-                <goals>
-                  <goal>run</goal>
-                </goals>
-              </execution>
-            </executions>
-          </plugin>
-          <plugin>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-jar-plugin</artifactId>
-            <configuration>
-              <archive>
-                <manifestFile>${bundle-manifest}</manifestFile>
-                <manifestEntries>
-                  <Eclipse-SourceReferences>scm:git:git://github.com/jacoco/jacoco.git;path="${project.artifactId}";commitId=${buildNumber}</Eclipse-SourceReferences>
-                </manifestEntries>
-              </archive>
-            </configuration>
-          </plugin>
-        </plugins>
-      </build>
     </profile>
 
     <profile>

@@ -22,7 +22,7 @@
   <artifactId>org.jacoco.report</artifactId>
 
   <name>JaCoCo :: Report</name>
-  <description>JaCoCo Reporting</description>
+  <description>JaCoCo Report</description>
 
   <dependencies>
     <dependency>
@@ -37,5 +37,29 @@
 
   <build>
     <sourceDirectory>src</sourceDirectory>
+
+    <plugins>
+      <plugin>
+        <groupId>org.apache.felix</groupId>
+        <artifactId>maven-bundle-plugin</artifactId>
+        <executions>
+          <execution>
+            <phase>process-classes</phase>
+            <goals>
+              <goal>manifest</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-jar-plugin</artifactId>
+        <configuration>
+          <archive>
+            <manifestFile>${project.build.outputDirectory}/META-INF/MANIFEST.MF</manifestFile>
+          </archive>
+        </configuration>
+      </plugin>
+    </plugins>
   </build>
 </project>
