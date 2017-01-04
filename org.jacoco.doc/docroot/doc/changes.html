@@ -22,6 +22,9 @@
 
 <h3>Fixed Bugs</h3>
 <ul>
+  <li>"<code>java.lang.ClassFormatError: Short length on BootstrapMethods in class file</code>"
+      caused by bug in ASM library
+      (GitHub <a href="https://github.com/jacoco/jacoco/issues/462">#462</a>).</li>
   <li>Do not recompute frames in case of large methods, otherwise
       <code>java.lang.ClassNotFoundException</code> might be thrown
       (GitHub <a href="https://github.com/jacoco/jacoco/issues/177">#177</a>).</li>
