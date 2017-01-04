@@ -76,7 +76,13 @@ public class Instrumenter {
 	 * 
 	 */
 	public byte[] instrument(final ClassReader reader) {
-		final ClassWriter writer = new ClassWriter(reader, 0);
+		final ClassWriter writer = new ClassWriter(reader, 0) {
+			@Override
+			protected String getCommonSuperClass(final String type1,
+					final String type2) {
+				throw new IllegalStateException();
+			}
+		};
 		final IProbeArrayStrategy strategy = ProbeArrayStrategyFactory
 				.createFor(reader, accessorGenerator);
 		final ClassVisitor visitor = new ClassProbesAdapter(
