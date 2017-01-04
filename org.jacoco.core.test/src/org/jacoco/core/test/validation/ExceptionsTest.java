@@ -27,9 +27,15 @@ public class ExceptionsTest extends ValidationTestBase {
 	@Test
 	public void testCoverageResult() {
 
-		// 1. Implicit Exception
+		// 0. Implicit NullPointerException
 		// Currently no coverage at all, as we don't see when a block aborts
 		// somewhere in the middle.
+		assertLine("implicitNullPointerException.before", ICounter.NOT_COVERED);
+		assertLine("implicitNullPointerException.exception",
+				ICounter.NOT_COVERED);
+		assertLine("implicitNullPointerException.after", ICounter.NOT_COVERED);
+
+		// 1. Implicit Exception
 		assertLine("implicitException.before", ICounter.FULLY_COVERED);
 		assertLine("implicitException.exception", ICounter.NOT_COVERED);
 		assertLine("implicitException.after", ICounter.NOT_COVERED);
@@ -45,8 +51,6 @@ public class ExceptionsTest extends ValidationTestBase {
 		assertLine("noExceptionTryCatch.catchBlock", ICounter.NOT_COVERED);
 
 		// 4. Try/Catch Block With Exception Thrown Implicitly
-		// As always with implicit exceptions we don't see when a block aborts
-		// somewhere in the middle.
 		assertLine("implicitExceptionTryCatch.beforeBlock",
 				ICounter.FULLY_COVERED);
 		assertLine("implicitExceptionTryCatch.before", ICounter.FULLY_COVERED);
