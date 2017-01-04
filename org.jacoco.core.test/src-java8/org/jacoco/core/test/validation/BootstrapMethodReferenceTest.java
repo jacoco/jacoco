@@ -40,7 +40,7 @@ import org.objectweb.asm.Opcodes;
  * {@code java.lang.ClassFormatError: Short length on BootstrapMethods in class file}
  * during instrumentation.
  */
-public class AsmBugTest {
+public class BootstrapMethodReferenceTest {
 
 	private final IRuntime runtime = new SystemPropertiesRuntime();
 	private final Instrumenter instrumenter = new Instrumenter(runtime);
@@ -114,7 +114,7 @@ public class AsmBugTest {
 	@SuppressWarnings("unused")
 	public static CallSite bootstrap(final MethodHandles.Lookup caller,
 			final String name, final MethodType type) throws Exception {
-		return new ConstantCallSite(caller.findStatic(AsmBugTest.class,
+		return new ConstantCallSite(caller.findStatic(BootstrapMethodReferenceTest.class,
 				"callTarget", MethodType.methodType(int.class)));
 	}
 
