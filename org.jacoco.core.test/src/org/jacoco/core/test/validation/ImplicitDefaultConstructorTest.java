@@ -17,6 +17,8 @@ import org.junit.Test;
 
 /**
  * Test of a implicit default constructor.
+ *
+ * @see PrivateEmptyDefaultConstructorTest
  */
 public class ImplicitDefaultConstructorTest extends ValidationTestBase {
 

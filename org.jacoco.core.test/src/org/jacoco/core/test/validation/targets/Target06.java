@@ -13,6 +13,8 @@ package org.jacoco.core.test.validation.targets;
 
 /**
  * This test target is a class with a implicit default constructor.
+ *
+ * @see Target07 explicit constructor
  */
 public class Target06 { // $line-classdef$
 

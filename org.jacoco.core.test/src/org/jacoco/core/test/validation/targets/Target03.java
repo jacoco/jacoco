@@ -113,7 +113,7 @@ public class Target03 {
 		nop(); // $line-noExceptionFinally.beforeBlock$
 		try {
 			nop(); // $line-noExceptionFinally.tryBlock$
-		} finally { // $line-noExceptionFinallyFinally$
+		} finally { // $line-noExceptionFinally.finally$
 			nop(); // $line-noExceptionFinally.finallyBlock$
 		}
 	}
