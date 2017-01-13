@@ -103,7 +103,7 @@ public class ExceptionsTest extends ValidationTestBase {
 				ICounter.FULLY_COVERED);
 		assertLine("explicitExceptionFinally.before", ICounter.FULLY_COVERED);
 		assertLine("explicitExceptionFinally.throw", ICounter.FULLY_COVERED);
-		assertLine("implicitExceptionFinally.finally", ICounter.EMPTY);
+		assertLine("explicitExceptionFinally.finally", ICounter.EMPTY);
 		assertLine("explicitExceptionFinally.finallyBlock",
 				ICounter.FULLY_COVERED);
 
