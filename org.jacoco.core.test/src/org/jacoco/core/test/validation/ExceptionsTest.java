@@ -53,6 +53,11 @@ public class ExceptionsTest extends ValidationTestBase {
 			/* partly when ECJ: */ICounter.NOT_COVERED);
 		}
 		assertLine("noExceptionTryCatch.catchBlock", ICounter.NOT_COVERED);
+		if (isJDKCompiler()) {
+			assertLine("noExceptionTryCatch.catchBlockEnd",
+			/* empty when ECJ: */ICounter.FULLY_COVERED);
+		}
+		assertLine("noExceptionTryCatch.afterBlock", ICounter.FULLY_COVERED);
 
 		// 4. Try/Catch Block With Exception Thrown Implicitly
 		assertLine("implicitExceptionTryCatch.beforeBlock",
@@ -65,6 +70,12 @@ public class ExceptionsTest extends ValidationTestBase {
 			/* partly when ECJ: */ICounter.FULLY_COVERED);
 		}
 		assertLine("implicitExceptionTryCatch.catchBlock",
+				ICounter.FULLY_COVERED);
+		if (isJDKCompiler()) {
+			assertLine("implicitExceptionTryCatch.catchBlockEnd",
+			/* empty when ECJ: */ICounter.NOT_COVERED);
+		}
+		assertLine("implicitExceptionTryCatch.afterBlock",
 				ICounter.FULLY_COVERED);
 
 		// 5. Try/Catch Block With Exception Thrown Implicitly After Condition
@@ -85,6 +96,9 @@ public class ExceptionsTest extends ValidationTestBase {
 		assertLine("explicitExceptionTryCatch.catch", ICounter.FULLY_COVERED);
 		assertLine("explicitExceptionTryCatch.catchBlock",
 				ICounter.FULLY_COVERED);
+		assertLine("explicitExceptionTryCatch.catchBlockEnd", ICounter.EMPTY);
+		assertLine("explicitExceptionTryCatch.afterBlock",
+				ICounter.FULLY_COVERED);
 
 		// 7. Finally Block Without Exception Thrown
 		// Finally block is yellow as the exception path is missing.
@@ -95,6 +109,11 @@ public class ExceptionsTest extends ValidationTestBase {
 			/* partly when ECJ: */ICounter.EMPTY);
 		}
 		assertLine("noExceptionFinally.finallyBlock", ICounter.PARTLY_COVERED);
+		if (isJDKCompiler()) {
+			assertLine("noExceptionFinally.finallyBlockEnd",
+			/* not covered when ECJ: */ICounter.FULLY_COVERED);
+		}
+		assertLine("noExceptionFinally.afterBlock", ICounter.FULLY_COVERED);
 
 		// 8. Finally Block With Implicit Exception
 		// Finally block is yellow as the non-exception path is missing.
@@ -109,6 +128,11 @@ public class ExceptionsTest extends ValidationTestBase {
 		}
 		assertLine("implicitExceptionFinally.finallyBlock",
 				ICounter.PARTLY_COVERED);
+		if (isJDKCompiler()) {
+			assertLine("implicitExceptionFinally.finallyBlockEnd",
+			/* fully when ECJ: */ICounter.NOT_COVERED);
+		}
+		assertLine("implicitExceptionFinally.afterBlock", ICounter.NOT_COVERED);
 
 		// 9. Finally Block With Exception Thrown Explicitly
 		assertLine("explicitExceptionFinally.beforeBlock",
@@ -121,6 +145,11 @@ public class ExceptionsTest extends ValidationTestBase {
 		}
 		assertLine("explicitExceptionFinally.finallyBlock",
 				ICounter.FULLY_COVERED);
+		if (isJDKCompiler()) {
+			assertLine("explicitExceptionFinally.finallyBlockEnd",
+			/* fully when ECJ: */ICounter.EMPTY);
+		}
+		assertLine("explicitExceptionFinally.afterBlock", ICounter.EMPTY);
 
 	}
 
