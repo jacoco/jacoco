@@ -74,8 +74,8 @@ public class Target03 {
 			nop(); // $line-noExceptionTryCatch.tryBlock$
 		} catch (StubException e) { // $line-noExceptionTryCatch.catch$
 			nop(); // $line-noExceptionTryCatch.catchBlock$
-		}
-	}
+		} // $line-noExceptionTryCatch.catchBlockEnd$
+	} // $line-noExceptionTryCatch.afterBlock$
 
 	private static void implicitExceptionTryCatch() {
 		nop(); // $line-implicitExceptionTryCatch.beforeBlock$
@@ -85,8 +85,8 @@ public class Target03 {
 			nop(); // $line-implicitExceptionTryCatch.after$
 		} catch (StubException e) { // $line-implicitExceptionTryCatch.catch$
 			nop(); // $line-implicitExceptionTryCatch.catchBlock$
-		}
-	}
+		} // $line-implicitExceptionTryCatch.catchBlockEnd$
+	} // $line-implicitExceptionTryCatch.afterBlock$
 
 	private static void implicitExceptionTryCatchAfterCondition() {
 		if (f()) { // $line-implicitExceptionTryCatchAfterCondition.condition$
@@ -106,17 +106,17 @@ public class Target03 {
 			throw new StubException(); // $line-explicitExceptionTryCatch.throw$
 		} catch (StubException e) { // $line-explicitExceptionTryCatch.catch$
 			nop(); // $line-explicitExceptionTryCatch.catchBlock$
-		}
-	}
+		} // $line-explicitExceptionTryCatch.catchBlockEnd$
+	} // $line-explicitExceptionTryCatch.afterBlock$
 
 	private static void noExceptionFinally() {
 		nop(); // $line-noExceptionFinally.beforeBlock$
 		try {
 			nop(); // $line-noExceptionFinally.tryBlock$
-		} finally { // $line-noExceptionFinallyFinally$
+		} finally { // $line-noExceptionFinally.finally$
 			nop(); // $line-noExceptionFinally.finallyBlock$
-		}
-	}
+		} // $line-noExceptionFinally.finallyBlockEnd$
+	} // $line-noExceptionFinally.afterBlock$
 
 	private static void implicitExceptionFinally() {
 		nop(); // $line-implicitExceptionFinally.beforeBlock$
@@ -126,8 +126,8 @@ public class Target03 {
 			nop(); // $line-implicitExceptionFinally.after$
 		} finally { // $line-implicitExceptionFinally.finally$
 			nop(); // $line-implicitExceptionFinally.finallyBlock$
-		}
-	}
+		} // $line-implicitExceptionFinally.finallyBlockEnd$
+	} // $line-implicitExceptionFinally.afterBlock$
 
 	private static void explicitExceptionFinally() {
 		nop(); // $line-explicitExceptionFinally.beforeBlock$
@@ -136,7 +136,7 @@ public class Target03 {
 			throw new StubException(); // $line-explicitExceptionFinally.throw$
 		} finally { // $line-explicitExceptionFinally.finally$
 			nop(); // $line-explicitExceptionFinally.finallyBlock$
-		}
-	}
+		} // $line-explicitExceptionFinally.finallyBlockEnd$
+	} // $line-explicitExceptionFinally.afterBlock$
 
 }

@@ -107,6 +107,10 @@ public abstract class ValidationTestBase {
 		analyzer.analyzeClass(bytes, data.getName());
 	}
 
+	boolean isJDKCompiler() {
+		return System.getProperty("bytecode.version") != null;
+	}
+
 	protected void assertLine(final String tag, final int status) {
 		final int nr = source.getLineNumber(tag);
 		final ILine line = sourceCoverage.getLine(nr);
