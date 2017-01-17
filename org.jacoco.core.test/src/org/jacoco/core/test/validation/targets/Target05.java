@@ -16,7 +16,7 @@ import static org.jacoco.core.test.validation.targets.Stubs.i1;
 /**
  * This test target is a class with a static initializer.
  */
-public class Target05 { // $line-classdef$
+public class Target05 {
 
 	// No code required to initialize these fields:
 

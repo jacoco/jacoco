@@ -13,10 +13,12 @@ package org.jacoco.core.test.validation.targets;
 
 /**
  * This test target is a private empty default constructor.
+ *
+ * @see Target06 implicit constructor
  */
 public class Target07 { // $line-classdef$
 
-	private Target07() {
+	private Target07() { // $line-super$
 	} // $line-constructor$
 
 	public static void main(String[] args) {
