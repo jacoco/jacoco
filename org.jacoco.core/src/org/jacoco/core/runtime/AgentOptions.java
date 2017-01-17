@@ -147,7 +147,16 @@ public final class AgentOptions {
 		 * Value for the {@link AgentOptions#OUTPUT} parameter: Do not produce
 		 * any output.
 		 */
-		none
+		none,
+
+		/**
+		 * Value for the {@link AgentOptions#OUTPUT} parameter: At time of exporting a report the
+		 * agent PUTs the report binary data to a HTTP port specified by the
+		 * {@link AgentOptions#ADDRESS}, {@link AgentOptions#PORT} attribute, {@link AgentOptions#DESTFILE} and
+		 * {@link AgentOptions#SESSIONID}. In the following format:
+		 * http://address:port/destfile/sessionid
+		 */
+		httpclient
 
 	}
 
