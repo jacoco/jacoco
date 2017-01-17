@@ -41,6 +41,13 @@
 <h3>Non-functional Changes</h3>
 <ul>
   <li>JaCoCo now depends on ASM 5.2.</li>
+  <li>OSGi metadata now generated automatically and additionally include
+      <code>uses</code> directives, <code>Require-Capability</code> attribute,
+      and export of all internal packages with <code>x-internal:=true</code> directive
+      (GitHub <a href="https://github.com/jacoco/jacoco/issues/211">#211</a>).</li>
+  <li>Removed OSGi attributes that were mistakenly added in version 0.6.1 into
+      <code>jacocoant.jar</code> that contains all dependencies
+      (GitHub <a href="https://github.com/jacoco/jacoco/issues/211">#211</a>).</li>
 </ul>
 
 <h2>Release 0.7.8 (2016/12/09)</h2>
