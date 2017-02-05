@@ -149,8 +149,11 @@ public abstract class AbstractAgentMojo extends AbstractJacocoMojo {
 	protected void skipMojo() {
 		final String name = getEffectivePropertyName();
 		final Properties projectProperties = getProject().getProperties();
-		getLog().info(name + " set to empty");
-		projectProperties.setProperty(name, "");
+		final String oldValue = projectProperties.getProperty(name);
+		if (oldValue == null) {
+			getLog().info(name + " set to empty");
+			projectProperties.setProperty(name, "");
+		}
 	}
 
 	File getAgentJarFile() {
