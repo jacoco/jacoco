@@ -15,6 +15,9 @@ import org.jacoco.core.analysis.ICounter;
 import org.jacoco.core.test.validation.targets.BadCycleInterface;
 import org.junit.Test;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 /**
  * Test of "bad cycles" with interfaces.
  */
@@ -26,7 +29,9 @@ public class BadCycleInterfaceTest extends ValidationTestBase {
 
 	@Test
 	public void test() throws Exception {
-		if (System.getProperty("java.version").startsWith("1.8")) {
+		final Matcher m = Pattern.compile("1\\.8\\.0_(\\d++)(-ea)?")
+				.matcher(System.getProperty("java.version"));
+		if (m.matches() && Integer.parseInt(m.group(1)) < 152) {
 			// Incorrect interpetation of JVMS 5.5 in JDK 8 causes a default
 			// method to be called before the static initializer of an interface
 			// (see JDK-8098557 and JDK-8164302):
@@ -36,7 +41,8 @@ public class BadCycleInterfaceTest extends ValidationTestBase {
 			assertLogEvents("baseclinit", "childdefaultmethod", "childclinit",
 					"childstaticmethod");
 		} else {
-			// This shouldn't happen with JDK 9 (see also JDK-8043275):
+			// This shouldn't happen with JDK 9 (see also JDK-8043275)
+			// and starting with JDK 8u152 (see JDK-8167607):
 			assertLine("baseclinit", ICounter.EMPTY);
 			assertLine("childdefault", ICounter.NOT_COVERED);
 			assertLogEvents("childclinit", "childstaticmethod");
