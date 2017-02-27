@@ -26,6 +26,7 @@ import org.objectweb.asm.Opcodes;
  */
 public class ClassAnalyzerTest {
 
+	private static final int NO_ACCESS_BITS = 0;
 	private ClassAnalyzer analyzer;
 	private ClassCoverageImpl coverage;
 
@@ -53,16 +54,16 @@ public class ClassAnalyzerTest {
 
 	@Test
 	public void testMethodFilter_Empty() {
-		final MethodProbesVisitor mv = analyzer.visitMethod(0, "foo", "()V",
-				null, null);
+		final MethodProbesVisitor mv = analyzer.visitMethod(NO_ACCESS_BITS, "foo",
+				"()V", null, null);
 		mv.visitEnd();
 		assertEquals(0, coverage.getMethods().size());
 	}
 
 	@Test
 	public void testMethodFilter_NonSynthetic() {
-		final MethodProbesVisitor mv = analyzer.visitMethod(0, "foo", "()V",
-				null, null);
+		final MethodProbesVisitor mv = analyzer.visitMethod(NO_ACCESS_BITS, "foo",
+				"()V", null, null);
 		mv.visitCode();
 		mv.visitInsn(Opcodes.RETURN);
 		mv.visitEnd();
