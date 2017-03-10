@@ -11,7 +11,7 @@
  *******************************************************************************/
 package org.jacoco.core.internal.analysis;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.*;
 
 import java.util.ArrayList;
 
@@ -39,6 +39,7 @@ public class MethodAnalyzerTest implements IProbeIdGenerator {
 
 	private MethodNode method;
 
+	private MethodAnalyzer analyzer;
 	private IMethodCoverage result;
 
 	@Before
@@ -70,6 +71,7 @@ public class MethodAnalyzerTest implements IProbeIdGenerator {
 	public void testLinearSequenceNotCovered1() {
 		createLinearSequence();
 		runMethodAnalzer();
+		assertFalse(analyzer.skip);
 		assertEquals(1, nextProbeId);
 
 		assertLine(1001, 1, 0, 0, 0);
@@ -580,8 +582,7 @@ public class MethodAnalyzerTest implements IProbeIdGenerator {
 
 	private void runMethodAnalzer() {
 		LabelFlowAnalyzer.markLabels(method);
-		final MethodAnalyzer analyzer = new MethodAnalyzer("doit", "()V", null,
-				probes);
+		analyzer = new MethodAnalyzer("doit", "()V", null, probes);
 		final MethodProbesAdapter probesAdapter = new MethodProbesAdapter(
 				analyzer, this);
 		// note that CheckMethodAdapter verifies that this test does not violate
@@ -601,4 +602,12 @@ public class MethodAnalyzerTest implements IProbeIdGenerator {
 				line.getBranchCounter());
 	}
 
+	@Test
+	public void testSkipLombokGeneratedAnnotation() throws Exception {
+		method.visitAnnotation("Llombok/Generated;", true);
+
+		runMethodAnalzer();
+
+		assertTrue(analyzer.skip);
+	}
 }
