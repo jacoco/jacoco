@@ -37,6 +37,8 @@ import org.junit.Before;
  */
 public abstract class ValidationTestBase {
 
+	static final boolean isJDKCompiler = Compiler.DETECT.isJDK();
+
 	private static final String[] STATUS_NAME = new String[4];
 
 	{
@@ -105,10 +107,6 @@ public abstract class ValidationTestBase {
 		final byte[] bytes = TargetLoader.getClassDataAsBytes(
 				target.getClassLoader(), data.getName());
 		analyzer.analyzeClass(bytes, data.getName());
-	}
-
-	boolean isJDKCompiler() {
-		return System.getProperty("bytecode.version") != null;
 	}
 
 	protected void assertLine(final String tag, final int status) {
