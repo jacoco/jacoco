@@ -118,8 +118,9 @@ public abstract class ValidationTestBase {
 		assertEquals(msg, STATUS_NAME[status], STATUS_NAME[insnStatus]);
 	}
 
-	protected void assertLine(final String tag, final int missedBranches,
-			final int coveredBranches) {
+	protected void assertLine(final String tag, final int status,
+			final int missedBranches, final int coveredBranches) {
+		assertLine(tag, status);
 		final int nr = source.getLineNumber(tag);
 		final ILine line = sourceCoverage.getLine(nr);
 		final String msg = String.format("Branches in line %s: %s",
@@ -127,12 +128,6 @@ public abstract class ValidationTestBase {
 		assertEquals(msg + " branches",
 				CounterImpl.getInstance(missedBranches, coveredBranches),
 				line.getBranchCounter());
-	}
-
-	protected void assertLine(final String tag, final int status,
-			final int missedBranches, final int coveredBranches) {
-		assertLine(tag, status);
-		assertLine(tag, missedBranches, coveredBranches);
 	}
 
 	protected void assertLogEvents(String... events) throws Exception {

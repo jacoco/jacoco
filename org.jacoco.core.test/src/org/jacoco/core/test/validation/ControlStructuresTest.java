@@ -41,8 +41,8 @@ public class ControlStructuresTest extends ValidationTestBase {
 		assertLine("missedelse", ICounter.NOT_COVERED);
 
 		// 4. Missed while block
-		// ECJ and javac produce different status here
-		assertLine("whilefalse", 1, 1);
+		assertLine("whilefalse", isJDKCompiler ? ICounter.FULLY_COVERED
+				: ICounter.PARTLY_COVERED, 1, 1);
 		assertLine("missedwhile", ICounter.NOT_COVERED);
 
 		// 5. Always true while block
