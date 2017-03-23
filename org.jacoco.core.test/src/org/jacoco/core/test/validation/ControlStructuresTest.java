@@ -41,8 +41,7 @@ public class ControlStructuresTest extends ValidationTestBase {
 		assertLine("missedelse", ICounter.NOT_COVERED);
 
 		// 4. Missed while block
-		assertLine("whilefalse", isJDKCompiler ? ICounter.FULLY_COVERED
-				: ICounter.PARTLY_COVERED, 1, 1);
+		assertLine("whilefalse", ICounter.FULLY_COVERED, 1, 1);
 		assertLine("missedwhile", ICounter.NOT_COVERED);
 
 		// 5. Always true while block
@@ -54,6 +53,7 @@ public class ControlStructuresTest extends ValidationTestBase {
 
 		// 7. Executed do while block
 		assertLine("executeddowhile", ICounter.FULLY_COVERED);
+		assertLine("executeddowhilefalse", ICounter.FULLY_COVERED, 1, 1);
 
 		// 8. Missed for block
 		assertLine("missedforincrementer", ICounter.PARTLY_COVERED, 1, 1);
@@ -121,12 +121,16 @@ public class ControlStructuresTest extends ValidationTestBase {
 		assertLine("executedcontinue", ICounter.FULLY_COVERED);
 		assertLine("missedaftercontinue", ICounter.NOT_COVERED);
 
-		// 20. Return statement
-		assertLine("return", ICounter.FULLY_COVERED);
-		assertLine("afterreturn", ICounter.NOT_COVERED);
+		// 20. Conditional return statement
+		assertLine("conditionalreturn", ICounter.FULLY_COVERED);
+		assertLine("afterconditionalreturn", ICounter.NOT_COVERED);
 
 		// 21. Implicit return
 		assertLine("implicitreturn", ICounter.FULLY_COVERED);
+
+		// 22. Explicit return
+		assertLine("explicitreturn", ICounter.FULLY_COVERED);
+		assertLine("afterexplicitreturn", ICounter.EMPTY);
 
 	}
 
