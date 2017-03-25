@@ -11,6 +11,8 @@
  *******************************************************************************/
 package org.jacoco.core.internal.flow;
 
+import org.objectweb.asm.tree.AbstractInsnNode;
+
 /**
  * Representation of a byte code instruction for analysis. Internally used for
  * analysis.
@@ -24,6 +26,8 @@ public class Instruction {
 	private int coveredBranches;
 
 	private Instruction predecessor;
+
+	public AbstractInsnNode node;
 
 	/**
 	 * New instruction at the given line.

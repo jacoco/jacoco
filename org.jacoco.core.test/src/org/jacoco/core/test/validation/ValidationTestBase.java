@@ -37,7 +37,7 @@ import org.junit.Before;
  */
 public abstract class ValidationTestBase {
 
-	static final boolean isJDKCompiler = Compiler.DETECT.isJDK();
+	protected static final boolean isJDKCompiler = Compiler.DETECT.isJDK();
 
 	private static final String[] STATUS_NAME = new String[4];
 

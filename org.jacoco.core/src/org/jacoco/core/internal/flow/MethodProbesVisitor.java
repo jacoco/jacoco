@@ -14,6 +14,7 @@ package org.jacoco.core.internal.flow;
 import org.jacoco.core.internal.instr.InstrSupport;
 import org.objectweb.asm.Label;
 import org.objectweb.asm.MethodVisitor;
+import org.objectweb.asm.tree.MethodNode;
 
 /**
  * A {@link MethodVisitor} with additional methods to get probe insertion
@@ -147,4 +148,8 @@ public abstract class MethodProbesVisitor extends MethodVisitor {
 			final int[] keys, final Label[] labels, final IFrame frame) {
 	}
 
+	public void accept(final MethodNode methodNode,
+			final MethodVisitor methodVisitor) {
+		methodNode.accept(methodVisitor);
+	}
 }

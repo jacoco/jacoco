@@ -84,9 +84,9 @@ public class ClassProbesAdapter extends ClassVisitor implements
 							ClassProbesAdapter.this.name, access, name, desc,
 							probesAdapter);
 					probesAdapter.setAnalyzer(analyzer);
-					this.accept(analyzer);
+					methodProbes.accept(this, analyzer);
 				} else {
-					this.accept(probesAdapter);
+					methodProbes.accept(this, probesAdapter);
 				}
 			}
 		};
