@@ -21,12 +21,13 @@
 
   <artifactId>report</artifactId>
   <name>Aggregate Report</name>
-  
+
   <dependencies>
     <dependency>
       <groupId>jacoco</groupId>
       <artifactId>child1</artifactId>
       <version>${project.version}</version>
+      <scope>compile</scope>
     </dependency>
     <dependency>
       <groupId>jacoco</groupId>
@@ -38,6 +39,7 @@
       <groupId>jacoco</groupId>
       <artifactId>child2</artifactId>
       <version>${project.version}</version>
+      <scope>runtime</scope>
     </dependency>
   </dependencies>
 
