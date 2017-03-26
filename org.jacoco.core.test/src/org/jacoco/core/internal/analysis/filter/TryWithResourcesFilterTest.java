@@ -647,10 +647,13 @@ public class TryWithResourcesFilterTest implements IFilterOutput {
 		print();
 		new TryWithResourcesFilter().filter(m, this);
 
-		assertEquals(1, from.size());
+		assertEquals(2, from.size());
 
 		assertEquals(m.instructions.get(5), from.get(0));
-		assertEquals(m.instructions.get(88), to.get(0));
+		assertEquals(m.instructions.get(9), to.get(0));
+
+		assertEquals(m.instructions.get(11), from.get(1));
+		assertEquals(m.instructions.get(88), to.get(1));
 	}
 
 	/**

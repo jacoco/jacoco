@@ -17,6 +17,7 @@ import org.objectweb.asm.tree.JumpInsnNode;
 import org.objectweb.asm.tree.LabelNode;
 import org.objectweb.asm.tree.MethodInsnNode;
 import org.objectweb.asm.tree.MethodNode;
+import org.objectweb.asm.tree.TryCatchBlockNode;
 import org.objectweb.asm.tree.VarInsnNode;
 
 import java.util.HashMap;
@@ -29,15 +30,24 @@ public final class TryWithResourcesFilter implements IFilter {
 
 	public void filter(final MethodNode methodNode,
 			final IFilterOutput output) {
-		if (methodNode.tryCatchBlocks.isEmpty()
-				|| methodNode.instructions.size() <= 11) {
+		if (methodNode.tryCatchBlocks.isEmpty()) {
 			return;
 		}
 		final Matcher matcher = new Matcher(output);
-		for (AbstractInsnNode i = methodNode.instructions.getFirst()
-				.getNext(); i != null; i = i.getNext()) {
-			if (i.getOpcode() == Opcodes.ALOAD) {
-				matcher.match(i);
+		for (TryCatchBlockNode t : methodNode.tryCatchBlocks) {
+			if (t.type == null) {
+				matcher.start(t.handler);
+				if (!matcher.matchEcj()) {
+					matcher.start(t.handler);
+					matcher.matchEcjNoFlowOut();
+				}
+			} else if ("java/lang/Throwable".equals(t.type)) {
+				for (Matcher.JavacPattern p : Matcher.JavacPattern.values()) {
+					matcher.start(t.handler);
+					if (matcher.matchJavac(p)) {
+						break;
+					}
+				}
 			}
 		}
 	}
@@ -56,51 +66,19 @@ public final class TryWithResourcesFilter implements IFilter {
 			this.output = output;
 		}
 
-		private enum Pattern {
-			ECJ, JAVAC_OPTIMAL, JAVAC_FULL, JAVAC_OMITTED_NULL_CHECK, JAVAC_METHOD,
+		private enum JavacPattern {
+			OPTIMAL, FULL, OMITTED_NULL_CHECK, METHOD,
 		}
 
-		public void match(final AbstractInsnNode start) {
+		private void start(final AbstractInsnNode start) {
 			this.start = start;
-			for (final Pattern t : Pattern.values()) {
-				cursor = start.getPrevious();
-				vars.clear();
-				labels.clear();
-				owners.clear();
-				if (matches(t)) {
-					break;
-				}
-			}
+			cursor = start.getPrevious();
+			vars.clear();
+			labels.clear();
+			owners.clear();
 		}
 
-		private boolean matches(final Pattern pattern) {
-			switch (pattern) {
-			case ECJ:
-				return matchEcj();
-			default:
-				return matchJavac(pattern);
-			}
-		}
-
-		private boolean matchJavac(final Matcher.Pattern p) {
-			if (!nextIsJavacClose(p)) {
-				return false;
-			}
-
-			AbstractInsnNode c = cursor;
-			if (!nextIs(Opcodes.GOTO)) {
-				cursor = c;
-			}
-
-			final AbstractInsnNode bodyStart = cursor;
-			while (!nextIsVar(Opcodes.ASTORE, "primaryExc")) {
-				if (cursor == null) {
-					return false;
-				}
-			}
-			final AbstractInsnNode bodyEnd = cursor.getPrevious().getPrevious();
-			cursor = bodyEnd.getPrevious();
-
+		private boolean matchJavac(final JavacPattern p) {
 			// "catch (Throwable t)"
 			if (!nextIs(Opcodes.ASTORE)) {
 				return false;
@@ -135,8 +113,25 @@ public final class TryWithResourcesFilter implements IFilter {
 				return false;
 			}
 
-			output.ignore(start, bodyStart);
-			output.ignore(bodyEnd, cursor);
+			final AbstractInsnNode end = cursor;
+			AbstractInsnNode c = start.getPrevious();
+			cursor = c;
+			while (!nextIsJavacClose(p)) {
+				c = c.getPrevious();
+				cursor = c;
+				if (cursor == null) {
+					return false;
+				}
+			}
+
+			AbstractInsnNode m = cursor;
+			next();
+			if (cursor.getOpcode() != Opcodes.GOTO) {
+				cursor = m;
+			}
+
+			output.ignore(c.getNext(), cursor);
+			output.ignore(start.getNext(), end);
 			return true;
 		}
 
@@ -145,10 +140,10 @@ public final class TryWithResourcesFilter implements IFilter {
 		 * "primaryExc", on subsequent invocations will use those associations
 		 * for checks.
 		 */
-		private boolean nextIsJavacClose(final Pattern p) {
+		private boolean nextIsJavacClose(final JavacPattern p) {
 			switch (p) {
-			case JAVAC_METHOD:
-			case JAVAC_FULL:
+			case METHOD:
+			case FULL:
 				// "if (r != null)"
 				if (!(nextIsVar(Opcodes.ALOAD, "r")
 						&& nextIs(Opcodes.IFNULL))) {
@@ -156,8 +151,8 @@ public final class TryWithResourcesFilter implements IFilter {
 				}
 			}
 			switch (p) {
-			case JAVAC_METHOD:
-			case JAVAC_OPTIMAL:
+			case METHOD:
+			case OPTIMAL:
 				if (nextIsVar(Opcodes.ALOAD, "primaryExc")
 						&& nextIsVar(Opcodes.ALOAD, "r")
 						&& nextIs(Opcodes.INVOKESTATIC)) {
@@ -167,8 +162,8 @@ public final class TryWithResourcesFilter implements IFilter {
 									.equals(m.desc);
 				}
 				return false;
-			case JAVAC_FULL:
-			case JAVAC_OMITTED_NULL_CHECK:
+			case FULL:
+			case OMITTED_NULL_CHECK:
 				return nextIsVar(Opcodes.ALOAD, "primaryExc")
 						// "if (primaryExc != null)"
 						&& nextIs(Opcodes.IFNULL)
@@ -188,21 +183,6 @@ public final class TryWithResourcesFilter implements IFilter {
 		}
 
 		private boolean matchEcj() {
-			if (!nextIsEcjClose("r0")) {
-				return false;
-			}
-
-			AbstractInsnNode c = cursor;
-			next();
-			if (cursor.getOpcode() != Opcodes.GOTO) {
-				cursor = c;
-				return nextIsEcjNoFlowOut(output);
-			}
-			cursor = c;
-
-			if (!nextIsJump(Opcodes.GOTO, "r0.end")) {
-				return false;
-			}
 			// "catch (any primaryExc)"
 			if (!nextIsVar(Opcodes.ASTORE, "primaryExc")) {
 				return false;
@@ -210,11 +190,12 @@ public final class TryWithResourcesFilter implements IFilter {
 			if (!nextIsEcjCloseAndThrow("r0")) {
 				return false;
 			}
+
+			AbstractInsnNode c;
 			int resources = 1;
 			String r = "r" + resources;
 			c = cursor;
-			while (nextIsLabel("r" + (resources - 1) + ".end")
-					&& nextIsEcjClose(r)) {
+			while (nextIsEcjClose(r)) {
 				if (!nextIsJump(Opcodes.GOTO, r + ".end")) {
 					return false;
 				}
@@ -240,42 +221,42 @@ public final class TryWithResourcesFilter implements IFilter {
 				return false;
 			}
 
-			output.ignore(start, cursor);
-			return true;
-		}
-
-		private boolean nextIsEcjNoFlowOut(final IFilterOutput output) {
-			int resources = 1;
-
-			AbstractInsnNode c = cursor;
-			while (nextIsEcjClose("r" + resources)) {
-				c = cursor;
-				resources++;
-			}
+			final AbstractInsnNode end = cursor;
+			c = start.getPrevious();
 			cursor = c;
-
-			final AbstractInsnNode bodyStart = cursor;
-			while (!(Opcodes.IRETURN <= cursor.getOpcode()
-					&& cursor.getOpcode() <= Opcodes.ARETURN)) {
-				next();
+			while (!nextIsEcjClose("r0")) {
+				c = c.getPrevious();
+				cursor = c;
 				if (cursor == null) {
 					return false;
 				}
 			}
-			final AbstractInsnNode bodyEnd = cursor.getNext();
+			next();
+			if (cursor.getOpcode() != Opcodes.GOTO) {
+				return false;
+			}
 
+			output.ignore(c.getNext(), cursor);
+			output.ignore(start.getNext(), end);
+			return true;
+		}
+
+		private boolean matchEcjNoFlowOut() {
 			// "catch (any primaryExc)"
 			if (!nextIsVar(Opcodes.ASTORE, "primaryExc")) {
 				return false;
 			}
-			for (int r = 0; r < resources; r++) {
-				if (!nextIsEcjCloseAndThrow("r" + r)) {
-					return false;
-				}
-				if (!nextIsEcjSuppress("r" + r)) {
-					return false;
-				}
+
+			AbstractInsnNode c;
+			int resources = 0;
+			String r = "r" + resources;
+			c = cursor;
+			while (nextIsEcjCloseAndThrow(r) && nextIsEcjSuppress(r)) {
+				resources++;
+				r = "r" + resources;
+				c = cursor;
 			}
+			cursor = c;
 			// "throw primaryExc"
 			if (!nextIsVar(Opcodes.ALOAD, "primaryExc")) {
 				return false;
@@ -284,8 +265,24 @@ public final class TryWithResourcesFilter implements IFilter {
 				return false;
 			}
 
-			output.ignore(start, bodyStart);
-			output.ignore(bodyEnd, cursor);
+			final AbstractInsnNode end = cursor;
+			c = start.getPrevious();
+			cursor = c;
+			while (!nextIsEcjClose("r0")) {
+				c = c.getPrevious();
+				cursor = c;
+				if (cursor == null) {
+					return false;
+				}
+			}
+			for (int i = 1; i < resources; i++) {
+				if (!nextIsEcjClose("r" + i)) {
+					return false;
+				}
+			}
+
+			output.ignore(c.getNext(), cursor);
+			output.ignore(start, end);
 			return true;
 		}
 

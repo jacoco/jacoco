@@ -120,9 +120,8 @@ public class TryWithResourcesTest extends ValidationTestBase {
 	@Test
 	public void handwritten() {
 		if (isJDKCompiler) {
-			// TODO getPrevious doesn't skip line numbers
 			assertLine("handwritten",
-					/* partly when ECJ: */ICounter.PARTLY_COVERED);
+					/* partly when ECJ: */ICounter.EMPTY);
 		}
 	}
 
