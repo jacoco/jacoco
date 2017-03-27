@@ -41,8 +41,27 @@ public final class LabelInfo {
 
 	private Instruction instruction = null;
 
+	private int charStart = 0;
+	private int charEnd = 0;
+
 	// instances are only created within this class
 	private LabelInfo() {
+	}
+
+	public static void setPos(final Label label, int charStart, int charEnd) {
+		LabelInfo info = create(label);
+		info.charStart = charStart;
+		info.charEnd = charEnd;
+	}
+
+	public static int getCharStart(final Label label) {
+		LabelInfo info = create(label);
+		return info.charStart;
+	}
+
+	public static int getCharEnd(final Label label) {
+		LabelInfo info = create(label);
+		return info.charEnd;
 	}
 
 	/**
