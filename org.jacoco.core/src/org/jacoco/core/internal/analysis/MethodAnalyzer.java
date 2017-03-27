@@ -17,10 +17,12 @@ import java.util.List;
 import org.jacoco.core.analysis.ICounter;
 import org.jacoco.core.analysis.IMethodCoverage;
 import org.jacoco.core.analysis.ISourceNode;
+import org.jacoco.core.internal.annotations.Annotations;
 import org.jacoco.core.internal.flow.IFrame;
 import org.jacoco.core.internal.flow.Instruction;
 import org.jacoco.core.internal.flow.LabelInfo;
 import org.jacoco.core.internal.flow.MethodProbesVisitor;
+import org.objectweb.asm.AnnotationVisitor;
 import org.objectweb.asm.Handle;
 import org.objectweb.asm.Label;
 
@@ -84,6 +86,15 @@ public class MethodAnalyzer extends MethodProbesVisitor {
 	 */
 	public IMethodCoverage getCoverage() {
 		return coverage;
+	}
+
+	@Override
+	public AnnotationVisitor visitAnnotation(final String desc,
+			final boolean visible) {
+		if (Annotations.isTreatAsCovered(desc)) {
+			this.coverage.setTreatAsFullyCovered(true);
+		}
+		return super.visitAnnotation(desc, visible);
 	}
 
 	@Override
@@ -276,8 +287,9 @@ public class MethodAnalyzer extends MethodProbesVisitor {
 			final int covered = i.getCoveredBranches();
 			final ICounter instrCounter = covered == 0 ? CounterImpl.COUNTER_1_0
 					: CounterImpl.COUNTER_0_1;
-			final ICounter branchCounter = total > 1 ? CounterImpl.getInstance(
-					total - covered, covered) : CounterImpl.COUNTER_0_0;
+			final ICounter branchCounter = total > 1
+					? CounterImpl.getInstance(total - covered, covered)
+					: CounterImpl.COUNTER_0_0;
 			coverage.increment(instrCounter, branchCounter, i.getLine());
 		}
 		coverage.incrementMethodCounter();

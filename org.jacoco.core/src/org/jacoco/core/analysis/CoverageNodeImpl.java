@@ -42,6 +42,9 @@ public class CoverageNodeImpl implements ICoverageNode {
 	/** Counter for classes. */
 	protected CounterImpl classCounter;
 
+	/** Treat all branches as being executed, even if they are not. */
+	private boolean treatAsFullyCovered;
+
 	/**
 	 * Creates a new coverage data node.
 	 * 
@@ -68,12 +71,12 @@ public class CoverageNodeImpl implements ICoverageNode {
 	 *            counters to add
 	 */
 	public void increment(final ICoverageNode child) {
-		instructionCounter = instructionCounter.increment(child
-				.getInstructionCounter());
+		instructionCounter = instructionCounter
+				.increment(child.getInstructionCounter());
 		branchCounter = branchCounter.increment(child.getBranchCounter());
 		lineCounter = lineCounter.increment(child.getLineCounter());
-		complexityCounter = complexityCounter.increment(child
-				.getComplexityCounter());
+		complexityCounter = complexityCounter
+				.increment(child.getComplexityCounter());
 		methodCounter = methodCounter.increment(child.getMethodCounter());
 		classCounter = classCounter.increment(child.getClassCounter());
 	}
@@ -101,28 +104,44 @@ public class CoverageNodeImpl implements ICoverageNode {
 		return name;
 	}
 
+	/**
+	 * Get the counter after treatments have been applied. Treatments include
+	 * being fully countered.
+	 * 
+	 * @param counter
+	 *            Counter to treat.
+	 * @return New counter that has had the treaments applied to counter.
+	 */
+	private ICounter getTreatedCounter(final ICounter counter) {
+		if (this.treatAsFullyCovered) {
+			return counter.treatAsFullyCovered();
+		} else {
+			return counter;
+		}
+	}
+
 	public ICounter getInstructionCounter() {
-		return instructionCounter;
+		return this.getTreatedCounter(instructionCounter);
 	}
 
 	public ICounter getBranchCounter() {
-		return branchCounter;
+		return this.getTreatedCounter(this.branchCounter);
 	}
 
 	public ICounter getLineCounter() {
-		return lineCounter;
+		return this.getTreatedCounter(lineCounter);
 	}
 
 	public ICounter getComplexityCounter() {
-		return complexityCounter;
+		return this.getTreatedCounter(complexityCounter);
 	}
 
 	public ICounter getMethodCounter() {
-		return methodCounter;
+		return this.getTreatedCounter(methodCounter);
 	}
 
 	public ICounter getClassCounter() {
-		return classCounter;
+		return this.getTreatedCounter(classCounter);
 	}
 
 	public ICounter getCounter(final CounterEntity entity) {
@@ -154,10 +173,22 @@ public class CoverageNodeImpl implements ICoverageNode {
 		return copy;
 	}
 
+	public void setTreatAsFullyCovered(final boolean treatAsFullyCovered) {
+		this.treatAsFullyCovered = treatAsFullyCovered;
+	}
+
+	public boolean isTreatedAsFullyCovered() {
+		return this.treatAsFullyCovered;
+	}
+
 	@Override
 	public String toString() {
 		final StringBuilder sb = new StringBuilder();
-		sb.append(name).append(" [").append(elementType).append("]");
+		sb.append(name).append(" [").append(elementType);
+		if (this.isTreatedAsFullyCovered()) {
+			sb.append(" TREAT_AS_FULLY_COVERED");
+		}
+		sb.append("]");
 		return sb.toString();
 	}
 

@@ -116,4 +116,12 @@ public interface ICounter {
 	 */
 	public int getStatus();
 
+	/**
+	 * Get a counter that indicates that all the branches in this counter have
+	 * been covered, and nothing has been missed.
+	 * 
+	 * @return Counter with same number of branches as this counter.
+	 */
+	public ICounter treatAsFullyCovered();
+
 }

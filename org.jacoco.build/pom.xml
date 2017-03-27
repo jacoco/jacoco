@@ -81,6 +81,9 @@
     <contributor>
       <name>Christoph Beck</name>
     </contributor>
+    <contributor>
+      <name>Marc Pawlowsky</name>
+    </contributor>
   </contributors>
 
   <prerequisites>
@@ -89,6 +92,7 @@
 
   <modules>
     <!-- Order is important: org.jacoco.agent.rt embeds into org.jacoco.agent and JaCoCo Agent used during tests -->
+    <module>../org.jacoco.annotations</module>
     <module>../org.jacoco.core</module>
     <module>../org.jacoco.report</module>
     <module>../org.jacoco.agent.rt</module>
