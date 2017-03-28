@@ -14,6 +14,7 @@ package org.jacoco.core.internal.flow;
 import org.jacoco.core.internal.instr.InstrSupport;
 import org.objectweb.asm.Label;
 import org.objectweb.asm.MethodVisitor;
+import org.objectweb.asm.tree.MethodNode;
 
 /**
  * A {@link MethodVisitor} with additional methods to get probe insertion
@@ -145,6 +146,22 @@ public abstract class MethodProbesVisitor extends MethodVisitor {
 	@SuppressWarnings("unused")
 	public void visitLookupSwitchInsnWithProbes(final Label dflt,
 			final int[] keys, final Label[] labels, final IFrame frame) {
+	}
+
+	/**
+	 * This method can be overwritten to hook into the process of emitting the
+	 * instructions of this method as <code>visitX()</code> events.
+	 *
+	 * @param methodNode
+	 *            the content to emit
+	 * @param methodVisitor
+	 *            A visitor to emit the content to. Note that this is not
+	 *            necessarily this visitor instance but some wrapper which
+	 *            calculates the probes.
+	 */
+	public void accept(final MethodNode methodNode,
+			final MethodVisitor methodVisitor) {
+		methodNode.accept(methodVisitor);
 	}
 
 }
