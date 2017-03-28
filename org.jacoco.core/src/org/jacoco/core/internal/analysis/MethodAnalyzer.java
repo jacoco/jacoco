@@ -151,8 +151,7 @@ public class MethodAnalyzer extends MethodProbesVisitor
 	}
 
 	private void visitInsn() {
-		final Instruction insn = new Instruction(currentLine);
-		insn.node = currentNode;
+		final Instruction insn = new Instruction(currentNode, currentLine);
 		instructions.add(insn);
 		if (lastInsn != null) {
 			insn.setPredecessor(lastInsn);
@@ -318,7 +317,7 @@ public class MethodAnalyzer extends MethodProbesVisitor
 		// Report result:
 		coverage.ensureCapacity(firstLine, lastLine);
 		for (final Instruction i : instructions) {
-			if (ignored.contains(i.node)) {
+			if (ignored.contains(i.getNode())) {
 				continue;
 			}
 

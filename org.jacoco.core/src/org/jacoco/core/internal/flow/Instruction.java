@@ -19,6 +19,8 @@ import org.objectweb.asm.tree.AbstractInsnNode;
  */
 public class Instruction {
 
+	private final AbstractInsnNode node;
+
 	private final int line;
 
 	private int branches;
@@ -27,18 +29,26 @@ public class Instruction {
 
 	private Instruction predecessor;
 
-	public AbstractInsnNode node;
-
 	/**
 	 * New instruction at the given line.
 	 * 
+	 * @param node
+	 *            corresponding node
 	 * @param line
 	 *            source line this instruction belongs to
 	 */
-	public Instruction(final int line) {
+	public Instruction(final AbstractInsnNode node, final int line) {
+		this.node = node;
 		this.line = line;
 		this.branches = 0;
 		this.coveredBranches = 0;
+	}
+
+	/**
+	 * @return corresponding node
+	 */
+	public AbstractInsnNode getNode() {
+		return node;
 	}
 
 	/**
