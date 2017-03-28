@@ -148,8 +148,20 @@ public abstract class MethodProbesVisitor extends MethodVisitor {
 			final int[] keys, final Label[] labels, final IFrame frame) {
 	}
 
+	/**
+	 * This method can be overwritten to hook into the process of emitting the
+	 * instructions of this method as <code>visitX()</code> events.
+	 *
+	 * @param methodNode
+	 *            the content to emit
+	 * @param methodVisitor
+	 *            A visitor to emit the content to. Note that this is not
+	 *            necessarily this visitor instance but some wrapper which
+	 *            calculates the probes.
+	 */
 	public void accept(final MethodNode methodNode,
 			final MethodVisitor methodVisitor) {
 		methodNode.accept(methodVisitor);
 	}
+
 }
