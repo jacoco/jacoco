@@ -13,37 +13,20 @@ package org.jacoco.core.internal.analysis.filter;
 
 import static org.junit.Assert.assertEquals;
 
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.jacoco.core.internal.Java9Support;
 import org.jacoco.core.internal.instr.InstrSupport;
 import org.junit.Test;
-import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.Label;
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.tree.AbstractInsnNode;
 import org.objectweb.asm.tree.MethodNode;
-import org.objectweb.asm.util.ASMifier;
-import org.objectweb.asm.util.TraceClassVisitor;
 
 public class TryWithResourcesFilterTest implements IFilterOutput {
 
 	private final MethodNode m = new MethodNode(InstrSupport.ASM_API_VERSION, 0,
 			"name", "()V", null, null);
-
-	private static void asmify(String filename) throws IOException {
-		final byte[] bytes = Java9Support.downgrade(
-				Java9Support.readFully(new FileInputStream(filename)));
-		final ClassReader cr = new ClassReader(bytes);
-		cr.accept(
-				new TraceClassVisitor(null, new ASMifier(),
-						new PrintWriter(System.out)),
-				ClassReader.SKIP_FRAMES | ClassReader.SKIP_DEBUG);
-	}
 
 	/**
 	 * javac 9 for
