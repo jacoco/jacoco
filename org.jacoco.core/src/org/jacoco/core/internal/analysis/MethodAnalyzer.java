@@ -113,10 +113,10 @@ public class MethodAnalyzer extends MethodProbesVisitor
 		for (final TryCatchBlockNode n : methodNode.tryCatchBlocks) {
 			n.accept(methodVisitor);
 		}
-		for (int i = 0; i < methodNode.instructions.size(); i++) {
-			final AbstractInsnNode instruction = methodNode.instructions.get(i);
-			currentNode = instruction;
-			instruction.accept(methodVisitor);
+		currentNode = methodNode.instructions.getFirst();
+		while (currentNode != null) {
+			currentNode.accept(methodVisitor);
+			currentNode = currentNode.getNext();
 		}
 		methodVisitor.visitEnd();
 	}
