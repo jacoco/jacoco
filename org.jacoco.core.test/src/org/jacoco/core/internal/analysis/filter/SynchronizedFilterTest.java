@@ -19,6 +19,7 @@ import org.junit.Test;
 import org.objectweb.asm.Label;
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.tree.AbstractInsnNode;
+import org.objectweb.asm.tree.LabelNode;
 import org.objectweb.asm.tree.MethodNode;
 
 public class SynchronizedFilterTest implements IFilterOutput {
@@ -63,8 +64,8 @@ public class SynchronizedFilterTest implements IFilterOutput {
 		m.visitInsn(Opcodes.RETURN);
 
 		filter.filter(m, this);
-		assertEquals(m.instructions.get(11), from);
-		assertEquals(m.instructions.get(17), to);
+		assertEquals(handler.info, from);
+		assertEquals(((LabelNode) exit.info).getPrevious(), to);
 	}
 
 	/**
@@ -151,8 +152,8 @@ public class SynchronizedFilterTest implements IFilterOutput {
 		m.visitInsn(Opcodes.RETURN);
 
 		filter.filter(m, this);
-		assertEquals(m.instructions.get(12), from);
-		assertEquals(m.instructions.get(16), to);
+		assertEquals(handler.info, from);
+		assertEquals(((LabelNode) exit.info).getPrevious(), to);
 	}
 
 	public void ignore(AbstractInsnNode from, AbstractInsnNode to) {
