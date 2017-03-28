@@ -28,9 +28,7 @@ import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.tree.AbstractInsnNode;
 import org.objectweb.asm.tree.MethodNode;
 import org.objectweb.asm.util.ASMifier;
-import org.objectweb.asm.util.Textifier;
 import org.objectweb.asm.util.TraceClassVisitor;
-import org.objectweb.asm.util.TraceMethodVisitor;
 
 public class TryWithResourcesFilterTest implements IFilterOutput {
 
@@ -60,6 +58,11 @@ public class TryWithResourcesFilterTest implements IFilterOutput {
 	 */
 	@Test
 	public void test1() {
+		final Range range0 = new Range();
+		final Range range1 = new Range();
+		final Range range2 = new Range();
+		final Range range3 = new Range();
+
 		final Label handler1 = new Label();
 		m.visitTryCatchBlock(handler1, handler1, handler1,
 				"java/lang/Throwable");
@@ -89,12 +92,15 @@ public class TryWithResourcesFilterTest implements IFilterOutput {
 
 		// $closeResource(primaryExc1, r1)
 		m.visitVarInsn(Opcodes.ALOAD, 4);
+		range0.fromInclusive = m.instructions.getLast();
 		m.visitVarInsn(Opcodes.ALOAD, 3);
 		m.visitMethodInsn(Opcodes.INVOKESTATIC, "Fun", "$closeResource",
 				"(Ljava/lang/Throwable;Ljava/lang/AutoCloseable;)V", false);
+		range0.toInclusive = m.instructions.getLast();
 
 		// if (r0 != null)
 		m.visitVarInsn(Opcodes.ALOAD, 1);
+		range2.fromInclusive = m.instructions.getLast();
 		final Label l11 = new Label();
 		m.visitJumpInsn(Opcodes.IFNULL, l11);
 		// $closeResource(primaryExc0, r0)
@@ -102,6 +108,7 @@ public class TryWithResourcesFilterTest implements IFilterOutput {
 		m.visitVarInsn(Opcodes.ALOAD, 1);
 		m.visitMethodInsn(Opcodes.INVOKESTATIC, "Fun", "$closeResource",
 				"(Ljava/lang/Throwable;Ljava/lang/AutoCloseable;)V", false);
+		range2.toInclusive = m.instructions.getLast();
 		m.visitLabel(l11);
 
 		// finally
@@ -112,6 +119,7 @@ public class TryWithResourcesFilterTest implements IFilterOutput {
 		// catch (Throwable t)
 		m.visitLabel(handler1);
 		m.visitVarInsn(Opcodes.ASTORE, 5);
+		range1.fromInclusive = m.instructions.getLast();
 		// primaryExc1 = t
 		m.visitVarInsn(Opcodes.ALOAD, 5);
 		m.visitVarInsn(Opcodes.ASTORE, 4);
@@ -128,10 +136,12 @@ public class TryWithResourcesFilterTest implements IFilterOutput {
 				"(Ljava/lang/Throwable;Ljava/lang/AutoCloseable;)V", false);
 		m.visitVarInsn(Opcodes.ALOAD, 6);
 		m.visitInsn(Opcodes.ATHROW);
+		range1.toInclusive = m.instructions.getLast();
 
 		// catch (Throwable t)
 		m.visitLabel(handler2);
 		m.visitVarInsn(Opcodes.ASTORE, 3);
+		range3.fromInclusive = m.instructions.getLast();
 		// primaryExc1 = t
 		m.visitVarInsn(Opcodes.ALOAD, 3);
 		m.visitVarInsn(Opcodes.ASTORE, 2);
@@ -154,6 +164,7 @@ public class TryWithResourcesFilterTest implements IFilterOutput {
 		// throw t
 		m.visitVarInsn(Opcodes.ALOAD, 7);
 		m.visitInsn(Opcodes.ATHROW);
+		range3.toInclusive = m.instructions.getLast();
 
 		m.visitVarInsn(Opcodes.ASTORE, 8);
 		// finally
@@ -161,22 +172,21 @@ public class TryWithResourcesFilterTest implements IFilterOutput {
 		m.visitVarInsn(Opcodes.ALOAD, 8);
 		m.visitInsn(Opcodes.ATHROW);
 
-		print();
 		new TryWithResourcesFilter().filter(m, this);
 
 		assertEquals(4, from.size());
 
-		assertEquals(m.instructions.get(9), from.get(0));
-		assertEquals(m.instructions.get(11), to.get(0));
+		assertEquals(range0.fromInclusive, from.get(0));
+		assertEquals(range0.toInclusive, to.get(0));
 
-		assertEquals(m.instructions.get(22), from.get(1));
-		assertEquals(m.instructions.get(32), to.get(1));
+		assertEquals(range1.fromInclusive, from.get(1));
+		assertEquals(range1.toInclusive, to.get(1));
 
-		assertEquals(m.instructions.get(12), from.get(2));
-		assertEquals(m.instructions.get(16), to.get(2));
+		assertEquals(range2.fromInclusive, from.get(2));
+		assertEquals(range2.toInclusive, to.get(2));
 
-		assertEquals(m.instructions.get(34), from.get(3));
-		assertEquals(m.instructions.get(47), to.get(3));
+		assertEquals(range3.fromInclusive, from.get(3));
+		assertEquals(range3.toInclusive, to.get(3));
 	}
 
 	/**
@@ -192,6 +202,11 @@ public class TryWithResourcesFilterTest implements IFilterOutput {
 	 */
 	@Test
 	public void test2() {
+		final Range range0 = new Range();
+		final Range range1 = new Range();
+		final Range range2 = new Range();
+		final Range range3 = new Range();
+
 		final Label handler1 = new Label();
 		m.visitTryCatchBlock(handler1, handler1, handler1,
 				"java/lang/Throwable");
@@ -221,6 +236,7 @@ public class TryWithResourcesFilterTest implements IFilterOutput {
 		final Label l15 = new Label();
 		// if (r2 != null)
 		m.visitVarInsn(Opcodes.ALOAD, 3);
+		range0.fromInclusive = m.instructions.getLast();
 		m.visitJumpInsn(Opcodes.IFNULL, l15);
 		// if (primaryExc2 != null)
 		m.visitVarInsn(Opcodes.ALOAD, 4);
@@ -245,10 +261,12 @@ public class TryWithResourcesFilterTest implements IFilterOutput {
 		m.visitVarInsn(Opcodes.ALOAD, 3);
 		m.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "Fun$Resource2", "close",
 				"()V", false);
+		range0.toInclusive = m.instructions.getLast();
 		m.visitLabel(l15);
 
 		// if (r1 != null)
 		m.visitVarInsn(Opcodes.ALOAD, 1);
+		range2.fromInclusive = m.instructions.getLast();
 		final Label l23 = new Label();
 		m.visitJumpInsn(Opcodes.IFNULL, l23);
 		// if (primaryExc1 != null)
@@ -273,6 +291,7 @@ public class TryWithResourcesFilterTest implements IFilterOutput {
 		m.visitVarInsn(Opcodes.ALOAD, 1);
 		m.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "Fun$Resource1", "close",
 				"()V", false);
+		range2.toInclusive = m.instructions.getLast();
 		m.visitLabel(l23);
 
 		// finally
@@ -282,6 +301,7 @@ public class TryWithResourcesFilterTest implements IFilterOutput {
 		// catch (Throwable t)
 		m.visitLabel(handler1);
 		m.visitVarInsn(Opcodes.ASTORE, 5);
+		range1.fromInclusive = m.instructions.getLast();
 		// primaryExc2 = t
 		m.visitVarInsn(Opcodes.ALOAD, 5);
 		m.visitVarInsn(Opcodes.ASTORE, 4);
@@ -321,10 +341,12 @@ public class TryWithResourcesFilterTest implements IFilterOutput {
 		// throw t
 		m.visitVarInsn(Opcodes.ALOAD, 7);
 		m.visitInsn(Opcodes.ATHROW);
+		range1.toInclusive = m.instructions.getLast();
 
 		// catch (Throwable t)
 		m.visitLabel(handler2);
 		m.visitVarInsn(Opcodes.ASTORE, 3);
+		range3.fromInclusive = m.instructions.getLast();
 		// primaryExc2 = t
 		m.visitVarInsn(Opcodes.ALOAD, 3);
 		m.visitVarInsn(Opcodes.ASTORE, 2);
@@ -364,6 +386,7 @@ public class TryWithResourcesFilterTest implements IFilterOutput {
 		// throw t
 		m.visitVarInsn(Opcodes.ALOAD, 9);
 		m.visitInsn(Opcodes.ATHROW);
+		range3.toInclusive = m.instructions.getLast();
 
 		m.visitVarInsn(Opcodes.ASTORE, 11);
 		// finally
@@ -371,26 +394,28 @@ public class TryWithResourcesFilterTest implements IFilterOutput {
 		m.visitVarInsn(Opcodes.ALOAD, 11);
 		m.visitInsn(Opcodes.ATHROW);
 
-		print();
 		new TryWithResourcesFilter().filter(m, this);
 
 		assertEquals(4, from.size());
 
-		assertEquals(m.instructions.get(9), from.get(0));
-		assertEquals(m.instructions.get(23), to.get(0));
+		assertEquals(range0.fromInclusive, from.get(0));
+		assertEquals(range0.toInclusive, to.get(0));
 
-		assertEquals(m.instructions.get(44), from.get(1));
-		assertEquals(m.instructions.get(67), to.get(1));
+		assertEquals(range1.fromInclusive, from.get(1));
+		assertEquals(range1.toInclusive, to.get(1));
 
-		assertEquals(m.instructions.get(25), from.get(2));
-		assertEquals(m.instructions.get(39), to.get(2));
+		assertEquals(range2.fromInclusive, from.get(2));
+		assertEquals(range2.toInclusive, to.get(2));
 
-		assertEquals(m.instructions.get(69), from.get(3));
-		assertEquals(m.instructions.get(92), to.get(3));
+		assertEquals(range3.fromInclusive, from.get(3));
+		assertEquals(range3.toInclusive, to.get(3));
 	}
 
 	@Test
 	public void javac9_omitted_null_check() {
+		final Range range0 = new Range();
+		final Range range1 = new Range();
+
 		final Label handler = new Label();
 		m.visitTryCatchBlock(handler, handler, handler, "java/lang/Throwable");
 
@@ -406,6 +431,7 @@ public class TryWithResourcesFilterTest implements IFilterOutput {
 		{
 			// if (primaryExc != null)
 			m.visitVarInsn(Opcodes.ALOAD, 2);
+			range0.fromInclusive = m.instructions.getLast();
 			final Label closeLabel = new Label();
 			m.visitJumpInsn(Opcodes.IFNULL, closeLabel);
 			// r.close
@@ -430,10 +456,12 @@ public class TryWithResourcesFilterTest implements IFilterOutput {
 					false);
 		}
 		m.visitJumpInsn(Opcodes.GOTO, end);
+		range0.toInclusive = m.instructions.getLast();
 		// catch (Throwable t)
 		m.visitLabel(handler);
 		{
 			m.visitVarInsn(Opcodes.ASTORE, 3);
+			range1.fromInclusive = m.instructions.getLast();
 			// primaryExc = t
 			m.visitVarInsn(Opcodes.ALOAD, 3);
 			m.visitVarInsn(Opcodes.ASTORE, 2);
@@ -474,19 +502,19 @@ public class TryWithResourcesFilterTest implements IFilterOutput {
 		// throw t
 		m.visitVarInsn(Opcodes.ALOAD, 4);
 		m.visitInsn(Opcodes.ATHROW);
+		range1.toInclusive = m.instructions.getLast();
 
 		m.visitLabel(end);
 
-		print();
 		new TryWithResourcesFilter().filter(m, this);
 
 		assertEquals(2, from.size());
 
-		assertEquals(m.instructions.get(3), from.get(0));
-		assertEquals(m.instructions.get(16), to.get(0));
+		assertEquals(range0.fromInclusive, from.get(0));
+		assertEquals(range0.toInclusive, to.get(0));
 
-		assertEquals(m.instructions.get(18), from.get(1));
-		assertEquals(m.instructions.get(39), to.get(1));
+		assertEquals(range1.fromInclusive, from.get(1));
+		assertEquals(range1.toInclusive, to.get(1));
 	}
 
 	/**
@@ -502,6 +530,9 @@ public class TryWithResourcesFilterTest implements IFilterOutput {
 	 */
 	@Test
 	public void ecj() {
+		final Range range0 = new Range();
+		final Range range1 = new Range();
+
 		final Label handler = new Label();
 		m.visitTryCatchBlock(handler, handler, handler, null);
 
@@ -520,15 +551,18 @@ public class TryWithResourcesFilterTest implements IFilterOutput {
 		final Label end = new Label();
 		{ // nextIsEcjClose("r0")
 			m.visitVarInsn(Opcodes.ALOAD, 5);
+			range0.fromInclusive = m.instructions.getLast();
 			m.visitJumpInsn(Opcodes.IFNULL, l4);
 			m.visitVarInsn(Opcodes.ALOAD, 5);
 			m.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "Fun2$Resource", "close",
 					"()V", false);
 		}
 		m.visitJumpInsn(Opcodes.GOTO, l4);
+		range0.toInclusive = m.instructions.getLast();
 		// catch (any primaryExc)
 		m.visitLabel(handler);
 		m.visitVarInsn(Opcodes.ASTORE, 1);
+		range1.fromInclusive = m.instructions.getLast();
 		{ // nextIsEcjCloseAndThrow("r0")
 			m.visitVarInsn(Opcodes.ALOAD, 5);
 			Label l11 = new Label();
@@ -640,20 +674,20 @@ public class TryWithResourcesFilterTest implements IFilterOutput {
 		// throw primaryExc
 		m.visitVarInsn(Opcodes.ALOAD, 1);
 		m.visitInsn(Opcodes.ATHROW);
+		range1.toInclusive = m.instructions.getLast();
 
 		// additional handlers
 		m.visitInsn(Opcodes.NOP);
 
-		print();
 		new TryWithResourcesFilter().filter(m, this);
 
 		assertEquals(2, from.size());
 
-		assertEquals(m.instructions.get(5), from.get(0));
-		assertEquals(m.instructions.get(9), to.get(0));
+		assertEquals(range0.fromInclusive, from.get(0));
+		assertEquals(range0.toInclusive, to.get(0));
 
-		assertEquals(m.instructions.get(11), from.get(1));
-		assertEquals(m.instructions.get(88), to.get(1));
+		assertEquals(range1.fromInclusive, from.get(1));
+		assertEquals(range1.toInclusive, to.get(1));
 	}
 
 	/**
@@ -669,6 +703,9 @@ public class TryWithResourcesFilterTest implements IFilterOutput {
 	 */
 	@Test
 	public void ecj_noFlowOut() {
+		final Range range0 = new Range();
+		final Range range1 = new Range();
+
 		final Label handler = new Label();
 		m.visitTryCatchBlock(handler, handler, handler, null);
 
@@ -685,6 +722,7 @@ public class TryWithResourcesFilterTest implements IFilterOutput {
 		{ // nextIsEcjClose("r0")
 			final Label label = new Label();
 			m.visitVarInsn(Opcodes.ALOAD, 5);
+			range0.fromInclusive = m.instructions.getLast();
 			m.visitJumpInsn(Opcodes.IFNULL, label);
 			m.visitVarInsn(Opcodes.ALOAD, 5);
 			m.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "Fun$Resource", "close",
@@ -707,6 +745,7 @@ public class TryWithResourcesFilterTest implements IFilterOutput {
 			m.visitVarInsn(Opcodes.ALOAD, 3);
 			m.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "Fun$Resource", "close",
 					"()V", false);
+			range0.toInclusive = m.instructions.getLast();
 			m.visitLabel(label);
 		}
 
@@ -716,6 +755,7 @@ public class TryWithResourcesFilterTest implements IFilterOutput {
 
 		// catch (any primaryExc)
 		m.visitLabel(handler);
+		range1.fromInclusive = m.instructions.getLast();
 		m.visitVarInsn(Opcodes.ASTORE, 1);
 		{ // nextIsEcjCloseAndThrow("r0")
 			m.visitVarInsn(Opcodes.ALOAD, 5);
@@ -810,33 +850,25 @@ public class TryWithResourcesFilterTest implements IFilterOutput {
 		// throw primaryExc
 		m.visitVarInsn(Opcodes.ALOAD, 1);
 		m.visitInsn(Opcodes.ATHROW);
+		range1.toInclusive = m.instructions.getLast();
 
 		// additional handlers
 		m.visitInsn(Opcodes.NOP);
 
-		print();
 		new TryWithResourcesFilter().filter(m, this);
 
 		assertEquals(2, from.size());
 
-		assertEquals(m.instructions.get(5), from.get(0));
-		assertEquals(m.instructions.get(18), to.get(0));
+		assertEquals(range0.fromInclusive, from.get(0));
+		assertEquals(range0.toInclusive, to.get(0));
 
-		assertEquals(m.instructions.get(22), from.get(1));
-		assertEquals(m.instructions.get(88), to.get(1));
+		assertEquals(range1.fromInclusive, from.get(1));
+		assertEquals(range1.toInclusive, to.get(1));
 	}
 
-	private void print() {
-		final PrintWriter pw = new PrintWriter(System.out);
-		final TraceMethodVisitor mv = new TraceMethodVisitor(new Textifier());
-		for (int i = 0; i < m.instructions.size(); i++) {
-			m.instructions.get(i).accept(mv);
-			pw.format("%3d: @%-8s", i,
-					Integer.toHexString(m.instructions.get(i).hashCode()));
-			mv.p.print(pw);
-			mv.p.getText().clear();
-			pw.flush();
-		}
+	static class Range {
+		AbstractInsnNode fromInclusive;
+		AbstractInsnNode toInclusive;
 	}
 
 	private final List<AbstractInsnNode> from = new ArrayList<AbstractInsnNode>();
