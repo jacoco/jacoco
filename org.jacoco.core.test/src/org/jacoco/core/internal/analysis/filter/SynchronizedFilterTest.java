@@ -23,6 +23,8 @@ import org.objectweb.asm.tree.MethodNode;
 
 public class SynchronizedFilterTest implements IFilterOutput {
 
+	private final SynchronizedFilter filter = new SynchronizedFilter();
+
 	private final MethodNode m = new MethodNode(InstrSupport.ASM_API_VERSION, 0,
 			"name", "()V", null, null);
 
@@ -60,9 +62,61 @@ public class SynchronizedFilterTest implements IFilterOutput {
 		m.visitLabel(exit);
 		m.visitInsn(Opcodes.RETURN);
 
-		new SynchronizedFilter().filter(m, this);
+		filter.filter(m, this);
 		assertEquals(m.instructions.get(11), from);
 		assertEquals(m.instructions.get(17), to);
+	}
+
+	/**
+	 * <pre>
+	 *     try {
+	 *         ...
+	 *     } catch (Exception e) {
+	 *         ...
+	 *     } finally {
+	 *         ...
+	 *     }
+	 * </pre>
+	 */
+	@Test
+	public void javacTryCatchFinally() {
+		final Label start = new Label();
+		final Label end = new Label();
+		final Label catchHandler = new Label();
+		final Label finallyHandler = new Label();
+		final Label catchHandlerEnd = new Label();
+		m.visitTryCatchBlock(start, end, catchHandler, "java/lang/Exception");
+		m.visitTryCatchBlock(start, end, finallyHandler, null);
+		m.visitTryCatchBlock(catchHandler, catchHandlerEnd, finallyHandler,
+				null);
+
+		m.visitLabel(start);
+		// body
+		m.visitInsn(Opcodes.NOP);
+		m.visitLabel(end);
+		// finally
+		m.visitInsn(Opcodes.NOP);
+		final Label exit = new Label();
+		m.visitJumpInsn(Opcodes.GOTO, exit);
+		m.visitLabel(catchHandler);
+		m.visitVarInsn(Opcodes.ASTORE, 1);
+		// catch
+		m.visitInsn(Opcodes.NOP);
+		m.visitLabel(catchHandlerEnd);
+		// finally
+		m.visitInsn(Opcodes.NOP);
+		m.visitJumpInsn(Opcodes.GOTO, exit);
+		m.visitLabel(finallyHandler);
+		m.visitVarInsn(Opcodes.ASTORE, 2);
+		// finally
+		m.visitInsn(Opcodes.NOP);
+		m.visitVarInsn(Opcodes.ALOAD, 2);
+		m.visitInsn(Opcodes.ATHROW);
+		m.visitLabel(exit);
+		m.visitInsn(Opcodes.RETURN);
+
+		filter.filter(m, this);
+		assertNull(from);
 	}
 
 	@Test
@@ -96,7 +150,7 @@ public class SynchronizedFilterTest implements IFilterOutput {
 		m.visitLabel(exit);
 		m.visitInsn(Opcodes.RETURN);
 
-		new SynchronizedFilter().filter(m, this);
+		filter.filter(m, this);
 		assertEquals(m.instructions.get(12), from);
 		assertEquals(m.instructions.get(16), to);
 	}
