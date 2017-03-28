@@ -13,8 +13,21 @@ package org.jacoco.core.internal.analysis.filter;
 
 import org.objectweb.asm.tree.AbstractInsnNode;
 
+/**
+ * Interface used by filters to mark filtered items.
+ */
 public interface IFilterOutput {
 
-	void ignore(AbstractInsnNode from, AbstractInsnNode to);
+	/**
+	 * Marks sequence of instructions that should be ignored during computation
+	 * of coverage.
+	 *
+	 * @param fromInclusive
+	 *            first instruction that should be ignored, inclusive
+	 * @param toInclusive
+	 *            last instruction coming after <code>fromInclusive</code> that
+	 *            should be ignored, inclusive
+	 */
+	void ignore(AbstractInsnNode fromInclusive, AbstractInsnNode toInclusive);
 
 }

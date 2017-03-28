@@ -29,8 +29,8 @@ public class SynchronizedFilterTest implements IFilterOutput {
 	private final MethodNode m = new MethodNode(InstrSupport.ASM_API_VERSION, 0,
 			"name", "()V", null, null);
 
-	private AbstractInsnNode from;
-	private AbstractInsnNode to;
+	private AbstractInsnNode fromInclusive;
+	private AbstractInsnNode toInclusive;
 
 	@Test
 	public void javac() {
@@ -64,8 +64,8 @@ public class SynchronizedFilterTest implements IFilterOutput {
 		m.visitInsn(Opcodes.RETURN);
 
 		filter.filter(m, this);
-		assertEquals(handler.info, from);
-		assertEquals(((LabelNode) exit.info).getPrevious(), to);
+		assertEquals(handler.info, fromInclusive);
+		assertEquals(((LabelNode) exit.info).getPrevious(), toInclusive);
 	}
 
 	/**
@@ -117,7 +117,7 @@ public class SynchronizedFilterTest implements IFilterOutput {
 		m.visitInsn(Opcodes.RETURN);
 
 		filter.filter(m, this);
-		assertNull(from);
+		assertNull(fromInclusive);
 	}
 
 	@Test
@@ -152,14 +152,15 @@ public class SynchronizedFilterTest implements IFilterOutput {
 		m.visitInsn(Opcodes.RETURN);
 
 		filter.filter(m, this);
-		assertEquals(handler.info, from);
-		assertEquals(((LabelNode) exit.info).getPrevious(), to);
+		assertEquals(handler.info, fromInclusive);
+		assertEquals(((LabelNode) exit.info).getPrevious(), toInclusive);
 	}
 
-	public void ignore(AbstractInsnNode from, AbstractInsnNode to) {
-		assertNull(this.from);
-		this.from = from;
-		this.to = to;
+	public void ignore(AbstractInsnNode fromInclusive,
+			AbstractInsnNode toInclusive) {
+		assertNull(this.fromInclusive);
+		this.fromInclusive = fromInclusive;
+		this.toInclusive = toInclusive;
 	}
 
 }

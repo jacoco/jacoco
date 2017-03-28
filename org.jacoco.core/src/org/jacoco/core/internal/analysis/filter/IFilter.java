@@ -13,8 +13,12 @@ package org.jacoco.core.internal.analysis.filter;
 
 import org.objectweb.asm.tree.MethodNode;
 
+/**
+ * Interface for filter implementations. Instances of filters are reused and so
+ * must be stateless.
+ */
 public interface IFilter {
 
-	void filter(final MethodNode methodNode, final IFilterOutput output);
+	void filter(MethodNode methodNode, IFilterOutput output);
 
 }

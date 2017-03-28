@@ -124,11 +124,13 @@ public class MethodAnalyzer extends MethodProbesVisitor
 	private final Set<AbstractInsnNode> ignored = new HashSet<AbstractInsnNode>();
 	private AbstractInsnNode currentNode;
 
-	public void ignore(final AbstractInsnNode from, final AbstractInsnNode to) {
-		for (AbstractInsnNode i = from; i != to; i = i.getNext()) {
+	public void ignore(final AbstractInsnNode fromInclusive,
+			final AbstractInsnNode toInclusive) {
+		for (AbstractInsnNode i = fromInclusive; i != toInclusive; i = i
+				.getNext()) {
 			ignored.add(i);
 		}
-		ignored.add(to);
+		ignored.add(toInclusive);
 	}
 
 	@Override
