@@ -28,7 +28,8 @@ public class Synchronized {
 		synchronized (lock) { // $line-monitorEnter$
 			nop(); // $line-body$
 		} // $line-monitorExit$
-	} // $line-after$
+		nop(); // $line-after$
+	}
 
 	private static void explicitException() {
 		synchronized (lock) { // $line-explicitException.monitorEnter$
