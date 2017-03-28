@@ -30,6 +30,42 @@ public class SynchronizedFilterTest implements IFilterOutput {
 	private AbstractInsnNode to;
 
 	@Test
+	public void javac() {
+		final Label start = new Label();
+		final Label end = new Label();
+		final Label handler = new Label();
+		final Label handlerEnd = new Label();
+		m.visitTryCatchBlock(start, end, handler, null);
+		m.visitTryCatchBlock(handler, handlerEnd, handler, null);
+
+		m.visitVarInsn(Opcodes.ALOAD, 0);
+		m.visitFieldInsn(Opcodes.GETFIELD, "Fun", "lock", "Ljava/lang/Object;");
+		m.visitInsn(Opcodes.DUP);
+		m.visitVarInsn(Opcodes.ASTORE, 1);
+		m.visitInsn(Opcodes.MONITORENTER);
+		m.visitLabel(start);
+		m.visitInsn(Opcodes.NOP);
+		m.visitVarInsn(Opcodes.ALOAD, 1);
+		m.visitInsn(Opcodes.MONITOREXIT);
+		m.visitLabel(end);
+		final Label exit = new Label();
+		m.visitJumpInsn(Opcodes.GOTO, exit);
+		m.visitLabel(handler);
+		m.visitVarInsn(Opcodes.ASTORE, 2);
+		m.visitVarInsn(Opcodes.ALOAD, 1);
+		m.visitInsn(Opcodes.MONITOREXIT);
+		m.visitLabel(handlerEnd);
+		m.visitVarInsn(Opcodes.ALOAD, 2);
+		m.visitInsn(Opcodes.ATHROW);
+		m.visitLabel(exit);
+		m.visitInsn(Opcodes.RETURN);
+
+		new SynchronizedFilter().filter(m, this);
+		assertEquals(m.instructions.get(11), from);
+		assertEquals(m.instructions.get(17), to);
+	}
+
+	@Test
 	public void ecj() {
 		final Label start = new Label();
 		final Label end = new Label();
