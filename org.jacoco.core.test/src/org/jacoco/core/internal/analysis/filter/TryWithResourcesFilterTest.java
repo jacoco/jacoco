@@ -662,7 +662,7 @@ public class TryWithResourcesFilterTest implements IFilterOutput {
 		// additional handlers
 		m.visitInsn(Opcodes.NOP);
 
-		new TryWithResourcesFilter().filter(m, this);
+		new TryWithResourcesEcjFilter().filter(m, this);
 
 		assertEquals(2, from.size());
 
@@ -838,7 +838,7 @@ public class TryWithResourcesFilterTest implements IFilterOutput {
 		// additional handlers
 		m.visitInsn(Opcodes.NOP);
 
-		new TryWithResourcesFilter().filter(m, this);
+		new TryWithResourcesEcjFilter().filter(m, this);
 
 		assertEquals(2, from.size());
 
