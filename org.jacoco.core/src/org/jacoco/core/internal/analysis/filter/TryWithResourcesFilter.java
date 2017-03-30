@@ -80,18 +80,18 @@ public final class TryWithResourcesFilter implements IFilter {
 
 		private boolean matchJavac(final JavacPattern p) {
 			// "catch (Throwable t)"
-			if (!nextIs(Opcodes.ASTORE)) {
+			if (!nextIsVar(Opcodes.ASTORE, "t1")) {
 				return false;
 			}
 			// "primaryExc = t"
-			if (!nextIs(Opcodes.ALOAD)) {
+			if (!nextIsVar(Opcodes.ALOAD, "t1")) {
 				return false;
 			}
 			if (!nextIsVar(Opcodes.ASTORE, "primaryExc")) {
 				return false;
 			}
 			// "throw t"
-			if (!nextIs(Opcodes.ALOAD)) {
+			if (!nextIsVar(Opcodes.ALOAD, "t1")) {
 				return false;
 			}
 			if (!nextIs(Opcodes.ATHROW)) {
@@ -99,14 +99,14 @@ public final class TryWithResourcesFilter implements IFilter {
 			}
 
 			// "catch (any t)"
-			if (!nextIs(Opcodes.ASTORE)) {
+			if (!nextIsVar(Opcodes.ASTORE, "t2")) {
 				return false;
 			}
 			if (!nextIsJavacClose(p)) {
 				return false;
 			}
 			// "throw t"
-			if (!nextIs(Opcodes.ALOAD)) {
+			if (!nextIsVar(Opcodes.ALOAD, "t2")) {
 				return false;
 			}
 			if (!nextIs(Opcodes.ATHROW)) {
