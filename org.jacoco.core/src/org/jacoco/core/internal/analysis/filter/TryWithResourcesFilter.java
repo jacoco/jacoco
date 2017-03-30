@@ -48,7 +48,7 @@ public final class TryWithResourcesFilter implements IFilter {
 		private final IFilterOutput output;
 
 		private final Map<String, VarInsnNode> vars = new HashMap<String, VarInsnNode>();
-		private final Map<String, String> owners = new HashMap<String, String>();
+		private String expectedOwner;
 
 		private AbstractInsnNode start;
 		private AbstractInsnNode cursor;
@@ -65,7 +65,7 @@ public final class TryWithResourcesFilter implements IFilter {
 			this.start = start;
 			cursor = start.getPrevious();
 			vars.clear();
-			owners.clear();
+			expectedOwner = null;
 		}
 
 		private boolean matchJavac(final JavacPattern p) {
@@ -159,7 +159,7 @@ public final class TryWithResourcesFilter implements IFilter {
 						// "if (primaryExc != null)"
 						&& nextIs(Opcodes.IFNULL)
 						// "r.close()"
-						&& nextIsClose("r") && nextIs(Opcodes.GOTO)
+						&& nextIsClose() && nextIs(Opcodes.GOTO)
 						// "catch (Throwable t)"
 						&& nextIsVar(Opcodes.ASTORE, ctx + "t")
 						// "primaryExc.addSuppressed(t)"
@@ -167,14 +167,14 @@ public final class TryWithResourcesFilter implements IFilter {
 						&& nextIsVar(Opcodes.ALOAD, ctx + "t")
 						&& nextIsAddSuppressed() && nextIs(Opcodes.GOTO)
 						// "r.close()"
-						&& nextIsClose("r");
+						&& nextIsClose();
 			default:
 				return false;
 			}
 		}
 
-		private boolean nextIsClose(final String name) {
-			if (!nextIsVar(Opcodes.ALOAD, name)) {
+		private boolean nextIsClose() {
+			if (!nextIsVar(Opcodes.ALOAD, "r")) {
 				return false;
 			}
 			next();
@@ -187,12 +187,11 @@ public final class TryWithResourcesFilter implements IFilter {
 				return false;
 			}
 			final String actual = m.owner;
-			final String expected = owners.get(name);
-			if (expected == null) {
-				owners.put(name, actual);
+			if (expectedOwner == null) {
+				expectedOwner = actual;
 				return true;
 			} else {
-				return expected.equals(actual);
+				return expectedOwner.equals(actual);
 			}
 		}
 

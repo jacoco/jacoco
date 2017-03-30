@@ -209,8 +209,9 @@ public final class TryWithResourcesEcjFilter implements IFilter {
 					&& nextIsVar(Opcodes.ALOAD, suppressedExc)
 					&& nextIsJump(Opcodes.IF_ACMPEQ, endLabel)
 					// "primaryExc.addSuppressed(suppressedExc)"
-					&& nextIsAddSuppressed(suppressedExc)
-					&& nextIsLabel(endLabel);
+					&& nextIsVar(Opcodes.ALOAD, "primaryExc")
+					&& nextIsVar(Opcodes.ALOAD, suppressedExc)
+					&& nextIsAddSuppressed() && nextIsLabel(endLabel);
 		}
 
 		private boolean nextIsClose(final String name) {
@@ -243,11 +244,6 @@ public final class TryWithResourcesEcjFilter implements IFilter {
 			final MethodInsnNode m = (MethodInsnNode) cursor;
 			return "java/lang/Throwable".equals(m.owner)
 					&& "addSuppressed".equals(m.name);
-		}
-
-		private boolean nextIsAddSuppressed(final String name) {
-			return nextIsVar(Opcodes.ALOAD, "primaryExc")
-					&& nextIsVar(Opcodes.ALOAD, name) && nextIsAddSuppressed();
 		}
 
 		private boolean nextIsVar(final int opcode, final String name) {
