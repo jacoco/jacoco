@@ -301,7 +301,8 @@ public final class TryWithResourcesFilter implements IFilter {
 					&& nextIsJump(Opcodes.IFNULL, name)
 					// "r.close()"
 					&& nextIsClose(name) && nextIsLabel(name)
-					&& nextIs(Opcodes.ALOAD) && nextIs(Opcodes.ATHROW);
+					&& nextIsVar(Opcodes.ALOAD, "primaryExc")
+					&& nextIs(Opcodes.ATHROW);
 		}
 
 		private boolean nextIsEcjSuppress(final String name) {
