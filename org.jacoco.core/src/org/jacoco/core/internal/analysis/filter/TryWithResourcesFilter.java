@@ -102,7 +102,7 @@ public final class TryWithResourcesFilter implements IFilter {
 			if (!nextIsVar(Opcodes.ASTORE, "t2")) {
 				return false;
 			}
-			if (!nextIsJavacClose(p)) {
+			if (!nextIsJavacClose(p, "e")) {
 				return false;
 			}
 			// "throw t"
@@ -116,7 +116,7 @@ public final class TryWithResourcesFilter implements IFilter {
 			final AbstractInsnNode end = cursor;
 			AbstractInsnNode c = start.getPrevious();
 			cursor = c;
-			while (!nextIsJavacClose(p)) {
+			while (!nextIsJavacClose(p, "n")) {
 				c = c.getPrevious();
 				cursor = c;
 				if (cursor == null) {
@@ -140,7 +140,8 @@ public final class TryWithResourcesFilter implements IFilter {
 		 * "primaryExc", on subsequent invocations will use those associations
 		 * for checks.
 		 */
-		private boolean nextIsJavacClose(final JavacPattern p) {
+		private boolean nextIsJavacClose(final JavacPattern p,
+				final String ctx) {
 			switch (p) {
 			case METHOD:
 			case FULL:
@@ -170,11 +171,11 @@ public final class TryWithResourcesFilter implements IFilter {
 						// "r.close()"
 						&& nextIsClose("r") && nextIs(Opcodes.GOTO)
 						// "catch (Throwable t)"
-						&& nextIs(Opcodes.ASTORE)
+						&& nextIsVar(Opcodes.ASTORE, ctx + "t")
 						// "primaryExc.addSuppressed(t)"
 						&& nextIsVar(Opcodes.ALOAD, "primaryExc")
-						&& nextIs(Opcodes.ALOAD) && nextIsAddSuppressed()
-						&& nextIs(Opcodes.GOTO)
+						&& nextIsVar(Opcodes.ALOAD, ctx + "t")
+						&& nextIsAddSuppressed() && nextIs(Opcodes.GOTO)
 						// "r.close()"
 						&& nextIsClose("r");
 			default:
