@@ -11,7 +11,14 @@
  *******************************************************************************/
 package org.jacoco.core.internal.analysis.filter;
 
-import org.objectweb.asm.Opcodes;
+import static org.jacoco.core.internal.analysis.pattern.Patterns.ALOAD;
+import static org.jacoco.core.internal.analysis.pattern.Patterns.ASTORE;
+import static org.jacoco.core.internal.analysis.pattern.Patterns.ATHROW;
+import static org.jacoco.core.internal.analysis.pattern.Patterns.MONITOREXIT;
+import static org.jacoco.core.internal.analysis.pattern.Patterns.choice;
+import static org.jacoco.core.internal.analysis.pattern.Patterns.sequence;
+
+import org.jacoco.core.internal.analysis.pattern.IPattern;
 import org.objectweb.asm.tree.AbstractInsnNode;
 import org.objectweb.asm.tree.MethodNode;
 import org.objectweb.asm.tree.TryCatchBlockNode;
@@ -21,70 +28,30 @@ import org.objectweb.asm.tree.TryCatchBlockNode;
  */
 public final class SynchronizedFilter implements IFilter {
 
+	private static final IPattern EXCEPTIONAL_EXIT = choice( //
+
+			// javac
+			sequence(ASTORE, ALOAD, MONITOREXIT, ALOAD, ATHROW),
+
+			// ecj
+			sequence(ALOAD, MONITOREXIT, ATHROW)
+
+	);
+
 	public void filter(final String className, final String superClassName,
 			final MethodNode methodNode, final IFilterOutput output) {
-		for (TryCatchBlockNode tryCatch : methodNode.tryCatchBlocks) {
+		for (final TryCatchBlockNode tryCatch : methodNode.tryCatchBlocks) {
 			if (tryCatch.type != null) {
 				continue;
 			}
 			if (tryCatch.start == tryCatch.handler) {
 				continue;
 			}
-			final AbstractInsnNode to = new Matcher(tryCatch.handler).match();
-			if (to == null) {
-				continue;
+			final AbstractInsnNode toNode = EXCEPTIONAL_EXIT
+					.matchForward(tryCatch.handler);
+			if (toNode != null) {
+				output.ignore(tryCatch.handler, toNode);
 			}
-			output.ignore(tryCatch.handler, to);
-		}
-	}
-
-	private static class Matcher {
-		private final AbstractInsnNode start;
-		private AbstractInsnNode cursor;
-
-		private Matcher(final AbstractInsnNode start) {
-			this.start = start;
-		}
-
-		private AbstractInsnNode match() {
-			if (nextIsEcj() || nextIsJavac()) {
-				return cursor;
-			}
-			return null;
-		}
-
-		private boolean nextIsJavac() {
-			cursor = start;
-			return nextIs(Opcodes.ASTORE) && nextIs(Opcodes.ALOAD)
-					&& nextIs(Opcodes.MONITOREXIT) && nextIs(Opcodes.ALOAD)
-					&& nextIs(Opcodes.ATHROW);
-		}
-
-		private boolean nextIsEcj() {
-			cursor = start;
-			return nextIs(Opcodes.ALOAD) && nextIs(Opcodes.MONITOREXIT)
-					&& nextIs(Opcodes.ATHROW);
-		}
-
-		/**
-		 * Moves {@link #cursor} to next instruction and returns
-		 * <code>true</code> if it has given opcode.
-		 */
-		private boolean nextIs(int opcode) {
-			next();
-			return cursor != null && cursor.getOpcode() == opcode;
-		}
-
-		/**
-		 * Moves {@link #cursor} to next instruction.
-		 */
-		private void next() {
-			do {
-				cursor = cursor.getNext();
-			} while (cursor != null
-					&& (cursor.getType() == AbstractInsnNode.FRAME
-							|| cursor.getType() == AbstractInsnNode.LABEL
-							|| cursor.getType() == AbstractInsnNode.LINE));
 		}
 	}
 
