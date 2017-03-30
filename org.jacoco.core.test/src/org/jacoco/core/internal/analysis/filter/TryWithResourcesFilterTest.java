@@ -103,8 +103,8 @@ public class TryWithResourcesFilterTest implements IFilterOutput {
 
 		// catch (Throwable t)
 		m.visitLabel(handler1);
-		m.visitVarInsn(Opcodes.ASTORE, 5);
 		range1.fromInclusive = m.instructions.getLast();
+		m.visitVarInsn(Opcodes.ASTORE, 5);
 		// primaryExc1 = t
 		m.visitVarInsn(Opcodes.ALOAD, 5);
 		m.visitVarInsn(Opcodes.ASTORE, 4);
@@ -125,8 +125,8 @@ public class TryWithResourcesFilterTest implements IFilterOutput {
 
 		// catch (Throwable t)
 		m.visitLabel(handler2);
-		m.visitVarInsn(Opcodes.ASTORE, 3);
 		range3.fromInclusive = m.instructions.getLast();
+		m.visitVarInsn(Opcodes.ASTORE, 3);
 		// primaryExc1 = t
 		m.visitVarInsn(Opcodes.ALOAD, 3);
 		m.visitVarInsn(Opcodes.ASTORE, 2);
@@ -285,8 +285,8 @@ public class TryWithResourcesFilterTest implements IFilterOutput {
 
 		// catch (Throwable t)
 		m.visitLabel(handler1);
-		m.visitVarInsn(Opcodes.ASTORE, 5);
 		range1.fromInclusive = m.instructions.getLast();
+		m.visitVarInsn(Opcodes.ASTORE, 5);
 		// primaryExc2 = t
 		m.visitVarInsn(Opcodes.ALOAD, 5);
 		m.visitVarInsn(Opcodes.ASTORE, 4);
@@ -330,8 +330,8 @@ public class TryWithResourcesFilterTest implements IFilterOutput {
 
 		// catch (Throwable t)
 		m.visitLabel(handler2);
-		m.visitVarInsn(Opcodes.ASTORE, 3);
 		range3.fromInclusive = m.instructions.getLast();
+		m.visitVarInsn(Opcodes.ASTORE, 3);
 		// primaryExc2 = t
 		m.visitVarInsn(Opcodes.ALOAD, 3);
 		m.visitVarInsn(Opcodes.ASTORE, 2);
@@ -445,8 +445,8 @@ public class TryWithResourcesFilterTest implements IFilterOutput {
 		// catch (Throwable t)
 		m.visitLabel(handler);
 		{
-			m.visitVarInsn(Opcodes.ASTORE, 3);
 			range1.fromInclusive = m.instructions.getLast();
+			m.visitVarInsn(Opcodes.ASTORE, 3);
 			// primaryExc = t
 			m.visitVarInsn(Opcodes.ALOAD, 3);
 			m.visitVarInsn(Opcodes.ASTORE, 2);

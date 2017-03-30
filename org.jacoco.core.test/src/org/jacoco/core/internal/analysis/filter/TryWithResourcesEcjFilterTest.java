@@ -74,8 +74,8 @@ public class TryWithResourcesEcjFilterTest implements IFilterOutput {
 		range0.toInclusive = m.instructions.getLast();
 		// catch (any primaryExc)
 		m.visitLabel(handler);
-		m.visitVarInsn(Opcodes.ASTORE, 1);
 		range1.fromInclusive = m.instructions.getLast();
+		m.visitVarInsn(Opcodes.ASTORE, 1);
 		{ // nextIsEcjCloseAndThrow("r0")
 			m.visitVarInsn(Opcodes.ALOAD, 5);
 			Label l11 = new Label();

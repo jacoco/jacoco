@@ -123,7 +123,7 @@ public final class TryWithResourcesFilter implements IFilter {
 			}
 
 			output.ignore(startOnNonExceptionalPath, cursor);
-			output.ignore(start.getNext(), end);
+			output.ignore(start, end);
 			return true;
 		}
 

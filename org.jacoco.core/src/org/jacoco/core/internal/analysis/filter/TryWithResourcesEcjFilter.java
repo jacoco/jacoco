@@ -123,7 +123,7 @@ public final class TryWithResourcesEcjFilter implements IFilter {
 			}
 
 			output.ignore(c.getNext(), cursor);
-			output.ignore(start.getNext(), end);
+			output.ignore(start, end);
 			return true;
 		}
 
