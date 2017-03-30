@@ -11,6 +11,7 @@
  *******************************************************************************/
 package org.jacoco.core.test.filter.targets;
 
+import static org.jacoco.core.test.validation.targets.Stubs.f;
 import static org.jacoco.core.test.validation.targets.Stubs.nop;
 
 import java.io.Closeable;
@@ -109,6 +110,35 @@ public class TryWithResources {
 		}
 	}
 
+	/**
+	 * In this case bytecode will contain 3 copies of <code>finally</code>
+	 * block, each containing 2 branches, resulting in 6 branches in total. One
+	 * could think that this is artifact of try-with-resources, but the same
+	 * happens without it.
+	 */
+	private static Object returnInCatch() {
+		try ( // $line-returnInCatch.try1$
+				Resource r = new Resource() // $line-returnInCatch.open$
+		) {
+			read(r);
+		} // $line-returnInCatch.close$
+		catch (Exception e) {
+			return null;
+		} finally {
+			nop(!f()); // $line-returnInCatch.finally1$
+		}
+
+		try { // $line-returnInCatch.try2$
+			read(new Resource());
+		} catch (Exception e) {
+			return null;
+		} finally {
+			nop(!f()); // $line-returnInCatch.finally2$
+		}
+
+		return null;
+	}
+
 	private static Object read(Object r1, Object r2, Object r3) {
 		return r1.toString() + r2.toString() + r3.toString();
 	}
@@ -122,6 +152,8 @@ public class TryWithResources {
 		test2();
 		returnInBody();
 		nested();
+
+		returnInCatch();
 
 		empty();
 		handwritten();

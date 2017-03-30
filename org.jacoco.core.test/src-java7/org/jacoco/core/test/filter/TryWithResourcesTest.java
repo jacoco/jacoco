@@ -110,6 +110,22 @@ public class TryWithResourcesTest extends ValidationTestBase {
 		assertLine("nested.close1", ICounter.EMPTY);
 	}
 
+	/**
+	 * {@link TryWithResources#returnInCatch()}
+	 */
+	@Test
+	public void returnInCatch() {
+		// without filter next line covered partly:
+		assertLine("returnInCatch.try1", ICounter.FULLY_COVERED);
+		assertLine("returnInCatch.open", ICounter.FULLY_COVERED);
+		assertLine("returnInCatch.finally1", ICounter.PARTLY_COVERED, 5, 1);
+		// without filter next line has branches:
+		assertLine("returnInCatch.close", ICounter.EMPTY);
+
+		assertLine("returnInCatch.try2", ICounter.EMPTY);
+		assertLine("returnInCatch.finally2", ICounter.PARTLY_COVERED, 5, 1);
+	}
+
 	/*
 	 * Corner cases
 	 */
