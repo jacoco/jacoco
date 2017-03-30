@@ -102,25 +102,27 @@ public final class TryWithResourcesFilter implements IFilter {
 			if (!nextIs(Opcodes.ATHROW)) {
 				return false;
 			}
-
 			final AbstractInsnNode end = cursor;
-			AbstractInsnNode c = start.getPrevious();
-			cursor = c;
+
+			AbstractInsnNode startOnNonExceptionalPath = start.getPrevious();
+			cursor = startOnNonExceptionalPath;
 			while (!nextIsJavacClose(p, "n")) {
-				c = c.getPrevious();
-				cursor = c;
+				startOnNonExceptionalPath = startOnNonExceptionalPath
+						.getPrevious();
+				cursor = startOnNonExceptionalPath;
 				if (cursor == null) {
 					return false;
 				}
 			}
+			startOnNonExceptionalPath = startOnNonExceptionalPath.getNext();
 
-			AbstractInsnNode m = cursor;
+			final AbstractInsnNode m = cursor;
 			next();
 			if (cursor.getOpcode() != Opcodes.GOTO) {
 				cursor = m;
 			}
 
-			output.ignore(c.getNext(), cursor);
+			output.ignore(startOnNonExceptionalPath, cursor);
 			output.ignore(start.getNext(), end);
 			return true;
 		}
