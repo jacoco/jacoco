@@ -106,23 +106,26 @@ public final class TryWithResourcesEcjFilter implements IFilter {
 			if (!nextIs(Opcodes.ATHROW)) {
 				return false;
 			}
-
 			final AbstractInsnNode end = cursor;
-			c = start.getPrevious();
-			cursor = c;
+
+			AbstractInsnNode startOnNonExceptionalPath = start.getPrevious();
+			cursor = startOnNonExceptionalPath;
 			while (!nextIsEcjClose("r0")) {
-				c = c.getPrevious();
-				cursor = c;
+				startOnNonExceptionalPath = startOnNonExceptionalPath
+						.getPrevious();
+				cursor = startOnNonExceptionalPath;
 				if (cursor == null) {
 					return false;
 				}
 			}
+			startOnNonExceptionalPath = startOnNonExceptionalPath.getNext();
+
 			next();
 			if (cursor.getOpcode() != Opcodes.GOTO) {
 				return false;
 			}
 
-			output.ignore(c.getNext(), cursor);
+			output.ignore(startOnNonExceptionalPath, cursor);
 			output.ignore(start, end);
 			return true;
 		}
@@ -150,24 +153,26 @@ public final class TryWithResourcesEcjFilter implements IFilter {
 			if (!nextIs(Opcodes.ATHROW)) {
 				return false;
 			}
-
 			final AbstractInsnNode end = cursor;
-			c = start.getPrevious();
-			cursor = c;
+
+			AbstractInsnNode startOnNonExceptionalPath = start.getPrevious();
+			cursor = startOnNonExceptionalPath;
 			while (!nextIsEcjClose("r0")) {
-				c = c.getPrevious();
-				cursor = c;
+				startOnNonExceptionalPath = startOnNonExceptionalPath
+						.getPrevious();
+				cursor = startOnNonExceptionalPath;
 				if (cursor == null) {
 					return false;
 				}
 			}
+			startOnNonExceptionalPath = startOnNonExceptionalPath.getNext();
 			for (int i = 1; i < resources; i++) {
 				if (!nextIsEcjClose("r" + i)) {
 					return false;
 				}
 			}
 
-			output.ignore(c.getNext(), cursor);
+			output.ignore(startOnNonExceptionalPath, cursor);
 			output.ignore(start, end);
 			return true;
 		}

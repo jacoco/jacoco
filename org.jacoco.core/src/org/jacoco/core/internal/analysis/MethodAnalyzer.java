@@ -23,7 +23,7 @@ import org.jacoco.core.internal.analysis.filter.IFilter;
 import org.jacoco.core.internal.analysis.filter.IFilterOutput;
 import org.jacoco.core.internal.analysis.filter.SynchronizedFilter;
 import org.jacoco.core.internal.analysis.filter.TryWithResourcesEcjFilter;
-import org.jacoco.core.internal.analysis.filter.TryWithResourcesFilter;
+import org.jacoco.core.internal.analysis.filter.TryWithResourcesJavacFilter;
 import org.jacoco.core.internal.flow.IFrame;
 import org.jacoco.core.internal.flow.Instruction;
 import org.jacoco.core.internal.flow.LabelInfo;
@@ -43,7 +43,7 @@ public class MethodAnalyzer extends MethodProbesVisitor
 		implements IFilterOutput {
 
 	private static final IFilter[] FILTERS = new IFilter[] {
-			new SynchronizedFilter(), new TryWithResourcesFilter(),
+			new SynchronizedFilter(), new TryWithResourcesJavacFilter(),
 			new TryWithResourcesEcjFilter() };
 
 	private final boolean[] probes;

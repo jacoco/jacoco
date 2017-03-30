@@ -23,9 +23,9 @@ import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.tree.AbstractInsnNode;
 import org.objectweb.asm.tree.MethodNode;
 
-public class TryWithResourcesFilterTest implements IFilterOutput {
+public class TryWithResourcesJavacFilterTest implements IFilterOutput {
 
-	private final TryWithResourcesFilter filter = new TryWithResourcesFilter();
+	private final TryWithResourcesJavacFilter filter = new TryWithResourcesJavacFilter();
 
 	private final MethodNode m = new MethodNode(InstrSupport.ASM_API_VERSION, 0,
 			"name", "()V", null, null);
@@ -491,7 +491,7 @@ public class TryWithResourcesFilterTest implements IFilterOutput {
 
 		m.visitLabel(end);
 
-		new TryWithResourcesFilter().filter(m, this);
+		filter.filter(m, this);
 
 		assertEquals(2, from.size());
 

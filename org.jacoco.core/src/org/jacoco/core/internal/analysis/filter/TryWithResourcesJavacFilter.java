@@ -24,7 +24,7 @@ import java.util.Map;
 /**
  * Filters code that javac generates for try-with-resources statement.
  */
-public final class TryWithResourcesFilter implements IFilter {
+public final class TryWithResourcesJavacFilter implements IFilter {
 
 	public void filter(final MethodNode methodNode,
 			final IFilterOutput output) {
