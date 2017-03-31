@@ -19,7 +19,7 @@ import org.objectweb.asm.tree.AbstractInsnNode;
 import org.objectweb.asm.tree.MethodInsnNode;
 import org.objectweb.asm.tree.VarInsnNode;
 
-abstract class AbstractTryWithResourcesMatcher {
+abstract class AbstractMatcher {
 
 	final Map<String, VarInsnNode> vars = new HashMap<String, VarInsnNode>();
 

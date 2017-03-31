@@ -37,9 +37,8 @@ public final class SynchronizedFilter implements IFilter {
 		}
 	}
 
-	private static class Matcher {
+	private static class Matcher extends AbstractMatcher {
 		private final AbstractInsnNode start;
-		private AbstractInsnNode cursor;
 
 		private Matcher(final AbstractInsnNode start) {
 			this.start = start;
@@ -54,36 +53,15 @@ public final class SynchronizedFilter implements IFilter {
 
 		private boolean nextIsJavac() {
 			cursor = start;
-			return nextIs(Opcodes.ASTORE) && nextIs(Opcodes.ALOAD)
-					&& nextIs(Opcodes.MONITOREXIT) && nextIs(Opcodes.ALOAD)
-					&& nextIs(Opcodes.ATHROW);
+			return nextIsVar(Opcodes.ASTORE, "t") && nextIs(Opcodes.ALOAD)
+					&& nextIs(Opcodes.MONITOREXIT)
+					&& nextIsVar(Opcodes.ALOAD, "t") && nextIs(Opcodes.ATHROW);
 		}
 
 		private boolean nextIsEcj() {
 			cursor = start;
 			return nextIs(Opcodes.ALOAD) && nextIs(Opcodes.MONITOREXIT)
 					&& nextIs(Opcodes.ATHROW);
-		}
-
-		/**
-		 * Moves {@link #cursor} to next instruction and returns
-		 * <code>true</code> if it has given opcode.
-		 */
-		private boolean nextIs(int opcode) {
-			next();
-			return cursor != null && cursor.getOpcode() == opcode;
-		}
-
-		/**
-		 * Moves {@link #cursor} to next instruction.
-		 */
-		private void next() {
-			do {
-				cursor = cursor.getNext();
-			} while (cursor != null
-					&& (cursor.getType() == AbstractInsnNode.FRAME
-							|| cursor.getType() == AbstractInsnNode.LABEL
-							|| cursor.getType() == AbstractInsnNode.LINE));
 		}
 	}
 

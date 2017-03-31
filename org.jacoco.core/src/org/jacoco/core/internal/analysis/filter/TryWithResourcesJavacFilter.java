@@ -40,7 +40,7 @@ public final class TryWithResourcesJavacFilter implements IFilter {
 		}
 	}
 
-	static class Matcher extends AbstractTryWithResourcesMatcher {
+	static class Matcher extends AbstractMatcher {
 		private final IFilterOutput output;
 
 		private String expectedOwner;
