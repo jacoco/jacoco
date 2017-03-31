@@ -11,6 +11,9 @@
  *******************************************************************************/
 package org.jacoco.core.internal.analysis.filter;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.tree.AbstractInsnNode;
 import org.objectweb.asm.tree.JumpInsnNode;
@@ -18,10 +21,6 @@ import org.objectweb.asm.tree.LabelNode;
 import org.objectweb.asm.tree.MethodInsnNode;
 import org.objectweb.asm.tree.MethodNode;
 import org.objectweb.asm.tree.TryCatchBlockNode;
-import org.objectweb.asm.tree.VarInsnNode;
-
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * Filters code that ECJ generates for try-with-resources statement.
@@ -45,16 +44,14 @@ public final class TryWithResourcesEcjFilter implements IFilter {
 		}
 	}
 
-	static class Matcher {
+	static class Matcher extends AbstractTryWithResourcesMatcher {
 
 		private final IFilterOutput output;
 
-		private final Map<String, VarInsnNode> vars = new HashMap<String, VarInsnNode>();
 		private final Map<String, String> owners = new HashMap<String, String>();
 		private final Map<String, LabelNode> labels = new HashMap<String, LabelNode>();
 
 		private AbstractInsnNode start;
-		private AbstractInsnNode cursor;
 
 		Matcher(final IFilterOutput output) {
 			this.output = output;
@@ -242,29 +239,6 @@ public final class TryWithResourcesEcjFilter implements IFilter {
 			}
 		}
 
-		private boolean nextIsAddSuppressed() {
-			if (!nextIs(Opcodes.INVOKEVIRTUAL)) {
-				return false;
-			}
-			final MethodInsnNode m = (MethodInsnNode) cursor;
-			return "java/lang/Throwable".equals(m.owner)
-					&& "addSuppressed".equals(m.name);
-		}
-
-		private boolean nextIsVar(final int opcode, final String name) {
-			if (!nextIs(opcode)) {
-				return false;
-			}
-			final VarInsnNode actual = (VarInsnNode) cursor;
-			final VarInsnNode expected = vars.get(name);
-			if (expected == null) {
-				vars.put(name, actual);
-				return true;
-			} else {
-				return expected.var == actual.var;
-			}
-		}
-
 		private boolean nextIsJump(final int opcode, final String name) {
 			if (!nextIs(opcode)) {
 				return false;
@@ -287,27 +261,6 @@ public final class TryWithResourcesEcjFilter implements IFilter {
 			final LabelNode actual = (LabelNode) cursor;
 			final LabelNode expected = labels.get(name);
 			return expected == actual;
-		}
-
-		/**
-		 * Moves {@link #cursor} to next instruction and returns
-		 * <code>true</code> if it has given opcode.
-		 */
-		private boolean nextIs(final int opcode) {
-			next();
-			return cursor != null && cursor.getOpcode() == opcode;
-		}
-
-		/**
-		 * Moves {@link #cursor} to next instruction.
-		 */
-		private void next() {
-			do {
-				cursor = cursor.getNext();
-			} while (cursor != null
-					&& (cursor.getType() == AbstractInsnNode.FRAME
-							|| cursor.getType() == AbstractInsnNode.LABEL
-							|| cursor.getType() == AbstractInsnNode.LINE));
 		}
 
 	}
