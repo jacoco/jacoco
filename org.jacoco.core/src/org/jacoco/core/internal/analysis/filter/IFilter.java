@@ -19,6 +19,16 @@ import org.objectweb.asm.tree.MethodNode;
  */
 public interface IFilter {
 
+	/**
+	 * This method is called for every method. The filter implementation is
+	 * expected to inspect the provided method and report its result to the
+	 * given {@link IFilterOutput} instance.
+	 * 
+	 * @param methodNode
+	 *            method to inspect
+	 * @param output
+	 *            callback to report filtering results to
+	 */
 	void filter(MethodNode methodNode, IFilterOutput output);
 
 }
