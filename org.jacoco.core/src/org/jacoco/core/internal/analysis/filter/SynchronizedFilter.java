@@ -19,6 +19,7 @@ import static org.jacoco.core.internal.analysis.pattern.Patterns.choice;
 import static org.jacoco.core.internal.analysis.pattern.Patterns.sequence;
 
 import org.jacoco.core.internal.analysis.pattern.IPattern;
+import org.jacoco.core.internal.analysis.pattern.MatchContext;
 import org.objectweb.asm.tree.AbstractInsnNode;
 import org.objectweb.asm.tree.MethodNode;
 import org.objectweb.asm.tree.TryCatchBlockNode;
@@ -31,7 +32,7 @@ public final class SynchronizedFilter implements IFilter {
 	private static final IPattern EXCEPTIONAL_EXIT = choice( //
 
 			// javac
-			sequence(ASTORE, ALOAD, MONITOREXIT, ALOAD, ATHROW),
+			sequence(ASTORE("e"), ALOAD, MONITOREXIT, ALOAD("e"), ATHROW),
 
 			// ecj
 			sequence(ALOAD, MONITOREXIT, ATHROW)
@@ -47,8 +48,8 @@ public final class SynchronizedFilter implements IFilter {
 			if (tryCatch.start == tryCatch.handler) {
 				continue;
 			}
-			final AbstractInsnNode toNode = EXCEPTIONAL_EXIT
-					.matchForward(tryCatch.handler);
+			final AbstractInsnNode toNode = EXCEPTIONAL_EXIT.matchForward(
+					tryCatch.handler, new MatchContext());
 			if (toNode != null) {
 				output.ignore(tryCatch.handler, toNode);
 			}

@@ -13,6 +13,7 @@ package org.jacoco.core.internal.analysis.pattern;
 
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.tree.AbstractInsnNode;
+import org.objectweb.asm.tree.VarInsnNode;
 
 /**
  * A collection of static factory methods to create {@link IPattern} instances.
@@ -32,7 +33,8 @@ public final class Patterns {
 	 */
 	public static IPattern sequence(final IPattern... sequence) {
 		return new IPattern() {
-			public AbstractInsnNode matchForward(AbstractInsnNode node) {
+			public AbstractInsnNode matchForward(AbstractInsnNode node,
+					final MatchContext ctx) {
 				boolean first = true;
 				for (final IPattern p : sequence) {
 					if (!first) {
@@ -42,7 +44,7 @@ public final class Patterns {
 					if (node == null) {
 						return null;
 					}
-					node = p.matchForward(node);
+					node = p.matchForward(node, ctx);
 					if (node == null) {
 						return null;
 					}
@@ -61,14 +63,69 @@ public final class Patterns {
 	 */
 	public static IPattern choice(final IPattern... choice) {
 		return new IPattern() {
-			public AbstractInsnNode matchForward(final AbstractInsnNode node) {
+			public AbstractInsnNode matchForward(final AbstractInsnNode node,
+					final MatchContext ctx) {
 				for (final IPattern p : choice) {
-					final AbstractInsnNode result = p.matchForward(node);
+					final AbstractInsnNode result = p.matchForward(node, ctx);
 					if (result != null) {
 						return result;
 					}
 				}
 				return null;
+			}
+		};
+	}
+
+	/**
+	 * Pattern for a single ALOAD instruction which loads a local variable. The
+	 * provided identifier is expected to be already assigned to the local
+	 * variable.
+	 * 
+	 * @param var
+	 *            name for the local variable
+	 * @return pattern for ALOAD
+	 * @see #ASTORE(String)
+	 */
+	public static IPattern ALOAD(final String var) {
+		return new SingleInstructionPattern(Opcodes.ALOAD) {
+			@Override
+			public AbstractInsnNode matchForward(final AbstractInsnNode node,
+					final MatchContext ctx) {
+				final VarInsnNode varInsn = (VarInsnNode) super.matchForward(
+						node, ctx);
+				if (varInsn == null) {
+					return null;
+				}
+				if (!ctx.isLocal(varInsn.var, var)) {
+					return null;
+				}
+				return varInsn;
+			}
+		};
+	}
+
+	/**
+	 * Pattern for a single ASTORE instruction which loads a local variable. The
+	 * provided identifier will be assigned to the local variable.
+	 * 
+	 * @param var
+	 *            name for the local variable
+	 * @return pattern for ASTORE
+	 * @see #ALOAD(String)
+	 */
+	public static IPattern ASTORE(final String var) {
+		return new SingleInstructionPattern(Opcodes.ASTORE) {
+			@Override
+			public AbstractInsnNode matchForward(final AbstractInsnNode node,
+					final MatchContext ctx) {
+				final VarInsnNode varInsn = (VarInsnNode) super.matchForward(
+						node, ctx);
+				if (varInsn == null) {
+					return null;
+				}
+				ctx.setLocal(varInsn.var, var);
+				return varInsn;
+
 			}
 		};
 	}
@@ -102,7 +159,8 @@ public final class Patterns {
 
 		}
 
-		public AbstractInsnNode matchForward(AbstractInsnNode node) {
+		public AbstractInsnNode matchForward(AbstractInsnNode node,
+				final MatchContext ctx) {
 			node = skipNonInstructions(node);
 			if (node != null && node.getOpcode() == opcode) {
 				return node;

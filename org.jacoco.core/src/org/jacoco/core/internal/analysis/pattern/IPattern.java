@@ -25,8 +25,10 @@ public interface IPattern {
 	 * 
 	 * @param startNode
 	 *            node to start matching with
+	 * @param ctx
+	 *            current context to execute the match operation in
 	 * @return last matched node or <code>null</code> if pattern does not match
 	 */
-	AbstractInsnNode matchForward(AbstractInsnNode startNode);
+	AbstractInsnNode matchForward(AbstractInsnNode startNode, MatchContext ctx);
 
 }
