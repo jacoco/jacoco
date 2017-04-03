@@ -27,6 +27,7 @@ import org.jacoco.core.internal.flow.IFrame;
 import org.jacoco.core.internal.flow.Instruction;
 import org.jacoco.core.internal.flow.LabelInfo;
 import org.jacoco.core.internal.flow.MethodProbesVisitor;
+import org.objectweb.asm.AnnotationVisitor;
 import org.objectweb.asm.Handle;
 import org.objectweb.asm.Label;
 import org.objectweb.asm.MethodVisitor;
@@ -68,6 +69,7 @@ public class MethodAnalyzer extends MethodProbesVisitor
 
 	/** Last instruction in byte code sequence */
 	private Instruction lastInsn;
+	protected boolean skip = false;
 
 	/**
 	 * New Method analyzer for the given probe data.
@@ -132,6 +134,14 @@ public class MethodAnalyzer extends MethodProbesVisitor
 			ignored.add(i);
 		}
 		ignored.add(toInclusive);
+	}
+
+	@Override
+	public AnnotationVisitor visitAnnotation(String desc, boolean visible) {
+		if ("Llombok/Generated;".equals(desc)) {
+			this.skip = true;
+		}
+		return super.visitAnnotation(desc, visible);
 	}
 
 	@Override
@@ -333,6 +343,11 @@ public class MethodAnalyzer extends MethodProbesVisitor
 			coverage.increment(instrCounter, branchCounter, i.getLine());
 		}
 		coverage.incrementMethodCounter();
+
+		// Only consider methods that actually contain code
+		if (coverage.getInstructionCounter().getTotalCount() == 0) {
+			skip = true;
+		}
 	}
 
 	private void addProbe(final int probeId) {
