@@ -60,34 +60,6 @@ public class ClassAnalyzerTest {
 	}
 
 	@Test
-	public void testMethodFilter_NonSynthetic() {
-		final MethodProbesVisitor mv = analyzer.visitMethod(0, "foo", "()V",
-				null, null);
-		mv.visitCode();
-		mv.visitInsn(Opcodes.RETURN);
-		mv.visitEnd();
-		assertEquals(1, coverage.getMethods().size());
-	}
-
-	@Test
-	public void testMethodFilter_Synthetic() {
-		final MethodProbesVisitor mv = analyzer.visitMethod(
-				Opcodes.ACC_SYNTHETIC, "foo", "()V", null, null);
-		assertNull(mv);
-		assertTrue(coverage.getMethods().isEmpty());
-	}
-
-	@Test
-	public void testMethodFilter_Lambda() {
-		final MethodProbesVisitor mv = analyzer.visitMethod(
-				Opcodes.ACC_SYNTHETIC, "lambda$1", "()V", null, null);
-		mv.visitCode();
-		mv.visitInsn(Opcodes.RETURN);
-		mv.visitEnd();
-		assertEquals(1, coverage.getMethods().size());
-	}
-
-	@Test
 	public void testMethodFilter_EnumValues() {
 		analyzer.visit(Opcodes.V1_5, Opcodes.ACC_PUBLIC, "Foo", null,
 				"java/lang/Enum", null);
