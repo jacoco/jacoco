@@ -21,6 +21,7 @@ import org.jacoco.core.analysis.IMethodCoverage;
 import org.jacoco.core.analysis.ISourceNode;
 import org.jacoco.core.internal.analysis.filter.IFilter;
 import org.jacoco.core.internal.analysis.filter.IFilterOutput;
+import org.jacoco.core.internal.analysis.filter.LombokGeneratedFilter;
 import org.jacoco.core.internal.analysis.filter.SynchronizedFilter;
 import org.jacoco.core.internal.analysis.filter.SyntheticFilter;
 import org.jacoco.core.internal.flow.IFrame;
@@ -42,7 +43,8 @@ public class MethodAnalyzer extends MethodProbesVisitor
 		implements IFilterOutput {
 
 	private static final IFilter[] FILTERS = new IFilter[] {
-			new SyntheticFilter(), new SynchronizedFilter() };
+			new SyntheticFilter(), new SynchronizedFilter(),
+			new LombokGeneratedFilter() };
 
 	private final boolean[] probes;
 
@@ -328,8 +330,9 @@ public class MethodAnalyzer extends MethodProbesVisitor
 			final int covered = i.getCoveredBranches();
 			final ICounter instrCounter = covered == 0 ? CounterImpl.COUNTER_1_0
 					: CounterImpl.COUNTER_0_1;
-			final ICounter branchCounter = total > 1 ? CounterImpl.getInstance(
-					total - covered, covered) : CounterImpl.COUNTER_0_0;
+			final ICounter branchCounter = total > 1
+					? CounterImpl.getInstance(total - covered, covered)
+					: CounterImpl.COUNTER_0_0;
 			coverage.increment(instrCounter, branchCounter, i.getLine());
 		}
 		coverage.incrementMethodCounter();
