@@ -29,7 +29,7 @@ public enum EnumImplicitMethods { // $line-classdef$
 	/**
 	 * This method should not be excluded from analysis unlike implicitly
 	 * created {@link #valueOf(String)} method that refers to the line of enum
-	 * definition.
+	 * definition in case of javac and to the first line in case of ECJ.
 	 */
 	public void valueOf() {
 	} // $line-customValueOfMethod$
@@ -37,7 +37,7 @@ public enum EnumImplicitMethods { // $line-classdef$
 	/**
 	 * This method should not be excluded from analysis unlike implicitly
 	 * created {@link #values()} method that refers to the line of enum
-	 * definition.
+	 * definition in case of javac and to the first line in case of ECJ.
 	 */
 	public void values(Object o) {
 	} // $line-customValuesMethod$

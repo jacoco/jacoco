@@ -21,7 +21,8 @@ import org.objectweb.asm.tree.TryCatchBlockNode;
  */
 public final class SynchronizedFilter implements IFilter {
 
-	public void filter(MethodNode methodNode, IFilterOutput output) {
+	public void filter(final String className, final String superClassName,
+			final MethodNode methodNode, final IFilterOutput output) {
 		for (TryCatchBlockNode tryCatch : methodNode.tryCatchBlocks) {
 			if (tryCatch.type != null) {
 				continue;

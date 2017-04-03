@@ -63,7 +63,7 @@ public class SynchronizedFilterTest implements IFilterOutput {
 		m.visitLabel(exit);
 		m.visitInsn(Opcodes.RETURN);
 
-		filter.filter(m, this);
+		filter.filter("Foo", "java/lang/Object", m, this);
 		assertEquals(handler.info, fromInclusive);
 		assertEquals(((LabelNode) exit.info).getPrevious(), toInclusive);
 	}
@@ -116,7 +116,7 @@ public class SynchronizedFilterTest implements IFilterOutput {
 		m.visitLabel(exit);
 		m.visitInsn(Opcodes.RETURN);
 
-		filter.filter(m, this);
+		filter.filter("Foo", "java/lang/Object", m, this);
 		assertNull(fromInclusive);
 	}
 
@@ -151,7 +151,7 @@ public class SynchronizedFilterTest implements IFilterOutput {
 		m.visitLabel(exit);
 		m.visitInsn(Opcodes.RETURN);
 
-		filter.filter(m, this);
+		filter.filter("Foo", "java/lang/Object", m, this);
 		assertEquals(handler.info, fromInclusive);
 		assertEquals(((LabelNode) exit.info).getPrevious(), toInclusive);
 	}

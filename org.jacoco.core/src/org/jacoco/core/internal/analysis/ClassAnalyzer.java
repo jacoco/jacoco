@@ -63,12 +63,8 @@ public class ClassAnalyzer extends ClassProbesVisitor {
 
 		InstrSupport.assertNotInstrumented(name, coverage.getName());
 
-		if (isMethodFiltered(coverage.getName(), coverage.getSuperName(), name,
-				desc)) {
-			return null;
-		}
-
-		return new MethodAnalyzer(stringPool.get(name), stringPool.get(desc),
+		return new MethodAnalyzer(coverage.getName(), coverage.getSuperName(),
+				stringPool.get(name), stringPool.get(desc),
 				stringPool.get(signature), probes) {
 			@Override
 			public void visitEnd() {
@@ -80,27 +76,6 @@ public class ClassAnalyzer extends ClassProbesVisitor {
 				}
 			}
 		};
-	}
-
-	/**
-	 * @return <code>true</code> if method should not be analyzed
-	 */
-	// TODO: Use filter hook in future
-	private boolean isMethodFiltered(final String className,
-			final String superClassName, final String name, final String desc) {
-		if ("java/lang/Enum".equals(superClassName)) {
-			// filter out methods that compiler creates for enums
-			if ("values".equals(name)
-					&& ("()[L" + className + ";").equals(desc)) {
-				return true;
-			}
-			if ("valueOf".equals(name)
-					&& ("(Ljava/lang/String;)L" + className + ";")
-							.equals(desc)) {
-				return true;
-			}
-		}
-		return false;
 	}
 
 	@Override
