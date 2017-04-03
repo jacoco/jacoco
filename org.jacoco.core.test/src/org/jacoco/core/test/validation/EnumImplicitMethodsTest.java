@@ -26,6 +26,8 @@ public class EnumImplicitMethodsTest extends ValidationTestBase {
 
     @Test
     public void testCoverageResult() {
+        assertMethodCount(5);
+
         assertLine("classdef", ICounter.FULLY_COVERED);
         assertLine("customValueOfMethod", ICounter.NOT_COVERED);
         assertLine("customValuesMethod", ICounter.NOT_COVERED);

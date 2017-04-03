@@ -109,6 +109,11 @@ public abstract class ValidationTestBase {
 		analyzer.analyzeClass(bytes, data.getName());
 	}
 
+	protected void assertMethodCount(final int expectedTotal) {
+		assertEquals(expectedTotal,
+				sourceCoverage.getMethodCounter().getTotalCount());
+	}
+
 	protected void assertLine(final String tag, final int status) {
 		final int nr = source.getLineNumber(tag);
 		final ILine line = sourceCoverage.getLine(nr);

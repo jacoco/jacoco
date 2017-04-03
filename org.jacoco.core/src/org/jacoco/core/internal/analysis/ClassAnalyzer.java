@@ -16,7 +16,6 @@ import org.jacoco.core.internal.flow.ClassProbesVisitor;
 import org.jacoco.core.internal.flow.MethodProbesVisitor;
 import org.jacoco.core.internal.instr.InstrSupport;
 import org.objectweb.asm.FieldVisitor;
-import org.objectweb.asm.Opcodes;
 
 /**
  * Analyzes the structure of a class.
@@ -64,8 +63,8 @@ public class ClassAnalyzer extends ClassProbesVisitor {
 
 		InstrSupport.assertNotInstrumented(name, coverage.getName());
 
-		if (isMethodFiltered(coverage.getName(), coverage.getSuperName(),
-				access, name, desc)) {
+		if (isMethodFiltered(coverage.getName(), coverage.getSuperName(), name,
+				desc)) {
 			return null;
 		}
 
@@ -88,8 +87,7 @@ public class ClassAnalyzer extends ClassProbesVisitor {
 	 */
 	// TODO: Use filter hook in future
 	private boolean isMethodFiltered(final String className,
-			final String superClassName, final int access, final String name,
-			final String desc) {
+			final String superClassName, final String name, final String desc) {
 		if ("java/lang/Enum".equals(superClassName)) {
 			// filter out methods that compiler creates for enums
 			if ("values".equals(name)
@@ -102,8 +100,7 @@ public class ClassAnalyzer extends ClassProbesVisitor {
 				return true;
 			}
 		}
-		return (access & Opcodes.ACC_SYNTHETIC) != 0
-				&& !name.startsWith("lambda$");
+		return false;
 	}
 
 	@Override
