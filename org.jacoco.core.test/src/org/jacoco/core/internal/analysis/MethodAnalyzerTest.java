@@ -580,8 +580,8 @@ public class MethodAnalyzerTest implements IProbeIdGenerator {
 
 	private void runMethodAnalzer() {
 		LabelFlowAnalyzer.markLabels(method);
-		final MethodAnalyzer analyzer = new MethodAnalyzer("doit", "()V", null,
-				probes);
+		final MethodAnalyzer analyzer = new MethodAnalyzer("Foo",
+				"java/lang/Object", "doit", "()V", null, probes);
 		final MethodProbesAdapter probesAdapter = new MethodProbesAdapter(
 				analyzer, this);
 		// note that CheckMethodAdapter verifies that this test does not violate

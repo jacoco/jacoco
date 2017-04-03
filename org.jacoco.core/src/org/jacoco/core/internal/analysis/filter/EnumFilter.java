@@ -11,21 +11,38 @@
  *******************************************************************************/
 package org.jacoco.core.internal.analysis.filter;
 
-import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.tree.MethodNode;
 
 /**
- * Filters synthetic methods unless they represent bodies of lambda expressions.
+ * Filters methods <code>values</code> and <code>valueOf</code> that compiler
+ * creates for enums.
  */
-public final class SyntheticFilter implements IFilter {
+public final class EnumFilter implements IFilter {
 
 	public void filter(final String className, final String superClassName,
 			final MethodNode methodNode, final IFilterOutput output) {
-		if ((methodNode.access & Opcodes.ACC_SYNTHETIC) != 0
-				&& !methodNode.name.startsWith("lambda$")) {
+		if (isMethodFiltered(className, superClassName, methodNode.name,
+				methodNode.desc)) {
 			output.ignore(methodNode.instructions.getFirst(),
 					methodNode.instructions.getLast());
 		}
+	}
+
+	private boolean isMethodFiltered(final String className,
+			final String superClassName, final String methodName,
+			final String methodDesc) {
+		if ("java/lang/Enum".equals(superClassName)) {
+			if ("values".equals(methodName)
+					&& ("()[L" + className + ";").equals(methodDesc)) {
+				return true;
+			}
+			if ("valueOf".equals(methodName)
+					&& ("(Ljava/lang/String;)L" + className + ";")
+							.equals(methodDesc)) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 }

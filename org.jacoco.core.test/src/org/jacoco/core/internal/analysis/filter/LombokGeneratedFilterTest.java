@@ -38,7 +38,7 @@ public class LombokGeneratedFilterTest implements IFilterOutput {
 		m.visitInsn(Opcodes.ICONST_0);
 		m.visitInsn(Opcodes.IRETURN);
 
-		filter.filter(m, this);
+		filter.filter("Foo", "java/lang/Object", m, this);
 
 		assertNull(fromInclusive);
 		assertNull(toInclusive);
@@ -53,7 +53,7 @@ public class LombokGeneratedFilterTest implements IFilterOutput {
 		m.visitInsn(Opcodes.ICONST_0);
 		m.visitInsn(Opcodes.IRETURN);
 
-		filter.filter(m, this);
+		filter.filter("Foo", "java/lang/Object", m, this);
 
 		assertNull(fromInclusive);
 		assertNull(toInclusive);
@@ -68,7 +68,7 @@ public class LombokGeneratedFilterTest implements IFilterOutput {
 		m.visitInsn(Opcodes.ICONST_0);
 		m.visitInsn(Opcodes.IRETURN);
 
-		filter.filter(m, this);
+		filter.filter("Foo", "java/lang/Object", m, this);
 
 		assertEquals(m.instructions.getFirst(), fromInclusive);
 		assertEquals(m.instructions.getLast(), toInclusive);

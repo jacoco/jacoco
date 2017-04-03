@@ -20,41 +20,65 @@ import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.tree.AbstractInsnNode;
 import org.objectweb.asm.tree.MethodNode;
 
-public class SyntheticFilterTest implements IFilterOutput {
+public class EnumFilterTest implements IFilterOutput {
 
-	private final SyntheticFilter filter = new SyntheticFilter();
+	private final EnumFilter filter = new EnumFilter();
 
 	private AbstractInsnNode fromInclusive;
 	private AbstractInsnNode toInclusive;
 
 	@Test
-	public void testNonSynthetic() {
+	public void testValues() {
 		final MethodNode m = new MethodNode(InstrSupport.ASM_API_VERSION, 0,
-				"name", "()V", null, null);
+				"values", "()[LFoo;", null, null);
 		m.visitInsn(Opcodes.NOP);
 
-		filter.filter("Foo", "java/lang/Object", m, this);
-
-		assertNull(fromInclusive);
-		assertNull(toInclusive);
-	}
-
-	@Test
-	public void testSynthetic() {
-		final MethodNode m = new MethodNode(InstrSupport.ASM_API_VERSION,
-				Opcodes.ACC_SYNTHETIC, "name", "()V", null, null);
-		m.visitInsn(Opcodes.NOP);
-
-		filter.filter("Foo", "java/lang/Object", m, this);
+		filter.filter("Foo", "java/lang/Enum", m, this);
 
 		assertEquals(m.instructions.getFirst(), fromInclusive);
 		assertEquals(m.instructions.getLast(), toInclusive);
 	}
 
 	@Test
-	public void testLambda() {
-		final MethodNode m = new MethodNode(InstrSupport.ASM_API_VERSION,
-				Opcodes.ACC_SYNTHETIC, "lambda$1", "()V", null, null);
+	public void testNonValues() {
+		final MethodNode m = new MethodNode(InstrSupport.ASM_API_VERSION, 0,
+				"values", "()V", null, null);
+		m.visitInsn(Opcodes.NOP);
+
+		filter.filter("Foo", "java/lang/Enum", m, this);
+
+		assertNull(fromInclusive);
+		assertNull(toInclusive);
+	}
+
+	@Test
+	public void testValueOf() {
+		final MethodNode m = new MethodNode(InstrSupport.ASM_API_VERSION, 0,
+				"valueOf", "(Ljava/lang/String;)LFoo;", null, null);
+		m.visitInsn(Opcodes.NOP);
+
+		filter.filter("Foo", "java/lang/Enum", m, this);
+
+		assertEquals(m.instructions.getFirst(), fromInclusive);
+		assertEquals(m.instructions.getLast(), toInclusive);
+	}
+
+	@Test
+	public void testNonValueOf() {
+		final MethodNode m = new MethodNode(InstrSupport.ASM_API_VERSION, 0,
+				"valueOf", "()V", null, null);
+		m.visitInsn(Opcodes.NOP);
+
+		filter.filter("Foo", "java/lang/Enum", m, this);
+
+		assertNull(fromInclusive);
+		assertNull(toInclusive);
+	}
+
+	@Test
+	public void testNonEnum() {
+		final MethodNode m = new MethodNode(InstrSupport.ASM_API_VERSION, 0,
+				"values", "()[LFoo;", null, null);
 		m.visitInsn(Opcodes.NOP);
 
 		filter.filter("Foo", "java/lang/Object", m, this);
