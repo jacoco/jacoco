@@ -21,7 +21,8 @@ public class Synthetic { // $line-classdef$
 	private Synthetic() {
 	}
 
-	private static class Inner extends Synthetic { // $line-inner.classdef$
+	static class Inner extends Synthetic { // $line-inner.classdef$
+
 		Inner() {
 		}
 

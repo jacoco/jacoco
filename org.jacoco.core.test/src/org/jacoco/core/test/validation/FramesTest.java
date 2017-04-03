@@ -17,7 +17,6 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 
-import org.jacoco.core.JaCoCo;
 import org.jacoco.core.instr.Instrumenter;
 import org.jacoco.core.internal.Java9Support;
 import org.jacoco.core.internal.instr.InstrSupport;
@@ -109,8 +108,9 @@ public class FramesTest {
 	private String dump(byte[] bytes) {
 		final StringWriter buffer = new StringWriter();
 		final PrintWriter writer = new PrintWriter(buffer);
-		new ClassReader(bytes).accept(new MaxStackEliminator(
-				new TraceClassVisitor(writer)), ClassReader.EXPAND_FRAMES);
+		new ClassReader(bytes).accept(
+				new MaxStackEliminator(new TraceClassVisitor(writer)),
+				ClassReader.EXPAND_FRAMES);
 		return buffer.toString();
 	}
 
