@@ -108,6 +108,7 @@ public class Analyzer {
 	public void analyzeClass(final ClassReader reader) {
 		final ClassVisitor visitor = createAnalyzingVisitor(
 				CRC64.checksum(reader.b), reader.getClassName());
+		// TODO maybe we can SKIP_FRAMES here?
 		reader.accept(visitor, 0);
 	}
 

@@ -163,4 +163,12 @@ public class SynchronizedFilterTest implements IFilterOutput {
 		this.toInclusive = toInclusive;
 	}
 
+	public void ignoreJumpTarget(AbstractInsnNode instruction) {
+		throw new AssertionError();
+	}
+
+	public void remapJump(AbstractInsnNode original, AbstractInsnNode remapped) {
+		throw new AssertionError();
+	}
+
 }

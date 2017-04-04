@@ -70,4 +70,13 @@ public class SyntheticFilterTest implements IFilterOutput {
 		this.toInclusive = toInclusive;
 	}
 
+	public void ignoreJumpTarget(final AbstractInsnNode instruction) {
+		throw new AssertionError();
+	}
+
+	public void remapJump(final AbstractInsnNode original,
+			final AbstractInsnNode remapped) {
+		throw new AssertionError();
+	}
+
 }

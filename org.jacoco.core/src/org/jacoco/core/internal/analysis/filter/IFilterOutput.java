@@ -30,4 +30,10 @@ public interface IFilterOutput {
 	 */
 	void ignore(AbstractInsnNode fromInclusive, AbstractInsnNode toInclusive);
 
+	// TODO add javadoc
+	void ignoreJumpTarget(AbstractInsnNode instruction);
+
+	// TODO add javadoc
+	void remapJump(AbstractInsnNode original, AbstractInsnNode remapped);
+
 }

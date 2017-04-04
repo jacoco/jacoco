@@ -12,8 +12,10 @@
 package org.jacoco.core.internal.analysis;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import org.jacoco.core.analysis.ICounter;
@@ -23,6 +25,7 @@ import org.jacoco.core.internal.analysis.filter.EnumFilter;
 import org.jacoco.core.internal.analysis.filter.IFilter;
 import org.jacoco.core.internal.analysis.filter.IFilterOutput;
 import org.jacoco.core.internal.analysis.filter.LombokGeneratedFilter;
+import org.jacoco.core.internal.analysis.filter.StringSwitchFilter;
 import org.jacoco.core.internal.analysis.filter.SynchronizedFilter;
 import org.jacoco.core.internal.analysis.filter.SyntheticFilter;
 import org.jacoco.core.internal.flow.IFrame;
@@ -45,7 +48,7 @@ public class MethodAnalyzer extends MethodProbesVisitor
 
 	private static final IFilter[] FILTERS = new IFilter[] { new EnumFilter(),
 			new SyntheticFilter(), new SynchronizedFilter(),
-			new LombokGeneratedFilter() };
+			new LombokGeneratedFilter(), new StringSwitchFilter() };
 
 	private final String className;
 
@@ -121,6 +124,10 @@ public class MethodAnalyzer extends MethodProbesVisitor
 	public void accept(final MethodNode methodNode,
 			final MethodVisitor methodVisitor) {
 		this.ignored.clear();
+		this.nodeToInstruction.clear();
+		this.remappedJumps.clear();
+		this.ignoredJumpTargets.clear();
+
 		for (final IFilter filter : FILTERS) {
 			filter.filter(className, superClassName, methodNode, this);
 		}
@@ -148,6 +155,19 @@ public class MethodAnalyzer extends MethodProbesVisitor
 		ignored.add(toInclusive);
 	}
 
+	private Set<AbstractInsnNode> ignoredJumpTargets = new HashSet<AbstractInsnNode>();
+	private Map<AbstractInsnNode, AbstractInsnNode> remappedJumps = new HashMap<AbstractInsnNode, AbstractInsnNode>();
+	private Map<AbstractInsnNode, Instruction> nodeToInstruction = new HashMap<AbstractInsnNode, Instruction>();
+
+	public void ignoreJumpTarget(final AbstractInsnNode instruction) {
+		ignoredJumpTargets.add(instruction);
+	}
+
+	public void remapJump(final AbstractInsnNode original,
+			final AbstractInsnNode remapped) {
+		remappedJumps.put(original, remapped);
+	}
+
 	@Override
 	public void visitLabel(final Label label) {
 		currentLabel.add(label);
@@ -169,6 +189,7 @@ public class MethodAnalyzer extends MethodProbesVisitor
 
 	private void visitInsn() {
 		final Instruction insn = new Instruction(currentNode, currentLine);
+		nodeToInstruction.put(currentNode, insn);
 		instructions.add(insn);
 		if (lastInsn != null) {
 			insn.setPredecessor(lastInsn);
@@ -224,6 +245,12 @@ public class MethodAnalyzer extends MethodProbesVisitor
 	@Override
 	public void visitJumpInsn(final int opcode, final Label label) {
 		visitInsn();
+
+		if (remappedJumps.containsKey(currentNode)) {
+			jumps.add(new Jump(
+					nodeToInstruction.get(remappedJumps.get(currentNode)),
+					label));
+		} else
 		jumps.add(new Jump(lastInsn, label));
 	}
 
@@ -277,6 +304,14 @@ public class MethodAnalyzer extends MethodProbesVisitor
 	public void visitJumpInsnWithProbe(final int opcode, final Label label,
 			final int probeId, final IFrame frame) {
 		visitInsn();
+
+		final AbstractInsnNode remapped = remappedJumps.get(currentNode);
+		if (remapped != null) {
+			final Instruction tmp = lastInsn;
+			lastInsn = nodeToInstruction.get(remapped);
+			addProbe(probeId);
+			lastInsn = tmp;
+		} else
 		addProbe(probeId);
 	}
 
@@ -325,6 +360,10 @@ public class MethodAnalyzer extends MethodProbesVisitor
 	public void visitEnd() {
 		// Wire jumps:
 		for (final Jump j : jumps) {
+			if (ignoredJumpTargets
+					.contains(LabelInfo.getInstruction(j.target).getNode())) {
+				continue;
+			}
 			LabelInfo.getInstruction(j.target).setPredecessor(j.source);
 		}
 		// Propagate probe values:
