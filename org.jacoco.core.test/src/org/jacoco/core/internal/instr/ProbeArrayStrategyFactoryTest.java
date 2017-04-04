@@ -337,7 +337,8 @@ public class ProbeArrayStrategyFactoryTest {
 						assertFalse(itf);
 						return;
 					}
-					assertEquals(itf, isInterface);
+					assertEquals(Boolean.valueOf(itf),
+							Boolean.valueOf(isInterface));
 
 					assertEquals(Opcodes.INVOKESTATIC, opcode);
 					assertEquals("Foo", owner);
