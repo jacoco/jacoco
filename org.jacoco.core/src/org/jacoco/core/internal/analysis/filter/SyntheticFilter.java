@@ -11,29 +11,21 @@
  *******************************************************************************/
 package org.jacoco.core.internal.analysis.filter;
 
+import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.tree.MethodNode;
 
 /**
- * Interface for filter implementations. Instances of filters are reused and so
- * must be stateless.
+ * Filters synthetic methods unless they represent bodies of lambda expressions.
  */
-public interface IFilter {
+public final class SyntheticFilter implements IFilter {
 
-	/**
-	 * This method is called for every method. The filter implementation is
-	 * expected to inspect the provided method and report its result to the
-	 * given {@link IFilterOutput} instance.
-	 *
-	 * @param className
-	 *            class name
-	 * @param superClassName
-	 *            superclass name
-	 * @param methodNode
-	 *            method to inspect
-	 * @param output
-	 *            callback to report filtering results to
-	 */
-	void filter(String className, String superClassName, MethodNode methodNode,
-			IFilterOutput output);
+	public void filter(final String className, final String superClassName,
+			final MethodNode methodNode, final IFilterOutput output) {
+		if ((methodNode.access & Opcodes.ACC_SYNTHETIC) != 0
+				&& !methodNode.name.startsWith("lambda$")) {
+			output.ignore(methodNode.instructions.getFirst(),
+					methodNode.instructions.getLast());
+		}
+	}
 
 }

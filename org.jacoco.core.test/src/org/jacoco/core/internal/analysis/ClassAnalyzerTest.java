@@ -12,8 +12,6 @@
 package org.jacoco.core.internal.analysis;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
 
 import org.jacoco.core.internal.flow.MethodProbesVisitor;
 import org.jacoco.core.internal.instr.InstrSupport;
@@ -57,78 +55,6 @@ public class ClassAnalyzerTest {
 				null, null);
 		mv.visitEnd();
 		assertEquals(0, coverage.getMethods().size());
-	}
-
-	@Test
-	public void testMethodFilter_NonSynthetic() {
-		final MethodProbesVisitor mv = analyzer.visitMethod(0, "foo", "()V",
-				null, null);
-		mv.visitCode();
-		mv.visitInsn(Opcodes.RETURN);
-		mv.visitEnd();
-		assertEquals(1, coverage.getMethods().size());
-	}
-
-	@Test
-	public void testMethodFilter_Synthetic() {
-		final MethodProbesVisitor mv = analyzer.visitMethod(
-				Opcodes.ACC_SYNTHETIC, "foo", "()V", null, null);
-		assertNull(mv);
-		assertTrue(coverage.getMethods().isEmpty());
-	}
-
-	@Test
-	public void testMethodFilter_Lambda() {
-		final MethodProbesVisitor mv = analyzer.visitMethod(
-				Opcodes.ACC_SYNTHETIC, "lambda$1", "()V", null, null);
-		mv.visitCode();
-		mv.visitInsn(Opcodes.RETURN);
-		mv.visitEnd();
-		assertEquals(1, coverage.getMethods().size());
-	}
-
-	@Test
-	public void testMethodFilter_EnumValues() {
-		analyzer.visit(Opcodes.V1_5, Opcodes.ACC_PUBLIC, "Foo", null,
-				"java/lang/Enum", null);
-		final MethodProbesVisitor mv = analyzer.visitMethod(0, "values",
-				"()[LFoo;", null, null);
-		assertNull(mv);
-		assertTrue(coverage.getMethods().isEmpty());
-	}
-
-	@Test
-	public void testMethodFilter_EnumNonValues() {
-		analyzer.visit(Opcodes.V1_5, Opcodes.ACC_PUBLIC, "Foo", null,
-				"java/lang/Enum", null);
-		final MethodProbesVisitor mv = analyzer.visitMethod(0, "values", "()V",
-				null, null);
-		mv.visitCode();
-		mv.visitInsn(Opcodes.RETURN);
-		mv.visitEnd();
-		assertEquals(1, coverage.getMethods().size());
-	}
-
-	@Test
-	public void testMethodFilter_EnumValueOf() {
-		analyzer.visit(Opcodes.V1_5, Opcodes.ACC_PUBLIC, "Foo", null,
-				"java/lang/Enum", null);
-		final MethodProbesVisitor mv = analyzer.visitMethod(0, "valueOf",
-				"(Ljava/lang/String;)LFoo;", null, null);
-		assertNull(mv);
-		assertTrue(coverage.getMethods().isEmpty());
-	}
-
-	@Test
-	public void testMethodFilter_EnumNonValueOf() {
-		analyzer.visit(Opcodes.V1_5, Opcodes.ACC_PUBLIC, "Foo", null,
-				"java/lang/Enum", null);
-		final MethodProbesVisitor mv = analyzer.visitMethod(0, "valueOf", "()V",
-				null, null);
-		mv.visitCode();
-		mv.visitInsn(Opcodes.RETURN);
-		mv.visitEnd();
-		assertEquals(1, coverage.getMethods().size());
 	}
 
 }

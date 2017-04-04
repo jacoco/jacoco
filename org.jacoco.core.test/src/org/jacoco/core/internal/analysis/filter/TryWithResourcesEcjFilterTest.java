@@ -192,7 +192,7 @@ public class TryWithResourcesEcjFilterTest implements IFilterOutput {
 		// additional handlers
 		m.visitInsn(Opcodes.NOP);
 
-		filter.filter(m, this);
+		filter.filter("Foo", "java/lang/Object", m, this);
 
 		assertEquals(2, from.size());
 
@@ -368,7 +368,7 @@ public class TryWithResourcesEcjFilterTest implements IFilterOutput {
 		// additional handlers
 		m.visitInsn(Opcodes.NOP);
 
-		filter.filter(m, this);
+		filter.filter("Foo", "java/lang/Object", m, this);
 
 		assertEquals(2, from.size());
 

@@ -27,8 +27,8 @@ import org.objectweb.asm.tree.TryCatchBlockNode;
  */
 public final class TryWithResourcesEcjFilter implements IFilter {
 
-	public void filter(final MethodNode methodNode,
-			final IFilterOutput output) {
+	public void filter(final String className, final String superClassName,
+			final MethodNode methodNode, final IFilterOutput output) {
 		if (methodNode.tryCatchBlocks.isEmpty()) {
 			return;
 		}

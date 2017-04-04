@@ -157,7 +157,7 @@ public class TryWithResourcesJavacFilterTest implements IFilterOutput {
 		m.visitVarInsn(Opcodes.ALOAD, 8);
 		m.visitInsn(Opcodes.ATHROW);
 
-		filter.filter(m, this);
+		filter.filter("Foo", "java/lang/Object", m, this);
 
 		assertEquals(4, from.size());
 
@@ -379,7 +379,7 @@ public class TryWithResourcesJavacFilterTest implements IFilterOutput {
 		m.visitVarInsn(Opcodes.ALOAD, 11);
 		m.visitInsn(Opcodes.ATHROW);
 
-		filter.filter(m, this);
+		filter.filter("Foo", "java/lang/Object", m, this);
 
 		assertEquals(4, from.size());
 
@@ -491,7 +491,7 @@ public class TryWithResourcesJavacFilterTest implements IFilterOutput {
 
 		m.visitLabel(end);
 
-		filter.filter(m, this);
+		filter.filter("Foo", "java/lang/Object", m, this);
 
 		assertEquals(2, from.size());
 

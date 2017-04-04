@@ -19,9 +19,12 @@ import java.util.Set;
 import org.jacoco.core.analysis.ICounter;
 import org.jacoco.core.analysis.IMethodCoverage;
 import org.jacoco.core.analysis.ISourceNode;
+import org.jacoco.core.internal.analysis.filter.EnumFilter;
 import org.jacoco.core.internal.analysis.filter.IFilter;
 import org.jacoco.core.internal.analysis.filter.IFilterOutput;
+import org.jacoco.core.internal.analysis.filter.LombokGeneratedFilter;
 import org.jacoco.core.internal.analysis.filter.SynchronizedFilter;
+import org.jacoco.core.internal.analysis.filter.SyntheticFilter;
 import org.jacoco.core.internal.analysis.filter.TryWithResourcesEcjFilter;
 import org.jacoco.core.internal.analysis.filter.TryWithResourcesJavacFilter;
 import org.jacoco.core.internal.flow.IFrame;
@@ -42,9 +45,14 @@ import org.objectweb.asm.tree.TryCatchBlockNode;
 public class MethodAnalyzer extends MethodProbesVisitor
 		implements IFilterOutput {
 
-	private static final IFilter[] FILTERS = new IFilter[] {
-			new SynchronizedFilter(), new TryWithResourcesJavacFilter(),
-			new TryWithResourcesEcjFilter() };
+	private static final IFilter[] FILTERS = new IFilter[] { new EnumFilter(),
+			new SyntheticFilter(), new SynchronizedFilter(),
+			new TryWithResourcesJavacFilter(), new TryWithResourcesEcjFilter(),
+			new LombokGeneratedFilter() };
+
+	private final String className;
+
+	private final String superClassName;
 
 	private final boolean[] probes;
 
@@ -74,6 +82,10 @@ public class MethodAnalyzer extends MethodProbesVisitor
 	/**
 	 * New Method analyzer for the given probe data.
 	 * 
+	 * @param className
+	 *            class name
+	 * @param superClassName
+	 *            superclass name
 	 * @param name
 	 *            method name
 	 * @param desc
@@ -85,9 +97,12 @@ public class MethodAnalyzer extends MethodProbesVisitor
 	 *            recorded probe date of the containing class or
 	 *            <code>null</code> if the class is not executed at all
 	 */
-	public MethodAnalyzer(final String name, final String desc,
-			final String signature, final boolean[] probes) {
+	public MethodAnalyzer(final String className, final String superClassName,
+			final String name, final String desc, final String signature,
+			final boolean[] probes) {
 		super();
+		this.className = className;
+		this.superClassName = superClassName;
 		this.probes = probes;
 		this.coverage = new MethodCoverageImpl(name, desc, signature);
 	}
@@ -110,7 +125,7 @@ public class MethodAnalyzer extends MethodProbesVisitor
 			final MethodVisitor methodVisitor) {
 		this.ignored.clear();
 		for (final IFilter filter : FILTERS) {
-			filter.filter(methodNode, this);
+			filter.filter(className, superClassName, methodNode, this);
 		}
 
 		for (final TryCatchBlockNode n : methodNode.tryCatchBlocks) {
@@ -330,8 +345,9 @@ public class MethodAnalyzer extends MethodProbesVisitor
 			final int covered = i.getCoveredBranches();
 			final ICounter instrCounter = covered == 0 ? CounterImpl.COUNTER_1_0
 					: CounterImpl.COUNTER_0_1;
-			final ICounter branchCounter = total > 1 ? CounterImpl.getInstance(
-					total - covered, covered) : CounterImpl.COUNTER_0_0;
+			final ICounter branchCounter = total > 1
+					? CounterImpl.getInstance(total - covered, covered)
+					: CounterImpl.COUNTER_0_0;
 			coverage.increment(instrCounter, branchCounter, i.getLine());
 		}
 		coverage.incrementMethodCounter();
