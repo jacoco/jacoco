@@ -39,8 +39,7 @@ public final class Java9Support {
 	 * @throws IOException
 	 *             if an I/O error occurs
 	 */
-	public static byte[] readFully(final InputStream is)
-			throws IOException {
+	public static byte[] readFully(final InputStream is) throws IOException {
 		if (is == null) {
 			throw new IllegalArgumentException();
 		}
@@ -61,7 +60,16 @@ public final class Java9Support {
 		b[index + 1] = (byte) s;
 	}
 
-	private static short readShort(byte[] b, int index) {
+	/**
+	 * Reads a signed short value at a given index from given array.
+	 * 
+	 * @param b
+	 *            array to read from
+	 * @param index
+	 *            the start index of the value to be read
+	 * @return the read value
+	 */
+	public static short readShort(byte[] b, int index) {
 		return (short) (((b[index] & 0xFF) << 8) | (b[index + 1] & 0xFF));
 	}
 

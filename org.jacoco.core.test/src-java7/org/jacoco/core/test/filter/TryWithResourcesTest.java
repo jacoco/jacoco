@@ -19,6 +19,7 @@ import org.jacoco.core.test.TargetLoader;
 import org.jacoco.core.test.validation.ValidationTestBase;
 import org.jacoco.core.test.filter.targets.TryWithResources;
 import org.junit.Test;
+import org.objectweb.asm.Opcodes;
 
 /**
  * Test of filtering of a bytecode that is generated for a try-with-resources
@@ -26,8 +27,18 @@ import org.junit.Test;
  */
 public class TryWithResourcesTest extends ValidationTestBase {
 
+	private final int bytecodeVersion;
+
 	public TryWithResourcesTest() {
 		super("src-java7", TryWithResources.class);
+
+		try {
+			bytecodeVersion = Java9Support.readShort(
+					TargetLoader.getClassDataAsBytes(TryWithResources.class),
+					6);
+		} catch (IOException e) {
+			throw new RuntimeException(e);
+		}
 	}
 
 	/**
@@ -75,9 +86,19 @@ public class TryWithResourcesTest extends ValidationTestBase {
 		// without filter next line covered partly:
 		assertLine("returnInBody.try", ICounter.FULLY_COVERED);
 		assertLine("returnInBody.open", ICounter.FULLY_COVERED);
+
 		// without filter next line has branches:
-		// TODO with javac 1.8.0_31 part of return instructions belong to close
-		// assertLine("returnInBody.close", ICounter.EMPTY);
+		if (isJDKCompiler) {
+			// https://bugs.openjdk.java.net/browse/JDK-8134759
+			if (bytecodeVersion == Opcodes.V1_7) {
+				assertLine("returnInBody.close", ICounter.FULLY_COVERED, 0, 0);
+			} else if (bytecodeVersion != Opcodes.V1_8) {
+				assertLine("returnInBody.close", ICounter.EMPTY);
+			}
+		} else {
+			assertLine("returnInBody.close", ICounter.EMPTY);
+		}
+
 		assertLine("returnInBody.return", ICounter.FULLY_COVERED);
 	}
 
@@ -136,8 +157,7 @@ public class TryWithResourcesTest extends ValidationTestBase {
 	@Test
 	public void handwritten() {
 		if (isJDKCompiler) {
-			assertLine("handwritten",
-					/* partly when ECJ: */ICounter.EMPTY);
+			assertLine("handwritten", /* partly when ECJ: */ICounter.EMPTY);
 		}
 	}
 
@@ -145,15 +165,12 @@ public class TryWithResourcesTest extends ValidationTestBase {
 	 * {@link TryWithResources#empty()}
 	 */
 	@Test
-	public void empty() throws IOException {
-		final boolean java9 = Java9Support.isPatchRequired(
-				TargetLoader.getClassDataAsBytes(TryWithResources.class));
-
+	public void empty() {
 		assertLine("empty.try", ICounter.FULLY_COVERED, 0, 0);
 		assertLine("empty.open", ICounter.FULLY_COVERED);
 		// empty when EJC:
 		if (isJDKCompiler) {
-			if (java9) {
+			if (bytecodeVersion == Java9Support.V1_9) {
 				assertLine("empty.close", ICounter.FULLY_COVERED, 0, 0);
 			} else {
 				// branches with javac 7 and 8
@@ -166,7 +183,7 @@ public class TryWithResourcesTest extends ValidationTestBase {
 	 * {@link TryWithResources#throwInBody()}
 	 */
 	@Test
-	public void throwInBody() throws Exception {
+	public void throwInBody() {
 		// not filtered
 		assertLine("throwInBody.try", ICounter.NOT_COVERED);
 		assertLine("throwInBody.close", ICounter.NOT_COVERED);

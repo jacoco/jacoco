@@ -69,7 +69,7 @@ public class TryWithResources {
 
 	private static Object returnInBody() throws IOException {
 		try ( // $line-returnInBody.try$
-			  Closeable r = new Resource() // $line-returnInBody.open$
+				Closeable r = new Resource() // $line-returnInBody.open$
 		) {
 			return read(r); // $line-returnInBody.return$
 		} // $line-returnInBody.close$
