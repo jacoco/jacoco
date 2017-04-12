@@ -40,9 +40,70 @@ public class TryWithResourcesJavacFilterTest implements IFilterOutput {
 	 *         ...
 	 *     }
 	 * </pre>
+	 *
+	 * generates
+	 *
+	 * <pre>
+	 *     ...
+	 *     ASTORE r0
+	 *     ACONST_NULL
+	 *     ASTORE primaryExc0
+	 *
+	 *     ...
+	 *     ASTORE r1
+	 *     ACONST_NULL
+	 *     ASTORE primaryExc1
+	 *
+	 *     ... // body
+	 *
+	 *     ALOAD primaryExc1
+	 *     ALOAD r1
+	 *     INVOKESTATIC $closeResource:(Ljava/lang/Throwable;Ljava/lang/AutoCloseable;)V
+	 *
+	 *     ALOAD r0
+	 *     IFNULL n
+	 *     ALOAD primaryExc0
+	 *     ALOAD r0
+	 *     INVOKESTATIC $closeResource:(Ljava/lang/Throwable;Ljava/lang/AutoCloseable;)V
+	 *     n:
+	 *
+	 *     ... // finally on normal path
+	 *     ARETURN
+	 *
+	 *     ASTORE t
+	 *     ALOAD t
+	 *     ASTORE primaryExc1
+	 *     ALOAD t
+	 *     ATHROW
+	 *
+	 *     ASTORE t
+	 *     ALOAD primaryExc1
+	 *     ALOAD r1
+	 *     INVOKESTATIC  $closeResource:(Ljava/lang/Throwable;Ljava/lang/AutoCloseable;)V
+	 *     ALOAD t
+	 *     ATHROW
+	 *
+	 *     ASTORE t
+	 *     ALOAD t
+	 *     ASTORE primaryExc0
+	 *     ALOAD t
+	 *     ATHROW
+	 *
+	 *     ASTORE t
+	 *     ALOAD r0
+	 *     IFNULL n
+	 *     ALOAD primaryExc0
+	 *     ALOAD r0
+	 *     INVOKESTATIC  $closeResource:(Ljava/lang/Throwable;Ljava/lang/AutoCloseable;)V
+	 *     n:
+	 *     ALOAD t
+	 *     ATHROW
+	 *
+	 *     ... // additional handlers for catch blocks and finally on exceptional path
+	 * </pre>
 	 */
 	@Test
-	public void test1() {
+	public void javac9() {
 		final Range range0 = new Range();
 		final Range range1 = new Range();
 		final Range range2 = new Range();
@@ -127,7 +188,7 @@ public class TryWithResourcesJavacFilterTest implements IFilterOutput {
 		m.visitLabel(handler2);
 		range3.fromInclusive = m.instructions.getLast();
 		m.visitVarInsn(Opcodes.ASTORE, 3);
-		// primaryExc1 = t
+		// primaryExc0 = t
 		m.visitVarInsn(Opcodes.ALOAD, 3);
 		m.visitVarInsn(Opcodes.ASTORE, 2);
 		// throw t
@@ -184,9 +245,116 @@ public class TryWithResourcesJavacFilterTest implements IFilterOutput {
 	 *         ...
 	 *     }
 	 * </pre>
+	 *
+	 * generate
+	 *
+	 * <pre>
+	 *     ...
+	 *     ASTORE r0
+	 *     ACONST_NULL
+	 *     ASTORE primaryExc0
+	 *
+	 *     ...
+	 *     ASTORE r1
+	 *     ACONST_NULL
+	 *     ASTORE primaryExc1
+	 *
+	 *     ... // body
+	 *
+	 *     ALOAD r1
+	 *     IFNULL n
+	 *     ALOAD primaryExc1
+	 *     IFNULL c
+	 *     ALOAD r1
+	 *     INVOKEVIRTUAL close:()V
+	 *     GOTO n
+	 *     ASTORE t
+	 *     ALOAD primaryExc1
+	 *     ALOAD t
+	 *     INVOKEVIRTUAL java/lang/Throwable.addSuppressed:(Ljava/lang/Throwable;)V
+	 *     GOTO n
+	 *     c:
+	 *     ALOAD r1
+	 *     INVOKEVIRTUAL close:()V
+	 *     n:
+	 *
+	 *     ALOAD r0
+	 *     IFNULL n
+	 *     ALOAD primaryExc0
+	 *     IFNULL c
+	 *     ALOAD r0
+	 *     INVOKEVIRTUAL close:()V
+	 *     GOTO n
+	 *     ASTORE t
+	 *     ALOAD primaryExc0
+	 *     ALOAD t
+	 *     INVOKEVIRTUAL java/lang/Throwable.addSuppressed:(Ljava/lang/Throwable;)V
+	 *     GOTO n
+	 *     c:
+	 *     ALOAD r0
+	 *     INVOKEVIRTUAL close:()V
+	 *     n:
+	 *
+	 *     ... // finally on normal path
+	 *     ARETURN
+	 *
+	 *     ASTORE t
+	 *     ALOAD t
+	 *     ASTORE primaryExc1
+	 *     ALOAD t
+	 *     ATHROW
+	 *
+	 *     ASTORE t1
+	 *     ALOAD r1
+	 *     IFNULL e
+	 *     ALOAD primaryExc1
+	 *     IFNULL c
+	 *     ALOAD r1
+	 *     INVOKEVIRTUAL close:()V
+	 *     GOTO e
+	 *     ASTORE t2
+	 *     ALOAD primaryExc1
+	 *     ALOAD t2
+	 *     INVOKEVIRTUAL java/lang/Throwable.addSuppressed:(Ljava/lang/Throwable;)V
+	 *     GOTO e
+	 *     c:
+	 *     ALOAD r1
+	 *     INVOKEVIRTUAL close:()V
+	 *     e:
+	 *     ALOAD t1
+	 *     ATHROW
+	 *
+	 *     ASTORE t
+	 *     ALOAD t
+	 *     ASTORE primaryExc0
+	 *     ALOAD t
+	 *     ATHROW
+	 *
+	 *     ASTORE t1
+	 *     ALOAD r0
+	 *     IFNULL e
+	 *     ALOAD primaryExc0
+	 *     IFNULL c
+	 *     ALOAD r0
+	 *     INVOKEVIRTUAL close:()V
+	 *     GOTO e
+	 *     ASTORE t2
+	 *     ALOAD primaryExc0
+	 *     ALOAD t2
+	 *     INVOKEVIRTUAL java/lang/Throwable.addSuppressed:(Ljava/lang/Throwable;)V
+	 *     GOTO e
+	 *     c:
+	 *     ALOAD r0
+	 *     INVOKEVIRTUAL close:()V
+	 *     e:
+	 *     ALOAD t1
+	 *     ATHROW
+	 *
+	 *     ... // additional handlers for catch blocks and finally on exceptional path
+	 * </pre>
 	 */
 	@Test
-	public void test2() {
+	public void javac_7_8() {
 		final Range range0 = new Range();
 		final Range range1 = new Range();
 		final Range range2 = new Range();
@@ -396,6 +564,72 @@ public class TryWithResourcesJavacFilterTest implements IFilterOutput {
 		assertEquals(range3.toInclusive, to.get(3));
 	}
 
+	/**
+	 * javac 9 for
+	 * 
+	 * <pre>
+	 *     try (r = new ...) {
+	 *         ...
+	 *     } finally {
+	 *         ...
+	 *     }
+	 * </pre>
+	 *
+	 * generates
+	 *
+	 * <pre>
+	 *     ...
+	 *     ASTORE r
+	 *     ACONST_NULL
+	 *     ASTORE primaryExc
+	 *
+	 *     ... // body
+	 *
+	 *     ALOAD primaryExc
+	 *     IFNULL c
+	 *     ALOAD r
+	 *     INVOKEVIRTUAL close:()V
+	 *     GOTO f
+	 *     ASTORE t
+	 *     ALOAD primaryExc
+	 *     ALOAD t
+	 *     NVOKEVIRTUAL java/lang/Throwable.addSuppressed:(Ljava/lang/Throwable;)V
+	 *     GOTO f
+	 *     c:
+	 *     ALOAD r
+	 *     INVOKEVIRTUAL close:()V
+	 *     GOTO f
+	 *
+	 *     ASTORE t
+	 *     ALOAD t
+	 *     ASTORE primaryExc
+	 *     ALOAD t
+	 *     ATHROW
+	 *
+	 *     ASTORE t
+	 *     ALOAD primaryExc
+	 *     IFNULL c
+	 *     ALOAD r
+	 *     INVOKEVIRTUAL close:()V
+	 *     GOTO L78
+	 *     ASTORE t2
+	 *     ALOAD primaryExc
+	 *     ALOAD t2
+	 *     INVOKEVIRTUAL java/lang/Throwable.addSuppressed:(Ljava/lang/Throwable;)V
+	 *     goto e
+	 *     c:
+	 *     ALOAD r
+	 *     INVOKEVIRTUAL close:()V
+	 *     e:
+	 *     ALOAD t
+	 *     ATHROW
+	 *
+	 *     f:
+	 *     ... // finally on normal path
+	 *     ... // additional handlers for catch blocks and finally on exceptional path
+	 *     ...
+	 * </pre>
+	 */
 	@Test
 	public void javac9_omitted_null_check() {
 		final Range range0 = new Range();
