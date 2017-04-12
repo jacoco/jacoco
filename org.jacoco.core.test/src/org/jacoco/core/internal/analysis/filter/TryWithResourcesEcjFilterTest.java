@@ -39,6 +39,123 @@ public class TryWithResourcesEcjFilterTest implements IFilterOutput {
 	 *     } finally (...) {
 	 *         ...
 	 *     }
+	 *     ...
+	 * </pre>
+	 *
+	 * generates
+	 *
+	 * <pre>
+	 *     ACONST_NULL
+	 *     ASTORE primaryExc
+	 *     ACONST_NULL
+	 *     ASTORE suppressedExc
+	 *     ...
+	 *     ASTORE r1
+	 *     ...
+	 *     ASTORE r2
+	 *     ...
+	 *     ASTORE r3
+	 *
+	 *     ... // body
+	 *
+	 *     ALOAD r3
+	 *     IFNULL r2_close
+	 *     ALOAD r3
+	 *     INVOKEVIRTUAL close:()V
+	 *     GOTO r2_close
+	 *
+	 *     ASTORE primaryExc
+	 *     ALOAD r3
+	 *     IFNULL n
+	 *     ALOAD r3
+	 *     INVOKEVIRTUAL close:()V
+	 *     n:
+	 *     ALOAD primaryExc
+	 *     ATHROW
+	 *
+	 *     r2_close:
+	 *     ALOAD r2
+	 *     IFNULL r1_close
+	 *     ALOAD r2
+	 *     INVOKEVIRTUAL close:()V
+	 *     GOTO r1_close
+	 *
+	 *     ASTORE suppressedExc
+	 *     ALOAD primaryExc
+	 *     IFNONNULL s
+	 *     ALOAD suppressedExc
+	 *     ASTORE primaryExc
+	 *     GOTO e
+	 *     s:
+	 *     ALOAD primaryExc
+	 *     ALOAD suppressedExc
+	 *     IF_ACMPEQ e
+	 *     ALOAD primaryExc
+	 *     ALOAD suppressedExc
+	 *     INVOKEVIRTUAL java/lang/Throwable.addSuppressed:(Ljava/lang/Throwable;)V
+	 *     e:
+	 *
+	 *     ALOAD r2
+	 *     IFNULL n
+	 *     ALOAD r2
+	 *     INVOKEVIRTUAL close:()V
+	 *     n:
+	 *     ALOAD primaryExc
+	 *     ATHROW
+	 *
+	 *     r1_close:
+	 *     ALOAD r1
+	 *     IFNULL after
+	 *     ALOAD r1
+	 *     INVOKEVIRTUAL close:()V
+	 *     GOTO after
+	 *
+	 *     ASTORE suppressedExc
+	 *     ALOAD primaryExc
+	 *     IFNONNULL s
+	 *     ALOAD suppressedExc
+	 *     ASTORE primaryExc
+	 *     GOTO e
+	 *     s:
+	 *     ALOAD primaryExc
+	 *     ALOAD suppressedExc
+	 *     IF_ACMPEQ e
+	 *     ALOAD primaryExc
+	 *     ALOAD suppressedExc
+	 *     INVOKEVIRTUAL java/lang/Throwable.addSuppressed:(Ljava/lang/Throwable;)V
+	 *     e:
+	 *
+	 *     ALOAD r1
+	 *     IFNULL n
+	 *     ALOAD r1
+	 *     INVOKEVIRTUAL close:()V
+	 *     n:
+	 *     ALOAD primaryExc
+	 *     ATHROW
+	 *
+	 *     ASTORE suppressedExc
+	 *     ALOAD primaryExc
+	 *     IFNONNULL s
+	 *     ALOAD suppressedExc
+	 *     ASTORE primaryExc
+	 *     GOTO e
+	 *     s:
+	 *     ALOAD primaryExc
+	 *     ALOAD suppressedExc
+	 *     IF_ACMPEQ e
+	 *     ALOAD primaryExc
+	 *     ALOAD suppressedExc
+	 *     INVOKEVIRTUAL java/lang/Throwable.addSuppressed:(Ljava/lang/Throwable;)V
+	 *     e:
+	 *
+	 *     ALOAD primaryExc
+	 *     ATHROW
+	 *
+	 *     ... // additional handlers for catch blocks and finally on exceptional path
+	 *
+	 *     after:
+	 *     ... // finally on normal path
+	 *     ...
 	 * </pre>
 	 */
 	@Test
@@ -212,6 +329,118 @@ public class TryWithResourcesEcjFilterTest implements IFilterOutput {
 	 *     } finally {
 	 *         ...
 	 *     }
+	 * </pre>
+	 *
+	 * generates
+	 *
+	 * <pre>
+	 *     ACONST_NULL
+	 *     astore primaryExc
+	 *     ACONST_NULL
+	 *     astore suppressedExc
+	 *
+	 *     ...
+	 *     ASTORE r1
+	 *     ...
+	 *     ASTORE r2
+	 *     ...
+	 *     ASTORE r3
+	 *
+	 *     ... // body
+	 *
+	 *     ALOAD r3
+	 *     IFNULL n
+	 *     ALOAD r3
+	 *     INVOKEVIRTUAL close:()V
+	 *     n:
+	 *     ALOAD r2
+	 *     IFNULL n
+	 *     ALOAD r2
+	 *     INVOKEVIRTUAL close:()V
+	 *     n:
+	 *     ALOAD r1
+	 *     IFNULL n
+	 *     ALOAD r1
+	 *     INVOKEVIRTUAL close:()V
+	 *     n:
+	 *
+	 *     ... // finally on normal path
+	 *     ARETURN
+	 *
+	 *     ASTORE primaryExc
+	 *     ALOAD r3
+	 *     IFNULL n
+	 *     ALOAD r3
+	 *     INVOKEVIRTUAL close:()V
+	 *     n:
+	 *     ALOAD primaryExc
+	 *     ATHROW
+	 *
+	 *     ASTORE suppressedExc
+	 *     ALOAD primaryExc
+	 *     IFNONNULL s
+	 *     ALOAD suppressedExc
+	 *     ASTORE primaryExc
+	 *     GOTO  e
+	 *     s:
+	 *     ALOAD primaryExc
+	 *     ALOAD suppressedExc
+	 *     IF_ACMPEQ  e
+	 *     ALOAD primaryExc
+	 *     ALOAD suppressedExc
+	 *     INVOKEVIRTUAL java/lang/Throwable.addSuppressed:(Ljava/lang/Throwable;)V
+	 *     e:
+	 *
+	 *     ALOAD r2
+	 *     IFNULL n
+	 *     ALOAD r2
+	 *     INVOKEVIRTUAL close:()V
+	 *     n:
+	 *     ALOAD primaryExc
+	 *     ATHROW
+	 *
+	 *     ASTORE suppressedExc
+	 *     ALOAD primaryExc
+	 *     IFNONNULL s
+	 *     ALOAD suppressedExc
+	 *     ASTORE primaryExc
+	 *     GOTO e
+	 *     s:
+	 *     ALOAD primaryExc
+	 *     ALOAD suppressedExc
+	 *     IF_ACMPEQ e
+	 *     ALOAD primaryExc
+	 *     ALOAD suppressedExc
+	 *     INVOKEVIRTUAL java/lang/Throwable.addSuppressed:(Ljava/lang/Throwable;)V
+	 *     e:
+	 *
+	 *     ALOAD r1
+	 *     IFNULL n
+	 *     ALOAD r1
+	 *     INVOKEVIRTUAL close:()V
+	 *     n:
+	 *     ALOAD primaryExc
+	 *     ATHROW
+	 *
+	 *     ASTORE suppressedExc
+	 *     ALOAD primaryExc
+	 *     IFNONNULL s
+	 *     ALOAD suppressedExc
+	 *     ASTORE primaryExc
+	 *     GOTO e
+	 *     s:
+	 *     ALOAD primaryExc
+	 *     ALOAD suppressedExc
+	 *     IF_ACMPEQ e
+	 *     ALOAD primaryExc
+	 *     ALOAD suppressedExc
+	 *     INVOKEVIRTUAL java/lang/Throwable.addSuppressed:(Ljava/lang/Throwable;)V
+	 *     e:
+	 *
+	 *     ALOAD primaryExc
+	 *     ATHROW
+	 *
+	 *     ... // additional handlers for catch blocks and finally on exceptional path
 	 * </pre>
 	 */
 	@Test
