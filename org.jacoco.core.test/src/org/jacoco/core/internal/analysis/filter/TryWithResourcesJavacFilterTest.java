@@ -736,6 +736,68 @@ public class TryWithResourcesJavacFilterTest implements IFilterOutput {
 		assertEquals(range1.toInclusive, to.get(1));
 	}
 
+	/**
+	 * javac 9 for
+	 * 
+	 * <pre>
+	 *     try (r = new ...) {
+	 *       throw ...
+	 *     }
+	 * </pre>
+	 *
+	 * generates
+	 *
+	 * <pre>
+	 *     ...
+	 *     ASTORE r
+	 *     ACONST_NULL
+	 *     ASTORE primaryExc
+	 *
+	 *     ...
+	 *     ATHROW
+	 *
+	 *     ASTORE t
+	 *     ALOAD t
+	 *     ASTORE primaryExc
+	 *     ALOAD t
+	 *     ATHROW
+	 *
+	 *     ASTORE t
+	 *     ALOAD primaryExc
+	 *     ALOAD r
+	 *     INVOKESTATIC  $closeResource:(Ljava/lang/Throwable;Ljava/lang/AutoCloseable;)V
+	 *     ALOAD t
+	 *     ATHROW
+	 * </pre>
+	 */
+	@Test
+	public void only_exceptional_path() {
+		final Label start = new Label();
+		final Label handler = new Label();
+		m.visitTryCatchBlock(start, handler, handler, "java/lang/Throwable");
+
+		m.visitLabel(start);
+		m.visitInsn(Opcodes.ATHROW);
+		m.visitLabel(handler);
+		m.visitVarInsn(Opcodes.ASTORE, 3);
+		m.visitVarInsn(Opcodes.ALOAD, 3);
+		m.visitVarInsn(Opcodes.ASTORE, 2);
+		m.visitVarInsn(Opcodes.ALOAD, 3);
+		m.visitInsn(Opcodes.ATHROW);
+
+		m.visitVarInsn(Opcodes.ASTORE, 4);
+		m.visitVarInsn(Opcodes.ALOAD, 2);
+		m.visitVarInsn(Opcodes.ALOAD, 1);
+		m.visitMethodInsn(Opcodes.INVOKESTATIC, "Fun", "$closeResource",
+				"(Ljava/lang/Throwable;Ljava/lang/AutoCloseable;)V", false);
+		m.visitVarInsn(Opcodes.ALOAD, 4);
+		m.visitInsn(Opcodes.ATHROW);
+
+		filter.filter("Foo", "java/lang/Object", m, this);
+
+		assertEquals(0, from.size());
+	}
+
 	static class Range {
 		AbstractInsnNode fromInclusive;
 		AbstractInsnNode toInclusive;
