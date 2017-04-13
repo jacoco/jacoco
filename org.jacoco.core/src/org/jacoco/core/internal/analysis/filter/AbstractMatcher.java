@@ -25,42 +25,54 @@ abstract class AbstractMatcher {
 
 	AbstractInsnNode cursor;
 
-	final boolean nextIsAddSuppressed() {
-		if (!nextIs(Opcodes.INVOKEVIRTUAL)) {
-			return false;
+	final void nextIsAddSuppressed() {
+		nextIs(Opcodes.INVOKEVIRTUAL);
+		if (cursor == null) {
+			return;
 		}
 		final MethodInsnNode m = (MethodInsnNode) cursor;
-		return "java/lang/Throwable".equals(m.owner)
-				&& "addSuppressed".equals(m.name);
+		if ("java/lang/Throwable".equals(m.owner)
+				&& "addSuppressed".equals(m.name)) {
+			return;
+		}
+		cursor = null;
 	}
 
-	final boolean nextIsVar(final int opcode, final String name) {
-		if (!nextIs(opcode)) {
-			return false;
+	final void nextIsVar(final int opcode, final String name) {
+		nextIs(opcode);
+		if (cursor == null) {
+			return;
 		}
 		final VarInsnNode actual = (VarInsnNode) cursor;
 		final VarInsnNode expected = vars.get(name);
 		if (expected == null) {
 			vars.put(name, actual);
-			return true;
-		} else {
-			return expected.var == actual.var;
+		} else if (expected.var != actual.var) {
+			cursor = null;
 		}
 	}
 
 	/**
-	 * Moves {@link #cursor} to next instruction and returns <code>true</code>
-	 * if it has given opcode.
+	 * Moves {@link #cursor} to next instruction if it has given opcode,
+	 * otherwise sets it to <code>null</code>.
 	 */
-	final boolean nextIs(final int opcode) {
+	final void nextIs(final int opcode) {
 		next();
-		return cursor != null && cursor.getOpcode() == opcode;
+		if (cursor == null) {
+			return;
+		}
+		if (cursor.getOpcode() != opcode) {
+			cursor = null;
+		}
 	}
 
 	/**
 	 * Moves {@link #cursor} to next instruction.
 	 */
 	final void next() {
+		if (cursor == null) {
+			return;
+		}
 		do {
 			cursor = cursor.getNext();
 		} while (cursor != null && (cursor.getType() == AbstractInsnNode.FRAME

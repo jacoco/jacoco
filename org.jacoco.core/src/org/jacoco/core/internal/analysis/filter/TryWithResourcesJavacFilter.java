@@ -129,36 +129,21 @@ public final class TryWithResourcesJavacFilter implements IFilter {
 
 		private boolean matchJavac(final JavacPattern p) {
 			// "catch (Throwable t)"
-			if (!nextIsVar(Opcodes.ASTORE, "t1")) {
-				return false;
-			}
+			nextIsVar(Opcodes.ASTORE, "t1");
 			// "primaryExc = t"
-			if (!nextIsVar(Opcodes.ALOAD, "t1")) {
-				return false;
-			}
-			if (!nextIsVar(Opcodes.ASTORE, "primaryExc")) {
-				return false;
-			}
+			nextIsVar(Opcodes.ALOAD, "t1");
+			nextIsVar(Opcodes.ASTORE, "primaryExc");
 			// "throw t"
-			if (!nextIsVar(Opcodes.ALOAD, "t1")) {
-				return false;
-			}
-			if (!nextIs(Opcodes.ATHROW)) {
-				return false;
-			}
+			nextIsVar(Opcodes.ALOAD, "t1");
+			nextIs(Opcodes.ATHROW);
 
 			// "catch (any t)"
-			if (!nextIsVar(Opcodes.ASTORE, "t2")) {
-				return false;
-			}
-			if (!nextIsJavacClose(p, "e")) {
-				return false;
-			}
+			nextIsVar(Opcodes.ASTORE, "t2");
+			nextIsJavacClose(p, "e");
 			// "throw t"
-			if (!nextIsVar(Opcodes.ALOAD, "t2")) {
-				return false;
-			}
-			if (!nextIs(Opcodes.ATHROW)) {
+			nextIsVar(Opcodes.ALOAD, "t2");
+			nextIs(Opcodes.ATHROW);
+			if (cursor == null) {
 				return false;
 			}
 			final AbstractInsnNode end = cursor;
@@ -197,62 +182,69 @@ public final class TryWithResourcesJavacFilter implements IFilter {
 			case METHOD:
 			case FULL:
 				// "if (r != null)"
-				if (!(nextIsVar(Opcodes.ALOAD, "r")
-						&& nextIs(Opcodes.IFNULL))) {
-					return false;
-				}
+				nextIsVar(Opcodes.ALOAD, "r");
+				nextIs(Opcodes.IFNULL);
 			}
 			switch (p) {
 			case METHOD:
 			case OPTIMAL:
-				if (nextIsVar(Opcodes.ALOAD, "primaryExc")
-						&& nextIsVar(Opcodes.ALOAD, "r")
-						&& nextIs(Opcodes.INVOKESTATIC)) {
+				nextIsVar(Opcodes.ALOAD, "primaryExc");
+				nextIsVar(Opcodes.ALOAD, "r");
+				nextIs(Opcodes.INVOKESTATIC);
+				if (cursor != null) {
 					final MethodInsnNode m = (MethodInsnNode) cursor;
-					return "$closeResource".equals(m.name)
+					if ("$closeResource".equals(m.name)
 							&& "(Ljava/lang/Throwable;Ljava/lang/AutoCloseable;)V"
-									.equals(m.desc);
+							.equals(m.desc)) {
+						return true;
+					}
+					cursor = null;
 				}
 				return false;
 			case FULL:
 			case OMITTED_NULL_CHECK:
-				return nextIsVar(Opcodes.ALOAD, "primaryExc")
-						// "if (primaryExc != null)"
-						&& nextIs(Opcodes.IFNULL)
-						// "r.close()"
-						&& nextIsClose() && nextIs(Opcodes.GOTO)
-						// "catch (Throwable t)"
-						&& nextIsVar(Opcodes.ASTORE, ctx + "t")
-						// "primaryExc.addSuppressed(t)"
-						&& nextIsVar(Opcodes.ALOAD, "primaryExc")
-						&& nextIsVar(Opcodes.ALOAD, ctx + "t")
-						&& nextIsAddSuppressed() && nextIs(Opcodes.GOTO)
-						// "r.close()"
-						&& nextIsClose();
+				nextIsVar(Opcodes.ALOAD, "primaryExc");
+				// "if (primaryExc != null)"
+				nextIs(Opcodes.IFNULL);
+				// "r.close()"
+				nextIsClose();
+				nextIs(Opcodes.GOTO);
+				// "catch (Throwable t)"
+				nextIsVar(Opcodes.ASTORE, ctx + "t");
+				// "primaryExc.addSuppressed(t)"
+				nextIsVar(Opcodes.ALOAD, "primaryExc");
+				nextIsVar(Opcodes.ALOAD, ctx + "t");
+				nextIsAddSuppressed();
+				nextIs(Opcodes.GOTO);
+				// "r.close()"
+				nextIsClose();
+				return cursor != null;
 			default:
-				return false;
+				throw new AssertionError();
 			}
 		}
 
-		private boolean nextIsClose() {
-			if (!nextIsVar(Opcodes.ALOAD, "r")) {
-				return false;
-			}
+		private void nextIsClose() {
+			nextIsVar(Opcodes.ALOAD, "r");
 			next();
+			if (cursor == null) {
+				return;
+			}
 			if (cursor.getOpcode() != Opcodes.INVOKEINTERFACE
 					&& cursor.getOpcode() != Opcodes.INVOKEVIRTUAL) {
-				return false;
+				cursor = null;
+				return;
 			}
 			final MethodInsnNode m = (MethodInsnNode) cursor;
 			if (!"close".equals(m.name) || !"()V".equals(m.desc)) {
-				return false;
+				cursor = null;
+				return;
 			}
 			final String actual = m.owner;
 			if (expectedOwner == null) {
 				expectedOwner = actual;
-				return true;
-			} else {
-				return expectedOwner.equals(actual);
+			} else if (!expectedOwner.equals(actual)) {
+				cursor = null;
 			}
 		}
 

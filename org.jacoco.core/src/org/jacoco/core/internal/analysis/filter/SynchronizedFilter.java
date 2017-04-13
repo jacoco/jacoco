@@ -54,15 +54,20 @@ public final class SynchronizedFilter implements IFilter {
 
 		private boolean nextIsJavac() {
 			cursor = start;
-			return nextIsVar(Opcodes.ASTORE, "t") && nextIs(Opcodes.ALOAD)
-					&& nextIs(Opcodes.MONITOREXIT)
-					&& nextIsVar(Opcodes.ALOAD, "t") && nextIs(Opcodes.ATHROW);
+			nextIsVar(Opcodes.ASTORE, "t");
+			nextIs(Opcodes.ALOAD);
+			nextIs(Opcodes.MONITOREXIT);
+			nextIsVar(Opcodes.ALOAD, "t");
+			nextIs(Opcodes.ATHROW);
+			return cursor != null;
 		}
 
 		private boolean nextIsEcj() {
 			cursor = start;
-			return nextIs(Opcodes.ALOAD) && nextIs(Opcodes.MONITOREXIT)
-					&& nextIs(Opcodes.ATHROW);
+			nextIs(Opcodes.ALOAD);
+			nextIs(Opcodes.MONITOREXIT);
+			nextIs(Opcodes.ATHROW);
+			return  cursor != null;
 		}
 	}
 

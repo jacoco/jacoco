@@ -67,40 +67,27 @@ public final class TryWithResourcesEcjFilter implements IFilter {
 
 		private boolean matchEcj() {
 			// "catch (any primaryExc)"
-			if (!nextIsVar(Opcodes.ASTORE, "primaryExc")) {
-				return false;
-			}
-			if (!nextIsEcjCloseAndThrow("r0")) {
-				return false;
-			}
+			nextIsVar(Opcodes.ASTORE, "primaryExc");
+			nextIsEcjCloseAndThrow("r0");
 
 			AbstractInsnNode c;
 			int resources = 1;
 			String r = "r" + resources;
 			c = cursor;
 			while (nextIsEcjClose(r)) {
-				if (!nextIsJump(Opcodes.GOTO, r + ".end")) {
-					return false;
-				}
-				if (!nextIsEcjSuppress(r)) {
-					return false;
-				}
-				if (!nextIsEcjCloseAndThrow(r)) {
-					return false;
-				}
+				nextIsJump(Opcodes.GOTO, r + ".end");
+				nextIsEcjSuppress(r);
+				nextIsEcjCloseAndThrow(r);
 				resources++;
 				r = "r" + resources;
 				c = cursor;
 			}
 			cursor = c;
-			if (!nextIsEcjSuppress("last")) {
-				return false;
-			}
+			nextIsEcjSuppress("last");
 			// "throw primaryExc"
-			if (!nextIsVar(Opcodes.ALOAD, "primaryExc")) {
-				return false;
-			}
-			if (!nextIs(Opcodes.ATHROW)) {
+			nextIsVar(Opcodes.ALOAD, "primaryExc");
+			nextIs(Opcodes.ATHROW);
+			if (cursor == null) {
 				return false;
 			}
 			final AbstractInsnNode end = cursor;
@@ -118,7 +105,7 @@ public final class TryWithResourcesEcjFilter implements IFilter {
 			startOnNonExceptionalPath = startOnNonExceptionalPath.getNext();
 
 			next();
-			if (cursor.getOpcode() != Opcodes.GOTO) {
+			if (cursor == null || cursor.getOpcode() != Opcodes.GOTO) {
 				return false;
 			}
 
@@ -129,9 +116,7 @@ public final class TryWithResourcesEcjFilter implements IFilter {
 
 		private boolean matchEcjNoFlowOut() {
 			// "catch (any primaryExc)"
-			if (!nextIsVar(Opcodes.ASTORE, "primaryExc")) {
-				return false;
-			}
+			nextIsVar(Opcodes.ASTORE, "primaryExc");
 
 			AbstractInsnNode c;
 			int resources = 0;
@@ -144,10 +129,9 @@ public final class TryWithResourcesEcjFilter implements IFilter {
 			}
 			cursor = c;
 			// "throw primaryExc"
-			if (!nextIsVar(Opcodes.ALOAD, "primaryExc")) {
-				return false;
-			}
-			if (!nextIs(Opcodes.ATHROW)) {
+			nextIsVar(Opcodes.ALOAD, "primaryExc");
+			nextIs(Opcodes.ATHROW);
+			if (cursor == null) {
 				return false;
 			}
 			final AbstractInsnNode end = cursor;
@@ -175,92 +159,105 @@ public final class TryWithResourcesEcjFilter implements IFilter {
 		}
 
 		private boolean nextIsEcjClose(final String name) {
-			return nextIsVar(Opcodes.ALOAD, name)
-					// "if (r != null)"
-					&& nextIsJump(Opcodes.IFNULL, name + ".end")
-					// "r.close()"
-					&& nextIsClose(name);
+			nextIsVar(Opcodes.ALOAD, name);
+			// "if (r != null)"
+			nextIsJump(Opcodes.IFNULL, name + ".end");
+			// "r.close()"
+			nextIsClose(name);
+			return cursor != null;
 		}
 
 		private boolean nextIsEcjCloseAndThrow(final String name) {
-			return nextIsVar(Opcodes.ALOAD, name)
-					// "if (r != null)"
-					&& nextIsJump(Opcodes.IFNULL, name)
-					// "r.close()"
-					&& nextIsClose(name) && nextIsLabel(name)
-					&& nextIsVar(Opcodes.ALOAD, "primaryExc")
-					&& nextIs(Opcodes.ATHROW);
+			nextIsVar(Opcodes.ALOAD, name);
+			// "if (r != null)"
+			nextIsJump(Opcodes.IFNULL, name);
+			// "r.close()"
+			nextIsClose(name);
+			nextIsLabel(name);
+			nextIsVar(Opcodes.ALOAD, "primaryExc");
+			nextIs(Opcodes.ATHROW);
+			return cursor != null;
 		}
 
 		private boolean nextIsEcjSuppress(final String name) {
 			final String suppressedExc = name + ".t";
 			final String startLabel = name + ".suppressStart";
 			final String endLabel = name + ".suppressEnd";
-			return nextIsVar(Opcodes.ASTORE, suppressedExc)
-					// "suppressedExc = t"
-					// "if (primaryExc != null)"
-					&& nextIsVar(Opcodes.ALOAD, "primaryExc")
-					&& nextIsJump(Opcodes.IFNONNULL, startLabel)
-					// "primaryExc = suppressedExc"
-					&& nextIsVar(Opcodes.ALOAD, suppressedExc)
-					&& nextIsVar(Opcodes.ASTORE, "primaryExc")
-					&& nextIsJump(Opcodes.GOTO, endLabel)
-					// "if (primaryExc == suppressedExc)"
-					&& nextIsLabel(startLabel)
-					&& nextIsVar(Opcodes.ALOAD, "primaryExc")
-					&& nextIsVar(Opcodes.ALOAD, suppressedExc)
-					&& nextIsJump(Opcodes.IF_ACMPEQ, endLabel)
-					// "primaryExc.addSuppressed(suppressedExc)"
-					&& nextIsVar(Opcodes.ALOAD, "primaryExc")
-					&& nextIsVar(Opcodes.ALOAD, suppressedExc)
-					&& nextIsAddSuppressed() && nextIsLabel(endLabel);
+			nextIsVar(Opcodes.ASTORE, suppressedExc);
+			// "suppressedExc = t"
+			// "if (primaryExc != null)"
+			nextIsVar(Opcodes.ALOAD, "primaryExc");
+			nextIsJump(Opcodes.IFNONNULL, startLabel);
+			// "primaryExc = suppressedExc"
+			nextIsVar(Opcodes.ALOAD, suppressedExc);
+			nextIsVar(Opcodes.ASTORE, "primaryExc");
+			nextIsJump(Opcodes.GOTO, endLabel);
+			// "if (primaryExc == suppressedExc)"
+			nextIsLabel(startLabel);
+			nextIsVar(Opcodes.ALOAD, "primaryExc");
+			nextIsVar(Opcodes.ALOAD, suppressedExc);
+			nextIsJump(Opcodes.IF_ACMPEQ, endLabel);
+			// "primaryExc.addSuppressed(suppressedExc)"
+			nextIsVar(Opcodes.ALOAD, "primaryExc");
+			nextIsVar(Opcodes.ALOAD, suppressedExc);
+			nextIsAddSuppressed();
+			nextIsLabel(endLabel);
+			return cursor != null;
 		}
 
-		private boolean nextIsClose(final String name) {
-			if (!nextIsVar(Opcodes.ALOAD, name)) {
-				return false;
-			}
+		private void nextIsClose(final String name) {
+			nextIsVar(Opcodes.ALOAD, name);
 			next();
+			if (cursor == null) {
+				return;
+			}
 			if (cursor.getOpcode() != Opcodes.INVOKEINTERFACE
 					&& cursor.getOpcode() != Opcodes.INVOKEVIRTUAL) {
-				return false;
+				cursor = null;
+				return;
 			}
 			final MethodInsnNode m = (MethodInsnNode) cursor;
 			if (!"close".equals(m.name) || !"()V".equals(m.desc)) {
-				return false;
+				cursor = null;
+				return;
 			}
 			final String actual = m.owner;
 			final String expected = owners.get(name);
 			if (expected == null) {
 				owners.put(name, actual);
-				return true;
-			} else {
-				return expected.equals(actual);
+			} else if (!expected.equals(actual)) {
+				cursor = null;
 			}
 		}
 
-		private boolean nextIsJump(final int opcode, final String name) {
-			if (!nextIs(opcode)) {
-				return false;
+		private void nextIsJump(final int opcode, final String name) {
+			nextIs(opcode);
+			if (cursor == null) {
+				return;
 			}
 			final LabelNode actual = ((JumpInsnNode) cursor).label;
 			final LabelNode expected = labels.get(name);
 			if (expected == null) {
 				labels.put(name, actual);
-				return true;
-			} else {
-				return expected == actual;
+			} else if (expected != actual) {
+				cursor = null;
 			}
 		}
 
-		private boolean nextIsLabel(final String name) {
+		private void nextIsLabel(final String name) {
+			if (cursor == null) {
+				return;
+			}
 			cursor = cursor.getNext();
 			if (cursor.getType() != AbstractInsnNode.LABEL) {
-				return false;
+				cursor = null;
+				return;
 			}
 			final LabelNode actual = (LabelNode) cursor;
 			final LabelNode expected = labels.get(name);
-			return expected == actual;
+			if (expected != actual) {
+				cursor = null;
+			}
 		}
 
 	}
