@@ -11,15 +11,13 @@
  *******************************************************************************/
 package org.jacoco.core.test.filter;
 
-import java.io.IOException;
-
 import org.jacoco.core.analysis.ICounter;
-import org.jacoco.core.internal.Java9Support;
-import org.jacoco.core.test.TargetLoader;
-import org.jacoco.core.test.validation.ValidationTestBase;
 import org.jacoco.core.test.filter.targets.TryWithResources;
+import org.jacoco.core.test.validation.ValidationTestBase;
 import org.junit.Test;
-import org.objectweb.asm.Opcodes;
+
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Test of filtering of a bytecode that is generated for a try-with-resources
@@ -27,18 +25,8 @@ import org.objectweb.asm.Opcodes;
  */
 public class TryWithResourcesTest extends ValidationTestBase {
 
-	private final int bytecodeVersion;
-
 	public TryWithResourcesTest() {
 		super("src-java7", TryWithResources.class);
-
-		try {
-			bytecodeVersion = Java9Support.readShort(
-					TargetLoader.getClassDataAsBytes(TryWithResources.class),
-					6);
-		} catch (IOException e) {
-			throw new RuntimeException(e);
-		}
 	}
 
 	/**
@@ -90,9 +78,14 @@ public class TryWithResourcesTest extends ValidationTestBase {
 		// without filter next line has branches:
 		if (isJDKCompiler) {
 			// https://bugs.openjdk.java.net/browse/JDK-8134759
-			if (bytecodeVersion == Opcodes.V1_7) {
+			// javac 7 and 8 up to 8u92 are affected
+			final String jdkVersion = System.getProperty("java.version");
+			final Matcher m = Pattern.compile("1\\.8\\.0_(\\d++)(-ea)?")
+					.matcher(jdkVersion);
+			if (jdkVersion.startsWith("1.7.0_")
+					|| (m.matches() && Integer.parseInt(m.group(1)) < 92)) {
 				assertLine("returnInBody.close", ICounter.FULLY_COVERED, 0, 0);
-			} else if (bytecodeVersion != Opcodes.V1_8) {
+			} else {
 				assertLine("returnInBody.close", ICounter.EMPTY);
 			}
 		} else {
@@ -170,7 +163,8 @@ public class TryWithResourcesTest extends ValidationTestBase {
 		assertLine("empty.open", ICounter.FULLY_COVERED);
 		// empty when EJC:
 		if (isJDKCompiler) {
-			if (bytecodeVersion == Java9Support.V1_9) {
+			final String jdkVersion = System.getProperty("java.version");
+			if (jdkVersion.startsWith("9-")) {
 				assertLine("empty.close", ICounter.FULLY_COVERED, 0, 0);
 			} else {
 				// branches with javac 7 and 8
