@@ -266,7 +266,7 @@ public class TryWithResourcesJavacFilterTest implements IFilterOutput {
 	 *     ALOAD primaryExc1
 	 *     IFNULL c
 	 *     ALOAD r1
-	 *     INVOKEVIRTUAL close:()V
+	 *     INVOKEINTERFACE close:()V
 	 *     GOTO n
 	 *     ASTORE t
 	 *     ALOAD primaryExc1
@@ -275,7 +275,7 @@ public class TryWithResourcesJavacFilterTest implements IFilterOutput {
 	 *     GOTO n
 	 *     c:
 	 *     ALOAD r1
-	 *     INVOKEVIRTUAL close:()V
+	 *     INVOKEINTERFACE close:()V
 	 *     n:
 	 *
 	 *     ALOAD r0
@@ -310,7 +310,7 @@ public class TryWithResourcesJavacFilterTest implements IFilterOutput {
 	 *     ALOAD primaryExc1
 	 *     IFNULL c
 	 *     ALOAD r1
-	 *     INVOKEVIRTUAL close:()V
+	 *     INVOKEINTERFACE close:()V
 	 *     GOTO e
 	 *     ASTORE t2
 	 *     ALOAD primaryExc1
@@ -319,7 +319,7 @@ public class TryWithResourcesJavacFilterTest implements IFilterOutput {
 	 *     GOTO e
 	 *     c:
 	 *     ALOAD r1
-	 *     INVOKEVIRTUAL close:()V
+	 *     INVOKEINTERFACE close:()V
 	 *     e:
 	 *     ALOAD t1
 	 *     ATHROW
@@ -397,7 +397,7 @@ public class TryWithResourcesJavacFilterTest implements IFilterOutput {
 		m.visitJumpInsn(Opcodes.IFNULL, l26);
 		// r2.close
 		m.visitVarInsn(Opcodes.ALOAD, 3);
-		m.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "Fun$Resource2", "close",
+		m.visitMethodInsn(Opcodes.INVOKEINTERFACE, "Fun$Resource2", "close",
 				"()V", false);
 		m.visitJumpInsn(Opcodes.GOTO, l15);
 
@@ -412,7 +412,7 @@ public class TryWithResourcesJavacFilterTest implements IFilterOutput {
 
 		// r2.close
 		m.visitVarInsn(Opcodes.ALOAD, 3);
-		m.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "Fun$Resource2", "close",
+		m.visitMethodInsn(Opcodes.INVOKEINTERFACE, "Fun$Resource2", "close",
 				"()V", false);
 		range0.toInclusive = m.instructions.getLast();
 		m.visitLabel(l15);
@@ -474,7 +474,7 @@ public class TryWithResourcesJavacFilterTest implements IFilterOutput {
 		m.visitJumpInsn(Opcodes.IFNULL, l29);
 		// r2.close
 		m.visitVarInsn(Opcodes.ALOAD, 3);
-		m.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "Fun$Resource2", "close",
+		m.visitMethodInsn(Opcodes.INVOKEINTERFACE, "Fun$Resource2", "close",
 				"()V", false);
 		m.visitJumpInsn(Opcodes.GOTO, l28);
 
@@ -488,7 +488,7 @@ public class TryWithResourcesJavacFilterTest implements IFilterOutput {
 		m.visitLabel(l29);
 		// r2.close
 		m.visitVarInsn(Opcodes.ALOAD, 3);
-		m.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "Fun$Resource2", "close",
+		m.visitMethodInsn(Opcodes.INVOKEINTERFACE, "Fun$Resource2", "close",
 				"()V", false);
 		m.visitLabel(l28);
 		// throw t
