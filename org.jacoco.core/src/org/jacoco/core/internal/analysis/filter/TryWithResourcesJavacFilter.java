@@ -75,7 +75,7 @@ public final class TryWithResourcesJavacFilter implements IFilter {
 	 * initialized using <code>new</code></li>
 	 * <li>synthetic method <code>$closeResource</code> containing
 	 * <code>null</code> check of primaryExc and calls to methods
-	 * <code>addSuppressed</code> and <code>close</code> is used when numbers of
+	 * <code>addSuppressed</code> and <code>close</code> is used when number of
 	 * copies of closing logic reaches threshold, <code>null</code> check of
 	 * resource (if present) is done before call of this method</li>
 	 * </ul>
