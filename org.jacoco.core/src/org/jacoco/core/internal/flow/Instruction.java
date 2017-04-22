@@ -11,6 +11,8 @@
  *******************************************************************************/
 package org.jacoco.core.internal.flow;
 
+import java.util.BitSet;
+
 import org.objectweb.asm.tree.AbstractInsnNode;
 
 /**
@@ -25,9 +27,12 @@ public class Instruction {
 
 	private int branches;
 
-	private int coveredBranches;
+	// TODO in majority of cases BitSet not needed, needed only for big switches
+	private final BitSet coveredBranches = new BitSet();
 
 	private Instruction predecessor;
+
+	private int predecessorBranch;
 
 	/**
 	 * New instruction at the given line.
@@ -41,7 +46,6 @@ public class Instruction {
 		this.node = node;
 		this.line = line;
 		this.branches = 0;
-		this.coveredBranches = 0;
 	}
 
 	/**
@@ -65,20 +69,35 @@ public class Instruction {
 	 * @see #addBranch()
 	 * @param predecessor
 	 *            predecessor instruction
+	 * @param branch
+	 *            branch number in predecessor that should be marked as covered
+	 *            when this instruction marked as covered
 	 */
-	public void setPredecessor(final Instruction predecessor) {
+	public void setPredecessor(final Instruction predecessor,
+			final int branch) {
 		this.predecessor = predecessor;
 		predecessor.addBranch();
+		this.predecessorBranch = branch;
 	}
 
 	/**
 	 * Marks one branch of this instruction as covered. Also recursively marks
 	 * all predecessor instructions as covered if this is the first covered
 	 * branch.
+	 * 
+	 * @param branch
+	 *            branch number to mark as covered
 	 */
-	public void setCovered() {
+	public void setCovered(final int branch) {
 		Instruction i = this;
-		while (i != null && i.coveredBranches++ == 0) {
+		int b = branch;
+		while (i != null) {
+			if (!i.coveredBranches.isEmpty()) {
+				i.coveredBranches.set(b);
+				break;
+			}
+			i.coveredBranches.set(b);
+			b = i.predecessorBranch;
 			i = i.predecessor;
 		}
 	}
@@ -102,11 +121,11 @@ public class Instruction {
 	}
 
 	/**
-	 * Returns the number of covered branches starting from this instruction.
-	 * 
-	 * @return number of covered branches
+	 * Returns coverage of branches of this instruction.
+	 *
+	 * @return coverage of branches of this instruction
 	 */
-	public int getCoveredBranches() {
+	public BitSet getCoveredBranches() {
 		return coveredBranches;
 	}
 
