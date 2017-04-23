@@ -16,6 +16,8 @@ env:
   - JDK=6
   - JDK=7
   - JDK=8
+  - JDK=8
+    ECJ=true
   - JDK=8-ea
   - JDK=9-ea
   - JDK=9-ea-stable
