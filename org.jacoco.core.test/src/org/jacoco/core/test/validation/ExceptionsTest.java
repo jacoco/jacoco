@@ -93,29 +93,27 @@ public class ExceptionsTest extends ValidationTestBase {
 				ICounter.FULLY_COVERED);
 
 		// 7. Finally Block Without Exception Thrown
-		// Finally block is yellow as the exception path is missing.
 		assertLine("noExceptionFinally.beforeBlock", ICounter.FULLY_COVERED);
 		assertLine("noExceptionFinally.tryBlock", ICounter.FULLY_COVERED);
 		assertLine("noExceptionFinally.finally",
-				isJDKCompiler ? ICounter.EMPTY : ICounter.PARTLY_COVERED);
-		assertLine("noExceptionFinally.finallyBlock", ICounter.PARTLY_COVERED);
+				isJDKCompiler ? ICounter.EMPTY : ICounter.FULLY_COVERED);
+		assertLine("noExceptionFinally.finallyBlock", ICounter.FULLY_COVERED);
 		assertLine("noExceptionFinally.finallyBlockEnd",
-				isJDKCompiler ? ICounter.FULLY_COVERED : ICounter.NOT_COVERED);
+				isJDKCompiler ? ICounter.FULLY_COVERED : ICounter.EMPTY);
 		assertLine("noExceptionFinally.afterBlock", ICounter.FULLY_COVERED);
 
 		// 8. Finally Block With Implicit Exception
-		// Finally block is yellow as the non-exception path is missing.
 		assertLine("implicitExceptionFinally.beforeBlock",
 				ICounter.FULLY_COVERED);
 		assertLine("implicitExceptionFinally.before", ICounter.FULLY_COVERED);
 		assertLine("implicitExceptionFinally.exception", ICounter.NOT_COVERED);
 		assertLine("implicitExceptionFinally.after", ICounter.NOT_COVERED);
 		assertLine("implicitExceptionFinally.finally",
-				isJDKCompiler ? ICounter.EMPTY : ICounter.PARTLY_COVERED);
+				isJDKCompiler ? ICounter.EMPTY : ICounter.NOT_COVERED);
 		assertLine("implicitExceptionFinally.finallyBlock",
-				ICounter.PARTLY_COVERED);
+				ICounter.FULLY_COVERED);
 		assertLine("implicitExceptionFinally.finallyBlockEnd",
-				isJDKCompiler ? ICounter.NOT_COVERED : ICounter.FULLY_COVERED);
+				isJDKCompiler ? ICounter.NOT_COVERED : ICounter.EMPTY);
 		assertLine("implicitExceptionFinally.afterBlock", ICounter.NOT_COVERED);
 
 		// 9. Finally Block With Exception Thrown Explicitly
