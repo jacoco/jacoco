@@ -12,8 +12,10 @@
 package org.jacoco.core.internal.analysis;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import org.jacoco.core.analysis.ICounter;
@@ -123,7 +125,6 @@ public class MethodAnalyzer extends MethodProbesVisitor
 	@Override
 	public void accept(final MethodNode methodNode,
 			final MethodVisitor methodVisitor) {
-		this.ignored.clear();
 		for (final IFilter filter : FILTERS) {
 			filter.filter(className, superClassName, methodNode, this);
 		}
@@ -141,6 +142,8 @@ public class MethodAnalyzer extends MethodProbesVisitor
 	}
 
 	private final Set<AbstractInsnNode> ignored = new HashSet<AbstractInsnNode>();
+	private final Map<AbstractInsnNode, Set<AbstractInsnNode>> merged = new HashMap<AbstractInsnNode, Set<AbstractInsnNode>>();
+	private final Map<AbstractInsnNode, Instruction> nodeToInstruction = new HashMap<AbstractInsnNode, Instruction>();
 	private AbstractInsnNode currentNode;
 
 	public void ignore(final AbstractInsnNode fromInclusive,
@@ -150,6 +153,24 @@ public class MethodAnalyzer extends MethodProbesVisitor
 			ignored.add(i);
 		}
 		ignored.add(toInclusive);
+	}
+
+	public void merge(final AbstractInsnNode i1, final AbstractInsnNode i2) {
+		// TODO non optimal implementation of disjoint-set
+		final Set<AbstractInsnNode> r = new HashSet<AbstractInsnNode>();
+		if (merged.get(i1) != null) {
+			r.addAll(merged.get(i1));
+		} else {
+			r.add(i1);
+		}
+		if (merged.get(i2) != null) {
+			r.addAll(merged.get(i2));
+		} else {
+			r.add(i2);
+		}
+		for (AbstractInsnNode n : r) {
+			merged.put(n, r);
+		}
 	}
 
 	@Override
@@ -173,6 +194,7 @@ public class MethodAnalyzer extends MethodProbesVisitor
 
 	private void visitInsn() {
 		final Instruction insn = new Instruction(currentNode, currentLine);
+		nodeToInstruction.put(currentNode, insn);
 		instructions.add(insn);
 		if (lastInsn != null) {
 			insn.setPredecessor(lastInsn, 0);
@@ -345,6 +367,17 @@ public class MethodAnalyzer extends MethodProbesVisitor
 		for (final Instruction i : instructions) {
 			if (ignored.contains(i.getNode())) {
 				continue;
+			}
+
+			final Set<AbstractInsnNode> merged = this.merged.get(i.getNode());
+			if (merged != null) {
+				ignored.addAll(merged);
+				for (final AbstractInsnNode node : merged) {
+					final Instruction mergedInstruction = nodeToInstruction
+							.get(node);
+					i.getCoveredBranches()
+							.or(mergedInstruction.getCoveredBranches());
+				}
 			}
 
 			final int total = i.getBranches();
