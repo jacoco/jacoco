@@ -82,7 +82,7 @@ case "$JDK" in
   mvn -V -B -e verify -Dbytecode.version=1.7
   ;;
 8 | 8-ea)
-  mvn -V -B -e verify -Dbytecode.version=1.8
+  mvn -V -B -e verify -Dbytecode.version=1.8 -Decj=${ECJ:-}
   ;;
 9-ea | 9-ea-stable)
   # Groovy version should be updated to get rid of "--add-opens" options (see https://twitter.com/CedricChampeau/status/807285853580103684)

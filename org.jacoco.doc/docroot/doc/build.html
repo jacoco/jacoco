@@ -152,6 +152,14 @@
 </pre>
 
 <p>
+  Also Eclipse Compiler for Java can be used for compilation:
+</p>
+
+<pre>
+  mvn clean install -Decj
+</pre>
+
+<p>
   In addition JaCoCo can be compiled for higher class file versions than 1.5
   specifying the property <code>bytecode.version</code>. Note that in this case
   the version of the JVM running Maven must be at least the version of the
@@ -164,6 +172,7 @@
   <li>Maven with 1.6 JDK: <code>mvn clean install -Djdk.version=1.6 -Dbytecode.version=1.6</code></li>
   <li>Maven with 1.7 JDK: <code>mvn clean install -Djdk.version=1.7 -Dbytecode.version=1.7</code></li>
   <li>Maven with 1.8 JDK: <code>mvn clean install -Djdk.version=1.8 -Dbytecode.version=1.8</code></li>
+  <li>Maven with 1.8 JDK: <code>mvn clean install -Djdk.version=1.8 -Dbytecode.version=1.8 -Decj</code></li>
   <li>Maven with 1.9 JDK: <code>mvn clean install -Djdk.version=1.9 -Dbytecode.version=1.9</code></li>
 </ul>
 

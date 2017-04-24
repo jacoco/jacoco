@@ -687,6 +687,40 @@
       </properties>
     </profile>
 
+    <!-- This profile is used for compilation with ECJ. -->
+    <profile>
+      <id>ecj</id>
+      <activation>
+        <property>
+          <name>ecj</name>
+        </property>
+      </activation>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-compiler-plugin</artifactId>
+            <version>3.6.0</version>
+            <configuration>
+              <compilerId>eclipse</compilerId>
+            </configuration>
+            <dependencies>
+              <dependency>
+                <groupId>org.eclipse.jdt.core.compiler</groupId>
+                <artifactId>ecj</artifactId>
+                <version>4.6.1</version>
+              </dependency>
+              <dependency>
+                <groupId>org.codehaus.plexus</groupId>
+                <artifactId>plexus-compiler-eclipse</artifactId>
+                <version>2.8.1</version>
+              </dependency>
+            </dependencies>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+
     <profile>
       <id>jdk16</id>
       <activation>
