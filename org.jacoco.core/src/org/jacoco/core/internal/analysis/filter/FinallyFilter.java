@@ -57,6 +57,9 @@ public final class FinallyFilter implements IFilter {
 			e = next(e);
 		}
 		output.ignore(e, next(e));
+		if (n.getOpcode() == Opcodes.GOTO) {
+			output.ignore(n, n);
+		}
 	}
 
 	private static int size(AbstractInsnNode e) {

@@ -70,6 +70,7 @@ public class FinallyFilterTest {
 		expectedMergeLast();
 		final Label after = new Label();
 		m.visitJumpInsn(Opcodes.GOTO, after);
+		expectedIgnoreLast();
 
 		m.visitLabel(catchStart);
 		m.visitInsn(Opcodes.NOP);
@@ -77,6 +78,7 @@ public class FinallyFilterTest {
 		m.visitInsn(Opcodes.NOP); // finally
 		expectedMergeLast();
 		m.visitJumpInsn(Opcodes.GOTO, after);
+		expectedIgnoreLast();
 
 		m.visitLabel(catch2Start);
 		m.visitInsn(Opcodes.ACONST_NULL);
@@ -143,7 +145,11 @@ public class FinallyFilterTest {
 		m.visitLabel(catchEnd);
 		m.visitInsn(Opcodes.NOP); // finally, can be omitted in case of throw
 		expectedMergeLast();
+		// following goto instruction has same line number as previous
+		// instruction, so should be ignored, otherwise will result in partial
+		// coverage of finally block if this catch block not executed:
 		m.visitJumpInsn(Opcodes.GOTO, after); // can be return or throw
+		expectedIgnoreLast();
 
 		m.visitLabel(finallyHandler);
 		m.visitVarInsn(Opcodes.ASTORE, 1);
