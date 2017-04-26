@@ -376,13 +376,12 @@ public class MethodAnalyzer extends MethodProbesVisitor
 				for (final AbstractInsnNode node : merged) {
 					final Instruction mergedInstruction = nodeToInstruction
 							.get(node);
-					i.getCoveredBranches()
-							.or(mergedInstruction.getCoveredBranches());
+					i.merge(mergedInstruction);
 				}
 			}
 
 			final int total = i.getBranches();
-			final int covered = i.getCoveredBranches().cardinality();
+			final int covered = i.getCoveredBranches();
 			final ICounter instrCounter = covered == 0 ? CounterImpl.COUNTER_1_0
 					: CounterImpl.COUNTER_0_1;
 			final ICounter branchCounter = total > 1

@@ -121,12 +121,28 @@ public class Instruction {
 	}
 
 	/**
-	 * Returns coverage of branches of this instruction.
+	 * Returns the number of covered branches starting from this instruction.
 	 *
-	 * @return coverage of branches of this instruction
+	 * @return number of covered branches
 	 */
-	public BitSet getCoveredBranches() {
-		return coveredBranches;
+	public int getCoveredBranches() {
+		return coveredBranches.cardinality();
+	}
+
+	/**
+	 * Merges information about covered branches of given instruction into this
+	 * instruction.
+	 *
+	 * @param instruction
+	 *            instruction from which to merge
+	 */
+	public void merge(Instruction instruction) {
+		this.coveredBranches.or(instruction.coveredBranches);
+	}
+
+	@Override
+	public String toString() {
+		return coveredBranches.toString();
 	}
 
 }

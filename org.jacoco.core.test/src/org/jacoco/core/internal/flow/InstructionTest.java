@@ -38,7 +38,7 @@ public class InstructionTest {
 		assertSame(node, instruction.getNode());
 		assertEquals(123, instruction.getLine());
 		assertEquals(0, instruction.getBranches());
-		assertEquals(0, instruction.getCoveredBranches().cardinality());
+		assertEquals(0, instruction.getCoveredBranches());
 	}
 
 	@Test
@@ -49,7 +49,7 @@ public class InstructionTest {
 		assertEquals(2, instruction.getBranches());
 		instruction.addBranch();
 		assertEquals(3, instruction.getBranches());
-		assertEquals(0, instruction.getCoveredBranches().cardinality());
+		assertEquals(0, instruction.getCoveredBranches());
 	}
 
 	@Test
@@ -65,24 +65,24 @@ public class InstructionTest {
 		final Instruction i = new Instruction(new InsnNode(Opcodes.NOP), 122);
 
 		i.setCovered(2);
-		assertEquals(1, i.getCoveredBranches().cardinality());
-		assertEquals("{2}", i.getCoveredBranches().toString());
+		assertEquals(1, i.getCoveredBranches());
+		assertEquals("{2}", i.toString());
 
 		final Instruction s1 = new Instruction(new InsnNode(Opcodes.NOP), 123);
 		s1.setPredecessor(i, 1);
 		s1.setCovered(0);
-		assertEquals("{0}", s1.getCoveredBranches().toString());
-		assertEquals(1, s1.getCoveredBranches().cardinality());
-		assertEquals("{1, 2}", i.getCoveredBranches().toString());
-		assertEquals(2, i.getCoveredBranches().cardinality());
+		assertEquals("{0}", s1.toString());
+		assertEquals(1, s1.getCoveredBranches());
+		assertEquals("{1, 2}", i.toString());
+		assertEquals(2, i.getCoveredBranches());
 
 		final Instruction s2 = new Instruction(new InsnNode(Opcodes.NOP), 124);
 		s2.setPredecessor(i, 0);
 		s2.setCovered(1);
-		assertEquals("{0}", s1.getCoveredBranches().toString());
-		assertEquals(1, s2.getCoveredBranches().cardinality());
-		assertEquals("{0, 1, 2}", i.getCoveredBranches().toString());
-		assertEquals(3, i.getCoveredBranches().cardinality());
+		assertEquals("{0}", s1.toString());
+		assertEquals(1, s2.getCoveredBranches());
+		assertEquals("{0, 1, 2}", i.toString());
+		assertEquals(3, i.getCoveredBranches());
 	}
 
 	@Test
@@ -90,7 +90,7 @@ public class InstructionTest {
 		for (int branch = 0; branch < 256; branch++) {
 			instruction.setCovered(branch);
 		}
-		assertEquals(256, instruction.getCoveredBranches().cardinality());
+		assertEquals(256, instruction.getCoveredBranches());
 	}
 
 	@Test
@@ -107,7 +107,7 @@ public class InstructionTest {
 		// The implementation must not cause an StackOverflowError even on very
 		// long sequences:
 		next.setCovered(0);
-		assertEquals(1, first.getCoveredBranches().cardinality());
+		assertEquals(1, first.getCoveredBranches());
 	}
 
 }
