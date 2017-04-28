@@ -60,6 +60,23 @@ public class Finally {
 		}
 	}
 
+	/**
+	 * Note that in this case javac generates bytecode that uses different slots
+	 * in different duplicates of same finally block for variable that stores
+	 * exception.
+	 */
+	private static void nested() {
+		try {
+			nop();
+		} finally {
+			try {
+				nop();
+			} finally {
+				nop(); // $line-nested$
+			}
+		}
+	}
+
 	public static void main(String[] args) {
 		branches(false);
 		try {
@@ -68,6 +85,8 @@ public class Finally {
 		}
 
 		returnInBody();
+
+		nested();
 	}
 
 }

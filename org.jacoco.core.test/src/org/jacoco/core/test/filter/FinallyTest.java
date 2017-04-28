@@ -32,6 +32,8 @@ public class FinallyTest extends ValidationTestBase {
 		assertLine("lookupswitch", ICounter.FULLY_COVERED, 0, 2);
 
 		assertLine("returnInBody", ICounter.FULLY_COVERED);
+
+		assertLine("nested", ICounter.FULLY_COVERED);
 	}
 
 }
