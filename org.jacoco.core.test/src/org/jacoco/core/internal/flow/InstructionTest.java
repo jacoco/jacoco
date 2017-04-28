@@ -13,7 +13,6 @@ package org.jacoco.core.internal.flow;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertSame;
-import static org.junit.Assert.fail;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -59,13 +58,14 @@ public class InstructionTest {
 				new InsnNode(Opcodes.NOP), 122);
 		instruction.setPredecessor(predecessor, 0);
 		assertEquals(1, predecessor.getBranches());
+	}
 
-		try {
-			instruction.setPredecessor(predecessor, 0);
-			fail("exception expected");
-		} catch (IllegalStateException e) {
-			// expected
-		}
+	@Test(expected = IllegalStateException.class)
+	public void testSetPredecessor2() {
+		final Instruction predecessor = new Instruction(
+				new InsnNode(Opcodes.NOP), 122);
+		instruction.setPredecessor(predecessor, 0);
+		instruction.setPredecessor(predecessor, 0);
 	}
 
 	@Test
