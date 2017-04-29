@@ -77,6 +77,14 @@ public class Finally {
 		}
 	}
 
+	private static void alwaysCompletesAbruptly() {
+		try {
+			nop(); // $line-alwaysCompletesAbruptly.tryBlock$
+		} finally { // $line-alwaysCompletesAbruptly.finally$
+			return; // $line-alwaysCompletesAbruptly.finallyBlock$
+		}
+	}
+
 	public static void main(String[] args) {
 		branches(false);
 		try {
@@ -87,6 +95,8 @@ public class Finally {
 		returnInBody();
 
 		nested();
+
+		alwaysCompletesAbruptly();
 	}
 
 }

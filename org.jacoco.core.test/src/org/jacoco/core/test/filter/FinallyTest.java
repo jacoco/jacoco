@@ -36,4 +36,22 @@ public class FinallyTest extends ValidationTestBase {
 		assertLine("nested", ICounter.FULLY_COVERED);
 	}
 
+	/**
+	 * {@link Finally#alwaysCompletesAbruptly()}
+	 */
+	@Test
+	public void alwaysCompletesAbruptly() {
+		assertLine("alwaysCompletesAbruptly.tryBlock", ICounter.FULLY_COVERED);
+		if (isJDKCompiler) {
+			assertLine("alwaysCompletesAbruptly.finally", ICounter.EMPTY);
+			assertLine("alwaysCompletesAbruptly.finallyBlock",
+					ICounter.PARTLY_COVERED);
+		} else {
+			assertLine("alwaysCompletesAbruptly.finally",
+					ICounter.PARTLY_COVERED);
+			assertLine("alwaysCompletesAbruptly.finallyBlock",
+					ICounter.FULLY_COVERED);
+		}
+	}
+
 }

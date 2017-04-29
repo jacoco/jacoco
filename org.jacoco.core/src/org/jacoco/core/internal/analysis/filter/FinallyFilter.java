@@ -70,7 +70,10 @@ public final class FinallyFilter implements IFilter {
 		int size = 0;
 		while (true) {
 			e = next(e);
-			if (e.getOpcode() == Opcodes.ALOAD
+			if (e == null) {
+				return 0;
+			}
+			if (Opcodes.ALOAD == e.getOpcode()
 					&& ((VarInsnNode) e).var == var) {
 				break;
 			}

@@ -217,6 +217,58 @@ public class FinallyFilterTest {
 		assertEquals(expectedOutput.ignored, output.ignored);
 	}
 
+	/**
+	 * @see #ecj_when_finally_block_always_completes_abruptly()
+	 */
+	@Test
+	public void javac_when_finally_block_always_completes_abruptly() {
+		final Label finallyHandler = new Label();
+		final Label bodyStart = new Label();
+		final Label bodyEnd = new Label();
+
+		m.visitTryCatchBlock(bodyStart, bodyEnd, finallyHandler, null);
+
+		m.visitLabel(bodyStart);
+		m.visitInsn(Opcodes.NOP);
+		m.visitLabel(bodyEnd);
+		m.visitInsn(Opcodes.NOP); // finally
+
+		m.visitLabel(finallyHandler);
+		m.visitVarInsn(Opcodes.ASTORE, 1);
+		m.visitInsn(Opcodes.NOP); // finally
+
+		filter.filter("", "", m, output);
+
+		assertEquals(expectedOutput.merged, output.merged);
+		assertEquals(expectedOutput.ignored, output.ignored);
+	}
+
+	/**
+	 * @see #javac_when_finally_block_always_completes_abruptly()
+	 */
+	@Test
+	public void ecj_when_finally_block_always_completes_abruptly() {
+		final Label bodyStart = new Label();
+		final Label finallyHandler = new Label();
+		final Label f = new Label();
+
+		m.visitTryCatchBlock(bodyStart, finallyHandler, finallyHandler, null);
+
+		m.visitLabel(bodyStart);
+		m.visitInsn(Opcodes.NOP);
+		m.visitJumpInsn(Opcodes.GOTO, f);
+
+		m.visitLabel(finallyHandler);
+		m.visitInsn(Opcodes.POP);
+		m.visitLabel(f);
+		m.visitInsn(Opcodes.NOP); // finally
+
+		filter.filter("", "", m, output);
+
+		assertEquals(expectedOutput.merged, output.merged);
+		assertEquals(expectedOutput.ignored, output.ignored);
+	}
+
 	private void expectedIgnoreLast() {
 		expectedOutput.ignored.add(m.instructions.getLast());
 	}
