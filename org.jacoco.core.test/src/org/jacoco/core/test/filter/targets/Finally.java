@@ -24,6 +24,22 @@ public class Finally {
 		}
 	}
 
+	/**
+	 * Note that ECJ places duplicate of finally handler for non exceptional
+	 * path after handler, while javac not. So that identical bytecode sequence
+	 * after handler should be merged with handler if it really represents
+	 * duplicate of a finally block on non exceptional path and not just an
+	 * identical bytecode sequence.
+	 */
+	private static void test() {
+		try {
+			nop(); // $line-test.tryBlock$
+		} finally {
+			nop(); // $line-test.finallyBlock$
+		}
+		nop(); // $line-test.after$
+	}
+
 	private static void branches(boolean t) {
 		int i = 0;
 		try {
@@ -86,6 +102,8 @@ public class Finally {
 	}
 
 	public static void main(String[] args) {
+		test();
+
 		branches(false);
 		try {
 			branches(true);

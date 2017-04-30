@@ -63,6 +63,7 @@ public class TryWithResourcesTest extends ValidationTestBase {
 		assertLine("test2.close", ICounter.EMPTY);
 		assertLine("test2.catch", ICounter.NOT_COVERED);
 		assertLine("test2.finally", ICounter.FULLY_COVERED);
+		assertLine("test2.after", ICounter.FULLY_COVERED);
 	}
 
 	/**

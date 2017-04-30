@@ -13,6 +13,7 @@ package org.jacoco.core.internal.analysis.filter;
 
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.tree.AbstractInsnNode;
+import org.objectweb.asm.tree.JumpInsnNode;
 import org.objectweb.asm.tree.MethodNode;
 import org.objectweb.asm.tree.TryCatchBlockNode;
 import org.objectweb.asm.tree.VarInsnNode;
@@ -120,7 +121,14 @@ public final class FinallyFilter implements IFilter {
 			return;
 		}
 
-		filter(output, size, e, n);
+		for (AbstractInsnNode i = next(tryCatch.end); i != tryCatch.start; i = i
+				.getPrevious()) {
+			if (Opcodes.GOTO == i.getOpcode()
+					&& n == next(((JumpInsnNode) i).label)) {
+				filter(output, size, e, n);
+				break;
+			}
+		}
 	}
 
 	private static AbstractInsnNode next(AbstractInsnNode node) {

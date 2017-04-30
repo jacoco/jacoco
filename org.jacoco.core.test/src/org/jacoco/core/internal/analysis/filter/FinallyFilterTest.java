@@ -100,6 +100,7 @@ public class FinallyFilterTest {
 		expectedIgnoreLast();
 
 		m.visitLabel(after);
+		m.visitInsn(Opcodes.NOP);
 		m.visitInsn(Opcodes.ARETURN);
 
 		filter.filter("", "", m, output);

@@ -37,6 +37,16 @@ public class FinallyTest extends ValidationTestBase {
 	}
 
 	/**
+	 * {@link Finally#test()}
+	 */
+	@Test
+	public void test() {
+		assertLine("test.tryBlock", ICounter.FULLY_COVERED);
+		assertLine("test.finallyBlock", ICounter.FULLY_COVERED);
+		assertLine("test.after", ICounter.FULLY_COVERED);
+	}
+
+	/**
 	 * {@link Finally#alwaysCompletesAbruptly()}
 	 */
 	@Test
