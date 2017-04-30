@@ -40,6 +40,17 @@ public class Finally {
 		nop(); // $line-test.after$
 	}
 
+	private static void catchNotExecuted() {
+		try {
+			nop(); // $line-catchNotExecuted.tryBlock$
+		} catch (Exception e) { // $line-catchNotExecuted.catch$
+			nop(); // $line-catchNotExecuted.catchBlock$
+		} finally {
+			nop(); // $line-catchNotExecuted.finallyBlock$
+		}
+		nop(); // $line-catchNotExecuted.after$
+	}
+
 	private static void branches(boolean t) {
 		int i = 0;
 		try {
@@ -103,6 +114,8 @@ public class Finally {
 
 	public static void main(String[] args) {
 		test();
+
+		catchNotExecuted();
 
 		branches(false);
 		try {

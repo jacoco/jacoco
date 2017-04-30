@@ -47,6 +47,19 @@ public class FinallyTest extends ValidationTestBase {
 	}
 
 	/**
+	 * {@link Finally#catchNotExecuted()}
+	 */
+	@Test
+	public void catchNotExecuted() {
+		assertLine("catchNotExecuted.tryBlock", ICounter.FULLY_COVERED);
+		assertLine("catchNotExecuted.catch",
+				isJDKCompiler ? ICounter.NOT_COVERED : ICounter.PARTLY_COVERED);
+		assertLine("catchNotExecuted.catchBlock", ICounter.NOT_COVERED);
+		assertLine("catchNotExecuted.finallyBlock", ICounter.FULLY_COVERED);
+		assertLine("catchNotExecuted.after", ICounter.FULLY_COVERED);
+	}
+
+	/**
 	 * {@link Finally#alwaysCompletesAbruptly()}
 	 */
 	@Test
