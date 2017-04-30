@@ -11,18 +11,13 @@
  *******************************************************************************/
 package org.jacoco.core.test.filter.targets;
 
+import static org.jacoco.core.test.validation.targets.Stubs.ex;
 import static org.jacoco.core.test.validation.targets.Stubs.nop;
 
 /**
  * This test target is a finally block.
  */
 public class Finally {
-
-	private static void ex(boolean t) {
-		if (t) {
-			throw new RuntimeException();
-		}
-	}
 
 	/**
 	 * Note that ECJ places duplicate of finally handler for non exceptional
@@ -118,10 +113,7 @@ public class Finally {
 		catchNotExecuted();
 
 		branches(false);
-		try {
-			branches(true);
-		} catch (Exception ignore) {
-		}
+		branches(true);
 
 		returnInBody();
 

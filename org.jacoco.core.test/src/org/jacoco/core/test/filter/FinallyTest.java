@@ -25,17 +25,6 @@ public class FinallyTest extends ValidationTestBase {
 		super(Finally.class);
 	}
 
-	@Test
-	public void testCoverageResult() {
-		assertLine("conditionalJump", ICounter.FULLY_COVERED, 0, 2);
-		assertLine("tableswitch", ICounter.FULLY_COVERED, 0, 2);
-		assertLine("lookupswitch", ICounter.FULLY_COVERED, 0, 2);
-
-		assertLine("returnInBody", ICounter.FULLY_COVERED);
-
-		assertLine("nested", ICounter.FULLY_COVERED);
-	}
-
 	/**
 	 * {@link Finally#test()}
 	 */
@@ -57,6 +46,32 @@ public class FinallyTest extends ValidationTestBase {
 		assertLine("catchNotExecuted.catchBlock", ICounter.NOT_COVERED);
 		assertLine("catchNotExecuted.finallyBlock", ICounter.FULLY_COVERED);
 		assertLine("catchNotExecuted.after", ICounter.FULLY_COVERED);
+	}
+
+	/**
+	 * {@link Finally#branches(boolean)}
+	 */
+	@Test
+	public void branches() {
+		assertLine("conditionalJump", ICounter.FULLY_COVERED, 0, 2);
+		assertLine("tableswitch", ICounter.FULLY_COVERED, 0, 2);
+		assertLine("lookupswitch", ICounter.FULLY_COVERED, 0, 2);
+	}
+
+	/**
+	 * {@link Finally#returnInBody()}
+	 */
+	@Test
+	public void returnInBody() {
+		assertLine("returnInBody", ICounter.FULLY_COVERED);
+	}
+
+	/**
+	 * {@link Finally#nested()}
+	 */
+	@Test
+	public void nested() {
+		assertLine("nested", ICounter.FULLY_COVERED);
 	}
 
 	/**
