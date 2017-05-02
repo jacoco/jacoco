@@ -87,7 +87,7 @@ public class ReportTest extends CommandTestBase {
 	}
 
 	@Test
-	public void shouldCreateCsvReport_whenXmlOptionIsProvided()
+	public void shouldCreateCsvReport_whenCsvOptionIsProvided()
 			throws Exception {
 		File csv = new File(tmp.getRoot(), "coverage.csv");
 
