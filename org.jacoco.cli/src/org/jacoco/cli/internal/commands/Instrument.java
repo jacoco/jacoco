@@ -33,8 +33,8 @@ import org.kohsuke.args4j.Option;
  */
 public class Instrument extends Command {
 
-	@Option(name = "-destdir", usage = "directory to write instrumented Java classes to", metaVar = "<dir>", required = true)
-	File destdir;
+	@Option(name = "-dest", usage = "path to write instrumented Java classes to", metaVar = "<dir>", required = true)
+	File dest;
 
 	@Argument(usage = "list of folder or files to instrument recusively", metaVar = "<sourcefiles>")
 	List<File> source = new ArrayList<File>();
@@ -53,10 +53,10 @@ public class Instrument extends Command {
 				new OfflineInstrumentationAccessGenerator());
 		int total = 0;
 		for (final File s : source) {
-			total += instrumentRecursive(s, destdir);
+			total += instrumentRecursive(s, dest);
 		}
 		out.printf("[INFO] %s classes instrumented to %s.%n",
-				Integer.valueOf(total), destdir.getAbsolutePath());
+				Integer.valueOf(total), dest.getAbsolutePath());
 		return 0;
 	}
 
