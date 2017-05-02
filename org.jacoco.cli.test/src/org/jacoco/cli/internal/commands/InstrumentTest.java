@@ -46,7 +46,7 @@ public class InstrumentTest extends CommandTestBase {
 	public void shouldPrintUsage_whenNoArgumentsGiven() throws Exception {
 		execute("instrument");
 		assertFailure();
-		assertContains("Option \"-destdir\" is required", err);
+		assertContains("Option \"-dest\" is required", err);
 		assertContains(
 				"Usage: java -jar jacococli.jar instrument [<sourcefiles> ...]",
 				err);
@@ -56,7 +56,7 @@ public class InstrumentTest extends CommandTestBase {
 	public void shouldInstrumentClassFiles() throws Exception {
 		File destdir = tmp.getRoot();
 
-		execute("instrument", "-destdir", destdir.getAbsolutePath(),
+		execute("instrument", "-dest", destdir.getAbsolutePath(),
 				getClassPath());
 
 		assertOk();
@@ -75,7 +75,7 @@ public class InstrumentTest extends CommandTestBase {
 			throws Exception {
 		File destdir = tmp.getRoot();
 
-		execute("instrument", "-destdir", destdir.getAbsolutePath());
+		execute("instrument", "-dest", destdir.getAbsolutePath());
 
 		assertOk();
 		assertArrayEquals(new String[0], destdir.list());
@@ -86,7 +86,7 @@ public class InstrumentTest extends CommandTestBase {
 			throws Exception {
 		File srcdir = new File(tmp.getRoot(), "src");
 		srcdir.mkdir();
-		File destdir = new File(tmp.getRoot(), "sdest");
+		File destdir = new File(tmp.getRoot(), "dest");
 		destdir.mkdir();
 
 		OutputStream out = new FileOutputStream(
@@ -102,7 +102,7 @@ public class InstrumentTest extends CommandTestBase {
 		out.close();
 
 		try {
-			execute("instrument", "-destdir", destdir.getAbsolutePath(),
+			execute("instrument", "-dest", destdir.getAbsolutePath(),
 					srcdir.getAbsolutePath());
 			fail("exception expected");
 		} catch (IOException expected) {
