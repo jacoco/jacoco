@@ -31,16 +31,6 @@
     <dependency>
       <groupId>${project.groupId}</groupId>
       <artifactId>org.jacoco.cli</artifactId>
-      <!-- 
-      <version>${project.version}</version> 
-      <classifier>nodeps</classifier>
-      <exclusions>
-        <exclusion>
-          <groupId>*</groupId>
-          <artifactId>*</artifactId>
-        </exclusion>
-      </exclusions>
-       -->
     </dependency>
     <dependency>
       <groupId>junit</groupId>
