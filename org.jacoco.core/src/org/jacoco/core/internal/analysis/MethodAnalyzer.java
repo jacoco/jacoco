@@ -143,8 +143,18 @@ public class MethodAnalyzer extends MethodProbesVisitor
 	}
 
 	private final Set<AbstractInsnNode> ignored = new HashSet<AbstractInsnNode>();
-	private final Map<AbstractInsnNode, Set<AbstractInsnNode>> merged = new HashMap<AbstractInsnNode, Set<AbstractInsnNode>>();
+
+	/**
+	 * Instructions that should be merged form disjoint sets - instructions from
+	 * same set are merged together. Each such set is represented as a singly
+	 * linked list: each element except one references another element from the
+	 * same set, element without reference - is a representative of this set.
+	 * This map for each element (key) stores its reference (value).
+	 */
+	private final Map<AbstractInsnNode, AbstractInsnNode> merged = new HashMap<AbstractInsnNode, AbstractInsnNode>();
+
 	private final Map<AbstractInsnNode, Instruction> nodeToInstruction = new HashMap<AbstractInsnNode, Instruction>();
+
 	private AbstractInsnNode currentNode;
 
 	public void ignore(final AbstractInsnNode fromInclusive,
@@ -156,21 +166,23 @@ public class MethodAnalyzer extends MethodProbesVisitor
 		ignored.add(toInclusive);
 	}
 
-	public void merge(final AbstractInsnNode i1, final AbstractInsnNode i2) {
-		// TODO non optimal implementation of disjoint-set
-		final Set<AbstractInsnNode> r = new HashSet<AbstractInsnNode>();
-		if (merged.get(i1) != null) {
-			r.addAll(merged.get(i1));
-		} else {
-			r.add(i1);
+	/**
+	 * @return representative of a set to which given instruction belongs
+	 */
+	private AbstractInsnNode findRepresentative(AbstractInsnNode i) {
+		AbstractInsnNode r = merged.get(i);
+		while (r != null) {
+			i = r;
+			r = merged.get(i);
 		}
-		if (merged.get(i2) != null) {
-			r.addAll(merged.get(i2));
-		} else {
-			r.add(i2);
-		}
-		for (AbstractInsnNode n : r) {
-			merged.put(n, r);
+		return i;
+	}
+
+	public void merge(AbstractInsnNode i1, AbstractInsnNode i2) {
+		i1 = findRepresentative(i1);
+		i2 = findRepresentative(i2);
+		if (i1 != i2) {
+			merged.put(i2, i1);
 		}
 	}
 
@@ -363,21 +375,22 @@ public class MethodAnalyzer extends MethodProbesVisitor
 		for (final CoveredProbe p : coveredProbes) {
 			p.instruction.setCovered(p.branch);
 		}
+		// Merge:
+		for (final Instruction i : instructions) {
+			if (ignored.contains(i.getNode())) {
+				continue;
+			}
+			final AbstractInsnNode r = findRepresentative(i.getNode());
+			if (r != i.getNode()) {
+				ignored.add(i.getNode());
+				nodeToInstruction.get(r).merge(i);
+			}
+		}
 		// Report result:
 		coverage.ensureCapacity(firstLine, lastLine);
 		for (final Instruction i : instructions) {
 			if (ignored.contains(i.getNode())) {
 				continue;
-			}
-
-			final Set<AbstractInsnNode> merged = this.merged.get(i.getNode());
-			if (merged != null) {
-				ignored.addAll(merged);
-				for (final AbstractInsnNode node : merged) {
-					final Instruction mergedInstruction = nodeToInstruction
-							.get(node);
-					i.merge(mergedInstruction);
-				}
 			}
 
 			final int total = i.getBranches();
