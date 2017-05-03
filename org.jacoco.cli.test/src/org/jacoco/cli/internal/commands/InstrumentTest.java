@@ -60,7 +60,7 @@ public class InstrumentTest extends CommandTestBase {
 				getClassPath());
 
 		assertOk();
-		assertContains("[INFO] 11 classes instrumented to "
+		assertContains("[INFO] 12 classes instrumented to "
 				+ destdir.getAbsolutePath(), out);
 
 		// non class-file resources are copied:

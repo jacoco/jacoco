@@ -11,36 +11,27 @@
  *******************************************************************************/
 package org.jacoco.cli.internal.commands;
 
-import java.util.Arrays;
-import java.util.List;
+import java.io.IOException;
+import java.io.PrintWriter;
 
 import org.jacoco.cli.internal.Command;
+import org.jacoco.core.JaCoCo;
 
 /**
- * List of all available commands.
+ * The <code>version</code> command.
  */
-public class AllCommands {
+public class Version extends Command {
 
-	/**
-	 * @return list of new instances of all available commands
-	 */
-	public static List<Command> get() {
-		return Arrays.asList(new Dump(), new Instrument(), new Merge(),
-				new Report(), new ClassInfo(), new ExecInfo(), new Version());
+	@Override
+	public String description() {
+		return "Print JaCoCo version information.";
 	}
 
-	/**
-	 * @return String containing all available command names
-	 */
-	public static String names() {
-		final StringBuilder sb = new StringBuilder();
-		for (final Command c : get()) {
-			if (sb.length() > 0) {
-				sb.append('|');
-			}
-			sb.append(c.name());
-		}
-		return sb.toString();
+	@Override
+	public int execute(final PrintWriter out, final PrintWriter err)
+			throws IOException {
+		out.println(JaCoCo.VERSION);
+		return 0;
 	}
 
 }
