@@ -77,7 +77,7 @@
 	
 	<xsl:template match="command">
 		<h2><xsl:value-of select="@name" /></h2>
-		<pre class="source">
+		<pre class="source" style="white-space: pre-wrap">
 			<xsl:value-of select="usage" />
 		</pre>
 		<p><xsl:value-of select="description" /></p>
