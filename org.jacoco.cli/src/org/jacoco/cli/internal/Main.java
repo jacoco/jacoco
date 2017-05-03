@@ -75,8 +75,8 @@ public class Main extends Command {
 	 *             on the console
 	 */
 	public static void main(final String... args) throws Exception {
-		new Main(args).execute(new PrintWriter(System.out),
-				new PrintWriter(System.err));
+		new Main(args).execute(new PrintWriter(System.out, true),
+				new PrintWriter(System.err, true));
 	}
 
 }
