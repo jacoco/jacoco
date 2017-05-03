@@ -12,33 +12,20 @@
 package org.jacoco.cli.internal.commands;
 
 import org.jacoco.cli.internal.CommandTestBase;
+import org.jacoco.core.JaCoCo;
 import org.junit.Test;
 
 /**
- * Unit tests for {@link ExecInfo}.
+ * Unit tests for {@link Version}.
  */
-public class ClassInfoTest extends CommandTestBase {
+public class VersionTest extends CommandTestBase {
 
 	@Test
-	public void shouldPrintUsage_whenInvalidArgumentIsGiven() throws Exception {
-		execute("classinfo", "-invalid");
-
-		assertFailure();
-		assertContains("\"-invalid\" is not a valid option", err);
-		assertContains(
-				"java -jar jacococli.jar classinfo [<classlocations> ...]",
-				err);
-	}
-
-	@Test
-	public void shouldProvideClassInfoInfo() throws Exception {
-		execute("classinfo", getClassPath());
+	public void should_print_version() throws Exception {
+		execute("version");
 
 		assertOk();
-		assertContains(
-				"class name:   org/jacoco/cli/internal/commands/ClassInfoTest",
-				out);
-		assertContains("methods:      3", out);
+		assertContains(JaCoCo.VERSION, out);
 	}
 
 }
