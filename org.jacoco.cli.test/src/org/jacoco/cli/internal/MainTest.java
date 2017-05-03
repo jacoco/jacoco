@@ -19,7 +19,7 @@ import org.junit.Test;
 public class MainTest extends CommandTestBase {
 
 	@Test
-	public void shouldPrintUsage_whenNoArgumentsGiven() throws Exception {
+	public void should_print_usage_when_no_arguments_given() throws Exception {
 		execute();
 
 		assertFailure();
@@ -30,7 +30,7 @@ public class MainTest extends CommandTestBase {
 	}
 
 	@Test
-	public void shouldPrintErrorMessage_whenInvalidCommandIsGiven()
+	public void should_print_error_message_when_invalid_command_is_given()
 			throws Exception {
 		execute("foo");
 
@@ -41,7 +41,7 @@ public class MainTest extends CommandTestBase {
 	}
 
 	@Test
-	public void shouldPrintGeneralHelp_whenHelpOptionIsGiven()
+	public void should_print_general_usage_when_help_option_is_given()
 			throws Exception {
 		execute("-help");
 
@@ -52,7 +52,7 @@ public class MainTest extends CommandTestBase {
 	}
 
 	@Test
-	public void shouldPrintCommandHelp_whenHelpOptionIsGiven()
+	public void should_print_command_usage_when_command_and_help_option_is_given()
 			throws Exception {
 		execute("dump", "-help");
 

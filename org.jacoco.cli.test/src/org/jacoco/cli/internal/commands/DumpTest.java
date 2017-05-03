@@ -47,7 +47,8 @@ public class DumpTest extends CommandTestBase {
 	}
 
 	@Test
-	public void shouldPrintUsage_whenNoArgumentsGiven() throws Exception {
+	public void should_print_usage_when_no_argument_is_given()
+			throws Exception {
 		execute("dump");
 		assertFailure();
 		assertContains("Option \"-destfile\" is required", err);
@@ -56,7 +57,7 @@ public class DumpTest extends CommandTestBase {
 	}
 
 	@Test
-	public void shouldWriteDump() throws Exception {
+	public void should_write_dump() throws Exception {
 
 		File execfile = new File(tmp.getRoot(), "jacoco.exec");
 		int port = startMockServer();
@@ -72,7 +73,8 @@ public class DumpTest extends CommandTestBase {
 	}
 
 	@Test
-	public void shouldLogConnectionError() throws Exception {
+	public void should_log_connection_error_when_retry_is_specified()
+			throws Exception {
 
 		File execfile = new File(tmp.getRoot(), "jacoco.exec");
 		int port = unusedPort();
