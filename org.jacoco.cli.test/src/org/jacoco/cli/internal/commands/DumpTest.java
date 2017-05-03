@@ -24,6 +24,7 @@ import org.jacoco.cli.internal.CommandTestBase;
 import org.jacoco.core.runtime.IRemoteCommandVisitor;
 import org.jacoco.core.runtime.RemoteControlReader;
 import org.jacoco.core.runtime.RemoteControlWriter;
+import org.junit.After;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
@@ -35,6 +36,15 @@ public class DumpTest extends CommandTestBase {
 
 	@Rule
 	public TemporaryFolder tmp = new TemporaryFolder();
+
+	private ServerSocket serverSocket;
+
+	@After
+	public void after() throws IOException {
+		if (serverSocket != null) {
+			serverSocket.close();
+		}
+	}
 
 	@Test
 	public void shouldPrintUsage_whenNoArgumentsGiven() throws Exception {
@@ -78,8 +88,7 @@ public class DumpTest extends CommandTestBase {
 	}
 
 	private int startMockServer() throws IOException {
-		final ServerSocket serverSocket = new ServerSocket(0, 0,
-				InetAddress.getByName(null));
+		serverSocket = new ServerSocket(0, 0, InetAddress.getByName(null));
 		new Thread() {
 			@Override
 			public void run() {
