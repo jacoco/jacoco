@@ -43,7 +43,8 @@ public class InstrumentTest extends CommandTestBase {
 	public TemporaryFolder tmp = new TemporaryFolder();
 
 	@Test
-	public void shouldPrintUsage_whenNoArgumentsGiven() throws Exception {
+	public void should_print_usage_when_no_options_are_given()
+			throws Exception {
 		execute("instrument");
 		assertFailure();
 		assertContains("Option \"-dest\" is required", err);
@@ -53,7 +54,8 @@ public class InstrumentTest extends CommandTestBase {
 	}
 
 	@Test
-	public void shouldInstrumentClassFiles() throws Exception {
+	public void should_instrument_class_files_and_copy_resources()
+			throws Exception {
 		File destdir = tmp.getRoot();
 
 		execute("instrument", "-dest", destdir.getAbsolutePath(),
@@ -71,7 +73,7 @@ public class InstrumentTest extends CommandTestBase {
 	}
 
 	@Test
-	public void shouldNotInstrumentAnything_whenNoSourceIsGiven()
+	public void should_not_instrument_anything_when_no_source_is_given()
 			throws Exception {
 		File destdir = tmp.getRoot();
 
@@ -82,7 +84,7 @@ public class InstrumentTest extends CommandTestBase {
 	}
 
 	@Test
-	public void shouldNotCreateTargetFile_whenSourceClassFileIsBroken()
+	public void should_not_create_dest_file_when_source_class_is_broken()
 			throws Exception {
 		File srcdir = new File(tmp.getRoot(), "src");
 		srcdir.mkdir();

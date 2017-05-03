@@ -15,12 +15,13 @@ import org.jacoco.cli.internal.CommandTestBase;
 import org.junit.Test;
 
 /**
- * Unit tests for {@link ExecInfo}.
+ * Unit tests for {@link ClassInfo}.
  */
 public class ClassInfoTest extends CommandTestBase {
 
 	@Test
-	public void shouldPrintUsage_whenInvalidArgumentIsGiven() throws Exception {
+	public void should_print_usage_when_invalid_option_is_given()
+			throws Exception {
 		execute("classinfo", "-invalid");
 
 		assertFailure();
@@ -31,7 +32,7 @@ public class ClassInfoTest extends CommandTestBase {
 	}
 
 	@Test
-	public void shouldProvideClassInfoInfo() throws Exception {
+	public void should_print_class_info() throws Exception {
 		execute("classinfo", getClassPath());
 
 		assertOk();

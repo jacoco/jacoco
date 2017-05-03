@@ -37,7 +37,8 @@ public class MergeTest extends CommandTestBase {
 	public TemporaryFolder tmp = new TemporaryFolder();
 
 	@Test
-	public void shouldPrintUsage_whenNoArgumentsGiven() throws Exception {
+	public void should_print_usage_when_no_options_are_given()
+			throws Exception {
 		execute("merge");
 
 		assertFailure();
@@ -46,7 +47,7 @@ public class MergeTest extends CommandTestBase {
 	}
 
 	@Test
-	public void shouldMergeExecFiles() throws Exception {
+	public void should_merge_exec_files() throws Exception {
 		File a = createExecFile("a");
 		File b = createExecFile("b");
 		File c = createExecFile("c");

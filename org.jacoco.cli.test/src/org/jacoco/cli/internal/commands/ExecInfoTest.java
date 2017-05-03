@@ -32,7 +32,8 @@ public class ExecInfoTest extends CommandTestBase {
 	public TemporaryFolder tmp = new TemporaryFolder();
 
 	@Test
-	public void shouldPrintUsage_whenInvalidArgumentIsGiven() throws Exception {
+	public void should_print_usage_when_invalid_argument_is_given()
+			throws Exception {
 		execute("execinfo", "-invalid");
 
 		assertFailure();
@@ -42,7 +43,7 @@ public class ExecInfoTest extends CommandTestBase {
 	}
 
 	@Test
-	public void shouldProvideExecutionDataInfo() throws Exception {
+	public void should_print_execution_data_info() throws Exception {
 		File execfile = createExecFile();
 
 		execute("execinfo", execfile.getAbsolutePath());

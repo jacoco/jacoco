@@ -32,7 +32,8 @@ public class ReportTest extends CommandTestBase {
 	public TemporaryFolder tmp = new TemporaryFolder();
 
 	@Test
-	public void shouldPrintUsage_whenNoArgumentsGiven() throws Exception {
+	public void should_print_usage_when_no_options_are_given()
+			throws Exception {
 		execute("report");
 
 		assertFailure();
@@ -42,7 +43,7 @@ public class ReportTest extends CommandTestBase {
 	}
 
 	@Test
-	public void shouldPrintNumberOfAnalyzedClasses() throws Exception {
+	public void should_print_number_of_analyzed_classes() throws Exception {
 		execute("report", "-classfiles", getClassPath());
 
 		assertOk();
@@ -50,7 +51,8 @@ public class ReportTest extends CommandTestBase {
 	}
 
 	@Test
-	public void shouldPrintWarning_whenExecDataDoesNotMatch() throws Exception {
+	public void should_print_warning_when_exec_data_does_not_match()
+			throws Exception {
 		File exec = new File(tmp.getRoot(), "jacoco.exec");
 		final FileOutputStream execout = new FileOutputStream(exec);
 		ExecutionDataWriter writer = new ExecutionDataWriter(execout);
@@ -75,7 +77,7 @@ public class ReportTest extends CommandTestBase {
 	}
 
 	@Test
-	public void shouldCreateXmlReport_whenXmlOptionIsProvided()
+	public void should_create_xml_report_when_xml_option_is_provided()
 			throws Exception {
 		File xml = new File(tmp.getRoot(), "coverage.xml");
 
@@ -87,7 +89,7 @@ public class ReportTest extends CommandTestBase {
 	}
 
 	@Test
-	public void shouldCreateCsvReport_whenCsvOptionIsProvided()
+	public void should_create_csv_report_when_csv_option_is_provided()
 			throws Exception {
 		File csv = new File(tmp.getRoot(), "coverage.csv");
 
@@ -99,7 +101,7 @@ public class ReportTest extends CommandTestBase {
 	}
 
 	@Test
-	public void shouldCreateHtmlReport_whenHtmlOptionIsProvided()
+	public void should_create_html_report_when_html_option_is_provided()
 			throws Exception {
 		File html = new File(tmp.getRoot(), "coverage");
 
