@@ -14,6 +14,8 @@ package org.jacoco.core.test.filter.targets;
 import static org.jacoco.core.test.validation.targets.Stubs.ex;
 import static org.jacoco.core.test.validation.targets.Stubs.nop;
 
+import org.jacoco.core.test.validation.targets.Stubs.StubException;
+
 /**
  * This test target is a finally block.
  */
@@ -99,6 +101,22 @@ public class Finally {
 		}
 	}
 
+	/**
+	 * Note that in this case ECJ places duplicate of finally handler as last
+	 * sequence of instructions.
+	 */
+	private static void noInstructionsAfterDuplicate() {
+		while (true) {
+			try {
+				ex();
+			} finally {
+				synchronized (Finally.class) {
+					nop(); // $line-noInstructionsAfterDuplicate.finally$
+				}
+			}
+		}
+	}
+
 	private static void alwaysCompletesAbruptly() {
 		try {
 			nop(); // $line-alwaysCompletesAbruptly.tryBlock$
@@ -118,6 +136,11 @@ public class Finally {
 		returnInBody();
 
 		nested();
+
+		try {
+			noInstructionsAfterDuplicate();
+		} catch (StubException ignore) {
+		}
 
 		alwaysCompletesAbruptly();
 	}

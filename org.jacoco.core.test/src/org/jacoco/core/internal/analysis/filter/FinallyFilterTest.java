@@ -210,7 +210,6 @@ public class FinallyFilterTest {
 		m.visitLabel(f);
 		m.visitInsn(Opcodes.NOP); // finally
 		expectedMergeLast();
-		m.visitInsn(Opcodes.RETURN);
 
 		filter.filter("", "", m, output);
 

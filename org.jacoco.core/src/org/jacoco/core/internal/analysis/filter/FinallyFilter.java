@@ -58,7 +58,7 @@ public final class FinallyFilter implements IFilter {
 			e = next(e);
 		}
 		output.ignore(e, next(e));
-		if (n.getOpcode() == Opcodes.GOTO) {
+		if (n != null && n.getOpcode() == Opcodes.GOTO) {
 			output.ignore(n, n);
 		}
 	}

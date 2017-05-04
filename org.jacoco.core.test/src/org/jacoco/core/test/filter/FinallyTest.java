@@ -75,6 +75,14 @@ public class FinallyTest extends ValidationTestBase {
 	}
 
 	/**
+	 * {@link Finally#noInstructionsAfterDuplicate()}
+	 */
+	@Test
+	public void noInstructionsAfterDuplicate() {
+		assertLine("noInstructionsAfterDuplicate.finally", ICounter.FULLY_COVERED);
+	}
+
+	/**
 	 * {@link Finally#alwaysCompletesAbruptly()}
 	 */
 	@Test
