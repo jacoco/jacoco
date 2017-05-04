@@ -27,7 +27,6 @@ public class Instruction {
 
 	private int branches;
 
-	// TODO in majority of cases BitSet not needed, needed only for big switches
 	private final BitSet coveredBranches = new BitSet();
 
 	private Instruction predecessor;
