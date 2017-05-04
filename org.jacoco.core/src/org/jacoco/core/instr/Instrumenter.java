@@ -100,7 +100,7 @@ public class Instrumenter {
 	 *            a name used for exception messages
 	 * @return instrumented definition
 	 * @throws IOException
-	 *             if the class can't be analyzed
+	 *             if the class can't be instrumented
 	 */
 	public byte[] instrument(final byte[] buffer, final String name)
 			throws IOException {
