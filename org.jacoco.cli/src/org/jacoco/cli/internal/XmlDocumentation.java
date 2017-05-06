@@ -43,6 +43,8 @@ public class XmlDocumentation {
 		for (final OptionHandler<?> o : list) {
 			final XMLElement optionNode = parent.element("option");
 			optionNode.attr("required", String.valueOf(o.option.required()));
+			optionNode.attr("multiple",
+					String.valueOf(o.setter.isMultiValued()));
 			optionNode.element("usage").text(o.getNameAndMeta(null));
 			optionNode.element("description").text(o.option.usage());
 		}

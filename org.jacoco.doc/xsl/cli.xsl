@@ -58,6 +58,12 @@
 					  <a href="integrations.html">integrations</a> with various
 					  build tools. 
 					</p>
+					
+					<p>
+					  The following commands are available. Each command has a
+					  list of optional and required parameters. Some parameters
+					  can be specified multiple times to provide multiple values. 
+					</p>
 					<xsl:apply-templates select="documentation" />
 				</div>
 				<div class="footer">
@@ -87,6 +93,7 @@
 					<td>Option</td>
 					<td>Description</td>
 					<td>Required</td>
+					<td>Multiple</td>
 				</tr>
 			</thead>
 			<tbody>
@@ -94,14 +101,8 @@
 					<tr>
 						<td><code><xsl:value-of select="usage" /></code></td>
 						<td><xsl:value-of select="description" /></td>
-						<td><xsl:choose>
-							<xsl:when test="@required = 'true'">
-								yes
-							</xsl:when>
-							<xsl:otherwise>
-								no
-							</xsl:otherwise>
-						</xsl:choose></td>
+						<td style="text-align:center"><xsl:if test="@required = 'true'">&#x25fc;</xsl:if></td>
+						<td style="text-align:center"><xsl:if test="@multiple = 'true'">&#x25fc;</xsl:if></td>
 					</tr>
 				</xsl:for-each>
 			</tbody>
