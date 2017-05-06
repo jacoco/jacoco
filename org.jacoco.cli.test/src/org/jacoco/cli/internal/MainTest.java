@@ -64,4 +64,14 @@ public class MainTest extends CommandTestBase {
 				out);
 	}
 
+	@Test
+	public void should_not_print_any_output_when_quiet_option_is_given()
+			throws Exception {
+		execute("version", "-quiet");
+
+		assertOk();
+		assertNoOutput(out);
+		assertNoOutput(err);
+	}
+
 }

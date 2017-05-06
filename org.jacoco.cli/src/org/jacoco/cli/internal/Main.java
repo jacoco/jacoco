@@ -11,7 +11,9 @@
  *******************************************************************************/
 package org.jacoco.cli.internal;
 
+import java.io.IOException;
 import java.io.PrintWriter;
+import java.io.Writer;
 
 import org.kohsuke.args4j.Argument;
 import org.kohsuke.args4j.CmdLineException;
@@ -20,6 +22,22 @@ import org.kohsuke.args4j.CmdLineException;
  * Entry point for all command line operations.
  */
 public class Main extends Command {
+
+	private static final PrintWriter NUL = new PrintWriter(new Writer() {
+
+		@Override
+		public void write(final char[] arg0, final int arg1, final int arg2)
+				throws IOException {
+		}
+
+		@Override
+		public void flush() throws IOException {
+		}
+
+		@Override
+		public void close() throws IOException {
+		}
+	});
 
 	private final String[] args;
 
@@ -41,7 +59,7 @@ public class Main extends Command {
 	}
 
 	@Override
-	public int execute(final PrintWriter out, final PrintWriter err)
+	public int execute(PrintWriter out, final PrintWriter err)
 			throws Exception {
 
 		final CommandParser mainParser = new CommandParser(this);
@@ -57,12 +75,18 @@ public class Main extends Command {
 		if (help) {
 			printHelp(out);
 			return 0;
-		} else if (command.help) {
+		}
+
+		if (command.help) {
 			command.printHelp(out);
 			return 0;
-		} else {
-			return command.execute(out, err);
 		}
+
+		if (command.quiet) {
+			out = NUL;
+		}
+
+		return command.execute(out, err);
 	}
 
 	/**
