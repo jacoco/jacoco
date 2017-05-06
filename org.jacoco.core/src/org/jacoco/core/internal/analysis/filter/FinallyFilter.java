@@ -90,7 +90,7 @@ public final class FinallyFilter implements IFilter {
 	private static boolean isSame(final int size, AbstractInsnNode e,
 			AbstractInsnNode n) {
 		for (int i = 0; i < size; i++) {
-			if (e.getOpcode() != n.getOpcode()) {
+			if (n == null || e.getOpcode() != n.getOpcode()) {
 				return false;
 			}
 			e = next(e);

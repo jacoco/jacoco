@@ -20,6 +20,7 @@ import org.jacoco.core.internal.instr.InstrSupport;
 import org.junit.Test;
 import org.objectweb.asm.Label;
 import org.objectweb.asm.Opcodes;
+import org.objectweb.asm.commons.JSRInlinerAdapter;
 import org.objectweb.asm.tree.AbstractInsnNode;
 import org.objectweb.asm.tree.MethodNode;
 
@@ -104,6 +105,60 @@ public class FinallyFilterTest {
 		m.visitInsn(Opcodes.ARETURN);
 
 		filter.filter("", "", m, output);
+
+		assertEquals(expectedOutput.merged, output.merged);
+		assertEquals(expectedOutput.ignored, output.ignored);
+	}
+
+	@Test
+	public void subroutine() {
+		final Label sr = new Label();
+		final Label label = new Label();
+		final Label bodyStart = new Label();
+		final Label finallyHandler = new Label();
+		final Label synchronizedHandler = new Label();
+
+		m.visitTryCatchBlock(bodyStart, finallyHandler, finallyHandler, null);
+		m.visitTryCatchBlock(bodyStart, synchronizedHandler,
+				synchronizedHandler, null);
+
+		m.visitLabel(bodyStart);
+		m.visitInsn(Opcodes.NOP);
+		m.visitJumpInsn(Opcodes.JSR, sr);
+		m.visitJumpInsn(Opcodes.GOTO, label);
+
+		m.visitLabel(finallyHandler);
+		m.visitVarInsn(Opcodes.ASTORE, 1);
+		m.visitJumpInsn(Opcodes.JSR, sr);
+		m.visitVarInsn(Opcodes.ALOAD, 1);
+		m.visitInsn(Opcodes.ATHROW);
+
+		m.visitLabel(sr);
+		m.visitInsn(Opcodes.NOP);
+		m.visitInsn(Opcodes.RET);
+
+		m.visitLabel(label);
+		m.visitInsn(Opcodes.NOP);
+		m.visitVarInsn(Opcodes.ALOAD, 0);
+		m.visitInsn(Opcodes.MONITOREXIT);
+		m.visitInsn(Opcodes.ARETURN);
+
+		m.visitLabel(synchronizedHandler);
+		m.visitVarInsn(Opcodes.ASTORE, 1);
+		m.visitVarInsn(Opcodes.ALOAD, 0);
+		m.visitInsn(Opcodes.MONITOREXIT);
+		m.visitVarInsn(Opcodes.ALOAD, 1);
+		m.visitInsn(Opcodes.ATHROW);
+
+		final MethodNode methodNodeWithoutSubroutine = new MethodNode(
+				Opcodes.ASM5, m.access, m.name, m.desc, null, null);
+		final JSRInlinerAdapter adapter = new JSRInlinerAdapter(Opcodes.ASM5,
+				methodNodeWithoutSubroutine, m.access, m.name, m.desc, null,
+				null) {
+		};
+		m.accept(adapter);
+
+		filter.filter("", "", methodNodeWithoutSubroutine, output);
 
 		assertEquals(expectedOutput.merged, output.merged);
 		assertEquals(expectedOutput.ignored, output.ignored);
