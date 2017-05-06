@@ -83,6 +83,15 @@ public class FinallyTest extends ValidationTestBase {
 	}
 
 	/**
+	 * {@link Finally#breakStatement()}
+	 */
+	@Test
+	public void breakStatement() {
+		assertLine("breakStatement.break", ICounter.EMPTY);
+		assertLine("breakStatement.finally", ICounter.FULLY_COVERED);
+	}
+
+	/**
 	 * {@link Finally#branches(boolean)}
 	 */
 	@Test

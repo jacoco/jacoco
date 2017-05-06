@@ -41,6 +41,14 @@ public class Finally {
 		nop(); // $line-test.after$
 	}
 
+	/**
+	 * Note that ECJ generates <code>goto</code> instruction at the end of catch
+	 * handler that refers to a line of previous instruction. Currently we
+	 * ignore this instruction, because otherwise it will cause partial coverage
+	 * of last line of finally handler, when catch handler not executed. However
+	 * because of this {@link #breakStatement() break statements are also
+	 * ignored}.
+	 */
 	private static void catchNotExecuted() {
 		try {
 			nop(); // $line-catchNotExecuted.tryBlock$
@@ -100,6 +108,26 @@ public class Finally {
 				nop(o);
 			} finally {
 				nop(); // $line-insideForEach.finally$
+			}
+		}
+	}
+
+	/**
+	 * Note that in this case javac does not assign line number to
+	 * <code>goto</code> instruction generated for <code>break</code> statement.
+	 * And currently in case of ECJ we ignore this instruction to cover case of
+	 * {@link #catchNotExecuted()}. This is misleading especially in case of
+	 * partial coverage of <code>if</code> statement.
+	 */
+	private static void breakStatement() {
+		for (int i = 0; i < 1; i++) {
+			try {
+				if (f()) {
+					break; // $line-breakStatement.break$
+				}
+				nop();
+			} finally {
+				nop(); // $line-breakStatement.finally$
 			}
 		}
 	}
@@ -193,6 +221,8 @@ public class Finally {
 		insideDoWhile();
 		insideFor();
 		insideForEach();
+
+		breakStatement();
 
 		branches(false);
 		branches(true);
