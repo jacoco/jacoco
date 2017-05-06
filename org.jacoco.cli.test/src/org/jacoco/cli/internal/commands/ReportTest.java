@@ -117,4 +117,26 @@ public class ReportTest extends CommandTestBase {
 						.isFile());
 	}
 
+	@Test
+	public void should_use_all_values_when_multiple_classfiles_options_are_provided()
+			throws Exception {
+		File html = new File(tmp.getRoot(), "coverage");
+
+		final String c1 = getClassPath()
+				+ "/org/jacoco/cli/internal/commands/ReportTest.class";
+		final String c2 = getClassPath()
+				+ "/org/jacoco/cli/internal/commands/DumpTest.class";
+
+		execute("report", "-classfiles", c1, "-classfiles", c2, "-html",
+				html.getAbsolutePath());
+
+		assertOk();
+		assertTrue(html.isDirectory());
+		assertTrue(new File(html,
+				"org.jacoco.cli.internal.commands/ReportTest.html").isFile());
+		assertTrue(
+				new File(html, "org.jacoco.cli.internal.commands/DumpTest.html")
+						.isFile());
+	}
+
 }
