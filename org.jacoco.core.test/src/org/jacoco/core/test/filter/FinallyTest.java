@@ -49,6 +49,40 @@ public class FinallyTest extends ValidationTestBase {
 	}
 
 	/**
+	 * {@link Finally#insideWhile()}
+	 */
+	@Test
+	public void insideWhile() {
+		assertLine("insideWhile.finally", ICounter.FULLY_COVERED);
+		assertLine("insideWhile.finallyLastLine", isJDKCompiler
+				? ICounter.PARTLY_COVERED : ICounter.FULLY_COVERED);
+	}
+
+	/**
+	 * {@link Finally#insideDoWhile()}
+	 */
+	@Test
+	public void insideDoWhile() {
+		assertLine("insideDoWhile.finally", ICounter.FULLY_COVERED);
+	}
+
+	/**
+	 * {@link Finally#insideFor()}
+	 */
+	@Test
+	public void insideFor() {
+		assertLine("insideFor.finally", ICounter.FULLY_COVERED);
+	}
+
+	/**
+	 * {@link Finally#insideForEach()}
+	 */
+	@Test
+	public void insideForEach() {
+		assertLine("insideForEach.finally", ICounter.FULLY_COVERED);
+	}
+
+	/**
 	 * {@link Finally#branches(boolean)}
 	 */
 	@Test

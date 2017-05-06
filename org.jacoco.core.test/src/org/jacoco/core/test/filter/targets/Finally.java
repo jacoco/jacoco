@@ -12,7 +12,11 @@
 package org.jacoco.core.test.filter.targets;
 
 import static org.jacoco.core.test.validation.targets.Stubs.ex;
+import static org.jacoco.core.test.validation.targets.Stubs.f;
 import static org.jacoco.core.test.validation.targets.Stubs.nop;
+import static org.jacoco.core.test.validation.targets.Stubs.t;
+
+import java.util.Collections;
 
 import org.jacoco.core.test.validation.targets.Stubs.StubException;
 
@@ -46,6 +50,58 @@ public class Finally {
 			nop(); // $line-catchNotExecuted.finallyBlock$
 		}
 		nop(); // $line-catchNotExecuted.after$
+	}
+
+	/**
+	 * Note that javac generates <code>goto</code> instruction at the end of
+	 * <code>while</code> statement that refers to a line of previous
+	 * instruction. And so causes partial coverage of last line of finally
+	 * handler, when loop executed only once. <code>do-while</code> and
+	 * <code>for</code> statements not affected by this.
+	 *
+	 * @see #insideDoWhile()
+	 * @see #insideFor()
+	 * @see #insideForEach()
+	 */
+	private static void insideWhile() {
+		while (t()) {
+			try {
+				ex();
+			} finally {
+				nop(); // $line-insideWhile.finally$
+				nop(); // $line-insideWhile.finallyLastLine$
+			}
+		}
+	}
+
+	private static void insideDoWhile() {
+		do {
+			try {
+				nop();
+			} finally {
+				nop(); // $line-insideDoWhile.finally$
+			}
+		} while (f());
+	}
+
+	private static void insideFor() {
+		for (int i = 0; i < 1; i++) {
+			try {
+				nop();
+			} finally {
+				nop(); // $line-insideFor.finally$
+			}
+		}
+	}
+
+	private static void insideForEach() {
+		for (Object o : Collections.singleton(new Object())) {
+			try {
+				nop(o);
+			} finally {
+				nop(); // $line-insideForEach.finally$
+			}
+		}
 	}
 
 	private static void branches(boolean t) {
@@ -129,6 +185,14 @@ public class Finally {
 		test();
 
 		catchNotExecuted();
+
+		try {
+			insideWhile();
+		} catch (StubException ignore) {
+		}
+		insideDoWhile();
+		insideFor();
+		insideForEach();
 
 		branches(false);
 		branches(true);
