@@ -33,6 +33,12 @@ public abstract class Command {
 	public boolean help = false;
 
 	/**
+	 * Flag whether output to stdout should be suppressed.
+	 */
+	@Option(name = "-quiet", usage = "suppress all output on stdout")
+	public boolean quiet = false;
+
+	/**
 	 * @return Short description of the command.
 	 */
 	public abstract String description();
