@@ -24,7 +24,10 @@ import org.kohsuke.args4j.spi.OptionHandler;
 /**
  * Internal utility to dump all command descriptions as XML.
  */
-public class XmlDocumentation {
+public final class XmlDocumentation {
+
+	private XmlDocumentation() {
+	}
 
 	private static void writeCommand(final Command command,
 			final XMLElement parent) throws IOException {
@@ -54,7 +57,9 @@ public class XmlDocumentation {
 	 * Called during the build process.
 	 * 
 	 * @param args
+	 *            exactly one argument expected with the target location
 	 * @throws IOException
+	 *             if XML document cannot be written
 	 */
 	public static void main(final String... args) throws IOException {
 		final File file = new File(args[0]);

@@ -19,7 +19,10 @@ import org.jacoco.cli.internal.Command;
 /**
  * List of all available commands.
  */
-public class AllCommands {
+public final class AllCommands {
+
+	private AllCommands() {
+	}
 
 	/**
 	 * @return list of new instances of all available commands
