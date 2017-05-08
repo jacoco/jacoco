@@ -149,6 +149,21 @@
   classpath and accessible from by the instrumented classes. 
 </p>
 
+<h3>Why do I get a <code>StackOverflowError</code> during code coverage analysis?</h3>
+<p>
+  There are two known reasons for this:
+</p>
+<ul>
+  <li>Misconfiguration: If you configure two JaCoCo agents of different releases
+      they will instrument each other and cause a endless recursion. Check the
+      effective java command line and avoid such configurations.</li>
+  <li>Heavy stack usage: JaCoCo instrumentation adds a small runtime overhead
+      by adding a local variable to each method. If your application is already
+      close to the maximum stack size this can eventually lead to an
+      <code>StackOverflowError</code>. Increase the maximum java stack size with
+      the <code>-Xss</code> JVM option.</li>
+</ul>
+
 </div>
 <div class="footer">
   <span class="right"><a href="@jacoco.home.url@">JaCoCo</a> @qualified.bundle.version@</span>

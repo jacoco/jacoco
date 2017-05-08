@@ -23,6 +23,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 import java.io.Serializable;
+import java.util.Arrays;
 import java.util.jar.JarInputStream;
 import java.util.jar.JarOutputStream;
 import java.util.jar.Pack200;
@@ -91,31 +92,57 @@ public class InstrumenterTest {
 		assertEquals("org.jacoco.core.instr.InstrumenterTest", clazz.getName());
 	}
 
+	/**
+	 * Triggers exception in {@link Instrumenter#instrument(byte[], String)}.
+	 */
 	@Test
 	public void testInstrumentBrokenClass1() throws IOException {
 		final byte[] brokenclass = TargetLoader
 				.getClassDataAsBytes(AnalyzerTest.class);
 		brokenclass[10] = 0x23;
 		try {
-			instrumenter.instrument(brokenclass, "Broken");
+			instrumenter.instrument(brokenclass, "Broken.class");
 			fail();
 		} catch (IOException e) {
-			assertEquals("Error while instrumenting class Broken.",
+			assertEquals("Error while instrumenting Broken.class.",
 					e.getMessage());
 		}
 	}
 
+	private static class BrokenInputStream extends InputStream {
+		@Override
+		public int read() throws IOException {
+			throw new IOException();
+		}
+	}
+
+	/**
+	 * Triggers exception in
+	 * {@link Instrumenter#instrument(InputStream, String)}.
+	 */
 	@Test
-	public void testInstrumentBrokenClass2() throws IOException {
-		final byte[] brokenclass = TargetLoader
-				.getClassDataAsBytes(AnalyzerTest.class);
-		brokenclass[10] = 0x23;
+	public void testInstrumentBrokenStream() {
 		try {
-			instrumenter.instrument(new ByteArrayInputStream(brokenclass),
-					"Broken");
-			fail();
+			instrumenter.instrument(new BrokenInputStream(), "BrokenStream");
+			fail("exception expected");
 		} catch (IOException e) {
-			assertEquals("Error while instrumenting class Broken.",
+			assertEquals("Error while instrumenting BrokenStream.",
+					e.getMessage());
+		}
+	}
+
+	/**
+	 * Triggers exception in
+	 * {@link Instrumenter#instrument(InputStream, OutputStream, String)}.
+	 */
+	@Test
+	public void testInstrumentBrokenStream2() {
+		try {
+			instrumenter.instrument(new BrokenInputStream(),
+					new ByteArrayOutputStream(), "BrokenStream");
+			fail("exception expected");
+		} catch (IOException e) {
+			assertEquals("Error while instrumenting BrokenStream.",
 					e.getMessage());
 		}
 	}
@@ -169,6 +196,97 @@ public class InstrumenterTest {
 		assertNull(zipin.getNextEntry());
 	}
 
+	/**
+	 * Triggers exception in
+	 * {@link org.jacoco.core.internal.ContentTypeDetector#ContentTypeDetector(InputStream)}.
+	 */
+	@Test
+	public void testInstrumentAll_Broken() {
+		try {
+			instrumenter.instrumentAll(new BrokenInputStream(),
+					new ByteArrayOutputStream(), "Broken");
+			fail("exception expected");
+		} catch (IOException e) {
+			assertEquals("Error while instrumenting Broken.", e.getMessage());
+		}
+	}
+
+	/**
+	 * Triggers exception in
+	 * {@link Instrumenter#copy(InputStream, OutputStream)}.
+	 */
+	@Test
+	public void testInstrumentAll_Broken2() {
+		final InputStream inputStream = new InputStream() {
+			private int count;
+
+			@Override
+			public int read() throws IOException {
+				count++;
+				if (count > 4) {
+					throw new IOException();
+				}
+				return 0;
+			}
+		};
+
+		try {
+			instrumenter.instrumentAll(inputStream, new ByteArrayOutputStream(),
+					"Broken");
+		} catch (IOException e) {
+			assertEquals("Error while instrumenting Broken.", e.getMessage());
+		}
+	}
+
+	/**
+	 * Triggers exception in
+	 * {@link Instrumenter#nextEntry(ZipInputStream, String)}.
+	 */
+	@Test
+	public void testInstrumentAll_BrokenZip() {
+		final byte[] buffer = new byte[30];
+		buffer[0] = 0x50;
+		buffer[1] = 0x4b;
+		buffer[2] = 0x03;
+		buffer[3] = 0x04;
+		Arrays.fill(buffer, 4, buffer.length, (byte) 0x42);
+
+		try {
+			instrumenter.instrumentAll(new ByteArrayInputStream(buffer),
+					new ByteArrayOutputStream(), "Test.zip");
+			fail("exception expected");
+		} catch (IOException e) {
+			assertEquals("Error while instrumenting Test.zip.", e.getMessage());
+		}
+	}
+
+	/**
+	 * With JDK <= 6 triggers exception in
+	 * {@link Instrumenter#copy(InputStream, OutputStream)}.
+	 *
+	 * With JDK > 6 triggers exception in
+	 * {@link org.jacoco.core.internal.ContentTypeDetector#ContentTypeDetector(InputStream)}.
+	 */
+	@Test
+	public void testInstrumentAll_BrokenZipEntry() throws IOException {
+		ByteArrayOutputStream out = new ByteArrayOutputStream();
+		ZipOutputStream zip = new ZipOutputStream(out);
+		zip.putNextEntry(new ZipEntry("brokenentry.txt"));
+		out.write(0x23); // Unexpected data here
+		zip.close();
+
+		try {
+			instrumenter.instrumentAll(
+					new ByteArrayInputStream(out.toByteArray()),
+					new ByteArrayOutputStream(), "broken.zip");
+			fail("exception expected");
+		} catch (IOException e) {
+			assertEquals(
+					"Error while instrumenting broken.zip@brokenentry.txt.",
+					e.getMessage());
+		}
+	}
+
 	@Test
 	public void testInstrumentAll_BrokenClassFileInZip() throws IOException {
 		ByteArrayOutputStream buffer = new ByteArrayOutputStream();
@@ -186,9 +304,25 @@ public class InstrumenterTest {
 					"test.zip");
 			fail();
 		} catch (IOException e) {
-			assertEquals(
-					"Error while instrumenting class test.zip@Test.class.",
+			assertEquals("Error while instrumenting test.zip@Test.class.",
 					e.getMessage());
+		}
+	}
+
+	/**
+	 * Triggers exception in
+	 * {@link Instrumenter#instrumentGzip(InputStream, OutputStream, String)}.
+	 */
+	@Test
+	public void testInstrumentAll_BrokenGZ() {
+		final byte[] buffer = new byte[] { 0x1f, (byte) 0x8b, 0x00, 0x00 };
+
+		try {
+			instrumenter.instrumentAll(new ByteArrayInputStream(buffer),
+					new ByteArrayOutputStream(), "Test.gz");
+			fail("exception expected");
+		} catch (IOException e) {
+			assertEquals("Error while instrumenting Test.gz.", e.getMessage());
 		}
 	}
 
@@ -221,6 +355,24 @@ public class InstrumenterTest {
 				jarbuffer.toByteArray()));
 		assertEquals("Test.class", zipin.getNextEntry().getName());
 		assertNull(zipin.getNextEntry());
+	}
+
+	/**
+	 * Triggers exception in
+	 * {@link Instrumenter#instrumentPack200(InputStream, OutputStream, String)}.
+	 */
+	@Test
+	public void testInstrumentAll_BrokenPack200() {
+		final byte[] buffer = new byte[] { (byte) 0xca, (byte) 0xfe,
+				(byte) 0xd0, 0x0d };
+
+		try {
+			instrumenter.instrumentAll(new ByteArrayInputStream(buffer),
+					new ByteArrayOutputStream(), "Test.pack200");
+		} catch (IOException e) {
+			assertEquals("Error while instrumenting Test.pack200.",
+					e.getMessage());
+		}
 	}
 
 	@Test
