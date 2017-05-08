@@ -23,6 +23,7 @@ import org.jacoco.core.internal.analysis.filter.EnumFilter;
 import org.jacoco.core.internal.analysis.filter.IFilter;
 import org.jacoco.core.internal.analysis.filter.IFilterOutput;
 import org.jacoco.core.internal.analysis.filter.LombokGeneratedFilter;
+import org.jacoco.core.internal.analysis.filter.PrivateEmptyNoArgConstructorFilter;
 import org.jacoco.core.internal.analysis.filter.SynchronizedFilter;
 import org.jacoco.core.internal.analysis.filter.SyntheticFilter;
 import org.jacoco.core.internal.analysis.filter.TryWithResourcesEcjFilter;
@@ -48,7 +49,7 @@ public class MethodAnalyzer extends MethodProbesVisitor
 	private static final IFilter[] FILTERS = new IFilter[] { new EnumFilter(),
 			new SyntheticFilter(), new SynchronizedFilter(),
 			new TryWithResourcesJavacFilter(), new TryWithResourcesEcjFilter(),
-			new LombokGeneratedFilter() };
+			new PrivateEmptyNoArgConstructorFilter(), new LombokGeneratedFilter() };
 
 	private final String className;
 

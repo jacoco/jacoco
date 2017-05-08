@@ -27,7 +27,7 @@ public class SyntheticTest extends ValidationTestBase {
 
 	@Test
 	public void testCoverageResult() {
-		assertMethodCount(6);
+		assertMethodCount(5);
 
 		assertLine("classdef", ICounter.EMPTY);
 		assertLine("field", ICounter.EMPTY);

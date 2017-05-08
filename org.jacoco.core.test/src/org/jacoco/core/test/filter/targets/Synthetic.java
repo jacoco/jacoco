@@ -18,6 +18,12 @@ public class Synthetic { // $line-classdef$
 
 	private static int counter; // $line-field$
 
+	/**
+	 * {@link org.jacoco.core.test.validation.targets.Target06 Default
+	 * constructor will refer to a line of class definition}, so that we define
+	 * constructor explicitly in order to verify that we filter all other
+	 * constructions here that might refer to line of class definition.
+	 */
 	private Synthetic() {
 	}
 
