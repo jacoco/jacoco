@@ -41,15 +41,15 @@ public class MockSocketConnection {
 		socketA.connect(socketB);
 	}
 
-	public Socket getSocketA() {
+	public MockSocket getSocketA() {
 		return socketA;
 	}
 
-	public Socket getSocketB() {
+	public MockSocket getSocketB() {
 		return socketB;
 	}
 
-	private class MockSocket extends Socket {
+	class MockSocket extends Socket {
 
 		private MockSocket other;
 
@@ -85,6 +85,7 @@ public class MockSocketConnection {
 								return -1;
 							}
 							final Byte b = buffer.poll();
+							buffer.notifyAll();
 							if (b != null) {
 								return 0xff & b.intValue();
 							}
@@ -98,26 +99,36 @@ public class MockSocketConnection {
 
 			@Override
 			public int available() throws IOException {
-				return buffer.size();
+				synchronized (buffer) {
+					return buffer.size();
+				}
 			}
 
 		};
 
-		public MockSocket() throws SocketException {
+		private MockSocket() throws SocketException {
 			super((SocketImpl) null);
 			closed = false;
 		}
 
-		void connect(MockSocket other) {
+		private void connect(MockSocket other) {
 			this.other = other;
 			other.other = this;
+		}
+
+		public void waitUntilInputBufferIsEmpty() throws InterruptedException {
+			synchronized (buffer) {
+				while (!closed && !buffer.isEmpty()) {
+					buffer.wait();
+				}
+			}
 		}
 
 		// socket methods with mocking behavior:
 
 		@Override
 		public OutputStream getOutputStream() throws IOException {
-			if (closed) {
+			if (isClosed()) {
 				throw new SocketException("Socket is closed");
 			}
 			return out;
@@ -125,7 +136,7 @@ public class MockSocketConnection {
 
 		@Override
 		public InputStream getInputStream() throws IOException {
-			if (closed) {
+			if (isClosed()) {
 				throw new SocketException("Socket is closed");
 			}
 			return in;
@@ -133,8 +144,8 @@ public class MockSocketConnection {
 
 		@Override
 		public void close() throws IOException {
-			closed = true;
 			synchronized (buffer) {
+				closed = true;
 				buffer.notifyAll();
 			}
 			synchronized (other.buffer) {
@@ -144,7 +155,9 @@ public class MockSocketConnection {
 
 		@Override
 		public boolean isClosed() {
-			return closed;
+			synchronized (buffer) {
+				return closed;
+			}
 		}
 
 		// unsupported socket methods:
