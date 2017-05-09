@@ -73,11 +73,16 @@ abstract class AbstractMatcher {
 		if (cursor == null) {
 			return;
 		}
-		do {
-			cursor = cursor.getNext();
-		} while (cursor != null && (cursor.getType() == AbstractInsnNode.FRAME
+		cursor = cursor.getNext();
+		skipNonOpcodes();
+	}
+
+	final void skipNonOpcodes() {
+		while (cursor != null && (cursor.getType() == AbstractInsnNode.FRAME
 				|| cursor.getType() == AbstractInsnNode.LABEL
-				|| cursor.getType() == AbstractInsnNode.LINE));
+				|| cursor.getType() == AbstractInsnNode.LINE)) {
+			cursor = cursor.getNext();
+		}
 	}
 
 }
