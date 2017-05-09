@@ -132,6 +132,24 @@ public class Finally {
 		}
 	}
 
+	/**
+	 * Note that difference of this case from {@link #breakStatement()} is that
+	 * there is nothing between <code>break</code> statement and end of
+	 * <code>try</code> block. And current implementation of filter does not
+	 * handle such case.
+	 */
+	private static void breakStatement2() {
+		for (int i = 0; i < 1; i++) {
+			try {
+				if (f()) {
+					break;
+				}
+			} finally {
+				nop(); // $line-breakStatement2.finally$
+			}
+		}
+	}
+
 	private static void branches(boolean t) {
 		int i = 0;
 		try {
@@ -223,6 +241,7 @@ public class Finally {
 		insideForEach();
 
 		breakStatement();
+		breakStatement2();
 
 		branches(false);
 		branches(true);
