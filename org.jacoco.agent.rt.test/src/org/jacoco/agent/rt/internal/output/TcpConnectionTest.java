@@ -101,26 +101,6 @@ public class TcpConnectionTest extends ExecutorTestBase {
 	}
 
 	/**
-	 * Remote endpoint is closed before even a valid header was send.
-	 */
-	public void testRemoteCloseWithoutHeader() throws Throwable {
-		final TcpConnection con = new TcpConnection(mockConnection.getSocketA(),
-				data);
-
-		final Future<Void> f = executor.submit(new Callable<Void>() {
-			public Void call() throws Exception {
-				con.init();
-				return null;
-			}
-		});
-
-		assertBlocks(f);
-
-		mockConnection.getSocketB().close();
-		f.get();
-	}
-
-	/**
 	 * Local socket is closed while waiting for commands.
 	 * 
 	 * @throws Exception
