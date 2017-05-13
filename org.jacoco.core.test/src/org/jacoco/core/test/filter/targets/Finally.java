@@ -125,10 +125,11 @@ public class Finally {
 
 	/**
 	 * Note that in this case javac does not assign line number to
-	 * <code>goto</code> instruction generated for <code>break</code> statement.
-	 * And currently in case of ECJ we ignore this instruction to cover case of
-	 * {@link #catchNotExecuted()}. This is misleading especially in case of
-	 * partial coverage of <code>if</code> statement.
+	 * <code>goto</code> instruction generated for <code>break</code> statement
+	 * (see <a href="https://bugs.openjdk.java.net/browse/JDK-8180141">
+	 * JDK-8180141</a>). And currently in case of ECJ we ignore this instruction
+	 * to cover case of {@link #catchNotExecuted()}. This is misleading
+	 * especially in case of partial coverage of <code>if</code> statement.
 	 */
 	private static void breakStatement() {
 		for (int i = 0; i < 1; i++) {
