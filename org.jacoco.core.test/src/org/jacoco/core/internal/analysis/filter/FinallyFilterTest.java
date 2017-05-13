@@ -111,6 +111,50 @@ public class FinallyFilterTest {
 	}
 
 	@Test
+	public void javac_empty_catch() {
+		final Label after = new Label();
+		final Label bodyStart = new Label();
+		final Label bodyEnd = new Label();
+		final Label catchHandler = new Label();
+		final Label finallyHandler = new Label();
+
+		m.visitTryCatchBlock(bodyStart, bodyEnd, catchHandler,
+				"java/lang/Exception");
+		m.visitTryCatchBlock(bodyStart, bodyEnd, finallyHandler, null);
+
+		m.visitLabel(bodyStart);
+		m.visitInsn(Opcodes.NOP);
+		m.visitLabel(bodyEnd);
+		m.visitInsn(Opcodes.NOP); // finally
+		expectedMergeLast();
+		m.visitJumpInsn(Opcodes.GOTO, after);
+		expectedIgnoreLast();
+
+		m.visitLabel(catchHandler);
+		m.visitVarInsn(Opcodes.ASTORE, 0);
+		m.visitInsn(Opcodes.NOP); // finally
+		m.visitJumpInsn(Opcodes.GOTO, after);
+
+		m.visitLabel(finallyHandler);
+		m.visitVarInsn(Opcodes.ASTORE, 1);
+		expectedIgnoreLast();
+		m.visitInsn(Opcodes.NOP); // finally
+		expectedMergeLast();
+		m.visitVarInsn(Opcodes.ALOAD, 1);
+		expectedIgnoreLast();
+		m.visitInsn(Opcodes.ATHROW);
+		expectedIgnoreLast();
+
+		m.visitLabel(after);
+		m.visitInsn(Opcodes.RETURN);
+
+		filter.filter("", "", m, output);
+
+		assertEquals(expectedOutput.merged, output.merged);
+		assertEquals(expectedOutput.ignored, output.ignored);
+	}
+
+	@Test
 	public void subroutine() {
 		final Label sr = new Label();
 		final Label label = new Label();

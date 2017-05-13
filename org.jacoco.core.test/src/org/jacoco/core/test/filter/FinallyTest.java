@@ -11,6 +11,8 @@
  *******************************************************************************/
 package org.jacoco.core.test.filter;
 
+import java.util.regex.Pattern;
+
 import org.jacoco.core.analysis.ICounter;
 import org.jacoco.core.test.filter.targets.Finally;
 import org.jacoco.core.test.validation.ValidationTestBase;
@@ -62,6 +64,32 @@ public class FinallyTest extends ValidationTestBase {
 		assertLine("catchExecuted.finallyBlock", ICounter.FULLY_COVERED);
 		assertLine("catchExecuted.finallyBlockEnd", ICounter.EMPTY);
 		assertLine("catchExecuted.after", ICounter.FULLY_COVERED);
+	}
+
+	/**
+	 * {@link Finally#emptyCatch()}
+	 */
+	@Test
+	public void emptyCatch() {
+		if (isJDKCompiler) {
+			if (Pattern.compile("1\\.[567]\\.0_(\\d++)")
+					.matcher(System.getProperty("java.version")).matches()) {
+				assertLine("emptyCatch.catch", ICounter.NOT_COVERED);
+				assertLine("emptyCatch.finally", ICounter.EMPTY);
+				assertLine("emptyCatch.finallyBlock", ICounter.FULLY_COVERED);
+				assertLine("emptyCatch.finallyBlockEnd", ICounter.EMPTY);
+			} else {
+				assertLine("emptyCatch.catch", ICounter.NOT_COVERED);
+				assertLine("emptyCatch.finally", ICounter.EMPTY);
+				assertLine("emptyCatch.finallyBlock", ICounter.PARTLY_COVERED);
+				assertLine("emptyCatch.finallyBlockEnd", ICounter.NOT_COVERED);
+			}
+		} else {
+			assertLine("emptyCatch.catch", ICounter.PARTLY_COVERED);
+			assertLine("emptyCatch.finally", ICounter.EMPTY);
+			assertLine("emptyCatch.finallyBlock", ICounter.FULLY_COVERED);
+			assertLine("emptyCatch.finallyBlockEnd", ICounter.EMPTY);
+		}
 	}
 
 	/**

@@ -71,6 +71,15 @@ public class Finally {
 		nop(); // $line-catchExecuted.after$
 	}
 
+	private static void emptyCatch() {
+		try {
+			nop();
+		} catch (Exception e) { // $line-emptyCatch.catch$
+		} finally { // $line-emptyCatch.finally$
+			nop(); // $line-emptyCatch.finallyBlock$
+		} // $line-emptyCatch.finallyBlockEnd$
+	}
+
 	/**
 	 * Note that javac generates <code>goto</code> instruction at the end of
 	 * <code>while</code> statement that refers to a line of previous
@@ -245,6 +254,8 @@ public class Finally {
 		catchNotExecuted();
 		catchExecuted(false);
 		catchExecuted(true);
+
+		emptyCatch();
 
 		try {
 			insideWhile();
