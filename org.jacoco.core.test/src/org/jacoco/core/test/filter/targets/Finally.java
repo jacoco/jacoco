@@ -54,10 +54,21 @@ public class Finally {
 			nop(); // $line-catchNotExecuted.tryBlock$
 		} catch (Exception e) { // $line-catchNotExecuted.catch$
 			nop(); // $line-catchNotExecuted.catchBlock$
-		} finally {
+		} finally { // $line-catchNotExecuted.finally$
 			nop(); // $line-catchNotExecuted.finallyBlock$
-		}
+		} // $line-catchNotExecuted.finallyBlockEnd$
 		nop(); // $line-catchNotExecuted.after$
+	}
+
+	private static void catchExecuted(boolean t) {
+		try {
+			ex(t);  // $line-catchExecuted.tryBlock$
+		} catch (Exception e) { // $line-catchExecuted.catch$
+			nop(); // $line-catchExecuted.catchBlock$
+		} finally { // $line-catchExecuted.finally$
+			nop(); // $line-catchExecuted.finallyBlock$
+		} // $line-catchExecuted.finallyBlockEnd$
+		nop(); // $line-catchExecuted.after$
 	}
 
 	/**
@@ -231,6 +242,8 @@ public class Finally {
 		test();
 
 		catchNotExecuted();
+		catchExecuted(false);
+		catchExecuted(true);
 
 		try {
 			insideWhile();
