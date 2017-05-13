@@ -72,14 +72,9 @@ public class Instruction {
 	 * @param branch
 	 *            branch number in predecessor that should be marked as covered
 	 *            when this instruction marked as covered
-	 * @throws IllegalStateException
-	 *             if predecessor has been already set for this instruction
 	 */
 	public void setPredecessor(final Instruction predecessor,
 			final int branch) {
-		if (this.predecessor != null) {
-			throw new IllegalStateException();
-		}
 		this.predecessor = predecessor;
 		predecessor.addBranch();
 		this.predecessorBranch = branch;

@@ -60,14 +60,6 @@ public class InstructionTest {
 		assertEquals(1, predecessor.getBranches());
 	}
 
-	@Test(expected = IllegalStateException.class)
-	public void testSetPredecessor2() {
-		final Instruction predecessor = new Instruction(
-				new InsnNode(Opcodes.NOP), 122);
-		instruction.setPredecessor(predecessor, 0);
-		instruction.setPredecessor(predecessor, 0);
-	}
-
 	@Test
 	public void testSetCovered() {
 		final Instruction i = new Instruction(new InsnNode(Opcodes.NOP), 122);
