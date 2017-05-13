@@ -21,6 +21,7 @@ import java.net.Socket;
 import java.util.List;
 
 import org.jacoco.agent.rt.internal.ExceptionRecorder;
+import org.jacoco.agent.rt.internal.output.MockSocketConnection.MockSocket;
 import org.jacoco.core.data.ExecutionDataStore;
 import org.jacoco.core.data.SessionInfo;
 import org.jacoco.core.data.SessionInfoStore;
@@ -40,7 +41,8 @@ public class TcpClientOutputTest {
 
 	private IAgentOutput controller;
 
-	private Socket remoteSocket;
+	private MockSocket localSocket;
+	private MockSocket remoteSocket;
 
 	private RemoteControlWriter remoteWriter;
 
@@ -52,13 +54,14 @@ public class TcpClientOutputTest {
 	public void setup() throws Exception {
 		logger = new ExceptionRecorder();
 		final MockSocketConnection con = new MockSocketConnection();
+		localSocket = con.getSocketA();
 		remoteSocket = con.getSocketB();
 		remoteWriter = new RemoteControlWriter(remoteSocket.getOutputStream());
 		controller = new TcpClientOutput(logger) {
 			@Override
 			protected Socket createSocket(AgentOptions options)
 					throws IOException {
-				return con.getSocketA();
+				return localSocket;
 			}
 		};
 		data = new RuntimeData();
@@ -75,6 +78,8 @@ public class TcpClientOutputTest {
 
 	@Test
 	public void testRemoteClose() throws Exception {
+		localSocket.waitUntilInputBufferIsEmpty();
+
 		remoteSocket.close();
 		controller.shutdown();
 		logger.assertNoException();
@@ -82,16 +87,18 @@ public class TcpClientOutputTest {
 
 	@Test
 	public void testInvalidCommand() throws Exception {
+		// send invalid command to agent
 		remoteWriter.visitSessionInfo(new SessionInfo("info", 1, 2));
-		while (remoteReader.read()) {
-		}
+
+		localSocket.waitUntilInputBufferIsEmpty();
 		controller.shutdown();
 		logger.assertException(IOException.class, "No session info visitor.");
 	}
 
 	@Test
 	public void testWriteExecutionData() throws Exception {
-		data.getExecutionData(Long.valueOf(0x12345678), "Foo", 42).getProbes()[0] = true;
+		data.getExecutionData(Long.valueOf(0x12345678), "Foo", 42)
+				.getProbes()[0] = true;
 		data.setSessionId("stubid");
 
 		controller.writeExecutionData(false);

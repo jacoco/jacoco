@@ -30,8 +30,8 @@ public class PrivateEmptyDefaultConstructorTest extends ValidationTestBase {
 	public void testCoverageResult() {
 
 		assertLine("classdef", ICounter.EMPTY);
-		assertLine("super", ICounter.NOT_COVERED);
-		assertLine("constructor", ICounter.NOT_COVERED);
+		assertLine("super", ICounter.EMPTY);
+		assertLine("constructor", ICounter.EMPTY);
 
 	}
 
