@@ -124,13 +124,7 @@ public class Limit {
 	 *            checked
 	 */
 	public void setMinimum(final String minimum) {
-		if (minimum == null) {
-			this.minimum = null;
-		} else if (isPercent(minimum)) {
-			this.minimum = percentToBigDecimal(minimum);
-		} else {
-			this.minimum = new BigDecimal(minimum);
-		}
+		this.minimum = parseValue(minimum);
 	}
 
 	/**
@@ -151,22 +145,21 @@ public class Limit {
 	 *            checked
 	 */
 	public void setMaximum(final String maximum) {
-		if (maximum == null) {
-			this.maximum = null;
-		} else if (isPercent(maximum)) {
-			this.maximum = percentToBigDecimal(maximum);
-		} else {
-			this.maximum = new BigDecimal(maximum);
+		this.maximum = parseValue(maximum);
+	}
+
+	private static BigDecimal parseValue(final String value) {
+		if (value == null) {
+			return null;
 		}
-	}
+		
+		final String trimmedValue = value.trim();
+		if (trimmedValue.endsWith("%")) {
+			final String percent = trimmedValue.substring(0, trimmedValue.length() - 1);
+			return new BigDecimal(percent).movePointLeft(2);
+		}
 
-	private static boolean isPercent(final String value) {
-		return value.trim().endsWith("%");
-	}
-
-	private static BigDecimal percentToBigDecimal(final String value) {
-		final String percent = value.trim().substring(0, value.length() - 1);
-		return new BigDecimal(percent).movePointLeft(2);
+		return new BigDecimal(trimmedValue);
 	}
 
 	String check(final ICoverageNode node) {
