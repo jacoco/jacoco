@@ -14,6 +14,7 @@ package org.jacoco.core.runtime;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
+import org.jacoco.core.matcher.WildcardMatcher;
 import org.junit.Test;
 
 public class WildcardMatcherTest {
