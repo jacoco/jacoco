@@ -29,6 +29,8 @@ import org.jacoco.core.internal.instr.ClassInstrumenter;
 import org.jacoco.core.internal.instr.IProbeArrayStrategy;
 import org.jacoco.core.internal.instr.ProbeArrayStrategyFactory;
 import org.jacoco.core.internal.instr.SignatureRemover;
+import org.jacoco.core.matcher.ClassnameMatcher;
+import org.jacoco.core.matcher.Matcher;
 import org.jacoco.core.runtime.IExecutionDataAccessorGenerator;
 import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.ClassVisitor;

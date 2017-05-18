@@ -18,7 +18,7 @@ import java.util.regex.Pattern;
  * Multiple expressions can be separated with a colon (:). In this case the
  * expression matches if at least one part matches.
  */
-public class WildcardMatcher {
+public class WildcardMatcher implements Matcher<String> {
 
 	private final Pattern pattern;
 
