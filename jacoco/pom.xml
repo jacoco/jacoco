@@ -55,6 +55,12 @@
     </dependency>
     <dependency>
       <groupId>${project.groupId}</groupId>
+      <artifactId>org.jacoco.cli</artifactId>
+      <version>${project.version}</version>
+      <classifier>nodeps</classifier>
+    </dependency>
+    <dependency>
+      <groupId>${project.groupId}</groupId>
       <artifactId>org.jacoco.examples</artifactId>
       <version>${project.version}</version>
       <type>zip</type>
@@ -104,8 +110,8 @@
             <configuration>
               <rules>
                 <requireFilesSize>
-                  <maxsize>3500000</maxsize>
-                  <minsize>2500000</minsize>
+                  <maxsize>4100000</maxsize>
+                  <minsize>3400000</minsize>
                   <files>
                     <file>${project.build.directory}/jacoco-${qualified.bundle.version}.zip</file>
                   </files>

@@ -123,7 +123,10 @@ public class ExecDumpClient {
 					.setExecutionDataVisitor(loader.getExecutionDataStore());
 
 			remoteWriter.visitDumpCommand(dump, reset);
-			remoteReader.read();
+
+			if (!remoteReader.read()) {
+				throw new IOException("Socket closed unexpectedly.");
+			}
 
 		} finally {
 			socket.close();

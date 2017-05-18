@@ -101,7 +101,7 @@ public class ExecDumpClientTest {
 				// 3. Retry
 				"onConnectionFailure", "onConnecting")
 
-		, callbacks);
+				, callbacks);
 	}
 
 	@Test
@@ -124,6 +124,12 @@ public class ExecDumpClientTest {
 		client.dump((String) null, port);
 		assertFalse(dumpRequested);
 		assertTrue(resetRequested);
+	}
+
+	@Test(expected = IOException.class)
+	public void testNopServer() throws IOException {
+		int port = createNopServer();
+		client.dump((String) null, port);
 	}
 
 	private int getFreePort() throws IOException {
@@ -159,11 +165,27 @@ public class ExecDumpClientTest {
 				dumpRequested = dump;
 				resetRequested = reset;
 				if (dump) {
-					writer.visitSessionInfo(new SessionInfo("TestId", 100, 200));
+					writer.visitSessionInfo(
+							new SessionInfo("TestId", 100, 200));
 				}
 				writer.sendCmdOk();
 			}
 		});
 		reader.read();
 	}
+
+	private int createNopServer() throws IOException {
+		server = new ServerSocket(0, 0, InetAddress.getByName(null));
+		new Thread(new Runnable() {
+			public void run() {
+				try {
+					server.accept().close();
+				} catch (IOException e) {
+					// ignore
+				}
+			}
+		}).start();
+		return server.getLocalPort();
+	}
+
 }
