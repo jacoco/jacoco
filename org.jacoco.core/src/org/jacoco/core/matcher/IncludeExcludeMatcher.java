@@ -60,6 +60,7 @@ public class IncludeExcludeMatcher<T> implements Matcher<T> {
 				return true;
 			}
 		}
+
 		// no match; choose a default based on whether any includes were given
 		return (inclusions.size() == 0);
 	}

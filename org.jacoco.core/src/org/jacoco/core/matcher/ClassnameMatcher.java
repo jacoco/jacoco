@@ -12,6 +12,7 @@
 
 package org.jacoco.core.matcher;
 
+import java.util.List;
 import org.objectweb.asm.ClassReader;
 
 /**
@@ -21,8 +22,8 @@ public class ClassnameMatcher implements Matcher<ClassReader> {
 	private IncludeExcludeMatcher<String> matcher = new IncludeExcludeMatcher<String>();
 
 	/**
-	 * Includes the given pattern from the matches of this matcher
-	 * @param pattern to include
+	 * As the given pattern as an inclusion for this matcher
+	 * @param pattern pattern to include
 	 * @return this object (for chaining)
 	 */
 	public ClassnameMatcher Include(String pattern) {
@@ -31,7 +32,19 @@ public class ClassnameMatcher implements Matcher<ClassReader> {
 	}
 
 	/**
-	 * Excludes the given pattern from the matches of this matcher
+	 * As the given patterns as inclusions for this matcher
+	 * @param patterns patterns to include
+	 * @return this object (for chaining)
+	 */
+	public ClassnameMatcher Include(List<String> patterns) {
+		for (String pattern : patterns) {
+			Include(pattern);
+		}
+		return this;
+	}
+
+	/**
+	 * As the given pattern as an exclusion for this matcher
 	 * @param pattern pattern to exclude
 	 * @return this object (for chaining)
 	 */
@@ -39,6 +52,19 @@ public class ClassnameMatcher implements Matcher<ClassReader> {
 		matcher.Exclude(new WildcardMatcher(pattern));
 		return this;
 	}
+
+	/**
+	 * As the given patterns as exclusions for this matcher
+	 * @param patterns patterns to include
+	 * @return this object (for chaining)
+	 */
+	public ClassnameMatcher Exclude(List<String> patterns) {
+		for (String pattern : patterns) {
+			Exclude(pattern);
+		}
+		return this;
+	}
+
 
 	/**
 	 * Tells whether this matcher matches this class reader

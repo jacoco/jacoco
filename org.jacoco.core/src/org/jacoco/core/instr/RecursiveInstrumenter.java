@@ -102,7 +102,7 @@ public class RecursiveInstrumenter {
   private int instrumentIfNotExcluded(final InputStream input, final OutputStream output,
       final String name) throws IOException {
     InstrumentationRequest request = instrumenter.asClassReader(input, name);
-    boolean included = false;
+    boolean included;
     try {
       included = instrumentationPredicate.matches(request.getClassReader());
     } catch (ArrayIndexOutOfBoundsException e) {
@@ -111,8 +111,11 @@ public class RecursiveInstrumenter {
     if (included) {
       output.write(instrumenter.instrument(request));
       return 1;
+    } else {
+      output.write(request.getClassReader().b);
+      //copy(request.getClassReader().b, output, name);
+      return 0;
     }
-    return 0;
   }
 
   /**
@@ -141,8 +144,7 @@ public class RecursiveInstrumenter {
     }
     switch (detector.getType()) {
       case ContentTypeDetector.CLASSFILE:
-        instrumentIfNotExcluded(detector.getInputStream(), output, name);
-        return 1;
+        return instrumentIfNotExcluded(detector.getInputStream(), output, name);
       case ContentTypeDetector.ZIPFILE:
         return instrumentZip(detector.getInputStream(), output, name);
       case ContentTypeDetector.GZFILE:

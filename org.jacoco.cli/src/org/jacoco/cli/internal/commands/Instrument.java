@@ -23,8 +23,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.jacoco.cli.internal.Command;
-import org.jacoco.core.instr.Instrumenter;
 import org.jacoco.core.instr.RecursiveInstrumenter;
+import org.jacoco.core.matcher.ClassnameMatcher;
 import org.jacoco.core.runtime.OfflineInstrumentationAccessGenerator;
 import org.kohsuke.args4j.Argument;
 import org.kohsuke.args4j.Option;
@@ -40,6 +40,12 @@ public class Instrument extends Command {
 	@Argument(usage = "list of folder or files to instrument recusively", metaVar = "<sourcefiles>")
 	List<File> source = new ArrayList<File>();
 
+	@Option(name = "-include", usage = "regular expression denoting fully-qualified class name to instrument (this option may be given several times)", metaVar = "<includes>")
+	List<String> includeExpressions = new ArrayList<String>();
+
+	@Option(name = "-exclude", usage = "regular expression denoting fully-qualified class names to exclude from instrumentation (this option may be given several times)", metaVar = "<excludes>")
+	List<String> excludeExpressions = new ArrayList<String>();
+
 	private RecursiveInstrumenter instrumenter;
 
 	@Override
@@ -50,8 +56,10 @@ public class Instrument extends Command {
 	@Override
 	public int execute(final PrintWriter out, final PrintWriter err)
 			throws IOException {
+		ClassnameMatcher matcher = new ClassnameMatcher()
+				.Include(includeExpressions).Exclude(excludeExpressions);
 		instrumenter = new RecursiveInstrumenter(
-				new OfflineInstrumentationAccessGenerator());
+				new OfflineInstrumentationAccessGenerator(), matcher);
 		int total = 0;
 		for (final File s : source) {
 			total += instrumentRecursive(s, dest);
