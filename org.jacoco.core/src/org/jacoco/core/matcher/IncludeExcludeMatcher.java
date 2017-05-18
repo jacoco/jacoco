@@ -34,7 +34,7 @@ public class IncludeExcludeMatcher<T> implements Matcher<T> {
 
 	/**
 	 * Excludes a given matcher
-	 * @param exclusion
+	 * @param exclusion pattern to exclude
 	 * @return this object (for chaining several calls)
 	 */
 	public IncludeExcludeMatcher Exclude(Matcher<T> exclusion) {

@@ -24,6 +24,7 @@ import java.util.List;
 
 import org.jacoco.cli.internal.Command;
 import org.jacoco.core.instr.Instrumenter;
+import org.jacoco.core.instr.RecursiveInstrumenter;
 import org.jacoco.core.runtime.OfflineInstrumentationAccessGenerator;
 import org.kohsuke.args4j.Argument;
 import org.kohsuke.args4j.Option;
@@ -39,7 +40,7 @@ public class Instrument extends Command {
 	@Argument(usage = "list of folder or files to instrument recusively", metaVar = "<sourcefiles>")
 	List<File> source = new ArrayList<File>();
 
-	private Instrumenter instrumenter;
+	private RecursiveInstrumenter instrumenter;
 
 	@Override
 	public String description() {
@@ -49,7 +50,7 @@ public class Instrument extends Command {
 	@Override
 	public int execute(final PrintWriter out, final PrintWriter err)
 			throws IOException {
-		instrumenter = new Instrumenter(
+		instrumenter = new RecursiveInstrumenter(
 				new OfflineInstrumentationAccessGenerator());
 		int total = 0;
 		for (final File s : source) {

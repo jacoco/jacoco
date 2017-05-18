@@ -26,6 +26,7 @@ import org.apache.tools.ant.types.ResourceCollection;
 import org.apache.tools.ant.types.resources.Union;
 import org.apache.tools.ant.util.FileUtils;
 import org.jacoco.core.instr.Instrumenter;
+import org.jacoco.core.instr.RecursiveInstrumenter;
 import org.jacoco.core.runtime.OfflineInstrumentationAccessGenerator;
 
 /**
@@ -76,7 +77,7 @@ public class InstrumentTask extends Task {
 					getLocation());
 		}
 		int total = 0;
-		final Instrumenter instrumenter = new Instrumenter(
+		final RecursiveInstrumenter instrumenter = new RecursiveInstrumenter(
 				new OfflineInstrumentationAccessGenerator());
 		instrumenter.setRemoveSignatures(removesignatures);
 		final Iterator<?> resourceIterator = files.iterator();
@@ -91,7 +92,7 @@ public class InstrumentTask extends Task {
 				destdir.getAbsolutePath()));
 	}
 
-	private int instrument(final Instrumenter instrumenter,
+	private int instrument(final RecursiveInstrumenter instrumenter,
 			final Resource resource) {
 		final File file = new File(destdir, resource.getName());
 		file.getParentFile().mkdirs();
