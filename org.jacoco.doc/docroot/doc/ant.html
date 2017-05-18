@@ -745,7 +745,7 @@
 <pre class="source lang-xml linenums">
 &lt;check&gt;
     &lt;rule element="PACKAGE"&gt;
-        &lt;limit counter="LINE" value="COVEREDRATIO" minimum="0.80"/&gt;
+        &lt;limit counter="LINE" value="COVEREDRATIO" minimum="80%"/&gt;
         &lt;limit counter="CLASS" value="MISSEDCOUNT" maximum="0"/&gt;
     &lt;/rule&gt;
 &lt;/check&gt;
@@ -858,12 +858,14 @@
       <td><code>minimum</code></td>
       <td>Expected minimum value. If the minimum refers to a ratio the range is
           from 0.0 to 1.0 where the number of decimal places will also determine
-          the precision in error messages.</td>
+          the precision in error messages. A limit ratio may optionally be
+          declared as a percentage where 0.80 and 80% represent the same value,
+          the value must end with %.</td>
       <td><i>none</i></td>
     </tr>
     <tr>
       <td><code>maximum</code></td>
-      <td>Expected maximum value.</td>
+      <td>Expected maximum value, see <code>minimum</code> for details.</td>
       <td><i>none</i></td>
     </tr>
   </tbody>
