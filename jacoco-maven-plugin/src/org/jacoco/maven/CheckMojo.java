@@ -49,7 +49,8 @@ public class CheckMojo extends AbstractJacocoMojo implements IViolationsOutput {
 	 * value (TOTALCOUNT, COVEREDCOUNT, MISSEDCOUNT, COVEREDRATIO, MISSEDRATIO).
 	 * If a limit refers to a ratio the range is from 0.0 to 1.0 where the
 	 * number of decimal places will also determine the precision in error
-	 * messages.
+	 * messages. A limit ratio may optionally be declared as a percentage
+	 * where 0.80 and 80% represent the same value, the value must end with %.
 	 * </p>
 	 * 
 	 * <p>
@@ -111,7 +112,7 @@ public class CheckMojo extends AbstractJacocoMojo implements IViolationsOutput {
 	 *       <limit>
 	 *         <counter>LINE</counter>
 	 *         <value>COVEREDRATIO</value>
-	 *         <minimum>0.50</minimum>
+	 *         <minimum>50%</minimum>
 	 *       </limit>
 	 *     </limits>
 	 *   </rule>

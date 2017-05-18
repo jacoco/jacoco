@@ -115,16 +115,16 @@ public class Limit {
 	}
 
 	/**
-	 * Sets allowed minimum value as decimal string representation. The given
-	 * precision is also considered in error messages. Coverage ratios are given
-	 * in the range from 0.0 to 1.0.
+	 * Sets allowed maximum value as decimal string or percent representation.
+	 * The given precision is also considered in error messages. Coverage ratios
+	 * are given in the range from 0.0 to 1.0.
 	 * 
 	 * @param minimum
 	 *            allowed minimum or <code>null</code>, if no minimum should be
 	 *            checked
 	 */
 	public void setMinimum(final String minimum) {
-		this.minimum = minimum == null ? null : new BigDecimal(minimum);
+		this.minimum = parseValue(minimum);
 	}
 
 	/**
@@ -136,16 +136,30 @@ public class Limit {
 	}
 
 	/**
-	 * Sets allowed maximum value as decimal string representation. The given
-	 * precision is also considered in error messages. Coverage ratios are given
-	 * in the range from 0.0 to 1.0.
+	 * Sets allowed maximum value as decimal string or percent representation.
+	 * The given precision is also considered in error messages. Coverage ratios
+	 * are given in the range from 0.0 to 1.0.
 	 * 
 	 * @param maximum
 	 *            allowed maximum or <code>null</code>, if no maximum should be
 	 *            checked
 	 */
 	public void setMaximum(final String maximum) {
-		this.maximum = maximum == null ? null : new BigDecimal(maximum);
+		this.maximum = parseValue(maximum);
+	}
+
+	private static BigDecimal parseValue(final String value) {
+		if (value == null) {
+			return null;
+		}
+		
+		final String trimmedValue = value.trim();
+		if (trimmedValue.endsWith("%")) {
+			final String percent = trimmedValue.substring(0, trimmedValue.length() - 1);
+			return new BigDecimal(percent).movePointLeft(2);
+		}
+
+		return new BigDecimal(trimmedValue);
 	}
 
 	String check(final ICoverageNode node) {
