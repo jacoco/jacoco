@@ -25,7 +25,9 @@ import org.jacoco.core.analysis.Analyzer;
 import org.jacoco.core.analysis.CoverageBuilder;
 import org.jacoco.core.analysis.IBundleCoverage;
 import org.jacoco.core.analysis.IClassCoverage;
+import org.jacoco.core.analysis.RecursiveAnalyzer;
 import org.jacoco.core.data.ExecutionDataStore;
+import org.jacoco.core.matcher.ClassnameMatcher;
 import org.jacoco.core.tools.ExecFileLoader;
 import org.jacoco.report.DirectorySourceFileLocator;
 import org.jacoco.report.FileMultiReportOutput;
@@ -100,7 +102,8 @@ public class Report extends Command {
 	private IBundleCoverage analyze(final ExecutionDataStore data,
 			final PrintWriter out) throws IOException {
 		final CoverageBuilder builder = new CoverageBuilder();
-		final Analyzer analyzer = new Analyzer(data, builder);
+		ClassnameMatcher predicate = new ClassnameMatcher();
+		final RecursiveAnalyzer analyzer = new RecursiveAnalyzer(data, builder, predicate);
 		for (final File f : classfiles) {
 			analyzer.analyzeAll(f);
 		}

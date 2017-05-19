@@ -21,7 +21,9 @@ import org.jacoco.cli.internal.Command;
 import org.jacoco.core.analysis.Analyzer;
 import org.jacoco.core.analysis.IClassCoverage;
 import org.jacoco.core.analysis.ICoverageVisitor;
+import org.jacoco.core.analysis.RecursiveAnalyzer;
 import org.jacoco.core.data.ExecutionDataStore;
+import org.jacoco.core.matcher.ClassnameMatcher;
 import org.kohsuke.args4j.Argument;
 
 /**
@@ -40,12 +42,12 @@ public class ClassInfo extends Command {
 	@Override
 	public int execute(final PrintWriter out, final PrintWriter err)
 			throws IOException {
-		final Analyzer analyzer = new Analyzer(new ExecutionDataStore(),
+		final RecursiveAnalyzer analyzer = new RecursiveAnalyzer(new ExecutionDataStore(),
 				new ICoverageVisitor() {
 					public void visitCoverage(final IClassCoverage coverage) {
 						print(coverage, out);
 					}
-				});
+				}, new ClassnameMatcher());
 
 		for (final File file : classfiles) {
 			analyzer.analyzeAll(file);

@@ -31,6 +31,7 @@ import org.jacoco.core.analysis.Analyzer;
 import org.jacoco.core.analysis.CoverageBuilder;
 import org.jacoco.core.analysis.IBundleCoverage;
 import org.jacoco.core.analysis.IClassCoverage;
+import org.jacoco.core.analysis.RecursiveAnalyzer;
 import org.jacoco.core.tools.ExecFileLoader;
 import org.jacoco.report.FileMultiReportOutput;
 import org.jacoco.report.IReportGroupVisitor;
@@ -193,7 +194,7 @@ final class ReportSupport {
 				.getOutputDirectory());
 
 		if (classesDir.isDirectory()) {
-			final Analyzer analyzer = new Analyzer(
+			final RecursiveAnalyzer analyzer = new RecursiveAnalyzer(
 					loader.getExecutionDataStore(), builder);
 			final FileFilter filter = new FileFilter(includes, excludes);
 			for (final File file : filter.getFiles(classesDir)) {
