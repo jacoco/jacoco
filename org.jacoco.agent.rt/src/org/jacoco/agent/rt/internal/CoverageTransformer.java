@@ -19,7 +19,7 @@ import java.security.ProtectionDomain;
 import org.jacoco.core.instr.Instrumenter;
 import org.jacoco.core.runtime.AgentOptions;
 import org.jacoco.core.runtime.IRuntime;
-import org.jacoco.core.runtime.WildcardMatcher;
+import org.jacoco.core.matcher.WildcardMatcher;
 
 /**
  * Class file transformer to instrument classes for code coverage analysis.

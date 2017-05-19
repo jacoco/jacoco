@@ -36,6 +36,7 @@ import org.jacoco.core.analysis.CoverageBuilder;
 import org.jacoco.core.analysis.IBundleCoverage;
 import org.jacoco.core.analysis.IClassCoverage;
 import org.jacoco.core.analysis.ICoverageNode;
+import org.jacoco.core.analysis.RecursiveAnalyzer;
 import org.jacoco.core.data.ExecutionDataStore;
 import org.jacoco.core.data.SessionInfoStore;
 import org.jacoco.core.tools.ExecFileLoader;
@@ -560,7 +561,7 @@ public class ReportTask extends Task {
 	private IBundleCoverage createBundle(final GroupElement group)
 			throws IOException {
 		final CoverageBuilder builder = new CoverageBuilder();
-		final Analyzer analyzer = new Analyzer(executionDataStore, builder);
+		final RecursiveAnalyzer analyzer = new RecursiveAnalyzer(executionDataStore, builder);
 		for (final Iterator<?> i = group.classfiles.iterator(); i.hasNext();) {
 			final Resource resource = (Resource) i.next();
 			if (resource.isDirectory() && resource instanceof FileResource) {

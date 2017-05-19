@@ -124,10 +124,9 @@ public class Analyzer {
 	public void analyzeClass(final byte[] buffer, final String location)
 			throws IOException {
 		try {
-			analyzeClass(
-					new ClassReader(Java9Support.downgradeIfRequired(buffer)));
-		} catch (final RuntimeException cause) {
-			throw analyzerError(location, cause);
+			analyzeClass(asClassReader(buffer, location));
+		} catch (ArrayIndexOutOfBoundsException e) {
+			throw analyzerError(location, e);
 		}
 	}
 
@@ -143,12 +142,41 @@ public class Analyzer {
 	 */
 	public void analyzeClass(final InputStream input, final String location)
 			throws IOException {
+		analyzeClass(asClassReader(input, location));
+	}
+
+	/**
+	 * Creates a ClassReader for the given buffer
+	 * @param buffer binary representation of the class
+	 * @param location where the class came from (for error messages)
+	 * @return ClassReader
+	 * @throws IOException if input cannot be decoded to a valid ClassReader
+	 */
+	public ClassReader asClassReader(final byte[] buffer, final String location)
+			throws IOException {
 		try {
-			analyzeClass(Java9Support.readFully(input), location);
+			return new ClassReader(Java9Support.downgradeIfRequired(buffer));
+		} catch (final RuntimeException cause) {
+			throw analyzerError(location, cause);
+		}
+	}
+
+	/**
+	 * Creates a ClassReader for the given buffer
+	 * @param input binary representation of the class
+	 * @param location where the class came from (for error messages)
+	 * @return ClassReader
+	 * @throws IOException if input cannot be decoded to a valid ClassReader
+	 */
+	public ClassReader asClassReader(final InputStream input, final String location)
+			throws IOException {
+		try {
+			return asClassReader(Java9Support.readFully(input), location);
 		} catch (final RuntimeException e) {
 			throw analyzerError(location, e);
 		}
 	}
+
 
 	private IOException analyzerError(final String location,
 			final Exception cause) {
@@ -156,138 +184,6 @@ public class Analyzer {
 				"Error while analyzing %s.", location));
 		ex.initCause(cause);
 		return ex;
-	}
-
-	/**
-	 * Analyzes all classes found in the given input stream. The input stream
-	 * may either represent a single class file, a ZIP archive, a Pack200
-	 * archive or a gzip stream that is searched recursively for class files.
-	 * All other content types are ignored.
-	 * 
-	 * @param input
-	 *            input data
-	 * @param location
-	 *            a location description used for exception messages
-	 * @return number of class files found
-	 * @throws IOException
-	 *             if the stream can't be read or a class can't be analyzed
-	 */
-	public int analyzeAll(final InputStream input, final String location)
-			throws IOException {
-		final ContentTypeDetector detector;
-		try {
-			detector = new ContentTypeDetector(input);
-		} catch (IOException e) {
-			throw analyzerError(location, e);
-		}
-		switch (detector.getType()) {
-		case ContentTypeDetector.CLASSFILE:
-			analyzeClass(detector.getInputStream(), location);
-			return 1;
-		case ContentTypeDetector.ZIPFILE:
-			return analyzeZip(detector.getInputStream(), location);
-		case ContentTypeDetector.GZFILE:
-			return analyzeGzip(detector.getInputStream(), location);
-		case ContentTypeDetector.PACK200FILE:
-			return analyzePack200(detector.getInputStream(), location);
-		default:
-			return 0;
-		}
-	}
-
-	/**
-	 * Analyzes all class files contained in the given file or folder. Class
-	 * files as well as ZIP files are considered. Folders are searched
-	 * recursively.
-	 * 
-	 * @param file
-	 *            file or folder to look for class files
-	 * @return number of class files found
-	 * @throws IOException
-	 *             if the file can't be read or a class can't be analyzed
-	 */
-	public int analyzeAll(final File file) throws IOException {
-		int count = 0;
-		if (file.isDirectory()) {
-			for (final File f : file.listFiles()) {
-				count += analyzeAll(f);
-			}
-		} else {
-			final InputStream in = new FileInputStream(file);
-			try {
-				count += analyzeAll(in, file.getPath());
-			} finally {
-				in.close();
-			}
-		}
-		return count;
-	}
-
-	/**
-	 * Analyzes all classes from the given class path. Directories containing
-	 * class files as well as archive files are considered.
-	 * 
-	 * @param path
-	 *            path definition
-	 * @param basedir
-	 *            optional base directory, if <code>null</code> the current
-	 *            working directory is used as the base for relative path
-	 *            entries
-	 * @return number of class files found
-	 * @throws IOException
-	 *             if a file can't be read or a class can't be analyzed
-	 */
-	public int analyzeAll(final String path, final File basedir)
-			throws IOException {
-		int count = 0;
-		final StringTokenizer st = new StringTokenizer(path,
-				File.pathSeparator);
-		while (st.hasMoreTokens()) {
-			count += analyzeAll(new File(basedir, st.nextToken()));
-		}
-		return count;
-	}
-
-	private int analyzeZip(final InputStream input, final String location)
-			throws IOException {
-		final ZipInputStream zip = new ZipInputStream(input);
-		ZipEntry entry;
-		int count = 0;
-		while ((entry = nextEntry(zip, location)) != null) {
-			count += analyzeAll(zip, location + "@" + entry.getName());
-		}
-		return count;
-	}
-
-	private ZipEntry nextEntry(ZipInputStream input, String location)
-			throws IOException {
-		try {
-			return input.getNextEntry();
-		} catch (IOException e) {
-			throw analyzerError(location, e);
-		}
-	}
-
-	private int analyzeGzip(final InputStream input, final String location)
-			throws IOException {
-		GZIPInputStream gzipInputStream;
-		try {
-			gzipInputStream = new GZIPInputStream(input);
-		} catch (IOException e) {
-			throw analyzerError(location, e);
-		}
-		return analyzeAll(gzipInputStream, location);
-	}
-
-	private int analyzePack200(final InputStream input, final String location)
-			throws IOException {
-		InputStream unpackedInput;
-		try {
-			unpackedInput = Pack200Streams.unpack(input);
-		} catch (IOException e) {
-			throw analyzerError(location, e);
-		}
-		return analyzeAll(unpackedInput, location);
 	}
 
 }

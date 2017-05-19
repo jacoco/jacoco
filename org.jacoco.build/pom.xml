@@ -94,12 +94,12 @@
     <module>../org.jacoco.agent.rt</module>
     <module>../org.jacoco.agent</module>
     <module>../org.jacoco.ant</module>
-
+    <module>../org.jacoco.cli</module>
+    <module>../org.jacoco.examples</module>
     <module>../jacoco-maven-plugin</module>
 
     <module>../org.jacoco.tests</module>
 
-    <module>../org.jacoco.examples</module>
     <module>../org.jacoco.doc</module>
     <module>../jacoco</module>
   </modules>
@@ -143,6 +143,7 @@
     <!-- Dependencies versions -->
     <asm.version>5.2</asm.version>
     <ant.version>1.7.1</ant.version>
+    <args4j.version>2.0.28</args4j.version>
     <junit.version>4.8.2</junit.version>
 
     <!-- ================== -->
@@ -198,6 +199,11 @@
       </dependency>
       <dependency>
         <groupId>${project.groupId}</groupId>
+        <artifactId>org.jacoco.cli</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>${project.groupId}</groupId>
         <artifactId>org.jacoco.examples</artifactId>
         <version>${project.version}</version>
       </dependency>
@@ -221,6 +227,11 @@
         <groupId>org.apache.ant</groupId>
         <artifactId>ant-antunit</artifactId>
         <version>1.2</version>
+      </dependency>
+      <dependency>
+        <groupId>args4j</groupId>
+        <artifactId>args4j</artifactId>
+        <version>${args4j.version}</version>
       </dependency>
       <dependency>
         <groupId>junit</groupId>
@@ -393,6 +404,12 @@
           <groupId>org.codehaus.mojo</groupId>
           <artifactId>xml-maven-plugin</artifactId>
           <version>1.0</version>
+        </plugin>
+        <plugin>
+          <groupId>org.codehaus.mojo</groupId>
+          <artifactId>exec-maven-plugin</artifactId>
+          <!--  latest version which runs with Java 5 -->
+          <version>1.5.0</version>
         </plugin>
         <!-- Third-party plugins -->
         <plugin>
