@@ -52,6 +52,12 @@ public class Report extends Command {
 	@Option(name = "-classfiles", usage = "location of Java class files", metaVar = "<path>", required = true)
 	List<File> classfiles = new ArrayList<File>();
 
+	@Option(name = "-include", usage = "regular expression denoting fully-qualified class names to include in report (this option may be given several times)", metaVar = "<includes>")
+	List<String> includeExpressions = new ArrayList<String>();
+
+	@Option(name = "-exclude", usage = "regular expression denoting fully-qualified class names to exclude from the report (this option may be given several times)", metaVar = "<excludes>")
+	List<String> excludeExpressions = new ArrayList<String>();
+
 	@Option(name = "-sourcefiles", usage = "location of the source files", metaVar = "<path>")
 	List<File> sourcefiles = new ArrayList<File>();
 
@@ -102,7 +108,7 @@ public class Report extends Command {
 	private IBundleCoverage analyze(final ExecutionDataStore data,
 			final PrintWriter out) throws IOException {
 		final CoverageBuilder builder = new CoverageBuilder();
-		ClassnameMatcher predicate = new ClassnameMatcher();
+		ClassnameMatcher predicate = new ClassnameMatcher().Include(includeExpressions).Exclude(excludeExpressions);
 		final RecursiveAnalyzer analyzer = new RecursiveAnalyzer(data, builder, predicate);
 		for (final File f : classfiles) {
 			analyzer.analyzeAll(f);

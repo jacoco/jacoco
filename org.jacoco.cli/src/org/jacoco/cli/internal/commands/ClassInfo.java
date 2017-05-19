@@ -18,7 +18,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.jacoco.cli.internal.Command;
-import org.jacoco.core.analysis.Analyzer;
 import org.jacoco.core.analysis.IClassCoverage;
 import org.jacoco.core.analysis.ICoverageVisitor;
 import org.jacoco.core.analysis.RecursiveAnalyzer;
