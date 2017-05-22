@@ -42,7 +42,7 @@ public class MergeTest extends CommandTestBase {
 		execute("merge");
 
 		assertFailure();
-		assertContains("Option \"-destfile\" is required", err);
+		assertContains("Option \"--destfile\" is required", err);
 		assertContains("java -jar jacococli.jar merge [<execfiles> ...]", err);
 	}
 
@@ -53,7 +53,7 @@ public class MergeTest extends CommandTestBase {
 		File c = createExecFile("c");
 		File dest = new File(tmp.getRoot(), "merged.exec");
 
-		execute("merge", "-destfile", dest.getAbsolutePath(),
+		execute("merge", "--destfile", dest.getAbsolutePath(),
 				a.getAbsolutePath(), b.getAbsolutePath(), c.getAbsolutePath());
 
 		assertOk();

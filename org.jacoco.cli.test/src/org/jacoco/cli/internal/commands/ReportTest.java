@@ -37,14 +37,14 @@ public class ReportTest extends CommandTestBase {
 		execute("report");
 
 		assertFailure();
-		assertContains("Option \"-classfiles\" is required", err);
+		assertContains("Option \"--classfiles\" is required", err);
 		assertContains(
 				"Usage: java -jar jacococli.jar report [<execfiles> ...]", err);
 	}
 
 	@Test
 	public void should_print_number_of_analyzed_classes() throws Exception {
-		execute("report", "-classfiles", getClassPath());
+		execute("report", "--classfiles", getClassPath());
 
 		assertOk();
 		assertContains("[INFO] Writing report with 14 classes.", out);
@@ -62,7 +62,7 @@ public class ReportTest extends CommandTestBase {
 						new boolean[] { true }));
 		execout.close();
 
-		execute("report", exec.getAbsolutePath(), "-classfiles",
+		execute("report", exec.getAbsolutePath(), "--classfiles",
 				getClassPath());
 
 		assertOk();
@@ -81,7 +81,7 @@ public class ReportTest extends CommandTestBase {
 			throws Exception {
 		File xml = new File(tmp.getRoot(), "coverage.xml");
 
-		execute("report", "-classfiles", getClassPath(), "-xml",
+		execute("report", "--classfiles", getClassPath(), "--xml",
 				xml.getAbsolutePath());
 
 		assertOk();
@@ -93,7 +93,7 @@ public class ReportTest extends CommandTestBase {
 			throws Exception {
 		File csv = new File(tmp.getRoot(), "coverage.csv");
 
-		execute("report", "-classfiles", getClassPath(), "-csv",
+		execute("report", "--classfiles", getClassPath(), "--csv",
 				csv.getAbsolutePath());
 
 		assertOk();
@@ -105,8 +105,8 @@ public class ReportTest extends CommandTestBase {
 			throws Exception {
 		File html = new File(tmp.getRoot(), "coverage");
 
-		execute("report", "-classfiles", getClassPath(), "-sourcefiles",
-				"./src", "-html", html.getAbsolutePath());
+		execute("report", "--classfiles", getClassPath(), "--sourcefiles",
+				"./src", "--html", html.getAbsolutePath());
 
 		assertOk();
 		assertTrue(html.isDirectory());
@@ -127,7 +127,7 @@ public class ReportTest extends CommandTestBase {
 		final String c2 = getClassPath()
 				+ "/org/jacoco/cli/internal/commands/DumpTest.class";
 
-		execute("report", "-classfiles", c1, "-classfiles", c2, "-html",
+		execute("report", "--classfiles", c1, "--classfiles", c2, "--html",
 				html.getAbsolutePath());
 
 		assertOk();

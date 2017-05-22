@@ -55,7 +55,7 @@ public class Main extends Command {
 
 	@Override
 	public String usage(final CommandParser parser) {
-		return JAVACMD + "-help | <command>";
+		return JAVACMD + "--help | <command>";
 	}
 
 	@Override

@@ -33,7 +33,7 @@ import org.kohsuke.args4j.Option;
  */
 public class Instrument extends Command {
 
-	@Option(name = "-dest", usage = "path to write instrumented Java classes to", metaVar = "<dir>", required = true)
+	@Option(name = "--dest", usage = "path to write instrumented Java classes to", metaVar = "<dir>", required = true)
 	File dest;
 
 	@Argument(usage = "list of folder or files to instrument recusively", metaVar = "<sourcefiles>")

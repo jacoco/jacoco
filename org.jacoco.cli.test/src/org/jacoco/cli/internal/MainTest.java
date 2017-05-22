@@ -25,7 +25,8 @@ public class MainTest extends CommandTestBase {
 		assertFailure();
 		assertNoOutput(out);
 		assertContains("Argument \"<command>\" is required", err);
-		assertContains("Usage: java -jar jacococli.jar -help | <command>", err);
+		assertContains("Usage: java -jar jacococli.jar --help | <command>",
+				err);
 		assertContains("Command line interface for JaCoCo.", err);
 	}
 
@@ -37,24 +38,26 @@ public class MainTest extends CommandTestBase {
 		assertFailure();
 		assertNoOutput(out);
 		assertContains("\"foo\" is not a valid value for \"<command>\"", err);
-		assertContains("Usage: java -jar jacococli.jar -help | <command>", err);
+		assertContains("Usage: java -jar jacococli.jar --help | <command>",
+				err);
 	}
 
 	@Test
 	public void should_print_general_usage_when_help_option_is_given()
 			throws Exception {
-		execute("-help");
+		execute("--help");
 
 		assertOk();
 		assertNoOutput(err);
-		assertContains("Usage: java -jar jacococli.jar -help | <command>", out);
+		assertContains("Usage: java -jar jacococli.jar --help | <command>",
+				out);
 		assertContains("<command> : dump|instrument|merge|report", out);
 	}
 
 	@Test
 	public void should_print_command_usage_when_command_and_help_option_is_given()
 			throws Exception {
-		execute("dump", "-help");
+		execute("dump", "--help");
 
 		assertOk();
 		assertNoOutput(err);
@@ -67,7 +70,7 @@ public class MainTest extends CommandTestBase {
 	@Test
 	public void should_not_print_any_output_when_quiet_option_is_given()
 			throws Exception {
-		execute("version", "-quiet");
+		execute("version", "--quiet");
 
 		assertOk();
 		assertNoOutput(out);

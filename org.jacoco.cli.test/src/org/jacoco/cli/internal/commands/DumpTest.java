@@ -51,8 +51,8 @@ public class DumpTest extends CommandTestBase {
 			throws Exception {
 		execute("dump");
 		assertFailure();
-		assertContains("Option \"-destfile\" is required", err);
-		assertContains("java -jar jacococli.jar dump [-address <address>]",
+		assertContains("Option \"--destfile\" is required", err);
+		assertContains("java -jar jacococli.jar dump [--address <address>]",
 				err);
 	}
 
@@ -62,7 +62,7 @@ public class DumpTest extends CommandTestBase {
 		File execfile = new File(tmp.getRoot(), "jacoco.exec");
 		int port = startMockServer();
 
-		execute("dump", "-destfile", execfile.getAbsolutePath(), "-port",
+		execute("dump", "--destfile", execfile.getAbsolutePath(), "--port",
 				String.valueOf(port));
 
 		assertOk();
@@ -80,8 +80,8 @@ public class DumpTest extends CommandTestBase {
 		int port = unusedPort();
 
 		try {
-			execute("dump", "-destfile", execfile.getAbsolutePath(), "-port",
-					String.valueOf(port), "-retry", "1");
+			execute("dump", "--destfile", execfile.getAbsolutePath(), "--port",
+					String.valueOf(port), "--retry", "1");
 			fail("IOException expected");
 		} catch (IOException ignore) {
 		}

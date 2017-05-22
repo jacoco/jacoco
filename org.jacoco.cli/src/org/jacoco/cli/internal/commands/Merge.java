@@ -30,7 +30,7 @@ public class Merge extends Command {
 	@Argument(usage = "list of JaCoCo *.exec files to read", metaVar = "<execfiles>")
 	List<File> execfiles = new ArrayList<File>();
 
-	@Option(name = "-destfile", usage = "file to write merged execution data to", metaVar = "<path>", required = true)
+	@Option(name = "--destfile", usage = "file to write merged execution data to", metaVar = "<path>", required = true)
 	File destfile;
 
 	@Override

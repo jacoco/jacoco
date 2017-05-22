@@ -22,10 +22,10 @@ public class ClassInfoTest extends CommandTestBase {
 	@Test
 	public void should_print_usage_when_invalid_option_is_given()
 			throws Exception {
-		execute("classinfo", "-invalid");
+		execute("classinfo", "--invalid");
 
 		assertFailure();
-		assertContains("\"-invalid\" is not a valid option", err);
+		assertContains("\"--invalid\" is not a valid option", err);
 		assertContains(
 				"java -jar jacococli.jar classinfo [<classlocations> ...]",
 				err);

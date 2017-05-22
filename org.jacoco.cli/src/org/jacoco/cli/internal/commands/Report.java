@@ -47,28 +47,28 @@ public class Report extends Command {
 	@Argument(usage = "list of JaCoCo *.exec files to read", metaVar = "<execfiles>")
 	List<File> execfiles = new ArrayList<File>();
 
-	@Option(name = "-classfiles", usage = "location of Java class files", metaVar = "<path>", required = true)
+	@Option(name = "--classfiles", usage = "location of Java class files", metaVar = "<path>", required = true)
 	List<File> classfiles = new ArrayList<File>();
 
-	@Option(name = "-sourcefiles", usage = "location of the source files", metaVar = "<path>")
+	@Option(name = "--sourcefiles", usage = "location of the source files", metaVar = "<path>")
 	List<File> sourcefiles = new ArrayList<File>();
 
-	@Option(name = "-tabwith", usage = "tab stop width for the source pages (default 4)", metaVar = "<n>")
+	@Option(name = "--tabwith", usage = "tab stop width for the source pages (default 4)", metaVar = "<n>")
 	int tabwidth = 4;
 
-	@Option(name = "-name", usage = "name used for this report", metaVar = "<name>")
+	@Option(name = "--name", usage = "name used for this report", metaVar = "<name>")
 	String name = "JaCoCo Coverage Report";
 
-	@Option(name = "-encoding", usage = "source file encoding (by default platform encoding is used)", metaVar = "<charset>")
+	@Option(name = "--encoding", usage = "source file encoding (by default platform encoding is used)", metaVar = "<charset>")
 	String encoding;
 
-	@Option(name = "-xml", usage = "output file for the XML report", metaVar = "<file>")
+	@Option(name = "--xml", usage = "output file for the XML report", metaVar = "<file>")
 	File xml;
 
-	@Option(name = "-csv", usage = "output file for the CSV report", metaVar = "<file>")
+	@Option(name = "--csv", usage = "output file for the CSV report", metaVar = "<file>")
 	File csv;
 
-	@Option(name = "-html", usage = "output directory for the HTML report", metaVar = "<dir>")
+	@Option(name = "--html", usage = "output directory for the HTML report", metaVar = "<dir>")
 	File html;
 
 	@Override

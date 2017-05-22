@@ -29,13 +29,13 @@ public abstract class Command {
 	/**
 	 * Flag whether help should be printed for this command.
 	 */
-	@Option(name = "-help", usage = "show help", help = true)
+	@Option(name = "--help", usage = "show help", help = true)
 	public boolean help = false;
 
 	/**
 	 * Flag whether output to stdout should be suppressed.
 	 */
-	@Option(name = "-quiet", usage = "suppress all output on stdout")
+	@Option(name = "--quiet", usage = "suppress all output on stdout")
 	public boolean quiet = false;
 
 	/**
