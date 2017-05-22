@@ -66,9 +66,9 @@ public class Main extends Command {
 		try {
 			mainParser.parseArgument(args);
 		} catch (final CmdLineException e) {
-			err.println(e.getMessage());
-			err.println();
 			((CommandParser) e.getParser()).getCommand().printHelp(err);
+			err.println();
+			err.println(e.getMessage());
 			return -1;
 		}
 

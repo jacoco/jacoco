@@ -83,8 +83,9 @@ public abstract class Command {
 	 */
 	protected void printHelp(final PrintWriter writer) {
 		final CommandParser parser = new CommandParser(this);
-		writer.println("Usage: " + parser.getCommand().usage(parser));
 		writer.println(description());
+		writer.println();
+		writer.println("Usage: " + parser.getCommand().usage(parser));
 		parser.printUsage(writer, null);
 	}
 
