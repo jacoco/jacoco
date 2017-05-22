@@ -59,7 +59,7 @@ public class Report extends Command {
 	@Option(name = "-name", usage = "name used for this report", metaVar = "<name>")
 	String name = "JaCoCo Coverage Report";
 
-	@Option(name = "-encoding", usage = "source file encoding (default platform encoding)", metaVar = "<charset>")
+	@Option(name = "-encoding", usage = "source file encoding (by default platform encoding is used)", metaVar = "<charset>")
 	String encoding;
 
 	@Option(name = "-xml", usage = "output file for the XML report", metaVar = "<file>")
