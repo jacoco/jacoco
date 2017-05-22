@@ -64,6 +64,18 @@
 					  list of optional and required parameters. Some parameters
 					  can be specified multiple times to provide multiple values. 
 					</p>
+					
+					<p class="hint">
+					  <b>Warning:</b> Although a <code>instrument</code> command
+					  is provided the preferred way for code coverage analysis
+					  with JaCoCo is on-the-fly instrumentation with the
+					  <a href="agent.html">JaCoCo agent</a>. Offline
+					  instrumentation has several drawbacks and should only be
+					  used if a specific scenario explicitly requires this mode.
+					  Please consult <a href="offline.html">documentation</a>
+					  about offline instrumentation before using this mode.
+					</p>
+					
 					<xsl:apply-templates select="documentation" />
 				</div>
 				<div class="footer">
