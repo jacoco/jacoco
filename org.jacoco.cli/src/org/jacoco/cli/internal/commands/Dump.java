@@ -39,8 +39,8 @@ public class Dump extends Command {
 	@Option(name = "-reset", usage = "reset execution data on test target after dump")
 	boolean reset = false;
 
-	@Option(name = "-retry", usage = "number of retries (default 0)", metaVar = "<count>")
-	int retrycount = 0;
+	@Option(name = "-retry", usage = "number of retries (default 10)", metaVar = "<count>")
+	int retrycount = 10;
 
 	@Override
 	public String description() {
