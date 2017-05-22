@@ -99,8 +99,10 @@ public class Main extends Command {
 	 *             on the console
 	 */
 	public static void main(final String... args) throws Exception {
-		new Main(args).execute(new PrintWriter(System.out, true),
-				new PrintWriter(System.err, true));
+		final PrintWriter out = new PrintWriter(System.out, true);
+		final PrintWriter err = new PrintWriter(System.err, true);
+		final int returncode = new Main(args).execute(out, err);
+		System.exit(returncode);
 	}
 
 }
