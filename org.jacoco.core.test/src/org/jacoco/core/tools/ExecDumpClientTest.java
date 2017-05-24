@@ -17,6 +17,7 @@ import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.ConnectException;
 import java.net.InetAddress;
 import java.net.ServerSocket;
@@ -31,7 +32,9 @@ import org.jacoco.core.runtime.RemoteControlReader;
 import org.jacoco.core.runtime.RemoteControlWriter;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 
 /**
  * Unit tests for {@link ExecDumpClient}.
@@ -45,6 +48,9 @@ public class ExecDumpClientTest {
 	private boolean resetRequested;
 
 	private ServerSocket server;
+
+	@Rule
+	public ExpectedException exception = ExpectedException.none();
 
 	@Before
 	public void setup() {
@@ -126,8 +132,12 @@ public class ExecDumpClientTest {
 		assertTrue(resetRequested);
 	}
 
-	@Test(expected = IOException.class)
-	public void testNopServer() throws IOException {
+	@Test
+	public void should_throw_IOException_when_server_closes_connection_without_response()
+			throws IOException {
+		exception.expect(IOException.class);
+		exception.expectMessage("Socket closed unexpectedly.");
+
 		int port = createNopServer();
 		client.dump((String) null, port);
 	}
@@ -179,7 +189,20 @@ public class ExecDumpClientTest {
 		new Thread(new Runnable() {
 			public void run() {
 				try {
-					server.accept().close();
+					Socket socket = server.accept();
+					InputStream in = socket.getInputStream();
+					// Read Header:
+					in.read();
+					in.read();
+					in.read();
+					in.read();
+					in.read();
+					// Read Dump Command:
+					in.read();
+					in.read();
+					in.read();
+					// Then just close connection without any response:
+					socket.close();
 				} catch (IOException e) {
 					// ignore
 				}
