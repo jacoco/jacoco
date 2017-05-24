@@ -126,7 +126,7 @@ public class Report extends Command {
 	private void writeReports(final IBundleCoverage bundle,
 			final ExecFileLoader loader, final PrintWriter out)
 			throws IOException {
-		out.printf("[INFO] Writing report with %s classes.%n",
+		out.printf("[INFO] Analyzing %s classes.%n",
 				Integer.valueOf(bundle.getClassCounter().getTotalCount()));
 		final IReportVisitor visitor = createReportVisitor();
 		visitor.visitInfo(loader.getSessionInfoStore().getInfos(),
