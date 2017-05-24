@@ -89,10 +89,14 @@ public class Report extends Command {
 	private ExecFileLoader loadExecutionData(final PrintWriter out)
 			throws IOException {
 		final ExecFileLoader loader = new ExecFileLoader();
-		for (final File file : execfiles) {
-			out.printf("[INFO] Loading execution data file %s.%n",
-					file.getAbsolutePath());
-			loader.load(file);
+		if (execfiles.isEmpty()) {
+			out.println("[WARN] No execution data files provided.");
+		} else {
+			for (final File file : execfiles) {
+				out.printf("[INFO] Loading execution data file %s.%n",
+						file.getAbsolutePath());
+				loader.load(file);
+			}
 		}
 		return loader;
 	}

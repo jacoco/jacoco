@@ -43,6 +43,15 @@ public class ExecInfoTest extends CommandTestBase {
 	}
 
 	@Test
+	public void should_print_warning_when_no_exec_files_are_provided()
+			throws Exception {
+		execute("execinfo");
+
+		assertOk();
+		assertContains("[WARN] No execution data files provided.", out);
+	}
+
+	@Test
 	public void should_print_execution_data_info() throws Exception {
 		File execfile = createExecFile();
 

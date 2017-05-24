@@ -43,8 +43,12 @@ public class ExecInfo extends Command {
 	@Override
 	public int execute(final PrintWriter out, final PrintWriter err)
 			throws IOException {
-		for (final File file : execfiles) {
-			dump(file, out);
+		if (execfiles.isEmpty()) {
+			out.println("[WARN] No execution data files provided.");
+		} else {
+			for (final File file : execfiles) {
+				dump(file, out);
+			}
 		}
 		return 0;
 	}

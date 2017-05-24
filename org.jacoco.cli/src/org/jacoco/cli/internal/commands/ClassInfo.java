@@ -40,15 +40,19 @@ public class ClassInfo extends Command {
 	@Override
 	public int execute(final PrintWriter out, final PrintWriter err)
 			throws IOException {
-		final Analyzer analyzer = new Analyzer(new ExecutionDataStore(),
-				new ICoverageVisitor() {
-					public void visitCoverage(final IClassCoverage coverage) {
-						print(coverage, out);
-					}
-				});
-
-		for (final File file : classfiles) {
-			analyzer.analyzeAll(file);
+		if (classfiles.isEmpty()) {
+			out.println("[WARN] No class files provided.");
+		} else {
+			final Analyzer analyzer = new Analyzer(new ExecutionDataStore(),
+					new ICoverageVisitor() {
+						public void visitCoverage(
+								final IClassCoverage coverage) {
+							print(coverage, out);
+						}
+					});
+			for (final File file : classfiles) {
+				analyzer.analyzeAll(file);
+			}
 		}
 		return 0;
 	}

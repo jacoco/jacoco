@@ -43,6 +43,15 @@ public class ReportTest extends CommandTestBase {
 	}
 
 	@Test
+	public void should_print_warning_when_no_exec_files_are_provided()
+			throws Exception {
+		execute("report", "--classfiles", getClassPath());
+
+		assertOk();
+		assertContains("[WARN] No execution data files provided.", out);
+	}
+
+	@Test
 	public void should_print_number_of_analyzed_classes() throws Exception {
 		execute("report", "--classfiles", getClassPath());
 

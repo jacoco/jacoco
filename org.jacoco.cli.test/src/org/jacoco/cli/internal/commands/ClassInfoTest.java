@@ -32,6 +32,15 @@ public class ClassInfoTest extends CommandTestBase {
 	}
 
 	@Test
+	public void should_print_warning_when_no_class_files_are_provided()
+			throws Exception {
+		execute("classinfo");
+
+		assertOk();
+		assertContains("[WARN] No class files provided.", out);
+	}
+
+	@Test
 	public void should_print_class_info() throws Exception {
 		execute("classinfo", getClassPath());
 
@@ -39,7 +48,7 @@ public class ClassInfoTest extends CommandTestBase {
 		assertContains(
 				"class name:   org/jacoco/cli/internal/commands/ClassInfoTest",
 				out);
-		assertContains("methods:      3", out);
+		assertContains("methods:      4", out);
 	}
 
 }
