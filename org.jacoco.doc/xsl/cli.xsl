@@ -48,8 +48,8 @@
 					  basic operations from the command line. The command line
 					  tools with all dependencies are packaged in
 					  <code>jacococli.jar</code> and are available with the
-					  JaCoCo download. A Java VM with version 1.5 or greater is
-					  required for execution.
+					  JaCoCo download. Java 1.5 or greater is required for
+					  execution.
 					</p>
 					
 					<p>
