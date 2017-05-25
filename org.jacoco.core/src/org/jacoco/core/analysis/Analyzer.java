@@ -143,11 +143,13 @@ public class Analyzer {
 	 */
 	public void analyzeClass(final InputStream input, final String location)
 			throws IOException {
+		final byte[] buffer;
 		try {
-			analyzeClass(Java9Support.readFully(input), location);
-		} catch (final RuntimeException e) {
+			buffer = Java9Support.readFully(input);
+		} catch (final IOException e) {
 			throw analyzerError(location, e);
 		}
+		analyzeClass(buffer, location);
 	}
 
 	private IOException analyzerError(final String location,
