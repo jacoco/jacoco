@@ -51,6 +51,14 @@ public abstract class AbstractAgentMojo extends AbstractJacocoMojo {
 	@Parameter(property = "jacoco.propertyName")
 	String propertyName;
 	/**
+	 * If set to true, the existing property value is overwritten and not
+	 * appended.
+	 *
+	 * @parameter expression="${jacoco.propertyOverride}" default-value="false"
+	 * @since 0.6.5
+	 */
+	protected boolean propertyOverride;
+	/**
 	 * If set to true and the execution data file already exists, coverage data
 	 * is appended to the existing file. If set to false, an existing execution
 	 * data file will be replaced.
@@ -140,7 +148,8 @@ public abstract class AbstractAgentMojo extends AbstractJacocoMojo {
 		final Properties projectProperties = getProject().getProperties();
 		final String oldValue = projectProperties.getProperty(name);
 		final String newValue = createAgentOptions().prependVMArguments(
-				oldValue, getAgentJarFile());
+				propertyOverride ? null : oldValue,
+				getAgentJarFile());
 		getLog().info(name + " set to " + newValue);
 		projectProperties.setProperty(name, newValue);
 	}
