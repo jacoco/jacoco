@@ -8,6 +8,7 @@
  * Contributors:
  *    Evgeny Mandrikov - initial API and implementation
  *    Kyle Lieber - implementation of CheckMojo
+ *    Maurice Quach - implementation of total coverage
  *
  *******************************************************************************/
 package org.jacoco.maven;
@@ -42,6 +43,7 @@ import org.jacoco.report.check.Rule;
 import org.jacoco.report.check.RulesChecker;
 import org.jacoco.report.csv.CSVFormatter;
 import org.jacoco.report.html.HTMLFormatter;
+import org.jacoco.report.totalcoverage.TotalCoverageFormatter;
 import org.jacoco.report.xml.XMLFormatter;
 
 /**
@@ -113,12 +115,21 @@ final class ReportSupport {
 				targetdir)));
 	}
 
+	public void addTotalCoverageFormatter(final File targetfile,
+			final String encoding) throws IOException {
+		final TotalCoverageFormatter totalCoverageFormatter = new TotalCoverageFormatter();
+		totalCoverageFormatter.setOutputEncoding(encoding);
+		formatters.add(totalCoverageFormatter
+				.createVisitor(new FileOutputStream(targetfile)));
+	}
+
 	public void addAllFormatters(final File targetdir, final String encoding,
 			final String footer, final Locale locale) throws IOException {
 		targetdir.mkdirs();
 		addXmlFormatter(new File(targetdir, "jacoco.xml"), encoding);
 		addCsvFormatter(new File(targetdir, "jacoco.csv"), encoding);
 		addHtmlFormatter(targetdir, encoding, footer, locale);
+		addTotalCoverageFormatter(new File(targetdir, "testcoverage.txt"), encoding);
 	}
 
 	public void addRulesChecker(final List<Rule> rules,
