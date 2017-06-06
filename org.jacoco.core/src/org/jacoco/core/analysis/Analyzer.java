@@ -214,6 +214,8 @@ public class Analyzer {
 			for (final File f : file.listFiles()) {
 				count += analyzeAll(f);
 			}
+		} else if (file.length() == 0l) {
+			// ignore the file
 		} else {
 			final InputStream in = new FileInputStream(file);
 			try {
