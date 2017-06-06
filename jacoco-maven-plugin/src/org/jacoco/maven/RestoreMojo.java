@@ -11,14 +11,18 @@
  *******************************************************************************/
 package org.jacoco.maven;
 
-import java.io.File;
-import java.io.IOException;
-
+import org.apache.maven.artifact.Artifact;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.plugins.annotations.LifecyclePhase;
 import org.apache.maven.plugins.annotations.Mojo;
 import org.codehaus.plexus.util.FileUtils;
+import org.jacoco.maven.util.FileUtil;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.Iterator;
+import java.util.Set;
 
 /**
  * Restores original classes as they were before offline instrumentation.
@@ -40,6 +44,25 @@ public class RestoreMojo extends AbstractJacocoMojo {
 		} catch (final IOException e) {
 			throw new MojoFailureException("Unable to restore classes.", e);
 		}
+
+        /**
+         * Delete dependency classes if project is multi-module and package patter is not null
+         */
+        if(isMultiModuleProject() && (getPackagePattern() != null))
+        {
+            Set artifacts = getProject().getDependencyArtifacts();
+            for (Iterator artifactIterator = artifacts.iterator(); artifactIterator.hasNext();) {
+                Artifact artifact = (Artifact) artifactIterator.next();
+                if(artifact.getGroupId().contains(getPackagePattern()))
+                {
+                    getLog().info("Found dependency: "+artifact.getArtifactId());
+                    String dependencyJarPath = getDependencyJarPath(artifact);
+                    if(dependencyJarPath != null) {
+                        FileUtil.deleteDependencyFile(getProject(), dependencyJarPath);
+                    }
+                }
+            }
+        }
 	}
 
 }

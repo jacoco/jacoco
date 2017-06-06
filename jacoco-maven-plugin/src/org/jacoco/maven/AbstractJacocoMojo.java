@@ -11,13 +11,19 @@
  *******************************************************************************/
 package org.jacoco.maven;
 
-import java.util.List;
-
+import org.apache.maven.artifact.Artifact;
+import org.apache.maven.artifact.repository.ArtifactRepository;
+import org.apache.maven.artifact.resolver.ArtifactNotFoundException;
+import org.apache.maven.artifact.resolver.ArtifactResolutionException;
+import org.apache.maven.artifact.resolver.ArtifactResolver;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.plugins.annotations.Parameter;
 import org.apache.maven.project.MavenProject;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Base class for JaCoCo Mojos.
@@ -30,7 +36,33 @@ public abstract class AbstractJacocoMojo extends AbstractMojo {
 	@Parameter(property = "project", readonly = true)
 	private MavenProject project;
 
-	/**
+    /**
+     * @component
+     */
+    private ArtifactResolver resolver;
+
+    /**
+     * Path to local repository
+     *
+     * @parameter default-value="${localRepository}"
+     */
+    private ArtifactRepository localRepository;
+
+    /**
+     * Flag to enable multi-module project coverage
+     *
+     * @parameter default-value="false"
+     */
+    private boolean isMultiModule;
+
+    /**
+     * Patter for classes copied if multi-module option is enabled.
+     *
+     * @parameter
+     */
+    private String packagePattern;
+
+    /**
 	 * A list of class files to include in instrumentation/analysis/reports. May
 	 * use wildcard characters (* and ?). When not specified everything will be
 	 * included.
@@ -108,4 +140,40 @@ public abstract class AbstractJacocoMojo extends AbstractMojo {
 		return excludes;
 	}
 
+    /**
+     * @return true if project is multi-module project, false if not
+     */
+    public final boolean isMultiModuleProject() {
+        return isMultiModule;
+    }
+
+    /**
+     * In most of cases the user wants only classes of project without external jars
+     *
+     * @return package patter
+     */
+    public final String getPackagePattern() {
+        return packagePattern;
+    }
+
+
+    /**
+     * Get path of dependency jar
+     *
+     * @param artifact  Dependency artifact
+     * @return          path to dependency jar located into local repository. Return null if it was not found.
+     */
+    public String getDependencyJarPath(Artifact artifact)
+    {
+        try {
+            resolver.resolve(artifact, new ArrayList(), localRepository);
+            return artifact.getFile().getPath();
+        } catch (ArtifactResolutionException e) {
+            getLog().error(e);
+        } catch (ArtifactNotFoundException e) {
+            getLog().error(e);
+        }
+
+        return null;
+    }
 }

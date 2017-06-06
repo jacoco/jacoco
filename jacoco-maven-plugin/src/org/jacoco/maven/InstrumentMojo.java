@@ -11,14 +11,7 @@
  *******************************************************************************/
 package org.jacoco.maven;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.util.List;
-
+import org.apache.maven.artifact.Artifact;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.plugins.annotations.LifecyclePhase;
@@ -27,6 +20,12 @@ import org.codehaus.plexus.util.FileUtils;
 import org.codehaus.plexus.util.IOUtil;
 import org.jacoco.core.instr.Instrumenter;
 import org.jacoco.core.runtime.OfflineInstrumentationAccessGenerator;
+import org.jacoco.maven.util.FileUtil;
+
+import java.io.*;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Set;
 
 /**
  * Performs offline instrumentation. Note that after execution of test you must
@@ -59,7 +58,30 @@ public class InstrumentMojo extends AbstractJacocoMojo {
 			return;
 		}
 
-		final List<String> fileNames;
+
+        /**
+         * Copy dependency classes if project is multi-module and package patter is not null
+         */
+        if(isMultiModuleProject() && (getPackagePattern() != null))
+        {
+            Set artifacts = getProject().getDependencyArtifacts();
+            for (Iterator artifactIterator = artifacts.iterator(); artifactIterator.hasNext();) {
+                Artifact artifact = (Artifact) artifactIterator.next();
+                if(artifact.getGroupId().contains(getPackagePattern()))
+                {
+                    getLog().info("Found dependency: "+artifact.getArtifactId());
+                    String dependencyJarPath = getDependencyJarPath(artifact);
+                    if(dependencyJarPath != null)
+                    {
+                        getLog().info("Jar found in: "+dependencyJarPath);
+                        FileUtil.extractClassesFromJar(getProject(), dependencyJarPath);
+                    }
+                }
+            }
+        }
+
+
+        final List<String> fileNames;
 		try {
 			fileNames = new FileFilter(this.getIncludes(), this.getExcludes())
 					.getFileNames(classesDir);
