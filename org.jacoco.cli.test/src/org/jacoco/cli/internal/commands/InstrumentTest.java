@@ -54,7 +54,7 @@ public class InstrumentTest extends CommandTestBase {
 	}
 
 	@Test
-	public void should_instrument_class_files_and_copy_resources()
+	public void should_instrument_class_files_and_copy_resources_when_folder_is_given()
 			throws Exception {
 		File destdir = tmp.getRoot();
 
@@ -70,6 +70,25 @@ public class InstrumentTest extends CommandTestBase {
 
 		assertInstrumented(new File(destdir,
 				"org/jacoco/cli/internal/commands/InstrumentTest.class"));
+	}
+
+	@Test
+	public void should_instrument_class_files_to_dest_folder_when_class_files_are_given()
+			throws Exception {
+		File destdir = tmp.getRoot();
+
+		File src = new File(getClassPath(),
+				"org/jacoco/cli/internal/commands/InstrumentTest.class");
+
+		execute("instrument", "--dest", destdir.getAbsolutePath(),
+				src.getAbsolutePath());
+
+		assertOk();
+		assertContains(
+				"[INFO] 1 classes instrumented to " + destdir.getAbsolutePath(),
+				out);
+
+		assertInstrumented(new File(destdir, "InstrumentTest.class"));
 	}
 
 	@Test
