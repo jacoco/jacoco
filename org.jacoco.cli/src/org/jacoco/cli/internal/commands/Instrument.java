@@ -49,14 +49,19 @@ public class Instrument extends Command {
 	@Override
 	public int execute(final PrintWriter out, final PrintWriter err)
 			throws IOException {
+		final File absoluteDest = dest.getAbsoluteFile();
 		instrumenter = new Instrumenter(
 				new OfflineInstrumentationAccessGenerator());
 		int total = 0;
 		for (final File s : source) {
-			total += instrumentRecursive(s, dest);
+			if (s.isFile()) {
+				total += instrument(s, new File(absoluteDest, s.getName()));
+			} else {
+				total += instrumentRecursive(s, absoluteDest);
+			}
 		}
 		out.printf("[INFO] %s classes instrumented to %s.%n",
-				Integer.valueOf(total), dest.getAbsolutePath());
+				Integer.valueOf(total), absoluteDest);
 		return 0;
 	}
 
