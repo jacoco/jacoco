@@ -215,7 +215,9 @@ boolean[] probes = (boolean[]) args[0];
 <p>
   The current JaCoCo Java agent implementation uses the 
   <code>ModifiedSystemClassRuntime</code> adding a field to the class
-  <code>java.util.UUID</code>.
+  <code>java.lang.UnknownError</code>. Versions 0.5.0 - 0.7.9 were adding field
+  to the class <code>java.util.UUID</code>, having bigger chance of conflict
+  with other agents.
 </p>
 
 
