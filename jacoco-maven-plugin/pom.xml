@@ -116,13 +116,9 @@
           <execution>
             <id>default-descriptor</id>
             <phase>process-classes</phase>
-            <goals>
-              <goal>descriptor</goal>
-            </goals>
           </execution>
           <execution>
-            <id>help-mojo</id>
-            <phase>process-classes</phase>
+            <id>help-goal</id>
             <goals>
               <goal>helpmojo</goal>
             </goals>
