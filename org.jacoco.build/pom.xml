@@ -636,6 +636,7 @@
         <artifactId>maven-bundle-plugin</artifactId>
         <configuration>
           <instructions>
+            <Automatic-Module-Name>${project.artifactId}</Automatic-Module-Name>
             <Bundle-Version>${qualified.bundle.version}</Bundle-Version>
             <Bundle-Name>${project.description}</Bundle-Name>
             <Export-Package>
