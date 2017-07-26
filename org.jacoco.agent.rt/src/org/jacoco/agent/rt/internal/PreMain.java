@@ -52,7 +52,7 @@ public final class PreMain {
 
 	private static IRuntime createRuntime(final Instrumentation inst)
 			throws Exception {
-		return ModifiedSystemClassRuntime.createFor(inst, "java/util/UUID");
+		return ModifiedSystemClassRuntime.createFor(inst, "java/lang/UnknownError");
 	}
 
 }

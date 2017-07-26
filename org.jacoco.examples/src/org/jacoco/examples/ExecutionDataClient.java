@@ -55,7 +55,9 @@ public final class ExecutionDataClient {
 
 		// Send a dump command and read the response:
 		writer.visitDumpCommand(true, false);
-		reader.read();
+		if (!reader.read()) {
+			throw new IOException("Socket closed unexpectedly.");
+		}
 
 		socket.close();
 		localFile.close();

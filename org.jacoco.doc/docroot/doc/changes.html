@@ -24,6 +24,9 @@
 <ul>
   <li>During creation of a report merge duplicate finally blocks that compiler generates
       (GitHub <a href="https://github.com/jacoco/jacoco/issues/521">#521</a>).</li>
+  <li>Limit configuration of Maven check goal and Ant check element now also
+      supports percentage values 
+      (GitHub <a href="https://github.com/jacoco/jacoco/issues/534">#534</a>).</li>
   <li>Exclude from a report enum methods <code>valueOf</code> and <code>values</code>
       that are created by compiler
       (GitHub <a href="https://github.com/jacoco/jacoco/issues/491">#491</a>).</li>
@@ -40,6 +43,24 @@
       (GitHub <a href="https://github.com/jacoco/jacoco/issues/529">#529</a>).</li>
   <li>Maven aggregated reports will now also include modules of runtime dependencies
       (GitHub <a href="https://github.com/jacoco/jacoco/issues/498">#498</a>).</li>
+  <li>JaCoCo now comes with a simple command line interface
+      (GitHub <a href="https://github.com/jacoco/jacoco/issues/525">#525</a>).</li>
+  <li>Manifests of JAR files now have <code>Automatic-Module-Name</code> for Java 9
+      (GitHub <a href="https://github.com/jacoco/jacoco/issues/565">#565</a>).</li>
+</ul>
+
+<h3>Fixed Bugs</h3>
+<ul>
+  <li><code>dump</code> commands now report error when server unexpectedly
+      closes connection without sending response
+      (GitHub <a href="https://github.com/jacoco/jacoco/issues/538">#538</a>).</li>
+  <li>More information about context is provided when unable to read stream during
+      analysis
+      (GitHub <a href="https://github.com/jacoco/jacoco/issues/541">#541</a>).</li>
+  <li>Reduced chance of conflict with other agents
+      (GitHub <a href="https://github.com/jacoco/jacoco/issues/555">#555</a>).</li>
+  <li>Restored Maven <code>help</code> goal that was missing in version 0.7.9
+      (GitHub <a href="https://github.com/jacoco/jacoco/issues/559">#559</a>).</li>
 </ul>
 
 <h3>Non-functional Changes</h3>

@@ -164,7 +164,7 @@ public class TryWithResourcesTest extends ValidationTestBase {
 		// empty when EJC:
 		if (isJDKCompiler) {
 			final String jdkVersion = System.getProperty("java.version");
-			if (jdkVersion.startsWith("9-")) {
+			if (jdkVersion.startsWith("9")) {
 				assertLine("empty.close", ICounter.FULLY_COVERED, 0, 0);
 			} else {
 				// branches with javac 7 and 8

@@ -17,6 +17,7 @@ import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.ConnectException;
 import java.net.InetAddress;
 import java.net.ServerSocket;
@@ -31,7 +32,9 @@ import org.jacoco.core.runtime.RemoteControlReader;
 import org.jacoco.core.runtime.RemoteControlWriter;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 
 /**
  * Unit tests for {@link ExecDumpClient}.
@@ -45,6 +48,9 @@ public class ExecDumpClientTest {
 	private boolean resetRequested;
 
 	private ServerSocket server;
+
+	@Rule
+	public ExpectedException exception = ExpectedException.none();
 
 	@Before
 	public void setup() {
@@ -101,7 +107,7 @@ public class ExecDumpClientTest {
 				// 3. Retry
 				"onConnectionFailure", "onConnecting")
 
-		, callbacks);
+				, callbacks);
 	}
 
 	@Test
@@ -124,6 +130,16 @@ public class ExecDumpClientTest {
 		client.dump((String) null, port);
 		assertFalse(dumpRequested);
 		assertTrue(resetRequested);
+	}
+
+	@Test
+	public void should_throw_IOException_when_server_closes_connection_without_response()
+			throws IOException {
+		exception.expect(IOException.class);
+		exception.expectMessage("Socket closed unexpectedly.");
+
+		int port = createNopServer();
+		client.dump((String) null, port);
 	}
 
 	private int getFreePort() throws IOException {
@@ -159,11 +175,40 @@ public class ExecDumpClientTest {
 				dumpRequested = dump;
 				resetRequested = reset;
 				if (dump) {
-					writer.visitSessionInfo(new SessionInfo("TestId", 100, 200));
+					writer.visitSessionInfo(
+							new SessionInfo("TestId", 100, 200));
 				}
 				writer.sendCmdOk();
 			}
 		});
 		reader.read();
 	}
+
+	private int createNopServer() throws IOException {
+		server = new ServerSocket(0, 0, InetAddress.getByName(null));
+		new Thread(new Runnable() {
+			public void run() {
+				try {
+					Socket socket = server.accept();
+					InputStream in = socket.getInputStream();
+					// Read Header:
+					in.read();
+					in.read();
+					in.read();
+					in.read();
+					in.read();
+					// Read Dump Command:
+					in.read();
+					in.read();
+					in.read();
+					// Then just close connection without any response:
+					socket.close();
+				} catch (IOException e) {
+					// ignore
+				}
+			}
+		}).start();
+		return server.getLocalPort();
+	}
+
 }

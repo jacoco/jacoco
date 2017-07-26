@@ -41,9 +41,6 @@ public final class Java9Support {
 	 */
 	public static byte[] readFully(final InputStream is)
 			throws IOException {
-		if (is == null) {
-			throw new IllegalArgumentException();
-		}
 		final byte[] buf = new byte[1024];
 		final ByteArrayOutputStream out = new ByteArrayOutputStream();
 		while (true) {
