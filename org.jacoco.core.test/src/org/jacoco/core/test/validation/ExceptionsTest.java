@@ -15,10 +15,24 @@ import org.jacoco.core.analysis.ICounter;
 import org.jacoco.core.test.validation.targets.Target03;
 import org.junit.Test;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 /**
  * Tests of exception based control flow.
  */
 public class ExceptionsTest extends ValidationTestBase {
+
+	/**
+	 * https://bugs.openjdk.java.net/browse/JDK-8180660
+	 */
+	private static final boolean isJDK8u152;
+
+	static {
+		final Matcher m = Pattern.compile("1\\.8\\.0_(\\d++)(-ea)?")
+				.matcher(System.getProperty("java.version"));
+		isJDK8u152 = m.matches() && Integer.parseInt(m.group(1)) >= 152;
+	}
 
 	public ExceptionsTest() {
 		super(Target03.class);
@@ -99,8 +113,16 @@ public class ExceptionsTest extends ValidationTestBase {
 		assertLine("noExceptionFinally.finally",
 				isJDKCompiler ? ICounter.EMPTY : ICounter.PARTLY_COVERED);
 		assertLine("noExceptionFinally.finallyBlock", ICounter.PARTLY_COVERED);
-		assertLine("noExceptionFinally.finallyBlockEnd",
-				isJDKCompiler ? ICounter.FULLY_COVERED : ICounter.NOT_COVERED);
+		if (!isJDKCompiler) {
+			assertLine("noExceptionFinally.finallyBlockEnd",
+					ICounter.NOT_COVERED);
+		} else if (isJDK8u152) {
+			assertLine("noExceptionFinally.finallyBlockEnd",
+					ICounter.PARTLY_COVERED);
+		} else {
+			assertLine("noExceptionFinally.finallyBlockEnd",
+					ICounter.FULLY_COVERED);
+		}
 		assertLine("noExceptionFinally.afterBlock", ICounter.FULLY_COVERED);
 
 		// 8. Finally Block With Implicit Exception
@@ -114,8 +136,16 @@ public class ExceptionsTest extends ValidationTestBase {
 				isJDKCompiler ? ICounter.EMPTY : ICounter.PARTLY_COVERED);
 		assertLine("implicitExceptionFinally.finallyBlock",
 				ICounter.PARTLY_COVERED);
-		assertLine("implicitExceptionFinally.finallyBlockEnd",
-				isJDKCompiler ? ICounter.NOT_COVERED : ICounter.FULLY_COVERED);
+		if (!isJDKCompiler) {
+			assertLine("implicitExceptionFinally.finallyBlockEnd",
+					ICounter.FULLY_COVERED);
+		} else if (isJDK8u152) {
+			assertLine("implicitExceptionFinally.finallyBlockEnd",
+					ICounter.PARTLY_COVERED);
+		} else {
+			assertLine("implicitExceptionFinally.finallyBlockEnd",
+					ICounter.NOT_COVERED);
+		}
 		assertLine("implicitExceptionFinally.afterBlock", ICounter.NOT_COVERED);
 
 		// 9. Finally Block With Exception Thrown Explicitly
@@ -127,8 +157,13 @@ public class ExceptionsTest extends ValidationTestBase {
 				isJDKCompiler ? ICounter.EMPTY : ICounter.FULLY_COVERED);
 		assertLine("explicitExceptionFinally.finallyBlock",
 				ICounter.FULLY_COVERED);
-		assertLine("explicitExceptionFinally.finallyBlockEnd",
-				isJDKCompiler ? ICounter.EMPTY : ICounter.FULLY_COVERED);
+		if (!isJDKCompiler || isJDK8u152) {
+			assertLine("explicitExceptionFinally.finallyBlockEnd",
+					ICounter.FULLY_COVERED);
+		} else {
+			assertLine("explicitExceptionFinally.finallyBlockEnd",
+					ICounter.EMPTY);
+		}
 		assertLine("explicitExceptionFinally.afterBlock", ICounter.EMPTY);
 
 	}
