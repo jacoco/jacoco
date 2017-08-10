@@ -42,8 +42,8 @@ import org.jacoco.report.IReportGroupVisitor;
  * </p>
  * 
  * <ul>
- * <li><code>compile</code>, <code>runtime</code>: Project source and execution
- * data is included in the report.</li>
+ * <li><code>compile</code>, <code>runtime</code>, <code>provided</code>:
+ * Project source and execution data is included in the report.</li>
  * <li><code>test</code>: Only execution data is considered for the report.</li>
  * </ul>
  * 
@@ -106,7 +106,7 @@ public class ReportAggregateMojo extends AbstractReportMojo {
 		loadExecutionData(support, filter, getProject().getBasedir());
 		for (final MavenProject dependency : findDependencies(
 				Artifact.SCOPE_COMPILE, Artifact.SCOPE_RUNTIME,
-				Artifact.SCOPE_TEST)) {
+				Artifact.SCOPE_PROVIDED, Artifact.SCOPE_TEST)) {
 			loadExecutionData(support, filter, dependency.getBasedir());
 		}
 	}
@@ -130,7 +130,8 @@ public class ReportAggregateMojo extends AbstractReportMojo {
 			final ReportSupport support) throws IOException {
 		final IReportGroupVisitor group = visitor.visitGroup(title);
 		for (final MavenProject dependency : findDependencies(
-				Artifact.SCOPE_COMPILE, Artifact.SCOPE_RUNTIME)) {
+				Artifact.SCOPE_COMPILE, Artifact.SCOPE_RUNTIME,
+				Artifact.SCOPE_PROVIDED)) {
 			support.processProject(group, dependency.getArtifactId(),
 					dependency, getIncludes(), getExcludes(), sourceEncoding);
 		}
