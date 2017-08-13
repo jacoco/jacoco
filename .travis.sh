@@ -85,9 +85,6 @@ case "$JDK" in
   mvn -V -B -e verify -Dbytecode.version=1.8 -Decj=${ECJ:-}
   ;;
 9-ea | 9-ea-stable)
-  # Groovy version should be updated to get rid of "--add-opens" options (see https://twitter.com/CedricChampeau/status/807285853580103684)
-  export MAVEN_OPTS="--add-opens java.base/java.lang=ALL-UNNAMED --add-opens java.base/java.io=ALL-UNNAMED"
-
   # see https://bugs.openjdk.java.net/browse/JDK-8131041 about "java.locale.providers"
   mvn -V -B -e verify -Dbytecode.version=1.9 \
     -DargLine=-Djava.locale.providers=JRE,SPI
