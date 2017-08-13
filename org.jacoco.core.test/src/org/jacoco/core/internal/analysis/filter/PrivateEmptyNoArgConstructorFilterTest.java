@@ -48,4 +48,8 @@ public class PrivateEmptyNoArgConstructorFilterTest implements IFilterOutput {
 		this.toInclusive = toInclusive;
 	}
 
+	public void merge(AbstractInsnNode i1, AbstractInsnNode i2) {
+		throw new AssertionError();
+	}
+
 }

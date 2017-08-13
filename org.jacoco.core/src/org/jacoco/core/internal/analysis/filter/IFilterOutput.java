@@ -30,4 +30,15 @@ public interface IFilterOutput {
 	 */
 	void ignore(AbstractInsnNode fromInclusive, AbstractInsnNode toInclusive);
 
+	/**
+	 * Marks two instructions that should be merged during computation of
+	 * coverage.
+	 * 
+	 * @param i1
+	 *            first instruction
+	 * @param i2
+	 *            second instruction
+	 */
+	void merge(AbstractInsnNode i1, AbstractInsnNode i2);
+
 }

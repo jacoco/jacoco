@@ -621,4 +621,8 @@ public class TryWithResourcesEcjFilterTest implements IFilterOutput {
 		this.to.add(to);
 	}
 
+	public void merge(final AbstractInsnNode i1, final AbstractInsnNode i2) {
+		throw new AssertionError();
+	}
+
 }
