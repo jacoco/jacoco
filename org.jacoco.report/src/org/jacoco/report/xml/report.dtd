@@ -8,8 +8,6 @@
    Contributors:
       Brock Janiczak - initial API and implementation
       Marc R. Hoffmann - generalized report structure, line info, documentation
-      
-   $Id: $
 -->
 
 <!-- This DTD describes the JaCoCo XML report format. It is identified by the
