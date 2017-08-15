@@ -9,8 +9,6 @@
   
    Contributors:
       Marc R. Hoffmann - initial API and implementation
-      
-   $Id: $
 -->
 
 <project name="JaCoCo Instrument Task Tests" xmlns:au="antlib:org.apache.ant.antunit" xmlns:jacoco="antlib:org.jacoco.ant">

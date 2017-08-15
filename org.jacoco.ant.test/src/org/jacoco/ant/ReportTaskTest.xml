@@ -10,8 +10,6 @@
    Contributors:
       Brock Janiczak - initial API and implementation
       Dominik Stadler - source folder support
-      
-   $Id: $
 -->
 
 <project name="JaCoCo Report Task Tests" xmlns:au="antlib:org.apache.ant.antunit" xmlns:jacoco="antlib:org.jacoco.ant">
