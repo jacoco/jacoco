@@ -63,14 +63,14 @@ public abstract class AbstractReportMojo extends AbstractMavenReport {
 	 * A list of class files to include in the report. May use wildcard
 	 * characters (* and ?). When not specified everything will be included.
 	 */
-	@Parameter(property = "jacoco.excludes")
+	@Parameter(property = "jacoco.includes")
 	List<String> includes;
 
 	/**
 	 * A list of class files to exclude from the report. May use wildcard
 	 * characters (* and ?). When not specified nothing will be excluded.
 	 */
-	@Parameter(property = "jacoco.includes")
+	@Parameter(property = "jacoco.excludes")
 	List<String> excludes;
 
 	/**
