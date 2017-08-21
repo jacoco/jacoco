@@ -57,7 +57,7 @@ public class ReportAggregateMojo extends AbstractReportMojo {
 	 * project. May use wildcard characters (* and ?). When not specified all
 	 * *.exec files from the target folder will be included.
 	 */
-	@Parameter
+	@Parameter(property = "jacoco.dataFileIncludes")
 	List<String> dataFileIncludes;
 
 	/**
@@ -65,7 +65,7 @@ public class ReportAggregateMojo extends AbstractReportMojo {
 	 * wildcard characters (* and ?). When not specified nothing will be
 	 * excluded.
 	 */
-	@Parameter
+	@Parameter(property = "jacoco.dataFileExcludes")
 	List<String> dataFileExcludes;
 
 	/**

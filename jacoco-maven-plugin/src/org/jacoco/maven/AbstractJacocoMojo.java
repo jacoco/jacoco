@@ -35,7 +35,7 @@ public abstract class AbstractJacocoMojo extends AbstractMojo {
 	 * use wildcard characters (* and ?). When not specified everything will be
 	 * included.
 	 */
-	@Parameter
+	@Parameter(property = "jacoco.includes")
 	private List<String> includes;
 
 	/**
@@ -43,7 +43,7 @@ public abstract class AbstractJacocoMojo extends AbstractMojo {
 	 * May use wildcard characters (* and ?). When not specified nothing will be
 	 * excluded.
 	 */
-	@Parameter
+	@Parameter(property = "jacoco.excludes")
 	private List<String> excludes;
 
 	/**
