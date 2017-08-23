@@ -19,6 +19,7 @@
           <goal>report</goal>
           <goal>report-integration</goal>
           <goal>report-aggregate</goal>
+          <goal>report-on-commit-coverage</goal>
           <goal>check</goal>
           <goal>dump</goal>
           <goal>instrument</goal>
