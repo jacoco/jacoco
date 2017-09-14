@@ -6,6 +6,12 @@ install: true
 # Use container-based infrastructure:
 sudo: false
 
+dist: precise
+addons:
+  hosts:
+    - travis
+  hostname: travis
+
 # Keep Maven local repository between builds:
 cache:
   directories:
