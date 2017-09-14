@@ -45,10 +45,19 @@ public class ClassInfoTest extends CommandTestBase {
 		execute("classinfo", getClassPath());
 
 		assertOk();
-		assertContains(
-				"class name:   org/jacoco/cli/internal/commands/ClassInfoTest",
-				out);
-		assertContains("methods:      4", out);
+		assertContains("class", out);
+		assertContains("org/jacoco/cli/internal/commands/ClassInfoTest", out);
+		assertContainsNot("method", out);
+	}
+
+	@Test
+	public void should_print_class_details_when_verbose() throws Exception {
+		execute("classinfo", "--verbose", getClassPath());
+
+		assertOk();
+		assertContains("line", out);
+		assertContains("method", out);
+		assertContains("line", out);
 	}
 
 }

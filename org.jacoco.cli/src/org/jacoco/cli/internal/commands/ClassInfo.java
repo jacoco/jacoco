@@ -15,14 +15,20 @@ import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import org.jacoco.cli.internal.Command;
 import org.jacoco.core.analysis.Analyzer;
 import org.jacoco.core.analysis.IClassCoverage;
+import org.jacoco.core.analysis.ICounter;
+import org.jacoco.core.analysis.ICoverageNode;
 import org.jacoco.core.analysis.ICoverageVisitor;
+import org.jacoco.core.analysis.ILine;
+import org.jacoco.core.analysis.IMethodCoverage;
 import org.jacoco.core.data.ExecutionDataStore;
 import org.kohsuke.args4j.Argument;
+import org.kohsuke.args4j.Option;
 
 /**
  * The <code>classinfo</code> command.
@@ -31,6 +37,9 @@ public class ClassInfo extends Command {
 
 	@Argument(usage = "location of Java class files", metaVar = "<classlocations>")
 	List<File> classfiles = new ArrayList<File>();
+
+	@Option(name = "--verbose", usage = "show method and line number details")
+	boolean verbose = false;
 
 	@Override
 	public String description() {
@@ -44,12 +53,7 @@ public class ClassInfo extends Command {
 			out.println("[WARN] No class files provided.");
 		} else {
 			final Analyzer analyzer = new Analyzer(new ExecutionDataStore(),
-					new ICoverageVisitor() {
-						public void visitCoverage(
-								final IClassCoverage coverage) {
-							print(coverage, out);
-						}
-					});
+					new Printer(out));
 			for (final File file : classfiles) {
 				analyzer.analyzeAll(file);
 			}
@@ -57,19 +61,62 @@ public class ClassInfo extends Command {
 		return 0;
 	}
 
-	private void print(final IClassCoverage coverage, final PrintWriter out) {
-		out.printf("class name:   %s%n", coverage.getName());
-		out.printf("class id:     %016x%n", Long.valueOf(coverage.getId()));
-		out.printf("instructions: %s%n", Integer
-				.valueOf(coverage.getInstructionCounter().getTotalCount()));
-		out.printf("branches:     %s%n",
-				Integer.valueOf(coverage.getBranchCounter().getTotalCount()));
-		out.printf("lines:        %s%n",
-				Integer.valueOf(coverage.getLineCounter().getTotalCount()));
-		out.printf("methods:      %s%n",
-				Integer.valueOf(coverage.getMethodCounter().getTotalCount()));
-		out.printf("complexity:   %s%n%n", Integer
-				.valueOf(coverage.getComplexityCounter().getTotalCount()));
+	private class Printer implements ICoverageVisitor {
+
+		private final PrintWriter out;
+
+		Printer(final PrintWriter out) {
+			this.out = out;
+			out.println("  INST   BRAN   LINE   METH   CXTY   ELEMENT");
+		}
+
+		public void visitCoverage(final IClassCoverage coverage) {
+			final String desc = String.format("class 0x%016x %s",
+					Long.valueOf(coverage.getId()), coverage.getName());
+			printDetails(desc, coverage);
+			if (verbose) {
+				for (final Iterator<IMethodCoverage> i = coverage.getMethods()
+						.iterator(); i.hasNext();) {
+					printMethod(i.next(), i.hasNext());
+				}
+			}
+		}
+
+		private void printMethod(final IMethodCoverage method,
+				final boolean more) {
+			final String desc = String.format("+- method %s%s",
+					method.getName(), method.getDesc());
+			printDetails(desc, method);
+			for (int nr = method.getFirstLine(); nr <= method
+					.getLastLine(); nr++) {
+				printLine(method.getLine(nr), nr, more ? "| " : "  ");
+			}
+		}
+
+		private void printLine(final ILine line, final int nr,
+				final String indent) {
+			if (line.getStatus() != ICounter.EMPTY) {
+				out.printf("%6s %6s                        %s +- line %s%n",
+						total(line.getInstructionCounter()),
+						total(line.getBranchCounter()), indent,
+						Integer.valueOf(nr));
+			}
+		}
+
+		private void printDetails(final String description,
+				final ICoverageNode coverage) {
+			out.printf("%6s %6s %6s %6s %6s   %s%n",
+					total(coverage.getInstructionCounter()),
+					total(coverage.getBranchCounter()),
+					total(coverage.getLineCounter()),
+					total(coverage.getMethodCounter()),
+					total(coverage.getComplexityCounter()), description);
+		}
+
+		private String total(final ICounter counter) {
+			return String.valueOf(counter.getTotalCount());
+		}
+
 	}
 
 }

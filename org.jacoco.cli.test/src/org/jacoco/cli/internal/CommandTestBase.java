@@ -12,6 +12,7 @@
 package org.jacoco.cli.internal;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import java.io.PrintWriter;
@@ -57,6 +58,11 @@ public abstract class CommandTestBase {
 	protected void assertContains(String expected, StringWriter buffer) {
 		final String content = buffer.toString();
 		assertTrue(content, content.contains(expected));
+	}
+
+	protected void assertContainsNot(String expected, StringWriter buffer) {
+		final String content = buffer.toString();
+		assertFalse(content, content.contains(expected));
 	}
 
 	protected String getClassPath() {
