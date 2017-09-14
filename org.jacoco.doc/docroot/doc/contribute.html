@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+  <link rel="stylesheet" href="resources/doc.css" charset="UTF-8" type="text/css" />
+  <link rel="shortcut icon" href=".resources/report.gif" type="image/gif" />
+  <title>JaCoCo - Contribute to JaCoCo</title>
+</head>
+<body>
+
+<div class="breadcrumb">
+  <a href="../index.html" class="el_report">JaCoCo</a> &gt;
+  <a href="index.html" class="el_group">Documentation</a> &gt;
+  <span class="el_source">Contribute to JaCoCo</span>
+</div>
+<div id="content"> 
+
+<h1>Contribute to JaCoCo</h1>
+
+<p>
+  From the very beginning JaCoCo was managed as a free and open project. All
+  work artifacts like code, build results, discussions on mailing lists, the bug
+  tracker and our wiki are publicly accessible. Many great features and bug fixes
+  have been contributed by the community.  
+</p>
+
+<p>
+  There are many ways to contribute to the JaCoCo project: 
+</p>
+
+<ul>
+  <li>Create a well-structured bug report using the provided template that also
+      comes with a executable reproducer.</li>
+  <li>Provide a features request that comes with enough context information so
+      everybody can understand the purpose and value of the feature.</li>
+  <li>Share insights on our mailing list, especially if you have experience on
+      specific platforms like mobile development, application servers or fancy
+      build systems.</li>
+  <li>Contribute to documentation, even if it's only about fixing typos.</li>
+  <li>Test new features and snapshot builds and share your discoveries.</li>
+  <li>Provide a idea how to fix a known bug or pending feature request.</li>
+  <li>Provide a fix for a known or new bug as a pull request.</li>
+  <li>Provide a new feature as a pull request.</li>
+</ul>
+
+<p>
+  The following topics provides a guide for successful contributions.   
+</p>
+
+<h2>Process</h2>
+
+<p>
+  All code contributions (even the contributions by the core developers)
+  are managed by GitHub pull requests. Each pull request has to be complete
+  in terms of features, testing and documentation before it can be merged
+  into master. We consider the master branch as shippable at any point in
+  time. This of course means that all builds on all supported JDKs must be
+  green. Every PR is automatically built and the result is reported to the
+  GitHub pull request.
+</p>
+
+<p>
+  Before you start a bigger contribution please get in touch through our
+  <a href="support.html">mailing list</a> to make sure the JaCoCo project
+  considers this in scope and the approach fits in the overall architecture.
+</p>
+
+<p>
+  Pull requests will be reviewed and discussed by the JaCoCo project team.
+  Once we decided to adopt a contribution we will help to get the everything
+  cleaned up before the merge.
+</p>
+
+<h2>Scope</h2>
+
+<p>
+  Keep your contributions as <b>specific</b> as possible. One thing at a time.
+  <i>"I fixed this and that"</i> style pull requests typically are very hard to
+  review and discuss as a single controversial aspect might kill the whole pull
+  request.
+</p>
+
+<p>
+  Also JaCoCo project is a code coverage library with some tool integration. We
+  will not extend the scope to other domains (profiling, code metrics, etc.).
+</p>
+
+<h2>Technical Depth</h2>
+
+<p>
+  The JaCoCo team is committed to support the project in the long run. Therefore
+  we do not accept any increase of technical depth in our code base.
+  Contributions with questionable design, missing tests or poor code quality
+  need to be reworked before they can be adopted. <i>"We fix that later"</i> is
+  generally no option in the JaCoCo project.
+</p>
+
+<p>
+  Please make sure your contribution follows the JaCoCo project's
+  <a href="conventions.html">development conventions</a>.
+</p>
+
+<h2>Test Coverage</h2>
+
+<p>
+  JaCoCo is developed in a fully test-driven manner. We're nearly at 100% unit
+  test coverage and have many automated integration tests to validate our
+  features with every build. We expect every new feature to come with full
+  test coverage. If you're unsure how to test certain aspects please come to
+  our mailing list to discuss a solution. 
+</p>
+
+<h2>Legal Issues</h2>
+
+<p>
+  We want to keep JaCoCo consumable as free and open software. For this we need
+  to stick with some basic rules for code contributions: 
+</p>
+
+<ul>
+  <li>Contributors (and if applicable their employer) need to agree that JaCoCo
+      and so all contributions are published under EPL 1.0.</li>
+  <li>Whatever is contributed has to be personal work or otherwise needs proper
+      attribution to its original authors.</li>
+</ul>
+
+</div>
+<div class="footer">
+  <span class="right"><a href="@jacoco.home.url@">JaCoCo</a> @qualified.bundle.version@</span>
+  <a href="license.html">Copyright</a> &copy; @copyright.years@ Mountainminds GmbH &amp; Co. KG and Contributors
+</div>
+
+</body>
+</html>
