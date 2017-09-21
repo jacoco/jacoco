@@ -21,9 +21,9 @@ import javax.management.remote.JMXConnectorFactory;
 import javax.management.remote.JMXServiceURL;
 
 /**
- * This example connects to a coverage agent that run in output mode
- * <code>mbean</code> and requests execution data. The collected data is dumped
- * to a local file.
+ * This example connects to a JaCoCo agent that runs with the option
+ * <code>jmx=yes</code> and requests execution data. The collected data is
+ * dumped to a local file.
  */
 public final class MBeanClient {
 
