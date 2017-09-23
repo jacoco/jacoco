@@ -25,14 +25,13 @@ abstract class AbstractMatcher {
 
 	AbstractInsnNode cursor;
 
-	final void nextIsAddSuppressed() {
+	final void nextIsInvokeVirtual(final String owner, final String name) {
 		nextIs(Opcodes.INVOKEVIRTUAL);
 		if (cursor == null) {
 			return;
 		}
 		final MethodInsnNode m = (MethodInsnNode) cursor;
-		if ("java/lang/Throwable".equals(m.owner)
-				&& "addSuppressed".equals(m.name)) {
+		if (owner.equals(m.owner) && name.equals(m.name)) {
 			return;
 		}
 		cursor = null;
