@@ -49,11 +49,8 @@ case "$JDK" in
 8-ea)
   install_jdk $JDK8_EA_URL
   ;;
-9-ea)
-  install_jdk $JDK9_EA_URL
-  ;;
-9-ea-stable)
-  install_jdk $JDK9_EA_STABLE_URL
+9)
+  install_jdk $JDK9_URL
   ;;
 esac
 
@@ -84,9 +81,11 @@ case "$JDK" in
 8 | 8-ea)
   mvn -V -B -e verify -Dbytecode.version=1.8 -Decj=${ECJ:-}
   ;;
-9-ea | 9-ea-stable)
+9)
+  export MAVEN_OPTS="-Djavax.net.ssl.trustStore=/etc/ssl/certs/java/cacerts"
   # see https://bugs.openjdk.java.net/browse/JDK-8131041 about "java.locale.providers"
   mvn -V -B -e verify -Dbytecode.version=1.9 \
+    -Dinvoker.mavenOpts="-Djavax.net.ssl.trustStore=/etc/ssl/certs/java/cacerts" \
     -DargLine=-Djava.locale.providers=JRE,SPI
   ;;
 *)
