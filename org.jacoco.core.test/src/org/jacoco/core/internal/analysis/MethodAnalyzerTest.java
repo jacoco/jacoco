@@ -162,6 +162,66 @@ public class MethodAnalyzerTest implements IProbeIdGenerator {
 		assertLine(1003, 0, 2, 0, 0);
 	}
 
+	// === Scenario: branch before unconditional probe ===
+
+	/**
+	 * Covers case of {@link MethodAnalyzer#visitProbe(int)} after
+	 * {@link MethodAnalyzer#visitJumpInsnWithProbe(int, Label, int, org.jacoco.core.internal.flow.IFrame)}.
+	 */
+	private void createIfBranchBeforeProbe() {
+		final Label l0 = new Label();
+		final Label l1 = new Label();
+		final Label l2 = new Label();
+		method.visitLabel(l0);
+		method.visitLineNumber(1001, l0);
+		method.visitVarInsn(Opcodes.ILOAD, 1);
+		method.visitJumpInsn(Opcodes.IFNE, l1);
+		method.visitLabel(l2);
+		method.visitLineNumber(1002, l2);
+		method.visitMethodInsn(Opcodes.INVOKESTATIC, "Foo", "foo", "()V",
+				false);
+		method.visitLabel(l1);
+		method.visitLineNumber(1003, l1);
+		method.visitInsn(Opcodes.RETURN);
+	}
+
+	@Test
+	public void testIfBranchBeforeProbeNotCovered() {
+		createIfBranchBeforeProbe();
+		runMethodAnalzer();
+		assertEquals(4, nextProbeId);
+
+		assertLine(1001, 2, 0, 2, 0);
+	}
+
+	@Test
+	public void testIfBranchBeforeProbeCovered1() {
+		createIfBranchBeforeProbe();
+		probes[0] = true;
+		runMethodAnalzer();
+
+		assertLine(1001, 0, 2, 1, 1);
+	}
+
+	@Test
+	public void testIfBranchBeforeProbeCovered2() {
+		createIfBranchBeforeProbe();
+		probes[1] = true;
+		runMethodAnalzer();
+
+		assertLine(1001, 0, 2, 1, 1);
+	}
+
+	@Test
+	public void testIfBranchBeforeProbeCovered3() {
+		createIfBranchBeforeProbe();
+		probes[0] = true;
+		probes[1] = true;
+		runMethodAnalzer();
+
+		assertLine(1001, 0, 2, 0, 2);
+	}
+
 	// === Scenario: branch which merges back ===
 
 	private void createIfBranchMerge() {

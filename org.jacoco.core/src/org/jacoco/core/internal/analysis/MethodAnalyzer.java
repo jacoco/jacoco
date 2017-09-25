@@ -74,7 +74,7 @@ public class MethodAnalyzer extends MethodProbesVisitor
 	private final List<Instruction> instructions = new ArrayList<Instruction>();
 
 	/** List of all predecessors of covered probes */
-	private final List<Instruction> coveredProbes = new ArrayList<Instruction>();
+	private final List<CoveredProbe> coveredProbes = new ArrayList<CoveredProbe>();
 
 	/** List of all jumps encountered */
 	private final List<Jump> jumps = new ArrayList<Jump>();
@@ -177,7 +177,7 @@ public class MethodAnalyzer extends MethodProbesVisitor
 		final Instruction insn = new Instruction(currentNode, currentLine);
 		instructions.add(insn);
 		if (lastInsn != null) {
-			insn.setPredecessor(lastInsn);
+			insn.setPredecessor(lastInsn, 0);
 		}
 		final int labelCount = currentLabel.size();
 		if (labelCount > 0) {
@@ -230,7 +230,7 @@ public class MethodAnalyzer extends MethodProbesVisitor
 	@Override
 	public void visitJumpInsn(final int opcode, final Label label) {
 		visitInsn();
-		jumps.add(new Jump(lastInsn, label));
+		jumps.add(new Jump(lastInsn, label, 1));
 	}
 
 	@Override
@@ -258,11 +258,13 @@ public class MethodAnalyzer extends MethodProbesVisitor
 	private void visitSwitchInsn(final Label dflt, final Label[] labels) {
 		visitInsn();
 		LabelInfo.resetDone(labels);
-		jumps.add(new Jump(lastInsn, dflt));
+		int branch = 0;
+		jumps.add(new Jump(lastInsn, dflt, branch));
 		LabelInfo.setDone(dflt);
 		for (final Label l : labels) {
 			if (!LabelInfo.isDone(l)) {
-				jumps.add(new Jump(lastInsn, l));
+				branch++;
+				jumps.add(new Jump(lastInsn, l, branch));
 				LabelInfo.setDone(l);
 			}
 		}
@@ -275,7 +277,7 @@ public class MethodAnalyzer extends MethodProbesVisitor
 
 	@Override
 	public void visitProbe(final int probeId) {
-		addProbe(probeId);
+		addProbe(probeId, 0);
 		lastInsn = null;
 	}
 
@@ -283,13 +285,13 @@ public class MethodAnalyzer extends MethodProbesVisitor
 	public void visitJumpInsnWithProbe(final int opcode, final Label label,
 			final int probeId, final IFrame frame) {
 		visitInsn();
-		addProbe(probeId);
+		addProbe(probeId, 1);
 	}
 
 	@Override
 	public void visitInsnWithProbe(final int opcode, final int probeId) {
 		visitInsn();
-		addProbe(probeId);
+		addProbe(probeId, 0);
 	}
 
 	@Override
@@ -309,19 +311,21 @@ public class MethodAnalyzer extends MethodProbesVisitor
 		visitInsn();
 		LabelInfo.resetDone(dflt);
 		LabelInfo.resetDone(labels);
-		visitSwitchTarget(dflt);
+		int branch = 0;
+		visitSwitchTarget(dflt, branch);
 		for (final Label l : labels) {
-			visitSwitchTarget(l);
+			branch++;
+			visitSwitchTarget(l, branch);
 		}
 	}
 
-	private void visitSwitchTarget(final Label label) {
+	private void visitSwitchTarget(final Label label, final int branch) {
 		final int id = LabelInfo.getProbeId(label);
 		if (!LabelInfo.isDone(label)) {
 			if (id == LabelInfo.NO_PROBE) {
-				jumps.add(new Jump(lastInsn, label));
+				jumps.add(new Jump(lastInsn, label, branch));
 			} else {
-				addProbe(id);
+				addProbe(id, branch);
 			}
 			LabelInfo.setDone(label);
 		}
@@ -331,11 +335,12 @@ public class MethodAnalyzer extends MethodProbesVisitor
 	public void visitEnd() {
 		// Wire jumps:
 		for (final Jump j : jumps) {
-			LabelInfo.getInstruction(j.target).setPredecessor(j.source);
+			LabelInfo.getInstruction(j.target).setPredecessor(j.source,
+					j.branch);
 		}
 		// Propagate probe values:
-		for (final Instruction p : coveredProbes) {
-			p.setCovered();
+		for (final CoveredProbe p : coveredProbes) {
+			p.instruction.setCovered(p.branch);
 		}
 		// Report result:
 		coverage.ensureCapacity(firstLine, lastLine);
@@ -356,10 +361,20 @@ public class MethodAnalyzer extends MethodProbesVisitor
 		coverage.incrementMethodCounter();
 	}
 
-	private void addProbe(final int probeId) {
+	private void addProbe(final int probeId, final int branch) {
 		lastInsn.addBranch();
 		if (probes != null && probes[probeId]) {
-			coveredProbes.add(lastInsn);
+			coveredProbes.add(new CoveredProbe(lastInsn, branch));
+		}
+	}
+
+	private static class CoveredProbe {
+		final Instruction instruction;
+		final int branch;
+
+		private CoveredProbe(Instruction instruction, int branch) {
+			this.instruction = instruction;
+			this.branch = branch;
 		}
 	}
 
@@ -367,10 +382,12 @@ public class MethodAnalyzer extends MethodProbesVisitor
 
 		final Instruction source;
 		final Label target;
+		final int branch;
 
-		Jump(final Instruction source, final Label target) {
+		Jump(final Instruction source, final Label target, final int branch) {
 			this.source = source;
 			this.target = target;
+			this.branch = branch;
 		}
 	}
 
