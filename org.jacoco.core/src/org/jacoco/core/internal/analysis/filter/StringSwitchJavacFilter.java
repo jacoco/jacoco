@@ -65,6 +65,8 @@ public final class StringSwitchJavacFilter implements IFilter {
 				return false;
 			}
 			nextIsVar(Opcodes.ISTORE, "c");
+			// Even if expression is not a variable, its result will be
+			// precomputed before the previous two instructions:
 			nextIsVar(Opcodes.ALOAD, "s");
 			nextIsInvokeVirtual("java/lang/String", "hashCode");
 			next();
