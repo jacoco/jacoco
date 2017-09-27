@@ -18,8 +18,8 @@ import static org.jacoco.core.test.validation.targets.Stubs.nop;
  */
 public class StringSwitch {
 
-	private static void covered(String s) {
-		switch (s) { // $line-covered.switch$
+	private static void covered(Object s) {
+		switch (String.valueOf(s)) { // $line-covered.switch$
 		case "a":
 			nop("case a"); // $line-covered.case1$
 			break;
@@ -35,8 +35,8 @@ public class StringSwitch {
 		}
 	}
 
-	private static void notCovered(String s) {
-		switch (s) { // $line-notCovered$
+	private static void notCovered(Object s) {
+		switch (String.valueOf(s)) { // $line-notCovered$
 		case "a":
 			nop("case a");
 			break;
