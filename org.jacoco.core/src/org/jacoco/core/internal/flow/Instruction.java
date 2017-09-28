@@ -130,6 +130,17 @@ public class Instruction {
 		return coveredBranches.cardinality();
 	}
 
+	/**
+	 * Merges information about covered branches of given instruction into this
+	 * instruction.
+	 * 
+	 * @param instruction
+	 *            instruction from which to merge
+	 */
+	public void merge(Instruction instruction) {
+		this.coveredBranches.or(instruction.coveredBranches);
+	}
+
 	@Override
 	public String toString() {
 		return coveredBranches.toString();

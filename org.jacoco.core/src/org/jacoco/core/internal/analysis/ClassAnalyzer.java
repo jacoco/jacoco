@@ -12,6 +12,7 @@
 package org.jacoco.core.internal.analysis;
 
 import org.jacoco.core.analysis.IMethodCoverage;
+import org.jacoco.core.internal.analysis.filter.Filters;
 import org.jacoco.core.internal.flow.ClassProbesVisitor;
 import org.jacoco.core.internal.flow.MethodProbesVisitor;
 import org.jacoco.core.internal.instr.InstrSupport;
@@ -65,7 +66,7 @@ public class ClassAnalyzer extends ClassProbesVisitor {
 
 		return new MethodAnalyzer(coverage.getName(), coverage.getSuperName(),
 				stringPool.get(name), stringPool.get(desc),
-				stringPool.get(signature), probes) {
+				stringPool.get(signature), probes, Filters.ALL) {
 			@Override
 			public void visitEnd() {
 				super.visitEnd();

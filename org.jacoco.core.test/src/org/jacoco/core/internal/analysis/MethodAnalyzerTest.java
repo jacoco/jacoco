@@ -17,6 +17,9 @@ import java.util.ArrayList;
 
 import org.jacoco.core.analysis.ILine;
 import org.jacoco.core.analysis.IMethodCoverage;
+import org.jacoco.core.internal.analysis.filter.Filters;
+import org.jacoco.core.internal.analysis.filter.IFilter;
+import org.jacoco.core.internal.analysis.filter.IFilterOutput;
 import org.jacoco.core.internal.flow.IProbeIdGenerator;
 import org.jacoco.core.internal.flow.LabelFlowAnalyzer;
 import org.jacoco.core.internal.flow.MethodProbesAdapter;
@@ -24,6 +27,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.objectweb.asm.Label;
 import org.objectweb.asm.Opcodes;
+import org.objectweb.asm.tree.AbstractInsnNode;
 import org.objectweb.asm.tree.MethodNode;
 import org.objectweb.asm.tree.TryCatchBlockNode;
 import org.objectweb.asm.util.CheckMethodAdapter;
@@ -638,15 +642,90 @@ public class MethodAnalyzerTest implements IProbeIdGenerator {
 		assertLine(1004, 0, 1, 0, 0);
 	}
 
+	// === Scenario: try/finally ===
+
+	private void createTryFinally() {
+		final Label l0 = new Label();
+		final Label l1 = new Label();
+		final Label l2 = new Label();
+		final Label l3 = new Label();
+
+		method.visitTryCatchBlock(l0, l2, l2, null);
+
+		method.visitLabel(l0);
+		method.visitLineNumber(1001, l0);
+
+		method.visitJumpInsn(Opcodes.IFEQ, l1);
+		// probe[0]
+		method.visitInsn(Opcodes.RETURN);
+		method.visitLabel(l1);
+		// probe[1]
+		method.visitInsn(Opcodes.RETURN);
+
+		method.visitLabel(l2);
+		method.visitJumpInsn(Opcodes.IFEQ, l3);
+		// probe[2]
+		method.visitInsn(Opcodes.RETURN);
+		method.visitLabel(l3);
+		// probe[3]
+		method.visitInsn(Opcodes.RETURN);
+	}
+
+	@Test
+	public void testTryFinallyWithoutFilter() {
+		createTryFinally();
+		probes[0] = true;
+		probes[3] = true;
+		runMethodAnalzer();
+		assertEquals(4, nextProbeId);
+
+		assertLine(1001, 2, 4, 2, 2);
+	}
+
+	private static final IFilter TRY_FINALLY_FILTER = new IFilter() {
+		public void filter(final String className, final String superClassName,
+				final MethodNode methodNode, final IFilterOutput output) {
+			final AbstractInsnNode i1 = methodNode.instructions.get(2);
+			final AbstractInsnNode i2 = methodNode.instructions.get(7);
+			assertEquals(Opcodes.IFEQ, i1.getOpcode());
+			assertEquals(Opcodes.IFEQ, i2.getOpcode());
+			output.merge(i1, i2);
+			// Merging of already merged instructions won't change result:
+			output.merge(i1, i2);
+		}
+	};
+
+	@Test
+	public void testTryFinallyMergeSameBranch() {
+		createTryFinally();
+		probes[0] = true;
+		probes[2] = true;
+		runMethodAnalzer(TRY_FINALLY_FILTER);
+		assertLine(1001, 2, 3, 1, 1);
+	}
+
+	@Test
+	public void testTryFinallyMergeDifferentBranches() {
+		createTryFinally();
+		probes[0] = true;
+		probes[3] = true;
+		runMethodAnalzer(TRY_FINALLY_FILTER);
+		assertLine(1001, 2, 3, 0, 2);
+	}
+
 	private void runMethodAnalzer() {
+		runMethodAnalzer(Filters.NONE);
+	}
+
+	private void runMethodAnalzer(IFilter filter) {
 		LabelFlowAnalyzer.markLabels(method);
 		final MethodAnalyzer analyzer = new MethodAnalyzer("Foo",
-				"java/lang/Object", "doit", "()V", null, probes);
+				"java/lang/Object", "doit", "()V", null, probes, filter);
 		final MethodProbesAdapter probesAdapter = new MethodProbesAdapter(
 				analyzer, this);
 		// note that CheckMethodAdapter verifies that this test does not violate
 		// contracts of ASM API
-		method.accept(new CheckMethodAdapter(probesAdapter));
+		analyzer.accept(method, new CheckMethodAdapter(probesAdapter));
 		result = analyzer.getCoverage();
 	}
 

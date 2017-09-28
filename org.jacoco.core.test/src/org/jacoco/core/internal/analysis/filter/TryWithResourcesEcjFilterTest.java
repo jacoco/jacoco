@@ -12,6 +12,7 @@
 package org.jacoco.core.internal.analysis.filter;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -619,6 +620,10 @@ public class TryWithResourcesEcjFilterTest implements IFilterOutput {
 	public void ignore(AbstractInsnNode from, AbstractInsnNode to) {
 		this.from.add(from);
 		this.to.add(to);
+	}
+
+	public void merge(final AbstractInsnNode i1, final AbstractInsnNode i2) {
+		fail();
 	}
 
 }

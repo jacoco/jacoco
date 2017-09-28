@@ -19,7 +19,7 @@ import org.objectweb.asm.tree.MethodNode;
 /**
  * Filters methods annotated with <code>@lombok.Generated</code>.
  */
-public class LombokGeneratedFilter implements IFilter {
+public final class LombokGeneratedFilter implements IFilter {
 
 	public void filter(final String className, final String superClassName,
 			final MethodNode methodNode, final IFilterOutput output) {

@@ -93,6 +93,18 @@ public class InstructionTest {
 	}
 
 	@Test
+	public void merge_should_add_covered_branches_from_another_instruction() {
+		final Instruction i1 = new Instruction(new InsnNode(Opcodes.NOP), 123);
+		i1.setCovered(0);
+		final Instruction i2 = new Instruction(new InsnNode(Opcodes.NOP), 123);
+		i2.setCovered(1);
+		i1.merge(i2);
+		assertEquals("{0, 1}", i1.toString());
+		assertEquals(2, i1.getCoveredBranches());
+		assertEquals("{1}", i2.toString());
+	}
+
+	@Test
 	public void testSetCoveredOnLongSequence() {
 		final Instruction first = new Instruction(new InsnNode(Opcodes.NOP), 0);
 		Instruction next = first;
