@@ -405,7 +405,7 @@ public class MethodAnalyzer extends MethodProbesVisitor
 		final Instruction instruction;
 		final int branch;
 
-		private CoveredProbe(Instruction instruction, int branch) {
+		private CoveredProbe(final Instruction instruction, final int branch) {
 			this.instruction = instruction;
 			this.branch = branch;
 		}
