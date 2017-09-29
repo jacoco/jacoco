@@ -13,6 +13,7 @@ package org.jacoco.core.internal.analysis.filter;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
+import static org.junit.Assert.fail;
 
 import org.jacoco.core.internal.instr.InstrSupport;
 import org.junit.Test;
@@ -76,6 +77,10 @@ public class LombokGeneratedFilterTest implements IFilterOutput {
 		assertNull(this.fromInclusive);
 		this.fromInclusive = fromInclusive;
 		this.toInclusive = toInclusive;
+	}
+
+	public void merge(final AbstractInsnNode i1, final AbstractInsnNode i2) {
+		fail();
 	}
 
 }
