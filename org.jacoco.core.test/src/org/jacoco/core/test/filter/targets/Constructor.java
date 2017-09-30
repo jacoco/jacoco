@@ -36,7 +36,8 @@ public class Constructor {
 	}
 
 	private static class InnerStatic {
-		private Object field = this;
+		@SuppressWarnings("unused")
+		private final Object field = this;
 
 		private InnerStatic() { // $line-innerStatic$
 		}
