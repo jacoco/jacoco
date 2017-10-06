@@ -29,7 +29,7 @@ public final class Filters implements IFilter {
 	public static final IFilter ALL = new Filters(new EnumFilter(),
 			new SyntheticFilter(), new SynchronizedFilter(),
 			new TryWithResourcesJavacFilter(), new TryWithResourcesEcjFilter(),
-			new PrivateEmptyNoArgConstructorFilter(),
+			new FinallyFilter(), new PrivateEmptyNoArgConstructorFilter(),
 			new StringSwitchJavacFilter(), new LombokGeneratedFilter());
 
 	private final IFilter[] filters;
