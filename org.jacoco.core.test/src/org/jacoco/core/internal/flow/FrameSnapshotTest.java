@@ -93,6 +93,25 @@ public class FrameSnapshotTest {
 		expectedVisitor.visitFrame(Opcodes.F_FULL, 1, arr("Foo"), 2, stack);
 	}
 
+	/**
+	 * Test of <a href="https://gitlab.ow2.org/asm/asm/issues/317793">ASM
+	 * bug</a>: according to <a href=
+	 * "https://docs.oracle.com/javase/specs/jvms/se9/html/jvms-4.html#jvms-4.10.1.9.aaload">JVMS
+	 * "4.10.1.9 Type Checking Instructions, AALOAD"</a> resulting type on the
+	 * operand stack should be null if the input array is null.
+	 */
+	@Test
+	public void after_aaload_stack_should_contain_null_when_input_array_is_null() {
+		analyzer.visitInsn(Opcodes.ACONST_NULL);
+		analyzer.visitInsn(Opcodes.ICONST_0);
+		analyzer.visitInsn(Opcodes.AALOAD);
+		frame = FrameSnapshot.create(analyzer, 0);
+
+		// FIXME should be Opcodes.NULL after update of ASM to 6.0
+		final Object[] stack = arr("java/lang/Object");
+		expectedVisitor.visitFrame(Opcodes.F_FULL, 1, arr("Foo"), 1, stack);
+	}
+
 	private Object[] arr(Object... elements) {
 		return elements;
 	}
