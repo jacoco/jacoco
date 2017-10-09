@@ -11,9 +11,13 @@
  *******************************************************************************/
 package org.jacoco.core.test.validation;
 
+import static org.junit.Assert.assertNotSame;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 import org.jacoco.core.instr.Instrumenter;
+import org.jacoco.core.internal.Java9Support;
+import org.jacoco.core.internal.instr.InstrSupport;
 import org.jacoco.core.runtime.IRuntime;
 import org.jacoco.core.runtime.RuntimeData;
 import org.jacoco.core.runtime.SystemPropertiesRuntime;
@@ -21,16 +25,13 @@ import org.jacoco.core.test.TargetLoader;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.objectweb.asm.ClassReader;
+import org.objectweb.asm.ClassVisitor;
 import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.Label;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
 
-/**
- * Test of ASM bug
- * <a href= "https://gitlab.ow2.org/asm/asm/issues/317630">#317630</a> that
- * caused {@code java.lang.ClassNotFoundException}.
- */
 public class ResizeInstructionsTest {
 
 	private final IRuntime runtime = new SystemPropertiesRuntime();
@@ -48,8 +49,51 @@ public class ResizeInstructionsTest {
 		runtime.shutdown();
 	}
 
+	private class Inner {
+	}
+
+	/**
+	 * Test of ASM bug
+	 * <a href="https://gitlab.ow2.org/asm/asm/issues/317792">#317792</a>.
+	 */
 	@Test
-	public void test() throws Exception {
+	public void should_not_loose_InnerClasses_attribute() throws Exception {
+		final ClassWriter cw = new ClassWriter(0);
+		final ClassReader cr = new ClassReader(Java9Support.downgradeIfRequired(
+				TargetLoader.getClassDataAsBytes(Inner.class)));
+		cr.accept(new ClassVisitor(InstrSupport.ASM_API_VERSION, cw) {
+			@Override
+			public void visitEnd() {
+				final MethodVisitor mv = cv.visitMethod(0, "m", "()V", null,
+						null);
+				mv.visitCode();
+				addCauseOfResizeInstructions(mv);
+				mv.visitMaxs(2, 1);
+				mv.visitEnd();
+				super.visitEnd();
+			}
+		}, 0);
+		final byte[] bytes = instrumenter.instrument(cw.toByteArray(), "");
+
+		final TargetLoader targetLoader = new TargetLoader();
+		final Class<?> outer = targetLoader.add(ResizeInstructionsTest.class,
+				TargetLoader.getClassDataAsBytes(ResizeInstructionsTest.class));
+		final Class<?> inner = targetLoader.add(Inner.class, bytes);
+		// FIXME should not be null after update of ASM to 6.0
+		assertNotSame(outer, inner.getEnclosingClass());
+		assertNull(inner.getEnclosingClass());
+		assertNotSame(outer, inner.getDeclaringClass());
+		assertNull(inner.getDeclaringClass());
+	}
+
+	/**
+	 * Test of ASM bug
+	 * <a href= "https://gitlab.ow2.org/asm/asm/issues/317630">#317630</a> that
+	 * caused {@code java.lang.ClassNotFoundException}.
+	 */
+	@Test
+	public void should_not_require_computation_of_common_superclass()
+			throws Exception {
 		final String className = "Example";
 
 		final ClassWriter cw = new ClassWriter(ClassWriter.COMPUTE_FRAMES) {
