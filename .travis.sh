@@ -83,10 +83,8 @@ case "$JDK" in
   ;;
 9)
   export MAVEN_OPTS="-Djavax.net.ssl.trustStore=/etc/ssl/certs/java/cacerts"
-  # see https://bugs.openjdk.java.net/browse/JDK-8131041 about "java.locale.providers"
   mvn -V -B -e verify -Dbytecode.version=1.9 \
-    -Dinvoker.mavenOpts="-Djavax.net.ssl.trustStore=/etc/ssl/certs/java/cacerts" \
-    -DargLine=-Djava.locale.providers=JRE,SPI
+    -Dinvoker.mavenOpts="-Djavax.net.ssl.trustStore=/etc/ssl/certs/java/cacerts"
   ;;
 *)
   echo "Incorrect JDK [$JDK]"
