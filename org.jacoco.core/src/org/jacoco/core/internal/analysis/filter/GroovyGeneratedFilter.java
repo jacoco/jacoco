@@ -17,20 +17,20 @@ import org.objectweb.asm.tree.AnnotationNode;
 import org.objectweb.asm.tree.MethodNode;
 
 /**
- * Filters methods annotated with <code>@lombok.Generated</code>.
+ * Filters methods annotated with <code>@groovy.transform.Generated</code>.
  */
-public final class LombokGeneratedFilter extends AbstractAnnotatedMethodFilter {
+public final class GroovyGeneratedFilter extends AbstractAnnotatedMethodFilter {
 
 	/**
 	 * New filter.
 	 */
-	public LombokGeneratedFilter() {
-		super("lombok/Generated");
+	public GroovyGeneratedFilter() {
+		super("groovy/transform/Generated");
 	}
 
 	@Override
 	List<AnnotationNode> getAnnotations(final MethodNode methodNode) {
-		return methodNode.invisibleAnnotations;
+		return methodNode.visibleAnnotations;
 	}
 
 }
