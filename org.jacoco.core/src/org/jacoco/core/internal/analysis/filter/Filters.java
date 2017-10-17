@@ -30,11 +30,12 @@ public final class Filters implements IFilter {
 			new SyntheticFilter(), new SynchronizedFilter(),
 			new TryWithResourcesJavacFilter(), new TryWithResourcesEcjFilter(),
 			new PrivateEmptyNoArgConstructorFilter(),
-			new StringSwitchJavacFilter(), new LombokGeneratedFilter());
+			new StringSwitchJavacFilter(), new LombokGeneratedFilter(),
+			new GroovyGeneratedFilter());
 
 	private final IFilter[] filters;
 
-	private Filters(IFilter... filters) {
+	private Filters(final IFilter... filters) {
 		this.filters = filters;
 	}
 
