@@ -20,7 +20,6 @@ import java.util.List;
 import java.util.Set;
 
 import org.jacoco.core.instr.Instrumenter;
-import org.jacoco.core.internal.Java9Support;
 import org.jacoco.core.runtime.IRuntime;
 import org.jacoco.core.runtime.SystemPropertiesRuntime;
 import org.jacoco.core.test.TargetLoader;
@@ -64,8 +63,7 @@ public class StructuredLockingTest {
 		byte[] instrumented = instrumenter.instrument(source, "TestTarget");
 
 		ClassNode cn = new ClassNode();
-		new ClassReader(Java9Support.downgradeIfRequired(instrumented))
-				.accept(cn, 0);
+		new ClassReader(instrumented).accept(cn, 0);
 		for (MethodNode mn : cn.methods) {
 			assertStructuredLocking(cn.name, mn);
 		}

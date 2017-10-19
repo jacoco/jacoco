@@ -25,11 +25,11 @@ import static org.objectweb.asm.Opcodes.V1_5;
 import static org.objectweb.asm.Opcodes.V1_6;
 import static org.objectweb.asm.Opcodes.V1_7;
 import static org.objectweb.asm.Opcodes.V1_8;
+import static org.objectweb.asm.Opcodes.V9;
 
 import java.io.IOException;
 
 import org.jacoco.core.instr.Instrumenter;
-import org.jacoco.core.internal.Java9Support;
 import org.jacoco.core.internal.instr.InstrSupport;
 import org.jacoco.core.runtime.IRuntime;
 import org.jacoco.core.runtime.SystemPropertiesRuntime;
@@ -86,7 +86,7 @@ public class ClassFileVersionsTest {
 
 	@Test
 	public void test_1_9() throws IOException {
-		testVersion(Java9Support.V1_9, true);
+		testVersion(V9, true);
 	}
 
 	private void testVersion(int version, boolean frames) throws IOException {
@@ -101,8 +101,8 @@ public class ClassFileVersionsTest {
 
 	private void assertFrames(byte[] source, boolean expected) {
 		final boolean[] hasFrames = new boolean[] { false };
-		new ClassReader(Java9Support.downgradeIfRequired(source)).accept(
-				new ClassVisitor(InstrSupport.ASM_API_VERSION) {
+		new ClassReader(source)
+				.accept(new ClassVisitor(InstrSupport.ASM_API_VERSION) {
 
 					@Override
 					public MethodVisitor visitMethod(int access, String name,

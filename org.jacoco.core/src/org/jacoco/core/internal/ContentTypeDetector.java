@@ -82,7 +82,7 @@ public class ContentTypeDetector {
 			case Opcodes.V1_6:
 			case Opcodes.V1_7:
 			case Opcodes.V1_8:
-			case Java9Support.V1_9:
+			case Opcodes.V9:
 				return CLASSFILE;
 			}
 		}
