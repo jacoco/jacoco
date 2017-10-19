@@ -50,12 +50,6 @@
             <goals>
               <goal>instrument</goal>
             </goals>
-            <configuration>
-              <!-- FIXME remove this workaround after update of ASM to 6.0 -->
-              <excludes>
-                <exclude>module-info.class</exclude>
-              </excludes>
-            </configuration>
           </execution>
           <execution>
             <id>restore-instrumented-classes</id>

@@ -23,7 +23,7 @@ import java.util.zip.ZipInputStream;
 import org.jacoco.core.data.ExecutionData;
 import org.jacoco.core.data.ExecutionDataStore;
 import org.jacoco.core.internal.ContentTypeDetector;
-import org.jacoco.core.internal.Java9Support;
+import org.jacoco.core.internal.InputStreams;
 import org.jacoco.core.internal.Pack200Streams;
 import org.jacoco.core.internal.analysis.ClassAnalyzer;
 import org.jacoco.core.internal.analysis.ClassCoverageImpl;
@@ -124,8 +124,7 @@ public class Analyzer {
 	public void analyzeClass(final byte[] buffer, final String location)
 			throws IOException {
 		try {
-			analyzeClass(
-					new ClassReader(Java9Support.downgradeIfRequired(buffer)));
+			analyzeClass(new ClassReader(buffer));
 		} catch (final RuntimeException cause) {
 			throw analyzerError(location, cause);
 		}
@@ -146,7 +145,7 @@ public class Analyzer {
 			throws IOException {
 		final byte[] buffer;
 		try {
-			buffer = Java9Support.readFully(input);
+			buffer = InputStreams.readFully(input);
 		} catch (final IOException e) {
 			throw analyzerError(location, e);
 		}

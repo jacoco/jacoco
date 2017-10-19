@@ -115,8 +115,7 @@ public class FrameSnapshotTest {
 		analyzer.visitInsn(Opcodes.AALOAD);
 		frame = FrameSnapshot.create(analyzer, 0);
 
-		// FIXME should be Opcodes.NULL after update of ASM to 6.0
-		final Object[] stack = arr("java/lang/Object");
+		final Object[] stack = arr(Opcodes.NULL);
 		expectedVisitor.visitFrame(Opcodes.F_FULL, 1, arr("Foo"), 1, stack);
 	}
 

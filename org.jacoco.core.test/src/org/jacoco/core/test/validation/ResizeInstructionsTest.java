@@ -11,12 +11,11 @@
  *******************************************************************************/
 package org.jacoco.core.test.validation;
 
-import static org.junit.Assert.assertNotSame;
-import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
 
 import org.jacoco.core.instr.Instrumenter;
-import org.jacoco.core.internal.Java9Support;
 import org.jacoco.core.internal.instr.InstrSupport;
 import org.jacoco.core.runtime.IRuntime;
 import org.jacoco.core.runtime.RuntimeData;
@@ -58,9 +57,11 @@ public class ResizeInstructionsTest {
 	 */
 	@Test
 	public void should_not_loose_InnerClasses_attribute() throws Exception {
-		final ClassWriter cw = new ClassWriter(0);
-		final ClassReader cr = new ClassReader(Java9Support.downgradeIfRequired(
-				TargetLoader.getClassDataAsBytes(Inner.class)));
+		// FIXME fails without COMPUTE_FRAMES because of
+		// https://gitlab.ow2.org/asm/asm/issues/317800
+		final ClassWriter cw = new ClassWriter(ClassWriter.COMPUTE_FRAMES);
+		final ClassReader cr = new ClassReader(
+				TargetLoader.getClassDataAsBytes(Inner.class));
 		cr.accept(new ClassVisitor(InstrSupport.ASM_API_VERSION, cw) {
 			@Override
 			public void visitEnd() {
@@ -79,11 +80,10 @@ public class ResizeInstructionsTest {
 		final Class<?> outer = targetLoader.add(ResizeInstructionsTest.class,
 				TargetLoader.getClassDataAsBytes(ResizeInstructionsTest.class));
 		final Class<?> inner = targetLoader.add(Inner.class, bytes);
-		// FIXME should not be null after update of ASM to 6.0
-		assertNotSame(outer, inner.getEnclosingClass());
-		assertNull(inner.getEnclosingClass());
-		assertNotSame(outer, inner.getDeclaringClass());
-		assertNull(inner.getDeclaringClass());
+		assertSame(outer, inner.getEnclosingClass());
+		assertNotNull(inner.getEnclosingClass());
+		assertSame(outer, inner.getDeclaringClass());
+		assertNotNull(inner.getDeclaringClass());
 	}
 
 	/**

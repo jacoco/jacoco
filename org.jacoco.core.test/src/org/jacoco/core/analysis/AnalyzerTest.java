@@ -36,7 +36,6 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
 import org.jacoco.core.data.ExecutionDataStore;
-import org.jacoco.core.internal.Java9Support;
 import org.jacoco.core.internal.data.CRC64;
 import org.jacoco.core.test.TargetLoader;
 import org.junit.Before;
@@ -93,8 +92,8 @@ public class AnalyzerTest {
 	@Test
 	public void testAnalyzeClassIdMatch() throws IOException {
 		// class IDs are always calculated after downgrade of the version
-		final byte[] bytes = Java9Support.downgradeIfRequired(
-				TargetLoader.getClassDataAsBytes(AnalyzerTest.class));
+		final byte[] bytes = TargetLoader
+				.getClassDataAsBytes(AnalyzerTest.class);
 		executionData.get(Long.valueOf(CRC64.checksum(bytes)),
 				"org/jacoco/core/analysis/AnalyzerTest", 200);
 		analyzer.analyzeClass(bytes, "Test");

@@ -18,7 +18,6 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 
 import org.jacoco.core.instr.Instrumenter;
-import org.jacoco.core.internal.Java9Support;
 import org.jacoco.core.internal.instr.InstrSupport;
 import org.jacoco.core.runtime.IRuntime;
 import org.jacoco.core.runtime.SystemPropertiesRuntime;
@@ -88,8 +87,7 @@ public class FramesTest {
 	}
 
 	private byte[] calculateFrames(byte[] source) {
-		ClassReader rc = new ClassReader(
-				Java9Support.downgradeIfRequired(source));
+		ClassReader rc = new ClassReader(source);
 		ClassWriter cw = new ClassWriter(ClassWriter.COMPUTE_FRAMES);
 
 		// Adjust Version to 1.6 to enable frames:

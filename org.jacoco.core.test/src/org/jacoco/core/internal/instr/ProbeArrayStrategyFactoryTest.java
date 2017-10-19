@@ -283,7 +283,7 @@ public class ProbeArrayStrategyFactoryTest {
 		private final List<AddedMethod> methods = new ArrayList<AddedMethod>();
 
 		ClassVisitorMock() {
-			super(Opcodes.ASM5);
+			super(Opcodes.ASM6);
 		}
 
 		@Override
@@ -300,7 +300,7 @@ public class ProbeArrayStrategyFactoryTest {
 				String signature, String[] exceptions) {
 			final AddedMethod m = new AddedMethod(access, name, desc);
 			methods.add(m);
-			return new MethodVisitor(Opcodes.ASM5) {
+			return new MethodVisitor(Opcodes.ASM6) {
 				@Override
 				public void visitFrame(int type, int nLocal, Object[] local,
 						int nStack, Object[] stack) {

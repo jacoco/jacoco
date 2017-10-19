@@ -22,7 +22,7 @@ import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
 
 import org.jacoco.core.internal.ContentTypeDetector;
-import org.jacoco.core.internal.Java9Support;
+import org.jacoco.core.internal.InputStreams;
 import org.jacoco.core.internal.Pack200Streams;
 import org.jacoco.core.internal.flow.ClassProbesAdapter;
 import org.jacoco.core.internal.instr.ClassInstrumenter;
@@ -105,14 +105,7 @@ public class Instrumenter {
 	public byte[] instrument(final byte[] buffer, final String name)
 			throws IOException {
 		try {
-			if (Java9Support.isPatchRequired(buffer)) {
-				final byte[] result = instrument(
-						new ClassReader(Java9Support.downgrade(buffer)));
-				Java9Support.upgrade(result);
-				return result;
-			} else {
-				return instrument(new ClassReader(buffer));
-			}
+			return instrument(new ClassReader(buffer));
 		} catch (final RuntimeException e) {
 			throw instrumentError(name, e);
 		}
@@ -135,7 +128,7 @@ public class Instrumenter {
 			throws IOException {
 		final byte[] bytes;
 		try {
-			bytes = Java9Support.readFully(input);
+			bytes = InputStreams.readFully(input);
 		} catch (final IOException e) {
 			throw instrumentError(name, e);
 		}
