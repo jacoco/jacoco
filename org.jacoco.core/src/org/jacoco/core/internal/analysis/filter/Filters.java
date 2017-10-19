@@ -27,7 +27,7 @@ public final class Filters implements IFilter {
 	 * Filter that combines all other filters.
 	 */
 	public static final IFilter ALL = new Filters(new EnumFilter(),
-			new SyntheticFilter(), new SynchronizedFilter(),
+			new SyntheticFilter(), new SynchronizedFilter(), new AssertFilter(),
 			new TryWithResourcesJavacFilter(), new TryWithResourcesEcjFilter(),
 			new PrivateEmptyNoArgConstructorFilter(),
 			new StringSwitchJavacFilter(), new LombokGeneratedFilter(),

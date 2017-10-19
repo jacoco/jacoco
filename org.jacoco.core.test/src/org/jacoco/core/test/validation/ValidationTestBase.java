@@ -12,6 +12,7 @@
 package org.jacoco.core.test.validation;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.fail;
 
 import java.io.IOException;
@@ -20,8 +21,10 @@ import java.util.Arrays;
 
 import org.jacoco.core.analysis.Analyzer;
 import org.jacoco.core.analysis.CoverageBuilder;
+import org.jacoco.core.analysis.IClassCoverage;
 import org.jacoco.core.analysis.ICounter;
 import org.jacoco.core.analysis.ILine;
+import org.jacoco.core.analysis.IMethodCoverage;
 import org.jacoco.core.analysis.ISourceFileCoverage;
 import org.jacoco.core.data.ExecutionData;
 import org.jacoco.core.data.ExecutionDataStore;
@@ -54,6 +57,8 @@ public abstract class ValidationTestBase {
 
 	private ISourceFileCoverage sourceCoverage;
 
+	private IClassCoverage classCoverage;
+
 	private Source source;
 
 	private InstrumentingLoader loader;
@@ -76,6 +81,7 @@ public abstract class ValidationTestBase {
 
 	private ExecutionDataStore execute() throws Exception {
 		loader = new InstrumentingLoader(target);
+		loader.setDefaultAssertionStatus(true);
 		run(loader.loadClass(target.getName()));
 		return loader.collect();
 	}
@@ -92,14 +98,23 @@ public abstract class ValidationTestBase {
 			analyze(analyzer, data);
 		}
 
-		String srcName = target.getName().replace('.', '/') + ".java";
+		String name = target.getName().replace('.', '/');
+		String srcName = name + ".java";
 		for (ISourceFileCoverage file : builder.getSourceFiles()) {
 			if (srcName.equals(file.getPackageName() + "/" + file.getName())) {
 				sourceCoverage = file;
-				return;
+				break;
 			}
 		}
-		fail("No source node found for " + srcName);
+		assertNotNull("No source node for " + name, sourceCoverage);
+
+		for (IClassCoverage c : builder.getClasses()) {
+			if (c.getName().equals(name)) {
+				classCoverage = c;
+				break;
+			}
+		}
+		assertNotNull("No class node for " + name, classCoverage);
 	}
 
 	private void analyze(final Analyzer analyzer, final ExecutionData data)
@@ -112,6 +127,18 @@ public abstract class ValidationTestBase {
 	protected void assertMethodCount(final int expectedTotal) {
 		assertEquals(expectedTotal,
 				sourceCoverage.getMethodCounter().getTotalCount());
+	}
+
+	protected void assertMethod(final String name, final int status) {
+		for (IMethodCoverage method : classCoverage.getMethods()) {
+			if (method.getName().equals(name)) {
+				int methodStatus = method.getInstructionCounter().getStatus();
+				assertEquals("Instruction status in method " + name,
+						STATUS_NAME[status], STATUS_NAME[methodStatus]);
+				return;
+			}
+		}
+		fail("No method node for " + name);
 	}
 
 	protected void assertLine(final String tag, final int status) {
@@ -133,6 +160,19 @@ public abstract class ValidationTestBase {
 		assertEquals(msg + " branches",
 				CounterImpl.getInstance(missedBranches, coveredBranches),
 				line.getBranchCounter());
+	}
+
+	protected void assertLine(final String tag, final int status,
+			final int missedBranches, final int coveredBranches,
+			final int missedInstructions, final int coveredInstructions) {
+		assertLine(tag, status, missedBranches, coveredBranches);
+		final int nr = source.getLineNumber(tag);
+		final ILine line = sourceCoverage.getLine(nr);
+		final String msg = String.format("Instructions in line %s: %s",
+				Integer.valueOf(nr), source.getLine(nr));
+		assertEquals(msg + " branches", CounterImpl
+				.getInstance(missedInstructions, coveredInstructions),
+				line.getInstructionCounter());
 	}
 
 	protected void assertLogEvents(String... events) throws Exception {
