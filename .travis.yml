@@ -6,11 +6,10 @@ install: true
 # Use container-based infrastructure:
 sudo: false
 
-dist: precise
 addons:
-  hosts:
-    - travis
-  hostname: travis
+  apt:
+    packages:
+      - openjdk-6-jdk
 
 # Keep Maven local repository between builds:
 cache:
