@@ -28,13 +28,11 @@ import org.jacoco.report.internal.html.resources.Resources;
 public interface IColumnRenderer {
 
 	/**
-	 * Returns the style used for the cells of this column.
+	 * Returns whether this column is left aligned.
 	 * 
-	 * @param border
-	 *            if a border should be shown to the left
-	 * @return CSS style
+	 * @return <code>true</code> if column is left aligned
 	 */
-	public String getStyle(boolean border);
+	public boolean isLeftAligned();
 
 	/**
 	 * Initializes the column before any output method is called.
@@ -61,8 +59,8 @@ public interface IColumnRenderer {
 	 * @throws IOException
 	 *             in case of IO problems with the element output
 	 */
-	public void footer(HTMLElement td, ICoverageNode total,
-			Resources resources, ReportOutputFolder base) throws IOException;
+	public void footer(HTMLElement td, ICoverageNode total, Resources resources,
+			ReportOutputFolder base) throws IOException;
 
 	/**
 	 * Renders a single item in this column.

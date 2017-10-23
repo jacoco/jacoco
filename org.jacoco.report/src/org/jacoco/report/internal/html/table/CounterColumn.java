@@ -25,7 +25,6 @@ import org.jacoco.core.analysis.ICoverageNode.CounterEntity;
 import org.jacoco.report.internal.ReportOutputFolder;
 import org.jacoco.report.internal.html.HTMLElement;
 import org.jacoco.report.internal.html.resources.Resources;
-import org.jacoco.report.internal.html.resources.Styles;
 
 /**
  * Column that prints the counter values of entities for each item and a summary
@@ -45,8 +44,8 @@ public abstract class CounterColumn implements IColumnRenderer {
 	 */
 	public static CounterColumn newTotal(final CounterEntity entity,
 			final Locale locale) {
-		return new CounterColumn(entity, locale, CounterComparator.TOTALITEMS
-				.reverse().on(entity)) {
+		return new CounterColumn(entity, locale,
+				CounterComparator.TOTALITEMS.reverse().on(entity)) {
 			@Override
 			protected int getValue(final ICounter counter) {
 				return counter.getTotalCount();
@@ -65,8 +64,8 @@ public abstract class CounterColumn implements IColumnRenderer {
 	 */
 	public static CounterColumn newMissed(final CounterEntity entity,
 			final Locale locale) {
-		return new CounterColumn(entity, locale, CounterComparator.MISSEDITEMS
-				.reverse().on(entity)) {
+		return new CounterColumn(entity, locale,
+				CounterComparator.MISSEDITEMS.reverse().on(entity)) {
 			@Override
 			protected int getValue(final ICounter counter) {
 				return counter.getMissedCount();
@@ -85,8 +84,8 @@ public abstract class CounterColumn implements IColumnRenderer {
 	 */
 	public static CounterColumn newCovered(final CounterEntity entity,
 			final Locale locale) {
-		return new CounterColumn(entity, locale, CounterComparator.COVEREDITEMS
-				.reverse().on(entity)) {
+		return new CounterColumn(entity, locale,
+				CounterComparator.COVEREDITEMS.reverse().on(entity)) {
 			@Override
 			protected int getValue(final ICounter counter) {
 				return counter.getCoveredCount();
@@ -118,8 +117,8 @@ public abstract class CounterColumn implements IColumnRenderer {
 		this.comparator = new TableItemComparator(comparator);
 	}
 
-	public String getStyle(final boolean border) {
-		return border ? Styles.CELL_R_BORDER : Styles.CELL_R;
+	public boolean isLeftAligned() {
+		return false;
 	}
 
 	public boolean init(final List<? extends ITableItem> items,

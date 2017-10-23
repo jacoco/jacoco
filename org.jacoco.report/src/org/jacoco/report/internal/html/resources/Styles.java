@@ -58,14 +58,11 @@ public final class Styles {
 	/** Left aligned table cells */
 	public static final String CELL_L = null;
 
-	/** Left aligned table cells with a border to the left */
-	public static final String CELL_L_BORDER = "lb";
-
 	/** Right aligned table cells */
 	public static final String CELL_R = "r";
 
-	/** Right aligned table cells with a border to the left */
-	public static final String CELL_R_BORDER = "rb";
+	/** Table cells with a border to the left */
+	public static final String CELL_BORDER = "b";
 
 	/** Table header for sortable columns */
 	public static final String SORTABLE = "sortable";

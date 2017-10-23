@@ -26,7 +26,6 @@ import org.jacoco.core.analysis.ICoverageNode.CounterEntity;
 import org.jacoco.report.internal.ReportOutputFolder;
 import org.jacoco.report.internal.html.HTMLElement;
 import org.jacoco.report.internal.html.resources.Resources;
-import org.jacoco.report.internal.html.resources.Styles;
 
 /**
  * Column that prints the coverage percentage for each item and the total
@@ -57,8 +56,8 @@ public class PercentageColumn implements IColumnRenderer {
 				CounterComparator.MISSEDRATIO.on(entity));
 	}
 
-	public String getStyle(final boolean border) {
-		return border ? Styles.CELL_R_BORDER : Styles.CELL_R;
+	public boolean isLeftAligned() {
+		return false;
 	}
 
 	public boolean init(final List<? extends ITableItem> items,
@@ -95,7 +94,7 @@ public class PercentageColumn implements IColumnRenderer {
 	 * default and ability to change available only starting from JDK 6, so
 	 * perform rounding using {@link RoundingMode#FLOOR} before formatting.
 	 */
-	private String format(double ratio) {
+	private String format(final double ratio) {
 		return percentageFormat.format(
 				BigDecimal.valueOf(ratio).setScale(2, RoundingMode.FLOOR));
 	}

@@ -54,8 +54,7 @@ public class TableBuilder {
 		final boolean defaultSorting = parser.isNext('^');
 		parser.expectNext('[');
 		final String header = parser.read(']');
-		table.add(header, renderer.getStyle(separator), renderer,
-				defaultSorting);
+		table.add(header, separator, renderer, defaultSorting);
 	}
 
 	private IColumnRenderer entity(final StringParser parser) {
