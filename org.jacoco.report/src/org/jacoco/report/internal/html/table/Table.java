@@ -44,17 +44,17 @@ public class Table {
 	 * 
 	 * @param header
 	 *            column header caption
-	 * @param leftBorder
-	 *            <code>true</code> if a border should be shown to the left
 	 * @param renderer
 	 *            callback for column rendering
+	 * @param leftBorder
+	 *            <code>true</code> if a border should be shown to the left
 	 * @param defaultSorting
-	 *            If <code>true</code>, this column is the default sorting
+	 *            <code>true</code> if this column is the default sorting
 	 *            column. Only one column can be selected for default sorting.
 	 * 
 	 */
-	public void add(final String header, final boolean leftBorder,
-			final IColumnRenderer renderer, final boolean defaultSorting) {
+	public void add(final String header, final IColumnRenderer renderer,
+			final boolean leftBorder, final boolean defaultSorting) {
 		columns.add(new Column(columns.size(), header, leftBorder, renderer,
 				defaultSorting));
 		if (defaultSorting) {

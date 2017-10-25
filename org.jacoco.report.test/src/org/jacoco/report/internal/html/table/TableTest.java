@@ -104,7 +104,7 @@ public class TableTest {
 		};
 		final List<ITableItem> items = Arrays.asList(createItem("A", 1),
 				createItem("B", 2), createItem("C", 3));
-		table.add("Header", false, recorder, false);
+		table.add("Header", recorder, false, false);
 		table.render(body, items, createTotal("Sum", 6), resources, root);
 		doc.close();
 		assertEquals("init-footer-itemA-itemB-itemC-", recorder.toString());
@@ -134,7 +134,7 @@ public class TableTest {
 			}
 		};
 		final List<ITableItem> items = Arrays.asList(createItem("A", 1));
-		table.add("Header", false, column, false);
+		table.add("Header", column, false, false);
 		table.render(body, items, createTotal("Sum", 1), resources, root);
 		doc.close();
 	}
@@ -142,27 +142,27 @@ public class TableTest {
 	@Test(expected = IllegalStateException.class)
 	public void testTwoDefaultSorts() throws IOException {
 		doc.close();
-		table.add("Header1", false,
+		table.add("Header1",
 				new StubRenderer(
 						CounterComparator.TOTALITEMS.on(CounterEntity.CLASS)),
-				true);
-		table.add("Header2", false,
+				false, true);
+		table.add("Header2",
 				new StubRenderer(
 						CounterComparator.TOTALITEMS.on(CounterEntity.CLASS)),
-				true);
+				false, true);
 	}
 
 	@Test
 	public void testSortIds() throws Exception {
 		final List<ITableItem> items = Arrays.asList(createItem("C", 3),
 				createItem("E", 4), createItem("A", 1), createItem("D", 2));
-		table.add("Forward", false,
+		table.add("Forward",
 				new StubRenderer(
 						CounterComparator.TOTALITEMS.on(CounterEntity.CLASS)),
-				false);
-		table.add("Reverse", false, new StubRenderer(
+				false, false);
+		table.add("Reverse", new StubRenderer(
 				CounterComparator.TOTALITEMS.reverse().on(CounterEntity.CLASS)),
-				false);
+				false, false);
 		table.render(body, items, createTotal("Sum", 6), resources, root);
 		doc.close();
 
@@ -203,10 +203,10 @@ public class TableTest {
 		final List<ITableItem> items = Arrays.asList(createItem("C", 3),
 				createItem("E", 5), createItem("A", 1), createItem("D", 4),
 				createItem("B", 2));
-		table.add("Forward", false,
+		table.add("Forward",
 				new StubRenderer(
 						CounterComparator.TOTALITEMS.on(CounterEntity.CLASS)),
-				true);
+				false, true);
 		table.render(body, items, createTotal("Sum", 1), resources, root);
 		doc.close();
 
