@@ -69,6 +69,7 @@ public class ResizeInstructionsTest {
 						null);
 				mv.visitCode();
 				addCauseOfResizeInstructions(mv);
+				mv.visitInsn(Opcodes.NOP);
 				mv.visitMaxs(2, 1);
 				mv.visitEnd();
 				super.visitEnd();
