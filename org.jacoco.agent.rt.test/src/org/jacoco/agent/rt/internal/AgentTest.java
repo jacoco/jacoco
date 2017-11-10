@@ -16,6 +16,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -146,14 +147,20 @@ public class AgentTest implements IExceptionLogger, IAgentOutput {
 		agent.shutdown();
 	}
 
-	@Test(expected = InstanceNotFoundException.class)
+	@Test
 	public void startup_should_not_register_mbean_when_disabled()
 			throws Exception {
 		Agent agent = createAgent();
+
 		agent.startup();
 
 		ObjectName objectName = new ObjectName("org.jacoco:type=Runtime");
-		ManagementFactory.getPlatformMBeanServer().getMBeanInfo(objectName);
+
+		try {
+			ManagementFactory.getPlatformMBeanServer().getMBeanInfo(objectName);
+			fail("InstanceNotFoundException expected");
+		} catch (InstanceNotFoundException e) {
+		}
 	}
 
 	@Test
@@ -208,7 +215,7 @@ public class AgentTest implements IExceptionLogger, IAgentOutput {
 		assertSame(expected, loggedException);
 	}
 
-	@Test(expected = InstanceNotFoundException.class)
+	@Test
 	public void shutdown_should_deregister_mbean_when_enabled()
 			throws Exception {
 		options.setJmx(true);
@@ -218,7 +225,12 @@ public class AgentTest implements IExceptionLogger, IAgentOutput {
 		agent.shutdown();
 
 		ObjectName objectName = new ObjectName("org.jacoco:type=Runtime");
-		ManagementFactory.getPlatformMBeanServer().getMBeanInfo(objectName);
+
+		try {
+			ManagementFactory.getPlatformMBeanServer().getMBeanInfo(objectName);
+			fail("InstanceNotFoundException expected");
+		} catch (InstanceNotFoundException e) {
+		}
 	}
 
 	@Test
