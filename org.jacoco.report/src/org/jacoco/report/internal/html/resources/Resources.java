@@ -107,6 +107,9 @@ public class Resources {
 		copyResource("source.gif");
 		copyResource("class.gif");
 		copyResource("method.gif");
+		copyResource("method_public.png");
+		copyResource("method_protected.png");
+		copyResource("method_private.png");
 		copyResource("session.gif");
 		copyResource("sort.gif");
 		copyResource("up.gif");

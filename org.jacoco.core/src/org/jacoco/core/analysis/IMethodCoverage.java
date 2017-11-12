@@ -31,4 +31,11 @@ public interface IMethodCoverage extends ISourceNode {
 	 */
 	public String getSignature();
 
+	/**
+	 * Returns the access of the method.
+	 *
+	 * @return access
+	 */
+	public int getAccess();
+
 }

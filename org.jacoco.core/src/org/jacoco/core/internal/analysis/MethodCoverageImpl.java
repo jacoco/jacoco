@@ -24,6 +24,8 @@ public class MethodCoverageImpl extends SourceNodeImpl implements
 
 	private final String signature;
 
+	private int access;
+
 	/**
 	 * Creates a method coverage data object with the given parameters.
 	 * 
@@ -72,6 +74,24 @@ public class MethodCoverageImpl extends SourceNodeImpl implements
 
 	public String getSignature() {
 		return signature;
+	}
+
+	/**
+	 * Sets the access of the method.
+	 *
+	 * @param access method access
+	 */
+	public void setAccess(final int access) {
+		this.access = access;
+	}
+
+	/**
+	 * Returns the access of the method.
+	 *
+	 * @return access
+	 */
+	public int getAccess() {
+		return access;
 	}
 
 }

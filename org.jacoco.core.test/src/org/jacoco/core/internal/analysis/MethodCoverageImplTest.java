@@ -15,6 +15,7 @@ import static org.junit.Assert.assertEquals;
 
 import org.jacoco.core.analysis.ICoverageNode;
 import org.junit.Test;
+import org.objectweb.asm.Opcodes;
 
 /**
  * Unit test for {@link MethodCoverageImpl}.
@@ -27,11 +28,13 @@ public class MethodCoverageImplTest {
 		MethodCoverageImpl node = new MethodCoverageImpl("emptySet",
 				"()Ljava/util/Set;",
 				"<T:Ljava/lang/Object;>()Ljava/util/Set<TT;>;");
+		node.setAccess(Opcodes.ACC_PUBLIC);
 		assertEquals(ICoverageNode.ElementType.METHOD, node.getElementType());
 		assertEquals("emptySet", node.getName());
 		assertEquals("()Ljava/util/Set;", node.getDesc());
 		assertEquals("<T:Ljava/lang/Object;>()Ljava/util/Set<TT;>;",
 				node.getSignature());
+		assertEquals(Opcodes.ACC_PUBLIC, node.getAccess());
 	}
 
 	@Test

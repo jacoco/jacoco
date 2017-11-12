@@ -20,6 +20,7 @@ import org.jacoco.core.internal.analysis.ClassCoverageImpl;
 import org.jacoco.core.internal.analysis.MethodCoverageImpl;
 import org.junit.Before;
 import org.junit.Test;
+import org.objectweb.asm.Opcodes;
 import org.w3c.dom.Document;
 
 /**
@@ -36,9 +37,15 @@ public class ClassPageTest extends PageTestBase {
 	public void setup() throws Exception {
 		super.setup();
 		node = new ClassCoverageImpl("org/jacoco/example/Foo", 123, false);
-		node.addMethod(new MethodCoverageImpl("a", "()V", null));
-		node.addMethod(new MethodCoverageImpl("b", "()V", null));
-		node.addMethod(new MethodCoverageImpl("c", "()V", null));
+		final MethodCoverageImpl methodA = new MethodCoverageImpl("a", "()V", null);
+		methodA.setAccess(Opcodes.ACC_PROTECTED);
+		node.addMethod(methodA);
+		final MethodCoverageImpl methodB = new MethodCoverageImpl("b", "()V", null);
+		methodB.setAccess(Opcodes.ACC_PUBLIC);
+		node.addMethod(methodB);
+		final MethodCoverageImpl methodC = new MethodCoverageImpl("c", "()V", null);
+		methodC.setAccess(Opcodes.ACC_PRIVATE);
+		node.addMethod(methodC);
 	}
 
 	@Test
@@ -47,12 +54,16 @@ public class ClassPageTest extends PageTestBase {
 		page.render();
 
 		final Document doc = support.parse(output.getFile("Foo.html"));
-		assertEquals("el_method", support.findStr(doc,
+		assertEquals("el_method_protected", support.findStr(doc,
 				"/html/body/table[1]/tbody/tr[1]/td[1]/span/@class"));
 		assertEquals("a()", support.findStr(doc,
 				"/html/body/table[1]/tbody/tr[1]/td[1]/span"));
+		assertEquals("el_method_public", support.findStr(doc,
+				"/html/body/table[1]/tbody/tr[2]/td[1]/span/@class"));
 		assertEquals("b()", support.findStr(doc,
 				"/html/body/table[1]/tbody/tr[2]/td[1]/span"));
+		assertEquals("el_method_private", support.findStr(doc,
+				"/html/body/table[1]/tbody/tr[3]/td[1]/span/@class"));
 		assertEquals("c()", support.findStr(doc,
 				"/html/body/table[1]/tbody/tr[3]/td[1]/span"));
 	}

@@ -103,6 +103,14 @@ public class MethodAnalyzer extends MethodProbesVisitor
 	}
 
 	/**
+	 * Sets the access of the method.
+	 * @param access method access
+	 */
+	public void setAccess(final int access) {
+		this.coverage.setAccess(access);
+	}
+
+	/**
 	 * Returns the coverage data for this method after this visitor has been
 	 * processed.
 	 * 

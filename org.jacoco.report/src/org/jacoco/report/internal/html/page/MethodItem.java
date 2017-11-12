@@ -18,6 +18,7 @@ import org.jacoco.report.internal.ReportOutputFolder;
 import org.jacoco.report.internal.html.ILinkable;
 import org.jacoco.report.internal.html.resources.Styles;
 import org.jacoco.report.internal.html.table.ITableItem;
+import org.objectweb.asm.Opcodes;
 
 /**
  * Table items representing a method.
@@ -42,7 +43,18 @@ final class MethodItem implements ITableItem {
 	}
 
 	public String getLinkStyle() {
-		return Styles.EL_METHOD;
+		final String linkStyle;
+
+		if ((node.getAccess() & Opcodes.ACC_PUBLIC) != 0) {
+			linkStyle = Styles.EL_METHOD_PUBLIC;
+
+		} else if ((node.getAccess() & Opcodes.ACC_PRIVATE) != 0) {
+			linkStyle = Styles.EL_METHOD_PRIVATE;
+
+		} else { // protected or default
+			linkStyle = Styles.EL_METHOD_PROTECTED;
+		}
+		return linkStyle;
 	}
 
 	public String getLink(final ReportOutputFolder base) {

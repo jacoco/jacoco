@@ -52,6 +52,15 @@ public final class Styles {
 	/** Method element */
 	public static final String EL_METHOD = "el_method";
 
+	/** Method element */
+	public static final String EL_METHOD_PUBLIC = "el_method_public";
+
+	/** Method element */
+	public static final String EL_METHOD_PROTECTED = "el_method_protected";
+
+	/** Method element */
+	public static final String EL_METHOD_PRIVATE = "el_method_private";
+
 	/** Coverage table */
 	public static final String COVERAGETABLE = "coverage";
 

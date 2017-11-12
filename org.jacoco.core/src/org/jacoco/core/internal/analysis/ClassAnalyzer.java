@@ -64,7 +64,8 @@ public class ClassAnalyzer extends ClassProbesVisitor {
 
 		InstrSupport.assertNotInstrumented(name, coverage.getName());
 
-		return new MethodAnalyzer(coverage.getName(), coverage.getSuperName(),
+		final MethodAnalyzer methodAnalyzer = new MethodAnalyzer(
+				coverage.getName(), coverage.getSuperName(),
 				stringPool.get(name), stringPool.get(desc),
 				stringPool.get(signature), probes, Filters.ALL) {
 			@Override
@@ -77,6 +78,8 @@ public class ClassAnalyzer extends ClassProbesVisitor {
 				}
 			}
 		};
+		methodAnalyzer.setAccess(access);
+		return methodAnalyzer;
 	}
 
 	@Override

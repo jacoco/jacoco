@@ -49,7 +49,7 @@ public class MethodItemTest {
 	@Test
 	public void testGetLinkStyle() {
 		final MethodItem item = new MethodItem(node, "test()", null);
-		assertEquals("el_method", item.getLinkStyle());
+		assertEquals("el_method_protected", item.getLinkStyle());
 	}
 
 	@Test
