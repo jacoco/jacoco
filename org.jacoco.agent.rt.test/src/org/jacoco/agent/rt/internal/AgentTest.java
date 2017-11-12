@@ -19,7 +19,6 @@ import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 import java.io.ByteArrayInputStream;
-import java.io.File;
 import java.io.IOException;
 import java.lang.management.ManagementFactory;
 
@@ -27,88 +26,177 @@ import javax.management.InstanceNotFoundException;
 import javax.management.MBeanServer;
 import javax.management.ObjectName;
 
-import org.jacoco.agent.rt.internal.output.IAgentOutput;
 import org.jacoco.agent.rt.internal.output.FileOutput;
+import org.jacoco.agent.rt.internal.output.IAgentOutput;
 import org.jacoco.agent.rt.internal.output.NoneOutput;
 import org.jacoco.agent.rt.internal.output.TcpClientOutput;
 import org.jacoco.agent.rt.internal.output.TcpServerOutput;
 import org.jacoco.core.JaCoCo;
-import org.jacoco.core.data.ExecutionDataReader;
-import org.jacoco.core.data.ExecutionDataStore;
-import org.jacoco.core.data.SessionInfoStore;
 import org.jacoco.core.runtime.AgentOptions;
 import org.jacoco.core.runtime.AgentOptions.OutputMode;
 import org.jacoco.core.runtime.RuntimeData;
+import org.jacoco.core.tools.ExecFileLoader;
 import org.junit.Before;
-import org.junit.Rule;
 import org.junit.Test;
-import org.junit.rules.TemporaryFolder;
 
 /**
  * Unit tests for {@link Agent}.
  */
-public class AgentTest implements IExceptionLogger {
-
-	@Rule
-	public TemporaryFolder folder = new TemporaryFolder();
+public class AgentTest implements IExceptionLogger, IAgentOutput {
 
 	private AgentOptions options;
-	private File execfile;
 
-	private Exception exception;
+	private Boolean writeExecutionDataReset;
+
+	private Exception loggedException;
 
 	@Before
 	public void setup() {
 		options = new AgentOptions();
-		execfile = new File(folder.getRoot(), "jacoco.exec");
 		options.setOutput(OutputMode.file);
-		options.setDestfile(execfile.getAbsolutePath());
+
+		// avoid network access (DNS lookup for id generation):
+		options.setSessionId("test");
 	}
 
 	@Test
-	public void testCreateController() {
+	public void createController_should_create_defined_controller_type() {
 		Agent agent = new Agent(options, this);
 
 		options.setOutput(OutputMode.file);
-		assertEquals(FileOutput.class, agent.createAgentOutput()
-				.getClass());
+		assertEquals(FileOutput.class, agent.createAgentOutput().getClass());
 
 		options.setOutput(OutputMode.tcpserver);
-		assertEquals(TcpServerOutput.class, agent.createAgentOutput()
-				.getClass());
+		assertEquals(TcpServerOutput.class,
+				agent.createAgentOutput().getClass());
 
 		options.setOutput(OutputMode.tcpclient);
-		assertEquals(TcpClientOutput.class, agent.createAgentOutput()
-				.getClass());
+		assertEquals(TcpClientOutput.class,
+				agent.createAgentOutput().getClass());
 
 		options.setOutput(OutputMode.none);
-		assertEquals(NoneOutput.class, agent.createAgentOutput()
-				.getClass());
+		assertEquals(NoneOutput.class, agent.createAgentOutput().getClass());
 	}
 
 	@Test
-	public void testStartupShutdown() throws Exception {
-		options.setSessionId("testsession");
-		Agent agent = new Agent(options, this);
+	public void startup_should_set_defined_session_id() throws Exception {
+		Agent agent = createAgent();
+
 		agent.startup();
 
-		assertEquals("testsession", agent.getData().getSessionId());
-
-		agent.shutdown();
-
-		assertTrue(execfile.isFile());
-		assertTrue(execfile.length() > 0);
-		assertNull(exception);
+		assertEquals("test", agent.getData().getSessionId());
+		assertNull(loggedException);
 	}
 
 	@Test
-	public void testShutdownWithException() throws Exception {
+	public void startup_should_create_random_session_id_when_undefined()
+			throws Exception {
+		options.setSessionId(null);
+
+		Agent agent = createAgent();
+		agent.startup();
+		final String id1 = agent.getData().getSessionId();
+
+		agent = createAgent();
+		agent.startup();
+		final String id2 = agent.getData().getSessionId();
+
+		assertFalse(id1.equals(id2));
+		assertNull(loggedException);
+	}
+
+	@Test
+	public void startup_should_log_exception() throws Exception {
 		final Exception expected = new Exception();
 		Agent agent = new Agent(options, this) {
 			@Override
 			IAgentOutput createAgentOutput() {
 				return new IAgentOutput() {
-					public void startup(AgentOptions options, RuntimeData data) {
+					public void startup(AgentOptions options, RuntimeData data)
+							throws Exception {
+						throw expected;
+					}
+
+					public void shutdown() {
+					}
+
+					public void writeExecutionData(boolean reset) {
+					}
+				};
+			}
+		};
+
+		agent.startup();
+
+		assertSame(expected, loggedException);
+	}
+
+	@Test
+	public void startup_should_register_mbean_when_enabled() throws Exception {
+		options.setJmx(true);
+		Agent agent = createAgent();
+
+		agent.startup();
+
+		ObjectName objectName = new ObjectName("org.jacoco:type=Runtime");
+		final MBeanServer server = ManagementFactory.getPlatformMBeanServer();
+		assertEquals(JaCoCo.VERSION,
+				server.getAttribute(objectName, "Version"));
+
+		// cleanup as MBean is registered globally
+		agent.shutdown();
+	}
+
+	@Test
+	public void startup_should_not_register_mbean_when_disabled()
+			throws Exception {
+		Agent agent = createAgent();
+
+		agent.startup();
+
+		ObjectName objectName = new ObjectName("org.jacoco:type=Runtime");
+
+		try {
+			ManagementFactory.getPlatformMBeanServer().getMBeanInfo(objectName);
+			fail("InstanceNotFoundException expected");
+		} catch (InstanceNotFoundException e) {
+		}
+	}
+
+	@Test
+	public void shutdown_should_write_execution_data_when_enabled()
+			throws Exception {
+		Agent agent = createAgent();
+		agent.startup();
+
+		agent.shutdown();
+
+		assertEquals(Boolean.FALSE, writeExecutionDataReset);
+		assertNull(loggedException);
+	}
+
+	@Test
+	public void shutdown_should_not_write_execution_data_when_disabled()
+			throws Exception {
+		options.setDumpOnExit(false);
+		Agent agent = createAgent();
+		agent.startup();
+
+		agent.shutdown();
+
+		assertNull(writeExecutionDataReset);
+		assertNull(loggedException);
+	}
+
+	@Test
+	public void shutdown_should_log_exception() throws Exception {
+		final Exception expected = new Exception();
+		Agent agent = new Agent(options, this) {
+			@Override
+			IAgentOutput createAgentOutput() {
+				return new IAgentOutput() {
+					public void startup(AgentOptions options,
+							RuntimeData data) {
 					}
 
 					public void shutdown() throws Exception {
@@ -124,68 +212,55 @@ public class AgentTest implements IExceptionLogger {
 
 		agent.shutdown();
 
-		assertSame(expected, exception);
+		assertSame(expected, loggedException);
 	}
 
 	@Test
-	public void testNoSessionId() throws Exception {
-		Agent agent = new Agent(options, this);
-
-		final String defaultId = agent.getData().getSessionId();
-
+	public void shutdown_should_deregister_mbean_when_enabled()
+			throws Exception {
+		options.setJmx(true);
+		Agent agent = createAgent();
 		agent.startup();
 
-		assertFalse(defaultId.equals(agent.getData().getSessionId()));
-		assertNull(exception);
-	}
-
-	@Test
-	public void testNoDumpOnExit() throws Exception {
-		options.setDumpOnExit(false);
-		Agent agent = new Agent(options, this);
-
-		agent.startup();
 		agent.shutdown();
 
-		assertEquals(0, execfile.length());
-		assertNull(exception);
+		ObjectName objectName = new ObjectName("org.jacoco:type=Runtime");
+
+		try {
+			ManagementFactory.getPlatformMBeanServer().getMBeanInfo(objectName);
+			fail("InstanceNotFoundException expected");
+		} catch (InstanceNotFoundException e) {
+		}
 	}
 
 	@Test
-	public void testInvalidExecFile() throws Exception {
-		options.setDestfile(folder.getRoot().getAbsolutePath());
-		Agent agent = new Agent(options, this);
-
-		agent.startup();
-
-		assertTrue(exception instanceof IOException);
-	}
-
-	@Test
-	public void testGetVersion() {
-		Agent agent = new Agent(options, this);
+	public void getVersion_should_return_current_version() {
+		Agent agent = createAgent();
 		assertEquals(JaCoCo.VERSION, agent.getVersion());
 	}
 
 	@Test
-	public void testGetSetSessionId() throws IOException {
-		Agent agent = new Agent(options, this);
-		agent.startup();
-		agent.setSessionId("agenttestid");
-		assertEquals("agenttestid", agent.getSessionId());
+	public void getSessionId_should_return_session_id() throws IOException {
+		Agent agent = createAgent();
 
-		SessionInfoStore sessionStore = new SessionInfoStore();
-		ExecutionDataReader reader = new ExecutionDataReader(
-				new ByteArrayInputStream(agent.getExecutionData(false)));
-		reader.setSessionInfoVisitor(sessionStore);
-		reader.read();
-		assertEquals("agenttestid", sessionStore.getInfos().get(0).getId());
+		agent.startup();
+
+		assertEquals("test", agent.getSessionId());
 	}
 
 	@Test
-	public void testReset() {
-		Agent agent = new Agent(options, this);
+	public void setSessionId_should_modify_session_id() throws IOException {
+		Agent agent = createAgent();
+		agent.startup();
 
+		agent.setSessionId("new_id");
+
+		assertEquals("new_id", agent.getSessionId());
+	}
+
+	@Test
+	public void reset_should_reset_probes() {
+		Agent agent = createAgent();
 		boolean[] probes = agent.getData()
 				.getExecutionData(Long.valueOf(0x12345678), "Foo", 1)
 				.getProbes();
@@ -197,95 +272,102 @@ public class AgentTest implements IExceptionLogger {
 	}
 
 	@Test
-	public void testGetExecutionData() throws IOException {
-		options.setSessionId("agenttestid");
-		Agent agent = new Agent(options, this);
+	public void getExecutionData_should_return_probes_and_session_id()
+			throws IOException {
+		Agent agent = createAgent();
 		agent.startup();
+		agent.getData().getExecutionData(Long.valueOf(0x12345678), "Foo", 1)
+				.getProbes()[0] = true;
 
-		boolean[] probes = agent.getData()
+		byte[] data = agent.getExecutionData(true);
+
+		ExecFileLoader loader = new ExecFileLoader();
+		loader.load(new ByteArrayInputStream(data));
+		assertEquals("Foo",
+				loader.getExecutionDataStore().get(0x12345678).getName());
+		assertEquals("test",
+				loader.getSessionInfoStore().getInfos().get(0).getId());
+	}
+
+	@Test
+	public void getExecutionData_should_reset_probes_when_enabled()
+			throws IOException {
+		Agent agent = createAgent();
+		agent.startup();
+		final boolean[] probes = agent.getData()
 				.getExecutionData(Long.valueOf(0x12345678), "Foo", 1)
 				.getProbes();
 		probes[0] = true;
 
-		byte[] data = agent.getExecutionData(true);
+		agent.getExecutionData(true);
 
-		// ensure reset has been executed
 		assertFalse(probes[0]);
-
-		ExecutionDataStore execStore = new ExecutionDataStore();
-		SessionInfoStore sessionStore = new SessionInfoStore();
-
-		ExecutionDataReader reader = new ExecutionDataReader(
-				new ByteArrayInputStream(data));
-		reader.setExecutionDataVisitor(execStore);
-		reader.setSessionInfoVisitor(sessionStore);
-		reader.read();
-
-		assertEquals("Foo", execStore.get(0x12345678).getName());
-		assertEquals(1, sessionStore.getInfos().size());
-		assertEquals("agenttestid", sessionStore.getInfos().get(0).getId());
 	}
 
 	@Test
-	public void testDump() throws Exception {
-		final boolean[] called = new boolean[1];
-		Agent agent = new Agent(options, this) {
-			@Override
-			IAgentOutput createAgentOutput() {
-				return new IAgentOutput() {
-					public void startup(AgentOptions options, RuntimeData data) {
-					}
+	public void getExecutionData_should_not_reset_probes_when_disabled()
+			throws IOException {
+		Agent agent = createAgent();
+		agent.startup();
+		final boolean[] probes = agent.getData()
+				.getExecutionData(Long.valueOf(0x12345678), "Foo", 1)
+				.getProbes();
+		probes[0] = true;
 
-					public void shutdown() throws Exception {
-					}
+		agent.getExecutionData(false);
 
-					public void writeExecutionData(boolean reset) {
-						assertTrue(reset);
-						called[0] = true;
-					}
-				};
-			}
-		};
+		assertTrue(probes[0]);
+	}
+
+	@Test
+	public void dump_should_trigger_writeExecutionData_with_reset()
+			throws Exception {
+		Agent agent = createAgent();
 		agent.startup();
 
 		agent.dump(true);
 
-		assertTrue(called[0]);
+		assertEquals(Boolean.TRUE, writeExecutionDataReset);
+		assertNull(loggedException);
 	}
 
 	@Test
-	public void testJmx() throws Exception {
-		options.setJmx(true);
-		Agent agent = new Agent(options, this);
-
+	public void dump_should_trigger_writeExecutionData_without_reset()
+			throws Exception {
+		Agent agent = createAgent();
 		agent.startup();
 
-		ObjectName objectName = new ObjectName("org.jacoco:type=Runtime");
-		final MBeanServer server = ManagementFactory.getPlatformMBeanServer();
-		assertEquals(JaCoCo.VERSION, server.getAttribute(objectName, "Version"));
+		agent.dump(false);
 
-		agent.shutdown();
-
-		try {
-			server.getMBeanInfo(objectName);
-			fail("InstanceNotFoundException expected");
-		} catch (InstanceNotFoundException expected) {
-		}
+		assertEquals(Boolean.FALSE, writeExecutionDataReset);
+		assertNull(loggedException);
 	}
 
-	@Test(expected = InstanceNotFoundException.class)
-	public void testNoJmx() throws Exception {
-		Agent agent = new Agent(options, this);
-		agent.startup();
-
-		ObjectName objectName = new ObjectName("org.jacoco:type=Runtime");
-		ManagementFactory.getPlatformMBeanServer().getMBeanInfo(objectName);
+	private Agent createAgent() {
+		return new Agent(options, this) {
+			@Override
+			IAgentOutput createAgentOutput() {
+				return AgentTest.this;
+			}
+		};
 	}
 
 	// === IExceptionLogger ===
 
 	public void logExeption(Exception ex) {
-		exception = ex;
+		loggedException = ex;
+	}
+
+	// === IAgentOutput ===
+
+	public void startup(AgentOptions options, RuntimeData data) {
+	}
+
+	public void shutdown() {
+	}
+
+	public void writeExecutionData(boolean reset) {
+		writeExecutionDataReset = Boolean.valueOf(reset);
 	}
 
 }
