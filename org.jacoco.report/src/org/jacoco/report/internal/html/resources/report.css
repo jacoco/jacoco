@@ -77,6 +77,13 @@ h1 {
   background-repeat:no-repeat;
 }
 
+.el_method_private {
+  padding-left:18px;
+  background-image:url(method_private.png);
+  background-position:left center;
+  background-repeat:no-repeat;
+}
+
 .el_method_protected {
   padding-left:18px;
   background-image:url(method_protected.png);
@@ -84,9 +91,9 @@ h1 {
   background-repeat:no-repeat;
 }
 
-.el_method_private {
+.el_method_default {
   padding-left:18px;
-  background-image:url(method_private.png);
+  background-image:url(method_default.png);
   background-position:left center;
   background-repeat:no-repeat;
 }

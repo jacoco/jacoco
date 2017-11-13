@@ -51,8 +51,11 @@ final class MethodItem implements ITableItem {
 		} else if ((node.getAccess() & Opcodes.ACC_PRIVATE) != 0) {
 			linkStyle = Styles.EL_METHOD_PRIVATE;
 
-		} else { // protected or default
+		} else if ((node.getAccess() & Opcodes.ACC_PROTECTED) != 0) {
 			linkStyle = Styles.EL_METHOD_PROTECTED;
+
+		} else { // default
+			linkStyle = Styles.EL_METHOD_DEFAULT;
 		}
 		return linkStyle;
 	}

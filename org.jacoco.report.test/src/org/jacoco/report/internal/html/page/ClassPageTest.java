@@ -37,15 +37,16 @@ public class ClassPageTest extends PageTestBase {
 	public void setup() throws Exception {
 		super.setup();
 		node = new ClassCoverageImpl("org/jacoco/example/Foo", 123, false);
-		final MethodCoverageImpl methodA = new MethodCoverageImpl("a", "()V", null);
-		methodA.setAccess(Opcodes.ACC_PROTECTED);
-		node.addMethod(methodA);
+		node.addMethod(new MethodCoverageImpl("a", "()V", null));
 		final MethodCoverageImpl methodB = new MethodCoverageImpl("b", "()V", null);
 		methodB.setAccess(Opcodes.ACC_PUBLIC);
 		node.addMethod(methodB);
 		final MethodCoverageImpl methodC = new MethodCoverageImpl("c", "()V", null);
 		methodC.setAccess(Opcodes.ACC_PRIVATE);
 		node.addMethod(methodC);
+		final MethodCoverageImpl methodD = new MethodCoverageImpl("d", "()V", null);
+		methodD.setAccess(Opcodes.ACC_PROTECTED);
+		node.addMethod(methodD);
 	}
 
 	@Test
@@ -54,7 +55,7 @@ public class ClassPageTest extends PageTestBase {
 		page.render();
 
 		final Document doc = support.parse(output.getFile("Foo.html"));
-		assertEquals("el_method_protected", support.findStr(doc,
+		assertEquals("el_method_default", support.findStr(doc,
 				"/html/body/table[1]/tbody/tr[1]/td[1]/span/@class"));
 		assertEquals("a()", support.findStr(doc,
 				"/html/body/table[1]/tbody/tr[1]/td[1]/span"));
@@ -66,6 +67,10 @@ public class ClassPageTest extends PageTestBase {
 				"/html/body/table[1]/tbody/tr[3]/td[1]/span/@class"));
 		assertEquals("c()", support.findStr(doc,
 				"/html/body/table[1]/tbody/tr[3]/td[1]/span"));
+		assertEquals("el_method_protected", support.findStr(doc,
+				"/html/body/table[1]/tbody/tr[4]/td[1]/span/@class"));
+		assertEquals("d()", support.findStr(doc,
+				"/html/body/table[1]/tbody/tr[4]/td[1]/span"));
 	}
 
 	@Test
