@@ -25,9 +25,11 @@ env:
     ECJ=true
   - JDK=8-ea
   - JDK=9
+  - JDK=10-ea
 
 matrix:
   allow_failures:
     - env: JDK=8-ea
+    - env: JDK=10-ea
 
 script: ./.travis.sh

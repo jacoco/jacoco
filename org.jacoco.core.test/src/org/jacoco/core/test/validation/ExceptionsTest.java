@@ -27,11 +27,13 @@ public class ExceptionsTest extends ValidationTestBase {
 	 * https://bugs.openjdk.java.net/browse/JDK-8180660
 	 */
 	private static final boolean isJDK8u152;
+	private static final boolean isJDK10;
 
 	static {
 		final Matcher m = Pattern.compile("1\\.8\\.0_(\\d++)(-ea)?")
 				.matcher(System.getProperty("java.version"));
 		isJDK8u152 = m.matches() && Integer.parseInt(m.group(1)) >= 152;
+		isJDK10 = System.getProperty("java.version").startsWith("10");
 	}
 
 	public ExceptionsTest() {
@@ -116,7 +118,7 @@ public class ExceptionsTest extends ValidationTestBase {
 		if (!isJDKCompiler) {
 			assertLine("noExceptionFinally.finallyBlockEnd",
 					ICounter.NOT_COVERED);
-		} else if (isJDK8u152) {
+		} else if (isJDK8u152 || isJDK10) {
 			assertLine("noExceptionFinally.finallyBlockEnd",
 					ICounter.PARTLY_COVERED);
 		} else {
@@ -139,7 +141,7 @@ public class ExceptionsTest extends ValidationTestBase {
 		if (!isJDKCompiler) {
 			assertLine("implicitExceptionFinally.finallyBlockEnd",
 					ICounter.FULLY_COVERED);
-		} else if (isJDK8u152) {
+		} else if (isJDK8u152 || isJDK10) {
 			assertLine("implicitExceptionFinally.finallyBlockEnd",
 					ICounter.PARTLY_COVERED);
 		} else {
@@ -157,7 +159,7 @@ public class ExceptionsTest extends ValidationTestBase {
 				isJDKCompiler ? ICounter.EMPTY : ICounter.FULLY_COVERED);
 		assertLine("explicitExceptionFinally.finallyBlock",
 				ICounter.FULLY_COVERED);
-		if (!isJDKCompiler || isJDK8u152) {
+		if (!isJDKCompiler || isJDK8u152 || isJDK10) {
 			assertLine("explicitExceptionFinally.finallyBlockEnd",
 					ICounter.FULLY_COVERED);
 		} else {
