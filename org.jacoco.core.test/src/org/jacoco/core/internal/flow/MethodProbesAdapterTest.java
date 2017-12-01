@@ -320,52 +320,87 @@ public class MethodProbesAdapterTest implements IProbeIdGenerator {
 
 		adapter.visitTryCatchBlock(start, end, handler, "java/lang/Exception");
 		adapter.visitLabel(start);
+		adapter.visitInsn(Opcodes.NOP);
+		adapter.visitLabel(end);
 
 		expectedVisitor.visitTryCatchBlock(start, end, handler,
 				"java/lang/Exception");
 		expectedVisitor.visitLabel(start);
+		expectedVisitor.visitInsn(Opcodes.NOP);
+		expectedVisitor.visitLabel(end);
 	}
 
 	@Test
-	public void testVisitTryCatchBlockWithProbe() {
-		Label target = new Label();
-		LabelInfo.setSuccessor(target);
-		LabelInfo.setTarget(target);
+	public void testVisitTryCatchBlockWithProbeBeforeStart() {
+		Label start = new Label();
+		LabelInfo.setSuccessor(start);
+		LabelInfo.setTarget(start);
 		Label end = new Label();
 		Label handler = new Label();
+		Label probe = new Label();
+
+		adapter.visitTryCatchBlock(start, end, handler, "java/lang/Exception");
+		adapter.visitLabel(start);
+		adapter.visitInsn(Opcodes.NOP);
+		adapter.visitLabel(end);
+
+		expectedVisitor.visitTryCatchBlock(probe, end, handler,
+				"java/lang/Exception");
+		expectedVisitor.visitLabel(probe);
+		expectedVisitor.visitProbe(1000);
+		expectedVisitor.visitLabel(start);
+		expectedVisitor.visitInsn(Opcodes.NOP);
+		expectedVisitor.visitLabel(end);
+	}
+
+	@Test
+	public void testVisitTryCatchBlockWithProbeBeforeEnd() {
 		Label start = new Label();
+		Label end = new Label();
+		LabelInfo.setSuccessor(end);
+		LabelInfo.setTarget(end);
+		Label handler = new Label();
+		Label probe = new Label();
 
-		adapter.visitTryCatchBlock(target, end, handler, "java/lang/Exception");
-		adapter.visitLabel(target);
+		adapter.visitTryCatchBlock(start, end, handler, "java/lang/Exception");
+		adapter.visitLabel(start);
+		adapter.visitInsn(Opcodes.NOP);
+		adapter.visitLabel(end);
 
-		expectedVisitor.visitTryCatchBlock(start, end, handler,
+		expectedVisitor.visitTryCatchBlock(start, probe, handler,
 				"java/lang/Exception");
 		expectedVisitor.visitLabel(start);
+		expectedVisitor.visitInsn(Opcodes.NOP);
+		expectedVisitor.visitLabel(probe);
 		expectedVisitor.visitProbe(1000);
-		expectedVisitor.visitLabel(target);
+		expectedVisitor.visitLabel(end);
 	}
 
 	@Test
 	public void testVisitMultipleTryCatchBlocksWithProbe() {
-		Label target = new Label();
-		LabelInfo.setSuccessor(target);
-		LabelInfo.setTarget(target);
+		Label start = new Label();
+		LabelInfo.setSuccessor(start);
+		LabelInfo.setTarget(start);
 		Label end = new Label();
 		Label handler1 = new Label();
 		Label handler2 = new Label();
-		Label start = new Label();
+		Label probe = new Label();
 
-		adapter.visitTryCatchBlock(target, end, handler1, "java/lang/Exception");
-		adapter.visitTryCatchBlock(target, end, handler2, "java/io/IOException");
-		adapter.visitLabel(target);
+		adapter.visitTryCatchBlock(start, end, handler1, "java/lang/Exception");
+		adapter.visitTryCatchBlock(start, end, handler2, "java/io/IOException");
+		adapter.visitLabel(start);
+		adapter.visitInsn(Opcodes.NOP);
+		adapter.visitLabel(end);
 
-		expectedVisitor.visitTryCatchBlock(start, end, handler1,
+		expectedVisitor.visitTryCatchBlock(probe, end, handler1,
 				"java/lang/Exception");
-		expectedVisitor.visitTryCatchBlock(start, end, handler2,
+		expectedVisitor.visitTryCatchBlock(probe, end, handler2,
 				"java/io/IOException");
-		expectedVisitor.visitLabel(start);
+		expectedVisitor.visitLabel(probe);
 		expectedVisitor.visitProbe(1000);
-		expectedVisitor.visitLabel(target);
+		expectedVisitor.visitLabel(start);
+		expectedVisitor.visitInsn(Opcodes.NOP);
+		expectedVisitor.visitLabel(end);
 	}
 
 	// === IProbeIdGenerator ===
