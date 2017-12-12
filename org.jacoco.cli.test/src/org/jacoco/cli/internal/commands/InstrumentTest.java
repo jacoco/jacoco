@@ -137,7 +137,7 @@ public class InstrumentTest extends CommandTestBase {
 		ClassReader reader = new ClassReader(in);
 		in.close();
 		final Set<String> fields = new HashSet<String>();
-		reader.accept(new ClassVisitor(Opcodes.ASM5) {
+		reader.accept(new ClassVisitor(Opcodes.ASM6) {
 			@Override
 			public FieldVisitor visitField(int access, String name, String desc,
 					String signature, Object value) {

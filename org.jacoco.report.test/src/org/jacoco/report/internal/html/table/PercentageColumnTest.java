@@ -115,8 +115,11 @@ public class PercentageColumnTest {
 		column.item(td, item, resources, root);
 		doc.close();
 		final Document doc = support.parse(output.getFile("Test.html"));
-		assertEquals("100 %",
-				support.findStr(doc, "/html/body/table/tr/td[1]/text()"));
+		// After integration of JEP 252 into JDK9, CLDR locale data is used by
+		// default, which results in usage of non-breaking space below, while
+		// the legacy locale data uses regular space:
+		assertTrue(support.findStr(doc, "/html/body/table/tr/td[1]/text()")
+				.matches("100[ \u00A0]%"));
 	}
 
 	@Test

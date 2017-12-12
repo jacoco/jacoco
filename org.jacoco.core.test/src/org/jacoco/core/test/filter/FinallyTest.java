@@ -19,7 +19,6 @@ import java.util.Set;
 import java.util.regex.Pattern;
 
 import org.jacoco.core.analysis.ICounter;
-import org.jacoco.core.internal.Java9Support;
 import org.jacoco.core.test.TargetLoader;
 import org.jacoco.core.test.filter.targets.Finally;
 import org.jacoco.core.test.validation.Source;
@@ -187,9 +186,8 @@ public class FinallyTest extends ValidationTestBase {
 		final Source source = Source.getSourceFor("src", Finally.class);
 
 		final ClassNode classNode = new ClassNode();
-		new ClassReader(Java9Support.downgradeIfRequired(
-				TargetLoader.getClassDataAsBytes(Finally.class)))
-						.accept(classNode, 0);
+		new ClassReader(TargetLoader.getClassDataAsBytes(Finally.class))
+				.accept(classNode, 0);
 		final Set<String> tags = new HashSet<String>();
 		for (final MethodNode m : classNode.methods) {
 			if ("main".equals(m.name)) {

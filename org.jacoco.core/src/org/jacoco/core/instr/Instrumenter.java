@@ -22,7 +22,7 @@ import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
 
 import org.jacoco.core.internal.ContentTypeDetector;
-import org.jacoco.core.internal.Java9Support;
+import org.jacoco.core.internal.InputStreams;
 import org.jacoco.core.internal.Pack200Streams;
 import org.jacoco.core.internal.flow.ClassProbesAdapter;
 import org.jacoco.core.internal.instr.ClassInstrumenter;
@@ -105,21 +105,15 @@ public class Instrumenter {
 	public byte[] instrument(final byte[] buffer, final String name)
 			throws IOException {
 		try {
-			if (Java9Support.isPatchRequired(buffer)) {
-				final byte[] result = instrument(
-						new ClassReader(Java9Support.downgrade(buffer)));
-				Java9Support.upgrade(result);
-				return result;
-			} else {
-				return instrument(new ClassReader(buffer));
-			}
+			return instrument(new ClassReader(buffer));
 		} catch (final RuntimeException e) {
 			throw instrumentError(name, e);
 		}
 	}
 
 	/**
-	 * Creates a instrumented version of the given class if possible.
+	 * Creates a instrumented version of the given class if possible. The
+	 * provided {@link InputStream} is not closed by this method.
 	 * 
 	 * @param input
 	 *            stream to read class definition from
@@ -134,7 +128,7 @@ public class Instrumenter {
 			throws IOException {
 		final byte[] bytes;
 		try {
-			bytes = Java9Support.readFully(input);
+			bytes = InputStreams.readFully(input);
 		} catch (final IOException e) {
 			throw instrumentError(name, e);
 		}
@@ -142,7 +136,9 @@ public class Instrumenter {
 	}
 
 	/**
-	 * Creates a instrumented version of the given class file.
+	 * Creates a instrumented version of the given class file. The provided
+	 * {@link InputStream} and {@link OutputStream} instances are not closed by
+	 * this method.
 	 * 
 	 * @param input
 	 *            stream to read class definition from
@@ -170,7 +166,9 @@ public class Instrumenter {
 	/**
 	 * Creates a instrumented version of the given resource depending on its
 	 * type. Class files and the content of archive files are instrumented. All
-	 * other files are copied without modification.
+	 * other files are copied without modification. The provided
+	 * {@link InputStream} and {@link OutputStream} instances are not closed by
+	 * this method.
 	 * 
 	 * @param input
 	 *            stream to contents from
@@ -183,12 +181,12 @@ public class Instrumenter {
 	 *             if reading data from the stream fails or a class can't be
 	 *             instrumented
 	 */
-	public int instrumentAll(final InputStream input,
-			final OutputStream output, final String name) throws IOException {
+	public int instrumentAll(final InputStream input, final OutputStream output,
+			final String name) throws IOException {
 		final ContentTypeDetector detector;
 		try {
 			detector = new ContentTypeDetector(input);
-		} catch (IOException e) {
+		} catch (final IOException e) {
 			throw instrumentError(name, e);
 		}
 		switch (detector.getType()) {
@@ -229,11 +227,11 @@ public class Instrumenter {
 		return count;
 	}
 
-	private ZipEntry nextEntry(ZipInputStream input, String location)
-			throws IOException {
+	private ZipEntry nextEntry(final ZipInputStream input,
+			final String location) throws IOException {
 		try {
 			return input.getNextEntry();
-		} catch (IOException e) {
+		} catch (final IOException e) {
 			throw instrumentError(location, e);
 		}
 	}
@@ -243,7 +241,7 @@ public class Instrumenter {
 		final GZIPInputStream gzipInputStream;
 		try {
 			gzipInputStream = new GZIPInputStream(input);
-		} catch (IOException e) {
+		} catch (final IOException e) {
 			throw instrumentError(name, e);
 		}
 		final GZIPOutputStream gzout = new GZIPOutputStream(output);
@@ -257,7 +255,7 @@ public class Instrumenter {
 		final InputStream unpackedInput;
 		try {
 			unpackedInput = Pack200Streams.unpack(input);
-		} catch (IOException e) {
+		} catch (final IOException e) {
 			throw instrumentError(name, e);
 		}
 		final ByteArrayOutputStream buffer = new ByteArrayOutputStream();
@@ -279,7 +277,7 @@ public class Instrumenter {
 			final String name) throws IOException {
 		try {
 			return input.read(buffer);
-		} catch (IOException e) {
+		} catch (final IOException e) {
 			throw instrumentError(name, e);
 		}
 	}

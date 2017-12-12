@@ -38,8 +38,12 @@
       for finally blocks
       (GitHub <a href="https://github.com/jacoco/jacoco/issues/604">#604</a>).</li>
   <li>Exclude from a report methods which are annotated with <code>@lombok.Generated</code>.
-      Initial analysis and contribution by Rüdiger zu Dohna.
+      Initial analysis and contribution by Rüdiger zu Dohna
       (GitHub <a href="https://github.com/jacoco/jacoco/issues/513">#513</a>).</li>
+  <li>Exclude from a report methods which are annotated with
+      <code>@groovy.transform.Generated</code> to better integrate with Groovy
+       >= 2.5.0. Thanks to Andres Almiray for adding the annotation to Groovy
+      (GitHub <a href="https://github.com/jacoco/jacoco/issues/610">#610</a>).</li>
   <li>Exclude from a report private empty constructors that do not have arguments
       (GitHub <a href="https://github.com/jacoco/jacoco/issues/529">#529</a>).</li>
   <li>Exclude from a report a part of bytecode that javac generates for a
@@ -67,10 +71,22 @@
       (GitHub <a href="https://github.com/jacoco/jacoco/issues/555">#555</a>).</li>
   <li>Restored Maven <code>help</code> goal that was missing in version 0.7.9
       (GitHub <a href="https://github.com/jacoco/jacoco/issues/559">#559</a>).</li>
+  <li><code>NullPointerException</code> during offline instrumentation of
+      <code>module-info.class</code>
+      (GitHub <a href="https://github.com/jacoco/jacoco/issues/600">#600</a>).</li>
+  <li>Incorrect update of frames caused by bug in ASM library
+      (GitHub <a href="https://github.com/jacoco/jacoco/issues/600">#600</a>).</li>
+  <li>Loss of <code>InnerClasses</code> attribute caused by bug in ASM library
+      (GitHub <a href="https://github.com/jacoco/jacoco/issues/600">#600</a>).</li>
+  <li><code>NegativeArraySizeException</code> during instrumentation caused by bug
+      in ASM library
+      (GitHub <a href="https://github.com/jacoco/jacoco/issues/600">#600</a>).</li>
 </ul>
 
 <h3>Non-functional Changes</h3>
 <ul>
+  <li>JaCoCo now depends on ASM 6.0
+      (GitHub <a href="https://github.com/jacoco/jacoco/issues/600">#600</a>).</li>
   <li>More information about context is provided when unable to read input during
       instrumentation
       (GitHub <a href="https://github.com/jacoco/jacoco/issues/527">#527</a>).</li>

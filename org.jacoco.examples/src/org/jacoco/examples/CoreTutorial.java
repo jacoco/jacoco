@@ -113,8 +113,9 @@ public final class CoreTutorial {
 		// The Instrumenter creates a modified version of our test target class
 		// that contains additional probes for execution data recording:
 		final Instrumenter instr = new Instrumenter(runtime);
-		final byte[] instrumented = instr.instrument(
-				getTargetClass(targetName), targetName);
+		InputStream original = getTargetClass(targetName);
+		final byte[] instrumented = instr.instrument(original, targetName);
+		original.close();
 
 		// Now we're ready to run our instrumented class and need to startup the
 		// runtime first:
@@ -142,7 +143,9 @@ public final class CoreTutorial {
 		// information:
 		final CoverageBuilder coverageBuilder = new CoverageBuilder();
 		final Analyzer analyzer = new Analyzer(executionData, coverageBuilder);
-		analyzer.analyzeClass(getTargetClass(targetName), targetName);
+		original = getTargetClass(targetName);
+		analyzer.analyzeClass(original, targetName);
+		original.close();
 
 		// Let's dump some metrics and line coverage information:
 		for (final IClassCoverage cc : coverageBuilder.getClasses()) {
@@ -155,8 +158,8 @@ public final class CoreTutorial {
 			printCounter("complexity", cc.getComplexityCounter());
 
 			for (int i = cc.getFirstLine(); i <= cc.getLastLine(); i++) {
-				out.printf("Line %s: %s%n", Integer.valueOf(i), getColor(cc
-						.getLine(i).getStatus()));
+				out.printf("Line %s: %s%n", Integer.valueOf(i),
+						getColor(cc.getLine(i).getStatus()));
 			}
 		}
 	}
