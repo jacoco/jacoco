@@ -24,6 +24,46 @@ import org.objectweb.asm.tree.VarInsnNode;
 
 /**
  * Filters duplicates of finally blocks that compiler generates.
+ *
+ * To understand algorithm of filtering, consider following example:
+ * 
+ * <pre>
+ * try {
+ * 	if (x) {
+ * 		a();
+ * 		return; // 1
+ * 	}
+ * 	b(); // 2
+ * } catch (Exception e) {
+ * 	c(); // 3
+ * } finally {
+ * 	d(); // 4
+ * }
+ * </pre>
+ *
+ * There are 4 <b>distinct</b> points of exit out of these "try/catch/finally"
+ * blocks - three without exception, and one with Throwable if it is thrown
+ * prior to reaching first three points of exit.
+ * 
+ * "finally" block must be executed just before these points, so there must be 4
+ * copies of its bytecode instructions.
+ *
+ * One of them handles Throwable ("catch-any") and must cover all instructions
+ * of "try/catch" blocks. But must not cover instructions of other duplicates,
+ * because instructions of "finally" block also can cause Throwable to be
+ * thrown.
+ *
+ * Therefore there will be multiple {@link MethodNode#tryCatchBlocks} with
+ * {@link TryCatchBlockNode#type} null with same
+ * {@link TryCatchBlockNode#handler} for different non-intersecting bytecode
+ * regions ({@link TryCatchBlockNode#start}, {@link TryCatchBlockNode#end}).
+ *
+ * And each exit out of these regions, except one that handles Throwable, will
+ * contain duplicate of "finally" block.
+ *
+ * To determine exits out of these regions, they all must be processed together
+ * at once, because execution can branch from one region to another (like it is
+ * in given example due to "if" statement).
  */
 public final class FinallyFilter implements IFilter {
 
@@ -38,18 +78,17 @@ public final class FinallyFilter implements IFilter {
 
 	private static void filter(final IFilterOutput output,
 			final List<TryCatchBlockNode> tryCatchBlocks,
-			final TryCatchBlockNode finallyBlock) {
-		final AbstractInsnNode e = next(finallyBlock.handler);
+			final TryCatchBlockNode catchAnyBlock) {
+		final AbstractInsnNode e = next(catchAnyBlock.handler);
 		final int size = size(e);
 		if (size <= 0) {
 			return;
 		}
 
-		// Instructions covered by finally handler
+		// Determine instructions inside regions
 		final Set<AbstractInsnNode> inside = new HashSet<AbstractInsnNode>();
-
 		for (final TryCatchBlockNode t : tryCatchBlocks) {
-			if (t.handler == finallyBlock.handler) {
+			if (t.handler == catchAnyBlock.handler) {
 				AbstractInsnNode i = t.start;
 				while (i != t.end) {
 					inside.add(i);
@@ -58,8 +97,9 @@ public final class FinallyFilter implements IFilter {
 			}
 		}
 
+		// Find and merge duplicates at exits of regions
 		for (final TryCatchBlockNode t : tryCatchBlocks) {
-			if (t.handler == finallyBlock.handler) {
+			if (t.handler == catchAnyBlock.handler) {
 				boolean continues = false;
 				AbstractInsnNode i = t.start;
 
@@ -103,8 +143,8 @@ public final class FinallyFilter implements IFilter {
 				}
 			}
 
-			if (t != finallyBlock && t.start == finallyBlock.start
-					&& t.end == finallyBlock.end) {
+			if (t != catchAnyBlock && t.start == catchAnyBlock.start
+					&& t.end == catchAnyBlock.end) {
 				final AbstractInsnNode i = next(next(t.handler));
 				if (!inside.contains(i)) {
 					// javac's empty catch - merge after ASTORE
@@ -127,7 +167,11 @@ public final class FinallyFilter implements IFilter {
 			n = next(n);
 		}
 		output.ignore(e, next(e));
+
 		if (n != null && n.getOpcode() == Opcodes.GOTO) {
+			// goto instructions at the end of non-executed duplicates
+			// cause partial coverage of last line of finally block,
+			// so should be ignored
 			output.ignore(n, n);
 		}
 	}
@@ -146,7 +190,7 @@ public final class FinallyFilter implements IFilter {
 	}
 
 	/**
-	 * @return number of instructions inside given finally handler
+	 * @return number of instructions inside given "catch-any" handler
 	 */
 	private static int size(AbstractInsnNode i) {
 		if (Opcodes.ASTORE != i.getOpcode()) {
