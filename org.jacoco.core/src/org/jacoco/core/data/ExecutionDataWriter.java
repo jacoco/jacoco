@@ -28,7 +28,7 @@ public class ExecutionDataWriter implements ISessionInfoVisitor,
 
 	static {
 		// Runtime initialize to ensure javac does not inline the value.
-		FORMAT_VERSION = 0x1008;
+		FORMAT_VERSION = 0x1007;
 	}
 
 	/** Magic number in header for file format identification. */
