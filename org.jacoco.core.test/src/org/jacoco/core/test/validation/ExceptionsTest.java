@@ -15,26 +15,10 @@ import org.jacoco.core.analysis.ICounter;
 import org.jacoco.core.test.validation.targets.Target03;
 import org.junit.Test;
 
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 /**
  * Tests of exception based control flow.
  */
 public class ExceptionsTest extends ValidationTestBase {
-
-	/**
-	 * https://bugs.openjdk.java.net/browse/JDK-8180660
-	 */
-	private static final boolean isJDK8u152;
-	private static final boolean isJDK10;
-
-	static {
-		final Matcher m = Pattern.compile("1\\.8\\.0_(\\d++)(-ea)?")
-				.matcher(System.getProperty("java.version"));
-		isJDK8u152 = m.matches() && Integer.parseInt(m.group(1)) >= 152;
-		isJDK10 = System.getProperty("java.version").startsWith("10");
-	}
 
 	public ExceptionsTest() {
 		super(Target03.class);
@@ -109,45 +93,25 @@ public class ExceptionsTest extends ValidationTestBase {
 				ICounter.FULLY_COVERED);
 
 		// 7. Finally Block Without Exception Thrown
-		// Finally block is yellow as the exception path is missing.
 		assertLine("noExceptionFinally.beforeBlock", ICounter.FULLY_COVERED);
 		assertLine("noExceptionFinally.tryBlock", ICounter.FULLY_COVERED);
 		assertLine("noExceptionFinally.finally",
-				isJDKCompiler ? ICounter.EMPTY : ICounter.PARTLY_COVERED);
-		assertLine("noExceptionFinally.finallyBlock", ICounter.PARTLY_COVERED);
-		if (!isJDKCompiler) {
-			assertLine("noExceptionFinally.finallyBlockEnd",
-					ICounter.NOT_COVERED);
-		} else if (isJDK8u152 || isJDK10) {
-			assertLine("noExceptionFinally.finallyBlockEnd",
-					ICounter.PARTLY_COVERED);
-		} else {
-			assertLine("noExceptionFinally.finallyBlockEnd",
-					ICounter.FULLY_COVERED);
-		}
+				isJDKCompiler ? ICounter.EMPTY : ICounter.FULLY_COVERED);
+		assertLine("noExceptionFinally.finallyBlock", ICounter.FULLY_COVERED);
+		assertLine("noExceptionFinally.finallyBlockEnd", ICounter.EMPTY);
 		assertLine("noExceptionFinally.afterBlock", ICounter.FULLY_COVERED);
 
 		// 8. Finally Block With Implicit Exception
-		// Finally block is yellow as the non-exception path is missing.
 		assertLine("implicitExceptionFinally.beforeBlock",
 				ICounter.FULLY_COVERED);
 		assertLine("implicitExceptionFinally.before", ICounter.FULLY_COVERED);
 		assertLine("implicitExceptionFinally.exception", ICounter.NOT_COVERED);
 		assertLine("implicitExceptionFinally.after", ICounter.NOT_COVERED);
 		assertLine("implicitExceptionFinally.finally",
-				isJDKCompiler ? ICounter.EMPTY : ICounter.PARTLY_COVERED);
+				isJDKCompiler ? ICounter.EMPTY : ICounter.NOT_COVERED);
 		assertLine("implicitExceptionFinally.finallyBlock",
-				ICounter.PARTLY_COVERED);
-		if (!isJDKCompiler) {
-			assertLine("implicitExceptionFinally.finallyBlockEnd",
-					ICounter.FULLY_COVERED);
-		} else if (isJDK8u152 || isJDK10) {
-			assertLine("implicitExceptionFinally.finallyBlockEnd",
-					ICounter.PARTLY_COVERED);
-		} else {
-			assertLine("implicitExceptionFinally.finallyBlockEnd",
-					ICounter.NOT_COVERED);
-		}
+				ICounter.FULLY_COVERED);
+		assertLine("implicitExceptionFinally.finallyBlockEnd", ICounter.EMPTY);
 		assertLine("implicitExceptionFinally.afterBlock", ICounter.NOT_COVERED);
 
 		// 9. Finally Block With Exception Thrown Explicitly
@@ -159,13 +123,8 @@ public class ExceptionsTest extends ValidationTestBase {
 				isJDKCompiler ? ICounter.EMPTY : ICounter.FULLY_COVERED);
 		assertLine("explicitExceptionFinally.finallyBlock",
 				ICounter.FULLY_COVERED);
-		if (!isJDKCompiler || isJDK8u152 || isJDK10) {
-			assertLine("explicitExceptionFinally.finallyBlockEnd",
-					ICounter.FULLY_COVERED);
-		} else {
-			assertLine("explicitExceptionFinally.finallyBlockEnd",
-					ICounter.EMPTY);
-		}
+		assertLine("explicitExceptionFinally.finallyBlockEnd",
+				isJDKCompiler ? ICounter.EMPTY : ICounter.FULLY_COVERED);
 		assertLine("explicitExceptionFinally.afterBlock", ICounter.EMPTY);
 
 	}

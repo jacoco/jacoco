@@ -44,7 +44,7 @@ public class TryWithResourcesTest extends ValidationTestBase {
 		// without filter next line has branches:
 		assertLine("test.close", ICounter.EMPTY);
 		assertLine("test.catch", ICounter.NOT_COVERED);
-		assertLine("test.finally", ICounter.PARTLY_COVERED);
+		assertLine("test.finally", ICounter.FULLY_COVERED);
 	}
 
 	/**
@@ -62,7 +62,7 @@ public class TryWithResourcesTest extends ValidationTestBase {
 		// without filter next line has branches:
 		assertLine("test2.close", ICounter.EMPTY);
 		assertLine("test2.catch", ICounter.NOT_COVERED);
-		assertLine("test2.finally", ICounter.PARTLY_COVERED);
+		assertLine("test2.finally", ICounter.FULLY_COVERED);
 		assertLine("test2.after", ICounter.FULLY_COVERED);
 	}
 
@@ -109,14 +109,14 @@ public class TryWithResourcesTest extends ValidationTestBase {
 		assertLine("nested.try2", ICounter.FULLY_COVERED);
 		assertLine("nested.body", ICounter.FULLY_COVERED);
 		assertLine("nested.catch2", ICounter.NOT_COVERED);
-		assertLine("nested.finally2", ICounter.PARTLY_COVERED);
+		assertLine("nested.finally2", ICounter.FULLY_COVERED);
 
 		// next lines not covered on exceptional path:
-		assertLine("nested.try3", ICounter.PARTLY_COVERED, 0, 0);
-		assertLine("nested.open3", ICounter.PARTLY_COVERED, 0, 0);
-		assertLine("nested.body3", ICounter.PARTLY_COVERED, 0, 0);
+		assertLine("nested.try3", ICounter.FULLY_COVERED, 0, 0);
+		assertLine("nested.open3", ICounter.FULLY_COVERED, 0, 0);
+		assertLine("nested.body3", ICounter.FULLY_COVERED, 0, 0);
 		assertLine("nested.catch3", ICounter.NOT_COVERED);
-		assertLine("nested.finally3", ICounter.PARTLY_COVERED, 0, 0);
+		assertLine("nested.finally3", ICounter.FULLY_COVERED, 0, 0);
 
 		// without filter next lines have branches:
 		assertLine("nested.close3", ICounter.EMPTY);
@@ -132,12 +132,12 @@ public class TryWithResourcesTest extends ValidationTestBase {
 		// without filter next line covered partly:
 		assertLine("returnInCatch.try1", ICounter.FULLY_COVERED);
 		assertLine("returnInCatch.open", ICounter.FULLY_COVERED);
-		assertLine("returnInCatch.finally1", ICounter.PARTLY_COVERED, 5, 1);
+		assertLine("returnInCatch.finally1", ICounter.PARTLY_COVERED, 1, 1);
 		// without filter next line has branches:
 		assertLine("returnInCatch.close", ICounter.EMPTY);
 
 		assertLine("returnInCatch.try2", ICounter.EMPTY);
-		assertLine("returnInCatch.finally2", ICounter.PARTLY_COVERED, 5, 1);
+		assertLine("returnInCatch.finally2", ICounter.PARTLY_COVERED, 1, 1);
 	}
 
 	/*
