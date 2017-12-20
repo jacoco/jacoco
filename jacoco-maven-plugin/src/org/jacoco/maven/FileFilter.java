@@ -39,7 +39,8 @@ public class FileFilter {
 	 * @param excludes
 	 *            list of excludes patterns
 	 */
-	public FileFilter(final List<String> includes, final List<String> excludes) {
+	public FileFilter(final List<String> includes,
+			final List<String> excludes) {
 		this.includes = includes;
 		this.excludes = excludes;
 	}
@@ -87,6 +88,12 @@ public class FileFilter {
 	 */
 	public String getExcludes() {
 		return this.buildPattern(this.excludes, DEFAULT_EXCLUDES);
+	}
+
+	@Override
+	public String toString() {
+		return String.format("Filter[includes=%s, excludes=%s]", getIncludes(),
+				getExcludes());
 	}
 
 	private String buildPattern(final List<String> patterns,

@@ -50,7 +50,8 @@ import org.jacoco.report.xml.XMLFormatter;
  * 
  * <ol>
  * <li>Create an instance</li>
- * <li>Load one or multiple exec files with <code>loadExecutionData()</code></li>
+ * <li>Load one or multiple exec files with
+ * <code>loadExecutionData()</code></li>
  * <li>Add one or multiple formatters with <code>addXXX()</code> methods</li>
  * <li>Create the root visitor with <code>initRootVisitor()</code></li>
  * <li>Process one or multiple projects with <code>processProject()</code></li>
@@ -109,8 +110,8 @@ final class ReportSupport {
 		if (footer != null) {
 			htmlFormatter.setFooterText(footer);
 		}
-		formatters.add(htmlFormatter.createVisitor(new FileMultiReportOutput(
-				targetdir)));
+		formatters.add(htmlFormatter
+				.createVisitor(new FileMultiReportOutput(targetdir)));
 	}
 
 	public void addAllFormatters(final File targetdir, final String encoding,
@@ -130,8 +131,8 @@ final class ReportSupport {
 
 	public IReportVisitor initRootVisitor() throws IOException {
 		final IReportVisitor visitor = new MultiReportVisitor(formatters);
-		visitor.visitInfo(loader.getSessionInfoStore().getInfos(), loader
-				.getExecutionDataStore().getContents());
+		visitor.visitInfo(loader.getSessionInfoStore().getInfos(),
+				loader.getExecutionDataStore().getContents());
 		return visitor;
 	}
 
@@ -185,23 +186,30 @@ final class ReportSupport {
 	}
 
 	private void processProject(final IReportGroupVisitor visitor,
-			final String bundeName, final MavenProject project,
+			final String bundleName, final MavenProject project,
 			final List<String> includes, final List<String> excludes,
 			final ISourceFileLocator locator) throws IOException {
 		final CoverageBuilder builder = new CoverageBuilder();
-		final File classesDir = new File(project.getBuild()
-				.getOutputDirectory());
+		final File classesDir = new File(
+				project.getBuild().getOutputDirectory());
 
 		if (classesDir.isDirectory()) {
 			final Analyzer analyzer = new Analyzer(
 					loader.getExecutionDataStore(), builder);
 			final FileFilter filter = new FileFilter(includes, excludes);
+			log.info(format(
+					"Analyzing classes from directory %s for bundle %s with %s",
+					classesDir.getAbsolutePath(), bundleName, filter));
 			for (final File file : filter.getFiles(classesDir)) {
 				analyzer.analyzeAll(file);
 			}
+		} else {
+			log.warn(format(
+					"No class directory %s for bundle %s. Coverage report will be empty.",
+					classesDir.getAbsolutePath(), bundleName));
 		}
 
-		final IBundleCoverage bundle = builder.getBundle(bundeName);
+		final IBundleCoverage bundle = builder.getBundle(bundleName);
 		logBundleInfo(bundle, builder.getNoMatchClasses());
 
 		visitor.visitBundle(bundle, locator);
@@ -224,7 +232,8 @@ final class ReportSupport {
 		}
 		if (bundle.getClassCounter().getTotalCount() > 0
 				&& bundle.getLineCounter().getTotalCount() == 0) {
-			log.warn("To enable source code annotation class files have to be compiled with debug information.");
+			log.warn(
+					"To enable source code annotation class files have to be compiled with debug information.");
 		}
 	}
 
@@ -274,7 +283,8 @@ final class ReportSupport {
 		}
 	}
 
-	private static List<File> getCompileSourceRoots(final MavenProject project) {
+	private static List<File> getCompileSourceRoots(
+			final MavenProject project) {
 		final List<File> result = new ArrayList<File>();
 		for (final Object path : project.getCompileSourceRoots()) {
 			result.add(resolvePath(project, (String) path));
