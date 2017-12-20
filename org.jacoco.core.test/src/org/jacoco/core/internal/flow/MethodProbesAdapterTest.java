@@ -384,6 +384,70 @@ public class MethodProbesAdapterTest implements IProbeIdGenerator {
 		expectedVisitor.visitLabel(end);
 	}
 
+	/**
+	 * https://docs.oracle.com/javase/specs/jvms/se9/html/jvms-2.html#jvms-2.11.10
+	 */
+	@Test
+	public void testStructuredLocking() {
+		Label start = new Label();
+		LabelInfo.setSuccessor(start);
+		LabelInfo.setTarget(start);
+		Label end = new Label();
+		LabelInfo.setSuccessor(end);
+		LabelInfo.setTarget(end);
+		Label handlerStart = new Label();
+		Label handlerEnd = new Label();
+		Label after = new Label();
+
+		adapter.visitTryCatchBlock(start, end, handlerStart, null);
+		adapter.visitTryCatchBlock(handlerStart, handlerEnd, handlerStart,
+				null);
+		adapter.visitVarInsn(Opcodes.ALOAD, 1);
+		adapter.visitInsn(Opcodes.MONITORENTER);
+		adapter.visitLabel(start);
+		adapter.visitInsn(Opcodes.NOP);
+		adapter.visitVarInsn(Opcodes.ALOAD, 1);
+		adapter.visitInsn(Opcodes.MONITOREXIT);
+		adapter.visitLabel(end);
+		adapter.visitJumpInsn(Opcodes.GOTO, after);
+		adapter.visitLabel(handlerStart);
+		adapter.visitVarInsn(Opcodes.ALOAD, 1);
+		adapter.visitInsn(Opcodes.MONITOREXIT);
+		adapter.visitLabel(handlerEnd);
+		adapter.visitInsn(Opcodes.ATHROW);
+		adapter.visitLabel(after);
+
+		Label probe1 = new Label();
+		Label probe2 = new Label();
+		expectedVisitor.visitTryCatchBlock(probe1, probe2, handlerStart, null);
+		expectedVisitor.visitTryCatchBlock(handlerStart, handlerEnd,
+				handlerStart, null);
+		expectedVisitor.visitVarInsn(Opcodes.ALOAD, 1);
+		expectedVisitor.visitInsn(Opcodes.MONITORENTER);
+		// next probe must be INSIDE range of instructions covered by handler,
+		// otherwise monitorexit won't be executed
+		// in case if probe causes exception
+		expectedVisitor.visitLabel(probe1);
+		expectedVisitor.visitProbe(1000);
+		expectedVisitor.visitLabel(start);
+		expectedVisitor.visitInsn(Opcodes.NOP);
+		expectedVisitor.visitVarInsn(Opcodes.ALOAD, 1);
+		expectedVisitor.visitInsn(Opcodes.MONITOREXIT);
+		// next probe must be OUTSIDE range of instructions covered by handler,
+		// otherwise monitorexit will be executed second time
+		// in case if probe causes exception
+		expectedVisitor.visitLabel(probe2);
+		expectedVisitor.visitProbe(1001);
+		expectedVisitor.visitLabel(end);
+		expectedVisitor.visitJumpInsn(Opcodes.GOTO, after);
+		expectedVisitor.visitLabel(handlerStart);
+		expectedVisitor.visitVarInsn(Opcodes.ALOAD, 1);
+		expectedVisitor.visitInsn(Opcodes.MONITOREXIT);
+		expectedVisitor.visitLabel(handlerEnd);
+		expectedVisitor.visitInsnWithProbe(Opcodes.ATHROW, 1002);
+		expectedVisitor.visitLabel(after);
+	}
+
 	// === IProbeIdGenerator ===
 
 	public int nextId() {
