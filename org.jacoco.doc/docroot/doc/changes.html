@@ -61,6 +61,10 @@
 
 <h3>Fixed Bugs</h3>
 <ul>
+  <li>Fixed bug in instrumentation of exception handlers, which was causing damage
+      of structured locking in certain situations and as consequence poor
+      performance of instrumented methods, analysis and fix contributed by Allen Hair
+      (GitHub <a href="https://github.com/jacoco/jacoco/issues/627">#627</a>).</li>
   <li><code>dump</code> commands now report error when server unexpectedly
       closes connection without sending response
       (GitHub <a href="https://github.com/jacoco/jacoco/issues/538">#538</a>).</li>
