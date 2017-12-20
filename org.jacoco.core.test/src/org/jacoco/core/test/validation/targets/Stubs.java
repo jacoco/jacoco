@@ -108,6 +108,15 @@ public class Stubs {
 	}
 
 	/**
+	 * Throws a {@link RuntimeException} if given argument is <code>true</code>.
+	 */
+	public static void ex(boolean t) {
+		if (t) {
+			throw new StubException();
+		}
+	}
+
+	/**
 	 * Directly executes the given runnable.
 	 */
 	public static void exec(Runnable task) {
