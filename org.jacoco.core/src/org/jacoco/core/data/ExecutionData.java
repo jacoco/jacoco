@@ -141,7 +141,7 @@ public final class ExecutionData {
 	 * A or B
 	 * </pre>
 	 * 
-	 * For <code>flag==true</code> this can be considered as a subtraction
+	 * For <code>flag==false</code> this can be considered as a subtraction
 	 * 
 	 * <pre>
 	 * A and not B
