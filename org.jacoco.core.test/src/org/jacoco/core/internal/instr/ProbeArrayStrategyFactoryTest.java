@@ -211,6 +211,19 @@ public class ProbeArrayStrategyFactoryTest {
 				true, 0);
 	}
 
+	@Test
+	public void testModule() {
+		final ClassWriter writer = new ClassWriter(0);
+		writer.visit(Opcodes.V9, Opcodes.ACC_MODULE, "module-info", null, null,
+				null);
+		writer.visitModule("module", 0, null).visitEnd();
+		writer.visitEnd();
+
+		final IProbeArrayStrategy strategy = ProbeArrayStrategyFactory
+				.createFor(new ClassReader(writer.toByteArray()), generator);
+		assertEquals(NoneProbeArrayStrategy.class, strategy.getClass());
+	}
+
 	private IProbeArrayStrategy test(int version, int access, boolean clinit,
 			boolean method, boolean abstractMethod) {
 		final ClassWriter writer = new ClassWriter(0);
