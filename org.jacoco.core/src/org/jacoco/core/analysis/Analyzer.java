@@ -107,7 +107,7 @@ public class Analyzer {
 	 */
 	public void analyzeClass(final ClassReader reader) {
 		final ClassVisitor visitor = createAnalyzingVisitor(
-				CRC64.checksum(reader.b), reader.getClassName());
+				CRC64.classId(reader.b), reader.getClassName());
 		reader.accept(visitor, 0);
 	}
 
