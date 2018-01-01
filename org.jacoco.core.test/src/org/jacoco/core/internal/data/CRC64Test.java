@@ -15,7 +15,10 @@ import static org.junit.Assert.assertEquals;
 
 import java.io.UnsupportedEncodingException;
 
+import org.jacoco.core.data.ExecutionDataWriter;
 import org.junit.Test;
+import org.objectweb.asm.ClassWriter;
+import org.objectweb.asm.Opcodes;
 
 /**
  * Unit tests for {@link CRC64}.
@@ -23,8 +26,32 @@ import org.junit.Test;
 public class CRC64Test {
 
 	@Test
+	public void testJava9() {
+		// should remove workaround for Java 9
+		// during change of exec file version
+		assertEquals(0x1007, ExecutionDataWriter.FORMAT_VERSION);
+
+		assertEquals(0xB5284860A572741CL,
+				CRC64.classId(createClass(Opcodes.V9)));
+
+		assertEquals(0xB5284860A572741CL,
+				CRC64.classId(createClass(Opcodes.V1_8)));
+
+		assertEquals(0x45284D30A572741AL,
+				CRC64.classId(createClass(Opcodes.V1_7)));
+	}
+
+	private static byte[] createClass(final int version) {
+		final ClassWriter cw = new ClassWriter(0);
+		cw.visit(version, 0, "Foo", null, "java/lang/Object", null);
+		cw.visitEnd();
+		cw.toByteArray();
+		return cw.toByteArray();
+	}
+
+	@Test
 	public void test0() {
-		final long sum = CRC64.checksum(new byte[0]);
+		final long sum = CRC64.classId(new byte[0]);
 		assertEquals(0L, sum);
 	}
 
@@ -35,7 +62,7 @@ public class CRC64Test {
 	 */
 	@Test
 	public void test1() throws UnsupportedEncodingException {
-		final long sum = CRC64.checksum("IHATEMATH".getBytes("ASCII"));
+		final long sum = CRC64.classId("IHATEMATH".getBytes("ASCII"));
 		assertEquals(0xE3DCADD69B01ADD1L, sum);
 	}
 
@@ -46,7 +73,7 @@ public class CRC64Test {
 	 */
 	@Test
 	public void test2() {
-		final long sum = CRC64.checksum(new byte[] { (byte) 0xff, (byte) 0xff,
+		final long sum = CRC64.classId(new byte[] { (byte) 0xff, (byte) 0xff,
 				(byte) 0xff, (byte) 0xff, (byte) 0xff, (byte) 0xff,
 				(byte) 0xff, (byte) 0xff });
 		assertEquals(0x5300000000000000L, sum);
@@ -59,7 +86,7 @@ public class CRC64Test {
 	 */
 	@Test
 	public void test3() throws UnsupportedEncodingException {
-		final long sum = CRC64.checksum("JACOCO_JACOCO_JACOCO_JACOCO"
+		final long sum = CRC64.classId("JACOCO_JACOCO_JACOCO_JACOCO"
 				.getBytes("ASCII"));
 		assertEquals(0xD8016B38AAD48308L, sum);
 	}

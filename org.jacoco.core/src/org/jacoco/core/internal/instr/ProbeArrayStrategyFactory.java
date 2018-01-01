@@ -42,7 +42,7 @@ public final class ProbeArrayStrategyFactory {
 
 		final String className = reader.getClassName();
 		final int version = getVersion(reader);
-		final long classId = CRC64.checksum(reader.b);
+		final long classId = CRC64.classId(reader.b);
 		final boolean withFrames = version >= Opcodes.V1_6;
 
 		if (isInterfaceOrModule(reader)) {
