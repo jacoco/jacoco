@@ -94,7 +94,7 @@ public class AnalyzerTest {
 		// class IDs are always calculated after downgrade of the version
 		final byte[] bytes = TargetLoader
 				.getClassDataAsBytes(AnalyzerTest.class);
-		executionData.get(Long.valueOf(CRC64.checksum(bytes)),
+		executionData.get(Long.valueOf(CRC64.classId(bytes)),
 				"org/jacoco/core/analysis/AnalyzerTest", 200);
 		analyzer.analyzeClass(bytes, "Test");
 		assertFalse(classes.get("org/jacoco/core/analysis/AnalyzerTest")

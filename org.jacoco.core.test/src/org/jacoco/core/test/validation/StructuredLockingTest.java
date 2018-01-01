@@ -40,11 +40,16 @@ import org.objectweb.asm.tree.analysis.Frame;
 import org.objectweb.asm.tree.analysis.Interpreter;
 
 /**
- * Tests that the invariants specified in chapter 2.11.10 of the JVM Spec do
- * also hold for instrumented classes. Note that only some runtimes like Android
- * ART do actually check these invariants.
+ * Tests that the invariants specified in <a href=
+ * "https://docs.oracle.com/javase/specs/jvms/se9/html/jvms-2.html#jvms-2.11.10">chapter
+ * 2.11.10 of the JVM Spec</a> do also hold for instrumented classes.
  * 
- * https://docs.oracle.com/javase/specs/jvms/se7/html/jvms-2.html#jvms-2.11.10
+ * This is important because JIT compiler in HotSpot JVM ignores methods with
+ * unstructured locking, so that they executed by interpreter. Android Runtime
+ * also doesn't optimize such methods.
+ *
+ * TODO verification implemented here is incomplete - in particular it is unable
+ * to catch problem described in https://github.com/jacoco/jacoco/issues/626
  */
 public class StructuredLockingTest {
 
