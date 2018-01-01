@@ -22,42 +22,54 @@
 
 <h3>New Features</h3>
 <ul>
-  <li>Limit configuration of Maven check goal and Ant check element now also
-      supports percentage values 
+  <li>JaCoCo now officially supports Java 9
+      (GitHub <a href="https://github.com/jacoco/jacoco/issues/600">#600</a>).</li>
+  <li>JaCoCo now comes with a simple command line interface
+      (GitHub <a href="https://github.com/jacoco/jacoco/issues/525">#525</a>).</li>
+  <li>Limit configuration of Maven <code>check</code> goal and Ant
+      <code>check</code> element now also supports percentage values 
       (GitHub <a href="https://github.com/jacoco/jacoco/issues/534">#534</a>).</li>
-  <li>Exclude from a report enum methods <code>valueOf</code> and <code>values</code>
-      that are created by compiler
-      (GitHub <a href="https://github.com/jacoco/jacoco/issues/491">#491</a>).</li>
-  <li>Exclude from a report a part of bytecode that compiler generates for a
-      synchronized statement
-      (GitHub <a href="https://github.com/jacoco/jacoco/issues/501">#501</a>).</li>
-  <li>Exclude from a report a part of bytecode that compiler generates for a
-      try-with-resources statement
-      (GitHub <a href="https://github.com/jacoco/jacoco/issues/500">#500</a>).</li>
-  <li>During creation of a report merge duplicate instructions that compiler generates
-      for finally blocks
-      (GitHub <a href="https://github.com/jacoco/jacoco/issues/604">#604</a>).</li>
-  <li>Exclude from a report methods which are annotated with <code>@lombok.Generated</code>.
-      Initial analysis and contribution by Rüdiger zu Dohna
-      (GitHub <a href="https://github.com/jacoco/jacoco/issues/513">#513</a>).</li>
-  <li>Exclude from a report methods which are annotated with
-      <code>@groovy.transform.Generated</code> to better integrate with Groovy
-       >= 2.5.0. Thanks to Andres Almiray for adding the annotation to Groovy
-      (GitHub <a href="https://github.com/jacoco/jacoco/issues/610">#610</a>).</li>
-  <li>Exclude from a report private empty constructors that do not have arguments
-      (GitHub <a href="https://github.com/jacoco/jacoco/issues/529">#529</a>).</li>
-  <li>Exclude from a report a part of bytecode that javac generates for a
-      String in switch statement
-      (GitHub <a href="https://github.com/jacoco/jacoco/issues/596">#596</a>).</li>
+  <li>Manifests of JAR files now have <code>Automatic-Module-Name</code> for Java 9
+      (GitHub <a href="https://github.com/jacoco/jacoco/issues/565">#565</a>).</li>
   <li>Maven aggregated reports will now also include modules of <code>runtime</code>
       and <code>provided</code> dependencies
       (GitHub <a href="https://github.com/jacoco/jacoco/issues/498">#498</a>,
       <a href="https://github.com/jacoco/jacoco/issues/572">#572</a>).</li>
-  <li>JaCoCo now comes with a simple command line interface
-      (GitHub <a href="https://github.com/jacoco/jacoco/issues/525">#525</a>).</li>
-  <li>Manifests of JAR files now have <code>Automatic-Module-Name</code> for Java 9
-      (GitHub <a href="https://github.com/jacoco/jacoco/issues/565">#565</a>).</li>
 </ul>
+
+<p>
+  During creation of reports various compiler generated artifacts are filtered
+  out, which otherwise require unnecessary and sometimes impossible tricks to
+  not have partial or missed coverage:
+</p>
+
+<ul>
+  <li>Methods <code>valueOf</code> and <code>values</code> of enum types
+      (GitHub <a href="https://github.com/jacoco/jacoco/issues/491">#491</a>).</li>
+  <li>Private empty no-argument constructors
+      (GitHub <a href="https://github.com/jacoco/jacoco/issues/529">#529</a>).</li>
+  <li>Methods annotated with <code>@lombok.Generated</code> to better integrate
+      with Lombok >= 1.16.14. Initial analysis and contribution by Rüdiger zu Dohna
+      (GitHub <a href="https://github.com/jacoco/jacoco/issues/513">#513</a>).</li>
+  <li>Methods annotated with <code>@groovy.transform.Generated</code> to better
+      integrate with Groovy >= 2.5.0. Thanks to Andres Almiray for adding the annotation to Groovy
+      (GitHub <a href="https://github.com/jacoco/jacoco/issues/610">#610</a>).</li>
+  <li>Part of bytecode for <code>synchronized</code> blocks
+      (GitHub <a href="https://github.com/jacoco/jacoco/issues/501">#501</a>).</li>
+  <li>Part of bytecode for try-with-resources statements
+      (GitHub <a href="https://github.com/jacoco/jacoco/issues/500">#500</a>).</li>
+  <li>Part of bytecode for <code>finally</code> blocks
+      (GitHub <a href="https://github.com/jacoco/jacoco/issues/604">#604</a>).</li>
+  <li>Part of bytecode for <code>switch</code> statements on
+      <code>java.lang.String</code> values
+      (GitHub <a href="https://github.com/jacoco/jacoco/issues/596">#596</a>).</li>
+</ul>
+
+<p>
+  Note: Tools that directly read <code>exec</code> files and embed JaCoCo for
+  this (such as SonarQube or Jenkins) will provide filtering functionality only
+  after they updated to this version of JaCoCo.
+</p>
 
 <h3>Fixed Bugs</h3>
 <ul>
@@ -68,16 +80,14 @@
   <li><code>dump</code> commands now report error when server unexpectedly
       closes connection without sending response
       (GitHub <a href="https://github.com/jacoco/jacoco/issues/538">#538</a>).</li>
-  <li>More information about context is provided when unable to read stream during
-      analysis
-      (GitHub <a href="https://github.com/jacoco/jacoco/issues/541">#541</a>).</li>
   <li>Reduced chance of conflict with other agents
       (GitHub <a href="https://github.com/jacoco/jacoco/issues/555">#555</a>).</li>
   <li>Restored Maven <code>help</code> goal that was missing in version 0.7.9
       (GitHub <a href="https://github.com/jacoco/jacoco/issues/559">#559</a>).</li>
   <li><code>NullPointerException</code> during offline instrumentation of
       <code>module-info.class</code>
-      (GitHub <a href="https://github.com/jacoco/jacoco/issues/600">#600</a>).</li>
+      (GitHub <a href="https://github.com/jacoco/jacoco/issues/600">#600</a>,
+      GitHub <a href="https://github.com/jacoco/jacoco/issues/634">#634</a>).</li>
   <li>Incorrect update of frames caused by bug in ASM library
       (GitHub <a href="https://github.com/jacoco/jacoco/issues/600">#600</a>).</li>
   <li>Loss of <code>InnerClasses</code> attribute caused by bug in ASM library
@@ -94,6 +104,9 @@
   <li>More information about context is provided when unable to read input during
       instrumentation
       (GitHub <a href="https://github.com/jacoco/jacoco/issues/527">#527</a>).</li>
+  <li>More information about context is provided when unable to read stream during
+      analysis
+      (GitHub <a href="https://github.com/jacoco/jacoco/issues/541">#541</a>).</li>
 </ul>
 
 <h2>Release 0.7.9 (2017/02/05)</h2>
