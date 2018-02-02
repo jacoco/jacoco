@@ -29,7 +29,7 @@ public final class JavaVersion {
 		final String[] s = javaVersionPropertyValue.split("[._-]");
 		if ("1".equals(s[0])) {
 			this.feature = Integer.parseInt(s[1]);
-			this.update = Integer.parseInt(s[3]);
+			this.update = s.length > 3 ? Integer.parseInt(s[3]) : 0;
 		} else {
 			this.feature = Integer.parseInt(s[0]);
 			this.update = s.length > 2 ? Integer.parseInt(s[2]) : 0;
@@ -40,7 +40,7 @@ public final class JavaVersion {
 	 * @return value of feature-release counter, for example: 8 for version
 	 *         "1.8.0_152" and 9 for version "9.0.1"
 	 */
-	public int feature() {
+	int feature() {
 		return feature;
 	}
 
@@ -48,8 +48,19 @@ public final class JavaVersion {
 	 * @return value of update-release counter, for example: 152 for version
 	 *         "1.8.0_152" and 1 for version "9.0.1"
 	 */
-	public int update() {
+	int update() {
 		return update;
+	}
+
+	/**
+	 * @param version
+	 *            version to compare with
+	 * @return <code>true</code> if this version is less than given
+	 */
+	public boolean isBefore(final String version) {
+		final JavaVersion other = new JavaVersion(version);
+		return this.feature < other.feature || (this.feature == other.feature
+				&& this.update < other.update);
 	}
 
 }

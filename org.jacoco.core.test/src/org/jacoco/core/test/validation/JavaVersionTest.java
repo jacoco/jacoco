@@ -14,6 +14,8 @@ package org.jacoco.core.test.validation;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 public class JavaVersionTest {
 
@@ -40,6 +42,20 @@ public class JavaVersionTest {
 		v = new JavaVersion("10-ea");
 		assertEquals(10, v.feature());
 		assertEquals(0, v.update());
+	}
+
+	@Test
+	public void should_compare_with_given_version() {
+		assertTrue(new JavaVersion("1.7.0_80").isBefore("1.8.0_92"));
+
+		assertTrue(new JavaVersion("1.8.0_31").isBefore("1.8.0_92"));
+
+		assertFalse(new JavaVersion("1.8.0_92").isBefore("1.8.0_92"));
+
+		assertFalse(new JavaVersion("1.8.0_162").isBefore("1.8.0_92"));
+		assertFalse(new JavaVersion("1.8.0_162").isBefore("1.8"));
+
+		assertFalse(new JavaVersion("9.0.1").isBefore("1.8.0_92"));
 	}
 
 }

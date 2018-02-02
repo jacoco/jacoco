@@ -76,8 +76,7 @@ public class TryWithResourcesTest extends ValidationTestBase {
 		if (isJDKCompiler) {
 			// https://bugs.openjdk.java.net/browse/JDK-8134759
 			// javac 7 and 8 up to 8u92 are affected
-			if (JAVA_VERSION.feature() == 7 || (JAVA_VERSION.feature() == 8
-					&& JAVA_VERSION.update() < 92)) {
+			if (JAVA_VERSION.isBefore("1.8.0_92")) {
 				assertLine("returnInBody.close", ICounter.FULLY_COVERED, 0, 0);
 			} else {
 				assertLine("returnInBody.close", ICounter.EMPTY);
@@ -157,11 +156,11 @@ public class TryWithResourcesTest extends ValidationTestBase {
 		assertLine("empty.open", ICounter.FULLY_COVERED);
 		// empty when EJC:
 		if (isJDKCompiler) {
-			if (JAVA_VERSION.feature() >= 9) {
-				assertLine("empty.close", ICounter.FULLY_COVERED, 0, 0);
-			} else {
+			if (JAVA_VERSION.isBefore("9")) {
 				// branches with javac 7 and 8
 				assertLine("empty.close", ICounter.PARTLY_COVERED);
+			} else {
+				assertLine("empty.close", ICounter.FULLY_COVERED, 0, 0);
 			}
 		}
 	}

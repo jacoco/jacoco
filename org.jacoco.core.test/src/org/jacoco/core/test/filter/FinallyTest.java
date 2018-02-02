@@ -105,7 +105,7 @@ public class FinallyTest extends ValidationTestBase {
 	@Test
 	public void twoRegions() {
 		assertLine("twoRegions.0", ICounter.EMPTY);
-		if (isJDKCompiler && JAVA_VERSION.feature() < 8) {
+		if (isJDKCompiler && JAVA_VERSION.isBefore("1.8")) {
 			// https://bugs.openjdk.java.net/browse/JDK-7008643
 			assertLine("twoRegions.1", ICounter.PARTLY_COVERED);
 			assertLine("twoRegions.return.1", ICounter.EMPTY);
@@ -148,13 +148,13 @@ public class FinallyTest extends ValidationTestBase {
 	@Test
 	public void emptyTry() {
 		assertLine("emptyTry.0", ICounter.EMPTY);
-		if (!isJDKCompiler || JAVA_VERSION.feature() > 7) {
-			assertLine("emptyTry.1", ICounter.FULLY_COVERED);
-			assertLine("emptyTry.2", ICounter.EMPTY);
-		} else {
+		if (isJDKCompiler && JAVA_VERSION.isBefore("1.8")) {
 			// compiler bug fixed in javac >= 1.8:
 			assertLine("emptyTry.1", ICounter.PARTLY_COVERED);
 			assertLine("emptyTry.2", ICounter.FULLY_COVERED);
+		} else {
+			assertLine("emptyTry.1", ICounter.FULLY_COVERED);
+			assertLine("emptyTry.2", ICounter.EMPTY);
 		}
 	}
 
@@ -248,7 +248,7 @@ public class FinallyTest extends ValidationTestBase {
 			expected.add("nested.3");
 		}
 
-		if (isJDKCompiler && JAVA_VERSION.feature() < 8) {
+		if (isJDKCompiler && JAVA_VERSION.isBefore("1.8")) {
 			expected.add("emptyTry.2");
 		}
 

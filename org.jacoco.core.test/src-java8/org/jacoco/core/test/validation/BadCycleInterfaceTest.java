@@ -26,7 +26,7 @@ public class BadCycleInterfaceTest extends ValidationTestBase {
 
 	@Test
 	public void test() throws Exception {
-		if (JAVA_VERSION.feature() == 8 && JAVA_VERSION.update() < 152) {
+		if (JAVA_VERSION.isBefore("1.8.0_152")) {
 			// Incorrect interpetation of JVMS 5.5 in JDK 8 causes a default
 			// method to be called before the static initializer of an interface
 			// (see JDK-8098557 and JDK-8164302):
