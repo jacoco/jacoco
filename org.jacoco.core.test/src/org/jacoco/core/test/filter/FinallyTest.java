@@ -220,7 +220,12 @@ public class FinallyTest extends ValidationTestBase {
 
 		expected.add("breakStatement.for");
 		if (isJDKCompiler) {
-			expected.add("breakStatement.1");
+			if (JAVA_VERSION.isBefore("10")) {
+				// https://bugs.openjdk.java.net/browse/JDK-8180141
+				expected.add("breakStatement.1");
+			} else {
+				expected.add("breakStatement");
+			}
 			expected.add("breakStatement.2");
 		} else {
 			expected.add("breakStatement");
