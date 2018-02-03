@@ -16,9 +16,6 @@ import org.jacoco.core.test.filter.targets.TryWithResources;
 import org.jacoco.core.test.validation.ValidationTestBase;
 import org.junit.Test;
 
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 /**
  * Test of filtering of a bytecode that is generated for a try-with-resources
  * statement.
@@ -79,11 +76,7 @@ public class TryWithResourcesTest extends ValidationTestBase {
 		if (isJDKCompiler) {
 			// https://bugs.openjdk.java.net/browse/JDK-8134759
 			// javac 7 and 8 up to 8u92 are affected
-			final String jdkVersion = System.getProperty("java.version");
-			final Matcher m = Pattern.compile("1\\.8\\.0_(\\d++)(-ea)?")
-					.matcher(jdkVersion);
-			if (jdkVersion.startsWith("1.7.0_")
-					|| (m.matches() && Integer.parseInt(m.group(1)) < 92)) {
+			if (JAVA_VERSION.isBefore("1.8.0_92")) {
 				assertLine("returnInBody.close", ICounter.FULLY_COVERED, 0, 0);
 			} else {
 				assertLine("returnInBody.close", ICounter.EMPTY);
@@ -163,12 +156,11 @@ public class TryWithResourcesTest extends ValidationTestBase {
 		assertLine("empty.open", ICounter.FULLY_COVERED);
 		// empty when EJC:
 		if (isJDKCompiler) {
-			final String jdkVersion = System.getProperty("java.version");
-			if (jdkVersion.startsWith("9") || jdkVersion.startsWith("10")) {
-				assertLine("empty.close", ICounter.FULLY_COVERED, 0, 0);
-			} else {
+			if (JAVA_VERSION.isBefore("9")) {
 				// branches with javac 7 and 8
 				assertLine("empty.close", ICounter.PARTLY_COVERED);
+			} else {
+				assertLine("empty.close", ICounter.FULLY_COVERED, 0, 0);
 			}
 		}
 	}

@@ -15,9 +15,6 @@ import org.jacoco.core.analysis.ICounter;
 import org.jacoco.core.test.validation.targets.BadCycleInterface;
 import org.junit.Test;
 
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 /**
  * Test of "bad cycles" with interfaces.
  */
@@ -29,9 +26,7 @@ public class BadCycleInterfaceTest extends ValidationTestBase {
 
 	@Test
 	public void test() throws Exception {
-		final Matcher m = Pattern.compile("1\\.8\\.0_(\\d++)(-ea)?")
-				.matcher(System.getProperty("java.version"));
-		if (m.matches() && Integer.parseInt(m.group(1)) < 152) {
+		if (JAVA_VERSION.isBefore("1.8.0_152")) {
 			// Incorrect interpetation of JVMS 5.5 in JDK 8 causes a default
 			// method to be called before the static initializer of an interface
 			// (see JDK-8098557 and JDK-8164302):
