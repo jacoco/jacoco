@@ -735,7 +735,7 @@
       <properties>
         <!--
         Compile into bytecode version 8 by default,
-        because maven-shade-plugin and maven-plugin-plugin are unable to proceess bytecode version 9,
+        because maven-bundle-plugin is unable to proceess bytecode version >=9,
         this is overridden for tests
         -->
         <maven.compiler.source>1.8</maven.compiler.source>
