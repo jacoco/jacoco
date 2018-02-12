@@ -17,6 +17,7 @@ import java.util.Map;
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.tree.AbstractInsnNode;
 import org.objectweb.asm.tree.MethodInsnNode;
+import org.objectweb.asm.tree.MethodNode;
 import org.objectweb.asm.tree.VarInsnNode;
 
 abstract class AbstractMatcher {
@@ -24,6 +25,35 @@ abstract class AbstractMatcher {
 	final Map<String, VarInsnNode> vars = new HashMap<String, VarInsnNode>();
 
 	AbstractInsnNode cursor;
+
+	/**
+	 * Sets {@link #cursor} to first instruction of method if it is
+	 * <code>ALOAD 0</code>, otherwise sets it to <code>null</code>.
+	 */
+	final void firstIsALoad0(final MethodNode methodNode) {
+		cursor = methodNode.instructions.getFirst();
+		skipNonOpcodes();
+		if (cursor.getOpcode() == Opcodes.ALOAD
+				&& ((VarInsnNode) cursor).var == 0) {
+			return;
+		}
+		cursor = null;
+	}
+
+	/**
+	 * Moves {@link #cursor} to next instruction if it is
+	 * <code>INVOKESPECIAL &lt;init&gt;</code> with given owner and descriptor,
+	 * otherwise sets it to <code>null</code>.
+	 */
+	final void nextIsInvokeSuper(final String owner, final String desc) {
+		nextIs(Opcodes.INVOKESPECIAL);
+		MethodInsnNode m = (MethodInsnNode) cursor;
+		if (m != null && owner.equals(m.owner) && "<init>".equals(m.name)
+				&& desc.equals(m.desc)) {
+			return;
+		}
+		cursor = null;
+	}
 
 	final void nextIsInvokeVirtual(final String owner, final String name) {
 		nextIs(Opcodes.INVOKEVIRTUAL);
@@ -76,7 +106,7 @@ abstract class AbstractMatcher {
 		skipNonOpcodes();
 	}
 
-	final void skipNonOpcodes() {
+	private void skipNonOpcodes() {
 		while (cursor != null && (cursor.getType() == AbstractInsnNode.FRAME
 				|| cursor.getType() == AbstractInsnNode.LABEL
 				|| cursor.getType() == AbstractInsnNode.LINE)) {
