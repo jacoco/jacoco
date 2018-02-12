@@ -15,16 +15,27 @@ import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.tree.MethodNode;
 
 /**
- * Filters private empty constructors that do not have arguments.
+ * Filters empty enum constructors.
+ *
+ * Constructor of enum is invoked from static initialization block to create
+ * instance of each enum constant. So it won't be executed if number of enum
+ * constants is zero. Such enums are sometimes used as alternative to classes
+ * with static utilities and private empty constructor. Implicit constructor of
+ * enum created by compiler doesn't have a synthetic flag and refers to a line
+ * of enum definition. Therefore in order to not have partial coverage of enum
+ * definition line in enums without enum constants and similarly to
+ * {@link PrivateEmptyNoArgConstructorFilter filter of private empty
+ * constructors} - empty constructor in enums without additional parameters
+ * should be filtered out even if it is not implicit.
  */
-public final class PrivateEmptyNoArgConstructorFilter implements IFilter {
+public final class EnumEmptyConstructorFilter implements IFilter {
 
 	private static final String CONSTRUCTOR_NAME = "<init>";
-	private static final String CONSTRUCTOR_DESC = "()V";
+	private static final String CONSTRUCTOR_DESC = "(Ljava/lang/String;I)V";
 
-	public void filter(final String className, final String superClassName,
-			final MethodNode methodNode, final IFilterOutput output) {
-		if ((methodNode.access & Opcodes.ACC_PRIVATE) != 0
+	public void filter(String className, String superClassName,
+			MethodNode methodNode, IFilterOutput output) {
+		if ("java/lang/Enum".equals(superClassName)
 				&& CONSTRUCTOR_NAME.equals(methodNode.name)
 				&& CONSTRUCTOR_DESC.equals(methodNode.desc)
 				&& new Matcher().match(methodNode, superClassName)) {
@@ -37,6 +48,8 @@ public final class PrivateEmptyNoArgConstructorFilter implements IFilter {
 		private boolean match(final MethodNode methodNode,
 				final String superClassName) {
 			firstIsALoad0(methodNode);
+			nextIs(Opcodes.ALOAD);
+			nextIs(Opcodes.ILOAD);
 			nextIsInvokeSuper(superClassName, CONSTRUCTOR_DESC);
 			nextIs(Opcodes.RETURN);
 			return cursor != null;
