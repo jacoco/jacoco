@@ -30,6 +30,22 @@
     <maven>2.2.1</maven>
   </prerequisites>
 
+  <dependencyManagement>
+    <dependencies>
+      <!-- maven-reporting-impl and slight update of version of its transitive dependency on commons-collections -->
+      <dependency>
+        <groupId>org.apache.maven.reporting</groupId>
+        <artifactId>maven-reporting-impl</artifactId>
+        <version>2.1</version>
+      </dependency>
+      <dependency>
+        <groupId>commons-collections</groupId>
+        <artifactId>commons-collections</artifactId>
+        <version>3.2.2</version>
+      </dependency>
+    </dependencies>
+  </dependencyManagement>
+
   <dependencies>
     <dependency>
       <groupId>org.apache.maven</groupId>
@@ -60,7 +76,6 @@
     <dependency>
       <groupId>org.apache.maven.reporting</groupId>
       <artifactId>maven-reporting-impl</artifactId>
-      <version>2.1</version>
     </dependency>
 
     <dependency>
