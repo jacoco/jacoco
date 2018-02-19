@@ -33,6 +33,7 @@ import org.jacoco.report.IReportVisitor;
 import org.jacoco.report.ISourceFileLocator;
 import org.jacoco.report.MultiReportVisitor;
 import org.jacoco.report.MultiSourceFileLocator;
+import org.jacoco.report.badge.BadgeFormatter;
 import org.jacoco.report.csv.CSVFormatter;
 import org.jacoco.report.html.HTMLFormatter;
 import org.jacoco.report.xml.XMLFormatter;
@@ -67,6 +68,9 @@ public class Report extends Command {
 
 	@Option(name = "--csv", usage = "output file for the CSV report", metaVar = "<file>")
 	File csv;
+
+	@Option(name = "--badge", usage = "output file for the SVG badge", metaVar = "<file>")
+	File badge;
 
 	@Option(name = "--html", usage = "output directory for the HTML report", metaVar = "<dir>")
 	File html;
@@ -150,6 +154,11 @@ public class Report extends Command {
 		if (csv != null) {
 			final CSVFormatter formatter = new CSVFormatter();
 			visitors.add(formatter.createVisitor(new FileOutputStream(csv)));
+		}
+
+		if (badge != null) {
+			final BadgeFormatter formatter = new BadgeFormatter();
+			visitors.add(formatter.createVisitor(new FileOutputStream(badge)));
 		}
 
 		if (html != null) {

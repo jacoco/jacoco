@@ -37,6 +37,7 @@ import org.jacoco.report.IReportGroupVisitor;
 import org.jacoco.report.IReportVisitor;
 import org.jacoco.report.ISourceFileLocator;
 import org.jacoco.report.MultiReportVisitor;
+import org.jacoco.report.badge.BadgeFormatter;
 import org.jacoco.report.check.IViolationsOutput;
 import org.jacoco.report.check.Rule;
 import org.jacoco.report.check.RulesChecker;
@@ -50,7 +51,8 @@ import org.jacoco.report.xml.XMLFormatter;
  * 
  * <ol>
  * <li>Create an instance</li>
- * <li>Load one or multiple exec files with <code>loadExecutionData()</code></li>
+ * <li>Load one or multiple exec files with
+ * <code>loadExecutionData()</code></li>
  * <li>Add one or multiple formatters with <code>addXXX()</code> methods</li>
  * <li>Create the root visitor with <code>initRootVisitor()</code></li>
  * <li>Process one or multiple projects with <code>processProject()</code></li>
@@ -109,8 +111,13 @@ final class ReportSupport {
 		if (footer != null) {
 			htmlFormatter.setFooterText(footer);
 		}
-		formatters.add(htmlFormatter.createVisitor(new FileMultiReportOutput(
-				targetdir)));
+		formatters.add(htmlFormatter
+				.createVisitor(new FileMultiReportOutput(targetdir)));
+	}
+
+	public void addBadgeFormatter(final File targetfile) throws IOException {
+		final BadgeFormatter badge = new BadgeFormatter();
+		formatters.add(badge.createVisitor(new FileOutputStream(targetfile)));
 	}
 
 	public void addAllFormatters(final File targetdir, final String encoding,
@@ -119,6 +126,7 @@ final class ReportSupport {
 		addXmlFormatter(new File(targetdir, "jacoco.xml"), encoding);
 		addCsvFormatter(new File(targetdir, "jacoco.csv"), encoding);
 		addHtmlFormatter(targetdir, encoding, footer, locale);
+		addBadgeFormatter(new File(targetdir, "jacoco.svg"));
 	}
 
 	public void addRulesChecker(final List<Rule> rules,
@@ -130,8 +138,8 @@ final class ReportSupport {
 
 	public IReportVisitor initRootVisitor() throws IOException {
 		final IReportVisitor visitor = new MultiReportVisitor(formatters);
-		visitor.visitInfo(loader.getSessionInfoStore().getInfos(), loader
-				.getExecutionDataStore().getContents());
+		visitor.visitInfo(loader.getSessionInfoStore().getInfos(),
+				loader.getExecutionDataStore().getContents());
 		return visitor;
 	}
 
@@ -189,8 +197,8 @@ final class ReportSupport {
 			final List<String> includes, final List<String> excludes,
 			final ISourceFileLocator locator) throws IOException {
 		final CoverageBuilder builder = new CoverageBuilder();
-		final File classesDir = new File(project.getBuild()
-				.getOutputDirectory());
+		final File classesDir = new File(
+				project.getBuild().getOutputDirectory());
 
 		if (classesDir.isDirectory()) {
 			final Analyzer analyzer = new Analyzer(
@@ -275,7 +283,8 @@ final class ReportSupport {
 		}
 	}
 
-	private static List<File> getCompileSourceRoots(final MavenProject project) {
+	private static List<File> getCompileSourceRoots(
+			final MavenProject project) {
 		final List<File> result = new ArrayList<File>();
 		for (final Object path : project.getCompileSourceRoots()) {
 			result.add(resolvePath(project, (String) path));

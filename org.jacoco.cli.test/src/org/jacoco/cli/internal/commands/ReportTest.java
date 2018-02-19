@@ -110,6 +110,18 @@ public class ReportTest extends CommandTestBase {
 	}
 
 	@Test
+	public void should_create_badge_when_badge_option_is_provided()
+			throws Exception {
+		File badge = new File(tmp.getRoot(), "badge.svg");
+
+		execute("report", "--classfiles", getClassPath(), "--badge",
+				badge.getAbsolutePath());
+
+		assertOk();
+		assertTrue(badge.isFile());
+	}
+
+	@Test
 	public void should_create_html_report_when_html_option_is_provided()
 			throws Exception {
 		File html = new File(tmp.getRoot(), "coverage");

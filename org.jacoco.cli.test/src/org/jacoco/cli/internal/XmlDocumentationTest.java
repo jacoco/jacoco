@@ -98,11 +98,11 @@ public class XmlDocumentationTest {
 				doc);
 
 		assertContains("-classfiles <path>",
-				"/documentation/command[@name='report']/option[2]/usage/text()",
+				"/documentation/command[@name='report']/option[3]/usage/text()",
 				doc);
 
 		assertContains("true",
-				"/documentation/command[@name='report']/option[2]/@multiple",
+				"/documentation/command[@name='report']/option[3]/@multiple",
 				doc);
 
 	}
