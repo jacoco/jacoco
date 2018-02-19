@@ -27,7 +27,6 @@ import org.jacoco.core.analysis.ICoverageNode.ElementType;
 import org.jacoco.core.internal.analysis.CounterImpl;
 import org.jacoco.report.MemoryMultiReportOutput;
 import org.jacoco.report.internal.ReportOutputFolder;
-import org.jacoco.report.internal.html.HTMLDocument;
 import org.jacoco.report.internal.html.HTMLElement;
 import org.jacoco.report.internal.html.HTMLSupport;
 import org.jacoco.report.internal.html.resources.Resources;
@@ -47,7 +46,7 @@ public class TableTest {
 
 	private Resources resources;
 
-	private HTMLDocument doc;
+	private HTMLElement html;
 
 	private HTMLElement body;
 
@@ -58,9 +57,9 @@ public class TableTest {
 		output = new MemoryMultiReportOutput();
 		root = new ReportOutputFolder(output);
 		resources = new Resources(root);
-		doc = new HTMLDocument(root.createFile("Test.html"), "UTF-8");
-		doc.head().title();
-		body = doc.body();
+		html = new HTMLElement(root.createFile("Test.html"), "UTF-8");
+		html.head().title();
+		body = html.body();
 		table = new Table();
 	}
 
@@ -106,7 +105,7 @@ public class TableTest {
 				createItem("B", 2), createItem("C", 3));
 		table.add("Header", null, recorder, false);
 		table.render(body, items, createTotal("Sum", 6), resources, root);
-		doc.close();
+		html.close();
 		assertEquals("init-footer-itemA-itemB-itemC-", recorder.toString());
 	}
 
@@ -136,31 +135,35 @@ public class TableTest {
 		final List<ITableItem> items = Arrays.asList(createItem("A", 1));
 		table.add("Header", null, column, false);
 		table.render(body, items, createTotal("Sum", 1), resources, root);
-		doc.close();
+		html.close();
 	}
 
 	@Test(expected = IllegalStateException.class)
 	public void testTwoDefaultSorts() throws IOException {
-		doc.close();
-		table.add("Header1", null, new StubRenderer(
-				CounterComparator.TOTALITEMS.on(CounterEntity.CLASS)), true);
-		table.add("Header2", null, new StubRenderer(
-				CounterComparator.TOTALITEMS.on(CounterEntity.CLASS)), true);
+		html.close();
+		table.add("Header1", null,
+				new StubRenderer(
+						CounterComparator.TOTALITEMS.on(CounterEntity.CLASS)),
+				true);
+		table.add("Header2", null,
+				new StubRenderer(
+						CounterComparator.TOTALITEMS.on(CounterEntity.CLASS)),
+				true);
 	}
 
 	@Test
 	public void testSortIds() throws Exception {
 		final List<ITableItem> items = Arrays.asList(createItem("C", 3),
 				createItem("E", 4), createItem("A", 1), createItem("D", 2));
-		table.add("Forward", null, new StubRenderer(
-				CounterComparator.TOTALITEMS.on(CounterEntity.CLASS)), false);
-		table.add(
-				"Reverse",
-				null,
-				new StubRenderer(CounterComparator.TOTALITEMS.reverse().on(
-						CounterEntity.CLASS)), false);
+		table.add("Forward", null,
+				new StubRenderer(
+						CounterComparator.TOTALITEMS.on(CounterEntity.CLASS)),
+				false);
+		table.add("Reverse", null, new StubRenderer(
+				CounterComparator.TOTALITEMS.reverse().on(CounterEntity.CLASS)),
+				false);
 		table.render(body, items, createTotal("Sum", 6), resources, root);
-		doc.close();
+		html.close();
 
 		final HTMLSupport support = new HTMLSupport();
 		final Document doc = support.parse(output.getFile("Test.html"));
@@ -199,10 +202,12 @@ public class TableTest {
 		final List<ITableItem> items = Arrays.asList(createItem("C", 3),
 				createItem("E", 5), createItem("A", 1), createItem("D", 4),
 				createItem("B", 2));
-		table.add("Forward", null, new StubRenderer(
-				CounterComparator.TOTALITEMS.on(CounterEntity.CLASS)), true);
+		table.add("Forward", null,
+				new StubRenderer(
+						CounterComparator.TOTALITEMS.on(CounterEntity.CLASS)),
+				true);
 		table.render(body, items, createTotal("Sum", 1), resources, root);
-		doc.close();
+		html.close();
 
 		final HTMLSupport support = new HTMLSupport();
 		final Document doc = support.parse(output.getFile("Test.html"));
@@ -222,7 +227,8 @@ public class TableTest {
 	}
 
 	private ITableItem createItem(final String name, final int count) {
-		final ICoverageNode node = new CoverageNodeImpl(ElementType.GROUP, name) {
+		final ICoverageNode node = new CoverageNodeImpl(ElementType.GROUP,
+				name) {
 			{
 				this.classCounter = CounterImpl.getInstance(count, 0);
 			}

@@ -15,7 +15,6 @@ import java.io.IOException;
 
 import org.jacoco.core.JaCoCo;
 import org.jacoco.report.internal.ReportOutputFolder;
-import org.jacoco.report.internal.html.HTMLDocument;
 import org.jacoco.report.internal.html.HTMLElement;
 import org.jacoco.report.internal.html.IHTMLReportContext;
 import org.jacoco.report.internal.html.ILinkable;
@@ -71,12 +70,12 @@ public abstract class ReportPage implements ILinkable {
 	 *             if the page can't be written
 	 */
 	public void render() throws IOException {
-		final HTMLDocument doc = new HTMLDocument(
+		final HTMLElement html = new HTMLElement(
 				folder.createFile(getFileName()), context.getOutputEncoding());
-		doc.attr("lang", context.getLocale().getLanguage());
-		head(doc.head());
-		body(doc.body());
-		doc.close();
+		html.attr("lang", context.getLocale().getLanguage());
+		head(html.head());
+		body(html.body());
+		html.close();
 	}
 
 	/**
@@ -130,8 +129,8 @@ public abstract class ReportPage implements ILinkable {
 		span.a(context.getSessionsPage(), folder);
 	}
 
-	private void breadcrumb(final HTMLElement div, final ReportOutputFolder base)
-			throws IOException {
+	private void breadcrumb(final HTMLElement div,
+			final ReportOutputFolder base) throws IOException {
 		breadcrumbParent(parent, div, base);
 		div.span(getLinkStyle()).text(getLinkLabel());
 	}
@@ -151,7 +150,8 @@ public abstract class ReportPage implements ILinkable {
 		final HTMLElement versioninfo = footer.span(Styles.RIGHT);
 		versioninfo.text("Created with ");
 		versioninfo.a(JaCoCo.HOMEURL).text("JaCoCo");
-		versioninfo.text(" ").text(JaCoCo.VERSION);
+		versioninfo.text(" ");
+		versioninfo.text(JaCoCo.VERSION);
 		footer.text(context.getFooterText());
 	}
 

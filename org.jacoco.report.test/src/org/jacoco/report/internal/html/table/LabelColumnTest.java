@@ -21,7 +21,6 @@ import org.jacoco.core.analysis.ICoverageNode;
 import org.jacoco.core.analysis.ICoverageNode.ElementType;
 import org.jacoco.report.MemoryMultiReportOutput;
 import org.jacoco.report.internal.ReportOutputFolder;
-import org.jacoco.report.internal.html.HTMLDocument;
 import org.jacoco.report.internal.html.HTMLElement;
 import org.jacoco.report.internal.html.HTMLSupport;
 import org.jacoco.report.internal.html.resources.Resources;
@@ -41,7 +40,7 @@ public class LabelColumnTest {
 
 	private Resources resources;
 
-	private HTMLDocument doc;
+	private HTMLElement html;
 
 	private HTMLElement td;
 
@@ -54,9 +53,9 @@ public class LabelColumnTest {
 		output = new MemoryMultiReportOutput();
 		root = new ReportOutputFolder(output);
 		resources = new Resources(root);
-		doc = new HTMLDocument(root.createFile("Test.html"), "UTF-8");
-		doc.head().title();
-		td = doc.body().table("somestyle").tr().td();
+		html = new HTMLElement(root.createFile("Test.html"), "UTF-8");
+		html.head().title();
+		td = html.body().table("somestyle").tr().td();
 		support = new HTMLSupport();
 		column = new LabelColumn();
 	}
@@ -70,15 +69,14 @@ public class LabelColumnTest {
 	@Test
 	public void testInit() throws Exception {
 		assertTrue(column.init(null, null));
-		doc.close();
+		html.close();
 	}
 
 	@Test
 	public void testFooter() throws Exception {
 		column.footer(td, new CoverageNodeImpl(ElementType.GROUP, "Foo"),
 				resources, root);
-		doc.close();
-		final Document doc = support.parse(output.getFile("Test.html"));
+		final Document doc = parseDoc();
 		assertEquals("Total",
 				support.findStr(doc, "/html/body/table/tr/td/text()"));
 	}
@@ -86,8 +84,7 @@ public class LabelColumnTest {
 	@Test
 	public void testItemWithoutLink() throws Exception {
 		column.item(td, createItem("Abc", null), resources, root);
-		doc.close();
-		final Document doc = support.parse(output.getFile("Test.html"));
+		final Document doc = parseDoc();
 		assertEquals("Abc",
 				support.findStr(doc, "/html/body/table/tr/td/span/text()"));
 		assertEquals("el_group",
@@ -97,8 +94,7 @@ public class LabelColumnTest {
 	@Test
 	public void testItemWithLink() throws Exception {
 		column.item(td, createItem("Def", "def.html"), resources, root);
-		doc.close();
-		final Document doc = support.parse(output.getFile("Test.html"));
+		final Document doc = parseDoc();
 		assertEquals("Def",
 				support.findStr(doc, "/html/body/table/tr/td/a/text()"));
 		assertEquals("def.html",
@@ -112,7 +108,7 @@ public class LabelColumnTest {
 		final ITableItem i1 = createItem("abcdef", null);
 		final ITableItem i2 = createItem("aBcDeF", null);
 		assertEquals(0, column.getComparator().compare(i1, i2));
-		doc.close();
+		html.close();
 	}
 
 	@Test
@@ -121,11 +117,12 @@ public class LabelColumnTest {
 		final ITableItem i2 = createItem("world", null);
 		assertTrue(column.getComparator().compare(i1, i2) < 0);
 		assertTrue(column.getComparator().compare(i2, i1) > 0);
-		doc.close();
+		html.close();
 	}
 
 	private ITableItem createItem(final String name, final String link) {
-		final ICoverageNode node = new CoverageNodeImpl(ElementType.GROUP, name);
+		final ICoverageNode node = new CoverageNodeImpl(ElementType.GROUP,
+				name);
 		return new ITableItem() {
 			public String getLinkLabel() {
 				return name;
@@ -145,4 +142,8 @@ public class LabelColumnTest {
 		};
 	}
 
+	private Document parseDoc() throws Exception {
+		html.close();
+		return support.parse(output.getFile("Test.html"));
+	}
 }
