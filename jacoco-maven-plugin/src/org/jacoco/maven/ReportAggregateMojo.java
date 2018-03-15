@@ -19,6 +19,9 @@ import java.util.List;
 import java.util.Locale;
 
 import org.apache.maven.artifact.Artifact;
+import org.apache.maven.artifact.versioning.DefaultArtifactVersion;
+import org.apache.maven.artifact.versioning.InvalidVersionSpecificationException;
+import org.apache.maven.artifact.versioning.VersionRange;
 import org.apache.maven.model.Dependency;
 import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
@@ -178,10 +181,19 @@ public class ReportAggregateMojo extends AbstractReportMojo {
 	}
 
 	private MavenProject findProjectFromReactor(final Dependency d) {
+		VersionRange depVersionAsRange;
+		try {
+			depVersionAsRange = VersionRange.createFromVersionSpec(d.getVersion());
+		} catch (InvalidVersionSpecificationException e) {
+			throw new IllegalStateException("Could not parse the version of the dependency even though Maven" +
+					" could: " + d);
+		}
+
 		for (final MavenProject p : reactorProjects) {
+			DefaultArtifactVersion pv = new DefaultArtifactVersion(p.getVersion());
 			if (p.getGroupId().equals(d.getGroupId())
 					&& p.getArtifactId().equals(d.getArtifactId())
-					&& p.getVersion().equals(d.getVersion())) {
+					&& depVersionAsRange.containsVersion(pv)) {
 				return p;
 			}
 		}
