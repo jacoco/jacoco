@@ -11,6 +11,7 @@
  *******************************************************************************/
 package org.jacoco.core.instr;
 
+import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.fail;
@@ -34,12 +35,16 @@ import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
 
 import org.jacoco.core.analysis.AnalyzerTest;
-import org.jacoco.core.runtime.RuntimeData;
-import org.jacoco.core.runtime.SystemPropertiesRuntime;
+import org.jacoco.core.internal.BytecodeVersion;
+import org.jacoco.core.internal.data.CRC64;
+import org.jacoco.core.internal.instr.InstrSupport;
+import org.jacoco.core.runtime.IExecutionDataAccessorGenerator;
 import org.jacoco.core.test.TargetLoader;
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.objectweb.asm.ClassWriter;
+import org.objectweb.asm.MethodVisitor;
+import org.objectweb.asm.Opcodes;
 
 /**
  * Unit tests for {@link Instrumenter}.
@@ -66,20 +71,51 @@ public class InstrumenterTest {
 
 	}
 
-	private SystemPropertiesRuntime runtime;
+	private static final class AccessorGenerator
+			implements IExecutionDataAccessorGenerator {
 
+		long classId;
+
+		public int generateDataAccessor(final long classId,
+				final String classname, final int probeCount,
+				final MethodVisitor mv) {
+			this.classId = classId;
+			InstrSupport.push(mv, probeCount);
+			mv.visitIntInsn(Opcodes.NEWARRAY, Opcodes.T_BOOLEAN);
+			return 1;
+		}
+
+	}
+
+	private AccessorGenerator accessorGenerator;
 	private Instrumenter instrumenter;
 
 	@Before
 	public void setup() throws Exception {
-		runtime = new SystemPropertiesRuntime();
-		instrumenter = new Instrumenter(runtime);
-		runtime.startup(new RuntimeData());
+		accessorGenerator = new AccessorGenerator();
+		instrumenter = new Instrumenter(accessorGenerator);
 	}
 
-	@After
-	public void teardown() {
-		runtime.shutdown();
+	@Test
+	public void should_instrument_java10_class() throws Exception {
+		final byte[] originalBytes = createClass(BytecodeVersion.V10);
+		final byte[] bytes = new byte[originalBytes.length];
+		System.arraycopy(originalBytes, 0, bytes, 0, originalBytes.length);
+		final long expectedClassId = CRC64.classId(bytes);
+
+		final byte[] instrumentedBytes = instrumenter.instrument(bytes, "");
+
+		assertArrayEquals(originalBytes, bytes);
+		assertEquals(BytecodeVersion.V10,
+				BytecodeVersion.get(instrumentedBytes));
+		assertEquals(expectedClassId, accessorGenerator.classId);
+	}
+
+	private static byte[] createClass(final int version) {
+		final ClassWriter cw = new ClassWriter(0);
+		cw.visit(version, 0, "Foo", null, "java/lang/Object", null);
+		cw.visitEnd();
+		return cw.toByteArray();
 	}
 
 	@Test

@@ -115,6 +115,13 @@ public class ContentTypeDetectorTest {
 	}
 
 	@Test
+	public void should_detect_java_10() throws IOException {
+		initData(0xCA, 0xFE, 0xBA, 0xBE, 0x00, 0x00, 0x00, 0x36);
+		assertEquals(ContentTypeDetector.CLASSFILE, detector.getType());
+		assertContent();
+	}
+
+	@Test
 	public void testMachObjectFile() throws IOException {
 		initData(0xCA, 0xFE, 0xBA, 0xBE, 0x00, 0x00, 0x00, 0x02);
 		assertEquals(ContentTypeDetector.UNKNOWN, detector.getType());

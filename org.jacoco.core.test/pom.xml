@@ -138,6 +138,42 @@
         </plugins>
       </build>
     </profile>
+    <profile>
+      <id>java10-validation</id>
+      <activation>
+        <!-- for some reason activation should be presented here, even if already defined in parent -->
+        <property>
+          <name>bytecode.version</name>
+          <value>10</value>
+        </property>
+      </activation>
+      <properties>
+        <maven.compiler.target>10</maven.compiler.target>
+      </properties>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.codehaus.mojo</groupId>
+            <artifactId>build-helper-maven-plugin</artifactId>
+            <executions>
+              <execution>
+                <id>add-source</id>
+                <phase>generate-sources</phase>
+                <goals>
+                  <goal>add-source</goal>
+                </goals>
+                <configuration>
+                  <sources>
+                    <source>src-java7</source>
+                    <source>src-java8</source>
+                  </sources>
+                </configuration>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
   </profiles>
 
 </project>
