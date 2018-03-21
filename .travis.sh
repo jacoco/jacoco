@@ -61,8 +61,8 @@ case "$JDK" in
 9)
   install_jdk $JDK9_URL
   ;;
-10-ea)
-  install_jdk $JDK10_EA_URL
+10)
+  install_jdk $JDK10_URL
   ;;
 esac
 
@@ -98,8 +98,8 @@ case "$JDK" in
   mvn -V -B -e verify -Dbytecode.version=1.9 \
     -Dinvoker.mavenOpts="-Djavax.net.ssl.trustStore=/etc/ssl/certs/java/cacerts"
   ;;
-10-ea)
-  mvn -V -B -e verify -Dbytecode.version=1.9
+10)
+  mvn -V -B -e verify -Dbytecode.version=10
   ;;
 *)
   echo "Incorrect JDK [$JDK]"

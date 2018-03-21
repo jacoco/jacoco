@@ -19,6 +19,7 @@ import java.lang.instrument.Instrumentation;
 import java.lang.reflect.Field;
 import java.security.ProtectionDomain;
 
+import org.jacoco.core.internal.BytecodeVersion;
 import org.jacoco.core.internal.instr.InstrSupport;
 import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.ClassVisitor;
@@ -153,7 +154,10 @@ public class ModifiedSystemClassRuntime extends AbstractRuntime {
 	 */
 	public static byte[] instrument(final byte[] source,
 			final String accessFieldName) {
-		final ClassReader reader = new ClassReader(source);
+		final int originalVersion = BytecodeVersion.get(source);
+		final byte[] b = BytecodeVersion.downgradeIfNeeded(originalVersion,
+				source);
+		final ClassReader reader = new ClassReader(b);
 		final ClassWriter writer = new ClassWriter(reader, 0);
 		reader.accept(new ClassVisitor(InstrSupport.ASM_API_VERSION, writer) {
 
@@ -164,7 +168,9 @@ public class ModifiedSystemClassRuntime extends AbstractRuntime {
 			}
 
 		}, ClassReader.EXPAND_FRAMES);
-		return writer.toByteArray();
+		final byte[] instrumented = writer.toByteArray();
+		BytecodeVersion.set(instrumented, originalVersion);
+		return instrumented;
 	}
 
 	private static void createDataField(final ClassVisitor visitor,

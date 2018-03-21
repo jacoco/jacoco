@@ -22,6 +22,7 @@ import java.util.zip.ZipInputStream;
 
 import org.jacoco.core.data.ExecutionData;
 import org.jacoco.core.data.ExecutionDataStore;
+import org.jacoco.core.internal.BytecodeVersion;
 import org.jacoco.core.internal.ContentTypeDetector;
 import org.jacoco.core.internal.InputStreams;
 import org.jacoco.core.internal.Pack200Streams;
@@ -106,8 +107,16 @@ public class Analyzer {
 	 *            reader with class definitions
 	 */
 	public void analyzeClass(final ClassReader reader) {
-		final ClassVisitor visitor = createAnalyzingVisitor(
-				CRC64.classId(reader.b), reader.getClassName());
+		analyzeClass(reader.b);
+	}
+
+	private void analyzeClass(final byte[] source) {
+		final long classId = CRC64.classId(source);
+		final int version = BytecodeVersion.get(source);
+		final byte[] b = BytecodeVersion.downgradeIfNeeded(version, source);
+		final ClassReader reader = new ClassReader(b);
+		final ClassVisitor visitor = createAnalyzingVisitor(classId,
+				reader.getClassName());
 		reader.accept(visitor, 0);
 	}
 
@@ -124,7 +133,7 @@ public class Analyzer {
 	public void analyzeClass(final byte[] buffer, final String location)
 			throws IOException {
 		try {
-			analyzeClass(new ClassReader(buffer));
+			analyzeClass(buffer);
 		} catch (final RuntimeException cause) {
 			throw analyzerError(location, cause);
 		}

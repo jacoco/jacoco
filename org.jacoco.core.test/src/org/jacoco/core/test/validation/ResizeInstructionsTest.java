@@ -16,6 +16,7 @@ import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
 
 import org.jacoco.core.instr.Instrumenter;
+import org.jacoco.core.internal.BytecodeVersion;
 import org.jacoco.core.internal.instr.InstrSupport;
 import org.jacoco.core.runtime.IRuntime;
 import org.jacoco.core.runtime.RuntimeData;
@@ -59,9 +60,13 @@ public class ResizeInstructionsTest {
 	public void should_not_loose_InnerClasses_attribute() throws Exception {
 		// FIXME fails without COMPUTE_FRAMES because of
 		// https://gitlab.ow2.org/asm/asm/issues/317800
+
+		byte[] source = TargetLoader.getClassDataAsBytes(Inner.class);
+		final int version = BytecodeVersion.get(source);
+		source = BytecodeVersion.downgradeIfNeeded(version, source);
+
+		final ClassReader cr = new ClassReader(source);
 		final ClassWriter cw = new ClassWriter(ClassWriter.COMPUTE_FRAMES);
-		final ClassReader cr = new ClassReader(
-				TargetLoader.getClassDataAsBytes(Inner.class));
 		cr.accept(new ClassVisitor(InstrSupport.ASM_API_VERSION, cw) {
 			@Override
 			public void visitEnd() {
@@ -75,7 +80,10 @@ public class ResizeInstructionsTest {
 				super.visitEnd();
 			}
 		}, 0);
-		final byte[] bytes = instrumenter.instrument(cw.toByteArray(), "");
+		source = cw.toByteArray();
+		BytecodeVersion.set(source, version);
+
+		final byte[] bytes = instrumenter.instrument(source, "");
 
 		final TargetLoader targetLoader = new TargetLoader();
 		final Class<?> outer = targetLoader.add(ResizeInstructionsTest.class,

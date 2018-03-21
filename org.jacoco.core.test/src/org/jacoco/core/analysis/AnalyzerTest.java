@@ -36,12 +36,14 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
 import org.jacoco.core.data.ExecutionDataStore;
+import org.jacoco.core.internal.BytecodeVersion;
 import org.jacoco.core.internal.data.CRC64;
 import org.jacoco.core.test.TargetLoader;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
+import org.objectweb.asm.ClassWriter;
 
 /**
  * Unit tests for {@link Analyzer}.
@@ -74,6 +76,23 @@ public class AnalyzerTest {
 	}
 
 	@Test
+	public void should_analyze_java10_class() throws Exception {
+		final byte[] bytes = createClass(BytecodeVersion.V10);
+		final long expectedClassId = CRC64.classId(bytes);
+
+		analyzer.analyzeClass(bytes, "");
+
+		assertEquals(expectedClassId, classes.get("Foo").getId());
+	}
+
+	private static byte[] createClass(final int version) {
+		final ClassWriter cw = new ClassWriter(0);
+		cw.visit(version, 0, "Foo", null, "java/lang/Object", null);
+		cw.visitEnd();
+		return cw.toByteArray();
+	}
+
+	@Test
 	public void testAnalyzeClassFromStream() throws IOException {
 		analyzer.analyzeClass(TargetLoader.getClassData(AnalyzerTest.class),
 				"Test");
@@ -91,7 +110,6 @@ public class AnalyzerTest {
 
 	@Test
 	public void testAnalyzeClassIdMatch() throws IOException {
-		// class IDs are always calculated after downgrade of the version
 		final byte[] bytes = TargetLoader
 				.getClassDataAsBytes(AnalyzerTest.class);
 		executionData.get(Long.valueOf(CRC64.classId(bytes)),

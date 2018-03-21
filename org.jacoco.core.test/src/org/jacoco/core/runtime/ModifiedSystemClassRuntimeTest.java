@@ -25,8 +25,12 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.lang.reflect.Proxy;
 
+import org.jacoco.core.internal.BytecodeVersion;
 import org.jacoco.core.test.TargetLoader;
 import org.junit.Test;
+import org.objectweb.asm.ClassReader;
+import org.objectweb.asm.ClassWriter;
+import org.objectweb.asm.tree.ClassNode;
 
 /**
  * Unit tests for {@link ModifiedSystemClassRuntime}.
@@ -43,6 +47,28 @@ public class ModifiedSystemClassRuntimeTest extends RuntimeTestBase {
 	public void testCreateForNegative() throws Exception {
 		Instrumentation inst = newInstrumentationMock();
 		ModifiedSystemClassRuntime.createFor(inst, TARGET_CLASS_NAME);
+	}
+
+	@Test
+	public void should_instrument_java10_class() {
+		final byte[] bytes = createClass(BytecodeVersion.V10);
+
+		byte[] instrumented = ModifiedSystemClassRuntime.instrument(bytes,
+				"accessField");
+
+		assertEquals(BytecodeVersion.V10, BytecodeVersion.get(instrumented));
+		instrumented = BytecodeVersion.downgradeIfNeeded(BytecodeVersion.V10,
+				instrumented);
+		final ClassNode classNode = new ClassNode();
+		new ClassReader(instrumented).accept(classNode, 0);
+		assertEquals("accessField", classNode.fields.get(0).name);
+	}
+
+	private static byte[] createClass(final int version) {
+		final ClassWriter cw = new ClassWriter(0);
+		cw.visit(version, 0, "Foo", null, "java/lang/Object", null);
+		cw.visitEnd();
+		return cw.toByteArray();
 	}
 
 	/** This static member emulate the instrumented system class. */
