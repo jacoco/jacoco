@@ -36,7 +36,7 @@ import org.jacoco.core.internal.analysis.SourceFileCoverageImpl;
  */
 public class CoverageBuilder implements ICoverageVisitor {
 
-	private final Map<String, IClassCoverage> classes;
+	private final Map<Long, IClassCoverage> classes;
 
 	private final Map<String, ISourceFileCoverage> sourcefiles;
 
@@ -45,7 +45,7 @@ public class CoverageBuilder implements ICoverageVisitor {
 	 * 
 	 */
 	public CoverageBuilder() {
-		this.classes = new HashMap<String, IClassCoverage>();
+		this.classes = new HashMap<Long, IClassCoverage>();
 		this.sourcefiles = new HashMap<String, ISourceFileCoverage>();
 	}
 
@@ -100,13 +100,13 @@ public class CoverageBuilder implements ICoverageVisitor {
 	public void visitCoverage(final IClassCoverage coverage) {
 		// Only consider classes that actually contain code:
 		if (coverage.getInstructionCounter().getTotalCount() > 0) {
-			final String name = coverage.getName();
-			final IClassCoverage dup = classes.put(name, coverage);
+			final long id = coverage.getId();
+			final IClassCoverage dup = classes.put(id, coverage);
 			if (dup != null) {
 				if (dup.getId() != coverage.getId()) {
 					throw new IllegalStateException(
-							"Can't add different class with same name: "
-									+ name);
+							"Can't add different class with same id: " + id + ", names are: "
+									+ coverage.getName() + ", " + dup.getName());
 				}
 			} else {
 				final String source = coverage.getSourceFileName();
