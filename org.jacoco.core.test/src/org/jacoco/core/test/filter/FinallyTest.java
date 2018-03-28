@@ -18,6 +18,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.jacoco.core.analysis.ICounter;
+import org.jacoco.core.internal.BytecodeVersion;
 import org.jacoco.core.test.TargetLoader;
 import org.jacoco.core.test.filter.targets.Finally;
 import org.jacoco.core.test.validation.Source;
@@ -181,9 +182,11 @@ public class FinallyTest extends ValidationTestBase {
 	public void gotos() throws IOException {
 		final Source source = Source.getSourceFor("src", Finally.class);
 
+		byte[] b = TargetLoader.getClassDataAsBytes(Finally.class);
+		b = BytecodeVersion.downgradeIfNeeded(BytecodeVersion.get(b), b);
+
 		final ClassNode classNode = new ClassNode();
-		new ClassReader(TargetLoader.getClassDataAsBytes(Finally.class))
-				.accept(classNode, 0);
+		new ClassReader(b).accept(classNode, 0);
 		final Set<String> tags = new HashSet<String>();
 		for (final MethodNode m : classNode.methods) {
 			if ("main".equals(m.name)) {

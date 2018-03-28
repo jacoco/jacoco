@@ -220,7 +220,7 @@ public class ProbeArrayStrategyFactoryTest {
 		writer.visitEnd();
 
 		final IProbeArrayStrategy strategy = ProbeArrayStrategyFactory
-				.createFor(new ClassReader(writer.toByteArray()), generator);
+				.createFor(0, new ClassReader(writer.toByteArray()), generator);
 		assertEquals(NoneProbeArrayStrategy.class, strategy.getClass());
 	}
 
@@ -254,7 +254,7 @@ public class ProbeArrayStrategyFactoryTest {
 		writer.visitEnd();
 
 		final IProbeArrayStrategy strategy = ProbeArrayStrategyFactory
-				.createFor(new ClassReader(writer.toByteArray()), generator);
+				.createFor(0, new ClassReader(writer.toByteArray()), generator);
 
 		strategy.addMembers(cv, 123);
 		return strategy;

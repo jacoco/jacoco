@@ -21,9 +21,11 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
 
+import org.jacoco.core.internal.BytecodeVersion;
 import org.jacoco.core.internal.ContentTypeDetector;
 import org.jacoco.core.internal.InputStreams;
 import org.jacoco.core.internal.Pack200Streams;
+import org.jacoco.core.internal.data.CRC64;
 import org.jacoco.core.internal.flow.ClassProbesAdapter;
 import org.jacoco.core.internal.instr.ClassInstrumenter;
 import org.jacoco.core.internal.instr.IProbeArrayStrategy;
@@ -76,6 +78,15 @@ public class Instrumenter {
 	 * 
 	 */
 	public byte[] instrument(final ClassReader reader) {
+		return instrument(reader.b);
+	}
+
+	private byte[] instrument(final byte[] source) {
+		final long classId = CRC64.classId(source);
+		final int originalVersion = BytecodeVersion.get(source);
+		final byte[] b = BytecodeVersion.downgradeIfNeeded(originalVersion,
+				source);
+		final ClassReader reader = new ClassReader(b);
 		final ClassWriter writer = new ClassWriter(reader, 0) {
 			@Override
 			protected String getCommonSuperClass(final String type1,
@@ -84,11 +95,13 @@ public class Instrumenter {
 			}
 		};
 		final IProbeArrayStrategy strategy = ProbeArrayStrategyFactory
-				.createFor(reader, accessorGenerator);
+				.createFor(classId, reader, accessorGenerator);
 		final ClassVisitor visitor = new ClassProbesAdapter(
 				new ClassInstrumenter(strategy, writer), true);
 		reader.accept(visitor, ClassReader.EXPAND_FRAMES);
-		return writer.toByteArray();
+		final byte[] instrumented = writer.toByteArray();
+		BytecodeVersion.set(instrumented, originalVersion);
+		return instrumented;
 	}
 
 	/**
@@ -105,7 +118,7 @@ public class Instrumenter {
 	public byte[] instrument(final byte[] buffer, final String name)
 			throws IOException {
 		try {
-			return instrument(new ClassReader(buffer));
+			return instrument(buffer);
 		} catch (final RuntimeException e) {
 			throw instrumentError(name, e);
 		}
