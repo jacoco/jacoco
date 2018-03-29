@@ -12,9 +12,13 @@
 package org.jacoco.core.internal.instr;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
+import org.jacoco.core.internal.BytecodeVersion;
 import org.junit.Before;
 import org.junit.Test;
+import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.util.Printer;
 import org.objectweb.asm.util.Textifier;
 import org.objectweb.asm.util.TraceMethodVisitor;
@@ -31,6 +35,24 @@ public class InstrSupportTest {
 	public void setup() {
 		printer = new Textifier();
 		trace = new TraceMethodVisitor(printer);
+	}
+
+	@Test
+	public void needFrames_should_return_false_for_versions_less_than_1_6() {
+		assertFalse(InstrSupport.needsFrames(Opcodes.V1_1));
+		assertFalse(InstrSupport.needsFrames(Opcodes.V1_2));
+		assertFalse(InstrSupport.needsFrames(Opcodes.V1_3));
+		assertFalse(InstrSupport.needsFrames(Opcodes.V1_4));
+		assertFalse(InstrSupport.needsFrames(Opcodes.V1_5));
+	}
+
+	@Test
+	public void needFrames_should_return_true_for_versions_greater_than_or_equal_to_1_6() {
+		assertTrue(InstrSupport.needsFrames(Opcodes.V1_6));
+		assertTrue(InstrSupport.needsFrames(Opcodes.V1_7));
+		assertTrue(InstrSupport.needsFrames(Opcodes.V1_8));
+		assertTrue(InstrSupport.needsFrames(Opcodes.V9));
+		assertTrue(InstrSupport.needsFrames(BytecodeVersion.V10));
 	}
 
 	@Test

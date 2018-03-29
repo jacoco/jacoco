@@ -29,6 +29,7 @@ import org.jacoco.core.internal.data.CRC64;
 import org.jacoco.core.internal.flow.ClassProbesAdapter;
 import org.jacoco.core.internal.instr.ClassInstrumenter;
 import org.jacoco.core.internal.instr.IProbeArrayStrategy;
+import org.jacoco.core.internal.instr.InstrSupport;
 import org.jacoco.core.internal.instr.ProbeArrayStrategyFactory;
 import org.jacoco.core.internal.instr.SignatureRemover;
 import org.jacoco.core.runtime.IExecutionDataAccessorGenerator;
@@ -97,7 +98,8 @@ public class Instrumenter {
 		final IProbeArrayStrategy strategy = ProbeArrayStrategyFactory
 				.createFor(classId, reader, accessorGenerator);
 		final ClassVisitor visitor = new ClassProbesAdapter(
-				new ClassInstrumenter(strategy, writer), true);
+				new ClassInstrumenter(strategy, writer),
+				InstrSupport.needsFrames(originalVersion));
 		reader.accept(visitor, ClassReader.EXPAND_FRAMES);
 		final byte[] instrumented = writer.toByteArray();
 		BytecodeVersion.set(instrumented, originalVersion);
