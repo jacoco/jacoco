@@ -45,7 +45,6 @@ public final class ProbeArrayStrategyFactory {
 
 		final String className = reader.getClassName();
 		final int version = BytecodeVersion.get(reader.b);
-		final boolean withFrames = version >= Opcodes.V1_6;
 
 		if (isInterfaceOrModule(reader)) {
 			final ProbeCounter counter = getProbeCounter(reader);
@@ -61,7 +60,7 @@ public final class ProbeArrayStrategyFactory {
 			}
 		} else {
 			return new ClassFieldProbeArrayStrategy(className, classId,
-					withFrames, accessorGenerator);
+					InstrSupport.needsFrames(version), accessorGenerator);
 		}
 	}
 

@@ -158,6 +158,18 @@ public final class InstrSupport {
 	static final int CLINIT_ACC = Opcodes.ACC_SYNTHETIC | Opcodes.ACC_STATIC;
 
 	/**
+	 * Determines whether the given class file version requires stackmap frames.
+	 * 
+	 * @param version
+	 *            class file version
+	 * @return <code>true</code> if frames are required
+	 */
+	public static boolean needsFrames(final int version) {
+		// consider major version only (due to 1.1 anomaly)
+		return (version & 0xff) >= Opcodes.V1_6;
+	}
+
+	/**
 	 * Ensures that the given member does not correspond to a internal member
 	 * created by the instrumentation process. This would mean that the class is
 	 * already instrumented.
@@ -173,8 +185,8 @@ public final class InstrSupport {
 	public static void assertNotInstrumented(final String member,
 			final String owner) throws IllegalStateException {
 		if (member.equals(DATAFIELD_NAME) || member.equals(INITMETHOD_NAME)) {
-			throw new IllegalStateException(format(
-					"Class %s is already instrumented.", owner));
+			throw new IllegalStateException(
+					format("Class %s is already instrumented.", owner));
 		}
 	}
 
