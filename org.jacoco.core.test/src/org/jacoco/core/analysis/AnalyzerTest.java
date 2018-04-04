@@ -44,6 +44,7 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 import org.objectweb.asm.ClassWriter;
+import org.objectweb.asm.Opcodes;
 
 /**
  * Unit tests for {@link Analyzer}.
@@ -73,6 +74,19 @@ public class AnalyzerTest {
 		classes = new HashMap<String, IClassCoverage>();
 		executionData = new ExecutionDataStore();
 		analyzer = new Analyzer(executionData, new EmptyStructureVisitor());
+	}
+
+	@Test
+	public void should_ignore_synthetic_classes() throws Exception {
+		final ClassWriter cw = new ClassWriter(0);
+		cw.visit(Opcodes.V1_1, Opcodes.ACC_SYNTHETIC, "Foo", null,
+				"java/lang/Object", null);
+		cw.visitEnd();
+		final byte[] bytes = cw.toByteArray();
+
+		analyzer.analyzeClass(bytes, "");
+
+		assertTrue(classes.isEmpty());
 	}
 
 	@Test
