@@ -19,30 +19,31 @@ import org.junit.Test;
 public class WildcardMatcherTest {
 
 	@Test
-	public void testEmpty() {
+	public void empty_expression_should_match_any_string() {
 		assertTrue(new WildcardMatcher("").matches(""));
 		assertFalse(new WildcardMatcher("").matches("abc"));
 	}
 
 	@Test
-	public void testExact() {
+	public void expressions_without_wildcards_should_match_exactly() {
 		assertTrue(new WildcardMatcher("abc/def.txt").matches("abc/def.txt"));
+		assertFalse(new WildcardMatcher("abc/def.txt").matches("/abc/def.txt"));
 	}
 
 	@Test
-	public void testCaseSensitive() {
+	public void should_match_case_sensitive() {
 		assertFalse(new WildcardMatcher("abcdef").matches("abcDef"));
 		assertFalse(new WildcardMatcher("ABCDEF").matches("AbCDEF"));
 	}
 
 	@Test
-	public void testQuote() {
+	public void should_not_use_regex_characters() {
 		assertFalse(new WildcardMatcher("rst.xyz").matches("rstAxyz"));
 		assertTrue(new WildcardMatcher("(x)+").matches("(x)+"));
 	}
 
 	@Test
-	public void testWildcards() {
+	public void asterix_should_match_any_number_of_any_character() {
 		assertTrue(new WildcardMatcher("*").matches(""));
 		assertTrue(new WildcardMatcher("*").matches("java/lang/Object"));
 		assertTrue(new WildcardMatcher("*Test").matches("jacoco/MatcherTest"));
@@ -50,20 +51,24 @@ public class WildcardMatcherTest {
 		assertTrue(new WildcardMatcher("Matcher*").matches("MatcherTest"));
 		assertTrue(new WildcardMatcher("a*b*a").matches("a-b-b-a"));
 		assertFalse(new WildcardMatcher("a*b*a").matches("alaska"));
-		assertTrue(new WildcardMatcher("Hello?orld").matches("HelloWorld"));
-		assertFalse(new WildcardMatcher("Hello?orld").matches("HelloWWWorld"));
-		assertTrue(new WildcardMatcher("?aco*").matches("jacoco"));
 	}
 
 	@Test
-	public void testMultiExpression() {
-		assertTrue(new WildcardMatcher("Hello:World").matches("World"));
+	public void questionmark_should_match_any_single_character() {
+		assertTrue(new WildcardMatcher("Hello?orld").matches("HelloWorld"));
+		assertFalse(new WildcardMatcher("Hello?orld").matches("Helloorld"));
+		assertFalse(new WildcardMatcher("Hello?orld").matches("HelloWWWorld"));
+	}
+
+	@Test
+	public void should_match_any_expression_when_multiple_expressions_are_given() {
 		assertTrue(new WildcardMatcher("Hello:World").matches("World"));
 		assertTrue(new WildcardMatcher("*Test:*Foo").matches("UnitTest"));
+		assertFalse(new WildcardMatcher("foo:bar").matches("foo:bar"));
 	}
 
 	@Test
-	public void testDollar() {
+	public void should_match_dollar_sign() {
 		assertTrue(new WildcardMatcher("*$*").matches("java/util/Map$Entry"));
 		assertTrue(new WildcardMatcher("*$$$*")
 				.matches("org/example/Enity$$$generated123"));
