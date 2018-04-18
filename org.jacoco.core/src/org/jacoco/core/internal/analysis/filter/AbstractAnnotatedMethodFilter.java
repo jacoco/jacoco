@@ -11,7 +11,9 @@
  *******************************************************************************/
 package org.jacoco.core.internal.analysis.filter;
 
+import java.text.MessageFormat;
 import java.util.List;
+import java.util.regex.Pattern;
 
 import org.objectweb.asm.tree.AnnotationNode;
 import org.objectweb.asm.tree.MethodNode;
@@ -20,17 +22,6 @@ import org.objectweb.asm.tree.MethodNode;
  * Filters annotated methods.
  */
 abstract class AbstractAnnotatedMethodFilter implements IFilter {
-	private final String descType;
-
-	/**
-	 * Configures a new filter instance.
-	 * 
-	 * @param annotationType
-	 *            VM type of the annotation
-	 */
-	protected AbstractAnnotatedMethodFilter(final String annotationType) {
-		this.descType = "L" + annotationType + ";";
-	}
 
 	public void filter(final String className, final String superClassName,
 			final MethodNode methodNode, final IFilterOutput output) {
@@ -44,13 +35,22 @@ abstract class AbstractAnnotatedMethodFilter implements IFilter {
 		final List<AnnotationNode> annotations = getAnnotations(methodNode);
 		if (annotations != null) {
 			for (final AnnotationNode annotation : annotations) {
-				if (descType.equals(annotation.desc)) {
+				if (isMatchingAnnotation(annotation)) {
 					return true;
 				}
 			}
 		}
 		return false;
 	}
+
+	/**
+	 * Test if the annotation matches certain criteria for a method to be filtered out.
+	 *
+	 * @param annotationNode
+	 *            the annontation to test against
+	 * @return true if the annotation matches. Otherwise, false.
+	 */
+	protected abstract boolean isMatchingAnnotation(AnnotationNode annotationNode);
 
 	/**
 	 * Retrieves the annotations to search from a method. Depending on the

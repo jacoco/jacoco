@@ -21,11 +21,9 @@ import org.objectweb.asm.tree.MethodNode;
  */
 public final class GroovyGeneratedFilter extends AbstractAnnotatedMethodFilter {
 
-	/**
-	 * New filter.
-	 */
-	public GroovyGeneratedFilter() {
-		super("groovy/transform/Generated");
+	@Override
+	protected boolean isMatchingAnnotation(AnnotationNode annotationNode) {
+		return "Lgroovy/transform/Generated;".equals(annotationNode.desc);
 	}
 
 	@Override

@@ -21,11 +21,9 @@ import org.objectweb.asm.tree.MethodNode;
  */
 public final class LombokGeneratedFilter extends AbstractAnnotatedMethodFilter {
 
-	/**
-	 * New filter.
-	 */
-	public LombokGeneratedFilter() {
-		super("lombok/Generated");
+	@Override
+	protected boolean isMatchingAnnotation(AnnotationNode annotationNode) {
+		return "Llombok/Generated;".equals(annotationNode.desc);
 	}
 
 	@Override
