@@ -31,7 +31,8 @@ public final class Filters implements IFilter {
 			new TryWithResourcesJavacFilter(), new TryWithResourcesEcjFilter(),
 			new FinallyFilter(), new PrivateEmptyNoArgConstructorFilter(),
 			new StringSwitchJavacFilter(), new LombokGeneratedFilter(),
-			new GroovyGeneratedFilter(), new EnumEmptyConstructorFilter());
+			new GroovyGeneratedFilter(), new EnumEmptyConstructorFilter(),
+			new KotlinGeneratedFilter());
 
 	private final IFilter[] filters;
 
