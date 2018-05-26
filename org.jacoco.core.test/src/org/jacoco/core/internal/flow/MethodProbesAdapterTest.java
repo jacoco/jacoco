@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2017 Mountainminds GmbH & Co. KG and Contributors
+ * Copyright (c) 2009, 2018 Mountainminds GmbH & Co. KG and Contributors
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -320,52 +320,132 @@ public class MethodProbesAdapterTest implements IProbeIdGenerator {
 
 		adapter.visitTryCatchBlock(start, end, handler, "java/lang/Exception");
 		adapter.visitLabel(start);
+		adapter.visitInsn(Opcodes.NOP);
+		adapter.visitLabel(end);
 
 		expectedVisitor.visitTryCatchBlock(start, end, handler,
 				"java/lang/Exception");
 		expectedVisitor.visitLabel(start);
+		expectedVisitor.visitInsn(Opcodes.NOP);
+		expectedVisitor.visitLabel(end);
 	}
 
 	@Test
-	public void testVisitTryCatchBlockWithProbe() {
-		Label target = new Label();
-		LabelInfo.setSuccessor(target);
-		LabelInfo.setTarget(target);
-		Label end = new Label();
-		Label handler = new Label();
+	public void testVisitTryCatchBlockWithProbeBeforeStart() {
 		Label start = new Label();
-
-		adapter.visitTryCatchBlock(target, end, handler, "java/lang/Exception");
-		adapter.visitLabel(target);
-
-		expectedVisitor.visitTryCatchBlock(start, end, handler,
-				"java/lang/Exception");
-		expectedVisitor.visitLabel(start);
-		expectedVisitor.visitProbe(1000);
-		expectedVisitor.visitLabel(target);
-	}
-
-	@Test
-	public void testVisitMultipleTryCatchBlocksWithProbe() {
-		Label target = new Label();
-		LabelInfo.setSuccessor(target);
-		LabelInfo.setTarget(target);
+		LabelInfo.setSuccessor(start);
+		LabelInfo.setTarget(start);
 		Label end = new Label();
 		Label handler1 = new Label();
 		Label handler2 = new Label();
-		Label start = new Label();
 
-		adapter.visitTryCatchBlock(target, end, handler1, "java/lang/Exception");
-		adapter.visitTryCatchBlock(target, end, handler2, "java/io/IOException");
-		adapter.visitLabel(target);
+		adapter.visitTryCatchBlock(start, end, handler1, "java/lang/Exception");
+		adapter.visitTryCatchBlock(start, end, handler2, "java/lang/Throwable");
+		adapter.visitLabel(start);
+		adapter.visitInsn(Opcodes.NOP);
+		adapter.visitLabel(end);
 
-		expectedVisitor.visitTryCatchBlock(start, end, handler1,
+		Label probe = new Label();
+		expectedVisitor.visitTryCatchBlock(probe, end, handler1,
 				"java/lang/Exception");
-		expectedVisitor.visitTryCatchBlock(start, end, handler2,
-				"java/io/IOException");
-		expectedVisitor.visitLabel(start);
+		expectedVisitor.visitTryCatchBlock(probe, end, handler2,
+				"java/lang/Throwable");
+		expectedVisitor.visitLabel(probe);
 		expectedVisitor.visitProbe(1000);
-		expectedVisitor.visitLabel(target);
+		expectedVisitor.visitLabel(start);
+		expectedVisitor.visitInsn(Opcodes.NOP);
+		expectedVisitor.visitLabel(end);
+	}
+
+	@Test
+	public void testVisitTryCatchBlockWithProbeBeforeEnd() {
+		Label start = new Label();
+		Label end = new Label();
+		LabelInfo.setSuccessor(end);
+		LabelInfo.setTarget(end);
+		Label handler1 = new Label();
+		Label handler2 = new Label();
+
+		adapter.visitTryCatchBlock(start, end, handler1, "java/lang/Exception");
+		adapter.visitTryCatchBlock(start, end, handler2, "java/lang/Throwable");
+		adapter.visitLabel(start);
+		adapter.visitInsn(Opcodes.NOP);
+		adapter.visitLabel(end);
+
+		Label probe = new Label();
+		expectedVisitor.visitTryCatchBlock(start, probe, handler1,
+				"java/lang/Exception");
+		expectedVisitor.visitTryCatchBlock(start, probe, handler2,
+				"java/lang/Throwable");
+		expectedVisitor.visitLabel(start);
+		expectedVisitor.visitInsn(Opcodes.NOP);
+		expectedVisitor.visitLabel(probe);
+		expectedVisitor.visitProbe(1000);
+		expectedVisitor.visitLabel(end);
+	}
+
+	/**
+	 * https://docs.oracle.com/javase/specs/jvms/se9/html/jvms-2.html#jvms-2.11.10
+	 */
+	@Test
+	public void testStructuredLocking() {
+		Label start = new Label();
+		LabelInfo.setSuccessor(start);
+		LabelInfo.setTarget(start);
+		Label end = new Label();
+		LabelInfo.setSuccessor(end);
+		LabelInfo.setTarget(end);
+		Label handlerStart = new Label();
+		Label handlerEnd = new Label();
+		Label after = new Label();
+
+		adapter.visitTryCatchBlock(start, end, handlerStart, null);
+		adapter.visitTryCatchBlock(handlerStart, handlerEnd, handlerStart,
+				null);
+		adapter.visitVarInsn(Opcodes.ALOAD, 1);
+		adapter.visitInsn(Opcodes.MONITORENTER);
+		adapter.visitLabel(start);
+		adapter.visitInsn(Opcodes.NOP);
+		adapter.visitVarInsn(Opcodes.ALOAD, 1);
+		adapter.visitInsn(Opcodes.MONITOREXIT);
+		adapter.visitLabel(end);
+		adapter.visitJumpInsn(Opcodes.GOTO, after);
+		adapter.visitLabel(handlerStart);
+		adapter.visitVarInsn(Opcodes.ALOAD, 1);
+		adapter.visitInsn(Opcodes.MONITOREXIT);
+		adapter.visitLabel(handlerEnd);
+		adapter.visitInsn(Opcodes.ATHROW);
+		adapter.visitLabel(after);
+
+		Label probe1 = new Label();
+		Label probe2 = new Label();
+		expectedVisitor.visitTryCatchBlock(probe1, probe2, handlerStart, null);
+		expectedVisitor.visitTryCatchBlock(handlerStart, handlerEnd,
+				handlerStart, null);
+		expectedVisitor.visitVarInsn(Opcodes.ALOAD, 1);
+		expectedVisitor.visitInsn(Opcodes.MONITORENTER);
+		// next probe must be INSIDE range of instructions covered by handler,
+		// otherwise monitorexit won't be executed
+		// in case if probe causes exception
+		expectedVisitor.visitLabel(probe1);
+		expectedVisitor.visitProbe(1000);
+		expectedVisitor.visitLabel(start);
+		expectedVisitor.visitInsn(Opcodes.NOP);
+		expectedVisitor.visitVarInsn(Opcodes.ALOAD, 1);
+		expectedVisitor.visitInsn(Opcodes.MONITOREXIT);
+		// next probe must be OUTSIDE range of instructions covered by handler,
+		// otherwise monitorexit will be executed second time
+		// in case if probe causes exception
+		expectedVisitor.visitLabel(probe2);
+		expectedVisitor.visitProbe(1001);
+		expectedVisitor.visitLabel(end);
+		expectedVisitor.visitJumpInsn(Opcodes.GOTO, after);
+		expectedVisitor.visitLabel(handlerStart);
+		expectedVisitor.visitVarInsn(Opcodes.ALOAD, 1);
+		expectedVisitor.visitInsn(Opcodes.MONITOREXIT);
+		expectedVisitor.visitLabel(handlerEnd);
+		expectedVisitor.visitInsnWithProbe(Opcodes.ATHROW, 1002);
+		expectedVisitor.visitLabel(after);
 	}
 
 	// === IProbeIdGenerator ===

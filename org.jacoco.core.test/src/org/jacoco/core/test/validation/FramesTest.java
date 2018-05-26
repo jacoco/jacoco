@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2017 Mountainminds GmbH & Co. KG and Contributors
+ * Copyright (c) 2009, 2018 Mountainminds GmbH & Co. KG and Contributors
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -18,6 +18,7 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 
 import org.jacoco.core.instr.Instrumenter;
+import org.jacoco.core.internal.BytecodeVersion;
 import org.jacoco.core.internal.instr.InstrSupport;
 import org.jacoco.core.runtime.IRuntime;
 import org.jacoco.core.runtime.SystemPropertiesRuntime;
@@ -87,6 +88,9 @@ public class FramesTest {
 	}
 
 	private byte[] calculateFrames(byte[] source) {
+		source = BytecodeVersion.downgradeIfNeeded(BytecodeVersion.get(source),
+				source);
+
 		ClassReader rc = new ClassReader(source);
 		ClassWriter cw = new ClassWriter(ClassWriter.COMPUTE_FRAMES);
 

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2017 Mountainminds GmbH & Co. KG and Contributors
+ * Copyright (c) 2009, 2018 Mountainminds GmbH & Co. KG and Contributors
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -14,9 +14,10 @@ package org.jacoco.core.runtime;
 import java.util.regex.Pattern;
 
 /**
- * Matches strings against <code>?</code>/<code>*</code> wildcard expressions.
- * Multiple expressions can be separated with a colon (:). In this case the
- * expression matches if at least one part matches.
+ * Matches strings against glob like wildcard expressions where <code>?</code>
+ * matches any single character and <code>*</code> matches any number of any
+ * character. Multiple expressions can be separated with a colon (:). In this
+ * case the expression matches if at least one part matches.
  */
 public class WildcardMatcher {
 
@@ -47,7 +48,7 @@ public class WildcardMatcher {
 		for (final char c : expression.toCharArray()) {
 			switch (c) {
 			case '?':
-				regex.append(".?");
+				regex.append(".");
 				break;
 			case '*':
 				regex.append(".*");

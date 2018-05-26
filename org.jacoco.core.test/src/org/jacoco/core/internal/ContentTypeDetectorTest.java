@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2017 Mountainminds GmbH & Co. KG and Contributors
+ * Copyright (c) 2009, 2018 Mountainminds GmbH & Co. KG and Contributors
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -110,6 +110,13 @@ public class ContentTypeDetectorTest {
 	@Test
 	public void testClassFile19() throws IOException {
 		initData(0xCA, 0xFE, 0xBA, 0xBE, 0x00, 0x00, 0x00, 0x35);
+		assertEquals(ContentTypeDetector.CLASSFILE, detector.getType());
+		assertContent();
+	}
+
+	@Test
+	public void should_detect_java_10() throws IOException {
+		initData(0xCA, 0xFE, 0xBA, 0xBE, 0x00, 0x00, 0x00, 0x36);
 		assertEquals(ContentTypeDetector.CLASSFILE, detector.getType());
 		assertContent();
 	}

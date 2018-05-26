@@ -61,6 +61,9 @@ case "$JDK" in
 9)
   install_jdk $JDK9_URL
   ;;
+10)
+  install_jdk $JDK10_URL
+  ;;
 esac
 
 # Do not use "~/.mavenrc" set by Travis (https://github.com/travis-ci/travis-ci/issues/3893),
@@ -94,6 +97,9 @@ case "$JDK" in
   export MAVEN_OPTS="-Djavax.net.ssl.trustStore=/etc/ssl/certs/java/cacerts"
   mvn -V -B -e verify -Dbytecode.version=1.9 \
     -Dinvoker.mavenOpts="-Djavax.net.ssl.trustStore=/etc/ssl/certs/java/cacerts"
+  ;;
+10)
+  mvn -V -B -e verify -Dbytecode.version=10
   ;;
 *)
   echo "Incorrect JDK [$JDK]"

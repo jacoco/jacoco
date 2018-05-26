@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2017 Mountainminds GmbH & Co. KG and Contributors
+ * Copyright (c) 2009, 2018 Mountainminds GmbH & Co. KG and Contributors
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -11,7 +11,7 @@
  *******************************************************************************/
 package org.jacoco.core.internal.instr;
 
-import org.jacoco.core.internal.data.CRC64;
+import org.jacoco.core.internal.BytecodeVersion;
 import org.jacoco.core.internal.flow.ClassProbesAdapter;
 import org.jacoco.core.runtime.IExecutionDataAccessorGenerator;
 import org.objectweb.asm.ClassReader;
@@ -30,22 +30,23 @@ public final class ProbeArrayStrategyFactory {
 	 * Creates a suitable strategy instance for the class described by the given
 	 * reader. Created instance must be used only to process a class or
 	 * interface for which it has been created and must be used only once.
-	 * 
+	 *
+	 * @param classId
+	 *            class identifier
 	 * @param reader
 	 *            reader to get information about the class
 	 * @param accessorGenerator
 	 *            accessor to the coverage runtime
 	 * @return strategy instance
 	 */
-	public static IProbeArrayStrategy createFor(final ClassReader reader,
+	public static IProbeArrayStrategy createFor(final long classId,
+			final ClassReader reader,
 			final IExecutionDataAccessorGenerator accessorGenerator) {
 
 		final String className = reader.getClassName();
-		final int version = getVersion(reader);
-		final long classId = CRC64.checksum(reader.b);
-		final boolean withFrames = version >= Opcodes.V1_6;
+		final int version = BytecodeVersion.get(reader.b);
 
-		if (isInterface(reader)) {
+		if (isInterfaceOrModule(reader)) {
 			final ProbeCounter counter = getProbeCounter(reader);
 			if (counter.getCount() == 0) {
 				return new NoneProbeArrayStrategy();
@@ -59,16 +60,13 @@ public final class ProbeArrayStrategyFactory {
 			}
 		} else {
 			return new ClassFieldProbeArrayStrategy(className, classId,
-					withFrames, accessorGenerator);
+					InstrSupport.needsFrames(version), accessorGenerator);
 		}
 	}
 
-	private static boolean isInterface(final ClassReader reader) {
-		return (reader.getAccess() & Opcodes.ACC_INTERFACE) != 0;
-	}
-
-	private static int getVersion(final ClassReader reader) {
-		return reader.readShort(6);
+	private static boolean isInterfaceOrModule(final ClassReader reader) {
+		return (reader.getAccess()
+				& (Opcodes.ACC_INTERFACE | Opcodes.ACC_MODULE)) != 0;
 	}
 
 	private static ProbeCounter getProbeCounter(final ClassReader reader) {

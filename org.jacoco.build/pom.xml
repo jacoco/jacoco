@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-   Copyright (c) 2009, 2017 Mountainminds GmbH & Co. KG and Contributors
+   Copyright (c) 2009, 2018 Mountainminds GmbH & Co. KG and Contributors
    All rights reserved. This program and the accompanying materials
    are made available under the terms of the Eclipse Public License v1.0
    which accompanies this distribution, and is available at
@@ -14,7 +14,7 @@
 
   <groupId>org.jacoco</groupId>
   <artifactId>org.jacoco.build</artifactId>
-  <version>0.7.10-SNAPSHOT</version>
+  <version>0.8.2-SNAPSHOT</version>
   <packaging>pom</packaging>
 
   <name>JaCoCo</name>
@@ -132,7 +132,7 @@
 
     <maven.build.timestamp.format>yyyyMMddhhmm</maven.build.timestamp.format>
     <jacoco.home.url>http://www.jacoco.org/jacoco</jacoco.home.url>
-    <copyright.years>${project.inceptionYear}, 2017</copyright.years>
+    <copyright.years>${project.inceptionYear}, 2018</copyright.years>
 
     <maven.compiler.source>1.5</maven.compiler.source>
     <maven.compiler.target>1.5</maven.compiler.target>
@@ -558,7 +558,7 @@
                 <fileset dir="${basedir}" includes="**/*.java,**/*.xml,**/*.bsh" excludes="target/**,.idea/**,nb-configuration.xml" id="missinglicense.fileset">
                   <not>
                     <and>
-                      <contains text="Copyright (c) 2009, 2017 Mountainminds GmbH &amp; Co. KG and Contributors"/>
+                      <contains text="Copyright (c) 2009, 2018 Mountainminds GmbH &amp; Co. KG and Contributors"/>
                       <contains text="All rights reserved. This program and the accompanying materials"/>
                       <contains text="are made available under the terms of the Eclipse Public License v1.0"/>
                       <contains text="which accompanies this distribution, and is available at"/>
@@ -735,7 +735,25 @@
       <properties>
         <!--
         Compile into bytecode version 8 by default,
-        because maven-shade-plugin and maven-plugin-plugin are unable to proceess bytecode version 9,
+        because maven-bundle-plugin is unable to proceess bytecode version >=9,
+        this is overridden for tests
+        -->
+        <maven.compiler.source>1.8</maven.compiler.source>
+        <maven.compiler.target>1.8</maven.compiler.target>
+      </properties>
+    </profile>
+    <profile>
+      <id>java10-validation</id>
+      <activation>
+        <property>
+          <name>bytecode.version</name>
+          <value>10</value>
+        </property>
+      </activation>
+      <properties>
+        <!--
+        Compile into bytecode version 8 by default,
+        because maven-bundle-plugin is unable to proceess bytecode version >=9,
         this is overridden for tests
         -->
         <maven.compiler.source>1.8</maven.compiler.source>

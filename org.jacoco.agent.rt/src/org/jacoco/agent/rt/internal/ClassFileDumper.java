@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2017 Mountainminds GmbH & Co. KG and Contributors
+ * Copyright (c) 2009, 2018 Mountainminds GmbH & Co. KG and Contributors
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -64,7 +64,7 @@ class ClassFileDumper {
 				localname = name;
 			}
 			outputdir.mkdirs();
-			final Long id = Long.valueOf(CRC64.checksum(contents));
+			final Long id = Long.valueOf(CRC64.classId(contents));
 			final File file = new File(outputdir, String.format(
 					"%s.%016x.class", localname, id));
 			final OutputStream out = new FileOutputStream(file);

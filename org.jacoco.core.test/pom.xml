@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-   Copyright (c) 2009, 2017 Mountainminds GmbH & Co. KG and Contributors
+   Copyright (c) 2009, 2018 Mountainminds GmbH & Co. KG and Contributors
    All rights reserved. This program and the accompanying materials
    are made available under the terms of the Eclipse Public License v1.0
    which accompanies this distribution, and is available at
@@ -15,7 +15,7 @@
   <parent>
     <groupId>org.jacoco</groupId>
     <artifactId>org.jacoco.tests</artifactId>
-    <version>0.7.10-SNAPSHOT</version>
+    <version>0.8.2-SNAPSHOT</version>
     <relativePath>../org.jacoco.tests</relativePath>
   </parent>
 
@@ -31,6 +31,14 @@
     <dependency>
       <groupId>${project.groupId}</groupId>
       <artifactId>org.jacoco.core</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.ow2.asm</groupId>
+      <artifactId>asm-analysis</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.ow2.asm</groupId>
+      <artifactId>asm-util</artifactId>
     </dependency>
     <dependency>
       <groupId>junit</groupId>
@@ -113,6 +121,42 @@
       </activation>
       <properties>
         <maven.compiler.target>1.9</maven.compiler.target>
+      </properties>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.codehaus.mojo</groupId>
+            <artifactId>build-helper-maven-plugin</artifactId>
+            <executions>
+              <execution>
+                <id>add-source</id>
+                <phase>generate-sources</phase>
+                <goals>
+                  <goal>add-source</goal>
+                </goals>
+                <configuration>
+                  <sources>
+                    <source>src-java7</source>
+                    <source>src-java8</source>
+                  </sources>
+                </configuration>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+    <profile>
+      <id>java10-validation</id>
+      <activation>
+        <!-- for some reason activation should be presented here, even if already defined in parent -->
+        <property>
+          <name>bytecode.version</name>
+          <value>10</value>
+        </property>
+      </activation>
+      <properties>
+        <maven.compiler.target>10</maven.compiler.target>
       </properties>
       <build>
         <plugins>

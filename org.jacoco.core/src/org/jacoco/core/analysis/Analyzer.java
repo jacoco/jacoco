@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2017 Mountainminds GmbH & Co. KG and Contributors
+ * Copyright (c) 2009, 2018 Mountainminds GmbH & Co. KG and Contributors
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -22,6 +22,7 @@ import java.util.zip.ZipInputStream;
 
 import org.jacoco.core.data.ExecutionData;
 import org.jacoco.core.data.ExecutionDataStore;
+import org.jacoco.core.internal.BytecodeVersion;
 import org.jacoco.core.internal.ContentTypeDetector;
 import org.jacoco.core.internal.InputStreams;
 import org.jacoco.core.internal.Pack200Streams;
@@ -32,6 +33,7 @@ import org.jacoco.core.internal.data.CRC64;
 import org.jacoco.core.internal.flow.ClassProbesAdapter;
 import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.ClassVisitor;
+import org.objectweb.asm.Opcodes;
 
 /**
  * An {@link Analyzer} instance processes a set of Java class files and
@@ -106,8 +108,19 @@ public class Analyzer {
 	 *            reader with class definitions
 	 */
 	public void analyzeClass(final ClassReader reader) {
-		final ClassVisitor visitor = createAnalyzingVisitor(
-				CRC64.checksum(reader.b), reader.getClassName());
+		analyzeClass(reader.b);
+	}
+
+	private void analyzeClass(final byte[] source) {
+		final long classId = CRC64.classId(source);
+		final int version = BytecodeVersion.get(source);
+		final byte[] b = BytecodeVersion.downgradeIfNeeded(version, source);
+		final ClassReader reader = new ClassReader(b);
+		if ((reader.getAccess() & Opcodes.ACC_SYNTHETIC) != 0) {
+			return;
+		}
+		final ClassVisitor visitor = createAnalyzingVisitor(classId,
+				reader.getClassName());
 		reader.accept(visitor, 0);
 	}
 
@@ -124,7 +137,7 @@ public class Analyzer {
 	public void analyzeClass(final byte[] buffer, final String location)
 			throws IOException {
 		try {
-			analyzeClass(new ClassReader(buffer));
+			analyzeClass(buffer);
 		} catch (final RuntimeException cause) {
 			throw analyzerError(location, cause);
 		}

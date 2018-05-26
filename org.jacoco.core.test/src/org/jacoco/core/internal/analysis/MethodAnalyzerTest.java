@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2017 Mountainminds GmbH & Co. KG and Contributors
+ * Copyright (c) 2009, 2018 Mountainminds GmbH & Co. KG and Contributors
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -695,7 +695,7 @@ public class MethodAnalyzerTest implements IProbeIdGenerator {
 	}
 
 	@Test
-	public void try_catch_should_should_show_missed_when_no_probes_are_executed() {
+	public void try_catch_should_show_missed_when_no_probes_are_executed() {
 		createTryCatchBlock();
 		runMethodAnalzer();
 
@@ -705,7 +705,7 @@ public class MethodAnalyzerTest implements IProbeIdGenerator {
 	}
 
 	@Test
-	public void try_catch_should_should_show_exception_handler_missed_when_probe_is_not_executed() {
+	public void try_catch_should_show_exception_handler_missed_when_probe_is_not_executed() {
 		createTryCatchBlock();
 		probes[0] = true;
 		probes[1] = true;
@@ -718,7 +718,7 @@ public class MethodAnalyzerTest implements IProbeIdGenerator {
 	}
 
 	@Test
-	public void try_catch_should_should_show_all_covered_when_all_probes_are_executed() {
+	public void try_catch_should_show_all_covered_when_all_probes_are_executed() {
 		createTryCatchBlock();
 		probes[0] = true;
 		probes[1] = true;

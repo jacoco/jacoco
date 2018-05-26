@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2017 Mountainminds GmbH & Co. KG and Contributors
+ * Copyright (c) 2009, 2018 Mountainminds GmbH & Co. KG and Contributors
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -36,12 +36,15 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
 import org.jacoco.core.data.ExecutionDataStore;
+import org.jacoco.core.internal.BytecodeVersion;
 import org.jacoco.core.internal.data.CRC64;
 import org.jacoco.core.test.TargetLoader;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
+import org.objectweb.asm.ClassWriter;
+import org.objectweb.asm.Opcodes;
 
 /**
  * Unit tests for {@link Analyzer}.
@@ -74,6 +77,36 @@ public class AnalyzerTest {
 	}
 
 	@Test
+	public void should_ignore_synthetic_classes() throws Exception {
+		final ClassWriter cw = new ClassWriter(0);
+		cw.visit(Opcodes.V1_1, Opcodes.ACC_SYNTHETIC, "Foo", null,
+				"java/lang/Object", null);
+		cw.visitEnd();
+		final byte[] bytes = cw.toByteArray();
+
+		analyzer.analyzeClass(bytes, "");
+
+		assertTrue(classes.isEmpty());
+	}
+
+	@Test
+	public void should_analyze_java10_class() throws Exception {
+		final byte[] bytes = createClass(BytecodeVersion.V10);
+		final long expectedClassId = CRC64.classId(bytes);
+
+		analyzer.analyzeClass(bytes, "");
+
+		assertEquals(expectedClassId, classes.get("Foo").getId());
+	}
+
+	private static byte[] createClass(final int version) {
+		final ClassWriter cw = new ClassWriter(0);
+		cw.visit(version, 0, "Foo", null, "java/lang/Object", null);
+		cw.visitEnd();
+		return cw.toByteArray();
+	}
+
+	@Test
 	public void testAnalyzeClassFromStream() throws IOException {
 		analyzer.analyzeClass(TargetLoader.getClassData(AnalyzerTest.class),
 				"Test");
@@ -91,10 +124,9 @@ public class AnalyzerTest {
 
 	@Test
 	public void testAnalyzeClassIdMatch() throws IOException {
-		// class IDs are always calculated after downgrade of the version
 		final byte[] bytes = TargetLoader
 				.getClassDataAsBytes(AnalyzerTest.class);
-		executionData.get(Long.valueOf(CRC64.checksum(bytes)),
+		executionData.get(Long.valueOf(CRC64.classId(bytes)),
 				"org/jacoco/core/analysis/AnalyzerTest", 200);
 		analyzer.analyzeClass(bytes, "Test");
 		assertFalse(classes.get("org/jacoco/core/analysis/AnalyzerTest")

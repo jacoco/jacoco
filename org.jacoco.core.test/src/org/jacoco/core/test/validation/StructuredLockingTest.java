@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2017 Mountainminds GmbH & Co. KG and Contributors
+ * Copyright (c) 2009, 2018 Mountainminds GmbH & Co. KG and Contributors
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -20,6 +20,7 @@ import java.util.List;
 import java.util.Set;
 
 import org.jacoco.core.instr.Instrumenter;
+import org.jacoco.core.internal.BytecodeVersion;
 import org.jacoco.core.runtime.IRuntime;
 import org.jacoco.core.runtime.SystemPropertiesRuntime;
 import org.jacoco.core.test.TargetLoader;
@@ -40,11 +41,16 @@ import org.objectweb.asm.tree.analysis.Frame;
 import org.objectweb.asm.tree.analysis.Interpreter;
 
 /**
- * Tests that the invariants specified in chapter 2.11.10 of the JVM Spec do
- * also hold for instrumented classes. Note that only some runtimes like Android
- * ART do actually check these invariants.
+ * Tests that the invariants specified in <a href=
+ * "https://docs.oracle.com/javase/specs/jvms/se9/html/jvms-2.html#jvms-2.11.10">chapter
+ * 2.11.10 of the JVM Spec</a> do also hold for instrumented classes.
  * 
- * https://docs.oracle.com/javase/specs/jvms/se7/html/jvms-2.html#jvms-2.11.10
+ * This is important because JIT compiler in HotSpot JVM ignores methods with
+ * unstructured locking, so that they executed by interpreter. Android Runtime
+ * also doesn't optimize such methods.
+ *
+ * TODO verification implemented here is incomplete - in particular it is unable
+ * to catch problem described in https://github.com/jacoco/jacoco/issues/626
  */
 public class StructuredLockingTest {
 
@@ -61,6 +67,9 @@ public class StructuredLockingTest {
 		IRuntime runtime = new SystemPropertiesRuntime();
 		Instrumenter instrumenter = new Instrumenter(runtime);
 		byte[] instrumented = instrumenter.instrument(source, "TestTarget");
+
+		final int version = BytecodeVersion.get(instrumented);
+		instrumented = BytecodeVersion.downgradeIfNeeded(version, instrumented);
 
 		ClassNode cn = new ClassNode();
 		new ClassReader(instrumented).accept(cn, 0);
