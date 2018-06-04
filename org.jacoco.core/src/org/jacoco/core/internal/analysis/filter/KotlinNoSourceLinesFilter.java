@@ -18,14 +18,24 @@ import org.objectweb.asm.tree.MethodNode;
 import java.util.ListIterator;
 import java.util.Set;
 
-public class NoSourceLinesFilter implements IFilter {
-    public void filter(String className, String superClassName,
-			Set<String> classAnnotations, String sourceFileName,
-			MethodNode methodNode, IFilterOutput output) {
-        if ("<init>".equals(methodNode.name)) {
-            // Don't process constructors
-            return;
-        }
+public class KotlinNoSourceLinesFilter implements IFilter {
+	static final String KOTLIN_METADATA_DESC = "Lkotlin/Metadata;";
+
+	public void filter(String className,
+			String superClassName,
+			Set<String> classAnnotations,
+			String sourceFileName,
+			MethodNode methodNode,
+			IFilterOutput output) {
+		if (sourceFileName == null) {
+			// probably full debug information is missing
+			// disabled filtering as all methods might be erroneously skipped
+			return;
+		}
+
+		if (!classAnnotations.contains(KOTLIN_METADATA_DESC)) {
+			return;
+		}
 
 		if (hasLineNumber(methodNode)) return;
 
