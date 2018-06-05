@@ -17,6 +17,8 @@ import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.tree.AbstractInsnNode;
 import org.objectweb.asm.tree.MethodNode;
 
+import java.util.Collections;
+
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.fail;
@@ -40,7 +42,9 @@ public class EnumEmptyConstructorFilterTest implements IFilterOutput {
 				"(Ljava/lang/String;I)V", false);
 		m.visitInsn(Opcodes.RETURN);
 
-		filter.filter("Foo", "java/lang/Enum", m, this);
+		filter.filter(
+				"Foo", "java/lang/Enum", Collections.<String>emptySet(),
+				null, m, this);
 
 		assertEquals(m.instructions.getFirst(), fromInclusive);
 		assertEquals(m.instructions.getLast(), toInclusive);
@@ -69,7 +73,8 @@ public class EnumEmptyConstructorFilterTest implements IFilterOutput {
 		m.visitInsn(Opcodes.NOP);
 		m.visitInsn(Opcodes.RETURN);
 
-		filter.filter("Foo", "java/lang/Enum", m, this);
+		filter.filter("Foo", "java/lang/Enum", Collections.<String>emptySet(),
+				null, m, this);
 
 		assertNull(fromInclusive);
 		assertNull(toInclusive);
@@ -96,7 +101,8 @@ public class EnumEmptyConstructorFilterTest implements IFilterOutput {
 				"(Ljava/lang/String;I)V", false);
 		m.visitInsn(Opcodes.RETURN);
 
-		filter.filter("Foo", "java/lang/Enum", m, this);
+		filter.filter("Foo", "java/lang/Enum", Collections.<String>emptySet(),
+				null, m, this);
 
 		assertNull(fromInclusive);
 		assertNull(toInclusive);
@@ -118,7 +124,8 @@ public class EnumEmptyConstructorFilterTest implements IFilterOutput {
 				null);
 		m.visitInsn(Opcodes.NOP);
 
-		filter.filter("Foo", "java/lang/Enum", m, this);
+		filter.filter("Foo", "java/lang/Enum", Collections.<String>emptySet(),
+				null, m, this);
 
 		assertNull(fromInclusive);
 		assertNull(toInclusive);
@@ -131,7 +138,8 @@ public class EnumEmptyConstructorFilterTest implements IFilterOutput {
 				null);
 		m.visitInsn(Opcodes.NOP);
 
-		filter.filter("Foo", "java/lang/Object", m, this);
+		filter.filter("Foo", "java/lang/Object", Collections.<String>emptySet(),
+				null, m, this);
 
 		assertNull(fromInclusive);
 		assertNull(toInclusive);

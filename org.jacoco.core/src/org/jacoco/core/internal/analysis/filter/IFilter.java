@@ -13,6 +13,8 @@ package org.jacoco.core.internal.analysis.filter;
 
 import org.objectweb.asm.tree.MethodNode;
 
+import java.util.Set;
+
 /**
  * Interface for filter implementations. Instances of filters are reused and so
  * must be stateless.
@@ -28,12 +30,17 @@ public interface IFilter {
 	 *            class name
 	 * @param superClassName
 	 *            superclass name
+	 * @param classAnnotations
+	 *            annotations qualified name on class
+	 * @param sourceFileName
+	 *            file source name
 	 * @param methodNode
 	 *            method to inspect
 	 * @param output
 	 *            callback to report filtering results to
 	 */
-	void filter(String className, String superClassName, MethodNode methodNode,
+	void filter(String className, String superClassName,
+			Set<String> classAnnotations, String sourceFileName,
+			MethodNode methodNode,
 			IFilterOutput output);
-
 }

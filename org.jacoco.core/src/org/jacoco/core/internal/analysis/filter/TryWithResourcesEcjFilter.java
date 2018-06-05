@@ -13,6 +13,7 @@ package org.jacoco.core.internal.analysis.filter;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.tree.AbstractInsnNode;
@@ -28,6 +29,8 @@ import org.objectweb.asm.tree.TryCatchBlockNode;
 public final class TryWithResourcesEcjFilter implements IFilter {
 
 	public void filter(final String className, final String superClassName,
+			final Set<String> classAnnotations,
+			final String sourceFileName,
 			final MethodNode methodNode, final IFilterOutput output) {
 		if (methodNode.tryCatchBlocks.isEmpty()) {
 			return;

@@ -45,6 +45,10 @@ public class MethodAnalyzer extends MethodProbesVisitor
 
 	private final String superClassName;
 
+	private final Set<String> classAnnotations;
+
+	private final String sourceFileName;
+
 	private final boolean[] probes;
 
 	private final IFilter filter;
@@ -74,11 +78,15 @@ public class MethodAnalyzer extends MethodProbesVisitor
 
 	/**
 	 * New Method analyzer for the given probe data.
-	 * 
+	 *
 	 * @param className
 	 *            class name
 	 * @param superClassName
 	 *            superclass name
+	 * @param classAnnotations
+	 * 			  set of class annotations descriptors
+	 * @param sourceFileName
+	 *            name of the source file
 	 * @param name
 	 *            method name
 	 * @param desc
@@ -91,12 +99,17 @@ public class MethodAnalyzer extends MethodProbesVisitor
 	 * @param filter
 	 *            filter
 	 */
-	MethodAnalyzer(final String className, final String superClassName,
+	MethodAnalyzer(final String className,
+			final String superClassName,
+			final Set<String> classAnnotations,
+			final String sourceFileName,
 			final String name, final String desc, final String signature,
 			final boolean[] probes, final IFilter filter) {
 		super();
 		this.className = className;
 		this.superClassName = superClassName;
+		this.classAnnotations = classAnnotations;
+		this.sourceFileName = sourceFileName;
 		this.probes = probes;
 		this.filter = filter;
 		this.coverage = new MethodCoverageImpl(name, desc, signature);
@@ -118,7 +131,9 @@ public class MethodAnalyzer extends MethodProbesVisitor
 	@Override
 	public void accept(final MethodNode methodNode,
 			final MethodVisitor methodVisitor) {
-		filter.filter(className, superClassName, methodNode, this);
+		filter.filter(className, superClassName,
+				classAnnotations, sourceFileName,
+				methodNode, this);
 
 		methodVisitor.visitCode();
 		for (final TryCatchBlockNode n : methodNode.tryCatchBlocks) {

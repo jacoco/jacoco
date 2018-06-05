@@ -16,7 +16,11 @@ import org.jacoco.core.internal.analysis.filter.Filters;
 import org.jacoco.core.internal.flow.ClassProbesVisitor;
 import org.jacoco.core.internal.flow.MethodProbesVisitor;
 import org.jacoco.core.internal.instr.InstrSupport;
+import org.objectweb.asm.AnnotationVisitor;
 import org.objectweb.asm.FieldVisitor;
+
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Analyzes the structure of a class.
@@ -26,6 +30,8 @@ public class ClassAnalyzer extends ClassProbesVisitor {
 	private final ClassCoverageImpl coverage;
 	private final boolean[] probes;
 	private final StringPool stringPool;
+
+	private final Set<String> classAnnotations = new HashSet<String>();
 
 	/**
 	 * Creates a new analyzer that builds coverage data for a class.
@@ -48,9 +54,16 @@ public class ClassAnalyzer extends ClassProbesVisitor {
 	public void visit(final int version, final int access, final String name,
 			final String signature, final String superName,
 			final String[] interfaces) {
+		classAnnotations.clear();
 		coverage.setSignature(stringPool.get(signature));
 		coverage.setSuperName(stringPool.get(superName));
 		coverage.setInterfaces(stringPool.get(interfaces));
+	}
+
+	@Override
+	public AnnotationVisitor visitAnnotation(String desc, boolean visible) {
+		classAnnotations.add(desc);
+		return super.visitAnnotation(desc, visible);
 	}
 
 	@Override
@@ -65,6 +78,7 @@ public class ClassAnalyzer extends ClassProbesVisitor {
 		InstrSupport.assertNotInstrumented(name, coverage.getName());
 
 		return new MethodAnalyzer(coverage.getName(), coverage.getSuperName(),
+				classAnnotations, coverage.getSourceFileName(),
 				stringPool.get(name), stringPool.get(desc),
 				stringPool.get(signature), probes, Filters.ALL) {
 			@Override

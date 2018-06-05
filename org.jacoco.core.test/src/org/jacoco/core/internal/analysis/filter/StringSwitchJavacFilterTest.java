@@ -22,6 +22,8 @@ import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.tree.AbstractInsnNode;
 import org.objectweb.asm.tree.MethodNode;
 
+import java.util.Collections;
+
 public class StringSwitchJavacFilterTest implements IFilterOutput {
 
 	private final IFilter filter = new StringSwitchJavacFilter();
@@ -92,7 +94,8 @@ public class StringSwitchJavacFilterTest implements IFilterOutput {
 		m.visitTableSwitchInsn(0, 2, cases);
 		m.visitLabel(cases);
 
-		filter.filter("Foo", "java/lang/Object", m, this);
+		filter.filter("Foo", "java/lang/Object",
+				Collections.<String>emptySet(), null, m, this);
 
 		assertEquals(fromInclusive, this.fromInclusive);
 		assertEquals(toInclusive, this.toInclusive);
@@ -140,7 +143,8 @@ public class StringSwitchJavacFilterTest implements IFilterOutput {
 
 		m.visitLabel(cases);
 
-		filter.filter("Foo", "java/lang/Object", m, this);
+		filter.filter("Foo", "java/lang/Object",
+				Collections.<String>emptySet(), null, m, this);
 
 		assertNull(this.fromInclusive);
 		assertNull(this.toInclusive);

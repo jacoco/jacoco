@@ -17,13 +17,19 @@ import org.objectweb.asm.tree.MethodInsnNode;
 import org.objectweb.asm.tree.MethodNode;
 import org.objectweb.asm.tree.TryCatchBlockNode;
 
+import java.util.Set;
+
 /**
  * Filters code that javac generates for try-with-resources statement.
  */
 public final class TryWithResourcesJavacFilter implements IFilter {
 
-	public void filter(final String className, final String superClassName,
-			final MethodNode methodNode, final IFilterOutput output) {
+	public void filter(final String className,
+			final String superClassName,
+			final Set<String> classAnnotations,
+			final String sourceFileName,
+			final MethodNode methodNode,
+			final IFilterOutput output) {
 		if (methodNode.tryCatchBlocks.isEmpty()) {
 			return;
 		}

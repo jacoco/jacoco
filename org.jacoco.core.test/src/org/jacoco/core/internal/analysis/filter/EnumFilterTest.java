@@ -21,6 +21,8 @@ import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.tree.AbstractInsnNode;
 import org.objectweb.asm.tree.MethodNode;
 
+import java.util.Collections;
+
 public class EnumFilterTest implements IFilterOutput {
 
 	private final EnumFilter filter = new EnumFilter();
@@ -34,7 +36,8 @@ public class EnumFilterTest implements IFilterOutput {
 				"values", "()[LFoo;", null, null);
 		m.visitInsn(Opcodes.NOP);
 
-		filter.filter("Foo", "java/lang/Enum", m, this);
+		filter.filter("Foo", "java/lang/Enum",
+				Collections.<String>emptySet(), null, m, this);
 
 		assertEquals(m.instructions.getFirst(), fromInclusive);
 		assertEquals(m.instructions.getLast(), toInclusive);
@@ -46,7 +49,8 @@ public class EnumFilterTest implements IFilterOutput {
 				"values", "()V", null, null);
 		m.visitInsn(Opcodes.NOP);
 
-		filter.filter("Foo", "java/lang/Enum", m, this);
+		filter.filter("Foo", "java/lang/Enum",
+				Collections.<String>emptySet(), null, m, this);
 
 		assertNull(fromInclusive);
 		assertNull(toInclusive);
@@ -58,7 +62,8 @@ public class EnumFilterTest implements IFilterOutput {
 				"valueOf", "(Ljava/lang/String;)LFoo;", null, null);
 		m.visitInsn(Opcodes.NOP);
 
-		filter.filter("Foo", "java/lang/Enum", m, this);
+		filter.filter("Foo", "java/lang/Enum",
+				Collections.<String>emptySet(), null, m, this);
 
 		assertEquals(m.instructions.getFirst(), fromInclusive);
 		assertEquals(m.instructions.getLast(), toInclusive);
@@ -70,7 +75,8 @@ public class EnumFilterTest implements IFilterOutput {
 				"valueOf", "()V", null, null);
 		m.visitInsn(Opcodes.NOP);
 
-		filter.filter("Foo", "java/lang/Enum", m, this);
+		filter.filter("Foo", "java/lang/Enum",
+				Collections.<String>emptySet(), null, m, this);
 
 		assertNull(fromInclusive);
 		assertNull(toInclusive);
@@ -82,7 +88,8 @@ public class EnumFilterTest implements IFilterOutput {
 				"values", "()[LFoo;", null, null);
 		m.visitInsn(Opcodes.NOP);
 
-		filter.filter("Foo", "java/lang/Object", m, this);
+		filter.filter("Foo", "java/lang/Object",
+				Collections.<String>emptySet(), null, m, this);
 
 		assertNull(fromInclusive);
 		assertNull(toInclusive);

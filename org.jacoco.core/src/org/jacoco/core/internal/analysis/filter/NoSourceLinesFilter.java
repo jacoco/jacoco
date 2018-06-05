@@ -16,14 +16,16 @@ import org.objectweb.asm.tree.LineNumberNode;
 import org.objectweb.asm.tree.MethodNode;
 
 import java.util.ListIterator;
+import java.util.Set;
 
 public class NoSourceLinesFilter implements IFilter {
-	public void filter(String className, String superClassName,
+    public void filter(String className, String superClassName,
+			Set<String> classAnnotations, String sourceFileName,
 			MethodNode methodNode, IFilterOutput output) {
-		if ("<init>".equals(methodNode.name)) {
-			// Don't process constructors
-			return;
-		}
+        if ("<init>".equals(methodNode.name)) {
+            // Don't process constructors
+            return;
+        }
 
 		if (hasLineNumber(methodNode)) return;
 

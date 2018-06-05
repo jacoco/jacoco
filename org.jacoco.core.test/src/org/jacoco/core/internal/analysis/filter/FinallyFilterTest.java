@@ -14,6 +14,7 @@ package org.jacoco.core.internal.analysis.filter;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -383,7 +384,7 @@ public class FinallyFilterTest implements IFilterOutput {
 	}
 
 	private void execute() {
-		filter.filter("", "", m, this);
+		filter.filter("", "", Collections.<String>emptySet(), null, m, this);
 		assertEquals("ignored", toIndexes(expectedIgnored),
 				toIndexes(actualIgnored));
 		assertEquals("merged", toIndexes(expectedMerged),

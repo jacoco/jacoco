@@ -14,6 +14,8 @@ package org.jacoco.core.internal.analysis.filter;
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.tree.MethodNode;
 
+import java.util.Set;
+
 /**
  * Filters empty enum constructors.
  *
@@ -34,6 +36,7 @@ public final class EnumEmptyConstructorFilter implements IFilter {
 	private static final String CONSTRUCTOR_DESC = "(Ljava/lang/String;I)V";
 
 	public void filter(String className, String superClassName,
+			Set<String> classAnnotations, String sourceFileName,
 			MethodNode methodNode, IFilterOutput output) {
 		if ("java/lang/Enum".equals(superClassName)
 				&& CONSTRUCTOR_NAME.equals(methodNode.name)

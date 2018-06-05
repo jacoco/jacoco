@@ -21,6 +21,8 @@ import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.tree.AbstractInsnNode;
 import org.objectweb.asm.tree.MethodNode;
 
+import java.util.Collections;
+
 public class LombokGeneratedFilterTest implements IFilterOutput {
 
 	private final IFilter filter = new LombokGeneratedFilter();
@@ -36,7 +38,8 @@ public class LombokGeneratedFilterTest implements IFilterOutput {
 		m.visitInsn(Opcodes.ICONST_0);
 		m.visitInsn(Opcodes.IRETURN);
 
-		filter.filter("Foo", "java/lang/Object", m, this);
+		filter.filter("Foo", "java/lang/Object",
+				Collections.<String>emptySet(), null, m, this);
 
 		assertNull(fromInclusive);
 		assertNull(toInclusive);
@@ -51,7 +54,8 @@ public class LombokGeneratedFilterTest implements IFilterOutput {
 		m.visitInsn(Opcodes.ICONST_0);
 		m.visitInsn(Opcodes.IRETURN);
 
-		filter.filter("Foo", "java/lang/Object", m, this);
+		filter.filter("Foo", "java/lang/Object",
+				Collections.<String>emptySet(), null, m, this);
 
 		assertNull(fromInclusive);
 		assertNull(toInclusive);
@@ -66,7 +70,8 @@ public class LombokGeneratedFilterTest implements IFilterOutput {
 		m.visitInsn(Opcodes.ICONST_0);
 		m.visitInsn(Opcodes.IRETURN);
 
-		filter.filter("Foo", "java/lang/Object", m, this);
+		filter.filter("Foo", "java/lang/Object",
+				Collections.<String>emptySet(), null, m, this);
 
 		assertEquals(m.instructions.getFirst(), fromInclusive);
 		assertEquals(m.instructions.getLast(), toInclusive);
