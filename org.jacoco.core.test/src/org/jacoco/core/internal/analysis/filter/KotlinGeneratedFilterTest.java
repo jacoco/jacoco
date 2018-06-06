@@ -11,6 +11,13 @@
  *******************************************************************************/
 package org.jacoco.core.internal.analysis.filter;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.fail;
+
+import java.util.Collections;
+import java.util.Set;
+
 import org.jacoco.core.internal.instr.InstrSupport;
 import org.junit.Test;
 import org.objectweb.asm.Label;
@@ -18,20 +25,12 @@ import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.tree.AbstractInsnNode;
 import org.objectweb.asm.tree.MethodNode;
 
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Set;
+public class KotlinGeneratedFilterTest implements IFilterOutput {
 
-import static org.junit.Assert.*;
+	private final static Set<String> KOTLIN_ANNOTATIONS_SET = Collections
+			.singleton(KotlinGeneratedFilter.KOTLIN_METADATA_DESC);
 
-public class KotlinNoSourceLinesFilterTest implements IFilterOutput {
-	private final static Set<String> KOTLIN_ANNOTATIONS_SET =
-			new HashSet<String>(Collections.singletonList(
-					KotlinNoSourceLinesFilter.KOTLIN_METADATA_DESC
-			));
-
-	private final IFilter filter = new KotlinNoSourceLinesFilter();
-
+	private final IFilter filter = new KotlinGeneratedFilter();
 
 	private AbstractInsnNode fromInclusive;
 	private AbstractInsnNode toInclusive;
@@ -44,9 +43,8 @@ public class KotlinNoSourceLinesFilterTest implements IFilterOutput {
 		m.visitInsn(Opcodes.ICONST_0);
 		m.visitInsn(Opcodes.IRETURN);
 
-		filter.filter(
-				"Foo", "java/lang/Object", KOTLIN_ANNOTATIONS_SET, "data.kt",
-				m, this);
+		filter.filter("Foo", "java/lang/Object", KOTLIN_ANNOTATIONS_SET,
+				"data.kt", m, this);
 
 		assertMethodSkipped(m);
 	}
@@ -61,9 +59,8 @@ public class KotlinNoSourceLinesFilterTest implements IFilterOutput {
 		m.visitInsn(Opcodes.ICONST_0);
 		m.visitInsn(Opcodes.IRETURN);
 
-		filter.filter(
-				"Foo", "java/lang/Object", KOTLIN_ANNOTATIONS_SET, "data.kt",
-				m, this);
+		filter.filter("Foo", "java/lang/Object", KOTLIN_ANNOTATIONS_SET,
+				"data.kt", m, this);
 
 		assertNotApplicable();
 	}
@@ -76,10 +73,8 @@ public class KotlinNoSourceLinesFilterTest implements IFilterOutput {
 		m.visitInsn(Opcodes.ICONST_0);
 		m.visitInsn(Opcodes.IRETURN);
 
-		filter.filter(
-				"Foo", "java/lang/Object",
-				Collections.<String>emptySet(), "data.kt",
-				m, this);
+		filter.filter("Foo", "java/lang/Object",
+				Collections.<String> emptySet(), "data.kt", m, this);
 
 		assertNotApplicable();
 	}
@@ -92,9 +87,7 @@ public class KotlinNoSourceLinesFilterTest implements IFilterOutput {
 		m.visitInsn(Opcodes.ICONST_0);
 		m.visitInsn(Opcodes.IRETURN);
 
-		filter.filter(
-				"Foo", "java/lang/Object",
-				KOTLIN_ANNOTATIONS_SET, null,
+		filter.filter("Foo", "java/lang/Object", KOTLIN_ANNOTATIONS_SET, null,
 				m, this);
 
 		assertNotApplicable();
@@ -109,9 +102,7 @@ public class KotlinNoSourceLinesFilterTest implements IFilterOutput {
 		m.visitInsn(Opcodes.IRETURN);
 		m.visitLineNumber(12, new Label());
 
-		filter.filter(
-				"Foo", "java/lang/Object",
-				KOTLIN_ANNOTATIONS_SET, null,
+		filter.filter("Foo", "java/lang/Object", KOTLIN_ANNOTATIONS_SET, null,
 				m, this);
 
 		assertNotApplicable();
@@ -137,4 +128,5 @@ public class KotlinNoSourceLinesFilterTest implements IFilterOutput {
 	public void merge(final AbstractInsnNode i1, final AbstractInsnNode i2) {
 		fail();
 	}
+
 }
