@@ -15,7 +15,6 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import org.jacoco.core.internal.instr.InstrSupport;
@@ -220,8 +219,7 @@ public class TryWithResourcesJavacFilterTest implements IFilterOutput {
 		m.visitVarInsn(Opcodes.ALOAD, 8);
 		m.visitInsn(Opcodes.ATHROW);
 
-		filter.filter("Foo", "java/lang/Object", Collections.<String>emptySet(),
-				null, m, this);
+		filter.filter(m, new FilterContextMock(), this);
 
 		assertEquals(4, from.size());
 
@@ -550,8 +548,7 @@ public class TryWithResourcesJavacFilterTest implements IFilterOutput {
 		m.visitVarInsn(Opcodes.ALOAD, 11);
 		m.visitInsn(Opcodes.ATHROW);
 
-		filter.filter("Foo", "java/lang/Object", Collections.<String>emptySet(),
-				null, m, this);
+		filter.filter(m, new FilterContextMock(), this);
 
 		assertEquals(4, from.size());
 
@@ -729,8 +726,7 @@ public class TryWithResourcesJavacFilterTest implements IFilterOutput {
 
 		m.visitLabel(end);
 
-		filter.filter("Foo", "java/lang/Object", Collections.<String>emptySet(),
-				null, m, this);
+		filter.filter(m, new FilterContextMock(), this);
 
 		assertEquals(2, from.size());
 
@@ -798,8 +794,7 @@ public class TryWithResourcesJavacFilterTest implements IFilterOutput {
 		m.visitVarInsn(Opcodes.ALOAD, 4);
 		m.visitInsn(Opcodes.ATHROW);
 
-		filter.filter("Foo", "java/lang/Object", Collections.<String>emptySet(),
-				null, m, this);
+		filter.filter(m, new FilterContextMock(), this);
 
 		assertEquals(0, from.size());
 	}

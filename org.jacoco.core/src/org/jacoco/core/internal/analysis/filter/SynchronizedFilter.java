@@ -16,18 +16,14 @@ import org.objectweb.asm.tree.AbstractInsnNode;
 import org.objectweb.asm.tree.MethodNode;
 import org.objectweb.asm.tree.TryCatchBlockNode;
 
-import java.util.Set;
-
 /**
  * Filters code that is generated for synchronized statement.
  */
 public final class SynchronizedFilter implements IFilter {
 
-	public void filter(final String className, final String superClassName,
-			final Set<String> classAnnotations,
-			final String sourceFileName,
-			final MethodNode methodNode, final IFilterOutput output) {
-		for (TryCatchBlockNode tryCatch : methodNode.tryCatchBlocks) {
+	public void filter(final MethodNode methodNode,
+			final IFilterContext context, final IFilterOutput output) {
+		for (final TryCatchBlockNode tryCatch : methodNode.tryCatchBlocks) {
 			if (tryCatch.type != null) {
 				continue;
 			}
@@ -71,7 +67,7 @@ public final class SynchronizedFilter implements IFilter {
 			nextIs(Opcodes.ALOAD);
 			nextIs(Opcodes.MONITOREXIT);
 			nextIs(Opcodes.ATHROW);
-			return  cursor != null;
+			return cursor != null;
 		}
 	}
 

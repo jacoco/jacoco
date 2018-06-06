@@ -20,8 +20,6 @@ import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.tree.AbstractInsnNode;
 import org.objectweb.asm.tree.MethodNode;
 
-import java.util.Collections;
-
 public class PrivateEmptyNoArgConstructorFilterTest implements IFilterOutput {
 
 	private final IFilter filter = new PrivateEmptyNoArgConstructorFilter();
@@ -39,8 +37,7 @@ public class PrivateEmptyNoArgConstructorFilterTest implements IFilterOutput {
 				"()V", false);
 		m.visitInsn(Opcodes.RETURN);
 
-		filter.filter("Foo", "java/lang/Object",
-				Collections.<String>emptySet(), null, m, this);
+		filter.filter(m, new FilterContextMock(), this);
 
 		assertEquals(m.instructions.getFirst(), fromInclusive);
 		assertEquals(m.instructions.getLast(), toInclusive);

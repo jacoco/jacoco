@@ -13,21 +13,16 @@ package org.jacoco.core.internal.analysis.filter;
 
 import org.objectweb.asm.tree.MethodNode;
 
-import java.util.Set;
-
 /**
  * Filters methods <code>values</code> and <code>valueOf</code> that compiler
  * creates for enums.
  */
 public final class EnumFilter implements IFilter {
 
-	public void filter(final String className,
-			final String superClassName,
-			final Set<String> classAnnotations,
-			final String sourceFileName,
-			final MethodNode methodNode,
-			final IFilterOutput output) {
-		if (isMethodFiltered(className, superClassName, methodNode.name,
+	public void filter(final MethodNode methodNode,
+			final IFilterContext context, final IFilterOutput output) {
+		if (isMethodFiltered(context.getClassName(),
+				context.getSuperClassName(), methodNode.name,
 				methodNode.desc)) {
 			output.ignore(methodNode.instructions.getFirst(),
 					methodNode.instructions.getLast());

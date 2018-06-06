@@ -15,7 +15,6 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import org.jacoco.core.internal.instr.InstrSupport;
@@ -311,8 +310,7 @@ public class TryWithResourcesEcjFilterTest implements IFilterOutput {
 		// additional handlers
 		m.visitInsn(Opcodes.NOP);
 
-		filter.filter("Foo", "java/lang/Object",
-				Collections.<String> emptySet(), null, m, this);
+		filter.filter(m, new FilterContextMock(), this);
 
 		assertEquals(2, from.size());
 
@@ -600,8 +598,7 @@ public class TryWithResourcesEcjFilterTest implements IFilterOutput {
 		// additional handlers
 		m.visitInsn(Opcodes.NOP);
 
-		filter.filter("Foo", "java/lang/Object",
-				Collections.<String> emptySet(), null, m, this);
+		filter.filter(m, new FilterContextMock(), this);
 
 		assertEquals(2, from.size());
 

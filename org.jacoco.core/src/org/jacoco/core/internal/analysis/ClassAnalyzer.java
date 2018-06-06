@@ -16,6 +16,7 @@ import java.util.Set;
 
 import org.jacoco.core.analysis.IMethodCoverage;
 import org.jacoco.core.internal.analysis.filter.Filters;
+import org.jacoco.core.internal.analysis.filter.IFilterContext;
 import org.jacoco.core.internal.flow.ClassProbesVisitor;
 import org.jacoco.core.internal.flow.MethodProbesVisitor;
 import org.jacoco.core.internal.instr.InstrSupport;
@@ -25,7 +26,8 @@ import org.objectweb.asm.FieldVisitor;
 /**
  * Analyzes the structure of a class.
  */
-public class ClassAnalyzer extends ClassProbesVisitor {
+public class ClassAnalyzer extends ClassProbesVisitor
+		implements IFilterContext {
 
 	private final ClassCoverageImpl coverage;
 	private final boolean[] probes;
@@ -78,10 +80,8 @@ public class ClassAnalyzer extends ClassProbesVisitor {
 
 		InstrSupport.assertNotInstrumented(name, coverage.getName());
 
-		return new MethodAnalyzer(coverage.getName(), coverage.getSuperName(),
-				classAnnotations, coverage.getSourceFileName(),
-				stringPool.get(name), stringPool.get(desc),
-				stringPool.get(signature), probes, Filters.ALL) {
+		return new MethodAnalyzer(stringPool.get(name), stringPool.get(desc),
+				stringPool.get(signature), probes, Filters.ALL, this) {
 			@Override
 			public void visitEnd() {
 				super.visitEnd();
@@ -105,6 +105,24 @@ public class ClassAnalyzer extends ClassProbesVisitor {
 	@Override
 	public void visitTotalProbeCount(final int count) {
 		// nothing to do
+	}
+
+	// IFilterContext implementation
+
+	public String getClassName() {
+		return coverage.getName();
+	}
+
+	public String getSuperClassName() {
+		return coverage.getSuperName();
+	}
+
+	public Set<String> getClassAnnotations() {
+		return classAnnotations;
+	}
+
+	public String getSourceFileName() {
+		return coverage.getSourceFileName();
 	}
 
 }

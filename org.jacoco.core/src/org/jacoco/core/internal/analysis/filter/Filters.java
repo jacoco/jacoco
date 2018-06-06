@@ -11,8 +11,6 @@
  *******************************************************************************/
 package org.jacoco.core.internal.analysis.filter;
 
-import java.util.Set;
-
 import org.objectweb.asm.tree.MethodNode;
 
 /**
@@ -42,12 +40,10 @@ public final class Filters implements IFilter {
 		this.filters = filters;
 	}
 
-	public void filter(final String className, final String superClassName,
-			final Set<String> classAnnotations, final String sourceFileName,
-			final MethodNode methodNode, final IFilterOutput output) {
+	public void filter(final MethodNode methodNode,
+			final IFilterContext context, final IFilterOutput output) {
 		for (final IFilter filter : filters) {
-			filter.filter(className, superClassName, classAnnotations,
-					sourceFileName, methodNode, output);
+			filter.filter(methodNode, context, output);
 		}
 	}
 

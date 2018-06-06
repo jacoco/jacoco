@@ -11,8 +11,6 @@
  *******************************************************************************/
 package org.jacoco.core.internal.analysis.filter;
 
-import java.util.Set;
-
 import org.objectweb.asm.tree.AbstractInsnNode;
 import org.objectweb.asm.tree.MethodNode;
 
@@ -25,17 +23,16 @@ public class KotlinGeneratedFilter implements IFilter {
 
 	static final String KOTLIN_METADATA_DESC = "Lkotlin/Metadata;";
 
-	public void filter(final String className, final String superClassName,
-			final Set<String> classAnnotations, final String sourceFileName,
-			final MethodNode methodNode, final IFilterOutput output) {
+	public void filter(final MethodNode methodNode,
+			final IFilterContext context, final IFilterOutput output) {
 
-		if (sourceFileName == null) {
+		if (context.getSourceFileName() == null) {
 			// probably full debug information is missing
 			// disabled filtering as all methods might be erroneously skipped
 			return;
 		}
 
-		if (!classAnnotations.contains(KOTLIN_METADATA_DESC)) {
+		if (!context.getClassAnnotations().contains(KOTLIN_METADATA_DESC)) {
 			return;
 		}
 

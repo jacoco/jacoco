@@ -14,8 +14,6 @@ package org.jacoco.core.internal.analysis.filter;
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.tree.MethodNode;
 
-import java.util.Set;
-
 /**
  * Filters private empty constructors that do not have arguments.
  */
@@ -24,14 +22,12 @@ public final class PrivateEmptyNoArgConstructorFilter implements IFilter {
 	private static final String CONSTRUCTOR_NAME = "<init>";
 	private static final String CONSTRUCTOR_DESC = "()V";
 
-	public void filter(final String className, final String superClassName,
-			final Set<String> classAnnotations,
-			final String sourceFileName,
-			final MethodNode methodNode, final IFilterOutput output) {
+	public void filter(final MethodNode methodNode,
+			final IFilterContext context, final IFilterOutput output) {
 		if ((methodNode.access & Opcodes.ACC_PRIVATE) != 0
 				&& CONSTRUCTOR_NAME.equals(methodNode.name)
-				&& CONSTRUCTOR_DESC.equals(methodNode.desc)
-				&& new Matcher().match(methodNode, superClassName)) {
+				&& CONSTRUCTOR_DESC.equals(methodNode.desc) && new Matcher()
+						.match(methodNode, context.getSuperClassName())) {
 			output.ignore(methodNode.instructions.getFirst(),
 					methodNode.instructions.getLast());
 		}

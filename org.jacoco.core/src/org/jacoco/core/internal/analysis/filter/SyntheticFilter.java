@@ -14,17 +14,13 @@ package org.jacoco.core.internal.analysis.filter;
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.tree.MethodNode;
 
-import java.util.Set;
-
 /**
  * Filters synthetic methods unless they represent bodies of lambda expressions.
  */
 public final class SyntheticFilter implements IFilter {
 
-	public void filter(final String className, final String superClassName,
-			final Set<String> classAnnotations,
-			final String sourceFileName,
-			final MethodNode methodNode, final IFilterOutput output) {
+	public void filter(final MethodNode methodNode,
+			final IFilterContext context, final IFilterOutput output) {
 		if ((methodNode.access & Opcodes.ACC_SYNTHETIC) != 0
 				&& !methodNode.name.startsWith("lambda$")) {
 			output.ignore(methodNode.instructions.getFirst(),

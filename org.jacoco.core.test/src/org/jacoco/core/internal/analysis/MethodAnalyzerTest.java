@@ -14,13 +14,13 @@ package org.jacoco.core.internal.analysis;
 import static org.junit.Assert.assertEquals;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Set;
 
 import org.jacoco.core.analysis.ILine;
 import org.jacoco.core.analysis.IMethodCoverage;
+import org.jacoco.core.internal.analysis.filter.FilterContextMock;
 import org.jacoco.core.internal.analysis.filter.Filters;
 import org.jacoco.core.internal.analysis.filter.IFilter;
+import org.jacoco.core.internal.analysis.filter.IFilterContext;
 import org.jacoco.core.internal.analysis.filter.IFilterOutput;
 import org.jacoco.core.internal.flow.IProbeIdGenerator;
 import org.jacoco.core.internal.flow.LabelFlowAnalyzer;
@@ -111,9 +111,8 @@ public class MethodAnalyzerTest implements IProbeIdGenerator {
 
 	/** Filters the NOP instructions as ignored */
 	private static final IFilter NOP_FILTER = new IFilter() {
-		public void filter(final String className, final String superClassName,
-				final Set<String> classAnnotations, final String sourceFileName,
-				final MethodNode methodNode, final IFilterOutput output) {
+		public void filter(final MethodNode methodNode,
+				final IFilterContext context, final IFilterOutput output) {
 			final AbstractInsnNode i1 = methodNode.instructions.get(2);
 			final AbstractInsnNode i2 = methodNode.instructions.get(3);
 			assertEquals(Opcodes.NOP, i1.getOpcode());
@@ -780,9 +779,8 @@ public class MethodAnalyzerTest implements IProbeIdGenerator {
 	}
 
 	private static final IFilter TRY_FINALLY_FILTER = new IFilter() {
-		public void filter(final String className, final String superClassName,
-				final Set<String> classAnnotations, final String sourceFileName,
-				final MethodNode methodNode, final IFilterOutput output) {
+		public void filter(final MethodNode methodNode,
+				final IFilterContext context, final IFilterOutput output) {
 			final AbstractInsnNode i1 = methodNode.instructions.get(2);
 			final AbstractInsnNode i2 = methodNode.instructions.get(7);
 			assertEquals(Opcodes.IFEQ, i1.getOpcode());
@@ -849,9 +847,8 @@ public class MethodAnalyzerTest implements IProbeIdGenerator {
 
 	private void runMethodAnalzer(IFilter filter) {
 		LabelFlowAnalyzer.markLabels(method);
-		final MethodAnalyzer analyzer = new MethodAnalyzer("Foo",
-				"java/lang/Object", Collections.<String> emptySet(), "Foo.java",
-				"doit", "()V", null, probes, filter);
+		final MethodAnalyzer analyzer = new MethodAnalyzer("doit", "()V", null,
+				probes, filter, new FilterContextMock());
 		final MethodProbesAdapter probesAdapter = new MethodProbesAdapter(
 				analyzer, this);
 		// note that CheckMethodAdapter verifies that this test does not violate

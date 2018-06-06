@@ -22,6 +22,7 @@ import org.jacoco.core.analysis.ICounter;
 import org.jacoco.core.analysis.IMethodCoverage;
 import org.jacoco.core.analysis.ISourceNode;
 import org.jacoco.core.internal.analysis.filter.IFilter;
+import org.jacoco.core.internal.analysis.filter.IFilterContext;
 import org.jacoco.core.internal.analysis.filter.IFilterOutput;
 import org.jacoco.core.internal.flow.IFrame;
 import org.jacoco.core.internal.flow.Instruction;
@@ -41,17 +42,11 @@ import org.objectweb.asm.tree.TryCatchBlockNode;
 public class MethodAnalyzer extends MethodProbesVisitor
 		implements IFilterOutput {
 
-	private final String className;
-
-	private final String superClassName;
-
-	private final Set<String> classAnnotations;
-
-	private final String sourceFileName;
-
 	private final boolean[] probes;
 
 	private final IFilter filter;
+
+	private final IFilterContext filterContext;
 
 	private final MethodCoverageImpl coverage;
 
@@ -79,14 +74,6 @@ public class MethodAnalyzer extends MethodProbesVisitor
 	/**
 	 * New Method analyzer for the given probe data.
 	 *
-	 * @param className
-	 *            class name
-	 * @param superClassName
-	 *            superclass name
-	 * @param classAnnotations
-	 *            set of class annotations descriptors
-	 * @param sourceFileName
-	 *            name of the source file
 	 * @param name
 	 *            method name
 	 * @param desc
@@ -97,19 +84,17 @@ public class MethodAnalyzer extends MethodProbesVisitor
 	 *            recorded probe date of the containing class or
 	 *            <code>null</code> if the class is not executed at all
 	 * @param filter
-	 *            filter
+	 *            filter which should be applied
+	 * @param filterContext
+	 *            class context information for the filter
 	 */
-	MethodAnalyzer(final String className, final String superClassName,
-			final Set<String> classAnnotations, final String sourceFileName,
-			final String name, final String desc, final String signature,
-			final boolean[] probes, final IFilter filter) {
+	MethodAnalyzer(final String name, final String desc, final String signature,
+			final boolean[] probes, final IFilter filter,
+			final IFilterContext filterContext) {
 		super();
-		this.className = className;
-		this.superClassName = superClassName;
-		this.classAnnotations = classAnnotations;
-		this.sourceFileName = sourceFileName;
 		this.probes = probes;
 		this.filter = filter;
+		this.filterContext = filterContext;
 		this.coverage = new MethodCoverageImpl(name, desc, signature);
 	}
 
@@ -129,8 +114,7 @@ public class MethodAnalyzer extends MethodProbesVisitor
 	@Override
 	public void accept(final MethodNode methodNode,
 			final MethodVisitor methodVisitor) {
-		filter.filter(className, superClassName, classAnnotations,
-				sourceFileName, methodNode, this);
+		filter.filter(methodNode, filterContext, this);
 
 		methodVisitor.visitCode();
 		for (final TryCatchBlockNode n : methodNode.tryCatchBlocks) {

@@ -23,8 +23,6 @@ import org.objectweb.asm.tree.AbstractInsnNode;
 import org.objectweb.asm.tree.LabelNode;
 import org.objectweb.asm.tree.MethodNode;
 
-import java.util.Collections;
-
 public class SynchronizedFilterTest implements IFilterOutput {
 
 	private final SynchronizedFilter filter = new SynchronizedFilter();
@@ -66,8 +64,7 @@ public class SynchronizedFilterTest implements IFilterOutput {
 		m.visitLabel(exit);
 		m.visitInsn(Opcodes.RETURN);
 
-		filter.filter("Foo", "java/lang/Object", Collections.<String>emptySet(),
-				null, m, this);
+		filter.filter(m, new FilterContextMock(), this);
 		assertEquals(handler.info, fromInclusive);
 		assertEquals(((LabelNode) exit.info).getPrevious(), toInclusive);
 	}
@@ -120,8 +117,7 @@ public class SynchronizedFilterTest implements IFilterOutput {
 		m.visitLabel(exit);
 		m.visitInsn(Opcodes.RETURN);
 
-		filter.filter("Foo", "java/lang/Object", Collections.<String>emptySet(),
-				null, m, this);
+		filter.filter(m, new FilterContextMock(), this);
 		assertNull(fromInclusive);
 	}
 
@@ -156,8 +152,7 @@ public class SynchronizedFilterTest implements IFilterOutput {
 		m.visitLabel(exit);
 		m.visitInsn(Opcodes.RETURN);
 
-		filter.filter("Foo", "java/lang/Object", Collections.<String>emptySet(),
-				null, m, this);
+		filter.filter(m, new FilterContextMock(), this);
 		assertEquals(handler.info, fromInclusive);
 		assertEquals(((LabelNode) exit.info).getPrevious(), toInclusive);
 	}

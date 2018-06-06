@@ -15,9 +15,6 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.fail;
 
-import java.util.Collections;
-import java.util.Set;
-
 import org.jacoco.core.internal.instr.InstrSupport;
 import org.junit.Test;
 import org.objectweb.asm.Label;
@@ -27,10 +24,9 @@ import org.objectweb.asm.tree.MethodNode;
 
 public class KotlinGeneratedFilterTest implements IFilterOutput {
 
-	private final static Set<String> KOTLIN_ANNOTATIONS_SET = Collections
-			.singleton(KotlinGeneratedFilter.KOTLIN_METADATA_DESC);
-
 	private final IFilter filter = new KotlinGeneratedFilter();
+
+	private final FilterContextMock context = new FilterContextMock();
 
 	private AbstractInsnNode fromInclusive;
 	private AbstractInsnNode toInclusive;
@@ -39,12 +35,12 @@ public class KotlinGeneratedFilterTest implements IFilterOutput {
 	public void testNoLinesForKotlinWithDebug() {
 		final MethodNode m = new MethodNode(InstrSupport.ASM_API_VERSION, 0,
 				"hashCode", "()I", null, null);
-
 		m.visitInsn(Opcodes.ICONST_0);
 		m.visitInsn(Opcodes.IRETURN);
+		context.classAnnotations
+				.add(KotlinGeneratedFilter.KOTLIN_METADATA_DESC);
 
-		filter.filter("Foo", "java/lang/Object", KOTLIN_ANNOTATIONS_SET,
-				"data.kt", m, this);
+		filter.filter(m, context, this);
 
 		assertMethodSkipped(m);
 	}
@@ -54,13 +50,13 @@ public class KotlinGeneratedFilterTest implements IFilterOutput {
 		final MethodNode m = new MethodNode(InstrSupport.ASM_API_VERSION, 0,
 				"hashCode", "()I", null, null);
 		m.visitAnnotation("Lother/Annotation;", false);
-
 		m.visitLineNumber(12, new Label());
 		m.visitInsn(Opcodes.ICONST_0);
 		m.visitInsn(Opcodes.IRETURN);
+		context.classAnnotations
+				.add(KotlinGeneratedFilter.KOTLIN_METADATA_DESC);
 
-		filter.filter("Foo", "java/lang/Object", KOTLIN_ANNOTATIONS_SET,
-				"data.kt", m, this);
+		filter.filter(m, context, this);
 
 		assertNotApplicable();
 	}
@@ -69,12 +65,10 @@ public class KotlinGeneratedFilterTest implements IFilterOutput {
 	public void testNoLinesNonKotlinWithDebug() {
 		final MethodNode m = new MethodNode(InstrSupport.ASM_API_VERSION, 0,
 				"hashCode", "()I", null, null);
-
 		m.visitInsn(Opcodes.ICONST_0);
 		m.visitInsn(Opcodes.IRETURN);
 
-		filter.filter("Foo", "java/lang/Object",
-				Collections.<String> emptySet(), "data.kt", m, this);
+		filter.filter(m, context, this);
 
 		assertNotApplicable();
 	}
@@ -83,12 +77,13 @@ public class KotlinGeneratedFilterTest implements IFilterOutput {
 	public void testNoLinesForKotlinNoDebug() {
 		final MethodNode m = new MethodNode(InstrSupport.ASM_API_VERSION, 0,
 				"hashCode", "()I", null, null);
-
 		m.visitInsn(Opcodes.ICONST_0);
 		m.visitInsn(Opcodes.IRETURN);
+		context.classAnnotations
+				.add(KotlinGeneratedFilter.KOTLIN_METADATA_DESC);
+		context.sourceFileName = null;
 
-		filter.filter("Foo", "java/lang/Object", KOTLIN_ANNOTATIONS_SET, null,
-				m, this);
+		filter.filter(m, context, this);
 
 		assertNotApplicable();
 	}
@@ -97,13 +92,14 @@ public class KotlinGeneratedFilterTest implements IFilterOutput {
 	public void testWithLinesForKotlinNoDebug() {
 		final MethodNode m = new MethodNode(InstrSupport.ASM_API_VERSION, 0,
 				"hashCode", "()I", null, null);
-
 		m.visitInsn(Opcodes.ICONST_0);
 		m.visitInsn(Opcodes.IRETURN);
 		m.visitLineNumber(12, new Label());
+		context.classAnnotations
+				.add(KotlinGeneratedFilter.KOTLIN_METADATA_DESC);
+		context.sourceFileName = null;
 
-		filter.filter("Foo", "java/lang/Object", KOTLIN_ANNOTATIONS_SET, null,
-				m, this);
+		filter.filter(m, context, this);
 
 		assertNotApplicable();
 	}

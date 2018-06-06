@@ -12,7 +12,6 @@
 package org.jacoco.core.internal.analysis.filter;
 
 import java.util.List;
-import java.util.Set;
 
 import org.objectweb.asm.tree.AnnotationNode;
 import org.objectweb.asm.tree.MethodNode;
@@ -33,9 +32,8 @@ abstract class AbstractAnnotatedMethodFilter implements IFilter {
 		this.descType = "L" + annotationType + ";";
 	}
 
-	public void filter(final String className, final String superClassName,
-			final Set<String> classAnnotations, final String sourceFileName,
-			final MethodNode methodNode, final IFilterOutput output) {
+	public void filter(final MethodNode methodNode,
+			final IFilterContext context, final IFilterOutput output) {
 		if (hasAnnotation(methodNode)) {
 			output.ignore(methodNode.instructions.getFirst(),
 					methodNode.instructions.getLast());
