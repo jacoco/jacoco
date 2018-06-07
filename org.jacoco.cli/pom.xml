@@ -101,6 +101,14 @@
                   </manifestEntries>
                 </transformer>
               </transformers>
+              <filters>
+                <filter>
+                  <artifact>args4j:args4j</artifact>
+                  <excludes>
+                    <exclude>**/Messages_*.properties</exclude>
+                  </excludes>
+                </filter>
+              </filters>
             </configuration>
           </execution>
         </executions>
