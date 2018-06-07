@@ -31,7 +31,8 @@ public final class Filters implements IFilter {
 			new TryWithResourcesJavacFilter(), new TryWithResourcesEcjFilter(),
 			new FinallyFilter(), new PrivateEmptyNoArgConstructorFilter(),
 			new StringSwitchJavacFilter(), new LombokGeneratedFilter(),
-			new GroovyGeneratedFilter(), new EnumEmptyConstructorFilter());
+			new GroovyGeneratedFilter(), new EnumEmptyConstructorFilter(),
+			new KotlinGeneratedFilter());
 
 	private final IFilter[] filters;
 
@@ -39,10 +40,10 @@ public final class Filters implements IFilter {
 		this.filters = filters;
 	}
 
-	public void filter(final String className, final String superClassName,
-			final MethodNode methodNode, final IFilterOutput output) {
+	public void filter(final MethodNode methodNode,
+			final IFilterContext context, final IFilterOutput output) {
 		for (final IFilter filter : filters) {
-			filter.filter(className, superClassName, methodNode, output);
+			filter.filter(methodNode, context, output);
 		}
 	}
 

@@ -24,8 +24,8 @@ import org.objectweb.asm.tree.TableSwitchInsnNode;
  */
 public final class StringSwitchJavacFilter implements IFilter {
 
-	public void filter(final String className, final String superClassName,
-			final MethodNode methodNode, final IFilterOutput output) {
+	public void filter(final MethodNode methodNode,
+			final IFilterContext context, final IFilterOutput output) {
 		AbstractInsnNode i = methodNode.instructions.getFirst();
 		while (i != null) {
 			filter(i, output);
