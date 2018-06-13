@@ -77,8 +77,11 @@ case "$JDK" in
 5)
   if [[ ${TRAVIS_PULL_REQUEST} == 'false' && ${TRAVIS_BRANCH} == 'master' ]]
   then
+    # Travis does shallow clone, but SonarQube performs "git blame" and so requires full history
+    git fetch --unshallow
+
     # goal "deploy:deploy" used directly instead of "deploy" phase to avoid pollution of Maven repository by "install" phase
-    mvn -V -B -e -f org.jacoco.build verify deploy:deploy -DdeployAtEnd -Djdk.version=1.5 --toolchains=./.travis/toolchains.xml --settings=./.travis/settings.xml -Dsonar.host.url=${SONARQUBE_URL} -Dsonar.login=${SONARQUBE_TOKEN}
+    mvn -V -B -e -f org.jacoco.build verify sonar:sonar deploy:deploy -DdeployAtEnd -Djdk.version=1.5 --toolchains=./.travis/toolchains.xml --settings=./.travis/settings.xml -Dsonar.host.url=${SONARQUBE_URL} -Dsonar.login=${SONARQUBE_TOKEN}
     python ./.travis/trigger-site-deployment.py
   else
     mvn -V -B -e verify -Djdk.version=1.5 --toolchains=./.travis/toolchains.xml
