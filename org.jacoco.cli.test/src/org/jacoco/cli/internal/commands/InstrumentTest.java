@@ -47,7 +47,7 @@ public class InstrumentTest extends CommandTestBase {
 			throws Exception {
 		execute("instrument");
 		assertFailure();
-		assertContains("Option \"--dest\" is required", err);
+		assertContains("\"--dest\"", err);
 		assertContains(
 				"Usage: java -jar jacococli.jar instrument [<sourcefiles> ...]",
 				err);

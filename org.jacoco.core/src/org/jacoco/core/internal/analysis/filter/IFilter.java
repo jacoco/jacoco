@@ -24,16 +24,13 @@ public interface IFilter {
 	 * expected to inspect the provided method and report its result to the
 	 * given {@link IFilterOutput} instance.
 	 *
-	 * @param className
-	 *            class name
-	 * @param superClassName
-	 *            superclass name
 	 * @param methodNode
 	 *            method to inspect
+	 * @param context
+	 *            context information for the method
 	 * @param output
 	 *            callback to report filtering results to
 	 */
-	void filter(String className, String superClassName, MethodNode methodNode,
+	void filter(MethodNode methodNode, IFilterContext context,
 			IFilterOutput output);
-
 }

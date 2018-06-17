@@ -34,7 +34,7 @@ public class SyntheticFilterTest implements IFilterOutput {
 				"name", "()V", null, null);
 		m.visitInsn(Opcodes.NOP);
 
-		filter.filter("Foo", "java/lang/Object", m, this);
+		filter.filter(m, new FilterContextMock(), this);
 
 		assertNull(fromInclusive);
 		assertNull(toInclusive);
@@ -46,7 +46,7 @@ public class SyntheticFilterTest implements IFilterOutput {
 				Opcodes.ACC_SYNTHETIC, "name", "()V", null, null);
 		m.visitInsn(Opcodes.NOP);
 
-		filter.filter("Foo", "java/lang/Object", m, this);
+		filter.filter(m, new FilterContextMock(), this);
 
 		assertEquals(m.instructions.getFirst(), fromInclusive);
 		assertEquals(m.instructions.getLast(), toInclusive);
@@ -58,7 +58,7 @@ public class SyntheticFilterTest implements IFilterOutput {
 				Opcodes.ACC_SYNTHETIC, "lambda$1", "()V", null, null);
 		m.visitInsn(Opcodes.NOP);
 
-		filter.filter("Foo", "java/lang/Object", m, this);
+		filter.filter(m, new FilterContextMock(), this);
 
 		assertNull(fromInclusive);
 		assertNull(toInclusive);

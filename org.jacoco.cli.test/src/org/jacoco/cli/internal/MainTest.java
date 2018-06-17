@@ -24,7 +24,7 @@ public class MainTest extends CommandTestBase {
 
 		assertFailure();
 		assertNoOutput(out);
-		assertContains("Argument \"<command>\" is required", err);
+		assertContains("\"<command>\"", err);
 		assertContains("Usage: java -jar jacococli.jar --help | <command>",
 				err);
 		assertContains("Command line interface for JaCoCo.", err);

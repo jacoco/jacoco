@@ -25,6 +25,8 @@ public class EnumFilterTest implements IFilterOutput {
 
 	private final EnumFilter filter = new EnumFilter();
 
+	private final FilterContextMock context = new FilterContextMock();
+
 	private AbstractInsnNode fromInclusive;
 	private AbstractInsnNode toInclusive;
 
@@ -33,8 +35,9 @@ public class EnumFilterTest implements IFilterOutput {
 		final MethodNode m = new MethodNode(InstrSupport.ASM_API_VERSION, 0,
 				"values", "()[LFoo;", null, null);
 		m.visitInsn(Opcodes.NOP);
+		context.superClassName = "java/lang/Enum";
 
-		filter.filter("Foo", "java/lang/Enum", m, this);
+		filter.filter(m, context, this);
 
 		assertEquals(m.instructions.getFirst(), fromInclusive);
 		assertEquals(m.instructions.getLast(), toInclusive);
@@ -46,7 +49,7 @@ public class EnumFilterTest implements IFilterOutput {
 				"values", "()V", null, null);
 		m.visitInsn(Opcodes.NOP);
 
-		filter.filter("Foo", "java/lang/Enum", m, this);
+		filter.filter(m, context, this);
 
 		assertNull(fromInclusive);
 		assertNull(toInclusive);
@@ -57,8 +60,9 @@ public class EnumFilterTest implements IFilterOutput {
 		final MethodNode m = new MethodNode(InstrSupport.ASM_API_VERSION, 0,
 				"valueOf", "(Ljava/lang/String;)LFoo;", null, null);
 		m.visitInsn(Opcodes.NOP);
+		context.superClassName = "java/lang/Enum";
 
-		filter.filter("Foo", "java/lang/Enum", m, this);
+		filter.filter(m, context, this);
 
 		assertEquals(m.instructions.getFirst(), fromInclusive);
 		assertEquals(m.instructions.getLast(), toInclusive);
@@ -69,8 +73,9 @@ public class EnumFilterTest implements IFilterOutput {
 		final MethodNode m = new MethodNode(InstrSupport.ASM_API_VERSION, 0,
 				"valueOf", "()V", null, null);
 		m.visitInsn(Opcodes.NOP);
+		context.superClassName = "java/lang/Enum";
 
-		filter.filter("Foo", "java/lang/Enum", m, this);
+		filter.filter(m, context, this);
 
 		assertNull(fromInclusive);
 		assertNull(toInclusive);
@@ -82,7 +87,7 @@ public class EnumFilterTest implements IFilterOutput {
 				"values", "()[LFoo;", null, null);
 		m.visitInsn(Opcodes.NOP);
 
-		filter.filter("Foo", "java/lang/Object", m, this);
+		filter.filter(m, context, this);
 
 		assertNull(fromInclusive);
 		assertNull(toInclusive);

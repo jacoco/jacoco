@@ -21,9 +21,9 @@ import org.objectweb.asm.tree.TryCatchBlockNode;
  */
 public final class SynchronizedFilter implements IFilter {
 
-	public void filter(final String className, final String superClassName,
-			final MethodNode methodNode, final IFilterOutput output) {
-		for (TryCatchBlockNode tryCatch : methodNode.tryCatchBlocks) {
+	public void filter(final MethodNode methodNode,
+			final IFilterContext context, final IFilterOutput output) {
+		for (final TryCatchBlockNode tryCatch : methodNode.tryCatchBlocks) {
 			if (tryCatch.type != null) {
 				continue;
 			}
@@ -67,7 +67,7 @@ public final class SynchronizedFilter implements IFilter {
 			nextIs(Opcodes.ALOAD);
 			nextIs(Opcodes.MONITOREXIT);
 			nextIs(Opcodes.ATHROW);
-			return  cursor != null;
+			return cursor != null;
 		}
 	}
 
