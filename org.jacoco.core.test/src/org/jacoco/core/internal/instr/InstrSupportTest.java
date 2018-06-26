@@ -56,17 +56,17 @@ public class InstrSupportTest {
 	}
 
 	@Test
-	public void testAssertNotIntrumentedPositive() {
+	public void assertNotIntrumented_should_accept_non_jacoco_memebers() {
 		InstrSupport.assertNotInstrumented("run", "Foo");
 	}
 
 	@Test(expected = IllegalStateException.class)
-	public void testAssertNotIntrumentedField() {
+	public void assertNotIntrumented_should_throw_exception_when_jacoco_data_field_is_present() {
 		InstrSupport.assertNotInstrumented("$jacocoData", "Foo");
 	}
 
 	@Test(expected = IllegalStateException.class)
-	public void testAssertNotIntrumentedMethod() {
+	public void assertNotIntrumented_should_throw_exception_when_jacoco_init_method_is_present() {
 		InstrSupport.assertNotInstrumented("$jacocoInit", "Foo");
 	}
 
