@@ -98,6 +98,8 @@ public class XMLFormatterTest {
 		assertPathMatches("org/jacoco/example", "/report/group/package/@name");
 		assertPathMatches("org/jacoco/example/FooClass",
 				"/report/group/package/class/@name");
+		assertPathMatches("FooClass.java",
+				"/report/group/package/class/@sourcefilename");
 		assertPathMatches("fooMethod",
 				"/report/group/package/class/method/@name");
 
@@ -167,8 +169,8 @@ public class XMLFormatterTest {
 		final IReportVisitor visitor = formatter.createVisitor(output);
 		visitor.visitInfo(infos, data);
 		driver.sendBundle(visitor);
-		final BufferedReader reader = new BufferedReader(new InputStreamReader(
-				output.getContentsAsStream(), "UTF-8"));
+		final BufferedReader reader = new BufferedReader(
+				new InputStreamReader(output.getContentsAsStream(), "UTF-8"));
 		final String line = reader.readLine();
 		assertTrue(line,
 				line.startsWith("<?xml version=\"1.0\" encoding=\"UTF-8\""));
@@ -180,8 +182,8 @@ public class XMLFormatterTest {
 		final IReportVisitor visitor = formatter.createVisitor(output);
 		visitor.visitInfo(infos, data);
 		driver.sendBundle(visitor);
-		final BufferedReader reader = new BufferedReader(new InputStreamReader(
-				output.getContentsAsStream(), "UTF-16"));
+		final BufferedReader reader = new BufferedReader(
+				new InputStreamReader(output.getContentsAsStream(), "UTF-16"));
 		final String line = reader.readLine();
 		assertTrue(line,
 				line.startsWith("<?xml version=\"1.0\" encoding=\"UTF-16\""));

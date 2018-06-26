@@ -83,6 +83,7 @@ public final class XMLCoverageWriter {
 	private static void writeClass(final IClassCoverage c,
 			final XMLElement parent) throws IOException {
 		final XMLElement element = createChild(parent, "class", c.getName());
+		element.attr("sourcefilename", c.getSourceFileName());
 		for (final IMethodCoverage m : c.getMethods()) {
 			writeMethod(m, element);
 		}
