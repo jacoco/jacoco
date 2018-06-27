@@ -44,7 +44,7 @@ public class XMLGroupVisitorTest {
 	public void setup() throws Exception {
 		buffer = new StringWriter();
 		support = new XMLSupport(XMLFormatter.class);
-		root = new XMLDocument("report", "-//JACOCO//DTD Report 1.0//EN",
+		root = new XMLDocument("report", "-//JACOCO//DTD Report 1.1//EN",
 				"report.dtd", "UTF-8", true, buffer);
 		root.attr("name", "Report");
 		handler = new XMLGroupVisitor(root, null);
@@ -77,8 +77,8 @@ public class XMLGroupVisitorTest {
 				"//report/counter[@type='BRANCH']/@covered"));
 	}
 
-	private Document getDocument() throws SAXException, IOException,
-			ParserConfigurationException {
+	private Document getDocument()
+			throws SAXException, IOException, ParserConfigurationException {
 		return support.parse(buffer.toString());
 	}
 

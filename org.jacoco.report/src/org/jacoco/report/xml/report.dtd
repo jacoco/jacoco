@@ -13,7 +13,7 @@
 <!-- This DTD describes the JaCoCo XML report format. It is identified by the
      following identifiers:
 
-        PUBID  = "-//JACOCO//DTD Report 1.0//EN"
+        PUBID  = "-//JACOCO//DTD Report 1.1//EN"
         SYSTEM = "report.dtd"
 -->
 
@@ -44,6 +44,8 @@
 <!ELEMENT class (method*, counter*)>
   <!-- fully qualified VM name -->
   <!ATTLIST class name CDATA #REQUIRED>
+  <!-- name of the corresponding source file -->
+  <!ATTLIST class sourcefilename CDATA #IMPLIED>
 
 <!-- representation of a method -->
 <!ELEMENT method (counter*)>
