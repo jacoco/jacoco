@@ -185,8 +185,9 @@ public final class InstrSupport {
 	public static void assertNotInstrumented(final String member,
 			final String owner) throws IllegalStateException {
 		if (member.equals(DATAFIELD_NAME) || member.equals(INITMETHOD_NAME)) {
-			throw new IllegalStateException(
-					format("Class %s is already instrumented.", owner));
+			throw new IllegalStateException(format(
+					"Cannot process instrumented class %s. Please supply original non-instrumented classes.",
+					owner));
 		}
 	}
 
