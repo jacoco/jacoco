@@ -97,7 +97,7 @@ public class BootstrapMethodReferenceTest {
 
 	/**
 	 * Adds code that triggers usage of
-	 * {@link org.objectweb.asm.MethodWriter#INSERTED_FRAMES} during
+	 * {@link org.objectweb.asm.MethodWriter#COMPUTE_INSERTED_FRAMES} during
 	 * instrumentation.
 	 */
 	private static void addCauseOfResizeInstructions(final MethodVisitor mv) {

@@ -101,7 +101,7 @@ public class DuplicateFrameEliminatorTest {
 	@Test
 	public void testInvokeDynamicInsn() {
 		testInstructionBetweenFrames(new InvokeDynamicInsnNode("foo", "()V",
-				new Handle(0, null, null, null, false)));
+				new Handle(Opcodes.H_INVOKEVIRTUAL, null, null, null, false)));
 	}
 
 	@Test
@@ -149,7 +149,7 @@ public class DuplicateFrameEliminatorTest {
 	}
 
 	private void frame(MethodVisitor mv) {
-		mv.visitFrame(Opcodes.NEW, 1, new Object[] { Opcodes.INTEGER }, 0,
+		mv.visitFrame(Opcodes.F_NEW, 1, new Object[] { Opcodes.INTEGER }, 0,
 				new Object[0]);
 	}
 }
