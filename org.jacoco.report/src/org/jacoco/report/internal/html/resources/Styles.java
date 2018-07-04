@@ -55,14 +55,14 @@ public final class Styles {
 	/** Coverage table */
 	public static final String COVERAGETABLE = "coverage";
 
-	/** Table cells for a graphical bar */
-	public static final String BAR = "bar";
+	/** Left aligned table cells */
+	public static final String CELL_L = null;
 
-	/** Table cells for the first column of a counter */
-	public static final String CTR1 = "ctr1";
+	/** Right aligned table cells */
+	public static final String CELL_R = "r";
 
-	/** Table cells for the second column of a counter */
-	public static final String CTR2 = "ctr2";
+	/** Table cells with a border to the left */
+	public static final String CELL_BORDER = "b";
 
 	/** Table header for sortable columns */
 	public static final String SORTABLE = "sortable";

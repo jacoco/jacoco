@@ -44,19 +44,18 @@ public class Table {
 	 * 
 	 * @param header
 	 *            column header caption
-	 * @param style
-	 *            optional CSS style class name for the td-Elements of this
-	 *            column
 	 * @param renderer
 	 *            callback for column rendering
+	 * @param leftBorder
+	 *            <code>true</code> if a border should be shown to the left
 	 * @param defaultSorting
-	 *            If <code>true</code>, this column is the default sorting
+	 *            <code>true</code> if this column is the default sorting
 	 *            column. Only one column can be selected for default sorting.
 	 * 
 	 */
-	public void add(final String header, final String style,
-			final IColumnRenderer renderer, final boolean defaultSorting) {
-		columns.add(new Column(columns.size(), header, style, renderer,
+	public void add(final String header, final IColumnRenderer renderer,
+			final boolean leftBorder, final boolean defaultSorting) {
+		columns.add(new Column(columns.size(), header, leftBorder, renderer,
 				defaultSorting));
 		if (defaultSorting) {
 			if (defaultComparator != null) {
@@ -144,19 +143,22 @@ public class Table {
 		private final String header;
 		private final IColumnRenderer renderer;
 		private final SortIndex<ITableItem> index;
-		private final String style, headerStyle;
+		private final String cellStyle, headerStyle;
 
 		private boolean visible;
 
-		Column(final int idx, final String header, final String style,
+		Column(final int idx, final String header, final boolean border,
 				final IColumnRenderer renderer, final boolean defaultSorting) {
 			this.idprefix = (char) ('a' + idx);
 			this.header = header;
 			this.renderer = renderer;
-			index = new SortIndex<ITableItem>(renderer.getComparator());
-			this.style = style;
-			this.headerStyle = Styles.combine(defaultSorting ? Styles.DOWN
-					: null, Styles.SORTABLE, style);
+			this.index = new SortIndex<ITableItem>(renderer.getComparator());
+			this.cellStyle = Styles.combine(
+					renderer.isLeftAligned() ? Styles.CELL_L : Styles.CELL_R,
+					border ? Styles.CELL_BORDER : null);
+			this.headerStyle = Styles.combine(
+					defaultSorting ? Styles.DOWN : null, Styles.SORTABLE,
+					cellStyle);
 		}
 
 		void init(final HTMLElement tr, final List<? extends ITableItem> items,
@@ -175,7 +177,7 @@ public class Table {
 				final Resources resources, final ReportOutputFolder base)
 				throws IOException {
 			if (visible) {
-				renderer.footer(tr.td(style), total, resources, base);
+				renderer.footer(tr.td(cellStyle), total, resources, base);
 			}
 		}
 
@@ -183,8 +185,9 @@ public class Table {
 				final Resources resources, final ReportOutputFolder base)
 				throws IOException {
 			if (visible) {
-				final HTMLElement td = tr.td(style);
-				td.attr("id", idprefix + String.valueOf(index.getPosition(idx)));
+				final HTMLElement td = tr.td(cellStyle);
+				td.attr("id",
+						idprefix + String.valueOf(index.getPosition(idx)));
 				renderer.item(td, item, resources, base);
 			}
 		}

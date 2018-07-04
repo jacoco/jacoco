@@ -60,6 +60,13 @@ h1 {
   padding:2px 4px 2px 4px;
 }
 
+.breadcrumb .info {
+  float:right;
+}
+
+.breadcrumb .info a {
+  margin-left:8px;
+}
 
 .el_report {
   padding-left:18px;
@@ -138,13 +145,42 @@ pre.source span.fc {
 }
 
 pre.source span.nc {
-  background-color:#ffcccc;
+  background-color:#ffaaaa;
 }
 
 pre.source span.pc {
   background-color:#ffffcc;
 }
 
+pre.source span.bfc {
+  background-image: url(branchfc.gif);
+  background-repeat: no-repeat;
+  background-position: 2px center;
+}
+
+pre.source span.bfc:hover {
+  background-color:#80ff80;
+}
+
+pre.source span.bnc {
+  background-image: url(branchnc.gif);
+  background-repeat: no-repeat;
+  background-position: 2px center;
+}
+
+pre.source span.bnc:hover {
+  background-color:#ff8080;
+}
+
+pre.source span.bpc {
+  background-image: url(branchpc.gif);
+  background-repeat: no-repeat;
+  background-position: 2px center;
+}
+
+pre.source span.bpc:hover {
+  background-color:#ffff80;
+}
 
 table.coverage {
   empty-cells:show;
@@ -157,55 +193,64 @@ table.coverage thead {
 
 table.coverage thead td {
   white-space:nowrap;
-  padding:2px 8px 0px 8px;
+  padding:2px 14px 0px 4px;
   border-bottom:#b0b0b0 1px solid;
 }
 
-table.coverage thead td.ctr1 {
+table.coverage thead td.r {
   text-align:right;
-  padding-right:4px;
+}
+
+table.coverage thead td.b {
   border-left:#cccccc 1px solid;
 }
 
-table.coverage thead td.ctr2 {
-  text-align:right;
-  padding-left:4px;
+table.coverage thead td.sortable {
+  cursor:pointer;
+  background-image:url(sort.gif);
+  background-position:right center;
+  background-repeat:no-repeat;
+}
+
+table.coverage thead td.up {
+  background-image:url(up.gif);
+}
+
+table.coverage thead td.down {
+  background-image:url(down.gif);
 }
 
 table.coverage tbody td {
-  vertical-align:top;
-  padding:2px 8px 2px 8px;
+  white-space:nowrap;
+  padding:2px 6px 2px 6px;
   border-bottom:#d6d3ce 1px solid;
 }
 
 table.coverage tbody tr:hover { 
-  background: #f0f0d0 !important;
+  background:#f0f0d0 !important;
 }
 
-table.coverage tbody td.ctr1 {
+table.coverage tbody td.r {
   text-align:right;
-  padding-right:4px;
+  padding-right:14px;
+}
+
+table.coverage tbody td.b {
   border-left:#e8e8e8 1px solid;
-}
-
-table.coverage tbody td.ctr2 {
-  text-align:right;
-  padding-left:4px;
 }
 
 table.coverage tfoot td {
-  padding:2px 8px 2px 8px;
+  white-space:nowrap;
+  padding:2px 6px 2px 6px;
 }
 
-table.coverage tfoot td.ctr1 {
+table.coverage tfoot td.r {
   text-align:right;
-  padding-right:4px;
+  padding-right:14px;
+}
+
+table.coverage tfoot td.b {
   border-left:#e8e8e8 1px solid;
-}
-
-table.coverage tfoot td.ctr2 {
-  text-align:right;
-  padding-left:4px;
 }
 
 .footer {

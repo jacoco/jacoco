@@ -55,9 +55,13 @@ public class BarColumn implements IColumnRenderer {
 	public BarColumn(final CounterEntity entity, final Locale locale) {
 		this.entity = entity;
 		this.integerFormat = DecimalFormat.getIntegerInstance(locale);
-		this.comparator = new TableItemComparator(CounterComparator.MISSEDITEMS
-				.reverse().on(entity)
-				.second(CounterComparator.TOTALITEMS.reverse().on(entity)));
+		this.comparator = new TableItemComparator(
+				CounterComparator.MISSEDITEMS.reverse().on(entity).second(
+						CounterComparator.TOTALITEMS.reverse().on(entity)));
+	}
+
+	public boolean isLeftAligned() {
+		return true;
 	}
 
 	public boolean init(final List<? extends ITableItem> items,

@@ -56,6 +56,10 @@ public class PercentageColumn implements IColumnRenderer {
 				CounterComparator.MISSEDRATIO.on(entity));
 	}
 
+	public boolean isLeftAligned() {
+		return false;
+	}
+
 	public boolean init(final List<? extends ITableItem> items,
 			final ICoverageNode total) {
 		return true;
@@ -90,7 +94,7 @@ public class PercentageColumn implements IColumnRenderer {
 	 * default and ability to change available only starting from JDK 6, so
 	 * perform rounding using {@link RoundingMode#FLOOR} before formatting.
 	 */
-	private String format(double ratio) {
+	private String format(final double ratio) {
 		return percentageFormat.format(
 				BigDecimal.valueOf(ratio).setScale(2, RoundingMode.FLOOR));
 	}

@@ -47,7 +47,7 @@ public abstract class PageTestBase {
 		rootFolder = new ReportOutputFolder(output);
 		final Resources resources = new Resources(rootFolder);
 		final Table table = new Table();
-		table.add("Element", null, new LabelColumn(), true);
+		table.add("Element", new LabelColumn(), false, true);
 		context = new IHTMLReportContext() {
 
 			public ILanguageNames getLanguageNames() {

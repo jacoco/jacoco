@@ -17,7 +17,6 @@ import java.util.List;
 import java.util.Locale;
 
 import org.jacoco.core.analysis.IBundleCoverage;
-import org.jacoco.core.analysis.ICoverageNode.CounterEntity;
 import org.jacoco.core.data.ExecutionData;
 import org.jacoco.core.data.SessionInfo;
 import org.jacoco.report.ILanguageNames;
@@ -36,12 +35,8 @@ import org.jacoco.report.internal.html.page.BundlePage;
 import org.jacoco.report.internal.html.page.ReportPage;
 import org.jacoco.report.internal.html.page.SessionsPage;
 import org.jacoco.report.internal.html.resources.Resources;
-import org.jacoco.report.internal.html.resources.Styles;
-import org.jacoco.report.internal.html.table.BarColumn;
-import org.jacoco.report.internal.html.table.CounterColumn;
-import org.jacoco.report.internal.html.table.LabelColumn;
-import org.jacoco.report.internal.html.table.PercentageColumn;
 import org.jacoco.report.internal.html.table.Table;
+import org.jacoco.report.internal.html.table.TableBuilder;
 
 /**
  * Formatter for coverage reports in multiple HTML pages.
@@ -51,6 +46,8 @@ public class HTMLFormatter implements IHTMLReportContext {
 	private ILanguageNames languageNames = new JavaNames();
 
 	private Locale locale = Locale.getDefault();
+
+	private String columns = "E[Element]|Ib^[Missed Instructions]Ip[Cov.]|Bb[Missed Branches]Bp[Cov.]|Xm[Missed]Xt[Cxty]|Lm[Missed]Lt[Lines]|Mm[Missed]Mt[Methods]|Cm[Missed]Ct[Classes]";
 
 	private String footerText = "";
 
@@ -79,6 +76,17 @@ public class HTMLFormatter implements IHTMLReportContext {
 	 */
 	public void setLanguageNames(final ILanguageNames languageNames) {
 		this.languageNames = languageNames;
+	}
+
+	/**
+	 * Defines the columns rendered in the HTML report. See JaCoCo documentation
+	 * for the format specification.
+	 * 
+	 * @param definition
+	 *            column definition;
+	 */
+	public void setColumns(final String definition) {
+		this.columns = definition;
 	}
 
 	/**
@@ -124,35 +132,9 @@ public class HTMLFormatter implements IHTMLReportContext {
 
 	public Table getTable() {
 		if (table == null) {
-			table = createTable();
+			table = new TableBuilder(locale).build(columns);
 		}
 		return table;
-	}
-
-	private Table createTable() {
-		final Table t = new Table();
-		t.add("Element", null, new LabelColumn(), false);
-		t.add("Missed Instructions", Styles.BAR, new BarColumn(CounterEntity.INSTRUCTION,
-				locale), true);
-		t.add("Cov.", Styles.CTR2,
-				new PercentageColumn(CounterEntity.INSTRUCTION, locale), false);
-		t.add("Missed Branches", Styles.BAR, new BarColumn(CounterEntity.BRANCH, locale),
-				false);
-		t.add("Cov.", Styles.CTR2, new PercentageColumn(CounterEntity.BRANCH, locale),
-				false);
-		addMissedTotalColumns(t, "Cxty", CounterEntity.COMPLEXITY);
-		addMissedTotalColumns(t, "Lines", CounterEntity.LINE);
-		addMissedTotalColumns(t, "Methods", CounterEntity.METHOD);
-		addMissedTotalColumns(t, "Classes", CounterEntity.CLASS);
-		return t;
-	}
-
-	private void addMissedTotalColumns(final Table table, final String label,
-			final CounterEntity entity) {
-		table.add("Missed", Styles.CTR1,
-				CounterColumn.newMissed(entity, locale), false);
-		table.add(label, Styles.CTR2, CounterColumn.newTotal(entity, locale),
-				false);
 	}
 
 	public String getFooterText() {

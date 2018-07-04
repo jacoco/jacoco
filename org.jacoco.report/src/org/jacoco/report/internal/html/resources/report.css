@@ -146,22 +146,16 @@ table.coverage thead {
 
 table.coverage thead td {
   white-space:nowrap;
-  padding:2px 14px 0px 6px;
+  padding:2px 14px 0px 4px;
   border-bottom:#b0b0b0 1px solid;
 }
 
-table.coverage thead td.bar {
-  border-left:#cccccc 1px solid;
+table.coverage thead td.r {
+  text-align:right;
 }
 
-table.coverage thead td.ctr1 {
-  text-align:right;
+table.coverage thead td.b {
   border-left:#cccccc 1px solid;
-}
-
-table.coverage thead td.ctr2 {
-  text-align:right;
-  padding-left:2px;
 }
 
 table.coverage thead td.sortable {
@@ -186,23 +180,16 @@ table.coverage tbody td {
 }
 
 table.coverage tbody tr:hover { 
-  background: #f0f0d0 !important;
+  background:#f0f0d0 !important;
 }
 
-table.coverage tbody td.bar {
-  border-left:#e8e8e8 1px solid;
-}
-
-table.coverage tbody td.ctr1 {
+table.coverage tbody td.r {
   text-align:right;
   padding-right:14px;
-  border-left:#e8e8e8 1px solid;
 }
 
-table.coverage tbody td.ctr2 {
-  text-align:right;
-  padding-right:14px;
-  padding-left:2px;
+table.coverage tbody td.b {
+  border-left:#e8e8e8 1px solid;
 }
 
 table.coverage tfoot td {
@@ -210,20 +197,13 @@ table.coverage tfoot td {
   padding:2px 6px 2px 6px;
 }
 
-table.coverage tfoot td.bar {
-  border-left:#e8e8e8 1px solid;
-}
-
-table.coverage tfoot td.ctr1 {
+table.coverage tfoot td.r {
   text-align:right;
   padding-right:14px;
-  border-left:#e8e8e8 1px solid;
 }
 
-table.coverage tfoot td.ctr2 {
-  text-align:right;
-  padding-right:14px;
-  padding-left:2px;
+table.coverage tfoot td.b {
+  border-left:#e8e8e8 1px solid;
 }
 
 .footer {

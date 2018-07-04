@@ -44,8 +44,8 @@ public abstract class CounterColumn implements IColumnRenderer {
 	 */
 	public static CounterColumn newTotal(final CounterEntity entity,
 			final Locale locale) {
-		return new CounterColumn(entity, locale, CounterComparator.TOTALITEMS
-				.reverse().on(entity)) {
+		return new CounterColumn(entity, locale,
+				CounterComparator.TOTALITEMS.reverse().on(entity)) {
 			@Override
 			protected int getValue(final ICounter counter) {
 				return counter.getTotalCount();
@@ -64,8 +64,8 @@ public abstract class CounterColumn implements IColumnRenderer {
 	 */
 	public static CounterColumn newMissed(final CounterEntity entity,
 			final Locale locale) {
-		return new CounterColumn(entity, locale, CounterComparator.MISSEDITEMS
-				.reverse().on(entity)) {
+		return new CounterColumn(entity, locale,
+				CounterComparator.MISSEDITEMS.reverse().on(entity)) {
 			@Override
 			protected int getValue(final ICounter counter) {
 				return counter.getMissedCount();
@@ -84,8 +84,8 @@ public abstract class CounterColumn implements IColumnRenderer {
 	 */
 	public static CounterColumn newCovered(final CounterEntity entity,
 			final Locale locale) {
-		return new CounterColumn(entity, locale, CounterComparator.COVEREDITEMS
-				.reverse().on(entity)) {
+		return new CounterColumn(entity, locale,
+				CounterComparator.COVEREDITEMS.reverse().on(entity)) {
 			@Override
 			protected int getValue(final ICounter counter) {
 				return counter.getCoveredCount();
@@ -115,6 +115,10 @@ public abstract class CounterColumn implements IColumnRenderer {
 		this.entity = entity;
 		this.integerFormat = DecimalFormat.getIntegerInstance(locale);
 		this.comparator = new TableItemComparator(comparator);
+	}
+
+	public boolean isLeftAligned() {
+		return false;
 	}
 
 	public boolean init(final List<? extends ITableItem> items,

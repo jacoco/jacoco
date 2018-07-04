@@ -32,6 +32,10 @@ public class LabelColumn implements IColumnRenderer {
 		}
 	};
 
+	public boolean isLeftAligned() {
+		return true;
+	}
+
 	public boolean init(final List<? extends ITableItem> items,
 			final ICoverageNode total) {
 		return true;

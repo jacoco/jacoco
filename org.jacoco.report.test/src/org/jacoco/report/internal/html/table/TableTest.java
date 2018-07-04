@@ -104,7 +104,7 @@ public class TableTest {
 		};
 		final List<ITableItem> items = Arrays.asList(createItem("A", 1),
 				createItem("B", 2), createItem("C", 3));
-		table.add("Header", null, recorder, false);
+		table.add("Header", recorder, false, false);
 		table.render(body, items, createTotal("Sum", 6), resources, root);
 		doc.close();
 		assertEquals("init-footer-itemA-itemB-itemC-", recorder.toString());
@@ -134,7 +134,7 @@ public class TableTest {
 			}
 		};
 		final List<ITableItem> items = Arrays.asList(createItem("A", 1));
-		table.add("Header", null, column, false);
+		table.add("Header", column, false, false);
 		table.render(body, items, createTotal("Sum", 1), resources, root);
 		doc.close();
 	}
@@ -142,23 +142,27 @@ public class TableTest {
 	@Test(expected = IllegalStateException.class)
 	public void testTwoDefaultSorts() throws IOException {
 		doc.close();
-		table.add("Header1", null, new StubRenderer(
-				CounterComparator.TOTALITEMS.on(CounterEntity.CLASS)), true);
-		table.add("Header2", null, new StubRenderer(
-				CounterComparator.TOTALITEMS.on(CounterEntity.CLASS)), true);
+		table.add("Header1",
+				new StubRenderer(
+						CounterComparator.TOTALITEMS.on(CounterEntity.CLASS)),
+				false, true);
+		table.add("Header2",
+				new StubRenderer(
+						CounterComparator.TOTALITEMS.on(CounterEntity.CLASS)),
+				false, true);
 	}
 
 	@Test
 	public void testSortIds() throws Exception {
 		final List<ITableItem> items = Arrays.asList(createItem("C", 3),
 				createItem("E", 4), createItem("A", 1), createItem("D", 2));
-		table.add("Forward", null, new StubRenderer(
-				CounterComparator.TOTALITEMS.on(CounterEntity.CLASS)), false);
-		table.add(
-				"Reverse",
-				null,
-				new StubRenderer(CounterComparator.TOTALITEMS.reverse().on(
-						CounterEntity.CLASS)), false);
+		table.add("Forward",
+				new StubRenderer(
+						CounterComparator.TOTALITEMS.on(CounterEntity.CLASS)),
+				false, false);
+		table.add("Reverse", new StubRenderer(
+				CounterComparator.TOTALITEMS.reverse().on(CounterEntity.CLASS)),
+				false, false);
 		table.render(body, items, createTotal("Sum", 6), resources, root);
 		doc.close();
 
@@ -199,8 +203,10 @@ public class TableTest {
 		final List<ITableItem> items = Arrays.asList(createItem("C", 3),
 				createItem("E", 5), createItem("A", 1), createItem("D", 4),
 				createItem("B", 2));
-		table.add("Forward", null, new StubRenderer(
-				CounterComparator.TOTALITEMS.on(CounterEntity.CLASS)), true);
+		table.add("Forward",
+				new StubRenderer(
+						CounterComparator.TOTALITEMS.on(CounterEntity.CLASS)),
+				false, true);
 		table.render(body, items, createTotal("Sum", 1), resources, root);
 		doc.close();
 
@@ -222,7 +228,8 @@ public class TableTest {
 	}
 
 	private ITableItem createItem(final String name, final int count) {
-		final ICoverageNode node = new CoverageNodeImpl(ElementType.GROUP, name) {
+		final ICoverageNode node = new CoverageNodeImpl(ElementType.GROUP,
+				name) {
 			{
 				this.classCounter = CounterImpl.getInstance(count, 0);
 			}
@@ -260,6 +267,10 @@ public class TableTest {
 
 		StubRenderer(Comparator<ICoverageNode> comparator) {
 			this.comparator = new TableItemComparator(comparator);
+		}
+
+		public boolean isLeftAligned() {
+			return true;
 		}
 
 		public boolean init(List<? extends ITableItem> items,
