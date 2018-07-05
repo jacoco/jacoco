@@ -14,29 +14,26 @@ package org.jacoco.report.internal.xml;
 import static java.lang.String.format;
 
 import java.io.IOException;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
 import java.io.Writer;
 
 /**
- * Simple API to create well formed XML streams. A {@link XMLElement} instance
- * represents a single element in a XML document.
- * 
- * @see XMLDocument
+ * Simple API to create well formed XML streams with minimal memory overhead. A
+ * {@link XMLElement} instance represents a single element in a XML document.
+ * {@link XMLElement} can be used directly or might be subclassed for schema
+ * specific convenience methods.
  */
 public class XMLElement {
 
-	private static final char SPACE = ' ';
+	/** XML header template */
+	private static final String HEADER = "<?xml version=\"1.0\" encoding=\"%s\"?>";
 
-	private static final char EQ = '=';
+	/** XML header template for standalone documents */
+	private static final String HEADER_STANDALONE = "<?xml version=\"1.0\" encoding=\"%s\" standalone=\"yes\"?>";
 
-	private static final char LT = '<';
-
-	private static final char GT = '>';
-
-	private static final char QUOT = '"';
-
-	private static final char AMP = '&';
-
-	private static final char SLASH = '/';
+	/** DOCTYPE declaration template */
+	private static final String DOCTYPE = "<!DOCTYPE %s PUBLIC \"%s\" \"%s\">";
 
 	/** Writer for content output */
 	protected final Writer writer;
@@ -49,51 +46,74 @@ public class XMLElement {
 
 	private XMLElement lastchild;
 
-	/**
-	 * Creates a new element for a XML document.
-	 * 
-	 * @param writer
-	 *            all output will be written directly to this
-	 * @param name
-	 *            element name
-	 */
-	protected XMLElement(final Writer writer, final String name) {
+	private final boolean root;
+
+	private XMLElement(final Writer writer, final String name,
+			final boolean root) throws IOException {
 		this.writer = writer;
 		this.name = name;
 		this.openTagDone = false;
 		this.closed = false;
 		this.lastchild = null;
+		this.root = root;
 	}
 
 	/**
-	 * Emits the beginning of the open tag. This method has to be called before
-	 * other other methods are called on this element.
+	 * Creates a root element of a XML document.
 	 * 
+	 * @param name
+	 *            element name
+	 * @param pubId
+	 *            optional schema public identifier
+	 * @param system
+	 *            optional schema system identifier
+	 * @param standalone
+	 *            if <code>true</code> the document is declared as standalone
+	 * @param encoding
+	 *            character encoding used for output
+	 * @param output
+	 *            output stream will be closed if the root element is closed
 	 * @throws IOException
-	 *             in case of problems with the writer
+	 *             in case of problems with the underlying output
 	 */
-	protected void beginOpenTag() throws IOException {
-		writer.write(LT);
+	public XMLElement(final String name, final String pubId,
+			final String system, final boolean standalone,
+			final String encoding, final OutputStream output)
+			throws IOException {
+		this(new OutputStreamWriter(output, encoding), name, true);
+		if (standalone) {
+			writer.write(format(HEADER_STANDALONE, encoding));
+		} else {
+			writer.write(format(HEADER, encoding));
+		}
+		if (pubId != null) {
+			writer.write(format(DOCTYPE, name, pubId, system));
+		}
+		writer.write('<');
 		writer.write(name);
 	}
 
-	private void finishOpenTag() throws IOException {
-		if (!openTagDone) {
-			writer.append(GT);
-			openTagDone = true;
-		}
+	/**
+	 * Creates a new child element within a XML document. May only be called
+	 * before the parent element has been closed.
+	 * 
+	 * @param name
+	 *            element name
+	 * @param parent
+	 *            parent of this element
+	 * @throws IOException
+	 *             in case of problems with the underlying output or if the
+	 *             parent element is already closed
+	 */
+	protected XMLElement(final String name, final XMLElement parent)
+			throws IOException {
+		this(parent.writer, name, false);
+		parent.addChildElement(this);
+		writer.write('<');
+		writer.write(name);
 	}
 
-	/**
-	 * Adds the given child to this element. This will close all previous child
-	 * elements.
-	 * 
-	 * @param child
-	 *            child element to add
-	 * @throws IOException
-	 *             in case of invalid nesting or problems with the writer
-	 */
-	protected void addChildElement(final XMLElement child) throws IOException {
+	private void addChildElement(final XMLElement child) throws IOException {
 		if (closed) {
 			throw new IOException(format("Element %s already closed.", name));
 		}
@@ -101,8 +121,14 @@ public class XMLElement {
 		if (lastchild != null) {
 			lastchild.close();
 		}
-		child.beginOpenTag();
 		lastchild = child;
+	}
+
+	private void finishOpenTag() throws IOException {
+		if (!openTagDone) {
+			writer.append('>');
+			openTagDone = true;
+		}
 	}
 
 	private void quote(final String text) throws IOException {
@@ -110,16 +136,16 @@ public class XMLElement {
 		for (int i = 0; i < len; i++) {
 			final char c = text.charAt(i);
 			switch (c) {
-			case LT:
+			case '<':
 				writer.write("&lt;");
 				break;
-			case GT:
+			case '>':
 				writer.write("&gt;");
 				break;
-			case QUOT:
+			case '"':
 				writer.write("&quot;");
 				break;
-			case AMP:
+			case '&':
 				writer.write("&amp;");
 				break;
 			default:
@@ -139,27 +165,25 @@ public class XMLElement {
 	 *            attribute name
 	 * @param value
 	 *            attribute value or <code>null</code>
-	 * 
-	 * @return this element
 	 * @throws IOException
-	 *             in case of problems with the writer
+	 *             in case of problems with the underlying output or if the
+	 *             element is already closed.
 	 */
-	public XMLElement attr(final String name, final String value)
+	public final void attr(final String name, final String value)
 			throws IOException {
 		if (value == null) {
-			return this;
+			return;
 		}
 		if (closed || openTagDone) {
-			throw new IOException(format("Element %s already closed.",
-					this.name));
+			throw new IOException(
+					format("Element %s already closed.", this.name));
 		}
-		writer.write(SPACE);
+		writer.write(' ');
 		writer.write(name);
-		writer.write(EQ);
-		writer.write(QUOT);
+		writer.write('=');
+		writer.write('"');
 		quote(value);
-		writer.write(QUOT);
-		return this;
+		writer.write('"');
 	}
 
 	/**
@@ -171,14 +195,13 @@ public class XMLElement {
 	 *            attribute name
 	 * @param value
 	 *            attribute value
-	 * 
-	 * @return this element
 	 * @throws IOException
-	 *             in case of problems with the writer
+	 *             in case of problems with the underlying output or if the
+	 *             element is already closed.
 	 */
-	public XMLElement attr(final String name, final int value)
+	public final void attr(final String name, final int value)
 			throws IOException {
-		return attr(name, String.valueOf(value));
+		attr(name, String.valueOf(value));
 	}
 
 	/**
@@ -190,26 +213,26 @@ public class XMLElement {
 	 *            attribute name
 	 * @param value
 	 *            attribute value
-	 * 
-	 * @return this element
 	 * @throws IOException
-	 *             in case of problems with the writer
+	 *             in case of problems with the underlying output or if the
+	 *             element is already closed.
 	 */
-	public XMLElement attr(final String name, final long value)
+	public final void attr(final String name, final long value)
 			throws IOException {
-		return attr(name, String.valueOf(value));
+		attr(name, String.valueOf(value));
 	}
 
 	/**
-	 * Adds the given text as a child to this node. The text will be quoted.
+	 * Adds the given text as a child to this node. The text will be quoted. May
+	 * only be called before this element has been closed.
 	 * 
 	 * @param text
 	 *            text to add
-	 * @return this element
 	 * @throws IOException
-	 *             in case of problems with the writer
+	 *             in case of problems with the underlying output or if the
+	 *             element is already closed.
 	 */
-	public XMLElement text(final String text) throws IOException {
+	public final void text(final String text) throws IOException {
 		if (closed) {
 			throw new IOException(format("Element %s already closed.", name));
 		}
@@ -218,45 +241,46 @@ public class XMLElement {
 			lastchild.close();
 		}
 		quote(text);
-		return this;
 	}
 
 	/**
-	 * Creates a new child element for this element,
+	 * Creates a new child element for this element. Might be overridden in
+	 * subclasses to return a instance of the subclass.
 	 * 
 	 * @param name
 	 *            name of the child element
 	 * @return child element instance
 	 * @throws IOException
-	 *             in case of problems with the writer
+	 *             in case of problems with the underlying output
 	 */
 	public XMLElement element(final String name) throws IOException {
-		final XMLElement element = new XMLElement(writer, name);
-		addChildElement(element);
-		return element;
+		return new XMLElement(name, this);
 	}
 
 	/**
 	 * Closes this element if it has not been closed before.
 	 * 
 	 * @throws IOException
-	 *             in case of problems with the writer
+	 *             in case of problems with the underlying output
 	 */
-	public void close() throws IOException {
+	public final void close() throws IOException {
 		if (!closed) {
 			if (lastchild != null) {
 				lastchild.close();
 			}
 			if (openTagDone) {
-				writer.write(LT);
-				writer.write(SLASH);
+				writer.write('<');
+				writer.write('/');
 				writer.write(name);
 			} else {
-				writer.write(SLASH);
+				writer.write('/');
 			}
-			writer.write(GT);
+			writer.write('>');
 			closed = true;
 			openTagDone = true;
+			if (root) {
+				writer.close();
+			}
 		}
 	}
 

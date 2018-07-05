@@ -19,12 +19,11 @@ import java.util.List;
 import org.jacoco.core.analysis.IBundleCoverage;
 import org.jacoco.core.data.ExecutionData;
 import org.jacoco.core.data.SessionInfo;
+import org.jacoco.report.IReportGroupVisitor;
 import org.jacoco.report.IReportVisitor;
 import org.jacoco.report.ISourceFileLocator;
-import org.jacoco.report.internal.AbstractGroupVisitor;
+import org.jacoco.report.internal.xml.ReportElement;
 import org.jacoco.report.internal.xml.XMLCoverageWriter;
-import org.jacoco.report.internal.xml.XMLDocument;
-import org.jacoco.report.internal.xml.XMLElement;
 import org.jacoco.report.internal.xml.XMLGroupVisitor;
 
 /**
@@ -59,15 +58,11 @@ public class XMLFormatter {
 	 */
 	public IReportVisitor createVisitor(final OutputStream output)
 			throws IOException {
-		final XMLElement root = new XMLDocument("report", PUBID, SYSTEM,
-				outputEncoding, true, output);
-		class RootVisitor extends XMLGroupVisitor implements IReportVisitor {
+		class RootVisitor implements IReportVisitor {
 
-			RootVisitor(final XMLElement element) throws IOException {
-				super(element, null);
-			}
-
+			private ReportElement report;
 			private List<SessionInfo> sessionInfos;
+			private XMLGroupVisitor groupVisitor;
 
 			public void visitInfo(final List<SessionInfo> sessionInfos,
 					final Collection<ExecutionData> executionData)
@@ -75,36 +70,35 @@ public class XMLFormatter {
 				this.sessionInfos = sessionInfos;
 			}
 
-			@Override
-			protected void handleBundle(final IBundleCoverage bundle,
+			public void visitBundle(final IBundleCoverage bundle,
 					final ISourceFileLocator locator) throws IOException {
-				writeHeader(bundle.getName());
-				XMLCoverageWriter.writeBundle(bundle, element);
+				createRootElement(bundle.getName());
+				XMLCoverageWriter.writeBundle(bundle, report);
 			}
 
-			@Override
-			protected AbstractGroupVisitor handleGroup(final String name)
+			public IReportGroupVisitor visitGroup(final String name)
 					throws IOException {
-				writeHeader(name);
-				return new XMLGroupVisitor(element, name);
+				createRootElement(name);
+				groupVisitor = new XMLGroupVisitor(report, name);
+				return groupVisitor;
 			}
 
-			private void writeHeader(final String name) throws IOException {
-				element.attr("name", name);
+			private void createRootElement(final String name)
+					throws IOException {
+				report = new ReportElement(name, output, outputEncoding);
 				for (final SessionInfo i : sessionInfos) {
-					final XMLElement sessioninfo = root.element("sessioninfo");
-					sessioninfo.attr("id", i.getId());
-					sessioninfo.attr("start", i.getStartTimeStamp());
-					sessioninfo.attr("dump", i.getDumpTimeStamp());
+					report.sessioninfo(i);
 				}
 			}
 
-			@Override
-			protected void handleEnd() throws IOException {
-				element.close();
+			public void visitEnd() throws IOException {
+				if (groupVisitor != null) {
+					groupVisitor.visitEnd();
+				}
+				report.close();
 			}
 		}
-		return new RootVisitor(root);
+		return new RootVisitor();
 	}
 
 }

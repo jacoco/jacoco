@@ -30,27 +30,6 @@ import org.jacoco.core.analysis.ISourceNode;
 public final class XMLCoverageWriter {
 
 	/**
-	 * Creates a child element with a name attribute.
-	 * 
-	 * @param parent
-	 *            parent element
-	 * @param tagname
-	 *            name of the child tag
-	 * @param name
-	 *            value of the name attribute
-	 * @return child element
-	 * @throws IOException
-	 *             if XML can't be written to the underlying output
-	 * 
-	 */
-	public static XMLElement createChild(final XMLElement parent,
-			final String tagname, final String name) throws IOException {
-		final XMLElement child = parent.element(tagname);
-		child.attr("name", name);
-		return child;
-	}
-
-	/**
 	 * Writes the structure of a given bundle.
 	 * 
 	 * @param bundle
@@ -61,7 +40,7 @@ public final class XMLCoverageWriter {
 	 *             if XML can't be written to the underlying output
 	 */
 	public static void writeBundle(final IBundleCoverage bundle,
-			final XMLElement element) throws IOException {
+			final ReportElement element) throws IOException {
 		for (final IPackageCoverage p : bundle.getPackages()) {
 			writePackage(p, element);
 		}
@@ -69,8 +48,8 @@ public final class XMLCoverageWriter {
 	}
 
 	private static void writePackage(final IPackageCoverage p,
-			final XMLElement parent) throws IOException {
-		final XMLElement element = createChild(parent, "package", p.getName());
+			final ReportElement parent) throws IOException {
+		final ReportElement element = parent.packageElement(p.getName());
 		for (final IClassCoverage c : p.getClasses()) {
 			writeClass(c, element);
 		}
@@ -81,9 +60,8 @@ public final class XMLCoverageWriter {
 	}
 
 	private static void writeClass(final IClassCoverage c,
-			final XMLElement parent) throws IOException {
-		final XMLElement element = createChild(parent, "class", c.getName());
-		element.attr("sourcefilename", c.getSourceFileName());
+			final ReportElement parent) throws IOException {
+		final ReportElement element = parent.classElement(c);
 		for (final IMethodCoverage m : c.getMethods()) {
 			writeMethod(m, element);
 		}
@@ -91,20 +69,14 @@ public final class XMLCoverageWriter {
 	}
 
 	private static void writeMethod(final IMethodCoverage m,
-			final XMLElement parent) throws IOException {
-		final XMLElement element = createChild(parent, "method", m.getName());
-		element.attr("desc", m.getDesc());
-		final int line = m.getFirstLine();
-		if (line != -1) {
-			element.attr("line", line);
-		}
+			final ReportElement parent) throws IOException {
+		final ReportElement element = parent.method(m);
 		writeCounters(m, element);
 	}
 
 	private static void writeSourceFile(final ISourceFileCoverage s,
-			final XMLElement parent) throws IOException {
-		final XMLElement element = createChild(parent, "sourcefile",
-				s.getName());
+			final ReportElement parent) throws IOException {
+		final ReportElement element = parent.sourcefile(s.getName());
 		writeLines(s, element);
 		writeCounters(s, element);
 	}
@@ -120,37 +92,24 @@ public final class XMLCoverageWriter {
 	 *             if XML can't be written to the underlying output
 	 */
 	public static void writeCounters(final ICoverageNode node,
-			final XMLElement parent) throws IOException {
+			final ReportElement parent) throws IOException {
 		for (final CounterEntity counterEntity : CounterEntity.values()) {
 			final ICounter counter = node.getCounter(counterEntity);
 			if (counter.getTotalCount() > 0) {
-				final XMLElement counterNode = parent.element("counter");
-				counterNode.attr("type", counterEntity.name());
-				writeCounter(counterNode, "missed", "covered", counter);
-				counterNode.close();
+				parent.counter(counterEntity, counter);
 			}
 		}
 	}
 
 	private static void writeLines(final ISourceNode source,
-			final XMLElement parent) throws IOException {
+			final ReportElement parent) throws IOException {
 		final int last = source.getLastLine();
 		for (int nr = source.getFirstLine(); nr <= last; nr++) {
 			final ILine line = source.getLine(nr);
 			if (line.getStatus() != ICounter.EMPTY) {
-				final XMLElement element = parent.element("line");
-				element.attr("nr", nr);
-				writeCounter(element, "mi", "ci", line.getInstructionCounter());
-				writeCounter(element, "mb", "cb", line.getBranchCounter());
+				parent.line(nr, line);
 			}
 		}
-	}
-
-	private static void writeCounter(final XMLElement element,
-			final String missedattr, final String coveredattr,
-			final ICounter counter) throws IOException {
-		element.attr(missedattr, counter.getMissedCount());
-		element.attr(coveredattr, counter.getCoveredCount());
 	}
 
 	private XMLCoverageWriter() {

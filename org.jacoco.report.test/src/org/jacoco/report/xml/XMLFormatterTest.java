@@ -162,6 +162,20 @@ public class XMLFormatterTest {
 		assertPathMatches("1", "count(/report/counter[@type='CLASS'])");
 		assertPathMatches("0", "report/counter[@type='CLASS']/@missed");
 		assertPathMatches("1", "report/counter[@type='CLASS']/@covered");
+
+		assertPathMatches("1",
+				"report/package/sourcefile[@name='FooClass.java']/line[1]/@nr");
+		assertPathMatches("3",
+				"report/package/sourcefile[@name='FooClass.java']/line[1]/@mi");
+		assertPathMatches("2",
+				"report/package/sourcefile[@name='FooClass.java']/line[2]/@nr");
+		assertPathMatches("2",
+				"report/package/sourcefile[@name='FooClass.java']/line[2]/@cb");
+		// empty line is skipped
+		assertPathMatches("4",
+				"report/package/sourcefile[@name='FooClass.java']/line[3]/@nr");
+		assertPathMatches("4",
+				"report/package/sourcefile[@name='FooClass.java']/line[3]/@mi");
 	}
 
 	@Test
@@ -192,7 +206,7 @@ public class XMLFormatterTest {
 	private void assertPathMatches(String expected, String path)
 			throws Exception {
 		XMLSupport support = new XMLSupport(XMLFormatter.class);
-		Document document = support.parse(output.toByteArray());
+		Document document = support.parse(output);
 		assertEquals(expected, support.findStr(document, path));
 	}
 

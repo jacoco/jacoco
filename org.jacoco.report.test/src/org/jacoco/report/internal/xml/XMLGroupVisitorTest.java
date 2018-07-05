@@ -13,26 +13,22 @@ package org.jacoco.report.internal.xml;
 
 import static org.junit.Assert.assertEquals;
 
-import java.io.IOException;
-import java.io.StringWriter;
-
-import javax.xml.parsers.ParserConfigurationException;
+import java.io.ByteArrayOutputStream;
 
 import org.jacoco.report.ReportStructureTestDriver;
 import org.jacoco.report.xml.XMLFormatter;
 import org.junit.Before;
 import org.junit.Test;
 import org.w3c.dom.Document;
-import org.xml.sax.SAXException;
 
 /**
  * Unit tests for {@link XMLGroupVisitor}.
  */
 public class XMLGroupVisitorTest {
 
-	private XMLElement root;
+	private ReportElement root;
 
-	private StringWriter buffer;
+	private ByteArrayOutputStream buffer;
 
 	private XMLSupport support;
 
@@ -42,11 +38,9 @@ public class XMLGroupVisitorTest {
 
 	@Before
 	public void setup() throws Exception {
-		buffer = new StringWriter();
+		buffer = new ByteArrayOutputStream();
 		support = new XMLSupport(XMLFormatter.class);
-		root = new XMLDocument("report", "-//JACOCO//DTD Report 1.1//EN",
-				"report.dtd", "UTF-8", true, buffer);
-		root.attr("name", "Report");
+		root = new ReportElement("Report", buffer, "UTF-8");
 		handler = new XMLGroupVisitor(root, null);
 		driver = new ReportStructureTestDriver();
 	}
@@ -54,16 +48,14 @@ public class XMLGroupVisitorTest {
 	@Test
 	public void testVisitBundle() throws Exception {
 		driver.sendBundle(handler);
-		root.close();
-		final Document doc = getDocument();
+		final Document doc = parseDoc();
 		assertEquals("bundle", support.findStr(doc, "//report/group/@name"));
 	}
 
 	@Test
 	public void testVisitGroup() throws Exception {
 		driver.sendGroup(handler);
-		root.close();
-		final Document doc = getDocument();
+		final Document doc = parseDoc();
 		assertEquals("group", support.findStr(doc, "//report/group/@name"));
 	}
 
@@ -71,15 +63,14 @@ public class XMLGroupVisitorTest {
 	public void testVisitEnd() throws Exception {
 		driver.sendBundle(handler);
 		handler.visitEnd();
-		root.close();
-		final Document doc = getDocument();
+		final Document doc = parseDoc();
 		assertEquals("2", support.findStr(doc,
 				"//report/counter[@type='BRANCH']/@covered"));
 	}
 
-	private Document getDocument()
-			throws SAXException, IOException, ParserConfigurationException {
-		return support.parse(buffer.toString());
+	private Document parseDoc() throws Exception {
+		root.close();
+		return support.parse(buffer);
 	}
 
 }
