@@ -31,10 +31,6 @@ import org.jacoco.report.internal.xml.XMLGroupVisitor;
  */
 public class XMLFormatter {
 
-	private static final String PUBID = "-//JACOCO//DTD Report 1.1//EN";
-
-	private static final String SYSTEM = "report.dtd";
-
 	private String outputEncoding = "UTF-8";
 
 	/**
