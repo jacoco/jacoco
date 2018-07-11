@@ -67,6 +67,18 @@ abstract class AbstractMatcher {
 		cursor = null;
 	}
 
+	final void nextIsInvokeStatic(final String owner, final String name) {
+		nextIs(Opcodes.INVOKESTATIC);
+		if (cursor == null) {
+			return;
+		}
+		final MethodInsnNode m = (MethodInsnNode) cursor;
+		if (owner.equals(m.owner) && name.equals(m.name)) {
+			return;
+		}
+		cursor = null;
+	}
+
 	final void nextIsVar(final int opcode, final String name) {
 		nextIs(opcode);
 		if (cursor == null) {
