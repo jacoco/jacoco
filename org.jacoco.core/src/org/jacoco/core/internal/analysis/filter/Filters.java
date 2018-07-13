@@ -33,7 +33,8 @@ public final class Filters implements IFilter {
 			new FinallyFilter(), new PrivateEmptyNoArgConstructorFilter(),
 			new StringSwitchJavacFilter(), new EnumEmptyConstructorFilter(),
 			new AnnotationGeneratedFilter(), new KotlinGeneratedFilter(),
-			new KotlinLateinitFilter(), new KotlinWhenSealedFilter());
+			new KotlinLateinitFilter(), new KotlinWhenSealedFilter(),
+			new AspectjFilter());
 
 	private final IFilter[] filters;
 
