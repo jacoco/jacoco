@@ -35,36 +35,78 @@ public class AspectjFilter implements IFilter {
 
     }
 
+    /**
+     * This method finds calls to ajc$preClinit() and ajc$postClinit() and ignores them.
+     *
+     * @param methodNode The {@literal <clinit>()}-Method
+     * @param output
+     */
     private void checkStaticInitializer(MethodNode methodNode, IFilterOutput output) {
-        AbstractInsnNode preClinitNode = null;
+        MethodInsnNode preClinitNode = null;
+        MethodInsnNode postClinitNode = null;
 
         for (AbstractInsnNode node = methodNode.instructions.getFirst();
              node != null;
              node = node.getNext()) {
 
-            if (node.getOpcode() == Opcodes.INVOKESTATIC) {
-                String name = ((MethodInsnNode) node).name;
+            if (node.getOpcode() != Opcodes.INVOKESTATIC) {
+                continue;
+            }
+            String name = ((MethodInsnNode) node).name;
 
-                if (name.equals("ajc$preClinit")) {
-                    if (isEffectivelyLast(node.getNext())) {
-                        output.ignore(methodNode.instructions.getFirst(), methodNode.instructions.getLast());
-                        return;
-                    } else {
-                        preClinitNode = node;
-                        output.ignore(methodNode.instructions.getFirst(), node);
-                    }
-                }
+            if (name.equals("ajc$preClinit")) {
+                preClinitNode = (MethodInsnNode) node;
+            }
 
-                if (name.equals("ajc$postClinit")) {
-                    if (isEffectivelyFirst(node.getPrevious()) || (preClinitNode != null && node == getNextRealOp(preClinitNode)) ) {
-                        output.ignore(methodNode.instructions.getFirst(), methodNode.instructions.getLast());
-                        return;
-                    } else {
-                        output.ignore(node, methodNode.instructions.getLast());
-                    }
-                }
+            if (name.equals("ajc$postClinit")) {
+                postClinitNode = (MethodInsnNode) node;
             }
         }
+
+        if (preClinitNode != null) {
+            ignorePreClinitCall(methodNode, output, preClinitNode);
+        }
+
+        if (postClinitNode != null) {
+            ignorePostClinitCall(methodNode, output, postClinitNode);
+        }
+
+        if (preClinitNode != null && postClinitNode != null && getNextRealOp(preClinitNode) == postClinitNode) {
+            output.ignore(preClinitNode, postClinitNode);
+        }
+    }
+
+    private void ignorePreClinitCall(MethodNode methodNode, IFilterOutput output, MethodInsnNode preClinitNode) {
+        AbstractInsnNode from = preClinitNode;
+        AbstractInsnNode to = preClinitNode;
+
+        if (from != methodNode.instructions.getFirst() && isEffectivelyFirst(preClinitNode.getPrevious())) {
+            from = methodNode.instructions.getFirst();
+        }
+        if (isEffectivelyLast(preClinitNode.getNext())) {
+            to = methodNode.instructions.getLast();
+        }
+
+        output.ignore(from, to);
+    }
+
+    private void ignorePostClinitCall(MethodNode methodNode, IFilterOutput output, MethodInsnNode postClinitNode) {
+        AbstractInsnNode from = postClinitNode;
+        AbstractInsnNode to = postClinitNode;
+
+        if (postClinitNode.getNext().getOpcode() == Opcodes.GOTO) {
+            JumpInsnNode next = (JumpInsnNode) postClinitNode.getNext();
+            to = next.label;
+        }
+
+        if (isEffectivelyFirst(postClinitNode.getPrevious())) {
+            from = methodNode.instructions.getFirst();
+        }
+        if (isEffectivelyLast(to.getNext())) {
+            to = methodNode.instructions.getLast();
+        }
+
+        output.ignore(from, to);
     }
 
     private AbstractInsnNode getNextRealOp(AbstractInsnNode preClinitNode) {
@@ -99,7 +141,7 @@ public class AspectjFilter implements IFilter {
     }
 
     private boolean isEffectivelyLast(AbstractInsnNode insnNode) {
-        if (insnNode.getOpcode() == Opcodes.RETURN) {
+        if (insnNode.getNext() == null) {
             return true;
         } else if (insnNode.getOpcode() <= 0) {
             return isEffectivelyLast(insnNode.getNext());
