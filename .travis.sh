@@ -47,10 +47,7 @@ case "$JDK" in
 5)
   install_jdk $JDK5_URL false
   ;;
-6)
-  ;;
-7)
-  jdk_switcher /usr/lib/jvm/java-7-openjdk-amd64
+6 | 7)
   ;;
 8)
   jdk_switcher /usr/lib/jvm/java-8-oracle
@@ -91,7 +88,7 @@ case "$JDK" in
   mvn -V -B -e verify -Djdk.version=1.6 -Dbytecode.version=1.6 --toolchains=./.travis/travis-toolchains.xml
   ;;
 7)
-  mvn -V -B -e verify -Dbytecode.version=1.7
+  mvn -V -B -e verify -Djdk.version=1.7 -Dbytecode.version=1.7 --toolchains=./.travis/travis-toolchains.xml
   ;;
 8 | 8-ea)
   mvn -V -B -e verify -Dbytecode.version=1.8 -Decj=${ECJ:-}

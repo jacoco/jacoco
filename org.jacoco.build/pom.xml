@@ -83,10 +83,6 @@
     </contributor>
   </contributors>
 
-  <prerequisites>
-    <maven>3.0</maven>
-  </prerequisites>
-
   <modules>
     <!-- Order is important: org.jacoco.agent.rt embeds into org.jacoco.agent and JaCoCo Agent used during tests -->
     <module>../org.jacoco.core</module>
@@ -323,7 +319,7 @@
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-enforcer-plugin</artifactId>
-          <version>1.0.1</version>
+          <version>3.0.0-M2</version>
         </plugin>
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
@@ -524,6 +520,12 @@
             </goals>
             <configuration>
               <rules>
+                <requireJavaVersion>
+                  <version>1.8</version>
+                </requireJavaVersion>
+                <requireMavenVersion>
+                  <version>3.3.9</version>
+                </requireMavenVersion>
                 <requireNoRepositories>
                   <message>The rules for repo1.maven.org are that pom.xml files should not include repository definitions.</message>
                   <banRepositories>true</banRepositories>
@@ -533,10 +535,6 @@
                   <message>No SNAPSHOT versions allowed for dependencies</message>
                   <onlyWhenRelease>true</onlyWhenRelease>
                 </requireReleaseDeps>
-                <requireMavenVersion>
-                  <!-- Maven 3.0.3 contains bug - see http://jira.codehaus.org/browse/MINVOKER-107 -->
-                  <version>[3.0.0,3.0.3),[3.0.4,)</version>
-                </requireMavenVersion>
               </rules>
             </configuration>
           </execution>
