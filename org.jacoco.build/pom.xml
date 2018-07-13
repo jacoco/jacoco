@@ -444,8 +444,7 @@
         <plugin>
           <groupId>org.apache.felix</groupId>
           <artifactId>maven-bundle-plugin</artifactId>
-          <!-- newer versions require Java 7 -->
-          <version>2.5.4</version>
+          <version>3.5.1</version>
         </plugin>
       </plugins>
     </pluginManagement>
@@ -723,24 +722,6 @@
       </properties>
     </profile>
     <profile>
-      <id>java9-validation</id>
-      <activation>
-        <property>
-          <name>bytecode.version</name>
-          <value>1.9</value>
-        </property>
-      </activation>
-      <properties>
-        <!--
-        Compile into bytecode version 8 by default,
-        because maven-bundle-plugin is unable to proceess bytecode version >=9,
-        this is overridden for tests
-        -->
-        <maven.compiler.source>1.8</maven.compiler.source>
-        <maven.compiler.target>1.8</maven.compiler.target>
-      </properties>
-    </profile>
-    <profile>
       <id>java10-validation</id>
       <activation>
         <property>
@@ -750,12 +731,14 @@
       </activation>
       <properties>
         <!--
-        Compile into bytecode version 8 by default,
-        because maven-bundle-plugin is unable to proceess bytecode version >=9,
+        Compile into bytecode version 9 by default,
+        because bytecode version 10 can't be processed by
+        maven-shade-plugin (https://issues.apache.org/jira/browse/MSHADE-289)
+        and maven-plugin-plugin (https://issues.apache.org/jira/browse/MPLUGIN-335),
         this is overridden for tests
         -->
-        <maven.compiler.source>1.8</maven.compiler.source>
-        <maven.compiler.target>1.8</maven.compiler.target>
+        <maven.compiler.source>1.9</maven.compiler.source>
+        <maven.compiler.target>1.9</maven.compiler.target>
       </properties>
     </profile>
 

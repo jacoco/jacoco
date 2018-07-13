@@ -119,9 +119,6 @@
           <value>1.9</value>
         </property>
       </activation>
-      <properties>
-        <maven.compiler.target>1.9</maven.compiler.target>
-      </properties>
       <build>
         <plugins>
           <plugin>
