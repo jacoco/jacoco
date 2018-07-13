@@ -20,6 +20,45 @@
 
 <h2>Snapshot Build @qualified.bundle.version@ (@build.date@)</h2>
 
+<h3>New Features</h3>
+<ul>
+  <li>Synthetic classes are filtered out during generation of report
+      (GitHub <a href="https://github.com/jacoco/jacoco/issues/668">#668</a>).</li>
+  <li>Methods added by the Kotlin compiler are filtered out during generation
+      of report. Idea and implementation by Nikolay Krasko
+      (GitHub <a href="https://github.com/jacoco/jacoco/issues/689">#689</a>).</li>
+  <li>Branch added by the Kotlin compiler for reading from <code>lateinit</code>
+      property is filtered out during generation of report. Implementation by
+      Fabian Mastenbroek
+      (GitHub <a href="https://github.com/jacoco/jacoco/issues/707">#707</a>).</li>
+</ul>
+
+<h3>Fixed Bugs</h3>
+<ul>
+  <li>Don't insert stackmap frames into class files with version &lt; 1.6,
+      this fixes regression which was introduced in version 0.6.5
+      (GitHub <a href="https://github.com/jacoco/jacoco/issues/667">#667</a>).</li>
+  <li>Question mark in filter expressions now correctly matches exactly one character
+      (GitHub <a href="https://github.com/jacoco/jacoco/issues/672">#672</a>).</li>
+</ul>
+
+<h3>Non-functional Changes</h3>
+<ul>
+  <li>JaCoCo now depends on ASM 6.2
+      (GitHub <a href="https://github.com/jacoco/jacoco/issues/706">#706</a>).</li>
+  <li>Improved error message when already instrumented classes are used for
+      instrumentation or analysis
+      (GitHub <a href="https://github.com/jacoco/jacoco/issues/703">#703</a>).</li>
+</ul>
+
+<h3>API Changes</h3>
+<ul>
+  <li>The XML report now has an optional attribute <code>sourcefilename</code>
+      on the <code>class</code> element to allow unambiguously relate classes
+      to source files. The JaCoCo DTD version has been updated to 1.1
+      (GitHub <a href="https://github.com/jacoco/jacoco/issues/702">#702</a>).</li>
+</ul>
+
 <h2>Release 0.8.1 (2018/03/21)</h2>
 
 <h3>New Features</h3>

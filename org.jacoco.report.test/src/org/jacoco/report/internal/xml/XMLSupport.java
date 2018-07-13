@@ -14,8 +14,8 @@ package org.jacoco.report.internal.xml;
 import static org.junit.Assert.fail;
 
 import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.StringReader;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -71,13 +71,13 @@ public class XMLSupport {
 		return xpath;
 	}
 
-	public Document parse(String document) throws SAXException, IOException,
-			ParserConfigurationException {
-		return builder.parse(new InputSource(new StringReader(document)));
+	public Document parse(ByteArrayOutputStream buffer)
+			throws SAXException, IOException, ParserConfigurationException {
+		return parse(buffer.toByteArray());
 	}
 
-	public Document parse(byte[] document) throws SAXException, IOException,
-			ParserConfigurationException {
+	public Document parse(byte[] document)
+			throws SAXException, IOException, ParserConfigurationException {
 		return builder
 				.parse(new InputSource(new ByteArrayInputStream(document)));
 	}

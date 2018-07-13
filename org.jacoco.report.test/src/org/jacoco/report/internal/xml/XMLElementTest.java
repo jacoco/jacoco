@@ -13,8 +13,8 @@ package org.jacoco.report.internal.xml;
 
 import static org.junit.Assert.assertEquals;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.StringWriter;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -24,123 +24,156 @@ import org.junit.Test;
  */
 public class XMLElementTest {
 
-	private StringWriter buffer;
+	private static final String DECL = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>";
+
+	private ByteArrayOutputStream buffer;
 
 	private XMLElement root;
 
 	@Before
-	public void setUp() throws IOException {
-		buffer = new StringWriter();
-		root = new XMLElement(buffer, "root");
-		root.beginOpenTag();
+	public void setup() throws IOException {
+		buffer = new ByteArrayOutputStream();
+		root = new XMLElement("root", null, null, false, "UTF-8", buffer);
 	}
 
 	@Test
-	public void testEmptyNode() throws IOException {
+	public void init_should_write_doctype_when_given() throws IOException {
+		root = new XMLElement("root", "-//JACOCO//TEST", "test.dtd", false,
+				"UTF-8", buffer);
+		assertEquals(DECL
+				+ "<!DOCTYPE root PUBLIC \"-//JACOCO//TEST\" \"test.dtd\"><root/>",
+				actual());
+	}
+
+	@Test
+	public void init_should_write_standalone_when_given() throws IOException {
+		root = new XMLElement("root", null, null, true, "UTF-8", buffer);
+		assertEquals(
+				"<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?><root/>",
+				actual());
+	}
+
+	@Test
+	public void close_should_emit_empty_element_when_no_children_exist()
+			throws IOException {
+		assertContent("<root/>");
+	}
+
+	@Test
+	public void close_should_be_allowed_multiple_times() throws IOException {
 		root.close();
-		// Second close has no effect:
 		root.close();
-		assertEquals("<root/>", buffer.toString());
+		assertContent("<root/>");
 	}
 
 	@Test(expected = IOException.class)
-	public void testAddAttributeToClosedNode() throws IOException {
+	public void attr_should_throw_exception_when_closed() throws IOException {
 		root.close();
 		root.attr("attr", "value");
 	}
 
 	@Test(expected = IOException.class)
-	public void testAddChildToClosedNode() throws IOException {
+	public void element_should_throw_exception_when_closed()
+			throws IOException {
 		root.close();
 		root.element("child");
 	}
 
 	@Test(expected = IOException.class)
-	public void testAddTextToClosedNode() throws IOException {
+	public void text_should_throw_exception_when_closed() throws IOException {
 		root.close();
 		root.text("text");
 	}
 
 	@Test
-	public void testNestedElement() throws IOException {
+	public void element_should_emit_nested_element() throws IOException {
 		root.element("world");
-		root.close();
-		assertEquals("<root><world/></root>", buffer.toString());
+		assertContent("<root><world/></root>");
 	}
 
 	@Test
-	public void test2NestedElements() throws IOException {
+	public void element_should_allow_multiple_nested_elements()
+			throws IOException {
 		root.element("world");
 		root.element("universe");
-		root.close();
-		assertEquals("<root><world/><universe/></root>", buffer.toString());
+		assertContent("<root><world/><universe/></root>");
 	}
 
 	@Test
-	public void testText() throws IOException {
+	public void text_should_emit_text() throws IOException {
 		root.text("world");
-		root.close();
-		assertEquals("<root>world</root>", buffer.toString());
+		assertContent("<root>world</root>");
 	}
 
 	@Test
-	public void testMixedContent() throws IOException {
+	public void text_should_allow_mixing_with_elements() throws IOException {
 		root.element("tag1");
 		root.text("world");
 		root.element("tag2");
-		root.close();
-		assertEquals("<root><tag1/>world<tag2/></root>", buffer.toString());
+		assertContent("<root><tag1/>world<tag2/></root>");
 	}
 
 	@Test
-	public void testQuotedText() throws IOException {
+	public void test_should_be_quoted() throws IOException {
 		root.text("<black&white\">");
-		root.close();
-		assertEquals("<root>&lt;black&amp;white&quot;&gt;</root>",
-				buffer.toString());
+		assertContent("<root>&lt;black&amp;white&quot;&gt;</root>");
 	}
 
 	@Test
-	public void testNullAttributes() throws IOException {
+	public void attr_should_ignore_call_when_value_is_null()
+			throws IOException {
 		root.attr("id", null);
-		root.close();
-		assertEquals("<root/>", buffer.toString());
+		assertContent("<root/>");
 	}
 
 	@Test
-	public void testStringAttributes() throws IOException {
-		root.attr("id", "12345").attr("quote", "<\">");
-		root.close();
-		assertEquals("<root id=\"12345\" quote=\"&lt;&quot;&gt;\"/>",
-				buffer.toString());
+	public void attr_should_emit_string_value() throws IOException {
+		root.attr("id", "12345");
+		assertContent("<root id=\"12345\"/>");
 	}
 
 	@Test
-	public void testIntAttributes() throws IOException {
-		root.attr("missed", 0).attr("total", 123);
-		root.close();
-		assertEquals("<root missed=\"0\" total=\"123\"/>", buffer.toString());
+	public void attr_should_quote_string_value() throws IOException {
+		root.attr("quote", "<\">");
+		assertContent("<root quote=\"&lt;&quot;&gt;\"/>");
 	}
 
 	@Test
-	public void testLongAttributes() throws IOException {
-		root.attr("min", Long.MIN_VALUE).attr("max", Long.MAX_VALUE);
-		root.close();
-		assertEquals(
-				"<root min=\"-9223372036854775808\" max=\"9223372036854775807\"/>",
-				buffer.toString());
+	public void attr_should_emit_int_value() throws IOException {
+		root.attr("missed", 0);
+		root.attr("total", 123);
+		assertContent("<root missed=\"0\" total=\"123\"/>");
+	}
+
+	@Test
+	public void attr_should_emit_long_value() throws IOException {
+		root.attr("min", Long.MIN_VALUE);
+		root.attr("max", Long.MAX_VALUE);
+		assertContent(
+				"<root min=\"-9223372036854775808\" max=\"9223372036854775807\"/>");
 	}
 
 	@Test(expected = IOException.class)
-	public void testInvalidAttributeOutput1() throws IOException {
+	public void attr_should_throw_exception_when_text_was_added()
+			throws IOException {
 		root.text("text");
 		root.attr("id", "12345");
 	}
 
 	@Test(expected = IOException.class)
-	public void testInvalidAttributeOutput2() throws IOException {
+	public void attr_should_throw_exception_when_child_was_added()
+			throws IOException {
 		root.element("child");
 		root.attr("id", "12345");
+	}
+
+	private void assertContent(String expected) throws IOException {
+		assertEquals(DECL + expected, actual());
+	}
+
+	private String actual() throws IOException {
+		root.close();
+		return buffer.toString("UTF-8");
 	}
 
 }

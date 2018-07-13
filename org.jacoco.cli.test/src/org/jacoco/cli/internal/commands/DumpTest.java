@@ -51,7 +51,7 @@ public class DumpTest extends CommandTestBase {
 			throws Exception {
 		execute("dump");
 		assertFailure();
-		assertContains("Option \"--destfile\" is required", err);
+		assertContains("\"--destfile\"", err);
 		assertContains("java -jar jacococli.jar dump [--address <address>]",
 				err);
 	}

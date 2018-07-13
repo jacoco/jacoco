@@ -17,7 +17,6 @@ import java.io.IOException;
 import java.util.List;
 
 import org.jacoco.cli.internal.commands.AllCommands;
-import org.jacoco.report.internal.xml.XMLDocument;
 import org.jacoco.report.internal.xml.XMLElement;
 import org.kohsuke.args4j.spi.OptionHandler;
 
@@ -65,8 +64,8 @@ public final class XmlDocumentation {
 		final File file = new File(args[0]);
 		file.getParentFile().mkdirs();
 
-		final XMLElement root = new XMLDocument("documentation", null, null,
-				"UTF-8", true, new FileOutputStream(file));
+		final XMLElement root = new XMLElement("documentation", null, null,
+				true, "UTF-8", new FileOutputStream(file));
 
 		for (final Command c : AllCommands.get()) {
 			writeCommand(c, root);

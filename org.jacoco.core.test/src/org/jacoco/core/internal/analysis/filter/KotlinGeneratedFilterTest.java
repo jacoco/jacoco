@@ -6,7 +6,7 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *
  * Contributors:
- *    Marc R. Hoffmann - initial API and implementation
+ *    Nikolay Krasko - initial API and implementation
  *
  *******************************************************************************/
 package org.jacoco.core.internal.analysis.filter;
@@ -17,57 +17,99 @@ import static org.junit.Assert.fail;
 
 import org.jacoco.core.internal.instr.InstrSupport;
 import org.junit.Test;
+import org.objectweb.asm.Label;
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.tree.AbstractInsnNode;
 import org.objectweb.asm.tree.MethodNode;
 
-public class LombokGeneratedFilterTest implements IFilterOutput {
+public class KotlinGeneratedFilterTest implements IFilterOutput {
 
-	private final IFilter filter = new LombokGeneratedFilter();
+	private final IFilter filter = new KotlinGeneratedFilter();
+
+	private final FilterContextMock context = new FilterContextMock();
 
 	private AbstractInsnNode fromInclusive;
 	private AbstractInsnNode toInclusive;
 
 	@Test
-	public void testNoAnnotations() {
+	public void testNoLinesForKotlinWithDebug() {
 		final MethodNode m = new MethodNode(InstrSupport.ASM_API_VERSION, 0,
 				"hashCode", "()I", null, null);
-
 		m.visitInsn(Opcodes.ICONST_0);
 		m.visitInsn(Opcodes.IRETURN);
+		context.classAnnotations
+				.add(KotlinGeneratedFilter.KOTLIN_METADATA_DESC);
 
-		filter.filter(m, new FilterContextMock(), this);
+		filter.filter(m, context, this);
 
-		assertNull(fromInclusive);
-		assertNull(toInclusive);
+		assertMethodSkipped(m);
 	}
 
 	@Test
-	public void testOtherAnnotation() {
+	public void testWithLinesForKotlinWithDebug() {
 		final MethodNode m = new MethodNode(InstrSupport.ASM_API_VERSION, 0,
 				"hashCode", "()I", null, null);
 		m.visitAnnotation("Lother/Annotation;", false);
+		m.visitLineNumber(12, new Label());
+		m.visitInsn(Opcodes.ICONST_0);
+		m.visitInsn(Opcodes.IRETURN);
+		context.classAnnotations
+				.add(KotlinGeneratedFilter.KOTLIN_METADATA_DESC);
 
+		filter.filter(m, context, this);
+
+		assertNotApplicable();
+	}
+
+	@Test
+	public void testNoLinesNonKotlinWithDebug() {
+		final MethodNode m = new MethodNode(InstrSupport.ASM_API_VERSION, 0,
+				"hashCode", "()I", null, null);
 		m.visitInsn(Opcodes.ICONST_0);
 		m.visitInsn(Opcodes.IRETURN);
 
-		filter.filter(m, new FilterContextMock(), this);
+		filter.filter(m, context, this);
 
+		assertNotApplicable();
+	}
+
+	@Test
+	public void testNoLinesForKotlinNoDebug() {
+		final MethodNode m = new MethodNode(InstrSupport.ASM_API_VERSION, 0,
+				"hashCode", "()I", null, null);
+		m.visitInsn(Opcodes.ICONST_0);
+		m.visitInsn(Opcodes.IRETURN);
+		context.classAnnotations
+				.add(KotlinGeneratedFilter.KOTLIN_METADATA_DESC);
+		context.sourceFileName = null;
+
+		filter.filter(m, context, this);
+
+		assertNotApplicable();
+	}
+
+	@Test
+	public void testWithLinesForKotlinNoDebug() {
+		final MethodNode m = new MethodNode(InstrSupport.ASM_API_VERSION, 0,
+				"hashCode", "()I", null, null);
+		m.visitInsn(Opcodes.ICONST_0);
+		m.visitInsn(Opcodes.IRETURN);
+		m.visitLineNumber(12, new Label());
+		context.classAnnotations
+				.add(KotlinGeneratedFilter.KOTLIN_METADATA_DESC);
+		context.sourceFileName = null;
+
+		filter.filter(m, context, this);
+
+		assertNotApplicable();
+	}
+
+	private void assertNotApplicable() {
 		assertNull(fromInclusive);
 		assertNull(toInclusive);
 	}
 
-	@Test
-	public void testLombokGeneratedAnnotation() {
-		final MethodNode m = new MethodNode(InstrSupport.ASM_API_VERSION, 0,
-				"hashCode", "()I", null, null);
-		m.visitAnnotation("Llombok/Generated;", false);
-
-		m.visitInsn(Opcodes.ICONST_0);
-		m.visitInsn(Opcodes.IRETURN);
-
-		filter.filter(m, new FilterContextMock(), this);
-
+	private void assertMethodSkipped(MethodNode m) {
 		assertEquals(m.instructions.getFirst(), fromInclusive);
 		assertEquals(m.instructions.getLast(), toInclusive);
 	}

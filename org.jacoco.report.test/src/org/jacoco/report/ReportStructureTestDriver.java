@@ -69,7 +69,7 @@ public class ReportStructureTestDriver {
 		m.increment(CounterImpl.getInstance(3, 5), CounterImpl.COUNTER_0_0, 1);
 		m.increment(CounterImpl.getInstance(3, 5),
 				CounterImpl.getInstance(1, 2), 2);
-		m.increment(CounterImpl.getInstance(4, 5), CounterImpl.COUNTER_0_0, 3);
+		m.increment(CounterImpl.getInstance(4, 5), CounterImpl.COUNTER_0_0, 4);
 		m.incrementMethodCounter();
 		methodCoverage = m;
 
@@ -119,7 +119,8 @@ public class ReportStructureTestDriver {
 		reportVisitor.visitEnd();
 	}
 
-	public void sendBundle(IReportGroupVisitor groupVisitor) throws IOException {
+	public void sendBundle(IReportGroupVisitor groupVisitor)
+			throws IOException {
 		groupVisitor.visitBundle(bundleCoverage, sourceFileLocator);
 	}
 

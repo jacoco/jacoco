@@ -383,7 +383,7 @@ public class FinallyFilterTest implements IFilterOutput {
 	}
 
 	private void execute() {
-		filter.filter("", "", m, this);
+		filter.filter(m, new FilterContextMock(), this);
 		assertEquals("ignored", toIndexes(expectedIgnored),
 				toIndexes(actualIgnored));
 		assertEquals("merged", toIndexes(expectedMerged),

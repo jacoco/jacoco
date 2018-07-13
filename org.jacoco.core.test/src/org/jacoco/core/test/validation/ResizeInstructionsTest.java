@@ -58,15 +58,12 @@ public class ResizeInstructionsTest {
 	 */
 	@Test
 	public void should_not_loose_InnerClasses_attribute() throws Exception {
-		// FIXME fails without COMPUTE_FRAMES because of
-		// https://gitlab.ow2.org/asm/asm/issues/317800
-
 		byte[] source = TargetLoader.getClassDataAsBytes(Inner.class);
 		final int version = BytecodeVersion.get(source);
 		source = BytecodeVersion.downgradeIfNeeded(version, source);
 
 		final ClassReader cr = new ClassReader(source);
-		final ClassWriter cw = new ClassWriter(ClassWriter.COMPUTE_FRAMES);
+		final ClassWriter cw = new ClassWriter(0);
 		cr.accept(new ClassVisitor(InstrSupport.ASM_API_VERSION, cw) {
 			@Override
 			public void visitEnd() {
@@ -157,7 +154,7 @@ public class ResizeInstructionsTest {
 
 	/**
 	 * Adds code that triggers usage of
-	 * {@link org.objectweb.asm.MethodWriter#INSERTED_FRAMES} during
+	 * {@link org.objectweb.asm.MethodWriter#COMPUTE_INSERTED_FRAMES} during
 	 * instrumentation.
 	 */
 	private static void addCauseOfResizeInstructions(final MethodVisitor mv) {

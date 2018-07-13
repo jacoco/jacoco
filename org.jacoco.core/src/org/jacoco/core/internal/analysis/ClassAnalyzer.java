@@ -11,21 +11,29 @@
  *******************************************************************************/
 package org.jacoco.core.internal.analysis;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import org.jacoco.core.analysis.IMethodCoverage;
 import org.jacoco.core.internal.analysis.filter.Filters;
+import org.jacoco.core.internal.analysis.filter.IFilterContext;
 import org.jacoco.core.internal.flow.ClassProbesVisitor;
 import org.jacoco.core.internal.flow.MethodProbesVisitor;
 import org.jacoco.core.internal.instr.InstrSupport;
+import org.objectweb.asm.AnnotationVisitor;
 import org.objectweb.asm.FieldVisitor;
 
 /**
  * Analyzes the structure of a class.
  */
-public class ClassAnalyzer extends ClassProbesVisitor {
+public class ClassAnalyzer extends ClassProbesVisitor
+		implements IFilterContext {
 
 	private final ClassCoverageImpl coverage;
 	private final boolean[] probes;
 	private final StringPool stringPool;
+
+	private final Set<String> classAnnotations = new HashSet<String>();
 
 	/**
 	 * Creates a new analyzer that builds coverage data for a class.
@@ -54,24 +62,32 @@ public class ClassAnalyzer extends ClassProbesVisitor {
 	}
 
 	@Override
+	public AnnotationVisitor visitAnnotation(final String desc,
+			final boolean visible) {
+		classAnnotations.add(desc);
+		return super.visitAnnotation(desc, visible);
+	}
+
+	@Override
 	public void visitSource(final String source, final String debug) {
 		coverage.setSourceFileName(stringPool.get(source));
 	}
 
 	@Override
 	public MethodProbesVisitor visitMethod(final int access, final String name,
-			final String desc, final String signature, final String[] exceptions) {
+			final String desc, final String signature,
+			final String[] exceptions) {
 
 		InstrSupport.assertNotInstrumented(name, coverage.getName());
 
-		return new MethodAnalyzer(coverage.getName(), coverage.getSuperName(),
-				stringPool.get(name), stringPool.get(desc),
-				stringPool.get(signature), probes, Filters.ALL) {
+		return new MethodAnalyzer(stringPool.get(name), stringPool.get(desc),
+				stringPool.get(signature), probes, Filters.ALL, this) {
 			@Override
 			public void visitEnd() {
 				super.visitEnd();
 				final IMethodCoverage methodCoverage = getCoverage();
-				if (methodCoverage.getInstructionCounter().getTotalCount() > 0) {
+				if (methodCoverage.getInstructionCounter()
+						.getTotalCount() > 0) {
 					// Only consider methods that actually contain code
 					coverage.addMethod(methodCoverage);
 				}
@@ -89,6 +105,24 @@ public class ClassAnalyzer extends ClassProbesVisitor {
 	@Override
 	public void visitTotalProbeCount(final int count) {
 		// nothing to do
+	}
+
+	// IFilterContext implementation
+
+	public String getClassName() {
+		return coverage.getName();
+	}
+
+	public String getSuperClassName() {
+		return coverage.getSuperName();
+	}
+
+	public Set<String> getClassAnnotations() {
+		return classAnnotations;
+	}
+
+	public String getSourceFileName() {
+		return coverage.getSourceFileName();
 	}
 
 }

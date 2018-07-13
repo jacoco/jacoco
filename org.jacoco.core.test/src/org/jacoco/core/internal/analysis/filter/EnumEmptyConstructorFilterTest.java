@@ -11,19 +11,21 @@
  *******************************************************************************/
 package org.jacoco.core.internal.analysis.filter;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.fail;
+
 import org.jacoco.core.internal.instr.InstrSupport;
 import org.junit.Test;
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.tree.AbstractInsnNode;
 import org.objectweb.asm.tree.MethodNode;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.fail;
-
 public class EnumEmptyConstructorFilterTest implements IFilterOutput {
 
 	private final EnumEmptyConstructorFilter filter = new EnumEmptyConstructorFilter();
+
+	private final FilterContextMock context = new FilterContextMock();
 
 	private AbstractInsnNode fromInclusive;
 	private AbstractInsnNode toInclusive;
@@ -39,8 +41,9 @@ public class EnumEmptyConstructorFilterTest implements IFilterOutput {
 		m.visitMethodInsn(Opcodes.INVOKESPECIAL, "java/lang/Enum", "<init>",
 				"(Ljava/lang/String;I)V", false);
 		m.visitInsn(Opcodes.RETURN);
+		context.superClassName = "java/lang/Enum";
 
-		filter.filter("Foo", "java/lang/Enum", m, this);
+		filter.filter(m, context, this);
 
 		assertEquals(m.instructions.getFirst(), fromInclusive);
 		assertEquals(m.instructions.getLast(), toInclusive);
@@ -68,8 +71,9 @@ public class EnumEmptyConstructorFilterTest implements IFilterOutput {
 				"(Ljava/lang/String;I)V", false);
 		m.visitInsn(Opcodes.NOP);
 		m.visitInsn(Opcodes.RETURN);
+		context.superClassName = "java/lang/Enum";
 
-		filter.filter("Foo", "java/lang/Enum", m, this);
+		filter.filter(m, context, this);
 
 		assertNull(fromInclusive);
 		assertNull(toInclusive);
@@ -95,8 +99,9 @@ public class EnumEmptyConstructorFilterTest implements IFilterOutput {
 		m.visitMethodInsn(Opcodes.INVOKESPECIAL, "java/lang/Enum", "<init>",
 				"(Ljava/lang/String;I)V", false);
 		m.visitInsn(Opcodes.RETURN);
+		context.superClassName = "java/lang/Enum";
 
-		filter.filter("Foo", "java/lang/Enum", m, this);
+		filter.filter(m, context, this);
 
 		assertNull(fromInclusive);
 		assertNull(toInclusive);
@@ -117,8 +122,9 @@ public class EnumEmptyConstructorFilterTest implements IFilterOutput {
 				Opcodes.ACC_PRIVATE, "method", "(Ljava/lang/String;I)V", null,
 				null);
 		m.visitInsn(Opcodes.NOP);
+		context.superClassName = "java/lang/Enum";
 
-		filter.filter("Foo", "java/lang/Enum", m, this);
+		filter.filter(m, context, this);
 
 		assertNull(fromInclusive);
 		assertNull(toInclusive);
@@ -131,7 +137,7 @@ public class EnumEmptyConstructorFilterTest implements IFilterOutput {
 				null);
 		m.visitInsn(Opcodes.NOP);
 
-		filter.filter("Foo", "java/lang/Object", m, this);
+		filter.filter(m, context, this);
 
 		assertNull(fromInclusive);
 		assertNull(toInclusive);

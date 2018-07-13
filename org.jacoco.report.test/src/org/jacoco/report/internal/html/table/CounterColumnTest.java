@@ -28,7 +28,6 @@ import org.jacoco.core.analysis.ICoverageNode.ElementType;
 import org.jacoco.core.internal.analysis.CounterImpl;
 import org.jacoco.report.MemoryMultiReportOutput;
 import org.jacoco.report.internal.ReportOutputFolder;
-import org.jacoco.report.internal.html.HTMLDocument;
 import org.jacoco.report.internal.html.HTMLElement;
 import org.jacoco.report.internal.html.HTMLSupport;
 import org.jacoco.report.internal.html.resources.Resources;
@@ -48,7 +47,7 @@ public class CounterColumnTest {
 
 	private Resources resources;
 
-	private HTMLDocument doc;
+	private HTMLElement html;
 
 	private HTMLElement td;
 
@@ -61,9 +60,9 @@ public class CounterColumnTest {
 		output = new MemoryMultiReportOutput();
 		root = new ReportOutputFolder(output);
 		resources = new Resources(root);
-		doc = new HTMLDocument(root.createFile("Test.html"), "UTF-8");
-		doc.head().title();
-		td = doc.body().table("somestyle").tr().td();
+		html = new HTMLElement(root.createFile("Test.html"), "UTF-8");
+		html.head().title();
+		td = html.body().table("somestyle").tr().td();
 		support = new HTMLSupport();
 		locale = Locale.ENGLISH;
 	}
@@ -80,7 +79,7 @@ public class CounterColumnTest {
 				locale);
 		final ITableItem item = createItem(0, 3);
 		assertTrue(column.init(Arrays.asList(item), item.getNode()));
-		doc.close();
+		html.close();
 	}
 
 	@Test
@@ -89,7 +88,7 @@ public class CounterColumnTest {
 				locale);
 		final ITableItem item = createItem(0, 0);
 		assertFalse(column.init(Arrays.asList(item), createNode(1, 0)));
-		doc.close();
+		html.close();
 	}
 
 	@Test
@@ -99,8 +98,7 @@ public class CounterColumnTest {
 		final ITableItem item = createItem(100, 50);
 		column.init(Collections.singletonList(item), item.getNode());
 		column.item(td, item, resources, root);
-		doc.close();
-		final Document doc = support.parse(output.getFile("Test.html"));
+		final Document doc = parseDoc();
 		assertEquals("150",
 				support.findStr(doc, "/html/body/table/tr/td[1]/text()"));
 	}
@@ -112,8 +110,7 @@ public class CounterColumnTest {
 		final ITableItem item = createItem(100, 50);
 		column.init(Collections.singletonList(item), item.getNode());
 		column.item(td, item, resources, root);
-		doc.close();
-		final Document doc = support.parse(output.getFile("Test.html"));
+		final Document doc = parseDoc();
 		assertEquals("100",
 				support.findStr(doc, "/html/body/table/tr/td[1]/text()"));
 	}
@@ -125,8 +122,7 @@ public class CounterColumnTest {
 		final ITableItem item = createItem(100, 50);
 		column.init(Collections.singletonList(item), item.getNode());
 		column.item(td, item, resources, root);
-		doc.close();
-		final Document doc = support.parse(output.getFile("Test.html"));
+		final Document doc = parseDoc();
 		assertEquals("50",
 				support.findStr(doc, "/html/body/table/tr/td[1]/text()"));
 	}
@@ -138,8 +134,7 @@ public class CounterColumnTest {
 		final ITableItem item = createItem(1000, 0);
 		column.init(Collections.singletonList(item), item.getNode());
 		column.item(td, item, resources, root);
-		doc.close();
-		final Document doc = support.parse(output.getFile("Test.html"));
+		final Document doc = parseDoc();
 		assertEquals("1.000",
 				support.findStr(doc, "/html/body/table/tr/td[1]/text()"));
 	}
@@ -151,8 +146,7 @@ public class CounterColumnTest {
 		final ITableItem item = createItem(20, 60);
 		column.init(Collections.singletonList(item), item.getNode());
 		column.footer(td, item.getNode(), resources, root);
-		doc.close();
-		final Document doc = support.parse(output.getFile("Test.html"));
+		final Document doc = parseDoc();
 		assertEquals("80",
 				support.findStr(doc, "/html/body/table/tr/td[1]/text()"));
 	}
@@ -167,7 +161,7 @@ public class CounterColumnTest {
 		assertEquals(0, c.compare(i1, i1));
 		assertTrue(c.compare(i1, i2) > 0);
 		assertTrue(c.compare(i2, i1) < 0);
-		doc.close();
+		html.close();
 	}
 
 	@Test
@@ -180,7 +174,7 @@ public class CounterColumnTest {
 		assertEquals(0, c.compare(i1, i1));
 		assertTrue(c.compare(i1, i2) > 0);
 		assertTrue(c.compare(i2, i1) < 0);
-		doc.close();
+		html.close();
 	}
 
 	@Test
@@ -193,7 +187,7 @@ public class CounterColumnTest {
 		assertEquals(0, c.compare(i1, i1));
 		assertTrue(c.compare(i1, i2) > 0);
 		assertTrue(c.compare(i2, i1) < 0);
-		doc.close();
+		html.close();
 	}
 
 	private ITableItem createItem(final int missed, final int covered) {
@@ -224,4 +218,10 @@ public class CounterColumnTest {
 			}
 		};
 	}
+
+	private Document parseDoc() throws Exception {
+		html.close();
+		return support.parse(output.getFile("Test.html"));
+	}
+
 }

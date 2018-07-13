@@ -37,7 +37,7 @@ public class ReportTest extends CommandTestBase {
 		execute("report");
 
 		assertFailure();
-		assertContains("Option \"--classfiles\" is required", err);
+		assertContains("\"--classfiles\"", err);
 		assertContains(
 				"Usage: java -jar jacococli.jar report [<execfiles> ...]", err);
 	}

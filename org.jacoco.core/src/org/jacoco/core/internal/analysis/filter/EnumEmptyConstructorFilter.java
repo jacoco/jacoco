@@ -33,24 +33,25 @@ public final class EnumEmptyConstructorFilter implements IFilter {
 	private static final String CONSTRUCTOR_NAME = "<init>";
 	private static final String CONSTRUCTOR_DESC = "(Ljava/lang/String;I)V";
 
-	public void filter(String className, String superClassName,
-			MethodNode methodNode, IFilterOutput output) {
-		if ("java/lang/Enum".equals(superClassName)
+	private static final String ENUM_TYPE = "java/lang/Enum";
+
+	public void filter(final MethodNode methodNode,
+			final IFilterContext context, final IFilterOutput output) {
+		if (ENUM_TYPE.equals(context.getSuperClassName())
 				&& CONSTRUCTOR_NAME.equals(methodNode.name)
 				&& CONSTRUCTOR_DESC.equals(methodNode.desc)
-				&& new Matcher().match(methodNode, superClassName)) {
+				&& new Matcher().match(methodNode)) {
 			output.ignore(methodNode.instructions.getFirst(),
 					methodNode.instructions.getLast());
 		}
 	}
 
 	private static class Matcher extends AbstractMatcher {
-		private boolean match(final MethodNode methodNode,
-				final String superClassName) {
+		private boolean match(final MethodNode methodNode) {
 			firstIsALoad0(methodNode);
 			nextIs(Opcodes.ALOAD);
 			nextIs(Opcodes.ILOAD);
-			nextIsInvokeSuper(superClassName, CONSTRUCTOR_DESC);
+			nextIsInvokeSuper(ENUM_TYPE, CONSTRUCTOR_DESC);
 			nextIs(Opcodes.RETURN);
 			return cursor != null;
 		}

@@ -12,7 +12,7 @@
 package org.jacoco.report.internal.html;
 
 import java.io.IOException;
-import java.io.Writer;
+import java.io.OutputStream;
 
 import org.jacoco.report.internal.ReportOutputFolder;
 import org.jacoco.report.internal.xml.XMLElement;
@@ -23,27 +23,60 @@ import org.jacoco.report.internal.xml.XMLElement;
  */
 public class HTMLElement extends XMLElement {
 
+	private static final String PUBID = "-//W3C//DTD XHTML 1.0 Strict//EN";
+
+	private static final String SYSTEM = "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd";
+
 	/**
-	 * Creates a new element for a HTML document.
+	 * Creates a <code>html</code> root element of a XHTML document.
 	 * 
-	 * @param writer
-	 *            all output will be written directly to this
-	 * @param name
-	 *            element name
+	 * @param encoding
+	 *            character encoding used for output
+	 * @param output
+	 *            output stream will be closed if the root element is closed
+	 * @throws IOException
+	 *             in case of problems with the underlying output
 	 */
-	protected HTMLElement(final Writer writer, final String name) {
-		super(writer, name);
+	public HTMLElement(final OutputStream output, final String encoding)
+			throws IOException {
+		super("html", PUBID, SYSTEM, false, encoding, output);
+		attr("xmlns", "http://www.w3.org/1999/xhtml");
+	}
+
+	private HTMLElement(final String name, final HTMLElement parent)
+			throws IOException {
+		super(name, parent);
 	}
 
 	@Override
 	public HTMLElement element(final String name) throws IOException {
-		final HTMLElement element = new HTMLElement(writer, name);
-		addChildElement(element);
-		return element;
+		return new HTMLElement(name, this);
 	}
 
 	private void classattr(final String classattr) throws IOException {
 		attr("class", classattr);
+	}
+
+	/**
+	 * Creates a 'head' element.
+	 * 
+	 * @return 'head' element
+	 * @throws IOException
+	 *             in case of problems with the underlying output
+	 */
+	public HTMLElement head() throws IOException {
+		return element("head");
+	}
+
+	/**
+	 * Creates a 'body' element.
+	 * 
+	 * @return 'body' element
+	 * @throws IOException
+	 *             in case of problems with the underlying output
+	 */
+	public HTMLElement body() throws IOException {
+		return element("body");
 	}
 
 	/**
@@ -55,10 +88,10 @@ public class HTMLElement extends XMLElement {
 	 *            value for the content attribute
 	 * @return 'meta' element
 	 * @throws IOException
-	 *             in case of problems with the writer
+	 *             in case of problems with the underlying output
 	 */
-	public HTMLElement meta(final String httpequivattr, final String contentattr)
-			throws IOException {
+	public HTMLElement meta(final String httpequivattr,
+			final String contentattr) throws IOException {
 		final HTMLElement meta = element("meta");
 		meta.attr("http-equiv", httpequivattr);
 		meta.attr("content", contentattr);
@@ -76,7 +109,7 @@ public class HTMLElement extends XMLElement {
 	 *            value for the type attribute
 	 * @return 'link' element
 	 * @throws IOException
-	 *             in case of problems with the writer
+	 *             in case of problems with the underlying output
 	 */
 	public HTMLElement link(final String relattr, final String hrefattr,
 			final String typeattr) throws IOException {
@@ -92,7 +125,7 @@ public class HTMLElement extends XMLElement {
 	 * 
 	 * @return 'title' element
 	 * @throws IOException
-	 *             in case of problems with the writer
+	 *             in case of problems with the underlying output
 	 */
 	public HTMLElement title() throws IOException {
 		return element("title");
@@ -103,7 +136,7 @@ public class HTMLElement extends XMLElement {
 	 * 
 	 * @return 'h1' element
 	 * @throws IOException
-	 *             in case of problems with the writer
+	 *             in case of problems with the underlying output
 	 */
 	public HTMLElement h1() throws IOException {
 		return element("h1");
@@ -114,7 +147,7 @@ public class HTMLElement extends XMLElement {
 	 * 
 	 * @return 'p' element
 	 * @throws IOException
-	 *             in case of problems with the writer
+	 *             in case of problems with the underlying output
 	 */
 	public HTMLElement p() throws IOException {
 		return element("p");
@@ -125,7 +158,7 @@ public class HTMLElement extends XMLElement {
 	 * 
 	 * @return 'span' element
 	 * @throws IOException
-	 *             in case of problems with the writer
+	 *             in case of problems with the underlying output
 	 */
 	public HTMLElement span() throws IOException {
 		return element("span");
@@ -138,7 +171,7 @@ public class HTMLElement extends XMLElement {
 	 *            value of the class attribute
 	 * @return 'span' element
 	 * @throws IOException
-	 *             in case of problems with the writer
+	 *             in case of problems with the underlying output
 	 */
 	public HTMLElement span(final String classattr) throws IOException {
 		final HTMLElement span = span();
@@ -155,7 +188,7 @@ public class HTMLElement extends XMLElement {
 	 *            value of the id attribute
 	 * @return 'span' element
 	 * @throws IOException
-	 *             in case of problems with the writer
+	 *             in case of problems with the underlying output
 	 */
 	public HTMLElement span(final String classattr, final String idattr)
 			throws IOException {
@@ -171,7 +204,7 @@ public class HTMLElement extends XMLElement {
 	 *            value of the class attribute
 	 * @return 'div' element
 	 * @throws IOException
-	 *             in case of problems with the writer
+	 *             in case of problems with the underlying output
 	 */
 	public HTMLElement div(final String classattr) throws IOException {
 		final HTMLElement div = element("div");
@@ -184,7 +217,7 @@ public class HTMLElement extends XMLElement {
 	 * 
 	 * @return 'code' element
 	 * @throws IOException
-	 *             in case of problems with the writer
+	 *             in case of problems with the underlying output
 	 */
 	public HTMLElement code() throws IOException {
 		return element("code");
@@ -197,7 +230,7 @@ public class HTMLElement extends XMLElement {
 	 *            value of the class attribute
 	 * @return 'pre' element
 	 * @throws IOException
-	 *             in case of problems with the writer
+	 *             in case of problems with the underlying output
 	 */
 	public HTMLElement pre(final String classattr) throws IOException {
 		final HTMLElement pre = element("pre");
@@ -212,7 +245,7 @@ public class HTMLElement extends XMLElement {
 	 *            value of the href attribute
 	 * @return 'a' element
 	 * @throws IOException
-	 *             in case of problems with the writer
+	 *             in case of problems with the underlying output
 	 */
 	public HTMLElement a(final String hrefattr) throws IOException {
 		final HTMLElement a = element("a");
@@ -229,7 +262,7 @@ public class HTMLElement extends XMLElement {
 	 *            value of the class attribute
 	 * @return 'a' element
 	 * @throws IOException
-	 *             in case of problems with the writer
+	 *             in case of problems with the underlying output
 	 */
 	public HTMLElement a(final String hrefattr, final String classattr)
 			throws IOException {
@@ -247,10 +280,10 @@ public class HTMLElement extends XMLElement {
 	 *            base folder where the link should be placed
 	 * @return 'a' element or 'span' element, if the link target does not exist
 	 * @throws IOException
-	 *             in case of problems with the writer
+	 *             in case of problems with the underlying output
 	 */
-	public HTMLElement a(final ILinkable linkable, final ReportOutputFolder base)
-			throws IOException {
+	public HTMLElement a(final ILinkable linkable,
+			final ReportOutputFolder base) throws IOException {
 		final HTMLElement a;
 		final String link = linkable.getLink(base);
 		if (link == null) {
@@ -269,7 +302,7 @@ public class HTMLElement extends XMLElement {
 	 *            value of the class attribute
 	 * @return 'table' element
 	 * @throws IOException
-	 *             in case of problems with the writer
+	 *             in case of problems with the underlying output
 	 */
 	public HTMLElement table(final String classattr) throws IOException {
 		final HTMLElement table = element("table");
@@ -283,7 +316,7 @@ public class HTMLElement extends XMLElement {
 	 * 
 	 * @return 'thead' element
 	 * @throws IOException
-	 *             in case of problems with the writer
+	 *             in case of problems with the underlying output
 	 */
 	public HTMLElement thead() throws IOException {
 		return element("thead");
@@ -294,7 +327,7 @@ public class HTMLElement extends XMLElement {
 	 * 
 	 * @return 'tfoot' element
 	 * @throws IOException
-	 *             in case of problems with the writer
+	 *             in case of problems with the underlying output
 	 */
 	public HTMLElement tfoot() throws IOException {
 		return element("tfoot");
@@ -305,7 +338,7 @@ public class HTMLElement extends XMLElement {
 	 * 
 	 * @return 'tbody' element
 	 * @throws IOException
-	 *             in case of problems with the writer
+	 *             in case of problems with the underlying output
 	 */
 	public HTMLElement tbody() throws IOException {
 		return element("tbody");
@@ -316,7 +349,7 @@ public class HTMLElement extends XMLElement {
 	 * 
 	 * @return 'tr' element
 	 * @throws IOException
-	 *             in case of problems with the writer
+	 *             in case of problems with the underlying output
 	 */
 	public HTMLElement tr() throws IOException {
 		return element("tr");
@@ -327,7 +360,7 @@ public class HTMLElement extends XMLElement {
 	 * 
 	 * @return 'td' element
 	 * @throws IOException
-	 *             in case of problems with the writer
+	 *             in case of problems with the underlying output
 	 */
 	public HTMLElement td() throws IOException {
 		return element("td");
@@ -340,7 +373,7 @@ public class HTMLElement extends XMLElement {
 	 *            value of the class attribute
 	 * @return 'td' element
 	 * @throws IOException
-	 *             in case of problems with the writer
+	 *             in case of problems with the underlying output
 	 */
 	public HTMLElement td(final String classattr) throws IOException {
 		final HTMLElement td = td();
@@ -360,7 +393,7 @@ public class HTMLElement extends XMLElement {
 	 * @param titleattr
 	 *            value of the title and alt attribute
 	 * @throws IOException
-	 *             in case of problems with the writer
+	 *             in case of problems with the underlying output
 	 */
 	public void img(final String srcattr, final int widthattr,
 			final int heightattr, final String titleattr) throws IOException {
@@ -374,19 +407,16 @@ public class HTMLElement extends XMLElement {
 	}
 
 	/**
-	 * Creates a 'script' element.
+	 * Creates a JavaScript 'script' element.
 	 * 
-	 * @param typeattr
-	 *            value of the type attribute
 	 * @param srcattr
 	 *            value of the src attribute
 	 * @throws IOException
-	 *             in case of problems with the writer
+	 *             in case of problems with the underlying output
 	 */
-	public void script(final String typeattr, final String srcattr)
-			throws IOException {
+	public void script(final String srcattr) throws IOException {
 		final HTMLElement script = element("script");
-		script.attr("type", typeattr);
+		script.attr("type", "text/javascript");
 		script.attr("src", srcattr);
 		// Enforce open and closing tag otherwise it won't work in browsers:
 		script.text("");

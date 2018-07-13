@@ -36,7 +36,7 @@ public class GroovyGeneratedFilterTest implements IFilterOutput {
 		m.visitInsn(Opcodes.ICONST_0);
 		m.visitInsn(Opcodes.IRETURN);
 
-		filter.filter("Foo", "java/lang/Object", m, this);
+		filter.filter(m, new FilterContextMock(), this);
 
 		assertNull(fromInclusive);
 		assertNull(toInclusive);
@@ -51,7 +51,7 @@ public class GroovyGeneratedFilterTest implements IFilterOutput {
 		m.visitInsn(Opcodes.ICONST_0);
 		m.visitInsn(Opcodes.IRETURN);
 
-		filter.filter("Foo", "java/lang/Object", m, this);
+		filter.filter(m, new FilterContextMock(), this);
 
 		assertNull(fromInclusive);
 		assertNull(toInclusive);
@@ -66,7 +66,7 @@ public class GroovyGeneratedFilterTest implements IFilterOutput {
 		m.visitInsn(Opcodes.ICONST_0);
 		m.visitInsn(Opcodes.IRETURN);
 
-		filter.filter("Foo", "java/lang/Object", m, this);
+		filter.filter(m, new FilterContextMock(), this);
 
 		assertEquals(m.instructions.getFirst(), fromInclusive);
 		assertEquals(m.instructions.getLast(), toInclusive);

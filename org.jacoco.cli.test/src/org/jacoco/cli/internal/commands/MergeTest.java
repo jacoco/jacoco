@@ -43,7 +43,7 @@ public class MergeTest extends CommandTestBase {
 		execute("merge");
 
 		assertFailure();
-		assertContains("Option \"--destfile\" is required", err);
+		assertContains("\"--destfile\"", err);
 		assertContains("java -jar jacococli.jar merge [<execfiles> ...]", err);
 	}
 

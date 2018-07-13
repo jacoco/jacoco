@@ -37,7 +37,7 @@ public class PrivateEmptyNoArgConstructorFilterTest implements IFilterOutput {
 				"()V", false);
 		m.visitInsn(Opcodes.RETURN);
 
-		filter.filter("Foo", "java/lang/Object", m, this);
+		filter.filter(m, new FilterContextMock(), this);
 
 		assertEquals(m.instructions.getFirst(), fromInclusive);
 		assertEquals(m.instructions.getLast(), toInclusive);

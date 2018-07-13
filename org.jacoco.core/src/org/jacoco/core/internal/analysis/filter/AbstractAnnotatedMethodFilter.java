@@ -32,8 +32,8 @@ abstract class AbstractAnnotatedMethodFilter implements IFilter {
 		this.descType = "L" + annotationType + ";";
 	}
 
-	public void filter(final String className, final String superClassName,
-			final MethodNode methodNode, final IFilterOutput output) {
+	public void filter(final MethodNode methodNode,
+			final IFilterContext context, final IFilterOutput output) {
 		if (hasAnnotation(methodNode)) {
 			output.ignore(methodNode.instructions.getFirst(),
 					methodNode.instructions.getLast());

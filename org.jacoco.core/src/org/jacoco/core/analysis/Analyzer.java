@@ -33,6 +33,7 @@ import org.jacoco.core.internal.data.CRC64;
 import org.jacoco.core.internal.flow.ClassProbesAdapter;
 import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.ClassVisitor;
+import org.objectweb.asm.Opcodes;
 
 /**
  * An {@link Analyzer} instance processes a set of Java class files and
@@ -115,6 +116,9 @@ public class Analyzer {
 		final int version = BytecodeVersion.get(source);
 		final byte[] b = BytecodeVersion.downgradeIfNeeded(version, source);
 		final ClassReader reader = new ClassReader(b);
+		if ((reader.getAccess() & Opcodes.ACC_SYNTHETIC) != 0) {
+			return;
+		}
 		final ClassVisitor visitor = createAnalyzingVisitor(classId,
 				reader.getClassName());
 		reader.accept(visitor, 0);

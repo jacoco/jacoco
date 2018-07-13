@@ -28,8 +28,8 @@ import org.jacoco.report.internal.html.table.ITableItem;
  * @param <NodeType>
  *            type of the node represented by this page
  */
-public abstract class TablePage<NodeType extends ICoverageNode> extends
-		NodePage<NodeType> {
+public abstract class TablePage<NodeType extends ICoverageNode>
+		extends NodePage<NodeType> {
 
 	private final List<ITableItem> items = new ArrayList<ITableItem>();
 
@@ -64,7 +64,7 @@ public abstract class TablePage<NodeType extends ICoverageNode> extends
 	@Override
 	protected void head(final HTMLElement head) throws IOException {
 		super.head(head);
-		head.script("text/javascript",
+		head.script(
 				context.getResources().getLink(folder, Resources.SORT_SCRIPT));
 	}
 

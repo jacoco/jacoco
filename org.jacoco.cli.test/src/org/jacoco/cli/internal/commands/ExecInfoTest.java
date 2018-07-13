@@ -37,7 +37,7 @@ public class ExecInfoTest extends CommandTestBase {
 		execute("execinfo", "--invalid");
 
 		assertFailure();
-		assertContains("\"--invalid\" is not a valid option", err);
+		assertContains("\"--invalid\"", err);
 		assertContains("java -jar jacococli.jar execinfo [<execfiles> ...]",
 				err);
 	}

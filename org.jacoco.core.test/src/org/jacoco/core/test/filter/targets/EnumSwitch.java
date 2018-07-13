@@ -9,23 +9,34 @@
  *    Evgeny Mandrikov - initial API and implementation
  *
  *******************************************************************************/
-package org.jacoco.core.internal.analysis.filter;
+package org.jacoco.core.test.filter.targets;
 
-import org.objectweb.asm.Opcodes;
-import org.objectweb.asm.tree.MethodNode;
+import static org.jacoco.core.test.validation.targets.Stubs.nop;
 
 /**
- * Filters synthetic methods unless they represent bodies of lambda expressions.
+ * This test target is a switch statement with a enum.
  */
-public final class SyntheticFilter implements IFilter {
+public class EnumSwitch {
 
-	public void filter(final MethodNode methodNode,
-			final IFilterContext context, final IFilterOutput output) {
-		if ((methodNode.access & Opcodes.ACC_SYNTHETIC) != 0
-				&& !methodNode.name.startsWith("lambda$")) {
-			output.ignore(methodNode.instructions.getFirst(),
-					methodNode.instructions.getLast());
+	private enum E {
+		V1, V2
+	}
+
+	private static void example(E e) {
+		switch (e) { // $line-switch$
+		case V1:
+			nop("V1");
+			break;
+		case V2:
+		default:
+			nop("V2");
+			break;
 		}
+	}
+
+	public static void main(String[] args) {
+		example(E.V1);
+		example(E.V2);
 	}
 
 }
