@@ -13,7 +13,12 @@ package org.jacoco.core.internal.analysis.filter;
 
 import org.objectweb.asm.Attribute;
 import org.objectweb.asm.Opcodes;
-import org.objectweb.asm.tree.*;
+import org.objectweb.asm.tree.AbstractInsnNode;
+import org.objectweb.asm.tree.JumpInsnNode;
+import org.objectweb.asm.tree.MethodInsnNode;
+import org.objectweb.asm.tree.MethodNode;
+
+import java.util.regex.Pattern;
 
 /**
  * Filters synthetic methods created by the AspectJ-Compiler (ajc)
@@ -21,8 +26,15 @@ import org.objectweb.asm.tree.*;
 public class AspectjFilter implements IFilter {
 
     private static final String AJ_SYNTHETIC_ATTRIBUTE = "org.aspectj.weaver.AjSynthetic";
+    private static final Pattern AJC_CLOSURE_PATTERN = Pattern.compile(".*\\$AjcClosure\\d+");
 
     public void filter(MethodNode methodNode, IFilterContext context, IFilterOutput output) {
+
+        if (context.getSuperClassName().equals("org/aspectj/runtime/internal/AroundClosure")
+                && AJC_CLOSURE_PATTERN.matcher(context.getClassName()).matches()) {
+            output.ignore(methodNode.instructions.getFirst(), methodNode.instructions.getLast());
+            return;
+        }
 
         if (isAjSynthetic(methodNode)) {
             output.ignore(methodNode.instructions.getFirst(), methodNode.instructions.getLast());
