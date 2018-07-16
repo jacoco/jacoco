@@ -21,7 +21,7 @@
 
   <artifactId>org.jacoco.core.test.java7</artifactId>
 
-  <!--<name></name>-->
+  <name>JaCoCo :: Test :: Core :: Integration Java 7</name>
 
   <properties>
     <jacoco.includes>org.jacoco.core.*</jacoco.includes>

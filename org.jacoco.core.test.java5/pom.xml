@@ -21,7 +21,7 @@
 
   <artifactId>org.jacoco.core.test.java5</artifactId>
 
-  <!--<name></name>-->
+  <name>JaCoCo :: Test :: Core :: Integration Java 5</name>
 
   <properties>
     <jacoco.includes>org.jacoco.core.*</jacoco.includes>

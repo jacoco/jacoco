@@ -21,7 +21,7 @@
 
   <artifactId>org.jacoco.core.test.java8</artifactId>
 
-  <!--<name></name>-->
+  <name>JaCoCo :: Test :: Core :: Integration Java 8</name>
 
   <properties>
     <jacoco.includes>org.jacoco.core.*</jacoco.includes>
