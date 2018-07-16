@@ -13,11 +13,10 @@ package org.jacoco.core.internal.analysis.filter;
 
 import org.objectweb.asm.Attribute;
 import org.objectweb.asm.Opcodes;
-import org.objectweb.asm.tree.AbstractInsnNode;
-import org.objectweb.asm.tree.JumpInsnNode;
-import org.objectweb.asm.tree.MethodInsnNode;
-import org.objectweb.asm.tree.MethodNode;
+import org.objectweb.asm.tree.*;
 
+import java.util.LinkedList;
+import java.util.List;
 import java.util.regex.Pattern;
 
 /**
@@ -30,8 +29,7 @@ public class AspectjFilter implements IFilter {
 
     public void filter(MethodNode methodNode, IFilterContext context, IFilterOutput output) {
 
-        if (context.getSuperClassName().equals("org/aspectj/runtime/internal/AroundClosure")
-                && AJC_CLOSURE_PATTERN.matcher(context.getClassName()).matches()) {
+        if (isAroundClosureClass(context)) {
             output.ignore(methodNode.instructions.getFirst(), methodNode.instructions.getLast());
             return;
         }
@@ -45,6 +43,15 @@ public class AspectjFilter implements IFilter {
             checkStaticInitializer(methodNode, output);
         }
 
+        VarInsnNode end = new JoinPointCreation().match(methodNode);
+        if (end != null) {
+            output.ignore(methodNode.instructions.getFirst(), end);
+        }
+    }
+
+    private boolean isAroundClosureClass(IFilterContext context) {
+        return context.getSuperClassName().equals("org/aspectj/runtime/internal/AroundClosure")
+                && AJC_CLOSURE_PATTERN.matcher(context.getClassName()).matches();
     }
 
     /**
@@ -131,6 +138,11 @@ public class AspectjFilter implements IFilter {
         }
     }
 
+    /**
+     * Checks if the given method has the {@literal org.aspectj.weaver.AjSynthetic} attribute.
+     *
+     * @return true, if the attribute is present.
+     */
     private boolean isAjSynthetic(MethodNode methodNode) {
         if (methodNode.attrs != null) {
             for (Attribute attr : methodNode.attrs) {
@@ -159,6 +171,98 @@ public class AspectjFilter implements IFilter {
             return isEffectivelyLast(insnNode.getNext());
         } else {
             return false;
+        }
+    }
+
+    class JoinPointCreation extends AbstractMatcher {
+        VarInsnNode match(MethodNode methodNode) {
+            cursor = methodNode.instructions.getFirst();
+            skipNonOpcodes();
+
+            // 1. LOAD/STORE pair for each method parameter
+            List<Integer> params = new LinkedList<Integer>();
+
+            while (cursor != null && cursor.getOpcode() >= Opcodes.ILOAD && cursor.getOpcode() <= Opcodes.ALOAD) {
+                switch (cursor.getOpcode()) {
+                    case Opcodes.ILOAD:
+                        nextIs(Opcodes.ISTORE);
+                        params.add(0);
+                        next();
+                        break;
+                    case Opcodes.LLOAD:
+                        nextIs(Opcodes.LSTORE);
+                        params.add(1);
+                        next();
+                        break;
+                    case Opcodes.FLOAD:
+                        nextIs(Opcodes.FSTORE);
+                        params.add(2);
+                        next();
+                        break;
+                    case Opcodes.DLOAD:
+                        nextIs(Opcodes.DSTORE);
+                        params.add(3);
+                        next();
+                        break;
+                    case Opcodes.ALOAD:
+                        nextIs(Opcodes.ASTORE);
+                        params.add(4);
+                        next();
+                        break;
+                    default:
+                        return null;
+                }
+            }
+
+            if (cursor == null) {
+                return null;
+            }
+
+            // 2. Get Static for the joinpoint (first param for the makeJP call)
+            if (cursor.getOpcode() == Opcodes.GETSTATIC) {
+                FieldInsnNode getStatic = (FieldInsnNode) cursor;
+                if (!getStatic.name.startsWith("ajc$") || !getStatic.desc.equals("Lorg/aspectj/lang/JoinPoint$StaticPart;")) {
+                    return null;
+                }
+            }
+            // 3. Second param for the makeJP call
+            nextIs(Opcodes.ALOAD);
+            // 4. Thrid param for the makeJP call
+            nextIs(Opcodes.ALOAD);
+
+            // 5. Optional fourth and fifth params
+            boolean arrayCreation = params.size() >= 3;
+            if (arrayCreation) {
+                next(); // Array size is loaded (ICONST_x or SIPUSH)
+                nextIs(Opcodes.ANEWARRAY);
+                nextIs(Opcodes.ASTORE);
+            }
+
+            for (Integer param : params) {
+                if (arrayCreation) {
+                    nextIs(Opcodes.ALOAD); //Load array
+                    next(); //Load array index
+                }
+
+                nextIs(Opcodes.ILOAD + param);
+
+                if (param != 4) {
+                    nextIs(Opcodes.INVOKESTATIC);
+                    if (cursor == null || !((MethodInsnNode) cursor).owner.equals("org/aspectj/runtime/internal/Conversions")) {
+                        return null;
+                    }
+                }
+                if (arrayCreation) {
+                    nextIs(Opcodes.AASTORE); // Store in Array
+                }
+            }
+
+            if (arrayCreation) {
+                nextIs(Opcodes.ALOAD);
+            }
+            nextIsInvokeStatic("org/aspectj/runtime/reflect/Factory", "makeJP");
+            nextIs(Opcodes.ASTORE);
+            return (VarInsnNode) cursor;
         }
     }
 }
