@@ -24,7 +24,7 @@
   <name>JaCoCo :: Test :: Core :: Integration Java 7</name>
 
   <properties>
-    <jacoco.includes>org.jacoco.core.*</jacoco.includes>
+    <jacoco.skip>true</jacoco.skip>
     <bytecode.version>7</bytecode.version>
   </properties>
 

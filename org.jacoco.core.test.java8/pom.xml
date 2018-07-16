@@ -24,7 +24,7 @@
   <name>JaCoCo :: Test :: Core :: Integration Java 8</name>
 
   <properties>
-    <jacoco.includes>org.jacoco.core.*</jacoco.includes>
+    <jacoco.skip>true</jacoco.skip>
     <bytecode.version>8</bytecode.version>
   </properties>
 

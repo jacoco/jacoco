@@ -24,7 +24,7 @@
   <name>JaCoCo :: Test :: Core :: Integration Java 5</name>
 
   <properties>
-    <jacoco.includes>org.jacoco.core.*</jacoco.includes>
+    <jacoco.skip>true</jacoco.skip>
   </properties>
 
   <dependencies>
