@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <projectDescription>
-	<name>org.jacoco.core.test.java8</name>
+	<name>org.jacoco.core.test.validation.java7</name>
 	<comment></comment>
 	<projects>
 	</projects>
