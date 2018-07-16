@@ -23,7 +23,7 @@ import org.junit.Test;
 public class StringSwitchTest extends ValidationTestBase {
 
 	public StringSwitchTest() {
-		super("src-java7", StringSwitch.class);
+		super(StringSwitch.class);
 	}
 
 	/**

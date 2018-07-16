@@ -6,29 +6,34 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *
  * Contributors:
- *    Evgeny Mandrikov - initial API and implementation
- *
+ *    Marc R. Hoffmann - initial API and implementation
+ *    
  *******************************************************************************/
 package org.jacoco.core.test.validation;
 
 import org.jacoco.core.analysis.ICounter;
-import org.jacoco.core.test.validation.targets.AnnotationOnLocalVariableTarget;
+import org.jacoco.core.test.validation.targets.LambdaInInterfaceTarget;
 import org.junit.Test;
 
 /**
- * Test of ASM bug
- * <a href="https://gitlab.ow2.org/asm/asm/issues/317815">#317815</a>
+ * Tests a constant with a lambda value in an interface.
  */
-public class AnnotationOnLocalVariableTest extends ValidationTestBase {
+public class LambdaInInterfaceTest extends ValidationTestBase {
 
-	public AnnotationOnLocalVariableTest() {
-		super("src-java8", AnnotationOnLocalVariableTarget.class);
+	public LambdaInInterfaceTest() {
+		super(LambdaInInterfaceTarget.class);
+	}
+
+	@Override
+	protected void run(final Class<?> targetClass) throws Exception {
+		((Runnable) targetClass.getField("RUN").get(null)).run();
 	}
 
 	@Test
 	public void testCoverageResult() {
 
-		assertLine("var", ICounter.FULLY_COVERED);
+		// Coverage of lambda body
+		assertLine("lambdabody", ICounter.FULLY_COVERED);
 
 	}
 

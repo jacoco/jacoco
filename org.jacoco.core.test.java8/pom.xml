@@ -19,31 +19,20 @@
     <relativePath>../org.jacoco.tests</relativePath>
   </parent>
 
-  <artifactId>org.jacoco.core.test</artifactId>
+  <artifactId>org.jacoco.core.test.java8</artifactId>
 
-  <name>JaCoCo :: Test :: Core</name>
+  <!--<name></name>-->
 
   <properties>
     <jacoco.includes>org.jacoco.core.*</jacoco.includes>
+    <bytecode.version>8</bytecode.version>
   </properties>
 
   <dependencies>
     <dependency>
       <groupId>${project.groupId}</groupId>
-      <artifactId>org.jacoco.core</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.ow2.asm</groupId>
-      <artifactId>asm-analysis</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.ow2.asm</groupId>
-      <artifactId>asm-util</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>junit</groupId>
-      <artifactId>junit</artifactId>
+      <artifactId>org.jacoco.core.test</artifactId>
+      <version>${project.version}</version>
     </dependency>
   </dependencies>
-
 </project>

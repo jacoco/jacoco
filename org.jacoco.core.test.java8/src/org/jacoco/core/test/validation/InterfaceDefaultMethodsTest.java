@@ -12,25 +12,23 @@
 package org.jacoco.core.test.validation;
 
 import org.jacoco.core.analysis.ICounter;
-import org.jacoco.core.test.validation.targets.LambdaExpressionsTarget;
+import org.jacoco.core.test.validation.targets.InterfaceDefaultMethodsTarget;
 import org.junit.Test;
 
 /**
- * Tests for different lambda expressions.
+ * Tests of static initializer and default methods in interfaces.
  */
-public class LambdaExpressionsTest extends ValidationTestBase {
+public class InterfaceDefaultMethodsTest extends ValidationTestBase {
 
-	public LambdaExpressionsTest() {
-		super("src-java8", LambdaExpressionsTarget.class);
+	public InterfaceDefaultMethodsTest() {
+		super(InterfaceDefaultMethodsTarget.class);
 	}
 
 	@Test
 	public void testCoverageResult() {
-
-		// Coverage of lambda bodies
-		assertLine("executedlambdabody", ICounter.FULLY_COVERED);
-		assertLine("notexecutedlambdabody", ICounter.NOT_COVERED);
-
+		assertLine("clinit", ICounter.FULLY_COVERED);
+		assertLine("m1", ICounter.FULLY_COVERED);
+		assertLine("m2", ICounter.NOT_COVERED);
 	}
 
 }

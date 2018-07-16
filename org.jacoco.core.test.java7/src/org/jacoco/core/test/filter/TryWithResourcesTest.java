@@ -23,7 +23,7 @@ import org.junit.Test;
 public class TryWithResourcesTest extends ValidationTestBase {
 
 	public TryWithResourcesTest() {
-		super("src-java7", TryWithResources.class);
+		super(TryWithResources.class);
 	}
 
 	/**
