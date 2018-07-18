@@ -88,7 +88,7 @@ public class MethodAnalyzer extends MethodProbesVisitor
 	 * @param filterContext
 	 *            class context information for the filter
 	 */
-	MethodAnalyzer(final String name, final String desc, final String signature,
+	public MethodAnalyzer(final String name, final String desc, final String signature,
 			final boolean[] probes, final IFilter filter,
 			final IFilterContext filterContext) {
 		super();
