@@ -6,6 +6,21 @@
   <link rel="stylesheet" href="resources/doc.css" charset="UTF-8" type="text/css" />
   <link rel="stylesheet" href="../coverage/jacoco-resources/prettify.css" charset="UTF-8" type="text/css" />
   <link rel="shortcut icon" href="resources/report.gif" type="image/gif" />
+  <style>
+    table, th, td {
+      border-collapse: collapse;
+      padding: 3px;
+    }
+    table tbody tr td:nth-child(2) {
+      border-right: #b0b0b0 3px solid;
+    }
+    th {
+      background-color:#e0e0e0;
+    }
+    table tbody td:hover {
+      background: #f0f0d0;
+    }
+  </style>
   <script type="text/javascript" src="../coverage/jacoco-resources/prettify.js"></script>
   <title>JaCoCo - Build</title>
 </head>
@@ -63,75 +78,62 @@
 </pre>
 
 
-<h2>Testing with different JDKs</h2>
+<h2>Compilation and testing with different JDKs</h2>
 
 <p>
   By default for compilation and execution of tests will be used JDK that runs
-  Maven. You can set property <code>jdk.version</code> to use JDK specified in
+  Maven. Alternatively you can use JDK from
   <a href="http://maven.apache.org/guides/mini/guide-using-toolchains.html">Maven
-  Toolchains</a> with respective value of <code>version</code> tag. For example
-  you can create following <code>~/.m2/toolchains.xml</code> file
+  Toolchains</a> by setting property <code>jdk.version</code>.
 </p>
 
-<pre class="source lang-xml linenums">
-&lt;?xml version="1.0" encoding="UTF8"?&gt;
-&lt;toolchains&gt;
-  &lt;toolchain&gt;
-    &lt;type&gt;jdk&lt;/type&gt;
-    &lt;provides&gt;
-      &lt;id&gt;java5&lt;/id&gt;
-      &lt;version&gt;5&lt;/version&gt;
-    &lt;/provides&gt;
-    &lt;configuration&gt;
-      &lt;jdkHome&gt;/usr/lib/jvm/sun-jdk-1.5&lt;/jdkHome&gt;
-    &lt;/configuration&gt;
-  &lt;/toolchain&gt;
+<p>
+  Following table shows how modules will be compiled depending on version of JDK:
+</p>
 
-  &lt;toolchain&gt;
-    &lt;type&gt;jdk&lt;/type&gt;
-    &lt;provides&gt;
-      &lt;id&gt;java6&lt;/id&gt;
-      &lt;version&gt;6&lt;/version&gt;
-    &lt;/provides&gt;
-    &lt;configuration&gt;
-      &lt;jdkHome&gt;/usr/lib/jvm/java-6-openjdk-amd64&lt;/jdkHome&gt;
-    &lt;/configuration&gt;
-  &lt;/toolchain&gt;
-
-  &lt;-- you can specify other JDKs in this file --&gt;
-
-&lt;/toolchains&gt;
-</pre>
+<table>
+  <thead>
+  <tr>
+    <th></th>
+    <th>JDK 5</th>
+    <th>JDK 6</th>
+    <th>JDK 7</th>
+    <th>JDK 8</th>
+    <th>JDK 9</th>
+    <th>JDK 10</th>
+  </tr>
+  </thead>
+  <tbody>
+  <tr>
+    <th>org.jacoco.core.test.validation.java7</th>
+    <td colspan="2">excluded from build</td>
+    <td colspan="4">compiled into bytecode version 51 (Java 7)</td>
+  </tr>
+  <tr>
+    <th>org.jacoco.core.test.validation.java8</th>
+    <td colspan="3">excluded from build</td>
+    <td colspan="3">compiled into bytecode version 52 (Java 8)</td>
+  </tr>
+  <tr>
+    <th>all other modules</th>
+    <td colspan="4">compiled into bytecode version 49 (Java 5)</td>
+    <td colspan="2">compiled into bytecode version 50 (Java 6)</td>
+  </tr>
+  </tbody>
+</table>
 
 <p>
-  to execute compilation and tests using JDK 5 or 6:
+  Alternatively you can specify bytecode version for all modules using property
+  <code>bytecode.version</code>.
+</p>
+
+<p>
+  For example to use JDK 10 from Maven Toolchains and compile all modules
+  into bytecode version 53 (Java 9):
 </p>
 
 <pre>
-  mvn clean install -Djdk.version=5
-  mvn clean install -Djdk.version=6
-</pre>
-
-<p>
-  Location of <code>toolchains.xml</code> can be set via an option:
-</p>
-
-<pre>
-  mvn --toolchains <i>path</i> clean install -Djdk.version=<i>version</i>
-</pre>
-
-<p>
-  By default modules <code>org.jacoco.core.test.java7</code> and
-  <code>org.jacoco.core.test.java8</code> will be compiled into bytecode
-  versions 51 (Java 7) and 52 (Java 8) respectively. All others will be compiled
-  into 49 (Java 5) when using JDK 8, and into 50 (Java 6) when using newer
-  versions. This can be changed by setting property
-  <code>bytecode.version</code>. For example to compile all modules into
-  bytecode version 54 (Java 10):
-</p>
-
-<pre>
-  mvn clean install -Dbytecode.version=10
+  mvn clean install -Djdk.version=10 -Dbytecode.version=9
 </pre>
 
 <p>
