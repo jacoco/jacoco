@@ -675,7 +675,18 @@
   </build>
 
   <profiles>
-    <!-- This profile is used to launch tests with different JDK versions. -->
+    <profile>
+      <id>maven-jdk9</id>
+      <activation>
+        <jdk>[9,)</jdk>
+      </activation>
+      <properties>
+        <!-- http://openjdk.java.net/jeps/182 -->
+        <bytecode.version>6</bytecode.version>
+      </properties>
+    </profile>
+
+    <!-- This profile enables use of JDK from Maven Toolchains -->
     <profile>
       <id>integration-tests</id>
       <activation>
@@ -709,26 +720,13 @@
       </build>
     </profile>
 
-    <!-- -->
-
-    <profile>
-      <id>maven-jdk9</id>
-      <activation>
-        <jdk>[9,)</jdk>
-      </activation>
-      <properties>
-        <!-- http://openjdk.java.net/jeps/182 -->
-        <bytecode.version>6</bytecode.version>
-      </properties>
-    </profile>
-
     <!--
     Following profiles enable compilation into bytecode version 9
     when requested "bytecode.version" greater than 9,
     because this is maximum that can be processed by
     maven-shade-plugin (https://issues.apache.org/jira/browse/MSHADE-289)
     and maven-plugin-plugin (https://issues.apache.org/jira/browse/MPLUGIN-335),
-    this is overridden for tests
+    This is overridden for tests.
     -->
 
     <profile>
@@ -773,7 +771,7 @@
       </properties>
     </profile>
 
-    <!-- This profile is used for compilation with ECJ. -->
+    <!-- This profile enables use of ECJ -->
     <profile>
       <id>ecj</id>
       <activation>
@@ -809,7 +807,9 @@
       </build>
     </profile>
 
-    <!-- -->
+    <!--
+    Profiles for different JDK versions:
+    -->
 
     <profile>
       <id>jdk6</id>
@@ -902,8 +902,7 @@
       </properties>
     </profile>
 
-    <!-- -->
-
+    <!-- This profile enables generation of JARs with sources and javadocs -->
     <profile>
       <id>sources</id>
       <activation>
