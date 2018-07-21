@@ -51,8 +51,6 @@ public abstract class ValidationTestBase {
 		STATUS_NAME[ICounter.PARTLY_COVERED] = "PARTLY_COVERED";
 	}
 
-	private final String srcFolder;
-
 	private final Class<?> target;
 
 	private ISourceFileCoverage sourceCoverage;
@@ -61,20 +59,15 @@ public abstract class ValidationTestBase {
 
 	private InstrumentingLoader loader;
 
-	protected ValidationTestBase(final String srcFolder, final Class<?> target) {
-		this.srcFolder = srcFolder;
-		this.target = target;
-	}
-
 	protected ValidationTestBase(final Class<?> target) {
-		this("src", target);
+		this.target = target;
 	}
 
 	@Before
 	public void setup() throws Exception {
 		final ExecutionDataStore store = execute();
 		analyze(store);
-		source = Source.getSourceFor(srcFolder, target);
+		source = Source.getSourceFor("src", target);
 	}
 
 	private ExecutionDataStore execute() throws Exception {

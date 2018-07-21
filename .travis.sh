@@ -43,20 +43,19 @@ function install_jdk {
   fi
 }
 
+# Preinstalled JDKs:
+ls -lA /usr/lib/jvm/
+
+
 case "$JDK" in
 5)
   install_jdk $JDK5_URL false
   ;;
-6 | 7)
-  ;;
-8)
+6 | 7 | 8)
   jdk_switcher /usr/lib/jvm/java-8-oracle
   ;;
-8-ea)
-  install_jdk $JDK8_EA_URL
-  ;;
 9)
-  install_jdk $JDK9_URL
+  jdk_switcher /usr/lib/jvm/java-9-oracle
   ;;
 10)
   install_jdk $JDK10_URL
@@ -69,7 +68,6 @@ esac
 export MAVEN_SKIP_RC=true
 
 # Build:
-# TODO(Godin): see https://github.com/jacoco/jacoco/issues/300 about "bytecode.version"
 case "$JDK" in
 5)
   if [[ ${TRAVIS_PULL_REQUEST} == 'false' && ${TRAVIS_BRANCH} == 'master' ]]
@@ -78,25 +76,14 @@ case "$JDK" in
     git fetch --unshallow
 
     # goal "deploy:deploy" used directly instead of "deploy" phase to avoid pollution of Maven repository by "install" phase
-    mvn -V -B -e -f org.jacoco.build verify sonar:sonar deploy:deploy -DdeployAtEnd -Djdk.version=1.5 --toolchains=./.travis/toolchains.xml --settings=./.travis/settings.xml -Dsonar.host.url=${SONARQUBE_URL} -Dsonar.login=${SONARQUBE_TOKEN}
+    mvn -V -B -e -f org.jacoco.build verify sonar:sonar deploy:deploy -DdeployAtEnd -Djdk.version=5 --toolchains=./.travis/toolchains.xml --settings=./.travis/settings.xml -Dsonar.host.url=${SONARQUBE_URL} -Dsonar.login=${SONARQUBE_TOKEN}
     python ./.travis/trigger-site-deployment.py
   else
-    mvn -V -B -e verify -Djdk.version=1.5 --toolchains=./.travis/toolchains.xml
+    mvn -V -B -e verify -Djdk.version=5 --toolchains=./.travis/toolchains.xml
   fi
   ;;
-6)
-  mvn -V -B -e verify -Djdk.version=1.6 -Dbytecode.version=1.6 --toolchains=./.travis/travis-toolchains.xml
-  ;;
-7)
-  mvn -V -B -e verify -Djdk.version=1.7 -Dbytecode.version=1.7 --toolchains=./.travis/travis-toolchains.xml
-  ;;
-8 | 8-ea)
-  mvn -V -B -e verify -Dbytecode.version=1.8 -Decj=${ECJ:-}
-  ;;
-9)
-  export MAVEN_OPTS="-Djavax.net.ssl.trustStore=/etc/ssl/certs/java/cacerts"
-  mvn -V -B -e verify -Dbytecode.version=1.9 \
-    -Dinvoker.mavenOpts="-Djavax.net.ssl.trustStore=/etc/ssl/certs/java/cacerts"
+6 | 7 | 8 | 9)
+  mvn -V -B -e verify -Djdk.version=${JDK} -Dbytecode.version=${JDK} -Decj=${ECJ:-} --toolchains=./.travis/travis-toolchains.xml
   ;;
 10)
   mvn -V -B -e verify -Dbytecode.version=10

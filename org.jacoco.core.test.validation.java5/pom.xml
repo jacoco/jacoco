@@ -14,36 +14,20 @@
 
   <parent>
     <groupId>org.jacoco</groupId>
-    <artifactId>org.jacoco.tests</artifactId>
+    <artifactId>org.jacoco.core.test.validation</artifactId>
     <version>0.8.2-SNAPSHOT</version>
-    <relativePath>../org.jacoco.tests</relativePath>
+    <relativePath>../org.jacoco.core.test.validation</relativePath>
   </parent>
 
-  <artifactId>org.jacoco.core.test</artifactId>
+  <artifactId>org.jacoco.core.test.validation.java5</artifactId>
 
-  <name>JaCoCo :: Test :: Core</name>
-
-  <properties>
-    <jacoco.includes>org.jacoco.core.*</jacoco.includes>
-  </properties>
+  <name>JaCoCo :: Test :: Core :: Validation Java 5</name>
 
   <dependencies>
     <dependency>
       <groupId>${project.groupId}</groupId>
-      <artifactId>org.jacoco.core</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.ow2.asm</groupId>
-      <artifactId>asm-analysis</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.ow2.asm</groupId>
-      <artifactId>asm-util</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>junit</groupId>
-      <artifactId>junit</artifactId>
+      <artifactId>org.jacoco.core.test</artifactId>
+      <version>${project.version}</version>
     </dependency>
   </dependencies>
-
 </project>

@@ -27,6 +27,7 @@
 
   <modules>
     <module>../org.jacoco.core.test</module>
+    <module>../org.jacoco.core.test.validation</module>
     <module>../org.jacoco.report.test</module>
     <module>../org.jacoco.agent.rt.test</module>
     <module>../org.jacoco.agent.test</module>

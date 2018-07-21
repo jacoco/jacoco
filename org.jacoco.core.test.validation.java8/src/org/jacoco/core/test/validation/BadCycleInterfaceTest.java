@@ -21,7 +21,7 @@ import org.junit.Test;
 public class BadCycleInterfaceTest extends ValidationTestBase {
 
 	public BadCycleInterfaceTest() throws Exception {
-		super("src-java8", BadCycleInterface.class);
+		super(BadCycleInterface.class);
 	}
 
 	@Test

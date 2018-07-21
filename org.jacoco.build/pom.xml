@@ -130,8 +130,9 @@
     <jacoco.home.url>http://www.jacoco.org/jacoco</jacoco.home.url>
     <copyright.years>${project.inceptionYear}, 2018</copyright.years>
 
-    <maven.compiler.source>1.5</maven.compiler.source>
-    <maven.compiler.target>1.5</maven.compiler.target>
+    <bytecode.version>1.5</bytecode.version>
+    <maven.compiler.source>${bytecode.version}</maven.compiler.source>
+    <maven.compiler.target>${bytecode.version}</maven.compiler.target>
 
     <jvm.args></jvm.args>
     <argLine>${jvm.args}</argLine>
@@ -674,7 +675,18 @@
   </build>
 
   <profiles>
-    <!-- This profile is used to launch tests with different JDK versions. -->
+    <profile>
+      <id>maven-jdk9</id>
+      <activation>
+        <jdk>[9,)</jdk>
+      </activation>
+      <properties>
+        <!-- http://openjdk.java.net/jeps/182 -->
+        <bytecode.version>6</bytecode.version>
+      </properties>
+    </profile>
+
+    <!-- This profile enables use of JDK from Maven Toolchains -->
     <profile>
       <id>integration-tests</id>
       <activation>
@@ -708,21 +720,17 @@
       </build>
     </profile>
 
-    <!-- This profile is used to launch tests with compilation into specific bytecode version. -->
+    <!--
+    Following profiles enable compilation into bytecode version 9
+    when requested "bytecode.version" greater than 9,
+    because this is maximum that can be processed by
+    maven-shade-plugin (https://issues.apache.org/jira/browse/MSHADE-289)
+    and maven-plugin-plugin (https://issues.apache.org/jira/browse/MPLUGIN-335),
+    This is overridden for tests.
+    -->
+
     <profile>
-      <id>bytecode</id>
-      <activation>
-        <property>
-          <name>bytecode.version</name>
-        </property>
-      </activation>
-      <properties>
-        <maven.compiler.source>${bytecode.version}</maven.compiler.source>
-        <maven.compiler.target>${bytecode.version}</maven.compiler.target>
-      </properties>
-    </profile>
-    <profile>
-      <id>java10-validation</id>
+      <id>java10-bytecode</id>
       <activation>
         <property>
           <name>bytecode.version</name>
@@ -730,19 +738,40 @@
         </property>
       </activation>
       <properties>
-        <!--
-        Compile into bytecode version 9 by default,
-        because bytecode version 10 can't be processed by
-        maven-shade-plugin (https://issues.apache.org/jira/browse/MSHADE-289)
-        and maven-plugin-plugin (https://issues.apache.org/jira/browse/MPLUGIN-335),
-        this is overridden for tests
-        -->
-        <maven.compiler.source>1.9</maven.compiler.source>
-        <maven.compiler.target>1.9</maven.compiler.target>
+        <maven.compiler.source>9</maven.compiler.source>
+        <maven.compiler.target>9</maven.compiler.target>
       </properties>
     </profile>
 
-    <!-- This profile is used for compilation with ECJ. -->
+    <profile>
+      <id>java11-bytecode</id>
+      <activation>
+        <property>
+          <name>bytecode.version</name>
+          <value>11</value>
+        </property>
+      </activation>
+      <properties>
+        <maven.compiler.source>9</maven.compiler.source>
+        <maven.compiler.target>9</maven.compiler.target>
+      </properties>
+    </profile>
+
+    <profile>
+      <id>java12-bytecode</id>
+      <activation>
+        <property>
+          <name>bytecode.version</name>
+          <value>12</value>
+        </property>
+      </activation>
+      <properties>
+        <maven.compiler.source>9</maven.compiler.source>
+        <maven.compiler.target>9</maven.compiler.target>
+      </properties>
+    </profile>
+
+    <!-- This profile enables use of ECJ -->
     <profile>
       <id>ecj</id>
       <activation>
@@ -758,6 +787,8 @@
             <version>3.6.0</version>
             <configuration>
               <compilerId>eclipse</compilerId>
+              <source>1.8</source>
+              <target>1.8</target>
             </configuration>
             <dependencies>
               <dependency>
@@ -776,12 +807,16 @@
       </build>
     </profile>
 
+    <!--
+    Profiles for different JDK versions:
+    -->
+
     <profile>
-      <id>jdk16</id>
+      <id>jdk6</id>
       <activation>
         <property>
           <name>jdk.version</name>
-          <value>1.6</value>
+          <value>6</value>
         </property>
       </activation>
       <properties>
@@ -790,11 +825,11 @@
     </profile>
 
     <profile>
-      <id>jdk17</id>
+      <id>jdk7</id>
       <activation>
         <property>
           <name>jdk.version</name>
-          <value>1.7</value>
+          <value>7</value>
         </property>
       </activation>
       <properties>
@@ -803,11 +838,11 @@
     </profile>
 
     <profile>
-      <id>jdk18</id>
+      <id>jdk8</id>
       <activation>
         <property>
           <name>jdk.version</name>
-          <value>1.8</value>
+          <value>8</value>
         </property>
       </activation>
       <properties>
@@ -820,14 +855,54 @@
       <activation>
         <property>
           <name>jdk.version</name>
-          <value>1.9</value>
+          <value>9</value>
         </property>
       </activation>
       <properties>
-        <jvm.args>-XX:-FailOverToOldVerifier -Xverify:all</jvm.args>
+        <bytecode.version>6</bytecode.version>
       </properties>
     </profile>
 
+    <profile>
+      <id>jdk10</id>
+      <activation>
+        <property>
+          <name>jdk.version</name>
+          <value>10</value>
+        </property>
+      </activation>
+      <properties>
+        <bytecode.version>6</bytecode.version>
+      </properties>
+    </profile>
+
+    <profile>
+      <id>jdk11</id>
+      <activation>
+        <property>
+          <name>jdk.version</name>
+          <value>11</value>
+        </property>
+      </activation>
+      <properties>
+        <bytecode.version>6</bytecode.version>
+      </properties>
+    </profile>
+
+    <profile>
+      <id>jdk12</id>
+      <activation>
+        <property>
+          <name>jdk.version</name>
+          <value>12</value>
+        </property>
+      </activation>
+      <properties>
+        <bytecode.version>6</bytecode.version>
+      </properties>
+    </profile>
+
+    <!-- This profile enables generation of JARs with sources and javadocs -->
     <profile>
       <id>sources</id>
       <activation>

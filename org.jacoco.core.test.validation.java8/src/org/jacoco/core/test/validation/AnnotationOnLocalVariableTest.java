@@ -6,29 +6,30 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *
  * Contributors:
- *    Marc R. Hoffmann - initial API and implementation
- *    
+ *    Evgeny Mandrikov - initial API and implementation
+ *
  *******************************************************************************/
 package org.jacoco.core.test.validation;
 
 import org.jacoco.core.analysis.ICounter;
-import org.jacoco.core.test.validation.targets.InterfaceDefaultMethodsTarget;
+import org.jacoco.core.test.validation.targets.AnnotationOnLocalVariableTarget;
 import org.junit.Test;
 
 /**
- * Tests of static initializer and default methods in interfaces.
+ * Test of ASM bug
+ * <a href="https://gitlab.ow2.org/asm/asm/issues/317815">#317815</a>
  */
-public class InterfaceDefaultMethodsTest extends ValidationTestBase {
+public class AnnotationOnLocalVariableTest extends ValidationTestBase {
 
-	public InterfaceDefaultMethodsTest() {
-		super("src-java8", InterfaceDefaultMethodsTarget.class);
+	public AnnotationOnLocalVariableTest() {
+		super(AnnotationOnLocalVariableTarget.class);
 	}
 
 	@Test
 	public void testCoverageResult() {
-		assertLine("clinit", ICounter.FULLY_COVERED);
-		assertLine("m1", ICounter.FULLY_COVERED);
-		assertLine("m2", ICounter.NOT_COVERED);
+
+		assertLine("var", ICounter.FULLY_COVERED);
+
 	}
 
 }

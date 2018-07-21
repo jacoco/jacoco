@@ -6,6 +6,21 @@
   <link rel="stylesheet" href="resources/doc.css" charset="UTF-8" type="text/css" />
   <link rel="stylesheet" href="../coverage/jacoco-resources/prettify.css" charset="UTF-8" type="text/css" />
   <link rel="shortcut icon" href="resources/report.gif" type="image/gif" />
+  <style>
+    table, th, td {
+      border-collapse: collapse;
+      padding: 3px;
+    }
+    table tbody tr td:nth-child(2) {
+      border-right: #b0b0b0 3px solid;
+    }
+    th {
+      background-color:#e0e0e0;
+    }
+    table tbody td:hover {
+      background: #f0f0d0;
+    }
+  </style>
   <script type="text/javascript" src="../coverage/jacoco-resources/prettify.js"></script>
   <title>JaCoCo - Build</title>
 </head>
@@ -24,9 +39,9 @@
   The JaCoCo build is based on <a href="http://maven.apache.org/">Maven</a> and
   can be locally executed on every machine with a proper
   <a href="environment.html">environment setup</a>. In particular you need at
-  least <a href="http://maven.apache.org/">Maven 3.3.9</a> installation.
-  Developers are encouraged to run the build before every commit to ensure
-  consistency of the source tree.
+  least <a href="http://maven.apache.org/">Maven 3.3.9</a> and JDK 8
+  installations. Developers are encouraged to run the build before every commit
+  to ensure consistency of the source tree.
 </p>
 
 
@@ -63,92 +78,62 @@
 </pre>
 
 
-<h2>Testing with different JDKs</h2>
+<h2>Compilation and testing with different JDKs</h2>
 
 <p>
-  Target Java version for JaCoCo builds is 1.5, however for verification
-  purposes you can execute tests using other versions. In order to do so, first
-  you should create file <code>toolchains.xml</code> in <code>~/.m2/</code>
-  directory. Here is an example of such file. For more information see
+  By default for compilation and execution of tests will be used JDK that runs
+  Maven. Alternatively you can use JDK from
   <a href="http://maven.apache.org/guides/mini/guide-using-toolchains.html">Maven
-  Guide to Using Toolchains</a>. 
+  Toolchains</a> by setting property <code>jdk.version</code>.
 </p>
 
-<pre class="source lang-xml linenums">
-&lt;?xml version="1.0" encoding="UTF8"?&gt;
-&lt;toolchains&gt;
-  &lt;toolchain&gt;
-    &lt;type&gt;jdk&lt;/type&gt;
-    &lt;provides&gt;
-      &lt;id&gt;java15&lt;/id&gt;
-      &lt;version&gt;1.5&lt;/version&gt;
-      &lt;vendor&gt;sun&lt;/vendor&gt;
-    &lt;/provides&gt;
-    &lt;configuration&gt;
-      &lt;jdkHome&gt;/usr/lib/jvm/sun-jdk-1.5&lt;/jdkHome&gt;
-    &lt;/configuration&gt;
-  &lt;/toolchain&gt;
-  &lt;toolchain&gt;
-    &lt;type&gt;jdk&lt;/type&gt;
-    &lt;provides&gt;
-      &lt;id&gt;java16&lt;/id&gt;
-      &lt;version&gt;1.6&lt;/version&gt;
-      &lt;vendor&gt;sun&lt;/vendor&gt;
-    &lt;/provides&gt;
-    &lt;configuration&gt;
-      &lt;jdkHome&gt;/usr/lib/jvm/sun-jdk-1.6&lt;/jdkHome&gt;
-    &lt;/configuration&gt;
-  &lt;/toolchain&gt;
-  &lt;toolchain&gt;
-    &lt;type&gt;jdk&lt;/type&gt;
-    &lt;provides&gt;
-      &lt;id&gt;java17&lt;/id&gt;
-      &lt;version&gt;1.7&lt;/version&gt;
-      &lt;vendor&gt;sun&lt;/vendor&gt;
-    &lt;/provides&gt;
-    &lt;configuration&gt;
-      &lt;jdkHome&gt;/usr/lib/jvm/sun-jdk-1.7&lt;/jdkHome&gt;
-    &lt;/configuration&gt;
-  &lt;/toolchain&gt;
-  &lt;toolchain&gt;
-    &lt;type&gt;jdk&lt;/type&gt;
-    &lt;provides&gt;
-      &lt;id&gt;java18&lt;/id&gt;
-      &lt;version&gt;1.8&lt;/version&gt;
-      &lt;vendor&gt;sun&lt;/vendor&gt;
-    &lt;/provides&gt;
-    &lt;configuration&gt;
-      &lt;jdkHome&gt;/usr/lib/jvm/sun-jdk-1.8&lt;/jdkHome&gt;
-    &lt;/configuration&gt;
-  &lt;/toolchain&gt;
-  &lt;toolchain&gt;
-    &lt;type&gt;jdk&lt;/type&gt;
-    &lt;provides&gt;
-      &lt;id&gt;java19&lt;/id&gt;
-      &lt;version&gt;1.9&lt;/version&gt;
-      &lt;vendor&gt;sun&lt;/vendor&gt;
-    &lt;/provides&gt;
-    &lt;configuration&gt;
-      &lt;jdkHome&gt;/usr/lib/jvm/sun-jdk-1.9&lt;/jdkHome&gt;
-    &lt;/configuration&gt;
-  &lt;/toolchain&gt;
-&lt;/toolchains&gt;
-</pre>
+<p>
+  Following table shows how modules will be compiled depending on version of JDK:
+</p>
+
+<table>
+  <thead>
+  <tr>
+    <th></th>
+    <th>JDK 5</th>
+    <th>JDK 6</th>
+    <th>JDK 7</th>
+    <th>JDK 8</th>
+    <th>JDK 9</th>
+    <th>JDK 10</th>
+  </tr>
+  </thead>
+  <tbody>
+  <tr>
+    <th>org.jacoco.core.test.validation.java7</th>
+    <td colspan="2">excluded from build</td>
+    <td colspan="4">compiled into bytecode version 51 (Java 7)</td>
+  </tr>
+  <tr>
+    <th>org.jacoco.core.test.validation.java8</th>
+    <td colspan="3">excluded from build</td>
+    <td colspan="3">compiled into bytecode version 52 (Java 8)</td>
+  </tr>
+  <tr>
+    <th>all other modules</th>
+    <td colspan="4">compiled into bytecode version 49 (Java 5)</td>
+    <td colspan="2">compiled into bytecode version 50 (Java 6)</td>
+  </tr>
+  </tbody>
+</table>
 
 <p>
-  Now you should be able to execute maven build with specified version of JDK:
+  Alternatively you can specify bytecode version for all modules using property
+  <code>bytecode.version</code>.
+</p>
+
+<p>
+  For example to use JDK 10 from Maven Toolchains and compile all modules
+  into bytecode version 53 (Java 9):
 </p>
 
 <pre>
-  mvn clean install -Djdk.version=<i>version</i>
-</pre>
-
-<p>
-  Location of <code>toolchains.xml</code> can be set via an option:
-</p>
-
-<pre>
-  mvn --toolchains <i>path</i> clean install -Djdk.version=<i>version</i>
+  mvn clean install -Djdk.version=10 -Dbytecode.version=9
 </pre>
 
 <p>
@@ -160,20 +145,17 @@
 </pre>
 
 <p>
-  In addition JaCoCo can be compiled for higher class file versions than 1.5
-  specifying the property <code>bytecode.version</code>. Note that in this case
-  the version of the JVM running Maven must be at least the version of the
-  specified bytecode version as this JVM is also running the tests. Combining
-  these options JaCoCo is regularly tested with the following setups:
+  Combining these options JaCoCo is regularly tested with the following setups:
 </p>
 
 <ul>
-  <li>Maven with 1.5 JDK: <code>mvn clean install -Djdk.version=1.5 -Dbytecode.version=1.5</code></li>
-  <li>Maven with 1.6 JDK: <code>mvn clean install -Djdk.version=1.6 -Dbytecode.version=1.6</code></li>
-  <li>Maven with 1.7 JDK: <code>mvn clean install -Djdk.version=1.7 -Dbytecode.version=1.7</code></li>
-  <li>Maven with 1.8 JDK: <code>mvn clean install -Djdk.version=1.8 -Dbytecode.version=1.8</code></li>
-  <li>Maven with 1.8 JDK: <code>mvn clean install -Djdk.version=1.8 -Dbytecode.version=1.8 -Decj</code></li>
-  <li>Maven with 1.9 JDK: <code>mvn clean install -Djdk.version=1.9 -Dbytecode.version=1.9</code></li>
+  <li><code>mvn clean install -Djdk.version=5 -Dbytecode.version=5</code></li>
+  <li><code>mvn clean install -Djdk.version=6 -Dbytecode.version=6</code></li>
+  <li><code>mvn clean install -Djdk.version=7 -Dbytecode.version=7</code></li>
+  <li><code>mvn clean install -Djdk.version=8 -Dbytecode.version=8</code></li>
+  <li><code>mvn clean install -Djdk.version=8 -Dbytecode.version=8 -Decj</code></li>
+  <li><code>mvn clean install -Djdk.version=9 -Dbytecode.version=9</code></li>
+  <li><code>mvn clean install -Djdk.version=10 -Dbytecode.version=10</code></li>
 </ul>
 
 
