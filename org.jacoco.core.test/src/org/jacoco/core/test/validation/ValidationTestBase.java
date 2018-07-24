@@ -14,12 +14,14 @@ package org.jacoco.core.test.validation;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 
+import java.io.FileReader;
 import java.io.IOException;
 import java.lang.reflect.Method;
 import java.util.Arrays;
 
 import org.jacoco.core.analysis.Analyzer;
 import org.jacoco.core.analysis.CoverageBuilder;
+import org.jacoco.core.analysis.IClassCoverage;
 import org.jacoco.core.analysis.ICounter;
 import org.jacoco.core.analysis.ILine;
 import org.jacoco.core.analysis.ISourceFileCoverage;
@@ -67,7 +69,6 @@ public abstract class ValidationTestBase {
 	public void setup() throws Exception {
 		final ExecutionDataStore store = execute();
 		analyze(store);
-		source = Source.getSourceFor("src", target);
 	}
 
 	private ExecutionDataStore execute() throws Exception {
@@ -88,7 +89,11 @@ public abstract class ValidationTestBase {
 			analyze(analyzer, data);
 		}
 
-		String srcName = target.getName().replace('.', '/') + ".java";
+		final String srcName = findSourceFileName(builder,
+				target.getName().replace('.', '/'));
+
+		source = new Source(new FileReader("src/" + srcName));
+
 		for (ISourceFileCoverage file : builder.getSourceFiles()) {
 			if (srcName.equals(file.getPackageName() + "/" + file.getName())) {
 				sourceCoverage = file;
@@ -103,6 +108,21 @@ public abstract class ValidationTestBase {
 		final byte[] bytes = TargetLoader.getClassDataAsBytes(
 				target.getClassLoader(), data.getName());
 		analyzer.analyzeClass(bytes, data.getName());
+	}
+
+	private static String findSourceFileName(
+			final CoverageBuilder coverageBuilder, final String className) {
+		for (IClassCoverage classCoverage : coverageBuilder.getClasses()) {
+			if (className.equals(classCoverage.getName())) {
+				return classCoverage.getPackageName() + '/'
+						+ classCoverage.getSourceFileName();
+			}
+		}
+		throw new AssertionError();
+	}
+
+	protected final Source getSource() {
+		return source;
 	}
 
 	protected void assertMethodCount(final int expectedTotal) {

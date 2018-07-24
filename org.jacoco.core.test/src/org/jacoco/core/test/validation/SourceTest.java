@@ -12,7 +12,6 @@
 package org.jacoco.core.test.validation;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 
 import java.io.IOException;
 import java.io.StringReader;
@@ -74,14 +73,6 @@ public class SourceTest {
 	public void testDuplicateTag() throws IOException {
 		String src = "a\nb$line-tag$\nc\nd\ne$line-tag$\nf";
 		new Source(new StringReader(src));
-	}
-
-	@Test
-	public void testGetSourceFor() throws IOException {
-		final Source s = Source.getSourceFor("src", SourceTest.class);
-		// Here we are. $line-testGetSourceFor$
-		final String l = s.getLine(s.getLineNumber("testGetSourceFor"));
-		assertTrue(l, l.contains("Here we are."));
 	}
 
 }
