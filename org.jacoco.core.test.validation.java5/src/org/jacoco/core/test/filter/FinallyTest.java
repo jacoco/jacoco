@@ -21,7 +21,6 @@ import org.jacoco.core.analysis.ICounter;
 import org.jacoco.core.internal.BytecodeVersion;
 import org.jacoco.core.test.TargetLoader;
 import org.jacoco.core.test.filter.targets.Finally;
-import org.jacoco.core.test.validation.Source;
 import org.jacoco.core.test.validation.ValidationTestBase;
 import org.junit.Test;
 import org.objectweb.asm.ClassReader;
@@ -180,8 +179,6 @@ public class FinallyTest extends ValidationTestBase {
 	 */
 	@Test
 	public void gotos() throws IOException {
-		final Source source = Source.getSourceFor("src", Finally.class);
-
 		byte[] b = TargetLoader.getClassDataAsBytes(Finally.class);
 		b = BytecodeVersion.downgradeIfNeeded(BytecodeVersion.get(b), b);
 
@@ -200,7 +197,7 @@ public class FinallyTest extends ValidationTestBase {
 					lineNumber = ((LineNumberNode) i).line;
 				}
 				if (Opcodes.GOTO == i.getOpcode()) {
-					final String line = source.getLine(lineNumber);
+					final String line = getSource().getLine(lineNumber);
 					if (line.indexOf('$') < 0) {
 						throw new AssertionError(
 								"No tag at line " + lineNumber);
