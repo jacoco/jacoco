@@ -22,6 +22,24 @@ import java.util.regex.Pattern;
 
 /**
  * Filters synthetic methods created by the AspectJ-Compiler (ajc)
+ * <p>
+ * Every class containing an advice, will get the synthetic methods {@code aspectOf(..)},
+ * {@code hasAspect(..)}. If the advice is a singleton, the class will also get the
+ * {@code ajc$postClinit()} method which will be called from the static initializer
+ * ({@code <clinit>()}).
+ * This filter ignores these 3 method and the call.
+ * <p>
+ * Every class containing advised methods, where the advice takes a JoinPoint as parameter,
+ * will contain the {@code ajc$preClinit()} method which will be called from the static
+ * initializer ({@code <clinit>()}).
+ * This filter ignores this method, and its call.
+ * <p>
+ * If the static initializer ({@code <clinit>()}) only contains the calls to
+ * {@code ajc$preClinit()} and/or {@code ajc$postClinit()}, its completely ignored.
+ * <p>
+ * For every JoinPoint which is advised by an around advice, an {@code $AjcClosure}-class
+ * is generated (unless the around advice is inlined).
+ * This filter ignored all methods ins such classes.
  */
 public class AspectjFilter implements IFilter {
 
@@ -151,7 +169,7 @@ public class AspectjFilter implements IFilter {
     }
 
     /**
-     * Checks if the given method has the {@literal org.aspectj.weaver.AjSynthetic} attribute.
+     * Checks if the given method has the {@code org.aspectj.weaver.AjSynthetic} attribute.
      *
      * @return true, if the attribute is present.
      */
