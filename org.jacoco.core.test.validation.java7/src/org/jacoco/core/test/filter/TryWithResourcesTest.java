@@ -33,7 +33,11 @@ public class TryWithResourcesTest extends ValidationTestBase {
 	public void test() {
 		assertLine("test.before", ICounter.FULLY_COVERED);
 		// without filter next line covered partly:
-		assertLine("test.try", ICounter.FULLY_COVERED);
+		if (!isJDKCompiler || JAVA_VERSION.isBefore("11")) {
+			assertLine("test.try", ICounter.FULLY_COVERED);
+		} else {
+			assertLine("test.try", ICounter.EMPTY);
+		}
 		assertLine("test.open1", ICounter.FULLY_COVERED);
 		assertLine("test.open2", ICounter.FULLY_COVERED);
 		assertLine("test.open3", ICounter.FULLY_COVERED);
@@ -51,7 +55,11 @@ public class TryWithResourcesTest extends ValidationTestBase {
 	public void test2() {
 		assertLine("test2.before", ICounter.FULLY_COVERED);
 		// without filter next line covered partly:
-		assertLine("test2.try", ICounter.FULLY_COVERED);
+		if (!isJDKCompiler || JAVA_VERSION.isBefore("11")) {
+			assertLine("test2.try", ICounter.FULLY_COVERED);
+		} else {
+			assertLine("test2.try", ICounter.EMPTY);
+		}
 		assertLine("test2.open1", ICounter.FULLY_COVERED);
 		assertLine("test2.open2", ICounter.FULLY_COVERED);
 		assertLine("test2.open3", ICounter.FULLY_COVERED);
@@ -69,7 +77,11 @@ public class TryWithResourcesTest extends ValidationTestBase {
 	@Test
 	public void returnInBody() {
 		// without filter next line covered partly:
-		assertLine("returnInBody.try", ICounter.FULLY_COVERED);
+		if (!isJDKCompiler || JAVA_VERSION.isBefore("11")) {
+			assertLine("returnInBody.try", ICounter.FULLY_COVERED);
+		} else {
+			assertLine("returnInBody.try", ICounter.EMPTY);
+		}
 		assertLine("returnInBody.open", ICounter.FULLY_COVERED);
 
 		// without filter next line has branches:
@@ -94,18 +106,30 @@ public class TryWithResourcesTest extends ValidationTestBase {
 	@Test
 	public void nested() {
 		// without filter next line covered partly:
-		assertLine("nested.try1", ICounter.FULLY_COVERED);
+		if (!isJDKCompiler || JAVA_VERSION.isBefore("11")) {
+			assertLine("nested.try1", ICounter.FULLY_COVERED);
+		} else {
+			assertLine("nested.try1", ICounter.EMPTY);
+		}
 		assertLine("nested.open1", ICounter.FULLY_COVERED);
 		assertLine("nested.catch1", ICounter.NOT_COVERED);
 
 		// without filter next line covered partly:
-		assertLine("nested.try2", ICounter.FULLY_COVERED);
+		if (!isJDKCompiler || JAVA_VERSION.isBefore("11")) {
+			assertLine("nested.try2", ICounter.FULLY_COVERED);
+		} else {
+			assertLine("nested.try2", ICounter.EMPTY);
+		}
 		assertLine("nested.body", ICounter.FULLY_COVERED);
 		assertLine("nested.catch2", ICounter.NOT_COVERED);
 		assertLine("nested.finally2", ICounter.FULLY_COVERED);
 
 		// next lines not covered on exceptional path:
-		assertLine("nested.try3", ICounter.FULLY_COVERED, 0, 0);
+		if (!isJDKCompiler || JAVA_VERSION.isBefore("11")) {
+			assertLine("nested.try3", ICounter.FULLY_COVERED);
+		} else {
+			assertLine("nested.try3", ICounter.EMPTY);
+		}
 		assertLine("nested.open3", ICounter.FULLY_COVERED, 0, 0);
 		assertLine("nested.body3", ICounter.FULLY_COVERED, 0, 0);
 		assertLine("nested.catch3", ICounter.NOT_COVERED);
@@ -123,7 +147,11 @@ public class TryWithResourcesTest extends ValidationTestBase {
 	@Test
 	public void returnInCatch() {
 		// without filter next line covered partly:
-		assertLine("returnInCatch.try1", ICounter.FULLY_COVERED);
+		if (!isJDKCompiler || JAVA_VERSION.isBefore("11")) {
+			assertLine("returnInCatch.try1", ICounter.FULLY_COVERED);
+		} else {
+			assertLine("returnInCatch.try1", ICounter.EMPTY);
+		}
 		assertLine("returnInCatch.open", ICounter.FULLY_COVERED);
 		assertLine("returnInCatch.finally1", ICounter.PARTLY_COVERED, 1, 1);
 		// without filter next line has branches:
@@ -152,7 +180,11 @@ public class TryWithResourcesTest extends ValidationTestBase {
 	 */
 	@Test
 	public void empty() {
-		assertLine("empty.try", ICounter.FULLY_COVERED, 0, 0);
+		if (!isJDKCompiler || JAVA_VERSION.isBefore("11")) {
+			assertLine("empty.try", ICounter.FULLY_COVERED);
+		} else {
+			assertLine("empty.try", ICounter.EMPTY);
+		}
 		assertLine("empty.open", ICounter.FULLY_COVERED);
 		// empty when EJC:
 		if (isJDKCompiler) {
@@ -172,7 +204,11 @@ public class TryWithResourcesTest extends ValidationTestBase {
 	public void throwInBody() {
 		// not filtered
 		assertLine("throwInBody.try", ICounter.NOT_COVERED);
-		assertLine("throwInBody.close", ICounter.NOT_COVERED);
+		if (!isJDKCompiler || JAVA_VERSION.isBefore("11")) {
+			assertLine("throwInBody.close", ICounter.NOT_COVERED);
+		} else {
+			assertLine("throwInBody.close", ICounter.EMPTY);
+		}
 	}
 
 }
