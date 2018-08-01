@@ -18,7 +18,8 @@ import org.objectweb.asm.tree.MethodNode;
 import org.objectweb.asm.tree.TryCatchBlockNode;
 
 /**
- * Filters code that javac generates for try-with-resources statement.
+ * Filters code which is generated for try-with-resources statement by javac
+ * versions from 7 to 10.
  */
 public final class TryWithResourcesJavacFilter implements IFilter {
 
