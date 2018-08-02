@@ -90,17 +90,18 @@ public class StatementParser {
 		final String name = expect(StreamTokenizer.TT_WORD).sval;
 		final List<Object> args = new ArrayList<Object>();
 		expect('(');
-		for (boolean more = false; !accept(')'); more = true) {
-			if (more) {
+		if (!accept(')')) {
+			args.add(argument());
+			while (!accept(')')) {
 				expect(',');
+				args.add(argument());
 			}
-			args.add(arg());
 		}
 		expect(';');
 		visitor.visitInvocation(ctx, name, args.toArray());
 	}
 
-	private Object arg() throws IOException {
+	private Object argument() throws IOException {
 		if (accept(StreamTokenizer.TT_NUMBER)) {
 			return Integer.valueOf((int) tokenizer.nval);
 		}
@@ -126,7 +127,7 @@ public class StatementParser {
 	}
 
 	private IOException syntaxError() {
-		return new IOException("Invalid syntax in " + ctx);
+		return new IOException("Invalid syntax at " + ctx);
 	}
 
 }

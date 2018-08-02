@@ -131,7 +131,7 @@ public class StatementParserTest {
 	public void should_give_context_info_when_parsing_fails()
 			throws IOException {
 		exception.expect(IOException.class);
-		exception.expectMessage("Invalid syntax in Foo.java:32");
+		exception.expectMessage("Invalid syntax at Foo.java:32");
 		StatementParser.parse("bad;", visitor, "Foo.java:32");
 	}
 
