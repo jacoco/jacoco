@@ -83,8 +83,7 @@ public class StatementParser {
 	}
 
 	private void parse() throws IOException {
-		tokenizer.nextToken();
-		while (tokenizer.ttype != StreamTokenizer.TT_EOF) {
+		while (!accept(StreamTokenizer.TT_EOF)) {
 			invocation();
 		}
 	}
@@ -106,41 +105,35 @@ public class StatementParser {
 	}
 
 	private void arg(List<Object> result) throws IOException {
-		if (tokenizer.ttype == StreamTokenizer.TT_NUMBER) {
+		if (accept(StreamTokenizer.TT_NUMBER)) {
 			result.add(Integer.valueOf((int) tokenizer.nval));
-			tokenizer.nextToken();
 			return;
 		}
-		if (tokenizer.ttype == '"') {
+		if (accept('"')) {
 			result.add(tokenizer.sval);
-			tokenizer.nextToken();
 			return;
 		}
 		syntaxError();
 	}
 
 	private boolean accept(final int type) throws IOException {
-		if (tokenizer.ttype == type) {
-			tokenizer.nextToken();
+		if (tokenizer.nextToken() == type) {
 			return true;
+		} else {
+			tokenizer.pushBack();
+			return false;
 		}
-		return false;
-	}
-
-	private void expect(final int type) throws IOException {
-		if (tokenizer.ttype != type) {
-			syntaxError();
-		}
-		tokenizer.nextToken();
 	}
 
 	private String expectWord() throws IOException {
-		if (tokenizer.ttype != StreamTokenizer.TT_WORD) {
+		expect(StreamTokenizer.TT_WORD);
+		return tokenizer.sval;
+	}
+
+	private void expect(final int type) throws IOException {
+		if (tokenizer.nextToken() != type) {
 			syntaxError();
 		}
-		String value = tokenizer.sval;
-		tokenizer.nextToken();
-		return value;
 	}
 
 	private void syntaxError() throws IOException {
