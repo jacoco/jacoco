@@ -16,8 +16,12 @@ import static org.junit.Assert.fail;
 
 import java.io.FileReader;
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Arrays;
+import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.jacoco.core.analysis.Analyzer;
 import org.jacoco.core.analysis.CoverageBuilder;
@@ -32,12 +36,16 @@ import org.jacoco.core.test.InstrumentingLoader;
 import org.jacoco.core.test.TargetLoader;
 import org.jacoco.core.test.validation.targets.Stubs;
 import org.junit.Before;
+import org.junit.Test;
 
 /**
  * Base class for validation tests. It executes the given class under code
  * coverage and provides the coverage results for validation.
  */
 public abstract class ValidationTestBase {
+
+	private static final Pattern INLINE_ASSERTIONS_PATTERN = Pattern
+			.compile("// >(.*)");
 
 	protected static final boolean isJDKCompiler = Compiler.DETECT.isJDK();
 
@@ -69,6 +77,20 @@ public abstract class ValidationTestBase {
 	public void setup() throws Exception {
 		final ExecutionDataStore store = execute();
 		analyze(store);
+	}
+
+	@Test
+	public void execute_inline_assertions() throws IOException {
+		final List<String> lines = source.getLines();
+		for (int idx = 0; idx < lines.size(); idx++) {
+			final String line = lines.get(idx);
+			final Matcher matcher = INLINE_ASSERTIONS_PATTERN.matcher(line);
+			if (matcher.find()) {
+				final int nr = idx + 1;
+				StatementParser.parse(matcher.group(1), new MethodDelegate(nr),
+						"line " + (nr));
+			}
+		}
 	}
 
 	private ExecutionDataStore execute() throws Exception {
@@ -105,8 +127,8 @@ public abstract class ValidationTestBase {
 
 	private void analyze(final Analyzer analyzer, final ExecutionData data)
 			throws IOException {
-		final byte[] bytes = TargetLoader.getClassDataAsBytes(
-				target.getClassLoader(), data.getName());
+		final byte[] bytes = TargetLoader
+				.getClassDataAsBytes(target.getClassLoader(), data.getName());
 		analyzer.analyzeClass(bytes, data.getName());
 	}
 
@@ -157,10 +179,96 @@ public abstract class ValidationTestBase {
 				line.getBranchCounter());
 	}
 
+	public void assertCoverage(final int nr, final String insnStatus,
+			final int missedBranches, final int coveredBranches) {
+		final ILine line = sourceCoverage.getLine(nr);
+
+		String msg = String.format("Instructions in line %s: %s",
+				Integer.valueOf(nr), source.getLine(nr));
+		final int actualStatus = line.getInstructionCounter().getStatus();
+		assertEquals(msg, insnStatus, STATUS_NAME[actualStatus]);
+
+		msg = String.format("Branches in line %s: %s", Integer.valueOf(nr),
+				source.getLine(nr));
+		assertEquals(msg,
+				CounterImpl.getInstance(missedBranches, coveredBranches),
+				line.getBranchCounter());
+	}
+
+	public void assertFullyCovered(int nr, final int missedBranches,
+			final int coveredBranches) {
+		assertCoverage(nr, "FULLY_COVERED", missedBranches, coveredBranches);
+	}
+
+	public void assertFullyCovered(int nr) {
+		assertFullyCovered(nr, 0, 0);
+	}
+
+	public void assertPartlyCovered(int nr, final int missedBranches,
+			final int coveredBranches) {
+		assertCoverage(nr, "PARTLY_COVERED", missedBranches, coveredBranches);
+	}
+
+	public void assertPartlyCovered(int nr) {
+		assertPartlyCovered(nr, 0, 0);
+	}
+
+	public void assertNotCovered(int nr) {
+		assertCoverage(nr, "NOT_COVERED", 0, 0);
+	}
+
+	public void assertEmpty(int nr) {
+		assertCoverage(nr, "EMPTY", 0, 0);
+	}
+
 	protected void assertLogEvents(String... events) throws Exception {
-		final Method getter = Class.forName(Stubs.class.getName(), false,
-				loader).getMethod("getLogEvents");
+		final Method getter = Class
+				.forName(Stubs.class.getName(), false, loader)
+				.getMethod("getLogEvents");
 		assertEquals("Log events", Arrays.asList(events), getter.invoke(null));
+	}
+
+	private class MethodDelegate implements StatementParser.IStatementVisitor {
+
+		private final int linenr;
+
+		MethodDelegate(int linenr) {
+			this.linenr = linenr;
+		}
+
+		public void visitInvocation(String ctx, String name, Object... args) {
+			final Object[] extArgs = new Object[args.length + 1];
+			extArgs[0] = Integer.valueOf(linenr);
+			System.arraycopy(args, 0, extArgs, 1, args.length);
+			final Object target = ValidationTestBase.this;
+			try {
+				target.getClass().getMethod(name, getTypes(extArgs))
+						.invoke(target, extArgs);
+			} catch (InvocationTargetException e) {
+				Throwable te = e.getTargetException();
+				if (te instanceof AssertionError) {
+					throw (AssertionError) te;
+				}
+				throw new RuntimeException(
+						"Error wile processing assertions in " + ctx, te);
+			} catch (Exception e) {
+				throw new RuntimeException(
+						"Error wile processing assertions in " + ctx, e);
+			}
+		}
+
+		private Class<?>[] getTypes(Object[] instances) {
+			final Class<?>[] classes = new Class[instances.length];
+			for (int i = 0; i < instances.length; i++) {
+				Class<? extends Object> c = instances[i].getClass();
+				if (c == Integer.class) {
+					c = Integer.TYPE;
+				}
+				classes[i] = c;
+			}
+			return classes;
+		}
+
 	}
 
 }
