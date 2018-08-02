@@ -71,15 +71,13 @@ public class StatementParser {
 		this.visitor = visitor;
 		this.ctx = ctx;
 		tokenizer = new StreamTokenizer(new StringReader(source));
+		tokenizer.resetSyntax();
 		tokenizer.whitespaceChars(' ', ' ');
 		tokenizer.whitespaceChars('\t', '\t');
-		tokenizer.ordinaryChar('(');
-		tokenizer.ordinaryChar(')');
-		tokenizer.ordinaryChar(',');
-		tokenizer.ordinaryChar(';');
 		tokenizer.wordChars('a', 'z');
 		tokenizer.wordChars('A', 'Z');
 		tokenizer.quoteChar('"');
+		tokenizer.parseNumbers();
 	}
 
 	private void parse() throws IOException {
@@ -92,13 +90,11 @@ public class StatementParser {
 		final String name = expect(StreamTokenizer.TT_WORD).sval;
 		final List<Object> args = new ArrayList<Object>();
 		expect('(');
-		boolean more = false;
-		while (!accept(')')) {
+		for (boolean more = false; !accept(')'); more = true) {
 			if (more) {
 				expect(',');
 			}
 			args.add(arg());
-			more = true;
 		}
 		expect(';');
 		visitor.visitInvocation(ctx, name, args.toArray());
