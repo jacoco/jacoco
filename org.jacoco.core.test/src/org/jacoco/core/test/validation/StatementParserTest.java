@@ -110,9 +110,15 @@ public class StatementParserTest {
 	}
 
 	@Test
-	public void should_fail_when_argument_is_missing() throws IOException {
+	public void should_fail_when_argument1_is_missing() throws IOException {
 		exception.expect(IOException.class);
-		StatementParser.parse("bad(3,);", visitor, "Foo.java");
+		StatementParser.parse("bad(1,);", visitor, "Foo.java");
+	}
+
+	@Test
+	public void should_fail_when_argument2_is_missing() throws IOException {
+		exception.expect(IOException.class);
+		StatementParser.parse("bad(,2);", visitor, "Foo.java");
 	}
 
 	@Test

@@ -89,7 +89,7 @@ public class StatementParser {
 	}
 
 	private void invocation() throws IOException {
-		final String name = expectWord();
+		final String name = expect(StreamTokenizer.TT_WORD).sval;
 		final List<Object> args = new ArrayList<Object>();
 		expect('(');
 		boolean more = false;
@@ -97,47 +97,40 @@ public class StatementParser {
 			if (more) {
 				expect(',');
 			}
-			arg(args);
+			args.add(arg());
 			more = true;
 		}
 		expect(';');
 		visitor.visitInvocation(ctx, name, args.toArray());
 	}
 
-	private void arg(List<Object> result) throws IOException {
+	private Object arg() throws IOException {
 		if (accept(StreamTokenizer.TT_NUMBER)) {
-			result.add(Integer.valueOf((int) tokenizer.nval));
-			return;
+			return Integer.valueOf((int) tokenizer.nval);
 		}
 		if (accept('"')) {
-			result.add(tokenizer.sval);
-			return;
+			return tokenizer.sval;
 		}
-		syntaxError();
+		throw syntaxError();
 	}
 
 	private boolean accept(final int type) throws IOException {
-		if (tokenizer.nextToken() == type) {
-			return true;
-		} else {
+		final boolean match = tokenizer.nextToken() == type;
+		if (!match) {
 			tokenizer.pushBack();
-			return false;
 		}
+		return match;
 	}
 
-	private String expectWord() throws IOException {
-		expect(StreamTokenizer.TT_WORD);
-		return tokenizer.sval;
-	}
-
-	private void expect(final int type) throws IOException {
+	private StreamTokenizer expect(final int type) throws IOException {
 		if (tokenizer.nextToken() != type) {
-			syntaxError();
+			throw syntaxError();
 		}
+		return tokenizer;
 	}
 
-	private void syntaxError() throws IOException {
-		throw new IOException("Invalid syntax in " + ctx);
+	private IOException syntaxError() {
+		return new IOException("Invalid syntax in " + ctx);
 	}
 
 }
