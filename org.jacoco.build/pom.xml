@@ -265,6 +265,7 @@
         <filtering>false</filtering>
         <excludes>
           <exclude>**/*.java</exclude>
+          <exclude>**/*.kt</exclude>
           <exclude>**/*.properties</exclude>
         </excludes>
       </resource>
@@ -554,6 +555,7 @@
             <configuration>
               <target>
                 <fileset dir="${basedir}" includes="**/*.java,**/*.xml,**/*.bsh" excludes="target/**,.idea/**,nb-configuration.xml" id="missinglicense.fileset">
+                  <include name="**/*.kt"/>
                   <not>
                     <and>
                       <contains text="Copyright (c) 2009, 2018 Mountainminds GmbH &amp; Co. KG and Contributors"/>
