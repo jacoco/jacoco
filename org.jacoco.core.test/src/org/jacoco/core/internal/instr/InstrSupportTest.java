@@ -58,6 +58,7 @@ public class InstrSupportTest {
 		assertTrue(InstrSupport.needsFrames(Opcodes.V1_8));
 		assertTrue(InstrSupport.needsFrames(Opcodes.V9));
 		assertTrue(InstrSupport.needsFrames(BytecodeVersion.V10));
+		assertTrue(InstrSupport.needsFrames(Opcodes.V11));
 	}
 
 	@Test

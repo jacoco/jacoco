@@ -22,6 +22,7 @@ import static org.objectweb.asm.Opcodes.INVOKESPECIAL;
 import static org.objectweb.asm.Opcodes.INVOKEVIRTUAL;
 import static org.objectweb.asm.Opcodes.POP;
 import static org.objectweb.asm.Opcodes.RETURN;
+import static org.objectweb.asm.Opcodes.V11;
 import static org.objectweb.asm.Opcodes.V1_1;
 import static org.objectweb.asm.Opcodes.V1_2;
 import static org.objectweb.asm.Opcodes.V1_3;
@@ -34,7 +35,6 @@ import static org.objectweb.asm.Opcodes.V9;
 
 import java.io.IOException;
 
-import org.jacoco.core.instr.Instrumenter;
 import org.jacoco.core.internal.BytecodeVersion;
 import org.jacoco.core.internal.instr.InstrSupport;
 import org.jacoco.core.runtime.IRuntime;
@@ -100,6 +100,11 @@ public class ClassFileVersionsTest {
 	@Test
 	public void test_10() throws IOException {
 		testVersion(BytecodeVersion.V10, true);
+	}
+
+	@Test
+	public void test_11() throws IOException {
+		testVersion(V11, true);
 	}
 
 	private void testVersion(int version, boolean frames) throws IOException {
