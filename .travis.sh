@@ -89,9 +89,10 @@ case "$JDK" in
   mvn -V -B -e verify -Djdk.version=${JDK} -Dbytecode.version=${JDK} -Decj=${ECJ:-} --toolchains=./.travis/travis-toolchains.xml
   ;;
 10)
-  ;&
-11-ea)
   mvn -V -B -e verify -Dbytecode.version=10
+  ;;
+11-ea)
+  mvn -V -B -e verify -Dbytecode.version=11
   ;;
 *)
   echo "Incorrect JDK [$JDK]"
