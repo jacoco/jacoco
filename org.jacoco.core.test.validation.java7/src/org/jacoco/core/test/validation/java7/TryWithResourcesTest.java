@@ -27,7 +27,7 @@ public class TryWithResourcesTest extends ValidationTestBase {
 	}
 
 	/**
-	 * {@link TryWithResourcesFilterTarget#test()}
+	 * {@link TryWithResourcesTarget#test()}
 	 */
 	@Test
 	public void test() {
@@ -49,7 +49,7 @@ public class TryWithResourcesTest extends ValidationTestBase {
 	}
 
 	/**
-	 * {@link TryWithResourcesFilterTarget#test2()}
+	 * {@link TryWithResourcesTarget#test2()}
 	 */
 	@Test
 	public void test2() {
@@ -72,7 +72,7 @@ public class TryWithResourcesTest extends ValidationTestBase {
 	}
 
 	/**
-	 * {@link TryWithResourcesFilterTarget#returnInBody()}
+	 * {@link TryWithResourcesTarget#returnInBody()}
 	 */
 	@Test
 	public void returnInBody() {
@@ -101,7 +101,7 @@ public class TryWithResourcesTest extends ValidationTestBase {
 	}
 
 	/**
-	 * {@link TryWithResourcesFilterTarget#nested()}
+	 * {@link TryWithResourcesTarget#nested()}
 	 */
 	@Test
 	public void nested() {
@@ -142,7 +142,7 @@ public class TryWithResourcesTest extends ValidationTestBase {
 	}
 
 	/**
-	 * {@link TryWithResourcesFilterTarget#returnInCatch()}
+	 * {@link TryWithResourcesTarget#returnInCatch()}
 	 */
 	@Test
 	public void returnInCatch() {
@@ -166,7 +166,7 @@ public class TryWithResourcesTest extends ValidationTestBase {
 	 */
 
 	/**
-	 * {@link TryWithResourcesFilterTarget#handwritten()}
+	 * {@link TryWithResourcesTarget#handwritten()}
 	 */
 	@Test
 	public void handwritten() {
@@ -176,7 +176,7 @@ public class TryWithResourcesTest extends ValidationTestBase {
 	}
 
 	/**
-	 * {@link TryWithResourcesFilterTarget#empty()}
+	 * {@link TryWithResourcesTarget#empty()}
 	 */
 	@Test
 	public void empty() {
@@ -198,7 +198,7 @@ public class TryWithResourcesTest extends ValidationTestBase {
 	}
 
 	/**
-	 * {@link TryWithResourcesFilterTarget#throwInBody()}
+	 * {@link TryWithResourcesTarget#throwInBody()}
 	 */
 	@Test
 	public void throwInBody() {

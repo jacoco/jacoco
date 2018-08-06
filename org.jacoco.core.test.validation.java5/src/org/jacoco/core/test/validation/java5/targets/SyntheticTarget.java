@@ -19,7 +19,7 @@ public class SyntheticTarget { // $line-classdef$
 	private static int counter; // $line-field$
 
 	/**
-	 * {@link org.jacoco.core.test.validation.java5.targets.ImplicitDefaultConstructorTarget
+	 * {@link org.jacoco.core.test.validation.java5.targets.ConstructorsTarget
 	 * Default constructor will refer to a line of class definition}, so that we
 	 * define constructor explicitly in order to verify that we filter all other
 	 * constructions here that might refer to line of class definition.
