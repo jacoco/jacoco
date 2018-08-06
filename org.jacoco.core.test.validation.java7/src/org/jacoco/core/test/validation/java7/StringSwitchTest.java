@@ -27,7 +27,7 @@ public class StringSwitchTest extends ValidationTestBase {
 	}
 
 	/**
-	 * {@link StringSwitchTarget#covered(String)}
+	 * {@link StringSwitchTarget#covered(Object)}
 	 */
 	@Test
 	public void covered() {
@@ -43,7 +43,7 @@ public class StringSwitchTest extends ValidationTestBase {
 	}
 
 	/**
-	 * {@link StringSwitchTarget#notCovered(String)}
+	 * {@link StringSwitchTarget#notCovered(Object)}
 	 */
 	@Test
 	public void notCovered() {
