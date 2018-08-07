@@ -143,79 +143,44 @@ public abstract class ValidationTestBase {
 		throw new AssertionError();
 	}
 
-	protected final Source getSource() {
-		return source;
-	}
-
 	protected void assertMethodCount(final int expectedTotal) {
 		assertEquals(expectedTotal,
 				sourceCoverage.getMethodCounter().getTotalCount());
 	}
 
-	protected void assertLine(final String tag, final int status) {
-		privateAssertLine(tag, status, 0, 0);
-	}
-
-	protected void assertLine(final String tag, final int status,
-			final int missedBranches, final int coveredBranches) {
-		if (missedBranches == 0 && coveredBranches == 0) {
-			throw new IllegalArgumentException(
-					"Omit redundant specification of zero number of branches");
-		}
-		privateAssertLine(tag, status, missedBranches, coveredBranches);
-	}
-
-	private void privateAssertLine(final String tag, final int status,
-			final int missedBranches, final int coveredBranches) {
-		final int nr = source.getLineNumber(tag);
-		final ILine line = sourceCoverage.getLine(nr);
-		final String lineMsg = String.format("line %s: %s", Integer.valueOf(nr),
-				source.getLine(nr));
-		final int insnStatus = line.getInstructionCounter().getStatus();
-		assertEquals("Instructions in " + lineMsg, STATUS_NAME[status],
-				STATUS_NAME[insnStatus]);
-		assertEquals("Branches in " + lineMsg,
-				CounterImpl.getInstance(missedBranches, coveredBranches),
-				line.getBranchCounter());
-	}
-
-	public void assertCoverage(final int nr, final String insnStatus,
-			final int missedBranches, final int coveredBranches) {
+	private void assertCoverage(final int nr, final int insnStatus,
+			final int mb, final int cb) {
 		final ILine line = sourceCoverage.getLine(nr);
 
 		String msg = String.format("Instructions in line %s: %s",
 				Integer.valueOf(nr), source.getLine(nr));
 		final int actualStatus = line.getInstructionCounter().getStatus();
-		assertEquals(msg, insnStatus, STATUS_NAME[actualStatus]);
+		assertEquals(msg, STATUS_NAME[insnStatus], STATUS_NAME[actualStatus]);
 
 		msg = String.format("Branches in line %s: %s", Integer.valueOf(nr),
 				source.getLine(nr));
-		assertEquals(msg,
-				CounterImpl.getInstance(missedBranches, coveredBranches),
+		assertEquals(msg, CounterImpl.getInstance(mb, cb),
 				line.getBranchCounter());
 	}
 
-	public void assertFullyCovered(int nr, final int missedBranches,
-			final int coveredBranches) {
-		assertCoverage(nr, "FULLY_COVERED", missedBranches, coveredBranches);
+	public void assertFullyCovered(int nr, final int mb, final int cb) {
+		assertCoverage(nr, ICounter.FULLY_COVERED, mb, cb);
 	}
 
 	public void assertFullyCovered(int nr) {
 		assertFullyCovered(nr, 0, 0);
 	}
 
-	public void assertPartlyCovered(int nr, final int missedBranches,
-			final int coveredBranches) {
-		assertCoverage(nr, "PARTLY_COVERED", missedBranches, coveredBranches);
+	public void assertPartlyCovered(int nr, final int mb, final int cb) {
+		assertCoverage(nr, ICounter.PARTLY_COVERED, mb, cb);
 	}
 
 	public void assertPartlyCovered(int nr) {
 		assertPartlyCovered(nr, 0, 0);
 	}
 
-	public void assertNotCovered(int nr, final int missedBranches,
-			final int coveredBranches) {
-		assertCoverage(nr, "NOT_COVERED", missedBranches, coveredBranches);
+	public void assertNotCovered(int nr, final int mb, final int cb) {
+		assertCoverage(nr, ICounter.NOT_COVERED, mb, cb);
 	}
 
 	public void assertNotCovered(int nr) {
@@ -223,7 +188,7 @@ public abstract class ValidationTestBase {
 	}
 
 	public void assertEmpty(int nr) {
-		assertCoverage(nr, "EMPTY", 0, 0);
+		assertCoverage(nr, ICounter.EMPTY, 0, 0);
 	}
 
 	protected void assertLogEvents(String... events) throws Exception {

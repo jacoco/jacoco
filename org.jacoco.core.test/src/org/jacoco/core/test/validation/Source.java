@@ -16,12 +16,7 @@ import java.io.IOException;
 import java.io.Reader;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.NoSuchElementException;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 /**
  * Reads a single source file and allows access to it through special probe
@@ -29,12 +24,7 @@ import java.util.regex.Pattern;
  */
 public class Source {
 
-	private static final Pattern TAG_PATTERN = Pattern
-			.compile("\\$line-(.*)\\$");
-
 	private final List<String> lines = new ArrayList<String>();
-
-	private final Map<String, Integer> tags = new HashMap<String, Integer>();
 
 	/**
 	 * Reads a source file from the given reader.
@@ -54,13 +44,6 @@ public class Source {
 
 	private void addLine(final String l) {
 		lines.add(l);
-		final Matcher m = TAG_PATTERN.matcher(l);
-		if (m.find()) {
-			final String tag = m.group(1);
-			if (tags.put(tag, Integer.valueOf(lines.size())) != null) {
-				throw new IllegalArgumentException("Duplicate tag: " + tag);
-			}
-		}
 	}
 
 	/**
@@ -81,23 +64,6 @@ public class Source {
 	 */
 	public String getLine(int nr) {
 		return lines.get(nr - 1);
-	}
-
-	/**
-	 * Returns the line number with the given tag
-	 * 
-	 * @param tag
-	 *            tag from a <code>//$line-<i>tag</i>$ marker
-	 * @return line number (first line is 1)
-	 * @throws NoSuchElementException
-	 *             if there is no such tag
-	 */
-	public int getLineNumber(String tag) throws NoSuchElementException {
-		final Integer nr = tags.get(tag);
-		if (nr == null) {
-			throw new NoSuchElementException("Unknown tag: " + tag);
-		}
-		return nr.intValue();
 	}
 
 }
