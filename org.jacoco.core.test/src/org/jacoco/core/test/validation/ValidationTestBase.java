@@ -131,22 +131,28 @@ public abstract class ValidationTestBase {
 	}
 
 	protected void assertLine(final String tag, final int status) {
-		final int nr = source.getLineNumber(tag);
-		final ILine line = sourceCoverage.getLine(nr);
-		final String msg = String.format("Status in line %s: %s",
-				Integer.valueOf(nr), source.getLine(nr));
-		final int insnStatus = line.getInstructionCounter().getStatus();
-		assertEquals(msg, STATUS_NAME[status], STATUS_NAME[insnStatus]);
+		privateAssertLine(tag, status, 0, 0);
 	}
 
 	protected void assertLine(final String tag, final int status,
 			final int missedBranches, final int coveredBranches) {
-		assertLine(tag, status);
+		if (missedBranches == 0 && coveredBranches == 0) {
+			throw new IllegalArgumentException(
+					"Omit redundant specification of zero number of branches");
+		}
+		privateAssertLine(tag, status, missedBranches, coveredBranches);
+	}
+
+	private void privateAssertLine(final String tag, final int status,
+			final int missedBranches, final int coveredBranches) {
 		final int nr = source.getLineNumber(tag);
 		final ILine line = sourceCoverage.getLine(nr);
-		final String msg = String.format("Branches in line %s: %s",
-				Integer.valueOf(nr), source.getLine(nr));
-		assertEquals(msg + " branches",
+		final String lineMsg = String.format("line %s: %s", Integer.valueOf(nr),
+				source.getLine(nr));
+		final int insnStatus = line.getInstructionCounter().getStatus();
+		assertEquals("Instructions in " + lineMsg, STATUS_NAME[status],
+				STATUS_NAME[insnStatus]);
+		assertEquals("Branches in " + lineMsg,
 				CounterImpl.getInstance(missedBranches, coveredBranches),
 				line.getBranchCounter());
 	}
