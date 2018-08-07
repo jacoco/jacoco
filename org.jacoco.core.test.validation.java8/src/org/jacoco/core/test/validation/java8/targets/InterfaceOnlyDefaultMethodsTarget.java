@@ -19,11 +19,11 @@ public interface InterfaceOnlyDefaultMethodsTarget {
 	// no <clinit>, only default methods:
 
 	default void m1() {
-		return; // $line-m1$
+		return; // > assertFullyCovered();
 	}
 
 	default void m2() {
-		return; // $line-m2$
+		return; // > assertNotCovered();
 	}
 
 	public class Impl implements InterfaceOnlyDefaultMethodsTarget {

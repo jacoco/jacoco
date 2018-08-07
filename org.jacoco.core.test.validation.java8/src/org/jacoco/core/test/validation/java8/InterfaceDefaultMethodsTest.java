@@ -11,10 +11,8 @@
  *******************************************************************************/
 package org.jacoco.core.test.validation.java8;
 
-import org.jacoco.core.analysis.ICounter;
 import org.jacoco.core.test.validation.ValidationTestBase;
 import org.jacoco.core.test.validation.java8.targets.InterfaceDefaultMethodsTarget;
-import org.junit.Test;
 
 /**
  * Tests of static initializer and default methods in interfaces.
@@ -23,13 +21,6 @@ public class InterfaceDefaultMethodsTest extends ValidationTestBase {
 
 	public InterfaceDefaultMethodsTest() {
 		super(InterfaceDefaultMethodsTarget.class);
-	}
-
-	@Test
-	public void testCoverageResult() {
-		assertLine("clinit", ICounter.FULLY_COVERED);
-		assertLine("m1", ICounter.FULLY_COVERED);
-		assertLine("m2", ICounter.NOT_COVERED);
 	}
 
 }

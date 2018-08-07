@@ -11,10 +11,8 @@
  *******************************************************************************/
 package org.jacoco.core.test.validation.java8;
 
-import org.jacoco.core.analysis.ICounter;
 import org.jacoco.core.test.validation.ValidationTestBase;
 import org.jacoco.core.test.validation.java8.targets.LambdaExpressionsTarget;
-import org.junit.Test;
 
 /**
  * Tests for different lambda expressions.
@@ -23,15 +21,6 @@ public class LambdaExpressionsTest extends ValidationTestBase {
 
 	public LambdaExpressionsTest() {
 		super(LambdaExpressionsTarget.class);
-	}
-
-	@Test
-	public void testCoverageResult() {
-
-		// Coverage of lambda bodies
-		assertLine("executedlambdabody", ICounter.FULLY_COVERED);
-		assertLine("notexecutedlambdabody", ICounter.NOT_COVERED);
-
 	}
 
 }

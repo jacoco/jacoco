@@ -11,7 +11,6 @@
  *******************************************************************************/
 package org.jacoco.core.test.validation.java8;
 
-import org.jacoco.core.analysis.ICounter;
 import org.jacoco.core.test.validation.ValidationTestBase;
 import org.jacoco.core.test.validation.java8.targets.BadCycleInterfaceTarget;
 import org.junit.Test;
@@ -26,25 +25,41 @@ public class BadCycleInterfaceTest extends ValidationTestBase {
 	}
 
 	@Test
-	public void test() throws Exception {
+	public void method_execution_sequence() throws Exception {
+		if (JAVA_VERSION.isBefore("1.8.0_152")) {
+			assertLogEvents("baseclinit", "childdefaultmethod", "childclinit",
+					"childstaticmethod");
+		} else {
+			assertLogEvents("childclinit", "childstaticmethod");
+		}
+	}
+
+	public void assertBaseClInit(int nr) {
 		if (JAVA_VERSION.isBefore("1.8.0_152")) {
 			// Incorrect interpetation of JVMS 5.5 in JDK 8 causes a default
 			// method to be called before the static initializer of an interface
 			// (see JDK-8098557 and JDK-8164302):
-			assertLine("baseclinit", ICounter.FULLY_COVERED);
-			assertLine("childdefault", ICounter.FULLY_COVERED);
+			assertFullyCovered(nr);
 
-			assertLogEvents("baseclinit", "childdefaultmethod", "childclinit",
-					"childstaticmethod");
 		} else {
 			// This shouldn't happen with JDK 9 (see also JDK-8043275)
 			// and starting with JDK 8u152 (see JDK-8167607):
-			assertLine("baseclinit", ICounter.EMPTY);
-			assertLine("childdefault", ICounter.NOT_COVERED);
-			assertLogEvents("childclinit", "childstaticmethod");
+			assertEmpty(nr);
 		}
-		assertLine("childclinit", ICounter.FULLY_COVERED);
-		assertLine("childstatic", ICounter.FULLY_COVERED);
+	}
+
+	public void assertChildDefault(int nr) throws Exception {
+		if (JAVA_VERSION.isBefore("1.8.0_152")) {
+			// Incorrect interpetation of JVMS 5.5 in JDK 8 causes a default
+			// method to be called before the static initializer of an interface
+			// (see JDK-8098557 and JDK-8164302):
+			assertFullyCovered(nr);
+
+		} else {
+			// This shouldn't happen with JDK 9 (see also JDK-8043275)
+			// and starting with JDK 8u152 (see JDK-8167607):
+			assertNotCovered(nr);
+		}
 	}
 
 }
