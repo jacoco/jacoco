@@ -45,7 +45,7 @@ import org.junit.Test;
 public abstract class ValidationTestBase {
 
 	private static final Pattern INLINE_ASSERTIONS_PATTERN = Pattern
-			.compile("// >(.*)");
+			.compile("//\\s*>(.*)");
 
 	protected static final boolean isJDKCompiler = Compiler.DETECT.isJDK();
 
