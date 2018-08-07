@@ -213,8 +213,13 @@ public abstract class ValidationTestBase {
 		assertPartlyCovered(nr, 0, 0);
 	}
 
+	public void assertNotCovered(int nr, final int missedBranches,
+			final int coveredBranches) {
+		assertCoverage(nr, "NOT_COVERED", missedBranches, coveredBranches);
+	}
+
 	public void assertNotCovered(int nr) {
-		assertCoverage(nr, "NOT_COVERED", 0, 0);
+		assertNotCovered(nr, 0, 0);
 	}
 
 	public void assertEmpty(int nr) {
