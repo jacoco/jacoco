@@ -18,6 +18,7 @@ import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.tree.AbstractInsnNode;
 import org.objectweb.asm.tree.MethodInsnNode;
 import org.objectweb.asm.tree.MethodNode;
+import org.objectweb.asm.tree.TypeInsnNode;
 import org.objectweb.asm.tree.VarInsnNode;
 
 abstract class AbstractMatcher {
@@ -35,6 +36,22 @@ abstract class AbstractMatcher {
 		skipNonOpcodes();
 		if (cursor.getOpcode() == Opcodes.ALOAD
 				&& ((VarInsnNode) cursor).var == 0) {
+			return;
+		}
+		cursor = null;
+	}
+
+	/**
+	 * Moves {@link #cursor} to next instruction if it is <code>NEW</code> with
+	 * given operand, otherwise sets it to <code>null</code>.
+	 */
+	final void nextIsNew(final String desc) {
+		nextIs(Opcodes.NEW);
+		if (cursor == null) {
+			return;
+		}
+		final TypeInsnNode i = (TypeInsnNode) cursor;
+		if (desc.equals(i.desc)) {
 			return;
 		}
 		cursor = null;
