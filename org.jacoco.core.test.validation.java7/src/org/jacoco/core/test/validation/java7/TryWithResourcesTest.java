@@ -89,7 +89,7 @@ public class TryWithResourcesTest extends ValidationTestBase {
 			// https://bugs.openjdk.java.net/browse/JDK-8134759
 			// javac 7 and 8 up to 8u92 are affected
 			if (JAVA_VERSION.isBefore("1.8.0_92")) {
-				assertLine("returnInBody.close", ICounter.FULLY_COVERED, 0, 0);
+				assertLine("returnInBody.close", ICounter.FULLY_COVERED);
 			} else {
 				assertLine("returnInBody.close", ICounter.EMPTY);
 			}
@@ -130,10 +130,10 @@ public class TryWithResourcesTest extends ValidationTestBase {
 		} else {
 			assertLine("nested.try3", ICounter.EMPTY);
 		}
-		assertLine("nested.open3", ICounter.FULLY_COVERED, 0, 0);
-		assertLine("nested.body3", ICounter.FULLY_COVERED, 0, 0);
+		assertLine("nested.open3", ICounter.FULLY_COVERED);
+		assertLine("nested.body3", ICounter.FULLY_COVERED);
 		assertLine("nested.catch3", ICounter.NOT_COVERED);
-		assertLine("nested.finally3", ICounter.FULLY_COVERED, 0, 0);
+		assertLine("nested.finally3", ICounter.FULLY_COVERED);
 
 		// without filter next lines have branches:
 		assertLine("nested.close3", ICounter.EMPTY);
@@ -186,14 +186,14 @@ public class TryWithResourcesTest extends ValidationTestBase {
 			assertLine("empty.try", ICounter.EMPTY);
 		}
 		assertLine("empty.open", ICounter.FULLY_COVERED);
-		// empty when EJC:
-		if (isJDKCompiler) {
-			if (JAVA_VERSION.isBefore("9")) {
-				// branches with javac 7 and 8
-				assertLine("empty.close", ICounter.PARTLY_COVERED);
-			} else {
-				assertLine("empty.close", ICounter.FULLY_COVERED, 0, 0);
-			}
+		if (!isJDKCompiler) {
+			assertLine("empty.close", ICounter.PARTLY_COVERED, 7, 1);
+		} else if (JAVA_VERSION.isBefore("8")) {
+			assertLine("empty.close", ICounter.PARTLY_COVERED, 6, 2);
+		} else if (JAVA_VERSION.isBefore("9")) {
+			assertLine("empty.close", ICounter.PARTLY_COVERED, 2, 2);
+		} else {
+			assertLine("empty.close", ICounter.FULLY_COVERED);
 		}
 	}
 
@@ -204,7 +204,11 @@ public class TryWithResourcesTest extends ValidationTestBase {
 	public void throwInBody() {
 		// not filtered
 		assertLine("throwInBody.try", ICounter.NOT_COVERED);
-		if (!isJDKCompiler || JAVA_VERSION.isBefore("11")) {
+		if (!isJDKCompiler){
+			assertLine("throwInBody.close", ICounter.NOT_COVERED, 6, 0);
+		} else if (JAVA_VERSION.isBefore("9")) {
+			assertLine("throwInBody.close", ICounter.NOT_COVERED, 4, 0);
+		} else if (JAVA_VERSION.isBefore("11")) {
 			assertLine("throwInBody.close", ICounter.NOT_COVERED);
 		} else {
 			assertLine("throwInBody.close", ICounter.EMPTY);

@@ -117,7 +117,7 @@ public class FinallyTest extends ValidationTestBase {
 		}
 		assertLine("twoRegions.2", ICounter.EMPTY);
 
-		assertLine("twoRegions.if", ICounter.FULLY_COVERED);
+		assertLine("twoRegions.if", ICounter.FULLY_COVERED, 1, 1);
 		assertLine("twoRegions.region.1", ICounter.FULLY_COVERED);
 		assertLine("twoRegions.region.2", ICounter.NOT_COVERED);
 	}

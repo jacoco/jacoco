@@ -33,7 +33,7 @@ public class EnumImplicitMethodsTest extends ValidationTestBase {
         assertLine("customValueOfMethod", ICounter.NOT_COVERED);
         assertLine("customValuesMethod", ICounter.NOT_COVERED);
 
-        assertLine("const", ICounter.PARTLY_COVERED);
+        assertLine("const", ICounter.PARTLY_COVERED, 1, 1);
         assertLine("staticblock", ICounter.FULLY_COVERED);
         assertLine("super", ICounter.FULLY_COVERED);
         assertLine("constructor", ICounter.FULLY_COVERED);

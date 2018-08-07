@@ -36,10 +36,10 @@ public class StringSwitchTest extends ValidationTestBase {
 		} else {
 			assertLine("covered.switch", ICounter.PARTLY_COVERED, 2, 7);
 		}
-		assertLine("covered.case1", ICounter.FULLY_COVERED, 0, 0);
-		assertLine("covered.case2", ICounter.FULLY_COVERED, 0, 0);
-		assertLine("covered.case3", ICounter.FULLY_COVERED, 0, 0);
-		assertLine("covered.default", ICounter.FULLY_COVERED, 0, 0);
+		assertLine("covered.case1", ICounter.FULLY_COVERED);
+		assertLine("covered.case2", ICounter.FULLY_COVERED);
+		assertLine("covered.case3", ICounter.FULLY_COVERED);
+		assertLine("covered.default", ICounter.FULLY_COVERED);
 	}
 
 	/**
@@ -57,7 +57,7 @@ public class StringSwitchTest extends ValidationTestBase {
 	@Test
 	public void handwritten() {
 		assertLine("handwritten.firstSwitch", ICounter.FULLY_COVERED, 2, 1);
-		assertLine("handwritten.ignored", ICounter.FULLY_COVERED);
+		assertLine("handwritten.ignored", ICounter.FULLY_COVERED, 1, 1);
 		assertLine("handwritten.secondSwitch", ICounter.FULLY_COVERED, 3, 1);
 		assertLine("handwritten.case1", ICounter.FULLY_COVERED);
 		assertLine("handwritten.case2", ICounter.NOT_COVERED);
