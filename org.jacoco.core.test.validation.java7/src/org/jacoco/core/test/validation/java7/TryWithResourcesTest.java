@@ -52,7 +52,7 @@ public class TryWithResourcesTest extends ValidationTestBase {
 		if (isJDKCompiler) {
 			assertEmpty(nr);
 		} else {
-			assertPartlyCovered(nr);
+			assertFullyCovered(nr);
 		}
 	}
 
