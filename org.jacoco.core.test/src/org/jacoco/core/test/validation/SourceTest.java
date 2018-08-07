@@ -54,10 +54,4 @@ public class SourceTest {
 		assertEquals("World!", s.getLine(3));
 	}
 
-	@Test(expected = IllegalArgumentException.class)
-	public void testDuplicateTag() throws IOException {
-		String src = "a\nb$line-tag$\nc\nd\ne$line-tag$\nf";
-		new Source(new StringReader(src));
-	}
-
 }
