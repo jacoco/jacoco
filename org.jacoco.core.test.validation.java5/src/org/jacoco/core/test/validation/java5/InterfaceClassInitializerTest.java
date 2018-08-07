@@ -11,10 +11,8 @@
  *******************************************************************************/
 package org.jacoco.core.test.validation.java5;
 
-import org.jacoco.core.analysis.ICounter;
 import org.jacoco.core.test.validation.ValidationTestBase;
 import org.jacoco.core.test.validation.java5.targets.InterfaceClassInitializerTarget;
-import org.junit.Test;
 
 /**
  * Tests of static initializer in interfaces.
@@ -29,16 +27,6 @@ public class InterfaceClassInitializerTest extends ValidationTestBase {
 	protected void run(final Class<?> targetClass) throws Exception {
 		// Force class initialization
 		targetClass.getField("CONST1").get(null);
-	}
-
-	@Test
-	public void testCoverageResult() {
-
-		assertLine("const1", ICounter.EMPTY);
-		assertLine("const2", ICounter.EMPTY);
-
-		assertLine("const3", ICounter.FULLY_COVERED);
-		assertLine("const4", ICounter.FULLY_COVERED);
 	}
 
 }

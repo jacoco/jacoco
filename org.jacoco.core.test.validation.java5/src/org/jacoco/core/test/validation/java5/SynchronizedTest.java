@@ -11,10 +11,8 @@
  *******************************************************************************/
 package org.jacoco.core.test.validation.java5;
 
-import org.jacoco.core.analysis.ICounter;
 import org.jacoco.core.test.validation.ValidationTestBase;
 import org.jacoco.core.test.validation.java5.targets.SynchronizedTarget;
-import org.junit.Test;
 
 /**
  * Test of filtering of a bytecode that is generated for a synchronized
@@ -26,48 +24,29 @@ public class SynchronizedTest extends ValidationTestBase {
 		super(SynchronizedTarget.class);
 	}
 
-	/**
-	 * {@link SynchronizedTarget#normal()}
-	 */
-	@Test
-	public void normal() {
-		assertLine("before", ICounter.FULLY_COVERED);
-		// when compiled with ECJ next line covered partly without filter:
-		assertLine("monitorEnter", ICounter.FULLY_COVERED);
-		assertLine("body", ICounter.FULLY_COVERED);
+	public void assertMonitorEnterImplicitException(int nr) {
 		if (isJDKCompiler) {
-			// without filter next line covered partly:
-			assertLine("monitorExit", ICounter.FULLY_COVERED);
+			assertFullyCovered(nr);
 		} else {
-			assertLine("monitorExit", ICounter.EMPTY);
+			assertPartlyCovered(nr);
 		}
-		assertLine("after", ICounter.FULLY_COVERED);
 	}
 
-	/**
-	 * {@link SynchronizedTarget#explicitException()}
-	 */
-	@Test
-	public void explicitException() {
-		assertLine("explicitException.monitorEnter", ICounter.FULLY_COVERED);
-		assertLine("explicitException.exception", ICounter.FULLY_COVERED);
-		// when compiled with javac next line covered fully without filter:
-		assertLine("explicitException.monitorExit", ICounter.EMPTY);
-	}
-
-	/**
-	 * {@link SynchronizedTarget#implicitException()}
-	 */
-	@Test
-	public void implicitException() {
-		assertLine("implicitException.monitorEnter", isJDKCompiler
-				? ICounter.FULLY_COVERED : ICounter.PARTLY_COVERED);
-		assertLine("implicitException.exception", ICounter.NOT_COVERED);
+	public void assertMonitorExit(int nr) {
 		if (isJDKCompiler) {
 			// without filter next line covered partly:
-			assertLine("implicitException.monitorExit", ICounter.NOT_COVERED);
+			assertFullyCovered(nr);
 		} else {
-			assertLine("implicitException.monitorExit", ICounter.EMPTY);
+			assertEmpty(nr);
+		}
+	}
+
+	public void assertMonitorExitImplicitException(int nr) {
+		if (isJDKCompiler) {
+			// without filter next line covered partly:
+			assertNotCovered(nr);
+		} else {
+			assertEmpty(nr);
 		}
 	}
 

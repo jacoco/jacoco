@@ -11,29 +11,17 @@
  *******************************************************************************/
 package org.jacoco.core.test.validation.java5;
 
-import org.jacoco.core.analysis.ICounter;
 import org.jacoco.core.test.validation.ValidationTestBase;
 import org.jacoco.core.test.validation.java5.targets.FieldInitializationInTwoConstructorsTarget;
-import org.junit.Test;
 
 /**
  * Test of field initialization in two constructors.
  */
-public class FieldInitializationInTwoConstructorsTest extends
-		ValidationTestBase {
+public class FieldInitializationInTwoConstructorsTest
+		extends ValidationTestBase {
 
 	public FieldInitializationInTwoConstructorsTest() {
 		super(FieldInitializationInTwoConstructorsTarget.class);
-	}
-
-	@Test
-	public void testCoverageResult() {
-
-		assertLine("field1", ICounter.PARTLY_COVERED);
-		assertLine("field2", ICounter.PARTLY_COVERED);
-		assertLine("constr1", ICounter.FULLY_COVERED);
-		assertLine("constr2", ICounter.NOT_COVERED);
-
 	}
 
 }

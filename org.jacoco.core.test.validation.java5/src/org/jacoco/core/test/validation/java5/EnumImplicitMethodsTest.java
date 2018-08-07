@@ -11,7 +11,6 @@
  *******************************************************************************/
 package org.jacoco.core.test.validation.java5;
 
-import org.jacoco.core.analysis.ICounter;
 import org.jacoco.core.test.validation.ValidationTestBase;
 import org.jacoco.core.test.validation.java5.targets.EnumImplicitMethodsTarget;
 import org.junit.Test;
@@ -21,22 +20,13 @@ import org.junit.Test;
  */
 public class EnumImplicitMethodsTest extends ValidationTestBase {
 
-    public EnumImplicitMethodsTest() {
-        super(EnumImplicitMethodsTarget.class);
-    }
+	public EnumImplicitMethodsTest() {
+		super(EnumImplicitMethodsTarget.class);
+	}
 
-    @Test
-    public void testCoverageResult() {
-        assertMethodCount(5);
-
-        assertLine("classdef", ICounter.FULLY_COVERED);
-        assertLine("customValueOfMethod", ICounter.NOT_COVERED);
-        assertLine("customValuesMethod", ICounter.NOT_COVERED);
-
-        assertLine("const", ICounter.PARTLY_COVERED, 1, 1);
-        assertLine("staticblock", ICounter.FULLY_COVERED);
-        assertLine("super", ICounter.FULLY_COVERED);
-        assertLine("constructor", ICounter.FULLY_COVERED);
-    }
+	@Test
+	public void test_method_count() {
+		assertMethodCount(5);
+	}
 
 }
