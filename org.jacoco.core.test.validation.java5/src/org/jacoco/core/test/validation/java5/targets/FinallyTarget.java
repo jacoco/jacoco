@@ -131,8 +131,8 @@ public class FinallyTarget {
 	private static void alwaysCompletesAbruptly() {
 		try {
 			nop();
-		} finally { // >alwaysCompletesAbruptly0();tag("alwaysCompletesAbruptly.0");
-			return; // > alwaysCompletesAbruptly1();
+		} finally { // >assertAlwaysCompletesAbruptly0();tag("alwaysCompletesAbruptly.0");
+			return; // > assertAlwaysCompletesAbruptly1();
 		} // > assertEmpty();
 	}
 

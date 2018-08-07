@@ -105,7 +105,7 @@ public class FinallyTest extends ValidationTestBase {
 		}
 	}
 
-	public void alwaysCompletesAbruptly0(int nr) {
+	public void assertAlwaysCompletesAbruptly0(int nr) {
 		if (isJDKCompiler) {
 			// uncovered case:
 			assertEmpty(nr);
@@ -114,7 +114,7 @@ public class FinallyTest extends ValidationTestBase {
 		}
 	}
 
-	public void alwaysCompletesAbruptly1(int nr) {
+	public void assertAlwaysCompletesAbruptly1(int nr) {
 		if (isJDKCompiler) {
 			// uncovered case:
 			assertPartlyCovered(nr);
