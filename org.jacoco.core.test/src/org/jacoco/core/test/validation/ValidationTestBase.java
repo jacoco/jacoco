@@ -14,7 +14,6 @@ package org.jacoco.core.test.validation;
 import static org.junit.Assert.assertEquals;
 
 import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Arrays;
 
@@ -68,17 +67,6 @@ public abstract class ValidationTestBase {
 		analyze(store);
 	}
 
-	@Test
-	public void execute_inline_assertions() throws IOException {
-		for (Line line : source.getLines()) {
-			String exec = line.getExecutableComment();
-			if (exec != null) {
-				StatementParser.parse(exec, new MethodDelegate(line),
-						line.toString());
-			}
-		}
-	}
-
 	private ExecutionDataStore execute() throws Exception {
 		loader = new InstrumentingLoader(target);
 		run(loader.loadClass(target.getName()));
@@ -106,10 +94,20 @@ public abstract class ValidationTestBase {
 		analyzer.analyzeClass(bytes, data.getName());
 	}
 
-	protected void assertMethodCount(final int expectedTotal) {
-		assertEquals(expectedTotal,
-				source.getCoverage().getMethodCounter().getTotalCount());
+	@Test
+	public void execute_inline_assertions() throws IOException {
+		for (Line line : source.getLines()) {
+			String exec = line.getExecutableComment();
+			if (exec != null) {
+				StatementParser.parse(exec,
+						new JavaStatementExecutor(this, line), line.toString());
+			}
+		}
 	}
+
+	/*
+	 * Predefined assertion methods:
+	 */
 
 	private void assertCoverage(final Line line, final int insnStatus,
 			final int mb, final int cb) {
@@ -162,47 +160,9 @@ public abstract class ValidationTestBase {
 		assertEquals("Log events", Arrays.asList(events), getter.invoke(null));
 	}
 
-	private class MethodDelegate implements StatementParser.IStatementVisitor {
-
-		private final Line line;
-
-		MethodDelegate(Line line) {
-			this.line = line;
-		}
-
-		public void visitInvocation(String ctx, String name, Object... args) {
-			final Object[] extArgs = new Object[args.length + 1];
-			extArgs[0] = line;
-			System.arraycopy(args, 0, extArgs, 1, args.length);
-			final Object target = ValidationTestBase.this;
-			try {
-				target.getClass().getMethod(name, getTypes(extArgs))
-						.invoke(target, extArgs);
-			} catch (InvocationTargetException e) {
-				Throwable te = e.getTargetException();
-				if (te instanceof AssertionError) {
-					throw (AssertionError) te;
-				}
-				throw new RuntimeException(
-						"Error wile processing assertions in " + ctx, te);
-			} catch (Exception e) {
-				throw new RuntimeException(
-						"Error wile processing assertions in " + ctx, e);
-			}
-		}
-
-		private Class<?>[] getTypes(Object[] instances) {
-			final Class<?>[] classes = new Class[instances.length];
-			for (int i = 0; i < instances.length; i++) {
-				Class<? extends Object> c = instances[i].getClass();
-				if (c == Integer.class) {
-					c = Integer.TYPE;
-				}
-				classes[i] = c;
-			}
-			return classes;
-		}
-
+	protected void assertMethodCount(final int expectedTotal) {
+		assertEquals(expectedTotal,
+				source.getCoverage().getMethodCounter().getTotalCount());
 	}
 
 }
