@@ -11,6 +11,7 @@
  *******************************************************************************/
 package org.jacoco.core.test.validation.java5;
 
+import org.jacoco.core.test.validation.Source.Line;
 import org.jacoco.core.test.validation.ValidationTestBase;
 import org.jacoco.core.test.validation.java5.targets.EnumSwitchTarget;
 
@@ -24,13 +25,13 @@ public class EnumSwitchTest extends ValidationTestBase {
 		super(EnumSwitchTarget.class);
 	}
 
-	public void assertSwitch(int nr) {
+	public void assertSwitch(final Line line) {
 		if (isJDKCompiler && JAVA_VERSION.isBefore("1.6")) {
 			// class that holds "switch map" is not marked as synthetic when
 			// compiling with javac 1.5
-			assertPartlyCovered(nr, 0, 2);
+			assertPartlyCovered(line, 0, 2);
 		} else {
-			assertFullyCovered(nr, 0, 2);
+			assertFullyCovered(line, 0, 2);
 		}
 	}
 

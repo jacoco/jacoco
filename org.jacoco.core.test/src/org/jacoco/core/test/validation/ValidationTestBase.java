@@ -12,28 +12,22 @@
 package org.jacoco.core.test.validation;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
 
-import java.io.FileReader;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Arrays;
-import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import org.jacoco.core.analysis.Analyzer;
 import org.jacoco.core.analysis.CoverageBuilder;
-import org.jacoco.core.analysis.IClassCoverage;
 import org.jacoco.core.analysis.ICounter;
 import org.jacoco.core.analysis.ILine;
-import org.jacoco.core.analysis.ISourceFileCoverage;
 import org.jacoco.core.data.ExecutionData;
 import org.jacoco.core.data.ExecutionDataStore;
 import org.jacoco.core.internal.analysis.CounterImpl;
 import org.jacoco.core.test.InstrumentingLoader;
 import org.jacoco.core.test.TargetLoader;
+import org.jacoco.core.test.validation.Source.Line;
 import org.jacoco.core.test.validation.targets.Stubs;
 import org.junit.Before;
 import org.junit.Test;
@@ -43,9 +37,6 @@ import org.junit.Test;
  * coverage and provides the coverage results for validation.
  */
 public abstract class ValidationTestBase {
-
-	private static final Pattern INLINE_ASSERTIONS_PATTERN = Pattern
-			.compile("//\\s*>(.*)");
 
 	protected static final boolean isJDKCompiler = Compiler.DETECT.isJDK();
 
@@ -63,8 +54,6 @@ public abstract class ValidationTestBase {
 
 	private final Class<?> target;
 
-	private ISourceFileCoverage sourceCoverage;
-
 	private Source source;
 
 	private InstrumentingLoader loader;
@@ -81,14 +70,11 @@ public abstract class ValidationTestBase {
 
 	@Test
 	public void execute_inline_assertions() throws IOException {
-		final List<String> lines = source.getLines();
-		for (int idx = 0; idx < lines.size(); idx++) {
-			final String line = lines.get(idx);
-			final Matcher matcher = INLINE_ASSERTIONS_PATTERN.matcher(line);
-			if (matcher.find()) {
-				final int nr = idx + 1;
-				StatementParser.parse(matcher.group(1), new MethodDelegate(nr),
-						"line " + (nr));
+		for (Line line : source.getLines()) {
+			String exec = line.getExecutableComment();
+			if (exec != null) {
+				StatementParser.parse(exec, new MethodDelegate(line),
+						line.toString());
 			}
 		}
 	}
@@ -110,19 +96,7 @@ public abstract class ValidationTestBase {
 		for (ExecutionData data : store.getContents()) {
 			analyze(analyzer, data);
 		}
-
-		final String srcName = findSourceFileName(builder,
-				target.getName().replace('.', '/'));
-
-		source = new Source(new FileReader("src/" + srcName));
-
-		for (ISourceFileCoverage file : builder.getSourceFiles()) {
-			if (srcName.equals(file.getPackageName() + "/" + file.getName())) {
-				sourceCoverage = file;
-				return;
-			}
-		}
-		fail("No source node found for " + srcName);
+		source = Source.load(target, builder.getBundle("Test"));
 	}
 
 	private void analyze(final Analyzer analyzer, final ExecutionData data)
@@ -132,63 +106,53 @@ public abstract class ValidationTestBase {
 		analyzer.analyzeClass(bytes, data.getName());
 	}
 
-	private static String findSourceFileName(
-			final CoverageBuilder coverageBuilder, final String className) {
-		for (IClassCoverage classCoverage : coverageBuilder.getClasses()) {
-			if (className.equals(classCoverage.getName())) {
-				return classCoverage.getPackageName() + '/'
-						+ classCoverage.getSourceFileName();
-			}
-		}
-		throw new AssertionError();
-	}
-
 	protected void assertMethodCount(final int expectedTotal) {
 		assertEquals(expectedTotal,
-				sourceCoverage.getMethodCounter().getTotalCount());
+				source.getCoverage().getMethodCounter().getTotalCount());
 	}
 
-	private void assertCoverage(final int nr, final int insnStatus,
+	private void assertCoverage(final Line line, final int insnStatus,
 			final int mb, final int cb) {
-		final ILine line = sourceCoverage.getLine(nr);
+		final ILine coverage = line.getCoverage();
 
-		String msg = String.format("Instructions in line %s: %s",
-				Integer.valueOf(nr), source.getLine(nr));
-		final int actualStatus = line.getInstructionCounter().getStatus();
+		String msg = String.format("Instructions in %s: %s", line,
+				line.getText());
+		final int actualStatus = coverage.getInstructionCounter().getStatus();
 		assertEquals(msg, STATUS_NAME[insnStatus], STATUS_NAME[actualStatus]);
 
-		msg = String.format("Branches in line %s: %s", Integer.valueOf(nr),
-				source.getLine(nr));
+		msg = String.format("Branches in %s: %s", line, line.getText());
 		assertEquals(msg, CounterImpl.getInstance(mb, cb),
-				line.getBranchCounter());
+				coverage.getBranchCounter());
 	}
 
-	public void assertFullyCovered(int nr, final int mb, final int cb) {
-		assertCoverage(nr, ICounter.FULLY_COVERED, mb, cb);
+	public void assertFullyCovered(final Line line, final int mb,
+			final int cb) {
+		assertCoverage(line, ICounter.FULLY_COVERED, mb, cb);
 	}
 
-	public void assertFullyCovered(int nr) {
-		assertFullyCovered(nr, 0, 0);
+	public void assertFullyCovered(final Line line) {
+		assertFullyCovered(line, 0, 0);
 	}
 
-	public void assertPartlyCovered(int nr, final int mb, final int cb) {
-		assertCoverage(nr, ICounter.PARTLY_COVERED, mb, cb);
+	public void assertPartlyCovered(final Line line, final int mb,
+			final int cb) {
+		assertCoverage(line, ICounter.PARTLY_COVERED, mb, cb);
 	}
 
-	public void assertPartlyCovered(int nr) {
-		assertPartlyCovered(nr, 0, 0);
+	public void assertPartlyCovered(final Line line) {
+		assertPartlyCovered(line, 0, 0);
 	}
 
-	public void assertNotCovered(int nr, final int mb, final int cb) {
-		assertCoverage(nr, ICounter.NOT_COVERED, mb, cb);
+	public void assertNotCovered(final Line line, final int mb, final int cb) {
+		assertCoverage(line, ICounter.NOT_COVERED, mb, cb);
 	}
 
-	public void assertNotCovered(int nr) {
-		assertNotCovered(nr, 0, 0);
+	public void assertNotCovered(final Line line) {
+		assertNotCovered(line, 0, 0);
 	}
 
-	public void assertEmpty(int nr) {
-		assertCoverage(nr, ICounter.EMPTY, 0, 0);
+	public void assertEmpty(final Line line) {
+		assertCoverage(line, ICounter.EMPTY, 0, 0);
 	}
 
 	protected void assertLogEvents(String... events) throws Exception {
@@ -200,15 +164,15 @@ public abstract class ValidationTestBase {
 
 	private class MethodDelegate implements StatementParser.IStatementVisitor {
 
-		private final int linenr;
+		private final Line line;
 
-		MethodDelegate(int linenr) {
-			this.linenr = linenr;
+		MethodDelegate(Line line) {
+			this.line = line;
 		}
 
 		public void visitInvocation(String ctx, String name, Object... args) {
 			final Object[] extArgs = new Object[args.length + 1];
-			extArgs[0] = Integer.valueOf(linenr);
+			extArgs[0] = line;
 			System.arraycopy(args, 0, extArgs, 1, args.length);
 			final Object target = ValidationTestBase.this;
 			try {

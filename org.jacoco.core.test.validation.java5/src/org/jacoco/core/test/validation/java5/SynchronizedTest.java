@@ -11,6 +11,7 @@
  *******************************************************************************/
 package org.jacoco.core.test.validation.java5;
 
+import org.jacoco.core.test.validation.Source.Line;
 import org.jacoco.core.test.validation.ValidationTestBase;
 import org.jacoco.core.test.validation.java5.targets.SynchronizedTarget;
 
@@ -24,29 +25,29 @@ public class SynchronizedTest extends ValidationTestBase {
 		super(SynchronizedTarget.class);
 	}
 
-	public void assertMonitorEnterImplicitException(int nr) {
+	public void assertMonitorEnterImplicitException(final Line line) {
 		if (isJDKCompiler) {
-			assertFullyCovered(nr);
+			assertFullyCovered(line);
 		} else {
-			assertPartlyCovered(nr);
+			assertPartlyCovered(line);
 		}
 	}
 
-	public void assertMonitorExit(int nr) {
+	public void assertMonitorExit(final Line line) {
 		if (isJDKCompiler) {
 			// without filter next line covered partly:
-			assertFullyCovered(nr);
+			assertFullyCovered(line);
 		} else {
-			assertEmpty(nr);
+			assertEmpty(line);
 		}
 	}
 
-	public void assertMonitorExitImplicitException(int nr) {
+	public void assertMonitorExitImplicitException(final Line line) {
 		if (isJDKCompiler) {
 			// without filter next line covered partly:
-			assertNotCovered(nr);
+			assertNotCovered(line);
 		} else {
-			assertEmpty(nr);
+			assertEmpty(line);
 		}
 	}
 

@@ -11,6 +11,7 @@
  *******************************************************************************/
 package org.jacoco.core.test.validation.java7;
 
+import org.jacoco.core.test.validation.Source.Line;
 import org.jacoco.core.test.validation.ValidationTestBase;
 import org.jacoco.core.test.validation.java7.targets.StringSwitchTarget;
 
@@ -24,21 +25,21 @@ public class StringSwitchTest extends ValidationTestBase {
 		super(StringSwitchTarget.class);
 	}
 
-	public void assertSwitchCovered(int nr) {
+	public void assertSwitchCovered(final Line line) {
 		if (isJDKCompiler) {
-			assertFullyCovered(nr, 0, 4);
+			assertFullyCovered(line, 0, 4);
 		} else {
 			// Filtering for ECJ not yet implemented:
-			assertPartlyCovered(nr, 2, 7);
+			assertPartlyCovered(line, 2, 7);
 		}
 	}
 
-	public void assertSwitchNotCovered(int nr) {
+	public void assertSwitchNotCovered(final Line line) {
 		if (isJDKCompiler) {
-			assertNotCovered(nr, 4, 0);
+			assertNotCovered(line, 4, 0);
 		} else {
 			// Filtering for ECJ not yet implemented:
-			assertNotCovered(nr, 9, 0);
+			assertNotCovered(line, 9, 0);
 		}
 	}
 

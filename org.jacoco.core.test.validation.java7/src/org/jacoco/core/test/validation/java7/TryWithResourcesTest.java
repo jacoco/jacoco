@@ -11,6 +11,7 @@
  *******************************************************************************/
 package org.jacoco.core.test.validation.java7;
 
+import org.jacoco.core.test.validation.Source.Line;
 import org.jacoco.core.test.validation.ValidationTestBase;
 import org.jacoco.core.test.validation.java7.targets.TryWithResourcesTarget;
 
@@ -24,60 +25,60 @@ public class TryWithResourcesTest extends ValidationTestBase {
 		super(TryWithResourcesTarget.class);
 	}
 
-	public void assertTry(int nr) {
+	public void assertTry(final Line line) {
 		// without filter this line is covered partly:
 		if (!isJDKCompiler || JAVA_VERSION.isBefore("11")) {
-			assertFullyCovered(nr);
+			assertFullyCovered(line);
 		} else {
-			assertEmpty(nr);
+			assertEmpty(line);
 		}
 	}
 
-	public void assertReturnInBodyClose(int nr) {
+	public void assertReturnInBodyClose(final Line line) {
 		// without filter next line has branches:
 		if (isJDKCompiler) {
 			// https://bugs.openjdk.java.net/browse/JDK-8134759
 			// javac 7 and 8 up to 8u92 are affected
 			if (JAVA_VERSION.isBefore("1.8.0_92")) {
-				assertFullyCovered(nr);
+				assertFullyCovered(line);
 			} else {
-				assertEmpty(nr);
+				assertEmpty(line);
 			}
 		} else {
-			assertEmpty(nr);
+			assertEmpty(line);
 		}
 	}
 
-	public void assertHandwritten(int nr) {
+	public void assertHandwritten(final Line line) {
 		if (isJDKCompiler) {
-			assertEmpty(nr);
+			assertEmpty(line);
 		} else {
-			assertFullyCovered(nr, 1, 1);
+			assertFullyCovered(line, 1, 1);
 		}
 	}
 
-	public void assertEmptyClose(int nr) {
+	public void assertEmptyClose(final Line line) {
 		if (!isJDKCompiler) {
-			assertPartlyCovered(nr, 7, 1);
+			assertPartlyCovered(line, 7, 1);
 		} else if (JAVA_VERSION.isBefore("8")) {
-			assertPartlyCovered(nr, 6, 2);
+			assertPartlyCovered(line, 6, 2);
 		} else if (JAVA_VERSION.isBefore("9")) {
-			assertPartlyCovered(nr, 2, 2);
+			assertPartlyCovered(line, 2, 2);
 		} else {
-			assertFullyCovered(nr);
+			assertFullyCovered(line);
 		}
 	}
 
-	public void assertThrowInBodyClose(int nr) {
+	public void assertThrowInBodyClose(final Line line) {
 		// not filtered
 		if (!isJDKCompiler) {
-			assertNotCovered(nr, 6, 0);
+			assertNotCovered(line, 6, 0);
 		} else if (JAVA_VERSION.isBefore("9")) {
-			assertNotCovered(nr, 4, 0);
+			assertNotCovered(line, 4, 0);
 		} else if (JAVA_VERSION.isBefore("11")) {
-			assertNotCovered(nr);
+			assertNotCovered(line);
 		} else {
-			assertEmpty(nr);
+			assertEmpty(line);
 		}
 	}
 

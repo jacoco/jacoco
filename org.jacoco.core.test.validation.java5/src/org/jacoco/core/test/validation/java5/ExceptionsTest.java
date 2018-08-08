@@ -11,6 +11,7 @@
  *******************************************************************************/
 package org.jacoco.core.test.validation.java5;
 
+import org.jacoco.core.test.validation.Source.Line;
 import org.jacoco.core.test.validation.ValidationTestBase;
 import org.jacoco.core.test.validation.java5.targets.ExceptionsTarget;
 
@@ -23,59 +24,59 @@ public class ExceptionsTest extends ValidationTestBase {
 		super(ExceptionsTarget.class);
 	}
 
-	public void assertCatchNoException(int nr) {
+	public void assertCatchNoException(final Line line) {
 		if (isJDKCompiler) {
-			assertNotCovered(nr);
+			assertNotCovered(line);
 		} else {
-			assertPartlyCovered(nr);
+			assertPartlyCovered(line);
 		}
 	}
 
-	public void assertCatchBlockEndNoException(int nr) {
+	public void assertCatchBlockEndNoException(final Line line) {
 		if (isJDKCompiler) {
-			assertFullyCovered(nr);
+			assertFullyCovered(line);
 		} else {
-			assertEmpty(nr);
+			assertEmpty(line);
 		}
 	}
 
-	public void assertCatchImplicitException(int nr) {
+	public void assertCatchImplicitException(final Line line) {
 		if (isJDKCompiler) {
-			assertFullyCovered(nr);
+			assertFullyCovered(line);
 		} else {
-			assertPartlyCovered(nr);
+			assertPartlyCovered(line);
 		}
 	}
 
-	public void assertCatchBlockEndImplicitException(int nr) {
+	public void assertCatchBlockEndImplicitException(final Line line) {
 		if (isJDKCompiler) {
-			assertNotCovered(nr);
+			assertNotCovered(line);
 		} else {
-			assertEmpty(nr);
+			assertEmpty(line);
 		}
 	}
 
-	public void assertFinally(int nr) {
+	public void assertFinally(final Line line) {
 		if (isJDKCompiler) {
-			assertEmpty(nr);
+			assertEmpty(line);
 		} else {
-			assertFullyCovered(nr);
+			assertFullyCovered(line);
 		}
 	}
 
-	public void assertFinallyImplicitException(int nr) {
+	public void assertFinallyImplicitException(final Line line) {
 		if (isJDKCompiler) {
-			assertEmpty(nr);
+			assertEmpty(line);
 		} else {
-			assertNotCovered(nr);
+			assertNotCovered(line);
 		}
 	}
 
-	public void assertBlockEndImplicitException(int nr) {
+	public void assertBlockEndImplicitException(final Line line) {
 		if (isJDKCompiler) {
-			assertEmpty(nr);
+			assertEmpty(line);
 		} else {
-			assertFullyCovered(nr);
+			assertFullyCovered(line);
 		}
 	}
 

@@ -23,6 +23,7 @@ import java.util.Set;
 
 import org.jacoco.core.internal.BytecodeVersion;
 import org.jacoco.core.test.TargetLoader;
+import org.jacoco.core.test.validation.Source.Line;
 import org.jacoco.core.test.validation.ValidationTestBase;
 import org.jacoco.core.test.validation.java5.targets.FinallyTarget;
 import org.junit.Before;
@@ -52,74 +53,74 @@ public class FinallyTest extends ValidationTestBase {
 		tags = new HashMap<Integer, String>();
 	}
 
-	public void assertFinallyNormalExecution(int nr) {
+	public void assertFinallyNormalExecution(final Line line) {
 		if (isJDKCompiler) {
-			assertEmpty(nr);
+			assertEmpty(line);
 		} else {
-			assertFullyCovered(nr);
+			assertFullyCovered(line);
 		}
 	}
 
-	public void assertTwoRegions1(int nr) {
+	public void assertTwoRegions1(final Line line) {
 		if (isJDKCompiler && JAVA_VERSION.isBefore("1.8")) {
 			// https://bugs.openjdk.java.net/browse/JDK-7008643
-			assertPartlyCovered(nr);
+			assertPartlyCovered(line);
 		} else {
-			assertFullyCovered(nr);
+			assertFullyCovered(line);
 		}
 	}
 
-	public void assertTwoRegionsReturn1(int nr) {
+	public void assertTwoRegionsReturn1(final Line line) {
 		if (isJDKCompiler && JAVA_VERSION.isBefore("1.8")) {
 			// https://bugs.openjdk.java.net/browse/JDK-7008643
-			assertEmpty(nr);
+			assertEmpty(line);
 		} else {
-			assertFullyCovered(nr);
+			assertFullyCovered(line);
 		}
 	}
 
-	public void assertTwoRegionsReturn2(int nr) {
+	public void assertTwoRegionsReturn2(final Line line) {
 		if (isJDKCompiler && JAVA_VERSION.isBefore("1.8")) {
 			// https://bugs.openjdk.java.net/browse/JDK-7008643
-			assertEmpty(nr);
+			assertEmpty(line);
 		} else {
-			assertNotCovered(nr);
+			assertNotCovered(line);
 		}
 	}
 
-	public void assertEmptyTry1(int nr) {
+	public void assertEmptyTry1(final Line line) {
 		if (isJDKCompiler && JAVA_VERSION.isBefore("1.8")) {
 			// compiler bug fixed in javac >= 1.8:
-			assertPartlyCovered(nr);
+			assertPartlyCovered(line);
 		} else {
-			assertFullyCovered(nr);
+			assertFullyCovered(line);
 		}
 	}
 
-	public void assertEmptyTry2(int nr) {
+	public void assertEmptyTry2(final Line line) {
 		if (isJDKCompiler && JAVA_VERSION.isBefore("1.8")) {
 			// compiler bug fixed in javac >= 1.8:
-			assertFullyCovered(nr);
+			assertFullyCovered(line);
 		} else {
-			assertEmpty(nr);
+			assertEmpty(line);
 		}
 	}
 
-	public void assertAlwaysCompletesAbruptly0(int nr) {
+	public void assertAlwaysCompletesAbruptly0(final Line line) {
 		if (isJDKCompiler) {
 			// uncovered case:
-			assertEmpty(nr);
+			assertEmpty(line);
 		} else {
-			assertPartlyCovered(nr);
+			assertPartlyCovered(line);
 		}
 	}
 
-	public void assertAlwaysCompletesAbruptly1(int nr) {
+	public void assertAlwaysCompletesAbruptly1(final Line line) {
 		if (isJDKCompiler) {
 			// uncovered case:
-			assertPartlyCovered(nr);
+			assertPartlyCovered(line);
 		} else {
-			assertFullyCovered(nr);
+			assertFullyCovered(line);
 		}
 	}
 
@@ -222,10 +223,10 @@ public class FinallyTest extends ValidationTestBase {
 		return gotoTags;
 	}
 
-	public void tag(int nr, String tag) {
+	public void tag(final Line line, String tag) {
 		assertFalse("duplicate tag " + tag, tags.containsValue(tag));
-		assertNull("duplicate tag in line " + nr,
-				tags.put(Integer.valueOf(nr), tag));
+		assertNull("duplicate tag in " + line,
+				tags.put(Integer.valueOf(line.getNr()), tag));
 	}
 
 }

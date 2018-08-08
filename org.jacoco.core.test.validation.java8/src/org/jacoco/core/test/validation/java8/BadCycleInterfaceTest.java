@@ -11,6 +11,7 @@
  *******************************************************************************/
 package org.jacoco.core.test.validation.java8;
 
+import org.jacoco.core.test.validation.Source.Line;
 import org.jacoco.core.test.validation.ValidationTestBase;
 import org.jacoco.core.test.validation.java8.targets.BadCycleInterfaceTarget;
 import org.junit.Test;
@@ -34,31 +35,31 @@ public class BadCycleInterfaceTest extends ValidationTestBase {
 		}
 	}
 
-	public void assertBaseClInit(int nr) {
+	public void assertBaseClInit(final Line line) {
 		if (JAVA_VERSION.isBefore("1.8.0_152")) {
 			// Incorrect interpetation of JVMS 5.5 in JDK 8 causes a default
 			// method to be called before the static initializer of an interface
 			// (see JDK-8098557 and JDK-8164302):
-			assertFullyCovered(nr);
+			assertFullyCovered(line);
 
 		} else {
 			// This shouldn't happen with JDK 9 (see also JDK-8043275)
 			// and starting with JDK 8u152 (see JDK-8167607):
-			assertEmpty(nr);
+			assertEmpty(line);
 		}
 	}
 
-	public void assertChildDefault(int nr) throws Exception {
+	public void assertChildDefault(final Line line) throws Exception {
 		if (JAVA_VERSION.isBefore("1.8.0_152")) {
 			// Incorrect interpetation of JVMS 5.5 in JDK 8 causes a default
 			// method to be called before the static initializer of an interface
 			// (see JDK-8098557 and JDK-8164302):
-			assertFullyCovered(nr);
+			assertFullyCovered(line);
 
 		} else {
 			// This shouldn't happen with JDK 9 (see also JDK-8043275)
 			// and starting with JDK 8u152 (see JDK-8167607):
-			assertNotCovered(nr);
+			assertNotCovered(line);
 		}
 	}
 
