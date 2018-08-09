@@ -120,13 +120,15 @@ public abstract class ValidationTestBase {
 	private void assertCoverage(final Line line, final int insnStatus,
 			final int missedBranches, final int coveredBranches) {
 		final ILine coverage = line.getCoverage();
+		final String location = String.format("(%s:%d)",
+				source.getCoverage().getName(), line.getNr());
 
-		String msg = String.format("Instructions in %s: %s", line,
+		String msg = String.format("Instructions in %s: %s", location,
 				line.getText());
 		final int actualStatus = coverage.getInstructionCounter().getStatus();
 		assertEquals(msg, STATUS_NAME[insnStatus], STATUS_NAME[actualStatus]);
 
-		msg = String.format("Branches in %s: %s", line, line.getText());
+		msg = String.format("Branches in %s: %s", location, line.getText());
 		assertEquals(msg,
 				CounterImpl.getInstance(missedBranches, coveredBranches),
 				coverage.getBranchCounter());
