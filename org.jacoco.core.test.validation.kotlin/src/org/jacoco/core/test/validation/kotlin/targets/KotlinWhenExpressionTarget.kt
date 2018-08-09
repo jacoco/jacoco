@@ -21,40 +21,40 @@ object KotlinWhenExpressionTarget {
         object Sealed2 : Sealed()
     }
 
-    private fun whenSealed(p: Sealed): Int = when (p) { // assertFullyCovered();
-        is Sealed.Sealed1 -> 1 // assertFullyCovered(0, 2);
-        is Sealed.Sealed2 -> 2 // assertFullyCovered();
-    } // assertFullyCovered();
+    private fun whenSealed(p: Sealed): Int = when (p) { // assertFullyCovered()
+        is Sealed.Sealed1 -> 1 // assertFullyCovered(0, 2)
+        is Sealed.Sealed2 -> 2 // assertFullyCovered()
+    } // assertFullyCovered()
 
     @Suppress("REDUNDANT_ELSE_IN_WHEN")
-    private fun whenSealedRedundantElse(p: Sealed): Int = when (p) { // assertFullyCovered();
-        is Sealed.Sealed1 -> 1 // assertFullyCovered(0, 2);
-        is Sealed.Sealed2 -> 2 // assertFullyCovered(1, 1);
-        else -> throw NoWhenBranchMatchedException() // assertNotCovered();
-    } // assertFullyCovered();
+    private fun whenSealedRedundantElse(p: Sealed): Int = when (p) { // assertFullyCovered()
+        is Sealed.Sealed1 -> 1 // assertFullyCovered(0, 2)
+        is Sealed.Sealed2 -> 2 // assertFullyCovered(1, 1)
+        else -> throw NoWhenBranchMatchedException() // assertNotCovered()
+    } // assertFullyCovered()
 
     private enum class Enum {
         A, B
     }
 
-    private fun whenEnum(p: Enum): Int = when (p) {  // assertFullyCovered(1, 2);
-        Enum.A -> 1 // assertFullyCovered();
-        Enum.B -> 2 // assertPartlyCovered();
-    } // assertFullyCovered();
+    private fun whenEnum(p: Enum): Int = when (p) {  // assertFullyCovered(1, 2)
+        Enum.A -> 1 // assertFullyCovered()
+        Enum.B -> 2 // assertPartlyCovered()
+    } // assertFullyCovered()
 
     @Suppress("REDUNDANT_ELSE_IN_WHEN")
-    private fun whenEnumRedundantElse(p: Enum): Int = when (p) { // assertFullyCovered(1, 2);
-        Enum.A -> 1 // assertFullyCovered();
-        Enum.B -> 2 // assertFullyCovered();
-        else -> throw NoWhenBranchMatchedException() // assertNotCovered();
-    } // assertFullyCovered();
+    private fun whenEnumRedundantElse(p: Enum): Int = when (p) { // assertFullyCovered(1, 2)
+        Enum.A -> 1 // assertFullyCovered()
+        Enum.B -> 2 // assertFullyCovered()
+        else -> throw NoWhenBranchMatchedException() // assertNotCovered()
+    } // assertFullyCovered()
 
-    private fun whenString(p: String): Int = when (p) { // assertFullyCovered(2, 7);
-        "a" -> 1 // assertFullyCovered();
-        "b" -> 2 // assertFullyCovered();
-        "\u0000a" -> 3 // assertFullyCovered();
-        else -> 4 // assertFullyCovered();
-    } // assertFullyCovered();
+    private fun whenString(p: String): Int = when (p) { // assertFullyCovered(2, 7)
+        "a" -> 1 // assertFullyCovered()
+        "b" -> 2 // assertFullyCovered()
+        "\u0000a" -> 3 // assertFullyCovered()
+        else -> 4 // assertFullyCovered()
+    } // assertFullyCovered()
 
     @JvmStatic
     fun main(args: Array<String>) {

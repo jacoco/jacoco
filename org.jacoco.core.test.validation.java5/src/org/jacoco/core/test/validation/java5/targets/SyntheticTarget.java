@@ -14,9 +14,9 @@ package org.jacoco.core.test.validation.java5.targets;
 /**
  * This test target results in synthetic methods.
  */
-public class SyntheticTarget { // assertEmpty();
+public class SyntheticTarget { // assertEmpty()
 
-	private static int counter; // assertEmpty();
+	private static int counter; // assertEmpty()
 
 	/**
 	 * {@link org.jacoco.core.test.validation.java5.targets.ConstructorsTarget
@@ -27,7 +27,7 @@ public class SyntheticTarget { // assertEmpty();
 	private SyntheticTarget() {
 	}
 
-	static class Inner extends SyntheticTarget { // assertEmpty();
+	static class Inner extends SyntheticTarget { // assertEmpty()
 
 		Inner() {
 		}

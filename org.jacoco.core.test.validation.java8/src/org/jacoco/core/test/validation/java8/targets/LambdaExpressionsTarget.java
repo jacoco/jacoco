@@ -23,11 +23,11 @@ public class LambdaExpressionsTarget {
 	public static void main(String[] args) {
 
 		exec(() -> {
-			nop(); // assertFullyCovered();
+			nop(); // assertFullyCovered()
 		});
 
 		noexec(() -> {
-			nop(); // assertNotCovered();
+			nop(); // assertNotCovered()
 		});
 
 	}

@@ -22,7 +22,7 @@ public class EnumConstructorTarget {
 	 * Implicit constructor should be filtered. without filter next line is
 	 * partly covered:
 	 */
-	private enum ImplicitConstructor { // assertFullyCovered();
+	private enum ImplicitConstructor { // assertFullyCovered()
 	}
 
 	/* Explicit non empty constructor should not be filtered: */
@@ -30,7 +30,7 @@ public class EnumConstructorTarget {
 		;
 
 		ExplicitNonEmptyConstructor() {
-			nop(); // assertNotCovered();
+			nop(); // assertNotCovered()
 		}
 	}
 
@@ -40,10 +40,10 @@ public class EnumConstructorTarget {
 
 		ExplicitEmptyConstructor() {
 			/* without filter next line is not covered: */
-		} // assertEmpty();
+		} // assertEmpty()
 
 		ExplicitEmptyConstructor(Object p) {
-		} // assertNotCovered();
+		} // assertNotCovered()
 	}
 
 	public static void main(String[] args) {

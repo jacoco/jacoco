@@ -34,79 +34,79 @@ public class TryWithResourcesTarget {
 	 * of resource.
 	 */
 	private static Object test() throws Exception {
-		nop(); // assertFullyCovered();
-		try ( // assertTry();
-				Resource r1 = new Resource(); // assertFullyCovered();
-				Closeable r2 = new Resource(); // assertFullyCovered();
-				AutoCloseable r3 = new Resource() // assertFullyCovered();
+		nop(); // assertFullyCovered()
+		try ( // assertTry()
+				Resource r1 = new Resource(); // assertFullyCovered()
+				Closeable r2 = new Resource(); // assertFullyCovered()
+				AutoCloseable r3 = new Resource() // assertFullyCovered()
 		) {
-			return read(r1, r2, r3); // assertFullyCovered();
+			return read(r1, r2, r3); // assertFullyCovered()
 			/* without filter next line has branches: */
-		} // assertEmpty();
+		} // assertEmpty()
 		catch (Exception e) {
-			nop(); // assertNotCovered();
+			nop(); // assertNotCovered()
 			throw e;
 		} finally {
-			nop(); // assertFullyCovered();
+			nop(); // assertFullyCovered()
 		}
 	}
 
 	private static void test2() throws Exception {
-		nop(); // assertFullyCovered();
-		try ( // assertTry();
-				Resource r1 = new Resource(); // assertFullyCovered();
-				Closeable r2 = new Resource(); // assertFullyCovered();
-				AutoCloseable r3 = new Resource() // assertFullyCovered();
+		nop(); // assertFullyCovered()
+		try ( // assertTry()
+				Resource r1 = new Resource(); // assertFullyCovered()
+				Closeable r2 = new Resource(); // assertFullyCovered()
+				AutoCloseable r3 = new Resource() // assertFullyCovered()
 		) {
-			read(r1, r2, r3); // assertFullyCovered();
+			read(r1, r2, r3); // assertFullyCovered()
 			/* without filter next line has branches: */
-		} // assertEmpty();
+		} // assertEmpty()
 		catch (Exception e) {
-			nop(); // assertNotCovered();
+			nop(); // assertNotCovered()
 		} finally {
-			nop(); // assertFullyCovered();
+			nop(); // assertFullyCovered()
 		}
-		nop(); // assertFullyCovered();
+		nop(); // assertFullyCovered()
 	}
 
 	private static Object returnInBody() throws IOException {
-		try ( // assertTry();
-				Closeable r = new Resource() // assertFullyCovered();
+		try ( // assertTry()
+				Closeable r = new Resource() // assertFullyCovered()
 		) {
-			return read(r); // assertFullyCovered();
-		} // assertReturnInBodyClose();
+			return read(r); // assertFullyCovered()
+		} // assertReturnInBodyClose()
 	}
 
 	private static void nested() {
-		try ( // assertTry();
-				Resource r1 = new Resource() // assertFullyCovered();
+		try ( // assertTry()
+				Resource r1 = new Resource() // assertFullyCovered()
 		) {
 
-			try ( // assertTry();
-					Resource r2 = new Resource() // assertFullyCovered();
+			try ( // assertTry()
+					Resource r2 = new Resource() // assertFullyCovered()
 			) {
-				nop(r1.toString() + r2.toString()); // assertFullyCovered();
-			} // assertEmpty();
+				nop(r1.toString() + r2.toString()); // assertFullyCovered()
+			} // assertEmpty()
 			catch (Exception e) {
-				nop(); // assertNotCovered();
+				nop(); // assertNotCovered()
 			} finally {
-				nop(); // assertFullyCovered();
+				nop(); // assertFullyCovered()
 			}
 
-		} // assertEmpty();
+		} // assertEmpty()
 		catch (Exception e) {
-			nop(); // assertNotCovered();
+			nop(); // assertNotCovered()
 		} finally {
 
-			try ( // assertTry();
-					Resource r2 = new Resource() // assertFullyCovered();
+			try ( // assertTry()
+					Resource r2 = new Resource() // assertFullyCovered()
 			) {
-				nop(r2); // assertFullyCovered();
-			} // assertEmpty();
+				nop(r2); // assertFullyCovered()
+			} // assertEmpty()
 			catch (Exception e) {
-				nop(); // assertNotCovered();
+				nop(); // assertNotCovered()
 			} finally {
-				nop(); // assertFullyCovered();
+				nop(); // assertFullyCovered()
 			}
 
 		}
@@ -119,24 +119,24 @@ public class TryWithResourcesTarget {
 	 * happens without it.
 	 */
 	private static Object returnInCatch() {
-		try ( // assertTry();
-				Resource r = new Resource() // assertFullyCovered();
+		try ( // assertTry()
+				Resource r = new Resource() // assertFullyCovered()
 		) {
 			read(r);
 			/* without filter next line has branches: */
-		} // assertEmpty();
+		} // assertEmpty()
 		catch (Exception e) {
 			return null;
 		} finally {
-			nop(!f()); // assertPartlyCovered(1, 1);
+			nop(!f()); // assertPartlyCovered(1, 1)
 		}
 
-		try { // assertEmpty();
+		try { // assertEmpty()
 			read(new Resource());
 		} catch (Exception e) {
 			return null;
 		} finally {
-			nop(!f()); // assertPartlyCovered(1, 1);
+			nop(!f()); // assertPartlyCovered(1, 1)
 		}
 
 		return null;
@@ -155,10 +155,10 @@ public class TryWithResourcesTarget {
 	 */
 
 	private static void empty() throws Exception {
-		try ( // assertTry();
-				Closeable r = new Resource() // assertFullyCovered();
+		try ( // assertTry()
+				Closeable r = new Resource() // assertFullyCovered()
 		) {
-		} // assertEmptyClose();
+		} // assertEmptyClose()
 	}
 
 	private static void handwritten() throws IOException {
@@ -170,7 +170,7 @@ public class TryWithResourcesTarget {
 			primaryExc = t;
 			throw t;
 		} finally {
-			if (r != null) { // assertHandwritten();
+			if (r != null) { // assertHandwritten()
 				if (primaryExc != null) {
 					try {
 						r.close();
@@ -185,11 +185,11 @@ public class TryWithResourcesTarget {
 	}
 
 	private static void throwInBody() throws IOException {
-		try ( // assertNotCovered();
+		try ( // assertNotCovered()
 				Closeable r = new Resource()) {
 			nop(r);
 			throw new RuntimeException();
-		} // assertThrowInBodyClose();
+		} // assertThrowInBodyClose()
 	}
 
 	public static void main(String[] args) throws Exception {

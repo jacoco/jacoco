@@ -62,28 +62,28 @@ public class StatementParserTest {
 
 	@Test
 	public void should_parse_invocation_without_params() throws IOException {
-		StatementParser.parse("run();", visitor, "Foo.java");
+		StatementParser.parse("run()", visitor, "Foo.java");
 		expectInvocation("Foo.java", "run");
 	}
 
 	@Test
 	public void should_parse_invocation_with_one_int_parameter()
 			throws IOException {
-		StatementParser.parse("ask(42);", visitor, "Foo.java");
+		StatementParser.parse("ask(42)", visitor, "Foo.java");
 		expectInvocation("Foo.java", "ask", Integer.valueOf(42));
 	}
 
 	@Test
 	public void should_parse_invocation_with_one_string_parameter()
 			throws IOException {
-		StatementParser.parse("say(\"hello\");", visitor, "Foo.java");
+		StatementParser.parse("say(\"hello\")", visitor, "Foo.java");
 		expectInvocation("Foo.java", "say", "hello");
 	}
 
 	@Test
 	public void should_parse_invocation_with_two_parameters()
 			throws IOException {
-		StatementParser.parse("add(1000, 234);", visitor, "Foo.java");
+		StatementParser.parse("add(1000, 234)", visitor, "Foo.java");
 		expectInvocation("Foo.java", "add", Integer.valueOf(1000),
 				Integer.valueOf(234));
 	}
@@ -91,14 +91,14 @@ public class StatementParserTest {
 	@Test
 	public void should_parse_invocation_with_mixed_parameter_types()
 			throws IOException {
-		StatementParser.parse("mix(1, \"two\", 3);", visitor, "Foo.java");
+		StatementParser.parse("mix(1, \"two\", 3)", visitor, "Foo.java");
 		expectInvocation("Foo.java", "mix", Integer.valueOf(1), "two",
 				Integer.valueOf(3));
 	}
 
 	@Test
 	public void should_parse_multiple_invocations() throws IOException {
-		StatementParser.parse("start(); stop();", visitor, "Foo.java");
+		StatementParser.parse("start() stop()", visitor, "Foo.java");
 		expectInvocation("Foo.java", "start");
 		expectInvocation("Foo.java", "stop");
 	}
@@ -106,25 +106,19 @@ public class StatementParserTest {
 	@Test
 	public void should_fail_when_parenthesis_is_missing() throws IOException {
 		exception.expect(IOException.class);
-		StatementParser.parse("bad(;", visitor, "Foo.java");
+		StatementParser.parse("bad(", visitor, "Foo.java");
 	}
 
 	@Test
 	public void should_fail_when_argument1_is_missing() throws IOException {
 		exception.expect(IOException.class);
-		StatementParser.parse("bad(1,);", visitor, "Foo.java");
+		StatementParser.parse("bad(,2)", visitor, "Foo.java");
 	}
 
 	@Test
 	public void should_fail_when_argument2_is_missing() throws IOException {
 		exception.expect(IOException.class);
-		StatementParser.parse("bad(,2);", visitor, "Foo.java");
-	}
-
-	@Test
-	public void should_fail_when_semicolon_is_missing() throws IOException {
-		exception.expect(IOException.class);
-		StatementParser.parse("bad()", visitor, "Foo.java");
+		StatementParser.parse("bad(1,)", visitor, "Foo.java");
 	}
 
 	@Test
@@ -132,7 +126,7 @@ public class StatementParserTest {
 			throws IOException {
 		exception.expect(IOException.class);
 		exception.expectMessage("Invalid syntax at Foo.java:32");
-		StatementParser.parse("bad;", visitor, "Foo.java:32");
+		StatementParser.parse("bad", visitor, "Foo.java:32");
 	}
 
 	private void expectInvocation(String ctx, String name, Object... args) {

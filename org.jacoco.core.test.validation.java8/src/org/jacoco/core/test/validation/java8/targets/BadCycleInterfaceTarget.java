@@ -18,7 +18,7 @@ public class BadCycleInterfaceTarget {
 	public interface Base {
 		static final Object BASE_CONST = new Child() {
 			{
-				Stubs.logEvent("baseclinit"); // assertBaseClInit();
+				Stubs.logEvent("baseclinit"); // assertBaseClInit()
 			}
 		}.childDefaultMethod();
 
@@ -29,17 +29,17 @@ public class BadCycleInterfaceTarget {
 	public interface Child extends Base {
 		static final Object CHILD_CONST = new Object() {
 			{
-				Stubs.logEvent("childclinit"); // assertFullyCovered();
+				Stubs.logEvent("childclinit"); // assertFullyCovered()
 			}
 		};
 
 		default Object childDefaultMethod() {
-			Stubs.logEvent("childdefaultmethod"); // assertChildDefault();
+			Stubs.logEvent("childdefaultmethod"); // assertChildDefault()
 			return null;
 		}
 
 		static void childStaticMethod() {
-			Stubs.logEvent("childstaticmethod"); // assertFullyCovered();
+			Stubs.logEvent("childstaticmethod"); // assertFullyCovered()
 		}
 	}
 

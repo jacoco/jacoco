@@ -23,7 +23,7 @@ public class EnumSwitchTarget {
 	}
 
 	private static void example(E e) {
-		switch (e) { // assertSwitch();
+		switch (e) { // assertSwitch()
 		case V1:
 			nop("V1");
 			break;

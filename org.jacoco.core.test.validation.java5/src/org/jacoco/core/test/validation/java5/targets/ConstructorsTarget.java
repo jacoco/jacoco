@@ -19,11 +19,11 @@ import static org.jacoco.core.test.validation.targets.Stubs.nop;
 public class ConstructorsTarget {
 
 	/* not filtered because not private: */
-	ConstructorsTarget() { // assertFullyCovered();
+	ConstructorsTarget() { // assertFullyCovered()
 	}
 
 	/* not filtered because has argument: */
-	private ConstructorsTarget(Object arg) { // assertFullyCovered();
+	private ConstructorsTarget(Object arg) { // assertFullyCovered()
 	}
 
 	private static class Super extends ConstructorsTarget {
@@ -32,7 +32,7 @@ public class ConstructorsTarget {
 			 * not filtered because not empty - prepares arguments for super
 			 * constructor:
 			 */
-			super(null); // assertFullyCovered();
+			super(null); // assertFullyCovered()
 		}
 	}
 
@@ -42,7 +42,7 @@ public class ConstructorsTarget {
 		 * reference to an instance of outer class that is passed as an
 		 * argument:
 		 */
-		private Inner() { // assertFullyCovered();
+		private Inner() { // assertFullyCovered()
 		}
 	}
 
@@ -53,7 +53,7 @@ public class ConstructorsTarget {
 		/*
 		 * not filtered because not empty - contains initialization of a field:
 		 */
-		private InnerStatic() { // assertFullyCovered();
+		private InnerStatic() { // assertFullyCovered()
 		}
 	}
 
@@ -61,24 +61,24 @@ public class ConstructorsTarget {
 	 * not filtered because default constructor for not private inner classes is
 	 * not private:
 	 */
-	public static class PublicDefault { // assertFullyCovered();
+	public static class PublicDefault { // assertFullyCovered()
 	}
 
-	static class PackageLocalDefault { // assertFullyCovered();
+	static class PackageLocalDefault { // assertFullyCovered()
 	}
 
-	private static class PrivateDefault { // assertEmpty();
+	private static class PrivateDefault { // assertEmpty()
 	}
 
 	private static class PrivateNonEmptyNoArg {
 		private PrivateNonEmptyNoArg() {
-			nop(); // assertFullyCovered();
+			nop(); // assertFullyCovered()
 		}
 	}
 
 	private static class PrivateEmptyNoArg {
-		private PrivateEmptyNoArg() { // assertEmpty();
-		} // assertEmpty();
+		private PrivateEmptyNoArg() { // assertEmpty()
+		} // assertEmpty()
 	}
 
 	public static void main(String[] args) {

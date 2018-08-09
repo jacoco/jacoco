@@ -52,41 +52,41 @@ public class ControlStructuresTarget {
 
 	private static void unconditionalExecution() {
 
-		nop(); // assertFullyCovered();
+		nop(); // assertFullyCovered()
 
 	}
 
 	private static void missedIfBlock() {
 
-		if (f()) { // assertFullyCovered(1, 1);
-			nop(); // assertNotCovered();
+		if (f()) { // assertFullyCovered(1, 1)
+			nop(); // assertNotCovered()
 		} else {
-			nop(); // assertFullyCovered();
+			nop(); // assertFullyCovered()
 		}
 
 	}
 
 	private static void executedIfBlock() {
 
-		if (t()) { // assertFullyCovered(1, 1);
-			nop(); // assertFullyCovered();
+		if (t()) { // assertFullyCovered(1, 1)
+			nop(); // assertFullyCovered()
 		} else {
-			nop(); // assertNotCovered();
+			nop(); // assertNotCovered()
 		}
 
 	}
 
 	private static void missedWhileBlock() {
 
-		while (f()) { // assertFullyCovered(1, 1);
-			nop(); // assertNotCovered();
+		while (f()) { // assertFullyCovered(1, 1)
+			nop(); // assertNotCovered()
 		}
 
 	}
 
 	private static void alwaysExecutedWhileBlock() {
 
-		while (t()) { // assertFullyCovered(1, 1);
+		while (t()) { // assertFullyCovered(1, 1)
 			if (t()) {
 				break;
 			}
@@ -97,8 +97,8 @@ public class ControlStructuresTarget {
 	private static void executedWhileBlock() {
 
 		int i = 0;
-		while (i++ < 3) { // assertFullyCovered(0, 2);
-			nop(); // assertFullyCovered();
+		while (i++ < 3) { // assertFullyCovered(0, 2)
+			nop(); // assertFullyCovered()
 		}
 
 	}
@@ -106,57 +106,57 @@ public class ControlStructuresTarget {
 	private static void executedDoWhileBlock() {
 
 		do {
-			nop(); // assertFullyCovered();
-		} while (f()); // assertFullyCovered(1, 1);
+			nop(); // assertFullyCovered()
+		} while (f()); // assertFullyCovered(1, 1)
 
 	}
 
 	private static void missedForBlock() {
 
-		for (nop(); f(); nop()) { // assertPartlyCovered(1, 1);
-			nop(); // assertNotCovered();
+		for (nop(); f(); nop()) { // assertPartlyCovered(1, 1)
+			nop(); // assertNotCovered()
 		}
 
 	}
 
 	private static void executedForBlock() {
 
-		for (int j = 0; j < 1; j++) { // assertFullyCovered(0, 2);
-			nop(); // assertFullyCovered();
+		for (int j = 0; j < 1; j++) { // assertFullyCovered(0, 2)
+			nop(); // assertFullyCovered()
 		}
 
 	}
 
 	private static void missedForEachBlock() {
 
-		for (Object o : Collections.emptyList()) { // assertPartlyCovered(1,1);
-			nop(o); // assertNotCovered();
+		for (Object o : Collections.emptyList()) { // assertPartlyCovered(1, 1)
+			nop(o); // assertNotCovered()
 		}
 
 	}
 
 	private static void executedForEachBlock() {
 
-		for (Object o : Collections.singleton(new Object())) { // assertFullyCovered(0,2);
-			nop(o); // assertFullyCovered();
+		for (Object o : Collections.singleton(new Object())) { // assertFullyCovered(0,2)
+			nop(o); // assertFullyCovered()
 		}
 
 	}
 
 	private static void tableSwitchWithHit() {
 
-		switch (i2()) { // assertFullyCovered(3, 1);
+		switch (i2()) { // assertFullyCovered(3, 1)
 		case 1:
-			nop(); // assertNotCovered();
+			nop(); // assertNotCovered()
 			break;
 		case 2:
-			nop(); // assertFullyCovered();
+			nop(); // assertFullyCovered()
 			break;
 		case 3:
-			nop(); // assertNotCovered();
+			nop(); // assertNotCovered()
 			break;
 		default:
-			nop(); // assertNotCovered();
+			nop(); // assertNotCovered()
 			break;
 		}
 
@@ -164,33 +164,33 @@ public class ControlStructuresTarget {
 
 	private static void continuedTableSwitchWithHit() {
 
-		switch (i2()) { // assertFullyCovered(3, 1);
+		switch (i2()) { // assertFullyCovered(3, 1)
 		case 1:
-			nop(); // assertNotCovered();
+			nop(); // assertNotCovered()
 		case 2:
-			nop(); // assertFullyCovered();
+			nop(); // assertFullyCovered()
 		case 3:
-			nop(); // assertFullyCovered();
+			nop(); // assertFullyCovered()
 		default:
-			nop(); // assertFullyCovered();
+			nop(); // assertFullyCovered()
 		}
 
 	}
 
 	private static void tableSwitchWithoutHit() {
 
-		switch (i2()) { // assertFullyCovered(3, 1);
+		switch (i2()) { // assertFullyCovered(3, 1)
 		case 3:
-			nop(); // assertNotCovered();
+			nop(); // assertNotCovered()
 			break;
 		case 4:
-			nop(); // assertNotCovered();
+			nop(); // assertNotCovered()
 			break;
 		case 5:
-			nop(); // assertNotCovered();
+			nop(); // assertNotCovered()
 			break;
 		default:
-			nop(); // assertFullyCovered();
+			nop(); // assertFullyCovered()
 			break;
 		}
 
@@ -198,18 +198,18 @@ public class ControlStructuresTarget {
 
 	private static void lookupSwitchWithHit() {
 
-		switch (i2()) { // assertFullyCovered(3, 1);
+		switch (i2()) { // assertFullyCovered(3, 1)
 		case -123:
-			nop(); // assertNotCovered();
+			nop(); // assertNotCovered()
 			break;
 		case 2:
-			nop(); // assertFullyCovered();
+			nop(); // assertFullyCovered()
 			break;
 		case 456:
-			nop(); // assertNotCovered();
+			nop(); // assertNotCovered()
 			break;
 		default:
-			nop(); // assertNotCovered();
+			nop(); // assertNotCovered()
 			break;
 		}
 
@@ -217,33 +217,33 @@ public class ControlStructuresTarget {
 
 	private static void continuedLookupSwitchWithHit() {
 
-		switch (i2()) { // assertFullyCovered(3, 1);
+		switch (i2()) { // assertFullyCovered(3, 1)
 		case -123:
-			nop(); // assertNotCovered();
+			nop(); // assertNotCovered()
 		case 2:
-			nop(); // assertFullyCovered();
+			nop(); // assertFullyCovered()
 		case 456:
-			nop(); // assertFullyCovered();
+			nop(); // assertFullyCovered()
 		default:
-			nop(); // assertFullyCovered();
+			nop(); // assertFullyCovered()
 		}
 
 	}
 
 	private static void lookupSwitchWithoutHit() {
 
-		switch (i2()) { // assertFullyCovered(3, 1);
+		switch (i2()) { // assertFullyCovered(3, 1)
 		case -123:
-			nop(); // assertNotCovered();
+			nop(); // assertNotCovered()
 			break;
 		case 456:
-			nop(); // assertNotCovered();
+			nop(); // assertNotCovered()
 			break;
 		case 789:
-			nop(); // assertNotCovered();
+			nop(); // assertNotCovered()
 			break;
 		default:
-			nop(); // assertFullyCovered();
+			nop(); // assertFullyCovered()
 			break;
 		}
 
@@ -253,9 +253,9 @@ public class ControlStructuresTarget {
 
 		while (true) {
 			if (t()) {
-				break; // assertFullyCovered();
+				break; // assertFullyCovered()
 			}
-			nop(); // assertNotCovered();
+			nop(); // assertNotCovered()
 		}
 
 	}
@@ -264,9 +264,9 @@ public class ControlStructuresTarget {
 
 		for (int j = 0; j < 1; j++) {
 			if (t()) {
-				continue; // assertFullyCovered();
+				continue; // assertFullyCovered()
 			}
-			nop(); // assertNotCovered();
+			nop(); // assertNotCovered()
 		}
 
 	}
@@ -274,20 +274,20 @@ public class ControlStructuresTarget {
 	private static void conditionalReturn() {
 
 		if (t()) {
-			return; // assertFullyCovered();
+			return; // assertFullyCovered()
 		}
-		nop(); // assertNotCovered();
+		nop(); // assertNotCovered()
 
 	}
 
 	private static void implicitReturn() {
 
-	} // assertFullyCovered();
+	} // assertFullyCovered()
 
 	private static void explicitReturn() {
 
-		return; // assertFullyCovered();
+		return; // assertFullyCovered()
 
-	} // assertEmpty();
+	} // assertEmpty()
 
 }

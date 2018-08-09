@@ -22,26 +22,26 @@ public class ClassInitializerTarget {
 
 	/* No code required to initialize these fields: */
 
-	public static final int CONST1 = 3; // assertEmpty();
+	public static final int CONST1 = 3; // assertEmpty()
 
-	public static final String CONST2 = "Hello"; // assertEmpty();
+	public static final String CONST2 = "Hello"; // assertEmpty()
 
 	/* These fields are initialized within <clinit> */
 
-	public static final int CONST3 = i1(); // assertFullyCovered();
+	public static final int CONST3 = i1(); // assertFullyCovered()
 
-	public static final Object CONST4 = new Object(); // assertFullyCovered();
+	public static final Object CONST4 = new Object(); // assertFullyCovered()
 
-	public static int field1 = 3; // assertFullyCovered();
+	public static int field1 = 3; // assertFullyCovered()
 
-	public static String field2 = "Hello"; // assertFullyCovered();
+	public static String field2 = "Hello"; // assertFullyCovered()
 
-	public static int field3 = i1(); // assertFullyCovered();
+	public static int field3 = i1(); // assertFullyCovered()
 
-	public static Object field4 = new Object(); // assertFullyCovered();
+	public static Object field4 = new Object(); // assertFullyCovered()
 
 	static {
-		Stubs.nop(); // assertFullyCovered();
+		Stubs.nop(); // assertFullyCovered()
 	}
 
 	private ClassInitializerTarget() {

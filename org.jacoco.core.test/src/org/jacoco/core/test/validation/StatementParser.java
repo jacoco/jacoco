@@ -21,7 +21,7 @@ import java.util.List;
  * Simple parser for Java like method invocation statements. For example:
  * 
  * <pre>
- * foo("BAR", 42);
+ * foo("BAR", 42)
  * </pre>
  * 
  * Method parameters can only be String or int literals.
@@ -97,7 +97,6 @@ class StatementParser {
 				args.add(argument());
 			}
 		}
-		expect(';');
 		visitor.visitInvocation(ctx, name, args.toArray());
 	}
 

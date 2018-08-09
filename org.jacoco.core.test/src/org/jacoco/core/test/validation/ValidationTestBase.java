@@ -99,7 +99,7 @@ public abstract class ValidationTestBase {
 	 * format:
 	 * 
 	 * <pre>
-	 * // statement1(); statement2();
+	 * // statement1() statement2()
 	 * </pre>
 	 */
 	@Test
