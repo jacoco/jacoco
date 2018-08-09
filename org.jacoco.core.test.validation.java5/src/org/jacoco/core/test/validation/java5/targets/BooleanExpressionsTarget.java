@@ -24,95 +24,95 @@ public class BooleanExpressionsTarget {
 
 	public static void main(String[] args) {
 
-		// 1. Boolean comparison result (one case)
-		nop(i2() > 3); // > assertPartlyCovered(1, 1);
+		/* 1. Boolean comparison result (one case) */
+		nop(i2() > 3); // assertPartlyCovered(1, 1);
 
-		// 2. Boolean comparison result (both cases)
+		/* 2. Boolean comparison result (both cases) */
 		for (int i = 0; i < 2; i++) {
-			nop(i < 1); // > assertFullyCovered(0, 2);
+			nop(i < 1); // assertFullyCovered(0, 2);
 		}
 
-		// 3. And
-		if (f() & f()) { // > assertFullyCovered(1, 1);
+		/* 3. And */
+		if (f() & f()) { // assertFullyCovered(1, 1);
 			nop();
 		}
-		if (f() & t()) { // > assertFullyCovered(1, 1);
+		if (f() & t()) { // assertFullyCovered(1, 1);
 			nop();
 		}
-		if (t() & f()) { // > assertFullyCovered(1, 1);
+		if (t() & f()) { // assertFullyCovered(1, 1);
 			nop();
 		}
-		if (t() & t()) { // > assertFullyCovered(1, 1);
-			nop();
-		}
-
-		// 4. Conditional And
-		if (f() && f()) { // > assertPartlyCovered(3, 1);
-			nop();
-		}
-		if (f() && t()) { // > assertPartlyCovered(3, 1);
-			nop();
-		}
-		if (t() && f()) { // > assertFullyCovered(2, 2);
-			nop();
-		}
-		if (t() && t()) { // > assertFullyCovered(2, 2);
+		if (t() & t()) { // assertFullyCovered(1, 1);
 			nop();
 		}
 
-		// 5. Or
-		if (f() | f()) { // > assertFullyCovered(1, 1);
+		/* 4. Conditional And */
+		if (f() && f()) { // assertPartlyCovered(3, 1);
 			nop();
 		}
-		if (f() | t()) { // > assertFullyCovered(1, 1);
+		if (f() && t()) { // assertPartlyCovered(3, 1);
 			nop();
 		}
-		if (t() | f()) { // > assertFullyCovered(1, 1);
+		if (t() && f()) { // assertFullyCovered(2, 2);
 			nop();
 		}
-		if (t() | t()) { // > assertFullyCovered(1, 1);
-			nop();
-		}
-
-		// 6. Conditional Or
-		if (f() || f()) { // > assertFullyCovered(2, 2);
-			nop();
-		}
-		if (f() || t()) { // > assertFullyCovered(2, 2);
-			nop();
-		}
-		if (t() || f()) { // > assertPartlyCovered(3, 1);
-			nop();
-		}
-		if (t() || t()) { // > assertPartlyCovered(3, 1);
+		if (t() && t()) { // assertFullyCovered(2, 2);
 			nop();
 		}
 
-		// 7. Exclusive Or
-		if (f() ^ f()) { // > assertFullyCovered(1, 1);
+		/* 5. Or */
+		if (f() | f()) { // assertFullyCovered(1, 1);
 			nop();
 		}
-		if (f() ^ t()) { // > assertFullyCovered(1, 1);
+		if (f() | t()) { // assertFullyCovered(1, 1);
 			nop();
 		}
-		if (t() ^ f()) { // > assertFullyCovered(1, 1);
+		if (t() | f()) { // assertFullyCovered(1, 1);
 			nop();
 		}
-		if (t() ^ t()) { // > assertFullyCovered(1, 1);
+		if (t() | t()) { // assertFullyCovered(1, 1);
 			nop();
 		}
 
-		// 8. Conditional Operator
-		nop(t() ? i1() : i2()); // > assertPartlyCovered(1, 1);
-		nop(f() ? i1() : i2()); // > assertPartlyCovered(1, 1);
+		/* 6. Conditional Or */
+		if (f() || f()) { // assertFullyCovered(2, 2);
+			nop();
+		}
+		if (f() || t()) { // assertFullyCovered(2, 2);
+			nop();
+		}
+		if (t() || f()) { // assertPartlyCovered(3, 1);
+			nop();
+		}
+		if (t() || t()) { // assertPartlyCovered(3, 1);
+			nop();
+		}
 
-		// 9. Not (one case)
-		nop(!t()); // > assertPartlyCovered(1, 1);
-		nop(!f()); // > assertPartlyCovered(1, 1);
+		/* 7. Exclusive Or */
+		if (f() ^ f()) { // assertFullyCovered(1, 1);
+			nop();
+		}
+		if (f() ^ t()) { // assertFullyCovered(1, 1);
+			nop();
+		}
+		if (t() ^ f()) { // assertFullyCovered(1, 1);
+			nop();
+		}
+		if (t() ^ t()) { // assertFullyCovered(1, 1);
+			nop();
+		}
 
-		// 10. Not (both cases)
+		/* 8. Conditional Operator */
+		nop(t() ? i1() : i2()); // assertPartlyCovered(1, 1);
+		nop(f() ? i1() : i2()); // assertPartlyCovered(1, 1);
+
+		/* 9. Not (one case) */
+		nop(!t()); // assertPartlyCovered(1, 1);
+		nop(!f()); // assertPartlyCovered(1, 1);
+
+		/* 10. Not (both cases) */
 		for (boolean b : new boolean[] { true, false }) {
-			nop(!b); // > assertFullyCovered(0, 2);
+			nop(!b); // assertFullyCovered(0, 2);
 		}
 
 	}

@@ -31,12 +31,7 @@ import org.jacoco.core.analysis.IPackageCoverage;
 import org.jacoco.core.analysis.ISourceFileCoverage;
 
 /**
- * Reads a single source file and allows access to its line coverage. Lines may
- * contains executable comments in the format
- * 
- * <pre>
- * // > statement1(); statement2();
- * </pre>
+ * Reads a single source file and allows access to its line coverage.
  */
 public class Source {
 
@@ -44,8 +39,8 @@ public class Source {
 
 	private static final String SRC_ENCODING = "UTF-8";
 
-	private static final Pattern EXEC_COMMENT_PATTERN = Pattern
-			.compile("//\\s*>(.*)");
+	private static final Pattern COMMENT_PATTERN = Pattern
+			.compile("(?<!https?:)//(.*)");
 
 	/**
 	 * Represents a single line in a source file.
@@ -75,10 +70,11 @@ public class Source {
 		}
 
 		/**
-		 * @return exectable comment if present or <code>null</code>
+		 * @return the text of a single line comment if present or
+		 *         <code>null</code>
 		 */
-		public String getExecutableComment() {
-			final Matcher matcher = EXEC_COMMENT_PATTERN.matcher(text);
+		public String getComment() {
+			final Matcher matcher = COMMENT_PATTERN.matcher(text);
 			return matcher.find() ? matcher.group(1) : null;
 		}
 

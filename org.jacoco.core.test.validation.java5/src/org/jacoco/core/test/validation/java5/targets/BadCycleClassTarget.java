@@ -26,15 +26,15 @@ public class BadCycleClassTarget {
 	public static class Child extends Base {
 
 		static {
-			Stubs.logEvent("childclinit"); // > assertFullyCovered();
+			Stubs.logEvent("childclinit"); // assertFullyCovered();
 		}
 
 		public Child() {
-			Stubs.logEvent("childinit"); // > assertFullyCovered();
+			Stubs.logEvent("childinit"); // assertFullyCovered();
 		}
 
 		void someMethod() {
-			Stubs.logEvent("childsomeMethod"); // > assertFullyCovered();
+			Stubs.logEvent("childsomeMethod"); // assertFullyCovered();
 		}
 
 	}

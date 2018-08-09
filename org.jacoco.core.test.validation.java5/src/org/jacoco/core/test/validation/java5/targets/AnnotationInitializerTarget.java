@@ -16,8 +16,8 @@ package org.jacoco.core.test.validation.java5.targets;
  */
 public @interface AnnotationInitializerTarget {
 
-	Object CONST = new Object(); // > assertFullyCovered();
+	Object CONST = new Object(); // assertFullyCovered();
 
-	int value() default 0; // > assertEmpty();
+	int value() default 0; // assertEmpty();
 
 }

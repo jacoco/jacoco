@@ -34,7 +34,7 @@ public class AnnotationOnLocalVariableTarget {
 
 	public static void main(String[] args) {
 		@NonNull
-		Object o = legacy(); // > assertFullyCovered();
+		Object o = legacy(); // assertFullyCovered();
 	}
 
 }

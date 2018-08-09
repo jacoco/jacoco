@@ -126,8 +126,8 @@ public class FinallyTest extends ValidationTestBase {
 
 	@Test
 	@Override
-	public void execute_inline_assertions() throws IOException {
-		super.execute_inline_assertions();
+	public void execute_assertions_in_comments() throws IOException {
+		super.execute_assertions_in_comments();
 		gotos();
 	}
 

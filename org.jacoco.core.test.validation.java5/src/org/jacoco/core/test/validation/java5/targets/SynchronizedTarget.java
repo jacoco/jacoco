@@ -24,24 +24,24 @@ public class SynchronizedTarget {
 	private static final Object lock = new Object();
 
 	private static void normal() {
-		nop(); // > assertFullyCovered();
-		// when compiled with ECJ next line covered partly without filter:
-		synchronized (lock) { // > assertFullyCovered();
-			nop(); // > assertFullyCovered();
-		} // > assertMonitorExit();
-		nop(); // > assertFullyCovered();
+		nop(); // assertFullyCovered();
+		/* when compiled with ECJ next line covered partly without filter: */
+		synchronized (lock) { // assertFullyCovered();
+			nop(); // assertFullyCovered();
+		} // assertMonitorExit();
+		nop(); // assertFullyCovered();
 	}
 
 	private static void explicitException() {
-		synchronized (lock) { // > assertFullyCovered();
-			throw new StubException(); // > assertFullyCovered();
-		} // > assertEmpty();
+		synchronized (lock) { // assertFullyCovered();
+			throw new StubException(); // assertFullyCovered();
+		} // assertEmpty();
 	}
 
 	private static void implicitException() {
-		synchronized (lock) { // > assertMonitorEnterImplicitException();
-			ex(); // > assertNotCovered();
-		} // > assertMonitorExitImplicitException();
+		synchronized (lock) { // assertMonitorEnterImplicitException();
+			ex(); // assertNotCovered();
+		} // assertMonitorExitImplicitException();
 	}
 
 	public static void main(String[] args) {

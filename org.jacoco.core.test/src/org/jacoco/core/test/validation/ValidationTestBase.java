@@ -94,10 +94,18 @@ public abstract class ValidationTestBase {
 		analyzer.analyzeClass(bytes, data.getName());
 	}
 
+	/**
+	 * All single line comments are interpreted as statements in the following
+	 * format:
+	 * 
+	 * <pre>
+	 * // statement1(); statement2();
+	 * </pre>
+	 */
 	@Test
-	public void execute_inline_assertions() throws IOException {
+	public void execute_assertions_in_comments() throws IOException {
 		for (Line line : source.getLines()) {
-			String exec = line.getExecutableComment();
+			String exec = line.getComment();
 			if (exec != null) {
 				StatementParser.parse(exec, new StatementExecutor(this, line),
 						line.toString());

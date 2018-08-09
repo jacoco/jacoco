@@ -119,17 +119,18 @@ public class SourceTest {
 	}
 
 	@Test
-	public void line_should_return_executable_comment() throws IOException {
-		String src = "aaa\nbbb // > test();\n}//>nospaces();";
+	public void line_should_return_comment() throws IOException {
+		String src = "aaa\nbbb // test()\n}//nospaces()\n/* http://jacoco.org/ */";
 
 		final Source s = new Source(new StringReader(src),
 				new SourceFileCoverageImpl("Foo", "foo"));
 
 		List<Line> lines = s.getLines();
-		assertEquals(3, lines.size());
-		assertNull("aaa", lines.get(0).getExecutableComment());
-		assertEquals(" test();", lines.get(1).getExecutableComment());
-		assertEquals("nospaces();", lines.get(2).getExecutableComment());
+		assertEquals(4, lines.size());
+		assertNull(lines.get(0).getComment());
+		assertEquals(" test()", lines.get(1).getComment());
+		assertEquals("nospaces()", lines.get(2).getComment());
+		assertNull(lines.get(3).getComment());
 	}
 
 }

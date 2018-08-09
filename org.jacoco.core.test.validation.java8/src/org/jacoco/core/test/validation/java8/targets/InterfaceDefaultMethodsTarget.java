@@ -19,14 +19,14 @@ import static org.jacoco.core.test.validation.targets.Stubs.i1;
  */
 public interface InterfaceDefaultMethodsTarget {
 
-	public static final int CONST = i1(); // > assertFullyCovered();
+	public static final int CONST = i1(); // assertFullyCovered();
 
 	default void m1() {
-		return; // > assertFullyCovered();
+		return; // assertFullyCovered();
 	}
 
 	default void m2() {
-		return; // > assertNotCovered();
+		return; // assertNotCovered();
 	}
 
 	public class Impl implements InterfaceDefaultMethodsTarget {
