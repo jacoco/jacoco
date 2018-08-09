@@ -15,4 +15,4 @@ package org.jacoco.core.test.validation.kotlin.targets
  * This test target is top level function.
  */
 fun main(args: Array<String>) {
-} // $line-fun$
+} // assertFullyCovered()

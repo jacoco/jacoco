@@ -34,7 +34,7 @@ public class AnnotationOnLocalVariableTarget {
 
 	public static void main(String[] args) {
 		@NonNull
-		Object o = legacy(); // $line-var$
+		Object o = legacy(); // assertFullyCovered()
 	}
 
 }

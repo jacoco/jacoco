@@ -23,7 +23,7 @@ import org.jacoco.core.test.validation.targets.Stubs.SuperClass;
 public class ControlStructureBeforeSuperConstructorTarget extends SuperClass {
 
 	public ControlStructureBeforeSuperConstructorTarget() {
-		super(t() || f()); // $line-super$
+		super(t() || f()); // assertPartlyCovered(3, 1)
 	}
 
 	public static void main(String[] args) {

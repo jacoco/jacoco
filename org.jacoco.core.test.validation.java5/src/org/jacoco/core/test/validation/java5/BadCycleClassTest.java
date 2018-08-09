@@ -11,7 +11,6 @@
  *******************************************************************************/
 package org.jacoco.core.test.validation.java5;
 
-import org.jacoco.core.analysis.ICounter;
 import org.jacoco.core.test.validation.ValidationTestBase;
 import org.jacoco.core.test.validation.java5.targets.BadCycleClassTarget;
 import org.junit.Test;
@@ -26,11 +25,7 @@ public class BadCycleClassTest extends ValidationTestBase {
 	}
 
 	@Test
-	public void test() throws Exception {
-		assertLine("childinit", ICounter.FULLY_COVERED);
-		assertLine("childsomeMethod", ICounter.FULLY_COVERED);
-		assertLine("childclinit", ICounter.FULLY_COVERED);
-
+	public void method_execution_sequence() throws Exception {
 		// The cycle causes a constructor and instance method to be called
 		// before the static initializer of a class:
 		assertLogEvents("childinit", "childsomeMethod", "childclinit",

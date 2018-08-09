@@ -18,16 +18,16 @@ import static org.jacoco.core.test.validation.targets.Stubs.i1;
  */
 public interface InterfaceClassInitializerTarget {
 
-	// No code required to initialize these fields:
+	/* No code required to initialize these fields: */
 
-	static final int CONST1 = 12345; // $line-const1$
+	static final int CONST1 = 12345; // assertEmpty()
 
-	static final String CONST2 = "const"; // $line-const2$
+	static final String CONST2 = "const"; // assertEmpty()
 
-	// These fields are initialized within <clinit>
+	/* These fields are initialized within <clinit> */
 
-	static final int CONST3 = i1(); // $line-const3$
+	static final int CONST3 = i1(); // assertFullyCovered()
 
-	static final Object CONST4 = new Object(); // $line-const4$
+	static final Object CONST4 = new Object(); // assertFullyCovered()
 
 }

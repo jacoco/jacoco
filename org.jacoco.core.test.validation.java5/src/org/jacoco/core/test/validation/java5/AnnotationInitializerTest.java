@@ -11,12 +11,10 @@
  *******************************************************************************/
 package org.jacoco.core.test.validation.java5;
 
-import org.jacoco.core.analysis.ICounter;
+import static org.junit.Assert.assertEquals;
+
 import org.jacoco.core.test.validation.ValidationTestBase;
 import org.jacoco.core.test.validation.java5.targets.AnnotationInitializerTarget;
-import org.junit.Test;
-
-import static org.junit.Assert.assertEquals;
 
 /**
  * Test of initializer in annotations.
@@ -37,12 +35,6 @@ public class AnnotationInitializerTest extends ValidationTestBase {
 
 		// Force initialization
 		targetClass.getField("CONST").get(null);
-	}
-
-	@Test
-	public void testCoverageResult() {
-		assertLine("const", ICounter.FULLY_COVERED);
-		assertLine("value", ICounter.EMPTY);
 	}
 
 }

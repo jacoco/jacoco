@@ -18,26 +18,32 @@ import static org.jacoco.core.test.validation.targets.Stubs.nop;
  */
 public class EnumConstructorTarget {
 
-	private enum ImplicitConstructor { // $line-implicitConstructor$
+	/*
+	 * Implicit constructor should be filtered. without filter next line is
+	 * partly covered:
+	 */
+	private enum ImplicitConstructor { // assertFullyCovered()
 	}
 
+	/* Explicit non empty constructor should not be filtered: */
 	private enum ExplicitNonEmptyConstructor {
 		;
 
 		ExplicitNonEmptyConstructor() {
-			nop(); // $line-explicitNonEmptyConstructor$
+			nop(); // assertNotCovered()
 		}
 	}
 
-	@SuppressWarnings("unused")
+	/* Explicit empty constructor should be filtered: */
 	private enum ExplicitEmptyConstructor {
 		;
 
 		ExplicitEmptyConstructor() {
-		} // $line-explicitEmptyConstructor$
+			/* without filter next line is not covered: */
+		} // assertEmpty()
 
 		ExplicitEmptyConstructor(Object p) {
-		} // $line-explicitEmptyConstructorWithParameter$
+		} // assertNotCovered()
 	}
 
 	public static void main(String[] args) {

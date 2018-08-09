@@ -35,11 +35,11 @@ public class FinallyTarget {
 		Object in = null;
 		try {
 			in = open(t);
-		} finally { // $line-example.0$
-			if (in != null) { // $line-example.1$
-				nop(); // $line-example.2$
-			} // $line-example.3$
-		} // $line-example.4$
+		} finally { // assertFinally() tag("example.0")
+			if (in != null) { // assertFullyCovered(0, 2)
+				nop(); // assertFullyCovered() tag("example.2")
+			} // assertEmpty()
+		} // assertEmpty()
 	}
 
 	private static Object open(boolean t) {
@@ -47,80 +47,93 @@ public class FinallyTarget {
 		return new Object();
 	}
 
+	/**
+	 * GOTO instructions at the end of duplicates of finally block might have
+	 * line number of a last instruction of finally block and hence lead to
+	 * unexpected coverage results, like for example in case of ECJ for
+	 * {@link FinallyTarget#catchNotExecuted()},
+	 * {@link FinallyTarget#emptyCatch()}. So we decided to ignore them, even if
+	 * they can correspond to a real break statement.
+	 * <p>
+	 * See also <a href=
+	 * "https://bugs.openjdk.java.net/browse/JDK-8180141">JDK-8180141</a> and
+	 * <a href=
+	 * "https://bugs.openjdk.java.net/browse/JDK-7008643">JDK-7008643</a>.
+	 */
 	private static void breakStatement() {
-		for (int i = 0; i < 1; i++) { // $line-breakStatement.for$
+		for (int i = 0; i < 1; i++) { // tag("breakStatement.for")
 			try {
 				if (f()) {
-					break; // $line-breakStatement$
+					break; // assertEmpty() tag("breakStatement")
 				}
 			} finally {
-				nop("finally"); // $line-breakStatement.1$
-			} // $line-breakStatement.2$
+				nop("finally"); // assertFullyCovered() tag("breakStatement.1")
+			} // assertEmpty() tag("breakStatement.2")
 		}
 	}
 
 	private static void catchNotExecuted() {
 		try {
 			nop("try");
-		} catch (Exception e) { // $line-catchNotExecuted$
-			nop("catch"); // $line-catchNotExecuted.catch$
-		} finally { // $line-catchNotExecuted.0$
-			nop("finally"); // $line-catchNotExecuted.1$
-		} // $line-catchNotExecuted.2$
+		} catch (Exception e) { // tag("catchNotExecuted")
+			nop("catch"); // assertNotCovered()
+		} finally { // assertEmpty()
+			nop("finally"); // assertFullyCovered() tag("catchNotExecuted.1")
+		} // assertEmpty() tag("catchNotExecuted.2")
 	}
 
 	private static void emptyCatch() {
 		try {
 			nop("try");
-		} catch (Exception e) { // $line-emptyCatch$
-			// empty
-		} finally { // $line-emptyCatch.0$
-			nop("finally"); // $line-emptyCatch.1$
-		} // $line-emptyCatch.2$
+		} catch (Exception e) { // tag("emptyCatch")
+			/* empty */
+		} finally { // assertEmpty()
+			nop("finally"); // assertFullyCovered() tag("emptyCatch.1")
+		} // assertEmpty() tag("emptyCatch.2")
 	}
 
 	private static void twoRegions() {
 		try {
-			// jump to another region associated with same handler:
-			if (t()) { // $line-twoRegions.if$
-				nop(); // $line-twoRegions.region.1$
-				return; // $line-twoRegions.return.1$
+			/* jump to another region associated with same handler: */
+			if (t()) { // assertFullyCovered(1, 1)
+				nop(); // assertFullyCovered()
+				return; // assertTwoRegionsReturn1()
 			} else {
-				nop(); // $line-twoRegions.region.2$
-				return; // $line-twoRegions.return.2$
+				nop(); // assertNotCovered()
+				return; // assertTwoRegionsReturn2()
 			}
-		} finally { // $line-twoRegions.0$
-			nop(); // $line-twoRegions.1$
-		} // $line-twoRegions.2$
+		} finally { // assertEmpty()
+			nop(); // assertTwoRegions1()
+		} // assertEmpty()
 	}
 
 	private static void nested() {
 		try {
 			nop();
-		} finally { // $line-nested.0$
-			try { // $line-nested.1$
-				nop(); // $line-nested.2$
-			} finally { // $line-nested.3$
-				nop(); // $line-nested.4$
-			} // $line-nested.5$
-		} // $line-nested.6$
+		} finally { // assertFinally() tag("nested.0")
+			try { // assertEmpty()
+				nop(); // assertFullyCovered()
+			} finally { // assertFinally() tag("nested.3")
+				nop(); // assertFullyCovered()
+			} // assertEmpty() tag("nested.5")
+		} // assertEmpty() tag("nested.6")
 	}
 
 	private static void emptyTry() {
 		try {
-			// empty
-		} finally { // $line-emptyTry.0$
-			nop(); // $line-emptyTry.1$
-		} // $line-emptyTry.2$
+			/* empty */
+		} finally { // assertEmpty()
+			nop(); // assertEmptyTry1()
+		} // assertEmptyTry2() tag("emptyTry.2")
 	}
 
 	@SuppressWarnings("finally")
 	private static void alwaysCompletesAbruptly() {
 		try {
 			nop();
-		} finally { // $line-alwaysCompletesAbruptly.0$
-			return; // $line-alwaysCompletesAbruptly.1$
-		} // $line-alwaysCompletesAbruptly.2$
+		} finally { // assertAlwaysCompletesAbruptly0()tag("alwaysCompletesAbruptly.0")
+			return; // assertAlwaysCompletesAbruptly1()
+		} // assertEmpty()
 	}
 
 	public static void main(String[] args) {

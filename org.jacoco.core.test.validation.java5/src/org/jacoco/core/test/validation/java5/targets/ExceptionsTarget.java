@@ -51,92 +51,104 @@ public class ExceptionsTarget {
 		}
 	}
 
+	/**
+	 * Currently no coverage at all, as we don't see when a block aborts
+	 * somewhere in the middle.
+	 */
 	private static void implicitNullPointerException(int[] a) {
-		nop(); // $line-implicitNullPointerException.before$
-		a[0] = 0; // $line-implicitNullPointerException.exception$
-		nop(); // $line-implicitNullPointerException.after$
+		nop(); // assertNotCovered()
+		a[0] = 0; // assertNotCovered()
+		nop(); // assertNotCovered()
 	}
 
+	/**
+	 * For each line with method invocations a extra probe is inserted.
+	 * Therefore the lines before the exception are marked as covered.
+	 */
 	private static void implicitException() {
-		nop(); // $line-implicitException.before$
-		ex(); // $line-implicitException.exception$
-		nop(); // $line-implicitException.after$
+		nop(); // assertFullyCovered()
+		ex(); // assertNotCovered()
+		nop(); // assertNotCovered()
 	}
 
 	private static void explicitException() {
-		nop(); // $line-explicitException.before$
-		throw new StubException(); // $line-explicitException.throw$
+		nop(); // assertFullyCovered()
+		throw new StubException(); // assertFullyCovered()
 	}
 
 	private static void noExceptionTryCatch() {
-		nop(); // $line-noExceptionTryCatch.beforeBlock$
+		nop(); // assertFullyCovered()
 		try {
-			nop(); // $line-noExceptionTryCatch.tryBlock$
-		} catch (StubException e) { // $line-noExceptionTryCatch.catch$
-			nop(); // $line-noExceptionTryCatch.catchBlock$
-		} // $line-noExceptionTryCatch.catchBlockEnd$
-	} // $line-noExceptionTryCatch.afterBlock$
+			nop(); // assertFullyCovered()
+		} catch (StubException e) { // assertCatchNoException()
+			nop(); // assertNotCovered()
+		} // assertCatchBlockEndNoException()
+	} // assertFullyCovered()
 
 	private static void implicitExceptionTryCatch() {
-		nop(); // $line-implicitExceptionTryCatch.beforeBlock$
+		nop(); // assertFullyCovered()
 		try {
-			nop(); // $line-implicitExceptionTryCatch.before$
-			ex(); // $line-implicitExceptionTryCatch.exception$
-			nop(); // $line-implicitExceptionTryCatch.after$
-		} catch (StubException e) { // $line-implicitExceptionTryCatch.catch$
-			nop(); // $line-implicitExceptionTryCatch.catchBlock$
-		} // $line-implicitExceptionTryCatch.catchBlockEnd$
-	} // $line-implicitExceptionTryCatch.afterBlock$
+			nop(); // assertFullyCovered()
+			ex(); // assertNotCovered()
+			nop(); // assertNotCovered()
+		} catch (StubException e) { // assertCatchImplicitException()
+			nop(); // assertFullyCovered()
+		} // assertCatchBlockEndImplicitException()
+	} // assertFullyCovered()
 
+	/**
+	 * As the try/catch block is entered at one branch of the condition should
+	 * be marked as executed
+	 */
 	private static void implicitExceptionTryCatchAfterCondition() {
-		if (f()) { // $line-implicitExceptionTryCatchAfterCondition.condition$
+		if (f()) { // assertFullyCovered(1, 1)
 			return;
 		}
 		try {
-			ex(); // $line-implicitExceptionTryCatchAfterCondition.exception$
+			ex(); // assertNotCovered()
 		} catch (StubException e) {
-			nop(); // $line-implicitExceptionTryCatchAfterCondition.catchBlock$
+			nop(); // assertFullyCovered()
 		}
 	}
 
 	private static void explicitExceptionTryCatch() {
-		nop(); // $line-explicitExceptionTryCatch.beforeBlock$
+		nop(); // assertFullyCovered()
 		try {
-			nop(); // $line-explicitExceptionTryCatch.before$
-			throw new StubException(); // $line-explicitExceptionTryCatch.throw$
-		} catch (StubException e) { // $line-explicitExceptionTryCatch.catch$
-			nop(); // $line-explicitExceptionTryCatch.catchBlock$
-		} // $line-explicitExceptionTryCatch.catchBlockEnd$
-	} // $line-explicitExceptionTryCatch.afterBlock$
+			nop(); // assertFullyCovered()
+			throw new StubException(); // assertFullyCovered()
+		} catch (StubException e) { // assertFullyCovered()
+			nop(); // assertFullyCovered()
+		} // assertEmpty()
+	} // assertFullyCovered()
 
 	private static void noExceptionFinally() {
-		nop(); // $line-noExceptionFinally.beforeBlock$
+		nop(); // assertFullyCovered()
 		try {
-			nop(); // $line-noExceptionFinally.tryBlock$
-		} finally { // $line-noExceptionFinally.finally$
-			nop(); // $line-noExceptionFinally.finallyBlock$
-		} // $line-noExceptionFinally.finallyBlockEnd$
-	} // $line-noExceptionFinally.afterBlock$
+			nop(); // assertFullyCovered()
+		} finally { // assertFinally()
+			nop(); // assertFullyCovered()
+		} // assertEmpty()
+	} // assertFullyCovered()
 
 	private static void implicitExceptionFinally() {
-		nop(); // $line-implicitExceptionFinally.beforeBlock$
+		nop(); // assertFullyCovered()
 		try {
-			nop(); // $line-implicitExceptionFinally.before$
-			ex(); // $line-implicitExceptionFinally.exception$
-			nop(); // $line-implicitExceptionFinally.after$
-		} finally { // $line-implicitExceptionFinally.finally$
-			nop(); // $line-implicitExceptionFinally.finallyBlock$
-		} // $line-implicitExceptionFinally.finallyBlockEnd$
-	} // $line-implicitExceptionFinally.afterBlock$
+			nop(); // assertFullyCovered()
+			ex(); // assertNotCovered()
+			nop(); // assertNotCovered()
+		} finally { // assertFinallyImplicitException()
+			nop(); // assertFullyCovered()
+		} // assertEmpty()
+	} // assertNotCovered()
 
 	private static void explicitExceptionFinally() {
-		nop(); // $line-explicitExceptionFinally.beforeBlock$
+		nop(); // assertFullyCovered()
 		try {
-			nop(); // $line-explicitExceptionFinally.before$
-			throw new StubException(); // $line-explicitExceptionFinally.throw$
-		} finally { // $line-explicitExceptionFinally.finally$
-			nop(); // $line-explicitExceptionFinally.finallyBlock$
-		} // $line-explicitExceptionFinally.finallyBlockEnd$
-	} // $line-explicitExceptionFinally.afterBlock$
+			nop(); // assertFullyCovered()
+			throw new StubException(); // assertFullyCovered()
+		} finally { // assertFinally()
+			nop(); // assertFullyCovered()
+		} // assertBlockEndImplicitException()
+	} // assertEmpty()
 
 }

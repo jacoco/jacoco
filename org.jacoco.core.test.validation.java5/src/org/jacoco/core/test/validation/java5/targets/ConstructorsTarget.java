@@ -18,20 +18,31 @@ import static org.jacoco.core.test.validation.targets.Stubs.nop;
  */
 public class ConstructorsTarget {
 
-	ConstructorsTarget() { // $line-packageLocal$
+	/* not filtered because not private: */
+	ConstructorsTarget() { // assertFullyCovered()
 	}
 
-	private ConstructorsTarget(Object arg) { // $line-arg$
+	/* not filtered because has argument: */
+	private ConstructorsTarget(Object arg) { // assertFullyCovered()
 	}
 
 	private static class Super extends ConstructorsTarget {
 		private Super() {
-			super(null); // $line-super$
+			/*
+			 * not filtered because not empty - prepares arguments for super
+			 * constructor:
+			 */
+			super(null); // assertFullyCovered()
 		}
 	}
 
 	private class Inner {
-		private Inner() { // $line-inner$
+		/*
+		 * not filtered because contains initialization of a field to hold
+		 * reference to an instance of outer class that is passed as an
+		 * argument:
+		 */
+		private Inner() { // assertFullyCovered()
 		}
 	}
 
@@ -39,28 +50,35 @@ public class ConstructorsTarget {
 		@SuppressWarnings("unused")
 		private final Object field = this;
 
-		private InnerStatic() { // $line-innerStatic$
+		/*
+		 * not filtered because not empty - contains initialization of a field:
+		 */
+		private InnerStatic() { // assertFullyCovered()
 		}
 	}
 
-	public static class PublicDefault { // $line-publicDefault$
+	/*
+	 * not filtered because default constructor for not private inner classes is
+	 * not private:
+	 */
+	public static class PublicDefault { // assertFullyCovered()
 	}
 
-	static class PackageLocalDefault { // $line-packageLocalDefault$
+	static class PackageLocalDefault { // assertFullyCovered()
 	}
 
-	private static class PrivateDefault { // $line-privateDefault$
+	private static class PrivateDefault { // assertEmpty()
 	}
 
 	private static class PrivateNonEmptyNoArg {
 		private PrivateNonEmptyNoArg() {
-			nop(); // $line-privateNonEmptyNoArg$
+			nop(); // assertFullyCovered()
 		}
 	}
 
 	private static class PrivateEmptyNoArg {
-		private PrivateEmptyNoArg() { // $line-privateEmptyNoArg$
-		} // $line-return$
+		private PrivateEmptyNoArg() { // assertEmpty()
+		} // assertEmpty()
 	}
 
 	public static void main(String[] args) {

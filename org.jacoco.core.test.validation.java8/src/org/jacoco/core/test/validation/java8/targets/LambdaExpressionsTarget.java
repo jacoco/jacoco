@@ -23,11 +23,11 @@ public class LambdaExpressionsTarget {
 	public static void main(String[] args) {
 
 		exec(() -> {
-			nop(); // $line-executedlambdabody$
+			nop(); // assertFullyCovered()
 		});
-		
+
 		noexec(() -> {
-			nop(); // $line-notexecutedlambdabody$
+			nop(); // assertNotCovered()
 		});
 
 	}

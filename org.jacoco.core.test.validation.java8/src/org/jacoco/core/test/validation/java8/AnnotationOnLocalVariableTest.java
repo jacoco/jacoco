@@ -11,10 +11,8 @@
  *******************************************************************************/
 package org.jacoco.core.test.validation.java8;
 
-import org.jacoco.core.analysis.ICounter;
 import org.jacoco.core.test.validation.ValidationTestBase;
 import org.jacoco.core.test.validation.java8.targets.AnnotationOnLocalVariableTarget;
-import org.junit.Test;
 
 /**
  * Test of ASM bug
@@ -24,13 +22,6 @@ public class AnnotationOnLocalVariableTest extends ValidationTestBase {
 
 	public AnnotationOnLocalVariableTest() {
 		super(AnnotationOnLocalVariableTarget.class);
-	}
-
-	@Test
-	public void testCoverageResult() {
-
-		assertLine("var", ICounter.FULLY_COVERED);
-
 	}
 
 }

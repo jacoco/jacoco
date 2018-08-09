@@ -13,20 +13,20 @@ package org.jacoco.core.test.validation.java5.targets;
 
 import org.jacoco.core.test.validation.targets.Stubs;
 
-public enum EnumImplicitMethodsTarget { // $line-classdef$
+public enum EnumImplicitMethodsTarget { // assertFullyCovered()
 
-	CONST(Stubs.f() ? new Object() : new Object()); // $line-const$
+	CONST(Stubs.f() ? new Object() : new Object()); // assertPartlyCovered(1, 1)
 
 	static {
-	} // $line-staticblock$
+	} // assertFullyCovered()
 
 	/**
-	 * Unlike in {@link ConstructorsTarget regular classes}, even if enum has explicit
-	 * constructor, {@code clinit} method in any case has a reference to the
-	 * line of enum definition.
+	 * Unlike in {@link ConstructorsTarget regular classes}, even if enum has
+	 * explicit constructor, {@code clinit} method in any case has a reference
+	 * to the line of enum definition.
 	 */
-	EnumImplicitMethodsTarget(Object o) { // $line-super$
-	} // $line-constructor$
+	EnumImplicitMethodsTarget(Object o) { // assertFullyCovered()
+	} // assertFullyCovered()
 
 	/**
 	 * This method should not be excluded from analysis unlike implicitly
@@ -34,7 +34,7 @@ public enum EnumImplicitMethodsTarget { // $line-classdef$
 	 * definition in case of javac and to the first line in case of ECJ.
 	 */
 	public void valueOf() {
-	} // $line-customValueOfMethod$
+	} // assertNotCovered()
 
 	/**
 	 * This method should not be excluded from analysis unlike implicitly
@@ -42,7 +42,7 @@ public enum EnumImplicitMethodsTarget { // $line-classdef$
 	 * definition in case of javac and to the first line in case of ECJ.
 	 */
 	public void values(Object o) {
-	} // $line-customValuesMethod$
+	} // assertNotCovered()
 
 	public static void main(String[] args) {
 	}

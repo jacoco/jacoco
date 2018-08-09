@@ -14,18 +14,19 @@ package org.jacoco.core.test.validation.java8.targets;
 import static org.jacoco.core.test.validation.targets.Stubs.i1;
 
 /**
- * This test target is an interface with a class initializer and default methods.
+ * This test target is an interface with a class initializer and default
+ * methods.
  */
 public interface InterfaceDefaultMethodsTarget {
 
-	public static final int CONST = i1(); // $line-clinit$
+	public static final int CONST = i1(); // assertFullyCovered()
 
 	default void m1() {
-		return; // $line-m1$
+		return; // assertFullyCovered()
 	}
 
 	default void m2() {
-		return; // $line-m2$
+		return; // assertNotCovered()
 	}
 
 	public class Impl implements InterfaceDefaultMethodsTarget {
@@ -34,7 +35,7 @@ public interface InterfaceDefaultMethodsTarget {
 			m1();
 		}
 	}
-	
+
 	public static void main(String[] args) {
 		new Impl();
 	}

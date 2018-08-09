@@ -11,25 +11,17 @@
  *******************************************************************************/
 package org.jacoco.core.test.validation.java5;
 
-import org.jacoco.core.analysis.ICounter;
 import org.jacoco.core.test.validation.ValidationTestBase;
 import org.jacoco.core.test.validation.java5.targets.ControlStructureBeforeSuperConstructorTarget;
-import org.junit.Test;
 
 /**
  * Test of probes before the super constructor call.
  */
-public class ControlStructureBeforeSuperConstructorTest extends ValidationTestBase {
+public class ControlStructureBeforeSuperConstructorTest
+		extends ValidationTestBase {
 
 	public ControlStructureBeforeSuperConstructorTest() {
 		super(ControlStructureBeforeSuperConstructorTarget.class);
-	}
-
-	@Test
-	public void testCoverageResult() {
-
-		assertLine("super", ICounter.PARTLY_COVERED, 3, 1);
-
 	}
 
 }

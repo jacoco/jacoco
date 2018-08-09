@@ -14,15 +14,15 @@ package org.jacoco.core.test.validation.java5.targets;
 /**
  * This test target has instance members with implicit initializers.
  */
-public class ImplicitFieldInitializationTarget { // $line-classdef$
+public class ImplicitFieldInitializationTarget { // assertFullyCovered()
 
-	Object field1; // $line-field1$
+	Object field1; // assertEmpty()
 
-	Object field2 = this; // $line-field2$
+	Object field2 = this; // assertFullyCovered()
 
-	int field3; // $line-field3$
+	int field3; // assertEmpty()
 
-	int field4 = 2000; // $line-field4$
+	int field4 = 2000; // assertFullyCovered()
 
 	public static void main(String[] args) {
 		new ImplicitFieldInitializationTarget();

@@ -12,16 +12,21 @@
 package org.jacoco.core.test.validation.java5;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNull;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
-import org.jacoco.core.analysis.ICounter;
 import org.jacoco.core.internal.BytecodeVersion;
 import org.jacoco.core.test.TargetLoader;
+import org.jacoco.core.test.validation.Source.Line;
 import org.jacoco.core.test.validation.ValidationTestBase;
 import org.jacoco.core.test.validation.java5.targets.FinallyTarget;
+import org.junit.Before;
 import org.junit.Test;
 import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.Opcodes;
@@ -35,180 +40,101 @@ import org.objectweb.asm.tree.MethodNode;
  */
 public class FinallyTest extends ValidationTestBase {
 
+	private Map<Integer, String> tags;
+
 	public FinallyTest() {
 		super(FinallyTarget.class);
 	}
 
-	/**
-	 * {@link FinallyTarget#example(boolean)}
-	 */
-	@Test
-	public void example() {
+	@Before
+	@Override
+	public void setup() throws Exception {
+		super.setup();
+		tags = new HashMap<Integer, String>();
+	}
+
+	public void assertFinally(final Line line) {
 		if (isJDKCompiler) {
-			assertLine("example.0", ICounter.EMPTY);
+			assertEmpty(line);
 		} else {
-			assertLine("example.0", ICounter.FULLY_COVERED);
+			assertFullyCovered(line);
 		}
-		assertLine("example.1", ICounter.FULLY_COVERED, 0, 2);
-		assertLine("example.2", ICounter.FULLY_COVERED);
-		assertLine("example.3", ICounter.EMPTY);
-		assertLine("example.4", ICounter.EMPTY);
 	}
 
-	/**
-	 * GOTO instructions at the end of duplicates of finally block might have
-	 * line number of a last instruction of finally block and hence lead to
-	 * unexpected coverage results, like for example in case of ECJ for
-	 * {@link FinallyTarget#catchNotExecuted()},
-	 * {@link FinallyTarget#emptyCatch()}. So we decided to ignore them, even if
-	 * they can correspond to a real break statement.
-	 * <p>
-	 * See also <a href=
-	 * "https://bugs.openjdk.java.net/browse/JDK-8180141">JDK-8180141</a> and
-	 * <a href=
-	 * "https://bugs.openjdk.java.net/browse/JDK-7008643">JDK-7008643</a>.
-	 * <p>
-	 * {@link FinallyTarget#breakStatement()}
-	 */
-	@Test
-	public void breakStatement() {
-		assertLine("breakStatement", ICounter.EMPTY);
-
-		assertLine("breakStatement.1", ICounter.FULLY_COVERED);
-		assertLine("breakStatement.2", ICounter.EMPTY);
-	}
-
-	/**
-	 * {@link FinallyTarget#catchNotExecuted()}
-	 */
-	@Test
-	public void catchNotExecuted() {
-		assertLine("catchNotExecuted.catch", ICounter.NOT_COVERED);
-		assertLine("catchNotExecuted.0", ICounter.EMPTY);
-		assertLine("catchNotExecuted.1", ICounter.FULLY_COVERED);
-		assertLine("catchNotExecuted.2", ICounter.EMPTY);
-	}
-
-	/**
-	 * {@link FinallyTarget#emptyCatch()}
-	 */
-	@Test
-	public void emptyCatch() {
-		assertLine("emptyCatch.0", ICounter.EMPTY);
-		assertLine("emptyCatch.1", ICounter.FULLY_COVERED);
-		assertLine("emptyCatch.2", ICounter.EMPTY);
-	}
-
-	/**
-	 * {@link FinallyTarget#twoRegions()}
-	 */
-	@Test
-	public void twoRegions() {
-		assertLine("twoRegions.0", ICounter.EMPTY);
+	public void assertTwoRegions1(final Line line) {
 		if (isJDKCompiler && JAVA_VERSION.isBefore("1.8")) {
 			// https://bugs.openjdk.java.net/browse/JDK-7008643
-			assertLine("twoRegions.1", ICounter.PARTLY_COVERED);
-			assertLine("twoRegions.return.1", ICounter.EMPTY);
-			assertLine("twoRegions.return.2", ICounter.EMPTY);
+			assertPartlyCovered(line);
 		} else {
-			assertLine("twoRegions.1", ICounter.FULLY_COVERED);
-			assertLine("twoRegions.return.1", ICounter.FULLY_COVERED);
-			assertLine("twoRegions.return.2", ICounter.NOT_COVERED);
+			assertFullyCovered(line);
 		}
-		assertLine("twoRegions.2", ICounter.EMPTY);
-
-		assertLine("twoRegions.if", ICounter.FULLY_COVERED, 1, 1);
-		assertLine("twoRegions.region.1", ICounter.FULLY_COVERED);
-		assertLine("twoRegions.region.2", ICounter.NOT_COVERED);
 	}
 
-	/**
-	 * {@link FinallyTarget#nested()}
-	 */
-	@Test
-	public void nested() {
-		if (isJDKCompiler) {
-			assertLine("nested.0", ICounter.EMPTY);
+	public void assertTwoRegionsReturn1(final Line line) {
+		if (isJDKCompiler && JAVA_VERSION.isBefore("1.8")) {
+			// https://bugs.openjdk.java.net/browse/JDK-7008643
+			assertEmpty(line);
 		} else {
-			assertLine("nested.0", ICounter.FULLY_COVERED);
+			assertFullyCovered(line);
 		}
-		assertLine("nested.1", ICounter.EMPTY);
-		assertLine("nested.2", ICounter.FULLY_COVERED);
-		if (isJDKCompiler) {
-			assertLine("nested.3", ICounter.EMPTY);
-		} else {
-			assertLine("nested.3", ICounter.FULLY_COVERED);
-		}
-		assertLine("nested.4", ICounter.FULLY_COVERED);
 	}
 
-	/**
-	 * {@link FinallyTarget#emptyTry()}
-	 */
-	@Test
-	public void emptyTry() {
-		assertLine("emptyTry.0", ICounter.EMPTY);
+	public void assertTwoRegionsReturn2(final Line line) {
+		if (isJDKCompiler && JAVA_VERSION.isBefore("1.8")) {
+			// https://bugs.openjdk.java.net/browse/JDK-7008643
+			assertEmpty(line);
+		} else {
+			assertNotCovered(line);
+		}
+	}
+
+	public void assertEmptyTry1(final Line line) {
 		if (isJDKCompiler && JAVA_VERSION.isBefore("1.8")) {
 			// compiler bug fixed in javac >= 1.8:
-			assertLine("emptyTry.1", ICounter.PARTLY_COVERED);
-			assertLine("emptyTry.2", ICounter.FULLY_COVERED);
+			assertPartlyCovered(line);
 		} else {
-			assertLine("emptyTry.1", ICounter.FULLY_COVERED);
-			assertLine("emptyTry.2", ICounter.EMPTY);
+			assertFullyCovered(line);
 		}
 	}
 
-	/**
-	 * {@link FinallyTarget#alwaysCompletesAbruptly()}
-	 */
-	@Test
-	public void alwaysCompletesAbruptly() {
+	public void assertEmptyTry2(final Line line) {
+		if (isJDKCompiler && JAVA_VERSION.isBefore("1.8")) {
+			// compiler bug fixed in javac >= 1.8:
+			assertFullyCovered(line);
+		} else {
+			assertEmpty(line);
+		}
+	}
+
+	public void assertAlwaysCompletesAbruptly0(final Line line) {
 		if (isJDKCompiler) {
 			// uncovered case:
-			assertLine("alwaysCompletesAbruptly.0", ICounter.EMPTY);
-			assertLine("alwaysCompletesAbruptly.1", ICounter.PARTLY_COVERED);
+			assertEmpty(line);
 		} else {
-			assertLine("alwaysCompletesAbruptly.0", ICounter.PARTLY_COVERED);
-			assertLine("alwaysCompletesAbruptly.1", ICounter.FULLY_COVERED);
+			assertPartlyCovered(line);
 		}
-		assertLine("alwaysCompletesAbruptly.2", ICounter.EMPTY);
+	}
+
+	public void assertAlwaysCompletesAbruptly1(final Line line) {
+		if (isJDKCompiler) {
+			// uncovered case:
+			assertPartlyCovered(line);
+		} else {
+			assertFullyCovered(line);
+		}
+	}
+
+	@Test
+	@Override
+	public void execute_assertions_in_comments() throws IOException {
+		super.execute_assertions_in_comments();
+		gotos();
 	}
 
 	/**
 	 * This test studies placement of GOTO instructions.
 	 */
-	@Test
-	public void gotos() throws IOException {
-		byte[] b = TargetLoader.getClassDataAsBytes(FinallyTarget.class);
-		b = BytecodeVersion.downgradeIfNeeded(BytecodeVersion.get(b), b);
-
-		final ClassNode classNode = new ClassNode();
-		new ClassReader(b).accept(classNode, 0);
-		final Set<String> tags = new HashSet<String>();
-		for (final MethodNode m : classNode.methods) {
-			if ("main".equals(m.name)) {
-				// skip it
-				continue;
-			}
-			int lineNumber = -1;
-			for (AbstractInsnNode i = m.instructions
-					.getFirst(); i != null; i = i.getNext()) {
-				if (AbstractInsnNode.LINE == i.getType()) {
-					lineNumber = ((LineNumberNode) i).line;
-				}
-				if (Opcodes.GOTO == i.getOpcode()) {
-					final String line = getSource().getLine(lineNumber);
-					if (line.indexOf('$') < 0) {
-						throw new AssertionError(
-								"No tag at line " + lineNumber);
-					}
-					final String tag = line.substring(
-							line.indexOf('$') + "$line-".length(),
-							line.lastIndexOf('$'));
-					tags.add(tag);
-				}
-			}
-		}
+	private void gotos() throws IOException {
 
 		final Set<String> expected = new HashSet<String>();
 
@@ -261,7 +187,46 @@ public class FinallyTest extends ValidationTestBase {
 			expected.add("alwaysCompletesAbruptly.0");
 		}
 
-		assertEquals(expected, tags);
+		assertEquals(expected, getTagsWithGotos());
+	}
+
+	private Set<String> getTagsWithGotos() throws IOException {
+		final Set<String> gotoTags = new HashSet<String>();
+
+		byte[] b = TargetLoader.getClassDataAsBytes(FinallyTarget.class);
+		b = BytecodeVersion.downgradeIfNeeded(BytecodeVersion.get(b), b);
+
+		final ClassNode classNode = new ClassNode();
+		new ClassReader(b).accept(classNode, 0);
+		for (final MethodNode m : classNode.methods) {
+			if ("main".equals(m.name)) {
+				// skip it
+				continue;
+			}
+			int lineNumber = -1;
+			for (AbstractInsnNode i = m.instructions
+					.getFirst(); i != null; i = i.getNext()) {
+				if (AbstractInsnNode.LINE == i.getType()) {
+					lineNumber = ((LineNumberNode) i).line;
+				}
+				if (Opcodes.GOTO == i.getOpcode()) {
+					String tag = tags.get(Integer.valueOf(lineNumber));
+					if (tag == null) {
+						throw new AssertionError(
+								"No tag at line " + lineNumber);
+					}
+					gotoTags.add(tag);
+				}
+			}
+		}
+
+		return gotoTags;
+	}
+
+	public void tag(final Line line, String tag) {
+		assertFalse("duplicate tag " + tag, tags.containsValue(tag));
+		assertNull("duplicate tag in " + line,
+				tags.put(Integer.valueOf(line.getNr()), tag));
 	}
 
 }

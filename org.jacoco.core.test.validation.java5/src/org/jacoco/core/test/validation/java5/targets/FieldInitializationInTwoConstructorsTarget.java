@@ -17,15 +17,15 @@ package org.jacoco.core.test.validation.java5.targets;
  */
 public class FieldInitializationInTwoConstructorsTarget {
 
-	Object field1 = null; // $line-field1$
+	Object field1 = null; // assertPartlyCovered()
 
-	int field2 = 123; // $line-field2$
+	int field2 = 123; // assertPartlyCovered()
 
 	public FieldInitializationInTwoConstructorsTarget() {
-	} // $line-constr1$
+	} // assertFullyCovered()
 
 	public FieldInitializationInTwoConstructorsTarget(String arg) {
-	} // $line-constr2$
+	} // assertNotCovered()
 
 	public static void main(String[] args) {
 		new FieldInitializationInTwoConstructorsTarget();

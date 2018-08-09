@@ -23,7 +23,7 @@ public class ExplicitInitialFrameTarget {
 	public static void main(String[] args) {
 
 		do {
-			nop(); // $line-dowhilebody$
+			nop(); // assertFullyCovered()
 		} while (f());
 
 	}

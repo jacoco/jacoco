@@ -12,92 +12,157 @@
 package org.jacoco.core.test.validation;
 
 import java.io.BufferedReader;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.Reader;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.NoSuchElementException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.jacoco.core.analysis.IBundleCoverage;
+import org.jacoco.core.analysis.IClassCoverage;
+import org.jacoco.core.analysis.ICoverageNode;
+import org.jacoco.core.analysis.ILine;
+import org.jacoco.core.analysis.IPackageCoverage;
+import org.jacoco.core.analysis.ISourceFileCoverage;
+
 /**
- * Reads a single source file and allows access to it through special probe
- * comments in the following format <code>//$line-<i>tag</i>$.
+ * Reads a single source file and allows access to its line coverage.
  */
 public class Source {
 
-	private static final Pattern TAG_PATTERN = Pattern
-			.compile("\\$line-(.*)\\$");
+	private static final String SRC_LOCATION = "src/";
 
-	private final List<String> lines = new ArrayList<String>();
+	private static final String SRC_ENCODING = "UTF-8";
 
-	private final Map<String, Integer> tags = new HashMap<String, Integer>();
+	private static final Pattern COMMENT_PATTERN = Pattern
+			.compile("(?<!https?:)//(.*)");
+
+	/**
+	 * Represents a single line in a source file.
+	 */
+	public static class Line {
+
+		private final int nr;
+		private final String text;
+		private final ILine coverage;
+
+		private Line(int nr, String text, ILine coverage) {
+			this.nr = nr;
+			this.text = text;
+			this.coverage = coverage;
+		}
+
+		public int getNr() {
+			return nr;
+		}
+
+		public String getText() {
+			return text;
+		}
+
+		public ILine getCoverage() {
+			return coverage;
+		}
+
+		/**
+		 * @return the text of a single line comment if present or
+		 *         <code>null</code>
+		 */
+		public String getComment() {
+			final Matcher matcher = COMMENT_PATTERN.matcher(text);
+			return matcher.find() ? matcher.group(1) : null;
+		}
+
+		@Override
+		public String toString() {
+			return "line " + nr;
+		}
+
+	}
+
+	private final List<Line> lines;
+
+	private final ISourceFileCoverage coverage;
 
 	/**
 	 * Reads a source file from the given reader.
 	 * 
 	 * @param reader
-	 *            the reader to read from
+	 *            the reader to read from, will be closed
+	 * @param coverage
+	 *            corresponding coverage data
 	 * @throws IOException
 	 *             if an I/O error occurs
 	 */
-	public Source(final Reader reader) throws IOException {
+	public Source(final Reader reader, ISourceFileCoverage coverage)
+			throws IOException {
+		this.lines = new ArrayList<Line>();
+		this.coverage = coverage;
 		final BufferedReader buffer = new BufferedReader(reader);
+		int nr = 1;
 		for (String l = buffer.readLine(); l != null; l = buffer.readLine()) {
-			addLine(l);
+			lines.add(new Line(nr, l, coverage.getLine(nr)));
+			nr++;
 		}
 		buffer.close();
 	}
 
-	private void addLine(final String l) {
-		lines.add(l);
-		final Matcher m = TAG_PATTERN.matcher(l);
-		if (m.find()) {
-			final String tag = m.group(1);
-			if (tags.put(tag, Integer.valueOf(lines.size())) != null) {
-				throw new IllegalArgumentException("Duplicate tag: " + tag);
-			}
-		}
-	}
-
 	/**
-	 * Returns all lines of the source file as a list.
-	 * 
 	 * @return all lines of the source file
 	 */
-	public List<String> getLines() {
+	public List<Line> getLines() {
 		return Collections.unmodifiableList(lines);
 	}
 
 	/**
-	 * Returns the line with the given number
-	 * 
-	 * @param nr
-	 *            line number (first line is 1)
-	 * @return line content
+	 * @return the corresponding coverage node
 	 */
-	public String getLine(int nr) {
-		return lines.get(nr - 1);
+	public ISourceFileCoverage getCoverage() {
+		return coverage;
 	}
 
 	/**
-	 * Returns the line number with the given tag
+	 * Loads the source file which holds the given target class.
 	 * 
-	 * @param tag
-	 *            tag from a <code>//$line-<i>tag</i>$ marker
-	 * @return line number (first line is 1)
-	 * @throws NoSuchElementException
-	 *             if there is no such tag
+	 * @param target
+	 *            the target class we want the source for
+	 * @param bundle
+	 *            the bundle containing the analyzed class and its source file
+	 * @return a {@link Source} instance
 	 */
-	public int getLineNumber(String tag) throws NoSuchElementException {
-		final Integer nr = tags.get(tag);
-		if (nr == null) {
-			throw new NoSuchElementException("Unknown tag: " + tag);
+	public static Source load(Class<?> target, IBundleCoverage bundle)
+			throws IOException {
+		final IPackageCoverage pkgCov = findByName(bundle.getPackages(),
+				vm(target.getPackage().getName()));
+		final IClassCoverage clsCov = findByName(pkgCov.getClasses(),
+				vm(target.getName()));
+		final ISourceFileCoverage srcCov = findByName(pkgCov.getSourceFiles(),
+				clsCov.getSourceFileName());
+		return new Source(open(SRC_LOCATION + pkgCov.getName() + "/"
+				+ clsCov.getSourceFileName()), srcCov);
+	}
+
+	private static <T extends ICoverageNode> T findByName(Collection<T> nodes,
+			String name) {
+		for (T node : nodes) {
+			if (name.equals(node.getName())) {
+				return node;
+			}
 		}
-		return nr.intValue();
+		throw new AssertionError("Node not found: " + name);
+	}
+
+	private static String vm(String javaname) {
+		return javaname.replace('.', '/');
+	}
+
+	private static Reader open(String file) throws IOException {
+		return new InputStreamReader(new FileInputStream(file), SRC_ENCODING);
 	}
 
 }

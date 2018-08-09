@@ -34,77 +34,79 @@ public class TryWithResourcesTarget {
 	 * of resource.
 	 */
 	private static Object test() throws Exception {
-		nop(); // $line-test.before$
-		try ( // $line-test.try$
-				Resource r1 = new Resource(); // $line-test.open1$
-				Closeable r2 = new Resource(); // $line-test.open2$
-				AutoCloseable r3 = new Resource() // $line-test.open3$
+		nop(); // assertFullyCovered()
+		try ( // assertTry()
+				Resource r1 = new Resource(); // assertFullyCovered()
+				Closeable r2 = new Resource(); // assertFullyCovered()
+				AutoCloseable r3 = new Resource() // assertFullyCovered()
 		) {
-			return read(r1, r2, r3); // $line-test.body$
-		} // $line-test.close$
+			return read(r1, r2, r3); // assertFullyCovered()
+			/* without filter next line has branches: */
+		} // assertEmpty()
 		catch (Exception e) {
-			nop(); // $line-test.catch$
+			nop(); // assertNotCovered()
 			throw e;
 		} finally {
-			nop(); // $line-test.finally$
+			nop(); // assertFullyCovered()
 		}
 	}
 
 	private static void test2() throws Exception {
-		nop(); // $line-test2.before$
-		try ( // $line-test2.try$
-				Resource r1 = new Resource(); // $line-test2.open1$
-				Closeable r2 = new Resource(); // $line-test2.open2$
-				AutoCloseable r3 = new Resource() // $line-test2.open3$
+		nop(); // assertFullyCovered()
+		try ( // assertTry()
+				Resource r1 = new Resource(); // assertFullyCovered()
+				Closeable r2 = new Resource(); // assertFullyCovered()
+				AutoCloseable r3 = new Resource() // assertFullyCovered()
 		) {
-			read(r1, r2, r3); // $line-test2.body$
-		} // $line-test2.close$
+			read(r1, r2, r3); // assertFullyCovered()
+			/* without filter next line has branches: */
+		} // assertEmpty()
 		catch (Exception e) {
-			nop(); // $line-test2.catch$
+			nop(); // assertNotCovered()
 		} finally {
-			nop(); // $line-test2.finally$
+			nop(); // assertFullyCovered()
 		}
-		nop(); // $line-test2.after$
+		nop(); // assertFullyCovered()
 	}
 
 	private static Object returnInBody() throws IOException {
-		try ( // $line-returnInBody.try$
-				Closeable r = new Resource() // $line-returnInBody.open$
+		try ( // assertTry()
+				Closeable r = new Resource() // assertFullyCovered()
 		) {
-			return read(r); // $line-returnInBody.return$
-		} // $line-returnInBody.close$
+			return read(r); // assertFullyCovered()
+		} // assertReturnInBodyClose()
 	}
 
 	private static void nested() {
-		try ( // $line-nested.try1$
-				Resource r1 = new Resource() // $line-nested.open1$
+		try ( // assertTry()
+				Resource r1 = new Resource() // assertFullyCovered()
 		) {
 
-			try ( // $line-nested.try2$
-					Resource r2 = new Resource() // $line-nested.open2$
+			try ( // assertTry()
+					Resource r2 = new Resource() // assertFullyCovered()
 			) {
-				nop(r1.toString() + r2.toString()); // $line-nested.body$
-			} // $line-nested.close2$
+				nop(r1.toString() + r2.toString()); // assertFullyCovered()
+			} // assertEmpty()
 			catch (Exception e) {
-				nop(); // $line-nested.catch2$
+				nop(); // assertNotCovered()
 			} finally {
-				nop(); // $line-nested.finally2$
+				nop(); // assertFullyCovered()
 			}
 
-		} // $line-nested.close1$
+		} // assertEmpty()
 		catch (Exception e) {
-			nop(); // $line-nested.catch1$
+			nop(); // assertNotCovered()
 		} finally {
 
-			try ( // $line-nested.try3$
-					Resource r2 = new Resource() // $line-nested.open3$
+			try ( // assertTry()
+					Resource r2 = new Resource() // assertFullyCovered()
 			) {
-				nop(r2); // $line-nested.body3$
-			} // $line-nested.close3$
+				nop(r2); // assertFullyCovered()
+			} // assertEmpty()
 			catch (Exception e) {
-				nop(); // $line-nested.catch3$
+				nop(); // assertNotCovered()
 			} finally {
-				nop(); // $line-nested.finally3$
+				nop(); // assertFullyCovered()
 			}
 
 		}
@@ -117,23 +119,24 @@ public class TryWithResourcesTarget {
 	 * happens without it.
 	 */
 	private static Object returnInCatch() {
-		try ( // $line-returnInCatch.try1$
-				Resource r = new Resource() // $line-returnInCatch.open$
+		try ( // assertTry()
+				Resource r = new Resource() // assertFullyCovered()
 		) {
 			read(r);
-		} // $line-returnInCatch.close$
+			/* without filter next line has branches: */
+		} // assertEmpty()
 		catch (Exception e) {
 			return null;
 		} finally {
-			nop(!f()); // $line-returnInCatch.finally1$
+			nop(!f()); // assertPartlyCovered(1, 1)
 		}
 
-		try { // $line-returnInCatch.try2$
+		try { // assertEmpty()
 			read(new Resource());
 		} catch (Exception e) {
 			return null;
 		} finally {
-			nop(!f()); // $line-returnInCatch.finally2$
+			nop(!f()); // assertPartlyCovered(1, 1)
 		}
 
 		return null;
@@ -147,27 +150,15 @@ public class TryWithResourcesTarget {
 		return r1.toString();
 	}
 
-	public static void main(String[] args) throws Exception {
-		test();
-		test2();
-		returnInBody();
-		nested();
-
-		returnInCatch();
-
-		empty();
-		handwritten();
-	}
-
 	/*
 	 * Corner cases
 	 */
 
 	private static void empty() throws Exception {
-		try ( // $line-empty.try$
-				Closeable r = new Resource() // $line-empty.open$
+		try ( // assertTry()
+				Closeable r = new Resource() // assertFullyCovered()
 		) {
-		} // $line-empty.close$
+		} // assertEmptyClose()
 	}
 
 	private static void handwritten() throws IOException {
@@ -179,7 +170,7 @@ public class TryWithResourcesTarget {
 			primaryExc = t;
 			throw t;
 		} finally {
-			if (r != null) { // $line-handwritten$
+			if (r != null) { // assertHandwritten()
 				if (primaryExc != null) {
 					try {
 						r.close();
@@ -194,11 +185,23 @@ public class TryWithResourcesTarget {
 	}
 
 	private static void throwInBody() throws IOException {
-		try ( // $line-throwInBody.try$
+		try ( // assertNotCovered()
 				Closeable r = new Resource()) {
 			nop(r);
 			throw new RuntimeException();
-		} // $line-throwInBody.close$
+		} // assertThrowInBodyClose()
+	}
+
+	public static void main(String[] args) throws Exception {
+		test();
+		test2();
+		returnInBody();
+		nested();
+
+		returnInCatch();
+
+		empty();
+		handwritten();
 	}
 
 }

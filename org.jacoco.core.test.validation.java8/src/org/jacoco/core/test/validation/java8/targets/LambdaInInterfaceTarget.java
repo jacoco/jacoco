@@ -19,7 +19,7 @@ import static org.jacoco.core.test.validation.targets.Stubs.nop;
 public interface LambdaInInterfaceTarget {
 
 	public static final Runnable RUN = () -> {
-		nop(); // $line-lambdabody$
+		nop(); // assertFullyCovered()
 	};
 
 }

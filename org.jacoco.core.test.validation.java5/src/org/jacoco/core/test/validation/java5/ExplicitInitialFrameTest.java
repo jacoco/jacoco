@@ -11,10 +11,8 @@
  *******************************************************************************/
 package org.jacoco.core.test.validation.java5;
 
-import org.jacoco.core.analysis.ICounter;
 import org.jacoco.core.test.validation.ValidationTestBase;
 import org.jacoco.core.test.validation.java5.targets.ExplicitInitialFrameTarget;
-import org.junit.Test;
 
 /**
  * Test for a methods having a explicit initial frame.
@@ -23,13 +21,6 @@ public class ExplicitInitialFrameTest extends ValidationTestBase {
 
 	public ExplicitInitialFrameTest() {
 		super(ExplicitInitialFrameTarget.class);
-	}
-
-	@Test
-	public void testCoverageResult() {
-
-		assertLine("dowhilebody", ICounter.FULLY_COVERED);
-
 	}
 
 }

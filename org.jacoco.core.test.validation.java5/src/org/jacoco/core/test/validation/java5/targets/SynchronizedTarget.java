@@ -24,23 +24,24 @@ public class SynchronizedTarget {
 	private static final Object lock = new Object();
 
 	private static void normal() {
-		nop(); // $line-before$
-		synchronized (lock) { // $line-monitorEnter$
-			nop(); // $line-body$
-		} // $line-monitorExit$
-		nop(); // $line-after$
+		nop(); // assertFullyCovered()
+		/* when compiled with ECJ next line covered partly without filter: */
+		synchronized (lock) { // assertFullyCovered()
+			nop(); // assertFullyCovered()
+		} // assertMonitorExit()
+		nop(); // assertFullyCovered()
 	}
 
 	private static void explicitException() {
-		synchronized (lock) { // $line-explicitException.monitorEnter$
-			throw new StubException(); // $line-explicitException.exception$
-		} // $line-explicitException.monitorExit$
+		synchronized (lock) { // assertFullyCovered()
+			throw new StubException(); // assertFullyCovered()
+		} // assertEmpty()
 	}
 
 	private static void implicitException() {
-		synchronized (lock) { // $line-implicitException.monitorEnter$
-			ex(); // $line-implicitException.exception$
-		} // $line-implicitException.monitorExit$
+		synchronized (lock) { // assertMonitorEnterImplicitException()
+			ex(); // assertNotCovered()
+		} // assertMonitorExitImplicitException()
 	}
 
 	public static void main(String[] args) {

@@ -19,24 +19,24 @@ import static org.jacoco.core.test.validation.targets.Stubs.nop;
 public class StringSwitchTarget {
 
 	private static void covered(Object s) {
-		switch (String.valueOf(s)) { // $line-covered.switch$
+		switch (String.valueOf(s)) { // assertSwitchCovered()
 		case "a":
-			nop("case a"); // $line-covered.case1$
+			nop("case a"); // assertFullyCovered()
 			break;
 		case "b":
-			nop("case b"); // $line-covered.case2$
+			nop("case b"); // assertFullyCovered()
 			break;
 		case "\0a":
-			nop("case \0a"); // $line-covered.case3$
+			nop("case \0a"); // assertFullyCovered()
 			break;
 		default:
-			nop("case default"); // $line-covered.default$
+			nop("case default"); // assertFullyCovered()
 			break;
 		}
 	}
 
 	private static void notCovered(Object s) {
-		switch (String.valueOf(s)) { // $line-notCovered$
+		switch (String.valueOf(s)) { // assertSwitchNotCovered()
 		case "a":
 			nop("case a");
 			break;
@@ -54,9 +54,9 @@ public class StringSwitchTarget {
 
 	private static void handwritten(String s) {
 		int c = -1;
-		switch (s.hashCode()) { // $line-handwritten.firstSwitch$
+		switch (s.hashCode()) { // assertFullyCovered(2, 1)
 		case 97:
-			if ("a".equals(s)) { // $line-handwritten.ignored$
+			if ("a".equals(s)) { // assertFullyCovered(1, 1)
 				c = 0;
 			} else if ("\0a".equals(s)) {
 				c = 1;
@@ -68,12 +68,12 @@ public class StringSwitchTarget {
 			}
 			break;
 		}
-		switch (c) { // $line-handwritten.secondSwitch$
+		switch (c) { // assertFullyCovered(3, 1)
 		case 0:
-			nop("case a"); // $line-handwritten.case1$
+			nop("case a"); // assertFullyCovered()
 			break;
 		case 1:
-			nop("case \0a"); // $line-handwritten.case2$
+			nop("case \0a"); // assertNotCovered()
 			break;
 		case 2:
 			nop("case b");

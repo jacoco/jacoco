@@ -21,40 +21,40 @@ object KotlinWhenExpressionTarget {
         object Sealed2 : Sealed()
     }
 
-    private fun whenSealed(p: Sealed): Int = when (p) { // $line-whenSealed.when$
-        is Sealed.Sealed1 -> 1 // $line-whenSealed.case1$
-        is Sealed.Sealed2 -> 2 // $line-whenSealed.case2$
-    } // $line-whenSealed.return$
+    private fun whenSealed(p: Sealed): Int = when (p) { // assertFullyCovered()
+        is Sealed.Sealed1 -> 1 // assertFullyCovered(0, 2)
+        is Sealed.Sealed2 -> 2 // assertFullyCovered()
+    } // assertFullyCovered()
 
     @Suppress("REDUNDANT_ELSE_IN_WHEN")
-    private fun whenSealedRedundantElse(p: Sealed): Int = when (p) { // $line-whenSealedRedundantElse.when$
-        is Sealed.Sealed1 -> 1 // $line-whenSealedRedundantElse.case1$
-        is Sealed.Sealed2 -> 2 // $line-whenSealedRedundantElse.case2$
-        else -> throw NoWhenBranchMatchedException() // $line-whenSealedRedundantElse.else$
-    } // $line-whenSealedRedundantElse.return$
+    private fun whenSealedRedundantElse(p: Sealed): Int = when (p) { // assertFullyCovered()
+        is Sealed.Sealed1 -> 1 // assertFullyCovered(0, 2)
+        is Sealed.Sealed2 -> 2 // assertFullyCovered(1, 1)
+        else -> throw NoWhenBranchMatchedException() // assertNotCovered()
+    } // assertFullyCovered()
 
     private enum class Enum {
         A, B
     }
 
-    private fun whenEnum(p: Enum): Int = when (p) { // $line-whenEnum.when$
-        Enum.A -> 1 // $line-whenEnum.case1$
-        Enum.B -> 2 // $line-whenEnum.case2$
-    } // $line-whenEnum.return$
+    private fun whenEnum(p: Enum): Int = when (p) {  // assertFullyCovered(1, 2)
+        Enum.A -> 1 // assertFullyCovered()
+        Enum.B -> 2 // assertPartlyCovered()
+    } // assertFullyCovered()
 
     @Suppress("REDUNDANT_ELSE_IN_WHEN")
-    private fun whenEnumRedundantElse(p: Enum): Int = when (p) { // $line-whenEnumRedundantElse.when$
-        Enum.A -> 1 // $line-whenEnumRedundantElse.case1$
-        Enum.B -> 2 // $line-whenEnumRedundantElse.case2$
-        else -> throw NoWhenBranchMatchedException() // $line-whenEnumRedundantElse.else$
-    } // $line-whenEnumRedundantElse.return$
+    private fun whenEnumRedundantElse(p: Enum): Int = when (p) { // assertFullyCovered(1, 2)
+        Enum.A -> 1 // assertFullyCovered()
+        Enum.B -> 2 // assertFullyCovered()
+        else -> throw NoWhenBranchMatchedException() // assertNotCovered()
+    } // assertFullyCovered()
 
-    private fun whenString(p: String): Int = when (p) { // $line-whenString.when$
-        "a" -> 1 // $line-whenString.case1$
-        "b" -> 2 // $line-whenString.case2$
-        "\u0000a" -> 3 // $line-whenString.case3$
-        else -> 4 // $line-whenString.else$
-    } // $line-whenString.return$
+    private fun whenString(p: String): Int = when (p) { // assertFullyCovered(2, 7)
+        "a" -> 1 // assertFullyCovered()
+        "b" -> 2 // assertFullyCovered()
+        "\u0000a" -> 3 // assertFullyCovered()
+        else -> 4 // assertFullyCovered()
+    } // assertFullyCovered()
 
     @JvmStatic
     fun main(args: Array<String>) {

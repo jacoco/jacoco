@@ -20,28 +20,28 @@ import org.jacoco.core.test.validation.targets.Stubs;
  */
 public class ClassInitializerTarget {
 
-	// No code required to initialize these fields:
+	/* No code required to initialize these fields: */
 
-	public static final int CONST1 = 3; // $line-const1$
+	public static final int CONST1 = 3; // assertEmpty()
 
-	public static final String CONST2 = "Hello"; // $line-const2$
+	public static final String CONST2 = "Hello"; // assertEmpty()
 
-	// These fields are initialized within <clinit>
+	/* These fields are initialized within <clinit> */
 
-	public static final int CONST3 = i1(); // $line-const3$
+	public static final int CONST3 = i1(); // assertFullyCovered()
 
-	public static final Object CONST4 = new Object(); // $line-const4$
+	public static final Object CONST4 = new Object(); // assertFullyCovered()
 
-	public static int field1 = 3; // $line-field1$
+	public static int field1 = 3; // assertFullyCovered()
 
-	public static String field2 = "Hello"; // $line-field2$
+	public static String field2 = "Hello"; // assertFullyCovered()
 
-	public static int field3 = i1(); // $line-field3$
+	public static int field3 = i1(); // assertFullyCovered()
 
-	public static Object field4 = new Object(); // $line-field4$
+	public static Object field4 = new Object(); // assertFullyCovered()
 
 	static {
-		Stubs.nop(); // $line-staticblock$
+		Stubs.nop(); // assertFullyCovered()
 	}
 
 	private ClassInitializerTarget() {

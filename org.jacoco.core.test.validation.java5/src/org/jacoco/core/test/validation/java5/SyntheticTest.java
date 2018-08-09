@@ -11,10 +11,8 @@
  *******************************************************************************/
 package org.jacoco.core.test.validation.java5;
 
-import org.jacoco.core.analysis.ICounter;
 import org.jacoco.core.test.validation.ValidationTestBase;
 import org.jacoco.core.test.validation.java5.targets.SyntheticTarget;
-import org.junit.Test;
 
 /**
  * Test of filtering of synthetic methods.
@@ -25,14 +23,8 @@ public class SyntheticTest extends ValidationTestBase {
 		super(SyntheticTarget.class);
 	}
 
-	@Test
-	public void testCoverageResult() {
+	public void test_method_count() {
 		assertMethodCount(5);
-
-		assertLine("classdef", ICounter.EMPTY);
-		assertLine("field", ICounter.EMPTY);
-
-		assertLine("inner.classdef", ICounter.EMPTY);
 	}
 
 }

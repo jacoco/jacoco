@@ -11,10 +11,8 @@
  *******************************************************************************/
 package org.jacoco.core.test.validation.java8;
 
-import org.jacoco.core.analysis.ICounter;
 import org.jacoco.core.test.validation.ValidationTestBase;
 import org.jacoco.core.test.validation.java8.targets.LambdaInInterfaceTarget;
-import org.junit.Test;
 
 /**
  * Tests a constant with a lambda value in an interface.
@@ -28,14 +26,6 @@ public class LambdaInInterfaceTest extends ValidationTestBase {
 	@Override
 	protected void run(final Class<?> targetClass) throws Exception {
 		((Runnable) targetClass.getField("RUN").get(null)).run();
-	}
-
-	@Test
-	public void testCoverageResult() {
-
-		// Coverage of lambda body
-		assertLine("lambdabody", ICounter.FULLY_COVERED);
-
 	}
 
 }
