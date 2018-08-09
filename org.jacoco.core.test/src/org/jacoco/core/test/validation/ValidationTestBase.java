@@ -99,8 +99,8 @@ public abstract class ValidationTestBase {
 		for (Line line : source.getLines()) {
 			String exec = line.getExecutableComment();
 			if (exec != null) {
-				StatementParser.parse(exec,
-						new StatementExecutor(this, line), line.toString());
+				StatementParser.parse(exec, new StatementExecutor(this, line),
+						line.toString());
 			}
 		}
 	}
@@ -110,7 +110,7 @@ public abstract class ValidationTestBase {
 	 */
 
 	private void assertCoverage(final Line line, final int insnStatus,
-			final int mb, final int cb) {
+			final int missedBranches, final int coveredBranches) {
 		final ILine coverage = line.getCoverage();
 
 		String msg = String.format("Instructions in %s: %s", line,
@@ -119,30 +119,35 @@ public abstract class ValidationTestBase {
 		assertEquals(msg, STATUS_NAME[insnStatus], STATUS_NAME[actualStatus]);
 
 		msg = String.format("Branches in %s: %s", line, line.getText());
-		assertEquals(msg, CounterImpl.getInstance(mb, cb),
+		assertEquals(msg,
+				CounterImpl.getInstance(missedBranches, coveredBranches),
 				coverage.getBranchCounter());
 	}
 
-	public void assertFullyCovered(final Line line, final int mb,
-			final int cb) {
-		assertCoverage(line, ICounter.FULLY_COVERED, mb, cb);
+	public void assertFullyCovered(final Line line, final int missedBranches,
+			final int coveredBranches) {
+		assertCoverage(line, ICounter.FULLY_COVERED, missedBranches,
+				coveredBranches);
 	}
 
 	public void assertFullyCovered(final Line line) {
 		assertFullyCovered(line, 0, 0);
 	}
 
-	public void assertPartlyCovered(final Line line, final int mb,
-			final int cb) {
-		assertCoverage(line, ICounter.PARTLY_COVERED, mb, cb);
+	public void assertPartlyCovered(final Line line, final int missedBranches,
+			final int coveredBranches) {
+		assertCoverage(line, ICounter.PARTLY_COVERED, missedBranches,
+				coveredBranches);
 	}
 
 	public void assertPartlyCovered(final Line line) {
 		assertPartlyCovered(line, 0, 0);
 	}
 
-	public void assertNotCovered(final Line line, final int mb, final int cb) {
-		assertCoverage(line, ICounter.NOT_COVERED, mb, cb);
+	public void assertNotCovered(final Line line, final int missedBranches,
+			final int coveredBranches) {
+		assertCoverage(line, ICounter.NOT_COVERED, missedBranches,
+				coveredBranches);
 	}
 
 	public void assertNotCovered(final Line line) {
