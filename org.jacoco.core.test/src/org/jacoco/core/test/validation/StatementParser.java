@@ -26,7 +26,7 @@ import java.util.List;
  * 
  * Method parameters can only be String or int literals.
  */
-public class StatementParser {
+class StatementParser {
 
 	/**
 	 * Call-back interface for parsed statements.

@@ -25,9 +25,9 @@ import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
 /**
- * Unit tests for {@link JavaStatementExecutor}.
+ * Unit tests for {@link StatementExecutor}.
  */
-public class JavaStatementExecutorTest {
+public class StatementExecutorTest {
 
 	@Rule
 	public ExpectedException exception = ExpectedException.none();
@@ -41,7 +41,7 @@ public class JavaStatementExecutorTest {
 
 	@Test
 	public void should_prefix_arguments() {
-		JavaStatementExecutor executor = new JavaStatementExecutor(this,
+		StatementExecutor executor = new StatementExecutor(this,
 				"Hello", "world");
 
 		executor.visitInvocation("ctx", "target1", "!");
@@ -52,7 +52,7 @@ public class JavaStatementExecutorTest {
 
 	@Test
 	public void should_call_method_with_int_argument() {
-		JavaStatementExecutor executor = new JavaStatementExecutor(this);
+		StatementExecutor executor = new StatementExecutor(this);
 
 		executor.visitInvocation("ctx", "target2", Integer.valueOf(42));
 
@@ -64,7 +64,7 @@ public class JavaStatementExecutorTest {
 	public void should_preserve_AssertionError() {
 		exception.expect(AssertionError.class);
 		exception.expectMessage("Original AssertionError.");
-		JavaStatementExecutor executor = new JavaStatementExecutor(this);
+		StatementExecutor executor = new StatementExecutor(this);
 
 		executor.visitInvocation("ctx", "target3");
 	}
@@ -73,7 +73,7 @@ public class JavaStatementExecutorTest {
 	public void should_wrap_other_exceptions() {
 		exception.expect(RuntimeException.class);
 		exception.expectMessage("Invocation error in ctx");
-		JavaStatementExecutor executor = new JavaStatementExecutor(this);
+		StatementExecutor executor = new StatementExecutor(this);
 
 		executor.visitInvocation("ctx", "target4");
 	}
@@ -82,7 +82,7 @@ public class JavaStatementExecutorTest {
 	public void should_throw_RuntimeException_when_method_cannot_be_invoked() {
 		exception.expect(RuntimeException.class);
 		exception.expectMessage("Invocation error in ctx");
-		JavaStatementExecutor executor = new JavaStatementExecutor(this);
+		StatementExecutor executor = new StatementExecutor(this);
 
 		executor.visitInvocation("ctx", "doesNotExist");
 	}

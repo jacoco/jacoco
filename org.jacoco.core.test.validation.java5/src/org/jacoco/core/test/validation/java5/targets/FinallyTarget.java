@@ -35,7 +35,7 @@ public class FinallyTarget {
 		Object in = null;
 		try {
 			in = open(t);
-		} finally { // > assertFinallyNormalExecution(); tag("example.0");
+		} finally { // > assertFinally(); tag("example.0");
 			if (in != null) { // > assertFullyCovered(0, 2);
 				nop(); // > assertFullyCovered(); tag("example.2");
 			} // > assertEmpty();
@@ -110,10 +110,10 @@ public class FinallyTarget {
 	private static void nested() {
 		try {
 			nop();
-		} finally { // > assertFinallyNormalExecution(); tag("nested.0");
+		} finally { // > assertFinally(); tag("nested.0");
 			try { // > assertEmpty();
 				nop(); // > assertFullyCovered();
-			} finally { // > assertFinallyNormalExecution(); tag("nested.3");
+			} finally { // > assertFinally(); tag("nested.3");
 				nop(); // > assertFullyCovered();
 			} // > assertEmpty(); tag("nested.5");
 		} // > assertEmpty(); tag("nested.6");

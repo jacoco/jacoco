@@ -53,7 +53,7 @@ public class FinallyTest extends ValidationTestBase {
 		tags = new HashMap<Integer, String>();
 	}
 
-	public void assertFinallyNormalExecution(final Line line) {
+	public void assertFinally(final Line line) {
 		if (isJDKCompiler) {
 			assertEmpty(line);
 		} else {

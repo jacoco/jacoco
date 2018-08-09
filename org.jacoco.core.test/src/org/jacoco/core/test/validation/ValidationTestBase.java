@@ -100,7 +100,7 @@ public abstract class ValidationTestBase {
 			String exec = line.getExecutableComment();
 			if (exec != null) {
 				StatementParser.parse(exec,
-						new JavaStatementExecutor(this, line), line.toString());
+						new StatementExecutor(this, line), line.toString());
 			}
 		}
 	}

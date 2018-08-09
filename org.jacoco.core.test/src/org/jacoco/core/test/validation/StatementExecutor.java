@@ -16,12 +16,12 @@ import java.lang.reflect.InvocationTargetException;
 /**
  * Executes statements against a given Java object instance.
  */
-class JavaStatementExecutor implements StatementParser.IStatementVisitor {
+class StatementExecutor implements StatementParser.IStatementVisitor {
 
 	private final Object target;
 	private final Object[] prefixArgs;
 
-	JavaStatementExecutor(Object target, Object... prefixArgs) {
+	StatementExecutor(Object target, Object... prefixArgs) {
 		this.target = target;
 		this.prefixArgs = prefixArgs;
 	}
@@ -54,7 +54,7 @@ class JavaStatementExecutor implements StatementParser.IStatementVisitor {
 		for (int i = 0; i < instances.length; i++) {
 			Class<? extends Object> c = instances[i].getClass();
 			if (c == Integer.class) {
-				// We always assume primitive int parameters:
+				// We always use primitive int parameters:
 				c = Integer.TYPE;
 			}
 			classes[i] = c;
