@@ -45,7 +45,7 @@ public class Source {
 	/**
 	 * Represents a single line in a source file.
 	 */
-	public static class Line {
+	public class Line {
 
 		private final int nr;
 		private final String text;
@@ -80,7 +80,7 @@ public class Source {
 
 		@Override
 		public String toString() {
-			return "line " + nr;
+			return Source.this.coverage.getName() + ":" + nr;
 		}
 
 	}

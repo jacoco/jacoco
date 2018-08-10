@@ -72,7 +72,7 @@ public class StatementExecutorTest {
 	@Test
 	public void should_wrap_other_exceptions() {
 		exception.expect(RuntimeException.class);
-		exception.expectMessage("Invocation error in ctx");
+		exception.expectMessage("Invocation error (ctx)");
 		StatementExecutor executor = new StatementExecutor(this);
 
 		executor.visitInvocation("ctx", "target4");
@@ -81,7 +81,7 @@ public class StatementExecutorTest {
 	@Test
 	public void should_throw_RuntimeException_when_method_cannot_be_invoked() {
 		exception.expect(RuntimeException.class);
-		exception.expectMessage("Invocation error in ctx");
+		exception.expectMessage("Invocation error (ctx)");
 		StatementExecutor executor = new StatementExecutor(this);
 
 		executor.visitInvocation("ctx", "doesNotExist");

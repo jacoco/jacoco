@@ -36,9 +36,9 @@ class StatementExecutor implements StatementParser.IStatementVisitor {
 			if (te instanceof AssertionError) {
 				throw (AssertionError) te;
 			}
-			throw new RuntimeException("Invocation error in " + ctx, te);
+			throw new RuntimeException("Invocation error (" + ctx + ")", te);
 		} catch (Exception e) {
-			throw new RuntimeException("Invocation error in " + ctx, e);
+			throw new RuntimeException("Invocation error (" + ctx + ")", e);
 		}
 	}
 

@@ -93,8 +93,8 @@ public class SourceTest {
 
 		List<Line> lines = s.getLines();
 		assertEquals(2, lines.size());
-		assertEquals("line 1", lines.get(0).toString());
-		assertEquals("line 2", lines.get(1).toString());
+		assertEquals("Foo:1", lines.get(0).toString());
+		assertEquals("Foo:2", lines.get(1).toString());
 	}
 
 	@Test

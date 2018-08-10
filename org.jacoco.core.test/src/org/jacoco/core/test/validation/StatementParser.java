@@ -126,7 +126,7 @@ class StatementParser {
 	}
 
 	private IOException syntaxError() {
-		return new IOException("Invalid syntax at " + ctx);
+		return new IOException("Invalid syntax (" + ctx + ")");
 	}
 
 }
