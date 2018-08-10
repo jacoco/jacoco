@@ -11,6 +11,7 @@
  *******************************************************************************/
 package org.jacoco.core.test.validation.kotlin.targets
 
+import org.jacoco.core.test.validation.targets.Stubs.nop
 import org.junit.Assert.assertEquals
 
 /**
@@ -22,7 +23,7 @@ object KotlinGeneratedTarget {
 
         val target = Target(0)
         target.value = 1
-        assertEquals(1, target.value)
+        nop(target.value)
     }
 
     /**
@@ -40,7 +41,7 @@ object KotlinGeneratedTarget {
         data class Target(var value: Int)  // assertPartlyCovered()
 
         val target = Target(0)
-        assertEquals(0, target.value)
+        nop(target.value)
     }
 
     /**
@@ -52,7 +53,7 @@ object KotlinGeneratedTarget {
         }
 
         val target = Target(0)
-        assertEquals(0, target.value)
+        nop(target.value) 
     }
 
     @JvmStatic
