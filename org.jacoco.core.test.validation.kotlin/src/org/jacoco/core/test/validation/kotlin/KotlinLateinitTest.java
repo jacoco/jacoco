@@ -15,7 +15,7 @@ import org.jacoco.core.test.validation.ValidationTestBase;
 import org.jacoco.core.test.validation.kotlin.targets.KotlinLateinitTarget;
 
 /**
- * Test for Kotlin lateinit properties.
+ * Test of <code>lateinit</code> properties.
  */
 public class KotlinLateinitTest extends ValidationTestBase {
 

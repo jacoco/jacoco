@@ -14,29 +14,14 @@ package org.jacoco.core.test.validation.kotlin.targets
 import org.jacoco.core.test.validation.targets.Stubs.nop
 
 /**
- * Test target for Kotlin lateinit properties
+ * This test target is `lateinit` property.
  */
 object KotlinLateinitTarget {
     private lateinit var x: String
 
-    private fun testClassProperty() {
-        x = ""
-        nop(x) // assertFullyCovered()
-    }
-
-    private fun testFunctionProperty() {
-        lateinit var x: String
-
-        /* This branch is needed as to not optimize away the assignment */
-        if (1 == 1)
-            x = ""
-
-        nop(x) // assertFullyCovered()
-    }
-
     @JvmStatic
     fun main(args: Array<String>) {
-        testClassProperty()
-        testFunctionProperty()
+        x = ""
+        nop(x) // assertFullyCovered()
     }
 }
