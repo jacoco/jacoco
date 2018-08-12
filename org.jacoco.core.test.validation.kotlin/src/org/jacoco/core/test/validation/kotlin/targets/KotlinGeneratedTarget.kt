@@ -44,7 +44,8 @@ object KotlinGeneratedTarget {
     }
 
     /**
-     * Methods in data classes that are usually generated, but are overridden by the user should not be covered by default.
+     * Methods in data classes that are usually generated, but are overridden
+     * by the user should not be covered by default.
      */
     private fun testOverrides() {
         data class Target(val value: Int) { // assertFullyCovered()
@@ -52,7 +53,7 @@ object KotlinGeneratedTarget {
         }
 
         val target = Target(0)
-        nop(target.value) 
+        nop(target.value)
     }
 
     @JvmStatic
@@ -63,4 +64,3 @@ object KotlinGeneratedTarget {
         testOverrides()
     }
 }
-

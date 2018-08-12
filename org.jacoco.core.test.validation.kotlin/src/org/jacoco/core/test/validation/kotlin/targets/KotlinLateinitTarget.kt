@@ -40,4 +40,3 @@ object KotlinLateinitTarget {
         testFunctionProperty()
     }
 }
-
