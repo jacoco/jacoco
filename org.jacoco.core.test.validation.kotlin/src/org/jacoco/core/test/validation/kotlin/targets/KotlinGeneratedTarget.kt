@@ -12,7 +12,6 @@
 package org.jacoco.core.test.validation.kotlin.targets
 
 import org.jacoco.core.test.validation.targets.Stubs.nop
-import org.junit.Assert.assertEquals
 
 /**
  * Test target for Kotlin generated methods
