@@ -17,50 +17,34 @@ import org.jacoco.core.test.validation.targets.Stubs.nop
  * This test target is `data class`.
  */
 object KotlinDataClassTarget {
-    private fun testTrivial() {
-        data class Target(var value: Int)  // assertFullyCovered()
 
-        val target = Target(0)
-        target.value = 1
-        nop(target.value)
+    data class DataClass( // assertFullyCovered()
+            val valNoRead: Int, // assertNotCovered()
+            val valRead: Int,  // assertFullyCovered()
+            var varNoReadNoWrite: Int, // assertNotCovered()
+            var varNoWrite: Int, // assertPartlyCovered()
+            var varNoRead: Int, // assertPartlyCovered()
+            var varReadWrite: Int  // assertFullyCovered()
+    ) // assertEmpty()
+
+    data class DataClassOverrideNotCovered(val v: Int) {
+        override fun toString(): String = "" // assertNotCovered()
     }
 
-    /**
-     * Immutable properties should have the getter tested.
-     */
-    private fun testImmutablePropertyNotAccessed() {
-        data class Target(val value: Int)  // assertPartlyCovered()
-        Target(0)
-    }
-
-    /**
-     * Mutable properties should have both their getters and setters tested.
-     */
-    private fun testMutablePropertyNotChanged() {
-        data class Target(var value: Int)  // assertPartlyCovered()
-
-        val target = Target(0)
-        nop(target.value)
-    }
-
-    /**
-     * Methods in data classes that are usually generated, but are overridden
-     * by the user should not be covered by default.
-     */
-    private fun testOverrides() {
-        data class Target(val value: Int) { // assertFullyCovered()
-            override fun toString(): String = "" // assertNotCovered()
-        }
-
-        val target = Target(0)
-        nop(target.value)
+    data class DataClassOverrideCovered(val v: Int) {
+        override fun toString(): String = "" // assertFullyCovered()
     }
 
     @JvmStatic
     fun main(args: Array<String>) {
-        testTrivial()
-        testImmutablePropertyNotAccessed()
-        testMutablePropertyNotChanged()
-        testOverrides()
+        val d = DataClass(0, 0, 0, 0, 0, 0)
+        nop(d.valRead)
+        nop(d.varNoWrite)
+        d.varNoRead = 1
+        nop(d.varReadWrite)
+        d.varReadWrite = 1
+
+        DataClassOverrideNotCovered(0)
+        DataClassOverrideCovered(0).toString()
     }
 }
