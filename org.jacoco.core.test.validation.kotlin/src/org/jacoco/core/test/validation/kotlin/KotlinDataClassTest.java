@@ -12,15 +12,15 @@
 package org.jacoco.core.test.validation.kotlin;
 
 import org.jacoco.core.test.validation.ValidationTestBase;
-import org.jacoco.core.test.validation.kotlin.targets.KotlinGeneratedTarget;
+import org.jacoco.core.test.validation.kotlin.targets.KotlinDataClassTarget;
 
 /**
- * Test for Kotlin generated methods.
+ * Test of <code>data class</code>es.
  */
-public class KotlinGeneratedTest extends ValidationTestBase {
+public class KotlinDataClassTest extends ValidationTestBase {
 
-	public KotlinGeneratedTest() {
-		super(KotlinGeneratedTarget.class);
+	public KotlinDataClassTest() {
+		super(KotlinDataClassTarget.class);
 	}
 
 }

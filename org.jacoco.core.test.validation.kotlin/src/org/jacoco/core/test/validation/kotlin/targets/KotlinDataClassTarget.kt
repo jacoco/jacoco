@@ -14,9 +14,9 @@ package org.jacoco.core.test.validation.kotlin.targets
 import org.jacoco.core.test.validation.targets.Stubs.nop
 
 /**
- * Test target for Kotlin generated methods
+ * This test target is `data class`.
  */
-object KotlinGeneratedTarget {
+object KotlinDataClassTarget {
     private fun testTrivial() {
         data class Target(var value: Int)  // assertFullyCovered()
 
