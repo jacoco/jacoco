@@ -84,6 +84,23 @@ public class StringSwitchTarget {
 		}
 	}
 
+	/**
+	 * In this case javac generates <code>LOOKUPSWITCH</code> for second switch.
+	 */
+	private static void lookupswitch(Object s) {
+		switch (String.valueOf(s)) { // assertLookupswitch()
+		case "a":
+			nop("case a");
+			break;
+		case "b":
+			nop("case b");
+			break;
+		default:
+			nop("default");
+			break;
+		}
+	}
+
 	public static void main(String[] args) {
 		covered("");
 		covered("a");
