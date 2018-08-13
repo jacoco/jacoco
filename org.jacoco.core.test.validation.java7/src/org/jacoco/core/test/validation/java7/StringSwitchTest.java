@@ -43,4 +43,13 @@ public class StringSwitchTest extends ValidationTestBase {
 		}
 	}
 
+	public void assertLookupswitch(final Line line) {
+		if (isJDKCompiler) {
+			assertNotCovered(line, 3, 0);
+		} else {
+			// Filtering for ECJ not yet implemented:
+			assertNotCovered(line, 7, 0);
+		}
+	}
+
 }

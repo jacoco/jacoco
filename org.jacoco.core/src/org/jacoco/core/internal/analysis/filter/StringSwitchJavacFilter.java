@@ -91,7 +91,8 @@ public final class StringSwitchJavacFilter implements IFilter {
 				}
 			}
 			nextIsVar(Opcodes.ILOAD, "c");
-			nextIs(Opcodes.TABLESWITCH);
+			// Can be TABLESWITCH or LOOKUPSWITCH depending on number of cases
+			nextIsSwitch();
 			return cursor != null;
 		}
 	}

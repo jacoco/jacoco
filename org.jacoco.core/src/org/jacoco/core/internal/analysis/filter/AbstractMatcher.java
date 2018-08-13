@@ -111,6 +111,25 @@ abstract class AbstractMatcher {
 	}
 
 	/**
+	 * Moves {@link #cursor} to next instruction if it is
+	 * <code>TABLESWITCH</code> or <code>LOOKUPSWITCH</code>, otherwise sets it
+	 * to <code>null</code>.
+	 */
+	final void nextIsSwitch() {
+		next();
+		if (cursor == null) {
+			return;
+		}
+		switch (cursor.getOpcode()) {
+		case Opcodes.TABLESWITCH:
+		case Opcodes.LOOKUPSWITCH:
+			return;
+		default:
+			cursor = null;
+		}
+	}
+
+	/**
 	 * Moves {@link #cursor} to next instruction if it has given opcode,
 	 * otherwise sets it to <code>null</code>.
 	 */
