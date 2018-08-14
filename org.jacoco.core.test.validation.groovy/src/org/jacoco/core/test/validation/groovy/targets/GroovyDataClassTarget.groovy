@@ -9,16 +9,14 @@
  *    Andres Almiray - initial API and implementation
  *
  *******************************************************************************/
-package org.jacoco.core.test.validation.groovy;
+package org.jacoco.core.test.validation.groovy.targets
 
-import org.jacoco.core.test.validation.ValidationTestBase;
-import org.jacoco.core.test.validation.groovy.targets.GroovyDataClassTarget;
+@groovy.transform.Canonical
+class GroovyDataClassTarget { // assertFullyCovered()
 
-/**
- * Test of <code>data class</code>es.
- */
-public class GroovyDataClassTest extends ValidationTestBase {
-    public GroovyDataClassTest() {
-        super(GroovyDataClassTarget.class);
+    int valRead // assertNotCovered()
+
+    static void main(String[] args) {
+        new GroovyDataClassTarget() // assertFullyCovered()
     }
 }
