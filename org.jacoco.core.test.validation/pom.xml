@@ -91,6 +91,7 @@
       <modules>
         <module>../org.jacoco.core.test.validation.kotlin</module>
         <module>../org.jacoco.core.test.validation.java7</module>
+        <module>../org.jacoco.core.test.validation.groovy</module>
       </modules>
     </profile>
 
@@ -105,6 +106,7 @@
       <modules>
         <module>../org.jacoco.core.test.validation.kotlin</module>
         <module>../org.jacoco.core.test.validation.java7</module>
+        <module>../org.jacoco.core.test.validation.groovy</module>
       </modules>
     </profile>
 
@@ -124,6 +126,7 @@
         <module>../org.jacoco.core.test.validation.kotlin</module>
         <module>../org.jacoco.core.test.validation.java7</module>
         <module>../org.jacoco.core.test.validation.java8</module>
+        <module>../org.jacoco.core.test.validation.groovy</module>
       </modules>
     </profile>
 
