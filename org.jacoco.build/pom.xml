@@ -266,6 +266,7 @@
         <excludes>
           <exclude>**/*.java</exclude>
           <exclude>**/*.kt</exclude>
+          <exclude>**/*.groovy</exclude>
           <exclude>**/*.properties</exclude>
         </excludes>
       </resource>
