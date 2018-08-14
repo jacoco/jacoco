@@ -25,7 +25,6 @@
     <name>JaCoCo :: Test :: Core :: Validation Groovy 2</name>
 
     <properties>
-        <bytecode.version>7</bytecode.version>
         <gmaven.version>1.6</gmaven.version>
         <groovy.version>2.5.2</groovy.version>
     </properties>
@@ -50,7 +49,6 @@
                 <groupId>org.codehaus.gmavenplus</groupId>
                 <artifactId>gmavenplus-plugin</artifactId>
                 <version>${gmaven.version}</version>
-                <inherited>true</inherited>
                 <executions>
                     <execution>
                         <id>compile</id>
@@ -61,7 +59,11 @@
                     </execution>
                 </executions>
                 <configuration>
-                    <targetBytecode>${bytecode.version}</targetBytecode>
+                    <!--
+                    Force target bytecode to 1.7 for now
+                    as Groovy does not understand values such as 8 or 9
+                    -->
+                    <targetBytecode>1.7</targetBytecode>
                     <sources>
                         <source>
                             <directory>${project.basedir}/src</directory>
