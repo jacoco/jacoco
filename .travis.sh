@@ -63,6 +63,9 @@ case "$JDK" in
 11-ea)
   install_jdk $JDK11_EA_URL
   ;;
+12-ea)
+  install_jdk $JDK12_EA_URL
+  ;;
 esac
 
 # Do not use "~/.mavenrc" set by Travis (https://github.com/travis-ci/travis-ci/issues/3893),
@@ -92,6 +95,9 @@ case "$JDK" in
   mvn -V -B -e verify -Dbytecode.version=10
   ;;
 11-ea)
+  mvn -V -B -e verify -Dbytecode.version=11
+  ;;
+12-ea)
   mvn -V -B -e verify -Dbytecode.version=11
   ;;
 *)
