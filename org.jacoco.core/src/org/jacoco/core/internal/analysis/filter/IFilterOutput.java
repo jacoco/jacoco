@@ -11,6 +11,8 @@
  *******************************************************************************/
 package org.jacoco.core.internal.analysis.filter;
 
+import java.util.List;
+
 import org.objectweb.asm.tree.AbstractInsnNode;
 
 /**
@@ -40,5 +42,7 @@ public interface IFilterOutput {
 	 *            second instruction
 	 */
 	void merge(AbstractInsnNode i1, AbstractInsnNode i2);
+
+	void replace(AbstractInsnNode i, List<AbstractInsnNode> branches);
 
 }

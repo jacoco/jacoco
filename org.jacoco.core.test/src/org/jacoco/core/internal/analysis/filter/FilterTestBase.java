@@ -42,6 +42,11 @@ public abstract class FilterTestBase {
 				final AbstractInsnNode i2) {
 			fail();
 		}
+
+		public void replace(final AbstractInsnNode i,
+				final List<AbstractInsnNode> branches) {
+			fail();
+		}
 	};
 
 	final void assertIgnored(Range... ranges) {
