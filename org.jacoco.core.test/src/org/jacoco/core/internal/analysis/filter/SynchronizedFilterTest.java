@@ -11,27 +11,22 @@
  *******************************************************************************/
 package org.jacoco.core.internal.analysis.filter;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.fail;
-
 import org.jacoco.core.internal.instr.InstrSupport;
 import org.junit.Test;
 import org.objectweb.asm.Label;
 import org.objectweb.asm.Opcodes;
-import org.objectweb.asm.tree.AbstractInsnNode;
 import org.objectweb.asm.tree.LabelNode;
 import org.objectweb.asm.tree.MethodNode;
 
-public class SynchronizedFilterTest implements IFilterOutput {
+/**
+ * Unit tests for {@link SynchronizedFilter}.
+ */
+public class SynchronizedFilterTest extends FilterTestBase {
 
 	private final SynchronizedFilter filter = new SynchronizedFilter();
 
 	private final MethodNode m = new MethodNode(InstrSupport.ASM_API_VERSION, 0,
 			"name", "()V", null, null);
-
-	private AbstractInsnNode fromInclusive;
-	private AbstractInsnNode toInclusive;
 
 	@Test
 	public void javac() {
@@ -64,9 +59,10 @@ public class SynchronizedFilterTest implements IFilterOutput {
 		m.visitLabel(exit);
 		m.visitInsn(Opcodes.RETURN);
 
-		filter.filter(m, new FilterContextMock(), this);
-		assertEquals(handler.info, fromInclusive);
-		assertEquals(((LabelNode) exit.info).getPrevious(), toInclusive);
+		filter.filter(m, context, output);
+
+		assertIgnored(new Range((LabelNode) handler.info,
+				((LabelNode) exit.info).getPrevious()));
 	}
 
 	/**
@@ -117,8 +113,9 @@ public class SynchronizedFilterTest implements IFilterOutput {
 		m.visitLabel(exit);
 		m.visitInsn(Opcodes.RETURN);
 
-		filter.filter(m, new FilterContextMock(), this);
-		assertNull(fromInclusive);
+		filter.filter(m, context, output);
+
+		assertIgnored();
 	}
 
 	@Test
@@ -152,20 +149,10 @@ public class SynchronizedFilterTest implements IFilterOutput {
 		m.visitLabel(exit);
 		m.visitInsn(Opcodes.RETURN);
 
-		filter.filter(m, new FilterContextMock(), this);
-		assertEquals(handler.info, fromInclusive);
-		assertEquals(((LabelNode) exit.info).getPrevious(), toInclusive);
-	}
+		filter.filter(m, context, output);
 
-	public void ignore(AbstractInsnNode fromInclusive,
-			AbstractInsnNode toInclusive) {
-		assertNull(this.fromInclusive);
-		this.fromInclusive = fromInclusive;
-		this.toInclusive = toInclusive;
-	}
-
-	public void merge(final AbstractInsnNode i1, final AbstractInsnNode i2) {
-		fail();
+		assertIgnored(new Range((LabelNode) handler.info,
+			((LabelNode) exit.info).getPrevious()));
 	}
 
 }

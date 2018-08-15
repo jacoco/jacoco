@@ -11,21 +11,17 @@
  *******************************************************************************/
 package org.jacoco.core.internal.analysis.filter;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
-
 import org.jacoco.core.internal.instr.InstrSupport;
 import org.junit.Test;
 import org.objectweb.asm.Opcodes;
-import org.objectweb.asm.tree.AbstractInsnNode;
 import org.objectweb.asm.tree.MethodNode;
 
-public class PrivateEmptyNoArgConstructorFilterTest implements IFilterOutput {
+/**
+ * Unit tests for {@link PrivateEmptyNoArgConstructorFilter}.
+ */
+public class PrivateEmptyNoArgConstructorFilterTest extends FilterTestBase {
 
 	private final IFilter filter = new PrivateEmptyNoArgConstructorFilter();
-
-	private AbstractInsnNode fromInclusive;
-	private AbstractInsnNode toInclusive;
 
 	@Test
 	public void test() {
@@ -37,20 +33,9 @@ public class PrivateEmptyNoArgConstructorFilterTest implements IFilterOutput {
 				"()V", false);
 		m.visitInsn(Opcodes.RETURN);
 
-		filter.filter(m, new FilterContextMock(), this);
+		filter.filter(m, context, output);
 
-		assertEquals(m.instructions.getFirst(), fromInclusive);
-		assertEquals(m.instructions.getLast(), toInclusive);
-	}
-
-	public void ignore(final AbstractInsnNode fromInclusive,
-			final AbstractInsnNode toInclusive) {
-		this.fromInclusive = fromInclusive;
-		this.toInclusive = toInclusive;
-	}
-
-	public void merge(final AbstractInsnNode i1, final AbstractInsnNode i2) {
-		fail();
+		assertMethodIgnored(m);
 	}
 
 }

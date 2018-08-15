@@ -11,20 +11,16 @@
  *******************************************************************************/
 package org.jacoco.core.internal.analysis.filter;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
-
-import java.util.ArrayList;
-import java.util.List;
-
 import org.jacoco.core.internal.instr.InstrSupport;
 import org.junit.Test;
 import org.objectweb.asm.Label;
 import org.objectweb.asm.Opcodes;
-import org.objectweb.asm.tree.AbstractInsnNode;
 import org.objectweb.asm.tree.MethodNode;
 
-public class TryWithResourcesEcjFilterTest implements IFilterOutput {
+/**
+ * Unit tests for {@link TryWithResourcesEcjFilter}.
+ */
+public class TryWithResourcesEcjFilterTest extends FilterTestBase {
 
 	private final TryWithResourcesEcjFilter filter = new TryWithResourcesEcjFilter();
 
@@ -310,15 +306,9 @@ public class TryWithResourcesEcjFilterTest implements IFilterOutput {
 		// additional handlers
 		m.visitInsn(Opcodes.NOP);
 
-		filter.filter(m, new FilterContextMock(), this);
+		filter.filter(m, context, output);
 
-		assertEquals(2, from.size());
-
-		assertEquals(range0.fromInclusive, from.get(0));
-		assertEquals(range0.toInclusive, to.get(0));
-
-		assertEquals(range1.fromInclusive, from.get(1));
-		assertEquals(range1.toInclusive, to.get(1));
+		assertIgnored(range0, range1);
 	}
 
 	/**
@@ -598,32 +588,9 @@ public class TryWithResourcesEcjFilterTest implements IFilterOutput {
 		// additional handlers
 		m.visitInsn(Opcodes.NOP);
 
-		filter.filter(m, new FilterContextMock(), this);
+		filter.filter(m, context, output);
 
-		assertEquals(2, from.size());
-
-		assertEquals(range0.fromInclusive, from.get(0));
-		assertEquals(range0.toInclusive, to.get(0));
-
-		assertEquals(range1.fromInclusive, from.get(1));
-		assertEquals(range1.toInclusive, to.get(1));
-	}
-
-	static class Range {
-		AbstractInsnNode fromInclusive;
-		AbstractInsnNode toInclusive;
-	}
-
-	private final List<AbstractInsnNode> from = new ArrayList<AbstractInsnNode>();
-	private final List<AbstractInsnNode> to = new ArrayList<AbstractInsnNode>();
-
-	public void ignore(AbstractInsnNode from, AbstractInsnNode to) {
-		this.from.add(from);
-		this.to.add(to);
-	}
-
-	public void merge(final AbstractInsnNode i1, final AbstractInsnNode i2) {
-		fail();
+		assertIgnored(range0, range1);
 	}
 
 }

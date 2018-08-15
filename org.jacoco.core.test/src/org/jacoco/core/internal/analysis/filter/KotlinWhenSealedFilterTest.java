@@ -11,20 +11,16 @@
  *******************************************************************************/
 package org.jacoco.core.internal.analysis.filter;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
-
-import java.util.ArrayList;
-import java.util.List;
-
 import org.jacoco.core.internal.instr.InstrSupport;
 import org.junit.Test;
 import org.objectweb.asm.Label;
 import org.objectweb.asm.Opcodes;
-import org.objectweb.asm.tree.AbstractInsnNode;
 import org.objectweb.asm.tree.MethodNode;
 
-public class KotlinWhenSealedFilterTest implements IFilterOutput {
+/**
+ * Unit tests for {@link KotlinWhenSealedFilter}.
+ */
+public class KotlinWhenSealedFilterTest extends FilterTestBase {
 
 	private final KotlinWhenSealedFilter filter = new KotlinWhenSealedFilter();
 
@@ -55,15 +51,9 @@ public class KotlinWhenSealedFilterTest implements IFilterOutput {
 		m.visitInsn(Opcodes.ATHROW);
 		range2.toInclusive = m.instructions.getLast();
 
-		filter.filter(m, new FilterContextMock(), this);
+		filter.filter(m, context, output);
 
-		assertEquals(2, ignoredRanges.size());
-
-		assertEquals(range1.fromInclusive, ignoredRanges.get(0).fromInclusive);
-		assertEquals(range1.toInclusive, ignoredRanges.get(0).toInclusive);
-
-		assertEquals(range2.fromInclusive, ignoredRanges.get(1).fromInclusive);
-		assertEquals(range2.toInclusive, ignoredRanges.get(1).toInclusive);
+		assertIgnored(range1, range2);
 	}
 
 	@Test
@@ -84,28 +74,9 @@ public class KotlinWhenSealedFilterTest implements IFilterOutput {
 		m.visitTypeInsn(Opcodes.CHECKCAST, "java/lang/Throwable");
 		m.visitInsn(Opcodes.ATHROW);
 
-		filter.filter(m, new FilterContextMock(), this);
+		filter.filter(m, context, output);
 
-		assertEquals(0, ignoredRanges.size());
-	}
-
-	static class Range {
-		AbstractInsnNode fromInclusive;
-		AbstractInsnNode toInclusive;
-	}
-
-	private final List<Range> ignoredRanges = new ArrayList<Range>();
-
-	public void ignore(final AbstractInsnNode fromInclusive,
-			final AbstractInsnNode toInclusive) {
-		final Range range = new Range();
-		range.fromInclusive = fromInclusive;
-		range.toInclusive = toInclusive;
-		this.ignoredRanges.add(range);
-	}
-
-	public void merge(final AbstractInsnNode i1, final AbstractInsnNode i2) {
-		fail();
+		assertIgnored();
 	}
 
 }
