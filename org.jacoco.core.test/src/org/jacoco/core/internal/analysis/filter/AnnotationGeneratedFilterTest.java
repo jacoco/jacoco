@@ -11,24 +11,17 @@
  *******************************************************************************/
 package org.jacoco.core.internal.analysis.filter;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.fail;
-
 import org.jacoco.core.internal.instr.InstrSupport;
 import org.junit.Test;
 import org.objectweb.asm.Opcodes;
-import org.objectweb.asm.tree.AbstractInsnNode;
 import org.objectweb.asm.tree.MethodNode;
 
-public class AnnotationGeneratedFilterTest implements IFilterOutput {
+/**
+ * Unit tests for {@link AnnotationGeneratedFilter}.
+ */
+public class AnnotationGeneratedFilterTest extends FilterTestBase {
 
 	private final IFilter filter = new AnnotationGeneratedFilter();
-
-	private final FilterContextMock context = new FilterContextMock();
-
-	private AbstractInsnNode fromInclusive;
-	private AbstractInsnNode toInclusive;
 
 	@Test
 	public void should_filter_methods_annotated_with_runtime_visible_org_groovy_transform_Generated() {
@@ -39,10 +32,9 @@ public class AnnotationGeneratedFilterTest implements IFilterOutput {
 		m.visitInsn(Opcodes.ICONST_0);
 		m.visitInsn(Opcodes.IRETURN);
 
-		filter.filter(m, context, this);
+		filter.filter(m, context, output);
 
-		assertEquals(m.instructions.getFirst(), fromInclusive);
-		assertEquals(m.instructions.getLast(), toInclusive);
+		assertMethodIgnored(m);
 	}
 
 	@Test
@@ -54,10 +46,9 @@ public class AnnotationGeneratedFilterTest implements IFilterOutput {
 		m.visitInsn(Opcodes.ICONST_0);
 		m.visitInsn(Opcodes.IRETURN);
 
-		filter.filter(m, context, this);
+		filter.filter(m, context, output);
 
-		assertEquals(m.instructions.getFirst(), fromInclusive);
-		assertEquals(m.instructions.getLast(), toInclusive);
+		assertMethodIgnored(m);
 	}
 
 	@Test
@@ -70,10 +61,9 @@ public class AnnotationGeneratedFilterTest implements IFilterOutput {
 
 		context.classAnnotations.add("Lorg/immutables/value/Generated;");
 
-		filter.filter(m, context, this);
+		filter.filter(m, context, output);
 
-		assertEquals(m.instructions.getFirst(), fromInclusive);
-		assertEquals(m.instructions.getLast(), toInclusive);
+		assertMethodIgnored(m);
 	}
 
 	@Test
@@ -86,10 +76,9 @@ public class AnnotationGeneratedFilterTest implements IFilterOutput {
 
 		context.classAnnotations.add("Lorg/example/Class$Generated;");
 
-		filter.filter(m, context, this);
+		filter.filter(m, context, output);
 
-		assertEquals(m.instructions.getFirst(), fromInclusive);
-		assertEquals(m.instructions.getLast(), toInclusive);
+		assertMethodIgnored(m);
 	}
 
 	@Test
@@ -100,10 +89,9 @@ public class AnnotationGeneratedFilterTest implements IFilterOutput {
 		m.visitInsn(Opcodes.ICONST_0);
 		m.visitInsn(Opcodes.IRETURN);
 
-		filter.filter(m, context, this);
+		filter.filter(m, context, output);
 
-		assertNull(fromInclusive);
-		assertNull(toInclusive);
+		assertIgnored();
 	}
 
 	@Test
@@ -117,21 +105,9 @@ public class AnnotationGeneratedFilterTest implements IFilterOutput {
 
 		context.classAnnotations.add("LOtherAnnotation;");
 
-		filter.filter(m, context, this);
+		filter.filter(m, context, output);
 
-		assertNull(fromInclusive);
-		assertNull(toInclusive);
-	}
-
-	public void ignore(final AbstractInsnNode fromInclusive,
-			final AbstractInsnNode toInclusive) {
-		assertNull(this.fromInclusive);
-		this.fromInclusive = fromInclusive;
-		this.toInclusive = toInclusive;
-	}
-
-	public void merge(final AbstractInsnNode i1, final AbstractInsnNode i2) {
-		fail();
+		assertIgnored();
 	}
 
 }

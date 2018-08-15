@@ -11,10 +11,6 @@
  *******************************************************************************/
 package org.jacoco.core.internal.analysis.filter;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.fail;
-
 import org.jacoco.core.internal.instr.InstrSupport;
 import org.junit.Test;
 import org.objectweb.asm.Label;
@@ -22,15 +18,15 @@ import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.tree.AbstractInsnNode;
 import org.objectweb.asm.tree.MethodNode;
 
-public class StringSwitchJavacFilterTest implements IFilterOutput {
+/**
+ * Unit tests for {@link StringSwitchJavacFilter}.
+ */
+public class StringSwitchJavacFilterTest extends FilterTestBase {
 
 	private final IFilter filter = new StringSwitchJavacFilter();
 
 	private final MethodNode m = new MethodNode(InstrSupport.ASM_API_VERSION, 0,
 			"name", "()V", null, null);
-
-	private AbstractInsnNode fromInclusive;
-	private AbstractInsnNode toInclusive;
 
 	private AbstractInsnNode expectedFromInclusive;
 	private AbstractInsnNode expectedToInclusive;
@@ -100,10 +96,9 @@ public class StringSwitchJavacFilterTest implements IFilterOutput {
 		m.visitTableSwitchInsn(0, 2, cases);
 		m.visitLabel(cases);
 
-		filter.filter(m, new FilterContextMock(), this);
+		filter.filter(m, context, output);
 
-		assertEquals(expectedFromInclusive, this.fromInclusive);
-		assertEquals(expectedToInclusive, this.toInclusive);
+		assertIgnored(new Range(expectedFromInclusive, expectedToInclusive));
 	}
 
 	@Test
@@ -114,10 +109,9 @@ public class StringSwitchJavacFilterTest implements IFilterOutput {
 		m.visitLookupSwitchInsn(cases, null, new Label[] {});
 		m.visitLabel(cases);
 
-		filter.filter(m, new FilterContextMock(), this);
+		filter.filter(m, context, output);
 
-		assertEquals(expectedFromInclusive, this.fromInclusive);
-		assertEquals(expectedToInclusive, this.toInclusive);
+		assertIgnored(new Range(expectedFromInclusive, expectedToInclusive));
 	}
 
 	@Test
@@ -162,21 +156,9 @@ public class StringSwitchJavacFilterTest implements IFilterOutput {
 
 		m.visitLabel(cases);
 
-		filter.filter(m, new FilterContextMock(), this);
+		filter.filter(m, context, output);
 
-		assertNull(this.fromInclusive);
-		assertNull(this.toInclusive);
-	}
-
-	public void ignore(final AbstractInsnNode fromInclusive,
-			final AbstractInsnNode toInclusive) {
-		assertNull(this.fromInclusive);
-		this.fromInclusive = fromInclusive;
-		this.toInclusive = toInclusive;
-	}
-
-	public void merge(final AbstractInsnNode i1, final AbstractInsnNode i2) {
-		fail();
+		assertIgnored();
 	}
 
 }

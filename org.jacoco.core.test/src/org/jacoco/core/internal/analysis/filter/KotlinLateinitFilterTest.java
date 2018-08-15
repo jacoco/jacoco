@@ -11,10 +11,6 @@
  *******************************************************************************/
 package org.jacoco.core.internal.analysis.filter;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.fail;
-
 import org.jacoco.core.internal.instr.InstrSupport;
 import org.junit.Test;
 import org.objectweb.asm.Label;
@@ -22,14 +18,15 @@ import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.tree.AbstractInsnNode;
 import org.objectweb.asm.tree.MethodNode;
 
-public class KotlinLateinitFilterTest implements IFilterOutput {
+/**
+ * Unit tests for {@link KotlinLateinitFilter}.
+ */
+public class KotlinLateinitFilterTest extends FilterTestBase {
+
 	private final KotlinLateinitFilter filter = new KotlinLateinitFilter();
 
 	private final MethodNode m = new MethodNode(InstrSupport.ASM_API_VERSION, 0,
 			"name", "()V", null, null);
-
-	private AbstractInsnNode fromInclusive;
-	private AbstractInsnNode toInclusive;
 
 	@Test
 	public void testLateinitBranchIsFiltered() {
@@ -55,20 +52,10 @@ public class KotlinLateinitFilterTest implements IFilterOutput {
 		m.visitLabel(l2);
 		m.visitMethodInsn(Opcodes.INVOKEVIRTUAL,
 				"android/os/PowerManager$WakeLock", "acquire", "", false);
-		filter.filter(m, new FilterContextMock(), this);
 
-		assertEquals(expectedFrom, fromInclusive);
-		assertEquals(expectedTo, toInclusive);
+		filter.filter(m, context, output);
+
+		assertIgnored(new Range(expectedFrom, expectedTo));
 	}
 
-	public void ignore(AbstractInsnNode fromInclusive,
-			AbstractInsnNode toInclusive) {
-		assertNull(this.fromInclusive);
-		this.fromInclusive = fromInclusive;
-		this.toInclusive = toInclusive;
-	}
-
-	public void merge(final AbstractInsnNode i1, final AbstractInsnNode i2) {
-		fail();
-	}
 }
