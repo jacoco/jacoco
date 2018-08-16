@@ -23,6 +23,7 @@ import static org.objectweb.asm.Opcodes.INVOKEVIRTUAL;
 import static org.objectweb.asm.Opcodes.POP;
 import static org.objectweb.asm.Opcodes.RETURN;
 import static org.objectweb.asm.Opcodes.V11;
+import static org.objectweb.asm.Opcodes.V12;
 import static org.objectweb.asm.Opcodes.V1_1;
 import static org.objectweb.asm.Opcodes.V1_2;
 import static org.objectweb.asm.Opcodes.V1_3;
@@ -105,6 +106,11 @@ public class ClassFileVersionsTest {
 	@Test
 	public void test_11() throws IOException {
 		testVersion(V11, true);
+	}
+
+	@Test
+	public void test_12() throws IOException {
+		testVersion(V12, true);
 	}
 
 	private void testVersion(int version, boolean frames) throws IOException {

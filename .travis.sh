@@ -98,7 +98,7 @@ case "$JDK" in
   mvn -V -B -e verify -Dbytecode.version=11
   ;;
 12-ea)
-  mvn -V -B -e verify -Dbytecode.version=11
+  mvn -V -B -e verify -Dbytecode.version=12
   ;;
 *)
   echo "Incorrect JDK [$JDK]"
