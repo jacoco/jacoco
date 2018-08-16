@@ -180,6 +180,13 @@ public class ReportAggregateMojo extends AbstractReportMojo {
 		return result;
 	}
 
+	/**
+	 * Note that if dependency specified using version range and reactor
+	 * contains multiple modules with same artifactId and groupId but of
+	 * different versions, then first dependency which matches range will be
+	 * selected. For example in case of range <code>[0,2]</code> if version 1 is
+	 * before version 2 in reactor, then version 1 will be selected.
+	 */
 	private MavenProject findProjectFromReactor(final Dependency d) {
 		final VersionRange depVersionAsRange;
 		try {
