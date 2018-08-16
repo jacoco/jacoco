@@ -15,20 +15,11 @@
 
   <parent>
     <groupId>jacoco</groupId>
-    <artifactId>it-report-aggregate-version-ranges</artifactId>
+    <artifactId>it-report-aggregate</artifactId>
     <version>1.0-SNAPSHOT</version>
   </parent>
 
-  <artifactId>child1-test</artifactId>
-  <packaging>jar</packaging>
-  <version>0.1</version>
+  <artifactId>child2</artifactId>
+  <version>2.0-SNAPSHOT</version>
 
-  <dependencies>
-    <dependency>
-      <groupId>jacoco</groupId>
-      <artifactId>child1</artifactId>
-      <version>${project.version}</version>
-    </dependency>
-  </dependencies>
-  
 </project>

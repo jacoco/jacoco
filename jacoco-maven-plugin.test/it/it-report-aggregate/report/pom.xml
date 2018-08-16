@@ -38,7 +38,7 @@
     <dependency>
       <groupId>jacoco</groupId>
       <artifactId>child2</artifactId>
-      <version>${project.version}</version>
+      <version>[2-SNAPSHOT,)</version>
       <scope>runtime</scope>
     </dependency>
   </dependencies>
