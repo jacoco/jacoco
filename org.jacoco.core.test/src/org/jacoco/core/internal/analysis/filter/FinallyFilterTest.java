@@ -422,7 +422,8 @@ public class FinallyFilterTest implements IFilterOutput {
 		}
 	}
 
-	public void replace(AbstractInsnNode i, List<AbstractInsnNode> branches) {
+	public void replace(final AbstractInsnNode original,
+			final List<AbstractInsnNode> targets) {
 		fail();
 	}
 

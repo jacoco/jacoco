@@ -43,8 +43,8 @@ public abstract class FilterTestBase {
 			fail();
 		}
 
-		public void replace(final AbstractInsnNode i,
-				final List<AbstractInsnNode> branches) {
+		public void replace(final AbstractInsnNode original,
+				final List<AbstractInsnNode> targets) {
 			fail();
 		}
 	};

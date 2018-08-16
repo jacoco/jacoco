@@ -175,8 +175,9 @@ public class MethodAnalyzer extends MethodProbesVisitor
 
 	private final Map<AbstractInsnNode, List<AbstractInsnNode>> replacements = new HashMap<AbstractInsnNode, List<AbstractInsnNode>>();
 
-	public void replace(AbstractInsnNode i, List<AbstractInsnNode> branches) {
-		replacements.put(i, branches);
+	public void replace(final AbstractInsnNode original,
+			final List<AbstractInsnNode> targets) {
+		replacements.put(original, targets);
 	}
 
 	@Override

@@ -51,9 +51,9 @@ public class StringSwitchEcjFilterTest {
 			fail();
 		}
 
-		public void replace(AbstractInsnNode i,
-				List<AbstractInsnNode> branches) {
-			StringSwitchEcjFilterTest.this.branches = branches;
+		public void replace(final AbstractInsnNode original,
+				final List<AbstractInsnNode> targets) {
+			StringSwitchEcjFilterTest.this.branches = targets;
 		}
 	};
 

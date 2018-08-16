@@ -43,6 +43,16 @@ public interface IFilterOutput {
 	 */
 	void merge(AbstractInsnNode i1, AbstractInsnNode i2);
 
-	void replace(AbstractInsnNode i, List<AbstractInsnNode> branches);
+	/**
+	 * Marks instruction that should be considered as having branches into the
+	 * given instructions during computation of coverage. The original target
+	 * branches of the original instruction will be ignored.
+	 *
+	 * @param original
+	 *            instruction to be replaced
+	 * @param targets
+	 *            new targets of branches
+	 */
+	void replace(AbstractInsnNode original, List<AbstractInsnNode> targets);
 
 }
