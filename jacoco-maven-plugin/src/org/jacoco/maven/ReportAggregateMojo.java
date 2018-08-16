@@ -181,15 +181,17 @@ public class ReportAggregateMojo extends AbstractReportMojo {
 	}
 
 	private MavenProject findProjectFromReactor(final Dependency d) {
-		VersionRange depVersionAsRange;
+		final VersionRange depVersionAsRange;
 		try {
-			depVersionAsRange = VersionRange.createFromVersionSpec(d.getVersion());
+			depVersionAsRange = VersionRange
+					.createFromVersionSpec(d.getVersion());
 		} catch (InvalidVersionSpecificationException e) {
 			throw new AssertionError(e);
 		}
 
 		for (final MavenProject p : reactorProjects) {
-			DefaultArtifactVersion pv = new DefaultArtifactVersion(p.getVersion());
+			final DefaultArtifactVersion pv = new DefaultArtifactVersion(
+					p.getVersion());
 			if (p.getGroupId().equals(d.getGroupId())
 					&& p.getArtifactId().equals(d.getArtifactId())
 					&& depVersionAsRange.containsVersion(pv)) {
