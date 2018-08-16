@@ -94,7 +94,8 @@ public final class StringSwitchEcjFilter implements IFilter {
 		}
 	}
 
-	private static AbstractInsnNode instructionAfterLabel(LabelNode label) {
+	private static AbstractInsnNode instructionAfterLabel(
+			final LabelNode label) {
 		AbstractInsnNode i = label.getNext();
 		while (i.getType() == AbstractInsnNode.FRAME
 				|| i.getType() == AbstractInsnNode.LABEL
