@@ -12,7 +12,6 @@
 package org.jacoco.core.test.validation;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
 
 import java.io.IOException;
 import java.lang.reflect.Method;
@@ -22,14 +21,15 @@ import org.jacoco.core.analysis.Analyzer;
 import org.jacoco.core.analysis.CoverageBuilder;
 import org.jacoco.core.analysis.ICounter;
 import org.jacoco.core.analysis.ILine;
-import org.jacoco.core.analysis.ISourceFileCoverage;
 import org.jacoco.core.data.ExecutionData;
 import org.jacoco.core.data.ExecutionDataStore;
 import org.jacoco.core.internal.analysis.CounterImpl;
 import org.jacoco.core.test.InstrumentingLoader;
 import org.jacoco.core.test.TargetLoader;
+import org.jacoco.core.test.validation.Source.Line;
 import org.jacoco.core.test.validation.targets.Stubs;
 import org.junit.Before;
+import org.junit.Test;
 
 /**
  * Base class for validation tests. It executes the given class under code
@@ -51,30 +51,20 @@ public abstract class ValidationTestBase {
 		STATUS_NAME[ICounter.PARTLY_COVERED] = "PARTLY_COVERED";
 	}
 
-	private final String srcFolder;
-
 	private final Class<?> target;
-
-	private ISourceFileCoverage sourceCoverage;
 
 	private Source source;
 
 	private InstrumentingLoader loader;
 
-	protected ValidationTestBase(final String srcFolder, final Class<?> target) {
-		this.srcFolder = srcFolder;
-		this.target = target;
-	}
-
 	protected ValidationTestBase(final Class<?> target) {
-		this("src", target);
+		this.target = target;
 	}
 
 	@Before
 	public void setup() throws Exception {
 		final ExecutionDataStore store = execute();
 		analyze(store);
-		source = Source.getSourceFor(srcFolder, target);
 	}
 
 	private ExecutionDataStore execute() throws Exception {
@@ -94,54 +84,97 @@ public abstract class ValidationTestBase {
 		for (ExecutionData data : store.getContents()) {
 			analyze(analyzer, data);
 		}
-
-		String srcName = target.getName().replace('.', '/') + ".java";
-		for (ISourceFileCoverage file : builder.getSourceFiles()) {
-			if (srcName.equals(file.getPackageName() + "/" + file.getName())) {
-				sourceCoverage = file;
-				return;
-			}
-		}
-		fail("No source node found for " + srcName);
+		source = Source.load(target, builder.getBundle("Test"));
 	}
 
 	private void analyze(final Analyzer analyzer, final ExecutionData data)
 			throws IOException {
-		final byte[] bytes = TargetLoader.getClassDataAsBytes(
-				target.getClassLoader(), data.getName());
+		final byte[] bytes = TargetLoader
+				.getClassDataAsBytes(target.getClassLoader(), data.getName());
 		analyzer.analyzeClass(bytes, data.getName());
+	}
+
+	/**
+	 * All single line comments are interpreted as statements in the following
+	 * format:
+	 * 
+	 * <pre>
+	 * // statement1() statement2()
+	 * </pre>
+	 */
+	@Test
+	public void execute_assertions_in_comments() throws IOException {
+		for (Line line : source.getLines()) {
+			String exec = line.getComment();
+			if (exec != null) {
+				StatementParser.parse(exec, new StatementExecutor(this, line),
+						line.toString());
+			}
+		}
+	}
+
+	/*
+	 * Predefined assertion methods:
+	 */
+
+	private void assertCoverage(final Line line, final int insnStatus,
+			final int missedBranches, final int coveredBranches) {
+		final ILine coverage = line.getCoverage();
+
+		String msg = String.format("Instructions (%s)", line);
+		final int actualStatus = coverage.getInstructionCounter().getStatus();
+		assertEquals(msg, STATUS_NAME[insnStatus], STATUS_NAME[actualStatus]);
+
+		msg = String.format("Branches (%s)", line);
+		assertEquals(msg,
+				CounterImpl.getInstance(missedBranches, coveredBranches),
+				coverage.getBranchCounter());
+	}
+
+	public void assertFullyCovered(final Line line, final int missedBranches,
+			final int coveredBranches) {
+		assertCoverage(line, ICounter.FULLY_COVERED, missedBranches,
+				coveredBranches);
+	}
+
+	public void assertFullyCovered(final Line line) {
+		assertFullyCovered(line, 0, 0);
+	}
+
+	public void assertPartlyCovered(final Line line, final int missedBranches,
+			final int coveredBranches) {
+		assertCoverage(line, ICounter.PARTLY_COVERED, missedBranches,
+				coveredBranches);
+	}
+
+	public void assertPartlyCovered(final Line line) {
+		assertPartlyCovered(line, 0, 0);
+	}
+
+	public void assertNotCovered(final Line line, final int missedBranches,
+			final int coveredBranches) {
+		assertCoverage(line, ICounter.NOT_COVERED, missedBranches,
+				coveredBranches);
+	}
+
+	public void assertNotCovered(final Line line) {
+		assertNotCovered(line, 0, 0);
+	}
+
+	public void assertEmpty(final Line line) {
+		assertCoverage(line, ICounter.EMPTY, 0, 0);
+	}
+
+	protected void assertLogEvents(String... events) throws Exception {
+		final Method getter = Class
+				.forName(Stubs.class.getName(), false, loader)
+				.getMethod("getLogEvents");
+		assertEquals("Log events", Arrays.asList(events), getter.invoke(null));
 	}
 
 	protected void assertMethodCount(final int expectedTotal) {
 		assertEquals(expectedTotal,
-				sourceCoverage.getMethodCounter().getTotalCount());
-	}
-
-	protected void assertLine(final String tag, final int status) {
-		final int nr = source.getLineNumber(tag);
-		final ILine line = sourceCoverage.getLine(nr);
-		final String msg = String.format("Status in line %s: %s",
-				Integer.valueOf(nr), source.getLine(nr));
-		final int insnStatus = line.getInstructionCounter().getStatus();
-		assertEquals(msg, STATUS_NAME[status], STATUS_NAME[insnStatus]);
-	}
-
-	protected void assertLine(final String tag, final int status,
-			final int missedBranches, final int coveredBranches) {
-		assertLine(tag, status);
-		final int nr = source.getLineNumber(tag);
-		final ILine line = sourceCoverage.getLine(nr);
-		final String msg = String.format("Branches in line %s: %s",
-				Integer.valueOf(nr), source.getLine(nr));
-		assertEquals(msg + " branches",
-				CounterImpl.getInstance(missedBranches, coveredBranches),
-				line.getBranchCounter());
-	}
-
-	protected void assertLogEvents(String... events) throws Exception {
-		final Method getter = Class.forName(Stubs.class.getName(), false,
-				loader).getMethod("getLogEvents");
-		assertEquals("Log events", Arrays.asList(events), getter.invoke(null));
+				source.getCoverage().getMethodCounter().getTotalCount());
 	}
 
 }

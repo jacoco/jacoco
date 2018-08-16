@@ -11,10 +11,6 @@
  *******************************************************************************/
 package org.jacoco.core.internal.analysis.filter;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.fail;
-
 import org.jacoco.core.internal.instr.InstrSupport;
 import org.junit.Test;
 import org.objectweb.asm.Label;
@@ -22,23 +18,24 @@ import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.tree.AbstractInsnNode;
 import org.objectweb.asm.tree.MethodNode;
 
-public class StringSwitchJavacFilterTest implements IFilterOutput {
+/**
+ * Unit tests for {@link StringSwitchJavacFilter}.
+ */
+public class StringSwitchJavacFilterTest extends FilterTestBase {
 
 	private final IFilter filter = new StringSwitchJavacFilter();
 
 	private final MethodNode m = new MethodNode(InstrSupport.ASM_API_VERSION, 0,
 			"name", "()V", null, null);
 
-	private AbstractInsnNode fromInclusive;
-	private AbstractInsnNode toInclusive;
+	private AbstractInsnNode expectedFromInclusive;
+	private AbstractInsnNode expectedToInclusive;
 
-	@Test
-	public void should_filter_code_generated_by_javac() {
+	private void createFirstSwitch() {
 		final Label h1 = new Label();
 		final Label h1_2 = new Label();
 		final Label h2 = new Label();
 		final Label secondSwitch = new Label();
-		final Label cases = new Label();
 
 		m.visitInsn(Opcodes.ICONST_M1);
 		m.visitVarInsn(Opcodes.ISTORE, 2);
@@ -48,7 +45,7 @@ public class StringSwitchJavacFilterTest implements IFilterOutput {
 				"()I", false);
 		m.visitLookupSwitchInsn(secondSwitch, new int[] { 97, 98 },
 				new Label[] { h1, h2 });
-		final AbstractInsnNode fromInclusive = m.instructions.getLast();
+		expectedFromInclusive = m.instructions.getLast();
 
 		m.visitLabel(h1);
 		m.visitVarInsn(Opcodes.ALOAD, 1);
@@ -87,15 +84,34 @@ public class StringSwitchJavacFilterTest implements IFilterOutput {
 		m.visitVarInsn(Opcodes.ISTORE, 2);
 
 		m.visitLabel(secondSwitch);
-		final AbstractInsnNode toInclusive = m.instructions.getLast();
+		expectedToInclusive = m.instructions.getLast();
 		m.visitVarInsn(Opcodes.ILOAD, 2);
+	}
+
+	@Test
+	public void should_filter_code_generated_by_javac() {
+		createFirstSwitch();
+
+		final Label cases = new Label();
 		m.visitTableSwitchInsn(0, 2, cases);
 		m.visitLabel(cases);
 
-		filter.filter(m, new FilterContextMock(), this);
+		filter.filter(m, context, output);
 
-		assertEquals(fromInclusive, this.fromInclusive);
-		assertEquals(toInclusive, this.toInclusive);
+		assertIgnored(new Range(expectedFromInclusive, expectedToInclusive));
+	}
+
+	@Test
+	public void should_filter_when_javac_generates_lookupswitch() {
+		createFirstSwitch();
+
+		final Label cases = new Label();
+		m.visitLookupSwitchInsn(cases, null, new Label[] {});
+		m.visitLabel(cases);
+
+		filter.filter(m, context, output);
+
+		assertIgnored(new Range(expectedFromInclusive, expectedToInclusive));
 	}
 
 	@Test
@@ -140,21 +156,9 @@ public class StringSwitchJavacFilterTest implements IFilterOutput {
 
 		m.visitLabel(cases);
 
-		filter.filter(m, new FilterContextMock(), this);
+		filter.filter(m, context, output);
 
-		assertNull(this.fromInclusive);
-		assertNull(this.toInclusive);
-	}
-
-	public void ignore(final AbstractInsnNode fromInclusive,
-			final AbstractInsnNode toInclusive) {
-		assertNull(this.fromInclusive);
-		this.fromInclusive = fromInclusive;
-		this.toInclusive = toInclusive;
-	}
-
-	public void merge(final AbstractInsnNode i1, final AbstractInsnNode i2) {
-		fail();
+		assertIgnored();
 	}
 
 }

@@ -25,7 +25,7 @@ public final class InstrSupport {
 	}
 
 	/** ASM API version */
-	public static final int ASM_API_VERSION = Opcodes.ASM6;
+	public static final int ASM_API_VERSION = Opcodes.ASM7_EXPERIMENTAL;
 
 	// === Data Field ===
 

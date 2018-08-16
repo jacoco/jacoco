@@ -14,6 +14,9 @@ package org.jacoco.core.internal.analysis.filter;
 import java.util.HashSet;
 import java.util.Set;
 
+/**
+ * {@link IFilterContext} mock for unit tests.
+ */
 public class FilterContextMock implements IFilterContext {
 
 	public String className = "Foo";
