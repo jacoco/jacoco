@@ -185,8 +185,7 @@ public class ReportAggregateMojo extends AbstractReportMojo {
 		try {
 			depVersionAsRange = VersionRange.createFromVersionSpec(d.getVersion());
 		} catch (InvalidVersionSpecificationException e) {
-			throw new IllegalStateException("Could not parse the version of the dependency even though Maven" +
-					" could: " + d);
+			throw new AssertionError(e);
 		}
 
 		for (final MavenProject p : reactorProjects) {
