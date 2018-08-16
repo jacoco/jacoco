@@ -36,6 +36,8 @@ public class StringSwitchEcjFilterTest {
 
 	private AbstractInsnNode fromInclusive;
 	private AbstractInsnNode toInclusive;
+
+	private AbstractInsnNode original;
 	private List<AbstractInsnNode> branches;
 
 	private final IFilterOutput output = new IFilterOutput() {
@@ -53,6 +55,8 @@ public class StringSwitchEcjFilterTest {
 
 		public void replace(final AbstractInsnNode original,
 				final List<AbstractInsnNode> targets) {
+			assertNull(StringSwitchEcjFilterTest.this.original);
+			StringSwitchEcjFilterTest.this.original = original;
 			StringSwitchEcjFilterTest.this.branches = targets;
 		}
 	};
@@ -126,6 +130,7 @@ public class StringSwitchEcjFilterTest {
 
 		filter.filter(m, context, output);
 
+		assertEquals(expectedFromInclusive.getPrevious(), original);
 		assertEquals(expectedBranches, branches);
 		assertEquals(expectedFromInclusive, fromInclusive);
 		assertEquals(expectedToInclusive, toInclusive);
