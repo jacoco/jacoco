@@ -101,10 +101,10 @@ public class StringSwitchEcjFilterTest {
 		m.visitLabel(h2);
 
 		m.visitVarInsn(Opcodes.ALOAD, 2);
-		m.visitLdcInsn("\0a");
+		m.visitLdcInsn("b");
 		m.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "java/lang/String", "equals",
 				"(Ljava/lang/Object;)Z", false);
-		// if equal "\0a", then goto its case
+		// if equal "b", then goto its case
 		m.visitJumpInsn(Opcodes.IFNE, case3);
 
 		// goto default case
