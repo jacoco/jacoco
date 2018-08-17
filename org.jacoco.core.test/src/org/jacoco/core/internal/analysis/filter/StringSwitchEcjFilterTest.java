@@ -16,7 +16,9 @@ import static org.junit.Assert.assertNull;
 import static org.junit.Assert.fail;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.jacoco.core.internal.instr.InstrSupport;
 import org.junit.Test;
@@ -37,8 +39,8 @@ public class StringSwitchEcjFilterTest {
 	private AbstractInsnNode fromInclusive;
 	private AbstractInsnNode toInclusive;
 
-	private AbstractInsnNode original;
-	private List<AbstractInsnNode> branches;
+	private AbstractInsnNode source;
+	private Set<AbstractInsnNode> newTargets;
 
 	private final IFilterOutput output = new IFilterOutput() {
 		public void ignore(final AbstractInsnNode fromInclusive,
@@ -53,17 +55,17 @@ public class StringSwitchEcjFilterTest {
 			fail();
 		}
 
-		public void replace(final AbstractInsnNode original,
-				final List<AbstractInsnNode> targets) {
-			assertNull(StringSwitchEcjFilterTest.this.original);
-			StringSwitchEcjFilterTest.this.original = original;
-			StringSwitchEcjFilterTest.this.branches = targets;
+		public void replaceBranches(final AbstractInsnNode source,
+				final Set<AbstractInsnNode> newTargets) {
+			assertNull(StringSwitchEcjFilterTest.this.source);
+			StringSwitchEcjFilterTest.this.source = source;
+			StringSwitchEcjFilterTest.this.newTargets = newTargets;
 		}
 	};
 
 	@Test
 	public void should_filter() {
-		final List<AbstractInsnNode> expectedBranches = new ArrayList<AbstractInsnNode>();
+		final Set<AbstractInsnNode> expectedNewTargets = new HashSet<AbstractInsnNode>();
 
 		final MethodNode m = new MethodNode(InstrSupport.ASM_API_VERSION, 0,
 				"name", "()V", null, null);
@@ -117,21 +119,21 @@ public class StringSwitchEcjFilterTest {
 
 		m.visitLabel(caseDefault);
 		m.visitInsn(Opcodes.RETURN);
-		expectedBranches.add(m.instructions.getLast());
+		expectedNewTargets.add(m.instructions.getLast());
 		m.visitLabel(case1);
 		m.visitInsn(Opcodes.RETURN);
-		expectedBranches.add(m.instructions.getLast());
+		expectedNewTargets.add(m.instructions.getLast());
 		m.visitLabel(case2);
 		m.visitInsn(Opcodes.RETURN);
-		expectedBranches.add(m.instructions.getLast());
+		expectedNewTargets.add(m.instructions.getLast());
 		m.visitLabel(case3);
 		m.visitInsn(Opcodes.RETURN);
-		expectedBranches.add(m.instructions.getLast());
+		expectedNewTargets.add(m.instructions.getLast());
 
 		filter.filter(m, context, output);
 
-		assertEquals(expectedFromInclusive.getPrevious(), original);
-		assertEquals(expectedBranches, branches);
+		assertEquals(expectedFromInclusive.getPrevious(), source);
+		assertEquals(expectedNewTargets, newTargets);
 		assertEquals(expectedFromInclusive, fromInclusive);
 		assertEquals(expectedToInclusive, toInclusive);
 	}

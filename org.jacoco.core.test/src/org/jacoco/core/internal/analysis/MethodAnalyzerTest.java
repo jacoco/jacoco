@@ -15,6 +15,8 @@ import static org.junit.Assert.assertEquals;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
 
 import org.jacoco.core.analysis.ILine;
 import org.jacoco.core.analysis.IMethodCoverage;
@@ -505,7 +507,10 @@ public class MethodAnalyzerTest implements IProbeIdGenerator {
 			final AbstractInsnNode t2 = methodNode.instructions.get(13);
 			assertEquals(Opcodes.BIPUSH, t2.getOpcode());
 
-			output.replace(i, Arrays.asList(t1, t2));
+			final Set<AbstractInsnNode> newTargets = new HashSet<AbstractInsnNode>();
+			newTargets.add(t1);
+			newTargets.add(t2);
+			output.replaceBranches(i, newTargets);
 		}
 	};
 

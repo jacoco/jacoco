@@ -11,8 +11,8 @@
  *******************************************************************************/
 package org.jacoco.core.internal.analysis.filter;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.tree.AbstractInsnNode;
@@ -63,7 +63,7 @@ public final class StringSwitchEcjFilter implements IFilter {
 				hashCodes = tableSwitch.labels.size();
 			}
 
-			final List<AbstractInsnNode> replacements = new ArrayList<AbstractInsnNode>();
+			final Set<AbstractInsnNode> replacements = new HashSet<AbstractInsnNode>();
 			replacements.add(instructionAfterLabel(defaultLabel));
 
 			for (int i = 0; i < hashCodes; i++) {
@@ -90,7 +90,7 @@ public final class StringSwitchEcjFilter implements IFilter {
 			}
 
 			output.ignore(s.getNext(), cursor);
-			output.replace(s, replacements);
+			output.replaceBranches(s, replacements);
 		}
 	}
 

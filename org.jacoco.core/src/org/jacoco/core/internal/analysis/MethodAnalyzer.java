@@ -173,11 +173,11 @@ public class MethodAnalyzer extends MethodProbesVisitor
 		}
 	}
 
-	private final Map<AbstractInsnNode, List<AbstractInsnNode>> replacements = new HashMap<AbstractInsnNode, List<AbstractInsnNode>>();
+	private final Map<AbstractInsnNode, Set<AbstractInsnNode>> replacements = new HashMap<AbstractInsnNode, Set<AbstractInsnNode>>();
 
-	public void replace(final AbstractInsnNode original,
-			final List<AbstractInsnNode> targets) {
-		replacements.put(original, targets);
+	public void replaceBranches(final AbstractInsnNode source,
+			final Set<AbstractInsnNode> newTargets) {
+		replacements.put(source, newTargets);
 	}
 
 	@Override
@@ -389,7 +389,7 @@ public class MethodAnalyzer extends MethodProbesVisitor
 
 			final int total;
 			final int covered;
-			final List<AbstractInsnNode> r = replacements.get(i.getNode());
+			final Set<AbstractInsnNode> r = replacements.get(i.getNode());
 			if (r != null) {
 				int cb = 0;
 				for (AbstractInsnNode b : r) {
