@@ -14,6 +14,9 @@ package org.jacoco.core.internal.analysis;
 import static org.junit.Assert.assertEquals;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
 
 import org.jacoco.core.analysis.ILine;
 import org.jacoco.core.analysis.IMethodCoverage;
@@ -449,7 +452,7 @@ public class MethodAnalyzerTest implements IProbeIdGenerator {
 		assertLine(1002, 0, 1, 0, 0);
 	}
 
-	// === Scenario: table switch ===
+	// === Scenario: table switch with and without replace filtering ===
 
 	private void createTableSwitch() {
 		final Label l0 = new Label();
@@ -492,6 +495,41 @@ public class MethodAnalyzerTest implements IProbeIdGenerator {
 		createTableSwitch();
 		runMethodAnalzer();
 		assertEquals(4, nextProbeId);
+	}
+
+	private static final IFilter SWITCH_FILTER = new IFilter() {
+		public void filter(final MethodNode methodNode,
+				final IFilterContext context, final IFilterOutput output) {
+			final AbstractInsnNode i = methodNode.instructions.get(3);
+			assertEquals(Opcodes.TABLESWITCH, i.getOpcode());
+			final AbstractInsnNode t1 = methodNode.instructions.get(6);
+			assertEquals(Opcodes.BIPUSH, t1.getOpcode());
+			final AbstractInsnNode t2 = methodNode.instructions.get(13);
+			assertEquals(Opcodes.BIPUSH, t2.getOpcode());
+
+			final Set<AbstractInsnNode> newTargets = new HashSet<AbstractInsnNode>();
+			newTargets.add(t1);
+			newTargets.add(t2);
+			output.replaceBranches(i, newTargets);
+		}
+	};
+
+	@Test
+	public void table_switch_with_filter_should_show_2_branches_when_original_replaced() {
+		createTableSwitch();
+		runMethodAnalzer(SWITCH_FILTER);
+
+		assertLine(1001, 2, 0, 2, 0);
+	}
+
+	@Test
+	public void table_switch_with_filter_should_show_full_branch_coverage_when_new_targets_covered() {
+		createTableSwitch();
+		probes[0] = true;
+		probes[1] = true;
+		runMethodAnalzer(SWITCH_FILTER);
+
+		assertLine(1001, 0, 2, 0, 2);
 	}
 
 	@Test

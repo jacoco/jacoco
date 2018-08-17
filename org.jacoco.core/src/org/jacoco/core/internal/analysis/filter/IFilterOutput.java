@@ -11,6 +11,8 @@
  *******************************************************************************/
 package org.jacoco.core.internal.analysis.filter;
 
+import java.util.Set;
+
 import org.objectweb.asm.tree.AbstractInsnNode;
 
 /**
@@ -40,5 +42,17 @@ public interface IFilterOutput {
 	 *            second instruction
 	 */
 	void merge(AbstractInsnNode i1, AbstractInsnNode i2);
+
+	/**
+	 * Marks instruction whose outgoing branches should be replaced during
+	 * computation of coverage.
+	 *
+	 * @param source
+	 *            instruction which branches should be replaced
+	 * @param newTargets
+	 *            new targets of branches
+	 */
+	void replaceBranches(AbstractInsnNode source,
+			Set<AbstractInsnNode> newTargets);
 
 }

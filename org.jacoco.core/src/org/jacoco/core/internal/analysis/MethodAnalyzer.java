@@ -173,6 +173,13 @@ public class MethodAnalyzer extends MethodProbesVisitor
 		}
 	}
 
+	private final Map<AbstractInsnNode, Set<AbstractInsnNode>> replacements = new HashMap<AbstractInsnNode, Set<AbstractInsnNode>>();
+
+	public void replaceBranches(final AbstractInsnNode source,
+			final Set<AbstractInsnNode> newTargets) {
+		replacements.put(source, newTargets);
+	}
+
 	@Override
 	public void visitLabel(final Label label) {
 		currentLabel.add(label);
@@ -362,6 +369,7 @@ public class MethodAnalyzer extends MethodProbesVisitor
 		for (final CoveredProbe p : coveredProbes) {
 			p.instruction.setCovered(p.branch);
 		}
+
 		// Merge:
 		for (final Instruction i : instructions) {
 			final AbstractInsnNode m = i.getNode();
@@ -371,6 +379,7 @@ public class MethodAnalyzer extends MethodProbesVisitor
 				nodeToInstruction.get(r).merge(i);
 			}
 		}
+
 		// Report result:
 		coverage.ensureCapacity(firstLine, lastLine);
 		for (final Instruction i : instructions) {
@@ -378,8 +387,23 @@ public class MethodAnalyzer extends MethodProbesVisitor
 				continue;
 			}
 
-			final int total = i.getBranches();
-			final int covered = i.getCoveredBranches();
+			final int total;
+			final int covered;
+			final Set<AbstractInsnNode> r = replacements.get(i.getNode());
+			if (r != null) {
+				int cb = 0;
+				for (AbstractInsnNode b : r) {
+					if (nodeToInstruction.get(b).getCoveredBranches() > 0) {
+						cb++;
+					}
+				}
+				total = r.size();
+				covered = cb;
+			} else {
+				total = i.getBranches();
+				covered = i.getCoveredBranches();
+			}
+
 			final ICounter instrCounter = covered == 0 ? CounterImpl.COUNTER_1_0
 					: CounterImpl.COUNTER_0_1;
 			final ICounter branchCounter = total > 1

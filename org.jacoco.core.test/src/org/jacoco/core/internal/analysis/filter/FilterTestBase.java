@@ -16,6 +16,7 @@ import static org.junit.Assert.fail;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 import org.objectweb.asm.tree.AbstractInsnNode;
 import org.objectweb.asm.tree.MethodNode;
@@ -40,6 +41,11 @@ public abstract class FilterTestBase {
 
 		public void merge(final AbstractInsnNode i1,
 				final AbstractInsnNode i2) {
+			fail();
+		}
+
+		public void replaceBranches(final AbstractInsnNode source,
+				final Set<AbstractInsnNode> newTargets) {
 			fail();
 		}
 	};
