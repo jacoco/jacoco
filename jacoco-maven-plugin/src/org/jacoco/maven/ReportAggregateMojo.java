@@ -19,6 +19,9 @@ import java.util.List;
 import java.util.Locale;
 
 import org.apache.maven.artifact.Artifact;
+import org.apache.maven.artifact.versioning.DefaultArtifactVersion;
+import org.apache.maven.artifact.versioning.InvalidVersionSpecificationException;
+import org.apache.maven.artifact.versioning.VersionRange;
 import org.apache.maven.model.Dependency;
 import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
@@ -177,11 +180,28 @@ public class ReportAggregateMojo extends AbstractReportMojo {
 		return result;
 	}
 
+	/**
+	 * Note that if dependency specified using version range and reactor
+	 * contains multiple modules with same artifactId and groupId but of
+	 * different versions, then first dependency which matches range will be
+	 * selected. For example in case of range <code>[0,2]</code> if version 1 is
+	 * before version 2 in reactor, then version 1 will be selected.
+	 */
 	private MavenProject findProjectFromReactor(final Dependency d) {
+		final VersionRange depVersionAsRange;
+		try {
+			depVersionAsRange = VersionRange
+					.createFromVersionSpec(d.getVersion());
+		} catch (InvalidVersionSpecificationException e) {
+			throw new AssertionError(e);
+		}
+
 		for (final MavenProject p : reactorProjects) {
+			final DefaultArtifactVersion pv = new DefaultArtifactVersion(
+					p.getVersion());
 			if (p.getGroupId().equals(d.getGroupId())
 					&& p.getArtifactId().equals(d.getArtifactId())
-					&& p.getVersion().equals(d.getVersion())) {
+					&& depVersionAsRange.containsVersion(pv)) {
 				return p;
 			}
 		}
