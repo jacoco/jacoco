@@ -37,9 +37,9 @@ object KotlinWhenExpressionTarget {
         A, B
     }
 
-    private fun whenEnum(p: Enum): Int = when (p) {  // assertFullyCovered(1, 2)
+    private fun whenEnum(p: Enum): Int = when (p) {  // assertFullyCovered(0, 2)
         Enum.A -> 1 // assertFullyCovered()
-        Enum.B -> 2 // assertPartlyCovered()
+        Enum.B -> 2 // assertFullyCovered()
     } // assertFullyCovered()
 
     @Suppress("REDUNDANT_ELSE_IN_WHEN")

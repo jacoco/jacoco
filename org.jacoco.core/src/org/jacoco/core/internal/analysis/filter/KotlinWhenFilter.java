@@ -11,18 +11,26 @@
  *******************************************************************************/
 package org.jacoco.core.internal.analysis.filter;
 
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.tree.AbstractInsnNode;
 import org.objectweb.asm.tree.InsnNode;
 import org.objectweb.asm.tree.JumpInsnNode;
+import org.objectweb.asm.tree.LabelNode;
+import org.objectweb.asm.tree.LookupSwitchInsnNode;
 import org.objectweb.asm.tree.MethodNode;
+import org.objectweb.asm.tree.TableSwitchInsnNode;
 
 /**
  * Filters bytecode that Kotlin compiler generates for <code>when</code>
- * expressions which list all cases of <code>sealed class</code>, i.e. which
- * don't require explicit <code>else</code>.
+ * expressions which list all cases of <code>enum</code> or
+ * <code>sealed class</code>, i.e. which don't require explicit
+ * <code>else</code>.
  */
-public final class KotlinWhenSealedFilter implements IFilter {
+public final class KotlinWhenFilter implements IFilter {
 
 	private static final String EXCEPTION = "kotlin/NoWhenBranchMatchedException";
 
@@ -54,9 +62,52 @@ public final class KotlinWhenSealedFilter implements IFilter {
 					output.ignore(i, i);
 					output.ignore(start, cursor);
 					return;
+
+				} else if (getDefaultLabel(i) == start) {
+					ignoreDefaultBranch(i, output);
+					output.ignore(start, cursor);
+					return;
+
 				}
 			}
 		}
+	}
+
+	private static LabelNode getDefaultLabel(final AbstractInsnNode i) {
+		switch (i.getOpcode()) {
+		case Opcodes.LOOKUPSWITCH:
+			return ((LookupSwitchInsnNode) i).dflt;
+		case Opcodes.TABLESWITCH:
+			return ((TableSwitchInsnNode) i).dflt;
+		default:
+			return null;
+		}
+	}
+
+	private static void ignoreDefaultBranch(final AbstractInsnNode switchNode,
+			final IFilterOutput output) {
+		final List<LabelNode> labels;
+		if (switchNode.getOpcode() == Opcodes.LOOKUPSWITCH) {
+			labels = ((LookupSwitchInsnNode) switchNode).labels;
+		} else {
+			labels = ((TableSwitchInsnNode) switchNode).labels;
+		}
+		final Set<AbstractInsnNode> newTargets = new HashSet<AbstractInsnNode>();
+		for (LabelNode label : labels) {
+			newTargets.add(instructionAfterLabel(label));
+		}
+		output.replaceBranches(switchNode, newTargets);
+	}
+
+	private static AbstractInsnNode instructionAfterLabel(
+			final LabelNode label) {
+		AbstractInsnNode i = label.getNext();
+		while (i.getType() == AbstractInsnNode.FRAME
+				|| i.getType() == AbstractInsnNode.LABEL
+				|| i.getType() == AbstractInsnNode.LINE) {
+			i = i.getNext();
+		}
+		return i;
 	}
 
 }
