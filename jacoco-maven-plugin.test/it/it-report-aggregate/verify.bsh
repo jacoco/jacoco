@@ -23,7 +23,7 @@ if ( !Pattern.compile( "Loading execution data file \\S*child1-test.target.jacoc
 }
 
 if ( !new File( basedir, "child2/target/jacoco.exec" ).isFile()) {
-    throw new RuntimeException( "No execution data in child2v2." );
+    throw new RuntimeException( "No execution data in child2." );
 }
 if ( Pattern.compile( "Loading execution data file \\S*child2.target.jacoco.exec").matcher( buildLog ).find() ) {
     throw new RuntimeException( "Execution data from child2 was loaded, whereas range should exclude it." );
