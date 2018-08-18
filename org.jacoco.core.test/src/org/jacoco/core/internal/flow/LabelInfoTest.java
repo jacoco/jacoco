@@ -17,11 +17,10 @@ import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
 
+import org.jacoco.core.internal.analysis.Instruction;
 import org.junit.Before;
 import org.junit.Test;
 import org.objectweb.asm.Label;
-import org.objectweb.asm.Opcodes;
-import org.objectweb.asm.tree.InsnNode;
 
 /**
  * Unit tests for {@link LabelInfoTest}.
@@ -161,8 +160,7 @@ public class LabelInfoTest {
 
 	@Test
 	public void testSetInstruction() {
-		final Instruction instruction = new Instruction(
-				new InsnNode(Opcodes.NOP), 123);
+		final Instruction instruction = new Instruction(123);
 		LabelInfo.setInstruction(label, instruction);
 		assertSame(instruction, LabelInfo.getInstruction(label));
 	}

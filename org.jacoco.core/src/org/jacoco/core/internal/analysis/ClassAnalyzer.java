@@ -14,20 +14,24 @@ package org.jacoco.core.internal.analysis;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.jacoco.core.analysis.IMethodCoverage;
 import org.jacoco.core.internal.analysis.filter.Filters;
+import org.jacoco.core.internal.analysis.filter.IFilter;
 import org.jacoco.core.internal.analysis.filter.IFilterContext;
 import org.jacoco.core.internal.flow.ClassProbesVisitor;
 import org.jacoco.core.internal.flow.MethodProbesVisitor;
 import org.jacoco.core.internal.instr.InstrSupport;
 import org.objectweb.asm.AnnotationVisitor;
 import org.objectweb.asm.FieldVisitor;
+import org.objectweb.asm.MethodVisitor;
+import org.objectweb.asm.tree.MethodNode;
 
 /**
  * Analyzes the structure of a class.
  */
 public class ClassAnalyzer extends ClassProbesVisitor
 		implements IFilterContext {
+
+	private final IFilter filter = Filters.ALL;
 
 	private final ClassCoverageImpl coverage;
 	private final boolean[] probes;
@@ -80,19 +84,37 @@ public class ClassAnalyzer extends ClassProbesVisitor
 
 		InstrSupport.assertNotInstrumented(name, coverage.getName());
 
-		return new MethodAnalyzer(stringPool.get(name), stringPool.get(desc),
-				stringPool.get(signature), probes, Filters.ALL, this) {
+		final InstructionsBuilder icc = new InstructionsBuilder(
+				probes);
+
+		return new MethodAnalyzer(icc) {
+
 			@Override
-			public void visitEnd() {
-				super.visitEnd();
-				final IMethodCoverage methodCoverage = getCoverage();
-				if (methodCoverage.getInstructionCounter()
-						.getTotalCount() > 0) {
-					// Only consider methods that actually contain code
-					coverage.addMethod(methodCoverage);
-				}
+			public void accept(final MethodNode methodNode,
+					final MethodVisitor methodVisitor) {
+				super.accept(methodNode, methodVisitor);
+				addMethodCoverage(stringPool.get(name), stringPool.get(desc),
+						stringPool.get(signature), icc, methodNode);
 			}
 		};
+	}
+
+	private void addMethodCoverage(final String name, final String desc,
+			final String signature, final InstructionsBuilder icc,
+			final MethodNode methodNode) {
+		final MethodCoverageCalculator mcc = new MethodCoverageCalculator(
+				icc.getInstructions());
+		filter.filter(methodNode, this, mcc);
+
+		final MethodCoverageImpl mc = new MethodCoverageImpl(name, desc,
+				signature);
+		mcc.calculate(mc);
+
+		if (mc.getInstructionCounter().getTotalCount() > 0) {
+			// Only consider methods that actually contain code
+			coverage.addMethod(mc);
+		}
+
 	}
 
 	@Override

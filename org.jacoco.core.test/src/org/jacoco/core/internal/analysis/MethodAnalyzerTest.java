@@ -884,14 +884,22 @@ public class MethodAnalyzerTest implements IProbeIdGenerator {
 
 	private void runMethodAnalzer(IFilter filter) {
 		LabelFlowAnalyzer.markLabels(method);
-		final MethodAnalyzer analyzer = new MethodAnalyzer("doit", "()V", null,
-				probes, filter, new FilterContextMock());
+		InstructionsBuilder icc = new InstructionsBuilder(
+				probes);
+		final MethodAnalyzer analyzer = new MethodAnalyzer(icc);
+
 		final MethodProbesAdapter probesAdapter = new MethodProbesAdapter(
 				analyzer, this);
 		// note that CheckMethodAdapter verifies that this test does not violate
 		// contracts of ASM API
 		analyzer.accept(method, new CheckMethodAdapter(probesAdapter));
-		result = analyzer.getCoverage();
+
+		MethodCoverageImpl mc = new MethodCoverageImpl("doit", "V()", null);
+		MethodCoverageCalculator mcc = new MethodCoverageCalculator(
+				icc.getInstructions());
+		filter.filter(method, new FilterContextMock(), mcc);
+		mcc.calculate(mc);
+		result = mc;
 	}
 
 	private void assertLine(int nr, int insnMissed, int insnCovered,
