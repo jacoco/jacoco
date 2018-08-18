@@ -101,6 +101,17 @@ public class StringSwitchTarget {
 		}
 	}
 
+	private static void default_is_first(Object s) {
+		switch (String.valueOf(s)) { // assertFullyCovered(0, 2)
+		default:
+			nop("default");
+			break;
+		case "a":
+			nop("case a");
+			break;
+		}
+	}
+
 	public static void main(String[] args) {
 		covered("");
 		covered("a");
@@ -108,6 +119,9 @@ public class StringSwitchTarget {
 		covered("\0a");
 
 		handwritten("a");
+
+		default_is_first("");
+		default_is_first("a");
 	}
 
 }
