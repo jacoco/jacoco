@@ -13,6 +13,7 @@ package org.jacoco.core.internal.analysis.filter;
 
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 import java.util.ArrayList;
@@ -63,6 +64,10 @@ public abstract class FilterTestBase {
 	final void assertMethodIgnored(final MethodNode m) {
 		assertIgnored(
 				new Range(m.instructions.getFirst(), m.instructions.getLast()));
+	}
+
+	final void assertNoReplacedBranches() {
+		assertTrue(replacedBranches.isEmpty());
 	}
 
 	final void assertReplacedBranches(final AbstractInsnNode source,
