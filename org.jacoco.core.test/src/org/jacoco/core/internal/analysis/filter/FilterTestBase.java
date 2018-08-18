@@ -12,10 +12,14 @@
 package org.jacoco.core.internal.analysis.filter;
 
 import static org.junit.Assert.assertArrayEquals;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import org.objectweb.asm.tree.AbstractInsnNode;
@@ -29,6 +33,8 @@ public abstract class FilterTestBase {
 	protected final FilterContextMock context = new FilterContextMock();
 
 	private final List<Range> ignoredRanges = new ArrayList<Range>();
+
+	private final Map<AbstractInsnNode, Set<AbstractInsnNode>> replacedBranches = new HashMap<AbstractInsnNode, Set<AbstractInsnNode>>();
 
 	protected final IFilterOutput output = new IFilterOutput() {
 		public void ignore(final AbstractInsnNode fromInclusive,
@@ -46,7 +52,7 @@ public abstract class FilterTestBase {
 
 		public void replaceBranches(final AbstractInsnNode source,
 				final Set<AbstractInsnNode> newTargets) {
-			fail();
+			replacedBranches.put(source, newTargets);
 		}
 	};
 
@@ -57,6 +63,12 @@ public abstract class FilterTestBase {
 	final void assertMethodIgnored(final MethodNode m) {
 		assertIgnored(
 				new Range(m.instructions.getFirst(), m.instructions.getLast()));
+	}
+
+	final void assertReplacedBranches(final AbstractInsnNode source,
+			final Set<AbstractInsnNode> newTargets) {
+		assertEquals(Collections.singletonMap(source, newTargets),
+				replacedBranches);
 	}
 
 	static class Range {

@@ -85,6 +85,8 @@ public final class StringSwitchEcjFilter implements IFilter {
 						// jump to default
 						nextIs(Opcodes.GOTO);
 						break;
+					} else if (cursor.getNext() == defaultLabel) {
+						break;
 					}
 				}
 			}
