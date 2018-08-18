@@ -85,20 +85,25 @@ case "$JDK" in
     mvn -V -B -e -f org.jacoco.build verify sonar:sonar deploy:deploy -DdeployAtEnd -Djdk.version=5 --toolchains=./.travis/toolchains.xml --settings=./.travis/settings.xml -Dsonar.host.url=${SONARQUBE_URL} -Dsonar.login=${SONARQUBE_TOKEN}
     python ./.travis/trigger-site-deployment.py
   else
-    mvn -V -B -e verify -Djdk.version=5 --toolchains=./.travis/toolchains.xml
+    mvn -V -B -e verify -Djdk.version=5 --toolchains=./.travis/toolchains.xml \
+      --settings=./.travis/settings.xml
   fi
   ;;
 6 | 7 | 8 | 9)
-  mvn -V -B -e verify -Djdk.version=${JDK} -Dbytecode.version=${JDK} -Decj=${ECJ:-} --toolchains=./.travis/travis-toolchains.xml
+  mvn -V -B -e verify -Djdk.version=${JDK} -Dbytecode.version=${JDK} -Decj=${ECJ:-} --toolchains=./.travis/travis-toolchains.xml \
+    --settings=./.travis/settings.xml
   ;;
 10)
-  mvn -V -B -e verify -Dbytecode.version=10
+  mvn -V -B -e verify -Dbytecode.version=10 \
+    --settings=./.travis/settings.xml
   ;;
 11-ea)
-  mvn -V -B -e verify -Dbytecode.version=11
+  mvn -V -B -e verify -Dbytecode.version=11 \
+    --settings=./.travis/settings.xml
   ;;
 12-ea)
-  mvn -V -B -e verify -Dbytecode.version=12
+  mvn -V -B -e verify -Dbytecode.version=12 \
+    --settings=./.travis/settings.xml
   ;;
 *)
   echo "Incorrect JDK [$JDK]"
