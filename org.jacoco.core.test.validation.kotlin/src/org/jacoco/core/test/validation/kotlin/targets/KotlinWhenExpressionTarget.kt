@@ -49,11 +49,12 @@ object KotlinWhenExpressionTarget {
         else -> throw NoWhenBranchMatchedException() // assertNotCovered()
     } // assertFullyCovered()
 
-    private fun whenString(p: String): Int = when (p) { // assertFullyCovered(2, 7)
+    private fun whenString(p: String): Int = when (p) { // assertFullyCovered(0, 5)
         "a" -> 1 // assertFullyCovered()
         "b" -> 2 // assertFullyCovered()
         "\u0000a" -> 3 // assertFullyCovered()
-        else -> 4 // assertFullyCovered()
+        "\u0000b" -> 4 // assertFullyCovered()
+        else -> 5 // assertFullyCovered()
     } // assertFullyCovered()
 
     @JvmStatic
@@ -74,6 +75,7 @@ object KotlinWhenExpressionTarget {
         whenString("a")
         whenString("b")
         whenString("\u0000a")
+        whenString("\u0000b")
     }
 
 }
