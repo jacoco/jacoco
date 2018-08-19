@@ -11,10 +11,6 @@
  *******************************************************************************/
 package org.jacoco.core.internal.analysis.filter;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.fail;
-
 import java.util.HashSet;
 import java.util.Set;
 
@@ -28,38 +24,9 @@ import org.objectweb.asm.tree.MethodNode;
 /**
  * Unit tests for {@link KotlinWhenStringFilter}.
  */
-public class KotlinWhenStringFilterTest {
+public class KotlinWhenStringFilterTest extends FilterTestBase {
 
 	private final IFilter filter = new KotlinWhenStringFilter();
-
-	private final FilterContextMock context = new FilterContextMock();
-
-	private AbstractInsnNode fromInclusive;
-	private AbstractInsnNode toInclusive;
-
-	private AbstractInsnNode source;
-	private Set<AbstractInsnNode> newTargets;
-
-	private final IFilterOutput output = new IFilterOutput() {
-		public void ignore(final AbstractInsnNode fromInclusive,
-				final AbstractInsnNode toInclusive) {
-			assertNull(KotlinWhenStringFilterTest.this.fromInclusive);
-			KotlinWhenStringFilterTest.this.fromInclusive = fromInclusive;
-			KotlinWhenStringFilterTest.this.toInclusive = toInclusive;
-		}
-
-		public void merge(final AbstractInsnNode i1,
-				final AbstractInsnNode i2) {
-			fail();
-		}
-
-		public void replaceBranches(final AbstractInsnNode source,
-				final Set<AbstractInsnNode> newTargets) {
-			assertNull(KotlinWhenStringFilterTest.this.source);
-			KotlinWhenStringFilterTest.this.source = source;
-			KotlinWhenStringFilterTest.this.newTargets = newTargets;
-		}
-	};
 
 	@Test
 	public void should_filter() {
@@ -129,10 +96,9 @@ public class KotlinWhenStringFilterTest {
 
 		filter.filter(m, context, output);
 
-		assertEquals(expectedFromInclusive.getPrevious(), source);
-		assertEquals(expectedNewTargets, newTargets);
-		assertEquals(expectedFromInclusive, fromInclusive);
-		assertEquals(expectedToInclusive, toInclusive);
+		assertReplacedBranches(expectedFromInclusive.getPrevious(),
+				expectedNewTargets);
+		assertIgnored(new Range(expectedFromInclusive, expectedToInclusive));
 	}
 
 }
