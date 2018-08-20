@@ -370,13 +370,23 @@ public class MethodAnalyzer extends MethodProbesVisitor
 			p.instruction.setCovered(p.branch);
 		}
 
-		// Merge:
+		// Merge into representative instruction:
 		for (final Instruction i : instructions) {
 			final AbstractInsnNode m = i.getNode();
 			final AbstractInsnNode r = findRepresentative(m);
 			if (r != m) {
 				ignored.add(m);
 				nodeToInstruction.get(r).merge(i);
+			}
+		}
+
+		// Merge from representative instruction, because result of merge might
+		// be used to compute coverage of instructions with replaced branches:
+		for (final Instruction i : instructions) {
+			final AbstractInsnNode m = i.getNode();
+			final AbstractInsnNode r = findRepresentative(m);
+			if (r != m) {
+				i.merge(nodeToInstruction.get(r));
 			}
 		}
 
