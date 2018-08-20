@@ -85,7 +85,9 @@ public class ContentTypeDetector {
 			case Opcodes.V9:
 			case BytecodeVersion.V10:
 			case Opcodes.V11:
+			case Opcodes.V11 | Opcodes.V_PREVIEW_EXPERIMENTAL:
 			case Opcodes.V12:
+			case Opcodes.V12 | Opcodes.V_PREVIEW_EXPERIMENTAL:
 				return CLASSFILE;
 			}
 		}
