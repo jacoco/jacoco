@@ -129,8 +129,24 @@ public class ContentTypeDetectorTest {
 	}
 
 	@Test
+	public void should_detect_java_11_with_preview_features()
+			throws IOException {
+		initData(0xCA, 0xFE, 0xBA, 0xBE, 0xFF, 0xFF, 0x00, 0x37);
+		assertEquals(ContentTypeDetector.CLASSFILE, detector.getType());
+		assertContent();
+	}
+
+	@Test
 	public void should_detect_java_12() throws IOException {
 		initData(0xCA, 0xFE, 0xBA, 0xBE, 0x00, 0x00, 0x00, 0x38);
+		assertEquals(ContentTypeDetector.CLASSFILE, detector.getType());
+		assertContent();
+	}
+
+	@Test
+	public void should_detect_java_12_with_preview_features()
+			throws IOException {
+		initData(0xCA, 0xFE, 0xBA, 0xBE, 0xFF, 0xFF, 0x00, 0x38);
 		assertEquals(ContentTypeDetector.CLASSFILE, detector.getType());
 		assertContent();
 	}
