@@ -34,10 +34,9 @@ public final class KotlinWhenFilter implements IFilter {
 
 	private static final String EXCEPTION = "kotlin/NoWhenBranchMatchedException";
 
-	private final Matcher matcher = new Matcher();
-
 	public void filter(final MethodNode methodNode,
 			final IFilterContext context, final IFilterOutput output) {
+		final Matcher matcher = new Matcher();
 		for (AbstractInsnNode i = methodNode.instructions
 				.getFirst(); i != null; i = i.getNext()) {
 			matcher.match(i, output);
