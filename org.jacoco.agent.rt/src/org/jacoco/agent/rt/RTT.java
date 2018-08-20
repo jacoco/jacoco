@@ -16,9 +16,9 @@ import org.jacoco.agent.rt.internal.Agent;
 /**
  * Entry point to access the JaCoCo agent runtime.
  */
-public final class RT {
+public final class RTT {
 
-	private RT() {
+	private RTT() {
 	}
 
 	/**
