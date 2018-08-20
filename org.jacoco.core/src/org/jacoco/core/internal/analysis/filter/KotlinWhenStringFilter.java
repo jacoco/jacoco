@@ -21,6 +21,7 @@ import org.objectweb.asm.tree.LabelNode;
 import org.objectweb.asm.tree.LookupSwitchInsnNode;
 import org.objectweb.asm.tree.MethodNode;
 import org.objectweb.asm.tree.TableSwitchInsnNode;
+import org.objectweb.asm.tree.VarInsnNode;
 
 /**
  * Filters bytecode that Kotlin compiler generates for <code>when</code>
@@ -41,15 +42,16 @@ public final class KotlinWhenStringFilter implements IFilter {
 		public void match(final AbstractInsnNode start,
 				final IFilterOutput output) {
 
+			if (Opcodes.ALOAD != start.getOpcode()) {
+				return;
+			}
 			cursor = start;
-
-			nextIsVar(Opcodes.ASTORE, "s");
-			nextIsVar(Opcodes.ALOAD, "s");
 			nextIsInvokeVirtual("java/lang/String", "hashCode");
 			nextIsSwitch();
 			if (cursor == null) {
 				return;
 			}
+			vars.put("s", (VarInsnNode) start);
 
 			final AbstractInsnNode s = cursor;
 			final int hashCodes;

@@ -42,8 +42,13 @@ public class StringSwitchEcjFilterTest extends FilterTestBase {
 		final Label h1 = new Label();
 		final Label h2 = new Label();
 
+		// filter should not remember this unrelated slot
+		m.visitLdcInsn("");
+		m.visitVarInsn(Opcodes.ASTORE, 1);
 		m.visitVarInsn(Opcodes.ALOAD, 1);
 
+		// switch (...)
+		m.visitInsn(Opcodes.DUP);
 		m.visitVarInsn(Opcodes.ASTORE, 2);
 		m.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "java/lang/String", "hashCode",
 				"()I", false);
@@ -112,8 +117,13 @@ public class StringSwitchEcjFilterTest extends FilterTestBase {
 		final Label caseDefault = new Label();
 		final Label h1 = new Label();
 
+		// filter should not remember this unrelated slot
+		m.visitLdcInsn("");
+		m.visitVarInsn(Opcodes.ASTORE, 1);
 		m.visitVarInsn(Opcodes.ALOAD, 1);
 
+		// switch (...)
+		m.visitInsn(Opcodes.DUP);
 		m.visitVarInsn(Opcodes.ASTORE, 2);
 		m.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "java/lang/String", "hashCode",
 				"()I", false);

@@ -43,8 +43,12 @@ public class KotlinWhenStringFilterTest extends FilterTestBase {
 		final Label case3 = new Label();
 		final Label defaultCase = new Label();
 
+		// filter should not remember this unrelated slot
+		m.visitLdcInsn("");
+		m.visitVarInsn(Opcodes.ASTORE, 1);
 		m.visitVarInsn(Opcodes.ALOAD, 1);
 
+		// switch (...)
 		m.visitVarInsn(Opcodes.ASTORE, 2);
 		m.visitVarInsn(Opcodes.ALOAD, 2);
 		m.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "java/lang/String", "hashCode",
