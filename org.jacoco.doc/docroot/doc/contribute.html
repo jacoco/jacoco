@@ -48,11 +48,20 @@
   The following topics provides a guide for successful contributions.   
 </p>
 
+<h2>Development Setup</h2>
+
+Our standard development setup is based on the Eclipse IDE and is described
+<a href="environment.html">here</a>. All contributions need to be in-line with
+our <a href="conventions.html">development conventions</a>. Also some
+information about the <a href="implementation.html">implementation design</a>
+can be helpful to understand JaCoCo's internal.
+
 <h2>Process</h2>
 
 <p>
   All code contributions (even the contributions by the core developers)
-  are managed by GitHub pull requests. Each pull request has to be complete
+  are managed by GitHub pull requests. Typically a pull request references an
+  open issue (bug or feature request). Each pull request has to be complete
   in terms of features, testing and documentation before it can be merged
   into master. We consider the master branch as shippable at any point in
   time. This of course means that all builds on all supported JDKs must be
@@ -76,9 +85,10 @@
 </p>
 
 <p class="hint">
-  Before you start a bigger contribution please get in touch through our
-  <a href="support.html">mailing list</a> to make sure the JaCoCo project
+  Before you start a bigger contribution please check whether we have an open
+  issue for this (or open a new issue first) to make sure the JaCoCo project
   considers this in scope and the approach fits in the overall architecture.
+  In doubt please get in touch through our <a href="support.html">mailing list</a> 
 </p>
 
 <h2>Scope</h2>
