@@ -17,7 +17,9 @@ import static org.junit.Assert.assertTrue;
 
 import org.jacoco.core.internal.BytecodeVersion;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.util.Printer;
 import org.objectweb.asm.util.Textifier;
@@ -30,6 +32,9 @@ public class InstrSupportTest {
 
 	private Printer printer;
 	private TraceMethodVisitor trace;
+
+	@Rule
+	public ExpectedException exception = ExpectedException.none();
 
 	@Before
 	public void setup() {
@@ -56,17 +61,25 @@ public class InstrSupportTest {
 	}
 
 	@Test
-	public void testAssertNotIntrumentedPositive() {
+	public void assertNotIntrumented_should_accept_non_jacoco_memebers() {
 		InstrSupport.assertNotInstrumented("run", "Foo");
 	}
 
-	@Test(expected = IllegalStateException.class)
-	public void testAssertNotIntrumentedField() {
+	@Test
+	public void assertNotIntrumented_should_throw_exception_when_jacoco_data_field_is_present() {
+		exception.expect(IllegalStateException.class);
+		exception.expectMessage(
+				"Cannot process instrumented class Foo. Please supply original non-instrumented classes.");
+
 		InstrSupport.assertNotInstrumented("$jacocoData", "Foo");
 	}
 
-	@Test(expected = IllegalStateException.class)
-	public void testAssertNotIntrumentedMethod() {
+	@Test
+	public void assertNotIntrumented_should_throw_exception_when_jacoco_init_method_is_present() {
+		exception.expect(IllegalStateException.class);
+		exception.expectMessage(
+				"Cannot process instrumented class Foo. Please supply original non-instrumented classes.");
+
 		InstrSupport.assertNotInstrumented("$jacocoInit", "Foo");
 	}
 
