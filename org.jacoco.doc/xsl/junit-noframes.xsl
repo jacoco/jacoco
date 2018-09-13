@@ -224,7 +224,7 @@
 <!-- Page HEADER -->
 <xsl:template name="pageHeader">
 	<div class="breadcrumb">
-		<a href="../index.html" class="el_report">JaCoCo</a> &gt;
+		<a href="../index.html" class="el_report">JaCoCo</a>&#xa0;&#x25b8;&#xa0;
 		<span class="el_testsuite">JUnit Test Results</span>
 	</div>
     <h1>JUnit Test Results</h1>
