@@ -19,7 +19,7 @@ import static org.jacoco.core.test.validation.targets.Stubs.nop;
 public class StringSwitchTarget {
 
 	private static void covered(Object s) {
-		switch (String.valueOf(s)) { // assertSwitchCovered()
+		switch (String.valueOf(s)) { // assertFullyCovered(0, 4)
 		case "a":
 			nop("case a"); // assertFullyCovered()
 			break;
@@ -36,7 +36,7 @@ public class StringSwitchTarget {
 	}
 
 	private static void notCovered(Object s) {
-		switch (String.valueOf(s)) { // assertSwitchNotCovered()
+		switch (String.valueOf(s)) { // assertNotCovered(4, 0)
 		case "a":
 			nop("case a");
 			break;
@@ -88,7 +88,7 @@ public class StringSwitchTarget {
 	 * In this case javac generates <code>LOOKUPSWITCH</code> for second switch.
 	 */
 	private static void lookupswitch(Object s) {
-		switch (String.valueOf(s)) { // assertLookupswitch()
+		switch (String.valueOf(s)) { // assertNotCovered(3, 0)
 		case "a":
 			nop("case a");
 			break;
@@ -101,6 +101,17 @@ public class StringSwitchTarget {
 		}
 	}
 
+	private static void default_is_first(Object s) {
+		switch (String.valueOf(s)) { // assertFullyCovered(0, 2)
+		default:
+			nop("default");
+			break;
+		case "a":
+			nop("case a");
+			break;
+		}
+	}
+
 	public static void main(String[] args) {
 		covered("");
 		covered("a");
@@ -108,6 +119,9 @@ public class StringSwitchTarget {
 		covered("\0a");
 
 		handwritten("a");
+
+		default_is_first("");
+		default_is_first("a");
 	}
 
 }

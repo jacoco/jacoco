@@ -59,7 +59,7 @@ public class MergeMojo extends AbstractJacocoMojo {
 	 * </code>
 	 * </pre>
 	 */
-	@Parameter(property = "jacoco.fileSets", required = true)
+	@Parameter(required = true)
 	private List<FileSet> fileSets;
 
 	@Override

@@ -26,6 +26,7 @@
     <module>child1</module>
     <module>child1-test</module>
     <module>child2</module>
+    <module>child2v2</module>
     <module>report</module>
   </modules>
 

@@ -421,4 +421,9 @@ public class FinallyFilterTest implements IFilterOutput {
 		}
 	}
 
+	public void replaceBranches(final AbstractInsnNode source,
+			final Set<AbstractInsnNode> newTargets) {
+		fail();
+	}
+
 }

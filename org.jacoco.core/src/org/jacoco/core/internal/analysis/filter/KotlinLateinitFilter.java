@@ -24,34 +24,30 @@ public class KotlinLateinitFilter implements IFilter {
 	private final static String OWNER = "kotlin/jvm/internal/Intrinsics";
 	private final static String NAME = "throwUninitializedPropertyAccessException";
 
-	public void filter(final MethodNode methodNode, final IFilterContext context,
-			final IFilterOutput output) {
+	public void filter(final MethodNode methodNode,
+			final IFilterContext context, final IFilterOutput output) {
+		final Matcher matcher = new Matcher();
 		for (AbstractInsnNode i = methodNode.instructions
 				.getFirst(); i != null; i = i.getNext()) {
-			if (i.getOpcode() != Opcodes.IFNONNULL) {
-				continue;
-			}
-
-			final AbstractInsnNode end = new Matcher(i).match();
-
-			if (end != null) {
-				output.ignore(i, end);
-			}
+			matcher.match(i, output);
 		}
 	}
 
 	private static class Matcher extends AbstractMatcher {
-		private final AbstractInsnNode start;
+		public void match(final AbstractInsnNode start,
+				final IFilterOutput output) {
 
-		private Matcher(final AbstractInsnNode start) {
-			this.start = start;
-		}
-
-		private AbstractInsnNode match() {
+			if (Opcodes.IFNONNULL != start.getOpcode()) {
+				return;
+			}
 			cursor = start;
+
 			nextIs(Opcodes.LDC);
 			nextIsInvokeStatic(OWNER, NAME);
-			return cursor;
+
+			if (cursor != null) {
+				output.ignore(start, cursor);
+			}
 		}
 	}
 }
