@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2017 Mountainminds GmbH & Co. KG and Contributors
+ * Copyright (c) 2009, 2018 Mountainminds GmbH & Co. KG and Contributors
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -22,6 +22,7 @@ import org.jacoco.core.analysis.ICounter;
 import org.jacoco.core.analysis.IMethodCoverage;
 import org.jacoco.core.analysis.ISourceNode;
 import org.jacoco.core.internal.analysis.filter.IFilter;
+import org.jacoco.core.internal.analysis.filter.IFilterContext;
 import org.jacoco.core.internal.analysis.filter.IFilterOutput;
 import org.jacoco.core.internal.flow.IFrame;
 import org.jacoco.core.internal.flow.Instruction;
@@ -41,13 +42,11 @@ import org.objectweb.asm.tree.TryCatchBlockNode;
 public class MethodAnalyzer extends MethodProbesVisitor
 		implements IFilterOutput {
 
-	private final String className;
-
-	private final String superClassName;
-
 	private final boolean[] probes;
 
 	private final IFilter filter;
+
+	private final IFilterContext filterContext;
 
 	private final MethodCoverageImpl coverage;
 
@@ -74,11 +73,7 @@ public class MethodAnalyzer extends MethodProbesVisitor
 
 	/**
 	 * New Method analyzer for the given probe data.
-	 * 
-	 * @param className
-	 *            class name
-	 * @param superClassName
-	 *            superclass name
+	 *
 	 * @param name
 	 *            method name
 	 * @param desc
@@ -89,16 +84,17 @@ public class MethodAnalyzer extends MethodProbesVisitor
 	 *            recorded probe date of the containing class or
 	 *            <code>null</code> if the class is not executed at all
 	 * @param filter
-	 *            filter
+	 *            filter which should be applied
+	 * @param filterContext
+	 *            class context information for the filter
 	 */
-	MethodAnalyzer(final String className, final String superClassName,
-			final String name, final String desc, final String signature,
-			final boolean[] probes, final IFilter filter) {
+	MethodAnalyzer(final String name, final String desc, final String signature,
+			final boolean[] probes, final IFilter filter,
+			final IFilterContext filterContext) {
 		super();
-		this.className = className;
-		this.superClassName = superClassName;
 		this.probes = probes;
 		this.filter = filter;
+		this.filterContext = filterContext;
 		this.coverage = new MethodCoverageImpl(name, desc, signature);
 	}
 
@@ -118,7 +114,7 @@ public class MethodAnalyzer extends MethodProbesVisitor
 	@Override
 	public void accept(final MethodNode methodNode,
 			final MethodVisitor methodVisitor) {
-		filter.filter(className, superClassName, methodNode, this);
+		filter.filter(methodNode, filterContext, this);
 
 		methodVisitor.visitCode();
 		for (final TryCatchBlockNode n : methodNode.tryCatchBlocks) {
@@ -175,6 +171,13 @@ public class MethodAnalyzer extends MethodProbesVisitor
 		if (i1 != i2) {
 			merged.put(i2, i1);
 		}
+	}
+
+	private final Map<AbstractInsnNode, Set<AbstractInsnNode>> replacements = new HashMap<AbstractInsnNode, Set<AbstractInsnNode>>();
+
+	public void replaceBranches(final AbstractInsnNode source,
+			final Set<AbstractInsnNode> newTargets) {
+		replacements.put(source, newTargets);
 	}
 
 	@Override
@@ -366,7 +369,8 @@ public class MethodAnalyzer extends MethodProbesVisitor
 		for (final CoveredProbe p : coveredProbes) {
 			p.instruction.setCovered(p.branch);
 		}
-		// Merge:
+
+		// Merge into representative instruction:
 		for (final Instruction i : instructions) {
 			final AbstractInsnNode m = i.getNode();
 			final AbstractInsnNode r = findRepresentative(m);
@@ -375,6 +379,17 @@ public class MethodAnalyzer extends MethodProbesVisitor
 				nodeToInstruction.get(r).merge(i);
 			}
 		}
+
+		// Merge from representative instruction, because result of merge might
+		// be used to compute coverage of instructions with replaced branches:
+		for (final Instruction i : instructions) {
+			final AbstractInsnNode m = i.getNode();
+			final AbstractInsnNode r = findRepresentative(m);
+			if (r != m) {
+				i.merge(nodeToInstruction.get(r));
+			}
+		}
+
 		// Report result:
 		coverage.ensureCapacity(firstLine, lastLine);
 		for (final Instruction i : instructions) {
@@ -382,8 +397,23 @@ public class MethodAnalyzer extends MethodProbesVisitor
 				continue;
 			}
 
-			final int total = i.getBranches();
-			final int covered = i.getCoveredBranches();
+			final int total;
+			final int covered;
+			final Set<AbstractInsnNode> r = replacements.get(i.getNode());
+			if (r != null) {
+				int cb = 0;
+				for (AbstractInsnNode b : r) {
+					if (nodeToInstruction.get(b).getCoveredBranches() > 0) {
+						cb++;
+					}
+				}
+				total = r.size();
+				covered = cb;
+			} else {
+				total = i.getBranches();
+				covered = i.getCoveredBranches();
+			}
+
 			final ICounter instrCounter = covered == 0 ? CounterImpl.COUNTER_1_0
 					: CounterImpl.COUNTER_0_1;
 			final ICounter branchCounter = total > 1

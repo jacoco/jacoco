@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2017 Mountainminds GmbH & Co. KG and Contributors
+ * Copyright (c) 2009, 2018 Mountainminds GmbH & Co. KG and Contributors
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -17,7 +17,6 @@ import java.io.IOException;
 import java.util.List;
 
 import org.jacoco.cli.internal.commands.AllCommands;
-import org.jacoco.report.internal.xml.XMLDocument;
 import org.jacoco.report.internal.xml.XMLElement;
 import org.kohsuke.args4j.spi.OptionHandler;
 
@@ -65,8 +64,8 @@ public final class XmlDocumentation {
 		final File file = new File(args[0]);
 		file.getParentFile().mkdirs();
 
-		final XMLElement root = new XMLDocument("documentation", null, null,
-				"UTF-8", true, new FileOutputStream(file));
+		final XMLElement root = new XMLElement("documentation", null, null,
+				true, "UTF-8", new FileOutputStream(file));
 
 		for (final Command c : AllCommands.get()) {
 			writeCommand(c, root);

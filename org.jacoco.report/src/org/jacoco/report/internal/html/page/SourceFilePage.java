@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2017 Mountainminds GmbH & Co. KG and Contributors
+ * Copyright (c) 2009, 2018 Mountainminds GmbH & Co. KG and Contributors
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -67,14 +67,10 @@ public class SourceFilePage extends NodePage<ISourceNode> {
 	@Override
 	protected void head(final HTMLElement head) throws IOException {
 		super.head(head);
-		head.link(
-				"stylesheet",
-				context.getResources().getLink(folder,
-						Resources.PRETTIFY_STYLESHEET), "text/css");
-		head.script(
-				"text/javascript",
-				context.getResources().getLink(folder,
-						Resources.PRETTIFY_SCRIPT));
+		head.link("stylesheet", context.getResources().getLink(folder,
+				Resources.PRETTIFY_STYLESHEET), "text/css");
+		head.script(context.getResources().getLink(folder,
+				Resources.PRETTIFY_SCRIPT));
 	}
 
 	@Override

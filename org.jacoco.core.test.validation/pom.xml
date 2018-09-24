@@ -1,0 +1,194 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+   Copyright (c) 2009, 2018 Mountainminds GmbH & Co. KG and Contributors
+   All rights reserved. This program and the accompanying materials
+   are made available under the terms of the Eclipse Public License v1.0
+   which accompanies this distribution, and is available at
+   http://www.eclipse.org/legal/epl-v10.html
+
+   Contributors:
+      Evgeny Mandrikov - initial API and implementation
+-->
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <parent>
+    <groupId>org.jacoco</groupId>
+    <artifactId>org.jacoco.tests</artifactId>
+    <version>0.8.3-SNAPSHOT</version>
+    <relativePath>../org.jacoco.tests</relativePath>
+  </parent>
+
+  <artifactId>org.jacoco.core.test.validation</artifactId>
+  <packaging>pom</packaging>
+
+  <name>JaCoCo :: Test :: Core :: Validation</name>
+
+  <modules>
+    <module>../org.jacoco.core.test.validation.java5</module>
+  </modules>
+
+  <properties>
+    <jacoco.skip>true</jacoco.skip>
+  </properties>
+
+  <profiles>
+    <profile>
+      <id>java5-bytecode</id>
+      <activation>
+        <property>
+          <name>bytecode.version</name>
+          <value>5</value>
+        </property>
+      </activation>
+    </profile>
+
+    <profile>
+      <id>jdk5</id>
+      <activation>
+        <property>
+          <name>jdk.version</name>
+          <value>5</value>
+        </property>
+      </activation>
+    </profile>
+
+    <profile>
+      <id>java6-bytecode</id>
+      <activation>
+        <property>
+          <name>bytecode.version</name>
+          <value>6</value>
+        </property>
+      </activation>
+      <modules>
+        <module>../org.jacoco.core.test.validation.kotlin</module>
+      </modules>
+    </profile>
+
+    <profile>
+      <id>jdk6</id>
+      <activation>
+        <property>
+          <name>jdk.version</name>
+          <value>6</value>
+        </property>
+      </activation>
+      <modules>
+        <module>../org.jacoco.core.test.validation.kotlin</module>
+      </modules>
+    </profile>
+
+    <profile>
+      <id>java7-bytecode</id>
+      <activation>
+        <property>
+          <name>bytecode.version</name>
+          <value>7</value>
+        </property>
+      </activation>
+      <modules>
+        <module>../org.jacoco.core.test.validation.kotlin</module>
+        <module>../org.jacoco.core.test.validation.java7</module>
+      </modules>
+    </profile>
+
+    <profile>
+      <id>jdk7</id>
+      <activation>
+        <property>
+          <name>jdk.version</name>
+          <value>7</value>
+        </property>
+      </activation>
+      <modules>
+        <module>../org.jacoco.core.test.validation.kotlin</module>
+        <module>../org.jacoco.core.test.validation.java7</module>
+      </modules>
+    </profile>
+
+    <profile>
+      <id>java8-bytecode</id>
+      <activation>
+        <activeByDefault>true</activeByDefault>
+        <property>
+          <name>bytecode.version</name>
+          <value>8</value>
+        </property>
+      </activation>
+      <properties>
+        <kotlin.compiler.jvmTarget>1.8</kotlin.compiler.jvmTarget>
+      </properties>
+      <modules>
+        <module>../org.jacoco.core.test.validation.kotlin</module>
+        <module>../org.jacoco.core.test.validation.java7</module>
+        <module>../org.jacoco.core.test.validation.java8</module>
+      </modules>
+    </profile>
+
+    <profile>
+      <id>java10-bytecode</id>
+      <activation>
+        <property>
+          <name>bytecode.version</name>
+          <value>10</value>
+        </property>
+      </activation>
+      <properties>
+        <kotlin.compiler.jvmTarget>1.8</kotlin.compiler.jvmTarget>
+        <!-- see respective profile in org.jacoco.build about this override -->
+        <maven.compiler.source>10</maven.compiler.source>
+        <maven.compiler.target>10</maven.compiler.target>
+      </properties>
+      <modules>
+        <module>../org.jacoco.core.test.validation.kotlin</module>
+        <module>../org.jacoco.core.test.validation.java7</module>
+        <module>../org.jacoco.core.test.validation.java8</module>
+      </modules>
+    </profile>
+
+    <profile>
+      <id>java11-bytecode</id>
+      <activation>
+        <property>
+          <name>bytecode.version</name>
+          <value>11</value>
+        </property>
+      </activation>
+      <properties>
+        <kotlin.compiler.jvmTarget>1.8</kotlin.compiler.jvmTarget>
+        <!-- see respective profile in org.jacoco.build about this override -->
+        <maven.compiler.source>11</maven.compiler.source>
+        <maven.compiler.target>11</maven.compiler.target>
+      </properties>
+      <modules>
+        <module>../org.jacoco.core.test.validation.kotlin</module>
+        <module>../org.jacoco.core.test.validation.java7</module>
+        <module>../org.jacoco.core.test.validation.java8</module>
+      </modules>
+    </profile>
+
+    <profile>
+      <id>java12-bytecode</id>
+      <activation>
+        <property>
+          <name>bytecode.version</name>
+          <value>12</value>
+        </property>
+      </activation>
+      <properties>
+        <kotlin.compiler.jvmTarget>1.8</kotlin.compiler.jvmTarget>
+        <!-- see respective profile in org.jacoco.build about this override -->
+        <maven.compiler.source>12</maven.compiler.source>
+        <maven.compiler.target>12</maven.compiler.target>
+      </properties>
+      <modules>
+        <module>../org.jacoco.core.test.validation.kotlin</module>
+        <module>../org.jacoco.core.test.validation.java7</module>
+        <module>../org.jacoco.core.test.validation.java8</module>
+      </modules>
+    </profile>
+  </profiles>
+
+</project>

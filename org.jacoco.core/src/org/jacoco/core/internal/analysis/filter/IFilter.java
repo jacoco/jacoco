@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2017 Mountainminds GmbH & Co. KG and Contributors
+ * Copyright (c) 2009, 2018 Mountainminds GmbH & Co. KG and Contributors
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -24,16 +24,13 @@ public interface IFilter {
 	 * expected to inspect the provided method and report its result to the
 	 * given {@link IFilterOutput} instance.
 	 *
-	 * @param className
-	 *            class name
-	 * @param superClassName
-	 *            superclass name
 	 * @param methodNode
 	 *            method to inspect
+	 * @param context
+	 *            context information for the method
 	 * @param output
 	 *            callback to report filtering results to
 	 */
-	void filter(String className, String superClassName, MethodNode methodNode,
+	void filter(MethodNode methodNode, IFilterContext context,
 			IFilterOutput output);
-
 }

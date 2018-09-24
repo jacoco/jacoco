@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2017 Mountainminds GmbH & Co. KG and Contributors
+ * Copyright (c) 2009, 2018 Mountainminds GmbH & Co. KG and Contributors
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -25,7 +25,7 @@ public class ClassInfoTest extends CommandTestBase {
 		execute("classinfo", "--invalid");
 
 		assertFailure();
-		assertContains("\"--invalid\" is not a valid option", err);
+		assertContains("\"--invalid\"", err);
 		assertContains(
 				"java -jar jacococli.jar classinfo [<classlocations> ...]",
 				err);

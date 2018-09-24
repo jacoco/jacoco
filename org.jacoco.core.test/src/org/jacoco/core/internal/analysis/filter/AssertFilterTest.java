@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2017 Mountainminds GmbH & Co. KG and Contributors
+ * Copyright (c) 2009, 2018 Mountainminds GmbH & Co. KG and Contributors
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -10,10 +10,6 @@
  *******************************************************************************/
 package org.jacoco.core.internal.analysis.filter;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.fail;
-
 import org.jacoco.core.internal.instr.InstrSupport;
 import org.junit.Test;
 import org.objectweb.asm.Label;
@@ -22,12 +18,9 @@ import org.objectweb.asm.Type;
 import org.objectweb.asm.tree.AbstractInsnNode;
 import org.objectweb.asm.tree.MethodNode;
 
-public class AssertFilterTest implements IFilterOutput {
+public class AssertFilterTest extends FilterTestBase {
 
 	private final IFilter filter = new AssertFilter();
-
-	private AbstractInsnNode fromInclusive;
-	private AbstractInsnNode toInclusive;
 
 	@Test
 	public void should_filter_initialize() {
@@ -36,7 +29,7 @@ public class AssertFilterTest implements IFilterOutput {
 
 		final MethodNode m = new MethodNode(InstrSupport.ASM_API_VERSION, 0,
 				"<clinit>", "()V", null, null);
-		m.visitLdcInsn(Type.getObjectType("p/C"));
+		m.visitLdcInsn(Type.getObjectType("Foo"));
 		final AbstractInsnNode fromInclusive = m.instructions.getLast();
 
 		m.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "java/lang/Class",
@@ -49,12 +42,12 @@ public class AssertFilterTest implements IFilterOutput {
 		m.visitInsn(Opcodes.ICONST_0);
 
 		m.visitLabel(init);
-		m.visitFieldInsn(Opcodes.PUTSTATIC, "p/C", "$assertionsDisabled", "Z");
+		m.visitFieldInsn(Opcodes.PUTSTATIC, "Foo", "$assertionsDisabled", "Z");
 		final AbstractInsnNode toInclusive = m.instructions.getLast();
 
-		filter.filter("p/C", "java/lang/Object", m, this);
-		assertEquals(fromInclusive, this.fromInclusive);
-		assertEquals(toInclusive, this.toInclusive);
+		filter.filter(m, context, output);
+
+		assertIgnored(new Range(fromInclusive, toInclusive));
 	}
 
 	@Test
@@ -63,7 +56,7 @@ public class AssertFilterTest implements IFilterOutput {
 
 		final MethodNode m = new MethodNode(InstrSupport.ASM_API_VERSION, 0,
 				"m", "(Z)V", null, null);
-		m.visitFieldInsn(Opcodes.GETSTATIC, "p/C", "$assertionsDisabled", "Z");
+		m.visitFieldInsn(Opcodes.GETSTATIC, "Foo", "$assertionsDisabled", "Z");
 		final AbstractInsnNode fromInclusive = m.instructions.getLast();
 
 		m.visitJumpInsn(Opcodes.IFNE, disabled);
@@ -78,9 +71,9 @@ public class AssertFilterTest implements IFilterOutput {
 		m.visitInsn(Opcodes.ATHROW);
 		m.visitLabel(disabled);
 
-		filter.filter("p/C", "java/lang/Object", m, this);
-		assertEquals(fromInclusive, this.fromInclusive);
-		assertEquals(toInclusive, this.toInclusive);
+		filter.filter(m, context, output);
+
+		assertIgnored(new Range(fromInclusive, toInclusive));
 	}
 
 	@Test
@@ -89,7 +82,7 @@ public class AssertFilterTest implements IFilterOutput {
 
 		final MethodNode m = new MethodNode(InstrSupport.ASM_API_VERSION, 0,
 				"m", "(Z)V", null, null);
-		m.visitFieldInsn(Opcodes.GETSTATIC, "p/C", "$assertionsDisabled", "Z");
+		m.visitFieldInsn(Opcodes.GETSTATIC, "Foo", "$assertionsDisabled", "Z");
 		final AbstractInsnNode fromInclusive = m.instructions.getLast();
 
 		m.visitJumpInsn(Opcodes.IFNE, disabled);
@@ -105,20 +98,9 @@ public class AssertFilterTest implements IFilterOutput {
 		m.visitInsn(Opcodes.ATHROW);
 		m.visitLabel(disabled);
 
-		filter.filter("p/C", "java/lang/Object", m, this);
-		assertEquals(fromInclusive, this.fromInclusive);
-		assertEquals(toInclusive, this.toInclusive);
-	}
+		filter.filter(m, context, output);
 
-	public void ignore(final AbstractInsnNode fromInclusive,
-			final AbstractInsnNode toInclusive) {
-		assertNull(this.fromInclusive);
-		this.fromInclusive = fromInclusive;
-		this.toInclusive = toInclusive;
-	}
-
-	public void merge(final AbstractInsnNode i1, final AbstractInsnNode i2) {
-		fail();
+		assertIgnored(new Range(fromInclusive, toInclusive));
 	}
 
 }

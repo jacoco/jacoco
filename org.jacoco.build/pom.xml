@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-   Copyright (c) 2009, 2017 Mountainminds GmbH & Co. KG and Contributors
+   Copyright (c) 2009, 2018 Mountainminds GmbH & Co. KG and Contributors
    All rights reserved. This program and the accompanying materials
    are made available under the terms of the Eclipse Public License v1.0
    which accompanies this distribution, and is available at
@@ -14,7 +14,7 @@
 
   <groupId>org.jacoco</groupId>
   <artifactId>org.jacoco.build</artifactId>
-  <version>0.7.10-SNAPSHOT</version>
+  <version>0.8.3-SNAPSHOT</version>
   <packaging>pom</packaging>
 
   <name>JaCoCo</name>
@@ -83,10 +83,6 @@
     </contributor>
   </contributors>
 
-  <prerequisites>
-    <maven>3.0</maven>
-  </prerequisites>
-
   <modules>
     <!-- Order is important: org.jacoco.agent.rt embeds into org.jacoco.agent and JaCoCo Agent used during tests -->
     <module>../org.jacoco.core</module>
@@ -132,16 +128,17 @@
 
     <maven.build.timestamp.format>yyyyMMddhhmm</maven.build.timestamp.format>
     <jacoco.home.url>http://www.jacoco.org/jacoco</jacoco.home.url>
-    <copyright.years>${project.inceptionYear}, 2017</copyright.years>
+    <copyright.years>${project.inceptionYear}, 2018</copyright.years>
 
-    <maven.compiler.source>1.5</maven.compiler.source>
-    <maven.compiler.target>1.5</maven.compiler.target>
+    <bytecode.version>1.5</bytecode.version>
+    <maven.compiler.source>${bytecode.version}</maven.compiler.source>
+    <maven.compiler.target>${bytecode.version}</maven.compiler.target>
 
     <jvm.args></jvm.args>
     <argLine>${jvm.args}</argLine>
 
     <!-- Dependencies versions -->
-    <asm.version>5.2</asm.version>
+    <asm.version>6.2.1</asm.version>
     <ant.version>1.7.1</ant.version>
     <args4j.version>2.0.28</args4j.version>
     <junit.version>4.8.2</junit.version>
@@ -210,7 +207,27 @@
       <!-- Third-party dependencies -->
       <dependency>
         <groupId>org.ow2.asm</groupId>
-        <artifactId>asm-debug-all</artifactId>
+        <artifactId>asm</artifactId>
+        <version>${asm.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.ow2.asm</groupId>
+        <artifactId>asm-commons</artifactId>
+        <version>${asm.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.ow2.asm</groupId>
+        <artifactId>asm-tree</artifactId>
+        <version>${asm.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.ow2.asm</groupId>
+        <artifactId>asm-analysis</artifactId>
+        <version>${asm.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.ow2.asm</groupId>
+        <artifactId>asm-util</artifactId>
         <version>${asm.version}</version>
       </dependency>
       <dependency>
@@ -248,6 +265,7 @@
         <filtering>false</filtering>
         <excludes>
           <exclude>**/*.java</exclude>
+          <exclude>**/*.kt</exclude>
           <exclude>**/*.properties</exclude>
         </excludes>
       </resource>
@@ -288,7 +306,7 @@
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-compiler-plugin</artifactId>
-          <version>2.3.2</version>
+          <version>3.7.0</version>
         </plugin>
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
@@ -303,7 +321,7 @@
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-enforcer-plugin</artifactId>
-          <version>1.0.1</version>
+          <version>3.0.0-M2</version>
         </plugin>
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
@@ -370,7 +388,7 @@
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-shade-plugin</artifactId>
-          <version>2.4.3</version>
+          <version>3.1.0</version>
         </plugin>
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
@@ -428,8 +446,7 @@
         <plugin>
           <groupId>org.apache.felix</groupId>
           <artifactId>maven-bundle-plugin</artifactId>
-          <!-- newer versions require Java 7 -->
-          <version>2.5.4</version>
+          <version>3.5.1</version>
         </plugin>
       </plugins>
     </pluginManagement>
@@ -504,6 +521,12 @@
             </goals>
             <configuration>
               <rules>
+                <requireJavaVersion>
+                  <version>1.8</version>
+                </requireJavaVersion>
+                <requireMavenVersion>
+                  <version>3.3.9</version>
+                </requireMavenVersion>
                 <requireNoRepositories>
                   <message>The rules for repo1.maven.org are that pom.xml files should not include repository definitions.</message>
                   <banRepositories>true</banRepositories>
@@ -513,10 +536,6 @@
                   <message>No SNAPSHOT versions allowed for dependencies</message>
                   <onlyWhenRelease>true</onlyWhenRelease>
                 </requireReleaseDeps>
-                <requireMavenVersion>
-                  <!-- Maven 3.0.3 contains bug - see http://jira.codehaus.org/browse/MINVOKER-107 -->
-                  <version>[3.0.0,3.0.3),[3.0.4,)</version>
-                </requireMavenVersion>
               </rules>
             </configuration>
           </execution>
@@ -536,9 +555,10 @@
             <configuration>
               <target>
                 <fileset dir="${basedir}" includes="**/*.java,**/*.xml,**/*.bsh" excludes="target/**,.idea/**,nb-configuration.xml" id="missinglicense.fileset">
+                  <include name="**/*.kt"/>
                   <not>
                     <and>
-                      <contains text="Copyright (c) 2009, 2017 Mountainminds GmbH &amp; Co. KG and Contributors"/>
+                      <contains text="Copyright (c) 2009, 2018 Mountainminds GmbH &amp; Co. KG and Contributors"/>
                       <contains text="All rights reserved. This program and the accompanying materials"/>
                       <contains text="are made available under the terms of the Eclipse Public License v1.0"/>
                       <contains text="which accompanies this distribution, and is available at"/>
@@ -657,7 +677,28 @@
   </build>
 
   <profiles>
-    <!-- This profile is used to launch tests with different JDK versions. -->
+    <!-- http://openjdk.java.net/jeps/182 -->
+    <profile>
+      <id>maven-jdk9</id>
+      <activation>
+        <jdk>[9,12)</jdk>
+      </activation>
+      <properties>
+        <bytecode.version>6</bytecode.version>
+      </properties>
+    </profile>
+
+    <profile>
+      <id>maven-jdk12</id>
+      <activation>
+        <jdk>[12,)</jdk>
+      </activation>
+      <properties>
+        <bytecode.version>7</bytecode.version>
+      </properties>
+    </profile>
+
+    <!-- This profile enables use of JDK from Maven Toolchains -->
     <profile>
       <id>integration-tests</id>
       <activation>
@@ -691,39 +732,58 @@
       </build>
     </profile>
 
-    <!-- This profile is used to launch tests with compilation into specific bytecode version. -->
+    <!--
+    Following profiles enable compilation into bytecode version 9
+    when requested "bytecode.version" greater than 9,
+    because this is maximum that can be processed by
+    maven-shade-plugin (https://issues.apache.org/jira/browse/MSHADE-289)
+    and maven-plugin-plugin (https://issues.apache.org/jira/browse/MPLUGIN-335),
+    This is overridden for tests.
+    -->
+
     <profile>
-      <id>bytecode</id>
+      <id>java10-bytecode</id>
       <activation>
         <property>
           <name>bytecode.version</name>
+          <value>10</value>
         </property>
       </activation>
       <properties>
-        <maven.compiler.source>${bytecode.version}</maven.compiler.source>
-        <maven.compiler.target>${bytecode.version}</maven.compiler.target>
-      </properties>
-    </profile>
-    <profile>
-      <id>java9-validation</id>
-      <activation>
-        <property>
-          <name>bytecode.version</name>
-          <value>1.9</value>
-        </property>
-      </activation>
-      <properties>
-        <!--
-        Compile into bytecode version 8 by default,
-        because maven-shade-plugin and maven-plugin-plugin are unable to proceess bytecode version 9,
-        this is overridden for tests
-        -->
-        <maven.compiler.source>1.8</maven.compiler.source>
-        <maven.compiler.target>1.8</maven.compiler.target>
+        <maven.compiler.source>9</maven.compiler.source>
+        <maven.compiler.target>9</maven.compiler.target>
       </properties>
     </profile>
 
-    <!-- This profile is used for compilation with ECJ. -->
+    <profile>
+      <id>java11-bytecode</id>
+      <activation>
+        <property>
+          <name>bytecode.version</name>
+          <value>11</value>
+        </property>
+      </activation>
+      <properties>
+        <maven.compiler.source>9</maven.compiler.source>
+        <maven.compiler.target>9</maven.compiler.target>
+      </properties>
+    </profile>
+
+    <profile>
+      <id>java12-bytecode</id>
+      <activation>
+        <property>
+          <name>bytecode.version</name>
+          <value>12</value>
+        </property>
+      </activation>
+      <properties>
+        <maven.compiler.source>9</maven.compiler.source>
+        <maven.compiler.target>9</maven.compiler.target>
+      </properties>
+    </profile>
+
+    <!-- This profile enables use of ECJ -->
     <profile>
       <id>ecj</id>
       <activation>
@@ -736,9 +796,10 @@
           <plugin>
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-compiler-plugin</artifactId>
-            <version>3.6.0</version>
             <configuration>
               <compilerId>eclipse</compilerId>
+              <source>1.8</source>
+              <target>1.8</target>
             </configuration>
             <dependencies>
               <dependency>
@@ -757,12 +818,16 @@
       </build>
     </profile>
 
+    <!--
+    Profiles for different JDK versions:
+    -->
+
     <profile>
-      <id>jdk16</id>
+      <id>jdk6</id>
       <activation>
         <property>
           <name>jdk.version</name>
-          <value>1.6</value>
+          <value>6</value>
         </property>
       </activation>
       <properties>
@@ -771,11 +836,11 @@
     </profile>
 
     <profile>
-      <id>jdk17</id>
+      <id>jdk7</id>
       <activation>
         <property>
           <name>jdk.version</name>
-          <value>1.7</value>
+          <value>7</value>
         </property>
       </activation>
       <properties>
@@ -784,11 +849,11 @@
     </profile>
 
     <profile>
-      <id>jdk18</id>
+      <id>jdk8</id>
       <activation>
         <property>
           <name>jdk.version</name>
-          <value>1.8</value>
+          <value>8</value>
         </property>
       </activation>
       <properties>
@@ -801,14 +866,54 @@
       <activation>
         <property>
           <name>jdk.version</name>
-          <value>1.9</value>
+          <value>9</value>
         </property>
       </activation>
       <properties>
-        <jvm.args>-XX:-FailOverToOldVerifier -Xverify:all</jvm.args>
+        <bytecode.version>6</bytecode.version>
       </properties>
     </profile>
 
+    <profile>
+      <id>jdk10</id>
+      <activation>
+        <property>
+          <name>jdk.version</name>
+          <value>10</value>
+        </property>
+      </activation>
+      <properties>
+        <bytecode.version>6</bytecode.version>
+      </properties>
+    </profile>
+
+    <profile>
+      <id>jdk11</id>
+      <activation>
+        <property>
+          <name>jdk.version</name>
+          <value>11</value>
+        </property>
+      </activation>
+      <properties>
+        <bytecode.version>6</bytecode.version>
+      </properties>
+    </profile>
+
+    <profile>
+      <id>jdk12</id>
+      <activation>
+        <property>
+          <name>jdk.version</name>
+          <value>12</value>
+        </property>
+      </activation>
+      <properties>
+        <bytecode.version>7</bytecode.version>
+      </properties>
+    </profile>
+
+    <!-- This profile enables generation of JARs with sources and javadocs -->
     <profile>
       <id>sources</id>
       <activation>

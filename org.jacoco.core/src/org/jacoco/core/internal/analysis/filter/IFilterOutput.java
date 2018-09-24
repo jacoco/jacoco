@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2017 Mountainminds GmbH & Co. KG and Contributors
+ * Copyright (c) 2009, 2018 Mountainminds GmbH & Co. KG and Contributors
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -10,6 +10,8 @@
  *
  *******************************************************************************/
 package org.jacoco.core.internal.analysis.filter;
+
+import java.util.Set;
 
 import org.objectweb.asm.tree.AbstractInsnNode;
 
@@ -40,5 +42,17 @@ public interface IFilterOutput {
 	 *            second instruction
 	 */
 	void merge(AbstractInsnNode i1, AbstractInsnNode i2);
+
+	/**
+	 * Marks instruction whose outgoing branches should be replaced during
+	 * computation of coverage.
+	 *
+	 * @param source
+	 *            instruction which branches should be replaced
+	 * @param newTargets
+	 *            new targets of branches
+	 */
+	void replaceBranches(AbstractInsnNode source,
+			Set<AbstractInsnNode> newTargets);
 
 }

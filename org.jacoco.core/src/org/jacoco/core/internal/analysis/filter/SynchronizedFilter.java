@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2017 Mountainminds GmbH & Co. KG and Contributors
+ * Copyright (c) 2009, 2018 Mountainminds GmbH & Co. KG and Contributors
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -21,9 +21,9 @@ import org.objectweb.asm.tree.TryCatchBlockNode;
  */
 public final class SynchronizedFilter implements IFilter {
 
-	public void filter(final String className, final String superClassName,
-			final MethodNode methodNode, final IFilterOutput output) {
-		for (TryCatchBlockNode tryCatch : methodNode.tryCatchBlocks) {
+	public void filter(final MethodNode methodNode,
+			final IFilterContext context, final IFilterOutput output) {
+		for (final TryCatchBlockNode tryCatch : methodNode.tryCatchBlocks) {
 			if (tryCatch.type != null) {
 				continue;
 			}
@@ -67,7 +67,7 @@ public final class SynchronizedFilter implements IFilter {
 			nextIs(Opcodes.ALOAD);
 			nextIs(Opcodes.MONITOREXIT);
 			nextIs(Opcodes.ATHROW);
-			return  cursor != null;
+			return cursor != null;
 		}
 	}
 

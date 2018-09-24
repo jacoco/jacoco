@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2017 Mountainminds GmbH & Co. KG and Contributors
+ * Copyright (c) 2009, 2018 Mountainminds GmbH & Co. KG and Contributors
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -47,7 +47,7 @@ public class InstrumentTest extends CommandTestBase {
 			throws Exception {
 		execute("instrument");
 		assertFailure();
-		assertContains("Option \"--dest\" is required", err);
+		assertContains("\"--dest\"", err);
 		assertContains(
 				"Usage: java -jar jacococli.jar instrument [<sourcefiles> ...]",
 				err);
@@ -137,7 +137,7 @@ public class InstrumentTest extends CommandTestBase {
 		ClassReader reader = new ClassReader(in);
 		in.close();
 		final Set<String> fields = new HashSet<String>();
-		reader.accept(new ClassVisitor(Opcodes.ASM5) {
+		reader.accept(new ClassVisitor(Opcodes.ASM6) {
 			@Override
 			public FieldVisitor visitField(int access, String name, String desc,
 					String signature, Object value) {

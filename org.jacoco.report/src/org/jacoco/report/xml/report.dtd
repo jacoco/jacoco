@@ -1,5 +1,5 @@
 <!-- 
-   Copyright (c) 2009, 2017 Mountainminds GmbH & Co. KG and Contributors
+   Copyright (c) 2009, 2018 Mountainminds GmbH & Co. KG and Contributors
    All rights reserved. This program and the accompanying materials
    are made available under the terms of the Eclipse Public License v1.0
    which accompanies this distribution, and is available at
@@ -13,7 +13,7 @@
 <!-- This DTD describes the JaCoCo XML report format. It is identified by the
      following identifiers:
 
-        PUBID  = "-//JACOCO//DTD Report 1.0//EN"
+        PUBID  = "-//JACOCO//DTD Report 1.1//EN"
         SYSTEM = "report.dtd"
 -->
 
@@ -44,6 +44,8 @@
 <!ELEMENT class (method*, counter*)>
   <!-- fully qualified VM name -->
   <!ATTLIST class name CDATA #REQUIRED>
+  <!-- name of the corresponding source file -->
+  <!ATTLIST class sourcefilename CDATA #IMPLIED>
 
 <!-- representation of a method -->
 <!ELEMENT method (counter*)>

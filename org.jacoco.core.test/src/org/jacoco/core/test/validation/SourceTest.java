@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2017 Mountainminds GmbH & Co. KG and Contributors
+ * Copyright (c) 2009, 2018 Mountainminds GmbH & Co. KG and Contributors
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -12,13 +12,16 @@
 package org.jacoco.core.test.validation;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertNull;
 
 import java.io.IOException;
 import java.io.StringReader;
-import java.util.Arrays;
-import java.util.NoSuchElementException;
+import java.util.List;
 
+import org.jacoco.core.internal.analysis.ClassCoverageImpl;
+import org.jacoco.core.internal.analysis.CounterImpl;
+import org.jacoco.core.internal.analysis.SourceFileCoverageImpl;
+import org.jacoco.core.test.validation.Source.Line;
 import org.junit.Test;
 
 /**
@@ -27,61 +30,116 @@ import org.junit.Test;
 public class SourceTest {
 
 	@Test
-	public void testGetLines1() throws IOException {
-		String src = "\na\nbb\n";
-		final Source s = new Source(new StringReader(src));
-		assertEquals(Arrays.asList("", "a", "bb"), s.getLines());
+	public void should_parse_lines() throws IOException {
+		String src = "aaa\nbbb\n;";
+
+		final Source s = new Source(new StringReader(src),
+				new ClassCoverageImpl("Foo", 0x1234, false),
+				new SourceFileCoverageImpl("Foo.java", "foo"));
+
+		List<Line> lines = s.getLines();
+		assertEquals(3, lines.size());
+		assertEquals("aaa", lines.get(0).getText());
+		assertEquals("bbb", lines.get(1).getText());
+		assertEquals(";", lines.get(2).getText());
 	}
 
 	@Test
-	public void testGetLines2() throws IOException {
-		String src = "aa\nbb\n;";
-		final Source s = new Source(new StringReader(src));
-		assertEquals(Arrays.asList("aa", "bb", ";"), s.getLines());
+	public void should_parse_empty_lines() throws IOException {
+		String src = "\naaa\n\nbbb\n";
+
+		final Source s = new Source(new StringReader(src),
+				new ClassCoverageImpl("Foo", 0x1234, false),
+				new SourceFileCoverageImpl("Foo.java", "foo"));
+
+		List<Line> lines = s.getLines();
+		assertEquals(4, lines.size());
+		assertEquals("", lines.get(0).getText());
+		assertEquals("aaa", lines.get(1).getText());
+		assertEquals("", lines.get(2).getText());
+		assertEquals("bbb", lines.get(3).getText());
 	}
 
 	@Test
-	public void testGetLines3() throws IOException {
-		String src = "xx\r\nyy";
-		final Source s = new Source(new StringReader(src));
-		assertEquals(Arrays.asList("xx", "yy"), s.getLines());
+	public void should_parse_crnl_separator() throws IOException {
+		String src = "aaa\r\nbbb";
+
+		final Source s = new Source(new StringReader(src),
+				new ClassCoverageImpl("Foo", 0x1234, false),
+				new SourceFileCoverageImpl("Foo.java", "foo"));
+
+		List<Line> lines = s.getLines();
+		assertEquals(2, lines.size());
+		assertEquals("aaa", lines.get(0).getText());
+		assertEquals("bbb", lines.get(1).getText());
 	}
 
 	@Test
-	public void testGetLine() throws IOException {
-		String src = "Hello\n\nWorld!";
-		final Source s = new Source(new StringReader(src));
-		assertEquals("Hello", s.getLine(1));
-		assertEquals("", s.getLine(2));
-		assertEquals("World!", s.getLine(3));
+	public void should_calculate_line_numbers() throws IOException {
+		String src = "a\nb\nc";
+
+		final Source s = new Source(new StringReader(src),
+				new ClassCoverageImpl("Foo", 0x1234, false),
+				new SourceFileCoverageImpl("Foo.java", "foo"));
+
+		List<Line> lines = s.getLines();
+		assertEquals(3, lines.size());
+		assertEquals(1, lines.get(0).getNr());
+		assertEquals(2, lines.get(1).getNr());
+		assertEquals(3, lines.get(2).getNr());
 	}
 
 	@Test
-	public void testGetLineNumber() throws IOException {
-		String src = "a\nb$line-tag$\nc\nd\ne$line-tagx$\nf";
-		final Source s = new Source(new StringReader(src));
-		assertEquals(2, s.getLineNumber("tag"), 0.0);
-	}
+	public void line_should_implement_toString() throws IOException {
+		String src = "a\nb";
 
-	@Test(expected = NoSuchElementException.class)
-	public void testGetLineNumberNegative() throws IOException {
-		String src = "a\nb$line-tag$\nc\nd\ne\nf";
-		final Source s = new Source(new StringReader(src));
-		s.getLineNumber("ag");
-	}
+		final Source s = new Source(new StringReader(src),
+				new ClassCoverageImpl("Foo", 0x1234, false),
+				new SourceFileCoverageImpl("Foo.java", "foo"));
 
-	@Test(expected = IllegalArgumentException.class)
-	public void testDuplicateTag() throws IOException {
-		String src = "a\nb$line-tag$\nc\nd\ne$line-tag$\nf";
-		new Source(new StringReader(src));
+		List<Line> lines = s.getLines();
+		assertEquals(2, lines.size());
+		assertEquals("Foo.java:1", lines.get(0).toString());
+		assertEquals("Foo.java:2", lines.get(1).toString());
 	}
 
 	@Test
-	public void testGetSourceFor() throws IOException {
-		final Source s = Source.getSourceFor("src", SourceTest.class);
-		// Here we are. $line-testGetSourceFor$
-		final String l = s.getLine(s.getLineNumber("testGetSourceFor"));
-		assertTrue(l, l.contains("Here we are."));
+	public void line_should_provide_corresponding_coverage()
+			throws IOException {
+		String src = "a\nb\nc";
+		SourceFileCoverageImpl sc = new SourceFileCoverageImpl("Foo.java",
+				"foo");
+		sc.increment(CounterImpl.getInstance(1, 0), CounterImpl.COUNTER_0_0, 1);
+		sc.increment(CounterImpl.getInstance(2, 0), CounterImpl.COUNTER_0_0, 2);
+		sc.increment(CounterImpl.getInstance(3, 0), CounterImpl.COUNTER_0_0, 3);
+
+		final Source s = new Source(new StringReader(src),
+				new ClassCoverageImpl("Foo", 0x1234, false), sc);
+
+		List<Line> lines = s.getLines();
+		assertEquals(3, lines.size());
+		assertEquals(1, lines.get(0).getCoverage().getInstructionCounter()
+				.getMissedCount());
+		assertEquals(2, lines.get(1).getCoverage().getInstructionCounter()
+				.getMissedCount());
+		assertEquals(3, lines.get(2).getCoverage().getInstructionCounter()
+				.getMissedCount());
+	}
+
+	@Test
+	public void line_should_return_comment() throws IOException {
+		String src = "aaa\nbbb // test()\n}//nospaces()\n/* http://jacoco.org/ */";
+
+		final Source s = new Source(new StringReader(src),
+				new ClassCoverageImpl("Foo", 0x1234, false),
+				new SourceFileCoverageImpl("Foo.java", "foo"));
+
+		List<Line> lines = s.getLines();
+		assertEquals(4, lines.size());
+		assertNull(lines.get(0).getComment());
+		assertEquals(" test()", lines.get(1).getComment());
+		assertEquals("nospaces()", lines.get(2).getComment());
+		assertNull(lines.get(3).getComment());
 	}
 
 }

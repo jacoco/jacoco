@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2017 Mountainminds GmbH & Co. KG and Contributors
+ * Copyright (c) 2009, 2018 Mountainminds GmbH & Co. KG and Contributors
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -69,7 +69,7 @@ public class ReportStructureTestDriver {
 		m.increment(CounterImpl.getInstance(3, 5), CounterImpl.COUNTER_0_0, 1);
 		m.increment(CounterImpl.getInstance(3, 5),
 				CounterImpl.getInstance(1, 2), 2);
-		m.increment(CounterImpl.getInstance(4, 5), CounterImpl.COUNTER_0_0, 3);
+		m.increment(CounterImpl.getInstance(4, 5), CounterImpl.COUNTER_0_0, 4);
 		m.incrementMethodCounter();
 		methodCoverage = m;
 
@@ -119,7 +119,8 @@ public class ReportStructureTestDriver {
 		reportVisitor.visitEnd();
 	}
 
-	public void sendBundle(IReportGroupVisitor groupVisitor) throws IOException {
+	public void sendBundle(IReportGroupVisitor groupVisitor)
+			throws IOException {
 		groupVisitor.visitBundle(bundleCoverage, sourceFileLocator);
 	}
 

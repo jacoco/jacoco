@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2017 Mountainminds GmbH & Co. KG and Contributors
+ * Copyright (c) 2009, 2018 Mountainminds GmbH & Co. KG and Contributors
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -25,19 +25,19 @@ import org.objectweb.asm.tree.MethodNode;
  */
 public final class AssertFilter implements IFilter {
 
-	public void filter(final String className, final String superClassName,
-			final MethodNode methodNode, final IFilterOutput output) {
+	public void filter(final MethodNode methodNode,
+			final IFilterContext context, final IFilterOutput output) {
 		if (methodNode.name.equals("<clinit>")) {
 			AbstractInsnNode i = methodNode.instructions.getFirst();
 			while (i != null) {
-				filterClinit(className, i, output);
+				filterClinit(context.getClassName(), i, output);
 				i = i.getNext();
 			}
 		}
 
 		AbstractInsnNode i = methodNode.instructions.getFirst();
 		while (i != null) {
-			filter(className, i, output);
+			filter(context.getClassName(), i, output);
 			i = i.getNext();
 		}
 	}

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2017 Mountainminds GmbH & Co. KG and Contributors
+ * Copyright (c) 2009, 2018 Mountainminds GmbH & Co. KG and Contributors
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -18,19 +18,21 @@ import org.objectweb.asm.tree.MethodNode;
 import org.objectweb.asm.tree.TryCatchBlockNode;
 
 /**
- * Filters code that javac generates for try-with-resources statement.
+ * Filters code which is generated for try-with-resources statement by javac
+ * versions from 7 to 10.
  */
 public final class TryWithResourcesJavacFilter implements IFilter {
 
-	public void filter(final String className, final String superClassName,
-			final MethodNode methodNode, final IFilterOutput output) {
+	public void filter(final MethodNode methodNode,
+			final IFilterContext context, final IFilterOutput output) {
 		if (methodNode.tryCatchBlocks.isEmpty()) {
 			return;
 		}
 		final Matcher matcher = new Matcher(output);
-		for (TryCatchBlockNode t : methodNode.tryCatchBlocks) {
+		for (final TryCatchBlockNode t : methodNode.tryCatchBlocks) {
 			if ("java/lang/Throwable".equals(t.type)) {
-				for (Matcher.JavacPattern p : Matcher.JavacPattern.values()) {
+				for (final Matcher.JavacPattern p : Matcher.JavacPattern
+						.values()) {
 					matcher.start(t.handler);
 					if (matcher.matchJavac(p)) {
 						break;
@@ -195,7 +197,7 @@ public final class TryWithResourcesJavacFilter implements IFilter {
 					final MethodInsnNode m = (MethodInsnNode) cursor;
 					if ("$closeResource".equals(m.name)
 							&& "(Ljava/lang/Throwable;Ljava/lang/AutoCloseable;)V"
-							.equals(m.desc)) {
+									.equals(m.desc)) {
 						return true;
 					}
 					cursor = null;

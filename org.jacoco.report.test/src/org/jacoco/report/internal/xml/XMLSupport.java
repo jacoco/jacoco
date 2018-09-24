@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2017 Mountainminds GmbH & Co. KG and Contributors
+ * Copyright (c) 2009, 2018 Mountainminds GmbH & Co. KG and Contributors
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -14,8 +14,8 @@ package org.jacoco.report.internal.xml;
 import static org.junit.Assert.fail;
 
 import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.StringReader;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -71,13 +71,13 @@ public class XMLSupport {
 		return xpath;
 	}
 
-	public Document parse(String document) throws SAXException, IOException,
-			ParserConfigurationException {
-		return builder.parse(new InputSource(new StringReader(document)));
+	public Document parse(ByteArrayOutputStream buffer)
+			throws SAXException, IOException, ParserConfigurationException {
+		return parse(buffer.toByteArray());
 	}
 
-	public Document parse(byte[] document) throws SAXException, IOException,
-			ParserConfigurationException {
+	public Document parse(byte[] document)
+			throws SAXException, IOException, ParserConfigurationException {
 		return builder
 				.parse(new InputSource(new ByteArrayInputStream(document)));
 	}
