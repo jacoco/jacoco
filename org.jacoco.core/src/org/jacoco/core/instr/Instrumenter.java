@@ -21,7 +21,6 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
 
-import org.jacoco.core.internal.BytecodeVersion;
 import org.jacoco.core.internal.ContentTypeDetector;
 import org.jacoco.core.internal.InputStreams;
 import org.jacoco.core.internal.Pack200Streams;
@@ -84,10 +83,7 @@ public class Instrumenter {
 
 	private byte[] instrument(final byte[] source) {
 		final long classId = CRC64.classId(source);
-		final int originalVersion = BytecodeVersion.get(source);
-		final byte[] b = BytecodeVersion.downgradeIfNeeded(originalVersion,
-				source);
-		final ClassReader reader = new ClassReader(b);
+		final ClassReader reader = new ClassReader(source);
 		final ClassWriter writer = new ClassWriter(reader, 0) {
 			@Override
 			protected String getCommonSuperClass(final String type1,
@@ -97,13 +93,12 @@ public class Instrumenter {
 		};
 		final IProbeArrayStrategy strategy = ProbeArrayStrategyFactory
 				.createFor(classId, reader, accessorGenerator);
+		final int version = InstrSupport.getVersionMajor(source);
 		final ClassVisitor visitor = new ClassProbesAdapter(
 				new ClassInstrumenter(strategy, writer),
-				InstrSupport.needsFrames(originalVersion));
+				InstrSupport.needsFrames(version));
 		reader.accept(visitor, ClassReader.EXPAND_FRAMES);
-		final byte[] instrumented = writer.toByteArray();
-		BytecodeVersion.set(instrumented, originalVersion);
-		return instrumented;
+		return writer.toByteArray();
 	}
 
 	/**

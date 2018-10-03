@@ -15,8 +15,6 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
 
-import org.jacoco.core.instr.Instrumenter;
-import org.jacoco.core.internal.BytecodeVersion;
 import org.jacoco.core.internal.instr.InstrSupport;
 import org.jacoco.core.runtime.IRuntime;
 import org.jacoco.core.runtime.RuntimeData;
@@ -62,8 +60,6 @@ public class ResizeInstructionsTest {
 	@Test
 	public void should_not_loose_InnerClasses_attribute() throws Exception {
 		byte[] source = TargetLoader.getClassDataAsBytes(Inner.class);
-		final int version = BytecodeVersion.get(source);
-		source = BytecodeVersion.downgradeIfNeeded(version, source);
 
 		final ClassReader cr = new ClassReader(source);
 		final ClassWriter cw = new ClassWriter(0);
@@ -81,7 +77,6 @@ public class ResizeInstructionsTest {
 			}
 		}, 0);
 		source = cw.toByteArray();
-		BytecodeVersion.set(source, version);
 
 		final byte[] bytes = instrumenter.instrument(source, "");
 

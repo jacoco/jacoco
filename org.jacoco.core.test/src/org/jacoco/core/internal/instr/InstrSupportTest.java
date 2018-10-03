@@ -15,7 +15,6 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
-import org.jacoco.core.internal.BytecodeVersion;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -43,6 +42,13 @@ public class InstrSupportTest {
 	}
 
 	@Test
+	public void getVersionMajor_should_return_major_version_number() {
+		final byte[] bytes = new byte[] { (byte) 0xCA, (byte) 0xFE, (byte) 0xBA,
+				(byte) 0xBE, /* minor */ 0x00, 0x03, /* major */ 0x00, 0x2D };
+		assertEquals(45, InstrSupport.getVersionMajor(bytes));
+	}
+
+	@Test
 	public void needFrames_should_return_false_for_versions_less_than_1_6() {
 		assertFalse(InstrSupport.needsFrames(Opcodes.V1_1));
 		assertFalse(InstrSupport.needsFrames(Opcodes.V1_2));
@@ -57,7 +63,7 @@ public class InstrSupportTest {
 		assertTrue(InstrSupport.needsFrames(Opcodes.V1_7));
 		assertTrue(InstrSupport.needsFrames(Opcodes.V1_8));
 		assertTrue(InstrSupport.needsFrames(Opcodes.V9));
-		assertTrue(InstrSupport.needsFrames(BytecodeVersion.V10));
+		assertTrue(InstrSupport.needsFrames(Opcodes.V10));
 		assertTrue(InstrSupport.needsFrames(Opcodes.V11));
 		assertTrue(InstrSupport.needsFrames(Opcodes.V12));
 	}
