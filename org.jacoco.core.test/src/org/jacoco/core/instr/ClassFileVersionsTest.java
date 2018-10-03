@@ -22,6 +22,7 @@ import static org.objectweb.asm.Opcodes.INVOKESPECIAL;
 import static org.objectweb.asm.Opcodes.INVOKEVIRTUAL;
 import static org.objectweb.asm.Opcodes.POP;
 import static org.objectweb.asm.Opcodes.RETURN;
+import static org.objectweb.asm.Opcodes.V10;
 import static org.objectweb.asm.Opcodes.V11;
 import static org.objectweb.asm.Opcodes.V12;
 import static org.objectweb.asm.Opcodes.V1_1;
@@ -36,7 +37,6 @@ import static org.objectweb.asm.Opcodes.V9;
 
 import java.io.IOException;
 
-import org.jacoco.core.internal.BytecodeVersion;
 import org.jacoco.core.internal.instr.InstrSupport;
 import org.jacoco.core.runtime.IRuntime;
 import org.jacoco.core.runtime.SystemPropertiesRuntime;
@@ -100,7 +100,7 @@ public class ClassFileVersionsTest {
 
 	@Test
 	public void test_10() throws IOException {
-		testVersion(BytecodeVersion.V10, true);
+		testVersion(V10, true);
 	}
 
 	@Test
@@ -124,8 +124,6 @@ public class ClassFileVersionsTest {
 	}
 
 	private void assertFrames(byte[] source, final boolean expected) {
-		int version = BytecodeVersion.get(source);
-		source = BytecodeVersion.downgradeIfNeeded(version, source);
 		new ClassReader(source)
 				.accept(new ClassVisitor(InstrSupport.ASM_API_VERSION) {
 

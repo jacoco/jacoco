@@ -11,7 +11,6 @@
  *******************************************************************************/
 package org.jacoco.core.internal.instr;
 
-import org.jacoco.core.internal.BytecodeVersion;
 import org.jacoco.core.internal.flow.ClassProbesAdapter;
 import org.jacoco.core.runtime.IExecutionDataAccessorGenerator;
 import org.objectweb.asm.ClassReader;
@@ -44,7 +43,7 @@ public final class ProbeArrayStrategyFactory {
 			final IExecutionDataAccessorGenerator accessorGenerator) {
 
 		final String className = reader.getClassName();
-		final int version = BytecodeVersion.get(reader.b);
+		final int version = InstrSupport.getVersionMajor(reader.b);
 
 		if (isInterfaceOrModule(reader)) {
 			final ProbeCounter counter = getProbeCounter(reader);

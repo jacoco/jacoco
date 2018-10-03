@@ -18,7 +18,6 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 
 import org.jacoco.core.instr.Instrumenter;
-import org.jacoco.core.internal.BytecodeVersion;
 import org.jacoco.core.internal.instr.InstrSupport;
 import org.jacoco.core.runtime.IRuntime;
 import org.jacoco.core.runtime.SystemPropertiesRuntime;
@@ -87,9 +86,6 @@ public class FramesTest {
 	}
 
 	private byte[] calculateFrames(byte[] source) {
-		source = BytecodeVersion.downgradeIfNeeded(BytecodeVersion.get(source),
-				source);
-
 		ClassReader rc = new ClassReader(source);
 		ClassWriter cw = new ClassWriter(ClassWriter.COMPUTE_FRAMES);
 
