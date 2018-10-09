@@ -17,39 +17,82 @@ import org.objectweb.asm.Label;
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.tree.MethodNode;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class KotlinInlineFilterTest extends FilterTestBase {
+
+	private final KotlinInlineFilter filter = new KotlinInlineFilter();
 
 	@Test
 	public void should_filter() {
 		final MethodNode m = new MethodNode(InstrSupport.ASM_API_VERSION, 0,
 				"callsite", "()V", null, null);
+		context.sourceDebugExtension = "" //
+				+ "SMAP\n" //
+				+ "callsite.kt\n" //
+				+ "Kotlin\n" //
+				+ "*S Kotlin\n" //
+				+ "*F\n" //
+				+ "+ 1 callsite.kt\n" //
+				+ "CallsiteKt\n" //
+				+ "+ 2 a.kt\n" //
+				+ "AKt\n" //
+				+ "+ 3 b.kt\n" //
+				+ "BKt\n" //
+				+ "*L\n" //
+				+ "1#1,8:1\n" //
+				+ "2#2,2:9\n" //
+				+ "2#3,2:11\n" //
+				+ "*E\n" //
+				+ "*S KotlinDebug\n" //
+				+ "*F\n" //
+				+ "+ 1 callsite.kt\n" //
+				+ "CallsiteKt\n" //
+				+ "*L\n" //
+				+ "2#1,2:9\n" //
+				+ "3#1,2:11\n" //
+				+ "*E";
+		context.classAnnotations
+				.add(KotlinGeneratedFilter.KOTLIN_METADATA_DESC);
 
 		m.visitLineNumber(2, new Label());
 		m.visitInsn(Opcodes.NOP);
 
-		final Range range1 = new Range();
-		m.visitLineNumber(6, new Label());
-		range1.fromInclusive = m.instructions.getLast();
+		m.visitLineNumber(9, new Label());
+		shouldIgnorePrevious(m);
 		m.visitMethodInsn(Opcodes.INVOKESTATIC, "Stubs", "nop", "()V", false);
-		m.visitLineNumber(7, new Label());
+		shouldIgnorePrevious(m);
+		m.visitLineNumber(10, new Label());
+		shouldIgnorePrevious(m);
 		m.visitInsn(Opcodes.NOP);
-		range1.toInclusive = m.instructions.getLast();
+		shouldIgnorePrevious(m);
 
 		m.visitLineNumber(3, new Label());
 		m.visitInsn(Opcodes.NOP);
 
-		final Range range2 = new Range();
-		m.visitLineNumber(8, new Label());
-		range1.fromInclusive = m.instructions.getLast();
+		m.visitLineNumber(11, new Label());
+		shouldIgnorePrevious(m);
 		m.visitMethodInsn(Opcodes.INVOKESTATIC, "Stubs", "nop", "()V", false);
-		m.visitLineNumber(9, new Label());
+		shouldIgnorePrevious(m);
+		m.visitLineNumber(12, new Label());
+		shouldIgnorePrevious(m);
 		m.visitInsn(Opcodes.NOP);
-		range1.toInclusive = m.instructions.getLast();
+		shouldIgnorePrevious(m);
 
 		m.visitLineNumber(4, new Label());
 		m.visitInsn(Opcodes.RETURN);
 
-		assertIgnored(range1, range2);
+		filter.filter(m, context, output);
+
+		assertIgnored(expectedRanges.toArray(new Range[0]));
+	}
+
+	private final List<Range> expectedRanges = new ArrayList<Range>();
+
+	private void shouldIgnorePrevious(final MethodNode m) {
+		expectedRanges.add(
+				new Range(m.instructions.getLast(), m.instructions.getLast()));
 	}
 
 }
