@@ -27,10 +27,11 @@ public class KotlinInlineFilterTest extends FilterTestBase {
 
 	private final KotlinInlineFilter filter = new KotlinInlineFilter();
 
+	private final MethodNode m = new MethodNode(InstrSupport.ASM_API_VERSION, 0,
+			"callsite", "()V", null, null);
+
 	@Test
 	public void should_filter() {
-		final MethodNode m = new MethodNode(InstrSupport.ASM_API_VERSION, 0,
-				"callsite", "()V", null, null);
 		context.sourceDebugExtension = "" //
 				+ "SMAP\n" //
 				+ "callsite.kt\n" //
@@ -89,6 +90,31 @@ public class KotlinInlineFilterTest extends FilterTestBase {
 		filter.filter(m, context, output);
 
 		assertIgnored(expectedRanges.toArray(new Range[0]));
+	}
+
+	@Test
+	public void should_not_parse_SourceDebugExtension_attribute_when_no_kotlin_metadata_annotation() {
+		context.sourceDebugExtension = "SMAP";
+
+		m.visitLineNumber(1, new Label());
+		m.visitInsn(Opcodes.RETURN);
+
+		filter.filter(m, context, output);
+
+		assertIgnored();
+	}
+
+	@Test
+	public void should_not_filter_when_no_SourceDebugExtension_attribute() {
+		context.classAnnotations
+				.add(KotlinGeneratedFilter.KOTLIN_METADATA_DESC);
+
+		m.visitLineNumber(1, new Label());
+		m.visitInsn(Opcodes.RETURN);
+
+		filter.filter(m, context, output);
+
+		assertIgnored();
 	}
 
 	private final List<Range> expectedRanges = new ArrayList<Range>();
