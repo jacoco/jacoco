@@ -35,6 +35,8 @@ public class ClassAnalyzer extends ClassProbesVisitor
 
 	private final Set<String> classAnnotations = new HashSet<String>();
 
+	private String sourceDebugExtension;
+
 	/**
 	 * Creates a new analyzer that builds coverage data for a class.
 	 * 
@@ -71,6 +73,7 @@ public class ClassAnalyzer extends ClassProbesVisitor
 	@Override
 	public void visitSource(final String source, final String debug) {
 		coverage.setSourceFileName(stringPool.get(source));
+		sourceDebugExtension = debug;
 	}
 
 	@Override
@@ -123,6 +126,10 @@ public class ClassAnalyzer extends ClassProbesVisitor
 
 	public String getSourceFileName() {
 		return coverage.getSourceFileName();
+	}
+
+	public String getSourceDebugExtension() {
+		return sourceDebugExtension;
 	}
 
 }
