@@ -11,10 +11,16 @@
  *******************************************************************************/
 package org.jacoco.core.test.validation.kotlin.targets
 
+import org.jacoco.core.test.validation.targets.Stubs.nop
+
 /**
  * This test target is inlined function.
  */
 object KotlinInlineTarget {
+
+    inline fun inlined() {
+        nop() // assertNotCovered()
+    }
 
     @JvmStatic
     fun main(args: Array<String>) {

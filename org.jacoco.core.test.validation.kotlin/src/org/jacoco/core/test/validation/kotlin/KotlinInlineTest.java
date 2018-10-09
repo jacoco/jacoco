@@ -14,6 +14,9 @@ package org.jacoco.core.test.validation.kotlin;
 import org.jacoco.core.test.validation.ValidationTestBase;
 import org.jacoco.core.test.validation.kotlin.targets.KotlinInlineTarget;
 
+/**
+ * Test of <code>inline</code> functions.
+ */
 public class KotlinInlineTest extends ValidationTestBase {
 
 	public KotlinInlineTest() {
