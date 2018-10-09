@@ -20,6 +20,9 @@ import org.objectweb.asm.tree.MethodNode;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Unit tests for {@link KotlinInlineFilter}.
+ */
 public class KotlinInlineFilterTest extends FilterTestBase {
 
 	private final KotlinInlineFilter filter = new KotlinInlineFilter();

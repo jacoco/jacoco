@@ -21,7 +21,10 @@ import java.io.StringReader;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class KotlinInlineFilter implements IFilter {
+/**
+ * Filters out instructions that were inlined by Kotlin compiler.
+ */
+public final class KotlinInlineFilter implements IFilter {
 
 	public void filter(final MethodNode methodNode,
 			final IFilterContext context, final IFilterOutput output) {
@@ -60,16 +63,16 @@ public class KotlinInlineFilter implements IFilter {
 			// FileSection
 			readLine(br, "*F");
 			String line;
-			while ((line = br.readLine()) != null && !line.equals("*L")) {
+			while (!"*L".equals(br.readLine())) {
 			}
 			// LineSection
-			while ((line = br.readLine()) != null && !line.equals("*E")) {
+			while (!"*E".equals(br.readLine())) {
 			}
 			// StratumSection
 			readLine(br, "*S KotlinDebug");
 			// FileSection
 			readLine(br, "*F");
-			while ((line = br.readLine()) != null && !line.equals("*L")) {
+			while (!"*L".equals(br.readLine())) {
 			}
 			return parseLineSection(br);
 		} catch (IOException e) {
@@ -88,7 +91,7 @@ public class KotlinInlineFilter implements IFilter {
 			throws IOException {
 		int min = Integer.MAX_VALUE;
 		String line;
-		while ((line = br.readLine()) != null && !"*E".equals(line)) {
+		while (!"*E".equals(line = br.readLine())) {
 			min = Math.min(parseLineInfo(line), min);
 		}
 		return min;
