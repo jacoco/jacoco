@@ -180,10 +180,7 @@ public final class TryWithResourcesJavacFilter implements IFilter {
 		 */
 		private boolean nextIsJavacClose(final JavacPattern p,
 				final String ctx) {
-			switch (p) {
-			case METHOD:
-			case FULL:
-				// "if (r != null)"
+			if (p == JavacPattern.METHOD || p == JavacPattern.FULL) {
 				nextIsVar(Opcodes.ALOAD, "r");
 				nextIs(Opcodes.IFNULL);
 			}
