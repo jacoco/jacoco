@@ -79,11 +79,11 @@ final class CommandLineSupport {
 		}
 		final List<String> args = new ArrayList<String>();
 		final StringBuilder current = new StringBuilder();
-		int mode = M_STRIPWHITESPACE;
+		int mode = M_STRIP_WHITESPACE;
 		int endChar = BLANK;
 		for (final char c : commandline.toCharArray()) {
 			switch (mode) {
-			case M_STRIPWHITESPACE:
+			case M_STRIP_WHITESPACE:
 				if (!Character.isWhitespace(c)) {
 					if (c == QUOTE) {
 						endChar = QUOTE;
@@ -91,13 +91,13 @@ final class CommandLineSupport {
 						current.append(c);
 						endChar = BLANK;
 					}
-					mode = M_PARSEARGUMENT;
+					mode = M_PARSE_ARGUMENT;
 				}
 				break;
-			case M_PARSEARGUMENT:
+			case M_PARSE_ARGUMENT:
 				if (c == endChar) {
 					addArgument(args, current);
-					mode = M_STRIPWHITESPACE;
+					mode = M_STRIP_WHITESPACE;
 				} else if (c == SLASH) {
 					current.append(SLASH);
 					mode = M_ESCAPED;
@@ -110,11 +110,11 @@ final class CommandLineSupport {
 					current.setCharAt(current.length() - 1, c);
 				} else if (c == endChar) {
 					addArgument(args, current);
-					mode = M_STRIPWHITESPACE;
+					mode = M_STRIP_WHITESPACE;
 				} else {
 					current.append(c);
 				}
-				mode = M_PARSEARGUMENT;
+				mode = M_PARSE_ARGUMENT;
 				break;
 			}
 		}
@@ -130,8 +130,8 @@ final class CommandLineSupport {
 		}
 	}
 
-	private static final int M_STRIPWHITESPACE = 0;
-	private static final int M_PARSEARGUMENT = 1;
+	private static final int M_STRIP_WHITESPACE = 0;
+	private static final int M_PARSE_ARGUMENT = 1;
 	private static final int M_ESCAPED = 2;
 
 	private CommandLineSupport() {
