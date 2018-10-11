@@ -54,13 +54,13 @@ final class CommandLineSupport {
 	 */
 	static String quote(final List<String> args) {
 		final StringBuilder result = new StringBuilder();
-		boolean seperate = false;
+		boolean separate = false;
 		for (final String arg : args) {
-			if (seperate) {
+			if (separate) {
 				result.append(BLANK);
 			}
 			result.append(quote(arg));
-			seperate = true;
+			separate = true;
 		}
 		return result.toString();
 	}
@@ -70,7 +70,7 @@ final class CommandLineSupport {
 	 * present.
 	 * 
 	 * @param commandline
-	 *            combinded command line
+	 *            combined command line
 	 * @return list of arguments
 	 */
 	static List<String> split(final String commandline) {
