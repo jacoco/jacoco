@@ -116,6 +116,8 @@ final class CommandLineSupport {
 				}
 				mode = M_PARSEARGUMENT;
 				break;
+			default:
+				throw new AssertionError();
 			}
 		}
 		addArgument(args, current);
