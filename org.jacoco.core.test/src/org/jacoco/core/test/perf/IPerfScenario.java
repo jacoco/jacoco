@@ -22,6 +22,6 @@ public interface IPerfScenario {
 	 * 
 	 * @param output
 	 */
-	public void run(IPerfOutput output) throws Exception;
+	void run(IPerfOutput output) throws Exception;
 
 }

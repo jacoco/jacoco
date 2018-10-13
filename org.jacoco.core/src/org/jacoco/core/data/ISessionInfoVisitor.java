@@ -25,6 +25,6 @@ public interface ISessionInfoVisitor {
 	 * @param info
 	 *            session information
 	 */
-	public void visitSessionInfo(final SessionInfo info);
+	void visitSessionInfo(SessionInfo info);
 
 }

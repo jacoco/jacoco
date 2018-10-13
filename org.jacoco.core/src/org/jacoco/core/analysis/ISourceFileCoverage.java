@@ -22,6 +22,6 @@ public interface ISourceFileCoverage extends ISourceNode {
 	 * 
 	 * @return package name
 	 */
-	public String getPackageName();
+	String getPackageName();
 
 }

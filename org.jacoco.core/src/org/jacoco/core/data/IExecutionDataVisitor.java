@@ -24,6 +24,6 @@ public interface IExecutionDataVisitor {
 	 * @param data
 	 *            execution data for a class
 	 */
-	public void visitClassExecution(ExecutionData data);
+	void visitClassExecution(ExecutionData data);
 
 }

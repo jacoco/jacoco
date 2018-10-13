@@ -22,13 +22,13 @@ public interface IMethodCoverage extends ISourceNode {
 	 * 
 	 * @return descriptor
 	 */
-	public String getDesc();
+	String getDesc();
 
 	/**
 	 * Returns the generic signature of the method if defined.
 	 * 
 	 * @return generic signature or <code>null</code>
 	 */
-	public String getSignature();
+	String getSignature();
 
 }
