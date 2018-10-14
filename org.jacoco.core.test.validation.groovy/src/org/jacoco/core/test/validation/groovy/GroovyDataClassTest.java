@@ -25,10 +25,6 @@ public class GroovyDataClassTest extends ValidationTestBase {
 
     @Test
     public void test_method_count() {
-        // This test fails in Groovy 2.5.2 and earlier because the
-        // compiler does not at @groovy.transform.Generated to
-        // property getters & setters nor the @ToString and
-        // @EqualsAndHashcode AST transformations
-        assertMethodCount(2);
+        assertMethodCount(1);
     }
 }

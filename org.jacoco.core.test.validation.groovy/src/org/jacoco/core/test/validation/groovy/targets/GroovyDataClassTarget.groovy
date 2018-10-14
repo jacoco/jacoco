@@ -11,13 +11,14 @@
  *******************************************************************************/
 package org.jacoco.core.test.validation.groovy.targets
 
-// This annotation generates the following
-// - a constructor that takes an int as argument
-// - a suitable implementation of toString()
-// - a suitable implementation of hashCode()
-// - a suitable implementation of equals(Object)
-// - a public method named canEqual(Object)
-// - a getter & setter for the valRead property
+/* This annotation generates the following
+ * - a constructor that takes an int as argument
+ * - a suitable implementation of toString()
+ * - a suitable implementation of hashCode()
+ * - a suitable implementation of equals(Object)
+ * - a public method named canEqual(Object)
+ * - a getter & setter for the valRead property
+ */
 @groovy.transform.Canonical
 class GroovyDataClassTarget { // assertFullyCovered()
 
