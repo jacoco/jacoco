@@ -62,7 +62,6 @@ public final class KotlinInlineFilter implements IFilter {
 			readLine(br, "*S Kotlin");
 			// FileSection
 			readLine(br, "*F");
-			String line;
 			while (!"*L".equals(br.readLine())) {
 			}
 			// LineSection
