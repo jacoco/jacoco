@@ -45,7 +45,7 @@ public interface IExecutionDataAccessorGenerator {
 	 * @return additional stack size required by the implementation, including
 	 *         the instance pushed to the stack
 	 */
-	int generateDataAccessor(long classid, String classname,
-							 int probecount, MethodVisitor mv);
+	int generateDataAccessor(long classid, String classname, int probecount,
+			MethodVisitor mv);
 
 }

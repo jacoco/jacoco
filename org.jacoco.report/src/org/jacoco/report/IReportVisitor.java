@@ -39,7 +39,7 @@ public interface IReportVisitor extends IReportGroupVisitor {
 	 *             in case of IO problems with the report writer
 	 */
 	void visitInfo(List<SessionInfo> sessionInfos,
-				   Collection<ExecutionData> executionData) throws IOException;
+			Collection<ExecutionData> executionData) throws IOException;
 
 	/**
 	 * Has to be called after all report data has been emitted.

@@ -28,7 +28,6 @@ public interface IRemoteCommandVisitor {
 	 * @throws IOException
 	 *             in case of problems with the remote connection
 	 */
-	void visitDumpCommand(boolean dump, boolean reset)
-			throws IOException;
+	void visitDumpCommand(boolean dump, boolean reset) throws IOException;
 
 }

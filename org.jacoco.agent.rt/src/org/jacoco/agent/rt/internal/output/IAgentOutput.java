@@ -33,8 +33,7 @@ public interface IAgentOutput {
 	 * @throws Exception
 	 *             in case startup fails
 	 */
-	void startup(AgentOptions options, RuntimeData data)
-			throws Exception;
+	void startup(AgentOptions options, RuntimeData data) throws Exception;
 
 	/**
 	 * Shutdown the agent controller and clean up any resources it has created.

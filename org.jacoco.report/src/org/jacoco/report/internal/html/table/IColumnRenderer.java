@@ -52,8 +52,8 @@ public interface IColumnRenderer {
 	 * @throws IOException
 	 *             in case of IO problems with the element output
 	 */
-	void footer(HTMLElement td, ICoverageNode total,
-				Resources resources, ReportOutputFolder base) throws IOException;
+	void footer(HTMLElement td, ICoverageNode total, Resources resources,
+			ReportOutputFolder base) throws IOException;
 
 	/**
 	 * Renders a single item in this column.
@@ -70,7 +70,7 @@ public interface IColumnRenderer {
 	 *             in case of IO problems with the element output
 	 */
 	void item(HTMLElement td, ITableItem item, Resources resources,
-			  ReportOutputFolder base) throws IOException;
+			ReportOutputFolder base) throws IOException;
 
 	/**
 	 * Returns the comparator to sort this table column.
