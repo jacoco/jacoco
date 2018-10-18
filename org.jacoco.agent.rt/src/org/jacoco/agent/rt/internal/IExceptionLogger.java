@@ -32,6 +32,6 @@ public interface IExceptionLogger {
 	 * @param ex
 	 *            exception to log
 	 */
-	public void logExeption(Exception ex);
+	void logExeption(Exception ex);
 
 }

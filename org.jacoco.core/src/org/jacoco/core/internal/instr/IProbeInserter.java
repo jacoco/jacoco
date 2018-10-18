@@ -23,6 +23,6 @@ interface IProbeInserter {
 	 * @param id
 	 *            id of the probe to insert
 	 */
-	public void insertProbe(final int id);
+	void insertProbe(int id);
 
 }

@@ -17,7 +17,7 @@ package org.jacoco.core.test.perf;
 public interface IPerfOutput {
 
 	/** Indicator for no reference time given */
-	public static final long NO_REFERENCE = Long.MIN_VALUE;
+	long NO_REFERENCE = Long.MIN_VALUE;
 
 	/**
 	 * Reports the result of a time measurement with a optional reference time

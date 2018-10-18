@@ -33,8 +33,7 @@ public interface IAgentOutput {
 	 * @throws Exception
 	 *             in case startup fails
 	 */
-	public void startup(final AgentOptions options, final RuntimeData data)
-			throws Exception;
+	void startup(AgentOptions options, RuntimeData data) throws Exception;
 
 	/**
 	 * Shutdown the agent controller and clean up any resources it has created.
@@ -42,7 +41,7 @@ public interface IAgentOutput {
 	 * @throws Exception
 	 *             in case shutdown fails
 	 */
-	public void shutdown() throws Exception;
+	void shutdown() throws Exception;
 
 	/**
 	 * Write all execution data in the runtime to a location determined by the
@@ -53,6 +52,6 @@ public interface IAgentOutput {
 	 * @throws IOException
 	 *             in case writing fails
 	 */
-	public void writeExecutionData(boolean reset) throws IOException;
+	void writeExecutionData(boolean reset) throws IOException;
 
 }

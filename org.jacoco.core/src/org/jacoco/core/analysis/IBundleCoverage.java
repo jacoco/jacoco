@@ -25,6 +25,6 @@ public interface IBundleCoverage extends ICoverageNode {
 	 * 
 	 * @return all packages
 	 */
-	public Collection<IPackageCoverage> getPackages();
+	Collection<IPackageCoverage> getPackages();
 
 }

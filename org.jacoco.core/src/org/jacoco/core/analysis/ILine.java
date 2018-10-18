@@ -22,14 +22,14 @@ public interface ILine {
 	 * 
 	 * @return instruction counter
 	 */
-	public ICounter getInstructionCounter();
+	ICounter getInstructionCounter();
 
 	/**
 	 * Returns the branches counter for this line.
 	 * 
 	 * @return branches counter
 	 */
-	public ICounter getBranchCounter();
+	ICounter getBranchCounter();
 
 	/**
 	 * Returns the coverage status of this line, calculated from the
@@ -42,6 +42,6 @@ public interface ILine {
 	 * 
 	 * @return status of this line
 	 */
-	public int getStatus();
+	int getStatus();
 
 }

@@ -38,7 +38,7 @@ public interface IReportVisitor extends IReportGroupVisitor {
 	 * @throws IOException
 	 *             in case of IO problems with the report writer
 	 */
-	public void visitInfo(List<SessionInfo> sessionInfos,
+	void visitInfo(List<SessionInfo> sessionInfos,
 			Collection<ExecutionData> executionData) throws IOException;
 
 	/**
@@ -47,6 +47,6 @@ public interface IReportVisitor extends IReportGroupVisitor {
 	 * @throws IOException
 	 *             in case of IO problems with the report writer
 	 */
-	public void visitEnd() throws IOException;
+	void visitEnd() throws IOException;
 
 }

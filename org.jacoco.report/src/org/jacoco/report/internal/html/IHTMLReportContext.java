@@ -28,55 +28,55 @@ public interface IHTMLReportContext {
 	 * 
 	 * @return static resources
 	 */
-	public Resources getResources();
+	Resources getResources();
 
 	/**
 	 * Returns the language names call-back used in this report.
 	 * 
 	 * @return language names
 	 */
-	public ILanguageNames getLanguageNames();
+	ILanguageNames getLanguageNames();
 
 	/**
 	 * Returns a table for rendering coverage nodes.
 	 * 
 	 * @return table for rendering
 	 */
-	public Table getTable();
+	Table getTable();
 
 	/**
 	 * Returns a string of textual information to include in every page footer.
 	 * 
 	 * @return footer text or empty string
 	 */
-	public String getFooterText();
+	String getFooterText();
 
 	/**
 	 * Returns the link to the sessions page.
 	 * 
 	 * @return sessions page link
 	 */
-	public ILinkable getSessionsPage();
+	ILinkable getSessionsPage();
 
 	/**
 	 * Returns the encoding of the generated HTML documents.
 	 * 
 	 * @return encoding for generated HTML documents
 	 */
-	public String getOutputEncoding();
+	String getOutputEncoding();
 
 	/**
 	 * Returns the service for index updates.
 	 * 
 	 * @return sevice for indes updates
 	 */
-	public IIndexUpdate getIndexUpdate();
+	IIndexUpdate getIndexUpdate();
 
 	/**
 	 * Returns the locale used to format numbers and dates.
 	 * 
 	 * @return locale for numbers and dates
 	 */
-	public Locale getLocale();
+	Locale getLocale();
 
 }

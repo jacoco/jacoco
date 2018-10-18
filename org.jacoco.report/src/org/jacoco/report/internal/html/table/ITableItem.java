@@ -24,6 +24,6 @@ public interface ITableItem extends ILinkable {
 	 * 
 	 * @return node data
 	 */
-	public ICoverageNode getNode();
+	ICoverageNode getNode();
 
 }
