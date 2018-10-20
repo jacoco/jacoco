@@ -11,6 +11,7 @@
  *******************************************************************************/
 package org.jacoco.core.analysis;
 
+import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
@@ -36,7 +37,6 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
 import org.jacoco.core.data.ExecutionDataStore;
-import org.jacoco.core.internal.BytecodeVersion;
 import org.jacoco.core.internal.data.CRC64;
 import org.jacoco.core.test.TargetLoader;
 import org.junit.Before;
@@ -90,12 +90,16 @@ public class AnalyzerTest {
 	}
 
 	@Test
-	public void should_analyze_java10_class() throws Exception {
-		final byte[] bytes = createClass(BytecodeVersion.V10);
+	public void should_not_modify_class_bytes_to_support_next_version()
+			throws Exception {
+		final byte[] originalBytes = createClass(Opcodes.V12);
+		final byte[] bytes = new byte[originalBytes.length];
+		System.arraycopy(originalBytes, 0, bytes, 0, originalBytes.length);
 		final long expectedClassId = CRC64.classId(bytes);
 
 		analyzer.analyzeClass(bytes, "");
 
+		assertArrayEquals(originalBytes, bytes);
 		assertEquals(expectedClassId, classes.get("Foo").getId());
 	}
 

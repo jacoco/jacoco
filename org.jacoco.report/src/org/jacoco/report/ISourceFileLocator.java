@@ -31,7 +31,7 @@ public interface ISourceFileLocator {
 	 * @throws IOException
 	 *             in case of problems while opening the file
 	 */
-	public Reader getSourceFile(String packageName, String fileName)
+	Reader getSourceFile(String packageName, String fileName)
 			throws IOException;
 
 	/**
@@ -39,6 +39,6 @@ public interface ISourceFileLocator {
 	 * 
 	 * @return tab width as number of blanks
 	 */
-	public int getTabWidth();
+	int getTabWidth();
 
 }

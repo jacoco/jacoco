@@ -18,7 +18,7 @@ package org.jacoco.core.analysis;
 public interface ISourceNode extends ICoverageNode {
 
 	/** Place holder for unknown lines (no debug information) */
-	public static int UNKNOWN_LINE = -1;
+	int UNKNOWN_LINE = -1;
 
 	/**
 	 * The number of the first line coverage information is available for. If no
@@ -26,7 +26,7 @@ public interface ISourceNode extends ICoverageNode {
 	 * 
 	 * @return number of the first line or {@link #UNKNOWN_LINE}
 	 */
-	public int getFirstLine();
+	int getFirstLine();
 
 	/**
 	 * The number of the last line coverage information is available for. If no
@@ -34,7 +34,7 @@ public interface ISourceNode extends ICoverageNode {
 	 * 
 	 * @return number of the last line or {@link #UNKNOWN_LINE}
 	 */
-	public int getLastLine();
+	int getLastLine();
 
 	/**
 	 * Returns the line information for given line.
@@ -43,6 +43,6 @@ public interface ISourceNode extends ICoverageNode {
 	 *            line number of interest
 	 * @return line information
 	 */
-	public ILine getLine(int nr);
+	ILine getLine(int nr);
 
 }

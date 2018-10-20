@@ -24,6 +24,6 @@ public interface IFrame {
 	 * @param mv
 	 *            method visitor to emit frame event to
 	 */
-	void accept(final MethodVisitor mv);
+	void accept(MethodVisitor mv);
 
 }

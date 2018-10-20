@@ -21,7 +21,6 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-import org.jacoco.core.internal.BytecodeVersion;
 import org.jacoco.core.test.TargetLoader;
 import org.jacoco.core.test.validation.Source.Line;
 import org.jacoco.core.test.validation.ValidationTestBase;
@@ -194,7 +193,6 @@ public class FinallyTest extends ValidationTestBase {
 		final Set<String> gotoTags = new HashSet<String>();
 
 		byte[] b = TargetLoader.getClassDataAsBytes(FinallyTarget.class);
-		b = BytecodeVersion.downgradeIfNeeded(BytecodeVersion.get(b), b);
 
 		final ClassNode classNode = new ClassNode();
 		new ClassReader(b).accept(classNode, 0);

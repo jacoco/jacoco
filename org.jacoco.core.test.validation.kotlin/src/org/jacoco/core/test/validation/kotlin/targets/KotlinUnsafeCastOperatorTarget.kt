@@ -6,24 +6,23 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *
  * Contributors:
- *    Marc R. Hoffmann - initial API and implementation
- *    
+ *    Evgeny Mandrikov - initial API and implementation
+ *
  *******************************************************************************/
-package org.jacoco.core.data;
+package org.jacoco.core.test.validation.kotlin.targets
 
 /**
- * Interface for data output of collected execution data. This interface is
- * meant to be implemented by parties that want to retrieve data from the
- * coverage runtime.
+ * This test target is "unsafe" cast operator.
  */
-public interface IExecutionDataVisitor {
+object KotlinUnsafeCastOperatorTarget {
 
-	/**
-	 * Provides execution data for a class.
-	 * 
-	 * @param data
-	 *            execution data for a class
-	 */
-	void visitClassExecution(ExecutionData data);
+    private fun nullable(): String? {
+        return ""
+    }
+
+    @JvmStatic
+    fun main(args: Array<String>) {
+        nullable() as String // assertFullyCovered()
+    }
 
 }

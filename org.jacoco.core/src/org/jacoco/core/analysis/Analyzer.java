@@ -22,7 +22,6 @@ import java.util.zip.ZipInputStream;
 
 import org.jacoco.core.data.ExecutionData;
 import org.jacoco.core.data.ExecutionDataStore;
-import org.jacoco.core.internal.BytecodeVersion;
 import org.jacoco.core.internal.ContentTypeDetector;
 import org.jacoco.core.internal.InputStreams;
 import org.jacoco.core.internal.Pack200Streams;
@@ -113,9 +112,7 @@ public class Analyzer {
 
 	private void analyzeClass(final byte[] source) {
 		final long classId = CRC64.classId(source);
-		final int version = BytecodeVersion.get(source);
-		final byte[] b = BytecodeVersion.downgradeIfNeeded(version, source);
-		final ClassReader reader = new ClassReader(b);
+		final ClassReader reader = new ClassReader(source);
 		if ((reader.getAccess() & Opcodes.ACC_SYNTHETIC) != 0) {
 			return;
 		}

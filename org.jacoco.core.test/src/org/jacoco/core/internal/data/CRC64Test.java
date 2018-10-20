@@ -16,7 +16,6 @@ import static org.junit.Assert.assertEquals;
 import java.io.UnsupportedEncodingException;
 
 import org.jacoco.core.data.ExecutionDataWriter;
-import org.jacoco.core.internal.BytecodeVersion;
 import org.junit.Test;
 import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.Opcodes;
@@ -29,7 +28,7 @@ public class CRC64Test {
 	@Test
 	public void except_java_9_checksums_should_be_different_for_different_bytecode_versions() {
 		assertEquals(0x589E9080A572741EL,
-				CRC64.classId(createClass(BytecodeVersion.V10)));
+				CRC64.classId(createClass(Opcodes.V10)));
 
 		// should remove workaround for Java 9
 		// during change of exec file version

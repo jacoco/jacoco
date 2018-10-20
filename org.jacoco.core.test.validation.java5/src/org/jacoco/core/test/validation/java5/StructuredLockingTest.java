@@ -20,7 +20,6 @@ import java.util.List;
 import java.util.Set;
 
 import org.jacoco.core.instr.Instrumenter;
-import org.jacoco.core.internal.BytecodeVersion;
 import org.jacoco.core.runtime.IRuntime;
 import org.jacoco.core.runtime.SystemPropertiesRuntime;
 import org.jacoco.core.test.TargetLoader;
@@ -64,9 +63,6 @@ public class StructuredLockingTest {
 		IRuntime runtime = new SystemPropertiesRuntime();
 		Instrumenter instrumenter = new Instrumenter(runtime);
 		byte[] instrumented = instrumenter.instrument(source, "TestTarget");
-
-		final int version = BytecodeVersion.get(instrumented);
-		instrumented = BytecodeVersion.downgradeIfNeeded(version, instrumented);
 
 		ClassNode cn = new ClassNode();
 		new ClassReader(instrumented).accept(cn, 0);

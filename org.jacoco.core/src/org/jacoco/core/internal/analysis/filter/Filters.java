@@ -35,6 +35,7 @@ public final class Filters implements IFilter {
 			new EnumEmptyConstructorFilter(), new AnnotationGeneratedFilter(),
 			new KotlinGeneratedFilter(), new KotlinLateinitFilter(),
 			new KotlinWhenFilter(), new KotlinWhenStringFilter(),
+			new KotlinUnsafeCastOperatorFilter(),
 			new AspectjFilter());
 
 	private final IFilter[] filters;

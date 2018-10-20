@@ -35,7 +35,6 @@ import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
 
 import org.jacoco.core.analysis.AnalyzerTest;
-import org.jacoco.core.internal.BytecodeVersion;
 import org.jacoco.core.internal.data.CRC64;
 import org.jacoco.core.internal.instr.InstrSupport;
 import org.jacoco.core.runtime.IExecutionDataAccessorGenerator;
@@ -97,17 +96,16 @@ public class InstrumenterTest {
 	}
 
 	@Test
-	public void should_instrument_java10_class() throws Exception {
-		final byte[] originalBytes = createClass(BytecodeVersion.V10);
+	public void should_not_modify_class_bytes_to_support_next_version()
+			throws Exception {
+		final byte[] originalBytes = createClass(Opcodes.V12);
 		final byte[] bytes = new byte[originalBytes.length];
 		System.arraycopy(originalBytes, 0, bytes, 0, originalBytes.length);
 		final long expectedClassId = CRC64.classId(bytes);
 
-		final byte[] instrumentedBytes = instrumenter.instrument(bytes, "");
+		instrumenter.instrument(bytes, "");
 
 		assertArrayEquals(originalBytes, bytes);
-		assertEquals(BytecodeVersion.V10,
-				BytecodeVersion.get(instrumentedBytes));
 		assertEquals(expectedClassId, accessorGenerator.classId);
 	}
 

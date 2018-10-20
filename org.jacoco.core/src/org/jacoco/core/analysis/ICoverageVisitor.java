@@ -23,6 +23,6 @@ public interface ICoverageVisitor {
 	 * @param coverage
 	 *            coverage data for a class
 	 */
-	public void visitCoverage(IClassCoverage coverage);
+	void visitCoverage(IClassCoverage coverage);
 
 }

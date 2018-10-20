@@ -157,6 +157,20 @@ public final class InstrSupport {
 	 */
 	static final int CLINIT_ACC = Opcodes.ACC_SYNTHETIC | Opcodes.ACC_STATIC;
 
+	private static final int MAJOR_VERSION_INDEX = 6;
+
+	/**
+	 * Gets major of bytecode version number from given bytes of class.
+	 *
+	 * @param b
+	 *            bytes of class
+	 * @return version of bytecode
+	 */
+	public static int getVersionMajor(final byte[] b) {
+		return (short) (((b[MAJOR_VERSION_INDEX] & 0xFF) << 8)
+				| (b[MAJOR_VERSION_INDEX + 1] & 0xFF));
+	}
+
 	/**
 	 * Determines whether the given class file version requires stackmap frames.
 	 * 
