@@ -129,6 +129,9 @@ public class MethodAnalyzerTest implements IProbeIdGenerator {
 		probes[0] = true;
 		runMethodAnalzer(NOP_FILTER);
 
+		assertEquals(1002, result.getFirstLine());
+		assertEquals(1002, result.getLastLine());
+
 		assertLine(1001, 0, 0, 0, 0);
 		assertLine(1002, 0, 1, 0, 0);
 	}

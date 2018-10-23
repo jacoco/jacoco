@@ -52,10 +52,6 @@ public class MethodAnalyzer extends MethodProbesVisitor
 
 	private int currentLine = ISourceNode.UNKNOWN_LINE;
 
-	private int firstLine = ISourceNode.UNKNOWN_LINE;
-
-	private int lastLine = ISourceNode.UNKNOWN_LINE;
-
 	// Due to ASM issue #315745 there can be more than one label per instruction
 	private final List<Label> currentLabel = new ArrayList<Label>(2);
 
@@ -191,12 +187,6 @@ public class MethodAnalyzer extends MethodProbesVisitor
 	@Override
 	public void visitLineNumber(final int line, final Label start) {
 		currentLine = line;
-		if (firstLine > line || lastLine == ISourceNode.UNKNOWN_LINE) {
-			firstLine = line;
-		}
-		if (lastLine < line) {
-			lastLine = line;
-		}
 	}
 
 	private void visitInsn() {
@@ -380,6 +370,9 @@ public class MethodAnalyzer extends MethodProbesVisitor
 			}
 		}
 
+		int firstLine = ISourceNode.UNKNOWN_LINE;
+		int lastLine = ISourceNode.UNKNOWN_LINE;
+
 		// Merge from representative instruction, because result of merge might
 		// be used to compute coverage of instructions with replaced branches:
 		for (final Instruction i : instructions) {
@@ -387,6 +380,16 @@ public class MethodAnalyzer extends MethodProbesVisitor
 			final AbstractInsnNode r = findRepresentative(m);
 			if (r != m) {
 				i.merge(nodeToInstruction.get(r));
+			}
+
+			if (!ignored.contains(m)) {
+				final int line = i.getLine();
+				if (firstLine > line || lastLine == ISourceNode.UNKNOWN_LINE) {
+					firstLine = line;
+				}
+				if (lastLine < line) {
+					lastLine = line;
+				}
 			}
 		}
 
