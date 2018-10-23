@@ -27,7 +27,7 @@ public interface IClassCoverage extends ISourceNode {
 	 * 
 	 * @return class identifier
 	 */
-	public long getId();
+	long getId();
 
 	/**
 	 * Returns if the the analyzed class does match the execution data provided.
@@ -37,14 +37,14 @@ public interface IClassCoverage extends ISourceNode {
 	 * @return <code>true</code> if this class does not match to the provided
 	 *         execution data.
 	 */
-	public boolean isNoMatch();
+	boolean isNoMatch();
 
 	/**
 	 * Returns the VM signature of the class.
 	 * 
 	 * @return VM signature of the class (may be <code>null</code>)
 	 */
-	public String getSignature();
+	String getSignature();
 
 	/**
 	 * Returns the VM name of the superclass.
@@ -52,34 +52,34 @@ public interface IClassCoverage extends ISourceNode {
 	 * @return VM name of the super class (may be <code>null</code>, i.e.
 	 *         <code>java/lang/Object</code>)
 	 */
-	public String getSuperName();
+	String getSuperName();
 
 	/**
 	 * Returns the VM names of implemented/extended interfaces.
 	 * 
 	 * @return VM names of implemented/extended interfaces
 	 */
-	public String[] getInterfaceNames();
+	String[] getInterfaceNames();
 
 	/**
 	 * Returns the VM name of the package this class belongs to.
 	 * 
 	 * @return VM name of the package
 	 */
-	public String getPackageName();
+	String getPackageName();
 
 	/**
 	 * Returns the optional name of the corresponding source file.
 	 * 
 	 * @return name of the corresponding source file
 	 */
-	public String getSourceFileName();
+	String getSourceFileName();
 
 	/**
 	 * Returns the methods included in this class.
 	 * 
 	 * @return methods of this class
 	 */
-	public Collection<IMethodCoverage> getMethods();
+	Collection<IMethodCoverage> getMethods();
 
 }

@@ -26,12 +26,12 @@ public interface IRuntime extends IExecutionDataAccessorGenerator {
 	 * @throws Exception
 	 *             any internal problem during startup
 	 */
-	public void startup(RuntimeData data) throws Exception;
+	void startup(RuntimeData data) throws Exception;
 
 	/**
 	 * Allows the coverage runtime to cleanup internals. This class should be
 	 * called when classes instrumented for this runtime are not used any more.
 	 */
-	public void shutdown();
+	void shutdown();
 
 }

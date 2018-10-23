@@ -27,6 +27,6 @@ public interface IIndexUpdate {
 	 * @param classid
 	 *            identifier of the class
 	 */
-	public void addClass(ILinkable link, long classid);
+	void addClass(ILinkable link, long classid);
 
 }

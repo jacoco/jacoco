@@ -28,13 +28,13 @@ public interface IPackageCoverage extends ICoverageNode {
 	 * 
 	 * @return all classes
 	 */
-	public Collection<IClassCoverage> getClasses();
+	Collection<IClassCoverage> getClasses();
 
 	/**
 	 * Returns all source files in this package.
 	 * 
 	 * @return all source files
 	 */
-	public Collection<ISourceFileCoverage> getSourceFiles();
+	Collection<ISourceFileCoverage> getSourceFiles();
 
 }

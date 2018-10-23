@@ -179,7 +179,7 @@ public class CoverageTask extends AbstractCoverageTask implements TaskContainer 
 		 * @return <code>true</code> if this enhancer is capable of enhancing
 		 *         the requested task type
 		 */
-		public boolean supportsTask(String taskname);
+		boolean supportsTask(String taskname);
 
 		/**
 		 * Attempt to enhance the supplied task with coverage information. This
@@ -192,6 +192,6 @@ public class CoverageTask extends AbstractCoverageTask implements TaskContainer 
 		 *             Thrown if this enhancer can handle this type of task, but
 		 *             this instance can not be enhanced for some reason.
 		 */
-		public void enhanceTask(Task task) throws BuildException;
+		void enhanceTask(Task task) throws BuildException;
 	}
 }

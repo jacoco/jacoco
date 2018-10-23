@@ -20,7 +20,7 @@ public interface ICounter {
 	/**
 	 * Different values provided by a counter.
 	 */
-	public enum CounterValue {
+	enum CounterValue {
 
 		/** Total number of items */
 		TOTALCOUNT,
@@ -41,22 +41,22 @@ public interface ICounter {
 	/**
 	 * Status flag for no items (value is 0x00).
 	 */
-	public static final int EMPTY = 0x00;
+	int EMPTY = 0x00;
 
 	/**
 	 * Status flag when all items are not covered (value is 0x01).
 	 */
-	public static final int NOT_COVERED = 0x01;
+	int NOT_COVERED = 0x01;
 
 	/**
 	 * Status flag when all items are covered (value is 0x02).
 	 */
-	public static final int FULLY_COVERED = 0x02;
+	int FULLY_COVERED = 0x02;
 
 	/**
 	 * Status flag when items are partly covered (value is 0x03).
 	 */
-	public static final int PARTLY_COVERED = NOT_COVERED | FULLY_COVERED;
+	int PARTLY_COVERED = NOT_COVERED | FULLY_COVERED;
 
 	/**
 	 * Returns the counter value of the given type.
@@ -65,28 +65,28 @@ public interface ICounter {
 	 *            value type to return
 	 * @return counter value
 	 */
-	public double getValue(CounterValue value);
+	double getValue(CounterValue value);
 
 	/**
 	 * Returns the total count of items.
 	 * 
 	 * @return total count of items
 	 */
-	public int getTotalCount();
+	int getTotalCount();
 
 	/**
 	 * Returns the count of covered items.
 	 * 
 	 * @return count of covered items
 	 */
-	public int getCoveredCount();
+	int getCoveredCount();
 
 	/**
 	 * Returns the count of missed items.
 	 * 
 	 * @return count of missed items
 	 */
-	public int getMissedCount();
+	int getMissedCount();
 
 	/**
 	 * Calculates the ratio of covered to total count items. If total count
@@ -94,7 +94,7 @@ public interface ICounter {
 	 * 
 	 * @return ratio of covered to total count items
 	 */
-	public double getCoveredRatio();
+	double getCoveredRatio();
 
 	/**
 	 * Calculates the ratio of missed to total count items. If total count items
@@ -102,7 +102,7 @@ public interface ICounter {
 	 * 
 	 * @return ratio of missed to total count items
 	 */
-	public double getMissedRatio();
+	double getMissedRatio();
 
 	/**
 	 * Returns the coverage status of this counter.
@@ -114,6 +114,6 @@ public interface ICounter {
 	 * 
 	 * @return status of this line
 	 */
-	public int getStatus();
+	int getStatus();
 
 }

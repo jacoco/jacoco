@@ -23,7 +23,7 @@ public interface ILanguageNames {
 	 *            vm name of a package
 	 * @return language specific notation for the package
 	 */
-	public String getPackageName(String vmname);
+	String getPackageName(String vmname);
 
 	/**
 	 * Calculates the language specific name of a class.
@@ -39,8 +39,8 @@ public interface ILanguageNames {
 	 *            vm names of interfaces of the class (may be <code>null</code>)
 	 * @return language specific notation of the class
 	 */
-	public String getClassName(String vmname, String vmsignature,
-			String vmsuperclass, String[] vminterfaces);
+	String getClassName(String vmname, String vmsignature, String vmsuperclass,
+			String[] vminterfaces);
 
 	/**
 	 * Calculates the language specific qualified name of a class.
@@ -49,7 +49,7 @@ public interface ILanguageNames {
 	 *            vm name of a class
 	 * @return language specific qualified notation of the class
 	 */
-	public String getQualifiedClassName(String vmname);
+	String getQualifiedClassName(String vmname);
 
 	/**
 	 * Calculates the language specific name of a method.
@@ -64,8 +64,8 @@ public interface ILanguageNames {
 	 *            vm signature of the method (may be <code>null</code>)
 	 * @return language specific notation for the method
 	 */
-	public String getMethodName(String vmclassname, String vmmethodname,
-			String vmdesc, String vmsignature);
+	String getMethodName(String vmclassname, String vmmethodname, String vmdesc,
+			String vmsignature);
 
 	/**
 	 * Calculates the language specific fully qualified name of a method.
@@ -80,7 +80,7 @@ public interface ILanguageNames {
 	 *            vm signature of the method (may be <code>null</code>)
 	 * @return language specific notation for the method
 	 */
-	public String getQualifiedMethodName(String vmclassname,
-			String vmmethodname, String vmdesc, String vmsignature);
+	String getQualifiedMethodName(String vmclassname, String vmmethodname,
+			String vmdesc, String vmsignature);
 
 }

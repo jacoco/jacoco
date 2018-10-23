@@ -36,7 +36,7 @@ public interface IColumnRenderer {
 	 *            the summary of all coverage data items in the table
 	 * @return <code>true</code> if the column should be visible
 	 */
-	public boolean init(List<? extends ITableItem> items, ICoverageNode total);
+	boolean init(List<? extends ITableItem> items, ICoverageNode total);
 
 	/**
 	 * Renders the footer for this column.
@@ -52,8 +52,8 @@ public interface IColumnRenderer {
 	 * @throws IOException
 	 *             in case of IO problems with the element output
 	 */
-	public void footer(HTMLElement td, ICoverageNode total,
-			Resources resources, ReportOutputFolder base) throws IOException;
+	void footer(HTMLElement td, ICoverageNode total, Resources resources,
+			ReportOutputFolder base) throws IOException;
 
 	/**
 	 * Renders a single item in this column.
@@ -69,7 +69,7 @@ public interface IColumnRenderer {
 	 * @throws IOException
 	 *             in case of IO problems with the element output
 	 */
-	public void item(HTMLElement td, ITableItem item, Resources resources,
+	void item(HTMLElement td, ITableItem item, Resources resources,
 			ReportOutputFolder base) throws IOException;
 
 	/**
@@ -77,6 +77,6 @@ public interface IColumnRenderer {
 	 * 
 	 * @return comparator for this column
 	 */
-	public Comparator<ITableItem> getComparator();
+	Comparator<ITableItem> getComparator();
 
 }

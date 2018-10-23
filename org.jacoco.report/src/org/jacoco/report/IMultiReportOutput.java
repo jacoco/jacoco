@@ -29,7 +29,7 @@ public interface IMultiReportOutput {
 	 * @throws IOException
 	 *             if the creation fails
 	 */
-	public OutputStream createFile(String path) throws IOException;
+	OutputStream createFile(String path) throws IOException;
 
 	/**
 	 * Closes the underlying resource container.
@@ -37,6 +37,6 @@ public interface IMultiReportOutput {
 	 * @throws IOException
 	 *             if closing fails
 	 */
-	public void close() throws IOException;
+	void close() throws IOException;
 
 }
