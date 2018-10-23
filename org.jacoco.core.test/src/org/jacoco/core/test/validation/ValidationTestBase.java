@@ -12,6 +12,7 @@
 package org.jacoco.core.test.validation;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 import java.io.IOException;
 import java.lang.reflect.Method;
@@ -104,6 +105,11 @@ public abstract class ValidationTestBase {
 	 */
 	@Test
 	public void execute_assertions_in_comments() throws IOException {
+		assertTrue(String.format(
+				"Last line in coverage data (%d) should be less or equal to number of lines in source file (%d)",
+				source.getCoverage().getLastLine(), source.getLines().size()),
+				source.getCoverage().getLastLine() <= source.getLines().size());
+
 		for (Line line : source.getLines()) {
 			String exec = line.getComment();
 			if (exec != null) {
