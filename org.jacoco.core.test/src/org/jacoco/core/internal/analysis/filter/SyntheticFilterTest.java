@@ -56,4 +56,18 @@ public class SyntheticFilterTest extends FilterTestBase {
 		assertIgnored();
 	}
 
+	@Test
+	public void should_not_filter_default_arguments_in_kotlin_classes() {
+		final MethodNode m = new MethodNode(InstrSupport.ASM_API_VERSION,
+				Opcodes.ACC_SYNTHETIC | Opcodes.ACC_BRIDGE, "example$default",
+				"(LTarget;Ljava/lang/String;Ijava/lang/Object;)V", null, null);
+		context.classAnnotations
+				.add(KotlinGeneratedFilter.KOTLIN_METADATA_DESC);
+		m.visitInsn(Opcodes.NOP);
+
+		filter.filter(m, context, output);
+
+		assertIgnored();
+	}
+
 }
