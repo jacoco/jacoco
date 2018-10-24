@@ -21,11 +21,22 @@ public final class SyntheticFilter implements IFilter {
 
 	public void filter(final MethodNode methodNode,
 			final IFilterContext context, final IFilterOutput output) {
-		if ((methodNode.access & Opcodes.ACC_SYNTHETIC) != 0
-				&& !methodNode.name.startsWith("lambda$")) {
-			output.ignore(methodNode.instructions.getFirst(),
-					methodNode.instructions.getLast());
+		if ((methodNode.access & Opcodes.ACC_SYNTHETIC) == 0) {
+			return;
 		}
+
+		if (methodNode.name.startsWith("lambda$")) {
+			return;
+		}
+
+		if (methodNode.name.endsWith("$default")
+				&& context.getClassAnnotations()
+						.contains(KotlinGeneratedFilter.KOTLIN_METADATA_DESC)) {
+			return;
+		}
+
+		output.ignore(methodNode.instructions.getFirst(),
+				methodNode.instructions.getLast());
 	}
 
 }
