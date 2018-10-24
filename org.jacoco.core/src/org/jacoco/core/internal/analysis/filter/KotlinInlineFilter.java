@@ -26,6 +26,8 @@ import org.objectweb.asm.tree.MethodNode;
  */
 public final class KotlinInlineFilter implements IFilter {
 
+	private int firstGeneratedLineNumber = -1;
+
 	public void filter(final MethodNode methodNode,
 			final IFilterContext context, final IFilterOutput output) {
 		if (context.getSourceDebugExtension() == null) {
@@ -36,20 +38,24 @@ public final class KotlinInlineFilter implements IFilter {
 			return;
 		}
 
-		final int max = parseSMAP(context.getSourceDebugExtension());
+		if (firstGeneratedLineNumber == -1) {
+			firstGeneratedLineNumber = getFirstGeneratedLineNumber(
+					context.getSourceDebugExtension());
+		}
+
 		int line = 0;
 		for (AbstractInsnNode i = methodNode.instructions
 				.getFirst(); i != null; i = i.getNext()) {
 			if (AbstractInsnNode.LINE == i.getType()) {
 				line = ((LineNumberNode) i).line;
 			}
-			if (line >= max) {
+			if (line >= firstGeneratedLineNumber) {
 				output.ignore(i, i);
 			}
 		}
 	}
 
-	private static int parseSMAP(final String smap) {
+	private static int getFirstGeneratedLineNumber(final String smap) {
 		try {
 			final BufferedReader br = new BufferedReader(
 					new StringReader(smap));
@@ -73,7 +79,19 @@ public final class KotlinInlineFilter implements IFilter {
 			readLine(br, "*F");
 			while (!"*L".equals(br.readLine())) {
 			}
-			return parseLineSection(br);
+			// LineSection
+			int min = Integer.MAX_VALUE;
+			String line;
+			while (!"*E".equals(line = br.readLine())) {
+				final Matcher m = LINE_INFO_PATTERN.matcher(line);
+				if (!m.matches()) {
+					throw new AssertionError();
+				}
+				final int outputStartLine = Integer
+						.parseInt(m.group(4).substring(1));
+				min = Math.min(outputStartLine, min);
+			}
+			return min;
 		} catch (IOException e) {
 			throw new AssertionError(e);
 		}
@@ -84,24 +102,6 @@ public final class KotlinInlineFilter implements IFilter {
 		if (!expected.equals(br.readLine())) {
 			throw new AssertionError();
 		}
-	}
-
-	private static int parseLineSection(final BufferedReader br)
-			throws IOException {
-		int min = Integer.MAX_VALUE;
-		String line;
-		while (!"*E".equals(line = br.readLine())) {
-			min = Math.min(parseLineInfo(line), min);
-		}
-		return min;
-	}
-
-	private static int parseLineInfo(final String input) {
-		final Matcher m = LINE_INFO_PATTERN.matcher(input);
-		if (!m.matches()) {
-			throw new AssertionError();
-		}
-		return Integer.parseInt(m.group(4).substring(1));
 	}
 
 	private static final Pattern LINE_INFO_PATTERN = Pattern.compile("" //

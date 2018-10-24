@@ -16,6 +16,7 @@ import java.util.Set;
 
 import org.jacoco.core.analysis.IMethodCoverage;
 import org.jacoco.core.internal.analysis.filter.Filters;
+import org.jacoco.core.internal.analysis.filter.IFilter;
 import org.jacoco.core.internal.analysis.filter.IFilterContext;
 import org.jacoco.core.internal.flow.ClassProbesVisitor;
 import org.jacoco.core.internal.flow.MethodProbesVisitor;
@@ -37,6 +38,8 @@ public class ClassAnalyzer extends ClassProbesVisitor
 
 	private String sourceDebugExtension;
 
+	private final IFilter filter;
+
 	/**
 	 * Creates a new analyzer that builds coverage data for a class.
 	 * 
@@ -52,6 +55,7 @@ public class ClassAnalyzer extends ClassProbesVisitor
 		this.coverage = coverage;
 		this.probes = probes;
 		this.stringPool = stringPool;
+		this.filter = Filters.all();
 	}
 
 	@Override
@@ -84,7 +88,7 @@ public class ClassAnalyzer extends ClassProbesVisitor
 		InstrSupport.assertNotInstrumented(name, coverage.getName());
 
 		return new MethodAnalyzer(stringPool.get(name), stringPool.get(desc),
-				stringPool.get(signature), probes, Filters.ALL, this) {
+				stringPool.get(signature), probes, filter, this) {
 			@Override
 			public void visitEnd() {
 				super.visitEnd();

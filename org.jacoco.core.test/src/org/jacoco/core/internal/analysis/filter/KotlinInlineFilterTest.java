@@ -90,6 +90,10 @@ public class KotlinInlineFilterTest extends FilterTestBase {
 		filter.filter(m, context, output);
 
 		assertIgnored(expectedRanges.toArray(new Range[0]));
+
+		// should not reparse:
+		context.sourceDebugExtension = "";
+		filter.filter(m, context, output);
 	}
 
 	@Test
