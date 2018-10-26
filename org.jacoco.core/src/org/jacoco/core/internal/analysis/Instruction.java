@@ -17,7 +17,7 @@ import java.util.Collection;
 import org.jacoco.core.analysis.ICounter;
 
 /**
- * Execution status of a single byte code instruction internally used for
+ * Execution status of a single bytecode instruction internally used for
  * coverage analysis. The execution status is recorded separately for each
  * outgoing branch. Each instructions has at least one branch, for example in
  * case of a simple sequence of instructions (by convention branch 0). Instances
@@ -28,9 +28,9 @@ import org.jacoco.core.analysis.ICounter;
  * For each bytecode instruction of a method a {@link Instruction} instance is
  * created. In correspondence with the CFG these instances are linked with each
  * other with the <code>addBranch()</code> methods. The executions status is
- * either be directly derived from a probe which has been inserted in the
- * execution flow ({@link #addBranch(boolean, int)}) or indirectly propagated
- * along the CFG edges ({@link #addBranch(Instruction, int)}).
+ * either directly derived from a probe which has been inserted in the execution
+ * flow ({@link #addBranch(boolean, int)}) or indirectly propagated along the
+ * CFG edges ({@link #addBranch(Instruction, int)}).
  * 
  * <h3>Step 2: Querying the Coverage Status</h3>
  * 

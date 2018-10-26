@@ -84,7 +84,7 @@ public class MethodCoverageCalculatorTest {
 		c.ignore(i1, i1);
 		c.calculate(coverage);
 
-		assertLine(1, 0, 1, 0, 0); // only one instruction nit filtered
+		assertLine(1, 0, 1, 0, 0); // only one instruction not filtered
 		assertLine(2, 0, 1, 0, 0);
 	}
 

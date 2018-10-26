@@ -110,7 +110,8 @@ class MethodCoverageCalculator implements IFilterOutput {
 
 			final Set<AbstractInsnNode> r = replacements.get(i.getKey());
 			if (r != null) {
-				final List<Instruction> newBranches = new ArrayList<Instruction>();
+				final List<Instruction> newBranches = new ArrayList<Instruction>(
+						r.size());
 				for (final AbstractInsnNode b : r) {
 					newBranches.add(instructions.get(b));
 				}
@@ -124,10 +125,9 @@ class MethodCoverageCalculator implements IFilterOutput {
 	}
 
 	private AbstractInsnNode findRepresentative(AbstractInsnNode i) {
-		AbstractInsnNode r = merged.get(i);
-		while (r != null) {
+		AbstractInsnNode r;
+		while ((r = merged.get(i)) != null) {
 			i = r;
-			r = merged.get(i);
 		}
 		return i;
 	}

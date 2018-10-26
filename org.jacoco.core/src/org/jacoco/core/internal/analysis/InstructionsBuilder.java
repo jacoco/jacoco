@@ -24,8 +24,8 @@ import org.objectweb.asm.tree.AbstractInsnNode;
 /**
  * Stateful builder for the {@link Instruction}s of a method. All instructions
  * of a method must be added in their original sequence along with additional
- * information like line numbers. Afterwards the the instructions can be
- * obtained with the <code>getInstructions()</code> method.
+ * information like line numbers. Afterwards the instructions can be obtained
+ * with the <code>getInstructions()</code> method.
  */
 class InstructionsBuilder {
 
@@ -58,7 +58,7 @@ class InstructionsBuilder {
 	private final List<Jump> jumps;
 
 	/**
-	 * Creates a new build instance which can be used to analyze a single
+	 * Creates a new builder instance which can be used to analyze a single
 	 * method.
 	 * 
 	 * @param probes
@@ -85,7 +85,7 @@ class InstructionsBuilder {
 	}
 
 	/**
-	 * Adds a label which applies to the subsequent added instruction. Due to
+	 * Adds a label which applies to the subsequently added instruction. Due to
 	 * ASM internals multiple {@link Label}s can be added to an instruction.
 	 */
 	void addLabel(final Label label) {
@@ -96,7 +96,7 @@ class InstructionsBuilder {
 	}
 
 	/**
-	 * Add a new instruction. Instructions are by default linked with the
+	 * Adds a new instruction. Instructions are by default linked with the
 	 * previous instruction unless specified otherwise.
 	 */
 	void addInstruction(final AbstractInsnNode node) {
@@ -116,9 +116,9 @@ class InstructionsBuilder {
 	}
 
 	/**
-	 * Declares that the next instruction will not be an successor of the
-	 * current instruction. This is the case with an unconditional jump or
-	 * technically when a probe was inserted before.
+	 * Declares that the next instruction will not be a successor of the current
+	 * instruction. This is the case with an unconditional jump or technically
+	 * when a probe was inserted before.
 	 */
 	void noSuccessor() {
 		currentInsn = null;
@@ -130,7 +130,7 @@ class InstructionsBuilder {
 	 * @param target
 	 *            jump target
 	 * @param branch
-	 *            unique branch number for the last instruction
+	 *            unique branch number
 	 */
 	void addJump(final Label target, final int branch) {
 		jumps.add(new Jump(currentInsn, target, branch));
@@ -153,7 +153,7 @@ class InstructionsBuilder {
 	 * Returns the status for all instructions of this method. This method must
 	 * be called exactly once after the instructions have been added.
 	 * 
-	 * @return map of ASM instruction node to corresponding {@link Instruction}
+	 * @return map of ASM instruction nodes to corresponding {@link Instruction}
 	 *         instances
 	 */
 	Map<AbstractInsnNode, Instruction> getInstructions() {

@@ -15,8 +15,6 @@ import static org.junit.Assert.assertEquals;
 
 import java.util.Arrays;
 
-import org.jacoco.core.internal.analysis.CounterImpl;
-import org.jacoco.core.internal.analysis.Instruction;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -41,7 +39,6 @@ public class InstructionTest {
 	public void new_instance_should_have_no_coverage_and_no_branches() {
 		assertEquals(CounterImpl.COUNTER_1_0,
 				instruction.getInstructionCounter());
-
 		assertEquals(CounterImpl.COUNTER_0_0, instruction.getBranchCounter());
 	}
 
@@ -55,7 +52,7 @@ public class InstructionTest {
 	@Test
 	public void addBranchWithInstruction_should_increment_branches_when_two_branches_are_added() {
 		instruction.addBranch(new Instruction(122), 0);
-		instruction.addBranch(new Instruction(123), 0);
+		instruction.addBranch(new Instruction(123), 1);
 
 		assertEquals(CounterImpl.getInstance(2, 0),
 				instruction.getBranchCounter());

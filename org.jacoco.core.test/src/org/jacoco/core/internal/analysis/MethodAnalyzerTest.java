@@ -884,9 +884,8 @@ public class MethodAnalyzerTest implements IProbeIdGenerator {
 
 	private void runMethodAnalzer(IFilter filter) {
 		LabelFlowAnalyzer.markLabels(method);
-		InstructionsBuilder icc = new InstructionsBuilder(
-				probes);
-		final MethodAnalyzer analyzer = new MethodAnalyzer(icc);
+		InstructionsBuilder builder = new InstructionsBuilder(probes);
+		final MethodAnalyzer analyzer = new MethodAnalyzer(builder);
 
 		final MethodProbesAdapter probesAdapter = new MethodProbesAdapter(
 				analyzer, this);
@@ -896,7 +895,7 @@ public class MethodAnalyzerTest implements IProbeIdGenerator {
 
 		MethodCoverageImpl mc = new MethodCoverageImpl("doit", "V()", null);
 		MethodCoverageCalculator mcc = new MethodCoverageCalculator(
-				icc.getInstructions());
+				builder.getInstructions());
 		filter.filter(method, new FilterContextMock(), mcc);
 		mcc.calculate(mc);
 		result = mc;

@@ -84,17 +84,16 @@ public class ClassAnalyzer extends ClassProbesVisitor
 
 		InstrSupport.assertNotInstrumented(name, coverage.getName());
 
-		final InstructionsBuilder icc = new InstructionsBuilder(
-				probes);
+		final InstructionsBuilder builder = new InstructionsBuilder(probes);
 
-		return new MethodAnalyzer(icc) {
+		return new MethodAnalyzer(builder) {
 
 			@Override
 			public void accept(final MethodNode methodNode,
 					final MethodVisitor methodVisitor) {
 				super.accept(methodNode, methodVisitor);
 				addMethodCoverage(stringPool.get(name), stringPool.get(desc),
-						stringPool.get(signature), icc, methodNode);
+						stringPool.get(signature), builder, methodNode);
 			}
 		};
 	}
