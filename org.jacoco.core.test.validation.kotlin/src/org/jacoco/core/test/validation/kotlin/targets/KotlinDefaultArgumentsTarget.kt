@@ -16,7 +16,7 @@ package org.jacoco.core.test.validation.kotlin.targets
  */
 object KotlinDefaultArgumentsTarget {
 
-    private fun f(a: String = "a", b: String = "b") { // assertFullyCovered(0, 2)
+    private fun f(a: String = "a", b: String = "b") { // assertFullyCovered(0, 0)
     }
 
     @JvmStatic

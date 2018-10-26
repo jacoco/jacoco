@@ -17,7 +17,12 @@ import org.objectweb.asm.Label;
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.tree.MethodNode;
 
+/**
+ * Unit test for {@link KotlinDefaultArgumentsFilter}.
+ */
 public class KotlinDefaultArgumentsFilterTest extends FilterTestBase {
+
+	private final IFilter filter = new KotlinDefaultArgumentsFilter();
 
 	private static MethodNode createMethod(final int access, final String name,
 			final String descriptor) {
@@ -48,6 +53,8 @@ public class KotlinDefaultArgumentsFilterTest extends FilterTestBase {
 		final MethodNode m = createMethod(Opcodes.ACC_SYNTHETIC,
 				"origin$default", "(LTarget;IILjava/lang/Object;)V");
 
+		filter.filter(m, context, output);
+
 		assertIgnored(new Range(m.instructions.get(3), m.instructions.get(3)));
 	}
 
@@ -56,6 +63,8 @@ public class KotlinDefaultArgumentsFilterTest extends FilterTestBase {
 		final MethodNode m = createMethod(Opcodes.ACC_SYNTHETIC,
 				"synthetic_without_suffix", "(LTarget;IILjava/lang/Object;)V");
 
+		filter.filter(m, context, output);
+
 		assertIgnored();
 	}
 
@@ -63,6 +72,8 @@ public class KotlinDefaultArgumentsFilterTest extends FilterTestBase {
 	public void should_not_filter_when_not_synthetic() {
 		final MethodNode m = createMethod(0, "not_synthetic$default",
 				"(LTarget;IILjava/lang/Object;)V");
+
+		filter.filter(m, context, output);
 
 		assertIgnored();
 	}
