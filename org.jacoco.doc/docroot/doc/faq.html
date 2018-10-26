@@ -99,28 +99,32 @@
   ids</a> for a detailed discussion.
 </p>
 
-<h3>Why are Java interface types not shown in the coverage reports?</h3>
+<h3>Why are abstract methods not shown in coverage reports?</h3>
 <p>
-  Java interface methods do not contain code, therefore code coverage cannot
-  be evaluated. Indeed code coverage is recorded for the implementation classes.
-  The same applies to abstract methods in abstract classes.
+  Abstract methods do not contain code, therefore code coverage cannot be
+  evaluated. Indeed code coverage is recorded for subclasses implementing these
+  methods. The same applies to non-default methods in interfaces.
 </p>
 
 <h3>Can I collect coverage information without stopping the JVM?</h3>
 <p>
-  Yes, there are two possible ways: The JaCoCo <a href="agent.html">agent</a>
+  Yes, there are three possible ways: The JaCoCo <a href="agent.html">agent</a>
   can be configured for remote control via TCP/IP sockets. This allows to
   collect execution data at any point in time from a running JVM. The
-  <a href="ant.html#dump"><code>dump</code> Ant task</a> or the
-  <a href="dump-mojo.html"><code>dump</code> Maven goal</a> can be used to
-  request dumps. The remote control feature also allows you to reset execution
-  data.
+  <a href="ant.html#dump"><code>dump</code> Ant task</a>, the
+  <a href="dump-mojo.html"><code>dump</code> Maven goal</a> and the
+  <a href="cli.html">command line interface</a> can be used to request dumps.
+  The remote control feature also allows you to reset execution data.
 </p>
 <p>
   Alternatively the JaCoCo <a href="agent.html">agent</a> can be configured to
   expose some functionality via JMX (<code>jmx=true</code>). The bean
   <code><a href="./api/org/jacoco/agent/rt/IAgent.html">org.jacoco:type=Runtime</a></code>
   provides operations to dump and reset execution data at any point in time.
+</p>
+<p>
+  In addition JaCoCo provides a <a href="./api/org/jacoco/agent/rt/RT.html">Java API</a>
+  to directly access the runtime within the JVM executing the tests.
 </p>
 
 <h3>My code uses reflection. Why does it fail when I execute it with JaCoCo?</h3>
