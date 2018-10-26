@@ -19,12 +19,18 @@ object KotlinDefaultArgumentsTarget {
     private fun f(a: String = "a", b: String = "b") { // assertFullyCovered(0, 0)
     }
 
+    private fun branch(a: Boolean, b: String = if (a) "a" else "b") { // assertFullyCovered(0, 2)
+    }
+
     @JvmStatic
     fun main(args: Array<String>) {
         f(a = "a")
         f(b = "b")
         /* next invocation doesn't use synthetic method: */
         f("a", "b")
+
+        branch(false)
+        branch(true)
     }
 
 }
