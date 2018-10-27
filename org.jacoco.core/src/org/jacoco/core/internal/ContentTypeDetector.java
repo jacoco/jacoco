@@ -85,9 +85,9 @@ public class ContentTypeDetector {
 			case Opcodes.V9:
 			case Opcodes.V10:
 			case Opcodes.V11:
-			case Opcodes.V11 | Opcodes.V_PREVIEW_EXPERIMENTAL:
+			case Opcodes.V11 | Opcodes.V_PREVIEW:
 			case Opcodes.V12:
-			case Opcodes.V12 | Opcodes.V_PREVIEW_EXPERIMENTAL:
+			case Opcodes.V12 | Opcodes.V_PREVIEW:
 				return CLASSFILE;
 			}
 		}
