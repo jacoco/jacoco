@@ -27,6 +27,23 @@ public interface IExceptionLogger {
 	};
 
 	/**
+	 * Implementation which dumps the exception message to System.err.
+	 */
+	IExceptionLogger NORMAL = new IExceptionLogger() {
+		public void logExeption(final Exception ex) {
+			System.err.println(ex.getMessage());
+		}
+	};
+
+	/**
+	 * Implementation which is silent
+	 */
+	IExceptionLogger SILENT = new IExceptionLogger() {
+		public void logExeption(final Exception ex) {
+		}
+	};
+
+	/**
 	 * Logs the given exception.
 	 * 
 	 * @param ex

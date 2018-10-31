@@ -188,10 +188,40 @@ public final class AgentOptions {
 	 */
 	public static final String JMX = "jmx";
 
+	/**
+	 * Specifies the amount of logging the agent should produce in case of an
+	 * error: <code>full</code>, <code>normal</code> or <code>silent</code>.
+	 */
+	public static final String LOG = "log";
+
+	/**
+	 * Possible values for {@link AgentOptions#LOG}.
+	 */
+	public static enum LogMode {
+
+		/**
+		 * Value for the {@link AgentOptions#LOG} parameter: Write the entire
+		 * stacktrace of an error to stderr.
+		 */
+		full,
+
+		/**
+		 * Value for the {@link AgentOptions#LOG} parameter: Write the message
+		 * of an error to stderr.
+		 */
+		normal,
+
+		/**
+		 * Value for the {@link AgentOptions#LOG} parameter: Do not log.
+		 */
+		silent
+
+	}
+
 	private static final Collection<String> VALID_OPTIONS = Arrays.asList(
 			DESTFILE, APPEND, INCLUDES, EXCLUDES, EXCLCLASSLOADER,
 			INCLBOOTSTRAPCLASSES, INCLNOLOCATIONCLASSES, SESSIONID, DUMPONEXIT,
-			OUTPUT, ADDRESS, PORT, CLASSDUMPDIR, JMX);
+			OUTPUT, ADDRESS, PORT, CLASSDUMPDIR, JMX, LOG);
 
 	private final Map<String, String> options;
 
@@ -219,8 +249,8 @@ public final class AgentOptions {
 				}
 				final String key = entry.substring(0, pos);
 				if (!VALID_OPTIONS.contains(key)) {
-					throw new IllegalArgumentException(format(
-							"Unknown agent option \"%s\".", key));
+					throw new IllegalArgumentException(
+							format("Unknown agent option \"%s\".", key));
 				}
 
 				final String value = entry.substring(pos + 1);
@@ -250,6 +280,7 @@ public final class AgentOptions {
 	private void validateAll() {
 		validatePort(getPort());
 		getOutput();
+		getLog();
 	}
 
 	private void validatePort(final int port) {
@@ -554,6 +585,36 @@ public final class AgentOptions {
 	 */
 	public void setJmx(final boolean jmx) {
 		setOption(JMX, jmx);
+	}
+
+	/**
+	 * Returns the log mode
+	 * 
+	 * @return current log mode
+	 */
+	public LogMode getLog() {
+		final String value = options.get(LOG);
+		return value == null ? LogMode.full : LogMode.valueOf(value);
+	}
+
+	/**
+	 * Sets the log mode
+	 * 
+	 * @param log
+	 *            Log mode
+	 */
+	public void setLog(final String log) {
+		setLog(LogMode.valueOf(log));
+	}
+
+	/**
+	 * Sets the log mode
+	 * 
+	 * @param log
+	 *            Log mode
+	 */
+	public void setLog(final LogMode log) {
+		setOption(LOG, log.name());
 	}
 
 	private void setOption(final String key, final int value) {

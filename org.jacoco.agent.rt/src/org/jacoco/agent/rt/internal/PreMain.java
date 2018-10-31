@@ -47,12 +47,13 @@ public final class PreMain {
 		final IRuntime runtime = createRuntime(inst);
 		runtime.startup(agent.getData());
 		inst.addTransformer(new CoverageTransformer(runtime, agentOptions,
-				IExceptionLogger.SYSTEM_ERR));
+				Agent.getLogger(agentOptions)));
 	}
 
 	private static IRuntime createRuntime(final Instrumentation inst)
 			throws Exception {
-		return ModifiedSystemClassRuntime.createFor(inst, "java/lang/UnknownError");
+		return ModifiedSystemClassRuntime.createFor(inst,
+				"java/lang/UnknownError");
 	}
 
 }

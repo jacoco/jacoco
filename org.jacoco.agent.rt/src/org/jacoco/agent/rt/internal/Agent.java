@@ -46,7 +46,7 @@ public class Agent implements IAgent {
 	 */
 	public static synchronized Agent getInstance(final AgentOptions options) {
 		if (singleton == null) {
-			final Agent agent = new Agent(options, IExceptionLogger.SYSTEM_ERR);
+			final Agent agent = new Agent(options, getLogger(options));
 			agent.startup();
 			Runtime.getRuntime().addShutdownHook(new Thread() {
 				@Override
@@ -67,11 +67,32 @@ public class Agent implements IAgent {
 	 * @throws IllegalStateException
 	 *             if no Agent has been started yet
 	 */
-	public static synchronized Agent getInstance() throws IllegalStateException {
+	public static synchronized Agent getInstance()
+			throws IllegalStateException {
 		if (singleton == null) {
 			throw new IllegalStateException("JaCoCo agent not started.");
 		}
 		return singleton;
+	}
+
+	/**
+	 * Returns the {@link IExceptionLogger} instance configured by the given
+	 * options.
+	 * 
+	 * @param options
+	 *            options to configure the agent
+	 * @return the resolved {@link IExceptionLogger}
+	 */
+	public static IExceptionLogger getLogger(final AgentOptions options) {
+		switch (options.getLog()) {
+		default:
+		case full:
+			return IExceptionLogger.SYSTEM_ERR;
+		case normal:
+			return IExceptionLogger.NORMAL;
+		case silent:
+			return IExceptionLogger.SILENT;
+		}
 	}
 
 	private final AgentOptions options;
