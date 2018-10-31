@@ -25,7 +25,7 @@ env:
     ECJ=true
   - JDK=9
   - JDK=10
-  - JDK=11-ea
+  - JDK=11
   - JDK=12-ea
 
 script: ./.travis.sh
