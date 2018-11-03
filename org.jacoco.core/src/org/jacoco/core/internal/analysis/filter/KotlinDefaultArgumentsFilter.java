@@ -19,6 +19,23 @@ import org.objectweb.asm.tree.VarInsnNode;
 
 /**
  * Filters branches that Kotlin compiler generates for default arguments.
+ * 
+ * For each default argument Kotlin compiler generates following bytecode to
+ * determine if it should be used or not:
+ * 
+ * <pre>
+ * ILOAD maskVar
+ * ICONST_x, BIPUSH, SIPUSH, LDC or LDC_W
+ * IAND
+ * IFEQ label
+ * default argument
+ * label:
+ * </pre>
+ * 
+ * Where <code>maskVar</code> is penultimate argument of synthetic function with
+ * suffix {@link #SUFFIX "$default"}. And it can't be zero - invocation with all
+ * arguments uses original non synthetic method, thus <code>IFEQ</code>
+ * instructions should be ignored.
  */
 public final class KotlinDefaultArgumentsFilter implements IFilter {
 
