@@ -22,7 +22,7 @@ import org.objectweb.asm.tree.VarInsnNode;
  */
 public final class KotlinDefaultArgumentsFilter implements IFilter {
 
-	private static final String SUFFIX = "$default";
+	static final String SUFFIX = "$default";
 
 	public void filter(final MethodNode methodNode,
 			final IFilterContext context, final IFilterOutput output) {

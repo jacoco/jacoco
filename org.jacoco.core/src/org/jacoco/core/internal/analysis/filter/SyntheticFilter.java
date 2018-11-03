@@ -29,7 +29,7 @@ public final class SyntheticFilter implements IFilter {
 			return;
 		}
 
-		if (methodNode.name.endsWith("$default")
+		if (methodNode.name.endsWith(KotlinDefaultArgumentsFilter.SUFFIX)
 				&& context.getClassAnnotations()
 						.contains(KotlinGeneratedFilter.KOTLIN_METADATA_DESC)) {
 			return;
