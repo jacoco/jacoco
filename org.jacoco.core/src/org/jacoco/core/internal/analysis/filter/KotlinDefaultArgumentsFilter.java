@@ -32,6 +32,10 @@ public final class KotlinDefaultArgumentsFilter implements IFilter {
 		if (!methodNode.name.endsWith(SUFFIX)) {
 			return;
 		}
+		if (!context.getClassAnnotations()
+				.contains(KotlinGeneratedFilter.KOTLIN_METADATA_DESC)) {
+			return;
+		}
 
 		final int maskVar = Type.getMethodType(methodNode.desc)
 				.getArgumentTypes().length - 2;
