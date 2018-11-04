@@ -556,6 +556,7 @@
               <target>
                 <fileset dir="${basedir}" includes="**/*.java,**/*.xml,**/*.bsh" excludes="target/**,.idea/**,nb-configuration.xml" id="missinglicense.fileset">
                   <include name="**/*.kt"/>
+                  <include name="**/*.groovy"/>
                   <not>
                     <and>
                       <contains text="Copyright (c) 2009, 2018 Mountainminds GmbH &amp; Co. KG and Contributors"/>
