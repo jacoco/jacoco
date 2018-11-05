@@ -113,7 +113,7 @@ class MethodCoverageCalculator implements IFilterOutput {
 				final List<Instruction> newBranches = new ArrayList<Instruction>(
 						r.size());
 				for (final AbstractInsnNode b : r) {
-					newBranches.add(instructions.get(b));
+					newBranches.add(instructions.get(findRepresentative(b)));
 				}
 				insn = insn.replaceBranches(newBranches);
 			}

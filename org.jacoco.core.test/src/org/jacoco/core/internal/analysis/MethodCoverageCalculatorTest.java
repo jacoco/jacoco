@@ -14,6 +14,7 @@ package org.jacoco.core.internal.analysis;
 import static org.junit.Assert.assertEquals;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -168,6 +169,20 @@ public class MethodCoverageCalculatorTest {
 
 		assertLine(1, 0, 1, 1, 2); // branches coverage status replaced
 		assertLine(2, 1, 2, 0, 0); // still in place
+	}
+
+	@Test
+	public void should_replace_branches_with_merged_instructions() {
+		InsnNode i1 = addInsn(1, false);
+		InsnNode i2 = addInsn(2, false);
+		InsnNode i3 = addInsn(2, true);
+
+		MethodCoverageCalculator c = new MethodCoverageCalculator(instructions);
+		c.merge(i3, i2);
+		c.replaceBranches(i1, Collections.<AbstractInsnNode> singleton(i2));
+		c.calculate(coverage);
+
+		assertLine(1, 0, 1, 0, 0);
 	}
 
 	@Test
