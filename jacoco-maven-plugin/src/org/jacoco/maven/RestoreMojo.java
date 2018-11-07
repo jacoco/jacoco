@@ -33,8 +33,14 @@ public class RestoreMojo extends AbstractJacocoMojo {
 			MojoFailureException {
 		final File originalClassesDir = new File(getProject().getBuild()
 				.getDirectory(), "generated-classes/jacoco");
-		final File classesDir = new File(getProject().getBuild()
-				.getOutputDirectory());
+
+		if (instrumentedClasses != null) {
+			getLog().info("Using custom instrumentation directory:" + instrumentedClasses);
+		}
+
+		final File classesDir = new File(instrumentedClasses == null ?
+				getProject().getBuild().getOutputDirectory() : instrumentedClasses);
+
 		try {
 			FileUtils.copyDirectoryStructure(originalClassesDir, classesDir);
 		} catch (final IOException e) {

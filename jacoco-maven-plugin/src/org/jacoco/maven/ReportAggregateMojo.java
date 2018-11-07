@@ -136,7 +136,7 @@ public class ReportAggregateMojo extends AbstractReportMojo {
 				Artifact.SCOPE_COMPILE, Artifact.SCOPE_RUNTIME,
 				Artifact.SCOPE_PROVIDED)) {
 			support.processProject(group, dependency.getArtifactId(),
-					dependency, getIncludes(), getExcludes(), sourceEncoding);
+					dependency, getIncludes(), getExcludes(), sourceEncoding, instrumentedClasses);
 		}
 	}
 

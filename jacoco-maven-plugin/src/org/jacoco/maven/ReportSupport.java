@@ -147,14 +147,17 @@ final class ReportSupport {
 	 *            list of includes patterns
 	 * @param excludes
 	 *            list of excludes patterns
+	 * @param instrumentedClasses
+	 * 			  the optional path to the instrumented classes
 	 * @throws IOException
 	 *             if class files can't be read
 	 */
 	public void processProject(final IReportGroupVisitor visitor,
 			final MavenProject project, final List<String> includes,
-			final List<String> excludes) throws IOException {
+			final List<String> excludes,
+			final String instrumentedClasses) throws IOException {
 		processProject(visitor, project.getArtifactId(), project, includes,
-				excludes, new NoSourceLocator());
+				excludes, new NoSourceLocator(), instrumentedClasses);
 	}
 
 	/**
@@ -173,24 +176,28 @@ final class ReportSupport {
 	 *            list of excludes patterns
 	 * @param srcEncoding
 	 *            encoding of the source files within this project
+	 * @param instrumentedClasses
+	 * 			  the optional path to the instrumented classes
 	 * @throws IOException
 	 *             if class files can't be read
 	 */
 	public void processProject(final IReportGroupVisitor visitor,
 			final String bundeName, final MavenProject project,
 			final List<String> includes, final List<String> excludes,
-			final String srcEncoding) throws IOException {
+			final String srcEncoding,
+			final String instrumentedClasses) throws IOException {
 		processProject(visitor, bundeName, project, includes, excludes,
-				new SourceFileCollection(project, srcEncoding));
+				new SourceFileCollection(project, srcEncoding), instrumentedClasses);
 	}
 
 	private void processProject(final IReportGroupVisitor visitor,
 			final String bundeName, final MavenProject project,
 			final List<String> includes, final List<String> excludes,
-			final ISourceFileLocator locator) throws IOException {
+			final ISourceFileLocator locator,
+			final String instrumentedClasses) throws IOException {
 		final CoverageBuilder builder = new CoverageBuilder();
-		final File classesDir = new File(project.getBuild()
-				.getOutputDirectory());
+		final File classesDir = new File(instrumentedClasses == null ? project.getBuild()
+				.getOutputDirectory() : instrumentedClasses);
 
 		if (classesDir.isDirectory()) {
 			final Analyzer analyzer = new Analyzer(

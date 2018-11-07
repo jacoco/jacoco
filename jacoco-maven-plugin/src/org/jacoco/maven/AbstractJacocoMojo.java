@@ -52,6 +52,12 @@ public abstract class AbstractJacocoMojo extends AbstractMojo {
 	@Parameter(property = "jacoco.skip", defaultValue = "false")
 	private boolean skip;
 
+	/**
+	 * The custom location for instrumented classes.
+	 */
+	@Parameter(property = "instrumentedClasses")
+	protected String instrumentedClasses;
+
 	public final void execute() throws MojoExecutionException,
 			MojoFailureException {
 		if (skip) {
