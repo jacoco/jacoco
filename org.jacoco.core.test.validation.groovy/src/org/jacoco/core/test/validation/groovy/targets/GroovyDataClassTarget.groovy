@@ -20,9 +20,9 @@ package org.jacoco.core.test.validation.groovy.targets
  * - a getter & setter for the valRead property
  */
 @groovy.transform.Canonical
-class GroovyDataClassTarget { // assertFullyCovered()
+class GroovyDataClassTarget { // assertEmpty()
 
-    int valRead // assertNotCovered()
+    int valRead // assertEmpty()
 
     static void main(String[] args) {
         new GroovyDataClassTarget() // assertFullyCovered()
