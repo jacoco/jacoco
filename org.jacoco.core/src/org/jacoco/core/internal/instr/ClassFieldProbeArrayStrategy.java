@@ -34,7 +34,7 @@ class ClassFieldProbeArrayStrategy implements IProbeArrayStrategy {
 	 */
 	private static final Object[] FRAME_LOCALS_EMPTY = new Object[0];
 
-	private final String className;
+	final String className;
 	private final long classId;
 	private final boolean withFrames;
 	private final IExecutionDataAccessorGenerator accessorGenerator;
@@ -60,6 +60,40 @@ class ClassFieldProbeArrayStrategy implements IProbeArrayStrategy {
 	public void addMembers(final ClassVisitor cv, final int probeCount) {
 		createDataField(cv);
 		createInitMethod(cv, probeCount);
+		createHitMethod(cv, withFrames, className);
+	}
+
+	static void createHitMethod(final ClassVisitor cv, final boolean withFrames, final String className) {
+		final MethodVisitor mv = cv
+				.visitMethod(
+						Opcodes.ACC_SYNTHETIC | Opcodes.ACC_PRIVATE
+								| Opcodes.ACC_STATIC,
+						"$jacocoHit", "(I)V", null, null);
+		mv.visitCode();
+
+		mv.visitFieldInsn(Opcodes.GETSTATIC, className,
+				InstrSupport.DATAFIELD_NAME, InstrSupport.DATAFIELD_DESC);
+		mv.visitVarInsn(Opcodes.ILOAD, 0);
+		mv.visitInsn(Opcodes.BALOAD);
+
+		final Label label = new Label();
+		mv.visitJumpInsn(Opcodes.IFNE, label);
+
+		mv.visitFieldInsn(Opcodes.GETSTATIC, className,
+				InstrSupport.DATAFIELD_NAME, InstrSupport.DATAFIELD_DESC);
+		mv.visitVarInsn(Opcodes.ILOAD, 0);
+		mv.visitInsn(Opcodes.ICONST_1);
+		mv.visitInsn(Opcodes.BASTORE);
+
+		mv.visitLabel(label);
+		if (withFrames) {
+			mv.visitFrame(Opcodes.F_SAME, 0, null, 0, null);
+		}
+		mv.visitInsn(Opcodes.RETURN);
+
+		mv.visitMaxs(3, 1);
+
+		mv.visitEnd();
 	}
 
 	private void createDataField(final ClassVisitor cv) {

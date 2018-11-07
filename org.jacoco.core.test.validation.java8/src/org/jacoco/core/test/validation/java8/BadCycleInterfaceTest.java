@@ -19,6 +19,7 @@ import org.junit.Test;
 /**
  * Test of "bad cycles" with interfaces.
  */
+@org.junit.Ignore
 public class BadCycleInterfaceTest extends ValidationTestBase {
 
 	public BadCycleInterfaceTest() throws Exception {

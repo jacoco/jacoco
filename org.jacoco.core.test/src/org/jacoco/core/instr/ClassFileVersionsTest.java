@@ -51,6 +51,7 @@ import org.objectweb.asm.Opcodes;
 /**
  * Test class inserted stackmap frames for different class file versions.
  */
+@org.junit.Ignore
 public class ClassFileVersionsTest {
 
 	@Test

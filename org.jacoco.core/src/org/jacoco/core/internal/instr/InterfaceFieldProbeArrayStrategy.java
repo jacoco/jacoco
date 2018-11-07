@@ -34,7 +34,7 @@ class InterfaceFieldProbeArrayStrategy implements IProbeArrayStrategy {
 	 */
 	private static final Object[] FRAME_LOCALS_EMPTY = new Object[0];
 
-	private final String className;
+	final String className;
 	private final long classId;
 	private final int probeCount;
 	private final IExecutionDataAccessorGenerator accessorGenerator;
@@ -87,6 +87,7 @@ class InterfaceFieldProbeArrayStrategy implements IProbeArrayStrategy {
 		if (!seenClinit) {
 			createClinitMethod(cv, probeCount);
 		}
+		ClassFieldProbeArrayStrategy.createHitMethod(cv, true, className);
 	}
 
 	private void createDataField(final ClassVisitor cv) {
