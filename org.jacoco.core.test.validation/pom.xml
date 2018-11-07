@@ -31,6 +31,7 @@
 
   <properties>
     <jacoco.skip>true</jacoco.skip>
+    <groovy.targetBytecode>${maven.compiler.target}</groovy.targetBytecode>
   </properties>
 
   <profiles>
@@ -155,6 +156,7 @@
         <module>../org.jacoco.core.test.validation.kotlin</module>
         <module>../org.jacoco.core.test.validation.java7</module>
         <module>../org.jacoco.core.test.validation.java8</module>
+        <module>../org.jacoco.core.test.validation.groovy</module>
       </modules>
     </profile>
 
@@ -176,6 +178,7 @@
         <module>../org.jacoco.core.test.validation.kotlin</module>
         <module>../org.jacoco.core.test.validation.java7</module>
         <module>../org.jacoco.core.test.validation.java8</module>
+        <module>../org.jacoco.core.test.validation.groovy</module>
       </modules>
     </profile>
 
@@ -197,6 +200,7 @@
         <module>../org.jacoco.core.test.validation.kotlin</module>
         <module>../org.jacoco.core.test.validation.java7</module>
         <module>../org.jacoco.core.test.validation.java8</module>
+        <module>../org.jacoco.core.test.validation.groovy</module>
       </modules>
     </profile>
   </profiles>
