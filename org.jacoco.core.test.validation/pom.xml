@@ -88,6 +88,9 @@
           <value>7</value>
         </property>
       </activation>
+      <properties>
+        <groovy.targetBytecode>1.7</groovy.targetBytecode>
+      </properties>
       <modules>
         <module>../org.jacoco.core.test.validation.kotlin</module>
         <module>../org.jacoco.core.test.validation.java7</module>
@@ -103,6 +106,9 @@
           <value>7</value>
         </property>
       </activation>
+      <properties>
+        <groovy.targetBytecode>1.7</groovy.targetBytecode>
+      </properties>
       <modules>
         <module>../org.jacoco.core.test.validation.kotlin</module>
         <module>../org.jacoco.core.test.validation.java7</module>
@@ -121,6 +127,7 @@
       </activation>
       <properties>
         <kotlin.compiler.jvmTarget>1.8</kotlin.compiler.jvmTarget>
+        <groovy.targetBytecode>1.8</groovy.targetBytecode>
       </properties>
       <modules>
         <module>../org.jacoco.core.test.validation.kotlin</module>

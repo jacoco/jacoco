@@ -58,11 +58,7 @@
                     </execution>
                 </executions>
                 <configuration>
-                    <!--
-                    Force target bytecode to 1.7 for now
-                    as Groovy does not understand values such as 8 or 9
-                    -->
-                    <targetBytecode>1.7</targetBytecode>
+                    <targetBytecode>${groovy.targetBytecode}</targetBytecode>
                     <sources>
                         <source>
                             <directory>${project.build.sourceDirectory}</directory>
