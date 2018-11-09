@@ -16,7 +16,11 @@ import java.util.Map;
 import java.util.Properties;
 
 import org.apache.maven.artifact.Artifact;
+import org.apache.maven.execution.MavenSession;
+import org.apache.maven.plugin.MojoExecution;
+import org.apache.maven.plugin.PluginParameterExpressionEvaluator;
 import org.apache.maven.plugins.annotations.Parameter;
+import org.codehaus.plexus.component.configurator.expression.ExpressionEvaluationException;
 import org.codehaus.plexus.util.StringUtils;
 import org.jacoco.core.runtime.AgentOptions;
 
@@ -134,11 +138,17 @@ public abstract class AbstractAgentMojo extends AbstractJacocoMojo {
 	@Parameter(property = "jacoco.jmx")
 	Boolean jmx;
 
+	@Parameter(property = "mojoExecution", readonly = true)
+	private MojoExecution _mojoExecution;
+
+	@Parameter(property = "session", readonly = true)
+	private MavenSession _session;
+
 	@Override
 	public void executeMojo() {
 		final String name = getEffectivePropertyName();
 		final Properties projectProperties = getProject().getProperties();
-		final String oldValue = projectProperties.getProperty(name);
+		final String oldValue = expandExpression(projectProperties.getProperty(name));
 		final String newValue = createAgentOptions().prependVMArguments(
 				oldValue, getAgentJarFile());
 		getLog().info(name + " set to " + newValue);
@@ -149,10 +159,33 @@ public abstract class AbstractAgentMojo extends AbstractJacocoMojo {
 	protected void skipMojo() {
 		final String name = getEffectivePropertyName();
 		final Properties projectProperties = getProject().getProperties();
-		final String oldValue = projectProperties.getProperty(name);
+		final String oldValue = expandExpression(projectProperties.getProperty(name));
 		if (oldValue == null) {
 			getLog().info(name + " set to empty");
 			projectProperties.setProperty(name, "");
+		}
+	}
+
+	String expandExpression(String s){
+		if(s == null){
+			return s;
+		}
+
+		PluginParameterExpressionEvaluator evaluator = new PluginParameterExpressionEvaluator(_session, _mojoExecution);
+		s = s.replace("@{", "${");
+
+		try {
+			StringBuilder sb = new StringBuilder(s);
+			int start = -1;
+			while ((start = sb.indexOf("${")) > -1) {
+				int end = sb.indexOf("}");
+				String expression = sb.substring(start, end + 1);
+				String resolved = evaluator.evaluate(expression).toString();
+				sb.replace(start, end + 1, resolved);
+			}
+			return sb.toString();
+		} catch (ExpressionEvaluationException e) {
+			throw new RuntimeException("Could not resolve expressions in property: " + s, e);
 		}
 	}
 
