@@ -73,24 +73,28 @@ class MethodCoverageCalculator implements IFilterOutput {
 		for (final Map.Entry<AbstractInsnNode, Instruction> entry : instructions
 				.entrySet()) {
 
-			final Instruction i = entry.getValue();
-			final AbstractInsnNode n = entry.getKey();
-			final AbstractInsnNode r = findRepresentative(n);
-			if (r != n) {
-				ignored.add(n);
-				instructions.put(r, instructions.get(r).merge(i));
+			final Instruction instruction = entry.getValue();
+			final AbstractInsnNode instructionNode = entry.getKey();
+			final AbstractInsnNode representativeNode = findRepresentative(
+					instructionNode);
+			if (representativeNode != instructionNode) {
+				ignored.add(instructionNode);
+				instructions.put(representativeNode, instructions
+						.get(representativeNode).merge(instruction));
+				continue;
 			}
 
-			if (!ignored.contains(n)) {
-				final int line = i.getLine();
-				if (line != ISourceNode.UNKNOWN_LINE) {
-					if (firstLine > line
-							|| lastLine == ISourceNode.UNKNOWN_LINE) {
-						firstLine = line;
-					}
-					if (lastLine < line) {
-						lastLine = line;
-					}
+			if (ignored.contains(instructionNode)) {
+				continue;
+			}
+
+			final int line = instruction.getLine();
+			if (line != ISourceNode.UNKNOWN_LINE) {
+				if (firstLine > line || lastLine == ISourceNode.UNKNOWN_LINE) {
+					firstLine = line;
+				}
+				if (lastLine < line) {
+					lastLine = line;
 				}
 			}
 
@@ -100,26 +104,27 @@ class MethodCoverageCalculator implements IFilterOutput {
 		coverage.ensureCapacity(firstLine, lastLine);
 
 		// Apply replacements and report result:
-		for (final Map.Entry<AbstractInsnNode, Instruction> i : instructions
+		for (final Map.Entry<AbstractInsnNode, Instruction> entry : instructions
 				.entrySet()) {
-			if (ignored.contains(i.getKey())) {
+			final AbstractInsnNode instructionNode = entry.getKey();
+			if (ignored.contains(instructionNode)) {
 				continue;
 			}
 
-			Instruction insn = i.getValue();
+			Instruction instruction = entry.getValue();
 
-			final Set<AbstractInsnNode> r = replacements.get(i.getKey());
+			final Set<AbstractInsnNode> r = replacements.get(instructionNode);
 			if (r != null) {
 				final List<Instruction> newBranches = new ArrayList<Instruction>(
 						r.size());
 				for (final AbstractInsnNode b : r) {
 					newBranches.add(instructions.get(findRepresentative(b)));
 				}
-				insn = insn.replaceBranches(newBranches);
+				instruction = instruction.replaceBranches(newBranches);
 			}
 
-			coverage.increment(insn.getInstructionCounter(),
-					insn.getBranchCounter(), insn.getLine());
+			coverage.increment(instruction.getInstructionCounter(),
+					instruction.getBranchCounter(), instruction.getLine());
 		}
 		coverage.incrementMethodCounter();
 	}
