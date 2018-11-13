@@ -66,67 +66,81 @@ class MethodCoverageCalculator implements IFilterOutput {
 	 */
 	void calculate(final MethodCoverageImpl coverage) {
 
-		// Merge and calculate line range:
-		int firstLine = ISourceFileCoverage.UNKNOWN_LINE;
-		int lastLine = ISourceFileCoverage.UNKNOWN_LINE;
+		merge();
+		replace();
+		ensureCapacity(coverage);
 
 		for (final Map.Entry<AbstractInsnNode, Instruction> entry : instructions
 				.entrySet()) {
+			if (!ignored.contains(entry.getKey())) {
+				final Instruction instruction = entry.getValue();
+				coverage.increment(instruction.getInstructionCounter(),
+						instruction.getBranchCounter(), instruction.getLine());
+			}
+		}
 
-			final Instruction instruction = entry.getValue();
-			final AbstractInsnNode instructionNode = entry.getKey();
+		coverage.incrementMethodCounter();
+	}
+
+	private void merge() {
+		// Merge to the representative:
+		for (final Map.Entry<AbstractInsnNode, AbstractInsnNode> entry : merged
+				.entrySet()) {
+			final AbstractInsnNode node = entry.getKey();
+			final Instruction instruction = instructions.get(node);
 			final AbstractInsnNode representativeNode = findRepresentative(
-					instructionNode);
-			if (representativeNode != instructionNode) {
-				ignored.add(instructionNode);
-				instructions.put(representativeNode, instructions
-						.get(representativeNode).merge(instruction));
-				continue;
-			}
+					node);
+			ignored.add(node);
+			instructions.put(representativeNode,
+					instructions.get(representativeNode).merge(instruction));
+			entry.setValue(representativeNode);
+		}
 
-			if (ignored.contains(instructionNode)) {
-				continue;
-			}
+		// Get merged value back from representative
+		for (final Map.Entry<AbstractInsnNode, AbstractInsnNode> entry : merged
+				.entrySet()) {
+			instructions.put(entry.getKey(),
+					instructions.get(entry.getValue()));
+		}
+	}
 
-			final int line = instruction.getLine();
-			if (line != ISourceNode.UNKNOWN_LINE) {
-				if (firstLine > line || lastLine == ISourceNode.UNKNOWN_LINE) {
-					firstLine = line;
+	private void replace() {
+		for (final Map.Entry<AbstractInsnNode, Set<AbstractInsnNode>> entry : replacements
+				.entrySet()) {
+			final Set<AbstractInsnNode> replacements = entry.getValue();
+			final List<Instruction> newBranches = new ArrayList<Instruction>(
+					replacements.size());
+			for (final AbstractInsnNode b : replacements) {
+				newBranches.add(instructions.get(b));
+			}
+			final AbstractInsnNode node = entry.getKey();
+			instructions.put(node,
+					instructions.get(node).replaceBranches(newBranches));
+		}
+	}
+
+	private void ensureCapacity(final MethodCoverageImpl coverage) {
+		// Determine line range:
+		int firstLine = ISourceFileCoverage.UNKNOWN_LINE;
+		int lastLine = ISourceFileCoverage.UNKNOWN_LINE;
+		for (final Map.Entry<AbstractInsnNode, Instruction> entry : instructions
+				.entrySet()) {
+			if (!ignored.contains(entry.getKey())) {
+				final int line = entry.getValue().getLine();
+				if (line != ISourceNode.UNKNOWN_LINE) {
+					if (firstLine > line
+							|| lastLine == ISourceNode.UNKNOWN_LINE) {
+						firstLine = line;
+					}
+					if (lastLine < line) {
+						lastLine = line;
+					}
 				}
-				if (lastLine < line) {
-					lastLine = line;
-				}
 			}
-
 		}
 
 		// Performance optimization to avoid incremental increase of line array:
 		coverage.ensureCapacity(firstLine, lastLine);
-
-		// Apply replacements and report result:
-		for (final Map.Entry<AbstractInsnNode, Instruction> entry : instructions
-				.entrySet()) {
-			final AbstractInsnNode instructionNode = entry.getKey();
-			if (ignored.contains(instructionNode)) {
-				continue;
-			}
-
-			Instruction instruction = entry.getValue();
-
-			final Set<AbstractInsnNode> r = replacements.get(instructionNode);
-			if (r != null) {
-				final List<Instruction> newBranches = new ArrayList<Instruction>(
-						r.size());
-				for (final AbstractInsnNode b : r) {
-					newBranches.add(instructions.get(findRepresentative(b)));
-				}
-				instruction = instruction.replaceBranches(newBranches);
-			}
-
-			coverage.increment(instruction.getInstructionCounter(),
-					instruction.getBranchCounter(), instruction.getLine());
-		}
-		coverage.incrementMethodCounter();
 	}
 
 	private AbstractInsnNode findRepresentative(AbstractInsnNode i) {
