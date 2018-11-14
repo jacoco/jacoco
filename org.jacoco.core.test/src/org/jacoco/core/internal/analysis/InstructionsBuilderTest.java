@@ -160,7 +160,7 @@ public class InstructionsBuilderTest {
 		// mark i2 as covered
 		builder.addProbe(1, 0);
 
-		// coverage should be propagated to i1
+		// coverage should not be propagated to i1
 		Map<AbstractInsnNode, Instruction> map = builder.getInstructions();
 		assertEquals(CounterImpl.COUNTER_1_0,
 				map.get(i1).getInstructionCounter());

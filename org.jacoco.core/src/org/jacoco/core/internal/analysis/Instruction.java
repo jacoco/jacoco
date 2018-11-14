@@ -19,7 +19,7 @@ import org.jacoco.core.analysis.ICounter;
 /**
  * Execution status of a single bytecode instruction internally used for
  * coverage analysis. The execution status is recorded separately for each
- * outgoing branch. Each instructions has at least one branch, for example in
+ * outgoing branch. Each instruction has at least one branch, for example in
  * case of a simple sequence of instructions (by convention branch 0). Instances
  * of this class are used in two steps:
  * 
@@ -83,7 +83,7 @@ public class Instruction {
 	 * this instruction.
 	 * 
 	 * Note: This method is not idempotent and must be called exactly once for
-	 * every branch
+	 * every branch.
 	 * 
 	 * @param target
 	 *            target instruction of this branch
@@ -105,7 +105,7 @@ public class Instruction {
 	 * propagated also to the predecessors of this instruction.
 	 * 
 	 * Note: This method is not idempotent and must be called exactly once for
-	 * every branch
+	 * every branch.
 	 * 
 	 * @param executed
 	 *            whether the corresponding probe has been executed
@@ -160,7 +160,7 @@ public class Instruction {
 	/**
 	 * Creates a copy of this instruction where all outgoing branches are
 	 * replaced with the given instructions. The coverage status of the new
-	 * instruction is derived from on the status of the given instructions.
+	 * instruction is derived from the status of the given instructions.
 	 * 
 	 * @param newBranches
 	 *            new branches to consider

@@ -32,10 +32,10 @@ class InstructionsBuilder {
 	/** Probe array of the class the analyzed method belongs to. */
 	private final boolean[] probes;
 
-	/** the line which belong to subsequently added instructions */
+	/** The line which belong to subsequently added instructions. */
 	private int currentLine;
 
-	/** the last instruction which has been added */
+	/** The last instruction which has been added. */
 	private Instruction currentInsn;
 
 	/**

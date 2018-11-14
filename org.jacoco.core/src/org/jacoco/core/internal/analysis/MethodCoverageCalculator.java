@@ -66,9 +66,8 @@ class MethodCoverageCalculator implements IFilterOutput {
 	 *            the result is added to this coverage node
 	 */
 	void calculate(final MethodCoverageImpl coverage) {
-
-		merge();
-		replace();
+		applyMerges();
+		applyReplacements();
 		ensureCapacity(coverage);
 
 		for (final Entry<AbstractInsnNode, Instruction> entry : instructions
@@ -83,7 +82,7 @@ class MethodCoverageCalculator implements IFilterOutput {
 		coverage.incrementMethodCounter();
 	}
 
-	private void merge() {
+	private void applyMerges() {
 		// Merge to the representative:
 		for (final Entry<AbstractInsnNode, AbstractInsnNode> entry : merged
 				.entrySet()) {
@@ -105,7 +104,7 @@ class MethodCoverageCalculator implements IFilterOutput {
 		}
 	}
 
-	private void replace() {
+	private void applyReplacements() {
 		for (final Entry<AbstractInsnNode, Set<AbstractInsnNode>> entry : replacements
 				.entrySet()) {
 			final Set<AbstractInsnNode> replacements = entry.getValue();
