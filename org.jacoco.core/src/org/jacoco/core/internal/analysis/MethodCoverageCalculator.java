@@ -16,6 +16,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 
 import org.jacoco.core.analysis.ISourceFileCoverage;
@@ -70,7 +71,7 @@ class MethodCoverageCalculator implements IFilterOutput {
 		replace();
 		ensureCapacity(coverage);
 
-		for (final Map.Entry<AbstractInsnNode, Instruction> entry : instructions
+		for (final Entry<AbstractInsnNode, Instruction> entry : instructions
 				.entrySet()) {
 			if (!ignored.contains(entry.getKey())) {
 				final Instruction instruction = entry.getValue();
@@ -84,7 +85,7 @@ class MethodCoverageCalculator implements IFilterOutput {
 
 	private void merge() {
 		// Merge to the representative:
-		for (final Map.Entry<AbstractInsnNode, AbstractInsnNode> entry : merged
+		for (final Entry<AbstractInsnNode, AbstractInsnNode> entry : merged
 				.entrySet()) {
 			final AbstractInsnNode node = entry.getKey();
 			final Instruction instruction = instructions.get(node);
@@ -97,7 +98,7 @@ class MethodCoverageCalculator implements IFilterOutput {
 		}
 
 		// Get merged value back from representative
-		for (final Map.Entry<AbstractInsnNode, AbstractInsnNode> entry : merged
+		for (final Entry<AbstractInsnNode, AbstractInsnNode> entry : merged
 				.entrySet()) {
 			instructions.put(entry.getKey(),
 					instructions.get(entry.getValue()));
@@ -105,7 +106,7 @@ class MethodCoverageCalculator implements IFilterOutput {
 	}
 
 	private void replace() {
-		for (final Map.Entry<AbstractInsnNode, Set<AbstractInsnNode>> entry : replacements
+		for (final Entry<AbstractInsnNode, Set<AbstractInsnNode>> entry : replacements
 				.entrySet()) {
 			final Set<AbstractInsnNode> replacements = entry.getValue();
 			final List<Instruction> newBranches = new ArrayList<Instruction>(
@@ -123,7 +124,7 @@ class MethodCoverageCalculator implements IFilterOutput {
 		// Determine line range:
 		int firstLine = ISourceFileCoverage.UNKNOWN_LINE;
 		int lastLine = ISourceFileCoverage.UNKNOWN_LINE;
-		for (final Map.Entry<AbstractInsnNode, Instruction> entry : instructions
+		for (final Entry<AbstractInsnNode, Instruction> entry : instructions
 				.entrySet()) {
 			if (!ignored.contains(entry.getKey())) {
 				final int line = entry.getValue().getLine();
