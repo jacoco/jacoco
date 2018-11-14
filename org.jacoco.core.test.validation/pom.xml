@@ -31,6 +31,7 @@
 
   <properties>
     <jacoco.skip>true</jacoco.skip>
+    <groovy.targetBytecode>${maven.compiler.target}</groovy.targetBytecode>
   </properties>
 
   <profiles>
@@ -88,9 +89,13 @@
           <value>7</value>
         </property>
       </activation>
+      <properties>
+        <groovy.targetBytecode>1.7</groovy.targetBytecode>
+      </properties>
       <modules>
         <module>../org.jacoco.core.test.validation.kotlin</module>
         <module>../org.jacoco.core.test.validation.java7</module>
+        <module>../org.jacoco.core.test.validation.groovy</module>
       </modules>
     </profile>
 
@@ -102,9 +107,13 @@
           <value>7</value>
         </property>
       </activation>
+      <properties>
+        <groovy.targetBytecode>1.7</groovy.targetBytecode>
+      </properties>
       <modules>
         <module>../org.jacoco.core.test.validation.kotlin</module>
         <module>../org.jacoco.core.test.validation.java7</module>
+        <module>../org.jacoco.core.test.validation.groovy</module>
       </modules>
     </profile>
 
@@ -119,11 +128,13 @@
       </activation>
       <properties>
         <kotlin.compiler.jvmTarget>1.8</kotlin.compiler.jvmTarget>
+        <groovy.targetBytecode>1.8</groovy.targetBytecode>
       </properties>
       <modules>
         <module>../org.jacoco.core.test.validation.kotlin</module>
         <module>../org.jacoco.core.test.validation.java7</module>
         <module>../org.jacoco.core.test.validation.java8</module>
+        <module>../org.jacoco.core.test.validation.groovy</module>
       </modules>
     </profile>
 
@@ -145,6 +156,7 @@
         <module>../org.jacoco.core.test.validation.kotlin</module>
         <module>../org.jacoco.core.test.validation.java7</module>
         <module>../org.jacoco.core.test.validation.java8</module>
+        <module>../org.jacoco.core.test.validation.groovy</module>
       </modules>
     </profile>
 
@@ -166,6 +178,7 @@
         <module>../org.jacoco.core.test.validation.kotlin</module>
         <module>../org.jacoco.core.test.validation.java7</module>
         <module>../org.jacoco.core.test.validation.java8</module>
+        <module>../org.jacoco.core.test.validation.groovy</module>
       </modules>
     </profile>
 
@@ -187,6 +200,7 @@
         <module>../org.jacoco.core.test.validation.kotlin</module>
         <module>../org.jacoco.core.test.validation.java7</module>
         <module>../org.jacoco.core.test.validation.java8</module>
+        <module>../org.jacoco.core.test.validation.groovy</module>
       </modules>
     </profile>
   </profiles>
