@@ -108,6 +108,21 @@ public class MethodCoverageCalculatorTest {
 	}
 
 	@Test
+	public void should_exclude_ignored_instructions_from_computation_of_first_and_last_lines() {
+		InsnNode i1 = addInsn(1, false);
+		addInsn(2, false);
+		InsnNode i3 = addInsn(3, false);
+
+		MethodCoverageCalculator c = new MethodCoverageCalculator(instructions);
+		c.ignore(i1, i1);
+		c.ignore(i3, i3);
+		c.calculate(coverage);
+
+		assertEquals(2, coverage.getFirstLine());
+		assertEquals(2, coverage.getLastLine());
+	}
+
+	@Test
 	public void should_merge_instructions() {
 		addInsn(1, true);
 		InsnNode i1 = addInsn(2, false, true);
