@@ -11,9 +11,14 @@
  *******************************************************************************/
 package org.jacoco.core.internal.analysis.filter;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.Type;
 import org.objectweb.asm.tree.AbstractInsnNode;
+import org.objectweb.asm.tree.JumpInsnNode;
+import org.objectweb.asm.tree.LabelNode;
 import org.objectweb.asm.tree.MethodNode;
 import org.objectweb.asm.tree.VarInsnNode;
 
@@ -54,22 +59,49 @@ public final class KotlinDefaultArgumentsFilter implements IFilter {
 			return;
 		}
 
-		final int maskVar = Type.getMethodType(methodNode.desc)
-				.getArgumentTypes().length - 2;
+		new Matcher().match(methodNode, output);
+	}
 
-		for (AbstractInsnNode i = methodNode.instructions
-				.getFirst(); i != null; i = i.getNext()) {
-			if (AbstractInsnNode.VAR_INSN != i.getType()) {
-				continue;
-			}
-			if (maskVar != ((VarInsnNode) i).var) {
-				continue;
+	private static class Matcher extends AbstractMatcher {
+		public void match(final MethodNode methodNode,
+				final IFilterOutput output) {
+			cursor = methodNode.instructions.getFirst();
+
+			final Set<AbstractInsnNode> ignore = new HashSet<AbstractInsnNode>();
+			final int maskVar = Type.getMethodType(methodNode.desc)
+					.getArgumentTypes().length - 2;
+			while (true) {
+				if (cursor.getOpcode() != Opcodes.ILOAD) {
+					break;
+				}
+				if (((VarInsnNode) cursor).var != maskVar) {
+					break;
+				}
+				next();
+				nextIs(Opcodes.IAND);
+				nextIs(Opcodes.IFEQ);
+				if (cursor == null) {
+					return;
+				}
+				ignore.add(cursor);
+				cursor = instructionAfterLabel(((JumpInsnNode) cursor).label);
 			}
 
-			final AbstractInsnNode jump = i.getNext().getNext().getNext();
-			output.ignore(jump, jump);
+			for (AbstractInsnNode i : ignore) {
+				output.ignore(i, i);
+			}
 		}
 
+		private static AbstractInsnNode instructionAfterLabel(
+				final LabelNode label) {
+			AbstractInsnNode i = label.getNext();
+			while (i.getType() == AbstractInsnNode.FRAME
+					|| i.getType() == AbstractInsnNode.LABEL
+					|| i.getType() == AbstractInsnNode.LINE) {
+				i = i.getNext();
+			}
+			return i;
+		}
 	}
 
 }
