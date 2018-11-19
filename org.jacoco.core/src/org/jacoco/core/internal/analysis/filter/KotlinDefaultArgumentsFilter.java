@@ -37,8 +37,8 @@ import org.objectweb.asm.tree.VarInsnNode;
  * label:
  * </pre>
  * 
- * Where <code>maskVar</code> is penultimate argument of synthetic function with
- * suffix {@link #SUFFIX "$default"}. And it can't be zero - invocation with all
+ * Where <code>maskVar</code> is penultimate argument of synthetic method with
+ * suffix "$default". And its value can't be zero - invocation with all
  * arguments uses original non synthetic method, thus <code>IFEQ</code>
  * instructions should be ignored.
  */
