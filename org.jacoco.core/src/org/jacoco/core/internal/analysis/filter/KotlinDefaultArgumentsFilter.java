@@ -44,18 +44,19 @@ import org.objectweb.asm.tree.VarInsnNode;
  */
 public final class KotlinDefaultArgumentsFilter implements IFilter {
 
-	static final String SUFFIX = "$default";
+	static boolean isDefaultArgumentsMethodName(final String methodName) {
+		return methodName.endsWith("$default");
+	}
 
 	public void filter(final MethodNode methodNode,
 			final IFilterContext context, final IFilterOutput output) {
 		if ((methodNode.access & Opcodes.ACC_SYNTHETIC) == 0) {
 			return;
 		}
-		if (!methodNode.name.endsWith(SUFFIX)) {
+		if (!isDefaultArgumentsMethodName(methodNode.name)) {
 			return;
 		}
-		if (!context.getClassAnnotations()
-				.contains(KotlinGeneratedFilter.KOTLIN_METADATA_DESC)) {
+		if (!KotlinGeneratedFilter.isKotlinClass(context)) {
 			return;
 		}
 

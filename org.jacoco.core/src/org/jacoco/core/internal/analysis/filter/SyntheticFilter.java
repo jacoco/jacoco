@@ -29,9 +29,9 @@ public final class SyntheticFilter implements IFilter {
 			return;
 		}
 
-		if (methodNode.name.endsWith(KotlinDefaultArgumentsFilter.SUFFIX)
-				&& context.getClassAnnotations()
-						.contains(KotlinGeneratedFilter.KOTLIN_METADATA_DESC)) {
+		if (KotlinDefaultArgumentsFilter
+				.isDefaultArgumentsMethodName(methodNode.name)
+				&& KotlinGeneratedFilter.isKotlinClass(context)) {
 			return;
 		}
 
