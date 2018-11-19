@@ -747,13 +747,12 @@ public class MethodAnalyzerTest implements IProbeIdGenerator {
 	public void try_catch_should_show_exception_handler_missed_when_probe_is_not_executed() {
 		createTryCatchBlock();
 		probes[0] = true;
-		probes[1] = true;
-		probes[0] = true;
+		probes[2] = true;
 		runMethodAnalzer();
 
 		assertLine(1001, 0, 3, 0, 0);
-		assertLine(1002, 0, 1, 0, 0);
-		assertLine(1003, 1, 0, 0, 0);
+		assertLine(1002, 1, 0, 0, 0);
+		assertLine(1003, 0, 1, 0, 0);
 	}
 
 	@Test
