@@ -747,13 +747,12 @@ public class MethodAnalyzerTest implements IProbeIdGenerator {
 	public void try_catch_should_show_exception_handler_missed_when_probe_is_not_executed() {
 		createTryCatchBlock();
 		probes[0] = true;
-		probes[1] = true;
-		probes[0] = true;
+		probes[2] = true;
 		runMethodAnalzer();
 
 		assertLine(1001, 0, 3, 0, 0);
-		assertLine(1002, 0, 1, 0, 0);
-		assertLine(1003, 1, 0, 0, 0);
+		assertLine(1002, 1, 0, 0, 0);
+		assertLine(1003, 0, 1, 0, 0);
 	}
 
 	@Test
@@ -884,14 +883,21 @@ public class MethodAnalyzerTest implements IProbeIdGenerator {
 
 	private void runMethodAnalzer(IFilter filter) {
 		LabelFlowAnalyzer.markLabels(method);
-		final MethodAnalyzer analyzer = new MethodAnalyzer("doit", "()V", null,
-				probes, filter, new FilterContextMock());
+		InstructionsBuilder builder = new InstructionsBuilder(probes);
+		final MethodAnalyzer analyzer = new MethodAnalyzer(builder);
+
 		final MethodProbesAdapter probesAdapter = new MethodProbesAdapter(
 				analyzer, this);
 		// note that CheckMethodAdapter verifies that this test does not violate
 		// contracts of ASM API
 		analyzer.accept(method, new CheckMethodAdapter(probesAdapter));
-		result = analyzer.getCoverage();
+
+		MethodCoverageImpl mc = new MethodCoverageImpl("doit", "V()", null);
+		MethodCoverageCalculator mcc = new MethodCoverageCalculator(
+				builder.getInstructions());
+		filter.filter(method, new FilterContextMock(), mcc);
+		mcc.calculate(mc);
+		result = mc;
 	}
 
 	private void assertLine(int nr, int insnMissed, int insnCovered,
