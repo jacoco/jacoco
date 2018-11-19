@@ -60,8 +60,8 @@ case "$JDK" in
 10)
   install_jdk $JDK10_URL
   ;;
-11-ea)
-  install_jdk $JDK11_EA_URL
+11)
+  install_jdk $JDK11_URL
   ;;
 12-ea)
   install_jdk $JDK12_EA_URL
@@ -93,12 +93,8 @@ case "$JDK" in
   mvn -V -B -e verify -Djdk.version=${JDK} -Dbytecode.version=${JDK} -Decj=${ECJ:-} --toolchains=./.travis/travis-toolchains.xml \
     --settings=./.travis/settings.xml
   ;;
-10)
-  mvn -V -B -e verify -Dbytecode.version=10 \
-    --settings=./.travis/settings.xml
-  ;;
-11-ea)
-  mvn -V -B -e verify -Dbytecode.version=11 \
+10 | 11)
+  mvn -V -B -e verify -Dbytecode.version=${JDK} \
     --settings=./.travis/settings.xml
   ;;
 12-ea)
