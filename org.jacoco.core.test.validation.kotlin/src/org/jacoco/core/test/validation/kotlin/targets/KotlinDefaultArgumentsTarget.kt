@@ -12,7 +12,7 @@
 package org.jacoco.core.test.validation.kotlin.targets
 
 /**
- * This test target is function with default arguments.
+ * Test target for functions with default arguments.
  */
 object KotlinDefaultArgumentsTarget {
 
