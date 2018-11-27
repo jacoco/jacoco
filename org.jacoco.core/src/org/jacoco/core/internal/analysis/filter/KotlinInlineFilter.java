@@ -85,7 +85,8 @@ public final class KotlinInlineFilter implements IFilter {
 			while (!"*E".equals(line = br.readLine())) {
 				final Matcher m = LINE_INFO_PATTERN.matcher(line);
 				if (!m.matches()) {
-					throw new AssertionError();
+					throw new IllegalStateException(
+							"Unexpected SMAP line: " + line);
 				}
 				final int outputStartLine = Integer.parseInt(m.group(4));
 				min = Math.min(outputStartLine, min);
@@ -99,8 +100,9 @@ public final class KotlinInlineFilter implements IFilter {
 
 	private static void expectLine(final BufferedReader br,
 			final String expected) throws IOException {
-		if (!expected.equals(br.readLine())) {
-			throw new AssertionError();
+		final String line = br.readLine();
+		if (!expected.equals(line)) {
+			throw new IllegalStateException("Unexpected SMAP line: " + line);
 		}
 	}
 
