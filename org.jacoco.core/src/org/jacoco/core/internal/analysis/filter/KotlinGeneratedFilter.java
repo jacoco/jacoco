@@ -36,7 +36,7 @@ public class KotlinGeneratedFilter implements IFilter {
 			return;
 		}
 
-		if (!context.getClassAnnotations().contains(KOTLIN_METADATA_DESC)) {
+		if (!isKotlinClass(context)) {
 			return;
 		}
 
