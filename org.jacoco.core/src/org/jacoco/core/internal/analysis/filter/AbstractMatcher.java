@@ -154,7 +154,11 @@ abstract class AbstractMatcher {
 		skipNonOpcodes();
 	}
 
-	private void skipNonOpcodes() {
+	/**
+	 * Moves {@link #cursor} through {@link AbstractInsnNode#FRAME},
+	 * {@link AbstractInsnNode#LABEL}, {@link AbstractInsnNode#LINE}.
+	 */
+	final void skipNonOpcodes() {
 		while (cursor != null && (cursor.getType() == AbstractInsnNode.FRAME
 				|| cursor.getType() == AbstractInsnNode.LABEL
 				|| cursor.getType() == AbstractInsnNode.LINE)) {

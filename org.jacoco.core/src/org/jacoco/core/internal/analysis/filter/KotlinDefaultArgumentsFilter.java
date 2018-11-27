@@ -18,7 +18,6 @@ import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.Type;
 import org.objectweb.asm.tree.AbstractInsnNode;
 import org.objectweb.asm.tree.JumpInsnNode;
-import org.objectweb.asm.tree.LabelNode;
 import org.objectweb.asm.tree.MethodNode;
 import org.objectweb.asm.tree.VarInsnNode;
 
@@ -85,23 +84,13 @@ public final class KotlinDefaultArgumentsFilter implements IFilter {
 					return;
 				}
 				ignore.add(cursor);
-				cursor = instructionAfterLabel(((JumpInsnNode) cursor).label);
+				cursor = ((JumpInsnNode) cursor).label;
+				skipNonOpcodes();
 			}
 
 			for (AbstractInsnNode i : ignore) {
 				output.ignore(i, i);
 			}
-		}
-
-		private static AbstractInsnNode instructionAfterLabel(
-				final LabelNode label) {
-			AbstractInsnNode i = label.getNext();
-			while (i.getType() == AbstractInsnNode.FRAME
-					|| i.getType() == AbstractInsnNode.LABEL
-					|| i.getType() == AbstractInsnNode.LINE) {
-				i = i.getNext();
-			}
-			return i;
 		}
 	}
 
