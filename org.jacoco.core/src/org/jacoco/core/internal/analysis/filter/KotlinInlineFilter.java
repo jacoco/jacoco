@@ -92,6 +92,7 @@ public final class KotlinInlineFilter implements IFilter {
 			}
 			return min;
 		} catch (IOException e) {
+			// Must not happen with StringReader
 			throw new AssertionError(e);
 		}
 	}
