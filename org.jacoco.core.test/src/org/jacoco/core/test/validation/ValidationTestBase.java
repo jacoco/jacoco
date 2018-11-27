@@ -105,12 +105,6 @@ public abstract class ValidationTestBase {
 	 */
 	@Test
 	public void execute_assertions_in_comments() throws IOException {
-		assertTrue(String.format(
-				"Last line in coverage data (%d) should be less or equal to number of lines in source file (%d)",
-				Integer.valueOf(source.getCoverage().getLastLine()),
-				Integer.valueOf(source.getLines().size())),
-				source.getCoverage().getLastLine() <= source.getLines().size());
-
 		for (Line line : source.getLines()) {
 			String exec = line.getComment();
 			if (exec != null) {
@@ -118,6 +112,15 @@ public abstract class ValidationTestBase {
 						line.toString());
 			}
 		}
+	}
+
+	@Test
+	public void last_line_in_coverage_data_should_be_less_or_equal_to_number_of_lines_in_source_file() {
+		assertTrue(String.format(
+				"Last line in coverage data (%d) should be less or equal to number of lines in source file (%d)",
+				Integer.valueOf(source.getCoverage().getLastLine()),
+				Integer.valueOf(source.getLines().size())),
+				source.getCoverage().getLastLine() <= source.getLines().size());
 	}
 
 	/*
