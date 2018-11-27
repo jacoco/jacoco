@@ -33,8 +33,8 @@ public final class KotlinInlineFilter implements IFilter {
 		if (context.getSourceDebugExtension() == null) {
 			return;
 		}
-		if (!context.getClassAnnotations()
-				.contains(KotlinGeneratedFilter.KOTLIN_METADATA_DESC)) {
+
+		if (!KotlinGeneratedFilter.isKotlinClass(context)) {
 			return;
 		}
 
