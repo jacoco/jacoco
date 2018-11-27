@@ -41,7 +41,8 @@ public final class Filters implements IFilter {
 				new AnnotationGeneratedFilter(), new KotlinGeneratedFilter(),
 				new KotlinLateinitFilter(), new KotlinWhenFilter(),
 				new KotlinWhenStringFilter(),
-				new KotlinUnsafeCastOperatorFilter(), new KotlinInlineFilter());
+				new KotlinUnsafeCastOperatorFilter(),
+				new KotlinDefaultArgumentsFilter(), new KotlinInlineFilter());
 	}
 
 	private Filters(final IFilter... filters) {
