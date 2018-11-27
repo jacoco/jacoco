@@ -68,17 +68,14 @@ public final class KotlinInlineFilter implements IFilter {
 			expectLine(br, "*S Kotlin");
 			// FileSection
 			expectLine(br, "*F");
-			while (!"*L".equals(br.readLine())) {
-			}
+			skipTo(br, "*L");
 			// LineSection
-			while (!"*E".equals(br.readLine())) {
-			}
+			skipTo(br, "*E");
 			// StratumSection
 			expectLine(br, "*S KotlinDebug");
 			// FileSection
 			expectLine(br, "*F");
-			while (!"*L".equals(br.readLine())) {
-			}
+			skipTo(br, "*L");
 			// LineSection
 			int min = Integer.MAX_VALUE;
 			String line;
@@ -96,6 +93,14 @@ public final class KotlinInlineFilter implements IFilter {
 			// Must not happen with StringReader
 			throw new AssertionError(e);
 		}
+	}
+
+	private static void skipTo(final BufferedReader br, final String expected)
+			throws IOException {
+		String line;
+		do {
+			line = br.readLine();
+		} while (line != null && !expected.equals(line));
 	}
 
 	private static void expectLine(final BufferedReader br,
