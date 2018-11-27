@@ -59,24 +59,24 @@ public final class KotlinInlineFilter implements IFilter {
 		try {
 			final BufferedReader br = new BufferedReader(
 					new StringReader(smap));
-			readLine(br, "SMAP");
+			expectLine(br, "SMAP");
 			// OutputFileName
 			br.readLine();
 			// DefaultStratumId
-			readLine(br, "Kotlin");
+			expectLine(br, "Kotlin");
 			// StratumSection
-			readLine(br, "*S Kotlin");
+			expectLine(br, "*S Kotlin");
 			// FileSection
-			readLine(br, "*F");
+			expectLine(br, "*F");
 			while (!"*L".equals(br.readLine())) {
 			}
 			// LineSection
 			while (!"*E".equals(br.readLine())) {
 			}
 			// StratumSection
-			readLine(br, "*S KotlinDebug");
+			expectLine(br, "*S KotlinDebug");
 			// FileSection
-			readLine(br, "*F");
+			expectLine(br, "*F");
 			while (!"*L".equals(br.readLine())) {
 			}
 			// LineSection
@@ -96,8 +96,8 @@ public final class KotlinInlineFilter implements IFilter {
 		}
 	}
 
-	private static void readLine(final BufferedReader br, final String expected)
-			throws IOException {
+	private static void expectLine(final BufferedReader br,
+			final String expected) throws IOException {
 		if (!expected.equals(br.readLine())) {
 			throw new AssertionError();
 		}
