@@ -87,8 +87,7 @@ public final class KotlinInlineFilter implements IFilter {
 				if (!m.matches()) {
 					throw new AssertionError();
 				}
-				final int outputStartLine = Integer
-						.parseInt(m.group(4).substring(1));
+				final int outputStartLine = Integer.parseInt(m.group(4));
 				min = Math.min(outputStartLine, min);
 			}
 			return min;
@@ -108,7 +107,7 @@ public final class KotlinInlineFilter implements IFilter {
 			+ "([0-9]++)" // InputStartLine
 			+ "(#[0-9]++)?+" // LineFileID
 			+ "(,[0-9]++)?+" // RepeatCount
-			+ "(:[0-9]++)" // OutputStartLine
+			+ ":([0-9]++)" // OutputStartLine
 			+ "(,[0-9]++)?+" // OutputLineIncrement
 	);
 
