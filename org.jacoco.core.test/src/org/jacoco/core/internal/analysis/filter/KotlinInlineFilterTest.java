@@ -52,14 +52,7 @@ public class KotlinInlineFilterTest extends FilterTestBase {
 				+ "2#2,2:9\n" //
 				+ "2#3,2:11\n" //
 				+ "*E\n" //
-				+ "*S KotlinDebug\n" //
-				+ "*F\n" //
-				+ "+ 1 callsite.kt\n" //
-				+ "CallsiteKt\n" //
-				+ "*L\n" //
-				+ "2#1,2:9\n" //
-				+ "3#1,2:11\n" //
-				+ "*E";
+				;
 		context.classAnnotations
 				.add(KotlinGeneratedFilter.KOTLIN_METADATA_DESC);
 
