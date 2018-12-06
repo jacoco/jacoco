@@ -51,8 +51,7 @@ public class KotlinInlineFilterTest extends FilterTestBase {
 				+ "1#1,8:1\n" //
 				+ "2#2,2:9\n" //
 				+ "2#3,2:11\n" //
-				+ "*E\n" //
-				;
+				+ "*E\n"; //
 		context.classAnnotations
 				.add(KotlinGeneratedFilter.KOTLIN_METADATA_DESC);
 
@@ -90,6 +89,43 @@ public class KotlinInlineFilterTest extends FilterTestBase {
 		// should not reparse:
 		context.sourceDebugExtension = "";
 		filter.filter(m, context, output);
+	}
+
+	@Test
+	public void should_filter_when_in_same_file() {
+		context.sourceDebugExtension = "" //
+				+ "SMAP\n" //
+				+ "callsite.kt\n" //
+				+ "Kotlin\n" //
+				+ "*S Kotlin\n" //
+				+ "*F\n" //
+				+ "+ 1 callsite.kt\n" //
+				+ "CallsiteKt\n" //
+				+ "*L\n" //
+				+ "1#1,33:1\n" //
+				+ "22#1,2:34\n" //
+				+ "*E\n"; //
+		context.classAnnotations
+				.add(KotlinGeneratedFilter.KOTLIN_METADATA_DESC);
+
+		m.visitLineNumber(28, new Label());
+		m.visitInsn(Opcodes.NOP);
+
+		m.visitLineNumber(34, new Label());
+		shouldIgnorePrevious(m);
+		m.visitMethodInsn(Opcodes.INVOKESTATIC, "Stubs", "nop", "()V", false);
+		shouldIgnorePrevious(m);
+		m.visitLineNumber(35, new Label());
+		shouldIgnorePrevious(m);
+		m.visitInsn(Opcodes.NOP);
+		shouldIgnorePrevious(m);
+
+		m.visitLineNumber(30, new Label());
+		m.visitInsn(Opcodes.RETURN);
+
+		filter.filter(m, context, output);
+
+		assertIgnored(expectedRanges.toArray(new Range[0]));
 	}
 
 	@Test
