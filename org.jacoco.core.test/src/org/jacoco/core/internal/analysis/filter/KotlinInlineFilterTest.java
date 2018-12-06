@@ -35,6 +35,7 @@ public class KotlinInlineFilterTest extends FilterTestBase {
 
 	@Test
 	public void should_filter() {
+		context.sourceFileName = "callsite.kt";
 		context.sourceDebugExtension = "" //
 				+ "SMAP\n" //
 				+ "callsite.kt\n" //
@@ -93,6 +94,7 @@ public class KotlinInlineFilterTest extends FilterTestBase {
 
 	@Test
 	public void should_filter_when_in_same_file() {
+		context.sourceFileName = "callsite.kt";
 		context.sourceDebugExtension = "" //
 				+ "SMAP\n" //
 				+ "callsite.kt\n" //
@@ -156,11 +158,7 @@ public class KotlinInlineFilterTest extends FilterTestBase {
 	@Test
 	public void should_throw_exception_when_SMAP_incomplete() {
 		context.sourceDebugExtension = "" //
-				+ "SMAP\n" //
-				+ "callsite.kt\n" //
-				+ "Kotlin\n" //
-				+ "*S Kotlin\n" //
-				+ "*F\n";
+				+ "SMAP\n";
 		context.classAnnotations
 				.add(KotlinGeneratedFilter.KOTLIN_METADATA_DESC);
 
@@ -169,6 +167,49 @@ public class KotlinInlineFilterTest extends FilterTestBase {
 			fail("exception expected");
 		} catch (final IllegalStateException e) {
 			assertEquals("Unexpected SMAP line: null", e.getMessage());
+		}
+	}
+
+	@Test
+	public void should_throw_exception_when_unexpected_FileInfo() {
+		context.sourceFileName = "callsite.kt";
+		context.sourceDebugExtension = "" //
+				+ "SMAP\n" //
+				+ "callsite.kt\n" //
+				+ "Kotlin\n" //
+				+ "*S Kotlin\n" //
+				+ "*F\n" //
+				+ "xxx";
+		context.classAnnotations
+				.add(KotlinGeneratedFilter.KOTLIN_METADATA_DESC);
+
+		try {
+			filter.filter(m, context, output);
+			fail("exception expected");
+		} catch (final IllegalStateException e) {
+			assertEquals("Unexpected SMAP line: xxx", e.getMessage());
+		}
+	}
+
+	@Test
+	public void should_throw_exception_when_unexpected_LineInfo() {
+		context.sourceFileName = "callsite.kt";
+		context.sourceDebugExtension = "" //
+				+ "SMAP\n" //
+				+ "callsite.kt\n" //
+				+ "Kotlin\n" //
+				+ "*S Kotlin\n" //
+				+ "*F\n" //
+				+ "*L\n" //
+				+ "xxx";
+		context.classAnnotations
+				.add(KotlinGeneratedFilter.KOTLIN_METADATA_DESC);
+
+		try {
+			filter.filter(m, context, output);
+			fail("exception expected");
+		} catch (final IllegalStateException e) {
+			assertEquals("Unexpected SMAP line: xxx", e.getMessage());
 		}
 	}
 

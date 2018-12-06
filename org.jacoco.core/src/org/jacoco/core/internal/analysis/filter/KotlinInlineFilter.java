@@ -40,6 +40,7 @@ public final class KotlinInlineFilter implements IFilter {
 
 		if (firstGeneratedLineNumber == -1) {
 			firstGeneratedLineNumber = getFirstGeneratedLineNumber(
+					context.getSourceFileName(),
 					context.getSourceDebugExtension());
 		}
 
@@ -55,37 +56,52 @@ public final class KotlinInlineFilter implements IFilter {
 		}
 	}
 
-	private static int getFirstGeneratedLineNumber(final String smap) {
+	private static int getFirstGeneratedLineNumber(final String sourceFileName,
+			final String smap) {
 		try {
 			final BufferedReader br = new BufferedReader(
 					new StringReader(smap));
 			expectLine(br, "SMAP");
 			// OutputFileName
-			br.readLine();
+			expectLine(br, sourceFileName);
 			// DefaultStratumId
 			expectLine(br, "Kotlin");
 			// StratumSection
 			expectLine(br, "*S Kotlin");
 			// FileSection
 			expectLine(br, "*F");
-			skipTo(br, "*L");
-			// LineSection
-			skipTo(br, "*E");
-			// StratumSection
-			expectLine(br, "*S KotlinDebug");
-			// FileSection
-			expectLine(br, "*F");
-			skipTo(br, "*L");
+			int sourceFileId = -1;
+			String line;
+			while (!"*L".equals(line = br.readLine())) {
+				// AbsoluteFileName
+				br.readLine();
+
+				final Matcher m = FILE_INFO_PATTERN.matcher(line);
+				if (!m.matches()) {
+					throw new IllegalStateException(
+							"Unexpected SMAP line: " + line);
+				}
+				final String fileName = m.group(2);
+				if (fileName.equals(sourceFileName)) {
+					sourceFileId = Integer.parseInt(m.group(1));
+				}
+			}
 			// LineSection
 			int min = Integer.MAX_VALUE;
-			String line;
 			while (!"*E".equals(line = br.readLine())) {
 				final Matcher m = LINE_INFO_PATTERN.matcher(line);
 				if (!m.matches()) {
 					throw new IllegalStateException(
 							"Unexpected SMAP line: " + line);
 				}
+				final int inputStartLine = Integer.parseInt(m.group(1));
+				final int lineFileID = Integer
+						.parseInt(m.group(2).substring(1));
 				final int outputStartLine = Integer.parseInt(m.group(4));
+				if (sourceFileId == lineFileID
+						&& inputStartLine == outputStartLine) {
+					continue;
+				}
 				min = Math.min(outputStartLine, min);
 			}
 			return min;
@@ -93,14 +109,6 @@ public final class KotlinInlineFilter implements IFilter {
 			// Must not happen with StringReader
 			throw new AssertionError(e);
 		}
-	}
-
-	private static void skipTo(final BufferedReader br, final String expected)
-			throws IOException {
-		String line;
-		do {
-			line = br.readLine();
-		} while (line != null && !expected.equals(line));
 	}
 
 	private static void expectLine(final BufferedReader br,
@@ -117,6 +125,11 @@ public final class KotlinInlineFilter implements IFilter {
 			+ "(,[0-9]++)?+" // RepeatCount
 			+ ":([0-9]++)" // OutputStartLine
 			+ "(,[0-9]++)?+" // OutputLineIncrement
+	);
+
+	private static final Pattern FILE_INFO_PATTERN = Pattern.compile("" //
+			+ "\\+ ([0-9]++)" // FileID
+			+ " (.++)" // FileName
 	);
 
 }
