@@ -12,6 +12,7 @@
 package org.jacoco.core.test.validation.kotlin.targets
 
 import org.jacoco.core.test.validation.targets.Stubs.nop
+import org.jacoco.core.test.validation.targets.Stubs.t
 
 /**
  * Test target for `inline` functions.
@@ -26,6 +27,9 @@ object KotlinInlineTarget {
     fun main(args: Array<String>) {
 
         inlined() // assertFullyCovered()
+
+        /* Following inlined method for some reasons doesn't appear in SMAP: */
+        assert(t()) // assertPartlyCovered(2, 2)
 
     }
 
