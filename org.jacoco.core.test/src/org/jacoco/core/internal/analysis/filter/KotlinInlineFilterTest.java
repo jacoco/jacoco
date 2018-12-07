@@ -38,21 +38,21 @@ public class KotlinInlineFilterTest extends FilterTestBase {
 		context.sourceFileName = "callsite.kt";
 		context.sourceDebugExtension = "" //
 				+ "SMAP\n" //
-				+ "callsite.kt\n" //
-				+ "Kotlin\n" //
-				+ "*S Kotlin\n" //
-				+ "*F\n" //
-				+ "+ 1 callsite.kt\n" //
+				+ "callsite.kt\n" // OutputFileName=callsite.kt
+				+ "Kotlin\n" // DefaultStratumId=Kotlin
+				+ "*S Kotlin\n" // StratumID=Kotlin
+				+ "*F\n" // FileSection
+				+ "+ 1 callsite.kt\n" // FileID=1,FileName=callsite.kt
 				+ "CallsiteKt\n" //
-				+ "+ 2 a.kt\n" //
+				+ "+ 2 a.kt\n" // FileID=2,FileName=a.kt
 				+ "AKt\n" //
-				+ "+ 3 b.kt\n" //
+				+ "+ 3 b.kt\n" // FileID=3,FileName=b.kt
 				+ "BKt\n" //
-				+ "*L\n" //
-				+ "1#1,8:1\n" //
-				+ "2#2,2:9\n" //
-				+ "2#3,2:11\n" //
-				+ "*E\n"; //
+				+ "*L\n" // LineSection
+				+ "1#1,8:1\n" // InputStartLine=1,LineFileID=1,RepeatCount=8,OutputStartLine=1
+				+ "2#2,2:9\n" // InputStartLine=2,LineFileID=2,RepeatCount=2,OutputStartLine=9
+				+ "2#3,2:11\n" // InputStartLine=2,LineFileID=3,RepeatCount=2,OutputStartLine=11
+				+ "*E\n"; // EndSection
 		context.classAnnotations
 				.add(KotlinGeneratedFilter.KOTLIN_METADATA_DESC);
 
@@ -97,16 +97,16 @@ public class KotlinInlineFilterTest extends FilterTestBase {
 		context.sourceFileName = "callsite.kt";
 		context.sourceDebugExtension = "" //
 				+ "SMAP\n" //
-				+ "callsite.kt\n" //
-				+ "Kotlin\n" //
-				+ "*S Kotlin\n" //
-				+ "*F\n" //
-				+ "+ 1 callsite.kt\n" //
+				+ "callsite.kt\n" // OutputFileName=callsite.kt
+				+ "Kotlin\n" // DefaultStratumId=Kotlin
+				+ "*S Kotlin\n" // StratumID=Kotlin
+				+ "*F\n" // FileSection
+				+ "+ 1 callsite.kt\n" // FileID=1,FileName=callsite.kt
 				+ "CallsiteKt\n" //
-				+ "*L\n" //
-				+ "1#1,33:1\n" //
-				+ "22#1,2:34\n" //
-				+ "*E\n"; //
+				+ "*L\n" // LineSection
+				+ "1#1,33:1\n" // InputStartLine=1,LineFileID=1,RepeatCount=33,OutputStartLine=1
+				+ "22#1,2:34\n" // InputStartLine=22,LineFileID=1,RepeatCount=2,OutputStartLine=34
+				+ "*E\n"; // EndSection
 		context.classAnnotations
 				.add(KotlinGeneratedFilter.KOTLIN_METADATA_DESC);
 
