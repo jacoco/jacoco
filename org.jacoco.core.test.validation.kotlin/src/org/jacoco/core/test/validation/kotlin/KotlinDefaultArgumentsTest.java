@@ -6,10 +6,21 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *
  * Contributors:
- *    Mirko Friedenhagen - initial API and implementation
+ *    Evgeny Mandrikov - initial API and implementation
  *
  *******************************************************************************/
-File realBaseDir = new File(basedir, "../../../target/it/build");
-assert new File(realBaseDir, "target/site/jacoco/index.html").exists();
-assert !new File(realBaseDir, "target/site/jacoco-it/index.html").exists();
-return true;
+package org.jacoco.core.test.validation.kotlin;
+
+import org.jacoco.core.test.validation.ValidationTestBase;
+import org.jacoco.core.test.validation.kotlin.targets.KotlinDefaultArgumentsTarget;
+
+/**
+ * Test of functions with default arguments.
+ */
+public class KotlinDefaultArgumentsTest extends ValidationTestBase {
+
+	public KotlinDefaultArgumentsTest() {
+		super(KotlinDefaultArgumentsTarget.class);
+	}
+
+}

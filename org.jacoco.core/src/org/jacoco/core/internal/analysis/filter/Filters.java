@@ -33,10 +33,11 @@ public final class Filters implements IFilter {
 			new FinallyFilter(), new PrivateEmptyNoArgConstructorFilter(),
 			new StringSwitchJavacFilter(), new StringSwitchEcjFilter(),
 			new EnumEmptyConstructorFilter(), new AnnotationGeneratedFilter(),
+			new AspectjFilter(),
 			new KotlinGeneratedFilter(), new KotlinLateinitFilter(),
 			new KotlinWhenFilter(), new KotlinWhenStringFilter(),
 			new KotlinUnsafeCastOperatorFilter(),
-			new AspectjFilter());
+			new KotlinDefaultArgumentsFilter());
 
 	private final IFilter[] filters;
 

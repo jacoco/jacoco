@@ -23,6 +23,10 @@ public class KotlinGeneratedFilter implements IFilter {
 
 	static final String KOTLIN_METADATA_DESC = "Lkotlin/Metadata;";
 
+	static boolean isKotlinClass(final IFilterContext context) {
+		return context.getClassAnnotations().contains(KOTLIN_METADATA_DESC);
+	}
+
 	public void filter(final MethodNode methodNode,
 			final IFilterContext context, final IFilterOutput output) {
 
@@ -32,7 +36,7 @@ public class KotlinGeneratedFilter implements IFilter {
 			return;
 		}
 
-		if (!context.getClassAnnotations().contains(KOTLIN_METADATA_DESC)) {
+		if (!isKotlinClass(context)) {
 			return;
 		}
 

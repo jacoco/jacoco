@@ -23,12 +23,26 @@ public final class SyntheticFilter implements IFilter {
 
 	public void filter(final MethodNode methodNode,
 			final IFilterContext context, final IFilterOutput output) {
-		if ((methodNode.access & Opcodes.ACC_SYNTHETIC) != 0
-				&& !methodNode.name.startsWith("lambda$")
-				&& !isHandledByAspectJFilter(methodNode)) {
-			output.ignore(methodNode.instructions.getFirst(),
-					methodNode.instructions.getLast());
+		if ((methodNode.access & Opcodes.ACC_SYNTHETIC) == 0) {
+			return;
 		}
+
+		if (methodNode.name.startsWith("lambda$")) {
+			return;
+		}
+
+		if (isHandledByAspectJFilter(methodNode)) {
+			return;
+		}
+
+		if (KotlinDefaultArgumentsFilter
+				.isDefaultArgumentsMethodName(methodNode.name)
+				&& KotlinGeneratedFilter.isKotlinClass(context)) {
+			return;
+		}
+
+		output.ignore(methodNode.instructions.getFirst(),
+				methodNode.instructions.getLast());
 	}
 
 	private static final Pattern ASPECTJ_AROUND_BODY_PATTERN = Pattern.compile(".*_aroundBody\\d+");

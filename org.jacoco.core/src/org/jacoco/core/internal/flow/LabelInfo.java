@@ -11,6 +11,7 @@
  *******************************************************************************/
 package org.jacoco.core.internal.flow;
 
+import org.jacoco.core.internal.analysis.Instruction;
 import org.objectweb.asm.Label;
 
 /**
