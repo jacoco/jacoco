@@ -14,8 +14,8 @@ package org.jacoco.core.internal.analysis.filter;
 import org.objectweb.asm.tree.MethodNode;
 
 /**
- * Interface for filter implementations. Instances of filters are reused and so
- * must be stateless.
+ * Interface for filter implementations. Instances of filters are created for
+ * analysis of each class and so can have per-class state.
  */
 public interface IFilter {
 

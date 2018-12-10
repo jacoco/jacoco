@@ -23,22 +23,27 @@ public final class Filters implements IFilter {
 	 */
 	public static final IFilter NONE = new Filters();
 
-	/**
-	 * Filter that combines all other filters.
-	 */
-	public static final IFilter ALL = new Filters(new EnumFilter(),
-			new SyntheticFilter(), new SynchronizedFilter(),
-			new TryWithResourcesJavac11Filter(),
-			new TryWithResourcesJavacFilter(), new TryWithResourcesEcjFilter(),
-			new FinallyFilter(), new PrivateEmptyNoArgConstructorFilter(),
-			new StringSwitchJavacFilter(), new StringSwitchEcjFilter(),
-			new EnumEmptyConstructorFilter(), new AnnotationGeneratedFilter(),
-			new KotlinGeneratedFilter(), new KotlinLateinitFilter(),
-			new KotlinWhenFilter(), new KotlinWhenStringFilter(),
-			new KotlinUnsafeCastOperatorFilter(),
-			new KotlinDefaultArgumentsFilter());
-
 	private final IFilter[] filters;
+
+	/**
+	 * Creates filter that combines all other filters.
+	 * 
+	 * @return filter that combines all other filters
+	 */
+	public static IFilter all() {
+		return new Filters(new EnumFilter(), new SyntheticFilter(),
+				new SynchronizedFilter(), new TryWithResourcesJavac11Filter(),
+				new TryWithResourcesJavacFilter(),
+				new TryWithResourcesEcjFilter(), new FinallyFilter(),
+				new PrivateEmptyNoArgConstructorFilter(),
+				new StringSwitchJavacFilter(), new StringSwitchEcjFilter(),
+				new EnumEmptyConstructorFilter(),
+				new AnnotationGeneratedFilter(), new KotlinGeneratedFilter(),
+				new KotlinLateinitFilter(), new KotlinWhenFilter(),
+				new KotlinWhenStringFilter(),
+				new KotlinUnsafeCastOperatorFilter(),
+				new KotlinDefaultArgumentsFilter(), new KotlinInlineFilter());
+	}
 
 	private Filters(final IFilter... filters) {
 		this.filters = filters;
