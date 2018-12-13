@@ -94,12 +94,17 @@ public class KotlinInlineFilterTest extends FilterTestBase {
 
 	/**
 	 * <pre>
-	 *     inline fun inlined() {
+	 *     inline fun inlined_top_level() {
 	 *       Stubs.nop()
 	 *     }
 	 *
 	 *     class Callsite {
+	 *       fun inlined() {
+	 *           Stubs.nop()
+	 *       }
+	 *
 	 *       fun callsite {
+	 *         inlined_top_level()
 	 *         inlined()
 	 *       }
 	 *     }
@@ -119,25 +124,37 @@ public class KotlinInlineFilterTest extends FilterTestBase {
 				+ "+ 2 example.kt\n" // FileID=2,FileName=example.kt
 				+ "ExampleKt\n" //
 				+ "*L\n" // LineSection
-				+ "1#1,10:1\n" // InputStartLine=1,LineFileID=1,RepeatCount=10,OutputStartLine=1
-				+ "2#2,2:11\n" // InputStartLine=2,LineFileID=2,RepeatCount=2,OutputStartLine=11
+				+ "1#1,15:1\n" // InputStartLine=1,LineFileID=1,RepeatCount=10,OutputStartLine=1
+				+ "7#1,2:18\n" // InputStartLine=7,LineFileID=1,RepeatCount=2,OutputStartLine=18
+				+ "2#2,2:16\n" // InputStartLine=2,LineFileID=2,RepeatCount=2,OutputStartLine=16
 				+ "*E\n"; // EndSection
 		context.classAnnotations
 				.add(KotlinGeneratedFilter.KOTLIN_METADATA_DESC);
 
-		m.visitLineNumber(7, new Label());
-		m.visitInsn(Opcodes.NOP);
-
 		m.visitLineNumber(11, new Label());
+		m.visitInsn(Opcodes.NOP);
+		m.visitLineNumber(16, new Label());
 		shouldIgnorePrevious(m);
 		m.visitMethodInsn(Opcodes.INVOKESTATIC, "Stubs", "nop", "()V", false);
 		shouldIgnorePrevious(m);
-		m.visitLineNumber(11, new Label());
+		m.visitLineNumber(17, new Label());
 		shouldIgnorePrevious(m);
 		m.visitInsn(Opcodes.NOP);
 		shouldIgnorePrevious(m);
 
-		m.visitLineNumber(8, new Label());
+		m.visitLineNumber(12, new Label());
+		m.visitVarInsn(Opcodes.ALOAD, 0);
+		m.visitVarInsn(Opcodes.ASTORE, 1);
+		m.visitLineNumber(18, new Label());
+		shouldIgnorePrevious(m);
+		m.visitMethodInsn(Opcodes.INVOKESTATIC, "Stubs", "nop", "()V", false);
+		shouldIgnorePrevious(m);
+		m.visitLineNumber(19, new Label());
+		shouldIgnorePrevious(m);
+		m.visitInsn(Opcodes.NOP);
+		shouldIgnorePrevious(m);
+
+		m.visitLineNumber(13, new Label());
 		m.visitInsn(Opcodes.RETURN);
 
 		filter.filter(m, context, output);

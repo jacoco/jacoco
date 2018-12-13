@@ -21,14 +21,20 @@ fun main(args: Array<String>) {
     KotlinInlineTarget.main(args)
 }
 
-inline fun inlined() {
+inline fun inlined_top_level() {
     nop() // assertNotCovered()
 }
 
 object KotlinInlineTarget {
 
+    inline fun inlined() {
+        nop() // assertNotCovered()
+    }
+
     @JvmStatic
     fun main(args: Array<String>) {
+
+        inlined_top_level() // assertFullyCovered()
 
         inlined() // assertFullyCovered()
 
