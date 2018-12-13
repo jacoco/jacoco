@@ -17,11 +17,15 @@ import org.jacoco.core.test.validation.targets.Stubs.t
 /**
  * Test target for `inline` functions.
  */
-object KotlinInlineTarget {
+fun main(args: Array<String>) {
+    KotlinInlineTarget.main(args)
+}
 
-    inline fun inlined() {
-        nop() // assertNotCovered()
-    }
+inline fun inlined() {
+    nop() // assertNotCovered()
+}
+
+object KotlinInlineTarget {
 
     @JvmStatic
     fun main(args: Array<String>) {
