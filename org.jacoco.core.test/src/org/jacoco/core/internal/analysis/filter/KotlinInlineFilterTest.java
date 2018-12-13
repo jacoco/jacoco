@@ -92,37 +92,52 @@ public class KotlinInlineFilterTest extends FilterTestBase {
 		filter.filter(m, context, output);
 	}
 
+	/**
+	 * <pre>
+	 *     inline fun inlined() {
+	 *       Stubs.nop()
+	 *     }
+	 *
+	 *     class Callsite {
+	 *       fun callsite {
+	 *         inlined()
+	 *       }
+	 *     }
+	 * </pre>
+	 */
 	@Test
 	public void should_filter_when_in_same_file() {
-		context.sourceFileName = "callsite.kt";
+		context.sourceFileName = "example.kt";
 		context.sourceDebugExtension = "" //
 				+ "SMAP\n" //
-				+ "callsite.kt\n" // OutputFileName=callsite.kt
+				+ "example.kt\n" // OutputFileName=example.kt
 				+ "Kotlin\n" // DefaultStratumId=Kotlin
 				+ "*S Kotlin\n" // StratumID=Kotlin
 				+ "*F\n" // FileSection
-				+ "+ 1 callsite.kt\n" // FileID=1,FileName=callsite.kt
-				+ "CallsiteKt\n" //
+				+ "+ 1 example.kt\n" // FileID=1,FileName=example.kt
+				+ "Callsite\n" //
+				+ "+ 2 example.kt\n" // FileID=2,FileName=example.kt
+				+ "ExampleKt\n" //
 				+ "*L\n" // LineSection
-				+ "1#1,33:1\n" // InputStartLine=1,LineFileID=1,RepeatCount=33,OutputStartLine=1
-				+ "22#1,2:34\n" // InputStartLine=22,LineFileID=1,RepeatCount=2,OutputStartLine=34
+				+ "1#1,10:1\n" // InputStartLine=1,LineFileID=1,RepeatCount=10,OutputStartLine=1
+				+ "2#2,2:11\n" // InputStartLine=2,LineFileID=2,RepeatCount=2,OutputStartLine=11
 				+ "*E\n"; // EndSection
 		context.classAnnotations
 				.add(KotlinGeneratedFilter.KOTLIN_METADATA_DESC);
 
-		m.visitLineNumber(28, new Label());
+		m.visitLineNumber(7, new Label());
 		m.visitInsn(Opcodes.NOP);
 
-		m.visitLineNumber(34, new Label());
+		m.visitLineNumber(11, new Label());
 		shouldIgnorePrevious(m);
 		m.visitMethodInsn(Opcodes.INVOKESTATIC, "Stubs", "nop", "()V", false);
 		shouldIgnorePrevious(m);
-		m.visitLineNumber(35, new Label());
+		m.visitLineNumber(11, new Label());
 		shouldIgnorePrevious(m);
 		m.visitInsn(Opcodes.NOP);
 		shouldIgnorePrevious(m);
 
-		m.visitLineNumber(30, new Label());
+		m.visitLineNumber(8, new Label());
 		m.visitInsn(Opcodes.RETURN);
 
 		filter.filter(m, context, output);
