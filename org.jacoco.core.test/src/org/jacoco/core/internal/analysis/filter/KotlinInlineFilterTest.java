@@ -243,7 +243,7 @@ public class KotlinInlineFilterTest extends FilterTestBase {
 			filter.filter(m, context, output);
 			fail("exception expected");
 		} catch (final IllegalStateException e) {
-			assertEquals("Unexpected SMAP", e.getMessage());
+			assertEquals("Unexpected SMAP FileSection", e.getMessage());
 		}
 	}
 
