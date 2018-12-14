@@ -12,7 +12,7 @@
 package org.jacoco.core.test.validation.kotlin;
 
 import org.jacoco.core.test.validation.ValidationTestBase;
-import org.jacoco.core.test.validation.kotlin.targets.KotlinInlineTarget;
+import org.jacoco.core.test.validation.kotlin.targets.KotlinInlineTargetKt;
 
 /**
  * Test of <code>inline</code> functions.
@@ -20,7 +20,7 @@ import org.jacoco.core.test.validation.kotlin.targets.KotlinInlineTarget;
 public class KotlinInlineTest extends ValidationTestBase {
 
 	public KotlinInlineTest() {
-		super(KotlinInlineTarget.class);
+		super(KotlinInlineTargetKt.class);
 	}
 
 }

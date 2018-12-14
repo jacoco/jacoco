@@ -14,6 +14,7 @@ package org.jacoco.core.internal.analysis.filter;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.StringReader;
+import java.util.BitSet;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -70,7 +71,7 @@ public final class KotlinInlineFilter implements IFilter {
 			expectLine(br, "*S Kotlin");
 			// FileSection
 			expectLine(br, "*F");
-			int sourceFileId = -1;
+			final BitSet sourceFileIds = new BitSet();
 			String line;
 			while (!"*L".equals(line = br.readLine())) {
 				// AbsoluteFileName
@@ -83,8 +84,11 @@ public final class KotlinInlineFilter implements IFilter {
 				}
 				final String fileName = m.group(2);
 				if (fileName.equals(sourceFileName)) {
-					sourceFileId = Integer.parseInt(m.group(1));
+					sourceFileIds.set(Integer.parseInt(m.group(1)));
 				}
+			}
+			if (sourceFileIds.isEmpty()) {
+				throw new IllegalStateException("Unexpected SMAP FileSection");
 			}
 			// LineSection
 			int min = Integer.MAX_VALUE;
@@ -98,7 +102,7 @@ public final class KotlinInlineFilter implements IFilter {
 				final int lineFileID = Integer
 						.parseInt(m.group(2).substring(1));
 				final int outputStartLine = Integer.parseInt(m.group(4));
-				if (sourceFileId == lineFileID
+				if (sourceFileIds.get(lineFileID)
 						&& inputStartLine == outputStartLine) {
 					continue;
 				}

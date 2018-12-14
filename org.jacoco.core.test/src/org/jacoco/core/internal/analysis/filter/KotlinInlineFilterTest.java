@@ -92,37 +92,69 @@ public class KotlinInlineFilterTest extends FilterTestBase {
 		filter.filter(m, context, output);
 	}
 
+	/**
+	 * <pre>
+	 *     inline fun inlined_top_level() {
+	 *       Stubs.nop()
+	 *     }
+	 *
+	 *     class Callsite {
+	 *       fun inlined() {
+	 *           Stubs.nop()
+	 *       }
+	 *
+	 *       fun callsite {
+	 *         inlined_top_level()
+	 *         inlined()
+	 *       }
+	 *     }
+	 * </pre>
+	 */
 	@Test
 	public void should_filter_when_in_same_file() {
-		context.sourceFileName = "callsite.kt";
+		context.sourceFileName = "example.kt";
 		context.sourceDebugExtension = "" //
 				+ "SMAP\n" //
-				+ "callsite.kt\n" // OutputFileName=callsite.kt
+				+ "example.kt\n" // OutputFileName=example.kt
 				+ "Kotlin\n" // DefaultStratumId=Kotlin
 				+ "*S Kotlin\n" // StratumID=Kotlin
 				+ "*F\n" // FileSection
-				+ "+ 1 callsite.kt\n" // FileID=1,FileName=callsite.kt
-				+ "CallsiteKt\n" //
+				+ "+ 1 example.kt\n" // FileID=1,FileName=example.kt
+				+ "Callsite\n" //
+				+ "+ 2 example.kt\n" // FileID=2,FileName=example.kt
+				+ "ExampleKt\n" //
 				+ "*L\n" // LineSection
-				+ "1#1,33:1\n" // InputStartLine=1,LineFileID=1,RepeatCount=33,OutputStartLine=1
-				+ "22#1,2:34\n" // InputStartLine=22,LineFileID=1,RepeatCount=2,OutputStartLine=34
+				+ "1#1,15:1\n" // InputStartLine=1,LineFileID=1,RepeatCount=10,OutputStartLine=1
+				+ "7#1,2:18\n" // InputStartLine=7,LineFileID=1,RepeatCount=2,OutputStartLine=18
+				+ "2#2,2:16\n" // InputStartLine=2,LineFileID=2,RepeatCount=2,OutputStartLine=16
 				+ "*E\n"; // EndSection
 		context.classAnnotations
 				.add(KotlinGeneratedFilter.KOTLIN_METADATA_DESC);
 
-		m.visitLineNumber(28, new Label());
+		m.visitLineNumber(11, new Label());
 		m.visitInsn(Opcodes.NOP);
-
-		m.visitLineNumber(34, new Label());
+		m.visitLineNumber(16, new Label());
 		shouldIgnorePrevious(m);
 		m.visitMethodInsn(Opcodes.INVOKESTATIC, "Stubs", "nop", "()V", false);
 		shouldIgnorePrevious(m);
-		m.visitLineNumber(35, new Label());
+		m.visitLineNumber(17, new Label());
 		shouldIgnorePrevious(m);
 		m.visitInsn(Opcodes.NOP);
 		shouldIgnorePrevious(m);
 
-		m.visitLineNumber(30, new Label());
+		m.visitLineNumber(12, new Label());
+		m.visitVarInsn(Opcodes.ALOAD, 0);
+		m.visitVarInsn(Opcodes.ASTORE, 1);
+		m.visitLineNumber(18, new Label());
+		shouldIgnorePrevious(m);
+		m.visitMethodInsn(Opcodes.INVOKESTATIC, "Stubs", "nop", "()V", false);
+		shouldIgnorePrevious(m);
+		m.visitLineNumber(19, new Label());
+		shouldIgnorePrevious(m);
+		m.visitInsn(Opcodes.NOP);
+		shouldIgnorePrevious(m);
+
+		m.visitLineNumber(13, new Label());
 		m.visitInsn(Opcodes.RETURN);
 
 		filter.filter(m, context, output);
@@ -192,6 +224,30 @@ public class KotlinInlineFilterTest extends FilterTestBase {
 	}
 
 	@Test
+	public void should_throw_exception_when_no_SourceFileId_for_SourceFile() {
+		context.sourceFileName = "example.kt";
+		context.classAnnotations
+				.add(KotlinGeneratedFilter.KOTLIN_METADATA_DESC);
+		context.sourceDebugExtension = "" //
+				+ "SMAP\n" //
+				+ "example.kt\n" //
+				+ "Kotlin\n" //
+				+ "*S Kotlin\n" //
+				+ "*F\n" //
+				+ "+ 1 another.kt\n" //
+				+ "AnotherKt\n" //
+				+ "*L\n" //
+				+ "*E\n";
+
+		try {
+			filter.filter(m, context, output);
+			fail("exception expected");
+		} catch (final IllegalStateException e) {
+			assertEquals("Unexpected SMAP FileSection", e.getMessage());
+		}
+	}
+
+	@Test
 	public void should_throw_exception_when_unexpected_LineInfo() {
 		context.sourceFileName = "callsite.kt";
 		context.sourceDebugExtension = "" //
@@ -200,6 +256,8 @@ public class KotlinInlineFilterTest extends FilterTestBase {
 				+ "Kotlin\n" //
 				+ "*S Kotlin\n" //
 				+ "*F\n" //
+				+ "+ 1 callsite.kt\n" //
+				+ "Callsite\n" //
 				+ "*L\n" //
 				+ "xxx";
 		context.classAnnotations
