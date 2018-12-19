@@ -47,6 +47,7 @@ public class ClassPageTest extends PageTestBase {
 		page.render();
 
 		final Document doc = support.parse(output.getFile("Foo.html"));
+		assertEquals("", support.findStr(doc, "doc/body/p[1]"));
 		assertEquals("el_method", support.findStr(doc,
 				"/html/body/table[1]/tbody/tr[1]/td[1]/span/@class"));
 		assertEquals("a()", support.findStr(doc,
@@ -55,6 +56,20 @@ public class ClassPageTest extends PageTestBase {
 				"/html/body/table[1]/tbody/tr[2]/td[1]/span"));
 		assertEquals("c()", support.findStr(doc,
 				"/html/body/table[1]/tbody/tr[3]/td[1]/span"));
+	}
+
+	@Test
+	public void should_generate_message_when_SourceFileName_present_but_no_SourceFilePage()
+			throws Exception {
+		node.setSourceFileName("Foo.java");
+
+		page = new ClassPage(node, null, null, rootFolder, context);
+		page.render();
+
+		final Document doc = support.parse(output.getFile("Foo.html"));
+		assertEquals(
+				"Source file \"org/jacoco/example/Foo.java\" was not found during generation of report.",
+				support.findStr(doc, "/html/body/p[1]"));
 	}
 
 	@Test
