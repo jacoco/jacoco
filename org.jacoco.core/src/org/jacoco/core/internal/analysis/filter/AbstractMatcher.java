@@ -42,22 +42,6 @@ abstract class AbstractMatcher {
 	}
 
 	/**
-	 * Moves {@link #cursor} to next instruction if it is <code>NEW</code> with
-	 * given operand, otherwise sets it to <code>null</code>.
-	 */
-	final void nextIsNew(final String desc) {
-		nextIs(Opcodes.NEW);
-		if (cursor == null) {
-			return;
-		}
-		final TypeInsnNode i = (TypeInsnNode) cursor;
-		if (desc.equals(i.desc)) {
-			return;
-		}
-		cursor = null;
-	}
-
-	/**
 	 * Moves {@link #cursor} to next instruction if it is {@link TypeInsnNode}
 	 * with given opcode and operand, otherwise sets it to <code>null</code>.
 	 */
