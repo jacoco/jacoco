@@ -50,7 +50,7 @@ public final class KotlinWhenFilter implements IFilter {
 			}
 			cursor = start;
 
-			nextIsNew(EXCEPTION);
+			nextIsType(Opcodes.NEW, EXCEPTION);
 			nextIs(Opcodes.DUP);
 			nextIsInvokeSuper(EXCEPTION, "()V");
 			nextIs(Opcodes.ATHROW);
