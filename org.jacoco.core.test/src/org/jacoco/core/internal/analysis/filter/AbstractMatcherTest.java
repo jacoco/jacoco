@@ -243,6 +243,31 @@ public class AbstractMatcherTest {
 	}
 
 	@Test
+	public void nextIsType() {
+		m.visitInsn(Opcodes.NOP);
+		m.visitTypeInsn(Opcodes.NEW, "descriptor");
+
+		// should set cursor to null when opcode mismatch
+		matcher.cursor = m.instructions.getFirst();
+		matcher.nextIsType(Opcodes.CHECKCAST, "descriptor");
+		assertNull(matcher.cursor);
+
+		// should set cursor to null when descriptor mismatch
+		matcher.cursor = m.instructions.getFirst();
+		matcher.nextIsType(Opcodes.NEW, "another_descriptor");
+		assertNull(matcher.cursor);
+
+		// should set cursor to next instruction when match
+		matcher.cursor = m.instructions.getFirst();
+		matcher.nextIsType(Opcodes.NEW, "descriptor");
+		assertSame(m.instructions.getLast(), matcher.cursor);
+
+		// should not do anything when cursor is null
+		matcher.cursor = null;
+		matcher.nextIsType(Opcodes.NEW, "descriptor");
+	}
+
+	@Test
 	public void firstIsALoad0() {
 		// should set cursor to null when opcode mismatch
 		m.visitInsn(Opcodes.NOP);

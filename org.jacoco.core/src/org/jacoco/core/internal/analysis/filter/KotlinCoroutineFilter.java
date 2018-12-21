@@ -121,22 +121,6 @@ public final class KotlinCoroutineFilter implements IFilter {
 				output.ignore(ignore.get(i), ignore.get(i + 1));
 			}
 		}
-
-		/**
-		 * Moves {@link #cursor} to next instruction if it is
-		 * {@link TypeInsnNode} with given opcode and operand, otherwise sets it
-		 * to <code>null</code>.
-		 */
-		private void nextIsType(final int opcode, final String desc) {
-			nextIs(opcode);
-			if (cursor == null) {
-				return;
-			}
-			if (((TypeInsnNode) cursor).desc.equals(desc)) {
-				return;
-			}
-			cursor = null;
-		}
 	}
 
 }
