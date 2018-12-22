@@ -26,9 +26,10 @@ object KotlinCoroutineTarget {
     fun main(args: Array<String>) {
 
         runBlocking { // assertFullyCovered()
-            nop() // assertFullyCovered()
+            val x = 42
+            nop(x) // assertFullyCovered()
             suspendingFunction() // assertFullyCovered()
-            nop() // assertFullyCovered()
+            nop(x) // assertFullyCovered()
         } // assertFullyCovered()
 
     }
