@@ -11,8 +11,11 @@
  *******************************************************************************/
 package org.jacoco.report.internal.html.page;
 
+import java.io.IOException;
+
 import org.jacoco.core.analysis.ICoverageNode;
 import org.jacoco.report.internal.ReportOutputFolder;
+import org.jacoco.report.internal.html.HTMLElement;
 import org.jacoco.report.internal.html.IHTMLReportContext;
 import org.jacoco.report.internal.html.resources.Resources;
 import org.jacoco.report.internal.html.resources.Styles;
@@ -24,10 +27,15 @@ import org.jacoco.report.internal.html.table.ITableItem;
  * @param <NodeType>
  *            type of the node represented by this page
  */
-public abstract class NodePage<NodeType extends ICoverageNode> extends
-		ReportPage implements ITableItem {
+public abstract class NodePage<NodeType extends ICoverageNode>
+		extends ReportPage implements ITableItem {
 
 	private final NodeType node;
+
+	/**
+	 * Can be used in subclasses to perform checks check.
+	 */
+	protected final DiagnosticInfo diagnosticInfo;
 
 	/**
 	 * Creates a new node page.
@@ -45,6 +53,13 @@ public abstract class NodePage<NodeType extends ICoverageNode> extends
 			final ReportOutputFolder folder, final IHTMLReportContext context) {
 		super(parent, folder, context);
 		this.node = node;
+		this.diagnosticInfo = new DiagnosticInfo();
+		this.diagnosticInfo.checkMissingLineNumbers(node);
+	}
+
+	@Override
+	protected void content(final HTMLElement body) throws IOException {
+		diagnosticInfo.renderInfos(body);
 	}
 
 	// === ILinkable ===

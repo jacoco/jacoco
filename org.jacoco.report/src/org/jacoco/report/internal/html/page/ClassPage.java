@@ -16,7 +16,6 @@ import java.io.IOException;
 import org.jacoco.core.analysis.IClassCoverage;
 import org.jacoco.core.analysis.IMethodCoverage;
 import org.jacoco.report.internal.ReportOutputFolder;
-import org.jacoco.report.internal.html.HTMLElement;
 import org.jacoco.report.internal.html.IHTMLReportContext;
 import org.jacoco.report.internal.html.ILinkable;
 
@@ -47,6 +46,8 @@ public class ClassPage extends TablePage<IClassCoverage> {
 			final IHTMLReportContext context) {
 		super(classNode, parent, folder, context);
 		this.sourcePage = sourcePage;
+		diagnosticInfo.checkClassIdMismatch(classNode);
+		diagnosticInfo.checkMissingSource(classNode, sourcePage);
 		context.getIndexUpdate().addClass(this, classNode.getId());
 	}
 
@@ -79,22 +80,6 @@ public class ClassPage extends TablePage<IClassCoverage> {
 		return context.getLanguageNames().getClassName(getNode().getName(),
 				getNode().getSignature(), getNode().getSuperName(),
 				getNode().getInterfaceNames());
-	}
-
-	@Override
-	protected void content(HTMLElement body) throws IOException {
-		if (getNode().getSourceFileName() != null && sourcePage == null) {
-			final String sourcePath;
-			if (getNode().getPackageName().length() != 0) {
-				sourcePath = getNode().getPackageName() + "/" + getNode().getSourceFileName();
-			} else {
-				sourcePath = getNode().getSourceFileName();
-			}
-			body.p().text("Source file \"" + sourcePath
-					+ "\" was not found during generation of report.");
-		}
-
-		super.content(body);
 	}
 
 }

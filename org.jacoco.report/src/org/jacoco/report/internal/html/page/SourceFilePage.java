@@ -59,6 +59,7 @@ public class SourceFilePage extends NodePage<ISourceNode> {
 
 	@Override
 	protected void content(final HTMLElement body) throws IOException {
+		super.content(body);
 		final SourceHighlighter hl = new SourceHighlighter(context.getLocale());
 		hl.render(body, getNode(), sourceReader);
 		sourceReader.close();
