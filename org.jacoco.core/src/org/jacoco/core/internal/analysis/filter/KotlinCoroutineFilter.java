@@ -79,7 +79,11 @@ public final class KotlinCoroutineFilter implements IFilter {
 				cursor = i;
 				nextIsVar(Opcodes.ALOAD, "COROUTINE_SUSPENDED");
 				nextIs(Opcodes.IF_ACMPNE);
-				AbstractInsnNode continuationAfterLoadedResult = cursor;
+				if (cursor == null) {
+					continue;
+				}
+				final AbstractInsnNode continuationAfterLoadedResult = skipNonOpcodes(
+						(((JumpInsnNode) cursor)).label);
 				nextIsVar(Opcodes.ALOAD, "COROUTINE_SUSPENDED");
 				nextIs(Opcodes.ARETURN);
 				if (cursor == null
@@ -87,8 +91,6 @@ public final class KotlinCoroutineFilter implements IFilter {
 								s.labels.get(suspensionPoint))) {
 					continue;
 				}
-				continuationAfterLoadedResult = skipNonOpcodes(
-						(((JumpInsnNode) continuationAfterLoadedResult)).label);
 
 				for (AbstractInsnNode j = i; j != null; j = j.getNext()) {
 					cursor = j;
