@@ -166,7 +166,7 @@ abstract class AbstractMatcher {
 	 * {@link AbstractInsnNode#FRAME}, {@link AbstractInsnNode#LABEL},
 	 * {@link AbstractInsnNode#LINE}.
 	 */
-	final AbstractInsnNode skipNonOpcodes(AbstractInsnNode cursor) {
+	static AbstractInsnNode skipNonOpcodes(AbstractInsnNode cursor) {
 		while (cursor != null && (cursor.getType() == AbstractInsnNode.FRAME
 				|| cursor.getType() == AbstractInsnNode.LABEL
 				|| cursor.getType() == AbstractInsnNode.LINE)) {
