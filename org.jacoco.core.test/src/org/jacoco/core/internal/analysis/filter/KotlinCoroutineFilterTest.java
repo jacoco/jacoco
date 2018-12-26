@@ -31,9 +31,10 @@ public class KotlinCoroutineFilterTest extends FilterTestBase {
 	/**
 	 * <pre>
 	 *     runBlocking {
-	 *         nop()
+	 *         val x = 42
+	 *         nop(x)
 	 *         suspendingFunction()
-	 *         nop()
+	 *         nop(x)
 	 *     }
 	 * </pre>
 	 */
@@ -46,11 +47,11 @@ public class KotlinCoroutineFilterTest extends FilterTestBase {
 		m.visitMethodInsn(Opcodes.INVOKESTATIC,
 				"kotlin/coroutines/intrinsics/IntrinsicsKt",
 				"getCOROUTINE_SUSPENDED", "()Ljava/lang/Object;", false);
-		m.visitVarInsn(Opcodes.ASTORE, 3);
+		m.visitVarInsn(Opcodes.ASTORE, 4);
 
 		m.visitVarInsn(Opcodes.ALOAD, 0);
 		// line of "runBlocking"
-		m.visitFieldInsn(Opcodes.GETFIELD, "", "label", "I");
+		m.visitFieldInsn(Opcodes.GETFIELD, "Target", "label", "I");
 		final Label dflt = new Label();
 		final Label state0 = new Label();
 		final Label state1 = new Label();
@@ -85,14 +86,18 @@ public class KotlinCoroutineFilterTest extends FilterTestBase {
 		m.visitInsn(Opcodes.DUP);
 		final Range range2 = new Range();
 		range2.fromInclusive = m.instructions.getLast();
-		m.visitVarInsn(Opcodes.ALOAD, 3);
+		m.visitVarInsn(Opcodes.ALOAD, 4);
 		final Label continuationLabelAfterLoadedResult = new Label();
 		m.visitJumpInsn(Opcodes.IF_ACMPNE, continuationLabelAfterLoadedResult);
 		// line of "runBlocking"
-		m.visitVarInsn(Opcodes.ALOAD, 3);
+		m.visitVarInsn(Opcodes.ALOAD, 4);
 		m.visitInsn(Opcodes.ARETURN);
 
 		m.visitLabel(state1);
+
+		m.visitVarInsn(Opcodes.ALOAD, 0);
+		m.visitFieldInsn(Opcodes.GETFIELD, "Target", "I$0", "I");
+		m.visitVarInsn(Opcodes.ISTORE, 3);
 
 		{
 			m.visitVarInsn(Opcodes.ALOAD, 1);

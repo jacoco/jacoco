@@ -16,6 +16,7 @@ import java.util.List;
 
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.tree.AbstractInsnNode;
+import org.objectweb.asm.tree.JumpInsnNode;
 import org.objectweb.asm.tree.LdcInsnNode;
 import org.objectweb.asm.tree.MethodNode;
 import org.objectweb.asm.tree.TableSwitchInsnNode;
@@ -72,32 +73,45 @@ public final class KotlinCoroutineFilter implements IFilter {
 			ignore.add(s);
 			ignore.add(cursor);
 
-			for (AbstractInsnNode i = methodNode.instructions
-					.getFirst(); i != null; i = i.getNext()) {
+			int suspensionPoint = 1;
+			for (AbstractInsnNode i = cursor; i != null
+					&& suspensionPoint < s.labels.size(); i = i.getNext()) {
 				cursor = i;
 				nextIsVar(Opcodes.ALOAD, "COROUTINE_SUSPENDED");
 				nextIs(Opcodes.IF_ACMPNE);
+				if (cursor == null) {
+					continue;
+				}
+				final AbstractInsnNode continuationAfterLoadedResult = skipNonOpcodes(
+						(((JumpInsnNode) cursor)).label);
 				nextIsVar(Opcodes.ALOAD, "COROUTINE_SUSPENDED");
 				nextIs(Opcodes.ARETURN);
-
-				nextIs(Opcodes.ALOAD);
-				nextIs(Opcodes.DUP);
-				nextIsType(Opcodes.INSTANCEOF, "kotlin/Result$Failure");
-				nextIs(Opcodes.IFEQ);
-				nextIsType(Opcodes.CHECKCAST, "kotlin/Result$Failure");
-				nextIs(Opcodes.GETFIELD);
-				nextIs(Opcodes.ATHROW);
-				nextIs(Opcodes.POP);
-
-				nextIs(Opcodes.ALOAD);
-				if (cursor != null) {
-					ignore.add(i);
-					ignore.add(cursor);
+				if (cursor == null
+						|| skipNonOpcodes(cursor.getNext()) != skipNonOpcodes(
+								s.labels.get(suspensionPoint))) {
+					continue;
 				}
-			}
 
-			if (ignore.size() != s.labels.size() * 2) {
-				return;
+				for (AbstractInsnNode j = i; j != null; j = j.getNext()) {
+					cursor = j;
+					nextIs(Opcodes.ALOAD);
+					nextIs(Opcodes.DUP);
+					nextIsType(Opcodes.INSTANCEOF, "kotlin/Result$Failure");
+					nextIs(Opcodes.IFEQ);
+					nextIsType(Opcodes.CHECKCAST, "kotlin/Result$Failure");
+					nextIs(Opcodes.GETFIELD);
+					nextIs(Opcodes.ATHROW);
+					nextIs(Opcodes.POP);
+
+					nextIs(Opcodes.ALOAD);
+					if (cursor != null && skipNonOpcodes(cursor
+							.getNext()) == continuationAfterLoadedResult) {
+						ignore.add(i);
+						ignore.add(cursor);
+						suspensionPoint++;
+						break;
+					}
+				}
 			}
 
 			cursor = s.dflt;
