@@ -12,7 +12,6 @@
 package org.jacoco.core.internal.analysis.filter;
 
 import org.objectweb.asm.Opcodes;
-import org.objectweb.asm.Type;
 import org.objectweb.asm.tree.MethodNode;
 
 /**
@@ -36,11 +35,7 @@ public final class SyntheticFilter implements IFilter {
 				return;
 			}
 
-			final Type methodType = Type.getMethodType(methodNode.desc);
-			final int lastArgument = methodType.getArgumentTypes().length - 1;
-			if (lastArgument >= 0 && "kotlin.coroutines.Continuation"
-					.equals(methodType.getArgumentTypes()[lastArgument]
-							.getClassName())) {
+			if (KotlinCoroutineFilter.isLastArgumentContinuation(methodNode)) {
 				return;
 			}
 		}
