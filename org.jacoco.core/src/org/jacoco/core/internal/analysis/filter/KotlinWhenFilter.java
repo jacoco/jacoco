@@ -93,20 +93,9 @@ public final class KotlinWhenFilter implements IFilter {
 		}
 		final Set<AbstractInsnNode> newTargets = new HashSet<AbstractInsnNode>();
 		for (LabelNode label : labels) {
-			newTargets.add(instructionAfterLabel(label));
+			newTargets.add(AbstractMatcher.skipNonOpcodes(label));
 		}
 		output.replaceBranches(switchNode, newTargets);
-	}
-
-	private static AbstractInsnNode instructionAfterLabel(
-			final LabelNode label) {
-		AbstractInsnNode i = label.getNext();
-		while (i.getType() == AbstractInsnNode.FRAME
-				|| i.getType() == AbstractInsnNode.LABEL
-				|| i.getType() == AbstractInsnNode.LINE) {
-			i = i.getNext();
-		}
-		return i;
 	}
 
 }
