@@ -67,7 +67,7 @@ public final class StringSwitchEcjFilter implements IFilter {
 			}
 
 			final Set<AbstractInsnNode> replacements = new HashSet<AbstractInsnNode>();
-			replacements.add(instructionAfterLabel(defaultLabel));
+			replacements.add(skipNonOpcodes(defaultLabel));
 
 			for (int i = 0; i < hashCodes; i++) {
 				while (true) {
@@ -80,8 +80,8 @@ public final class StringSwitchEcjFilter implements IFilter {
 						return;
 					}
 
-					replacements.add(instructionAfterLabel(
-							((JumpInsnNode) cursor).label));
+					replacements
+							.add(skipNonOpcodes(((JumpInsnNode) cursor).label));
 
 					if (cursor.getNext().getOpcode() == Opcodes.GOTO) {
 						// end of comparisons for same hashCode
@@ -97,17 +97,6 @@ public final class StringSwitchEcjFilter implements IFilter {
 			output.ignore(s.getNext(), cursor);
 			output.replaceBranches(s, replacements);
 		}
-	}
-
-	private static AbstractInsnNode instructionAfterLabel(
-			final LabelNode label) {
-		AbstractInsnNode i = label.getNext();
-		while (i.getType() == AbstractInsnNode.FRAME
-				|| i.getType() == AbstractInsnNode.LABEL
-				|| i.getType() == AbstractInsnNode.LINE) {
-			i = i.getNext();
-		}
-		return i;
 	}
 
 }

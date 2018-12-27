@@ -67,7 +67,7 @@ public final class KotlinWhenStringFilter implements IFilter {
 			}
 
 			final Set<AbstractInsnNode> replacements = new HashSet<AbstractInsnNode>();
-			replacements.add(instructionAfterLabel(defaultLabel));
+			replacements.add(skipNonOpcodes(defaultLabel));
 
 			for (int i = 0; i < hashCodes; i++) {
 				while (true) {
@@ -83,8 +83,8 @@ public final class KotlinWhenStringFilter implements IFilter {
 						return;
 					}
 
-					replacements.add(instructionAfterLabel(
-							((JumpInsnNode) cursor).label));
+					replacements
+							.add(skipNonOpcodes(((JumpInsnNode) cursor).label));
 
 					if (jump.label == defaultLabel) {
 						// end of comparisons for same hashCode
@@ -96,17 +96,6 @@ public final class KotlinWhenStringFilter implements IFilter {
 			output.ignore(s.getNext(), cursor);
 			output.replaceBranches(s, replacements);
 		}
-	}
-
-	private static AbstractInsnNode instructionAfterLabel(
-			final LabelNode label) {
-		AbstractInsnNode i = label.getNext();
-		while (i.getType() == AbstractInsnNode.FRAME
-				|| i.getType() == AbstractInsnNode.LABEL
-				|| i.getType() == AbstractInsnNode.LINE) {
-			i = i.getNext();
-		}
-		return i;
 	}
 
 }
