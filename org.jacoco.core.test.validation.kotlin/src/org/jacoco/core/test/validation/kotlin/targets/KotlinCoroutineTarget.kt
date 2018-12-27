@@ -19,12 +19,13 @@ import org.jacoco.core.test.validation.targets.Stubs.nop
  */
 object KotlinCoroutineTarget {
 
-    suspend fun suspendingFunction() { // assertEmpty()
+    private suspend fun suspendingFunction() { // assertEmpty()
         anotherSuspendingFunction() // assertFullyCovered()
         nop() // assertFullyCovered()
     } // assertFullyCovered()
 
-    suspend fun anotherSuspendingFunction() {
+    private suspend fun anotherSuspendingFunction() {
+        nop() // assertFullyCovered()
     }
 
     @JvmStatic

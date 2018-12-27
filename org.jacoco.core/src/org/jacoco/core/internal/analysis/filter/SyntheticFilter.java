@@ -29,10 +29,15 @@ public final class SyntheticFilter implements IFilter {
 			return;
 		}
 
-		if (KotlinDefaultArgumentsFilter
-				.isDefaultArgumentsMethodName(methodNode.name)
-				&& KotlinGeneratedFilter.isKotlinClass(context)) {
-			return;
+		if (KotlinGeneratedFilter.isKotlinClass(context)) {
+			if (KotlinDefaultArgumentsFilter
+					.isDefaultArgumentsMethodName(methodNode.name)) {
+				return;
+			}
+
+			if (KotlinCoroutineFilter.isLastArgumentContinuation(methodNode)) {
+				return;
+			}
 		}
 
 		output.ignore(methodNode.instructions.getFirst(),
