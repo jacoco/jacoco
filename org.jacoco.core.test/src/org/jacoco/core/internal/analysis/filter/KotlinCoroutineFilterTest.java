@@ -24,10 +24,6 @@ public class KotlinCoroutineFilterTest extends FilterTestBase {
 
 	private final IFilter filter = new KotlinCoroutineFilter();
 
-	private final MethodNode m = new MethodNode(InstrSupport.ASM_API_VERSION, 0,
-			"invokeSuspend", "(Ljava/lang/Object;)Ljava/lang/Object;", null,
-			null);
-
 	/**
 	 * <pre>
 	 *     runBlocking {
@@ -39,7 +35,10 @@ public class KotlinCoroutineFilterTest extends FilterTestBase {
 	 * </pre>
 	 */
 	@Test
-	public void should_filter() {
+	public void should_filter_suspending_lambdas() {
+		final MethodNode m = new MethodNode(InstrSupport.ASM_API_VERSION, 0,
+				"invokeSuspend", "(Ljava/lang/Object;)Ljava/lang/Object;", null,
+				null);
 		context.classAnnotations
 				.add(KotlinGeneratedFilter.KOTLIN_METADATA_DESC);
 
@@ -146,7 +145,7 @@ public class KotlinCoroutineFilterTest extends FilterTestBase {
 	 * </pre>
 	 */
 	@Test
-	public void should_filter_suspend_functions() {
+	public void should_filter_suspending_functions() {
 		final MethodNode m = new MethodNode(InstrSupport.ASM_API_VERSION,
 				Opcodes.ACC_STATIC, "example",
 				"(Lkotlin/coroutines/Continuation;)Ljava/lang/Object;", null,
@@ -190,7 +189,7 @@ public class KotlinCoroutineFilterTest extends FilterTestBase {
 
 		m.visitTypeInsn(Opcodes.NEW, "ExampleKt$example$1");
 		m.visitInsn(Opcodes.DUP);
-		m.visitVarInsn(Opcodes.ALOAD, 0);
+		m.visitVarInsn(Opcodes.ALOAD, continuationArgumentIndex);
 		m.visitMethodInsn(Opcodes.INVOKESPECIAL, "ExampleKt$example$1",
 				"<init>", "(Lkotlin/coroutines/Continuation;)V", false);
 
