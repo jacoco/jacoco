@@ -170,7 +170,7 @@ public class KotlinCoroutineFilterTest extends FilterTestBase {
 		m.visitVarInsn(Opcodes.ALOAD, continuationIndex);
 		m.visitFieldInsn(Opcodes.GETFIELD, "ExampleKt$example$1", "label", "I");
 
-		m.visitLdcInsn(1 << 31);
+		m.visitLdcInsn(Integer.MIN_VALUE);
 		m.visitInsn(Opcodes.IAND);
 		m.visitJumpInsn(Opcodes.IFEQ, createStateInstance);
 
@@ -178,7 +178,7 @@ public class KotlinCoroutineFilterTest extends FilterTestBase {
 		m.visitInsn(Opcodes.DUP);
 		m.visitFieldInsn(Opcodes.GETFIELD, "ExampleKt$example$1", "label", "I");
 
-		m.visitLdcInsn(1 << 31);
+		m.visitLdcInsn(Integer.MIN_VALUE);
 		m.visitInsn(Opcodes.ISUB);
 		m.visitFieldInsn(Opcodes.PUTFIELD, "ExampleKt$example$1", "label", "I");
 
