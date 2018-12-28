@@ -55,52 +55,7 @@ public final class KotlinCoroutineFilter implements IFilter {
 			if (cursor == null) {
 				cursor = skipNonOpcodes(methodNode.instructions.getFirst());
 
-				nextIs(Opcodes.INSTANCEOF);
-
-				nextIs(Opcodes.IFEQ);
-				if (cursor == null) {
-					return;
-				}
-				final AbstractInsnNode createStateInstance = skipNonOpcodes(
-						((JumpInsnNode) cursor).label);
-
-				nextIs(Opcodes.ALOAD);
-				nextIs(Opcodes.CHECKCAST);
-				nextIs(Opcodes.ASTORE);
-
-				nextIs(Opcodes.ALOAD);
-				nextIs(Opcodes.GETFIELD);
-
-				nextIs(Opcodes.LDC);
-				nextIs(Opcodes.IAND);
-				nextIs(Opcodes.IFEQ);
-				if (cursor == null || skipNonOpcodes(
-						((JumpInsnNode) cursor).label) != createStateInstance) {
-					return;
-				}
-
-				nextIs(Opcodes.ALOAD);
-				nextIs(Opcodes.DUP);
-				nextIs(Opcodes.GETFIELD);
-
-				nextIs(Opcodes.LDC);
-				nextIs(Opcodes.ISUB);
-				nextIs(Opcodes.PUTFIELD);
-
-				nextIs(Opcodes.GOTO);
-				if (cursor == null) {
-					return;
-				}
-				final AbstractInsnNode afterCoroutineStateCreated = skipNonOpcodes(
-						((JumpInsnNode) cursor).label);
-
-				if (skipNonOpcodes(cursor.getNext()) != createStateInstance) {
-					return;
-				}
-
-				cursor = afterCoroutineStateCreated;
-				nextIs(Opcodes.GETFIELD);
-				nextIs(Opcodes.ASTORE);
+				nextIsCreateStateInstance();
 
 				nextIsInvokeStatic("kotlin/coroutines/intrinsics/IntrinsicsKt",
 						"getCOROUTINE_SUSPENDED");
@@ -192,6 +147,55 @@ public final class KotlinCoroutineFilter implements IFilter {
 			for (int i = 0; i < ignore.size(); i += 2) {
 				output.ignore(ignore.get(i), ignore.get(i + 1));
 			}
+		}
+
+		private void nextIsCreateStateInstance() {
+			nextIs(Opcodes.INSTANCEOF);
+
+			nextIs(Opcodes.IFEQ);
+			if (cursor == null) {
+				return;
+			}
+			final AbstractInsnNode createStateInstance = skipNonOpcodes(
+					((JumpInsnNode) cursor).label);
+
+			nextIs(Opcodes.ALOAD);
+			nextIs(Opcodes.CHECKCAST);
+			nextIs(Opcodes.ASTORE);
+
+			nextIs(Opcodes.ALOAD);
+			nextIs(Opcodes.GETFIELD);
+
+			nextIs(Opcodes.LDC);
+			nextIs(Opcodes.IAND);
+			nextIs(Opcodes.IFEQ);
+			if (cursor == null || skipNonOpcodes(
+					((JumpInsnNode) cursor).label) != createStateInstance) {
+				return;
+			}
+
+			nextIs(Opcodes.ALOAD);
+			nextIs(Opcodes.DUP);
+			nextIs(Opcodes.GETFIELD);
+
+			nextIs(Opcodes.LDC);
+			nextIs(Opcodes.ISUB);
+			nextIs(Opcodes.PUTFIELD);
+
+			nextIs(Opcodes.GOTO);
+			if (cursor == null) {
+				return;
+			}
+			final AbstractInsnNode afterCoroutineStateCreated = skipNonOpcodes(
+					((JumpInsnNode) cursor).label);
+
+			if (skipNonOpcodes(cursor.getNext()) != createStateInstance) {
+				return;
+			}
+
+			cursor = afterCoroutineStateCreated;
+			nextIs(Opcodes.GETFIELD);
+			nextIs(Opcodes.ASTORE);
 		}
 	}
 
