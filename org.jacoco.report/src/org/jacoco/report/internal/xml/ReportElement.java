@@ -170,8 +170,19 @@ public class ReportElement extends XMLElement {
 	public void line(final int nr, final ILine line) throws IOException {
 		final ReportElement element = element("line");
 		element.attr("nr", nr);
-		counterAttributes(element, "mi", "ci", line.getInstructionCounter());
-		counterAttributes(element, "mb", "cb", line.getBranchCounter());
+		lineAttributes(element, "mi", "ci", line.getInstructionCounter());
+		lineAttributes(element, "mb", "cb", line.getBranchCounter());
+	}
+
+	private static void lineAttributes(final XMLElement element,
+			final String missedattr, final String coveredattr,
+			final ICounter counter) throws IOException {
+		if (counter.getMissedCount() != 0) {
+			element.attr(missedattr, counter.getMissedCount());
+		}
+		if (counter.getCoveredCount() != 0) {
+			element.attr(coveredattr, counter.getCoveredCount());
+		}
 	}
 
 	/**
@@ -190,14 +201,8 @@ public class ReportElement extends XMLElement {
 			final ICounter counter) throws IOException {
 		final ReportElement counterNode = element("counter");
 		counterNode.attr("type", counterEntity.name());
-		counterAttributes(counterNode, "missed", "covered", counter);
-	}
-
-	private static void counterAttributes(final XMLElement element,
-			final String missedattr, final String coveredattr,
-			final ICounter counter) throws IOException {
-		element.attr(missedattr, counter.getMissedCount());
-		element.attr(coveredattr, counter.getCoveredCount());
+		counterNode.attr("missed", counter.getMissedCount());
+		counterNode.attr("covered", counter.getCoveredCount());
 	}
 
 }
