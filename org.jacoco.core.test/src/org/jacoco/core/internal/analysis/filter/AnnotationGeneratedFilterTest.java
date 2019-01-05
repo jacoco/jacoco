@@ -67,6 +67,21 @@ public class AnnotationGeneratedFilterTest extends FilterTestBase {
 	}
 
 	@Test
+	public void should_filter_classes_annotated_with_runtime_visible_org_apache_avro_specific_AvroGenerated() {
+		final MethodNode m = new MethodNode(InstrSupport.ASM_API_VERSION, 0,
+				"readExternal", "()V", null, null);
+
+		m.visitInsn(Opcodes.NOP);
+
+		context.classAnnotations
+				.add("Lorg/apache/avro/specific/AvroGenerated;");
+
+		filter.filter(m, context, output);
+
+		assertMethodIgnored(m);
+	}
+
+	@Test
 	public void should_filter_when_annotation_is_inner() {
 		final MethodNode m = new MethodNode(InstrSupport.ASM_API_VERSION, 0,
 				"hashCode", "()I", null, null);
