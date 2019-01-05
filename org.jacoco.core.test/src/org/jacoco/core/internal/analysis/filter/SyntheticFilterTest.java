@@ -82,4 +82,19 @@ public class SyntheticFilterTest extends FilterTestBase {
 		assertMethodIgnored(m);
 	}
 
+	@Test
+	public void should_not_filter_synthetic_methods_whose_last_argument_is_kotlin_coroutine_continuation() {
+		final MethodNode m = new MethodNode(InstrSupport.ASM_API_VERSION,
+				Opcodes.ACC_SYNTHETIC | Opcodes.ACC_STATIC, "example",
+				"(Lkotlin/coroutines/Continuation;)Ljava/lang/Object;", null,
+				null);
+		context.classAnnotations
+				.add(KotlinGeneratedFilter.KOTLIN_METADATA_DESC);
+		m.visitInsn(Opcodes.NOP);
+
+		filter.filter(m, context, output);
+
+		assertIgnored();
+	}
+
 }

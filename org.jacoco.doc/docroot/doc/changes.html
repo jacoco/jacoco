@@ -27,12 +27,25 @@
   <li>Branch added by the Kotlin compiler for "unsafe" cast operator is filtered
       out during generation of report
       (GitHub <a href="https://github.com/jacoco/jacoco/issues/761">#761</a>).</li>
+  <li>Instructions inlined by Kotlin compiler are filtered out during generation
+      of report
+      (GitHub <a href="https://github.com/jacoco/jacoco/issues/764">#764</a>).</li>
+  <li>Branches added by the Kotlin compiler for suspending lambdas and functions
+      are filtered out during generation of report
+      (GitHub <a href="https://github.com/jacoco/jacoco/issues/802">#802</a>,
+      <a href="https://github.com/jacoco/jacoco/issues/803">#803</a>,
+      <a href="https://github.com/jacoco/jacoco/issues/809">#809</a>).</li>
+  <li>HTML report shows message when source file can't be found
+      (GitHub <a href="https://github.com/jacoco/jacoco/issues/801">#801</a>).</li>
 </ul>
 
 <h3>Fixed Bugs</h3>
 <ul>
   <li>Report code coverage correctly for Kotlin methods with default arguments
       (GitHub <a href="https://github.com/jacoco/jacoco/issues/774">#774</a>).</li>
+  <li><code>synthetic</code> methods that represent Kotlin <code>suspend</code>
+      functions should not be ignored
+      (GitHub <a href="https://github.com/jacoco/jacoco/issues/804">#804</a>).</li>
 </ul>
 
 <h3>Non-functional Changes</h3>

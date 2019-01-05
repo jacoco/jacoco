@@ -43,7 +43,7 @@ public final class KotlinUnsafeCastOperatorFilter implements IFilter {
 			}
 			cursor = start;
 
-			nextIsNew(KOTLIN_TYPE_CAST_EXCEPTION);
+			nextIsType(Opcodes.NEW, KOTLIN_TYPE_CAST_EXCEPTION);
 			nextIs(Opcodes.DUP);
 			nextIs(Opcodes.LDC);
 			if (cursor == null) {
