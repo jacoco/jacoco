@@ -11,6 +11,8 @@
  *******************************************************************************/
 package org.jacoco.core.internal.analysis.filter;
 
+import org.objectweb.asm.Opcodes;
+import org.objectweb.asm.tree.AbstractInsnNode;
 import org.objectweb.asm.tree.MethodNode;
 
 /**
@@ -21,7 +23,26 @@ public final class KotlinNotNullOperatorFilter implements IFilter {
 
 	public void filter(final MethodNode methodNode,
 			final IFilterContext context, final IFilterOutput output) {
-		// TODO
+		final Matcher matcher = new Matcher();
+		for (AbstractInsnNode i = methodNode.instructions
+				.getFirst(); i != null; i = i.getNext()) {
+			matcher.match(i, output);
+		}
+	}
+
+	private static class Matcher extends AbstractMatcher {
+		public void match(final AbstractInsnNode start,
+				final IFilterOutput output) {
+			if (Opcodes.IFNONNULL != start.getOpcode()) {
+				return;
+			}
+			cursor = start;
+			nextIsInvokeStatic("kotlin/jvm/internal/Intrinsics", "throwNpe");
+			if (cursor == null) {
+				return;
+			}
+			output.ignore(start, cursor);
+		}
 	}
 
 }
