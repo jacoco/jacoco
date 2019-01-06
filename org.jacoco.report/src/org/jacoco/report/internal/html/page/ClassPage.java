@@ -83,12 +83,17 @@ public class ClassPage extends TablePage<IClassCoverage> {
 
 	@Override
 	protected void content(HTMLElement body) throws IOException {
-		if (getNode().getSourceFileName() != null && sourcePage == null) {
+		final String sourceFileName = getNode().getSourceFileName();
+		if (sourceFileName == null) {
+			body.p().text(
+					"Class files must be compiled with debug information to link with source files.");
+
+		} else if (sourcePage == null) {
 			final String sourcePath;
 			if (getNode().getPackageName().length() != 0) {
-				sourcePath = getNode().getPackageName() + "/" + getNode().getSourceFileName();
+				sourcePath = getNode().getPackageName() + "/" + sourceFileName;
 			} else {
-				sourcePath = getNode().getSourceFileName();
+				sourcePath = sourceFileName;
 			}
 			body.p().text("Source file \"" + sourcePath
 					+ "\" was not found during generation of report.");
