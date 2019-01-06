@@ -40,7 +40,7 @@ public class BundlePageTest extends PageTestBase {
 	}
 
 	@Test
-	public void should_rended_non_empty_packages() throws Exception {
+	public void should_render_non_empty_packages() throws Exception {
 		final ClassCoverageImpl classCoverage = new ClassCoverageImpl(
 				"example/Class", 0, false);
 		classCoverage.addMethod(new MethodCoverageImpl("m", "()V", null));

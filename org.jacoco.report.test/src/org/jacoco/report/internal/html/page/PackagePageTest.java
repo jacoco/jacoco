@@ -58,7 +58,7 @@ public class PackagePageTest extends PageTestBase {
 	}
 
 	@Test
-	public void should_rended_non_empty_classes() throws Exception {
+	public void should_render_non_empty_classes() throws Exception {
 		final ClassCoverageImpl nonEmptyClass = new ClassCoverageImpl(
 				"example/NonEmptyClass", 0, false);
 		nonEmptyClass.addMethod(new MethodCoverageImpl("m", "()V", null));
