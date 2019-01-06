@@ -12,6 +12,7 @@
 package org.jacoco.report.csv;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 
 import java.io.BufferedReader;
 import java.io.StringReader;
@@ -51,6 +52,7 @@ public class CSVGroupHandlerTest {
 		assertEquals(
 				"bundle,org.jacoco.example,FooClass,10,15,1,2,0,3,1,2,0,1",
 				reader.readLine());
+		assertEquals("no more lines expected", null, reader.readLine());
 	}
 
 	@Test
@@ -61,6 +63,7 @@ public class CSVGroupHandlerTest {
 		assertEquals(
 				"group/bundle,org.jacoco.example,FooClass,10,15,1,2,0,3,1,2,0,1",
 				reader.readLine());
+		assertEquals("no more lines expected", null, reader.readLine());
 	}
 
 	private BufferedReader getResultReader() {
