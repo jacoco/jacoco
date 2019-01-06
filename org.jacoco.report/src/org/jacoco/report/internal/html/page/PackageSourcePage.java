@@ -79,6 +79,9 @@ public class PackageSourcePage extends TablePage<IPackageCoverage> {
 	private final void renderSourceFilePages() throws IOException {
 		final String packagename = getNode().getName();
 		for (final ISourceFileCoverage s : getNode().getSourceFiles()) {
+			if (s.getInstructionCounter().getTotalCount() == 0) {
+				continue;
+			}
 			final String sourcename = s.getName();
 			final Reader reader = locator
 					.getSourceFile(packagename, sourcename);

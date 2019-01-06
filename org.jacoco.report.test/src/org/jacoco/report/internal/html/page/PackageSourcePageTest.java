@@ -49,12 +49,16 @@ public class PackageSourcePageTest extends PageTestBase {
 	@Override
 	public void setup() throws Exception {
 		super.setup();
-		ISourceFileCoverage src1 = new SourceFileCoverageImpl("Src1.java",
+		SourceFileCoverageImpl src1 = new SourceFileCoverageImpl("Src1.java",
 				"org/jacoco/example");
-		ISourceFileCoverage src2 = new SourceFileCoverageImpl("Src2.java",
+		src1.increment(CounterImpl.COUNTER_1_0,
+				CounterImpl.COUNTER_0_0, 1);
+		SourceFileCoverageImpl src2 = new SourceFileCoverageImpl("Src2.java",
 				"org/jacoco/example");
+		src2.increment(CounterImpl.COUNTER_1_0,
+				CounterImpl.COUNTER_0_0, 1);
 		node = new PackageCoverageImpl("org/jacoco/example",
-				Collections.<IClassCoverage> emptyList(), Arrays.asList(src1,
+				Collections.<IClassCoverage> emptyList(), Arrays.<ISourceFileCoverage>asList(src1,
 						src2));
 		sourceLocator = new ISourceFileLocator() {
 
