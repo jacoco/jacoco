@@ -17,6 +17,7 @@ import java.io.IOException;
 
 import org.jacoco.core.analysis.IClassCoverage;
 import org.jacoco.core.internal.analysis.ClassCoverageImpl;
+import org.jacoco.core.internal.analysis.CounterImpl;
 import org.jacoco.core.internal.analysis.MethodCoverageImpl;
 import org.jacoco.report.internal.ReportOutputFolder;
 import org.jacoco.report.internal.html.ILinkable;
@@ -37,8 +38,10 @@ public class ClassPageTest extends PageTestBase {
 	@Override
 	public void setup() throws Exception {
 		super.setup();
+		final MethodCoverageImpl m = new MethodCoverageImpl("a", "()V", null);
+		m.increment(CounterImpl.COUNTER_1_0, CounterImpl.COUNTER_0_0, 42);
 		node = new ClassCoverageImpl("org/jacoco/example/Foo", 123, false);
-		node.addMethod(new MethodCoverageImpl("a", "()V", null));
+		node.addMethod(m);
 		node.addMethod(new MethodCoverageImpl("b", "()V", null));
 		node.addMethod(new MethodCoverageImpl("c", "()V", null));
 	}
@@ -61,13 +64,15 @@ public class ClassPageTest extends PageTestBase {
 	}
 
 	@Test
-	public void should_not_generate_message_when_SourceFileName_not_present()
+	public void should_generate_message_when_SourceFileName_not_present()
 			throws Exception {
 		page = new ClassPage(node, null, null, rootFolder, context);
 		page.render();
 
 		final Document doc = support.parse(output.getFile("Foo.html"));
-		assertEquals("", support.findStr(doc, "/html/body/p[1]"));
+		assertEquals(
+				"Class files must be compiled with debug information to link with source files.",
+				support.findStr(doc, "/html/body/p[1]"));
 	}
 
 	@Test
@@ -87,8 +92,10 @@ public class ClassPageTest extends PageTestBase {
 	@Test
 	public void should_generate_message_with_default_package_when_SourceFileName_present_but_no_SourceFilePage()
 			throws Exception {
+		final MethodCoverageImpl m = new MethodCoverageImpl("a", "()V", null);
+		m.increment(CounterImpl.COUNTER_1_0, CounterImpl.COUNTER_0_0, 42);
 		node = new ClassCoverageImpl("Foo", 123, false);
-		node.addMethod(new MethodCoverageImpl("a", "()V", null));
+		node.addMethod(m);
 		node.setSourceFileName("Foo.java");
 
 		page = new ClassPage(node, null, null, rootFolder, context);
@@ -110,6 +117,20 @@ public class ClassPageTest extends PageTestBase {
 
 		final Document doc = support.parse(output.getFile("Foo.html"));
 		assertEquals("", support.findStr(doc, "/html/body/p[1]"));
+	}
+
+	@Test
+	public void should_generate_message_when_no_lines() throws Exception {
+		node = new ClassCoverageImpl("Foo", 123, false);
+		node.addMethod(new MethodCoverageImpl("m", "()V", null));
+
+		page = new ClassPage(node, null, new SourceLink(), rootFolder, context);
+		page.render();
+
+		final Document doc = support.parse(output.getFile("Foo.html"));
+		assertEquals(
+				"Class files must be compiled with debug information to show line coverage.",
+				support.findStr(doc, "/html/body/p[1]"));
 	}
 
 	private class SourceLink implements ILinkable {
