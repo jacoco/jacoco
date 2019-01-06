@@ -22,6 +22,7 @@ import org.jacoco.core.analysis.IClassCoverage;
 import org.jacoco.core.analysis.IPackageCoverage;
 import org.jacoco.core.analysis.ISourceFileCoverage;
 import org.jacoco.core.internal.analysis.ClassCoverageImpl;
+import org.jacoco.core.internal.analysis.MethodCoverageImpl;
 import org.jacoco.core.internal.analysis.PackageCoverageImpl;
 import org.jacoco.core.internal.analysis.SourceFileCoverageImpl;
 import org.jacoco.report.ISourceFileLocator;
@@ -54,6 +55,28 @@ public class PackagePageTest extends PageTestBase {
 				return null;
 			}
 		};
+	}
+
+	@Test
+	public void should_rended_non_empty_classes() throws Exception {
+		final ClassCoverageImpl nonEmptyClass = new ClassCoverageImpl(
+				"example/NonEmptyClass", 0, false);
+		nonEmptyClass.addMethod(new MethodCoverageImpl("m", "()V", null));
+		final ClassCoverageImpl emptyClass = new ClassCoverageImpl(
+				"example/EmptyClass", 0, false);
+
+		node = new PackageCoverageImpl("example",
+				Arrays.<IClassCoverage> asList(emptyClass, nonEmptyClass),
+				Collections.<ISourceFileCoverage> emptySet());
+
+		page = new PackagePage(node, null, sourceLocator, rootFolder, context);
+		page.render();
+
+		final Document doc = support.parse(output.getFile("index.html"));
+		assertEquals("NonEmptyClass", support.findStr(doc,
+				"/html/body/table[1]/tbody/tr[1]/td[1]/a"));
+		assertEquals("1",
+				support.findStr(doc, "count(/html/body/table[1]/tbody/tr)"));
 	}
 
 	@Test
