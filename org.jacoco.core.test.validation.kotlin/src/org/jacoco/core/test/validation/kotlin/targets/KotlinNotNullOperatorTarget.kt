@@ -16,8 +16,8 @@ package org.jacoco.core.test.validation.kotlin.targets
  */
 object KotlinNotNullOperatorTarget {
 
-    private fun example(x: Any?) {
-        x!! // assertFullyCovered()
+    private fun example(x: String?): Int {
+        return x!!.length // assertFullyCovered()
     }
 
     @JvmStatic

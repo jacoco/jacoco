@@ -29,7 +29,7 @@ public class KotlinNotNullOperatorFilterTest extends FilterTestBase {
 
 	/**
 	 * <pre>
-	 *     return x!!
+	 *     return x!!.length
 	 * </pre>
 	 */
 	@Test
@@ -41,12 +41,15 @@ public class KotlinNotNullOperatorFilterTest extends FilterTestBase {
 		final Label label = new Label();
 		m.visitJumpInsn(Opcodes.IFNONNULL, label);
 		range.fromInclusive = m.instructions.getLast();
+		// no line number here and hence no probe
 		m.visitMethodInsn(Opcodes.INVOKESTATIC,
 				"kotlin/jvm/internal/Intrinsics", "throwNpe", "()V", false);
 		range.toInclusive = m.instructions.getLast();
 
 		m.visitLabel(label);
-		m.visitInsn(Opcodes.ARETURN);
+		m.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "java/lang/String", "length",
+				"()I", false);
+		m.visitInsn(Opcodes.IRETURN);
 
 		filter.filter(m, context, output);
 
