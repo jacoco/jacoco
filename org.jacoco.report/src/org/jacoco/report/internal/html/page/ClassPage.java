@@ -83,6 +83,11 @@ public class ClassPage extends TablePage<IClassCoverage> {
 
 	@Override
 	protected void content(HTMLElement body) throws IOException {
+		if (getNode().isNoMatch()) {
+			body.p().text(
+					"A different version of class was executed at runtime.");
+		}
+
 		if (getNode().getLineCounter().getTotalCount() == 0) {
 			body.p().text(
 					"Class files must be compiled with debug information to show line coverage.");
