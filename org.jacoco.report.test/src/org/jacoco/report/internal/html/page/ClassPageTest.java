@@ -61,13 +61,15 @@ public class ClassPageTest extends PageTestBase {
 	}
 
 	@Test
-	public void should_not_generate_message_when_SourceFileName_not_present()
+	public void should_generate_message_when_SourceFileName_not_present()
 			throws Exception {
 		page = new ClassPage(node, null, null, rootFolder, context);
 		page.render();
 
 		final Document doc = support.parse(output.getFile("Foo.html"));
-		assertEquals("", support.findStr(doc, "/html/body/p[1]"));
+		assertEquals(
+				"Class files must be compiled with debug information to link with source files.",
+				support.findStr(doc, "/html/body/p[1]"));
 	}
 
 	@Test
