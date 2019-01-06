@@ -24,6 +24,7 @@ import java.util.Collections;
 
 import org.jacoco.core.analysis.IClassCoverage;
 import org.jacoco.core.analysis.ISourceFileCoverage;
+import org.jacoco.core.internal.analysis.CounterImpl;
 import org.jacoco.core.internal.analysis.PackageCoverageImpl;
 import org.jacoco.core.internal.analysis.SourceFileCoverageImpl;
 import org.jacoco.report.ISourceFileLocator;
@@ -106,6 +107,29 @@ public class PackageSourcePageTest extends PageTestBase {
 				"/html/body/table[1]/tbody/tr[2]/td[1]/span/@class"));
 		assertEquals("Src2.java", support.findStr(doc,
 				"/html/body/table[1]/tbody/tr[2]/td[1]/span"));
+	}
+
+	@Test
+	public void should_render_non_empty_sources() throws Exception {
+		final ISourceFileCoverage emptySource = new SourceFileCoverageImpl(
+				"Empty.java", "example");
+		final SourceFileCoverageImpl nonEmptySource = new SourceFileCoverageImpl(
+				"NonEmpty.java", "example");
+		nonEmptySource.increment(CounterImpl.COUNTER_1_0,
+				CounterImpl.COUNTER_0_0, 1);
+		node = new PackageCoverageImpl("example",
+				Collections.<IClassCoverage> emptyList(),
+				Arrays.asList(emptySource, nonEmptySource));
+
+		page = new PackageSourcePage(node, null, sourceLocator, rootFolder,
+				context, packagePageLink);
+		page.render();
+
+		final Document doc = support.parse(output.getFile("index.source.html"));
+		assertEquals("NonEmpty.java", support.findStr(doc,
+				"/html/body/table[1]/tbody/tr[1]/td[1]/span"));
+		assertEquals("1",
+				support.findStr(doc, "count(/html/body/table[1]/tbody/tr)"));
 	}
 
 	@Test
