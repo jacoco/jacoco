@@ -138,7 +138,7 @@ public class XMLFormatterTest {
 		assertPathMatches("2", "count(/report/package)");
 		assertPathMatches("org/jacoco/example", "/report/package/@name");
 
-		assertPathMatches("2", "count(/report/package/class)");
+		assertPathMatches("3", "count(/report/package/class)");
 		assertPathMatches("org/jacoco/example/FooClass",
 				"/report/package/class/@name");
 
@@ -169,7 +169,8 @@ public class XMLFormatterTest {
 		assertPathMatches("0", "report/counter[@type='CLASS']/@missed");
 		assertPathMatches("1", "report/counter[@type='CLASS']/@covered");
 
-		assertPathMatches("2", "count(report/package/sourcefile)");
+		assertPathMatches("2",
+				"count(report/package[@name='org/jacoco/example']/sourcefile)");
 		assertPathMatches("3", "count(report/package/sourcefile/line)");
 		assertPathMatches("1",
 				"report/package/sourcefile[@name='FooClass.java']/line[1]/@nr");
@@ -188,7 +189,7 @@ public class XMLFormatterTest {
 		assertPathMatches("0", "count(/report/package[@name='empty']/counter)");
 
 		assertPathMatches("1", "count(/report/package[@name='empty']/class)");
-		assertPathMatches("empty/EmptyClass",
+		assertPathMatches("empty/Empty",
 				"/report/package[@name='empty']/class/@name");
 		assertPathMatches("0",
 				"count(report/package[@name='empty']/class/*)");

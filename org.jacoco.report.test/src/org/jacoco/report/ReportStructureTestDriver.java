@@ -86,20 +86,30 @@ public class ReportStructureTestDriver {
 		sourceFileCoverageImpl.increment(classCoverage);
 		sourceFileCoverage = sourceFileCoverageImpl;
 
-		final ClassCoverageImpl emptyClass = new ClassCoverageImpl(
-				"empty/EmptyClass", 0, false);
-		emptyClass.setSourceFileName("Empty.java");
-		final SourceFileCoverageImpl emptySource = new SourceFileCoverageImpl(
+		final ClassCoverageImpl emptyClassInNonEmptyPackage = new ClassCoverageImpl(
+				"org/jacoco/example/Empty", 0, false);
+		emptyClassInNonEmptyPackage.setSourceFileName("Empty.java");
+		final SourceFileCoverageImpl emptySourceInNonEmptyPackage = new SourceFileCoverageImpl(
+				"Empty.java", "org/jacoco/example");
+
+		final ClassCoverageImpl emptyClassInEmptyPackage = new ClassCoverageImpl(
+				"empty/Empty", 0, false);
+		emptyClassInEmptyPackage.setSourceFileName("Empty.java");
+		final SourceFileCoverageImpl emptySourceInEmptyPackage = new SourceFileCoverageImpl(
 				"Empty.java", "empty");
-		final PackageCoverageImpl packageWithEmptyClass = new PackageCoverageImpl(
-				"empty", Collections.<IClassCoverage> singleton(emptyClass),
-				Collections.<ISourceFileCoverage> singleton(emptySource));
+		final PackageCoverageImpl emptyPackage = new PackageCoverageImpl(
+				"empty",
+				Collections.<IClassCoverage> singletonList(
+						emptyClassInEmptyPackage),
+				Collections.<ISourceFileCoverage> singletonList(
+						emptySourceInEmptyPackage));
 
 		packageCoverage = new PackageCoverageImpl("org/jacoco/example",
-				Collections.singleton(classCoverage),
-				Collections.singleton(sourceFileCoverage));
+				Arrays.asList(classCoverage, emptyClassInNonEmptyPackage),
+				Arrays.asList(sourceFileCoverage,
+						emptySourceInNonEmptyPackage));
 		bundleCoverage = new BundleCoverageImpl("bundle",
-				Arrays.asList(packageCoverage, packageWithEmptyClass));
+				Arrays.asList(packageCoverage, emptyPackage));
 	}
 
 	public void sendNestedGroups(IReportVisitor reportVisitor)

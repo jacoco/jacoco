@@ -70,10 +70,12 @@ public class HTMLFormatterTest {
 		output.assertFile("bundle/org.jacoco.example/index.source.html");
 		output.assertFile("bundle/org.jacoco.example/FooClass.html");
 		output.assertFile("bundle/org.jacoco.example/FooClass.java.html");
+		output.assertNoFile("bundle/org.jacoco.example/Empty.html");
+		output.assertNoFile("bundle/org.jacoco.example/Empty.java.html");
 
 		output.assertNoFile("bundle/empty/index.html");
 		output.assertNoFile("bundle/empty/index.source.html");
-		output.assertNoFile("bundle/empty/EmptyClass.html");
+		output.assertNoFile("bundle/empty/Empty.html");
 		output.assertNoFile("bundle/empty/Empty.java.html");
 	}
 
@@ -86,10 +88,12 @@ public class HTMLFormatterTest {
 		output.assertFile("org.jacoco.example/index.source.html");
 		output.assertFile("org.jacoco.example/FooClass.html");
 		output.assertFile("org.jacoco.example/FooClass.java.html");
+		output.assertNoFile("org.jacoco.example/Empty.html");
+		output.assertNoFile("org.jacoco.example/Empty.java.html");
 
 		output.assertNoFile("empty/index.html");
 		output.assertNoFile("empty/index.source.html");
-		output.assertNoFile("empty/EmptyClass.html");
+		output.assertNoFile("empty/Empty.html");
 		output.assertNoFile("empty/Empty.java.html");
 	}
 
