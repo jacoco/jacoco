@@ -13,6 +13,8 @@ package org.jacoco.report;
 
 import java.io.IOException;
 import java.io.Reader;
+import java.io.StringReader;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
@@ -45,7 +47,7 @@ public class ReportStructureTestDriver {
 
 		public Reader getSourceFile(String packageName, String fileName)
 				throws IOException {
-			return null;
+			return  new StringReader("");
 		}
 
 		public int getTabWidth() {
@@ -84,11 +86,20 @@ public class ReportStructureTestDriver {
 		sourceFileCoverageImpl.increment(classCoverage);
 		sourceFileCoverage = sourceFileCoverageImpl;
 
+		final ClassCoverageImpl emptyClass = new ClassCoverageImpl(
+				"empty/EmptyClass", 0, false);
+		emptyClass.setSourceFileName("Empty.java");
+		final SourceFileCoverageImpl emptySource = new SourceFileCoverageImpl(
+				"Empty.java", "empty");
+		final PackageCoverageImpl packageWithEmptyClass = new PackageCoverageImpl(
+				"empty", Collections.<IClassCoverage> singleton(emptyClass),
+				Collections.<ISourceFileCoverage> singleton(emptySource));
+
 		packageCoverage = new PackageCoverageImpl("org/jacoco/example",
 				Collections.singleton(classCoverage),
 				Collections.singleton(sourceFileCoverage));
 		bundleCoverage = new BundleCoverageImpl("bundle",
-				Collections.singleton(packageCoverage));
+				Arrays.asList(packageCoverage, packageWithEmptyClass));
 	}
 
 	public void sendNestedGroups(IReportVisitor reportVisitor)

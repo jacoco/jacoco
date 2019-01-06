@@ -65,16 +65,32 @@ public class HTMLFormatterTest {
 		driver.sendGroup(formatter.createVisitor(output));
 		output.assertFile("index.html");
 		output.assertFile("bundle/index.html");
+
 		output.assertFile("bundle/org.jacoco.example/index.html");
+		output.assertFile("bundle/org.jacoco.example/index.source.html");
 		output.assertFile("bundle/org.jacoco.example/FooClass.html");
+		output.assertFile("bundle/org.jacoco.example/FooClass.java.html");
+
+		output.assertFile("bundle/empty/index.html");
+		output.assertFile("bundle/empty/index.source.html");
+		output.assertFile("bundle/empty/EmptyClass.html");
+		output.assertFile("bundle/empty/Empty.java.html");
 	}
 
 	@Test
 	public void testStructureWithBundleOnly() throws IOException {
 		driver.sendBundle(formatter.createVisitor(output));
 		output.assertFile("index.html");
+
 		output.assertFile("org.jacoco.example/index.html");
+		output.assertFile("org.jacoco.example/index.source.html");
 		output.assertFile("org.jacoco.example/FooClass.html");
+		output.assertFile("org.jacoco.example/FooClass.java.html");
+
+		output.assertFile("empty/index.html");
+		output.assertFile("empty/index.source.html");
+		output.assertFile("empty/EmptyClass.html");
+		output.assertFile("empty/Empty.java.html");
 	}
 
 	@Test
