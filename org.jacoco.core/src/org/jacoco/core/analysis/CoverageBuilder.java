@@ -95,7 +95,7 @@ public class CoverageBuilder implements ICoverageVisitor {
 		return result;
 	}
 
-	// === IStructureVisitor ===
+	// === ICoverageVisitor ===
 
 	public void visitCoverage(final IClassCoverage coverage) {
 		final String name = coverage.getName();
