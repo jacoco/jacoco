@@ -114,6 +114,20 @@ public class ClassPageTest extends PageTestBase {
 		assertEquals("", support.findStr(doc, "/html/body/p[1]"));
 	}
 
+	@Test
+	public void should_generate_message_when_no_lines() throws Exception {
+		node = new ClassCoverageImpl("Foo", 123, false);
+		node.addMethod(new MethodCoverageImpl("m", "()V", null));
+
+		page = new ClassPage(node, null, new SourceLink(), rootFolder, context);
+		page.render();
+
+		final Document doc = support.parse(output.getFile("Foo.html"));
+		assertEquals(
+				"Class files must be compiled with debug information to show line coverage.",
+				support.findStr(doc, "/html/body/p[1]"));
+	}
+
 	private class SourceLink implements ILinkable {
 
 		public String getLink(final ReportOutputFolder base) {
