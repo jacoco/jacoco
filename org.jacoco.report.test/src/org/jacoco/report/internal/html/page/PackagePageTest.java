@@ -30,7 +30,7 @@ import org.junit.Test;
 import org.w3c.dom.Document;
 
 /**
- * Unit tests for {@link PackageSourcePage}.
+ * Unit tests for {@link PackagePage}.
  */
 public class PackagePageTest extends PageTestBase {
 
