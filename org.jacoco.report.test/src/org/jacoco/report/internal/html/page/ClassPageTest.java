@@ -133,6 +133,20 @@ public class ClassPageTest extends PageTestBase {
 				support.findStr(doc, "/html/body/p[1]"));
 	}
 
+	@Test
+	public void should_generate_message_when_class_id_mismatch()
+			throws Exception {
+		node = new ClassCoverageImpl("Foo", 123, true);
+		node.addMethod(new MethodCoverageImpl("m", "()V", null));
+
+		page = new ClassPage(node, null, new SourceLink(), rootFolder, context);
+		page.render();
+
+		final Document doc = support.parse(output.getFile("Foo.html"));
+		assertEquals("A different version of class was executed at runtime.",
+				support.findStr(doc, "/html/body/p[1]"));
+	}
+
 	private class SourceLink implements ILinkable {
 
 		public String getLink(final ReportOutputFolder base) {
