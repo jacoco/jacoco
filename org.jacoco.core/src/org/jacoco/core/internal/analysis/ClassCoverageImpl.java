@@ -47,7 +47,6 @@ public class ClassCoverageImpl extends SourceNodeImpl implements IClassCoverage 
 		this.id = id;
 		this.noMatch = noMatch;
 		this.methods = new ArrayList<IMethodCoverage>();
-		this.classCounter = CounterImpl.COUNTER_1_0;
 	}
 
 	/**
@@ -59,10 +58,11 @@ public class ClassCoverageImpl extends SourceNodeImpl implements IClassCoverage 
 	public void addMethod(final IMethodCoverage method) {
 		this.methods.add(method);
 		increment(method);
-		// As class is considered as covered when at least one method is
-		// covered:
+		// Class is considered as covered when at least one method is covered:
 		if (methodCounter.getCoveredCount() > 0) {
 			this.classCounter = CounterImpl.COUNTER_0_1;
+		} else {
+			this.classCounter = CounterImpl.COUNTER_1_0;
 		}
 	}
 
