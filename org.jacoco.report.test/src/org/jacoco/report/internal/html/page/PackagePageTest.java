@@ -81,14 +81,17 @@ public class PackagePageTest extends PageTestBase {
 
 	@Test
 	public void testContentsWithSource() throws Exception {
-		IClassCoverage class1 = new ClassCoverageImpl(
+		ClassCoverageImpl class1 = new ClassCoverageImpl(
 				"org/jacoco/example/Foo1", 0x1000, false);
-		IClassCoverage class2 = new ClassCoverageImpl(
+		class1.addMethod(new MethodCoverageImpl("m", "()V", null));
+		ClassCoverageImpl class2 = new ClassCoverageImpl(
 				"org/jacoco/example/Foo2", 0x2000, false);
+		class2.addMethod(new MethodCoverageImpl("m", "()V", null));
 		ISourceFileCoverage src1 = new SourceFileCoverageImpl("Src1.java",
 				"org/jacoco/example");
-		node = new PackageCoverageImpl("org/jacoco/example", Arrays.asList(
-				class1, class2), Arrays.asList(src1));
+		node = new PackageCoverageImpl("org/jacoco/example",
+				Arrays.<IClassCoverage> asList(class1, class2),
+				Arrays.asList(src1));
 
 		page = new PackagePage(node, null, sourceLocator, rootFolder, context);
 		page.render();
@@ -116,12 +119,15 @@ public class PackagePageTest extends PageTestBase {
 
 	@Test
 	public void testContentsNoSource() throws Exception {
-		IClassCoverage class1 = new ClassCoverageImpl(
+		ClassCoverageImpl class1 = new ClassCoverageImpl(
 				"org/jacoco/example/Foo1", 0x1000, false);
-		IClassCoverage class2 = new ClassCoverageImpl(
+		class1.addMethod(new MethodCoverageImpl("m", "()V", null));
+		ClassCoverageImpl class2 = new ClassCoverageImpl(
 				"org/jacoco/example/Foo2", 0x2000, false);
-		node = new PackageCoverageImpl("org/jacoco/example", Arrays.asList(
-				class1, class2), Collections.<ISourceFileCoverage> emptyList());
+		class2.addMethod(new MethodCoverageImpl("m", "()V", null));
+		node = new PackageCoverageImpl("org/jacoco/example",
+				Arrays.<IClassCoverage> asList(class1, class2),
+				Collections.<ISourceFileCoverage> emptyList());
 
 		page = new PackagePage(node, null, sourceLocator, rootFolder, context);
 		page.render();
