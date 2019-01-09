@@ -364,7 +364,7 @@
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-plugin-plugin</artifactId>
-          <version>3.5</version>
+          <version>3.6.0</version>
         </plugin>
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
@@ -389,7 +389,7 @@
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-shade-plugin</artifactId>
-          <version>3.1.0</version>
+          <version>3.2.1</version>
         </plugin>
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
@@ -732,57 +732,6 @@
           </plugin>
         </plugins>
       </build>
-    </profile>
-
-    <!--
-    Following profiles enable compilation into bytecode version 9
-    when requested "bytecode.version" greater than 9,
-    because this is maximum that can be processed by
-    maven-shade-plugin (https://issues.apache.org/jira/browse/MSHADE-289)
-    and maven-plugin-plugin (https://issues.apache.org/jira/browse/MPLUGIN-335),
-    This is overridden for tests.
-    -->
-
-    <profile>
-      <id>java10-bytecode</id>
-      <activation>
-        <property>
-          <name>bytecode.version</name>
-          <value>10</value>
-        </property>
-      </activation>
-      <properties>
-        <maven.compiler.source>9</maven.compiler.source>
-        <maven.compiler.target>9</maven.compiler.target>
-      </properties>
-    </profile>
-
-    <profile>
-      <id>java11-bytecode</id>
-      <activation>
-        <property>
-          <name>bytecode.version</name>
-          <value>11</value>
-        </property>
-      </activation>
-      <properties>
-        <maven.compiler.source>9</maven.compiler.source>
-        <maven.compiler.target>9</maven.compiler.target>
-      </properties>
-    </profile>
-
-    <profile>
-      <id>java12-bytecode</id>
-      <activation>
-        <property>
-          <name>bytecode.version</name>
-          <value>12</value>
-        </property>
-      </activation>
-      <properties>
-        <maven.compiler.source>9</maven.compiler.source>
-        <maven.compiler.target>9</maven.compiler.target>
-      </properties>
     </profile>
 
     <!-- This profile enables use of ECJ -->
