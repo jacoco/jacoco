@@ -325,22 +325,24 @@ public class MethodAnalyzerTest implements IProbeIdGenerator {
 	public void if_branch_merge_should_show_partial_branch_coverage_when_probe_for_first_branch_is_executed() {
 		createIfBranchMerge();
 		probes[0] = true;
+		probes[2] = true;
 		runMethodAnalzer();
 
 		assertLine(1001, 0, 2, 1, 1);
 		assertLine(1002, 1, 0, 0, 0);
-		assertLine(1003, 1, 0, 0, 0);
+		assertLine(1003, 0, 1, 0, 0);
 	}
 
 	@Test
 	public void if_branch_merge_should_show_partial_branch_coverage_when_probe_for_second_branch_is_executed() {
 		createIfBranchMerge();
 		probes[1] = true;
+		probes[2] = true;
 		runMethodAnalzer();
 
 		assertLine(1001, 0, 2, 1, 1);
 		assertLine(1002, 0, 1, 0, 0);
-		assertLine(1003, 1, 0, 0, 0);
+		assertLine(1003, 0, 1, 0, 0);
 	}
 
 	@Test
