@@ -26,6 +26,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.jacoco.cli.internal.CommandTestBase;
+import org.jacoco.core.internal.instr.InstrSupport;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
@@ -137,7 +138,7 @@ public class InstrumentTest extends CommandTestBase {
 		ClassReader reader = new ClassReader(in);
 		in.close();
 		final Set<String> fields = new HashSet<String>();
-		reader.accept(new ClassVisitor(Opcodes.ASM6) {
+		reader.accept(new ClassVisitor(InstrSupport.ASM_API_VERSION) {
 			@Override
 			public FieldVisitor visitField(int access, String name, String desc,
 					String signature, Object value) {
