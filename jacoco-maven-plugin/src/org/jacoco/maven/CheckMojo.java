@@ -64,12 +64,6 @@ public class CheckMojo extends AbstractJacocoMojo implements IViolationsOutput {
 	 * </ul>
 	 * 
 	 * <p>
-	 * Note that you <b>must</b> use <tt>implementation</tt> hints for
-	 * <tt>rule</tt> and <tt>limit</tt> when using Maven 2, with Maven 3 you do
-	 * not need to specify the attributes.
-	 * </p>
-	 * 
-	 * <p>
 	 * This example requires an overall instruction coverage of 80% and no class
 	 * must be missed:
 	 * </p>
@@ -77,15 +71,15 @@ public class CheckMojo extends AbstractJacocoMojo implements IViolationsOutput {
 	 * <pre>
 	 * {@code
 	 * <rules>
-	 *   <rule implementation="org.jacoco.maven.RuleConfiguration">
+	 *   <rule>
 	 *     <element>BUNDLE</element>
 	 *     <limits>
-	 *       <limit implementation="org.jacoco.report.check.Limit">
+	 *       <limit>
 	 *         <counter>INSTRUCTION</counter>
 	 *         <value>COVEREDRATIO</value>
 	 *         <minimum>0.80</minimum>
 	 *       </limit>
-	 *       <limit implementation="org.jacoco.report.check.Limit">
+	 *       <limit>
 	 *         <counter>CLASS</counter>
 	 *         <value>MISSEDCOUNT</value>
 	 *         <maximum>0</maximum>

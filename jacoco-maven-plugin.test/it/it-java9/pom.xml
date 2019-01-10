@@ -49,11 +49,9 @@
             </goals>
             <configuration>
               <rules>
-                <!-- implementation is needed only for Maven 2 -->
-                <rule implementation="org.jacoco.maven.RuleConfiguration">
+                <rule>
                   <limits>
-                    <!-- implementation is needed only for Maven 2 -->
-                    <limit implementation="org.jacoco.report.check.Limit">
+                    <limit>
                       <counter>INSTRUCTION</counter>
                       <value>COVEREDCOUNT</value>
                       <minimum>8</minimum>
