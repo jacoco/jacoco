@@ -12,6 +12,7 @@
 package org.jacoco.maven;
 
 import java.io.File;
+import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
@@ -57,6 +58,21 @@ public abstract class AbstractAgentMojo extends AbstractJacocoMojo {
 	 */
 	@Parameter(property = "jacoco.append")
 	Boolean append;
+
+	/**
+	 * A list of class names to include in instrumentation. May use wildcard
+	 * characters (* and ?). When not specified everything will be included.
+	 */
+	@Parameter
+	private List<String> includes;
+
+	/**
+	 * A list of class names to exclude from instrumentation. May use wildcard
+	 * characters (* and ?). When not specified nothing will be excluded.
+	 */
+	@Parameter
+	private List<String> excludes;
+
 	/**
 	 * A list of class loader names, that should be excluded from execution
 	 * analysis. The list entries are separated by a colon (:) and may use
@@ -168,14 +184,14 @@ public abstract class AbstractAgentMojo extends AbstractJacocoMojo {
 		if (append != null) {
 			agentOptions.setAppend(append.booleanValue());
 		}
-		if (getIncludes() != null && !getIncludes().isEmpty()) {
-			final String agentIncludes = StringUtils.join(getIncludes()
-					.iterator(), ":");
+		if (includes != null && !includes.isEmpty()) {
+			final String agentIncludes = StringUtils.join(includes.iterator(),
+					":");
 			agentOptions.setIncludes(agentIncludes);
 		}
-		if (getExcludes() != null && !getExcludes().isEmpty()) {
-			final String agentExcludes = StringUtils.join(getExcludes()
-					.iterator(), ":");
+		if (excludes != null && !excludes.isEmpty()) {
+			final String agentExcludes = StringUtils.join(excludes.iterator(),
+					":");
 			agentOptions.setExcludes(agentExcludes);
 		}
 		if (exclClassLoaders != null) {

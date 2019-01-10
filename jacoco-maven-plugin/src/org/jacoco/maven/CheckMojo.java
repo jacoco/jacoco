@@ -128,6 +128,20 @@ public class CheckMojo extends AbstractJacocoMojo implements IViolationsOutput {
 	@Parameter(defaultValue = "${project.build.directory}/jacoco.exec")
 	private File dataFile;
 
+	/**
+	 * A list of class files to include into analysis. May use wildcard
+	 * characters (* and ?). When not specified everything will be included.
+	 */
+	@Parameter
+	private List<String> includes;
+
+	/**
+	 * A list of class files to exclude from analysis. May use wildcard
+	 * characters (* and ?). When not specified nothing will be excluded.
+	 */
+	@Parameter
+	private List<String> excludes;
+
 	private boolean violations;
 
 	private boolean canCheckCoverage() {
@@ -169,8 +183,7 @@ public class CheckMojo extends AbstractJacocoMojo implements IViolationsOutput {
 		try {
 			final IReportVisitor visitor = support.initRootVisitor();
 			support.loadExecutionData(dataFile);
-			support.processProject(visitor, getProject(), this.getIncludes(),
-					this.getExcludes());
+			support.processProject(visitor, getProject(), includes, excludes);
 			visitor.visitEnd();
 		} catch (final IOException e) {
 			throw new MojoExecutionException(
