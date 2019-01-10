@@ -11,8 +11,6 @@
  *******************************************************************************/
 package org.jacoco.maven;
 
-import java.util.List;
-
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;

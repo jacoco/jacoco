@@ -185,14 +185,12 @@ public abstract class AbstractAgentMojo extends AbstractJacocoMojo {
 			agentOptions.setAppend(append.booleanValue());
 		}
 		if (includes != null && !includes.isEmpty()) {
-			final String agentIncludes = StringUtils.join(includes.iterator(),
-					":");
-			agentOptions.setIncludes(agentIncludes);
+			agentOptions
+					.setIncludes(StringUtils.join(includes.iterator(), ":"));
 		}
 		if (excludes != null && !excludes.isEmpty()) {
-			final String agentExcludes = StringUtils.join(excludes.iterator(),
-					":");
-			agentOptions.setExcludes(agentExcludes);
+			agentOptions
+					.setExcludes(StringUtils.join(excludes.iterator(), ":"));
 		}
 		if (exclClassLoaders != null) {
 			agentOptions.setExclClassloader(exclClassLoaders);

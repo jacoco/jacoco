@@ -46,9 +46,8 @@ import org.jacoco.core.runtime.OfflineInstrumentationAccessGenerator;
 public class InstrumentMojo extends AbstractJacocoMojo {
 
 	/**
-	 * A list of class files to include in instrumentation/analysis/reports. May
-	 * use wildcard characters (* and ?). When not specified everything will be
-	 * included.
+	 * A list of class files to include in instrumentation. May use wildcard
+	 * characters (* and ?). When not specified everything will be included.
 	 */
 	@Parameter
 	private List<String> includes;
