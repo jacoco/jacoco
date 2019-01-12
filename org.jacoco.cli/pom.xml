@@ -49,11 +49,15 @@
           <execution>
             <phase>package</phase>
             <goals>
-              <goal>java</goal>
+              <goal>exec</goal>
             </goals>
             <configuration>
-              <mainClass>org.jacoco.cli.internal.XmlDocumentation</mainClass>
+              <toolchain>jdk</toolchain>
+              <executable>java</executable>
               <arguments>
+                <argument>-cp</argument>
+                <classpath/>
+                <argument>org.jacoco.cli.internal.XmlDocumentation</argument>
                 <argument>${project.build.directory}/generated-documentation/cli.xml</argument>
               </arguments>
             </configuration>
@@ -119,6 +123,6 @@
           </execution>
         </executions>
       </plugin>
-    </plugins>    
+    </plugins>
   </build>
 </project>
