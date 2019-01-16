@@ -11,8 +11,6 @@
  *******************************************************************************/
 package org.jacoco.maven;
 
-import java.util.List;
-
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
@@ -29,22 +27,6 @@ public abstract class AbstractJacocoMojo extends AbstractMojo {
 	 */
 	@Parameter(property = "project", readonly = true)
 	private MavenProject project;
-
-	/**
-	 * A list of class files to include in instrumentation/analysis/reports. May
-	 * use wildcard characters (* and ?). When not specified everything will be
-	 * included.
-	 */
-	@Parameter
-	private List<String> includes;
-
-	/**
-	 * A list of class files to exclude from instrumentation/analysis/reports.
-	 * May use wildcard characters (* and ?). When not specified nothing will be
-	 * excluded.
-	 */
-	@Parameter
-	private List<String> excludes;
 
 	/**
 	 * Flag used to suppress execution.
@@ -88,24 +70,6 @@ public abstract class AbstractJacocoMojo extends AbstractMojo {
 	 */
 	protected final MavenProject getProject() {
 		return project;
-	}
-
-	/**
-	 * Returns the list of class files to include.
-	 * 
-	 * @return class files to include, may contain wildcard characters
-	 */
-	protected List<String> getIncludes() {
-		return includes;
-	}
-
-	/**
-	 * Returns the list of class files to exclude.
-	 * 
-	 * @return class files to exclude, may contain wildcard characters
-	 */
-	protected List<String> getExcludes() {
-		return excludes;
 	}
 
 }
