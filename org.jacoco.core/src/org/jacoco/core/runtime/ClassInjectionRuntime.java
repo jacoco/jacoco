@@ -66,8 +66,8 @@ public class ClassInjectionRuntime extends AbstractRuntime {
 	 *             if unable to define class
 	 */
 	ClassInjectionRuntime(final Class<?> targetClass) throws Exception {
-		this.injectedClassName = targetClass.getName().replace('.', '/')
-				+ "$JaCoCo";
+		this.injectedClassName = targetClass.getPackage().getName().replace('.',
+				'/') + "/$JaCoCo";
 		final Class<?> injectedClass = Lookup //
 				.privateLookupIn(targetClass, Lookup.lookup()) //
 				.defineClass(createClass(injectedClassName));
