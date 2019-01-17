@@ -56,15 +56,16 @@ public class ClassInjectionRuntime extends AbstractRuntime {
 		}
 	}
 
-	ClassInjectionRuntime(final Class cls) throws Exception {
+	ClassInjectionRuntime(final Class<?> cls) throws Exception {
 		this.injectedClassName = cls.getName().replace('.', '/') + "$JaCoCo";
-		final Class injectedClass = Lookup //
+		final Class<?> injectedClass = Lookup //
 				.privateLookupIn(cls, Lookup.lookup()) //
 				.defineClass(createClass(injectedClassName));
 		this.dataFieldSetter = Lookup.lookup().findStaticSetter(injectedClass,
 				FIELD_NAME, Object.class);
 	}
 
+	@Override
 	public void startup(final RuntimeData data) throws Exception {
 		super.startup(data);
 		dataFieldSetter.invokeWithArguments(data);
@@ -134,13 +135,13 @@ public class ClassInjectionRuntime extends AbstractRuntime {
 										ClassInjectionRuntime.class))), // extraOpens
 						Collections.emptySet(), // extraUses
 						Collections.emptyMap() // extraProvides
-				);
+		);
 	}
 
 	/**
 	 * @return {@code cls.getModule()}
 	 */
-	private static Object getModule(final Class cls) throws Exception {
+	private static Object getModule(final Class<?> cls) throws Exception {
 		return Class.class //
 				.getMethod("getModule") //
 				.invoke(cls);
@@ -154,7 +155,7 @@ public class ClassInjectionRuntime extends AbstractRuntime {
 
 		private final Object instance;
 
-		private Lookup(Object instance) {
+		private Lookup(final Object instance) {
 			this.instance = instance;
 		}
 
@@ -195,8 +196,8 @@ public class ClassInjectionRuntime extends AbstractRuntime {
 		 *            the field's type
 		 * @return a method handle which can store values into the field
 		 */
-		MethodHandle findStaticSetter(final Class refc, final String name,
-				final Class type) throws Exception {
+		MethodHandle findStaticSetter(final Class<?> refc, final String name,
+				final Class<?> type) throws Exception {
 			return new MethodHandle(Class //
 					.forName("java.lang.invoke.MethodHandles$Lookup") //
 					.getMethod("findStaticSetter", Class.class, String.class,
@@ -247,7 +248,7 @@ public class ClassInjectionRuntime extends AbstractRuntime {
 
 		private final Object instance;
 
-		private MethodHandle(Object instance) {
+		private MethodHandle(final Object instance) {
 			this.instance = instance;
 		}
 
@@ -283,8 +284,8 @@ public class ClassInjectionRuntime extends AbstractRuntime {
 		 *            the parameter types
 		 * @return a method type
 		 */
-		static MethodType methodType(final Class rType, final Class... pTypes)
-				throws Exception {
+		static MethodType methodType(final Class<?> rType,
+				final Class<?>... pTypes) throws Exception {
 			return new MethodType(Class //
 					.forName("java.lang.invoke.MethodType") //
 					.getMethod("methodType", Class.class, Class[].class)
