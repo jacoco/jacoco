@@ -235,7 +235,7 @@ public class ClassInjectionRuntime extends AbstractRuntime {
 			return (Class<?>) Class //
 					.forName("java.lang.invoke.MethodHandles$Lookup")
 					.getMethod("defineClass", byte[].class)
-					.invoke(this.instance, (Object) bytes);
+					.invoke(this.instance, new Object[] { bytes });
 		}
 
 	}
