@@ -56,10 +56,20 @@ public class ClassInjectionRuntime extends AbstractRuntime {
 		return new ClassInjectionRuntime(Object.class);
 	}
 
-	ClassInjectionRuntime(final Class<?> cls) throws Exception {
-		this.injectedClassName = cls.getName().replace('.', '/') + "$JaCoCo";
+	/**
+	 * Creates a new runtime which will define a class to the same class loader
+	 * and in the same package and protection domain as given class.
+	 *
+	 * @param targetClass
+	 *            class to identify the target class loader and package
+	 * @throws Exception
+	 *             if unable to define class
+	 */
+	ClassInjectionRuntime(final Class<?> targetClass) throws Exception {
+		this.injectedClassName = targetClass.getName().replace('.', '/')
+				+ "$JaCoCo";
 		final Class<?> injectedClass = Lookup //
-				.privateLookupIn(cls, Lookup.lookup()) //
+				.privateLookupIn(targetClass, Lookup.lookup()) //
 				.defineClass(createClass(injectedClassName));
 		this.dataFieldSetter = Lookup.lookup().findStaticSetter(injectedClass,
 				FIELD_NAME, Object.class);
