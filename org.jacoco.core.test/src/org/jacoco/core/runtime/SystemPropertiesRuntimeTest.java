@@ -17,7 +17,7 @@ package org.jacoco.core.runtime;
 public class SystemPropertiesRuntimeTest extends RuntimeTestBase {
 
 	@Override
-	public IRuntime createRuntime() {
+	IRuntime createRuntime() {
 		return new SystemPropertiesRuntime();
 	}
 

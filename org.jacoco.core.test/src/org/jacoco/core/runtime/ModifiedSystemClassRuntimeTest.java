@@ -34,7 +34,7 @@ import org.junit.Test;
 public class ModifiedSystemClassRuntimeTest extends RuntimeTestBase {
 
 	@Override
-	public IRuntime createRuntime() {
+	IRuntime createRuntime() {
 		return new ModifiedSystemClassRuntime(
 				ModifiedSystemClassRuntimeTest.class, "accessField");
 	}

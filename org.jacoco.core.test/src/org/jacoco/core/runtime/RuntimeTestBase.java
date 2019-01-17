@@ -38,7 +38,7 @@ public abstract class RuntimeTestBase {
 
 	private TestStorage storage;
 
-	public abstract IRuntime createRuntime();
+	abstract IRuntime createRuntime();
 
 	@Before
 	public void setup() throws Exception {

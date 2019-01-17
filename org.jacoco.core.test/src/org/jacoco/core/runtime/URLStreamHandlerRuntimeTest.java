@@ -20,7 +20,7 @@ import org.junit.BeforeClass;
 public class URLStreamHandlerRuntimeTest extends RuntimeTestBase {
 
 	@Override
-	public IRuntime createRuntime() {
+	IRuntime createRuntime() {
 		return new URLStreamHandlerRuntime();
 	}
 

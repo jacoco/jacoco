@@ -9,7 +9,7 @@
  *    Evgeny Mandrikov - initial API and implementation
  *
  *******************************************************************************/
-package org.jacoco.core.internal.runtime;
+package org.jacoco.core.runtime;
 
 import java.lang.instrument.Instrumentation;
 import java.util.Arrays;
@@ -18,9 +18,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.jacoco.core.runtime.AbstractRuntime;
-import org.jacoco.core.runtime.IRuntime;
-import org.jacoco.core.runtime.RuntimeData;
 import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;

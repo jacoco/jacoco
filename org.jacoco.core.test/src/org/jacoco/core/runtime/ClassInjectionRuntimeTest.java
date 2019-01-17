@@ -9,7 +9,7 @@
  *    Evgeny Mandrikov - initial API and implementation
  *
  *******************************************************************************/
-package org.jacoco.core.internal.runtime;
+package org.jacoco.core.runtime;
 
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
@@ -17,8 +17,6 @@ import static org.junit.Assert.fail;
 
 import java.lang.reflect.InvocationTargetException;
 
-import org.jacoco.core.runtime.IRuntime;
-import org.jacoco.core.runtime.RuntimeTestBase;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.internal.AssumptionViolatedException;
