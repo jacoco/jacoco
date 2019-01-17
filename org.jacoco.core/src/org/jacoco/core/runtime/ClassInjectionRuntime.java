@@ -41,15 +41,19 @@ public class ClassInjectionRuntime extends AbstractRuntime {
 	 *
 	 * @param instrumentation
 	 *            instrumentation interface
-	 * @return new runtime instance or <code>null</code> if unable to create
+	 * @return new runtime instance or <code>null</code> if not Java 9
+	 * @throws Exception
+	 *             if unable to create
 	 */
-	public static IRuntime create(final Instrumentation instrumentation) {
+	public static IRuntime create(final Instrumentation instrumentation)
+			throws Exception {
 		try {
-			redefineJavaBaseModule(instrumentation);
-			return new ClassInjectionRuntime(Object.class);
-		} catch (final Exception e) {
+			Class.forName("java.lang.Module");
+		} catch (final ClassNotFoundException e) {
 			return null;
 		}
+		redefineJavaBaseModule(instrumentation);
+		return new ClassInjectionRuntime(Object.class);
 	}
 
 	ClassInjectionRuntime(final Class<?> cls) throws Exception {

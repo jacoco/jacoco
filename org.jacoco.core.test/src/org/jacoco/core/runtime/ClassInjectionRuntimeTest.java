@@ -60,11 +60,6 @@ public class ClassInjectionRuntimeTest extends RuntimeTestBase {
 		}
 	}
 
-	@Test
-	public void create_should_return_null_when_unable_to_create() {
-		assertNull(ClassInjectionRuntime.create(null));
-	}
-
 	private static void defineJava9Class() {
 		new ClassLoader() {
 			void defineJava9Class() {
