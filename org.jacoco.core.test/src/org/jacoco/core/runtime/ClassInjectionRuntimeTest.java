@@ -11,7 +11,6 @@
  *******************************************************************************/
 package org.jacoco.core.runtime;
 
-import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
@@ -20,8 +19,6 @@ import java.lang.reflect.InvocationTargetException;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.internal.AssumptionViolatedException;
-import org.objectweb.asm.ClassWriter;
-import org.objectweb.asm.Opcodes;
 
 /**
  * Unit test for {@link ClassInjectionRuntime}.
@@ -33,8 +30,8 @@ public class ClassInjectionRuntimeTest extends RuntimeTestBase {
 	@BeforeClass
 	public static void setupClass() throws Exception {
 		try {
-			defineJava9Class();
-		} catch (final UnsupportedClassVersionError e) {
+			Class.forName("java.lang.Module");
+		} catch (final ClassNotFoundException e) {
 			throw new AssumptionViolatedException(
 					"this test requires at least Java 9");
 		}
@@ -58,19 +55,6 @@ public class ClassInjectionRuntimeTest extends RuntimeTestBase {
 			assertTrue(e.getCause().getMessage()
 					.contains("duplicate class definition"));
 		}
-	}
-
-	private static void defineJava9Class() {
-		new ClassLoader() {
-			void defineJava9Class() {
-				final String name = "Example";
-				final ClassWriter cw = new ClassWriter(0);
-				cw.visit(Opcodes.V9, 0, name, null, "java/lang/Object", null);
-				cw.visitEnd();
-				final byte[] bytes = cw.toByteArray();
-				defineClass(name, bytes, 0, bytes.length);
-			}
-		}.defineJava9Class();
 	}
 
 }
