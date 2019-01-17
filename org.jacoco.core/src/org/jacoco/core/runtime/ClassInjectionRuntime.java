@@ -23,9 +23,8 @@ import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
 
 /**
- * {@link IRuntime} that uses introduced in Java 9
- * {@code java.lang.instrument.Instrumentation.redefineModule} and
- * {@code java.lang.invoke.MethodHandles.Lookup.defineClass}.
+ * {@link IRuntime} which injects a new class into the <code>java.base</code>
+ * module using Java 9 APIs.
  */
 public class ClassInjectionRuntime extends AbstractRuntime {
 
