@@ -17,6 +17,7 @@ import org.jacoco.core.analysis.IPackageCoverage;
 import org.jacoco.core.analysis.ISourceFileCoverage;
 import org.jacoco.core.internal.analysis.BundleCoverageImpl;
 import org.jacoco.core.internal.analysis.ClassCoverageImpl;
+import org.jacoco.core.internal.analysis.CounterImpl;
 import org.jacoco.core.internal.analysis.MethodCoverageImpl;
 import org.jacoco.core.internal.analysis.PackageCoverageImpl;
 import org.junit.Before;
@@ -43,7 +44,11 @@ public class BundlePageTest extends PageTestBase {
 	public void should_render_non_empty_packages() throws Exception {
 		final ClassCoverageImpl classCoverage = new ClassCoverageImpl(
 				"example/Class", 0, false);
-		classCoverage.addMethod(new MethodCoverageImpl("m", "()V", null));
+		final MethodCoverageImpl methodCoverage = new MethodCoverageImpl("m",
+				"()V", null);
+		methodCoverage.increment(CounterImpl.COUNTER_1_0,
+				CounterImpl.COUNTER_0_0, 42);
+		classCoverage.addMethod(methodCoverage);
 		final IPackageCoverage nonEmptyPackage = new PackageCoverageImpl(
 				"example",
 				Collections.<IClassCoverage> singleton(classCoverage),

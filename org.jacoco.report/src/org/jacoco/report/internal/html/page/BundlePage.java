@@ -62,7 +62,7 @@ public class BundlePage extends TablePage<ICoverageNode> {
 
 	private void renderPackages() throws IOException {
 		for (final IPackageCoverage p : bundle.getPackages()) {
-			if (p.getClassCounter().getTotalCount() == 0) {
+			if (p.isEmpty()) {
 				continue;
 			}
 			final String packagename = p.getName();

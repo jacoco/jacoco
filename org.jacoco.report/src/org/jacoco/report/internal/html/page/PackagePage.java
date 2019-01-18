@@ -65,7 +65,7 @@ public class PackagePage extends TablePage<IPackageCoverage> {
 
 	private void renderClasses() throws IOException {
 		for (final IClassCoverage c : getNode().getClasses()) {
-			if (c.getClassCounter().getTotalCount() == 0) {
+			if (c.isEmpty()) {
 				continue;
 			}
 			final ILinkable sourceFilePage = packageSourcePage
