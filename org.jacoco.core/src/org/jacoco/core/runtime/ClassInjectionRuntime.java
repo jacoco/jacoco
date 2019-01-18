@@ -12,9 +12,7 @@
 package org.jacoco.core.runtime;
 
 import java.lang.instrument.Instrumentation;
-import java.util.Arrays;
 import java.util.Collections;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -76,11 +74,11 @@ public class ClassInjectionRuntime extends AbstractRuntime {
 	@Override
 	public void startup(final RuntimeData data) throws Exception {
 		super.startup(data);
-		final Class<?> cls = Lookup //
+		Lookup //
 				.privateLookupIn(locator, Lookup.lookup()) //
-				.defineClass(createClass(className));
-		Lookup.lookup().findStaticSetter(cls, FIELD_NAME, Object.class)
-				.invokeWithArguments(data);
+				.defineClass(createClass(className)) //
+				.getField(FIELD_NAME) //
+				.set(null, data);
 	}
 
 	public void shutdown() {
@@ -176,24 +174,6 @@ public class ClassInjectionRuntime extends AbstractRuntime {
 		}
 
 		/**
-		 * @param refc
-		 *            the class or interface from which the method is accessed
-		 * @param name
-		 *            the field's name
-		 * @param type
-		 *            the field's type
-		 * @return a method handle which can store values into the field
-		 */
-		MethodHandle findStaticSetter(final Class<?> refc, final String name,
-				final Class<?> type) throws Exception {
-			return new MethodHandle(Class //
-					.forName("java.lang.invoke.MethodHandles$Lookup") //
-					.getMethod("findStaticSetter", Class.class, String.class,
-							Class.class) //
-					.invoke(this.instance, refc, name, type));
-		}
-
-		/**
 		 * See corresponding method introduced in Java 9.
 		 *
 		 * @param targetClass
@@ -224,31 +204,6 @@ public class ClassInjectionRuntime extends AbstractRuntime {
 					.forName("java.lang.invoke.MethodHandles$Lookup")
 					.getMethod("defineClass", byte[].class)
 					.invoke(this.instance, new Object[] { bytes });
-		}
-
-	}
-
-	/**
-	 * Provides access to class {@code java.lang.invoke.MethodHandle} introduced
-	 * in Java 8.
-	 */
-	private static class MethodHandle {
-
-		private final Object instance;
-
-		private MethodHandle(final Object instance) {
-			this.instance = instance;
-		}
-
-		/**
-		 * @param arguments
-		 *            the arguments to pass to the target
-		 */
-		Object invokeWithArguments(final Object... arguments) throws Exception {
-			return Class //
-					.forName("java.lang.invoke.MethodHandle") //
-					.getMethod("invokeWithArguments", List.class) //
-					.invoke(instance, Arrays.asList(arguments));
 		}
 
 	}
