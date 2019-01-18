@@ -12,7 +12,6 @@
 package org.jacoco.report.csv;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
 
 import java.io.BufferedReader;
 import java.io.StringReader;
