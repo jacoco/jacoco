@@ -17,38 +17,40 @@ import static org.junit.Assert.fail;
 import java.lang.reflect.InvocationTargetException;
 
 import org.junit.BeforeClass;
+import org.junit.Rule;
 import org.junit.Test;
 import org.junit.internal.AssumptionViolatedException;
+import org.junit.rules.TestName;
 
 /**
  * Unit test for {@link ClassInjectionRuntime}.
  */
 public class ClassInjectionRuntimeTest extends RuntimeTestBase {
 
-	private static IRuntime runtime;
+	@Rule
+	public TestName testName = new TestName();
 
 	@BeforeClass
-	public static void setupClass() throws Exception {
+	public static void requires_at_least_Java_9() {
 		try {
 			Class.forName("java.lang.Module");
 		} catch (final ClassNotFoundException e) {
 			throw new AssumptionViolatedException(
 					"this test requires at least Java 9");
 		}
-
-		runtime = new ClassInjectionRuntime(ClassInjectionRuntimeTest.class);
 	}
 
 	@Override
 	public IRuntime createRuntime() {
-		return runtime;
+		return new ClassInjectionRuntime(ClassInjectionRuntimeTest.class,
+				testName.getMethodName());
 	}
 
 	@Test
-	public void constructor_should_not_create_duplicate_class_definition()
+	public void startup_should_not_create_duplicate_class_definition()
 			throws Exception {
 		try {
-			new ClassInjectionRuntime(ClassInjectionRuntimeTest.class);
+			createRuntime().startup(null);
 			fail("exception expected");
 		} catch (final InvocationTargetException e) {
 			assertTrue(e.getCause() instanceof LinkageError);

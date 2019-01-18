@@ -32,9 +32,9 @@ public class ClassInjectionRuntime extends AbstractRuntime {
 
 	private static final String FIELD_TYPE = "Ljava/lang/Object;";
 
-	private final String injectedClassName;
+	private final Class<?> locator;
 
-	private final MethodHandle dataFieldSetter;
+	private final String className;
 
 	/**
 	 * Creates new instance of runtime.
@@ -42,43 +42,45 @@ public class ClassInjectionRuntime extends AbstractRuntime {
 	 * @param instrumentation
 	 *            instrumentation interface
 	 * @return new runtime instance or <code>null</code> if not Java 9
-	 * @throws Exception
-	 *             if unable to create
 	 */
-	public static IRuntime create(final Instrumentation instrumentation)
-			throws Exception {
+	public static IRuntime create(final Instrumentation instrumentation) {
 		try {
 			Class.forName("java.lang.Module");
 		} catch (final ClassNotFoundException e) {
 			return null;
 		}
-		redefineJavaBaseModule(instrumentation);
-		return new ClassInjectionRuntime(Object.class);
+		try {
+			redefineJavaBaseModule(instrumentation);
+		} catch (final Exception e) {
+			throw new RuntimeException(e);
+		}
+		return new ClassInjectionRuntime(Object.class, "$JaCoCo");
 	}
 
 	/**
 	 * Creates a new runtime which will define a class to the same class loader
 	 * and in the same package and protection domain as given class.
 	 *
-	 * @param targetClass
+	 * @param locator
 	 *            class to identify the target class loader and package
-	 * @throws Exception
-	 *             if unable to define class
+	 * @param simpleClassName
+	 *            simple name of the class to be defined
 	 */
-	ClassInjectionRuntime(final Class<?> targetClass) throws Exception {
-		this.injectedClassName = targetClass.getPackage().getName().replace('.',
-				'/') + "/$JaCoCo";
-		final Class<?> injectedClass = Lookup //
-				.privateLookupIn(targetClass, Lookup.lookup()) //
-				.defineClass(createClass(injectedClassName));
-		this.dataFieldSetter = Lookup.lookup().findStaticSetter(injectedClass,
-				FIELD_NAME, Object.class);
+	ClassInjectionRuntime(final Class<?> locator,
+			final String simpleClassName) {
+		this.locator = locator;
+		this.className = locator.getPackage().getName().replace('.', '/') + '/'
+				+ simpleClassName;
 	}
 
 	@Override
 	public void startup(final RuntimeData data) throws Exception {
 		super.startup(data);
-		dataFieldSetter.invokeWithArguments(data);
+		final Class<?> cls = Lookup //
+				.privateLookupIn(locator, Lookup.lookup()) //
+				.defineClass(createClass(className));
+		Lookup.lookup().findStaticSetter(cls, FIELD_NAME, Object.class)
+				.invokeWithArguments(data);
 	}
 
 	public void shutdown() {
@@ -87,8 +89,7 @@ public class ClassInjectionRuntime extends AbstractRuntime {
 
 	public int generateDataAccessor(final long classid, final String classname,
 			final int probecount, final MethodVisitor mv) {
-		mv.visitFieldInsn(Opcodes.GETSTATIC, injectedClassName, FIELD_NAME,
-				FIELD_TYPE);
+		mv.visitFieldInsn(Opcodes.GETSTATIC, className, FIELD_NAME, FIELD_TYPE);
 
 		RuntimeData.generateAccessCall(classid, classname, probecount, mv);
 
