@@ -13,6 +13,8 @@ package org.jacoco.report;
 
 import java.io.IOException;
 import java.io.Reader;
+import java.io.StringReader;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
@@ -45,7 +47,7 @@ public class ReportStructureTestDriver {
 
 		public Reader getSourceFile(String packageName, String fileName)
 				throws IOException {
-			return null;
+			return  new StringReader("");
 		}
 
 		public int getTabWidth() {
@@ -84,11 +86,30 @@ public class ReportStructureTestDriver {
 		sourceFileCoverageImpl.increment(classCoverage);
 		sourceFileCoverage = sourceFileCoverageImpl;
 
+		final ClassCoverageImpl emptyClassInNonEmptyPackage = new ClassCoverageImpl(
+				"org/jacoco/example/Empty", 0, false);
+		emptyClassInNonEmptyPackage.setSourceFileName("Empty.java");
+		final SourceFileCoverageImpl emptySourceInNonEmptyPackage = new SourceFileCoverageImpl(
+				"Empty.java", "org/jacoco/example");
+
+		final ClassCoverageImpl emptyClassInEmptyPackage = new ClassCoverageImpl(
+				"empty/Empty", 0, false);
+		emptyClassInEmptyPackage.setSourceFileName("Empty.java");
+		final SourceFileCoverageImpl emptySourceInEmptyPackage = new SourceFileCoverageImpl(
+				"Empty.java", "empty");
+		final PackageCoverageImpl emptyPackage = new PackageCoverageImpl(
+				"empty",
+				Collections.<IClassCoverage> singletonList(
+						emptyClassInEmptyPackage),
+				Collections.<ISourceFileCoverage> singletonList(
+						emptySourceInEmptyPackage));
+
 		packageCoverage = new PackageCoverageImpl("org/jacoco/example",
-				Collections.singleton(classCoverage),
-				Collections.singleton(sourceFileCoverage));
+				Arrays.asList(classCoverage, emptyClassInNonEmptyPackage),
+				Arrays.asList(sourceFileCoverage,
+						emptySourceInNonEmptyPackage));
 		bundleCoverage = new BundleCoverageImpl("bundle",
-				Collections.singleton(packageCoverage));
+				Arrays.asList(packageCoverage, emptyPackage));
 	}
 
 	public void sendNestedGroups(IReportVisitor reportVisitor)
