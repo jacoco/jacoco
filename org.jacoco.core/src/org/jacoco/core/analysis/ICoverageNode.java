@@ -132,6 +132,13 @@ public interface ICoverageNode {
 	ICounter getCounter(CounterEntity entity);
 
 	/**
+	 * Checks whether this is an empty node.
+	 *
+	 * @return <code>true</code> if this node does not contain instructions
+	 */
+	boolean isEmpty();
+
+	/**
 	 * Creates a plain copy of this node. While {@link ICoverageNode}
 	 * implementations may contain heavy data structures, the copy returned by
 	 * this method is reduced to the counters only. This helps to save memory

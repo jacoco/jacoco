@@ -593,8 +593,7 @@ public class ReportTask extends Task {
 	}
 
 	private void checkForMissingDebugInformation(final ICoverageNode node) {
-		if (node.getClassCounter().getTotalCount() > 0
-				&& node.getLineCounter().getTotalCount() == 0) {
+		if (!node.isEmpty() && node.getLineCounter().getTotalCount() == 0) {
 			log(format(
 					"To enable source code annotation class files for bundle '%s' have to be compiled with debug information.",
 					node.getName()), Project.MSG_WARN);

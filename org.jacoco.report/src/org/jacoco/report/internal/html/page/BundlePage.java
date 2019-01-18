@@ -62,6 +62,9 @@ public class BundlePage extends TablePage<ICoverageNode> {
 
 	private void renderPackages() throws IOException {
 		for (final IPackageCoverage p : bundle.getPackages()) {
+			if (p.isEmpty()) {
+				continue;
+			}
 			final String packagename = p.getName();
 			final String foldername = packagename.length() == 0 ? "default"
 					: packagename.replace('/', '.');

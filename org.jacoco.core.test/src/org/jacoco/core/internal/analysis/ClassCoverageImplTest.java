@@ -93,7 +93,7 @@ public class ClassCoverageImplTest {
 		assertEquals(CounterImpl.COUNTER_0_0, node.getInstructionCounter());
 		assertEquals(CounterImpl.COUNTER_0_0, node.getBranchCounter());
 		assertEquals(CounterImpl.COUNTER_0_0, node.getMethodCounter());
-		assertEquals(CounterImpl.COUNTER_1_0, node.getClassCounter());
+		assertEquals(CounterImpl.COUNTER_0_0, node.getClassCounter());
 	}
 
 	@Test
