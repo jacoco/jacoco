@@ -114,7 +114,7 @@ public class ModifiedSystemClassRuntime extends AbstractRuntime {
 	 * @return new runtime instance
 	 * 
 	 * @throws ClassNotFoundException
-	 *             id the given class can not be found
+	 *             if the given class can not be found
 	 */
 	public static IRuntime createFor(final Instrumentation inst,
 			final String className, final String accessFieldName)
