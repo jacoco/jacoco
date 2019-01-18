@@ -11,18 +11,15 @@
  *******************************************************************************/
 package org.jacoco.core.runtime;
 
-import java.lang.instrument.Instrumentation;
-import java.util.Collections;
-import java.util.Map;
-import java.util.Set;
-
 import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
 
 /**
- * {@link IRuntime} which injects a new class into the <code>java.base</code>
- * module using Java 9 APIs.
+ * {@link IRuntime} which defines a new class using
+ * {@code java.lang.invoke.MethodHandles.Lookup.defineClass} introduced in Java
+ * 9. Module where class will be defined must be opened to at least module of
+ * this class.
  */
 public class ClassInjectionRuntime extends AbstractRuntime {
 
@@ -35,27 +32,6 @@ public class ClassInjectionRuntime extends AbstractRuntime {
 	private final String className;
 
 	/**
-	 * Creates new instance of runtime.
-	 *
-	 * @param instrumentation
-	 *            instrumentation interface
-	 * @return new runtime instance or <code>null</code> if not Java 9
-	 */
-	public static IRuntime create(final Instrumentation instrumentation) {
-		try {
-			Class.forName("java.lang.Module");
-		} catch (final ClassNotFoundException e) {
-			return null;
-		}
-		try {
-			redefineJavaBaseModule(instrumentation);
-		} catch (final Exception e) {
-			throw new RuntimeException(e);
-		}
-		return new ClassInjectionRuntime(Object.class, "$JaCoCo");
-	}
-
-	/**
 	 * Creates a new runtime which will define a class to the same class loader
 	 * and in the same package and protection domain as given class.
 	 *
@@ -64,7 +40,7 @@ public class ClassInjectionRuntime extends AbstractRuntime {
 	 * @param simpleClassName
 	 *            simple name of the class to be defined
 	 */
-	ClassInjectionRuntime(final Class<?> locator,
+	public ClassInjectionRuntime(final Class<?> locator,
 			final String simpleClassName) {
 		this.locator = locator;
 		this.className = locator.getPackage().getName().replace('.', '/') + '/'
@@ -102,53 +78,6 @@ public class ClassInjectionRuntime extends AbstractRuntime {
 				FIELD_TYPE, null, null);
 		cw.visitEnd();
 		return cw.toByteArray();
-	}
-
-	/**
-	 * <pre>
-	 * {@code
-	 * instrumentation.redefineModule(
-	 *   getModule(Object.class),
-	 *   Collections.emptySet(),
-	 *   Collections.emptyMap(),
-	 *   Collections.singletonMap(
-	 *     "java.lang",
-	 *     Collections.singleton(getModule(ClassInjectionRuntime.class))),
-	 *   Collections.emptySet(),
-	 *   Collections.emptyMap())
-	 * }
-	 * </pre>
-	 */
-	private static void redefineJavaBaseModule(
-			final Instrumentation instrumentation) throws Exception {
-		Instrumentation.class.getMethod( //
-				"redefineModule", //
-				Class.forName("java.lang.Module"), //
-				Set.class, //
-				Map.class, //
-				Map.class, //
-				Set.class, //
-				Map.class //
-		).invoke( //
-				instrumentation, // instance
-				getModule(Object.class), // module
-				Collections.emptySet(), // extraReads
-				Collections.emptyMap(), // extraExports
-				Collections.singletonMap("java.lang",
-						Collections.singleton(
-								getModule(ClassInjectionRuntime.class))), // extraOpens
-				Collections.emptySet(), // extraUses
-				Collections.emptyMap() // extraProvides
-		);
-	}
-
-	/**
-	 * @return {@code cls.getModule()}
-	 */
-	private static Object getModule(final Class<?> cls) throws Exception {
-		return Class.class //
-				.getMethod("getModule") //
-				.invoke(cls);
 	}
 
 	/**
