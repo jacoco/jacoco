@@ -21,7 +21,7 @@ import org.objectweb.asm.Opcodes;
  * 9. Module where class will be defined must be opened to at least module of
  * this class.
  */
-public class ClassInjectionRuntime extends AbstractRuntime {
+public class InjectedClassRuntime extends AbstractRuntime {
 
 	private static final String FIELD_NAME = "data";
 
@@ -40,7 +40,7 @@ public class ClassInjectionRuntime extends AbstractRuntime {
 	 * @param simpleClassName
 	 *            simple name of the class to be defined
 	 */
-	public ClassInjectionRuntime(final Class<?> locator,
+	public InjectedClassRuntime(final Class<?> locator,
 			final String simpleClassName) {
 		this.locator = locator;
 		this.className = locator.getPackage().getName().replace('.', '/') + '/'

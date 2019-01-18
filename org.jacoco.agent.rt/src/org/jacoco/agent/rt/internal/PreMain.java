@@ -17,8 +17,8 @@ import java.util.Map;
 import java.util.Set;
 
 import org.jacoco.core.runtime.AgentOptions;
-import org.jacoco.core.runtime.ClassInjectionRuntime;
 import org.jacoco.core.runtime.IRuntime;
+import org.jacoco.core.runtime.InjectedClassRuntime;
 import org.jacoco.core.runtime.ModifiedSystemClassRuntime;
 
 /**
@@ -58,7 +58,7 @@ public final class PreMain {
 			throws Exception {
 
 		if (redefineJavaBaseModule(inst)) {
-			return new ClassInjectionRuntime(Object.class, "$JaCoCo");
+			return new InjectedClassRuntime(Object.class, "$JaCoCo");
 		}
 
 		return ModifiedSystemClassRuntime.createFor(inst, "java/lang/UnknownError");
@@ -85,7 +85,7 @@ public final class PreMain {
 				Collections.emptyMap(), // extraExports
 				Collections.singletonMap("java.lang",
 						Collections.singleton(
-								getModule(ClassInjectionRuntime.class))), // extraOpens
+								getModule(InjectedClassRuntime.class))), // extraOpens
 				Collections.emptySet(), // extraUses
 				Collections.emptyMap() // extraProvides
 		);

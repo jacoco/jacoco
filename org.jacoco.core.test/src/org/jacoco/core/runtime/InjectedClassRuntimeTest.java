@@ -23,9 +23,9 @@ import org.junit.internal.AssumptionViolatedException;
 import org.junit.rules.TestName;
 
 /**
- * Unit test for {@link ClassInjectionRuntime}.
+ * Unit test for {@link InjectedClassRuntime}.
  */
-public class ClassInjectionRuntimeTest extends RuntimeTestBase {
+public class InjectedClassRuntimeTest extends RuntimeTestBase {
 
 	@Rule
 	public TestName testName = new TestName();
@@ -42,7 +42,7 @@ public class ClassInjectionRuntimeTest extends RuntimeTestBase {
 
 	@Override
 	public IRuntime createRuntime() {
-		return new ClassInjectionRuntime(ClassInjectionRuntimeTest.class,
+		return new InjectedClassRuntime(InjectedClassRuntimeTest.class,
 				testName.getMethodName());
 	}
 
