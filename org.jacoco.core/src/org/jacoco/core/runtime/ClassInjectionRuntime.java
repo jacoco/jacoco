@@ -176,24 +176,6 @@ public class ClassInjectionRuntime extends AbstractRuntime {
 		}
 
 		/**
-		 * @param obj
-		 *            the object from which the method is accessed
-		 * @param name
-		 *            the name of the method
-		 * @param methodType
-		 *            the type of the method
-		 * @return a method handle
-		 */
-		MethodHandle bind(final Object obj, final String name,
-				final MethodType methodType) throws Exception {
-			return new MethodHandle(Class //
-					.forName("java.lang.invoke.MethodHandles$Lookup") //
-					.getMethod("bind", Object.class, String.class,
-							Class.forName("java.lang.invoke.MethodType")) //
-					.invoke(this.instance, obj, name, methodType.instance));
-		}
-
-		/**
 		 * @param refc
 		 *            the class or interface from which the method is accessed
 		 * @param name
@@ -267,35 +249,6 @@ public class ClassInjectionRuntime extends AbstractRuntime {
 					.forName("java.lang.invoke.MethodHandle") //
 					.getMethod("invokeWithArguments", List.class) //
 					.invoke(instance, Arrays.asList(arguments));
-		}
-
-	}
-
-	/**
-	 * Provides access to class {@code java.lang.invoke.MethodType} introduced
-	 * in Java 8.
-	 */
-	private static class MethodType {
-
-		private final Object instance;
-
-		private MethodType(final Object instance) {
-			this.instance = instance;
-		}
-
-		/**
-		 * @param rType
-		 *            the return type
-		 * @param pTypes
-		 *            the parameter types
-		 * @return a method type
-		 */
-		static MethodType methodType(final Class<?> rType,
-				final Class<?>... pTypes) throws Exception {
-			return new MethodType(Class //
-					.forName("java.lang.invoke.MethodType") //
-					.getMethod("methodType", Class.class, Class[].class)
-					.invoke(null, rType, pTypes));
 		}
 
 	}
