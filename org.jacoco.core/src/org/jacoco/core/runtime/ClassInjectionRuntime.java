@@ -123,29 +123,24 @@ public class ClassInjectionRuntime extends AbstractRuntime {
 	 */
 	private static void redefineJavaBaseModule(
 			final Instrumentation instrumentation) throws Exception {
-		Lookup.lookup() //
-				.bind( //
-						instrumentation, //
-						"redefineModule", //
-						MethodType.methodType( //
-								void.class, //
-								Class.forName("java.lang.Module"), //
-								Set.class, //
-								Map.class, //
-								Map.class, //
-								Set.class, //
-								Map.class //
-						) //
-				) //
-				.invokeWithArguments( //
-						getModule(Object.class), // module
-						Collections.emptySet(), // extraReads
-						Collections.emptyMap(), // extraExports
-						Collections.singletonMap("java.lang",
-								Collections.singleton(getModule(
-										ClassInjectionRuntime.class))), // extraOpens
-						Collections.emptySet(), // extraUses
-						Collections.emptyMap() // extraProvides
+		Instrumentation.class.getMethod( //
+				"redefineModule", //
+				Class.forName("java.lang.Module"), //
+				Set.class, //
+				Map.class, //
+				Map.class, //
+				Set.class, //
+				Map.class //
+		).invoke( //
+				instrumentation, // instance
+				getModule(Object.class), // module
+				Collections.emptySet(), // extraReads
+				Collections.emptyMap(), // extraExports
+				Collections.singletonMap("java.lang",
+						Collections.singleton(
+								getModule(ClassInjectionRuntime.class))), // extraOpens
+				Collections.emptySet(), // extraUses
+				Collections.emptyMap() // extraProvides
 		);
 	}
 
