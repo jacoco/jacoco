@@ -89,4 +89,22 @@ public class BundlePageTest extends PageTestBase {
 				support.findStr(doc, "/html/body/p"));
 	}
 
+	@Test
+	public void should_render_message_when_all_classes_empty()
+			throws Exception {
+		final ClassCoverageImpl emptyClass = new ClassCoverageImpl(
+				"example/Class", 0, false);
+		final IBundleCoverage node = new BundleCoverageImpl("bundle",
+				Collections.<IClassCoverage> singleton(emptyClass),
+				Collections.<ISourceFileCoverage> emptySet());
+
+		final BundlePage page = new BundlePage(node, null, null, rootFolder,
+				context);
+		page.render();
+
+		final Document doc = support.parse(output.getFile("index.html"));
+		assertEquals("No classes to display - all analyzed classes are abstract or generated code.",
+				support.findStr(doc, "/html/body/p"));
+	}
+
 }
