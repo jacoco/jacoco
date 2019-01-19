@@ -74,4 +74,19 @@ public class BundlePageTest extends PageTestBase {
 				support.findStr(doc, "count(/html/body/table[1]/tbody/tr)"));
 	}
 
+	@Test
+	public void should_render_message_when_no_class_files_specified()
+			throws Exception {
+		final IBundleCoverage node = new BundleCoverageImpl("bundle",
+				Collections.<IPackageCoverage> emptySet());
+
+		final BundlePage page = new BundlePage(node, null, null, rootFolder,
+				context);
+		page.render();
+
+		final Document doc = support.parse(output.getFile("index.html"));
+		assertEquals("No class files specified.",
+				support.findStr(doc, "/html/body/p"));
+	}
+
 }
