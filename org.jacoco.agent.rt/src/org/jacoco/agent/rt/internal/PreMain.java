@@ -12,9 +12,13 @@
 package org.jacoco.agent.rt.internal;
 
 import java.lang.instrument.Instrumentation;
+import java.util.Collections;
+import java.util.Map;
+import java.util.Set;
 
 import org.jacoco.core.runtime.AgentOptions;
 import org.jacoco.core.runtime.IRuntime;
+import org.jacoco.core.runtime.InjectedClassRuntime;
 import org.jacoco.core.runtime.ModifiedSystemClassRuntime;
 
 /**
@@ -52,7 +56,58 @@ public final class PreMain {
 
 	private static IRuntime createRuntime(final Instrumentation inst)
 			throws Exception {
+
+		if (redefineJavaBaseModule(inst)) {
+			return new InjectedClassRuntime(Object.class, "$JaCoCo");
+		}
+
 		return ModifiedSystemClassRuntime.createFor(inst, "java/lang/UnknownError");
+	}
+
+	/**
+	 * Opens {@code java.base} module for {@link InjectedClassRuntime} when
+	 * executed on Java 9 JREs or higher.
+	 *
+	 * @return <code>true</code> when running on Java 9 or higher,
+	 *         <code>false</code> otherwise
+	 * @throws Exception
+	 *             if unable to open
+	 */
+	private static boolean redefineJavaBaseModule(
+			final Instrumentation instrumentation) throws Exception {
+		try {
+			Class.forName("java.lang.Module");
+		} catch (final ClassNotFoundException e) {
+			return false;
+		}
+
+		Instrumentation.class.getMethod("redefineModule", //
+				Class.forName("java.lang.Module"), //
+				Set.class, //
+				Map.class, //
+				Map.class, //
+				Set.class, //
+				Map.class //
+		).invoke(instrumentation, // instance
+				getModule(Object.class), // module
+				Collections.emptySet(), // extraReads
+				Collections.emptyMap(), // extraExports
+				Collections.singletonMap("java.lang",
+						Collections.singleton(
+								getModule(InjectedClassRuntime.class))), // extraOpens
+				Collections.emptySet(), // extraUses
+				Collections.emptyMap() // extraProvides
+		);
+		return true;
+	}
+
+	/**
+	 * @return {@code cls.getModule()}
+	 */
+	private static Object getModule(final Class<?> cls) throws Exception {
+		return Class.class //
+				.getMethod("getModule") //
+				.invoke(cls);
 	}
 
 }
