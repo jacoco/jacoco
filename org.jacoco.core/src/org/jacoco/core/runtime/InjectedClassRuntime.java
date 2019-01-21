@@ -29,7 +29,7 @@ public class InjectedClassRuntime extends AbstractRuntime {
 
 	private final Class<?> locator;
 
-	private final String className;
+	private final String injectedClassName;
 
 	/**
 	 * Creates a new runtime which will define a class to the same class loader
@@ -43,8 +43,8 @@ public class InjectedClassRuntime extends AbstractRuntime {
 	public InjectedClassRuntime(final Class<?> locator,
 			final String simpleClassName) {
 		this.locator = locator;
-		this.className = locator.getPackage().getName().replace('.', '/') + '/'
-				+ simpleClassName;
+		this.injectedClassName = locator.getPackage().getName().replace('.',
+				'/') + '/' + simpleClassName;
 	}
 
 	@Override
@@ -52,7 +52,7 @@ public class InjectedClassRuntime extends AbstractRuntime {
 		super.startup(data);
 		Lookup //
 				.privateLookupIn(locator, Lookup.lookup()) //
-				.defineClass(createClass(className)) //
+				.defineClass(createClass(injectedClassName)) //
 				.getField(FIELD_NAME) //
 				.set(null, data);
 	}
@@ -63,7 +63,8 @@ public class InjectedClassRuntime extends AbstractRuntime {
 
 	public int generateDataAccessor(final long classid, final String classname,
 			final int probecount, final MethodVisitor mv) {
-		mv.visitFieldInsn(Opcodes.GETSTATIC, className, FIELD_NAME, FIELD_TYPE);
+		mv.visitFieldInsn(Opcodes.GETSTATIC, injectedClassName, FIELD_NAME,
+				FIELD_TYPE);
 
 		RuntimeData.generateAccessCall(classid, classname, probecount, mv);
 
