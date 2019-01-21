@@ -92,7 +92,7 @@ public class BundlePage extends TablePage<ICoverageNode> {
 			body.p().text("No class files specified.");
 		} else if (bundle.isEmpty()) {
 			body.p().text(
-					"No classes to display - all analyzed classes are abstract or generated code.");
+					"None of the analyzed classes contain code relevant for code coverage.");
 		} else {
 			super.content(body);
 		}

@@ -103,7 +103,8 @@ public class BundlePageTest extends PageTestBase {
 		page.render();
 
 		final Document doc = support.parse(output.getFile("index.html"));
-		assertEquals("No classes to display - all analyzed classes are abstract or generated code.",
+		assertEquals(
+				"None of the analyzed classes contain code relevant for code coverage.",
 				support.findStr(doc, "/html/body/p"));
 	}
 
