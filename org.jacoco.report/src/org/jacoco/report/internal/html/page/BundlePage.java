@@ -18,6 +18,7 @@ import org.jacoco.core.analysis.ICoverageNode;
 import org.jacoco.core.analysis.IPackageCoverage;
 import org.jacoco.report.ISourceFileLocator;
 import org.jacoco.report.internal.ReportOutputFolder;
+import org.jacoco.report.internal.html.HTMLElement;
 import org.jacoco.report.internal.html.IHTMLReportContext;
 
 /**
@@ -83,6 +84,18 @@ public class BundlePage extends TablePage<ICoverageNode> {
 	@Override
 	protected String getFileName() {
 		return "index.html";
+	}
+
+	@Override
+	protected void content(HTMLElement body) throws IOException {
+		if (bundle.getPackages().isEmpty()) {
+			body.p().text("No class files specified.");
+		} else if (bundle.isEmpty()) {
+			body.p().text(
+					"None of the analyzed classes contain code relevant for code coverage.");
+		} else {
+			super.content(body);
+		}
 	}
 
 }
