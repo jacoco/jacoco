@@ -64,6 +64,15 @@ public final class PreMain {
 		return ModifiedSystemClassRuntime.createFor(inst, "java/lang/UnknownError");
 	}
 
+	/**
+	 * Opens {@code java.base} module for {@link InjectedClassRuntime} when
+	 * executed on Java 9 JREs or higher.
+	 *
+	 * @return <code>true</code> when running on Java 9 or higher,
+	 *         <code>false</code> otherwise
+	 * @throws Exception
+	 *             if unable to open
+	 */
 	private static boolean redefineJavaBaseModule(
 			final Instrumentation instrumentation) throws Exception {
 		try {
