@@ -143,8 +143,8 @@ public class CoverageNodeImpl implements ICoverageNode {
 		throw new AssertionError(entity);
 	}
 
-	public boolean isEmpty() {
-		return getInstructionCounter().getTotalCount() == 0;
+	public boolean containsCode() {
+		return getInstructionCounter().getTotalCount() != 0;
 	}
 
 	public ICoverageNode getPlainCopy() {

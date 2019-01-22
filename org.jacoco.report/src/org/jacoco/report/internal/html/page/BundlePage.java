@@ -63,7 +63,7 @@ public class BundlePage extends TablePage<ICoverageNode> {
 
 	private void renderPackages() throws IOException {
 		for (final IPackageCoverage p : bundle.getPackages()) {
-			if (p.isEmpty()) {
+			if (!p.containsCode()) {
 				continue;
 			}
 			final String packagename = p.getName();
@@ -90,7 +90,7 @@ public class BundlePage extends TablePage<ICoverageNode> {
 	protected void content(HTMLElement body) throws IOException {
 		if (bundle.getPackages().isEmpty()) {
 			body.p().text("No class files specified.");
-		} else if (bundle.isEmpty()) {
+		} else if (!bundle.containsCode()) {
 			body.p().text(
 					"None of the analyzed classes contain code relevant for code coverage.");
 		} else {

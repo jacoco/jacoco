@@ -79,7 +79,7 @@ public class PackageSourcePage extends TablePage<IPackageCoverage> {
 	private final void renderSourceFilePages() throws IOException {
 		final String packagename = getNode().getName();
 		for (final ISourceFileCoverage s : getNode().getSourceFiles()) {
-			if (s.isEmpty()) {
+			if (!s.containsCode()) {
 				continue;
 			}
 			final String sourcename = s.getName();

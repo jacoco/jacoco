@@ -222,7 +222,8 @@ final class ReportSupport {
 						c.getName()));
 			}
 		}
-		if (!bundle.isEmpty() && bundle.getLineCounter().getTotalCount() == 0) {
+		if (bundle.containsCode()
+				&& bundle.getLineCounter().getTotalCount() == 0) {
 			log.warn(
 					"To enable source code annotation class files have to be compiled with debug information.");
 		}

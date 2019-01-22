@@ -113,7 +113,7 @@ public class ClassAnalyzer extends ClassProbesVisitor
 				signature);
 		mcc.calculate(mc);
 
-		if (!mc.isEmpty()) {
+		if (mc.containsCode()) {
 			// Only consider methods that actually contain code
 			coverage.addMethod(mc);
 		}

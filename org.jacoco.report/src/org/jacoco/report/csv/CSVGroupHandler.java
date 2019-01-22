@@ -43,7 +43,7 @@ class CSVGroupHandler implements IReportGroupVisitor {
 		for (final IPackageCoverage p : bundle.getPackages()) {
 			final String packageName = p.getName();
 			for (final IClassCoverage c : p.getClasses()) {
-				if (!c.isEmpty()) {
+				if (c.containsCode()) {
 					writer.writeRow(name, packageName, c);
 				}
 			}

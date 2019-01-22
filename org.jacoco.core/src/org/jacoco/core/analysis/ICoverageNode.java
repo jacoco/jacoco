@@ -132,11 +132,11 @@ public interface ICoverageNode {
 	ICounter getCounter(CounterEntity entity);
 
 	/**
-	 * Checks whether this is an empty node.
+	 * Checks whether this node contains code relevant for code coverage.
 	 *
-	 * @return <code>true</code> if this node does not contain instructions
+	 * @return <code>true</code> if this node contains code relevant for code coverage
 	 */
-	boolean isEmpty();
+	boolean containsCode();
 
 	/**
 	 * Creates a plain copy of this node. While {@link ICoverageNode}
