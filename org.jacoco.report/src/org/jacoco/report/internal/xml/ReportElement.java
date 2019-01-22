@@ -26,10 +26,6 @@ import org.jacoco.core.data.SessionInfo;
  */
 public class ReportElement extends XMLElement {
 
-	private static final String PUBID = "-//JACOCO//DTD Report 1.2//EN";
-
-	private static final String SYSTEM = "report.dtd";
-
 	/**
 	 * Creates a <code>report</code> root element for a XML report.
 	 * 
@@ -44,7 +40,7 @@ public class ReportElement extends XMLElement {
 	 */
 	public ReportElement(final String name, final OutputStream output,
 			final String encoding) throws IOException {
-		super("report", PUBID, SYSTEM, false, encoding, output);
+		super("report", DTDLoader.load(), encoding, output);
 		attr("name", name);
 	}
 

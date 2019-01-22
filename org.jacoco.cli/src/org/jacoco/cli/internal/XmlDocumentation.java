@@ -65,7 +65,7 @@ public final class XmlDocumentation {
 		file.getParentFile().mkdirs();
 
 		final XMLElement root = new XMLElement("documentation", null, null,
-				true, "UTF-8", new FileOutputStream(file));
+				"UTF-8", new FileOutputStream(file));
 
 		for (final Command c : AllCommands.get()) {
 			writeCommand(c, root);

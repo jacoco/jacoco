@@ -39,7 +39,7 @@ public class HTMLElement extends XMLElement {
 	 */
 	public HTMLElement(final OutputStream output, final String encoding)
 			throws IOException {
-		super("html", PUBID, SYSTEM, false, encoding, output);
+		super("html", PUBID, SYSTEM, encoding, output);
 		attr("xmlns", "http://www.w3.org/1999/xhtml");
 	}
 
