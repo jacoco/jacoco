@@ -113,6 +113,11 @@ public class ClassFileVersionsTest {
 		testVersion(V12, true);
 	}
 
+	@Test
+	public void test_13() throws IOException {
+		testVersion(V12 + 1, true);
+	}
+
 	private void testVersion(int version, boolean frames) throws IOException {
 		final byte[] original = createClass(version, frames);
 
@@ -124,7 +129,7 @@ public class ClassFileVersionsTest {
 	}
 
 	private void assertFrames(byte[] source, final boolean expected) {
-		new ClassReader(source)
+		InstrSupport.classReaderFor(source)
 				.accept(new ClassVisitor(InstrSupport.ASM_API_VERSION) {
 
 					@Override

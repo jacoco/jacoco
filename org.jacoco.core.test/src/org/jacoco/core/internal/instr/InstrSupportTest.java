@@ -11,6 +11,7 @@
  *******************************************************************************/
 package org.jacoco.core.internal.instr;
 
+import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -19,6 +20,9 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
+import org.objectweb.asm.ClassReader;
+import org.objectweb.asm.ClassVisitor;
+import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.util.Printer;
 import org.objectweb.asm.util.Textifier;
@@ -39,6 +43,32 @@ public class InstrSupportTest {
 	public void setup() {
 		printer = new Textifier();
 		trace = new TraceMethodVisitor(printer);
+	}
+
+	@Test
+	public void classReaderFor_should_read_java_13_class() {
+		final byte[] bytes = createJava13Class();
+
+		final ClassReader classReader = InstrSupport.classReaderFor(bytes);
+
+		classReader.accept(new ClassVisitor(InstrSupport.ASM_API_VERSION) {
+			@Override
+			public void visit(final int version, final int access,
+					final String name, final String signature,
+					final String superName, final String[] interfaces) {
+				assertEquals(Opcodes.V12 + 1, version);
+			}
+		}, 0);
+
+		assertArrayEquals(createJava13Class(), bytes);
+	}
+
+	private static byte[] createJava13Class() {
+		final ClassWriter cw = new ClassWriter(0);
+		cw.visit(Opcodes.V12 + 1, 0, "Foo", null, "java/lang/Object", null);
+		cw.visitEnd();
+		cw.toByteArray();
+		return cw.toByteArray();
 	}
 
 	@Test
@@ -66,6 +96,7 @@ public class InstrSupportTest {
 		assertTrue(InstrSupport.needsFrames(Opcodes.V10));
 		assertTrue(InstrSupport.needsFrames(Opcodes.V11));
 		assertTrue(InstrSupport.needsFrames(Opcodes.V12));
+		assertTrue(InstrSupport.needsFrames(Opcodes.V12 + 1));
 	}
 
 	@Test
