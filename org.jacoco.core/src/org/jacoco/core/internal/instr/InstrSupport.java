@@ -229,7 +229,8 @@ public final class InstrSupport {
 	}
 
 	/**
-	 * Creates {@link ClassReader}.
+	 * Creates a {@link ClassReader} instance for given bytes of class even if
+	 * its version not yet supported by ASM.
 	 *
 	 * @param b
 	 *            bytes of class
