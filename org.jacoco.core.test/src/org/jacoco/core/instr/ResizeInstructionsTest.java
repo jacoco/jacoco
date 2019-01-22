@@ -61,7 +61,7 @@ public class ResizeInstructionsTest {
 	public void should_not_loose_InnerClasses_attribute() throws Exception {
 		byte[] source = TargetLoader.getClassDataAsBytes(Inner.class);
 
-		final ClassReader cr = new ClassReader(source);
+		final ClassReader cr = InstrSupport.classReaderFor(source);
 		final ClassWriter cw = new ClassWriter(0);
 		cr.accept(new ClassVisitor(InstrSupport.ASM_API_VERSION, cw) {
 			@Override

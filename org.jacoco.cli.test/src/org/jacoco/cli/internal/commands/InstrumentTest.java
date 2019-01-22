@@ -26,6 +26,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.jacoco.cli.internal.CommandTestBase;
+import org.jacoco.core.internal.InputStreams;
 import org.jacoco.core.internal.instr.InstrSupport;
 import org.junit.Rule;
 import org.junit.Test;
@@ -33,7 +34,6 @@ import org.junit.rules.TemporaryFolder;
 import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.ClassVisitor;
 import org.objectweb.asm.FieldVisitor;
-import org.objectweb.asm.Opcodes;
 
 /**
  * Unit tests for {@link Instrument}.
@@ -135,7 +135,8 @@ public class InstrumentTest extends CommandTestBase {
 
 	private void assertInstrumented(File classfile) throws IOException {
 		InputStream in = new FileInputStream(classfile);
-		ClassReader reader = new ClassReader(in);
+		final ClassReader reader = InstrSupport
+				.classReaderFor(InputStreams.readFully(in));
 		in.close();
 		final Set<String> fields = new HashSet<String>();
 		reader.accept(new ClassVisitor(InstrSupport.ASM_API_VERSION) {

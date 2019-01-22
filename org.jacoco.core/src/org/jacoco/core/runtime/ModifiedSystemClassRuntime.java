@@ -153,7 +153,7 @@ public class ModifiedSystemClassRuntime extends AbstractRuntime {
 	 */
 	public static byte[] instrument(final byte[] source,
 			final String accessFieldName) {
-		final ClassReader reader = new ClassReader(source);
+		final ClassReader reader = InstrSupport.classReaderFor(source);
 		final ClassWriter writer = new ClassWriter(reader, 0);
 		reader.accept(new ClassVisitor(InstrSupport.ASM_API_VERSION, writer) {
 

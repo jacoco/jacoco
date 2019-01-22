@@ -86,7 +86,7 @@ public class FramesTest {
 	}
 
 	private byte[] calculateFrames(byte[] source) {
-		ClassReader rc = new ClassReader(source);
+		ClassReader rc = InstrSupport.classReaderFor(source);
 		ClassWriter cw = new ClassWriter(ClassWriter.COMPUTE_FRAMES);
 
 		// Adjust Version to 1.6 to enable frames:

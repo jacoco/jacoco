@@ -83,7 +83,7 @@ public class Instrumenter {
 
 	private byte[] instrument(final byte[] source) {
 		final long classId = CRC64.classId(source);
-		final ClassReader reader = new ClassReader(source);
+		final ClassReader reader = InstrSupport.classReaderFor(source);
 		final ClassWriter writer = new ClassWriter(reader, 0) {
 			@Override
 			protected String getCommonSuperClass(final String type1,

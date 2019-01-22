@@ -21,13 +21,13 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+import org.jacoco.core.internal.instr.InstrSupport;
 import org.jacoco.core.test.TargetLoader;
 import org.jacoco.core.test.validation.Source.Line;
 import org.jacoco.core.test.validation.ValidationTestBase;
 import org.jacoco.core.test.validation.java5.targets.FinallyTarget;
 import org.junit.Before;
 import org.junit.Test;
-import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.tree.AbstractInsnNode;
 import org.objectweb.asm.tree.ClassNode;
@@ -195,7 +195,7 @@ public class FinallyTest extends ValidationTestBase {
 		byte[] b = TargetLoader.getClassDataAsBytes(FinallyTarget.class);
 
 		final ClassNode classNode = new ClassNode();
-		new ClassReader(b).accept(classNode, 0);
+		InstrSupport.classReaderFor(b).accept(classNode, 0);
 		for (final MethodNode m : classNode.methods) {
 			if ("main".equals(m.name)) {
 				// skip it
