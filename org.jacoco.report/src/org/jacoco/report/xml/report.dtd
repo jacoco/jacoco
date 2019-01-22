@@ -13,7 +13,7 @@
 <!-- This DTD describes the JaCoCo XML report format. It is identified by the
      following identifiers:
 
-        PUBID  = "-//JACOCO//DTD Report 1.1//EN"
+        PUBID  = "-//JACOCO//DTD Report 1.2//EN"
         SYSTEM = "report.dtd"
 -->
 
@@ -66,19 +66,19 @@
   <!-- line number -->
   <!ATTLIST line nr CDATA #REQUIRED>
   <!-- number of missed instructions -->
-  <!ATTLIST line mi CDATA #IMPLIED>
+  <!ATTLIST line mi CDATA "0">
   <!-- number of covered instructions -->
-  <!ATTLIST line ci CDATA #IMPLIED>
+  <!ATTLIST line ci CDATA "0">
   <!-- number of missed branches -->
-  <!ATTLIST line mb CDATA #IMPLIED>
+  <!ATTLIST line mb CDATA "0">
   <!-- number of covered branches -->
-  <!ATTLIST line cb CDATA #IMPLIED>
+  <!ATTLIST line cb CDATA "0">
 
 <!-- coverage data counter for different metrics -->
 <!ELEMENT counter EMPTY>
   <!-- metric type -->
   <!ATTLIST counter type (INSTRUCTION|BRANCH|LINE|COMPLEXITY|METHOD|CLASS) #REQUIRED>
   <!-- number of missed items -->
-  <!ATTLIST counter missed CDATA #REQUIRED>
+  <!ATTLIST counter missed CDATA "0">
   <!-- number of covered items -->
-  <!ATTLIST counter covered CDATA #REQUIRED>
+  <!ATTLIST counter covered CDATA "0">
