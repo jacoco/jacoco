@@ -12,8 +12,7 @@
 package org.jacoco.report.internal.xml;
 
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.Reader;
+import java.util.Scanner;
 
 /**
  * Internal utility to load the report DTD.
@@ -24,22 +23,30 @@ public class DTDLoader {
 	}
 
 	/**
+	 * Returns a compact version of the DTD with all comments and unnecessary
+	 * whitespaces removed.
+	 * 
 	 * @return The DTD as a string
 	 * @throws IOException
 	 *             in case the DTD cannot be loaded
 	 */
 	public static String load() throws IOException {
 		final StringBuilder sb = new StringBuilder();
-		final Reader in = new InputStreamReader(DTDLoader.class
-				.getResourceAsStream("/org/jacoco/report/xml/report.dtd"),
-				"UTF-8");
+		final Scanner scanner = new Scanner(DTDLoader.class.getResourceAsStream(
+				"/org/jacoco/report/xml/report.dtd"), "UTF-8");
 		try {
-			int c;
-			while ((c = in.read()) != -1) {
-				sb.append((char) c);
+			scanner.useDelimiter("(?s)(\\s)+|(<!--.*?-->)");
+			while (scanner.hasNext()) {
+				final String s = scanner.next();
+				if ((s.length() > 0)) {
+					sb.append(s);
+					if (!s.endsWith(">")) {
+						sb.append(' ');
+					}
+				}
 			}
 		} finally {
-			in.close();
+			scanner.close();
 		}
 		return sb.toString();
 	}
