@@ -64,10 +64,11 @@
 
 <h3>Fixed Bugs</h3>
 <ul>
-  <li>Report code coverage correctly for Kotlin methods with default arguments
+  <li><code>synthetic</code> methods that contain values of default arguments
+      in Kotlin should not be ignored
       (GitHub <a href="https://github.com/jacoco/jacoco/issues/774">#774</a>).</li>
-  <li><code>synthetic</code> methods that represent Kotlin <code>suspend</code>
-      functions should not be ignored
+  <li><code>synthetic</code> methods that represent <code>suspend</code>
+      functions in Kotlin should not be ignored
       (GitHub <a href="https://github.com/jacoco/jacoco/issues/804">#804</a>).</li>
   <li>Removed misleading parameters <code>includes</code> and
       <code>excludes</code> from <code>dump</code>, <code>merge</code> and
