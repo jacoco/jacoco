@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2018 Mountainminds GmbH & Co. KG and Contributors
+ * Copyright (c) 2009, 2019 Mountainminds GmbH & Co. KG and Contributors
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -16,6 +16,8 @@ import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
 
+import org.jacoco.core.internal.InputStreams;
+import org.jacoco.core.internal.instr.InstrSupport;
 import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.ClassWriter;
 
@@ -26,7 +28,8 @@ public class RemoveDebugInfos {
 
 	public static void main(String[] args) throws Exception {
 		final InputStream in = new FileInputStream(args[0]);
-		final ClassReader reader = new ClassReader(in);
+		final ClassReader reader = InstrSupport
+				.classReaderFor(InputStreams.readFully(in));
 		in.close();
 
 		final ClassWriter writer = new ClassWriter(0);

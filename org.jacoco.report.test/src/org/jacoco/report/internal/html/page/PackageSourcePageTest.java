@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2018 Mountainminds GmbH & Co. KG and Contributors
+ * Copyright (c) 2009, 2019 Mountainminds GmbH & Co. KG and Contributors
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -24,6 +24,7 @@ import java.util.Collections;
 
 import org.jacoco.core.analysis.IClassCoverage;
 import org.jacoco.core.analysis.ISourceFileCoverage;
+import org.jacoco.core.internal.analysis.CounterImpl;
 import org.jacoco.core.internal.analysis.PackageCoverageImpl;
 import org.jacoco.core.internal.analysis.SourceFileCoverageImpl;
 import org.jacoco.report.ISourceFileLocator;
@@ -48,12 +49,16 @@ public class PackageSourcePageTest extends PageTestBase {
 	@Override
 	public void setup() throws Exception {
 		super.setup();
-		ISourceFileCoverage src1 = new SourceFileCoverageImpl("Src1.java",
+		SourceFileCoverageImpl src1 = new SourceFileCoverageImpl("Src1.java",
 				"org/jacoco/example");
-		ISourceFileCoverage src2 = new SourceFileCoverageImpl("Src2.java",
+		src1.increment(CounterImpl.COUNTER_1_0,
+				CounterImpl.COUNTER_0_0, 1);
+		SourceFileCoverageImpl src2 = new SourceFileCoverageImpl("Src2.java",
 				"org/jacoco/example");
+		src2.increment(CounterImpl.COUNTER_1_0,
+				CounterImpl.COUNTER_0_0, 1);
 		node = new PackageCoverageImpl("org/jacoco/example",
-				Collections.<IClassCoverage> emptyList(), Arrays.asList(src1,
+				Collections.<IClassCoverage> emptyList(), Arrays.<ISourceFileCoverage>asList(src1,
 						src2));
 		sourceLocator = new ISourceFileLocator() {
 
@@ -106,6 +111,29 @@ public class PackageSourcePageTest extends PageTestBase {
 				"/html/body/table[1]/tbody/tr[2]/td[1]/span/@class"));
 		assertEquals("Src2.java", support.findStr(doc,
 				"/html/body/table[1]/tbody/tr[2]/td[1]/span"));
+	}
+
+	@Test
+	public void should_render_non_empty_sources() throws Exception {
+		final ISourceFileCoverage emptySource = new SourceFileCoverageImpl(
+				"Empty.java", "example");
+		final SourceFileCoverageImpl nonEmptySource = new SourceFileCoverageImpl(
+				"NonEmpty.java", "example");
+		nonEmptySource.increment(CounterImpl.COUNTER_1_0,
+				CounterImpl.COUNTER_0_0, 1);
+		node = new PackageCoverageImpl("example",
+				Collections.<IClassCoverage> emptyList(),
+				Arrays.asList(emptySource, nonEmptySource));
+
+		page = new PackageSourcePage(node, null, sourceLocator, rootFolder,
+				context, packagePageLink);
+		page.render();
+
+		final Document doc = support.parse(output.getFile("index.source.html"));
+		assertEquals("NonEmpty.java", support.findStr(doc,
+				"/html/body/table[1]/tbody/tr[1]/td[1]/span"));
+		assertEquals("1",
+				support.findStr(doc, "count(/html/body/table[1]/tbody/tr)"));
 	}
 
 	@Test

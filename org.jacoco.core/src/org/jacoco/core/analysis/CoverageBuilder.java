@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2018 Mountainminds GmbH & Co. KG and Contributors
+ * Copyright (c) 2009, 2019 Mountainminds GmbH & Co. KG and Contributors
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -98,23 +98,19 @@ public class CoverageBuilder implements ICoverageVisitor {
 	// === ICoverageVisitor ===
 
 	public void visitCoverage(final IClassCoverage coverage) {
-		// Only consider classes that actually contain code:
-		if (coverage.getInstructionCounter().getTotalCount() > 0) {
-			final String name = coverage.getName();
-			final IClassCoverage dup = classes.put(name, coverage);
-			if (dup != null) {
-				if (dup.getId() != coverage.getId()) {
-					throw new IllegalStateException(
-							"Can't add different class with same name: "
-									+ name);
-				}
-			} else {
-				final String source = coverage.getSourceFileName();
-				if (source != null) {
-					final SourceFileCoverageImpl sourceFile = getSourceFile(
-							source, coverage.getPackageName());
-					sourceFile.increment(coverage);
-				}
+		final String name = coverage.getName();
+		final IClassCoverage dup = classes.put(name, coverage);
+		if (dup != null) {
+			if (dup.getId() != coverage.getId()) {
+				throw new IllegalStateException(
+						"Can't add different class with same name: " + name);
+			}
+		} else {
+			final String source = coverage.getSourceFileName();
+			if (source != null) {
+				final SourceFileCoverageImpl sourceFile = getSourceFile(source,
+						coverage.getPackageName());
+				sourceFile.increment(coverage);
 			}
 		}
 	}

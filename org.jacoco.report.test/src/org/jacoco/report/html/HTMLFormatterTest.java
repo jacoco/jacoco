@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2018 Mountainminds GmbH & Co. KG and Contributors
+ * Copyright (c) 2009, 2019 Mountainminds GmbH & Co. KG and Contributors
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -65,16 +65,36 @@ public class HTMLFormatterTest {
 		driver.sendGroup(formatter.createVisitor(output));
 		output.assertFile("index.html");
 		output.assertFile("bundle/index.html");
+
 		output.assertFile("bundle/org.jacoco.example/index.html");
+		output.assertFile("bundle/org.jacoco.example/index.source.html");
 		output.assertFile("bundle/org.jacoco.example/FooClass.html");
+		output.assertFile("bundle/org.jacoco.example/FooClass.java.html");
+		output.assertNoFile("bundle/org.jacoco.example/Empty.html");
+		output.assertNoFile("bundle/org.jacoco.example/Empty.java.html");
+
+		output.assertNoFile("bundle/empty/index.html");
+		output.assertNoFile("bundle/empty/index.source.html");
+		output.assertNoFile("bundle/empty/Empty.html");
+		output.assertNoFile("bundle/empty/Empty.java.html");
 	}
 
 	@Test
 	public void testStructureWithBundleOnly() throws IOException {
 		driver.sendBundle(formatter.createVisitor(output));
 		output.assertFile("index.html");
+
 		output.assertFile("org.jacoco.example/index.html");
+		output.assertFile("org.jacoco.example/index.source.html");
 		output.assertFile("org.jacoco.example/FooClass.html");
+		output.assertFile("org.jacoco.example/FooClass.java.html");
+		output.assertNoFile("org.jacoco.example/Empty.html");
+		output.assertNoFile("org.jacoco.example/Empty.java.html");
+
+		output.assertNoFile("empty/index.html");
+		output.assertNoFile("empty/index.source.html");
+		output.assertNoFile("empty/Empty.html");
+		output.assertNoFile("empty/Empty.java.html");
 	}
 
 	@Test
