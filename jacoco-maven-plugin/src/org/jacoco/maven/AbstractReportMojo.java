@@ -91,6 +91,18 @@ public abstract class AbstractReportMojo extends AbstractMavenReport {
 	@Component
 	Renderer siteRenderer;
 
+	/**
+	 * Total coverage will be prefixed with this text
+	 */
+    @Parameter(property = "coverageText")
+	String coverageText;
+
+	/**
+	 * If true total coverage will be printed to maven log, default false
+	 */
+	@Parameter(property = "showCoverageOnLog")
+	boolean showCoverageOnLog;
+
 	public String getDescription(final Locale locale) {
 		return getName(locale) + " Coverage Report.";
 	}

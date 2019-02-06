@@ -154,7 +154,7 @@ final class ReportSupport {
 			final MavenProject project, final List<String> includes,
 			final List<String> excludes) throws IOException {
 		processProject(visitor, project.getArtifactId(), project, includes,
-				excludes, new NoSourceLocator());
+				excludes, new NoSourceLocator(), null, false);
 	}
 
 	/**
@@ -177,17 +177,26 @@ final class ReportSupport {
 	 *             if class files can't be read
 	 */
 	public void processProject(final IReportGroupVisitor visitor,
-			final String bundeName, final MavenProject project,
-			final List<String> includes, final List<String> excludes,
-			final String srcEncoding) throws IOException {
+							   final String bundeName, final MavenProject project,
+							   final List<String> includes, final List<String> excludes,
+							   final String srcEncoding) throws IOException {
 		processProject(visitor, bundeName, project, includes, excludes,
-				new SourceFileCollection(project, srcEncoding));
+				srcEncoding, null, false);
+	}
+
+	public void processProject(final IReportGroupVisitor visitor,
+							   final String bundeName, final MavenProject project,
+							   final List<String> includes, final List<String> excludes,
+							   final String srcEncoding,
+							   String totalCoveragePrefix, boolean showCoverage) throws IOException {
+		processProject(visitor, bundeName, project, includes, excludes,
+				new SourceFileCollection(project, srcEncoding), totalCoveragePrefix, showCoverage);
 	}
 
 	private void processProject(final IReportGroupVisitor visitor,
 			final String bundeName, final MavenProject project,
 			final List<String> includes, final List<String> excludes,
-			final ISourceFileLocator locator) throws IOException {
+			final ISourceFileLocator locator, String totalCoveragePrefix, boolean showCoverage) throws IOException {
 		final CoverageBuilder builder = new CoverageBuilder();
 		final File classesDir = new File(project.getBuild()
 				.getOutputDirectory());
@@ -205,6 +214,20 @@ final class ReportSupport {
 		logBundleInfo(bundle, builder.getNoMatchClasses());
 
 		visitor.visitBundle(bundle, locator);
+		if(showCoverage) {
+			showCoverage(totalCoveragePrefix, bundle);
+		}
+	}
+
+	private void showCoverage(String totalCoveragePrefix, IBundleCoverage bundle) {
+		if(totalCoveragePrefix == null || totalCoveragePrefix.trim().length() == 0) {
+			totalCoveragePrefix = "Total Code Coverage:";
+		}
+		log.info(totalCoveragePrefix + bundle.getInstructionCounter().getCoveredRatio() * 100);
+		log.info("Total Covered count:" + bundle.getInstructionCounter().getCoveredCount());
+		log.info("Total Missed count:" + bundle.getInstructionCounter().getMissedCount());
+		log.info("Total Covered Ratio:" + bundle.getInstructionCounter().getMissedRatio());
+		log.info("Total count:" + bundle.getInstructionCounter().getTotalCount());
 	}
 
 	private void logBundleInfo(final IBundleCoverage bundle,

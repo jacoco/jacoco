@@ -71,7 +71,7 @@ public class ReportMojo extends AbstractReportMojo {
 	void createReport(final IReportGroupVisitor visitor,
 			final ReportSupport support) throws IOException {
 		support.processProject(visitor, title, getProject(), getIncludes(),
-				getExcludes(), sourceEncoding);
+				getExcludes(), sourceEncoding, coverageText, showCoverageOnLog);
 	}
 
 	@Override
