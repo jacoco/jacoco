@@ -139,8 +139,7 @@ public class Report extends Command {
 		visitor.visitEnd();
 	}
 
-	private IReportVisitor createReportVisitor()
-			throws IOException, IOException {
+	private IReportVisitor createReportVisitor() throws IOException {
 		final List<IReportVisitor> visitors = new ArrayList<IReportVisitor>();
 
 		if (xml != null) {
