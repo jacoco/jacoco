@@ -226,16 +226,20 @@ public class ProbeArrayStrategyFactoryTest {
 
 	@Test
 	public void should_not_add_field_into_java11_classes() {
-		test(Opcodes.V11, 0, true, true, true);
+		final IProbeArrayStrategy strategy = test(Opcodes.V11, 0, true, true,
+				true);
 
+		assertEquals(CondyProbeArrayStrategy.class, strategy.getClass());
 		assertNoDataField();
 		assertCondyBootstrapMethod();
 	}
 
 	@Test
 	public void should_not_add_field_into_java11_interfaces() {
-		test(Opcodes.V11, Opcodes.ACC_INTERFACE, true, true, true);
+		final IProbeArrayStrategy strategy = test(Opcodes.V11,
+				Opcodes.ACC_INTERFACE, true, true, true);
 
+		assertEquals(CondyProbeArrayStrategy.class, strategy.getClass());
 		assertNoDataField();
 		assertCondyBootstrapMethod();
 	}

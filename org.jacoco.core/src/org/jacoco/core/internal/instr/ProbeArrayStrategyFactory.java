@@ -45,6 +45,9 @@ public final class ProbeArrayStrategyFactory {
 		final String className = reader.getClassName();
 		final int version = InstrSupport.getVersionMajor(reader.b);
 
+		if (version >= Opcodes.V11) {
+			return new CondyProbeArrayStrategy();
+		}
 		if (isInterfaceOrModule(reader)) {
 			final ProbeCounter counter = getProbeCounter(reader);
 			if (counter.getCount() == 0) {
