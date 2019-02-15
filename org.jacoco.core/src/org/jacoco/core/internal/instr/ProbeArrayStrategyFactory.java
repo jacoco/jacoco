@@ -50,7 +50,7 @@ public final class ProbeArrayStrategyFactory {
 			if (counter.getCount() == 0) {
 				return new NoneProbeArrayStrategy();
 			}
-			if (version >= Opcodes.V11) {
+			if (version >= Opcodes.V11 && counter.hasMethods()) {
 				return new CondyProbeArrayStrategy(className, true, classId,
 						accessorGenerator);
 			}

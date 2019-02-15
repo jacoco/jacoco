@@ -228,13 +228,23 @@ public class ProbeArrayStrategyFactoryTest {
 	}
 
 	@Test
-	public void test_java11_interface_with_code() {
+	public void test_java11_interface_with_clinit_and_methods() {
 		final IProbeArrayStrategy strategy = test(Opcodes.V11,
 				Opcodes.ACC_INTERFACE, true, true, true);
 
 		assertEquals(CondyProbeArrayStrategy.class, strategy.getClass());
 		assertNoDataField();
 		assertCondyBootstrapMethod();
+	}
+
+	@Test
+	public void test_java11_interface_with_clinit() {
+		final IProbeArrayStrategy strategy = test(Opcodes.V11,
+				Opcodes.ACC_INTERFACE, true, false, true);
+
+		assertEquals(LocalProbeArrayStrategy.class, strategy.getClass());
+		assertNoDataField();
+		assertNoInitMethod();
 	}
 
 	@Test
