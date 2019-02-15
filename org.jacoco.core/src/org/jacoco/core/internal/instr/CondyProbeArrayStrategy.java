@@ -22,6 +22,11 @@ import org.objectweb.asm.MethodVisitor;
  */
 class CondyProbeArrayStrategy implements IProbeArrayStrategy {
 
+	/**
+	 * Descriptor of the bootstrap method.
+	 */
+	static final String B_DESC = "(Ljava/lang/invoke/MethodHandle$Lookup;Ljava/lang/String;Ljava/lang/Class;)[Z";
+
 	public int storeInstance(final MethodVisitor mv, final boolean clinit,
 			final int variable) {
 		return 0;

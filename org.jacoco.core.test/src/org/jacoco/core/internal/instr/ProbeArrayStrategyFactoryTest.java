@@ -229,6 +229,7 @@ public class ProbeArrayStrategyFactoryTest {
 		test(Opcodes.V11, 0, true, true, true);
 
 		assertNoDataField();
+		assertCondyBootstrapMethod();
 	}
 
 	@Test
@@ -236,6 +237,7 @@ public class ProbeArrayStrategyFactoryTest {
 		test(Opcodes.V11, Opcodes.ACC_INTERFACE, true, true, true);
 
 		assertNoDataField();
+		assertCondyBootstrapMethod();
 	}
 
 	private IProbeArrayStrategy test(int version, int access, boolean clinit,
@@ -286,9 +288,9 @@ public class ProbeArrayStrategyFactoryTest {
 			this.desc = desc;
 		}
 
-		void assertInitMethod(boolean frames) {
+		void assertInitMethod(String expectedDesc, boolean frames) {
 			assertEquals(InstrSupport.INITMETHOD_NAME, name);
-			assertEquals(InstrSupport.INITMETHOD_DESC, desc);
+			assertEquals(expectedDesc, desc);
 			assertEquals(InstrSupport.INITMETHOD_ACC, access);
 			assertEquals(Boolean.valueOf(frames), Boolean.valueOf(frames));
 		}
@@ -387,12 +389,19 @@ public class ProbeArrayStrategyFactoryTest {
 
 	void assertInitMethod(boolean frames) {
 		assertEquals(cv.methods.size(), 1);
-		cv.methods.get(0).assertInitMethod(frames);
+		cv.methods.get(0).assertInitMethod(InstrSupport.INITMETHOD_DESC,
+				frames);
+	}
+
+	void assertCondyBootstrapMethod() {
+		assertEquals(cv.methods.size(), 1);
+		cv.methods.get(0).assertInitMethod(CondyProbeArrayStrategy.B_DESC,
+				false);
 	}
 
 	void assertInitAndClinitMethods() {
 		assertEquals(2, cv.methods.size());
-		cv.methods.get(0).assertInitMethod(true);
+		cv.methods.get(0).assertInitMethod(InstrSupport.INITMETHOD_DESC, true);
 		cv.methods.get(1).assertClinit();
 	}
 
