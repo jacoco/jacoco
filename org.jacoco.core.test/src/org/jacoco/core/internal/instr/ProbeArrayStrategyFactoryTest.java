@@ -212,20 +212,13 @@ public class ProbeArrayStrategyFactoryTest {
 	}
 
 	@Test
-	public void testModule() {
-		final ClassWriter writer = new ClassWriter(0);
-		writer.visit(Opcodes.V9, Opcodes.ACC_MODULE, "module-info", null, null,
-				null);
-		writer.visitModule("module", 0, null).visitEnd();
-		writer.visitEnd();
-
-		final IProbeArrayStrategy strategy = ProbeArrayStrategyFactory
-				.createFor(0, new ClassReader(writer.toByteArray()), generator);
+	public void test_java9_module() {
+		final IProbeArrayStrategy strategy = createForModule(Opcodes.V9);
 		assertEquals(NoneProbeArrayStrategy.class, strategy.getClass());
 	}
 
 	@Test
-	public void should_not_add_field_into_java11_classes() {
+	public void test_java11_class() {
 		final IProbeArrayStrategy strategy = test(Opcodes.V11, 0, true, true,
 				true);
 
@@ -235,13 +228,39 @@ public class ProbeArrayStrategyFactoryTest {
 	}
 
 	@Test
-	public void should_not_add_field_into_java11_interfaces() {
+	public void test_java11_interface_with_code() {
 		final IProbeArrayStrategy strategy = test(Opcodes.V11,
 				Opcodes.ACC_INTERFACE, true, true, true);
 
 		assertEquals(CondyProbeArrayStrategy.class, strategy.getClass());
 		assertNoDataField();
 		assertCondyBootstrapMethod();
+	}
+
+	@Test
+	public void test_java11_interface_without_code() {
+		final IProbeArrayStrategy strategy = test(Opcodes.V11,
+				Opcodes.ACC_INTERFACE, false, false, true);
+
+		assertEquals(NoneProbeArrayStrategy.class, strategy.getClass());
+		assertNoDataField();
+		assertNoInitMethod();
+	}
+
+	@Test
+	public void test_java11_module() {
+		final IProbeArrayStrategy strategy = createForModule(Opcodes.V11);
+		assertEquals(NoneProbeArrayStrategy.class, strategy.getClass());
+	}
+
+	private IProbeArrayStrategy createForModule(int version) {
+		final ClassWriter writer = new ClassWriter(0);
+		writer.visit(version, Opcodes.ACC_MODULE, "module-info", null, null,
+				null);
+		writer.visitModule("module", 0, null).visitEnd();
+		writer.visitEnd();
+		return ProbeArrayStrategyFactory.createFor(0,
+				new ClassReader(writer.toByteArray()), generator);
 	}
 
 	private IProbeArrayStrategy test(int version, int access, boolean clinit,
