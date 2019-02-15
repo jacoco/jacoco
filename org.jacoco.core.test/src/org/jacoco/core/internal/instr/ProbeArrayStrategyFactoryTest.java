@@ -224,6 +224,20 @@ public class ProbeArrayStrategyFactoryTest {
 		assertEquals(NoneProbeArrayStrategy.class, strategy.getClass());
 	}
 
+	@Test
+	public void should_not_add_field_into_java11_classes() {
+		test(Opcodes.V11, 0, true, true, true);
+
+		assertNoDataField();
+	}
+
+	@Test
+	public void should_not_add_field_into_java11_interfaces() {
+		test(Opcodes.V11, Opcodes.ACC_INTERFACE, true, true, true);
+
+		assertNoDataField();
+	}
+
 	private IProbeArrayStrategy test(int version, int access, boolean clinit,
 			boolean method, boolean abstractMethod) {
 		final ClassWriter writer = new ClassWriter(0);
