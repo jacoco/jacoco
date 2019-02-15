@@ -37,6 +37,7 @@ import static org.objectweb.asm.Opcodes.V9;
 
 import java.io.IOException;
 
+import org.jacoco.core.internal.instr.CondyProbeArrayStrategy;
 import org.jacoco.core.internal.instr.InstrSupport;
 import org.jacoco.core.runtime.IRuntime;
 import org.jacoco.core.runtime.SystemPropertiesRuntime;
@@ -133,7 +134,7 @@ public class ClassFileVersionsTest {
 
 					@Override
 					public MethodVisitor visitMethod(int access, String name,
-							String desc, String signature,
+							final String desc, String signature,
 							String[] exceptions) {
 						return new MethodVisitor(InstrSupport.ASM_API_VERSION) {
 							boolean frames = false;
@@ -147,8 +148,14 @@ public class ClassFileVersionsTest {
 
 							@Override
 							public void visitEnd() {
-								assertEquals(Boolean.valueOf(expected),
-										Boolean.valueOf(frames));
+								if (CondyProbeArrayStrategy.B_DESC
+										.equals(desc)) {
+									assertEquals(Boolean.FALSE,
+											Boolean.valueOf(frames));
+								} else {
+									assertEquals(Boolean.valueOf(expected),
+											Boolean.valueOf(frames));
+								}
 							}
 						};
 					}

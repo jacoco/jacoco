@@ -14,13 +14,15 @@ package org.jacoco.core.internal.instr;
 import org.junit.Test;
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.tree.ClassNode;
+import org.jacoco.core.runtime.OfflineInstrumentationAccessGenerator;
 import org.objectweb.asm.tree.MethodNode;
 
 import static org.junit.Assert.assertEquals;
 
 public class CondyProbeArrayStrategyTest {
 
-	private final CondyProbeArrayStrategy strategy = new CondyProbeArrayStrategy();
+	private final CondyProbeArrayStrategy strategy = new CondyProbeArrayStrategy(
+			"ClassName", 1L, new OfflineInstrumentationAccessGenerator());
 
 	@Test
 	public void should_not_add_fields() {

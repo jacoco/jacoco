@@ -46,7 +46,8 @@ public final class ProbeArrayStrategyFactory {
 		final int version = InstrSupport.getVersionMajor(reader.b);
 
 		if (version >= Opcodes.V11) {
-			return new CondyProbeArrayStrategy();
+			return new CondyProbeArrayStrategy(className, classId,
+					accessorGenerator);
 		}
 		if (isInterfaceOrModule(reader)) {
 			final ProbeCounter counter = getProbeCounter(reader);
