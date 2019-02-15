@@ -14,6 +14,7 @@ package org.jacoco.core.internal.instr;
 import org.objectweb.asm.ClassVisitor;
 import org.objectweb.asm.ConstantDynamic;
 import org.jacoco.core.runtime.IExecutionDataAccessorGenerator;
+import org.objectweb.asm.Handle;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
 
@@ -27,24 +28,34 @@ public class CondyProbeArrayStrategy implements IProbeArrayStrategy {
 	/**
 	 * Descriptor of the bootstrap method.
 	 */
-	public static final String B_DESC = "(Ljava/lang/invoke/MethodHandle$Lookup;Ljava/lang/String;Ljava/lang/Class;)[Z";
+	public static final String B_DESC = "(Ljava/lang/invoke/MethodHandles$Lookup;Ljava/lang/String;Ljava/lang/Class;)[Z";
 
 	private final String className;
+
+	private final boolean isInterface;
 
 	private final long classId;
 
 	private final IExecutionDataAccessorGenerator accessorGenerator;
 
-	CondyProbeArrayStrategy(final String className, final long classId,
+	CondyProbeArrayStrategy(final String className, final boolean isInterface,
+			final long classId,
 			final IExecutionDataAccessorGenerator accessorGenerator) {
 		this.className = className;
+		this.isInterface = isInterface;
 		this.classId = classId;
 		this.accessorGenerator = accessorGenerator;
 	}
 
 	public int storeInstance(final MethodVisitor mv, final boolean clinit,
 			final int variable) {
-		return 0;
+		final Handle bootstrapMethod = new Handle(Opcodes.H_INVOKESTATIC,
+				className, InstrSupport.INITMETHOD_NAME, B_DESC, isInterface);
+		mv.visitLdcInsn(new ConstantDynamic(InstrSupport.DATAFIELD_NAME,
+				"Ljava/lang/Object;", bootstrapMethod));
+		mv.visitTypeInsn(Opcodes.CHECKCAST, "[Z");
+		mv.visitVarInsn(Opcodes.ASTORE, variable);
+		return 1;
 	}
 
 	public void addMembers(final ClassVisitor cv, final int probeCount) {

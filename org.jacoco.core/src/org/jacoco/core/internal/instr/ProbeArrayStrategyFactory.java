@@ -51,7 +51,7 @@ public final class ProbeArrayStrategyFactory {
 				return new NoneProbeArrayStrategy();
 			}
 			if (version >= Opcodes.V11) {
-				return new CondyProbeArrayStrategy(className, classId,
+				return new CondyProbeArrayStrategy(className, true, classId,
 						accessorGenerator);
 			}
 			if (version >= Opcodes.V1_8 && counter.hasMethods()) {
@@ -63,7 +63,7 @@ public final class ProbeArrayStrategyFactory {
 			}
 		} else {
 			if (version >= Opcodes.V11) {
-				return new CondyProbeArrayStrategy(className, classId,
+				return new CondyProbeArrayStrategy(className, false, classId,
 						accessorGenerator);
 			}
 			return new ClassFieldProbeArrayStrategy(className, classId,

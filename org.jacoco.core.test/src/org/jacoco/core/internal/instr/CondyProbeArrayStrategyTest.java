@@ -28,7 +28,7 @@ import org.objectweb.asm.tree.VarInsnNode;
 public class CondyProbeArrayStrategyTest {
 
 	private final CondyProbeArrayStrategy strategy = new CondyProbeArrayStrategy(
-			"ClassName", 1L, new OfflineInstrumentationAccessGenerator());
+			"ClassName", true, 1L, new OfflineInstrumentationAccessGenerator());
 
 	@Test
 	public void should_store_instance_using_condy_and_checkcast() {
@@ -49,7 +49,7 @@ public class CondyProbeArrayStrategyTest {
 		assertEquals("ClassName", bootstrapMethod.getOwner());
 		assertEquals("$jacocoInit", bootstrapMethod.getName());
 		assertEquals(
-				"(Ljava/lang/invoke/MethodHandle$Lookup;Ljava/lang/String;Ljava/lang/Class;)[Z",
+				"(Ljava/lang/invoke/MethodHandles$Lookup;Ljava/lang/String;Ljava/lang/Class;)[Z",
 				bootstrapMethod.getDesc());
 		assertTrue(bootstrapMethod.isInterface());
 
@@ -86,7 +86,7 @@ public class CondyProbeArrayStrategyTest {
 				| Opcodes.ACC_STATIC, m.access);
 		assertEquals("$jacocoInit", m.name);
 		assertEquals(
-				"(Ljava/lang/invoke/MethodHandle$Lookup;Ljava/lang/String;Ljava/lang/Class;)[Z",
+				"(Ljava/lang/invoke/MethodHandles$Lookup;Ljava/lang/String;Ljava/lang/Class;)[Z",
 				m.desc);
 
 		assertEquals(4, m.maxStack);
