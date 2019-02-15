@@ -11,18 +11,60 @@
  *******************************************************************************/
 package org.jacoco.core.internal.instr;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+
+import org.jacoco.core.runtime.OfflineInstrumentationAccessGenerator;
 import org.junit.Test;
+import org.objectweb.asm.ConstantDynamic;
+import org.objectweb.asm.Handle;
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.tree.ClassNode;
-import org.jacoco.core.runtime.OfflineInstrumentationAccessGenerator;
+import org.objectweb.asm.tree.LdcInsnNode;
 import org.objectweb.asm.tree.MethodNode;
-
-import static org.junit.Assert.assertEquals;
+import org.objectweb.asm.tree.TypeInsnNode;
+import org.objectweb.asm.tree.VarInsnNode;
 
 public class CondyProbeArrayStrategyTest {
 
 	private final CondyProbeArrayStrategy strategy = new CondyProbeArrayStrategy(
 			"ClassName", 1L, new OfflineInstrumentationAccessGenerator());
+
+	@Test
+	public void should_store_instance_using_condy_and_checkcast() {
+		final MethodNode m = new MethodNode();
+		final int maxStack = strategy.storeInstance(m, false, 1);
+
+		assertEquals(1, maxStack);
+
+		final ConstantDynamic constantDynamic = (ConstantDynamic) ((LdcInsnNode) m.instructions
+				.get(0)).cst;
+		assertEquals("$jacocoData", constantDynamic.getName());
+		// as a workaround for https://bugs.openjdk.java.net/browse/JDK-8216970
+		// constant should have type Object
+		assertEquals("Ljava/lang/Object;", constantDynamic.getDescriptor());
+
+		final Handle bootstrapMethod = constantDynamic.getBootstrapMethod();
+		assertEquals(Opcodes.H_INVOKESTATIC, bootstrapMethod.getTag());
+		assertEquals("ClassName", bootstrapMethod.getOwner());
+		assertEquals("$jacocoInit", bootstrapMethod.getName());
+		assertEquals(
+				"(Ljava/lang/invoke/MethodHandle$Lookup;Ljava/lang/String;Ljava/lang/Class;)[Z",
+				bootstrapMethod.getDesc());
+		assertTrue(bootstrapMethod.isInterface());
+
+		final TypeInsnNode castInstruction = (TypeInsnNode) m.instructions
+				.get(1);
+		assertEquals(Opcodes.CHECKCAST, castInstruction.getOpcode());
+		assertEquals("[Z", castInstruction.desc);
+
+		final VarInsnNode storeInstruction = (VarInsnNode) m.instructions
+				.get(2);
+		assertEquals(Opcodes.ASTORE, storeInstruction.getOpcode());
+		assertEquals(1, storeInstruction.var);
+
+		assertEquals(3, m.instructions.size());
+	}
 
 	@Test
 	public void should_not_add_fields() {
