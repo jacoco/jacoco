@@ -183,9 +183,9 @@ public class ServiceLoaderFilterTest extends FilterTestBase {
 		filter.filter(m, context, output);
 	}
 
-	@Test
+	@Test(expected = ServiceConfigurationError.class)
 	public void should_fail_on_unassignable_class() throws Exception {
-		// classes loaded by ServiceLoader which cannot be assigned to
+		// classes loaded by ServiceLoader which cannot be assigned to a
 		// service-class are just ignored instead of throwing an exception
 		// since java 9, so skip this test in that case
 		Assume.assumeTrue(isJavaVersionLessThan9());
@@ -196,14 +196,7 @@ public class ServiceLoaderFilterTest extends FilterTestBase {
 				"foo", "()V", null, null);
 		m.visitInsn(Opcodes.NOP);
 
-		// expected exceptions do not work with the assumptions, so test them
-		// the old way
-		try {
-			filter.filter(m, context, output);
-			Assert.fail("Filter should not be called successfully");
-		} catch (ServiceConfigurationError e) {
-			// ignore
-		}
+		filter.filter(m, context, output);
 	}
 
 	@Test(expected = ServiceConfigurationError.class)
