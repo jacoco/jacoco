@@ -185,8 +185,9 @@ public class ServiceLoaderFilterTest extends FilterTestBase {
 
 	@Test
 	public void should_fail_on_unassignable_class() throws Exception {
-		// since java 9 incompatible classes loaded by ServiceLoader
-		// are just ignored, so skip this test in that case
+		// classes loaded by ServiceLoader which cannot be assigned to
+		// service-class are just ignored instead of throwing an exception
+		// since java 9, so skip this test in that case
 		Assume.assumeTrue(isJavaVersionLessThan9());
 
 		writeServiceLines(String.class.getName());
