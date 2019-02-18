@@ -215,7 +215,6 @@ public class ServiceLoaderFilterTest extends FilterTestBase {
 
 	public static class ServiceLoaderFilter1 implements IFilter {
 		private static boolean invoked;
-		@Override
 		public void filter(final MethodNode methodNode,
 				final IFilterContext context, final IFilterOutput output) {
 			invoked = true;
@@ -224,7 +223,6 @@ public class ServiceLoaderFilterTest extends FilterTestBase {
 
 	public static class ServiceLoaderFilter2 implements IFilter {
 		private static boolean invoked;
-		@Override
 		public void filter(final MethodNode methodNode,
 				final IFilterContext context, final IFilterOutput output) {
 			invoked = true;
@@ -236,7 +234,6 @@ public class ServiceLoaderFilterTest extends FilterTestBase {
 		private static boolean invoked;
 		private ServiceLoaderFilter3() {
 		}
-		@Override
 		public void filter(final MethodNode methodNode,
 				final IFilterContext context, final IFilterOutput output) {
 			invoked = true;
@@ -249,7 +246,6 @@ public class ServiceLoaderFilterTest extends FilterTestBase {
 		public ServiceLoaderFilter4(
 				@SuppressWarnings("unused") String ignored) {
 		}
-		@Override
 		public void filter(final MethodNode methodNode,
 				final IFilterContext context, final IFilterOutput output) {
 			invoked = true;
