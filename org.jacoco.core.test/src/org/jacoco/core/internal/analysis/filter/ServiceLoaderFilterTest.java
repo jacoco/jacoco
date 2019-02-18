@@ -18,6 +18,7 @@ import java.util.ServiceConfigurationError;
 import org.jacoco.core.internal.instr.InstrSupport;
 import org.junit.After;
 import org.junit.Assert;
+import org.junit.Assume;
 import org.junit.Before;
 import org.junit.Test;
 import org.objectweb.asm.Opcodes;
@@ -182,15 +183,26 @@ public class ServiceLoaderFilterTest extends FilterTestBase {
 		filter.filter(m, context, output);
 	}
 
-	@Test(expected = ServiceConfigurationError.class)
+	@Test
 	public void should_fail_on_unassignable_class() throws Exception {
+		// since java 9 incompatible classes loaded by ServiceLoader
+		// are just ignored, so skip this test in that case
+		Assume.assumeTrue(getJavaMajorVersion() < 9);
+
 		writeServiceLines(String.class.getName());
 
 		final MethodNode m = new MethodNode(InstrSupport.ASM_API_VERSION, 0,
 				"foo", "()V", null, null);
 		m.visitInsn(Opcodes.NOP);
 
-		filter.filter(m, context, output);
+		// expected exceptions do not work with the assumptions, so test them
+		// the old way
+		try {
+			filter.filter(m, context, output);
+			Assert.fail("Filter should not be called successfully");
+		} catch (ServiceConfigurationError e) {
+			// ignore
+		}
 	}
 
 	@Test(expected = ServiceConfigurationError.class)
@@ -253,6 +265,12 @@ public class ServiceLoaderFilterTest extends FilterTestBase {
 	private void writeServiceLines(final String... lines)
 			throws Exception {
 		writeServiceLines(true, lines);
+	}
+
+	private int getJavaMajorVersion() {
+		final String javaVersion = System.getProperty("java.version");
+		return Integer.parseInt(
+				javaVersion.substring(0, javaVersion.indexOf('.')));
 	}
 
 	public static class ServiceLoaderFilter1 implements IFilter {
