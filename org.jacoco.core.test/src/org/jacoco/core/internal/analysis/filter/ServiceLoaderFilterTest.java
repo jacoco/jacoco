@@ -187,7 +187,7 @@ public class ServiceLoaderFilterTest extends FilterTestBase {
 	public void should_fail_on_unassignable_class() throws Exception {
 		// since java 9 incompatible classes loaded by ServiceLoader
 		// are just ignored, so skip this test in that case
-		Assume.assumeTrue(getJavaMajorVersion() < 9);
+		Assume.assumeTrue(isJavaVersionLessThan9());
 
 		writeServiceLines(String.class.getName());
 
@@ -267,10 +267,13 @@ public class ServiceLoaderFilterTest extends FilterTestBase {
 		writeServiceLines(true, lines);
 	}
 
-	private int getJavaMajorVersion() {
-		final String javaVersion = System.getProperty("java.version");
-		return Integer.parseInt(
-				javaVersion.substring(0, javaVersion.indexOf('.')));
+	private static boolean isJavaVersionLessThan9() {
+		try {
+			Runtime.class.getMethod("version");
+			return false;
+		} catch (NoSuchMethodException e) {
+			return true;
+		}
 	}
 
 	public static class ServiceLoaderFilter1 implements IFilter {
