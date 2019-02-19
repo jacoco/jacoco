@@ -40,8 +40,6 @@ public class CondyProbeArrayStrategyTest {
 		final ConstantDynamic constantDynamic = (ConstantDynamic) ((LdcInsnNode) m.instructions
 				.get(0)).cst;
 		assertEquals("$jacocoData", constantDynamic.getName());
-		// as a workaround for https://bugs.openjdk.java.net/browse/JDK-8216970
-		// constant should have type Object
 		assertEquals("Ljava/lang/Object;", constantDynamic.getDescriptor());
 
 		final Handle bootstrapMethod = constantDynamic.getBootstrapMethod();

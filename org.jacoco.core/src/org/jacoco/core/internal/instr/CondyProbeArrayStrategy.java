@@ -51,6 +51,8 @@ public class CondyProbeArrayStrategy implements IProbeArrayStrategy {
 			final int variable) {
 		final Handle bootstrapMethod = new Handle(Opcodes.H_INVOKESTATIC,
 				className, InstrSupport.INITMETHOD_NAME, B_DESC, isInterface);
+		// As a workaround for https://bugs.openjdk.java.net/browse/JDK-8216970
+		// constant should have type Object
 		mv.visitLdcInsn(new ConstantDynamic(InstrSupport.DATAFIELD_NAME,
 				"Ljava/lang/Object;", bootstrapMethod));
 		mv.visitTypeInsn(Opcodes.CHECKCAST, "[Z");
