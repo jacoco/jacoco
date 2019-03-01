@@ -48,6 +48,9 @@ public final class SyntheticFilter implements IFilter {
 	private static final Pattern ASPECTJ_AROUND_BODY_PATTERN = Pattern.compile(".*_aroundBody\\d+");
 
 	/**
+	 * Returns true for AspectJ-generated methods which must not be (fully) excluded,
+	 * despite having the {@code ACC_SYNTHETIC} flag.
+	 *
 	 * @see AspectjFilter
 	 */
 	private boolean isHandledByAspectJFilter(MethodNode methodNode) {
