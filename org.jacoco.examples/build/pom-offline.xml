@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-   Copyright (c) 2009, 2018 Mountainminds GmbH & Co. KG and Contributors
+   Copyright (c) 2009, 2019 Mountainminds GmbH & Co. KG and Contributors
    All rights reserved. This program and the accompanying materials
    are made available under the terms of the Eclipse Public License v1.0
    which accompanies this distribution, and is available at
@@ -75,12 +75,10 @@
             </goals>
             <configuration>
               <rules>
-                <!-- implementation is needed only for Maven 2 -->
-                <rule implementation="org.jacoco.maven.RuleConfiguration">
+                <rule>
                   <element>BUNDLE</element>
                   <limits>
-                    <!-- implementation is needed only for Maven 2 -->
-                    <limit implementation="org.jacoco.report.check.Limit">
+                    <limit>
                       <counter>COMPLEXITY</counter>
                       <value>COVEREDRATIO</value>
                       <minimum>0.60</minimum>

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2018 Mountainminds GmbH & Co. KG and Contributors
+ * Copyright (c) 2009, 2019 Mountainminds GmbH & Co. KG and Contributors
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -60,6 +60,21 @@ public class AnnotationGeneratedFilterTest extends FilterTestBase {
 		m.visitInsn(Opcodes.IRETURN);
 
 		context.classAnnotations.add("Lorg/immutables/value/Generated;");
+
+		filter.filter(m, context, output);
+
+		assertMethodIgnored(m);
+	}
+
+	@Test
+	public void should_filter_classes_annotated_with_runtime_visible_org_apache_avro_specific_AvroGenerated() {
+		final MethodNode m = new MethodNode(InstrSupport.ASM_API_VERSION, 0,
+				"readExternal", "()V", null, null);
+
+		m.visitInsn(Opcodes.NOP);
+
+		context.classAnnotations
+				.add("Lorg/apache/avro/specific/AvroGenerated;");
 
 		filter.filter(m, context, output);
 

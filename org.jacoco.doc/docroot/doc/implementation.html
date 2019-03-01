@@ -210,12 +210,18 @@ boolean[] probes = (boolean[]) args[0];
     public static field to an existing JRE class through instrumentation. Unlike
     the other methods above this is only possible for environments where a Java
     agent is active.</li> 
+  <li><b><code>InjectedClassRuntime</code></b>: This approach defines a new class
+    using <code>java.lang.invoke.MethodHandles.Lookup.defineClass</code>
+    introduced in Java 9.</li>
 </ul>
 
 <p>
-  The current JaCoCo Java agent implementation uses the 
-  <code>ModifiedSystemClassRuntime</code> adding a field to the class
-  <code>java.lang.UnknownError</code>. Versions 0.5.0 - 0.7.9 were adding field
+  Starting from version 0.8.3 JaCoCo Java agent implementation uses the
+  <code>InjectedClassRuntime</code> to define new class in bootstrap class
+  loader when running on JRE 9 and higher, otherwise uses
+  <code>ModifiedSystemClassRuntime</code> to add field to an existing JRE class.
+  Starting from version 0.8.0 field is added to the class
+  <code>java.lang.UnknownError</code>, versions 0.5.0 - 0.7.9 were adding field
   to the class <code>java.util.UUID</code>, having bigger chance of conflict
   with other agents.
 </p>

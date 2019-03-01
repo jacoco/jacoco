@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2018 Mountainminds GmbH & Co. KG and Contributors
+ * Copyright (c) 2009, 2019 Mountainminds GmbH & Co. KG and Contributors
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -31,13 +31,15 @@ import org.objectweb.asm.tree.MethodNode;
 public class ClassAnalyzer extends ClassProbesVisitor
 		implements IFilterContext {
 
-	private final IFilter filter = Filters.ALL;
-
 	private final ClassCoverageImpl coverage;
 	private final boolean[] probes;
 	private final StringPool stringPool;
 
 	private final Set<String> classAnnotations = new HashSet<String>();
+
+	private String sourceDebugExtension;
+
+	private final IFilter filter;
 
 	/**
 	 * Creates a new analyzer that builds coverage data for a class.
@@ -54,6 +56,7 @@ public class ClassAnalyzer extends ClassProbesVisitor
 		this.coverage = coverage;
 		this.probes = probes;
 		this.stringPool = stringPool;
+		this.filter = Filters.all();
 	}
 
 	@Override
@@ -75,6 +78,7 @@ public class ClassAnalyzer extends ClassProbesVisitor
 	@Override
 	public void visitSource(final String source, final String debug) {
 		coverage.setSourceFileName(stringPool.get(source));
+		sourceDebugExtension = debug;
 	}
 
 	@Override
@@ -109,7 +113,7 @@ public class ClassAnalyzer extends ClassProbesVisitor
 				signature);
 		mcc.calculate(mc);
 
-		if (mc.getInstructionCounter().getTotalCount() > 0) {
+		if (mc.containsCode()) {
 			// Only consider methods that actually contain code
 			coverage.addMethod(mc);
 		}
@@ -144,6 +148,10 @@ public class ClassAnalyzer extends ClassProbesVisitor
 
 	public String getSourceFileName() {
 		return coverage.getSourceFileName();
+	}
+
+	public String getSourceDebugExtension() {
+		return sourceDebugExtension;
 	}
 
 }

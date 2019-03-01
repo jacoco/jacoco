@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2018 Mountainminds GmbH & Co. KG and Contributors
+ * Copyright (c) 2009, 2019 Mountainminds GmbH & Co. KG and Contributors
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -130,6 +130,13 @@ public interface ICoverageNode {
 	 * @return counter for the given entity
 	 */
 	ICounter getCounter(CounterEntity entity);
+
+	/**
+	 * Checks whether this node contains code relevant for code coverage.
+	 *
+	 * @return <code>true</code> if this node contains code relevant for code coverage
+	 */
+	boolean containsCode();
 
 	/**
 	 * Creates a plain copy of this node. While {@link ICoverageNode}

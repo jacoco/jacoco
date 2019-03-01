@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2018 Mountainminds GmbH & Co. KG and Contributors
+ * Copyright (c) 2009, 2019 Mountainminds GmbH & Co. KG and Contributors
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -13,6 +13,7 @@ package org.jacoco.core.internal.instr;
 
 import static java.lang.String.format;
 
+import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
 
@@ -225,6 +226,27 @@ public final class InstrSupport {
 		} else {
 			mv.visitLdcInsn(Integer.valueOf(value));
 		}
+	}
+
+	/**
+	 * Creates a {@link ClassReader} instance for given bytes of class even if
+	 * its version not yet supported by ASM.
+	 *
+	 * @param b
+	 *            bytes of class
+	 * @return {@link ClassReader}
+	 */
+	public static ClassReader classReaderFor(final byte[] b) {
+		final byte[] originalVersion = new byte[] { b[4], b[5], b[6], b[7] };
+		if (getVersionMajor(b) == Opcodes.V12 + 1) {
+			b[4] = (byte) (Opcodes.V12 >>> 24);
+			b[5] = (byte) (Opcodes.V12 >>> 16);
+			b[6] = (byte) (Opcodes.V12 >>> 8);
+			b[7] = (byte) Opcodes.V12;
+		}
+		final ClassReader classReader = new ClassReader(b);
+		System.arraycopy(originalVersion, 0, b, 4, originalVersion.length);
+		return classReader;
 	}
 
 }

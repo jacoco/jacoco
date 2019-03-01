@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2018 Mountainminds GmbH & Co. KG and Contributors
+ * Copyright (c) 2009, 2019 Mountainminds GmbH & Co. KG and Contributors
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -128,6 +128,9 @@ public class MethodAnalyzerTest implements IProbeIdGenerator {
 		createLinearSequence();
 		probes[0] = true;
 		runMethodAnalzer(NOP_FILTER);
+
+		assertEquals(1002, result.getFirstLine());
+		assertEquals(1002, result.getLastLine());
 
 		assertLine(1001, 0, 0, 0, 0);
 		assertLine(1002, 0, 1, 0, 0);
@@ -322,22 +325,24 @@ public class MethodAnalyzerTest implements IProbeIdGenerator {
 	public void if_branch_merge_should_show_partial_branch_coverage_when_probe_for_first_branch_is_executed() {
 		createIfBranchMerge();
 		probes[0] = true;
+		probes[2] = true;
 		runMethodAnalzer();
 
 		assertLine(1001, 0, 2, 1, 1);
 		assertLine(1002, 1, 0, 0, 0);
-		assertLine(1003, 1, 0, 0, 0);
+		assertLine(1003, 0, 1, 0, 0);
 	}
 
 	@Test
 	public void if_branch_merge_should_show_partial_branch_coverage_when_probe_for_second_branch_is_executed() {
 		createIfBranchMerge();
 		probes[1] = true;
+		probes[2] = true;
 		runMethodAnalzer();
 
 		assertLine(1001, 0, 2, 1, 1);
 		assertLine(1002, 0, 1, 0, 0);
-		assertLine(1003, 1, 0, 0, 0);
+		assertLine(1003, 0, 1, 0, 0);
 	}
 
 	@Test

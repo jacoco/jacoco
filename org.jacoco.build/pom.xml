@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-   Copyright (c) 2009, 2018 Mountainminds GmbH & Co. KG and Contributors
+   Copyright (c) 2009, 2019 Mountainminds GmbH & Co. KG and Contributors
    All rights reserved. This program and the accompanying materials
    are made available under the terms of the Eclipse Public License v1.0
    which accompanies this distribution, and is available at
@@ -14,7 +14,7 @@
 
   <groupId>org.jacoco</groupId>
   <artifactId>org.jacoco.build</artifactId>
-  <version>0.8.3-SNAPSHOT</version>
+  <version>0.8.4-SNAPSHOT</version>
   <packaging>pom</packaging>
 
   <name>JaCoCo</name>
@@ -128,7 +128,7 @@
 
     <maven.build.timestamp.format>yyyyMMddhhmm</maven.build.timestamp.format>
     <jacoco.home.url>http://www.jacoco.org/jacoco</jacoco.home.url>
-    <copyright.years>${project.inceptionYear}, 2018</copyright.years>
+    <copyright.years>${project.inceptionYear}, 2019</copyright.years>
 
     <bytecode.version>1.5</bytecode.version>
     <maven.compiler.source>${bytecode.version}</maven.compiler.source>
@@ -364,7 +364,7 @@
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-plugin-plugin</artifactId>
-          <version>3.5</version>
+          <version>3.6.0</version>
         </plugin>
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
@@ -389,7 +389,7 @@
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-shade-plugin</artifactId>
-          <version>3.1.0</version>
+          <version>3.2.1</version>
         </plugin>
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
@@ -560,7 +560,7 @@
                   <include name="**/*.groovy"/>
                   <not>
                     <and>
-                      <contains text="Copyright (c) 2009, 2018 Mountainminds GmbH &amp; Co. KG and Contributors"/>
+                      <contains text="Copyright (c) 2009, 2019 Mountainminds GmbH &amp; Co. KG and Contributors"/>
                       <contains text="All rights reserved. This program and the accompanying materials"/>
                       <contains text="are made available under the terms of the Eclipse Public License v1.0"/>
                       <contains text="which accompanies this distribution, and is available at"/>
@@ -732,57 +732,6 @@
           </plugin>
         </plugins>
       </build>
-    </profile>
-
-    <!--
-    Following profiles enable compilation into bytecode version 9
-    when requested "bytecode.version" greater than 9,
-    because this is maximum that can be processed by
-    maven-shade-plugin (https://issues.apache.org/jira/browse/MSHADE-289)
-    and maven-plugin-plugin (https://issues.apache.org/jira/browse/MPLUGIN-335),
-    This is overridden for tests.
-    -->
-
-    <profile>
-      <id>java10-bytecode</id>
-      <activation>
-        <property>
-          <name>bytecode.version</name>
-          <value>10</value>
-        </property>
-      </activation>
-      <properties>
-        <maven.compiler.source>9</maven.compiler.source>
-        <maven.compiler.target>9</maven.compiler.target>
-      </properties>
-    </profile>
-
-    <profile>
-      <id>java11-bytecode</id>
-      <activation>
-        <property>
-          <name>bytecode.version</name>
-          <value>11</value>
-        </property>
-      </activation>
-      <properties>
-        <maven.compiler.source>9</maven.compiler.source>
-        <maven.compiler.target>9</maven.compiler.target>
-      </properties>
-    </profile>
-
-    <profile>
-      <id>java12-bytecode</id>
-      <activation>
-        <property>
-          <name>bytecode.version</name>
-          <value>12</value>
-        </property>
-      </activation>
-      <properties>
-        <maven.compiler.source>9</maven.compiler.source>
-        <maven.compiler.target>9</maven.compiler.target>
-      </properties>
     </profile>
 
     <!-- This profile enables use of ECJ -->

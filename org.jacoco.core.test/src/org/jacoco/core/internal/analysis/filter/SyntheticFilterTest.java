@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2018 Mountainminds GmbH & Co. KG and Contributors
+ * Copyright (c) 2009, 2019 Mountainminds GmbH & Co. KG and Contributors
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -80,6 +80,21 @@ public class SyntheticFilterTest extends FilterTestBase {
 		filter.filter(m, context, output);
 
 		assertMethodIgnored(m);
+	}
+
+	@Test
+	public void should_not_filter_synthetic_methods_whose_last_argument_is_kotlin_coroutine_continuation() {
+		final MethodNode m = new MethodNode(InstrSupport.ASM_API_VERSION,
+				Opcodes.ACC_SYNTHETIC | Opcodes.ACC_STATIC, "example",
+				"(Lkotlin/coroutines/Continuation;)Ljava/lang/Object;", null,
+				null);
+		context.classAnnotations
+				.add(KotlinGeneratedFilter.KOTLIN_METADATA_DESC);
+		m.visitInsn(Opcodes.NOP);
+
+		filter.filter(m, context, output);
+
+		assertIgnored();
 	}
 
 }

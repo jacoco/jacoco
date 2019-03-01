@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2018 Mountainminds GmbH & Co. KG and Contributors
+ * Copyright (c) 2009, 2019 Mountainminds GmbH & Co. KG and Contributors
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -50,7 +50,7 @@ public final class KotlinWhenFilter implements IFilter {
 			}
 			cursor = start;
 
-			nextIsNew(EXCEPTION);
+			nextIsType(Opcodes.NEW, EXCEPTION);
 			nextIs(Opcodes.DUP);
 			nextIsInvokeSuper(EXCEPTION, "()V");
 			nextIs(Opcodes.ATHROW);
@@ -93,20 +93,9 @@ public final class KotlinWhenFilter implements IFilter {
 		}
 		final Set<AbstractInsnNode> newTargets = new HashSet<AbstractInsnNode>();
 		for (LabelNode label : labels) {
-			newTargets.add(instructionAfterLabel(label));
+			newTargets.add(AbstractMatcher.skipNonOpcodes(label));
 		}
 		output.replaceBranches(switchNode, newTargets);
-	}
-
-	private static AbstractInsnNode instructionAfterLabel(
-			final LabelNode label) {
-		AbstractInsnNode i = label.getNext();
-		while (i.getType() == AbstractInsnNode.FRAME
-				|| i.getType() == AbstractInsnNode.LABEL
-				|| i.getType() == AbstractInsnNode.LINE) {
-			i = i.getNext();
-		}
-		return i;
 	}
 
 }

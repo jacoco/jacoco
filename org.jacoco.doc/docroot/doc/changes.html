@@ -20,19 +20,63 @@
 
 <h2>Snapshot Build @qualified.bundle.version@ (@build.date@)</h2>
 
+<h2>Release 0.8.3 (2019/01/23)</h2>
+
 <h3>New Features</h3>
 <ul>
+  <li>jacoco-maven-plugin now requires at least Maven 3.0
+      (GitHub <a href="https://github.com/jacoco/jacoco/issues/821">#821</a>).</li>
   <li>JaCoCo now officially supports Java 11
       (GitHub <a href="https://github.com/jacoco/jacoco/issues/760">#760</a>).</li>
+  <li>Experimental support for Java 13 class files
+      (GitHub <a href="https://github.com/jacoco/jacoco/issues/835">#835</a>).</li>
   <li>Branch added by the Kotlin compiler for "unsafe" cast operator is filtered
       out during generation of report
       (GitHub <a href="https://github.com/jacoco/jacoco/issues/761">#761</a>).</li>
+  <li>Branch added by the Kotlin compiler for not-null assertion operator is
+      filtered out during generation of report
+      (GitHub <a href="https://github.com/jacoco/jacoco/issues/815">#815</a>).</li>
+  <li>Instructions inlined by Kotlin compiler are filtered out during generation
+      of report
+      (GitHub <a href="https://github.com/jacoco/jacoco/issues/764">#764</a>).</li>
+  <li>Branches added by the Kotlin compiler for suspending lambdas and functions
+      are filtered out during generation of report
+      (GitHub <a href="https://github.com/jacoco/jacoco/issues/802">#802</a>,
+      <a href="https://github.com/jacoco/jacoco/issues/803">#803</a>,
+      <a href="https://github.com/jacoco/jacoco/issues/809">#809</a>).</li>
+  <li>Classes and methods annotated by annotation whose retention policy is
+      <code>runtime</code> or <code>class</code> and whose simple name contains
+      "Generated" (previously equality was required) are filtered out during
+      generation of report
+      (GitHub <a href="https://github.com/jacoco/jacoco/issues/822">#822</a>).</li>
+  <li>HTML report shows message when source file can't be found
+      (GitHub <a href="https://github.com/jacoco/jacoco/issues/801">#801</a>).</li>
+  <li>HTML report shows message when class has no debug information
+      (GitHub <a href="https://github.com/jacoco/jacoco/issues/818">#818</a>).</li>
+  <li>HTML report shows message when analyzed class does not match executed
+      (GitHub <a href="https://github.com/jacoco/jacoco/issues/819">#819</a>).</li>
+  <li>HTML report shows message when no class files specified and when
+      none of the analyzed classes contain code relevant for code coverage
+      (GitHub <a href="https://github.com/jacoco/jacoco/issues/833">#833</a>).</li>
+  <li>Empty class and sourcefile nodes are preserved and available in XML report
+      (GitHub <a href="https://github.com/jacoco/jacoco/issues/817">#817</a>).</li>
+  <li>Agent avoids conflicts with other agents when running on Java 9+
+      (GitHub <a href="https://github.com/jacoco/jacoco/issues/829">#829</a>).</li>
 </ul>
 
 <h3>Fixed Bugs</h3>
 <ul>
-  <li>Report code coverage correctly for Kotlin methods with default arguments
+  <li><code>synthetic</code> methods that contain values of default arguments
+      in Kotlin should not be ignored
       (GitHub <a href="https://github.com/jacoco/jacoco/issues/774">#774</a>).</li>
+  <li><code>synthetic</code> methods that represent <code>suspend</code>
+      functions in Kotlin should not be ignored
+      (GitHub <a href="https://github.com/jacoco/jacoco/issues/804">#804</a>).</li>
+  <li>Removed misleading parameters <code>includes</code> and
+      <code>excludes</code> from <code>dump</code>, <code>merge</code> and
+      <code>restore-instrumented-classes</code> goals of jacoco-maven-plugin,
+      because they have no effect
+      (GitHub <a href="https://github.com/jacoco/jacoco/issues/827">#827</a>).</li>
 </ul>
 
 <h3>Non-functional Changes</h3>
@@ -80,9 +124,9 @@
       generation of report
       (GitHub <a href="https://github.com/jacoco/jacoco/issues/737">#737</a>,
       <a href="https://github.com/jacoco/jacoco/issues/746">#746</a>).</li>
-  <li>Classes and methods annotated with runtime visible and invisible annotation
-      whose simple name is <code>Generated</code> are filtered out during
-      generation of report
+  <li>Classes and methods annotated with annotation whose retention policy
+      is <code>runtime</code> or <code>class</code> and whose simple name
+      is <code>Generated</code> are filtered out during generation of report
       (GitHub <a href="https://github.com/jacoco/jacoco/issues/731">#731</a>).</li>
   <li>Maven goal <code>report-aggregate</code> now also considers dependencies
       specified using version range. Idea and implementation by Lukas Krejc

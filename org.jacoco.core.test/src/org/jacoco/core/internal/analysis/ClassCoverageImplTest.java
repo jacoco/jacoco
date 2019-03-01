@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2018 Mountainminds GmbH & Co. KG and Contributors
+ * Copyright (c) 2009, 2019 Mountainminds GmbH & Co. KG and Contributors
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -93,7 +93,7 @@ public class ClassCoverageImplTest {
 		assertEquals(CounterImpl.COUNTER_0_0, node.getInstructionCounter());
 		assertEquals(CounterImpl.COUNTER_0_0, node.getBranchCounter());
 		assertEquals(CounterImpl.COUNTER_0_0, node.getMethodCounter());
-		assertEquals(CounterImpl.COUNTER_1_0, node.getClassCounter());
+		assertEquals(CounterImpl.COUNTER_0_0, node.getClassCounter());
 	}
 
 	@Test

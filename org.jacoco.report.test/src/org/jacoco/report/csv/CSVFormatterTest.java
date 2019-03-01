@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2018 Mountainminds GmbH & Co. KG and Contributors
+ * Copyright (c) 2009, 2019 Mountainminds GmbH & Co. KG and Contributors
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -64,6 +64,7 @@ public class CSVFormatterTest {
 		assertEquals(
 				"group/bundle,org.jacoco.example,FooClass,10,15,1,2,0,3,1,2,0,1",
 				lines.get(1));
+		assertEquals(2, lines.size());
 	}
 
 	@Test
@@ -77,6 +78,7 @@ public class CSVFormatterTest {
 		assertEquals(
 				"report/bundle,org.jacoco.example,FooClass,10,15,1,2,0,3,1,2,0,1",
 				lines.get(2));
+		assertEquals(3, lines.size());
 	}
 
 	@Test
@@ -84,9 +86,9 @@ public class CSVFormatterTest {
 		driver.sendBundle(visitor);
 		final List<String> lines = getLines();
 		assertEquals(HEADER, lines.get(0));
-		assertEquals(
-				"bundle,org.jacoco.example,FooClass,10,15,1,2,0,3,1,2,0,1",
+		assertEquals("bundle,org.jacoco.example,FooClass,10,15,1,2,0,3,1,2,0,1",
 				lines.get(1));
+		assertEquals(2, lines.size());
 	}
 
 	@Test

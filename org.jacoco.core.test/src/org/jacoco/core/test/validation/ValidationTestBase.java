@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2018 Mountainminds GmbH & Co. KG and Contributors
+ * Copyright (c) 2009, 2019 Mountainminds GmbH & Co. KG and Contributors
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -12,6 +12,7 @@
 package org.jacoco.core.test.validation;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 import java.io.IOException;
 import java.lang.reflect.Method;
@@ -111,6 +112,15 @@ public abstract class ValidationTestBase {
 						line.toString());
 			}
 		}
+	}
+
+	@Test
+	public void last_line_in_coverage_data_should_be_less_or_equal_to_number_of_lines_in_source_file() {
+		assertTrue(String.format(
+				"Last line in coverage data (%d) should be less or equal to number of lines in source file (%d)",
+				Integer.valueOf(source.getCoverage().getLastLine()),
+				Integer.valueOf(source.getLines().size())),
+				source.getCoverage().getLastLine() <= source.getLines().size());
 	}
 
 	/*

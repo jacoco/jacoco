@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2018 Mountainminds GmbH & Co. KG and Contributors
+ * Copyright (c) 2009, 2019 Mountainminds GmbH & Co. KG and Contributors
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -43,7 +43,7 @@ public final class KotlinUnsafeCastOperatorFilter implements IFilter {
 			}
 			cursor = start;
 
-			nextIsNew(KOTLIN_TYPE_CAST_EXCEPTION);
+			nextIsType(Opcodes.NEW, KOTLIN_TYPE_CAST_EXCEPTION);
 			nextIs(Opcodes.DUP);
 			nextIs(Opcodes.LDC);
 			if (cursor == null) {

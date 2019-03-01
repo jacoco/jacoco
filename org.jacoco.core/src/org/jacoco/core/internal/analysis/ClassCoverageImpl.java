@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2018 Mountainminds GmbH & Co. KG and Contributors
+ * Copyright (c) 2009, 2019 Mountainminds GmbH & Co. KG and Contributors
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -47,7 +47,6 @@ public class ClassCoverageImpl extends SourceNodeImpl implements IClassCoverage 
 		this.id = id;
 		this.noMatch = noMatch;
 		this.methods = new ArrayList<IMethodCoverage>();
-		this.classCounter = CounterImpl.COUNTER_1_0;
 	}
 
 	/**
@@ -59,10 +58,11 @@ public class ClassCoverageImpl extends SourceNodeImpl implements IClassCoverage 
 	public void addMethod(final IMethodCoverage method) {
 		this.methods.add(method);
 		increment(method);
-		// As class is considered as covered when at least one method is
-		// covered:
+		// Class is considered as covered when at least one method is covered:
 		if (methodCounter.getCoveredCount() > 0) {
 			this.classCounter = CounterImpl.COUNTER_0_1;
+		} else {
+			this.classCounter = CounterImpl.COUNTER_1_0;
 		}
 	}
 

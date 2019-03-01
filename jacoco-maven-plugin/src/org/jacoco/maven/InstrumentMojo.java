@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2018 Mountainminds GmbH & Co. KG and Contributors
+ * Copyright (c) 2009, 2019 Mountainminds GmbH & Co. KG and Contributors
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -23,6 +23,7 @@ import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.plugins.annotations.LifecyclePhase;
 import org.apache.maven.plugins.annotations.Mojo;
+import org.apache.maven.plugins.annotations.Parameter;
 import org.codehaus.plexus.util.FileUtils;
 import org.codehaus.plexus.util.IOUtil;
 import org.jacoco.core.instr.Instrumenter;
@@ -44,6 +45,20 @@ import org.jacoco.core.runtime.OfflineInstrumentationAccessGenerator;
 @Mojo(name = "instrument", defaultPhase = LifecyclePhase.PROCESS_CLASSES, threadSafe = true)
 public class InstrumentMojo extends AbstractJacocoMojo {
 
+	/**
+	 * A list of class files to include in instrumentation. May use wildcard
+	 * characters (* and ?). When not specified everything will be included.
+	 */
+	@Parameter
+	private List<String> includes;
+
+	/**
+	 * A list of class files to exclude from instrumentation. May use wildcard
+	 * characters (* and ?). When not specified nothing will be excluded.
+	 */
+	@Parameter
+	private List<String> excludes;
+
 	@Override
 	public void executeMojo() throws MojoExecutionException,
 			MojoFailureException {
@@ -61,7 +76,7 @@ public class InstrumentMojo extends AbstractJacocoMojo {
 
 		final List<String> fileNames;
 		try {
-			fileNames = new FileFilter(this.getIncludes(), this.getExcludes())
+			fileNames = new FileFilter(includes, excludes)
 					.getFileNames(classesDir);
 		} catch (final IOException e1) {
 			throw new MojoExecutionException(

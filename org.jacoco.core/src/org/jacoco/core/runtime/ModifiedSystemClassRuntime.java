@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2018 Mountainminds GmbH & Co. KG and Contributors
+ * Copyright (c) 2009, 2019 Mountainminds GmbH & Co. KG and Contributors
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -114,7 +114,7 @@ public class ModifiedSystemClassRuntime extends AbstractRuntime {
 	 * @return new runtime instance
 	 * 
 	 * @throws ClassNotFoundException
-	 *             id the given class can not be found
+	 *             if the given class can not be found
 	 */
 	public static IRuntime createFor(final Instrumentation inst,
 			final String className, final String accessFieldName)
@@ -153,7 +153,7 @@ public class ModifiedSystemClassRuntime extends AbstractRuntime {
 	 */
 	public static byte[] instrument(final byte[] source,
 			final String accessFieldName) {
-		final ClassReader reader = new ClassReader(source);
+		final ClassReader reader = InstrSupport.classReaderFor(source);
 		final ClassWriter writer = new ClassWriter(reader, 0);
 		reader.accept(new ClassVisitor(InstrSupport.ASM_API_VERSION, writer) {
 

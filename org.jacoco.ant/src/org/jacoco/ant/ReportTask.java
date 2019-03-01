@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2018 Mountainminds GmbH & Co. KG and Contributors
+ * Copyright (c) 2009, 2019 Mountainminds GmbH & Co. KG and Contributors
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -593,8 +593,7 @@ public class ReportTask extends Task {
 	}
 
 	private void checkForMissingDebugInformation(final ICoverageNode node) {
-		if (node.getClassCounter().getTotalCount() > 0
-				&& node.getLineCounter().getTotalCount() == 0) {
+		if (node.containsCode() && node.getLineCounter().getTotalCount() == 0) {
 			log(format(
 					"To enable source code annotation class files for bundle '%s' have to be compiled with debug information.",
 					node.getName()), Project.MSG_WARN);

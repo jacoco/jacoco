@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-   Copyright (c) 2009, 2018 Mountainminds GmbH & Co. KG and Contributors
+   Copyright (c) 2009, 2019 Mountainminds GmbH & Co. KG and Contributors
    All rights reserved. This program and the accompanying materials
    are made available under the terms of the Eclipse Public License v1.0
    which accompanies this distribution, and is available at
@@ -16,7 +16,7 @@
   <parent>
     <groupId>org.jacoco</groupId>
     <artifactId>org.jacoco.tests</artifactId>
-    <version>0.8.3-SNAPSHOT</version>
+    <version>0.8.4-SNAPSHOT</version>
     <relativePath>../org.jacoco.tests</relativePath>
   </parent>
 
@@ -148,9 +148,6 @@
       </activation>
       <properties>
         <kotlin.compiler.jvmTarget>1.8</kotlin.compiler.jvmTarget>
-        <!-- see respective profile in org.jacoco.build about this override -->
-        <maven.compiler.source>10</maven.compiler.source>
-        <maven.compiler.target>10</maven.compiler.target>
       </properties>
       <modules>
         <module>../org.jacoco.core.test.validation.kotlin</module>
@@ -170,9 +167,6 @@
       </activation>
       <properties>
         <kotlin.compiler.jvmTarget>1.8</kotlin.compiler.jvmTarget>
-        <!-- see respective profile in org.jacoco.build about this override -->
-        <maven.compiler.source>11</maven.compiler.source>
-        <maven.compiler.target>11</maven.compiler.target>
       </properties>
       <modules>
         <module>../org.jacoco.core.test.validation.kotlin</module>
@@ -192,9 +186,6 @@
       </activation>
       <properties>
         <kotlin.compiler.jvmTarget>1.8</kotlin.compiler.jvmTarget>
-        <!-- see respective profile in org.jacoco.build about this override -->
-        <maven.compiler.source>12</maven.compiler.source>
-        <maven.compiler.target>12</maven.compiler.target>
       </properties>
       <modules>
         <module>../org.jacoco.core.test.validation.kotlin</module>

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2018 Mountainminds GmbH & Co. KG and Contributors
+ * Copyright (c) 2009, 2019 Mountainminds GmbH & Co. KG and Contributors
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -16,6 +16,7 @@ import java.io.IOException;
 import org.jacoco.core.analysis.IClassCoverage;
 import org.jacoco.core.analysis.IMethodCoverage;
 import org.jacoco.report.internal.ReportOutputFolder;
+import org.jacoco.report.internal.html.HTMLElement;
 import org.jacoco.report.internal.html.IHTMLReportContext;
 import org.jacoco.report.internal.html.ILinkable;
 
@@ -78,6 +79,37 @@ public class ClassPage extends TablePage<IClassCoverage> {
 		return context.getLanguageNames().getClassName(getNode().getName(),
 				getNode().getSignature(), getNode().getSuperName(),
 				getNode().getInterfaceNames());
+	}
+
+	@Override
+	protected void content(HTMLElement body) throws IOException {
+		if (getNode().isNoMatch()) {
+			body.p().text(
+					"A different version of class was executed at runtime.");
+		}
+
+		if (getNode().getLineCounter().getTotalCount() == 0) {
+			body.p().text(
+					"Class files must be compiled with debug information to show line coverage.");
+		}
+
+		final String sourceFileName = getNode().getSourceFileName();
+		if (sourceFileName == null) {
+			body.p().text(
+					"Class files must be compiled with debug information to link with source files.");
+
+		} else if (sourcePage == null) {
+			final String sourcePath;
+			if (getNode().getPackageName().length() != 0) {
+				sourcePath = getNode().getPackageName() + "/" + sourceFileName;
+			} else {
+				sourcePath = sourceFileName;
+			}
+			body.p().text("Source file \"" + sourcePath
+					+ "\" was not found during generation of report.");
+		}
+
+		super.content(body);
 	}
 
 }

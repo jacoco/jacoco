@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2018 Mountainminds GmbH & Co. KG and Contributors
+ * Copyright (c) 2009, 2019 Mountainminds GmbH & Co. KG and Contributors
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -61,7 +61,7 @@ public class ResizeInstructionsTest {
 	public void should_not_loose_InnerClasses_attribute() throws Exception {
 		byte[] source = TargetLoader.getClassDataAsBytes(Inner.class);
 
-		final ClassReader cr = new ClassReader(source);
+		final ClassReader cr = InstrSupport.classReaderFor(source);
 		final ClassWriter cw = new ClassWriter(0);
 		cr.accept(new ClassVisitor(InstrSupport.ASM_API_VERSION, cw) {
 			@Override

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2018 Mountainminds GmbH & Co. KG and Contributors
+ * Copyright (c) 2009, 2019 Mountainminds GmbH & Co. KG and Contributors
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -20,7 +20,7 @@ import org.objectweb.asm.tree.MethodNode;
  * Filters classes and methods annotated with
  * {@link java.lang.annotation.RetentionPolicy#RUNTIME runtime visible} and
  * {@link java.lang.annotation.RetentionPolicy#CLASS invisible} annotation whose
- * simple name is <code>Generated</code>.
+ * simple name contains <code>Generated</code>.
  */
 public final class AnnotationGeneratedFilter implements IFilter {
 
@@ -44,9 +44,10 @@ public final class AnnotationGeneratedFilter implements IFilter {
 	}
 
 	private static boolean matches(final String annotation) {
-		return "Generated;".equals(
-				annotation.substring(Math.max(annotation.lastIndexOf('/'),
-						annotation.lastIndexOf('$')) + 1));
+		final String name = annotation
+				.substring(Math.max(annotation.lastIndexOf('/'),
+						annotation.lastIndexOf('$')) + 1);
+		return name.contains("Generated");
 	}
 
 	private static boolean presentIn(final List<AnnotationNode> annotations) {

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2018 Mountainminds GmbH & Co. KG and Contributors
+ * Copyright (c) 2009, 2019 Mountainminds GmbH & Co. KG and Contributors
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -42,16 +42,15 @@ abstract class AbstractMatcher {
 	}
 
 	/**
-	 * Moves {@link #cursor} to next instruction if it is <code>NEW</code> with
-	 * given operand, otherwise sets it to <code>null</code>.
+	 * Moves {@link #cursor} to next instruction if it is {@link TypeInsnNode}
+	 * with given opcode and operand, otherwise sets it to <code>null</code>.
 	 */
-	final void nextIsNew(final String desc) {
-		nextIs(Opcodes.NEW);
+	final void nextIsType(final int opcode, final String desc) {
+		nextIs(opcode);
 		if (cursor == null) {
 			return;
 		}
-		final TypeInsnNode i = (TypeInsnNode) cursor;
-		if (desc.equals(i.desc)) {
+		if (((TypeInsnNode) cursor).desc.equals(desc)) {
 			return;
 		}
 		cursor = null;
@@ -72,6 +71,11 @@ abstract class AbstractMatcher {
 		cursor = null;
 	}
 
+	/**
+	 * Moves {@link #cursor} to next instruction if it is
+	 * <code>INVOKEVIRTUAL</code> with given owner and name, otherwise sets it
+	 * to <code>null</code>.
+	 */
 	final void nextIsInvokeVirtual(final String owner, final String name) {
 		nextIs(Opcodes.INVOKEVIRTUAL);
 		if (cursor == null) {
@@ -84,6 +88,11 @@ abstract class AbstractMatcher {
 		cursor = null;
 	}
 
+	/**
+	 * Moves {@link #cursor} to next instruction if it is
+	 * <code>INVOKESTATIC</code> with given owner and name, otherwise sets it to
+	 * <code>null</code>.
+	 */
 	final void nextIsInvokeStatic(final String owner, final String name) {
 		nextIs(Opcodes.INVOKESTATIC);
 		if (cursor == null) {
@@ -159,11 +168,21 @@ abstract class AbstractMatcher {
 	 * {@link AbstractInsnNode#LABEL}, {@link AbstractInsnNode#LINE}.
 	 */
 	final void skipNonOpcodes() {
+		cursor = skipNonOpcodes(cursor);
+	}
+
+	/**
+	 * Returns first instruction from given and following it that is not
+	 * {@link AbstractInsnNode#FRAME}, {@link AbstractInsnNode#LABEL},
+	 * {@link AbstractInsnNode#LINE}.
+	 */
+	static AbstractInsnNode skipNonOpcodes(AbstractInsnNode cursor) {
 		while (cursor != null && (cursor.getType() == AbstractInsnNode.FRAME
 				|| cursor.getType() == AbstractInsnNode.LABEL
 				|| cursor.getType() == AbstractInsnNode.LINE)) {
 			cursor = cursor.getNext();
 		}
+		return cursor;
 	}
 
 }
