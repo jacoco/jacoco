@@ -53,7 +53,7 @@ public class AspectjFilter implements IFilter {
             return;
         }
 
-        if (isWellKnownSyntheticMethod(methodNode)) {
+        if (isAjSynthetic(methodNode)) {
             output.ignore(methodNode.instructions.getFirst(), methodNode.instructions.getLast());
             return;
         }
@@ -61,22 +61,6 @@ public class AspectjFilter implements IFilter {
         if (methodNode.name.equals("<clinit>")) {
             checkStaticInitializer(methodNode, output);
         }
-    }
-
-    private boolean isWellKnownSyntheticMethod(MethodNode methodNode) {
-        if (methodNode.name.equals("aspectOf") && isAjSynthetic(methodNode)) {
-            return true;
-        }
-        if (methodNode.name.equals("hasAspect") && isAjSynthetic(methodNode)) {
-            return true;
-        }
-        if (methodNode.name.equals("ajc$postClinit") && isAjSynthetic(methodNode)) {
-            return true;
-        }
-        if (methodNode.name.equals("ajc$preClinit") && ((methodNode.access & Opcodes.ACC_SYNTHETIC) != 0)) {
-            return true;
-        }
-        return false;
     }
 
     private boolean isAroundClosureClass(IFilterContext context) {
