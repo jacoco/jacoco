@@ -15,6 +15,7 @@ import org.jacoco.core.internal.instr.InstrSupport;
 import org.junit.Before;
 import org.junit.Test;
 import org.objectweb.asm.Attribute;
+import org.objectweb.asm.Label;
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.tree.AbstractInsnNode;
 import org.objectweb.asm.tree.MethodNode;
@@ -57,9 +58,7 @@ public class AspectjFilterTest implements IFilterOutput {
     public void testClinitOnlyPre() {
         final MethodNode m = new MethodNode(InstrSupport.ASM_API_VERSION, 0,
                 "<clinit>", "()V", null, null);
-        m.visitInsn(Opcodes.NOP);
         m.visitMethodInsn(Opcodes.INVOKESTATIC, "Foo", "ajc$preClinit", "()V", false);
-        m.visitInsn(Opcodes.NOP);
         m.visitInsn(Opcodes.RETURN);
 
         filter.filter(m, context, this);
@@ -71,7 +70,6 @@ public class AspectjFilterTest implements IFilterOutput {
     public void testClinitPreAndUserCode() {
         final MethodNode m = new MethodNode(InstrSupport.ASM_API_VERSION, 0,
                 "<clinit>", "()V", null, null);
-        m.visitInsn(Opcodes.NOP);
         m.visitMethodInsn(Opcodes.INVOKESTATIC, "Foo", "ajc$preClinit", "()V", false);
         m.visitInsn(Opcodes.NOP);
         m.visitMethodInsn(Opcodes.INVOKESTATIC, "Foo", "myCustomMethod", "()V", false);
@@ -87,9 +85,7 @@ public class AspectjFilterTest implements IFilterOutput {
     public void testClinitOnlyPost() {
         final MethodNode m = new MethodNode(InstrSupport.ASM_API_VERSION, 0,
                 "<clinit>", "()V", null, null);
-        m.visitInsn(Opcodes.NOP);
-        m.visitMethodInsn(Opcodes.INVOKESTATIC, "Foo", "ajc$postClinit", "()V", false);
-        m.visitInsn(Opcodes.NOP);
+        mockPostClinitCall(m);
         m.visitInsn(Opcodes.RETURN);
 
         filter.filter(m, context, this);
@@ -104,7 +100,7 @@ public class AspectjFilterTest implements IFilterOutput {
         m.visitInsn(Opcodes.NOP);
         m.visitMethodInsn(Opcodes.INVOKESTATIC, "Foo", "myCustomMethod", "()V", false);
         m.visitInsn(Opcodes.NOP);
-        m.visitMethodInsn(Opcodes.INVOKESTATIC, "Foo", "ajc$postClinit", "()V", false);
+        mockPostClinitCall(m);
         m.visitInsn(Opcodes.RETURN);
 
         filter.filter(m, context, this);
@@ -120,12 +116,28 @@ public class AspectjFilterTest implements IFilterOutput {
         m.visitInsn(Opcodes.NOP);
         m.visitMethodInsn(Opcodes.INVOKESTATIC, "Foo", "ajc$preClinit", "()V", false);
         m.visitInsn(Opcodes.NOP);
-        m.visitMethodInsn(Opcodes.INVOKESTATIC, "Foo", "ajc$postClinit", "()V", false);
+        mockPostClinitCall(m);
         m.visitInsn(Opcodes.RETURN);
 
         filter.filter(m, context, this);
 
         assertTrue(ignored.containsAll(Arrays.asList(m.instructions.toArray())));
+    }
+
+    private void mockPostClinitCall(MethodNode m) {
+        Label start = new Label();
+        Label handler = new Label();
+        Label end = new Label();
+
+        m.visitTryCatchBlock(start, end, handler, "java/lang/Throwable");
+        m.visitLabel(start);
+        m.visitMethodInsn(Opcodes.INVOKESTATIC, "Foo", "ajc$postClinit", "()V", false);
+        m.visitJumpInsn(Opcodes.GOTO, end);
+        m.visitLabel(handler);
+        m.visitInsn(Opcodes.ASTORE);
+        m.visitInsn(Opcodes.ALOAD);
+        m.visitFieldInsn(Opcodes.PUTSTATIC, "Foo", "ajc$initFailureCause", "Ljava/lang/Throwable");
+        m.visitLabel(end);
     }
 
     public void ignore(final AbstractInsnNode fromInclusive,
