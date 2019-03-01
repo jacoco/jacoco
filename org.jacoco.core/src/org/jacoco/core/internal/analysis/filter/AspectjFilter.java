@@ -14,9 +14,12 @@ package org.jacoco.core.internal.analysis.filter;
 import org.objectweb.asm.Attribute;
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.tree.AbstractInsnNode;
+import org.objectweb.asm.tree.FieldInsnNode;
 import org.objectweb.asm.tree.JumpInsnNode;
+import org.objectweb.asm.tree.LabelNode;
 import org.objectweb.asm.tree.MethodInsnNode;
 import org.objectweb.asm.tree.MethodNode;
+import org.objectweb.asm.tree.TryCatchBlockNode;
 
 import java.util.regex.Pattern;
 
@@ -75,81 +78,24 @@ public class AspectjFilter implements IFilter {
      * @param output
      */
     private void checkStaticInitializer(MethodNode methodNode, IFilterOutput output) {
-        MethodInsnNode preClinitNode = null;
-        MethodInsnNode postClinitNode = null;
+        PreClinitMatcher preClinitMatcher = new PreClinitMatcher(methodNode);
 
-        for (AbstractInsnNode node = methodNode.instructions.getFirst();
-             node != null;
-             node = node.getNext()) {
+        AbstractInsnNode match = preClinitMatcher.match();
 
-            if (node.getOpcode() != Opcodes.INVOKESTATIC) {
-                continue;
-            }
-            String name = ((MethodInsnNode) node).name;
+        if (match != null) {
+            output.ignore(methodNode.instructions.getFirst(), match);
+        }
 
-            if (name.equals("ajc$preClinit")) {
-                preClinitNode = (MethodInsnNode) node;
-            }
+        for (TryCatchBlockNode tryCatchBlock : methodNode.tryCatchBlocks) {
+            PostClinitMatcher postClinitMatcher = new PostClinitMatcher(tryCatchBlock.start);
 
-            if (name.equals("ajc$postClinit")) {
-                postClinitNode = (MethodInsnNode) node;
+            AbstractInsnNode end = postClinitMatcher.match();
+
+            if (end != null) {
+                output.ignore(tryCatchBlock.start, end);
             }
         }
 
-        if (preClinitNode != null) {
-            ignorePreClinitCall(methodNode, output, preClinitNode);
-        }
-
-        if (postClinitNode != null) {
-            ignorePostClinitCall(methodNode, output, postClinitNode);
-        }
-
-        if (preClinitNode != null && postClinitNode != null && getNextRealOp(preClinitNode) == postClinitNode) {
-            output.ignore(preClinitNode, postClinitNode);
-        }
-    }
-
-    private void ignorePreClinitCall(MethodNode methodNode, IFilterOutput output, MethodInsnNode preClinitNode) {
-        AbstractInsnNode from = preClinitNode;
-        AbstractInsnNode to = preClinitNode;
-
-        if (from != methodNode.instructions.getFirst() && isEffectivelyFirst(preClinitNode.getPrevious())) {
-            from = methodNode.instructions.getFirst();
-        }
-        if (isEffectivelyLast(preClinitNode.getNext())) {
-            to = methodNode.instructions.getLast();
-        }
-
-        output.ignore(from, to);
-    }
-
-    private void ignorePostClinitCall(MethodNode methodNode, IFilterOutput output, MethodInsnNode postClinitNode) {
-        AbstractInsnNode from = postClinitNode;
-        AbstractInsnNode to = postClinitNode;
-
-        if (postClinitNode.getNext().getOpcode() == Opcodes.GOTO) {
-            JumpInsnNode next = (JumpInsnNode) postClinitNode.getNext();
-            to = next.label;
-        }
-
-        if (isEffectivelyFirst(postClinitNode.getPrevious())) {
-            from = methodNode.instructions.getFirst();
-        }
-        if (isEffectivelyLast(to.getNext())) {
-            to = methodNode.instructions.getLast();
-        }
-
-        output.ignore(from, to);
-    }
-
-    private AbstractInsnNode getNextRealOp(AbstractInsnNode preClinitNode) {
-        AbstractInsnNode next = preClinitNode.getNext();
-
-        if (next != null && next.getOpcode() <= 0) {
-            return getNextRealOp(next);
-        } else {
-            return next;
-        }
     }
 
     /**
@@ -168,23 +114,76 @@ public class AspectjFilter implements IFilter {
         return false;
     }
 
-    private boolean isEffectivelyFirst(AbstractInsnNode insnNode) {
-        if (insnNode.getPrevious() == null) {
-            return true;
-        } else if (insnNode.getOpcode() <= 0) {
-            return isEffectivelyFirst(insnNode.getPrevious());
-        } else {
-            return false;
+    static class PreClinitMatcher extends AbstractMatcher {
+        private MethodNode methodNode;
+
+        PreClinitMatcher(MethodNode methodNode) {
+            this.methodNode = methodNode;
+        }
+
+        public AbstractInsnNode match() {
+            cursor = methodNode.instructions.getFirst();
+            nextIs(Opcodes.INVOKESTATIC);
+            if (cursor == null || !((MethodInsnNode) cursor).name.equals("ajc$preClinit")) {
+                cursor = null;
+                return null;
+            }
+            skipNonOpcodes();
+            AbstractInsnNode end = cursor;
+
+            nextIs(Opcodes.NOP);
+            if (cursor != null) {
+                return cursor;
+            } else {
+                cursor = end;
+            }
+
+            nextIs(Opcodes.RETURN);
+            if (cursor != null) {
+                return cursor;
+            } else {
+                return end;
+            }
         }
     }
 
-    private boolean isEffectivelyLast(AbstractInsnNode insnNode) {
-        if (insnNode.getNext() == null) {
-            return true;
-        } else if (insnNode.getOpcode() <= 0) {
-            return isEffectivelyLast(insnNode.getNext());
-        } else {
-            return false;
+
+    static class PostClinitMatcher extends AbstractMatcher {
+
+        private AbstractInsnNode start;
+
+        PostClinitMatcher(AbstractInsnNode start) {
+            this.start = start;
+        }
+
+        public AbstractInsnNode match() {
+            cursor = start;
+            nextIs(Opcodes.INVOKESTATIC);
+            if (!((MethodInsnNode) cursor).name.equals("ajc$postClinit")) {
+                cursor = null;
+                return null;
+            }
+            nextIs(Opcodes.GOTO);
+            LabelNode jumpTarget = ((JumpInsnNode) cursor).label;
+            nextIs(Opcodes.ASTORE);
+            nextIs(Opcodes.ALOAD);
+            nextIs(Opcodes.PUTSTATIC);
+            if (!((FieldInsnNode) cursor).name.startsWith("ajc$")) {
+                cursor = null;
+                return null;
+            }
+            if (cursor.getNext() != jumpTarget) {
+                return cursor;
+            } else {
+                cursor = jumpTarget;
+            }
+
+            nextIs(Opcodes.RETURN);
+            if (cursor == null) {
+                return jumpTarget;
+            } else {
+                return cursor;
+            }
         }
     }
 }
