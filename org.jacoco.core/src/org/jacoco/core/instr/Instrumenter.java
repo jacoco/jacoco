@@ -69,18 +69,6 @@ public class Instrumenter {
 		signatureRemover.setActive(flag);
 	}
 
-	/**
-	 * Creates a instrumented version of the given class if possible.
-	 * 
-	 * @param reader
-	 *            definition of the class as ASM reader
-	 * @return instrumented definition
-	 * 
-	 */
-	public byte[] instrument(final ClassReader reader) {
-		return instrument(reader.b);
-	}
-
 	private byte[] instrument(final byte[] source) {
 		final long classId = CRC64.classId(source);
 		final ClassReader reader = InstrSupport.classReaderFor(source);

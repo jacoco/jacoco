@@ -21,11 +21,18 @@
 <h2>Snapshot Build @qualified.bundle.version@ (@build.date@)</h2>
 
 <h3>New Features</h3>
-
 <ul>
   <li>Branches added by the Kotlin compiler version 1.3.30 for suspending lambdas
       and functions are filtered out during generation of report
       (GitHub <a href="https://github.com/jacoco/jacoco/issues/849">#849</a>).</li>
+</ul>
+
+<h3>API Changes</h3>
+<ul>
+    <li>Methods <code>Instrumenter.instrument(org.objectweb.asm.ClassReader)</code>
+        and <code>Analyzer.analyzeClass(org.objectweb.asm.ClassReader)</code>
+        were removed
+        (GitHub <a href="https://github.com/jacoco/jacoco/issues/850">#850</a>).</li>
 </ul>
 
 <h2>Release 0.8.3 (2019/01/23)</h2>
