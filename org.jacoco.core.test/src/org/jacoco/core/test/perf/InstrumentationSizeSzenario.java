@@ -15,7 +15,6 @@ import org.jacoco.core.instr.Instrumenter;
 import org.jacoco.core.runtime.IRuntime;
 import org.jacoco.core.runtime.LoggerRuntime;
 import org.jacoco.core.test.TargetLoader;
-import org.objectweb.asm.ClassReader;
 
 /**
  * Scenario to measure the overhead in terms of additional byte code size
@@ -31,11 +30,11 @@ public class InstrumentationSizeSzenario implements IPerfScenario {
 
 	public void run(IPerfOutput output) throws Exception {
 		final IRuntime runtime = new LoggerRuntime();
-		ClassReader reader = new ClassReader(TargetLoader.getClassData(target));
 		final Instrumenter instr = new Instrumenter(runtime);
-		instr.instrument(reader);
-		output.writeByteResult("instrumented class",
-				instr.instrument(reader).length, reader.b.length);
+		final byte[] original = TargetLoader.getClassDataAsBytes(target);
+		final byte[] instrumented = instr.instrument(original, "");
+		output.writeByteResult("instrumented class", instrumented.length,
+				original.length);
 	}
 
 }

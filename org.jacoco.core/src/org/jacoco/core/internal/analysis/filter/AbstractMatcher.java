@@ -71,6 +71,11 @@ abstract class AbstractMatcher {
 		cursor = null;
 	}
 
+	/**
+	 * Moves {@link #cursor} to next instruction if it is
+	 * <code>INVOKEVIRTUAL</code> with given owner and name, otherwise sets it
+	 * to <code>null</code>.
+	 */
 	final void nextIsInvokeVirtual(final String owner, final String name) {
 		nextIs(Opcodes.INVOKEVIRTUAL);
 		if (cursor == null) {
@@ -83,6 +88,11 @@ abstract class AbstractMatcher {
 		cursor = null;
 	}
 
+	/**
+	 * Moves {@link #cursor} to next instruction if it is
+	 * <code>INVOKESTATIC</code> with given owner and name, otherwise sets it to
+	 * <code>null</code>.
+	 */
 	final void nextIsInvokeStatic(final String owner, final String name) {
 		nextIs(Opcodes.INVOKESTATIC);
 		if (cursor == null) {
