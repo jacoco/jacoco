@@ -24,6 +24,92 @@ public class KotlinCoroutineFilterTest extends FilterTestBase {
 
 	private final IFilter filter = new KotlinCoroutineFilter();
 
+	@Test
+	public void should_filter_suspending_lambdas_generated_by_Kotlin_1_3_30() {
+		final MethodNode m = new MethodNode(InstrSupport.ASM_API_VERSION, 0,
+				"invokeSuspend", "(Ljava/lang/Object;)Ljava/lang/Object;", null,
+				null);
+		context.classAnnotations
+				.add(KotlinGeneratedFilter.KOTLIN_METADATA_DESC);
+
+		m.visitLabel(new Label());
+		final Range range1 = new Range();
+		range1.fromInclusive = m.instructions.getLast();
+		m.visitMethodInsn(Opcodes.INVOKESTATIC,
+				"kotlin/coroutines/intrinsics/IntrinsicsKt",
+				"getCOROUTINE_SUSPENDED", "()Ljava/lang/Object;", false);
+		m.visitVarInsn(Opcodes.ASTORE, 4);
+
+		m.visitVarInsn(Opcodes.ALOAD, 0);
+		// line of "runBlocking"
+		m.visitFieldInsn(Opcodes.GETFIELD, "Target", "label", "I");
+		final Label dflt = new Label();
+		final Label state0 = new Label();
+		final Label state1 = new Label();
+		m.visitTableSwitchInsn(0, 1, dflt, state0, state1);
+
+		m.visitLabel(state0);
+
+		{
+			m.visitVarInsn(Opcodes.ALOAD, 1);
+			m.visitMethodInsn(Opcodes.INVOKESTATIC, "kotlin/ResultKt",
+					"throwOnFailure", "", false);
+			range1.toInclusive = m.instructions.getLast();
+		}
+
+		// line before "suspendingFunction"
+		m.visitInsn(Opcodes.NOP);
+
+		// line of "suspendingFunction"
+		m.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "", "suspendingFunction",
+				"(Lkotlin/coroutines/Continuation;)Ljava/lang/Object;", false);
+
+		m.visitInsn(Opcodes.DUP);
+		final Range range2 = new Range();
+		range2.fromInclusive = m.instructions.getLast();
+		m.visitVarInsn(Opcodes.ALOAD, 4);
+		final Label continuationLabelAfterLoadedResult = new Label();
+		m.visitJumpInsn(Opcodes.IF_ACMPNE, continuationLabelAfterLoadedResult);
+		// line of "runBlocking"
+		m.visitVarInsn(Opcodes.ALOAD, 4);
+		m.visitInsn(Opcodes.ARETURN);
+
+		m.visitLabel(state1);
+
+		m.visitVarInsn(Opcodes.ALOAD, 0);
+		m.visitFieldInsn(Opcodes.GETFIELD, "Target", "I$0", "I");
+		m.visitVarInsn(Opcodes.ISTORE, 3);
+
+		{
+			m.visitVarInsn(Opcodes.ALOAD, 1);
+			m.visitMethodInsn(Opcodes.INVOKESTATIC, "kotlin/ResultKt",
+					"throwOnFailure", "", false);
+		}
+		m.visitVarInsn(Opcodes.ALOAD, 1);
+		range2.toInclusive = m.instructions.getLast();
+		m.visitLabel(continuationLabelAfterLoadedResult);
+
+		// line after "suspendingFunction"
+		m.visitInsn(Opcodes.NOP);
+		m.visitInsn(Opcodes.ARETURN);
+
+		m.visitLabel(dflt);
+		final Range range0 = new Range();
+		range0.fromInclusive = m.instructions.getLast();
+		m.visitTypeInsn(Opcodes.NEW, "java/lang/IllegalStateException");
+		m.visitInsn(Opcodes.DUP);
+		m.visitLdcInsn("call to 'resume' before 'invoke' with coroutine");
+		m.visitMethodInsn(Opcodes.INVOKESPECIAL,
+				"java/lang/IllegalStateException", "<init>",
+				"(Ljava/lang/String;)V", false);
+		m.visitInsn(Opcodes.ATHROW);
+		range0.toInclusive = m.instructions.getLast();
+
+		filter.filter(m, context, output);
+
+		assertIgnored(range0, range1, range2);
+	}
+
 	/**
 	 * <pre>
 	 *     runBlocking {
