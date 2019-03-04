@@ -15,6 +15,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 import org.jacoco.core.runtime.OfflineInstrumentationAccessGenerator;
+import org.junit.Before;
 import org.junit.Test;
 import org.objectweb.asm.ConstantDynamic;
 import org.objectweb.asm.Handle;
@@ -27,8 +28,13 @@ import org.objectweb.asm.tree.VarInsnNode;
 
 public class CondyProbeArrayStrategyTest {
 
-	private final CondyProbeArrayStrategy strategy = new CondyProbeArrayStrategy(
-			"ClassName", true, 1L, new OfflineInstrumentationAccessGenerator());
+	private CondyProbeArrayStrategy strategy;
+
+	@Before
+	public void setup() {
+		strategy = new CondyProbeArrayStrategy("ClassName", true, 1L,
+				new OfflineInstrumentationAccessGenerator());
+	}
 
 	@Test
 	public void should_store_instance_using_condy_and_checkcast() {

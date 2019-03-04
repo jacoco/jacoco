@@ -12,6 +12,7 @@
 package org.jacoco.core.instr;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.objectweb.asm.Opcodes.ACC_PUBLIC;
 import static org.objectweb.asm.Opcodes.ACC_SUPER;
 import static org.objectweb.asm.Opcodes.ALOAD;
@@ -150,8 +151,9 @@ public class ClassFileVersionsTest {
 							public void visitEnd() {
 								if (CondyProbeArrayStrategy.B_DESC
 										.equals(desc)) {
-									assertEquals(Boolean.FALSE,
-											Boolean.valueOf(frames));
+									assertFalse(
+											"CondyProbeArrayStrategy does not need frames",
+											frames);
 								} else {
 									assertEquals(Boolean.valueOf(expected),
 											Boolean.valueOf(frames));
