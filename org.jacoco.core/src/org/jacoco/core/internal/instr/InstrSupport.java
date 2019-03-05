@@ -158,18 +158,16 @@ public final class InstrSupport {
 	 */
 	static final int CLINIT_ACC = Opcodes.ACC_SYNTHETIC | Opcodes.ACC_STATIC;
 
-	private static final int MAJOR_VERSION_INDEX = 6;
-
 	/**
-	 * Gets major of bytecode version number from given bytes of class.
+	 * Gets major of bytecode version number from given {@link ClassReader}.
 	 *
-	 * @param b
-	 *            bytes of class
-	 * @return version of bytecode
+	 * @param reader
+	 *            reader to get information about the class
+	 * @return major version of bytecode
 	 */
-	public static int getVersionMajor(final byte[] b) {
-		return (short) (((b[MAJOR_VERSION_INDEX] & 0xFF) << 8)
-				| (b[MAJOR_VERSION_INDEX + 1] & 0xFF));
+	public static int getVersionMajor(final ClassReader reader) {
+		final int firstConstantPoolEntryOffset = reader.getItem(1) - 1;
+		return reader.readShort(firstConstantPoolEntryOffset - 4);
 	}
 
 	/**
@@ -238,7 +236,7 @@ public final class InstrSupport {
 	 */
 	public static ClassReader classReaderFor(final byte[] b) {
 		final byte[] originalVersion = new byte[] { b[4], b[5], b[6], b[7] };
-		if (getVersionMajor(b) == Opcodes.V12 + 1) {
+		if (b[6] == 0x00 && b[7] == 0x39) {
 			b[4] = (byte) (Opcodes.V12 >>> 24);
 			b[5] = (byte) (Opcodes.V12 >>> 16);
 			b[6] = (byte) (Opcodes.V12 >>> 8);
