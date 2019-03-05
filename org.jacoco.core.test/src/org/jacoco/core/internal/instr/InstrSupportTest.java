@@ -67,7 +67,6 @@ public class InstrSupportTest {
 		final ClassWriter cw = new ClassWriter(0);
 		cw.visit(Opcodes.V12 + 1, 0, "Foo", null, "java/lang/Object", null);
 		cw.visitEnd();
-		cw.toByteArray();
 		return cw.toByteArray();
 	}
 
