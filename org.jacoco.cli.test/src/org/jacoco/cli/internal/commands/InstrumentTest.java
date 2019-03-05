@@ -33,7 +33,7 @@ import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.ClassVisitor;
-import org.objectweb.asm.FieldVisitor;
+import org.objectweb.asm.MethodVisitor;
 
 /**
  * Unit tests for {@link Instrument}.
@@ -138,16 +138,16 @@ public class InstrumentTest extends CommandTestBase {
 		final ClassReader reader = InstrSupport
 				.classReaderFor(InputStreams.readFully(in));
 		in.close();
-		final Set<String> fields = new HashSet<String>();
+		final Set<String> methods = new HashSet<String>();
 		reader.accept(new ClassVisitor(InstrSupport.ASM_API_VERSION) {
 			@Override
-			public FieldVisitor visitField(int access, String name, String desc,
-					String signature, Object value) {
-				fields.add(name);
+			public MethodVisitor visitMethod(int access, String name,
+					String descriptor, String signature, String[] exceptions) {
+				methods.add(name);
 				return null;
 			}
 		}, 0);
-		assertTrue(fields.contains("$jacocoData"));
+		assertTrue(methods.contains("$jacocoInit"));
 	}
 
 }

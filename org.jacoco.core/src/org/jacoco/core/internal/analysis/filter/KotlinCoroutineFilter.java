@@ -73,13 +73,7 @@ public final class KotlinCoroutineFilter implements IFilter {
 					s.labels.size() * 2);
 
 			nextIs(Opcodes.ALOAD);
-			nextIs(Opcodes.DUP);
-			nextIsType(Opcodes.INSTANCEOF, "kotlin/Result$Failure");
-			nextIs(Opcodes.IFEQ);
-			nextIsType(Opcodes.CHECKCAST, "kotlin/Result$Failure");
-			nextIs(Opcodes.GETFIELD);
-			nextIs(Opcodes.ATHROW);
-			nextIs(Opcodes.POP);
+			nextIsThrowOnFailure();
 
 			if (cursor == null) {
 				return;
@@ -109,13 +103,7 @@ public final class KotlinCoroutineFilter implements IFilter {
 				for (AbstractInsnNode j = i; j != null; j = j.getNext()) {
 					cursor = j;
 					nextIs(Opcodes.ALOAD);
-					nextIs(Opcodes.DUP);
-					nextIsType(Opcodes.INSTANCEOF, "kotlin/Result$Failure");
-					nextIs(Opcodes.IFEQ);
-					nextIsType(Opcodes.CHECKCAST, "kotlin/Result$Failure");
-					nextIs(Opcodes.GETFIELD);
-					nextIs(Opcodes.ATHROW);
-					nextIs(Opcodes.POP);
+					nextIsThrowOnFailure();
 
 					nextIs(Opcodes.ALOAD);
 					if (cursor != null && skipNonOpcodes(cursor
@@ -146,6 +134,24 @@ public final class KotlinCoroutineFilter implements IFilter {
 			output.ignore(s.dflt, cursor);
 			for (int i = 0; i < ignore.size(); i += 2) {
 				output.ignore(ignore.get(i), ignore.get(i + 1));
+			}
+		}
+
+		private void nextIsThrowOnFailure() {
+			final AbstractInsnNode c = cursor;
+			nextIsInvokeStatic("kotlin/ResultKt", "throwOnFailure");
+			if (cursor == null) {
+				cursor = c;
+				// Before resolution of
+				// https://youtrack.jetbrains.com/issue/KT-28015 in
+				// Kotlin 1.3.30
+				nextIs(Opcodes.DUP);
+				nextIsType(Opcodes.INSTANCEOF, "kotlin/Result$Failure");
+				nextIs(Opcodes.IFEQ);
+				nextIsType(Opcodes.CHECKCAST, "kotlin/Result$Failure");
+				nextIs(Opcodes.GETFIELD);
+				nextIs(Opcodes.ATHROW);
+				nextIs(Opcodes.POP);
 			}
 		}
 

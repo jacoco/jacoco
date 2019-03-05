@@ -18,7 +18,6 @@ import org.jacoco.core.runtime.IRuntime;
 import org.jacoco.core.runtime.LoggerRuntime;
 import org.jacoco.core.runtime.RuntimeData;
 import org.jacoco.core.test.TargetLoader;
-import org.objectweb.asm.ClassReader;
 
 /**
  * This scenario runs a given scenario twice and reports the execution time:
@@ -37,11 +36,11 @@ public class ExecuteInstrumentedCodeScenario extends TimedScenario {
 	@Override
 	@SuppressWarnings("unchecked")
 	protected Callable<Void> getInstrumentedCallable() throws Exception {
-		ClassReader reader = new ClassReader(TargetLoader.getClassData(target));
 		IRuntime runtime = new LoggerRuntime();
 		runtime.startup(new RuntimeData());
 		final Instrumenter instr = new Instrumenter(runtime);
-		final byte[] instrumentedBuffer = instr.instrument(reader);
+		final byte[] original = TargetLoader.getClassDataAsBytes(target);
+		final byte[] instrumentedBuffer = instr.instrument(original, "");
 		final TargetLoader loader = new TargetLoader();
 
 		return (Callable<Void>) loader.add(target, instrumentedBuffer)
