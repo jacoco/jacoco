@@ -194,8 +194,12 @@ public final class InstrSupport {
 	 * @param reader
 	 *            reader to get information about the class
 	 * @return major version of bytecode
+	 * @see ClassReader#ClassReader(byte[], int, int)
+	 * @see #getMajorVersion(byte[])
 	 */
 	public static int getMajorVersion(final ClassReader reader) {
+		// relative to the beginning of constant pool because ASM provides API
+		// to construct ClassReader which reads from the middle of array
 		final int firstConstantPoolEntryOffset = reader.getItem(1) - 1;
 		return reader.readUnsignedShort(firstConstantPoolEntryOffset - 4);
 	}
@@ -267,6 +271,7 @@ public final class InstrSupport {
 	public static ClassReader classReaderFor(final byte[] b) {
 		final int originalVersion = getMajorVersion(b);
 		if (originalVersion == Opcodes.V12 + 1) {
+			// temporarily downgrade version to bypass check in ASM
 			setMajorVersion(Opcodes.V12, b);
 		}
 		final ClassReader classReader = new ClassReader(b);

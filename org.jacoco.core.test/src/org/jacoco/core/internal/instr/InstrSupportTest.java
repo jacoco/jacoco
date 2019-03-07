@@ -95,8 +95,9 @@ public class InstrSupportTest {
 	}
 
 	@Test
-	public void getMajorVersion_should_read_major_version_from_ClassReader() {
+	public void getMajorVersion_should_read_major_version_from_ClassReader_at_offset_relative_to_constant_pool() {
 		final byte[] bytes = new byte[] { //
+				(byte) 0xFF, // before class bytes
 				(byte) 0xCA, (byte) 0xFE, (byte) 0xBA, (byte) 0xBE, // magic
 				0x00, 0x03, // minor_version
 				(byte) 0x80, 0x12, // major_version
@@ -105,7 +106,7 @@ public class InstrSupportTest {
 		};
 
 		assertEquals(32786,
-				InstrSupport.getMajorVersion(new ClassReader(bytes)));
+				InstrSupport.getMajorVersion(new ClassReader(bytes, 1, -1)));
 	}
 
 	@Test
