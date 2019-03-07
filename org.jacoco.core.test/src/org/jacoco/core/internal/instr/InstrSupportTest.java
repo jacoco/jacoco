@@ -71,6 +71,30 @@ public class InstrSupportTest {
 	}
 
 	@Test
+	public void getMajorVersion_should_read_unsigned_two_bytes_at_offset_6() {
+		final byte[] bytes = new byte[] { //
+				(byte) 0xCA, (byte) 0xFE, (byte) 0xBA, (byte) 0xBE, // magic
+				(byte) 0xFF, (byte) 0xFF, // minor_version
+				(byte) 0x80, (byte) 0x12 // major_version
+		};
+
+		assertEquals(32786, InstrSupport.getMajorVersion(bytes));
+	}
+
+	@Test
+	public void setMajorVersion_should_write_unsigned_two_bytes_at_offset_6() {
+		final byte[] bytes = new byte[8];
+
+		InstrSupport.setMajorVersion(32786, bytes);
+
+		assertArrayEquals(
+				new byte[] { (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, // magic
+						(byte) 0x00, (byte) 0x00, // minor_version
+						(byte) 0x80, (byte) 0x12 // major_version
+				}, bytes);
+	}
+
+	@Test
 	public void getVersionMajor_should_return_major_version() {
 		final byte[] bytes = new byte[] { //
 				(byte) 0xCA, (byte) 0xFE, (byte) 0xBA, (byte) 0xBE, // magic
