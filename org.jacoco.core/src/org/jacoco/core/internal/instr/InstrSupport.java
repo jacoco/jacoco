@@ -167,7 +167,7 @@ public final class InstrSupport {
 	 *      "https://docs.oracle.com/javase/specs/jvms/se11/html/jvms-4.html#jvms-4.1">Java
 	 *      Virtual Machine Specification §4 The class File Format</a>
 	 * @see #setMajorVersion(int, byte[])
-	 * @see #getVersionMajor(ClassReader)
+	 * @see #getMajorVersion(ClassReader)
 	 */
 	static int getMajorVersion(final byte[] b) {
 		return ((b[6] & 0xFF) << 8) | (b[7] & 0xFF);
@@ -195,7 +195,7 @@ public final class InstrSupport {
 	 *            reader to get information about the class
 	 * @return major version of bytecode
 	 */
-	public static int getVersionMajor(final ClassReader reader) {
+	public static int getMajorVersion(final ClassReader reader) {
 		final int firstConstantPoolEntryOffset = reader.getItem(1) - 1;
 		return reader.readUnsignedShort(firstConstantPoolEntryOffset - 4);
 	}

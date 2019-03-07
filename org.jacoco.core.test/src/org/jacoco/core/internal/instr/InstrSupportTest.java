@@ -95,7 +95,7 @@ public class InstrSupportTest {
 	}
 
 	@Test
-	public void getVersionMajor_should_return_major_version() {
+	public void getMajorVersion_should_read_major_version_from_ClassReader() {
 		final byte[] bytes = new byte[] { //
 				(byte) 0xCA, (byte) 0xFE, (byte) 0xBA, (byte) 0xBE, // magic
 				0x00, 0x03, // minor_version
@@ -104,7 +104,8 @@ public class InstrSupportTest {
 				0x01, 0x00, 0x00 // constant_pool
 		};
 
-		assertEquals(32786, InstrSupport.getVersionMajor(new ClassReader(bytes)));
+		assertEquals(32786,
+				InstrSupport.getMajorVersion(new ClassReader(bytes)));
 	}
 
 	@Test
