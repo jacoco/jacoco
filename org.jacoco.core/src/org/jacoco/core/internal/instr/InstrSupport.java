@@ -167,7 +167,7 @@ public final class InstrSupport {
 	 */
 	public static int getVersionMajor(final ClassReader reader) {
 		final int firstConstantPoolEntryOffset = reader.getItem(1) - 1;
-		return reader.readShort(firstConstantPoolEntryOffset - 4);
+		return reader.readUnsignedShort(firstConstantPoolEntryOffset - 4);
 	}
 
 	/**
