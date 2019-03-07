@@ -75,12 +75,12 @@ public class InstrSupportTest {
 		final byte[] bytes = new byte[] { //
 				(byte) 0xCA, (byte) 0xFE, (byte) 0xBA, (byte) 0xBE, // magic
 				0x00, 0x03, // minor_version
-				0x00, 0x2d, // major_version
+				(byte) 0x80, 0x12, // major_version
 				0x00, 0x02, // constant_pool_count
 				0x01, 0x00, 0x00 // constant_pool
 		};
 
-		assertEquals(45, InstrSupport.getVersionMajor(new ClassReader(bytes)));
+		assertEquals(32786, InstrSupport.getVersionMajor(new ClassReader(bytes)));
 	}
 
 	@Test
