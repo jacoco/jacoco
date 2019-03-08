@@ -169,7 +169,7 @@ public final class InstrSupport {
 	 * @see #setMajorVersion(int, byte[])
 	 * @see #getMajorVersion(ClassReader)
 	 */
-	static int getMajorVersion(final byte[] b) {
+	public static int getMajorVersion(final byte[] b) {
 		return ((b[6] & 0xFF) << 8) | (b[7] & 0xFF);
 	}
 
@@ -183,13 +183,13 @@ public final class InstrSupport {
 	 *            bytes of class
 	 * @see #getMajorVersion(byte[])
 	 */
-	static void setMajorVersion(final int majorVersion, final byte[] b) {
+	public static void setMajorVersion(final int majorVersion, final byte[] b) {
 		b[6] = (byte) (majorVersion >>> 8);
 		b[7] = (byte) majorVersion;
 	}
 
 	/**
-	 * Gets major of bytecode version number from given {@link ClassReader}.
+	 * Gets major version number from given {@link ClassReader}.
 	 *
 	 * @param reader
 	 *            reader to get information about the class
