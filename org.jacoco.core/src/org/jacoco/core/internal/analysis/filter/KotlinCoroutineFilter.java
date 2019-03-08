@@ -120,6 +120,9 @@ public final class KotlinCoroutineFilter implements IFilter {
 			nextIsType(Opcodes.NEW, "java/lang/IllegalStateException");
 			nextIs(Opcodes.DUP);
 			nextIs(Opcodes.LDC);
+			if (cursor == null) {
+				return;
+			}
 			if (!((LdcInsnNode) cursor).cst.equals(
 					"call to 'resume' before 'invoke' with coroutine")) {
 				return;
