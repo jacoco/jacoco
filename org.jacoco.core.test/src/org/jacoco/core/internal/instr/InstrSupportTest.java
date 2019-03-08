@@ -128,6 +128,8 @@ public class InstrSupportTest {
 		assertTrue(InstrSupport.needsFrames(Opcodes.V11));
 		assertTrue(InstrSupport.needsFrames(Opcodes.V12));
 		assertTrue(InstrSupport.needsFrames(Opcodes.V12 + 1));
+
+		assertTrue(InstrSupport.needsFrames(0x0100));
 	}
 
 	@Test
