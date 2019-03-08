@@ -39,7 +39,7 @@ public interface IProbeArrayStrategy {
 	 * called after all original members of the class has been processed.
 	 * 
 	 * @param cv
-	 *            visitor to create fields and classes
+	 *            visitor to create fields and methods
 	 * @param probeCount
 	 *            total number of probes required for this class
 	 */
