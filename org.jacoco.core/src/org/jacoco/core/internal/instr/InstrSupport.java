@@ -215,7 +215,7 @@ public final class InstrSupport {
 	 */
 	public static boolean needsFrames(final int version) {
 		// consider major version only (due to 1.1 anomaly)
-		return (version & 0xff) >= Opcodes.V1_6;
+		return (version & 0xFFFF) >= Opcodes.V1_6;
 	}
 
 	/**
