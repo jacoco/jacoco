@@ -162,6 +162,8 @@ public final class InstrSupport {
 	 * Gets major version number from given bytes of class (unsigned two bytes
 	 * at offset 6).
 	 *
+	 * @param b
+	 *            bytes of class
 	 * @return major version of bytecode
 	 * @see <a href=
 	 *      "https://docs.oracle.com/javase/specs/jvms/se11/html/jvms-4.html#jvms-4.1">Java
