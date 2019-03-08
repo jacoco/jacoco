@@ -30,12 +30,25 @@
       (GitHub <a href="https://github.com/jacoco/jacoco/issues/849">#849</a>).</li>
 </ul>
 
+<h3>Fixed bugs</h3>
+<ul>
+  <li>Fixed incorrect update of frames caused by bug in ASM library in case of
+      arrays with more than 7 dimensions
+      (GitHub <a href="https://github.com/jacoco/jacoco/issues/839">#839</a>).</li>
+</ul>
+
 <h3>API Changes</h3>
 <ul>
     <li>Methods <code>Instrumenter.instrument(org.objectweb.asm.ClassReader)</code>
         and <code>Analyzer.analyzeClass(org.objectweb.asm.ClassReader)</code>
         were removed
         (GitHub <a href="https://github.com/jacoco/jacoco/issues/850">#850</a>).</li>
+</ul>
+
+<h3>Non-functional Changes</h3>
+<ul>
+  <li>JaCoCo now depends on ASM 7.1
+      (GitHub <a href="https://github.com/jacoco/jacoco/issues/851">#851</a>).</li>
 </ul>
 
 <h2>Release 0.8.3 (2019/01/23)</h2>

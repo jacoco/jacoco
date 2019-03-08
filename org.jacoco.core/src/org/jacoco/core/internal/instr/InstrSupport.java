@@ -158,18 +158,52 @@ public final class InstrSupport {
 	 */
 	static final int CLINIT_ACC = Opcodes.ACC_SYNTHETIC | Opcodes.ACC_STATIC;
 
-	private static final int MAJOR_VERSION_INDEX = 6;
-
 	/**
-	 * Gets major of bytecode version number from given bytes of class.
+	 * Gets major version number from given bytes of class (unsigned two bytes
+	 * at offset 6).
 	 *
 	 * @param b
 	 *            bytes of class
-	 * @return version of bytecode
+	 * @return major version of bytecode
+	 * @see <a href=
+	 *      "https://docs.oracle.com/javase/specs/jvms/se11/html/jvms-4.html#jvms-4.1">Java
+	 *      Virtual Machine Specification §4 The class File Format</a>
+	 * @see #setMajorVersion(int, byte[])
+	 * @see #getMajorVersion(ClassReader)
 	 */
-	public static int getVersionMajor(final byte[] b) {
-		return (short) (((b[MAJOR_VERSION_INDEX] & 0xFF) << 8)
-				| (b[MAJOR_VERSION_INDEX + 1] & 0xFF));
+	public static int getMajorVersion(final byte[] b) {
+		return ((b[6] & 0xFF) << 8) | (b[7] & 0xFF);
+	}
+
+	/**
+	 * Sets major version number in given bytes of class (unsigned two bytes at
+	 * offset 6).
+	 *
+	 * @param majorVersion
+	 *            major version of bytecode to set
+	 * @param b
+	 *            bytes of class
+	 * @see #getMajorVersion(byte[])
+	 */
+	public static void setMajorVersion(final int majorVersion, final byte[] b) {
+		b[6] = (byte) (majorVersion >>> 8);
+		b[7] = (byte) majorVersion;
+	}
+
+	/**
+	 * Gets major version number from given {@link ClassReader}.
+	 *
+	 * @param reader
+	 *            reader to get information about the class
+	 * @return major version of bytecode
+	 * @see ClassReader#ClassReader(byte[], int, int)
+	 * @see #getMajorVersion(byte[])
+	 */
+	public static int getMajorVersion(final ClassReader reader) {
+		// relative to the beginning of constant pool because ASM provides API
+		// to construct ClassReader which reads from the middle of array
+		final int firstConstantPoolEntryOffset = reader.getItem(1) - 1;
+		return reader.readUnsignedShort(firstConstantPoolEntryOffset - 4);
 	}
 
 	/**
@@ -237,15 +271,13 @@ public final class InstrSupport {
 	 * @return {@link ClassReader}
 	 */
 	public static ClassReader classReaderFor(final byte[] b) {
-		final byte[] originalVersion = new byte[] { b[4], b[5], b[6], b[7] };
-		if (getVersionMajor(b) == Opcodes.V12 + 1) {
-			b[4] = (byte) (Opcodes.V12 >>> 24);
-			b[5] = (byte) (Opcodes.V12 >>> 16);
-			b[6] = (byte) (Opcodes.V12 >>> 8);
-			b[7] = (byte) Opcodes.V12;
+		final int originalVersion = getMajorVersion(b);
+		if (originalVersion == Opcodes.V12 + 1) {
+			// temporarily downgrade version to bypass check in ASM
+			setMajorVersion(Opcodes.V12, b);
 		}
 		final ClassReader classReader = new ClassReader(b);
-		System.arraycopy(originalVersion, 0, b, 4, originalVersion.length);
+		setMajorVersion(originalVersion, b);
 		return classReader;
 	}
 

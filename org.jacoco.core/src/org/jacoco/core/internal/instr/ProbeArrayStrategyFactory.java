@@ -43,7 +43,7 @@ public final class ProbeArrayStrategyFactory {
 			final IExecutionDataAccessorGenerator accessorGenerator) {
 
 		final String className = reader.getClassName();
-		final int version = InstrSupport.getVersionMajor(reader.b);
+		final int version = InstrSupport.getMajorVersion(reader);
 
 		if (isInterfaceOrModule(reader)) {
 			final ProbeCounter counter = getProbeCounter(reader);
