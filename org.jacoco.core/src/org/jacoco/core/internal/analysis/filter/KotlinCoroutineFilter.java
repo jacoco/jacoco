@@ -91,7 +91,7 @@ public final class KotlinCoroutineFilter implements IFilter {
 					continue;
 				}
 				final AbstractInsnNode continuationAfterLoadedResult = skipNonOpcodes(
-						(((JumpInsnNode) cursor)).label);
+						((JumpInsnNode) cursor).label);
 				nextIsVar(Opcodes.ALOAD, "COROUTINE_SUSPENDED");
 				nextIs(Opcodes.ARETURN);
 				if (cursor == null
