@@ -37,7 +37,8 @@ public final class KotlinNotNullOperatorFilter implements IFilter {
 				return;
 			}
 			cursor = start;
-			nextIsInvokeStatic("kotlin/jvm/internal/Intrinsics", "throwNpe");
+			nextIsInvokeStatic("kotlin/jvm/internal/Intrinsics", "throwNpe",
+					"()V");
 			if (cursor == null) {
 				return;
 			}

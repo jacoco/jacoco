@@ -143,22 +143,27 @@ public class AbstractMatcherTest {
 
 		// should set cursor to null when owner mismatch
 		matcher.cursor = m.instructions.getFirst();
-		matcher.nextIsInvokeStatic("another_owner", "name");
+		matcher.nextIsInvokeStatic("another_owner", "name", "()V");
 		assertNull(matcher.cursor);
 
 		// should set cursor to null when name mismatch
 		matcher.cursor = m.instructions.getFirst();
-		matcher.nextIsInvokeStatic("owner", "another_name");
+		matcher.nextIsInvokeStatic("owner", "another_name", "()V");
+		assertNull(matcher.cursor);
+
+		// should set cursor to null when descriptor mismatch
+		matcher.cursor = m.instructions.getFirst();
+		matcher.nextIsInvokeStatic("owner", "name", "()I");
 		assertNull(matcher.cursor);
 
 		// should set cursor to next instruction when match
 		matcher.cursor = m.instructions.getFirst();
-		matcher.nextIsInvokeStatic("owner", "name");
+		matcher.nextIsInvokeStatic("owner", "name", "()V");
 		assertSame(m.instructions.getLast(), matcher.cursor);
 
 		// should not do anything when cursor is null
 		matcher.cursor = null;
-		matcher.nextIsInvokeStatic("owner", "name");
+		matcher.nextIsInvokeStatic("owner", "name", "()V");
 	}
 
 	@Test

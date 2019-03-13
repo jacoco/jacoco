@@ -90,16 +90,18 @@ abstract class AbstractMatcher {
 
 	/**
 	 * Moves {@link #cursor} to next instruction if it is
-	 * <code>INVOKESTATIC</code> with given owner and name, otherwise sets it to
-	 * <code>null</code>.
+	 * <code>INVOKESTATIC</code> with given owner, name and descriptor,
+	 * otherwise sets it to <code>null</code>.
 	 */
-	final void nextIsInvokeStatic(final String owner, final String name) {
+	final void nextIsInvokeStatic(final String owner, final String name,
+			final String descriptor) {
 		nextIs(Opcodes.INVOKESTATIC);
 		if (cursor == null) {
 			return;
 		}
 		final MethodInsnNode m = (MethodInsnNode) cursor;
-		if (owner.equals(m.owner) && name.equals(m.name)) {
+		if (owner.equals(m.owner) && name.equals(m.name)
+				&& descriptor.equals(m.desc)) {
 			return;
 		}
 		cursor = null;

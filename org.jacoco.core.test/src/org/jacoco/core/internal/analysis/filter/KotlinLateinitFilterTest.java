@@ -47,7 +47,7 @@ public class KotlinLateinitFilterTest extends FilterTestBase {
 		m.visitMethodInsn(Opcodes.INVOKESTATIC,
 				"kotlin/jvm/internal/Intrinsics",
 				"throwUninitializedPropertyAccessException",
-				"Ljava/lang/String;", false);
+				"(Ljava/lang/String;)V", false);
 		final AbstractInsnNode expectedTo = m.instructions.getLast();
 		m.visitLabel(l2);
 		m.visitMethodInsn(Opcodes.INVOKEVIRTUAL,
