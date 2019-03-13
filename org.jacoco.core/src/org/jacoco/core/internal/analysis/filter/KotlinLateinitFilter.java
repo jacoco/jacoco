@@ -40,7 +40,7 @@ public class KotlinLateinitFilter implements IFilter {
 			cursor = start;
 
 			nextIs(Opcodes.LDC);
-			nextIsInvokeStatic("kotlin/jvm/internal/Intrinsics",
+			nextIsInvoke(Opcodes.INVOKESTATIC, "kotlin/jvm/internal/Intrinsics",
 					"throwUninitializedPropertyAccessException",
 					"(Ljava/lang/String;)V");
 

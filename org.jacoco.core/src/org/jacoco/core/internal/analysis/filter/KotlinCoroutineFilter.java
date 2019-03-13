@@ -49,7 +49,8 @@ public final class KotlinCoroutineFilter implements IFilter {
 		private void match(final MethodNode methodNode,
 				final IFilterOutput output) {
 			cursor = methodNode.instructions.getFirst();
-			nextIsInvokeStatic("kotlin/coroutines/intrinsics/IntrinsicsKt",
+			nextIsInvoke(Opcodes.INVOKESTATIC,
+					"kotlin/coroutines/intrinsics/IntrinsicsKt",
 					"getCOROUTINE_SUSPENDED", "()Ljava/lang/Object;");
 
 			if (cursor == null) {
@@ -57,7 +58,8 @@ public final class KotlinCoroutineFilter implements IFilter {
 
 				nextIsCreateStateInstance();
 
-				nextIsInvokeStatic("kotlin/coroutines/intrinsics/IntrinsicsKt",
+				nextIsInvoke(Opcodes.INVOKESTATIC,
+						"kotlin/coroutines/intrinsics/IntrinsicsKt",
 						"getCOROUTINE_SUSPENDED", "()Ljava/lang/Object;");
 			}
 
@@ -127,7 +129,8 @@ public final class KotlinCoroutineFilter implements IFilter {
 					"call to 'resume' before 'invoke' with coroutine")) {
 				return;
 			}
-			nextIsInvokeSuper("java/lang/IllegalStateException",
+			nextIsInvoke(Opcodes.INVOKESPECIAL,
+					"java/lang/IllegalStateException", "<init>",
 					"(Ljava/lang/String;)V");
 			nextIs(Opcodes.ATHROW);
 			if (cursor == null) {
@@ -142,8 +145,8 @@ public final class KotlinCoroutineFilter implements IFilter {
 
 		private void nextIsThrowOnFailure() {
 			final AbstractInsnNode c = cursor;
-			nextIsInvokeStatic("kotlin/ResultKt", "throwOnFailure",
-					"(Ljava/lang/Object;)V");
+			nextIsInvoke(Opcodes.INVOKESTATIC, "kotlin/ResultKt",
+					"throwOnFailure", "(Ljava/lang/Object;)V");
 			if (cursor == null) {
 				cursor = c;
 				// Before resolution of

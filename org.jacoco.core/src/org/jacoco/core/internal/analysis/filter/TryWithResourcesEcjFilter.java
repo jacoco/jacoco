@@ -200,8 +200,8 @@ public final class TryWithResourcesEcjFilter implements IFilter {
 			// "primaryExc.addSuppressed(suppressedExc)"
 			nextIsVar(Opcodes.ALOAD, "primaryExc");
 			nextIsVar(Opcodes.ALOAD, suppressedExc);
-			nextIsInvokeVirtual("java/lang/Throwable", "addSuppressed",
-					"(Ljava/lang/Throwable;)V");
+			nextIsInvoke(Opcodes.INVOKEVIRTUAL, "java/lang/Throwable",
+					"addSuppressed", "(Ljava/lang/Throwable;)V");
 			nextIsLabel(endLabel);
 			return cursor != null;
 		}
