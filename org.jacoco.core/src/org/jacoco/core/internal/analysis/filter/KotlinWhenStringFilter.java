@@ -46,7 +46,7 @@ public final class KotlinWhenStringFilter implements IFilter {
 				return;
 			}
 			cursor = start;
-			nextIsInvokeVirtual("java/lang/String", "hashCode");
+			nextIsInvokeVirtual("java/lang/String", "hashCode", "()I");
 			nextIsSwitch();
 			if (cursor == null) {
 				return;
@@ -73,7 +73,8 @@ public final class KotlinWhenStringFilter implements IFilter {
 				while (true) {
 					nextIsVar(Opcodes.ALOAD, "s");
 					nextIs(Opcodes.LDC);
-					nextIsInvokeVirtual("java/lang/String", "equals");
+					nextIsInvokeVirtual("java/lang/String", "equals",
+							"(Ljava/lang/Object;)Z");
 					// jump to next comparison or default case
 					nextIs(Opcodes.IFEQ);
 					final JumpInsnNode jump = (JumpInsnNode) cursor;

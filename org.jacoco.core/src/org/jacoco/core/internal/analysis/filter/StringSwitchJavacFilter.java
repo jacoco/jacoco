@@ -68,12 +68,13 @@ public final class StringSwitchJavacFilter implements IFilter {
 			// Even if expression is not a variable, its result will be
 			// precomputed before the previous two instructions:
 			nextIsVar(Opcodes.ALOAD, "s");
-			nextIsInvokeVirtual("java/lang/String", "hashCode");
+			nextIsInvokeVirtual("java/lang/String", "hashCode", "()I");
 			next();
 			while (true) {
 				nextIsVar(Opcodes.ALOAD, "s");
 				nextIs(Opcodes.LDC);
-				nextIsInvokeVirtual("java/lang/String", "equals");
+				nextIsInvokeVirtual("java/lang/String", "equals",
+						"(Ljava/lang/Object;)Z");
 				// jump to next comparison or second switch
 				nextIs(Opcodes.IFEQ);
 				// ICONST, BIPUSH or SIPUSH
