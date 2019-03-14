@@ -53,7 +53,7 @@ public class KotlinCoroutineFilterTest extends FilterTestBase {
 		{
 			m.visitVarInsn(Opcodes.ALOAD, 1);
 			m.visitMethodInsn(Opcodes.INVOKESTATIC, "kotlin/ResultKt",
-					"throwOnFailure", "", false);
+					"throwOnFailure", "(Ljava/lang/Object;)V", false);
 			range1.toInclusive = m.instructions.getLast();
 		}
 
@@ -83,7 +83,7 @@ public class KotlinCoroutineFilterTest extends FilterTestBase {
 		{
 			m.visitVarInsn(Opcodes.ALOAD, 1);
 			m.visitMethodInsn(Opcodes.INVOKESTATIC, "kotlin/ResultKt",
-					"throwOnFailure", "", false);
+					"throwOnFailure", "(Ljava/lang/Object;)V", false);
 		}
 		m.visitVarInsn(Opcodes.ALOAD, 1);
 		range2.toInclusive = m.instructions.getLast();

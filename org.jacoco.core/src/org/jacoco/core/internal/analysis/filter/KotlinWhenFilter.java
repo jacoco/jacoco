@@ -52,7 +52,7 @@ public final class KotlinWhenFilter implements IFilter {
 
 			nextIsType(Opcodes.NEW, EXCEPTION);
 			nextIs(Opcodes.DUP);
-			nextIsInvokeSuper(EXCEPTION, "()V");
+			nextIsInvoke(Opcodes.INVOKESPECIAL, EXCEPTION, "<init>", "()V");
 			nextIs(Opcodes.ATHROW);
 
 			for (AbstractInsnNode i = cursor; i != null; i = i.getPrevious()) {

@@ -77,7 +77,8 @@ public final class TryWithResourcesJavac11Filter implements IFilter {
 			nextIsVar(Opcodes.ASTORE, "t");
 			nextIsVar(Opcodes.ALOAD, "primaryExc");
 			nextIsVar(Opcodes.ALOAD, "t");
-			nextIsInvokeVirtual("java/lang/Throwable", "addSuppressed"); // primaryExc.addSuppressed(t)
+			nextIsInvoke(Opcodes.INVOKEVIRTUAL, "java/lang/Throwable",
+					"addSuppressed", "(Ljava/lang/Throwable;)V"); // primaryExc.addSuppressed(t)
 			nextIsVar(Opcodes.ALOAD, "primaryExc");
 			nextIs(Opcodes.ATHROW);
 			if (cursor == null) {

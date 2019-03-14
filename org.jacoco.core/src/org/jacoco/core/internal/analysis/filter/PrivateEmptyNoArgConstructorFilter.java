@@ -37,7 +37,8 @@ public final class PrivateEmptyNoArgConstructorFilter implements IFilter {
 		private boolean match(final MethodNode methodNode,
 				final String superClassName) {
 			firstIsALoad0(methodNode);
-			nextIsInvokeSuper(superClassName, CONSTRUCTOR_DESC);
+			nextIsInvoke(Opcodes.INVOKESPECIAL, superClassName,
+					CONSTRUCTOR_NAME, CONSTRUCTOR_DESC);
 			nextIs(Opcodes.RETURN);
 			return cursor != null;
 		}
