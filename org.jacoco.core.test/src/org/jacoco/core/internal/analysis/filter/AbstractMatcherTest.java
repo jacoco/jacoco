@@ -160,8 +160,8 @@ public class AbstractMatcherTest {
 
 		// should set cursor to null when descriptor mismatch
 		matcher.cursor = m.instructions.getFirst();
-		matcher.nextIsInvoke(Opcodes.INVOKEVIRTUAL, "owner", "another_name",
-				"()I");
+		matcher.nextIsInvoke(Opcodes.INVOKEVIRTUAL, "owner", "name",
+				"(Lanother_descriptor;)V");
 		assertNull(matcher.cursor);
 
 		// should set cursor to next instruction when match
