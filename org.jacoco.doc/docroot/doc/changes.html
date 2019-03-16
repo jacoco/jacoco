@@ -35,6 +35,10 @@
   <li>Fixed incorrect update of frames caused by bug in ASM library in case of
       arrays with more than 7 dimensions
       (GitHub <a href="https://github.com/jacoco/jacoco/issues/839">#839</a>).</li>
+  <li>Fixed regression, which was introduced in 0.8.3 -
+      <code>module-info.class</code> should be excluded from analysis to not cause
+      <code>IllegalStateException</code>
+      (GitHub <a href="https://github.com/jacoco/jacoco/issues/859">#859</a>).</li>
 </ul>
 
 <h3>API Changes</h3>
