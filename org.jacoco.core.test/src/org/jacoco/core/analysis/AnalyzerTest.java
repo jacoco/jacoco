@@ -77,6 +77,20 @@ public class AnalyzerTest {
 	}
 
 	@Test
+	public void should_ignore_module_info() throws Exception {
+		final ClassWriter cw = new ClassWriter(0);
+		cw.visit(Opcodes.V9, Opcodes.ACC_MODULE, "module-info", null, null,
+				null);
+		cw.visitModule("module", 0, null).visitEnd();
+		cw.visitEnd();
+		final byte[] bytes = cw.toByteArray();
+
+		analyzer.analyzeClass(bytes, "");
+
+		assertTrue(classes.isEmpty());
+	}
+
+	@Test
 	public void should_ignore_synthetic_classes() throws Exception {
 		final ClassWriter cw = new ClassWriter(0);
 		cw.visit(Opcodes.V1_5, Opcodes.ACC_SYNTHETIC, "Foo", null,
