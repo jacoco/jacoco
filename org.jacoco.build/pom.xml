@@ -347,19 +347,15 @@
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-javadoc-plugin</artifactId>
-          <version>2.10.4</version>
+          <!--
+          Do not upgrade to 3.1.0 because it has troubles with "Automatic-Module-Name"
+          See https://issues.apache.org/jira/browse/MJAVADOC-588
+          -->
+          <version>3.0.1</version>
           <configuration>
             <quiet>true</quiet>
             <detectOfflineLinks>false</detectOfflineLinks>
           </configuration>
-          <dependencies>
-            <dependency>
-              <!-- Workaround to be able to use JDK 9 >= b175 -->
-              <groupId>commons-lang</groupId>
-              <artifactId>commons-lang</artifactId>
-              <version>2.6</version>
-            </dependency>
-          </dependencies>
         </plugin>
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
