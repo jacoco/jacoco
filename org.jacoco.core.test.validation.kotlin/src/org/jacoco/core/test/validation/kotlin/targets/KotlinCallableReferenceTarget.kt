@@ -22,10 +22,11 @@ object KotlinCallableReferenceTarget {
     fun main(args: Array<String>) {
 
         /*
-        anonymous class generated for callable reference is not marked as synthetic
+        Since Kotlin 1.3.30
+        anonymous class generated for callable reference is marked as synthetic
         https://youtrack.jetbrains.com/issue/KT-28453
         */
-        nop(::main) // assertPartlyCovered(0, 0)
+        nop(::main) // assertFullyCovered(0, 0)
 
     }
 
