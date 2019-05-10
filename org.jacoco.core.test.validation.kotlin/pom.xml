@@ -15,7 +15,7 @@
   <parent>
     <groupId>org.jacoco</groupId>
     <artifactId>org.jacoco.core.test.validation</artifactId>
-    <version>0.8.4-SNAPSHOT</version>
+    <version>0.8.5-SNAPSHOT</version>
     <relativePath>../org.jacoco.core.test.validation</relativePath>
   </parent>
 
@@ -25,7 +25,7 @@
 
   <properties>
     <bytecode.version>6</bytecode.version>
-    <kotlin.version>1.3.0</kotlin.version>
+    <kotlin.version>1.3.31</kotlin.version>
   </properties>
 
   <dependencies>
