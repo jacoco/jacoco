@@ -11,23 +11,16 @@
  *******************************************************************************/
 package org.jacoco.core.test.validation.groovy.targets
 
-/* This annotation generates on a field of type Date the following
-* - a suitable implementation of getTime()
-* - a suitable implementation of setTime(long)
-* - a suitable implementation of before(Date)
-* - a suitable implementation of after(Date)
-* - a suitable implementation of compareTo(Date)
-* - a suitable implementation of toInstant()
-* - a suitable implementation of getTarget()
-* - a suitable implementation of setTarget(Date)
-*/
-
 class GroovyDelegateClassTarget { // assertEmpty()
 
-    @groovy.lang.Delegate
-    Date target // assertEmpty()
+    @Delegate
+    Date target = new Date() // assertEmpty()
+
+    long getTime() {
+        return target.time  // assertFullyCovered()
+    }
 
     static void main(String[] args) {
-        new GroovyDelegateClassTarget() // assertFullyCovered()
+        new GroovyDelegateClassTarget().time // assertFullyCovered()
     }
 }

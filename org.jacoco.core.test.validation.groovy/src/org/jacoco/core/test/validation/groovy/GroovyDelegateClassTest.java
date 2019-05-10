@@ -12,12 +12,11 @@
 package org.jacoco.core.test.validation.groovy;
 
 import org.jacoco.core.test.validation.ValidationTestBase;
-import org.jacoco.core.test.validation.groovy.targets.GroovyDataClassTarget;
 import org.jacoco.core.test.validation.groovy.targets.GroovyDelegateClassTarget;
 import org.junit.Test;
 
 /**
- * Test of <code>delegate annotation</code>es.
+ * Test of class with field annotated by {@link groovy.lang.Delegate}.
  */
 public class GroovyDelegateClassTest extends ValidationTestBase {
     public GroovyDelegateClassTest() {
@@ -26,6 +25,6 @@ public class GroovyDelegateClassTest extends ValidationTestBase {
 
     @Test
     public void test_method_count() {
-        assertMethodCount(1);
+        assertMethodCount(2);
     }
 }
