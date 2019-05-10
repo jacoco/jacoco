@@ -12,12 +12,11 @@
 package org.jacoco.core.test.validation.groovy;
 
 import org.jacoco.core.test.validation.ValidationTestBase;
-import org.jacoco.core.test.validation.groovy.targets.GroovyDataClassTarget;
 import org.jacoco.core.test.validation.groovy.targets.GroovyImutableClassTarget;
 import org.junit.Test;
 
 /**
- * Test of <code>data class</code>es.
+ * Test of class with {@link groovy.transform.Immutable} annotation.
  */
 public class GroovyImutableClassTest extends ValidationTestBase {
     public GroovyImutableClassTest() {
