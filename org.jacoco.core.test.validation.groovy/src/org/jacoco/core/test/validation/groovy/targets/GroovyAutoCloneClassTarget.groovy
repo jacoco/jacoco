@@ -15,10 +15,6 @@ import groovy.transform.AutoClone
 
 @AutoClone
 class GroovyAutoCloneClassTarget { // assertEmpty()
-
-    String name // assertEmpty()
-    Date age     // assertEmpty()
-
     static void main(String[] args) {
         new GroovyAutoCloneClassTarget() // assertFullyCovered()
     }

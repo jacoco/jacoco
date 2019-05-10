@@ -6,18 +6,17 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *
  * Contributors:
- *    Andres Almiray - initial API and implementation
+ *    Oliver Nautsch - initial API and implementation
  *
  *******************************************************************************/
 package org.jacoco.core.test.validation.groovy;
 
 import org.jacoco.core.test.validation.ValidationTestBase;
 import org.jacoco.core.test.validation.groovy.targets.GroovyAutoCloneClassTarget;
-import org.jacoco.core.test.validation.groovy.targets.GroovyDataClassTarget;
 import org.junit.Test;
 
 /**
- * Test of <code>data class</code>es.
+ * Test of class with {@link groovy.transform.AutoClone} annotation.
  */
 public class GroovyAutoCloneClassTest extends ValidationTestBase {
     public GroovyAutoCloneClassTest() {
