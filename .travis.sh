@@ -102,7 +102,6 @@ case "$JDK" in
   ;;
 13-ea)
   mvn -V -B -e verify -Dbytecode.version=13 \
-    --projects \!org.jacoco.core.test.validation.groovy \
     --settings=./.travis/settings.xml
   ;;
 *)
