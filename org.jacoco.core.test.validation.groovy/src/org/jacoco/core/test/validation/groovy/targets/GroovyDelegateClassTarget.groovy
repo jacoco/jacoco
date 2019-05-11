@@ -13,14 +13,24 @@ package org.jacoco.core.test.validation.groovy.targets
 
 class GroovyDelegateClassTarget { // assertEmpty()
 
-    @Delegate
-    Date target = new Date() // assertEmpty()
+    static class D {
+        void m1() {
+        } // assertFullyCovered()
 
-    long getTime() {
-        return target.time  // assertFullyCovered()
+        void m2() {
+        } // assertFullyCovered()
+    }
+
+    @Delegate
+    D delegate = new D() // assertEmpty()
+
+    void m2() {
+        delegate.m2() // assertFullyCovered()
     }
 
     static void main(String[] args) {
-        new GroovyDelegateClassTarget().time // assertFullyCovered()
+        new GroovyDelegateClassTarget().m1()
+        new GroovyDelegateClassTarget().m2()
     }
+
 }

@@ -25,6 +25,6 @@ public class GroovyDelegateClassTest extends ValidationTestBase {
 
     @Test
     public void test_method_count() {
-        assertMethodCount(2);
+        assertMethodCount(4);
     }
 }
