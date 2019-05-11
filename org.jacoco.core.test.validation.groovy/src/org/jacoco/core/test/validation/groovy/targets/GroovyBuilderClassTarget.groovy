@@ -9,22 +9,17 @@
  *    Jan Wloka - initial API and implementation
  *
  *******************************************************************************/
-package org.jacoco.core.test.validation.groovy;
+package org.jacoco.core.test.validation.groovy.targets
 
-import org.jacoco.core.test.validation.ValidationTestBase;
-import org.jacoco.core.test.validation.groovy.targets.GroovySimpleStrategyBuilderClassTarget;
-import org.junit.Test;
+import groovy.transform.builder.Builder
+import groovy.transform.builder.SimpleStrategy
 
-/**
- * Test of <code>builder annotation</code>s.
- */
-public class GroovySimpleStrategyBuilderClassTest extends ValidationTestBase {
-    public GroovySimpleStrategyBuilderClassTest() {
-        super(GroovySimpleStrategyBuilderClassTarget.class);
-    }
+@Builder(builderStrategy = SimpleStrategy)
+class GroovyBuilderClassTarget { // assertEmpty()
 
-    @Test
-    public void test_method_count() {
-        assertMethodCount(1);
+    String name // assertEmpty()
+
+    static void main(String[] args) {
+        new GroovyBuilderClassTarget() // assertFullyCovered()
     }
 }
