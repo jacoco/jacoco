@@ -123,6 +123,17 @@ public abstract class ValidationTestBase {
 				source.getCoverage().getLastLine() <= source.getLines().size());
 	}
 
+	@Test
+	public void all_branches_should_have_line_number() {
+		CounterImpl c = CounterImpl.COUNTER_0_0;
+		for (Line line : source.getLines()) {
+			c = c.increment(line.getCoverage().getBranchCounter());
+		}
+		assertEquals(
+				"sum of branch counters of all lines should be equal to branch counter of file",
+				source.getCoverage().getBranchCounter(), c);
+	}
+
 	/*
 	 * Predefined assertion methods:
 	 */
