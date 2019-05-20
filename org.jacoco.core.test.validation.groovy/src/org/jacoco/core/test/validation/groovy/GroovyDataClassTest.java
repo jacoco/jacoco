@@ -16,7 +16,7 @@ import org.jacoco.core.test.validation.groovy.targets.GroovyDataClassTarget;
 import org.junit.Test;
 
 /**
- * Test of <code>data class</code>es.
+ * Test of {@link groovy.transform.Canonical} annotation.
  */
 public class GroovyDataClassTest extends ValidationTestBase {
     public GroovyDataClassTest() {

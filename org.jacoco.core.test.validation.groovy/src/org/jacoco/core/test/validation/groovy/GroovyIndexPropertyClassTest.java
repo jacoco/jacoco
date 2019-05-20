@@ -17,7 +17,7 @@ import org.jacoco.core.test.validation.groovy.targets.GroovyIndexPropertyClassTa
 import org.junit.Test;
 
 /**
- * Test of <code>data class</code>es.
+ * Test of {@link groovy.transform.IndexedProperty} annotation.
  */
 public class GroovyIndexPropertyClassTest extends ValidationTestBase {
     public GroovyIndexPropertyClassTest() {
