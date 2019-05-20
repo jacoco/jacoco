@@ -26,6 +26,8 @@ public class GroovySortableClassTest extends ValidationTestBase {
 
     @Test
     public void test_method_count() {
-        assertMethodCount(1);
+        // the method count is 2 because the sortable annotation
+        // generates a static block.
+        assertMethodCount(2);
     }
 }
