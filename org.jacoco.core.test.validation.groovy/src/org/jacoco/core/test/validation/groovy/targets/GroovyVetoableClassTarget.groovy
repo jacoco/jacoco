@@ -12,6 +12,8 @@
  *******************************************************************************/
 package org.jacoco.core.test.validation.groovy.targets
 
+import groovy.beans.Vetoable
+
 /* This annotation generates the following
  * - getters and setters
  * - 2 versions of addVetoablePropertyChangeListener()
@@ -20,7 +22,7 @@ package org.jacoco.core.test.validation.groovy.targets
  * - fireVetoablePropertyChange()
  */
 
-@groovy.beans.Vetoable
+@Vetoable
 class GroovyVetoableClassTarget { // assertEmpty()
 
     String firstName    // assertEmpty()

@@ -12,6 +12,8 @@
  *******************************************************************************/
 package org.jacoco.core.test.validation.groovy.targets
 
+import groovy.beans.Bindable
+
 /* This annotation generates the following
  * - getters and setters
  * - 2 versions of addPropertyChangeListener()
@@ -22,10 +24,10 @@ package org.jacoco.core.test.validation.groovy.targets
 
 class GroovyBindableClassTarget { // assertEmpty()
 
-    @groovy.beans.Bindable
+    @Bindable
     String firstName    // assertEmpty()
 
-    @groovy.beans.Bindable
+    @Bindable
     def zipCode    // assertEmpty()
 
     static void main(String[] args) {

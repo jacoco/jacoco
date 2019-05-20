@@ -11,6 +11,8 @@
  *******************************************************************************/
 package org.jacoco.core.test.validation.groovy.targets
 
+import groovy.transform.Canonical
+
 /* This annotation generates the following
  * - a constructor that takes an int as argument
  * - a suitable implementation of toString()
@@ -19,7 +21,7 @@ package org.jacoco.core.test.validation.groovy.targets
  * - a public method named canEqual(Object)
  * - a getter & setter for the valRead property
  */
-@groovy.transform.Canonical
+@Canonical
 class GroovyDataClassTarget { // assertEmpty()
 
     int valRead // assertEmpty()
