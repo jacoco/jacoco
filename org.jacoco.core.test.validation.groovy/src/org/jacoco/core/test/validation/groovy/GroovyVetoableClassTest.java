@@ -17,7 +17,7 @@ import org.jacoco.core.test.validation.groovy.targets.GroovyVetoableClassTarget;
 import org.junit.Test;
 
 /**
- * Test of {@link groovy.beans.Vetoable} annotation.
+ * Test of class with {@link groovy.beans.Vetoable} annotation.
  */
 public class GroovyVetoableClassTest extends ValidationTestBase {
     public GroovyVetoableClassTest() {

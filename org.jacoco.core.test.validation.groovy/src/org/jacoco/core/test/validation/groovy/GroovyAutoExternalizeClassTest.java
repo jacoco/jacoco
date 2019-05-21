@@ -17,7 +17,7 @@ import org.jacoco.core.test.validation.groovy.targets.GroovyAutoExternalizeClass
 import org.junit.Test;
 
 /**
- * Test of {@link groovy.transform.AutoExternalize} annotation.
+ * Test of class with {@link groovy.transform.AutoExternalize} annotation.
  */
 public class GroovyAutoExternalizeClassTest extends ValidationTestBase {
     public GroovyAutoExternalizeClassTest() {

@@ -12,15 +12,15 @@
 package org.jacoco.core.test.validation.groovy;
 
 import org.jacoco.core.test.validation.ValidationTestBase;
-import org.jacoco.core.test.validation.groovy.targets.GroovyDataClassTarget;
+import org.jacoco.core.test.validation.groovy.targets.GroovyCanonicalClassTarget;
 import org.junit.Test;
 
 /**
- * Test of {@link groovy.transform.Canonical} annotation.
+ * Test of class with {@link groovy.transform.Canonical} annotation.
  */
-public class GroovyDataClassTest extends ValidationTestBase {
-    public GroovyDataClassTest() {
-        super(GroovyDataClassTarget.class);
+public class GroovyCanonicalClassTest extends ValidationTestBase {
+    public GroovyCanonicalClassTest() {
+        super(GroovyCanonicalClassTarget.class);
     }
 
     @Test

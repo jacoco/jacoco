@@ -17,7 +17,7 @@ import org.jacoco.core.test.validation.groovy.targets.GroovyBindableClassTarget;
 import org.junit.Test;
 
 /**
- * Test of {@link groovy.beans.Bindable} annotation.
+ * Test of class with {@link groovy.beans.Bindable} annotation.
  */
 public class GroovyBindableClassTest extends ValidationTestBase {
     public GroovyBindableClassTest() {

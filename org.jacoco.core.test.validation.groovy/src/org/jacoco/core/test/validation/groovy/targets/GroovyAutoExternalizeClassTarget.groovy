@@ -14,11 +14,6 @@ package org.jacoco.core.test.validation.groovy.targets
 
 import groovy.transform.AutoExternalize
 
-/* This annotation generates the following
- * - writeExternal()
- # - readExternal()
- */
-
 @AutoExternalize
 class GroovyAutoExternalizeClassTarget { // assertEmpty()
 

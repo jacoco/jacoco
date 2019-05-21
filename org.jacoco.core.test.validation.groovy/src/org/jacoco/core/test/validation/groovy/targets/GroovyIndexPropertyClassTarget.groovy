@@ -15,14 +15,6 @@ package org.jacoco.core.test.validation.groovy.targets
 import groovy.io.FileType
 import groovy.transform.IndexedProperty
 
-/* This annotation generates the following
- * for all annotated fields
- * - standard getter and setter
- * - getter and setter with an index
- *      - FieldType getSomeField(int index)
- *      - void setSomeField(int index, FieldType val)
- */
-
 class GroovyIndexPropertyClassTarget { // assertEmpty()
 
     @IndexedProperty
