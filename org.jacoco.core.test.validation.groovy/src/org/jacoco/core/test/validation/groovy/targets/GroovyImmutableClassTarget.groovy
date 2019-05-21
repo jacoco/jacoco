@@ -14,12 +14,12 @@ package org.jacoco.core.test.validation.groovy.targets
 import groovy.transform.Immutable
 
 @Immutable
-class GroovyImutableClassTarget { // assertEmpty()
+class GroovyImmutableClassTarget { // assertEmpty()
 
     String name // assertEmpty()
     int age     // assertEmpty()
 
     static void main(String[] args) {
-        new GroovyImutableClassTarget() // assertFullyCovered()
+        new GroovyImmutableClassTarget() // assertFullyCovered()
     }
 }
