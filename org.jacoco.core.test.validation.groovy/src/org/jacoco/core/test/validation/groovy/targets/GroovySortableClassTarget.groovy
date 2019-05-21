@@ -14,13 +14,6 @@ package org.jacoco.core.test.validation.groovy.targets
 
 import groovy.transform.Sortable
 
-/* This annotation generates the following
- * - implement the Comparable interface
- * - have a compareTo method based on the first, last and born properties (priority ordering will be according to the ordering of property definition, highest first, unless 'includes' is used; in which case, priority will be according to the order given in the includes list)
- * - have three Comparator methods named comparatorByFirst, comparatorByLast and comparatorByBorn
- * - sort by natural order by default, reversed natural order can be specified
- */
-
 @Sortable
 class GroovySortableClassTarget { // assertEmpty()
 

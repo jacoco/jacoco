@@ -17,7 +17,7 @@ import org.jacoco.core.test.validation.groovy.targets.GroovySortableClassTarget;
 import org.junit.Test;
 
 /**
- * Test of {@link groovy.transform.Sortable} annotation.
+ * Test of class with {@link groovy.transform.Sortable} annotation.
  */
 public class GroovySortableClassTest extends ValidationTestBase {
     public GroovySortableClassTest() {
@@ -26,8 +26,7 @@ public class GroovySortableClassTest extends ValidationTestBase {
 
     @Test
     public void test_method_count() {
-        // the method count is 2 because the sortable annotation
-        // generates a static block.
+        // main method and static initializer
         assertMethodCount(2);
     }
 }
