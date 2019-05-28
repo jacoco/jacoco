@@ -57,49 +57,19 @@ abstract class AbstractMatcher {
 	}
 
 	/**
-	 * Moves {@link #cursor} to next instruction if it is
-	 * <code>INVOKESPECIAL &lt;init&gt;</code> with given owner and descriptor,
-	 * otherwise sets it to <code>null</code>.
-	 */
-	final void nextIsInvokeSuper(final String owner, final String desc) {
-		nextIs(Opcodes.INVOKESPECIAL);
-		MethodInsnNode m = (MethodInsnNode) cursor;
-		if (m != null && owner.equals(m.owner) && "<init>".equals(m.name)
-				&& desc.equals(m.desc)) {
-			return;
-		}
-		cursor = null;
-	}
-
-	/**
-	 * Moves {@link #cursor} to next instruction if it is
-	 * <code>INVOKEVIRTUAL</code> with given owner and name, otherwise sets it
-	 * to <code>null</code>.
-	 */
-	final void nextIsInvokeVirtual(final String owner, final String name) {
-		nextIs(Opcodes.INVOKEVIRTUAL);
-		if (cursor == null) {
-			return;
-		}
-		final MethodInsnNode m = (MethodInsnNode) cursor;
-		if (owner.equals(m.owner) && name.equals(m.name)) {
-			return;
-		}
-		cursor = null;
-	}
-
-	/**
-	 * Moves {@link #cursor} to next instruction if it is
-	 * <code>INVOKESTATIC</code> with given owner and name, otherwise sets it to
+	 * Moves {@link #cursor} to next instruction if it is {@link MethodInsnNode}
+	 * with given opcode, owner, name and descriptor, otherwise sets it to
 	 * <code>null</code>.
 	 */
-	final void nextIsInvokeStatic(final String owner, final String name) {
-		nextIs(Opcodes.INVOKESTATIC);
+	final void nextIsInvoke(final int opcode, final String owner,
+			final String name, final String descriptor) {
+		nextIs(opcode);
 		if (cursor == null) {
 			return;
 		}
 		final MethodInsnNode m = (MethodInsnNode) cursor;
-		if (owner.equals(m.owner) && name.equals(m.name)) {
+		if (owner.equals(m.owner) && name.equals(m.name)
+				&& descriptor.equals(m.desc)) {
 			return;
 		}
 		cursor = null;

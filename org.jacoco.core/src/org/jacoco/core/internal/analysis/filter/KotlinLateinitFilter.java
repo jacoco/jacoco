@@ -21,9 +21,6 @@ import org.objectweb.asm.tree.MethodNode;
  */
 public class KotlinLateinitFilter implements IFilter {
 
-	private final static String OWNER = "kotlin/jvm/internal/Intrinsics";
-	private final static String NAME = "throwUninitializedPropertyAccessException";
-
 	public void filter(final MethodNode methodNode,
 			final IFilterContext context, final IFilterOutput output) {
 		final Matcher matcher = new Matcher();
@@ -43,7 +40,9 @@ public class KotlinLateinitFilter implements IFilter {
 			cursor = start;
 
 			nextIs(Opcodes.LDC);
-			nextIsInvokeStatic(OWNER, NAME);
+			nextIsInvoke(Opcodes.INVOKESTATIC, "kotlin/jvm/internal/Intrinsics",
+					"throwUninitializedPropertyAccessException",
+					"(Ljava/lang/String;)V");
 
 			if (cursor != null) {
 				output.ignore(start, cursor);

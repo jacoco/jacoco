@@ -20,6 +20,44 @@
 
 <h2>Snapshot Build @qualified.bundle.version@ (@build.date@)</h2>
 
+<h2>Release 0.8.4 (2019/05/08)</h2>
+
+<h3>New Features</h3>
+<ul>
+  <li>JaCoCo now officially supports Java 12</li>
+  <li>Instrumentation does not add synthetic field to Java 11+ class files,
+      however still adds synthetic method
+      (GitHub <a href="https://github.com/jacoco/jacoco/issues/845">#845</a>).</li>
+  <li>Branches added by the Kotlin compiler version 1.3.30 for suspending lambdas
+      and functions are filtered out during generation of report
+      (GitHub <a href="https://github.com/jacoco/jacoco/issues/849">#849</a>).</li>
+</ul>
+
+<h3>Fixed bugs</h3>
+<ul>
+  <li>Fixed incorrect update of frames caused by bug in ASM library in case of
+      arrays with more than 7 dimensions
+      (GitHub <a href="https://github.com/jacoco/jacoco/issues/839">#839</a>).</li>
+  <li>Fixed regression, which was introduced in 0.8.3 -
+      <code>module-info.class</code> should be excluded from analysis to not cause
+      <code>IllegalStateException</code>
+      (GitHub <a href="https://github.com/jacoco/jacoco/issues/859">#859</a>).</li>
+</ul>
+
+<h3>API Changes</h3>
+<ul>
+    <li>Methods <code>Instrumenter.instrument(org.objectweb.asm.ClassReader)</code>
+        and <code>Analyzer.analyzeClass(org.objectweb.asm.ClassReader)</code>
+        were removed
+        (GitHub <a href="https://github.com/jacoco/jacoco/issues/850">#850</a>).</li>
+</ul>
+
+<h3>Non-functional Changes</h3>
+<ul>
+  <li>JaCoCo now depends on ASM 7.1
+      (GitHub <a href="https://github.com/jacoco/jacoco/issues/851">#851</a>).</li>
+</ul>
+
 <h2>Release 0.8.3 (2019/01/23)</h2>
 
 <h3>New Features</h3>

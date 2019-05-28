@@ -137,89 +137,41 @@ public class AbstractMatcherTest {
 	}
 
 	@Test
-	public void nextIsInvokeStatic() {
-		m.visitInsn(Opcodes.NOP);
-		m.visitMethodInsn(Opcodes.INVOKESTATIC, "owner", "name", "()V", false);
-
-		// should set cursor to null when owner mismatch
-		matcher.cursor = m.instructions.getFirst();
-		matcher.nextIsInvokeStatic("another_owner", "name");
-		assertNull(matcher.cursor);
-
-		// should set cursor to null when name mismatch
-		matcher.cursor = m.instructions.getFirst();
-		matcher.nextIsInvokeStatic("owner", "another_name");
-		assertNull(matcher.cursor);
-
-		// should set cursor to next instruction when match
-		matcher.cursor = m.instructions.getFirst();
-		matcher.nextIsInvokeStatic("owner", "name");
-		assertSame(m.instructions.getLast(), matcher.cursor);
-
-		// should not do anything when cursor is null
-		matcher.cursor = null;
-		matcher.nextIsInvokeStatic("owner", "name");
-	}
-
-	@Test
-	public void nextIsInvokeVirtual() {
+	public void nextIsInvoke() {
 		m.visitInsn(Opcodes.NOP);
 		m.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "owner", "name", "()V", false);
 
+		// should set cursor to null when opcode mismatch
+		matcher.cursor = m.instructions.getFirst();
+		matcher.nextIsInvoke(Opcodes.INVOKESTATIC, "owner", "name", "()V");
+		assertNull(matcher.cursor);
+
 		// should set cursor to null when owner mismatch
 		matcher.cursor = m.instructions.getFirst();
-		matcher.nextIsInvokeVirtual("another_owner", "name");
+		matcher.nextIsInvoke(Opcodes.INVOKEVIRTUAL, "another_owner", "name",
+				"()V");
 		assertNull(matcher.cursor);
 
 		// should set cursor to null when name mismatch
 		matcher.cursor = m.instructions.getFirst();
-		matcher.nextIsInvokeVirtual("owner", "another_name");
-		assertNull(matcher.cursor);
-
-		// should set cursor to next instruction when match
-		matcher.cursor = m.instructions.getFirst();
-		matcher.nextIsInvokeVirtual("owner", "name");
-		assertSame(m.instructions.getLast(), matcher.cursor);
-
-		// should not do anything when cursor is null
-		matcher.cursor = null;
-		matcher.nextIsInvokeVirtual("owner", "name");
-	}
-
-	@Test
-	public void nextIsInvokeSuper() {
-		m.visitInsn(Opcodes.NOP);
-		m.visitMethodInsn(Opcodes.INVOKESPECIAL, "owner", "not_init", "()V",
-				false);
-
-		// should set cursor to null when name mismatch
-		matcher.cursor = m.instructions.getFirst();
-		matcher.nextIsInvokeSuper("owner", "()V");
-		assertNull(matcher.cursor);
-
-		m.instructions.clear();
-		m.visitInsn(Opcodes.NOP);
-		m.visitMethodInsn(Opcodes.INVOKESPECIAL, "owner", "<init>", "()V",
-				false);
-
-		// should set cursor to null when owner mismatch
-		matcher.cursor = m.instructions.getFirst();
-		matcher.nextIsInvokeSuper("another_owner", "()V");
+		matcher.nextIsInvoke(Opcodes.INVOKEVIRTUAL, "owner", "another_name",
+				"()V");
 		assertNull(matcher.cursor);
 
 		// should set cursor to null when descriptor mismatch
 		matcher.cursor = m.instructions.getFirst();
-		matcher.nextIsInvokeSuper("owner", "(I)V");
+		matcher.nextIsInvoke(Opcodes.INVOKEVIRTUAL, "owner", "name",
+				"(Lanother_descriptor;)V");
 		assertNull(matcher.cursor);
 
 		// should set cursor to next instruction when match
 		matcher.cursor = m.instructions.getFirst();
-		matcher.nextIsInvokeSuper("owner", "()V");
+		matcher.nextIsInvoke(Opcodes.INVOKEVIRTUAL, "owner", "name", "()V");
 		assertSame(m.instructions.getLast(), matcher.cursor);
 
 		// should not do anything when cursor is null
 		matcher.cursor = null;
-		matcher.nextIsInvokeSuper("owner", "()V");
+		matcher.nextIsInvoke(Opcodes.INVOKEVIRTUAL, "owner", "name", "()V");
 	}
 
 	@Test

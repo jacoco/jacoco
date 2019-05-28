@@ -69,18 +69,6 @@ public class Instrumenter {
 		signatureRemover.setActive(flag);
 	}
 
-	/**
-	 * Creates a instrumented version of the given class if possible.
-	 * 
-	 * @param reader
-	 *            definition of the class as ASM reader
-	 * @return instrumented definition
-	 * 
-	 */
-	public byte[] instrument(final ClassReader reader) {
-		return instrument(reader.b);
-	}
-
 	private byte[] instrument(final byte[] source) {
 		final long classId = CRC64.classId(source);
 		final ClassReader reader = InstrSupport.classReaderFor(source);
@@ -93,7 +81,7 @@ public class Instrumenter {
 		};
 		final IProbeArrayStrategy strategy = ProbeArrayStrategyFactory
 				.createFor(classId, reader, accessorGenerator);
-		final int version = InstrSupport.getVersionMajor(source);
+		final int version = InstrSupport.getMajorVersion(reader);
 		final ClassVisitor visitor = new ClassProbesAdapter(
 				new ClassInstrumenter(strategy, writer),
 				InstrSupport.needsFrames(version));

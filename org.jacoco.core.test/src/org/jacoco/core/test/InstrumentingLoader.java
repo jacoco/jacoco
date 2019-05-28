@@ -52,6 +52,10 @@ public final class InstrumentingLoader extends ClassLoader {
 	protected synchronized Class<?> loadClass(String name, boolean resolve)
 			throws ClassNotFoundException {
 		if (name.startsWith(scope)) {
+			Class<?> c = findLoadedClass(name);
+			if (c != null) {
+				return c;
+			}
 			final byte[] bytes;
 			try {
 				bytes = TargetLoader.getClassDataAsBytes(delegate, name);
@@ -64,8 +68,7 @@ public final class InstrumentingLoader extends ClassLoader {
 			} catch (IOException e) {
 				throw new ClassNotFoundException("Unable to instrument", e);
 			}
-			final Class<?> c = defineClass(name, instrumented, 0,
-					instrumented.length);
+			c = defineClass(name, instrumented, 0, instrumented.length);
 			if (resolve) {
 				resolveClass(c);
 			}

@@ -46,7 +46,8 @@ public final class StringSwitchEcjFilter implements IFilter {
 				return;
 			}
 			cursor = start;
-			nextIsInvokeVirtual("java/lang/String", "hashCode");
+			nextIsInvoke(Opcodes.INVOKEVIRTUAL, "java/lang/String", "hashCode",
+					"()I");
 			nextIsSwitch();
 			if (cursor == null) {
 				return;
@@ -73,7 +74,8 @@ public final class StringSwitchEcjFilter implements IFilter {
 				while (true) {
 					nextIsVar(Opcodes.ALOAD, "s");
 					nextIs(Opcodes.LDC);
-					nextIsInvokeVirtual("java/lang/String", "equals");
+					nextIsInvoke(Opcodes.INVOKEVIRTUAL, "java/lang/String",
+							"equals", "(Ljava/lang/Object;)Z");
 					// jump to case
 					nextIs(Opcodes.IFNE);
 					if (cursor == null) {

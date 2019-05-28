@@ -54,8 +54,8 @@ public final class KotlinUnsafeCastOperatorFilter implements IFilter {
 					.startsWith("null cannot be cast to non-null type"))) {
 				return;
 			}
-			nextIsInvokeSuper(KOTLIN_TYPE_CAST_EXCEPTION,
-					"(Ljava/lang/String;)V");
+			nextIsInvoke(Opcodes.INVOKESPECIAL, KOTLIN_TYPE_CAST_EXCEPTION,
+					"<init>", "(Ljava/lang/String;)V");
 			nextIs(Opcodes.ATHROW);
 			if (cursor == null) {
 				return;

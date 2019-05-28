@@ -51,7 +51,8 @@ public final class EnumEmptyConstructorFilter implements IFilter {
 			firstIsALoad0(methodNode);
 			nextIs(Opcodes.ALOAD);
 			nextIs(Opcodes.ILOAD);
-			nextIsInvokeSuper(ENUM_TYPE, CONSTRUCTOR_DESC);
+			nextIsInvoke(Opcodes.INVOKESPECIAL, ENUM_TYPE, CONSTRUCTOR_NAME,
+					CONSTRUCTOR_DESC);
 			nextIs(Opcodes.RETURN);
 			return cursor != null;
 		}

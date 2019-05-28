@@ -12,6 +12,7 @@
 package org.jacoco.core.instr;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.objectweb.asm.Opcodes.ACC_PUBLIC;
 import static org.objectweb.asm.Opcodes.ACC_SUPER;
 import static org.objectweb.asm.Opcodes.ALOAD;
@@ -37,6 +38,7 @@ import static org.objectweb.asm.Opcodes.V9;
 
 import java.io.IOException;
 
+import org.jacoco.core.internal.instr.CondyProbeArrayStrategy;
 import org.jacoco.core.internal.instr.InstrSupport;
 import org.jacoco.core.runtime.IRuntime;
 import org.jacoco.core.runtime.SystemPropertiesRuntime;
@@ -133,7 +135,7 @@ public class ClassFileVersionsTest {
 
 					@Override
 					public MethodVisitor visitMethod(int access, String name,
-							String desc, String signature,
+							final String desc, String signature,
 							String[] exceptions) {
 						return new MethodVisitor(InstrSupport.ASM_API_VERSION) {
 							boolean frames = false;
@@ -147,8 +149,15 @@ public class ClassFileVersionsTest {
 
 							@Override
 							public void visitEnd() {
-								assertEquals(Boolean.valueOf(expected),
-										Boolean.valueOf(frames));
+								if (CondyProbeArrayStrategy.B_DESC
+										.equals(desc)) {
+									assertFalse(
+											"CondyProbeArrayStrategy does not need frames",
+											frames);
+								} else {
+									assertEquals(Boolean.valueOf(expected),
+											Boolean.valueOf(frames));
+								}
 							}
 						};
 					}

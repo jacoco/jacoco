@@ -49,16 +49,18 @@ public final class KotlinCoroutineFilter implements IFilter {
 		private void match(final MethodNode methodNode,
 				final IFilterOutput output) {
 			cursor = methodNode.instructions.getFirst();
-			nextIsInvokeStatic("kotlin/coroutines/intrinsics/IntrinsicsKt",
-					"getCOROUTINE_SUSPENDED");
+			nextIsInvoke(Opcodes.INVOKESTATIC,
+					"kotlin/coroutines/intrinsics/IntrinsicsKt",
+					"getCOROUTINE_SUSPENDED", "()Ljava/lang/Object;");
 
 			if (cursor == null) {
 				cursor = skipNonOpcodes(methodNode.instructions.getFirst());
 
 				nextIsCreateStateInstance();
 
-				nextIsInvokeStatic("kotlin/coroutines/intrinsics/IntrinsicsKt",
-						"getCOROUTINE_SUSPENDED");
+				nextIsInvoke(Opcodes.INVOKESTATIC,
+						"kotlin/coroutines/intrinsics/IntrinsicsKt",
+						"getCOROUTINE_SUSPENDED", "()Ljava/lang/Object;");
 			}
 
 			nextIsVar(Opcodes.ASTORE, "COROUTINE_SUSPENDED");
@@ -73,13 +75,7 @@ public final class KotlinCoroutineFilter implements IFilter {
 					s.labels.size() * 2);
 
 			nextIs(Opcodes.ALOAD);
-			nextIs(Opcodes.DUP);
-			nextIsType(Opcodes.INSTANCEOF, "kotlin/Result$Failure");
-			nextIs(Opcodes.IFEQ);
-			nextIsType(Opcodes.CHECKCAST, "kotlin/Result$Failure");
-			nextIs(Opcodes.GETFIELD);
-			nextIs(Opcodes.ATHROW);
-			nextIs(Opcodes.POP);
+			nextIsThrowOnFailure();
 
 			if (cursor == null) {
 				return;
@@ -97,7 +93,7 @@ public final class KotlinCoroutineFilter implements IFilter {
 					continue;
 				}
 				final AbstractInsnNode continuationAfterLoadedResult = skipNonOpcodes(
-						(((JumpInsnNode) cursor)).label);
+						((JumpInsnNode) cursor).label);
 				nextIsVar(Opcodes.ALOAD, "COROUTINE_SUSPENDED");
 				nextIs(Opcodes.ARETURN);
 				if (cursor == null
@@ -109,13 +105,7 @@ public final class KotlinCoroutineFilter implements IFilter {
 				for (AbstractInsnNode j = i; j != null; j = j.getNext()) {
 					cursor = j;
 					nextIs(Opcodes.ALOAD);
-					nextIs(Opcodes.DUP);
-					nextIsType(Opcodes.INSTANCEOF, "kotlin/Result$Failure");
-					nextIs(Opcodes.IFEQ);
-					nextIsType(Opcodes.CHECKCAST, "kotlin/Result$Failure");
-					nextIs(Opcodes.GETFIELD);
-					nextIs(Opcodes.ATHROW);
-					nextIs(Opcodes.POP);
+					nextIsThrowOnFailure();
 
 					nextIs(Opcodes.ALOAD);
 					if (cursor != null && skipNonOpcodes(cursor
@@ -132,11 +122,15 @@ public final class KotlinCoroutineFilter implements IFilter {
 			nextIsType(Opcodes.NEW, "java/lang/IllegalStateException");
 			nextIs(Opcodes.DUP);
 			nextIs(Opcodes.LDC);
+			if (cursor == null) {
+				return;
+			}
 			if (!((LdcInsnNode) cursor).cst.equals(
 					"call to 'resume' before 'invoke' with coroutine")) {
 				return;
 			}
-			nextIsInvokeSuper("java/lang/IllegalStateException",
+			nextIsInvoke(Opcodes.INVOKESPECIAL,
+					"java/lang/IllegalStateException", "<init>",
 					"(Ljava/lang/String;)V");
 			nextIs(Opcodes.ATHROW);
 			if (cursor == null) {
@@ -146,6 +140,25 @@ public final class KotlinCoroutineFilter implements IFilter {
 			output.ignore(s.dflt, cursor);
 			for (int i = 0; i < ignore.size(); i += 2) {
 				output.ignore(ignore.get(i), ignore.get(i + 1));
+			}
+		}
+
+		private void nextIsThrowOnFailure() {
+			final AbstractInsnNode c = cursor;
+			nextIsInvoke(Opcodes.INVOKESTATIC, "kotlin/ResultKt",
+					"throwOnFailure", "(Ljava/lang/Object;)V");
+			if (cursor == null) {
+				cursor = c;
+				// Before resolution of
+				// https://youtrack.jetbrains.com/issue/KT-28015 in
+				// Kotlin 1.3.30
+				nextIs(Opcodes.DUP);
+				nextIsType(Opcodes.INSTANCEOF, "kotlin/Result$Failure");
+				nextIs(Opcodes.IFEQ);
+				nextIsType(Opcodes.CHECKCAST, "kotlin/Result$Failure");
+				nextIs(Opcodes.GETFIELD);
+				nextIs(Opcodes.ATHROW);
+				nextIs(Opcodes.POP);
 			}
 		}
 

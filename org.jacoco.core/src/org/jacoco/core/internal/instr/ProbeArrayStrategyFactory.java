@@ -43,12 +43,16 @@ public final class ProbeArrayStrategyFactory {
 			final IExecutionDataAccessorGenerator accessorGenerator) {
 
 		final String className = reader.getClassName();
-		final int version = InstrSupport.getVersionMajor(reader.b);
+		final int version = InstrSupport.getMajorVersion(reader);
 
 		if (isInterfaceOrModule(reader)) {
 			final ProbeCounter counter = getProbeCounter(reader);
 			if (counter.getCount() == 0) {
 				return new NoneProbeArrayStrategy();
+			}
+			if (version >= Opcodes.V11 && counter.hasMethods()) {
+				return new CondyProbeArrayStrategy(className, true, classId,
+						accessorGenerator);
 			}
 			if (version >= Opcodes.V1_8 && counter.hasMethods()) {
 				return new InterfaceFieldProbeArrayStrategy(className, classId,
@@ -58,6 +62,10 @@ public final class ProbeArrayStrategyFactory {
 						counter.getCount(), accessorGenerator);
 			}
 		} else {
+			if (version >= Opcodes.V11) {
+				return new CondyProbeArrayStrategy(className, false, classId,
+						accessorGenerator);
+			}
 			return new ClassFieldProbeArrayStrategy(className, classId,
 					InstrSupport.needsFrames(version), accessorGenerator);
 		}

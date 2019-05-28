@@ -101,19 +101,12 @@ public class Analyzer {
 		return new ClassProbesAdapter(analyzer, false);
 	}
 
-	/**
-	 * Analyzes the class given as a ASM reader.
-	 * 
-	 * @param reader
-	 *            reader with class definitions
-	 */
-	public void analyzeClass(final ClassReader reader) {
-		analyzeClass(reader.b);
-	}
-
 	private void analyzeClass(final byte[] source) {
 		final long classId = CRC64.classId(source);
 		final ClassReader reader = InstrSupport.classReaderFor(source);
+		if ((reader.getAccess() & Opcodes.ACC_MODULE) != 0) {
+			return;
+		}
 		if ((reader.getAccess() & Opcodes.ACC_SYNTHETIC) != 0) {
 			return;
 		}
