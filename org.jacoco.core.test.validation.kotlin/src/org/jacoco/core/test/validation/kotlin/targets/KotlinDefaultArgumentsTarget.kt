@@ -27,6 +27,10 @@ object KotlinDefaultArgumentsTarget {
         }
     }
 
+    class Constructor() {
+        constructor(a: Boolean, b: String = if (a) "a" else "b") : this() // assertFullyCovered(0, 2)
+    }
+
     @JvmStatic
     fun main(args: Array<String>) {
         f(a = "a")
@@ -38,6 +42,9 @@ object KotlinDefaultArgumentsTarget {
         branch(true)
 
         Open().f()
+
+        Constructor(false)
+        Constructor(true)
     }
 
 }
