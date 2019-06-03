@@ -150,4 +150,38 @@ public class KotlinDefaultArgumentsFilterTest extends FilterTestBase {
 				new Range(m.instructions.get(11), m.instructions.get(11)));
 	}
 
+	/**
+	 * <pre>
+	 * class C(a: Int = 42)
+	 * </pre>
+	 */
+	@Test
+	public void should_filter_constructors() {
+		final MethodNode m = new MethodNode(InstrSupport.ASM_API_VERSION,
+				Opcodes.ACC_SYNTHETIC, "<init>",
+				"(IILkotlin/jvm/internal/DefaultConstructorMarker;)V", null,
+				null);
+		context.classAnnotations
+				.add(KotlinGeneratedFilter.KOTLIN_METADATA_DESC);
+
+		m.visitVarInsn(Opcodes.ILOAD, 2);
+		m.visitInsn(Opcodes.ICONST_1);
+		m.visitInsn(Opcodes.IAND);
+		Label label = new Label();
+		m.visitJumpInsn(Opcodes.IFEQ, label);
+		// default argument
+		m.visitLdcInsn(Integer.valueOf(42));
+		m.visitVarInsn(Opcodes.ISTORE, 1);
+		m.visitLabel(label);
+		m.visitVarInsn(Opcodes.ALOAD, 0);
+		m.visitVarInsn(Opcodes.ILOAD, 1);
+		m.visitMethodInsn(Opcodes.INVOKESPECIAL, "Owner", "<init>", "(I)V",
+				false);
+		m.visitInsn(Opcodes.RETURN);
+
+		filter.filter(m, context, output);
+
+		assertIgnored(new Range(m.instructions.get(3), m.instructions.get(3)));
+	}
+
 }
