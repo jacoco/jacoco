@@ -18,6 +18,7 @@ import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.Type;
 import org.objectweb.asm.tree.AbstractInsnNode;
 import org.objectweb.asm.tree.JumpInsnNode;
+import org.objectweb.asm.tree.LdcInsnNode;
 import org.objectweb.asm.tree.MethodNode;
 import org.objectweb.asm.tree.VarInsnNode;
 
@@ -66,6 +67,27 @@ public final class KotlinDefaultArgumentsFilter implements IFilter {
 		public void match(final MethodNode methodNode,
 				final IFilterOutput output) {
 			cursor = methodNode.instructions.getFirst();
+
+			nextIs(Opcodes.IFNULL);
+			nextIsType(Opcodes.NEW, "java/lang/UnsupportedOperationException");
+			nextIs(Opcodes.DUP);
+			nextIs(Opcodes.LDC);
+			if (cursor == null
+					|| !(((LdcInsnNode) cursor).cst instanceof String)
+					|| !(((String) ((LdcInsnNode) cursor).cst).startsWith(
+							"Super calls with default arguments not supported in this target"))) {
+				cursor = null;
+			}
+			nextIsInvoke(Opcodes.INVOKESPECIAL,
+					"java/lang/UnsupportedOperationException", "<init>",
+					"(Ljava/lang/String;)V");
+			nextIs(Opcodes.ATHROW);
+			if (cursor != null) {
+				output.ignore(methodNode.instructions.getFirst(), cursor);
+				next();
+			} else {
+				cursor = methodNode.instructions.getFirst();
+			}
 
 			final Set<AbstractInsnNode> ignore = new HashSet<AbstractInsnNode>();
 			final int maskVar = Type.getMethodType(methodNode.desc)

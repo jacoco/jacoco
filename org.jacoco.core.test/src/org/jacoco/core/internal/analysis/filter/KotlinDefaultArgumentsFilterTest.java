@@ -95,4 +95,59 @@ public class KotlinDefaultArgumentsFilterTest extends FilterTestBase {
 		assertIgnored();
 	}
 
+	/**
+	 * <pre>
+	 * open class Open {
+	 *     open fun foo(a: Int = 42) {
+	 *     }
+	 * }
+	 * </pre>
+	 */
+	@Test
+	public void should_filter_open_functions() {
+		final MethodNode m = new MethodNode(InstrSupport.ASM_API_VERSION,
+				Opcodes.ACC_SYNTHETIC, "foo$default",
+				"(LOpen;IILjava/lang/Object;)V", null, null);
+		context.classAnnotations
+				.add(KotlinGeneratedFilter.KOTLIN_METADATA_DESC);
+		{
+			m.visitVarInsn(Opcodes.ALOAD, 3);
+			final Label label = new Label();
+			m.visitJumpInsn(Opcodes.IFNULL, label);
+			m.visitTypeInsn(Opcodes.NEW,
+					"java/lang/UnsupportedOperationException");
+			m.visitInsn(Opcodes.DUP);
+			m.visitLdcInsn(
+					"Super calls with default arguments not supported in this target, function: foo");
+			m.visitMethodInsn(Opcodes.INVOKESPECIAL,
+					"java/lang/UnsupportedOperationException", "<init>",
+					"(Ljava/lang/String;)V", false);
+			m.visitInsn(Opcodes.ATHROW);
+			m.visitLabel(label);
+		}
+		{
+			m.visitVarInsn(Opcodes.ILOAD, 2);
+			m.visitInsn(Opcodes.ICONST_1);
+			m.visitInsn(Opcodes.IAND);
+			final Label label = new Label();
+			m.visitJumpInsn(Opcodes.IFEQ, label);
+			// default argument
+			m.visitLdcInsn(Integer.valueOf(42));
+			m.visitVarInsn(Opcodes.ISTORE, 1);
+			m.visitLabel(label);
+
+			m.visitVarInsn(Opcodes.ALOAD, 0);
+			m.visitVarInsn(Opcodes.ILOAD, 1);
+			m.visitMethodInsn(Opcodes.INVOKESPECIAL, "Open", "foo", "(I)V",
+					false);
+			m.visitInsn(Opcodes.RETURN);
+		}
+
+		filter.filter(m, context, output);
+
+		assertIgnored(
+				new Range(m.instructions.getFirst(), m.instructions.get(6)),
+				new Range(m.instructions.get(11), m.instructions.get(11)));
+	}
+
 }
