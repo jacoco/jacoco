@@ -35,6 +35,11 @@ public final class SyntheticFilter implements IFilter {
 				return;
 			}
 
+			if (KotlinDefaultArgumentsFilter
+					.isDefaultArgumentsConstructor(methodNode)) {
+				return;
+			}
+
 			if (KotlinCoroutineFilter.isLastArgumentContinuation(methodNode)) {
 				return;
 			}
