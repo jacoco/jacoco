@@ -23,7 +23,7 @@ import org.jacoco.core.analysis.ICounter;
  * case of a simple sequence of instructions (by convention branch 0). Instances
  * of this class are used in two steps:
  * 
- * <h3>Step 1: Building the CFG</h3>
+ * <h2>Step 1: Building the CFG</h2>
  * 
  * For each bytecode instruction of a method a {@link Instruction} instance is
  * created. In correspondence with the CFG these instances are linked with each
@@ -32,7 +32,7 @@ import org.jacoco.core.analysis.ICounter;
  * flow ({@link #addBranch(boolean, int)}) or indirectly propagated along the
  * CFG edges ({@link #addBranch(Instruction, int)}).
  * 
- * <h3>Step 2: Querying the Coverage Status</h3>
+ * <h2>Step 2: Querying the Coverage Status</h2>
  * 
  * After all instructions have been created and linked each instruction knows
  * its execution status and can be queried with:
