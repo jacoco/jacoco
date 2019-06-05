@@ -267,6 +267,7 @@
           <exclude>**/*.java</exclude>
           <exclude>**/*.kt</exclude>
           <exclude>**/*.groovy</exclude>
+          <exclude>**/*.scala</exclude>
           <exclude>**/*.properties</exclude>
         </excludes>
       </resource>
@@ -570,6 +571,7 @@
                 <fileset dir="${basedir}" includes="**/*.java,**/*.xml,**/*.bsh" excludes="target/**,.idea/**,nb-configuration.xml" id="missinglicense.fileset">
                   <include name="**/*.kt"/>
                   <include name="**/*.groovy"/>
+                  <include name="**/*.scala"/>
                   <not>
                     <and>
                       <contains text="Copyright (c) 2009, 2019 Mountainminds GmbH &amp; Co. KG and Contributors"/>
