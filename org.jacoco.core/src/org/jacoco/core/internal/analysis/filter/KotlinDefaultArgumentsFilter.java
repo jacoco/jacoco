@@ -38,18 +38,19 @@ import org.objectweb.asm.tree.VarInsnNode;
  * </pre>
  * 
  * Where <code>maskVar</code> is penultimate argument of synthetic method with
- * suffix "$default". And its value can't be zero - invocation with all
- * arguments uses original non synthetic method, thus <code>IFEQ</code>
- * instructions should be ignored.
+ * suffix "$default" or of synthetic constructor with last argument
+ * "kotlin.jvm.internal.DefaultConstructorMarker". And its value can't be zero -
+ * invocation with all arguments uses original non synthetic method, thus
+ * <code>IFEQ</code> instructions should be ignored.
  */
 public final class KotlinDefaultArgumentsFilter implements IFilter {
 
-	static boolean isDefaultArgumentsMethodName(final String methodName) {
-		return methodName.endsWith("$default");
+	static boolean isDefaultArgumentsMethod(final MethodNode methodNode) {
+		return methodNode.name.endsWith("$default");
 	}
 
 	static boolean isDefaultArgumentsConstructor(final MethodNode methodNode) {
-		if (!methodNode.name.equals("<init>")) {
+		if (!"<init>".equals(methodNode.name)) {
 			return false;
 		}
 		final Type[] argumentTypes = Type.getMethodType(methodNode.desc)
@@ -70,7 +71,7 @@ public final class KotlinDefaultArgumentsFilter implements IFilter {
 			return;
 		}
 
-		if (isDefaultArgumentsMethodName(methodNode.name)) {
+		if (isDefaultArgumentsMethod(methodNode)) {
 			new Matcher().match(methodNode, output, false);
 		} else if (isDefaultArgumentsConstructor(methodNode)) {
 			new Matcher().match(methodNode, output, true);
