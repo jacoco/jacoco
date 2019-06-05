@@ -135,6 +135,7 @@
         <module>../org.jacoco.core.test.validation.java7</module>
         <module>../org.jacoco.core.test.validation.java8</module>
         <module>../org.jacoco.core.test.validation.groovy</module>
+        <module>../org.jacoco.core.test.validation.scala</module>
       </modules>
     </profile>
 
