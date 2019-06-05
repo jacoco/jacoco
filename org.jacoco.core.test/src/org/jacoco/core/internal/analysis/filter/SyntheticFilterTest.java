@@ -83,6 +83,21 @@ public class SyntheticFilterTest extends FilterTestBase {
 	}
 
 	@Test
+	public void should_not_filter_synthetic_constructor_containing_default_arguments_in_kotlin_classes() {
+		final MethodNode m = new MethodNode(InstrSupport.ASM_API_VERSION,
+				Opcodes.ACC_SYNTHETIC, "<init>",
+				"(IILkotlin/jvm/internal/DefaultConstructorMarker;)V", null,
+				null);
+		context.classAnnotations
+				.add(KotlinGeneratedFilter.KOTLIN_METADATA_DESC);
+		m.visitInsn(Opcodes.NOP);
+
+		filter.filter(m, context, output);
+
+		assertIgnored();
+	}
+
+	@Test
 	public void should_not_filter_synthetic_methods_whose_last_argument_is_kotlin_coroutine_continuation() {
 		final MethodNode m = new MethodNode(InstrSupport.ASM_API_VERSION,
 				Opcodes.ACC_SYNTHETIC | Opcodes.ACC_STATIC, "example",

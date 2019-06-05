@@ -31,7 +31,12 @@ public final class SyntheticFilter implements IFilter {
 
 		if (KotlinGeneratedFilter.isKotlinClass(context)) {
 			if (KotlinDefaultArgumentsFilter
-					.isDefaultArgumentsMethodName(methodNode.name)) {
+					.isDefaultArgumentsMethod(methodNode)) {
+				return;
+			}
+
+			if (KotlinDefaultArgumentsFilter
+					.isDefaultArgumentsConstructor(methodNode)) {
 				return;
 			}
 

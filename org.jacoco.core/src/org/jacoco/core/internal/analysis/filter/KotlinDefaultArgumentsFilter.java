@@ -38,14 +38,28 @@ import org.objectweb.asm.tree.VarInsnNode;
  * </pre>
  * 
  * Where <code>maskVar</code> is penultimate argument of synthetic method with
- * suffix "$default". And its value can't be zero - invocation with all
- * arguments uses original non synthetic method, thus <code>IFEQ</code>
- * instructions should be ignored.
+ * suffix "$default" or of synthetic constructor with last argument
+ * "kotlin.jvm.internal.DefaultConstructorMarker". And its value can't be zero -
+ * invocation with all arguments uses original non synthetic method, thus
+ * <code>IFEQ</code> instructions should be ignored.
  */
 public final class KotlinDefaultArgumentsFilter implements IFilter {
 
-	static boolean isDefaultArgumentsMethodName(final String methodName) {
-		return methodName.endsWith("$default");
+	static boolean isDefaultArgumentsMethod(final MethodNode methodNode) {
+		return methodNode.name.endsWith("$default");
+	}
+
+	static boolean isDefaultArgumentsConstructor(final MethodNode methodNode) {
+		if (!"<init>".equals(methodNode.name)) {
+			return false;
+		}
+		final Type[] argumentTypes = Type.getMethodType(methodNode.desc)
+				.getArgumentTypes();
+		if (argumentTypes.length < 2) {
+			return false;
+		}
+		return "kotlin.jvm.internal.DefaultConstructorMarker"
+				.equals(argumentTypes[argumentTypes.length - 1].getClassName());
 	}
 
 	public void filter(final MethodNode methodNode,
@@ -53,19 +67,20 @@ public final class KotlinDefaultArgumentsFilter implements IFilter {
 		if ((methodNode.access & Opcodes.ACC_SYNTHETIC) == 0) {
 			return;
 		}
-		if (!isDefaultArgumentsMethodName(methodNode.name)) {
-			return;
-		}
 		if (!KotlinGeneratedFilter.isKotlinClass(context)) {
 			return;
 		}
 
-		new Matcher().match(methodNode, output);
+		if (isDefaultArgumentsMethod(methodNode)) {
+			new Matcher().match(methodNode, output, false);
+		} else if (isDefaultArgumentsConstructor(methodNode)) {
+			new Matcher().match(methodNode, output, true);
+		}
 	}
 
 	private static class Matcher extends AbstractMatcher {
 		public void match(final MethodNode methodNode,
-				final IFilterOutput output) {
+				final IFilterOutput output, final boolean constructor) {
 			cursor = methodNode.instructions.getFirst();
 
 			nextIs(Opcodes.IFNULL);
@@ -91,7 +106,7 @@ public final class KotlinDefaultArgumentsFilter implements IFilter {
 
 			final Set<AbstractInsnNode> ignore = new HashSet<AbstractInsnNode>();
 			final int maskVar = Type.getMethodType(methodNode.desc)
-					.getArgumentTypes().length - 2;
+					.getArgumentTypes().length - (constructor ? 1 : 2);
 			while (true) {
 				if (cursor.getOpcode() != Opcodes.ILOAD) {
 					break;
