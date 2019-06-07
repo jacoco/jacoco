@@ -18,8 +18,11 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.objectweb.asm.ClassVisitor;
+import org.objectweb.asm.Label;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
+import org.objectweb.asm.TypePath;
+import org.objectweb.asm.TypeReference;
 
 /**
  * Unit tests for {@link ProbeInserter}.
@@ -180,6 +183,28 @@ public class ProbeInserterTest {
 		// Local variables are shifted by one:
 		expectedVisitor.visitLocalVariable(null, null, null, null, null, 4);
 		expectedVisitor.visitLocalVariable(null, null, null, null, null, 5);
+	}
+
+	@Test
+	public void should_remap_LocalVariableAnnotation() {
+		ProbeInserter pi = new ProbeInserter(0, "m", "(I)V", actualVisitor,
+				arrayStrategy);
+
+		final Label start = new Label();
+		pi.visitLabel(start);
+		final Label end = new Label();
+		pi.visitLabel(end);
+
+		pi.visitLocalVariableAnnotation(TypeReference.LOCAL_VARIABLE, null,
+				new Label[] { start }, new Label[] { end }, new int[] { 2 },
+				"LNonNull;", false);
+
+		expectedVisitor.visitLabel(start);
+		expectedVisitor.visitLabel(end);
+		// Local variables are shifted by one:
+		expectedVisitor.visitLocalVariableAnnotation(
+				TypeReference.LOCAL_VARIABLE, null, new Label[] { start },
+				new Label[] { end }, new int[] { 3 }, "LNonNull;", false);
 	}
 
 	@Test
