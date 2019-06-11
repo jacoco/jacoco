@@ -117,7 +117,7 @@ class ProbeInserter extends MethodVisitor implements IProbeInserter {
 	public AnnotationVisitor visitLocalVariableAnnotation(final int typeRef,
 			final TypePath typePath, final Label[] start, final Label[] end,
 			final int[] index, final String descriptor, final boolean visible) {
-		int[] newIndex = new int[index.length];
+		final int[] newIndex = new int[index.length];
 		for (int i = 0; i < newIndex.length; i++) {
 			newIndex[i] = map(index[i]);
 		}
