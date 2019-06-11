@@ -11,10 +11,12 @@
  *******************************************************************************/
 package org.jacoco.core.internal.instr;
 
+import org.objectweb.asm.AnnotationVisitor;
 import org.objectweb.asm.Label;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.Type;
+import org.objectweb.asm.TypePath;
 
 /**
  * Internal utility to add probes into the control flow of a method. The code
@@ -109,6 +111,18 @@ class ProbeInserter extends MethodVisitor implements IProbeInserter {
 			final String signature, final Label start, final Label end,
 			final int index) {
 		mv.visitLocalVariable(name, desc, signature, start, end, map(index));
+	}
+
+	@Override
+	public AnnotationVisitor visitLocalVariableAnnotation(final int typeRef,
+			final TypePath typePath, final Label[] start, final Label[] end,
+			final int[] index, final String descriptor, final boolean visible) {
+		final int[] newIndex = new int[index.length];
+		for (int i = 0; i < newIndex.length; i++) {
+			newIndex[i] = map(index[i]);
+		}
+		return mv.visitLocalVariableAnnotation(typeRef, typePath, start, end,
+				newIndex, descriptor, visible);
 	}
 
 	@Override
