@@ -6,6 +6,7 @@ install: true
 # Use container-based infrastructure:
 sudo: false
 
+dist: trusty
 addons:
   apt:
     packages:
