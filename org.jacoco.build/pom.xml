@@ -748,6 +748,27 @@
       </build>
     </profile>
 
+    <!--
+    Following profile enables compilation into bytecode version 13
+    when requested "bytecode.version" greater than 13,
+    because this is maximum that can be processed by
+    maven-shade-plugin and maven-plugin-plugin.
+    This is overridden for tests.
+    -->
+    <profile>
+      <id>java14-bytecode</id>
+      <activation>
+        <property>
+          <name>bytecode.version</name>
+          <value>14</value>
+        </property>
+      </activation>
+      <properties>
+        <maven.compiler.source>13</maven.compiler.source>
+        <maven.compiler.target>13</maven.compiler.target>
+      </properties>
+    </profile>
+
     <!-- This profile enables use of ECJ -->
     <profile>
       <id>ecj</id>
