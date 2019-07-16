@@ -9,23 +9,18 @@
  *    Evgeny Mandrikov - initial API and implementation
  *
  *******************************************************************************/
-package org.jacoco.core.test.validation.kotlin;
+package org.jacoco.core.test.validation.scala;
 
 import org.jacoco.core.test.validation.ValidationTestBase;
-import org.jacoco.core.test.validation.kotlin.targets.KotlinInlineTargetKt;
+import org.jacoco.core.test.validation.scala.targets.ScalaSingletonObjectTarget;
 
 /**
- * Test of <code>inline</code> functions.
+ * Test of singleton object.
  */
-public class KotlinInlineTest extends ValidationTestBase {
+public class ScalaSingletonObjectTest extends ValidationTestBase {
 
-	public KotlinInlineTest() {
-		super(KotlinInlineTargetKt.class);
-	}
-
-	@Override
-	public void all_missed_instructions_should_have_line_number() {
-		// missed instructions without line number in inline function
-	}
+    public ScalaSingletonObjectTest() {
+        super(ScalaSingletonObjectTarget.class);
+    }
 
 }

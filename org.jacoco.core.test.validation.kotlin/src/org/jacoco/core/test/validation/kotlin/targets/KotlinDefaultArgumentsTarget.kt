@@ -22,6 +22,15 @@ object KotlinDefaultArgumentsTarget {
     private fun branch(a: Boolean, b: String = if (a) "a" else "b") { // assertFullyCovered(0, 2)
     }
 
+    open class Open {
+        open fun f(a: String = "a") { // assertFullyCovered()
+        }
+    }
+
+    class Constructor() {
+        constructor(a: Boolean, b: String = if (a) "a" else "b") : this() // assertFullyCovered(0, 2)
+    }
+
     @JvmStatic
     fun main(args: Array<String>) {
         f(a = "a")
@@ -31,6 +40,11 @@ object KotlinDefaultArgumentsTarget {
 
         branch(false)
         branch(true)
+
+        Open().f()
+
+        Constructor(false)
+        Constructor(true)
     }
 
 }
