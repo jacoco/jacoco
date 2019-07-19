@@ -28,7 +28,11 @@ public final class Offline {
 	static {
 		final Properties config = ConfigLoader.load(CONFIG_RESOURCE,
 				System.getProperties());
-		DATA = Agent.getInstance(new AgentOptions(config)).getData();
+		try {
+			DATA = Agent.getInstance(new AgentOptions(config)).getData();
+		} catch (final Exception e) {
+			throw new RuntimeException("Failed to initialize JaCoCo.", e);
+		}
 	}
 
 	private Offline() {
@@ -48,8 +52,9 @@ public final class Offline {
 	 */
 	public static boolean[] getProbes(final long classid,
 			final String classname, final int probecount) {
-		return DATA.getExecutionData(Long.valueOf(classid), classname,
-				probecount).getProbes();
+		return DATA
+				.getExecutionData(Long.valueOf(classid), classname, probecount)
+				.getProbes();
 	}
 
 }

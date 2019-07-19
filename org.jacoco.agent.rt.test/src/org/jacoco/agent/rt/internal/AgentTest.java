@@ -19,8 +19,8 @@ import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 import java.io.ByteArrayInputStream;
-import java.io.IOException;
 import java.lang.management.ManagementFactory;
+import java.util.NoSuchElementException;
 
 import javax.management.InstanceNotFoundException;
 import javax.management.MBeanServer;
@@ -105,16 +105,15 @@ public class AgentTest implements IExceptionLogger, IAgentOutput {
 		assertNull(loggedException);
 	}
 
-	@Test
-	public void startup_should_log_exception() throws Exception {
-		final Exception expected = new Exception();
+	@Test(expected = NoSuchElementException.class)
+	public void startup_should_rethrow_exception() throws Exception {
 		Agent agent = new Agent(options, this) {
 			@Override
 			IAgentOutput createAgentOutput() {
 				return new IAgentOutput() {
 					public void startup(AgentOptions options, RuntimeData data)
 							throws Exception {
-						throw expected;
+						throw new NoSuchElementException();
 					}
 
 					public void shutdown() {
@@ -127,8 +126,6 @@ public class AgentTest implements IExceptionLogger, IAgentOutput {
 		};
 
 		agent.startup();
-
-		assertSame(expected, loggedException);
 	}
 
 	@Test
@@ -240,7 +237,7 @@ public class AgentTest implements IExceptionLogger, IAgentOutput {
 	}
 
 	@Test
-	public void getSessionId_should_return_session_id() throws IOException {
+	public void getSessionId_should_return_session_id() throws Exception {
 		Agent agent = createAgent();
 
 		agent.startup();
@@ -249,7 +246,7 @@ public class AgentTest implements IExceptionLogger, IAgentOutput {
 	}
 
 	@Test
-	public void setSessionId_should_modify_session_id() throws IOException {
+	public void setSessionId_should_modify_session_id() throws Exception {
 		Agent agent = createAgent();
 		agent.startup();
 
@@ -273,7 +270,7 @@ public class AgentTest implements IExceptionLogger, IAgentOutput {
 
 	@Test
 	public void getExecutionData_should_return_probes_and_session_id()
-			throws IOException {
+			throws Exception {
 		Agent agent = createAgent();
 		agent.startup();
 		agent.getData().getExecutionData(Long.valueOf(0x12345678), "Foo", 1)
@@ -291,7 +288,7 @@ public class AgentTest implements IExceptionLogger, IAgentOutput {
 
 	@Test
 	public void getExecutionData_should_reset_probes_when_enabled()
-			throws IOException {
+			throws Exception {
 		Agent agent = createAgent();
 		agent.startup();
 		final boolean[] probes = agent.getData()
@@ -306,7 +303,7 @@ public class AgentTest implements IExceptionLogger, IAgentOutput {
 
 	@Test
 	public void getExecutionData_should_not_reset_probes_when_disabled()
-			throws IOException {
+			throws Exception {
 		Agent agent = createAgent();
 		agent.startup();
 		final boolean[] probes = agent.getData()
