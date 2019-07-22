@@ -129,12 +129,17 @@ public final class KotlinDefaultArgumentsFilter implements IFilter {
 			}
 		}
 
-		private static int maskVar(final String desc, final boolean constructor) {
+		private static int maskVar(final String desc,
+				final boolean constructor) {
+			int slot = 0;
+			if (constructor) {
+				// one slot for reference to current object
+				slot++;
+			}
 			final Type[] argumentTypes = Type.getMethodType(desc)
 					.getArgumentTypes();
-			int slot = 0;
-			for (int i = 0; i < argumentTypes.length
-					- (constructor ? 1 : 2); i++) {
+			final int penultimateArgument = argumentTypes.length - 2;
+			for (int i = 0; i < penultimateArgument; i++) {
 				slot += argumentTypes[i].getSize();
 			}
 			return slot;
