@@ -105,8 +105,7 @@ public final class KotlinDefaultArgumentsFilter implements IFilter {
 			}
 
 			final Set<AbstractInsnNode> ignore = new HashSet<AbstractInsnNode>();
-			final int maskVar = Type.getMethodType(methodNode.desc)
-					.getArgumentTypes().length - (constructor ? 1 : 2);
+			final int maskVar = maskVar(methodNode.desc, constructor);
 			while (true) {
 				if (cursor.getOpcode() != Opcodes.ILOAD) {
 					break;
@@ -128,6 +127,22 @@ public final class KotlinDefaultArgumentsFilter implements IFilter {
 			for (AbstractInsnNode i : ignore) {
 				output.ignore(i, i);
 			}
+		}
+
+		private static int maskVar(final String desc,
+				final boolean constructor) {
+			int slot = 0;
+			if (constructor) {
+				// one slot for reference to current object
+				slot++;
+			}
+			final Type[] argumentTypes = Type.getMethodType(desc)
+					.getArgumentTypes();
+			final int penultimateArgument = argumentTypes.length - 2;
+			for (int i = 0; i < penultimateArgument; i++) {
+				slot += argumentTypes[i].getSize();
+			}
+			return slot;
 		}
 	}
 
