@@ -57,6 +57,17 @@ public class SyntheticFilterTest extends FilterTestBase {
 	}
 
 	@Test
+	public void should_not_filter_Scala_anonymous_functions() {
+		final MethodNode m = new MethodNode(InstrSupport.ASM_API_VERSION,
+				Opcodes.ACC_SYNTHETIC, "$anonfun$main$1", "()V", null, null);
+		m.visitInsn(Opcodes.RETURN);
+
+		filter.filter(m, context, output);
+
+		assertIgnored();
+	}
+
+	@Test
 	public void should_not_filter_method_with_suffix_default_in_kotlin_classes() {
 		final MethodNode m = new MethodNode(InstrSupport.ASM_API_VERSION,
 				Opcodes.ACC_SYNTHETIC | Opcodes.ACC_BRIDGE, "example$default",
