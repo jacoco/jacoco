@@ -29,6 +29,10 @@ public final class SyntheticFilter implements IFilter {
 			return;
 		}
 
+		if (methodNode.name.startsWith("$anonfun$")) {
+			return;
+		}
+
 		if (KotlinGeneratedFilter.isKotlinClass(context)) {
 			if (KotlinDefaultArgumentsFilter
 					.isDefaultArgumentsMethod(methodNode)) {
