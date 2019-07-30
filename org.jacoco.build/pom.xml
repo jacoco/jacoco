@@ -146,7 +146,7 @@
     <!-- ================== -->
     <!-- For SonarQube analysis -->
     <!-- ================== -->
-    <sonar.jacoco.reportPath>../${project.artifactId}.test/target/jacoco.exec</sonar.jacoco.reportPath>
+    <sonar.coverage.jacoco.xmlReportPaths>../org.jacoco.doc/target/site/jacoco-aggregate/jacoco.xml</sonar.coverage.jacoco.xmlReportPaths>
     <sonar.surefire.reportsPath>../${project.artifactId}.test/target/surefire-reports/</sonar.surefire.reportsPath>
 
     <!-- See http://jira.codehaus.org/browse/SONAR-2096 -->
