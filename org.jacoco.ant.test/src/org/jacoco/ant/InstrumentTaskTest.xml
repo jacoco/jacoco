@@ -139,8 +139,8 @@
 				<pathelement path="${temp.dir}"/>
 			</classpath>
 		</java>
-		<au:assertLogContains text="Caused by: java.lang.RuntimeException: Failed to initialize JaCoCo."/>
-		<au:assertLogContains text="Caused by: java.lang.NumberFormatException: For input string: &quot;foo&quot;"/>
+		<au:assertLogContains text="java.lang.RuntimeException: Failed to initialize JaCoCo."/>
+		<au:assertLogContains text="java.lang.NumberFormatException: For input string: &quot;foo&quot;"/>
 	</target>
 	
 </project>

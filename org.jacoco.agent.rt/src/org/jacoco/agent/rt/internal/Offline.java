@@ -22,21 +22,25 @@ import org.jacoco.core.runtime.RuntimeData;
  */
 public final class Offline {
 
-	private static final RuntimeData DATA;
 	private static final String CONFIG_RESOURCE = "/jacoco-agent.properties";
-
-	static {
-		final Properties config = ConfigLoader.load(CONFIG_RESOURCE,
-				System.getProperties());
-		try {
-			DATA = Agent.getInstance(new AgentOptions(config)).getData();
-		} catch (final Exception e) {
-			throw new RuntimeException("Failed to initialize JaCoCo.", e);
-		}
-	}
 
 	private Offline() {
 		// no instances
+	}
+
+	private static RuntimeData data;
+
+	private static synchronized RuntimeData getRuntimeData() {
+		if (data == null) {
+			final Properties config = ConfigLoader.load(CONFIG_RESOURCE,
+					System.getProperties());
+			try {
+				data = Agent.getInstance(new AgentOptions(config)).getData();
+			} catch (final Exception e) {
+				throw new RuntimeException("Failed to initialize JaCoCo.", e);
+			}
+		}
+		return data;
 	}
 
 	/**
@@ -52,7 +56,7 @@ public final class Offline {
 	 */
 	public static boolean[] getProbes(final long classid,
 			final String classname, final int probecount) {
-		return DATA
+		return getRuntimeData()
 				.getExecutionData(Long.valueOf(classid), classname, probecount)
 				.getProbes();
 	}
