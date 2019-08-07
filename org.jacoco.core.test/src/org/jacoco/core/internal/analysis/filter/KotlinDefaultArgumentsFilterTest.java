@@ -184,4 +184,38 @@ public class KotlinDefaultArgumentsFilterTest extends FilterTestBase {
 		assertIgnored(new Range(m.instructions.get(3), m.instructions.get(3)));
 	}
 
+	/**
+	 * <pre>
+	 * data class C(val x: Long = 42)
+	 * </pre>
+	 */
+	@Test
+	public void should_filter_methods_with_parameters_that_consume_two_slots() {
+		final MethodNode m = new MethodNode(InstrSupport.ASM_API_VERSION,
+				Opcodes.ACC_SYNTHETIC, "<init>",
+				"(JILkotlin/jvm/internal/DefaultConstructorMarker;)V", null,
+				null);
+		context.classAnnotations
+				.add(KotlinGeneratedFilter.KOTLIN_METADATA_DESC);
+
+		m.visitVarInsn(Opcodes.ILOAD, 3);
+		m.visitInsn(Opcodes.ICONST_1);
+		m.visitInsn(Opcodes.IAND);
+		final Label label = new Label();
+		m.visitJumpInsn(Opcodes.IFEQ, label);
+		// default argument
+		m.visitLdcInsn(Integer.valueOf(42));
+		m.visitVarInsn(Opcodes.ISTORE, 1);
+		m.visitLabel(label);
+		m.visitVarInsn(Opcodes.ALOAD, 0);
+		m.visitVarInsn(Opcodes.ILOAD, 1);
+		m.visitMethodInsn(Opcodes.INVOKESPECIAL, "Owner", "<init>", "(J)V",
+				false);
+		m.visitInsn(Opcodes.RETURN);
+
+		filter.filter(m, context, output);
+
+		assertIgnored(new Range(m.instructions.get(3), m.instructions.get(3)));
+	}
+
 }

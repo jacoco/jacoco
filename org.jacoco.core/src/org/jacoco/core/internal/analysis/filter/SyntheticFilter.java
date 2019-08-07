@@ -31,9 +31,13 @@ public final class SyntheticFilter implements IFilter {
 			return;
 		}
 
-		if (isHandledByAspectJFilter(methodNode)) {
+		if (methodNode.name.startsWith("$anonfun$")) {
 			return;
 		}
+
+    if (isHandledByAspectJFilter(methodNode)) {
+      return;
+    }
 
 		if (KotlinGeneratedFilter.isKotlinClass(context)) {
 			if (KotlinDefaultArgumentsFilter

@@ -19,6 +19,9 @@ object KotlinDefaultArgumentsTarget {
     private fun f(a: String = "a", b: String = "b") { // assertFullyCovered(0, 0)
     }
 
+    private fun longParameter(x: Long = 0) { // assertFullyCovered()
+    }
+
     private fun branch(a: Boolean, b: String = if (a) "a" else "b") { // assertFullyCovered(0, 2)
     }
 
@@ -37,6 +40,9 @@ object KotlinDefaultArgumentsTarget {
         f(b = "b")
         /* next invocation doesn't use synthetic method: */
         f("a", "b")
+
+        longParameter()
+        longParameter(1)
 
         branch(false)
         branch(true)
