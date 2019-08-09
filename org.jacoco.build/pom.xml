@@ -142,6 +142,7 @@
     <ant.version>1.7.1</ant.version>
     <args4j.version>2.0.28</args4j.version>
     <junit.version>4.8.2</junit.version>
+    <googlecodeprettify.version>20100721</googlecodeprettify.version>
 
     <!-- ================== -->
     <!-- For SonarQube analysis -->
@@ -655,6 +656,16 @@
                 buildNumber = project.getProperties().get("buildNumber");
                 pkgName = buildNumber.substring(buildNumber.length() - 7, buildNumber.length());
                 project.getProperties().setProperty("jacoco.runtime.package.name", "org.jacoco.agent.rt.internal_" + pkgName);
+                
+                void loadLicense(String libraryId) {
+                    version = project.getProperties().get(libraryId + ".version");
+                    path = project.getBasedir().toPath().resolve("../org.jacoco.build/licenses/" + libraryId + "-" + version + ".html");
+                    license = new String(java.nio.file.Files.readAllBytes(path), "UTF-8");
+                    project.getProperties().setProperty(libraryId + ".license", license);
+                }
+                loadLicense("args4j");
+                loadLicense("asm");
+                loadLicense("googlecodeprettify");
               ]]>
               </script>
             </configuration>
