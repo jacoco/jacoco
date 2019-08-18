@@ -21,6 +21,7 @@ import org.jacoco.core.internal.flow.ClassProbesVisitor;
 import org.jacoco.core.internal.flow.MethodProbesVisitor;
 import org.jacoco.core.internal.instr.InstrSupport;
 import org.objectweb.asm.AnnotationVisitor;
+import org.objectweb.asm.Attribute;
 import org.objectweb.asm.FieldVisitor;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.tree.MethodNode;
@@ -36,6 +37,8 @@ public class ClassAnalyzer extends ClassProbesVisitor
 	private final StringPool stringPool;
 
 	private final Set<String> classAnnotations = new HashSet<String>();
+
+	private final Set<String> classAttributes = new HashSet<String>();
 
 	private String sourceDebugExtension;
 
@@ -73,6 +76,11 @@ public class ClassAnalyzer extends ClassProbesVisitor
 			final boolean visible) {
 		classAnnotations.add(desc);
 		return super.visitAnnotation(desc, visible);
+	}
+
+	@Override
+	public void visitAttribute(final Attribute attribute) {
+		classAttributes.add(attribute.type);
 	}
 
 	@Override
@@ -147,7 +155,7 @@ public class ClassAnalyzer extends ClassProbesVisitor
 	}
 
 	public Set<String> getClassAttributes() {
-		return new HashSet<String>();
+		return classAttributes;
 	}
 
 	public String getSourceFileName() {
