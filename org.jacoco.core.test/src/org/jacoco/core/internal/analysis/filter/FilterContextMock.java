@@ -38,6 +38,10 @@ public class FilterContextMock implements IFilterContext {
 		return classAnnotations;
 	}
 
+	public Set<String> getClassAttributes() {
+		return classAttributes;
+	}
+
 	public String getSourceFileName() {
 		return sourceFileName;
 	}

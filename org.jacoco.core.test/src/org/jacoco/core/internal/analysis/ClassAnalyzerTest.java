@@ -12,11 +12,13 @@
 package org.jacoco.core.internal.analysis;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 import org.jacoco.core.internal.flow.MethodProbesVisitor;
 import org.jacoco.core.internal.instr.InstrSupport;
 import org.junit.Before;
 import org.junit.Test;
+import org.objectweb.asm.Attribute;
 import org.objectweb.asm.Opcodes;
 
 /**
@@ -55,6 +57,14 @@ public class ClassAnalyzerTest {
 				null, null);
 		mv.visitEnd();
 		assertEquals(0, coverage.getMethods().size());
+	}
+
+	@Test
+	public void should_collect_attributes() {
+		assertTrue(analyzer.getClassAttributes().isEmpty());
+		analyzer.visitAttribute(new Attribute("foo") {
+		});
+		assertTrue(analyzer.getClassAttributes().contains("foo"));
 	}
 
 }

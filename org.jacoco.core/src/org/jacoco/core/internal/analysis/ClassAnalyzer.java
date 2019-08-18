@@ -146,6 +146,10 @@ public class ClassAnalyzer extends ClassProbesVisitor
 		return classAnnotations;
 	}
 
+	public Set<String> getClassAttributes() {
+		return new HashSet<String>();
+	}
+
 	public String getSourceFileName() {
 		return coverage.getSourceFileName();
 	}
