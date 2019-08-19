@@ -19,6 +19,11 @@ import org.objectweb.asm.tree.MethodNode;
  */
 public final class SyntheticFilter implements IFilter {
 
+	private static boolean isScalaClass(final IFilterContext context) {
+		return context.getClassAttributes().contains("ScalaSig")
+				|| context.getClassAttributes().contains("Scala");
+	}
+
 	public void filter(final MethodNode methodNode,
 			final IFilterContext context, final IFilterOutput output) {
 		if ((methodNode.access & Opcodes.ACC_SYNTHETIC) == 0) {
@@ -29,8 +34,10 @@ public final class SyntheticFilter implements IFilter {
 			return;
 		}
 
-		if (methodNode.name.startsWith("$anonfun$")) {
-			return;
+		if (isScalaClass(context)) {
+			if (methodNode.name.startsWith("$anonfun$")) {
+				return;
+			}
 		}
 
 		if (KotlinGeneratedFilter.isKotlinClass(context)) {

@@ -34,6 +34,11 @@ public interface IFilterContext {
 	Set<String> getClassAnnotations();
 
 	/**
+	 * @return names of the class attributes
+	 */
+	Set<String> getClassAttributes();
+
+	/**
 	 * @return file name of the corresponding source file or <code>null</code>
 	 *         if not available
 	 */
