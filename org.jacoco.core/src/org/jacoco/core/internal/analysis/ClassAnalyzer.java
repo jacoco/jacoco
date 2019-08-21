@@ -24,6 +24,7 @@ import org.objectweb.asm.AnnotationVisitor;
 import org.objectweb.asm.Attribute;
 import org.objectweb.asm.FieldVisitor;
 import org.objectweb.asm.MethodVisitor;
+import org.objectweb.asm.tree.FieldNode;
 import org.objectweb.asm.tree.MethodNode;
 
 /**
@@ -37,6 +38,7 @@ public class ClassAnalyzer extends ClassProbesVisitor
 	private final StringPool stringPool;
 
 	private final Set<String> classAnnotations = new HashSet<String>();
+    private final Set<FieldNode> classFields = new HashSet<FieldNode>();
 
 	private final Set<String> classAttributes = new HashSet<String>();
 
@@ -131,6 +133,8 @@ public class ClassAnalyzer extends ClassProbesVisitor
 	@Override
 	public FieldVisitor visitField(final int access, final String name,
 			final String desc, final String signature, final Object value) {
+        FieldNode fieldNode = new FieldNode(access, name, desc, signature, value);
+        classFields.add(fieldNode);
 		InstrSupport.assertNotInstrumented(name, coverage.getName());
 		return super.visitField(access, name, desc, signature, value);
 	}
@@ -158,7 +162,12 @@ public class ClassAnalyzer extends ClassProbesVisitor
 		return classAttributes;
 	}
 
-	public String getSourceFileName() {
+
+    public Set<FieldNode> getClassFields() {
+        return classFields;
+    }
+
+    public String getSourceFileName() {
 		return coverage.getSourceFileName();
 	}
 

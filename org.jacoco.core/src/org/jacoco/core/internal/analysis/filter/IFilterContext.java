@@ -11,6 +11,8 @@
  *******************************************************************************/
 package org.jacoco.core.internal.analysis.filter;
 
+import org.objectweb.asm.tree.FieldNode;
+
 import java.util.Set;
 
 /**
@@ -37,6 +39,11 @@ public interface IFilterContext {
 	 * @return names of the class attributes
 	 */
 	Set<String> getClassAttributes();
+
+	/**
+	 * @return vm names of the class fields of the enclosing class
+	 */
+	Set<FieldNode> getClassFields();
 
 	/**
 	 * @return file name of the corresponding source file or <code>null</code>
