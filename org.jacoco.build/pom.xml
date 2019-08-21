@@ -146,7 +146,7 @@
     <!-- ================== -->
     <!-- For SonarQube analysis -->
     <!-- ================== -->
-    <sonar.jacoco.reportPath>../${project.artifactId}.test/target/jacoco.exec</sonar.jacoco.reportPath>
+    <sonar.coverage.jacoco.xmlReportPaths>../org.jacoco.doc/target/site/jacoco-aggregate/jacoco.xml</sonar.coverage.jacoco.xmlReportPaths>
     <sonar.surefire.reportsPath>../${project.artifactId}.test/target/surefire-reports/</sonar.surefire.reportsPath>
 
     <!-- See http://jira.codehaus.org/browse/SONAR-2096 -->
@@ -267,6 +267,7 @@
           <exclude>**/*.java</exclude>
           <exclude>**/*.kt</exclude>
           <exclude>**/*.groovy</exclude>
+          <exclude>**/*.scala</exclude>
           <exclude>**/*.properties</exclude>
         </excludes>
       </resource>
@@ -570,6 +571,7 @@
                 <fileset dir="${basedir}" includes="**/*.java,**/*.xml,**/*.bsh" excludes="target/**,.idea/**,nb-configuration.xml" id="missinglicense.fileset">
                   <include name="**/*.kt"/>
                   <include name="**/*.groovy"/>
+                  <include name="**/*.scala"/>
                   <not>
                     <and>
                       <contains text="Copyright (c) 2009, 2019 Mountainminds GmbH &amp; Co. KG and Contributors"/>
@@ -744,6 +746,27 @@
           </plugin>
         </plugins>
       </build>
+    </profile>
+
+    <!--
+    Following profile enables compilation into bytecode version 13
+    when requested "bytecode.version" greater than 13,
+    because this is maximum that can be processed by
+    maven-shade-plugin and maven-plugin-plugin.
+    This is overridden for tests.
+    -->
+    <profile>
+      <id>java14-bytecode</id>
+      <activation>
+        <property>
+          <name>bytecode.version</name>
+          <value>14</value>
+        </property>
+      </activation>
+      <properties>
+        <maven.compiler.source>13</maven.compiler.source>
+        <maven.compiler.target>13</maven.compiler.target>
+      </properties>
     </profile>
 
     <!-- This profile enables use of ECJ -->

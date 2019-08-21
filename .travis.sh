@@ -69,6 +69,9 @@ case "$JDK" in
 13-ea)
   install_jdk $JDK13_EA_URL
   ;;
+14-ea)
+  install_jdk $JDK14_EA_URL
+  ;;
 esac
 
 # Do not use "~/.mavenrc" set by Travis (https://github.com/travis-ci/travis-ci/issues/3893),
@@ -102,6 +105,10 @@ case "$JDK" in
   ;;
 13-ea)
   mvn -V -B -e verify -Dbytecode.version=13 \
+    --settings=./.travis/settings.xml
+  ;;
+14-ea)
+  mvn -V -B -e verify -Dbytecode.version=14 \
     --settings=./.travis/settings.xml
   ;;
 *)

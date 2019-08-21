@@ -7,10 +7,9 @@
    http://www.eclipse.org/legal/epl-v10.html
 
    Contributors:
-      Andres Almiray - initial API and implementation
+      Evgeny Mandrikov - initial API and implementation
 -->
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
   <parent>
@@ -20,13 +19,12 @@
     <relativePath>../org.jacoco.core.test.validation</relativePath>
   </parent>
 
-  <artifactId>org.jacoco.core.test.validation.groovy</artifactId>
+  <artifactId>org.jacoco.core.test.validation.scala</artifactId>
 
-  <name>JaCoCo :: Test :: Core :: Validation Groovy</name>
+  <name>JaCoCo :: Test :: Core :: Validation Scala</name>
 
   <properties>
-    <gmaven.version>1.6.2</gmaven.version>
-    <groovy.version>2.5.8</groovy.version>
+    <bytecode.version>6</bytecode.version>
   </properties>
 
   <dependencies>
@@ -36,18 +34,18 @@
       <version>${project.version}</version>
     </dependency>
     <dependency>
-      <groupId>org.codehaus.groovy</groupId>
-      <artifactId>groovy</artifactId>
-      <version>${groovy.version}</version>
+      <groupId>org.scala-lang</groupId>
+      <artifactId>scala-library</artifactId>
+      <version>2.12.8</version>
     </dependency>
   </dependencies>
 
   <build>
     <plugins>
       <plugin>
-        <groupId>org.codehaus.gmavenplus</groupId>
-        <artifactId>gmavenplus-plugin</artifactId>
-        <version>${gmaven.version}</version>
+        <groupId>net.alchim31.maven</groupId>
+        <artifactId>scala-maven-plugin</artifactId>
+        <version>4.0.2</version>
         <executions>
           <execution>
             <id>compile</id>
@@ -57,17 +55,6 @@
             </goals>
           </execution>
         </executions>
-        <configuration>
-          <targetBytecode>${groovy.targetBytecode}</targetBytecode>
-          <sources>
-            <source>
-              <directory>${project.build.sourceDirectory}</directory>
-              <includes>
-                <include>**/*.groovy</include>
-              </includes>
-            </source>
-          </sources>
-        </configuration>
       </plugin>
     </plugins>
   </build>

@@ -6,20 +6,28 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *
  * Contributors:
- *    Oliver Nautsch - initial API and implementation
+ *    Evgeny Mandrikov - initial API and implementation
  *
  *******************************************************************************/
-package org.jacoco.core.test.validation.groovy.targets
+package org.jacoco.core.test.validation.scala.targets
 
-import groovy.transform.Immutable
+import org.jacoco.core.test.validation.targets.Stubs.{exec, noexec, nop}
 
-@Immutable
-class GroovyImutableClassTarget { // assertEmpty()
+/**
+ * Test target for anonymous functions.
+ */
+object ScalaAnonymousFunctionTarget {
 
-    String name // assertEmpty()
-    int age     // assertEmpty()
+  def main(args: Array[String]): Unit = {
 
-    static void main(String[] args) {
-        new GroovyImutableClassTarget() // assertFullyCovered()
-    }
+    exec(() => {
+      nop() // assertFullyCovered()
+    })
+
+    noexec(() => {
+      nop() // assertNotCovered()
+    })
+
+  }
+
 }

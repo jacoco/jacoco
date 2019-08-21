@@ -9,23 +9,18 @@
  *    Evgeny Mandrikov - initial API and implementation
  *
  *******************************************************************************/
-package org.jacoco.core.test.validation.kotlin;
+package org.jacoco.core.test.validation.scala;
 
 import org.jacoco.core.test.validation.ValidationTestBase;
-import org.jacoco.core.test.validation.kotlin.targets.KotlinInlineTargetKt;
+import org.jacoco.core.test.validation.scala.targets.ScalaAnonymousFunctionTarget;
 
 /**
- * Test of <code>inline</code> functions.
+ * Test of anonymous functions.
  */
-public class KotlinInlineTest extends ValidationTestBase {
+public class ScalaAnonymousFunctionTest extends ValidationTestBase {
 
-	public KotlinInlineTest() {
-		super(KotlinInlineTargetKt.class);
-	}
-
-	@Override
-	public void all_missed_instructions_should_have_line_number() {
-		// missed instructions without line number in inline function
-	}
+    public ScalaAnonymousFunctionTest() {
+        super(ScalaAnonymousFunctionTarget.class);
+    }
 
 }

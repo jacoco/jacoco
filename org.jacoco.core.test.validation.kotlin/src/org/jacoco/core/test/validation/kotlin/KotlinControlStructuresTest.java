@@ -12,20 +12,15 @@
 package org.jacoco.core.test.validation.kotlin;
 
 import org.jacoco.core.test.validation.ValidationTestBase;
-import org.jacoco.core.test.validation.kotlin.targets.KotlinInlineTargetKt;
+import org.jacoco.core.test.validation.kotlin.targets.KotlinControlStructuresTarget;
 
 /**
- * Test of <code>inline</code> functions.
+ * Tests of Kotlin control structures.
  */
-public class KotlinInlineTest extends ValidationTestBase {
+public class KotlinControlStructuresTest extends ValidationTestBase {
 
-	public KotlinInlineTest() {
-		super(KotlinInlineTargetKt.class);
-	}
-
-	@Override
-	public void all_missed_instructions_should_have_line_number() {
-		// missed instructions without line number in inline function
+	public KotlinControlStructuresTest() {
+		super(KotlinControlStructuresTarget.class);
 	}
 
 }

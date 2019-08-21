@@ -171,8 +171,11 @@ public class BarColumnTest {
 		col.item(td, i1, resources, root);
 		final Document doc = parseDoc();
 
-		assertEquals("123\u00a0456",
-				support.findStr(doc, "/html/body/table/tr[1]/td/img[1]/@alt"));
+		// Prior to integration of JDK-8221432 in JDK 13
+		// formatting of a below number was using non-breaking space,
+		// after - narrow non-breaking space:
+		assertTrue(support.findStr(doc, "/html/body/table/tr[1]/td/img[1]/@alt")
+				.matches("123[\u00A0\u202F]456"));
 	}
 
 	@Test

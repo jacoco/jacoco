@@ -6,6 +6,7 @@ install: true
 # Use container-based infrastructure:
 sudo: false
 
+dist: trusty
 addons:
   apt:
     packages:
@@ -28,5 +29,6 @@ env:
   - JDK=11
   - JDK=12
   - JDK=13-ea
+  - JDK=14-ea
 
 script: ./.travis.sh

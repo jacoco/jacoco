@@ -6,26 +6,26 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *
  * Contributors:
- *    Evgeny Mandrikov - initial API and implementation
+ *    Stephan Classen
+ *    Vadim Bauer
  *
  *******************************************************************************/
-package org.jacoco.core.test.validation.kotlin;
+package org.jacoco.core.test.validation.groovy;
 
 import org.jacoco.core.test.validation.ValidationTestBase;
-import org.jacoco.core.test.validation.kotlin.targets.KotlinInlineTargetKt;
+import org.jacoco.core.test.validation.groovy.targets.GroovyIndexPropertyClassTarget;
+import org.junit.Test;
 
 /**
- * Test of <code>inline</code> functions.
+ * Test of class with fields annotated by {@link groovy.transform.IndexedProperty} annotation.
  */
-public class KotlinInlineTest extends ValidationTestBase {
+public class GroovyIndexPropertyClassTest extends ValidationTestBase {
+    public GroovyIndexPropertyClassTest() {
+        super(GroovyIndexPropertyClassTarget.class);
+    }
 
-	public KotlinInlineTest() {
-		super(KotlinInlineTargetKt.class);
-	}
-
-	@Override
-	public void all_missed_instructions_should_have_line_number() {
-		// missed instructions without line number in inline function
-	}
-
+    @Test
+    public void test_method_count() {
+        assertMethodCount(1);
+    }
 }

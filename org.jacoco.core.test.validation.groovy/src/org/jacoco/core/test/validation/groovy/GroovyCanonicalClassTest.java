@@ -6,21 +6,21 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *
  * Contributors:
- *    Oliver Nautsch - initial API and implementation
+ *    Andres Almiray - initial API and implementation
  *
  *******************************************************************************/
 package org.jacoco.core.test.validation.groovy;
 
 import org.jacoco.core.test.validation.ValidationTestBase;
-import org.jacoco.core.test.validation.groovy.targets.GroovyImutableClassTarget;
+import org.jacoco.core.test.validation.groovy.targets.GroovyCanonicalClassTarget;
 import org.junit.Test;
 
 /**
- * Test of class with {@link groovy.transform.Immutable} annotation.
+ * Test of class with {@link groovy.transform.Canonical} annotation.
  */
-public class GroovyImutableClassTest extends ValidationTestBase {
-    public GroovyImutableClassTest() {
-        super(GroovyImutableClassTarget.class);
+public class GroovyCanonicalClassTest extends ValidationTestBase {
+    public GroovyCanonicalClassTest() {
+        super(GroovyCanonicalClassTarget.class);
     }
 
     @Test

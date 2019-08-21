@@ -20,6 +20,31 @@
 
 <h2>Snapshot Build @qualified.bundle.version@ (@build.date@)</h2>
 
+<h3>New Features</h3>
+<ul>
+  <li>Experimental support for Java 14 class files
+      (GitHub <a href="https://github.com/jacoco/jacoco/issues/897">#897</a>).</li>
+  <li>Branches added by the Kotlin compiler for <code>open</code> functions with
+      default arguments are filtered out during generation of report
+      (GitHub <a href="https://github.com/jacoco/jacoco/issues/887">#887</a>).</li>
+</ul>
+
+<h3>Fixed bugs</h3>
+<ul>
+  <li><code>synthetic</code> constructors that contain values of default arguments
+      in Kotlin should not be ignored
+      (GitHub <a href="https://github.com/jacoco/jacoco/issues/888">#888</a>).</li>
+  <li>Instrumentation should update indexes of local variables in annotations
+      (GitHub <a href="https://github.com/jacoco/jacoco/issues/894">#894</a>).</li>
+  <li>Branches added by the Kotlin compiler for functions with default arguments
+      and containing arguments of type <code>long</code> or <code>double</code>
+      should be filtered out during generation of report
+      (GitHub <a href="https://github.com/jacoco/jacoco/issues/908">#908</a>).</li>
+  <li><code>synthetic</code> methods that contain bodies of anonymous functions
+      in Scala should not be ignored
+      (GitHub <a href="https://github.com/jacoco/jacoco/issues/912">#912</a>).</li>
+</ul>
+
 <h2>Release 0.8.4 (2019/05/08)</h2>
 
 <h3>New Features</h3>

@@ -6,21 +6,22 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *
  * Contributors:
- *    Andres Almiray - initial API and implementation
+ *    Stephan Classen
+ *    Vadim Bauer
  *
  *******************************************************************************/
 package org.jacoco.core.test.validation.groovy;
 
 import org.jacoco.core.test.validation.ValidationTestBase;
-import org.jacoco.core.test.validation.groovy.targets.GroovyDataClassTarget;
+import org.jacoco.core.test.validation.groovy.targets.GroovyAutoExternalizeClassTarget;
 import org.junit.Test;
 
 /**
- * Test of <code>data class</code>es.
+ * Test of class with {@link groovy.transform.AutoExternalize} annotation.
  */
-public class GroovyDataClassTest extends ValidationTestBase {
-    public GroovyDataClassTest() {
-        super(GroovyDataClassTarget.class);
+public class GroovyAutoExternalizeClassTest extends ValidationTestBase {
+    public GroovyAutoExternalizeClassTest() {
+        super(GroovyAutoExternalizeClassTarget.class);
     }
 
     @Test
