@@ -664,7 +664,7 @@
                 
                 void loadLicense(String libraryId) {
                     version = project.getProperties().get(libraryId + ".version");
-                    path = java.nio.file.Paths.get("../org.jacoco.build/licenses/" + libraryId + "-" + version + ".html", new String[0]);
+                    path = project.getBasedir().toPath().resolve("../org.jacoco.build/licenses/" + libraryId + "-" + version + ".html");
                     license = new String(java.nio.file.Files.readAllBytes(path), "UTF-8");
                     project.getProperties().setProperty(libraryId + ".license", license);
                 }
