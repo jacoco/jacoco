@@ -47,10 +47,10 @@ public class CheckMojo extends AbstractJacocoMojo implements IViolationsOutput {
 	 * applies to a certain counter (INSTRUCTION, LINE, BRANCH, COMPLEXITY,
 	 * METHOD, CLASS) and defines a minimum or maximum for the corresponding
 	 * value (TOTALCOUNT, COVEREDCOUNT, MISSEDCOUNT, COVEREDRATIO, MISSEDRATIO).
-	 * If a limit refers to a ratio the range is from 0.0 to 1.0 where the
-	 * number of decimal places will also determine the precision in error
-	 * messages. A limit ratio may optionally be declared as a percentage
-	 * where 0.80 and 80% represent the same value, the value must end with %.
+	 * If a limit refers to a ratio it must be in the range from 0.0 to 1.0
+	 * where the number of decimal places will also determine the precision in
+	 * error messages. A limit ratio may optionally be declared as a percentage
+	 * where 0.80 and 80% represent the same value.
 	 * </p>
 	 * 
 	 * <p>
@@ -149,8 +149,8 @@ public class CheckMojo extends AbstractJacocoMojo implements IViolationsOutput {
 			getLog().info(MSG_SKIPPING + dataFile);
 			return false;
 		}
-		final File classesDirectory = new File(getProject().getBuild()
-				.getOutputDirectory());
+		final File classesDirectory = new File(
+				getProject().getBuild().getOutputDirectory());
 		if (!classesDirectory.exists()) {
 			getLog().info(
 					"Skipping JaCoCo execution due to missing classes directory:"
@@ -161,8 +161,8 @@ public class CheckMojo extends AbstractJacocoMojo implements IViolationsOutput {
 	}
 
 	@Override
-	public void executeMojo() throws MojoExecutionException,
-			MojoExecutionException {
+	public void executeMojo()
+			throws MojoExecutionException, MojoExecutionException {
 		if (!canCheckCoverage()) {
 			return;
 		}
