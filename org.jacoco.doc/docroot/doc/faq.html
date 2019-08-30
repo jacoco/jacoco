@@ -184,6 +184,27 @@
       the <code>-Xss</code> JVM option.</li>
 </ul>
 
+<h3>Why do I see classes in the coverage report although I excluded them in the JaCoCo agent configuration?</h3>
+<p>
+  The <code>includes</code> and <code>excludes</code> options of the
+  <a href="agent.html">JaCoCo agent</a> determine for which classes execution
+  data is collected. Except for technical corner cases these options are
+  normally not required. If you exclude classes, no execution data is collected
+  for them.
+</p> 
+<p>  
+  Report creation is a separate step where all class files which should show up
+  in the report are explicitly provided. Coverage is determined from the
+  provided execution data. If execution data is missing for a particular class,
+  this class is shown as not covered because the report generator cannot
+  distinguish whether the class was excluded or not executed.
+</p>
+
+<p>
+  If you want to exclude classes from the report please configure the
+  respective report generation tool accordingly. 
+</p>
+
 </div>
 <div class="footer">
   <span class="right"><a href="${jacoco.home.url}">JaCoCo</a> ${qualified.bundle.version}</span>
