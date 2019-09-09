@@ -22,9 +22,9 @@ import org.apache.maven.artifact.Artifact;
 import org.apache.maven.artifact.versioning.DefaultArtifactVersion;
 import org.apache.maven.artifact.versioning.InvalidVersionSpecificationException;
 import org.apache.maven.artifact.versioning.VersionRange;
-import org.apache.maven.model.Dependency;
 import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
+import org.apache.maven.plugins.annotations.ResolutionScope;
 import org.apache.maven.project.MavenProject;
 import org.jacoco.report.IReportGroupVisitor;
 
@@ -52,7 +52,9 @@ import org.jacoco.report.IReportGroupVisitor;
  * 
  * @since 0.7.7
  */
-@Mojo(name = "report-aggregate", threadSafe = true)
+@Mojo(name = "report-aggregate", threadSafe = true,
+		requiresDependencyCollection = ResolutionScope.TEST,
+		requiresDependencyResolution = ResolutionScope.TEST)
 public class ReportAggregateMojo extends AbstractReportMojo {
 
 	/**
@@ -168,10 +170,9 @@ public class ReportAggregateMojo extends AbstractReportMojo {
 	private List<MavenProject> findDependencies(final String... scopes) {
 		final List<MavenProject> result = new ArrayList<MavenProject>();
 		final List<String> scopeList = Arrays.asList(scopes);
-		for (final Object dependencyObject : getProject().getDependencies()) {
-			final Dependency dependency = (Dependency) dependencyObject;
-			if (scopeList.contains(dependency.getScope())) {
-				final MavenProject project = findProjectFromReactor(dependency);
+		for (final Artifact artifact : getProject().getArtifacts()) {
+			if (scopeList.contains(artifact.getScope())) {
+				final MavenProject project = findProjectFromReactor(artifact);
 				if (project != null) {
 					result.add(project);
 				}
@@ -187,11 +188,11 @@ public class ReportAggregateMojo extends AbstractReportMojo {
 	 * selected. For example in case of range <code>[0,2]</code> if version 1 is
 	 * before version 2 in reactor, then version 1 will be selected.
 	 */
-	private MavenProject findProjectFromReactor(final Dependency d) {
+	private MavenProject findProjectFromReactor(final Artifact a) {
 		final VersionRange depVersionAsRange;
 		try {
 			depVersionAsRange = VersionRange
-					.createFromVersionSpec(d.getVersion());
+					.createFromVersionSpec(a.getVersion());
 		} catch (InvalidVersionSpecificationException e) {
 			throw new AssertionError(e);
 		}
@@ -199,8 +200,8 @@ public class ReportAggregateMojo extends AbstractReportMojo {
 		for (final MavenProject p : reactorProjects) {
 			final DefaultArtifactVersion pv = new DefaultArtifactVersion(
 					p.getVersion());
-			if (p.getGroupId().equals(d.getGroupId())
-					&& p.getArtifactId().equals(d.getArtifactId())
+			if (p.getGroupId().equals(a.getGroupId())
+					&& p.getArtifactId().equals(a.getArtifactId())
 					&& depVersionAsRange.containsVersion(pv)) {
 				return p;
 			}
