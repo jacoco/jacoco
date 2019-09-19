@@ -20,7 +20,6 @@ import static org.junit.Assert.fail;
 
 import java.io.ByteArrayInputStream;
 import java.lang.management.ManagementFactory;
-import java.util.NoSuchElementException;
 
 import javax.management.InstanceNotFoundException;
 import javax.management.MBeanServer;
@@ -105,15 +104,17 @@ public class AgentTest implements IExceptionLogger, IAgentOutput {
 		assertNull(loggedException);
 	}
 
-	@Test(expected = NoSuchElementException.class)
-	public void startup_should_rethrow_exception() throws Exception {
+	@Test
+	public void startup_should_log_and_rethrow_exception() throws Exception {
+		final Exception expected = new Exception();
+
 		Agent agent = new Agent(options, this) {
 			@Override
 			IAgentOutput createAgentOutput() {
 				return new IAgentOutput() {
 					public void startup(AgentOptions options, RuntimeData data)
 							throws Exception {
-						throw new NoSuchElementException();
+						throw expected;
 					}
 
 					public void shutdown() {
@@ -125,7 +126,13 @@ public class AgentTest implements IExceptionLogger, IAgentOutput {
 			}
 		};
 
-		agent.startup();
+		try {
+			agent.startup();
+			fail("Exception expected");
+		} catch (Exception actual) {
+			assertSame(expected, actual);
+			assertSame(expected, loggedException);
+		}
 	}
 
 	@Test
