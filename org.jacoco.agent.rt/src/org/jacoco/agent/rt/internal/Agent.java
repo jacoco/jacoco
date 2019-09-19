@@ -43,8 +43,11 @@ public class Agent implements IAgent {
 	 * @param options
 	 *            options to configure the instance
 	 * @return global instance
+	 * @throws Exception
+	 *             in case something cannot be initialized
 	 */
-	public static synchronized Agent getInstance(final AgentOptions options) {
+	public static synchronized Agent getInstance(final AgentOptions options)
+			throws Exception {
 		if (singleton == null) {
 			final Agent agent = new Agent(options, IExceptionLogger.SYSTEM_ERR);
 			agent.startup();
@@ -67,7 +70,8 @@ public class Agent implements IAgent {
 	 * @throws IllegalStateException
 	 *             if no Agent has been started yet
 	 */
-	public static synchronized Agent getInstance() throws IllegalStateException {
+	public static synchronized Agent getInstance()
+			throws IllegalStateException {
 		if (singleton == null) {
 			throw new IllegalStateException("JaCoCo agent not started.");
 		}
@@ -110,8 +114,10 @@ public class Agent implements IAgent {
 	/**
 	 * Initializes this agent.
 	 * 
+	 * @throws Exception
+	 *             in case something cannot be initialized
 	 */
-	public void startup() {
+	public void startup() throws Exception {
 		try {
 			String sessionId = options.getSessionId();
 			if (sessionId == null) {
@@ -125,6 +131,7 @@ public class Agent implements IAgent {
 			}
 		} catch (final Exception e) {
 			logger.logExeption(e);
+			throw e;
 		}
 	}
 
