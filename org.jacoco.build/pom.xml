@@ -142,11 +142,12 @@
     <ant.version>1.7.1</ant.version>
     <args4j.version>2.0.28</args4j.version>
     <junit.version>4.8.2</junit.version>
+    <googlecodeprettify.version>20100721</googlecodeprettify.version>
 
     <!-- ================== -->
     <!-- For SonarQube analysis -->
     <!-- ================== -->
-    <sonar.jacoco.reportPath>../${project.artifactId}.test/target/jacoco.exec</sonar.jacoco.reportPath>
+    <sonar.coverage.jacoco.xmlReportPaths>../org.jacoco.doc/target/site/jacoco-aggregate/jacoco.xml</sonar.coverage.jacoco.xmlReportPaths>
     <sonar.surefire.reportsPath>../${project.artifactId}.test/target/surefire-reports/</sonar.surefire.reportsPath>
 
     <!-- See http://jira.codehaus.org/browse/SONAR-2096 -->
@@ -276,6 +277,16 @@
         <filtering>true</filtering>
         <includes>
           <include>**/*.properties</include>
+        </includes>
+        <excludes>
+          <exclude>**/*-test.properties</exclude>
+        </excludes>
+      </resource>
+      <resource>
+        <directory>src</directory>
+        <filtering>false</filtering>
+        <includes>
+          <include>**/*-test.properties</include>
         </includes>
       </resource>
       <resource>
@@ -477,21 +488,6 @@
 
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-resources-plugin</artifactId>
-        <configuration>
-          <!-- We can't use delimiters "${*}" and "$*$" together - probably it's bug in plugin -->
-          <!-- so for now we will define only our delimiters in compliance with https://sourceforge.net/apps/trac/eclemma/changeset/1229 -->
-          <!-- but it would be better to use defaults -->
-          <useDefaultDelimiters>false</useDefaultDelimiters>
-          <delimiters>
-            <delimiter>@*@</delimiter>
-            <delimiter>$*$</delimiter>
-          </delimiters>
-        </configuration>
-      </plugin>
-
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-shade-plugin</artifactId>
         <configuration>
           <filters>
@@ -660,6 +656,16 @@
                 buildNumber = project.getProperties().get("buildNumber");
                 pkgName = buildNumber.substring(buildNumber.length() - 7, buildNumber.length());
                 project.getProperties().setProperty("jacoco.runtime.package.name", "org.jacoco.agent.rt.internal_" + pkgName);
+                
+                void loadLicense(String libraryId) {
+                    version = project.getProperties().get(libraryId + ".version");
+                    path = project.getBasedir().toPath().resolve("../org.jacoco.build/licenses/" + libraryId + "-" + version + ".html");
+                    license = new String(java.nio.file.Files.readAllBytes(path), "UTF-8");
+                    project.getProperties().setProperty(libraryId + ".license", license);
+                }
+                loadLicense("args4j");
+                loadLicense("asm");
+                loadLicense("googlecodeprettify");
               ]]>
               </script>
             </configuration>
