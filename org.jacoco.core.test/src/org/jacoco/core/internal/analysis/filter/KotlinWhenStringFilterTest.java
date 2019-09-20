@@ -105,4 +105,21 @@ public class KotlinWhenStringFilterTest extends FilterTestBase {
 		assertIgnored(new Range(expectedFromInclusive, expectedToInclusive));
 	}
 
+	@Test
+	public void should_not_filter_empty_lookup_switch() {
+		final MethodNode m = new MethodNode(InstrSupport.ASM_API_VERSION, 0,
+				"name", "(Ljava/lang/String;)V", null, null);
+		m.visitVarInsn(Opcodes.ALOAD, 1);
+		m.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "java/lang/String", "hashCode",
+				"()I", false);
+		final Label defaultCase = new Label();
+		m.visitLookupSwitchInsn(defaultCase, null, new Label[] {});
+		m.visitLabel(defaultCase);
+		m.visitInsn(Opcodes.RETURN);
+
+		filter.filter(m, context, output);
+
+		assertIgnored();
+	}
+
 }
