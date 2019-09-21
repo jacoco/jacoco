@@ -10,7 +10,8 @@ h1 {
 
 .breadcrumb {
   border:#d6d3ce 1px solid;
-  padding:2px 4px 2px 4px;
+  padding:6px 4px 4px 4px;
+  border-radius:3px;
 }
 
 .breadcrumb .info {
@@ -79,17 +80,19 @@ h1 {
 
 pre.source {
   border:#d6d3ce 1px solid;
+  border-radius:3px;
   font-family:monospace;
 }
 
 pre.source ol {
   margin-bottom: 0px;
   margin-top: 0px;
+  margin-left: 8px
 }
 
 pre.source li {
   border-left: 1px solid #D6D3CE;
-  color: #A0A0A0;
+  color: #cccccc;
   padding-left: 0px;
 }
 
@@ -137,7 +140,10 @@ pre.source span.bpc:hover {
 
 table.coverage {
   empty-cells:show;
-  border-collapse:collapse; 
+  border-spacing:0;
+  border-collapse:separate; 
+  border-radius:3px;
+  border:#c0c0c0 1px solid;
 }
 
 table.coverage thead {
@@ -146,8 +152,7 @@ table.coverage thead {
 
 table.coverage thead td {
   white-space:nowrap;
-  padding:2px 14px 0px 6px;
-  border-bottom:#b0b0b0 1px solid;
+  padding:4px 14px 2px 6px;
 }
 
 table.coverage thead td.bar {
@@ -181,8 +186,8 @@ table.coverage thead td.down {
 
 table.coverage tbody td {
   white-space:nowrap;
-  padding:2px 6px 2px 6px;
-  border-bottom:#d6d3ce 1px solid;
+  padding:4px 6px 2px 6px;
+  border-top:#c0c0c0 1px solid;
 }
 
 table.coverage tbody tr:hover { 
@@ -207,7 +212,8 @@ table.coverage tbody td.ctr2 {
 
 table.coverage tfoot td {
   white-space:nowrap;
-  padding:2px 6px 2px 6px;
+  padding:4px 6px 2px 6px;
+  border-top:#c0c0c0 1px solid;  
 }
 
 table.coverage tfoot td.bar {
@@ -229,7 +235,7 @@ table.coverage tfoot td.ctr2 {
 .footer {
   margin-top:20px;
   border-top:#d6d3ce 1px solid;
-  padding-top:2px;
+  padding-top:4px;
   font-size:8pt;
   color:#a0a0a0;
 }

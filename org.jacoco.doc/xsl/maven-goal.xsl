@@ -38,11 +38,11 @@
 			<body>
 				<div class="breadcrumb">
 					<a href="../index.html" class="el_report">JaCoCo</a>
-					&gt;
+					&#xa0;&#x25b8;&#xa0;
 					<a href="index.html" class="el_group">Documentation</a>
-					&gt;
+					&#xa0;&#x25b8;&#xa0;
 					<a href="maven.html" class="el_group">Maven</a>
-					&gt;
+					&#xa0;&#x25b8;&#xa0;
 					<span class="el_source">
 						<xsl:value-of select="xdoc:document/xdoc:properties/xdoc:title" />
 					</span>

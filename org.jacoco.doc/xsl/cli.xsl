@@ -35,8 +35,8 @@
 			</head>
 			<body>
 				<div class="breadcrumb">
-					<a href="../index.html" class="el_report">JaCoCo</a> &gt;
-					<a href="index.html" class="el_group">Documentation</a> &gt;
+					<a href="../index.html" class="el_report">JaCoCo</a>&#xa0;&#x25b8;&#xa0;
+					<a href="index.html" class="el_group">Documentation</a>&#xa0;&#x25b8;&#xa0;
 					<span class="el_source">Command Line Interface</span>
 				</div>
 				<div id="content">

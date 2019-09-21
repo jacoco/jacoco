@@ -28,6 +28,8 @@ import org.jacoco.report.internal.html.resources.Styles;
  */
 public abstract class ReportPage implements ILinkable {
 
+	private static final String BREADCRUMP_SEPARATOR = " \u25b8 ";
+
 	private final ReportPage parent;
 
 	/** output folder for this node */
@@ -141,7 +143,7 @@ public abstract class ReportPage implements ILinkable {
 		if (page != null) {
 			breadcrumbParent(page.parent, div, base);
 			div.a(page, base);
-			div.text(" > ");
+			div.text(BREADCRUMP_SEPARATOR);
 		}
 	}
 
