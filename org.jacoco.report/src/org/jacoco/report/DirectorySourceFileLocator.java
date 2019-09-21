@@ -35,7 +35,6 @@ public class DirectorySourceFileLocator extends InputStreamSourceFileLocator {
 	 *            default encoding
 	 * @param tabWidth
 	 *            tab width in source files as number of blanks
-	 * 
 	 */
 	public DirectorySourceFileLocator(final File directory,
 			final String encoding, final int tabWidth) {
@@ -44,9 +43,10 @@ public class DirectorySourceFileLocator extends InputStreamSourceFileLocator {
 	}
 
 	@Override
-	protected InputStream getSourceStream(final String path) throws IOException {
+	protected InputStream getSourceStream(final String path)
+			throws IOException {
 		final File file = new File(directory, path);
-		if (file.exists()) {
+		if (file.isFile()) {
 			return new FileInputStream(file);
 		} else {
 			return null;
