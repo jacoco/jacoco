@@ -70,6 +70,10 @@ public final class StringSwitchEcjFilter implements IFilter {
 			final Set<AbstractInsnNode> replacements = new HashSet<AbstractInsnNode>();
 			replacements.add(skipNonOpcodes(defaultLabel));
 
+			if (hashCodes == 0) {
+				return;
+			}
+
 			for (int i = 0; i < hashCodes; i++) {
 				while (true) {
 					nextIsVar(Opcodes.ALOAD, "s");
