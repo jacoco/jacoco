@@ -45,13 +45,24 @@ public class DirectorySourceFileLocatorTest {
 	}
 
 	@Test
-	public void testGetSourceFileNegative() throws IOException {
+	public void getSourceFile_should_return_null_when_source_does_not_exist()
+			throws IOException {
 		assertNull(locator.getSourceFile("org/jacoco/example",
 				"DoesNotExist.java"));
 	}
 
 	@Test
-	public void testGetSourceFile() throws IOException {
+	public void getSourceFile_should_return_null_when_source_is_folder()
+			throws IOException {
+		final File file = new File(sourceFolder.getRoot(),
+				"org/jacoco/example");
+		file.mkdirs();
+		assertNull(locator.getSourceFile("org/jacoco", "example"));
+	}
+
+	@Test
+	public void getSourceFile_should_return_content_when_file_exists()
+			throws IOException {
 		createFile("org/jacoco/example/Test.java");
 		final Reader source = locator.getSourceFile("org/jacoco/example",
 				"Test.java");
@@ -61,8 +72,8 @@ public class DirectorySourceFileLocatorTest {
 	private void createFile(String path) throws IOException {
 		final File file = new File(sourceFolder.getRoot(), path);
 		file.getParentFile().mkdirs();
-		final Writer writer = new OutputStreamWriter(
-				new FileOutputStream(file), "UTF-8");
+		final Writer writer = new OutputStreamWriter(new FileOutputStream(file),
+				"UTF-8");
 		writer.write("Source");
 		writer.close();
 	}
