@@ -22,6 +22,7 @@
 
 <h3>New Features</h3>
 <ul>
+  <li>JaCoCo now officially supports Java 13</li>
   <li>Experimental support for Java 14 class files
       (GitHub <a href="https://github.com/jacoco/jacoco/issues/897">#897</a>).</li>
   <li>Branches added by the Kotlin compiler for <code>open</code> functions with
@@ -43,6 +44,16 @@
   <li><code>synthetic</code> methods that contain bodies of anonymous functions
       in Scala should not be ignored
       (GitHub <a href="https://github.com/jacoco/jacoco/issues/912">#912</a>).</li>
+  <li>To avoid failures with invalid class files report generation now checks
+      that source references are actually files
+      (GitHub <a href="https://github.com/jacoco/jacoco/issues/941">#941</a>).</li>
+</ul>
+
+<h3>Non-functional Changes</h3>
+<ul>
+  <li>Prevent startup when JaCoCo runtime cannot be initialized to avoid
+      subsequent faults
+      (GitHub <a href="https://github.com/jacoco/jacoco/issues/910">#910</a>).</li>
 </ul>
 
 <h3>API Changes</h3>

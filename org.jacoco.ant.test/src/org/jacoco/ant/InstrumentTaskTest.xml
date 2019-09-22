@@ -123,5 +123,24 @@
 		</java>
 		<au:assertFileExists file="${temp.dir}/test.exec" />
 	</target>
+
+	<target name="testInstrumentWithRuntimeStartupFailure">
+		<jacoco:instrument destdir="${temp.dir}">
+			<fileset dir="${org.jacoco.ant.instrumentTaskTest.classes.dir}" includes="**/*.class"/>
+		</jacoco:instrument>
+		<au:assertLogContains text="Instrumented 15 classes to ${temp.dir}"/>
+		<au:assertFileExists file="${temp.dir}/org/jacoco/ant/InstrumentTaskTest.class" />
+
+		<java classname="org.jacoco.ant.TestTarget" failonerror="false" fork="true">
+			<sysproperty key="jacoco-agent.output" value="tcpserver"/>
+			<sysproperty key="jacoco-agent.port" value="foo"/>
+			<classpath>
+				<pathelement path="${org.jacoco.ant.instrumentTaskTest.agent.file}"/>
+				<pathelement path="${temp.dir}"/>
+			</classpath>
+		</java>
+		<au:assertLogContains text="java.lang.RuntimeException: Failed to initialize JaCoCo."/>
+		<au:assertLogContains text="java.lang.NumberFormatException: For input string: &quot;foo&quot;"/>
+	</target>
 	
 </project>

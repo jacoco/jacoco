@@ -106,18 +106,19 @@
     <th>JDK 10</th>
     <th>JDK 11</th>
     <th>JDK 12</th>
+    <th>JDK 13</th>
   </tr>
   </thead>
   <tbody>
   <tr>
     <th>org.jacoco.core.test.validation.java8</th>
     <td colspan="3">excluded from build</td>
-    <td colspan="5">compiled into bytecode version 52 (Java 8)</td>
+    <td colspan="6">compiled into bytecode version 52 (Java 8)</td>
   </tr>
   <tr>
     <th>org.jacoco.core.test.validation.java7</th>
     <td colspan="2">excluded from build</td>
-    <td colspan="6" rowspan="2">compiled into bytecode version 51 (Java 7)</td>
+    <td colspan="7" rowspan="2">compiled into bytecode version 51 (Java 7)</td>
   </tr>
   <tr>
     <th>org.jacoco.core.test.validation.groovy</th>
@@ -127,7 +128,7 @@
     <th>org.jacoco.core.test.validation.kotlin</th>
     <td colspan="1">excluded from build</td>
     <td colspan="6">compiled into bytecode version 50 (Java 6)</td>
-    <td rowspan="2">compiled into bytecode version 51 (Java 7)</td>
+    <td colspan="2" rowspan="2">compiled into bytecode version 51 (Java 7)</td>
   </tr>
   <tr>
     <th>all other modules</th>
@@ -173,6 +174,7 @@
   <li><code>mvn clean install -Djdk.version=10 -Dbytecode.version=10</code></li>
   <li><code>mvn clean install -Djdk.version=11 -Dbytecode.version=11</code></li>
   <li><code>mvn clean install -Djdk.version=12 -Dbytecode.version=12</code></li>
+  <li><code>mvn clean install -Djdk.version=13 -Dbytecode.version=13</code></li>
 </ul>
 
 

@@ -45,7 +45,7 @@
 
 <h3>What Java versions are supported by JaCoCo?</h3>
 <p>
-  JaCoCo supports Java class files from version 1.0 to 12. However the minimum
+  JaCoCo supports Java class files from version 1.0 to 13. However the minimum
   JRE version required by the JaCoCo runtime (e.g. the agent) and the JaCoCo
   tools is 1.5. Also note that class files under test from version 1.6 and above
   have to contain valid stackmap frames.
@@ -183,6 +183,27 @@
       <code>StackOverflowError</code>. Increase the maximum java stack size with
       the <code>-Xss</code> JVM option.</li>
 </ul>
+
+<h3>Why do I see classes in the coverage report although I excluded them in the JaCoCo agent configuration?</h3>
+<p>
+  The <code>includes</code> and <code>excludes</code> options of the
+  <a href="agent.html">JaCoCo agent</a> determine for which classes execution
+  data is collected. Except for technical corner cases these options are
+  normally not required. If you exclude classes, no execution data is collected
+  for them.
+</p> 
+<p>  
+  Report creation is a separate step where all class files which should show up
+  in the report are explicitly provided. Coverage is determined from the
+  provided execution data. If execution data is missing for a particular class,
+  this class is shown as not covered because the report generator cannot
+  distinguish whether the class was excluded or not executed.
+</p>
+
+<p>
+  If you want to exclude classes from the report please configure the
+  respective report generation tool accordingly. 
+</p>
 
 </div>
 <div class="footer">
