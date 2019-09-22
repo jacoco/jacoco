@@ -67,6 +67,10 @@ public final class KotlinWhenStringFilter implements IFilter {
 				hashCodes = tableSwitch.labels.size();
 			}
 
+			if (hashCodes == 0) {
+				return;
+			}
+
 			final Set<AbstractInsnNode> replacements = new HashSet<AbstractInsnNode>();
 			replacements.add(skipNonOpcodes(defaultLabel));
 
