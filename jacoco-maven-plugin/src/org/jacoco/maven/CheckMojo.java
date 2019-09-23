@@ -162,8 +162,7 @@ public class CheckMojo extends AbstractJacocoMojo implements IViolationsOutput {
 	}
 
 	@Override
-	public void executeMojo() throws MojoExecutionException,
-			MojoExecutionException {
+	public void executeMojo() throws MojoExecutionException {
 		if (!canCheckCoverage()) {
 			return;
 		}
