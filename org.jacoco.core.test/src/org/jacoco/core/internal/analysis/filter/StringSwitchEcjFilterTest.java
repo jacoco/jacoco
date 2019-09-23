@@ -1,9 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2009, 2019 Mountainminds GmbH & Co. KG and Contributors
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
- * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
+ * This program and the accompanying materials are made available under
+ * the terms of the Eclipse Public License 2.0 which is available at
+ * http://www.eclipse.org/legal/epl-2.0
+ *
+ * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
  *    Evgeny Mandrikov - initial API and implementation
@@ -153,6 +154,24 @@ public class StringSwitchEcjFilterTest extends FilterTestBase {
 
 		assertReplacedBranches(switchNode, expectedNewTargets);
 		assertIgnored(new Range(switchNode.getNext(), expectedToInclusive));
+	}
+
+	@Test
+	public void should_not_filter_empty_lookup_switch() {
+		final MethodNode m = new MethodNode(InstrSupport.ASM_API_VERSION, 0,
+				"name", "(Ljava/lang/String;)V", null, null);
+		m.visitVarInsn(Opcodes.ALOAD, 1);
+		m.visitVarInsn(Opcodes.ASTORE, 2);
+		m.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "java/lang/String", "hashCode",
+				"()I", false);
+		final Label defaultCase = new Label();
+		m.visitLookupSwitchInsn(defaultCase, null, new Label[] {});
+		m.visitLabel(defaultCase);
+		m.visitInsn(Opcodes.RETURN);
+
+		filter.filter(m, context, output);
+
+		assertIgnored();
 	}
 
 }
