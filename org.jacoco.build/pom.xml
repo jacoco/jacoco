@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
    Copyright (c) 2009, 2019 Mountainminds GmbH & Co. KG and Contributors
-   All rights reserved. This program and the accompanying materials
-   are made available under the terms of the Eclipse Public License v1.0
-   which accompanies this distribution, and is available at
-   http://www.eclipse.org/legal/epl-v10.html
+   This program and the accompanying materials are made available under
+   the terms of the Eclipse Public License 2.0 which is available at
+   http://www.eclipse.org/legal/epl-2.0
+
+   SPDX-License-Identifier: EPL-2.0
 
    Contributors:
       Evgeny Mandrikov - initial API and implementation
@@ -26,8 +27,8 @@
   </organization>
   <licenses>
     <license>
-      <name>Eclipse Public License v1.0</name>
-      <url>http://www.eclipse.org/legal/epl-v10.html</url>
+      <name>Eclipse Public License 2.0</name>
+      <url>https://www.eclipse.org/legal/epl-2.0/</url>
       <distribution>repo</distribution>
     </license>
   </licenses>
@@ -571,10 +572,10 @@
                   <not>
                     <and>
                       <contains text="Copyright (c) 2009, 2019 Mountainminds GmbH &amp; Co. KG and Contributors"/>
-                      <contains text="All rights reserved. This program and the accompanying materials"/>
-                      <contains text="are made available under the terms of the Eclipse Public License v1.0"/>
-                      <contains text="which accompanies this distribution, and is available at"/>
-                      <contains text="http://www.eclipse.org/legal/epl-v10.html"/>
+                      <contains text="This program and the accompanying materials are made available under"/>
+                      <contains text="the terms of the Eclipse Public License 2.0 which is available at"/>
+                      <contains text="http://www.eclipse.org/legal/epl-2.0"/>
+                      <contains text="SPDX-License-Identifier: EPL-2.0"/>
                     </and>
                   </not>
                 </fileset>
@@ -656,7 +657,7 @@
                 buildNumber = project.getProperties().get("buildNumber");
                 pkgName = buildNumber.substring(buildNumber.length() - 7, buildNumber.length());
                 project.getProperties().setProperty("jacoco.runtime.package.name", "org.jacoco.agent.rt.internal_" + pkgName);
-                
+
                 void loadLicense(String libraryId) {
                     version = project.getProperties().get(libraryId + ".version");
                     path = project.getBasedir().toPath().resolve("../org.jacoco.build/licenses/" + libraryId + "-" + version + ".html");

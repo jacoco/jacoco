@@ -1,9 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2009, 2019 Mountainminds GmbH & Co. KG and Contributors
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
- * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
+ * This program and the accompanying materials are made available under
+ * the terms of the Eclipse Public License 2.0 which is available at
+ * http://www.eclipse.org/legal/epl-2.0
+ *
+ * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
  *    Marc R. Hoffmann - initial API and implementation
@@ -30,9 +31,9 @@ public class CoreTutorialTest {
 
 		console.expect(containsLine("0 of 3 methods missed"));
 		console.expect(containsLine("1 of 5 complexity missed"));
-		console.expect(containsLine("Line 46: "));
-		console.expect(containsLine("Line 47: green"));
-		console.expect(containsLine("Line 48: yellow"));
-		console.expect(containsLine("Line 49: red"));
+		console.expect(containsLine("Line 47: "));
+		console.expect(containsLine("Line 48: green"));
+		console.expect(containsLine("Line 49: yellow"));
+		console.expect(containsLine("Line 50: red"));
 	}
 }
