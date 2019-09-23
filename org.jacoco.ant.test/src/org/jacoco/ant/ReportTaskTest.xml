@@ -437,9 +437,6 @@
 				<classfiles>
 					<fileset dir="${org.jacoco.ant.reportTaskTest.classes.dir}" includes="**/*.class"/>
 				</classfiles>
-				<sourcefiles encoding="UTF-8">
-					<fileset dir="${org.jacoco.ant.reportTaskTest.sources.dir}" />
-				</sourcefiles>
 			</structure>
 			<check>
 				<rule element="CLASS">
@@ -456,9 +453,6 @@
 					<classfiles>
 						<fileset dir="${org.jacoco.ant.reportTaskTest.classes.dir}" includes="**/*.class"/>
 					</classfiles>
-					<sourcefiles encoding="UTF-8">
-						<fileset dir="${org.jacoco.ant.reportTaskTest.sources.dir}" />
-					</sourcefiles>
 				</structure>
 				<check>
 					<rule element="BUNDLE">
@@ -476,9 +470,6 @@
 				<classfiles>
 					<fileset dir="${org.jacoco.ant.reportTaskTest.classes.dir}" includes="**/*.class"/>
 				</classfiles>
-				<sourcefiles encoding="UTF-8">
-					<fileset dir="${org.jacoco.ant.reportTaskTest.sources.dir}" />
-				</sourcefiles>
 			</structure>
 			<check failonviolation="false" violationsproperty="violation">
 				<rule element="BUNDLE">
