@@ -211,8 +211,8 @@ public class Limit {
 	}
 
 	private String checkRatioLimit(final String minmax, final BigDecimal v) {
-		if (v != null && (v.compareTo(BigDecimal.ZERO) == -1
-				|| v.compareTo(BigDecimal.ONE) == 1)) {
+		if (v != null && (v.compareTo(BigDecimal.ZERO) < 0
+				|| v.compareTo(BigDecimal.ONE) > 0)) {
 			return String.format(
 					"given %s ratio is %s, but must be between 0.0 and 1.0",
 					minmax, v);
