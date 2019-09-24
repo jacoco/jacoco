@@ -464,6 +464,24 @@
 		<au:assertLogContains level="error" text="instructions covered ratio is 0.00, but expected minimum is 0.90"/>
 	</target>
 
+	<target name="testReportInvalidConfiguration">
+		<au:expectfailure expectedMessage="Coverage check failed due to violated rules.">
+			<jacoco:report>
+				<structure name="Test">
+					<classfiles>
+						<fileset dir="${org.jacoco.ant.reportTaskTest.classes.dir}" includes="**/*.class"/>
+					</classfiles>
+				</structure>
+				<check>
+					<rule element="BUNDLE">
+						<limit counter="INSTRUCTION" value="COVEREDRATIO" minimum="80"/>
+					</rule>
+				</check>
+			</jacoco:report>
+		</au:expectfailure>
+		<au:assertLogContains level="error" text="given minimum ratio is 80, but must be between 0.0 and 1.0"/>
+	</target>
+	
 	<target name="testReportCheckSetPropertyOnly">
 		<jacoco:report>
 			<structure name="Test">

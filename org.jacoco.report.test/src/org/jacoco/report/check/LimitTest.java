@@ -79,13 +79,13 @@ public class LimitTest {
 	@Test
 	public void check_should_fail_on_value_missedratio() {
 		limit.setValue(CounterValue.MISSEDRATIO.name());
-		limit.setMaximum("-1");
+		limit.setMaximum("0.5");
 		assertEquals(CounterValue.MISSEDRATIO, limit.getValue());
 		assertEquals(
-				"instructions missed ratio is 0, but expected maximum is -1",
+				"instructions missed ratio is 1.0, but expected maximum is 0.5",
 				limit.check(new TestNode() {
 					{
-						instructionCounter = CounterImpl.COUNTER_0_1;
+						instructionCounter = CounterImpl.COUNTER_1_0;
 					}
 				}));
 	}
@@ -93,13 +93,13 @@ public class LimitTest {
 	@Test
 	public void check_should_fail_on_value_coveredratio() {
 		limit.setValue(CounterValue.COVEREDRATIO.name());
-		limit.setMaximum("-1");
+		limit.setMaximum("0.5");
 		assertEquals(CounterValue.COVEREDRATIO, limit.getValue());
 		assertEquals(
-				"instructions covered ratio is 0, but expected maximum is -1",
+				"instructions covered ratio is 1.0, but expected maximum is 0.5",
 				limit.check(new TestNode() {
 					{
-						instructionCounter = CounterImpl.COUNTER_1_0;
+						instructionCounter = CounterImpl.COUNTER_0_1;
 					}
 				}));
 	}
@@ -243,6 +243,24 @@ public class LimitTest {
 	}
 
 	@Test
+	public void check_should_fail_when_minimum_ratio_is_smaller_than_0() {
+		limit.setMinimum("-3");
+		assertEquals("-3", limit.getMinimum());
+		assertEquals(
+				"given minimum ratio is -3, but must be between 0.0 and 1.0",
+				limit.check(new TestNode()));
+	}
+
+	@Test
+	public void check_should_fail_when_minimum_ratio_is_bigger_than_1() {
+		limit.setMinimum("80");
+		assertEquals("80", limit.getMinimum());
+		assertEquals(
+				"given minimum ratio is 80, but must be between 0.0 and 1.0",
+				limit.check(new TestNode()));
+	}
+
+	@Test
 	public void setMinimum_should_accept_percentage_string() {
 		limit.setMinimum("1.55%");
 		assertEquals("0.0155", limit.getMinimum());
@@ -312,6 +330,24 @@ public class LimitTest {
 								999001);
 					}
 				}));
+	}
+
+	@Test
+	public void check_should_fail_when_maximum_ratio_is_smaller_than_0() {
+		limit.setMaximum("-3");
+		assertEquals("-3", limit.getMaximum());
+		assertEquals(
+				"given maximum ratio is -3, but must be between 0.0 and 1.0",
+				limit.check(new TestNode()));
+	}
+
+	@Test
+	public void check_should_fail_when_maximum_ratio_is_bigger_than_1() {
+		limit.setMaximum("80");
+		assertEquals("80", limit.getMaximum());
+		assertEquals(
+				"given maximum ratio is 80, but must be between 0.0 and 1.0",
+				limit.check(new TestNode()));
 	}
 
 	@Test

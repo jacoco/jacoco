@@ -139,11 +139,11 @@ class BundleChecker {
 	}
 
 	private void checkLimit(final ICoverageNode node, final String elementtype,
-			final String typename, final Rule rule, final Limit limit) {
+			final String elementname, final Rule rule, final Limit limit) {
 		final String message = limit.check(node);
 		if (message != null) {
 			output.onViolation(node, rule, limit, String.format(
-					"Rule violated for %s %s: %s", elementtype, typename,
+					"Rule violated for %s %s: %s", elementtype, elementname,
 					message));
 		}
 	}
