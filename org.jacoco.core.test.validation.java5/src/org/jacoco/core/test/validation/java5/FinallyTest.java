@@ -203,8 +203,7 @@ public class FinallyTest extends ValidationTestBase {
 				continue;
 			}
 			int lineNumber = -1;
-			for (AbstractInsnNode i = m.instructions
-					.getFirst(); i != null; i = i.getNext()) {
+			for (AbstractInsnNode i : m.instructions) {
 				if (AbstractInsnNode.LINE == i.getType()) {
 					lineNumber = ((LineNumberNode) i).line;
 				}

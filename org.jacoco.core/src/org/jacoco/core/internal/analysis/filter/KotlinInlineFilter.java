@@ -47,8 +47,7 @@ public final class KotlinInlineFilter implements IFilter {
 		}
 
 		int line = 0;
-		for (AbstractInsnNode i = methodNode.instructions
-				.getFirst(); i != null; i = i.getNext()) {
+		for (final AbstractInsnNode i : methodNode.instructions) {
 			if (AbstractInsnNode.LINE == i.getType()) {
 				line = ((LineNumberNode) i).line;
 			}

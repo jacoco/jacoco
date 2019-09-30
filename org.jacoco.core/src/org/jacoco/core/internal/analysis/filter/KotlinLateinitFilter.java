@@ -25,9 +25,8 @@ public class KotlinLateinitFilter implements IFilter {
 	public void filter(final MethodNode methodNode,
 			final IFilterContext context, final IFilterOutput output) {
 		final Matcher matcher = new Matcher();
-		for (AbstractInsnNode i = methodNode.instructions
-				.getFirst(); i != null; i = i.getNext()) {
-			matcher.match(i, output);
+		for (final AbstractInsnNode node : methodNode.instructions) {
+			matcher.match(node, output);
 		}
 	}
 

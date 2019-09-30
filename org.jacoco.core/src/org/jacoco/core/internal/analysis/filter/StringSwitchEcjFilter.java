@@ -33,8 +33,7 @@ public final class StringSwitchEcjFilter implements IFilter {
 	public void filter(final MethodNode methodNode,
 			final IFilterContext context, final IFilterOutput output) {
 		final Matcher matcher = new Matcher();
-		for (AbstractInsnNode i = methodNode.instructions
-				.getFirst(); i != null; i = i.getNext()) {
+		for (final AbstractInsnNode i : methodNode.instructions) {
 			matcher.match(i, output);
 		}
 	}
