@@ -50,8 +50,7 @@ public class KotlinGeneratedFilter implements IFilter {
 	}
 
 	private boolean hasLineNumber(final MethodNode methodNode) {
-		for (AbstractInsnNode i = methodNode.instructions
-				.getFirst(); i != null; i = i.getNext()) {
+		for (final AbstractInsnNode i : methodNode.instructions) {
 			if (AbstractInsnNode.LINE == i.getType()) {
 				return true;
 			}

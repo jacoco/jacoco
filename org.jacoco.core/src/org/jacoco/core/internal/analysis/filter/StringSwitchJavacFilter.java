@@ -27,10 +27,8 @@ public final class StringSwitchJavacFilter implements IFilter {
 
 	public void filter(final MethodNode methodNode,
 			final IFilterContext context, final IFilterOutput output) {
-		AbstractInsnNode i = methodNode.instructions.getFirst();
-		while (i != null) {
+		for (final AbstractInsnNode i : methodNode.instructions) {
 			filter(i, output);
-			i = i.getNext();
 		}
 	}
 
