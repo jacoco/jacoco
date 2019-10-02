@@ -55,7 +55,10 @@ public class InstrumentMojo extends AbstractJacocoMojo {
 
 	/**
 	 * A list of class files to exclude from instrumentation. May use wildcard
-	 * characters (* and ?). When not specified nothing will be excluded.
+	 * characters (* and ?). When not specified nothing will be excluded. Except
+	 * for performance optimization or technical corner cases this option is
+	 * normally not required. If you want to exclude classes from the report
+	 * please configure the <code>report</code> goal accordingly.
 	 */
 	@Parameter
 	private List<String> excludes;
