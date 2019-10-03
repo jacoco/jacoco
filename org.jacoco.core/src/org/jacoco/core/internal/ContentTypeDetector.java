@@ -73,7 +73,12 @@ public class ContentTypeDetector {
 		case PACK200FILE:
 			return PACK200FILE;
 		case CLASSFILE:
-			// also verify version to distinguish from Mach Object files:
+			// Mach-O fat/universal binaries have the same magic header as Java
+			// class files, number of architectures is stored in unsigned 4
+			// bytes in the same place and in the same big-endian order as major
+			// and minor version of class file. Hopefully on practice number of
+			// architectures in single executable is less than 45, which is
+			// major version of Java 1.1 class files:
 			final int majorVersion = readInt(in) & 0xFFFF;
 			if (majorVersion >= 45) {
 				return CLASSFILE;
