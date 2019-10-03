@@ -65,7 +65,7 @@ class ProbeInserter extends MethodVisitor implements IProbeInserter {
 		for (final Type t : Type.getArgumentTypes(desc)) {
 			pos += t.getSize();
 		}
-		variable = pos;
+		variable = pos + 1;
 	}
 
 	public void insertProbe(final int id) {
@@ -133,14 +133,14 @@ class ProbeInserter extends MethodVisitor implements IProbeInserter {
 		// stack size is an absolute maximum, as the accessor code is inserted
 		// at the very beginning of each method when the stack size is empty.
 		final int increasedStack = Math.max(maxStack + 3, accessorStackSize);
-		mv.visitMaxs(increasedStack, maxLocals + 1);
+		mv.visitMaxs(increasedStack, maxLocals + 2);
 	}
 
 	private int map(final int var) {
-		if (var < variable) {
+		if (var < variable - 1) {
 			return var;
 		} else {
-			return var + 1;
+			return var + 2;
 		}
 	}
 
@@ -153,12 +153,15 @@ class ProbeInserter extends MethodVisitor implements IProbeInserter {
 					"ClassReader.accept() should be called with EXPAND_FRAMES flag");
 		}
 
-		final Object[] newLocal = new Object[Math.max(nLocal, variable) + 1];
+		final Object[] newLocal = new Object[Math.max(nLocal + 2, variable + 1)];
 		int idx = 0; // Arrays index for existing locals
 		int newIdx = 0; // Array index for new locals
 		int pos = 0; // Current variable position
 		while (idx < nLocal || pos <= variable) {
-			if (pos == variable) {
+			if (pos == variable - 1) {
+				newLocal[newIdx++] = Opcodes.TOP;
+				pos++;
+			} else if (pos == variable) {
 				newLocal[newIdx++] = InstrSupport.DATAFIELD_DESC;
 				pos++;
 			} else {
