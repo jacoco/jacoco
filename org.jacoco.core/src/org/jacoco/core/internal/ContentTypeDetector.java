@@ -74,25 +74,8 @@ public class ContentTypeDetector {
 			return PACK200FILE;
 		case CLASSFILE:
 			// also verify version to distinguish from Mach Object files:
-			switch (readInt(in)) {
-			case Opcodes.V1_1:
-			case Opcodes.V1_2:
-			case Opcodes.V1_3:
-			case Opcodes.V1_4:
-			case Opcodes.V1_5:
-			case Opcodes.V1_6:
-			case Opcodes.V1_7:
-			case Opcodes.V1_8:
-			case Opcodes.V9:
-			case Opcodes.V10:
-			case Opcodes.V11:
-			case Opcodes.V11 | Opcodes.V_PREVIEW:
-			case Opcodes.V12:
-			case Opcodes.V12 | Opcodes.V_PREVIEW:
-			case Opcodes.V13:
-			case Opcodes.V13 | Opcodes.V_PREVIEW:
-			case (Opcodes.V13 + 1):
-			case (Opcodes.V13 + 1) | Opcodes.V_PREVIEW:
+			final int majorVersion = readInt(in) & 0xFFFF;
+			if (majorVersion >= 45) {
 				return CLASSFILE;
 			}
 		}
