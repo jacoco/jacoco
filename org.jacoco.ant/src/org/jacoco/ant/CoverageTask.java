@@ -34,7 +34,8 @@ import org.apache.tools.ant.UnknownElement;
  * <li>Task must be using a forked VM (so vm args can be passed)</li>
  * </ul>
  */
-public class CoverageTask extends AbstractCoverageTask implements TaskContainer {
+public class CoverageTask extends AbstractCoverageTask
+		implements TaskContainer {
 
 	private final Collection<TaskEnhancer> taskEnhancers = new ArrayList<TaskEnhancer>();
 	private Task childTask;
@@ -66,9 +67,10 @@ public class CoverageTask extends AbstractCoverageTask implements TaskContainer 
 
 		final TaskEnhancer enhancer = findEnhancerForTask(subTaskTypeName);
 		if (enhancer == null) {
-			throw new BuildException(format(
-					"%s is not a valid child of the coverage task",
-					subTaskTypeName), getLocation());
+			throw new BuildException(
+					format("%s is not a valid child of the coverage task",
+							subTaskTypeName),
+					getLocation());
 		}
 
 		if (isEnabled()) {
@@ -162,8 +164,8 @@ public class CoverageTask extends AbstractCoverageTask implements TaskContainer 
 			runtimeConfigurableWrapper.setAttribute("value",
 					getLaunchingArgument());
 
-			task.getRuntimeConfigurableWrapper().addChild(
-					runtimeConfigurableWrapper);
+			task.getRuntimeConfigurableWrapper()
+					.addChild(runtimeConfigurableWrapper);
 
 			((UnknownElement) task).addChild(el);
 		}

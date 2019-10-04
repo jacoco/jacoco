@@ -20,12 +20,12 @@ import org.junit.Test;
  * Test of class with {@link groovy.transform.Immutable} annotation.
  */
 public class GroovyImmutableClassTest extends ValidationTestBase {
-    public GroovyImmutableClassTest() {
-        super(GroovyImmutableClassTarget.class);
-    }
+	public GroovyImmutableClassTest() {
+		super(GroovyImmutableClassTarget.class);
+	}
 
-    @Test
-    public void test_method_count() {
-        assertMethodCount(1);
-    }
+	@Test
+	public void test_method_count() {
+		assertMethodCount(1);
+	}
 }

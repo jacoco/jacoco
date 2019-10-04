@@ -135,7 +135,8 @@ public interface ICoverageNode {
 	/**
 	 * Checks whether this node contains code relevant for code coverage.
 	 *
-	 * @return <code>true</code> if this node contains code relevant for code coverage
+	 * @return <code>true</code> if this node contains code relevant for code
+	 *         coverage
 	 */
 	boolean containsCode();
 

@@ -132,7 +132,8 @@ public abstract class ValidationTestBase {
 		}
 		assertEquals(
 				"sum of missed instructions of all lines should be equal to missed instructions of file",
-				source.getCoverage().getInstructionCounter().getMissedCount(), c.getMissedCount());
+				source.getCoverage().getInstructionCounter().getMissedCount(),
+				c.getMissedCount());
 	}
 
 	@Test

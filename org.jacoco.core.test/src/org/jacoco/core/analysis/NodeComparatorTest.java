@@ -35,9 +35,9 @@ public class NodeComparatorTest {
 		ICoverageNode d3 = new MockNode(30);
 		ICoverageNode d4 = new MockNode(60);
 		ICoverageNode d5 = new MockNode(99);
-		final List<ICoverageNode> result = CounterComparator.TOTALITEMS.on(
-				CounterEntity.INSTRUCTION).sort(
-				Arrays.asList(d3, d5, d1, d4, d2));
+		final List<ICoverageNode> result = CounterComparator.TOTALITEMS
+				.on(CounterEntity.INSTRUCTION)
+				.sort(Arrays.asList(d3, d5, d1, d4, d2));
 		assertEquals(Arrays.asList(d1, d2, d3, d4, d5), result);
 	}
 

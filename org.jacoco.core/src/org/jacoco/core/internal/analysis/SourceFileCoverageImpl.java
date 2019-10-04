@@ -17,8 +17,8 @@ import org.jacoco.core.analysis.ISourceFileCoverage;
 /**
  * Implementation of {@link ISourceFileCoverage}.
  */
-public class SourceFileCoverageImpl extends SourceNodeImpl implements
-		ISourceFileCoverage {
+public class SourceFileCoverageImpl extends SourceNodeImpl
+		implements ISourceFileCoverage {
 
 	private final String packagename;
 

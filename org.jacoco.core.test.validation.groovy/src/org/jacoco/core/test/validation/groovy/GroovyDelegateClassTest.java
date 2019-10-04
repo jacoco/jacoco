@@ -20,12 +20,12 @@ import org.junit.Test;
  * Test of class with field annotated by {@link groovy.lang.Delegate}.
  */
 public class GroovyDelegateClassTest extends ValidationTestBase {
-    public GroovyDelegateClassTest() {
-        super(GroovyDelegateClassTarget.class);
-    }
+	public GroovyDelegateClassTest() {
+		super(GroovyDelegateClassTarget.class);
+	}
 
-    @Test
-    public void test_method_count() {
-        assertMethodCount(4);
-    }
+	@Test
+	public void test_method_count() {
+		assertMethodCount(4);
+	}
 }

@@ -77,9 +77,9 @@ public class CRC64Test {
 	 */
 	@Test
 	public void test2() {
-		final long sum = CRC64.classId(new byte[] { (byte) 0xff, (byte) 0xff,
-				(byte) 0xff, (byte) 0xff, (byte) 0xff, (byte) 0xff,
-				(byte) 0xff, (byte) 0xff });
+		final long sum = CRC64.classId(
+				new byte[] { (byte) 0xff, (byte) 0xff, (byte) 0xff, (byte) 0xff,
+						(byte) 0xff, (byte) 0xff, (byte) 0xff, (byte) 0xff });
 		assertEquals(0x5300000000000000L, sum);
 	}
 
@@ -90,8 +90,8 @@ public class CRC64Test {
 	 */
 	@Test
 	public void test3() throws UnsupportedEncodingException {
-		final long sum = CRC64.classId("JACOCO_JACOCO_JACOCO_JACOCO"
-				.getBytes("ASCII"));
+		final long sum = CRC64
+				.classId("JACOCO_JACOCO_JACOCO_JACOCO".getBytes("ASCII"));
 		assertEquals(0xD8016B38AAD48308L, sum);
 	}
 

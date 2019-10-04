@@ -14,7 +14,7 @@ package package2;
 
 public class Example2 {
 
-  public void a() {
-  }
+	public void a() {
+	}
 
 }

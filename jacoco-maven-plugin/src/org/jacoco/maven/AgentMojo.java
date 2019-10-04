@@ -38,7 +38,9 @@ import org.apache.maven.plugins.annotations.ResolutionScope;
  *
  * <p>
  * One of the ways to do this in case of maven-surefire-plugin - is to use
- * syntax for <a href="http://maven.apache.org/surefire/maven-surefire-plugin/faq.html#late-property-evaluation">late property evaluation</a>:
+ * syntax for <a href=
+ * "http://maven.apache.org/surefire/maven-surefire-plugin/faq.html#late-property-evaluation">late
+ * property evaluation</a>:
  * </p>
  * 
  * <pre>
@@ -52,13 +54,14 @@ import org.apache.maven.plugins.annotations.ResolutionScope;
  * </pre>
  * 
  * <p>
- * You can define empty property to avoid JVM startup error <code>Could not find or load main class @{argLine}</code>
- * when using late property evaluation and jacoco-maven-plugin not executed.
+ * You can define empty property to avoid JVM startup error
+ * <code>Could not find or load main class @{argLine}</code> when using late
+ * property evaluation and jacoco-maven-plugin not executed.
  * </p>
  * 
  * <p>
- * Another way is to define "argLine" as a Maven property rather than
- * as part of the configuration of maven-surefire-plugin:
+ * Another way is to define "argLine" as a Maven property rather than as part of
+ * the configuration of maven-surefire-plugin:
  * </p>
  * 
  * <pre>

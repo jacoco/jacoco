@@ -81,11 +81,11 @@ public class SourceNodeImpl extends CoverageNodeImpl implements ISourceNode {
 	 *            child node to add
 	 */
 	public void increment(final ISourceNode child) {
-		instructionCounter = instructionCounter.increment(child
-				.getInstructionCounter());
+		instructionCounter = instructionCounter
+				.increment(child.getInstructionCounter());
 		branchCounter = branchCounter.increment(child.getBranchCounter());
-		complexityCounter = complexityCounter.increment(child
-				.getComplexityCounter());
+		complexityCounter = complexityCounter
+				.increment(child.getComplexityCounter());
 		methodCounter = methodCounter.increment(child.getMethodCounter());
 		classCounter = classCounter.increment(child.getClassCounter());
 		final int firstLine = child.getFirstLine();

@@ -21,7 +21,8 @@ import org.jacoco.core.analysis.IMethodCoverage;
 /**
  * Implementation of {@link IClassCoverage}.
  */
-public class ClassCoverageImpl extends SourceNodeImpl implements IClassCoverage {
+public class ClassCoverageImpl extends SourceNodeImpl
+		implements IClassCoverage {
 
 	private final long id;
 	private final boolean noMatch;

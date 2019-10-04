@@ -39,7 +39,8 @@ public class EnumEmptyConstructorFilterTest extends FilterTestBase {
 
 		filter.filter(m, context, output);
 
-		assertIgnored(new Range(m.instructions.getFirst(), m.instructions.getLast()));
+		assertIgnored(
+				new Range(m.instructions.getFirst(), m.instructions.getLast()));
 	}
 
 	/**

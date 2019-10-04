@@ -16,9 +16,9 @@ import static org.junit.Assert.assertNotNull;
 
 public class ExampleTest {
 
-  @Test
-  public void test() {
-    assertNotNull(System.getProperty("foo"));
-  }
+	@Test
+	public void test() {
+		assertNotNull(System.getProperty("foo"));
+	}
 
 }

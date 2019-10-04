@@ -134,9 +134,7 @@ public class LoggerRuntime extends AbstractRuntime {
 		// Stack[1]: Ljava/util/logging/Logger;
 		// Stack[0]: [Ljava/lang/Object;
 
-		mv.visitMethodInsn(
-				Opcodes.INVOKEVIRTUAL,
-				"java/util/logging/Logger",
+		mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "java/util/logging/Logger",
 				"log",
 				"(Ljava/util/logging/Level;Ljava/lang/String;[Ljava/lang/Object;)V",
 				false);

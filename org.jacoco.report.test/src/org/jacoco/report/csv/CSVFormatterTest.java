@@ -117,8 +117,8 @@ public class CSVFormatterTest {
 				return null;
 			}
 
-			public String getMethodName(String vmclassname,
-					String vmmethodname, String vmdesc, String vmsignature) {
+			public String getMethodName(String vmclassname, String vmmethodname,
+					String vmdesc, String vmsignature) {
 				return null;
 			}
 
@@ -137,8 +137,8 @@ public class CSVFormatterTest {
 	}
 
 	private List<String> getLines(String encoding) throws IOException {
-		final BufferedReader reader = new BufferedReader(new InputStreamReader(
-				output.getContentsAsStream(), encoding));
+		final BufferedReader reader = new BufferedReader(
+				new InputStreamReader(output.getContentsAsStream(), encoding));
 		final List<String> lines = new ArrayList<String>();
 		String line;
 		while ((line = reader.readLine()) != null) {

@@ -40,7 +40,8 @@ public class FileFilter {
 	 * @param excludes
 	 *            list of excludes patterns
 	 */
-	public FileFilter(final List<String> includes, final List<String> excludes) {
+	public FileFilter(final List<String> includes,
+			final List<String> excludes) {
 		this.includes = includes;
 		this.excludes = excludes;
 	}

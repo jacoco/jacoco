@@ -345,8 +345,8 @@ public class ReportTask extends Task {
 	/**
 	 * Formatter element for coverage checks.
 	 */
-	public class CheckFormatterElement extends FormatterElement implements
-			IViolationsOutput {
+	public class CheckFormatterElement extends FormatterElement
+			implements IViolationsOutput {
 
 		private final List<Rule> rules = new ArrayList<Rule>();
 		private boolean violations = false;
@@ -398,8 +398,8 @@ public class ReportTask extends Task {
 			violations = true;
 			if (violationsPropery != null) {
 				final String old = getProject().getProperty(violationsPropery);
-				final String value = old == null ? message : String.format(
-						"%s\n%s", old, message);
+				final String value = old == null ? message
+						: String.format("%s\n%s", old, message);
 				getProject().setProperty(violationsPropery, value);
 			}
 		}
@@ -506,7 +506,8 @@ public class ReportTask extends Task {
 
 	private void loadExecutionData() {
 		final ExecFileLoader loader = new ExecFileLoader();
-		for (final Iterator<?> i = executiondataElement.iterator(); i.hasNext();) {
+		for (final Iterator<?> i = executiondataElement.iterator(); i
+				.hasNext();) {
 			final Resource resource = (Resource) i.next();
 			log(format("Loading execution data file %s", resource));
 			InputStream in = null;
@@ -514,9 +515,10 @@ public class ReportTask extends Task {
 				in = resource.getInputStream();
 				loader.load(in);
 			} catch (final IOException e) {
-				throw new BuildException(format(
-						"Unable to read execution data file %s", resource), e,
-						getLocation());
+				throw new BuildException(
+						format("Unable to read execution data file %s",
+								resource),
+						e, getLocation());
 			} finally {
 				FileUtils.close(in);
 			}

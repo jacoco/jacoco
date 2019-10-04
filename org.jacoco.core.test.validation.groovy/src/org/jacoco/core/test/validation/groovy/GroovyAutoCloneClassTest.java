@@ -20,12 +20,12 @@ import org.junit.Test;
  * Test of class with {@link groovy.transform.AutoClone} annotation.
  */
 public class GroovyAutoCloneClassTest extends ValidationTestBase {
-    public GroovyAutoCloneClassTest() {
-        super(GroovyAutoCloneClassTarget.class);
-    }
+	public GroovyAutoCloneClassTest() {
+		super(GroovyAutoCloneClassTarget.class);
+	}
 
-    @Test
-    public void test_method_count() {
-        assertMethodCount(1);
-    }
+	@Test
+	public void test_method_count() {
+		assertMethodCount(1);
+	}
 }

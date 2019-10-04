@@ -37,8 +37,8 @@ public class FileOutput implements IAgentOutput {
 
 	private boolean append;
 
-	public final void startup(final AgentOptions options, final RuntimeData data)
-			throws IOException {
+	public final void startup(final AgentOptions options,
+			final RuntimeData data) throws IOException {
 		this.data = data;
 		this.destFile = new File(options.getDestfile()).getAbsoluteFile();
 		this.append = options.getAppend();

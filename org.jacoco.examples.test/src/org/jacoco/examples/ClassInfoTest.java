@@ -36,15 +36,17 @@ public class ClassInfoTest {
 		final String[] args = new String[] { createClassFile() };
 		new ClassInfo(console.stream).execute(args);
 
-		console.expect(containsLine("class name:   org/jacoco/examples/ClassInfoTest"));
+		console.expect(containsLine(
+				"class name:   org/jacoco/examples/ClassInfoTest"));
 		console.expect(containsLine("methods:      3"));
 		console.expect(containsLine("branches:     2"));
 		console.expect(containsLine("complexity:   4"));
 	}
 
 	private String createClassFile() throws IOException {
-		InputStream in = getClass().getResource(
-				getClass().getSimpleName() + ".class").openStream();
+		InputStream in = getClass()
+				.getResource(getClass().getSimpleName() + ".class")
+				.openStream();
 		File f = File.createTempFile("Example", ".class");
 		FileOutputStream out = new FileOutputStream(f);
 		int b;

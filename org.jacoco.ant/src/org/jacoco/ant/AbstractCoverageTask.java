@@ -231,8 +231,8 @@ public class AbstractCoverageTask extends Task {
 	private File getAgentFile() {
 		try {
 			File agentFile = null;
-			final String agentFileLocation = getProject().getProperty(
-					"_jacoco.agentFile");
+			final String agentFileLocation = getProject()
+					.getProperty("_jacoco.agentFile");
 			if (agentFileLocation != null) {
 				agentFile = new File(agentFileLocation);
 			} else {

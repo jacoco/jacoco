@@ -29,12 +29,12 @@ public class PackageCoverageTest {
 
 	@Test
 	public void testProperties() {
-		Collection<IClassCoverage> classes = Collections
-				.singleton((IClassCoverage) new ClassCoverageImpl(
-						"org/jacoco/test/Sample", 0, false));
-		Collection<ISourceFileCoverage> sourceFiles = Collections
-				.singleton((ISourceFileCoverage) new SourceFileCoverageImpl(
-						"Sample.java", "org/jacoco/test/Sample"));
+		Collection<IClassCoverage> classes = Collections.singleton(
+				(IClassCoverage) new ClassCoverageImpl("org/jacoco/test/Sample",
+						0, false));
+		Collection<ISourceFileCoverage> sourceFiles = Collections.singleton(
+				(ISourceFileCoverage) new SourceFileCoverageImpl("Sample.java",
+						"org/jacoco/test/Sample"));
 		PackageCoverageImpl data = new PackageCoverageImpl("org/jacoco/test",
 				classes, sourceFiles);
 		assertEquals(ICoverageNode.ElementType.PACKAGE, data.getElementType());

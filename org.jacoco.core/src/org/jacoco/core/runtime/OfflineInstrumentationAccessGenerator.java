@@ -23,8 +23,8 @@ import org.objectweb.asm.Opcodes;
  * obtain probe arrays. This generator is designed for offline instrumentation
  * only.
  */
-public class OfflineInstrumentationAccessGenerator implements
-		IExecutionDataAccessorGenerator {
+public class OfflineInstrumentationAccessGenerator
+		implements IExecutionDataAccessorGenerator {
 
 	private final String runtimeClassName;
 

@@ -160,7 +160,8 @@ class MethodInstrumenter extends MethodProbesVisitor {
 		return intermediate;
 	}
 
-	private void insertIntermediateProbe(final Label label, final IFrame frame) {
+	private void insertIntermediateProbe(final Label label,
+			final IFrame frame) {
 		final int probeId = LabelInfo.getProbeId(label);
 		if (probeId != LabelInfo.NO_PROBE && !LabelInfo.isDone(label)) {
 			mv.visitLabel(LabelInfo.getIntermediateLabel(label));

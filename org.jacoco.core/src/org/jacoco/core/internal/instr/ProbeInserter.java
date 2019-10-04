@@ -56,8 +56,8 @@ class ProbeInserter extends MethodVisitor implements IProbeInserter {
 	 *            callback to create the code that retrieves the reference to
 	 *            the probe array
 	 */
-	ProbeInserter(final int access, final String name, final String desc, final MethodVisitor mv,
-			final IProbeArrayStrategy arrayStrategy) {
+	ProbeInserter(final int access, final String name, final String desc,
+			final MethodVisitor mv, final IProbeArrayStrategy arrayStrategy) {
 		super(InstrSupport.ASM_API_VERSION, mv);
 		this.clinit = InstrSupport.CLINIT_NAME.equals(name);
 		this.arrayStrategy = arrayStrategy;

@@ -160,7 +160,8 @@ public class ContentTypeDetectorTest {
 	}
 
 	@Test
-	public void should_detect_java_13_with_preview_features() throws IOException {
+	public void should_detect_java_13_with_preview_features()
+			throws IOException {
 		initData(0xCA, 0xFE, 0xBA, 0xBE, 0xFF, 0xFF, 0x00, 0x39);
 		assertEquals(ContentTypeDetector.CLASSFILE, detector.getType());
 		assertContent();
@@ -174,7 +175,8 @@ public class ContentTypeDetectorTest {
 	}
 
 	@Test
-	public void should_detect_java_14_with_preview_features() throws IOException {
+	public void should_detect_java_14_with_preview_features()
+			throws IOException {
 		initData(0xCA, 0xFE, 0xBA, 0xBE, 0xFF, 0xFF, 0x00, 0x3A);
 		assertEquals(ContentTypeDetector.CLASSFILE, detector.getType());
 		assertContent();
@@ -223,9 +225,10 @@ public class ContentTypeDetectorTest {
 		zip.close();
 
 		final ByteArrayOutputStream pack200buffer = new ByteArrayOutputStream();
-		Pack200.newPacker().pack(
-				new JarInputStream(new ByteArrayInputStream(
-						zipbuffer.toByteArray())), pack200buffer);
+		Pack200.newPacker()
+				.pack(new JarInputStream(
+						new ByteArrayInputStream(zipbuffer.toByteArray())),
+						pack200buffer);
 		initData(pack200buffer.toByteArray());
 		assertEquals(ContentTypeDetector.PACK200FILE, detector.getType());
 		assertContent();

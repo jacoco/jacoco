@@ -50,8 +50,8 @@ public class ClassRowWriterTest {
 				throw new AssertionError();
 			}
 
-			public String getMethodName(String vmclassname,
-					String vmmethodname, String vmdesc, String vmsignature) {
+			public String getMethodName(String vmclassname, String vmmethodname,
+					String vmdesc, String vmsignature) {
 				throw new AssertionError();
 			}
 

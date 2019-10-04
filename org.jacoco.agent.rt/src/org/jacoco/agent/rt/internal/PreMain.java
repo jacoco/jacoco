@@ -62,7 +62,8 @@ public final class PreMain {
 			return new InjectedClassRuntime(Object.class, "$JaCoCo");
 		}
 
-		return ModifiedSystemClassRuntime.createFor(inst, "java/lang/UnknownError");
+		return ModifiedSystemClassRuntime.createFor(inst,
+				"java/lang/UnknownError");
 	}
 
 	/**

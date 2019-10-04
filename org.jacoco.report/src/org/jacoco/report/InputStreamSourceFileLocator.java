@@ -21,8 +21,8 @@ import java.io.Reader;
  * Abstract base class for {@link ISourceFileLocator} locator implementations
  * based on {@link InputStream}s. It handles the encoding and tab width.
  */
-public abstract class InputStreamSourceFileLocator implements
-		ISourceFileLocator {
+public abstract class InputStreamSourceFileLocator
+		implements ISourceFileLocator {
 
 	private final String encoding;
 	private final int tabWidth;

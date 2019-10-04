@@ -59,7 +59,8 @@ public class ClassInstrumenter extends ClassProbesVisitor {
 
 	@Override
 	public MethodProbesVisitor visitMethod(final int access, final String name,
-			final String desc, final String signature, final String[] exceptions) {
+			final String desc, final String signature,
+			final String[] exceptions) {
 
 		InstrSupport.assertNotInstrumented(name, className);
 

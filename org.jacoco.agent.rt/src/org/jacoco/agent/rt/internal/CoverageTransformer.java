@@ -118,7 +118,8 @@ public class CoverageTransformer implements ClassFileTransformer {
 				return false;
 			}
 		} else {
-			if (!inclNoLocationClasses && !hasSourceLocation(protectionDomain)) {
+			if (!inclNoLocationClasses
+					&& !hasSourceLocation(protectionDomain)) {
 				return false;
 			}
 			if (exclClassloader.matches(loader.getClass().getName())) {
@@ -128,9 +129,9 @@ public class CoverageTransformer implements ClassFileTransformer {
 
 		return !classname.startsWith(AGENT_PREFIX) &&
 
-		includes.matches(classname) &&
+				includes.matches(classname) &&
 
-		!excludes.matches(classname);
+				!excludes.matches(classname);
 	}
 
 	/**

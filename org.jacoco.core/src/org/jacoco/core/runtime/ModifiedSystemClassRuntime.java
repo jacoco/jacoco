@@ -121,10 +121,10 @@ public class ModifiedSystemClassRuntime extends AbstractRuntime {
 			final String className, final String accessFieldName)
 			throws ClassNotFoundException {
 		final ClassFileTransformer transformer = new ClassFileTransformer() {
-			public byte[] transform(final ClassLoader loader,
-					final String name, final Class<?> classBeingRedefined,
-					final ProtectionDomain protectionDomain, final byte[] source)
-					throws IllegalClassFormatException {
+			public byte[] transform(final ClassLoader loader, final String name,
+					final Class<?> classBeingRedefined,
+					final ProtectionDomain protectionDomain,
+					final byte[] source) throws IllegalClassFormatException {
 				if (name.equals(className)) {
 					return instrument(source, accessFieldName);
 				}
@@ -137,8 +137,9 @@ public class ModifiedSystemClassRuntime extends AbstractRuntime {
 		try {
 			clazz.getField(accessFieldName);
 		} catch (final NoSuchFieldException e) {
-			throw new RuntimeException(format(
-					"Class %s could not be instrumented.", className), e);
+			throw new RuntimeException(
+					format("Class %s could not be instrumented.", className),
+					e);
 		}
 		return new ModifiedSystemClassRuntime(clazz, accessFieldName);
 	}
@@ -170,9 +171,10 @@ public class ModifiedSystemClassRuntime extends AbstractRuntime {
 
 	private static void createDataField(final ClassVisitor visitor,
 			final String dataField) {
-		visitor.visitField(Opcodes.ACC_PUBLIC | Opcodes.ACC_STATIC
-				| Opcodes.ACC_SYNTHETIC | Opcodes.ACC_TRANSIENT, dataField,
-				ACCESS_FIELD_TYPE, null, null);
+		visitor.visitField(
+				Opcodes.ACC_PUBLIC | Opcodes.ACC_STATIC | Opcodes.ACC_SYNTHETIC
+						| Opcodes.ACC_TRANSIENT,
+				dataField, ACCESS_FIELD_TYPE, null, null);
 	}
 
 }

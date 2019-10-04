@@ -45,12 +45,12 @@ public final class RT {
 	 *             in case of problems with the file output
 	 */
 	@SuppressWarnings("unused")
-	public static void dumpCoverageData(final File outFile,
-			final boolean merge, final boolean stopDataCollection)
-			throws IOException {
+	public static void dumpCoverageData(final File outFile, final boolean merge,
+			final boolean stopDataCollection) throws IOException {
 		final OutputStream out = new FileOutputStream(outFile, merge);
 		try {
-			out.write(org.jacoco.agent.rt.RT.getAgent().getExecutionData(false));
+			out.write(
+					org.jacoco.agent.rt.RT.getAgent().getExecutionData(false));
 		} finally {
 			out.close();
 		}

@@ -73,8 +73,8 @@ public class ReportOutputFolder {
 		if (folder != null) {
 			return folder;
 		}
-		folder = new ReportOutputFolder(output, this, path + normalizedName
-				+ "/");
+		folder = new ReportOutputFolder(output, this,
+				path + normalizedName + "/");
 		subFolders.put(normalizedName, folder);
 		return folder;
 	}

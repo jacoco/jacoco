@@ -12,9 +12,8 @@
  *******************************************************************************/
 package org.project;
 
-
 public class TestUtil {
-  public void doStuff() {
-    System.out.println("Do TestUtil Stuff");
-  }
+	public void doStuff() {
+		System.out.println("Do TestUtil Stuff");
+	}
 }

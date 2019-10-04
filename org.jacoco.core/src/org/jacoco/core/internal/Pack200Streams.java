@@ -57,8 +57,8 @@ public final class Pack200Streams {
 	 */
 	public static void pack(final byte[] source, final OutputStream output)
 			throws IOException {
-		final JarInputStream jar = new JarInputStream(new ByteArrayInputStream(
-				source));
+		final JarInputStream jar = new JarInputStream(
+				new ByteArrayInputStream(source));
 		Pack200.newPacker().pack(jar, output);
 	}
 

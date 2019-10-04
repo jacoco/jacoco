@@ -31,8 +31,8 @@ import org.junit.Test;
  * The tests don't care about the written binary format, they just verify
  * symmetry.
  */
-public class RemoteControlReaderWriterTest extends
-		ExecutionDataReaderWriterTest {
+public class RemoteControlReaderWriterTest
+		extends ExecutionDataReaderWriterTest {
 
 	private RemoteControlWriter writer;
 
@@ -94,8 +94,8 @@ public class RemoteControlReaderWriterTest extends
 
 	@Override
 	protected RemoteControlReader createReader() throws IOException {
-		return new RemoteControlReader(new ByteArrayInputStream(
-				buffer.toByteArray()));
+		return new RemoteControlReader(
+				new ByteArrayInputStream(buffer.toByteArray()));
 	}
 
 	@Override

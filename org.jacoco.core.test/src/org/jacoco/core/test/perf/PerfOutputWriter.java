@@ -37,8 +37,10 @@ public class PerfOutputWriter implements IPerfOutput {
 				System.getProperty("java.vm.vendor"));
 		writer.printf("JVM Version:     %s%n%n",
 				System.getProperty("java.vm.version"));
-		writer.println("scenario                         instr     ref    overhead");
-		writer.println("----------------------------------------------------------");
+		writer.println(
+				"scenario                         instr     ref    overhead");
+		writer.println(
+				"----------------------------------------------------------");
 	}
 
 	public void writeTimeResult(final String description, final long duration,

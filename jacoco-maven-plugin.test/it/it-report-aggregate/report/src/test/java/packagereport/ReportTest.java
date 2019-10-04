@@ -16,8 +16,8 @@ import org.junit.Test;
 
 public class ReportTest {
 
-  @Test
-  public void test() {
-  }
+	@Test
+	public void test() {
+	}
 
 }

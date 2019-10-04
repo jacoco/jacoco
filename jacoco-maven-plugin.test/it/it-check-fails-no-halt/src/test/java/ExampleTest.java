@@ -15,9 +15,9 @@ import org.junit.Test;
 
 public class ExampleTest {
 
-  @Test
-  public void test() {
-    new Example();
-  }
+	@Test
+	public void test() {
+		new Example();
+	}
 
 }

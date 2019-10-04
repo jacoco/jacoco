@@ -39,7 +39,8 @@ public class ReportPageTest extends PageTestBase {
 		private final String label;
 		private final String style;
 
-		protected TestReportPage(String label, String style, ReportPage parent) {
+		protected TestReportPage(String label, String style,
+				ReportPage parent) {
 			super(parent, rootFolder, ReportPageTest.this.context);
 			this.label = label;
 			this.style = style;

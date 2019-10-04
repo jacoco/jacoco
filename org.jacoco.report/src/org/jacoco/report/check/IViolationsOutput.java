@@ -32,6 +32,7 @@ public interface IViolationsOutput {
 	 * @param message
 	 *            readable message describing this violation
 	 */
-	void onViolation(ICoverageNode node, Rule rule, Limit limit, String message);
+	void onViolation(ICoverageNode node, Rule rule, Limit limit,
+			String message);
 
 }

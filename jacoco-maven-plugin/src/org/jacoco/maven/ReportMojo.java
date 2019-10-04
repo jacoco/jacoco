@@ -82,8 +82,8 @@ public class ReportMojo extends AbstractReportMojo {
 
 	@Override
 	public void setReportOutputDirectory(final File reportOutputDirectory) {
-		if (reportOutputDirectory != null
-				&& !reportOutputDirectory.getAbsolutePath().endsWith("jacoco")) {
+		if (reportOutputDirectory != null && !reportOutputDirectory
+				.getAbsolutePath().endsWith("jacoco")) {
 			outputDirectory = new File(reportOutputDirectory, "jacoco");
 		} else {
 			outputDirectory = reportOutputDirectory;

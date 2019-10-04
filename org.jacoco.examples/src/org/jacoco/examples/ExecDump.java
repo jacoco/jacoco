@@ -63,8 +63,8 @@ public final class ExecDump {
 		final ExecutionDataReader reader = new ExecutionDataReader(in);
 		reader.setSessionInfoVisitor(new ISessionInfoVisitor() {
 			public void visitSessionInfo(final SessionInfo info) {
-				out.printf("Session \"%s\": %s - %s%n", info.getId(), new Date(
-						info.getStartTimeStamp()),
+				out.printf("Session \"%s\": %s - %s%n", info.getId(),
+						new Date(info.getStartTimeStamp()),
 						new Date(info.getDumpTimeStamp()));
 			}
 		});

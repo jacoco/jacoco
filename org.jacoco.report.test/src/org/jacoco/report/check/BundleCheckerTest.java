@@ -56,7 +56,8 @@ public class BundleCheckerTest implements IViolationsOutput {
 		addRule(ElementType.BUNDLE);
 		final BundleChecker checker = new BundleChecker(rules, names, this);
 		checker.checkBundle(createBundle());
-		assertMessage("Rule violated for bundle Test: instructions covered ratio is 0.50, but expected minimum is 0.75");
+		assertMessage(
+				"Rule violated for bundle Test: instructions covered ratio is 0.50, but expected minimum is 0.75");
 	}
 
 	@Test
@@ -64,7 +65,8 @@ public class BundleCheckerTest implements IViolationsOutput {
 		addRule(ElementType.PACKAGE);
 		final BundleChecker checker = new BundleChecker(rules, names, this);
 		checker.checkBundle(createBundle());
-		assertMessage("Rule violated for package org.jacoco.example: instructions covered ratio is 0.50, but expected minimum is 0.75");
+		assertMessage(
+				"Rule violated for package org.jacoco.example: instructions covered ratio is 0.50, but expected minimum is 0.75");
 	}
 
 	@Test
@@ -72,7 +74,8 @@ public class BundleCheckerTest implements IViolationsOutput {
 		addRule(ElementType.SOURCEFILE);
 		final BundleChecker checker = new BundleChecker(rules, names, this);
 		checker.checkBundle(createBundle());
-		assertMessage("Rule violated for source file org/jacoco/example/FooClass.java: instructions covered ratio is 0.50, but expected minimum is 0.75");
+		assertMessage(
+				"Rule violated for source file org/jacoco/example/FooClass.java: instructions covered ratio is 0.50, but expected minimum is 0.75");
 	}
 
 	@Test
@@ -80,7 +83,8 @@ public class BundleCheckerTest implements IViolationsOutput {
 		addRule(ElementType.CLASS);
 		final BundleChecker checker = new BundleChecker(rules, names, this);
 		checker.checkBundle(createBundle());
-		assertMessage("Rule violated for class org.jacoco.example.FooClass: instructions covered ratio is 0.50, but expected minimum is 0.75");
+		assertMessage(
+				"Rule violated for class org.jacoco.example.FooClass: instructions covered ratio is 0.50, but expected minimum is 0.75");
 	}
 
 	@Test
@@ -88,7 +92,8 @@ public class BundleCheckerTest implements IViolationsOutput {
 		addRule(ElementType.METHOD);
 		final BundleChecker checker = new BundleChecker(rules, names, this);
 		checker.checkBundle(createBundle());
-		assertMessage("Rule violated for method org.jacoco.example.FooClass.fooMethod(): instructions covered ratio is 0.50, but expected minimum is 0.75");
+		assertMessage(
+				"Rule violated for method org.jacoco.example.FooClass.fooMethod(): instructions covered ratio is 0.50, but expected minimum is 0.75");
 	}
 
 	@Test

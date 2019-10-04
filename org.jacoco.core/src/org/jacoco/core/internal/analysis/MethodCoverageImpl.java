@@ -18,8 +18,8 @@ import org.jacoco.core.analysis.IMethodCoverage;
 /**
  * Implementation of {@link IMethodCoverage}.
  */
-public class MethodCoverageImpl extends SourceNodeImpl implements
-		IMethodCoverage {
+public class MethodCoverageImpl extends SourceNodeImpl
+		implements IMethodCoverage {
 
 	private final String desc;
 
@@ -59,7 +59,8 @@ public class MethodCoverageImpl extends SourceNodeImpl implements
 	 * branches have been incremented for this method coverage node.
 	 */
 	public void incrementMethodCounter() {
-		final ICounter base = this.instructionCounter.getCoveredCount() == 0 ? CounterImpl.COUNTER_1_0
+		final ICounter base = this.instructionCounter.getCoveredCount() == 0
+				? CounterImpl.COUNTER_1_0
 				: CounterImpl.COUNTER_0_1;
 		this.methodCounter = this.methodCounter.increment(base);
 		this.complexityCounter = this.complexityCounter.increment(base);

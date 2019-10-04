@@ -12,9 +12,8 @@
  *******************************************************************************/
 package org.project;
 
-
 public class DatabaseUtil {
-  public void doStuff() {
-    System.out.println("Do DatabaseUtil Stuff");
-  }
+	public void doStuff() {
+		System.out.println("Do DatabaseUtil Stuff");
+	}
 }

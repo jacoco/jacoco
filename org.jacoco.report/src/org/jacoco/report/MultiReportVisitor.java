@@ -25,8 +25,8 @@ import org.jacoco.core.data.SessionInfo;
  * A report visitor that is composed from multiple other visitors. This can be
  * used to create more than one report format in one run.
  */
-public class MultiReportVisitor extends MultiGroupVisitor implements
-		IReportVisitor {
+public class MultiReportVisitor extends MultiGroupVisitor
+		implements IReportVisitor {
 
 	private final List<IReportVisitor> visitors;
 
@@ -71,7 +71,8 @@ class MultiGroupVisitor implements IReportGroupVisitor {
 		}
 	}
 
-	public IReportGroupVisitor visitGroup(final String name) throws IOException {
+	public IReportGroupVisitor visitGroup(final String name)
+			throws IOException {
 		final List<IReportGroupVisitor> children = new ArrayList<IReportGroupVisitor>();
 		for (final IReportGroupVisitor v : visitors) {
 			children.add(v.visitGroup(name));

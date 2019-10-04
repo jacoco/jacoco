@@ -142,13 +142,13 @@ public class CoverageBuilderTest {
 
 	@Test
 	public void testCreateSourceFile() {
-		final MethodCoverageImpl method1 = new MethodCoverageImpl("doit",
-				"()V", null);
+		final MethodCoverageImpl method1 = new MethodCoverageImpl("doit", "()V",
+				null);
 		method1.increment(CounterImpl.COUNTER_1_0, CounterImpl.COUNTER_0_0, 3);
 		addClass(123L, false, "Sample", "Sample.java", method1);
 
-		final MethodCoverageImpl method2 = new MethodCoverageImpl("doit",
-				"()V", null);
+		final MethodCoverageImpl method2 = new MethodCoverageImpl("doit", "()V",
+				null);
 		method2.increment(CounterImpl.COUNTER_1_0, CounterImpl.COUNTER_0_0, 6);
 		addClass(234L, false, "Second", "Sample.java", method2);
 
@@ -163,13 +163,13 @@ public class CoverageBuilderTest {
 
 	@Test
 	public void testCreateSourceFileDuplicateClassNameIdentical() {
-		final MethodCoverageImpl method1 = new MethodCoverageImpl("doit",
-				"()V", null);
+		final MethodCoverageImpl method1 = new MethodCoverageImpl("doit", "()V",
+				null);
 		method1.increment(CounterImpl.COUNTER_1_0, CounterImpl.COUNTER_0_0, 3);
 		addClass(123L, false, "Sample", "Sample.java", method1);
 
-		final MethodCoverageImpl method2 = new MethodCoverageImpl("doit",
-				"()V", null);
+		final MethodCoverageImpl method2 = new MethodCoverageImpl("doit", "()V",
+				null);
 		method2.increment(CounterImpl.COUNTER_1_0, CounterImpl.COUNTER_0_0, 3);
 		addClass(123L, false, "Sample", "Sample.java", method2);
 
@@ -184,18 +184,18 @@ public class CoverageBuilderTest {
 
 	@Test
 	public void testGetBundle() {
-		final MethodCoverageImpl method1 = new MethodCoverageImpl("doit",
-				"()V", null);
+		final MethodCoverageImpl method1 = new MethodCoverageImpl("doit", "()V",
+				null);
 		method1.increment(CounterImpl.COUNTER_1_0, CounterImpl.COUNTER_0_0, 3);
 		addClass(1, false, "org/jacoco/examples/Sample1", null, method1);
 
-		final MethodCoverageImpl method2 = new MethodCoverageImpl("doit",
-				"()V", null);
+		final MethodCoverageImpl method2 = new MethodCoverageImpl("doit", "()V",
+				null);
 		method2.increment(CounterImpl.COUNTER_1_0, CounterImpl.COUNTER_0_0, 6);
 		addClass(2, false, "org/jacoco/examples/Sample2", null, method2);
 
-		final MethodCoverageImpl method3 = new MethodCoverageImpl("doit",
-				"()V", null);
+		final MethodCoverageImpl method3 = new MethodCoverageImpl("doit", "()V",
+				null);
 		method3.increment(CounterImpl.COUNTER_1_0, CounterImpl.COUNTER_0_0, 1);
 		addClass(3, false, "Sample3", null, method3);
 
@@ -212,8 +212,7 @@ public class CoverageBuilderTest {
 		IPackageCoverage p1 = packagesByName.get("org/jacoco/examples");
 		assertNotNull(p1);
 		assertEquals(
-				new HashSet<String>(Arrays.asList(
-						"org/jacoco/examples/Sample1",
+				new HashSet<String>(Arrays.asList("org/jacoco/examples/Sample1",
 						"org/jacoco/examples/Sample2")),
 				getNames(p1.getClasses()));
 
@@ -237,9 +236,10 @@ public class CoverageBuilderTest {
 		m.increment(CounterImpl.COUNTER_1_0, CounterImpl.COUNTER_0_0, 3);
 		addClass(3, false, "Sample3", null, m);
 
-		final Set<String> actual = getNames(coverageBuilder.getNoMatchClasses());
-		final Set<String> expected = new HashSet<String>(Arrays.asList(
-				"Sample1", "Sample2"));
+		final Set<String> actual = getNames(
+				coverageBuilder.getNoMatchClasses());
+		final Set<String> expected = new HashSet<String>(
+				Arrays.asList("Sample1", "Sample2"));
 
 		assertEquals(expected, actual);
 	}

@@ -196,8 +196,8 @@ public class MethodInstrumenterTest {
 		final Label L2 = new Label();
 		LabelInfo.setProbeId(L0, 0);
 		LabelInfo.setProbeId(L1, 1);
-		instrumenter.visitTableSwitchInsnWithProbes(3, 5, L0, new Label[] { L1,
-				L1, L2 }, frame);
+		instrumenter.visitTableSwitchInsnWithProbes(3, 5, L0,
+				new Label[] { L1, L1, L2 }, frame);
 
 		expectedVisitor.visitTableSwitchInsn(3, 4, L0,
 				new Label[] { L1, L1, L2 });

@@ -156,8 +156,9 @@ public class Table {
 			this.renderer = renderer;
 			index = new SortIndex<ITableItem>(renderer.getComparator());
 			this.style = style;
-			this.headerStyle = Styles.combine(defaultSorting ? Styles.DOWN
-					: null, Styles.SORTABLE, style);
+			this.headerStyle = Styles.combine(
+					defaultSorting ? Styles.DOWN : null, Styles.SORTABLE,
+					style);
 		}
 
 		void init(final HTMLElement tr, final List<? extends ITableItem> items,
@@ -185,7 +186,8 @@ public class Table {
 				throws IOException {
 			if (visible) {
 				final HTMLElement td = tr.td(style);
-				td.attr("id", idprefix + String.valueOf(index.getPosition(idx)));
+				td.attr("id",
+						idprefix + String.valueOf(index.getPosition(idx)));
 				renderer.item(td, item, resources, base);
 			}
 		}

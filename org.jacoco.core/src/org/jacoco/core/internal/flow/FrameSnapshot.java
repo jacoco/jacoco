@@ -59,7 +59,8 @@ class FrameSnapshot implements IFrame {
 	 * {@link MethodVisitor#visitFrame(int, int, Object[], int, Object[])}
 	 * method.
 	 */
-	private static Object[] reduce(final List<Object> source, final int popCount) {
+	private static Object[] reduce(final List<Object> source,
+			final int popCount) {
 		final List<Object> copy = new ArrayList<Object>(source);
 		final int size = source.size() - popCount;
 		copy.subList(size, source.size()).clear();

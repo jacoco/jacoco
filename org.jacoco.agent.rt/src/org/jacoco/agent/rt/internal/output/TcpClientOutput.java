@@ -20,8 +20,8 @@ import org.jacoco.core.runtime.AgentOptions;
 import org.jacoco.core.runtime.RuntimeData;
 
 /**
- * Output that connects to a TCP port. This controller uses the following
- * agent options:
+ * Output that connects to a TCP port. This controller uses the following agent
+ * options:
  * <ul>
  * <li>address</li>
  * <li>port</li>

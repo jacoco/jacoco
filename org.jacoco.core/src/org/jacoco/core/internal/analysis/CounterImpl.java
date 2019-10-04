@@ -23,7 +23,8 @@ public abstract class CounterImpl implements ICounter {
 	/** Max counter value for which singletons are created */
 	private static final int SINGLETON_LIMIT = 30;
 
-	private static final CounterImpl[][] SINGLETONS = new CounterImpl[SINGLETON_LIMIT + 1][];
+	private static final CounterImpl[][] SINGLETONS = new CounterImpl[SINGLETON_LIMIT
+			+ 1][];
 
 	static {
 		for (int i = 0; i <= SINGLETON_LIMIT; i++) {

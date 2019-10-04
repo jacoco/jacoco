@@ -50,8 +50,8 @@ public class TryWithResourcesJavac11FilterTest extends FilterTestBase {
 
 		m.visitVarInsn(Opcodes.ALOAD, 0);
 		range1.fromInclusive = m.instructions.getLast();
-		m.visitMethodInsn(Opcodes.INVOKEINTERFACE, "Resource", "close",
-			"()V", false);
+		m.visitMethodInsn(Opcodes.INVOKEINTERFACE, "Resource", "close", "()V",
+				false);
 		m.visitJumpInsn(Opcodes.GOTO, e);
 		range1.toInclusive = m.instructions.getLast();
 
@@ -59,15 +59,15 @@ public class TryWithResourcesJavac11FilterTest extends FilterTestBase {
 		range2.fromInclusive = m.instructions.getLast();
 		m.visitVarInsn(Opcodes.ASTORE, 1);
 		m.visitVarInsn(Opcodes.ALOAD, 0);
-		m.visitMethodInsn(Opcodes.INVOKEINTERFACE, "Resource", "close",
-			"()V", false);
+		m.visitMethodInsn(Opcodes.INVOKEINTERFACE, "Resource", "close", "()V",
+				false);
 		m.visitJumpInsn(Opcodes.GOTO, t);
 
 		m.visitVarInsn(Opcodes.ASTORE, 2);
 		m.visitVarInsn(Opcodes.ALOAD, 1);
 		m.visitVarInsn(Opcodes.ALOAD, 2);
 		m.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "java/lang/Throwable",
-			"addSuppressed", "(Ljava/lang/Throwable;)V", false);
+				"addSuppressed", "(Ljava/lang/Throwable;)V", false);
 		m.visitLabel(t);
 		m.visitVarInsn(Opcodes.ALOAD, 1);
 		m.visitInsn(Opcodes.ATHROW);
@@ -104,8 +104,8 @@ public class TryWithResourcesJavac11FilterTest extends FilterTestBase {
 		range1.fromInclusive = m.instructions.getLast();
 		m.visitJumpInsn(Opcodes.IFNULL, e);
 		m.visitVarInsn(Opcodes.ALOAD, 0);
-		m.visitMethodInsn(Opcodes.INVOKEINTERFACE, "Resource", "close",
-				"()V", false);
+		m.visitMethodInsn(Opcodes.INVOKEINTERFACE, "Resource", "close", "()V",
+				false);
 		m.visitJumpInsn(Opcodes.GOTO, e);
 		range1.toInclusive = m.instructions.getLast();
 
@@ -115,8 +115,8 @@ public class TryWithResourcesJavac11FilterTest extends FilterTestBase {
 		m.visitVarInsn(Opcodes.ALOAD, 0);
 		m.visitJumpInsn(Opcodes.IFNULL, t);
 		m.visitVarInsn(Opcodes.ALOAD, 0);
-		m.visitMethodInsn(Opcodes.INVOKEINTERFACE, "Resource", "close",
-				"()V", false);
+		m.visitMethodInsn(Opcodes.INVOKEINTERFACE, "Resource", "close", "()V",
+				false);
 		m.visitJumpInsn(Opcodes.GOTO, t);
 
 		m.visitVarInsn(Opcodes.ASTORE, 2);

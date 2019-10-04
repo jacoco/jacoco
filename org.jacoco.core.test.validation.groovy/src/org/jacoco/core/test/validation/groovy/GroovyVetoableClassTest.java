@@ -21,12 +21,12 @@ import org.junit.Test;
  * Test of class with {@link groovy.beans.Vetoable} annotation.
  */
 public class GroovyVetoableClassTest extends ValidationTestBase {
-    public GroovyVetoableClassTest() {
-        super(GroovyVetoableClassTarget.class);
-    }
+	public GroovyVetoableClassTest() {
+		super(GroovyVetoableClassTarget.class);
+	}
 
-    @Test
-    public void test_method_count() {
-        assertMethodCount(1);
-    }
+	@Test
+	public void test_method_count() {
+		assertMethodCount(1);
+	}
 }

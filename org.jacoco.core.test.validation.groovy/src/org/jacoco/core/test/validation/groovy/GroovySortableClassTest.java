@@ -21,13 +21,13 @@ import org.junit.Test;
  * Test of class with {@link groovy.transform.Sortable} annotation.
  */
 public class GroovySortableClassTest extends ValidationTestBase {
-    public GroovySortableClassTest() {
-        super(GroovySortableClassTarget.class);
-    }
+	public GroovySortableClassTest() {
+		super(GroovySortableClassTarget.class);
+	}
 
-    @Test
-    public void test_method_count() {
-        // main method and static initializer
-        assertMethodCount(2);
-    }
+	@Test
+	public void test_method_count() {
+		// main method and static initializer
+		assertMethodCount(2);
+	}
 }

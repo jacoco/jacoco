@@ -181,16 +181,16 @@ public abstract class AbstractReportMojo extends AbstractMavenReport {
 			createReport(visitor, support);
 			visitor.visitEnd();
 		} catch (final IOException e) {
-			throw new MavenReportException("Error while creating report: "
-					+ e.getMessage(), e);
+			throw new MavenReportException(
+					"Error while creating report: " + e.getMessage(), e);
 		}
 	}
 
 	abstract void loadExecutionData(final ReportSupport support)
 			throws IOException;
 
-	abstract void addFormatters(final ReportSupport support, final Locale locale)
-			throws IOException;
+	abstract void addFormatters(final ReportSupport support,
+			final Locale locale) throws IOException;
 
 	abstract void createReport(final IReportGroupVisitor visitor,
 			final ReportSupport support) throws IOException;
