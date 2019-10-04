@@ -70,8 +70,9 @@
         a coverage ratio limit is configured outside the range [0,1] to avoid
         common configuration mistakes
         (GitHub <a href="https://github.com/jacoco/jacoco/issues/783">#783</a>).</li>
-  <li>Report generation and offline instrumentation now throw an exception for
-      class files of unsupported version instead of skipping them silently
+  <li>Unsupported class file versions are now consistently reported as exceptions
+      by all methods of <code>Analyzer</code> and <code>Instrumenter</code> and
+      thus also during report generation and offline instrumentation
       (GitHub <a href="https://github.com/jacoco/jacoco/issues/952">#952</a>).</li>
 </ul>
 
