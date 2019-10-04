@@ -128,6 +128,20 @@ public class ReportTest extends CommandTestBase {
 	}
 
 	@Test
+	public void should_link_sources_in_html_report_to_shortened_package()
+			throws Exception {
+		File html = new File(tmp.getRoot(), "coverage");
+
+		execute("report", "--classfiles", getClassPath(), "--sourcefiles",
+				"./src/org/jacoco", "--html", html.getAbsolutePath());
+
+		assertOk();
+		assertTrue(new File(html,
+				"org.jacoco.cli.internal.commands/ReportTest.java.html")
+						.isFile());
+	}
+
+	@Test
 	public void should_use_all_values_when_multiple_classfiles_options_are_provided()
 			throws Exception {
 		File html = new File(tmp.getRoot(), "coverage");

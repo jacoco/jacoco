@@ -34,6 +34,7 @@ import org.jacoco.report.IReportVisitor;
 import org.jacoco.report.ISourceFileLocator;
 import org.jacoco.report.MultiReportVisitor;
 import org.jacoco.report.MultiSourceFileLocator;
+import org.jacoco.report.ShortenedPackageSourceFileLocator;
 import org.jacoco.report.csv.CSVFormatter;
 import org.jacoco.report.html.HTMLFormatter;
 import org.jacoco.report.xml.XMLFormatter;
@@ -168,7 +169,7 @@ public class Report extends Command {
 		for (final File f : sourcefiles) {
 			multi.add(new DirectorySourceFileLocator(f, encoding, tabwidth));
 		}
-		return multi;
+		return new ShortenedPackageSourceFileLocator(multi);
 	}
 
 }
