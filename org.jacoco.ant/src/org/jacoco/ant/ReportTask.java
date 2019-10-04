@@ -45,6 +45,7 @@ import org.jacoco.report.IMultiReportOutput;
 import org.jacoco.report.IReportGroupVisitor;
 import org.jacoco.report.IReportVisitor;
 import org.jacoco.report.MultiReportVisitor;
+import org.jacoco.report.ShortenedPackageSourceFileLocator;
 import org.jacoco.report.ZipMultiReportOutput;
 import org.jacoco.report.check.IViolationsOutput;
 import org.jacoco.report.check.Limit;
@@ -548,7 +549,8 @@ public class ReportTask extends Task {
 			if (!locator.isEmpty()) {
 				checkForMissingDebugInformation(bundle);
 			}
-			visitor.visitBundle(bundle, locator);
+			visitor.visitBundle(bundle,
+					new ShortenedPackageSourceFileLocator(locator));
 		} else {
 			final IReportGroupVisitor groupVisitor = visitor
 					.visitGroup(group.name);

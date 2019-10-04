@@ -328,6 +328,22 @@
 		<au:assertFileExists file="${temp.dir}/org.jacoco.ant/TestTarget.java.html"/>
 		<au:assertFileExists file="${temp.dir}/default/TestTargetInDefault.java.html"/>
 	</target>
+
+	<target name="testReportHtmlWithShortenedPackageDir">
+		<jacoco:report>
+			<structure name="Test">
+				<classfiles>
+					<fileset dir="${org.jacoco.ant.reportTaskTest.classes.dir}" includes="**/*.class"/>
+				</classfiles>
+				<sourcefiles encoding="UTF-8">
+					<fileset dir="${org.jacoco.ant.reportTaskTest.sources.dir}/org/jacoco" />
+				</sourcefiles>
+			</structure>
+			<html destdir="${temp.dir}"/>
+		</jacoco:report>
+		
+		<au:assertFileExists file="${temp.dir}/org.jacoco.ant/TestTarget.java.html"/>
+	</target>
 	
 	<target name="testReportHtmlWithSourceEncoding">
 		<mkdir dir="${temp.dir}/org/jacoco/ant"/>
