@@ -16,8 +16,6 @@ import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
-import org.objectweb.asm.Opcodes;
-
 /**
  * Detector for content types of binary streams based on a magic headers.
  */
@@ -73,26 +71,14 @@ public class ContentTypeDetector {
 		case PACK200FILE:
 			return PACK200FILE;
 		case CLASSFILE:
-			// also verify version to distinguish from Mach Object files:
-			switch (readInt(in)) {
-			case Opcodes.V1_1:
-			case Opcodes.V1_2:
-			case Opcodes.V1_3:
-			case Opcodes.V1_4:
-			case Opcodes.V1_5:
-			case Opcodes.V1_6:
-			case Opcodes.V1_7:
-			case Opcodes.V1_8:
-			case Opcodes.V9:
-			case Opcodes.V10:
-			case Opcodes.V11:
-			case Opcodes.V11 | Opcodes.V_PREVIEW:
-			case Opcodes.V12:
-			case Opcodes.V12 | Opcodes.V_PREVIEW:
-			case Opcodes.V13:
-			case Opcodes.V13 | Opcodes.V_PREVIEW:
-			case (Opcodes.V13 + 1):
-			case (Opcodes.V13 + 1) | Opcodes.V_PREVIEW:
+			// Mach-O fat/universal binaries have the same magic header as Java
+			// class files, number of architectures is stored in unsigned 4
+			// bytes in the same place and in the same big-endian order as major
+			// and minor version of class file. Hopefully on practice number of
+			// architectures in single executable is less than 45, which is
+			// major version of Java 1.1 class files:
+			final int majorVersion = readInt(in) & 0xFFFF;
+			if (majorVersion >= 45) {
 				return CLASSFILE;
 			}
 		}
