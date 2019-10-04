@@ -12,6 +12,11 @@
  *******************************************************************************/
 package org.jacoco.report.internal.html.page;
 
+import static org.junit.Assert.assertEquals;
+
+import java.util.Arrays;
+import java.util.Collections;
+
 import org.jacoco.core.analysis.IBundleCoverage;
 import org.jacoco.core.analysis.IClassCoverage;
 import org.jacoco.core.analysis.IPackageCoverage;
@@ -24,11 +29,6 @@ import org.jacoco.core.internal.analysis.PackageCoverageImpl;
 import org.junit.Before;
 import org.junit.Test;
 import org.w3c.dom.Document;
-
-import java.util.Arrays;
-import java.util.Collections;
-
-import static org.junit.Assert.assertEquals;
 
 /**
  * Unit tests for {@link BundlePage}.

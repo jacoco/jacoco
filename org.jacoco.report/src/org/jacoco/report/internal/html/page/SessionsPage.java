@@ -82,8 +82,8 @@ public class SessionsPage extends ReportPage {
 		final ILanguageNames names = context.getLanguageNames();
 		Collections.sort(this.executionData, new Comparator<ExecutionData>() {
 			public int compare(final ExecutionData e1, final ExecutionData e2) {
-				return names.getQualifiedClassName(e1.getName()).compareTo(
-						names.getQualifiedClassName(e2.getName()));
+				return names.getQualifiedClassName(e1.getName())
+						.compareTo(names.getQualifiedClassName(e2.getName()));
 			}
 		});
 	}
@@ -133,8 +133,8 @@ public class SessionsPage extends ReportPage {
 		for (final ExecutionData e : executionData) {
 			final HTMLElement tr = tbody.tr();
 			final String link = index.getLinkToClass(e.getId());
-			final String qualifiedName = names.getQualifiedClassName(e
-					.getName());
+			final String qualifiedName = names
+					.getQualifiedClassName(e.getName());
 			if (link == null) {
 				tr.td().span(Styles.EL_CLASS).text(qualifiedName);
 			} else {

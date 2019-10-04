@@ -12,8 +12,8 @@
  *******************************************************************************/
 public class DoNotInstrument {
 
-  public void sayHello() {
-    System.out.println("Hello world");
-  }
+	public void sayHello() {
+		System.out.println("Hello world");
+	}
 
 }

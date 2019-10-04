@@ -21,12 +21,12 @@ import org.junit.Test;
  * Test of class with {@link groovy.transform.AutoExternalize} annotation.
  */
 public class GroovyAutoExternalizeClassTest extends ValidationTestBase {
-    public GroovyAutoExternalizeClassTest() {
-        super(GroovyAutoExternalizeClassTarget.class);
-    }
+	public GroovyAutoExternalizeClassTest() {
+		super(GroovyAutoExternalizeClassTarget.class);
+	}
 
-    @Test
-    public void test_method_count() {
-        assertMethodCount(1);
-    }
+	@Test
+	public void test_method_count() {
+		assertMethodCount(1);
+	}
 }

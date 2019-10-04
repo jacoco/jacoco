@@ -12,9 +12,8 @@
  *******************************************************************************/
 package org.project;
 
-
 public class FileUtil {
-  public void doStuff() {
-    System.out.println("Do FileUtil Stuff");
-  }
+	public void doStuff() {
+		System.out.println("Do FileUtil Stuff");
+	}
 }

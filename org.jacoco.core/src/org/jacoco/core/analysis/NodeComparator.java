@@ -73,7 +73,8 @@ public class NodeComparator implements Comparator<ICoverageNode>, Serializable {
 	 *            collection to create a copy of
 	 * @return sorted copy
 	 */
-	public <T extends ICoverageNode> List<T> sort(final Collection<T> summaries) {
+	public <T extends ICoverageNode> List<T> sort(
+			final Collection<T> summaries) {
 		final List<T> result = new ArrayList<T>(summaries);
 		Collections.sort(result, this);
 		return result;

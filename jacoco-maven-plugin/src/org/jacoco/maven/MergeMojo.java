@@ -61,8 +61,8 @@ public class MergeMojo extends AbstractJacocoMojo {
 	private List<FileSet> fileSets;
 
 	@Override
-	protected void executeMojo() throws MojoExecutionException,
-			MojoFailureException {
+	protected void executeMojo()
+			throws MojoExecutionException, MojoFailureException {
 		if (!canMergeReports()) {
 			return;
 		}
@@ -96,13 +96,12 @@ public class MergeMojo extends AbstractJacocoMojo {
 					continue;
 				}
 				try {
-					getLog().info(
-							"Loading execution data file "
-									+ inputFile.getAbsolutePath());
+					getLog().info("Loading execution data file "
+							+ inputFile.getAbsolutePath());
 					loader.load(inputFile);
 				} catch (final IOException e) {
-					throw new MojoExecutionException("Unable to read "
-							+ inputFile.getAbsolutePath(), e);
+					throw new MojoExecutionException(
+							"Unable to read " + inputFile.getAbsolutePath(), e);
 				}
 			}
 		}
@@ -114,14 +113,14 @@ public class MergeMojo extends AbstractJacocoMojo {
 			getLog().info(MSG_SKIPPING);
 			return;
 		}
-		getLog().info(
-				"Writing merged execution data to "
-						+ destFile.getAbsolutePath());
+		getLog().info("Writing merged execution data to "
+				+ destFile.getAbsolutePath());
 		try {
 			loader.save(destFile, false);
 		} catch (final IOException e) {
-			throw new MojoExecutionException("Unable to write merged file "
-					+ destFile.getAbsolutePath(), e);
+			throw new MojoExecutionException(
+					"Unable to write merged file " + destFile.getAbsolutePath(),
+					e);
 		}
 	}
 

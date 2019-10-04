@@ -25,8 +25,8 @@ import org.jacoco.report.internal.html.table.ITableItem;
  * @param <NodeType>
  *            type of the node represented by this page
  */
-public abstract class NodePage<NodeType extends ICoverageNode> extends
-		ReportPage implements ITableItem {
+public abstract class NodePage<NodeType extends ICoverageNode>
+		extends ReportPage implements ITableItem {
 
 	private final NodeType node;
 

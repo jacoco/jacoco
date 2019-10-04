@@ -18,11 +18,12 @@ import org.jacoco.core.analysis.IBundleCoverage;
 
 /**
  * Output-Interface for hierarchical report structures. To allow sequential
- * processing and save memory the group structure has to be traversed in a
- * "deep first" fashion. The interface is implemented by the report formatters
- * and can be used to emit coverage report structures.
+ * processing and save memory the group structure has to be traversed in a "deep
+ * first" fashion. The interface is implemented by the report formatters and can
+ * be used to emit coverage report structures.
  * 
- * The following constraints apply in using {@link IReportGroupVisitor} instances:
+ * The following constraints apply in using {@link IReportGroupVisitor}
+ * instances:
  * 
  * <ul>
  * <li>A visitor instance can be used to either submit bundles (

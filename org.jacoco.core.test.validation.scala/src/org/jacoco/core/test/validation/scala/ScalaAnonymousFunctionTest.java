@@ -20,8 +20,8 @@ import org.jacoco.core.test.validation.scala.targets.ScalaAnonymousFunctionTarge
  */
 public class ScalaAnonymousFunctionTest extends ValidationTestBase {
 
-    public ScalaAnonymousFunctionTest() {
-        super(ScalaAnonymousFunctionTarget.class);
-    }
+	public ScalaAnonymousFunctionTest() {
+		super(ScalaAnonymousFunctionTarget.class);
+	}
 
 }

@@ -18,7 +18,6 @@ import static org.junit.Assert.assertTrue;
 import java.io.File;
 import java.io.IOException;
 
-import org.jacoco.agent.rt.internal.output.FileOutput;
 import org.jacoco.core.runtime.AgentOptions;
 import org.jacoco.core.runtime.RuntimeData;
 import org.junit.Rule;

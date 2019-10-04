@@ -95,9 +95,8 @@ public class DumpMojo extends AbstractJacocoMojo {
 			@Override
 			protected void onConnecting(final InetAddress address,
 					final int port) {
-				getLog().info(
-						format("Connecting to %s:%s", address,
-								Integer.valueOf(port)));
+				getLog().info(format("Connecting to %s:%s", address,
+						Integer.valueOf(port)));
 			}
 
 			@Override
@@ -112,9 +111,8 @@ public class DumpMojo extends AbstractJacocoMojo {
 		try {
 			final ExecFileLoader loader = client.dump(address, port);
 			if (dump) {
-				getLog().info(
-						format("Dumping execution data to %s",
-								destFile.getAbsolutePath()));
+				getLog().info(format("Dumping execution data to %s",
+						destFile.getAbsolutePath()));
 				loader.save(destFile, append);
 			}
 		} catch (final IOException e) {

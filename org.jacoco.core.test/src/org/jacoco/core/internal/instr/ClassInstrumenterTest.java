@@ -28,9 +28,9 @@ public class ClassInstrumenterTest implements IProbeArrayStrategy {
 
 	@Before
 	public void setup() {
-		instrumenter = new ClassInstrumenter(this, new ClassVisitor(
-				InstrSupport.ASM_API_VERSION) {
-		});
+		instrumenter = new ClassInstrumenter(this,
+				new ClassVisitor(InstrSupport.ASM_API_VERSION) {
+				});
 	}
 
 	@Test(expected = IllegalStateException.class)
@@ -49,14 +49,15 @@ public class ClassInstrumenterTest implements IProbeArrayStrategy {
 
 	@Test
 	public void testNoMethodVisitor() {
-		instrumenter = new ClassInstrumenter(this, new ClassVisitor(
-				InstrSupport.ASM_API_VERSION) {
-			@Override
-			public MethodVisitor visitMethod(int access, String name,
-					String desc, String signature, String[] exceptions) {
-				return null;
-			}
-		});
+		instrumenter = new ClassInstrumenter(this,
+				new ClassVisitor(InstrSupport.ASM_API_VERSION) {
+					@Override
+					public MethodVisitor visitMethod(int access, String name,
+							String desc, String signature,
+							String[] exceptions) {
+						return null;
+					}
+				});
 		assertNull(instrumenter.visitMethod(0, "foo", "()V", null, null));
 	}
 

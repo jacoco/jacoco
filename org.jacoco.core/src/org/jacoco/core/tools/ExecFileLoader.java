@@ -112,7 +112,8 @@ public class ExecFileLoader {
 		final FileOutputStream fileStream = new FileOutputStream(file, append);
 		// Avoid concurrent writes from other processes:
 		fileStream.getChannel().lock();
-		final OutputStream bufferedStream = new BufferedOutputStream(fileStream);
+		final OutputStream bufferedStream = new BufferedOutputStream(
+				fileStream);
 		try {
 			save(bufferedStream);
 		} finally {

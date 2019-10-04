@@ -63,8 +63,8 @@ public class AntFilesLocatorTest {
 	private Resource createFile(String path) throws IOException {
 		final File file = new File(folder.getRoot(), path);
 		file.getParentFile().mkdirs();
-		final Writer writer = new OutputStreamWriter(
-				new FileOutputStream(file), "UTF-8");
+		final Writer writer = new OutputStreamWriter(new FileOutputStream(file),
+				"UTF-8");
 		writer.write("Source");
 		writer.close();
 		return new FileResource(folder.getRoot(), path);

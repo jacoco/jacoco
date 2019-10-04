@@ -110,8 +110,9 @@ public class InstrumentTask extends Task {
 			}
 		} catch (final Exception e) {
 			file.delete();
-			throw new BuildException(format("Error while instrumenting %s",
-					resource), e, getLocation());
+			throw new BuildException(
+					format("Error while instrumenting %s", resource), e,
+					getLocation());
 		}
 	}
 }

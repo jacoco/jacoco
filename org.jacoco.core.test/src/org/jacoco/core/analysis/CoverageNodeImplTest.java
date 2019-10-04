@@ -53,7 +53,8 @@ public class CoverageNodeImplTest {
 	public void testIncrement() {
 		CoverageNodeImpl parent = new CoverageNodeImpl(ElementType.GROUP,
 				"sample");
-		ICoverageNode child = new CoverageNodeImpl(ElementType.GROUP, "sample") {
+		ICoverageNode child = new CoverageNodeImpl(ElementType.GROUP,
+				"sample") {
 			{
 				instructionCounter = CounterImpl.getInstance(1, 41);
 				branchCounter = CounterImpl.getInstance(10, 15);
@@ -68,8 +69,10 @@ public class CoverageNodeImplTest {
 				parent.getCounter(INSTRUCTION));
 		assertEquals(CounterImpl.getInstance(1, 41),
 				parent.getInstructionCounter());
-		assertEquals(CounterImpl.getInstance(10, 15), parent.getCounter(BRANCH));
-		assertEquals(CounterImpl.getInstance(10, 15), parent.getBranchCounter());
+		assertEquals(CounterImpl.getInstance(10, 15),
+				parent.getCounter(BRANCH));
+		assertEquals(CounterImpl.getInstance(10, 15),
+				parent.getBranchCounter());
 		assertEquals(CounterImpl.getInstance(5, 3), parent.getCounter(LINE));
 		assertEquals(CounterImpl.getInstance(5, 3), parent.getLineCounter());
 		assertEquals(CounterImpl.getInstance(4, 2),
@@ -86,12 +89,14 @@ public class CoverageNodeImplTest {
 	public void testIncrementCollection() {
 		CoverageNodeImpl parent = new CoverageNodeImpl(ElementType.GROUP,
 				"sample");
-		ICoverageNode child1 = new CoverageNodeImpl(ElementType.GROUP, "sample") {
+		ICoverageNode child1 = new CoverageNodeImpl(ElementType.GROUP,
+				"sample") {
 			{
 				branchCounter = CounterImpl.getInstance(5, 2);
 			}
 		};
-		ICoverageNode child2 = new CoverageNodeImpl(ElementType.GROUP, "sample") {
+		ICoverageNode child2 = new CoverageNodeImpl(ElementType.GROUP,
+				"sample") {
 			{
 				branchCounter = CounterImpl.getInstance(3, 3);
 			}
@@ -121,7 +126,8 @@ public class CoverageNodeImplTest {
 		assertEquals(CounterImpl.getInstance(4, 4),
 				copy.getInstructionCounter());
 		assertEquals(CounterImpl.getInstance(5, 5), copy.getLineCounter());
-		assertEquals(CounterImpl.getInstance(6, 6), copy.getComplexityCounter());
+		assertEquals(CounterImpl.getInstance(6, 6),
+				copy.getComplexityCounter());
 	}
 
 	@Test

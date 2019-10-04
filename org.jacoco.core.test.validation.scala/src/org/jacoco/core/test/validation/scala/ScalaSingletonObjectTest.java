@@ -20,8 +20,8 @@ import org.jacoco.core.test.validation.scala.targets.ScalaSingletonObjectTarget;
  */
 public class ScalaSingletonObjectTest extends ValidationTestBase {
 
-    public ScalaSingletonObjectTest() {
-        super(ScalaSingletonObjectTarget.class);
-    }
+	public ScalaSingletonObjectTest() {
+		super(ScalaSingletonObjectTarget.class);
+	}
 
 }

@@ -21,8 +21,8 @@ import org.objectweb.asm.commons.AnalyzerAdapter;
  * A {@link org.objectweb.asm.ClassVisitor} that calculates probes for every
  * method.
  */
-public class ClassProbesAdapter extends ClassVisitor implements
-		IProbeIdGenerator {
+public class ClassProbesAdapter extends ClassVisitor
+		implements IProbeIdGenerator {
 
 	private static final MethodProbesVisitor EMPTY_METHOD_PROBES_VISITOR = new MethodProbesVisitor() {
 	};
@@ -60,7 +60,8 @@ public class ClassProbesAdapter extends ClassVisitor implements
 
 	@Override
 	public final MethodVisitor visitMethod(final int access, final String name,
-			final String desc, final String signature, final String[] exceptions) {
+			final String desc, final String signature,
+			final String[] exceptions) {
 		final MethodProbesVisitor methodProbes;
 		final MethodProbesVisitor mv = cv.visitMethod(access, name, desc,
 				signature, exceptions);

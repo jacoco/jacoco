@@ -43,8 +43,8 @@ public class FileMultiReportOutputTest {
 		stream.close();
 		output.close();
 
-		final InputStream actual = new FileInputStream(new File(
-				folder.getRoot(), "a/b/c/test"));
+		final InputStream actual = new FileInputStream(
+				new File(folder.getRoot(), "a/b/c/test"));
 		assertEquals(1, actual.read());
 		assertEquals(2, actual.read());
 		assertEquals(3, actual.read());

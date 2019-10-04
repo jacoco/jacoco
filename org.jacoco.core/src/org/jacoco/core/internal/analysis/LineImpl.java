@@ -26,7 +26,8 @@ public abstract class LineImpl implements ILine {
 	/** Max branch counter value for which singletons are created */
 	private static final int SINGLETON_BRA_LIMIT = 4;
 
-	private static final LineImpl[][][][] SINGLETONS = new LineImpl[SINGLETON_INS_LIMIT + 1][][][];
+	private static final LineImpl[][][][] SINGLETONS = new LineImpl[SINGLETON_INS_LIMIT
+			+ 1][][][];
 
 	static {
 		for (int i = 0; i <= SINGLETON_INS_LIMIT; i++) {
@@ -83,8 +84,8 @@ public abstract class LineImpl implements ILine {
 	 */
 	private static final class Fix extends LineImpl {
 		public Fix(final int im, final int ic, final int bm, final int bc) {
-			super(CounterImpl.getInstance(im, ic), CounterImpl.getInstance(bm,
-					bc));
+			super(CounterImpl.getInstance(im, ic),
+					CounterImpl.getInstance(bm, bc));
 		}
 
 		@Override
@@ -101,7 +102,8 @@ public abstract class LineImpl implements ILine {
 	/** branch counter */
 	protected CounterImpl branches;
 
-	private LineImpl(final CounterImpl instructions, final CounterImpl branches) {
+	private LineImpl(final CounterImpl instructions,
+			final CounterImpl branches) {
 		this.instructions = instructions;
 		this.branches = branches;
 	}

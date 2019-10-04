@@ -69,7 +69,8 @@ public final class ExecutionDataStore implements IExecutionDataVisitor {
 	 *             to a corresponding one, that is already contained
 	 * @see ExecutionData#assertCompatibility(long, String, int)
 	 */
-	public void subtract(final ExecutionData data) throws IllegalStateException {
+	public void subtract(final ExecutionData data)
+			throws IllegalStateException {
 		final Long id = Long.valueOf(data.getId());
 		final ExecutionData entry = entries.get(id);
 		if (entry != null) {

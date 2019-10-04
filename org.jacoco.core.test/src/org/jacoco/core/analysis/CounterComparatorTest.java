@@ -111,12 +111,14 @@ public class CounterComparatorTest {
 
 	private void assertCmpLess(Comparator<ICounter> cmp, int missed1,
 			int covered1, int missed2, int covered2) {
-		assertTrue(cmp.compare(ctr(missed1, covered1), ctr(missed2, covered2)) < 0);
+		assertTrue(cmp.compare(ctr(missed1, covered1),
+				ctr(missed2, covered2)) < 0);
 	}
 
 	private void assertCmpGreater(Comparator<ICounter> cmp, int missed1,
 			int covered1, int missed2, int covered2) {
-		assertTrue(cmp.compare(ctr(missed1, covered1), ctr(missed2, covered2)) > 0);
+		assertTrue(cmp.compare(ctr(missed1, covered1),
+				ctr(missed2, covered2)) > 0);
 	}
 
 	private CounterImpl ctr(int missed, int covered) {

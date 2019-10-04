@@ -109,8 +109,9 @@ public class ZipMultiReportOutputTest {
 
 		final Map<String, byte[]> entries = readEntries();
 		assertEquals(
-				new HashSet<String>(Arrays.asList("dir/index.html",
-						"readme.txt")), entries.keySet());
+				new HashSet<String>(
+						Arrays.asList("dir/index.html", "readme.txt")),
+				entries.keySet());
 		assertArrayEquals(content1, entries.get("dir/index.html"));
 		assertArrayEquals(content2, entries.get("readme.txt"));
 	}
@@ -131,8 +132,9 @@ public class ZipMultiReportOutputTest {
 
 		final Map<String, byte[]> entries = readEntries();
 		assertEquals(
-				new HashSet<String>(Arrays.asList("dir/index.html",
-						"readme.txt")), entries.keySet());
+				new HashSet<String>(
+						Arrays.asList("dir/index.html", "readme.txt")),
+				entries.keySet());
 		assertArrayEquals(content1, entries.get("dir/index.html"));
 		assertArrayEquals(content2, entries.get("readme.txt"));
 	}
@@ -184,8 +186,8 @@ public class ZipMultiReportOutputTest {
 			while ((b = input.read()) != -1) {
 				entryBuffer.write(b);
 			}
-			byte[] old = entries
-					.put(entry.getName(), entryBuffer.toByteArray());
+			byte[] old = entries.put(entry.getName(),
+					entryBuffer.toByteArray());
 			assertNull("Duplicate entry " + entry.getName(), old);
 		}
 		return entries;

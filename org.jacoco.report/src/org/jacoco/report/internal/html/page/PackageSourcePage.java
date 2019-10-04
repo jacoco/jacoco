@@ -84,8 +84,8 @@ public class PackageSourcePage extends TablePage<IPackageCoverage> {
 				continue;
 			}
 			final String sourcename = s.getName();
-			final Reader reader = locator
-					.getSourceFile(packagename, sourcename);
+			final Reader reader = locator.getSourceFile(packagename,
+					sourcename);
 			if (reader == null) {
 				addItem(new SourceFileItem(s));
 			} else {

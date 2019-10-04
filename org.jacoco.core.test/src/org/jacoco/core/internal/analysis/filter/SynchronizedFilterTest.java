@@ -153,7 +153,7 @@ public class SynchronizedFilterTest extends FilterTestBase {
 		filter.filter(m, context, output);
 
 		assertIgnored(new Range((LabelNode) handler.info,
-			((LabelNode) exit.info).getPrevious()));
+				((LabelNode) exit.info).getPrevious()));
 	}
 
 }

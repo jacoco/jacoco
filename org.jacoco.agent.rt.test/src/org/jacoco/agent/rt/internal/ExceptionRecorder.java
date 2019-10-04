@@ -15,8 +15,6 @@ package org.jacoco.agent.rt.internal;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 
-import org.jacoco.agent.rt.internal.IExceptionLogger;
-
 /**
  * {@link IExceptionLogger} implementation for testing purposes.
  */

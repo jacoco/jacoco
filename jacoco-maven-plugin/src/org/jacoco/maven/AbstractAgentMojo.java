@@ -159,8 +159,8 @@ public abstract class AbstractAgentMojo extends AbstractJacocoMojo {
 		final String name = getEffectivePropertyName();
 		final Properties projectProperties = getProject().getProperties();
 		final String oldValue = projectProperties.getProperty(name);
-		final String newValue = createAgentOptions().prependVMArguments(
-				oldValue, getAgentJarFile());
+		final String newValue = createAgentOptions()
+				.prependVMArguments(oldValue, getAgentJarFile());
 		getLog().info(name + " set to " + newValue);
 		projectProperties.setProperty(name, newValue);
 	}
@@ -200,12 +200,12 @@ public abstract class AbstractAgentMojo extends AbstractJacocoMojo {
 			agentOptions.setExclClassloader(exclClassLoaders);
 		}
 		if (inclBootstrapClasses != null) {
-			agentOptions.setInclBootstrapClasses(inclBootstrapClasses
-					.booleanValue());
+			agentOptions.setInclBootstrapClasses(
+					inclBootstrapClasses.booleanValue());
 		}
 		if (inclNoLocationClasses != null) {
-			agentOptions.setInclNoLocationClasses(inclNoLocationClasses
-					.booleanValue());
+			agentOptions.setInclNoLocationClasses(
+					inclNoLocationClasses.booleanValue());
 		}
 		if (sessionId != null) {
 			agentOptions.setSessionId(sessionId);

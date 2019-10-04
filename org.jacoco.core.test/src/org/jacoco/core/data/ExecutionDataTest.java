@@ -46,8 +46,8 @@ public class ExecutionDataTest {
 
 	@Test
 	public void testReset() {
-		final ExecutionData e = new ExecutionData(5, "Example", new boolean[] {
-				true, false, true });
+		final ExecutionData e = new ExecutionData(5, "Example",
+				new boolean[] { true, false, true });
 		e.reset();
 		assertFalse(e.getProbes()[0]);
 		assertFalse(e.getProbes()[1]);
@@ -72,10 +72,10 @@ public class ExecutionDataTest {
 
 	@Test
 	public void testMerge() {
-		final ExecutionData a = new ExecutionData(5, "Example", new boolean[] {
-				false, true, false, true });
-		final ExecutionData b = new ExecutionData(5, "Example", new boolean[] {
-				false, false, true, true });
+		final ExecutionData a = new ExecutionData(5, "Example",
+				new boolean[] { false, true, false, true });
+		final ExecutionData b = new ExecutionData(5, "Example",
+				new boolean[] { false, false, true, true });
 		a.merge(b);
 
 		// b is merged into a:
@@ -93,10 +93,10 @@ public class ExecutionDataTest {
 
 	@Test
 	public void testMergeSubtract() {
-		final ExecutionData a = new ExecutionData(5, "Example", new boolean[] {
-				false, true, false, true });
-		final ExecutionData b = new ExecutionData(5, "Example", new boolean[] {
-				false, false, true, true });
+		final ExecutionData a = new ExecutionData(5, "Example",
+				new boolean[] { false, true, false, true });
+		final ExecutionData b = new ExecutionData(5, "Example",
+				new boolean[] { false, false, true, true });
 		a.merge(b, false);
 
 		// b is subtracted from a:

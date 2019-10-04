@@ -20,8 +20,8 @@ import org.jacoco.core.data.ExecutionDataWriter;
 /**
  * {@link ExecutionDataWriter} with commands added for runtime remote control.
  */
-public class RemoteControlWriter extends ExecutionDataWriter implements
-		IRemoteCommandVisitor {
+public class RemoteControlWriter extends ExecutionDataWriter
+		implements IRemoteCommandVisitor {
 
 	/** Block identifier to confirm successful command execution. */
 	public static final byte BLOCK_CMDOK = 0x20;

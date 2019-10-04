@@ -57,7 +57,8 @@ public final class ExecutionData {
 	 * @param probeCount
 	 *            probe count
 	 */
-	public ExecutionData(final long id, final String name, final int probeCount) {
+	public ExecutionData(final long id, final String name,
+			final int probeCount) {
 		this.id = id;
 		this.name = name;
 		this.probes = new boolean[probeCount];
@@ -183,14 +184,14 @@ public final class ExecutionData {
 	public void assertCompatibility(final long id, final String name,
 			final int probecount) throws IllegalStateException {
 		if (this.id != id) {
-			throw new IllegalStateException(format(
-					"Different ids (%016x and %016x).", Long.valueOf(this.id),
-					Long.valueOf(id)));
+			throw new IllegalStateException(
+					format("Different ids (%016x and %016x).",
+							Long.valueOf(this.id), Long.valueOf(id)));
 		}
 		if (!this.name.equals(name)) {
-			throw new IllegalStateException(format(
-					"Different class names %s and %s for id %016x.", this.name,
-					name, Long.valueOf(id)));
+			throw new IllegalStateException(
+					format("Different class names %s and %s for id %016x.",
+							this.name, name, Long.valueOf(id)));
 		}
 		if (this.probes.length != probecount) {
 			throw new IllegalStateException(format(

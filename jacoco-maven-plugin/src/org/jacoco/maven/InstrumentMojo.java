@@ -64,17 +64,18 @@ public class InstrumentMojo extends AbstractJacocoMojo {
 	private List<String> excludes;
 
 	@Override
-	public void executeMojo() throws MojoExecutionException,
-			MojoFailureException {
-		final File originalClassesDir = new File(getProject().getBuild()
-				.getDirectory(), "generated-classes/jacoco");
+	public void executeMojo()
+			throws MojoExecutionException, MojoFailureException {
+		final File originalClassesDir = new File(
+				getProject().getBuild().getDirectory(),
+				"generated-classes/jacoco");
 		originalClassesDir.mkdirs();
 		final File classesDir = new File(
 				getProject().getBuild().getOutputDirectory());
 		if (!classesDir.exists()) {
 			getLog().info(
-					"Skipping JaCoCo execution due to missing classes directory:" +
-					classesDir);
+					"Skipping JaCoCo execution due to missing classes directory:"
+							+ classesDir);
 			return;
 		}
 

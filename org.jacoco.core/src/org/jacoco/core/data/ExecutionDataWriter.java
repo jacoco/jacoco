@@ -21,10 +21,12 @@ import org.jacoco.core.internal.data.CompactDataOutput;
 /**
  * Serialization of execution data into binary streams.
  */
-public class ExecutionDataWriter implements ISessionInfoVisitor,
-		IExecutionDataVisitor {
+public class ExecutionDataWriter
+		implements ISessionInfoVisitor, IExecutionDataVisitor {
 
-	/** File format version, will be incremented for each incompatible change. */
+	/**
+	 * File format version, will be incremented for each incompatible change.
+	 */
 	public static final char FORMAT_VERSION;
 
 	static {

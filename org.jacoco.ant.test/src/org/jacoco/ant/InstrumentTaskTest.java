@@ -15,12 +15,12 @@ package org.jacoco.ant;
 import java.io.File;
 import java.io.IOException;
 
-import junit.framework.TestSuite;
-
 import org.apache.ant.antunit.junit3.AntUnitSuite;
 import org.apache.ant.antunit.junit4.AntUnitSuiteRunner;
 import org.jacoco.agent.AgentJar;
 import org.junit.runner.RunWith;
+
+import junit.framework.TestSuite;
 
 @RunWith(AntUnitSuiteRunner.class)
 public class InstrumentTaskTest {

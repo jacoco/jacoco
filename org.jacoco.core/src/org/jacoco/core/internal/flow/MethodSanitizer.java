@@ -31,8 +31,8 @@ import org.objectweb.asm.commons.JSRInlinerAdapter;
  */
 class MethodSanitizer extends JSRInlinerAdapter {
 
-	MethodSanitizer(final MethodVisitor mv, final int access,
-			final String name, final String desc, final String signature,
+	MethodSanitizer(final MethodVisitor mv, final int access, final String name,
+			final String desc, final String signature,
 			final String[] exceptions) {
 		super(InstrSupport.ASM_API_VERSION, mv, access, name, desc, signature,
 				exceptions);

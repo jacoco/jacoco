@@ -47,16 +47,16 @@ public class Pack200StreamsTest {
 		zipout.finish();
 
 		ByteArrayOutputStream pack200buffer = new ByteArrayOutputStream();
-		Pack200Streams.pack(jarbuffer.toByteArray(), new NoCloseOutputStream(
-				pack200buffer));
+		Pack200Streams.pack(jarbuffer.toByteArray(),
+				new NoCloseOutputStream(pack200buffer));
 
 		jarbuffer.reset();
 		Pack200.newUnpacker().unpack(
 				new ByteArrayInputStream(pack200buffer.toByteArray()),
 				new JarOutputStream(jarbuffer));
 
-		ZipInputStream zipin = new ZipInputStream(new ByteArrayInputStream(
-				jarbuffer.toByteArray()));
+		ZipInputStream zipin = new ZipInputStream(
+				new ByteArrayInputStream(jarbuffer.toByteArray()));
 		assertEquals("Test.class", zipin.getNextEntry().getName());
 		assertNull(zipin.getNextEntry());
 	}
@@ -70,9 +70,10 @@ public class Pack200StreamsTest {
 		zipout.finish();
 
 		ByteArrayOutputStream pack200buffer = new ByteArrayOutputStream();
-		Pack200.newPacker().pack(
-				new JarInputStream(new ByteArrayInputStream(
-						jarbuffer.toByteArray())), pack200buffer);
+		Pack200.newPacker()
+				.pack(new JarInputStream(
+						new ByteArrayInputStream(jarbuffer.toByteArray())),
+						pack200buffer);
 
 		InputStream result = Pack200Streams.unpack(new NoCloseInputStream(
 				new ByteArrayInputStream(pack200buffer.toByteArray())));

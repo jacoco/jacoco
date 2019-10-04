@@ -61,14 +61,16 @@ public class MethodItemTest {
 
 	@Test
 	public void testGetLink() {
-		final MethodItem item = new MethodItem(node, "test()", new SourceLink());
+		final MethodItem item = new MethodItem(node, "test()",
+				new SourceLink());
 		assertEquals("../Source.java", item.getLink(null));
 	}
 
 	@Test
 	public void testGetLinkWithLine() {
 		node.increment(CounterImpl.COUNTER_1_0, CounterImpl.COUNTER_0_0, 15);
-		final MethodItem item = new MethodItem(node, "test()", new SourceLink());
+		final MethodItem item = new MethodItem(node, "test()",
+				new SourceLink());
 		assertEquals("../Source.java#L15", item.getLink(null));
 	}
 

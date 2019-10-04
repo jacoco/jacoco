@@ -135,8 +135,8 @@ public class HTMLFormatterTest {
 				return null;
 			}
 
-			public String getMethodName(String vmclassname,
-					String vmmethodname, String vmdesc, String vmsignature) {
+			public String getMethodName(String vmclassname, String vmmethodname,
+					String vmdesc, String vmsignature) {
 				return null;
 			}
 

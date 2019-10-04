@@ -197,8 +197,8 @@ public class InstrumenterTest {
 		new ObjectOutputStream(buffer).writeObject(obj1);
 
 		// Deserialize with original class definition:
-		Object obj2 = new ObjectInputStream(new ByteArrayInputStream(
-				buffer.toByteArray())).readObject();
+		Object obj2 = new ObjectInputStream(
+				new ByteArrayInputStream(buffer.toByteArray())).readObject();
 		assertEquals("Hello42", obj2.toString());
 	}
 
@@ -225,8 +225,8 @@ public class InstrumenterTest {
 				new ByteArrayInputStream(buffer.toByteArray()), out, "Test");
 
 		assertEquals(1, count);
-		ZipInputStream zipin = new ZipInputStream(new ByteArrayInputStream(
-				out.toByteArray()));
+		ZipInputStream zipin = new ZipInputStream(
+				new ByteArrayInputStream(out.toByteArray()));
 		assertEquals("Test.class", zipin.getNextEntry().getName());
 		assertNull(zipin.getNextEntry());
 	}
@@ -371,23 +371,26 @@ public class InstrumenterTest {
 
 		ByteArrayOutputStream pack200buffer = new ByteArrayOutputStream();
 		GZIPOutputStream gzipOutput = new GZIPOutputStream(pack200buffer);
-		Pack200.newPacker().pack(
-				new JarInputStream(new ByteArrayInputStream(
-						jarbuffer.toByteArray())), gzipOutput);
+		Pack200.newPacker()
+				.pack(new JarInputStream(
+						new ByteArrayInputStream(jarbuffer.toByteArray())),
+						gzipOutput);
 		gzipOutput.finish();
 
 		ByteArrayOutputStream out = new ByteArrayOutputStream();
-		int count = instrumenter.instrumentAll(new ByteArrayInputStream(
-				pack200buffer.toByteArray()), out, "Test");
+		int count = instrumenter.instrumentAll(
+				new ByteArrayInputStream(pack200buffer.toByteArray()), out,
+				"Test");
 
 		jarbuffer.reset();
 		Pack200.newUnpacker()
-				.unpack(new GZIPInputStream(new ByteArrayInputStream(
-						out.toByteArray())), new JarOutputStream(jarbuffer));
+				.unpack(new GZIPInputStream(
+						new ByteArrayInputStream(out.toByteArray())),
+						new JarOutputStream(jarbuffer));
 
 		assertEquals(1, count);
-		ZipInputStream zipin = new ZipInputStream(new ByteArrayInputStream(
-				jarbuffer.toByteArray()));
+		ZipInputStream zipin = new ZipInputStream(
+				new ByteArrayInputStream(jarbuffer.toByteArray()));
 		assertEquals("Test.class", zipin.getNextEntry().getName());
 		assertNull(zipin.getNextEntry());
 	}
@@ -434,8 +437,8 @@ public class InstrumenterTest {
 				new ByteArrayInputStream(buffer.toByteArray()), out, "Test");
 
 		assertEquals(0, count);
-		ZipInputStream zipin = new ZipInputStream(new ByteArrayInputStream(
-				out.toByteArray()));
+		ZipInputStream zipin = new ZipInputStream(
+				new ByteArrayInputStream(out.toByteArray()));
 		assertEquals("META-INF/MANIFEST.MF", zipin.getNextEntry().getName());
 		assertNull(zipin.getNextEntry());
 	}
@@ -453,8 +456,8 @@ public class InstrumenterTest {
 				new ByteArrayInputStream(buffer.toByteArray()), out, "Test");
 
 		assertEquals(0, count);
-		ZipInputStream zipin = new ZipInputStream(new ByteArrayInputStream(
-				out.toByteArray()));
+		ZipInputStream zipin = new ZipInputStream(
+				new ByteArrayInputStream(out.toByteArray()));
 		assertEquals("META-INF/ALIAS.SF", zipin.getNextEntry().getName());
 		assertNull(zipin.getNextEntry());
 	}

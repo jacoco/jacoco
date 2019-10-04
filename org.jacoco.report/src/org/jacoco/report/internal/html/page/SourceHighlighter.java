@@ -68,8 +68,8 @@ final class SourceHighlighter {
 	 */
 	public void render(final HTMLElement parent, final ISourceNode source,
 			final Reader contents) throws IOException {
-		final HTMLElement pre = parent.pre(Styles.SOURCE + " lang-" + lang
-				+ " linenums");
+		final HTMLElement pre = parent
+				.pre(Styles.SOURCE + " lang-" + lang + " linenums");
 		final BufferedReader lineBuffer = new BufferedReader(contents);
 		String line;
 		int nr = 0;

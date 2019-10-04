@@ -50,8 +50,8 @@ public class PackagePage extends TablePage<IPackageCoverage> {
 			final ISourceFileLocator locator, final ReportOutputFolder folder,
 			final IHTMLReportContext context) {
 		super(node, parent, folder, context);
-		packageSourcePage = new PackageSourcePage(node, parent, locator,
-				folder, context, this);
+		packageSourcePage = new PackageSourcePage(node, parent, locator, folder,
+				context, this);
 		sourceCoverageExists = !node.getSourceFiles().isEmpty();
 	}
 

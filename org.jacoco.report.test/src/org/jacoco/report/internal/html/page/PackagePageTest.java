@@ -117,12 +117,12 @@ public class PackagePageTest extends PageTestBase {
 				support.findStr(doc, "/html/body/div[1]/span[1]/a"));
 		assertEquals("el_class", support.findStr(doc,
 				"/html/body/table[1]/tbody/tr[1]/td[1]/a/@class"));
-		assertEquals("Foo1",
-				support.findStr(doc, "/html/body/table[1]/tbody/tr[1]/td[1]/a"));
+		assertEquals("Foo1", support.findStr(doc,
+				"/html/body/table[1]/tbody/tr[1]/td[1]/a"));
 		assertEquals("el_class", support.findStr(doc,
 				"/html/body/table[1]/tbody/tr[2]/td[1]/a/@class"));
-		assertEquals("Foo2",
-				support.findStr(doc, "/html/body/table[1]/tbody/tr[2]/td[1]/a"));
+		assertEquals("Foo2", support.findStr(doc,
+				"/html/body/table[1]/tbody/tr[2]/td[1]/a"));
 
 		output.assertFile("index.source.html");
 	}

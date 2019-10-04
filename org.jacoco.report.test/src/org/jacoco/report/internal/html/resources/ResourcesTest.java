@@ -75,13 +75,15 @@ public class ResourcesTest {
 	@Test
 	public void testGetElementStyle() {
 		assertEquals("el_group", Resources.getElementStyle(ElementType.GROUP));
-		assertEquals("el_bundle", Resources.getElementStyle(ElementType.BUNDLE));
+		assertEquals("el_bundle",
+				Resources.getElementStyle(ElementType.BUNDLE));
 		assertEquals("el_package",
 				Resources.getElementStyle(ElementType.PACKAGE));
 		assertEquals("el_source",
 				Resources.getElementStyle(ElementType.SOURCEFILE));
 		assertEquals("el_class", Resources.getElementStyle(ElementType.CLASS));
-		assertEquals("el_method", Resources.getElementStyle(ElementType.METHOD));
+		assertEquals("el_method",
+				Resources.getElementStyle(ElementType.METHOD));
 	}
 
 }

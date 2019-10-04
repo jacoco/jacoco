@@ -51,8 +51,8 @@ public class RulesCheckerTest implements IViolationsOutput {
 		limit.setMaximum("5");
 		checker.setRules(Arrays.asList(rule));
 		driver.sendGroup(checker.createVisitor(this));
-		assertEquals(
-				Arrays.asList("Rule violated for bundle bundle: instructions missed count is 10, but expected maximum is 5"),
+		assertEquals(Arrays.asList(
+				"Rule violated for bundle bundle: instructions missed count is 10, but expected maximum is 5"),
 				messages);
 	}
 
@@ -79,8 +79,8 @@ public class RulesCheckerTest implements IViolationsOutput {
 				return null;
 			}
 
-			public String getMethodName(String vmclassname,
-					String vmmethodname, String vmdesc, String vmsignature) {
+			public String getMethodName(String vmclassname, String vmmethodname,
+					String vmdesc, String vmsignature) {
 				return null;
 			}
 
@@ -91,8 +91,8 @@ public class RulesCheckerTest implements IViolationsOutput {
 		});
 
 		driver.sendGroup(checker.createVisitor(this));
-		assertEquals(
-				Arrays.asList("Rule violated for class MyClass: instructions missed count is 10, but expected maximum is 5"),
+		assertEquals(Arrays.asList(
+				"Rule violated for class MyClass: instructions missed count is 10, but expected maximum is 5"),
 				messages);
 	}
 

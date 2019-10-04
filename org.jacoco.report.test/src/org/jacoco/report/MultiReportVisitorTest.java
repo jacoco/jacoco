@@ -34,8 +34,8 @@ import org.junit.Test;
  */
 public class MultiReportVisitorTest {
 
-	private static class MockVisitor extends MockGroupVisitor implements
-			IReportVisitor {
+	private static class MockVisitor extends MockGroupVisitor
+			implements IReportVisitor {
 
 		MockVisitor() {
 			super("Report");
