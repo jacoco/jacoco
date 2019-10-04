@@ -16,8 +16,6 @@ import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
-import org.objectweb.asm.Opcodes;
-
 /**
  * Detector for content types of binary streams based on a magic headers.
  */
