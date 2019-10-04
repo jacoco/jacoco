@@ -125,6 +125,23 @@ public class AnalyzerTest {
 		return cw.toByteArray();
 	}
 
+	/**
+	 * @see #analyzeAll_should_throw_exception_for_unsupported_class_file_version()
+	 */
+	@Test
+	public void analyzeClass_should_throw_exception_for_unsupported_class_file_version() {
+		final byte[] bytes = createClass(Opcodes.V14 + 1);
+		try {
+			analyzer.analyzeClass(bytes, "UnsupportedVersion");
+			fail("exception expected");
+		} catch (IOException e) {
+			assertEquals("Error while analyzing UnsupportedVersion.",
+					e.getMessage());
+			assertEquals("Unsupported class file major version 59",
+					e.getCause().getMessage());
+		}
+	}
+
 	@Test
 	public void testAnalyzeClassFromStream() throws IOException {
 		analyzer.analyzeClass(TargetLoader.getClassData(AnalyzerTest.class),
@@ -193,6 +210,24 @@ public class AnalyzerTest {
 			fail("exception expected");
 		} catch (IOException e) {
 			assertEquals("Error while analyzing BrokenStream.", e.getMessage());
+		}
+	}
+
+	/**
+	 * @see #analyzeClass_should_throw_exception_for_unsupported_class_file_version()
+	 */
+	@Test
+	public void analyzeAll_should_throw_exception_for_unsupported_class_file_version() {
+		final byte[] bytes = createClass(Opcodes.V14 + 1);
+		try {
+			analyzer.analyzeAll(new ByteArrayInputStream(bytes),
+					"UnsupportedVersion");
+			fail("exception expected");
+		} catch (IOException e) {
+			assertEquals("Error while analyzing UnsupportedVersion.",
+					e.getMessage());
+			assertEquals("Unsupported class file major version 59",
+					e.getCause().getMessage());
 		}
 	}
 
