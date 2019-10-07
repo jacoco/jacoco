@@ -28,6 +28,10 @@
   <li>Branches added by the Kotlin compiler for <code>open</code> functions with
       default arguments are filtered out during generation of report
       (GitHub <a href="https://github.com/jacoco/jacoco/issues/887">#887</a>).</li>
+  <li>Built-in report generation tools (Ant, CLI and Maven) now support loading
+      sources from "shortened" package folders. E.g. Kotlin conventions allow to
+      strip the common package prefix from the directories in the source tree
+      (GitHub <a href="https://github.com/jacoco/jacoco/issues/953">#953</a>).</li>
 </ul>
 
 <h3>Fixed bugs</h3>
