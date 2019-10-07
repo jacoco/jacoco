@@ -21,8 +21,8 @@ import org.jacoco.core.data.SessionInfo;
 
 /**
  * Interface for all implementations to retrieve structured report data. Unlike
- * nested {@link IReportGroupVisitor} instances the root visitor accepts exactly one
- * bundle or group.
+ * nested {@link IReportGroupVisitor} instances the root visitor accepts exactly
+ * one bundle or group.
  */
 public interface IReportVisitor extends IReportGroupVisitor {
 

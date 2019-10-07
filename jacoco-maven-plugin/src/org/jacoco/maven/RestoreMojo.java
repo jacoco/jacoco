@@ -30,12 +30,13 @@ import org.codehaus.plexus.util.FileUtils;
 public class RestoreMojo extends AbstractJacocoMojo {
 
 	@Override
-	protected void executeMojo() throws MojoExecutionException,
-			MojoFailureException {
-		final File originalClassesDir = new File(getProject().getBuild()
-				.getDirectory(), "generated-classes/jacoco");
-		final File classesDir = new File(getProject().getBuild()
-				.getOutputDirectory());
+	protected void executeMojo()
+			throws MojoExecutionException, MojoFailureException {
+		final File originalClassesDir = new File(
+				getProject().getBuild().getDirectory(),
+				"generated-classes/jacoco");
+		final File classesDir = new File(
+				getProject().getBuild().getOutputDirectory());
 		try {
 			FileUtils.copyDirectoryStructure(originalClassesDir, classesDir);
 		} catch (final IOException e) {

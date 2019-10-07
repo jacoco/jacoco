@@ -87,7 +87,8 @@ public class ReportOutputFolderTest {
 	public void testRelativeLinkInSibling1() throws IOException {
 		final ReportOutputFolder folder = root.subFolder("f1").subFolder("f2");
 		final ReportOutputFolder base = root.subFolder("g1").subFolder("g2");
-		assertEquals("../../f1/f2/test.html", folder.getLink(base, "test.html"));
+		assertEquals("../../f1/f2/test.html",
+				folder.getLink(base, "test.html"));
 	}
 
 	@Test

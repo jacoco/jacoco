@@ -152,8 +152,8 @@ public class ExecutionDataReaderWriterTest {
 	@Test(expected = IOException.class)
 	public void testMissingHeader() throws IOException {
 		buffer.reset();
-		writer.visitClassExecution(new ExecutionData(Long.MIN_VALUE, "Sample",
-				createData(8)));
+		writer.visitClassExecution(
+				new ExecutionData(Long.MIN_VALUE, "Sample", createData(8)));
 		createReaderWithVisitors().read();
 	}
 
@@ -165,8 +165,8 @@ public class ExecutionDataReaderWriterTest {
 
 	@Test(expected = EOFException.class)
 	public void testTruncatedFile() throws IOException {
-		writer.visitClassExecution(new ExecutionData(Long.MIN_VALUE, "Sample",
-				createData(8)));
+		writer.visitClassExecution(
+				new ExecutionData(Long.MIN_VALUE, "Sample", createData(8)));
 		final byte[] content = buffer.toByteArray();
 		buffer.reset();
 		buffer.write(content, 0, content.length - 1);
@@ -217,16 +217,16 @@ public class ExecutionDataReaderWriterTest {
 
 	@Test(expected = IOException.class)
 	public void testNoExecutionDataVisitor() throws IOException {
-		writer.visitClassExecution(new ExecutionData(Long.MIN_VALUE, "Sample",
-				createData(8)));
+		writer.visitClassExecution(
+				new ExecutionData(Long.MIN_VALUE, "Sample", createData(8)));
 		createReader().read();
 	}
 
 	@Test
 	public void testMinClassId() throws IOException {
 		final boolean[] data = createData(8);
-		writer.visitClassExecution(new ExecutionData(Long.MIN_VALUE, "Sample",
-				data));
+		writer.visitClassExecution(
+				new ExecutionData(Long.MIN_VALUE, "Sample", data));
 		assertFalse(createReaderWithVisitors().read());
 		assertArrayEquals(data, store.get(Long.MIN_VALUE).getProbes());
 	}
@@ -234,8 +234,8 @@ public class ExecutionDataReaderWriterTest {
 	@Test
 	public void testMaxClassId() throws IOException {
 		final boolean[] data = createData(8);
-		writer.visitClassExecution(new ExecutionData(Long.MAX_VALUE, "Sample",
-				data));
+		writer.visitClassExecution(
+				new ExecutionData(Long.MAX_VALUE, "Sample", data));
 		assertFalse(createReaderWithVisitors().read());
 		assertArrayEquals(data, store.get(Long.MAX_VALUE).getProbes());
 	}
@@ -295,7 +295,8 @@ public class ExecutionDataReaderWriterTest {
 			}
 		});
 		broken[0] = true;
-		writer.visitClassExecution(new ExecutionData(3, "Sample", createData(1)));
+		writer.visitClassExecution(
+				new ExecutionData(3, "Sample", createData(1)));
 	}
 
 	private ExecutionDataReader createReaderWithVisitors() throws IOException {
@@ -328,8 +329,8 @@ public class ExecutionDataReaderWriterTest {
 	}
 
 	protected ExecutionDataReader createReader() throws IOException {
-		return new ExecutionDataReader(new ByteArrayInputStream(
-				buffer.toByteArray()));
+		return new ExecutionDataReader(
+				new ByteArrayInputStream(buffer.toByteArray()));
 	}
 
 }

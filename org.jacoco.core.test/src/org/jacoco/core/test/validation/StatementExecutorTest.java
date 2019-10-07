@@ -42,8 +42,8 @@ public class StatementExecutorTest {
 
 	@Test
 	public void should_prefix_arguments() {
-		StatementExecutor executor = new StatementExecutor(this,
-				"Hello", "world");
+		StatementExecutor executor = new StatementExecutor(this, "Hello",
+				"world");
 
 		executor.visitInvocation("ctx", "target1", "!");
 

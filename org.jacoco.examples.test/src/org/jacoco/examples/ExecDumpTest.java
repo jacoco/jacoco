@@ -41,9 +41,11 @@ public class ExecDumpTest {
 		new ExecDump(console.stream).execute(args);
 
 		console.expect(containsLine("exec file: " + file));
-		console.expect(containsLine("CLASS ID         HITS/PROBES   CLASS NAME"));
+		console.expect(
+				containsLine("CLASS ID         HITS/PROBES   CLASS NAME"));
 		console.expect(containsString("Session \"testid\":"));
-		console.expect(containsLine("0000000000001234    2 of   3   foo/MyClass"));
+		console.expect(
+				containsLine("0000000000001234    2 of   3   foo/MyClass"));
 	}
 
 	private String createExecFile() throws IOException {

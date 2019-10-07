@@ -28,7 +28,8 @@ public class InstrumentationTimeScenario extends TimedScenario {
 	private final int count;
 
 	protected InstrumentationTimeScenario(Class<?> target, int count) {
-		super(String.format("instrumenting %s classes", Integer.valueOf(count)));
+		super(String.format("instrumenting %s classes",
+				Integer.valueOf(count)));
 		this.target = target;
 		this.count = count;
 	}

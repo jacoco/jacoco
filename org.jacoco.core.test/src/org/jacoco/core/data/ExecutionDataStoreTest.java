@@ -206,8 +206,8 @@ public class ExecutionDataStoreTest implements IExecutionDataVisitor {
 	}
 
 	@Test
-	public void testReset() throws InstantiationException,
-			IllegalAccessException {
+	public void testReset()
+			throws InstantiationException, IllegalAccessException {
 		final boolean[] data1 = new boolean[] { true, true, false };
 		store.put(new ExecutionData(1000, "Sample", data1));
 		store.reset();

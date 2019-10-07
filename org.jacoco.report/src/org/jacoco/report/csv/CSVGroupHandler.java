@@ -33,7 +33,8 @@ class CSVGroupHandler implements IReportGroupVisitor {
 		this(writer, null);
 	}
 
-	private CSVGroupHandler(final ClassRowWriter writer, final String groupName) {
+	private CSVGroupHandler(final ClassRowWriter writer,
+			final String groupName) {
 		this.writer = writer;
 		this.groupName = groupName;
 	}
@@ -51,7 +52,8 @@ class CSVGroupHandler implements IReportGroupVisitor {
 		}
 	}
 
-	public IReportGroupVisitor visitGroup(final String name) throws IOException {
+	public IReportGroupVisitor visitGroup(final String name)
+			throws IOException {
 		return new CSVGroupHandler(writer, appendName(name));
 	}
 

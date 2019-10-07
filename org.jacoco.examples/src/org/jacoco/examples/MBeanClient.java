@@ -46,8 +46,9 @@ public final class MBeanClient {
 				.getMBeanServerConnection();
 
 		final IProxy proxy = (IProxy) MBeanServerInvocationHandler
-				.newProxyInstance(connection, new ObjectName(
-						"org.jacoco:type=Runtime"), IProxy.class, false);
+				.newProxyInstance(connection,
+						new ObjectName("org.jacoco:type=Runtime"), IProxy.class,
+						false);
 
 		// Retrieve JaCoCo version and session id:
 		System.out.println("Version: " + proxy.getVersion());

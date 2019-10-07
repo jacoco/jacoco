@@ -66,8 +66,8 @@ class ClassFileDumper {
 			}
 			outputdir.mkdirs();
 			final Long id = Long.valueOf(CRC64.classId(contents));
-			final File file = new File(outputdir, String.format(
-					"%s.%016x.class", localname, id));
+			final File file = new File(outputdir,
+					String.format("%s.%016x.class", localname, id));
 			final OutputStream out = new FileOutputStream(file);
 			out.write(contents);
 			out.close();

@@ -21,12 +21,12 @@ import org.junit.Test;
  * Test of class with {@link groovy.beans.Bindable} annotation.
  */
 public class GroovyBindableClassTest extends ValidationTestBase {
-    public GroovyBindableClassTest() {
-        super(GroovyBindableClassTarget.class);
-    }
+	public GroovyBindableClassTest() {
+		super(GroovyBindableClassTarget.class);
+	}
 
-    @Test
-    public void test_method_count() {
-        assertMethodCount(1);
-    }
+	@Test
+	public void test_method_count() {
+		assertMethodCount(1);
+	}
 }

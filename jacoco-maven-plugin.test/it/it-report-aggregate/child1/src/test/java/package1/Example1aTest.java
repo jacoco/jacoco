@@ -16,9 +16,9 @@ import org.junit.Test;
 
 public class Example1aTest {
 
-  @Test
-  public void test() {
-    new Example1a().a();
-  }
+	@Test
+	public void test() {
+		new Example1a().a();
+	}
 
 }

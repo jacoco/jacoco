@@ -29,8 +29,8 @@ import org.jacoco.core.analysis.ISourceFileCoverage;
 /**
  * Implementation of {@link IBundleCoverage}.
  */
-public class BundleCoverageImpl extends CoverageNodeImpl implements
-		IBundleCoverage {
+public class BundleCoverageImpl extends CoverageNodeImpl
+		implements IBundleCoverage {
 
 	private final Collection<IPackageCoverage> packages;
 

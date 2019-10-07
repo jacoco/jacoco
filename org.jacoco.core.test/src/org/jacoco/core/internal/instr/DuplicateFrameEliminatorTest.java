@@ -83,14 +83,14 @@ public class DuplicateFrameEliminatorTest {
 
 	@Test
 	public void testTypeInsn() {
-		testInstructionBetweenFrames(new TypeInsnNode(Opcodes.NEW,
-				"java/lang/Object"));
+		testInstructionBetweenFrames(
+				new TypeInsnNode(Opcodes.NEW, "java/lang/Object"));
 	}
 
 	@Test
 	public void testFieldInsn() {
-		testInstructionBetweenFrames(new FieldInsnNode(Opcodes.GETFIELD, "Foo",
-				"f", "I"));
+		testInstructionBetweenFrames(
+				new FieldInsnNode(Opcodes.GETFIELD, "Foo", "f", "I"));
 	}
 
 	@Test
@@ -107,8 +107,8 @@ public class DuplicateFrameEliminatorTest {
 
 	@Test
 	public void testJumpInsn() {
-		testInstructionBetweenFrames(new JumpInsnNode(Opcodes.GOTO,
-				new LabelNode()));
+		testInstructionBetweenFrames(
+				new JumpInsnNode(Opcodes.GOTO, new LabelNode()));
 	}
 
 	@Test
@@ -135,8 +135,8 @@ public class DuplicateFrameEliminatorTest {
 
 	@Test
 	public void testMultiANewArrayInsn() {
-		testInstructionBetweenFrames(new MultiANewArrayInsnNode(
-				"java/lang/String", 4));
+		testInstructionBetweenFrames(
+				new MultiANewArrayInsnNode("java/lang/String", 4));
 	}
 
 	private void testInstructionBetweenFrames(AbstractInsnNode node) {

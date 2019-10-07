@@ -77,8 +77,8 @@ public class ExecutionDataReader {
 	 * @throws IncompatibleExecDataVersionException
 	 *             incompatible data version from different JaCoCo release
 	 */
-	public boolean read() throws IOException,
-			IncompatibleExecDataVersionException {
+	public boolean read()
+			throws IOException, IncompatibleExecDataVersionException {
 		byte type;
 		do {
 			int i = in.read();
@@ -116,8 +116,8 @@ public class ExecutionDataReader {
 			readExecutionData();
 			return true;
 		default:
-			throw new IOException(format("Unknown block type %x.",
-					Byte.valueOf(blocktype)));
+			throw new IOException(
+					format("Unknown block type %x.", Byte.valueOf(blocktype)));
 		}
 	}
 
@@ -148,8 +148,8 @@ public class ExecutionDataReader {
 		final long id = in.readLong();
 		final String name = in.readUTF();
 		final boolean[] probes = in.readBooleanArray();
-		executionDataVisitor.visitClassExecution(new ExecutionData(id, name,
-				probes));
+		executionDataVisitor
+				.visitClassExecution(new ExecutionData(id, name, probes));
 	}
 
 }

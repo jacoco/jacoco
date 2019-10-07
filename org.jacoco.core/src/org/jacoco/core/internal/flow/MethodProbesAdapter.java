@@ -65,8 +65,8 @@ public final class MethodProbesAdapter extends MethodVisitor {
 	@Override
 	public void visitTryCatchBlock(final Label start, final Label end,
 			final Label handler, final String type) {
-		probesVisitor.visitTryCatchBlock(getTryCatchLabel(start), getTryCatchLabel(end),
-				handler, type);
+		probesVisitor.visitTryCatchBlock(getTryCatchLabel(start),
+				getTryCatchLabel(end), handler, type);
 	}
 
 	private Label getTryCatchLabel(Label label) {
@@ -155,8 +155,8 @@ public final class MethodProbesAdapter extends MethodVisitor {
 	public void visitTableSwitchInsn(final int min, final int max,
 			final Label dflt, final Label... labels) {
 		if (markLabels(dflt, labels)) {
-			probesVisitor.visitTableSwitchInsnWithProbes(min, max, dflt,
-					labels, frame(1));
+			probesVisitor.visitTableSwitchInsnWithProbes(min, max, dflt, labels,
+					frame(1));
 		} else {
 			probesVisitor.visitTableSwitchInsn(min, max, dflt, labels);
 		}

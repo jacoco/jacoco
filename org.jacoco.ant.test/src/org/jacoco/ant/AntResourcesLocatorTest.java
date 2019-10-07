@@ -121,11 +121,12 @@ public class AntResourcesLocatorTest {
 		assertContent("BBB", source);
 	}
 
-	private Resource createFile(String path, String content) throws IOException {
+	private Resource createFile(String path, String content)
+			throws IOException {
 		final File file = new File(folder.getRoot(), path);
 		file.getParentFile().mkdirs();
-		final Writer writer = new OutputStreamWriter(
-				new FileOutputStream(file), "UTF-8");
+		final Writer writer = new OutputStreamWriter(new FileOutputStream(file),
+				"UTF-8");
 		writer.write(content);
 		writer.close();
 		return new FileResource(folder.getRoot(), path);

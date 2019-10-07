@@ -123,8 +123,8 @@ public final class AgentJar {
 		}
 	}
 
-	private static final String ERRORMSG = String.format(
-			"The resource %s has not been found. Please see "
+	private static final String ERRORMSG = String
+			.format("The resource %s has not been found. Please see "
 					+ "/org.jacoco.agent/README.TXT for details.", RESOURCE);
 
 }

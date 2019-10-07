@@ -10,7 +10,6 @@
  *    Marc R. Hoffmann - initial API and implementation
  *    
  *******************************************************************************/
-
 import java.io.File;
 
 /**

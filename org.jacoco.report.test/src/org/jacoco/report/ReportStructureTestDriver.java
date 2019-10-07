@@ -48,7 +48,7 @@ public class ReportStructureTestDriver {
 
 		public Reader getSourceFile(String packageName, String fileName)
 				throws IOException {
-			return  new StringReader("");
+			return new StringReader("");
 		}
 
 		public int getTabWidth() {

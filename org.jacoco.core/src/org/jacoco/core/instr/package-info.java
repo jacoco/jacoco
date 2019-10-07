@@ -13,8 +13,8 @@
 
 /**
  * <p>
- *  Instrumentation of Java class files for code coverage. The main entry point
- *  is the class {@link org.jacoco.core.instr.Instrumenter}.
+ * Instrumentation of Java class files for code coverage. The main entry point
+ * is the class {@link org.jacoco.core.instr.Instrumenter}.
  * </p>
  */
 package org.jacoco.core.instr;

@@ -220,8 +220,8 @@ public final class AgentOptions {
 				}
 				final String key = entry.substring(0, pos);
 				if (!VALID_OPTIONS.contains(key)) {
-					throw new IllegalArgumentException(format(
-							"Unknown agent option \"%s\".", key));
+					throw new IllegalArgumentException(
+							format("Unknown agent option \"%s\".", key));
 				}
 
 				final String value = entry.substring(pos + 1);

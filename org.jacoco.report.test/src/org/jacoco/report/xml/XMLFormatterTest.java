@@ -192,8 +192,7 @@ public class XMLFormatterTest {
 		assertPathMatches("1", "count(/report/package[@name='empty']/class)");
 		assertPathMatches("empty/Empty",
 				"/report/package[@name='empty']/class/@name");
-		assertPathMatches("0",
-				"count(report/package[@name='empty']/class/*)");
+		assertPathMatches("0", "count(report/package[@name='empty']/class/*)");
 
 		assertPathMatches("1",
 				"count(/report/package[@name='empty']/sourcefile)");

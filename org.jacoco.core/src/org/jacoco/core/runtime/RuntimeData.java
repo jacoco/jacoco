@@ -180,7 +180,8 @@ public class RuntimeData {
 	 *            visitor to emit generated code
 	 */
 	public static void generateArgumentArray(final long classid,
-			final String classname, final int probecount, final MethodVisitor mv) {
+			final String classname, final int probecount,
+			final MethodVisitor mv) {
 		mv.visitInsn(Opcodes.ICONST_3);
 		mv.visitTypeInsn(Opcodes.ANEWARRAY, "java/lang/Object");
 
@@ -202,8 +203,8 @@ public class RuntimeData {
 		mv.visitInsn(Opcodes.DUP);
 		mv.visitInsn(Opcodes.ICONST_2);
 		InstrSupport.push(mv, probecount);
-		mv.visitMethodInsn(Opcodes.INVOKESTATIC, "java/lang/Integer",
-				"valueOf", "(I)Ljava/lang/Integer;", false);
+		mv.visitMethodInsn(Opcodes.INVOKESTATIC, "java/lang/Integer", "valueOf",
+				"(I)Ljava/lang/Integer;", false);
 		mv.visitInsn(Opcodes.AASTORE);
 	}
 
@@ -224,7 +225,8 @@ public class RuntimeData {
 	 *            visitor to emit generated code
 	 */
 	public static void generateAccessCall(final long classid,
-			final String classname, final int probecount, final MethodVisitor mv) {
+			final String classname, final int probecount,
+			final MethodVisitor mv) {
 		// stack[0]: Ljava/lang/Object;
 
 		generateArgumentArray(classid, classname, probecount, mv);

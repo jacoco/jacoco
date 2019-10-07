@@ -62,7 +62,8 @@ public class TargetLoader extends ClassLoader {
 		return readBytes(getClassData(loader, name));
 	}
 
-	public static byte[] getClassDataAsBytes(Class<?> clazz) throws IOException {
+	public static byte[] getClassDataAsBytes(Class<?> clazz)
+			throws IOException {
 		return readBytes(getClassData(clazz));
 	}
 

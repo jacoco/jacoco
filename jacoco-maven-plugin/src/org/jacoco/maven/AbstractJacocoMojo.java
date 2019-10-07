@@ -35,8 +35,8 @@ public abstract class AbstractJacocoMojo extends AbstractMojo {
 	@Parameter(property = "jacoco.skip", defaultValue = "false")
 	private boolean skip;
 
-	public final void execute() throws MojoExecutionException,
-			MojoFailureException {
+	public final void execute()
+			throws MojoExecutionException, MojoFailureException {
 		if (skip) {
 			getLog().info(
 					"Skipping JaCoCo execution because property jacoco.skip is set.");
@@ -57,8 +57,8 @@ public abstract class AbstractJacocoMojo extends AbstractMojo {
 	 *             occurs. Throwing this exception causes a "BUILD FAILURE"
 	 *             message to be displayed.
 	 */
-	protected abstract void executeMojo() throws MojoExecutionException,
-			MojoFailureException;
+	protected abstract void executeMojo()
+			throws MojoExecutionException, MojoFailureException;
 
 	/**
 	 * Skips Mojo.

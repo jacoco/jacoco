@@ -100,13 +100,14 @@ public class OfflineInstrumentationAccessGeneratorTest {
 				null);
 
 		// Constructor
-		GeneratorAdapter gen = new GeneratorAdapter(writer.visitMethod(
-				Opcodes.ACC_PUBLIC, "<init>", "()V", null, new String[0]),
+		GeneratorAdapter gen = new GeneratorAdapter(
+				writer.visitMethod(Opcodes.ACC_PUBLIC, "<init>", "()V", null,
+						new String[0]),
 				Opcodes.ACC_PUBLIC, "<init>", "()V");
 		gen.visitCode();
 		gen.loadThis();
-		gen.invokeConstructor(Type.getType(Object.class), new Method("<init>",
-				"()V"));
+		gen.invokeConstructor(Type.getType(Object.class),
+				new Method("<init>", "()V"));
 		gen.loadThis();
 		final int size = generator.generateDataAccessor(classid, className, 2,
 				gen);
@@ -117,8 +118,8 @@ public class OfflineInstrumentationAccessGeneratorTest {
 		gen.visitEnd();
 
 		// get()
-		gen = new GeneratorAdapter(writer.visitMethod(Opcodes.ACC_PUBLIC,
-				"get", "()[Z", null, new String[0]), Opcodes.ACC_PUBLIC, "get",
+		gen = new GeneratorAdapter(writer.visitMethod(Opcodes.ACC_PUBLIC, "get",
+				"()[Z", null, new String[0]), Opcodes.ACC_PUBLIC, "get",
 				"()[Z");
 		gen.visitCode();
 		gen.getStatic(classType, InstrSupport.DATAFIELD_NAME,
@@ -130,8 +131,9 @@ public class OfflineInstrumentationAccessGeneratorTest {
 		writer.visitEnd();
 
 		final TargetLoader loader = new TargetLoader();
-		return (ITarget) loader.add(className.replace('/', '.'),
-				writer.toByteArray()).newInstance();
+		return (ITarget) loader
+				.add(className.replace('/', '.'), writer.toByteArray())
+				.newInstance();
 	}
 
 	/**

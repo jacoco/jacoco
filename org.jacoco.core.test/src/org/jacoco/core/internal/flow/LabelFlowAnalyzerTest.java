@@ -128,8 +128,8 @@ public class LabelFlowAnalyzerTest {
 	public void testFlowScenario11() {
 		// Even if the same label is referenced multiple times but from the same
 		// source instruction this is only counted as one target.
-		analyzer.visitLookupSwitchInsn(label, new int[] { 0, 1 }, new Label[] {
-				label, label });
+		analyzer.visitLookupSwitchInsn(label, new int[] { 0, 1 },
+				new Label[] { label, label });
 		assertFalse(LabelInfo.isMultiTarget(label));
 		assertFalse(LabelInfo.isSuccessor(label));
 	}
@@ -138,7 +138,8 @@ public class LabelFlowAnalyzerTest {
 	public void testFlowScenario12() {
 		// Even if the same label is referenced multiple times but from the same
 		// source instruction this is only counted as one target.
-		analyzer.visitTableSwitchInsn(0, 1, label, new Label[] { label, label });
+		analyzer.visitTableSwitchInsn(0, 1, label,
+				new Label[] { label, label });
 		assertFalse(LabelInfo.isMultiTarget(label));
 		assertFalse(LabelInfo.isSuccessor(label));
 	}

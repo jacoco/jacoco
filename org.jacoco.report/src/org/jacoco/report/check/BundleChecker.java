@@ -97,7 +97,8 @@ class BundleChecker {
 			}
 		}
 		if (traverseSourceFiles) {
-			for (final ISourceFileCoverage s : packageCoverage.getSourceFiles()) {
+			for (final ISourceFileCoverage s : packageCoverage
+					.getSourceFiles()) {
 				check(s);
 			}
 		}
@@ -142,9 +143,9 @@ class BundleChecker {
 			final String elementname, final Rule rule, final Limit limit) {
 		final String message = limit.check(node);
 		if (message != null) {
-			output.onViolation(node, rule, limit, String.format(
-					"Rule violated for %s %s: %s", elementtype, elementname,
-					message));
+			output.onViolation(node, rule, limit,
+					String.format("Rule violated for %s %s: %s", elementtype,
+							elementname, message));
 		}
 	}
 

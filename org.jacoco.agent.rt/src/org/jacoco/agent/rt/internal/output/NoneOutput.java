@@ -20,7 +20,8 @@ import org.jacoco.core.runtime.RuntimeData;
  */
 public class NoneOutput implements IAgentOutput {
 
-	public final void startup(final AgentOptions options, final RuntimeData data) {
+	public final void startup(final AgentOptions options,
+			final RuntimeData data) {
 		// Nothing to do
 	}
 

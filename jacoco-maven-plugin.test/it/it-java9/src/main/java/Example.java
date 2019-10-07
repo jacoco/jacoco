@@ -12,9 +12,9 @@
  *******************************************************************************/
 public class Example {
 
-  public void sayHello(String name) {
-    // http://openjdk.java.net/jeps/280
-    System.out.println("Hello, " + name);
-  }
+	public void sayHello(String name) {
+		// http://openjdk.java.net/jeps/280
+		System.out.println("Hello, " + name);
+	}
 
 }

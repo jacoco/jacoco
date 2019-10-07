@@ -51,8 +51,8 @@ public class SystemPropertiesRuntime extends AbstractRuntime {
 		// Stack[1]: Ljava/lang/String;
 		// Stack[0]: Ljava/util/Properties;
 
-		mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "java/util/Properties",
-				"get", "(Ljava/lang/Object;)Ljava/lang/Object;", false);
+		mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "java/util/Properties", "get",
+				"(Ljava/lang/Object;)Ljava/lang/Object;", false);
 
 		// Stack[0]: Ljava/lang/Object;
 

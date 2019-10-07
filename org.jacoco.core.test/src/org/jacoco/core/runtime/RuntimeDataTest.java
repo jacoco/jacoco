@@ -139,8 +139,8 @@ public class RuntimeDataTest {
 
 		writer.visitEnd();
 		final TargetLoader loader = new TargetLoader();
-		Callable<?> callable = (Callable<?>) loader.add("Sample",
-				writer.toByteArray()).newInstance();
+		Callable<?> callable = (Callable<?>) loader
+				.add("Sample", writer.toByteArray()).newInstance();
 		final Object[] args = (Object[]) callable.call();
 		assertEquals(3, args.length, 0.0);
 		assertEquals(Long.valueOf(1000), args[0]);
@@ -150,8 +150,8 @@ public class RuntimeDataTest {
 
 	@Test
 	public void testGenerateAccessCall() throws Exception {
-		final boolean[] probes = data.getExecutionData(Long.valueOf(1234),
-				"Sample", 5).getProbes();
+		final boolean[] probes = data
+				.getExecutionData(Long.valueOf(1234), "Sample", 5).getProbes();
 
 		final ClassWriter writer = new ClassWriter(0);
 		writer.visit(Opcodes.V1_5, Opcodes.ACC_PUBLIC, "Sample", null,

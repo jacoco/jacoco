@@ -148,9 +148,8 @@ public class ReportAggregateMojo extends AbstractReportMojo {
 
 	@Override
 	public void setReportOutputDirectory(final File reportOutputDirectory) {
-		if (reportOutputDirectory != null
-				&& !reportOutputDirectory.getAbsolutePath().endsWith(
-						"jacoco-aggregate")) {
+		if (reportOutputDirectory != null && !reportOutputDirectory
+				.getAbsolutePath().endsWith("jacoco-aggregate")) {
 			outputDirectory = new File(reportOutputDirectory,
 					"jacoco-aggregate");
 		} else {

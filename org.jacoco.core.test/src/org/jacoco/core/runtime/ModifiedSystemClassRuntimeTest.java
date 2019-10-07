@@ -57,8 +57,9 @@ public class ModifiedSystemClassRuntimeTest extends RuntimeTestBase {
 	 * "java.lang.reflect.Module" introduced in JDK 9.
 	 */
 	private Instrumentation newInstrumentationMock() {
-		return (Instrumentation) Proxy.newProxyInstance(getClass()
-				.getClassLoader(), new Class[] { Instrumentation.class },
+		return (Instrumentation) Proxy.newProxyInstance(
+				getClass().getClassLoader(),
+				new Class[] { Instrumentation.class },
 				new MyInvocationHandler());
 	}
 
@@ -75,8 +76,8 @@ public class ModifiedSystemClassRuntimeTest extends RuntimeTestBase {
 			added = true;
 			try {
 				// Our class should get instrumented:
-				final byte[] data = TargetLoader
-						.getClassDataAsBytes(ModifiedSystemClassRuntimeTest.class);
+				final byte[] data = TargetLoader.getClassDataAsBytes(
+						ModifiedSystemClassRuntimeTest.class);
 				verifyInstrumentedClass(TARGET_CLASS_NAME,
 						transformer.transform((ClassLoader) null,
 								TARGET_CLASS_NAME, null, null, data));

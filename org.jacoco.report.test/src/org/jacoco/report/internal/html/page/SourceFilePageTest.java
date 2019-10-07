@@ -35,9 +35,8 @@ public class SourceFilePageTest extends PageTestBase {
 	@Override
 	public void setup() throws Exception {
 		super.setup();
-		sourceReader = new InputStreamReader(
-				new FileInputStream(
-						"./src/org/jacoco/report/internal/html/page/SourceFilePageTest.java"),
+		sourceReader = new InputStreamReader(new FileInputStream(
+				"./src/org/jacoco/report/internal/html/page/SourceFilePageTest.java"),
 				"UTF-8");
 	}
 
@@ -49,8 +48,8 @@ public class SourceFilePageTest extends PageTestBase {
 				null, rootFolder, context);
 		page.render();
 
-		final Document result = support.parse(output
-				.getFile("SourceFilePageTest.java.html"));
+		final Document result = support
+				.parse(output.getFile("SourceFilePageTest.java.html"));
 
 		// additional style sheet
 		assertEquals("jacoco-resources/report.css", support.findStr(result,

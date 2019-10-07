@@ -56,8 +56,8 @@ public final class ExecutionDataServer {
 		}
 	}
 
-	private static class Handler implements Runnable, ISessionInfoVisitor,
-			IExecutionDataVisitor {
+	private static class Handler
+			implements Runnable, ISessionInfoVisitor, IExecutionDataVisitor {
 
 		private final Socket socket;
 

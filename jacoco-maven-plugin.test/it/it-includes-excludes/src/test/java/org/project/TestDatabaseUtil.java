@@ -15,8 +15,8 @@ package org.project;
 import org.junit.Test;
 
 public class TestDatabaseUtil {
-  @Test
-  public void testDoStuff() {
-    new DatabaseUtil().doStuff();
-  }
+	@Test
+	public void testDoStuff() {
+		new DatabaseUtil().doStuff();
+	}
 }

@@ -14,9 +14,9 @@ import org.junit.Test;
 
 public class ExampleIT {
 
-  @Test
-  public void test() {
-    new Example().sayHelloIT();
-  }
+	@Test
+	public void test() {
+		new Example().sayHelloIT();
+	}
 
 }

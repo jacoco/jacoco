@@ -18,15 +18,16 @@ import org.jacoco.core.test.validation.groovy.targets.GroovyIndexPropertyClassTa
 import org.junit.Test;
 
 /**
- * Test of class with fields annotated by {@link groovy.transform.IndexedProperty} annotation.
+ * Test of class with fields annotated by
+ * {@link groovy.transform.IndexedProperty} annotation.
  */
 public class GroovyIndexPropertyClassTest extends ValidationTestBase {
-    public GroovyIndexPropertyClassTest() {
-        super(GroovyIndexPropertyClassTarget.class);
-    }
+	public GroovyIndexPropertyClassTest() {
+		super(GroovyIndexPropertyClassTarget.class);
+	}
 
-    @Test
-    public void test_method_count() {
-        assertMethodCount(1);
-    }
+	@Test
+	public void test_method_count() {
+		assertMethodCount(1);
+	}
 }

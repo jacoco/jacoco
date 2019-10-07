@@ -58,16 +58,16 @@ public final class ClassInfo implements ICoverageVisitor {
 	public void visitCoverage(final IClassCoverage coverage) {
 		out.printf("class name:   %s%n", coverage.getName());
 		out.printf("class id:     %016x%n", Long.valueOf(coverage.getId()));
-		out.printf("instructions: %s%n", Integer.valueOf(coverage
-				.getInstructionCounter().getTotalCount()));
+		out.printf("instructions: %s%n", Integer
+				.valueOf(coverage.getInstructionCounter().getTotalCount()));
 		out.printf("branches:     %s%n",
 				Integer.valueOf(coverage.getBranchCounter().getTotalCount()));
 		out.printf("lines:        %s%n",
 				Integer.valueOf(coverage.getLineCounter().getTotalCount()));
 		out.printf("methods:      %s%n",
 				Integer.valueOf(coverage.getMethodCounter().getTotalCount()));
-		out.printf("complexity:   %s%n%n", Integer.valueOf(coverage
-				.getComplexityCounter().getTotalCount()));
+		out.printf("complexity:   %s%n%n", Integer
+				.valueOf(coverage.getComplexityCounter().getTotalCount()));
 	}
 
 	/**

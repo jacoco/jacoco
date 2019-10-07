@@ -32,14 +32,14 @@ public class ClassProbesAdapterTest {
 		boolean frame = false;
 
 		@Override
-		public void visitJumpInsnWithProbe(int opcode, Label label,
-				int probeId, IFrame frame) {
+		public void visitJumpInsnWithProbe(int opcode, Label label, int probeId,
+				IFrame frame) {
 			frame.accept(this);
 		}
 
 		@Override
-		public void visitTableSwitchInsnWithProbes(int min, int max,
-				Label dflt, Label[] labels, IFrame frame) {
+		public void visitTableSwitchInsnWithProbes(int min, int max, Label dflt,
+				Label[] labels, IFrame frame) {
 			frame.accept(this);
 		}
 
@@ -50,8 +50,8 @@ public class ClassProbesAdapterTest {
 		}
 
 		@Override
-		public void visitFrame(int type, int nLocal, Object[] local,
-				int nStack, Object[] stack) {
+		public void visitFrame(int type, int nLocal, Object[] local, int nStack,
+				Object[] stack) {
 			frame = true;
 		}
 	}
