@@ -474,6 +474,11 @@
           <artifactId>maven-bundle-plugin</artifactId>
           <version>3.5.1</version>
         </plugin>
+        <plugin>
+          <groupId>com.diffplug.spotless</groupId>
+          <artifactId>spotless-maven-plugin</artifactId>
+          <version>1.24.3</version>
+       </plugin>
       </plugins>
     </pluginManagement>
 
@@ -549,6 +554,31 @@
                 </requireReleaseDeps>
               </rules>
             </configuration>
+          </execution>
+        </executions>
+      </plugin>
+
+      <plugin>
+        <groupId>com.diffplug.spotless</groupId>
+        <artifactId>spotless-maven-plugin</artifactId>
+        <configuration>
+          <java>
+            <lineEndings>UNIX</lineEndings>
+            <includes>
+              <include>src/**/*.java</include>
+            </includes>
+            <eclipse>
+              <version>4.12.0</version>
+              <file>../org.jacoco.core/.settings/org.eclipse.jdt.core.prefs</file>
+            </eclipse>
+          </java>
+        </configuration>
+        <executions>
+          <execution>
+            <phase>prepare-package</phase>
+            <goals>
+              <goal>check</goal>
+            </goals>
           </execution>
         </executions>
       </plugin>
