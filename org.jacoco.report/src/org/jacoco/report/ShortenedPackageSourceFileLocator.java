@@ -50,7 +50,7 @@ public class ShortenedPackageSourceFileLocator implements ISourceFileLocator {
 		}
 	}
 
-	private String shortenPackage(final String pkg) {
+	private static String shortenPackage(final String pkg) {
 		final int sep = pkg.indexOf('/');
 		return sep == -1 ? "" : pkg.substring(sep + 1);
 	}
