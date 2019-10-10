@@ -8,7 +8,7 @@
  *
  * Contributors:
  *    Marc R. Hoffmann - initial API and implementation
- *    
+ *
  *******************************************************************************/
 package org.jacoco.core.test.validation.java5;
 
@@ -44,7 +44,7 @@ import org.objectweb.asm.tree.analysis.Interpreter;
  * Tests that the invariants specified in <a href=
  * "https://docs.oracle.com/javase/specs/jvms/se9/html/jvms-2.html#jvms-2.11.10">chapter
  * 2.11.10 of the JVM Spec</a> do also hold for instrumented classes.
- * 
+ *
  * This is important because JIT compiler in HotSpot JVM ignores methods with
  * unstructured locking, so that they executed by interpreter. Android Runtime
  * also doesn't optimize such methods.

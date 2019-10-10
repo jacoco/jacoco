@@ -103,7 +103,7 @@ public class TcpConnectionTest extends ExecutorTestBase {
 
 	/**
 	 * Local socket is closed while waiting for commands.
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test

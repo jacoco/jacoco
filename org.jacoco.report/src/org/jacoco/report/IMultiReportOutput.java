@@ -8,7 +8,7 @@
  *
  * Contributors:
  *    Marc R. Hoffmann - initial API and implementation
- *    
+ *
  *******************************************************************************/
 package org.jacoco.report;
 
@@ -23,7 +23,7 @@ public interface IMultiReportOutput {
 	/**
 	 * Creates a file at the given local path. The returned {@link OutputStream}
 	 * has to be closed before the next document is created.
-	 * 
+	 *
 	 * @param path
 	 *            local path to the new document
 	 * @return output for the content
@@ -34,7 +34,7 @@ public interface IMultiReportOutput {
 
 	/**
 	 * Closes the underlying resource container.
-	 * 
+	 *
 	 * @throws IOException
 	 *             if closing fails
 	 */

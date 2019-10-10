@@ -8,7 +8,7 @@
  *
  * Contributors:
  *    Marc R. Hoffmann - initial API and implementation
- *    
+ *
  *******************************************************************************/
 package org.jacoco.core.instr;
 
@@ -174,7 +174,7 @@ public class ClassFileVersionsTest {
 	/**
 	 * Creates a class that requires a frame before the return statement. Also
 	 * for this class instrumentation should insert another frame.
-	 * 
+	 *
 	 * <code><pre>
 	 * public class Sample {
 	 *   public Sample(boolean b){

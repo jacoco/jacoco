@@ -64,7 +64,7 @@ public abstract class Command {
 
 	/**
 	 * Executes the given command.
-	 * 
+	 *
 	 * @param out
 	 *            std out
 	 * @param err
@@ -78,7 +78,7 @@ public abstract class Command {
 
 	/**
 	 * Prints textual help for this command.
-	 * 
+	 *
 	 * @param writer
 	 *            output destination
 	 */

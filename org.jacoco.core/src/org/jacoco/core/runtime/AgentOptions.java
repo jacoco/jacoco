@@ -8,7 +8,7 @@
  *
  * Contributors:
  *    Marc R. Hoffmann - initial API and implementation
- *    
+ *
  *******************************************************************************/
 package org.jacoco.core.runtime;
 
@@ -27,7 +27,7 @@ import java.util.regex.Pattern;
 /**
  * Utility to create and parse options for the runtime agent. Options are
  * represented as a string in the following format:
- * 
+ *
  * <pre>
  *   key1=value1,key2=value2,key3=value3
  * </pre>
@@ -54,7 +54,7 @@ public final class AgentOptions {
 	/**
 	 * Wildcard expression for class names that should be included for code
 	 * coverage. Default is <code>*</code> (all classes included).
-	 * 
+	 *
 	 * @see WildcardMatcher
 	 */
 	public static final String INCLUDES = "includes";
@@ -62,7 +62,7 @@ public final class AgentOptions {
 	/**
 	 * Wildcard expression for class names that should be excluded from code
 	 * coverage. Default is the empty string (no exclusions).
-	 * 
+	 *
 	 * @see WildcardMatcher
 	 */
 	public static final String EXCLUDES = "excludes";
@@ -73,7 +73,7 @@ public final class AgentOptions {
 	 * loader which full qualified name matches this expression will be ignored
 	 * for code coverage regardless of all other filtering settings. Default is
 	 * <code>sun.reflect.DelegatingClassLoader</code>.
-	 * 
+	 *
 	 * @see WildcardMatcher
 	 */
 	public static final String EXCLCLASSLOADER = "exclclassloader";
@@ -107,7 +107,7 @@ public final class AgentOptions {
 
 	/**
 	 * Specifies the output mode. Default is {@link OutputMode#file}.
-	 * 
+	 *
 	 * @see OutputMode#file
 	 * @see OutputMode#tcpserver
 	 * @see OutputMode#tcpclient
@@ -205,7 +205,7 @@ public final class AgentOptions {
 
 	/**
 	 * New instance parsed from the given option string.
-	 * 
+	 *
 	 * @param optionstr
 	 *            string to parse or <code>null</code>
 	 */
@@ -234,7 +234,7 @@ public final class AgentOptions {
 
 	/**
 	 * New instance read from the given {@link Properties} object.
-	 * 
+	 *
 	 * @param properties
 	 *            {@link Properties} object to read configuration options from
 	 */
@@ -261,7 +261,7 @@ public final class AgentOptions {
 
 	/**
 	 * Returns the output file location.
-	 * 
+	 *
 	 * @return output file location
 	 */
 	public String getDestfile() {
@@ -270,7 +270,7 @@ public final class AgentOptions {
 
 	/**
 	 * Sets the output file location.
-	 * 
+	 *
 	 * @param destfile
 	 *            output file location
 	 */
@@ -280,7 +280,7 @@ public final class AgentOptions {
 
 	/**
 	 * Returns whether the output should be appended to an existing file.
-	 * 
+	 *
 	 * @return <code>true</code>, when the output should be appended
 	 */
 	public boolean getAppend() {
@@ -289,7 +289,7 @@ public final class AgentOptions {
 
 	/**
 	 * Sets whether the output should be appended to an existing file.
-	 * 
+	 *
 	 * @param append
 	 *            <code>true</code>, when the output should be appended
 	 */
@@ -299,7 +299,7 @@ public final class AgentOptions {
 
 	/**
 	 * Returns the wildcard expression for classes to include.
-	 * 
+	 *
 	 * @return wildcard expression for classes to include
 	 * @see WildcardMatcher
 	 */
@@ -309,7 +309,7 @@ public final class AgentOptions {
 
 	/**
 	 * Sets the wildcard expression for classes to include.
-	 * 
+	 *
 	 * @param includes
 	 *            wildcard expression for classes to include
 	 * @see WildcardMatcher
@@ -320,7 +320,7 @@ public final class AgentOptions {
 
 	/**
 	 * Returns the wildcard expression for classes to exclude.
-	 * 
+	 *
 	 * @return wildcard expression for classes to exclude
 	 * @see WildcardMatcher
 	 */
@@ -330,7 +330,7 @@ public final class AgentOptions {
 
 	/**
 	 * Sets the wildcard expression for classes to exclude.
-	 * 
+	 *
 	 * @param excludes
 	 *            wildcard expression for classes to exclude
 	 * @see WildcardMatcher
@@ -341,7 +341,7 @@ public final class AgentOptions {
 
 	/**
 	 * Returns the wildcard expression for excluded class loaders.
-	 * 
+	 *
 	 * @return expression for excluded class loaders
 	 * @see WildcardMatcher
 	 */
@@ -351,7 +351,7 @@ public final class AgentOptions {
 
 	/**
 	 * Sets the wildcard expression for excluded class loaders.
-	 * 
+	 *
 	 * @param expression
 	 *            expression for excluded class loaders
 	 * @see WildcardMatcher
@@ -363,7 +363,7 @@ public final class AgentOptions {
 	/**
 	 * Returns whether classes from the bootstrap classloader should be
 	 * instrumented.
-	 * 
+	 *
 	 * @return <code>true</code> if classes from the bootstrap classloader
 	 *         should be instrumented
 	 */
@@ -374,7 +374,7 @@ public final class AgentOptions {
 	/**
 	 * Sets whether classes from the bootstrap classloader should be
 	 * instrumented.
-	 * 
+	 *
 	 * @param include
 	 *            <code>true</code> if bootstrap classes should be instrumented
 	 */
@@ -384,7 +384,7 @@ public final class AgentOptions {
 
 	/**
 	 * Returns whether classes without source location should be instrumented.
-	 * 
+	 *
 	 * @return <code>true</code> if classes without source location should be
 	 *         instrumented
 	 */
@@ -394,7 +394,7 @@ public final class AgentOptions {
 
 	/**
 	 * Sets whether classes without source location should be instrumented.
-	 * 
+	 *
 	 * @param include
 	 *            <code>true</code> if classes without source location should be
 	 *            instrumented
@@ -405,7 +405,7 @@ public final class AgentOptions {
 
 	/**
 	 * Returns the session identifier.
-	 * 
+	 *
 	 * @return session identifier
 	 */
 	public String getSessionId() {
@@ -414,7 +414,7 @@ public final class AgentOptions {
 
 	/**
 	 * Sets the session identifier.
-	 * 
+	 *
 	 * @param id
 	 *            session identifier
 	 */
@@ -424,7 +424,7 @@ public final class AgentOptions {
 
 	/**
 	 * Returns whether coverage data should be dumped on exit.
-	 * 
+	 *
 	 * @return <code>true</code> if coverage data will be written on VM exit
 	 */
 	public boolean getDumpOnExit() {
@@ -433,7 +433,7 @@ public final class AgentOptions {
 
 	/**
 	 * Sets whether coverage data should be dumped on exit.
-	 * 
+	 *
 	 * @param dumpOnExit
 	 *            <code>true</code> if coverage data should be written on VM
 	 *            exit
@@ -446,7 +446,7 @@ public final class AgentOptions {
 	 * Returns the port on which to listen to when the output is
 	 * <code>tcpserver</code> or the port to connect to when output is
 	 * <code>tcpclient</code>.
-	 * 
+	 *
 	 * @return port to listen on or connect to
 	 */
 	public int getPort() {
@@ -456,7 +456,7 @@ public final class AgentOptions {
 	/**
 	 * Sets the port on which to listen to when output is <code>tcpserver</code>
 	 * or the port to connect to when output is <code>tcpclient</code>
-	 * 
+	 *
 	 * @param port
 	 *            port to listen on or connect to
 	 */
@@ -469,7 +469,7 @@ public final class AgentOptions {
 	 * Gets the hostname or IP address to listen to when output is
 	 * <code>tcpserver</code> or connect to when output is
 	 * <code>tcpclient</code>
-	 * 
+	 *
 	 * @return Hostname or IP address
 	 */
 	public String getAddress() {
@@ -480,7 +480,7 @@ public final class AgentOptions {
 	 * Sets the hostname or IP address to listen to when output is
 	 * <code>tcpserver</code> or connect to when output is
 	 * <code>tcpclient</code>
-	 * 
+	 *
 	 * @param address
 	 *            Hostname or IP address
 	 */
@@ -490,7 +490,7 @@ public final class AgentOptions {
 
 	/**
 	 * Returns the output mode
-	 * 
+	 *
 	 * @return current output mode
 	 */
 	public OutputMode getOutput() {
@@ -500,7 +500,7 @@ public final class AgentOptions {
 
 	/**
 	 * Sets the output mode
-	 * 
+	 *
 	 * @param output
 	 *            Output mode
 	 */
@@ -510,7 +510,7 @@ public final class AgentOptions {
 
 	/**
 	 * Sets the output mode
-	 * 
+	 *
 	 * @param output
 	 *            Output mode
 	 */
@@ -521,7 +521,7 @@ public final class AgentOptions {
 	/**
 	 * Returns the location of the directory where class files should be dumped
 	 * to.
-	 * 
+	 *
 	 * @return dump location or <code>null</code> (no dumps)
 	 */
 	public String getClassDumpDir() {
@@ -530,7 +530,7 @@ public final class AgentOptions {
 
 	/**
 	 * Sets the directory where class files should be dumped to.
-	 * 
+	 *
 	 * @param location
 	 *            dump location or <code>null</code> (no dumps)
 	 */
@@ -540,7 +540,7 @@ public final class AgentOptions {
 
 	/**
 	 * Returns whether the agent exposes functionality via JMX.
-	 * 
+	 *
 	 * @return <code>true</code>, when JMX is enabled
 	 */
 	public boolean getJmx() {
@@ -549,7 +549,7 @@ public final class AgentOptions {
 
 	/**
 	 * Sets whether the agent should expose functionality via JMX.
-	 * 
+	 *
 	 * @param jmx
 	 *            <code>true</code> if JMX should be enabled
 	 */
@@ -587,7 +587,7 @@ public final class AgentOptions {
 	/**
 	 * Generate required JVM argument based on current configuration and
 	 * supplied agent jar location.
-	 * 
+	 *
 	 * @param agentJarFile
 	 *            location of the JaCoCo Agent Jar
 	 * @return Argument to pass to create new VM with coverage enabled
@@ -599,7 +599,7 @@ public final class AgentOptions {
 	/**
 	 * Generate required quoted JVM argument based on current configuration and
 	 * supplied agent jar location.
-	 * 
+	 *
 	 * @param agentJarFile
 	 *            location of the JaCoCo Agent Jar
 	 * @return Quoted argument to pass to create new VM with coverage enabled
@@ -613,7 +613,7 @@ public final class AgentOptions {
 	 * prepends it to the given argument command line. If a agent with the same
 	 * JAR file is already specified this parameter is removed from the existing
 	 * command line.
-	 * 
+	 *
 	 * @param arguments
 	 *            existing command line arguments or <code>null</code>
 	 * @param agentJarFile

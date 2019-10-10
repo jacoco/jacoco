@@ -8,7 +8,7 @@
  *
  * Contributors:
  *    Marc R. Hoffmann - initial API and implementation
- *    
+ *
  *******************************************************************************/
 package org.jacoco.report;
 
@@ -28,7 +28,7 @@ public class DirectorySourceFileLocator extends InputStreamSourceFileLocator {
 	/**
 	 * Creates a new locator that searches for source files in the given
 	 * directory.
-	 * 
+	 *
 	 * @param directory
 	 *            directory to search for source file
 	 * @param encoding

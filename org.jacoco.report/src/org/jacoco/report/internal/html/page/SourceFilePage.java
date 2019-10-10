@@ -8,7 +8,7 @@
  *
  * Contributors:
  *    Marc R. Hoffmann - initial API and implementation
- *    
+ *
  *******************************************************************************/
 package org.jacoco.report.internal.html.page;
 
@@ -35,7 +35,7 @@ public class SourceFilePage extends NodePage<ISourceNode> {
 
 	/**
 	 * Creates a new page with given information.
-	 * 
+	 *
 	 * @param sourceFileNode
 	 *            coverage data for this source file
 	 * @param sourceReader

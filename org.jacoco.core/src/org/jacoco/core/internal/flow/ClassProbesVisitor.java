@@ -8,7 +8,7 @@
  *
  * Contributors:
  *    Marc R. Hoffmann - initial API and implementation
- *    
+ *
  *******************************************************************************/
 package org.jacoco.core.internal.flow;
 
@@ -30,7 +30,7 @@ public abstract class ClassProbesVisitor extends ClassVisitor {
 
 	/**
 	 * New visitor instance that delegates to the given visitor.
-	 * 
+	 *
 	 * @param cv
 	 *            optional next visitor in chain
 	 */
@@ -51,7 +51,7 @@ public abstract class ClassProbesVisitor extends ClassVisitor {
 	 * is called just before {@link ClassVisitor#visitEnd()}. For interfaces
 	 * this method is called before the first method (the static initializer) is
 	 * emitted.
-	 * 
+	 *
 	 * @param count
 	 *            total number of probes
 	 */

@@ -8,7 +8,7 @@
  *
  * Contributors:
  *    Marc R. Hoffmann - initial API and implementation
- *    
+ *
  *******************************************************************************/
 package org.jacoco.agent.rt.internal;
 
@@ -29,7 +29,7 @@ public interface IExceptionLogger {
 
 	/**
 	 * Logs the given exception.
-	 * 
+	 *
 	 * @param ex
 	 *            exception to log
 	 */

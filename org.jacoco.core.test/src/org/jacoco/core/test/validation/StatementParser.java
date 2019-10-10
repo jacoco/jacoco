@@ -8,7 +8,7 @@
  *
  * Contributors:
  *    Marc R. Hoffmann - initial API and implementation
- *    
+ *
  *******************************************************************************/
 package org.jacoco.core.test.validation;
 
@@ -20,11 +20,11 @@ import java.util.List;
 
 /**
  * Simple parser for Java like method invocation statements. For example:
- * 
+ *
  * <pre>
  * foo("BAR", 42)
  * </pre>
- * 
+ *
  * Method parameters can only be String or int literals.
  */
 class StatementParser {
@@ -36,7 +36,7 @@ class StatementParser {
 
 		/**
 		 * Called when a method invocation has been paresed.
-		 * 
+		 *
 		 * @param ctx
 		 *            context information for error messages
 		 * @param name
@@ -50,7 +50,7 @@ class StatementParser {
 
 	/**
 	 * Parses the given source.
-	 * 
+	 *
 	 * @param source
 	 *            source string to parse
 	 * @param visitor

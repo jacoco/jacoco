@@ -9,7 +9,7 @@
  * Contributors:
  *    Evgeny Mandrikov - TestNG support
  *    Brock Janiczak - initial API and implementation
- *    
+ *
  *******************************************************************************/
 package org.jacoco.ant;
 
@@ -187,7 +187,7 @@ public class CoverageTask extends AbstractCoverageTask
 		/**
 		 * Attempt to enhance the supplied task with coverage information. This
 		 * operation may fail if the task is being executed in the current VM
-		 * 
+		 *
 		 * @param task
 		 *            Task instance to enhance (usually an
 		 *            {@link UnknownElement})

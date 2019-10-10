@@ -29,7 +29,7 @@ import org.jacoco.report.IReportGroupVisitor;
  * <li>bound to <code>report-integration</code> phase</li>
  * <li>different <code>dataFile</code></li>
  * </ul>
- * 
+ *
  * @since 0.6.4
  */
 @Mojo(name = "report-integration", defaultPhase = LifecyclePhase.VERIFY, threadSafe = true)

@@ -8,7 +8,7 @@
  *
  * Contributors:
  *    Marc R. Hoffmann - initial API and implementation
- *    
+ *
  *******************************************************************************/
 package org.jacoco.core.internal;
 
@@ -46,7 +46,7 @@ public class ContentTypeDetector {
 	 * Creates a new detector based on the given input. To process the complete
 	 * original input afterwards use the stream returned by
 	 * {@link #getInputStream()}.
-	 * 
+	 *
 	 * @param in
 	 *            input to read the header from
 	 * @throws IOException
@@ -95,7 +95,7 @@ public class ContentTypeDetector {
 	/**
 	 * Returns an input stream instance to read the complete content (including
 	 * the header) of the underlying stream.
-	 * 
+	 *
 	 * @return input stream containing the complete content
 	 */
 	public InputStream getInputStream() {
@@ -104,7 +104,7 @@ public class ContentTypeDetector {
 
 	/**
 	 * Returns the detected file type.
-	 * 
+	 *
 	 * @return file type
 	 */
 	public int getType() {

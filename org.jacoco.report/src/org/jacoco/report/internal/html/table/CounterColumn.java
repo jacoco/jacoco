@@ -8,7 +8,7 @@
  *
  * Contributors:
  *    Marc R. Hoffmann - initial API and implementation
- *    
+ *
  *******************************************************************************/
 package org.jacoco.report.internal.html.table;
 
@@ -36,7 +36,7 @@ public abstract class CounterColumn implements IColumnRenderer {
 
 	/**
 	 * Creates a new column that shows the total count for the given entity.
-	 * 
+	 *
 	 * @param entity
 	 *            counter entity for this column
 	 * @param locale
@@ -56,7 +56,7 @@ public abstract class CounterColumn implements IColumnRenderer {
 
 	/**
 	 * Creates a new column that shows the missed count for the given entity.
-	 * 
+	 *
 	 * @param entity
 	 *            counter entity for this column
 	 * @param locale
@@ -76,7 +76,7 @@ public abstract class CounterColumn implements IColumnRenderer {
 
 	/**
 	 * Creates a new column that shows the covered count for the given entity.
-	 * 
+	 *
 	 * @param entity
 	 *            counter entity for this column
 	 * @param locale
@@ -103,7 +103,7 @@ public abstract class CounterColumn implements IColumnRenderer {
 	/**
 	 * Creates a new column that is based on the {@link ICounter} for the given
 	 * entity.
-	 * 
+	 *
 	 * @param entity
 	 *            counter entity for this column
 	 * @param locale
@@ -152,7 +152,7 @@ public abstract class CounterColumn implements IColumnRenderer {
 
 	/**
 	 * Retrieves the respective value from the counter.
-	 * 
+	 *
 	 * @param counter
 	 *            counter object
 	 * @return value of interest

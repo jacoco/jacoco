@@ -8,7 +8,7 @@
  *
  * Contributors:
  *    Marc R. Hoffmann - initial API and implementation
- *    
+ *
  *******************************************************************************/
 package org.jacoco.core.internal.analysis;
 
@@ -27,7 +27,7 @@ public class MethodCoverageImpl extends SourceNodeImpl
 
 	/**
 	 * Creates a method coverage data object with the given parameters.
-	 * 
+	 *
 	 * @param name
 	 *            name of the method
 	 * @param desc

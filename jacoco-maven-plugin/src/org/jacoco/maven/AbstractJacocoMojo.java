@@ -48,7 +48,7 @@ public abstract class AbstractJacocoMojo extends AbstractMojo {
 
 	/**
 	 * Executes Mojo.
-	 * 
+	 *
 	 * @throws MojoExecutionException
 	 *             if an unexpected problem occurs. Throwing this exception
 	 *             causes a "BUILD ERROR" message to be displayed.

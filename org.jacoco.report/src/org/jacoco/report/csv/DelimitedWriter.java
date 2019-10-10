@@ -8,7 +8,7 @@
  *
  * Contributors:
  *    Brock Janiczak - initial API and implementation
- *    
+ *
  *******************************************************************************/
 package org.jacoco.report.csv;
 
@@ -19,7 +19,7 @@ import java.io.Writer;
  * Helper class for writing out CSV or tab delimited files.
  * <p>
  * <strong>Example Usage:</strong>
- * 
+ *
  * <pre>
  * delimitedWriter.writeFields(&quot;header1&quot;, &quot;header2&quot;, ...);
  * for each line to be written {
@@ -29,7 +29,7 @@ import java.io.Writer;
  * }
  * delimitedWriter.close();
  * </pre>
- * 
+ *
  * </p>
  */
 class DelimitedWriter {
@@ -44,7 +44,7 @@ class DelimitedWriter {
 
 	/**
 	 * Creates a new Delimited writer using the default delimiter
-	 * 
+	 *
 	 * @param delegate
 	 *            Writer to delegate all writes to
 	 */
@@ -54,7 +54,7 @@ class DelimitedWriter {
 
 	/**
 	 * Creates a new Delimited writer using the default delimiter
-	 * 
+	 *
 	 * @param delegate
 	 *            Writer to delegate all writes to
 	 * @param delimiter
@@ -68,7 +68,7 @@ class DelimitedWriter {
 	/**
 	 * Write multiple fields at once. Values will be auto escaped and quoted as
 	 * needed. Each value will be separated using the current delimiter
-	 * 
+	 *
 	 * @param fields
 	 *            Values to write
 	 * @throws IOException
@@ -84,7 +84,7 @@ class DelimitedWriter {
 	 * Write a single value. Values will be auto escaped and quoted as needed.
 	 * If this is not the first field of the current line the value will be
 	 * prepended with the current delimiter
-	 * 
+	 *
 	 * @param field
 	 *            Value to write
 	 * @throws IOException
@@ -100,7 +100,7 @@ class DelimitedWriter {
 
 	/**
 	 * Write a single integer value.
-	 * 
+	 *
 	 * @param value
 	 *            Value to write
 	 * @throws IOException
@@ -112,7 +112,7 @@ class DelimitedWriter {
 
 	/**
 	 * Write muliple integer values
-	 * 
+	 *
 	 * @param values
 	 *            values to write
 	 * @throws IOException
@@ -127,7 +127,7 @@ class DelimitedWriter {
 	/**
 	 * Output a new line and advance the writer to the next line. The line
 	 * delimiter is the default for the platform.
-	 * 
+	 *
 	 * @throws IOException
 	 *             Error writing to the underlying writer object
 	 */
@@ -139,7 +139,7 @@ class DelimitedWriter {
 	/**
 	 * Close the underlying writer object. Once closed all write operations will
 	 * fail
-	 * 
+	 *
 	 * @throws IOException
 	 *             Error closing the underlying writer object
 	 */
@@ -151,7 +151,7 @@ class DelimitedWriter {
 	 * Escapes any occurrences of the quote character in value by replacing it
 	 * with a double quote. Also Quotes the value if a quote or delimiter value
 	 * is found.
-	 * 
+	 *
 	 * @param value
 	 *            String that needs escaping
 	 * @return New string with all values escaped

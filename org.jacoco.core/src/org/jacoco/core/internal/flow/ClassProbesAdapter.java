@@ -8,7 +8,7 @@
  *
  * Contributors:
  *    Marc R. Hoffmann - initial API and implementation
- *    
+ *
  *******************************************************************************/
 package org.jacoco.core.internal.flow;
 
@@ -37,7 +37,7 @@ public class ClassProbesAdapter extends ClassVisitor
 
 	/**
 	 * Creates a new adapter that delegates to the given visitor.
-	 * 
+	 *
 	 * @param cv
 	 *            instance to delegate to
 	 * @param trackFrames

@@ -39,18 +39,18 @@ import org.jacoco.report.IReportGroupVisitor;
  * reports when tests are in separate projects than the code under test, for
  * example in case of integration tests.
  * </p>
- * 
+ *
  * <p>
  * Using the dependency scope allows to distinguish projects which contribute
  * execution data but should not become part of the report:
  * </p>
- * 
+ *
  * <ul>
  * <li><code>compile</code>, <code>runtime</code>, <code>provided</code>:
  * Project source and execution data is included in the report.</li>
  * <li><code>test</code>: Only execution data is considered for the report.</li>
  * </ul>
- * 
+ *
  * @since 0.7.7
  */
 @Mojo(name = "report-aggregate", threadSafe = true)

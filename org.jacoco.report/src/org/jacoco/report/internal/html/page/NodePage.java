@@ -8,7 +8,7 @@
  *
  * Contributors:
  *    Marc R. Hoffmann - initial API and implementation
- *    
+ *
  *******************************************************************************/
 package org.jacoco.report.internal.html.page;
 
@@ -21,7 +21,7 @@ import org.jacoco.report.internal.html.table.ITableItem;
 
 /**
  * Report page that represents a coverage node.
- * 
+ *
  * @param <NodeType>
  *            type of the node represented by this page
  */
@@ -32,7 +32,7 @@ public abstract class NodePage<NodeType extends ICoverageNode>
 
 	/**
 	 * Creates a new node page.
-	 * 
+	 *
 	 * @param node
 	 *            corresponding node
 	 * @param parent

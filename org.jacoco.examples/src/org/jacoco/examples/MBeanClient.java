@@ -34,7 +34,7 @@ public final class MBeanClient {
 
 	/**
 	 * Execute the example.
-	 * 
+	 *
 	 * @param args
 	 * @throws Exception
 	 */

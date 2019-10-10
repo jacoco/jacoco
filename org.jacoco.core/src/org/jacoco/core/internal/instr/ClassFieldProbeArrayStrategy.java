@@ -8,7 +8,7 @@
  *
  * Contributors:
  *    Marc R. Hoffmann - initial API and implementation
- *    
+ *
  *******************************************************************************/
 package org.jacoco.core.internal.instr;
 
@@ -109,9 +109,9 @@ class ClassFieldProbeArrayStrategy implements IProbeArrayStrategy {
 	/**
 	 * Generates the byte code to initialize the static coverage data field
 	 * within this class.
-	 * 
+	 *
 	 * The code will push the [Z data array on the operand stack.
-	 * 
+	 *
 	 * @param mv
 	 *            generator to emit code to
 	 */

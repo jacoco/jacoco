@@ -23,7 +23,7 @@ import org.codehaus.plexus.util.FileUtils;
 
 /**
  * Restores original classes as they were before offline instrumentation.
- * 
+ *
  * @since 0.6.2
  */
 @Mojo(name = "restore-instrumented-classes", defaultPhase = LifecyclePhase.PREPARE_PACKAGE, threadSafe = true)

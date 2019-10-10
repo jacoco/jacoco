@@ -8,7 +8,7 @@
  *
  * Contributors:
  *    Marc R. Hoffmann - initial API and implementation
- *    
+ *
  *******************************************************************************/
 package org.jacoco.core.internal.instr;
 
@@ -24,7 +24,7 @@ public interface IProbeArrayStrategy {
 
 	/**
 	 * Creates code that stores the probe array instance in the given variable.
-	 * 
+	 *
 	 * @param mv
 	 *            visitor to create code
 	 * @param clinit
@@ -38,7 +38,7 @@ public interface IProbeArrayStrategy {
 	/**
 	 * Adds additional class members required by this strategy. This method is
 	 * called after all original members of the class has been processed.
-	 * 
+	 *
 	 * @param cv
 	 *            visitor to create fields and methods
 	 * @param probeCount

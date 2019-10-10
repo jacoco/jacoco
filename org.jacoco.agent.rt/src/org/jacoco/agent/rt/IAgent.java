@@ -21,21 +21,21 @@ public interface IAgent {
 
 	/**
 	 * Returns version of JaCoCo.
-	 * 
+	 *
 	 * @return version of JaCoCo
 	 */
 	String getVersion();
 
 	/**
 	 * Returns current a session identifier.
-	 * 
+	 *
 	 * @return current session identifier
 	 */
 	String getSessionId();
 
 	/**
 	 * Sets a session identifier.
-	 * 
+	 *
 	 * @param id
 	 *            new session identifier
 	 */
@@ -48,7 +48,7 @@ public interface IAgent {
 
 	/**
 	 * Returns current execution data.
-	 * 
+	 *
 	 * @param reset
 	 *            if <code>true</code> the current execution data is cleared
 	 *            afterwards
@@ -59,7 +59,7 @@ public interface IAgent {
 	/**
 	 * Triggers a dump of the current execution data through the configured
 	 * output.
-	 * 
+	 *
 	 * @param reset
 	 *            if <code>true</code> the current execution data is cleared
 	 *            afterwards

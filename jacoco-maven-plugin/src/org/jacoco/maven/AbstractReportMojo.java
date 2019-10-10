@@ -113,7 +113,7 @@ public abstract class AbstractReportMojo extends AbstractMavenReport {
 
 	/**
 	 * Returns the list of class files to include in the report.
-	 * 
+	 *
 	 * @return class files to include, may contain wildcard characters
 	 */
 	List<String> getIncludes() {
@@ -122,7 +122,7 @@ public abstract class AbstractReportMojo extends AbstractMavenReport {
 
 	/**
 	 * Returns the list of class files to exclude from the report.
-	 * 
+	 *
 	 * @return class files to exclude, may contain wildcard characters
 	 */
 	List<String> getExcludes() {

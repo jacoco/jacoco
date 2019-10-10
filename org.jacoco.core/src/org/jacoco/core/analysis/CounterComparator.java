@@ -8,7 +8,7 @@
  *
  * Contributors:
  *    Marc R. Hoffmann - initial API and implementation
- *    
+ *
  *******************************************************************************/
 package org.jacoco.core.analysis;
 
@@ -75,7 +75,7 @@ public class CounterComparator implements Comparator<ICounter>, Serializable {
 
 	/**
 	 * Creates a new version of this comparator that sorts in reverse order.
-	 * 
+	 *
 	 * @return reverse comparator
 	 */
 	public CounterComparator reverse() {
@@ -85,7 +85,7 @@ public class CounterComparator implements Comparator<ICounter>, Serializable {
 	/**
 	 * Creates a new comparator for {@link ICoverageNode} counters of the given
 	 * entity based on this counter sorting criteria.
-	 * 
+	 *
 	 * @param entity
 	 *            counter entity to sort on
 	 * @return comparator for {@link ICoverageNode} elements

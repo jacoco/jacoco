@@ -8,7 +8,7 @@
  *
  * Contributors:
  *    Marc R. Hoffmann - initial API and implementation
- *    
+ *
  *******************************************************************************/
 package org.jacoco.core.internal.flow;
 
@@ -28,7 +28,7 @@ public final class LabelFlowAnalyzer extends MethodVisitor {
 
 	/**
 	 * Marks all labels of the method with control flow information.
-	 * 
+	 *
 	 * @param method
 	 *            Method to mark labels
 	 */

@@ -8,7 +8,7 @@
  *
  * Contributors:
  *    Marc R. Hoffmann - initial API and implementation
- *    
+ *
  *******************************************************************************/
 package org.jacoco.core.runtime;
 
@@ -143,7 +143,7 @@ public class OfflineInstrumentationAccessGeneratorTest {
 
 		/**
 		 * Returns a reference to the probe array.
-		 * 
+		 *
 		 * @return the probe array
 		 */
 		boolean[] get();

@@ -8,7 +8,7 @@
  *
  * Contributors:
  *    Marc R. Hoffmann - initial API and implementation
- *    
+ *
  *******************************************************************************/
 package org.jacoco.core.internal.flow;
 
@@ -37,7 +37,7 @@ public final class MethodProbesAdapter extends MethodVisitor {
 
 	/**
 	 * Create a new adapter instance.
-	 * 
+	 *
 	 * @param probesVisitor
 	 *            visitor to delegate to
 	 * @param idGenerator
@@ -54,7 +54,7 @@ public final class MethodProbesAdapter extends MethodVisitor {
 	/**
 	 * If an analyzer is set {@link IFrame} handles are calculated and emitted
 	 * to the probes methods.
-	 * 
+	 *
 	 * @param analyzer
 	 *            optional analyzer to set
 	 */

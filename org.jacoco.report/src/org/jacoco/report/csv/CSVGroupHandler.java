@@ -5,10 +5,10 @@
  * http://www.eclipse.org/legal/epl-2.0
  *
  * SPDX-License-Identifier: EPL-2.0
- * 
+ *
  * Contributors:
  *    Brock Janiczak - initial API and implementation
- * 
+ *
  *******************************************************************************/
 package org.jacoco.report.csv;
 

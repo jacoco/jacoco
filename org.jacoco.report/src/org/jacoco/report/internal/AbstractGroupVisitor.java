@@ -8,7 +8,7 @@
  *
  * Contributors:
  *    Marc R. Hoffmann - initial API and implementation
- *    
+ *
  *******************************************************************************/
 package org.jacoco.report.internal;
 
@@ -33,7 +33,7 @@ public abstract class AbstractGroupVisitor implements IReportGroupVisitor {
 
 	/**
 	 * Creates a new group with the given name.
-	 * 
+	 *
 	 * @param name
 	 *            name for the coverage node created internally
 	 */
@@ -50,7 +50,7 @@ public abstract class AbstractGroupVisitor implements IReportGroupVisitor {
 
 	/**
 	 * Called to handle the given bundle in a specific way.
-	 * 
+	 *
 	 * @param bundle
 	 *            analyzed bundle
 	 * @param locator
@@ -70,7 +70,7 @@ public abstract class AbstractGroupVisitor implements IReportGroupVisitor {
 
 	/**
 	 * Called to handle a group with the given name in a specific way.
-	 * 
+	 *
 	 * @param name
 	 *            name of the group
 	 * @return created child group
@@ -82,7 +82,7 @@ public abstract class AbstractGroupVisitor implements IReportGroupVisitor {
 
 	/**
 	 * Must be called at the end of every group.
-	 * 
+	 *
 	 * @throws IOException
 	 *             if the report can't be written
 	 */
@@ -93,7 +93,7 @@ public abstract class AbstractGroupVisitor implements IReportGroupVisitor {
 
 	/**
 	 * Called to handle the end of this group in a specific way.
-	 * 
+	 *
 	 * @throws IOException
 	 *             if the report can't be written
 	 */

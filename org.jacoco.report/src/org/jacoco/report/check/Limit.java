@@ -8,7 +8,7 @@
  *
  * Contributors:
  *    Marc R. Hoffmann - initial API and implementation
- *    
+ *
  *******************************************************************************/
 package org.jacoco.report.check;
 
@@ -121,7 +121,7 @@ public class Limit {
 	 * also determine the precision in error messages. A limit ratio may
 	 * optionally be declared as a percentage where 0.80 and 80% represent the
 	 * same value.
-	 * 
+	 *
 	 * @param minimum
 	 *            allowed minimum or <code>null</code>, if no minimum should be
 	 *            checked
@@ -144,7 +144,7 @@ public class Limit {
 	 * also determine the precision in error messages. A limit ratio may
 	 * optionally be declared as a percentage where 0.80 and 80% represent the
 	 * same value.
-	 * 
+	 *
 	 * @param maximum
 	 *            allowed maximum or <code>null</code>, if no maximum should be
 	 *            checked

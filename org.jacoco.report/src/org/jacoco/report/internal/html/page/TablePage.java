@@ -8,7 +8,7 @@
  *
  * Contributors:
  *    Marc R. Hoffmann - initial API and implementation
- *    
+ *
  *******************************************************************************/
 package org.jacoco.report.internal.html.page;
 
@@ -25,7 +25,7 @@ import org.jacoco.report.internal.html.table.ITableItem;
 
 /**
  * Report page that contains a table of items linked to other pages.
- * 
+ *
  * @param <NodeType>
  *            type of the node represented by this page
  */
@@ -36,7 +36,7 @@ public abstract class TablePage<NodeType extends ICoverageNode>
 
 	/**
 	 * Creates a new node page.
-	 * 
+	 *
 	 * @param node
 	 *            corresponding node
 	 * @param parent
@@ -54,7 +54,7 @@ public abstract class TablePage<NodeType extends ICoverageNode>
 	/**
 	 * Adds the given item to the table. Method must be called before the page
 	 * is rendered.
-	 * 
+	 *
 	 * @param item
 	 *            table item to add
 	 */

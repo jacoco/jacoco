@@ -8,7 +8,7 @@
  *
  * Contributors:
  *    Marc R. Hoffmann - initial API and implementation
- *    
+ *
  *******************************************************************************/
 package org.jacoco.report.internal.html;
 
@@ -37,7 +37,7 @@ public class HTMLGroupVisitor extends AbstractGroupVisitor {
 
 	/**
 	 * Create a new group handler.
-	 * 
+	 *
 	 * @param parent
 	 *            optional hierarchical parent
 	 * @param folder
@@ -58,7 +58,7 @@ public class HTMLGroupVisitor extends AbstractGroupVisitor {
 
 	/**
 	 * Returns the page rendered for this group.
-	 * 
+	 *
 	 * @return page for this group
 	 */
 	public NodePage<ICoverageNode> getPage() {

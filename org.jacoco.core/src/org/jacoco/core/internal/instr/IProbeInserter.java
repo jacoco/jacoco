@@ -8,7 +8,7 @@
  *
  * Contributors:
  *    Marc R. Hoffmann - initial API and implementation
- *    
+ *
  *******************************************************************************/
 package org.jacoco.core.internal.instr;
 
@@ -20,7 +20,7 @@ interface IProbeInserter {
 
 	/**
 	 * Inserts the probe with the given id.
-	 * 
+	 *
 	 * @param id
 	 *            id of the probe to insert
 	 */

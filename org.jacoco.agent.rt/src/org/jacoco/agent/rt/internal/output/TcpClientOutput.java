@@ -8,7 +8,7 @@
  *
  * Contributors:
  *    Marc R. Hoffmann - initial API and implementation
- *    
+ *
  *******************************************************************************/
 package org.jacoco.agent.rt.internal.output;
 
@@ -37,7 +37,7 @@ public class TcpClientOutput implements IAgentOutput {
 
 	/**
 	 * New controller instance.
-	 * 
+	 *
 	 * @param logger
 	 *            logger to use in case of exceptions is spawned threads
 	 */
@@ -75,7 +75,7 @@ public class TcpClientOutput implements IAgentOutput {
 
 	/**
 	 * Open a socket based on the given configuration.
-	 * 
+	 *
 	 * @param options
 	 *            address and port configuration
 	 * @return opened socket

@@ -8,7 +8,7 @@
  *
  * Contributors:
  *    Marc R. Hoffmann - initial API and implementation
- *    
+ *
  *******************************************************************************/
 package org.jacoco.core.analysis;
 
@@ -45,7 +45,7 @@ public class CoverageNodeImpl implements ICoverageNode {
 
 	/**
 	 * Creates a new coverage data node.
-	 * 
+	 *
 	 * @param elementType
 	 *            type of the element represented by this instance
 	 * @param name
@@ -64,7 +64,7 @@ public class CoverageNodeImpl implements ICoverageNode {
 
 	/**
 	 * Increments the counters by the values given by another element.
-	 * 
+	 *
 	 * @param child
 	 *            counters to add
 	 */
@@ -82,7 +82,7 @@ public class CoverageNodeImpl implements ICoverageNode {
 	/**
 	 * Increments the counters by the values given by the collection of
 	 * elements.
-	 * 
+	 *
 	 * @param children
 	 *            list of nodes, which counters will be added to this node
 	 */

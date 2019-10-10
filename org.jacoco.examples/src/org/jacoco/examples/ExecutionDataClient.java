@@ -8,7 +8,7 @@
  *
  * Contributors:
  *    Marc R. Hoffmann - initial API and implementation
- *    
+ *
  *******************************************************************************/
 package org.jacoco.examples;
 
@@ -36,7 +36,7 @@ public final class ExecutionDataClient {
 
 	/**
 	 * Starts the execution data request.
-	 * 
+	 *
 	 * @param args
 	 * @throws IOException
 	 */

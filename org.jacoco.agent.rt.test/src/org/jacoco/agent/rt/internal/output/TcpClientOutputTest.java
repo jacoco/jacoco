@@ -9,7 +9,7 @@
  * Contributors:
  *    Brock Janiczak - initial API and implementation
  *    Marc R. Hoffmann - migration to mock socket
- *    
+ *
  *******************************************************************************/
 package org.jacoco.agent.rt.internal.output;
 

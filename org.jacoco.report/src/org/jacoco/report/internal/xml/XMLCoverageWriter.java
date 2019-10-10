@@ -8,7 +8,7 @@
  *
  * Contributors:
  *    Marc R. Hoffmann - initial API and implementation
- *    
+ *
  *******************************************************************************/
 package org.jacoco.report.internal.xml;
 
@@ -32,7 +32,7 @@ public final class XMLCoverageWriter {
 
 	/**
 	 * Writes the structure of a given bundle.
-	 * 
+	 *
 	 * @param bundle
 	 *            bundle coverage data
 	 * @param element
@@ -84,7 +84,7 @@ public final class XMLCoverageWriter {
 
 	/**
 	 * Writes all non-zero counters of the given node.
-	 * 
+	 *
 	 * @param node
 	 *            node to retrieve counters from
 	 * @param parent

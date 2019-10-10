@@ -8,7 +8,7 @@
  *
  * Contributors:
  *    Marc R. Hoffmann - initial API and implementation
- *    
+ *
  *******************************************************************************/
 package org.jacoco.core.test.validation;
 
@@ -92,7 +92,7 @@ public class Source {
 
 	/**
 	 * Reads a source file from the given reader.
-	 * 
+	 *
 	 * @param reader
 	 *            the reader to read from, will be closed
 	 * @param coverage
@@ -129,7 +129,7 @@ public class Source {
 
 	/**
 	 * Loads the source file which holds the given target class.
-	 * 
+	 *
 	 * @param target
 	 *            the target class we want the source for
 	 * @param bundle

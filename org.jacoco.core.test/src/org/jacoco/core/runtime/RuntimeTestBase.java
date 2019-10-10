@@ -8,7 +8,7 @@
  *
  * Contributors:
  *    Marc R. Hoffmann - initial API and implementation
- *    
+ *
  *******************************************************************************/
 package org.jacoco.core.runtime;
 
@@ -189,7 +189,7 @@ public abstract class RuntimeTestBase {
 
 		/**
 		 * Returns a reference to the probe array.
-		 * 
+		 *
 		 * @return the probe array
 		 */
 		boolean[] get();

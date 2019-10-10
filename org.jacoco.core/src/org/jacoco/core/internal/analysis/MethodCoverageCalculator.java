@@ -8,7 +8,7 @@
  *
  * Contributors:
  *    Evgeny Mandrikov - initial API and implementation
- *    
+ *
  *******************************************************************************/
 package org.jacoco.core.internal.analysis;
 
@@ -40,11 +40,11 @@ class MethodCoverageCalculator implements IFilterOutput {
 	 * Instructions that should be merged form disjoint sets. Coverage
 	 * information from instructions of one set will be merged into
 	 * representative instruction of set.
-	 * 
+	 *
 	 * Each such set is represented as a singly linked list: each element except
 	 * one references another element from the same set, element without
 	 * reference - is a representative of this set.
-	 * 
+	 *
 	 * This map stores reference (value) for elements of sets (key).
 	 */
 	private final Map<AbstractInsnNode, AbstractInsnNode> merged;
@@ -62,7 +62,7 @@ class MethodCoverageCalculator implements IFilterOutput {
 	/**
 	 * Applies all specified filtering commands and calculates the resulting
 	 * coverage.
-	 * 
+	 *
 	 * @param coverage
 	 *            the result is added to this coverage node
 	 */

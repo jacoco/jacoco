@@ -8,7 +8,7 @@
  *
  * Contributors:
  *    Brock Janiczak - initial API and implementation
- *    
+ *
  *******************************************************************************/
 package org.jacoco.ant;
 
@@ -38,7 +38,7 @@ public class MergeTask extends Task {
 
 	/**
 	 * Sets the location of the merged data store
-	 * 
+	 *
 	 * @param destfile
 	 *            Destination data store location
 	 */
@@ -48,7 +48,7 @@ public class MergeTask extends Task {
 
 	/**
 	 * This task accepts any number of execution data resources.
-	 * 
+	 *
 	 * @param resources
 	 *            Execution data resources
 	 */

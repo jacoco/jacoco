@@ -31,7 +31,7 @@ public class CommandHandler extends OptionHandler<Command> {
 
 	/**
 	 * This constructor is required by the args4j framework.
-	 * 
+	 *
 	 * @param parser
 	 * @param option
 	 * @param setter

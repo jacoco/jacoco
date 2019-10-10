@@ -8,7 +8,7 @@
  *
  * Contributors:
  *    Marc R. Hoffmann - initial API and implementation
- *    
+ *
  *******************************************************************************/
 package org.jacoco.core.runtime;
 
@@ -21,7 +21,7 @@ public interface IRemoteCommandVisitor {
 
 	/**
 	 * Requests a execution data dump with an optional reset.
-	 * 
+	 *
 	 * @param dump
 	 *            <code>true</code> if the dump should be executed
 	 * @param reset

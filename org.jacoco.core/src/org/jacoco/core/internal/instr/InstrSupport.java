@@ -8,7 +8,7 @@
  *
  * Contributors:
  *    Marc R. Hoffmann - initial API and implementation
- *    
+ *
  *******************************************************************************/
 package org.jacoco.core.internal.instr;
 
@@ -209,7 +209,7 @@ public final class InstrSupport {
 
 	/**
 	 * Determines whether the given class file version requires stackmap frames.
-	 * 
+	 *
 	 * @param version
 	 *            class file version
 	 * @return <code>true</code> if frames are required
@@ -223,7 +223,7 @@ public final class InstrSupport {
 	 * Ensures that the given member does not correspond to a internal member
 	 * created by the instrumentation process. This would mean that the class is
 	 * already instrumented.
-	 * 
+	 *
 	 * @param member
 	 *            name of the member to check
 	 * @param owner
@@ -245,7 +245,7 @@ public final class InstrSupport {
 	 * Generates the instruction to push the given int value on the stack.
 	 * Implementation taken from
 	 * {@link org.objectweb.asm.commons.GeneratorAdapter#push(int)}.
-	 * 
+	 *
 	 * @param mv
 	 *            visitor to emit the instruction
 	 * @param value

@@ -8,7 +8,7 @@
  *
  * Contributors:
  *    Marc R. Hoffmann - initial API and implementation
- *    
+ *
  *******************************************************************************/
 package org.jacoco.report.check;
 
@@ -81,7 +81,7 @@ public final class Rule {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param excludes
 	 *            excludes patterns
 	 */
@@ -107,7 +107,7 @@ public final class Rule {
 
 	/**
 	 * Creates and adds a new {@link Limit}.
-	 * 
+	 *
 	 * @return creates {@link Limit}
 	 */
 	public Limit createLimit() {

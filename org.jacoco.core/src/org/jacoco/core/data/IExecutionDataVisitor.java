@@ -8,7 +8,7 @@
  *
  * Contributors:
  *    Marc R. Hoffmann - initial API and implementation
- *    
+ *
  *******************************************************************************/
 package org.jacoco.core.data;
 
@@ -21,7 +21,7 @@ public interface IExecutionDataVisitor {
 
 	/**
 	 * Provides execution data for a class.
-	 * 
+	 *
 	 * @param data
 	 *            execution data for a class
 	 */

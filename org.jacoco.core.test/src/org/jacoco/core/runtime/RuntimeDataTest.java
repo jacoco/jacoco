@@ -8,7 +8,7 @@
  *
  * Contributors:
  *    Marc R. Hoffmann - initial API and implementation
- *    
+ *
  *******************************************************************************/
 package org.jacoco.core.runtime;
 
@@ -30,7 +30,7 @@ import org.objectweb.asm.Type;
 
 /**
  * Unit tests for {@link RuntimeData}.
- * 
+ *
  */
 public class RuntimeDataTest {
 

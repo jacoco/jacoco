@@ -314,7 +314,7 @@ public class TryWithResourcesEcjFilterTest extends FilterTestBase {
 
 	/**
 	 * ECJ for
-	 * 
+	 *
 	 * <pre>
 	 *     try (r1 = ...; r2 = ...; r3 = ...) {
 	 *         return ...

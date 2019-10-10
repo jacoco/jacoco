@@ -8,7 +8,7 @@
  *
  * Contributors:
  *    Marc R. Hoffmann - initial API and implementation
- *    
+ *
  *******************************************************************************/
 package org.jacoco.report.internal.html.index;
 
@@ -22,7 +22,7 @@ public interface IIndexUpdate {
 
 	/**
 	 * Adds a class to the index.
-	 * 
+	 *
 	 * @param link
 	 *            link to the class
 	 * @param classid

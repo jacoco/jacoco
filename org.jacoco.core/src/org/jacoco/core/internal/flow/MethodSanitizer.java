@@ -8,7 +8,7 @@
  *
  * Contributors:
  *    Marc R. Hoffmann - initial API and implementation
- *    
+ *
  *******************************************************************************/
 package org.jacoco.core.internal.flow;
 
@@ -19,7 +19,7 @@ import org.objectweb.asm.commons.JSRInlinerAdapter;
 
 /**
  * This method visitor fixes two potential issues with Java byte code:
- * 
+ *
  * <ul>
  * <li>Remove JSR/RET instructions by inlining subroutines which are deprecated
  * since Java 6. The RET statement complicates control flow analysis as the jump

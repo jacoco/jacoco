@@ -8,7 +8,7 @@
  *
  * Contributors:
  *    Marc R. Hoffmann - initial API and implementation
- *    
+ *
  *******************************************************************************/
 package org.jacoco.report.internal.html.page;
 
@@ -24,7 +24,7 @@ public class GroupPage extends TablePage<ICoverageNode> {
 
 	/**
 	 * Creates a new visitor in the given context.
-	 * 
+	 *
 	 * @param node
 	 *            corresponding coverage data
 	 * @param parent

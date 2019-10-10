@@ -8,7 +8,7 @@
  *
  * Contributors:
  *    Marc R. Hoffmann - initial API and implementation
- *    
+ *
  *******************************************************************************/
 
 package org.jacoco.core.internal.flow;
@@ -37,7 +37,7 @@ class FrameSnapshot implements IFrame {
 
 	/**
 	 * Create a IFrame instance based on the given analyzer.
-	 * 
+	 *
 	 * @param analyzer
 	 *            analyzer instance or <code>null</code>
 	 * @param popCount

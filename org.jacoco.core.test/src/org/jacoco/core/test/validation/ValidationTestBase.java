@@ -8,7 +8,7 @@
  *
  * Contributors:
  *    Marc R. Hoffmann - initial API and implementation
- *    
+ *
  *******************************************************************************/
 package org.jacoco.core.test.validation;
 
@@ -99,7 +99,7 @@ public abstract class ValidationTestBase {
 	/**
 	 * All single line comments are interpreted as statements in the following
 	 * format:
-	 * 
+	 *
 	 * <pre>
 	 * // statement1() statement2()
 	 * </pre>

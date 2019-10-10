@@ -8,7 +8,7 @@
  *
  * Contributors:
  *    Marc R. Hoffmann - initial API and implementation
- *    
+ *
  *******************************************************************************/
 package org.jacoco.report.internal.html.table;
 
@@ -44,7 +44,7 @@ public class PercentageColumn implements IColumnRenderer {
 	/**
 	 * Creates a new column that is based on the {@link ICounter} for the given
 	 * entity.
-	 * 
+	 *
 	 * @param entity
 	 *            counter entity for this column
 	 * @param locale

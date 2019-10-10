@@ -8,7 +8,7 @@
  *
  * Contributors:
  *    Marc R. Hoffmann - initial API and implementation
- *    
+ *
  *******************************************************************************/
 package org.jacoco.report.internal.html.page;
 
@@ -34,7 +34,7 @@ public class BundlePage extends TablePage<ICoverageNode> {
 
 	/**
 	 * Creates a new visitor in the given context.
-	 * 
+	 *
 	 * @param bundle
 	 *            coverage date for the bundle
 	 * @param parent

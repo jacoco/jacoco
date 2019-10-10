@@ -8,7 +8,7 @@
  *
  * Contributors:
  *    Marc R. Hoffmann - initial API and implementation
- *    
+ *
  *******************************************************************************/
 package org.jacoco.agent.rt.internal;
 
@@ -46,7 +46,7 @@ public final class Offline {
 
 	/**
 	 * API for offline instrumented classes.
-	 * 
+	 *
 	 * @param classid
 	 *            class identifier
 	 * @param classname

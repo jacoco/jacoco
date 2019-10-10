@@ -24,7 +24,7 @@ import org.jacoco.report.IReportGroupVisitor;
 /**
  * Creates a code coverage report for tests of a single project in multiple
  * formats (HTML, XML, and CSV).
- * 
+ *
  * @since 0.5.3
  */
 @Mojo(name = "report", defaultPhase = LifecyclePhase.VERIFY, threadSafe = true)

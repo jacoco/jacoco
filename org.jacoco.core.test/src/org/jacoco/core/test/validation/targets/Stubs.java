@@ -8,7 +8,7 @@
  *
  * Contributors:
  *    Marc R. Hoffmann - initial API and implementation
- *    
+ *
  *******************************************************************************/
 package org.jacoco.core.test.validation.targets;
 
@@ -100,7 +100,7 @@ public class Stubs {
 
 	/**
 	 * Always throws a {@link RuntimeException}.
-	 * 
+	 *
 	 * @throws StubException
 	 *             always thrown
 	 */

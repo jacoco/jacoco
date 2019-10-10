@@ -9,7 +9,7 @@
  * Contributors:
  *    Brock Janiczak - initial API and implementation
  *    Marc R. Hoffmann - generalized structure, line info
- *    
+ *
  *******************************************************************************/
 package org.jacoco.report.internal.xml;
 
@@ -30,7 +30,7 @@ public class XMLGroupVisitor extends AbstractGroupVisitor {
 
 	/**
 	 * New handler for a group with the given name.
-	 * 
+	 *
 	 * @param element
 	 *            XML-Element representing this coverage node. The start tag
 	 *            must not be closed yet to allow adding additional attributes.

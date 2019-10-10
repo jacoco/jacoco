@@ -8,7 +8,7 @@
  *
  * Contributors:
  *    Brock Janiczak - initial API and implementation
- *    
+ *
  *******************************************************************************/
 package org.jacoco.report.csv;
 

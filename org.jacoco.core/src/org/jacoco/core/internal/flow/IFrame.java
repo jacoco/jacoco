@@ -8,7 +8,7 @@
  *
  * Contributors:
  *    Marc R. Hoffmann - initial API and implementation
- *    
+ *
  *******************************************************************************/
 package org.jacoco.core.internal.flow;
 
@@ -21,7 +21,7 @@ public interface IFrame {
 
 	/**
 	 * Emits a frame event with the current content to the given visitor.
-	 * 
+	 *
 	 * @param mv
 	 *            method visitor to emit frame event to
 	 */

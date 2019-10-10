@@ -8,7 +8,7 @@
  *
  * Contributors:
  *    Marc R. Hoffmann - initial API and implementation
- *    
+ *
  *******************************************************************************/
 package org.jacoco.core.runtime;
 
@@ -38,7 +38,7 @@ public class OfflineInstrumentationAccessGenerator
 	/**
 	 * Creates a new instance with the given runtime class name for testing
 	 * purposes
-	 * 
+	 *
 	 * @param runtimeClassName
 	 *            VM name of the runtime class
 	 */

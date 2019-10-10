@@ -5,10 +5,10 @@
  * http://www.eclipse.org/legal/epl-2.0
  *
  * SPDX-License-Identifier: EPL-2.0
- * 
+ *
  * Contributors:
  *    Brock Janiczak - initial API and implementation
- * 
+ *
  *******************************************************************************/
 package org.jacoco.report.csv;
 
@@ -36,7 +36,7 @@ class ClassRowWriter {
 	/**
 	 * Creates a new row writer that writes class information to the given CSV
 	 * writer.
-	 * 
+	 *
 	 * @param writer
 	 *            writer for csv output
 	 * @param languageNames
@@ -62,7 +62,7 @@ class ClassRowWriter {
 
 	/**
 	 * Writes the class summary information as a row.
-	 * 
+	 *
 	 * @param groupName
 	 *            name of the group
 	 * @param packageName

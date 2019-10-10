@@ -27,7 +27,7 @@ import org.jacoco.core.tools.ExecFileLoader;
 
 /**
  * Mojo for merging a set of execution data files (*.exec) into a single file
- * 
+ *
  * @since 0.6.4
  */
 @Mojo(name = "merge", defaultPhase = LifecyclePhase.GENERATE_RESOURCES, threadSafe = true)
@@ -43,7 +43,7 @@ public class MergeMojo extends AbstractJacocoMojo {
 
 	/**
 	 * This mojo accepts any number of execution data file sets.
-	 * 
+	 *
 	 * <pre>
 	 * <code>
 	 * &lt;fileSets&gt;
