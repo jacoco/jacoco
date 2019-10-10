@@ -8,7 +8,7 @@
  *
  * Contributors:
  *    Marc R. Hoffmann - initial API and implementation
- *    
+ *
  *******************************************************************************/
 package org.jacoco.report;
 
@@ -29,7 +29,7 @@ public class ZipMultiReportOutput implements IMultiReportOutput {
 
 	/**
 	 * Creates a new instance based on the given {@link ZipOutputStream}.
-	 * 
+	 *
 	 * @param zip
 	 *            stream to write file entries to
 	 */
@@ -39,7 +39,7 @@ public class ZipMultiReportOutput implements IMultiReportOutput {
 
 	/**
 	 * Creates a new instance based on the given {@link OutputStream}.
-	 * 
+	 *
 	 * @param out
 	 *            stream to write file entries to
 	 */

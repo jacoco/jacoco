@@ -8,7 +8,7 @@
  *
  * Contributors:
  *    Marc R. Hoffmann - initial API and implementation
- *    
+ *
  *******************************************************************************/
 package org.jacoco.report.internal.html.resources;
 
@@ -100,7 +100,7 @@ public final class Styles {
 
 	/**
 	 * Returns a combined style from the given styles.
-	 * 
+	 *
 	 * @param styles
 	 *            list of separate styles, entries might be null
 	 * @return combined style or <code>null</code> if no style is given

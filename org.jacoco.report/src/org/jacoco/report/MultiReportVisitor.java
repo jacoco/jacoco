@@ -8,7 +8,7 @@
  *
  * Contributors:
  *    Marc R. Hoffmann - initial API and implementation
- *    
+ *
  *******************************************************************************/
 package org.jacoco.report;
 
@@ -32,7 +32,7 @@ public class MultiReportVisitor extends MultiGroupVisitor
 
 	/**
 	 * New visitor delegating to all given visitors.
-	 * 
+	 *
 	 * @param visitors
 	 *            visitors to delegate to
 	 */

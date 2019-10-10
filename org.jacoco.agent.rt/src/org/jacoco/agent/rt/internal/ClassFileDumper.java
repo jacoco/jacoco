@@ -8,7 +8,7 @@
  *
  * Contributors:
  *    Marc R. Hoffmann - initial API and implementation
- *    
+ *
  *******************************************************************************/
 package org.jacoco.agent.rt.internal;
 
@@ -28,7 +28,7 @@ class ClassFileDumper {
 
 	/**
 	 * Create a new dumper for the given location.
-	 * 
+	 *
 	 * @param location
 	 *            relative path to dump directory. <code>null</code> if no dumps
 	 *            should be written
@@ -44,7 +44,7 @@ class ClassFileDumper {
 	/**
 	 * Dumps the given binary content under the given name if a non-
 	 * <code>null</code> location has been specified.
-	 * 
+	 *
 	 * @param name
 	 *            qualified class name in VM notation
 	 * @param contents

@@ -8,7 +8,7 @@
  *
  * Contributors:
  *    Marc R. Hoffmann - initial API and implementation
- *    
+ *
  *******************************************************************************/
 package org.jacoco.core.data;
 
@@ -27,7 +27,7 @@ public class SessionInfo implements Comparable<SessionInfo> {
 
 	/**
 	 * Create a immutable session info with the given data.
-	 * 
+	 *
 	 * @param id
 	 *            arbitrary session identifier, must not be <code>null</code>
 	 * @param start

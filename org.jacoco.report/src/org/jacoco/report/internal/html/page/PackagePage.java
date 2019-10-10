@@ -8,7 +8,7 @@
  *
  * Contributors:
  *    Marc R. Hoffmann - initial API and implementation
- *    
+ *
  *******************************************************************************/
 package org.jacoco.report.internal.html.page;
 
@@ -34,7 +34,7 @@ public class PackagePage extends TablePage<IPackageCoverage> {
 
 	/**
 	 * Creates a new visitor in the given context.
-	 * 
+	 *
 	 * @param node
 	 *            coverage data for this package
 	 * @param parent

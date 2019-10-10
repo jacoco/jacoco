@@ -8,7 +8,7 @@
  *
  * Contributors:
  *    Marc R. Hoffmann - initial API and implementation
- *    
+ *
  *******************************************************************************/
 package org.jacoco.core.instr;
 
@@ -48,7 +48,7 @@ public class Instrumenter {
 
 	/**
 	 * Creates a new instance based on the given runtime.
-	 * 
+	 *
 	 * @param runtime
 	 *            runtime used by the instrumented classes
 	 */
@@ -62,7 +62,7 @@ public class Instrumenter {
 	 * typically necessary as instrumentation modifies the class files and
 	 * therefore invalidates existing JAR signatures. Default is
 	 * <code>true</code>.
-	 * 
+	 *
 	 * @param flag
 	 *            <code>true</code> if signatures should be removed
 	 */
@@ -92,7 +92,7 @@ public class Instrumenter {
 
 	/**
 	 * Creates a instrumented version of the given class if possible.
-	 * 
+	 *
 	 * @param buffer
 	 *            definition of the class
 	 * @param name
@@ -113,7 +113,7 @@ public class Instrumenter {
 	/**
 	 * Creates a instrumented version of the given class if possible. The
 	 * provided {@link InputStream} is not closed by this method.
-	 * 
+	 *
 	 * @param input
 	 *            stream to read class definition from
 	 * @param name
@@ -138,7 +138,7 @@ public class Instrumenter {
 	 * Creates a instrumented version of the given class file. The provided
 	 * {@link InputStream} and {@link OutputStream} instances are not closed by
 	 * this method.
-	 * 
+	 *
 	 * @param input
 	 *            stream to read class definition from
 	 * @param output
@@ -168,7 +168,7 @@ public class Instrumenter {
 	 * other files are copied without modification. The provided
 	 * {@link InputStream} and {@link OutputStream} instances are not closed by
 	 * this method.
-	 * 
+	 *
 	 * @param input
 	 *            stream to contents from
 	 * @param output

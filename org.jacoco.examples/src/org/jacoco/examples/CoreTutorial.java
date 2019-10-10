@@ -8,7 +8,7 @@
  *
  * Contributors:
  *    Marc R. Hoffmann - initial API and implementation
- *    
+ *
  *******************************************************************************/
 package org.jacoco.examples;
 
@@ -64,7 +64,7 @@ public final class CoreTutorial {
 
 		/**
 		 * Add a in-memory representation of a class.
-		 * 
+		 *
 		 * @param name
 		 *            name of the class
 		 * @param bytes
@@ -90,7 +90,7 @@ public final class CoreTutorial {
 
 	/**
 	 * Creates a new example instance printing to the given stream.
-	 * 
+	 *
 	 * @param out
 	 *            stream for outputs
 	 */
@@ -100,7 +100,7 @@ public final class CoreTutorial {
 
 	/**
 	 * Run this example.
-	 * 
+	 *
 	 * @throws Exception
 	 *             in case of errors
 	 */
@@ -190,7 +190,7 @@ public final class CoreTutorial {
 
 	/**
 	 * Entry point to run this examples as a Java application.
-	 * 
+	 *
 	 * @param args
 	 *            list of program arguments
 	 * @throws Exception

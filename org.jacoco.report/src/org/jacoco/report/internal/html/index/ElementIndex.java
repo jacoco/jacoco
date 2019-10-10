@@ -8,7 +8,7 @@
  *
  * Contributors:
  *    Marc R. Hoffmann - initial API and implementation
- *    
+ *
  *******************************************************************************/
 package org.jacoco.report.internal.html.index;
 
@@ -30,7 +30,7 @@ public class ElementIndex implements IIndexUpdate {
 
 	/**
 	 * Creates a new empty index for a HTML report.
-	 * 
+	 *
 	 * @param baseFolder
 	 *            base folder where all links are calculated relative to
 	 */
@@ -41,7 +41,7 @@ public class ElementIndex implements IIndexUpdate {
 	/**
 	 * Returns the link to the class with the given identifier if a
 	 * corresponding page exists.
-	 * 
+	 *
 	 * @param classid
 	 *            class identifier
 	 * @return Link or null

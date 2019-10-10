@@ -8,7 +8,7 @@
  *
  * Contributors:
  *    Marc R. Hoffmann - initial API and implementation
- *    
+ *
  *******************************************************************************/
 package org.jacoco.core.internal;
 
@@ -29,7 +29,7 @@ public final class Pack200Streams {
 
 	/**
 	 * Unpack a stream in Pack200 format into a stream in JAR/ZIP format.
-	 * 
+	 *
 	 * @param input
 	 *            stream in Pack200 format
 	 * @return stream in JAR/ZIP format
@@ -47,7 +47,7 @@ public final class Pack200Streams {
 
 	/**
 	 * Packs a buffer in JAR/ZIP format into a stream in Pack200 format.
-	 * 
+	 *
 	 * @param source
 	 *            source in JAR/ZIP format
 	 * @param output

@@ -10,7 +10,7 @@
  *    Evgeny Mandrikov - initial API and implementation
  *    Kyle Lieber - implementation of CheckMojo
  *    Marc Hoffmann - redesign using report APIs
- *    
+ *
  *******************************************************************************/
 package org.jacoco.maven;
 
@@ -23,7 +23,7 @@ import org.jacoco.report.check.Rule;
 
 /**
  * Wrapper for {@link Rule} objects to allow Maven style includes/excludes lists
- * 
+ *
  */
 public class RuleConfiguration {
 
@@ -54,7 +54,7 @@ public class RuleConfiguration {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param excludes
 	 *            excludes patterns
 	 */

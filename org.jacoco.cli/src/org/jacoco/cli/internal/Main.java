@@ -92,7 +92,7 @@ public class Main extends Command {
 
 	/**
 	 * Main entry point for program invocations.
-	 * 
+	 *
 	 * @param args
 	 *            program arguments
 	 * @throws Exception

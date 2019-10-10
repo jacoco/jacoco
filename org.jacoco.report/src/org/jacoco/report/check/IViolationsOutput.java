@@ -8,7 +8,7 @@
  *
  * Contributors:
  *    Marc R. Hoffmann - initial API and implementation
- *    
+ *
  *******************************************************************************/
 package org.jacoco.report.check;
 
@@ -16,13 +16,13 @@ import org.jacoco.core.analysis.ICoverageNode;
 
 /**
  * Call-back interface which is used to report rule violations to.
- * 
+ *
  */
 public interface IViolationsOutput {
 
 	/**
 	 * Called for every rule violation.
-	 * 
+	 *
 	 * @param node
 	 *            node which violates a rule
 	 * @param rule

@@ -27,7 +27,7 @@ import org.objectweb.asm.tree.VarInsnNode;
  * Filters duplicates of finally blocks that compiler generates.
  *
  * To understand algorithm of filtering, consider following example:
- * 
+ *
  * <pre>
  * try {
  * 	if (x) {
@@ -45,7 +45,7 @@ import org.objectweb.asm.tree.VarInsnNode;
  * There are 4 <b>distinct</b> points of exit out of these "try/catch/finally"
  * blocks - three without exception, and one with Throwable if it is thrown
  * prior to reaching first three points of exit.
- * 
+ *
  * "finally" block must be executed just before these points, so there must be 4
  * copies of its bytecode instructions.
  *

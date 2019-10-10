@@ -8,7 +8,7 @@
  *
  * Contributors:
  *    Marc R. Hoffmann - initial API and implementation
- *    
+ *
  *******************************************************************************/
 package org.jacoco.core.analysis;
 
@@ -24,7 +24,7 @@ import org.jacoco.core.analysis.ICoverageNode.CounterEntity;
 /**
  * Comparator to compare {@link ICoverageNode} objects by different counter
  * criteria.
- * 
+ *
  * @see CounterComparator#on(ICoverageNode.CounterEntity)
  */
 public class NodeComparator implements Comparator<ICoverageNode>, Serializable {
@@ -43,10 +43,10 @@ public class NodeComparator implements Comparator<ICoverageNode>, Serializable {
 
 	/**
 	 * Creates a new composite comparator with a second search criterion.
-	 * 
+	 *
 	 * @param second
 	 *            second criterion comparator
-	 * 
+	 *
 	 * @return composite comparator
 	 */
 	public NodeComparator second(final Comparator<ICoverageNode> second) {
@@ -66,7 +66,7 @@ public class NodeComparator implements Comparator<ICoverageNode>, Serializable {
 	/**
 	 * Returns a sorted copy of the given collection of {@link ICoverageNode}
 	 * elements.
-	 * 
+	 *
 	 * @param <T>
 	 *            actual type of the elements
 	 * @param summaries

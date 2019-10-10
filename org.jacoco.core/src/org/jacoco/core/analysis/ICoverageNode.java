@@ -8,7 +8,7 @@
  *
  * Contributors:
  *    Marc R. Hoffmann - initial API and implementation
- *    
+ *
  *******************************************************************************/
 package org.jacoco.core.analysis;
 
@@ -69,63 +69,63 @@ public interface ICoverageNode {
 
 	/**
 	 * Returns the type of element represented by this node.
-	 * 
+	 *
 	 * @return type of this node
 	 */
 	ElementType getElementType();
 
 	/**
 	 * Returns the name of this node.
-	 * 
+	 *
 	 * @return name of this node
 	 */
 	String getName();
 
 	/**
 	 * Returns the counter for byte code instructions.
-	 * 
+	 *
 	 * @return counter for instructions
 	 */
 	ICounter getInstructionCounter();
 
 	/**
 	 * Returns the counter for branches.
-	 * 
+	 *
 	 * @return counter for branches
 	 */
 	ICounter getBranchCounter();
 
 	/**
 	 * Returns the counter for lines.
-	 * 
+	 *
 	 * @return counter for lines
 	 */
 	ICounter getLineCounter();
 
 	/**
 	 * Returns the counter for cyclomatic complexity.
-	 * 
+	 *
 	 * @return counter for complexity
 	 */
 	ICounter getComplexityCounter();
 
 	/**
 	 * Returns the counter for methods.
-	 * 
+	 *
 	 * @return counter for methods
 	 */
 	ICounter getMethodCounter();
 
 	/**
 	 * Returns the counter for classes.
-	 * 
+	 *
 	 * @return counter for classes
 	 */
 	ICounter getClassCounter();
 
 	/**
 	 * Generic access to the the counters.
-	 * 
+	 *
 	 * @param entity
 	 *            entity we're we want to have the counter for
 	 * @return counter for the given entity
@@ -145,7 +145,7 @@ public interface ICoverageNode {
 	 * implementations may contain heavy data structures, the copy returned by
 	 * this method is reduced to the counters only. This helps to save memory
 	 * while processing huge structures.
-	 * 
+	 *
 	 * @return copy with counters only
 	 */
 	ICoverageNode getPlainCopy();

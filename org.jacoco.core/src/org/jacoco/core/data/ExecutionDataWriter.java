@@ -8,7 +8,7 @@
  *
  * Contributors:
  *    Marc R. Hoffmann - initial API and implementation
- *    
+ *
  *******************************************************************************/
 package org.jacoco.core.data;
 
@@ -53,7 +53,7 @@ public class ExecutionDataWriter
 	 * Creates a new writer based on the given output stream. Depending on the
 	 * nature of the underlying stream output should be buffered as most data is
 	 * written in single bytes.
-	 * 
+	 *
 	 * @param output
 	 *            binary stream to write execution data to
 	 * @throws IOException
@@ -66,7 +66,7 @@ public class ExecutionDataWriter
 
 	/**
 	 * Writes an file header to identify the stream and its protocol version.
-	 * 
+	 *
 	 * @throws IOException
 	 *             if the header can't be written
 	 */
@@ -78,7 +78,7 @@ public class ExecutionDataWriter
 
 	/**
 	 * Flushes the underlying stream.
-	 * 
+	 *
 	 * @throws IOException
 	 *             if the underlying stream can't be flushed
 	 */
@@ -114,7 +114,7 @@ public class ExecutionDataWriter
 	 * Returns the first bytes of a file that represents a valid execution data
 	 * file. In any case every execution data file starts with the three bytes
 	 * <code>0x01 0xC0 0xC0</code>.
-	 * 
+	 *
 	 * @return first bytes of a execution data file
 	 */
 	public static final byte[] getFileHeader() {

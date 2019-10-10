@@ -8,7 +8,7 @@
  *
  * Contributors:
  *    Marc R. Hoffmann - initial API and implementation
- *    
+ *
  *******************************************************************************/
 package org.jacoco.core.runtime;
 
@@ -21,7 +21,7 @@ public interface IRuntime extends IExecutionDataAccessorGenerator {
 	/**
 	 * Starts the coverage runtime. This method MUST be called before any class
 	 * instrumented for this runtime is loaded.
-	 * 
+	 *
 	 * @param data
 	 *            the execution data for this runtime
 	 * @throws Exception

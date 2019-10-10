@@ -8,7 +8,7 @@
  *
  * Contributors:
  *    Marc R. Hoffmann - initial API and implementation
- *    
+ *
  *******************************************************************************/
 package org.jacoco.agent.rt.internal;
 
@@ -34,7 +34,7 @@ public final class PreMain {
 
 	/**
 	 * This method is called by the JVM to initialize Java agents.
-	 * 
+	 *
 	 * @param options
 	 *            agent options
 	 * @param inst

@@ -8,7 +8,7 @@
  *
  * Contributors:
  *    Marc R. Hoffmann - initial API and implementation
- *    
+ *
  *******************************************************************************/
 package org.jacoco.report;
 
@@ -29,7 +29,7 @@ public interface IReportVisitor extends IReportGroupVisitor {
 	/**
 	 * Initializes the report with global information. This method has to be
 	 * called before any other method can be called.
-	 * 
+	 *
 	 * @param sessionInfos
 	 *            list of chronological ordered {@link SessionInfo} objects
 	 *            where execution data has been collected for this report.
@@ -44,7 +44,7 @@ public interface IReportVisitor extends IReportGroupVisitor {
 
 	/**
 	 * Has to be called after all report data has been emitted.
-	 * 
+	 *
 	 * @throws IOException
 	 *             in case of IO problems with the report writer
 	 */

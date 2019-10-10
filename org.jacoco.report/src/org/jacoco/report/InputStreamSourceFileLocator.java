@@ -8,7 +8,7 @@
  *
  * Contributors:
  *    Marc R. Hoffmann - initial API and implementation
- *    
+ *
  *******************************************************************************/
 package org.jacoco.report;
 
@@ -29,13 +29,13 @@ public abstract class InputStreamSourceFileLocator
 
 	/**
 	 * Creates a new locator with the given specification.
-	 * 
+	 *
 	 * @param encoding
 	 *            encoding of the source files, <code>null</code> for platform
 	 *            default encoding
 	 * @param tabWidth
 	 *            tab width in source files as number of blanks
-	 * 
+	 *
 	 */
 	protected InputStreamSourceFileLocator(final String encoding,
 			final int tabWidth) {
@@ -69,7 +69,7 @@ public abstract class InputStreamSourceFileLocator
 
 	/**
 	 * Tries to locate the given source file and opens its binary content.
-	 * 
+	 *
 	 * @param path
 	 *            local path to the resource
 	 * @return stream if the file could be located, <code>null</code> otherwise

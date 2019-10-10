@@ -8,7 +8,7 @@
  *
  * Contributors:
  *    Marc R. Hoffmann - initial API and implementation
- *    
+ *
  *******************************************************************************/
 package org.jacoco.core.runtime;
 
@@ -26,7 +26,7 @@ public class RemoteControlReader extends ExecutionDataReader {
 
 	/**
 	 * Create a new read based on the given input stream.
-	 * 
+	 *
 	 * @param input
 	 *            input stream to read commands from
 	 * @throws IOException
@@ -51,7 +51,7 @@ public class RemoteControlReader extends ExecutionDataReader {
 
 	/**
 	 * Sets an listener for agent commands.
-	 * 
+	 *
 	 * @param visitor
 	 *            visitor to retrieve agent commands
 	 */

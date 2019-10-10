@@ -8,7 +8,7 @@
  *
  * Contributors:
  *    Marc R. Hoffmann - initial API and implementation
- *    
+ *
  *******************************************************************************/
 package org.jacoco.examples;
 
@@ -41,7 +41,7 @@ public final class ExecutionDataServer {
 
 	/**
 	 * Start the server as a standalone program.
-	 * 
+	 *
 	 * @param args
 	 * @throws IOException
 	 */

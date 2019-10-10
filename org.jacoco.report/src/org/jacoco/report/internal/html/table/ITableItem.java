@@ -8,7 +8,7 @@
  *
  * Contributors:
  *    Marc R. Hoffmann - initial API and implementation
- *    
+ *
  *******************************************************************************/
 package org.jacoco.report.internal.html.table;
 
@@ -22,7 +22,7 @@ public interface ITableItem extends ILinkable {
 
 	/**
 	 * Returns the corresponding node data.
-	 * 
+	 *
 	 * @return node data
 	 */
 	ICoverageNode getNode();

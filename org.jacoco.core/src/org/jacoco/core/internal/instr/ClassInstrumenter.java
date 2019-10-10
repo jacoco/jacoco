@@ -8,7 +8,7 @@
  *
  * Contributors:
  *    Marc R. Hoffmann - initial API and implementation
- *    
+ *
  *******************************************************************************/
 package org.jacoco.core.internal.instr;
 
@@ -29,7 +29,7 @@ public class ClassInstrumenter extends ClassProbesVisitor {
 
 	/**
 	 * Emits a instrumented version of this class to the given class visitor.
-	 * 
+	 *
 	 * @param probeArrayStrategy
 	 *            this strategy will be used to access the probe array
 	 * @param cv

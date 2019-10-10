@@ -8,7 +8,7 @@
  *
  * Contributors:
  *    Marc R. Hoffmann - initial API and implementation
- *    
+ *
  *******************************************************************************/
 package org.jacoco.report;
 
@@ -30,7 +30,7 @@ public class FileMultiReportOutput implements IMultiReportOutput {
 
 	/**
 	 * Creates a new instance for document output in the given base directory.
-	 * 
+	 *
 	 * @param basedir
 	 *            base directory
 	 */

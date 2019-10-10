@@ -223,7 +223,7 @@ public class TryWithResourcesJavacFilterTest extends FilterTestBase {
 
 	/**
 	 * javac 7 and 8 for
-	 * 
+	 *
 	 * <pre>
 	 *     try (r0 = ...; r1 = ...) {
 	 *         return ...
@@ -540,7 +540,7 @@ public class TryWithResourcesJavacFilterTest extends FilterTestBase {
 
 	/**
 	 * javac 9 for
-	 * 
+	 *
 	 * <pre>
 	 *     try (r = new ...) {
 	 *         ...
@@ -706,7 +706,7 @@ public class TryWithResourcesJavacFilterTest extends FilterTestBase {
 
 	/**
 	 * javac 9 for
-	 * 
+	 *
 	 * <pre>
 	 *     try (r = new ...) {
 	 *       throw ...

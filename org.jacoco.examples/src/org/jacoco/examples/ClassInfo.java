@@ -8,7 +8,7 @@
  *
  * Contributors:
  *    Marc R. Hoffmann - initial API and implementation
- *    
+ *
  *******************************************************************************/
 package org.jacoco.examples;
 
@@ -32,7 +32,7 @@ public final class ClassInfo implements ICoverageVisitor {
 
 	/**
 	 * Creates a new example instance printing to the given stream.
-	 * 
+	 *
 	 * @param out
 	 *            stream for outputs
 	 */
@@ -43,7 +43,7 @@ public final class ClassInfo implements ICoverageVisitor {
 
 	/**
 	 * Run this example with the given parameters.
-	 * 
+	 *
 	 * @param args
 	 *            command line parameters
 	 * @throws IOException
@@ -72,7 +72,7 @@ public final class ClassInfo implements ICoverageVisitor {
 
 	/**
 	 * Entry point to run this examples as a Java application.
-	 * 
+	 *
 	 * @param args
 	 *            list of program arguments
 	 * @throws IOException

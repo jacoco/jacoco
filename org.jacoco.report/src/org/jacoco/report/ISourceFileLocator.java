@@ -8,7 +8,7 @@
  *
  * Contributors:
  *    Marc R. Hoffmann - initial API and implementation
- *    
+ *
  *******************************************************************************/
 package org.jacoco.report;
 
@@ -23,7 +23,7 @@ public interface ISourceFileLocator {
 	/**
 	 * Tries to locate the given source file and opens a reader with the
 	 * appropriate encoding.
-	 * 
+	 *
 	 * @param packageName
 	 *            VM name of the package
 	 * @param fileName
@@ -37,7 +37,7 @@ public interface ISourceFileLocator {
 
 	/**
 	 * Returns number of blank characters that represent a tab in source code.
-	 * 
+	 *
 	 * @return tab width as number of blanks
 	 */
 	int getTabWidth();

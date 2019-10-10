@@ -28,7 +28,7 @@ public final class Filters implements IFilter {
 
 	/**
 	 * Creates filter that combines all other filters.
-	 * 
+	 *
 	 * @return filter that combines all other filters
 	 */
 	public static IFilter all() {

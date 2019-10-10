@@ -8,7 +8,7 @@
  *
  * Contributors:
  *    Marc R. Hoffmann - initial API and implementation
- *    
+ *
  *******************************************************************************/
 package org.jacoco.agent.rt.internal;
 
@@ -52,7 +52,7 @@ public class CoverageTransformer implements ClassFileTransformer {
 
 	/**
 	 * New transformer with the given delegates.
-	 * 
+	 *
 	 * @param runtime
 	 *            coverage runtime
 	 * @param options
@@ -102,7 +102,7 @@ public class CoverageTransformer implements ClassFileTransformer {
 
 	/**
 	 * Checks whether this class should be instrumented.
-	 * 
+	 *
 	 * @param loader
 	 *            loader for the class
 	 * @param classname
@@ -137,7 +137,7 @@ public class CoverageTransformer implements ClassFileTransformer {
 	/**
 	 * Checks whether this protection domain is associated with a source
 	 * location.
-	 * 
+	 *
 	 * @param protectionDomain
 	 *            protection domain to check (or <code>null</code>)
 	 * @return <code>true</code> if a source location is defined

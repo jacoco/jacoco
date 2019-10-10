@@ -8,7 +8,7 @@
  *
  * Contributors:
  *    Marc R. Hoffmann - initial API and implementation
- *    
+ *
  *******************************************************************************/
 package org.jacoco.ant;
 
@@ -35,7 +35,7 @@ class AntFilesLocator extends InputStreamSourceFileLocator {
 
 	/**
 	 * Adds the given file resource as a potential source file.
-	 * 
+	 *
 	 * @param file
 	 *            file resource to add
 	 */

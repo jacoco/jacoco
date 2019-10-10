@@ -8,7 +8,7 @@
  *
  * Contributors:
  *    Marc R. Hoffmann - initial API and implementation
- *    
+ *
  *******************************************************************************/
 package org.jacoco.core.internal.instr;
 
@@ -43,7 +43,7 @@ class ProbeInserter extends MethodVisitor implements IProbeInserter {
 
 	/**
 	 * Creates a new {@link ProbeInserter}.
-	 * 
+	 *
 	 * @param access
 	 *            access flags of the adapted method
 	 * @param name

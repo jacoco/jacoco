@@ -56,7 +56,7 @@ public final class TryWithResourcesJavac11Filter implements IFilter {
 	 *         throw primaryExc;
 	 *     }
 	 * </pre>
-	 * 
+	 *
 	 * <code>null</code> check for resource is omitted when it is initialized
 	 * using <code>new</code>
 	 */

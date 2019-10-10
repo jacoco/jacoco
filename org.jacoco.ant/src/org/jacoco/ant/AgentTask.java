@@ -8,7 +8,7 @@
  *
  * Contributors:
  *    Brock Janiczak - initial API and implementation
- *    
+ *
  *******************************************************************************/
 package org.jacoco.ant;
 
@@ -24,7 +24,7 @@ public class AgentTask extends AbstractCoverageTask {
 
 	/**
 	 * Sets the name of the property to hold the agent JVM options
-	 * 
+	 *
 	 * @param property
 	 *            Name of the property to be populated
 	 */

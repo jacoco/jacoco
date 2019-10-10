@@ -44,7 +44,7 @@ public class MockServerSocket extends ServerSocket {
 	/**
 	 * Establishes a new mock connection. This method blocks until the other end
 	 * of the connection has been accepted.
-	 * 
+	 *
 	 * @return remote end of the mock connection
 	 */
 	public Socket connect() throws Exception {

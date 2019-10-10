@@ -8,7 +8,7 @@
  *
  * Contributors:
  *    Marc R. Hoffmann - initial API and implementation
- *    
+ *
  *******************************************************************************/
 package org.jacoco.core.internal.data;
 
@@ -17,7 +17,7 @@ import org.objectweb.asm.Opcodes;
 /**
  * CRC64 checksum calculator based on the polynom specified in ISO 3309. The
  * implementation is based on the following publications:
- * 
+ *
  * <ul>
  * <li>http://en.wikipedia.org/wiki/Cyclic_redundancy_check</li>
  * <li>http://www.geocities.com/SiliconValley/Pines/8659/crc.htm</li>

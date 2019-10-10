@@ -8,7 +8,7 @@
  *
  * Contributors:
  *    Marc R. Hoffmann - initial API and implementation
- *    
+ *
  *******************************************************************************/
 package org.jacoco.core.runtime;
 
@@ -31,7 +31,7 @@ public class RemoteControlWriter extends ExecutionDataWriter
 
 	/**
 	 * Creates a new writer based on the given output stream.
-	 * 
+	 *
 	 * @param output
 	 *            stream to write commands to
 	 * @throws IOException
@@ -44,7 +44,7 @@ public class RemoteControlWriter extends ExecutionDataWriter
 	/**
 	 * Sends a confirmation that a commands has been successfully executed and
 	 * the response is completed.
-	 * 
+	 *
 	 * @throws IOException
 	 *             in case of problems with the remote connection
 	 */

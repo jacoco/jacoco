@@ -8,7 +8,7 @@
  *
  * Contributors:
  *    Marc R. Hoffmann - initial API and implementation
- *    
+ *
  *******************************************************************************/
 package org.jacoco.core.internal.analysis;
 
@@ -47,7 +47,7 @@ public class ClassAnalyzer extends ClassProbesVisitor
 
 	/**
 	 * Creates a new analyzer that builds coverage data for a class.
-	 * 
+	 *
 	 * @param coverage
 	 *            coverage node for the analyzed class data
 	 * @param probes

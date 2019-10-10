@@ -8,7 +8,7 @@
  *
  * Contributors:
  *    Marc R. Hoffmann - initial API and implementation
- *    
+ *
  *******************************************************************************/
 package org.jacoco.core.test.perf;
 
@@ -42,7 +42,7 @@ public abstract class TimedScenario implements IPerfScenario {
 	/**
 	 * Runs the given subject several times and returns the minimum execution
 	 * time.
-	 * 
+	 *
 	 * @param subject
 	 * @return minimum execution time in nano seconds
 	 * @throws Exception

@@ -8,7 +8,7 @@
  *
  * Contributors:
  *    Marc R. Hoffmann - initial API and implementation
- *    
+ *
  *******************************************************************************/
 package org.jacoco.core.internal.analysis;
 
@@ -24,7 +24,7 @@ public class SourceFileCoverageImpl extends SourceNodeImpl
 
 	/**
 	 * Creates a source file data object with the given parameters.
-	 * 
+	 *
 	 * @param name
 	 *            name of the source file
 	 * @param packagename

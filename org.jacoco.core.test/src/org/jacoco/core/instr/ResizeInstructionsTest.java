@@ -132,7 +132,7 @@ public class ResizeInstructionsTest {
 	/**
 	 * Adds code that requires
 	 * {@link ClassWriter#getCommonSuperClass(String, String)}.
-	 * 
+	 *
 	 * <pre>
 	 * Object o = this;
 	 * while (true) {

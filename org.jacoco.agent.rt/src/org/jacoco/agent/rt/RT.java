@@ -8,7 +8,7 @@
  *
  * Contributors:
  *    Marc R. Hoffmann - initial API and implementation
- *    
+ *
  *******************************************************************************/
 package org.jacoco.agent.rt;
 
@@ -24,7 +24,7 @@ public final class RT {
 
 	/**
 	 * Returns the agent instance of the JaCoCo runtime in this JVM.
-	 * 
+	 *
 	 * @return agent instance
 	 * @throws IllegalStateException
 	 *             if no Agent has been started yet

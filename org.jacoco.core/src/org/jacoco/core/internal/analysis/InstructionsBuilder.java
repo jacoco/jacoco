@@ -8,7 +8,7 @@
  *
  * Contributors:
  *    Marc R. Hoffmann - initial API and implementation
- *    
+ *
  *******************************************************************************/
 package org.jacoco.core.internal.analysis;
 
@@ -47,7 +47,7 @@ class InstructionsBuilder {
 
 	/**
 	 * The labels which mark the subsequent instructions.
-	 * 
+	 *
 	 * Due to ASM issue #315745 there can be more than one label per instruction
 	 */
 	private final List<Label> currentLabel;
@@ -61,7 +61,7 @@ class InstructionsBuilder {
 	/**
 	 * Creates a new builder instance which can be used to analyze a single
 	 * method.
-	 * 
+	 *
 	 * @param probes
 	 *            probe array of the corresponding class used to determine the
 	 *            coverage status of every instruction.
@@ -127,7 +127,7 @@ class InstructionsBuilder {
 
 	/**
 	 * Adds a jump from the last added instruction.
-	 * 
+	 *
 	 * @param target
 	 *            jump target
 	 * @param branch
@@ -139,7 +139,7 @@ class InstructionsBuilder {
 
 	/**
 	 * Adds a new probe for the last instruction.
-	 * 
+	 *
 	 * @param probeId
 	 *            index in the probe array
 	 * @param branch
@@ -153,7 +153,7 @@ class InstructionsBuilder {
 	/**
 	 * Returns the status for all instructions of this method. This method must
 	 * be called exactly once after the instructions have been added.
-	 * 
+	 *
 	 * @return map of ASM instruction nodes to corresponding {@link Instruction}
 	 *         instances
 	 */

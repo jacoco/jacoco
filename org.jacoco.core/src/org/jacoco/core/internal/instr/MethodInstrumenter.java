@@ -8,7 +8,7 @@
  *
  * Contributors:
  *    Marc R. Hoffmann - initial API and implementation
- *    
+ *
  *******************************************************************************/
 package org.jacoco.core.internal.instr;
 
@@ -29,7 +29,7 @@ class MethodInstrumenter extends MethodProbesVisitor {
 
 	/**
 	 * Create a new instrumenter instance for the given method.
-	 * 
+	 *
 	 * @param mv
 	 *            next method visitor in the chain
 	 * @param probeInserter

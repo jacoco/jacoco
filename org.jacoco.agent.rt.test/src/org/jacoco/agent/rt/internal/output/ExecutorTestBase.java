@@ -44,7 +44,7 @@ public abstract class ExecutorTestBase {
 
 	/**
 	 * Asserts that the given future blocks.
-	 * 
+	 *
 	 * @param future
 	 *            future to test
 	 * @throws Exception

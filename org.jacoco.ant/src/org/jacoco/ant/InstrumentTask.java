@@ -8,7 +8,7 @@
  *
  * Contributors:
  *    Brock Janiczak - initial API and implementation
- *    
+ *
  *******************************************************************************/
 package org.jacoco.ant;
 
@@ -42,7 +42,7 @@ public class InstrumentTask extends Task {
 
 	/**
 	 * Sets the location of the instrumented classes.
-	 * 
+	 *
 	 * @param destdir
 	 *            destination folder for instrumented classes
 	 */
@@ -52,7 +52,7 @@ public class InstrumentTask extends Task {
 
 	/**
 	 * Sets whether signatures should be removed from JAR files.
-	 * 
+	 *
 	 * @param removesignatures
 	 *            <code>true</code> if signatures should be removed
 	 */
@@ -62,7 +62,7 @@ public class InstrumentTask extends Task {
 
 	/**
 	 * This task accepts any number of class file resources.
-	 * 
+	 *
 	 * @param resources
 	 *            Execution data resources
 	 */

@@ -8,7 +8,7 @@
  *
  * Contributors:
  *    Marc R. Hoffmann - initial API and implementation
- *    
+ *
  *******************************************************************************/
 package org.jacoco.core.tools;
 
@@ -44,7 +44,7 @@ public class ExecDumpClient {
 
 	/**
 	 * Specifies whether a dump should be requested
-	 * 
+	 *
 	 * @param dump
 	 *            <code>true</code> if a dump should be requested
 	 */
@@ -54,7 +54,7 @@ public class ExecDumpClient {
 
 	/**
 	 * Specifies whether execution data should be reset.
-	 * 
+	 *
 	 * @param reset
 	 *            <code>true</code> if execution data should be reset
 	 */
@@ -65,7 +65,7 @@ public class ExecDumpClient {
 	/**
 	 * Sets the number of retry attempts to connect to the target socket. This
 	 * allows to wait for a certain time until the target agent has initialized.
-	 * 
+	 *
 	 * @param retryCount
 	 *            number of retries
 	 */
@@ -75,7 +75,7 @@ public class ExecDumpClient {
 
 	/**
 	 * Sets the delay time before between connection attempts.
-	 * 
+	 *
 	 * @param retryDelay
 	 *            delay in milliseconds
 	 */
@@ -85,7 +85,7 @@ public class ExecDumpClient {
 
 	/**
 	 * Requests a dump from the given end-point.
-	 * 
+	 *
 	 * @param address
 	 *            IP-Address to connect to
 	 * @param port
@@ -101,7 +101,7 @@ public class ExecDumpClient {
 
 	/**
 	 * Requests a dump from the given end-point.
-	 * 
+	 *
 	 * @param address
 	 *            host name or IP-Address to connect to
 	 * @param port
@@ -163,7 +163,7 @@ public class ExecDumpClient {
 	/**
 	 * This method can be overwritten to get an event just before a connection
 	 * is made.
-	 * 
+	 *
 	 * @param address
 	 *            target address
 	 * @param port
@@ -177,7 +177,7 @@ public class ExecDumpClient {
 	/**
 	 * This method can be overwritten to get an event for connection failures
 	 * when another retry will be attempted.
-	 * 
+	 *
 	 * @param exception
 	 *            connection error
 	 */

@@ -8,7 +8,7 @@
  *
  * Contributors:
  *    Brock Janiczak - initial API and implementation
- *    
+ *
  *******************************************************************************/
 package org.jacoco.examples;
 
@@ -28,7 +28,7 @@ import org.jacoco.report.html.HTMLFormatter;
  * This example creates a HTML report for eclipse like projects based on a
  * single execution data store called jacoco.exec. The report contains no
  * grouping information.
- * 
+ *
  * The class files under test must be compiled with debug information, otherwise
  * source highlighting will not work.
  */
@@ -45,7 +45,7 @@ public class ReportGenerator {
 
 	/**
 	 * Create a new generator based for the given project.
-	 * 
+	 *
 	 * @param projectDirectory
 	 */
 	public ReportGenerator(final File projectDirectory) {
@@ -58,7 +58,7 @@ public class ReportGenerator {
 
 	/**
 	 * Create the report.
-	 * 
+	 *
 	 * @throws IOException
 	 */
 	public void create() throws IOException {
@@ -122,7 +122,7 @@ public class ReportGenerator {
 
 	/**
 	 * Starts the report generation process
-	 * 
+	 *
 	 * @param args
 	 *            Arguments to the application. This will be the location of the
 	 *            eclipse projects that will be used to generate reports for

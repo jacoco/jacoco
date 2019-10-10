@@ -55,7 +55,7 @@ public final class XmlDocumentation {
 
 	/**
 	 * Called during the build process.
-	 * 
+	 *
 	 * @param args
 	 *            exactly one argument expected with the target location
 	 * @throws IOException

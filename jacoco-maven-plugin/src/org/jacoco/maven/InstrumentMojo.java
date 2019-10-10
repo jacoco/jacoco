@@ -40,7 +40,7 @@ import org.jacoco.core.runtime.OfflineInstrumentationAccessGenerator;
  * this mode. Please consult <a href="offline.html">documentation</a> about
  * offline instrumentation before using this mode.
  * </p>
- * 
+ *
  * @since 0.6.2
  */
 @Mojo(name = "instrument", defaultPhase = LifecyclePhase.PROCESS_CLASSES, threadSafe = true)

@@ -8,7 +8,7 @@
  *
  * Contributors:
  *    Marc R. Hoffmann - initial API and implementation
- *    
+ *
  *******************************************************************************/
 package org.jacoco.report.internal.html.page;
 
@@ -20,7 +20,7 @@ import org.jacoco.report.internal.html.table.ITableItem;
 
 /**
  * Table items representing a source file which cannot be linked.
- * 
+ *
  */
 final class SourceFileItem implements ITableItem {
 

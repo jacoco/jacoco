@@ -8,7 +8,7 @@
  *
  * Contributors:
  *    Marc R. Hoffmann, somechris - initial API and implementation
- *    
+ *
  *******************************************************************************/
 package org.jacoco.core.data;
 
@@ -25,7 +25,7 @@ public class IncompatibleExecDataVersionException extends IOException {
 
 	/**
 	 * Creates a new exception to flag version mismatches in execution data.
-	 * 
+	 *
 	 * @param actualVersion
 	 *            version found in the exec data
 	 */
@@ -40,7 +40,7 @@ public class IncompatibleExecDataVersionException extends IOException {
 	/**
 	 * Gets the version expected in the execution data which can be read by this
 	 * version of JaCoCo.
-	 * 
+	 *
 	 * @return expected version in execution data
 	 */
 	public int getExpectedVersion() {
@@ -49,7 +49,7 @@ public class IncompatibleExecDataVersionException extends IOException {
 
 	/**
 	 * Gets the actual version found in the execution data.
-	 * 
+	 *
 	 * @return actual version in execution data
 	 */
 	public int getActualVersion() {

@@ -8,7 +8,7 @@
  *
  * Contributors:
  *    Marc R. Hoffmann - initial API and implementation
- *    
+ *
  *******************************************************************************/
 package org.jacoco.core.internal.analysis;
 
@@ -110,7 +110,7 @@ public abstract class LineImpl implements ILine {
 
 	/**
 	 * Adds the given counters to this line.
-	 * 
+	 *
 	 * @param instructions
 	 *            instructions to add
 	 * @param branches

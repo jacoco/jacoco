@@ -27,7 +27,7 @@ import org.apache.maven.plugins.annotations.ResolutionScope;
  * <li>bound to <code>pre-integration-test</code> phase</li>
  * <li>different <code>destFile</code></li>
  * </ul>
- * 
+ *
  * @since 0.6.4
  */
 @Mojo(name = "prepare-agent-integration", defaultPhase = LifecyclePhase.PRE_INTEGRATION_TEST, requiresDependencyResolution = ResolutionScope.RUNTIME, threadSafe = true)

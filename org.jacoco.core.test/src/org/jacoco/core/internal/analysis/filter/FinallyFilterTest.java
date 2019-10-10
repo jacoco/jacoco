@@ -240,7 +240,7 @@ public class FinallyFilterTest implements IFilterOutput {
 
 	/**
 	 * javac >= 1.8
-	 * 
+	 *
 	 * Probably related to https://bugs.openjdk.java.net/browse/JDK-7093325
 	 */
 	@Test

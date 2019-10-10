@@ -8,7 +8,7 @@
  *
  * Contributors:
  *    Marc R. Hoffmann - initial API and implementation
- *    
+ *
  *******************************************************************************/
 package org.jacoco.core.internal.data;
 
@@ -61,7 +61,7 @@ public class CRC64Test {
 
 	/**
 	 * Example taken from http://swissknife.sourceforge.net/docs/CRC64.html
-	 * 
+	 *
 	 * @throws UnsupportedEncodingException
 	 */
 	@Test
@@ -72,7 +72,7 @@ public class CRC64Test {
 
 	/**
 	 * Example generated with http://fsumfe.sourceforge.net/
-	 * 
+	 *
 	 * @throws UnsupportedEncodingException
 	 */
 	@Test
@@ -85,7 +85,7 @@ public class CRC64Test {
 
 	/**
 	 * Example generated with http://fsumfe.sourceforge.net/
-	 * 
+	 *
 	 * @throws UnsupportedEncodingException
 	 */
 	@Test

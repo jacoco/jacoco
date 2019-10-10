@@ -8,7 +8,7 @@
  *
  * Contributors:
  *    Marc R. Hoffmann - initial API and implementation
- *    
+ *
  *******************************************************************************/
 package org.jacoco.core.internal.analysis;
 
@@ -36,7 +36,7 @@ public class BundleCoverageImpl extends CoverageNodeImpl
 
 	/**
 	 * Creates a new instance of a bundle with the given name.
-	 * 
+	 *
 	 * @param name
 	 *            name of this bundle
 	 * @param packages
@@ -52,7 +52,7 @@ public class BundleCoverageImpl extends CoverageNodeImpl
 	/**
 	 * Creates a new instance of a bundle with the given name. The packages are
 	 * calculated from the given classes and source files.
-	 * 
+	 *
 	 * @param name
 	 *            name of this bundle
 	 * @param classes

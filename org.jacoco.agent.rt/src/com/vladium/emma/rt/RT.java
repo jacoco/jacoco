@@ -8,7 +8,7 @@
  *
  * Contributors:
  *    Marc R. Hoffmann - initial API and implementation
- *    
+ *
  *******************************************************************************/
 package com.vladium.emma.rt;
 
@@ -21,7 +21,7 @@ import java.io.OutputStream;
  * Compatibility layer for the EMMA runtime which allows to trigger dumps
  * through EMMA APIs. Note that even this class emulates an EMMA API the files
  * written are in JaCoCo execution data format.
- * 
+ *
  * @deprecated Use {@link org.jacoco.agent.rt.IAgent} instead.
  */
 @Deprecated
@@ -33,7 +33,7 @@ public final class RT {
 	/**
 	 * Writes the current execution data to the given file in JaCoCo execution
 	 * data format.
-	 * 
+	 *
 	 * @param outFile
 	 *            file to write execution data to
 	 * @param merge
@@ -59,7 +59,7 @@ public final class RT {
 	/**
 	 * Writes the current execution data to the given file in JaCoCo execution
 	 * data format. If the file already exists new data is appended.
-	 * 
+	 *
 	 * @param outFile
 	 *            file to write execution data to
 	 * @param stopDataCollection

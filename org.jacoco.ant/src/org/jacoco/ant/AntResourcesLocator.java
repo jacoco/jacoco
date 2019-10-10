@@ -9,7 +9,7 @@
  * Contributors:
  *    Marc R. Hoffmann - initial API and implementation
  *    Dominik Stadler - source folder support
- *    
+ *
  *******************************************************************************/
 package org.jacoco.ant;
 
@@ -45,7 +45,7 @@ class AntResourcesLocator extends MultiSourceFileLocator {
 
 	/**
 	 * Adds the given file or directory resource to the locator.
-	 * 
+	 *
 	 * @param resource
 	 *            resource to add
 	 */
@@ -68,7 +68,7 @@ class AntResourcesLocator extends MultiSourceFileLocator {
 
 	/**
 	 * Checks, whether resources have been added.
-	 * 
+	 *
 	 * @return <code>true</code>, if no resources have been added
 	 */
 	boolean isEmpty() {

@@ -8,7 +8,7 @@
  *
  * Contributors:
  *    Marc R. Hoffmann - initial API and implementation
- *    
+ *
  *******************************************************************************/
 package org.jacoco.core.internal.analysis;
 
@@ -31,7 +31,7 @@ public class PackageCoverageImpl extends CoverageNodeImpl
 
 	/**
 	 * Creates package node instance for a package with the given name.
-	 * 
+	 *
 	 * @param name
 	 *            vm name of the package
 	 * @param classes

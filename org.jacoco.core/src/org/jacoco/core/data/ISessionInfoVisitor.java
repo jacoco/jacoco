@@ -8,7 +8,7 @@
  *
  * Contributors:
  *    Marc R. Hoffmann - initial API and implementation
- *    
+ *
  *******************************************************************************/
 package org.jacoco.core.data;
 
@@ -22,7 +22,7 @@ public interface ISessionInfoVisitor {
 	/**
 	 * Provides session information for the subsequent execution data calls. In
 	 * case of merged sessions this method might be called multiple times.
-	 * 
+	 *
 	 * @param info
 	 *            session information
 	 */

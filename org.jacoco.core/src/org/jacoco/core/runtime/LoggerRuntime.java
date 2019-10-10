@@ -8,7 +8,7 @@
  *
  * Contributors:
  *    Marc R. Hoffmann - initial API and implementation
- *    
+ *
  *******************************************************************************/
 package org.jacoco.core.runtime;
 
@@ -25,7 +25,7 @@ import org.objectweb.asm.Opcodes;
  * This {@link IRuntime} implementation uses the Java logging API to report
  * coverage data.
  * <p>
- * 
+ *
  * The implementation uses a dedicated log channel. Instrumented classes call
  * {@link Logger#log(Level, String, Object[])} with the class identifier in the
  * first slot of the parameter array. The runtime implements a {@link Handler}

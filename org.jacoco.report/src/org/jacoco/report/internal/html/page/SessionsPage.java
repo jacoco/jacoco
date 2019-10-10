@@ -8,7 +8,7 @@
  *
  * Contributors:
  *    Marc R. Hoffmann - initial API and implementation
- *    
+ *
  *******************************************************************************/
 package org.jacoco.report.internal.html.page;
 
@@ -55,7 +55,7 @@ public class SessionsPage extends ReportPage {
 
 	/**
 	 * Creates a new page page to display session information.
-	 * 
+	 *
 	 * @param sessionInfos
 	 *            session info objects
 	 * @param executionData

@@ -8,7 +8,7 @@
  *
  * Contributors:
  *    Marc R. Hoffmann - initial API and implementation
- *    
+ *
  *******************************************************************************/
 package org.jacoco.core.test.perf;
 
@@ -20,7 +20,7 @@ public interface IPerfScenario {
 	/**
 	 * Runs the performance scenario and reports the result to the given
 	 * interface.
-	 * 
+	 *
 	 * @param output
 	 */
 	void run(IPerfOutput output) throws Exception;

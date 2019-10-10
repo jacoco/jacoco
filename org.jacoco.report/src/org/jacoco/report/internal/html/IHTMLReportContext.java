@@ -8,7 +8,7 @@
  *
  * Contributors:
  *    Marc R. Hoffmann - initial API and implementation
- *    
+ *
  *******************************************************************************/
 package org.jacoco.report.internal.html;
 
@@ -26,56 +26,56 @@ public interface IHTMLReportContext {
 
 	/**
 	 * Returns the static resources used in this report.
-	 * 
+	 *
 	 * @return static resources
 	 */
 	Resources getResources();
 
 	/**
 	 * Returns the language names call-back used in this report.
-	 * 
+	 *
 	 * @return language names
 	 */
 	ILanguageNames getLanguageNames();
 
 	/**
 	 * Returns a table for rendering coverage nodes.
-	 * 
+	 *
 	 * @return table for rendering
 	 */
 	Table getTable();
 
 	/**
 	 * Returns a string of textual information to include in every page footer.
-	 * 
+	 *
 	 * @return footer text or empty string
 	 */
 	String getFooterText();
 
 	/**
 	 * Returns the link to the sessions page.
-	 * 
+	 *
 	 * @return sessions page link
 	 */
 	ILinkable getSessionsPage();
 
 	/**
 	 * Returns the encoding of the generated HTML documents.
-	 * 
+	 *
 	 * @return encoding for generated HTML documents
 	 */
 	String getOutputEncoding();
 
 	/**
 	 * Returns the service for index updates.
-	 * 
+	 *
 	 * @return sevice for indes updates
 	 */
 	IIndexUpdate getIndexUpdate();
 
 	/**
 	 * Returns the locale used to format numbers and dates.
-	 * 
+	 *
 	 * @return locale for numbers and dates
 	 */
 	Locale getLocale();

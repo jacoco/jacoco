@@ -8,7 +8,7 @@
  *
  * Contributors:
  *    Marc R. Hoffmann - initial API and implementation
- *    
+ *
  *******************************************************************************/
 package org.jacoco.core.runtime;
 
@@ -33,7 +33,7 @@ public abstract class AbstractRuntime implements IRuntime {
 
 	/**
 	 * Creates a random session identifier.
-	 * 
+	 *
 	 * @return random session identifier
 	 */
 	public static String createRandomId() {
