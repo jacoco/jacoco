@@ -28,18 +28,20 @@
 			</java>
 		</jacoco:coverage>
 		
-		<waitfor maxwait="1" maxwaitunit="second" checkevery="10" checkeveryunit="millisecond">
+		<waitfor maxwait="60" maxwaitunit="second" checkevery="10" checkeveryunit="millisecond" timeoutproperty="timeout">
 			<socket server="localhost" port="6300"/>
 		</waitfor>
+		<fail message="Server startup timeout." if="timeout"/>
 	</target>
 
 	<target name="tearDown">
 		<touch file="${term.file}"/>
-		<waitfor maxwait="5" maxwaitunit="second" checkevery="10" checkeveryunit="millisecond">
+		<waitfor maxwait="60" maxwaitunit="second" checkevery="10" checkeveryunit="millisecond" timeoutproperty="timeout">
 			<not>
 				<socket server="localhost" port="6300"/>
 			</not>
 		</waitfor>
+		<fail message="Server shutdown timeout." if="timeout"/>
 		<delete dir="${temp.dir}" quiet="false" failonerror="true"/>
 	</target>
 	
