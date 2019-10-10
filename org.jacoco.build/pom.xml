@@ -571,6 +571,7 @@
               <version>4.12.0</version>
               <file>../org.jacoco.core/.settings/org.eclipse.jdt.core.prefs</file>
             </eclipse>
+            <trimTrailingWhitespace/>
           </java>
         </configuration>
         <executions>
