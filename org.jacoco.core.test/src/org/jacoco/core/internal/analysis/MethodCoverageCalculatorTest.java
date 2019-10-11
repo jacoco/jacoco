@@ -19,7 +19,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 
-import org.jacoco.core.analysis.ISourceFileCoverage;
+import org.jacoco.core.analysis.ISourceNode;
 import org.junit.Before;
 import org.junit.Test;
 import org.objectweb.asm.Opcodes;
@@ -205,15 +205,15 @@ public class MethodCoverageCalculatorTest {
 
 	@Test
 	public void should_work_without_lines() {
-		addInsn(ISourceFileCoverage.UNKNOWN_LINE, false);
-		addInsn(ISourceFileCoverage.UNKNOWN_LINE, false);
-		addInsn(ISourceFileCoverage.UNKNOWN_LINE, true);
+		addInsn(ISourceNode.UNKNOWN_LINE, false);
+		addInsn(ISourceNode.UNKNOWN_LINE, false);
+		addInsn(ISourceNode.UNKNOWN_LINE, true);
 
 		MethodCoverageCalculator c = new MethodCoverageCalculator(instructions);
 		c.calculate(coverage);
 
-		assertEquals(ISourceFileCoverage.UNKNOWN_LINE, coverage.getFirstLine());
-		assertEquals(ISourceFileCoverage.UNKNOWN_LINE, coverage.getLastLine());
+		assertEquals(ISourceNode.UNKNOWN_LINE, coverage.getFirstLine());
+		assertEquals(ISourceNode.UNKNOWN_LINE, coverage.getLastLine());
 		assertEquals(CounterImpl.getInstance(2, 1),
 				coverage.getInstructionCounter());
 	}

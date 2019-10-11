@@ -18,7 +18,6 @@ import java.util.Set;
 
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.tree.AbstractInsnNode;
-import org.objectweb.asm.tree.InsnNode;
 import org.objectweb.asm.tree.JumpInsnNode;
 import org.objectweb.asm.tree.LabelNode;
 import org.objectweb.asm.tree.LookupSwitchInsnNode;
@@ -45,7 +44,7 @@ public final class KotlinWhenFilter implements IFilter {
 
 	private static class Matcher extends AbstractMatcher {
 		void match(final AbstractInsnNode start, final IFilterOutput output) {
-			if (start.getType() != InsnNode.LABEL) {
+			if (start.getType() != AbstractInsnNode.LABEL) {
 				return;
 			}
 			cursor = start;

@@ -13,7 +13,6 @@
 package org.jacoco.report.internal.html.table;
 
 import java.io.IOException;
-import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.Comparator;
 import java.util.List;
@@ -114,7 +113,7 @@ public abstract class CounterColumn implements IColumnRenderer {
 	protected CounterColumn(final CounterEntity entity, final Locale locale,
 			final Comparator<ICoverageNode> comparator) {
 		this.entity = entity;
-		this.integerFormat = DecimalFormat.getIntegerInstance(locale);
+		this.integerFormat = NumberFormat.getIntegerInstance(locale);
 		this.comparator = new TableItemComparator(comparator);
 	}
 

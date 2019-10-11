@@ -16,7 +16,7 @@ import static org.junit.Assert.assertEquals;
 
 import java.util.Map;
 
-import org.jacoco.core.analysis.ISourceFileCoverage;
+import org.jacoco.core.analysis.ISourceNode;
 import org.jacoco.core.internal.flow.LabelInfo;
 import org.junit.Before;
 import org.junit.Test;
@@ -53,7 +53,7 @@ public class InstructionsBuilderTest {
 		builder.addInstruction(i4);
 
 		Map<AbstractInsnNode, Instruction> map = builder.getInstructions();
-		assertEquals(ISourceFileCoverage.UNKNOWN_LINE, map.get(i1).getLine());
+		assertEquals(ISourceNode.UNKNOWN_LINE, map.get(i1).getLine());
 		assertEquals(10, map.get(i2).getLine());
 		assertEquals(10, map.get(i3).getLine());
 		assertEquals(20, map.get(i4).getLine());

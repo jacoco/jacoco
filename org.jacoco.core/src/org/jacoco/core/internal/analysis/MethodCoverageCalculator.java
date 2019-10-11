@@ -20,7 +20,6 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
-import org.jacoco.core.analysis.ISourceFileCoverage;
 import org.jacoco.core.analysis.ISourceNode;
 import org.jacoco.core.internal.analysis.filter.IFilterOutput;
 import org.objectweb.asm.tree.AbstractInsnNode;
@@ -122,8 +121,8 @@ class MethodCoverageCalculator implements IFilterOutput {
 
 	private void ensureCapacity(final MethodCoverageImpl coverage) {
 		// Determine line range:
-		int firstLine = ISourceFileCoverage.UNKNOWN_LINE;
-		int lastLine = ISourceFileCoverage.UNKNOWN_LINE;
+		int firstLine = ISourceNode.UNKNOWN_LINE;
+		int lastLine = ISourceNode.UNKNOWN_LINE;
 		for (final Entry<AbstractInsnNode, Instruction> entry : instructions
 				.entrySet()) {
 			if (!ignored.contains(entry.getKey())) {
