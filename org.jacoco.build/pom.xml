@@ -579,6 +579,9 @@
                 <include>**/*.html</include>
                 <include>**/*.css</include>
                 <include>**/*.js</include>
+                <include>**/*.xml</include>
+                <include>**/*.xsl</include>
+                <include>**/*.dtd</include>
               </includes>
               <excludes>
                 <exclude>target/**</exclude>
