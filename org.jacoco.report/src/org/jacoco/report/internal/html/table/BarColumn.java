@@ -13,7 +13,6 @@
 package org.jacoco.report.internal.html.table;
 
 import java.io.IOException;
-import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.Comparator;
 import java.util.List;
@@ -55,7 +54,7 @@ public class BarColumn implements IColumnRenderer {
 	 */
 	public BarColumn(final CounterEntity entity, final Locale locale) {
 		this.entity = entity;
-		this.integerFormat = DecimalFormat.getIntegerInstance(locale);
+		this.integerFormat = NumberFormat.getIntegerInstance(locale);
 		this.comparator = new TableItemComparator(
 				CounterComparator.MISSEDITEMS.reverse().on(entity).second(
 						CounterComparator.TOTALITEMS.reverse().on(entity)));
