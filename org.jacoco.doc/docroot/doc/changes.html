@@ -280,7 +280,7 @@
   <li>JaCoCo now comes with a simple command line interface
       (GitHub <a href="https://github.com/jacoco/jacoco/issues/525">#525</a>).</li>
   <li>Limit configuration of Maven <code>check</code> goal and Ant
-      <code>check</code> element now also supports percentage values 
+      <code>check</code> element now also supports percentage values
       (GitHub <a href="https://github.com/jacoco/jacoco/issues/534">#534</a>).</li>
   <li>Manifests of JAR files now have <code>Automatic-Module-Name</code> for Java 9
       (GitHub <a href="https://github.com/jacoco/jacoco/issues/565">#565</a>).</li>
@@ -496,7 +496,7 @@
 <h3>API Changes</h3>
 <ul>
   <li>In case of incompatible execution data formats read from another JaCoCo
-  version <code>ExecutionDataReader.read()</code> now throws a 
+  version <code>ExecutionDataReader.read()</code> now throws a
   <code>IncompatibleExecDataVersionException</code>.</li>
 </ul>
 
@@ -628,7 +628,7 @@
       includes removal of the specific skip condition for packages e.g. POMs and
       instead checks existence of <tt>target/classes</tt> in appropriate goals
       (GitHub <a href="https://github.com/jacoco/jacoco/issues/171">#171</a>).</li>
-  <li>GitHub #44: (Regression) Agent Mojo should set empty property, if execution was skipped 
+  <li>GitHub #44: (Regression) Agent Mojo should set empty property, if execution was skipped
       (GitHub <a href="https://github.com/jacoco/jacoco/issues/192">#192</a>).</li>
 </ul>
 
@@ -954,7 +954,7 @@
       complexity (Trac #129).</li>
   <li>XML and CSV report includes new counter type <code>COMPLEXITY</code>
       (Trac #129).</li>
-  <li>New method <code>getTabWidth()</code> in callback interface 
+  <li>New method <code>getTabWidth()</code> in callback interface
       <code>ISourceFileLocator</code> instead of
       <code>HTMLReportFormatter.setTabWidth()</code> which has been removed.
       (Trac #152).</li>
@@ -1049,7 +1049,7 @@
 
 <h3>Fixed Bugs</h3>
 <ul>
-  <li>Better error message when multiple JaCoCo agents are specified 
+  <li>Better error message when multiple JaCoCo agents are specified
       (Track #103).</li>
   <li>Fixed potential NPE at shutdown when running agent in
       <code>tcpserver</code> mode (Track #117).</li>
@@ -1082,7 +1082,7 @@
   <li>Additional and modified methods in <code>IRuntime</code> to produce
       session information (Trac #88).</li>
   <li>Coverage element type <code>SESSION</code> removed (Trac #95).</li>
-  <li>Removed several internal APIs from package 
+  <li>Removed several internal APIs from package
       <code>org.jacoco.core.instr</code> used for class instrumentation.</li>
   <li>Renamed class <code>org.jacoco.report.csv.CsvFormatter</code> to
       <code>CSVFormatter</code> (upper case) for consistency with other
