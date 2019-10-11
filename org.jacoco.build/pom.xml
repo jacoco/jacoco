@@ -572,10 +572,12 @@
               <file>../org.jacoco.core/.settings/org.eclipse.jdt.core.prefs</file>
             </eclipse>
             <trimTrailingWhitespace/>
+            <endWithNewline/>
           </java>
           <formats>
             <format>
               <includes>
+                <include>**/*.properties</include>
                 <include>**/*.html</include>
                 <include>**/*.css</include>
                 <include>**/*.js</include>
@@ -588,6 +590,7 @@
               </excludes>
               <lineEndings>UNIX</lineEndings>
               <trimTrailingWhitespace/>
+              <endWithNewline/>
             </format>
           </formats>
         </configuration>
