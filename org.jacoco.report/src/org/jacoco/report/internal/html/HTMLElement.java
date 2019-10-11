@@ -144,6 +144,17 @@ public class HTMLElement extends XMLElement {
 	}
 
 	/**
+	 * Creates a 'h4' element.
+	 *
+	 * @return 'h4' element
+	 * @throws IOException
+	 *             in case of problems with the writer
+	 */
+	public HTMLElement h4() throws IOException {
+		return element("h4");
+	}
+
+	/**
 	 * Creates a 'p' element.
 	 *
 	 * @return 'p' element
@@ -211,6 +222,24 @@ public class HTMLElement extends XMLElement {
 		final HTMLElement div = element("div");
 		div.classattr(classattr);
 		return div;
+	}
+
+	/**
+	 * Creates a 'input' element.
+	 *
+	 * @param classattr
+	 *            value of the class attribute
+	 * @param idattr
+	 *            value of the id attribute
+	 * @return 'input' element
+	 * @throws IOException
+	 *             in case of problems with the writer
+	 */
+	public HTMLElement input(final String classattr, final String idattr) throws IOException {
+		final HTMLElement input = element("input");
+		input.classattr(classattr);
+		input.attr("id", idattr);
+		return input;
 	}
 
 	/**

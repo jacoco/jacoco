@@ -105,6 +105,10 @@ public abstract class ReportPage implements ILinkable {
 		infoLinks(navigation.span(Styles.INFO));
 		breadcrumb(navigation, folder);
 		body.h1().text(getLinkLabel());
+		HTMLElement filterInput = body.input("", "filter-input");
+		filterInput.attr("type", "text");
+		filterInput.attr("oninput", "filterTable('filter-input')");
+
 		content(body);
 		footer(body);
 	}
