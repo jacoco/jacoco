@@ -573,6 +573,20 @@
             </eclipse>
             <trimTrailingWhitespace/>
           </java>
+          <formats>
+            <format>
+              <includes>
+                <include>**/*.html</include>
+                <include>**/*.css</include>
+                <include>**/*.js</include>
+              </includes>
+              <excludes>
+                <exclude>target/**</exclude>
+              </excludes>
+              <lineEndings>UNIX</lineEndings>
+              <trimTrailingWhitespace/>
+            </format>
+          </formats>
         </configuration>
         <executions>
           <execution>
