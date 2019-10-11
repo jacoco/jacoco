@@ -123,4 +123,3 @@
 	</xsl:template>
 
 </xsl:stylesheet>
-

@@ -36,4 +36,3 @@ String buildLog = FileUtils.fileRead( new File( basedir, "build.log" ) );
 if ( buildLog.indexOf( argLine ) < 0 ) {
     throw new RuntimeException( "Original argLine was overwritten" );
 }
-
