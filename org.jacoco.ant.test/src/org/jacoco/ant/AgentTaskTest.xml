@@ -1,19 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<!-- 
+<!--
    Copyright (c) 2009, 2019 Mountainminds GmbH & Co. KG and Contributors
    This program and the accompanying materials are made available under
    the terms of the Eclipse Public License 2.0 which is available at
    http://www.eclipse.org/legal/epl-2.0
 
    SPDX-License-Identifier: EPL-2.0
-  
+
    Contributors:
       Brock Janiczak - initial API and implementation
 -->
 
 <project name="JaCoCo Agent Task Tests" xmlns:au="antlib:org.apache.ant.antunit" xmlns:jacoco="antlib:org.jacoco.ant">
-			
+
 	<target name="testCoverageAgent">
 		<jacoco:agent property="jacocoagent" append="false" destfile="test.exec"
 			exclClassLoader="EvilClassLoader" includes="org.example.*" excludes="*Test"
@@ -40,12 +40,12 @@
 		<property name="dump.dir" location="target/dump"/>
 		<au:assertPropertyContains name="jacocoagent" value="classdumpdir=${dump.dir}"/>
 	</target>
-	
+
 	<target name="testCoverageAgentDisabled">
 		<jacoco:agent enabled="false" property="jacocoagent" append="false" destfile="${basedir}/test.exec" exclClassLoader="sun.reflect.DelegatingClassLoader"/>
 		<au:assertPropertyEquals name="jacocoagent" value=""/>
 	</target>
-	
+
 	<target name="testCoverageAgentWithNoProperty">
 		<au:expectfailure expectedMessage="Property is mandatory">
 			<jacoco:agent/>
@@ -63,5 +63,5 @@
 		<jacoco:agent property="agent2"/>
 		<au:assertEquals expected="${agent1}" actual="${agent2}"/>
 	</target>
-	
+
 </project>

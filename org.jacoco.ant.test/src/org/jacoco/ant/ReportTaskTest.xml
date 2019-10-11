@@ -1,20 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<!-- 
+<!--
    Copyright (c) 2009, 2019 Mountainminds GmbH & Co. KG and Contributors
    This program and the accompanying materials are made available under
    the terms of the Eclipse Public License 2.0 which is available at
    http://www.eclipse.org/legal/epl-2.0
 
    SPDX-License-Identifier: EPL-2.0
-  
+
    Contributors:
       Brock Janiczak - initial API and implementation
       Dominik Stadler - source folder support
 -->
 
 <project name="JaCoCo Report Task Tests" xmlns:au="antlib:org.apache.ant.antunit" xmlns:jacoco="antlib:org.jacoco.ant">
-			
+
 	<target name="setUp">
 		<tempfile property="temp.dir" prefix="jacocoTest" destdir="${java.io.tmpdir}" />
 		<mkdir dir="${temp.dir}"/>
@@ -23,8 +23,8 @@
 	<target name="tearDown">
 		<delete dir="${temp.dir}" quiet="false" failonerror="true" />
 	</target>
-	
-	
+
+
 	<target name="testReportNoStructureElement">
 		<au:expectfailure expectedMessage="Group name must be supplied">
 			<jacoco:report/>
@@ -57,7 +57,7 @@
 			<structure name="root"/>
 		</jacoco:report>
 	</target>
-	
+
 	<target name="testReportInvalidExecutionDataFile">
 		<property name="doesnotexist.file" location="doesnotexist.exec"/>
 		<au:expectfailure expectedMessage="Unable to read execution data file ${doesnotexist.file}">
@@ -69,7 +69,7 @@
 			</jacoco:report>
 		</au:expectfailure>
 	</target>
-	
+
 	<target name="testReportWithSourceButNoDebug">
 		<java classname="org.jacoco.ant.RemoveDebugInfos" classpath="${java.class.path}" failonerror="true">
 			<arg value="${org.jacoco.ant.reportTaskTest.classes.dir}/org/jacoco/ant/TestTarget.class" />
@@ -87,7 +87,7 @@
 		</jacoco:report>
 		<au:assertLogContains level="warn" text="To enable source code annotation class files for bundle 'root' have to be compiled with debug information"/>
 	</target>
-	
+
 	<target name="testReportWithSourceDirButNoDebug">
 		<java classname="org.jacoco.ant.RemoveDebugInfos" classpath="${java.class.path}" failonerror="true">
 			<arg value="${org.jacoco.ant.reportTaskTest.classes.dir}/org/jacoco/ant/TestTarget.class" />
@@ -134,9 +134,9 @@
 		<au:assertLogContains level="warn" text="Execution data for class org/jacoco/ant/TestTarget does not match."/>
 	</target>
 
-	
+
 	<!-- HTML Output -->
-	
+
 	<target name="testReportHtmlNoDestdirOrDestfile">
 		<au:expectfailure expectedMessage="Destination directory or file must be supplied for html report">
 			<jacoco:report>
@@ -154,7 +154,7 @@
 			</jacoco:report>
 		</au:expectfailure>
 	</target>
-	
+
 	<target name="testReportHtmlWithClassFileSet">
 		<jacoco:report>
 			<structure name="Test">
@@ -166,10 +166,10 @@
 			</structure>
 			<html destdir="${temp.dir}"/>
 		</jacoco:report>
-		
+
 		<au:assertFileExists file="${temp.dir}/Group/org.jacoco.ant/TestTarget.html"/>
 	</target>
-	
+
 	<target name="testReportHtmlWithPath">
 		<jacoco:report>
 			<structure name="Test">
@@ -181,10 +181,10 @@
 			</structure>
 			<html destdir="${temp.dir}"/>
 		</jacoco:report>
-		
+
 		<au:assertFileExists file="${temp.dir}/Group/org.jacoco.ant/TestTarget.html"/>
 	</target>
-	
+
 	<target name="testReportHtmlWithJAR">
 		<property name="testReportHtmlWithJAR.jarfile" location="${temp.dir}/testclasses.jar"/>
 		<jar destfile="${testReportHtmlWithJAR.jarfile}">
@@ -200,16 +200,16 @@
 			</structure>
 			<html destdir="${temp.dir}"/>
 		</jacoco:report>
-		
+
 		<au:assertFileExists file="${temp.dir}/Group/org.jacoco.ant/TestTarget.html"/>
 	</target>
-	
+
 	<target name="testReportHtmlFooter">
 		<jacoco:report>
 			<structure name="Test"/>
 			<html footer="ExampleFooter" destdir="${temp.dir}"/>
 		</jacoco:report>
-		
+
 		<loadfile property="testReportHtmlFooter.content" srcfile="${temp.dir}/index.html" encoding="UTF-8"/>
 		<au:assertTrue message="Footer not included in ${testReportHtmlFooter.content}">
 			<contains string="${testReportHtmlFooter.content}" substring="ExampleFooter"/>
@@ -221,7 +221,7 @@
 			<structure name="Test"/>
 			<html encoding="UTF-16" destdir="${temp.dir}"/>
 		</jacoco:report>
-		
+
 		<loadfile property="testReportHtmlEncoding.content" srcfile="${temp.dir}/index.html" encoding="UTF-16"/>
 		<au:assertTrue message="Encoding not set in ${testReportHtmlEncoding.content}">
 			<contains string="${testReportHtmlEncoding.content}" substring="encoding=&quot;UTF-16&quot;"/>
@@ -240,7 +240,7 @@
 			</structure>
 			<html destdir="${temp.dir}"/>
 		</jacoco:report>
-		
+
 		<loadfile property="testReportHtmlTabWidth.content" srcfile="${temp.dir}/org.jacoco.ant/TestTarget.java.html"/>
 		<au:assertTrue message="Tab width not set in ${testReportHtmlTabWidth.content}">
 			<contains string="${testReportHtmlTabWidth.content}" substring="window['PR_TAB_WIDTH']=4"/>
@@ -259,7 +259,7 @@
 			</structure>
 			<html destdir="${temp.dir}"/>
 		</jacoco:report>
-		
+
 		<loadfile property="testReportHtmlTabWidth.content" srcfile="${temp.dir}/org.jacoco.ant/TestTarget.java.html"/>
 		<au:assertTrue message="Tab width not set in ${testReportHtmlTabWidth.content}">
 			<contains string="${testReportHtmlTabWidth.content}" substring="window['PR_TAB_WIDTH']=13"/>
@@ -281,7 +281,7 @@
 			</jacoco:report>
 		</au:expectfailure>
 	</target>
-			
+
 	<target name="testReportHtmlZipFile">
 		<jacoco:report>
 			<structure name="Test">
@@ -291,7 +291,7 @@
 			</structure>
 			<html destfile="${temp.dir}/report.zip"/>
 		</jacoco:report>
-		
+
 		<au:assertFileExists file="${temp.dir}/report.zip"/>
 	</target>
 
@@ -307,11 +307,11 @@
 			</structure>
 			<html destdir="${temp.dir}"/>
 		</jacoco:report>
-		
+
 		<au:assertFileExists file="${temp.dir}/org.jacoco.ant/TestTarget.java.html"/>
 		<au:assertFileExists file="${temp.dir}/default/TestTargetInDefault.java.html"/>
 	</target>
-	
+
 	<target name="testReportHtmlWithSourcesDir">
 		<jacoco:report>
 			<structure name="Test">
@@ -324,11 +324,11 @@
 			</structure>
 			<html destdir="${temp.dir}"/>
 		</jacoco:report>
-		
+
 		<au:assertFileExists file="${temp.dir}/org.jacoco.ant/TestTarget.java.html"/>
 		<au:assertFileExists file="${temp.dir}/default/TestTargetInDefault.java.html"/>
 	</target>
-	
+
 	<target name="testReportHtmlWithSourceEncoding">
 		<mkdir dir="${temp.dir}/org/jacoco/ant"/>
 		<echo file="${temp.dir}/org/jacoco/ant/TestTarget.java" encoding="UTF-16">Source Code</echo>
@@ -343,7 +343,7 @@
 			</structure>
 			<html destdir="${temp.dir}"/>
 		</jacoco:report>
-		
+
 		<loadfile property="testReportHtmlWithSourceEncoding.content" srcfile="${temp.dir}/org.jacoco.ant/TestTarget.java.html" encoding="UTF-8"/>
 		<au:assertTrue message="Report does not contain expected text.">
 			<contains string="${testReportHtmlWithSourceEncoding.content}" substring="Source Code"/>
@@ -362,13 +362,13 @@
 			</structure>
 			<html destdir="${temp.dir}" locale="gr"/>
 		</jacoco:report>
-		
+
 		<loadfile property="testReportHtmlLocale.content" srcfile="${temp.dir}/org.jacoco.ant/TestTarget.java.html" encoding="UTF-8"/>
 		<au:assertTrue message="Report does not contain expected language tag.">
 			<contains string="${testReportHtmlLocale.content}" substring="lang=&quot;gr&quot;"/>
 		</au:assertTrue>
 	</target>
-	
+
 	<!-- CSV Output -->
 
 	<target name="testReportCsvNoDestfile">
@@ -379,14 +379,14 @@
 			</jacoco:report>
 		</au:expectfailure>
 	</target>
-	
+
 	<target name="testReportCsvEncoding">
 		<property name="testReportCsvEncoding.destfile" location="${temp.dir}/report.csv"/>
 		<jacoco:report>
 			<structure name="Test"/>
 			<csv encoding="UTF-16" destfile="${testReportCsvEncoding.destfile}"/>
 		</jacoco:report>
-		
+
 		<au:assertFileExists file="${testReportCsvEncoding.destfile}"/>
 		<loadfile property="testReportCsvEncoding.content" srcfile="${testReportCsvEncoding.destfile}" encoding="UTF-16"/>
 		<au:assertTrue message="Encoding not set in ${testReportCsvEncoding.content}">
@@ -394,9 +394,9 @@
 		</au:assertTrue>
 	</target>
 
-	
+
 	<!-- XML Output -->
-	
+
 	<target name="testReportXmlNoDestfile">
 		<au:expectfailure expectedMessage="Destination file must be supplied for xml report">
 			<jacoco:report>
@@ -414,21 +414,21 @@
 			</jacoco:report>
 		</au:expectfailure>
 	</target>
-	
+
 	<target name="testReportXmlEncoding">
 		<property name="testReportXmlEncoding.destfile" location="${temp.dir}/report.xml"/>
 		<jacoco:report>
 			<structure name="Test"/>
 			<xml encoding="UTF-16" destfile="${testReportXmlEncoding.destfile}"/>
 		</jacoco:report>
-		
+
 		<au:assertFileExists file="${testReportXmlEncoding.destfile}"/>
 		<loadfile property="testReportXmlEncoding.content" srcfile="${testReportXmlEncoding.destfile}" encoding="UTF-16"/>
 		<au:assertTrue message="Encoding not set in ${testReportXmlEncoding.content}">
 			<contains string="${testReportXmlEncoding.content}" substring="encoding=&quot;UTF-16&quot;"/>
 		</au:assertTrue>
 	</target>
-	
+
 	<!-- Coverage Check -->
 
 	<target name="testReportCheckOk">
@@ -481,7 +481,7 @@
 		</au:expectfailure>
 		<au:assertLogContains level="error" text="given minimum ratio is 80, but must be between 0.0 and 1.0"/>
 	</target>
-	
+
 	<target name="testReportCheckSetPropertyOnly">
 		<jacoco:report>
 			<structure name="Test">
@@ -506,5 +506,5 @@
 		</au:assertTrue>
 	</target>
 
-	
+
 </project>

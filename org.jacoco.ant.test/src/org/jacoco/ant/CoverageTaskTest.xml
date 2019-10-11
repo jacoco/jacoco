@@ -1,19 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<!-- 
+<!--
    Copyright (c) 2009, 2019 Mountainminds GmbH & Co. KG and Contributors
    This program and the accompanying materials are made available under
    the terms of the Eclipse Public License 2.0 which is available at
    http://www.eclipse.org/legal/epl-2.0
 
    SPDX-License-Identifier: EPL-2.0
-  
+
    Contributors:
       Brock Janiczak - initial API and implementation
 -->
 
 <project name="JaCoCo Coverage Task Tests" xmlns:au="antlib:org.apache.ant.antunit" xmlns:jacoco="antlib:org.jacoco.ant">
-	
+
 	<target name="setUp">
 		<tempfile property="temp.dir" prefix="jacocoTest" destdir="${java.io.tmpdir}" />
 		<mkdir dir="${temp.dir}"/>
@@ -23,7 +23,7 @@
 	<target name="tearDown">
 		<delete dir="${temp.dir}" quiet="false" failonerror="true"/>
 	</target>
-			
+
 	<target name="testNoSubTasks">
 		<au:expectfailure expectedMessage="A child task must be supplied for the coverage task">
 			<jacoco:coverage/>
@@ -41,10 +41,10 @@
 				</java>
 			</jacoco:coverage>
 		</au:expectfailure>
-		
+
 		<au:assertLogDoesntContain text="Target executed"/>
 	</target>
-	
+
 	<target name="testInvalidSubTask">
 		<au:expectfailure expectedMessage="jar is not a valid child of the coverage task">
 			<jacoco:coverage>
@@ -59,7 +59,7 @@
 				<classpath path="${org.jacoco.ant.coverageTaskTest.classes.dir}"/>
 			</java>
 		</jacoco:coverage>
-		
+
 		<au:assertLogContains text="Enhancing java with coverage"/>
 		<au:assertFileExists file="${exec.file}"/>
 		<au:assertLogContains text="Target executed"/>
@@ -72,19 +72,19 @@
 				<classpath path="${org.jacoco.ant.coverageTaskTest.classes.dir}"/>
 			</java>
 		</jacoco:coverage>
-		
+
 		<au:assertLogContains text="Enhancing java with coverage"/>
 		<au:assertFileExists file="${exec.file}"/>
 		<au:assertLogContains text="Target executed"/>
 	</target>
-	
+
 	<target name="testCoverageOfForkedJavaDisabled">
 		<jacoco:coverage enabled="false" destfile="${exec.file}">
 			<java classname="org.jacoco.ant.TestTarget" fork="true" failonerror="true">
 				<classpath path="${org.jacoco.ant.coverageTaskTest.classes.dir}"/>
 			</java>
 		</jacoco:coverage>
-		
+
 		<au:assertLogDoesntContain text="Enhancing java with coverage"/>
 		<au:assertFileDoesntExist file="${exec.file}"/>
 		<au:assertLogContains text="Target executed"/>
@@ -98,7 +98,7 @@
 				</java>
 			</jacoco:coverage>
 		</au:expectfailure>
-		
+
 		<au:assertLogDoesntContain text="Target executed"/>
 	</target>
 
@@ -109,12 +109,12 @@
 				<test name="org.jacoco.ant.TestTarget" />
 			</junit>
 		</jacoco:coverage>
-		
+
 		<au:assertLogContains text="Enhancing junit with coverage"/>
 		<au:assertFileExists file="${exec.file}"/>
 		<au:assertLogContains text="Target executed"/>
 	</target>
-	
+
 	<target name="testCoverageOfForkedJUnitDisabled">
 		<jacoco:coverage enabled="false" destfile="${exec.file}">
 			<junit fork="true" haltonfailure="true" showoutput="true">
@@ -122,7 +122,7 @@
 				<test name="org.jacoco.ant.TestTarget" />
 			</junit>
 		</jacoco:coverage>
-		
+
 		<au:assertLogDoesntContain text="Enhancing junit with coverage"/>
 		<au:assertFileDoesntExist file="${exec.file}"/>
 		<au:assertLogContains text="Target executed"/>
@@ -137,7 +137,7 @@
 				</junit>
 			</jacoco:coverage>
 		</au:expectfailure>
-		
+
 		<au:assertLogDoesntContain text="Target executed"/>
 	</target>
 
@@ -147,11 +147,11 @@
 				<classpath path="${org.jacoco.ant.coverageTaskTest.classes.dir}"/>
 			</java>
 		</jacoco:coverage>
-		
+
 		<au:assertLogContains text="Enhancing java with coverage"/>
 		<au:assertFileExists file="${exec.file}"/>
 		<au:assertLogContains text="Target executed"/>
-		
+
 		<java classname="org.jacoco.ant.DumpExecClassNames" classpath="${java.class.path}" failonerror="true">
 			<arg value="${exec.file}" />
 		</java>
