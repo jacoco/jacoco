@@ -133,6 +133,8 @@ public class ReportAggregateMojo extends AbstractReportMojo {
 	void createReport(final IReportGroupVisitor visitor,
 			final ReportSupport support) throws IOException {
 		final IReportGroupVisitor group = visitor.visitGroup(title);
+		support.processProject(group, getProject().getArtifactId(),
+				getProject(), getIncludes(), getExcludes(), sourceEncoding);
 		for (final MavenProject dependency : findDependencies(
 				Artifact.SCOPE_COMPILE, Artifact.SCOPE_RUNTIME,
 				Artifact.SCOPE_PROVIDED)) {
