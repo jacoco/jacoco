@@ -12,15 +12,17 @@
  *******************************************************************************/
 package org.jacoco.agent.rt.internal;
 
+import java.lang.instrument.ClassFileTransformer;
 import java.lang.instrument.Instrumentation;
-import java.util.Collections;
-import java.util.Map;
-import java.util.Set;
 
+import org.jacoco.agent.rt.internal.CoverageTransformer.InstrumenterFactory;
+import org.jacoco.core.instr.Instrumenter;
+import org.jacoco.core.internal.instr.ClassInstrumenter;
+import org.jacoco.core.internal.instr.IProbeArrayStrategy;
 import org.jacoco.core.runtime.AgentOptions;
 import org.jacoco.core.runtime.IRuntime;
-import org.jacoco.core.runtime.InjectedClassRuntime;
-import org.jacoco.core.runtime.ModifiedSystemClassRuntime;
+import org.objectweb.asm.ClassVisitor;
+import org.pavelreich.saaremaa.tmetrics.TestMetricsCollector;
 
 /**
  * The agent which is referred as the <code>Premain-Class</code>. The agent
@@ -30,6 +32,76 @@ public final class PreMain {
 
 	private PreMain() {
 		// no instances
+	}
+
+	/**
+	 * TODO: move it to my own jagent. gather test metrics
+	 *
+	 * @author preich
+	 *
+	 */
+	private static final class TestMetricsGatheringPreMainBuilder
+			extends PremainBuilder {
+		final IExceptionLogger exceptionLogger = IExceptionLogger.SYSTEM_ERR;
+
+		@Override
+		protected Runnable createShutdownAction() {
+			return new Runnable() {
+
+				@Override
+				public void run() {
+					try {
+						TestMetricsCollector.dumpTestingArtifacts();
+					} catch (final Exception e) {
+						exceptionLogger.logExeption(e);
+					}
+				}
+
+			};
+		}
+
+		@Override
+		public ClassFileTransformer createTransformer(final IRuntime runtime,
+				final AgentOptions agentOptions) {
+			final InstrumenterFactory instrumenterFactory = new TracingInstrumenterFactory(
+					agentOptions, exceptionLogger);
+			final CoverageTransformer transformer = new CoverageTransformer(
+					runtime, agentOptions, exceptionLogger,
+					instrumenterFactory);
+			return transformer;
+		}
+	}
+
+	static class TracingInstrumenterFactory implements InstrumenterFactory {
+		private final String jacocoDestFileName;
+		private final IExceptionLogger exceptionLogger;
+
+		public TracingInstrumenterFactory(final AgentOptions agentOptions,
+				final IExceptionLogger exceptionLogger) {
+			this.jacocoDestFileName = agentOptions.getDestfile();
+			this.exceptionLogger = exceptionLogger;
+		}
+
+		@Override
+		public Instrumenter create(final IRuntime runtime) {
+			return new Instrumenter(runtime) {
+				@Override
+				protected ClassInstrumenter createClassInstrumenter(
+						final ClassVisitor writer,
+						final IProbeArrayStrategy strategy) {
+					final ClassVisitor visitor = chainVisitor(writer);
+					return super.createClassInstrumenter(visitor, strategy);
+				}
+
+			};
+		}
+
+		protected ClassVisitor chainVisitor(final ClassVisitor nextVisitor) {
+			final ClassVisitor visitor = TestMetricsCollector
+					.provideClassVisitor(nextVisitor, jacocoDestFileName,
+							exceptionLogger);
+			return visitor;
+		}
 	}
 
 	/**
@@ -45,71 +117,8 @@ public final class PreMain {
 	public static void premain(final String options, final Instrumentation inst)
 			throws Exception {
 
-		final AgentOptions agentOptions = new AgentOptions(options);
-
-		final Agent agent = Agent.getInstance(agentOptions);
-
-		final IRuntime runtime = createRuntime(inst);
-		runtime.startup(agent.getData());
-		inst.addTransformer(new CoverageTransformer(runtime, agentOptions,
-				IExceptionLogger.SYSTEM_ERR));
-	}
-
-	private static IRuntime createRuntime(final Instrumentation inst)
-			throws Exception {
-
-		if (redefineJavaBaseModule(inst)) {
-			return new InjectedClassRuntime(Object.class, "$JaCoCo");
-		}
-
-		return ModifiedSystemClassRuntime.createFor(inst,
-				"java/lang/UnknownError");
-	}
-
-	/**
-	 * Opens {@code java.base} module for {@link InjectedClassRuntime} when
-	 * executed on Java 9 JREs or higher.
-	 *
-	 * @return <code>true</code> when running on Java 9 or higher,
-	 *         <code>false</code> otherwise
-	 * @throws Exception
-	 *             if unable to open
-	 */
-	private static boolean redefineJavaBaseModule(
-			final Instrumentation instrumentation) throws Exception {
-		try {
-			Class.forName("java.lang.Module");
-		} catch (final ClassNotFoundException e) {
-			return false;
-		}
-
-		Instrumentation.class.getMethod("redefineModule", //
-				Class.forName("java.lang.Module"), //
-				Set.class, //
-				Map.class, //
-				Map.class, //
-				Set.class, //
-				Map.class //
-		).invoke(instrumentation, // instance
-				getModule(Object.class), // module
-				Collections.emptySet(), // extraReads
-				Collections.emptyMap(), // extraExports
-				Collections.singletonMap("java.lang",
-						Collections.singleton(
-								getModule(InjectedClassRuntime.class))), // extraOpens
-				Collections.emptySet(), // extraUses
-				Collections.emptyMap() // extraProvides
-		);
-		return true;
-	}
-
-	/**
-	 * @return {@code cls.getModule()}
-	 */
-	private static Object getModule(final Class<?> cls) throws Exception {
-		return Class.class //
-				.getMethod("getModule") //
-				.invoke(cls);
+		final PremainBuilder premainBuilder = new TestMetricsGatheringPreMainBuilder();
+		premainBuilder.premain(options, inst);
 	}
 
 }

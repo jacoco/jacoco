@@ -83,11 +83,24 @@ public class Instrumenter {
 		final IProbeArrayStrategy strategy = ProbeArrayStrategyFactory
 				.createFor(classId, reader, accessorGenerator);
 		final int version = InstrSupport.getMajorVersion(reader);
-		final ClassVisitor visitor = new ClassProbesAdapter(
-				new ClassInstrumenter(strategy, writer),
+		final ClassInstrumenter classInstrumenter = createClassInstrumenter(
+				writer, strategy);
+		final ClassVisitor visitor = new ClassProbesAdapter(classInstrumenter,
 				InstrSupport.needsFrames(version));
 		reader.accept(visitor, ClassReader.EXPAND_FRAMES);
 		return writer.toByteArray();
+	}
+
+	/**
+	 * override if necessary
+	 *
+	 * @param writer
+	 * @param strategy
+	 * @return
+	 */
+	protected ClassInstrumenter createClassInstrumenter(
+			final ClassVisitor writer, final IProbeArrayStrategy strategy) {
+		return new ClassInstrumenter(strategy, writer);
 	}
 
 	/**

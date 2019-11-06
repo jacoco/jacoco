@@ -44,17 +44,27 @@ public class Agent implements IAgent {
 	 * @param options
 	 *            options to configure the instance
 	 * @return global instance
+	 * @return runnable to run before agent.shutdown
+	 *
 	 * @throws Exception
 	 *             in case something cannot be initialized
 	 */
 	public static synchronized Agent getInstance(final AgentOptions options)
 			throws Exception {
+		return getInstance(options, null);
+	}
+
+	public static synchronized Agent getInstance(final AgentOptions options,
+			final Runnable shutdownAction) throws Exception {
 		if (singleton == null) {
 			final Agent agent = new Agent(options, IExceptionLogger.SYSTEM_ERR);
 			agent.startup();
 			Runtime.getRuntime().addShutdownHook(new Thread() {
 				@Override
 				public void run() {
+					if (shutdownAction != null) {
+						shutdownAction.run();
+					}
 					agent.shutdown();
 				}
 			});

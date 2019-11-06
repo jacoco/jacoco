@@ -62,7 +62,38 @@ public class CoverageTransformer implements ClassFileTransformer {
 	 */
 	public CoverageTransformer(final IRuntime runtime,
 			final AgentOptions options, final IExceptionLogger logger) {
-		this.instrumenter = new Instrumenter(runtime);
+		this(runtime, options, logger, new DefaultInstrumenterFactory());
+	}
+
+	static interface InstrumenterFactory {
+		Instrumenter create(IRuntime runtime);
+	}
+
+	static class DefaultInstrumenterFactory implements InstrumenterFactory {
+
+		@Override
+		public Instrumenter create(final IRuntime runtime) {
+			return new Instrumenter(runtime);
+		}
+
+	}
+
+	/**
+	 * New transformer with the given delegates.
+	 *
+	 * @param runtime
+	 *            coverage runtime
+	 * @param options
+	 *            configuration options for the generator
+	 * @param logger
+	 *            logger for exceptions during instrumentation
+	 * @param instrumenterFactory
+	 *            factory to create Instrumenter
+	 */
+	public CoverageTransformer(final IRuntime runtime,
+			final AgentOptions options, final IExceptionLogger logger,
+			final InstrumenterFactory instrumenterFactory) {
+		this.instrumenter = instrumenterFactory.create(runtime);
 		this.logger = logger;
 		// Class names will be reported in VM notation:
 		includes = new WildcardMatcher(toVMName(options.getIncludes()));
@@ -73,6 +104,7 @@ public class CoverageTransformer implements ClassFileTransformer {
 		inclNoLocationClasses = options.getInclNoLocationClasses();
 	}
 
+	@Override
 	public byte[] transform(final ClassLoader loader, final String classname,
 			final Class<?> classBeingRedefined,
 			final ProtectionDomain protectionDomain,
