@@ -16,6 +16,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
@@ -123,6 +124,15 @@ public class TestMetricsCollector {
 		jsonWriter.close();
 	}
 
+	/**
+	 * provide ClassVisitor that collects test metrics and delegates to
+	 * nextVisitor.
+	 *
+	 * @param nextVisitor
+	 * @param jacocoDestFilename
+	 * @param exceptionLogger
+	 * @return
+	 */
 	public static ClassVisitor provideClassVisitor(
 			final ClassVisitor nextVisitor, final String jacocoDestFilename,
 			final IExceptionLogger exceptionLogger) {
@@ -140,7 +150,7 @@ public class TestMetricsCollector {
 		return new TestObservingClassVisitor(nextVisitor);
 	}
 
-	protected static boolean isClassRelevant(final String ownerClassName) {
+	private static boolean isClassRelevant(final String ownerClassName) {
 		final String packageName = TestMetricsCollector.class.getPackage()
 				.getName();
 		final String replacedName = ownerClassName.replace('/', '.');
@@ -156,7 +166,8 @@ public class TestMetricsCollector {
 		}
 
 		public Document toDocument() {
-			final Document d = new Document("type", getClass().getName());
+			final Document d = new Document("type", getClass().getName())
+					.append("metricType", getClass().getSimpleName());
 			return d;
 		}
 
@@ -326,35 +337,34 @@ public class TestMetricsCollector {
 
 	static class TestObservingMethodVisitor extends MethodVisitor {
 
+		private static final Set<String> ASSERT_CLASSES = new HashSet<String>(
+				Arrays.asList("org.junit.Assert", "junit.framework.Assert"));
 		private final VisitClassRecord visitClassRecord;
 		private final VisitMethodRecord visitMethodRecord;
-		private final TestObservingClassVisitor prevVisitor;
 		private int currentLine;
 
 		public TestObservingMethodVisitor(
 				final VisitClassRecord visitClassRecord,
 				final VisitMethodRecord visitMethodRecord,
-				final TestObservingClassVisitor prevVisitor,
 				final MethodVisitor nextVisitor) {
 			super(ASM_VERSION, nextVisitor);
-			this.prevVisitor = prevVisitor;
 			this.visitClassRecord = visitClassRecord;
 			this.visitMethodRecord = visitMethodRecord;
 		}
 
 		@Override
-		public void visitMethodInsn(final int opcode,
-				final String ownerClassName, final String methodName,
-				final String descriptor, final boolean isInterface) {
+		public void visitMethodInsn(final int opcode, final String owner,
+				final String methodName, final String descriptor,
+				final boolean isInterface) {
 			printWriter.println(toString() + ". opcode: " + opcode + ", owner: "
-					+ ownerClassName + ", name: " + methodName);
+					+ owner + ", name: " + methodName);
 			// TODO: add hamcrest, etc.
-			if ("org.junit.Assert".equals(ownerClassName.replace('/', '.'))) {
+			final String ownerClassName = owner.replace('/', '.');
+			if (ASSERT_CLASSES.contains(ownerClassName)) {
 				occurences.add(new TAssert(getSourceLocation(),
 						new TargetLocation(ownerClassName, methodName)));
 			}
-			if ("org.mockito.Mockito"
-					.equals(ownerClassName.replace('/', '.'))) {
+			if ("org.mockito.Mockito".equals(ownerClassName)) {
 				occurences.add(new TMockOperation(getSourceLocation(),
 						new TargetLocation(ownerClassName, methodName)));
 			}
@@ -476,7 +486,7 @@ public class TestMetricsCollector {
 			final VisitMethodRecord visitMethodRecord = new VisitMethodRecord(
 					access, methodName, descriptor, signature, exceptions);
 			return new TestObservingMethodVisitor(visitClassRecord,
-					visitMethodRecord, this, nextVisitor);
+					visitMethodRecord, nextVisitor);
 		}
 
 	}
@@ -499,7 +509,6 @@ public class TestMetricsCollector {
 		public VisitClassRecord(final int version, final int access,
 				final String name, final String signature,
 				final String superName, final String[] interfaces) {
-			super();
 			this.version = version;
 			this.access = access;
 			this.name = name;
