@@ -68,4 +68,14 @@ public interface IAgent {
 	 */
 	void dump(boolean reset) throws IOException;
 
+	/**
+	 * Experimental: Returns the total number of executed probes.
+	 *
+	 * @param reset
+	 *            if <code>true</code> the current execution data is cleared
+	 *            afterwards
+	 * @return number of executed probes
+	 */
+	int getHitCount(boolean reset);
+
 }

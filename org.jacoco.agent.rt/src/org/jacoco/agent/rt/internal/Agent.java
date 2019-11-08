@@ -24,7 +24,11 @@ import org.jacoco.agent.rt.internal.output.NoneOutput;
 import org.jacoco.agent.rt.internal.output.TcpClientOutput;
 import org.jacoco.agent.rt.internal.output.TcpServerOutput;
 import org.jacoco.core.JaCoCo;
+import org.jacoco.core.data.ExecutionData;
 import org.jacoco.core.data.ExecutionDataWriter;
+import org.jacoco.core.data.IExecutionDataVisitor;
+import org.jacoco.core.data.ISessionInfoVisitor;
+import org.jacoco.core.data.SessionInfo;
 import org.jacoco.core.runtime.AbstractRuntime;
 import org.jacoco.core.runtime.AgentOptions;
 import org.jacoco.core.runtime.AgentOptions.OutputMode;
@@ -218,6 +222,30 @@ public class Agent implements IAgent {
 
 	public void dump(final boolean reset) throws IOException {
 		output.writeExecutionData(reset);
+	}
+
+	public int getHitCount(final boolean reset) {
+		final HitCounter counter = new HitCounter();
+		data.collect(counter, counter, reset);
+		return counter.count;
+	}
+
+	private static class HitCounter
+			implements IExecutionDataVisitor, ISessionInfoVisitor {
+
+		int count = 0;
+
+		public void visitClassExecution(final ExecutionData data) {
+			for (final boolean probe : data.getProbes()) {
+				if (probe) {
+					count++;
+				}
+			}
+		}
+
+		public void visitSessionInfo(final SessionInfo info) {
+		}
+
 	}
 
 }
