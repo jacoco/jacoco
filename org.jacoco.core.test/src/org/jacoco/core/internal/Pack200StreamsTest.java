@@ -14,6 +14,7 @@ package org.jacoco.core.internal;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 import java.io.ByteArrayInputStream;
@@ -31,6 +32,7 @@ import java.util.zip.ZipOutputStream;
 
 import org.jacoco.core.test.TargetLoader;
 import org.junit.Test;
+import org.junit.internal.AssumptionViolatedException;
 
 /**
  * Unit tests for {@link Pack200Streams}.
@@ -76,6 +78,24 @@ public class Pack200StreamsTest {
 	}
 
 	@Test
+	public void pack_should_throw_IOException_when_Pack200_not_available_in_JDK() {
+		try {
+			Class.forName("java.util.jar.Pack200");
+			throw new AssumptionViolatedException(
+					"this test requires JDK without Pack200");
+		} catch (ClassNotFoundException ignore) {
+		}
+
+		try {
+			Pack200Streams.pack(new byte[0], new ByteArrayOutputStream());
+			fail("expected exception");
+		} catch (IOException e) {
+			assertNull(e.getMessage());
+			assertTrue(e.getCause() instanceof ClassNotFoundException);
+		}
+	}
+
+	@Test
 	public void unpack_should_unpack() throws Exception {
 		ByteArrayOutputStream jarbuffer = new ByteArrayOutputStream();
 		ZipOutputStream zipout = new ZipOutputStream(jarbuffer);
@@ -108,6 +128,24 @@ public class Pack200StreamsTest {
 			fail("expected exception");
 		} catch (IOException e) {
 			assertEquals("fake broken input stream", e.getMessage());
+		}
+	}
+
+	@Test
+	public void unpack_should_throw_IOException_when_Pack200_not_available_in_JDK() {
+		try {
+			Class.forName("java.util.jar.Pack200");
+			throw new AssumptionViolatedException(
+					"this test requires JDK without Pack200");
+		} catch (ClassNotFoundException ignore) {
+		}
+
+		try {
+			Pack200Streams.unpack(new ByteArrayInputStream(new byte[0]));
+			fail("expected exception");
+		} catch (IOException e) {
+			assertNull(e.getMessage());
+			assertTrue(e.getCause() instanceof ClassNotFoundException);
 		}
 	}
 
