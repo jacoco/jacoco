@@ -31,13 +31,12 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
-import java.util.jar.JarInputStream;
-import java.util.jar.Pack200;
 import java.util.zip.GZIPOutputStream;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
 import org.jacoco.core.data.ExecutionDataStore;
+import org.jacoco.core.internal.Pack200Streams;
 import org.jacoco.core.internal.data.CRC64;
 import org.jacoco.core.test.TargetLoader;
 import org.junit.Before;
@@ -303,10 +302,7 @@ public class AnalyzerTest {
 
 		final ByteArrayOutputStream pack200buffer = new ByteArrayOutputStream();
 		GZIPOutputStream gzipOutput = new GZIPOutputStream(pack200buffer);
-		Pack200.newPacker()
-				.pack(new JarInputStream(
-						new ByteArrayInputStream(zipbuffer.toByteArray())),
-						gzipOutput);
+		Pack200Streams.pack(zipbuffer.toByteArray(), gzipOutput);
 		gzipOutput.finish();
 
 		final int count = analyzer.analyzeAll(

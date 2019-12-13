@@ -26,9 +26,6 @@ import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 import java.io.Serializable;
 import java.util.Arrays;
-import java.util.jar.JarInputStream;
-import java.util.jar.JarOutputStream;
-import java.util.jar.Pack200;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
 import java.util.zip.ZipEntry;
@@ -36,6 +33,7 @@ import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
 
 import org.jacoco.core.analysis.AnalyzerTest;
+import org.jacoco.core.internal.Pack200Streams;
 import org.jacoco.core.internal.data.CRC64;
 import org.jacoco.core.internal.instr.InstrSupport;
 import org.jacoco.core.runtime.IExecutionDataAccessorGenerator;
@@ -406,10 +404,7 @@ public class InstrumenterTest {
 
 		ByteArrayOutputStream pack200buffer = new ByteArrayOutputStream();
 		GZIPOutputStream gzipOutput = new GZIPOutputStream(pack200buffer);
-		Pack200.newPacker()
-				.pack(new JarInputStream(
-						new ByteArrayInputStream(jarbuffer.toByteArray())),
-						gzipOutput);
+		Pack200Streams.pack(jarbuffer.toByteArray(), gzipOutput);
 		gzipOutput.finish();
 
 		ByteArrayOutputStream out = new ByteArrayOutputStream();
@@ -417,15 +412,10 @@ public class InstrumenterTest {
 				new ByteArrayInputStream(pack200buffer.toByteArray()), out,
 				"Test");
 
-		jarbuffer.reset();
-		Pack200.newUnpacker()
-				.unpack(new GZIPInputStream(
-						new ByteArrayInputStream(out.toByteArray())),
-						new JarOutputStream(jarbuffer));
-
 		assertEquals(1, count);
 		ZipInputStream zipin = new ZipInputStream(
-				new ByteArrayInputStream(jarbuffer.toByteArray()));
+				Pack200Streams.unpack(new GZIPInputStream(
+						new ByteArrayInputStream(out.toByteArray()))));
 		assertEquals("Test.class", zipin.getNextEntry().getName());
 		assertNull(zipin.getNextEntry());
 	}
