@@ -73,7 +73,9 @@ public class Pack200StreamsTest {
 			Pack200Streams.pack(new byte[0], outputStream);
 			fail("expected exception");
 		} catch (IOException e) {
-			assertEquals("fake broken output stream", e.getMessage());
+			assertTrue(e.getCause() instanceof IOException);
+			assertEquals("fake broken output stream",
+					e.getCause().getMessage());
 		}
 	}
 
@@ -127,7 +129,8 @@ public class Pack200StreamsTest {
 			Pack200Streams.unpack(inputStream);
 			fail("expected exception");
 		} catch (IOException e) {
-			assertEquals("fake broken input stream", e.getMessage());
+			assertTrue(e.getCause() instanceof IOException);
+			assertEquals("fake broken input stream", e.getCause().getMessage());
 		}
 	}
 

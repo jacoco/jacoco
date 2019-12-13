@@ -18,9 +18,9 @@ import java.io.FilterInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.lang.reflect.InvocationTargetException;
 import java.util.jar.JarInputStream;
 import java.util.jar.JarOutputStream;
-import java.util.jar.Pack200;
 
 /**
  * Internal wrapper for the weird Pack200 Java API to allow usage with streams.
@@ -40,7 +40,22 @@ public final class Pack200Streams {
 			throws IOException {
 		final ByteArrayOutputStream buffer = new ByteArrayOutputStream();
 		final JarOutputStream jar = new JarOutputStream(buffer);
-		Pack200.newUnpacker().unpack(new NoCloseInput(input), jar);
+		try {
+			final Object unpacker = Class.forName("java.util.jar.Pack200")
+					.getMethod("newUnpacker").invoke(null);
+			Class.forName("java.util.jar.Pack200$Unpacker")
+					.getMethod("unpack", InputStream.class,
+							JarOutputStream.class)
+					.invoke(unpacker, new NoCloseInput(input), jar);
+		} catch (ClassNotFoundException e) {
+			throw newIOException(e);
+		} catch (NoSuchMethodException e) {
+			throw newIOException(e);
+		} catch (IllegalAccessException e) {
+			throw newIOException(e);
+		} catch (InvocationTargetException e) {
+			throw newIOException(e.getCause());
+		}
 		jar.finish();
 		return new ByteArrayInputStream(buffer.toByteArray());
 	}
@@ -59,7 +74,27 @@ public final class Pack200Streams {
 			throws IOException {
 		final JarInputStream jar = new JarInputStream(
 				new ByteArrayInputStream(source));
-		Pack200.newPacker().pack(jar, output);
+		try {
+			final Object packer = Class.forName("java.util.jar.Pack200")
+					.getMethod("newPacker").invoke(null);
+			Class.forName("java.util.jar.Pack200$Packer")
+					.getMethod("pack", JarInputStream.class, OutputStream.class)
+					.invoke(packer, jar, output);
+		} catch (ClassNotFoundException e) {
+			throw newIOException(e);
+		} catch (NoSuchMethodException e) {
+			throw newIOException(e);
+		} catch (IllegalAccessException e) {
+			throw newIOException(e);
+		} catch (InvocationTargetException e) {
+			throw newIOException(e.getCause());
+		}
+	}
+
+	private static IOException newIOException(final Throwable cause) {
+		final IOException exception = new IOException();
+		exception.initCause(cause);
+		return exception;
 	}
 
 	private static class NoCloseInput extends FilterInputStream {
