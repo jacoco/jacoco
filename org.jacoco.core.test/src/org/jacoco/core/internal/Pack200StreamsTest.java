@@ -25,7 +25,6 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.jar.JarInputStream;
 import java.util.jar.JarOutputStream;
-import java.util.jar.Pack200;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
@@ -39,7 +38,7 @@ import org.junit.Test;
 public class Pack200StreamsTest {
 
 	@Test
-	public void testPack() throws IOException {
+	public void pack_should_pack() throws Exception {
 		ByteArrayOutputStream jarbuffer = new ByteArrayOutputStream();
 		ZipOutputStream zipout = new ZipOutputStream(jarbuffer);
 		zipout.putNextEntry(new ZipEntry("Test.class"));
@@ -51,9 +50,13 @@ public class Pack200StreamsTest {
 				new NoCloseOutputStream(pack200buffer));
 
 		jarbuffer.reset();
-		Pack200.newUnpacker().unpack(
-				new ByteArrayInputStream(pack200buffer.toByteArray()),
-				new JarOutputStream(jarbuffer));
+		final Object unpacker = Class.forName("java.util.jar.Pack200")
+				.getMethod("newUnpacker").invoke(null);
+		Class.forName("java.util.jar.Pack200$Unpacker")
+				.getMethod("unpack", InputStream.class, JarOutputStream.class)
+				.invoke(unpacker,
+						new ByteArrayInputStream(pack200buffer.toByteArray()),
+						new JarOutputStream(jarbuffer));
 
 		ZipInputStream zipin = new ZipInputStream(
 				new ByteArrayInputStream(jarbuffer.toByteArray()));
@@ -73,7 +76,7 @@ public class Pack200StreamsTest {
 	}
 
 	@Test
-	public void testUnpack() throws IOException {
+	public void unpack_should_unpack() throws Exception {
 		ByteArrayOutputStream jarbuffer = new ByteArrayOutputStream();
 		ZipOutputStream zipout = new ZipOutputStream(jarbuffer);
 		zipout.putNextEntry(new ZipEntry("Test.class"));
@@ -81,8 +84,11 @@ public class Pack200StreamsTest {
 		zipout.finish();
 
 		ByteArrayOutputStream pack200buffer = new ByteArrayOutputStream();
-		Pack200.newPacker()
-				.pack(new JarInputStream(
+		final Object packer = Class.forName("java.util.jar.Pack200")
+				.getMethod("newPacker").invoke(null);
+		Class.forName("java.util.jar.Pack200$Packer")
+				.getMethod("pack", JarInputStream.class, OutputStream.class)
+				.invoke(packer, new JarInputStream(
 						new ByteArrayInputStream(jarbuffer.toByteArray())),
 						pack200buffer);
 
