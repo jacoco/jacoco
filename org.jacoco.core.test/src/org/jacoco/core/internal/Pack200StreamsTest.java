@@ -62,6 +62,17 @@ public class Pack200StreamsTest {
 	}
 
 	@Test
+	public void pack_should_throw_IOException_when_can_not_write_to_OutputStream() {
+		final OutputStream outputStream = new BrokenOutputStream();
+		try {
+			Pack200Streams.pack(new byte[0], outputStream);
+			fail("expected exception");
+		} catch (IOException e) {
+			assertEquals("fake broken output stream", e.getMessage());
+		}
+	}
+
+	@Test
 	public void testUnpack() throws IOException {
 		ByteArrayOutputStream jarbuffer = new ByteArrayOutputStream();
 		ZipOutputStream zipout = new ZipOutputStream(jarbuffer);
@@ -83,6 +94,17 @@ public class Pack200StreamsTest {
 		assertNull(zipin.getNextEntry());
 	}
 
+	@Test
+	public void unpack_should_throw_IOException_when_can_not_read_from_InputStream() {
+		final InputStream inputStream = new BrokenInputStream();
+		try {
+			Pack200Streams.unpack(inputStream);
+			fail("expected exception");
+		} catch (IOException e) {
+			assertEquals("fake broken input stream", e.getMessage());
+		}
+	}
+
 	static class NoCloseInputStream extends FilterInputStream {
 		public NoCloseInputStream(InputStream in) {
 			super(in);
@@ -102,6 +124,20 @@ public class Pack200StreamsTest {
 		@Override
 		public void close() throws IOException {
 			fail();
+		}
+	}
+
+	private static class BrokenInputStream extends InputStream {
+		@Override
+		public int read() throws IOException {
+			throw new IOException("fake broken input stream");
+		}
+	}
+
+	private static class BrokenOutputStream extends OutputStream {
+		@Override
+		public void write(int b) throws IOException {
+			throw new IOException("fake broken output stream");
 		}
 	}
 
