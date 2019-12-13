@@ -42,6 +42,7 @@ import org.jacoco.core.test.TargetLoader;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
+import org.junit.internal.AssumptionViolatedException;
 import org.junit.rules.TemporaryFolder;
 import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.Opcodes;
@@ -293,6 +294,13 @@ public class AnalyzerTest {
 
 	@Test
 	public void testAnalyzeAll_Pack200() throws IOException {
+		try {
+			Class.forName("java.util.jar.Pack200");
+		} catch (ClassNotFoundException e) {
+			throw new AssumptionViolatedException(
+					"this test requires JDK with Pack200");
+		}
+
 		final ByteArrayOutputStream zipbuffer = new ByteArrayOutputStream();
 		final ZipOutputStream zip = new ZipOutputStream(zipbuffer);
 		zip.putNextEntry(

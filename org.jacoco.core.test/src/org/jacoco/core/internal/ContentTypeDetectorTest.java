@@ -25,6 +25,7 @@ import java.util.zip.ZipOutputStream;
 
 import org.jacoco.core.test.TargetLoader;
 import org.junit.Test;
+import org.junit.internal.AssumptionViolatedException;
 
 /**
  * Unit tests for {@link ContentTypeDetector}.
@@ -216,6 +217,13 @@ public class ContentTypeDetectorTest {
 
 	@Test
 	public void testPack200File() throws IOException {
+		try {
+			Class.forName("java.util.jar.Pack200");
+		} catch (ClassNotFoundException e) {
+			throw new AssumptionViolatedException(
+					"this test requires JDK with Pack200");
+		}
+
 		final ByteArrayOutputStream zipbuffer = new ByteArrayOutputStream();
 		final ZipOutputStream zip = new ZipOutputStream(zipbuffer);
 		zip.putNextEntry(new ZipEntry("hello.txt"));

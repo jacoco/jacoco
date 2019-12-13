@@ -41,6 +41,13 @@ public class Pack200StreamsTest {
 
 	@Test
 	public void pack_should_pack() throws Exception {
+		try {
+			Class.forName("java.util.jar.Pack200");
+		} catch (ClassNotFoundException e) {
+			throw new AssumptionViolatedException(
+					"this test requires JDK with Pack200");
+		}
+
 		ByteArrayOutputStream jarbuffer = new ByteArrayOutputStream();
 		ZipOutputStream zipout = new ZipOutputStream(jarbuffer);
 		zipout.putNextEntry(new ZipEntry("Test.class"));
@@ -68,6 +75,13 @@ public class Pack200StreamsTest {
 
 	@Test
 	public void pack_should_throw_IOException_when_can_not_write_to_OutputStream() {
+		try {
+			Class.forName("java.util.jar.Pack200");
+		} catch (ClassNotFoundException e) {
+			throw new AssumptionViolatedException(
+					"this test requires JDK with Pack200");
+		}
+
 		final OutputStream outputStream = new BrokenOutputStream();
 		try {
 			Pack200Streams.pack(new byte[0], outputStream);
@@ -99,6 +113,13 @@ public class Pack200StreamsTest {
 
 	@Test
 	public void unpack_should_unpack() throws Exception {
+		try {
+			Class.forName("java.util.jar.Pack200");
+		} catch (ClassNotFoundException e) {
+			throw new AssumptionViolatedException(
+					"this test requires JDK with Pack200");
+		}
+
 		ByteArrayOutputStream jarbuffer = new ByteArrayOutputStream();
 		ZipOutputStream zipout = new ZipOutputStream(jarbuffer);
 		zipout.putNextEntry(new ZipEntry("Test.class"));
@@ -124,6 +145,13 @@ public class Pack200StreamsTest {
 
 	@Test
 	public void unpack_should_throw_IOException_when_can_not_read_from_InputStream() {
+		try {
+			Class.forName("java.util.jar.Pack200");
+		} catch (ClassNotFoundException e) {
+			throw new AssumptionViolatedException(
+					"this test requires JDK with Pack200");
+		}
+
 		final InputStream inputStream = new BrokenInputStream();
 		try {
 			Pack200Streams.unpack(inputStream);

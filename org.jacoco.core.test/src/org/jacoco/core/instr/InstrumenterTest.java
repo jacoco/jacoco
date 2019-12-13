@@ -40,6 +40,7 @@ import org.jacoco.core.runtime.IExecutionDataAccessorGenerator;
 import org.jacoco.core.test.TargetLoader;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.internal.AssumptionViolatedException;
 import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
@@ -396,6 +397,13 @@ public class InstrumenterTest {
 
 	@Test
 	public void testInstrumentAll_Pack200() throws IOException {
+		try {
+			Class.forName("java.util.jar.Pack200");
+		} catch (ClassNotFoundException e) {
+			throw new AssumptionViolatedException(
+					"this test requires JDK with Pack200");
+		}
+
 		ByteArrayOutputStream jarbuffer = new ByteArrayOutputStream();
 		ZipOutputStream zipout = new ZipOutputStream(jarbuffer);
 		zipout.putNextEntry(new ZipEntry("Test.class"));
