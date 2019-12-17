@@ -36,6 +36,7 @@ public final class Pack200Streams {
 	 * @throws IOException
 	 *             in case of errors with the streams
 	 */
+	@SuppressWarnings("resource")
 	public static InputStream unpack(final InputStream input)
 			throws IOException {
 		final ByteArrayOutputStream buffer = new ByteArrayOutputStream();
@@ -70,6 +71,7 @@ public final class Pack200Streams {
 	 * @throws IOException
 	 *             in case of errors with the streams
 	 */
+	@SuppressWarnings("resource")
 	public static void pack(final byte[] source, final OutputStream output)
 			throws IOException {
 		final JarInputStream jar = new JarInputStream(
