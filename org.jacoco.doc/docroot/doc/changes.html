@@ -20,6 +20,13 @@
 
 <h2>Snapshot Build @qualified.bundle.version@ (@build.date@)</h2>
 
+<h3>Non-functional Changes</h3>
+<ul>
+  <li>Support for Pack200 was removed in JDK 14. JaCoCo will now throw a detailed
+      exception when Pack200 archives are processed with the latest JDKs
+      (GitHub <a href="https://github.com/jacoco/jacoco/issues/984">#984</a>).</li>
+</ul>
+
 <h2>Release 0.8.5 (2019/10/11)</h2>
 
 <h3>New Features</h3>

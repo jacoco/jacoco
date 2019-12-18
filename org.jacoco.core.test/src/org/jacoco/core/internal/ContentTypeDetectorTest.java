@@ -19,14 +19,13 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.util.jar.JarInputStream;
-import java.util.jar.Pack200;
 import java.util.zip.GZIPOutputStream;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
 import org.jacoco.core.test.TargetLoader;
 import org.junit.Test;
+import org.junit.internal.AssumptionViolatedException;
 
 /**
  * Unit tests for {@link ContentTypeDetector}.
@@ -218,6 +217,13 @@ public class ContentTypeDetectorTest {
 
 	@Test
 	public void testPack200File() throws IOException {
+		try {
+			Class.forName("java.util.jar.Pack200");
+		} catch (ClassNotFoundException e) {
+			throw new AssumptionViolatedException(
+					"this test requires JDK with Pack200");
+		}
+
 		final ByteArrayOutputStream zipbuffer = new ByteArrayOutputStream();
 		final ZipOutputStream zip = new ZipOutputStream(zipbuffer);
 		zip.putNextEntry(new ZipEntry("hello.txt"));
@@ -225,10 +231,7 @@ public class ContentTypeDetectorTest {
 		zip.close();
 
 		final ByteArrayOutputStream pack200buffer = new ByteArrayOutputStream();
-		Pack200.newPacker()
-				.pack(new JarInputStream(
-						new ByteArrayInputStream(zipbuffer.toByteArray())),
-						pack200buffer);
+		Pack200Streams.pack(zipbuffer.toByteArray(), pack200buffer);
 		initData(pack200buffer.toByteArray());
 		assertEquals(ContentTypeDetector.PACK200FILE, detector.getType());
 		assertContent();
