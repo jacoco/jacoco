@@ -12,6 +12,10 @@
  *******************************************************************************/
 package org.jacoco.core.test.validation.java14.targets;
 
+import static org.jacoco.core.test.validation.targets.Stubs.Enum.A;
+import static org.jacoco.core.test.validation.targets.Stubs.Enum.B;
+import static org.jacoco.core.test.validation.targets.Stubs.Enum.C;
+import static org.jacoco.core.test.validation.targets.Stubs.enumA;
 import static org.jacoco.core.test.validation.targets.Stubs.i1;
 import static org.jacoco.core.test.validation.targets.Stubs.i2;
 import static org.jacoco.core.test.validation.targets.Stubs.nop;
@@ -23,14 +27,15 @@ public class SwitchExpressionsTarget {
 
 	public static void main(String[] args) {
 
-		switchExpressionsWithArrows();
-		multiValueSwitchExpressionsWithArrows();
-		switchExpressionsWithArrowsAndYield();
-		switchExpressionsWithYield();
+		switchExpressionWithArrows();
+		multiValueSwitchExpressionWithArrows();
+		switchExpressionWithArrowsAndYield();
+		switchExpressionWithYield();
+		exhaustiveSwitchExpression();
 
 	}
 
-	private static void switchExpressionsWithArrows() {
+	private static void switchExpressionWithArrows() {
 
 		nop(switch (i2()) { // assertFullyCovered(3, 1)
 		case 1 -> i1(); // assertNotCovered()
@@ -41,7 +46,7 @@ public class SwitchExpressionsTarget {
 
 	}
 
-	private static void multiValueSwitchExpressionsWithArrows() {
+	private static void multiValueSwitchExpressionWithArrows() {
 
 		nop(switch (i2()) { // assertFullyCovered(2, 1)
 		case 1, 2 -> i1(); // assertFullyCovered()
@@ -51,7 +56,7 @@ public class SwitchExpressionsTarget {
 
 	}
 
-	private static void switchExpressionsWithArrowsAndYield() {
+	private static void switchExpressionWithArrowsAndYield() {
 
 		nop(switch (i2()) { // assertFullyCovered(3, 1)
 		case 1 -> {
@@ -74,7 +79,7 @@ public class SwitchExpressionsTarget {
 
 	}
 
-	private static void switchExpressionsWithYield() {
+	private static void switchExpressionWithYield() {
 
 		nop(switch (i2()) { // assertFullyCovered(3, 1)
 		case 1:
@@ -89,6 +94,16 @@ public class SwitchExpressionsTarget {
 		default:
 			nop(); // assertNotCovered()
 			yield i1(); // assertNotCovered()
+		});
+
+	}
+
+	private static void exhaustiveSwitchExpression() {
+
+		nop(switch (enumA()) { // assertPartlyCovered(3, 1)
+		case A -> i1(); // assertFullyCovered()
+		case B -> i1(); // assertNotCovered()
+		case C -> i1(); // assertNotCovered()
 		});
 
 	}

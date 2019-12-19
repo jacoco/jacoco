@@ -40,6 +40,13 @@ public class Stubs {
 	}
 
 	/**
+	 * Enum stub.
+	 */
+	public static enum Enum {
+		A, B, C
+	}
+
+	/**
 	 * Dummy method.
 	 */
 	public static void nop() {
@@ -96,6 +103,13 @@ public class Stubs {
 	 */
 	public static int i3() {
 		return 3;
+	}
+
+	/**
+	 * @return always <code>A</code>
+	 */
+	public static Enum enumA() {
+		return Enum.A;
 	}
 
 	/**
