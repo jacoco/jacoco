@@ -7,7 +7,7 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
- *    Evgeny Mandrikov - initial API and implementation
+ *    Marc R. Hoffmann - initial API and implementation
  *
  *******************************************************************************/
 package org.jacoco.core.test.validation.java14;
