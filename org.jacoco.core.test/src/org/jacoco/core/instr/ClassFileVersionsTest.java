@@ -124,7 +124,7 @@ public class ClassFileVersionsTest {
 
 	@Test
 	public void test_14() throws IOException {
-		testVersion(V13 + 1, true);
+		testVersion(V14, true);
 	}
 
 	@Test
