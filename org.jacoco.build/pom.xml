@@ -807,7 +807,7 @@
     </profile>
 
     <!--
-    Following profile enables compilation into bytecode version 13
+    Following profiles enable compilation into bytecode version 13
     when requested "bytecode.version" greater than 13,
     because this is maximum that can be processed by
     maven-shade-plugin and maven-plugin-plugin.
@@ -819,6 +819,20 @@
         <property>
           <name>bytecode.version</name>
           <value>14</value>
+        </property>
+      </activation>
+      <properties>
+        <maven.compiler.source>13</maven.compiler.source>
+        <maven.compiler.target>13</maven.compiler.target>
+      </properties>
+    </profile>
+
+    <profile>
+      <id>java15-bytecode</id>
+      <activation>
+        <property>
+          <name>bytecode.version</name>
+          <value>15</value>
         </property>
       </activation>
       <properties>
