@@ -47,6 +47,31 @@ public class InstrSupportTest {
 	}
 
 	@Test
+	public void classReaderFor_should_read_java_15_class() {
+		final byte[] bytes = createJava15Class();
+
+		final ClassReader classReader = InstrSupport.classReaderFor(bytes);
+
+		classReader.accept(new ClassVisitor(InstrSupport.ASM_API_VERSION) {
+			@Override
+			public void visit(final int version, final int access,
+					final String name, final String signature,
+					final String superName, final String[] interfaces) {
+				assertEquals(Opcodes.V14 + 1, version);
+			}
+		}, 0);
+
+		assertArrayEquals(createJava15Class(), bytes);
+	}
+
+	private static byte[] createJava15Class() {
+		final ClassWriter cw = new ClassWriter(0);
+		cw.visit(Opcodes.V14 + 1, 0, "Foo", null, "java/lang/Object", null);
+		cw.visitEnd();
+		return cw.toByteArray();
+	}
+
+	@Test
 	public void classReaderFor_should_read_java_14_class() {
 		final byte[] bytes = createJava14Class();
 
@@ -130,6 +155,7 @@ public class InstrSupportTest {
 		assertTrue(InstrSupport.needsFrames(Opcodes.V12));
 		assertTrue(InstrSupport.needsFrames(Opcodes.V13));
 		assertTrue(InstrSupport.needsFrames(Opcodes.V13 + 1));
+		assertTrue(InstrSupport.needsFrames(Opcodes.V14 + 1));
 
 		assertTrue(InstrSupport.needsFrames(0x0100));
 	}
