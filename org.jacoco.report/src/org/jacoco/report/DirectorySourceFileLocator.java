@@ -46,8 +46,10 @@ public class DirectorySourceFileLocator extends InputStreamSourceFileLocator {
 	@Override
 	protected InputStream getSourceStream(final String path)
 			throws IOException {
-		final File file = new File(directory, path);
+		File file = new File(directory, path);
 		if (file.isFile()) {
+			return new FileInputStream(file);
+		} else if ((file=new File(path)).isFile()) {
 			return new FileInputStream(file);
 		} else {
 			return null;
