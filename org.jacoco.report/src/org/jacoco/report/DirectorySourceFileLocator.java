@@ -49,7 +49,7 @@ public class DirectorySourceFileLocator extends InputStreamSourceFileLocator {
 		File file = new File(directory, path);
 		if (file.isFile()) {
 			return new FileInputStream(file);
-		} else if ((file=new File(path)).isFile()) {
+		} else if ((file = new File(path)).isFile()) {
 			return new FileInputStream(file);
 		} else {
 			return null;
