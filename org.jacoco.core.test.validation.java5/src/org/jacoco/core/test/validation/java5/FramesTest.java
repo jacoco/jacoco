@@ -31,6 +31,7 @@ import org.jacoco.core.test.validation.java5.targets.ControlStructuresTarget;
 import org.jacoco.core.test.validation.java5.targets.ExceptionsTarget;
 import org.jacoco.core.test.validation.java5.targets.ExplicitInitialFrameTarget;
 import org.jacoco.core.test.validation.java5.targets.FieldInitializationInTwoConstructorsTarget;
+import org.jacoco.core.test.validation.java5.targets.GetterAndSetterTarget;
 import org.jacoco.core.test.validation.java5.targets.ImplicitFieldInitializationTarget;
 import org.jacoco.core.test.validation.java5.targets.InterfaceClassInitializerTarget;
 import org.jacoco.core.test.validation.java5.targets.StructuredLockingTarget;
@@ -125,6 +126,11 @@ public class FramesTest {
 	@Test
 	public void constructors() throws IOException {
 		testFrames(ConstructorsTarget.class);
+	}
+
+	@Test
+	public void getterAndSetter() throws IOException {
+		testFrames(GetterAndSetterTarget.class);
 	}
 
 	@Test

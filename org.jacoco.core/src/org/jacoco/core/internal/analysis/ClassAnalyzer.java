@@ -41,6 +41,8 @@ public class ClassAnalyzer extends ClassProbesVisitor
 
 	private final Set<String> classAttributes = new HashSet<String>();
 
+	private final Set<String> classFields = new HashSet<String>();
+
 	private String sourceDebugExtension;
 
 	private final IFilter filter;
@@ -82,6 +84,7 @@ public class ClassAnalyzer extends ClassProbesVisitor
 	@Override
 	public void visitAttribute(final Attribute attribute) {
 		classAttributes.add(attribute.type);
+		System.out.println(attribute.type);
 	}
 
 	@Override
@@ -132,6 +135,7 @@ public class ClassAnalyzer extends ClassProbesVisitor
 	@Override
 	public FieldVisitor visitField(final int access, final String name,
 			final String desc, final String signature, final Object value) {
+		classFields.add(name);
 		InstrSupport.assertNotInstrumented(name, coverage.getName());
 		return super.visitField(access, name, desc, signature, value);
 	}
@@ -157,6 +161,10 @@ public class ClassAnalyzer extends ClassProbesVisitor
 
 	public Set<String> getClassAttributes() {
 		return classAttributes;
+	}
+
+	public Set<String> getClassFields() {
+		return classFields;
 	}
 
 	public String getSourceFileName() {

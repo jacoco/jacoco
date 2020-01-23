@@ -40,6 +40,11 @@ public interface IFilterContext {
 	Set<String> getClassAttributes();
 
 	/**
+	 * @return names of the class fields
+	 */
+	Set<String> getClassFields();
+
+	/**
 	 * @return file name of the corresponding source file or <code>null</code>
 	 *         if not available
 	 */
