@@ -13,6 +13,8 @@
 
 package org.jacoco.core.test.validation.java5.targets;
 
+import java.util.ArrayList;
+
 public class GetterAndSetterTarget {
 
 	private long id;
@@ -20,6 +22,7 @@ public class GetterAndSetterTarget {
 	private String desc;
 	private double value;
 	private boolean valid;
+	private ArrayList<String> hobbies;
 
 	public GetterAndSetterTarget(long id, String name, String desc,
 			double value) {
@@ -54,6 +57,10 @@ public class GetterAndSetterTarget {
 		return valid; // assertFullyCovered()
 	}
 
+	public ArrayList<String> getHobbies() {
+		return hobbies; // assertEmpty()
+	}
+
 	public void setId(long id) {
 		this.id = id; // assertEmpty()
 	}
@@ -78,6 +85,10 @@ public class GetterAndSetterTarget {
 
 	public void setValid(boolean valid) {
 		this.valid = valid; // assertEmpty()
+	}
+
+	public void setHobbies(ArrayList<String> hobbies) {
+		this.hobbies = hobbies; // assertEmpty()
 	}
 
 	@Override
