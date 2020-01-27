@@ -63,6 +63,7 @@ final class ReportSupport {
 	private final Log log;
 	private final ExecFileLoader loader;
 	private final List<IReportVisitor> formatters;
+	private final boolean disablePlainGetterSetter;
 
 	/**
 	 * Construct a new instance with the given log output.
@@ -74,6 +75,24 @@ final class ReportSupport {
 		this.log = log;
 		this.loader = new ExecFileLoader();
 		this.formatters = new ArrayList<IReportVisitor>();
+		this.disablePlainGetterSetter = false;
+	}
+
+	/**
+	 * Construct a new instance with the given log output and set
+	 * disablePlainGetterSetter.
+	 *
+	 * @param log
+	 *            for log output
+	 * @param disablePlainGetterSetter
+	 *            to disable the filter for plain getter and setter
+	 */
+	public ReportSupport(final Log log,
+			final boolean disablePlainGetterSetter) {
+		this.log = log;
+		this.loader = new ExecFileLoader();
+		this.formatters = new ArrayList<IReportVisitor>();
+		this.disablePlainGetterSetter = disablePlainGetterSetter;
 	}
 
 	/**
@@ -196,7 +215,8 @@ final class ReportSupport {
 
 		if (classesDir.isDirectory()) {
 			final Analyzer analyzer = new Analyzer(
-					loader.getExecutionDataStore(), builder);
+					loader.getExecutionDataStore(), builder,
+					disablePlainGetterSetter);
 			final FileFilter filter = new FileFilter(includes, excludes);
 			for (final File file : filter.getFiles(classesDir)) {
 				analyzer.analyzeAll(file);

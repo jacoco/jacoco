@@ -57,6 +57,7 @@
                   </limits>
                 </rule>
               </rules>
+              <disablePlainGetterSetter>true</disablePlainGetterSetter>
             </configuration>
           </execution>
         </executions>

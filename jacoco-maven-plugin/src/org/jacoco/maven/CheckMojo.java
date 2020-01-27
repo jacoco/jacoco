@@ -143,6 +143,12 @@ public class CheckMojo extends AbstractJacocoMojo implements IViolationsOutput {
 	@Parameter
 	private List<String> excludes;
 
+	/**
+	 * Flag used to disable the filter for plain getter and setter.
+	 */
+	@Parameter(property = "jacoco.disablePlainGetterSetter", defaultValue = "false")
+	boolean disablePlainGetterSetter;
+
 	private boolean violations;
 
 	private boolean canCheckCoverage() {
@@ -172,7 +178,8 @@ public class CheckMojo extends AbstractJacocoMojo implements IViolationsOutput {
 	private void executeCheck() throws MojoExecutionException {
 		violations = false;
 
-		final ReportSupport support = new ReportSupport(getLog());
+		final ReportSupport support = new ReportSupport(getLog(),
+				disablePlainGetterSetter);
 
 		final List<Rule> checkerrules = new ArrayList<Rule>();
 		for (final RuleConfiguration r : rules) {

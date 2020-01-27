@@ -92,6 +92,12 @@ public abstract class AbstractReportMojo extends AbstractMavenReport {
 	@Component
 	Renderer siteRenderer;
 
+	/**
+	 * Flag used to disable the filter for plain getter and setter.
+	 */
+	@Parameter(property = "jacoco.disablePlainGetterSetter", defaultValue = "false")
+	boolean disablePlainGetterSetter;
+
 	public String getDescription(final Locale locale) {
 		return getName(locale) + " Coverage Report.";
 	}
@@ -174,7 +180,8 @@ public abstract class AbstractReportMojo extends AbstractMavenReport {
 	protected void executeReport(final Locale locale)
 			throws MavenReportException {
 		try {
-			final ReportSupport support = new ReportSupport(getLog());
+			final ReportSupport support = new ReportSupport(getLog(),
+					disablePlainGetterSetter);
 			loadExecutionData(support);
 			addFormatters(support, locale);
 			final IReportVisitor visitor = support.initRootVisitor();

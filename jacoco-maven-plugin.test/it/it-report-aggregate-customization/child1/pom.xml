@@ -25,6 +25,7 @@
 
   <properties>
     <jacoco.destFile>target/child1.coverage</jacoco.destFile>
+    <jacoco.disablePlainGetterSetter>false</jacoco.disablePlainGetterSetter>
   </properties>
 
 </project>
