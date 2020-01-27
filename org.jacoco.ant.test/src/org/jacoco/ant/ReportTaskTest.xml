@@ -106,6 +106,44 @@
 		<au:assertLogContains level="warn" text="To enable source code annotation class files for bundle 'root' have to be compiled with debug information"/>
 	</target>
 
+	<target name="testReportWithDisabledPlainGetterSetterFilter">
+		<java classname="org.jacoco.ant.RemoveDebugInfos" classpath="${java.class.path}" failonerror="true">
+			<arg value="${org.jacoco.ant.reportTaskTest.classes.dir}/org/jacoco/ant/TestTarget.class" />
+			<arg value="${temp.dir}/TestTarget.class" />
+		</java>
+		<jacoco:report>
+			<structure name="root">
+				<classfiles>
+					<fileset dir="${temp.dir}" id="*.class" />
+				</classfiles>
+				<sourcefiles encoding="UTF-8">
+					<dirset file="${org.jacoco.ant.reportTaskTest.sources.dir}" />
+				</sourcefiles>
+				<filters plainGetterSetter="true" />
+			</structure>
+		</jacoco:report>
+		<au:assertLogContains level="warn" text="To enable source code annotation class files for bundle 'root' have to be compiled with debug information"/>
+	</target>
+
+	<target name="testReportWithEnabledPlainGetterSetterFilter">
+		<java classname="org.jacoco.ant.RemoveDebugInfos" classpath="${java.class.path}" failonerror="true">
+			<arg value="${org.jacoco.ant.reportTaskTest.classes.dir}/org/jacoco/ant/TestTarget.class" />
+			<arg value="${temp.dir}/TestTarget.class" />
+		</java>
+		<jacoco:report>
+			<structure name="root">
+				<classfiles>
+					<fileset dir="${temp.dir}" id="*.class" />
+				</classfiles>
+				<sourcefiles encoding="UTF-8">
+					<dirset file="${org.jacoco.ant.reportTaskTest.sources.dir}" />
+				</sourcefiles>
+				<filters plainGetterSetter="false" />
+			</structure>
+		</jacoco:report>
+		<au:assertLogContains level="warn" text="To enable source code annotation class files for bundle 'root' have to be compiled with debug information"/>
+	</target>
+
 	<target name="testReportWithSourceButNoClasses">
 		<jacoco:report>
 			<structure name="root">

@@ -96,6 +96,23 @@ public class ReportTask extends Task {
 	}
 
 	/**
+	 * Disabled filters.
+	 */
+	public static class DisabledFilter extends Union {
+
+		boolean plainGetterSetter = false;
+
+		/**
+		 * Set plainGetterSetter.
+		 *
+		 * @param plainGetterSetter
+		 */
+		public void setPlainGetterSetter(final boolean plainGetterSetter) {
+			this.plainGetterSetter = plainGetterSetter;
+		}
+	}
+
+	/**
 	 * Container element for class file groups.
 	 */
 	public static class GroupElement {
@@ -107,6 +124,8 @@ public class ReportTask extends Task {
 		private final SourceFilesElement sourcefiles = new SourceFilesElement();
 
 		private String name;
+
+		private final DisabledFilter filters = new DisabledFilter();
 
 		/**
 		 * Sets the name of the group.
@@ -145,6 +164,15 @@ public class ReportTask extends Task {
 		 */
 		public SourceFilesElement createSourcefiles() {
 			return sourcefiles;
+		}
+
+		/**
+		 * Returns the disabled filters.
+		 *
+		 * @return object of Filter
+		 */
+		public DisabledFilter createFilters() {
+			return filters;
 		}
 
 	}
@@ -563,7 +591,8 @@ public class ReportTask extends Task {
 	private IBundleCoverage createBundle(final GroupElement group)
 			throws IOException {
 		final CoverageBuilder builder = new CoverageBuilder();
-		final Analyzer analyzer = new Analyzer(executionDataStore, builder);
+		final Analyzer analyzer = new Analyzer(executionDataStore, builder,
+				group.filters.plainGetterSetter);
 		for (final Iterator<?> i = group.classfiles.iterator(); i.hasNext();) {
 			final Resource resource = (Resource) i.next();
 			if (resource.isDirectory() && resource instanceof FileResource) {

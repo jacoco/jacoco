@@ -482,6 +482,7 @@
         &lt;sourcefiles encoding="UTF-8"&gt;
             &lt;fileset dir="src"/&gt;
         &lt;/sourcefiles&gt;
+    	&lt;filters plainGetterSetter="true"/&gt;
     &lt;/structure&gt;
 
     &lt;html destdir="report"/&gt;
@@ -519,6 +520,7 @@
     resource collections that specify corresponding source files. If source
     files are specified, some report formats include highlighted source code.
     Source files can be specified as individual files or as source directories.</li>
+  <li><code>filters</code>: Optional container element for deactivating filters. </li>
 </ul>
 
 <p>
@@ -575,6 +577,27 @@
   files, this resource type has poor performance characteristics and comes with
   an huge memory overhead especially for large scale projects.
 </p>
+
+<p>
+  The <code>filters</code> element has these optional attributes:
+</p>
+
+<table class="coverage">
+  <thead>
+    <tr>
+      <td>Attribute</td>
+      <td>Description</td>
+      <td>Default</td>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>plainGetterSetter</code></td>
+      <td>Disable filtering plain getter and setter.</td>
+      <td>false</td>
+    </tr>
+  </tbody>
+</table>
 
 <p>
   The structure can be refined with a hierarchy of <code>group</code> elements.
