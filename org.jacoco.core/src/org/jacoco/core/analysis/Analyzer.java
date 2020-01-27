@@ -52,6 +52,8 @@ public class Analyzer {
 
 	private final StringPool stringPool;
 
+	private final boolean disablePlainGetterSetter;
+
 	/**
 	 * Creates a new analyzer reporting to the given output.
 	 *
@@ -66,6 +68,27 @@ public class Analyzer {
 		this.executionData = executionData;
 		this.coverageVisitor = coverageVisitor;
 		this.stringPool = new StringPool();
+		this.disablePlainGetterSetter = false;
+	}
+
+	/**
+	 * Creates a new analyzer reporting to the given output.
+	 *
+	 * @param executionData
+	 *            execution data
+	 * @param coverageVisitor
+	 *            the output instance that will coverage data for every analyzed
+	 *            class
+	 * @param ignoreGetterSetter
+	 *            flag if plain getter and setter should ignored
+	 */
+	public Analyzer(final ExecutionDataStore executionData,
+			final ICoverageVisitor coverageVisitor,
+			final boolean ignoreGetterSetter) {
+		this.executionData = executionData;
+		this.coverageVisitor = coverageVisitor;
+		this.stringPool = new StringPool();
+		this.disablePlainGetterSetter = ignoreGetterSetter;
 	}
 
 	/**
@@ -92,7 +115,7 @@ public class Analyzer {
 		final ClassCoverageImpl coverage = new ClassCoverageImpl(className,
 				classid, noMatch);
 		final ClassAnalyzer analyzer = new ClassAnalyzer(coverage, probes,
-				stringPool) {
+				stringPool, disablePlainGetterSetter) {
 			@Override
 			public void visitEnd() {
 				super.visitEnd();

@@ -149,4 +149,14 @@ public class ReportTest extends CommandTestBase {
 						.isFile());
 	}
 
+	@Test
+	public void should_disable_plain_getter_and_setter_filter()
+			throws Exception {
+		execute("report", "--classfiles", getClassPath(),
+				"--disablePlainGetterSetter");
+
+		assertOk();
+		assertContains("[INFO] Analyzing 14 classes.", out);
+	}
+
 }

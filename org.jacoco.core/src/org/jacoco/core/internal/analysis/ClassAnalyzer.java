@@ -65,6 +65,29 @@ public class ClassAnalyzer extends ClassProbesVisitor
 		this.filter = Filters.all();
 	}
 
+	/**
+	 * Creates a new analyzer that builds coverage data for a class.
+	 *
+	 * @param coverage
+	 *            coverage node for the analyzed class data
+	 * @param probes
+	 *            execution data for this class or <code>null</code>
+	 * @param stringPool
+	 *            shared pool to minimize the number of {@link String} instances
+	 * @param disablePlainGetterSetter
+	 *            flag if plain getter and setter should ignored
+	 */
+	public ClassAnalyzer(final ClassCoverageImpl coverage,
+			final boolean[] probes, final StringPool stringPool,
+			final boolean disablePlainGetterSetter) {
+		this.coverage = coverage;
+		this.probes = probes;
+		this.stringPool = stringPool;
+		this.filter = disablePlainGetterSetter
+				? Filters.allWithoutGetterAndSetter()
+				: Filters.all();
+	}
+
 	@Override
 	public void visit(final int version, final int access, final String name,
 			final String signature, final String superName,

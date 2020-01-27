@@ -48,6 +48,30 @@ public final class Filters implements IFilter {
 				new KotlinCoroutineFilter());
 	}
 
+	/**
+	 * Creates filter that combines all other filters without
+	 * PlainGetterAndSetterFilter.
+	 *
+	 * @return filter that combines all other filters without
+	 *         PlainGetterAndSetterFilter
+	 */
+	public static IFilter allWithoutGetterAndSetter() {
+		return new Filters(new EnumFilter(), new SyntheticFilter(),
+				new SynchronizedFilter(), new TryWithResourcesJavac11Filter(),
+				new TryWithResourcesJavacFilter(),
+				new TryWithResourcesEcjFilter(), new FinallyFilter(),
+				new PrivateEmptyNoArgConstructorFilter(),
+				new StringSwitchJavacFilter(), new StringSwitchEcjFilter(),
+				new EnumEmptyConstructorFilter(), new RecordsFilter(),
+				new AnnotationGeneratedFilter(), new KotlinGeneratedFilter(),
+				new KotlinLateinitFilter(), new KotlinWhenFilter(),
+				new KotlinWhenStringFilter(),
+				new KotlinUnsafeCastOperatorFilter(),
+				new KotlinNotNullOperatorFilter(),
+				new KotlinDefaultArgumentsFilter(), new KotlinInlineFilter(),
+				new KotlinCoroutineFilter());
+	}
+
 	private Filters(final IFilter... filters) {
 		this.filters = filters;
 	}

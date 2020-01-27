@@ -72,6 +72,9 @@ public class Report extends Command {
 	@Option(name = "--html", usage = "output directory for the HTML report", metaVar = "<dir>")
 	File html;
 
+	@Option(name = "--disablePlainGetterSetter", usage = "disable filtering of plain getter and setter")
+	boolean disablePlainGetterSetter = false;
+
 	@Override
 	public String description() {
 		return "Generate reports in different formats by reading exec and Java class files.";
@@ -105,7 +108,8 @@ public class Report extends Command {
 	private IBundleCoverage analyze(final ExecutionDataStore data,
 			final PrintWriter out) throws IOException {
 		final CoverageBuilder builder = new CoverageBuilder();
-		final Analyzer analyzer = new Analyzer(data, builder);
+		final Analyzer analyzer = new Analyzer(data, builder,
+				disablePlainGetterSetter);
 		for (final File f : classfiles) {
 			analyzer.analyzeAll(f);
 		}
