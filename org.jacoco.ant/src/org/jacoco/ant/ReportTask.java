@@ -100,15 +100,16 @@ public class ReportTask extends Task {
 	 */
 	public static class DisabledFilter extends Union {
 
-		boolean plainGetterSetter = false;
+		boolean disablePlainGetterSetter = false;
 
 		/**
-		 * Set plainGetterSetter.
+		 * Set disablePlainGetterSetter.
 		 *
-		 * @param plainGetterSetter
+		 * @param disablePlainGetterSetter
 		 */
-		public void setPlainGetterSetter(final boolean plainGetterSetter) {
-			this.plainGetterSetter = plainGetterSetter;
+		public void setDisablePlainGetterSetter(
+				final boolean disablePlainGetterSetter) {
+			this.disablePlainGetterSetter = disablePlainGetterSetter;
 		}
 	}
 
@@ -592,7 +593,7 @@ public class ReportTask extends Task {
 			throws IOException {
 		final CoverageBuilder builder = new CoverageBuilder();
 		final Analyzer analyzer = new Analyzer(executionDataStore, builder,
-				group.filters.plainGetterSetter);
+				group.filters.disablePlainGetterSetter);
 		for (final Iterator<?> i = group.classfiles.iterator(); i.hasNext();) {
 			final Resource resource = (Resource) i.next();
 			if (resource.isDirectory() && resource instanceof FileResource) {
