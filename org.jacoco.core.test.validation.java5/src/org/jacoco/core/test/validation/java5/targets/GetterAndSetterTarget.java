@@ -54,7 +54,7 @@ public class GetterAndSetterTarget {
 	}
 
 	public boolean isValid() {
-		return valid; // assertFullyCovered()
+		return valid; // assertEmpty()
 	}
 
 	public ArrayList<String> getHobbies() {

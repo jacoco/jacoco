@@ -65,10 +65,7 @@ public class Analyzer {
 	 */
 	public Analyzer(final ExecutionDataStore executionData,
 			final ICoverageVisitor coverageVisitor) {
-		this.executionData = executionData;
-		this.coverageVisitor = coverageVisitor;
-		this.stringPool = new StringPool();
-		this.disablePlainGetterSetter = false;
+		this(executionData, coverageVisitor, false);
 	}
 
 	/**
@@ -79,16 +76,16 @@ public class Analyzer {
 	 * @param coverageVisitor
 	 *            the output instance that will coverage data for every analyzed
 	 *            class
-	 * @param ignoreGetterSetter
+	 * @param disablePlainGetterSetter
 	 *            flag if plain getter and setter should ignored
 	 */
 	public Analyzer(final ExecutionDataStore executionData,
 			final ICoverageVisitor coverageVisitor,
-			final boolean ignoreGetterSetter) {
+			final boolean disablePlainGetterSetter) {
 		this.executionData = executionData;
 		this.coverageVisitor = coverageVisitor;
 		this.stringPool = new StringPool();
-		this.disablePlainGetterSetter = ignoreGetterSetter;
+		this.disablePlainGetterSetter = disablePlainGetterSetter;
 	}
 
 	/**

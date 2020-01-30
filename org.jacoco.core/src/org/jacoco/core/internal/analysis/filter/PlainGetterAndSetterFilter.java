@@ -32,26 +32,35 @@ public class PlainGetterAndSetterFilter implements IFilter {
 
 	private boolean isCandidate(final MethodNode methodNode,
 			final IFilterContext context) {
-		return methodNode.name.length() > 3
-				&& dependsOnAttribute(methodNode, context)
-				&& methodNode.instructions.getFirst() != null
-				&& (isGetter(methodNode) || isSetter(methodNode));
+		return methodNode.instructions.getFirst() != null
+				&& (isGetter(methodNode, context)
+						|| isSetter(methodNode, context));
 	}
 
 	private boolean dependsOnAttribute(final MethodNode methodNode,
-			final IFilterContext context) {
-		final String attributeName = methodNode.name.substring(3, 4)
-				.toLowerCase() + methodNode.name.substring(4);
+			final IFilterContext context, final int split) {
+		final String attributeName = methodNode.name.substring(split, split + 1)
+				.toLowerCase() + methodNode.name.substring(split + 1);
 		return context.getClassFields().contains(attributeName);
 	}
 
-	private boolean isGetter(final MethodNode methodNode) {
-		return methodNode.name.startsWith("get")
-				&& new GetterMatcher().match(methodNode);
+	private boolean isGetter(final MethodNode methodNode,
+			final IFilterContext context) {
+		if (methodNode.name.startsWith("get") && methodNode.name.length() > 3) {
+			return dependsOnAttribute(methodNode, context, 3)
+					&& new GetterMatcher().match(methodNode);
+		} else if (methodNode.name.startsWith("is")
+				&& methodNode.name.length() > 2) {
+			return dependsOnAttribute(methodNode, context, 2)
+					&& new GetterMatcher().match(methodNode);
+		}
+		return false;
 	}
 
-	private boolean isSetter(final MethodNode methodNode) {
-		return methodNode.name.startsWith("set")
+	private boolean isSetter(final MethodNode methodNode,
+			final IFilterContext context) {
+		return methodNode.name.startsWith("set") && methodNode.name.length() > 3
+				&& dependsOnAttribute(methodNode, context, 3)
 				&& new SetterMatcher().match(methodNode);
 	}
 

@@ -68,4 +68,13 @@ public class ClassAnalyzerTest {
 		assertTrue(analyzer.getClassAttributes().contains("foo"));
 	}
 
+	@Test
+	public void should_collect_attributes_with_disabled_filter_for_getter_and_setter() {
+		analyzer = new ClassAnalyzer(coverage, null, new StringPool(), true);
+		assertTrue(analyzer.getClassAttributes().isEmpty());
+		analyzer.visitAttribute(new Attribute("foo") {
+		});
+		assertTrue(analyzer.getClassAttributes().contains("foo"));
+	}
+
 }

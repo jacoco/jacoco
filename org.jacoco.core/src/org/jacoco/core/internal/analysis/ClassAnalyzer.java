@@ -59,10 +59,7 @@ public class ClassAnalyzer extends ClassProbesVisitor
 	 */
 	public ClassAnalyzer(final ClassCoverageImpl coverage,
 			final boolean[] probes, final StringPool stringPool) {
-		this.coverage = coverage;
-		this.probes = probes;
-		this.stringPool = stringPool;
-		this.filter = Filters.all();
+		this(coverage, probes, stringPool, false);
 	}
 
 	/**
