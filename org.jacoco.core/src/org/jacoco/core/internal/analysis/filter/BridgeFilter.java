@@ -12,6 +12,7 @@
  *******************************************************************************/
 package org.jacoco.core.internal.analysis.filter;
 
+import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.tree.MethodNode;
 
 /**
@@ -21,7 +22,11 @@ final class BridgeFilter implements IFilter {
 
 	public void filter(final MethodNode methodNode,
 			final IFilterContext context, final IFilterOutput output) {
-		// TODO
+		if ((methodNode.access & Opcodes.ACC_BRIDGE) == 0) {
+			return;
+		}
+		output.ignore(methodNode.instructions.getFirst(),
+				methodNode.instructions.getLast());
 	}
 
 }
