@@ -20,8 +20,7 @@ import static org.jacoco.core.test.validation.targets.Stubs.nop;
 public class InstanceofTarget {
 
 	private static void ifInstanceof(Object e) {
-		/* See https://bugs.openjdk.java.net/browse/JDK-8237528 */
-		if (e instanceof String s) { // assertFullyCovered(1, 3)
+		if (e instanceof String s) { // assertInstanceof()
 			nop(s);
 		}
 	}
