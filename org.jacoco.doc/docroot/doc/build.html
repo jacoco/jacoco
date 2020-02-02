@@ -56,7 +56,7 @@
 </p>
 
 <pre>
-  mvn clean install
+  mvn clean verify
 </pre>
 
 <p>
@@ -77,7 +77,7 @@
 </p>
 
 <pre>
-  mvn clean install -DskipTests
+  mvn clean verify -DskipTests
 </pre>
 
 
@@ -149,7 +149,7 @@
 </p>
 
 <pre>
-  mvn clean install -Djdk.version=10 -Dbytecode.version=9
+  mvn clean verify -Djdk.version=10 -Dbytecode.version=9
 </pre>
 
 <p>
@@ -157,7 +157,7 @@
 </p>
 
 <pre>
-  mvn clean install -Decj
+  mvn clean verify -Decj
 </pre>
 
 <p>
@@ -165,16 +165,16 @@
 </p>
 
 <ul>
-  <li><code>mvn clean install -Djdk.version=5 -Dbytecode.version=5</code></li>
-  <li><code>mvn clean install -Djdk.version=6 -Dbytecode.version=6</code></li>
-  <li><code>mvn clean install -Djdk.version=7 -Dbytecode.version=7</code></li>
-  <li><code>mvn clean install -Djdk.version=8 -Dbytecode.version=8</code></li>
-  <li><code>mvn clean install -Djdk.version=8 -Dbytecode.version=8 -Decj</code></li>
-  <li><code>mvn clean install -Djdk.version=9 -Dbytecode.version=9</code></li>
-  <li><code>mvn clean install -Djdk.version=10 -Dbytecode.version=10</code></li>
-  <li><code>mvn clean install -Djdk.version=11 -Dbytecode.version=11</code></li>
-  <li><code>mvn clean install -Djdk.version=12 -Dbytecode.version=12</code></li>
-  <li><code>mvn clean install -Djdk.version=13 -Dbytecode.version=13</code></li>
+  <li><code>mvn clean verify -Djdk.version=5 -Dbytecode.version=5</code></li>
+  <li><code>mvn clean verify -Djdk.version=6 -Dbytecode.version=6</code></li>
+  <li><code>mvn clean verify -Djdk.version=7 -Dbytecode.version=7</code></li>
+  <li><code>mvn clean verify -Djdk.version=8 -Dbytecode.version=8</code></li>
+  <li><code>mvn clean verify -Djdk.version=8 -Dbytecode.version=8 -Decj</code></li>
+  <li><code>mvn clean verify -Djdk.version=9 -Dbytecode.version=9</code></li>
+  <li><code>mvn clean verify -Djdk.version=10 -Dbytecode.version=10</code></li>
+  <li><code>mvn clean verify -Djdk.version=11 -Dbytecode.version=11</code></li>
+  <li><code>mvn clean verify -Djdk.version=12 -Dbytecode.version=12</code></li>
+  <li><code>mvn clean verify -Djdk.version=13 -Dbytecode.version=13</code></li>
 </ul>
 
 
