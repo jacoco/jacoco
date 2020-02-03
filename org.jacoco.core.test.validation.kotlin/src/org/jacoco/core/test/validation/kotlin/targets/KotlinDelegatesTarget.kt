@@ -10,24 +10,18 @@
  *    Evgeny Mandrikov - initial API and implementation
  *
  *******************************************************************************/
-package org.jacoco.core.test.validation.java14.targets;
-
-import static org.jacoco.core.test.validation.targets.Stubs.nop;
+package org.jacoco.core.test.validation.kotlin.targets
 
 /**
- * This target exercises pattern matching for instanceof (JEP 305).
+ * This test target contains different delegates.
  */
-public class InstanceofTarget {
+object KotlinDelegatesTarget {
 
-	private static void ifInstanceof(Object e) {
-		if (e instanceof String s) { // assertInstanceof()
-			nop(s);
-		}
-	}
+    class DelegatedList : List<Int> by ArrayList() // assertFullyCovered()
 
-	public static void main(String[] args) {
-		ifInstanceof(new Object());
-		ifInstanceof("string");
-	}
+    @JvmStatic
+    fun main(args: Array<String>) {
+        DelegatedList()
+    }
 
 }

@@ -10,24 +10,23 @@
  *    Evgeny Mandrikov - initial API and implementation
  *
  *******************************************************************************/
-package org.jacoco.core.test.validation.java14.targets;
+package org.jacoco.core.internal.analysis.filter;
 
-import static org.jacoco.core.test.validation.targets.Stubs.nop;
+import org.objectweb.asm.Opcodes;
+import org.objectweb.asm.tree.MethodNode;
 
 /**
- * This target exercises pattern matching for instanceof (JEP 305).
+ * Filters bridge methods.
  */
-public class InstanceofTarget {
+final class BridgeFilter implements IFilter {
 
-	private static void ifInstanceof(Object e) {
-		if (e instanceof String s) { // assertInstanceof()
-			nop(s);
+	public void filter(final MethodNode methodNode,
+			final IFilterContext context, final IFilterOutput output) {
+		if ((methodNode.access & Opcodes.ACC_BRIDGE) == 0) {
+			return;
 		}
-	}
-
-	public static void main(String[] args) {
-		ifInstanceof(new Object());
-		ifInstanceof("string");
+		output.ignore(methodNode.instructions.getFirst(),
+				methodNode.instructions.getLast());
 	}
 
 }
