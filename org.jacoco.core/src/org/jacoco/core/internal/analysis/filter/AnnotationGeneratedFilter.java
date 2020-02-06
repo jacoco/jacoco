@@ -48,7 +48,7 @@ public final class AnnotationGeneratedFilter implements IFilter {
 		final String name = annotation
 				.substring(Math.max(annotation.lastIndexOf('/'),
 						annotation.lastIndexOf('$')) + 1);
-		return name.contains("Generated");
+		return name.contains("Generated") || name.contains("NoCoverage");
 	}
 
 	private static boolean presentIn(final List<AnnotationNode> annotations) {
