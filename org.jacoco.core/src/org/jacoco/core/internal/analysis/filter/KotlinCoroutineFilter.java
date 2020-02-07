@@ -19,6 +19,7 @@ import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.Type;
 import org.objectweb.asm.tree.AbstractInsnNode;
 import org.objectweb.asm.tree.JumpInsnNode;
+import org.objectweb.asm.tree.LabelNode;
 import org.objectweb.asm.tree.LdcInsnNode;
 import org.objectweb.asm.tree.MethodNode;
 import org.objectweb.asm.tree.TableSwitchInsnNode;
@@ -57,10 +58,40 @@ public final class KotlinCoroutineFilter implements IFilter {
 						"kotlin/coroutines/intrinsics/IntrinsicsKt",
 						"getCOROUTINE_SUSPENDED", "()Ljava/lang/Object;");
 				nextIs(Opcodes.IF_ACMPNE);
+				JumpInsnNode jump = (JumpInsnNode) cursor;
 				nextIs(Opcodes.ARETURN);
+				nextIsLabel();
+				LabelNode label = (LabelNode) cursor;
 				nextIs(Opcodes.POP);
-				if (cursor != null) {
+				if (cursor != null && jump.label == label) {
 					output.ignore(i.getNext(), cursor);
+					AbstractInsnNode pop = cursor;
+
+					// If we find a GOTO, follow it, the return Unit
+					// instructions may be there
+					nextIs(Opcodes.GOTO);
+					if (cursor != null) {
+						LabelNode gotoTarget = ((JumpInsnNode) cursor).label;
+						for (AbstractInsnNode j = cursor; j != null; j = j
+								.getNext()) {
+							if (j == gotoTarget) {
+								cursor = j;
+								break;
+							}
+						}
+					} else {
+						// else reset to the pop instruction
+						cursor = pop;
+					}
+
+					// ignore the return-unit path as well
+					nextIsField(Opcodes.GETSTATIC, "kotlin/Unit", "INSTANCE",
+							"Lkotlin/Unit;");
+					AbstractInsnNode getUnit = cursor;
+					nextIs(Opcodes.ARETURN);
+					if (cursor != null) {
+						output.ignore(getUnit, cursor);
+					}
 				}
 			}
 		}

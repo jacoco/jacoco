@@ -17,6 +17,7 @@ import java.util.Map;
 
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.tree.AbstractInsnNode;
+import org.objectweb.asm.tree.FieldInsnNode;
 import org.objectweb.asm.tree.MethodInsnNode;
 import org.objectweb.asm.tree.MethodNode;
 import org.objectweb.asm.tree.TypeInsnNode;
@@ -76,6 +77,25 @@ abstract class AbstractMatcher {
 		cursor = null;
 	}
 
+	/**
+	 * Moves {@link #cursor} to next instruction if it is {@link MethodInsnNode}
+	 * with given opcode, owner, name and descriptor, otherwise sets it to
+	 * <code>null</code>.
+	 */
+	final void nextIsField(final int opcode, final String owner,
+			final String name, final String descriptor) {
+		nextIs(opcode);
+		if (cursor == null) {
+			return;
+		}
+		final FieldInsnNode m = (FieldInsnNode) cursor;
+		if (owner.equals(m.owner) && name.equals(m.name)
+				&& descriptor.equals(m.desc)) {
+			return;
+		}
+		cursor = null;
+	}
+
 	final void nextIsVar(final int opcode, final String name) {
 		nextIs(opcode);
 		if (cursor == null) {
@@ -105,6 +125,16 @@ abstract class AbstractMatcher {
 		case Opcodes.LOOKUPSWITCH:
 			return;
 		default:
+			cursor = null;
+		}
+	}
+
+	final void nextIsLabel() {
+		if (cursor == null) {
+			return;
+		}
+		cursor = cursor.getNext();
+		if (cursor != null && cursor.getType() != AbstractInsnNode.LABEL) {
 			cursor = null;
 		}
 	}
