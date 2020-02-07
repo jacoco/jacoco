@@ -374,4 +374,52 @@ public class KotlinCoroutineFilterTest extends FilterTestBase {
 		assertIgnored(range0, range1, range2);
 	}
 
+	/**
+	 * <pre>
+	 *     suspend fun example() {
+	 *         suspendingFunction()
+	 *     }
+	 * </pre>
+	 */
+	@Test
+	public void should_filter_ternary_operator_when_calling_other_unit_returning_suspend_fun_as_last_statement() {
+		final MethodNode m = new MethodNode(InstrSupport.ASM_API_VERSION,
+				Opcodes.ACC_STATIC, "example",
+				"(Lkotlin/coroutines/Continuation;)Ljava/lang/Object;", null,
+				null);
+		context.classAnnotations
+				.add(KotlinGeneratedFilter.KOTLIN_METADATA_DESC);
+
+		final Label[] labels = new Label[] { new Label(), new Label(),
+				new Label(), new Label() };
+		final Range[] ranges = new Range[] { new Range(), new Range() };
+
+		m.visitLabel(labels[0]);
+		m.visitVarInsn(Opcodes.ALOAD, 0);
+		m.visitVarInsn(Opcodes.ALOAD, 1);
+		m.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "", "suspendingFunction",
+				"(Lkotlin/coroutines/Continuation;)Ljava/lang/Object;", false);
+		m.visitInsn(Opcodes.DUP);
+		m.visitMethodInsn(Opcodes.INVOKESTATIC,
+				"kotlin/coroutines/intrinsics/IntrinsicsKt",
+				"getCOROUTINE_SUSPENDED", "()Ljava/lang/Object;", false);
+		m.visitJumpInsn(Opcodes.IF_ACMPNE, labels[1]);
+		ranges[0].fromInclusive = m.instructions.getLast();
+		m.visitInsn(Opcodes.ARETURN);
+		ranges[0].toInclusive = m.instructions.getLast();
+		ranges[1].fromInclusive = m.instructions.getLast();
+		m.visitLabel(labels[1]);
+		m.visitInsn(Opcodes.POP);
+		m.visitLabel(labels[2]);
+		m.visitFieldInsn(Opcodes.GETSTATIC, "kotlin/Unit", "INSTANCE",
+				"Lkotlin/Unit;");
+		m.visitInsn(Opcodes.ARETURN);
+		m.visitLabel(labels[3]);
+		ranges[1].toInclusive = m.instructions.getLast();
+
+		filter.filter(m, context, output);
+
+		assertIgnored(ranges);
+	}
+
 }

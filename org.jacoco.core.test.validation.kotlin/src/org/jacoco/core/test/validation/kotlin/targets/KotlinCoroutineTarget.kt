@@ -29,6 +29,10 @@ object KotlinCoroutineTarget {
         nop() // assertFullyCovered()
     }
 
+    private suspend fun aThirdSuspendingFunction() {
+        anotherSuspendingFunction() // assertFullyCovered()
+    }
+
     @JvmStatic
     fun main(args: Array<String>) {
 
@@ -36,6 +40,7 @@ object KotlinCoroutineTarget {
             val x = 42
             nop(x) // assertFullyCovered()
             suspendingFunction() // assertFullyCovered()
+            aThirdSuspendingFunction() // assertFullyCovered()
             nop(x) // assertFullyCovered()
         } // assertFullyCovered()
 

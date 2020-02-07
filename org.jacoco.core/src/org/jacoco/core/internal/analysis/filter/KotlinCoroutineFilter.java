@@ -19,6 +19,7 @@ import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.Type;
 import org.objectweb.asm.tree.AbstractInsnNode;
 import org.objectweb.asm.tree.JumpInsnNode;
+import org.objectweb.asm.tree.LabelNode;
 import org.objectweb.asm.tree.LdcInsnNode;
 import org.objectweb.asm.tree.MethodNode;
 import org.objectweb.asm.tree.TableSwitchInsnNode;
@@ -69,6 +70,33 @@ public final class KotlinCoroutineFilter implements IFilter {
 			nextIs(Opcodes.GETFIELD);
 			nextIs(Opcodes.TABLESWITCH);
 			if (cursor == null) {
+				cursor = skipNonOpcodes(methodNode.instructions.getFirst());
+				for (AbstractInsnNode i = cursor; i != null; i = i.getNext()) {
+					cursor = i;
+					nextIsInvoke(Opcodes.INVOKESTATIC,
+							"kotlin/coroutines/intrinsics/IntrinsicsKt",
+							"getCOROUTINE_SUSPENDED", "()Ljava/lang/Object;");
+					if (cursor == null) {
+						continue;
+					}
+					nextIs(Opcodes.IF_ACMPNE);
+					JumpInsnNode jump = (JumpInsnNode) cursor;
+					nextIs(Opcodes.ARETURN);
+					AbstractInsnNode ret = cursor;
+					nextIsLabel();
+					LabelNode label = (LabelNode) cursor;
+					if (jump.label == label) {
+						output.ignore(jump, ret);
+						nextIs(Opcodes.POP);
+						nextIsField(Opcodes.GETSTATIC, "kotlin/Unit",
+								"INSTANCE", "Lkotlin/Unit;");
+						nextIs(Opcodes.ARETURN);
+						nextIsLabel();
+						if (cursor != null) {
+							output.ignore(ret, cursor);
+						}
+					}
+				}
 				return;
 			}
 			final TableSwitchInsnNode s = (TableSwitchInsnNode) cursor;
