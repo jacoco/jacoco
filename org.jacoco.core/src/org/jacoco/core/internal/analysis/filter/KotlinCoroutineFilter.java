@@ -50,8 +50,7 @@ public final class KotlinCoroutineFilter implements IFilter {
 
 		private void matchOptimizedTailCall(final MethodNode methodNode,
 				final IFilterOutput output) {
-			for (AbstractInsnNode i = methodNode.instructions
-					.getFirst(); i != null; i = i.getNext()) {
+			for (final AbstractInsnNode i : methodNode.instructions) {
 				cursor = i;
 				nextIs(Opcodes.DUP);
 				nextIsInvoke(Opcodes.INVOKESTATIC,
