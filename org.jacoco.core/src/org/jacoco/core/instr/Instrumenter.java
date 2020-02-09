@@ -16,6 +16,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.zip.CRC32;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
 import java.util.zip.ZipEntry;
@@ -216,14 +217,40 @@ public class Instrumenter {
 				continue;
 			}
 
-			zipout.putNextEntry(new ZipEntry(entryName));
-			if (!signatureRemover.filterEntry(entryName, zipin, zipout)) {
-				count += instrumentAll(zipin, zipout, name + "@" + entryName);
+			final ZipEntry newEntry = new ZipEntry(entryName);
+			if (entry.getMethod() == ZipEntry.DEFLATED) {
+				newEntry.setMethod(ZipEntry.DEFLATED);
+				zipout.putNextEntry(newEntry);
+				count += filterOrInstrument(zipin, zipout, name, entryName);
+			} else {
+				// Uncompressed entries must be processed in-memory to calculate
+				// mandatory entry size and CRC
+				newEntry.setMethod(ZipEntry.STORED);
+				final ByteArrayOutputStream buffer = new ByteArrayOutputStream();
+				count += filterOrInstrument(zipin, buffer, name, entryName);
+				final byte[] bytes = buffer.toByteArray();
+				count += filterOrInstrument(zipin, buffer, name, entryName);
+				newEntry.setSize(bytes.length);
+				newEntry.setCompressedSize(bytes.length);
+				final CRC32 crc = new CRC32();
+				crc.update(bytes);
+				newEntry.setCrc(crc.getValue());
+				zipout.putNextEntry(newEntry);
+				zipout.write(bytes);
 			}
 			zipout.closeEntry();
 		}
 		zipout.finish();
 		return count;
+	}
+
+	private int filterOrInstrument(final InputStream in, final OutputStream out,
+			final String name, final String entryName) throws IOException {
+		if (signatureRemover.filterEntry(entryName, in, out)) {
+			return 0;
+		} else {
+			return instrumentAll(in, out, name + "@" + entryName);
+		}
 	}
 
 	private ZipEntry nextEntry(final ZipInputStream input,
