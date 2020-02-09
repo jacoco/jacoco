@@ -374,4 +374,80 @@ public class KotlinCoroutineFilterTest extends FilterTestBase {
 		assertIgnored(range0, range1, range2);
 	}
 
+	/**
+	 * <pre>
+	 *     suspend fun example(b: Boolean) {
+	 *         if (b)
+	 *             suspendingFunction()
+	 *         else
+	 *             suspendingFunction()
+	 *     }
+	 * </pre>
+	 */
+	@Test
+	public void should_filter_suspending_functions_with_tail_call_optimization() {
+		final MethodNode m = new MethodNode(InstrSupport.ASM_API_VERSION, 0,
+				"example",
+				"(ZLkotlin/coroutines/Continuation;)Ljava/lang/Object;", null,
+				null);
+		context.classAnnotations
+				.add(KotlinGeneratedFilter.KOTLIN_METADATA_DESC);
+
+		final Label exit = new Label();
+
+		m.visitVarInsn(Opcodes.ILOAD, 1);
+		final Label next = new Label();
+		m.visitJumpInsn(Opcodes.IFEQ, next);
+
+		m.visitVarInsn(Opcodes.ALOAD, 0);
+		m.visitVarInsn(Opcodes.ALOAD, 2);
+		m.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "", "suspendingFunction",
+				"(Lkotlin/coroutines/Continuation;)Ljava/lang/Object;", false);
+		final Range range1 = new Range();
+		{
+			m.visitInsn(Opcodes.DUP);
+			range1.fromInclusive = m.instructions.getLast();
+			m.visitMethodInsn(Opcodes.INVOKESTATIC,
+					"kotlin/coroutines/intrinsics/IntrinsicsKt",
+					"getCOROUTINE_SUSPENDED", "()Ljava/lang/Object;", false);
+			final Label label = new Label();
+			m.visitJumpInsn(Opcodes.IF_ACMPNE, label);
+			m.visitInsn(Opcodes.ARETURN);
+			m.visitLabel(label);
+			m.visitInsn(Opcodes.POP);
+			range1.toInclusive = m.instructions.getLast();
+		}
+
+		m.visitJumpInsn(Opcodes.GOTO, exit);
+		m.visitLabel(next);
+
+		m.visitVarInsn(Opcodes.ALOAD, 0);
+		m.visitVarInsn(Opcodes.ALOAD, 2);
+		m.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "", "suspendingFunction",
+				"(Lkotlin/coroutines/Continuation;)Ljava/lang/Object;", false);
+		final Range range2 = new Range();
+		{
+			m.visitInsn(Opcodes.DUP);
+			range2.fromInclusive = m.instructions.getLast();
+			m.visitMethodInsn(Opcodes.INVOKESTATIC,
+					"kotlin/coroutines/intrinsics/IntrinsicsKt",
+					"getCOROUTINE_SUSPENDED", "()Ljava/lang/Object;", false);
+			final Label label = new Label();
+			m.visitJumpInsn(Opcodes.IF_ACMPNE, label);
+			m.visitInsn(Opcodes.ARETURN);
+			m.visitLabel(label);
+			m.visitInsn(Opcodes.POP);
+			range2.toInclusive = m.instructions.getLast();
+		}
+
+		m.visitLabel(exit);
+		m.visitFieldInsn(Opcodes.GETSTATIC, "kotlin/Unit", "INSTANCE",
+				"Lkotlin/Unit;");
+		m.visitInsn(Opcodes.ARETURN);
+
+		filter.filter(m, context, output);
+
+		assertIgnored(range1, range2);
+	}
+
 }
