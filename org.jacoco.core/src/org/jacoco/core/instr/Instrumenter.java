@@ -232,9 +232,7 @@ public class Instrumenter {
 				final byte[] bytes = buffer.toByteArray();
 				newEntry.setSize(bytes.length);
 				newEntry.setCompressedSize(bytes.length);
-				final CRC32 crc = new CRC32();
-				crc.update(bytes);
-				newEntry.setCrc(crc.getValue());
+				newEntry.setCrc(crc(bytes));
 				zipout.putNextEntry(newEntry);
 				zipout.write(bytes);
 				break;
@@ -254,6 +252,12 @@ public class Instrumenter {
 		} else {
 			return instrumentAll(in, out, name + "@" + entryName);
 		}
+	}
+
+	private static long crc(final byte[] data) {
+		final CRC32 crc = new CRC32();
+		crc.update(data);
+		return crc.getValue();
 	}
 
 	private ZipEntry nextEntry(final ZipInputStream input,
