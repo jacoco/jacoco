@@ -229,7 +229,6 @@ public class Instrumenter {
 				final ByteArrayOutputStream buffer = new ByteArrayOutputStream();
 				count += filterOrInstrument(zipin, buffer, name, entryName);
 				final byte[] bytes = buffer.toByteArray();
-				count += filterOrInstrument(zipin, buffer, name, entryName);
 				newEntry.setSize(bytes.length);
 				newEntry.setCompressedSize(bytes.length);
 				final CRC32 crc = new CRC32();
