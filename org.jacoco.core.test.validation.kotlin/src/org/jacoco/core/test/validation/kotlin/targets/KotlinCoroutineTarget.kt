@@ -25,6 +25,11 @@ object KotlinCoroutineTarget {
         nop() // assertFullyCovered()
     } // assertFullyCovered()
 
+    private suspend fun suspendingFunctionWithTailCallOptimization() { // assertEmpty()
+        nop() // assertFullyCovered()
+        anotherSuspendingFunction() // assertFullyCovered()
+    } // assertFullyCovered()
+
     private suspend fun anotherSuspendingFunction() {
         nop() // assertFullyCovered()
     }
@@ -37,6 +42,7 @@ object KotlinCoroutineTarget {
             nop(x) // assertFullyCovered()
             suspendingFunction() // assertFullyCovered()
             nop(x) // assertFullyCovered()
+            suspendingFunctionWithTailCallOptimization()
         } // assertFullyCovered()
 
     }
