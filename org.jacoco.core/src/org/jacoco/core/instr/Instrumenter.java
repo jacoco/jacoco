@@ -218,11 +218,13 @@ public class Instrumenter {
 			}
 
 			final ZipEntry newEntry = new ZipEntry(entryName);
-			if (entry.getMethod() == ZipEntry.DEFLATED) {
+			switch (entry.getMethod()) {
+			case ZipEntry.DEFLATED:
 				newEntry.setMethod(ZipEntry.DEFLATED);
 				zipout.putNextEntry(newEntry);
 				count += filterOrInstrument(zipin, zipout, name, entryName);
-			} else {
+				break;
+			case ZipEntry.STORED:
 				// Uncompressed entries must be processed in-memory to calculate
 				// mandatory entry size and CRC
 				newEntry.setMethod(ZipEntry.STORED);
@@ -236,6 +238,9 @@ public class Instrumenter {
 				newEntry.setCrc(crc.getValue());
 				zipout.putNextEntry(newEntry);
 				zipout.write(bytes);
+				break;
+			default:
+				throw new AssertionError(entry.getMethod());
 			}
 			zipout.closeEntry();
 		}
