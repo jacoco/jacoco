@@ -218,16 +218,15 @@ public class Instrumenter {
 			}
 
 			final ZipEntry newEntry = new ZipEntry(entryName);
+			newEntry.setMethod(entry.getMethod());
 			switch (entry.getMethod()) {
 			case ZipEntry.DEFLATED:
-				newEntry.setMethod(ZipEntry.DEFLATED);
 				zipout.putNextEntry(newEntry);
 				count += filterOrInstrument(zipin, zipout, name, entryName);
 				break;
 			case ZipEntry.STORED:
 				// Uncompressed entries must be processed in-memory to calculate
 				// mandatory entry size and CRC
-				newEntry.setMethod(ZipEntry.STORED);
 				final ByteArrayOutputStream buffer = new ByteArrayOutputStream();
 				count += filterOrInstrument(zipin, buffer, name, entryName);
 				final byte[] bytes = buffer.toByteArray();
