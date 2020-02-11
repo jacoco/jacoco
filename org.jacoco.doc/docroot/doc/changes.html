@@ -37,6 +37,13 @@
       (GitHub <a href="https://github.com/jacoco/jacoco/issues/1016">#1016</a>).</li>
 </ul>
 
+<h3>Fixed bugs</h3>
+<ul>
+  <li>Compression method of zip entries is now preserved when instrumenting archives.
+      This allows to use JaCoCo with frameworks that expect uncompressed entries
+      (GitHub <a href="https://github.com/jacoco/jacoco/issues/1018">#1018</a>).</li>
+</ul>
+
 <h3>Non-functional Changes</h3>
 <ul>
   <li>Support for Pack200 was removed in JDK 14. JaCoCo will now throw a detailed
