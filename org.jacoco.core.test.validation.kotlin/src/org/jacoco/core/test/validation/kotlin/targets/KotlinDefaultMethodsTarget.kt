@@ -23,7 +23,7 @@ object KotlinDefaultMethodsTarget {
         fun m3() = Unit // assertNotCovered()
     }
 
-    class C : I { // assertFullyCovered()
+    class C : I { // assertPartlyCovered()
         override fun m1() = Unit // assertFullyCovered()
     }
 
