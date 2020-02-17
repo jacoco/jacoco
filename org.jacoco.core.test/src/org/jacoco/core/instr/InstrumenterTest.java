@@ -26,6 +26,7 @@ import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 import java.io.Serializable;
 import java.util.Arrays;
+import java.util.zip.CRC32;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
 import java.util.zip.ZipEntry;
@@ -250,18 +251,38 @@ public class InstrumenterTest {
 	public void testInstrumentAll_Zip() throws IOException {
 		ByteArrayOutputStream buffer = new ByteArrayOutputStream();
 		ZipOutputStream zipout = new ZipOutputStream(buffer);
-		zipout.putNextEntry(new ZipEntry("Test.class"));
+
+		// Compressed Entry
+		ZipEntry entry = new ZipEntry("TestCompressed.class");
+		entry.setMethod(ZipEntry.DEFLATED);
+		zipout.putNextEntry(entry);
 		zipout.write(TargetLoader.getClassDataAsBytes(getClass()));
+
+		// Uncompressed Entry
+		entry = new ZipEntry("TestUncompressed.class");
+		entry.setMethod(ZipEntry.STORED);
+		entry.setSize(TargetLoader.getClassDataAsBytes(getClass()).length);
+		CRC32 crc = new CRC32();
+		crc.update(TargetLoader.getClassDataAsBytes(getClass()));
+		entry.setCrc(crc.getValue());
+		zipout.putNextEntry(entry);
+		zipout.write(TargetLoader.getClassDataAsBytes(getClass()));
+
 		zipout.finish();
 		ByteArrayOutputStream out = new ByteArrayOutputStream();
 
 		int count = instrumenter.instrumentAll(
 				new ByteArrayInputStream(buffer.toByteArray()), out, "Test");
 
-		assertEquals(1, count);
+		assertEquals(2, count);
 		ZipInputStream zipin = new ZipInputStream(
 				new ByteArrayInputStream(out.toByteArray()));
-		assertEquals("Test.class", zipin.getNextEntry().getName());
+		entry = zipin.getNextEntry();
+		assertEquals("TestCompressed.class", entry.getName());
+		assertEquals(ZipEntry.DEFLATED, entry.getMethod());
+		entry = zipin.getNextEntry();
+		assertEquals("TestUncompressed.class", entry.getName());
+		assertEquals(ZipEntry.STORED, entry.getMethod());
 		assertNull(zipin.getNextEntry());
 	}
 
