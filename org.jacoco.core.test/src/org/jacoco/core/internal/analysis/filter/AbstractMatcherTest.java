@@ -202,6 +202,10 @@ public class AbstractMatcherTest {
 
 	@Test
 	public void firstIsALoad0() {
+		// should set cursor to null when no opcodes are present
+		matcher.firstIsALoad0(m);
+		assertNull(matcher.cursor);
+
 		// should set cursor to null when opcode mismatch
 		m.visitInsn(Opcodes.NOP);
 		matcher.firstIsALoad0(m);
