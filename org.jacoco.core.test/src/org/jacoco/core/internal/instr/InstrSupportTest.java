@@ -16,11 +16,10 @@ import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 import org.junit.Before;
-import org.junit.Rule;
 import org.junit.Test;
-import org.junit.rules.ExpectedException;
 import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.ClassVisitor;
 import org.objectweb.asm.ClassWriter;
@@ -36,9 +35,6 @@ public class InstrSupportTest {
 
 	private Printer printer;
 	private TraceMethodVisitor trace;
-
-	@Rule
-	public ExpectedException exception = ExpectedException.none();
 
 	@Before
 	public void setup() {
@@ -142,20 +138,26 @@ public class InstrSupportTest {
 
 	@Test
 	public void assertNotIntrumented_should_throw_exception_when_jacoco_data_field_is_present() {
-		exception.expect(IllegalStateException.class);
-		exception.expectMessage(
-				"Cannot process instrumented class Foo. Please supply original non-instrumented classes.");
-
-		InstrSupport.assertNotInstrumented("$jacocoData", "Foo");
+		try {
+			InstrSupport.assertNotInstrumented("$jacocoData", "Foo");
+			fail("exception expected");
+		} catch (IllegalStateException e) {
+			assertEquals(
+					"Cannot process instrumented class Foo. Please supply original non-instrumented classes.",
+					e.getMessage());
+		}
 	}
 
 	@Test
 	public void assertNotIntrumented_should_throw_exception_when_jacoco_init_method_is_present() {
-		exception.expect(IllegalStateException.class);
-		exception.expectMessage(
-				"Cannot process instrumented class Foo. Please supply original non-instrumented classes.");
-
-		InstrSupport.assertNotInstrumented("$jacocoInit", "Foo");
+		try {
+			InstrSupport.assertNotInstrumented("$jacocoInit", "Foo");
+			fail("exception expected");
+		} catch (IllegalStateException e) {
+			assertEquals(
+					"Cannot process instrumented class Foo. Please supply original non-instrumented classes.",
+					e.getMessage());
+		}
 	}
 
 	@Test

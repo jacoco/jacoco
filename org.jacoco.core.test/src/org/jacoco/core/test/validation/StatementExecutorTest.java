@@ -13,6 +13,7 @@
 package org.jacoco.core.test.validation;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 
 import java.io.IOException;
 import java.util.Arrays;
@@ -21,17 +22,12 @@ import java.util.List;
 import java.util.Map;
 
 import org.junit.Before;
-import org.junit.Rule;
 import org.junit.Test;
-import org.junit.rules.ExpectedException;
 
 /**
  * Unit tests for {@link StatementExecutor}.
  */
 public class StatementExecutorTest {
-
-	@Rule
-	public ExpectedException exception = ExpectedException.none();
 
 	private Map<String, List<?>> invocations;
 
@@ -63,29 +59,36 @@ public class StatementExecutorTest {
 
 	@Test
 	public void should_preserve_AssertionError() {
-		exception.expect(AssertionError.class);
-		exception.expectMessage("Original AssertionError.");
 		StatementExecutor executor = new StatementExecutor(this);
-
-		executor.visitInvocation("ctx", "target3");
+		try {
+			executor.visitInvocation("ctx", "target3");
+			fail("exception expected");
+		} catch (AssertionError e) {
+			assertEquals("Original AssertionError.", e.getMessage());
+		}
 	}
 
 	@Test
 	public void should_wrap_other_exceptions() {
-		exception.expect(RuntimeException.class);
-		exception.expectMessage("Invocation error (ctx)");
 		StatementExecutor executor = new StatementExecutor(this);
-
-		executor.visitInvocation("ctx", "target4");
+		try {
+			executor.visitInvocation("ctx", "target4");
+			fail("exception expected");
+		} catch (RuntimeException e) {
+			assertEquals("Invocation error (ctx)", e.getMessage());
+			assertEquals("Original IOException.", e.getCause().getMessage());
+		}
 	}
 
 	@Test
 	public void should_throw_RuntimeException_when_method_cannot_be_invoked() {
-		exception.expect(RuntimeException.class);
-		exception.expectMessage("Invocation error (ctx)");
 		StatementExecutor executor = new StatementExecutor(this);
-
-		executor.visitInvocation("ctx", "doesNotExist");
+		try {
+			executor.visitInvocation("ctx", "doesNotExist");
+			fail("exception expected");
+		} catch (RuntimeException e) {
+			assertEquals("Invocation error (ctx)", e.getMessage());
+		}
 	}
 
 	public void target1(String a, String b, String c) {
