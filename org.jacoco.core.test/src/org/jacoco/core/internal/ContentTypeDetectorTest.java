@@ -24,8 +24,8 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
 import org.jacoco.core.test.TargetLoader;
+import org.junit.AssumptionViolatedException;
 import org.junit.Test;
-import org.junit.internal.AssumptionViolatedException;
 
 /**
  * Unit tests for {@link ContentTypeDetector}.
