@@ -17,10 +17,10 @@ import static org.junit.Assert.fail;
 
 import java.lang.reflect.InvocationTargetException;
 
+import org.junit.AssumptionViolatedException;
 import org.junit.BeforeClass;
 import org.junit.Rule;
 import org.junit.Test;
-import org.junit.internal.AssumptionViolatedException;
 import org.junit.rules.TestName;
 
 /**

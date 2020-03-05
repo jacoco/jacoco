@@ -12,8 +12,8 @@
  *******************************************************************************/
 package org.jacoco.examples;
 
+import static org.hamcrest.CoreMatchers.containsString;
 import static org.jacoco.examples.ConsoleOutput.containsLine;
-import static org.junit.matchers.JUnitMatchers.containsString;
 
 import java.io.File;
 import java.io.FileOutputStream;
