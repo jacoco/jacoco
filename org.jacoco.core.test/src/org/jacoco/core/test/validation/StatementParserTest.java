@@ -13,6 +13,7 @@
 package org.jacoco.core.test.validation;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -22,9 +23,7 @@ import java.util.List;
 import org.jacoco.core.test.validation.StatementParser.IStatementVisitor;
 import org.junit.After;
 import org.junit.Before;
-import org.junit.Rule;
 import org.junit.Test;
-import org.junit.rules.ExpectedException;
 
 /**
  * Unit tests for {@link StatementParser}
@@ -35,9 +34,6 @@ public class StatementParserTest {
 
 	private List<String> actualInvocations;
 	private List<String> expectedInvocations;
-
-	@Rule
-	public ExpectedException exception = ExpectedException.none();
 
 	@Before
 	public void setup() {
@@ -106,28 +102,43 @@ public class StatementParserTest {
 
 	@Test
 	public void should_fail_when_parenthesis_is_missing() throws IOException {
-		exception.expect(IOException.class);
-		StatementParser.parse("bad(", visitor, "Foo.java");
+		try {
+			StatementParser.parse("bad(", visitor, "Foo.java");
+			fail("exception expected");
+		} catch (IOException e) {
+			// expected
+		}
 	}
 
 	@Test
 	public void should_fail_when_argument1_is_missing() throws IOException {
-		exception.expect(IOException.class);
-		StatementParser.parse("bad(,2)", visitor, "Foo.java");
+		try {
+			StatementParser.parse("bad(,2)", visitor, "Foo.java");
+			fail("exception expected");
+		} catch (IOException e) {
+			// expected
+		}
 	}
 
 	@Test
 	public void should_fail_when_argument2_is_missing() throws IOException {
-		exception.expect(IOException.class);
-		StatementParser.parse("bad(1,)", visitor, "Foo.java");
+		try {
+			StatementParser.parse("bad(1,)", visitor, "Foo.java");
+			fail("exception expected");
+		} catch (IOException e) {
+			// expected
+		}
 	}
 
 	@Test
 	public void should_give_context_info_when_parsing_fails()
 			throws IOException {
-		exception.expect(IOException.class);
-		exception.expectMessage("Invalid syntax (Foo.java:32)");
-		StatementParser.parse("bad", visitor, "Foo.java:32");
+		try {
+			StatementParser.parse("bad", visitor, "Foo.java:32");
+			fail("exception expected");
+		} catch (IOException e) {
+			assertEquals("Invalid syntax (Foo.java:32)", e.getMessage());
+		}
 	}
 
 	private void expectInvocation(String ctx, String name, Object... args) {
