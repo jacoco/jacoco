@@ -1,13 +1,14 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2019 Mountainminds GmbH & Co. KG and Contributors
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
- * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
+ * Copyright (c) 2009, 2020 Mountainminds GmbH & Co. KG and Contributors
+ * This program and the accompanying materials are made available under
+ * the terms of the Eclipse Public License 2.0 which is available at
+ * http://www.eclipse.org/legal/epl-2.0
+ *
+ * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
  *    Marc R. Hoffmann - initial API and implementation
- *    
+ *
  *******************************************************************************/
 package org.jacoco.report.html;
 
@@ -73,7 +74,7 @@ public class HTMLFormatter implements IHTMLReportContext {
 	/**
 	 * Sets the implementation for language name display. Java language names
 	 * are defined by default.
-	 * 
+	 *
 	 * @param languageNames
 	 *            converter for language specific names
 	 */
@@ -84,7 +85,7 @@ public class HTMLFormatter implements IHTMLReportContext {
 	/**
 	 * Sets the locale used for report rendering. The current default locale is
 	 * used by default.
-	 * 
+	 *
 	 * @param locale
 	 *            locale used for report rendering
 	 */
@@ -94,7 +95,7 @@ public class HTMLFormatter implements IHTMLReportContext {
 
 	/**
 	 * Sets the optional text that should be included in every footer page.
-	 * 
+	 *
 	 * @param footerText
 	 *            footer text
 	 */
@@ -104,7 +105,7 @@ public class HTMLFormatter implements IHTMLReportContext {
 
 	/**
 	 * Sets the encoding used for generated HTML pages. Default is UTF-8.
-	 * 
+	 *
 	 * @param outputEncoding
 	 *            HTML output encoding
 	 */
@@ -132,14 +133,14 @@ public class HTMLFormatter implements IHTMLReportContext {
 	private Table createTable() {
 		final Table t = new Table();
 		t.add("Element", null, new LabelColumn(), false);
-		t.add("Missed Instructions", Styles.BAR, new BarColumn(CounterEntity.INSTRUCTION,
-				locale), true);
+		t.add("Missed Instructions", Styles.BAR,
+				new BarColumn(CounterEntity.INSTRUCTION, locale), true);
 		t.add("Cov.", Styles.CTR2,
 				new PercentageColumn(CounterEntity.INSTRUCTION, locale), false);
-		t.add("Missed Branches", Styles.BAR, new BarColumn(CounterEntity.BRANCH, locale),
-				false);
-		t.add("Cov.", Styles.CTR2, new PercentageColumn(CounterEntity.BRANCH, locale),
-				false);
+		t.add("Missed Branches", Styles.BAR,
+				new BarColumn(CounterEntity.BRANCH, locale), false);
+		t.add("Cov.", Styles.CTR2,
+				new PercentageColumn(CounterEntity.BRANCH, locale), false);
 		addMissedTotalColumns(t, "Cxty", CounterEntity.COMPLEXITY);
 		addMissedTotalColumns(t, "Lines", CounterEntity.LINE);
 		addMissedTotalColumns(t, "Methods", CounterEntity.METHOD);
@@ -177,7 +178,7 @@ public class HTMLFormatter implements IHTMLReportContext {
 
 	/**
 	 * Creates a new visitor to write a report to the given output.
-	 * 
+	 *
 	 * @param output
 	 *            output to write the report to
 	 * @return visitor to emit the report data to

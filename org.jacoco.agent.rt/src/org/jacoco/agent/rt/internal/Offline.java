@@ -1,13 +1,14 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2019 Mountainminds GmbH & Co. KG and Contributors
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
- * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
+ * Copyright (c) 2009, 2020 Mountainminds GmbH & Co. KG and Contributors
+ * This program and the accompanying materials are made available under
+ * the terms of the Eclipse Public License 2.0 which is available at
+ * http://www.eclipse.org/legal/epl-2.0
+ *
+ * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
  *    Marc R. Hoffmann - initial API and implementation
- *    
+ *
  *******************************************************************************/
 package org.jacoco.agent.rt.internal;
 
@@ -22,22 +23,30 @@ import org.jacoco.core.runtime.RuntimeData;
  */
 public final class Offline {
 
-	private static final RuntimeData DATA;
 	private static final String CONFIG_RESOURCE = "/jacoco-agent.properties";
-
-	static {
-		final Properties config = ConfigLoader.load(CONFIG_RESOURCE,
-				System.getProperties());
-		DATA = Agent.getInstance(new AgentOptions(config)).getData();
-	}
 
 	private Offline() {
 		// no instances
 	}
 
+	private static RuntimeData data;
+
+	private static synchronized RuntimeData getRuntimeData() {
+		if (data == null) {
+			final Properties config = ConfigLoader.load(CONFIG_RESOURCE,
+					System.getProperties());
+			try {
+				data = Agent.getInstance(new AgentOptions(config)).getData();
+			} catch (final Exception e) {
+				throw new RuntimeException("Failed to initialize JaCoCo.", e);
+			}
+		}
+		return data;
+	}
+
 	/**
 	 * API for offline instrumented classes.
-	 * 
+	 *
 	 * @param classid
 	 *            class identifier
 	 * @param classname
@@ -48,8 +57,9 @@ public final class Offline {
 	 */
 	public static boolean[] getProbes(final long classid,
 			final String classname, final int probecount) {
-		return DATA.getExecutionData(Long.valueOf(classid), classname,
-				probecount).getProbes();
+		return getRuntimeData()
+				.getExecutionData(Long.valueOf(classid), classname, probecount)
+				.getProbes();
 	}
 
 }

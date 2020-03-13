@@ -1,13 +1,14 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2019 Mountainminds GmbH & Co. KG and Contributors
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
- * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
+ * Copyright (c) 2009, 2020 Mountainminds GmbH & Co. KG and Contributors
+ * This program and the accompanying materials are made available under
+ * the terms of the Eclipse Public License 2.0 which is available at
+ * http://www.eclipse.org/legal/epl-2.0
+ *
+ * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
  *    Marc R. Hoffmann - initial API and implementation
- *    
+ *
  *******************************************************************************/
 package org.jacoco.core.internal.analysis;
 
@@ -18,7 +19,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 
-import org.jacoco.core.analysis.ISourceFileCoverage;
+import org.jacoco.core.analysis.ISourceNode;
 import org.junit.Before;
 import org.junit.Test;
 import org.objectweb.asm.Opcodes;
@@ -204,15 +205,15 @@ public class MethodCoverageCalculatorTest {
 
 	@Test
 	public void should_work_without_lines() {
-		addInsn(ISourceFileCoverage.UNKNOWN_LINE, false);
-		addInsn(ISourceFileCoverage.UNKNOWN_LINE, false);
-		addInsn(ISourceFileCoverage.UNKNOWN_LINE, true);
+		addInsn(ISourceNode.UNKNOWN_LINE, false);
+		addInsn(ISourceNode.UNKNOWN_LINE, false);
+		addInsn(ISourceNode.UNKNOWN_LINE, true);
 
 		MethodCoverageCalculator c = new MethodCoverageCalculator(instructions);
 		c.calculate(coverage);
 
-		assertEquals(ISourceFileCoverage.UNKNOWN_LINE, coverage.getFirstLine());
-		assertEquals(ISourceFileCoverage.UNKNOWN_LINE, coverage.getLastLine());
+		assertEquals(ISourceNode.UNKNOWN_LINE, coverage.getFirstLine());
+		assertEquals(ISourceNode.UNKNOWN_LINE, coverage.getLastLine());
 		assertEquals(CounterImpl.getInstance(2, 1),
 				coverage.getInstructionCounter());
 	}

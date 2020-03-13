@@ -1,13 +1,14 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2019 Mountainminds GmbH & Co. KG and Contributors
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
- * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
+ * Copyright (c) 2009, 2020 Mountainminds GmbH & Co. KG and Contributors
+ * This program and the accompanying materials are made available under
+ * the terms of the Eclipse Public License 2.0 which is available at
+ * http://www.eclipse.org/legal/epl-2.0
+ *
+ * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
  *    Marc R. Hoffmann - initial API and implementation
- *    
+ *
  *******************************************************************************/
 package org.jacoco.core.analysis;
 
@@ -53,7 +54,7 @@ public class Analyzer {
 
 	/**
 	 * Creates a new analyzer reporting to the given output.
-	 * 
+	 *
 	 * @param executionData
 	 *            execution data
 	 * @param coverageVisitor
@@ -69,7 +70,7 @@ public class Analyzer {
 
 	/**
 	 * Creates an ASM class visitor for analysis.
-	 * 
+	 *
 	 * @param classid
 	 *            id of the class calculated with {@link CRC64}
 	 * @param className
@@ -117,7 +118,7 @@ public class Analyzer {
 
 	/**
 	 * Analyzes the class definition from a given in-memory buffer.
-	 * 
+	 *
 	 * @param buffer
 	 *            class definitions
 	 * @param location
@@ -137,7 +138,7 @@ public class Analyzer {
 	/**
 	 * Analyzes the class definition from a given input stream. The provided
 	 * {@link InputStream} is not closed by this method.
-	 * 
+	 *
 	 * @param input
 	 *            stream to read class definition from
 	 * @param location
@@ -170,7 +171,7 @@ public class Analyzer {
 	 * archive or a gzip stream that is searched recursively for class files.
 	 * All other content types are ignored. The provided {@link InputStream} is
 	 * not closed by this method.
-	 * 
+	 *
 	 * @param input
 	 *            input data
 	 * @param location
@@ -206,7 +207,7 @@ public class Analyzer {
 	 * Analyzes all class files contained in the given file or folder. Class
 	 * files as well as ZIP files are considered. Folders are searched
 	 * recursively.
-	 * 
+	 *
 	 * @param file
 	 *            file or folder to look for class files
 	 * @return number of class files found
@@ -233,7 +234,7 @@ public class Analyzer {
 	/**
 	 * Analyzes all classes from the given class path. Directories containing
 	 * class files as well as archive files are considered.
-	 * 
+	 *
 	 * @param path
 	 *            path definition
 	 * @param basedir

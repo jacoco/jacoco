@@ -1,13 +1,14 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2019 Mountainminds GmbH & Co. KG and Contributors
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
- * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
+ * Copyright (c) 2009, 2020 Mountainminds GmbH & Co. KG and Contributors
+ * This program and the accompanying materials are made available under
+ * the terms of the Eclipse Public License 2.0 which is available at
+ * http://www.eclipse.org/legal/epl-2.0
+ *
+ * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
  *    Marc R. Hoffmann - initial API and implementation
- *    
+ *
  *******************************************************************************/
 package org.jacoco.core.internal.instr;
 
@@ -42,7 +43,7 @@ class ProbeInserter extends MethodVisitor implements IProbeInserter {
 
 	/**
 	 * Creates a new {@link ProbeInserter}.
-	 * 
+	 *
 	 * @param access
 	 *            access flags of the adapted method
 	 * @param name
@@ -55,8 +56,8 @@ class ProbeInserter extends MethodVisitor implements IProbeInserter {
 	 *            callback to create the code that retrieves the reference to
 	 *            the probe array
 	 */
-	ProbeInserter(final int access, final String name, final String desc, final MethodVisitor mv,
-			final IProbeArrayStrategy arrayStrategy) {
+	ProbeInserter(final int access, final String name, final String desc,
+			final MethodVisitor mv, final IProbeArrayStrategy arrayStrategy) {
 		super(InstrSupport.ASM_API_VERSION, mv);
 		this.clinit = InstrSupport.CLINIT_NAME.equals(name);
 		this.arrayStrategy = arrayStrategy;

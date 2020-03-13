@@ -1,13 +1,14 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2019 Mountainminds GmbH & Co. KG and Contributors
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
- * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
+ * Copyright (c) 2009, 2020 Mountainminds GmbH & Co. KG and Contributors
+ * This program and the accompanying materials are made available under
+ * the terms of the Eclipse Public License 2.0 which is available at
+ * http://www.eclipse.org/legal/epl-2.0
+ *
+ * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
  *    Marc R. Hoffmann - initial API and implementation
- *    
+ *
  *******************************************************************************/
 package org.jacoco.core.data;
 
@@ -28,7 +29,7 @@ public class SessionInfoStore implements ISessionInfoVisitor {
 
 	/**
 	 * Tests whether the store is empty.
-	 * 
+	 *
 	 * @return <code>true</code> if the store is empty
 	 */
 	public boolean isEmpty() {
@@ -39,7 +40,7 @@ public class SessionInfoStore implements ISessionInfoVisitor {
 	 * Returns all {@link SessionInfo} objects currently contained in the store.
 	 * The info objects are ordered by its natural ordering (i.e. by the dump
 	 * time stamp).
-	 * 
+	 *
 	 * @return list of stored {@link SessionInfo} objects
 	 */
 	public List<SessionInfo> getInfos() {
@@ -54,11 +55,11 @@ public class SessionInfoStore implements ISessionInfoVisitor {
 	 * all contained sessions, the dump timestamp the maximum of all contained
 	 * sessions. If no session is currently contained both timestamps are set to
 	 * <code>0</code>.
-	 * 
+	 *
 	 * @param id
 	 *            identifier for the merged session info
 	 * @return new {@link SessionInfo} object
-	 * 
+	 *
 	 */
 	public SessionInfo getMerged(final String id) {
 		if (infos.isEmpty()) {
@@ -76,7 +77,7 @@ public class SessionInfoStore implements ISessionInfoVisitor {
 	/**
 	 * Writes all contained {@link SessionInfo} objects into the given visitor.
 	 * The info objects are emitted in chronological order by dump timestamp.
-	 * 
+	 *
 	 * @param visitor
 	 *            visitor to emit {@link SessionInfo} objects to
 	 */

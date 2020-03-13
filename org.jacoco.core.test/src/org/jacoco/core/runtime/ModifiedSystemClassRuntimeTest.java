@@ -1,13 +1,14 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2019 Mountainminds GmbH & Co. KG and Contributors
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
- * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
+ * Copyright (c) 2009, 2020 Mountainminds GmbH & Co. KG and Contributors
+ * This program and the accompanying materials are made available under
+ * the terms of the Eclipse Public License 2.0 which is available at
+ * http://www.eclipse.org/legal/epl-2.0
+ *
+ * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
  *    Marc R. Hoffmann - initial API and implementation
- *    
+ *
  *******************************************************************************/
 package org.jacoco.core.runtime;
 
@@ -56,8 +57,9 @@ public class ModifiedSystemClassRuntimeTest extends RuntimeTestBase {
 	 * "java.lang.reflect.Module" introduced in JDK 9.
 	 */
 	private Instrumentation newInstrumentationMock() {
-		return (Instrumentation) Proxy.newProxyInstance(getClass()
-				.getClassLoader(), new Class[] { Instrumentation.class },
+		return (Instrumentation) Proxy.newProxyInstance(
+				getClass().getClassLoader(),
+				new Class[] { Instrumentation.class },
 				new MyInvocationHandler());
 	}
 
@@ -74,8 +76,8 @@ public class ModifiedSystemClassRuntimeTest extends RuntimeTestBase {
 			added = true;
 			try {
 				// Our class should get instrumented:
-				final byte[] data = TargetLoader
-						.getClassDataAsBytes(ModifiedSystemClassRuntimeTest.class);
+				final byte[] data = TargetLoader.getClassDataAsBytes(
+						ModifiedSystemClassRuntimeTest.class);
 				verifyInstrumentedClass(TARGET_CLASS_NAME,
 						transformer.transform((ClassLoader) null,
 								TARGET_CLASS_NAME, null, null, data));

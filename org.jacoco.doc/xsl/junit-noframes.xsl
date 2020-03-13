@@ -4,7 +4,7 @@
         xmlns:stringutils="xalan://org.apache.tools.ant.util.StringUtils"
         exclude-result-prefixes="stringutils">
 <xsl:output method="xml" indent="yes" encoding="UTF-8"
-  doctype-public="-//W3C//DTD XHTML 1.0 Strict//EN" 
+  doctype-public="-//W3C//DTD XHTML 1.0 Strict//EN"
   doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"/>
 <xsl:decimal-format decimal-separator="." grouping-separator="," />
 <!--
@@ -40,7 +40,7 @@
             <link rel="stylesheet" href="../doc/resources/doc.css" charset="UTF-8" type="text/css" />
             <link rel="shortcut icon" href="../doc/resources/report.gif" type="image/gif" />
             <title>JaCoCo - JUnit Test Results</title>
-            
+
     <style type="text/css">
       .Error {
         font-weight:bold; color:red;
@@ -66,7 +66,7 @@
 
             <!-- For each class create the  part -->
             <xsl:call-template name="classes"/>
-            
+
             </div>
 			<div class="footer">
 				<span class="right"><a href="{$jacoco.home.url}">JaCoCo</a>&#160;<xsl:value-of select="$qualified.bundle.version"/></span>
@@ -86,7 +86,7 @@
 	<h2>Packages</h2>
 	<table class="coverage">
 		<xsl:call-template name="testsuite.test.header"/>
-		<tbody>			
+		<tbody>
 			<!-- list all packages recursively -->
             <xsl:for-each select="./testsuite[not(./@package = preceding-sibling::testsuite/@package)]">
                 <xsl:sort select="@package"/>

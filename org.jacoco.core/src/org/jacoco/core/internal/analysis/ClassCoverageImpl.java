@@ -1,13 +1,14 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2019 Mountainminds GmbH & Co. KG and Contributors
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
- * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
+ * Copyright (c) 2009, 2020 Mountainminds GmbH & Co. KG and Contributors
+ * This program and the accompanying materials are made available under
+ * the terms of the Eclipse Public License 2.0 which is available at
+ * http://www.eclipse.org/legal/epl-2.0
+ *
+ * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
  *    Marc R. Hoffmann - initial API and implementation
- *    
+ *
  *******************************************************************************/
 package org.jacoco.core.internal.analysis;
 
@@ -20,7 +21,8 @@ import org.jacoco.core.analysis.IMethodCoverage;
 /**
  * Implementation of {@link IClassCoverage}.
  */
-public class ClassCoverageImpl extends SourceNodeImpl implements IClassCoverage {
+public class ClassCoverageImpl extends SourceNodeImpl
+		implements IClassCoverage {
 
 	private final long id;
 	private final boolean noMatch;
@@ -32,7 +34,7 @@ public class ClassCoverageImpl extends SourceNodeImpl implements IClassCoverage 
 
 	/**
 	 * Creates a class coverage data object with the given parameters.
-	 * 
+	 *
 	 * @param name
 	 *            VM name of the class
 	 * @param id
@@ -51,7 +53,7 @@ public class ClassCoverageImpl extends SourceNodeImpl implements IClassCoverage 
 
 	/**
 	 * Add a method to this class.
-	 * 
+	 *
 	 * @param method
 	 *            method data to add
 	 */
@@ -68,7 +70,7 @@ public class ClassCoverageImpl extends SourceNodeImpl implements IClassCoverage 
 
 	/**
 	 * Sets the VM signature of the class.
-	 * 
+	 *
 	 * @param signature
 	 *            VM signature of the class (may be <code>null</code>)
 	 */
@@ -78,7 +80,7 @@ public class ClassCoverageImpl extends SourceNodeImpl implements IClassCoverage 
 
 	/**
 	 * Sets the VM name of the superclass.
-	 * 
+	 *
 	 * @param superName
 	 *            VM name of the super class (may be <code>null</code>, i.e.
 	 *            <code>java/lang/Object</code>)
@@ -89,7 +91,7 @@ public class ClassCoverageImpl extends SourceNodeImpl implements IClassCoverage 
 
 	/**
 	 * Sets the VM names of implemented/extended interfaces.
-	 * 
+	 *
 	 * @param interfaces
 	 *            VM names of implemented/extended interfaces
 	 */
@@ -99,7 +101,7 @@ public class ClassCoverageImpl extends SourceNodeImpl implements IClassCoverage 
 
 	/**
 	 * Sets the name of the corresponding source file for this class.
-	 * 
+	 *
 	 * @param sourceFileName
 	 *            name of the source file
 	 */

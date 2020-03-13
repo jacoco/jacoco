@@ -1,14 +1,15 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2019 Mountainminds GmbH & Co. KG and Contributors
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
- * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
+ * Copyright (c) 2009, 2020 Mountainminds GmbH & Co. KG and Contributors
+ * This program and the accompanying materials are made available under
+ * the terms of the Eclipse Public License 2.0 which is available at
+ * http://www.eclipse.org/legal/epl-2.0
+ *
+ * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
  *    Marc R. Hoffmann - initial API and implementation
  *    Dominik Stadler - source folder support
- *    
+ *
  *******************************************************************************/
 package org.jacoco.ant;
 
@@ -44,7 +45,7 @@ class AntResourcesLocator extends MultiSourceFileLocator {
 
 	/**
 	 * Adds the given file or directory resource to the locator.
-	 * 
+	 *
 	 * @param resource
 	 *            resource to add
 	 */
@@ -67,7 +68,7 @@ class AntResourcesLocator extends MultiSourceFileLocator {
 
 	/**
 	 * Checks, whether resources have been added.
-	 * 
+	 *
 	 * @return <code>true</code>, if no resources have been added
 	 */
 	boolean isEmpty() {

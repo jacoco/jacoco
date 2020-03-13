@@ -1,13 +1,14 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2019 Mountainminds GmbH & Co. KG and Contributors
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
- * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
+ * Copyright (c) 2009, 2020 Mountainminds GmbH & Co. KG and Contributors
+ * This program and the accompanying materials are made available under
+ * the terms of the Eclipse Public License 2.0 which is available at
+ * http://www.eclipse.org/legal/epl-2.0
+ *
+ * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
  *    Marc R. Hoffmann - initial API and implementation
- *    
+ *
  *******************************************************************************/
 
 package org.jacoco.core.internal.flow;
@@ -36,7 +37,7 @@ class FrameSnapshot implements IFrame {
 
 	/**
 	 * Create a IFrame instance based on the given analyzer.
-	 * 
+	 *
 	 * @param analyzer
 	 *            analyzer instance or <code>null</code>
 	 * @param popCount
@@ -58,7 +59,8 @@ class FrameSnapshot implements IFrame {
 	 * {@link MethodVisitor#visitFrame(int, int, Object[], int, Object[])}
 	 * method.
 	 */
-	private static Object[] reduce(final List<Object> source, final int popCount) {
+	private static Object[] reduce(final List<Object> source,
+			final int popCount) {
 		final List<Object> copy = new ArrayList<Object>(source);
 		final int size = source.size() - popCount;
 		copy.subList(size, source.size()).clear();

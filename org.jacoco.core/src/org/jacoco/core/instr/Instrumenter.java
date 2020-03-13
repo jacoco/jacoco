@@ -1,13 +1,14 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2019 Mountainminds GmbH & Co. KG and Contributors
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
- * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
+ * Copyright (c) 2009, 2020 Mountainminds GmbH & Co. KG and Contributors
+ * This program and the accompanying materials are made available under
+ * the terms of the Eclipse Public License 2.0 which is available at
+ * http://www.eclipse.org/legal/epl-2.0
+ *
+ * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
  *    Marc R. Hoffmann - initial API and implementation
- *    
+ *
  *******************************************************************************/
 package org.jacoco.core.instr;
 
@@ -15,6 +16,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.zip.CRC32;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
 import java.util.zip.ZipEntry;
@@ -47,7 +49,7 @@ public class Instrumenter {
 
 	/**
 	 * Creates a new instance based on the given runtime.
-	 * 
+	 *
 	 * @param runtime
 	 *            runtime used by the instrumented classes
 	 */
@@ -61,7 +63,7 @@ public class Instrumenter {
 	 * typically necessary as instrumentation modifies the class files and
 	 * therefore invalidates existing JAR signatures. Default is
 	 * <code>true</code>.
-	 * 
+	 *
 	 * @param flag
 	 *            <code>true</code> if signatures should be removed
 	 */
@@ -91,7 +93,7 @@ public class Instrumenter {
 
 	/**
 	 * Creates a instrumented version of the given class if possible.
-	 * 
+	 *
 	 * @param buffer
 	 *            definition of the class
 	 * @param name
@@ -112,7 +114,7 @@ public class Instrumenter {
 	/**
 	 * Creates a instrumented version of the given class if possible. The
 	 * provided {@link InputStream} is not closed by this method.
-	 * 
+	 *
 	 * @param input
 	 *            stream to read class definition from
 	 * @param name
@@ -137,7 +139,7 @@ public class Instrumenter {
 	 * Creates a instrumented version of the given class file. The provided
 	 * {@link InputStream} and {@link OutputStream} instances are not closed by
 	 * this method.
-	 * 
+	 *
 	 * @param input
 	 *            stream to read class definition from
 	 * @param output
@@ -167,7 +169,7 @@ public class Instrumenter {
 	 * other files are copied without modification. The provided
 	 * {@link InputStream} and {@link OutputStream} instances are not closed by
 	 * this method.
-	 * 
+	 *
 	 * @param input
 	 *            stream to contents from
 	 * @param output
@@ -215,14 +217,47 @@ public class Instrumenter {
 				continue;
 			}
 
-			zipout.putNextEntry(new ZipEntry(entryName));
-			if (!signatureRemover.filterEntry(entryName, zipin, zipout)) {
-				count += instrumentAll(zipin, zipout, name + "@" + entryName);
+			final ZipEntry newEntry = new ZipEntry(entryName);
+			newEntry.setMethod(entry.getMethod());
+			switch (entry.getMethod()) {
+			case ZipEntry.DEFLATED:
+				zipout.putNextEntry(newEntry);
+				count += filterOrInstrument(zipin, zipout, name, entryName);
+				break;
+			case ZipEntry.STORED:
+				// Uncompressed entries must be processed in-memory to calculate
+				// mandatory entry size and CRC
+				final ByteArrayOutputStream buffer = new ByteArrayOutputStream();
+				count += filterOrInstrument(zipin, buffer, name, entryName);
+				final byte[] bytes = buffer.toByteArray();
+				newEntry.setSize(bytes.length);
+				newEntry.setCompressedSize(bytes.length);
+				newEntry.setCrc(crc(bytes));
+				zipout.putNextEntry(newEntry);
+				zipout.write(bytes);
+				break;
+			default:
+				throw new AssertionError(entry.getMethod());
 			}
 			zipout.closeEntry();
 		}
 		zipout.finish();
 		return count;
+	}
+
+	private int filterOrInstrument(final InputStream in, final OutputStream out,
+			final String name, final String entryName) throws IOException {
+		if (signatureRemover.filterEntry(entryName, in, out)) {
+			return 0;
+		} else {
+			return instrumentAll(in, out, name + "@" + entryName);
+		}
+	}
+
+	private static long crc(final byte[] data) {
+		final CRC32 crc = new CRC32();
+		crc.update(data);
+		return crc.getValue();
 	}
 
 	private ZipEntry nextEntry(final ZipInputStream input,

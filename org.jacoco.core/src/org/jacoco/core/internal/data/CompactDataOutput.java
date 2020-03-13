@@ -1,13 +1,14 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2019 Mountainminds GmbH & Co. KG and Contributors
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
- * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
+ * Copyright (c) 2009, 2020 Mountainminds GmbH & Co. KG and Contributors
+ * This program and the accompanying materials are made available under
+ * the terms of the Eclipse Public License 2.0 which is available at
+ * http://www.eclipse.org/legal/epl-2.0
+ *
+ * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
  *    Marc R. Hoffmann - initial API and implementation
- *    
+ *
  *******************************************************************************/
 package org.jacoco.core.internal.data;
 
@@ -17,7 +18,7 @@ import java.io.OutputStream;
 
 /**
  * Additional data output methods for compact storage of data structures.
- * 
+ *
  * @see CompactDataInput
  */
 public class CompactDataOutput extends DataOutputStream {
@@ -25,7 +26,7 @@ public class CompactDataOutput extends DataOutputStream {
 	/**
 	 * Creates a new {@link CompactDataOutput} instance that writes data to the
 	 * specified underlying output stream
-	 * 
+	 *
 	 * @param out
 	 *            underlying output stream
 	 */
@@ -37,7 +38,7 @@ public class CompactDataOutput extends DataOutputStream {
 	 * Writes a variable length representation of an integer value that reduces
 	 * the number of written bytes for small positive values. Depending on the
 	 * given value 1 to 5 bytes will be written to the underlying stream.
-	 * 
+	 *
 	 * @param value
 	 *            value to write
 	 * @throws IOException
@@ -55,7 +56,7 @@ public class CompactDataOutput extends DataOutputStream {
 	/**
 	 * Writes a boolean array. Internally a sequence of boolean values is packed
 	 * into single bits.
-	 * 
+	 *
 	 * @param value
 	 *            boolean array
 	 * @throws IOException

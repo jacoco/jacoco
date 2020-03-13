@@ -1,13 +1,14 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2019 Mountainminds GmbH & Co. KG and Contributors
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
- * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
- * 
+ * Copyright (c) 2009, 2020 Mountainminds GmbH & Co. KG and Contributors
+ * This program and the accompanying materials are made available under
+ * the terms of the Eclipse Public License 2.0 which is available at
+ * http://www.eclipse.org/legal/epl-2.0
+ *
+ * SPDX-License-Identifier: EPL-2.0
+ *
  * Contributors:
  *    Brock Janiczak - initial API and implementation
- * 
+ *
  *******************************************************************************/
 package org.jacoco.report.csv;
 
@@ -32,7 +33,8 @@ class CSVGroupHandler implements IReportGroupVisitor {
 		this(writer, null);
 	}
 
-	private CSVGroupHandler(final ClassRowWriter writer, final String groupName) {
+	private CSVGroupHandler(final ClassRowWriter writer,
+			final String groupName) {
 		this.writer = writer;
 		this.groupName = groupName;
 	}
@@ -50,7 +52,8 @@ class CSVGroupHandler implements IReportGroupVisitor {
 		}
 	}
 
-	public IReportGroupVisitor visitGroup(final String name) throws IOException {
+	public IReportGroupVisitor visitGroup(final String name)
+			throws IOException {
 		return new CSVGroupHandler(writer, appendName(name));
 	}
 

@@ -1,13 +1,14 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2019 Mountainminds GmbH & Co. KG and Contributors
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
- * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
+ * Copyright (c) 2009, 2020 Mountainminds GmbH & Co. KG and Contributors
+ * This program and the accompanying materials are made available under
+ * the terms of the Eclipse Public License 2.0 which is available at
+ * http://www.eclipse.org/legal/epl-2.0
+ *
+ * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
  *    Marc R. Hoffmann - initial API and implementation
- *    
+ *
  *******************************************************************************/
 package org.jacoco.core.runtime;
 
@@ -54,8 +55,8 @@ public abstract class RuntimeTestBase {
 	}
 
 	@Test
-	public void testDataAccessor() throws InstantiationException,
-			IllegalAccessException {
+	public void testDataAccessor()
+			throws InstantiationException, IllegalAccessException {
 		ITarget t = generateAndInstantiateClass(1234);
 		data.collect(storage, storage, false);
 		storage.assertData(1234, t.get());
@@ -64,18 +65,18 @@ public abstract class RuntimeTestBase {
 	@Test
 	public void testNoLocalVariablesInDataAccessor()
 			throws InstantiationException, IllegalAccessException {
-		runtime.generateDataAccessor(1001, "Target", 5, new MethodVisitor(
-				InstrSupport.ASM_API_VERSION) {
-			@Override
-			public void visitVarInsn(int opcode, int var) {
-				fail("No usage of local variables allowed.");
-			}
-		});
+		runtime.generateDataAccessor(1001, "Target", 5,
+				new MethodVisitor(InstrSupport.ASM_API_VERSION) {
+					@Override
+					public void visitVarInsn(int opcode, int var) {
+						fail("No usage of local variables allowed.");
+					}
+				});
 	}
 
 	@Test
-	public void testExecutionRecording() throws InstantiationException,
-			IllegalAccessException {
+	public void testExecutionRecording()
+			throws InstantiationException, IllegalAccessException {
 		generateAndInstantiateClass(1001).a();
 		data.collect(storage, storage, false);
 		storage.assertSize(1);
@@ -85,8 +86,8 @@ public abstract class RuntimeTestBase {
 	}
 
 	@Test
-	public void testLoadSameClassTwice() throws InstantiationException,
-			IllegalAccessException {
+	public void testLoadSameClassTwice()
+			throws InstantiationException, IllegalAccessException {
 		generateAndInstantiateClass(1001).a();
 		generateAndInstantiateClass(1001).b();
 		data.collect(storage, storage, false);
@@ -118,13 +119,14 @@ public abstract class RuntimeTestBase {
 				null);
 
 		// Constructor
-		GeneratorAdapter gen = new GeneratorAdapter(writer.visitMethod(
-				Opcodes.ACC_PUBLIC, "<init>", "()V", null, new String[0]),
+		GeneratorAdapter gen = new GeneratorAdapter(
+				writer.visitMethod(Opcodes.ACC_PUBLIC, "<init>", "()V", null,
+						new String[0]),
 				Opcodes.ACC_PUBLIC, "<init>", "()V");
 		gen.visitCode();
 		gen.loadThis();
-		gen.invokeConstructor(Type.getType(Object.class), new Method("<init>",
-				"()V"));
+		gen.invokeConstructor(Type.getType(Object.class),
+				new Method("<init>", "()V"));
 		gen.loadThis();
 		final int size = runtime.generateDataAccessor(classid, className, 2,
 				gen);
@@ -135,8 +137,8 @@ public abstract class RuntimeTestBase {
 		gen.visitEnd();
 
 		// get()
-		gen = new GeneratorAdapter(writer.visitMethod(Opcodes.ACC_PUBLIC,
-				"get", "()[Z", null, new String[0]), Opcodes.ACC_PUBLIC, "get",
+		gen = new GeneratorAdapter(writer.visitMethod(Opcodes.ACC_PUBLIC, "get",
+				"()[Z", null, new String[0]), Opcodes.ACC_PUBLIC, "get",
 				"()[Z");
 		gen.visitCode();
 		gen.getStatic(classType, InstrSupport.DATAFIELD_NAME,
@@ -174,8 +176,9 @@ public abstract class RuntimeTestBase {
 		writer.visitEnd();
 
 		final TargetLoader loader = new TargetLoader();
-		return (ITarget) loader.add(className.replace('/', '.'),
-				writer.toByteArray()).newInstance();
+		return (ITarget) loader
+				.add(className.replace('/', '.'), writer.toByteArray())
+				.newInstance();
 	}
 
 	/**
@@ -186,7 +189,7 @@ public abstract class RuntimeTestBase {
 
 		/**
 		 * Returns a reference to the probe array.
-		 * 
+		 *
 		 * @return the probe array
 		 */
 		boolean[] get();

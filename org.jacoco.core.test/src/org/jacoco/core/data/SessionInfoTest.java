@@ -1,13 +1,14 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2019 Mountainminds GmbH & Co. KG and Contributors
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
- * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
+ * Copyright (c) 2009, 2020 Mountainminds GmbH & Co. KG and Contributors
+ * This program and the accompanying materials are made available under
+ * the terms of the Eclipse Public License 2.0 which is available at
+ * http://www.eclipse.org/legal/epl-2.0
+ *
+ * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
  *    Marc R. Hoffmann - initial API and implementation
- *    
+ *
  *******************************************************************************/
 package org.jacoco.core.data;
 
@@ -35,15 +36,12 @@ public class SessionInfoTest {
 
 	@Test
 	public void testCompare() {
-		assertEquals(0,
-				new SessionInfo("id", 1000, 2000).compareTo(new SessionInfo(
-						"id", 1234, 2000)));
-		assertEquals(-1,
-				new SessionInfo("id", 3333, 1999).compareTo(new SessionInfo(
-						"id", 1234, 2000)));
-		assertEquals(+1,
-				new SessionInfo("id", 1234, 2001).compareTo(new SessionInfo(
-						"id", 2222, 2000)));
+		assertEquals(0, new SessionInfo("id", 1000, 2000)
+				.compareTo(new SessionInfo("id", 1234, 2000)));
+		assertEquals(-1, new SessionInfo("id", 3333, 1999)
+				.compareTo(new SessionInfo("id", 1234, 2000)));
+		assertEquals(+1, new SessionInfo("id", 1234, 2001)
+				.compareTo(new SessionInfo("id", 2222, 2000)));
 	}
 
 	@Test

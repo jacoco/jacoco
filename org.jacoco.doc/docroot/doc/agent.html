@@ -14,7 +14,7 @@
   <a href="index.html" class="el_group">Documentation</a> &gt;
   <span class="el_source">Java Agent</span>
 </div>
-<div id="content"> 
+<div id="content">
 
 <h1>Java Agent</h1>
 
@@ -51,7 +51,7 @@
 <p>
   The agent <code>jacocoagent.jar</code> is part of the JaCoCo distribution and
   includes all required dependencies. A Java agent can be activated with the
-  following JVM option: 
+  following JVM option:
 </p>
 
 <pre>
@@ -59,7 +59,7 @@
 </pre>
 
 <p>
-  The JaCoCo agent accepts the following options: 
+  The JaCoCo agent accepts the following options:
 </p>
 
 <table class="coverage">
@@ -83,14 +83,14 @@
           <code>false</code>, an existing execution data file will be replaced.
       </td>
       <td><code>true</code></td>
-    </tr>    
+    </tr>
     <tr>
       <td><code>includes</code></td>
       <td>A list of class names that should be included in execution analysis.
           The list entries are separated by a colon (<code>:</code>) and
           may use wildcard characters (<code>*</code> and <code>?</code>).
           Except for performance optimization or technical corner cases this
-          option is normally not required. 
+          option is normally not required.
       </td>
       <td><code>*</code> (all classes)</td>
     </tr>
@@ -100,7 +100,9 @@
           The list entries are separated by a colon (<code>:</code>) and
           may use wildcard characters (<code>*</code> and <code>?</code>).
           Except for performance optimization or technical corner cases this
-          option is normally not required. 
+          option is normally not required. If you want to exclude classes from
+          the report please configure the respective report generation tool
+          accordingly.
       </td>
       <td><i>empty</i> (no excluded classes)</td>
     </tr>
@@ -112,7 +114,7 @@
           <code>?</code>). This option might be required in case of special
           frameworks that conflict with JaCoCo code instrumentation, in
           particular class loaders that do not have access to the Java runtime
-          classes. 
+          classes.
       </td>
       <td><code>sun.reflect.DelegatingClassLoader</code></td>
     </tr>
@@ -120,7 +122,7 @@
       <td><code>inclbootstrapclasses</code></td>
       <td>Specifies whether also classes from the bootstrap classloader should
           be instrumented. Use this feature with caution, it needs heavy
-          includes/excludes tuning. 
+          includes/excludes tuning.
       </td>
       <td><code>false</code></td>
     </tr>
@@ -128,7 +130,7 @@
       <td><code>inclnolocationclasses</code></td>
       <td>Specifies whether also classes without a source location should be
           instrumented. Normally such classes are generated at runtime e.g. by
-          mocking frameworks and are therefore excluded by default. 
+          mocking frameworks and are therefore excluded by default.
       </td>
       <td><code>false</code></td>
     </tr>
@@ -138,7 +140,7 @@
           this parameter a random identifier is created by the agent.
       </td>
       <td><i>auto-generated</i></td>
-    </tr>  
+    </tr>
     <tr>
       <td><code>dumponexit</code></td>
       <td>If set to <code>true</code> coverage data will be written on VM
@@ -163,7 +165,7 @@
               attribute. Execution data is written to this TCP connection.</li>
           <li><code>none</code>: Do not produce any output.</li>
         </ul>
-        Please see the security considerations below. 
+        Please see the security considerations below.
       </td>
       <td><code>file</code></td>
     </tr>
@@ -201,7 +203,7 @@
       <td>If set to <code>true</code> the agent exposes
           <a href="./api/org/jacoco/agent/rt/IAgent.html">functionality</a> via
           JMX under the name <code>org.jacoco:type=Runtime</code>. Please see
-          the security considerations below. 
+          the security considerations below.
       </td>
       <td><code>false</code></td>
     </tr>
@@ -216,13 +218,13 @@
   authentication mechanism. If you run JaCoCo on production systems make sure
   that no untrusted sources have access to the TCP server port, or JaCoCo TCP
   clients only connect to trusted targets. Otherwise internal information of the
-  application might be revealed or DOS attacks are possible. 
+  application might be revealed or DOS attacks are possible.
 </p>
 
 </div>
 <div class="footer">
-  <span class="right"><a href="@jacoco.home.url@">JaCoCo</a> @qualified.bundle.version@</span>
-  <a href="license.html">Copyright</a> &copy; @copyright.years@ Mountainminds GmbH &amp; Co. KG and Contributors
+  <span class="right"><a href="${jacoco.home.url}">JaCoCo</a> ${qualified.bundle.version}</span>
+  <a href="license.html">Copyright</a> &copy; ${copyright.years} Mountainminds GmbH &amp; Co. KG and Contributors
 </div>
 
 </body>

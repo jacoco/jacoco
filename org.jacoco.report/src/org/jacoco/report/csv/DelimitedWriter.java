@@ -1,13 +1,14 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2019 Mountainminds GmbH & Co. KG and Contributors
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
- * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
+ * Copyright (c) 2009, 2020 Mountainminds GmbH & Co. KG and Contributors
+ * This program and the accompanying materials are made available under
+ * the terms of the Eclipse Public License 2.0 which is available at
+ * http://www.eclipse.org/legal/epl-2.0
+ *
+ * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
  *    Brock Janiczak - initial API and implementation
- *    
+ *
  *******************************************************************************/
 package org.jacoco.report.csv;
 
@@ -18,7 +19,7 @@ import java.io.Writer;
  * Helper class for writing out CSV or tab delimited files.
  * <p>
  * <strong>Example Usage:</strong>
- * 
+ *
  * <pre>
  * delimitedWriter.writeFields(&quot;header1&quot;, &quot;header2&quot;, ...);
  * for each line to be written {
@@ -28,7 +29,7 @@ import java.io.Writer;
  * }
  * delimitedWriter.close();
  * </pre>
- * 
+ *
  * </p>
  */
 class DelimitedWriter {
@@ -43,7 +44,7 @@ class DelimitedWriter {
 
 	/**
 	 * Creates a new Delimited writer using the default delimiter
-	 * 
+	 *
 	 * @param delegate
 	 *            Writer to delegate all writes to
 	 */
@@ -53,7 +54,7 @@ class DelimitedWriter {
 
 	/**
 	 * Creates a new Delimited writer using the default delimiter
-	 * 
+	 *
 	 * @param delegate
 	 *            Writer to delegate all writes to
 	 * @param delimiter
@@ -67,7 +68,7 @@ class DelimitedWriter {
 	/**
 	 * Write multiple fields at once. Values will be auto escaped and quoted as
 	 * needed. Each value will be separated using the current delimiter
-	 * 
+	 *
 	 * @param fields
 	 *            Values to write
 	 * @throws IOException
@@ -83,7 +84,7 @@ class DelimitedWriter {
 	 * Write a single value. Values will be auto escaped and quoted as needed.
 	 * If this is not the first field of the current line the value will be
 	 * prepended with the current delimiter
-	 * 
+	 *
 	 * @param field
 	 *            Value to write
 	 * @throws IOException
@@ -99,7 +100,7 @@ class DelimitedWriter {
 
 	/**
 	 * Write a single integer value.
-	 * 
+	 *
 	 * @param value
 	 *            Value to write
 	 * @throws IOException
@@ -111,7 +112,7 @@ class DelimitedWriter {
 
 	/**
 	 * Write muliple integer values
-	 * 
+	 *
 	 * @param values
 	 *            values to write
 	 * @throws IOException
@@ -126,7 +127,7 @@ class DelimitedWriter {
 	/**
 	 * Output a new line and advance the writer to the next line. The line
 	 * delimiter is the default for the platform.
-	 * 
+	 *
 	 * @throws IOException
 	 *             Error writing to the underlying writer object
 	 */
@@ -138,7 +139,7 @@ class DelimitedWriter {
 	/**
 	 * Close the underlying writer object. Once closed all write operations will
 	 * fail
-	 * 
+	 *
 	 * @throws IOException
 	 *             Error closing the underlying writer object
 	 */
@@ -150,7 +151,7 @@ class DelimitedWriter {
 	 * Escapes any occurrences of the quote character in value by replacing it
 	 * with a double quote. Also Quotes the value if a quote or delimiter value
 	 * is found.
-	 * 
+	 *
 	 * @param value
 	 *            String that needs escaping
 	 * @return New string with all values escaped

@@ -1,14 +1,15 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2019 Mountainminds GmbH & Co. KG and Contributors
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
- * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
+ * Copyright (c) 2009, 2020 Mountainminds GmbH & Co. KG and Contributors
+ * This program and the accompanying materials are made available under
+ * the terms of the Eclipse Public License 2.0 which is available at
+ * http://www.eclipse.org/legal/epl-2.0
+ *
+ * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
  *    Evgeny Mandrikov - TestNG support
  *    Brock Janiczak - initial API and implementation
- *    
+ *
  *******************************************************************************/
 package org.jacoco.ant;
 
@@ -33,7 +34,8 @@ import org.apache.tools.ant.UnknownElement;
  * <li>Task must be using a forked VM (so vm args can be passed)</li>
  * </ul>
  */
-public class CoverageTask extends AbstractCoverageTask implements TaskContainer {
+public class CoverageTask extends AbstractCoverageTask
+		implements TaskContainer {
 
 	private final Collection<TaskEnhancer> taskEnhancers = new ArrayList<TaskEnhancer>();
 	private Task childTask;
@@ -65,9 +67,10 @@ public class CoverageTask extends AbstractCoverageTask implements TaskContainer 
 
 		final TaskEnhancer enhancer = findEnhancerForTask(subTaskTypeName);
 		if (enhancer == null) {
-			throw new BuildException(format(
-					"%s is not a valid child of the coverage task",
-					subTaskTypeName), getLocation());
+			throw new BuildException(
+					format("%s is not a valid child of the coverage task",
+							subTaskTypeName),
+					getLocation());
 		}
 
 		if (isEnabled()) {
@@ -161,8 +164,8 @@ public class CoverageTask extends AbstractCoverageTask implements TaskContainer 
 			runtimeConfigurableWrapper.setAttribute("value",
 					getLaunchingArgument());
 
-			task.getRuntimeConfigurableWrapper().addChild(
-					runtimeConfigurableWrapper);
+			task.getRuntimeConfigurableWrapper()
+					.addChild(runtimeConfigurableWrapper);
 
 			((UnknownElement) task).addChild(el);
 		}
@@ -184,7 +187,7 @@ public class CoverageTask extends AbstractCoverageTask implements TaskContainer 
 		/**
 		 * Attempt to enhance the supplied task with coverage information. This
 		 * operation may fail if the task is being executed in the current VM
-		 * 
+		 *
 		 * @param task
 		 *            Task instance to enhance (usually an
 		 *            {@link UnknownElement})

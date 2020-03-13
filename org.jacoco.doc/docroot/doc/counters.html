@@ -14,14 +14,14 @@
   <a href="index.html" class="el_group">Documentation</a> &gt;
   <span class="el_source">Coverage Counters</span>
 </div>
-<div id="content"> 
+<div id="content">
 
 <h1>Coverage Counters</h1>
 
 <p>
   JaCoCo uses a set of different counters to calculate coverage metrics. All
   these counters are derived from information contained in Java class files
-  which basically are Java byte code instructions and debug information 
+  which basically are Java byte code instructions and debug information
   optionally embedded in class files. This approach allows efficient on-the-fly
   instrumentation and analysis of applications even when no source code is
   available. In most cases the collected information can be mapped back to
@@ -30,7 +30,7 @@
   information to calculate line level coverage and provide source highlighting.
   Not all Java language constructs can be directly compiled to corresponding
   byte code. In such cases the Java compiler creates so called <i>synthetic</i>
-  code which sometimes results in unexpected code coverage results. 
+  code which sometimes results in unexpected code coverage results.
 </p>
 
 <h2>Instructions (C0 Coverage)</h2>
@@ -82,7 +82,7 @@
 
 <p>
   The formal definition of the cyclomatic complexity v(G) is based on the
-  representation of a method's control flow graph as a directed graph:  
+  representation of a method's control flow graph as a directed graph:
 </p>
 
 <blockquote>
@@ -123,7 +123,7 @@
 <p>
   Due to the fact that a single line typically compiles to multiple byte code
   instructions the source code highlighting shows three different status for
-  each line containing source code: 
+  each line containing source code:
 </p>
 
 <ul>
@@ -164,10 +164,10 @@
   initializers such interfaces are also considered as executable classes.
 </p>
 
-</div> 
+</div>
 <div class="footer">
-  <span class="right"><a href="@jacoco.home.url@">JaCoCo</a> @qualified.bundle.version@</span>
-  <a href="license.html">Copyright</a> &copy; @copyright.years@ Mountainminds GmbH &amp; Co. KG and Contributors
+  <span class="right"><a href="${jacoco.home.url}">JaCoCo</a> ${qualified.bundle.version}</span>
+  <a href="license.html">Copyright</a> &copy; ${copyright.years} Mountainminds GmbH &amp; Co. KG and Contributors
 </div>
 
 </body>

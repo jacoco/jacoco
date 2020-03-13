@@ -1,13 +1,14 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2019 Mountainminds GmbH & Co. KG and Contributors
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
- * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
+ * Copyright (c) 2009, 2020 Mountainminds GmbH & Co. KG and Contributors
+ * This program and the accompanying materials are made available under
+ * the terms of the Eclipse Public License 2.0 which is available at
+ * http://www.eclipse.org/legal/epl-2.0
+ *
+ * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
  *    Marc R. Hoffmann - initial API and implementation
- *    
+ *
  *******************************************************************************/
 package org.jacoco.report.internal.html;
 
@@ -29,7 +30,7 @@ public class HTMLElement extends XMLElement {
 
 	/**
 	 * Creates a <code>html</code> root element of a XHTML document.
-	 * 
+	 *
 	 * @param encoding
 	 *            character encoding used for output
 	 * @param output
@@ -59,7 +60,7 @@ public class HTMLElement extends XMLElement {
 
 	/**
 	 * Creates a 'head' element.
-	 * 
+	 *
 	 * @return 'head' element
 	 * @throws IOException
 	 *             in case of problems with the underlying output
@@ -70,7 +71,7 @@ public class HTMLElement extends XMLElement {
 
 	/**
 	 * Creates a 'body' element.
-	 * 
+	 *
 	 * @return 'body' element
 	 * @throws IOException
 	 *             in case of problems with the underlying output
@@ -81,7 +82,7 @@ public class HTMLElement extends XMLElement {
 
 	/**
 	 * Creates a 'meta' element.
-	 * 
+	 *
 	 * @param httpequivattr
 	 *            value of the http-equiv attribute
 	 * @param contentattr
@@ -100,7 +101,7 @@ public class HTMLElement extends XMLElement {
 
 	/**
 	 * Creates a 'link' element.
-	 * 
+	 *
 	 * @param relattr
 	 *            value of the rel attribute
 	 * @param hrefattr
@@ -122,7 +123,7 @@ public class HTMLElement extends XMLElement {
 
 	/**
 	 * Creates a 'title' element.
-	 * 
+	 *
 	 * @return 'title' element
 	 * @throws IOException
 	 *             in case of problems with the underlying output
@@ -133,7 +134,7 @@ public class HTMLElement extends XMLElement {
 
 	/**
 	 * Creates a 'h1' element.
-	 * 
+	 *
 	 * @return 'h1' element
 	 * @throws IOException
 	 *             in case of problems with the underlying output
@@ -144,7 +145,7 @@ public class HTMLElement extends XMLElement {
 
 	/**
 	 * Creates a 'p' element.
-	 * 
+	 *
 	 * @return 'p' element
 	 * @throws IOException
 	 *             in case of problems with the underlying output
@@ -155,7 +156,7 @@ public class HTMLElement extends XMLElement {
 
 	/**
 	 * Creates a 'span' element.
-	 * 
+	 *
 	 * @return 'span' element
 	 * @throws IOException
 	 *             in case of problems with the underlying output
@@ -166,7 +167,7 @@ public class HTMLElement extends XMLElement {
 
 	/**
 	 * Creates a 'span' element.
-	 * 
+	 *
 	 * @param classattr
 	 *            value of the class attribute
 	 * @return 'span' element
@@ -181,7 +182,7 @@ public class HTMLElement extends XMLElement {
 
 	/**
 	 * Creates a 'span' element.
-	 * 
+	 *
 	 * @param classattr
 	 *            value of the class attribute
 	 * @param idattr
@@ -199,7 +200,7 @@ public class HTMLElement extends XMLElement {
 
 	/**
 	 * Creates a 'div' element.
-	 * 
+	 *
 	 * @param classattr
 	 *            value of the class attribute
 	 * @return 'div' element
@@ -214,7 +215,7 @@ public class HTMLElement extends XMLElement {
 
 	/**
 	 * Creates a 'code' element.
-	 * 
+	 *
 	 * @return 'code' element
 	 * @throws IOException
 	 *             in case of problems with the underlying output
@@ -225,7 +226,7 @@ public class HTMLElement extends XMLElement {
 
 	/**
 	 * Creates a 'pre' element.
-	 * 
+	 *
 	 * @param classattr
 	 *            value of the class attribute
 	 * @return 'pre' element
@@ -240,7 +241,7 @@ public class HTMLElement extends XMLElement {
 
 	/**
 	 * Creates a 'a' element.
-	 * 
+	 *
 	 * @param hrefattr
 	 *            value of the href attribute
 	 * @return 'a' element
@@ -255,7 +256,7 @@ public class HTMLElement extends XMLElement {
 
 	/**
 	 * Creates a 'a' element.
-	 * 
+	 *
 	 * @param hrefattr
 	 *            value of the href attribute
 	 * @param classattr
@@ -273,7 +274,7 @@ public class HTMLElement extends XMLElement {
 
 	/**
 	 * Creates a link to the given {@link ILinkable}.
-	 * 
+	 *
 	 * @param linkable
 	 *            object to link to
 	 * @param base
@@ -297,7 +298,7 @@ public class HTMLElement extends XMLElement {
 
 	/**
 	 * Creates a 'table' element.
-	 * 
+	 *
 	 * @param classattr
 	 *            value of the class attribute
 	 * @return 'table' element
@@ -313,7 +314,7 @@ public class HTMLElement extends XMLElement {
 
 	/**
 	 * Creates a 'thead' element.
-	 * 
+	 *
 	 * @return 'thead' element
 	 * @throws IOException
 	 *             in case of problems with the underlying output
@@ -324,7 +325,7 @@ public class HTMLElement extends XMLElement {
 
 	/**
 	 * Creates a 'tfoot' element.
-	 * 
+	 *
 	 * @return 'tfoot' element
 	 * @throws IOException
 	 *             in case of problems with the underlying output
@@ -335,7 +336,7 @@ public class HTMLElement extends XMLElement {
 
 	/**
 	 * Creates a 'tbody' element.
-	 * 
+	 *
 	 * @return 'tbody' element
 	 * @throws IOException
 	 *             in case of problems with the underlying output
@@ -346,7 +347,7 @@ public class HTMLElement extends XMLElement {
 
 	/**
 	 * Creates a 'tr' element.
-	 * 
+	 *
 	 * @return 'tr' element
 	 * @throws IOException
 	 *             in case of problems with the underlying output
@@ -357,7 +358,7 @@ public class HTMLElement extends XMLElement {
 
 	/**
 	 * Creates a 'td' element.
-	 * 
+	 *
 	 * @return 'td' element
 	 * @throws IOException
 	 *             in case of problems with the underlying output
@@ -368,7 +369,7 @@ public class HTMLElement extends XMLElement {
 
 	/**
 	 * Creates a 'td' element.
-	 * 
+	 *
 	 * @param classattr
 	 *            value of the class attribute
 	 * @return 'td' element
@@ -383,7 +384,7 @@ public class HTMLElement extends XMLElement {
 
 	/**
 	 * Creates a 'img' element.
-	 * 
+	 *
 	 * @param srcattr
 	 *            value of the src attribute
 	 * @param widthattr
@@ -408,7 +409,7 @@ public class HTMLElement extends XMLElement {
 
 	/**
 	 * Creates a JavaScript 'script' element.
-	 * 
+	 *
 	 * @param srcattr
 	 *            value of the src attribute
 	 * @throws IOException

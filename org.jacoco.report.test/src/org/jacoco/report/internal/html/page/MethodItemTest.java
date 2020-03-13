@@ -1,13 +1,14 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2019 Mountainminds GmbH & Co. KG and Contributors
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
- * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
+ * Copyright (c) 2009, 2020 Mountainminds GmbH & Co. KG and Contributors
+ * This program and the accompanying materials are made available under
+ * the terms of the Eclipse Public License 2.0 which is available at
+ * http://www.eclipse.org/legal/epl-2.0
+ *
+ * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
  *    Marc R. Hoffmann - initial API and implementation
- *    
+ *
  *******************************************************************************/
 package org.jacoco.report.internal.html.page;
 
@@ -60,14 +61,16 @@ public class MethodItemTest {
 
 	@Test
 	public void testGetLink() {
-		final MethodItem item = new MethodItem(node, "test()", new SourceLink());
+		final MethodItem item = new MethodItem(node, "test()",
+				new SourceLink());
 		assertEquals("../Source.java", item.getLink(null));
 	}
 
 	@Test
 	public void testGetLinkWithLine() {
 		node.increment(CounterImpl.COUNTER_1_0, CounterImpl.COUNTER_0_0, 15);
-		final MethodItem item = new MethodItem(node, "test()", new SourceLink());
+		final MethodItem item = new MethodItem(node, "test()",
+				new SourceLink());
 		assertEquals("../Source.java#L15", item.getLink(null));
 	}
 

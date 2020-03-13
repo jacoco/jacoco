@@ -1,13 +1,14 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2019 Mountainminds GmbH & Co. KG and Contributors
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
- * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
+ * Copyright (c) 2009, 2020 Mountainminds GmbH & Co. KG and Contributors
+ * This program and the accompanying materials are made available under
+ * the terms of the Eclipse Public License 2.0 which is available at
+ * http://www.eclipse.org/legal/epl-2.0
+ *
+ * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
  *    Marc R. Hoffmann - initial API and implementation
- *    
+ *
  *******************************************************************************/
 package org.jacoco.core.internal.analysis;
 
@@ -16,14 +17,14 @@ import org.jacoco.core.analysis.ISourceFileCoverage;
 /**
  * Implementation of {@link ISourceFileCoverage}.
  */
-public class SourceFileCoverageImpl extends SourceNodeImpl implements
-		ISourceFileCoverage {
+public class SourceFileCoverageImpl extends SourceNodeImpl
+		implements ISourceFileCoverage {
 
 	private final String packagename;
 
 	/**
 	 * Creates a source file data object with the given parameters.
-	 * 
+	 *
 	 * @param name
 	 *            name of the source file
 	 * @param packagename

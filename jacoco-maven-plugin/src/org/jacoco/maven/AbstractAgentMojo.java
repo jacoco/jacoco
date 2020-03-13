@@ -1,9 +1,10 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2019 Mountainminds GmbH & Co. KG and Contributors
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
- * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
+ * Copyright (c) 2009, 2020 Mountainminds GmbH & Co. KG and Contributors
+ * This program and the accompanying materials are made available under
+ * the terms of the Eclipse Public License 2.0 which is available at
+ * http://www.eclipse.org/legal/epl-2.0
+ *
+ * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
  *    Evgeny Mandrikov - initial API and implementation
@@ -68,7 +69,10 @@ public abstract class AbstractAgentMojo extends AbstractJacocoMojo {
 
 	/**
 	 * A list of class names to exclude from instrumentation. May use wildcard
-	 * characters (* and ?). When not specified nothing will be excluded.
+	 * characters (* and ?). When not specified nothing will be excluded. Except
+	 * for performance optimization or technical corner cases this option is
+	 * normally not required. If you want to exclude classes from the report
+	 * please configure the <code>report</code> goal accordingly.
 	 */
 	@Parameter
 	private List<String> excludes;
@@ -155,8 +159,8 @@ public abstract class AbstractAgentMojo extends AbstractJacocoMojo {
 		final String name = getEffectivePropertyName();
 		final Properties projectProperties = getProject().getProperties();
 		final String oldValue = projectProperties.getProperty(name);
-		final String newValue = createAgentOptions().prependVMArguments(
-				oldValue, getAgentJarFile());
+		final String newValue = createAgentOptions()
+				.prependVMArguments(oldValue, getAgentJarFile());
 		getLog().info(name + " set to " + newValue);
 		projectProperties.setProperty(name, newValue);
 	}
@@ -196,12 +200,12 @@ public abstract class AbstractAgentMojo extends AbstractJacocoMojo {
 			agentOptions.setExclClassloader(exclClassLoaders);
 		}
 		if (inclBootstrapClasses != null) {
-			agentOptions.setInclBootstrapClasses(inclBootstrapClasses
-					.booleanValue());
+			agentOptions.setInclBootstrapClasses(
+					inclBootstrapClasses.booleanValue());
 		}
 		if (inclNoLocationClasses != null) {
-			agentOptions.setInclNoLocationClasses(inclNoLocationClasses
-					.booleanValue());
+			agentOptions.setInclNoLocationClasses(
+					inclNoLocationClasses.booleanValue());
 		}
 		if (sessionId != null) {
 			agentOptions.setSessionId(sessionId);

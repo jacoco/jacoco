@@ -1,9 +1,10 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2019 Mountainminds GmbH & Co. KG and Contributors
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
- * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
+ * Copyright (c) 2009, 2020 Mountainminds GmbH & Co. KG and Contributors
+ * This program and the accompanying materials are made available under
+ * the terms of the Eclipse Public License 2.0 which is available at
+ * http://www.eclipse.org/legal/epl-2.0
+ *
+ * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
  *    Evgeny Mandrikov - initial API and implementation
@@ -20,21 +21,21 @@ public interface IAgent {
 
 	/**
 	 * Returns version of JaCoCo.
-	 * 
+	 *
 	 * @return version of JaCoCo
 	 */
 	String getVersion();
 
 	/**
 	 * Returns current a session identifier.
-	 * 
+	 *
 	 * @return current session identifier
 	 */
 	String getSessionId();
 
 	/**
 	 * Sets a session identifier.
-	 * 
+	 *
 	 * @param id
 	 *            new session identifier
 	 */
@@ -47,7 +48,7 @@ public interface IAgent {
 
 	/**
 	 * Returns current execution data.
-	 * 
+	 *
 	 * @param reset
 	 *            if <code>true</code> the current execution data is cleared
 	 *            afterwards
@@ -58,7 +59,7 @@ public interface IAgent {
 	/**
 	 * Triggers a dump of the current execution data through the configured
 	 * output.
-	 * 
+	 *
 	 * @param reset
 	 *            if <code>true</code> the current execution data is cleared
 	 *            afterwards

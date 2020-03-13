@@ -1,13 +1,14 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2019 Mountainminds GmbH & Co. KG and Contributors
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
- * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
+ * Copyright (c) 2009, 2020 Mountainminds GmbH & Co. KG and Contributors
+ * This program and the accompanying materials are made available under
+ * the terms of the Eclipse Public License 2.0 which is available at
+ * http://www.eclipse.org/legal/epl-2.0
+ *
+ * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
  *    Marc R. Hoffmann - initial API and implementation
- *    
+ *
  *******************************************************************************/
 package org.jacoco.ant;
 
@@ -120,11 +121,12 @@ public class AntResourcesLocatorTest {
 		assertContent("BBB", source);
 	}
 
-	private Resource createFile(String path, String content) throws IOException {
+	private Resource createFile(String path, String content)
+			throws IOException {
 		final File file = new File(folder.getRoot(), path);
 		file.getParentFile().mkdirs();
-		final Writer writer = new OutputStreamWriter(
-				new FileOutputStream(file), "UTF-8");
+		final Writer writer = new OutputStreamWriter(new FileOutputStream(file),
+				"UTF-8");
 		writer.write(content);
 		writer.close();
 		return new FileResource(folder.getRoot(), path);

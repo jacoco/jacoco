@@ -34,7 +34,7 @@
   <a href="index.html" class="el_group">Documentation</a> &gt;
   <span class="el_source">Build</span>
 </div>
-<div id="content"> 
+<div id="content">
 
 <h1>Build</h1>
 
@@ -56,7 +56,7 @@
 </p>
 
 <pre>
-  mvn clean install
+  mvn clean verify
 </pre>
 
 <p>
@@ -77,7 +77,7 @@
 </p>
 
 <pre>
-  mvn clean install -DskipTests
+  mvn clean verify -DskipTests
 </pre>
 
 
@@ -106,18 +106,19 @@
     <th>JDK 10</th>
     <th>JDK 11</th>
     <th>JDK 12</th>
+    <th>JDK 13</th>
   </tr>
   </thead>
   <tbody>
   <tr>
     <th>org.jacoco.core.test.validation.java8</th>
     <td colspan="3">excluded from build</td>
-    <td colspan="5">compiled into bytecode version 52 (Java 8)</td>
+    <td colspan="6">compiled into bytecode version 52 (Java 8)</td>
   </tr>
   <tr>
     <th>org.jacoco.core.test.validation.java7</th>
     <td colspan="2">excluded from build</td>
-    <td colspan="6" rowspan="2">compiled into bytecode version 51 (Java 7)</td>
+    <td colspan="7" rowspan="2">compiled into bytecode version 51 (Java 7)</td>
   </tr>
   <tr>
     <th>org.jacoco.core.test.validation.groovy</th>
@@ -127,7 +128,7 @@
     <th>org.jacoco.core.test.validation.kotlin</th>
     <td colspan="1">excluded from build</td>
     <td colspan="6">compiled into bytecode version 50 (Java 6)</td>
-    <td rowspan="2">compiled into bytecode version 51 (Java 7)</td>
+    <td colspan="2" rowspan="2">compiled into bytecode version 51 (Java 7)</td>
   </tr>
   <tr>
     <th>all other modules</th>
@@ -148,7 +149,7 @@
 </p>
 
 <pre>
-  mvn clean install -Djdk.version=10 -Dbytecode.version=9
+  mvn clean verify -Djdk.version=10 -Dbytecode.version=9
 </pre>
 
 <p>
@@ -156,7 +157,7 @@
 </p>
 
 <pre>
-  mvn clean install -Decj
+  mvn clean verify -Decj
 </pre>
 
 <p>
@@ -164,22 +165,23 @@
 </p>
 
 <ul>
-  <li><code>mvn clean install -Djdk.version=5 -Dbytecode.version=5</code></li>
-  <li><code>mvn clean install -Djdk.version=6 -Dbytecode.version=6</code></li>
-  <li><code>mvn clean install -Djdk.version=7 -Dbytecode.version=7</code></li>
-  <li><code>mvn clean install -Djdk.version=8 -Dbytecode.version=8</code></li>
-  <li><code>mvn clean install -Djdk.version=8 -Dbytecode.version=8 -Decj</code></li>
-  <li><code>mvn clean install -Djdk.version=9 -Dbytecode.version=9</code></li>
-  <li><code>mvn clean install -Djdk.version=10 -Dbytecode.version=10</code></li>
-  <li><code>mvn clean install -Djdk.version=11 -Dbytecode.version=11</code></li>
-  <li><code>mvn clean install -Djdk.version=12 -Dbytecode.version=12</code></li>
+  <li><code>mvn clean verify -Djdk.version=5 -Dbytecode.version=5</code></li>
+  <li><code>mvn clean verify -Djdk.version=6 -Dbytecode.version=6</code></li>
+  <li><code>mvn clean verify -Djdk.version=7 -Dbytecode.version=7</code></li>
+  <li><code>mvn clean verify -Djdk.version=8 -Dbytecode.version=8</code></li>
+  <li><code>mvn clean verify -Djdk.version=8 -Dbytecode.version=8 -Decj</code></li>
+  <li><code>mvn clean verify -Djdk.version=9 -Dbytecode.version=9</code></li>
+  <li><code>mvn clean verify -Djdk.version=10 -Dbytecode.version=10</code></li>
+  <li><code>mvn clean verify -Djdk.version=11 -Dbytecode.version=11</code></li>
+  <li><code>mvn clean verify -Djdk.version=12 -Dbytecode.version=12</code></li>
+  <li><code>mvn clean verify -Djdk.version=13 -Dbytecode.version=13</code></li>
 </ul>
 
 
 </div>
 <div class="footer">
-  <span class="right"><a href="@jacoco.home.url@">JaCoCo</a> @qualified.bundle.version@</span>
-  <a href="license.html">Copyright</a> &copy; @copyright.years@ Mountainminds GmbH &amp; Co. KG and Contributors
+  <span class="right"><a href="${jacoco.home.url}">JaCoCo</a> ${qualified.bundle.version}</span>
+  <a href="license.html">Copyright</a> &copy; ${copyright.years} Mountainminds GmbH &amp; Co. KG and Contributors
 </div>
 
 </body>

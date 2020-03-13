@@ -1,13 +1,14 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2019 Mountainminds GmbH & Co. KG and Contributors
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
- * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
+ * Copyright (c) 2009, 2020 Mountainminds GmbH & Co. KG and Contributors
+ * This program and the accompanying materials are made available under
+ * the terms of the Eclipse Public License 2.0 which is available at
+ * http://www.eclipse.org/legal/epl-2.0
+ *
+ * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
  *    Marc R. Hoffmann - initial API and implementation
- *    
+ *
  *******************************************************************************/
 package org.jacoco.core.test.validation.java5;
 
@@ -43,7 +44,7 @@ import org.objectweb.asm.tree.analysis.Interpreter;
  * Tests that the invariants specified in <a href=
  * "https://docs.oracle.com/javase/specs/jvms/se9/html/jvms-2.html#jvms-2.11.10">chapter
  * 2.11.10 of the JVM Spec</a> do also hold for instrumented classes.
- * 
+ *
  * This is important because JIT compiler in HotSpot JVM ignores methods with
  * unstructured locking, so that they executed by interpreter. Android Runtime
  * also doesn't optimize such methods.

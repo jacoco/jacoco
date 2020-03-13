@@ -1,9 +1,10 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2019 Mountainminds GmbH & Co. KG and Contributors
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
- * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
+ * Copyright (c) 2009, 2020 Mountainminds GmbH & Co. KG and Contributors
+ * This program and the accompanying materials are made available under
+ * the terms of the Eclipse Public License 2.0 which is available at
+ * http://www.eclipse.org/legal/epl-2.0
+ *
+ * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
  *    Evgeny Mandrikov - initial API and implementation
@@ -34,8 +35,8 @@ public abstract class AbstractJacocoMojo extends AbstractMojo {
 	@Parameter(property = "jacoco.skip", defaultValue = "false")
 	private boolean skip;
 
-	public final void execute() throws MojoExecutionException,
-			MojoFailureException {
+	public final void execute()
+			throws MojoExecutionException, MojoFailureException {
 		if (skip) {
 			getLog().info(
 					"Skipping JaCoCo execution because property jacoco.skip is set.");
@@ -47,7 +48,7 @@ public abstract class AbstractJacocoMojo extends AbstractMojo {
 
 	/**
 	 * Executes Mojo.
-	 * 
+	 *
 	 * @throws MojoExecutionException
 	 *             if an unexpected problem occurs. Throwing this exception
 	 *             causes a "BUILD ERROR" message to be displayed.
@@ -56,8 +57,8 @@ public abstract class AbstractJacocoMojo extends AbstractMojo {
 	 *             occurs. Throwing this exception causes a "BUILD FAILURE"
 	 *             message to be displayed.
 	 */
-	protected abstract void executeMojo() throws MojoExecutionException,
-			MojoFailureException;
+	protected abstract void executeMojo()
+			throws MojoExecutionException, MojoFailureException;
 
 	/**
 	 * Skips Mojo.

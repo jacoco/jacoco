@@ -1,13 +1,14 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2019 Mountainminds GmbH & Co. KG and Contributors
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
- * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
+ * Copyright (c) 2009, 2020 Mountainminds GmbH & Co. KG and Contributors
+ * This program and the accompanying materials are made available under
+ * the terms of the Eclipse Public License 2.0 which is available at
+ * http://www.eclipse.org/legal/epl-2.0
+ *
+ * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
  *    Brock Janiczak - initial API and implementation
- *    
+ *
  *******************************************************************************/
 package org.jacoco.ant;
 
@@ -41,7 +42,7 @@ public class DumpTask extends Task {
 	 * Sets the location of the execution data file to write. This parameter is
 	 * required when dump is <code>true</code>. Default is
 	 * <code>jacoco.exec</code>
-	 * 
+	 *
 	 * @param destfile
 	 *            Location to write execution data to
 	 */
@@ -51,7 +52,7 @@ public class DumpTask extends Task {
 
 	/**
 	 * IP Address or hostname to connect to. Defaults to <code>localhost</code>
-	 * 
+	 *
 	 * @param address
 	 *            IP Address or hostname to connect to
 	 */
@@ -61,7 +62,7 @@ public class DumpTask extends Task {
 
 	/**
 	 * Port number to connect to. Default is <code>6300</code>
-	 * 
+	 *
 	 * @param port
 	 *            Port to connect to
 	 */
@@ -72,7 +73,7 @@ public class DumpTask extends Task {
 	/**
 	 * Number of retries which the goal will attempt to establish a connection.
 	 * This can be used to wait until the target JVM is successfully launched.
-	 * 
+	 *
 	 * @param retryCount
 	 *            number of retries
 	 */
@@ -83,7 +84,7 @@ public class DumpTask extends Task {
 	/**
 	 * <code>true</code> if the destination file it to be appended to.
 	 * <code>false</code> if the file is to be overwritten
-	 * 
+	 *
 	 * @param append
 	 *            <code>true</code> if the destination file should be appended
 	 *            to
@@ -95,7 +96,7 @@ public class DumpTask extends Task {
 	/**
 	 * Sets whether execution data should be downloaded from the remote host.
 	 * Defaults to <code>true</code>
-	 * 
+	 *
 	 * @param dump
 	 *            <code>true</code> to download execution data
 	 */
@@ -106,7 +107,7 @@ public class DumpTask extends Task {
 	/**
 	 * Sets whether a reset command should be sent after the execution data has
 	 * been dumped. Defaults to <code>false</code>
-	 * 
+	 *
 	 * @param reset
 	 *            <code>true</code> to reset execution data
 	 */

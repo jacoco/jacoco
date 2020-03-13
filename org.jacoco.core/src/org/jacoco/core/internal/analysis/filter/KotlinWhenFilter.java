@@ -1,9 +1,10 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2019 Mountainminds GmbH & Co. KG and Contributors
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
- * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
+ * Copyright (c) 2009, 2020 Mountainminds GmbH & Co. KG and Contributors
+ * This program and the accompanying materials are made available under
+ * the terms of the Eclipse Public License 2.0 which is available at
+ * http://www.eclipse.org/legal/epl-2.0
+ *
+ * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
  *    Evgeny Mandrikov - initial API and implementation
@@ -17,7 +18,6 @@ import java.util.Set;
 
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.tree.AbstractInsnNode;
-import org.objectweb.asm.tree.InsnNode;
 import org.objectweb.asm.tree.JumpInsnNode;
 import org.objectweb.asm.tree.LabelNode;
 import org.objectweb.asm.tree.LookupSwitchInsnNode;
@@ -37,15 +37,14 @@ public final class KotlinWhenFilter implements IFilter {
 	public void filter(final MethodNode methodNode,
 			final IFilterContext context, final IFilterOutput output) {
 		final Matcher matcher = new Matcher();
-		for (AbstractInsnNode i = methodNode.instructions
-				.getFirst(); i != null; i = i.getNext()) {
+		for (final AbstractInsnNode i : methodNode.instructions) {
 			matcher.match(i, output);
 		}
 	}
 
 	private static class Matcher extends AbstractMatcher {
 		void match(final AbstractInsnNode start, final IFilterOutput output) {
-			if (start.getType() != InsnNode.LABEL) {
+			if (start.getType() != AbstractInsnNode.LABEL) {
 				return;
 			}
 			cursor = start;
@@ -92,7 +91,7 @@ public final class KotlinWhenFilter implements IFilter {
 			labels = ((TableSwitchInsnNode) switchNode).labels;
 		}
 		final Set<AbstractInsnNode> newTargets = new HashSet<AbstractInsnNode>();
-		for (LabelNode label : labels) {
+		for (final LabelNode label : labels) {
 			newTargets.add(AbstractMatcher.skipNonOpcodes(label));
 		}
 		output.replaceBranches(switchNode, newTargets);

@@ -1,13 +1,14 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2019 Mountainminds GmbH & Co. KG and Contributors
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
- * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
+ * Copyright (c) 2009, 2020 Mountainminds GmbH & Co. KG and Contributors
+ * This program and the accompanying materials are made available under
+ * the terms of the Eclipse Public License 2.0 which is available at
+ * http://www.eclipse.org/legal/epl-2.0
+ *
+ * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
  *    Marc R. Hoffmann - initial API and implementation
- *    
+ *
  *******************************************************************************/
 package org.jacoco.examples;
 
@@ -35,15 +36,17 @@ public class ClassInfoTest {
 		final String[] args = new String[] { createClassFile() };
 		new ClassInfo(console.stream).execute(args);
 
-		console.expect(containsLine("class name:   org/jacoco/examples/ClassInfoTest"));
+		console.expect(containsLine(
+				"class name:   org/jacoco/examples/ClassInfoTest"));
 		console.expect(containsLine("methods:      3"));
 		console.expect(containsLine("branches:     2"));
 		console.expect(containsLine("complexity:   4"));
 	}
 
 	private String createClassFile() throws IOException {
-		InputStream in = getClass().getResource(
-				getClass().getSimpleName() + ".class").openStream();
+		InputStream in = getClass()
+				.getResource(getClass().getSimpleName() + ".class")
+				.openStream();
 		File f = File.createTempFile("Example", ".class");
 		FileOutputStream out = new FileOutputStream(f);
 		int b;

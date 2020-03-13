@@ -1,9 +1,10 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2019 Mountainminds GmbH & Co. KG and Contributors
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
- * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
+ * Copyright (c) 2009, 2020 Mountainminds GmbH & Co. KG and Contributors
+ * This program and the accompanying materials are made available under
+ * the terms of the Eclipse Public License 2.0 which is available at
+ * http://www.eclipse.org/legal/epl-2.0
+ *
+ * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
  *    Evgeny Mandrikov - initial API and implementation
@@ -112,7 +113,7 @@ public abstract class AbstractReportMojo extends AbstractMavenReport {
 
 	/**
 	 * Returns the list of class files to include in the report.
-	 * 
+	 *
 	 * @return class files to include, may contain wildcard characters
 	 */
 	List<String> getIncludes() {
@@ -121,7 +122,7 @@ public abstract class AbstractReportMojo extends AbstractMavenReport {
 
 	/**
 	 * Returns the list of class files to exclude from the report.
-	 * 
+	 *
 	 * @return class files to exclude, may contain wildcard characters
 	 */
 	List<String> getExcludes() {
@@ -180,16 +181,16 @@ public abstract class AbstractReportMojo extends AbstractMavenReport {
 			createReport(visitor, support);
 			visitor.visitEnd();
 		} catch (final IOException e) {
-			throw new MavenReportException("Error while creating report: "
-					+ e.getMessage(), e);
+			throw new MavenReportException(
+					"Error while creating report: " + e.getMessage(), e);
 		}
 	}
 
 	abstract void loadExecutionData(final ReportSupport support)
 			throws IOException;
 
-	abstract void addFormatters(final ReportSupport support, final Locale locale)
-			throws IOException;
+	abstract void addFormatters(final ReportSupport support,
+			final Locale locale) throws IOException;
 
 	abstract void createReport(final IReportGroupVisitor visitor,
 			final ReportSupport support) throws IOException;

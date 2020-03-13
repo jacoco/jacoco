@@ -1,9 +1,10 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2019 Mountainminds GmbH & Co. KG and Contributors
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
- * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
+ * Copyright (c) 2009, 2020 Mountainminds GmbH & Co. KG and Contributors
+ * This program and the accompanying materials are made available under
+ * the terms of the Eclipse Public License 2.0 which is available at
+ * http://www.eclipse.org/legal/epl-2.0
+ *
+ * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
  *    Evgeny Mandrikov - initial API and implementation
@@ -32,8 +33,7 @@ public final class KotlinWhenStringFilter implements IFilter {
 	public void filter(final MethodNode methodNode,
 			final IFilterContext context, final IFilterOutput output) {
 		final Matcher matcher = new Matcher();
-		for (AbstractInsnNode i = methodNode.instructions
-				.getFirst(); i != null; i = i.getNext()) {
+		for (final AbstractInsnNode i : methodNode.instructions) {
 			matcher.match(i, output);
 		}
 	}
@@ -65,6 +65,10 @@ public final class KotlinWhenStringFilter implements IFilter {
 				final TableSwitchInsnNode tableSwitch = (TableSwitchInsnNode) cursor;
 				defaultLabel = tableSwitch.dflt;
 				hashCodes = tableSwitch.labels.size();
+			}
+
+			if (hashCodes == 0) {
+				return;
 			}
 
 			final Set<AbstractInsnNode> replacements = new HashSet<AbstractInsnNode>();

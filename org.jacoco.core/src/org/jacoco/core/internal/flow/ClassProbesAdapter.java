@@ -1,13 +1,14 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2019 Mountainminds GmbH & Co. KG and Contributors
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
- * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
+ * Copyright (c) 2009, 2020 Mountainminds GmbH & Co. KG and Contributors
+ * This program and the accompanying materials are made available under
+ * the terms of the Eclipse Public License 2.0 which is available at
+ * http://www.eclipse.org/legal/epl-2.0
+ *
+ * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
  *    Marc R. Hoffmann - initial API and implementation
- *    
+ *
  *******************************************************************************/
 package org.jacoco.core.internal.flow;
 
@@ -20,8 +21,8 @@ import org.objectweb.asm.commons.AnalyzerAdapter;
  * A {@link org.objectweb.asm.ClassVisitor} that calculates probes for every
  * method.
  */
-public class ClassProbesAdapter extends ClassVisitor implements
-		IProbeIdGenerator {
+public class ClassProbesAdapter extends ClassVisitor
+		implements IProbeIdGenerator {
 
 	private static final MethodProbesVisitor EMPTY_METHOD_PROBES_VISITOR = new MethodProbesVisitor() {
 	};
@@ -36,7 +37,7 @@ public class ClassProbesAdapter extends ClassVisitor implements
 
 	/**
 	 * Creates a new adapter that delegates to the given visitor.
-	 * 
+	 *
 	 * @param cv
 	 *            instance to delegate to
 	 * @param trackFrames
@@ -59,7 +60,8 @@ public class ClassProbesAdapter extends ClassVisitor implements
 
 	@Override
 	public final MethodVisitor visitMethod(final int access, final String name,
-			final String desc, final String signature, final String[] exceptions) {
+			final String desc, final String signature,
+			final String[] exceptions) {
 		final MethodProbesVisitor methodProbes;
 		final MethodProbesVisitor mv = cv.visitMethod(access, name, desc,
 				signature, exceptions);

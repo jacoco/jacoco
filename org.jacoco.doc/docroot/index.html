@@ -12,20 +12,20 @@
 <div class="breadcrumb">
   <span class="el_report">JaCoCo</span>
 </div>
-<div id="content"> 
+<div id="content">
 
 <h1>JaCoCo - Java Code Coverage Library</h1>
 
 <p>
   JaCoCo is a free Java code coverage library distributed under the
   <a href="doc/license.html">Eclipse Public License</a>. Check
-  <a href="@jacoco.home.url@">@jacoco.home.url@</a> for updates and feedback.
+  <a href="${jacoco.home.url}">${jacoco.home.url}</a> for updates and feedback.
 </p>
 
 <p>
-  This is the distribution of version @qualified.bundle.version@ created on
-  @build.date@ based on commit
-  <a href="https://github.com/jacoco/jacoco/tree/@buildNumber@">@buildNumber@</a>.
+  This is the distribution of version ${qualified.bundle.version} created on
+  ${build.date} based on commit
+  <a href="https://github.com/jacoco/jacoco/tree/${buildNumber}">${buildNumber}</a>.
 </p>
 
 <h2>Contents</h2>
@@ -74,25 +74,25 @@
       <td>- <i>(all dependencies included)</i></td>
     </tr>
     <tr>
-      <td><span class="el_jar">org.jacoco.agent_@qualified.bundle.version@.jar</span></td>
+      <td><span class="el_jar">org.jacoco.agent_${qualified.bundle.version}.jar</span></td>
       <td>yes</td>
       <td>JaCoCo agent</td>
       <td>-</td>
     </tr>
     <tr>
-      <td><span class="el_jar">org.jacoco.core_@qualified.bundle.version@.jar</span></td>
+      <td><span class="el_jar">org.jacoco.core_${qualified.bundle.version}.jar</span></td>
       <td>yes</td>
       <td>JaCoCo core</td>
       <td>ASM</td>
     </tr>
     <tr>
-      <td><span class="el_jar">org.jacoco.report_@qualified.bundle.version@.jar</span></td>
+      <td><span class="el_jar">org.jacoco.report_${qualified.bundle.version}.jar</span></td>
       <td>yes</td>
       <td>JaCoCo reporting</td>
       <td>org.jacoco.core, ASM</td>
     </tr>
     <tr>
-      <td><span class="el_jar">org.jacoco.ant_@qualified.bundle.version@.jar</span></td>
+      <td><span class="el_jar">org.jacoco.ant_${qualified.bundle.version}.jar</span></td>
       <td>yes</td>
       <td>JaCoCo Ant tasks</td>
       <td>org.jacoco.core, org.jacoco.agent, org.jacoco.report, ASM, Ant</td>
@@ -107,8 +107,8 @@
 
 </div>
 <div class="footer">
-  <span class="right"><a href="@jacoco.home.url@">JaCoCo</a> @qualified.bundle.version@</span>
-  <a href="doc/license.html">Copyright</a> &copy; @copyright.years@ Mountainminds GmbH &amp; Co. KG and Contributors
+  <span class="right"><a href="${jacoco.home.url}">JaCoCo</a> ${qualified.bundle.version}</span>
+  <a href="doc/license.html">Copyright</a> &copy; ${copyright.years} Mountainminds GmbH &amp; Co. KG and Contributors
 </div>
 
 </body>

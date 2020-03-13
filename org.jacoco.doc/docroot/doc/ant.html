@@ -16,7 +16,7 @@
   <a href="index.html" class="el_group">Documentation</a> &gt;
   <span class="el_source">Ant Tasks</span>
 </div>
-<div id="content"> 
+<div id="content">
 
 <h1>Ant Tasks</h1>
 
@@ -28,16 +28,16 @@
   <a href="#agent"><code>agent</code></a>,
   <a href="#dump"><code>dump</code></a> and
   <a href="#merge"><code>merge</code></a>. Reports in different formats are
-  created with the <a href="#report"><code>report</code></a> task. For 
+  created with the <a href="#report"><code>report</code></a> task. For
   <a href="offline.html">offline instrumentation</a> the task
   <a href="#instrument"><code>instrument</code></a> can be used to prepare class
-  files.  
+  files.
 </p>
 
 <p class="hint">
   If you want to have line number information included in the coverage reports
   or you want source code highlighting the class files of the test target must
-  be compiled with debug information. 
+  be compiled with debug information.
 </p>
 
 <h2>Example</h2>
@@ -63,10 +63,10 @@
   <li>Java 1.5 or higher (for both, the Ant runner and the test executor).</li>
 </ul>
 
-   
+
 <p>All tasks are defined in <code>jacocoant.jar</code> (which is part of the
   distribution) and can be included in your Ant scripts with the usual
-  <code>taskdef</code> declaration:   
+  <code>taskdef</code> declaration:
 </p>
 
 <pre class="source lang-xml linenums">
@@ -75,9 +75,9 @@
     &lt;taskdef uri="antlib:org.jacoco.ant" resource="org/jacoco/ant/antlib.xml"&gt;
         &lt;classpath path="<i>path_to_jacoco</i>/lib/jacocoant.jar"/&gt;
     &lt;/taskdef&gt;
-    
+
     ...
-    
+
 &lt;/project&gt;
 </pre>
 
@@ -102,7 +102,7 @@
   The standard Ant tasks to launch Java programs are <code>java</code>, <code>junit</code> and
   <code>testng</code>. To add code coverage recording to these tasks they can
   simply be wrapped with the <code>coverage</code> task as shown in the
-  following examples:  
+  following examples:
 </p>
 
 <pre class="source lang-xml linenums">
@@ -128,7 +128,7 @@
 <p>
   Resulting coverage information is collected during execution and written
   to a file when the process terminates. Note the <code>fork</code> attribute
-  above in the wrapped <code>java</code> task. 
+  above in the wrapped <code>java</code> task.
 </p>
 
 <p class="hint">
@@ -145,7 +145,7 @@
 
 <p>
   The coverage task must wrap exactly one task. While it typically works without
-  any configuration, the behavior can be adjusted with some optional attributes: 
+  any configuration, the behavior can be adjusted with some optional attributes:
 </p>
 
 <table class="coverage">
@@ -174,14 +174,14 @@
           <code>false</code>, an existing execution data file will be replaced.
       </td>
       <td><code>true</code></td>
-    </tr>    
+    </tr>
     <tr>
       <td><code>includes</code></td>
       <td>A list of class names that should be included in execution analysis.
           The list entries are separated by a colon (<code>:</code>) and
           may use wildcard characters (<code>*</code> and <code>?</code>).
           Except for performance optimization or technical corner cases this
-          option is normally not required. 
+          option is normally not required.
       </td>
       <td><code>*</code> (all classes)</td>
     </tr>
@@ -191,7 +191,8 @@
           The list entries are separated by a colon (<code>:</code>) and
           may use wildcard characters (<code>*</code> and <code>?</code>).
           Except for performance optimization or technical corner cases this
-          option is normally not required. 
+          option is normally not required. If you want to exclude classes from
+          the report please configure the <code>report</code> task accordingly.
       </td>
       <td><i>empty</i> (no excluded classes)</td>
     </tr>
@@ -203,7 +204,7 @@
           <code>?</code>). This option might be required in case of special
           frameworks that conflict with JaCoCo code instrumentation, in
           particular class loaders that do not have access to the Java runtime
-          classes. 
+          classes.
       </td>
       <td><code>sun.reflect.DelegatingClassLoader</code></td>
     </tr>
@@ -211,7 +212,7 @@
       <td><code>inclbootstrapclasses</code></td>
       <td>Specifies whether also classes from the bootstrap classloader should
           be instrumented. Use this feature with caution, it needs heavy
-          includes/excludes tuning. 
+          includes/excludes tuning.
       </td>
       <td><code>false</code></td>
     </tr>
@@ -219,7 +220,7 @@
       <td><code>inclnolocationclasses</code></td>
       <td>Specifies whether also classes without a source location should be
           instrumented. Normally such classes are generated at runtime e.g. by
-          mocking frameworks and are therefore excluded by default. 
+          mocking frameworks and are therefore excluded by default.
       </td>
       <td><code>false</code></td>
     </tr>
@@ -229,7 +230,7 @@
           this parameter a random identifier is created by the agent.
       </td>
       <td><i>auto-generated</i></td>
-    </tr>  
+    </tr>
     <tr>
       <td><code>dumponexit</code></td>
       <td>If set to <code>true</code> coverage data will be written on VM
@@ -366,7 +367,7 @@
 </p>
 
 <p>
-  The <code>dump</code> task has the following attributes: 
+  The <code>dump</code> task has the following attributes:
 </p>
 
 <table class="coverage">
@@ -427,7 +428,7 @@
 
 <p>
   This task can be used to merge the execution data from multiple test runs
-  into a single data store. 
+  into a single data store.
 </p>
 
 <pre class="source lang-xml linenums">
@@ -438,7 +439,7 @@
 
 <p>
   The task definition can contain any number of resource collection types and
-  has the following mandatory attribute: 
+  has the following mandatory attribute:
 </p>
 
 <table class="coverage">
@@ -464,16 +465,16 @@
 <p>
   Finally different reports can be created with the <code>report</code> task.
   A report task declaration consists of different sections, two specify the
-  input data, additional ones specify the output formats:  
+  input data, additional ones specify the output formats:
 </p>
 
 <pre class="source lang-xml linenums">
 &lt;jacoco:report&gt;
-			
+
     &lt;executiondata&gt;
         &lt;file file="jacoco.exec"/&gt;
     &lt;/executiondata&gt;
-			
+
     &lt;structure name="Example Project"&gt;
         &lt;classfiles&gt;
             &lt;fileset dir="classes"/&gt;
@@ -482,9 +483,9 @@
             &lt;fileset dir="src"/&gt;
         &lt;/sourcefiles&gt;
     &lt;/structure&gt;
-			
+
     &lt;html destdir="report"/&gt;
-			
+
 &lt;/jacoco:report&gt;
 </pre>
 
@@ -557,7 +558,7 @@
   accept any
   <a href="http://ant.apache.org/manual/Types/resources.html#collection">Ant
   resource collection</a>. Therefore also filtering the class file set is
-  possible and allows to narrow the scope of the report, for example: 
+  possible and allows to narrow the scope of the report, for example:
 </p>
 
 <pre class="source lang-xml linenums">
@@ -579,7 +580,7 @@
   The structure can be refined with a hierarchy of <code>group</code> elements.
   This way the coverage report can reflect different modules of a software
   project. For each group element the corresponding class and source files can
-  be specified separately. For example: 
+  be specified separately. For example:
 </p>
 
 <pre class="source lang-xml linenums">
@@ -600,9 +601,9 @@
             &lt;fileset dir="${workspace.dir}/org.jacoco.example.client/src"/&gt;
         &lt;/sourcefiles&gt;
     &lt;/group&gt;
-    
+
     ...
-    
+
 &lt;/structure&gt;
 </pre>
 
@@ -679,7 +680,7 @@
 <h3>Element <code>xml</code></h3>
 
 <p>
-  Create a single-file report in XML format. 
+  Create a single-file report in XML format.
 </p>
 
 <table class="coverage">
@@ -707,7 +708,7 @@
 <h3>Element <code>csv</code></h3>
 
 <p>
-  Create single-file report in CSV format. 
+  Create single-file report in CSV format.
 </p>
 
 <table class="coverage">
@@ -856,11 +857,11 @@
     </tr>
     <tr>
       <td><code>minimum</code></td>
-      <td>Expected minimum value. If the minimum refers to a ratio the range is
-          from 0.0 to 1.0 where the number of decimal places will also determine
-          the precision in error messages. A limit ratio may optionally be
-          declared as a percentage where 0.80 and 80% represent the same value,
-          the value must end with %.</td>
+      <td>Expected minimum value. If the minimum refers to a ratio it must be
+          in the range from 0.0 to 1.0 where the number of decimal places will
+          also determine the precision in error messages. A limit ratio may
+          optionally be declared as a percentage where 0.80 and 80% represent
+          the same value.</td>
       <td><i>none</i></td>
     </tr>
     <tr>
@@ -898,7 +899,7 @@
 
 <p>
   The task definition can contain any number of resource collection types and
-  has the following mandatory attribute: 
+  has the following mandatory attribute:
 </p>
 
 <table class="coverage">
@@ -917,7 +918,7 @@
     </tr>
     <tr>
       <td><code>removesignatures</code></td>
-      <td>If set to <code>true</code> all signature related information is 
+      <td>If set to <code>true</code> all signature related information is
           stripped from JARs. This is typically necessary as instrumentation
           breaks the signatures of the original class files.</td>
       <td><code>true</code></td>
@@ -927,8 +928,8 @@
 
 </div>
 <div class="footer">
-  <span class="right"><a href="@jacoco.home.url@">JaCoCo</a> @qualified.bundle.version@</span>
-  <a href="license.html">Copyright</a> &copy; @copyright.years@ Mountainminds GmbH &amp; Co. KG and Contributors
+  <span class="right"><a href="${jacoco.home.url}">JaCoCo</a> ${qualified.bundle.version}</span>
+  <a href="license.html">Copyright</a> &copy; ${copyright.years} Mountainminds GmbH &amp; Co. KG and Contributors
 </div>
 
 </body>

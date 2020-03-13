@@ -1,13 +1,14 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2019 Mountainminds GmbH & Co. KG and Contributors
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
- * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
+ * Copyright (c) 2009, 2020 Mountainminds GmbH & Co. KG and Contributors
+ * This program and the accompanying materials are made available under
+ * the terms of the Eclipse Public License 2.0 which is available at
+ * http://www.eclipse.org/legal/epl-2.0
+ *
+ * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
  *    Marc R. Hoffmann - initial API and implementation
- *    
+ *
  *******************************************************************************/
 package org.jacoco.core.internal.instr;
 
@@ -47,7 +48,7 @@ public class SignatureRemover {
 	/**
 	 * Defines whether this remover should be active. If it is not active it
 	 * will not remove any entries.
-	 * 
+	 *
 	 * @param active
 	 *            <code>true</code> if it should remove signature related
 	 *            entries.
@@ -58,7 +59,7 @@ public class SignatureRemover {
 
 	/**
 	 * Checks whether a entry with the provided name should be ignored at all.
-	 * 
+	 *
 	 * @param name
 	 *            path name of the entry in question
 	 * @return true is the entry should be ignored
@@ -69,7 +70,7 @@ public class SignatureRemover {
 
 	/**
 	 * Filters the content of the entry with the provided name if necessary.
-	 * 
+	 *
 	 * @param name
 	 *            path name of the entry in question
 	 * @param in
@@ -102,7 +103,8 @@ public class SignatureRemover {
 	}
 
 	private void filterManifestEntryAttributes(final Attributes attrs) {
-		for (final Iterator<Object> i = attrs.keySet().iterator(); i.hasNext();) {
+		for (final Iterator<Object> i = attrs.keySet().iterator(); i
+				.hasNext();) {
 			if (String.valueOf(i.next()).endsWith(DIGEST_SUFFIX)) {
 				i.remove();
 			}

@@ -1,13 +1,14 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2019 Mountainminds GmbH & Co. KG and Contributors
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
- * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
+ * Copyright (c) 2009, 2020 Mountainminds GmbH & Co. KG and Contributors
+ * This program and the accompanying materials are made available under
+ * the terms of the Eclipse Public License 2.0 which is available at
+ * http://www.eclipse.org/legal/epl-2.0
+ *
+ * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
  *    Marc R. Hoffmann - initial API and implementation
- *    
+ *
  *******************************************************************************/
 package org.jacoco.agent.rt.internal.output;
 
@@ -50,7 +51,7 @@ class TcpConnection implements IRemoteCommandVisitor {
 
 	/**
 	 * Processes all requests for this session until the socket is closed.
-	 * 
+	 *
 	 * @throws IOException
 	 *             in case of problems whith the connection
 	 */
@@ -72,7 +73,7 @@ class TcpConnection implements IRemoteCommandVisitor {
 	/**
 	 * Dumps the current execution data if the connection is already initialized
 	 * and the underlying socket is still open.
-	 * 
+	 *
 	 * @param reset
 	 *            if <code>true</code> execution data is cleared afterwards
 	 * @throws IOException
@@ -85,7 +86,7 @@ class TcpConnection implements IRemoteCommandVisitor {
 
 	/**
 	 * Closes the underlying socket if not closed yet.
-	 * 
+	 *
 	 * @throws IOException
 	 */
 	public void close() throws IOException {

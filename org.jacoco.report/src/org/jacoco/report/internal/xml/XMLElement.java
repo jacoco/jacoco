@@ -1,13 +1,14 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2019 Mountainminds GmbH & Co. KG and Contributors
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
- * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
+ * Copyright (c) 2009, 2020 Mountainminds GmbH & Co. KG and Contributors
+ * This program and the accompanying materials are made available under
+ * the terms of the Eclipse Public License 2.0 which is available at
+ * http://www.eclipse.org/legal/epl-2.0
+ *
+ * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
  *    Marc R. Hoffmann - initial API and implementation
- *    
+ *
  *******************************************************************************/
 package org.jacoco.report.internal.xml;
 
@@ -60,7 +61,7 @@ public class XMLElement {
 
 	/**
 	 * Creates a root element of a XML document.
-	 * 
+	 *
 	 * @param name
 	 *            element name
 	 * @param pubId
@@ -96,7 +97,7 @@ public class XMLElement {
 	/**
 	 * Creates a new child element within a XML document. May only be called
 	 * before the parent element has been closed.
-	 * 
+	 *
 	 * @param name
 	 *            element name
 	 * @param parent
@@ -160,7 +161,7 @@ public class XMLElement {
 	 * element is added or this element has been closed. The attribute value
 	 * will be quoted. If the value is <code>null</code> the attribute will not
 	 * be added.
-	 * 
+	 *
 	 * @param name
 	 *            attribute name
 	 * @param value
@@ -190,7 +191,7 @@ public class XMLElement {
 	 * Adds an attribute to this element. May only be called before an child
 	 * element is added or this element has been closed. The attribute value is
 	 * the decimal representation of the given int value.
-	 * 
+	 *
 	 * @param name
 	 *            attribute name
 	 * @param value
@@ -208,7 +209,7 @@ public class XMLElement {
 	 * Adds an attribute to this element. May only be called before an child
 	 * element is added or this element has been closed. The attribute value is
 	 * the decimal representation of the given long value.
-	 * 
+	 *
 	 * @param name
 	 *            attribute name
 	 * @param value
@@ -225,7 +226,7 @@ public class XMLElement {
 	/**
 	 * Adds the given text as a child to this node. The text will be quoted. May
 	 * only be called before this element has been closed.
-	 * 
+	 *
 	 * @param text
 	 *            text to add
 	 * @throws IOException
@@ -246,7 +247,7 @@ public class XMLElement {
 	/**
 	 * Creates a new child element for this element. Might be overridden in
 	 * subclasses to return a instance of the subclass.
-	 * 
+	 *
 	 * @param name
 	 *            name of the child element
 	 * @return child element instance
@@ -259,7 +260,7 @@ public class XMLElement {
 
 	/**
 	 * Closes this element if it has not been closed before.
-	 * 
+	 *
 	 * @throws IOException
 	 *             in case of problems with the underlying output
 	 */

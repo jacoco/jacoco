@@ -1,13 +1,14 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2019 Mountainminds GmbH & Co. KG and Contributors
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
- * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
+ * Copyright (c) 2009, 2020 Mountainminds GmbH & Co. KG and Contributors
+ * This program and the accompanying materials are made available under
+ * the terms of the Eclipse Public License 2.0 which is available at
+ * http://www.eclipse.org/legal/epl-2.0
+ *
+ * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
  *    Brock Janiczak - initial API and implementation
- *    
+ *
  *******************************************************************************/
 package org.jacoco.ant;
 
@@ -41,7 +42,7 @@ public class InstrumentTask extends Task {
 
 	/**
 	 * Sets the location of the instrumented classes.
-	 * 
+	 *
 	 * @param destdir
 	 *            destination folder for instrumented classes
 	 */
@@ -51,7 +52,7 @@ public class InstrumentTask extends Task {
 
 	/**
 	 * Sets whether signatures should be removed from JAR files.
-	 * 
+	 *
 	 * @param removesignatures
 	 *            <code>true</code> if signatures should be removed
 	 */
@@ -61,7 +62,7 @@ public class InstrumentTask extends Task {
 
 	/**
 	 * This task accepts any number of class file resources.
-	 * 
+	 *
 	 * @param resources
 	 *            Execution data resources
 	 */
@@ -109,8 +110,9 @@ public class InstrumentTask extends Task {
 			}
 		} catch (final Exception e) {
 			file.delete();
-			throw new BuildException(format("Error while instrumenting %s",
-					resource), e, getLocation());
+			throw new BuildException(
+					format("Error while instrumenting %s", resource), e,
+					getLocation());
 		}
 	}
 }

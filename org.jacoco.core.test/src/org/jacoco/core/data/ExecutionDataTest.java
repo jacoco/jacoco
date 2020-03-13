@@ -1,13 +1,14 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2019 Mountainminds GmbH & Co. KG and Contributors
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
- * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
+ * Copyright (c) 2009, 2020 Mountainminds GmbH & Co. KG and Contributors
+ * This program and the accompanying materials are made available under
+ * the terms of the Eclipse Public License 2.0 which is available at
+ * http://www.eclipse.org/legal/epl-2.0
+ *
+ * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
  *    Marc R. Hoffmann - initial API and implementation
- *    
+ *
  *******************************************************************************/
 package org.jacoco.core.data;
 
@@ -45,8 +46,8 @@ public class ExecutionDataTest {
 
 	@Test
 	public void testReset() {
-		final ExecutionData e = new ExecutionData(5, "Example", new boolean[] {
-				true, false, true });
+		final ExecutionData e = new ExecutionData(5, "Example",
+				new boolean[] { true, false, true });
 		e.reset();
 		assertFalse(e.getProbes()[0]);
 		assertFalse(e.getProbes()[1]);
@@ -71,10 +72,10 @@ public class ExecutionDataTest {
 
 	@Test
 	public void testMerge() {
-		final ExecutionData a = new ExecutionData(5, "Example", new boolean[] {
-				false, true, false, true });
-		final ExecutionData b = new ExecutionData(5, "Example", new boolean[] {
-				false, false, true, true });
+		final ExecutionData a = new ExecutionData(5, "Example",
+				new boolean[] { false, true, false, true });
+		final ExecutionData b = new ExecutionData(5, "Example",
+				new boolean[] { false, false, true, true });
 		a.merge(b);
 
 		// b is merged into a:
@@ -92,10 +93,10 @@ public class ExecutionDataTest {
 
 	@Test
 	public void testMergeSubtract() {
-		final ExecutionData a = new ExecutionData(5, "Example", new boolean[] {
-				false, true, false, true });
-		final ExecutionData b = new ExecutionData(5, "Example", new boolean[] {
-				false, false, true, true });
+		final ExecutionData a = new ExecutionData(5, "Example",
+				new boolean[] { false, true, false, true });
+		final ExecutionData b = new ExecutionData(5, "Example",
+				new boolean[] { false, false, true, true });
 		a.merge(b, false);
 
 		// b is subtracted from a:

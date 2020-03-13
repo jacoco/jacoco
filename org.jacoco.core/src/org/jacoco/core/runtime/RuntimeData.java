@@ -1,13 +1,14 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2019 Mountainminds GmbH & Co. KG and Contributors
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
- * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
+ * Copyright (c) 2009, 2020 Mountainminds GmbH & Co. KG and Contributors
+ * This program and the accompanying materials are made available under
+ * the terms of the Eclipse Public License 2.0 which is available at
+ * http://www.eclipse.org/legal/epl-2.0
+ *
+ * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
  *    Marc R. Hoffmann - initial API and implementation
- *    
+ *
  *******************************************************************************/
 package org.jacoco.core.runtime;
 
@@ -47,7 +48,7 @@ public class RuntimeData {
 	 * execution data is collected. If no identifier is explicitly set a
 	 * identifier is generated from the host name and a random number. This
 	 * method can be called at any time.
-	 * 
+	 *
 	 * @see #collect(IExecutionDataVisitor, ISessionInfoVisitor, boolean)
 	 * @param id
 	 *            new session identifier
@@ -58,7 +59,7 @@ public class RuntimeData {
 
 	/**
 	 * Get the current a session identifier for this runtime.
-	 * 
+	 *
 	 * @see #setSessionId(String)
 	 * @return current session identifier
 	 */
@@ -69,7 +70,7 @@ public class RuntimeData {
 	/**
 	 * Collects the current execution data and writes it to the given
 	 * {@link IExecutionDataVisitor} object.
-	 * 
+	 *
 	 * @param executionDataVisitor
 	 *            handler to write coverage data to
 	 * @param sessionInfoVisitor
@@ -105,7 +106,7 @@ public class RuntimeData {
 	 * Returns the coverage data for the class with the given identifier. If
 	 * there is no data available under the given id a new entry is created.
 	 * This is a synchronized access to the underlying store.
-	 * 
+	 *
 	 * @param id
 	 *            class identifier
 	 * @param name
@@ -125,19 +126,19 @@ public class RuntimeData {
 	 * Retrieves the execution probe array for a given class. The passed
 	 * {@link Object} array instance is used for parameters and the return value
 	 * as follows. Call parameters:
-	 * 
+	 *
 	 * <ul>
 	 * <li>args[0]: class id ({@link Long})
 	 * <li>args[1]: vm class name ({@link String})
 	 * <li>args[2]: probe count ({@link Integer})
 	 * </ul>
-	 * 
+	 *
 	 * Return value:
-	 * 
+	 *
 	 * <ul>
 	 * <li>args[0]: probe array (<code>boolean[]</code>)
 	 * </ul>
-	 * 
+	 *
 	 * @param args
 	 *            parameter array of length 3
 	 */
@@ -151,7 +152,7 @@ public class RuntimeData {
 	/**
 	 * In violation of the regular semantic of {@link Object#equals(Object)}
 	 * this implementation is used as the interface to the execution data store.
-	 * 
+	 *
 	 * @param args
 	 *            the arguments as an {@link Object} array
 	 * @return has no meaning
@@ -168,7 +169,7 @@ public class RuntimeData {
 	 * Generates code that creates the argument array for the
 	 * {@link #getProbes(Object[])} method. The array instance is left on the
 	 * operand stack. The generated code requires a stack size of 5.
-	 * 
+	 *
 	 * @param classid
 	 *            class identifier
 	 * @param classname
@@ -179,7 +180,8 @@ public class RuntimeData {
 	 *            visitor to emit generated code
 	 */
 	public static void generateArgumentArray(final long classid,
-			final String classname, final int probecount, final MethodVisitor mv) {
+			final String classname, final int probecount,
+			final MethodVisitor mv) {
 		mv.visitInsn(Opcodes.ICONST_3);
 		mv.visitTypeInsn(Opcodes.ANEWARRAY, "java/lang/Object");
 
@@ -201,8 +203,8 @@ public class RuntimeData {
 		mv.visitInsn(Opcodes.DUP);
 		mv.visitInsn(Opcodes.ICONST_2);
 		InstrSupport.push(mv, probecount);
-		mv.visitMethodInsn(Opcodes.INVOKESTATIC, "java/lang/Integer",
-				"valueOf", "(I)Ljava/lang/Integer;", false);
+		mv.visitMethodInsn(Opcodes.INVOKESTATIC, "java/lang/Integer", "valueOf",
+				"(I)Ljava/lang/Integer;", false);
 		mv.visitInsn(Opcodes.AASTORE);
 	}
 
@@ -212,7 +214,7 @@ public class RuntimeData {
 	 * {@link Object} instance from the stack and pushes the probe array of type
 	 * <code>boolean[]</code> on the operand stack. The generated code requires
 	 * a stack size of 6.
-	 * 
+	 *
 	 * @param classid
 	 *            class identifier
 	 * @param classname
@@ -223,7 +225,8 @@ public class RuntimeData {
 	 *            visitor to emit generated code
 	 */
 	public static void generateAccessCall(final long classid,
-			final String classname, final int probecount, final MethodVisitor mv) {
+			final String classname, final int probecount,
+			final MethodVisitor mv) {
 		// stack[0]: Ljava/lang/Object;
 
 		generateArgumentArray(classid, classname, probecount, mv);

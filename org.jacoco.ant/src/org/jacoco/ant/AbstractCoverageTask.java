@@ -1,13 +1,14 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2019 Mountainminds GmbH & Co. KG and Contributors
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
- * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
+ * Copyright (c) 2009, 2020 Mountainminds GmbH & Co. KG and Contributors
+ * This program and the accompanying materials are made available under
+ * the terms of the Eclipse Public License 2.0 which is available at
+ * http://www.eclipse.org/legal/epl-2.0
+ *
+ * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
  *    Brock Janiczak - initial API and implementation
- *    
+ *
  *******************************************************************************/
 package org.jacoco.ant;
 
@@ -50,7 +51,7 @@ public class AbstractCoverageTask extends Task {
 
 	/**
 	 * Sets whether or not the current task is enabled
-	 * 
+	 *
 	 * @param enabled
 	 *            Enablement state of the task
 	 */
@@ -61,7 +62,7 @@ public class AbstractCoverageTask extends Task {
 	/**
 	 * Sets the location to write coverage execution data to. Default is
 	 * <code>jacoco.exec</code>.
-	 * 
+	 *
 	 * @param file
 	 *            Location to write coverage execution data to
 	 */
@@ -72,7 +73,7 @@ public class AbstractCoverageTask extends Task {
 	/**
 	 * Append execution coverage data if a coverage file is already present.
 	 * Default is <code>true</code>
-	 * 
+	 *
 	 * @param append
 	 *            <code>true</code> to append execution data to an existing file
 	 */
@@ -83,7 +84,7 @@ public class AbstractCoverageTask extends Task {
 	/**
 	 * List of wildcard patterns classes to include for instrumentation. Default
 	 * is <code>*</code>
-	 * 
+	 *
 	 * @param includes
 	 *            Wildcard pattern of included classes
 	 */
@@ -94,7 +95,7 @@ public class AbstractCoverageTask extends Task {
 	/**
 	 * List of wildcard patterns classes to exclude from instrumentation.
 	 * Default is the empty string, no classes excluded
-	 * 
+	 *
 	 * @param excludes
 	 *            Wildcard pattern of excluded classes
 	 */
@@ -106,7 +107,7 @@ public class AbstractCoverageTask extends Task {
 	 * List of wildcard patterns for classloaders that JaCoCo will not
 	 * instrument classes from. Default is
 	 * <code>sun.reflect.DelegatingClassLoader</code>
-	 * 
+	 *
 	 * @param exclClassLoader
 	 *            Wildcard pattern of class loaders to exclude
 	 */
@@ -117,7 +118,7 @@ public class AbstractCoverageTask extends Task {
 	/**
 	 * Sets whether classes from the bootstrap classloader should be
 	 * instrumented.
-	 * 
+	 *
 	 * @param include
 	 *            <code>true</code> if bootstrap classes should be instrumented
 	 */
@@ -127,7 +128,7 @@ public class AbstractCoverageTask extends Task {
 
 	/**
 	 * Sets whether classes without source location should be instrumented.
-	 * 
+	 *
 	 * @param include
 	 *            <code>true</code> if classes without source location should be
 	 *            instrumented
@@ -138,7 +139,7 @@ public class AbstractCoverageTask extends Task {
 
 	/**
 	 * Sets the session identifier. Default is a auto-generated id
-	 * 
+	 *
 	 * @param id
 	 *            session identifier
 	 */
@@ -148,7 +149,7 @@ public class AbstractCoverageTask extends Task {
 
 	/**
 	 * Dump coverage data on VM termination. Default is <code>true</code>
-	 * 
+	 *
 	 * @param dumpOnExit
 	 *            <code>true</code> to write coverage data on VM termination
 	 */
@@ -158,7 +159,7 @@ public class AbstractCoverageTask extends Task {
 
 	/**
 	 * Sets the output method. Default is <code>file</code>
-	 * 
+	 *
 	 * @param output
 	 *            Output method
 	 */
@@ -170,7 +171,7 @@ public class AbstractCoverageTask extends Task {
 	 * Sets the IP address or hostname to bind to when output method is tcp
 	 * server or connect to when the output method is tcp client. Default is
 	 * <code>localhost</code>
-	 * 
+	 *
 	 * @param address
 	 *            Address to bind or connect to
 	 */
@@ -181,7 +182,7 @@ public class AbstractCoverageTask extends Task {
 	/**
 	 * Sets the Port to bind to when the output method is tcp server or connect
 	 * to when the output method is tcp client. Default is <code>6300</code>
-	 * 
+	 *
 	 * @param port
 	 *            port to bind to or connect to
 	 */
@@ -192,7 +193,7 @@ public class AbstractCoverageTask extends Task {
 	/**
 	 * Sets the directory where all class files seen by the agent should be
 	 * dumped to.
-	 * 
+	 *
 	 * @param dir
 	 *            dump output location
 	 */
@@ -202,7 +203,7 @@ public class AbstractCoverageTask extends Task {
 
 	/**
 	 * Sets whether the agent should expose functionality via JMX.
-	 * 
+	 *
 	 * @param jmx
 	 *            <code>true</code> if JMX should be enabled
 	 */
@@ -213,7 +214,7 @@ public class AbstractCoverageTask extends Task {
 	/**
 	 * Creates JVM argument to launch with the specified JaCoCo agent jar and
 	 * the current options
-	 * 
+	 *
 	 * @return JVM Argument to pass to new VM
 	 */
 	protected String getLaunchingArgument() {
@@ -230,8 +231,8 @@ public class AbstractCoverageTask extends Task {
 	private File getAgentFile() {
 		try {
 			File agentFile = null;
-			final String agentFileLocation = getProject().getProperty(
-					"_jacoco.agentFile");
+			final String agentFileLocation = getProject()
+					.getProperty("_jacoco.agentFile");
 			if (agentFileLocation != null) {
 				agentFile = new File(agentFileLocation);
 			} else {

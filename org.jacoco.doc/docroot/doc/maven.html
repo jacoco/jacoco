@@ -16,7 +16,7 @@
   <a href="index.html" class="el_group">Documentation</a> &gt;
   <span class="el_source">Maven Plug-in</span>
 </div>
-<div id="content"> 
+<div id="content">
 
 <h1>Maven Plug-in</h1>
 
@@ -45,7 +45,7 @@
 
 <ul>
   <li>
-    The JaCoCo distribution contains a simple example how code coverage 
+    The JaCoCo distribution contains a simple example how code coverage
     can be added to a Maven project.</li>
   <li>
     This <a href="examples/build/pom.xml">POM file</a>
@@ -91,7 +91,7 @@
 &lt;plugin&gt;
   &lt;groupId&gt;org.jacoco&lt;/groupId&gt;
   &lt;artifactId&gt;jacoco-maven-plugin&lt;/artifactId&gt;
-  &lt;version&gt;@project.version@&lt;/version&gt;
+  &lt;version&gt;${project.version}&lt;/version&gt;
 &lt;/plugin&gt;
 </pre>
 
@@ -152,8 +152,8 @@ mvn help:describe -Dplugin=org.jacoco:jacoco-maven-plugin -Ddetail
 
 </div>
 <div class="footer">
-  <span class="right"><a href="@jacoco.home.url@">JaCoCo</a> @qualified.bundle.version@</span>
-  <a href="license.html">Copyright</a> &copy; @copyright.years@ Mountainminds GmbH &amp; Co. KG and Contributors
+  <span class="right"><a href="${jacoco.home.url}">JaCoCo</a> ${qualified.bundle.version}</span>
+  <a href="license.html">Copyright</a> &copy; ${copyright.years} Mountainminds GmbH &amp; Co. KG and Contributors
 </div>
 
 </body>

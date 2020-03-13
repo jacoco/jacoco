@@ -1,13 +1,14 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2019 Mountainminds GmbH & Co. KG and Contributors
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
- * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
+ * Copyright (c) 2009, 2020 Mountainminds GmbH & Co. KG and Contributors
+ * This program and the accompanying materials are made available under
+ * the terms of the Eclipse Public License 2.0 which is available at
+ * http://www.eclipse.org/legal/epl-2.0
+ *
+ * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
  *    Brock Janiczak - initial API and implementation
- *    
+ *
  *******************************************************************************/
 package org.jacoco.report.csv;
 
@@ -36,7 +37,7 @@ public class CSVFormatter {
 	/**
 	 * Sets the implementation for language name display. Java language names
 	 * are defined by default.
-	 * 
+	 *
 	 * @param languageNames
 	 *            converter for language specific names
 	 */
@@ -46,7 +47,7 @@ public class CSVFormatter {
 
 	/**
 	 * Returns the language names call-back used in this report.
-	 * 
+	 *
 	 * @return language names
 	 */
 	public ILanguageNames getLanguageNames() {
@@ -55,7 +56,7 @@ public class CSVFormatter {
 
 	/**
 	 * Sets the encoding used for generated CSV document. Default is UTF-8.
-	 * 
+	 *
 	 * @param outputEncoding
 	 *            CSV output encoding
 	 */
@@ -65,7 +66,7 @@ public class CSVFormatter {
 
 	/**
 	 * Creates a new visitor to write a report to the given stream.
-	 * 
+	 *
 	 * @param output
 	 *            output stream to write the report to
 	 * @return visitor to emit the report data to

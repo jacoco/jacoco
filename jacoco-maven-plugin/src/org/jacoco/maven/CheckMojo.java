@@ -1,15 +1,16 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2019 Mountainminds GmbH & Co. KG and Contributors
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
- * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
+ * Copyright (c) 2009, 2020 Mountainminds GmbH & Co. KG and Contributors
+ * This program and the accompanying materials are made available under
+ * the terms of the Eclipse Public License 2.0 which is available at
+ * http://www.eclipse.org/legal/epl-2.0
+ *
+ * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
  *    Evgeny Mandrikov - initial API and implementation
  *    Kyle Lieber - implementation of CheckMojo
  *    Marc Hoffmann - redesign using report APIs
- *    
+ *
  *******************************************************************************/
 package org.jacoco.maven;
 
@@ -30,7 +31,7 @@ import org.jacoco.report.check.Rule;
 
 /**
  * Checks that the code coverage metrics are being met.
- * 
+ *
  * @since 0.6.1
  */
 @Mojo(name = "check", defaultPhase = LifecyclePhase.VERIFY, threadSafe = true)
@@ -47,27 +48,27 @@ public class CheckMojo extends AbstractJacocoMojo implements IViolationsOutput {
 	 * applies to a certain counter (INSTRUCTION, LINE, BRANCH, COMPLEXITY,
 	 * METHOD, CLASS) and defines a minimum or maximum for the corresponding
 	 * value (TOTALCOUNT, COVEREDCOUNT, MISSEDCOUNT, COVEREDRATIO, MISSEDRATIO).
-	 * If a limit refers to a ratio the range is from 0.0 to 1.0 where the
-	 * number of decimal places will also determine the precision in error
-	 * messages. A limit ratio may optionally be declared as a percentage
-	 * where 0.80 and 80% represent the same value, the value must end with %.
+	 * If a limit refers to a ratio it must be in the range from 0.0 to 1.0
+	 * where the number of decimal places will also determine the precision in
+	 * error messages. A limit ratio may optionally be declared as a percentage
+	 * where 0.80 and 80% represent the same value.
 	 * </p>
-	 * 
+	 *
 	 * <p>
 	 * If not specified the following defaults are assumed:
 	 * </p>
-	 * 
+	 *
 	 * <ul>
 	 * <li>rule element: BUNDLE</li>
 	 * <li>limit counter: INSTRUCTION</li>
 	 * <li>limit value: COVEREDRATIO</li>
 	 * </ul>
-	 * 
+	 *
 	 * <p>
 	 * This example requires an overall instruction coverage of 80% and no class
 	 * must be missed:
 	 * </p>
-	 * 
+	 *
 	 * <pre>
 	 * {@code
 	 * <rules>
@@ -88,12 +89,12 @@ public class CheckMojo extends AbstractJacocoMojo implements IViolationsOutput {
 	 *   </rule>
 	 * </rules>}
 	 * </pre>
-	 * 
+	 *
 	 * <p>
 	 * This example requires a line coverage minimum of 50% for every class
 	 * except test classes:
 	 * </p>
-	 * 
+	 *
 	 * <pre>
 	 * {@code
 	 * <rules>
@@ -149,8 +150,8 @@ public class CheckMojo extends AbstractJacocoMojo implements IViolationsOutput {
 			getLog().info(MSG_SKIPPING + dataFile);
 			return false;
 		}
-		final File classesDirectory = new File(getProject().getBuild()
-				.getOutputDirectory());
+		final File classesDirectory = new File(
+				getProject().getBuild().getOutputDirectory());
 		if (!classesDirectory.exists()) {
 			getLog().info(
 					"Skipping JaCoCo execution due to missing classes directory:"
@@ -161,8 +162,7 @@ public class CheckMojo extends AbstractJacocoMojo implements IViolationsOutput {
 	}
 
 	@Override
-	public void executeMojo() throws MojoExecutionException,
-			MojoExecutionException {
+	public void executeMojo() throws MojoExecutionException {
 		if (!canCheckCoverage()) {
 			return;
 		}

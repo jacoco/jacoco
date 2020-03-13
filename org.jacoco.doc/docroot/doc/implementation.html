@@ -16,7 +16,7 @@
   <a href="index.html" class="el_group">Documentation</a> &gt;
   <span class="el_source">Implementation Design</span>
 </div>
-<div id="content"> 
+<div id="content">
 
 <h1>Implementation Design</h1>
 
@@ -38,7 +38,7 @@
   Coverage information has to be collected at runtime. For this purpose JaCoCo
   creates instrumented versions of the original class definitions. The
   instrumentation process happens on-the-fly during class loading using so
-  called Java agents.  
+  called Java agents.
 </p>
 
 <p>
@@ -71,12 +71,12 @@
   The Java agent is loaded by the application class loader. Therefore the
   classes of the agent live in the same name space like the application classes
   which can result in clashes especially with the third party library ASM. The
-  JoCoCo build therefore moves all agent classes into a unique package.  
+  JoCoCo build therefore moves all agent classes into a unique package.
 </p>
 
 <p>
   The JaCoCo build renames all classes contained in the
-  <code>jacocoagent.jar</code> into classes with a 
+  <code>jacocoagent.jar</code> into classes with a
   <code>org.jacoco.agent.rt_&lt;randomid&gt;</code> prefix, including the
   required ASM library classes. The identifier is created from a random number.
   As the agent does not provide any API, no one should be affected by this
@@ -131,7 +131,7 @@
   the presented figures are extracted from a valid test target. A hash code of
   the class definitions allows to differentiate between classes and versions of
   classes. The CRC64 hash computation is simple and fast resulting in a small 64
-  bit identifier. 
+  bit identifier.
 </p>
 
 <p>
@@ -144,7 +144,7 @@
   results. The CRC64 code might produce so called <i>collisions</i>, i.e.
   creating the same hash code for two different classes. Although CRC64 is not
   cryptographically strong and collision examples can be easily computed, for
-  regular class files the collision probability is very low. 
+  regular class files the collision probability is very low.
 </p>
 
 <h2>Coverage Runtime Dependency</h2>
@@ -152,19 +152,19 @@
 <p class="intro">
   Instrumented code typically gets a dependency to a coverage runtime which is
   responsible for collecting and storing execution data. JaCoCo uses JRE types
-  only in generated instrumentation code. 
+  only in generated instrumentation code.
 </p>
 
 <p>
   Making a runtime library available to all instrumented classes can be a
   painful or impossible task in frameworks that use their own class loading
   mechanisms. Since Java 1.6 <code>java.lang.instrument.Instrumentation</code>
-  has an API to extends the bootsstrap loader. As our minimum target is Java 1.5 
+  has an API to extends the bootsstrap loader. As our minimum target is Java 1.5
   JaCoCo decouples the instrumented classes and the coverage runtime through
   official JRE API types only. The instrumented classes communicate through the
   <code>Object.equals(Object)</code> method with the runtime. A instrumented
   class can retrieve its probe array instance with the following code. Note
-  that only JRE APIs are used:   
+  that only JRE APIs are used:
 </p>
 
 
@@ -172,7 +172,7 @@
 Object access = ...                          // Retrieve instance
 
 Object[] args = new Object[3];
-args[0] = Long.valueOf(8060044182221863588); // class id 
+args[0] = Long.valueOf(8060044182221863588); // class id
 args[1] = "com/example/MyClass";             // class name
 args[2] = Integer.valueOf(24);               // probe count
 
@@ -199,17 +199,17 @@ boolean[] probes = (boolean[]) args[0];
     parameter array instead of a <code>equals()</code> method. The coverage
     runtime registers a custom <code>Handler</code> to receive the parameter
     array. This approach might break environments that install their own log
-    managers (e.g. Glassfish).</li> 
+    managers (e.g. Glassfish).</li>
   <li><b><code>URLStreamHandlerRuntime</code></b>: This runtime registers a
     <code>URLStreamHandler</code> for a "jacoco-xxxxx" protocol. Instrumented
     classes open a connection on this protocol. The returned connection object
     is the one that provides access to the coverage runtime through its
     <code>equals()</code> method. However to register the protocol the runtime
-    needs to access internal members of the <code>java.net.URL</code> class.</li> 
+    needs to access internal members of the <code>java.net.URL</code> class.</li>
   <li><b><code>ModifiedSystemClassRuntime</code></b>: This approach adds a
     public static field to an existing JRE class through instrumentation. Unlike
     the other methods above this is only possible for environments where a Java
-    agent is active.</li> 
+    agent is active.</li>
   <li><b><code>InjectedClassRuntime</code></b>: This approach defines a new class
     using <code>java.lang.invoke.MethodHandles.Lookup.defineClass</code>
     introduced in Java 9.</li>
@@ -233,14 +233,14 @@ boolean[] probes = (boolean[]) args[0];
   Coverage analysis for huge projects with several thousand classes or hundred
   thousand lines of code should be possible. To allow this with reasonable
   memory usage the coverage analysis is based on streaming patterns and
-  "depth first" traversals.  
+  "depth first" traversals.
 </p>
 
 <p>
   The complete data tree of a huge coverage report is too big to fit into a
   reasonable heap memory configuration. Therefore the coverage analysis and
   report generation is implemented as "depth first" traversals. Which means that
-  at any point in time only the following data has to be held in working memory:  
+  at any point in time only the following data has to be held in working memory:
 </p>
 
 <ul>
@@ -252,7 +252,7 @@ boolean[] probes = (boolean[]) args[0];
 
 <p class="intro">
   The Java language and the Java VM use different String representation formats
-  for Java elements. For example while a type reference in Java reads like 
+  for Java elements. For example while a type reference in Java reads like
   <code>java.lang.Object</code>, the VM references the same type as
   <code>Ljava/lang/Object;</code>. The JaCoCo API is based on VM identifiers only.
 </p>
@@ -275,13 +275,13 @@ boolean[] probes = (boolean[]) args[0];
 <p>
   Using OSGi bundles allows well defined dependencies at development time and
   at runtime in OSGi containers. As there are no dependencies on OSGi, the
-  bundles can also be used like regular JAR files.  
+  bundles can also be used like regular JAR files.
 </p>
 
 </div>
 <div class="footer">
-  <span class="right"><a href="@jacoco.home.url@">JaCoCo</a> @qualified.bundle.version@</span>
-  <a href="license.html">Copyright</a> &copy; @copyright.years@ Mountainminds GmbH &amp; Co. KG and Contributors
+  <span class="right"><a href="${jacoco.home.url}">JaCoCo</a> ${qualified.bundle.version}</span>
+  <a href="license.html">Copyright</a> &copy; ${copyright.years} Mountainminds GmbH &amp; Co. KG and Contributors
 </div>
 
 </body>

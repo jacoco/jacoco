@@ -1,9 +1,10 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2019 Mountainminds GmbH & Co. KG and Contributors
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
- * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
+ * Copyright (c) 2009, 2020 Mountainminds GmbH & Co. KG and Contributors
+ * This program and the accompanying materials are made available under
+ * the terms of the Eclipse Public License 2.0 which is available at
+ * http://www.eclipse.org/legal/epl-2.0
+ *
+ * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
  *    Evgeny Mandrikov - initial API and implementation
@@ -23,7 +24,7 @@ import org.jacoco.report.IReportGroupVisitor;
 /**
  * Creates a code coverage report for tests of a single project in multiple
  * formats (HTML, XML, and CSV).
- * 
+ *
  * @since 0.5.3
  */
 @Mojo(name = "report", defaultPhase = LifecyclePhase.VERIFY, threadSafe = true)
@@ -81,8 +82,8 @@ public class ReportMojo extends AbstractReportMojo {
 
 	@Override
 	public void setReportOutputDirectory(final File reportOutputDirectory) {
-		if (reportOutputDirectory != null
-				&& !reportOutputDirectory.getAbsolutePath().endsWith("jacoco")) {
+		if (reportOutputDirectory != null && !reportOutputDirectory
+				.getAbsolutePath().endsWith("jacoco")) {
 			outputDirectory = new File(reportOutputDirectory, "jacoco");
 		} else {
 			outputDirectory = reportOutputDirectory;

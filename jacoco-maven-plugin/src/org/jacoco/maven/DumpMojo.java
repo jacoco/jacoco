@@ -1,9 +1,10 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2019 Mountainminds GmbH & Co. KG and Contributors
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
- * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
+ * Copyright (c) 2009, 2020 Mountainminds GmbH & Co. KG and Contributors
+ * This program and the accompanying materials are made available under
+ * the terms of the Eclipse Public License 2.0 which is available at
+ * http://www.eclipse.org/legal/epl-2.0
+ *
+ * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
  *    Chas Honton, Marc R. Hoffmann - initial implementation
@@ -29,13 +30,13 @@ import org.jacoco.core.tools.ExecFileLoader;
  * Request a dump over TCP/IP from a JaCoCo agent running in
  * <code>tcpserver</code> mode.
  * </p>
- * 
+ *
  * <p>
  * Note concerning parallel builds: While the dump goal as such is thread safe,
  * it has to be considered that TCP/IP server ports of the agents are a shared
  * resource.
  * </p>
- * 
+ *
  * @since 0.6.4
  */
 @Mojo(name = "dump", defaultPhase = LifecyclePhase.POST_INTEGRATION_TEST, threadSafe = true)
@@ -94,9 +95,8 @@ public class DumpMojo extends AbstractJacocoMojo {
 			@Override
 			protected void onConnecting(final InetAddress address,
 					final int port) {
-				getLog().info(
-						format("Connecting to %s:%s", address,
-								Integer.valueOf(port)));
+				getLog().info(format("Connecting to %s:%s", address,
+						Integer.valueOf(port)));
 			}
 
 			@Override
@@ -111,9 +111,8 @@ public class DumpMojo extends AbstractJacocoMojo {
 		try {
 			final ExecFileLoader loader = client.dump(address, port);
 			if (dump) {
-				getLog().info(
-						format("Dumping execution data to %s",
-								destFile.getAbsolutePath()));
+				getLog().info(format("Dumping execution data to %s",
+						destFile.getAbsolutePath()));
 				loader.save(destFile, append);
 			}
 		} catch (final IOException e) {

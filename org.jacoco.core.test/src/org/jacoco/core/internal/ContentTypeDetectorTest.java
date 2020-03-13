@@ -1,13 +1,14 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2019 Mountainminds GmbH & Co. KG and Contributors
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
- * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
+ * Copyright (c) 2009, 2020 Mountainminds GmbH & Co. KG and Contributors
+ * This program and the accompanying materials are made available under
+ * the terms of the Eclipse Public License 2.0 which is available at
+ * http://www.eclipse.org/legal/epl-2.0
+ *
+ * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
  *    Marc R. Hoffmann - initial API and implementation
- *    
+ *
  *******************************************************************************/
 package org.jacoco.core.internal;
 
@@ -18,13 +19,12 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.util.jar.JarInputStream;
-import java.util.jar.Pack200;
 import java.util.zip.GZIPOutputStream;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
 import org.jacoco.core.test.TargetLoader;
+import org.junit.AssumptionViolatedException;
 import org.junit.Test;
 
 /**
@@ -159,7 +159,8 @@ public class ContentTypeDetectorTest {
 	}
 
 	@Test
-	public void should_detect_java_13_with_preview_features() throws IOException {
+	public void should_detect_java_13_with_preview_features()
+			throws IOException {
 		initData(0xCA, 0xFE, 0xBA, 0xBE, 0xFF, 0xFF, 0x00, 0x39);
 		assertEquals(ContentTypeDetector.CLASSFILE, detector.getType());
 		assertContent();
@@ -173,9 +174,25 @@ public class ContentTypeDetectorTest {
 	}
 
 	@Test
-	public void should_detect_java_14_with_preview_features() throws IOException {
+	public void should_detect_java_14_with_preview_features()
+			throws IOException {
 		initData(0xCA, 0xFE, 0xBA, 0xBE, 0xFF, 0xFF, 0x00, 0x3A);
 		assertEquals(ContentTypeDetector.CLASSFILE, detector.getType());
+		assertContent();
+	}
+
+	@Test
+	public void should_detect_java_42() throws IOException {
+		initData(0xCA, 0xFE, 0xBA, 0xBE, 0x00, 0x00, 0x00, 0x56);
+		assertEquals(ContentTypeDetector.CLASSFILE, detector.getType());
+		assertContent();
+	}
+
+	@Test
+	public void should_not_detect_MachO_fat_binary_with_44_architectures()
+			throws IOException {
+		initData(0xCA, 0xFE, 0xBA, 0xBE, 0x00, 0x00, 0x00, 0x2C);
+		assertEquals(ContentTypeDetector.UNKNOWN, detector.getType());
 		assertContent();
 	}
 
@@ -200,6 +217,13 @@ public class ContentTypeDetectorTest {
 
 	@Test
 	public void testPack200File() throws IOException {
+		try {
+			Class.forName("java.util.jar.Pack200");
+		} catch (ClassNotFoundException e) {
+			throw new AssumptionViolatedException(
+					"this test requires JDK with Pack200");
+		}
+
 		final ByteArrayOutputStream zipbuffer = new ByteArrayOutputStream();
 		final ZipOutputStream zip = new ZipOutputStream(zipbuffer);
 		zip.putNextEntry(new ZipEntry("hello.txt"));
@@ -207,9 +231,7 @@ public class ContentTypeDetectorTest {
 		zip.close();
 
 		final ByteArrayOutputStream pack200buffer = new ByteArrayOutputStream();
-		Pack200.newPacker().pack(
-				new JarInputStream(new ByteArrayInputStream(
-						zipbuffer.toByteArray())), pack200buffer);
+		Pack200Streams.pack(zipbuffer.toByteArray(), pack200buffer);
 		initData(pack200buffer.toByteArray());
 		assertEquals(ContentTypeDetector.PACK200FILE, detector.getType());
 		assertContent();

@@ -1,13 +1,14 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2019 Mountainminds GmbH & Co. KG and Contributors
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
- * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
+ * Copyright (c) 2009, 2020 Mountainminds GmbH & Co. KG and Contributors
+ * This program and the accompanying materials are made available under
+ * the terms of the Eclipse Public License 2.0 which is available at
+ * http://www.eclipse.org/legal/epl-2.0
+ *
+ * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
  *    Marc R. Hoffmann - initial API and implementation
- *    
+ *
  *******************************************************************************/
 package org.jacoco.report.check;
 
@@ -82,8 +83,8 @@ public class Limit {
 	 *
 	 * @param entity
 	 *            counter entity to check
-	 * TODO: use CounterEntity directly once Maven 3 is required.
 	 */
+	// TODO: use CounterEntity directly once Maven 3 is required.
 	public void setCounter(final String entity) {
 		this.entity = CounterEntity.valueOf(entity);
 	}
@@ -100,8 +101,8 @@ public class Limit {
 	 *
 	 * @param value
 	 *            value to check
-	 * TODO: use CounterValue directly once Maven 3 is required.
 	 */
+	// TODO: use CounterValue directly once Maven 3 is required.
 	public void setValue(final String value) {
 		this.value = CounterValue.valueOf(value);
 	}
@@ -115,10 +116,12 @@ public class Limit {
 	}
 
 	/**
-	 * Sets allowed maximum value as decimal string or percent representation.
-	 * The given precision is also considered in error messages. Coverage ratios
-	 * are given in the range from 0.0 to 1.0.
-	 * 
+	 * Sets the expected minimum value. If the minimum refers to a ratio it must
+	 * be in the range from 0.0 to 1.0 where the number of decimal places will
+	 * also determine the precision in error messages. A limit ratio may
+	 * optionally be declared as a percentage where 0.80 and 80% represent the
+	 * same value.
+	 *
 	 * @param minimum
 	 *            allowed minimum or <code>null</code>, if no minimum should be
 	 *            checked
@@ -136,10 +139,12 @@ public class Limit {
 	}
 
 	/**
-	 * Sets allowed maximum value as decimal string or percent representation.
-	 * The given precision is also considered in error messages. Coverage ratios
-	 * are given in the range from 0.0 to 1.0.
-	 * 
+	 * Sets the expected maximum value. If the maximum refers to a ratio it must
+	 * be in the range from 0.0 to 1.0 where the number of decimal places will
+	 * also determine the precision in error messages. A limit ratio may
+	 * optionally be declared as a percentage where 0.80 and 80% represent the
+	 * same value.
+	 *
 	 * @param maximum
 	 *            allowed maximum or <code>null</code>, if no maximum should be
 	 *            checked
@@ -152,10 +157,11 @@ public class Limit {
 		if (value == null) {
 			return null;
 		}
-		
+
 		final String trimmedValue = value.trim();
 		if (trimmedValue.endsWith("%")) {
-			final String percent = trimmedValue.substring(0, trimmedValue.length() - 1);
+			final String percent = trimmedValue.substring(0,
+					trimmedValue.length() - 1);
 			return new BigDecimal(percent).movePointLeft(2);
 		}
 
@@ -163,6 +169,10 @@ public class Limit {
 	}
 
 	String check(final ICoverageNode node) {
+		final String msg = checkRatioLimit();
+		if (msg != null) {
+			return msg;
+		}
 		final double d = node.getCounter(entity).getValue(value);
 		if (Double.isNaN(d)) {
 			return null;
@@ -183,6 +193,31 @@ public class Limit {
 		return String.format("%s %s is %s, but expected %s is %s",
 				ENTITY_NAMES.get(entity), VALUE_NAMES.get(value),
 				rounded.toPlainString(), minmax, ref.toPlainString());
+	}
+
+	private String checkRatioLimit() {
+		if (CounterValue.MISSEDRATIO.equals(value)
+				|| CounterValue.COVEREDRATIO.equals(value)) {
+			final String minmsg = checkRatioLimit("minimum", minimum);
+			if (minmsg != null) {
+				return minmsg;
+			}
+			final String maxmsg = checkRatioLimit("maximum", maximum);
+			if (maxmsg != null) {
+				return maxmsg;
+			}
+		}
+		return null;
+	}
+
+	private String checkRatioLimit(final String minmax, final BigDecimal v) {
+		if (v != null && (v.compareTo(BigDecimal.ZERO) < 0
+				|| v.compareTo(BigDecimal.ONE) > 0)) {
+			return String.format(
+					"given %s ratio is %s, but must be between 0.0 and 1.0",
+					minmax, v);
+		}
+		return null;
 	}
 
 }

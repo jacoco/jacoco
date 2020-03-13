@@ -1,13 +1,14 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2019 Mountainminds GmbH & Co. KG and Contributors
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
- * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
+ * Copyright (c) 2009, 2020 Mountainminds GmbH & Co. KG and Contributors
+ * This program and the accompanying materials are made available under
+ * the terms of the Eclipse Public License 2.0 which is available at
+ * http://www.eclipse.org/legal/epl-2.0
+ *
+ * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
  *    Marc R. Hoffmann - initial API and implementation
- *    
+ *
  *******************************************************************************/
 package org.jacoco.core.internal.analysis;
 
@@ -25,7 +26,8 @@ public abstract class LineImpl implements ILine {
 	/** Max branch counter value for which singletons are created */
 	private static final int SINGLETON_BRA_LIMIT = 4;
 
-	private static final LineImpl[][][][] SINGLETONS = new LineImpl[SINGLETON_INS_LIMIT + 1][][][];
+	private static final LineImpl[][][][] SINGLETONS = new LineImpl[SINGLETON_INS_LIMIT
+			+ 1][][][];
 
 	static {
 		for (int i = 0; i <= SINGLETON_INS_LIMIT; i++) {
@@ -82,8 +84,8 @@ public abstract class LineImpl implements ILine {
 	 */
 	private static final class Fix extends LineImpl {
 		public Fix(final int im, final int ic, final int bm, final int bc) {
-			super(CounterImpl.getInstance(im, ic), CounterImpl.getInstance(bm,
-					bc));
+			super(CounterImpl.getInstance(im, ic),
+					CounterImpl.getInstance(bm, bc));
 		}
 
 		@Override
@@ -100,14 +102,15 @@ public abstract class LineImpl implements ILine {
 	/** branch counter */
 	protected CounterImpl branches;
 
-	private LineImpl(final CounterImpl instructions, final CounterImpl branches) {
+	private LineImpl(final CounterImpl instructions,
+			final CounterImpl branches) {
 		this.instructions = instructions;
 		this.branches = branches;
 	}
 
 	/**
 	 * Adds the given counters to this line.
-	 * 
+	 *
 	 * @param instructions
 	 *            instructions to add
 	 * @param branches

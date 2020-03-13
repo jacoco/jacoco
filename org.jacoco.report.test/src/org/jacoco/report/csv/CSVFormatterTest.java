@@ -1,13 +1,14 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2019 Mountainminds GmbH & Co. KG and Contributors
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
- * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
+ * Copyright (c) 2009, 2020 Mountainminds GmbH & Co. KG and Contributors
+ * This program and the accompanying materials are made available under
+ * the terms of the Eclipse Public License 2.0 which is available at
+ * http://www.eclipse.org/legal/epl-2.0
+ *
+ * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
  *    Marc R. Hoffmann - initial API and implementation
- *    
+ *
  *******************************************************************************/
 package org.jacoco.report.csv;
 
@@ -116,8 +117,8 @@ public class CSVFormatterTest {
 				return null;
 			}
 
-			public String getMethodName(String vmclassname,
-					String vmmethodname, String vmdesc, String vmsignature) {
+			public String getMethodName(String vmclassname, String vmmethodname,
+					String vmdesc, String vmsignature) {
 				return null;
 			}
 
@@ -136,8 +137,8 @@ public class CSVFormatterTest {
 	}
 
 	private List<String> getLines(String encoding) throws IOException {
-		final BufferedReader reader = new BufferedReader(new InputStreamReader(
-				output.getContentsAsStream(), encoding));
+		final BufferedReader reader = new BufferedReader(
+				new InputStreamReader(output.getContentsAsStream(), encoding));
 		final List<String> lines = new ArrayList<String>();
 		String line;
 		while ((line = reader.readLine()) != null) {

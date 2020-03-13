@@ -1,13 +1,14 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2019 Mountainminds GmbH & Co. KG and Contributors
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
- * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
+ * Copyright (c) 2009, 2020 Mountainminds GmbH & Co. KG and Contributors
+ * This program and the accompanying materials are made available under
+ * the terms of the Eclipse Public License 2.0 which is available at
+ * http://www.eclipse.org/legal/epl-2.0
+ *
+ * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
  *    Marc R. Hoffmann - initial API and implementation
- *    
+ *
  *******************************************************************************/
 package org.jacoco.report.internal.html.page;
 
@@ -34,9 +35,8 @@ public class SourceFilePageTest extends PageTestBase {
 	@Override
 	public void setup() throws Exception {
 		super.setup();
-		sourceReader = new InputStreamReader(
-				new FileInputStream(
-						"./src/org/jacoco/report/internal/html/page/SourceFilePageTest.java"),
+		sourceReader = new InputStreamReader(new FileInputStream(
+				"./src/org/jacoco/report/internal/html/page/SourceFilePageTest.java"),
 				"UTF-8");
 	}
 
@@ -48,8 +48,8 @@ public class SourceFilePageTest extends PageTestBase {
 				null, rootFolder, context);
 		page.render();
 
-		final Document result = support.parse(output
-				.getFile("SourceFilePageTest.java.html"));
+		final Document result = support
+				.parse(output.getFile("SourceFilePageTest.java.html"));
 
 		// additional style sheet
 		assertEquals("jacoco-resources/report.css", support.findStr(result,

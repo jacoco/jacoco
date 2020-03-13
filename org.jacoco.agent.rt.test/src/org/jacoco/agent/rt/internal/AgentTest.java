@@ -1,9 +1,10 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2019 Mountainminds GmbH & Co. KG and Contributors
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
- * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
+ * Copyright (c) 2009, 2020 Mountainminds GmbH & Co. KG and Contributors
+ * This program and the accompanying materials are made available under
+ * the terms of the Eclipse Public License 2.0 which is available at
+ * http://www.eclipse.org/legal/epl-2.0
+ *
+ * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
  *    Evgeny Mandrikov - initial API and implementation
@@ -19,7 +20,6 @@ import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 import java.io.ByteArrayInputStream;
-import java.io.IOException;
 import java.lang.management.ManagementFactory;
 
 import javax.management.InstanceNotFoundException;
@@ -106,8 +106,9 @@ public class AgentTest implements IExceptionLogger, IAgentOutput {
 	}
 
 	@Test
-	public void startup_should_log_exception() throws Exception {
+	public void startup_should_log_and_rethrow_exception() throws Exception {
 		final Exception expected = new Exception();
+
 		Agent agent = new Agent(options, this) {
 			@Override
 			IAgentOutput createAgentOutput() {
@@ -126,9 +127,13 @@ public class AgentTest implements IExceptionLogger, IAgentOutput {
 			}
 		};
 
-		agent.startup();
-
-		assertSame(expected, loggedException);
+		try {
+			agent.startup();
+			fail("Exception expected");
+		} catch (Exception actual) {
+			assertSame(expected, actual);
+			assertSame(expected, loggedException);
+		}
 	}
 
 	@Test
@@ -240,7 +245,7 @@ public class AgentTest implements IExceptionLogger, IAgentOutput {
 	}
 
 	@Test
-	public void getSessionId_should_return_session_id() throws IOException {
+	public void getSessionId_should_return_session_id() throws Exception {
 		Agent agent = createAgent();
 
 		agent.startup();
@@ -249,7 +254,7 @@ public class AgentTest implements IExceptionLogger, IAgentOutput {
 	}
 
 	@Test
-	public void setSessionId_should_modify_session_id() throws IOException {
+	public void setSessionId_should_modify_session_id() throws Exception {
 		Agent agent = createAgent();
 		agent.startup();
 
@@ -273,7 +278,7 @@ public class AgentTest implements IExceptionLogger, IAgentOutput {
 
 	@Test
 	public void getExecutionData_should_return_probes_and_session_id()
-			throws IOException {
+			throws Exception {
 		Agent agent = createAgent();
 		agent.startup();
 		agent.getData().getExecutionData(Long.valueOf(0x12345678), "Foo", 1)
@@ -291,7 +296,7 @@ public class AgentTest implements IExceptionLogger, IAgentOutput {
 
 	@Test
 	public void getExecutionData_should_reset_probes_when_enabled()
-			throws IOException {
+			throws Exception {
 		Agent agent = createAgent();
 		agent.startup();
 		final boolean[] probes = agent.getData()
@@ -306,7 +311,7 @@ public class AgentTest implements IExceptionLogger, IAgentOutput {
 
 	@Test
 	public void getExecutionData_should_not_reset_probes_when_disabled()
-			throws IOException {
+			throws Exception {
 		Agent agent = createAgent();
 		agent.startup();
 		final boolean[] probes = agent.getData()

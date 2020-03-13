@@ -1,9 +1,10 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2019 Mountainminds GmbH & Co. KG and Contributors
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
- * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
+ * Copyright (c) 2009, 2020 Mountainminds GmbH & Co. KG and Contributors
+ * This program and the accompanying materials are made available under
+ * the terms of the Eclipse Public License 2.0 which is available at
+ * http://www.eclipse.org/legal/epl-2.0
+ *
+ * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
  *    John Oliver, Marc R. Hoffmann, Jan Wloka - initial API and implementation
@@ -38,18 +39,18 @@ import org.jacoco.report.IReportGroupVisitor;
  * reports when tests are in separate projects than the code under test, for
  * example in case of integration tests.
  * </p>
- * 
+ *
  * <p>
  * Using the dependency scope allows to distinguish projects which contribute
  * execution data but should not become part of the report:
  * </p>
- * 
+ *
  * <ul>
  * <li><code>compile</code>, <code>runtime</code>, <code>provided</code>:
  * Project source and execution data is included in the report.</li>
  * <li><code>test</code>: Only execution data is considered for the report.</li>
  * </ul>
- * 
+ *
  * @since 0.7.7
  */
 @Mojo(name = "report-aggregate", threadSafe = true)
@@ -147,9 +148,8 @@ public class ReportAggregateMojo extends AbstractReportMojo {
 
 	@Override
 	public void setReportOutputDirectory(final File reportOutputDirectory) {
-		if (reportOutputDirectory != null
-				&& !reportOutputDirectory.getAbsolutePath().endsWith(
-						"jacoco-aggregate")) {
+		if (reportOutputDirectory != null && !reportOutputDirectory
+				.getAbsolutePath().endsWith("jacoco-aggregate")) {
 			outputDirectory = new File(reportOutputDirectory,
 					"jacoco-aggregate");
 		} else {

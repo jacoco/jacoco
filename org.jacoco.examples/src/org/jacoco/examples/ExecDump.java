@@ -1,13 +1,14 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2019 Mountainminds GmbH & Co. KG and Contributors
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
- * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
+ * Copyright (c) 2009, 2020 Mountainminds GmbH & Co. KG and Contributors
+ * This program and the accompanying materials are made available under
+ * the terms of the Eclipse Public License 2.0 which is available at
+ * http://www.eclipse.org/legal/epl-2.0
+ *
+ * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
  *    Marc R. Hoffmann - initial API and implementation
- *    
+ *
  *******************************************************************************/
 package org.jacoco.examples;
 
@@ -32,7 +33,7 @@ public final class ExecDump {
 
 	/**
 	 * Creates a new example instance printing to the given stream.
-	 * 
+	 *
 	 * @param out
 	 *            stream for outputs
 	 */
@@ -42,7 +43,7 @@ public final class ExecDump {
 
 	/**
 	 * Run this example with the given parameters.
-	 * 
+	 *
 	 * @param args
 	 *            command line parameters
 	 * @throws IOException
@@ -62,8 +63,8 @@ public final class ExecDump {
 		final ExecutionDataReader reader = new ExecutionDataReader(in);
 		reader.setSessionInfoVisitor(new ISessionInfoVisitor() {
 			public void visitSessionInfo(final SessionInfo info) {
-				out.printf("Session \"%s\": %s - %s%n", info.getId(), new Date(
-						info.getStartTimeStamp()),
+				out.printf("Session \"%s\": %s - %s%n", info.getId(),
+						new Date(info.getStartTimeStamp()),
 						new Date(info.getDumpTimeStamp()));
 			}
 		});
@@ -93,7 +94,7 @@ public final class ExecDump {
 
 	/**
 	 * Entry point to run this examples as a Java application.
-	 * 
+	 *
 	 * @param args
 	 *            list of program arguments
 	 * @throws IOException

@@ -1,13 +1,14 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2019 Mountainminds GmbH & Co. KG and Contributors
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
- * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
+ * Copyright (c) 2009, 2020 Mountainminds GmbH & Co. KG and Contributors
+ * This program and the accompanying materials are made available under
+ * the terms of the Eclipse Public License 2.0 which is available at
+ * http://www.eclipse.org/legal/epl-2.0
+ *
+ * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
  *    Marc R. Hoffmann - initial API and implementation
- *    
+ *
  *******************************************************************************/
 package org.jacoco.report.internal.html.page;
 
@@ -54,7 +55,7 @@ public class SessionsPage extends ReportPage {
 
 	/**
 	 * Creates a new page page to display session information.
-	 * 
+	 *
 	 * @param sessionInfos
 	 *            session info objects
 	 * @param executionData
@@ -81,8 +82,8 @@ public class SessionsPage extends ReportPage {
 		final ILanguageNames names = context.getLanguageNames();
 		Collections.sort(this.executionData, new Comparator<ExecutionData>() {
 			public int compare(final ExecutionData e1, final ExecutionData e2) {
-				return names.getQualifiedClassName(e1.getName()).compareTo(
-						names.getQualifiedClassName(e2.getName()));
+				return names.getQualifiedClassName(e1.getName())
+						.compareTo(names.getQualifiedClassName(e2.getName()));
 			}
 		});
 	}
@@ -132,8 +133,8 @@ public class SessionsPage extends ReportPage {
 		for (final ExecutionData e : executionData) {
 			final HTMLElement tr = tbody.tr();
 			final String link = index.getLinkToClass(e.getId());
-			final String qualifiedName = names.getQualifiedClassName(e
-					.getName());
+			final String qualifiedName = names
+					.getQualifiedClassName(e.getName());
 			if (link == null) {
 				tr.td().span(Styles.EL_CLASS).text(qualifiedName);
 			} else {

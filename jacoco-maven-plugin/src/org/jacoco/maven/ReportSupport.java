@@ -1,9 +1,10 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2019 Mountainminds GmbH & Co. KG and Contributors
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
- * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
+ * Copyright (c) 2009, 2020 Mountainminds GmbH & Co. KG and Contributors
+ * This program and the accompanying materials are made available under
+ * the terms of the Eclipse Public License 2.0 which is available at
+ * http://www.eclipse.org/legal/epl-2.0
+ *
+ * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
  *    Evgeny Mandrikov - initial API and implementation
@@ -47,10 +48,11 @@ import org.jacoco.report.xml.XMLFormatter;
 /**
  * Encapsulates the tasks to create reports for Maven projects. Instances are
  * supposed to be used in the following sequence:
- * 
+ *
  * <ol>
  * <li>Create an instance</li>
- * <li>Load one or multiple exec files with <code>loadExecutionData()</code></li>
+ * <li>Load one or multiple exec files with
+ * <code>loadExecutionData()</code></li>
  * <li>Add one or multiple formatters with <code>addXXX()</code> methods</li>
  * <li>Create the root visitor with <code>initRootVisitor()</code></li>
  * <li>Process one or multiple projects with <code>processProject()</code></li>
@@ -64,7 +66,7 @@ final class ReportSupport {
 
 	/**
 	 * Construct a new instance with the given log output.
-	 * 
+	 *
 	 * @param log
 	 *            for log output
 	 */
@@ -76,7 +78,7 @@ final class ReportSupport {
 
 	/**
 	 * Loads the given execution data file.
-	 * 
+	 *
 	 * @param execFile
 	 *            execution data file to load
 	 * @throws IOException
@@ -109,8 +111,8 @@ final class ReportSupport {
 		if (footer != null) {
 			htmlFormatter.setFooterText(footer);
 		}
-		formatters.add(htmlFormatter.createVisitor(new FileMultiReportOutput(
-				targetdir)));
+		formatters.add(htmlFormatter
+				.createVisitor(new FileMultiReportOutput(targetdir)));
 	}
 
 	public void addAllFormatters(final File targetdir, final String encoding,
@@ -130,15 +132,15 @@ final class ReportSupport {
 
 	public IReportVisitor initRootVisitor() throws IOException {
 		final IReportVisitor visitor = new MultiReportVisitor(formatters);
-		visitor.visitInfo(loader.getSessionInfoStore().getInfos(), loader
-				.getExecutionDataStore().getContents());
+		visitor.visitInfo(loader.getSessionInfoStore().getInfos(),
+				loader.getExecutionDataStore().getContents());
 		return visitor;
 	}
 
 	/**
 	 * Calculates coverage for the given project and emits it to the report
 	 * group without source references
-	 * 
+	 *
 	 * @param visitor
 	 *            group visitor to emit the project's coverage to
 	 * @param project
@@ -160,7 +162,7 @@ final class ReportSupport {
 	/**
 	 * Calculates coverage for the given project and emits it to the report
 	 * group including source references
-	 * 
+	 *
 	 * @param visitor
 	 *            group visitor to emit the project's coverage to
 	 * @param bundeName
@@ -189,8 +191,8 @@ final class ReportSupport {
 			final List<String> includes, final List<String> excludes,
 			final ISourceFileLocator locator) throws IOException {
 		final CoverageBuilder builder = new CoverageBuilder();
-		final File classesDir = new File(project.getBuild()
-				.getOutputDirectory());
+		final File classesDir = new File(
+				project.getBuild().getOutputDirectory());
 
 		if (classesDir.isDirectory()) {
 			final Analyzer analyzer = new Analyzer(
@@ -275,7 +277,8 @@ final class ReportSupport {
 		}
 	}
 
-	private static List<File> getCompileSourceRoots(final MavenProject project) {
+	private static List<File> getCompileSourceRoots(
+			final MavenProject project) {
 		final List<File> result = new ArrayList<File>();
 		for (final Object path : project.getCompileSourceRoots()) {
 			result.add(resolvePath(project, (String) path));

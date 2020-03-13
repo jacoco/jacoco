@@ -14,7 +14,7 @@
   <a href="index.html" class="el_group">Documentation</a> &gt;
   <span class="el_source">Offline Instrumentation</span>
 </div>
-<div id="content"> 
+<div id="content">
 
 <h1>Offline Instrumentation</h1>
 
@@ -64,7 +64,7 @@
 <p>
   In both cases configuration values may contain variables in the format
   <code>${<i>name</i>}</code> which are resolved with system property values
-  at runtime. For example: 
+  at runtime. For example:
 </p>
 
 <pre class="source">
@@ -79,7 +79,7 @@ destfile=${user.home}/jacoco.exec
   instrumented classes. The proper location for <code>jacocoagent.jar</code>
   might depend on your deployment scenario. The first instrumented class loaded
   will trigger the initialization of the JaCoCo runtime. If no instrumented
-  class is loaded the JaCoCo runtime will not get started at all.   
+  class is loaded the JaCoCo runtime will not get started at all.
 </p>
 
 <h2>Using Pre-Instrumented Classes With the Java Agent</h2>
@@ -88,7 +88,7 @@ destfile=${user.home}/jacoco.exec
   agent. In this case the configuration is taken from the agent options. The
   agent must be configured in a way that pre-instrumented classes are excluded,
   e.g. with "<code>excludes=*</code>". Otherwise it will result in error
-  messages on the console if the agent instruments such classes again. 
+  messages on the console if the agent instruments such classes again.
 </p>
 
 <h2>Execution Data Collection</h2>
@@ -111,8 +111,8 @@ destfile=${user.home}/jacoco.exec
 
 </div>
 <div class="footer">
-  <span class="right"><a href="@jacoco.home.url@">JaCoCo</a> @qualified.bundle.version@</span>
-  <a href="license.html">Copyright</a> &copy; @copyright.years@ Mountainminds GmbH &amp; Co. KG and Contributors
+  <span class="right"><a href="${jacoco.home.url}">JaCoCo</a> ${qualified.bundle.version}</span>
+  <a href="license.html">Copyright</a> &copy; ${copyright.years} Mountainminds GmbH &amp; Co. KG and Contributors
 </div>
 
 </body>

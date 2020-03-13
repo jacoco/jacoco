@@ -1,13 +1,14 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2019 Mountainminds GmbH & Co. KG and Contributors
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
- * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
+ * Copyright (c) 2009, 2020 Mountainminds GmbH & Co. KG and Contributors
+ * This program and the accompanying materials are made available under
+ * the terms of the Eclipse Public License 2.0 which is available at
+ * http://www.eclipse.org/legal/epl-2.0
+ *
+ * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
  *    Marc R. Hoffmann - initial API and implementation
- *    
+ *
  *******************************************************************************/
 package org.jacoco.core.internal.analysis;
 
@@ -22,31 +23,31 @@ import org.jacoco.core.analysis.ICounter;
  * outgoing branch. Each instruction has at least one branch, for example in
  * case of a simple sequence of instructions (by convention branch 0). Instances
  * of this class are used in two steps:
- * 
+ *
  * <h2>Step 1: Building the CFG</h2>
- * 
+ *
  * For each bytecode instruction of a method a {@link Instruction} instance is
  * created. In correspondence with the CFG these instances are linked with each
  * other with the <code>addBranch()</code> methods. The executions status is
  * either directly derived from a probe which has been inserted in the execution
  * flow ({@link #addBranch(boolean, int)}) or indirectly propagated along the
  * CFG edges ({@link #addBranch(Instruction, int)}).
- * 
+ *
  * <h2>Step 2: Querying the Coverage Status</h2>
- * 
+ *
  * After all instructions have been created and linked each instruction knows
  * its execution status and can be queried with:
- * 
+ *
  * <ul>
  * <li>{@link #getLine()}</li>
  * <li>{@link #getInstructionCounter()}</li>
  * <li>{@link #getBranchCounter()}</li>
  * </ul>
- * 
+ *
  * For the purpose of filtering instructions can be combined to new
  * instructions. Note that these methods create new {@link Instruction}
  * instances and do not modify the existing ones.
- * 
+ *
  * <ul>
  * <li>{@link #merge(Instruction)}</li>
  * <li>{@link #replaceBranches(Collection)}</li>
@@ -66,7 +67,7 @@ public class Instruction {
 
 	/**
 	 * New instruction at the given line.
-	 * 
+	 *
 	 * @param line
 	 *            source line this instruction belongs to
 	 */
@@ -81,10 +82,10 @@ public class Instruction {
 	 * derived from the execution status of the target instruction. In case the
 	 * branch is covered the status is propagated also to the predecessors of
 	 * this instruction.
-	 * 
+	 *
 	 * Note: This method is not idempotent and must be called exactly once for
 	 * every branch.
-	 * 
+	 *
 	 * @param target
 	 *            target instruction of this branch
 	 * @param branch
@@ -103,10 +104,10 @@ public class Instruction {
 	 * Adds a branch to this instruction which execution status is directly
 	 * derived from a probe. In case the branch is covered the status is
 	 * propagated also to the predecessors of this instruction.
-	 * 
+	 *
 	 * Note: This method is not idempotent and must be called exactly once for
 	 * every branch.
-	 * 
+	 *
 	 * @param executed
 	 *            whether the corresponding probe has been executed
 	 * @param branch
@@ -134,7 +135,7 @@ public class Instruction {
 
 	/**
 	 * Returns the source line this instruction belongs to.
-	 * 
+	 *
 	 * @return corresponding source line
 	 */
 	public int getLine() {
@@ -144,7 +145,7 @@ public class Instruction {
 	/**
 	 * Merges information about covered branches of this instruction with
 	 * another instruction.
-	 * 
+	 *
 	 * @param other
 	 *            instruction to merge with
 	 * @return new instance with merged branches
@@ -161,7 +162,7 @@ public class Instruction {
 	 * Creates a copy of this instruction where all outgoing branches are
 	 * replaced with the given instructions. The coverage status of the new
 	 * instruction is derived from the status of the given instructions.
-	 * 
+	 *
 	 * @param newBranches
 	 *            new branches to consider
 	 * @return new instance with replaced branches
@@ -182,7 +183,7 @@ public class Instruction {
 	/**
 	 * Returns the instruction coverage counter of this instruction. It is
 	 * always 1 instruction which is covered or not.
-	 * 
+	 *
 	 * @return the instruction coverage counter
 	 */
 	public ICounter getInstructionCounter() {
@@ -193,7 +194,7 @@ public class Instruction {
 	/**
 	 * Returns the branch coverage counter of this instruction. Only
 	 * instructions with at least 2 outgoing edges report branches.
-	 * 
+	 *
 	 * @return the branch coverage counter
 	 */
 	public ICounter getBranchCounter() {

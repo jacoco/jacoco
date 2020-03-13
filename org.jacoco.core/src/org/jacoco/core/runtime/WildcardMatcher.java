@@ -1,13 +1,14 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2019 Mountainminds GmbH & Co. KG and Contributors
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
- * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
+ * Copyright (c) 2009, 2020 Mountainminds GmbH & Co. KG and Contributors
+ * This program and the accompanying materials are made available under
+ * the terms of the Eclipse Public License 2.0 which is available at
+ * http://www.eclipse.org/legal/epl-2.0
+ *
+ * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
  *    Marc R. Hoffmann - initial API and implementation
- *    
+ *
  *******************************************************************************/
 package org.jacoco.core.runtime;
 
@@ -25,7 +26,7 @@ public class WildcardMatcher {
 
 	/**
 	 * Creates a new matcher with the given expression.
-	 * 
+	 *
 	 * @param expression
 	 *            wildcard expressions
 	 */
@@ -63,7 +64,7 @@ public class WildcardMatcher {
 
 	/**
 	 * Matches the given string against the expressions of this matcher.
-	 * 
+	 *
 	 * @param s
 	 *            string to test
 	 * @return <code>true</code>, if the expression matches

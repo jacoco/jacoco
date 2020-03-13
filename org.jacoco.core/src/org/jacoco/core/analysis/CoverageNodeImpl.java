@@ -1,13 +1,14 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2019 Mountainminds GmbH & Co. KG and Contributors
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
- * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
+ * Copyright (c) 2009, 2020 Mountainminds GmbH & Co. KG and Contributors
+ * This program and the accompanying materials are made available under
+ * the terms of the Eclipse Public License 2.0 which is available at
+ * http://www.eclipse.org/legal/epl-2.0
+ *
+ * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
  *    Marc R. Hoffmann - initial API and implementation
- *    
+ *
  *******************************************************************************/
 package org.jacoco.core.analysis;
 
@@ -44,7 +45,7 @@ public class CoverageNodeImpl implements ICoverageNode {
 
 	/**
 	 * Creates a new coverage data node.
-	 * 
+	 *
 	 * @param elementType
 	 *            type of the element represented by this instance
 	 * @param name
@@ -63,17 +64,17 @@ public class CoverageNodeImpl implements ICoverageNode {
 
 	/**
 	 * Increments the counters by the values given by another element.
-	 * 
+	 *
 	 * @param child
 	 *            counters to add
 	 */
 	public void increment(final ICoverageNode child) {
-		instructionCounter = instructionCounter.increment(child
-				.getInstructionCounter());
+		instructionCounter = instructionCounter
+				.increment(child.getInstructionCounter());
 		branchCounter = branchCounter.increment(child.getBranchCounter());
 		lineCounter = lineCounter.increment(child.getLineCounter());
-		complexityCounter = complexityCounter.increment(child
-				.getComplexityCounter());
+		complexityCounter = complexityCounter
+				.increment(child.getComplexityCounter());
 		methodCounter = methodCounter.increment(child.getMethodCounter());
 		classCounter = classCounter.increment(child.getClassCounter());
 	}
@@ -81,7 +82,7 @@ public class CoverageNodeImpl implements ICoverageNode {
 	/**
 	 * Increments the counters by the values given by the collection of
 	 * elements.
-	 * 
+	 *
 	 * @param children
 	 *            list of nodes, which counters will be added to this node
 	 */

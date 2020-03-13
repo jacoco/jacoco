@@ -1,13 +1,14 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2019 Mountainminds GmbH & Co. KG and Contributors
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
- * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
+ * Copyright (c) 2009, 2020 Mountainminds GmbH & Co. KG and Contributors
+ * This program and the accompanying materials are made available under
+ * the terms of the Eclipse Public License 2.0 which is available at
+ * http://www.eclipse.org/legal/epl-2.0
+ *
+ * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
  *    Marc R. Hoffmann - initial API and implementation
- *    
+ *
  *******************************************************************************/
 package org.jacoco.agent.rt.internal;
 
@@ -51,7 +52,7 @@ public class CoverageTransformer implements ClassFileTransformer {
 
 	/**
 	 * New transformer with the given delegates.
-	 * 
+	 *
 	 * @param runtime
 	 *            coverage runtime
 	 * @param options
@@ -101,7 +102,7 @@ public class CoverageTransformer implements ClassFileTransformer {
 
 	/**
 	 * Checks whether this class should be instrumented.
-	 * 
+	 *
 	 * @param loader
 	 *            loader for the class
 	 * @param classname
@@ -117,7 +118,8 @@ public class CoverageTransformer implements ClassFileTransformer {
 				return false;
 			}
 		} else {
-			if (!inclNoLocationClasses && !hasSourceLocation(protectionDomain)) {
+			if (!inclNoLocationClasses
+					&& !hasSourceLocation(protectionDomain)) {
 				return false;
 			}
 			if (exclClassloader.matches(loader.getClass().getName())) {
@@ -127,15 +129,15 @@ public class CoverageTransformer implements ClassFileTransformer {
 
 		return !classname.startsWith(AGENT_PREFIX) &&
 
-		includes.matches(classname) &&
+				includes.matches(classname) &&
 
-		!excludes.matches(classname);
+				!excludes.matches(classname);
 	}
 
 	/**
 	 * Checks whether this protection domain is associated with a source
 	 * location.
-	 * 
+	 *
 	 * @param protectionDomain
 	 *            protection domain to check (or <code>null</code>)
 	 * @return <code>true</code> if a source location is defined

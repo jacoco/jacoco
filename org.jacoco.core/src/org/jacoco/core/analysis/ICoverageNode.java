@@ -1,13 +1,14 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2019 Mountainminds GmbH & Co. KG and Contributors
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
- * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
+ * Copyright (c) 2009, 2020 Mountainminds GmbH & Co. KG and Contributors
+ * This program and the accompanying materials are made available under
+ * the terms of the Eclipse Public License 2.0 which is available at
+ * http://www.eclipse.org/legal/epl-2.0
+ *
+ * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
  *    Marc R. Hoffmann - initial API and implementation
- *    
+ *
  *******************************************************************************/
 package org.jacoco.core.analysis;
 
@@ -68,63 +69,63 @@ public interface ICoverageNode {
 
 	/**
 	 * Returns the type of element represented by this node.
-	 * 
+	 *
 	 * @return type of this node
 	 */
 	ElementType getElementType();
 
 	/**
 	 * Returns the name of this node.
-	 * 
+	 *
 	 * @return name of this node
 	 */
 	String getName();
 
 	/**
 	 * Returns the counter for byte code instructions.
-	 * 
+	 *
 	 * @return counter for instructions
 	 */
 	ICounter getInstructionCounter();
 
 	/**
 	 * Returns the counter for branches.
-	 * 
+	 *
 	 * @return counter for branches
 	 */
 	ICounter getBranchCounter();
 
 	/**
 	 * Returns the counter for lines.
-	 * 
+	 *
 	 * @return counter for lines
 	 */
 	ICounter getLineCounter();
 
 	/**
 	 * Returns the counter for cyclomatic complexity.
-	 * 
+	 *
 	 * @return counter for complexity
 	 */
 	ICounter getComplexityCounter();
 
 	/**
 	 * Returns the counter for methods.
-	 * 
+	 *
 	 * @return counter for methods
 	 */
 	ICounter getMethodCounter();
 
 	/**
 	 * Returns the counter for classes.
-	 * 
+	 *
 	 * @return counter for classes
 	 */
 	ICounter getClassCounter();
 
 	/**
 	 * Generic access to the the counters.
-	 * 
+	 *
 	 * @param entity
 	 *            entity we're we want to have the counter for
 	 * @return counter for the given entity
@@ -134,7 +135,8 @@ public interface ICoverageNode {
 	/**
 	 * Checks whether this node contains code relevant for code coverage.
 	 *
-	 * @return <code>true</code> if this node contains code relevant for code coverage
+	 * @return <code>true</code> if this node contains code relevant for code
+	 *         coverage
 	 */
 	boolean containsCode();
 
@@ -143,7 +145,7 @@ public interface ICoverageNode {
 	 * implementations may contain heavy data structures, the copy returned by
 	 * this method is reduced to the counters only. This helps to save memory
 	 * while processing huge structures.
-	 * 
+	 *
 	 * @return copy with counters only
 	 */
 	ICoverageNode getPlainCopy();

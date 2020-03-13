@@ -1,13 +1,14 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2019 Mountainminds GmbH & Co. KG and Contributors
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
- * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
+ * Copyright (c) 2009, 2020 Mountainminds GmbH & Co. KG and Contributors
+ * This program and the accompanying materials are made available under
+ * the terms of the Eclipse Public License 2.0 which is available at
+ * http://www.eclipse.org/legal/epl-2.0
+ *
+ * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
  *    Marc R. Hoffmann - initial API and implementation
- *    
+ *
  *******************************************************************************/
 package org.jacoco.report;
 
@@ -63,9 +64,9 @@ public class JavaNamesTest {
 
 	@Test
 	public void testGetClassName5() {
-		assertEquals("Bar.new ISample() {...}", names.getClassName(
-				"com/foo/Bar$1", null, "java/lang/Object",
-				new String[] { "org/foo/ISample" }));
+		assertEquals("Bar.new ISample() {...}",
+				names.getClassName("com/foo/Bar$1", null, "java/lang/Object",
+						new String[] { "org/foo/ISample" }));
 	}
 
 	@Test
@@ -142,9 +143,9 @@ public class JavaNamesTest {
 
 	@Test
 	public void testGetMethodName8() {
-		assertEquals("update(Map.Entry)", names.getMethodName(
-				"com/example/SomeClass", "update", "(Ljava/util/Map$Entry;)V",
-				null));
+		assertEquals("update(Map.Entry)",
+				names.getMethodName("com/example/SomeClass", "update",
+						"(Ljava/util/Map$Entry;)V", null));
 	}
 
 	@Test

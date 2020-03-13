@@ -1,13 +1,14 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2019 Mountainminds GmbH & Co. KG and Contributors
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
- * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
+ * Copyright (c) 2009, 2020 Mountainminds GmbH & Co. KG and Contributors
+ * This program and the accompanying materials are made available under
+ * the terms of the Eclipse Public License 2.0 which is available at
+ * http://www.eclipse.org/legal/epl-2.0
+ *
+ * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
  *    Marc R. Hoffmann - initial API and implementation
- *    
+ *
  *******************************************************************************/
 package org.jacoco.core.internal.analysis;
 
@@ -24,7 +25,8 @@ public class SourceNodeImplTest {
 
 	@Test
 	public void testInit() {
-		final SourceNodeImpl node = new SourceNodeImpl(ElementType.CLASS, "Foo");
+		final SourceNodeImpl node = new SourceNodeImpl(ElementType.CLASS,
+				"Foo");
 		assertEquals(ElementType.CLASS, node.getElementType());
 		assertEquals("Foo", node.getName());
 		assertEquals(ISourceNode.UNKNOWN_LINE, node.getFirstLine());
@@ -34,7 +36,8 @@ public class SourceNodeImplTest {
 
 	@Test
 	public void testGetLine() {
-		final SourceNodeImpl node = new SourceNodeImpl(ElementType.CLASS, "Foo");
+		final SourceNodeImpl node = new SourceNodeImpl(ElementType.CLASS,
+				"Foo");
 		node.ensureCapacity(10, 20);
 		assertEquals(LineImpl.EMPTY, node.getLine(5));
 		assertEquals(LineImpl.EMPTY, node.getLine(15));
@@ -43,21 +46,24 @@ public class SourceNodeImplTest {
 
 	@Test
 	public void testEnsureCapacityUnknown1() {
-		final SourceNodeImpl node = new SourceNodeImpl(ElementType.CLASS, "Foo");
+		final SourceNodeImpl node = new SourceNodeImpl(ElementType.CLASS,
+				"Foo");
 		node.ensureCapacity(10, ISourceNode.UNKNOWN_LINE);
 		assertEquals(LineImpl.EMPTY, node.getLine(10));
 	}
 
 	@Test
 	public void testEnsureCapacityUnknown2() {
-		final SourceNodeImpl node = new SourceNodeImpl(ElementType.CLASS, "Foo");
+		final SourceNodeImpl node = new SourceNodeImpl(ElementType.CLASS,
+				"Foo");
 		node.ensureCapacity(ISourceNode.UNKNOWN_LINE, 10);
 		assertEquals(LineImpl.EMPTY, node.getLine(10));
 	}
 
 	@Test
 	public void testIncrementLineUnknown() {
-		final SourceNodeImpl node = new SourceNodeImpl(ElementType.CLASS, "Foo");
+		final SourceNodeImpl node = new SourceNodeImpl(ElementType.CLASS,
+				"Foo");
 		node.increment(CounterImpl.getInstance(1, 2),
 				CounterImpl.getInstance(3, 4), ISourceNode.UNKNOWN_LINE);
 		assertEquals(CounterImpl.getInstance(1, 2),
@@ -68,18 +74,19 @@ public class SourceNodeImplTest {
 
 	@Test
 	public void testIncrementLines() {
-		final SourceNodeImpl node = new SourceNodeImpl(ElementType.CLASS, "Foo");
+		final SourceNodeImpl node = new SourceNodeImpl(ElementType.CLASS,
+				"Foo");
 		node.increment(CounterImpl.getInstance(1, 1), CounterImpl.COUNTER_0_0,
 				10);
 		node.increment(CounterImpl.getInstance(2, 2), CounterImpl.COUNTER_0_0,
 				12);
 
-		assertEquals(CounterImpl.getInstance(1, 1), node.getLine(10)
-				.getInstructionCounter());
-		assertEquals(CounterImpl.COUNTER_0_0, node.getLine(11)
-				.getInstructionCounter());
-		assertEquals(CounterImpl.getInstance(2, 2), node.getLine(12)
-				.getInstructionCounter());
+		assertEquals(CounterImpl.getInstance(1, 1),
+				node.getLine(10).getInstructionCounter());
+		assertEquals(CounterImpl.COUNTER_0_0,
+				node.getLine(11).getInstructionCounter());
+		assertEquals(CounterImpl.getInstance(2, 2),
+				node.getLine(12).getInstructionCounter());
 	}
 
 	@Test
@@ -164,20 +171,22 @@ public class SourceNodeImplTest {
 
 	private void testIncrementLine(int mi1, int ci1, int mi2, int ci2,
 			int expectedMissedLines, int expectedCoveredLines) {
-		final SourceNodeImpl node = new SourceNodeImpl(ElementType.CLASS, "Foo");
+		final SourceNodeImpl node = new SourceNodeImpl(ElementType.CLASS,
+				"Foo");
 		node.increment(CounterImpl.getInstance(mi1, ci1),
 				CounterImpl.COUNTER_0_0, 33);
 		node.increment(CounterImpl.getInstance(mi2, ci2),
 				CounterImpl.COUNTER_0_0, 33);
 		assertEquals(CounterImpl.getInstance(expectedMissedLines,
 				expectedCoveredLines), node.getLineCounter());
-		assertEquals(CounterImpl.getInstance(mi1 + mi2, ci1 + ci2), node
-				.getLine(33).getInstructionCounter());
+		assertEquals(CounterImpl.getInstance(mi1 + mi2, ci1 + ci2),
+				node.getLine(33).getInstructionCounter());
 	}
 
 	@Test
 	public void testIncrementChildNoLines() {
-		final SourceNodeImpl node = new SourceNodeImpl(ElementType.CLASS, "Foo");
+		final SourceNodeImpl node = new SourceNodeImpl(ElementType.CLASS,
+				"Foo");
 		final SourceNodeImpl child = new SourceNodeImpl(ElementType.CLASS,
 				"Foo") {
 			{
@@ -197,7 +206,8 @@ public class SourceNodeImplTest {
 
 	@Test
 	public void testIncrementChildWithLines() {
-		final SourceNodeImpl node = new SourceNodeImpl(ElementType.CLASS, "Foo");
+		final SourceNodeImpl node = new SourceNodeImpl(ElementType.CLASS,
+				"Foo");
 
 		final SourceNodeImpl child = new SourceNodeImpl(ElementType.CLASS,
 				"Foo");

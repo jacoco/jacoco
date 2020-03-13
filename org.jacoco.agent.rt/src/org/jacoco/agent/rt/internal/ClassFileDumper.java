@@ -1,13 +1,14 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2019 Mountainminds GmbH & Co. KG and Contributors
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
- * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
+ * Copyright (c) 2009, 2020 Mountainminds GmbH & Co. KG and Contributors
+ * This program and the accompanying materials are made available under
+ * the terms of the Eclipse Public License 2.0 which is available at
+ * http://www.eclipse.org/legal/epl-2.0
+ *
+ * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
  *    Marc R. Hoffmann - initial API and implementation
- *    
+ *
  *******************************************************************************/
 package org.jacoco.agent.rt.internal;
 
@@ -27,7 +28,7 @@ class ClassFileDumper {
 
 	/**
 	 * Create a new dumper for the given location.
-	 * 
+	 *
 	 * @param location
 	 *            relative path to dump directory. <code>null</code> if no dumps
 	 *            should be written
@@ -43,7 +44,7 @@ class ClassFileDumper {
 	/**
 	 * Dumps the given binary content under the given name if a non-
 	 * <code>null</code> location has been specified.
-	 * 
+	 *
 	 * @param name
 	 *            qualified class name in VM notation
 	 * @param contents
@@ -65,8 +66,8 @@ class ClassFileDumper {
 			}
 			outputdir.mkdirs();
 			final Long id = Long.valueOf(CRC64.classId(contents));
-			final File file = new File(outputdir, String.format(
-					"%s.%016x.class", localname, id));
+			final File file = new File(outputdir,
+					String.format("%s.%016x.class", localname, id));
 			final OutputStream out = new FileOutputStream(file);
 			out.write(contents);
 			out.close();

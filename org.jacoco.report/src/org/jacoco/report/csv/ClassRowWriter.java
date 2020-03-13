@@ -1,13 +1,14 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2019 Mountainminds GmbH & Co. KG and Contributors
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
- * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
- * 
+ * Copyright (c) 2009, 2020 Mountainminds GmbH & Co. KG and Contributors
+ * This program and the accompanying materials are made available under
+ * the terms of the Eclipse Public License 2.0 which is available at
+ * http://www.eclipse.org/legal/epl-2.0
+ *
+ * SPDX-License-Identifier: EPL-2.0
+ *
  * Contributors:
  *    Brock Janiczak - initial API and implementation
- * 
+ *
  *******************************************************************************/
 package org.jacoco.report.csv;
 
@@ -25,8 +26,8 @@ import org.jacoco.report.ILanguageNames;
 class ClassRowWriter {
 
 	private static final CounterEntity[] COUNTERS = { CounterEntity.INSTRUCTION,
-			CounterEntity.BRANCH, CounterEntity.LINE,
-			CounterEntity.COMPLEXITY, CounterEntity.METHOD };
+			CounterEntity.BRANCH, CounterEntity.LINE, CounterEntity.COMPLEXITY,
+			CounterEntity.METHOD };
 
 	private final DelimitedWriter writer;
 
@@ -35,7 +36,7 @@ class ClassRowWriter {
 	/**
 	 * Creates a new row writer that writes class information to the given CSV
 	 * writer.
-	 * 
+	 *
 	 * @param writer
 	 *            writer for csv output
 	 * @param languageNames
@@ -61,7 +62,7 @@ class ClassRowWriter {
 
 	/**
 	 * Writes the class summary information as a row.
-	 * 
+	 *
 	 * @param groupName
 	 *            name of the group
 	 * @param packageName

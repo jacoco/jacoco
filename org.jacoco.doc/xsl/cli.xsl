@@ -1,12 +1,13 @@
 <?xml version="1.0"?>
 
-<!-- 
+<!--
    Copyright (c) 2009, 2018 Mountainminds GmbH & Co. KG and Contributors
-   All rights reserved. This program and the accompanying materials
-   are made available under the terms of the Eclipse Public License v1.0
-   which accompanies this distribution, and is available at
-   http://www.eclipse.org/legal/epl-v10.html
-  
+   This program and the accompanying materials are made available under
+   the terms of the Eclipse Public License 2.0 which is available at
+   http://www.eclipse.org/legal/epl-2.0
+
+   SPDX-License-Identifier: EPL-2.0
+
    Contributors:
       Marc R. Hoffmann - initial API and implementation
 -->
@@ -40,9 +41,9 @@
 					<span class="el_source">Command Line Interface</span>
 				</div>
 				<div id="content">
-				
+
 					<h1>Command Line Interface</h1>
-					
+
 					<p>
 					  JaCoCo comes with a command line interface to perform
 					  basic operations from the command line. The command line
@@ -51,20 +52,20 @@
 					  JaCoCo download. Java 1.5 or greater is required for
 					  execution.
 					</p>
-					
+
 					<p>
 					  For more sophisticated usage especially with larger
 					  projects please use our
 					  <a href="integrations.html">integrations</a> with various
-					  build tools. 
+					  build tools.
 					</p>
-					
+
 					<p>
 					  The following commands are available. Each command has a
 					  list of optional and required parameters. Some parameters
-					  can be specified multiple times to provide multiple values. 
+					  can be specified multiple times to provide multiple values.
 					</p>
-					
+
 					<p class="hint">
 					  <b>Warning:</b> Although a <code>instrument</code> command
 					  is provided the preferred way for code coverage analysis
@@ -75,7 +76,7 @@
 					  Please consult <a href="offline.html">documentation</a>
 					  about offline instrumentation before using this mode.
 					</p>
-					
+
 					<xsl:apply-templates select="documentation" />
 				</div>
 				<div class="footer">
@@ -92,7 +93,7 @@
 			</body>
 		</html>
 	</xsl:template>
-	
+
 	<xsl:template match="command">
 		<h2><xsl:value-of select="@name" /></h2>
 		<pre class="source" style="white-space: pre-wrap">
@@ -120,6 +121,5 @@
 			</tbody>
 		</table>
 	</xsl:template>
-	
-</xsl:stylesheet>
 
+</xsl:stylesheet>

@@ -1,9 +1,10 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2019 Mountainminds GmbH & Co. KG and Contributors
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
- * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
+ * Copyright (c) 2009, 2020 Mountainminds GmbH & Co. KG and Contributors
+ * This program and the accompanying materials are made available under
+ * the terms of the Eclipse Public License 2.0 which is available at
+ * http://www.eclipse.org/legal/epl-2.0
+ *
+ * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
  *    Mads Mohr Christensen - implementation of MergeMojo
@@ -26,7 +27,7 @@ import org.jacoco.core.tools.ExecFileLoader;
 
 /**
  * Mojo for merging a set of execution data files (*.exec) into a single file
- * 
+ *
  * @since 0.6.4
  */
 @Mojo(name = "merge", defaultPhase = LifecyclePhase.GENERATE_RESOURCES, threadSafe = true)
@@ -42,7 +43,7 @@ public class MergeMojo extends AbstractJacocoMojo {
 
 	/**
 	 * This mojo accepts any number of execution data file sets.
-	 * 
+	 *
 	 * <pre>
 	 * <code>
 	 * &lt;fileSets&gt;
@@ -60,8 +61,8 @@ public class MergeMojo extends AbstractJacocoMojo {
 	private List<FileSet> fileSets;
 
 	@Override
-	protected void executeMojo() throws MojoExecutionException,
-			MojoFailureException {
+	protected void executeMojo()
+			throws MojoExecutionException, MojoFailureException {
 		if (!canMergeReports()) {
 			return;
 		}
@@ -95,13 +96,12 @@ public class MergeMojo extends AbstractJacocoMojo {
 					continue;
 				}
 				try {
-					getLog().info(
-							"Loading execution data file "
-									+ inputFile.getAbsolutePath());
+					getLog().info("Loading execution data file "
+							+ inputFile.getAbsolutePath());
 					loader.load(inputFile);
 				} catch (final IOException e) {
-					throw new MojoExecutionException("Unable to read "
-							+ inputFile.getAbsolutePath(), e);
+					throw new MojoExecutionException(
+							"Unable to read " + inputFile.getAbsolutePath(), e);
 				}
 			}
 		}
@@ -113,14 +113,14 @@ public class MergeMojo extends AbstractJacocoMojo {
 			getLog().info(MSG_SKIPPING);
 			return;
 		}
-		getLog().info(
-				"Writing merged execution data to "
-						+ destFile.getAbsolutePath());
+		getLog().info("Writing merged execution data to "
+				+ destFile.getAbsolutePath());
 		try {
 			loader.save(destFile, false);
 		} catch (final IOException e) {
-			throw new MojoExecutionException("Unable to write merged file "
-					+ destFile.getAbsolutePath(), e);
+			throw new MojoExecutionException(
+					"Unable to write merged file " + destFile.getAbsolutePath(),
+					e);
 		}
 	}
 

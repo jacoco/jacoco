@@ -1,13 +1,14 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2019 Mountainminds GmbH & Co. KG and Contributors
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
- * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
+ * Copyright (c) 2009, 2020 Mountainminds GmbH & Co. KG and Contributors
+ * This program and the accompanying materials are made available under
+ * the terms of the Eclipse Public License 2.0 which is available at
+ * http://www.eclipse.org/legal/epl-2.0
+ *
+ * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
  *    Marc R. Hoffmann - initial API and implementation
- *    
+ *
  *******************************************************************************/
 package org.jacoco.core.runtime;
 
@@ -24,7 +25,7 @@ import org.objectweb.asm.Opcodes;
  * This {@link IRuntime} implementation uses the Java logging API to report
  * coverage data.
  * <p>
- * 
+ *
  * The implementation uses a dedicated log channel. Instrumented classes call
  * {@link Logger#log(Level, String, Object[])} with the class identifier in the
  * first slot of the parameter array. The runtime implements a {@link Handler}
@@ -133,9 +134,7 @@ public class LoggerRuntime extends AbstractRuntime {
 		// Stack[1]: Ljava/util/logging/Logger;
 		// Stack[0]: [Ljava/lang/Object;
 
-		mv.visitMethodInsn(
-				Opcodes.INVOKEVIRTUAL,
-				"java/util/logging/Logger",
+		mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "java/util/logging/Logger",
 				"log",
 				"(Ljava/util/logging/Level;Ljava/lang/String;[Ljava/lang/Object;)V",
 				false);

@@ -1,9 +1,10 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2019 Mountainminds GmbH & Co. KG and Contributors
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
- * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
+ * Copyright (c) 2009, 2020 Mountainminds GmbH & Co. KG and Contributors
+ * This program and the accompanying materials are made available under
+ * the terms of the Eclipse Public License 2.0 which is available at
+ * http://www.eclipse.org/legal/epl-2.0
+ *
+ * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
  *    Evgeny Mandrikov - initial API and implementation
@@ -371,6 +372,82 @@ public class KotlinCoroutineFilterTest extends FilterTestBase {
 		filter.filter(m, context, output);
 
 		assertIgnored(range0, range1, range2);
+	}
+
+	/**
+	 * <pre>
+	 *     suspend fun example(b: Boolean) {
+	 *         if (b)
+	 *             suspendingFunction()
+	 *         else
+	 *             suspendingFunction()
+	 *     }
+	 * </pre>
+	 */
+	@Test
+	public void should_filter_suspending_functions_with_tail_call_optimization() {
+		final MethodNode m = new MethodNode(InstrSupport.ASM_API_VERSION, 0,
+				"example",
+				"(ZLkotlin/coroutines/Continuation;)Ljava/lang/Object;", null,
+				null);
+		context.classAnnotations
+				.add(KotlinGeneratedFilter.KOTLIN_METADATA_DESC);
+
+		final Label exit = new Label();
+
+		m.visitVarInsn(Opcodes.ILOAD, 1);
+		final Label next = new Label();
+		m.visitJumpInsn(Opcodes.IFEQ, next);
+
+		m.visitVarInsn(Opcodes.ALOAD, 0);
+		m.visitVarInsn(Opcodes.ALOAD, 2);
+		m.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "", "suspendingFunction",
+				"(Lkotlin/coroutines/Continuation;)Ljava/lang/Object;", false);
+		final Range range1 = new Range();
+		{
+			m.visitInsn(Opcodes.DUP);
+			range1.fromInclusive = m.instructions.getLast();
+			m.visitMethodInsn(Opcodes.INVOKESTATIC,
+					"kotlin/coroutines/intrinsics/IntrinsicsKt",
+					"getCOROUTINE_SUSPENDED", "()Ljava/lang/Object;", false);
+			final Label label = new Label();
+			m.visitJumpInsn(Opcodes.IF_ACMPNE, label);
+			m.visitInsn(Opcodes.ARETURN);
+			m.visitLabel(label);
+			m.visitInsn(Opcodes.POP);
+			range1.toInclusive = m.instructions.getLast();
+		}
+
+		m.visitJumpInsn(Opcodes.GOTO, exit);
+		m.visitLabel(next);
+
+		m.visitVarInsn(Opcodes.ALOAD, 0);
+		m.visitVarInsn(Opcodes.ALOAD, 2);
+		m.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "", "suspendingFunction",
+				"(Lkotlin/coroutines/Continuation;)Ljava/lang/Object;", false);
+		final Range range2 = new Range();
+		{
+			m.visitInsn(Opcodes.DUP);
+			range2.fromInclusive = m.instructions.getLast();
+			m.visitMethodInsn(Opcodes.INVOKESTATIC,
+					"kotlin/coroutines/intrinsics/IntrinsicsKt",
+					"getCOROUTINE_SUSPENDED", "()Ljava/lang/Object;", false);
+			final Label label = new Label();
+			m.visitJumpInsn(Opcodes.IF_ACMPNE, label);
+			m.visitInsn(Opcodes.ARETURN);
+			m.visitLabel(label);
+			m.visitInsn(Opcodes.POP);
+			range2.toInclusive = m.instructions.getLast();
+		}
+
+		m.visitLabel(exit);
+		m.visitFieldInsn(Opcodes.GETSTATIC, "kotlin/Unit", "INSTANCE",
+				"Lkotlin/Unit;");
+		m.visitInsn(Opcodes.ARETURN);
+
+		filter.filter(m, context, output);
+
+		assertIgnored(range1, range2);
 	}
 
 }

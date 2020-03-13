@@ -1,13 +1,14 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2019 Mountainminds GmbH & Co. KG and Contributors
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
- * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
+ * Copyright (c) 2009, 2020 Mountainminds GmbH & Co. KG and Contributors
+ * This program and the accompanying materials are made available under
+ * the terms of the Eclipse Public License 2.0 which is available at
+ * http://www.eclipse.org/legal/epl-2.0
+ *
+ * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
  *    Marc R. Hoffmann - initial API and implementation
- *    
+ *
  *******************************************************************************/
 package org.jacoco.report.internal;
 
@@ -32,7 +33,7 @@ public abstract class AbstractGroupVisitor implements IReportGroupVisitor {
 
 	/**
 	 * Creates a new group with the given name.
-	 * 
+	 *
 	 * @param name
 	 *            name for the coverage node created internally
 	 */
@@ -49,7 +50,7 @@ public abstract class AbstractGroupVisitor implements IReportGroupVisitor {
 
 	/**
 	 * Called to handle the given bundle in a specific way.
-	 * 
+	 *
 	 * @param bundle
 	 *            analyzed bundle
 	 * @param locator
@@ -69,7 +70,7 @@ public abstract class AbstractGroupVisitor implements IReportGroupVisitor {
 
 	/**
 	 * Called to handle a group with the given name in a specific way.
-	 * 
+	 *
 	 * @param name
 	 *            name of the group
 	 * @return created child group
@@ -81,7 +82,7 @@ public abstract class AbstractGroupVisitor implements IReportGroupVisitor {
 
 	/**
 	 * Must be called at the end of every group.
-	 * 
+	 *
 	 * @throws IOException
 	 *             if the report can't be written
 	 */
@@ -92,7 +93,7 @@ public abstract class AbstractGroupVisitor implements IReportGroupVisitor {
 
 	/**
 	 * Called to handle the end of this group in a specific way.
-	 * 
+	 *
 	 * @throws IOException
 	 *             if the report can't be written
 	 */

@@ -1,13 +1,14 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2019 Mountainminds GmbH & Co. KG and Contributors
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
- * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
+ * Copyright (c) 2009, 2020 Mountainminds GmbH & Co. KG and Contributors
+ * This program and the accompanying materials are made available under
+ * the terms of the Eclipse Public License 2.0 which is available at
+ * http://www.eclipse.org/legal/epl-2.0
+ *
+ * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
  *    Marc R. Hoffmann - initial API and implementation
- *    
+ *
  *******************************************************************************/
 package org.jacoco.core.analysis;
 
@@ -30,15 +31,15 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
-import java.util.jar.JarInputStream;
-import java.util.jar.Pack200;
 import java.util.zip.GZIPOutputStream;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
 import org.jacoco.core.data.ExecutionDataStore;
+import org.jacoco.core.internal.Pack200Streams;
 import org.jacoco.core.internal.data.CRC64;
 import org.jacoco.core.test.TargetLoader;
+import org.junit.AssumptionViolatedException;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -106,7 +107,7 @@ public class AnalyzerTest {
 	@Test
 	public void should_not_modify_class_bytes_to_support_next_version()
 			throws Exception {
-		final byte[] originalBytes = createClass(Opcodes.V13 + 1);
+		final byte[] originalBytes = createClass(Opcodes.V14 + 1);
 		final byte[] bytes = new byte[originalBytes.length];
 		System.arraycopy(originalBytes, 0, bytes, 0, originalBytes.length);
 		final long expectedClassId = CRC64.classId(bytes);
@@ -122,6 +123,23 @@ public class AnalyzerTest {
 		cw.visit(version, 0, "Foo", null, "java/lang/Object", null);
 		cw.visitEnd();
 		return cw.toByteArray();
+	}
+
+	/**
+	 * @see #analyzeAll_should_throw_exception_for_unsupported_class_file_version()
+	 */
+	@Test
+	public void analyzeClass_should_throw_exception_for_unsupported_class_file_version() {
+		final byte[] bytes = createClass(Opcodes.V14 + 2);
+		try {
+			analyzer.analyzeClass(bytes, "UnsupportedVersion");
+			fail("exception expected");
+		} catch (IOException e) {
+			assertEquals("Error while analyzing UnsupportedVersion.",
+					e.getMessage());
+			assertEquals("Unsupported class file major version 60",
+					e.getCause().getMessage());
+		}
 	}
 
 	@Test
@@ -182,8 +200,7 @@ public class AnalyzerTest {
 	}
 
 	/**
-	 * Triggers exception in
-	 * {@link Analyzer#analyzeClass(InputStream, String)}.
+	 * Triggers exception in {@link Analyzer#analyzeClass(InputStream, String)}.
 	 */
 	@Test
 	public void testAnalyzeClass_BrokenStream() throws IOException {
@@ -192,6 +209,24 @@ public class AnalyzerTest {
 			fail("exception expected");
 		} catch (IOException e) {
 			assertEquals("Error while analyzing BrokenStream.", e.getMessage());
+		}
+	}
+
+	/**
+	 * @see #analyzeClass_should_throw_exception_for_unsupported_class_file_version()
+	 */
+	@Test
+	public void analyzeAll_should_throw_exception_for_unsupported_class_file_version() {
+		final byte[] bytes = createClass(Opcodes.V14 + 2);
+		try {
+			analyzer.analyzeAll(new ByteArrayInputStream(bytes),
+					"UnsupportedVersion");
+			fail("exception expected");
+		} catch (IOException e) {
+			assertEquals("Error while analyzing UnsupportedVersion.",
+					e.getMessage());
+			assertEquals("Unsupported class file major version 60",
+					e.getCause().getMessage());
 		}
 	}
 
@@ -207,8 +242,8 @@ public class AnalyzerTest {
 	public void testAnalyzeAll_Zip() throws IOException {
 		final ByteArrayOutputStream buffer = new ByteArrayOutputStream();
 		final ZipOutputStream zip = new ZipOutputStream(buffer);
-		zip.putNextEntry(new ZipEntry(
-				"org/jacoco/core/analysis/AnalyzerTest.class"));
+		zip.putNextEntry(
+				new ZipEntry("org/jacoco/core/analysis/AnalyzerTest.class"));
 		zip.write(TargetLoader.getClassDataAsBytes(AnalyzerTest.class));
 		zip.finish();
 		final int count = analyzer.analyzeAll(
@@ -259,22 +294,27 @@ public class AnalyzerTest {
 
 	@Test
 	public void testAnalyzeAll_Pack200() throws IOException {
+		try {
+			Class.forName("java.util.jar.Pack200");
+		} catch (ClassNotFoundException e) {
+			throw new AssumptionViolatedException(
+					"this test requires JDK with Pack200");
+		}
+
 		final ByteArrayOutputStream zipbuffer = new ByteArrayOutputStream();
 		final ZipOutputStream zip = new ZipOutputStream(zipbuffer);
-		zip.putNextEntry(new ZipEntry(
-				"org/jacoco/core/analysis/AnalyzerTest.class"));
+		zip.putNextEntry(
+				new ZipEntry("org/jacoco/core/analysis/AnalyzerTest.class"));
 		zip.write(TargetLoader.getClassDataAsBytes(AnalyzerTest.class));
 		zip.finish();
 
 		final ByteArrayOutputStream pack200buffer = new ByteArrayOutputStream();
 		GZIPOutputStream gzipOutput = new GZIPOutputStream(pack200buffer);
-		Pack200.newPacker().pack(
-				new JarInputStream(new ByteArrayInputStream(
-						zipbuffer.toByteArray())), gzipOutput);
+		Pack200Streams.pack(zipbuffer.toByteArray(), gzipOutput);
 		gzipOutput.finish();
 
-		final int count = analyzer.analyzeAll(new ByteArrayInputStream(
-				pack200buffer.toByteArray()), "Test");
+		final int count = analyzer.analyzeAll(
+				new ByteArrayInputStream(pack200buffer.toByteArray()), "Test");
 		assertEquals(1, count);
 		assertClasses("org/jacoco/core/analysis/AnalyzerTest");
 	}
@@ -298,8 +338,8 @@ public class AnalyzerTest {
 
 	@Test
 	public void testAnalyzeAll_Empty() throws IOException {
-		final int count = analyzer.analyzeAll(new ByteArrayInputStream(
-				new byte[0]), "Test");
+		final int count = analyzer
+				.analyzeAll(new ByteArrayInputStream(new byte[0]), "Test");
 		assertEquals(0, count);
 		assertEquals(Collections.emptyMap(), classes);
 	}
@@ -345,12 +385,12 @@ public class AnalyzerTest {
 
 	/**
 	 * With JDK 5 triggers exception in
-	 * {@link Analyzer#nextEntry(ZipInputStream, String)},
-	 * i.e. message will contain only "broken.zip".
+	 * {@link Analyzer#nextEntry(ZipInputStream, String)}, i.e. message will
+	 * contain only "broken.zip".
 	 *
 	 * With JDK > 5 triggers exception in
-	 * {@link Analyzer#analyzeAll(java.io.InputStream, String)},
-	 * i.e. message will contain only "broken.zip@brokenentry.txt".
+	 * {@link Analyzer#analyzeAll(java.io.InputStream, String)}, i.e. message
+	 * will contain only "broken.zip@brokenentry.txt".
 	 */
 	@Test
 	public void testAnalyzeAll_BrokenZipEntry() throws IOException {
@@ -377,8 +417,8 @@ public class AnalyzerTest {
 	public void testAnalyzeAll_BrokenClassFileInZip() throws IOException {
 		final ByteArrayOutputStream buffer = new ByteArrayOutputStream();
 		final ZipOutputStream zip = new ZipOutputStream(buffer);
-		zip.putNextEntry(new ZipEntry(
-				"org/jacoco/core/analysis/AnalyzerTest.class"));
+		zip.putNextEntry(
+				new ZipEntry("org/jacoco/core/analysis/AnalyzerTest.class"));
 		final byte[] brokenclass = TargetLoader
 				.getClassDataAsBytes(AnalyzerTest.class);
 		brokenclass[10] = 0x23;

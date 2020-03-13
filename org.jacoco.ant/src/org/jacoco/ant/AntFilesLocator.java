@@ -1,13 +1,14 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2019 Mountainminds GmbH & Co. KG and Contributors
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
- * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
+ * Copyright (c) 2009, 2020 Mountainminds GmbH & Co. KG and Contributors
+ * This program and the accompanying materials are made available under
+ * the terms of the Eclipse Public License 2.0 which is available at
+ * http://www.eclipse.org/legal/epl-2.0
+ *
+ * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
  *    Marc R. Hoffmann - initial API and implementation
- *    
+ *
  *******************************************************************************/
 package org.jacoco.ant;
 
@@ -27,15 +28,14 @@ class AntFilesLocator extends InputStreamSourceFileLocator {
 
 	private final Map<String, Resource> resources;
 
-	public AntFilesLocator(final String encoding,
-			final int tabWidth) {
+	public AntFilesLocator(final String encoding, final int tabWidth) {
 		super(encoding, tabWidth);
 		this.resources = new HashMap<String, Resource>();
 	}
 
 	/**
 	 * Adds the given file resource as a potential source file.
-	 * 
+	 *
 	 * @param file
 	 *            file resource to add
 	 */
@@ -44,7 +44,8 @@ class AntFilesLocator extends InputStreamSourceFileLocator {
 	}
 
 	@Override
-	protected InputStream getSourceStream(final String path) throws IOException {
+	protected InputStream getSourceStream(final String path)
+			throws IOException {
 		final Resource file = resources.get(path);
 		if (file == null) {
 			return null;

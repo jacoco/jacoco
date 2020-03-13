@@ -1,13 +1,14 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2019 Mountainminds GmbH & Co. KG and Contributors
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
- * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
+ * Copyright (c) 2009, 2020 Mountainminds GmbH & Co. KG and Contributors
+ * This program and the accompanying materials are made available under
+ * the terms of the Eclipse Public License 2.0 which is available at
+ * http://www.eclipse.org/legal/epl-2.0
+ *
+ * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
  *    Marc R. Hoffmann - initial API and implementation
- *    
+ *
  *******************************************************************************/
 package org.jacoco.report.internal.html.page;
 
@@ -20,18 +21,18 @@ import org.jacoco.report.internal.html.table.ITableItem;
 
 /**
  * Report page that represents a coverage node.
- * 
+ *
  * @param <NodeType>
  *            type of the node represented by this page
  */
-public abstract class NodePage<NodeType extends ICoverageNode> extends
-		ReportPage implements ITableItem {
+public abstract class NodePage<NodeType extends ICoverageNode>
+		extends ReportPage implements ITableItem {
 
 	private final NodeType node;
 
 	/**
 	 * Creates a new node page.
-	 * 
+	 *
 	 * @param node
 	 *            corresponding node
 	 * @param parent

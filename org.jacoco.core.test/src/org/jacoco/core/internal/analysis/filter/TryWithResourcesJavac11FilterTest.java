@@ -1,9 +1,10 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2019 Mountainminds GmbH & Co. KG and Contributors
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
- * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
+ * Copyright (c) 2009, 2020 Mountainminds GmbH & Co. KG and Contributors
+ * This program and the accompanying materials are made available under
+ * the terms of the Eclipse Public License 2.0 which is available at
+ * http://www.eclipse.org/legal/epl-2.0
+ *
+ * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
  *    Evgeny Mandrikov - initial API and implementation
@@ -49,8 +50,8 @@ public class TryWithResourcesJavac11FilterTest extends FilterTestBase {
 
 		m.visitVarInsn(Opcodes.ALOAD, 0);
 		range1.fromInclusive = m.instructions.getLast();
-		m.visitMethodInsn(Opcodes.INVOKEINTERFACE, "Resource", "close",
-			"()V", false);
+		m.visitMethodInsn(Opcodes.INVOKEINTERFACE, "Resource", "close", "()V",
+				false);
 		m.visitJumpInsn(Opcodes.GOTO, e);
 		range1.toInclusive = m.instructions.getLast();
 
@@ -58,15 +59,15 @@ public class TryWithResourcesJavac11FilterTest extends FilterTestBase {
 		range2.fromInclusive = m.instructions.getLast();
 		m.visitVarInsn(Opcodes.ASTORE, 1);
 		m.visitVarInsn(Opcodes.ALOAD, 0);
-		m.visitMethodInsn(Opcodes.INVOKEINTERFACE, "Resource", "close",
-			"()V", false);
+		m.visitMethodInsn(Opcodes.INVOKEINTERFACE, "Resource", "close", "()V",
+				false);
 		m.visitJumpInsn(Opcodes.GOTO, t);
 
 		m.visitVarInsn(Opcodes.ASTORE, 2);
 		m.visitVarInsn(Opcodes.ALOAD, 1);
 		m.visitVarInsn(Opcodes.ALOAD, 2);
 		m.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "java/lang/Throwable",
-			"addSuppressed", "(Ljava/lang/Throwable;)V", false);
+				"addSuppressed", "(Ljava/lang/Throwable;)V", false);
 		m.visitLabel(t);
 		m.visitVarInsn(Opcodes.ALOAD, 1);
 		m.visitInsn(Opcodes.ATHROW);
@@ -103,8 +104,8 @@ public class TryWithResourcesJavac11FilterTest extends FilterTestBase {
 		range1.fromInclusive = m.instructions.getLast();
 		m.visitJumpInsn(Opcodes.IFNULL, e);
 		m.visitVarInsn(Opcodes.ALOAD, 0);
-		m.visitMethodInsn(Opcodes.INVOKEINTERFACE, "Resource", "close",
-				"()V", false);
+		m.visitMethodInsn(Opcodes.INVOKEINTERFACE, "Resource", "close", "()V",
+				false);
 		m.visitJumpInsn(Opcodes.GOTO, e);
 		range1.toInclusive = m.instructions.getLast();
 
@@ -114,8 +115,8 @@ public class TryWithResourcesJavac11FilterTest extends FilterTestBase {
 		m.visitVarInsn(Opcodes.ALOAD, 0);
 		m.visitJumpInsn(Opcodes.IFNULL, t);
 		m.visitVarInsn(Opcodes.ALOAD, 0);
-		m.visitMethodInsn(Opcodes.INVOKEINTERFACE, "Resource", "close",
-				"()V", false);
+		m.visitMethodInsn(Opcodes.INVOKEINTERFACE, "Resource", "close", "()V",
+				false);
 		m.visitJumpInsn(Opcodes.GOTO, t);
 
 		m.visitVarInsn(Opcodes.ASTORE, 2);

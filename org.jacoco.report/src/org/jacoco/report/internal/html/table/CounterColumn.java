@@ -1,18 +1,18 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2019 Mountainminds GmbH & Co. KG and Contributors
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
- * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
+ * Copyright (c) 2009, 2020 Mountainminds GmbH & Co. KG and Contributors
+ * This program and the accompanying materials are made available under
+ * the terms of the Eclipse Public License 2.0 which is available at
+ * http://www.eclipse.org/legal/epl-2.0
+ *
+ * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
  *    Marc R. Hoffmann - initial API and implementation
- *    
+ *
  *******************************************************************************/
 package org.jacoco.report.internal.html.table;
 
 import java.io.IOException;
-import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.Comparator;
 import java.util.List;
@@ -35,7 +35,7 @@ public abstract class CounterColumn implements IColumnRenderer {
 
 	/**
 	 * Creates a new column that shows the total count for the given entity.
-	 * 
+	 *
 	 * @param entity
 	 *            counter entity for this column
 	 * @param locale
@@ -44,8 +44,8 @@ public abstract class CounterColumn implements IColumnRenderer {
 	 */
 	public static CounterColumn newTotal(final CounterEntity entity,
 			final Locale locale) {
-		return new CounterColumn(entity, locale, CounterComparator.TOTALITEMS
-				.reverse().on(entity)) {
+		return new CounterColumn(entity, locale,
+				CounterComparator.TOTALITEMS.reverse().on(entity)) {
 			@Override
 			protected int getValue(final ICounter counter) {
 				return counter.getTotalCount();
@@ -55,7 +55,7 @@ public abstract class CounterColumn implements IColumnRenderer {
 
 	/**
 	 * Creates a new column that shows the missed count for the given entity.
-	 * 
+	 *
 	 * @param entity
 	 *            counter entity for this column
 	 * @param locale
@@ -64,8 +64,8 @@ public abstract class CounterColumn implements IColumnRenderer {
 	 */
 	public static CounterColumn newMissed(final CounterEntity entity,
 			final Locale locale) {
-		return new CounterColumn(entity, locale, CounterComparator.MISSEDITEMS
-				.reverse().on(entity)) {
+		return new CounterColumn(entity, locale,
+				CounterComparator.MISSEDITEMS.reverse().on(entity)) {
 			@Override
 			protected int getValue(final ICounter counter) {
 				return counter.getMissedCount();
@@ -75,7 +75,7 @@ public abstract class CounterColumn implements IColumnRenderer {
 
 	/**
 	 * Creates a new column that shows the covered count for the given entity.
-	 * 
+	 *
 	 * @param entity
 	 *            counter entity for this column
 	 * @param locale
@@ -84,8 +84,8 @@ public abstract class CounterColumn implements IColumnRenderer {
 	 */
 	public static CounterColumn newCovered(final CounterEntity entity,
 			final Locale locale) {
-		return new CounterColumn(entity, locale, CounterComparator.COVEREDITEMS
-				.reverse().on(entity)) {
+		return new CounterColumn(entity, locale,
+				CounterComparator.COVEREDITEMS.reverse().on(entity)) {
 			@Override
 			protected int getValue(final ICounter counter) {
 				return counter.getCoveredCount();
@@ -102,7 +102,7 @@ public abstract class CounterColumn implements IColumnRenderer {
 	/**
 	 * Creates a new column that is based on the {@link ICounter} for the given
 	 * entity.
-	 * 
+	 *
 	 * @param entity
 	 *            counter entity for this column
 	 * @param locale
@@ -113,7 +113,7 @@ public abstract class CounterColumn implements IColumnRenderer {
 	protected CounterColumn(final CounterEntity entity, final Locale locale,
 			final Comparator<ICoverageNode> comparator) {
 		this.entity = entity;
-		this.integerFormat = DecimalFormat.getIntegerInstance(locale);
+		this.integerFormat = NumberFormat.getIntegerInstance(locale);
 		this.comparator = new TableItemComparator(comparator);
 	}
 
@@ -151,7 +151,7 @@ public abstract class CounterColumn implements IColumnRenderer {
 
 	/**
 	 * Retrieves the respective value from the counter.
-	 * 
+	 *
 	 * @param counter
 	 *            counter object
 	 * @return value of interest

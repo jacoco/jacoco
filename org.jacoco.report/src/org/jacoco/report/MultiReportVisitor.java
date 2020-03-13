@@ -1,13 +1,14 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2019 Mountainminds GmbH & Co. KG and Contributors
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
- * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
+ * Copyright (c) 2009, 2020 Mountainminds GmbH & Co. KG and Contributors
+ * This program and the accompanying materials are made available under
+ * the terms of the Eclipse Public License 2.0 which is available at
+ * http://www.eclipse.org/legal/epl-2.0
+ *
+ * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
  *    Marc R. Hoffmann - initial API and implementation
- *    
+ *
  *******************************************************************************/
 package org.jacoco.report;
 
@@ -24,14 +25,14 @@ import org.jacoco.core.data.SessionInfo;
  * A report visitor that is composed from multiple other visitors. This can be
  * used to create more than one report format in one run.
  */
-public class MultiReportVisitor extends MultiGroupVisitor implements
-		IReportVisitor {
+public class MultiReportVisitor extends MultiGroupVisitor
+		implements IReportVisitor {
 
 	private final List<IReportVisitor> visitors;
 
 	/**
 	 * New visitor delegating to all given visitors.
-	 * 
+	 *
 	 * @param visitors
 	 *            visitors to delegate to
 	 */
@@ -70,7 +71,8 @@ class MultiGroupVisitor implements IReportGroupVisitor {
 		}
 	}
 
-	public IReportGroupVisitor visitGroup(final String name) throws IOException {
+	public IReportGroupVisitor visitGroup(final String name)
+			throws IOException {
 		final List<IReportGroupVisitor> children = new ArrayList<IReportGroupVisitor>();
 		for (final IReportGroupVisitor v : visitors) {
 			children.add(v.visitGroup(name));

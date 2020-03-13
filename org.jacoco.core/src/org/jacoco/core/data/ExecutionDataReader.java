@@ -1,13 +1,14 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2019 Mountainminds GmbH & Co. KG and Contributors
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
- * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
+ * Copyright (c) 2009, 2020 Mountainminds GmbH & Co. KG and Contributors
+ * This program and the accompanying materials are made available under
+ * the terms of the Eclipse Public License 2.0 which is available at
+ * http://www.eclipse.org/legal/epl-2.0
+ *
+ * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
  *    Marc R. Hoffmann - initial API and implementation
- *    
+ *
  *******************************************************************************/
 package org.jacoco.core.data;
 
@@ -36,7 +37,7 @@ public class ExecutionDataReader {
 	 * Creates a new reader based on the given input stream input. Depending on
 	 * the nature of the underlying stream input should be buffered as most data
 	 * is read in single bytes.
-	 * 
+	 *
 	 * @param input
 	 *            input stream to read execution data from
 	 */
@@ -46,7 +47,7 @@ public class ExecutionDataReader {
 
 	/**
 	 * Sets an listener for session information.
-	 * 
+	 *
 	 * @param visitor
 	 *            visitor to retrieve session info events
 	 */
@@ -56,7 +57,7 @@ public class ExecutionDataReader {
 
 	/**
 	 * Sets an listener for execution data.
-	 * 
+	 *
 	 * @param visitor
 	 *            visitor to retrieve execution data events
 	 */
@@ -67,7 +68,7 @@ public class ExecutionDataReader {
 	/**
 	 * Reads all data and reports it to the corresponding visitors. The stream
 	 * is read until its end or a command confirmation has been sent.
-	 * 
+	 *
 	 * @return <code>true</code> if additional data can be expected after a
 	 *         command has been executed. <code>false</code> if the end of the
 	 *         stream has been reached.
@@ -76,8 +77,8 @@ public class ExecutionDataReader {
 	 * @throws IncompatibleExecDataVersionException
 	 *             incompatible data version from different JaCoCo release
 	 */
-	public boolean read() throws IOException,
-			IncompatibleExecDataVersionException {
+	public boolean read()
+			throws IOException, IncompatibleExecDataVersionException {
 		byte type;
 		do {
 			int i = in.read();
@@ -96,7 +97,7 @@ public class ExecutionDataReader {
 	/**
 	 * Reads a block of data identified by the given id. Subclasses may
 	 * overwrite this method to support additional block types.
-	 * 
+	 *
 	 * @param blocktype
 	 *            block type
 	 * @return <code>true</code> if there are more blocks to read
@@ -115,8 +116,8 @@ public class ExecutionDataReader {
 			readExecutionData();
 			return true;
 		default:
-			throw new IOException(format("Unknown block type %x.",
-					Byte.valueOf(blocktype)));
+			throw new IOException(
+					format("Unknown block type %x.", Byte.valueOf(blocktype)));
 		}
 	}
 
@@ -147,8 +148,8 @@ public class ExecutionDataReader {
 		final long id = in.readLong();
 		final String name = in.readUTF();
 		final boolean[] probes = in.readBooleanArray();
-		executionDataVisitor.visitClassExecution(new ExecutionData(id, name,
-				probes));
+		executionDataVisitor
+				.visitClassExecution(new ExecutionData(id, name, probes));
 	}
 
 }

@@ -1,13 +1,14 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2019 Mountainminds GmbH & Co. KG and Contributors
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
- * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
+ * Copyright (c) 2009, 2020 Mountainminds GmbH & Co. KG and Contributors
+ * This program and the accompanying materials are made available under
+ * the terms of the Eclipse Public License 2.0 which is available at
+ * http://www.eclipse.org/legal/epl-2.0
+ *
+ * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
  *    Marc R. Hoffmann - initial API and implementation
- *    
+ *
  *******************************************************************************/
 package org.jacoco.core.internal.instr;
 
@@ -82,14 +83,14 @@ public class DuplicateFrameEliminatorTest {
 
 	@Test
 	public void testTypeInsn() {
-		testInstructionBetweenFrames(new TypeInsnNode(Opcodes.NEW,
-				"java/lang/Object"));
+		testInstructionBetweenFrames(
+				new TypeInsnNode(Opcodes.NEW, "java/lang/Object"));
 	}
 
 	@Test
 	public void testFieldInsn() {
-		testInstructionBetweenFrames(new FieldInsnNode(Opcodes.GETFIELD, "Foo",
-				"f", "I"));
+		testInstructionBetweenFrames(
+				new FieldInsnNode(Opcodes.GETFIELD, "Foo", "f", "I"));
 	}
 
 	@Test
@@ -106,8 +107,8 @@ public class DuplicateFrameEliminatorTest {
 
 	@Test
 	public void testJumpInsn() {
-		testInstructionBetweenFrames(new JumpInsnNode(Opcodes.GOTO,
-				new LabelNode()));
+		testInstructionBetweenFrames(
+				new JumpInsnNode(Opcodes.GOTO, new LabelNode()));
 	}
 
 	@Test
@@ -134,8 +135,8 @@ public class DuplicateFrameEliminatorTest {
 
 	@Test
 	public void testMultiANewArrayInsn() {
-		testInstructionBetweenFrames(new MultiANewArrayInsnNode(
-				"java/lang/String", 4));
+		testInstructionBetweenFrames(
+				new MultiANewArrayInsnNode("java/lang/String", 4));
 	}
 
 	private void testInstructionBetweenFrames(AbstractInsnNode node) {
