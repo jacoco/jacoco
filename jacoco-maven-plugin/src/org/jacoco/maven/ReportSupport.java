@@ -214,6 +214,12 @@ final class ReportSupport {
 		log.info(format("Analyzed bundle '%s' with %s classes",
 				bundle.getName(),
 				Integer.valueOf(bundle.getClassCounter().getTotalCount())));
+		log.info(format("%s of %s instructions have been covered (%s %%)",
+				Integer.valueOf(
+						bundle.getInstructionCounter().getCoveredCount()),
+				Integer.valueOf(bundle.getInstructionCounter().getTotalCount()),
+				Double.valueOf(bundle.getInstructionCounter().getCoveredRatio()
+						* 100)));
 		if (!nomatch.isEmpty()) {
 			log.warn(format(
 					"Classes in bundle '%s' do no match with execution data. "
