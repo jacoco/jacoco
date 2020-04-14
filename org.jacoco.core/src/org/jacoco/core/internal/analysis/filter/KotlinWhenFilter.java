@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2019 Mountainminds GmbH & Co. KG and Contributors
+ * Copyright (c) 2009, 2020 Mountainminds GmbH & Co. KG and Contributors
  * This program and the accompanying materials are made available under
  * the terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0
@@ -18,7 +18,6 @@ import java.util.Set;
 
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.tree.AbstractInsnNode;
-import org.objectweb.asm.tree.InsnNode;
 import org.objectweb.asm.tree.JumpInsnNode;
 import org.objectweb.asm.tree.LabelNode;
 import org.objectweb.asm.tree.LookupSwitchInsnNode;
@@ -45,7 +44,7 @@ public final class KotlinWhenFilter implements IFilter {
 
 	private static class Matcher extends AbstractMatcher {
 		void match(final AbstractInsnNode start, final IFilterOutput output) {
-			if (start.getType() != InsnNode.LABEL) {
+			if (start.getType() != AbstractInsnNode.LABEL) {
 				return;
 			}
 			cursor = start;

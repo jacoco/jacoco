@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2019 Mountainminds GmbH & Co. KG and Contributors
+ * Copyright (c) 2009, 2020 Mountainminds GmbH & Co. KG and Contributors
  * This program and the accompanying materials are made available under
  * the terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0
@@ -8,7 +8,7 @@
  *
  * Contributors:
  *    Marc R. Hoffmann - initial API and implementation
- *    
+ *
  *******************************************************************************/
 package org.jacoco.agent.rt.internal;
 
@@ -40,7 +40,7 @@ public class Agent implements IAgent {
 	/**
 	 * Returns a global instance which is already started. If the method is
 	 * called the first time the instance is created with the given options.
-	 * 
+	 *
 	 * @param options
 	 *            options to configure the instance
 	 * @return global instance
@@ -66,7 +66,7 @@ public class Agent implements IAgent {
 	/**
 	 * Returns a global instance which is already started. If a agent has not
 	 * been initialized before this method will fail.
-	 * 
+	 *
 	 * @return global instance
 	 * @throws IllegalStateException
 	 *             if no Agent has been started yet
@@ -91,7 +91,7 @@ public class Agent implements IAgent {
 
 	/**
 	 * Creates a new agent with the given agent options.
-	 * 
+	 *
 	 * @param options
 	 *            agent options
 	 * @param logger
@@ -105,7 +105,7 @@ public class Agent implements IAgent {
 
 	/**
 	 * Returns the runtime data object created by this agent
-	 * 
+	 *
 	 * @return runtime data for this agent instance
 	 */
 	public RuntimeData getData() {
@@ -114,7 +114,7 @@ public class Agent implements IAgent {
 
 	/**
 	 * Initializes this agent.
-	 * 
+	 *
 	 * @throws Exception
 	 *             in case something cannot be initialized
 	 */
@@ -155,7 +155,7 @@ public class Agent implements IAgent {
 
 	/**
 	 * Create output implementation as given by the agent options.
-	 * 
+	 *
 	 * @return configured controller implementation
 	 */
 	IAgentOutput createAgentOutput() {

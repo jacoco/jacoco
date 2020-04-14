@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2019 Mountainminds GmbH & Co. KG and Contributors
+ * Copyright (c) 2009, 2020 Mountainminds GmbH & Co. KG and Contributors
  * This program and the accompanying materials are made available under
  * the terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0
@@ -8,7 +8,7 @@
  *
  * Contributors:
  *    Marc R. Hoffmann - initial API and implementation
- *    
+ *
  *******************************************************************************/
 package org.jacoco.core.runtime;
 
@@ -45,12 +45,12 @@ public class ModifiedSystemClassRuntime extends AbstractRuntime {
 
 	/**
 	 * Creates a new runtime based on the given class and members.
-	 * 
+	 *
 	 * @param systemClass
 	 *            system class that contains the execution data
 	 * @param accessFieldName
 	 *            name of the public static runtime access field
-	 * 
+	 *
 	 */
 	public ModifiedSystemClassRuntime(final Class<?> systemClass,
 			final String accessFieldName) {
@@ -86,13 +86,13 @@ public class ModifiedSystemClassRuntime extends AbstractRuntime {
 	 * Creates a new {@link ModifiedSystemClassRuntime} using the given class as
 	 * the data container. Member is created with internal default name. The
 	 * given class must not have been loaded before by the agent.
-	 * 
+	 *
 	 * @param inst
 	 *            instrumentation interface
 	 * @param className
 	 *            VM name of the class to use
 	 * @return new runtime instance
-	 * 
+	 *
 	 * @throws ClassNotFoundException
 	 *             id the given class can not be found
 	 */
@@ -105,7 +105,7 @@ public class ModifiedSystemClassRuntime extends AbstractRuntime {
 	 * Creates a new {@link ModifiedSystemClassRuntime} using the given class as
 	 * the data container. The given class must not have been loaded before by
 	 * the agent.
-	 * 
+	 *
 	 * @param inst
 	 *            instrumentation interface
 	 * @param className
@@ -113,7 +113,7 @@ public class ModifiedSystemClassRuntime extends AbstractRuntime {
 	 * @param accessFieldName
 	 *            name of the added runtime access field
 	 * @return new runtime instance
-	 * 
+	 *
 	 * @throws ClassNotFoundException
 	 *             if the given class can not be found
 	 */
@@ -146,7 +146,7 @@ public class ModifiedSystemClassRuntime extends AbstractRuntime {
 
 	/**
 	 * Adds the static data field to the given class definition.
-	 * 
+	 *
 	 * @param source
 	 *            class definition source
 	 * @param accessFieldName

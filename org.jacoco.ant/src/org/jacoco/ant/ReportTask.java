@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2019 Mountainminds GmbH & Co. KG and Contributors
+ * Copyright (c) 2009, 2020 Mountainminds GmbH & Co. KG and Contributors
  * This program and the accompanying materials are made available under
  * the terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0
@@ -8,7 +8,7 @@
  *
  * Contributors:
  *    Marc R. Hoffmann - initial API and implementation
- *    
+ *
  *******************************************************************************/
 package org.jacoco.ant;
 
@@ -73,7 +73,7 @@ public class ReportTask extends Task {
 		/**
 		 * Defines the optional source file encoding. If not set the platform
 		 * default is used.
-		 * 
+		 *
 		 * @param encoding
 		 *            source file encoding
 		 */
@@ -83,7 +83,7 @@ public class ReportTask extends Task {
 
 		/**
 		 * Sets the tab stop width for the source pages. Default value is 4.
-		 * 
+		 *
 		 * @param tabWidth
 		 *            number of characters per tab stop
 		 */
@@ -111,7 +111,7 @@ public class ReportTask extends Task {
 
 		/**
 		 * Sets the name of the group.
-		 * 
+		 *
 		 * @param name
 		 *            name of the group
 		 */
@@ -121,7 +121,7 @@ public class ReportTask extends Task {
 
 		/**
 		 * Creates a new child group.
-		 * 
+		 *
 		 * @return new child group
 		 */
 		public GroupElement createGroup() {
@@ -132,7 +132,7 @@ public class ReportTask extends Task {
 
 		/**
 		 * Returns the nested resource collection for class files.
-		 * 
+		 *
 		 * @return resource collection for class files
 		 */
 		public Union createClassfiles() {
@@ -141,7 +141,7 @@ public class ReportTask extends Task {
 
 		/**
 		 * Returns the nested resource collection for source files.
-		 * 
+		 *
 		 * @return resource collection for source files
 		 */
 		public SourceFilesElement createSourcefiles() {
@@ -178,7 +178,7 @@ public class ReportTask extends Task {
 
 		/**
 		 * Sets the output directory for the report.
-		 * 
+		 *
 		 * @param destdir
 		 *            output directory
 		 */
@@ -188,7 +188,7 @@ public class ReportTask extends Task {
 
 		/**
 		 * Sets the Zip output file for the report.
-		 * 
+		 *
 		 * @param destfile
 		 *            Zip output file
 		 */
@@ -199,7 +199,7 @@ public class ReportTask extends Task {
 		/**
 		 * Sets an optional footer text that will be displayed on every report
 		 * page.
-		 * 
+		 *
 		 * @param text
 		 *            footer text
 		 */
@@ -209,7 +209,7 @@ public class ReportTask extends Task {
 
 		/**
 		 * Sets the output encoding for generated HTML files. Default is UTF-8.
-		 * 
+		 *
 		 * @param encoding
 		 *            output encoding
 		 */
@@ -220,7 +220,7 @@ public class ReportTask extends Task {
 		/**
 		 * Sets the locale for generated text output. By default the platform
 		 * locale is used.
-		 * 
+		 *
 		 * @param locale
 		 *            text locale
 		 */
@@ -268,7 +268,7 @@ public class ReportTask extends Task {
 
 		/**
 		 * Sets the output file for the report.
-		 * 
+		 *
 		 * @param destfile
 		 *            output file
 		 */
@@ -290,7 +290,7 @@ public class ReportTask extends Task {
 
 		/**
 		 * Sets the output encoding for generated XML file. Default is UTF-8.
-		 * 
+		 *
 		 * @param encoding
 		 *            output encoding
 		 */
@@ -311,7 +311,7 @@ public class ReportTask extends Task {
 
 		/**
 		 * Sets the output file for the report.
-		 * 
+		 *
 		 * @param destfile
 		 *            output file
 		 */
@@ -321,7 +321,7 @@ public class ReportTask extends Task {
 
 		/**
 		 * Sets the output encoding for generated XML file. Default is UTF-8.
-		 * 
+		 *
 		 * @param encoding
 		 *            output encoding
 		 */
@@ -356,7 +356,7 @@ public class ReportTask extends Task {
 
 		/**
 		 * Creates and adds a new rule.
-		 * 
+		 *
 		 * @return new rule
 		 */
 		public Rule createRule() {
@@ -368,7 +368,7 @@ public class ReportTask extends Task {
 		/**
 		 * Sets whether the build should fail in case of a violation. Default is
 		 * <code>true</code>.
-		 * 
+		 *
 		 * @param flag
 		 *            if <code>true</code> the build fails on violation
 		 */
@@ -378,7 +378,7 @@ public class ReportTask extends Task {
 
 		/**
 		 * Sets the name of a property to append the violation messages to.
-		 * 
+		 *
 		 * @param property
 		 *            name of a property
 		 */
@@ -427,7 +427,7 @@ public class ReportTask extends Task {
 
 	/**
 	 * Returns the nested resource collection for execution data files.
-	 * 
+	 *
 	 * @return resource collection for execution files
 	 */
 	public Union createExecutiondata() {
@@ -436,7 +436,7 @@ public class ReportTask extends Task {
 
 	/**
 	 * Returns the root group element that defines the report structure.
-	 * 
+	 *
 	 * @return root group element
 	 */
 	public GroupElement createStructure() {
@@ -445,7 +445,7 @@ public class ReportTask extends Task {
 
 	/**
 	 * Creates a new HTML report element.
-	 * 
+	 *
 	 * @return HTML report element
 	 */
 	public HTMLFormatterElement createHtml() {
@@ -456,7 +456,7 @@ public class ReportTask extends Task {
 
 	/**
 	 * Creates a new CSV report element.
-	 * 
+	 *
 	 * @return CSV report element
 	 */
 	public CSVFormatterElement createCsv() {
@@ -467,7 +467,7 @@ public class ReportTask extends Task {
 
 	/**
 	 * Creates a new coverage check element.
-	 * 
+	 *
 	 * @return coverage check element
 	 */
 	public CheckFormatterElement createCheck() {
@@ -478,7 +478,7 @@ public class ReportTask extends Task {
 
 	/**
 	 * Creates a new XML report element.
-	 * 
+	 *
 	 * @return CSV report element
 	 */
 	public XMLFormatterElement createXml() {
@@ -609,7 +609,7 @@ public class ReportTask extends Task {
 	 * Splits a given underscore "_" separated string and creates a Locale. This
 	 * method is implemented as the method Locale.forLanguageTag() was not
 	 * available in Java 5.
-	 * 
+	 *
 	 * @param locale
 	 *            String representation of a Locate
 	 * @return Locale instance

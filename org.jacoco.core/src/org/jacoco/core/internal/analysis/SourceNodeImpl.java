@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2019 Mountainminds GmbH & Co. KG and Contributors
+ * Copyright (c) 2009, 2020 Mountainminds GmbH & Co. KG and Contributors
  * This program and the accompanying materials are made available under
  * the terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0
@@ -8,7 +8,7 @@
  *
  * Contributors:
  *    Marc R. Hoffmann - initial API and implementation
- *    
+ *
  *******************************************************************************/
 package org.jacoco.core.internal.analysis;
 
@@ -29,7 +29,7 @@ public class SourceNodeImpl extends CoverageNodeImpl implements ISourceNode {
 
 	/**
 	 * Create a new source node implementation instance.
-	 * 
+	 *
 	 * @param elementType
 	 *            element type
 	 * @param name
@@ -45,7 +45,7 @@ public class SourceNodeImpl extends CoverageNodeImpl implements ISourceNode {
 	 * Make sure that the internal buffer can keep lines from first to last.
 	 * While the buffer is also incremented automatically, this method allows
 	 * optimization in case the total range is known in advance.
-	 * 
+	 *
 	 * @param first
 	 *            first line number or {@link ISourceNode#UNKNOWN_LINE}
 	 * @param last
@@ -76,7 +76,7 @@ public class SourceNodeImpl extends CoverageNodeImpl implements ISourceNode {
 	 * Increments all counters by the values of the given child. When
 	 * incrementing the line counter it is assumed that the child refers to the
 	 * same source file.
-	 * 
+	 *
 	 * @param child
 	 *            child node to add
 	 */
@@ -104,7 +104,7 @@ public class SourceNodeImpl extends CoverageNodeImpl implements ISourceNode {
 	 * Increments instructions and branches by the given counter values. If a
 	 * optional line number is specified the instructions and branches are added
 	 * to the given line. The line counter is incremented accordingly.
-	 * 
+	 *
 	 * @param instructions
 	 *            instructions to add
 	 * @param branches

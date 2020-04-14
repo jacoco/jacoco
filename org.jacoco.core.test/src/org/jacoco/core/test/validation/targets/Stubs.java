@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2019 Mountainminds GmbH & Co. KG and Contributors
+ * Copyright (c) 2009, 2020 Mountainminds GmbH & Co. KG and Contributors
  * This program and the accompanying materials are made available under
  * the terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0
@@ -8,7 +8,7 @@
  *
  * Contributors:
  *    Marc R. Hoffmann - initial API and implementation
- *    
+ *
  *******************************************************************************/
 package org.jacoco.core.test.validation.targets;
 
@@ -37,6 +37,13 @@ public class Stubs {
 		public SuperClass(boolean arg) {
 		}
 
+	}
+
+	/**
+	 * Enum stub.
+	 */
+	public static enum Enum {
+		A, B, C
 	}
 
 	/**
@@ -99,8 +106,15 @@ public class Stubs {
 	}
 
 	/**
+	 * @return always <code>A</code>
+	 */
+	public static Enum enumA() {
+		return Enum.A;
+	}
+
+	/**
 	 * Always throws a {@link RuntimeException}.
-	 * 
+	 *
 	 * @throws StubException
 	 *             always thrown
 	 */

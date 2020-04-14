@@ -9,7 +9,7 @@
    For further information, see: http://www.w3.org/TR/xhtml1
 
    Copyright (c) 1998-2002 W3C (MIT, INRIA, Keio),
-   All Rights Reserved. 
+   All Rights Reserved.
 
    This DTD module is identified by the PUBLIC and SYSTEM identifiers:
 
@@ -263,7 +263,7 @@
        window title. Exactly one title is required per document.
     -->
 <!ELEMENT title (#PCDATA)>
-<!ATTLIST title 
+<!ATTLIST title
   %i18n;
   id          ID             #IMPLIED
   >
@@ -801,7 +801,7 @@
 
 <!--
  Content is %Flow; excluding a, form and form controls
---> 
+-->
 <!ELEMENT button %button.content;>  <!-- push button -->
 <!ATTLIST button
   %attrs;
@@ -834,7 +834,7 @@
 -->
 
 <!ENTITY % TRules "(none | groups | rows | cols | all)">
-  
+
 <!-- horizontal alignment attributes for cell contents
 
   char        alignment char, e.g. char=':'
@@ -975,4 +975,3 @@ several semantically related columns together.
   %cellhalign;
   %cellvalign;
   >
-

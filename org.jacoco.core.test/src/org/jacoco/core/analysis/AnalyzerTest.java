@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2019 Mountainminds GmbH & Co. KG and Contributors
+ * Copyright (c) 2009, 2020 Mountainminds GmbH & Co. KG and Contributors
  * This program and the accompanying materials are made available under
  * the terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0
@@ -8,7 +8,7 @@
  *
  * Contributors:
  *    Marc R. Hoffmann - initial API and implementation
- *    
+ *
  *******************************************************************************/
 package org.jacoco.core.analysis;
 
@@ -31,15 +31,15 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
-import java.util.jar.JarInputStream;
-import java.util.jar.Pack200;
 import java.util.zip.GZIPOutputStream;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
 import org.jacoco.core.data.ExecutionDataStore;
+import org.jacoco.core.internal.Pack200Streams;
 import org.jacoco.core.internal.data.CRC64;
 import org.jacoco.core.test.TargetLoader;
+import org.junit.AssumptionViolatedException;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -107,7 +107,7 @@ public class AnalyzerTest {
 	@Test
 	public void should_not_modify_class_bytes_to_support_next_version()
 			throws Exception {
-		final byte[] originalBytes = createClass(Opcodes.V13 + 1);
+		final byte[] originalBytes = createClass(Opcodes.V14 + 1);
 		final byte[] bytes = new byte[originalBytes.length];
 		System.arraycopy(originalBytes, 0, bytes, 0, originalBytes.length);
 		final long expectedClassId = CRC64.classId(bytes);
@@ -130,14 +130,14 @@ public class AnalyzerTest {
 	 */
 	@Test
 	public void analyzeClass_should_throw_exception_for_unsupported_class_file_version() {
-		final byte[] bytes = createClass(Opcodes.V14 + 1);
+		final byte[] bytes = createClass(Opcodes.V14 + 2);
 		try {
 			analyzer.analyzeClass(bytes, "UnsupportedVersion");
 			fail("exception expected");
 		} catch (IOException e) {
 			assertEquals("Error while analyzing UnsupportedVersion.",
 					e.getMessage());
-			assertEquals("Unsupported class file major version 59",
+			assertEquals("Unsupported class file major version 60",
 					e.getCause().getMessage());
 		}
 	}
@@ -217,7 +217,7 @@ public class AnalyzerTest {
 	 */
 	@Test
 	public void analyzeAll_should_throw_exception_for_unsupported_class_file_version() {
-		final byte[] bytes = createClass(Opcodes.V14 + 1);
+		final byte[] bytes = createClass(Opcodes.V14 + 2);
 		try {
 			analyzer.analyzeAll(new ByteArrayInputStream(bytes),
 					"UnsupportedVersion");
@@ -225,7 +225,7 @@ public class AnalyzerTest {
 		} catch (IOException e) {
 			assertEquals("Error while analyzing UnsupportedVersion.",
 					e.getMessage());
-			assertEquals("Unsupported class file major version 59",
+			assertEquals("Unsupported class file major version 60",
 					e.getCause().getMessage());
 		}
 	}
@@ -294,6 +294,13 @@ public class AnalyzerTest {
 
 	@Test
 	public void testAnalyzeAll_Pack200() throws IOException {
+		try {
+			Class.forName("java.util.jar.Pack200");
+		} catch (ClassNotFoundException e) {
+			throw new AssumptionViolatedException(
+					"this test requires JDK with Pack200");
+		}
+
 		final ByteArrayOutputStream zipbuffer = new ByteArrayOutputStream();
 		final ZipOutputStream zip = new ZipOutputStream(zipbuffer);
 		zip.putNextEntry(
@@ -303,10 +310,7 @@ public class AnalyzerTest {
 
 		final ByteArrayOutputStream pack200buffer = new ByteArrayOutputStream();
 		GZIPOutputStream gzipOutput = new GZIPOutputStream(pack200buffer);
-		Pack200.newPacker()
-				.pack(new JarInputStream(
-						new ByteArrayInputStream(zipbuffer.toByteArray())),
-						gzipOutput);
+		Pack200Streams.pack(zipbuffer.toByteArray(), gzipOutput);
 		gzipOutput.finish();
 
 		final int count = analyzer.analyzeAll(

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2019 Mountainminds GmbH & Co. KG and Contributors
+ * Copyright (c) 2009, 2020 Mountainminds GmbH & Co. KG and Contributors
  * This program and the accompanying materials are made available under
  * the terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0
@@ -8,7 +8,7 @@
  *
  * Contributors:
  *    Marc R. Hoffmann - initial API and implementation
- *    
+ *
  *******************************************************************************/
 package org.jacoco.core.tools;
 
@@ -33,9 +33,7 @@ import org.jacoco.core.runtime.RemoteControlReader;
 import org.jacoco.core.runtime.RemoteControlWriter;
 import org.junit.After;
 import org.junit.Before;
-import org.junit.Rule;
 import org.junit.Test;
-import org.junit.rules.ExpectedException;
 
 /**
  * Unit tests for {@link ExecDumpClient}.
@@ -49,9 +47,6 @@ public class ExecDumpClientTest {
 	private boolean resetRequested;
 
 	private ServerSocket server;
-
-	@Rule
-	public ExpectedException exception = ExpectedException.none();
 
 	@Before
 	public void setup() {
@@ -136,11 +131,13 @@ public class ExecDumpClientTest {
 	@Test
 	public void should_throw_IOException_when_server_closes_connection_without_response()
 			throws IOException {
-		exception.expect(IOException.class);
-		exception.expectMessage("Socket closed unexpectedly.");
-
 		int port = createNopServer();
-		client.dump((String) null, port);
+		try {
+			client.dump((String) null, port);
+			fail("exception expected");
+		} catch (IOException e) {
+			assertEquals("Socket closed unexpectedly.", e.getMessage());
+		}
 	}
 
 	private int getFreePort() throws IOException {

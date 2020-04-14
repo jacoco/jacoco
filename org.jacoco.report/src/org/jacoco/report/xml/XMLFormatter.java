@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2019 Mountainminds GmbH & Co. KG and Contributors
+ * Copyright (c) 2009, 2020 Mountainminds GmbH & Co. KG and Contributors
  * This program and the accompanying materials are made available under
  * the terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0
@@ -8,7 +8,7 @@
  *
  * Contributors:
  *    Brock Janiczak -initial API and implementation
- *    
+ *
  *******************************************************************************/
 package org.jacoco.report.xml;
 
@@ -36,7 +36,7 @@ public class XMLFormatter {
 
 	/**
 	 * Sets the encoding used for generated XML document. Default is UTF-8.
-	 * 
+	 *
 	 * @param outputEncoding
 	 *            XML output encoding
 	 */
@@ -46,7 +46,7 @@ public class XMLFormatter {
 
 	/**
 	 * Creates a new visitor to write a report to the given stream.
-	 * 
+	 *
 	 * @param output
 	 *            output stream to write the report to
 	 * @return visitor to emit the report data to

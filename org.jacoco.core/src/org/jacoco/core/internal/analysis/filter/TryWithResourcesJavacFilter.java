@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2019 Mountainminds GmbH & Co. KG and Contributors
+ * Copyright (c) 2009, 2020 Mountainminds GmbH & Co. KG and Contributors
  * This program and the accompanying materials are made available under
  * the terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0
@@ -48,7 +48,7 @@ public final class TryWithResourcesJavacFilter implements IFilter {
 	 * compilation of source code that is described in <a href=
 	 * "http://docs.oracle.com/javase/specs/jls/se8/html/jls-14.html#jls-14.20.3.1">JLS
 	 * 14.20.3. try-with-resources</a>:
-	 * 
+	 *
 	 * <pre>
 	 *     Resource r = ...;
 	 *     Throwable primaryExc = null;

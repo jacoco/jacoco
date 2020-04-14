@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2019 Mountainminds GmbH & Co. KG and Contributors
+ * Copyright (c) 2009, 2020 Mountainminds GmbH & Co. KG and Contributors
  * This program and the accompanying materials are made available under
  * the terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0
@@ -8,7 +8,7 @@
  *
  * Contributors:
  *    Marc R. Hoffmann - initial API and implementation
- *    
+ *
  *******************************************************************************/
 package org.jacoco.core.internal.instr;
 
@@ -27,7 +27,7 @@ public final class InstrSupport {
 	}
 
 	/** ASM API version */
-	public static final int ASM_API_VERSION = Opcodes.ASM7;
+	public static final int ASM_API_VERSION = Opcodes.ASM8;
 
 	// === Data Field ===
 
@@ -209,7 +209,7 @@ public final class InstrSupport {
 
 	/**
 	 * Determines whether the given class file version requires stackmap frames.
-	 * 
+	 *
 	 * @param version
 	 *            class file version
 	 * @return <code>true</code> if frames are required
@@ -223,7 +223,7 @@ public final class InstrSupport {
 	 * Ensures that the given member does not correspond to a internal member
 	 * created by the instrumentation process. This would mean that the class is
 	 * already instrumented.
-	 * 
+	 *
 	 * @param member
 	 *            name of the member to check
 	 * @param owner
@@ -245,7 +245,7 @@ public final class InstrSupport {
 	 * Generates the instruction to push the given int value on the stack.
 	 * Implementation taken from
 	 * {@link org.objectweb.asm.commons.GeneratorAdapter#push(int)}.
-	 * 
+	 *
 	 * @param mv
 	 *            visitor to emit the instruction
 	 * @param value
@@ -273,9 +273,9 @@ public final class InstrSupport {
 	 */
 	public static ClassReader classReaderFor(final byte[] b) {
 		final int originalVersion = getMajorVersion(b);
-		if (originalVersion == Opcodes.V13 + 1) {
+		if (originalVersion == Opcodes.V14 + 1) {
 			// temporarily downgrade version to bypass check in ASM
-			setMajorVersion(Opcodes.V13, b);
+			setMajorVersion(Opcodes.V14, b);
 		}
 		final ClassReader classReader = new ClassReader(b);
 		setMajorVersion(originalVersion, b);

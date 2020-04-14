@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2019 Mountainminds GmbH & Co. KG and Contributors
+ * Copyright (c) 2009, 2020 Mountainminds GmbH & Co. KG and Contributors
  * This program and the accompanying materials are made available under
  * the terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0
@@ -8,7 +8,7 @@
  *
  * Contributors:
  *    Marc R. Hoffmann - initial API and implementation
- *    
+ *
  *******************************************************************************/
 package org.jacoco.report;
 
@@ -29,7 +29,7 @@ public interface IReportVisitor extends IReportGroupVisitor {
 	/**
 	 * Initializes the report with global information. This method has to be
 	 * called before any other method can be called.
-	 * 
+	 *
 	 * @param sessionInfos
 	 *            list of chronological ordered {@link SessionInfo} objects
 	 *            where execution data has been collected for this report.
@@ -44,7 +44,7 @@ public interface IReportVisitor extends IReportGroupVisitor {
 
 	/**
 	 * Has to be called after all report data has been emitted.
-	 * 
+	 *
 	 * @throws IOException
 	 *             in case of IO problems with the report writer
 	 */

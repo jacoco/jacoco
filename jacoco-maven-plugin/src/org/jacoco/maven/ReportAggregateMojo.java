@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2019 Mountainminds GmbH & Co. KG and Contributors
+ * Copyright (c) 2009, 2020 Mountainminds GmbH & Co. KG and Contributors
  * This program and the accompanying materials are made available under
  * the terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0
@@ -39,18 +39,18 @@ import org.jacoco.report.IReportGroupVisitor;
  * reports when tests are in separate projects than the code under test, for
  * example in case of integration tests.
  * </p>
- * 
+ *
  * <p>
  * Using the dependency scope allows to distinguish projects which contribute
  * execution data but should not become part of the report:
  * </p>
- * 
+ *
  * <ul>
  * <li><code>compile</code>, <code>runtime</code>, <code>provided</code>:
  * Project source and execution data is included in the report.</li>
  * <li><code>test</code>: Only execution data is considered for the report.</li>
  * </ul>
- * 
+ *
  * @since 0.7.7
  */
 @Mojo(name = "report-aggregate", threadSafe = true)

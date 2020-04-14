@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2019 Mountainminds GmbH & Co. KG and Contributors
+ * Copyright (c) 2009, 2020 Mountainminds GmbH & Co. KG and Contributors
  * This program and the accompanying materials are made available under
  * the terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0
@@ -8,7 +8,7 @@
  *
  * Contributors:
  *    Marc R. Hoffmann - initial API and implementation
- *    
+ *
  *******************************************************************************/
 package org.jacoco.core.internal.analysis;
 
@@ -16,7 +16,7 @@ import static org.junit.Assert.assertEquals;
 
 import java.util.Map;
 
-import org.jacoco.core.analysis.ISourceFileCoverage;
+import org.jacoco.core.analysis.ISourceNode;
 import org.jacoco.core.internal.flow.LabelInfo;
 import org.junit.Before;
 import org.junit.Test;
@@ -53,7 +53,7 @@ public class InstructionsBuilderTest {
 		builder.addInstruction(i4);
 
 		Map<AbstractInsnNode, Instruction> map = builder.getInstructions();
-		assertEquals(ISourceFileCoverage.UNKNOWN_LINE, map.get(i1).getLine());
+		assertEquals(ISourceNode.UNKNOWN_LINE, map.get(i1).getLine());
 		assertEquals(10, map.get(i2).getLine());
 		assertEquals(10, map.get(i3).getLine());
 		assertEquals(20, map.get(i4).getLine());

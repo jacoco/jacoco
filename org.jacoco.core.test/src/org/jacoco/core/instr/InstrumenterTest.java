@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2019 Mountainminds GmbH & Co. KG and Contributors
+ * Copyright (c) 2009, 2020 Mountainminds GmbH & Co. KG and Contributors
  * This program and the accompanying materials are made available under
  * the terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0
@@ -8,7 +8,7 @@
  *
  * Contributors:
  *    Marc R. Hoffmann - initial API and implementation
- *    
+ *
  *******************************************************************************/
 package org.jacoco.core.instr;
 
@@ -26,9 +26,7 @@ import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 import java.io.Serializable;
 import java.util.Arrays;
-import java.util.jar.JarInputStream;
-import java.util.jar.JarOutputStream;
-import java.util.jar.Pack200;
+import java.util.zip.CRC32;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
 import java.util.zip.ZipEntry;
@@ -36,10 +34,12 @@ import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
 
 import org.jacoco.core.analysis.AnalyzerTest;
+import org.jacoco.core.internal.Pack200Streams;
 import org.jacoco.core.internal.data.CRC64;
 import org.jacoco.core.internal.instr.InstrSupport;
 import org.jacoco.core.runtime.IExecutionDataAccessorGenerator;
 import org.jacoco.core.test.TargetLoader;
+import org.junit.AssumptionViolatedException;
 import org.junit.Before;
 import org.junit.Test;
 import org.objectweb.asm.ClassWriter;
@@ -99,7 +99,7 @@ public class InstrumenterTest {
 	@Test
 	public void should_not_modify_class_bytes_to_support_next_version()
 			throws Exception {
-		final byte[] originalBytes = createClass(Opcodes.V13 + 1);
+		final byte[] originalBytes = createClass(Opcodes.V14 + 1);
 		final byte[] bytes = new byte[originalBytes.length];
 		System.arraycopy(originalBytes, 0, bytes, 0, originalBytes.length);
 		final long expectedClassId = CRC64.classId(bytes);
@@ -122,14 +122,14 @@ public class InstrumenterTest {
 	 */
 	@Test
 	public void instrument_should_throw_exception_for_unsupported_class_file_version() {
-		final byte[] bytes = createClass(Opcodes.V14 + 1);
+		final byte[] bytes = createClass(Opcodes.V14 + 2);
 		try {
 			instrumenter.instrument(bytes, "UnsupportedVersion");
 			fail("exception expected");
 		} catch (final IOException e) {
 			assertEquals("Error while instrumenting UnsupportedVersion.",
 					e.getMessage());
-			assertEquals("Unsupported class file major version 59",
+			assertEquals("Unsupported class file major version 60",
 					e.getCause().getMessage());
 		}
 	}
@@ -224,7 +224,7 @@ public class InstrumenterTest {
 	 */
 	@Test
 	public void instrumentAll_should_throw_exception_for_unsupported_class_file_version() {
-		final byte[] bytes = createClass(Opcodes.V14 + 1);
+		final byte[] bytes = createClass(Opcodes.V14 + 2);
 		try {
 			instrumenter.instrumentAll(new ByteArrayInputStream(bytes),
 					new ByteArrayOutputStream(), "UnsupportedVersion");
@@ -232,7 +232,7 @@ public class InstrumenterTest {
 		} catch (final IOException e) {
 			assertEquals("Error while instrumenting UnsupportedVersion.",
 					e.getMessage());
-			assertEquals("Unsupported class file major version 59",
+			assertEquals("Unsupported class file major version 60",
 					e.getCause().getMessage());
 		}
 	}
@@ -251,18 +251,38 @@ public class InstrumenterTest {
 	public void testInstrumentAll_Zip() throws IOException {
 		ByteArrayOutputStream buffer = new ByteArrayOutputStream();
 		ZipOutputStream zipout = new ZipOutputStream(buffer);
-		zipout.putNextEntry(new ZipEntry("Test.class"));
+
+		// Compressed Entry
+		ZipEntry entry = new ZipEntry("TestCompressed.class");
+		entry.setMethod(ZipEntry.DEFLATED);
+		zipout.putNextEntry(entry);
 		zipout.write(TargetLoader.getClassDataAsBytes(getClass()));
+
+		// Uncompressed Entry
+		entry = new ZipEntry("TestUncompressed.class");
+		entry.setMethod(ZipEntry.STORED);
+		entry.setSize(TargetLoader.getClassDataAsBytes(getClass()).length);
+		CRC32 crc = new CRC32();
+		crc.update(TargetLoader.getClassDataAsBytes(getClass()));
+		entry.setCrc(crc.getValue());
+		zipout.putNextEntry(entry);
+		zipout.write(TargetLoader.getClassDataAsBytes(getClass()));
+
 		zipout.finish();
 		ByteArrayOutputStream out = new ByteArrayOutputStream();
 
 		int count = instrumenter.instrumentAll(
 				new ByteArrayInputStream(buffer.toByteArray()), out, "Test");
 
-		assertEquals(1, count);
+		assertEquals(2, count);
 		ZipInputStream zipin = new ZipInputStream(
 				new ByteArrayInputStream(out.toByteArray()));
-		assertEquals("Test.class", zipin.getNextEntry().getName());
+		entry = zipin.getNextEntry();
+		assertEquals("TestCompressed.class", entry.getName());
+		assertEquals(ZipEntry.DEFLATED, entry.getMethod());
+		entry = zipin.getNextEntry();
+		assertEquals("TestUncompressed.class", entry.getName());
+		assertEquals(ZipEntry.STORED, entry.getMethod());
 		assertNull(zipin.getNextEntry());
 	}
 
@@ -398,6 +418,13 @@ public class InstrumenterTest {
 
 	@Test
 	public void testInstrumentAll_Pack200() throws IOException {
+		try {
+			Class.forName("java.util.jar.Pack200");
+		} catch (ClassNotFoundException e) {
+			throw new AssumptionViolatedException(
+					"this test requires JDK with Pack200");
+		}
+
 		ByteArrayOutputStream jarbuffer = new ByteArrayOutputStream();
 		ZipOutputStream zipout = new ZipOutputStream(jarbuffer);
 		zipout.putNextEntry(new ZipEntry("Test.class"));
@@ -406,10 +433,7 @@ public class InstrumenterTest {
 
 		ByteArrayOutputStream pack200buffer = new ByteArrayOutputStream();
 		GZIPOutputStream gzipOutput = new GZIPOutputStream(pack200buffer);
-		Pack200.newPacker()
-				.pack(new JarInputStream(
-						new ByteArrayInputStream(jarbuffer.toByteArray())),
-						gzipOutput);
+		Pack200Streams.pack(jarbuffer.toByteArray(), gzipOutput);
 		gzipOutput.finish();
 
 		ByteArrayOutputStream out = new ByteArrayOutputStream();
@@ -417,15 +441,10 @@ public class InstrumenterTest {
 				new ByteArrayInputStream(pack200buffer.toByteArray()), out,
 				"Test");
 
-		jarbuffer.reset();
-		Pack200.newUnpacker()
-				.unpack(new GZIPInputStream(
-						new ByteArrayInputStream(out.toByteArray())),
-						new JarOutputStream(jarbuffer));
-
 		assertEquals(1, count);
 		ZipInputStream zipin = new ZipInputStream(
-				new ByteArrayInputStream(jarbuffer.toByteArray()));
+				Pack200Streams.unpack(new GZIPInputStream(
+						new ByteArrayInputStream(out.toByteArray()))));
 		assertEquals("Test.class", zipin.getNextEntry().getName());
 		assertNull(zipin.getNextEntry());
 	}

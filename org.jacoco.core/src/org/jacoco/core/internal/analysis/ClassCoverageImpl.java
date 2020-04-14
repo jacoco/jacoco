@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2019 Mountainminds GmbH & Co. KG and Contributors
+ * Copyright (c) 2009, 2020 Mountainminds GmbH & Co. KG and Contributors
  * This program and the accompanying materials are made available under
  * the terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0
@@ -8,7 +8,7 @@
  *
  * Contributors:
  *    Marc R. Hoffmann - initial API and implementation
- *    
+ *
  *******************************************************************************/
 package org.jacoco.core.internal.analysis;
 
@@ -34,7 +34,7 @@ public class ClassCoverageImpl extends SourceNodeImpl
 
 	/**
 	 * Creates a class coverage data object with the given parameters.
-	 * 
+	 *
 	 * @param name
 	 *            VM name of the class
 	 * @param id
@@ -53,7 +53,7 @@ public class ClassCoverageImpl extends SourceNodeImpl
 
 	/**
 	 * Add a method to this class.
-	 * 
+	 *
 	 * @param method
 	 *            method data to add
 	 */
@@ -70,7 +70,7 @@ public class ClassCoverageImpl extends SourceNodeImpl
 
 	/**
 	 * Sets the VM signature of the class.
-	 * 
+	 *
 	 * @param signature
 	 *            VM signature of the class (may be <code>null</code>)
 	 */
@@ -80,7 +80,7 @@ public class ClassCoverageImpl extends SourceNodeImpl
 
 	/**
 	 * Sets the VM name of the superclass.
-	 * 
+	 *
 	 * @param superName
 	 *            VM name of the super class (may be <code>null</code>, i.e.
 	 *            <code>java/lang/Object</code>)
@@ -91,7 +91,7 @@ public class ClassCoverageImpl extends SourceNodeImpl
 
 	/**
 	 * Sets the VM names of implemented/extended interfaces.
-	 * 
+	 *
 	 * @param interfaces
 	 *            VM names of implemented/extended interfaces
 	 */
@@ -101,7 +101,7 @@ public class ClassCoverageImpl extends SourceNodeImpl
 
 	/**
 	 * Sets the name of the corresponding source file for this class.
-	 * 
+	 *
 	 * @param sourceFileName
 	 *            name of the source file
 	 */

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2019 Mountainminds GmbH & Co. KG and Contributors
+ * Copyright (c) 2009, 2020 Mountainminds GmbH & Co. KG and Contributors
  * This program and the accompanying materials are made available under
  * the terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0
@@ -8,7 +8,7 @@
  *
  * Contributors:
  *    Marc R. Hoffmann - initial API and implementation
- *    
+ *
  *******************************************************************************/
 package org.jacoco.report.internal.html.page;
 
@@ -34,7 +34,7 @@ final class SourceHighlighter {
 
 	/**
 	 * Creates a new highlighter with default settings.
-	 * 
+	 *
 	 * @param locale
 	 *            locale for tooltip rendering
 	 */
@@ -46,7 +46,7 @@ final class SourceHighlighter {
 	/**
 	 * Specifies the source language. This value might be used for syntax
 	 * highlighting. Default is "java".
-	 * 
+	 *
 	 * @param lang
 	 *            source language identifier
 	 */
@@ -56,7 +56,7 @@ final class SourceHighlighter {
 
 	/**
 	 * Highlights the given source file.
-	 * 
+	 *
 	 * @param parent
 	 *            parent HTML element
 	 * @param source

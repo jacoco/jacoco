@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2019 Mountainminds GmbH & Co. KG and Contributors
+ * Copyright (c) 2009, 2020 Mountainminds GmbH & Co. KG and Contributors
  * This program and the accompanying materials are made available under
  * the terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0
@@ -25,10 +25,10 @@ import org.objectweb.asm.tree.VarInsnNode;
 
 /**
  * Filters branches that Kotlin compiler generates for default arguments.
- * 
+ *
  * For each default argument Kotlin compiler generates following bytecode to
  * determine if it should be used or not:
- * 
+ *
  * <pre>
  * ILOAD maskVar
  * ICONST_x, BIPUSH, SIPUSH, LDC or LDC_W
@@ -37,7 +37,7 @@ import org.objectweb.asm.tree.VarInsnNode;
  * default argument
  * label:
  * </pre>
- * 
+ *
  * Where <code>maskVar</code> is penultimate argument of synthetic method with
  * suffix "$default" or of synthetic constructor with last argument
  * "kotlin.jvm.internal.DefaultConstructorMarker". And its value can't be zero -

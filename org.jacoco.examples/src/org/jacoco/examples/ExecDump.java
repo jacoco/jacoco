@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2019 Mountainminds GmbH & Co. KG and Contributors
+ * Copyright (c) 2009, 2020 Mountainminds GmbH & Co. KG and Contributors
  * This program and the accompanying materials are made available under
  * the terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0
@@ -8,7 +8,7 @@
  *
  * Contributors:
  *    Marc R. Hoffmann - initial API and implementation
- *    
+ *
  *******************************************************************************/
 package org.jacoco.examples;
 
@@ -33,7 +33,7 @@ public final class ExecDump {
 
 	/**
 	 * Creates a new example instance printing to the given stream.
-	 * 
+	 *
 	 * @param out
 	 *            stream for outputs
 	 */
@@ -43,7 +43,7 @@ public final class ExecDump {
 
 	/**
 	 * Run this example with the given parameters.
-	 * 
+	 *
 	 * @param args
 	 *            command line parameters
 	 * @throws IOException
@@ -94,7 +94,7 @@ public final class ExecDump {
 
 	/**
 	 * Entry point to run this examples as a Java application.
-	 * 
+	 *
 	 * @param args
 	 *            list of program arguments
 	 * @throws IOException

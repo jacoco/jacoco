@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2019 Mountainminds GmbH & Co. KG and Contributors
+ * Copyright (c) 2009, 2020 Mountainminds GmbH & Co. KG and Contributors
  * This program and the accompanying materials are made available under
  * the terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0
@@ -8,7 +8,7 @@
  *
  * Contributors:
  *    Marc R. Hoffmann - initial API and implementation
- *    
+ *
  *******************************************************************************/
 package org.jacoco.agent.rt.internal;
 
@@ -52,7 +52,7 @@ public class CoverageTransformer implements ClassFileTransformer {
 
 	/**
 	 * New transformer with the given delegates.
-	 * 
+	 *
 	 * @param runtime
 	 *            coverage runtime
 	 * @param options
@@ -102,7 +102,7 @@ public class CoverageTransformer implements ClassFileTransformer {
 
 	/**
 	 * Checks whether this class should be instrumented.
-	 * 
+	 *
 	 * @param loader
 	 *            loader for the class
 	 * @param classname
@@ -137,7 +137,7 @@ public class CoverageTransformer implements ClassFileTransformer {
 	/**
 	 * Checks whether this protection domain is associated with a source
 	 * location.
-	 * 
+	 *
 	 * @param protectionDomain
 	 *            protection domain to check (or <code>null</code>)
 	 * @return <code>true</code> if a source location is defined

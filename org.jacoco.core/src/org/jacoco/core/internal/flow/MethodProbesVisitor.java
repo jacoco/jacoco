@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2019 Mountainminds GmbH & Co. KG and Contributors
+ * Copyright (c) 2009, 2020 Mountainminds GmbH & Co. KG and Contributors
  * This program and the accompanying materials are made available under
  * the terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0
@@ -8,7 +8,7 @@
  *
  * Contributors:
  *    Marc R. Hoffmann - initial API and implementation
- *    
+ *
  *******************************************************************************/
 package org.jacoco.core.internal.flow;
 
@@ -32,7 +32,7 @@ public abstract class MethodProbesVisitor extends MethodVisitor {
 
 	/**
 	 * New visitor instance that delegates to the given visitor.
-	 * 
+	 *
 	 * @param mv
 	 *            optional next visitor in chain
 	 */
@@ -43,7 +43,7 @@ public abstract class MethodProbesVisitor extends MethodVisitor {
 	/**
 	 * Visits an unconditional probe that should be inserted at the current
 	 * position.
-	 * 
+	 *
 	 * @param probeId
 	 *            id of the probe to insert
 	 */
@@ -55,7 +55,7 @@ public abstract class MethodProbesVisitor extends MethodVisitor {
 	 * Visits a jump instruction. A probe with the given id should be inserted
 	 * in a way that it is executed only when the jump to the given label is
 	 * executed.
-	 * 
+	 *
 	 * @param opcode
 	 *            the opcode of the type instruction to be visited. This opcode
 	 *            is either IFEQ, IFNE, IFLT, IFGE, IFGT, IFLE, IF_ICMPEQ,
@@ -82,7 +82,7 @@ public abstract class MethodProbesVisitor extends MethodVisitor {
 	 * Visits a zero operand instruction with a probe. This event is used only
 	 * for instructions that terminate the method. Therefore the probe must be
 	 * inserted before the actual instruction.
-	 * 
+	 *
 	 * @param opcode
 	 *            the opcode of the instruction to be visited. This opcode is
 	 *            either IRETURN, LRETURN, FRETURN, DRETURN, ARETURN, RETURN or
@@ -101,7 +101,7 @@ public abstract class MethodProbesVisitor extends MethodVisitor {
 	 * target labels will always have the same probe id within a call to this
 	 * method. The probe id for each label can be obtained with
 	 * {@link LabelInfo#getProbeId(Label)}.
-	 * 
+	 *
 	 * @param min
 	 *            the minimum key value.
 	 * @param max
@@ -129,7 +129,7 @@ public abstract class MethodProbesVisitor extends MethodVisitor {
 	 * target labels will always have the same probe id within a call to this
 	 * method. The probe id for each label can be obtained with
 	 * {@link LabelInfo#getProbeId(Label)}.
-	 * 
+	 *
 	 * @param dflt
 	 *            beginning of the default handler block.
 	 * @param keys

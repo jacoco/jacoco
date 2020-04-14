@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-   Copyright (c) 2009, 2019 Mountainminds GmbH & Co. KG and Contributors
+   Copyright (c) 2009, 2020 Mountainminds GmbH & Co. KG and Contributors
    This program and the accompanying materials are made available under
    the terms of the Eclipse Public License 2.0 which is available at
    http://www.eclipse.org/legal/epl-2.0
@@ -17,7 +17,7 @@
   <parent>
     <groupId>org.jacoco</groupId>
     <artifactId>org.jacoco.tests</artifactId>
-    <version>0.8.5-SNAPSHOT</version>
+    <version>0.8.6-SNAPSHOT</version>
     <relativePath>../org.jacoco.tests</relativePath>
   </parent>
 
@@ -214,7 +214,33 @@
         <module>../org.jacoco.core.test.validation.kotlin</module>
         <module>../org.jacoco.core.test.validation.java7</module>
         <module>../org.jacoco.core.test.validation.java8</module>
+        <module>../org.jacoco.core.test.validation.java14</module>
         <!-- Groovy 2.5.8 doesn't support bytecode version 14
+        <module>../org.jacoco.core.test.validation.groovy</module>
+        -->
+        <module>../org.jacoco.core.test.validation.scala</module>
+      </modules>
+    </profile>
+
+    <profile>
+      <id>java15-bytecode</id>
+      <activation>
+        <property>
+          <name>bytecode.version</name>
+          <value>15</value>
+        </property>
+      </activation>
+      <properties>
+        <!-- see respective profile in org.jacoco.build about this override -->
+        <maven.compiler.source>15</maven.compiler.source>
+        <maven.compiler.target>15</maven.compiler.target>
+      </properties>
+      <modules>
+        <module>../org.jacoco.core.test.validation.kotlin</module>
+        <module>../org.jacoco.core.test.validation.java7</module>
+        <module>../org.jacoco.core.test.validation.java8</module>
+        <module>../org.jacoco.core.test.validation.java14</module>
+        <!-- Groovy 2.5.8 doesn't support bytecode version 15
         <module>../org.jacoco.core.test.validation.groovy</module>
         -->
         <module>../org.jacoco.core.test.validation.scala</module>

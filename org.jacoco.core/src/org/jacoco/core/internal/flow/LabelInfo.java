@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2019 Mountainminds GmbH & Co. KG and Contributors
+ * Copyright (c) 2009, 2020 Mountainminds GmbH & Co. KG and Contributors
  * This program and the accompanying materials are made available under
  * the terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0
@@ -8,7 +8,7 @@
  *
  * Contributors:
  *    Marc R. Hoffmann - initial API and implementation
- *    
+ *
  *******************************************************************************/
 package org.jacoco.core.internal.flow;
 
@@ -49,7 +49,7 @@ public final class LabelInfo {
 
 	/**
 	 * Defines that the given label is a jump target.
-	 * 
+	 *
 	 * @param label
 	 *            label to define
 	 */
@@ -65,7 +65,7 @@ public final class LabelInfo {
 	/**
 	 * Defines that the given label is the possible successor of the previous
 	 * instruction in the method.
-	 * 
+	 *
 	 * @param label
 	 *            label to define
 	 */
@@ -82,7 +82,7 @@ public final class LabelInfo {
 	 * to a certain label are: jump targets, exception handlers and normal
 	 * control flow from its predecessor instruction (unless this is an
 	 * unconditional jump or method exit).
-	 * 
+	 *
 	 * @param label
 	 *            label to check
 	 * @return <code>true</code> if the given multiple control paths lead to the
@@ -97,7 +97,7 @@ public final class LabelInfo {
 	 * Checks whether this label is the possible successor of the previous
 	 * instruction in the method. This is the case if the predecessor isn't a
 	 * unconditional jump or method exit instruction.
-	 * 
+	 *
 	 * @param label
 	 *            label to check
 	 * @return <code>true</code> if the label is a possible instruction
@@ -110,7 +110,7 @@ public final class LabelInfo {
 
 	/**
 	 * Mark a given label as the beginning of a line with method invocations.
-	 * 
+	 *
 	 * @param label
 	 *            label to mark
 	 */
@@ -121,7 +121,7 @@ public final class LabelInfo {
 	/**
 	 * Checks whether the a given label has been marked as a line with method
 	 * invocations.
-	 * 
+	 *
 	 * @param label
 	 *            label to check
 	 * @return <code>true</code> if the label represents a line with method
@@ -134,7 +134,7 @@ public final class LabelInfo {
 
 	/**
 	 * Determines whether the given label needs a probe to be inserted before.
-	 * 
+	 *
 	 * @param label
 	 *            label to test
 	 * @return <code>true</code> if a probe should be inserted before
@@ -147,7 +147,7 @@ public final class LabelInfo {
 
 	/**
 	 * Mark a given label as done.
-	 * 
+	 *
 	 * @param label
 	 *            label to mark
 	 */
@@ -157,7 +157,7 @@ public final class LabelInfo {
 
 	/**
 	 * Resets the "done" status of a given label.
-	 * 
+	 *
 	 * @param label
 	 *            label to reset
 	 */
@@ -170,7 +170,7 @@ public final class LabelInfo {
 
 	/**
 	 * Resets the "done" status of all given labels.
-	 * 
+	 *
 	 * @param labels
 	 *            labels to reset
 	 */
@@ -182,7 +182,7 @@ public final class LabelInfo {
 
 	/**
 	 * Checks whether this label is marked as done.
-	 * 
+	 *
 	 * @param label
 	 *            label to check
 	 * @return <code>true</code> if this label is marked as done
@@ -194,7 +194,7 @@ public final class LabelInfo {
 
 	/**
 	 * Sets the given probe id to the given label.
-	 * 
+	 *
 	 * @param label
 	 *            label to assign a probe to
 	 * @param id
@@ -206,7 +206,7 @@ public final class LabelInfo {
 
 	/**
 	 * Returns the assigned probe id.
-	 * 
+	 *
 	 * @param label
 	 *            label to check
 	 * @return probe id or {@link #NO_PROBE} if no probe is assigned to the
@@ -220,7 +220,7 @@ public final class LabelInfo {
 	/**
 	 * Defines an intermediate label for the given label. Such intermediate
 	 * labels are required during instrumentation to add probes to jump targets.
-	 * 
+	 *
 	 * @param label
 	 *            label to define for
 	 * @param intermediate
@@ -234,7 +234,7 @@ public final class LabelInfo {
 	/**
 	 * Returns the intermediate label for the given label if one has been
 	 * defined.
-	 * 
+	 *
 	 * @param label
 	 *            label to look for
 	 * @return intermediate label or <code>null</code>
@@ -246,7 +246,7 @@ public final class LabelInfo {
 
 	/**
 	 * Sets the instruction corresponding to this label.
-	 * 
+	 *
 	 * @param label
 	 *            label to set the instruction for
 	 * @param instruction
@@ -260,7 +260,7 @@ public final class LabelInfo {
 	/**
 	 * Returns the corresponding instruction for the given label if one has been
 	 * defined.
-	 * 
+	 *
 	 * @param label
 	 *            label to look for
 	 * @return corresponding instruction or <code>null</code>

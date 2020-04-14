@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2019 Mountainminds GmbH & Co. KG and Contributors
+ * Copyright (c) 2009, 2020 Mountainminds GmbH & Co. KG and Contributors
  * This program and the accompanying materials are made available under
  * the terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0
@@ -8,7 +8,7 @@
  *
  * Contributors:
  *    Marc R. Hoffmann - initial API and implementation
- *    
+ *
  *******************************************************************************/
 package org.jacoco.agent;
 
@@ -38,7 +38,7 @@ public final class AgentJar {
 
 	/**
 	 * Returns a URL pointing to the JAR file.
-	 * 
+	 *
 	 * @return URL of the JAR file
 	 */
 	public static URL getResource() {
@@ -51,7 +51,7 @@ public final class AgentJar {
 
 	/**
 	 * Returns the content of the JAR file as a stream.
-	 * 
+	 *
 	 * @return content of the JAR file
 	 */
 	public static InputStream getResourceAsStream() {
@@ -65,7 +65,7 @@ public final class AgentJar {
 	/**
 	 * Extract the JaCoCo agent JAR and put it into a temporary location. This
 	 * file should be deleted on exit, but may not if the VM is terminated
-	 * 
+	 *
 	 * @return Location of the Agent Jar file in the local file system. The file
 	 *         should exist and be readable.
 	 * @throws IOException
@@ -82,7 +82,7 @@ public final class AgentJar {
 
 	/**
 	 * Extract the JaCoCo agent JAR and put it into the specified location.
-	 * 
+	 *
 	 * @param destination
 	 *            Location to write JaCoCo Agent Jar to. Must be writeable
 	 * @throws IOException
@@ -110,7 +110,7 @@ public final class AgentJar {
 
 	/**
 	 * Close a stream ignoring any error
-	 * 
+	 *
 	 * @param closeable
 	 *            stream to be closed
 	 */

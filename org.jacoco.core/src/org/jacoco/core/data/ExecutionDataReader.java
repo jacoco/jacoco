@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2019 Mountainminds GmbH & Co. KG and Contributors
+ * Copyright (c) 2009, 2020 Mountainminds GmbH & Co. KG and Contributors
  * This program and the accompanying materials are made available under
  * the terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0
@@ -8,7 +8,7 @@
  *
  * Contributors:
  *    Marc R. Hoffmann - initial API and implementation
- *    
+ *
  *******************************************************************************/
 package org.jacoco.core.data;
 
@@ -37,7 +37,7 @@ public class ExecutionDataReader {
 	 * Creates a new reader based on the given input stream input. Depending on
 	 * the nature of the underlying stream input should be buffered as most data
 	 * is read in single bytes.
-	 * 
+	 *
 	 * @param input
 	 *            input stream to read execution data from
 	 */
@@ -47,7 +47,7 @@ public class ExecutionDataReader {
 
 	/**
 	 * Sets an listener for session information.
-	 * 
+	 *
 	 * @param visitor
 	 *            visitor to retrieve session info events
 	 */
@@ -57,7 +57,7 @@ public class ExecutionDataReader {
 
 	/**
 	 * Sets an listener for execution data.
-	 * 
+	 *
 	 * @param visitor
 	 *            visitor to retrieve execution data events
 	 */
@@ -68,7 +68,7 @@ public class ExecutionDataReader {
 	/**
 	 * Reads all data and reports it to the corresponding visitors. The stream
 	 * is read until its end or a command confirmation has been sent.
-	 * 
+	 *
 	 * @return <code>true</code> if additional data can be expected after a
 	 *         command has been executed. <code>false</code> if the end of the
 	 *         stream has been reached.
@@ -97,7 +97,7 @@ public class ExecutionDataReader {
 	/**
 	 * Reads a block of data identified by the given id. Subclasses may
 	 * overwrite this method to support additional block types.
-	 * 
+	 *
 	 * @param blocktype
 	 *            block type
 	 * @return <code>true</code> if there are more blocks to read

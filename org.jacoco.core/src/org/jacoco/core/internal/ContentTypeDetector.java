@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2019 Mountainminds GmbH & Co. KG and Contributors
+ * Copyright (c) 2009, 2020 Mountainminds GmbH & Co. KG and Contributors
  * This program and the accompanying materials are made available under
  * the terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0
@@ -8,7 +8,7 @@
  *
  * Contributors:
  *    Marc R. Hoffmann - initial API and implementation
- *    
+ *
  *******************************************************************************/
 package org.jacoco.core.internal;
 
@@ -46,7 +46,7 @@ public class ContentTypeDetector {
 	 * Creates a new detector based on the given input. To process the complete
 	 * original input afterwards use the stream returned by
 	 * {@link #getInputStream()}.
-	 * 
+	 *
 	 * @param in
 	 *            input to read the header from
 	 * @throws IOException
@@ -95,7 +95,7 @@ public class ContentTypeDetector {
 	/**
 	 * Returns an input stream instance to read the complete content (including
 	 * the header) of the underlying stream.
-	 * 
+	 *
 	 * @return input stream containing the complete content
 	 */
 	public InputStream getInputStream() {
@@ -104,7 +104,7 @@ public class ContentTypeDetector {
 
 	/**
 	 * Returns the detected file type.
-	 * 
+	 *
 	 * @return file type
 	 */
 	public int getType() {

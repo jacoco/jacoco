@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2019 Mountainminds GmbH & Co. KG and Contributors
+ * Copyright (c) 2009, 2020 Mountainminds GmbH & Co. KG and Contributors
  * This program and the accompanying materials are made available under
  * the terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0
@@ -8,7 +8,7 @@
  *
  * Contributors:
  *    Marc R. Hoffmann - initial API and implementation
- *    
+ *
  *******************************************************************************/
 package org.jacoco.report.internal.html.table;
 
@@ -42,7 +42,7 @@ public class Table {
 
 	/**
 	 * Adds a new column with the given properties to the table.
-	 * 
+	 *
 	 * @param header
 	 *            column header caption
 	 * @param style
@@ -53,7 +53,7 @@ public class Table {
 	 * @param defaultSorting
 	 *            If <code>true</code>, this column is the default sorting
 	 *            column. Only one column can be selected for default sorting.
-	 * 
+	 *
 	 */
 	public void add(final String header, final String style,
 			final IColumnRenderer renderer, final boolean defaultSorting) {
@@ -70,7 +70,7 @@ public class Table {
 
 	/**
 	 * Renders a table for the given icon
-	 * 
+	 *
 	 * @param parent
 	 *            parent element in which the table is created
 	 * @param items

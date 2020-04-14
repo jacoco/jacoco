@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2019 Mountainminds GmbH & Co. KG and Contributors
+ * Copyright (c) 2009, 2020 Mountainminds GmbH & Co. KG and Contributors
  * This program and the accompanying materials are made available under
  * the terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0
@@ -8,7 +8,7 @@
  *
  * Contributors:
  *    Marc R. Hoffmann - initial API and implementation
- *    
+ *
  *******************************************************************************/
 package org.jacoco.core.analysis;
 
@@ -27,7 +27,7 @@ import org.jacoco.core.internal.analysis.SourceFileCoverageImpl;
  * {@link ICoverageVisitor} interface. Afterwards the aggregated data can be
  * obtained with {@link #getClasses()}, {@link #getSourceFiles()} or
  * {@link #getBundle(String)} in the following hierarchy:
- * 
+ *
  * <pre>
  * {@link IBundleCoverage}
  * +-- {@link IPackageCoverage}*
@@ -43,7 +43,7 @@ public class CoverageBuilder implements ICoverageVisitor {
 
 	/**
 	 * Create a new builder.
-	 * 
+	 *
 	 */
 	public CoverageBuilder() {
 		this.classes = new HashMap<String, IClassCoverage>();
@@ -52,7 +52,7 @@ public class CoverageBuilder implements ICoverageVisitor {
 
 	/**
 	 * Returns all class nodes currently contained in this builder.
-	 * 
+	 *
 	 * @return all class nodes
 	 */
 	public Collection<IClassCoverage> getClasses() {
@@ -61,7 +61,7 @@ public class CoverageBuilder implements ICoverageVisitor {
 
 	/**
 	 * Returns all source file nodes currently contained in this builder.
-	 * 
+	 *
 	 * @return all source file nodes
 	 */
 	public Collection<ISourceFileCoverage> getSourceFiles() {
@@ -70,7 +70,7 @@ public class CoverageBuilder implements ICoverageVisitor {
 
 	/**
 	 * Creates a bundle from all nodes currently contained in this bundle.
-	 * 
+	 *
 	 * @param name
 	 *            Name of the bundle
 	 * @return bundle containing all classes and source files
@@ -82,7 +82,7 @@ public class CoverageBuilder implements ICoverageVisitor {
 
 	/**
 	 * Returns all classes for which execution data does not match.
-	 * 
+	 *
 	 * @see IClassCoverage#isNoMatch()
 	 * @return collection of classes with non-matching execution data
 	 */

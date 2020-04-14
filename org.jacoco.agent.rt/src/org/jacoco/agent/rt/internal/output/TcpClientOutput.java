@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2019 Mountainminds GmbH & Co. KG and Contributors
+ * Copyright (c) 2009, 2020 Mountainminds GmbH & Co. KG and Contributors
  * This program and the accompanying materials are made available under
  * the terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0
@@ -8,7 +8,7 @@
  *
  * Contributors:
  *    Marc R. Hoffmann - initial API and implementation
- *    
+ *
  *******************************************************************************/
 package org.jacoco.agent.rt.internal.output;
 
@@ -37,7 +37,7 @@ public class TcpClientOutput implements IAgentOutput {
 
 	/**
 	 * New controller instance.
-	 * 
+	 *
 	 * @param logger
 	 *            logger to use in case of exceptions is spawned threads
 	 */
@@ -75,7 +75,7 @@ public class TcpClientOutput implements IAgentOutput {
 
 	/**
 	 * Open a socket based on the given configuration.
-	 * 
+	 *
 	 * @param options
 	 *            address and port configuration
 	 * @return opened socket

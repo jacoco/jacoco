@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2019 Mountainminds GmbH & Co. KG and Contributors
+ * Copyright (c) 2009, 2020 Mountainminds GmbH & Co. KG and Contributors
  * This program and the accompanying materials are made available under
  * the terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0
@@ -8,7 +8,7 @@
  *
  * Contributors:
  *    Marc R. Hoffmann - initial API and implementation
- *    
+ *
  *******************************************************************************/
 package org.jacoco.core.analysis;
 
@@ -61,7 +61,7 @@ public interface ICounter {
 
 	/**
 	 * Returns the counter value of the given type.
-	 * 
+	 *
 	 * @param value
 	 *            value type to return
 	 * @return counter value
@@ -70,21 +70,21 @@ public interface ICounter {
 
 	/**
 	 * Returns the total count of items.
-	 * 
+	 *
 	 * @return total count of items
 	 */
 	int getTotalCount();
 
 	/**
 	 * Returns the count of covered items.
-	 * 
+	 *
 	 * @return count of covered items
 	 */
 	int getCoveredCount();
 
 	/**
 	 * Returns the count of missed items.
-	 * 
+	 *
 	 * @return count of missed items
 	 */
 	int getMissedCount();
@@ -92,7 +92,7 @@ public interface ICounter {
 	/**
 	 * Calculates the ratio of covered to total count items. If total count
 	 * items is 0 this method returns NaN.
-	 * 
+	 *
 	 * @return ratio of covered to total count items
 	 */
 	double getCoveredRatio();
@@ -100,19 +100,19 @@ public interface ICounter {
 	/**
 	 * Calculates the ratio of missed to total count items. If total count items
 	 * is 0 this method returns NaN.
-	 * 
+	 *
 	 * @return ratio of missed to total count items
 	 */
 	double getMissedRatio();
 
 	/**
 	 * Returns the coverage status of this counter.
-	 * 
+	 *
 	 * @see ICounter#EMPTY
 	 * @see ICounter#NOT_COVERED
 	 * @see ICounter#PARTLY_COVERED
 	 * @see ICounter#FULLY_COVERED
-	 * 
+	 *
 	 * @return status of this line
 	 */
 	int getStatus();

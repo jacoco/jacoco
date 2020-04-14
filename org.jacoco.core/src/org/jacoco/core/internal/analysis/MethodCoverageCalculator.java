@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2019 Mountainminds GmbH & Co. KG and Contributors
+ * Copyright (c) 2009, 2020 Mountainminds GmbH & Co. KG and Contributors
  * This program and the accompanying materials are made available under
  * the terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0
@@ -8,7 +8,7 @@
  *
  * Contributors:
  *    Evgeny Mandrikov - initial API and implementation
- *    
+ *
  *******************************************************************************/
 package org.jacoco.core.internal.analysis;
 
@@ -20,7 +20,6 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
-import org.jacoco.core.analysis.ISourceFileCoverage;
 import org.jacoco.core.analysis.ISourceNode;
 import org.jacoco.core.internal.analysis.filter.IFilterOutput;
 import org.objectweb.asm.tree.AbstractInsnNode;
@@ -40,11 +39,11 @@ class MethodCoverageCalculator implements IFilterOutput {
 	 * Instructions that should be merged form disjoint sets. Coverage
 	 * information from instructions of one set will be merged into
 	 * representative instruction of set.
-	 * 
+	 *
 	 * Each such set is represented as a singly linked list: each element except
 	 * one references another element from the same set, element without
 	 * reference - is a representative of this set.
-	 * 
+	 *
 	 * This map stores reference (value) for elements of sets (key).
 	 */
 	private final Map<AbstractInsnNode, AbstractInsnNode> merged;
@@ -62,7 +61,7 @@ class MethodCoverageCalculator implements IFilterOutput {
 	/**
 	 * Applies all specified filtering commands and calculates the resulting
 	 * coverage.
-	 * 
+	 *
 	 * @param coverage
 	 *            the result is added to this coverage node
 	 */
@@ -122,8 +121,8 @@ class MethodCoverageCalculator implements IFilterOutput {
 
 	private void ensureCapacity(final MethodCoverageImpl coverage) {
 		// Determine line range:
-		int firstLine = ISourceFileCoverage.UNKNOWN_LINE;
-		int lastLine = ISourceFileCoverage.UNKNOWN_LINE;
+		int firstLine = ISourceNode.UNKNOWN_LINE;
+		int lastLine = ISourceNode.UNKNOWN_LINE;
 		for (final Entry<AbstractInsnNode, Instruction> entry : instructions
 				.entrySet()) {
 			if (!ignored.contains(entry.getKey())) {

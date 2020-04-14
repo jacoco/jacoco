@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2019 Mountainminds GmbH & Co. KG and Contributors
+ * Copyright (c) 2009, 2020 Mountainminds GmbH & Co. KG and Contributors
  * This program and the accompanying materials are made available under
  * the terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0
@@ -8,7 +8,7 @@
  *
  * Contributors:
  *    Marc R. Hoffmann - initial API and implementation
- *    
+ *
  *******************************************************************************/
 package org.jacoco.report.check;
 
@@ -45,7 +45,7 @@ public class RulesChecker {
 
 	/**
 	 * Sets the rules to check by this formatter.
-	 * 
+	 *
 	 * @param rules
 	 *            rules to check
 	 */
@@ -56,7 +56,7 @@ public class RulesChecker {
 	/**
 	 * Sets the implementation for language name display for message formatting.
 	 * Java language names are defined by default.
-	 * 
+	 *
 	 * @param languageNames
 	 *            converter for language specific names
 	 */
@@ -66,7 +66,7 @@ public class RulesChecker {
 
 	/**
 	 * Creates a new visitor to process the configured checks.
-	 * 
+	 *
 	 * @param output
 	 *            call-back to report violations to
 	 * @return visitor to emit the report data to

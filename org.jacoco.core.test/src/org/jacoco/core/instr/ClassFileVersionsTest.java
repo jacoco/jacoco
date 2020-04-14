@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2019 Mountainminds GmbH & Co. KG and Contributors
+ * Copyright (c) 2009, 2020 Mountainminds GmbH & Co. KG and Contributors
  * This program and the accompanying materials are made available under
  * the terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0
@@ -8,7 +8,7 @@
  *
  * Contributors:
  *    Marc R. Hoffmann - initial API and implementation
- *    
+ *
  *******************************************************************************/
 package org.jacoco.core.instr;
 
@@ -28,6 +28,7 @@ import static org.objectweb.asm.Opcodes.V10;
 import static org.objectweb.asm.Opcodes.V11;
 import static org.objectweb.asm.Opcodes.V12;
 import static org.objectweb.asm.Opcodes.V13;
+import static org.objectweb.asm.Opcodes.V14;
 import static org.objectweb.asm.Opcodes.V1_1;
 import static org.objectweb.asm.Opcodes.V1_2;
 import static org.objectweb.asm.Opcodes.V1_3;
@@ -123,7 +124,12 @@ public class ClassFileVersionsTest {
 
 	@Test
 	public void test_14() throws IOException {
-		testVersion(V13 + 1, true);
+		testVersion(V14, true);
+	}
+
+	@Test
+	public void test_15() throws IOException {
+		testVersion(V14 + 1, true);
 	}
 
 	private void testVersion(int version, boolean frames) throws IOException {
@@ -174,7 +180,7 @@ public class ClassFileVersionsTest {
 	/**
 	 * Creates a class that requires a frame before the return statement. Also
 	 * for this class instrumentation should insert another frame.
-	 * 
+	 *
 	 * <code><pre>
 	 * public class Sample {
 	 *   public Sample(boolean b){

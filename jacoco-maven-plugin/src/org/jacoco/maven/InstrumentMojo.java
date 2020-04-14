@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2019 Mountainminds GmbH & Co. KG and Contributors
+ * Copyright (c) 2009, 2020 Mountainminds GmbH & Co. KG and Contributors
  * This program and the accompanying materials are made available under
  * the terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0
@@ -40,7 +40,7 @@ import org.jacoco.core.runtime.OfflineInstrumentationAccessGenerator;
  * this mode. Please consult <a href="offline.html">documentation</a> about
  * offline instrumentation before using this mode.
  * </p>
- * 
+ *
  * @since 0.6.2
  */
 @Mojo(name = "instrument", defaultPhase = LifecyclePhase.PROCESS_CLASSES, threadSafe = true)

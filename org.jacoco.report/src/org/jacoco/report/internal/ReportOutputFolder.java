@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2019 Mountainminds GmbH & Co. KG and Contributors
+ * Copyright (c) 2009, 2020 Mountainminds GmbH & Co. KG and Contributors
  * This program and the accompanying materials are made available under
  * the terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0
@@ -8,7 +8,7 @@
  *
  * Contributors:
  *    Marc R. Hoffmann - initial API and implementation
- *    
+ *
  *******************************************************************************/
 package org.jacoco.report.internal;
 
@@ -38,7 +38,7 @@ public class ReportOutputFolder {
 
 	/**
 	 * Creates a new root folder for the given output.
-	 * 
+	 *
 	 * @param output
 	 *            output for generated files
 	 */
@@ -48,7 +48,7 @@ public class ReportOutputFolder {
 
 	/**
 	 * Creates a new root folder for the given output.
-	 * 
+	 *
 	 * @param output
 	 *            output for generated files
 	 */
@@ -62,7 +62,7 @@ public class ReportOutputFolder {
 
 	/**
 	 * Creates a sub-folder with the given name.
-	 * 
+	 *
 	 * @param name
 	 *            name of the sub-folder
 	 * @return handle for output into the sub-folder
@@ -81,7 +81,7 @@ public class ReportOutputFolder {
 
 	/**
 	 * Creates a new file in this folder with the given local name.
-	 * 
+	 *
 	 * @param name
 	 *            name of the sub-folder
 	 * @return handle for output into the sub-folder
@@ -94,7 +94,7 @@ public class ReportOutputFolder {
 
 	/**
 	 * Returns a link relative to a given base to a resource within this folder.
-	 * 
+	 *
 	 * @param base
 	 *            base to create the relative link from
 	 * @param name

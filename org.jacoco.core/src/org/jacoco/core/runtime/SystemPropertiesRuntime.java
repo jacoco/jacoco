@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2019 Mountainminds GmbH & Co. KG and Contributors
+ * Copyright (c) 2009, 2020 Mountainminds GmbH & Co. KG and Contributors
  * This program and the accompanying materials are made available under
  * the terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0
@@ -8,7 +8,7 @@
  *
  * Contributors:
  *    Marc R. Hoffmann - initial API and implementation
- *    
+ *
  *******************************************************************************/
 package org.jacoco.core.runtime;
 
@@ -20,7 +20,7 @@ import org.objectweb.asm.Opcodes;
  * through a special entry in the {@link System#getProperties()} hash table. The
  * advantage is, that the instrumented classes do not get dependencies to other
  * classes than the JRE library itself.
- * 
+ *
  * This runtime may cause problems in environments with security restrictions,
  * in applications that replace the system properties or in applications that
  * fail if non-String values are placed in the system properties.

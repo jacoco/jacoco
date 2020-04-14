@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2019 Mountainminds GmbH & Co. KG and Contributors
+ * Copyright (c) 2009, 2020 Mountainminds GmbH & Co. KG and Contributors
  * This program and the accompanying materials are made available under
  * the terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0
@@ -49,7 +49,7 @@ import org.jacoco.report.xml.XMLFormatter;
 /**
  * Encapsulates the tasks to create reports for Maven projects. Instances are
  * supposed to be used in the following sequence:
- * 
+ *
  * <ol>
  * <li>Create an instance</li>
  * <li>Load one or multiple exec files with
@@ -67,7 +67,7 @@ final class ReportSupport {
 
 	/**
 	 * Construct a new instance with the given log output.
-	 * 
+	 *
 	 * @param log
 	 *            for log output
 	 */
@@ -79,7 +79,7 @@ final class ReportSupport {
 
 	/**
 	 * Loads the given execution data file.
-	 * 
+	 *
 	 * @param execFile
 	 *            execution data file to load
 	 * @throws IOException
@@ -141,7 +141,7 @@ final class ReportSupport {
 	/**
 	 * Calculates coverage for the given project and emits it to the report
 	 * group without source references
-	 * 
+	 *
 	 * @param visitor
 	 *            group visitor to emit the project's coverage to
 	 * @param project
@@ -163,7 +163,7 @@ final class ReportSupport {
 	/**
 	 * Calculates coverage for the given project and emits it to the report
 	 * group including source references
-	 * 
+	 *
 	 * @param visitor
 	 *            group visitor to emit the project's coverage to
 	 * @param bundeName

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2019 Mountainminds GmbH & Co. KG and Contributors
+ * Copyright (c) 2009, 2020 Mountainminds GmbH & Co. KG and Contributors
  * This program and the accompanying materials are made available under
  * the terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0
@@ -10,7 +10,7 @@
  *    Evgeny Mandrikov - initial API and implementation
  *    Kyle Lieber - implementation of CheckMojo
  *    Marc Hoffmann - redesign using report APIs
- *    
+ *
  *******************************************************************************/
 package org.jacoco.maven;
 
@@ -31,7 +31,7 @@ import org.jacoco.report.check.Rule;
 
 /**
  * Checks that the code coverage metrics are being met.
- * 
+ *
  * @since 0.6.1
  */
 @Mojo(name = "check", defaultPhase = LifecyclePhase.VERIFY, threadSafe = true)
@@ -53,22 +53,22 @@ public class CheckMojo extends AbstractJacocoMojo implements IViolationsOutput {
 	 * error messages. A limit ratio may optionally be declared as a percentage
 	 * where 0.80 and 80% represent the same value.
 	 * </p>
-	 * 
+	 *
 	 * <p>
 	 * If not specified the following defaults are assumed:
 	 * </p>
-	 * 
+	 *
 	 * <ul>
 	 * <li>rule element: BUNDLE</li>
 	 * <li>limit counter: INSTRUCTION</li>
 	 * <li>limit value: COVEREDRATIO</li>
 	 * </ul>
-	 * 
+	 *
 	 * <p>
 	 * This example requires an overall instruction coverage of 80% and no class
 	 * must be missed:
 	 * </p>
-	 * 
+	 *
 	 * <pre>
 	 * {@code
 	 * <rules>
@@ -89,12 +89,12 @@ public class CheckMojo extends AbstractJacocoMojo implements IViolationsOutput {
 	 *   </rule>
 	 * </rules>}
 	 * </pre>
-	 * 
+	 *
 	 * <p>
 	 * This example requires a line coverage minimum of 50% for every class
 	 * except test classes:
 	 * </p>
-	 * 
+	 *
 	 * <pre>
 	 * {@code
 	 * <rules>

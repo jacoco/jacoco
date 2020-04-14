@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2019 Mountainminds GmbH & Co. KG and Contributors
+ * Copyright (c) 2009, 2020 Mountainminds GmbH & Co. KG and Contributors
  * This program and the accompanying materials are made available under
  * the terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0
@@ -8,7 +8,7 @@
  *
  * Contributors:
  *    Brock Janiczak - initial API and implementation
- *    
+ *
  *******************************************************************************/
 package org.jacoco.agent.rt.internal.output;
 
@@ -26,7 +26,7 @@ public interface IAgentOutput {
 	/**
 	 * Configure the agent controller with the supplied options and connect it
 	 * to the coverage runtime
-	 * 
+	 *
 	 * @param options
 	 *            Options used to configure the agent controller
 	 * @param data
@@ -38,7 +38,7 @@ public interface IAgentOutput {
 
 	/**
 	 * Shutdown the agent controller and clean up any resources it has created.
-	 * 
+	 *
 	 * @throws Exception
 	 *             in case shutdown fails
 	 */
@@ -47,7 +47,7 @@ public interface IAgentOutput {
 	/**
 	 * Write all execution data in the runtime to a location determined by the
 	 * agent controller. This method should only be called by the Agent
-	 * 
+	 *
 	 * @param reset
 	 *            if <code>true</code> execution data is cleared afterwards
 	 * @throws IOException

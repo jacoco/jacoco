@@ -43,7 +43,7 @@ div#content a[href^='http://'], a[href^='https://'] {
   background:transparent url(extern.gif) center left no-repeat;
 }
 
-/* === Definitions from report.css start here: === */ 
+/* === Definitions from report.css start here: === */
 
 body, td {
   font-family:sans-serif;
@@ -148,7 +148,7 @@ pre.source span.pc {
 
 table.coverage {
   empty-cells:show;
-  border-collapse:collapse; 
+  border-collapse:collapse;
 }
 
 table.coverage thead {
@@ -178,7 +178,7 @@ table.coverage tbody td {
   border-bottom:#d6d3ce 1px solid;
 }
 
-table.coverage tbody tr:hover { 
+table.coverage tbody tr:hover {
   background: #f0f0d0 !important;
 }
 

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2019 Mountainminds GmbH & Co. KG and Contributors
+ * Copyright (c) 2009, 2020 Mountainminds GmbH & Co. KG and Contributors
  * This program and the accompanying materials are made available under
  * the terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0
@@ -27,7 +27,7 @@ import org.apache.maven.plugins.annotations.ResolutionScope;
  * <li>bound to <code>pre-integration-test</code> phase</li>
  * <li>different <code>destFile</code></li>
  * </ul>
- * 
+ *
  * @since 0.6.4
  */
 @Mojo(name = "prepare-agent-integration", defaultPhase = LifecyclePhase.PRE_INTEGRATION_TEST, requiresDependencyResolution = ResolutionScope.RUNTIME, threadSafe = true)

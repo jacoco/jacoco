@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2019 Mountainminds GmbH & Co. KG and Contributors
+ * Copyright (c) 2009, 2020 Mountainminds GmbH & Co. KG and Contributors
  * This program and the accompanying materials are made available under
  * the terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0
@@ -8,7 +8,7 @@
  *
  * Contributors:
  *    Marc R. Hoffmann - initial API and implementation
- *    
+ *
  *******************************************************************************/
 package org.jacoco.core.analysis;
 
@@ -24,7 +24,7 @@ import org.jacoco.core.analysis.ICoverageNode.CounterEntity;
 /**
  * Comparator to compare {@link ICoverageNode} objects by different counter
  * criteria.
- * 
+ *
  * @see CounterComparator#on(ICoverageNode.CounterEntity)
  */
 public class NodeComparator implements Comparator<ICoverageNode>, Serializable {
@@ -43,10 +43,10 @@ public class NodeComparator implements Comparator<ICoverageNode>, Serializable {
 
 	/**
 	 * Creates a new composite comparator with a second search criterion.
-	 * 
+	 *
 	 * @param second
 	 *            second criterion comparator
-	 * 
+	 *
 	 * @return composite comparator
 	 */
 	public NodeComparator second(final Comparator<ICoverageNode> second) {
@@ -66,7 +66,7 @@ public class NodeComparator implements Comparator<ICoverageNode>, Serializable {
 	/**
 	 * Returns a sorted copy of the given collection of {@link ICoverageNode}
 	 * elements.
-	 * 
+	 *
 	 * @param <T>
 	 *            actual type of the elements
 	 * @param summaries

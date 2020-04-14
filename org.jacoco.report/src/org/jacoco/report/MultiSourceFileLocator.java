@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2019 Mountainminds GmbH & Co. KG and Contributors
+ * Copyright (c) 2009, 2020 Mountainminds GmbH & Co. KG and Contributors
  * This program and the accompanying materials are made available under
  * the terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0
@@ -8,7 +8,7 @@
  *
  * Contributors:
  *    Marc R. Hoffmann - initial API and implementation
- *    
+ *
  *******************************************************************************/
 package org.jacoco.report;
 
@@ -30,7 +30,7 @@ public class MultiSourceFileLocator implements ISourceFileLocator {
 
 	/**
 	 * Creates a new empty locator.
-	 * 
+	 *
 	 * @param tabWidth
 	 *            tab width in source files as number of blanks used for all
 	 *            source files
@@ -43,7 +43,7 @@ public class MultiSourceFileLocator implements ISourceFileLocator {
 	/**
 	 * Adds the given locator. Locators are queried in the sequence they have
 	 * been added.
-	 * 
+	 *
 	 * @param locator
 	 *            Additional locator to query
 	 */

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2019 Mountainminds GmbH & Co. KG and Contributors
+ * Copyright (c) 2009, 2020 Mountainminds GmbH & Co. KG and Contributors
  * This program and the accompanying materials are made available under
  * the terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0
@@ -20,7 +20,7 @@ import java.util.List;
 /**
  * A index on a list of items sorted with a given {@link Comparator}. The index
  * does not change the list itself.
- * 
+ *
  * @param <T>
  *            type of the items
  */
@@ -51,7 +51,7 @@ final class SortIndex<T> {
 
 	/**
 	 * Creates a new index based in the given comparator.
-	 * 
+	 *
 	 * @param comparator
 	 *            comparator to sort items
 	 */
@@ -61,7 +61,7 @@ final class SortIndex<T> {
 
 	/**
 	 * Initializes the index for the given list of items.
-	 * 
+	 *
 	 * @param items
 	 *            list of items
 	 */
@@ -85,7 +85,7 @@ final class SortIndex<T> {
 	/**
 	 * Returns the sorted position of the element with the given index in the
 	 * items list provided to the init() method.
-	 * 
+	 *
 	 * @param idx
 	 *            index of a element of the list
 	 * @return its position in a sorted list

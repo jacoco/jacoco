@@ -16,7 +16,7 @@
   <a href="index.html" class="el_group">Documentation</a> &gt;
   <span class="el_source">Control Flow Analysis</span>
 </div>
-<div id="content"> 
+<div id="content">
 
 <h1>Control Flow Analysis for Java Methods</h1>
 
@@ -31,7 +31,7 @@
 
 <h2>Control Flow Graphs for Java Bytecode</h2>
 
-<p> 
+<p>
   As an starting point we take the following example method that contains a
   single branching point:
 </p>
@@ -55,7 +55,7 @@ public static void example() {
   <code>IFEQ</code> or the unconditional <code>GOTO</code> opcode. The jump
   targets are technically relative offsets to the target instruction. For better
   readability we use symbolic labels (<code>L1</code>, <code>L2</code>) instead
-  (also the ASM API uses such symbolic labels):  
+  (also the ASM API uses such symbolic labels):
 </p>
 
 <pre class="source linenums">
@@ -87,7 +87,7 @@ public static example()V
   the following Edges. Each edge connects a source instruction with a target
   instruction. In some cases the source instruction or the target instruction
   does not exist (virtual edges for method entry and exit) or cannot be
-  exactly specified (exception handlers). 
+  exactly specified (exception handlers).
 </p>
 
 <table class="coverage">
@@ -108,7 +108,7 @@ public static example()V
     </tr>
     <tr>
       <td>SEQUENCE</td>
-      <td>Instruction, except <code>GOTO</code>, <code>xRETURN</code>, 
+      <td>Instruction, except <code>GOTO</code>, <code>xRETURN</code>,
         <code>THROW</code>, <code>TABLESWITCH</code> and <code>LOOKUPSWITCH</code></td>
       <td>Subsequent instruction</td>
       <td></td>
@@ -167,7 +167,7 @@ public static example()V
 
 <p>
   If a probe has been executed we know that the corresponding edge has been
-  visited. From this edge we can conclude to other preceding nodes and edges: 
+  visited. From this edge we can conclude to other preceding nodes and edges:
 </p>
 
 <ul>
@@ -180,7 +180,7 @@ public static example()V
 <p>
   Recursively applying these rules allows to determine the execution status of
   all instructions of a method &ndash; given that we have probes at the right
-  positions. Therefore JaCoCo inserts probes      
+  positions. Therefore JaCoCo inserts probes
 </p>
 
 <ul>
@@ -212,7 +212,7 @@ public static example()V
       <td><img src="resources/flow-sequence-probe.png" alt="Sequence with Probe"/></td>
       <td>
         In case of a simple sequence the probe is simply inserted between the
-        two instructions. 
+        two instructions.
       </td>
     </tr>
     <tr>
@@ -349,7 +349,7 @@ BASTORE
   The size of the probe code above depends on the position of the probe array
   variable and the value of the probe identifier as different opcodes can be
   used. As calculated in the table below the overhead per probe ranges between 4
-  and 7 bytes of additional bytecode: 
+  and 7 bytes of additional bytecode:
 </p>
 
 <table class="coverage">
@@ -409,7 +409,7 @@ BASTORE
   total classes instrumented with JaCoCo increase their size by about 30%. Due
   to the fact that probe execution does not require any method calls, only local
   instructions, the observed execution time overhead for instrumented
-  applications typically is less than 10%. 
+  applications typically is less than 10%.
 </p>
 
 <h2>References</h2>

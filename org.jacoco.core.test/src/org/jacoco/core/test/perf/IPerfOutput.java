@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2019 Mountainminds GmbH & Co. KG and Contributors
+ * Copyright (c) 2009, 2020 Mountainminds GmbH & Co. KG and Contributors
  * This program and the accompanying materials are made available under
  * the terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0
@@ -8,7 +8,7 @@
  *
  * Contributors:
  *    Marc R. Hoffmann - initial API and implementation
- *    
+ *
  *******************************************************************************/
 package org.jacoco.core.test.perf;
 
@@ -23,7 +23,7 @@ public interface IPerfOutput {
 	/**
 	 * Reports the result of a time measurement with a optional reference time
 	 * for comparison.
-	 * 
+	 *
 	 * @param description
 	 *            textual description of the test case
 	 * @param duration
@@ -36,7 +36,7 @@ public interface IPerfOutput {
 	/**
 	 * Reports the result of a byte size measurement with a optional reference
 	 * size for comparison.
-	 * 
+	 *
 	 * @param description
 	 *            textual description of the test case
 	 * @param size

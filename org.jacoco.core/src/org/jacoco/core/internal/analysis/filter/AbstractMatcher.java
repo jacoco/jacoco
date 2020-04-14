@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2019 Mountainminds GmbH & Co. KG and Contributors
+ * Copyright (c) 2009, 2020 Mountainminds GmbH & Co. KG and Contributors
  * This program and the accompanying materials are made available under
  * the terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0
@@ -35,7 +35,7 @@ abstract class AbstractMatcher {
 	final void firstIsALoad0(final MethodNode methodNode) {
 		cursor = methodNode.instructions.getFirst();
 		skipNonOpcodes();
-		if (cursor.getOpcode() == Opcodes.ALOAD
+		if (cursor != null && cursor.getOpcode() == Opcodes.ALOAD
 				&& ((VarInsnNode) cursor).var == 0) {
 			return;
 		}

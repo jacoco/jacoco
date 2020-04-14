@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2019 Mountainminds GmbH & Co. KG and Contributors
+ * Copyright (c) 2009, 2020 Mountainminds GmbH & Co. KG and Contributors
  * This program and the accompanying materials are made available under
  * the terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0
@@ -8,7 +8,7 @@
  *
  * Contributors:
  *    Marc R. Hoffmann - initial API and implementation
- *    
+ *
  *******************************************************************************/
 package org.jacoco.report.internal.html.page;
 
@@ -39,7 +39,7 @@ public abstract class ReportPage implements ILinkable {
 
 	/**
 	 * Creates a new report page.
-	 * 
+	 *
 	 * @param parent
 	 *            optional hierarchical parent
 	 * @param folder
@@ -56,7 +56,7 @@ public abstract class ReportPage implements ILinkable {
 
 	/**
 	 * Checks whether this is the root page of the report.
-	 * 
+	 *
 	 * @return <code>true</code> if this is the root page
 	 */
 	protected final boolean isRootPage() {
@@ -66,7 +66,7 @@ public abstract class ReportPage implements ILinkable {
 	/**
 	 * Renders this page's content and optionally additional pages. This method
 	 * must be called at most once.
-	 * 
+	 *
 	 * @throws IOException
 	 *             if the page can't be written
 	 */
@@ -81,7 +81,7 @@ public abstract class ReportPage implements ILinkable {
 
 	/**
 	 * Creates the elements within the head element.
-	 * 
+	 *
 	 * @param head
 	 *            head tag of the page
 	 * @throws IOException
@@ -111,7 +111,7 @@ public abstract class ReportPage implements ILinkable {
 
 	/**
 	 * Returns the onload handler for this page.
-	 * 
+	 *
 	 * @return handler or <code>null</code>
 	 */
 	protected String getOnload() {
@@ -120,7 +120,7 @@ public abstract class ReportPage implements ILinkable {
 
 	/**
 	 * Inserts additional links on the top right corner.
-	 * 
+	 *
 	 * @param span
 	 *            parent element
 	 * @throws IOException
@@ -158,14 +158,14 @@ public abstract class ReportPage implements ILinkable {
 
 	/**
 	 * Specifies the local file name of this page.
-	 * 
+	 *
 	 * @return local file name
 	 */
 	protected abstract String getFileName();
 
 	/**
 	 * Creates the actual content of the page.
-	 * 
+	 *
 	 * @param body
 	 *            body tag of the page
 	 * @throws IOException

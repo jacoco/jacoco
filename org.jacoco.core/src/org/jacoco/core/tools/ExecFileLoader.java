@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2019 Mountainminds GmbH & Co. KG and Contributors
+ * Copyright (c) 2009, 2020 Mountainminds GmbH & Co. KG and Contributors
  * This program and the accompanying materials are made available under
  * the terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0
@@ -8,7 +8,7 @@
  *
  * Contributors:
  *    Marc R. Hoffmann - initial API and implementation
- *    
+ *
  *******************************************************************************/
 package org.jacoco.core.tools;
 
@@ -46,7 +46,7 @@ public class ExecFileLoader {
 
 	/**
 	 * Reads all data from given input stream.
-	 * 
+	 *
 	 * @param stream
 	 *            Stream to read data from
 	 * @throws IOException
@@ -62,7 +62,7 @@ public class ExecFileLoader {
 
 	/**
 	 * Reads all data from given input stream.
-	 * 
+	 *
 	 * @param file
 	 *            file to read data from
 	 * @throws IOException
@@ -79,7 +79,7 @@ public class ExecFileLoader {
 
 	/**
 	 * Saves the current content into the given output stream.
-	 * 
+	 *
 	 * @param stream
 	 *            stream to save content to
 	 * @throws IOException
@@ -95,7 +95,7 @@ public class ExecFileLoader {
 	 * Saves the current content into the given file. Parent directories are
 	 * created as needed. Also a files system lock is acquired to avoid
 	 * concurrent write access.
-	 * 
+	 *
 	 * @param file
 	 *            file to save content to
 	 * @param append
@@ -123,7 +123,7 @@ public class ExecFileLoader {
 
 	/**
 	 * Returns the session info store with all loaded sessions.
-	 * 
+	 *
 	 * @return session info store
 	 */
 	public SessionInfoStore getSessionInfoStore() {
@@ -132,7 +132,7 @@ public class ExecFileLoader {
 
 	/**
 	 * Returns the execution data store with data for all loaded classes.
-	 * 
+	 *
 	 * @return execution data store
 	 */
 	public ExecutionDataStore getExecutionDataStore() {

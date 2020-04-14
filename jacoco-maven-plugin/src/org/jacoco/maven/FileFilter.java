@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2019 Mountainminds GmbH & Co. KG and Contributors
+ * Copyright (c) 2009, 2020 Mountainminds GmbH & Co. KG and Contributors
  * This program and the accompanying materials are made available under
  * the terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0
@@ -34,7 +34,7 @@ public class FileFilter {
 
 	/**
 	 * Construct a new FileFilter
-	 * 
+	 *
 	 * @param includes
 	 *            list of includes patterns
 	 * @param excludes
@@ -48,7 +48,7 @@ public class FileFilter {
 
 	/**
 	 * Returns a list of file names.
-	 * 
+	 *
 	 * @param directory
 	 *            the directory to scan
 	 * @return a list of files
@@ -62,7 +62,7 @@ public class FileFilter {
 
 	/**
 	 * Returns a list of files.
-	 * 
+	 *
 	 * @param directory
 	 *            the directory to scan
 	 * @return a list of files
@@ -75,7 +75,7 @@ public class FileFilter {
 
 	/**
 	 * Get the includes pattern
-	 * 
+	 *
 	 * @return the pattern
 	 */
 	public String getIncludes() {
@@ -84,7 +84,7 @@ public class FileFilter {
 
 	/**
 	 * Get the excludes pattern
-	 * 
+	 *
 	 * @return the pattern
 	 */
 	public String getExcludes() {

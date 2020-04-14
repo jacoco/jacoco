@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2019 Mountainminds GmbH & Co. KG and Contributors
+ * Copyright (c) 2009, 2020 Mountainminds GmbH & Co. KG and Contributors
  * This program and the accompanying materials are made available under
  * the terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0
@@ -8,7 +8,7 @@
  *
  * Contributors:
  *    Marc R. Hoffmann - initial API and implementation
- *    
+ *
  *******************************************************************************/
 package org.jacoco.core.data;
 
@@ -31,7 +31,7 @@ public final class ExecutionData {
 
 	/**
 	 * Creates a new {@link ExecutionData} object with the given probe data.
-	 * 
+	 *
 	 * @param id
 	 *            class identifier
 	 * @param name
@@ -49,7 +49,7 @@ public final class ExecutionData {
 	/**
 	 * Creates a new {@link ExecutionData} object with the given probe data
 	 * length. All probes are set to <code>false</code>.
-	 * 
+	 *
 	 * @param id
 	 *            class identifier
 	 * @param name
@@ -67,7 +67,7 @@ public final class ExecutionData {
 	/**
 	 * Return the unique identifier for this class. The identifier is the CRC64
 	 * checksum of the raw class file definition.
-	 * 
+	 *
 	 * @return class identifier
 	 */
 	public long getId() {
@@ -76,7 +76,7 @@ public final class ExecutionData {
 
 	/**
 	 * The VM name of the class.
-	 * 
+	 *
 	 * @return VM name
 	 */
 	public String getName() {
@@ -86,7 +86,7 @@ public final class ExecutionData {
 	/**
 	 * Returns the execution data probes. A value of <code>true</code> indicates
 	 * that the corresponding probe was executed.
-	 * 
+	 *
 	 * @return probe data
 	 */
 	public boolean[] getProbes() {
@@ -102,7 +102,7 @@ public final class ExecutionData {
 
 	/**
 	 * Checks whether any probe has been hit.
-	 * 
+	 *
 	 * @return <code>true</code>, if at least one probe has been hit
 	 */
 	public boolean hasHits() {
@@ -119,13 +119,13 @@ public final class ExecutionData {
 	 * a probe entry in this object is marked as executed (<code>true</code>) if
 	 * this probe or the corresponding other probe was executed. So the result
 	 * is
-	 * 
+	 *
 	 * <pre>
 	 * A or B
 	 * </pre>
-	 * 
+	 *
 	 * The probe array of the other object is not modified.
-	 * 
+	 *
 	 * @param other
 	 *            execution data to merge
 	 */
@@ -138,19 +138,19 @@ public final class ExecutionData {
 	 * probe in this object is set to the value of <code>flag</code> if the
 	 * corresponding other probe was executed. For <code>flag==true</code> this
 	 * corresponds to
-	 * 
+	 *
 	 * <pre>
 	 * A or B
 	 * </pre>
-	 * 
+	 *
 	 * For <code>flag==false</code> this can be considered as a subtraction
-	 * 
+	 *
 	 * <pre>
 	 * A and not B
 	 * </pre>
-	 * 
+	 *
 	 * The probe array of the other object is not modified.
-	 * 
+	 *
 	 * @param other
 	 *            execution data to merge
 	 * @param flag
@@ -171,7 +171,7 @@ public final class ExecutionData {
 	 * Asserts that this execution data object is compatible with the given
 	 * parameters. The purpose of this check is to detect a very unlikely class
 	 * id collision.
-	 * 
+	 *
 	 * @param id
 	 *            other class id, must be the same
 	 * @param name
