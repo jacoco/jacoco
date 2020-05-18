@@ -39,10 +39,10 @@ import org.jacoco.core.data.ExecutionDataStore;
 import org.jacoco.core.internal.Pack200Streams;
 import org.jacoco.core.internal.data.CRC64;
 import org.jacoco.core.test.TargetLoader;
+import org.junit.AssumptionViolatedException;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
-import org.junit.internal.AssumptionViolatedException;
 import org.junit.rules.TemporaryFolder;
 import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.Opcodes;
@@ -107,7 +107,7 @@ public class AnalyzerTest {
 	@Test
 	public void should_not_modify_class_bytes_to_support_next_version()
 			throws Exception {
-		final byte[] originalBytes = createClass(Opcodes.V13 + 1);
+		final byte[] originalBytes = createClass(Opcodes.V14 + 1);
 		final byte[] bytes = new byte[originalBytes.length];
 		System.arraycopy(originalBytes, 0, bytes, 0, originalBytes.length);
 		final long expectedClassId = CRC64.classId(bytes);
@@ -130,14 +130,14 @@ public class AnalyzerTest {
 	 */
 	@Test
 	public void analyzeClass_should_throw_exception_for_unsupported_class_file_version() {
-		final byte[] bytes = createClass(Opcodes.V14 + 1);
+		final byte[] bytes = createClass(Opcodes.V14 + 2);
 		try {
 			analyzer.analyzeClass(bytes, "UnsupportedVersion");
 			fail("exception expected");
 		} catch (IOException e) {
 			assertEquals("Error while analyzing UnsupportedVersion.",
 					e.getMessage());
-			assertEquals("Unsupported class file major version 59",
+			assertEquals("Unsupported class file major version 60",
 					e.getCause().getMessage());
 		}
 	}
@@ -217,7 +217,7 @@ public class AnalyzerTest {
 	 */
 	@Test
 	public void analyzeAll_should_throw_exception_for_unsupported_class_file_version() {
-		final byte[] bytes = createClass(Opcodes.V14 + 1);
+		final byte[] bytes = createClass(Opcodes.V14 + 2);
 		try {
 			analyzer.analyzeAll(new ByteArrayInputStream(bytes),
 					"UnsupportedVersion");
@@ -225,7 +225,7 @@ public class AnalyzerTest {
 		} catch (IOException e) {
 			assertEquals("Error while analyzing UnsupportedVersion.",
 					e.getMessage());
-			assertEquals("Unsupported class file major version 59",
+			assertEquals("Unsupported class file major version 60",
 					e.getCause().getMessage());
 		}
 	}

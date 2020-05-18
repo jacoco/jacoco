@@ -43,10 +43,28 @@ public final class KotlinCoroutineFilter implements IFilter {
 		}
 
 		new Matcher().match(methodNode, output);
-
+		new Matcher().matchOptimizedTailCall(methodNode, output);
 	}
 
 	private static class Matcher extends AbstractMatcher {
+
+		private void matchOptimizedTailCall(final MethodNode methodNode,
+				final IFilterOutput output) {
+			for (final AbstractInsnNode i : methodNode.instructions) {
+				cursor = i;
+				nextIs(Opcodes.DUP);
+				nextIsInvoke(Opcodes.INVOKESTATIC,
+						"kotlin/coroutines/intrinsics/IntrinsicsKt",
+						"getCOROUTINE_SUSPENDED", "()Ljava/lang/Object;");
+				nextIs(Opcodes.IF_ACMPNE);
+				nextIs(Opcodes.ARETURN);
+				nextIs(Opcodes.POP);
+				if (cursor != null) {
+					output.ignore(i.getNext(), cursor);
+				}
+			}
+		}
+
 		private void match(final MethodNode methodNode,
 				final IFilterOutput output) {
 			cursor = methodNode.instructions.getFirst();

@@ -26,6 +26,7 @@ import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 import java.io.Serializable;
 import java.util.Arrays;
+import java.util.zip.CRC32;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
 import java.util.zip.ZipEntry;
@@ -38,9 +39,9 @@ import org.jacoco.core.internal.data.CRC64;
 import org.jacoco.core.internal.instr.InstrSupport;
 import org.jacoco.core.runtime.IExecutionDataAccessorGenerator;
 import org.jacoco.core.test.TargetLoader;
+import org.junit.AssumptionViolatedException;
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.internal.AssumptionViolatedException;
 import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
@@ -98,7 +99,7 @@ public class InstrumenterTest {
 	@Test
 	public void should_not_modify_class_bytes_to_support_next_version()
 			throws Exception {
-		final byte[] originalBytes = createClass(Opcodes.V13 + 1);
+		final byte[] originalBytes = createClass(Opcodes.V14 + 1);
 		final byte[] bytes = new byte[originalBytes.length];
 		System.arraycopy(originalBytes, 0, bytes, 0, originalBytes.length);
 		final long expectedClassId = CRC64.classId(bytes);
@@ -121,14 +122,14 @@ public class InstrumenterTest {
 	 */
 	@Test
 	public void instrument_should_throw_exception_for_unsupported_class_file_version() {
-		final byte[] bytes = createClass(Opcodes.V14 + 1);
+		final byte[] bytes = createClass(Opcodes.V14 + 2);
 		try {
 			instrumenter.instrument(bytes, "UnsupportedVersion");
 			fail("exception expected");
 		} catch (final IOException e) {
 			assertEquals("Error while instrumenting UnsupportedVersion.",
 					e.getMessage());
-			assertEquals("Unsupported class file major version 59",
+			assertEquals("Unsupported class file major version 60",
 					e.getCause().getMessage());
 		}
 	}
@@ -223,7 +224,7 @@ public class InstrumenterTest {
 	 */
 	@Test
 	public void instrumentAll_should_throw_exception_for_unsupported_class_file_version() {
-		final byte[] bytes = createClass(Opcodes.V14 + 1);
+		final byte[] bytes = createClass(Opcodes.V14 + 2);
 		try {
 			instrumenter.instrumentAll(new ByteArrayInputStream(bytes),
 					new ByteArrayOutputStream(), "UnsupportedVersion");
@@ -231,7 +232,7 @@ public class InstrumenterTest {
 		} catch (final IOException e) {
 			assertEquals("Error while instrumenting UnsupportedVersion.",
 					e.getMessage());
-			assertEquals("Unsupported class file major version 59",
+			assertEquals("Unsupported class file major version 60",
 					e.getCause().getMessage());
 		}
 	}
@@ -250,18 +251,38 @@ public class InstrumenterTest {
 	public void testInstrumentAll_Zip() throws IOException {
 		ByteArrayOutputStream buffer = new ByteArrayOutputStream();
 		ZipOutputStream zipout = new ZipOutputStream(buffer);
-		zipout.putNextEntry(new ZipEntry("Test.class"));
+
+		// Compressed Entry
+		ZipEntry entry = new ZipEntry("TestCompressed.class");
+		entry.setMethod(ZipEntry.DEFLATED);
+		zipout.putNextEntry(entry);
 		zipout.write(TargetLoader.getClassDataAsBytes(getClass()));
+
+		// Uncompressed Entry
+		entry = new ZipEntry("TestUncompressed.class");
+		entry.setMethod(ZipEntry.STORED);
+		entry.setSize(TargetLoader.getClassDataAsBytes(getClass()).length);
+		CRC32 crc = new CRC32();
+		crc.update(TargetLoader.getClassDataAsBytes(getClass()));
+		entry.setCrc(crc.getValue());
+		zipout.putNextEntry(entry);
+		zipout.write(TargetLoader.getClassDataAsBytes(getClass()));
+
 		zipout.finish();
 		ByteArrayOutputStream out = new ByteArrayOutputStream();
 
 		int count = instrumenter.instrumentAll(
 				new ByteArrayInputStream(buffer.toByteArray()), out, "Test");
 
-		assertEquals(1, count);
+		assertEquals(2, count);
 		ZipInputStream zipin = new ZipInputStream(
 				new ByteArrayInputStream(out.toByteArray()));
-		assertEquals("Test.class", zipin.getNextEntry().getName());
+		entry = zipin.getNextEntry();
+		assertEquals("TestCompressed.class", entry.getName());
+		assertEquals(ZipEntry.DEFLATED, entry.getMethod());
+		entry = zipin.getNextEntry();
+		assertEquals("TestUncompressed.class", entry.getName());
+		assertEquals(ZipEntry.STORED, entry.getMethod());
 		assertNull(zipin.getNextEntry());
 	}
 
