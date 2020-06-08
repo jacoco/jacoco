@@ -24,10 +24,6 @@
 
   <name>JaCoCo :: Test :: Core :: Validation Scala</name>
 
-  <properties>
-    <bytecode.version>6</bytecode.version>
-  </properties>
-
   <dependencies>
     <dependency>
       <groupId>${project.groupId}</groupId>
