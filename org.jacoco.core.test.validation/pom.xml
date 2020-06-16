@@ -246,6 +246,31 @@
         <module>../org.jacoco.core.test.validation.scala</module>
       </modules>
     </profile>
+
+    <profile>
+      <id>java16-bytecode</id>
+      <activation>
+        <property>
+          <name>bytecode.version</name>
+          <value>16</value>
+        </property>
+      </activation>
+      <properties>
+        <!-- see respective profile in org.jacoco.build about this override -->
+        <maven.compiler.source>16</maven.compiler.source>
+        <maven.compiler.target>16</maven.compiler.target>
+      </properties>
+      <modules>
+        <module>../org.jacoco.core.test.validation.kotlin</module>
+        <module>../org.jacoco.core.test.validation.java7</module>
+        <module>../org.jacoco.core.test.validation.java8</module>
+        <module>../org.jacoco.core.test.validation.java14</module>
+        <!-- Groovy 2.5.8 doesn't support bytecode version 16
+        <module>../org.jacoco.core.test.validation.groovy</module>
+        -->
+        <module>../org.jacoco.core.test.validation.scala</module>
+      </modules>
+    </profile>
   </profiles>
 
 </project>
