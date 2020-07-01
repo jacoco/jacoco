@@ -139,7 +139,7 @@
     <argLine>${jvm.args}</argLine>
 
     <!-- Dependencies versions -->
-    <asm.version>8.0</asm.version>
+    <asm.version>8.0.1</asm.version>
     <ant.version>1.7.1</ant.version>
     <args4j.version>2.0.28</args4j.version>
     <junit.version>4.13</junit.version>
@@ -833,6 +833,20 @@
         <property>
           <name>bytecode.version</name>
           <value>15</value>
+        </property>
+      </activation>
+      <properties>
+        <maven.compiler.source>13</maven.compiler.source>
+        <maven.compiler.target>13</maven.compiler.target>
+      </properties>
+    </profile>
+
+    <profile>
+      <id>java16-bytecode</id>
+      <activation>
+        <property>
+          <name>bytecode.version</name>
+          <value>16</value>
         </property>
       </activation>
       <properties>
