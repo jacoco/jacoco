@@ -216,7 +216,7 @@ final class ReportSupport {
 				Integer.valueOf(bundle.getClassCounter().getTotalCount())));
 		if (!nomatch.isEmpty()) {
 			log.warn(format(
-					"Classes in bundle '%s' do no match with execution data. "
+					"Classes in bundle '%s' do not match with execution data. "
 							+ "For report generation the same class files must be used as at runtime.",
 					bundle.getName()));
 			for (final IClassCoverage c : nomatch) {
