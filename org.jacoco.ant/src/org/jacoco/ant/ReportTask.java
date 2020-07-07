@@ -585,7 +585,7 @@ public class ReportTask extends Task {
 				Integer.valueOf(bundle.getClassCounter().getTotalCount())));
 		if (!nomatch.isEmpty()) {
 			log(format(
-					"Classes in bundle '%s' do no match with execution data. "
+					"Classes in bundle '%s' do not match with execution data. "
 							+ "For report generation the same class files must be used as at runtime.",
 					bundle.getName()), Project.MSG_WARN);
 			for (final IClassCoverage c : nomatch) {
