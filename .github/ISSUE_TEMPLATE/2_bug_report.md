@@ -19,7 +19,7 @@ Thank you for filling bug report!
 
 ### Steps to reproduce
 
-* JaCoCo version:  (from right bottom corner of JaCoCo report)
+* JaCoCo version:  (from bottom left corner of JaCoCo report)
 * Operating system:
 * Tool integration: Maven / Ant / CLI / API (for others please report to respective project)
 * Complete executable reproducer: (e.g. GitHub Repo)
