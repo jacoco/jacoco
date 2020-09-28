@@ -99,7 +99,7 @@ public class InstrumenterTest {
 	@Test
 	public void should_not_modify_class_bytes_to_support_next_version()
 			throws Exception {
-		final byte[] originalBytes = createClass(Opcodes.V16 + 1);
+		final byte[] originalBytes = createClass(Opcodes.V16);
 		final byte[] bytes = new byte[originalBytes.length];
 		System.arraycopy(originalBytes, 0, bytes, 0, originalBytes.length);
 		final long expectedClassId = CRC64.classId(bytes);
@@ -122,14 +122,14 @@ public class InstrumenterTest {
 	 */
 	@Test
 	public void instrument_should_throw_exception_for_unsupported_class_file_version() {
-		final byte[] bytes = createClass(Opcodes.V16 + 2);
+		final byte[] bytes = createClass(Opcodes.V16 + 1);
 		try {
 			instrumenter.instrument(bytes, "UnsupportedVersion");
 			fail("exception expected");
 		} catch (final IOException e) {
 			assertEquals("Error while instrumenting UnsupportedVersion.",
 					e.getMessage());
-			assertEquals("Unsupported class file major version 62",
+			assertEquals("Unsupported class file major version 61",
 					e.getCause().getMessage());
 		}
 	}
@@ -224,7 +224,7 @@ public class InstrumenterTest {
 	 */
 	@Test
 	public void instrumentAll_should_throw_exception_for_unsupported_class_file_version() {
-		final byte[] bytes = createClass(Opcodes.V16 + 2);
+		final byte[] bytes = createClass(Opcodes.V16 + 1);
 		try {
 			instrumenter.instrumentAll(new ByteArrayInputStream(bytes),
 					new ByteArrayOutputStream(), "UnsupportedVersion");
@@ -232,7 +232,7 @@ public class InstrumenterTest {
 		} catch (final IOException e) {
 			assertEquals("Error while instrumenting UnsupportedVersion.",
 					e.getMessage());
-			assertEquals("Unsupported class file major version 62",
+			assertEquals("Unsupported class file major version 61",
 					e.getCause().getMessage());
 		}
 	}

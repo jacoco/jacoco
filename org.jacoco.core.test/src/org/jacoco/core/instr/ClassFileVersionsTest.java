@@ -136,12 +136,7 @@ public class ClassFileVersionsTest {
 
 	@Test
 	public void test_16() throws IOException {
-		testVersion(V16 + 1, true);
-	}
-
-	@Test
-	public void test_17() throws IOException {
-		testVersion(V16 + 1, true);
+		testVersion(V16, true);
 	}
 
 	private void testVersion(int version, boolean frames) throws IOException {
