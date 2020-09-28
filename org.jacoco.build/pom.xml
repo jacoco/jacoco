@@ -740,7 +740,7 @@
             </Export-Package>
             <Import-Package>
               org.jacoco.*;version="${range;[===,==+);${Bundle-Version}}",
-              org.objectweb.asm.*;version="[9.0.0,10.0)"
+              org.objectweb.asm.*;version="${range;[===,=+);${asm.version}}"
             </Import-Package>
             <Bundle-RequiredExecutionEnvironment>J2SE-1.5</Bundle-RequiredExecutionEnvironment>
             <Eclipse-SourceReferences>scm:git:git://github.com/jacoco/jacoco.git;path="${project.artifactId}";commitId=${buildNumber}</Eclipse-SourceReferences>
