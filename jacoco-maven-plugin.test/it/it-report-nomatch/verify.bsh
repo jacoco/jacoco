@@ -14,7 +14,7 @@ import java.io.*;
 import org.codehaus.plexus.util.*;
 
 String buildLog = FileUtils.fileRead( new File( basedir, "build.log" ) );
-if ( buildLog.indexOf( "Classes in bundle " ) < 0 || buildLog.indexOf(" do no match with execution data." ) < 0 ) {
+if ( buildLog.indexOf( "Classes in bundle " ) < 0 || buildLog.indexOf(" do not match with execution data." ) < 0 ) {
     throw new RuntimeException( "Warning 1 was not printed" );
 }
 if ( buildLog.indexOf( "For report generation the same class files must be used as at runtime." ) < 0 ) {

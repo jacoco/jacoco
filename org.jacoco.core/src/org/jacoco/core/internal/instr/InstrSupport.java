@@ -27,7 +27,7 @@ public final class InstrSupport {
 	}
 
 	/** ASM API version */
-	public static final int ASM_API_VERSION = Opcodes.ASM7;
+	public static final int ASM_API_VERSION = Opcodes.ASM9;
 
 	// === Data Field ===
 
@@ -273,9 +273,9 @@ public final class InstrSupport {
 	 */
 	public static ClassReader classReaderFor(final byte[] b) {
 		final int originalVersion = getMajorVersion(b);
-		if (originalVersion == Opcodes.V14 + 1) {
+		if (originalVersion == Opcodes.V16) {
 			// temporarily downgrade version to bypass check in ASM
-			setMajorVersion(Opcodes.V14, b);
+			setMajorVersion(Opcodes.V16, b);
 		}
 		final ClassReader classReader = new ClassReader(b);
 		setMajorVersion(originalVersion, b);
