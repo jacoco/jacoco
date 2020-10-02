@@ -67,12 +67,12 @@ public final class StringSwitchEcjFilter implements IFilter {
 				hashCodes = tableSwitch.labels.size();
 			}
 
-			final Set<AbstractInsnNode> replacements = new HashSet<AbstractInsnNode>();
-			replacements.add(skipNonOpcodes(defaultLabel));
-
 			if (hashCodes == 0) {
 				return;
 			}
+
+			final Set<AbstractInsnNode> replacements = new HashSet<AbstractInsnNode>();
+			replacements.add(skipNonOpcodes(defaultLabel));
 
 			for (int i = 0; i < hashCodes; i++) {
 				while (true) {
