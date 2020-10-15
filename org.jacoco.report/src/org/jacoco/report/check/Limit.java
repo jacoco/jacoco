@@ -190,9 +190,9 @@ public class Limit {
 	private String message(final String minmax, final BigDecimal v,
 			final BigDecimal ref, final RoundingMode mode) {
 		final BigDecimal rounded = v.setScale(ref.scale(), mode);
-		return String.format("unacceptable %s %s, because %s does not meet %s",
+		return String.format("unacceptable %s %s, because %s does not meet %s %s",
 				ENTITY_NAMES.get(entity),
-				rounded.toPlainString(), VALUE_NAMES.get(value), minmax);
+				rounded.toPlainString(), VALUE_NAMES.get(value), minmax, ref.toPlainString());
 	}
 
 	private String checkRatioLimit() {
