@@ -38,6 +38,7 @@ import org.jacoco.report.IReportGroupVisitor;
 import org.jacoco.report.IReportVisitor;
 import org.jacoco.report.ISourceFileLocator;
 import org.jacoco.report.MultiReportVisitor;
+import org.jacoco.report.ShortenedPackageSourceFileLocator;
 import org.jacoco.report.check.IViolationsOutput;
 import org.jacoco.report.check.Rule;
 import org.jacoco.report.check.RulesChecker;
@@ -183,7 +184,8 @@ final class ReportSupport {
 			final List<String> includes, final List<String> excludes,
 			final String srcEncoding) throws IOException {
 		processProject(visitor, bundeName, project, includes, excludes,
-				new SourceFileCollection(project, srcEncoding));
+				new ShortenedPackageSourceFileLocator(
+						new SourceFileCollection(project, srcEncoding)));
 	}
 
 	private void processProject(final IReportGroupVisitor visitor,
