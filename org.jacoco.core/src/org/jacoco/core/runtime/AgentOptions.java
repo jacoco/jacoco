@@ -177,6 +177,19 @@ public final class AgentOptions {
 	public static final int DEFAULT_PORT = 6300;
 
 	/**
+	 * The interval tcpclient will wait, in milliseconds, before attempting to
+	 * reconnect to the tcpserver if it is not available at startup or
+	 * disconnects subsequently. Negative values disable reconnection. Default
+	 * is defined by {@link #DEFAULT_RECONNECT_MS}.
+	 */
+	public static final String RECONNECT_MS = "reconnectms";
+
+	/**
+	 * Default value for the "reconnectms" agent option.
+	 */
+	public static final int DEFAULT_RECONNECT_MS = -1;
+
+	/**
 	 * Specifies where the agent dumps all class files it encounters. The
 	 * location is specified as a relative path to the working directory.
 	 * Default is <code>null</code> (no dumps).
@@ -192,7 +205,7 @@ public final class AgentOptions {
 	private static final Collection<String> VALID_OPTIONS = Arrays.asList(
 			DESTFILE, APPEND, INCLUDES, EXCLUDES, EXCLCLASSLOADER,
 			INCLBOOTSTRAPCLASSES, INCLNOLOCATIONCLASSES, SESSIONID, DUMPONEXIT,
-			OUTPUT, ADDRESS, PORT, CLASSDUMPDIR, JMX);
+			OUTPUT, ADDRESS, PORT, RECONNECT_MS, CLASSDUMPDIR, JMX);
 
 	private final Map<String, String> options;
 
@@ -463,6 +476,36 @@ public final class AgentOptions {
 	public void setPort(final int port) {
 		validatePort(port);
 		setOption(PORT, port);
+	}
+
+	/**
+	 * Returns the interval in milliseconds between attempts to connect to the
+	 * <code>tcpserver</code>.
+	 *
+	 * @return interval in milliseconds
+	 */
+	public int getReconnectMs() {
+		return getOption(RECONNECT_MS, DEFAULT_RECONNECT_MS);
+	}
+
+	/**
+	 * Sets the interval in milliseconds between attempts to connect to the
+	 * <code>tcpserver</code>.
+	 *
+	 * @param reconnectMs
+	 *            interval in milliseconds
+	 */
+	public void setReconnectMs(final int reconnectMs) {
+		setOption(RECONNECT_MS, reconnectMs);
+	}
+
+	/**
+	 * Returns true if <code>tcpclient</code> reconnection is enabled.
+	 *
+	 * @return true if reconnection is enabled
+	 */
+	public boolean reconnectEnabled() {
+		return getReconnectMs() >= 0;
 	}
 
 	/**
