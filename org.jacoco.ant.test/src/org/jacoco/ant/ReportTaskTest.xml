@@ -129,7 +129,7 @@
 				</classfiles>
 			</structure>
 		</jacoco:report>
-		<au:assertLogContains level="warn" text="Classes in bundle 'root' do no match with execution data."/>
+		<au:assertLogContains level="warn" text="Classes in bundle 'root' do not match with execution data."/>
 		<au:assertLogContains level="warn" text="For report generation the same class files must be used as at runtime."/>
 		<au:assertLogContains level="warn" text="Execution data for class org/jacoco/ant/TestTarget does not match."/>
 	</target>

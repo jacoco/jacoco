@@ -15,7 +15,7 @@
 
   <groupId>org.jacoco</groupId>
   <artifactId>org.jacoco.build</artifactId>
-  <version>0.8.6-SNAPSHOT</version>
+  <version>0.8.7-SNAPSHOT</version>
   <packaging>pom</packaging>
 
   <name>JaCoCo</name>
@@ -139,10 +139,10 @@
     <argLine>${jvm.args}</argLine>
 
     <!-- Dependencies versions -->
-    <asm.version>8.0.1</asm.version>
-    <ant.version>1.7.1</ant.version>
+    <asm.version>9.0</asm.version>
+    <ant.version>1.9.15</ant.version>
     <args4j.version>2.0.28</args4j.version>
-    <junit.version>4.13</junit.version>
+    <junit.version>4.13.1</junit.version>
     <googlecodeprettify.version>20100721</googlecodeprettify.version>
 
     <!-- ================== -->
@@ -244,8 +244,18 @@
       </dependency>
       <dependency>
         <groupId>org.apache.ant</groupId>
+        <artifactId>ant-junit4</artifactId>
+        <version>${ant.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.ant</groupId>
+        <artifactId>ant-launcher</artifactId>
+        <version>${ant.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.ant</groupId>
         <artifactId>ant-antunit</artifactId>
-        <version>1.2</version>
+        <version>1.4</version>
       </dependency>
       <dependency>
         <groupId>args4j</groupId>
@@ -833,6 +843,20 @@
         <property>
           <name>bytecode.version</name>
           <value>15</value>
+        </property>
+      </activation>
+      <properties>
+        <maven.compiler.source>13</maven.compiler.source>
+        <maven.compiler.target>13</maven.compiler.target>
+      </properties>
+    </profile>
+
+    <profile>
+      <id>java16-bytecode</id>
+      <activation>
+        <property>
+          <name>bytecode.version</name>
+          <value>16</value>
         </property>
       </activation>
       <properties>

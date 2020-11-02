@@ -114,7 +114,6 @@
                         <xsl:with-param name="value" select="$timeCount"/>
                     </xsl:call-template>
                     </td>
-                    <td><xsl:value-of select="$testsuites-in-package/@timestamp"/></td>
                 </tr>
             </xsl:for-each>
 		</tbody>
@@ -251,7 +250,6 @@
         	<td>Errors</td>
         	<td>Failures</td>
         	<td>Time(s)</td>
-        	<td>Time Stamp</td>
     	</tr>
     </thead>
 </xsl:template>
@@ -290,7 +288,6 @@
                 <xsl:with-param name="value" select="@time"/>
             </xsl:call-template>
         </td>
-        <td><xsl:apply-templates select="@timestamp"/></td>
     </tr>
 </xsl:template>
 

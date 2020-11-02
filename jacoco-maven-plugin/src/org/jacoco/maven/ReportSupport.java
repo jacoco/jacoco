@@ -165,7 +165,7 @@ final class ReportSupport {
 	 *
 	 * @param visitor
 	 *            group visitor to emit the project's coverage to
-	 * @param bundeName
+	 * @param bundleName
 	 *            name for this project in the report
 	 * @param project
 	 *            the MavenProject
@@ -179,15 +179,15 @@ final class ReportSupport {
 	 *             if class files can't be read
 	 */
 	public void processProject(final IReportGroupVisitor visitor,
-			final String bundeName, final MavenProject project,
+			final String bundleName, final MavenProject project,
 			final List<String> includes, final List<String> excludes,
 			final String srcEncoding) throws IOException {
-		processProject(visitor, bundeName, project, includes, excludes,
+		processProject(visitor, bundleName, project, includes, excludes,
 				new SourceFileCollection(project, srcEncoding));
 	}
 
 	private void processProject(final IReportGroupVisitor visitor,
-			final String bundeName, final MavenProject project,
+			final String bundleName, final MavenProject project,
 			final List<String> includes, final List<String> excludes,
 			final ISourceFileLocator locator) throws IOException {
 		final CoverageBuilder builder = new CoverageBuilder();
@@ -203,7 +203,7 @@ final class ReportSupport {
 			}
 		}
 
-		final IBundleCoverage bundle = builder.getBundle(bundeName);
+		final IBundleCoverage bundle = builder.getBundle(bundleName);
 		logBundleInfo(bundle, builder.getNoMatchClasses());
 
 		visitor.visitBundle(bundle, locator);
@@ -216,7 +216,7 @@ final class ReportSupport {
 				Integer.valueOf(bundle.getClassCounter().getTotalCount())));
 		if (!nomatch.isEmpty()) {
 			log.warn(format(
-					"Classes in bundle '%s' do no match with execution data. "
+					"Classes in bundle '%s' do not match with execution data. "
 							+ "For report generation the same class files must be used as at runtime.",
 					bundle.getName()));
 			for (final IClassCoverage c : nomatch) {

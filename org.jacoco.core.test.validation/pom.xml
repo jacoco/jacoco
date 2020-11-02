@@ -17,7 +17,7 @@
   <parent>
     <groupId>org.jacoco</groupId>
     <artifactId>org.jacoco.tests</artifactId>
-    <version>0.8.6-SNAPSHOT</version>
+    <version>0.8.7-SNAPSHOT</version>
     <relativePath>../org.jacoco.tests</relativePath>
   </parent>
 
@@ -90,13 +90,9 @@
           <value>7</value>
         </property>
       </activation>
-      <properties>
-        <groovy.targetBytecode>1.7</groovy.targetBytecode>
-      </properties>
       <modules>
         <module>../org.jacoco.core.test.validation.kotlin</module>
         <module>../org.jacoco.core.test.validation.java7</module>
-        <module>../org.jacoco.core.test.validation.groovy</module>
       </modules>
     </profile>
 
@@ -108,13 +104,9 @@
           <value>7</value>
         </property>
       </activation>
-      <properties>
-        <groovy.targetBytecode>1.7</groovy.targetBytecode>
-      </properties>
       <modules>
         <module>../org.jacoco.core.test.validation.kotlin</module>
         <module>../org.jacoco.core.test.validation.java7</module>
-        <module>../org.jacoco.core.test.validation.groovy</module>
       </modules>
     </profile>
 
@@ -215,9 +207,7 @@
         <module>../org.jacoco.core.test.validation.java7</module>
         <module>../org.jacoco.core.test.validation.java8</module>
         <module>../org.jacoco.core.test.validation.java14</module>
-        <!-- Groovy 2.5.8 doesn't support bytecode version 14
         <module>../org.jacoco.core.test.validation.groovy</module>
-        -->
         <module>../org.jacoco.core.test.validation.scala</module>
       </modules>
     </profile>
@@ -240,9 +230,30 @@
         <module>../org.jacoco.core.test.validation.java7</module>
         <module>../org.jacoco.core.test.validation.java8</module>
         <module>../org.jacoco.core.test.validation.java14</module>
-        <!-- Groovy 2.5.8 doesn't support bytecode version 15
         <module>../org.jacoco.core.test.validation.groovy</module>
-        -->
+        <module>../org.jacoco.core.test.validation.scala</module>
+      </modules>
+    </profile>
+
+    <profile>
+      <id>java16-bytecode</id>
+      <activation>
+        <property>
+          <name>bytecode.version</name>
+          <value>16</value>
+        </property>
+      </activation>
+      <properties>
+        <!-- see respective profile in org.jacoco.build about this override -->
+        <maven.compiler.source>16</maven.compiler.source>
+        <maven.compiler.target>16</maven.compiler.target>
+      </properties>
+      <modules>
+        <module>../org.jacoco.core.test.validation.kotlin</module>
+        <module>../org.jacoco.core.test.validation.java7</module>
+        <module>../org.jacoco.core.test.validation.java8</module>
+        <module>../org.jacoco.core.test.validation.java14</module>
+        <module>../org.jacoco.core.test.validation.groovy</module>
         <module>../org.jacoco.core.test.validation.scala</module>
       </modules>
     </profile>

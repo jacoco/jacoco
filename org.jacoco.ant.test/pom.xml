@@ -16,7 +16,7 @@
   <parent>
     <groupId>org.jacoco</groupId>
     <artifactId>org.jacoco.tests</artifactId>
-    <version>0.8.6-SNAPSHOT</version>
+    <version>0.8.7-SNAPSHOT</version>
     <relativePath>../org.jacoco.tests</relativePath>
   </parent>
 
@@ -43,7 +43,15 @@
     </dependency>
     <dependency>
       <groupId>org.apache.ant</groupId>
+      <artifactId>ant-launcher</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.ant</groupId>
       <artifactId>ant-junit</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.ant</groupId>
+      <artifactId>ant-junit4</artifactId>
     </dependency>
   </dependencies>
 
