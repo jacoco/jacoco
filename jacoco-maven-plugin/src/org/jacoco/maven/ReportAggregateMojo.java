@@ -18,15 +18,18 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
+import java.util.Stack;
 
 import org.apache.maven.artifact.Artifact;
-import org.apache.maven.artifact.versioning.DefaultArtifactVersion;
-import org.apache.maven.artifact.versioning.InvalidVersionSpecificationException;
-import org.apache.maven.artifact.versioning.VersionRange;
-import org.apache.maven.model.Dependency;
+import org.apache.maven.execution.MavenSession;
+import org.apache.maven.plugins.annotations.Component;
 import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
+import org.apache.maven.project.DefaultProjectBuildingRequest;
 import org.apache.maven.project.MavenProject;
+import org.apache.maven.shared.dependency.graph.DependencyGraphBuilder;
+import org.apache.maven.shared.dependency.graph.DependencyGraphBuilderException;
+import org.apache.maven.shared.dependency.graph.DependencyNode;
 import org.jacoco.report.IReportGroupVisitor;
 
 /**
@@ -87,6 +90,12 @@ public class ReportAggregateMojo extends AbstractReportMojo {
 	 */
 	@Parameter(property = "reactorProjects", readonly = true)
 	private List<MavenProject> reactorProjects;
+
+	@Parameter(defaultValue = "${session}", readonly = true)
+	private MavenSession session;
+
+	@Component
+	private DependencyGraphBuilder dependencyGraphBuilder;
 
 	@Override
 	boolean canGenerateReportRegardingDataFiles() {
@@ -168,44 +177,46 @@ public class ReportAggregateMojo extends AbstractReportMojo {
 	private List<MavenProject> findDependencies(final String... scopes) {
 		final List<MavenProject> result = new ArrayList<MavenProject>();
 		final List<String> scopeList = Arrays.asList(scopes);
-		for (final Object dependencyObject : getProject().getDependencies()) {
-			final Dependency dependency = (Dependency) dependencyObject;
-			if (scopeList.contains(dependency.getScope())) {
-				final MavenProject project = findProjectFromReactor(dependency);
-				if (project != null) {
-					result.add(project);
+		final Stack<DependencyNode> dependencyNodes = new Stack<DependencyNode>();
+		try {
+			final DefaultProjectBuildingRequest projectBuildingRequest = new DefaultProjectBuildingRequest(
+					session.getProjectBuildingRequest());
+			projectBuildingRequest.setProject(project);
+			final DependencyNode projectNode = dependencyGraphBuilder
+					.buildDependencyGraph(projectBuildingRequest, null,
+							reactorProjects);
+			for (final DependencyNode child : projectNode.getChildren()) {
+				if (scopeList.contains(child.getArtifact().getScope())) {
+					dependencyNodes.push(child);
 				}
+			}
+		} catch (DependencyGraphBuilderException e) {
+			throw new AssertionError(e);
+		}
+
+		while (!dependencyNodes.isEmpty()) {
+			final DependencyNode dependencyNode = dependencyNodes.pop();
+			for (final DependencyNode child : dependencyNode.getChildren()) {
+				dependencyNodes.push(child);
+			}
+
+			final MavenProject project = findProjectFromReactor(
+					dependencyNode.getArtifact());
+			if (project != null) {
+				result.add(project);
 			}
 		}
 		return result;
 	}
 
-	/**
-	 * Note that if dependency specified using version range and reactor
-	 * contains multiple modules with same artifactId and groupId but of
-	 * different versions, then first dependency which matches range will be
-	 * selected. For example in case of range <code>[0,2]</code> if version 1 is
-	 * before version 2 in reactor, then version 1 will be selected.
-	 */
-	private MavenProject findProjectFromReactor(final Dependency d) {
-		final VersionRange depVersionAsRange;
-		try {
-			depVersionAsRange = VersionRange
-					.createFromVersionSpec(d.getVersion());
-		} catch (InvalidVersionSpecificationException e) {
-			throw new AssertionError(e);
-		}
-
+	private MavenProject findProjectFromReactor(final Artifact a) {
 		for (final MavenProject p : reactorProjects) {
-			final DefaultArtifactVersion pv = new DefaultArtifactVersion(
-					p.getVersion());
-			if (p.getGroupId().equals(d.getGroupId())
-					&& p.getArtifactId().equals(d.getArtifactId())
-					&& depVersionAsRange.containsVersion(pv)) {
+			if (p.getGroupId().equals(a.getGroupId())
+					&& p.getArtifactId().equals(a.getArtifactId())
+					&& p.getVersion().equals(a.getVersion())) {
 				return p;
 			}
 		}
 		return null;
 	}
-
 }
