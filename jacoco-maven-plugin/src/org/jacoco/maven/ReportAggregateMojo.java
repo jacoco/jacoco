@@ -25,7 +25,6 @@ import org.apache.maven.execution.MavenSession;
 import org.apache.maven.plugins.annotations.Component;
 import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
-import org.apache.maven.project.DefaultProjectBuildingRequest;
 import org.apache.maven.project.MavenProject;
 import org.apache.maven.shared.dependency.graph.DependencyGraphBuilder;
 import org.apache.maven.shared.dependency.graph.DependencyGraphBuilderException;
@@ -179,12 +178,8 @@ public class ReportAggregateMojo extends AbstractReportMojo {
 		final List<String> scopeList = Arrays.asList(scopes);
 		final Stack<DependencyNode> dependencyNodes = new Stack<DependencyNode>();
 		try {
-			final DefaultProjectBuildingRequest projectBuildingRequest = new DefaultProjectBuildingRequest(
-					session.getProjectBuildingRequest());
-			projectBuildingRequest.setProject(project);
 			final DependencyNode projectNode = dependencyGraphBuilder
-					.buildDependencyGraph(projectBuildingRequest, null,
-							reactorProjects);
+					.buildDependencyGraph(project, null, reactorProjects);
 			for (final DependencyNode child : projectNode.getChildren()) {
 				if (scopeList.contains(child.getArtifact().getScope())) {
 					dependencyNodes.push(child);
