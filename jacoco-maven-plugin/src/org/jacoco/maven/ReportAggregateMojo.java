@@ -107,7 +107,7 @@ public class ReportAggregateMojo extends AbstractReportMojo {
 
 		final FileFilter filter = new FileFilter(dataFileIncludes,
 				dataFileExcludes);
-		loadExecutionData(support, filter, getProject().getBasedir());
+		loadExecutionData(support, filter, project.getBasedir());
 		for (final MavenProject dependency : findDependencies(
 				Artifact.SCOPE_COMPILE, Artifact.SCOPE_RUNTIME,
 				Artifact.SCOPE_PROVIDED, Artifact.SCOPE_TEST)) {
@@ -141,12 +141,10 @@ public class ReportAggregateMojo extends AbstractReportMojo {
 		}
 	}
 
-	@Override
-	protected String getOutputDirectory() {
-		return outputDirectory.getAbsolutePath();
+	public File getReportOutputDirectory() {
+		return outputDirectory;
 	}
 
-	@Override
 	public void setReportOutputDirectory(final File reportOutputDirectory) {
 		if (reportOutputDirectory != null && !reportOutputDirectory
 				.getAbsolutePath().endsWith("jacoco-aggregate")) {
@@ -168,7 +166,7 @@ public class ReportAggregateMojo extends AbstractReportMojo {
 	private List<MavenProject> findDependencies(final String... scopes) {
 		final List<MavenProject> result = new ArrayList<MavenProject>();
 		final List<String> scopeList = Arrays.asList(scopes);
-		for (final Object dependencyObject : getProject().getDependencies()) {
+		for (final Object dependencyObject : project.getDependencies()) {
 			final Dependency dependency = (Dependency) dependencyObject;
 			if (scopeList.contains(dependency.getScope())) {
 				final MavenProject project = findProjectFromReactor(dependency);
@@ -192,7 +190,7 @@ public class ReportAggregateMojo extends AbstractReportMojo {
 		try {
 			depVersionAsRange = VersionRange
 					.createFromVersionSpec(d.getVersion());
-		} catch (InvalidVersionSpecificationException e) {
+		} catch (final InvalidVersionSpecificationException e) {
 			throw new AssertionError(e);
 		}
 

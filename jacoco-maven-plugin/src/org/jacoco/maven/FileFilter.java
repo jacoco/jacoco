@@ -17,7 +17,6 @@ import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
-import org.apache.commons.collections.CollectionUtils;
 import org.codehaus.plexus.util.FileUtils;
 import org.codehaus.plexus.util.StringUtils;
 
@@ -94,7 +93,7 @@ public class FileFilter {
 	private String buildPattern(final List<String> patterns,
 			final String defaultPattern) {
 		String pattern = defaultPattern;
-		if (CollectionUtils.isNotEmpty(patterns)) {
+		if (patterns != null && !patterns.isEmpty()) {
 			pattern = StringUtils.join(patterns.iterator(), ",");
 		}
 		return pattern;
