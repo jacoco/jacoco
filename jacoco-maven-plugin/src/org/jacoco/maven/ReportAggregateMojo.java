@@ -21,7 +21,11 @@ import java.util.Locale;
 import java.util.Stack;
 
 import org.apache.maven.artifact.Artifact;
+import org.apache.maven.artifact.versioning.DefaultArtifactVersion;
+import org.apache.maven.artifact.versioning.InvalidVersionSpecificationException;
+import org.apache.maven.artifact.versioning.VersionRange;
 import org.apache.maven.execution.MavenSession;
+import org.apache.maven.model.Dependency;
 import org.apache.maven.plugins.annotations.Component;
 import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
@@ -83,6 +87,13 @@ public class ReportAggregateMojo extends AbstractReportMojo {
 	 */
 	@Parameter(defaultValue = "${project.reporting.outputDirectory}/jacoco-aggregate")
 	private File outputDirectory;
+
+	/**
+	 * Whether all dependencies of a project should be scanned if they are in
+	 * the reactor or only direct dependencies.
+	 */
+	@Parameter(defaultValue = "false")
+	private boolean transitiveDependencies;
 
 	/**
 	 * The projects in the reactor.
@@ -176,32 +187,76 @@ public class ReportAggregateMojo extends AbstractReportMojo {
 	private List<MavenProject> findDependencies(final String... scopes) {
 		final List<MavenProject> result = new ArrayList<MavenProject>();
 		final List<String> scopeList = Arrays.asList(scopes);
-		final Stack<DependencyNode> dependencyNodes = new Stack<DependencyNode>();
-		try {
-			final DependencyNode projectNode = dependencyGraphBuilder
-					.buildDependencyGraph(project, null, reactorProjects);
-			for (final DependencyNode child : projectNode.getChildren()) {
-				if (scopeList.contains(child.getArtifact().getScope())) {
+
+		if (transitiveDependencies) {
+			final Stack<DependencyNode> dependencyNodes = new Stack<DependencyNode>();
+			try {
+				final DependencyNode projectNode = dependencyGraphBuilder
+						.buildDependencyGraph(project, null, reactorProjects);
+				for (final DependencyNode child : projectNode.getChildren()) {
+					if (scopeList.contains(child.getArtifact().getScope())) {
+						dependencyNodes.push(child);
+					}
+				}
+			} catch (DependencyGraphBuilderException e) {
+				throw new AssertionError(e);
+			}
+
+			while (!dependencyNodes.isEmpty()) {
+				final DependencyNode dependencyNode = dependencyNodes.pop();
+				for (final DependencyNode child : dependencyNode
+						.getChildren()) {
 					dependencyNodes.push(child);
 				}
-			}
-		} catch (DependencyGraphBuilderException e) {
-			throw new AssertionError(e);
-		}
 
-		while (!dependencyNodes.isEmpty()) {
-			final DependencyNode dependencyNode = dependencyNodes.pop();
-			for (final DependencyNode child : dependencyNode.getChildren()) {
-				dependencyNodes.push(child);
+				final MavenProject project = findProjectFromReactor(
+						dependencyNode.getArtifact());
+				if (project != null) {
+					result.add(project);
+				}
 			}
-
-			final MavenProject project = findProjectFromReactor(
-					dependencyNode.getArtifact());
-			if (project != null) {
-				result.add(project);
+		} else {
+			for (final Object dependencyObject : getProject()
+					.getDependencies()) {
+				final Dependency dependency = (Dependency) dependencyObject;
+				if (scopeList.contains(dependency.getScope())) {
+					final MavenProject project = findProjectFromReactor(
+							dependency);
+					if (project != null) {
+						result.add(project);
+					}
+				}
 			}
 		}
 		return result;
+	}
+
+	/**
+	 * Note that if dependency specified using version range and reactor
+	 * contains multiple modules with same artifactId and groupId but of
+	 * different versions, then first dependency which matches range will be
+	 * selected. For example in case of range <code>[0,2]</code> if version 1 is
+	 * before version 2 in reactor, then version 1 will be selected.
+	 */
+	private MavenProject findProjectFromReactor(final Dependency d) {
+		final VersionRange depVersionAsRange;
+		try {
+			depVersionAsRange = VersionRange
+					.createFromVersionSpec(d.getVersion());
+		} catch (InvalidVersionSpecificationException e) {
+			throw new AssertionError(e);
+		}
+
+		for (final MavenProject p : reactorProjects) {
+			final DefaultArtifactVersion pv = new DefaultArtifactVersion(
+					p.getVersion());
+			if (p.getGroupId().equals(d.getGroupId())
+					&& p.getArtifactId().equals(d.getArtifactId())
+					&& depVersionAsRange.containsVersion(pv)) {
+				return p;
+			}
+		}
+		return null;
 	}
 
 	private MavenProject findProjectFromReactor(final Artifact a) {

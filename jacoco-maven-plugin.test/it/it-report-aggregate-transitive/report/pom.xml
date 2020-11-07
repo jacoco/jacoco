@@ -43,6 +43,9 @@
             <goals>
               <goal>report-aggregate</goal>
             </goals>
+            <configuration>
+              <transitiveDependencies>true</transitiveDependencies>
+            </configuration>
           </execution>
         </executions>
       </plugin>
