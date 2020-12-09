@@ -27,7 +27,7 @@
 
   <properties>
     <gmaven.version>1.11.0</gmaven.version>
-    <groovy.version>3.0.6</groovy.version>
+    <groovy.version>3.0.7</groovy.version>
   </properties>
 
   <dependencies>
