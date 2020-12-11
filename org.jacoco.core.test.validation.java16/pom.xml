@@ -16,16 +16,16 @@
   <parent>
     <groupId>org.jacoco</groupId>
     <artifactId>org.jacoco.core.test.validation</artifactId>
-    <version>0.8.8-SNAPSHOT</version>
+    <version>0.8.7-SNAPSHOT</version>
     <relativePath>../org.jacoco.core.test.validation</relativePath>
   </parent>
 
-  <artifactId>org.jacoco.core.test.validation.java14</artifactId>
+  <artifactId>org.jacoco.core.test.validation.java16</artifactId>
 
-  <name>JaCoCo :: Test :: Core :: Validation Java 14</name>
+  <name>JaCoCo :: Test :: Core :: Validation Java 16</name>
 
   <properties>
-    <bytecode.version>14</bytecode.version>
+    <bytecode.version>16</bytecode.version>
   </properties>
 
   <dependencies>

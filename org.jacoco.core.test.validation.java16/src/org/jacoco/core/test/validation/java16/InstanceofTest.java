@@ -10,18 +10,18 @@
  *    Evgeny Mandrikov - initial API and implementation
  *
  *******************************************************************************/
-package org.jacoco.core.test.validation.java14;
+package org.jacoco.core.test.validation.java16;
 
 import org.jacoco.core.test.validation.ValidationTestBase;
-import org.jacoco.core.test.validation.java14.targets.RecordsTarget;
+import org.jacoco.core.test.validation.java16.targets.InstanceofTarget;
 
 /**
- * Test of code coverage for records.
+ * Test of code coverage in {@link InstanceofTarget}.
  */
-public class RecordsTest extends ValidationTestBase {
+public class InstanceofTest extends ValidationTestBase {
 
-	public RecordsTest() {
-		super(RecordsTarget.class);
+	public InstanceofTest() {
+		super(InstanceofTarget.class);
 	}
 
 }

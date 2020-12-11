@@ -10,7 +10,7 @@
  *    Evgeny Mandrikov - initial API and implementation
  *
  *******************************************************************************/
-package org.jacoco.core.test.validation.java14.targets;
+package org.jacoco.core.test.validation.java16.targets;
 
 import static org.jacoco.core.test.validation.targets.Stubs.nop;
 
@@ -20,7 +20,7 @@ import static org.jacoco.core.test.validation.targets.Stubs.nop;
 public class InstanceofTarget {
 
 	private static void ifInstanceof(Object e) {
-		if (e instanceof String s) { // assertInstanceof()
+		if (e instanceof String s) { // assertFullyCovered(0, 2)
 			nop(s);
 		}
 	}
