@@ -39,6 +39,7 @@ jobs:
       mkdir .jdk
       curl -L $JDK_URL -o .jdk/jdk.tar.gz
       tar -xzf .jdk/jdk.tar.gz -C .jdk --strip-components 1
+      .jdk/bin/java -version
       echo "
       <toolchains>
         <toolchain>
