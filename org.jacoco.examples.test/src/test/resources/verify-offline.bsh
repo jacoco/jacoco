@@ -10,7 +10,15 @@
  *    Mirko Friedenhagen - initial API and implementation
  *
  *******************************************************************************/
-File realBaseDir = new File(basedir, "../../../target/it/build");
-assert new File(realBaseDir, "target/site/jacoco/index.html").exists();
-assert !new File(realBaseDir, "target/site/jacoco-it/index.html").exists();
-return true;
+import org.codehaus.plexus.util.*;
+
+File realBaseDir = new File(basedir, "../../../target/it-offline/build");
+if (!new File(realBaseDir, "target/site/jacoco/index.html").exists()) {
+  throw new RuntimeException();
+}
+if (new File(realBaseDir, "target/site/jacoco-it/index.html").exists()) {
+  throw new RuntimeException();
+}
+if (!FileUtils.fileRead(new File(realBaseDir, "build.log")).contains(":restore-instrumented-classes")) {
+  throw new RuntimeException();
+}
