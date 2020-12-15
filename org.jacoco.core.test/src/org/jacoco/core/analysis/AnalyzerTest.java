@@ -23,8 +23,8 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
-import java.io.InputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Arrays;
 import java.util.Collections;
@@ -33,6 +33,7 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.zip.GZIPOutputStream;
 import java.util.zip.ZipEntry;
+import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
 
 import org.jacoco.core.data.ExecutionDataStore;
@@ -130,14 +131,14 @@ public class AnalyzerTest {
 	 */
 	@Test
 	public void analyzeClass_should_throw_exception_for_unsupported_class_file_version() {
-		final byte[] bytes = createClass(Opcodes.V16 + 1);
+		final byte[] bytes = createClass(Opcodes.V16 + 2);
 		try {
 			analyzer.analyzeClass(bytes, "UnsupportedVersion");
 			fail("exception expected");
 		} catch (IOException e) {
 			assertEquals("Error while analyzing UnsupportedVersion.",
 					e.getMessage());
-			assertEquals("Unsupported class file major version 61",
+			assertEquals("Unsupported class file major version 62",
 					e.getCause().getMessage());
 		}
 	}
@@ -217,7 +218,7 @@ public class AnalyzerTest {
 	 */
 	@Test
 	public void analyzeAll_should_throw_exception_for_unsupported_class_file_version() {
-		final byte[] bytes = createClass(Opcodes.V16 + 1);
+		final byte[] bytes = createClass(Opcodes.V16 + 2);
 		try {
 			analyzer.analyzeAll(new ByteArrayInputStream(bytes),
 					"UnsupportedVersion");
@@ -225,7 +226,7 @@ public class AnalyzerTest {
 		} catch (IOException e) {
 			assertEquals("Error while analyzing UnsupportedVersion.",
 					e.getMessage());
-			assertEquals("Unsupported class file major version 61",
+			assertEquals("Unsupported class file major version 62",
 					e.getCause().getMessage());
 		}
 	}
