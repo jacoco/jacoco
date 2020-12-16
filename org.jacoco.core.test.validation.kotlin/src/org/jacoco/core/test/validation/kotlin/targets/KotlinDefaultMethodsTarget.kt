@@ -12,6 +12,8 @@
  *******************************************************************************/
 package org.jacoco.core.test.validation.kotlin.targets
 
+import org.jacoco.core.test.validation.targets.Stubs.nop
+
 /**
  * This test target contains class implementing interface with default methods.
  */
@@ -19,17 +21,30 @@ object KotlinDefaultMethodsTarget {
 
     interface I {
         fun overriddenWithoutSuperCall() = Unit // assertNotCovered()
+        fun overridden() = Unit // assertFullyCovered()
+        fun overriddenRedundantly() = Unit // assertFullyCovered()
         fun notOverridden() = Unit // assertFullyCovered()
         fun notOverriddenNotCalled() = Unit // assertNotCovered()
     }
 
     class C : I { // assertFullyCovered()
         override fun overriddenWithoutSuperCall() = Unit // assertFullyCovered()
+
+        override fun overridden() {
+            super.overridden() // assertFullyCovered()
+            nop() // assertFullyCovered()
+        }
+
+        override fun overriddenRedundantly() {
+            super.overriddenRedundantly() // assertEmpty()
+        }
     }
 
     @JvmStatic
     fun main(args: Array<String>) {
         C().overriddenWithoutSuperCall()
+        C().overridden()
+        C().overriddenRedundantly()
         C().notOverridden()
     }
 
