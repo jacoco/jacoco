@@ -20,9 +20,9 @@
     <relativePath>../org.jacoco.core.test.validation</relativePath>
   </parent>
 
-  <artifactId>org.jacoco.core.test.validation.scala</artifactId>
+  <artifactId>org.jacoco.core.test.validation.scala2_11</artifactId>
 
-  <name>JaCoCo :: Test :: Core :: Validation Scala</name>
+  <name>JaCoCo :: Test :: Core :: Validation Scala 2.11</name>
 
   <dependencies>
     <dependency>
@@ -33,7 +33,7 @@
     <dependency>
       <groupId>org.scala-lang</groupId>
       <artifactId>scala-library</artifactId>
-      <version>2.12.8</version>
+      <version>2.11.12</version>
     </dependency>
   </dependencies>
 

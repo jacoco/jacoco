@@ -7,21 +7,21 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
- *    Evgeny Mandrikov - initial API and implementation
+ *    Gergely Fábián - initial API and implementation
  *
  *******************************************************************************/
 package org.jacoco.core.test.validation.scala;
 
 import org.jacoco.core.test.validation.ValidationTestBase;
-import org.jacoco.core.test.validation.scala.targets.ScalaAnonymousFunctionTarget;
+import org.jacoco.core.test.validation.scala2_11.targets.ScalaCaseClassTarget;
 
 /**
- * Test of anonymous functions.
+ * Test of synchronized block.
  */
-public class ScalaAnonymousFunctionTest extends ValidationTestBase {
+public class ScalaCaseClassTest extends ValidationTestBase {
 
-	public ScalaAnonymousFunctionTest() {
-		super(ScalaAnonymousFunctionTarget.class);
+	public ScalaCaseClassTest() {
+		super(ScalaCaseClassTarget.class);
 	}
 
 }

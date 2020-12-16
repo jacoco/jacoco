@@ -7,27 +7,25 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
- *    Evgeny Mandrikov - initial API and implementation
+ *    Gergely Fábián - initial API and implementation
  *
  *******************************************************************************/
-package org.jacoco.core.test.validation.scala.targets
+package org.jacoco.core.test.validation.scala2_11.targets
 
-import org.jacoco.core.test.validation.targets.Stubs.nop
+import org.jacoco.core.test.validation.targets.Stubs.{exec, noexec, nop}
 
 /**
- * Test target for synchronized block.
+ * Test target for anonymous functions.
  */
-object ScalaSynchronizedTarget {
+object ScalaCaseClassTarget {
 
-  private val lock: Object = new Object()
+  case class Foo(a: Int, b: String, c: Set[String], d: Double) // assertPartlyCovered(31, 0)
 
   def main(args: Array[String]): Unit = {
-    nop()
-    lock.synchronized { // assertFullyCovered()
-      /* Without filter next line covered partly */
-      nop() // assertFullyCovered()
-    } // assertEmpty()
-    nop()
+
+    val foo = Foo(1, "test", Set.empty[String], 2.3) // assertFullyCovered()
+    val message = "" + foo.a + foo.b + foo.c.mkString(",") + foo.d // assertFullyCovered()
+
   }
 
 }

@@ -10,14 +10,24 @@
  *    Evgeny Mandrikov - initial API and implementation
  *
  *******************************************************************************/
-package org.jacoco.core.test.validation.scala.targets
+package org.jacoco.core.test.validation.scala2_12.targets
+
+import org.jacoco.core.test.validation.targets.Stubs.nop
 
 /**
- * This test target is singleton object.
+ * Test target for synchronized block.
  */
-object ScalaSingletonObjectTarget { // assertFullyCovered()
+object ScalaSynchronizedTarget {
 
-  def main(args: Array[String]): Unit = { // assertFullyCovered()
-  } // assertEmpty()
+  private val lock: Object = new Object()
+
+  def main(args: Array[String]): Unit = {
+    nop()
+    lock.synchronized { // assertFullyCovered()
+      /* Without filter next line covered partly */
+      nop() // assertFullyCovered()
+    } // assertEmpty()
+    nop()
+  }
 
 }

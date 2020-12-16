@@ -10,7 +10,7 @@
  *    Evgeny Mandrikov - initial API and implementation
  *
  *******************************************************************************/
-package org.jacoco.core.test.validation.scala.targets
+package org.jacoco.core.test.validation.scala2_12.targets
 
 import org.jacoco.core.test.validation.targets.Stubs.{exec, noexec, nop}
 
