@@ -7,21 +7,21 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
- *    Gergely Fábián - initial API and implementation
+ *    Evgeny Mandrikov - initial API and implementation
  *
  *******************************************************************************/
-package org.jacoco.core.test.validation.scala;
+package org.jacoco.core.test.validation.scala2_12;
 
 import org.jacoco.core.test.validation.ValidationTestBase;
-import org.jacoco.core.test.validation.scala.targets.ScalaCaseClassTarget;
+import org.jacoco.core.test.validation.scala2_12.targets.ScalaSynchronizedTarget;
 
 /**
  * Test of synchronized block.
  */
-public class ScalaCaseClassTest extends ValidationTestBase {
+public class ScalaSynchronizedTest extends ValidationTestBase {
 
-	public ScalaCaseClassTest() {
-		super(ScalaCaseClassTarget.class);
+	public ScalaSynchronizedTest() {
+		super(ScalaSynchronizedTarget.class);
 	}
 
 }

@@ -10,18 +10,24 @@
  *    Evgeny Mandrikov - initial API and implementation
  *
  *******************************************************************************/
-package org.jacoco.core.test.validation.scala;
+package org.jacoco.core.test.validation.scala2_11.targets
 
-import org.jacoco.core.test.validation.ValidationTestBase;
-import org.jacoco.core.test.validation.scala.targets.ScalaAnonymousFunctionTarget;
+import org.jacoco.core.test.validation.targets.Stubs.nop
 
 /**
- * Test of anonymous functions.
+ * Test target for synchronized block.
  */
-public class ScalaAnonymousFunctionTest extends ValidationTestBase {
+object ScalaSynchronizedTarget {
 
-	public ScalaAnonymousFunctionTest() {
-		super(ScalaAnonymousFunctionTarget.class);
-	}
+  private val lock: Object = new Object()
+
+  def main(args: Array[String]): Unit = {
+    nop()
+    lock.synchronized { // assertFullyCovered()
+      /* Without filter next line covered partly */
+      nop() // assertFullyCovered()
+    } // assertEmpty()
+    nop()
+  }
 
 }

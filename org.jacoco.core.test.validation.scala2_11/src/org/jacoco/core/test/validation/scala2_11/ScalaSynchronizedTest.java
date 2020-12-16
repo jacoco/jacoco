@@ -10,18 +10,18 @@
  *    Evgeny Mandrikov - initial API and implementation
  *
  *******************************************************************************/
-package org.jacoco.core.test.validation.scala;
+package org.jacoco.core.test.validation.scala2_11;
 
 import org.jacoco.core.test.validation.ValidationTestBase;
-import org.jacoco.core.test.validation.scala.targets.ScalaSingletonObjectTarget;
+import org.jacoco.core.test.validation.scala2_11.targets.ScalaSynchronizedTarget;
 
 /**
- * Test of singleton object.
+ * Test of synchronized block.
  */
-public class ScalaSingletonObjectTest extends ValidationTestBase {
+public class ScalaSynchronizedTest extends ValidationTestBase {
 
-	public ScalaSingletonObjectTest() {
-		super(ScalaSingletonObjectTarget.class);
+	public ScalaSynchronizedTest() {
+		super(ScalaSynchronizedTarget.class);
 	}
 
 }

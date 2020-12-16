@@ -10,25 +10,14 @@
  *    Evgeny Mandrikov - initial API and implementation
  *
  *******************************************************************************/
-package org.jacoco.core.test.validation.scala.targets
-
-import org.jacoco.core.test.validation.targets.Stubs.{exec, noexec, nop}
+package org.jacoco.core.test.validation.scala2_12.targets
 
 /**
- * Test target for anonymous functions.
+ * This test target is singleton object.
  */
-object ScalaAnonymousFunctionTarget {
+object ScalaSingletonObjectTarget { // assertFullyCovered()
 
-  def main(args: Array[String]): Unit = {
-
-    exec(() => {
-      nop() // assertFullyCovered()
-    })
-
-    noexec(() => {
-      nop() // assertNotCovered()
-    })
-
-  }
+  def main(args: Array[String]): Unit = { // assertFullyCovered()
+  } // assertEmpty()
 
 }
