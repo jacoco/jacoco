@@ -19,7 +19,7 @@ import org.jacoco.core.test.validation.targets.Stubs.{exec, noexec, nop}
  */
 object ScalaCaseClassTarget {
 
-  case class Foo(a: Int, b: String, c: Set[String], d: Double) // assertPartlyCovered(31, 0)
+  case class Foo(a: Int, b: String, c: Set[String], d: Double) // assertPartlyCovered()
 
   def main(args: Array[String]): Unit = {
 
