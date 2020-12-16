@@ -18,19 +18,19 @@ package org.jacoco.core.test.validation.kotlin.targets
 object KotlinDefaultMethodsTarget {
 
     interface I {
-        fun m1() = Unit // assertNotCovered()
-        fun m2() = Unit // assertFullyCovered()
-        fun m3() = Unit // assertNotCovered()
+        fun overriddenWithoutSuperCall() = Unit // assertNotCovered()
+        fun notOverridden() = Unit // assertFullyCovered()
+        fun notOverriddenNotCalled() = Unit // assertNotCovered()
     }
 
     class C : I { // assertFullyCovered()
-        override fun m1() = Unit // assertFullyCovered()
+        override fun overriddenWithoutSuperCall() = Unit // assertFullyCovered()
     }
 
     @JvmStatic
     fun main(args: Array<String>) {
-        C().m1()
-        C().m2()
+        C().overriddenWithoutSuperCall()
+        C().notOverridden()
     }
 
 }
