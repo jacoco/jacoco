@@ -26,7 +26,6 @@ public class KotlinUnsafeCastOperatorFilter1_4 implements IFilter {
 
 	private static final String KOTLIN_1_4_TYPE_CAST_EXCEPTION = "java/lang/NullPointerException";
 
-	@Override
 	public void filter(MethodNode methodNode, IFilterContext context,
 			IFilterOutput output) {
 		final KotlinUnsafeCastOperatorFilter1_4.Matcher matcher = new KotlinUnsafeCastOperatorFilter1_4.Matcher();
