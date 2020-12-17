@@ -43,6 +43,9 @@ final class KotlinDefaultMethodsFilter implements IFilter {
 			if (!m.owner.endsWith("$DefaultImpls")) {
 				return;
 			}
+			if (!m.name.equals(methodNode.name)) {
+				return;
+			}
 			nextIs(Type.getReturnType(methodNode.desc)
 					.getOpcode(Opcodes.IRETURN));
 			if (cursor == null) {
