@@ -23,6 +23,7 @@ object KotlinDefaultMethodsTarget {
         fun overriddenWithoutSuperCall() = Unit // assertNotCovered()
         fun overridden() = Unit // assertFullyCovered()
         fun overriddenRedundantly() = Unit // assertFullyCovered()
+        fun overriddenBySuperCallOfAnotherMethod() = Unit // assertNotCovered()
         fun notOverridden() = Unit // assertFullyCovered()
         fun notOverriddenNotCalled() = Unit // assertNotCovered()
     }
@@ -38,6 +39,10 @@ object KotlinDefaultMethodsTarget {
         override fun overriddenRedundantly() {
             super.overriddenRedundantly() // assertEmpty()
         }
+
+        override fun overriddenBySuperCallOfAnotherMethod() {
+            super.overridden() // assertFullyCovered()
+        }
     }
 
     @JvmStatic
@@ -45,6 +50,7 @@ object KotlinDefaultMethodsTarget {
         C().overriddenWithoutSuperCall()
         C().overridden()
         C().overriddenRedundantly()
+        C().overriddenBySuperCallOfAnotherMethod()
         C().notOverridden()
     }
 
