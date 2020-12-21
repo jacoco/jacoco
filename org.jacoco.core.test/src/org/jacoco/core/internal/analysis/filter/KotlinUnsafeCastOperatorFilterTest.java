@@ -31,6 +31,8 @@ public class KotlinUnsafeCastOperatorFilterTest extends FilterTestBase {
 
 	@Test
 	public void should_filter() {
+		context.classAnnotations
+				.add(KotlinGeneratedFilter.KOTLIN_METADATA_DESC);
 		final Label label = new Label();
 
 		m.visitInsn(Opcodes.DUP);
@@ -52,6 +54,8 @@ public class KotlinUnsafeCastOperatorFilterTest extends FilterTestBase {
 
 	@Test
 	public void should_filter_Kotlin_1_4() {
+		context.classAnnotations
+				.add(KotlinGeneratedFilter.KOTLIN_METADATA_DESC);
 		final Label label = new Label();
 
 		m.visitInsn(Opcodes.DUP);
@@ -82,6 +86,8 @@ public class KotlinUnsafeCastOperatorFilterTest extends FilterTestBase {
 	 */
 	@Test
 	public void should_not_filter() {
+		context.classAnnotations
+				.add(KotlinGeneratedFilter.KOTLIN_METADATA_DESC);
 		m.visitVarInsn(Opcodes.ALOAD, 1);
 		final Label label = new Label();
 		m.visitJumpInsn(Opcodes.IFNONNULL, label);
@@ -94,6 +100,25 @@ public class KotlinUnsafeCastOperatorFilterTest extends FilterTestBase {
 		m.visitInsn(Opcodes.ATHROW);
 		m.visitLabel(label);
 		m.visitInsn(Opcodes.RETURN);
+
+		filter.filter(m, context, output);
+
+		assertIgnored();
+	}
+
+	@Test
+	public void should_not_filter_when_not_kotlin() {
+		m.visitInsn(Opcodes.DUP);
+		final Label label = new Label();
+		m.visitJumpInsn(Opcodes.IFNONNULL, label);
+		m.visitTypeInsn(Opcodes.NEW, "java/lang/NullPointerException");
+		m.visitInsn(Opcodes.DUP);
+		m.visitLdcInsn("null cannot be cast to non-null type kotlin.String");
+		m.visitMethodInsn(Opcodes.INVOKESPECIAL,
+				"java/lang/NullPointerException", "<init>",
+				"(Ljava/lang/String;)V", false);
+		m.visitInsn(Opcodes.ATHROW);
+		m.visitLabel(label);
 
 		filter.filter(m, context, output);
 
