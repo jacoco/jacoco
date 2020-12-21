@@ -38,11 +38,12 @@ public final class KotlinUnsafeCastOperatorFilter implements IFilter {
 		public void match(final String exceptionType,
 				final AbstractInsnNode start, final IFilterOutput output) {
 
-			if (Opcodes.IFNONNULL != start.getOpcode()) {
+			if (Opcodes.DUP != start.getOpcode()) {
 				return;
 			}
 			cursor = start;
-
+			nextIs(Opcodes.IFNONNULL);
+			final JumpInsnNode jumpInsnNode = (JumpInsnNode) cursor;
 			nextIsType(Opcodes.NEW, exceptionType);
 			nextIs(Opcodes.DUP);
 			nextIs(Opcodes.LDC);
@@ -60,7 +61,7 @@ public final class KotlinUnsafeCastOperatorFilter implements IFilter {
 			if (cursor == null) {
 				return;
 			}
-			if (cursor.getNext() != ((JumpInsnNode) start).label) {
+			if (cursor.getNext() != jumpInsnNode.label) {
 				return;
 			}
 

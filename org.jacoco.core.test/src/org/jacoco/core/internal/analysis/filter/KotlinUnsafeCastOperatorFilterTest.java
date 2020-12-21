@@ -34,8 +34,8 @@ public class KotlinUnsafeCastOperatorFilterTest extends FilterTestBase {
 		final Label label = new Label();
 
 		m.visitInsn(Opcodes.DUP);
-		m.visitJumpInsn(Opcodes.IFNONNULL, label);
 		final AbstractInsnNode expectedFrom = m.instructions.getLast();
+		m.visitJumpInsn(Opcodes.IFNONNULL, label);
 		m.visitTypeInsn(Opcodes.NEW, "kotlin/TypeCastException");
 		m.visitInsn(Opcodes.DUP);
 		m.visitLdcInsn("null cannot be cast to non-null type kotlin.String");
@@ -55,8 +55,8 @@ public class KotlinUnsafeCastOperatorFilterTest extends FilterTestBase {
 		final Label label = new Label();
 
 		m.visitInsn(Opcodes.DUP);
-		m.visitJumpInsn(Opcodes.IFNONNULL, label);
 		final AbstractInsnNode expectedFrom = m.instructions.getLast();
+		m.visitJumpInsn(Opcodes.IFNONNULL, label);
 		m.visitTypeInsn(Opcodes.NEW, "java/lang/NullPointerException");
 		m.visitInsn(Opcodes.DUP);
 		m.visitLdcInsn("null cannot be cast to non-null type kotlin.String");
