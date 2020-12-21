@@ -72,4 +72,32 @@ public class KotlinUnsafeCastOperatorFilterTest extends FilterTestBase {
 		assertIgnored(new Range(expectedFrom, expectedTo));
 	}
 
+	/**
+	 * <pre>
+	 *   fun f(o: Any?) {
+	 *     if (o == null)
+	 *       throw NullPointerException("null cannot be cast to non-null type")
+	 *   }
+	 * </pre>
+	 */
+	@Test
+	public void should_not_filter() {
+		m.visitVarInsn(Opcodes.ALOAD, 1);
+		final Label label = new Label();
+		m.visitJumpInsn(Opcodes.IFNONNULL, label);
+		m.visitTypeInsn(Opcodes.NEW, "java/lang/NullPointerException");
+		m.visitInsn(Opcodes.DUP);
+		m.visitLdcInsn("null cannot be cast to non-null type");
+		m.visitMethodInsn(Opcodes.INVOKESPECIAL,
+				"java/lang/NullPointerException", "<init>",
+				"(Ljava/lang/String;)V", false);
+		m.visitInsn(Opcodes.ATHROW);
+		m.visitLabel(label);
+		m.visitInsn(Opcodes.RETURN);
+
+		filter.filter(m, context, output);
+
+		assertIgnored();
+	}
+
 }
