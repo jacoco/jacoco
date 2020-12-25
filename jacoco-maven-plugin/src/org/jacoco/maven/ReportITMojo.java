@@ -58,7 +58,7 @@ public class ReportITMojo extends AbstractReportMojo {
 
 	@Override
 	boolean canGenerateReportRegardingClassesDirectory() {
-		return new File(getProject().getBuild().getOutputDirectory()).exists();
+		return new File(project.getBuild().getOutputDirectory()).exists();
 	}
 
 	@Override
@@ -76,16 +76,14 @@ public class ReportITMojo extends AbstractReportMojo {
 	@Override
 	void createReport(final IReportGroupVisitor visitor,
 			final ReportSupport support) throws IOException {
-		support.processProject(visitor, title, getProject(), getIncludes(),
+		support.processProject(visitor, title, project, getIncludes(),
 				getExcludes(), sourceEncoding);
 	}
 
-	@Override
-	protected String getOutputDirectory() {
-		return outputDirectory.getAbsolutePath();
+	public File getReportOutputDirectory() {
+		return outputDirectory;
 	}
 
-	@Override
 	public void setReportOutputDirectory(final File reportOutputDirectory) {
 		if (reportOutputDirectory != null && !reportOutputDirectory
 				.getAbsolutePath().endsWith("jacoco-it")) {
