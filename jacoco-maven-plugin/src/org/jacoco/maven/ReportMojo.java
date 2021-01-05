@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2020 Mountainminds GmbH & Co. KG and Contributors
+ * Copyright (c) 2009, 2021 Mountainminds GmbH & Co. KG and Contributors
  * This program and the accompanying materials are made available under
  * the terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0
@@ -53,7 +53,7 @@ public class ReportMojo extends AbstractReportMojo {
 
 	@Override
 	boolean canGenerateReportRegardingClassesDirectory() {
-		return new File(getProject().getBuild().getOutputDirectory()).exists();
+		return new File(project.getBuild().getOutputDirectory()).exists();
 	}
 
 	@Override
@@ -71,16 +71,14 @@ public class ReportMojo extends AbstractReportMojo {
 	@Override
 	void createReport(final IReportGroupVisitor visitor,
 			final ReportSupport support) throws IOException {
-		support.processProject(visitor, title, getProject(), getIncludes(),
+		support.processProject(visitor, title, project, getIncludes(),
 				getExcludes(), sourceEncoding);
 	}
 
-	@Override
-	protected String getOutputDirectory() {
-		return outputDirectory.getAbsolutePath();
+	public File getReportOutputDirectory() {
+		return outputDirectory;
 	}
 
-	@Override
 	public void setReportOutputDirectory(final File reportOutputDirectory) {
 		if (reportOutputDirectory != null && !reportOutputDirectory
 				.getAbsolutePath().endsWith("jacoco")) {
