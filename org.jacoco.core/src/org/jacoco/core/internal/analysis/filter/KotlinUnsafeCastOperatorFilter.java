@@ -24,26 +24,30 @@ import org.objectweb.asm.tree.MethodNode;
  */
 public final class KotlinUnsafeCastOperatorFilter implements IFilter {
 
-	private static final String KOTLIN_TYPE_CAST_EXCEPTION = "kotlin/TypeCastException";
-
 	public void filter(final MethodNode methodNode,
 			final IFilterContext context, final IFilterOutput output) {
+		if (!KotlinGeneratedFilter.isKotlinClass(context)) {
+			return;
+		}
 		final Matcher matcher = new Matcher();
 		for (final AbstractInsnNode i : methodNode.instructions) {
-			matcher.match(i, output);
+			matcher.match("kotlin/TypeCastException", i, output);
+			// Since Kotlin 1.4.0:
+			matcher.match("java/lang/NullPointerException", i, output);
 		}
 	}
 
 	private static class Matcher extends AbstractMatcher {
-		public void match(final AbstractInsnNode start,
-				final IFilterOutput output) {
+		public void match(final String exceptionType,
+				final AbstractInsnNode start, final IFilterOutput output) {
 
-			if (Opcodes.IFNONNULL != start.getOpcode()) {
+			if (Opcodes.DUP != start.getOpcode()) {
 				return;
 			}
 			cursor = start;
-
-			nextIsType(Opcodes.NEW, KOTLIN_TYPE_CAST_EXCEPTION);
+			nextIs(Opcodes.IFNONNULL);
+			final JumpInsnNode jumpInsnNode = (JumpInsnNode) cursor;
+			nextIsType(Opcodes.NEW, exceptionType);
 			nextIs(Opcodes.DUP);
 			nextIs(Opcodes.LDC);
 			if (cursor == null) {
@@ -54,13 +58,13 @@ public final class KotlinUnsafeCastOperatorFilter implements IFilter {
 					.startsWith("null cannot be cast to non-null type"))) {
 				return;
 			}
-			nextIsInvoke(Opcodes.INVOKESPECIAL, KOTLIN_TYPE_CAST_EXCEPTION,
-					"<init>", "(Ljava/lang/String;)V");
+			nextIsInvoke(Opcodes.INVOKESPECIAL, exceptionType, "<init>",
+					"(Ljava/lang/String;)V");
 			nextIs(Opcodes.ATHROW);
 			if (cursor == null) {
 				return;
 			}
-			if (cursor.getNext() != ((JumpInsnNode) start).label) {
+			if (cursor.getNext() != jumpInsnNode.label) {
 				return;
 			}
 
