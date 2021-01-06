@@ -25,6 +25,10 @@
   <name>JaCoCo :: Test :: Core :: Validation Kotlin</name>
 
   <properties>
+    <!--
+    re-include this module in profiles for JDK 16 and 17 in org.jacoco.core.test.validation
+    once there is version with resolved https://youtrack.jetbrains.com/issue/KT-43704
+    -->
     <kotlin.version>1.4.20</kotlin.version>
   </properties>
 

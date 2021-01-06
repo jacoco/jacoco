@@ -249,7 +249,12 @@
         <maven.compiler.target>16</maven.compiler.target>
       </properties>
       <modules>
+        <!--
+        kotlin-maven-plugin versions 1.4.20 and 1.4.21 fail
+        due to https://openjdk.java.net/jeps/396
+        see https://youtrack.jetbrains.com/issue/KT-43704
         <module>../org.jacoco.core.test.validation.kotlin</module>
+        -->
         <module>../org.jacoco.core.test.validation.java7</module>
         <module>../org.jacoco.core.test.validation.java8</module>
         <module>../org.jacoco.core.test.validation.java14</module>
@@ -272,7 +277,12 @@
         <maven.compiler.target>17</maven.compiler.target>
       </properties>
       <modules>
+        <!--
+        kotlin-maven-plugin versions 1.4.20 and 1.4.21 fail
+        due to https://openjdk.java.net/jeps/396
+        see https://youtrack.jetbrains.com/issue/KT-43704
         <module>../org.jacoco.core.test.validation.kotlin</module>
+        -->
         <module>../org.jacoco.core.test.validation.java7</module>
         <module>../org.jacoco.core.test.validation.java8</module>
         <module>../org.jacoco.core.test.validation.java14</module>
