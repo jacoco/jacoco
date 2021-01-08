@@ -20,6 +20,7 @@ import org.objectweb.asm.Type;
 import org.objectweb.asm.tree.AbstractInsnNode;
 import org.objectweb.asm.tree.JumpInsnNode;
 import org.objectweb.asm.tree.LdcInsnNode;
+import org.objectweb.asm.tree.MethodInsnNode;
 import org.objectweb.asm.tree.MethodNode;
 import org.objectweb.asm.tree.TableSwitchInsnNode;
 
@@ -67,10 +68,17 @@ public final class KotlinCoroutineFilter implements IFilter {
 
 		private void match(final MethodNode methodNode,
 				final IFilterOutput output) {
-			cursor = methodNode.instructions.getFirst();
-			nextIsInvoke(Opcodes.INVOKESTATIC,
-					"kotlin/coroutines/intrinsics/IntrinsicsKt",
-					"getCOROUTINE_SUSPENDED", "()Ljava/lang/Object;");
+			cursor = skipNonOpcodes(methodNode.instructions.getFirst());
+			if (cursor == null || cursor.getOpcode() != Opcodes.INVOKESTATIC) {
+				cursor = null;
+			} else {
+				final MethodInsnNode m = (MethodInsnNode) cursor;
+				if (!"kotlin/coroutines/intrinsics/IntrinsicsKt".equals(m.owner)
+						|| !"getCOROUTINE_SUSPENDED".equals(m.name)
+						|| !"()Ljava/lang/Object;".equals(m.desc)) {
+					cursor = null;
+				}
+			}
 
 			if (cursor == null) {
 				cursor = skipNonOpcodes(methodNode.instructions.getFirst());
