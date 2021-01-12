@@ -7,7 +7,7 @@
 + 所有修改内容在commit记录可查，为了方便查看，我尽量减少了commit的次数
 
 ### 使用方法
-###### 1、 下载源码，然后运行maven: mvn package   -Dmaven.test.skip=true  -Dmaven.javadoc.skip=true
+###### 1、 下载源码，然后运行maven: mvn package   -Dmaven.test.skip=true   -Dmaven.javadoc.skip=true
 ###### 2、 其他包都可以使用jacoco官方包，report时使用我们构建的包，如果是增量覆盖率加入参数--diffCode=
 ```
 [
