@@ -45,130 +45,139 @@ import org.kohsuke.args4j.Option;
  */
 public class Report extends Command {
 
-	@Argument(usage = "list of JaCoCo *.exec files to read", metaVar = "<execfiles>")
-	List<File> execfiles = new ArrayList<File>();
+    @Argument(usage = "list of JaCoCo *.exec files to read", metaVar = "<execfiles>")
+    List<File> execfiles = new ArrayList<File>();
 
-	@Option(name = "--classfiles", usage = "location of Java class files", metaVar = "<path>", required = true)
-	List<File> classfiles = new ArrayList<File>();
+    @Option(name = "--classfiles", usage = "location of Java class files", metaVar = "<path>", required = true)
+    List<File> classfiles = new ArrayList<File>();
 
-	@Option(name = "--sourcefiles", usage = "location of the source files", metaVar = "<path>")
-	List<File> sourcefiles = new ArrayList<File>();
+    @Option(name = "--sourcefiles", usage = "location of the source files", metaVar = "<path>")
+    List<File> sourcefiles = new ArrayList<File>();
 
-	@Option(name = "--tabwith", usage = "tab stop width for the source pages (default 4)", metaVar = "<n>")
-	int tabwidth = 4;
+    @Option(name = "--diffCode", usage = "input file for diff", metaVar = "<file>")
+    String diffCode;
 
-	@Option(name = "--name", usage = "name used for this report", metaVar = "<name>")
-	String name = "JaCoCo Coverage Report";
+    @Option(name = "--tabwith", usage = "tab stop width for the source pages (default 4)", metaVar = "<n>")
+    int tabwidth = 4;
 
-	@Option(name = "--encoding", usage = "source file encoding (by default platform encoding is used)", metaVar = "<charset>")
-	String encoding;
+    @Option(name = "--name", usage = "name used for this report", metaVar = "<name>")
+    String name = "JaCoCo Coverage Report";
 
-	@Option(name = "--xml", usage = "output file for the XML report", metaVar = "<file>")
-	File xml;
+    @Option(name = "--encoding", usage = "source file encoding (by default platform encoding is used)", metaVar = "<charset>")
+    String encoding;
 
-	@Option(name = "--csv", usage = "output file for the CSV report", metaVar = "<file>")
-	File csv;
+    @Option(name = "--xml", usage = "output file for the XML report", metaVar = "<file>")
+    File xml;
 
-	@Option(name = "--html", usage = "output directory for the HTML report", metaVar = "<dir>")
-	File html;
+    @Option(name = "--csv", usage = "output file for the CSV report", metaVar = "<file>")
+    File csv;
 
-	@Override
-	public String description() {
-		return "Generate reports in different formats by reading exec and Java class files.";
-	}
+    @Option(name = "--html", usage = "output directory for the HTML report", metaVar = "<dir>")
+    File html;
 
-	@Override
-	public int execute(final PrintWriter out, final PrintWriter err)
-			throws IOException {
-		final ExecFileLoader loader = loadExecutionData(out);
-		final IBundleCoverage bundle = analyze(loader.getExecutionDataStore(),
-				out);
-		writeReports(bundle, loader, out);
-		return 0;
-	}
+    @Override
+    public String description() {
+        return "Generate reports in different formats by reading exec and Java class files.";
+    }
 
-	private ExecFileLoader loadExecutionData(final PrintWriter out)
-			throws IOException {
-		final ExecFileLoader loader = new ExecFileLoader();
-		if (execfiles.isEmpty()) {
-			out.println("[WARN] No execution data files provided.");
-		} else {
-			for (final File file : execfiles) {
-				out.printf("[INFO] Loading execution data file %s.%n",
-						file.getAbsolutePath());
-				loader.load(file);
-			}
-		}
-		return loader;
-	}
+    @Override
+    public int execute(final PrintWriter out, final PrintWriter err)
+            throws IOException {
+        final ExecFileLoader loader = loadExecutionData(out);
+        final IBundleCoverage bundle = analyze(loader.getExecutionDataStore(),
+                out);
+        writeReports(bundle, loader, out);
+        return 0;
+    }
 
-	private IBundleCoverage analyze(final ExecutionDataStore data,
-			final PrintWriter out) throws IOException {
-		final CoverageBuilder builder = new CoverageBuilder();
-		final Analyzer analyzer = new Analyzer(data, builder);
-		for (final File f : classfiles) {
-			analyzer.analyzeAll(f);
-		}
-		printNoMatchWarning(builder.getNoMatchClasses(), out);
-		return builder.getBundle(name);
-	}
+    private ExecFileLoader loadExecutionData(final PrintWriter out)
+            throws IOException {
+        final ExecFileLoader loader = new ExecFileLoader();
+        if (execfiles.isEmpty()) {
+            out.println("[WARN] No execution data files provided.");
+        } else {
+            for (final File file : execfiles) {
+                out.printf("[INFO] Loading execution data file %s.%n",
+                        file.getAbsolutePath());
+                loader.load(file);
+            }
+        }
+        return loader;
+    }
 
-	private void printNoMatchWarning(final Collection<IClassCoverage> nomatch,
-			final PrintWriter out) {
-		if (!nomatch.isEmpty()) {
-			out.println(
-					"[WARN] Some classes do not match with execution data.");
-			out.println(
-					"[WARN] For report generation the same class files must be used as at runtime.");
-			for (final IClassCoverage c : nomatch) {
-				out.printf(
-						"[WARN] Execution data for class %s does not match.%n",
-						c.getName());
-			}
-		}
-	}
+    private IBundleCoverage analyze(final ExecutionDataStore data,
+                                    final PrintWriter out) throws IOException {
+        CoverageBuilder builder;
+        //如果有增量参数将其设置进去
+        if (null != this.diffCode) {
+            builder = new CoverageBuilder(this.diffCode);
+        } else {
+            builder = new CoverageBuilder();
+        }
+        final Analyzer analyzer = new Analyzer(data, builder);
+        for (final File f : classfiles) {
+            analyzer.analyzeAll(f);
+        }
+        printNoMatchWarning(builder.getNoMatchClasses(), out);
+        return builder.getBundle(name);
+    }
 
-	private void writeReports(final IBundleCoverage bundle,
-			final ExecFileLoader loader, final PrintWriter out)
-			throws IOException {
-		out.printf("[INFO] Analyzing %s classes.%n",
-				Integer.valueOf(bundle.getClassCounter().getTotalCount()));
-		final IReportVisitor visitor = createReportVisitor();
-		visitor.visitInfo(loader.getSessionInfoStore().getInfos(),
-				loader.getExecutionDataStore().getContents());
-		visitor.visitBundle(bundle, getSourceLocator());
-		visitor.visitEnd();
-	}
+    private void printNoMatchWarning(final Collection<IClassCoverage> nomatch,
+                                     final PrintWriter out) {
+        if (!nomatch.isEmpty()) {
+            out.println(
+                    "[WARN] Some classes do not match with execution data.");
+            out.println(
+                    "[WARN] For report generation the same class files must be used as at runtime.");
+            for (final IClassCoverage c : nomatch) {
+                out.printf(
+                        "[WARN] Execution data for class %s does not match.%n",
+                        c.getName());
+            }
+        }
+    }
 
-	private IReportVisitor createReportVisitor() throws IOException {
-		final List<IReportVisitor> visitors = new ArrayList<IReportVisitor>();
+    private void writeReports(final IBundleCoverage bundle,
+                              final ExecFileLoader loader, final PrintWriter out)
+            throws IOException {
+        out.printf("[INFO] Analyzing %s classes.%n",
+                Integer.valueOf(bundle.getClassCounter().getTotalCount()));
+        final IReportVisitor visitor = createReportVisitor();
+        visitor.visitInfo(loader.getSessionInfoStore().getInfos(),
+                loader.getExecutionDataStore().getContents());
+        visitor.visitBundle(bundle, getSourceLocator());
+        visitor.visitEnd();
+    }
 
-		if (xml != null) {
-			final XMLFormatter formatter = new XMLFormatter();
-			visitors.add(formatter.createVisitor(new FileOutputStream(xml)));
-		}
+    private IReportVisitor createReportVisitor() throws IOException {
+        final List<IReportVisitor> visitors = new ArrayList<IReportVisitor>();
 
-		if (csv != null) {
-			final CSVFormatter formatter = new CSVFormatter();
-			visitors.add(formatter.createVisitor(new FileOutputStream(csv)));
-		}
+        if (xml != null) {
+            final XMLFormatter formatter = new XMLFormatter();
+            visitors.add(formatter.createVisitor(new FileOutputStream(xml)));
+        }
 
-		if (html != null) {
-			final HTMLFormatter formatter = new HTMLFormatter();
-			visitors.add(
-					formatter.createVisitor(new FileMultiReportOutput(html)));
-		}
+        if (csv != null) {
+            final CSVFormatter formatter = new CSVFormatter();
+            visitors.add(formatter.createVisitor(new FileOutputStream(csv)));
+        }
 
-		return new MultiReportVisitor(visitors);
-	}
+        if (html != null) {
+            final HTMLFormatter formatter = new HTMLFormatter();
+            visitors.add(
+                    formatter.createVisitor(new FileMultiReportOutput(html)));
+        }
 
-	private ISourceFileLocator getSourceLocator() {
-		final MultiSourceFileLocator multi = new MultiSourceFileLocator(
-				tabwidth);
-		for (final File f : sourcefiles) {
-			multi.add(new DirectorySourceFileLocator(f, encoding, tabwidth));
-		}
-		return multi;
-	}
+        return new MultiReportVisitor(visitors);
+    }
+
+    private ISourceFileLocator getSourceLocator() {
+        final MultiSourceFileLocator multi = new MultiSourceFileLocator(
+                tabwidth);
+        for (final File f : sourcefiles) {
+            multi.add(new DirectorySourceFileLocator(f, encoding, tabwidth));
+        }
+        return multi;
+    }
 
 }
