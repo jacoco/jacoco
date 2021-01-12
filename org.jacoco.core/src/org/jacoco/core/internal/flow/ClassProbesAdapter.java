@@ -24,94 +24,97 @@ import org.objectweb.asm.commons.AnalyzerAdapter;
  * method.
  */
 public class ClassProbesAdapter extends ClassVisitor
-        implements IProbeIdGenerator {
+		implements IProbeIdGenerator {
 
-    private static final MethodProbesVisitor EMPTY_METHOD_PROBES_VISITOR = new MethodProbesVisitor() {
-    };
+	private static final MethodProbesVisitor EMPTY_METHOD_PROBES_VISITOR = new MethodProbesVisitor() {
+	};
 
-    private final ClassProbesVisitor cv;
+	private final ClassProbesVisitor cv;
 
-    private final boolean trackFrames;
+	private final boolean trackFrames;
 
-    private int counter = 0;
+	private int counter = 0;
 
-    private String name;
+	private String name;
 
-    /**
-     * Creates a new adapter that delegates to the given visitor.
-     *
-     * @param cv          instance to delegate to
-     * @param trackFrames if <code>true</code> stackmap frames are tracked and provided
-     */
-    public ClassProbesAdapter(final ClassProbesVisitor cv,
-                              final boolean trackFrames) {
-        super(InstrSupport.ASM_API_VERSION, cv);
-        this.cv = cv;
-        this.trackFrames = trackFrames;
-    }
+	/**
+	 * Creates a new adapter that delegates to the given visitor.
+	 *
+	 * @param cv
+	 *            instance to delegate to
+	 * @param trackFrames
+	 *            if <code>true</code> stackmap frames are tracked and provided
+	 */
+	public ClassProbesAdapter(final ClassProbesVisitor cv,
+			final boolean trackFrames) {
+		super(InstrSupport.ASM_API_VERSION, cv);
+		this.cv = cv;
+		this.trackFrames = trackFrames;
+	}
 
-    @Override
-    public void visit(final int version, final int access, final String name,
-                      final String signature, final String superName,
-                      final String[] interfaces) {
-        this.name = name;
-        super.visit(version, access, name, signature, superName, interfaces);
-    }
+	@Override
+	public void visit(final int version, final int access, final String name,
+			final String signature, final String superName,
+			final String[] interfaces) {
+		this.name = name;
+		super.visit(version, access, name, signature, superName, interfaces);
+	}
 
-    @Override
-    public final MethodVisitor visitMethod(final int access, final String name,
-                                           final String desc, final String signature,
-                                           final String[] exceptions) {
-        final MethodProbesVisitor methodProbes;
-        final MethodProbesVisitor mv = cv.visitMethod(access, name, desc,
-                signature, exceptions);
-        if (null != mv) {
-            //增量代码，有点绕，由于参数定义成final,无法第二次指定五一代码无法简化
-            if (null != CoverageBuilder.classInfos && !CoverageBuilder.classInfos.isEmpty()) {
-                if (CodeDiffUtil.checkMethodIn(this.name, name)) {
-                    methodProbes = mv;
-                } else {
-                    methodProbes = EMPTY_METHOD_PROBES_VISITOR;
-                }
-            } else {
-                methodProbes = mv;
-            }
-        } else {
-            methodProbes = EMPTY_METHOD_PROBES_VISITOR;
-        }
+	@Override
+	public final MethodVisitor visitMethod(final int access, final String name,
+			final String desc, final String signature,
+			final String[] exceptions) {
+		final MethodProbesVisitor methodProbes;
+		final MethodProbesVisitor mv = cv.visitMethod(access, name, desc,
+				signature, exceptions);
+		if (null != mv) {
+			// 增量代码，有点绕，由于参数定义成final,无法第二次指定五一代码无法简化
+			if (null != CoverageBuilder.classInfos
+					&& !CoverageBuilder.classInfos.isEmpty()) {
+				if (CodeDiffUtil.checkMethodIn(this.name, name)) {
+					methodProbes = mv;
+				} else {
+					methodProbes = EMPTY_METHOD_PROBES_VISITOR;
+				}
+			} else {
+				methodProbes = mv;
+			}
+		} else {
+			methodProbes = EMPTY_METHOD_PROBES_VISITOR;
+		}
 
-        return new MethodSanitizer(null, access, name, desc, signature,
-                exceptions) {
+		return new MethodSanitizer(null, access, name, desc, signature,
+				exceptions) {
 
-            @Override
-            public void visitEnd() {
-                super.visitEnd();
-                LabelFlowAnalyzer.markLabels(this);
-                final MethodProbesAdapter probesAdapter = new MethodProbesAdapter(
-                        methodProbes, ClassProbesAdapter.this);
-                if (trackFrames) {
-                    final AnalyzerAdapter analyzer = new AnalyzerAdapter(
-                            ClassProbesAdapter.this.name, access, name, desc,
-                            probesAdapter);
-                    probesAdapter.setAnalyzer(analyzer);
-                    methodProbes.accept(this, analyzer);
-                } else {
-                    methodProbes.accept(this, probesAdapter);
-                }
-            }
-        };
-    }
+			@Override
+			public void visitEnd() {
+				super.visitEnd();
+				LabelFlowAnalyzer.markLabels(this);
+				final MethodProbesAdapter probesAdapter = new MethodProbesAdapter(
+						methodProbes, ClassProbesAdapter.this);
+				if (trackFrames) {
+					final AnalyzerAdapter analyzer = new AnalyzerAdapter(
+							ClassProbesAdapter.this.name, access, name, desc,
+							probesAdapter);
+					probesAdapter.setAnalyzer(analyzer);
+					methodProbes.accept(this, analyzer);
+				} else {
+					methodProbes.accept(this, probesAdapter);
+				}
+			}
+		};
+	}
 
-    @Override
-    public void visitEnd() {
-        cv.visitTotalProbeCount(counter);
-        super.visitEnd();
-    }
+	@Override
+	public void visitEnd() {
+		cv.visitTotalProbeCount(counter);
+		super.visitEnd();
+	}
 
-    // === IProbeIdGenerator ===
+	// === IProbeIdGenerator ===
 
-    public int nextId() {
-        return counter++;
-    }
+	public int nextId() {
+		return counter++;
+	}
 
 }
