@@ -55,7 +55,7 @@ public class CoverageBuilder implements ICoverageVisitor {
 	public CoverageBuilder(String classList) {
 		this.classes = new HashMap<String, IClassCoverage>();
 		this.sourcefiles = new HashMap<String, ISourceFileCoverage>();
-		if (null != classInfos) {
+		if (null != classList) {
 			classInfos = JSON.parseArray(classList, ClassInfoDto.class);
 		}
 	}

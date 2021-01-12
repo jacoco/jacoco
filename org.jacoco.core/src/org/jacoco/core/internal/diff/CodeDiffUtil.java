@@ -58,13 +58,13 @@ public class CodeDiffUtil {
 		ClassInfoDto classInfoDto = CoverageBuilder.classInfos.stream()
 				.filter(c -> className.equals(c.getClassFile())).findFirst()
 				.get();
-		if (null == classInfoDto.getMethodInfos()
-				|| classInfoDto.getMethodInfos().isEmpty()) {
-			return Boolean.FALSE;
-		}
 		// 如果是新增类，不用匹配方法，直接运行
 		if (("ADD").equals(classInfoDto.getType())) {
 			return Boolean.TRUE;
+		}
+		if (null == classInfoDto.getMethodInfos()
+				|| classInfoDto.getMethodInfos().isEmpty()) {
+			return Boolean.FALSE;
 		}
 		// 匹配了方法，参数也需要校验？
 		return classInfoDto.getMethodInfos().stream()
