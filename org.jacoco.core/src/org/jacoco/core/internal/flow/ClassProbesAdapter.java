@@ -17,6 +17,7 @@ import org.jacoco.core.internal.diff.CodeDiffUtil;
 import org.jacoco.core.internal.instr.InstrSupport;
 import org.objectweb.asm.ClassVisitor;
 import org.objectweb.asm.MethodVisitor;
+import org.objectweb.asm.Type;
 import org.objectweb.asm.commons.AnalyzerAdapter;
 
 /**
@@ -68,10 +69,10 @@ public class ClassProbesAdapter extends ClassVisitor
 		final MethodProbesVisitor mv = cv.visitMethod(access, name, desc,
 				signature, exceptions);
 		if (null != mv) {
-			// 增量代码，有点绕，由于参数定义成final,无法第二次指定五一代码无法简化
+			// 增量代码，有点绕，由于参数定义成final,无法第二次指定,代码无法简化
 			if (null != CoverageBuilder.classInfos
 					&& !CoverageBuilder.classInfos.isEmpty()) {
-				if (CodeDiffUtil.checkMethodIn(this.name, name)) {
+				if (CodeDiffUtil.checkMethodIn(this.name, name, desc)) {
 					methodProbes = mv;
 				} else {
 					methodProbes = EMPTY_METHOD_PROBES_VISITOR;

@@ -13,6 +13,9 @@
 package org.jacoco.core.internal.diff;
 
 import org.jacoco.core.analysis.CoverageBuilder;
+import org.objectweb.asm.Type;
+
+import java.util.stream.Stream;
 
 /**
  * @ProjectName: root
@@ -48,7 +51,8 @@ public class CodeDiffUtil {
 	 * @param methodName
 	 * @return Boolean
 	 */
-	public static Boolean checkMethodIn(String className, String methodName) {
+	public static Boolean checkMethodIn(String className, String methodName,
+			String desc) {
 		// 参数校验
 		if (null == CoverageBuilder.classInfos
 				|| CoverageBuilder.classInfos.isEmpty() || null == methodName
@@ -66,8 +70,48 @@ public class CodeDiffUtil {
 				|| classInfoDto.getMethodInfos().isEmpty()) {
 			return Boolean.FALSE;
 		}
-		// 匹配了方法，参数也需要校验？
-		return classInfoDto.getMethodInfos().stream()
-				.anyMatch(m -> methodName.equals(m.getMethodName()));
+		// 匹配了方法，参数也需要校验
+		return classInfoDto.getMethodInfos().stream().anyMatch(m -> {
+			if (methodName.equals(m.getMethodName())) {
+				return checkParamsIn(m.getParameters(), desc);
+			} else {
+				return Boolean.FALSE;
+			}
+		});
+
+	}
+
+	/**
+	 * 匹配餐数
+	 *
+	 * @param params
+	 *            格式：String a
+	 * @param desc
+	 *            转换后格式： java.lang.String
+	 * @return
+	 */
+	public static Boolean checkParamsIn(String params, String desc) {
+		if (null == params || params.length() == 0 || null == desc) {
+			if (null == desc && null == params) {
+				return Boolean.TRUE;
+			}
+			return Boolean.FALSE;
+		}
+		Type[] argumentTypes = Type.getArgumentTypes(desc);
+		String[] diffParams = params.split(",");
+		// 只有参数数量完全相等才做下一次比较
+		if (diffParams.length > 0
+				&& argumentTypes.length == diffParams.length) {
+			for (int i = 0; i < argumentTypes.length; i++) {
+				// 去掉包名只保留最后一位匹配
+				String[] args = argumentTypes[i].getClassName().split("\\.");
+				if (!diffParams[i].contains(args[args.length - 1])) {
+					return Boolean.FALSE;
+				}
+			}
+			// 只有个数和类型全匹配到才算匹配
+			return Boolean.TRUE;
+		}
+		return Boolean.FALSE;
 	}
 }
