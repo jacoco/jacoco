@@ -99,11 +99,11 @@ public class CodeDiffUtil {
 		}
 		Type[] argumentTypes = Type.getArgumentTypes(desc);
 		String[] diffParams = params.split(",");
-		// 只有参数数量完全相等才做下一次比较
+		// 只有参数数量完全相等才做下一次比较，Type格式：I C  Ljava/lang/String;
 		if (diffParams.length > 0
 				&& argumentTypes.length == diffParams.length) {
 			for (int i = 0; i < argumentTypes.length; i++) {
-				// 去掉包名只保留最后一位匹配
+				// 去掉包名只保留最后一位匹配,getClassName格式： int java/lang/String
 				String[] args = argumentTypes[i].getClassName().split("\\.");
 				if (!diffParams[i].contains(args[args.length - 1])) {
 					return Boolean.FALSE;
