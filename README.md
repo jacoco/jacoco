@@ -1,5 +1,5 @@
 ### 简介
-+ jacoco二开，主要加入了增量代码匹配的功能
++ jacoco二开，主要加入了增量代码匹配的功能 具体设计方案参考  [jacoco增量代码实践](https://blog.csdn.net/tushuping/article/details/112613528) 
 
 ### 改造内容：
 + 新增类：所有新增类处于org.jacoco.core.internal.diff包下面；
