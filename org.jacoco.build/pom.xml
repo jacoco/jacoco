@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-   Copyright (c) 2009, 2020 Mountainminds GmbH & Co. KG and Contributors
+   Copyright (c) 2009, 2021 Mountainminds GmbH & Co. KG and Contributors
    This program and the accompanying materials are made available under
    the terms of the Eclipse Public License 2.0 which is available at
    http://www.eclipse.org/legal/epl-2.0
@@ -129,7 +129,7 @@
 
     <maven.build.timestamp.format>yyyyMMddhhmm</maven.build.timestamp.format>
     <jacoco.home.url>http://www.jacoco.org/jacoco</jacoco.home.url>
-    <copyright.years>${project.inceptionYear}, 2020</copyright.years>
+    <copyright.years>${project.inceptionYear}, 2021</copyright.years>
 
     <bytecode.version>1.5</bytecode.version>
     <maven.compiler.source>${bytecode.version}</maven.compiler.source>
@@ -632,7 +632,7 @@
                   <include name="**/*.scala"/>
                   <not>
                     <and>
-                      <contains text="Copyright (c) 2009, 2020 Mountainminds GmbH &amp; Co. KG and Contributors"/>
+                      <contains text="Copyright (c) 2009, 2021 Mountainminds GmbH &amp; Co. KG and Contributors"/>
                       <contains text="This program and the accompanying materials are made available under"/>
                       <contains text="the terms of the Eclipse Public License 2.0 which is available at"/>
                       <contains text="http://www.eclipse.org/legal/epl-2.0"/>
@@ -857,6 +857,20 @@
         <property>
           <name>bytecode.version</name>
           <value>16</value>
+        </property>
+      </activation>
+      <properties>
+        <maven.compiler.source>13</maven.compiler.source>
+        <maven.compiler.target>13</maven.compiler.target>
+      </properties>
+    </profile>
+
+    <profile>
+      <id>java17-bytecode</id>
+      <activation>
+        <property>
+          <name>bytecode.version</name>
+          <value>17</value>
         </property>
       </activation>
       <properties>

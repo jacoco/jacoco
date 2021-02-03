@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2020 Mountainminds GmbH & Co. KG and Contributors
+ * Copyright (c) 2009, 2021 Mountainminds GmbH & Co. KG and Contributors
  * This program and the accompanying materials are made available under
  * the terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0
@@ -17,7 +17,6 @@ import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
-import org.apache.commons.collections.CollectionUtils;
 import org.codehaus.plexus.util.FileUtils;
 import org.codehaus.plexus.util.StringUtils;
 
@@ -94,7 +93,7 @@ public class FileFilter {
 	private String buildPattern(final List<String> patterns,
 			final String defaultPattern) {
 		String pattern = defaultPattern;
-		if (CollectionUtils.isNotEmpty(patterns)) {
+		if (patterns != null && !patterns.isEmpty()) {
 			pattern = StringUtils.join(patterns.iterator(), ",");
 		}
 		return pattern;
