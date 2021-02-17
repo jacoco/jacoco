@@ -14,6 +14,7 @@ package org.jacoco.core.test.validation.java5;
 
 import org.jacoco.core.test.validation.ValidationTestBase;
 import org.jacoco.core.test.validation.java5.targets.SyntheticTarget;
+import org.junit.Test;
 
 /**
  * Test of filtering of synthetic methods.
@@ -24,6 +25,7 @@ public class SyntheticTest extends ValidationTestBase {
 		super(SyntheticTarget.class);
 	}
 
+	@Test
 	public void test_method_count() {
 		assertMethodCount(5);
 	}
