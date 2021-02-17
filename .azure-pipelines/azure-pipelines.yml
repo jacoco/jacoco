@@ -64,12 +64,17 @@ jobs:
       if [[ "$BUILD_SOURCEBRANCH" == "refs/heads/master" && "$JDK_VERSION" == "5" ]]; then
         mvn -V -B -e -f org.jacoco.build \
           verify -Djdk.version=$JDK_VERSION \
-          sonar:sonar deploy:deploy -DdeployAtEnd \
+          deploy:deploy -DdeployAtEnd \
           --toolchains=toolchains.xml --settings=.azure-pipelines/maven-settings.xml
       elif [[ "$JDK_VERSION" == "5" ]]; then
         mvn -V -B -e \
           verify -Djdk.version=$JDK_VERSION \
           --toolchains=toolchains.xml
+      elif [[ "$BUILD_SOURCEBRANCH" == "refs/heads/master" && "$JDK_VERSION" == "11" ]]; then
+        mvn -V -B -e -f org.jacoco.build \
+          verify -Djdk.version=$JDK_VERSION -Dbytecode.version=$JDK_VERSION \
+          sonar:sonar \
+          --toolchains=toolchains.xml --settings=.azure-pipelines/maven-settings.xml
       else
         mvn -V -B -e \
           verify -Djdk.version=$JDK_VERSION -Dbytecode.version=$JDK_VERSION -Decj=${ECJ:-} \
