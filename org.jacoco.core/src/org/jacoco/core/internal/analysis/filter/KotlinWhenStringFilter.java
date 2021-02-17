@@ -74,7 +74,7 @@ public final class KotlinWhenStringFilter implements IFilter {
 			final Set<AbstractInsnNode> replacements = new HashSet<AbstractInsnNode>();
 			replacements.add(skipNonOpcodes(defaultLabel));
 
-			for (int i = 0; i < hashCodes; i++) {
+			for (int i = 1; i <= hashCodes; i++) {
 				while (true) {
 					nextIsVar(Opcodes.ALOAD, "s");
 					nextIs(Opcodes.LDC);
@@ -83,18 +83,24 @@ public final class KotlinWhenStringFilter implements IFilter {
 					// jump to next comparison or default case
 					nextIs(Opcodes.IFEQ);
 					final JumpInsnNode jump = (JumpInsnNode) cursor;
-					// jump to case
-					nextIs(Opcodes.GOTO);
+					next();
 					if (cursor == null) {
 						return;
-					}
-
-					replacements
-							.add(skipNonOpcodes(((JumpInsnNode) cursor).label));
-
-					if (jump.label == defaultLabel) {
-						// end of comparisons for same hashCode
+					} else if (cursor.getOpcode() == Opcodes.GOTO) {
+						// jump to case body
+						replacements.add(
+								skipNonOpcodes(((JumpInsnNode) cursor).label));
+						if (jump.label == defaultLabel) {
+							// end of comparisons for same hashCode
+							break;
+						}
+					} else if (i == hashCodes && jump.label == defaultLabel) {
+						// case body
+						replacements.add(cursor);
+						cursor = jump;
 						break;
+					} else {
+						return;
 					}
 				}
 			}
