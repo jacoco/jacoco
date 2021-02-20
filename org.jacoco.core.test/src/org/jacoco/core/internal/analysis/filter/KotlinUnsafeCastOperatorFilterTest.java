@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2020 Mountainminds GmbH & Co. KG and Contributors
+ * Copyright (c) 2009, 2021 Mountainminds GmbH & Co. KG and Contributors
  * This program and the accompanying materials are made available under
  * the terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0
@@ -31,11 +31,13 @@ public class KotlinUnsafeCastOperatorFilterTest extends FilterTestBase {
 
 	@Test
 	public void should_filter() {
+		context.classAnnotations
+				.add(KotlinGeneratedFilter.KOTLIN_METADATA_DESC);
 		final Label label = new Label();
 
 		m.visitInsn(Opcodes.DUP);
-		m.visitJumpInsn(Opcodes.IFNONNULL, label);
 		final AbstractInsnNode expectedFrom = m.instructions.getLast();
+		m.visitJumpInsn(Opcodes.IFNONNULL, label);
 		m.visitTypeInsn(Opcodes.NEW, "kotlin/TypeCastException");
 		m.visitInsn(Opcodes.DUP);
 		m.visitLdcInsn("null cannot be cast to non-null type kotlin.String");
@@ -48,6 +50,79 @@ public class KotlinUnsafeCastOperatorFilterTest extends FilterTestBase {
 		filter.filter(m, context, output);
 
 		assertIgnored(new Range(expectedFrom, expectedTo));
+	}
+
+	@Test
+	public void should_filter_Kotlin_1_4() {
+		context.classAnnotations
+				.add(KotlinGeneratedFilter.KOTLIN_METADATA_DESC);
+		final Label label = new Label();
+
+		m.visitInsn(Opcodes.DUP);
+		final AbstractInsnNode expectedFrom = m.instructions.getLast();
+		m.visitJumpInsn(Opcodes.IFNONNULL, label);
+		m.visitTypeInsn(Opcodes.NEW, "java/lang/NullPointerException");
+		m.visitInsn(Opcodes.DUP);
+		m.visitLdcInsn("null cannot be cast to non-null type kotlin.String");
+		m.visitMethodInsn(Opcodes.INVOKESPECIAL,
+				"java/lang/NullPointerException", "<init>",
+				"(Ljava/lang/String;)V", false);
+		m.visitInsn(Opcodes.ATHROW);
+		final AbstractInsnNode expectedTo = m.instructions.getLast();
+		m.visitLabel(label);
+
+		filter.filter(m, context, output);
+
+		assertIgnored(new Range(expectedFrom, expectedTo));
+	}
+
+	/**
+	 * <pre>
+	 *   fun f(o: Any?) {
+	 *     if (o == null)
+	 *       throw NullPointerException("null cannot be cast to non-null type")
+	 *   }
+	 * </pre>
+	 */
+	@Test
+	public void should_not_filter() {
+		context.classAnnotations
+				.add(KotlinGeneratedFilter.KOTLIN_METADATA_DESC);
+		m.visitVarInsn(Opcodes.ALOAD, 1);
+		final Label label = new Label();
+		m.visitJumpInsn(Opcodes.IFNONNULL, label);
+		m.visitTypeInsn(Opcodes.NEW, "java/lang/NullPointerException");
+		m.visitInsn(Opcodes.DUP);
+		m.visitLdcInsn("null cannot be cast to non-null type");
+		m.visitMethodInsn(Opcodes.INVOKESPECIAL,
+				"java/lang/NullPointerException", "<init>",
+				"(Ljava/lang/String;)V", false);
+		m.visitInsn(Opcodes.ATHROW);
+		m.visitLabel(label);
+		m.visitInsn(Opcodes.RETURN);
+
+		filter.filter(m, context, output);
+
+		assertIgnored();
+	}
+
+	@Test
+	public void should_not_filter_when_not_kotlin() {
+		m.visitInsn(Opcodes.DUP);
+		final Label label = new Label();
+		m.visitJumpInsn(Opcodes.IFNONNULL, label);
+		m.visitTypeInsn(Opcodes.NEW, "java/lang/NullPointerException");
+		m.visitInsn(Opcodes.DUP);
+		m.visitLdcInsn("null cannot be cast to non-null type kotlin.String");
+		m.visitMethodInsn(Opcodes.INVOKESPECIAL,
+				"java/lang/NullPointerException", "<init>",
+				"(Ljava/lang/String;)V", false);
+		m.visitInsn(Opcodes.ATHROW);
+		m.visitLabel(label);
+
+		filter.filter(m, context, output);
+
+		assertIgnored();
 	}
 
 }
