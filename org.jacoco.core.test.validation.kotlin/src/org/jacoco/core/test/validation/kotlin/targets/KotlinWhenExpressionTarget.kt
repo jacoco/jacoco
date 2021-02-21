@@ -58,6 +58,17 @@ object KotlinWhenExpressionTarget {
         else -> 5 // assertFullyCovered()
     } // assertFullyCovered()
 
+    /**
+     * Unlike [whenString]
+     * in this example first case is the only case with biggest hashCode value.
+     */
+    private fun whenStringBiggestHashCodeFirst(p: String): Int = when (p) { // assertFullyCovered(0, 4)
+        "b" -> 1 // assertFullyCovered()
+        "a" -> 2 // assertFullyCovered()
+        "\u0000a" -> 3 // assertFullyCovered()
+        else -> 4 // assertFullyCovered()
+    } // assertFullyCovered()
+
     @JvmStatic
     fun main(args: Array<String>) {
         whenSealed(Sealed.Sealed1)
@@ -77,6 +88,11 @@ object KotlinWhenExpressionTarget {
         whenString("b")
         whenString("\u0000a")
         whenString("\u0000b")
+
+        whenStringBiggestHashCodeFirst("")
+        whenStringBiggestHashCodeFirst("a")
+        whenStringBiggestHashCodeFirst("b")
+        whenStringBiggestHashCodeFirst("\u0000a")
     }
 
 }
