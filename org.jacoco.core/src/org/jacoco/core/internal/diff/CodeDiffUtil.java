@@ -92,7 +92,7 @@ public class CodeDiffUtil {
         //解析ASM获取的参数
         Type[] argumentTypes = Type.getArgumentTypes(desc);
         //说明是无参数的方法，匹配成功
-        if (params.length() == 0 || argumentTypes.length == 0) {
+        if (params.length() == 0 && argumentTypes.length == 0) {
             return Boolean.TRUE;
         }
         String[] diffParams = params.split(",");
