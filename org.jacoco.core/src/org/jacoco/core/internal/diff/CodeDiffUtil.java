@@ -89,13 +89,12 @@ public class CodeDiffUtil {
      * @return
      */
     public static Boolean checkParamsIn(String params, String desc) {
-        if (null == params || params.length() == 0 || null == desc) {
-            if (null == desc && null == params) {
-                return Boolean.TRUE;
-            }
-            return Boolean.FALSE;
-        }
+        //解析ASM获取的参数
         Type[] argumentTypes = Type.getArgumentTypes(desc);
+        //说明是无参数的方法，匹配成功
+        if (params.length() == 0 || argumentTypes.length == 0) {
+            return Boolean.TRUE;
+        }
         String[] diffParams = params.split(",");
         // 只有参数数量完全相等才做下一次比较，Type格式：I C  Ljava/lang/String;
         if (diffParams.length > 0
