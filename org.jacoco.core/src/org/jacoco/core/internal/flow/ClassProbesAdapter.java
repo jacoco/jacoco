@@ -103,6 +103,7 @@ public class ClassProbesAdapter extends ClassVisitor
 					methodProbes.accept(this, probesAdapter);
 				}
 			}
+
 		};
 	}
 

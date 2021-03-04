@@ -15,8 +15,6 @@ package org.jacoco.core.internal.diff;
 import org.jacoco.core.analysis.CoverageBuilder;
 import org.objectweb.asm.Type;
 
-import java.util.stream.Stream;
-
 /**
  * @ProjectName: root
  * @Package: org.jacoco.core.internal.diff
@@ -89,13 +87,12 @@ public class CodeDiffUtil {
      * @return
      */
     public static Boolean checkParamsIn(String params, String desc) {
-        if (null == params || params.length() == 0 || null == desc) {
-            if (null == desc && null == params) {
-                return Boolean.TRUE;
-            }
-            return Boolean.FALSE;
-        }
+        //解析参数
         Type[] argumentTypes = Type.getArgumentTypes(desc);
+        //参数为空的处理方式，说明参数为空匹配到
+        if (params.length() == 0 && argumentTypes.length == 0) {
+            return Boolean.TRUE;
+        }
         String[] diffParams = params.split(",");
         // 只有参数数量完全相等才做下一次比较，Type格式：I C  Ljava/lang/String;
         if (diffParams.length > 0
