@@ -15,6 +15,8 @@ package org.jacoco.core.internal.diff;
 import org.jacoco.core.analysis.CoverageBuilder;
 import org.objectweb.asm.Type;
 
+import java.util.stream.Stream;
+
 /**
  * @ProjectName: root
  * @Package: org.jacoco.core.internal.diff
@@ -87,9 +89,9 @@ public class CodeDiffUtil {
      * @return
      */
     public static Boolean checkParamsIn(String params, String desc) {
-        //解析参数
+        //解析ASM获取的参数
         Type[] argumentTypes = Type.getArgumentTypes(desc);
-        //参数为空的处理方式，说明参数为空匹配到
+        //说明是无参数的方法，匹配成功
         if (params.length() == 0 && argumentTypes.length == 0) {
             return Boolean.TRUE;
         }
