@@ -116,7 +116,7 @@ public class Analyzer {
 		if (null != CoverageBuilder.classInfos
 				&& !CoverageBuilder.classInfos.isEmpty()) {
 			// 如果没有匹配到增量代码就无需解析类
-			if (!CodeDiffUtil.checkClassIn(reader.getClassName())) {
+			if (!CodeDiffUtil. checkClassIn(reader.getClassName())) {
 				return;
 			}
 		}

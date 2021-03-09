@@ -95,7 +95,7 @@ public class CodeDiffUtil {
         if (params.length() == 0 && argumentTypes.length == 0) {
             return Boolean.TRUE;
         }
-        String[] diffParams = params.split(",");
+        String[] diffParams = params.split("&");
         // 只有参数数量完全相等才做下一次比较，Type格式：I C  Ljava/lang/String;
         if (diffParams.length > 0
                 && argumentTypes.length == diffParams.length) {
