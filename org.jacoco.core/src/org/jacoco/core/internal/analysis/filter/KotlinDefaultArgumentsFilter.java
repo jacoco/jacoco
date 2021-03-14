@@ -82,7 +82,7 @@ public final class KotlinDefaultArgumentsFilter implements IFilter {
 	private static class Matcher extends AbstractMatcher {
 		public void match(final MethodNode methodNode,
 				final IFilterOutput output, final boolean constructor) {
-			cursor = methodNode.instructions.getFirst();
+			cursor = skipNonOpcodes(methodNode.instructions.getFirst());
 
 			nextIs(Opcodes.IFNULL);
 			nextIsType(Opcodes.NEW, "java/lang/UnsupportedOperationException");
@@ -102,7 +102,7 @@ public final class KotlinDefaultArgumentsFilter implements IFilter {
 				output.ignore(methodNode.instructions.getFirst(), cursor);
 				next();
 			} else {
-				cursor = methodNode.instructions.getFirst();
+				cursor = skipNonOpcodes(methodNode.instructions.getFirst());
 			}
 
 			final Set<AbstractInsnNode> ignore = new HashSet<AbstractInsnNode>();
