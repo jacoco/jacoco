@@ -92,7 +92,11 @@ public final class KotlinInlineFilter implements IFilter {
 			}
 			// LineSection
 			int min = Integer.MAX_VALUE;
-			while (!"*E".equals(line = br.readLine())) {
+			while (true) {
+				line = br.readLine();
+				if (line.equals("*E") || line.equals("*S KotlinDebug")) {
+					break;
+				}
 				final Matcher m = LINE_INFO_PATTERN.matcher(line);
 				if (!m.matches()) {
 					throw new IllegalStateException(
