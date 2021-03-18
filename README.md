@@ -152,3 +152,26 @@
 ```
 由于对象格式的通用性，可以配合 [差异代码获取](https://github.com/rayduan/code-diff.git) 一起使用
 
+
+###### 3、关于生成多模块工程中jacoco报告命令参考 demo ：
+java -jar org.jacoco.cli-0.8.7-SNAPSHOT-nodeps.jar    report jacoco.exec 
+--classfiles \Desktop\feigin\web\build\classes   
+--classfiles \Desktop\feigin\biz\build\classes   
+--classfiles \Desktop\feigin\base\build\classes 
+--sourcefiles \Desktop\feigin\web\src\main\java  
+--sourcefiles \Desktop\feigin\biz\src\main\java   
+--sourcefiles \Desktop\feigin\base\src\main\java --html report --xml jacoco.xml   
+--diffCode=[{
+      "classFile": "com/vx/crm/web/swagger/SwaggerConfig",
+      "methodInfos": [
+        {
+          "methodName": "apiInfo",
+          "parameters": ""
+        }
+      ],
+      "type": "MODIFY"
+    }]    
+--encoding=utf8
+
+###### 4、jacoco报告如存在乱码问题：  请执行命令时带入参数  --encoding=utf8
+
