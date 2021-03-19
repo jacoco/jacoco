@@ -57,6 +57,7 @@ public class ExecFileLoader {
 				new BufferedInputStream(stream));
 		reader.setExecutionDataVisitor(executionData);
 		reader.setSessionInfoVisitor(sessionInfos);
+		//核心，解析并合并需要合并的exec文件流
 		reader.read();
 	}
 
