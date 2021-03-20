@@ -14,6 +14,7 @@ package org.jacoco.core.internal.analysis.filter;
 
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.tree.AbstractInsnNode;
+import org.objectweb.asm.tree.JumpInsnNode;
 import org.objectweb.asm.tree.MethodNode;
 
 /**
@@ -43,6 +44,13 @@ public class KotlinLateinitFilter implements IFilter {
 			nextIsInvoke(Opcodes.INVOKESTATIC, "kotlin/jvm/internal/Intrinsics",
 					"throwUninitializedPropertyAccessException",
 					"(Ljava/lang/String;)V");
+
+			if (cursor != null
+					&& skipNonOpcodes(cursor.getNext()) != skipNonOpcodes(
+							((JumpInsnNode) start).label)) {
+				nextIs(Opcodes.ACONST_NULL);
+				nextIs(Opcodes.ATHROW);
+			}
 
 			if (cursor != null) {
 				output.ignore(start, cursor);
