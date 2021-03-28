@@ -152,3 +152,5 @@
 ```
 由于对象格式的通用性，可以配合 [差异代码获取](https://github.com/rayduan/code-diff.git) 一起使用
 
+#近期github不稳定，请访问https://gitee.com/Dray/jacoco.git
+
