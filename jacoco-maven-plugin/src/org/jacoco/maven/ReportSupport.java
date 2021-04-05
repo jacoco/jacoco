@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2020 Mountainminds GmbH & Co. KG and Contributors
+ * Copyright (c) 2009, 2021 Mountainminds GmbH & Co. KG and Contributors
  * This program and the accompanying materials are made available under
  * the terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0
@@ -165,7 +165,7 @@ final class ReportSupport {
 	 *
 	 * @param visitor
 	 *            group visitor to emit the project's coverage to
-	 * @param bundeName
+	 * @param bundleName
 	 *            name for this project in the report
 	 * @param project
 	 *            the MavenProject
@@ -179,15 +179,15 @@ final class ReportSupport {
 	 *             if class files can't be read
 	 */
 	public void processProject(final IReportGroupVisitor visitor,
-			final String bundeName, final MavenProject project,
+			final String bundleName, final MavenProject project,
 			final List<String> includes, final List<String> excludes,
 			final String srcEncoding) throws IOException {
-		processProject(visitor, bundeName, project, includes, excludes,
+		processProject(visitor, bundleName, project, includes, excludes,
 				new SourceFileCollection(project, srcEncoding));
 	}
 
 	private void processProject(final IReportGroupVisitor visitor,
-			final String bundeName, final MavenProject project,
+			final String bundleName, final MavenProject project,
 			final List<String> includes, final List<String> excludes,
 			final ISourceFileLocator locator) throws IOException {
 		final CoverageBuilder builder = new CoverageBuilder();
@@ -203,7 +203,7 @@ final class ReportSupport {
 			}
 		}
 
-		final IBundleCoverage bundle = builder.getBundle(bundeName);
+		final IBundleCoverage bundle = builder.getBundle(bundleName);
 		logBundleInfo(bundle, builder.getNoMatchClasses());
 
 		visitor.visitBundle(bundle, locator);

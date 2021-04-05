@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-   Copyright (c) 2009, 2020 Mountainminds GmbH & Co. KG and Contributors
+   Copyright (c) 2009, 2021 Mountainminds GmbH & Co. KG and Contributors
    This program and the accompanying materials are made available under
    the terms of the Eclipse Public License 2.0 which is available at
    http://www.eclipse.org/legal/epl-2.0
@@ -23,7 +23,7 @@
     <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
-      <version>4.8.2</version>
+      <version>@junit.version@</version>
       <scope>test</scope>
     </dependency>
   </dependencies>

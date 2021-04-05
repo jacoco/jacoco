@@ -1,0 +1,87 @@
+jobs:
+- job:
+  strategy:
+    matrix:
+      JDK 5:
+        JDK_VERSION: 5
+      JDK 6:
+        JDK_VERSION: 6
+      JDK 7:
+        JDK_VERSION: 7
+      JDK 8:
+        JDK_VERSION: 8
+      JDK 8 with ECJ:
+        JDK_VERSION: 8
+        ECJ: true
+      JDK 9:
+        JDK_VERSION: 9
+      JDK 10:
+        JDK_VERSION: 10
+      JDK 11:
+        JDK_VERSION: 11
+      JDK 12:
+        JDK_VERSION: 12
+      JDK 13:
+        JDK_VERSION: 13
+      JDK 14:
+        JDK_VERSION: 14
+      JDK 15:
+        JDK_VERSION: 15
+      JDK 16:
+        JDK_VERSION: 16
+      JDK 17:
+        JDK_VERSION: 17
+  pool:
+    vmImage: 'ubuntu-18.04'
+  steps:
+  - bash: |
+      set -e
+      url_var=JDK${JDK_VERSION}_URL
+      JDK_URL=${!url_var}
+      mkdir .jdk
+      curl -L $JDK_URL -o .jdk/jdk.tar.gz
+      tar -xzf .jdk/jdk.tar.gz -C .jdk --strip-components 1
+      .jdk/bin/java -version
+      echo "
+      <toolchains>
+        <toolchain>
+          <type>jdk</type>
+          <provides>
+            <id>$JDK_VERSION</id>
+            <version>$JDK_VERSION</version>
+          </provides>
+          <configuration>
+            <jdkHome>$PWD/.jdk</jdkHome>
+          </configuration>
+        </toolchain>
+      </toolchains>
+      " > toolchains.xml
+    displayName: Setup JDK
+  - bash: |
+      if [[ "$JDK_VERSION" -ge "8" ]]; then
+        export JAVA_HOME=$PWD/.jdk
+      fi
+      if [[ "$BUILD_SOURCEBRANCH" == "refs/heads/master" && "$JDK_VERSION" == "5" ]]; then
+        mvn -V -B -e -f org.jacoco.build \
+          verify -Djdk.version=$JDK_VERSION \
+          deploy:deploy -DdeployAtEnd \
+          --toolchains=toolchains.xml --settings=.azure-pipelines/maven-settings.xml
+      elif [[ "$JDK_VERSION" == "5" ]]; then
+        mvn -V -B -e \
+          verify -Djdk.version=$JDK_VERSION \
+          --toolchains=toolchains.xml
+      elif [[ "$BUILD_SOURCEBRANCH" == "refs/heads/master" && "$JDK_VERSION" == "11" ]]; then
+        mvn -V -B -e -f org.jacoco.build \
+          verify -Djdk.version=$JDK_VERSION -Dbytecode.version=$JDK_VERSION \
+          sonar:sonar \
+          --toolchains=toolchains.xml --settings=.azure-pipelines/maven-settings.xml
+      else
+        mvn -V -B -e \
+          verify -Djdk.version=$JDK_VERSION -Dbytecode.version=$JDK_VERSION -Decj=${ECJ:-} \
+          --toolchains=toolchains.xml
+      fi
+    displayName: Build
+    env:
+      SONARQUBE_TOKEN: $(SONARQUBE_TOKEN)
+      SONATYPE_USERNAME: $(SONATYPE_USERNAME)
+      SONATYPE_PASSWORD: $(SONATYPE_PASSWORD)

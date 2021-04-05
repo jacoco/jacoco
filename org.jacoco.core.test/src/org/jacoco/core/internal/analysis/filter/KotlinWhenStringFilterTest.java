@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2020 Mountainminds GmbH & Co. KG and Contributors
+ * Copyright (c) 2009, 2021 Mountainminds GmbH & Co. KG and Contributors
  * This program and the accompanying materials are made available under
  * the terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0
@@ -104,6 +104,82 @@ public class KotlinWhenStringFilterTest extends FilterTestBase {
 		assertReplacedBranches(expectedFromInclusive.getPrevious(),
 				expectedNewTargets);
 		assertIgnored(new Range(expectedFromInclusive, expectedToInclusive));
+	}
+
+	/**
+	 * <pre>
+	 * fun example(p: String) {
+	 *   when (p) {
+	 *     "b" -> return
+	 *     "a" -> return
+	 *     "\u0000a" -> return
+	 *   }
+	 * }
+	 * </pre>
+	 */
+	@Test
+	public void should_filter_when_biggest_hashCode_first() {
+		final Set<AbstractInsnNode> expectedNewTargets = new HashSet<AbstractInsnNode>();
+
+		final MethodNode m = new MethodNode(InstrSupport.ASM_API_VERSION, 0,
+				"example", "(Ljava/lang/String;)V", null, null);
+
+		final Label h1 = new Label();
+		final Label sameHash = new Label();
+		final Label h2 = new Label();
+		final Label case1 = new Label();
+		final Label case2 = new Label();
+		final Label case3 = new Label();
+		final Label defaultCase = new Label();
+
+		m.visitVarInsn(Opcodes.ALOAD, 2);
+		m.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "java/lang/String", "hashCode",
+				"()I", false);
+		m.visitTableSwitchInsn(97, 98, defaultCase, h1, h2);
+
+		m.visitLabel(h1);
+		final AbstractInsnNode expectedFromInclusive = m.instructions.getLast();
+		m.visitVarInsn(Opcodes.ALOAD, 2);
+		m.visitLdcInsn("a");
+		m.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "java/lang/String", "equals",
+				"(Ljava/lang/Object;)Z", false);
+		m.visitJumpInsn(Opcodes.IFEQ, sameHash);
+		m.visitJumpInsn(Opcodes.GOTO, case2);
+
+		m.visitLabel(sameHash);
+		m.visitVarInsn(Opcodes.ALOAD, 2);
+		m.visitLdcInsn("\u0000a");
+		m.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "java/lang/String", "equals",
+				"(Ljava/lang/Object;)Z", false);
+		m.visitJumpInsn(Opcodes.IFEQ, defaultCase);
+		m.visitJumpInsn(Opcodes.GOTO, case3);
+
+		m.visitLabel(h2);
+		m.visitVarInsn(Opcodes.ALOAD, 2);
+		m.visitLdcInsn("b");
+		m.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "java/lang/String", "equals",
+				"(Ljava/lang/Object;)Z", false);
+		m.visitJumpInsn(Opcodes.IFEQ, defaultCase);
+		final AbstractInsnNode expectedToInclusive = m.instructions.getLast();
+
+		m.visitLabel(case1);
+		m.visitInsn(Opcodes.RETURN);
+		expectedNewTargets.add(m.instructions.getLast());
+		m.visitLabel(case2);
+		m.visitInsn(Opcodes.RETURN);
+		expectedNewTargets.add(m.instructions.getLast());
+		m.visitLabel(case3);
+		m.visitInsn(Opcodes.RETURN);
+		expectedNewTargets.add(m.instructions.getLast());
+		m.visitLabel(defaultCase);
+		m.visitInsn(Opcodes.RETURN);
+		expectedNewTargets.add(m.instructions.getLast());
+
+		filter.filter(m, context, output);
+
+		assertIgnored(new Range(expectedFromInclusive, expectedToInclusive));
+		assertReplacedBranches(expectedFromInclusive.getPrevious(),
+				expectedNewTargets);
 	}
 
 	@Test

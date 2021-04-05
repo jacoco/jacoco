@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2020 Mountainminds GmbH & Co. KG and Contributors
+ * Copyright (c) 2009, 2021 Mountainminds GmbH & Co. KG and Contributors
  * This program and the accompanying materials are made available under
  * the terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0
@@ -14,6 +14,7 @@ package org.jacoco.core.internal.analysis.filter;
 
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.tree.AbstractInsnNode;
+import org.objectweb.asm.tree.JumpInsnNode;
 import org.objectweb.asm.tree.MethodNode;
 
 /**
@@ -43,6 +44,13 @@ public class KotlinLateinitFilter implements IFilter {
 			nextIsInvoke(Opcodes.INVOKESTATIC, "kotlin/jvm/internal/Intrinsics",
 					"throwUninitializedPropertyAccessException",
 					"(Ljava/lang/String;)V");
+
+			if (cursor != null
+					&& skipNonOpcodes(cursor.getNext()) != skipNonOpcodes(
+							((JumpInsnNode) start).label)) {
+				nextIs(Opcodes.ACONST_NULL);
+				nextIs(Opcodes.ATHROW);
+			}
 
 			if (cursor != null) {
 				output.ignore(start, cursor);
