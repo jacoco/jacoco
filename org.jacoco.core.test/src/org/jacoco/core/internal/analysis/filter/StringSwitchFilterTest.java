@@ -23,11 +23,11 @@ import org.objectweb.asm.tree.AbstractInsnNode;
 import org.objectweb.asm.tree.MethodNode;
 
 /**
- * Unit tests for {@link StringSwitchEcjFilter}.
+ * Unit tests for {@link StringSwitchFilter}.
  */
-public class StringSwitchEcjFilterTest extends FilterTestBase {
+public class StringSwitchFilterTest extends FilterTestBase {
 
-	private final IFilter filter = new StringSwitchEcjFilter();
+	private final IFilter filter = new StringSwitchFilter();
 
 	@Test
 	public void should_filter() {
