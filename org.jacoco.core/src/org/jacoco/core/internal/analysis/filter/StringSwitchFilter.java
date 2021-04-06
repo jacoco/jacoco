@@ -42,7 +42,8 @@ public final class StringSwitchFilter implements IFilter {
 		public void match(final AbstractInsnNode start,
 				final IFilterOutput output) {
 
-			if (Opcodes.ASTORE != start.getOpcode()) {
+			if (start.getOpcode() != /* ECJ */ Opcodes.ASTORE
+					&& start.getOpcode() != /* Kotlin */ Opcodes.ALOAD) {
 				return;
 			}
 			cursor = start;
