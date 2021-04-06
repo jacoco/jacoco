@@ -15,6 +15,8 @@ package org.jacoco.core.internal.analysis.filter;
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.tree.MethodNode;
 
+import java.util.regex.Pattern;
+
 /**
  * Filters synthetic methods unless they represent bodies of lambda expressions.
  */
@@ -41,6 +43,10 @@ public final class SyntheticFilter implements IFilter {
 			}
 		}
 
+    if (isHandledByAspectJFilter(methodNode)) {
+      return;
+    }
+
 		if (KotlinGeneratedFilter.isKotlinClass(context)) {
 			if (KotlinDefaultArgumentsFilter
 					.isDefaultArgumentsMethod(methodNode)) {
@@ -59,6 +65,19 @@ public final class SyntheticFilter implements IFilter {
 
 		output.ignore(methodNode.instructions.getFirst(),
 				methodNode.instructions.getLast());
+	}
+
+	private static final Pattern ASPECTJ_AROUND_BODY_PATTERN = Pattern.compile(".*_aroundBody\\d+");
+
+	/**
+	 * Returns true for AspectJ-generated methods which must not be (fully) excluded,
+	 * despite having the {@code ACC_SYNTHETIC} flag.
+	 *
+	 * @see AspectjFilter
+	 */
+	private boolean isHandledByAspectJFilter(MethodNode methodNode) {
+		return ASPECTJ_AROUND_BODY_PATTERN.matcher(methodNode.name).matches()
+				&& methodNode.desc.contains("Lorg/aspectj/lang/JoinPoint");
 	}
 
 }
