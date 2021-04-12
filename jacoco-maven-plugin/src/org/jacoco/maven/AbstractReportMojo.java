@@ -12,6 +12,7 @@
  *******************************************************************************/
 package org.jacoco.maven;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.List;
 import java.util.Locale;
@@ -33,11 +34,22 @@ import org.jacoco.report.IReportVisitor;
 public abstract class AbstractReportMojo extends AbstractMojo
 		implements MavenMultiPageReport {
 
+	static final String REPORT_XML = "XML";
+	static final String REPORT_HTML = "HTML";
+	static final String REPORT_CSV = "CSV";
+
 	/**
 	 * Encoding of the generated reports.
 	 */
 	@Parameter(property = "project.reporting.outputEncoding", defaultValue = "UTF-8")
 	String outputEncoding;
+
+	/**
+	 * A list of report formats to generate. Supported formats are HTML, XML and
+	 * CSV. Defaults to all formats if no values are given
+	 */
+	@Parameter
+	List<String> formats;
 
 	/**
 	 * Name of the root node HTML report pages.
@@ -140,6 +152,8 @@ public abstract class AbstractReportMojo extends AbstractMojo
 
 	abstract boolean canGenerateReportRegardingClassesDirectory();
 
+	abstract File getOutputDirectory();
+
 	public void generate(
 			@SuppressWarnings("deprecation") final org.codehaus.doxia.sink.Sink sink,
 			final Locale locale) throws MavenReportException {
@@ -186,11 +200,33 @@ public abstract class AbstractReportMojo extends AbstractMojo
 		}
 	}
 
+	private void addFormatters(final ReportSupport support, final Locale locale)
+			throws IOException {
+		if (formats == null || formats.isEmpty()) {
+			support.addAllFormatters(getOutputDirectory(), outputEncoding,
+					footer, locale);
+		} else {
+			getOutputDirectory().mkdirs();
+			if (formats.contains(REPORT_CSV)) {
+				support.addCsvFormatter(
+						new File(getOutputDirectory(), "jacoco.csv"),
+						outputEncoding);
+			}
+			if (formats.contains(REPORT_XML)) {
+				support.addXmlFormatter(
+						new File(getOutputDirectory(), "jacoco.xml"),
+						outputEncoding);
+			}
+			if (formats.contains(REPORT_HTML)) {
+				support.addHtmlFormatter(getOutputDirectory(), outputEncoding,
+						footer, locale);
+			}
+		}
+
+	}
+
 	abstract void loadExecutionData(final ReportSupport support)
 			throws IOException;
-
-	abstract void addFormatters(final ReportSupport support,
-			final Locale locale) throws IOException;
 
 	abstract void createReport(final IReportGroupVisitor visitor,
 			final ReportSupport support) throws IOException;
