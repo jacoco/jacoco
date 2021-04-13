@@ -52,7 +52,8 @@ public final class SyntheticFilter implements IFilter {
 				return;
 			}
 
-			if (KotlinCoroutineFilter.isLastArgumentContinuation(methodNode)) {
+			if (KotlinCoroutineFilter
+					.isImplementationOfSuspendFunction(methodNode)) {
 				return;
 			}
 		}
