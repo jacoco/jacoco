@@ -140,7 +140,7 @@
 
     <!-- Dependencies versions -->
     <asm.version>9.1</asm.version>
-    <ant.version>1.9.15</ant.version>
+    <ant.version>1.10.9</ant.version>
     <args4j.version>2.0.28</args4j.version>
     <junit.version>4.13.1</junit.version>
     <googlecodeprettify.version>20100721</googlecodeprettify.version>
