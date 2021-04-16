@@ -42,9 +42,11 @@ public abstract class AbstractReportMojo extends AbstractMojo
 
 	/**
 	 * A list of report formats to generate. Supported formats are HTML, XML and
-	 * CSV. Defaults to all formats if no values are given
+	 * CSV. Defaults to all formats if no values are given.
+	 *
+	 * @since 0.8.7
 	 */
-	@Parameter
+	@Parameter(defaultValue = "HTML,XML,CSV")
 	List<ReportFormat> formats;
 
 	/**
@@ -198,27 +200,21 @@ public abstract class AbstractReportMojo extends AbstractMojo
 
 	private void addFormatters(final ReportSupport support, final Locale locale)
 			throws IOException {
-		if (formats == null || formats.isEmpty()) {
-			support.addAllFormatters(getOutputDirectory(), outputEncoding,
-					footer, locale);
-		} else {
-			getOutputDirectory().mkdirs();
-			if (formats.contains(ReportFormat.CSV)) {
-				support.addCsvFormatter(
-						new File(getOutputDirectory(), "jacoco.csv"),
-						outputEncoding);
-			}
-			if (formats.contains(ReportFormat.XML)) {
-				support.addXmlFormatter(
-						new File(getOutputDirectory(), "jacoco.xml"),
-						outputEncoding);
-			}
-			if (formats.contains(ReportFormat.HTML)) {
-				support.addHtmlFormatter(getOutputDirectory(), outputEncoding,
-						footer, locale);
-			}
+		getOutputDirectory().mkdirs();
+		if (formats.contains(ReportFormat.CSV)) {
+			support.addCsvFormatter(
+					new File(getOutputDirectory(), "jacoco.csv"),
+					outputEncoding);
 		}
-
+		if (formats.contains(ReportFormat.XML)) {
+			support.addXmlFormatter(
+					new File(getOutputDirectory(), "jacoco.xml"),
+					outputEncoding);
+		}
+		if (formats.contains(ReportFormat.HTML)) {
+			support.addHtmlFormatter(getOutputDirectory(), outputEncoding,
+					footer, locale);
+		}
 	}
 
 	abstract void loadExecutionData(final ReportSupport support)

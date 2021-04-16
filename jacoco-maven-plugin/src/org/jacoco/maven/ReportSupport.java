@@ -115,14 +115,6 @@ final class ReportSupport {
 				.createVisitor(new FileMultiReportOutput(targetdir)));
 	}
 
-	public void addAllFormatters(final File targetdir, final String encoding,
-			final String footer, final Locale locale) throws IOException {
-		targetdir.mkdirs();
-		addXmlFormatter(new File(targetdir, "jacoco.xml"), encoding);
-		addCsvFormatter(new File(targetdir, "jacoco.csv"), encoding);
-		addHtmlFormatter(targetdir, encoding, footer, locale);
-	}
-
 	public void addRulesChecker(final List<Rule> rules,
 			final IViolationsOutput output) {
 		final RulesChecker checker = new RulesChecker();
