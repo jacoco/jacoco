@@ -23,6 +23,7 @@
 
   <artifactId>jacoco-maven-plugin</artifactId>
   <packaging>maven-plugin</packaging>
+  <url>https://www.jacoco.org/jacoco/trunk/doc/maven.html</url>
 
   <name>JaCoCo :: Maven Plugin</name>
   <description>The JaCoCo Maven Plugin provides the JaCoCo runtime agent to your tests and allows basic report creation.</description>

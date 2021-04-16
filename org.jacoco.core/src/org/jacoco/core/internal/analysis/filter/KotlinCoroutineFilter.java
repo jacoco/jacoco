@@ -29,7 +29,11 @@ import org.objectweb.asm.tree.TableSwitchInsnNode;
  */
 public final class KotlinCoroutineFilter implements IFilter {
 
-	static boolean isLastArgumentContinuation(final MethodNode methodNode) {
+	static boolean isImplementationOfSuspendFunction(
+			final MethodNode methodNode) {
+		if (methodNode.name.startsWith("access$")) {
+			return false;
+		}
 		final Type methodType = Type.getMethodType(methodNode.desc);
 		final int lastArgument = methodType.getArgumentTypes().length - 1;
 		return lastArgument >= 0 && "kotlin.coroutines.Continuation".equals(
