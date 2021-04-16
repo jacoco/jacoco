@@ -8,6 +8,7 @@
  *
  * Contributors:
  *    Evgeny Mandrikov - initial API and implementation
+ *    troosan - add support for format selection
  *
  *******************************************************************************/
 package org.jacoco.maven;
@@ -201,19 +202,8 @@ public abstract class AbstractReportMojo extends AbstractMojo
 	private void addFormatters(final ReportSupport support, final Locale locale)
 			throws IOException {
 		getOutputDirectory().mkdirs();
-		if (formats.contains(ReportFormat.CSV)) {
-			support.addCsvFormatter(
-					new File(getOutputDirectory(), "jacoco.csv"),
-					outputEncoding);
-		}
-		if (formats.contains(ReportFormat.XML)) {
-			support.addXmlFormatter(
-					new File(getOutputDirectory(), "jacoco.xml"),
-					outputEncoding);
-		}
-		if (formats.contains(ReportFormat.HTML)) {
-			support.addHtmlFormatter(getOutputDirectory(), outputEncoding,
-					footer, locale);
+		for (final ReportFormat f : formats) {
+			support.addVisitor(f.createVisitor(this, locale));
 		}
 	}
 
