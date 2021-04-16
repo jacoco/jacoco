@@ -34,10 +34,6 @@ import org.jacoco.report.IReportVisitor;
 public abstract class AbstractReportMojo extends AbstractMojo
 		implements MavenMultiPageReport {
 
-	static final String REPORT_XML = "XML";
-	static final String REPORT_HTML = "HTML";
-	static final String REPORT_CSV = "CSV";
-
 	/**
 	 * Encoding of the generated reports.
 	 */
@@ -49,7 +45,7 @@ public abstract class AbstractReportMojo extends AbstractMojo
 	 * CSV. Defaults to all formats if no values are given
 	 */
 	@Parameter
-	List<String> formats;
+	List<ReportFormat> formats;
 
 	/**
 	 * Name of the root node HTML report pages.
@@ -207,17 +203,17 @@ public abstract class AbstractReportMojo extends AbstractMojo
 					footer, locale);
 		} else {
 			getOutputDirectory().mkdirs();
-			if (formats.contains(REPORT_CSV)) {
+			if (formats.contains(ReportFormat.CSV)) {
 				support.addCsvFormatter(
 						new File(getOutputDirectory(), "jacoco.csv"),
 						outputEncoding);
 			}
-			if (formats.contains(REPORT_XML)) {
+			if (formats.contains(ReportFormat.XML)) {
 				support.addXmlFormatter(
 						new File(getOutputDirectory(), "jacoco.xml"),
 						outputEncoding);
 			}
-			if (formats.contains(REPORT_HTML)) {
+			if (formats.contains(ReportFormat.HTML)) {
 				support.addHtmlFormatter(getOutputDirectory(), outputEncoding,
 						footer, locale);
 			}
