@@ -17,14 +17,12 @@ import static java.lang.String.format;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.Locale;
 
 import org.apache.maven.plugin.logging.Log;
 import org.apache.maven.project.MavenProject;
@@ -33,7 +31,6 @@ import org.jacoco.core.analysis.CoverageBuilder;
 import org.jacoco.core.analysis.IBundleCoverage;
 import org.jacoco.core.analysis.IClassCoverage;
 import org.jacoco.core.tools.ExecFileLoader;
-import org.jacoco.report.FileMultiReportOutput;
 import org.jacoco.report.IReportGroupVisitor;
 import org.jacoco.report.IReportVisitor;
 import org.jacoco.report.ISourceFileLocator;
@@ -41,9 +38,6 @@ import org.jacoco.report.MultiReportVisitor;
 import org.jacoco.report.check.IViolationsOutput;
 import org.jacoco.report.check.Rule;
 import org.jacoco.report.check.RulesChecker;
-import org.jacoco.report.csv.CSVFormatter;
-import org.jacoco.report.html.HTMLFormatter;
-import org.jacoco.report.xml.XMLFormatter;
 
 /**
  * Encapsulates the tasks to create reports for Maven projects. Instances are
@@ -89,38 +83,8 @@ final class ReportSupport {
 		loader.load(execFile);
 	}
 
-	public void addXmlFormatter(final File targetfile, final String encoding)
-			throws IOException {
-		final XMLFormatter xml = new XMLFormatter();
-		xml.setOutputEncoding(encoding);
-		formatters.add(xml.createVisitor(new FileOutputStream(targetfile)));
-	}
-
-	public void addCsvFormatter(final File targetfile, final String encoding)
-			throws IOException {
-		final CSVFormatter csv = new CSVFormatter();
-		csv.setOutputEncoding(encoding);
-		formatters.add(csv.createVisitor(new FileOutputStream(targetfile)));
-	}
-
-	public void addHtmlFormatter(final File targetdir, final String encoding,
-			final String footer, final Locale locale) throws IOException {
-		final HTMLFormatter htmlFormatter = new HTMLFormatter();
-		htmlFormatter.setOutputEncoding(encoding);
-		htmlFormatter.setLocale(locale);
-		if (footer != null) {
-			htmlFormatter.setFooterText(footer);
-		}
-		formatters.add(htmlFormatter
-				.createVisitor(new FileMultiReportOutput(targetdir)));
-	}
-
-	public void addAllFormatters(final File targetdir, final String encoding,
-			final String footer, final Locale locale) throws IOException {
-		targetdir.mkdirs();
-		addXmlFormatter(new File(targetdir, "jacoco.xml"), encoding);
-		addCsvFormatter(new File(targetdir, "jacoco.csv"), encoding);
-		addHtmlFormatter(targetdir, encoding, footer, locale);
+	public void addVisitor(final IReportVisitor visitor) {
+		formatters.add(visitor);
 	}
 
 	public void addRulesChecker(final List<Rule> rules,

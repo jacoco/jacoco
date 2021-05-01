@@ -8,10 +8,12 @@
  *
  * Contributors:
  *    Evgeny Mandrikov - initial API and implementation
+ *    troosan - add support for format selection
  *
  *******************************************************************************/
 package org.jacoco.maven;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.List;
 import java.util.Locale;
@@ -38,6 +40,15 @@ public abstract class AbstractReportMojo extends AbstractMojo
 	 */
 	@Parameter(property = "project.reporting.outputEncoding", defaultValue = "UTF-8")
 	String outputEncoding;
+
+	/**
+	 * A list of report formats to generate. Supported formats are HTML, XML and
+	 * CSV. Defaults to all formats if no values are given.
+	 *
+	 * @since 0.8.7
+	 */
+	@Parameter(defaultValue = "HTML,XML,CSV")
+	List<ReportFormat> formats;
 
 	/**
 	 * Name of the root node HTML report pages.
@@ -140,6 +151,8 @@ public abstract class AbstractReportMojo extends AbstractMojo
 
 	abstract boolean canGenerateReportRegardingClassesDirectory();
 
+	abstract File getOutputDirectory();
+
 	public void generate(
 			@SuppressWarnings("deprecation") final org.codehaus.doxia.sink.Sink sink,
 			final Locale locale) throws MavenReportException {
@@ -186,11 +199,16 @@ public abstract class AbstractReportMojo extends AbstractMojo
 		}
 	}
 
+	private void addFormatters(final ReportSupport support, final Locale locale)
+			throws IOException {
+		getOutputDirectory().mkdirs();
+		for (final ReportFormat f : formats) {
+			support.addVisitor(f.createVisitor(this, locale));
+		}
+	}
+
 	abstract void loadExecutionData(final ReportSupport support)
 			throws IOException;
-
-	abstract void addFormatters(final ReportSupport support,
-			final Locale locale) throws IOException;
 
 	abstract void createReport(final IReportGroupVisitor visitor,
 			final ReportSupport support) throws IOException;
