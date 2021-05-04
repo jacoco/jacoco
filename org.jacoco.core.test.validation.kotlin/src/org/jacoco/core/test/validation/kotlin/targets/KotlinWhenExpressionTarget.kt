@@ -30,8 +30,8 @@ object KotlinWhenExpressionTarget {
     @Suppress("REDUNDANT_ELSE_IN_WHEN")
     private fun whenSealedRedundantElse(p: Sealed): Int = when (p) { // assertFullyCovered()
         is Sealed.Sealed1 -> 1 // assertFullyCovered(0, 2)
-        is Sealed.Sealed2 -> 2 // assertFullyCovered(1, 1)
-        else -> throw NoWhenBranchMatchedException() // assertNotCovered()
+        is Sealed.Sealed2 -> 2 // assertFullyCovered(0, 0)
+        else -> throw NoWhenBranchMatchedException() // assertEmpty()
     } // assertFullyCovered()
 
     private enum class Enum {
@@ -44,10 +44,10 @@ object KotlinWhenExpressionTarget {
     } // assertFullyCovered()
 
     @Suppress("REDUNDANT_ELSE_IN_WHEN")
-    private fun whenEnumRedundantElse(p: Enum): Int = when (p) { // assertFullyCovered(1, 2)
+    private fun whenEnumRedundantElse(p: Enum): Int = when (p) { // assertFullyCovered(0, 2)
         Enum.A -> 1 // assertFullyCovered()
         Enum.B -> 2 // assertFullyCovered()
-        else -> throw NoWhenBranchMatchedException() // assertNotCovered()
+        else -> throw NoWhenBranchMatchedException() // assertEmpty()
     } // assertFullyCovered()
 
     private fun whenString(p: String): Int = when (p) { // assertFullyCovered(0, 7)

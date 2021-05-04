@@ -32,7 +32,10 @@
 
   <properties>
     <jacoco.skip>true</jacoco.skip>
-    <groovy.targetBytecode>${maven.compiler.target}</groovy.targetBytecode>
+
+    <!-- when bytecode.version not specified -->
+    <kotlin.compiler.jvmTarget>1.6</kotlin.compiler.jvmTarget>
+    <groovy.targetBytecode>1.8</groovy.targetBytecode>
   </properties>
 
   <profiles>
@@ -64,6 +67,9 @@
           <value>6</value>
         </property>
       </activation>
+      <properties>
+        <kotlin.compiler.jvmTarget>1.6</kotlin.compiler.jvmTarget>
+      </properties>
       <modules>
         <module>../org.jacoco.core.test.validation.kotlin</module>
       </modules>
@@ -90,6 +96,10 @@
           <value>7</value>
         </property>
       </activation>
+      <properties>
+        <!-- Kotlin 1.5.0 doesn't support compilation into 1.7 -->
+        <kotlin.compiler.jvmTarget>1.6</kotlin.compiler.jvmTarget>
+      </properties>
       <modules>
         <module>../org.jacoco.core.test.validation.kotlin</module>
         <module>../org.jacoco.core.test.validation.java7</module>
@@ -111,9 +121,22 @@
     </profile>
 
     <profile>
-      <id>java8-bytecode</id>
+      <id>default</id>
       <activation>
         <activeByDefault>true</activeByDefault>
+      </activation>
+      <modules>
+        <module>../org.jacoco.core.test.validation.kotlin</module>
+        <module>../org.jacoco.core.test.validation.java7</module>
+        <module>../org.jacoco.core.test.validation.java8</module>
+        <module>../org.jacoco.core.test.validation.groovy</module>
+        <module>../org.jacoco.core.test.validation.scala</module>
+      </modules>
+    </profile>
+
+    <profile>
+      <id>java8-bytecode</id>
+      <activation>
         <property>
           <name>bytecode.version</name>
           <value>8</value>
@@ -133,6 +156,26 @@
     </profile>
 
     <profile>
+      <id>java9-bytecode</id>
+      <activation>
+        <property>
+          <name>bytecode.version</name>
+          <value>9</value>
+        </property>
+      </activation>
+      <properties>
+        <kotlin.compiler.jvmTarget>9</kotlin.compiler.jvmTarget>
+        <groovy.targetBytecode>9</groovy.targetBytecode>
+      </properties>
+      <modules>
+        <module>../org.jacoco.core.test.validation.kotlin</module>
+        <module>../org.jacoco.core.test.validation.java7</module>
+        <module>../org.jacoco.core.test.validation.java8</module>
+        <module>../org.jacoco.core.test.validation.groovy</module>
+      </modules>
+    </profile>
+
+    <profile>
       <id>java10-bytecode</id>
       <activation>
         <property>
@@ -141,7 +184,8 @@
         </property>
       </activation>
       <properties>
-        <kotlin.compiler.jvmTarget>1.8</kotlin.compiler.jvmTarget>
+        <kotlin.compiler.jvmTarget>10</kotlin.compiler.jvmTarget>
+        <groovy.targetBytecode>10</groovy.targetBytecode>
       </properties>
       <modules>
         <module>../org.jacoco.core.test.validation.kotlin</module>
@@ -160,7 +204,8 @@
         </property>
       </activation>
       <properties>
-        <kotlin.compiler.jvmTarget>1.8</kotlin.compiler.jvmTarget>
+        <kotlin.compiler.jvmTarget>11</kotlin.compiler.jvmTarget>
+        <groovy.targetBytecode>11</groovy.targetBytecode>
       </properties>
       <modules>
         <module>../org.jacoco.core.test.validation.kotlin</module>
@@ -180,7 +225,8 @@
         </property>
       </activation>
       <properties>
-        <kotlin.compiler.jvmTarget>1.8</kotlin.compiler.jvmTarget>
+        <kotlin.compiler.jvmTarget>12</kotlin.compiler.jvmTarget>
+        <groovy.targetBytecode>12</groovy.targetBytecode>
       </properties>
       <modules>
         <module>../org.jacoco.core.test.validation.kotlin</module>
@@ -200,6 +246,8 @@
         </property>
       </activation>
       <properties>
+        <kotlin.compiler.jvmTarget>14</kotlin.compiler.jvmTarget>
+        <groovy.targetBytecode>14</groovy.targetBytecode>
         <!-- see respective profile in org.jacoco.build about this override -->
         <maven.compiler.source>14</maven.compiler.source>
         <maven.compiler.target>14</maven.compiler.target>
@@ -223,6 +271,8 @@
         </property>
       </activation>
       <properties>
+        <kotlin.compiler.jvmTarget>15</kotlin.compiler.jvmTarget>
+        <groovy.targetBytecode>15</groovy.targetBytecode>
         <!-- see respective profile in org.jacoco.build about this override -->
         <maven.compiler.source>15</maven.compiler.source>
         <maven.compiler.target>15</maven.compiler.target>
@@ -246,17 +296,14 @@
         </property>
       </activation>
       <properties>
+        <kotlin.compiler.jvmTarget>16</kotlin.compiler.jvmTarget>
+        <groovy.targetBytecode>16</groovy.targetBytecode>
         <!-- see respective profile in org.jacoco.build about this override -->
         <maven.compiler.source>16</maven.compiler.source>
         <maven.compiler.target>16</maven.compiler.target>
       </properties>
       <modules>
-        <!--
-        kotlin-maven-plugin versions 1.4.20 and 1.4.21 fail
-        due to https://openjdk.java.net/jeps/396
-        see https://youtrack.jetbrains.com/issue/KT-43704
         <module>../org.jacoco.core.test.validation.kotlin</module>
-        -->
         <module>../org.jacoco.core.test.validation.java7</module>
         <module>../org.jacoco.core.test.validation.java8</module>
         <module>../org.jacoco.core.test.validation.java14</module>
@@ -274,17 +321,15 @@
         </property>
       </activation>
       <properties>
+        <!-- Kotlin 1.5.0 doesn't support compilation into 17 -->
+        <kotlin.compiler.jvmTarget>16</kotlin.compiler.jvmTarget>
+        <groovy.targetBytecode>17</groovy.targetBytecode>
         <!-- see respective profile in org.jacoco.build about this override -->
         <maven.compiler.source>17</maven.compiler.source>
         <maven.compiler.target>17</maven.compiler.target>
       </properties>
       <modules>
-        <!--
-        kotlin-maven-plugin versions 1.4.20 and 1.4.21 fail
-        due to https://openjdk.java.net/jeps/396
-        see https://youtrack.jetbrains.com/issue/KT-43704
         <module>../org.jacoco.core.test.validation.kotlin</module>
-        -->
         <module>../org.jacoco.core.test.validation.java7</module>
         <module>../org.jacoco.core.test.validation.java8</module>
         <module>../org.jacoco.core.test.validation.java14</module>

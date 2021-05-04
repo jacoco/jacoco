@@ -20,9 +20,9 @@ import org.jacoco.core.test.validation.targets.Stubs.nop
 object KotlinDataClassTarget {
 
     data class DataClass( // assertFullyCovered()
-            val valNoRead: Int, // assertNotCovered()
+            val valNoRead: Int, // assertPartlyCovered()
             val valRead: Int,  // assertFullyCovered()
-            var varNoReadNoWrite: Int, // assertNotCovered()
+            var varNoReadNoWrite: Int, // assertPartlyCovered()
             var varNoWrite: Int, // assertPartlyCovered()
             var varNoRead: Int, // assertPartlyCovered()
             var varReadWrite: Int  // assertFullyCovered()
