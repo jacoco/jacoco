@@ -47,7 +47,7 @@ object KotlinControlStructuresTarget {
 
     private fun missedWhileBlock() {
 
-        while (f()) { // assertPartlyCovered(1, 1)
+        while (f()) { // assertFullyCovered(1, 1)
             nop() // assertNotCovered()
         }
 
