@@ -323,7 +323,8 @@
       <properties>
         <!-- Kotlin 1.5.0 doesn't support compilation into 17 -->
         <kotlin.compiler.jvmTarget>16</kotlin.compiler.jvmTarget>
-        <groovy.targetBytecode>17</groovy.targetBytecode>
+        <!-- while Groovy 3.0.8 supports compilation into 17, gmavenplus-plugin 1.12.1 doesn't -->
+        <groovy.targetBytecode>16</groovy.targetBytecode>
         <!-- see respective profile in org.jacoco.build about this override -->
         <maven.compiler.source>17</maven.compiler.source>
         <maven.compiler.target>17</maven.compiler.target>
@@ -333,9 +334,7 @@
         <module>../org.jacoco.core.test.validation.java7</module>
         <module>../org.jacoco.core.test.validation.java8</module>
         <module>../org.jacoco.core.test.validation.java14</module>
-        <!-- Groovy 3.0.7 does not support Java 17
         <module>../org.jacoco.core.test.validation.groovy</module>
-        -->
         <module>../org.jacoco.core.test.validation.scala</module>
       </modules>
     </profile>
