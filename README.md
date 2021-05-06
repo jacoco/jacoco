@@ -41,6 +41,3 @@ java -jar org.jacoco.cli-0.8.7-SNAPSHOT-nodeps.jar    report jacoco.exec
 --encoding=utf8
 
 ###### 4、jacoco报告如存在乱码问题：  请执行命令时带入参数  --encoding=utf8
-
-
-(![欢迎大家一起参与探讨相关问题](https://images.gitee.com/uploads/images/2021/0407/200636_9a413bd1_1007820.png "屏幕截图.png"))
