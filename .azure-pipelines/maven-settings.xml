@@ -9,13 +9,15 @@
   </servers>
   <profiles>
     <profile>
-      <id>default</id>
+      <id>SonarCloud</id>
       <properties>
-        <https.protocols>TLSv1</https.protocols>
+        <sonar.host.url>https://sonarcloud.io/</sonar.host.url>
+        <sonar.organization>default</sonar.organization>
+        <sonar.login>${env.SONARQUBE_TOKEN}</sonar.login>
       </properties>
     </profile>
   </profiles>
   <activeProfiles>
-    <activeProfile>default</activeProfile>
+    <activeProfile>SonarCloud</activeProfile>
   </activeProfiles>
 </settings>

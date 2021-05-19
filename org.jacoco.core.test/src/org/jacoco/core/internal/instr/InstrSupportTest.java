@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2020 Mountainminds GmbH & Co. KG and Contributors
+ * Copyright (c) 2009, 2021 Mountainminds GmbH & Co. KG and Contributors
  * This program and the accompanying materials are made available under
  * the terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0
@@ -53,7 +53,7 @@ public class InstrSupportTest {
 			public void visit(final int version, final int access,
 					final String name, final String signature,
 					final String superName, final String[] interfaces) {
-				assertEquals(Opcodes.V15 + 1, version);
+				assertEquals(Opcodes.V16, version);
 			}
 		}, 0);
 
@@ -62,7 +62,7 @@ public class InstrSupportTest {
 
 	private static byte[] createJava16Class() {
 		final ClassWriter cw = new ClassWriter(0);
-		cw.visit(Opcodes.V15 + 1, 0, "Foo", null, "java/lang/Object", null);
+		cw.visit(Opcodes.V16, 0, "Foo", null, "java/lang/Object", null);
 		cw.visitEnd();
 		return cw.toByteArray();
 	}
@@ -127,7 +127,7 @@ public class InstrSupportTest {
 		assertTrue(InstrSupport.needsFrames(Opcodes.V13));
 		assertTrue(InstrSupport.needsFrames(Opcodes.V14));
 		assertTrue(InstrSupport.needsFrames(Opcodes.V15));
-		assertTrue(InstrSupport.needsFrames(Opcodes.V15 + 1));
+		assertTrue(InstrSupport.needsFrames(Opcodes.V16));
 
 		assertTrue(InstrSupport.needsFrames(0x0100));
 	}

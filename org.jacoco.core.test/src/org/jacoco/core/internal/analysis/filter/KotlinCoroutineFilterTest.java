@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2020 Mountainminds GmbH & Co. KG and Contributors
+ * Copyright (c) 2009, 2021 Mountainminds GmbH & Co. KG and Contributors
  * This program and the accompanying materials are made available under
  * the terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0
@@ -33,12 +33,11 @@ public class KotlinCoroutineFilterTest extends FilterTestBase {
 		context.classAnnotations
 				.add(KotlinGeneratedFilter.KOTLIN_METADATA_DESC);
 
-		m.visitLabel(new Label());
-		final Range range1 = new Range();
-		range1.fromInclusive = m.instructions.getLast();
 		m.visitMethodInsn(Opcodes.INVOKESTATIC,
 				"kotlin/coroutines/intrinsics/IntrinsicsKt",
 				"getCOROUTINE_SUSPENDED", "()Ljava/lang/Object;", false);
+		final Range range1 = new Range();
+		range1.fromInclusive = m.instructions.getLast();
 		m.visitVarInsn(Opcodes.ASTORE, 4);
 
 		m.visitVarInsn(Opcodes.ALOAD, 0);
@@ -129,12 +128,11 @@ public class KotlinCoroutineFilterTest extends FilterTestBase {
 		context.classAnnotations
 				.add(KotlinGeneratedFilter.KOTLIN_METADATA_DESC);
 
-		m.visitLabel(new Label());
-		final Range range1 = new Range();
-		range1.fromInclusive = m.instructions.getLast();
 		m.visitMethodInsn(Opcodes.INVOKESTATIC,
 				"kotlin/coroutines/intrinsics/IntrinsicsKt",
 				"getCOROUTINE_SUSPENDED", "()Ljava/lang/Object;", false);
+		final Range range1 = new Range();
+		range1.fromInclusive = m.instructions.getLast();
 		m.visitVarInsn(Opcodes.ASTORE, 4);
 
 		m.visitVarInsn(Opcodes.ALOAD, 0);

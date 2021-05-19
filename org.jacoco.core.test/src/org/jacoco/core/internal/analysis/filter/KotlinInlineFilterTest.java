@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2020 Mountainminds GmbH & Co. KG and Contributors
+ * Copyright (c) 2009, 2021 Mountainminds GmbH & Co. KG and Contributors
  * This program and the accompanying materials are made available under
  * the terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0
@@ -156,6 +156,47 @@ public class KotlinInlineFilterTest extends FilterTestBase {
 		shouldIgnorePrevious(m);
 
 		m.visitLineNumber(13, new Label());
+		m.visitInsn(Opcodes.RETURN);
+
+		filter.filter(m, context, output);
+
+		assertIgnored(expectedRanges.toArray(new Range[0]));
+	}
+
+	/**
+	 * See <a href="https://youtrack.jetbrains.com/issue/KT-37704">KT-37704</a>
+	 *
+	 * <pre>
+	 * inline fun f() {}
+	 * fun g() = f()
+	 * </pre>
+	 */
+	@Test
+	public void should_filter_without_parsing_KotlinDebug_stratum() {
+		context.sourceFileName = "Example.kt";
+		context.sourceDebugExtension = "" //
+				+ "SMAP\n" //
+				+ "Example.kt\n" // OutputFileName=Example.kt
+				+ "Kotlin\n" // DefaultStratumId=Kotlin
+				+ "*S Kotlin\n" // StratumID=Kotlin
+				+ "*F\n" // FileSection
+				+ "+ 1 Example.kt\n" // FileID=1,FileName=Example.kt
+				+ "ExampleKt\n" //
+				+ "*L\n" // LineSection
+				+ "1#1,3:1\n" // InputStartLine=1,LineFileID=1,RepeatCount=3,OutputStartLine=1
+				+ "1#1:4\n" // InputStartLine=1,LineFileID=1,OutputStartLine=4
+				+ "*S KotlinDebug\n"; // StratumID=KotlinDebug
+		context.classAnnotations
+				.add(KotlinGeneratedFilter.KOTLIN_METADATA_DESC);
+
+		m.visitLineNumber(2, new Label());
+		m.visitInsn(Opcodes.ICONST_0);
+		m.visitVarInsn(Opcodes.ISTORE, 0);
+		m.visitLineNumber(4, new Label());
+		shouldIgnorePrevious(m);
+		m.visitInsn(Opcodes.NOP);
+		shouldIgnorePrevious(m);
+		m.visitLineNumber(3, new Label());
 		m.visitInsn(Opcodes.RETURN);
 
 		filter.filter(m, context, output);

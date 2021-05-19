@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2020 Mountainminds GmbH & Co. KG and Contributors
+ * Copyright (c) 2009, 2021 Mountainminds GmbH & Co. KG and Contributors
  * This program and the accompanying materials are made available under
  * the terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0
@@ -130,6 +130,17 @@ public class SyntheticFilterTest extends FilterTestBase {
 		assertIgnored();
 	}
 
+	/**
+	 * For private suspending function Kotlin compiler versions prior to 1.5
+	 * produce package-local synthetic method that should not be filtered
+	 *
+	 * <pre>
+	 * private suspend fun example() {
+	 * }
+	 * </pre>
+	 *
+	 * @see #should_filter_synthetic_methods_whose_name_starts_with_access_dollar_even_if_last_argument_is_kotlin_coroutine_continuation()
+	 */
 	@Test
 	public void should_not_filter_synthetic_methods_whose_last_argument_is_kotlin_coroutine_continuation() {
 		final MethodNode m = new MethodNode(InstrSupport.ASM_API_VERSION,
@@ -143,6 +154,38 @@ public class SyntheticFilterTest extends FilterTestBase {
 		filter.filter(m, context, output);
 
 		assertIgnored();
+	}
+
+	/**
+	 * For private suspending function Kotlin compiler versions starting from
+	 * 1.5 produce additional public synthetic method with name starting with
+	 * "access$" that should be filtered
+	 *
+	 * <pre>
+	 * private suspend fun example() {
+	 * }
+	 * </pre>
+	 *
+	 * @see #should_not_filter_synthetic_methods_whose_last_argument_is_kotlin_coroutine_continuation()
+	 */
+	@Test
+	public void should_filter_synthetic_methods_whose_name_starts_with_access_dollar_even_if_last_argument_is_kotlin_coroutine_continuation() {
+		final MethodNode m = new MethodNode(InstrSupport.ASM_API_VERSION,
+				Opcodes.ACC_PUBLIC | Opcodes.ACC_STATIC | Opcodes.ACC_FINAL
+						| Opcodes.ACC_SYNTHETIC,
+				"access$example",
+				"(Lkotlin/coroutines/Continuation;)Ljava/lang/Object;", null,
+				null);
+		context.classAnnotations
+				.add(KotlinGeneratedFilter.KOTLIN_METADATA_DESC);
+		m.visitVarInsn(Opcodes.ALOAD, 0);
+		m.visitMethodInsn(Opcodes.INVOKESTATIC, "ExampleKt", "example",
+				"(Lkotlin/coroutines/Continuation;)Ljava/lang/Object;", false);
+		m.visitInsn(Opcodes.RETURN);
+
+		filter.filter(m, context, output);
+
+		assertMethodIgnored(m);
 	}
 
 }
