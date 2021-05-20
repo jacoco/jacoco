@@ -20,7 +20,7 @@
 #近期github不稳定，请访问https://gitee.com/Dray/jacoco.git
 
 
-###### 3、关于生成多模块工程中jacoco报告命令参考 demo ：
+###### 3、关于生成多模块工程中jacoco报告命令参考 demo，其中diffcode传递的参数为diffcode服务返回的uniqueData字段，已进行转义和压缩直接使用 ：
 java -jar org.jacoco.cli-0.8.7-SNAPSHOT-nodeps.jar    report jacoco.exec 
 --classfiles \Desktop\feigin\web\build\classes   
 --classfiles \Desktop\feigin\biz\build\classes   
