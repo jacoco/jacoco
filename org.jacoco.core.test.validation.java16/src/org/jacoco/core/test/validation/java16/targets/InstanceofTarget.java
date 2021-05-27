@@ -15,7 +15,8 @@ package org.jacoco.core.test.validation.java16.targets;
 import static org.jacoco.core.test.validation.targets.Stubs.nop;
 
 /**
- * This target exercises pattern matching for instanceof (JEP 305).
+ * This target exercises pattern matching for instanceof
+ * (<a href="https://openjdk.java.net/jeps/394">JEP 394</a>).
  */
 public class InstanceofTarget {
 
