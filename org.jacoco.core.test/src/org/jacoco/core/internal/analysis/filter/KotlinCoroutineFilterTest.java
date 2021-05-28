@@ -391,11 +391,13 @@ public class KotlinCoroutineFilterTest extends FilterTestBase {
 		context.classAnnotations
 				.add(KotlinGeneratedFilter.KOTLIN_METADATA_DESC);
 
-		final Label exit = new Label();
+		final Label[] labels = new Label[] { new Label(), new Label(),
+				new Label(), new Label(), new Label(), new Label() };
 
+		m.visitLabel(labels[0]);
 		m.visitVarInsn(Opcodes.ILOAD, 1);
-		final Label next = new Label();
-		m.visitJumpInsn(Opcodes.IFEQ, next);
+		m.visitLabel(labels[2]);
+		m.visitJumpInsn(Opcodes.IFEQ, labels[1]);
 
 		m.visitVarInsn(Opcodes.ALOAD, 0);
 		m.visitVarInsn(Opcodes.ALOAD, 2);
@@ -408,16 +410,15 @@ public class KotlinCoroutineFilterTest extends FilterTestBase {
 			m.visitMethodInsn(Opcodes.INVOKESTATIC,
 					"kotlin/coroutines/intrinsics/IntrinsicsKt",
 					"getCOROUTINE_SUSPENDED", "()Ljava/lang/Object;", false);
-			final Label label = new Label();
-			m.visitJumpInsn(Opcodes.IF_ACMPNE, label);
+			m.visitJumpInsn(Opcodes.IF_ACMPNE, labels[3]);
 			m.visitInsn(Opcodes.ARETURN);
-			m.visitLabel(label);
+			m.visitLabel(labels[3]);
 			m.visitInsn(Opcodes.POP);
 			range1.toInclusive = m.instructions.getLast();
 		}
 
-		m.visitJumpInsn(Opcodes.GOTO, exit);
-		m.visitLabel(next);
+		m.visitJumpInsn(Opcodes.GOTO, labels[4]);
+		m.visitLabel(labels[1]);
 
 		m.visitVarInsn(Opcodes.ALOAD, 0);
 		m.visitVarInsn(Opcodes.ALOAD, 2);
@@ -430,22 +431,26 @@ public class KotlinCoroutineFilterTest extends FilterTestBase {
 			m.visitMethodInsn(Opcodes.INVOKESTATIC,
 					"kotlin/coroutines/intrinsics/IntrinsicsKt",
 					"getCOROUTINE_SUSPENDED", "()Ljava/lang/Object;", false);
-			final Label label = new Label();
-			m.visitJumpInsn(Opcodes.IF_ACMPNE, label);
+			m.visitJumpInsn(Opcodes.IF_ACMPNE, labels[5]);
 			m.visitInsn(Opcodes.ARETURN);
-			m.visitLabel(label);
+			m.visitLabel(labels[5]);
 			m.visitInsn(Opcodes.POP);
 			range2.toInclusive = m.instructions.getLast();
 		}
 
-		m.visitLabel(exit);
-		m.visitFieldInsn(Opcodes.GETSTATIC, "kotlin/Unit", "INSTANCE",
-				"Lkotlin/Unit;");
-		m.visitInsn(Opcodes.ARETURN);
+		m.visitLabel(labels[4]);
+		final Range range3 = new Range();
+		{
+			m.visitFieldInsn(Opcodes.GETSTATIC, "kotlin/Unit", "INSTANCE",
+					"Lkotlin/Unit;");
+			range3.fromInclusive = m.instructions.getLast();
+			m.visitInsn(Opcodes.ARETURN);
+			range3.toInclusive = m.instructions.getLast();
+		}
 
 		filter.filter(m, context, output);
 
-		assertIgnored(range1, range2);
+		// range3 is ignored twice, once for each suspend call
+		assertIgnored(range1, range3, range2, range3);
 	}
-
 }
