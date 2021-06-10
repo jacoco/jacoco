@@ -53,7 +53,7 @@ public class ExecDumpTest {
 		final FileOutputStream out = new FileOutputStream(f);
 		final ExecutionDataWriter writer = new ExecutionDataWriter(out);
 		writer.visitSessionInfo(new SessionInfo("testid", 1, 2));
-		writer.visitClassExecution(new ExecutionData(0x1234, "foo/MyClass",
+		writer.visitClassExecutionMerge(new ExecutionData(0x1234, "foo/MyClass",
 				new boolean[] { false, true, true }));
 		writer.flush();
 		out.close();

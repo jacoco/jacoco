@@ -168,13 +168,17 @@ public final class ExecutionDataStore implements IExecutionDataVisitor {
 	 */
 	public void accept(final IExecutionDataVisitor visitor) {
 		for (final ExecutionData data : getContents()) {
-			visitor.visitClassExecution(data);
+			visitor.visitClassExecutionMerge(data);
 		}
 	}
 
 	// === IExecutionDataVisitor ===
 
-	public void visitClassExecution(final ExecutionData data) {
+	public void visitClassExecutionMerge(final ExecutionData data) {
 		put(data);
+	}
+
+	public void visitClassExecutionDiff(final ExecutionData data) {
+		subtract(data);
 	}
 }

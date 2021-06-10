@@ -97,7 +97,7 @@ public class ExecutionDataWriter
 		}
 	}
 
-	public void visitClassExecution(final ExecutionData data) {
+	public void visitClassExecutionMerge(final ExecutionData data) {
 		if (data.hasHits()) {
 			try {
 				out.writeByte(BLOCK_EXECUTIONDATA);
@@ -108,6 +108,9 @@ public class ExecutionDataWriter
 				throw new RuntimeException(e);
 			}
 		}
+	}
+
+	public void visitClassExecutionDiff(final ExecutionData data) {
 	}
 
 	/**

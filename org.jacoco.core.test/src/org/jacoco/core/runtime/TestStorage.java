@@ -47,8 +47,11 @@ class TestStorage implements IExecutionDataVisitor, ISessionInfoVisitor {
 
 	// === ICoverageDataVisitor ===
 
-	public void visitClassExecution(final ExecutionData ed) {
+	public void visitClassExecutionMerge(final ExecutionData ed) {
 		data.put(Long.valueOf(ed.getId()), ed);
+	}
+
+	public void visitClassExecutionDiff(final ExecutionData ed) {
 	}
 
 	// === ISessionInfoVisitor ===

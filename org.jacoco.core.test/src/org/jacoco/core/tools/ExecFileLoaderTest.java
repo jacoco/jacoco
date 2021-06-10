@@ -119,7 +119,7 @@ public class ExecFileLoaderTest {
 		final FileOutputStream out = new FileOutputStream(file);
 		final ExecutionDataWriter writer = new ExecutionDataWriter(out);
 		final int value = id.length();
-		writer.visitClassExecution(
+		writer.visitClassExecutionMerge(
 				new ExecutionData(value, id, new boolean[] { true }));
 		writer.visitSessionInfo(new SessionInfo(id, value, value));
 		out.close();

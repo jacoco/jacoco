@@ -79,7 +79,7 @@ public class MergeTest extends CommandTestBase {
 		File file = new File(tmp.getRoot(), name + ".exec");
 		final FileOutputStream execout = new FileOutputStream(file);
 		ExecutionDataWriter writer = new ExecutionDataWriter(execout);
-		writer.visitClassExecution(new ExecutionData(name.hashCode(), name,
+		writer.visitClassExecutionMerge(new ExecutionData(name.hashCode(), name,
 				new boolean[] { true }));
 		execout.close();
 		return file;

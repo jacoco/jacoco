@@ -99,10 +99,13 @@ public final class ExecutionDataServer {
 			}
 		}
 
-		public void visitClassExecution(final ExecutionData data) {
+		public void visitClassExecutionMerge(final ExecutionData data) {
 			synchronized (fileWriter) {
-				fileWriter.visitClassExecution(data);
+				fileWriter.visitClassExecutionMerge(data);
 			}
+		}
+
+		public void visitClassExecutionDiff(final ExecutionData data) {
 		}
 	}
 

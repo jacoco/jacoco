@@ -70,9 +70,12 @@ public class ExecutionDataStoreTest implements IExecutionDataVisitor {
 		store.put(new ExecutionData(1000, "Sample0", probes));
 		store.put(new ExecutionData(1001, "Sample1", probes));
 		store.accept(new IExecutionDataVisitor() {
-			public void visitClassExecution(ExecutionData data) {
+			public void visitClassExecutionMerge(ExecutionData data) {
 				store.put(new ExecutionData(1002, "Sample2", probes));
-				ExecutionDataStoreTest.this.visitClassExecution(data);
+				ExecutionDataStoreTest.this.visitClassExecutionMerge(data);
+			}
+
+			public void visitClassExecutionDiff(ExecutionData data) {
 			}
 		});
 		assertEquals(2, dataOutput.size());
@@ -140,9 +143,11 @@ public class ExecutionDataStoreTest implements IExecutionDataVisitor {
 	@Test
 	public void testMerge() {
 		final boolean[] data1 = new boolean[] { false, true, false, true };
-		store.visitClassExecution(new ExecutionData(1000, "Sample", data1));
+		store.visitClassExecutionMerge(
+				new ExecutionData(1000, "Sample", data1));
 		final boolean[] data2 = new boolean[] { false, true, true, false };
-		store.visitClassExecution(new ExecutionData(1000, "Sample", data2));
+		store.visitClassExecutionMerge(
+				new ExecutionData(1000, "Sample", data2));
 
 		final boolean[] result = store.get(1000).getProbes();
 		assertFalse(result[0]);
@@ -154,9 +159,11 @@ public class ExecutionDataStoreTest implements IExecutionDataVisitor {
 	@Test(expected = IllegalStateException.class)
 	public void testMergeNegative() {
 		final boolean[] data1 = new boolean[] { false, false };
-		store.visitClassExecution(new ExecutionData(1000, "Sample", data1));
+		store.visitClassExecutionMerge(
+				new ExecutionData(1000, "Sample", data1));
 		final boolean[] data2 = new boolean[] { false, false, false };
-		store.visitClassExecution(new ExecutionData(1000, "Sample", data2));
+		store.visitClassExecutionMerge(
+				new ExecutionData(1000, "Sample", data2));
 	}
 
 	@Test
@@ -220,8 +227,11 @@ public class ExecutionDataStoreTest implements IExecutionDataVisitor {
 
 	// === IExecutionDataOutput ===
 
-	public void visitClassExecution(final ExecutionData data) {
+	public void visitClassExecutionMerge(final ExecutionData data) {
 		dataOutput.put(Long.valueOf(data.getId()), data);
+	}
+
+	public void visitClassExecutionDiff(final ExecutionData data) {
 	}
 
 }

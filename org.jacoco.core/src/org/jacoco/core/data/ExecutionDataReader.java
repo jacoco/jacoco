@@ -24,6 +24,10 @@ import org.jacoco.core.internal.data.CompactDataInput;
  */
 public class ExecutionDataReader {
 
+	public enum ExecReadMode {
+		MERGE, DIFF
+	}
+
 	/** Underlying data input */
 	protected final CompactDataInput in;
 
@@ -32,6 +36,8 @@ public class ExecutionDataReader {
 	private IExecutionDataVisitor executionDataVisitor = null;
 
 	private boolean firstBlock = true;
+
+	private ExecReadMode readMode = ExecReadMode.MERGE;
 
 	/**
 	 * Creates a new reader based on the given input stream input. Depending on
@@ -43,6 +49,19 @@ public class ExecutionDataReader {
 	 */
 	public ExecutionDataReader(final InputStream input) {
 		this.in = new CompactDataInput(input);
+	}
+
+	/**
+	 * Creates a new reader based on the given input stream input. Depending on
+	 * the nature of the underlying stream input should be buffered as most data
+	 * is read in single bytes.
+	 *
+	 * @param input
+	 *            input stream to read execution data from
+	 */
+	public ExecutionDataReader(final InputStream input, ExecReadMode readMode) {
+		this.in = new CompactDataInput(input);
+		this.readMode = readMode;
 	}
 
 	/**
@@ -148,8 +167,20 @@ public class ExecutionDataReader {
 		final long id = in.readLong();
 		final String name = in.readUTF();
 		final boolean[] probes = in.readBooleanArray();
-		executionDataVisitor
-				.visitClassExecution(new ExecutionData(id, name, probes));
+		switch (this.readMode) {
+		case MERGE:
+			executionDataVisitor.visitClassExecutionMerge(
+					new ExecutionData(id, name, probes));
+			break;
+		case DIFF:
+			executionDataVisitor.visitClassExecutionDiff(
+					new ExecutionData(id, name, probes));
+			break;
+		default:
+			throw new IllegalStateException(
+					"Unexpected value: " + this.readMode);
+		}
+
 	}
 
 }

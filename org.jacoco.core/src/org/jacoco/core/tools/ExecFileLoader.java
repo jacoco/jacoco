@@ -34,6 +34,14 @@ public class ExecFileLoader {
 
 	private final SessionInfoStore sessionInfos;
 	private final ExecutionDataStore executionData;
+	private ExecutionDataReader.ExecReadMode readMode = ExecutionDataReader.ExecReadMode.MERGE;
+
+	public ExecFileLoader(boolean diffLoading) {
+		this();
+		if (diffLoading) {
+			this.readMode = ExecutionDataReader.ExecReadMode.DIFF;
+		}
+	}
 
 	/**
 	 * New instance to combine session infos and execution data from multiple
@@ -54,7 +62,7 @@ public class ExecFileLoader {
 	 */
 	public void load(final InputStream stream) throws IOException {
 		final ExecutionDataReader reader = new ExecutionDataReader(
-				new BufferedInputStream(stream));
+				new BufferedInputStream(stream), readMode);
 		reader.setExecutionDataVisitor(executionData);
 		reader.setSessionInfoVisitor(sessionInfos);
 		reader.read();

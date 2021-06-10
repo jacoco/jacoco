@@ -69,13 +69,17 @@ public final class ExecDump {
 			}
 		});
 		reader.setExecutionDataVisitor(new IExecutionDataVisitor() {
-			public void visitClassExecution(final ExecutionData data) {
+			public void visitClassExecutionMerge(final ExecutionData data) {
 				out.printf("%016x  %3d of %3d   %s%n",
 						Long.valueOf(data.getId()),
 						Integer.valueOf(getHitCount(data.getProbes())),
 						Integer.valueOf(data.getProbes().length),
 						data.getName());
 			}
+
+			public void visitClassExecutionDiff(final ExecutionData data) {
+			}
+
 		});
 		reader.read();
 		in.close();

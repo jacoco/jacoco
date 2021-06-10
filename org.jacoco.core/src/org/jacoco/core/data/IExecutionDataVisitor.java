@@ -25,6 +25,14 @@ public interface IExecutionDataVisitor {
 	 * @param data
 	 *            execution data for a class
 	 */
-	void visitClassExecution(ExecutionData data);
+	void visitClassExecutionMerge(ExecutionData data);
+
+	/**
+	 * Provides execution data for a class.
+	 *
+	 * @param data
+	 *            execution data for a class
+	 */
+	void visitClassExecutionDiff(ExecutionData data);
 
 }
