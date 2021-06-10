@@ -37,7 +37,7 @@ public final class Filters implements IFilter {
 				new TryWithResourcesJavac11Filter(),
 				new TryWithResourcesJavacFilter(),
 				new TryWithResourcesEcjFilter(), new FinallyFilter(),
-				new PrivateEmptyNoArgConstructorFilter(),
+				new PrivateEmptyNoArgConstructorFilter(), new AssertFilter(),
 				new StringSwitchJavacFilter(), new StringSwitchFilter(),
 				new EnumEmptyConstructorFilter(), new RecordsFilter(),
 				new AnnotationGeneratedFilter(), new KotlinGeneratedFilter(),

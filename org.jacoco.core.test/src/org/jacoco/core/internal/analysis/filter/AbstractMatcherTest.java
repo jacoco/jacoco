@@ -138,6 +138,42 @@ public class AbstractMatcherTest {
 	}
 
 	@Test
+	public void nextIsField() {
+		m.visitInsn(Opcodes.NOP);
+		m.visitFieldInsn(Opcodes.PUTSTATIC, "owner", "name", "Z");
+
+		// should set cursor to null when opcode mismatch
+		matcher.cursor = m.instructions.getFirst();
+		matcher.nextIsField(Opcodes.GETSTATIC, "owner", "name", "Z");
+		assertNull(matcher.cursor);
+
+		// should set cursor to null when owner mismatch
+		matcher.cursor = m.instructions.getFirst();
+		matcher.nextIsField(Opcodes.PUTSTATIC, "another_owner", "name", "Z");
+		assertNull(matcher.cursor);
+
+		// should set cursor to null when name mismatch
+		matcher.cursor = m.instructions.getFirst();
+		matcher.nextIsField(Opcodes.PUTSTATIC, "owner", "another_name", "Z");
+		assertNull(matcher.cursor);
+
+		// should set cursor to null when descriptor mismatch
+		matcher.cursor = m.instructions.getFirst();
+		matcher.nextIsField(Opcodes.PUTSTATIC, "owner", "name",
+				"another_descriptor");
+		assertNull(matcher.cursor);
+
+		// should set cursor to next instruction when match
+		matcher.cursor = m.instructions.getFirst();
+		matcher.nextIsField(Opcodes.PUTSTATIC, "owner", "name", "Z");
+		assertSame(m.instructions.getLast(), matcher.cursor);
+
+		// should not do anything when cursor is null
+		matcher.cursor = null;
+		matcher.nextIsField(Opcodes.PUTSTATIC, "owner", "name", "Z");
+	}
+
+	@Test
 	public void nextIsInvoke() {
 		m.visitInsn(Opcodes.NOP);
 		m.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "owner", "name", "()V", false);
