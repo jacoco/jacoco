@@ -43,8 +43,8 @@ public class InstrSupportTest {
 	}
 
 	@Test
-	public void classReaderFor_should_read_java_16_class() {
-		final byte[] bytes = createJava16Class();
+	public void classReaderFor_should_read_java_18_class() {
+		final byte[] bytes = createJava18Class();
 
 		final ClassReader classReader = InstrSupport.classReaderFor(bytes);
 
@@ -53,16 +53,16 @@ public class InstrSupportTest {
 			public void visit(final int version, final int access,
 					final String name, final String signature,
 					final String superName, final String[] interfaces) {
-				assertEquals(Opcodes.V16, version);
+				assertEquals(Opcodes.V17 + 1, version);
 			}
 		}, 0);
 
-		assertArrayEquals(createJava16Class(), bytes);
+		assertArrayEquals(createJava18Class(), bytes);
 	}
 
-	private static byte[] createJava16Class() {
+	private static byte[] createJava18Class() {
 		final ClassWriter cw = new ClassWriter(0);
-		cw.visit(Opcodes.V16, 0, "Foo", null, "java/lang/Object", null);
+		cw.visit(Opcodes.V17 + 1, 0, "Foo", null, "java/lang/Object", null);
 		cw.visitEnd();
 		return cw.toByteArray();
 	}
@@ -128,6 +128,8 @@ public class InstrSupportTest {
 		assertTrue(InstrSupport.needsFrames(Opcodes.V14));
 		assertTrue(InstrSupport.needsFrames(Opcodes.V15));
 		assertTrue(InstrSupport.needsFrames(Opcodes.V16));
+		assertTrue(InstrSupport.needsFrames(Opcodes.V17));
+		assertTrue(InstrSupport.needsFrames(Opcodes.V17 + 1));
 
 		assertTrue(InstrSupport.needsFrames(0x0100));
 	}

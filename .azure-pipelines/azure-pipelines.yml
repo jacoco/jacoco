@@ -31,6 +31,8 @@ jobs:
         JDK_VERSION: 16
       JDK 17:
         JDK_VERSION: 17
+      JDK 18:
+        JDK_VERSION: 18
   pool:
     vmImage: 'ubuntu-18.04'
   steps:
