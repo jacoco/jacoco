@@ -90,7 +90,7 @@ public class ExecutionDataReader {
 				throw new IOException("Invalid execution data file.");
 			}
 			firstBlock = false;
-		} while (readBlock(type)); //藏得很深，具体解析在这个方法
+		} while (readBlock(type)); // 藏得很深，具体解析在这个方法
 		return true;
 	}
 

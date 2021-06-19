@@ -58,7 +58,7 @@ public class Merge extends Command {
 			for (final File file : execfiles) {
 				out.printf("[INFO] Loading execution data file %s.%n",
 						file.getAbsolutePath());
-				//开始加载exec文件，遍历多个文件加载
+				// 开始加载exec文件，遍历多个文件加载
 				loader.load(file);
 			}
 		}

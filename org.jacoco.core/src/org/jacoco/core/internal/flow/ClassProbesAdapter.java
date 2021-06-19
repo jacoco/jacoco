@@ -107,6 +107,7 @@ public class ClassProbesAdapter extends ClassVisitor
 		};
 	}
 
+
 	@Override
 	public void visitEnd() {
 		cv.visitTotalProbeCount(counter);

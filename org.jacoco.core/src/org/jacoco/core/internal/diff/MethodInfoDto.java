@@ -26,7 +26,6 @@ public class MethodInfoDto {
 	 */
 	public String parameters;
 
-
 	public String getMethodName() {
 		return methodName;
 	}
