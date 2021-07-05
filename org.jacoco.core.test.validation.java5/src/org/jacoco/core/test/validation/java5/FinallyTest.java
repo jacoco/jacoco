@@ -24,6 +24,7 @@ import java.util.Set;
 
 import org.jacoco.core.internal.instr.InstrSupport;
 import org.jacoco.core.test.TargetLoader;
+import org.jacoco.core.test.validation.JavaVersion;
 import org.jacoco.core.test.validation.Source.Line;
 import org.jacoco.core.test.validation.ValidationTestBase;
 import org.jacoco.core.test.validation.java5.targets.FinallyTarget;
@@ -62,7 +63,7 @@ public class FinallyTest extends ValidationTestBase {
 	}
 
 	public void assertTwoRegions1(final Line line) {
-		if (isJDKCompiler && JAVA_VERSION.isBefore("1.8")) {
+		if (isJDKCompiler && JavaVersion.current().isBefore("1.8")) {
 			// https://bugs.openjdk.java.net/browse/JDK-7008643
 			assertPartlyCovered(line);
 		} else {
@@ -71,7 +72,7 @@ public class FinallyTest extends ValidationTestBase {
 	}
 
 	public void assertTwoRegionsReturn1(final Line line) {
-		if (isJDKCompiler && JAVA_VERSION.isBefore("1.8")) {
+		if (isJDKCompiler && JavaVersion.current().isBefore("1.8")) {
 			// https://bugs.openjdk.java.net/browse/JDK-7008643
 			assertEmpty(line);
 		} else {
@@ -80,7 +81,7 @@ public class FinallyTest extends ValidationTestBase {
 	}
 
 	public void assertTwoRegionsReturn2(final Line line) {
-		if (isJDKCompiler && JAVA_VERSION.isBefore("1.8")) {
+		if (isJDKCompiler && JavaVersion.current().isBefore("1.8")) {
 			// https://bugs.openjdk.java.net/browse/JDK-7008643
 			assertEmpty(line);
 		} else {
@@ -89,7 +90,7 @@ public class FinallyTest extends ValidationTestBase {
 	}
 
 	public void assertEmptyTry1(final Line line) {
-		if (isJDKCompiler && JAVA_VERSION.isBefore("1.8")) {
+		if (isJDKCompiler && JavaVersion.current().isBefore("1.8")) {
 			// compiler bug fixed in javac >= 1.8:
 			assertPartlyCovered(line);
 		} else {
@@ -98,7 +99,7 @@ public class FinallyTest extends ValidationTestBase {
 	}
 
 	public void assertEmptyTry2(final Line line) {
-		if (isJDKCompiler && JAVA_VERSION.isBefore("1.8")) {
+		if (isJDKCompiler && JavaVersion.current().isBefore("1.8")) {
 			// compiler bug fixed in javac >= 1.8:
 			assertFullyCovered(line);
 		} else {
@@ -146,7 +147,7 @@ public class FinallyTest extends ValidationTestBase {
 
 		expected.add("breakStatement.for");
 		if (isJDKCompiler) {
-			if (JAVA_VERSION.isBefore("10")) {
+			if (JavaVersion.current().isBefore("10")) {
 				// https://bugs.openjdk.java.net/browse/JDK-8180141
 				expected.add("breakStatement.1");
 			} else {
@@ -179,7 +180,7 @@ public class FinallyTest extends ValidationTestBase {
 			expected.add("nested.3");
 		}
 
-		if (isJDKCompiler && JAVA_VERSION.isBefore("1.8")) {
+		if (isJDKCompiler && JavaVersion.current().isBefore("1.8")) {
 			expected.add("emptyTry.2");
 		}
 
