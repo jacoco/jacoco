@@ -28,7 +28,6 @@
     <dependency>
       <groupId>${project.groupId}</groupId>
       <artifactId>org.jacoco.core.test</artifactId>
-      <version>${project.version}</version>
     </dependency>
   </dependencies>
 </project>
