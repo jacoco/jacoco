@@ -23,6 +23,8 @@ import java.nio.channels.OverlappingFileLockException;
 
 import org.jacoco.core.runtime.AgentOptions;
 import org.jacoco.core.runtime.RuntimeData;
+import org.jacoco.core.test.validation.JavaVersion;
+import org.junit.AssumptionViolatedException;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
@@ -79,6 +81,11 @@ public class FileOutputTest {
 	@Test(expected = OverlappingFileLockException.class)
 	public void startup_should_throws_OverlappingFileLockException_when_execfile_is_permanently_locked()
 			throws Exception {
+		if (JavaVersion.current().isBefore("1.6")) {
+			throw new AssumptionViolatedException(
+					"OverlappingFileLockException only thrown since Java 1.6");
+		}
+
 		File destFile = folder.newFile("jacoco.exec");
 		AgentOptions options = new AgentOptions();
 		options.setDestfile(destFile.getAbsolutePath());
@@ -96,6 +103,11 @@ public class FileOutputTest {
 	@Test(expected = InterruptedIOException.class)
 	public void startup_should_throws_InterruptedIOException_when_execfile_is_locked_and_thread_is_interrupted()
 			throws Exception {
+		if (JavaVersion.current().isBefore("1.6")) {
+			throw new AssumptionViolatedException(
+					"OverlappingFileLockException only thrown since Java 1.6");
+		}
+
 		File destFile = folder.newFile("jacoco.exec");
 		AgentOptions options = new AgentOptions();
 		options.setDestfile(destFile.getAbsolutePath());
