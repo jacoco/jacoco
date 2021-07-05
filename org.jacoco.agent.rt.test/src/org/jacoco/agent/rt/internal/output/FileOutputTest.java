@@ -16,7 +16,10 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InterruptedIOException;
+import java.nio.channels.OverlappingFileLockException;
 
 import org.jacoco.core.runtime.AgentOptions;
 import org.jacoco.core.runtime.RuntimeData;
@@ -33,7 +36,7 @@ public class FileOutputTest {
 	public TemporaryFolder folder = new TemporaryFolder();
 
 	@Test
-	public void testCreateDestFileOnStartup() throws Exception {
+	public void startup_should_create_empty_execfile() throws Exception {
 		File destFile = folder.newFile("jacoco.exec");
 		AgentOptions options = new AgentOptions();
 		options.setDestfile(destFile.getAbsolutePath());
@@ -47,7 +50,7 @@ public class FileOutputTest {
 	}
 
 	@Test
-	public void testWriteData() throws Exception {
+	public void shutdown_should_write_execdata() throws Exception {
 		File destFile = folder.newFile("jacoco.exec");
 		AgentOptions options = new AgentOptions();
 		options.setDestfile(destFile.getAbsolutePath());
@@ -63,7 +66,8 @@ public class FileOutputTest {
 	}
 
 	@Test(expected = IOException.class)
-	public void testInvalidDestFile() throws Exception {
+	public void startup_should_throw_IOException_when_execfile_cannot_be_created()
+			throws Exception {
 		AgentOptions options = new AgentOptions();
 		options.setDestfile(folder.newFolder("folder").getAbsolutePath());
 		FileOutput controller = new FileOutput();
@@ -72,4 +76,38 @@ public class FileOutputTest {
 		controller.startup(options, new RuntimeData());
 	}
 
+	@Test(expected = OverlappingFileLockException.class)
+	public void startup_should_throws_OverlappingFileLockException_when_execfile_is_permanently_locked()
+			throws Exception {
+		File destFile = folder.newFile("jacoco.exec");
+		AgentOptions options = new AgentOptions();
+		options.setDestfile(destFile.getAbsolutePath());
+
+		FileOutputStream out = new FileOutputStream(destFile);
+		try {
+			out.getChannel().lock();
+			FileOutput controller = new FileOutput();
+			controller.startup(options, new RuntimeData());
+		} finally {
+			out.close();
+		}
+	}
+
+	@Test(expected = InterruptedIOException.class)
+	public void startup_should_throws_InterruptedIOException_when_execfile_is_locked_and_thread_is_interrupted()
+			throws Exception {
+		File destFile = folder.newFile("jacoco.exec");
+		AgentOptions options = new AgentOptions();
+		options.setDestfile(destFile.getAbsolutePath());
+
+		FileOutputStream out = new FileOutputStream(destFile);
+		try {
+			out.getChannel().lock();
+			FileOutput controller = new FileOutput();
+			Thread.currentThread().interrupt();
+			controller.startup(options, new RuntimeData());
+		} finally {
+			out.close();
+		}
+	}
 }
