@@ -56,6 +56,7 @@
                 <dataFileExclude>target/child2.coverage</dataFileExclude>
               </dataFileExcludes>
               <outputDirectory>target/jacoco-aggregate-customization</outputDirectory>
+              <includeCurrentProject>true</includeCurrentProject>
             </configuration>
           </execution>
         </executions>
