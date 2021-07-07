@@ -55,6 +55,11 @@
       <artifactId>file-management</artifactId>
       <version>1.2.1</version>
     </dependency>
+    <dependency>
+      <groupId>org.apache.maven.shared</groupId>
+      <artifactId>maven-dependency-tree</artifactId>
+      <version>2.2</version>
+    </dependency>
 
     <dependency>
       <groupId>org.apache.maven.reporting</groupId>
