@@ -30,11 +30,11 @@ public class XMLElement {
 	/** XML header template */
 	private static final String HEADER = "<?xml version=\"1.0\" encoding=\"%s\"?>";
 
-	/** XML header template for standalone documents */
-	private static final String HEADER_STANDALONE = "<?xml version=\"1.0\" encoding=\"%s\" standalone=\"yes\"?>";
-
 	/** DOCTYPE declaration template */
 	private static final String DOCTYPE = "<!DOCTYPE %s PUBLIC \"%s\" \"%s\">";
+
+	/** DOCTYPE declaration template for embedded DTD */
+	private static final String DOCTYPE_EMBEDDED = "<!DOCTYPE %s [%s]>";
 
 	/** Writer for content output */
 	protected final Writer writer;
@@ -68,8 +68,6 @@ public class XMLElement {
 	 *            optional schema public identifier
 	 * @param system
 	 *            optional schema system identifier
-	 * @param standalone
-	 *            if <code>true</code> the document is declared as standalone
 	 * @param encoding
 	 *            character encoding used for output
 	 * @param output
@@ -78,18 +76,37 @@ public class XMLElement {
 	 *             in case of problems with the underlying output
 	 */
 	public XMLElement(final String name, final String pubId,
-			final String system, final boolean standalone,
-			final String encoding, final OutputStream output)
-			throws IOException {
+			final String system, final String encoding,
+			final OutputStream output) throws IOException {
 		this(new OutputStreamWriter(output, encoding), name, true);
-		if (standalone) {
-			writer.write(format(HEADER_STANDALONE, encoding));
-		} else {
-			writer.write(format(HEADER, encoding));
-		}
+		writer.write(format(HEADER, encoding));
 		if (pubId != null) {
 			writer.write(format(DOCTYPE, name, pubId, system));
 		}
+		writer.write('<');
+		writer.write(name);
+	}
+
+	/**
+	 * Creates a root element of a XML document.
+	 * 
+	 * @param name
+	 *            element name
+	 * @param dtd
+	 *            dtd to embed
+	 * @param encoding
+	 *            character encoding used for output
+	 * @param output
+	 *            output stream will be closed if the root element is closed
+	 * @throws IOException
+	 *             in case of problems with the underlying output
+	 */
+	public XMLElement(final String name, final String dtd,
+			final String encoding, final OutputStream output)
+			throws IOException {
+		this(new OutputStreamWriter(output, encoding), name, true);
+		writer.write(format(HEADER, encoding));
+		writer.write(format(DOCTYPE_EMBEDDED, name, dtd));
 		writer.write('<');
 		writer.write(name);
 	}

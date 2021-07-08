@@ -34,23 +34,15 @@ public class XMLElementTest {
 	@Before
 	public void setup() throws IOException {
 		buffer = new ByteArrayOutputStream();
-		root = new XMLElement("root", null, null, false, "UTF-8", buffer);
+		root = new XMLElement("root", null, null, "UTF-8", buffer);
 	}
 
 	@Test
 	public void init_should_write_doctype_when_given() throws IOException {
-		root = new XMLElement("root", "-//JACOCO//TEST", "test.dtd", false,
-				"UTF-8", buffer);
+		root = new XMLElement("root", "-//JACOCO//TEST", "test.dtd", "UTF-8",
+				buffer);
 		assertEquals(DECL
 				+ "<!DOCTYPE root PUBLIC \"-//JACOCO//TEST\" \"test.dtd\"><root/>",
-				actual());
-	}
-
-	@Test
-	public void init_should_write_standalone_when_given() throws IOException {
-		root = new XMLElement("root", null, null, true, "UTF-8", buffer);
-		assertEquals(
-				"<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?><root/>",
 				actual());
 	}
 
