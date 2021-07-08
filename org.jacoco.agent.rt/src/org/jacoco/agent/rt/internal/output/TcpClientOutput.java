@@ -14,6 +14,8 @@ package org.jacoco.agent.rt.internal.output;
 
 import java.io.IOException;
 import java.net.Socket;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import org.jacoco.agent.rt.internal.IExceptionLogger;
 import org.jacoco.core.runtime.AgentOptions;
@@ -28,12 +30,14 @@ import org.jacoco.core.runtime.RuntimeData;
  * </ul>
  */
 public class TcpClientOutput implements IAgentOutput {
-
 	private final IExceptionLogger logger;
 
 	private TcpConnection connection;
 
-	private Thread worker;
+	private AgentOptions options;
+	private RuntimeData data;
+
+	private Timer timer;
 
 	/**
 	 * New controller instance.
@@ -47,30 +51,58 @@ public class TcpClientOutput implements IAgentOutput {
 
 	public void startup(final AgentOptions options, final RuntimeData data)
 			throws IOException {
-		final Socket socket = createSocket(options);
-		connection = new TcpConnection(socket, data);
-		connection.init();
-		worker = new Thread(new Runnable() {
-			public void run() {
-				try {
-					connection.run();
-				} catch (final IOException e) {
-					logger.logExeption(e);
-				}
+		this.options = options;
+		this.data = data;
+		timer = new Timer(getClass().getName(), true);
+		scheduleConnection(0);
+	}
+
+	private void scheduleConnection(final int delayMs) {
+		if (connection != null) {
+			try {
+				connection.close();
+			} catch (final IOException ioe) {
 			}
-		});
-		worker.setName(getClass().getName());
-		worker.setDaemon(true);
-		worker.start();
+		}
+		if (timer != null) {
+			final TimerTask task = new TimerTask() {
+				@Override
+				public void run() {
+					try {
+						final Socket socket = createSocket(options);
+						connection = new TcpConnection(socket, data);
+						connection.init();
+						connection.run();
+					} catch (final IOException e) {
+						if (options.reconnectEnabled()) {
+							// scheduling reconnect
+							scheduleConnection(options.getReconnectMs());
+						} else {
+							logger.logExeption(e);
+						}
+					}
+				}
+			};
+			timer.schedule(task, delayMs);
+		}
 	}
 
 	public void shutdown() throws Exception {
-		connection.close();
-		worker.join();
+		if (timer != null) {
+			timer.cancel();
+			timer = null;
+		}
+		if (connection != null) {
+			connection.close();
+		}
 	}
 
 	public void writeExecutionData(final boolean reset) throws IOException {
-		connection.writeExecutionData(reset);
+		if (connection != null) {
+			connection.writeExecutionData(reset);
+		} else {
+			throw new IOException("Writer not connected");
+		}
 	}
 
 	/**
