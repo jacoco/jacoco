@@ -53,7 +53,7 @@ public class FileOutputTest {
 	}
 
 	@Test
-	public void shutdown_should_write_execdata() throws Exception {
+	public void writeExecutionData_should_write_execdata() throws Exception {
 		File destFile = folder.newFile("jacoco.exec");
 		AgentOptions options = new AgentOptions();
 		options.setDestfile(destFile.getAbsolutePath());
