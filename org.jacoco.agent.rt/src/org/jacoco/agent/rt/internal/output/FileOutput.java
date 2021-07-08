@@ -15,7 +15,10 @@ package org.jacoco.agent.rt.internal.output;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InterruptedIOException;
 import java.io.OutputStream;
+import java.nio.channels.FileChannel;
+import java.nio.channels.OverlappingFileLockException;
 
 import org.jacoco.core.data.ExecutionDataWriter;
 import org.jacoco.core.runtime.AgentOptions;
@@ -30,6 +33,10 @@ import org.jacoco.core.runtime.RuntimeData;
  * </ul>
  */
 public class FileOutput implements IAgentOutput {
+
+	private static final int LOCK_RETRY_COUNT = 30;
+
+	private static final long LOCK_RETRY_WAIT_TIME_MS = 100;
 
 	private RuntimeData data;
 
@@ -67,8 +74,28 @@ public class FileOutput implements IAgentOutput {
 	private OutputStream openFile() throws IOException {
 		final FileOutputStream file = new FileOutputStream(destFile, append);
 		// Avoid concurrent writes from different agents running in parallel:
-		file.getChannel().lock();
-		return file;
+		final FileChannel fc = file.getChannel();
+		int retries = 0;
+		while (true) {
+			try {
+				// An agent from another JVM might have a lock. In this case
+				// this method blocks until the lock is freed.
+				fc.lock();
+				return file;
+			} catch (final OverlappingFileLockException e) {
+				// In the case of multiple class loaders there can be multiple
+				// JaCoCo runtimes even in the same VM. In this case we get an
+				// OverlappingFileLockException and retry lock acquisition:
+				if (retries++ > LOCK_RETRY_COUNT) {
+					throw e;
+				}
+			}
+			try {
+				Thread.sleep(LOCK_RETRY_WAIT_TIME_MS);
+			} catch (final InterruptedException e) {
+				throw new InterruptedIOException();
+			}
+		}
 	}
 
 }
