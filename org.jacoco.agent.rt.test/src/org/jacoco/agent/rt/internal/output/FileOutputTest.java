@@ -108,7 +108,7 @@ public class FileOutputTest {
 		}
 	}
 
-	public void startup_should_throws_InterruptedIOException_when_execfile_is_locked_and_thread_is_interrupted()
+	public void startup_should_throw_InterruptedIOException_when_execfile_is_locked_and_thread_is_interrupted()
 			throws Exception {
 		if (JavaVersion.current().isBefore("1.6")) {
 			throw new AssumptionViolatedException(
