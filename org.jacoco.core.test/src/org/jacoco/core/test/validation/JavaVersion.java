@@ -65,7 +65,7 @@ public final class JavaVersion {
 	}
 
 	/**
-	 * @return Version of the current JVM
+	 * @return version of the current JVM
 	 */
 	public static JavaVersion current() {
 		return new JavaVersion(System.getProperty("java.version"));
