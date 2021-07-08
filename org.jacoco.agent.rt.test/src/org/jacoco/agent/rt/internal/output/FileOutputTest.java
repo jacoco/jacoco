@@ -84,7 +84,7 @@ public class FileOutputTest {
 	}
 
 	@Test
-	public void startup_should_throws_OverlappingFileLockException_when_execfile_is_permanently_locked()
+	public void startup_should_throw_OverlappingFileLockException_when_execfile_is_permanently_locked()
 			throws Exception {
 		if (JavaVersion.current().isBefore("1.6")) {
 			throw new AssumptionViolatedException(
