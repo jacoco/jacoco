@@ -16,7 +16,7 @@
 
 	<description>
 	  Example Ant build file that demonstrates how a JaCoCo coverage report
-	  can be itegrated into an existing build in three simple steps.
+	  can be integrated into an existing build in three simple steps.
 	</description>
 
 	<property name="src.dir" location="./src/main/java" />
