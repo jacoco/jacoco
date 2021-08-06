@@ -437,6 +437,36 @@ public class AnalyzerTest {
 		}
 	}
 
+	@Test
+	public void testAnalyze_skip_uncovered_empty() throws Exception {
+		// Setup analyzer for skipping uncovered classes
+		analyzer = new Analyzer(executionData, new EmptyStructureVisitor(),
+				true);
+
+		final int count = analyzer.analyzeAll(
+				TargetLoader.getClassData(AnalyzerTest.class), "Test");
+		assertEquals(1, count);
+		assertTrue(classes.isEmpty());
+	}
+
+	@Test
+	public void testAnalyze_skip_uncovered() throws Exception {
+		// Setup analyzer for skipping uncovered classes
+		analyzer = new Analyzer(executionData, new EmptyStructureVisitor(),
+				true);
+
+		// Setup execution data
+		final byte[] bytes = TargetLoader
+				.getClassDataAsBytes(AnalyzerTest.class);
+		executionData.get(Long.valueOf(CRC64.classId(bytes)),
+				"org/jacoco/core/analysis/AnalyzerTest", 200);
+
+		createClassfile("bin1", AnalyzerTest.class);
+		final int count = analyzer.analyzeAll(folder.getRoot());
+		assertEquals(1, count);
+		assertClasses("org/jacoco/core/analysis/AnalyzerTest");
+	}
+
 	private void createClassfile(final String dir, final Class<?> source)
 			throws IOException {
 		File file = new File(folder.getRoot(), dir);

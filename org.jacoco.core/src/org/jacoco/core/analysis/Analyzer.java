@@ -39,10 +39,12 @@ import org.objectweb.asm.Opcodes;
 /**
  * An {@link Analyzer} instance processes a set of Java class files and
  * calculates coverage data for them. For each class file the result is reported
- * to a given {@link ICoverageVisitor} instance. In addition the
- * {@link Analyzer} requires a {@link ExecutionDataStore} instance that holds
- * the execution data for the classes to analyze. The {@link Analyzer} offers
- * several methods to analyze classes from a variety of sources.
+ * to a given {@link ICoverageVisitor} instance. Optionally, uncovered classes
+ * can be ignored during the analysis by setting skipUncovered to true. In
+ * addition the {@link Analyzer} requires a {@link ExecutionDataStore} instance
+ * that holds the execution data for the classes to analyze. The
+ * {@link Analyzer} offers several methods to analyze classes from a variety of
+ * sources.
  */
 public class Analyzer {
 
@@ -51,6 +53,8 @@ public class Analyzer {
 	private final ICoverageVisitor coverageVisitor;
 
 	private final StringPool stringPool;
+
+	private final boolean skipUncovered;
 
 	/**
 	 * Creates a new analyzer reporting to the given output.
@@ -63,9 +67,28 @@ public class Analyzer {
 	 */
 	public Analyzer(final ExecutionDataStore executionData,
 			final ICoverageVisitor coverageVisitor) {
+		this(executionData, coverageVisitor, false);
+	}
+
+	/**
+	 * Creates a new analyzer reporting to the given output.
+	 *
+	 * @param executionData
+	 *            execution data
+	 * @param coverageVisitor
+	 *            the output instance that will coverage data for every analyzed
+	 *            class
+	 * @param skipUncovered
+	 *            whether uncovered classes should be skipped in the coverage
+	 *            analysis
+	 */
+	public Analyzer(final ExecutionDataStore executionData,
+			final ICoverageVisitor coverageVisitor,
+			final boolean skipUncovered) {
 		this.executionData = executionData;
 		this.coverageVisitor = coverageVisitor;
 		this.stringPool = new StringPool();
+		this.skipUncovered = skipUncovered;
 	}
 
 	/**
@@ -104,6 +127,13 @@ public class Analyzer {
 
 	private void analyzeClass(final byte[] source) {
 		final long classId = CRC64.classId(source);
+
+		// If skipUncovered is set, we ignore classes that are not
+		// present in the executionData
+		if (skipUncovered && executionData.get(classId) == null) {
+			return;
+		}
+
 		final ClassReader reader = InstrSupport.classReaderFor(source);
 		if ((reader.getAccess() & Opcodes.ACC_MODULE) != 0) {
 			return;
