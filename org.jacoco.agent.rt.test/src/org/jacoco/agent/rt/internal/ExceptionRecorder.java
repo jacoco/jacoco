@@ -14,6 +14,7 @@ package org.jacoco.agent.rt.internal;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 
 /**
  * {@link IExceptionLogger} implementation for testing purposes.
@@ -50,7 +51,7 @@ public class ExceptionRecorder implements IExceptionLogger {
 	public void assertException(final Class<? extends Throwable> exceptionType,
 			final String message, final Class<? extends Throwable> causeType) {
 		assertEquals(exceptionType, this.exceptionType);
-		assertEquals(message, this.message);
+		assertTrue(this.message, this.message.startsWith(message));
 		assertEquals(causeType, this.causeType);
 	}
 
