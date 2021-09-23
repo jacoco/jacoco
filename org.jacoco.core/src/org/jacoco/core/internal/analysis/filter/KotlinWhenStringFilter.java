@@ -29,9 +29,17 @@ import org.objectweb.asm.tree.VarInsnNode;
  * expressions with a <code>String</code>.
  */
 public final class KotlinWhenStringFilter implements IFilter {
+	private static boolean isScalaClass(final IFilterContext context) {
+		return context.getClassAttributes().contains("ScalaSig")
+				|| context.getClassAttributes().contains("Scala");
+	}
 
 	public void filter(final MethodNode methodNode,
 			final IFilterContext context, final IFilterOutput output) {
+		if (isScalaClass(context)) {
+			return;
+		}
+
 		final Matcher matcher = new Matcher();
 		for (final AbstractInsnNode i : methodNode.instructions) {
 			matcher.match(i, output);
