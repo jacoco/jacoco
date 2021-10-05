@@ -62,7 +62,7 @@ jobs:
   - bash: |
       set -e
       mkdir .maven
-      curl -L "https://downloads.apache.org/maven/maven-3/3.8.1/binaries/apache-maven-3.8.1-bin.tar.gz" -o .maven/maven.tar.gz
+      curl -L "https://archive.apache.org/dist/maven/maven-3/3.8.3/binaries/apache-maven-3.8.3-bin.tar.gz" -o .maven/maven.tar.gz
       tar -xzf .maven/maven.tar.gz -C .maven --strip-components 1
     displayName: Setup Maven
   - bash: |
