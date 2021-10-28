@@ -48,8 +48,16 @@ public class KotlinLateinitFilter implements IFilter {
 			if (cursor != null
 					&& skipNonOpcodes(cursor.getNext()) != skipNonOpcodes(
 							((JumpInsnNode) start).label)) {
-				nextIs(Opcodes.ACONST_NULL);
-				if (cursor.getNext().getOpcode() == Opcodes.ATHROW) {
+
+				if (cursor != null && cursor.getNext() != null
+						&& cursor.getNext().getOpcode() == Opcodes.GETSTATIC) {
+					nextIs(Opcodes.GETSTATIC);
+				} else {
+					nextIs(Opcodes.ACONST_NULL);
+				}
+
+				if (cursor != null && cursor.getNext() != null
+						&& cursor.getNext().getOpcode() == Opcodes.ATHROW) {
 					nextIs(Opcodes.ATHROW);
 				} else {
 					nextIs(Opcodes.GOTO);
