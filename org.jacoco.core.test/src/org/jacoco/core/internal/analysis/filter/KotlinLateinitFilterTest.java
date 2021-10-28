@@ -96,4 +96,41 @@ public class KotlinLateinitFilterTest extends FilterTestBase {
 		assertIgnored(new Range(expectedFrom, expectedTo));
 	}
 
+	/**
+	 * <pre>
+	 * class Example {
+	 *   class X
+	 *   private lateinit var x: X
+	 *   fun example() = x
+	 * }
+	 * </pre>
+	 */
+	@Test
+	public void should_filter_Kotlin_1_5_custom_class() {
+		final MethodNode m = new MethodNode(InstrSupport.ASM_API_VERSION, 0,
+				"example", "()L/Example$X;", null, null);
+		Label label = new Label();
+		m.visitVarInsn(Opcodes.ALOAD, 0);
+		m.visitFieldInsn(Opcodes.GETFIELD, "Example", "x", "L/Example$X;");
+		m.visitVarInsn(Opcodes.ASTORE, 1);
+		m.visitVarInsn(Opcodes.ALOAD, 1);
+		m.visitJumpInsn(Opcodes.IFNONNULL, label);
+		final AbstractInsnNode expectedFrom = m.instructions.getLast();
+		m.visitLdcInsn("x");
+		m.visitMethodInsn(Opcodes.INVOKESTATIC,
+				"kotlin/jvm/internal/Intrinsics",
+				"throwUninitializedPropertyAccessException",
+				"(Ljava/lang/String;)V", false);
+		m.visitInsn(Opcodes.ACONST_NULL);
+		m.visitInsn(Opcodes.GOTO);
+		final AbstractInsnNode expectedTo = m.instructions.getLast();
+		m.visitLabel(label);
+		m.visitVarInsn(Opcodes.ALOAD, 1);
+		m.visitInsn(Opcodes.ARETURN);
+
+		filter.filter(m, context, output);
+
+		assertIgnored(new Range(expectedFrom, expectedTo));
+	}
+
 }

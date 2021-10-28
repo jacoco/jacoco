@@ -18,11 +18,12 @@ import org.jacoco.core.test.validation.targets.Stubs.nop
  * This test target is `lateinit` property.
  */
 object KotlinLateinitTarget {
-    private lateinit var x: String
+    private class X
+    private lateinit var x: X
 
     @JvmStatic
     fun main(args: Array<String>) {
-        x = ""
+        x = X()
         nop(x) // assertFullyCovered()
     }
 }
