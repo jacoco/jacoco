@@ -10,18 +10,20 @@
  *    Evgeny Mandrikov - initial API and implementation
  *
  *******************************************************************************/
-package org.jacoco.core.test.validation.java14;
+package org.jacoco.core.test.validation.java5.targets;
 
-import org.jacoco.core.test.validation.ValidationTestBase;
-import org.jacoco.core.test.validation.java14.targets.RecordsTarget;
+import static org.jacoco.core.test.validation.targets.Stubs.t;
 
 /**
- * Test of code coverage for records.
+ * This target exercises assert statement.
  */
-public class RecordsTest extends ValidationTestBase {
+public class AssertTarget { // assertFullyCovered()
 
-	public RecordsTest() {
-		super(RecordsTarget.class);
+	private AssertTarget() {
+	}
+
+	public static void main(String[] args) {
+		assert t() : "msg"; // assertPartlyCovered(1, 1)
 	}
 
 }

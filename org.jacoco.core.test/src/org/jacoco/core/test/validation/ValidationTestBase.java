@@ -71,6 +71,7 @@ public abstract class ValidationTestBase {
 
 	private ExecutionDataStore execute() throws Exception {
 		loader = new InstrumentingLoader(target);
+		loader.setDefaultAssertionStatus(true);
 		run(loader.loadClass(target.getName()));
 		return loader.collect();
 	}

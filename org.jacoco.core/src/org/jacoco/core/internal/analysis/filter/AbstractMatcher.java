@@ -17,6 +17,7 @@ import java.util.Map;
 
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.tree.AbstractInsnNode;
+import org.objectweb.asm.tree.FieldInsnNode;
 import org.objectweb.asm.tree.MethodInsnNode;
 import org.objectweb.asm.tree.MethodNode;
 import org.objectweb.asm.tree.TypeInsnNode;
@@ -71,6 +72,25 @@ abstract class AbstractMatcher {
 		final MethodInsnNode m = (MethodInsnNode) cursor;
 		if (owner.equals(m.owner) && name.equals(m.name)
 				&& descriptor.equals(m.desc)) {
+			return;
+		}
+		cursor = null;
+	}
+
+	/**
+	 * Moves {@link #cursor} to next instruction if it is {@link FieldInsnNode}
+	 * with given opcode, owner, name and descriptor, otherwise sets it to
+	 * <code>null</code>.
+	 */
+	final void nextIsField(final int opcode, final String owner,
+			final String name, final String descriptor) {
+		nextIs(opcode);
+		if (cursor == null) {
+			return;
+		}
+		final FieldInsnNode f = (FieldInsnNode) cursor;
+		if (owner.equals(f.owner) && name.equals(f.name)
+				&& descriptor.equals(f.desc)) {
 			return;
 		}
 		cursor = null;

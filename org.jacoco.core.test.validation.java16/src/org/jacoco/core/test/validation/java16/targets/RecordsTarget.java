@@ -10,10 +10,11 @@
  *    Evgeny Mandrikov - initial API and implementation
  *
  *******************************************************************************/
-package org.jacoco.core.test.validation.java14.targets;
+package org.jacoco.core.test.validation.java16.targets;
 
 /**
- * This target exercises records.
+ * This target exercises records
+ * (<a href="https://openjdk.java.net/jeps/395">JEP 395</a>).
  */
 public class RecordsTarget {
 

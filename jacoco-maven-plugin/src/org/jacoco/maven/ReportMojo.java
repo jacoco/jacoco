@@ -62,10 +62,8 @@ public class ReportMojo extends AbstractReportMojo {
 	}
 
 	@Override
-	void addFormatters(final ReportSupport support, final Locale locale)
-			throws IOException {
-		support.addAllFormatters(outputDirectory, outputEncoding, footer,
-				locale);
+	File getOutputDirectory() {
+		return outputDirectory;
 	}
 
 	@Override

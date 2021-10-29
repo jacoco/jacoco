@@ -15,7 +15,7 @@
 
   <groupId>org.jacoco</groupId>
   <artifactId>org.jacoco.build</artifactId>
-  <version>0.8.7-SNAPSHOT</version>
+  <version>0.8.8-SNAPSHOT</version>
   <packaging>pom</packaging>
 
   <name>JaCoCo</name>
@@ -139,7 +139,7 @@
     <argLine>${jvm.args}</argLine>
 
     <!-- Dependencies versions -->
-    <asm.version>9.1</asm.version>
+    <asm.version>9.2</asm.version>
     <ant.version>1.9.15</ant.version>
     <args4j.version>2.0.28</args4j.version>
     <junit.version>4.13.1</junit.version>
@@ -551,7 +551,8 @@
                   <version>1.8</version>
                 </requireJavaVersion>
                 <requireMavenVersion>
-                  <version>3.3.9</version>
+                  <!-- Maven 3.8.2 contains bug - see https://github.com/jacoco/jacoco/issues/1218 -->
+                  <version>[3.3.9,3.8.2),(3.8.2,)</version>
                 </requireMavenVersion>
                 <requireNoRepositories>
                   <message>The rules for repo1.maven.org are that pom.xml files should not include repository definitions.</message>
@@ -871,6 +872,20 @@
         <property>
           <name>bytecode.version</name>
           <value>17</value>
+        </property>
+      </activation>
+      <properties>
+        <maven.compiler.source>13</maven.compiler.source>
+        <maven.compiler.target>13</maven.compiler.target>
+      </properties>
+    </profile>
+
+    <profile>
+      <id>java18-bytecode</id>
+      <activation>
+        <property>
+          <name>bytecode.version</name>
+          <value>18</value>
         </property>
       </activation>
       <properties>

@@ -30,8 +30,8 @@ object KotlinWhenExpressionTarget {
     @Suppress("REDUNDANT_ELSE_IN_WHEN")
     private fun whenSealedRedundantElse(p: Sealed): Int = when (p) { // assertFullyCovered()
         is Sealed.Sealed1 -> 1 // assertFullyCovered(0, 2)
-        is Sealed.Sealed2 -> 2 // assertFullyCovered(1, 1)
-        else -> throw NoWhenBranchMatchedException() // assertNotCovered()
+        is Sealed.Sealed2 -> 2 // assertFullyCovered(0, 0)
+        else -> throw NoWhenBranchMatchedException() // assertEmpty()
     } // assertFullyCovered()
 
     private enum class Enum {
@@ -44,29 +44,33 @@ object KotlinWhenExpressionTarget {
     } // assertFullyCovered()
 
     @Suppress("REDUNDANT_ELSE_IN_WHEN")
-    private fun whenEnumRedundantElse(p: Enum): Int = when (p) { // assertFullyCovered(1, 2)
+    private fun whenEnumRedundantElse(p: Enum): Int = when (p) { // assertFullyCovered(0, 2)
         Enum.A -> 1 // assertFullyCovered()
         Enum.B -> 2 // assertFullyCovered()
-        else -> throw NoWhenBranchMatchedException() // assertNotCovered()
+        else -> throw NoWhenBranchMatchedException() // assertEmpty()
     } // assertFullyCovered()
 
-    private fun whenString(p: String): Int = when (p) { // assertFullyCovered(0, 5)
+    private fun whenString(p: String): Int = when (p) { // assertFullyCovered(0, 7)
         "a" -> 1 // assertFullyCovered()
         "b" -> 2 // assertFullyCovered()
-        "\u0000a" -> 3 // assertFullyCovered()
-        "\u0000b" -> 4 // assertFullyCovered()
-        else -> 5 // assertFullyCovered()
+        "c" -> 3 // assertFullyCovered()
+        "\u0000a" -> 4 // assertFullyCovered()
+        "\u0000b" -> 5 // assertFullyCovered()
+        "\u0000c" -> 6 // assertFullyCovered()
+        else -> 7 // assertFullyCovered()
     } // assertFullyCovered()
 
     /**
      * Unlike [whenString]
      * in this example first case is the only case with biggest hashCode value.
      */
-    private fun whenStringBiggestHashCodeFirst(p: String): Int = when (p) { // assertFullyCovered(0, 4)
-        "b" -> 1 // assertFullyCovered()
-        "a" -> 2 // assertFullyCovered()
-        "\u0000a" -> 3 // assertFullyCovered()
-        else -> 4 // assertFullyCovered()
+    private fun whenStringBiggestHashCodeFirst(p: String): Int = when (p) { // assertFullyCovered(0, 6)
+        "c" -> 1 // assertFullyCovered()
+        "b" -> 2 // assertFullyCovered()
+        "\u0000b" -> 3 // assertFullyCovered()
+        "a" -> 4 // assertFullyCovered()
+        "\u0000a" -> 5 // assertFullyCovered()
+        else -> 6 // assertFullyCovered()
     } // assertFullyCovered()
 
     @JvmStatic
@@ -86,13 +90,17 @@ object KotlinWhenExpressionTarget {
         whenString("")
         whenString("a")
         whenString("b")
+        whenString("c")
         whenString("\u0000a")
         whenString("\u0000b")
+        whenString("\u0000c")
 
         whenStringBiggestHashCodeFirst("")
         whenStringBiggestHashCodeFirst("a")
         whenStringBiggestHashCodeFirst("b")
+        whenStringBiggestHashCodeFirst("c")
         whenStringBiggestHashCodeFirst("\u0000a")
+        whenStringBiggestHashCodeFirst("\u0000b")
     }
 
 }

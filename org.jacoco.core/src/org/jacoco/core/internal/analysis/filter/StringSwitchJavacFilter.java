@@ -87,6 +87,9 @@ public final class StringSwitchJavacFilter implements IFilter {
 					break;
 				}
 				nextIs(Opcodes.GOTO);
+				if (cursor == null) {
+					return false;
+				}
 				if (((JumpInsnNode) cursor).label != secondSwitchLabel) {
 					return false;
 				}

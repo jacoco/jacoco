@@ -47,7 +47,7 @@ object KotlinControlStructuresTarget {
 
     private fun missedWhileBlock() {
 
-        while (f()) { // assertPartlyCovered(1, 1)
+        while (f()) { // assertFullyCovered(1, 1)
             nop() // assertNotCovered()
         }
 
@@ -72,7 +72,7 @@ object KotlinControlStructuresTarget {
 
     private fun missedForBlock() {
 
-        for (j in 0..-1) { // assertPartlyCovered(1, 1)
+        for (j in i2()..i1()) { // assertPartlyCovered(3, 1)
             nop() // assertNotCovered()
         }
 
@@ -80,7 +80,7 @@ object KotlinControlStructuresTarget {
 
     private fun executedForBlock() {
 
-        for (j in 0..0) { // assertFullyCovered(0, 2)
+        for (j in i1()..i2()) { // assertFullyCovered(1, 3)
             nop() // assertFullyCovered()
         }
 
@@ -125,7 +125,7 @@ object KotlinControlStructuresTarget {
 
     private fun continueStatement() {
 
-        for (j in 0..0) {
+        for (j in i1()..i2()) {
             if (t()) {
                 continue // assertFullyCovered()
             }

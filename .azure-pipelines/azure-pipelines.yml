@@ -31,6 +31,8 @@ jobs:
         JDK_VERSION: 16
       JDK 17:
         JDK_VERSION: 17
+      JDK 18:
+        JDK_VERSION: 18
   pool:
     vmImage: 'ubuntu-18.04'
   steps:
@@ -58,25 +60,31 @@ jobs:
       " > toolchains.xml
     displayName: Setup JDK
   - bash: |
+      set -e
+      mkdir .maven
+      curl -L "https://archive.apache.org/dist/maven/maven-3/3.8.3/binaries/apache-maven-3.8.3-bin.tar.gz" -o .maven/maven.tar.gz
+      tar -xzf .maven/maven.tar.gz -C .maven --strip-components 1
+    displayName: Setup Maven
+  - bash: |
       if [[ "$JDK_VERSION" -ge "8" ]]; then
         export JAVA_HOME=$PWD/.jdk
       fi
       if [[ "$BUILD_SOURCEBRANCH" == "refs/heads/master" && "$JDK_VERSION" == "5" ]]; then
-        mvn -V -B -e -f org.jacoco.build \
+        .maven/bin/mvn -V -B -e -f org.jacoco.build \
           verify -Djdk.version=$JDK_VERSION \
           deploy:deploy -DdeployAtEnd \
           --toolchains=toolchains.xml --settings=.azure-pipelines/maven-settings.xml
       elif [[ "$JDK_VERSION" == "5" ]]; then
-        mvn -V -B -e \
+        .maven/bin/mvn -V -B -e \
           verify -Djdk.version=$JDK_VERSION \
           --toolchains=toolchains.xml
       elif [[ "$BUILD_SOURCEBRANCH" == "refs/heads/master" && "$JDK_VERSION" == "11" ]]; then
-        mvn -V -B -e -f org.jacoco.build \
+        .maven/bin/mvn -V -B -e -f org.jacoco.build \
           verify -Djdk.version=$JDK_VERSION -Dbytecode.version=$JDK_VERSION \
           sonar:sonar \
           --toolchains=toolchains.xml --settings=.azure-pipelines/maven-settings.xml
       else
-        mvn -V -B -e \
+        .maven/bin/mvn -V -B -e \
           verify -Djdk.version=$JDK_VERSION -Dbytecode.version=$JDK_VERSION -Decj=${ECJ:-} \
           --toolchains=toolchains.xml
       fi
