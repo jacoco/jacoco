@@ -99,19 +99,55 @@ public class KotlinLateinitFilterTest extends FilterTestBase {
 	/**
 	 * <pre>
 	 * class Example {
-	 *   class X
-	 *   private lateinit var x: X
+	 *   lateinit var x: String
+	 * }
+	 * </pre>
+	 */
+	@Test
+	public void should_filter_Kotlin_1_5_public() {
+		final MethodNode m = new MethodNode(InstrSupport.ASM_API_VERSION, 0,
+				"example", "()Ljava/lang/String;", null, null);
+		Label label = new Label();
+		m.visitVarInsn(Opcodes.ALOAD, 0);
+		m.visitFieldInsn(Opcodes.GETFIELD, "Example", "x",
+				"Ljava/lang/String;");
+		m.visitVarInsn(Opcodes.ASTORE, 1);
+		m.visitVarInsn(Opcodes.ALOAD, 1);
+		m.visitJumpInsn(Opcodes.IFNULL, label);
+		final AbstractInsnNode expectedFrom = m.instructions.getLast();
+		m.visitVarInsn(Opcodes.ALOAD, 1);
+		m.visitInsn(Opcodes.ARETURN);
+		m.visitLdcInsn("x");
+		m.visitMethodInsn(Opcodes.INVOKESTATIC,
+				"kotlin/jvm/internal/Intrinsics",
+				"throwUninitializedPropertyAccessException",
+				"(Ljava/lang/String;)V", false);
+		m.visitInsn(Opcodes.ACONST_NULL);
+		m.visitInsn(Opcodes.ATHROW);
+		final AbstractInsnNode expectedTo = m.instructions.getLast();
+		m.visitLabel(label);
+
+		filter.filter(m, context, output);
+
+		assertIgnored(new Range(expectedFrom, expectedTo));
+	}
+
+	/**
+	 * <pre>
+	 * class Example {
+	 *   private lateinit var x: String
 	 *   fun example() = x
 	 * }
 	 * </pre>
 	 */
 	@Test
-	public void should_filter_Kotlin_1_5_custom_class() {
+	public void should_filter_Kotlin_1_5_30() {
 		final MethodNode m = new MethodNode(InstrSupport.ASM_API_VERSION, 0,
-				"example", "()L/Example$X;", null, null);
+				"example", "()Ljava/lang/String;", null, null);
 		Label label = new Label();
 		m.visitVarInsn(Opcodes.ALOAD, 0);
-		m.visitFieldInsn(Opcodes.GETFIELD, "Example", "x", "L/Example$X;");
+		m.visitFieldInsn(Opcodes.GETFIELD, "Example", "x",
+				"Ljava/lang/String;");
 		m.visitVarInsn(Opcodes.ASTORE, 1);
 		m.visitVarInsn(Opcodes.ALOAD, 1);
 		m.visitJumpInsn(Opcodes.IFNONNULL, label);
@@ -122,11 +158,47 @@ public class KotlinLateinitFilterTest extends FilterTestBase {
 				"throwUninitializedPropertyAccessException",
 				"(Ljava/lang/String;)V", false);
 		m.visitInsn(Opcodes.ACONST_NULL);
-		m.visitInsn(Opcodes.GOTO);
+		m.visitJumpInsn(Opcodes.GOTO, label);
 		final AbstractInsnNode expectedTo = m.instructions.getLast();
 		m.visitLabel(label);
 		m.visitVarInsn(Opcodes.ALOAD, 1);
 		m.visitInsn(Opcodes.ARETURN);
+
+		filter.filter(m, context, output);
+
+		assertIgnored(new Range(expectedFrom, expectedTo));
+	}
+
+	/**
+	 * <pre>
+	 * class Example {
+	 *   lateinit var x: String
+	 * }
+	 * </pre>
+	 */
+	@Test
+	public void should_filter_Kotlin_1_5_30_public() {
+		final MethodNode m = new MethodNode(InstrSupport.ASM_API_VERSION, 0,
+				"example", "()Ljava/lang/String;", null, null);
+		Label label = new Label();
+		m.visitVarInsn(Opcodes.ALOAD, 0);
+		m.visitFieldInsn(Opcodes.GETFIELD, "Example", "x",
+				"Ljava/lang/String;");
+		m.visitVarInsn(Opcodes.ASTORE, 1);
+		m.visitVarInsn(Opcodes.ALOAD, 1);
+		m.visitJumpInsn(Opcodes.IFNULL, label);
+		final AbstractInsnNode expectedFrom = m.instructions.getLast();
+		m.visitVarInsn(Opcodes.ALOAD, 1);
+		m.visitInsn(Opcodes.ARETURN);
+		m.visitLdcInsn("x");
+		m.visitMethodInsn(Opcodes.INVOKESTATIC,
+				"kotlin/jvm/internal/Intrinsics",
+				"throwUninitializedPropertyAccessException",
+				"(Ljava/lang/String;)V", false);
+		m.visitInsn(Opcodes.ACONST_NULL);
+		m.visitInsn(Opcodes.ARETURN);
+		final AbstractInsnNode expectedTo = m.instructions.getLast();
+		m.visitLabel(label);
 
 		filter.filter(m, context, output);
 
@@ -142,7 +214,7 @@ public class KotlinLateinitFilterTest extends FilterTestBase {
 	 * </pre>
 	 */
 	@Test
-	public void should_filter_Kotlin_1_5_generics() {
+	public void should_filter_Kotlin_1_5_30_generics() {
 		final MethodNode m = new MethodNode(InstrSupport.ASM_API_VERSION, 0,
 				"example", "()Ljava/lang/Object;", null, null);
 		Label label = new Label();
@@ -158,8 +230,9 @@ public class KotlinLateinitFilterTest extends FilterTestBase {
 				"kotlin/jvm/internal/Intrinsics",
 				"throwUninitializedPropertyAccessException",
 				"(Ljava/lang/String;)V", false);
-		m.visitInsn(Opcodes.GETSTATIC);
-		m.visitInsn(Opcodes.GOTO);
+		m.visitFieldInsn(Opcodes.GETSTATIC, "kotlin/Unit", "INSTANCE",
+				"Lkotlin/Unit;");
+		m.visitJumpInsn(Opcodes.GOTO, label);
 		final AbstractInsnNode expectedTo = m.instructions.getLast();
 		m.visitLabel(label);
 		m.visitVarInsn(Opcodes.ALOAD, 1);

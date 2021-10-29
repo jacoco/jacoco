@@ -27,18 +27,28 @@ public class KotlinLateinitFilter implements IFilter {
 			final IFilterContext context, final IFilterOutput output) {
 		final Matcher matcher = new Matcher();
 		for (final AbstractInsnNode node : methodNode.instructions) {
-			matcher.match(node, output);
+			final AbstractInsnNode to = matcher.match(node);
+			if (to != null) {
+				output.ignore(node, to);
+			}
 		}
 	}
 
 	private static class Matcher extends AbstractMatcher {
-		public void match(final AbstractInsnNode start,
-				final IFilterOutput output) {
 
-			if (Opcodes.IFNONNULL != start.getOpcode()) {
-				return;
+		public AbstractInsnNode match(final AbstractInsnNode start) {
+
+			if (Opcodes.IFNONNULL != start.getOpcode()
+					&& Opcodes.IFNULL != start.getOpcode()) {
+				return null;
 			}
+
 			cursor = start;
+
+			if (Opcodes.IFNULL == start.getOpcode()) {
+				nextIs(Opcodes.ALOAD);
+				nextIs(Opcodes.ARETURN);
+			}
 
 			nextIs(Opcodes.LDC);
 			nextIsInvoke(Opcodes.INVOKESTATIC, "kotlin/jvm/internal/Intrinsics",
@@ -49,24 +59,47 @@ public class KotlinLateinitFilter implements IFilter {
 					&& skipNonOpcodes(cursor.getNext()) != skipNonOpcodes(
 							((JumpInsnNode) start).label)) {
 
-				if (cursor != null && cursor.getNext() != null
-						&& cursor.getNext().getOpcode() == Opcodes.GETSTATIC) {
-					nextIs(Opcodes.GETSTATIC);
-				} else {
-					nextIs(Opcodes.ACONST_NULL);
+				final AbstractInsnNode node = cursor;
+				if (isKotlin1_5(node) || isKotlin1_5_30(node)) {
+					return cursor;
 				}
-
-				if (cursor != null && cursor.getNext() != null
-						&& cursor.getNext().getOpcode() == Opcodes.ATHROW) {
-					nextIs(Opcodes.ATHROW);
-				} else {
-					nextIs(Opcodes.GOTO);
-				}
+				return null;
 			}
-
-			if (cursor != null) {
-				output.ignore(start, cursor);
-			}
+			return cursor;
 		}
+
+		private boolean isKotlin1_5(AbstractInsnNode node) {
+			cursor = node;
+			nextIs(Opcodes.ACONST_NULL);
+			nextIs(Opcodes.ATHROW);
+			return cursor != null;
+		}
+
+		private boolean isKotlin1_5_30(AbstractInsnNode node) {
+			cursor = node;
+			if (cursor.getNext() != null) {
+				switch (cursor.getNext().getOpcode()) {
+				case Opcodes.GETSTATIC:
+					nextIsField(Opcodes.GETSTATIC, "kotlin/Unit", "INSTANCE",
+							"Lkotlin/Unit;");
+					break;
+				case Opcodes.ACONST_NULL:
+					nextIs(Opcodes.ACONST_NULL);
+					break;
+				}
+			}
+			if (cursor.getNext() != null) {
+				switch (cursor.getNext().getOpcode()) {
+				case Opcodes.GOTO:
+					nextIs(Opcodes.GOTO);
+					break;
+				case Opcodes.ARETURN:
+					nextIs(Opcodes.ARETURN);
+					break;
+				}
+			}
+			return cursor != null;
+		}
+
 	}
 }
