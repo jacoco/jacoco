@@ -82,12 +82,17 @@ public final class ExecutionDataServer {
 			try {
 				while (reader.read()) {
 				}
-				socket.close();
 				synchronized (fileWriter) {
 					fileWriter.flush();
 				}
 			} catch (final IOException e) {
 				e.printStackTrace();
+			} finally {
+				try {
+					socket.close();
+				} catch (IOException ex) {
+					ex.printStackTrace();
+				}
 			}
 		}
 
