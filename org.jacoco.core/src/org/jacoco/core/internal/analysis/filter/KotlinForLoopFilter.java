@@ -18,6 +18,10 @@ import org.objectweb.asm.tree.JumpInsnNode;
 import org.objectweb.asm.tree.LabelNode;
 import org.objectweb.asm.tree.MethodNode;
 
+/**
+ * Filters branches in bytecode that the Kotlin compiler generates for
+ * <code>for</code> loops as they are not coverable most of the time.
+ */
 public class KotlinForLoopFilter implements IFilter {
 
 	public void filter(final MethodNode methodNode,
@@ -39,6 +43,8 @@ public class KotlinForLoopFilter implements IFilter {
 			LabelNode jumpTarget = ((JumpInsnNode) cursor).label;
 			if (isLoop(jumpTarget)) {
 				output.ignore(start, start);
+				output.ignore(jumpTarget.getPrevious(),
+						jumpTarget.getPrevious());
 			}
 		}
 
@@ -51,8 +57,10 @@ public class KotlinForLoopFilter implements IFilter {
 				if (j == jumpTarget) {
 					// if the node prior to the jump target matches
 					// we can be sure that this is the loop we are looking for
-					return j.getPrevious().getOpcode() == Opcodes.IF_ICMPLT
-							|| j.getPrevious().getOpcode() == Opcodes.IF_ICMPNE;
+					int previousOpcode = j.getPrevious().getOpcode();
+					return previousOpcode == Opcodes.IF_ICMPLT
+							|| previousOpcode == Opcodes.IF_ICMPNE
+							|| previousOpcode == Opcodes.IF_ICMPLE;
 				}
 			}
 			return false;
