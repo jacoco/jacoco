@@ -14,18 +14,13 @@ package org.jacoco.maven;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
-
-import org.apache.maven.artifact.Artifact;
-import org.apache.maven.artifact.versioning.DefaultArtifactVersion;
-import org.apache.maven.artifact.versioning.InvalidVersionSpecificationException;
-import org.apache.maven.artifact.versioning.VersionRange;
-import org.apache.maven.model.Dependency;
+import org.apache.maven.execution.MavenSession;
 import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
+import org.apache.maven.plugins.annotations.ResolutionScope;
 import org.apache.maven.project.MavenProject;
 import org.jacoco.report.IReportGroupVisitor;
 
@@ -53,9 +48,11 @@ import org.jacoco.report.IReportGroupVisitor;
  *
  * @since 0.7.7
  */
-@Mojo(name = "report-aggregate", threadSafe = true)
+@Mojo(name = "report-aggregate", requiresDependencyResolution = ResolutionScope.TEST, threadSafe = true, aggregator = true)
 public class ReportAggregateMojo extends AbstractReportMojo {
 
+	@Parameter(defaultValue = "${session}", required = true, readonly = true)
+	private MavenSession session;
 	/**
 	 * A list of execution data files to include in the report from each
 	 * project. May use wildcard characters (* and ?). When not specified all
@@ -108,9 +105,7 @@ public class ReportAggregateMojo extends AbstractReportMojo {
 		final FileFilter filter = new FileFilter(dataFileIncludes,
 				dataFileExcludes);
 		loadExecutionData(support, filter, project.getBasedir());
-		for (final MavenProject dependency : findDependencies(
-				Artifact.SCOPE_COMPILE, Artifact.SCOPE_RUNTIME,
-				Artifact.SCOPE_PROVIDED, Artifact.SCOPE_TEST)) {
+		for (final MavenProject dependency : getProjects()) {
 			loadExecutionData(support, filter, dependency.getBasedir());
 		}
 	}
@@ -131,9 +126,7 @@ public class ReportAggregateMojo extends AbstractReportMojo {
 	void createReport(final IReportGroupVisitor visitor,
 			final ReportSupport support) throws IOException {
 		final IReportGroupVisitor group = visitor.visitGroup(title);
-		for (final MavenProject dependency : findDependencies(
-				Artifact.SCOPE_COMPILE, Artifact.SCOPE_RUNTIME,
-				Artifact.SCOPE_PROVIDED)) {
+		for (final MavenProject dependency : getProjects()) {
 			support.processProject(group, dependency.getArtifactId(),
 					dependency, getIncludes(), getExcludes(), sourceEncoding);
 		}
@@ -161,47 +154,7 @@ public class ReportAggregateMojo extends AbstractReportMojo {
 		return "JaCoCo Aggregate";
 	}
 
-	private List<MavenProject> findDependencies(final String... scopes) {
-		final List<MavenProject> result = new ArrayList<MavenProject>();
-		final List<String> scopeList = Arrays.asList(scopes);
-		for (final Object dependencyObject : project.getDependencies()) {
-			final Dependency dependency = (Dependency) dependencyObject;
-			if (scopeList.contains(dependency.getScope())) {
-				final MavenProject project = findProjectFromReactor(dependency);
-				if (project != null) {
-					result.add(project);
-				}
-			}
-		}
-		return result;
+	private List<MavenProject> getProjects() {
+		return this.session.getProjectDependencyGraph().getSortedProjects();
 	}
-
-	/**
-	 * Note that if dependency specified using version range and reactor
-	 * contains multiple modules with same artifactId and groupId but of
-	 * different versions, then first dependency which matches range will be
-	 * selected. For example in case of range <code>[0,2]</code> if version 1 is
-	 * before version 2 in reactor, then version 1 will be selected.
-	 */
-	private MavenProject findProjectFromReactor(final Dependency d) {
-		final VersionRange depVersionAsRange;
-		try {
-			depVersionAsRange = VersionRange
-					.createFromVersionSpec(d.getVersion());
-		} catch (final InvalidVersionSpecificationException e) {
-			throw new AssertionError(e);
-		}
-
-		for (final MavenProject p : reactorProjects) {
-			final DefaultArtifactVersion pv = new DefaultArtifactVersion(
-					p.getVersion());
-			if (p.getGroupId().equals(d.getGroupId())
-					&& p.getArtifactId().equals(d.getArtifactId())
-					&& depVersionAsRange.containsVersion(pv)) {
-				return p;
-			}
-		}
-		return null;
-	}
-
 }
