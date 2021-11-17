@@ -38,6 +38,9 @@ class ProbeInserter extends MethodVisitor implements IProbeInserter {
 	/** Position of the inserted variable. */
 	private final int variable;
 
+	/** Label for the new beginning of the method */
+	private final Label beginLabel;
+
 	/** Maximum stack usage of the code to access the probe array. */
 	private int accessorStackSize;
 
@@ -66,6 +69,7 @@ class ProbeInserter extends MethodVisitor implements IProbeInserter {
 			pos += t.getSize();
 		}
 		variable = pos;
+		beginLabel = new Label();
 	}
 
 	public void insertProbe(final int id) {
@@ -93,6 +97,7 @@ class ProbeInserter extends MethodVisitor implements IProbeInserter {
 
 	@Override
 	public void visitCode() {
+		mv.visitLabel(beginLabel);
 		accessorStackSize = arrayStrategy.storeInstance(mv, clinit, variable);
 		mv.visitCode();
 	}
@@ -111,7 +116,14 @@ class ProbeInserter extends MethodVisitor implements IProbeInserter {
 	public final void visitLocalVariable(final String name, final String desc,
 			final String signature, final Label start, final Label end,
 			final int index) {
-		mv.visitLocalVariable(name, desc, signature, start, end, map(index));
+		if (index < variable) {
+			// Method parameters are still valid from the very beginning
+			mv.visitLocalVariable(name, desc, signature, beginLabel, end,
+					index);
+		} else {
+			mv.visitLocalVariable(name, desc, signature, start, end,
+					map(index));
+		}
 	}
 
 	@Override
