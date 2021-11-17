@@ -152,7 +152,7 @@
 		<au:assertFileExists file="${exec.file}"/>
 		<au:assertLogContains text="Target executed"/>
 
-		<java classname="org.jacoco.ant.DumpExecClassNames" classpath="${java.class.path}" failonerror="true">
+		<java classname="org.jacoco.ant.DumpExecClassNames" fork="true" classpath="${java.class.path}" failonerror="true">
 			<arg value="${exec.file}" />
 		</java>
 		<au:assertLogContains text="java/sql/Timestamp"/>
