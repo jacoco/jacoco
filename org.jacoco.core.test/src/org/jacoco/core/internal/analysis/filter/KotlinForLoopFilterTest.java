@@ -52,6 +52,7 @@ public class KotlinForLoopFilterTest extends FilterTestBase {
 		m.visitVarInsn(Opcodes.ILOAD, 1);
 		m.visitJumpInsn(Opcodes.IF_ICMPGE, label1);
 		final AbstractInsnNode ignored1 = m.instructions.getLast();
+		m.visitLabel(label2);
 		m.visitVarInsn(Opcodes.ILOAD, 0);
 		m.visitVarInsn(Opcodes.ISTORE, 2);
 		m.visitInsn(Opcodes.IINC);
@@ -92,8 +93,9 @@ public class KotlinForLoopFilterTest extends FilterTestBase {
 		m.visitVarInsn(Opcodes.ILOAD, 1);
 		m.visitJumpInsn(Opcodes.IF_ICMPGT, label1);
 		final AbstractInsnNode ignored1 = m.instructions.getLast();
+		m.visitLabel(label2);
 		m.visitVarInsn(Opcodes.ILOAD, 0);
-		m.visitVarInsn(Opcodes.ISTORE, 2);
+		m.visitVarInsn(Opcodes.ISTORE, 1);
 		m.visitInsn(Opcodes.IINC);
 		m.visitInsn(Opcodes.ICONST_0);
 		m.visitVarInsn(Opcodes.ILOAD, 1);
@@ -136,6 +138,7 @@ public class KotlinForLoopFilterTest extends FilterTestBase {
 		m.visitVarInsn(Opcodes.ILOAD, 1);
 		m.visitJumpInsn(Opcodes.IF_ICMPGT, label1);
 		final AbstractInsnNode ignored1 = m.instructions.getLast();
+		m.visitLabel(label2);
 		m.visitVarInsn(Opcodes.ILOAD, 1);
 		m.visitVarInsn(Opcodes.ISTORE, 3);
 		m.visitInsn(Opcodes.IINC);

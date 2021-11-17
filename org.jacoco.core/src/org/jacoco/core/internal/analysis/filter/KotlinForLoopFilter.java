@@ -12,6 +12,7 @@
  *******************************************************************************/
 package org.jacoco.core.internal.analysis.filter;
 
+import org.objectweb.asm.Label;
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.tree.AbstractInsnNode;
 import org.objectweb.asm.tree.JumpInsnNode;
@@ -40,27 +41,29 @@ public class KotlinForLoopFilter implements IFilter {
 				return;
 			}
 			cursor = start;
-			LabelNode jumpTarget = ((JumpInsnNode) cursor).label;
-			if (isLoop(jumpTarget)) {
-				output.ignore(start, start);
-				output.ignore(jumpTarget.getPrevious(),
-						jumpTarget.getPrevious());
+			AbstractInsnNode loopLabel = start.getNext();
+			if (loopLabel instanceof LabelNode) {
+				LabelNode jumpTarget = ((JumpInsnNode) cursor).label;
+				if (isLoop(jumpTarget, ((LabelNode) loopLabel).getLabel())) {
+					output.ignore(start, start);
+					output.ignore(jumpTarget.getPrevious(),
+							jumpTarget.getPrevious());
+				}
 			}
 		}
 
-		private boolean isLoop(LabelNode jumpTarget) {
+		private boolean isLoop(LabelNode jumpTarget, Label label) {
 			nextIs(Opcodes.ILOAD);
 			nextIs(Opcodes.ISTORE);
 			nextIs(Opcodes.IINC);
 			// follow the jump node
 			for (AbstractInsnNode j = cursor; j != null; j = j.getNext()) {
 				if (j == jumpTarget) {
-					// if the node prior to the jump target matches
+					// if the label prior to the jump target matches
 					// we can be sure that this is the loop we are looking for
-					int previousOpcode = j.getPrevious().getOpcode();
-					return previousOpcode == Opcodes.IF_ICMPLT
-							|| previousOpcode == Opcodes.IF_ICMPNE
-							|| previousOpcode == Opcodes.IF_ICMPLE;
+					AbstractInsnNode previousOpcode = j.getPrevious();
+					return ((JumpInsnNode) previousOpcode).label.getLabel()
+							.equals(label);
 				}
 			}
 			return false;
