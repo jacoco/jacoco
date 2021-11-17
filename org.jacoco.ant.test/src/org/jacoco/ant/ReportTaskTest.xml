@@ -71,7 +71,7 @@
 	</target>
 
 	<target name="testReportWithSourceButNoDebug">
-		<java classname="org.jacoco.ant.RemoveDebugInfos" classpath="${java.class.path}" failonerror="true">
+		<java classname="org.jacoco.ant.RemoveDebugInfos" fork="true" classpath="${java.class.path}" failonerror="true">
 			<arg value="${org.jacoco.ant.reportTaskTest.classes.dir}/org/jacoco/ant/TestTarget.class" />
 			<arg value="${temp.dir}/TestTarget.class" />
 		</java>
@@ -89,7 +89,7 @@
 	</target>
 
 	<target name="testReportWithSourceDirButNoDebug">
-		<java classname="org.jacoco.ant.RemoveDebugInfos" classpath="${java.class.path}" failonerror="true">
+		<java classname="org.jacoco.ant.RemoveDebugInfos" fork="true" classpath="${java.class.path}" failonerror="true">
 			<arg value="${org.jacoco.ant.reportTaskTest.classes.dir}/org/jacoco/ant/TestTarget.class" />
 			<arg value="${temp.dir}/TestTarget.class" />
 		</java>
