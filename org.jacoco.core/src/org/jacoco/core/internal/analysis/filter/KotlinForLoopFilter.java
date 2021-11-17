@@ -41,10 +41,11 @@ public class KotlinForLoopFilter implements IFilter {
 				return;
 			}
 			cursor = start;
-			AbstractInsnNode loopLabel = start.getNext();
-			if (loopLabel instanceof LabelNode) {
+			AbstractInsnNode loopLabelNode = start.getNext();
+			if (loopLabelNode instanceof LabelNode) {
+				Label loopLabel = ((LabelNode) loopLabelNode).getLabel();
 				LabelNode jumpTarget = ((JumpInsnNode) cursor).label;
-				if (isLoop(jumpTarget, ((LabelNode) loopLabel).getLabel())) {
+				if (isLoop(jumpTarget, loopLabel)) {
 					output.ignore(start, start);
 					output.ignore(jumpTarget.getPrevious(),
 							jumpTarget.getPrevious());
@@ -52,7 +53,7 @@ public class KotlinForLoopFilter implements IFilter {
 			}
 		}
 
-		private boolean isLoop(LabelNode jumpTarget, Label label) {
+		private boolean isLoop(LabelNode jumpTarget, Label loopLabel) {
 			nextIs(Opcodes.ILOAD);
 			nextIs(Opcodes.ISTORE);
 			nextIs(Opcodes.IINC);
@@ -63,7 +64,7 @@ public class KotlinForLoopFilter implements IFilter {
 					// we can be sure that this is the loop we are looking for
 					AbstractInsnNode previousOpcode = j.getPrevious();
 					return ((JumpInsnNode) previousOpcode).label.getLabel()
-							.equals(label);
+							.equals(loopLabel);
 				}
 			}
 			return false;
