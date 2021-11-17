@@ -64,7 +64,7 @@ public abstract class AbstractAgentMojo extends AbstractJacocoMojo {
 	 * A list of class names to include in instrumentation. May use wildcard
 	 * characters (* and ?). When not specified everything will be included.
 	 */
-	@Parameter
+	@Parameter(property = "jacoco.includes")
 	private List<String> includes;
 
 	/**
@@ -74,7 +74,7 @@ public abstract class AbstractAgentMojo extends AbstractJacocoMojo {
 	 * normally not required. If you want to exclude classes from the report
 	 * please configure the <code>report</code> goal accordingly.
 	 */
-	@Parameter
+	@Parameter(property = "jacoco.excludes")
 	private List<String> excludes;
 
 	/**
