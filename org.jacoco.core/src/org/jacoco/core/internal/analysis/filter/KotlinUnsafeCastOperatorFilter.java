@@ -46,6 +46,14 @@ public final class KotlinUnsafeCastOperatorFilter implements IFilter {
 			}
 			cursor = start;
 			final JumpInsnNode jumpInsnNode = (JumpInsnNode) cursor;
+			AbstractInsnNode optionalPop = cursor.getNext();
+			if (optionalPop != null && optionalPop.getOpcode() == Opcodes.POP) {
+				// Kotlin 1.6.0 DUPs the variable that's being casted and POPs
+				// it here, previous versions instead load the variable twice,
+				// once before IFNONNULL, and once before CHECKCAST. To be
+				// compatible with both, we can just skip the POP.
+				next();
+			}
 			nextIsType(Opcodes.NEW, exceptionType);
 			nextIs(Opcodes.DUP);
 			nextIs(Opcodes.LDC);
