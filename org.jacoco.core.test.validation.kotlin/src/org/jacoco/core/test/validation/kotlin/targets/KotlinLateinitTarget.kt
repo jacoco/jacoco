@@ -23,9 +23,18 @@ object KotlinLateinitTarget {
 
     private class Example<T: Any> {
         private lateinit var x: T
+        private lateinit var xx: Any
+        lateinit var y: T
+        lateinit var yy: Any
         fun nop() {
             x = Any() as T
-            nop(x)
+            xx = Any()
+            y = Any() as T
+            yy = Any()
+            nop(x) // assertFullyCovered()
+            nop(xx) // assertFullyCovered()
+            nop(y) // assertFullyCovered()
+            nop(yy) // assertFullyCovered()
         }
     }
 

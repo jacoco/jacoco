@@ -46,8 +46,20 @@ public class KotlinLateinitFilter implements IFilter {
 			cursor = start;
 
 			if (Opcodes.IFNULL == start.getOpcode()) {
-				nextIs(Opcodes.ALOAD);
-				nextIs(Opcodes.ARETURN);
+				// we're looking for the
+				// throwUninitializedPropertyAccessException instruction, which
+				// is in the "null" branch, so we have to follow this jump. If
+				// we have an IFNONNULL instruction, we are already in die
+				// "null" branch and don't have to jump.
+				cursor = ((JumpInsnNode) start).label;
+			}
+
+			AbstractInsnNode optionalPop = cursor.getNext();
+			if (optionalPop != null && optionalPop.getOpcode() == Opcodes.POP) {
+				// Kotlin 1.6.0 DUPs the lateinit variable and POPs it here,
+				// previous versions instead load the variable twice. To be
+				// compatible with both, we can just skip the POP.
+				next();
 			}
 
 			nextIs(Opcodes.LDC);
@@ -55,51 +67,26 @@ public class KotlinLateinitFilter implements IFilter {
 					"throwUninitializedPropertyAccessException",
 					"(Ljava/lang/String;)V");
 
-			if (cursor != null
-					&& skipNonOpcodes(cursor.getNext()) != skipNonOpcodes(
-							((JumpInsnNode) start).label)) {
-
-				final AbstractInsnNode node = cursor;
-				if (isKotlin1_5(node) || isKotlin1_5_30(node)) {
-					return cursor;
-				}
+			if (cursor == null) {
 				return null;
 			}
-			return cursor;
-		}
 
-		private boolean isKotlin1_5(AbstractInsnNode node) {
-			cursor = node;
-			nextIs(Opcodes.ACONST_NULL);
-			nextIs(Opcodes.ATHROW);
-			return cursor != null;
-		}
-
-		private boolean isKotlin1_5_30(AbstractInsnNode node) {
-			cursor = node;
-			if (cursor.getNext() != null) {
-				switch (cursor.getNext().getOpcode()) {
-				case Opcodes.GETSTATIC:
-					nextIsField(Opcodes.GETSTATIC, "kotlin/Unit", "INSTANCE",
-							"Lkotlin/Unit;");
-					break;
-				case Opcodes.ACONST_NULL:
-					nextIs(Opcodes.ACONST_NULL);
-					break;
+			if (Opcodes.IFNONNULL == start.getOpcode()) {
+				// ignore everything until the jump target of our IFNONNULL.
+				return ((JumpInsnNode) start).label;
+			} else {
+				// ignore everything until the next ARETURN or ATHROW
+				// instruction; or until the end of the function.
+				while (cursor.getOpcode() != Opcodes.ATHROW
+						&& cursor.getOpcode() != Opcodes.ARETURN) {
+					AbstractInsnNode next = cursor.getNext();
+					if (next == null) {
+						break;
+					}
+					cursor = next;
 				}
+				return cursor;
 			}
-			if (cursor.getNext() != null) {
-				switch (cursor.getNext().getOpcode()) {
-				case Opcodes.GOTO:
-					nextIs(Opcodes.GOTO);
-					break;
-				case Opcodes.ARETURN:
-					nextIs(Opcodes.ARETURN);
-					break;
-				}
-			}
-			return cursor != null;
 		}
-
 	}
 }
