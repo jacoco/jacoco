@@ -146,6 +146,24 @@ abstract class AbstractMatcher {
 	}
 
 	/**
+	 * Moves {@link #cursor} to next instruction if it is <code>LDC</code> with
+	 * <code>cst</code> that starts with <code>cstPrefix</code>, otherwise sets
+	 * it to <code>null</code>.
+	 */
+	final void nextIsLdcStartingWith(final String cstPrefix) {
+		nextIs(Opcodes.LDC);
+		if (cursor == null) {
+			return;
+		}
+		LdcInsnNode ldcNode = (LdcInsnNode) cursor;
+		if (ldcNode.cst instanceof String
+				&& ((String) ldcNode.cst).startsWith(cstPrefix)) {
+			return;
+		}
+		cursor = null;
+	}
+
+	/**
 	 * Moves {@link #cursor} to next instruction if it has given opcode,
 	 * otherwise sets it to <code>null</code>.
 	 */

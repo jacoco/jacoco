@@ -48,15 +48,7 @@ public final class KotlinUnsafeCastOperatorFilter implements IFilter {
 			final JumpInsnNode jumpInsnNode = (JumpInsnNode) cursor;
 			nextIsType(Opcodes.NEW, exceptionType);
 			nextIs(Opcodes.DUP);
-			nextIs(Opcodes.LDC);
-			if (cursor == null) {
-				return;
-			}
-			final LdcInsnNode ldc = (LdcInsnNode) cursor;
-			if (!(ldc.cst instanceof String && ((String) ldc.cst)
-					.startsWith("null cannot be cast to non-null type"))) {
-				return;
-			}
+			nextIsLdcStartingWith("null cannot be cast to non-null type");
 			nextIsInvoke(Opcodes.INVOKESPECIAL, exceptionType, "<init>",
 					"(Ljava/lang/String;)V");
 			nextIs(Opcodes.ATHROW);

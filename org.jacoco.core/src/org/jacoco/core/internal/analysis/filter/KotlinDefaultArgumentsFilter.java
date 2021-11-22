@@ -87,13 +87,8 @@ public final class KotlinDefaultArgumentsFilter implements IFilter {
 			nextIs(Opcodes.IFNULL);
 			nextIsType(Opcodes.NEW, "java/lang/UnsupportedOperationException");
 			nextIs(Opcodes.DUP);
-			nextIs(Opcodes.LDC);
-			if (cursor == null
-					|| !(((LdcInsnNode) cursor).cst instanceof String)
-					|| !(((String) ((LdcInsnNode) cursor).cst).startsWith(
-							"Super calls with default arguments not supported in this target"))) {
-				cursor = null;
-			}
+			nextIsLdcStartingWith(
+					"Super calls with default arguments not supported in this target");
 			nextIsInvoke(Opcodes.INVOKESPECIAL,
 					"java/lang/UnsupportedOperationException", "<init>",
 					"(Ljava/lang/String;)V");
