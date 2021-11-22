@@ -18,6 +18,7 @@ import java.util.Map;
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.tree.AbstractInsnNode;
 import org.objectweb.asm.tree.FieldInsnNode;
+import org.objectweb.asm.tree.LdcInsnNode;
 import org.objectweb.asm.tree.MethodInsnNode;
 import org.objectweb.asm.tree.MethodNode;
 import org.objectweb.asm.tree.TypeInsnNode;
@@ -127,6 +128,21 @@ abstract class AbstractMatcher {
 		default:
 			cursor = null;
 		}
+	}
+
+	/**
+	 * Moves {@link #cursor} to next instruction if it is <code>LDC</code> with
+	 * the given <code>cst</code>, otherwise sets it to <code>null</code>.
+	 */
+	final void nextIsLdc(final String cst) {
+		nextIs(Opcodes.LDC);
+		if (cursor == null) {
+			return;
+		}
+		if (((LdcInsnNode) cursor).cst.equals(cst)) {
+			return;
+		}
+		cursor = null;
 	}
 
 	/**
