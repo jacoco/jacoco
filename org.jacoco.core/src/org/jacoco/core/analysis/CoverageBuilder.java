@@ -17,6 +17,7 @@ import org.jacoco.core.internal.analysis.BundleCoverageImpl;
 import org.jacoco.core.internal.analysis.SourceFileCoverageImpl;
 import org.jacoco.core.internal.diff.ClassInfoDto;
 
+import java.io.File;
 import java.util.*;
 
 /**

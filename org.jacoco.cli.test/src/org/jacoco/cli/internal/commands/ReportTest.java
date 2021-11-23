@@ -136,26 +136,18 @@ public class ReportTest extends CommandTestBase {
 				"D:\\IdeaProjects\\base\\base-service\\application\\src\\main\\java ",
 				"--html", "D:\\jacoco\\report", "--xml",
 				"D:\\jacoco\\report.xml", "--diffCode",
-				" [\n" +
-						"    {\n" +
-						"      \"classFile\": \"com/dr/application/app/controller/LoginController\",\n" +
-						"      \"methodInfos\": [\n" +
-						"        {\n" +
-						"          \"methodName\": \"testInt\",\n" +
-						"          \"parameters\": \"Map<String,Object>&List<String>&Set<Integer>\"\n" +
-						"        },\n" +
-						"        {\n" +
-						"          \"methodName\": \"display\",\n" +
-						"          \"parameters\": \"\"\n" +
-						"        },\n" +
-						"        {\n" +
-						"          \"methodName\": \"a\",\n" +
-						"          \"parameters\": \"InnerClass\"\n" +
-						"        }\n" +
-						"      ],\n" +
-						"      \"type\": \"MODIFY\"\n" +
-						"    }\n" +
-						"  ]");
+				" [\n" + "    {\n"
+						+ "      \"classFile\": \"com/dr/application/app/controller/LoginController\",\n"
+						+ "      \"methodInfos\": [\n" + "        {\n"
+						+ "          \"methodName\": \"testInt\",\n"
+						+ "          \"parameters\": \"Map<String,Object>&List<String>&Set<Integer>\"\n"
+						+ "        },\n" + "        {\n"
+						+ "          \"methodName\": \"display\",\n"
+						+ "          \"parameters\": \"\"\n" + "        },\n"
+						+ "        {\n" + "          \"methodName\": \"a\",\n"
+						+ "          \"parameters\": \"InnerClass\"\n"
+						+ "        }\n" + "      ],\n"
+						+ "      \"type\": \"MODIFY\"\n" + "    }\n" + "  ]");
 		// execute("report","D:\\jacoco\\jacoco-demo.exec", "--classfiles",
 		// "D:\\IdeaProjects\\base\\base-service\\application\\target\\classes\\com",
 		// "--sourcefiles",
@@ -170,6 +162,19 @@ public class ReportTest extends CommandTestBase {
 		// assertTrue(new File(html,
 		// "org.jacoco.cli.internal.commands/ReportTest.java.html")
 		// .isFile());
+	}
+
+	@Test
+	public void mytest2() throws Exception {
+
+		execute("report", "/Users/rayduan/jacoco/jacoco-demo.exec",
+				"--classfiles",
+				"/Users/rayduan/IdeaProjects\\base\\base-service\\application\\target\\classes\\com",
+				"--sourcefiles",
+				"/Users/rayduan/IdeaProjects\\base\\base-service\\application\\src\\main\\java ",
+				"--html", "/Users/rayduan/jacoco/report", "--xml",
+				"/Users/rayduan/jacoco/report.xml", "--diffCodeFiles", "");
+		assertOk();
 	}
 
 	@Test

@@ -75,12 +75,12 @@ public class MergeTest extends CommandTestBase {
 		assertEquals(new HashSet<String>(Arrays.asList("a", "b", "c")), names);
 	}
 
-
 	@Test
 	public void local_should_merge_exec_files() throws Exception {
 		File dest = new File("D:\\jacoco", "merged.exec");
 
-		execute("merge", "--destfile", dest.getAbsolutePath(),"D:\\jacoco/jacoco-demo.exec", "D:\\jacoco/jacoco-demo1.exec");
+		execute("merge", "--destfile", dest.getAbsolutePath(),
+				"D:\\jacoco/jacoco-demo.exec", "D:\\jacoco/jacoco-demo1.exec");
 
 		assertOk();
 		Set<String> names = loadExecFile(dest);
