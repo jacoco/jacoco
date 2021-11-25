@@ -67,7 +67,6 @@ public abstract class FilterTestBase {
 	 */
 	protected void sortIgnoredRanges() {
 		Collections.sort(ignoredRanges, new Comparator<Range>() {
-			@Override
 			public int compare(Range o1, Range o2) {
 				if (o1.toInclusive == o2.toInclusive)
 					return 0;
