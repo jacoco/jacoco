@@ -35,7 +35,6 @@ class KotlinComposeFilter implements IFilter {
 
 	static final String COMPOSABLE_ANNOTATION_DESCRIPTOR = "Landroidx/compose/runtime/Composable;";
 
-	@Override
 	public void filter(MethodNode methodNode, IFilterContext context,
 			IFilterOutput output) {
 		if (!KotlinGeneratedFilter.isKotlinClass(context)) {
