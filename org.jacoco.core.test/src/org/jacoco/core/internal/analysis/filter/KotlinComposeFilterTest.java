@@ -64,7 +64,7 @@ public class KotlinComposeFilterTest extends FilterTestBase {
 	 *             modifier = (Modifier)Modifier.Companion;
 	 *          }
 	 *
-	 *          if (Intrinsics.areEqual(text, com.finanteq.android.compose.lottie.LiveLiterals.MyComposableKt.INSTANCE.String$arg-1$call-EQEQ$cond$if$fun-MyComposableWithIf())) {
+	 *          if (Intrinsics.areEqual(text, com.example.android.compose.LiveLiterals.MyComposableKt.INSTANCE.String$arg-1$call-EQEQ$cond$if$fun-MyComposableWithIf())) {
 	 *             $composer.startReplaceableGroup(229561780);
 	 *             ComposerKt.sourceInformation($composer, "10@277L38");
 	 *             TextKt.Text-fLXpl1I(text, modifier, 0L, 0L, (FontStyle)null, (FontWeight)null, (FontFamily)null, 0L, (TextDecoration)null, (TextAlign)null, 0L, 0, false, 0, (Function1)null, (TextStyle)null, $composer, 14 & $dirty | 112 & $dirty, 64, 65532);
