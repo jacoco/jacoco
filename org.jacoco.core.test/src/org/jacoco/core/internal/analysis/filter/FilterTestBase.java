@@ -19,8 +19,10 @@ import static org.junit.Assert.fail;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
+import java.util.ListIterator;
 import java.util.Map;
 import java.util.Set;
 
@@ -57,6 +59,67 @@ public abstract class FilterTestBase {
 			replacedBranches.put(source, newTargets);
 		}
 	};
+
+	/**
+	 * Sorts ranges so that {@link Range} 1 with {@link Range#toInclusive} which
+	 * is before {@link Range} 2 appears in the list {@link #ignoredRanges}
+	 * before it
+	 */
+	protected void sortIgnoredRanges() {
+		Collections.sort(ignoredRanges, new Comparator<Range>() {
+			@Override
+			public int compare(Range o1, Range o2) {
+				if (o1.toInclusive == o2.toInclusive)
+					return 0;
+				AbstractInsnNode node = o1.toInclusive;
+				while (node != null) {
+					if (node == o2.toInclusive) {
+						return -1;
+					}
+					node = node.getNext();
+				}
+				return 1;
+			}
+		});
+	}
+
+	/**
+	 * Merges {@link #ignoredRanges} so that if there is no gap between 2 ranges
+	 * they will be merged to one range
+	 */
+	protected void mergeIgnoredRanges() {
+		sortIgnoredRanges();
+
+		ListIterator<Range> iterator = ignoredRanges.listIterator();
+
+		Range previous = null;
+		List<Range> merged = new ArrayList<Range>();
+		while (iterator.hasNext()) {
+			Range current = iterator.next();
+			if (previous == null) {
+				previous = current;
+				continue;
+			}
+			AbstractInsnNode prevRangeEnd = previous.toInclusive.getNext();
+			while (prevRangeEnd != current.fromInclusive) {
+				prevRangeEnd = prevRangeEnd.getPrevious();
+				if (prevRangeEnd == null) {
+					break;
+				}
+			}
+			if (prevRangeEnd != null) {
+				previous.toInclusive = current.toInclusive;
+			} else {
+				merged.add(previous);
+				previous = current;
+			}
+		}
+		ignoredRanges.clear();
+		ignoredRanges.addAll(merged);
+		if (!merged.contains(previous)) {
+			ignoredRanges.add(previous);
+		}
+	}
 
 	final void assertIgnored(Range... ranges) {
 		assertArrayEquals(ranges, ignoredRanges.toArray(new Range[0]));
@@ -97,6 +160,20 @@ public abstract class FilterTestBase {
 						&& this.toInclusive.equals(other.toInclusive);
 			}
 			return false;
+		}
+
+		@Override
+		public int hashCode() {
+			int result = fromInclusive != null ? fromInclusive.hashCode() : 0;
+			result = 31 * result
+					+ (toInclusive != null ? toInclusive.hashCode() : 0);
+			return result;
+		}
+
+		@Override
+		public String toString() {
+			return "Range{" + "fromInclusive=" + fromInclusive
+					+ ", toInclusive=" + toInclusive + '}';
 		}
 	}
 
