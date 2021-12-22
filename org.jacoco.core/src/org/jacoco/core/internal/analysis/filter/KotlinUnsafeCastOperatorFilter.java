@@ -46,6 +46,12 @@ public final class KotlinUnsafeCastOperatorFilter implements IFilter {
 			}
 			cursor = start;
 			final JumpInsnNode jumpInsnNode = (JumpInsnNode) cursor;
+			final AbstractInsnNode next = cursor.getNext();
+			if (next != null && next.getOpcode() == Opcodes.POP) {
+				// Since Kotlin 1.6.0 - see
+				// https://github.com/JetBrains/kotlin/commit/041773fd2584bc279813361eb7fc11ae84c214fd
+				next();
+			}
 			nextIsType(Opcodes.NEW, exceptionType);
 			nextIs(Opcodes.DUP);
 			nextIs(Opcodes.LDC);
