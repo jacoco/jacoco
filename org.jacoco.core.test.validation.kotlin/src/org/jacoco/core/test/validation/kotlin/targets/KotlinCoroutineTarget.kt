@@ -34,6 +34,12 @@ object KotlinCoroutineTarget {
         nop() // assertFullyCovered()
     }
 
+    private fun suspendingLambdaWithoutSuspensionPoints() {
+        runBlocking { // assertFullyCovered()
+            nop() // assertFullyCovered()
+        } // assertFullyCovered()
+    }
+
     @JvmStatic
     fun main(args: Array<String>) {
 
@@ -45,6 +51,7 @@ object KotlinCoroutineTarget {
             suspendingFunctionWithTailCallOptimization()
         } // assertFullyCovered()
 
+        suspendingLambdaWithoutSuspensionPoints()
     }
 
 }
