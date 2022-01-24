@@ -15,6 +15,8 @@ package org.jacoco.agent.rt.internal;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.net.InetAddress;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.concurrent.Callable;
 
 import org.jacoco.agent.rt.IAgent;
