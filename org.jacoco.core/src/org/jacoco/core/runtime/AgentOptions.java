@@ -106,6 +106,23 @@ public final class AgentOptions {
 	public static final String DUMPONEXIT = "dumponexit";
 
 	/**
+	 * Specifies whether the agent will dump coverage data continuously. Default
+	 * is <code>false</code>.
+	 */
+	public static final String DUMPCONTINUOUSLY = "dumpcontinuously";
+
+	/**
+	 * Specifies after agent startup, how many milliseconds to wait to dump
+	 * coverage data.
+	 */
+	public static final String DUMPWAITTIME = "dumpwaittime";
+
+	/**
+	 * Specifies How many milliseconds between dump coverage data.
+	 */
+	public static final String DUMPINTERVAL = "dumpinterval";
+
+	/**
 	 * Specifies the output mode. Default is {@link OutputMode#file}.
 	 *
 	 * @see OutputMode#file
@@ -650,6 +667,33 @@ public final class AgentOptions {
 			}
 		}
 		return sb.toString();
+	}
+
+	/**
+	 * Returns whether the agent need to report Continuously.
+	 *
+	 * @return <code>true</code>, when DUMPCONTINUOUSLY is enabled
+	 */
+	public boolean isDumpContinuously() {
+		return getOption(DUMPCONTINUOUSLY, false);
+	}
+
+	/**
+	 * Returns dump wait time.
+	 *
+	 * @return dump wait time, default value is 0 milliseconds.
+	 */
+	public int getDumpWaitTime() {
+		return getOption(DUMPWAITTIME, 0);
+	}
+
+	/**
+	 * Returns dump interval.
+	 *
+	 * @return dump interval, default value is 1 minute.
+	 */
+	public int getDumpInterval() {
+		return getOption(DUMPINTERVAL, 60000);
 	}
 
 }

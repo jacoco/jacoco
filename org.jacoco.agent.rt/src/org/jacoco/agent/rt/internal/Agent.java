@@ -130,6 +130,19 @@ public class Agent implements IAgent {
 			if (options.getJmx()) {
 				jmxRegistration = new JmxRegistration(this);
 			}
+			if (options.isDumpContinuously()) {
+				Timer timer = new Timer();
+				timer.schedule(new TimerTask() {
+					@Override
+					public void run() {
+						try {
+							output.writeExecutionData(false);
+						} catch (final Exception e) {
+							logger.logExeption(e);
+						}
+					}
+				}, options.getDumpWaitTime(), options.getDumpInterval());
+			}
 		} catch (final Exception e) {
 			logger.logExeption(e);
 			throw e;
