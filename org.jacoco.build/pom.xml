@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-   Copyright (c) 2009, 2020 Mountainminds GmbH & Co. KG and Contributors
+   Copyright (c) 2009, 2022 Mountainminds GmbH & Co. KG and Contributors
    This program and the accompanying materials are made available under
    the terms of the Eclipse Public License 2.0 which is available at
    http://www.eclipse.org/legal/epl-2.0
@@ -15,7 +15,7 @@
 
   <groupId>org.jacoco</groupId>
   <artifactId>org.jacoco.build</artifactId>
-  <version>0.8.7-SNAPSHOT</version>
+  <version>0.8.8-SNAPSHOT</version>
   <packaging>pom</packaging>
 
   <name>JaCoCo</name>
@@ -129,7 +129,7 @@
 
     <maven.build.timestamp.format>yyyyMMddhhmm</maven.build.timestamp.format>
     <jacoco.home.url>http://www.jacoco.org/jacoco</jacoco.home.url>
-    <copyright.years>${project.inceptionYear}, 2020</copyright.years>
+    <copyright.years>${project.inceptionYear}, 2022</copyright.years>
 
     <bytecode.version>1.5</bytecode.version>
     <maven.compiler.source>${bytecode.version}</maven.compiler.source>
@@ -139,10 +139,10 @@
     <argLine>${jvm.args}</argLine>
 
     <!-- Dependencies versions -->
-    <asm.version>9.0</asm.version>
+    <asm.version>9.2</asm.version>
     <ant.version>1.9.15</ant.version>
     <args4j.version>2.0.28</args4j.version>
-    <junit.version>4.13</junit.version>
+    <junit.version>4.13.1</junit.version>
     <googlecodeprettify.version>20100721</googlecodeprettify.version>
 
     <!-- ================== -->
@@ -551,7 +551,8 @@
                   <version>1.8</version>
                 </requireJavaVersion>
                 <requireMavenVersion>
-                  <version>3.3.9</version>
+                  <!-- Maven 3.8.2 contains bug - see https://github.com/jacoco/jacoco/issues/1218 -->
+                  <version>[3.3.9,3.8.2),(3.8.2,)</version>
                 </requireMavenVersion>
                 <requireNoRepositories>
                   <message>The rules for repo1.maven.org are that pom.xml files should not include repository definitions.</message>
@@ -632,7 +633,7 @@
                   <include name="**/*.scala"/>
                   <not>
                     <and>
-                      <contains text="Copyright (c) 2009, 2020 Mountainminds GmbH &amp; Co. KG and Contributors"/>
+                      <contains text="Copyright (c) 2009, 2022 Mountainminds GmbH &amp; Co. KG and Contributors"/>
                       <contains text="This program and the accompanying materials are made available under"/>
                       <contains text="the terms of the Eclipse Public License 2.0 which is available at"/>
                       <contains text="http://www.eclipse.org/legal/epl-2.0"/>
@@ -857,6 +858,48 @@
         <property>
           <name>bytecode.version</name>
           <value>16</value>
+        </property>
+      </activation>
+      <properties>
+        <maven.compiler.source>13</maven.compiler.source>
+        <maven.compiler.target>13</maven.compiler.target>
+      </properties>
+    </profile>
+
+    <profile>
+      <id>java17-bytecode</id>
+      <activation>
+        <property>
+          <name>bytecode.version</name>
+          <value>17</value>
+        </property>
+      </activation>
+      <properties>
+        <maven.compiler.source>13</maven.compiler.source>
+        <maven.compiler.target>13</maven.compiler.target>
+      </properties>
+    </profile>
+
+    <profile>
+      <id>java18-bytecode</id>
+      <activation>
+        <property>
+          <name>bytecode.version</name>
+          <value>18</value>
+        </property>
+      </activation>
+      <properties>
+        <maven.compiler.source>13</maven.compiler.source>
+        <maven.compiler.target>13</maven.compiler.target>
+      </properties>
+    </profile>
+
+    <profile>
+      <id>java19-bytecode</id>
+      <activation>
+        <property>
+          <name>bytecode.version</name>
+          <value>19</value>
         </property>
       </activation>
       <properties>

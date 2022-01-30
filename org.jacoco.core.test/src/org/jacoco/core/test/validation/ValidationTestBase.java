@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2020 Mountainminds GmbH & Co. KG and Contributors
+ * Copyright (c) 2009, 2022 Mountainminds GmbH & Co. KG and Contributors
  * This program and the accompanying materials are made available under
  * the terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0
@@ -71,6 +71,7 @@ public abstract class ValidationTestBase {
 
 	private ExecutionDataStore execute() throws Exception {
 		loader = new InstrumentingLoader(target);
+		loader.setDefaultAssertionStatus(true);
 		run(loader.loadClass(target.getName()));
 		return loader.collect();
 	}
