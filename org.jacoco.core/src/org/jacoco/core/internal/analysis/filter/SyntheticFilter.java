@@ -43,9 +43,9 @@ public final class SyntheticFilter implements IFilter {
 			}
 		}
 
-    if (isHandledByAspectJFilter(methodNode)) {
-      return;
-    }
+		if (isHandledByAspectJFilter(methodNode)) {
+			return;
+		}
 
 		if (KotlinGeneratedFilter.isKotlinClass(context)) {
 			if (KotlinDefaultArgumentsFilter
@@ -68,11 +68,12 @@ public final class SyntheticFilter implements IFilter {
 				methodNode.instructions.getLast());
 	}
 
-	private static final Pattern ASPECTJ_AROUND_BODY_PATTERN = Pattern.compile(".*_aroundBody\\d+");
+	private static final Pattern ASPECTJ_AROUND_BODY_PATTERN = Pattern
+			.compile(".*_aroundBody\\d+");
 
 	/**
-	 * Returns true for AspectJ-generated methods which must not be (fully) excluded,
-	 * despite having the {@code ACC_SYNTHETIC} flag.
+	 * Returns true for AspectJ-generated methods which must not be (fully)
+	 * excluded, despite having the {@code ACC_SYNTHETIC} flag.
 	 *
 	 * @see AspectjFilter
 	 */

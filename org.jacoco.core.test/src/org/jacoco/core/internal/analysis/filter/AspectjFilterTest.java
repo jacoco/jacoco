@@ -28,140 +28,150 @@ import static org.junit.Assert.*;
 
 public class AspectjFilterTest implements IFilterOutput {
 
-    private AspectjFilter filter;
+	private AspectjFilter filter;
 
-    private final FilterContextMock context = new FilterContextMock();
+	private final FilterContextMock context = new FilterContextMock();
 
-    private Set<AbstractInsnNode> ignored;
+	private Set<AbstractInsnNode> ignored;
 
-    @Before
-    public void setUp() {
-        filter = new AspectjFilter();
-        ignored = new HashSet<AbstractInsnNode>();
-    }
+	@Before
+	public void setUp() {
+		filter = new AspectjFilter();
+		ignored = new HashSet<AbstractInsnNode>();
+	}
 
-    @Test
-    public void testAjSyntheticAttribute() {
-        final MethodNode m = new MethodNode(InstrSupport.ASM_API_VERSION, 0,
-                "aspectOf", "()LFoo", null, null);
-        m.visitAttribute(new TestAttribute("org.aspectj.weaver.AjSynthetic"));
-        m.visitInsn(Opcodes.NOP);
-        m.visitInsn(Opcodes.NOP);
-        m.visitInsn(Opcodes.NOP);
+	@Test
+	public void testAjSyntheticAttribute() {
+		final MethodNode m = new MethodNode(InstrSupport.ASM_API_VERSION, 0,
+				"aspectOf", "()LFoo", null, null);
+		m.visitAttribute(new TestAttribute("org.aspectj.weaver.AjSynthetic"));
+		m.visitInsn(Opcodes.NOP);
+		m.visitInsn(Opcodes.NOP);
+		m.visitInsn(Opcodes.NOP);
 
-        filter.filter(m, context, this);
+		filter.filter(m, context, this);
 
-        assertTrue(ignored.containsAll(Arrays.asList(m.instructions.toArray())));
-    }
+		assertTrue(
+				ignored.containsAll(Arrays.asList(m.instructions.toArray())));
+	}
 
-    @Test
-    public void testClinitOnlyPre() {
-        final MethodNode m = new MethodNode(InstrSupport.ASM_API_VERSION, 0,
-                "<clinit>", "()V", null, null);
-        m.visitMethodInsn(Opcodes.INVOKESTATIC, "Foo", "ajc$preClinit", "()V", false);
-        m.visitInsn(Opcodes.RETURN);
+	@Test
+	public void testClinitOnlyPre() {
+		final MethodNode m = new MethodNode(InstrSupport.ASM_API_VERSION, 0,
+				"<clinit>", "()V", null, null);
+		m.visitMethodInsn(Opcodes.INVOKESTATIC, "Foo", "ajc$preClinit", "()V",
+				false);
+		m.visitInsn(Opcodes.RETURN);
 
-        filter.filter(m, context, this);
+		filter.filter(m, context, this);
 
-        assertTrue(ignored.containsAll(Arrays.asList(m.instructions.toArray())));
-    }
+		assertTrue(
+				ignored.containsAll(Arrays.asList(m.instructions.toArray())));
+	}
 
-    @Test
-    public void testClinitPreAndUserCode() {
-        final MethodNode m = new MethodNode(InstrSupport.ASM_API_VERSION, 0,
-                "<clinit>", "()V", null, null);
-        m.visitMethodInsn(Opcodes.INVOKESTATIC, "Foo", "ajc$preClinit", "()V", false);
-        m.visitInsn(Opcodes.NOP);
-        m.visitMethodInsn(Opcodes.INVOKESTATIC, "Foo", "myCustomMethod", "()V", false);
-        m.visitInsn(Opcodes.RETURN);
+	@Test
+	public void testClinitPreAndUserCode() {
+		final MethodNode m = new MethodNode(InstrSupport.ASM_API_VERSION, 0,
+				"<clinit>", "()V", null, null);
+		m.visitMethodInsn(Opcodes.INVOKESTATIC, "Foo", "ajc$preClinit", "()V",
+				false);
+		m.visitInsn(Opcodes.NOP);
+		m.visitMethodInsn(Opcodes.INVOKESTATIC, "Foo", "myCustomMethod", "()V",
+				false);
+		m.visitInsn(Opcodes.RETURN);
 
-        filter.filter(m, context, this);
+		filter.filter(m, context, this);
 
-        assertTrue(ignored.contains(m.instructions.getFirst()));
-        assertFalse(ignored.contains(m.instructions.getLast()));
-    }
+		assertTrue(ignored.contains(m.instructions.getFirst()));
+		assertFalse(ignored.contains(m.instructions.getLast()));
+	}
 
-    @Test
-    public void testClinitOnlyPost() {
-        final MethodNode m = new MethodNode(InstrSupport.ASM_API_VERSION, 0,
-                "<clinit>", "()V", null, null);
-        mockPostClinitCall(m);
-        m.visitInsn(Opcodes.RETURN);
+	@Test
+	public void testClinitOnlyPost() {
+		final MethodNode m = new MethodNode(InstrSupport.ASM_API_VERSION, 0,
+				"<clinit>", "()V", null, null);
+		mockPostClinitCall(m);
+		m.visitInsn(Opcodes.RETURN);
 
-        filter.filter(m, context, this);
+		filter.filter(m, context, this);
 
-        assertTrue(ignored.containsAll(Arrays.asList(m.instructions.toArray())));
-    }
+		assertTrue(
+				ignored.containsAll(Arrays.asList(m.instructions.toArray())));
+	}
 
-    @Test
-    public void testClinitPostAndUserCode() {
-        final MethodNode m = new MethodNode(InstrSupport.ASM_API_VERSION, 0,
-                "<clinit>", "()V", null, null);
-        m.visitInsn(Opcodes.NOP);
-        m.visitMethodInsn(Opcodes.INVOKESTATIC, "Foo", "myCustomMethod", "()V", false);
-        m.visitInsn(Opcodes.NOP);
-        mockPostClinitCall(m);
-        m.visitInsn(Opcodes.RETURN);
+	@Test
+	public void testClinitPostAndUserCode() {
+		final MethodNode m = new MethodNode(InstrSupport.ASM_API_VERSION, 0,
+				"<clinit>", "()V", null, null);
+		m.visitInsn(Opcodes.NOP);
+		m.visitMethodInsn(Opcodes.INVOKESTATIC, "Foo", "myCustomMethod", "()V",
+				false);
+		m.visitInsn(Opcodes.NOP);
+		mockPostClinitCall(m);
+		m.visitInsn(Opcodes.RETURN);
 
-        filter.filter(m, context, this);
+		filter.filter(m, context, this);
 
-        assertFalse(ignored.contains(m.instructions.getFirst()));
-        assertTrue(ignored.contains(m.instructions.getLast()));
-    }
+		assertFalse(ignored.contains(m.instructions.getFirst()));
+		assertTrue(ignored.contains(m.instructions.getLast()));
+	}
 
-    @Test
-    public void testClinitOnlyPreAndPost() {
-        final MethodNode m = new MethodNode(InstrSupport.ASM_API_VERSION, 0,
-                "<clinit>", "()V", null, null);
-        m.visitInsn(Opcodes.NOP);
-        m.visitMethodInsn(Opcodes.INVOKESTATIC, "Foo", "ajc$preClinit", "()V", false);
-        m.visitInsn(Opcodes.NOP);
-        mockPostClinitCall(m);
-        m.visitInsn(Opcodes.RETURN);
+	@Test
+	public void testClinitOnlyPreAndPost() {
+		final MethodNode m = new MethodNode(InstrSupport.ASM_API_VERSION, 0,
+				"<clinit>", "()V", null, null);
+		m.visitInsn(Opcodes.NOP);
+		m.visitMethodInsn(Opcodes.INVOKESTATIC, "Foo", "ajc$preClinit", "()V",
+				false);
+		m.visitInsn(Opcodes.NOP);
+		mockPostClinitCall(m);
+		m.visitInsn(Opcodes.RETURN);
 
-        filter.filter(m, context, this);
+		filter.filter(m, context, this);
 
-        assertTrue(ignored.containsAll(Arrays.asList(m.instructions.toArray())));
-    }
+		assertTrue(
+				ignored.containsAll(Arrays.asList(m.instructions.toArray())));
+	}
 
-    private void mockPostClinitCall(MethodNode m) {
-        Label start = new Label();
-        Label handler = new Label();
-        Label end = new Label();
+	private void mockPostClinitCall(MethodNode m) {
+		Label start = new Label();
+		Label handler = new Label();
+		Label end = new Label();
 
-        m.visitTryCatchBlock(start, end, handler, "java/lang/Throwable");
-        m.visitLabel(start);
-        m.visitMethodInsn(Opcodes.INVOKESTATIC, "Foo", "ajc$postClinit", "()V", false);
-        m.visitJumpInsn(Opcodes.GOTO, end);
-        m.visitLabel(handler);
-        m.visitInsn(Opcodes.ASTORE);
-        m.visitInsn(Opcodes.ALOAD);
-        m.visitFieldInsn(Opcodes.PUTSTATIC, "Foo", "ajc$initFailureCause", "Ljava/lang/Throwable");
-        m.visitLabel(end);
-    }
+		m.visitTryCatchBlock(start, end, handler, "java/lang/Throwable");
+		m.visitLabel(start);
+		m.visitMethodInsn(Opcodes.INVOKESTATIC, "Foo", "ajc$postClinit", "()V",
+				false);
+		m.visitJumpInsn(Opcodes.GOTO, end);
+		m.visitLabel(handler);
+		m.visitInsn(Opcodes.ASTORE);
+		m.visitInsn(Opcodes.ALOAD);
+		m.visitFieldInsn(Opcodes.PUTSTATIC, "Foo", "ajc$initFailureCause",
+				"Ljava/lang/Throwable");
+		m.visitLabel(end);
+	}
 
-    public void ignore(final AbstractInsnNode fromInclusive,
-                       final AbstractInsnNode toInclusive) {
-        for (AbstractInsnNode i = fromInclusive; i != toInclusive; i = i
-                .getNext()) {
-            ignored.add(i);
-        }
-        ignored.add(toInclusive);
-    }
+	public void ignore(final AbstractInsnNode fromInclusive,
+			final AbstractInsnNode toInclusive) {
+		for (AbstractInsnNode i = fromInclusive; i != toInclusive; i = i
+				.getNext()) {
+			ignored.add(i);
+		}
+		ignored.add(toInclusive);
+	}
 
+	public void merge(final AbstractInsnNode i1, final AbstractInsnNode i2) {
+		fail();
+	}
 
+	public void replaceBranches(AbstractInsnNode source,
+			Set<AbstractInsnNode> newTargets) {
 
-    public void merge(final AbstractInsnNode i1, final AbstractInsnNode i2) {
-        fail();
-    }
+	}
 
-    public void replaceBranches(AbstractInsnNode source, Set<AbstractInsnNode> newTargets) {
-
-    }
-
-    private static class TestAttribute extends Attribute {
-        TestAttribute(String type) {
-            super(type);
-        }
-    }
+	private static class TestAttribute extends Attribute {
+		TestAttribute(String type) {
+			super(type);
+		}
+	}
 }
