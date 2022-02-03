@@ -19,7 +19,7 @@ import java.util.ResourceBundle;
  */
 public final class JaCoCo {
 
-	/** Version of JaCoCo core. */
+	/** Qualified version of JaCoCo core. */
 	public static final String VERSION;
 
 	/** Commit ID of the source tree of JaCoCo core. */
