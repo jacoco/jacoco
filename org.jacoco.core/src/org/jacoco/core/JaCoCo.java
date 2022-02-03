@@ -19,8 +19,16 @@ import java.util.ResourceBundle;
  */
 public final class JaCoCo {
 
-	/** Qualified build version of the JaCoCo core library. */
+	/** Qualified version of JaCoCo core. */
 	public static final String VERSION;
+
+	/** Commit ID of the source tree of JaCoCo core. */
+	public static final String COMMITID;
+
+	/**
+	 * Shortened (7 digit) commit ID of the source tree of JaCoCo core.
+	 */
+	public static final String COMMITID_SHORT;
 
 	/** Absolute URL of the current JaCoCo home page */
 	public static final String HOMEURL;
@@ -32,6 +40,8 @@ public final class JaCoCo {
 		final ResourceBundle bundle = ResourceBundle
 				.getBundle("org.jacoco.core.jacoco");
 		VERSION = bundle.getString("VERSION");
+		COMMITID = bundle.getString("COMMITID");
+		COMMITID_SHORT = COMMITID.substring(0, 7);
 		HOMEURL = bundle.getString("HOMEURL");
 		RUNTIMEPACKAGE = bundle.getString("RUNTIMEPACKAGE");
 	}

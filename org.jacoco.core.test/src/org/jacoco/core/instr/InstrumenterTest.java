@@ -33,6 +33,7 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
 
+import org.jacoco.core.JaCoCo;
 import org.jacoco.core.analysis.AnalyzerTest;
 import org.jacoco.core.internal.Pack200Streams;
 import org.jacoco.core.internal.data.CRC64;
@@ -127,8 +128,7 @@ public class InstrumenterTest {
 			instrumenter.instrument(bytes, "UnsupportedVersion");
 			fail("exception expected");
 		} catch (final IOException e) {
-			assertEquals("Error while instrumenting UnsupportedVersion.",
-					e.getMessage());
+			assertExceptionMessage("UnsupportedVersion", e);
 			assertEquals("Unsupported class file major version 64",
 					e.getCause().getMessage());
 		}
@@ -156,8 +156,7 @@ public class InstrumenterTest {
 			instrumenter.instrument(brokenclass, "Broken.class");
 			fail();
 		} catch (IOException e) {
-			assertEquals("Error while instrumenting Broken.class.",
-					e.getMessage());
+			assertExceptionMessage("Broken.class", e);
 		}
 	}
 
@@ -178,8 +177,7 @@ public class InstrumenterTest {
 			instrumenter.instrument(new BrokenInputStream(), "BrokenStream");
 			fail("exception expected");
 		} catch (IOException e) {
-			assertEquals("Error while instrumenting BrokenStream.",
-					e.getMessage());
+			assertExceptionMessage("BrokenStream", e);
 		}
 	}
 
@@ -194,8 +192,7 @@ public class InstrumenterTest {
 					new ByteArrayOutputStream(), "BrokenStream");
 			fail("exception expected");
 		} catch (IOException e) {
-			assertEquals("Error while instrumenting BrokenStream.",
-					e.getMessage());
+			assertExceptionMessage("BrokenStream", e);
 		}
 	}
 
@@ -230,8 +227,7 @@ public class InstrumenterTest {
 					new ByteArrayOutputStream(), "UnsupportedVersion");
 			fail("exception expected");
 		} catch (final IOException e) {
-			assertEquals("Error while instrumenting UnsupportedVersion.",
-					e.getMessage());
+			assertExceptionMessage("UnsupportedVersion", e);
 			assertEquals("Unsupported class file major version 64",
 					e.getCause().getMessage());
 		}
@@ -297,7 +293,7 @@ public class InstrumenterTest {
 					new ByteArrayOutputStream(), "Broken");
 			fail("exception expected");
 		} catch (IOException e) {
-			assertEquals("Error while instrumenting Broken.", e.getMessage());
+			assertExceptionMessage("Broken", e);
 		}
 	}
 
@@ -324,7 +320,7 @@ public class InstrumenterTest {
 			instrumenter.instrumentAll(inputStream, new ByteArrayOutputStream(),
 					"Broken");
 		} catch (IOException e) {
-			assertEquals("Error while instrumenting Broken.", e.getMessage());
+			assertExceptionMessage("Broken", e);
 		}
 	}
 
@@ -346,7 +342,7 @@ public class InstrumenterTest {
 					new ByteArrayOutputStream(), "Test.zip");
 			fail("exception expected");
 		} catch (IOException e) {
-			assertEquals("Error while instrumenting Test.zip.", e.getMessage());
+			assertExceptionMessage("Test.zip", e);
 		}
 	}
 
@@ -371,9 +367,7 @@ public class InstrumenterTest {
 					new ByteArrayOutputStream(), "broken.zip");
 			fail("exception expected");
 		} catch (IOException e) {
-			assertEquals(
-					"Error while instrumenting broken.zip@brokenentry.txt.",
-					e.getMessage());
+			assertExceptionMessage("broken.zip@brokenentry.txt", e);
 		}
 	}
 
@@ -394,8 +388,7 @@ public class InstrumenterTest {
 					"test.zip");
 			fail();
 		} catch (IOException e) {
-			assertEquals("Error while instrumenting test.zip@Test.class.",
-					e.getMessage());
+			assertExceptionMessage("test.zip@Test.class", e);
 		}
 	}
 
@@ -412,7 +405,7 @@ public class InstrumenterTest {
 					new ByteArrayOutputStream(), "Test.gz");
 			fail("exception expected");
 		} catch (IOException e) {
-			assertEquals("Error while instrumenting Test.gz.", e.getMessage());
+			assertExceptionMessage("Test.gz", e);
 		}
 	}
 
@@ -462,8 +455,7 @@ public class InstrumenterTest {
 			instrumenter.instrumentAll(new ByteArrayInputStream(buffer),
 					new ByteArrayOutputStream(), "Test.pack200");
 		} catch (IOException e) {
-			assertEquals("Error while instrumenting Test.pack200.",
-					e.getMessage());
+			assertExceptionMessage("Test.pack200", e);
 		}
 	}
 
@@ -514,6 +506,12 @@ public class InstrumenterTest {
 				new ByteArrayInputStream(out.toByteArray()));
 		assertEquals("META-INF/ALIAS.SF", zipin.getNextEntry().getName());
 		assertNull(zipin.getNextEntry());
+	}
+
+	private void assertExceptionMessage(String name, Exception ex) {
+		String expected = "Error while instrumenting " + name + " with JaCoCo "
+				+ JaCoCo.VERSION + "/" + JaCoCo.COMMITID_SHORT + ".";
+		assertEquals(expected, ex.getMessage());
 	}
 
 }

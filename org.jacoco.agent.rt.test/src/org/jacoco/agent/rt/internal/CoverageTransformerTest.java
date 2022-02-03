@@ -215,11 +215,15 @@ public class CoverageTransformerTest {
 					protectionDomain, null);
 			fail("IllegalClassFormatException expected.");
 		} catch (IllegalClassFormatException e) {
-			assertEquals("Error while instrumenting org.jacoco.Sample.",
+			assertEquals(String.format(
+					"Error while instrumenting %s with JaCoCo %s/%s.",
+					"org.jacoco.Sample", JaCoCo.VERSION, JaCoCo.COMMITID_SHORT),
 					e.getMessage());
 		}
 		recorder.assertException(IllegalClassFormatException.class,
-				"Error while instrumenting org.jacoco.Sample.",
+				String.format("Error while instrumenting %s with JaCoCo %s/%s.",
+						"org.jacoco.Sample", JaCoCo.VERSION,
+						JaCoCo.COMMITID_SHORT),
 				IOException.class);
 		recorder.clear();
 	}

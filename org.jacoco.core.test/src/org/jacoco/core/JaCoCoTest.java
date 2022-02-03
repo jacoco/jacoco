@@ -12,6 +12,7 @@
  *******************************************************************************/
 package org.jacoco.core;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
 import org.junit.Test;
@@ -24,6 +25,16 @@ public class JaCoCoTest {
 	@Test
 	public void testVERSION() {
 		assertNotNull(JaCoCo.VERSION);
+	}
+
+	@Test
+	public void testCOMMITID() {
+		assertNotNull(JaCoCo.COMMITID);
+	}
+
+	@Test
+	public void testCOMMITID_SHORT() {
+		assertEquals(7, JaCoCo.COMMITID_SHORT.length());
 	}
 
 	@Test
