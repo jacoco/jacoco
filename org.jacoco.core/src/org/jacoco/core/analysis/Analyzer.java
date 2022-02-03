@@ -21,6 +21,7 @@ import java.util.zip.GZIPInputStream;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
+import org.jacoco.core.JaCoCo;
 import org.jacoco.core.data.ExecutionData;
 import org.jacoco.core.data.ExecutionDataStore;
 import org.jacoco.core.internal.ContentTypeDetector;
@@ -160,7 +161,8 @@ public class Analyzer {
 	private IOException analyzerError(final String location,
 			final Exception cause) {
 		final IOException ex = new IOException(
-				String.format("Error while analyzing %s.", location));
+				String.format("Error while analyzing %s with JaCoCo %s/%s.",
+						location, JaCoCo.VERSION, JaCoCo.COMMITID_SHORT));
 		ex.initCause(cause);
 		return ex;
 	}
