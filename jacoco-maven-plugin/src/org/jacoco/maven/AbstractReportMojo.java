@@ -154,7 +154,7 @@ public abstract class AbstractReportMojo extends AbstractMojo
 	abstract File getOutputDirectory();
 
 	public void generate(
-			@SuppressWarnings("deprecation") final org.codehaus.doxia.sink.Sink sink,
+			@SuppressWarnings("deprecation") final org.apache.maven.doxia.sink.Sink sink,
 			final Locale locale) throws MavenReportException {
 		generate(sink, null, locale);
 	}
