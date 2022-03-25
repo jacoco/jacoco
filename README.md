@@ -21,23 +21,12 @@
 
 
 ###### 3、关于生成多模块工程中jacoco报告命令参考 demo，其中diffcode传递的参数为diffcode服务返回的uniqueData字段，已进行转义和压缩直接使用 ：
-java -jar org.jacoco.cli-0.8.7-SNAPSHOT-nodeps.jar    report jacoco.exec 
---classfiles \Desktop\feigin\web\build\classes   
---classfiles \Desktop\feigin\biz\build\classes   
---classfiles \Desktop\feigin\base\build\classes 
---sourcefiles \Desktop\feigin\web\src\main\java  
---sourcefiles \Desktop\feigin\biz\src\main\java   
---sourcefiles \Desktop\feigin\base\src\main\java --html report --xml jacoco.xml   
---diffCode=[{
-      "classFile": "com/vx/crm/web/swagger/SwaggerConfig",
-      "methodInfos": [
-        {
-          "methodName": "apiInfo",
-          "parameters": ""
-        }
-      ],
-      "type": "MODIFY"
-    }]    
---encoding=utf8
+java -jar org.jacoco.cli-0.8.7-SNAPSHOT-nodeps.jar report jacoco.exec --classfiles \Desktop\feigin\web\build\classes
+--classfiles \Desktop\feigin\biz\build\classes
+--classfiles \Desktop\feigin\base\build\classes --sourcefiles \Desktop\feigin\web\src\main\java
+--sourcefiles \Desktop\feigin\biz\src\main\java
+--sourcefiles \Desktop\feigin\base\src\main\java --html report --xml jacoco.xml
+--diffCode "[{\"classFile\":\"com/dr/application/InstallCert\",\"methodInfos\":[],\"type\":\"ADD\"},{\"classFile\":\"com/dr/application/app/controller/Calculable\",\"methodInfos\":[],\"type\":\"ADD\"},{\"classFile\":\"com/dr/application/app/controller/JenkinsPluginController\",\"methodInfos\":[],\"type\":\"ADD\"},{\"classFile\":\"com/dr/application/app/controller/LoginController\",\"methodInfos\":[{\"methodName\":\"captcha\",\"parameters\":\"HttpServletRequest&HttpServletResponse\"},{\"methodName\":\"login\",\"parameters\":\"LoginUserParam&HttpServletRequest\"},{\"methodName\":\"testInt\",\"parameters\":\"int&char\"},{\"methodName\":\"testInt\",\"parameters\":\"String&int\"},{\"methodName\":\"testInt\",\"parameters\":\"short&int\"},{\"methodName\":\"testInt\",\"parameters\":\"int[]\"},{\"methodName\":\"testInt\",\"parameters\":\"T[]\"},{\"methodName\":\"testInt\",\"parameters\":\"Calculable&int&int\"},{\"methodName\":\"testInt\",\"parameters\":\"Map<String,Object>&List<String>&Set<Integer>\"},{\"methodName\":\"display\",\"parameters\":\"\"},{\"methodName\":\"a\",\"parameters\":\"InnerClass\"}],\"type\":\"MODIFY\"},{\"classFile\":\"com/dr/application/app/controller/RoleController\",\"methodInfos\":[],\"type\":\"ADD\"},{\"classFile\":\"com/dr/application/app/controller/TestController\",\"methodInfos\":[{\"methodName\":\"test\",\"parameters\":\"\"},{\"methodName\":\"getPom\",\"parameters\":\"HttpServletResponse\"},{\"methodName\":\"getDeList\",\"parameters\":\"\"}],\"type\":\"MODIFY\"},{\"classFile\":\"com/dr/application/app/controller/view/RoleViewController\",\"methodInfos\":[],\"type\":\"ADD\"},{\"classFile\":\"com/dr/application/app/param/AddRoleParam\",\"methodInfos\":[],\"type\":\"ADD\"},{\"classFile\":\"com/dr/application/app/vo/DependencyVO\",\"methodInfos\":[],\"type\":\"ADD\"},{\"classFile\":\"com/dr/application/app/vo/JenkinsPluginsVO\",\"methodInfos\":[],\"type\":\"ADD\"},{\"classFile\":\"com/dr/application/app/vo/RoleVO\",\"methodInfos\":[],\"type\":\"ADD\"},{\"classFile\":\"com/dr/application/config/ExceptionAdvice\",\"methodInfos\":[{\"methodName\":\"handleException\",\"parameters\":\"Exception\"},{\"methodName\":\"handleMissingServletRequestParameterException\",\"parameters\":\"MissingServletRequestParameterException\"}],\"type\":\"MODIFY\"},{\"classFile\":\"com/dr/application/config/GitConfig\",\"methodInfos\":[],\"type\":\"ADD\"},{\"classFile\":\"com/dr/application/config/JenkinsConfig\",\"methodInfos\":[],\"type\":\"ADD\"},{\"classFile\":\"com/dr/application/ddd/StaticTest\",\"methodInfos\":[],\"type\":\"ADD\"},{\"classFile\":\"com/dr/application/ddd/Test\",\"methodInfos\":[],\"type\":\"ADD\"},{\"classFile\":\"com/dr/application/util/GitAdapter\",\"methodInfos\":[],\"type\":\"ADD\"},{\"classFile\":\"com/dr/common/errorcode/BizCode\",\"methodInfos\":[{\"methodName\":\"getCode\",\"parameters\":\"\"}],\"type\":\"MODIFY\"},{\"classFile\":\"com/dr/common/response/ApiResponse\",\"methodInfos\":[{\"methodName\":\"success\",\"parameters\":\"\"}],\"type\":\"MODIFY\"},{\"classFile\":\"com/dr/jenkins/JenkinsApplication\",\"methodInfos\":[],\"type\":\"ADD\"},{\"classFile\":\"com/dr/jenkins/config/JenkinsConfigure\",\"methodInfos\":[],\"type\":\"ADD\"},{\"classFile\":\"com/dr/jenkins/controller/JenkinsController\",\"methodInfos\":[],\"type\":\"ADD\"},{\"classFile\":\"com/dr/jenkins/controller/TestApi\",\"methodInfos\":[],\"type\":\"ADD\"},{\"classFile\":\"com/dr/jenkins/dto/JobAddDto\",\"methodInfos\":[],\"type\":\"ADD\"},{\"classFile\":\"com/dr/jenkins/service/JenkinsService\",\"methodInfos\":[],\"type\":\"ADD\"},{\"classFile\":\"com/dr/jenkins/service/impl/JenkinsServiceImpl\",\"methodInfos\":[],\"type\":\"ADD\"},{\"classFile\":\"com/dr/jenkins/util/GenerateUniqueIdUtil\",\"methodInfos\":[],\"type\":\"ADD\"},{\"classFile\":\"com/dr/jenkins/vo/DeviceVo\",\"methodInfos\":[],\"type\":\"ADD\"},{\"classFile\":\"com/dr/jenkins/vo/GoodsVO\",\"methodInfos\":[],\"type\":\"ADD\"},{\"classFile\":\"com/dr/jenkins/vo/JobAddVo\",\"methodInfos\":[],\"type\":\"ADD\"},{\"classFile\":\"com/dr/repository/user/dto/query/RoleQueryDto\",\"methodInfos\":[],\"type\":\"ADD\"},{\"classFile\":\"com/dr/repository/user/dto/result/RoleResultDto\",\"methodInfos\":[],\"type\":\"ADD\"},{\"classFile\":\"com/dr/user/service/impl/PermissionServiceImpl\",\"methodInfos\":[{\"methodName\":\"getPermissionByRoles\",\"parameters\":\"List<Long>\"},{\"methodName\":\"buildMenuTree\",\"parameters\":\"List<MenuDTO>\"},{\"methodName\":\"getSubMenus\",\"parameters\":\"Long&Map<Long,List<MenuDTO>>\"}],\"type\":\"MODIFY\"},{\"classFile\":\"com/dr/user/service/impl/RoleServiceImpl\",\"methodInfos\":[{\"methodName\":\"getByUserId\",\"parameters\":\"Long\"},{\"methodName\":\"getListByPage\",\"parameters\":\"RoleQueryDto\"}],\"type\":\"MODIFY\"}]"
+--encoding utf8
 
-###### 4、jacoco报告如存在乱码问题：  请执行命令时带入参数  --encoding=utf8
+###### 4、jacoco报告如存在乱码问题：  请执行命令时带入参数  --encoding utf8
