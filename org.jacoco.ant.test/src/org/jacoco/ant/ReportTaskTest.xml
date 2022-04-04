@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <!--
-   Copyright (c) 2009, 2021 Mountainminds GmbH & Co. KG and Contributors
+   Copyright (c) 2009, 2022 Mountainminds GmbH & Co. KG and Contributors
    This program and the accompanying materials are made available under
    the terms of the Eclipse Public License 2.0 which is available at
    http://www.eclipse.org/legal/epl-2.0
@@ -71,7 +71,7 @@
 	</target>
 
 	<target name="testReportWithSourceButNoDebug">
-		<java classname="org.jacoco.ant.RemoveDebugInfos" classpath="${java.class.path}" failonerror="true">
+		<java classname="org.jacoco.ant.RemoveDebugInfos" fork="true" classpath="${java.class.path}" failonerror="true">
 			<arg value="${org.jacoco.ant.reportTaskTest.classes.dir}/org/jacoco/ant/TestTarget.class" />
 			<arg value="${temp.dir}/TestTarget.class" />
 		</java>
@@ -89,7 +89,7 @@
 	</target>
 
 	<target name="testReportWithSourceDirButNoDebug">
-		<java classname="org.jacoco.ant.RemoveDebugInfos" classpath="${java.class.path}" failonerror="true">
+		<java classname="org.jacoco.ant.RemoveDebugInfos" fork="true" classpath="${java.class.path}" failonerror="true">
 			<arg value="${org.jacoco.ant.reportTaskTest.classes.dir}/org/jacoco/ant/TestTarget.class" />
 			<arg value="${temp.dir}/TestTarget.class" />
 		</java>

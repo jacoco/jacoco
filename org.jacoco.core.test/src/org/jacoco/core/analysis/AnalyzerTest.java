@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2021 Mountainminds GmbH & Co. KG and Contributors
+ * Copyright (c) 2009, 2022 Mountainminds GmbH & Co. KG and Contributors
  * This program and the accompanying materials are made available under
  * the terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0
@@ -36,6 +36,7 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
 
+import org.jacoco.core.JaCoCo;
 import org.jacoco.core.data.ExecutionDataStore;
 import org.jacoco.core.internal.Pack200Streams;
 import org.jacoco.core.internal.data.CRC64;
@@ -108,7 +109,7 @@ public class AnalyzerTest {
 	@Test
 	public void should_not_modify_class_bytes_to_support_next_version()
 			throws Exception {
-		final byte[] originalBytes = createClass(Opcodes.V17 + 1);
+		final byte[] originalBytes = createClass(Opcodes.V18 + 1);
 		final byte[] bytes = new byte[originalBytes.length];
 		System.arraycopy(originalBytes, 0, bytes, 0, originalBytes.length);
 		final long expectedClassId = CRC64.classId(bytes);
@@ -131,14 +132,13 @@ public class AnalyzerTest {
 	 */
 	@Test
 	public void analyzeClass_should_throw_exception_for_unsupported_class_file_version() {
-		final byte[] bytes = createClass(Opcodes.V17 + 2);
+		final byte[] bytes = createClass(Opcodes.V18 + 2);
 		try {
 			analyzer.analyzeClass(bytes, "UnsupportedVersion");
 			fail("exception expected");
 		} catch (IOException e) {
-			assertEquals("Error while analyzing UnsupportedVersion.",
-					e.getMessage());
-			assertEquals("Unsupported class file major version 63",
+			assertExceptionMessage("UnsupportedVersion", e);
+			assertEquals("Unsupported class file major version 64",
 					e.getCause().getMessage());
 		}
 	}
@@ -164,7 +164,7 @@ public class AnalyzerTest {
 		final byte[] bytes = TargetLoader
 				.getClassDataAsBytes(AnalyzerTest.class);
 		executionData.get(Long.valueOf(CRC64.classId(bytes)),
-				"org/jacoco/core/analysis/AnalyzerTest", 200);
+				"org/jacoco/core/analysis/AnalyzerTest", 400);
 		analyzer.analyzeClass(bytes, "Test");
 		assertFalse(classes.get("org/jacoco/core/analysis/AnalyzerTest")
 				.isNoMatch());
@@ -173,7 +173,7 @@ public class AnalyzerTest {
 	@Test
 	public void testAnalyzeClassNoIdMatch() throws IOException {
 		executionData.get(Long.valueOf(0),
-				"org/jacoco/core/analysis/AnalyzerTest", 200);
+				"org/jacoco/core/analysis/AnalyzerTest", 400);
 		analyzer.analyzeClass(
 				TargetLoader.getClassDataAsBytes(AnalyzerTest.class), "Test");
 		assertTrue(classes.get("org/jacoco/core/analysis/AnalyzerTest")
@@ -189,7 +189,7 @@ public class AnalyzerTest {
 			analyzer.analyzeClass(brokenclass, "Broken.class");
 			fail("expected exception");
 		} catch (IOException e) {
-			assertEquals("Error while analyzing Broken.class.", e.getMessage());
+			assertExceptionMessage("Broken.class", e);
 		}
 	}
 
@@ -209,7 +209,7 @@ public class AnalyzerTest {
 			analyzer.analyzeClass(new BrokenInputStream(), "BrokenStream");
 			fail("exception expected");
 		} catch (IOException e) {
-			assertEquals("Error while analyzing BrokenStream.", e.getMessage());
+			assertExceptionMessage("BrokenStream", e);
 		}
 	}
 
@@ -218,15 +218,14 @@ public class AnalyzerTest {
 	 */
 	@Test
 	public void analyzeAll_should_throw_exception_for_unsupported_class_file_version() {
-		final byte[] bytes = createClass(Opcodes.V17 + 2);
+		final byte[] bytes = createClass(Opcodes.V18 + 2);
 		try {
 			analyzer.analyzeAll(new ByteArrayInputStream(bytes),
 					"UnsupportedVersion");
 			fail("exception expected");
 		} catch (IOException e) {
-			assertEquals("Error while analyzing UnsupportedVersion.",
-					e.getMessage());
-			assertEquals("Unsupported class file major version 63",
+			assertExceptionMessage("UnsupportedVersion", e);
+			assertEquals("Unsupported class file major version 64",
 					e.getCause().getMessage());
 		}
 	}
@@ -274,7 +273,7 @@ public class AnalyzerTest {
 			analyzer.analyzeAll(new BrokenInputStream(), "Test");
 			fail("expected exception");
 		} catch (IOException e) {
-			assertEquals("Error while analyzing Test.", e.getMessage());
+			assertExceptionMessage("Test", e);
 		}
 	}
 
@@ -289,7 +288,7 @@ public class AnalyzerTest {
 			analyzer.analyzeAll(new ByteArrayInputStream(buffer), "Test.gz");
 			fail("expected exception");
 		} catch (IOException e) {
-			assertEquals("Error while analyzing Test.gz.", e.getMessage());
+			assertExceptionMessage("Test.gz", e);
 		}
 	}
 
@@ -333,7 +332,7 @@ public class AnalyzerTest {
 					"Test.pack200");
 			fail("expected exception");
 		} catch (IOException e) {
-			assertEquals("Error while analyzing Test.pack200.", e.getMessage());
+			assertExceptionMessage("Test.pack200", e);
 		}
 	}
 
@@ -380,7 +379,7 @@ public class AnalyzerTest {
 			analyzer.analyzeAll(new ByteArrayInputStream(buffer), "Test.zip");
 			fail("expected exception");
 		} catch (IOException e) {
-			assertEquals("Error while analyzing Test.zip.", e.getMessage());
+			assertExceptionMessage("Test.zip", e);
 		}
 	}
 
@@ -431,9 +430,8 @@ public class AnalyzerTest {
 					"test.zip");
 			fail("expected exception");
 		} catch (IOException e) {
-			assertEquals(
-					"Error while analyzing test.zip@org/jacoco/core/analysis/AnalyzerTest.class.",
-					e.getMessage());
+			assertExceptionMessage(
+					"test.zip@org/jacoco/core/analysis/AnalyzerTest.class", e);
 		}
 	}
 
@@ -450,6 +448,12 @@ public class AnalyzerTest {
 	private void assertClasses(String... classNames) {
 		assertEquals(new HashSet<String>(Arrays.asList(classNames)),
 				classes.keySet());
+	}
+
+	private void assertExceptionMessage(String name, Exception ex) {
+		String expected = "Error while analyzing " + name + " with JaCoCo "
+				+ JaCoCo.VERSION + "/" + JaCoCo.COMMITID_SHORT + ".";
+		assertEquals(expected, ex.getMessage());
 	}
 
 }
