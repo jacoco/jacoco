@@ -41,9 +41,6 @@ public abstract class ValidationTestBase {
 
 	protected static final boolean isJDKCompiler = Compiler.DETECT.isJDK();
 
-	protected static final JavaVersion JAVA_VERSION = new JavaVersion(
-			System.getProperty("java.version"));
-
 	private static final String[] STATUS_NAME = new String[4];
 
 	{
