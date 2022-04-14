@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2020 Mountainminds GmbH & Co. KG and Contributors
+ * Copyright (c) 2009, 2022 Mountainminds GmbH & Co. KG and Contributors
  * This program and the accompanying materials are made available under
  * the terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0
@@ -10,18 +10,18 @@
  *    Evgeny Mandrikov - initial API and implementation
  *
  *******************************************************************************/
-package org.jacoco.core.test.validation.java14;
+package org.jacoco.core.test.validation.java16;
 
 import org.jacoco.core.test.validation.ValidationTestBase;
-import org.jacoco.core.test.validation.java14.targets.RecordsTarget;
+import org.jacoco.core.test.validation.java16.targets.InstanceofTarget;
 
 /**
- * Test of code coverage for records.
+ * Test of code coverage in {@link InstanceofTarget}.
  */
-public class RecordsTest extends ValidationTestBase {
+public class InstanceofTest extends ValidationTestBase {
 
-	public RecordsTest() {
-		super(RecordsTarget.class);
+	public InstanceofTest() {
+		super(InstanceofTarget.class);
 	}
 
 }

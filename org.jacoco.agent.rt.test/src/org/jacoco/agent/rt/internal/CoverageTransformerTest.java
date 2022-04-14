@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2020 Mountainminds GmbH & Co. KG and Contributors
+ * Copyright (c) 2009, 2022 Mountainminds GmbH & Co. KG and Contributors
  * This program and the accompanying materials are made available under
  * the terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0
@@ -215,11 +215,15 @@ public class CoverageTransformerTest {
 					protectionDomain, null);
 			fail("IllegalClassFormatException expected.");
 		} catch (IllegalClassFormatException e) {
-			assertEquals("Error while instrumenting org.jacoco.Sample.",
+			assertEquals(String.format(
+					"Error while instrumenting %s with JaCoCo %s/%s.",
+					"org.jacoco.Sample", JaCoCo.VERSION, JaCoCo.COMMITID_SHORT),
 					e.getMessage());
 		}
 		recorder.assertException(IllegalClassFormatException.class,
-				"Error while instrumenting org.jacoco.Sample.",
+				String.format("Error while instrumenting %s with JaCoCo %s/%s.",
+						"org.jacoco.Sample", JaCoCo.VERSION,
+						JaCoCo.COMMITID_SHORT),
 				IOException.class);
 		recorder.clear();
 	}

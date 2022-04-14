@@ -1,0 +1,24 @@
+/*******************************************************************************
+ * Copyright (c) 2009, 2022 Mountainminds GmbH & Co. KG and Contributors
+ * This program and the accompanying materials are made available under
+ * the terms of the Eclipse Public License 2.0 which is available at
+ * http://www.eclipse.org/legal/epl-2.0
+ *
+ * SPDX-License-Identifier: EPL-2.0
+ *
+ * Contributors:
+ *    Mirko Friedenhagen - initial API and implementation
+ *
+ *******************************************************************************/
+import org.codehaus.plexus.util.*;
+
+File realBaseDir = new File(basedir, "../../../target/it-offline/build");
+if (!new File(realBaseDir, "target/site/jacoco/index.html").exists()) {
+  throw new RuntimeException();
+}
+if (new File(realBaseDir, "target/site/jacoco-it/index.html").exists()) {
+  throw new RuntimeException();
+}
+if (!FileUtils.fileRead(new File(realBaseDir, "build.log")).contains(":restore-instrumented-classes")) {
+  throw new RuntimeException();
+}

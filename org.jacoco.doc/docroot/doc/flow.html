@@ -335,9 +335,9 @@ BASTORE
 </pre>
 
 <p>
-  Note that this probe code is thread safe, does not modify the operand stack
-  or modify local variables and is also thread safe. It does also not leave the
-  method though an external call. The only prerequisite is that the probe array
+  Note that this probe code is thread safe and does not modify the operand stack
+  or modify local variables. It does also not leave the
+  method through an external call. The only prerequisite is that the probe array
   is available as a local variable. For this at the beginning of each method
   additional instrumentation code needs to be added to obtain the array instance
   associated with the belonging class. To avoid code duplication the
