@@ -144,11 +144,21 @@ public class Report extends Command {
 		final List<IReportVisitor> visitors = new ArrayList<IReportVisitor>();
 
 		if (xml != null) {
+			String path = xml.getPath().substring(0, xml.getPath().lastIndexOf("\\"));
+			File file = new File(path);
+			if (!file.exists()){
+				boolean dr = file.mkdirs();
+			}
 			final XMLFormatter formatter = new XMLFormatter();
 			visitors.add(formatter.createVisitor(new FileOutputStream(xml)));
 		}
 
 		if (csv != null) {
+			String path = csv.getPath().substring(0, csv.getPath().lastIndexOf("\\"));
+			File file = new File(path);
+			if (!file.exists()){
+				boolean dr = file.mkdirs();
+			}
 			final CSVFormatter formatter = new CSVFormatter();
 			visitors.add(formatter.createVisitor(new FileOutputStream(csv)));
 		}
