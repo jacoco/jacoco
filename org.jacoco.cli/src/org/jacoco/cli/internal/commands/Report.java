@@ -149,7 +149,6 @@ public class Report extends Command {
 		final List<IReportVisitor> visitors = new ArrayList<IReportVisitor>();
 
 		if (xml != null) {
-			//CS304 Issue link: https://github.com/jacoco/jacoco/issues/1100
 			final File folder = xml.getParentFile();
 			if (!folder.exists()){
 				boolean dr = folder.mkdirs();
@@ -159,7 +158,6 @@ public class Report extends Command {
 		}
 
 		if (csv != null) {
-			//CS304 Issue link: https://github.com/jacoco/jacoco/issues/1100
 			final File folder = csv.getParentFile();
 			if (!folder.exists()){
 				boolean dr = folder.mkdirs();
