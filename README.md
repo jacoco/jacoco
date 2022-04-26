@@ -15,29 +15,3 @@ for questions regarding JaCoCo which are not already covered by the
 
 Note: We do not answer general questions in the project's issue tracker. Please use our [mailing list](https://groups.google.com/forum/?fromgroups=#!forum/jacoco) for this.
 -------------------------------------------------------------------------
--------------------------------------------------------------------------
--------------------------------------------------------------------------
-
-Usage: java -jar jacococli.jar report [(execfiles) ...] --classfiles (path) [--csv (file)] [--encoding (charset)] [--help] [--html (dir)] [--name (name)] [--quiet][--sourcefiles (path)] [--tabwith (n)] [--xml (file)]
-  
- (execfiles)          : list of JaCoCo *.exec files to read
-   
- --classfiles (path)  : location of Java class files
-   
- --csv (file)         : output file for the CSV report
-   
- --encoding (charset) : source file encoding (by default platform encoding is used)
-   
- --help               : show help
-   
- --html (dir)         : output directory for the HTML report
-   
- --name (name)        : name used for this report
-   
- --quiet              : suppress all output on stdout
-   
- --sourcefiles (path) : location of the source files
-   
- --tabwith (n)        : tab stop width for the source pages (default 4)
-   
- --xml (file)         : output file for the XML report
