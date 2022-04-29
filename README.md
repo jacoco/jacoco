@@ -30,3 +30,6 @@ java -jar org.jacoco.cli-0.8.7-SNAPSHOT-nodeps.jar report jacoco.exec --classfil
 --encoding utf8
 
 ###### 4、jacoco报告如存在乱码问题：  请执行命令时带入参数  --encoding utf8
+
+
+###### 5、由于差异代码可能变更较大，这里支持了支持传递jsonw文件的方式：  请执行命令时带入参数  --diffCodeFiles /app/diff/change.json 这种方式和字符串方式只能同时支持一种
