@@ -98,7 +98,6 @@ public class ReportTest extends CommandTestBase {
 		assertTrue(xml.isFile());
 	}
 
-	//CS304 (manually written) Issue link: https://github.com/jacoco/jacoco/issues/1100
 	@Test
 	public void should_create_xml_report_when_xml_option_is_provided_and_the_path_is_not_exist()
 			throws Exception {
@@ -123,7 +122,6 @@ public class ReportTest extends CommandTestBase {
 		assertTrue(csv.isFile());
 	}
 
-	//CS304 (manually written) Issue link: https://github.com/jacoco/jacoco/issues/1100
 	@Test
 	public void should_create_csv_report_when_csv_option_is_provided_and_the_path_is_not_exist()
 			throws Exception {

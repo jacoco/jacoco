@@ -140,7 +140,6 @@ public class Report extends Command {
 		visitor.visitEnd();
 	}
 
-
 	private void createParent(File file){
 		final File folder = file.getParentFile();
 		if (!folder.exists()){
@@ -152,14 +151,12 @@ public class Report extends Command {
 		final List<IReportVisitor> visitors = new ArrayList<IReportVisitor>();
 
 		if (xml != null) {
-			//CS304 Issue link: https://github.com/jacoco/jacoco/issues/1100
 			createParent(xml);
 			final XMLFormatter formatter = new XMLFormatter();
 			visitors.add(formatter.createVisitor(new FileOutputStream(xml)));
 		}
 
 		if (csv != null) {
-			//CS304 Issue link: https://github.com/jacoco/jacoco/issues/1100
 			createParent(csv);
 			final CSVFormatter formatter = new CSVFormatter();
 			visitors.add(formatter.createVisitor(new FileOutputStream(csv)));
