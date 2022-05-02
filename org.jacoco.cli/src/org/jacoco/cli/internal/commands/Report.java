@@ -141,27 +141,26 @@ public class Report extends Command {
 	}
 
 
-	/**
-	 * Added blocks:
-	 * Check the parent files of xml and csv, create them if they do not exist.
-	 */
+	private void createParent(File file){
+		final File folder = file.getParentFile();
+		if (!folder.exists()){
+			boolean dr = folder.mkdirs();
+		}
+	}
+
 	private IReportVisitor createReportVisitor() throws IOException {
 		final List<IReportVisitor> visitors = new ArrayList<IReportVisitor>();
 
 		if (xml != null) {
-			final File folder = xml.getParentFile();
-			if (!folder.exists()){
-				boolean dr = folder.mkdirs();
-			}
+			//CS304 Issue link: https://github.com/jacoco/jacoco/issues/1100
+			createParent(xml);
 			final XMLFormatter formatter = new XMLFormatter();
 			visitors.add(formatter.createVisitor(new FileOutputStream(xml)));
 		}
 
 		if (csv != null) {
-			final File folder = csv.getParentFile();
-			if (!folder.exists()){
-				boolean dr = folder.mkdirs();
-			}
+			//CS304 Issue link: https://github.com/jacoco/jacoco/issues/1100
+			createParent(csv);
 			final CSVFormatter formatter = new CSVFormatter();
 			visitors.add(formatter.createVisitor(new FileOutputStream(csv)));
 		}
