@@ -140,10 +140,10 @@ public class Report extends Command {
 		visitor.visitEnd();
 	}
 
-	private void createParent(File file){
+	private void createParent(final File file) {
 		final File folder = file.getParentFile();
-		if (!folder.exists()){
-			boolean dr = folder.mkdirs();
+		if (!folder.exists()) {
+			final boolean dr = folder.mkdirs();
 		}
 	}
 
