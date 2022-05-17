@@ -12,12 +12,12 @@
  *******************************************************************************/
 package org.jacoco.core.analysis;
 
-import com.alibaba.fastjson.JSON;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import org.jacoco.core.internal.analysis.BundleCoverageImpl;
 import org.jacoco.core.internal.analysis.SourceFileCoverageImpl;
 import org.jacoco.core.internal.diff.ClassInfoDto;
 
-import java.io.File;
 import java.util.*;
 
 /**
@@ -56,10 +56,11 @@ public class CoverageBuilder implements ICoverageVisitor {
 	public CoverageBuilder(String classList) {
 		this.classes = new HashMap<String, IClassCoverage>();
 		this.sourcefiles = new HashMap<String, ISourceFileCoverage>();
-		if (null != classList) {
-			//处理可能出现的转义字符串问题
-			String parse = JSON.toJSONString(JSON.parse(classList));
-			classInfos = JSON.parseArray(parse, ClassInfoDto.class);
+		if (null != classList && !"".equals(classList)) {
+			Gson gson = new Gson();
+			classInfos = gson.fromJson(classList,
+					new TypeToken<List<ClassInfoDto>>() {
+					}.getType());
 		}
 	}
 

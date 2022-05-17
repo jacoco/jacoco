@@ -154,17 +154,17 @@
     <!-- See http://jira.codehaus.org/browse/SONAR-2096 -->
     <sonar.java.source>1.5</sonar.java.source>
     <sonar.java.target>1.5</sonar.java.target>
-    <fastjson.version>1.2.75</fastjson.version>
+    <gson.version>2.9.0</gson.version>
   </properties>
 
   <dependencyManagement>
     <dependencies>
 
-      <!-- https://mvnrepository.com/artifact/com.alibaba/fastjson -->
+
       <dependency>
-        <groupId>com.alibaba</groupId>
-        <artifactId>fastjson</artifactId>
-        <version>${fastjson.version}</version>
+        <groupId>com.google.code.gson</groupId>
+        <artifactId>gson</artifactId>
+        <version>${gson.version}</version>
       </dependency>
 
       <!-- Project dependencies -->
