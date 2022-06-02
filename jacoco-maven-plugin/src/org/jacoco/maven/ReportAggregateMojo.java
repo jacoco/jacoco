@@ -139,15 +139,19 @@ public class ReportAggregateMojo extends AbstractReportMojo {
 			final ReportSupport support) throws IOException {
 		final IReportGroupVisitor group = visitor.visitGroup(title);
 		if (includeCurrentProject) {
-			support.processProject(group, project.getArtifactId(), project,
-					getIncludes(), getExcludes(), sourceEncoding);
+			processProject(support, group, project);
 		}
 		for (final MavenProject dependency : findDependencies(
 				Artifact.SCOPE_COMPILE, Artifact.SCOPE_RUNTIME,
 				Artifact.SCOPE_PROVIDED)) {
-			support.processProject(group, dependency.getArtifactId(),
-					dependency, getIncludes(), getExcludes(), sourceEncoding);
+			processProject(support, group, dependency);
 		}
+	}
+
+	private void processProject(final ReportSupport support,
+			final IReportGroupVisitor group, final MavenProject project) throws IOException {
+		support.processProject(group, project.getArtifactId(), project,
+				getIncludes(), getExcludes(), sourceEncoding);
 	}
 
 	public File getReportOutputDirectory() {
