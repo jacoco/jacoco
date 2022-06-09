@@ -12,6 +12,8 @@
  *******************************************************************************/
 package org.jacoco.core.internal.diff;
 
+import java.util.List;
+
 /**
  * @author dr
  */
@@ -24,7 +26,7 @@ public class MethodInfoDto {
 	/**
 	 * 方法参数
 	 */
-	public String parameters;
+	public List<String> parameters;
 
 	public String getMethodName() {
 		return methodName;
@@ -34,11 +36,11 @@ public class MethodInfoDto {
 		this.methodName = methodName;
 	}
 
-	public String getParameters() {
+	public List<String> getParameters() {
 		return parameters;
 	}
 
-	public void setParameters(String parameters) {
+	public void setParameters(List<String> parameters) {
 		this.parameters = parameters;
 	}
 }
