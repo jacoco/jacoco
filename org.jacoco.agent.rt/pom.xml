@@ -85,6 +85,7 @@
                     <Implementation-Title>${project.description}</Implementation-Title>
                     <Implementation-Vendor>${project.organization.name}</Implementation-Vendor>
                     <Implementation-Version>${project.version}</Implementation-Version>
+                    <Add-Opens>java.base/java.lang</Add-Opens>
                   </manifestEntries>
                 </transformer>
               </transformers>
