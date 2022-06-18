@@ -35,6 +35,8 @@ jobs:
         JDK_VERSION: 18
       JDK 19:
         JDK_VERSION: 19
+      JDK 20:
+        JDK_VERSION: 20
   pool:
     vmImage: 'ubuntu-18.04'
   steps:
