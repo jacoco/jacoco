@@ -158,4 +158,12 @@
 		<au:assertLogContains text="java/sql/Timestamp"/>
 	</target>
 
+	<target name="testIllegalReflectiveAccess">
+		<jacoco:coverage destfile="${exec.file}">
+			<java classname="org.jacoco.ant.IllegalReflectiveAccessTarget" fork="true" failonerror="true">
+				<classpath path="${org.jacoco.ant.coverageTaskTest.classes.dir}"/>
+			</java>
+		</jacoco:coverage>
+	</target>
+
 </project>
