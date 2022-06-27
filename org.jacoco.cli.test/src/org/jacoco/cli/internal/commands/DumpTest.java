@@ -64,7 +64,7 @@ public class DumpTest extends CommandTestBase {
 		int port = startMockServer();
 
 		execute("dump", "--destfile", execfile.getAbsolutePath(), "--port",
-				String.valueOf(port));
+				String.valueOf(port), "--append", "true");
 
 		assertOk();
 		assertContains("[INFO] Connecting to ", out);

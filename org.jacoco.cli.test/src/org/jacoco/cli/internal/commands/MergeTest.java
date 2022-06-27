@@ -68,7 +68,8 @@ public class MergeTest extends CommandTestBase {
 		File dest = new File(tmp.getRoot(), "merged.exec");
 
 		execute("merge", "--destfile", dest.getAbsolutePath(),
-				a.getAbsolutePath(), b.getAbsolutePath(), c.getAbsolutePath());
+				a.getAbsolutePath(), b.getAbsolutePath(), c.getAbsolutePath(),
+				"--append", "true");
 
 		assertOk();
 		Set<String> names = loadExecFile(dest);
