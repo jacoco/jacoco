@@ -18,15 +18,21 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
+import java.util.Stack;
 
 import org.apache.maven.artifact.Artifact;
 import org.apache.maven.artifact.versioning.DefaultArtifactVersion;
 import org.apache.maven.artifact.versioning.InvalidVersionSpecificationException;
 import org.apache.maven.artifact.versioning.VersionRange;
+import org.apache.maven.execution.MavenSession;
 import org.apache.maven.model.Dependency;
+import org.apache.maven.plugins.annotations.Component;
 import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
 import org.apache.maven.project.MavenProject;
+import org.apache.maven.shared.dependency.graph.DependencyGraphBuilder;
+import org.apache.maven.shared.dependency.graph.DependencyGraphBuilderException;
+import org.apache.maven.shared.dependency.graph.DependencyNode;
 import org.jacoco.report.IReportGroupVisitor;
 
 /**
@@ -83,10 +89,23 @@ public class ReportAggregateMojo extends AbstractReportMojo {
 	private File outputDirectory;
 
 	/**
+	 * Whether all dependencies of a project should be scanned if they are in
+	 * the reactor or only direct dependencies.
+	 */
+	@Parameter(defaultValue = "false")
+	private boolean transitiveDependencies;
+
+	/**
 	 * The projects in the reactor.
 	 */
 	@Parameter(property = "reactorProjects", readonly = true)
 	private List<MavenProject> reactorProjects;
+
+	@Parameter(defaultValue = "${session}", readonly = true)
+	private MavenSession session;
+
+	@Component
+	private DependencyGraphBuilder dependencyGraphBuilder;
 
 	@Override
 	boolean canGenerateReportRegardingDataFiles() {
@@ -164,12 +183,43 @@ public class ReportAggregateMojo extends AbstractReportMojo {
 	private List<MavenProject> findDependencies(final String... scopes) {
 		final List<MavenProject> result = new ArrayList<MavenProject>();
 		final List<String> scopeList = Arrays.asList(scopes);
-		for (final Object dependencyObject : project.getDependencies()) {
-			final Dependency dependency = (Dependency) dependencyObject;
-			if (scopeList.contains(dependency.getScope())) {
-				final MavenProject project = findProjectFromReactor(dependency);
+
+		if (transitiveDependencies) {
+			final Stack<DependencyNode> dependencyNodes = new Stack<DependencyNode>();
+			try {
+				final DependencyNode projectNode = dependencyGraphBuilder
+						.buildDependencyGraph(project, null, reactorProjects);
+				for (final DependencyNode child : projectNode.getChildren()) {
+					if (scopeList.contains(child.getArtifact().getScope())) {
+						dependencyNodes.push(child);
+					}
+				}
+			} catch (DependencyGraphBuilderException e) {
+				throw new AssertionError(e);
+			}
+
+			while (!dependencyNodes.isEmpty()) {
+				final DependencyNode dependencyNode = dependencyNodes.pop();
+				for (final DependencyNode child : dependencyNode
+						.getChildren()) {
+					dependencyNodes.push(child);
+				}
+
+				final MavenProject project = findProjectFromReactor(
+						dependencyNode.getArtifact());
 				if (project != null) {
 					result.add(project);
+				}
+			}
+		} else {
+			for (final Object dependencyObject : project.getDependencies()) {
+				final Dependency dependency = (Dependency) dependencyObject;
+				if (scopeList.contains(dependency.getScope())) {
+					final MavenProject project = findProjectFromReactor(
+							dependency);
+					if (project != null) {
+						result.add(project);
+					}
 				}
 			}
 		}
@@ -204,4 +254,14 @@ public class ReportAggregateMojo extends AbstractReportMojo {
 		return null;
 	}
 
+	private MavenProject findProjectFromReactor(final Artifact a) {
+		for (final MavenProject p : reactorProjects) {
+			if (p.getGroupId().equals(a.getGroupId())
+					&& p.getArtifactId().equals(a.getArtifactId())
+					&& p.getVersion().equals(a.getVersion())) {
+				return p;
+			}
+		}
+		return null;
+	}
 }
