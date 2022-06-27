@@ -36,3 +36,10 @@ File reportChild2 = new File( basedir, "report/target/jacoco-aggregate-customiza
 if ( !reportChild2.isFile() ) {
     throw new RuntimeException( "Report for child2 was not created." );
 }
+
+// Test customization of includeCurrentProject
+
+File reportReport = new File( basedir, "report/target/jacoco-aggregate-customization/report/index.html" );
+if ( !reportReport.isFile() ) {
+    throw new RuntimeException( "Report for report was not created." );
+}
