@@ -33,11 +33,11 @@ import org.jacoco.report.IReportGroupVisitor;
  * <p>
  * Creates a structured code coverage report (HTML, XML, and CSV) from multiple
  * projects within reactor. The report is created from all modules this project
- * depends on. From those projects class and source files as well as JaCoCo
- * execution data files will be collected. In addition execution data is
- * collected from the project itself. This also allows to create coverage
- * reports when tests are in separate projects than the code under test, for
- * example in case of integration tests.
+ * depends on, and optionally this project itself. From those projects class and
+ * source files as well as JaCoCo execution data files will be collected. In
+ * addition execution data is collected from the project itself. This also
+ * allows to create coverage reports when tests are in separate projects than
+ * the code under test, for example in case of integration tests.
  * </p>
  *
  * <p>
@@ -81,6 +81,13 @@ public class ReportAggregateMojo extends AbstractReportMojo {
 	 */
 	@Parameter(defaultValue = "${project.reporting.outputDirectory}/jacoco-aggregate")
 	private File outputDirectory;
+
+	/**
+	 * Include this project in the report. If true then this projects class and
+	 * source files as well as JaCoCo execution data files will be collected.
+	 */
+	@Parameter(defaultValue = "false")
+	private boolean includeCurrentProject;
 
 	/**
 	 * The projects in the reactor.
@@ -131,12 +138,21 @@ public class ReportAggregateMojo extends AbstractReportMojo {
 	void createReport(final IReportGroupVisitor visitor,
 			final ReportSupport support) throws IOException {
 		final IReportGroupVisitor group = visitor.visitGroup(title);
+		if (includeCurrentProject) {
+			processProject(support, group, project);
+		}
 		for (final MavenProject dependency : findDependencies(
 				Artifact.SCOPE_COMPILE, Artifact.SCOPE_RUNTIME,
 				Artifact.SCOPE_PROVIDED)) {
-			support.processProject(group, dependency.getArtifactId(),
-					dependency, getIncludes(), getExcludes(), sourceEncoding);
+			processProject(support, group, dependency);
 		}
+	}
+
+	private void processProject(final ReportSupport support,
+			final IReportGroupVisitor group, final MavenProject project)
+			throws IOException {
+		support.processProject(group, project.getArtifactId(), project,
+				getIncludes(), getExcludes(), sourceEncoding);
 	}
 
 	public File getReportOutputDirectory() {
