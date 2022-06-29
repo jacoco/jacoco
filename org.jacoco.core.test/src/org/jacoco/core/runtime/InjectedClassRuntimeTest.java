@@ -54,8 +54,8 @@ public class InjectedClassRuntimeTest extends RuntimeTestBase {
 			createRuntime().startup(null);
 			fail("exception expected");
 		} catch (final InvocationTargetException e) {
-			assertTrue(e.getCause() instanceof LinkageError);
-			assertTrue(e.getCause().getMessage()
+			assertTrue(e.getCause().getCause() instanceof LinkageError);
+			assertTrue(e.getCause().getCause().getMessage()
 					.contains("duplicate class definition"));
 		}
 	}
