@@ -12,14 +12,8 @@
  *******************************************************************************/
 package org.jacoco.agent.rt.internal;
 
-import java.io.IOException;
-import java.io.InputStream;
 import java.lang.instrument.Instrumentation;
-import java.util.Collections;
-import java.util.Map;
-import java.util.Set;
 
-import org.jacoco.core.internal.InputStreams;
 import org.jacoco.core.runtime.AgentOptions;
 import org.jacoco.core.runtime.IRuntime;
 import org.jacoco.core.runtime.InjectedClassRuntime;
@@ -77,56 +71,7 @@ public final class PreMain {
 		} catch (final ClassNotFoundException e) {
 			return null;
 		}
-		final IRuntime runtime = (IRuntime) (new ClassLoader() {
-			@Override
-			public Class<?> loadClass(String name)
-					throws ClassNotFoundException {
-				if (!name.startsWith(InjectedClassRuntime.class.getName())) {
-					return super.loadClass(name);
-				}
-				final InputStream resourceAsStream = getResourceAsStream(
-						name.replace('.', '/') + ".class");
-				final byte[] bytes;
-				try {
-					bytes = InputStreams.readFully(resourceAsStream);
-				} catch (IOException e) {
-					throw new RuntimeException(e);
-				}
-				return defineClass(name, bytes, 0, bytes.length);
-			}
-		}.loadClass(InjectedClassRuntime.class.getName())
-				.getConstructor(Class.class, String.class)
-				.newInstance(Object.class, "$JaCoCo"));
-		final Object module = getModule(runtime.getClass());
-		if (module.equals(getModule(PreMain.class))) {
-			throw new IllegalStateException();
-		}
-		Instrumentation.class.getMethod("redefineModule", //
-				Class.forName("java.lang.Module"), //
-				Set.class, //
-				Map.class, //
-				Map.class, //
-				Set.class, //
-				Map.class //
-		).invoke(instrumentation, // instance
-				getModule(Object.class), // module
-				Collections.emptySet(), // extraReads
-				Collections.emptyMap(), // extraExports
-				Collections.singletonMap("java.lang",
-						Collections.singleton(module)), // extraOpens
-				Collections.emptySet(), // extraUses
-				Collections.emptyMap() // extraProvides
-		);
-		return runtime;
-	}
-
-	/**
-	 * @return {@code cls.getModule()}
-	 */
-	private static Object getModule(final Class<?> cls) throws Exception {
-		return Class.class //
-				.getMethod("getModule") //
-				.invoke(cls);
+		return InjectedClassRuntime.createFor(instrumentation);
 	}
 
 }
