@@ -78,10 +78,6 @@ jobs:
           verify -Djdk.version=$JDK_VERSION \
           deploy:deploy -DdeployAtEnd \
           --toolchains=toolchains.xml --settings=.azure-pipelines/maven-settings.xml
-      elif [[ "$JDK_VERSION" == "5" ]]; then
-        .maven/bin/mvn -V -B -e \
-          verify -Djdk.version=$JDK_VERSION \
-          --toolchains=toolchains.xml
       elif [[ "$BUILD_SOURCEBRANCH" == "refs/heads/master" && "$JDK_VERSION" == "11" ]]; then
         .maven/bin/mvn -V -B -e -f org.jacoco.build \
           verify -Djdk.version=$JDK_VERSION -Dbytecode.version=$JDK_VERSION \
