@@ -20,6 +20,6 @@
  if ( buildLog.indexOf( "Writing merged execution data to" ) < 0 ) {
      throw new RuntimeException( "Could not write merged execution data" );
  }
-if ( buildLog.indexOf( "Rule violated for class project1.ExampleClass1: lines covered ratio is 0, but expected minimum is 1" ) < 0 ) {
-    throw new RuntimeException( "Expected check failure for project1.ExampleClass1 not reported" );
+if ( buildLog.indexOf( "Rule violated for class project1.Example1: lines covered ratio is 0, but expected minimum is 1" ) < 0 ) {
+    throw new RuntimeException( "Expected check failure for project1.Example1 not reported" );
 }

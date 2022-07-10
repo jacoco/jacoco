@@ -12,14 +12,14 @@
  *******************************************************************************/
 package project2;
 
-import project1.ExampleClass2;
+import project1.Example2;
 
 import org.junit.Test;
 
 public class Project1Class2Test {
 	@Test
 	public void testProject1ExampleClass2(){
-		new ExampleClass2().sayHello();
+		new Example2().sayHello();
 	}
 
 }

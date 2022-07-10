@@ -10,16 +10,15 @@
  *    Mads Mohr Christensen - implementation of MergeMojo
  *
  *******************************************************************************/
-package project2;
-
-import project1.ExampleClass2;
+package project1;
 
 import org.junit.Test;
 
-public class Project1Class2Test {
+public class Example1Test {
+
 	@Test
-	public void testProject1ExampleClass2(){
-		new ExampleClass2().sayHello();
+	public void test() {
+		new Example1().sayHello();
 	}
 
 }

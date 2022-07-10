@@ -14,11 +14,11 @@ package project1;
 
 import org.junit.Test;
 
-public class ExampleClass1Test {
+public class Example1Test {
 
 	@Test
 	public void test() {
-		new ExampleClass1().sayHello();
+		new Example1().sayHello();
 	}
 
 }
