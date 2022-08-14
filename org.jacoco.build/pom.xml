@@ -360,6 +360,7 @@
           <configuration>
             <quiet>true</quiet>
             <detectOfflineLinks>false</detectOfflineLinks>
+            <excludePackageNames>*.internal</excludePackageNames>
           </configuration>
         </plugin>
         <plugin>
