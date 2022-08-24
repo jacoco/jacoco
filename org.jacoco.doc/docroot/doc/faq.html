@@ -205,6 +205,26 @@
   respective report generation tool accordingly.
 </p>
 
+<h3>Why can execution data files (<code>*.exec</code>) become so large?</h3>
+<p>
+  JaCoCo uses a very compact binary format to store execution data. The size of
+  a single dump depends on the number of loaded classes and is typically in the
+  range of kilobytes and several megabytes.
+</p>
+<p>
+  However depending on your build configuration and test setup you might output
+  data from multiple sessions to the same <code>*.exec</code> file. In this case
+  the data dumps are simply appended and the execution data file grows with
+  every dump. This happens for example when you fork a new JVM for every test
+  case. In such setups execution data files can grow very large.
+</p>
+<p>
+  The <a href="ant.html#merge"><code>merge</code> Ant task</a>, the
+  <a href="merge-mojo.html"><code>merge</code> Maven goal</a> or the
+  <a href="cli.html">command line interface</a> can be used to consolidate the
+  data from all sessions into a new, smaller file.
+</p>
+
 </div>
 <div class="footer">
   <span class="right"><a href="${jacoco.home.url}">JaCoCo</a> ${qualified.bundle.version}</span>
