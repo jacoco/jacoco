@@ -1,0 +1,22 @@
+name: Question
+description: Please ask questions at our user forum
+title: "PLEASE DO NOT USE GITHUB FOR QUESTIONS - CHECK FAQ OR USE FORUM"
+labels: ["declined: question :x:"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Please understand that we do **not** use the issue tracker for questions. The issue will be closed as invalid.
+        
+        Many questions are already answered in our [FAQ](https://www.jacoco.org/jacoco/trunk/doc/faq.html).
+
+        Please have a look at our [forum](https://groups.google.com/forum/?fromgroups=#!forum/jacoco) where more questions have been discussed before or ask a new question at the [forum](https://groups.google.com/forum/?fromgroups=#!forum/jacoco).
+
+        Thank you for keeping our issue tracker clean!
+  - type: checkboxes
+    id: terms
+    attributes:
+      label: No questions answered here
+      options:
+        - label: I understand that no quesions will be answered on this issue tracker
+          required: true

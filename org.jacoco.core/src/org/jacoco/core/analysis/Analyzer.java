@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2021 Mountainminds GmbH & Co. KG and Contributors
+ * Copyright (c) 2009, 2022 Mountainminds GmbH & Co. KG and Contributors
  * This program and the accompanying materials are made available under
  * the terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0
@@ -21,6 +21,7 @@ import java.util.zip.GZIPInputStream;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
+import org.jacoco.core.JaCoCo;
 import org.jacoco.core.data.ExecutionData;
 import org.jacoco.core.data.ExecutionDataStore;
 import org.jacoco.core.internal.ContentTypeDetector;
@@ -160,7 +161,8 @@ public class Analyzer {
 	private IOException analyzerError(final String location,
 			final Exception cause) {
 		final IOException ex = new IOException(
-				String.format("Error while analyzing %s.", location));
+				String.format("Error while analyzing %s with JaCoCo %s/%s.",
+						location, JaCoCo.VERSION, JaCoCo.COMMITID_SHORT));
 		ex.initCause(cause);
 		return ex;
 	}

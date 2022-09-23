@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2021 Mountainminds GmbH & Co. KG and Contributors
+ * Copyright (c) 2009, 2022 Mountainminds GmbH & Co. KG and Contributors
  * This program and the accompanying materials are made available under
  * the terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0
@@ -62,6 +62,13 @@ public final class JavaVersion {
 		final JavaVersion other = new JavaVersion(version);
 		return this.feature < other.feature || (this.feature == other.feature
 				&& this.update < other.update);
+	}
+
+	/**
+	 * @return version of the current JVM
+	 */
+	public static JavaVersion current() {
+		return new JavaVersion(System.getProperty("java.version"));
 	}
 
 }
