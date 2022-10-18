@@ -85,6 +85,8 @@ public class ReportAggregateMojo extends AbstractReportMojo {
 	/**
 	 * Include this project in the report. If true then this projects class and
 	 * source files as well as JaCoCo execution data files will be collected.
+	 *
+	 * @since 0.8.9
 	 */
 	@Parameter(defaultValue = "false")
 	private boolean includeCurrentProject;
