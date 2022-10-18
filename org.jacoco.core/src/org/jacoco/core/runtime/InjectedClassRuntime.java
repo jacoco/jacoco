@@ -20,7 +20,6 @@ import org.objectweb.asm.Opcodes;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.instrument.Instrumentation;
-import java.lang.reflect.Method;
 import java.util.Collections;
 import java.util.Map;
 import java.util.Set;
@@ -37,8 +36,6 @@ public class InjectedClassRuntime extends AbstractRuntime {
 
 	private static final String FIELD_TYPE = "Ljava/lang/Object;";
 
-	private final ClassLoader classLoader;
-
 	private final Class<?> locator;
 
 	private final String injectedClassName;
@@ -54,14 +51,6 @@ public class InjectedClassRuntime extends AbstractRuntime {
 	 */
 	public InjectedClassRuntime(final Class<?> locator,
 			final String simpleClassName) {
-		this(null, locator, simpleClassName);
-	}
-
-	private InjectedClassRuntime(final ClassLoader classLoader,
-			final Class<?> locator, final String simpleClassName) {
-		this.classLoader = classLoader == null
-				? this.getClass().getClassLoader()
-				: classLoader;
 		this.locator = locator;
 		this.injectedClassName = locator.getPackage().getName().replace('.',
 				'/') + '/' + simpleClassName;
@@ -80,7 +69,8 @@ public class InjectedClassRuntime extends AbstractRuntime {
 			@Override
 			protected Class<?> loadClass(String name, boolean resolve)
 					throws ClassNotFoundException {
-				if (!name.equals(Lookup.class.getName())) {
+				if (!name.equals(InjectedClassRuntime.class.getName())
+						&& !name.equals(Lookup.class.getName())) {
 					return super.loadClass(name, resolve);
 				}
 				final InputStream resourceAsStream = getResourceAsStream(
@@ -112,18 +102,20 @@ public class InjectedClassRuntime extends AbstractRuntime {
 				Collections.emptySet(), // extraUses
 				Collections.emptyMap() // extraProvides
 		);
-		return new InjectedClassRuntime(classLoader, Object.class, "$JaCoCo");
+		return (IRuntime) classLoader
+				.loadClass(InjectedClassRuntime.class.getName())
+				.getConstructor(Class.class, String.class)
+				.newInstance(Object.class, "$JaCoCo");
 	}
 
 	@Override
 	public void startup(final RuntimeData data) throws Exception {
 		super.startup(data);
-		final Method injector = classLoader.loadClass(Lookup.class.getName())
-				.getDeclaredMethod("defineClass", Class.class, byte[].class);
-		injector.setAccessible(true);
-		final Class<?> injectedClass = (Class<?>) injector.invoke(null, locator,
-				createClass(injectedClassName));
-		injectedClass.getField(FIELD_NAME).set(null, data);
+		Lookup //
+				.privateLookupIn(locator, Lookup.lookup()) //
+				.defineClass(createClass(injectedClassName)) //
+				.getField(FIELD_NAME) //
+				.set(null, data);
 	}
 
 	public void shutdown() {
@@ -165,7 +157,7 @@ public class InjectedClassRuntime extends AbstractRuntime {
 		/**
 		 * @return a lookup object for the caller of this method
 		 */
-		private static Lookup lookup() throws Exception {
+		static Lookup lookup() throws Exception {
 			return new Lookup(Class //
 					.forName("java.lang.invoke.MethodHandles") //
 					.getMethod("lookup") //
@@ -181,7 +173,7 @@ public class InjectedClassRuntime extends AbstractRuntime {
 		 *            the caller lookup object
 		 * @return a lookup object for the target class, with private access
 		 */
-		private static Lookup privateLookupIn(final Class<?> targetClass,
+		static Lookup privateLookupIn(final Class<?> targetClass,
 				final Lookup lookup) throws Exception {
 			return new Lookup(Class //
 					.forName("java.lang.invoke.MethodHandles") //
@@ -198,28 +190,11 @@ public class InjectedClassRuntime extends AbstractRuntime {
 		 *            the class bytes
 		 * @return class
 		 */
-		private Class<?> defineClass(final byte[] bytes) throws Exception {
+		Class<?> defineClass(final byte[] bytes) throws Exception {
 			return (Class<?>) Class //
 					.forName("java.lang.invoke.MethodHandles$Lookup")
 					.getMethod("defineClass", byte[].class)
 					.invoke(this.instance, new Object[] { bytes });
-		}
-
-		/**
-		 * Defines a class to the same class loader and in the same package and
-		 * protection domain as given class.
-		 *
-		 * @param locator
-		 *            the target class
-		 * @param bytes
-		 *            the class bytes
-		 * @return class
-		 */
-		static Class<?> defineClass(final Class<?> locator, final byte[] bytes)
-				throws Exception {
-			return Lookup //
-					.privateLookupIn(locator, Lookup.lookup()) //
-					.defineClass(bytes); //
 		}
 
 	}
