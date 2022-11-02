@@ -33,3 +33,9 @@ java -jar org.jacoco.cli-0.8.7-SNAPSHOT-nodeps.jar report jacoco.exec --classfil
 
 
 ###### 5、由于差异代码可能变更较大，这里支持了支持传递jsonw文件的方式：  请执行命令时带入参数  --diffCodeFiles /app/diff/change.json 这种方式和字符串方式只能同时支持一种
+
+
+
+
+
+##github的版本升级至0.8.9，代码分支为master_merge
