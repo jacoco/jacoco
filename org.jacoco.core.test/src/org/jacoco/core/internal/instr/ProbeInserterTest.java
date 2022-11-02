@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2021 Mountainminds GmbH & Co. KG and Contributors
+ * Copyright (c) 2009, 2022 Mountainminds GmbH & Co. KG and Contributors
  * This program and the accompanying materials are made available under
  * the terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0
@@ -59,7 +59,7 @@ public class ProbeInserterTest {
 	}
 
 	@Test
-	public void testVariableStatic() {
+	public void probevar_should_be_at_position_0_for_static_method_without_parameters() {
 		ProbeInserter pi = new ProbeInserter(Opcodes.ACC_STATIC, "m", "()V",
 				actualVisitor, arrayStrategy);
 		pi.insertProbe(0);
@@ -71,7 +71,7 @@ public class ProbeInserterTest {
 	}
 
 	@Test
-	public void testVariableNonStatic() {
+	public void probevar_should_be_at_position_1_for_instance_method_without_parameters() {
 		ProbeInserter pi = new ProbeInserter(0, "m", "()V", actualVisitor,
 				arrayStrategy);
 		pi.insertProbe(0);
@@ -83,7 +83,7 @@ public class ProbeInserterTest {
 	}
 
 	@Test
-	public void testVariableNonStatic_IZObject() {
+	public void probevar_should_be_at_position_4_for_instance_method_with_3_parameters() {
 		ProbeInserter pi = new ProbeInserter(0, "m", "(IZLjava/lang/Object;)V",
 				actualVisitor, arrayStrategy);
 		pi.insertProbe(0);
@@ -95,7 +95,7 @@ public class ProbeInserterTest {
 	}
 
 	@Test
-	public void testVariableNonStatic_JD() {
+	public void probevar_should_be_at_position_5_for_instance_method_with_2_wide_parameters() {
 		ProbeInserter pi = new ProbeInserter(0, "m", "(JD)V", actualVisitor,
 				arrayStrategy);
 		pi.insertProbe(0);
@@ -107,25 +107,27 @@ public class ProbeInserterTest {
 	}
 
 	@Test
-	public void testVisitCode() {
+	public void visitCode_should_call_IProbeArrayStrategy_for_any_methods() {
 		ProbeInserter pi = new ProbeInserter(0, "m", "()V", actualVisitor,
 				arrayStrategy);
 		pi.visitCode();
 
+		expectedVisitor.visitLabel(new Label());
 		expectedVisitor.visitLdcInsn("init");
 	}
 
 	@Test
-	public void testVisitClinit() {
+	public void visitCode_should_call_IProbeArrayStrategy_for_static_initializers() {
 		ProbeInserter pi = new ProbeInserter(0, "<clinit>", "()V",
 				actualVisitor, arrayStrategy);
 		pi.visitCode();
 
+		expectedVisitor.visitLabel(new Label());
 		expectedVisitor.visitLdcInsn("clinit");
 	}
 
 	@Test
-	public void testVisitVarIns() {
+	public void visitVarInsn_should_be_called_with_adjusted_variable_positions() {
 		ProbeInserter pi = new ProbeInserter(0, "m", "(II)V", actualVisitor,
 				arrayStrategy);
 
@@ -146,7 +148,7 @@ public class ProbeInserterTest {
 	}
 
 	@Test
-	public void testVisitIincInsn() {
+	public void visitIincInsn_should_be_called_with_adjusted_variable_positions() {
 		ProbeInserter pi = new ProbeInserter(0, "m", "(II)V", actualVisitor,
 				arrayStrategy);
 		pi.visitIincInsn(0, 100);
@@ -166,7 +168,7 @@ public class ProbeInserterTest {
 	}
 
 	@Test
-	public void testVisitLocalVariable() {
+	public void visitLocalVariable_should_be_called_with_adjusted_variable_positions() {
 		ProbeInserter pi = new ProbeInserter(0, "m", "(II)V", actualVisitor,
 				arrayStrategy);
 
@@ -176,10 +178,12 @@ public class ProbeInserterTest {
 		pi.visitLocalVariable(null, null, null, null, null, 3);
 		pi.visitLocalVariable(null, null, null, null, null, 4);
 
+		Label begin = new Label();
+
 		// Argument variables stay at the same position:
-		expectedVisitor.visitLocalVariable(null, null, null, null, null, 0);
-		expectedVisitor.visitLocalVariable(null, null, null, null, null, 1);
-		expectedVisitor.visitLocalVariable(null, null, null, null, null, 2);
+		expectedVisitor.visitLocalVariable(null, null, null, begin, null, 0);
+		expectedVisitor.visitLocalVariable(null, null, null, begin, null, 1);
+		expectedVisitor.visitLocalVariable(null, null, null, begin, null, 2);
 
 		// Local variables are shifted by one:
 		expectedVisitor.visitLocalVariable(null, null, null, null, null, 4);
@@ -209,29 +213,31 @@ public class ProbeInserterTest {
 	}
 
 	@Test
-	public void testVisitMaxs1() {
+	public void new_stack_size_should_be_big_enought_to_store_probe_array() {
 		ProbeInserter pi = new ProbeInserter(0, "m", "(II)V", actualVisitor,
 				arrayStrategy);
 		pi.visitCode();
 		pi.visitMaxs(0, 8);
 
+		expectedVisitor.visitLabel(new Label());
 		expectedVisitor.visitLdcInsn("init");
 		expectedVisitor.visitMaxs(5, 9);
 	}
 
 	@Test
-	public void testVisitMaxs2() {
+	public void new_stack_size_should_be_increased_for_probes() {
 		ProbeInserter pi = new ProbeInserter(0, "m", "(II)V", actualVisitor,
 				arrayStrategy);
 		pi.visitCode();
 		pi.visitMaxs(10, 8);
 
+		expectedVisitor.visitLabel(new Label());
 		expectedVisitor.visitLdcInsn("init");
 		expectedVisitor.visitMaxs(13, 9);
 	}
 
 	@Test
-	public void testVisitFrame() {
+	public void visitFrame_should_insert_probe_variable_between_arguments_and_local_variables() {
 		ProbeInserter pi = new ProbeInserter(0, "m", "(J)V", actualVisitor,
 				arrayStrategy);
 
@@ -245,7 +251,7 @@ public class ProbeInserterTest {
 	}
 
 	@Test
-	public void testVisitFrameNoLocals() {
+	public void visitFrame_should_only_insert_probe_variable_when_no_other_local_variables_exist() {
 		ProbeInserter pi = new ProbeInserter(Opcodes.ACC_STATIC, "m", "()V",
 				actualVisitor, arrayStrategy);
 
@@ -256,7 +262,7 @@ public class ProbeInserterTest {
 	}
 
 	@Test
-	public void testVisitFrameProbeAt0() {
+	public void visitFrame_should_insert_probe_variable_first_when_no_parameters_exist() {
 		ProbeInserter pi = new ProbeInserter(Opcodes.ACC_STATIC, "m", "()V",
 				actualVisitor, arrayStrategy);
 
@@ -268,7 +274,7 @@ public class ProbeInserterTest {
 	}
 
 	@Test
-	public void testFillOneWord() {
+	public void visitFrame_should_fill_one_unused_slots_before_probe_variable_with_TOP() {
 		ProbeInserter pi = new ProbeInserter(Opcodes.ACC_STATIC, "m", "(I)V",
 				actualVisitor, arrayStrategy);
 
@@ -280,7 +286,7 @@ public class ProbeInserterTest {
 	}
 
 	@Test
-	public void testFillTwoWord() {
+	public void visitFrame_should_fill_two_unused_slots_before_probe_variable_with_TOP_TOP() {
 		ProbeInserter pi = new ProbeInserter(Opcodes.ACC_STATIC, "m", "(J)V",
 				actualVisitor, arrayStrategy);
 
@@ -293,7 +299,7 @@ public class ProbeInserterTest {
 	}
 
 	@Test
-	public void testFillPartly() {
+	public void visitFrame_should_fill_three_unused_slots_before_probe_variable_with_TOP_TOP_TOP() {
 		ProbeInserter pi = new ProbeInserter(Opcodes.ACC_STATIC, "m", "(DIJ)V",
 				actualVisitor, arrayStrategy);
 
@@ -309,7 +315,7 @@ public class ProbeInserterTest {
 	}
 
 	@Test(expected = IllegalArgumentException.class)
-	public void testVisitFrame_invalidType() {
+	public void visitFrame_must_only_support_resolved_frames() {
 		ProbeInserter pi = new ProbeInserter(0, "m", "()V", actualVisitor,
 				arrayStrategy);
 		pi.visitFrame(Opcodes.F_SAME, 0, null, 0, null);

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2021 Mountainminds GmbH & Co. KG and Contributors
+ * Copyright (c) 2009, 2022 Mountainminds GmbH & Co. KG and Contributors
  * This program and the accompanying materials are made available under
  * the terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0
@@ -29,7 +29,11 @@ import org.objectweb.asm.tree.TableSwitchInsnNode;
  */
 public final class KotlinCoroutineFilter implements IFilter {
 
-	static boolean isLastArgumentContinuation(final MethodNode methodNode) {
+	static boolean isImplementationOfSuspendFunction(
+			final MethodNode methodNode) {
+		if (methodNode.name.startsWith("access$")) {
+			return false;
+		}
 		final Type methodType = Type.getMethodType(methodNode.desc);
 		final int lastArgument = methodType.getArgumentTypes().length - 1;
 		return lastArgument >= 0 && "kotlin.coroutines.Continuation".equals(

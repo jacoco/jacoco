@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2021 Mountainminds GmbH & Co. KG and Contributors
+ * Copyright (c) 2009, 2022 Mountainminds GmbH & Co. KG and Contributors
  * This program and the accompanying materials are made available under
  * the terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0
@@ -41,12 +41,17 @@ public final class KotlinUnsafeCastOperatorFilter implements IFilter {
 		public void match(final String exceptionType,
 				final AbstractInsnNode start, final IFilterOutput output) {
 
-			if (Opcodes.DUP != start.getOpcode()) {
+			if (Opcodes.IFNONNULL != start.getOpcode()) {
 				return;
 			}
 			cursor = start;
-			nextIs(Opcodes.IFNONNULL);
 			final JumpInsnNode jumpInsnNode = (JumpInsnNode) cursor;
+			final AbstractInsnNode next = cursor.getNext();
+			if (next != null && next.getOpcode() == Opcodes.POP) {
+				// Since Kotlin 1.6.0 - see
+				// https://github.com/JetBrains/kotlin/commit/041773fd2584bc279813361eb7fc11ae84c214fd
+				next();
+			}
 			nextIsType(Opcodes.NEW, exceptionType);
 			nextIs(Opcodes.DUP);
 			nextIs(Opcodes.LDC);
