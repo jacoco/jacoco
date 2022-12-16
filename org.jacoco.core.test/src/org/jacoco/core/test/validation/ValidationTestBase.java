@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2021 Mountainminds GmbH & Co. KG and Contributors
+ * Copyright (c) 2009, 2022 Mountainminds GmbH & Co. KG and Contributors
  * This program and the accompanying materials are made available under
  * the terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0
@@ -40,9 +40,6 @@ import org.junit.Test;
 public abstract class ValidationTestBase {
 
 	protected static final boolean isJDKCompiler = Compiler.DETECT.isJDK();
-
-	protected static final JavaVersion JAVA_VERSION = new JavaVersion(
-			System.getProperty("java.version"));
 
 	private static final String[] STATUS_NAME = new String[4];
 
