@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2021 Mountainminds GmbH & Co. KG and Contributors
+ * Copyright (c) 2009, 2022 Mountainminds GmbH & Co. KG and Contributors
  * This program and the accompanying materials are made available under
  * the terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0
@@ -19,8 +19,16 @@ import java.util.ResourceBundle;
  */
 public final class JaCoCo {
 
-	/** Qualified build version of the JaCoCo core library. */
+	/** Qualified version of JaCoCo core. */
 	public static final String VERSION;
+
+	/** Commit ID of the source tree of JaCoCo core. */
+	public static final String COMMITID;
+
+	/**
+	 * Shortened (7 digit) commit ID of the source tree of JaCoCo core.
+	 */
+	public static final String COMMITID_SHORT;
 
 	/** Absolute URL of the current JaCoCo home page */
 	public static final String HOMEURL;
@@ -32,6 +40,8 @@ public final class JaCoCo {
 		final ResourceBundle bundle = ResourceBundle
 				.getBundle("org.jacoco.core.jacoco");
 		VERSION = bundle.getString("VERSION");
+		COMMITID = bundle.getString("COMMITID");
+		COMMITID_SHORT = COMMITID.substring(0, 7);
 		HOMEURL = bundle.getString("HOMEURL");
 		RUNTIMEPACKAGE = bundle.getString("RUNTIMEPACKAGE");
 	}
