@@ -14,6 +14,7 @@ package org.jacoco.core.internal.analysis.filter;
 
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.tree.AbstractInsnNode;
+import org.objectweb.asm.tree.FrameNode;
 import org.objectweb.asm.tree.JumpInsnNode;
 import org.objectweb.asm.tree.MethodNode;
 
@@ -52,6 +53,12 @@ public class KotlinLateinitFilter implements IFilter {
 				// we have an IFNONNULL instruction, we are already in die
 				// "null" branch and don't have to jump.
 				cursor = ((JumpInsnNode) start).label;
+			}
+
+			AbstractInsnNode optionalFrame = cursor.getNext();
+			if (optionalFrame != null && optionalFrame instanceof FrameNode
+					&& ((FrameNode) optionalFrame).type == Opcodes.F_SAME1) {
+				next();
 			}
 
 			AbstractInsnNode optionalPop = cursor.getNext();

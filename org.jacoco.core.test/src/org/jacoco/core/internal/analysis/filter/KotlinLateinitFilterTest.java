@@ -359,4 +359,43 @@ public class KotlinLateinitFilterTest extends FilterTestBase {
 
 		assertIgnored(new Range(expectedFrom, expectedTo));
 	}
+
+	/**
+	 * <pre>
+	 * class LateinitStringPublic {
+	 *     lateinit var member: String
+	 * }
+	 * </pre>
+	 *
+	 * Kotlin 1.7.21 contains an additional frame node before the option pop.
+	 */
+	@Test
+	public void should_filter_Kotlin_1_7_21() {
+		final MethodNode m = new MethodNode(InstrSupport.ASM_API_VERSION, 0,
+				"get", "()Ljava/lang/String;", null, null);
+		Label label = new Label();
+		m.visitVarInsn(Opcodes.ALOAD, 0);
+		m.visitFieldInsn(Opcodes.GETFIELD, "LateinitStringPublic", "member",
+				"Ljava/lang/String;");
+		m.visitInsn(Opcodes.DUP);
+		m.visitJumpInsn(Opcodes.IFNULL, label);
+		final AbstractInsnNode expectedFrom = m.instructions.getLast();
+		m.visitInsn(Opcodes.ARETURN);
+		m.visitLabel(label);
+		m.visitFrame(Opcodes.F_SAME1, 0, new Object[] {}, 1,
+				new String[] { "java/lang/String" });
+		m.visitInsn(Opcodes.POP);
+		m.visitLdcInsn("member");
+		m.visitMethodInsn(Opcodes.INVOKESTATIC,
+				"kotlin/jvm/internal/Intrinsics",
+				"throwUninitializedPropertyAccessException",
+				"(Ljava/lang/String;)V", false);
+		m.visitInsn(Opcodes.ACONST_NULL);
+		m.visitInsn(Opcodes.ARETURN);
+		final AbstractInsnNode expectedTo = m.instructions.getLast();
+
+		filter.filter(m, context, output);
+
+		assertIgnored(new Range(expectedFrom, expectedTo));
+	}
 }
