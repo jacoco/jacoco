@@ -14,8 +14,12 @@ package org.jacoco.core.internal.analysis.filter;
 
 import org.objectweb.asm.Handle;
 import org.objectweb.asm.Opcodes;
+import org.objectweb.asm.tree.FieldInsnNode;
 import org.objectweb.asm.tree.InvokeDynamicInsnNode;
 import org.objectweb.asm.tree.MethodNode;
+
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * Filters methods <code>toString</code>, <code>hashCode</code> and
@@ -29,8 +33,10 @@ public final class RecordsFilter implements IFilter {
 			return;
 		}
 		final Matcher matcher = new Matcher();
-		if (matcher.isEquals(methodNode) || matcher.isHashCode(methodNode)
-				|| matcher.isToString(methodNode)) {
+		if (matcher.isEquals(methodNode)
+				|| matcher.isHashCode(methodNode)
+				|| matcher.isToString(methodNode)
+				|| matcher.isFieldAccessor(methodNode)) {
 			output.ignore(methodNode.instructions.getFirst(),
 					methodNode.instructions.getLast());
 		}
@@ -56,6 +62,41 @@ public final class RecordsFilter implements IFilter {
 			nextIsInvokeDynamic("hashCode");
 			nextIs(Opcodes.IRETURN);
 			return cursor != null;
+		}
+
+		public static final List<Integer> ret = Arrays.asList(
+				Opcodes.IRETURN,
+				Opcodes.LRETURN,
+				Opcodes.FRETURN,
+				Opcodes.DRETURN,
+				Opcodes.ARETURN
+		);
+
+		/**
+		 * Criteria: method name == field name, only three instructions (aload0, getField, return),
+		 * and note that this class only happens in a record, so it's safe to assume that this is the
+		 * record field accessor generated.
+		 * It may happen that the code is explicitly written by the developer and is intentionally kept
+		 * the same as the default generated format, but that's just trivial code,
+		 * and it still makes sense to filter them out anyway.
+		 * <p>
+		 * Exception: if the code is compiled within IntelliJ IDEA's Java instrumentation,
+		 * there will be extra null-assertion instructions after the getField instruction.
+		 * This case is <emph>ignored</emph>.
+		 *
+		 * @see #ret
+		 */
+		boolean isFieldAccessor(final MethodNode m) {
+			// No parameter
+			if (!m.desc.startsWith("()")) {
+				return false;
+			}
+			firstIsALoad0(m);
+			nextIs(Opcodes.GETFIELD);
+			if (!(cursor instanceof FieldInsnNode)) return false;
+			if (!((FieldInsnNode) cursor).name.equals(m.name)) return false;
+			next();
+			return ret.contains(cursor.getOpcode());
 		}
 
 		boolean isEquals(final MethodNode m) {
