@@ -21,14 +21,14 @@ public class RecordsTarget {
 	record WithoutFields() { // assertFullyCovered()
 	}
 
-	record WithFields( // assertPartlyCovered()
-			int x // assertEmpty()
+	record WithFields( // assertFullyCovered()
+			int x // assertFullyCovered()
 	) {
 	}
 
 	record WithCustomMethods(int x) { // assertFullyCovered()
 		public int x() {
-			return x; // assertNotCovered()
+			return x; // assertFullyCovered()
 		}
 
 		public String toString() {
