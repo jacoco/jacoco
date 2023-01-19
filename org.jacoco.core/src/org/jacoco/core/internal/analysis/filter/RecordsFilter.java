@@ -33,8 +33,7 @@ public final class RecordsFilter implements IFilter {
 			return;
 		}
 		final Matcher matcher = new Matcher();
-		if (matcher.isEquals(methodNode)
-				|| matcher.isHashCode(methodNode)
+		if (matcher.isEquals(methodNode) || matcher.isHashCode(methodNode)
 				|| matcher.isToString(methodNode)
 				|| matcher.isFieldAccessor(methodNode)) {
 			output.ignore(methodNode.instructions.getFirst(),
