@@ -28,7 +28,7 @@ import java.util.List;
 public final class RecordsFilter implements IFilter {
 
 	public void filter(final MethodNode methodNode,
-			final IFilterContext context, final IFilterOutput output) {
+					   final IFilterContext context, final IFilterOutput output) {
 		if (!"java/lang/Record".equals(context.getSuperClassName())) {
 			return;
 		}
@@ -63,25 +63,22 @@ public final class RecordsFilter implements IFilter {
 			return cursor != null;
 		}
 
-		public static final List<Integer> ret = Arrays.asList(
-				Opcodes.IRETURN,
-				Opcodes.LRETURN,
-				Opcodes.FRETURN,
-				Opcodes.DRETURN,
-				Opcodes.ARETURN
-		);
+		public static final List<Integer> ret = Arrays.asList(Opcodes.IRETURN,
+				Opcodes.LRETURN, Opcodes.FRETURN, Opcodes.DRETURN,
+				Opcodes.ARETURN);
 
 		/**
-		 * Criteria: method name == field name, only three instructions (aload0, getField, return),
-		 * and note that this class only happens in a record, so it's safe to assume that this is the
-		 * record field accessor generated.
-		 * It may happen that the code is explicitly written by the developer and is intentionally kept
-		 * the same as the default generated format, but that's just trivial code,
-		 * and it still makes sense to filter them out anyway.
+		 * ·Criteria:·method·name·==·field·name,·only·three·instructions·(aload0,
+		 * ·getField,·return),·and·note·that·this·class·only·happens·in·a·record,
+		 * ·so·it's·safe·to·assume·that·this·is·the·record·field·accessor
+		 * ·generated.·It·may·happen·that·the·code·is·explicitly·written·by·the
+		 * ·developer·and·is·intentionally·kept·the·same·as·the·default·generated
+		 * ·format,·but·that's·just·trivial·code,·and·it·still·makes·sense·to
+		 * ·filter·them·out·anyway.
 		 * <p>
-		 * Exception: if the code is compiled within IntelliJ IDEA's Java instrumentation,
-		 * there will be extra null-assertion instructions after the getField instruction.
-		 * This case is <emph>ignored</emph>.
+		 *·Exception:·if·the·code·is·compiled·within·IntelliJ·IDEA's·Java
+		 *·instrumentation,·there·will·be·extra·null-assertion·instructions
+		 *·after·the·getField·instruction.·This·case·is·<emph>ignored</emph>.
 		 *
 		 * @see #ret
 		 */
