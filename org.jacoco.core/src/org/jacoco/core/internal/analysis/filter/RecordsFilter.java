@@ -28,7 +28,7 @@ import java.util.List;
 public final class RecordsFilter implements IFilter {
 
 	public void filter(final MethodNode methodNode,
-					   final IFilterContext context, final IFilterOutput output) {
+			final IFilterContext context, final IFilterOutput output) {
 		if (!"java/lang/Record".equals(context.getSuperClassName())) {
 			return;
 		}
