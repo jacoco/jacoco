@@ -22,13 +22,13 @@ public class RecordsTarget {
 	}
 
 	record WithFields( // assertFullyCovered()
-			int x // assertFullyCovered()
+			int x // assertEmpty()
 	) {
 	}
 
 	record WithCustomMethods(int x) { // assertFullyCovered()
 		public int x() {
-			return x; // assertFullyCovered()
+			return x; // assertEmpty()
 		}
 
 		public String toString() {
