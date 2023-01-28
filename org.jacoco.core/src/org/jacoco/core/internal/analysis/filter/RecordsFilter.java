@@ -28,7 +28,7 @@ import java.util.List;
 public final class RecordsFilter implements IFilter {
 
 	public void filter(final MethodNode methodNode,
-			final IFilterContext context, final IFilterOutput output) {
+					   final IFilterContext context, final IFilterOutput output) {
 		if (!"java/lang/Record".equals(context.getSuperClassName())) {
 			return;
 		}
@@ -63,10 +63,6 @@ public final class RecordsFilter implements IFilter {
 			return cursor != null;
 		}
 
-		public static final List<Integer> ret = Arrays.asList(Opcodes.IRETURN,
-				Opcodes.LRETURN, Opcodes.FRETURN, Opcodes.DRETURN,
-				Opcodes.ARETURN);
-
 		/**
 		 * Criteria: method name == field name, only three instructions (aload0,
 		 * getField, return), and note that this class only happens in a record,
@@ -79,8 +75,6 @@ public final class RecordsFilter implements IFilter {
 		 * Exception: if the code is compiled within IntelliJ IDEA's Java
 		 * instrumentation, there will be extra null-assertion instructions
 		 * after the getField instruction. This case is <emph>ignored</emph>.
-		 *
-		 * @see #ret
 		 */
 		boolean isFieldAccessor(final MethodNode m) {
 			// No parameter
@@ -94,7 +88,16 @@ public final class RecordsFilter implements IFilter {
 			if (!((FieldInsnNode) cursor).name.equals(m.name))
 				return false;
 			next();
-			return ret.contains(cursor.getOpcode());
+			switch (cursor.getOpcode()) {
+			case Opcodes.IRETURN:
+			case Opcodes.LRETURN:
+			case Opcodes.FRETURN:
+			case Opcodes.DRETURN:
+			case Opcodes.ARETURN:
+				return true;
+			default:
+				return false;
+			}
 		}
 
 		boolean isEquals(final MethodNode m) {
