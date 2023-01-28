@@ -18,9 +18,6 @@ import org.objectweb.asm.tree.FieldInsnNode;
 import org.objectweb.asm.tree.InvokeDynamicInsnNode;
 import org.objectweb.asm.tree.MethodNode;
 
-import java.util.Arrays;
-import java.util.List;
-
 /**
  * Filters methods <code>toString</code>, <code>hashCode</code> and
  * <code>equals</code> that compiler generates for records.
