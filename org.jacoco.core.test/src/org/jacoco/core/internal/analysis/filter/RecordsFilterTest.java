@@ -199,4 +199,19 @@ public class RecordsFilterTest extends FilterTestBase {
 
 		assertMethodIgnored(m);
 	}
+
+	@Test
+	public void should_not_filter_redirect_method() {
+		context.superClassName = "java/lang/Record";
+		final MethodNode m = new MethodNode(InstrSupport.ASM_API_VERSION, 0,
+				"foo", "()Ljava/lang/String;", null, null);
+		m.visitVarInsn(Opcodes.ALOAD, 0);
+		// The method name is different from the field name
+		m.visitFieldInsn(Opcodes.GETFIELD, "Dunno", "bar", "Ljava/lang/String");
+		m.visitInsn(Opcodes.LRETURN);
+
+		filter.filter(m, context, output);
+
+		assertIgnored();
+	}
 }
