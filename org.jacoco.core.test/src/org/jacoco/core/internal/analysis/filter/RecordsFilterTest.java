@@ -144,32 +144,6 @@ public class RecordsFilterTest extends FilterTestBase {
 	}
 
 	@Test
-	public void should_not_filter_field_int() {
-		context.superClassName = "java/lang/Record";
-		final MethodNode m = new MethodNode(InstrSupport.ASM_API_VERSION, 0,
-				"foo", "()Z", null, null);
-		m.visitInsn(Opcodes.GETFIELD);
-		m.visitInsn(Opcodes.IRETURN);
-
-		filter.filter(m, context, output);
-
-		assertIgnored();
-	}
-
-	@Test
-	public void should_not_filter_field_object() {
-		context.superClassName = "java/lang/Record";
-		final MethodNode m = new MethodNode(InstrSupport.ASM_API_VERSION, 0,
-				"foo", "()Ljava/lang/Object;", null, null);
-		m.visitInsn(Opcodes.GETFIELD);
-		m.visitInsn(Opcodes.LRETURN);
-
-		filter.filter(m, context, output);
-
-		assertIgnored();
-	}
-
-	@Test
 	public void should_not_filter_non_equals_method() {
 		context.superClassName = "java/lang/Record";
 		final MethodNode m = new MethodNode(InstrSupport.ASM_API_VERSION, 0,
@@ -198,4 +172,31 @@ public class RecordsFilterTest extends FilterTestBase {
 		assertIgnored();
 	}
 
+	@Test
+	public void should_filter_field_int() {
+		context.superClassName = "java/lang/Record";
+		final MethodNode m = new MethodNode(InstrSupport.ASM_API_VERSION, 0,
+				"foo", "()Z", null, null);
+		m.visitVarInsn(Opcodes.ALOAD, 0);
+		m.visitFieldInsn(Opcodes.GETFIELD, "Dunno", "foo", "Z");
+		m.visitInsn(Opcodes.IRETURN);
+
+		filter.filter(m, context, output);
+
+		assertMethodIgnored(m);
+	}
+
+	@Test
+	public void should_filter_field_object() {
+		context.superClassName = "java/lang/Record";
+		final MethodNode m = new MethodNode(InstrSupport.ASM_API_VERSION, 0,
+				"foo", "()Ljava/lang/String;", null, null);
+		m.visitVarInsn(Opcodes.ALOAD, 0);
+		m.visitFieldInsn(Opcodes.GETFIELD, "Dunno", "foo", "Ljava/lang/String");
+		m.visitInsn(Opcodes.LRETURN);
+
+		filter.filter(m, context, output);
+
+		assertMethodIgnored(m);
+	}
 }
