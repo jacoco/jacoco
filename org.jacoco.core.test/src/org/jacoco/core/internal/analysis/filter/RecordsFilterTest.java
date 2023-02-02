@@ -214,6 +214,7 @@ public class RecordsFilterTest extends FilterTestBase {
 
 		assertIgnored();
 	}
+
 	@Test
 	public void should_not_filter_noreturn_method() {
 		context.superClassName = "java/lang/Record";

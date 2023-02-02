@@ -85,7 +85,9 @@ public final class RecordsFilter implements IFilter {
 			if (!((FieldInsnNode) cursor).name.equals(m.name))
 				return false;
 			next();
-			if (cursor == null) return false;
+			if (cursor == null) {
+				return false;
+			}
 			switch (cursor.getOpcode()) {
 			case Opcodes.IRETURN:
 			case Opcodes.LRETURN:
