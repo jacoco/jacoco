@@ -214,4 +214,16 @@ public class RecordsFilterTest extends FilterTestBase {
 
 		assertIgnored();
 	}
+	@Test
+	public void should_not_filter_noreturn_method() {
+		context.superClassName = "java/lang/Record";
+		final MethodNode m = new MethodNode(InstrSupport.ASM_API_VERSION, 0,
+				"foo", "()Ljava/lang/String;", null, null);
+		m.visitVarInsn(Opcodes.ALOAD, 0);
+		m.visitFieldInsn(Opcodes.GETFIELD, "Dunno", "foo", "Ljava/lang/String");
+
+		filter.filter(m, context, output);
+
+		assertIgnored();
+	}
 }
