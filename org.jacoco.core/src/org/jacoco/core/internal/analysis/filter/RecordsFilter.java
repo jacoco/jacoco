@@ -80,10 +80,12 @@ public final class RecordsFilter implements IFilter {
 			}
 			firstIsALoad0(m);
 			nextIs(Opcodes.GETFIELD);
-			if (!(cursor instanceof FieldInsnNode))
+			if (!(cursor instanceof FieldInsnNode)) {
 				return false;
-			if (!((FieldInsnNode) cursor).name.equals(m.name))
+			}
+			if (!((FieldInsnNode) cursor).name.equals(m.name)) {
 				return false;
+			}
 			next();
 			if (cursor == null) {
 				return false;
