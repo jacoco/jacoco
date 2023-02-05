@@ -74,8 +74,8 @@ public final class RecordsFilter implements IFilter {
 		 * after the getField instruction. This case is <emph>ignored</emph>.
 		 */
 		boolean isFieldAccessor(final MethodNode m) {
-			// No parameter
 			if (!m.desc.startsWith("()")) {
+				// Method with parameter(s)
 				return false;
 			}
 			firstIsALoad0(m);
