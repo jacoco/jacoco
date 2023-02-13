@@ -55,6 +55,14 @@
           <extraArtifacts>
             <extraArtifact>org.jacoco:org.jacoco.agent:${project.version}:jar:runtime</extraArtifact>
           </extraArtifacts>
+          <properties>
+            <!--
+            maven-invoker-plugin for forked Maven invocations uses the same JDK that is used for Maven,
+            so can not use source level lower than 8 with modern JDKs
+            -->
+            <maven.compiler.source>8</maven.compiler.source>
+            <maven.compiler.target>8</maven.compiler.target>
+          </properties>
         </configuration>
         <executions>
           <execution>
