@@ -124,8 +124,12 @@
         <configuration>
           <projectsDirectory>${project.build.directory}/build/examples</projectsDirectory>
           <properties>
-            <maven.compiler.source>${maven.compiler.source}</maven.compiler.source>
-            <maven.compiler.target>${maven.compiler.target}</maven.compiler.target>
+            <!--
+            maven-invoker-plugin for forked Maven invocations uses the same JDK that is used for Maven,
+            so can not use source level lower than 8 with modern JDKs
+            -->
+            <maven.compiler.source>8</maven.compiler.source>
+            <maven.compiler.target>8</maven.compiler.target>
           </properties>
         </configuration>
       </plugin>
