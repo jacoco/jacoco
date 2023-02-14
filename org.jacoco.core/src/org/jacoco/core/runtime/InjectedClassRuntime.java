@@ -62,6 +62,8 @@ public class InjectedClassRuntime extends AbstractRuntime {
 	 * @param instrumentation
 	 *            instrumentation interface
 	 * @return new runtime instance
+	 * @throws Exception
+	 *             if unable to create
 	 */
 	public static IRuntime createFor(final Instrumentation instrumentation)
 			throws Exception {
