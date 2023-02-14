@@ -67,12 +67,17 @@ public class InjectedClassRuntime extends AbstractRuntime {
 	 *
 	 * @param instrumentation
 	 *            instrumentation interface
-	 * @return new runtime instance
+	 * @return new runtime instance, null if JVM version is lower than 9
 	 * @throws Exception
 	 *             if unable to create
 	 */
 	public static IRuntime createFor(final Instrumentation instrumentation)
 			throws Exception {
+		try {
+			Class.forName("java.lang.Module");
+		} catch (final ClassNotFoundException e) {
+			return null;
+		}
 		final ClassLoader classLoader = new ClassLoader() {
 			@Override
 			protected Class<?> loadClass(String name, boolean resolve)

@@ -55,23 +55,14 @@ public final class PreMain {
 	private static IRuntime createRuntime(final Instrumentation inst)
 			throws Exception {
 
-		final IRuntime injectedClassRuntime = createInjectedClassRuntime(inst);
+		final IRuntime injectedClassRuntime = InjectedClassRuntime
+				.createFor(inst);
 		if (injectedClassRuntime != null) {
 			return injectedClassRuntime;
 		}
 
 		return ModifiedSystemClassRuntime.createFor(inst,
 				"java/lang/UnknownError");
-	}
-
-	private static IRuntime createInjectedClassRuntime(
-			final Instrumentation instrumentation) throws Exception {
-		try {
-			Class.forName("java.lang.Module");
-		} catch (final ClassNotFoundException e) {
-			return null;
-		}
-		return InjectedClassRuntime.createFor(instrumentation);
 	}
 
 }
