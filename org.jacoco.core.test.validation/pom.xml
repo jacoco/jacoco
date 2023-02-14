@@ -351,7 +351,7 @@
       <properties>
         <!-- Kotlin 1.5.0 doesn't support compilation into 18 -->
         <kotlin.compiler.jvmTarget>16</kotlin.compiler.jvmTarget>
-        <!-- Groovy 3.0.8 does not support compilation into 18 -->
+        <!-- Groovy 3.0.13 does not support compilation into 18 -->
         <groovy.targetBytecode>16</groovy.targetBytecode>
         <!-- see respective profile in org.jacoco.build about this override -->
         <maven.compiler.source>18</maven.compiler.source>
@@ -363,9 +363,7 @@
         <module>../org.jacoco.core.test.validation.java8</module>
         <module>../org.jacoco.core.test.validation.java14</module>
         <module>../org.jacoco.core.test.validation.java16</module>
-        <!-- Groovy 3.0.8 does not support Java 18
         <module>../org.jacoco.core.test.validation.groovy</module>
-        -->
         <module>../org.jacoco.core.test.validation.scala</module>
       </modules>
     </profile>
@@ -381,7 +379,7 @@
       <properties>
         <!-- Kotlin 1.5.0 doesn't support compilation into 19 -->
         <kotlin.compiler.jvmTarget>16</kotlin.compiler.jvmTarget>
-        <!-- Groovy 3.0.8 does not support compilation into 19 -->
+        <!-- Groovy 3.0.13 does not support compilation into 19 -->
         <groovy.targetBytecode>16</groovy.targetBytecode>
         <!-- see respective profile in org.jacoco.build about this override -->
         <maven.compiler.source>19</maven.compiler.source>
@@ -393,9 +391,7 @@
         <module>../org.jacoco.core.test.validation.java8</module>
         <module>../org.jacoco.core.test.validation.java14</module>
         <module>../org.jacoco.core.test.validation.java16</module>
-        <!-- Groovy 3.0.8 does not support Java 19
         <module>../org.jacoco.core.test.validation.groovy</module>
-        -->
         <module>../org.jacoco.core.test.validation.scala</module>
       </modules>
     </profile>
@@ -411,7 +407,7 @@
       <properties>
         <!-- Kotlin 1.5.0 doesn't support compilation into 20 -->
         <kotlin.compiler.jvmTarget>16</kotlin.compiler.jvmTarget>
-        <!-- Groovy 3.0.8 does not support compilation into 20 -->
+        <!-- Groovy 3.0.13 does not support compilation into 20 -->
         <groovy.targetBytecode>16</groovy.targetBytecode>
         <!-- see respective profile in org.jacoco.build about this override -->
         <maven.compiler.source>20</maven.compiler.source>
@@ -423,12 +419,43 @@
         <module>../org.jacoco.core.test.validation.java8</module>
         <module>../org.jacoco.core.test.validation.java14</module>
         <module>../org.jacoco.core.test.validation.java16</module>
-        <!-- Groovy 3.0.8 does not support Java 20
+        <!-- Groovy 3.0.13 does not support Java 20
         <module>../org.jacoco.core.test.validation.groovy</module>
         -->
         <module>../org.jacoco.core.test.validation.scala</module>
       </modules>
     </profile>
+
+    <profile>
+      <id>java21-bytecode</id>
+      <activation>
+        <property>
+          <name>bytecode.version</name>
+          <value>21</value>
+        </property>
+      </activation>
+      <properties>
+        <!-- Kotlin 1.5.0 doesn't support compilation into 21 -->
+        <kotlin.compiler.jvmTarget>16</kotlin.compiler.jvmTarget>
+        <!-- Groovy 3.0.13 does not support compilation into 21 -->
+        <groovy.targetBytecode>16</groovy.targetBytecode>
+        <!-- see respective profile in org.jacoco.build about this override -->
+        <maven.compiler.source>21</maven.compiler.source>
+        <maven.compiler.target>21</maven.compiler.target>
+      </properties>
+      <modules>
+        <module>../org.jacoco.core.test.validation.kotlin</module>
+        <module>../org.jacoco.core.test.validation.java7</module>
+        <module>../org.jacoco.core.test.validation.java8</module>
+        <module>../org.jacoco.core.test.validation.java14</module>
+        <module>../org.jacoco.core.test.validation.java16</module>
+        <!-- Groovy 3.0.13 does not support Java 21
+        <module>../org.jacoco.core.test.validation.groovy</module>
+        -->
+        <module>../org.jacoco.core.test.validation.scala</module>
+      </modules>
+    </profile>
+
   </profiles>
 
 </project>
