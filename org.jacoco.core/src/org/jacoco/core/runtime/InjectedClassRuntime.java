@@ -57,7 +57,13 @@ public class InjectedClassRuntime extends AbstractRuntime {
 	}
 
 	/**
-	 * Creates a new {@link InjectedClassRuntime}.
+	 * Creates a new {@link InjectedClassRuntime} that will define class in the
+	 * {@code java.lang} package. To do so this method opens package
+	 * {@code java.lang} to the unnamed module of a new ClassLoader that is used
+	 * to create an instance of {@link InjectedClassRuntime}, so this <a href=
+	 * "https://docs.oracle.com/javase/specs/jvms/se11/html/jvms-5.html#jvms-5.3.6">
+	 * unnamed module is distinct from all run-time modules (including unnamed
+	 * modules) bound to other class loaders</a>.
 	 *
 	 * @param instrumentation
 	 *            instrumentation interface
