@@ -10,15 +10,15 @@ jobs:
         JDK_VERSION: 7
       JDK 8:
         JDK_VERSION: 8
-      JDK 8 with ECJ:
-        JDK_VERSION: 8
-        ECJ: true
       JDK 9:
         JDK_VERSION: 9
       JDK 10:
         JDK_VERSION: 10
       JDK 11:
         JDK_VERSION: 11
+      JDK 11 with ECJ:
+        JDK_VERSION: 11
+        ECJ: true
       JDK 12:
         JDK_VERSION: 12
       JDK 13:
@@ -31,10 +31,16 @@ jobs:
         JDK_VERSION: 16
       JDK 17:
         JDK_VERSION: 17
+      JDK 17 with ECJ:
+        JDK_VERSION: 17
+        ECJ: true
       JDK 18:
         JDK_VERSION: 18
       JDK 19:
         JDK_VERSION: 19
+      JDK 19 with ECJ:
+        JDK_VERSION: 19
+        ECJ: true
       JDK 20:
         JDK_VERSION: 20
       JDK 21:
