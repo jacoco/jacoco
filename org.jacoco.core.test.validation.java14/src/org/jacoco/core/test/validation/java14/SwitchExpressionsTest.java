@@ -12,6 +12,7 @@
  *******************************************************************************/
 package org.jacoco.core.test.validation.java14;
 
+import org.jacoco.core.test.validation.Source.Line;
 import org.jacoco.core.test.validation.ValidationTestBase;
 import org.jacoco.core.test.validation.java14.targets.SwitchExpressionsTarget;
 
@@ -22,6 +23,22 @@ public class SwitchExpressionsTest extends ValidationTestBase {
 
 	public SwitchExpressionsTest() {
 		super(SwitchExpressionsTarget.class);
+	}
+
+	public void assertExhaustiveSwitchExpression(Line line) {
+		if (isJDKCompiler) {
+			assertPartlyCovered(line, 1, 3);
+		} else {
+			assertFullyCovered(line, 1, 3);
+		}
+	}
+
+	public void assertExhaustiveSwitchExpressionLastCase(Line line) {
+		if (isJDKCompiler) {
+			assertFullyCovered(line);
+		} else {
+			assertPartlyCovered(line);
+		}
 	}
 
 }
