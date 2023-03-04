@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2022 Mountainminds GmbH & Co. KG and Contributors
+ * Copyright (c) 2009, 2023 Mountainminds GmbH & Co. KG and Contributors
  * This program and the accompanying materials are made available under
  * the terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0
@@ -21,7 +21,7 @@ import static org.jacoco.core.test.validation.targets.Stubs.nop;
 public class InstanceofTarget {
 
 	private static void ifInstanceof(Object e) {
-		if (e instanceof String s) { // assertFullyCovered(0, 2)
+		if (e instanceof String s) { // assertInstanceof()
 			nop(s);
 		}
 	}
