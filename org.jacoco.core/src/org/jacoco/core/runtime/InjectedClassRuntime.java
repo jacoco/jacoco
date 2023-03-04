@@ -91,7 +91,7 @@ public class InjectedClassRuntime extends AbstractRuntime {
 				final byte[] bytes;
 				try {
 					bytes = InputStreams.readFully(resourceAsStream);
-				} catch (IOException e) {
+				} catch (final IOException e) {
 					throw new RuntimeException(e);
 				}
 				return defineClass(name, bytes, 0, bytes.length);

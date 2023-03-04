@@ -19,12 +19,8 @@ public class IllegalReflectiveAccessTarget {
 
 	public static void main(String[] args) throws Exception {
 		try {
-			Class.forName("java.lang.invoke.MethodHandles$Lookup")
-					.getField("ORIGINAL");
+			Class.forName("java.net.UnixDomainSocketAddress");
 		} catch (ClassNotFoundException e) {
-			// Java < 7
-			return;
-		} catch (NoSuchFieldException e) {
 			// Java < 16
 			return;
 		}
