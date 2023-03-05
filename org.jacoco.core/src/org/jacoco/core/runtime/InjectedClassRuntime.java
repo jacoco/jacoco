@@ -12,17 +12,9 @@
  *******************************************************************************/
 package org.jacoco.core.runtime;
 
-import org.jacoco.core.internal.InputStreams;
 import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
-
-import java.io.IOException;
-import java.io.InputStream;
-import java.lang.instrument.Instrumentation;
-import java.util.Collections;
-import java.util.Map;
-import java.util.Set;
 
 /**
  * {@link IRuntime} which defines a new class using
@@ -54,71 +46,6 @@ public class InjectedClassRuntime extends AbstractRuntime {
 		this.locator = locator;
 		this.injectedClassName = locator.getPackage().getName().replace('.',
 				'/') + '/' + simpleClassName;
-	}
-
-	/**
-	 * Creates a new {@link InjectedClassRuntime} that will define class in the
-	 * {@code java.lang} package. To do so this method opens package
-	 * {@code java.lang} to the unnamed module of a new ClassLoader that is used
-	 * to create an instance of {@link InjectedClassRuntime}, so this <a href=
-	 * "https://docs.oracle.com/javase/specs/jvms/se11/html/jvms-5.html#jvms-5.3.6">
-	 * unnamed module is distinct from all run-time modules (including unnamed
-	 * modules) bound to other class loaders</a>.
-	 *
-	 * @param instrumentation
-	 *            instrumentation interface
-	 * @return new runtime instance, null if JVM version is lower than 9
-	 * @throws Exception
-	 *             if unable to create
-	 */
-	public static IRuntime createFor(final Instrumentation instrumentation)
-			throws Exception {
-		try {
-			Class.forName("java.lang.Module");
-		} catch (final ClassNotFoundException e) {
-			return null;
-		}
-		final ClassLoader classLoader = new ClassLoader() {
-			@Override
-			protected Class<?> loadClass(String name, boolean resolve)
-					throws ClassNotFoundException {
-				if (!name.equals(InjectedClassRuntime.class.getName())
-						&& !name.equals(Lookup.class.getName())) {
-					return super.loadClass(name, resolve);
-				}
-				final InputStream resourceAsStream = getResourceAsStream(
-						name.replace('.', '/') + ".class");
-				final byte[] bytes;
-				try {
-					bytes = InputStreams.readFully(resourceAsStream);
-				} catch (final IOException e) {
-					throw new RuntimeException(e);
-				}
-				return defineClass(name, bytes, 0, bytes.length);
-			}
-		};
-		Instrumentation.class.getMethod("redefineModule", //
-				Class.forName("java.lang.Module"), //
-				Set.class, //
-				Map.class, //
-				Map.class, //
-				Set.class, //
-				Map.class //
-		).invoke(instrumentation, // instance
-				Class.class.getMethod("getModule").invoke(Object.class), // module
-				Collections.emptySet(), // extraReads
-				Collections.emptyMap(), // extraExports
-				Collections.singletonMap("java.lang",
-						Collections.singleton(
-								ClassLoader.class.getMethod("getUnnamedModule")
-										.invoke(classLoader))), // extraOpens
-				Collections.emptySet(), // extraUses
-				Collections.emptyMap() // extraProvides
-		);
-		return (IRuntime) classLoader
-				.loadClass(InjectedClassRuntime.class.getName())
-				.getConstructor(Class.class, String.class)
-				.newInstance(Object.class, "$JaCoCo");
 	}
 
 	@Override
