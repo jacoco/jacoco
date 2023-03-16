@@ -7,7 +7,8 @@ install:
       curl -LsS "http://www.apache.org/dyn/closer.cgi?action=download&filename=maven/maven-3/3.3.9/binaries/apache-maven-3.3.9-bin.zip" > apache-maven-3.3.9-bin.zip &&
       unzip apache-maven-3.3.9-bin.zip -d C:\Users\appveyor
     )
-  - SET PATH=C:\Users\appveyor\apache-maven-3.3.9\bin;%PATH%
+  - SET JAVA_HOME=C:\Program Files\Java\jdk11
+  - SET PATH=C:\Users\appveyor\apache-maven-3.3.9\bin;%JAVA_HOME%;%PATH%
 
 build_script:
   # Maven 3.3.9 requires Java >= 7, but generation of Javadocs requires Java <= 6 (https://github.com/jacoco/jacoco/issues/110)

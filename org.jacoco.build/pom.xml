@@ -531,7 +531,7 @@
             <configuration>
               <rules>
                 <requireJavaVersion>
-                  <version>1.8</version>
+                  <version>11</version>
                 </requireJavaVersion>
                 <requireMavenVersion>
                   <!-- Maven 3.8.2 contains bug - see https://github.com/jacoco/jacoco/issues/1218 -->
