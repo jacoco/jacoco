@@ -8,9 +8,10 @@
  *
  * Contributors:
  *    Evgeny Mandrikov - initial API and implementation
+ *    Marc R. Hoffmann - move to separate class
  *
  *******************************************************************************/
-package org.jacoco.core.runtime;
+package org.jacoco.agent.rt.internal;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -24,7 +25,7 @@ import org.jacoco.core.internal.InputStreams;
 
 /**
  * An isolated class loader and distinct module to encapsulate JaCoCo runtime
- * classes. This isolated environments allows to specifically open JDK packages
+ * classes. This isolated environment allows to specifically open JDK packages
  * to the agent runtime without changing package accessibility for the
  * application under test.
  * <p>
@@ -80,6 +81,8 @@ public class AgentModule {
 	}
 
 	/**
+	 * Opens the package of the provided class to the module created in this
+	 * {@link #AgentModule()} instance.
 	 *
 	 * @param instrumentation
 	 *            service provided to the agent by the Java runtime
