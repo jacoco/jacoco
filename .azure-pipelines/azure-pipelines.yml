@@ -78,7 +78,7 @@ jobs:
       tar -xzf .maven/maven.tar.gz -C .maven --strip-components 1
     displayName: Setup Maven
   - bash: |
-      if [[ "$JDK_VERSION" -ge "8" ]]; then
+      if [[ "$JDK_VERSION" -ge "11" ]]; then
         export JAVA_HOME=$PWD/.jdk
       fi
       if [[ "$BUILD_SOURCEBRANCH" == "refs/heads/master" && "$JDK_VERSION" == "5" ]]; then
