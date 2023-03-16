@@ -65,6 +65,15 @@ public final class JavaVersion {
 	}
 
 	/**
+	 * @param version
+	 *            version to compare with
+	 * @return <code>true</code> if this version is greater or equals than given
+	 */
+	public boolean isAtLeast(final String version) {
+		return !isBefore(version);
+	}
+
+	/**
 	 * @return version of the current JVM
 	 */
 	public static JavaVersion current() {
