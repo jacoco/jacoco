@@ -21,7 +21,7 @@ import static org.jacoco.core.test.validation.targets.Stubs.nop;
 public class InstanceofTarget {
 
 	private static void ifInstanceof(Object e) {
-if (e instanceof String s) { // assertInstanceof()
+		if (e instanceof String s) { // assertInstanceof()
 			nop(s);
 		}
 	}
