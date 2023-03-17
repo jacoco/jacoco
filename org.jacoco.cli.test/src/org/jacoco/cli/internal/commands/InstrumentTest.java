@@ -70,7 +70,7 @@ public class InstrumentTest extends CommandTestBase {
 		// non class-file resources are copied:
 		assertTrue(new File(destdir,
 				"org/jacoco/cli/internal/commands/test-resource.properties")
-						.isFile());
+				.isFile());
 
 		assertInstrumented(new File(destdir,
 				"org/jacoco/cli/internal/commands/InstrumentTest.class"));

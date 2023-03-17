@@ -124,7 +124,7 @@ public class ReportTest extends CommandTestBase {
 				"org.jacoco.cli.internal.commands/ReportTest.html").isFile());
 		assertTrue(new File(html,
 				"org.jacoco.cli.internal.commands/ReportTest.java.html")
-						.isFile());
+				.isFile());
 	}
 
 	@Test
