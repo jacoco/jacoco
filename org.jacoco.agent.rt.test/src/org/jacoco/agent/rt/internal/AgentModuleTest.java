@@ -12,45 +12,28 @@
  *******************************************************************************/
 package org.jacoco.agent.rt.internal;
 
-import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotSame;
 import static org.junit.Assert.assertSame;
-import static org.junit.Assert.assertTrue;
 
 import org.jacoco.core.test.validation.JavaVersion;
-import org.junit.AssumptionViolatedException;
 import org.junit.Test;
 
 /**
  * Unit tests for {@link AgentModule}.
  */
-public class AgentModulTest {
+public class AgentModuleTest {
 
 	@Test
 	public void isSupported_should_return_false_before_Java9() {
-		if (JavaVersion.current().isAtLeast("9")) {
-			throw new AssumptionViolatedException(
-					"Modules available after Java 9");
-		}
-		assertFalse(AgentModule.isSupported());
-	}
-
-	@Test
-	public void isSupported_should_return_true_for_Java9_or_greater() {
-		if (JavaVersion.current().isBefore("9")) {
-			throw new AssumptionViolatedException(
-					"Modules only available after Java 9");
-		}
-		assertTrue(AgentModule.isSupported());
+		Boolean expected = Boolean
+				.valueOf(!JavaVersion.current().isBefore("9"));
+		Boolean supported = Boolean.valueOf(AgentModule.isSupported());
+		assertEquals(expected, supported);
 	}
 
 	@Test
 	public void should_only_load_classes_in_scope() throws Exception {
-		if (JavaVersion.current().isBefore("9")) {
-			throw new AssumptionViolatedException(
-					"Modules only available after Java 9");
-		}
-
 		AgentModule am = new AgentModule();
 		Class<? extends Target> targetclass = am
 				.loadClassInModule(TargetImpl.class);
@@ -58,6 +41,8 @@ public class AgentModulTest {
 
 		assertNotSame(this.getClass().getClassLoader(),
 				t.getClass().getClassLoader());
+		assertSame(t.getClass().getClassLoader(),
+				t.getInnerClassInstance().getClass().getClassLoader());
 		assertNotSame(this.getClass().getClassLoader(),
 				t.getInnerClassInstance().getClass().getClassLoader());
 		assertSame(this.getClass().getClassLoader(),

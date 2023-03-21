@@ -59,11 +59,4 @@ public class JavaVersionTest {
 		assertFalse(new JavaVersion("9.0.1").isBefore("1.8.0_92"));
 	}
 
-	@Test
-	public void isAtLeast_should_compare_with_given_version() {
-		assertFalse(new JavaVersion("1.7.0_80").isAtLeast("1.8.0_92"));
-		assertTrue(new JavaVersion("1.8.0_92").isAtLeast("1.8.0_92"));
-		assertTrue(new JavaVersion("17.0.4").isAtLeast("11"));
-	}
-
 }
