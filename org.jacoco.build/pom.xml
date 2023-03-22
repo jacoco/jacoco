@@ -470,7 +470,7 @@
         <plugin>
           <groupId>com.diffplug.spotless</groupId>
           <artifactId>spotless-maven-plugin</artifactId>
-          <version>1.24.3</version>
+          <version>2.35.0</version>
        </plugin>
       </plugins>
     </pluginManagement>
@@ -531,7 +531,7 @@
             <configuration>
               <rules>
                 <requireJavaVersion>
-                  <version>1.8</version>
+                  <version>11</version>
                 </requireJavaVersion>
                 <requireMavenVersion>
                   <!-- Maven 3.8.2 contains bug - see https://github.com/jacoco/jacoco/issues/1218 -->
@@ -562,7 +562,7 @@
               <include>src/**/*.java</include>
             </includes>
             <eclipse>
-              <version>4.12.0</version>
+              <version>4.27</version>
               <file>../org.jacoco.core/.settings/org.eclipse.jdt.core.prefs</file>
             </eclipse>
             <trimTrailingWhitespace/>
