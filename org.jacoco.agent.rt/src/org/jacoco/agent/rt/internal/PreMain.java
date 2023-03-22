@@ -55,10 +55,13 @@ public final class PreMain {
 	private static IRuntime createRuntime(final Instrumentation inst)
 			throws Exception {
 
-		final IRuntime injectedClassRuntime = InjectedClassRuntime
-				.createFor(inst);
-		if (injectedClassRuntime != null) {
-			return injectedClassRuntime;
+		if (AgentModule.isSupported()) {
+			final AgentModule module = new AgentModule();
+			module.openPackage(inst, Object.class);
+			final Class<InjectedClassRuntime> clazz = module
+					.loadClassInModule(InjectedClassRuntime.class);
+			return clazz.getConstructor(Class.class, String.class)
+					.newInstance(Object.class, "$JaCoCo");
 		}
 
 		return ModifiedSystemClassRuntime.createFor(inst,
