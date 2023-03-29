@@ -14,7 +14,7 @@
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
-  <groupId>org.jacoco</groupId>
+  <groupId>za.co.absa.jacoco</groupId>
   <artifactId>org.jacoco.examples.maven</artifactId>
   <version>@project.version@</version>
   <packaging>jar</packaging>
@@ -31,7 +31,7 @@
     </dependency>
     <dependency>
       <!-- must be on the classpath -->
-      <groupId>org.jacoco</groupId>
+      <groupId>za.co.absa.jacoco</groupId>
       <artifactId>org.jacoco.agent</artifactId>
       <classifier>runtime</classifier>
       <version>@project.version@</version>
@@ -47,7 +47,7 @@
   <build>
     <plugins>
       <plugin>
-        <groupId>org.jacoco</groupId>
+        <groupId>za.co.absa.jacoco</groupId>
         <artifactId>jacoco-maven-plugin</artifactId>
         <version>@project.version@</version>
         <executions>
