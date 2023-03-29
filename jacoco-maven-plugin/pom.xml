@@ -15,7 +15,7 @@
   <modelVersion>4.0.0</modelVersion>
 
   <parent>
-    <groupId>org.jacoco</groupId>
+    <groupId>za.co.absa.jacoco</groupId>
     <artifactId>org.jacoco.build</artifactId>
     <version>0.8.9-SNAPSHOT</version>
     <relativePath>../org.jacoco.build</relativePath>

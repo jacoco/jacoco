@@ -31,7 +31,7 @@ public abstract class AbstractAgentMojo extends AbstractJacocoMojo {
 	/**
 	 * Name of the JaCoCo Agent artifact.
 	 */
-	static final String AGENT_ARTIFACT_NAME = "org.jacoco:org.jacoco.agent";
+	static final String AGENT_ARTIFACT_NAME = "za.co.absa.jacoco:org.jacoco.agent";
 	/**
 	 * Name of the property used in maven-osgi-test-plugin.
 	 */
