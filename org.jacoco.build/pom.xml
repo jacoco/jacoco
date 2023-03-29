@@ -102,13 +102,13 @@
   </modules>
 
   <scm>
-    <connection>scm:git:git://github.com/jacoco/jacoco.git</connection>
-    <developerConnection>scm:git:ssh://git@github.com:jacoco/jacoco.git</developerConnection>
-    <url>https://github.com/jacoco/jacoco</url>
+    <connection>scm:git:git://github.com/AbsaOSS/jacoco.git</connection>
+    <developerConnection>scm:git:ssh://git@github.com:AbsaOSS/jacoco.git</developerConnection>
+    <url>https://github.com/AbsaOSS/jacoco</url>
   </scm>
   <issueManagement>
     <system>GitHub</system>
-    <url>https://github.com/jacoco/jacoco/issues</url>
+    <url>https://github.com/AbsaOSS/jacoco/issues</url>
   </issueManagement>
   <distributionManagement>
     <repository>
@@ -737,7 +737,7 @@
               org.objectweb.asm.*;version="${range;[===,=+);${asm.version}}"
             </Import-Package>
             <Bundle-RequiredExecutionEnvironment>J2SE-1.5</Bundle-RequiredExecutionEnvironment>
-            <Eclipse-SourceReferences>scm:git:git://github.com/jacoco/jacoco.git;path="${project.artifactId}";commitId=${buildNumber}</Eclipse-SourceReferences>
+            <Eclipse-SourceReferences>scm:git:git://github.com/AbsaOSS/jacoco.git;path="${project.artifactId}";commitId=${buildNumber}</Eclipse-SourceReferences>
           </instructions>
         </configuration>
       </plugin>

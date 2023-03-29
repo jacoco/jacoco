@@ -1,3 +1,3 @@
 PLEASE USE ONE OF THE FOLLOWING TEMPLATES
 
-https://github.com/jacoco/jacoco/issues/new/choose
+https://github.com/AbsaOSS/jacoco/issues/new/choose
