@@ -610,7 +610,7 @@
             </goals>
             <configuration>
               <target>
-                <fileset dir="${basedir}" includes="**/*.java,**/*.xml,**/*.bsh" excludes="target/**,.idea/**,nb-configuration.xml" id="missinglicense.fileset">
+                <fileset dir="${basedir}" includes="**/*.java,**/*.xml,**/*.bsh" excludes="target/**,.idea/**,nb-configuration.xml,src/test/resources/**" id="missinglicense.fileset">
                   <include name="**/*.kt"/>
                   <include name="**/*.groovy"/>
                   <include name="**/*.scala"/>

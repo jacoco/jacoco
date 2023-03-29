@@ -153,6 +153,12 @@ public abstract class AbstractReportMojo extends AbstractMojo
 
 	abstract File getOutputDirectory();
 
+	abstract boolean canDoMethodFiltration();
+
+	abstract boolean isScalaMethodFiltrationRequired();
+
+	abstract File getSourceRootDir();
+
 	public void generate(
 			@SuppressWarnings("deprecation") final org.codehaus.doxia.sink.Sink sink,
 			final Locale locale) throws MavenReportException {
@@ -187,7 +193,9 @@ public abstract class AbstractReportMojo extends AbstractMojo
 	private void executeReport(final Locale locale)
 			throws MavenReportException {
 		try {
-			final ReportSupport support = new ReportSupport(getLog());
+			final ReportSupport support = new ReportSupport(getLog(),
+					canDoMethodFiltration(), getSourceRootDir(),
+					isScalaMethodFiltrationRequired());
 			loadExecutionData(support);
 			addFormatters(support, locale);
 			final IReportVisitor visitor = support.initRootVisitor();

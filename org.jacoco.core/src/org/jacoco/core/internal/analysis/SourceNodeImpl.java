@@ -100,6 +100,16 @@ public class SourceNodeImpl extends CoverageNodeImpl implements ISourceNode {
 		}
 	}
 
+	public void decrement(final ISourceNode child) {
+		instructionCounter = instructionCounter
+				.decrement(child.getInstructionCounter());
+		branchCounter = branchCounter.decrement(child.getBranchCounter());
+		complexityCounter = complexityCounter
+				.decrement(child.getComplexityCounter());
+		methodCounter = methodCounter.decrement(child.getMethodCounter());
+		classCounter = classCounter.decrement(child.getClassCounter());
+	}
+
 	/**
 	 * Increments instructions and branches by the given counter values. If a
 	 * optional line number is specified the instructions and branches are added

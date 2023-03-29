@@ -26,10 +26,7 @@ import java.util.List;
 
 import org.apache.maven.plugin.logging.Log;
 import org.apache.maven.project.MavenProject;
-import org.jacoco.core.analysis.Analyzer;
-import org.jacoco.core.analysis.CoverageBuilder;
-import org.jacoco.core.analysis.IBundleCoverage;
-import org.jacoco.core.analysis.IClassCoverage;
+import org.jacoco.core.analysis.*;
 import org.jacoco.core.tools.ExecFileLoader;
 import org.jacoco.report.IReportGroupVisitor;
 import org.jacoco.report.IReportVisitor;
@@ -58,6 +55,10 @@ final class ReportSupport {
 	private final ExecFileLoader loader;
 	private final List<IReportVisitor> formatters;
 
+	private final boolean doMethodFiltration;
+	private final File sourceRootDir;
+	private final boolean doMethodFiltrationScala;
+
 	/**
 	 * Construct a new instance with the given log output.
 	 *
@@ -68,6 +69,19 @@ final class ReportSupport {
 		this.log = log;
 		this.loader = new ExecFileLoader();
 		this.formatters = new ArrayList<IReportVisitor>();
+		this.doMethodFiltration = false;
+		this.sourceRootDir = new File(".");
+		this.doMethodFiltrationScala = false;
+	}
+
+	public ReportSupport(final Log log, final boolean doMethodFiltration,
+			final File sourceRootDir, final boolean doScalaMethodFiltration) {
+		this.log = log;
+		this.loader = new ExecFileLoader();
+		this.formatters = new ArrayList<IReportVisitor>();
+		this.doMethodFiltration = doMethodFiltration;
+		this.sourceRootDir = sourceRootDir;
+		this.doMethodFiltrationScala = doScalaMethodFiltration;
 	}
 
 	/**
@@ -170,7 +184,28 @@ final class ReportSupport {
 		final IBundleCoverage bundle = builder.getBundle(bundleName);
 		logBundleInfo(bundle, builder.getNoMatchClasses());
 
-		visitor.visitBundle(bundle, locator);
+		log.info(String.format(
+				"Do method filtration: '%b', source root dir: '%s'",
+				doMethodFiltration, sourceRootDir.toURI()));
+
+		if (doMethodFiltration && sourceRootDir.exists()) {
+			final IBundleCoverage bundleMethodFiltered;
+
+			if (doMethodFiltrationScala) {
+				log.info("Scala method filter applied.");
+				bundleMethodFiltered = new CoverageBundleMethodFilterScalaImpl()
+						.filterMethods(bundle, this.sourceRootDir);
+			} else {
+				// no method filtering - any filter logic active
+				log.info(
+						"No method filter applied. No filtering logic active.");
+				bundleMethodFiltered = bundle;
+			}
+
+			visitor.visitBundle(bundleMethodFiltered, locator);
+		} else {
+			visitor.visitBundle(bundle, locator);
+		}
 	}
 
 	private void logBundleInfo(final IBundleCoverage bundle,
