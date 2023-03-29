@@ -46,9 +46,38 @@ public class ReportMojo extends AbstractReportMojo {
 	@Parameter(property = "jacoco.dataFile", defaultValue = "${project.build.directory}/jacoco.exec")
 	private File dataFile;
 
+	/**
+	 * If true method filtering logic will be performed.
+	 */
+	@Parameter(property = "do.method.filtration", defaultValue = "false")
+	private Boolean doMethodFiltration;
+
+	/**
+	 * If defined used as root path for analysis of class sources, otherwise
+	 * method filtering logic will be skipped.
+	 */
+	@Parameter(property = "src.root.dir", defaultValue = "${project.build.directory}/../src/main/scala")
+	private File srcRootDir;
+
+	/**
+	 * Activate method filtering logic for scala source files.
+	 */
+	@Parameter(property = "do.method.filtration.scala", defaultValue = "false")
+	private Boolean doScalaMethodFiltration;
+
 	@Override
 	boolean canGenerateReportRegardingDataFiles() {
 		return dataFile.exists();
+	}
+
+	@Override
+	boolean canDoMethodFiltration() {
+		return doMethodFiltration;
+	}
+
+	@Override
+	boolean isScalaMethodFiltrationRequired() {
+		return doScalaMethodFiltration;
 	}
 
 	@Override
@@ -64,6 +93,11 @@ public class ReportMojo extends AbstractReportMojo {
 	@Override
 	File getOutputDirectory() {
 		return outputDirectory;
+	}
+
+	@Override
+	File getSourceRootDir() {
+		return srcRootDir;
 	}
 
 	@Override

@@ -80,6 +80,24 @@ public class CoverageNodeImpl implements ICoverageNode {
 	}
 
 	/**
+	 * Decrements the counters by the values given by another element.
+	 *
+	 * @param child
+	 *            counters to remove
+	 */
+	public void decrement(final ICoverageNode child) {
+		instructionCounter = instructionCounter
+				.decrement(child.getInstructionCounter());
+		branchCounter = branchCounter.decrement(child.getBranchCounter());
+		// for scala code this metric cannot be simply decremented
+		// lineCounter = lineCounter.decrement(child.getLineCounter());
+		complexityCounter = complexityCounter
+				.decrement(child.getComplexityCounter());
+		methodCounter = methodCounter.decrement(child.getMethodCounter());
+		classCounter = classCounter.decrement(child.getClassCounter());
+	}
+
+	/**
 	 * Increments the counters by the values given by the collection of
 	 * elements.
 	 *
@@ -89,6 +107,12 @@ public class CoverageNodeImpl implements ICoverageNode {
 	public void increment(final Collection<? extends ICoverageNode> children) {
 		for (final ICoverageNode child : children) {
 			increment(child);
+		}
+	}
+
+	public void decrement(final Collection<? extends ICoverageNode> children) {
+		for (final ICoverageNode child : children) {
+			decrement(child);
 		}
 	}
 

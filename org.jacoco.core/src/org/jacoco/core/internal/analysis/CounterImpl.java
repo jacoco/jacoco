@@ -58,6 +58,18 @@ public abstract class CounterImpl implements ICounter {
 			this.covered += covered;
 			return this;
 		}
+
+		@Override
+		public CounterImpl decrement(final int missed, final int covered) {
+			this.missed -= missed;
+			this.covered -= covered;
+
+			if (this.missed < 0)
+				System.out.println("Var detected missed lower than zero");
+			if (this.covered < 0)
+				System.out.println("Var detected covered lower than zero");
+			return this;
+		}
 	}
 
 	/**
@@ -71,6 +83,27 @@ public abstract class CounterImpl implements ICounter {
 		@Override
 		public CounterImpl increment(final int missed, final int covered) {
 			return getInstance(this.missed + missed, this.covered + covered);
+		}
+
+		@Override
+		public CounterImpl decrement(final int missed, final int covered) {
+			int nMissed = this.missed - missed;
+			int nCovered = this.covered - covered;
+
+			if (nMissed < 0) {
+				nMissed = 0;
+				System.out.println(String.format(
+						"Received(Missed) %d missed and %d covered", missed,
+						covered));
+			}
+			if (nCovered < 0) {
+				nCovered = 0;
+				System.out.println(String.format(
+						"Received(Covered) %d missed and %d covered", missed,
+						covered));
+			}
+
+			return getInstance(nMissed, nCovered);
 		}
 	}
 
@@ -134,6 +167,10 @@ public abstract class CounterImpl implements ICounter {
 		return increment(counter.getMissedCount(), counter.getCoveredCount());
 	}
 
+	public CounterImpl decrement(final ICounter counter) {
+		return decrement(counter.getMissedCount(), counter.getCoveredCount());
+	}
+
 	/**
 	 * Returns a counter with values incremented by the given numbers. It is up
 	 * to the implementation whether this counter instance is modified or a new
@@ -146,6 +183,8 @@ public abstract class CounterImpl implements ICounter {
 	 * @return counter instance with incremented values
 	 */
 	public abstract CounterImpl increment(int missed, int covered);
+
+	public abstract CounterImpl decrement(int missed, int covered);
 
 	// === ICounter implementation ===
 

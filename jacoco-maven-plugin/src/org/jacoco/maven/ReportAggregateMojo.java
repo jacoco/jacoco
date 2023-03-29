@@ -136,6 +136,18 @@ public class ReportAggregateMojo extends AbstractReportMojo {
 		return outputDirectory;
 	}
 
+	boolean canDoMethodFiltration() {
+		return false;
+	}
+
+	boolean isScalaMethodFiltrationRequired() {
+		return false;
+	}
+
+	File getSourceRootDir() {
+		return new File(".");
+	}
+
 	@Override
 	void createReport(final IReportGroupVisitor visitor,
 			final ReportSupport support) throws IOException {
