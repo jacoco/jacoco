@@ -75,7 +75,7 @@ final class ReportSupport {
 	}
 
 	public ReportSupport(final Log log, final boolean doMethodFiltration,
-						 final File sourceRootDir, final boolean doScalaMethodFiltration) {
+			final File sourceRootDir, final boolean doScalaMethodFiltration) {
 		this.log = log;
 		this.loader = new ExecFileLoader();
 		this.formatters = new ArrayList<IReportVisitor>();
@@ -184,17 +184,21 @@ final class ReportSupport {
 		final IBundleCoverage bundle = builder.getBundle(bundleName);
 		logBundleInfo(bundle, builder.getNoMatchClasses());
 
-		log.info(String.format("Do method filtration: '%b', source root dir: '%s'", doMethodFiltration, sourceRootDir.toURI()));
+		log.info(String.format(
+				"Do method filtration: '%b', source root dir: '%s'",
+				doMethodFiltration, sourceRootDir.toURI()));
 
 		if (doMethodFiltration && sourceRootDir.exists()) {
 			final IBundleCoverage bundleMethodFiltered;
 
 			if (doMethodFiltrationScala) {
 				log.info("Scala method filter applied.");
-				bundleMethodFiltered = new CoverageBundleMethodFilterScalaImpl().filterMethods(bundle, this.sourceRootDir);
+				bundleMethodFiltered = new CoverageBundleMethodFilterScalaImpl()
+						.filterMethods(bundle, this.sourceRootDir);
 			} else {
 				// no method filtering - any filter logic active
-				log.info("No method filter applied. No filtering logic active.");
+				log.info(
+						"No method filter applied. No filtering logic active.");
 				bundleMethodFiltered = bundle;
 			}
 

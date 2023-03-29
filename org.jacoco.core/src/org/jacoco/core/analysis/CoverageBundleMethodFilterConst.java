@@ -40,8 +40,7 @@ public interface CoverageBundleMethodFilterConst {
 	String STYPE_ENUM = "enum";
 
 	List<String> supportedExtensions = new ArrayList<>(
-			Collections.singletonList("scala")
-	);
+			Collections.singletonList("scala"));
 
 	List<String> validExceptions = new ArrayList<>(
 			// '<init>' .. class constructor

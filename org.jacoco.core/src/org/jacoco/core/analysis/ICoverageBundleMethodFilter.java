@@ -17,5 +17,5 @@ import java.io.File;
 public interface ICoverageBundleMethodFilter {
 
 	IBundleCoverage filterMethods(IBundleCoverage bundleCoverage,
-                                  File classesRootDir);
+			File classesRootDir);
 }
