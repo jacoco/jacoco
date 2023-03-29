@@ -11,7 +11,7 @@ install:
   - SET PATH=C:\Users\appveyor\apache-maven-3.3.9\bin;%JAVA_HOME%;%PATH%
 
 build_script:
-  # Maven 3.3.9 requires Java >= 7, but generation of Javadocs requires Java <= 6 (https://github.com/jacoco/jacoco/issues/110)
+  # Maven 3.3.9 requires Java >= 7, but generation of Javadocs requires Java <= 6 (https://github.com/AbsaOSS/jacoco/issues/110)
   - mvn -V -B -e verify -Djdk.version=6 --toolchains=.travis\appveyor-toolchains.xml
 
 artifacts:
