@@ -67,3 +67,60 @@ Suggestion for usage:
 - Generate two JaCoCo reports: switched on/off method filtration.
 - Do comparison of results.
 - **If you identify missing method after filtration collect inputs and provide them to us to improved logic.**
+
+## How to use locally
+Until Scala method filtering solution will be available in official library. You can use this workaround.
+
+### How to get library with filtering logic
+- Checkout this repository.
+- Call `mvn install` in repository root dir.
+- New snapshots should be available on path `$HOME/.m2/repository/za/co/absa/jacoco/*`
+
+### How to use library in maven project
+- Optional: add new version property in your `pom.xml` file
+```
+    <jacoco.version>0.8.9-SNAPSHOT</jacoco.version>
+```
+- add new `profile` section in your `pom.xml` file
+```
+<profile>
+    <id>code-coverage</id>
+    <properties>
+        <scalatest.argLine>${default.scalatest.argLine} ${argLine}</scalatest.argLine>
+        <skip.integration.tests>false</skip.integration.tests>
+        <skip.unit.tests>false</skip.unit.tests>
+    </properties>
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>za.co.absa.jacoco</groupId>
+                <artifactId>jacoco-maven-plugin</artifactId>
+                <version>${jacoco.version}</version>
+                <executions>
+                    <execution>
+                        <id>jacoco-prepare-agent</id>
+                        <goals>
+                            <goal>prepare-agent</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>jacoco-report</id>
+                        <goals>
+                            <goal>report</goal>
+                        </goals>
+                        <configuration>
+                            <title>${project.name} - ${scala.version}</title>
+                            <doMethodFiltration>true</doMethodFiltration>
+                            <doScalaMethodFiltration>true</doScalaMethodFiltration>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+</profile>
+```
+- to activate JaCoCo report generation call `mvn clean verify -Pcode-coverage`
+
+### How to use library in sbt project
+- For JaCoCo with sbt continue with steps in project [AbsaOSS/sbt-jacoco](https://github.com/AbsaOSS/sbt-jacoco)
