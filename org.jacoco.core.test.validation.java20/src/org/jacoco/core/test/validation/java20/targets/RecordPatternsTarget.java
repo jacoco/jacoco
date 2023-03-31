@@ -31,8 +31,8 @@ public class RecordPatternsTarget {
 
 	private static void switchStatement(Object p) {
 		switch (p) { // assertFullyCovered(0, 2)
-		case Point(int x, int y) -> nop(x + y); // assertFullyCovered()
-		default -> nop(); // assertPartlyCovered()
+		case Point(int x, int y) -> nop(x + y); // assertSwitchStatementCase()
+		default -> nop(); // assertSwitchStatementDefault()
 		} // assertEmpty()
 	}
 
