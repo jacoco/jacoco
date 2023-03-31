@@ -25,15 +25,4 @@ public class InstanceofTest extends ValidationTestBase {
 		super(InstanceofTarget.class);
 	}
 
-	public void assertInstanceof(Line line) {
-		if (isJDKCompiler) {
-			assertFullyCovered(line, 0, 2);
-		} else {
-			// Upgrade to ECJ version with
-			// https://github.com/eclipse-jdt/eclipse.jdt.core/commit/3b4c932227240d090904e141a485ba9181a79b67
-			// will lead to the absence of missed branches
-			assertFullyCovered(line, 1, 3);
-		}
-	}
-
 }
