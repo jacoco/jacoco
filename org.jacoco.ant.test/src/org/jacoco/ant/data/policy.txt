@@ -1,0 +1,3 @@
+grant codeBase "file:${jacoco.agent}" {
+    permission java.security.AllPermission;
+};
