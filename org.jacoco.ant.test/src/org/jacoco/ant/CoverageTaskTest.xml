@@ -166,4 +166,20 @@
 		</jacoco:coverage>
 	</target>
 
+	<target name="testSecurityManager">
+		<jacoco:coverage destfile="${exec.file}">
+			<java classname="org.jacoco.ant.TestTarget" fork="true" failonerror="true">
+				<classpath path="${org.jacoco.ant.coverageTaskTest.classes.dir}"/>
+				<jvmarg value="-Djacoco.agent=${_jacoco.agentFile}"/>
+				<jvmarg value="-Djacoco.exec=${exec.file}"/>
+				<jvmarg value="-Djava.security.manager"/>
+				<!-- Note that the use of two equal signs (==) below is not a typo -->
+				<jvmarg value="-Djava.security.policy==${basedir}/data/policy.txt"/>
+			</java>
+		</jacoco:coverage>
+
+		<au:assertFileExists file="${exec.file}"/>
+		<au:assertLogContains text="Target executed"/>
+	</target>
+
 </project>

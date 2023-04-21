@@ -41,6 +41,8 @@ public class AgentModuleTest {
 
 		assertNotSame(this.getClass().getClassLoader(),
 				t.getClass().getClassLoader());
+		assertSame(AgentModule.class.getProtectionDomain(),
+				t.getClass().getProtectionDomain());
 		assertSame(t.getClass().getClassLoader(),
 				t.getInnerClassInstance().getClass().getClassLoader());
 		assertNotSame(this.getClass().getClassLoader(),

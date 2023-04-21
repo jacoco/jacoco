@@ -75,7 +75,8 @@ public class AgentModule {
 				} catch (final IOException e) {
 					throw new RuntimeException(e);
 				}
-				return defineClass(name, bytes, 0, bytes.length);
+				return defineClass(name, bytes, 0, bytes.length,
+						AgentModule.class.getProtectionDomain());
 			}
 		};
 	}
