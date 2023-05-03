@@ -68,7 +68,7 @@ class ProbeInserter extends MethodVisitor implements IProbeInserter {
 		for (final Type t : Type.getArgumentTypes(desc)) {
 			pos += t.getSize();
 		}
-		variable = pos;
+		variable = pos + 1;
 		beginLabel = new Label();
 	}
 
@@ -116,7 +116,7 @@ class ProbeInserter extends MethodVisitor implements IProbeInserter {
 	public final void visitLocalVariable(final String name, final String desc,
 			final String signature, final Label start, final Label end,
 			final int index) {
-		if (index < variable) {
+		if (index < variable - 1) {
 			// Method parameters are still valid from the very beginning
 			mv.visitLocalVariable(name, desc, signature, beginLabel, end,
 					index);
@@ -145,14 +145,14 @@ class ProbeInserter extends MethodVisitor implements IProbeInserter {
 		// stack size is an absolute maximum, as the accessor code is inserted
 		// at the very beginning of each method when the stack size is empty.
 		final int increasedStack = Math.max(maxStack + 3, accessorStackSize);
-		mv.visitMaxs(increasedStack, maxLocals + 1);
+		mv.visitMaxs(increasedStack, maxLocals + 2);
 	}
 
 	private int map(final int var) {
-		if (var < variable) {
+		if (var < variable - 1) {
 			return var;
 		} else {
-			return var + 1;
+			return var + 2;
 		}
 	}
 
@@ -165,29 +165,29 @@ class ProbeInserter extends MethodVisitor implements IProbeInserter {
 					"ClassReader.accept() should be called with EXPAND_FRAMES flag");
 		}
 
-		final Object[] newLocal = new Object[Math.max(nLocal, variable) + 1];
+		final Object[] newLocal = new Object[Math.max(nLocal + 2,
+				variable + 1)];
 		int idx = 0; // Arrays index for existing locals
 		int newIdx = 0; // Array index for new locals
 		int pos = 0; // Current variable position
-		while (idx < nLocal || pos <= variable) {
-			if (pos == variable) {
-				newLocal[newIdx++] = InstrSupport.DATAFIELD_DESC;
-				pos++;
-			} else {
-				if (idx < nLocal) {
-					final Object t = local[idx++];
-					newLocal[newIdx++] = t;
-					pos++;
-					if (t == Opcodes.LONG || t == Opcodes.DOUBLE) {
-						pos++;
-					}
-				} else {
-					// Fill unused slots with TOP
-					newLocal[newIdx++] = Opcodes.TOP;
-					pos++;
-				}
-			}
+		while (idx < nLocal && pos < variable - 1) {
+			final Object t = local[idx++];
+			newLocal[newIdx++] = t;
+			pos += t == Opcodes.LONG || t == Opcodes.DOUBLE ? 2 : 1;
 		}
+		final boolean safetySlotOccupied = pos == variable;
+		while (pos < variable) {
+			newLocal[newIdx++] = Opcodes.TOP;
+			pos++;
+		}
+		newLocal[newIdx++] = InstrSupport.DATAFIELD_DESC;
+		if (idx < nLocal && safetySlotOccupied) {
+			newLocal[newIdx++] = Opcodes.TOP;
+		}
+		while (idx < nLocal) {
+			newLocal[newIdx++] = local[idx++];
+		}
+
 		mv.visitFrame(type, newIdx, newLocal, nStack, stack);
 	}
 
