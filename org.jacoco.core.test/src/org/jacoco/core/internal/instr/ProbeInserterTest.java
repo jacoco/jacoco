@@ -333,6 +333,39 @@ public class ProbeInserterTest {
 		}, 0, new Object[] {});
 	}
 
+	@Test
+	public void visitFrame_should_not_insert_safety_slot_when_it_is_the_last_occupied_slot() {
+		ProbeInserter pi = new ProbeInserter(0, "m", "()V", actualVisitor,
+				arrayStrategy);
+
+		pi.visitFrame(Opcodes.F_NEW, 1, new Object[] { //
+				Opcodes.DOUBLE //
+		}, 0, new Object[] {});
+
+		expectedVisitor.visitFrame(Opcodes.F_NEW, 2, new Object[] { //
+				Opcodes.DOUBLE, //
+				"[Z" // probe array
+		}, 0, new Object[] {});
+	}
+
+	@Test
+	public void visitFrame_should_insert_TOP_after_probe_variable_when_safety_slot_occupied_but_not_the_last() {
+		ProbeInserter pi = new ProbeInserter(0, "m", "()V", actualVisitor,
+				arrayStrategy);
+
+		pi.visitFrame(Opcodes.F_NEW, 2, new Object[] { //
+				Opcodes.DOUBLE, //
+				Opcodes.INTEGER //
+		}, 0, new Object[] {});
+
+		expectedVisitor.visitFrame(Opcodes.F_NEW, 4, new Object[] { //
+				Opcodes.DOUBLE, //
+				"[Z", // probe array
+				Opcodes.TOP, //
+				Opcodes.INTEGER, //
+		}, 0, new Object[] {});
+	}
+
 	@Test(expected = IllegalArgumentException.class)
 	public void visitFrame_must_only_support_resolved_frames() {
 		ProbeInserter pi = new ProbeInserter(0, "m", "()V", actualVisitor,
