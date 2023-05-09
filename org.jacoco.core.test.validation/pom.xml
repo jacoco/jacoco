@@ -452,7 +452,9 @@
         <!-- Groovy 3.0.15 does not support Java 21
         <module>../org.jacoco.core.test.validation.groovy</module>
         -->
+        <!-- Scala 2.13.4 does not support Java 21 - see https://github.com/jacoco/jacoco/issues/1431
         <module>../org.jacoco.core.test.validation.scala</module>
+        -->
       </modules>
     </profile>
 
