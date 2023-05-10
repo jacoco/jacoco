@@ -28,14 +28,16 @@ import org.objectweb.asm.Opcodes;
 public class SafetySlotTest {
 
 	@Test
-	public void original() throws Exception {
+	public void jvm_should_verify_original_class_without_errors()
+			throws Exception {
 		final byte[] original = createClass();
 
 		new TargetLoader().add("Sample", original).newInstance();
 	}
 
 	@Test
-	public void instrumented() throws Exception {
+	public void jvm_should_verify_instrumented_class_without_errors()
+			throws Exception {
 		final IRuntime runtime = new SystemPropertiesRuntime();
 		runtime.startup(new RuntimeData());
 
@@ -46,7 +48,7 @@ public class SafetySlotTest {
 		new TargetLoader().add("Sample", instrumented).newInstance();
 	}
 
-	private static byte[] createClass() throws Exception {
+	private static byte[] createClass() {
 		final ClassWriter writer = new ClassWriter(0);
 		writer.visit(bytecodeVersion(), Opcodes.ACC_PUBLIC, "Sample", null,
 				"java/lang/Object", new String[0]);
