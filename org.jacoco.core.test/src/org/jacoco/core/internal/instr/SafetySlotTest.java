@@ -24,6 +24,16 @@ import org.objectweb.asm.Label;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
 
+/**
+ * This test verifies that instrumentation can handle case when the last local
+ * variable of method parameters is overridden in the method body to store
+ * <a href=
+ * "https://docs.oracle.com/javase/specs/jvms/se8/html/jvms-4.html#jvms-4.10.2.3">a
+ * value of type long or double which occupy two variables</a>.
+ *
+ * @see ProbeInserterTest#visitFrame_should_not_insert_safety_slot_when_it_is_the_last_occupied_slot()
+ * @see ProbeInserterTest#visitFrame_should_insert_TOP_after_probe_variable_when_safety_slot_occupied_but_not_the_last()
+ */
 public class SafetySlotTest {
 
 	@Test

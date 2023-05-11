@@ -23,7 +23,13 @@ import org.objectweb.asm.TypePath;
  * Internal utility to add probes into the control flow of a method. The code
  * for a probe simply sets a certain slot of a boolean array to true. In
  * addition the probe array has to be retrieved at the beginning of the method
- * and stored in a local variable.
+ * and stored in a local variable. For this two local variables will be reserved
+ * immediately after the method parameters - the probe array will be stored in
+ * the second one, and the first one is reserved for the case when the last
+ * local variable of method parameters is overridden in the method body to store
+ * <a href=
+ * "https://docs.oracle.com/javase/specs/jvms/se8/html/jvms-4.html#jvms-4.10.2.3">a
+ * value of type long or double which occupy two variables</a>.
  */
 class ProbeInserter extends MethodVisitor implements IProbeInserter {
 
