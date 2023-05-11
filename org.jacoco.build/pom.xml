@@ -128,6 +128,7 @@
     <sonatypeOssDistMgmtSnapshotsUrl>https://oss.sonatype.org/content/repositories/snapshots/</sonatypeOssDistMgmtSnapshotsUrl>
 
     <maven.build.timestamp.format>yyyyMMddhhmm</maven.build.timestamp.format>
+    <build.commitId>0000000</build.commitId>
     <jacoco.home.url>http://www.jacoco.org/jacoco</jacoco.home.url>
     <copyright.years>${project.inceptionYear}, 2023</copyright.years>
 
@@ -668,6 +669,7 @@
           <doUpdate>false</doUpdate>
           <getRevisionOnlyOnce>true</getRevisionOnlyOnce>
           <revisionOnScmFailure>0000000</revisionOnScmFailure>
+          <buildNumberPropertyName>build.commitId</buildNumberPropertyName>
         </configuration>
       </plugin>
 
@@ -699,8 +701,8 @@
                 buildDate = qualifier.substring(0, 4) + "/" + qualifier.substring(4, 6) + "/" + qualifier.substring(6, 8);
                 project.getProperties().setProperty("build.date", buildDate);
 
-                buildNumber = project.getProperties().get("buildNumber");
-                pkgName = buildNumber.substring(buildNumber.length() - 7, buildNumber.length());
+                commitId = project.getProperties().get("build.commitId");
+                pkgName = commitId.substring(commitId.length() - 7, commitId.length());
                 project.getProperties().setProperty("jacoco.runtime.package.name", "org.jacoco.agent.rt.internal_" + pkgName);
 
                 void loadLicense(String libraryId) {
@@ -737,7 +739,7 @@
               org.objectweb.asm.*;version="${range;[===,=+);${asm.version}}"
             </Import-Package>
             <Bundle-RequiredExecutionEnvironment>J2SE-1.5</Bundle-RequiredExecutionEnvironment>
-            <Eclipse-SourceReferences>scm:git:git://github.com/jacoco/jacoco.git;path="${project.artifactId}";commitId=${buildNumber}</Eclipse-SourceReferences>
+            <Eclipse-SourceReferences>scm:git:git://github.com/jacoco/jacoco.git;path="${project.artifactId}";commitId=${build.commitId}</Eclipse-SourceReferences>
           </instructions>
         </configuration>
       </plugin>
@@ -1108,7 +1110,7 @@
                   <rules>
                     <requireReleaseVersion/>
                     <requireProperty>
-                      <property>buildNumber</property>
+                      <property>build.commitId</property>
                       <regex>[0-9a-f]{40}</regex>
                     </requireProperty>
                   </rules>
