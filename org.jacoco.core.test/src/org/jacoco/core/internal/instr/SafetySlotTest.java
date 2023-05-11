@@ -19,7 +19,6 @@ import org.jacoco.core.runtime.SystemPropertiesRuntime;
 import org.jacoco.core.test.TargetLoader;
 import org.jacoco.core.test.validation.JavaVersion;
 import org.junit.Test;
-import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.Label;
 import org.objectweb.asm.MethodVisitor;
