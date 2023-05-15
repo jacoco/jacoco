@@ -667,7 +667,7 @@
         <configuration>
           <doCheck>false</doCheck>
           <doUpdate>false</doUpdate>
-          <getRevisionOnlyOnce>true</getRevisionOnlyOnce>
+          <getRevisionOnlyOnce>false</getRevisionOnlyOnce>
           <revisionOnScmFailure>0000000</revisionOnScmFailure>
           <buildNumberPropertyName>build.commitId</buildNumberPropertyName>
         </configuration>
