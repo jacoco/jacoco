@@ -20,6 +20,14 @@
 
 <h2>Snapshot Build @qualified.bundle.version@ (@build.date@)</h2>
 
+<h3>Fixed bugs</h3>
+<ul>
+  <li>Instrumentation should not cause <code>VerifyError</code> when the last
+      local variable of method parameters is overridden in the method body to
+      store a value of type long or double
+      (GitHub <a href="https://github.com/jacoco/jacoco/issues/893">#893</a>).</li>
+</ul>
+
 <h2>Release 0.8.10 (2023/04/24)</h2>
 
 <h3>Fixed bugs</h3>

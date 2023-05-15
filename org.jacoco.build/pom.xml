@@ -454,8 +454,7 @@
         <plugin>
           <groupId>org.codehaus.mojo</groupId>
           <artifactId>exec-maven-plugin</artifactId>
-          <!--  latest version which runs with Java 5 -->
-          <version>1.5.0</version>
+          <version>3.1.0</version>
         </plugin>
         <!-- Third-party plugins -->
         <plugin>
