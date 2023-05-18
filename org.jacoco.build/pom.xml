@@ -128,7 +128,6 @@
     <sonatypeOssDistMgmtSnapshotsUrl>https://oss.sonatype.org/content/repositories/snapshots/</sonatypeOssDistMgmtSnapshotsUrl>
 
     <maven.build.timestamp.format>yyyyMMddhhmm</maven.build.timestamp.format>
-    <build.commitId>0000000</build.commitId>
     <jacoco.home.url>http://www.jacoco.org/jacoco</jacoco.home.url>
     <copyright.years>${project.inceptionYear}, 2023</copyright.years>
 
@@ -666,7 +665,7 @@
         <configuration>
           <doCheck>false</doCheck>
           <doUpdate>false</doUpdate>
-          <getRevisionOnlyOnce>false</getRevisionOnlyOnce>
+          <getRevisionOnlyOnce>true</getRevisionOnlyOnce>
           <revisionOnScmFailure>0000000</revisionOnScmFailure>
           <buildNumberPropertyName>build.commitId</buildNumberPropertyName>
         </configuration>
