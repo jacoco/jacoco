@@ -443,7 +443,7 @@
         <plugin>
           <groupId>org.codehaus.mojo</groupId>
           <artifactId>buildnumber-maven-plugin</artifactId>
-          <version>1.2</version>
+          <version>3.1.0</version>
         </plugin>
         <plugin>
           <groupId>org.codehaus.mojo</groupId>
@@ -534,7 +534,7 @@
                 </requireJavaVersion>
                 <requireMavenVersion>
                   <!-- Maven 3.8.2 contains bug - see https://github.com/jacoco/jacoco/issues/1218 -->
-                  <version>[3.3.9,3.8.2),(3.8.2,)</version>
+                  <version>[3.5.4,3.8.2),(3.8.2,)</version>
                 </requireMavenVersion>
                 <requireNoRepositories>
                   <message>The rules for repo1.maven.org are that pom.xml files should not include repository definitions.</message>
