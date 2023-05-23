@@ -16,7 +16,7 @@ import static org.jacoco.core.test.validation.targets.Stubs.nop;
 
 /**
  * This target exercises Record Patterns
- * (<a href="https://openjdk.org/jeps/432">JEP 432</a>).
+ * (<a href="https://openjdk.org/jeps/440">JEP 440</a>).
  */
 public class RecordPatternsTarget {
 
@@ -36,20 +36,12 @@ public class RecordPatternsTarget {
 		} // assertEmpty()
 	}
 
-	private static void enhancedForStatement(Point[] p) {
-		for (Point(int x, int y) : p) { // assertPartlyCovered(2, 3)
-			nop(x + y); // assertFullyCovered()
-		} // assertEmpty()
-	}
-
 	public static void main(String[] args) {
 		instanceofOperator(new Point(1, 2));
 		instanceofOperator(new Object());
 
 		switchStatement(new Point(1, 2));
 		switchStatement(new Object());
-
-		enhancedForStatement(new Point[] { new Point(1, 2) });
 	}
 
 }
