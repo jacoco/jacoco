@@ -86,7 +86,7 @@ public class MergeMojo extends AbstractJacocoMojo {
 
 	private void load(final ExecFileLoader loader)
 			throws MojoExecutionException {
-		final FileSetManager fileSetManager = new FileSetManager(getLog());
+		final FileSetManager fileSetManager = new FileSetManager();
 		for (final FileSet fileSet : fileSets) {
 			for (final String includedFilename : fileSetManager
 					.getIncludedFiles(fileSet)) {
