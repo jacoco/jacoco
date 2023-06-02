@@ -101,10 +101,10 @@ public class SwitchExpressionsTarget {
 
 	private static void exhaustiveSwitchExpression(Stubs.Enum e) {
 
-		nop(switch (e) { // assertExhaustiveSwitchExpression()
+		nop(switch (e) { // assertFullyCovered(0, 3)
 		case A -> i1(); // assertFullyCovered()
 		case B -> i1(); // assertFullyCovered()
-		case C -> i1(); // assertExhaustiveSwitchExpressionLastCase()
+		case C -> i1(); // assertFullyCovered()
 		}); // assertEmpty()
 
 	}
