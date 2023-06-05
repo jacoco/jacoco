@@ -15,6 +15,7 @@ package org.jacoco.core.internal.analysis.filter;
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.tree.AbstractInsnNode;
 import org.objectweb.asm.tree.LabelNode;
+import org.objectweb.asm.tree.LineNumberNode;
 import org.objectweb.asm.tree.LookupSwitchInsnNode;
 import org.objectweb.asm.tree.MethodNode;
 import org.objectweb.asm.tree.TableSwitchInsnNode;
@@ -32,13 +33,17 @@ final class ExhaustiveSwitchFilter implements IFilter {
 	public void filter(final MethodNode methodNode,
 			final IFilterContext context, final IFilterOutput output) {
 		final Matcher matcher = new Matcher();
+		int line = -1;
 		for (final AbstractInsnNode i : methodNode.instructions) {
-			matcher.match(i, output);
+			if (i.getType() == AbstractInsnNode.LINE) {
+				line = ((LineNumberNode) i).line;
+			}
+			matcher.match(i, line, output);
 		}
 	}
 
 	private static class Matcher extends AbstractMatcher {
-		public void match(final AbstractInsnNode start,
+		public void match(final AbstractInsnNode start, final int line,
 				final IFilterOutput output) {
 			final LabelNode dflt;
 			final List<LabelNode> labels;
@@ -53,6 +58,14 @@ final class ExhaustiveSwitchFilter implements IFilter {
 			}
 
 			cursor = skipToLineNumberOrInstruction(dflt);
+			if (cursor == null) {
+				return;
+			} else if (cursor.getType() == AbstractInsnNode.LINE) {
+				if (line != ((LineNumberNode) cursor).line) {
+					return;
+				}
+				cursor = skipNonOpcodes(cursor);
+			}
 			if (cursor == null || cursor.getOpcode() != Opcodes.NEW) {
 				return;
 			}
