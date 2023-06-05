@@ -45,7 +45,81 @@ public class ExhaustiveSwitchFilterTest extends FilterTestBase {
 	 * </pre>
 	 */
 	@Test
-	public void should_filter() {
+	public void should_filter_when_default_branch_has_LineNumber_of_switch() {
+		final MethodNode m = new MethodNode(InstrSupport.ASM_API_VERSION, 0,
+				"Example", "()I", null, null);
+
+		final Label start = new Label();
+		final Label end = new Label();
+		m.visitLabel(start);
+		m.visitLineNumber(0, start);
+		m.visitFieldInsn(Opcodes.GETSTATIC, "Example$1", "$SwitchMap$Example$E",
+				"[I");
+		m.visitVarInsn(Opcodes.ALOAD, 0);
+		m.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "Example$E", "ordinal", "()I",
+				false);
+		m.visitInsn(Opcodes.IALOAD);
+
+		final Label dflt = new Label();
+		final Label case1 = new Label();
+		final Label case2 = new Label();
+		final Label case3 = new Label();
+		m.visitLookupSwitchInsn(dflt, new int[] { 1, 2, 3 },
+				new Label[] { case1, case2, case3 });
+		final AbstractInsnNode switchNode = m.instructions.getLast();
+		final Set<AbstractInsnNode> newTargets = new HashSet<AbstractInsnNode>();
+
+		m.visitLabel(dflt);
+		final Range range = new Range();
+		range.fromInclusive = m.instructions.getLast();
+		m.visitLineNumber(0, dflt);
+		m.visitTypeInsn(Opcodes.NEW, "java/lang/IncompatibleClassChangeError");
+		m.visitInsn(Opcodes.DUP);
+		m.visitMethodInsn(Opcodes.INVOKESPECIAL,
+				"java/lang/IncompatibleClassChangeError", "<init>", "()V",
+				false);
+		m.visitInsn(Opcodes.ATHROW);
+		range.toInclusive = m.instructions.getLast();
+
+		m.visitLabel(case1);
+		m.visitInsn(Opcodes.ICONST_1);
+		newTargets.add(m.instructions.getLast());
+		m.visitJumpInsn(Opcodes.GOTO, end);
+
+		m.visitLabel(case2);
+		m.visitInsn(Opcodes.ICONST_2);
+		newTargets.add(m.instructions.getLast());
+
+		m.visitLabel(case3);
+		m.visitInsn(Opcodes.ICONST_3);
+		newTargets.add(m.instructions.getLast());
+
+		m.visitLabel(end);
+		m.visitInsn(Opcodes.IRETURN);
+
+		filter.filter(m, context, output);
+
+		assertIgnored(range);
+		assertReplacedBranches(switchNode, newTargets);
+	}
+
+	/**
+	 * <pre>
+	 *   enum E {
+	 *     A, B, C
+	 *   }
+	 *
+	 *   int example(E e) {
+	 *     return switch (e) {
+	 *       case A -> 1;
+	 *       case B -> 2;
+	 *       case C -> 3;
+	 *     };
+	 *   }
+	 * </pre>
+	 */
+	@Test
+	public void should_filter_when_default_branch_has_no_LineNumber() {
 		final MethodNode m = new MethodNode(InstrSupport.ASM_API_VERSION, 0,
 				"Example", "()I", null, null);
 
@@ -118,7 +192,7 @@ public class ExhaustiveSwitchFilterTest extends FilterTestBase {
 	 * </pre>
 	 */
 	@Test
-	public void should_filter_Java_21() {
+	public void should_filter_when_default_branch_throws_Java_21_MatchException() {
 		final MethodNode m = new MethodNode(InstrSupport.ASM_API_VERSION, 0,
 				"Example", "()I", null, null);
 
@@ -192,7 +266,7 @@ public class ExhaustiveSwitchFilterTest extends FilterTestBase {
 	 * </pre>
 	 */
 	@Test
-	public void should_not_filter_when_default_branch_has_LineNumber() {
+	public void should_not_filter_when_default_branch_has_LineNumber_different_from_switch() {
 		final MethodNode m = new MethodNode(InstrSupport.ASM_API_VERSION, 0,
 				"Example", "()I", null, null);
 
@@ -214,7 +288,7 @@ public class ExhaustiveSwitchFilterTest extends FilterTestBase {
 				new Label[] { case1, case2 });
 
 		m.visitLabel(dflt);
-		m.visitLineNumber(0, dflt);
+		m.visitLineNumber(1, dflt);
 		m.visitTypeInsn(Opcodes.NEW, "java/lang/IncompatibleClassChangeError");
 		m.visitInsn(Opcodes.DUP);
 		m.visitMethodInsn(Opcodes.INVOKESPECIAL,
