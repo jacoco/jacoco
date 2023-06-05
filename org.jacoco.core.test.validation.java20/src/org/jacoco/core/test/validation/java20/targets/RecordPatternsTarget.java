@@ -24,15 +24,15 @@ public class RecordPatternsTarget {
 	}
 
 	private static void instanceofOperator(Object o) {
-		if (o instanceof Point(int x,int y)) { // assertPartlyCovered(0, 2)
+		if (o instanceof Point(int x,int y)) { // assertFullyCovered(0, 2)
 			nop(x + y); // assertFullyCovered()
 		} // assertEmpty()
 	}
 
 	private static void switchStatement(Object p) {
 		switch (p) { // assertFullyCovered(0, 2)
-		case Point(int x, int y) -> nop(x + y); // assertSwitchStatementCase()
-		default -> nop(); // assertSwitchStatementDefault()
+		case Point(int x, int y) -> nop(x + y); // assertFullyCovered()
+		default -> nop(); // assertFullyCovered()
 		} // assertEmpty()
 	}
 

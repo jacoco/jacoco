@@ -26,22 +26,4 @@ public class RecordPatternsTest extends ValidationTestBase {
 		super(RecordPatternsTarget.class);
 	}
 
-	public void assertSwitchStatementCase(Line line) {
-		if (JavaVersion.current().isBefore("21")) {
-			assertFullyCovered(line);
-		} else {
-			// https://github.com/openjdk/jdk/commit/138cdc9283ae8f3367e51f0fe7e27833118dd7cb
-			assertPartlyCovered(line);
-		}
-	}
-
-	public void assertSwitchStatementDefault(Line line) {
-		if (JavaVersion.current().isBefore("21")) {
-			assertPartlyCovered(line);
-		} else {
-			// https://github.com/openjdk/jdk/commit/138cdc9283ae8f3367e51f0fe7e27833118dd7cb
-			assertFullyCovered(line);
-		}
-	}
-
 }

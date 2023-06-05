@@ -40,6 +40,7 @@ public final class Filters implements IFilter {
 				new PrivateEmptyNoArgConstructorFilter(), new AssertFilter(),
 				new StringSwitchJavacFilter(), new StringSwitchFilter(),
 				new EnumEmptyConstructorFilter(), new RecordsFilter(),
+				new RecordPatternFilter(), //
 				new AnnotationGeneratedFilter(), new KotlinGeneratedFilter(),
 				new KotlinLateinitFilter(), new KotlinWhenFilter(),
 				new KotlinWhenStringFilter(),
