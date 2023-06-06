@@ -41,6 +41,7 @@ public final class Filters implements IFilter {
 				new StringSwitchJavacFilter(), new StringSwitchFilter(),
 				new EnumEmptyConstructorFilter(), new RecordsFilter(),
 				new ExhaustiveSwitchFilter(), //
+				new RecordPatternFilter(), //
 				new AnnotationGeneratedFilter(), new KotlinGeneratedFilter(),
 				new KotlinLateinitFilter(), new KotlinWhenFilter(),
 				new KotlinWhenStringFilter(),
