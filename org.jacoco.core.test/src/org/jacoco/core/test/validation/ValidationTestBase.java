@@ -113,6 +113,17 @@ public abstract class ValidationTestBase {
 		}
 	}
 
+	/**
+	 * Source files for validation tests should contain the license header,
+	 * which can not contain executable lines, so this test allows to catch
+	 * cases when the compiler generates wrong line numbers.
+	 */
+	@Test
+	public void first_line_in_coverage_data_should_be_greater_than_one() {
+		assertTrue("First line in coverage data should be greater than one",
+				1 < source.getCoverage().getFirstLine());
+	}
+
 	@Test
 	public void last_line_in_coverage_data_should_be_less_or_equal_to_number_of_lines_in_source_file() {
 		assertTrue(String.format(
