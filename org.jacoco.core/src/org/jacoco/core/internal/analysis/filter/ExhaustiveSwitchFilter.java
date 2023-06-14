@@ -60,7 +60,8 @@ final class ExhaustiveSwitchFilter implements IFilter {
 			cursor = skipToLineNumberOrInstruction(dflt);
 			if (cursor == null) {
 				return;
-			} else if (cursor.getType() == AbstractInsnNode.LINE) {
+			}
+			if (cursor.getType() == AbstractInsnNode.LINE) {
 				if (line != ((LineNumberNode) cursor).line) {
 					return;
 				}
@@ -71,6 +72,7 @@ final class ExhaustiveSwitchFilter implements IFilter {
 			}
 			if ("java/lang/MatchException"
 					.equals(((TypeInsnNode) cursor).desc)) {
+				// since Java 21
 				nextIs(Opcodes.DUP);
 				nextIs(Opcodes.ACONST_NULL);
 				nextIs(Opcodes.ACONST_NULL);
@@ -78,6 +80,7 @@ final class ExhaustiveSwitchFilter implements IFilter {
 						"<init>", "(Ljava/lang/String;Ljava/lang/Throwable;)V");
 			} else if ("java/lang/IncompatibleClassChangeError"
 					.equals(((TypeInsnNode) cursor).desc)) {
+				// prior to Java 21
 				nextIs(Opcodes.DUP);
 				nextIsInvoke(Opcodes.INVOKESPECIAL,
 						"java/lang/IncompatibleClassChangeError", "<init>",
