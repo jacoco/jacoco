@@ -25,20 +25,4 @@ public class SwitchExpressionsTest extends ValidationTestBase {
 		super(SwitchExpressionsTarget.class);
 	}
 
-	public void assertExhaustiveSwitchExpression(Line line) {
-		if (isJDKCompiler) {
-			assertPartlyCovered(line, 1, 3);
-		} else {
-			assertFullyCovered(line, 1, 3);
-		}
-	}
-
-	public void assertExhaustiveSwitchExpressionLastCase(Line line) {
-		if (isJDKCompiler) {
-			assertFullyCovered(line);
-		} else {
-			assertPartlyCovered(line);
-		}
-	}
-
 }
