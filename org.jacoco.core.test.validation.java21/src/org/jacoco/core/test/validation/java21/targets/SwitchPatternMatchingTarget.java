@@ -10,13 +10,13 @@
  *    Evgeny Mandrikov - initial API and implementation
  *
  *******************************************************************************/
-package org.jacoco.core.test.validation.java20.targets;
+package org.jacoco.core.test.validation.java21.targets;
 
 import static org.jacoco.core.test.validation.targets.Stubs.nop;
 
 /**
  * This target exercises pattern matching for switch
- * (<a href="https://openjdk.org/jeps/433">JEP 433</a>).
+ * (<a href="https://openjdk.org/jeps/441">JEP 441</a>).
  */
 public class SwitchPatternMatchingTarget {
 

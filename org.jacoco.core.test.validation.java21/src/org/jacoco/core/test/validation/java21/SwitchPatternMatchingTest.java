@@ -10,20 +10,18 @@
  *    Evgeny Mandrikov - initial API and implementation
  *
  *******************************************************************************/
-package org.jacoco.core.test.validation.java20;
+package org.jacoco.core.test.validation.java21;
 
-import org.jacoco.core.test.validation.JavaVersion;
-import org.jacoco.core.test.validation.Source.Line;
 import org.jacoco.core.test.validation.ValidationTestBase;
-import org.jacoco.core.test.validation.java20.targets.RecordPatternsTarget;
+import org.jacoco.core.test.validation.java21.targets.SwitchPatternMatchingTarget;
 
 /**
- * Test of code coverage in {@link RecordPatterns}.
+ * Test of code coverage in {@link SwitchPatternMatchingTarget}.
  */
-public class RecordPatternsTest extends ValidationTestBase {
+public class SwitchPatternMatchingTest extends ValidationTestBase {
 
-	public RecordPatternsTest() {
-		super(RecordPatternsTarget.class);
+	public SwitchPatternMatchingTest() {
+		super(SwitchPatternMatchingTarget.class);
 	}
 
 }
