@@ -419,7 +419,6 @@
         <module>../org.jacoco.core.test.validation.java8</module>
         <module>../org.jacoco.core.test.validation.java14</module>
         <module>../org.jacoco.core.test.validation.java16</module>
-        <module>../org.jacoco.core.test.validation.java20</module>
         <module>../org.jacoco.core.test.validation.groovy</module>
         <module>../org.jacoco.core.test.validation.scala</module>
       </modules>
@@ -448,7 +447,7 @@
         <module>../org.jacoco.core.test.validation.java8</module>
         <module>../org.jacoco.core.test.validation.java14</module>
         <module>../org.jacoco.core.test.validation.java16</module>
-        <module>../org.jacoco.core.test.validation.java20</module>
+        <module>../org.jacoco.core.test.validation.java21</module>
         <!-- Groovy 3.0.15 does not support Java 21
         <module>../org.jacoco.core.test.validation.groovy</module>
         -->
@@ -481,7 +480,7 @@
         <module>../org.jacoco.core.test.validation.java8</module>
         <module>../org.jacoco.core.test.validation.java14</module>
         <module>../org.jacoco.core.test.validation.java16</module>
-        <module>../org.jacoco.core.test.validation.java20</module>
+        <module>../org.jacoco.core.test.validation.java21</module>
         <!-- Groovy 3.0.15 does not support Java 22
         <module>../org.jacoco.core.test.validation.groovy</module>
         -->

@@ -10,7 +10,7 @@
  *    Evgeny Mandrikov - initial API and implementation
  *
  *******************************************************************************/
-package org.jacoco.core.test.validation.java20.targets;
+package org.jacoco.core.test.validation.java21.targets;
 
 import static org.jacoco.core.test.validation.targets.Stubs.nop;
 
