@@ -20,12 +20,12 @@
     <relativePath>../org.jacoco.core.test.validation</relativePath>
   </parent>
 
-  <artifactId>org.jacoco.core.test.validation.java20</artifactId>
+  <artifactId>org.jacoco.core.test.validation.java21</artifactId>
 
-  <name>JaCoCo :: Test :: Core :: Validation Java 20</name>
+  <name>JaCoCo :: Test :: Core :: Validation Java 21</name>
 
   <properties>
-    <bytecode.version>20</bytecode.version>
+    <bytecode.version>21</bytecode.version>
   </properties>
 
   <dependencies>
@@ -39,39 +39,24 @@
   <build>
     <plugins>
       <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-compiler-plugin</artifactId>
-        <configuration>
-          <compilerArgs>
-            <arg>--enable-preview</arg>
-          </compilerArgs>
-        </configuration>
-      </plugin>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-surefire-plugin</artifactId>
-        <configuration>
-          <argLine>--enable-preview</argLine>
-        </configuration>
-      </plugin>
-
-      <plugin>
         <groupId>com.diffplug.spotless</groupId>
         <artifactId>spotless-maven-plugin</artifactId>
         <configuration>
           <java>
             <eclipse>
               <!--
+              Temporary workaround until there is an Eclipse release with Java 21 support:
               Configuration file referenced below
               is a copy of ../org.jacoco.core/.settings/org.eclipse.jdt.core.prefs
               with the following line added
               org.eclipse.jdt.core.compiler.problem.enablePreviewFeatures=enabled
               -->
-              <file>../org.jacoco.core.test.validation.java20/.settings/org.eclipse.jdt.core.prefs</file>
+              <file>../org.jacoco.core.test.validation.java21/.settings/org.eclipse.jdt.core.prefs</file>
             </eclipse>
           </java>
         </configuration>
       </plugin>
     </plugins>
   </build>
+
 </project>
