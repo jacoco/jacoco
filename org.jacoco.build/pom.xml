@@ -398,15 +398,7 @@
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-shade-plugin</artifactId>
-          <version>3.2.1</version>
-          <dependencies>
-            <dependency>
-              <!-- Workaround to be able to compile into Java 13 bytecode -->
-              <groupId>org.ow2.asm</groupId>
-              <artifactId>asm</artifactId>
-              <version>7.1</version>
-            </dependency>
-          </dependencies>
+          <version>3.5.0</version>
         </plugin>
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
@@ -488,6 +480,7 @@
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-shade-plugin</artifactId>
         <configuration>
+          <createDependencyReducedPom>false</createDependencyReducedPom>
           <filters>
             <!-- Don't include signatures -->
             <filter>
@@ -803,8 +796,7 @@
     <!--
     Following profiles enable compilation into bytecode version 13
     when requested "bytecode.version" greater than 13,
-    because this is maximum that can be processed by
-    maven-shade-plugin and maven-plugin-plugin.
+    because this is maximum that can be processed by maven-plugin-plugin.
     This is overridden for tests.
     -->
     <profile>
