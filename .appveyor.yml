@@ -1,17 +1,11 @@
 cache:
-  - C:\Users\appveyor\apache-maven-3.3.9 -> appveyor.yml
   - C:\Users\appveyor\.m2 -> **\pom.xml
 
 install:
-  - if not exist C:\Users\appveyor\apache-maven-3.3.9 (
-      curl -LsS "http://www.apache.org/dyn/closer.cgi?action=download&filename=maven/maven-3/3.3.9/binaries/apache-maven-3.3.9-bin.zip" > apache-maven-3.3.9-bin.zip &&
-      unzip apache-maven-3.3.9-bin.zip -d C:\Users\appveyor
-    )
   - SET JAVA_HOME=C:\Program Files\Java\jdk11
-  - SET PATH=C:\Users\appveyor\apache-maven-3.3.9\bin;%JAVA_HOME%;%PATH%
 
 build_script:
-  # Maven 3.3.9 requires Java >= 7, but generation of Javadocs requires Java <= 6 (https://github.com/jacoco/jacoco/issues/110)
+  # generation of Javadocs requires Java <= 6 (https://github.com/jacoco/jacoco/issues/110)
   - mvn -V -B -e verify -Djdk.version=6 --toolchains=.travis\appveyor-toolchains.xml
 
 artifacts:
