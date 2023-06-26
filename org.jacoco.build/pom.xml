@@ -523,7 +523,7 @@
             <configuration>
               <rules>
                 <requireJavaVersion>
-                  <version>11</version>
+                  <version>17</version>
                 </requireJavaVersion>
                 <requireMavenVersion>
                   <!-- Maven 3.8.2 contains bug - see https://github.com/jacoco/jacoco/issues/1218 -->
@@ -945,7 +945,7 @@
               <dependency>
                 <groupId>org.eclipse.jdt</groupId>
                 <artifactId>ecj</artifactId>
-                <version>3.33.0</version>
+                <version>3.34.0</version>
               </dependency>
               <dependency>
                 <groupId>org.codehaus.plexus</groupId>
