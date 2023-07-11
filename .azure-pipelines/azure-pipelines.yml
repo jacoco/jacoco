@@ -38,11 +38,11 @@ jobs:
         JDK_VERSION: 18
       JDK 19:
         JDK_VERSION: 19
-      JDK 19 with ECJ:
-        JDK_VERSION: 19
-        ECJ: true
       JDK 20:
         JDK_VERSION: 20
+      JDK 20 with ECJ:
+        JDK_VERSION: 20
+        ECJ: true
       JDK 21:
         JDK_VERSION: 21
       JDK 22:
@@ -80,8 +80,10 @@ jobs:
       tar -xzf .maven/maven.tar.gz -C .maven --strip-components 1
     displayName: Setup Maven
   - bash: |
-      if [[ "$JDK_VERSION" -ge "11" ]]; then
+      if [[ "$JDK_VERSION" -ge "17" ]]; then
         export JAVA_HOME=$PWD/.jdk
+      else
+        export JAVA_HOME=$JAVA_HOME_17_X64
       fi
       if [[ "$BUILD_SOURCEBRANCH" == "refs/heads/master" && "$JDK_VERSION" == "5" ]]; then
         .maven/bin/mvn -V -B -e -f org.jacoco.build \
