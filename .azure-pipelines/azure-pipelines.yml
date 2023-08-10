@@ -10,15 +10,15 @@ jobs:
         JDK_VERSION: 7
       JDK 8:
         JDK_VERSION: 8
-      JDK 8 with ECJ:
-        JDK_VERSION: 8
-        ECJ: true
       JDK 9:
         JDK_VERSION: 9
       JDK 10:
         JDK_VERSION: 10
       JDK 11:
         JDK_VERSION: 11
+      JDK 11 with ECJ:
+        JDK_VERSION: 11
+        ECJ: true
       JDK 12:
         JDK_VERSION: 12
       JDK 13:
@@ -31,14 +31,24 @@ jobs:
         JDK_VERSION: 16
       JDK 17:
         JDK_VERSION: 17
+      JDK 17 with ECJ:
+        JDK_VERSION: 17
+        ECJ: true
       JDK 18:
         JDK_VERSION: 18
       JDK 19:
         JDK_VERSION: 19
       JDK 20:
         JDK_VERSION: 20
+      JDK 20 with ECJ:
+        JDK_VERSION: 20
+        ECJ: true
+      JDK 21:
+        JDK_VERSION: 21
+      JDK 22:
+        JDK_VERSION: 22
   pool:
-    vmImage: 'ubuntu-18.04'
+    vmImage: 'ubuntu-20.04'
   steps:
   - bash: |
       set -e
@@ -70,12 +80,14 @@ jobs:
       tar -xzf .maven/maven.tar.gz -C .maven --strip-components 1
     displayName: Setup Maven
   - bash: |
-      if [[ "$JDK_VERSION" -ge "8" ]]; then
+      if [[ "$JDK_VERSION" -ge "17" ]]; then
         export JAVA_HOME=$PWD/.jdk
+      else
+        export JAVA_HOME=$JAVA_HOME_17_X64
       fi
       if [[ "$BUILD_SOURCEBRANCH" == "refs/heads/master" && "$JDK_VERSION" == "5" ]]; then
         .maven/bin/mvn -V -B -e -f org.jacoco.build \
-          verify -Djdk.version=$JDK_VERSION \
+          verify -Djdk.version=$JDK_VERSION -Dbytecode.version=$JDK_VERSION \
           deploy:deploy -DdeployAtEnd \
           --toolchains=toolchains.xml --settings=.azure-pipelines/maven-settings.xml
       elif [[ "$BUILD_SOURCEBRANCH" == "refs/heads/master" && "$JDK_VERSION" == "11" ]]; then

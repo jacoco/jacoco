@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2022 Mountainminds GmbH & Co. KG and Contributors
+ * Copyright (c) 2009, 2023 Mountainminds GmbH & Co. KG and Contributors
  * This program and the accompanying materials are made available under
  * the terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0
@@ -111,6 +111,17 @@ public abstract class ValidationTestBase {
 						line.toString());
 			}
 		}
+	}
+
+	/**
+	 * Source files for validation tests should contain the license header,
+	 * which can not contain executable lines, so this test allows to catch
+	 * cases when the compiler generates wrong line numbers.
+	 */
+	@Test
+	public void first_line_in_coverage_data_should_be_greater_than_one() {
+		assertTrue("First line in coverage data should be greater than one",
+				1 < source.getCoverage().getFirstLine());
 	}
 
 	@Test

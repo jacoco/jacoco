@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-   Copyright (c) 2009, 2022 Mountainminds GmbH & Co. KG and Contributors
+   Copyright (c) 2009, 2023 Mountainminds GmbH & Co. KG and Contributors
    This program and the accompanying materials are made available under
    the terms of the Eclipse Public License 2.0 which is available at
    http://www.eclipse.org/legal/epl-2.0
@@ -17,7 +17,7 @@
   <parent>
     <groupId>org.jacoco</groupId>
     <artifactId>org.jacoco.tests</artifactId>
-    <version>0.8.9-SNAPSHOT</version>
+    <version>0.8.11-SNAPSHOT</version>
     <relativePath>../org.jacoco.tests</relativePath>
   </parent>
 
@@ -55,6 +55,14 @@
           <extraArtifacts>
             <extraArtifact>org.jacoco:org.jacoco.agent:${project.version}:jar:runtime</extraArtifact>
           </extraArtifacts>
+          <properties>
+            <!--
+            maven-invoker-plugin for forked Maven invocations uses the same JDK that is used for Maven,
+            so can not use source level lower than 8 with modern JDKs
+            -->
+            <maven.compiler.source>8</maven.compiler.source>
+            <maven.compiler.target>8</maven.compiler.target>
+          </properties>
         </configuration>
         <executions>
           <execution>

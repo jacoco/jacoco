@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2022 Mountainminds GmbH & Co. KG and Contributors
+ * Copyright (c) 2009, 2023 Mountainminds GmbH & Co. KG and Contributors
  * This program and the accompanying materials are made available under
  * the terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0
@@ -85,6 +85,8 @@ public class ReportAggregateMojo extends AbstractReportMojo {
 	/**
 	 * Include this project in the report. If true then this projects class and
 	 * source files as well as JaCoCo execution data files will be collected.
+	 *
+	 * @since 0.8.9
 	 */
 	@Parameter(defaultValue = "false")
 	private boolean includeCurrentProject;

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2022 Mountainminds GmbH & Co. KG and Contributors
+ * Copyright (c) 2009, 2023 Mountainminds GmbH & Co. KG and Contributors
  * This program and the accompanying materials are made available under
  * the terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0
@@ -43,8 +43,8 @@ public class InstrSupportTest {
 	}
 
 	@Test
-	public void classReaderFor_should_read_java_20_class() {
-		final byte[] bytes = createJava20Class();
+	public void classReaderFor_should_read_java_22_class() {
+		final byte[] bytes = createJava22Class();
 
 		final ClassReader classReader = InstrSupport.classReaderFor(bytes);
 
@@ -53,16 +53,16 @@ public class InstrSupportTest {
 			public void visit(final int version, final int access,
 					final String name, final String signature,
 					final String superName, final String[] interfaces) {
-				assertEquals(Opcodes.V19 + 1, version);
+				assertEquals(Opcodes.V21 + 1, version);
 			}
 		}, 0);
 
-		assertArrayEquals(createJava20Class(), bytes);
+		assertArrayEquals(createJava22Class(), bytes);
 	}
 
-	private static byte[] createJava20Class() {
+	private static byte[] createJava22Class() {
 		final ClassWriter cw = new ClassWriter(0);
-		cw.visit(Opcodes.V19 + 1, 0, "Foo", null, "java/lang/Object", null);
+		cw.visit(Opcodes.V21 + 1, 0, "Foo", null, "java/lang/Object", null);
 		cw.visitEnd();
 		return cw.toByteArray();
 	}
@@ -131,7 +131,9 @@ public class InstrSupportTest {
 		assertTrue(InstrSupport.needsFrames(Opcodes.V17));
 		assertTrue(InstrSupport.needsFrames(Opcodes.V18));
 		assertTrue(InstrSupport.needsFrames(Opcodes.V19));
-		assertTrue(InstrSupport.needsFrames(Opcodes.V19 + 1));
+		assertTrue(InstrSupport.needsFrames(Opcodes.V20));
+		assertTrue(InstrSupport.needsFrames(Opcodes.V21));
+		assertTrue(InstrSupport.needsFrames(Opcodes.V21 + 1));
 
 		assertTrue(InstrSupport.needsFrames(0x0100));
 	}
