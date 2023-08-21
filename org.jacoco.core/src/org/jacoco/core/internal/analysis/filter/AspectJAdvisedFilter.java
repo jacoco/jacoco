@@ -15,15 +15,10 @@ package org.jacoco.core.internal.analysis.filter;
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.tree.*;
 
-import java.util.regex.Pattern;
-
+/**
+ * Filter for ByteCode created at AspectJ join-points.
+ */
 public class AspectJAdvisedFilter implements IFilter {
-
-	private static final Pattern ASPECTJ_AROUND_BODY_PATTERN = Pattern
-			.compile(".*_aroundBody\\d+");
-
-	private static final Pattern AJC_CLOSURE_PATTERN = Pattern
-			.compile(".*\\$AjcClosure\\d+");
 
 	@Override
 	public void filter(MethodNode methodNode, IFilterContext context,
@@ -33,29 +28,7 @@ public class AspectJAdvisedFilter implements IFilter {
 			return;
 		}
 
-		if (isAroundClosureClass(context)) {
-			output.ignore(methodNode.instructions.getFirst(),
-					methodNode.instructions.getLast());
-		}
-
-		int methodDeclarationLineNumber = AspectJUtil
-				.getMethodDeclarationLineNumber(methodNode);
-
-		if (methodDeclarationLineNumber > 0) {
-
-			LineNumberNode firstLineAfter = findFirstLineAfter(methodNode,
-					methodDeclarationLineNumber);
-
-			if (firstLineAfter == null) {
-
-				output.ignore(methodNode.instructions.getFirst(),
-						methodNode.instructions.getLast());
-			} else if (methodNode.instructions.indexOf(firstLineAfter) > 1) {
-				output.ignore(methodNode.instructions.getFirst(),
-						firstLineAfter.getPrevious());
-			}
-
-		}
+		ignoreInitCode(methodNode, output);
 
 		for (AbstractInsnNode instruction : methodNode.instructions) {
 			if (instruction instanceof FieldInsnNode) {
@@ -100,6 +73,36 @@ public class AspectJAdvisedFilter implements IFilter {
 		}
 	}
 
+	/**
+	 * In some advised methods, ajc generates code before the first line number.
+	 * <p>
+	 * If we know the correct first line from ajcs attribute, we can ignore all
+	 * instructions before the real first line.
+	 */
+	private void ignoreInitCode(MethodNode methodNode, IFilterOutput output) {
+		int methodDeclarationLineNumber = AspectJUtil
+				.getMethodDeclarationLineNumber(methodNode);
+
+		if (methodDeclarationLineNumber > 0) {
+
+			LineNumberNode firstLineAfter = findFirstLineAfter(methodNode,
+					methodDeclarationLineNumber);
+
+			if (firstLineAfter == null) {
+
+				output.ignore(methodNode.instructions.getFirst(),
+						methodNode.instructions.getLast());
+			} else if (methodNode.instructions.indexOf(firstLineAfter) > 1) {
+				output.ignore(methodNode.instructions.getFirst(),
+						firstLineAfter.getPrevious());
+			}
+
+		}
+	}
+
+	/**
+	 * Ignores the exception handler generated for after throwing advices.
+	 */
 	private static void checkAfterThrowingHandler(IFilterOutput output,
 			TryCatchBlockNode tryCatchBlock) {
 		if (tryCatchBlock.type == null) {
@@ -139,18 +142,6 @@ public class AspectJAdvisedFilter implements IFilter {
 			}
 		}
 		return null;
-	}
-
-	private boolean isAroundClosureClass(IFilterContext context) {
-		return context.getSuperClassName()
-				.equals("org/aspectj/runtime/internal/AroundClosure")
-				&& AJC_CLOSURE_PATTERN.matcher(context.getClassName())
-						.matches();
-	}
-
-	public static boolean isAspectJAroundBody(MethodNode methodNode) {
-		return ASPECTJ_AROUND_BODY_PATTERN.matcher(methodNode.name).matches()
-				&& methodNode.desc.contains("Lorg/aspectj/lang/JoinPoint");
 	}
 
 	public static <T extends AbstractInsnNode> T findNext(Class<T> type,

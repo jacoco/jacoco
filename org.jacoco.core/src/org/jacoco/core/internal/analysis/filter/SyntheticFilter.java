@@ -59,7 +59,7 @@ public final class SyntheticFilter implements IFilter {
 		}
 
 		if (AspectJUtil.isAspectJClass(context)) {
-			if (AspectJAdvisedFilter.isAspectJAroundBody(methodNode)) {
+			if (AspectJUtil.isAspectJAroundBody(methodNode)) {
 				return;
 			}
 		}

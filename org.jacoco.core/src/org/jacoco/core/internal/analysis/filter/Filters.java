@@ -50,7 +50,8 @@ public final class Filters implements IFilter {
 				new KotlinDefaultArgumentsFilter(), new KotlinInlineFilter(),
 				new KotlinCoroutineFilter(), new KotlinDefaultMethodsFilter(),
 				new AspectJInitFilter(), new AspectJAdvisedFilter(),
-				new AspectJSyntheticFilter());
+				new AspectJSyntheticFilter(),
+				new AspectJAroundClosureClassFilter());
 	}
 
 	private Filters(final IFilter... filters) {
