@@ -21,20 +21,20 @@ import org.aspectj.lang.annotation.Aspect;
 public class AfterThrowingExecutionTargetAspect {
 
 	@AfterThrowing("execution(* org.jacoco.core.test.validation.aspectj.targets.AfterThrowingExecutionTarget.foo1())")
-	public void after1(JoinPoint joinPoint) {
+	public void after_joinpoint(JoinPoint joinPoint) {
 		System.out.println("after " + joinPoint);
 	}
 
 	@AfterThrowing("execution(* org.jacoco.core.test.validation.aspectj.targets.AfterThrowingExecutionTarget.foo2())")
-	public void after2() {
+	public void after_empty() {
 		System.out.println("after ");
 	}
 	@AfterThrowing(value = "execution(* org.jacoco.core.test.validation.aspectj.targets.AfterThrowingExecutionTarget.foo3())", throwing = "e")
-	public void after3(JoinPoint joinPoint, Exception e) {
+	public void after_joinpoint_value(JoinPoint joinPoint, Exception e) {
 		System.out.println("after " + joinPoint);
 	}
 	@AfterThrowing(value = "execution(* org.jacoco.core.test.validation.aspectj.targets.AfterThrowingExecutionTarget.foo4())", throwing = "e")
-	public void after4(Exception e) {
+	public void after_value(Exception e) {
 		System.out.println("after");
 	}
 }

@@ -19,8 +19,20 @@ import org.aspectj.lang.annotation.Aspect;
 @Aspect
 public class AfterReturningExecutionTargetAspect {
 
-	@AfterReturning("execution(* org.jacoco.core.test.validation.aspectj.targets.AfterReturningExecutionTarget.*())")
-	public void after(JoinPoint joinPoint) {
+	@AfterReturning("execution(* org.jacoco.core.test.validation.aspectj.targets.AfterReturningExecutionTarget.foo1())")
+	public void after_joinpoint(JoinPoint joinPoint) {
 		System.out.println("after " + joinPoint);
+	}
+	@AfterReturning("execution(* org.jacoco.core.test.validation.aspectj.targets.AfterReturningExecutionTarget.foo2())")
+	public void after_empty() {
+		System.out.println("after");
+	}
+	@AfterReturning(value = "execution(* org.jacoco.core.test.validation.aspectj.targets.AfterReturningExecutionTarget.foo3())", returning = "val")
+	public void after_joinpoint_value(JoinPoint joinPoint, Object val) {
+		System.out.println("after " + joinPoint);
+	}
+	@AfterReturning(value = "execution(* org.jacoco.core.test.validation.aspectj.targets.AfterReturningExecutionTarget.foo4())", returning = "val")
+	public void after_value(Object val) {
+		System.out.println("after");
 	}
 }

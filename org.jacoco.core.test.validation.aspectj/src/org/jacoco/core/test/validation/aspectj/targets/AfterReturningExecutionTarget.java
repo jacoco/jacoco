@@ -15,10 +15,22 @@ package org.jacoco.core.test.validation.aspectj.targets;
 public class AfterReturningExecutionTarget {
 
 	public static void main(String[] args) {
-		new AfterReturningExecutionTarget().foo(); // assertFullyCovered()
+		new AfterReturningExecutionTarget().foo1(); // assertFullyCovered()
+		new AfterReturningExecutionTarget().foo2(); // assertFullyCovered()
+		new AfterReturningExecutionTarget().foo3(); // assertFullyCovered()
+		new AfterReturningExecutionTarget().foo4(); // assertFullyCovered()
 	}
 
-	public void foo() {
+	public void foo1() {
+		System.out.println("bar"); // assertFullyCovered()
+	}
+	public void foo2() {
+		System.out.println("bar"); // assertFullyCovered()
+	}
+	public void foo3() {
+		System.out.println("bar"); // assertFullyCovered()
+	}
+	public void foo4() {
 		System.out.println("bar"); // assertFullyCovered()
 	}
 }
