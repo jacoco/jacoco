@@ -14,10 +14,10 @@ package org.jacoco.core.test.validation.aspectj.targets;
 
 public class BeforeSetTarget {
 
-    private int foo;
+	private int foo;
 
-    public static void main(String[] args) {
-        new BeforeSetTarget().foo = 2; // assertFullyCovered()
-    }
+	public static void main(String[] args) {
+		new BeforeSetTarget().foo = 2; // assertFullyCovered()
+	}
 
 }
