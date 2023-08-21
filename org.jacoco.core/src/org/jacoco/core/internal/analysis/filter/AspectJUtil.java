@@ -71,7 +71,9 @@ public class AspectJUtil {
 						contentField.setAccessible(true);
 					}
 					content = (byte[]) contentField.get(attr);
-				} catch (NoSuchFieldException | IllegalAccessException e) {
+				} catch (NoSuchFieldException e) {
+					throw new RuntimeException(e);
+				} catch (IllegalAccessException e) {
 					throw new RuntimeException(e);
 				}
 				return intFromByteArray(content);

@@ -55,7 +55,7 @@ import org.objectweb.asm.tree.*;
  * </pre>
  */
 public class AspectJInitFilter implements IFilter {
-	@Override
+
 	public void filter(MethodNode methodNode, IFilterContext context,
 			IFilterOutput output) {
 		if (!methodNode.name.equals("<clinit>")) {

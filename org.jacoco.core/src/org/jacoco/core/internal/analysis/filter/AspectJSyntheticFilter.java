@@ -19,7 +19,7 @@ import org.objectweb.asm.tree.MethodNode;
  * Filters methods with the {@code org.aspectj.weaver.AjSynthetic} attribute.
  */
 public class AspectJSyntheticFilter implements IFilter {
-	@Override
+
 	public void filter(MethodNode methodNode, IFilterContext context,
 			IFilterOutput output) {
 

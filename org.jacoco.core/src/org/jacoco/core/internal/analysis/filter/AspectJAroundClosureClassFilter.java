@@ -24,7 +24,6 @@ public class AspectJAroundClosureClassFilter implements IFilter {
 	private static final Pattern AJC_CLOSURE_PATTERN = Pattern
 			.compile(".*\\$AjcClosure\\d+");
 
-	@Override
 	public void filter(MethodNode methodNode, IFilterContext context,
 			IFilterOutput output) {
 

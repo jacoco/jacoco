@@ -20,7 +20,6 @@ import org.objectweb.asm.tree.*;
  */
 public class AspectJAdvisedFilter implements IFilter {
 
-	@Override
 	public void filter(MethodNode methodNode, IFilterContext context,
 			IFilterOutput output) {
 
