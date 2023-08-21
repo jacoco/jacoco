@@ -12,6 +12,7 @@
  *******************************************************************************/
 package org.jacoco.core.internal.analysis.filter;
 
+import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.tree.*;
 
 import java.util.regex.Pattern;
@@ -93,6 +94,40 @@ public class AspectJAdvisedFilter implements IFilter {
 				}
 			}
 		}
+
+		for (TryCatchBlockNode tryCatchBlock : methodNode.tryCatchBlocks) {
+			checkAfterThrowingHandler(output, tryCatchBlock);
+		}
+	}
+
+	private static void checkAfterThrowingHandler(IFilterOutput output,
+			TryCatchBlockNode tryCatchBlock) {
+		if (tryCatchBlock.type == null) {
+			return;
+		}
+
+		MethodInsnNode aspectOf = findNext(MethodInsnNode.class,
+				tryCatchBlock.handler);
+
+		if (aspectOf == null || !"aspectOf".equals(aspectOf.name)
+				|| aspectOf.getOpcode() != Opcodes.INVOKESTATIC) {
+			return;
+		}
+
+		String aspectClass = aspectOf.owner;
+
+		MethodInsnNode aspectCall = findNext(MethodInsnNode.class, aspectOf);
+
+		if (aspectCall != null && aspectCall.owner.equals(aspectClass)) {
+
+			AbstractInsnNode throwNode = findNext(Opcodes.ATHROW, aspectCall);
+
+			if (throwNode != null) {
+				output.ignore(tryCatchBlock.handler, throwNode);
+			}
+
+		}
+
 	}
 
 	private LineNumberNode findFirstLineAfter(MethodNode methodNode, int line) {
@@ -132,5 +167,19 @@ public class AspectJAdvisedFilter implements IFilter {
 
 		return null;
 
+	}
+
+	public static AbstractInsnNode findNext(int opcode,
+			AbstractInsnNode start) {
+		AbstractInsnNode cursor = start;
+		while (cursor != null) {
+			cursor = cursor.getNext();
+
+			if (cursor.getOpcode() == opcode) {
+				return cursor;
+			}
+		}
+
+		return null;
 	}
 }
