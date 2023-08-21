@@ -16,16 +16,13 @@ import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
 
+@SuppressWarnings("SpringAopPointcutExpressionInspection")
 @Aspect
-public class BeforeExecutionTargetAspect {
+public class BeforeSetTargetAspect {
 
-	@Before("execution(* org.jacoco.core.test.validation.aspectj.targets.BeforeExecutionTarget.foo1())")
+	@Before("set(* org.jacoco.core.test.validation.aspectj.targets.BeforeSetTarget.foo)")
 	public void before_joinpoint(JoinPoint joinPoint) {
 		System.out.println("before " + joinPoint);
 	}
 
-	@Before("execution(* org.jacoco.core.test.validation.aspectj.targets.BeforeExecutionTarget.foo2())")
-	public void before_empty() {
-		System.out.println("before");
-	}
 }

@@ -29,10 +29,12 @@ public class AfterThrowingExecutionTargetAspect {
 	public void after_empty() {
 		System.out.println("after ");
 	}
+
 	@AfterThrowing(value = "execution(* org.jacoco.core.test.validation.aspectj.targets.AfterThrowingExecutionTarget.foo3())", throwing = "e")
 	public void after_joinpoint_value(JoinPoint joinPoint, Exception e) {
 		System.out.println("after " + joinPoint);
 	}
+
 	@AfterThrowing(value = "execution(* org.jacoco.core.test.validation.aspectj.targets.AfterThrowingExecutionTarget.foo4())", throwing = "e")
 	public void after_value(Exception e) {
 		System.out.println("after");

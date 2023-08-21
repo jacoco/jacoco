@@ -15,10 +15,15 @@ package org.jacoco.core.test.validation.aspectj.targets;
 public class BeforeExecutionTarget {
 
 	public static void main(String[] args) {
-		new BeforeExecutionTarget().foo(); // assertFullyCovered()
+		new BeforeExecutionTarget().foo1(); // assertFullyCovered()
+		new BeforeExecutionTarget().foo2(); // assertFullyCovered()
 	}
 
-	public void foo() {
+	public void foo1() {
+		System.out.println("bar"); // assertFullyCovered()
+	}
+
+	public void foo2() {
 		System.out.println("bar"); // assertFullyCovered()
 	}
 }

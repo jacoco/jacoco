@@ -12,20 +12,12 @@
  *******************************************************************************/
 package org.jacoco.core.test.validation.aspectj.targets;
 
-import org.aspectj.lang.JoinPoint;
-import org.aspectj.lang.annotation.Aspect;
-import org.aspectj.lang.annotation.Before;
+public class BeforeSetTarget {
 
-@Aspect
-public class BeforeExecutionTargetAspect {
+    private int foo;
 
-	@Before("execution(* org.jacoco.core.test.validation.aspectj.targets.BeforeExecutionTarget.foo1())")
-	public void before_joinpoint(JoinPoint joinPoint) {
-		System.out.println("before " + joinPoint);
-	}
+    public static void main(String[] args) {
+        new BeforeSetTarget().foo = 2; // assertFullyCovered()
+    }
 
-	@Before("execution(* org.jacoco.core.test.validation.aspectj.targets.BeforeExecutionTarget.foo2())")
-	public void before_empty() {
-		System.out.println("before");
-	}
 }

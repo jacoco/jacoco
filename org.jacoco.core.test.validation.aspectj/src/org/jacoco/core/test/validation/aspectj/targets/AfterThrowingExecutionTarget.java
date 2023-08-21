@@ -24,12 +24,15 @@ public class AfterThrowingExecutionTarget {
 	public void foo1() {
 		System.out.println("bar"); // assertFullyCovered()
 	}
+
 	public void foo2() {
 		System.out.println("bar"); // assertFullyCovered()
 	}
+
 	public void foo3() {
 		System.out.println("bar"); // assertFullyCovered()
 	}
+
 	public void foo4() {
 		System.out.println("bar"); // assertFullyCovered()
 	}
