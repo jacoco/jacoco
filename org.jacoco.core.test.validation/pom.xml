@@ -351,7 +351,7 @@
       <properties>
         <!-- Kotlin 1.5.0 doesn't support compilation into 18 -->
         <kotlin.compiler.jvmTarget>16</kotlin.compiler.jvmTarget>
-        <!-- Groovy 3.0.15 does not support compilation into 18 -->
+        <!-- Groovy 3.0.19 does not support compilation into 18 -->
         <groovy.targetBytecode>16</groovy.targetBytecode>
         <!-- see respective profile in org.jacoco.build about this override -->
         <maven.compiler.source>18</maven.compiler.source>
@@ -379,7 +379,7 @@
       <properties>
         <!-- Kotlin 1.5.0 doesn't support compilation into 19 -->
         <kotlin.compiler.jvmTarget>16</kotlin.compiler.jvmTarget>
-        <!-- Groovy 3.0.15 does not support compilation into 19 -->
+        <!-- Groovy 3.0.19 does not support compilation into 19 -->
         <groovy.targetBytecode>16</groovy.targetBytecode>
         <!-- see respective profile in org.jacoco.build about this override -->
         <maven.compiler.source>19</maven.compiler.source>
@@ -407,7 +407,7 @@
       <properties>
         <!-- Kotlin 1.5.0 doesn't support compilation into 20 -->
         <kotlin.compiler.jvmTarget>16</kotlin.compiler.jvmTarget>
-        <!-- Groovy 3.0.15 does not support compilation into 20 -->
+        <!-- Groovy 3.0.19 does not support compilation into 20 -->
         <groovy.targetBytecode>16</groovy.targetBytecode>
         <!-- see respective profile in org.jacoco.build about this override -->
         <maven.compiler.source>20</maven.compiler.source>
@@ -435,7 +435,7 @@
       <properties>
         <!-- Kotlin 1.5.0 doesn't support compilation into 21 -->
         <kotlin.compiler.jvmTarget>16</kotlin.compiler.jvmTarget>
-        <!-- Groovy 3.0.15 does not support compilation into 21 -->
+        <!-- Groovy 3.0.19 does not support compilation into 21 -->
         <groovy.targetBytecode>16</groovy.targetBytecode>
         <!-- see respective profile in org.jacoco.build about this override -->
         <maven.compiler.source>21</maven.compiler.source>
@@ -448,9 +448,7 @@
         <module>../org.jacoco.core.test.validation.java14</module>
         <module>../org.jacoco.core.test.validation.java16</module>
         <module>../org.jacoco.core.test.validation.java21</module>
-        <!-- Groovy 3.0.15 does not support Java 21
         <module>../org.jacoco.core.test.validation.groovy</module>
-        -->
         <!-- Scala 2.13.4 does not support Java 21 - see https://github.com/jacoco/jacoco/issues/1431
         <module>../org.jacoco.core.test.validation.scala</module>
         -->
@@ -468,7 +466,7 @@
       <properties>
         <!-- Kotlin 1.5.0 doesn't support compilation into 22 -->
         <kotlin.compiler.jvmTarget>16</kotlin.compiler.jvmTarget>
-        <!-- Groovy 3.0.15 does not support compilation into 22 -->
+        <!-- Groovy 3.0.19 does not support compilation into 22 -->
         <groovy.targetBytecode>16</groovy.targetBytecode>
         <!-- see respective profile in org.jacoco.build about this override -->
         <maven.compiler.source>22</maven.compiler.source>
@@ -481,7 +479,7 @@
         <module>../org.jacoco.core.test.validation.java14</module>
         <module>../org.jacoco.core.test.validation.java16</module>
         <module>../org.jacoco.core.test.validation.java21</module>
-        <!-- Groovy 3.0.15 does not support Java 22
+        <!-- Groovy 3.0.19 does not support Java 22
         <module>../org.jacoco.core.test.validation.groovy</module>
         -->
         <!-- Scala 2.13.4 does not support Java 22 - see https://github.com/jacoco/jacoco/issues/1431
