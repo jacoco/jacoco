@@ -56,10 +56,6 @@ public class MethodInstrumenterTest {
 		};
 	}
 
-	void sampleReturn() {
-		return;
-	}
-
 	@Test
 	public void testVisitProbe() {
 		instrumenter.visitProbe(33);
