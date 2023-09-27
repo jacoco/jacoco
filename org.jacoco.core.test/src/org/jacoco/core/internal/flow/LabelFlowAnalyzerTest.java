@@ -264,11 +264,6 @@ public class LabelFlowAnalyzerTest {
 		assertFalse(analyzer.first);
 	}
 
-	@Test(expected = AssertionError.class)
-	public void testVisitInsnNegative() {
-		analyzer.visitInsn(RET);
-	}
-
 	@Test
 	public void testIntInsn() {
 		analyzer.visitIntInsn(BIPUSH, 0);
@@ -281,6 +276,11 @@ public class LabelFlowAnalyzerTest {
 		analyzer.visitVarInsn(ILOAD, 0);
 		assertTrue(analyzer.successor);
 		assertFalse(analyzer.first);
+	}
+
+	@Test(expected = AssertionError.class)
+	public void testVisitVarInsnNegative() {
+		analyzer.visitVarInsn(RET, 0);
 	}
 
 	@Test
