@@ -137,8 +137,6 @@ public final class LabelFlowAnalyzer extends MethodVisitor {
 	@Override
 	public void visitInsn(final int opcode) {
 		switch (opcode) {
-		case Opcodes.RET:
-			throw new AssertionError("Subroutines not supported.");
 		case Opcodes.IRETURN:
 		case Opcodes.LRETURN:
 		case Opcodes.FRETURN:
@@ -163,6 +161,9 @@ public final class LabelFlowAnalyzer extends MethodVisitor {
 
 	@Override
 	public void visitVarInsn(final int opcode, final int var) {
+		if (Opcodes.RET == opcode) {
+			throw new AssertionError("Subroutines not supported.");
+		}
 		successor = true;
 		first = false;
 	}
