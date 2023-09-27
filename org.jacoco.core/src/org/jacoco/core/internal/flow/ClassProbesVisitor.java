@@ -47,10 +47,8 @@ public abstract class ClassProbesVisitor extends ClassVisitor {
 			String desc, String signature, String[] exceptions);
 
 	/**
-	 * Reports the total number of encountered probes. For classes this method
-	 * is called just before {@link ClassVisitor#visitEnd()}. For interfaces
-	 * this method is called before the first method (the static initializer) is
-	 * emitted.
+	 * Reports the total number of encountered probes. This method is called
+	 * just before {@link #visitEnd()}
 	 *
 	 * @param count
 	 *            total number of probes
