@@ -46,6 +46,7 @@ public class BooleanExpressionsTarget {
 		if (t() & t()) { // assertFullyCovered(1, 1)
 			nop();
 		}
+		nop(f() & f()); // assertFullyCovered()
 
 		/* 4. Conditional And */
 		if (f() && f()) { // assertPartlyCovered(3, 1)
@@ -60,6 +61,8 @@ public class BooleanExpressionsTarget {
 		if (t() && t()) { // assertFullyCovered(2, 2)
 			nop();
 		}
+		nop(f() && f()); // assertPartlyCovered(3, 1)
+		nop(t() && f()); // assertPartlyCovered(2, 2)
 
 		/* 5. Or */
 		if (f() | f()) { // assertFullyCovered(1, 1)
@@ -74,6 +77,7 @@ public class BooleanExpressionsTarget {
 		if (t() | t()) { // assertFullyCovered(1, 1)
 			nop();
 		}
+		nop(f() | f()); // assertFullyCovered()
 
 		/* 6. Conditional Or */
 		if (f() || f()) { // assertFullyCovered(2, 2)
@@ -88,6 +92,8 @@ public class BooleanExpressionsTarget {
 		if (t() || t()) { // assertPartlyCovered(3, 1)
 			nop();
 		}
+		nop(t() || f()); // assertPartlyCovered(3, 1)
+		nop(f() || f()); // assertPartlyCovered(2, 2)
 
 		/* 7. Exclusive Or */
 		if (f() ^ f()) { // assertFullyCovered(1, 1)
@@ -102,6 +108,7 @@ public class BooleanExpressionsTarget {
 		if (t() ^ t()) { // assertFullyCovered(1, 1)
 			nop();
 		}
+		nop(f() ^ f()); // assertFullyCovered()
 
 		/* 8. Conditional Operator */
 		nop(t() ? i1() : i2()); // assertPartlyCovered(1, 1)
