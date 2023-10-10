@@ -101,6 +101,12 @@ public final class LabelFlowAnalyzer extends MethodVisitor {
 
 	@Override
 	public void visitLineNumber(final int line, final Label start) {
+		if (line == 0) {
+			// ASM versions prior to 9.5 were ignoring zero line numbers
+			// (https://gitlab.ow2.org/asm/asm/-/issues/317989)
+			// so we ignore them here to preserve exec file compatibility
+			return;
+		}
 		lineStart = start;
 	}
 
