@@ -88,9 +88,6 @@ public final class KotlinInlineFilter implements IFilter {
 					sourceFileIds.set(Integer.parseInt(m.group(1)));
 				}
 			}
-			if (sourceFileIds.isEmpty()) {
-				throw new IllegalStateException("Unexpected SMAP FileSection");
-			}
 			// LineSection
 			int min = Integer.MAX_VALUE;
 			while (true) {
