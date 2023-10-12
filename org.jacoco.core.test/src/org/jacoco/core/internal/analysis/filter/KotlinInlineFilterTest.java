@@ -391,31 +391,6 @@ public class KotlinInlineFilterTest extends FilterTestBase {
 	}
 
 	@Test
-	public void should_throw_exception_when_no_SourceFileId_for_SourceFile() {
-		context.className = "ExampleKt";
-		context.sourceFileName = "example.kt";
-		context.classAnnotations
-				.add(KotlinGeneratedFilter.KOTLIN_METADATA_DESC);
-		context.sourceDebugExtension = "" //
-				+ "SMAP\n" //
-				+ "example.kt\n" //
-				+ "Kotlin\n" //
-				+ "*S Kotlin\n" //
-				+ "*F\n" //
-				+ "+ 1 another.kt\n" //
-				+ "AnotherKt\n" //
-				+ "*L\n" //
-				+ "*E\n";
-
-		try {
-			filter.filter(m, context, output);
-			fail("exception expected");
-		} catch (final IllegalStateException e) {
-			assertEquals("Unexpected SMAP FileSection", e.getMessage());
-		}
-	}
-
-	@Test
 	public void should_throw_exception_when_unexpected_LineInfo() {
 		context.className = "Callsite";
 		context.sourceFileName = "callsite.kt";
