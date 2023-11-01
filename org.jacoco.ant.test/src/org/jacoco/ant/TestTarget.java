@@ -21,8 +21,7 @@ import org.junit.Test;
 
 /**
  * Simple test target for Java applications ant JUnit4 tests. To assert
- * execution it creates an empty file <code>target.txt</code> in the working
- * directory.
+ * execution it prints "Target executed".
  */
 public class TestTarget {
 
