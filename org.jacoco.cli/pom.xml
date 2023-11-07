@@ -108,6 +108,24 @@
               </transformers>
               <filters>
                 <filter>
+                  <artifact>*:*</artifact>
+                  <excludes>
+                    <exclude>META-INF/MANIFEST.MF</exclude>
+                  </excludes>
+                </filter>
+                <filter>
+                  <artifact>org.jacoco:org.jacoco.core</artifact>
+                  <excludes>
+                    <exclude>about.html</exclude>
+                  </excludes>
+                </filter>
+                <filter>
+                  <artifact>org.jacoco:org.jacoco.report</artifact>
+                  <excludes>
+                    <exclude>about.html</exclude>
+                  </excludes>
+                </filter>
+                <filter>
                   <artifact>args4j:args4j</artifact>
                   <excludes>
                     <exclude>**/Messages_*.properties</exclude>

@@ -71,6 +71,18 @@
               </relocations>
               <filters>
                 <filter>
+                  <artifact>*:*</artifact>
+                  <excludes>
+                    <exclude>META-INF/MANIFEST.MF</exclude>
+                  </excludes>
+                </filter>
+                <filter>
+                  <artifact>org.jacoco:org.jacoco.core</artifact>
+                  <excludes>
+                    <exclude>about.html</exclude>
+                  </excludes>
+                </filter>
+                <filter>
                   <artifact>org.ow2.asm:*</artifact>
                   <excludes>
                     <exclude>module-info.class</exclude>
