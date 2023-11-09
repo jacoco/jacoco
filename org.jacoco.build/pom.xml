@@ -557,6 +557,10 @@
               <version>4.29</version>
               <file>../org.jacoco.core/.settings/org.eclipse.jdt.core.prefs</file>
             </eclipse>
+            <importOrder>
+              <order>java,javax,org,com,</order>
+              <semanticSort>true</semanticSort>
+            </importOrder>
             <trimTrailingWhitespace/>
             <endWithNewline/>
           </java>

@@ -12,9 +12,9 @@
  *******************************************************************************/
 package org.jacoco.core.test;
 
-import org.junit.Test;
-
 import static org.junit.Assert.assertSame;
+
+import org.junit.Test;
 
 /**
  * Unit test for {@link InstrumentingLoader}.
