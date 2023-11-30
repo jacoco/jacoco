@@ -132,19 +132,41 @@ public class HTMLFormatter implements IHTMLReportContext {
 
 	private Table createTable() {
 		final Table t = new Table();
-		t.add("Element", null, new LabelColumn(), false);
-		t.add("Missed Instructions", Styles.BAR,
-				new BarColumn(CounterEntity.INSTRUCTION, locale), true);
-		t.add("Cov.", Styles.CTR2,
-				new PercentageColumn(CounterEntity.INSTRUCTION, locale), false);
-		t.add("Missed Branches", Styles.BAR,
-				new BarColumn(CounterEntity.BRANCH, locale), false);
-		t.add("Cov.", Styles.CTR2,
+		t.add("模块(Element)", null, new LabelColumn(), false);
+
+		t.add("行覆盖(line)", Styles.BAR, new BarColumn(CounterEntity.LINE, locale),
+				false);
+		t.add("%", Styles.CTR2,
+				new PercentageColumn(CounterEntity.LINE, locale), false);
+
+		t.add("分支覆盖(branch)", Styles.BAR, new BarColumn(CounterEntity.BRANCH, locale),
+				false);
+		t.add("", Styles.CTR2,
 				new PercentageColumn(CounterEntity.BRANCH, locale), false);
-		addMissedTotalColumns(t, "Cxty", CounterEntity.COMPLEXITY);
-		addMissedTotalColumns(t, "Lines", CounterEntity.LINE);
-		addMissedTotalColumns(t, "Methods", CounterEntity.METHOD);
-		addMissedTotalColumns(t, "Classes", CounterEntity.CLASS);
+
+		t.add("方法覆盖(method)", Styles.BAR, new BarColumn(CounterEntity.METHOD, locale),
+				false);
+		t.add("", Styles.CTR2,
+				new PercentageColumn(CounterEntity.METHOD, locale), false);
+
+		t.add("类覆盖(class)", Styles.BAR, new BarColumn(CounterEntity.CLASS, locale),
+				false);
+		t.add("", Styles.CTR2,
+				new PercentageColumn(CounterEntity.CLASS, locale), false);
+
+//		 t.add("Missed Instructions", Styles.BAR,
+//		 new BarColumn(CounterEntity.INSTRUCTION, locale), true);
+//		 t.add("Cov.", Styles.CTR2,
+//		 new PercentageColumn(CounterEntity.INSTRUCTION, locale), false);
+//		 t.add("Missed Branches", Styles.BAR,
+//		 new BarColumn(CounterEntity.BRANCH, locale), false);
+//		 t.add("Cov.", Styles.CTR2,
+//		 new PercentageColumn(CounterEntity.BRANCH, locale), false);
+//		 addMissedTotalColumns(t, "Cxty", CounterEntity.COMPLEXITY);
+		 addMissedTotalColumns(t, "Lines", CounterEntity.LINE);
+		 addMissedTotalColumns(t, "Branches", CounterEntity.BRANCH);
+		 addMissedTotalColumns(t, "Methods", CounterEntity.METHOD);
+		 addMissedTotalColumns(t, "Classes", CounterEntity.CLASS);
 		return t;
 	}
 
@@ -205,11 +227,20 @@ public class HTMLFormatter implements IHTMLReportContext {
 				this.executionData = executionData;
 			}
 
+			/**
+			 * 访问Bundle覆盖率信息的方法
+			 * @param bundle 覆盖率信息的Bundle对象
+			 * @param locator 源文件定位器
+			 * @throws IOException 如果发生IO异常
+			 */
 			public void visitBundle(final IBundleCoverage bundle,
 					final ISourceFileLocator locator) throws IOException {
+				// 创建一个BundlePage对象，用于展示Bundle的覆盖率信息
 				final BundlePage page = new BundlePage(bundle, null, locator,
 						root, HTMLFormatter.this);
+				// 创建Sessions页面
 				createSessionsPage(page);
+				// 渲染页面
 				page.render();
 			}
 

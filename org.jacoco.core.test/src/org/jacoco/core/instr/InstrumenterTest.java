@@ -28,13 +28,14 @@ import java.io.Serializable;
 import java.util.Arrays;
 import java.util.jar.JarInputStream;
 import java.util.jar.JarOutputStream;
-import java.util.jar.Pack200;
+
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
 
+import org.apache.commons.compress.java.util.jar.Pack200;
 import org.jacoco.core.analysis.AnalyzerTest;
 import org.jacoco.core.internal.data.CRC64;
 import org.jacoco.core.internal.instr.InstrSupport;

@@ -15,6 +15,8 @@ package org.jacoco.report.internal.html.page;
 import java.io.IOException;
 
 import org.jacoco.core.JaCoCo;
+import org.jacoco.core.analysis.ICounter;
+import org.jacoco.core.analysis.ICoverageNode;
 import org.jacoco.report.internal.ReportOutputFolder;
 import org.jacoco.report.internal.html.HTMLElement;
 import org.jacoco.report.internal.html.IHTMLReportContext;
@@ -75,7 +77,9 @@ public abstract class ReportPage implements ILinkable {
 				folder.createFile(getFileName()), context.getOutputEncoding());
 		html.attr("lang", context.getLocale().getLanguage());
 		head(html.head());
-		body(html.body());
+		html.script("https://code,highcharts.com.cn/highcharts/highcharts.js");
+		html.script("https://code.highcharts.com.cn/highcharts/modules/exporting.js");
+		body(html.body(),getFileName().contains(".java"));
 		html.close();
 	}
 
@@ -98,16 +102,73 @@ public abstract class ReportPage implements ILinkable {
 		head.title().text(getLinkLabel());
 	}
 
-	private void body(final HTMLElement body) throws IOException {
+	private void body(final HTMLElement body, boolean isSourcePage) throws IOException {
 		body.attr("onload", getOnload());
-		final HTMLElement navigation = body.div(Styles.BREADCRUMB);
-		navigation.attr("id", "breadcrumb");
-		infoLinks(navigation.span(Styles.INFO));
-		breadcrumb(navigation, folder);
-		body.h1().text(getLinkLabel());
+//		if (!isSourcePage) {
+//			// 创建汇总区域
+//			final HTMLElement graphDiv = body.div("graph");
+//			graphDiv.attr("style", "border:2px solid lightgray;height:300px;width:800px;margin-top:30px;margin-botom:20px;");
+//
+//			// 获取汇总数据
+//			Object summaryData = getSummaryNode(body);
+//			if (summaryData instanceof ICoverageNode) {
+//				ICoverageNode summary = (ICoverageNode) summaryData;
+//				// 创建汇总区域图表
+//				summary(graphDiv, summary);
+//				graphDiv.close();
+//			}
+//		}
 		content(body);
-		footer(body);
 	}
+
+	private void summary(HTMLElement graphBody, ICoverageNode summary) throws IOException {
+
+		HTMLElement containers = graphBody.div("container");
+		containers.attr("style","margin-left:70px;");
+		//生成行覆盖率图表
+		ICounter lineCounter = summary.getLineCounter();
+		HTMLElement div1 = containers.div("container1");
+		drawGraph(div1, graphBody, "1", "行", lineCounter.getCoveredCount(), lineCounter.getMissedCount(), lineCounter.getCoveredRatio());
+		//生成分支覆盖率图表
+		ICounter branchCounter = summary.getBranchCounter();
+		HTMLElement div2 = containers.div("container2");
+		drawGraph(div2, graphBody, "2", "分支", branchCounter.getCoveredCount(),branchCounter.getMissedCount(), branchCounter.getCoveredCount());
+	}
+
+	private void drawGraph(HTMLElement divItem, HTMLElement graphBody, String index, String title, int cover, int miss, double percent) {
+		try {
+			divItem.attr("style", "height: 160px;width:160px;float:left");
+			divItem.attr("id", "container" + index);
+			if (Double.isNaN(percent)) {
+				percent = 0.0;
+			}
+			divItem.script(
+					"Highcharts.setOptions({\n" +
+							"    colors: ['#67C23A', '#COC4CC']\n" +
+							"});\n" +
+							"var chart = Highcharts.chart('container" + index + "', {\n" +
+							"    chart: {\n" +
+							"        spacing: [10, 0, 10, 0]\n" +
+							"    },\n" +
+							"    title: {\n" +
+							"        floating: true,\n" +
+							"        text: '" + title + " " + Double.parseDouble(df.format(percent * 100)) + "%',\n" +
+							"        style: {\n" +
+							"            fontSize: '18px'\n" +
+							"        }\n" +
+							"    },\n" +
+							"    plotOptions: {\n" +
+							"        pie: {\n" +
+							"            allowPointSelect: true\n" +
+							"        }\n" +
+							"    }\n" +
+							"});"
+			);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
 
 	/**
 	 * Returns the onload handler for this page.

@@ -32,7 +32,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.jar.JarInputStream;
-import java.util.jar.Pack200;
+import org.apache.commons.compress.java.util.jar.Pack200;
 import java.util.zip.GZIPOutputStream;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;

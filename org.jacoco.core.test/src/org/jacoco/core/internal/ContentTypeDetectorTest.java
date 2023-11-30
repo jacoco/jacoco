@@ -20,11 +20,11 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.jar.JarInputStream;
-import java.util.jar.Pack200;
 import java.util.zip.GZIPOutputStream;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
+import org.apache.commons.compress.java.util.jar.Pack200;
 import org.jacoco.core.test.TargetLoader;
 import org.junit.Test;
 

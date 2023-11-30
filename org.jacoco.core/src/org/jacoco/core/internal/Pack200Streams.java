@@ -12,6 +12,7 @@
  *******************************************************************************/
 package org.jacoco.core.internal;
 
+import org.apache.commons.compress.java.util.jar.Pack200;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.FilterInputStream;
@@ -20,7 +21,6 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.jar.JarInputStream;
 import java.util.jar.JarOutputStream;
-import java.util.jar.Pack200;
 
 /**
  * Internal wrapper for the weird Pack200 Java API to allow usage with streams.
