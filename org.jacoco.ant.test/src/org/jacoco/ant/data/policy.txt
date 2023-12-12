@@ -1,0 +1,9 @@
+grant codeBase "file:${jacoco.agent}" {
+    permission java.io.FilePermission "${jacoco.exec}/..", "read";
+    permission java.io.FilePermission "${jacoco.exec}", "write";
+    permission java.lang.RuntimePermission "shutdownHooks";
+    permission java.lang.RuntimePermission "createClassLoader";
+    permission java.lang.RuntimePermission "getProtectionDomain";
+    permission java.lang.reflect.ReflectPermission "suppressAccessChecks";
+    permission java.lang.RuntimePermission "defineClass";
+};

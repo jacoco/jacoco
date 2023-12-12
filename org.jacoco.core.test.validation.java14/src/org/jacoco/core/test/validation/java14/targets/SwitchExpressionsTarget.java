@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2022 Mountainminds GmbH & Co. KG and Contributors
+ * Copyright (c) 2009, 2023 Mountainminds GmbH & Co. KG and Contributors
  * This program and the accompanying materials are made available under
  * the terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0
@@ -12,13 +12,11 @@
  *******************************************************************************/
 package org.jacoco.core.test.validation.java14.targets;
 
-import static org.jacoco.core.test.validation.targets.Stubs.Enum.A;
-import static org.jacoco.core.test.validation.targets.Stubs.Enum.B;
-import static org.jacoco.core.test.validation.targets.Stubs.Enum.C;
-import static org.jacoco.core.test.validation.targets.Stubs.enumA;
 import static org.jacoco.core.test.validation.targets.Stubs.i1;
 import static org.jacoco.core.test.validation.targets.Stubs.i2;
 import static org.jacoco.core.test.validation.targets.Stubs.nop;
+
+import org.jacoco.core.test.validation.targets.Stubs;
 
 /**
  * This target exercises switch expressions.
@@ -31,7 +29,10 @@ public class SwitchExpressionsTarget {
 		multiValueSwitchExpressionWithArrows();
 		switchExpressionWithArrowsAndYield();
 		switchExpressionWithYield();
-		exhaustiveSwitchExpression();
+
+		exhaustiveSwitchExpression(Stubs.Enum.A);
+		exhaustiveSwitchExpression(Stubs.Enum.B);
+		exhaustiveSwitchExpression(Stubs.Enum.C);
 
 	}
 
@@ -98,13 +99,13 @@ public class SwitchExpressionsTarget {
 
 	}
 
-	private static void exhaustiveSwitchExpression() {
+	private static void exhaustiveSwitchExpression(Stubs.Enum e) {
 
-		nop(switch (enumA()) { // assertPartlyCovered(3, 1)
+		nop(switch (e) { // assertFullyCovered(0, 3)
 		case A -> i1(); // assertFullyCovered()
-		case B -> i1(); // assertNotCovered()
-		case C -> i1(); // assertNotCovered()
-		});
+		case B -> i1(); // assertFullyCovered()
+		case C -> i1(); // assertFullyCovered()
+		}); // assertEmpty()
 
 	}
 }

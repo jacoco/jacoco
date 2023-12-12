@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2022 Mountainminds GmbH & Co. KG and Contributors
+ * Copyright (c) 2009, 2023 Mountainminds GmbH & Co. KG and Contributors
  * This program and the accompanying materials are made available under
  * the terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0
@@ -12,12 +12,14 @@
  *******************************************************************************/
 package org.jacoco.core.internal.flow;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
 import static org.objectweb.asm.Opcodes.*;
 
+import org.jacoco.core.data.ExecutionDataWriter;
 import org.junit.Before;
 import org.junit.Test;
 import org.objectweb.asm.Label;
@@ -264,11 +266,6 @@ public class LabelFlowAnalyzerTest {
 		assertFalse(analyzer.first);
 	}
 
-	@Test(expected = AssertionError.class)
-	public void testVisitInsnNegative() {
-		analyzer.visitInsn(RET);
-	}
-
 	@Test
 	public void testIntInsn() {
 		analyzer.visitIntInsn(BIPUSH, 0);
@@ -281,6 +278,11 @@ public class LabelFlowAnalyzerTest {
 		analyzer.visitVarInsn(ILOAD, 0);
 		assertTrue(analyzer.successor);
 		assertFalse(analyzer.first);
+	}
+
+	@Test(expected = AssertionError.class)
+	public void testVisitVarInsnNegative() {
+		analyzer.visitVarInsn(RET, 0);
 	}
 
 	@Test
@@ -302,6 +304,20 @@ public class LabelFlowAnalyzerTest {
 	public void testLineNumber() {
 		analyzer.visitLineNumber(42, label);
 		assertSame(label, analyzer.lineStart);
+	}
+
+	/**
+	 * @see org.jacoco.core.internal.analysis.MethodAnalyzerTest#zero_line_number_should_create_1_probe()
+	 * @see org.jacoco.core.internal.instr.ZeroLineNumberTest
+	 */
+	@Test
+	public void visitLineNumber_should_skip_zero() {
+		analyzer.visitLineNumber(0, label);
+		assertNull(analyzer.lineStart);
+
+		// workaround for zero line number can be removed if needed
+		// during change of exec file version
+		assertEquals(0x1007, ExecutionDataWriter.FORMAT_VERSION);
 	}
 
 	@Test

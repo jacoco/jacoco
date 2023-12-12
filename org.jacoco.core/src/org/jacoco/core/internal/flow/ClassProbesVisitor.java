@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2022 Mountainminds GmbH & Co. KG and Contributors
+ * Copyright (c) 2009, 2023 Mountainminds GmbH & Co. KG and Contributors
  * This program and the accompanying materials are made available under
  * the terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0
@@ -47,10 +47,8 @@ public abstract class ClassProbesVisitor extends ClassVisitor {
 			String desc, String signature, String[] exceptions);
 
 	/**
-	 * Reports the total number of encountered probes. For classes this method
-	 * is called just before {@link ClassVisitor#visitEnd()}. For interfaces
-	 * this method is called before the first method (the static initializer) is
-	 * emitted.
+	 * Reports the total number of encountered probes. This method is called
+	 * just before {@link #visitEnd()}
 	 *
 	 * @param count
 	 *            total number of probes

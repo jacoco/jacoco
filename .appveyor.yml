@@ -1,17 +1,17 @@
 cache:
-  - C:\Users\appveyor\apache-maven-3.3.9 -> appveyor.yml
   - C:\Users\appveyor\.m2 -> **\pom.xml
 
 install:
-  - if not exist C:\Users\appveyor\apache-maven-3.3.9 (
-      curl -LsS "http://www.apache.org/dyn/closer.cgi?action=download&filename=maven/maven-3/3.3.9/binaries/apache-maven-3.3.9-bin.zip" > apache-maven-3.3.9-bin.zip &&
-      unzip apache-maven-3.3.9-bin.zip -d C:\Users\appveyor
-    )
-  - SET PATH=C:\Users\appveyor\apache-maven-3.3.9\bin;%PATH%
+  - mkdir .jdk
+  - curl -L "https://api.azul.com/zulu/download/community/v1.0/bundles/latest/binary/?jdk_version=17&ext=zip&os=windows&arch=x86&hw_bitness=64&javafx=false&bundle_type=jdk" -o .jdk/jdk.zip
+  - unzip -d .jdk .jdk/jdk.zip
+  - mv .jdk/*/* .jdk
+  - .jdk\bin\java -version
+  - SET JAVA_HOME=%CD%\.jdk
 
 build_script:
-  # Maven 3.3.9 requires Java >= 7, but generation of Javadocs requires Java <= 6 (https://github.com/jacoco/jacoco/issues/110)
-  - mvn -V -B -e verify -Djdk.version=6 --toolchains=.travis\appveyor-toolchains.xml
+  # generation of Javadocs requires Java <= 6 (https://github.com/jacoco/jacoco/issues/110)
+  - mvn -V -B -e verify -Djdk.version=6 -Dbytecode.version=5 --toolchains=.travis\appveyor-toolchains.xml
 
 artifacts:
   - path: jacoco\target\*.zip

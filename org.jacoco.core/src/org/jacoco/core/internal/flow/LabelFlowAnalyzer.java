@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2022 Mountainminds GmbH & Co. KG and Contributors
+ * Copyright (c) 2009, 2023 Mountainminds GmbH & Co. KG and Contributors
  * This program and the accompanying materials are made available under
  * the terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0
@@ -101,6 +101,12 @@ public final class LabelFlowAnalyzer extends MethodVisitor {
 
 	@Override
 	public void visitLineNumber(final int line, final Label start) {
+		if (line == 0) {
+			// ASM versions prior to 9.5 were ignoring zero line numbers
+			// (https://gitlab.ow2.org/asm/asm/-/issues/317989)
+			// so we ignore them here to preserve exec file compatibility
+			return;
+		}
 		lineStart = start;
 	}
 
@@ -137,8 +143,6 @@ public final class LabelFlowAnalyzer extends MethodVisitor {
 	@Override
 	public void visitInsn(final int opcode) {
 		switch (opcode) {
-		case Opcodes.RET:
-			throw new AssertionError("Subroutines not supported.");
 		case Opcodes.IRETURN:
 		case Opcodes.LRETURN:
 		case Opcodes.FRETURN:
@@ -163,6 +167,9 @@ public final class LabelFlowAnalyzer extends MethodVisitor {
 
 	@Override
 	public void visitVarInsn(final int opcode, final int var) {
+		if (Opcodes.RET == opcode) {
+			throw new AssertionError("Subroutines not supported.");
+		}
 		successor = true;
 		first = false;
 	}
