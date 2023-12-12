@@ -47,6 +47,8 @@ jobs:
         JDK_VERSION: 21
       JDK 22:
         JDK_VERSION: 22
+      JDK 23:
+        JDK_VERSION: 23
   pool:
     vmImage: 'ubuntu-20.04'
   steps:
