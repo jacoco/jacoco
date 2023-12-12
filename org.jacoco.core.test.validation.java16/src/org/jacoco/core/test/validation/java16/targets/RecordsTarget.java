@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2022 Mountainminds GmbH & Co. KG and Contributors
+ * Copyright (c) 2009, 2023 Mountainminds GmbH & Co. KG and Contributors
  * This program and the accompanying materials are made available under
  * the terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0
@@ -21,14 +21,14 @@ public class RecordsTarget {
 	record WithoutFields() { // assertFullyCovered()
 	}
 
-	record WithFields( // assertPartlyCovered()
+	record WithFields( // assertFullyCovered()
 			int x // assertEmpty()
 	) {
 	}
 
 	record WithCustomMethods(int x) { // assertFullyCovered()
 		public int x() {
-			return x; // assertNotCovered()
+			return x; // assertEmpty()
 		}
 
 		public String toString() {

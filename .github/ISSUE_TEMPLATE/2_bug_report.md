@@ -15,7 +15,7 @@ https://groups.google.com/forum/?fromgroups=#!forum/jacoco
 
 Please understand that
 ISSUES WITHOUT FOLLOWING INFORMATION WILL BE CLOSED WITHOUT COMMENTS!
-Thank you for filling bug report!
+Thank you for filing a useful bug report!
 
 ### Steps to reproduce
 

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2022 Mountainminds GmbH & Co. KG and Contributors
+ * Copyright (c) 2009, 2023 Mountainminds GmbH & Co. KG and Contributors
  * This program and the accompanying materials are made available under
  * the terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0
@@ -20,6 +20,7 @@ import java.util.Set;
 
 import org.jacoco.core.analysis.ILine;
 import org.jacoco.core.analysis.IMethodCoverage;
+import org.jacoco.core.data.ExecutionDataWriter;
 import org.jacoco.core.internal.analysis.filter.FilterContextMock;
 import org.jacoco.core.internal.analysis.filter.Filters;
 import org.jacoco.core.internal.analysis.filter.IFilter;
@@ -134,6 +135,62 @@ public class MethodAnalyzerTest implements IProbeIdGenerator {
 		assertEquals(1002, result.getLastLine());
 
 		assertLine(1001, 0, 0, 0, 0);
+		assertLine(1002, 0, 1, 0, 0);
+	}
+
+	// === Scenario: method invocation after zero line number
+
+	/**
+	 * @see org.jacoco.core.internal.flow.LabelFlowAnalyzer#visitLineNumber(int,
+	 *      Label)
+	 * @see org.jacoco.core.internal.instr.ZeroLineNumberTest
+	 */
+	private void createZeroLineNumber() {
+		final Label l0 = new Label();
+		method.visitLabel(l0);
+		method.visitLineNumber(1001, l0);
+		method.visitInsn(Opcodes.NOP);
+		final Label l1 = new Label();
+		method.visitLabel(l1);
+		method.visitLineNumber(0, l1);
+		method.visitMethodInsn(Opcodes.INVOKESTATIC, "Foo", "foo", "()V",
+				false);
+		method.visitInsn(Opcodes.NOP);
+		final Label l2 = new Label();
+		method.visitLabel(l2);
+		method.visitLineNumber(1002, l2);
+		method.visitInsn(Opcodes.RETURN);
+	}
+
+	@Test
+	public void zero_line_number_should_create_1_probe() {
+		createZeroLineNumber();
+		runMethodAnalzer();
+		assertEquals(1, nextProbeId);
+
+		// workaround for zero line number can be removed if needed
+		// during change of exec file version
+		assertEquals(0x1007, ExecutionDataWriter.FORMAT_VERSION);
+	}
+
+	@Test
+	public void zero_line_number_should_show_missed_when_no_probes_are_executed() {
+		createZeroLineNumber();
+		runMethodAnalzer();
+
+		assertLine(1001, 1, 0, 0, 0);
+		assertLine(0, 2, 0, 0, 0);
+		assertLine(1002, 1, 0, 0, 0);
+	}
+
+	@Test
+	public void zero_line_number_should_show_covered_when_probe_is_executed() {
+		createZeroLineNumber();
+		probes[0] = true;
+		runMethodAnalzer();
+
+		assertLine(1001, 0, 1, 0, 0);
+		assertLine(0, 0, 2, 0, 0);
 		assertLine(1002, 0, 1, 0, 0);
 	}
 

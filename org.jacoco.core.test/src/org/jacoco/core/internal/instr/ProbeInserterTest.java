@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2022 Mountainminds GmbH & Co. KG and Contributors
+ * Copyright (c) 2009, 2023 Mountainminds GmbH & Co. KG and Contributors
  * This program and the accompanying materials are made available under
  * the terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0
@@ -59,21 +59,9 @@ public class ProbeInserterTest {
 	}
 
 	@Test
-	public void probevar_should_be_at_position_0_for_static_method_without_parameters() {
+	public void probevar_should_be_at_position_1_for_static_method_without_parameters() {
 		ProbeInserter pi = new ProbeInserter(Opcodes.ACC_STATIC, "m", "()V",
 				actualVisitor, arrayStrategy);
-		pi.insertProbe(0);
-
-		expectedVisitor.visitVarInsn(Opcodes.ALOAD, 0);
-		expectedVisitor.visitInsn(Opcodes.ICONST_0);
-		expectedVisitor.visitInsn(Opcodes.ICONST_1);
-		expectedVisitor.visitInsn(Opcodes.BASTORE);
-	}
-
-	@Test
-	public void probevar_should_be_at_position_1_for_instance_method_without_parameters() {
-		ProbeInserter pi = new ProbeInserter(0, "m", "()V", actualVisitor,
-				arrayStrategy);
 		pi.insertProbe(0);
 
 		expectedVisitor.visitVarInsn(Opcodes.ALOAD, 1);
@@ -83,24 +71,36 @@ public class ProbeInserterTest {
 	}
 
 	@Test
-	public void probevar_should_be_at_position_4_for_instance_method_with_3_parameters() {
-		ProbeInserter pi = new ProbeInserter(0, "m", "(IZLjava/lang/Object;)V",
-				actualVisitor, arrayStrategy);
+	public void probevar_should_be_at_position_2_for_instance_method_without_parameters() {
+		ProbeInserter pi = new ProbeInserter(0, "m", "()V", actualVisitor,
+				arrayStrategy);
 		pi.insertProbe(0);
 
-		expectedVisitor.visitVarInsn(Opcodes.ALOAD, 4);
+		expectedVisitor.visitVarInsn(Opcodes.ALOAD, 2);
 		expectedVisitor.visitInsn(Opcodes.ICONST_0);
 		expectedVisitor.visitInsn(Opcodes.ICONST_1);
 		expectedVisitor.visitInsn(Opcodes.BASTORE);
 	}
 
 	@Test
-	public void probevar_should_be_at_position_5_for_instance_method_with_2_wide_parameters() {
+	public void probevar_should_be_at_position_5_for_instance_method_with_3_parameters() {
+		ProbeInserter pi = new ProbeInserter(0, "m", "(IZLjava/lang/Object;)V",
+				actualVisitor, arrayStrategy);
+		pi.insertProbe(0);
+
+		expectedVisitor.visitVarInsn(Opcodes.ALOAD, 5);
+		expectedVisitor.visitInsn(Opcodes.ICONST_0);
+		expectedVisitor.visitInsn(Opcodes.ICONST_1);
+		expectedVisitor.visitInsn(Opcodes.BASTORE);
+	}
+
+	@Test
+	public void probevar_should_be_at_position_6_for_instance_method_with_2_wide_parameters() {
 		ProbeInserter pi = new ProbeInserter(0, "m", "(JD)V", actualVisitor,
 				arrayStrategy);
 		pi.insertProbe(0);
 
-		expectedVisitor.visitVarInsn(Opcodes.ALOAD, 5);
+		expectedVisitor.visitVarInsn(Opcodes.ALOAD, 6);
 		expectedVisitor.visitInsn(Opcodes.ICONST_0);
 		expectedVisitor.visitInsn(Opcodes.ICONST_1);
 		expectedVisitor.visitInsn(Opcodes.BASTORE);
@@ -142,9 +142,9 @@ public class ProbeInserterTest {
 		expectedVisitor.visitVarInsn(Opcodes.ILOAD, 1);
 		expectedVisitor.visitVarInsn(Opcodes.ILOAD, 2);
 
-		// Local variables are shifted by one:
-		expectedVisitor.visitVarInsn(Opcodes.ISTORE, 4);
-		expectedVisitor.visitVarInsn(Opcodes.FSTORE, 5);
+		// Local variables are shifted by two:
+		expectedVisitor.visitVarInsn(Opcodes.ISTORE, 5);
+		expectedVisitor.visitVarInsn(Opcodes.FSTORE, 6);
 	}
 
 	@Test
@@ -162,9 +162,9 @@ public class ProbeInserterTest {
 		expectedVisitor.visitIincInsn(1, 101);
 		expectedVisitor.visitIincInsn(2, 102);
 
-		// Local variables are shifted by one:
-		expectedVisitor.visitIincInsn(4, 103);
-		expectedVisitor.visitIincInsn(5, 104);
+		// Local variables are shifted by two:
+		expectedVisitor.visitIincInsn(5, 103);
+		expectedVisitor.visitIincInsn(6, 104);
 	}
 
 	@Test
@@ -185,9 +185,9 @@ public class ProbeInserterTest {
 		expectedVisitor.visitLocalVariable(null, null, null, begin, null, 1);
 		expectedVisitor.visitLocalVariable(null, null, null, begin, null, 2);
 
-		// Local variables are shifted by one:
-		expectedVisitor.visitLocalVariable(null, null, null, null, null, 4);
+		// Local variables are shifted by two:
 		expectedVisitor.visitLocalVariable(null, null, null, null, null, 5);
+		expectedVisitor.visitLocalVariable(null, null, null, null, null, 6);
 	}
 
 	@Test
@@ -206,10 +206,10 @@ public class ProbeInserterTest {
 
 		expectedVisitor.visitLabel(start);
 		expectedVisitor.visitLabel(end);
-		// Local variables are shifted by one:
+		// Local variables are shifted by two:
 		expectedVisitor.visitLocalVariableAnnotation(
 				TypeReference.LOCAL_VARIABLE, null, new Label[] { start },
-				new Label[] { end }, new int[] { 3 }, "LNonNull;", false);
+				new Label[] { end }, new int[] { 4 }, "LNonNull;", false);
 	}
 
 	@Test
@@ -221,7 +221,7 @@ public class ProbeInserterTest {
 
 		expectedVisitor.visitLabel(new Label());
 		expectedVisitor.visitLdcInsn("init");
-		expectedVisitor.visitMaxs(5, 9);
+		expectedVisitor.visitMaxs(5, 10);
 	}
 
 	@Test
@@ -233,11 +233,11 @@ public class ProbeInserterTest {
 
 		expectedVisitor.visitLabel(new Label());
 		expectedVisitor.visitLdcInsn("init");
-		expectedVisitor.visitMaxs(13, 9);
+		expectedVisitor.visitMaxs(13, 10);
 	}
 
 	@Test
-	public void visitFrame_should_insert_probe_variable_between_arguments_and_local_variables() {
+	public void visitFrame_should_insert_safety_slot_and_probe_variable_between_arguments_and_local_variables() {
 		ProbeInserter pi = new ProbeInserter(0, "m", "(J)V", actualVisitor,
 				arrayStrategy);
 
@@ -245,61 +245,77 @@ public class ProbeInserterTest {
 				new Object[] { "Foo", Opcodes.LONG, "java/lang/String" }, 0,
 				new Object[0]);
 
-		expectedVisitor.visitFrame(Opcodes.F_NEW, 4,
-				new Object[] { "Foo", Opcodes.LONG, "[Z", "java/lang/String" },
-				0, new Object[0]);
+		expectedVisitor.visitFrame(Opcodes.F_NEW, 5, new Object[] { //
+				"Foo", //
+				Opcodes.LONG, //
+				Opcodes.TOP, // safety slot
+				"[Z", // probe array
+				"java/lang/String" //
+		}, 0, new Object[0]);
 	}
 
 	@Test
-	public void visitFrame_should_only_insert_probe_variable_when_no_other_local_variables_exist() {
+	public void visitFrame_should_only_insert_safety_slot_and_probe_variable_when_no_other_local_variables_exist() {
 		ProbeInserter pi = new ProbeInserter(Opcodes.ACC_STATIC, "m", "()V",
 				actualVisitor, arrayStrategy);
 
 		pi.visitFrame(Opcodes.F_NEW, 0, new Object[] {}, 0, new Object[0]);
 
-		expectedVisitor.visitFrame(Opcodes.F_NEW, 1, new Object[] { "[Z" }, 0,
-				new Object[0]);
+		expectedVisitor.visitFrame(Opcodes.F_NEW, 2, new Object[] { //
+				Opcodes.TOP, // safety slot
+				"[Z", // probe array
+		}, 0, new Object[0]);
 	}
 
 	@Test
-	public void visitFrame_should_insert_probe_variable_first_when_no_parameters_exist() {
+	public void visitFrame_should_insert_safety_slot_and_probe_variable_first_when_no_parameters_exist() {
 		ProbeInserter pi = new ProbeInserter(Opcodes.ACC_STATIC, "m", "()V",
 				actualVisitor, arrayStrategy);
 
 		pi.visitFrame(Opcodes.F_NEW, 2, new Object[] { Opcodes.DOUBLE, "Foo" },
 				0, new Object[0]);
 
-		expectedVisitor.visitFrame(Opcodes.F_NEW, 3,
-				new Object[] { "[Z", Opcodes.DOUBLE, "Foo" }, 0, new Object[0]);
+		expectedVisitor.visitFrame(Opcodes.F_NEW, 4, new Object[] { //
+				Opcodes.TOP, // safety slot
+				"[Z", // probe array
+				Opcodes.DOUBLE, //
+				"Foo" //
+		}, 0, new Object[0]);
 	}
 
 	@Test
-	public void visitFrame_should_fill_one_unused_slots_before_probe_variable_with_TOP() {
+	public void visitFrame_should_fill_2_unused_slots_before_probe_variable_with_TOP_TOP() {
 		ProbeInserter pi = new ProbeInserter(Opcodes.ACC_STATIC, "m", "(I)V",
 				actualVisitor, arrayStrategy);
 
 		pi.visitFrame(Opcodes.F_NEW, 0, new Object[] {}, 0, new Object[] {});
 
 		// The locals in this frame are filled with TOP up to the probe variable
-		expectedVisitor.visitFrame(Opcodes.F_NEW, 2,
-				new Object[] { Opcodes.TOP, "[Z", }, 0, new Object[] {});
+		expectedVisitor.visitFrame(Opcodes.F_NEW, 3, new Object[] { //
+				Opcodes.TOP, //
+				Opcodes.TOP, // safety slot
+				"[Z", // probe array
+		}, 0, new Object[] {});
 	}
 
 	@Test
-	public void visitFrame_should_fill_two_unused_slots_before_probe_variable_with_TOP_TOP() {
+	public void visitFrame_should_fill_3_unused_slots_before_probe_variable_with_TOP_TOP_TOP() {
 		ProbeInserter pi = new ProbeInserter(Opcodes.ACC_STATIC, "m", "(J)V",
 				actualVisitor, arrayStrategy);
 
 		pi.visitFrame(Opcodes.F_NEW, 0, new Object[] {}, 0, new Object[] {});
 
 		// The locals in this frame are filled with TOP up to the probe variable
-		expectedVisitor.visitFrame(Opcodes.F_NEW, 3,
-				new Object[] { Opcodes.TOP, Opcodes.TOP, "[Z", }, 0,
-				new Object[] {});
+		expectedVisitor.visitFrame(Opcodes.F_NEW, 4, new Object[] { //
+				Opcodes.TOP, //
+				Opcodes.TOP, //
+				Opcodes.TOP, // safety slot
+				"[Z", // probe array
+		}, 0, new Object[] {});
 	}
 
 	@Test
-	public void visitFrame_should_fill_three_unused_slots_before_probe_variable_with_TOP_TOP_TOP() {
+	public void visitFrame_should_fill_4_unused_slots_before_probe_variable_with_TOP_TOP_TOP_TOP() {
 		ProbeInserter pi = new ProbeInserter(Opcodes.ACC_STATIC, "m", "(DIJ)V",
 				actualVisitor, arrayStrategy);
 
@@ -307,11 +323,47 @@ public class ProbeInserterTest {
 				new Object[] {});
 
 		// The locals in this frame are filled with TOP up to the probe variable
-		expectedVisitor
-				.visitFrame(
-						Opcodes.F_NEW, 5, new Object[] { Opcodes.DOUBLE,
-								Opcodes.TOP, Opcodes.TOP, Opcodes.TOP, "[Z", },
-						0, new Object[] {});
+		expectedVisitor.visitFrame(Opcodes.F_NEW, 6, new Object[] { //
+				Opcodes.DOUBLE, //
+				Opcodes.TOP, //
+				Opcodes.TOP, //
+				Opcodes.TOP, //
+				Opcodes.TOP, // safety slot
+				"[Z", // probe array
+		}, 0, new Object[] {});
+	}
+
+	@Test
+	public void visitFrame_should_not_insert_safety_slot_when_it_is_the_last_occupied_slot() {
+		ProbeInserter pi = new ProbeInserter(0, "m", "()V", actualVisitor,
+				arrayStrategy);
+
+		pi.visitFrame(Opcodes.F_NEW, 1, new Object[] { //
+				Opcodes.DOUBLE //
+		}, 0, new Object[] {});
+
+		expectedVisitor.visitFrame(Opcodes.F_NEW, 2, new Object[] { //
+				Opcodes.DOUBLE, //
+				"[Z" // probe array
+		}, 0, new Object[] {});
+	}
+
+	@Test
+	public void visitFrame_should_insert_TOP_after_probe_variable_when_safety_slot_occupied_but_not_the_last() {
+		ProbeInserter pi = new ProbeInserter(0, "m", "()V", actualVisitor,
+				arrayStrategy);
+
+		pi.visitFrame(Opcodes.F_NEW, 2, new Object[] { //
+				Opcodes.DOUBLE, //
+				Opcodes.INTEGER //
+		}, 0, new Object[] {});
+
+		expectedVisitor.visitFrame(Opcodes.F_NEW, 4, new Object[] { //
+				Opcodes.DOUBLE, //
+				"[Z", // probe array
+				Opcodes.TOP, //
+				Opcodes.INTEGER, //
+		}, 0, new Object[] {});
 	}
 
 	@Test(expected = IllegalArgumentException.class)
