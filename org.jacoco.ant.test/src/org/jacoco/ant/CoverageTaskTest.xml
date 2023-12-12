@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <!--
-   Copyright (c) 2009, 2022 Mountainminds GmbH & Co. KG and Contributors
+   Copyright (c) 2009, 2023 Mountainminds GmbH & Co. KG and Contributors
    This program and the accompanying materials are made available under
    the terms of the Eclipse Public License 2.0 which is available at
    http://www.eclipse.org/legal/epl-2.0
@@ -156,6 +156,30 @@
 			<arg value="${exec.file}" />
 		</java>
 		<au:assertLogContains text="java/sql/Timestamp"/>
+	</target>
+
+	<target name="testIllegalReflectiveAccess">
+		<jacoco:coverage destfile="${exec.file}">
+			<java classname="org.jacoco.ant.IllegalReflectiveAccessTarget" fork="true" failonerror="true">
+				<classpath path="${org.jacoco.ant.coverageTaskTest.classes.dir}"/>
+			</java>
+		</jacoco:coverage>
+	</target>
+
+	<target name="testSecurityManager">
+		<jacoco:coverage destfile="${exec.file}">
+			<java classname="org.jacoco.ant.TestTarget" fork="true" failonerror="true">
+				<classpath path="${org.jacoco.ant.coverageTaskTest.classes.dir}"/>
+				<jvmarg value="-Djacoco.agent=${_jacoco.agentFile}"/>
+				<jvmarg value="-Djacoco.exec=${exec.file}"/>
+				<jvmarg value="-Djava.security.manager"/>
+				<!-- Note that the use of two equal signs (==) below is not a typo -->
+				<jvmarg value="-Djava.security.policy==${basedir}/data/policy.txt"/>
+			</java>
+		</jacoco:coverage>
+
+		<au:assertFileExists file="${exec.file}"/>
+		<au:assertLogContains text="Target executed"/>
 	</target>
 
 </project>

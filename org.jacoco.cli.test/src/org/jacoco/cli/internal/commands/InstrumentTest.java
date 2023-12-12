@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2022 Mountainminds GmbH & Co. KG and Contributors
+ * Copyright (c) 2009, 2023 Mountainminds GmbH & Co. KG and Contributors
  * This program and the accompanying materials are made available under
  * the terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0
@@ -70,7 +70,7 @@ public class InstrumentTest extends CommandTestBase {
 		// non class-file resources are copied:
 		assertTrue(new File(destdir,
 				"org/jacoco/cli/internal/commands/test-resource.properties")
-						.isFile());
+				.isFile());
 
 		assertInstrumented(new File(destdir,
 				"org/jacoco/cli/internal/commands/InstrumentTest.class"));
