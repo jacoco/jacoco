@@ -30,6 +30,7 @@ public class RecordPatternsTest extends ValidationTestBase {
 		if (isJDKCompiler) {
 			assertFullyCovered(line);
 		} else {
+			// https://github.com/eclipse-jdt/eclipse.jdt.core/issues/773
 			assertPartlyCovered(line);
 		}
 	}
