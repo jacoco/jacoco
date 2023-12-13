@@ -26,4 +26,13 @@ public class RecordPatternsTest extends ValidationTestBase {
 		super(RecordPatternsTarget.class);
 	}
 
+	public void assertSwitchStatementLastCase(final Line line) {
+		if (isJDKCompiler) {
+			assertFullyCovered(line);
+		} else {
+			// https://github.com/eclipse-jdt/eclipse.jdt.core/issues/773
+			assertPartlyCovered(line);
+		}
+	}
+
 }
