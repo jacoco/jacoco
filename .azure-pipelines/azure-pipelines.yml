@@ -40,11 +40,11 @@ jobs:
         JDK_VERSION: 19
       JDK 20:
         JDK_VERSION: 20
-      JDK 20 with ECJ:
-        JDK_VERSION: 20
-        ECJ: true
       JDK 21:
         JDK_VERSION: 21
+      JDK 21 with ECJ:
+        JDK_VERSION: 21
+        ECJ: true
       JDK 22:
         JDK_VERSION: 22
       JDK 23:
