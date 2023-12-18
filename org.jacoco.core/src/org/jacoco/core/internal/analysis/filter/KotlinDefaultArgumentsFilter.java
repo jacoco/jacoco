@@ -26,8 +26,11 @@ import org.objectweb.asm.tree.VarInsnNode;
 /**
  * Filters branches that Kotlin compiler generates for default arguments.
  *
- * For each default argument Kotlin compiler generates following bytecode to
- * determine if it should be used or not:
+ * For methods and constructors with default arguments Kotlin compiler generates
+ * synthetic method with suffix "$default" or a synthetic constructor with last
+ * argument "kotlin.jvm.internal.DefaultConstructorMarker" respectively. And in
+ * this synthetic method for each default argument Kotlin compiler generates
+ * following bytecode to determine if it should be used or not:
  *
  * <pre>
  * ILOAD maskVar
@@ -38,11 +41,14 @@ import org.objectweb.asm.tree.VarInsnNode;
  * label:
  * </pre>
  *
- * Where <code>maskVar</code> is penultimate argument of synthetic method with
- * suffix "$default" or of synthetic constructor with last argument
- * "kotlin.jvm.internal.DefaultConstructorMarker". And its value can't be zero -
- * invocation with all arguments uses original non synthetic method, thus
- * <code>IFEQ</code> instructions should be ignored.
+ * If original method has <code>X</code> arguments, then in synthetic method
+ * <code>maskVar</code> is one of arguments from <code>X+1</code> to
+ * <code>X+1+(X/32)</code>.
+ *
+ * At least one of such arguments is not zero - invocation without default
+ * arguments uses original non synthetic method.
+ *
+ * This filter marks <code>IFEQ</code> instructions as ignored.
  */
 public final class KotlinDefaultArgumentsFilter implements IFilter {
 
@@ -132,19 +138,29 @@ public final class KotlinDefaultArgumentsFilter implements IFilter {
 
 		private static int maskVar(final String desc,
 				final boolean constructor) {
+			final Type[] argumentTypes = Type.getMethodType(desc)
+					.getArgumentTypes();
 			int slot = 0;
 			if (constructor) {
 				// one slot for reference to current object
 				slot++;
 			}
-			final Type[] argumentTypes = Type.getMethodType(desc)
-					.getArgumentTypes();
-			final int penultimateArgument = argumentTypes.length - 2;
-			for (int i = 0; i < penultimateArgument; i++) {
+			final int firstMaskArgument = argumentTypes.length - 1
+					- computeNumberOfMaskArguments(argumentTypes.length);
+			for (int i = 0; i < firstMaskArgument; i++) {
 				slot += argumentTypes[i].getSize();
 			}
 			return slot;
 		}
+	}
+
+	/**
+	 * @param arguments
+	 *            number of arguments of synthetic method
+	 * @return number of arguments holding mask
+	 */
+	static int computeNumberOfMaskArguments(final int arguments) {
+		return (arguments - 2) / 33 + 1;
 	}
 
 }
