@@ -140,23 +140,27 @@ public final class KotlinDefaultArgumentsFilter implements IFilter {
 				final boolean constructor) {
 			final Type[] argumentTypes = Type.getMethodType(desc)
 					.getArgumentTypes();
-			int masks;
-			for (masks = 1; masks <= 8; masks++) {
-				if (argumentTypes.length <= masks * 32 + masks + 1) {
-					break;
-				}
-			}
 			int slot = 0;
 			if (constructor) {
 				// one slot for reference to current object
 				slot++;
 			}
-			final int firstMaskArgument = argumentTypes.length - 1 - masks;
+			final int firstMaskArgument = argumentTypes.length - 1
+					- computeNumberOfMaskArguments(argumentTypes.length);
 			for (int i = 0; i < firstMaskArgument; i++) {
 				slot += argumentTypes[i].getSize();
 			}
 			return slot;
 		}
+	}
+
+	/**
+	 * @param arguments
+	 *            number of arguments of synthetic method
+	 * @return number of arguments holding mask
+	 */
+	static int computeNumberOfMaskArguments(final int arguments) {
+		return (arguments - 2) / 33 + 1;
 	}
 
 }

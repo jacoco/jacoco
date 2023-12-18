@@ -12,6 +12,8 @@
  *******************************************************************************/
 package org.jacoco.core.internal.analysis.filter;
 
+import static org.junit.Assert.assertEquals;
+
 import org.jacoco.core.internal.instr.InstrSupport;
 import org.junit.Test;
 import org.objectweb.asm.Label;
@@ -247,7 +249,7 @@ public class KotlinDefaultArgumentsFilterTest extends FilterTestBase {
 				.add(KotlinGeneratedFilter.KOTLIN_METADATA_DESC);
 
 		m.visitVarInsn(Opcodes.ILOAD, 34);
-		m.visitLdcInsn(1 << 31);
+		m.visitLdcInsn(Integer.valueOf(1 << 31));
 		m.visitInsn(Opcodes.IAND);
 		final Label label = new Label();
 		m.visitJumpInsn(Opcodes.IFEQ, label);
@@ -326,6 +328,42 @@ public class KotlinDefaultArgumentsFilterTest extends FilterTestBase {
 		filter.filter(m, context, output);
 
 		assertIgnored(new Range(m.instructions.get(3), m.instructions.get(3)));
+	}
+
+	@Test
+	public void computeNumberOfMaskArguments() {
+		assertEquals(1,
+				KotlinDefaultArgumentsFilter.computeNumberOfMaskArguments(3));
+		assertEquals(1,
+				KotlinDefaultArgumentsFilter.computeNumberOfMaskArguments(34));
+		assertEquals(2,
+				KotlinDefaultArgumentsFilter.computeNumberOfMaskArguments(36));
+		assertEquals(2,
+				KotlinDefaultArgumentsFilter.computeNumberOfMaskArguments(67));
+		assertEquals(3,
+				KotlinDefaultArgumentsFilter.computeNumberOfMaskArguments(69));
+		assertEquals(3,
+				KotlinDefaultArgumentsFilter.computeNumberOfMaskArguments(100));
+		assertEquals(4,
+				KotlinDefaultArgumentsFilter.computeNumberOfMaskArguments(102));
+		assertEquals(4,
+				KotlinDefaultArgumentsFilter.computeNumberOfMaskArguments(133));
+		assertEquals(5,
+				KotlinDefaultArgumentsFilter.computeNumberOfMaskArguments(135));
+		assertEquals(5,
+				KotlinDefaultArgumentsFilter.computeNumberOfMaskArguments(166));
+		assertEquals(6,
+				KotlinDefaultArgumentsFilter.computeNumberOfMaskArguments(168));
+		assertEquals(6,
+				KotlinDefaultArgumentsFilter.computeNumberOfMaskArguments(199));
+		assertEquals(7,
+				KotlinDefaultArgumentsFilter.computeNumberOfMaskArguments(201));
+		assertEquals(7,
+				KotlinDefaultArgumentsFilter.computeNumberOfMaskArguments(232));
+		assertEquals(8,
+				KotlinDefaultArgumentsFilter.computeNumberOfMaskArguments(234));
+		assertEquals(8,
+				KotlinDefaultArgumentsFilter.computeNumberOfMaskArguments(255));
 	}
 
 }
