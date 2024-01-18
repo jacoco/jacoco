@@ -127,7 +127,7 @@ public class FinallyTest extends ValidationTestBase {
 
 	@Test
 	@Override
-	public void execute_assertions_in_comments() throws IOException {
+	public void execute_assertions_in_comments() throws Exception {
 		super.execute_assertions_in_comments();
 		gotos();
 	}

@@ -17,6 +17,7 @@ import static org.junit.Assert.assertTrue;
 
 import java.io.IOException;
 import java.lang.reflect.Method;
+import java.util.ArrayList;
 import java.util.Arrays;
 
 import org.jacoco.core.analysis.Analyzer;
@@ -32,6 +33,7 @@ import org.jacoco.core.test.validation.Source.Line;
 import org.jacoco.core.test.validation.targets.Stubs;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runners.model.MultipleFailureException;
 
 /**
  * Base class for validation tests. It executes the given class under code
@@ -103,14 +105,20 @@ public abstract class ValidationTestBase {
 	 * </pre>
 	 */
 	@Test
-	public void execute_assertions_in_comments() throws IOException {
+	public void execute_assertions_in_comments() throws Exception {
+		final ArrayList<Throwable> failedAssertions = new ArrayList<Throwable>();
 		for (Line line : source.getLines()) {
 			String exec = line.getComment();
 			if (exec != null) {
-				StatementParser.parse(exec, new StatementExecutor(this, line),
-						line.toString());
+				try {
+					StatementParser.parse(exec,
+							new StatementExecutor(this, line), line.toString());
+				} catch (final AssertionError e) {
+					failedAssertions.add(e);
+				}
 			}
 		}
+		MultipleFailureException.assertEmpty(failedAssertions);
 	}
 
 	/**
