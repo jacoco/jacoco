@@ -15,6 +15,7 @@ package org.jacoco.core.internal.analysis.filter;
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.tree.AbstractInsnNode;
 import org.objectweb.asm.tree.JumpInsnNode;
+import org.objectweb.asm.tree.LabelNode;
 import org.objectweb.asm.tree.MethodNode;
 
 /**
@@ -34,27 +35,53 @@ public class KotlinLateinitFilter implements IFilter {
 	private static class Matcher extends AbstractMatcher {
 		public void match(final AbstractInsnNode start,
 				final IFilterOutput output) {
+			if (Opcodes.IFNONNULL == start.getOpcode()) {
+				cursor = start;
+				nextIsIntrinsic();
+				final LabelNode label = ((JumpInsnNode) start).label;
+				if (cursor != null && cursor.getNext() == label) {
+					// Kotlin 1.2
+					output.ignore(start, cursor);
+					return;
+				}
+				next();
+				if (cursor != null && cursor.getNext() == label) {
+					// Kotlin 1.6.20
+					output.ignore(start, cursor);
+					return;
+				}
+				next();
+				if (cursor != null && cursor.getNext() == label) {
+					// Kotlin 1.5.0 or 1.5.30
+					output.ignore(start, cursor);
+				}
+			} else if (Opcodes.IFNULL == start.getOpcode()) {
+				cursor = ((JumpInsnNode) start).label;
+				nextIsIntrinsic();
+				next();
+				next();
+				if (cursor != null && (Opcodes.ARETURN == cursor.getOpcode()
+						|| Opcodes.ATHROW == cursor.getOpcode())) {
+					output.ignore(start, start);
+					output.ignore(((JumpInsnNode) start).label, cursor);
+				}
+			}
+		}
 
-			if (Opcodes.IFNONNULL != start.getOpcode()) {
+		private void nextIsIntrinsic() {
+			next();
+			if (cursor == null) {
+				return;
+			} else if (Opcodes.POP == cursor.getOpcode()) {
+				nextIs(Opcodes.LDC);
+			} else if (Opcodes.LDC != cursor.getOpcode()) {
+				cursor = null;
 				return;
 			}
-			cursor = start;
-
-			nextIs(Opcodes.LDC);
 			nextIsInvoke(Opcodes.INVOKESTATIC, "kotlin/jvm/internal/Intrinsics",
 					"throwUninitializedPropertyAccessException",
 					"(Ljava/lang/String;)V");
-
-			if (cursor != null
-					&& skipNonOpcodes(cursor.getNext()) != skipNonOpcodes(
-							((JumpInsnNode) start).label)) {
-				nextIs(Opcodes.ACONST_NULL);
-				nextIs(Opcodes.ATHROW);
-			}
-
-			if (cursor != null) {
-				output.ignore(start, cursor);
-			}
 		}
 	}
+
 }
