@@ -43,7 +43,7 @@ jobs:
           " > toolchains.xml
       - name: 'Build'
         run: |
-          mvn -V -B -e \
+          mvn -V -B -e --no-transfer-progress \
             verify -Djdk.version=${{ matrix.jdk }} -Dbytecode.version=${{ matrix.jdk }} \
             --toolchains=toolchains.xml
   Windows:
@@ -79,7 +79,7 @@ jobs:
       - name: 'Build'
         shell: bash
         run: |
-          mvn -V -B -e \
+          mvn -V -B -e --no-transfer-progress \
             verify -Djdk.version=6 -Dbytecode.version=5 \
             --toolchains=toolchains.xml
       - uses: actions/upload-artifact@26f96dfa697d77e81fd5907df203aa23a56210a8 # v4.3.0
