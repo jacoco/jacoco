@@ -113,26 +113,37 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-plugin-plugin</artifactId>
+        <!-- TODO NOTE starting from 3.6.1 produces HelpMojo that requires Java 7 - see https://issues.apache.org/jira/browse/MPLUGIN-353 -->
+        <!-- TODO
+            starting from 3.7.0 report is deprecated, moved into separate plugin - https://issues.apache.org/jira/browse/MPLUGIN-423
+            starting from 3.9.0 report is removed - https://issues.apache.org/jira/browse/MPLUGIN-467
+            ??? throws NPE starting from 3.10.1 - https://issues.apache.org/jira/browse/MPLUGIN-442
+        -->
+        <!-- TODO also check
+             https://issues.apache.org/jira/browse/MPLUGIN-379
+             https://issues.apache.org/jira/browse/MPLUGIN-477
+        -->
+        <!-- TODO NOTE maven-shade-plugin 3.5.0 can process bytecode only up to version 19 -->
         <executions>
-          <execution>
-            <id>default-descriptor</id>
-            <phase>process-classes</phase>
-          </execution>
           <execution>
             <id>help-goal</id>
             <goals>
               <goal>helpmojo</goal>
             </goals>
           </execution>
-          <execution>
-            <id>report</id>
-            <phase>package</phase>
-            <goals>
-              <goal>report</goal>
-            </goals>
-          </execution>
         </executions>
       </plugin>
     </plugins>
   </build>
+
+  <!-- FIXME remove - works only for site -->
+  <reporting>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-plugin-report-plugin</artifactId>
+        <version>3.8.2</version>
+      </plugin>
+    </plugins>
+  </reporting>
 </project>

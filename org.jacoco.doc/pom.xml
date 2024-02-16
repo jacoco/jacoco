@@ -206,6 +206,8 @@
               </dependencySourceIncludes>
               <dependencySourceExcludes>
                 <dependencySourceExclude>org.jacoco:*.test</dependencySourceExclude>
+                <!-- TODO -->
+                <dependencySourceExclude>org.jacoco:jacoco-maven-plugin</dependencySourceExclude>
               </dependencySourceExcludes>
               <doctitle>JaCoCo ${qualified.bundle.version} API</doctitle>
               <windowtitle>JaCoCo ${qualified.bundle.version} API</windowtitle>
@@ -240,6 +242,14 @@
       <plugin>
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>xml-maven-plugin</artifactId>
+        <dependencies>
+          <dependency>
+            <groupId>net.sf.saxon</groupId>
+            <artifactId>saxon</artifactId>
+            <!-- TODO newer version? -->
+            <version>8.7</version>
+          </dependency>
+        </dependencies>
         <executions>
           <execution>
             <id>transform-generated-doc</id>
@@ -249,17 +259,16 @@
             <configuration>
               <transformationSets>
                 <transformationSet>
-                  <dir>../jacoco-maven-plugin/target/generated-site/xdoc</dir>
+                  <dir>../jacoco-maven-plugin/target</dir>
                   <includes>
-                    <include>*.xml</include>
+                    <include>plugin-enhanced.xml</include>
                   </includes>
-                  <stylesheet>xsl/maven-goal.xsl</stylesheet>
-                  <fileMappers>
-                    <fileMapper implementation="org.codehaus.plexus.components.io.filemappers.FileExtensionMapper">
-                      <targetExtension>.html</targetExtension>
-                    </fileMapper>
-                  </fileMappers>
+                  <stylesheet>xsl/maven-plugin.xsl</stylesheet>
                   <parameters>
+                    <parameter>
+                      <name>outdir</name>
+                      <value>${project.build.directory}/generated-resources/xml/xslt</value>
+                    </parameter>
                     <parameter>
                       <name>qualified.bundle.version</name>
                       <value>${qualified.bundle.version}</value>
