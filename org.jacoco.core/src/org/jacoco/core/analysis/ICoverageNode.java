@@ -124,7 +124,7 @@ public interface ICoverageNode {
 	ICounter getClassCounter();
 
 	/**
-	 * Generic access to the the counters.
+	 * Generic access to the counters.
 	 *
 	 * @param entity
 	 *            entity we're we want to have the counter for

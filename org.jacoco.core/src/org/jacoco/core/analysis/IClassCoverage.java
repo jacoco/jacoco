@@ -31,7 +31,7 @@ public interface IClassCoverage extends ISourceNode {
 	long getId();
 
 	/**
-	 * Returns if the the analyzed class does match the execution data provided.
+	 * Returns if the analyzed class does match the execution data provided.
 	 * More precisely if execution data is available for a class with the same
 	 * qualified name but with a different class id.
 	 *

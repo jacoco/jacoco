@@ -37,7 +37,7 @@ import org.jacoco.core.analysis.IBundleCoverage;
 public interface IReportGroupVisitor {
 
 	/**
-	 * Called to add a bundle to the the report.
+	 * Called to add a bundle to the report.
 	 *
 	 * @param bundle
 	 *            a bundle to include in the report
