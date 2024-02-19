@@ -200,7 +200,7 @@
             <configuration>
               <reportOutputDirectory>${project.build.directory}/apidocs</reportOutputDirectory>
               <includeDependencySources>true</includeDependencySources>
-              <excludePackageNames>*.internal,org.jacoco.ant,org.jacoco.maven,org.jacoco.examples</excludePackageNames>
+              <excludePackageNames>*.internal.*,*.internal,org.jacoco.ant,org.jacoco.maven,org.jacoco.examples</excludePackageNames>
               <dependencySourceIncludes>
                 <dependencySourceInclude>org.jacoco:*</dependencySourceInclude>
               </dependencySourceIncludes>
