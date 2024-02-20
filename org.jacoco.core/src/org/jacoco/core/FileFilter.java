@@ -11,7 +11,7 @@
  *    Kyle Lieber - implementation of CheckMojo
  *
  *******************************************************************************/
-package org.jacoco.maven;
+package org.jacoco.core;
 
 import java.io.File;
 import java.io.IOException;
