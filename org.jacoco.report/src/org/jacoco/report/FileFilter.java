@@ -11,7 +11,7 @@
  *    Kyle Lieber - implementation of CheckMojo
  *
  *******************************************************************************/
-package org.jacoco.core;
+package org.jacoco.report;
 
 import org.codehaus.plexus.util.FileUtils;
 import org.codehaus.plexus.util.StringUtils;
