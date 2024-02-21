@@ -13,12 +13,12 @@
  *******************************************************************************/
 package org.jacoco.core;
 
+import org.codehaus.plexus.util.FileUtils;
+import org.codehaus.plexus.util.StringUtils;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
-
-import org.codehaus.plexus.util.FileUtils;
-import org.codehaus.plexus.util.StringUtils;
 
 /**
  * A file filter using includes/excludes patterns.
@@ -92,10 +92,9 @@ public class FileFilter {
 
 	private String buildPattern(final List<String> patterns,
 			final String defaultPattern) {
-		String pattern = defaultPattern;
-		if (patterns != null && !patterns.isEmpty()) {
-			pattern = StringUtils.join(patterns.iterator(), ",");
-		}
-		return pattern;
+        if (patterns == null || patterns.isEmpty()) {
+            return defaultPattern;
+        }
+        return StringUtils.join(patterns.iterator(), ",");
 	}
 }
