@@ -38,11 +38,6 @@
       <groupId>org.ow2.asm</groupId>
       <artifactId>asm-tree</artifactId>
     </dependency>
-    <dependency>
-      <groupId>org.codehaus.plexus</groupId>
-      <artifactId>plexus-utils</artifactId>
-      <version>3.0.24</version>
-    </dependency>
   </dependencies>
 
   <build>
