@@ -18,7 +18,7 @@ import java.io.IOException;
 import java.util.List;
 
 import org.codehaus.plexus.util.FileUtils;
-import org.codehaus.plexus.util.StringUtils;
+import org.jacoco.core.utils.StringUtils;
 
 /**
  * A file filter using includes/excludes patterns.
@@ -95,6 +95,6 @@ public class FileFilter {
 		if (patterns == null || patterns.isEmpty()) {
 			return defaultPattern;
 		}
-		return StringUtils.join(patterns.iterator(), ",");
+		return StringUtils.join(patterns, ",");
 	}
 }
