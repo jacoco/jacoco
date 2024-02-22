@@ -25,7 +25,7 @@
   <name>JaCoCo :: Test :: Core :: Validation Scala</name>
 
   <properties>
-    <scala.version>2.13.4</scala.version>
+    <scala.version>2.13.12</scala.version>
   </properties>
 
   <dependencies>

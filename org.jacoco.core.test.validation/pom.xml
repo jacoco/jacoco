@@ -449,9 +449,7 @@
         <module>../org.jacoco.core.test.validation.java16</module>
         <module>../org.jacoco.core.test.validation.java21</module>
         <module>../org.jacoco.core.test.validation.groovy</module>
-        <!-- Scala 2.13.4 does not support Java 21 - see https://github.com/jacoco/jacoco/issues/1431
         <module>../org.jacoco.core.test.validation.scala</module>
-        -->
       </modules>
     </profile>
 
@@ -482,9 +480,7 @@
         <!-- Groovy 3.0.20 does not support Java 22
         <module>../org.jacoco.core.test.validation.groovy</module>
         -->
-        <!-- Scala 2.13.4 does not support Java 22 - see https://github.com/jacoco/jacoco/issues/1431
         <module>../org.jacoco.core.test.validation.scala</module>
-        -->
       </modules>
     </profile>
 
@@ -515,9 +511,7 @@
         <!-- Groovy 3.0.20 does not support Java 23
         <module>../org.jacoco.core.test.validation.groovy</module>
         -->
-        <!-- Scala 2.13.4 does not support Java 23 - see https://github.com/jacoco/jacoco/issues/1431
         <module>../org.jacoco.core.test.validation.scala</module>
-        -->
       </modules>
     </profile>
 
