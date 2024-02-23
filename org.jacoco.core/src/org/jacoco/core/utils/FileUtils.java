@@ -67,7 +67,7 @@ public class FileUtils {
 	public static List<File> getFiles(final File directory,
 			final Collection<String> includes,
 			final Collection<String> excludes) throws IOException {
-		return getFiles(directory, includes, excludes, false);
+		return getFiles(directory, includes, excludes, true);
 	}
 
 	public static List<String> getFileNames(File directory,
@@ -86,7 +86,7 @@ public class FileUtils {
 	public static List<String> getFileNames(File directory,
 			final Collection<String> includes,
 			final Collection<String> excludes) throws IOException {
-		return getFileNames(directory, includes, excludes, false);
+		return getFileNames(directory, includes, excludes, true);
 	}
 
 	public static PathMatcher buildPathMatcher(String pattern) {
