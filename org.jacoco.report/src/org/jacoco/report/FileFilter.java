@@ -15,10 +15,10 @@ package org.jacoco.report;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Collections;
 import java.util.List;
 
-import org.codehaus.plexus.util.FileUtils;
-import org.jacoco.core.utils.StringUtils;
+import org.jacoco.core.utils.FileUtils;
 
 /**
  * A file filter using includes/excludes patterns.
@@ -77,7 +77,7 @@ public class FileFilter {
 	 *
 	 * @return the pattern
 	 */
-	public String getIncludes() {
+	public List<String> getIncludes() {
 		return this.buildPattern(this.includes, DEFAULT_INCLUDES);
 	}
 
@@ -86,15 +86,15 @@ public class FileFilter {
 	 *
 	 * @return the pattern
 	 */
-	public String getExcludes() {
+	public List<String> getExcludes() {
 		return this.buildPattern(this.excludes, DEFAULT_EXCLUDES);
 	}
 
-	private String buildPattern(final List<String> patterns,
+	private List<String> buildPattern(final List<String> patterns,
 			final String defaultPattern) {
 		if (patterns == null || patterns.isEmpty()) {
-			return defaultPattern;
+			return Collections.singletonList(defaultPattern);
 		}
-		return StringUtils.join(patterns, ",");
+		return patterns;
 	}
 }
