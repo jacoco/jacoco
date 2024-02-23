@@ -27,16 +27,16 @@ public class FileUtils {
 			final Collection<String> includes,
 			final Collection<String> excludes, final boolean includeBaseDir)
 			throws IOException {
-		final List<PathMatcher> includeMatchers = new ArrayList<>();
+		final List<PathMatcher> includeMatchers = new ArrayList<PathMatcher>();
 		for (String include : includes) {
 			includeMatchers.add(FileUtils.buildPathMatcher(include));
 		}
-		final List<PathMatcher> excludeMatchers = new ArrayList<>();
+		final List<PathMatcher> excludeMatchers = new ArrayList<PathMatcher>();
 		for (String exclude : excludes) {
 			excludeMatchers.add(FileUtils.buildPathMatcher(exclude));
 		}
 
-		final List<File> files = new ArrayList<>();
+		final List<File> files = new ArrayList<File>();
 		SimpleFileVisitor<Path> visitor = new SimpleFileVisitor<Path>() {
 			boolean matches(Path file, Collection<PathMatcher> patterns) {
 				for (PathMatcher pattern : patterns) {
@@ -76,7 +76,7 @@ public class FileUtils {
 			throws IOException {
 		final List<File> files = FileUtils.getFiles(directory, includes,
 				excludes, includeBaseDir);
-		final List<String> names = new ArrayList<>();
+		final List<String> names = new ArrayList<String>();
 		for (File file : files) {
 			names.add(file.toString());
 		}
