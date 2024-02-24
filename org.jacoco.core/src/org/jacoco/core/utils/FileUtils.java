@@ -17,6 +17,7 @@ import java.nio.file.*;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.EnumSet;
 import java.util.List;
 
 public class FileUtils {
@@ -29,11 +30,17 @@ public class FileUtils {
 			throws IOException {
 		final List<PathMatcher> includeMatchers = new ArrayList<PathMatcher>();
 		for (String include : includes) {
-			includeMatchers.add(FileUtils.buildPathMatcher(include));
+			final PathMatcher matcher = FileUtils.buildPathMatcher(include);
+			if (matcher != null) {
+				includeMatchers.add(matcher);
+			}
 		}
 		final List<PathMatcher> excludeMatchers = new ArrayList<PathMatcher>();
 		for (String exclude : excludes) {
-			excludeMatchers.add(FileUtils.buildPathMatcher(exclude));
+			final PathMatcher matcher = FileUtils.buildPathMatcher(exclude);
+			if (matcher != null) {
+				excludeMatchers.add(matcher);
+			}
 		}
 
 		final List<File> files = new ArrayList<File>();
@@ -52,9 +59,9 @@ public class FileUtils {
 					BasicFileAttributes attrs) {
 				if (matches(file, includeMatchers)
 						&& !matches(file, excludeMatchers)) {
-					files.add(!includeBaseDir
-							? file.relativize(directory.toPath()).toFile()
-							: file.toFile());
+					final Path path = includeBaseDir ? file
+							: directory.toPath().relativize(file);
+					files.add(path.toFile());
 				}
 				return FileVisitResult.CONTINUE;
 			}
@@ -90,6 +97,9 @@ public class FileUtils {
 	}
 
 	public static PathMatcher buildPathMatcher(String pattern) {
+		if (pattern == null || pattern.isEmpty()) {
+			return null;
+		}
 		return FileSystems.getDefault().getPathMatcher("glob:" + pattern);
 	}
 }
