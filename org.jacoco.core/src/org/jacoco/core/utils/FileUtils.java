@@ -17,7 +17,6 @@ import java.nio.file.*;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.EnumSet;
 import java.util.List;
 
 public class FileUtils {
@@ -28,20 +27,8 @@ public class FileUtils {
 			final Collection<String> includes,
 			final Collection<String> excludes, final boolean includeBaseDir)
 			throws IOException {
-		final List<PathMatcher> includeMatchers = new ArrayList<PathMatcher>();
-		for (String include : includes) {
-			final PathMatcher matcher = FileUtils.buildPathMatcher(include);
-			if (matcher != null) {
-				includeMatchers.add(matcher);
-			}
-		}
-		final List<PathMatcher> excludeMatchers = new ArrayList<PathMatcher>();
-		for (String exclude : excludes) {
-			final PathMatcher matcher = FileUtils.buildPathMatcher(exclude);
-			if (matcher != null) {
-				excludeMatchers.add(matcher);
-			}
-		}
+		final List<PathMatcher> includeMatchers = buildPathMatchers(includes);
+		final List<PathMatcher> excludeMatchers = buildPathMatchers(excludes);
 
 		final List<File> files = new ArrayList<File>();
 		SimpleFileVisitor<Path> visitor = new SimpleFileVisitor<Path>() {
@@ -57,10 +44,10 @@ public class FileUtils {
 			@Override
 			public FileVisitResult visitFile(Path file,
 					BasicFileAttributes attrs) {
-				if (matches(file, includeMatchers)
-						&& !matches(file, excludeMatchers)) {
-					final Path path = includeBaseDir ? file
-							: directory.toPath().relativize(file);
+				final Path relativePath = directory.toPath().relativize(file);
+				if (matches(relativePath, includeMatchers)
+						&& !matches(relativePath, excludeMatchers)) {
+					final Path path = includeBaseDir ? file : relativePath;
 					files.add(path.toFile());
 				}
 				return FileVisitResult.CONTINUE;
@@ -69,6 +56,25 @@ public class FileUtils {
 		Files.walkFileTree(directory.toPath(), visitor);
 
 		return files;
+	}
+
+	private static List<PathMatcher> buildPathMatchers(
+			Collection<String> includeOrExcludes) {
+		final List<PathMatcher> excludeMatchers = new ArrayList<PathMatcher>();
+		for (String xclude : includeOrExcludes) {
+			final PathMatcher matcher = FileUtils.buildPathMatcher(xclude);
+			if (matcher != null) {
+				excludeMatchers.add(matcher);
+			}
+			if (xclude.startsWith("**/")) {
+				final PathMatcher rootMatcher = FileUtils
+						.buildPathMatcher(xclude.substring(3));
+				if (rootMatcher != null) {
+					excludeMatchers.add(rootMatcher);
+				}
+			}
+		}
+		return excludeMatchers;
 	}
 
 	public static List<File> getFiles(final File directory,
