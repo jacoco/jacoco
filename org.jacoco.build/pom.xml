@@ -361,15 +361,7 @@
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-plugin-plugin</artifactId>
-          <version>3.6.0</version>
-          <dependencies>
-            <dependency>
-              <!-- Workaround to be able to compile into Java 13 bytecode -->
-              <groupId>org.ow2.asm</groupId>
-              <artifactId>asm</artifactId>
-              <version>7.1</version>
-            </dependency>
-          </dependencies>
+          <version>3.8.2</version>
         </plugin>
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
@@ -410,7 +402,7 @@
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-site-plugin</artifactId>
-          <version>3.3</version>
+          <version>4.0.0-M12</version>
         </plugin>
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
@@ -793,10 +785,10 @@
       </build>
     </profile>
 
-    <!--
+    <!-- TODO
     Following profiles enable compilation into bytecode version 13
     when requested "bytecode.version" greater than 13,
-    because this is maximum that can be processed by maven-plugin-plugin.
+    because this is maximum that can be processed by
     This is overridden for tests.
     -->
     <profile>
