@@ -238,6 +238,30 @@
     </profile>
 
     <profile>
+      <id>java13-bytecode</id>
+      <activation>
+        <property>
+          <name>bytecode.version</name>
+          <value>13</value>
+        </property>
+      </activation>
+      <properties>
+        <kotlin.compiler.jvmTarget>13</kotlin.compiler.jvmTarget>
+        <groovy.targetBytecode>13</groovy.targetBytecode>
+        <!-- see respective profile in org.jacoco.build about this override -->
+        <maven.compiler.source>13</maven.compiler.source>
+        <maven.compiler.target>13</maven.compiler.target>
+      </properties>
+      <modules>
+        <module>../org.jacoco.core.test.validation.kotlin</module>
+        <module>../org.jacoco.core.test.validation.java7</module>
+        <module>../org.jacoco.core.test.validation.java8</module>
+        <module>../org.jacoco.core.test.validation.groovy</module>
+        <module>../org.jacoco.core.test.validation.scala</module>
+      </modules>
+    </profile>
+
+    <profile>
       <id>java14-bytecode</id>
       <activation>
         <property>
