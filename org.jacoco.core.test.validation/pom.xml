@@ -68,10 +68,8 @@
         </property>
       </activation>
       <properties>
-        <kotlin.compiler.jvmTarget>1.6</kotlin.compiler.jvmTarget>
       </properties>
       <modules>
-        <module>../org.jacoco.core.test.validation.kotlin</module>
       </modules>
     </profile>
 
@@ -84,7 +82,6 @@
         </property>
       </activation>
       <modules>
-        <module>../org.jacoco.core.test.validation.kotlin</module>
       </modules>
     </profile>
 
@@ -97,11 +94,8 @@
         </property>
       </activation>
       <properties>
-        <!-- Kotlin 1.5.0 doesn't support compilation into 1.7 -->
-        <kotlin.compiler.jvmTarget>1.6</kotlin.compiler.jvmTarget>
       </properties>
       <modules>
-        <module>../org.jacoco.core.test.validation.kotlin</module>
         <module>../org.jacoco.core.test.validation.java7</module>
       </modules>
     </profile>
@@ -115,7 +109,6 @@
         </property>
       </activation>
       <modules>
-        <module>../org.jacoco.core.test.validation.kotlin</module>
         <module>../org.jacoco.core.test.validation.java7</module>
       </modules>
     </profile>
@@ -125,6 +118,9 @@
       <activation>
         <activeByDefault>true</activeByDefault>
       </activation>
+      <properties>
+        <kotlin.compiler.jvmTarget>1.8</kotlin.compiler.jvmTarget>
+      </properties>
       <modules>
         <module>../org.jacoco.core.test.validation.kotlin</module>
         <module>../org.jacoco.core.test.validation.java7</module>
