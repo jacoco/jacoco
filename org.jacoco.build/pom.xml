@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-   Copyright (c) 2009, 2023 Mountainminds GmbH & Co. KG and Contributors
+   Copyright (c) 2009, 2024 Mountainminds GmbH & Co. KG and Contributors
    This program and the accompanying materials are made available under
    the terms of the Eclipse Public License 2.0 which is available at
    http://www.eclipse.org/legal/epl-2.0
@@ -129,7 +129,7 @@
 
     <maven.build.timestamp.format>yyyyMMddhhmm</maven.build.timestamp.format>
     <jacoco.home.url>http://www.jacoco.org/jacoco</jacoco.home.url>
-    <copyright.years>${project.inceptionYear}, 2023</copyright.years>
+    <copyright.years>${project.inceptionYear}, 2024</copyright.years>
 
     <bytecode.version>1.5</bytecode.version>
     <maven.compiler.source>${bytecode.version}</maven.compiler.source>
@@ -352,11 +352,7 @@
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-javadoc-plugin</artifactId>
-          <!--
-          Do not upgrade to 3.1.0 because it has troubles with "Automatic-Module-Name"
-          See https://issues.apache.org/jira/browse/MJAVADOC-588
-          -->
-          <version>3.0.1</version>
+          <version>3.6.3</version>
           <configuration>
             <quiet>true</quiet>
             <detectOfflineLinks>false</detectOfflineLinks>
@@ -414,7 +410,7 @@
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-site-plugin</artifactId>
-          <version>3.3</version>
+          <version>3.12.1</version>
         </plugin>
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
@@ -461,7 +457,7 @@
         <plugin>
           <groupId>com.diffplug.spotless</groupId>
           <artifactId>spotless-maven-plugin</artifactId>
-          <version>2.37.0</version>
+          <version>2.41.1</version>
        </plugin>
       </plugins>
     </pluginManagement>
@@ -554,9 +550,13 @@
               <include>src/**/*.java</include>
             </includes>
             <eclipse>
-              <version>4.28</version>
+              <version>4.30</version>
               <file>../org.jacoco.core/.settings/org.eclipse.jdt.core.prefs</file>
             </eclipse>
+            <importOrder>
+              <order>java,javax,org,com,</order>
+              <semanticSort>true</semanticSort>
+            </importOrder>
             <trimTrailingWhitespace/>
             <endWithNewline/>
           </java>
@@ -608,7 +608,7 @@
                   <include name="**/*.scala"/>
                   <not>
                     <and>
-                      <contains text="Copyright (c) 2009, 2023 Mountainminds GmbH &amp; Co. KG and Contributors"/>
+                      <contains text="Copyright (c) 2009, 2024 Mountainminds GmbH &amp; Co. KG and Contributors"/>
                       <contains text="This program and the accompanying materials are made available under"/>
                       <contains text="the terms of the Eclipse Public License 2.0 which is available at"/>
                       <contains text="http://www.eclipse.org/legal/epl-2.0"/>
@@ -925,6 +925,20 @@
       </properties>
     </profile>
 
+    <profile>
+      <id>java23-bytecode</id>
+      <activation>
+        <property>
+          <name>bytecode.version</name>
+          <value>23</value>
+        </property>
+      </activation>
+      <properties>
+        <maven.compiler.source>13</maven.compiler.source>
+        <maven.compiler.target>13</maven.compiler.target>
+      </properties>
+    </profile>
+
     <!-- This profile enables use of ECJ -->
     <profile>
       <id>ecj</id>
@@ -945,7 +959,7 @@
               <dependency>
                 <groupId>org.eclipse.jdt</groupId>
                 <artifactId>ecj</artifactId>
-                <version>3.34.0</version>
+                <version>3.37.0</version>
               </dependency>
               <dependency>
                 <groupId>org.codehaus.plexus</groupId>

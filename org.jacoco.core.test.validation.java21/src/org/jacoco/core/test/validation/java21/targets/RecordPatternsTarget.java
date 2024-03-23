@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2023 Mountainminds GmbH & Co. KG and Contributors
+ * Copyright (c) 2009, 2024 Mountainminds GmbH & Co. KG and Contributors
  * This program and the accompanying materials are made available under
  * the terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0
@@ -24,14 +24,14 @@ public class RecordPatternsTarget {
 	}
 
 	private static void instanceofOperator(Object o) {
-		if (o instanceof Point(int x, int y)) { // assertFullyCovered(0, 2)
+		if (o instanceof Point(int x, int y)) { // assertInstanceof()
 			nop(x + y); // assertFullyCovered()
 		} // assertEmpty()
 	}
 
 	private static void switchStatement(Object p) {
 		switch (p) { // assertFullyCovered(0, 2)
-		case Point(int x, int y) -> nop(x + y); // assertFullyCovered()
+		case Point(int x, int y) -> nop(x + y); // assertSwitchStatementLastCase()
 		default -> nop(); // assertFullyCovered()
 		} // assertEmpty()
 	}

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2023 Mountainminds GmbH & Co. KG and Contributors
+ * Copyright (c) 2009, 2024 Mountainminds GmbH & Co. KG and Contributors
  * This program and the accompanying materials are made available under
  * the terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0
@@ -12,11 +12,11 @@
  *******************************************************************************/
 package org.jacoco.core.test.validation;
 
-import org.junit.Test;
-
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
+
+import org.junit.Test;
 
 public class JavaVersionTest {
 

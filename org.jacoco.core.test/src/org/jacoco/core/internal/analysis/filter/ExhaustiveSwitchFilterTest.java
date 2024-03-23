@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2023 Mountainminds GmbH & Co. KG and Contributors
+ * Copyright (c) 2009, 2024 Mountainminds GmbH & Co. KG and Contributors
  * This program and the accompanying materials are made available under
  * the terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0
@@ -12,15 +12,15 @@
  *******************************************************************************/
 package org.jacoco.core.internal.analysis.filter;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import org.jacoco.core.internal.instr.InstrSupport;
 import org.junit.Test;
 import org.objectweb.asm.Label;
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.tree.AbstractInsnNode;
 import org.objectweb.asm.tree.MethodNode;
-
-import java.util.HashSet;
-import java.util.Set;
 
 /**
  * Unit tests for {@link ExhaustiveSwitchFilter}.

@@ -40,13 +40,15 @@ jobs:
         JDK_VERSION: 19
       JDK 20:
         JDK_VERSION: 20
-      JDK 20 with ECJ:
-        JDK_VERSION: 20
-        ECJ: true
       JDK 21:
         JDK_VERSION: 21
+      JDK 21 with ECJ:
+        JDK_VERSION: 21
+        ECJ: true
       JDK 22:
         JDK_VERSION: 22
+      JDK 23:
+        JDK_VERSION: 23
   pool:
     vmImage: 'ubuntu-20.04'
   steps:
@@ -86,17 +88,17 @@ jobs:
         export JAVA_HOME=$JAVA_HOME_17_X64
       fi
       if [[ "$BUILD_SOURCEBRANCH" == "refs/heads/master" && "$JDK_VERSION" == "5" ]]; then
-        .maven/bin/mvn -V -B -e -f org.jacoco.build \
+        .maven/bin/mvn -V -B -e --no-transfer-progress -f org.jacoco.build \
           verify -Djdk.version=$JDK_VERSION -Dbytecode.version=$JDK_VERSION \
           deploy:deploy -DdeployAtEnd \
           --toolchains=toolchains.xml --settings=.azure-pipelines/maven-settings.xml
       elif [[ "$BUILD_SOURCEBRANCH" == "refs/heads/master" && "$JDK_VERSION" == "11" ]]; then
-        .maven/bin/mvn -V -B -e -f org.jacoco.build \
+        .maven/bin/mvn -V -B -e --no-transfer-progress -f org.jacoco.build \
           verify -Djdk.version=$JDK_VERSION -Dbytecode.version=$JDK_VERSION \
           sonar:sonar \
           --toolchains=toolchains.xml --settings=.azure-pipelines/maven-settings.xml
       else
-        .maven/bin/mvn -V -B -e \
+        .maven/bin/mvn -V -B -e --no-transfer-progress \
           verify -Djdk.version=$JDK_VERSION -Dbytecode.version=$JDK_VERSION -Decj=${ECJ:-} \
           --toolchains=toolchains.xml
       fi

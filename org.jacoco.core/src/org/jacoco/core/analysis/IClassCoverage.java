@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2023 Mountainminds GmbH & Co. KG and Contributors
+ * Copyright (c) 2009, 2024 Mountainminds GmbH & Co. KG and Contributors
  * This program and the accompanying materials are made available under
  * the terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0
@@ -31,7 +31,7 @@ public interface IClassCoverage extends ISourceNode {
 	long getId();
 
 	/**
-	 * Returns if the the analyzed class does match the execution data provided.
+	 * Returns if the analyzed class does match the execution data provided.
 	 * More precisely if execution data is available for a class with the same
 	 * qualified name but with a different class id.
 	 *

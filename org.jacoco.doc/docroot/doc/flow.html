@@ -144,7 +144,7 @@ public static example()V
 
 <p>
   The current JaCoCo implementation ignores edges caused by implicit exceptions
-  and the the method entry. This means we consider SEQUENCE, JUMP, EXIT.
+  and the method entry. This means we consider SEQUENCE, JUMP, EXIT.
 </p>
 
 
@@ -253,7 +253,7 @@ public static example()V
   Now let's see how this rules apply to the example snippet above. We see that
   <code>INVOKE d()</code> instruction is the only node with more than one
   incoming edge. So we need to place probes on those edges and another probe on
-  the only exit node. The result is shown the the right box of the diagram
+  the only exit node. The result is shown the right box of the diagram
   above.
 </p>
 
@@ -264,7 +264,7 @@ public static example()V
   exceptions thrown for example from invoked methods. If the control flow
   between two probes is interrupted by a exception not explicitly created with
   a <code>throw</code> statement all instruction in between are considered as
-  not covered. This leads to unexpected results especially when the the block of
+  not covered. This leads to unexpected results especially when the block of
   instructions spans multiple lines of source code.
 </p>
 
