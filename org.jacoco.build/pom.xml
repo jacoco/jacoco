@@ -367,7 +367,7 @@
               <!-- Workaround to be able to compile into Java 13 bytecode -->
               <groupId>org.ow2.asm</groupId>
               <artifactId>asm</artifactId>
-              <version>7.1</version>
+              <version>9.7</version>
             </dependency>
           </dependencies>
         </plugin>
