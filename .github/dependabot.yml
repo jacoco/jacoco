@@ -4,9 +4,15 @@ updates:
     directory: "/"
     schedule:
       interval: "weekly"
+    labels:
+      - "dependencies"
+      - "component: build"
   - package-ecosystem: "maven"
     directory: "/"
     schedule:
       interval: "daily"
+    labels:
+      - "dependencies"
+      - "component: core"
     allow:
       - dependency-name: "org.ow2.asm:*"
