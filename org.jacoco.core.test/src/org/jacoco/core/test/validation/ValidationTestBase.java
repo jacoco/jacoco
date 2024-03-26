@@ -228,4 +228,7 @@ public abstract class ValidationTestBase {
 				source.getCoverage().getMethodCounter().getTotalCount());
 	}
 
+	protected Source getSource() {
+		return source;
+	}
 }
