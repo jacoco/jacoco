@@ -448,4 +448,65 @@ public class KotlinCoroutineFilterTest extends FilterTestBase {
 		assertIgnored(range1, range2);
 	}
 
+	/**
+	 * <pre>
+	 *     runBlocking {
+	 *         // suspending lambda without suspension points,
+	 *         // i.e. without invocations of suspending functions/lambdas
+	 *     }
+	 * </pre>
+	 *
+	 * @see #should_filter_suspending_lambdas()
+	 */
+	@Test
+	public void should_filter_Kotlin_1_6_suspending_lambda_without_suspension_points() {
+		final MethodNode m = new MethodNode(InstrSupport.ASM_API_VERSION,
+				Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "invokeSuspend",
+				"(Ljava/lang/Object;)Ljava/lang/Object;", null, null);
+		context.classAnnotations
+				.add(KotlinGeneratedFilter.KOTLIN_METADATA_DESC);
+
+		m.visitMethodInsn(Opcodes.INVOKESTATIC,
+				"kotlin/coroutines/intrinsics/IntrinsicsKt",
+				"getCOROUTINE_SUSPENDED", "()Ljava/lang/Object;", false);
+		m.visitInsn(Opcodes.POP);
+
+		m.visitVarInsn(Opcodes.ALOAD, 0);
+		m.visitFieldInsn(Opcodes.GETFIELD, "ExampleKt$example$1", "label", "I");
+
+		final Label dflt = new Label();
+		final Label state0 = new Label();
+		m.visitTableSwitchInsn(0, 0, dflt, state0);
+		final Range range1 = new Range();
+		range1.fromInclusive = m.instructions.getLast();
+		range1.toInclusive = m.instructions.getLast();
+
+		m.visitLabel(state0);
+		{
+			m.visitVarInsn(Opcodes.ALOAD, 1);
+			m.visitMethodInsn(Opcodes.INVOKESTATIC, "kotlin/ResultKt",
+					"throwOnFailure", "(Ljava/lang/Object;)V", false);
+		}
+
+		m.visitFieldInsn(Opcodes.GETSTATIC, "kotlin/Unit", "INSTANCE",
+				"Lkotlin/Unit;");
+		m.visitInsn(Opcodes.ARETURN);
+
+		m.visitLabel(dflt);
+		final Range range0 = new Range();
+		range0.fromInclusive = m.instructions.getLast();
+		m.visitTypeInsn(Opcodes.NEW, "java/lang/IllegalStateException");
+		m.visitInsn(Opcodes.DUP);
+		m.visitLdcInsn("call to 'resume' before 'invoke' with coroutine");
+		m.visitMethodInsn(Opcodes.INVOKESPECIAL,
+				"java/lang/IllegalStateException", "<init>",
+				"(Ljava/lang/String;)V", false);
+		m.visitInsn(Opcodes.ATHROW);
+		range0.toInclusive = m.instructions.getLast();
+
+		filter.filter(m, context, output);
+
+		assertIgnored(range0, range1);
+	}
+
 }
