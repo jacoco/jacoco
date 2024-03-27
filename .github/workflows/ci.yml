@@ -12,6 +12,7 @@ jobs:
           - jdk: 11
           - jdk: 17
           - jdk: 21
+          - jdk: 22
     name: JDK ${{ matrix.jdk }}
     runs-on: ubuntu-20.04
     steps:
