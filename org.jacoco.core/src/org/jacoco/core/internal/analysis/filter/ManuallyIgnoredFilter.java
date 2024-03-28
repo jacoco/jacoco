@@ -33,7 +33,6 @@ public class ManuallyIgnoredFilter implements IFilter {
 
 	public static final String ANNOTATION_VALUE = "JacocoIgnored";
 
-	@Override
 	public void filter(MethodNode methodNode, IFilterContext context,
 			IFilterOutput output) {
 		for (String annotation : context.getClassAnnotations()) {
