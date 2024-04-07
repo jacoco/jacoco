@@ -80,6 +80,9 @@ h1 {
 pre.source {
   border:#d6d3ce 1px solid;
   font-family:monospace;
+  background-color: #f3f3f3;
+  border-radius: 20px;
+  padding: 10px;
 }
 
 pre.source ol {
@@ -88,8 +91,8 @@ pre.source ol {
 }
 
 pre.source li {
-  border-left: 1px solid #D6D3CE;
-  color: #A0A0A0;
+  border-left: 0px;
+  color: black;
   padding-left: 0px;
 }
 
