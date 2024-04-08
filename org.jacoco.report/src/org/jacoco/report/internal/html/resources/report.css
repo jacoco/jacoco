@@ -10,7 +10,8 @@ h1 {
 
 .breadcrumb {
   border:#d6d3ce 1px solid;
-  padding:2px 4px 2px 4px;
+  border-radius:5px;
+  padding:5px;
 }
 
 .breadcrumb .info {
@@ -79,10 +80,10 @@ h1 {
 
 pre.source {
   border:#d6d3ce 1px solid;
+  border-radius:5px;
   font-family:monospace;
-  background-color: #f6f8fa;
-  border-radius: 10px;
-  padding: 10px 0px;
+  background-color:#f6f8fa;
+  padding:10px 0px;
 }
 
 pre.source ol {
