@@ -24,14 +24,24 @@
 
   <name>JaCoCo :: Test :: Core :: Validation Java 7</name>
 
-  <properties>
-    <bytecode.version>7</bytecode.version>
-  </properties>
-
   <dependencies>
     <dependency>
       <groupId>${project.groupId}</groupId>
       <artifactId>org.jacoco.core.test</artifactId>
     </dependency>
   </dependencies>
+
+  <profiles>
+    <profile>
+      <id>intellij</id>
+      <activation>
+        <property>
+          <name>idea.maven.embedder.version</name>
+        </property>
+      </activation>
+      <properties>
+        <bytecode.version>7</bytecode.version>
+      </properties>
+    </profile>
+  </profiles>
 </project>
