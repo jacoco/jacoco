@@ -87,21 +87,9 @@ jobs:
       else
         export JAVA_HOME=$JAVA_HOME_17_X64
       fi
-      if [[ "$BUILD_SOURCEBRANCH" == "refs/heads/master" && "$JDK_VERSION" == "5" ]]; then
-        .maven/bin/mvn -V -B -e --no-transfer-progress -f org.jacoco.build \
-          verify -Djdk.version=$JDK_VERSION -Dbytecode.version=$JDK_VERSION \
-          deploy:deploy -DdeployAtEnd \
-          --toolchains=toolchains.xml --settings=.azure-pipelines/maven-settings.xml
-      elif [[ "$BUILD_SOURCEBRANCH" == "refs/heads/master" && "$JDK_VERSION" == "11" ]]; then
-        .maven/bin/mvn -V -B -e --no-transfer-progress -f org.jacoco.build \
-          verify -Djdk.version=$JDK_VERSION -Dbytecode.version=$JDK_VERSION \
-          sonar:sonar \
-          --toolchains=toolchains.xml --settings=.azure-pipelines/maven-settings.xml
-      else
-        .maven/bin/mvn -V -B -e --no-transfer-progress \
-          verify -Djdk.version=$JDK_VERSION -Dbytecode.version=$JDK_VERSION -Decj=${ECJ:-} \
-          --toolchains=toolchains.xml
-      fi
+      .maven/bin/mvn -V -B -e --no-transfer-progress \
+        verify -Djdk.version=$JDK_VERSION -Dbytecode.version=$JDK_VERSION -Decj=${ECJ:-} \
+        --toolchains=toolchains.xml
     displayName: Build
     env:
       SONARQUBE_TOKEN: $(SONARQUBE_TOKEN)
