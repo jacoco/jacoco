@@ -744,10 +744,37 @@
     <profile>
       <id>maven-jdk12</id>
       <activation>
-        <jdk>[12,)</jdk>
+        <jdk>[12,20)</jdk>
       </activation>
       <properties>
         <bytecode.version>7</bytecode.version>
+      </properties>
+    </profile>
+
+    <profile>
+      <!-- https://bugs.openjdk.org/browse/JDK-8173605 -->
+      <id>maven-jdk20</id>
+      <activation>
+        <jdk>[20,)</jdk>
+      </activation>
+      <properties>
+        <bytecode.version>8</bytecode.version>
+      </properties>
+    </profile>
+
+    <!--
+    Following profile is automatically activated in IntelliJ IDEA
+    and used to set the correct Java language level in it
+    -->
+    <profile>
+      <id>intellij</id>
+      <activation>
+        <property>
+          <name>idea.maven.embedder.version</name>
+        </property>
+      </activation>
+      <properties>
+        <bytecode.version>5</bytecode.version>
       </properties>
     </profile>
 
