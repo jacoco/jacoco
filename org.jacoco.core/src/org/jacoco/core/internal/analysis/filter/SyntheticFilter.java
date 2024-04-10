@@ -58,6 +58,12 @@ public final class SyntheticFilter implements IFilter {
 			}
 		}
 
+		if (AspectJUtil.isAspectJClass(context)) {
+			if (AspectJUtil.isAspectJAroundBody(methodNode)) {
+				return;
+			}
+		}
+
 		output.ignore(methodNode.instructions.getFirst(),
 				methodNode.instructions.getLast());
 	}
