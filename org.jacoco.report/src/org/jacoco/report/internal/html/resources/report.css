@@ -1,3 +1,10 @@
+:root {
+  --grey-90:#fafafa;
+  --grey-80:#d6d3ce;
+  --grey-70:#cccccc;
+  --grey-60:#a0a0a0;
+}
+
 body, td {
   font-family:sans-serif;
   font-size:10pt;
@@ -9,7 +16,7 @@ h1 {
 }
 
 .breadcrumb {
-  border:#d6d3ce 1px solid;
+  border:var(--grey-80) 1px solid;
   border-radius:5px;
   padding:5px;
 }
@@ -79,11 +86,11 @@ h1 {
 }
 
 pre.source {
-  border:#d6d3ce 1px solid;
+  border:var(--grey-80) 1px solid;
   border-radius:5px;
   font-family:monospace;
-  background-color:#f6f8fa;
-  padding:10px 0px;
+  background-color:var(--grey-90);
+  padding:5px 0px;
 }
 
 pre.source ol {
@@ -93,7 +100,7 @@ pre.source ol {
 
 pre.source li {
   border-left: 0px;
-  color: black;
+  color: var(--grey-60);
   padding-left: 0px;
 }
 
@@ -155,12 +162,12 @@ table.coverage thead td {
 }
 
 table.coverage thead td.bar {
-  border-left:#cccccc 1px solid;
+  border-left:var(--grey-70) 1px solid;
 }
 
 table.coverage thead td.ctr1 {
   text-align:right;
-  border-left:#cccccc 1px solid;
+  border-left:var(--grey-70) 1px solid;
 }
 
 table.coverage thead td.ctr2 {
@@ -186,7 +193,7 @@ table.coverage thead td.down {
 table.coverage tbody td {
   white-space:nowrap;
   padding:2px 6px 2px 6px;
-  border-bottom:#d6d3ce 1px solid;
+  border-bottom:var(--grey-80) 1px solid;
 }
 
 table.coverage tbody tr:hover {
@@ -232,14 +239,14 @@ table.coverage tfoot td.ctr2 {
 
 .footer {
   margin-top:20px;
-  border-top:#d6d3ce 1px solid;
+  border-top:var(--grey-80) 1px solid;
   padding-top:2px;
   font-size:8pt;
-  color:#a0a0a0;
+  color:var(--grey-60);
 }
 
 .footer a {
-  color:#a0a0a0;
+  color:var(--grey-60);
 }
 
 .right {
