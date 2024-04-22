@@ -60,9 +60,8 @@ public class SourceFilePage extends NodePage<ISourceNode> {
 
 	@Override
 	protected void content(final HTMLElement body) throws IOException {
-		final SourceHighlighter highlighter;
-		highlighter = new SourceHighlighter(context.getLocale());
-		highlighter.render(body, getNode(), sourceReader);
+		final SourceHighlighter hl = new SourceHighlighter(context.getLocale());
+		hl.render(body, getNode(), sourceReader);
 		sourceReader.close();
 	}
 
@@ -77,9 +76,8 @@ public class SourceFilePage extends NodePage<ISourceNode> {
 
 	@Override
 	protected String getOnload() {
-		String setTabWidth = format("window['PR_TAB_WIDTH']=%d", tabWidth);
-		String invokePrettyPrint = "prettyPrint()";
-		return setTabWidth + ";" + invokePrettyPrint;
+		return format("window['PR_TAB_WIDTH']=%d;prettyPrint()",
+				Integer.valueOf(tabWidth));
 	}
 
 	@Override

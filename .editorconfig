@@ -1,8 +1,0 @@
-root = true
-
-[*.java]
-indent_style = tab
-
-[*.css]
-indent_size = 2
-indent_style = space

@@ -77,6 +77,9 @@ public final class Styles {
 	/** Block of source code */
 	public static final String SOURCE = "source";
 
+	/** Line number before each source line */
+	public static final String NR = "nr";
+
 	/** Part of source code where instructions are not covered */
 	public static final String NOT_COVERED = "nc";
 
