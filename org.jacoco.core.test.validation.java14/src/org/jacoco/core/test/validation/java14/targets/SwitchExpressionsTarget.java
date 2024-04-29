@@ -34,6 +34,9 @@ public class SwitchExpressionsTarget {
 		exhaustiveSwitchExpression(Stubs.Enum.B);
 		exhaustiveSwitchExpression(Stubs.Enum.C);
 
+		exhaustiveSwitchExpressionWithYield(Stubs.Enum.A);
+		exhaustiveSwitchExpressionWithYield(Stubs.Enum.B);
+		exhaustiveSwitchExpressionWithYield(Stubs.Enum.C);
 	}
 
 	private static void switchExpressionWithArrows() {
@@ -108,4 +111,24 @@ public class SwitchExpressionsTarget {
 		}); // assertEmpty()
 
 	}
+
+	private static void exhaustiveSwitchExpressionWithYield(Stubs.Enum e) {
+
+		nop(switch(e) { // assertFullyCovered(0, 3)
+			case A -> {
+				nop();
+				yield i1(); // assertFullyCovered()
+			}
+			case B -> {
+				nop();
+				yield i1(); // assertFullyCovered()
+			}
+			case C -> {
+				nop();
+				yield i1(); // assertFullyCovered()
+			}
+		});
+
+	}
+
 }
