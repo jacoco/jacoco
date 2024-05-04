@@ -92,7 +92,7 @@ public class KotlinComposeFilterTest extends FilterTestBase {
 
 		m.visitVarInsn(ALOAD, 1);
 		range1.fromInclusive = m.instructions.getLast();
-		m.visitLdcInsn(new Integer(-974630231));
+		m.visitLdcInsn(Integer.valueOf(-974630231));
 		m.visitMethodInsn(INVOKEINTERFACE, "androidx/compose/runtime/Composer",
 				"startRestartGroup", "(I)Landroidx/compose/runtime/Composer;",
 				true);
@@ -141,7 +141,7 @@ public class KotlinComposeFilterTest extends FilterTestBase {
 		Label label7 = new Label();
 		m.visitJumpInsn(IFEQ, label7);
 		range3.fromInclusive = m.instructions.getLast();
-		m.visitLdcInsn(new Integer(-974630231));
+		m.visitLdcInsn(Integer.valueOf(-974630231));
 		m.visitVarInsn(ILOAD, 3);
 		m.visitInsn(ICONST_M1);
 		m.visitLdcInsn("org.example.example (Example.kt:19)");
