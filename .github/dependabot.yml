@@ -23,6 +23,6 @@ updates:
     labels:
       - "dependencies"
       - "component: test"
-      - "language: kotlin"
+      - "language: Kotlin"
     allow:
       - dependency-name: "org.jetbrains.kotlin:*"
