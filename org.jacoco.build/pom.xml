@@ -762,6 +762,27 @@
       </properties>
     </profile>
 
+    <profile>
+      <id>maven-jdk23</id>
+      <activation>
+        <jdk>[23,)</jdk>
+      </activation>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-javadoc-plugin</artifactId>
+            <configuration>
+              <additionalOptions>
+                <!-- https://bugs.openjdk.org/browse/JDK-8324774 -->
+                <option>--no-fonts</option>
+              </additionalOptions>
+            </configuration>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+
     <!--
     Following profile is automatically activated in IntelliJ IDEA
     and used to set the correct Java language level in it
@@ -1033,6 +1054,30 @@
       <properties>
         <bytecode.version>7</bytecode.version>
       </properties>
+    </profile>
+
+    <profile>
+      <id>jdk23</id>
+      <activation>
+        <property>
+          <name>jdk.version</name>
+          <value>23</value>
+        </property>
+      </activation>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-javadoc-plugin</artifactId>
+            <configuration>
+              <additionalOptions>
+                <!-- https://bugs.openjdk.org/browse/JDK-8324774 -->
+                <option>--no-fonts</option>
+              </additionalOptions>
+            </configuration>
+          </plugin>
+        </plugins>
+      </build>
     </profile>
 
     <!-- This profile enables generation of JARs with sources and javadocs -->
