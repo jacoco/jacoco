@@ -23,6 +23,7 @@ import org.objectweb.asm.tree.LdcInsnNode;
 import org.objectweb.asm.tree.MethodInsnNode;
 import org.objectweb.asm.tree.MethodNode;
 import org.objectweb.asm.tree.TableSwitchInsnNode;
+import org.objectweb.asm.tree.VarInsnNode;
 
 /**
  * Filters branches that Kotlin compiler generates for coroutines.
@@ -94,7 +95,16 @@ public final class KotlinCoroutineFilter implements IFilter {
 						"getCOROUTINE_SUSPENDED", "()Ljava/lang/Object;");
 			}
 
-			nextIsVar(Opcodes.ASTORE, "COROUTINE_SUSPENDED");
+			if (cursor != null
+					&& Opcodes.POP == skipNonOpcodes(cursor.getNext())
+							.getOpcode()) {
+				nextIs(Opcodes.POP);
+				vars.put("COROUTINE_SUSPENDED",
+						new VarInsnNode(Opcodes.NOP, -1));
+			} else {
+				nextIsVar(Opcodes.ASTORE, "COROUTINE_SUSPENDED");
+			}
+
 			nextIsVar(Opcodes.ALOAD, "this");
 			nextIs(Opcodes.GETFIELD);
 			nextIs(Opcodes.TABLESWITCH);
