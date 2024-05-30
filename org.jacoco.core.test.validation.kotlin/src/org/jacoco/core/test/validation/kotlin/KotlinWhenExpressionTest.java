@@ -24,4 +24,9 @@ public class KotlinWhenExpressionTest extends ValidationTestBase {
 		super(KotlinWhenExpressionTarget.class);
 	}
 
+	@Override
+	public void all_missed_instructions_should_have_line_number() {
+		// https://github.com/jacoco/jacoco/issues/1557
+	}
+
 }
