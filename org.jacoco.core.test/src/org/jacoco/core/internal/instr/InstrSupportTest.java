@@ -43,8 +43,8 @@ public class InstrSupportTest {
 	}
 
 	@Test
-	public void classReaderFor_should_read_java_23_class() {
-		final byte[] bytes = createJava23Class();
+	public void classReaderFor_should_read_java_24_class() {
+		final byte[] bytes = createJava24Class();
 
 		final ClassReader classReader = InstrSupport.classReaderFor(bytes);
 
@@ -53,16 +53,16 @@ public class InstrSupportTest {
 			public void visit(final int version, final int access,
 					final String name, final String signature,
 					final String superName, final String[] interfaces) {
-				assertEquals(Opcodes.V22 + 1, version);
+				assertEquals(Opcodes.V23 + 1, version);
 			}
 		}, 0);
 
-		assertArrayEquals(createJava23Class(), bytes);
+		assertArrayEquals(createJava24Class(), bytes);
 	}
 
-	private static byte[] createJava23Class() {
+	private static byte[] createJava24Class() {
 		final ClassWriter cw = new ClassWriter(0);
-		cw.visit(Opcodes.V22 + 1, 0, "Foo", null, "java/lang/Object", null);
+		cw.visit(Opcodes.V23 + 1, 0, "Foo", null, "java/lang/Object", null);
 		cw.visitEnd();
 		return cw.toByteArray();
 	}
@@ -134,7 +134,8 @@ public class InstrSupportTest {
 		assertTrue(InstrSupport.needsFrames(Opcodes.V20));
 		assertTrue(InstrSupport.needsFrames(Opcodes.V21));
 		assertTrue(InstrSupport.needsFrames(Opcodes.V22));
-		assertTrue(InstrSupport.needsFrames(Opcodes.V22 + 1));
+		assertTrue(InstrSupport.needsFrames(Opcodes.V23));
+		assertTrue(InstrSupport.needsFrames(Opcodes.V23 + 1));
 
 		assertTrue(InstrSupport.needsFrames(0x0100));
 	}
