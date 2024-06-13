@@ -149,4 +149,14 @@ public class ReportTest extends CommandTestBase {
 						.isFile());
 	}
 
+	@Test
+	public void should_exclude_classes_when_excludeclassfiles_option_is_provided()
+			throws Exception {
+		execute("report", "--classfiles", getClassPath(), "--excludeclassfiles",
+				".*/commands/.*", "--excludeclassfiles", getClassPath() + "/org.jacoco.cli.internal/XmlDocumentationTest(?:$\\S+)?.*\\.class");
+
+		assertOk();
+		assertContains("[INFO] Analyzing 2 classes.", out);
+	}
+
 }

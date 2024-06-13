@@ -20,6 +20,7 @@ import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.regex.Pattern;
 
 import org.jacoco.cli.internal.Command;
 import org.jacoco.core.analysis.Analyzer;
@@ -50,6 +51,9 @@ public class Report extends Command {
 
 	@Option(name = "--classfiles", usage = "location of Java class files", metaVar = "<path>", required = true)
 	List<File> classfiles = new ArrayList<File>();
+
+	@Option(name = "--excludeclassfiles", usage = "Java class files to exclude by regular expression", metaVar = "<pattern>")
+	List<Pattern> excludeclassfiles = new ArrayList<Pattern>();
 
 	@Option(name = "--sourcefiles", usage = "location of the source files", metaVar = "<path>")
 	List<File> sourcefiles = new ArrayList<File>();
@@ -102,12 +106,36 @@ public class Report extends Command {
 		return loader;
 	}
 
+	private void analyzeRecursive(Analyzer analyzer, File f)
+			throws IOException {
+		if (f.isDirectory()) {
+			for (final File file : f.listFiles()) {
+				analyzeRecursive(analyzer, file);
+			}
+		} else {
+			boolean match = false;
+			for (Pattern pattern : excludeclassfiles) {
+				if (pattern.matcher(f.getPath()).matches()) {
+					match = true;
+					break;
+				}
+			}
+			if (!match) {
+				analyzer.analyzeAll(f);
+			}
+		}
+	}
+
 	private IBundleCoverage analyze(final ExecutionDataStore data,
 			final PrintWriter out) throws IOException {
 		final CoverageBuilder builder = new CoverageBuilder();
 		final Analyzer analyzer = new Analyzer(data, builder);
 		for (final File f : classfiles) {
-			analyzer.analyzeAll(f);
+			if (excludeclassfiles.isEmpty()) {
+				analyzer.analyzeAll(f);
+			} else {
+				analyzeRecursive(analyzer, f);
+			}
 		}
 		printNoMatchWarning(builder.getNoMatchClasses(), out);
 		return builder.getBundle(name);

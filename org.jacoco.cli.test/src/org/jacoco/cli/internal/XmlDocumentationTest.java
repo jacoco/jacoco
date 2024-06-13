@@ -106,6 +106,14 @@ public class XmlDocumentationTest {
 				"/documentation/command[@name='report']/option[2]/@multiple",
 				doc);
 
+		assertContains("-excludeclassfiles <pattern>",
+				"/documentation/command[@name='report']/option[5]/usage/text()",
+				doc);
+
+		assertContains("true",
+				"/documentation/command[@name='report']/option[5]/@multiple",
+				doc);
+
 	}
 
 	private Document parse(File file) throws Exception {
