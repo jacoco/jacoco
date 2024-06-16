@@ -37,6 +37,7 @@ public class RecordPatternsTest extends ValidationTestBase {
 
 	public void assertSwitchStatementLastCase(final Line line) {
 		if (!isJDKCompiler) {
+			// FIXME create new issue
 			// https://github.com/eclipse-jdt/eclipse.jdt.core/issues/773
 			assertPartlyCovered(line);
 		} else if (JavaVersion.current().isBefore("23")) {
