@@ -22,6 +22,7 @@ import org.jacoco.cli.internal.Command;
 import org.jacoco.core.tools.ExecFileLoader;
 import org.kohsuke.args4j.Argument;
 import org.kohsuke.args4j.Option;
+import org.kohsuke.args4j.spi.ExplicitBooleanOptionHandler;
 
 /**
  * The <code>merge</code> command.
@@ -34,6 +35,9 @@ public class Merge extends Command {
 	@Option(name = "--destfile", usage = "file to write merged execution data to", metaVar = "<path>", required = true)
 	File destfile;
 
+	@Option(name = "--append", handler = ExplicitBooleanOptionHandler.class, usage = "destination file should be appended (default true)", metaVar = "<append>")
+	boolean append = true;
+
 	@Override
 	public String description() {
 		return "Merges multiple exec files into a new one.";
@@ -45,7 +49,7 @@ public class Merge extends Command {
 		final ExecFileLoader loader = loadExecutionData(out);
 		out.printf("[INFO] Writing execution data to %s.%n",
 				destfile.getAbsolutePath());
-		loader.save(destfile, true);
+		loader.save(destfile, append);
 		return 0;
 	}
 
