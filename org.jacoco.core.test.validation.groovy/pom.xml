@@ -17,7 +17,7 @@
   <parent>
     <groupId>org.jacoco</groupId>
     <artifactId>org.jacoco.core.test.validation</artifactId>
-    <version>0.8.12-SNAPSHOT</version>
+    <version>0.8.13-SNAPSHOT</version>
     <relativePath>../org.jacoco.core.test.validation</relativePath>
   </parent>
 
@@ -27,7 +27,7 @@
 
   <properties>
     <gmaven.version>3.0.0</gmaven.version>
-    <groovy.version>3.0.20</groovy.version>
+    <groovy.version>3.0.21</groovy.version>
   </properties>
 
   <dependencies>

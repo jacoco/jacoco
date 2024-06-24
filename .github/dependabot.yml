@@ -16,3 +16,13 @@ updates:
       - "component: core"
     allow:
       - dependency-name: "org.ow2.asm:*"
+  - package-ecosystem: "maven"
+    directory: "/org.jacoco.core.test.validation.kotlin"
+    schedule:
+      interval: "weekly"
+    labels:
+      - "dependencies"
+      - "component: test"
+      - "language: Kotlin"
+    allow:
+      - dependency-name: "org.jetbrains.kotlin:*"

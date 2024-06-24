@@ -13,20 +13,15 @@
 package org.jacoco.core.test.validation.kotlin;
 
 import org.jacoco.core.test.validation.ValidationTestBase;
-import org.jacoco.core.test.validation.kotlin.targets.KotlinWhenExpressionTarget;
+import org.jacoco.core.test.validation.kotlin.targets.KotlinInlineClassTarget;
 
 /**
- * Test of <code>when</code> expressions.
+ * Test of code coverage in {@link KotlinInlineClassTarget}.
  */
-public class KotlinWhenExpressionTest extends ValidationTestBase {
+public class KotlinInlineClassTest extends ValidationTestBase {
 
-	public KotlinWhenExpressionTest() {
-		super(KotlinWhenExpressionTarget.class);
-	}
-
-	@Override
-	public void all_missed_instructions_should_have_line_number() {
-		// https://github.com/jacoco/jacoco/issues/1557
+	public KotlinInlineClassTest() {
+		super(KotlinInlineClassTarget.class);
 	}
 
 }

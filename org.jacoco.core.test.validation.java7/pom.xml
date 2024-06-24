@@ -16,7 +16,7 @@
   <parent>
     <groupId>org.jacoco</groupId>
     <artifactId>org.jacoco.core.test.validation</artifactId>
-    <version>0.8.12-SNAPSHOT</version>
+    <version>0.8.13-SNAPSHOT</version>
     <relativePath>../org.jacoco.core.test.validation</relativePath>
   </parent>
 
@@ -24,14 +24,24 @@
 
   <name>JaCoCo :: Test :: Core :: Validation Java 7</name>
 
-  <properties>
-    <bytecode.version>7</bytecode.version>
-  </properties>
-
   <dependencies>
     <dependency>
       <groupId>${project.groupId}</groupId>
       <artifactId>org.jacoco.core.test</artifactId>
     </dependency>
   </dependencies>
+
+  <profiles>
+    <profile>
+      <id>intellij</id>
+      <activation>
+        <property>
+          <name>idea.maven.embedder.version</name>
+        </property>
+      </activation>
+      <properties>
+        <bytecode.version>7</bytecode.version>
+      </properties>
+    </profile>
+  </profiles>
 </project>
