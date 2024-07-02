@@ -43,6 +43,7 @@ public final class Filters implements IFilter {
 				new ExhaustiveSwitchFilter(), //
 				new RecordPatternFilter(), //
 				new AnnotationGeneratedFilter(), new KotlinGeneratedFilter(),
+				new KotlinEnumFilter(), //
 				new KotlinLateinitFilter(), new KotlinWhenFilter(),
 				new KotlinWhenStringFilter(),
 				new KotlinUnsafeCastOperatorFilter(),
