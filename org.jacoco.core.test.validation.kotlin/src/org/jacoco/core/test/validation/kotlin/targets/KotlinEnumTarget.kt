@@ -10,18 +10,22 @@
  *    Evgeny Mandrikov - initial API and implementation
  *
  *******************************************************************************/
-package org.jacoco.core.test.validation.kotlin;
+package org.jacoco.core.test.validation.kotlin.targets
 
-import org.jacoco.core.test.validation.ValidationTestBase;
-import org.jacoco.core.test.validation.kotlin.targets.KotlinWhenExpressionTarget;
+import org.jacoco.core.test.validation.targets.Stubs.nop
 
 /**
- * Test of <code>when</code> expressions.
+ * Test target for `enum class`.
  */
-public class KotlinWhenExpressionTest extends ValidationTestBase {
+object KotlinEnumTarget {
 
-	public KotlinWhenExpressionTest() {
-		super(KotlinWhenExpressionTarget.class);
-	}
+    private enum class EnumClass { // assertEmpty()
+        E // assertFullyCovered()
+    } // assertEmpty()
+
+    @JvmStatic
+    fun main(args: Array<String>) {
+        nop(EnumClass.E)
+    }
 
 }
