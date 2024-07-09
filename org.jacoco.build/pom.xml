@@ -933,6 +933,20 @@
       </properties>
     </profile>
 
+    <profile>
+      <id>java24-bytecode</id>
+      <activation>
+        <property>
+          <name>bytecode.version</name>
+          <value>24</value>
+        </property>
+      </activation>
+      <properties>
+        <maven.compiler.source>17</maven.compiler.source>
+        <maven.compiler.target>17</maven.compiler.target>
+      </properties>
+    </profile>
+
     <!-- This profile enables use of ECJ -->
     <profile>
       <id>ecj</id>
