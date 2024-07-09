@@ -13,15 +13,15 @@
 package org.jacoco.core.test.validation.kotlin;
 
 import org.jacoco.core.test.validation.ValidationTestBase;
-import org.jacoco.core.test.validation.kotlin.targets.KotlinWhenExpressionTarget;
+import org.jacoco.core.test.validation.kotlin.targets.KotlinEnumTarget;
 
 /**
- * Test of <code>when</code> expressions.
+ * Test of code coverage in {@link KotlinEnumTarget}.
  */
-public class KotlinWhenExpressionTest extends ValidationTestBase {
+public class KotlinEnumTest extends ValidationTestBase {
 
-	public KotlinWhenExpressionTest() {
-		super(KotlinWhenExpressionTarget.class);
+	public KotlinEnumTest() {
+		super(KotlinEnumTarget.class);
 	}
 
 }
