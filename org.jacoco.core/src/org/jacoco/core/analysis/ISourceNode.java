@@ -18,7 +18,7 @@ package org.jacoco.core.analysis;
  */
 public interface ISourceNode extends ICoverageNode {
 
-	/** Place holder for unknown lines (no debug information) */
+	/** Placeholder for unknown lines (no debug information) */
 	int UNKNOWN_LINE = -1;
 
 	/**
