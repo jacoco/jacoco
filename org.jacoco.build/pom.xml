@@ -953,6 +953,7 @@
       <activation>
         <property>
           <name>ecj</name>
+          <value>true</value>
         </property>
       </activation>
       <build>
