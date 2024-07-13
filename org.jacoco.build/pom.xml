@@ -451,6 +451,11 @@
           <artifactId>spotless-maven-plugin</artifactId>
           <version>2.41.1</version>
        </plugin>
+       <plugin>
+         <groupId>org.sonarsource.scanner.maven</groupId>
+         <artifactId>sonar-maven-plugin</artifactId>
+         <version>4.0.0.4121</version>
+       </plugin>
       </plugins>
     </pluginManagement>
 
@@ -948,6 +953,7 @@
       <activation>
         <property>
           <name>ecj</name>
+          <value>true</value>
         </property>
       </activation>
       <build>
