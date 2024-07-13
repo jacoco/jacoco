@@ -23,7 +23,6 @@ import org.objectweb.asm.tree.LdcInsnNode;
 import org.objectweb.asm.tree.MethodInsnNode;
 import org.objectweb.asm.tree.MethodNode;
 import org.objectweb.asm.tree.TableSwitchInsnNode;
-import org.objectweb.asm.tree.VarInsnNode;
 
 /**
  * Filters branches that Kotlin compiler generates for coroutines.
@@ -95,23 +94,23 @@ public final class KotlinCoroutineFilter implements IFilter {
 						"getCOROUTINE_SUSPENDED", "()Ljava/lang/Object;");
 			}
 
+			final TableSwitchInsnNode s;
 			if (cursor != null
 					&& Opcodes.POP == skipNonOpcodes(cursor.getNext())
 							.getOpcode()) {
+				// suspending lambda without suspension points
 				nextIs(Opcodes.POP);
-				vars.put("COROUTINE_SUSPENDED",
-						new VarInsnNode(Opcodes.NOP, -1));
+				s = nextIsStateSwitch();
+				if (s == null || s.labels.size() != 1) {
+					return;
+				}
 			} else {
 				nextIsVar(Opcodes.ASTORE, "COROUTINE_SUSPENDED");
+				s = nextIsStateSwitch();
+				if (s == null) {
+					return;
+				}
 			}
-
-			nextIsVar(Opcodes.ALOAD, "this");
-			nextIs(Opcodes.GETFIELD);
-			nextIs(Opcodes.TABLESWITCH);
-			if (cursor == null) {
-				return;
-			}
-			final TableSwitchInsnNode s = (TableSwitchInsnNode) cursor;
 			final List<AbstractInsnNode> ignore = new ArrayList<AbstractInsnNode>(
 					s.labels.size() * 2);
 
@@ -182,6 +181,16 @@ public final class KotlinCoroutineFilter implements IFilter {
 			for (int i = 0; i < ignore.size(); i += 2) {
 				output.ignore(ignore.get(i), ignore.get(i + 1));
 			}
+		}
+
+		private TableSwitchInsnNode nextIsStateSwitch() {
+			nextIsVar(Opcodes.ALOAD, "this");
+			nextIs(Opcodes.GETFIELD);
+			nextIs(Opcodes.TABLESWITCH);
+			if (cursor == null) {
+				return null;
+			}
+			return (TableSwitchInsnNode) cursor;
 		}
 
 		private void nextIsThrowOnFailure() {
