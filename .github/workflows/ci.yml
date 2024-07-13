@@ -9,10 +9,18 @@ jobs:
       matrix:
         include:
           - jdk: 8
+          - jdk: 8
+            ecj: true
           - jdk: 11
+          - jdk: 11
+            ecj: true
           - jdk: 17
+          - jdk: 17
+            ecj: true
           - jdk: 21
-    name: JDK ${{ matrix.jdk }}
+          - jdk: 21
+            ecj: true
+    name: JDK ${{ matrix.jdk }}${{ matrix.ecj && ' with ECJ' || ''}}
     runs-on: ubuntu-20.04
     steps:
       - uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4.1.7
@@ -45,6 +53,7 @@ jobs:
         run: |
           mvn -V -B -e --no-transfer-progress \
             verify -Djdk.version=${{ matrix.jdk }} -Dbytecode.version=${{ matrix.jdk }} \
+            ${{ matrix.ecj && '-Decj' || ''}} \
             --toolchains=toolchains.xml
   Windows:
     runs-on: windows-2022
