@@ -36,6 +36,7 @@ public class KotlinInlineFilterTest extends FilterTestBase {
 
 	@Test
 	public void should_filter() {
+		context.className = "CallsiteKt";
 		context.sourceFileName = "callsite.kt";
 		context.sourceDebugExtension = "" //
 				+ "SMAP\n" //
@@ -113,6 +114,7 @@ public class KotlinInlineFilterTest extends FilterTestBase {
 	 */
 	@Test
 	public void should_filter_when_in_same_file() {
+		context.className = "Callsite";
 		context.sourceFileName = "example.kt";
 		context.sourceDebugExtension = "" //
 				+ "SMAP\n" //
@@ -173,6 +175,7 @@ public class KotlinInlineFilterTest extends FilterTestBase {
 	 */
 	@Test
 	public void should_filter_without_parsing_KotlinDebug_stratum() {
+		context.className = "ExampleKt";
 		context.sourceFileName = "Example.kt";
 		context.sourceDebugExtension = "" //
 				+ "SMAP\n" //
@@ -221,6 +224,7 @@ public class KotlinInlineFilterTest extends FilterTestBase {
 	 */
 	@Test
 	public void should_filter_when_inlined_with_same_file_name_and_line_number() {
+		context.className = "ExampleKt";
 		context.sourceFileName = "Example.kt";
 		context.sourceDebugExtension = "" //
 				+ "SMAP\n" //
@@ -324,6 +328,7 @@ public class KotlinInlineFilterTest extends FilterTestBase {
 
 	@Test
 	public void should_throw_exception_when_no_SourceFileId_for_SourceFile() {
+		context.className = "ExampleKt";
 		context.sourceFileName = "example.kt";
 		context.classAnnotations
 				.add(KotlinGeneratedFilter.KOTLIN_METADATA_DESC);
@@ -348,6 +353,7 @@ public class KotlinInlineFilterTest extends FilterTestBase {
 
 	@Test
 	public void should_throw_exception_when_unexpected_LineInfo() {
+		context.className = "Callsite";
 		context.sourceFileName = "callsite.kt";
 		context.sourceDebugExtension = "" //
 				+ "SMAP\n" //

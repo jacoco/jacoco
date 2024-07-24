@@ -42,7 +42,7 @@ public final class KotlinInlineFilter implements IFilter {
 
 		if (firstGeneratedLineNumber == -1) {
 			firstGeneratedLineNumber = getFirstGeneratedLineNumber(
-					context.getSourceFileName(),
+					context.getClassName(), context.getSourceFileName(),
 					context.getSourceDebugExtension());
 		}
 
@@ -57,7 +57,8 @@ public final class KotlinInlineFilter implements IFilter {
 		}
 	}
 
-	private static int getFirstGeneratedLineNumber(final String sourceFileName,
+	private static int getFirstGeneratedLineNumber(
+			final String currentClassName, final String sourceFileName,
 			final String smap) {
 		try {
 			final BufferedReader br = new BufferedReader(
@@ -74,16 +75,16 @@ public final class KotlinInlineFilter implements IFilter {
 			final BitSet sourceFileIds = new BitSet();
 			String line;
 			while (!"*L".equals(line = br.readLine())) {
-				// AbsoluteFileName
-				br.readLine();
-
 				final Matcher m = FILE_INFO_PATTERN.matcher(line);
 				if (!m.matches()) {
 					throw new IllegalStateException(
 							"Unexpected SMAP line: " + line);
 				}
-				final String fileName = m.group(2);
-				if (fileName.equals(sourceFileName)) {
+				// See
+				// https://github.com/JetBrains/kotlin/blob/2.0.0/compiler/backend/src/org/jetbrains/kotlin/codegen/inline/SMAP.kt#L120-L121
+				// https://github.com/JetBrains/kotlin/blob/2.0.0/compiler/backend/src/org/jetbrains/kotlin/codegen/SourceInfo.kt#L38-L41
+				final String className = br.readLine();
+				if (currentClassName.equals(className)) {
 					sourceFileIds.set(Integer.parseInt(m.group(1)));
 				}
 			}
