@@ -42,6 +42,14 @@ public class MergeMojo extends AbstractJacocoMojo {
 	private File destFile;
 
 	/**
+	 * If set to true and the execution data file already exists, coverage data
+	 * is appended to the existing file. If set to false, an existing execution
+	 * data file will be replaced.
+	 */
+	@Parameter(property = "jacoco.append", defaultValue = "false")
+	private boolean append;
+
+	/**
 	 * This mojo accepts any number of execution data file sets.
 	 *
 	 * <pre>
@@ -116,7 +124,7 @@ public class MergeMojo extends AbstractJacocoMojo {
 		getLog().info("Writing merged execution data to "
 				+ destFile.getAbsolutePath());
 		try {
-			loader.save(destFile, false);
+			loader.save(destFile, append);
 		} catch (final IOException e) {
 			throw new MojoExecutionException(
 					"Unable to write merged file " + destFile.getAbsolutePath(),
