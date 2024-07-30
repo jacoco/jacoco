@@ -24,16 +24,27 @@ public class KotlinDefaultMethodsFilterTest extends FilterTestBase {
 
 	private final IFilter filter = new KotlinDefaultMethodsFilter();
 
+	/**
+	 * <pre>
+	 *   interface I {
+	 *     fun m(): Any = ...
+	 *   }
+	 *
+	 *   // Should filter method generated in
+	 *   class C : I {
+	 *   }
+	 * </pre>
+	 */
 	@Test
 	public void should_filter() {
 		context.classAnnotations
 				.add(KotlinGeneratedFilter.KOTLIN_METADATA_DESC);
 		final MethodNode m = new MethodNode(InstrSupport.ASM_API_VERSION, 0,
-				"m", "()V", null, null);
+				"m", "()Ljava/lang/Object;", null, null);
 		m.visitVarInsn(Opcodes.ALOAD, 0);
 		m.visitMethodInsn(Opcodes.INVOKESTATIC, "Target$DefaultImpls", "m",
-				"(LTarget;)V", false);
-		m.visitInsn(Opcodes.RETURN);
+				"(LTarget;)Ljava/lang/Object;", false);
+		m.visitInsn(Opcodes.ARETURN);
 
 		filter.filter(m, context, output);
 
@@ -56,12 +67,75 @@ public class KotlinDefaultMethodsFilterTest extends FilterTestBase {
 		assertIgnored();
 	}
 
+	/**
+	 * <pre>
+	 *   interface I {
+	 *     fun m1() = Unit
+	 *     fun m2() = Unit
+	 *   }
+	 *
+	 *   class C : I {
+	 *     // Should not be filtered:
+	 *     override fun m1() {
+	 *       super.m2()
+	 *     }
+	 *   }
+	 * </pre>
+	 */
+	@Test
+	public void should_not_filter_when_invokestatic_name_does_not_match() {
+		context.classAnnotations
+				.add(KotlinGeneratedFilter.KOTLIN_METADATA_DESC);
+		final MethodNode m = new MethodNode(InstrSupport.ASM_API_VERSION, 0,
+				"m1", "()V", null, null);
+		m.visitVarInsn(Opcodes.ALOAD, 0);
+		m.visitMethodInsn(Opcodes.INVOKESTATIC, "I$DefaultImpls", "m2",
+				"(LI;)V", false);
+		m.visitInsn(Opcodes.RETURN);
+
+		filter.filter(m, context, output);
+
+		assertIgnored();
+	}
+
 	@Test
 	public void should_not_filter_when_instructions_do_not_match() {
 		context.classAnnotations
 				.add(KotlinGeneratedFilter.KOTLIN_METADATA_DESC);
 		final MethodNode m = new MethodNode(InstrSupport.ASM_API_VERSION, 0,
 				"m", "()V", null, null);
+		m.visitInsn(Opcodes.RETURN);
+
+		filter.filter(m, context, output);
+
+		assertIgnored();
+	}
+
+	/**
+	 * <pre>
+	 *   interface I {
+	 *     fun m() = Unit
+	 *   }
+	 *
+	 *   class C : I {
+	 *     // Should not be filtered:
+	 *     override fun m() {
+	 *       super.m()
+	 *       ...
+	 *     }
+	 *   }
+	 * </pre>
+	 */
+	@Test
+	public void should_not_filter_when_invokestatic_not_followed_by_return() {
+		context.classAnnotations
+				.add(KotlinGeneratedFilter.KOTLIN_METADATA_DESC);
+		final MethodNode m = new MethodNode(InstrSupport.ASM_API_VERSION, 0,
+				"m", "()V", null, null);
+		m.visitVarInsn(Opcodes.ALOAD, 0);
+		m.visitMethodInsn(Opcodes.INVOKESTATIC, "I$DefaultImpls", "m", "(LI;)V",
+				false);
+		m.visitInsn(Opcodes.NOP);
 		m.visitInsn(Opcodes.RETURN);
 
 		filter.filter(m, context, output);
