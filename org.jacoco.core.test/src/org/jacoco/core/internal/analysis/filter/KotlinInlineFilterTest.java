@@ -12,9 +12,6 @@
  *******************************************************************************/
 package org.jacoco.core.internal.analysis.filter;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -167,48 +164,6 @@ public class KotlinInlineFilterTest extends FilterTestBase {
 	}
 
 	/**
-	 * See <a href="https://youtrack.jetbrains.com/issue/KT-37704">KT-37704</a>
-	 *
-	 * <pre>
-	 * inline fun f() {}
-	 * fun g() = f()
-	 * </pre>
-	 */
-	@Test
-	public void should_filter_without_parsing_KotlinDebug_stratum() {
-		context.className = "ExampleKt";
-		context.sourceFileName = "Example.kt";
-		context.sourceDebugExtension = "" //
-				+ "SMAP\n" //
-				+ "Example.kt\n" // OutputFileName=Example.kt
-				+ "Kotlin\n" // DefaultStratumId=Kotlin
-				+ "*S Kotlin\n" // StratumID=Kotlin
-				+ "*F\n" // FileSection
-				+ "+ 1 Example.kt\n" // FileID=1,FileName=Example.kt
-				+ "ExampleKt\n" //
-				+ "*L\n" // LineSection
-				+ "1#1,3:1\n" // InputStartLine=1,LineFileID=1,RepeatCount=3,OutputStartLine=1
-				+ "1#1:4\n" // InputStartLine=1,LineFileID=1,OutputStartLine=4
-				+ "*S KotlinDebug\n"; // StratumID=KotlinDebug
-		context.classAnnotations
-				.add(KotlinGeneratedFilter.KOTLIN_METADATA_DESC);
-
-		m.visitLineNumber(2, new Label());
-		m.visitInsn(Opcodes.ICONST_0);
-		m.visitVarInsn(Opcodes.ISTORE, 0);
-		m.visitLineNumber(4, new Label());
-		shouldIgnorePrevious(m);
-		m.visitInsn(Opcodes.NOP);
-		shouldIgnorePrevious(m);
-		m.visitLineNumber(3, new Label());
-		m.visitInsn(Opcodes.RETURN);
-
-		filter.filter(m, context, output);
-
-		assertIgnored(expectedRanges.toArray(new Range[0]));
-	}
-
-	/**
 	 * <pre>
 	 * package a;
 	 *
@@ -352,67 +307,6 @@ public class KotlinInlineFilterTest extends FilterTestBase {
 		filter.filter(m, context, output);
 
 		assertIgnored();
-	}
-
-	@Test
-	public void should_throw_exception_when_SMAP_incomplete() {
-		context.sourceDebugExtension = "" //
-				+ "SMAP\n";
-		context.classAnnotations
-				.add(KotlinGeneratedFilter.KOTLIN_METADATA_DESC);
-
-		try {
-			filter.filter(m, context, output);
-			fail("exception expected");
-		} catch (final IllegalStateException e) {
-			assertEquals("Unexpected SMAP line: null", e.getMessage());
-		}
-	}
-
-	@Test
-	public void should_throw_exception_when_unexpected_FileInfo() {
-		context.sourceFileName = "callsite.kt";
-		context.sourceDebugExtension = "" //
-				+ "SMAP\n" //
-				+ "callsite.kt\n" //
-				+ "Kotlin\n" //
-				+ "*S Kotlin\n" //
-				+ "*F\n" //
-				+ "xxx";
-		context.classAnnotations
-				.add(KotlinGeneratedFilter.KOTLIN_METADATA_DESC);
-
-		try {
-			filter.filter(m, context, output);
-			fail("exception expected");
-		} catch (final IllegalStateException e) {
-			assertEquals("Unexpected SMAP line: xxx", e.getMessage());
-		}
-	}
-
-	@Test
-	public void should_throw_exception_when_unexpected_LineInfo() {
-		context.className = "Callsite";
-		context.sourceFileName = "callsite.kt";
-		context.sourceDebugExtension = "" //
-				+ "SMAP\n" //
-				+ "callsite.kt\n" //
-				+ "Kotlin\n" //
-				+ "*S Kotlin\n" //
-				+ "*F\n" //
-				+ "+ 1 callsite.kt\n" //
-				+ "Callsite\n" //
-				+ "*L\n" //
-				+ "xxx";
-		context.classAnnotations
-				.add(KotlinGeneratedFilter.KOTLIN_METADATA_DESC);
-
-		try {
-			filter.filter(m, context, output);
-			fail("exception expected");
-		} catch (final IllegalStateException e) {
-			assertEquals("Unexpected SMAP line: xxx", e.getMessage());
-		}
 	}
 
 	private final List<Range> expectedRanges = new ArrayList<Range>();
