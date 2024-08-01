@@ -60,7 +60,7 @@ public class AgentModule {
 	 *             if it cannot be created
 	 */
 	public AgentModule() throws Exception {
-		classLoader = new ClassLoader() {
+		classLoader = new ClassLoader(getClass().getClassLoader()) {
 			@Override
 			protected Class<?> loadClass(final String name,
 					final boolean resolve) throws ClassNotFoundException {
