@@ -122,8 +122,10 @@ public class ClassAnalyzer extends ClassProbesVisitor
 				signature);
 		mcc.calculate(mc);
 
-		// Only consider methods that actually contain code
-		coverage.addMethod(mc);
+		if (mc.containsCode()) {
+			// Only consider methods that actually contain code
+			coverage.addMethod(mc);
+		}
 
 	}
 
