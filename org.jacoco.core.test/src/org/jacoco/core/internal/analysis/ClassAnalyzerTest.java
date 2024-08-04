@@ -61,6 +61,13 @@ public class ClassAnalyzerTest {
 	}
 
 	@Test
+	public void should_collect_annotations() {
+		assertTrue(analyzer.getClassAnnotations().isEmpty());
+		analyzer.visitAnnotation("Lpkg/Annotation;", true);
+		assertTrue(analyzer.getClassAnnotations().contains("Lpkg/Annotation;"));
+	}
+
+	@Test
 	public void should_collect_attributes() {
 		assertTrue(analyzer.getClassAttributes().isEmpty());
 		analyzer.visitAttribute(new Attribute("foo") {
