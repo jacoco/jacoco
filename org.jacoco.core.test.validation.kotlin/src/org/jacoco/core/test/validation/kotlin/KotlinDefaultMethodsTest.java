@@ -24,10 +24,4 @@ public class KotlinDefaultMethodsTest extends ValidationTestBase {
 		super(KotlinDefaultMethodsTarget.class);
 	}
 
-	@Override
-	public void all_missed_instructions_should_have_line_number() {
-		// instructions without line numbers
-		// corresponding to non-executed default implementations
-	}
-
 }

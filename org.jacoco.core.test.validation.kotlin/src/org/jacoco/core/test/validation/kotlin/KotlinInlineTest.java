@@ -24,9 +24,4 @@ public class KotlinInlineTest extends ValidationTestBase {
 		super(KotlinInlineTargetKt.class);
 	}
 
-	@Override
-	public void all_missed_instructions_should_have_line_number() {
-		// missed instructions without line number in inline function
-	}
-
 }
