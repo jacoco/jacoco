@@ -98,4 +98,31 @@ public class KotlinGeneratedFilterTest extends FilterTestBase {
 		assertIgnored();
 	}
 
+	/**
+	 * <pre>
+	 * inline fun f() {
+	 * }
+	 * </pre>
+	 */
+	@Test
+	public void should_filter_instructions_without_line_numbers() {
+		context.sourceFileName = "Example.kt";
+		context.classAnnotations
+				.add(KotlinGeneratedFilter.KOTLIN_METADATA_DESC);
+		final MethodNode m = new MethodNode(InstrSupport.ASM_API_VERSION, 0,
+				"f", "()V", null, null);
+		m.visitInsn(Opcodes.ICONST_0);
+		final Range range1 = new Range(m.instructions.getLast(),
+				m.instructions.getLast());
+		m.visitVarInsn(Opcodes.ISTORE, 1);
+		final Range range2 = new Range(m.instructions.getLast(),
+				m.instructions.getLast());
+		m.visitLineNumber(1, new Label());
+		m.visitInsn(Opcodes.RETURN);
+
+		filter.filter(m, context, output);
+
+		assertIgnored(range1, range2);
+	}
+
 }

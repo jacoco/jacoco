@@ -22,15 +22,15 @@ fun main(args: Array<String>) {
     KotlinInlineTarget.main(args)
 }
 
-inline fun inlined_top_level() {
-    nop() // assertNotCovered()
-}
+inline fun inlined_top_level() { // assertEmpty()
+    nop() // assertFullyCovered()
+} // assertFullyCovered()
 
 object KotlinInlineTarget {
 
-    inline fun inlined() {
-        nop() // assertNotCovered()
-    }
+    inline fun inlined() { // assertEmpty()
+        nop() // assertFullyCovered()
+    } // assertFullyCovered()
 
     @JvmStatic
     fun main(args: Array<String>) {

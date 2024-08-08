@@ -26,6 +26,7 @@ import java.util.Set;
 import org.jacoco.core.internal.analysis.ClassCoverageImpl;
 import org.jacoco.core.internal.analysis.CounterImpl;
 import org.jacoco.core.internal.analysis.MethodCoverageImpl;
+import org.jacoco.core.internal.analysis.SourceNodeImpl;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -242,6 +243,35 @@ public class CoverageBuilderTest {
 				Arrays.asList("Sample1", "Sample2"));
 
 		assertEquals(expected, actual);
+	}
+
+	@Test
+	public void testApplyFragment() {
+		coverageBuilder.visitCoverage(new ClassCoverageImpl("FooKt", 0, false) {
+			{
+				setSourceFileName("Foo.kt");
+				addMethod(new MethodCoverageImpl("foo", "()V", null) {
+					{
+						increment(CounterImpl.COUNTER_1_0,
+								CounterImpl.COUNTER_0_0, 42);
+					}
+				});
+				setFragments(Collections.<SourceNodeImpl> singletonList(
+						new SourceNodeImpl(null, "FooKt") {
+							{
+								increment(CounterImpl.COUNTER_0_1,
+										CounterImpl.COUNTER_0_0, 42);
+							}
+						}));
+			}
+		});
+
+		final IClassCoverage c = coverageBuilder.getClasses().iterator().next();
+		assertEquals(1, c.getClassCounter().getCoveredCount());
+
+		final ISourceFileCoverage s = coverageBuilder.getSourceFiles()
+				.iterator().next();
+		assertEquals(1, s.getClassCounter().getCoveredCount());
 	}
 
 	private Set<String> getNames(Collection<? extends ICoverageNode> nodes) {

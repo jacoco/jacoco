@@ -24,7 +24,7 @@ import java.util.regex.Pattern;
 /**
  * Parsed representation of SourceDebugExtension attribute.
  */
-final class KotlinSMAP {
+public final class KotlinSMAP {
 
 	public static final class Mapping {
 		private final String inputClassName;

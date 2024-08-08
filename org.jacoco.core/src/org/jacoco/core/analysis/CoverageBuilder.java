@@ -19,7 +19,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.jacoco.core.internal.analysis.BundleCoverageImpl;
+import org.jacoco.core.internal.analysis.ClassCoverageImpl;
 import org.jacoco.core.internal.analysis.SourceFileCoverageImpl;
+import org.jacoco.core.internal.analysis.SourceNodeImpl;
 
 /**
  * Builder for hierarchical {@link ICoverageNode} structures from single
@@ -39,7 +41,7 @@ public class CoverageBuilder implements ICoverageVisitor {
 
 	private final Map<String, IClassCoverage> classes;
 
-	private final Map<String, ISourceFileCoverage> sourcefiles;
+	private Map<String, ISourceFileCoverage> sourcefiles;
 
 	/**
 	 * Create a new builder.
@@ -56,6 +58,7 @@ public class CoverageBuilder implements ICoverageVisitor {
 	 * @return all class nodes
 	 */
 	public Collection<IClassCoverage> getClasses() {
+		build();
 		return Collections.unmodifiableCollection(classes.values());
 	}
 
@@ -65,6 +68,7 @@ public class CoverageBuilder implements ICoverageVisitor {
 	 * @return all source file nodes
 	 */
 	public Collection<ISourceFileCoverage> getSourceFiles() {
+		build();
 		return Collections.unmodifiableCollection(sourcefiles.values());
 	}
 
@@ -76,6 +80,7 @@ public class CoverageBuilder implements ICoverageVisitor {
 	 * @return bundle containing all classes and source files
 	 */
 	public IBundleCoverage getBundle(final String name) {
+		build();
 		return new BundleCoverageImpl(name, classes.values(),
 				sourcefiles.values());
 	}
@@ -96,22 +101,41 @@ public class CoverageBuilder implements ICoverageVisitor {
 		return result;
 	}
 
+	private void build() {
+		if (sourcefiles != null) {
+			return;
+		}
+		this.sourcefiles = new HashMap<String, ISourceFileCoverage>();
+		for (final IClassCoverage c : classes.values()) {
+			for (final SourceNodeImpl fragment : ((ClassCoverageImpl) c)
+					.getFragments()) {
+				final SourceNodeImpl classCoverage = (SourceNodeImpl) classes
+						.get(fragment.getName());
+				if (classCoverage != null) {
+					classCoverage.applyFragment(fragment);
+				}
+			}
+		}
+		for (final IClassCoverage coverage : classes.values()) {
+			final String source = coverage.getSourceFileName();
+			if (source != null) {
+				final SourceFileCoverageImpl sourceFile = getSourceFile(source,
+						coverage.getPackageName());
+				sourceFile.increment(coverage);
+			}
+		}
+	}
+
 	// === ICoverageVisitor ===
 
 	public void visitCoverage(final IClassCoverage coverage) {
+		sourcefiles = null;
 		final String name = coverage.getName();
 		final IClassCoverage dup = classes.put(name, coverage);
 		if (dup != null) {
 			if (dup.getId() != coverage.getId()) {
 				throw new IllegalStateException(
 						"Can't add different class with same name: " + name);
-			}
-		} else {
-			final String source = coverage.getSourceFileName();
-			if (source != null) {
-				final SourceFileCoverageImpl sourceFile = getSourceFile(source,
-						coverage.getPackageName());
-				sourceFile.increment(coverage);
 			}
 		}
 	}

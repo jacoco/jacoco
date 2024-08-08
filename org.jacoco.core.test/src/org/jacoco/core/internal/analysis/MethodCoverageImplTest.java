@@ -13,6 +13,8 @@
 package org.jacoco.core.internal.analysis;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 import org.jacoco.core.analysis.ICoverageNode;
 import org.junit.Test;
@@ -136,4 +138,57 @@ public class MethodCoverageImplTest {
 		assertEquals(CounterImpl.getInstance(0, 2),
 				node.getComplexityCounter());
 	}
+
+	/**
+	 * {@link MethodCoverageImpl#applyFragment(SourceNodeImpl)}
+	 */
+	@Test
+	public void testApplyFragment() {
+		// uncovered
+		MethodCoverageImpl node = new MethodCoverageImpl("sample", "()V", null);
+		node.increment(CounterImpl.COUNTER_1_0, CounterImpl.COUNTER_0_0, 42);
+		node.incrementMethodCounter();
+		// covered
+		final SourceNodeImpl fragment = new SourceNodeImpl(null, "fragment");
+		fragment.increment(CounterImpl.COUNTER_0_1, CounterImpl.COUNTER_0_0,
+				42);
+		assertTrue(node.applyFragment(fragment));
+
+		assertEquals(CounterImpl.COUNTER_0_1, node.getInstructionCounter());
+		assertEquals(CounterImpl.COUNTER_0_1, node.getLineCounter());
+		assertEquals(CounterImpl.COUNTER_0_0, node.getBranchCounter());
+		assertEquals(CounterImpl.COUNTER_0_1, node.getComplexityCounter());
+		assertEquals(CounterImpl.COUNTER_0_1, node.getMethodCounter());
+		final LineImpl line = node.getLine(42);
+		assertEquals(CounterImpl.COUNTER_0_1, line.getInstructionCounter());
+		assertEquals(CounterImpl.COUNTER_0_0, line.getBranchCounter());
+	}
+
+	/**
+	 * {@link MethodCoverageImpl#applyFragment(SourceNodeImpl)}
+	 */
+	@Test
+	public void testApplyFragment2() {
+		// uncovered
+		MethodCoverageImpl node = new MethodCoverageImpl("sample", "()V", null);
+		node.increment(CounterImpl.COUNTER_1_0, CounterImpl.getInstance(2, 0),
+				42);
+		node.incrementMethodCounter();
+		// covered unrelated
+		final SourceNodeImpl fragment = new SourceNodeImpl(null, "fragment");
+		fragment.increment(CounterImpl.COUNTER_0_1, CounterImpl.COUNTER_0_0,
+				13);
+		assertFalse(node.applyFragment(fragment));
+		// should not change
+		assertEquals(CounterImpl.COUNTER_1_0, node.getInstructionCounter());
+		assertEquals(CounterImpl.COUNTER_1_0, node.getLineCounter());
+		assertEquals(CounterImpl.getInstance(2, 0), node.getBranchCounter());
+		assertEquals(CounterImpl.getInstance(2, 0),
+				node.getComplexityCounter());
+		assertEquals(CounterImpl.COUNTER_1_0, node.getMethodCounter());
+		final LineImpl line = node.getLine(42);
+		assertEquals(CounterImpl.COUNTER_1_0, line.getInstructionCounter());
+		assertEquals(CounterImpl.getInstance(2, 0), line.getBranchCounter());
+	}
+
 }

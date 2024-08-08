@@ -42,6 +42,41 @@ public class SourceNodeImpl extends CoverageNodeImpl implements ISourceNode {
 	}
 
 	/**
+	 * @return <code>true</code> if fragment contains lines of this node
+	 */
+	public boolean applyFragment(final SourceNodeImpl fragment) {
+		boolean applied = false;
+		for (int line = getFirstLine(); line <= getLastLine(); line++) {
+			final ILine fragmentLine = fragment.getLine(line);
+			if (fragmentLine.equals(LineImpl.EMPTY)) {
+				continue;
+			}
+			final LineImpl l = getLine(line);
+			final CounterImpl counter;
+			if (l.getInstructionCounter().getCoveredCount() > 0 || fragmentLine
+					.getInstructionCounter().getCoveredCount() > 0) {
+				counter = CounterImpl.COUNTER_0_1;
+			} else {
+				counter = CounterImpl.COUNTER_1_0;
+			}
+			lines[line - offset] = LineImpl.EMPTY;
+			if (l.instructions.covered > 0) {
+				lineCounter = lineCounter.increment(0, -1);
+			} else if (l.instructions.missed > 0) {
+				lineCounter = lineCounter.increment(-1, 0);
+			}
+			incrementLine(counter, CounterImpl.COUNTER_0_0, line);
+			instructionCounter = instructionCounter.increment(
+					counter.missed - l.instructions.missed,
+					counter.covered - l.instructions.covered);
+			branchCounter = branchCounter.increment(-l.branches.missed,
+					-l.branches.covered);
+			applied = true;
+		}
+		return applied;
+	}
+
+	/**
 	 * Make sure that the internal buffer can keep lines from first to last.
 	 * While the buffer is also incremented automatically, this method allows
 	 * optimization in case the total range is known in advance.
