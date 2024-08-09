@@ -27,6 +27,9 @@ import org.objectweb.asm.tree.MethodNode;
 import org.objectweb.asm.tree.TypeInsnNode;
 import org.objectweb.asm.tree.VarInsnNode;
 
+/**
+ * Unit test for {@link CondyProbeArrayStrategy}.
+ */
 public class CondyProbeArrayStrategyTest {
 
 	private CondyProbeArrayStrategy strategy;
