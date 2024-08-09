@@ -19,14 +19,18 @@ import java.io.IOException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 
 import org.jacoco.core.analysis.Analyzer;
 import org.jacoco.core.analysis.CoverageBuilder;
+import org.jacoco.core.analysis.IClassCoverage;
 import org.jacoco.core.analysis.ICounter;
 import org.jacoco.core.analysis.ILine;
+import org.jacoco.core.analysis.IMethodCoverage;
 import org.jacoco.core.data.ExecutionData;
 import org.jacoco.core.data.ExecutionDataStore;
 import org.jacoco.core.internal.analysis.CounterImpl;
+import org.jacoco.core.internal.analysis.LineImpl;
 import org.jacoco.core.test.InstrumentingLoader;
 import org.jacoco.core.test.TargetLoader;
 import org.jacoco.core.test.validation.Source.Line;
@@ -80,12 +84,15 @@ public abstract class ValidationTestBase {
 				(Object) new String[0]);
 	}
 
+	protected Collection<IClassCoverage> classes;
+
 	private void analyze(final ExecutionDataStore store) throws IOException {
 		final CoverageBuilder builder = new CoverageBuilder();
 		final Analyzer analyzer = new Analyzer(store, builder);
 		for (ExecutionData data : store.getContents()) {
 			analyze(analyzer, data);
 		}
+		classes = builder.getClasses();
 		source = Source.load(target, builder.getBundle("Test"));
 	}
 
@@ -226,6 +233,28 @@ public abstract class ValidationTestBase {
 	protected void assertMethodCount(final int expectedTotal) {
 		assertEquals(expectedTotal,
 				source.getCoverage().getMethodCounter().getTotalCount());
+	}
+
+	public void assertCoveredBranches(final Source.Line line,
+			final String expected) {
+		final int lineNumber = line.getNr();
+		String actual = null;
+		for (final IClassCoverage aClass : classes) {
+			for (final IMethodCoverage aMethod : aClass.getMethods()) {
+				if (aMethod.getFirstLine() <= lineNumber
+						&& lineNumber <= aMethod.getLastLine()) {
+					if (actual != null) {
+						throw new AssertionError(String
+								.format("Multiple matching lines (%s)", line));
+					}
+					actual = String
+							.valueOf(((LineImpl) aMethod.getLine(lineNumber))
+									.getCoveredBranches());
+					assertEquals(String.format("CoveredBranches (%s)", line),
+							expected, actual);
+				}
+			}
+		}
 	}
 
 }
