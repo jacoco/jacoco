@@ -40,14 +40,14 @@ public class ClassAnalyzerTest {
 	}
 
 	@Test(expected = IllegalStateException.class)
-	public void testAnalyzeInstrumentedClass1() {
+	public void should_throw_IllegalStateException_when_class_is_instrumented_with_data_field() {
 		analyzer.visitField(InstrSupport.DATAFIELD_ACC,
 				InstrSupport.DATAFIELD_NAME, InstrSupport.DATAFIELD_DESC, null,
 				null);
 	}
 
 	@Test(expected = IllegalStateException.class)
-	public void testAnalyzeInstrumentedClass2() {
+	public void should_throw_IllegalStateException_when_class_is_instrumented_with_init_method() {
 		analyzer.visitMethod(InstrSupport.INITMETHOD_ACC,
 				InstrSupport.INITMETHOD_NAME, InstrSupport.INITMETHOD_DESC,
 				null, null);
