@@ -13,7 +13,6 @@
 package org.jacoco.core.test.validation.kotlin;
 
 import org.jacoco.core.test.validation.ValidationTestBase;
-import org.jacoco.core.test.validation.kotlin.targets.KotlinElvisOperatorTarget;
 import org.jacoco.core.test.validation.kotlin.targets.KotlinSafeCastTarget;
 
 /**
