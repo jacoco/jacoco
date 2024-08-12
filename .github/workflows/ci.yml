@@ -91,7 +91,7 @@ jobs:
           mvn -V -B -e --no-transfer-progress \
             verify -Djdk.version=6 -Dbytecode.version=5 \
             --toolchains=toolchains.xml
-      - uses: actions/upload-artifact@89ef406dd8d7e03cfd12d9e0a4a378f454709029 # v4.3.5
+      - uses: actions/upload-artifact@834a144ee995460fba8ed112a2fc961b36a5ec5a # v4.3.6
         id: artifact-upload-step
         with:
           name: jacoco
