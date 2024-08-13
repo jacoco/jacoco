@@ -70,8 +70,7 @@ public class PackageSourcePage extends TablePage<IPackageCoverage> {
 
 	/**
 	 * Returns the link to the source file page of the source file with the
-	 * given name. If no source file was located, <code>null</code> is
-	 * returned..
+	 * given name. If no source file was located, <code>null</code> is returned.
 	 */
 	ILinkable getSourceFilePage(final String name) {
 		return sourceFilePages.get(name);

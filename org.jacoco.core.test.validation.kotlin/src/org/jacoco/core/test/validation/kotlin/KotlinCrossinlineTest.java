@@ -13,15 +13,20 @@
 package org.jacoco.core.test.validation.kotlin;
 
 import org.jacoco.core.test.validation.ValidationTestBase;
-import org.jacoco.core.test.validation.kotlin.targets.KotlinSafeCastTarget;
+import org.jacoco.core.test.validation.kotlin.targets.KotlinCrossinlineTarget;
 
 /**
- * Test of "safe" cast operator.
+ * Test of code coverage in {@link KotlinCrossinlineTarget}.
  */
-public class KotlinSafeCastTest extends ValidationTestBase {
+public class KotlinCrossinlineTest extends ValidationTestBase {
 
-	public KotlinSafeCastTest() {
-		super(KotlinSafeCastTarget.class);
+	public KotlinCrossinlineTest() {
+		super(KotlinCrossinlineTarget.class);
+	}
+
+	@Override
+	public void all_missed_instructions_should_have_line_number() {
+		// missed instructions without line number in inline function
 	}
 
 }

@@ -52,26 +52,26 @@ public class NormalizedFileNamesTest {
 
 	@Test
 	public void testReplaceIllegalCharactersNonUnique() {
-		assertEquals("F__", nfn.getFileName("F__"));
-		assertEquals("F__~1", nfn.getFileName("F**"));
-		assertEquals("F__~2", nfn.getFileName("F??"));
+		assertEquals("F__.html", nfn.getFileName("F__.html"));
+		assertEquals("1~F__.html", nfn.getFileName("F**.html"));
+		assertEquals("2~F__.html", nfn.getFileName("F??.html"));
 
 		// Mapping must be reproducible
-		assertEquals("F__", nfn.getFileName("F__"));
-		assertEquals("F__~1", nfn.getFileName("F**"));
-		assertEquals("F__~2", nfn.getFileName("F??"));
+		assertEquals("F__.html", nfn.getFileName("F__.html"));
+		assertEquals("1~F__.html", nfn.getFileName("F**.html"));
+		assertEquals("2~F__.html", nfn.getFileName("F??.html"));
 	}
 
 	@Test
 	public void testCaseAware() {
-		assertEquals("Hello", nfn.getFileName("Hello"));
-		assertEquals("HELLO~1", nfn.getFileName("HELLO"));
-		assertEquals("HeLLo~2", nfn.getFileName("HeLLo"));
+		assertEquals("Hello.html", nfn.getFileName("Hello.html"));
+		assertEquals("1~HELLO.html", nfn.getFileName("HELLO.html"));
+		assertEquals("2~HeLLo.html", nfn.getFileName("HeLLo.html"));
 
 		// Mapping must be reproducible
-		assertEquals("Hello", nfn.getFileName("Hello"));
-		assertEquals("HELLO~1", nfn.getFileName("HELLO"));
-		assertEquals("HeLLo~2", nfn.getFileName("HeLLo"));
+		assertEquals("Hello.html", nfn.getFileName("Hello.html"));
+		assertEquals("1~HELLO.html", nfn.getFileName("HELLO.html"));
+		assertEquals("2~HeLLo.html", nfn.getFileName("HeLLo.html"));
 	}
 
 }

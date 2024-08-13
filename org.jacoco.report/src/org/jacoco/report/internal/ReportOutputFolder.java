@@ -83,8 +83,8 @@ public class ReportOutputFolder {
 	 * Creates a new file in this folder with the given local name.
 	 *
 	 * @param name
-	 *            name of the sub-folder
-	 * @return handle for output into the sub-folder
+	 *            name of the file
+	 * @return stream for output into the file
 	 * @throws IOException
 	 *             if the file creation fails
 	 */
