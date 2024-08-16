@@ -13,15 +13,20 @@
 package org.jacoco.core.test.validation.kotlin;
 
 import org.jacoco.core.test.validation.ValidationTestBase;
-import org.jacoco.core.test.validation.kotlin.targets.KotlinWhenExpressionTarget;
+import org.jacoco.core.test.validation.kotlin.targets.KotlinCrossinlineTarget;
 
 /**
- * Test of <code>when</code> expressions.
+ * Test of code coverage in {@link KotlinCrossinlineTarget}.
  */
-public class KotlinWhenExpressionTest extends ValidationTestBase {
+public class KotlinCrossinlineTest extends ValidationTestBase {
 
-	public KotlinWhenExpressionTest() {
-		super(KotlinWhenExpressionTarget.class);
+	public KotlinCrossinlineTest() {
+		super(KotlinCrossinlineTarget.class);
+	}
+
+	@Override
+	public void all_missed_instructions_should_have_line_number() {
+		// missed instructions without line number in inline function
 	}
 
 }

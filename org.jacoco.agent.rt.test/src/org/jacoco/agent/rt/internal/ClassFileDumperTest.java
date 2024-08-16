@@ -14,12 +14,12 @@ package org.jacoco.agent.rt.internal;
 
 import static org.junit.Assert.assertArrayEquals;
 
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
+import org.jacoco.core.internal.InputStreams;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -66,13 +66,9 @@ public class ClassFileDumperTest {
 	private void assertContents(File location, String filename)
 			throws IOException {
 		InputStream in = new FileInputStream(new File(location, filename));
-		ByteArrayOutputStream buffer = new ByteArrayOutputStream();
-		int b;
-		while ((b = in.read()) != -1) {
-			buffer.write(b);
-		}
+		final byte[] bytes = InputStreams.readFully(in);
 		in.close();
-		assertArrayEquals(contents, buffer.toByteArray());
+		assertArrayEquals(contents, bytes);
 	}
 
 }

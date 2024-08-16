@@ -31,7 +31,7 @@ import java.util.Set;
  * <li>File names are case aware, i.e. the same file name but with different
  * upper/lower case characters is not possible.</li>
  * <li>If unique filenames can't directly created from the ids, additional
- * suffixes are appended.</li>
+ * prefixes are prepended.</li>
  * </ul>
  */
 class NormalizedFileNames {
@@ -81,7 +81,7 @@ class NormalizedFileNames {
 		String lower = unique.toLowerCase(Locale.ENGLISH);
 		int idx = 1;
 		while (usedNames.contains(lower)) {
-			unique = s + '~' + idx++;
+			unique = (idx++) + "~" + s;
 			lower = unique.toLowerCase(Locale.ENGLISH);
 		}
 		usedNames.add(lower);
