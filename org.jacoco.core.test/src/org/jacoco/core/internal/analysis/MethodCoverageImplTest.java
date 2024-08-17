@@ -14,6 +14,8 @@ package org.jacoco.core.internal.analysis;
 
 import static org.junit.Assert.assertEquals;
 
+import java.util.BitSet;
+
 import org.jacoco.core.analysis.ICoverageNode;
 import org.junit.Test;
 
@@ -135,5 +137,18 @@ public class MethodCoverageImplTest {
 				3);
 		assertEquals(CounterImpl.getInstance(0, 2),
 				node.getComplexityCounter());
+	}
+
+	@Test
+	public void testAppendCoveredBranches() {
+		MethodCoverageImpl node = new MethodCoverageImpl("sample", "()V", null);
+		node.increment(CounterImpl.COUNTER_1_0, CounterImpl.COUNTER_1_0,
+				MethodCoverageImpl.UNKNOWN_LINE, new BitSet());
+		BitSet coveredBranches = new BitSet();
+		coveredBranches.set(0);
+		node.increment(CounterImpl.COUNTER_0_1, CounterImpl.COUNTER_0_1, 42,
+				coveredBranches);
+		LineImpl line = node.getLine(42);
+		assertEquals(1, line.coveredBranches);
 	}
 }
