@@ -31,7 +31,7 @@
   <dependencies>
     <dependency>
       <groupId>${project.groupId}</groupId>
-      <artifactId>org.jacoco.core</artifactId>
+      <artifactId>org.jacoco.report</artifactId>
     </dependency>
     <dependency>
       <groupId>org.ow2.asm</groupId>
