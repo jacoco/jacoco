@@ -60,7 +60,7 @@ public final class TryWithResourcesJavac11Filter implements IFilter {
 	 * <code>null</code> check for resource is omitted when it is initialized
 	 * using <code>new</code>
 	 */
-	private class Matcher extends AbstractMatcher {
+	private static class Matcher extends AbstractMatcher {
 		private boolean withNullCheck;
 
 		private String expectedOwner;

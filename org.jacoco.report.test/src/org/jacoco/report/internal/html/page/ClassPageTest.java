@@ -148,7 +148,7 @@ public class ClassPageTest extends PageTestBase {
 				support.findStr(doc, "/html/body/p[1]"));
 	}
 
-	private class SourceLink implements ILinkable {
+	private static class SourceLink implements ILinkable {
 
 		public String getLink(final ReportOutputFolder base) {
 			return "Source.java.html";

@@ -195,7 +195,7 @@ final class ReportSupport {
 		}
 	}
 
-	private class NoSourceLocator implements ISourceFileLocator {
+	private static class NoSourceLocator implements ISourceFileLocator {
 
 		public Reader getSourceFile(final String packageName,
 				final String fileName) {
@@ -207,7 +207,7 @@ final class ReportSupport {
 		}
 	}
 
-	private class SourceFileCollection implements ISourceFileLocator {
+	private static class SourceFileCollection implements ISourceFileLocator {
 
 		private final List<File> sourceRoots;
 		private final String encoding;
