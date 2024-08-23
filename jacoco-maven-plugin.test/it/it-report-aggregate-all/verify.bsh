@@ -1,0 +1,53 @@
+/*******************************************************************************
+ * Copyright (c) 2009, 2025 Mountainminds GmbH & Co. KG and Contributors
+ * This program and the accompanying materials are made available under
+ * the terms of the Eclipse Public License 2.0 which is available at
+ * http://www.eclipse.org/legal/epl-2.0
+ *
+ * SPDX-License-Identifier: EPL-2.0
+ *
+ * Contributors:
+ *    Marc R. Hoffmann, Jan Wloka - initial API and implementation
+ *
+ *******************************************************************************/
+import org.codehaus.plexus.util.*;
+import java.util.regex.*;
+
+String buildLog = FileUtils.fileRead( new File( basedir, "build.log" ) );
+
+if ( !Pattern.compile( "Loading execution data file \\S*child1.target.jacoco.exec").matcher( buildLog ).find() ) {
+    throw new RuntimeException( "Execution data from child1 was not loaded." );
+}
+
+if ( !Pattern.compile( "Loading execution data file \\S*child1-test.target.jacoco.exec").matcher( buildLog ).find() ) {
+    throw new RuntimeException( "Execution data from child1-test was not loaded." );
+}
+
+if ( !new File( basedir, "child2/target/jacoco.exec" ).isFile()) {
+    throw new RuntimeException( "No execution data in child2." );
+}
+if ( !Pattern.compile( "Loading execution data file \\S*child2.target.jacoco.exec").matcher( buildLog ).find() ) {
+    throw new RuntimeException( "Execution data from child2 was not loaded." );
+}
+if ( !Pattern.compile( "Loading execution data file \\S*child2v2.target.jacoco.exec").matcher( buildLog ).find() ) {
+    throw new RuntimeException( "Execution data from child2v2 was not loaded." );
+}
+
+//if ( !Pattern.compile( "Loading execution data file \\S*report.target.jacoco.exec").matcher( buildLog ).find() ) {
+//    throw new RuntimeException( "Execution data from report was not loaded." );
+//}
+
+File reportChild1 = new File( basedir, "target/site/jacoco-aggregate/child1/index.html" );
+if ( !reportChild1.isFile() ) {
+    throw new RuntimeException( "Report for child1 was not created." );
+}
+
+File reportChild1test = new File( basedir, "target/site/jacoco-aggregate/child1-test/index.html" );
+if ( !reportChild1test.isFile() ) {
+    throw new RuntimeException( "Report for child1-test was not created." );
+}
+
+File reportChild2 = new File( basedir, "target/site/jacoco-aggregate/child2/index.html" );
+if ( !reportChild2.isFile() ) {
+    throw new RuntimeException( "Report for child2 was not created." );
+}
