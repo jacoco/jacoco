@@ -142,7 +142,7 @@
     <asm.version>9.7</asm.version>
     <ant.version>1.9.16</ant.version>
     <args4j.version>2.0.28</args4j.version>
-    <junit.version>4.13.1</junit.version>
+    <junit.version>4.13.2</junit.version>
     <googlecodeprettify.version>20100721</googlecodeprettify.version>
 
     <!-- ================== -->
@@ -237,7 +237,7 @@
       <dependency>
         <groupId>org.apache.ant</groupId>
         <artifactId>ant-antunit</artifactId>
-        <version>1.4</version>
+        <version>1.4.1</version>
       </dependency>
       <dependency>
         <groupId>args4j</groupId>
@@ -520,7 +520,7 @@
                 </requireJavaVersion>
                 <requireMavenVersion>
                   <!-- Maven 3.8.2 contains bug - see https://github.com/jacoco/jacoco/issues/1218 -->
-                  <version>[3.5.4,3.8.2),(3.8.2,)</version>
+                  <version>[3.6.3,3.8.2),(3.8.2,)</version>
                 </requireMavenVersion>
                 <requireNoRepositories>
                   <message>The rules for repo1.maven.org are that pom.xml files should not include repository definitions.</message>

@@ -42,25 +42,46 @@ public class ClassAnalyzerTest {
 	}
 
 	@Test(expected = IllegalStateException.class)
-	public void testAnalyzeInstrumentedClass1() {
+	public void should_throw_IllegalStateException_when_class_is_instrumented_with_data_field() {
 		analyzer.visitField(InstrSupport.DATAFIELD_ACC,
 				InstrSupport.DATAFIELD_NAME, InstrSupport.DATAFIELD_DESC, null,
 				null);
 	}
 
 	@Test(expected = IllegalStateException.class)
-	public void testAnalyzeInstrumentedClass2() {
+	public void should_throw_IllegalStateException_when_class_is_instrumented_with_init_method() {
 		analyzer.visitMethod(InstrSupport.INITMETHOD_ACC,
 				InstrSupport.INITMETHOD_NAME, InstrSupport.INITMETHOD_DESC,
 				null, null);
 	}
 
+	/**
+	 * @see #should_add_non_empty_methods()
+	 */
 	@Test
-	public void testMethodFilter_Empty() {
-		final MethodProbesVisitor mv = analyzer.visitMethod(0, "foo", "()V",
-				null, null);
-		mv.visitEnd();
+	public void should_not_add_empty_methods() {
+		final MethodNode m = new MethodNode(0, "foo", "()V", null, null);
+
+		final MethodProbesVisitor mv = analyzer.visitMethod(m.access, m.name,
+				m.desc, m.signature, m.exceptions.toArray(new String[0]));
+		mv.accept(m, mv);
+
 		assertEquals(0, coverage.getMethods().size());
+	}
+
+	/**
+	 * @see #should_not_add_empty_methods()
+	 */
+	@Test
+	public void should_add_non_empty_methods() {
+		final MethodNode m = new MethodNode(0, "foo", "()V", null, null);
+		m.visitInsn(Opcodes.RETURN);
+
+		final MethodProbesVisitor mv = analyzer.visitMethod(m.access, m.name,
+				m.desc, m.signature, m.exceptions.toArray(new String[0]));
+		mv.accept(m, mv);
+
+		assertEquals(1, coverage.getMethods().size());
 	}
 
 	@Test
