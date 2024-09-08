@@ -45,21 +45,6 @@ public final class SyntheticFilter implements IFilter {
 			if (!methodNode.name.startsWith("access$")) {
 				return;
 			}
-
-			if (KotlinDefaultArgumentsFilter
-					.isDefaultArgumentsMethod(methodNode)) {
-				return;
-			}
-
-			if (KotlinDefaultArgumentsFilter
-					.isDefaultArgumentsConstructor(methodNode)) {
-				return;
-			}
-
-			if (KotlinCoroutineFilter
-					.isImplementationOfSuspendFunction(methodNode)) {
-				return;
-			}
 		}
 
 		output.ignore(methodNode.instructions.getFirst(),
