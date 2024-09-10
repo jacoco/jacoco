@@ -42,18 +42,7 @@ public final class SyntheticFilter implements IFilter {
 		}
 
 		if (KotlinGeneratedFilter.isKotlinClass(context)) {
-			if (KotlinDefaultArgumentsFilter
-					.isDefaultArgumentsMethod(methodNode)) {
-				return;
-			}
-
-			if (KotlinDefaultArgumentsFilter
-					.isDefaultArgumentsConstructor(methodNode)) {
-				return;
-			}
-
-			if (KotlinCoroutineFilter
-					.isImplementationOfSuspendFunction(methodNode)) {
+			if (!methodNode.name.startsWith("access$")) {
 				return;
 			}
 		}
