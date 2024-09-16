@@ -519,8 +519,7 @@
                   <version>17</version>
                 </requireJavaVersion>
                 <requireMavenVersion>
-                  <!-- Maven 3.8.2 contains bug - see https://github.com/jacoco/jacoco/issues/1218 -->
-                  <version>[3.6.3,3.8.2),(3.8.2,)</version>
+                  <version>3.9.9</version>
                 </requireMavenVersion>
                 <requireNoRepositories>
                   <message>The rules for repo1.maven.org are that pom.xml files should not include repository definitions.</message>
