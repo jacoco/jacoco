@@ -23,9 +23,8 @@
 <p>
   The JaCoCo build is based on <a href="http://maven.apache.org/">Maven</a> and
   can be locally executed on every machine with a proper
-  <a href="environment.html">environment setup</a>. In particular you need at
-  least <a href="http://maven.apache.org/">Maven 3.6.3</a> and JDK 17
-  installations. Developers are encouraged to run the build before every commit
+  <a href="environment.html">environment setup</a>. In particular you need JDK 17
+  installation. Developers are encouraged to run the build before every commit
   to ensure consistency of the source tree.
 </p>
 
@@ -33,12 +32,13 @@
 <h2>Running the Build</h2>
 
 <p>
-  The build can be started by executing the following command with
-  <code>./org.jacoco.build/</code> as the working directory:
+  The build can be started by executing the
+  <a href="https://maven.apache.org/wrapper/">Maven Wrapper</a> using following
+  command with <code>./org.jacoco.build/</code> as the working directory:
 </p>
 
 <pre>
-  mvn clean verify
+  ../mvnw clean verify
 </pre>
 
 <p>
@@ -48,7 +48,7 @@
 </p>
 
 <pre>
-  ./jacoco/target/jacoco-<i>x.y.z.qualifier</i>.zip
+  ../jacoco/target/jacoco-<i>x.y.z.qualifier</i>.zip
 </pre>
 
 
@@ -59,7 +59,7 @@
 </p>
 
 <pre>
-  mvn clean verify -DskipTests
+  ../mvnw clean verify -DskipTests
 </pre>
 
 
@@ -305,7 +305,7 @@
 </p>
 
 <pre>
-  mvn clean verify -Djdk.version=10 -Dbytecode.version=9
+  ../mvnw clean verify -Djdk.version=10 -Dbytecode.version=9
 </pre>
 
 <p>
@@ -313,7 +313,7 @@
 </p>
 
 <pre>
-  mvn clean verify -Decj
+  ../mvnw clean verify -Decj
 </pre>
 
 <p>
@@ -321,27 +321,27 @@
 </p>
 
 <ul>
-  <li><code>mvn clean verify -Djdk.version=5 -Dbytecode.version=5</code></li>
-  <li><code>mvn clean verify -Djdk.version=6 -Dbytecode.version=6</code></li>
-  <li><code>mvn clean verify -Djdk.version=7 -Dbytecode.version=7</code></li>
-  <li><code>mvn clean verify -Djdk.version=8 -Dbytecode.version=8</code></li>
-  <li><code>mvn clean verify -Djdk.version=9 -Dbytecode.version=9</code></li>
-  <li><code>mvn clean verify -Djdk.version=10 -Dbytecode.version=10</code></li>
-  <li><code>mvn clean verify -Djdk.version=11 -Dbytecode.version=11</code></li>
-  <li><code>mvn clean verify -Djdk.version=11 -Dbytecode.version=11 -Decj</code></li>
-  <li><code>mvn clean verify -Djdk.version=12 -Dbytecode.version=12</code></li>
-  <li><code>mvn clean verify -Djdk.version=13 -Dbytecode.version=13</code></li>
-  <li><code>mvn clean verify -Djdk.version=14 -Dbytecode.version=14</code></li>
-  <li><code>mvn clean verify -Djdk.version=15 -Dbytecode.version=15</code></li>
-  <li><code>mvn clean verify -Djdk.version=16 -Dbytecode.version=16</code></li>
-  <li><code>mvn clean verify -Djdk.version=17 -Dbytecode.version=17</code></li>
-  <li><code>mvn clean verify -Djdk.version=17 -Dbytecode.version=17 -Decj</code></li>
-  <li><code>mvn clean verify -Djdk.version=18 -Dbytecode.version=18</code></li>
-  <li><code>mvn clean verify -Djdk.version=19 -Dbytecode.version=19</code></li>
-  <li><code>mvn clean verify -Djdk.version=20 -Dbytecode.version=20</code></li>
-  <li><code>mvn clean verify -Djdk.version=21 -Dbytecode.version=21</code></li>
-  <li><code>mvn clean verify -Djdk.version=21 -Dbytecode.version=21 -Decj</code></li>
-  <li><code>mvn clean verify -Djdk.version=22 -Dbytecode.version=22</code></li>
+  <li><code>../mvnw clean verify -Djdk.version=5 -Dbytecode.version=5</code></li>
+  <li><code>../mvnw clean verify -Djdk.version=6 -Dbytecode.version=6</code></li>
+  <li><code>../mvnw clean verify -Djdk.version=7 -Dbytecode.version=7</code></li>
+  <li><code>../mvnw clean verify -Djdk.version=8 -Dbytecode.version=8</code></li>
+  <li><code>../mvnw clean verify -Djdk.version=9 -Dbytecode.version=9</code></li>
+  <li><code>../mvnw clean verify -Djdk.version=10 -Dbytecode.version=10</code></li>
+  <li><code>../mvnw clean verify -Djdk.version=11 -Dbytecode.version=11</code></li>
+  <li><code>../mvnw clean verify -Djdk.version=11 -Dbytecode.version=11 -Decj</code></li>
+  <li><code>../mvnw clean verify -Djdk.version=12 -Dbytecode.version=12</code></li>
+  <li><code>../mvnw clean verify -Djdk.version=13 -Dbytecode.version=13</code></li>
+  <li><code>../mvnw clean verify -Djdk.version=14 -Dbytecode.version=14</code></li>
+  <li><code>../mvnw clean verify -Djdk.version=15 -Dbytecode.version=15</code></li>
+  <li><code>../mvnw clean verify -Djdk.version=16 -Dbytecode.version=16</code></li>
+  <li><code>../mvnw clean verify -Djdk.version=17 -Dbytecode.version=17</code></li>
+  <li><code>../mvnw clean verify -Djdk.version=17 -Dbytecode.version=17 -Decj</code></li>
+  <li><code>../mvnw clean verify -Djdk.version=18 -Dbytecode.version=18</code></li>
+  <li><code>../mvnw clean verify -Djdk.version=19 -Dbytecode.version=19</code></li>
+  <li><code>../mvnw clean verify -Djdk.version=20 -Dbytecode.version=20</code></li>
+  <li><code>../mvnw clean verify -Djdk.version=21 -Dbytecode.version=21</code></li>
+  <li><code>../mvnw clean verify -Djdk.version=21 -Dbytecode.version=21 -Decj</code></li>
+  <li><code>../mvnw clean verify -Djdk.version=22 -Dbytecode.version=22</code></li>
 </ul>
 
 
