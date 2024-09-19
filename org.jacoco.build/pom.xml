@@ -840,7 +840,7 @@
     <!--
     Following profiles enable compilation into bytecode version 17
     when requested "bytecode.version" greater than 17. This is needed even though
-    maven-shade-plugin 3.5.0 can process bytecode up to version 19
+    maven-shade-plugin 3.6.0 can process bytecode up to version 22
     and maven-plugin-plugin 3.6.4 can process bytecode up to version 18,
     because we use JDK 17 to launch Maven while compiling by more recent JDKs
     and unfortunately maven-plugin-plugin loads project classes using the same JDK that is used for Maven
