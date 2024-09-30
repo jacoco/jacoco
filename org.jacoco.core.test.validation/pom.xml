@@ -504,7 +504,7 @@
         </property>
       </activation>
       <properties>
-        <!-- Kotlin 2.0.10 doesn't support compilation into 23 -->
+        <!-- Kotlin 2.0.20 doesn't support compilation into 23 -->
         <kotlin.compiler.jvmTarget>22</kotlin.compiler.jvmTarget>
         <!-- Groovy 3.0.22 does not support compilation into 23 -->
         <groovy.targetBytecode>16</groovy.targetBytecode>
@@ -533,7 +533,7 @@
         </property>
       </activation>
       <properties>
-        <!-- Kotlin 2.0.10 doesn't support compilation into 24 -->
+        <!-- Kotlin 2.0.20 doesn't support compilation into 24 -->
         <kotlin.compiler.jvmTarget>22</kotlin.compiler.jvmTarget>
         <!-- Groovy 3.0.22 does not support compilation into 24 -->
         <groovy.targetBytecode>16</groovy.targetBytecode>

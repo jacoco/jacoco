@@ -15,25 +15,18 @@ package org.jacoco.core.test.validation.kotlin.targets
 import org.jacoco.core.test.validation.targets.Stubs.nop
 
 /**
- * Test target for `crossinline`.
+ * Test target containing `inline` function with
+ * [`reified` type parameter](https://kotlinlang.org/docs/inline-functions.html#reified-type-parameters).
  */
-object KotlinCrossinlineTarget {
+object KotlinInlineReifiedTarget {
 
-    inline fun example(crossinline lambda: () -> Unit): () -> Unit { // assertEmpty()
-        return { // assertFullyCovered()
-            requireCrossinline { lambda() } // assertFullyCovered()
-        } // assertFullyCovered()
-    } // assertEmpty()
-
-    fun requireCrossinline(lambda: () -> Unit) = lambda()
+    private inline fun <reified T> example() { // assertEmpty()
+        nop(T::class) // assertFullyCovered()
+    } // assertFullyCovered()
 
     @JvmStatic
     fun main(args: Array<String>) {
-
-        example { // assertFullyCovered()
-            nop() // assertFullyCovered()
-        }() // assertFullyCovered()
-
+        example<String>()
     }
 
 }
