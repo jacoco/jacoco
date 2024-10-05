@@ -15,6 +15,9 @@ package org.jacoco.core.runtime;
 import static java.lang.String.format;
 
 import java.io.File;
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
+import java.net.URLEncoder;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
@@ -225,7 +228,11 @@ public final class AgentOptions {
 				}
 
 				final String value = entry.substring(pos + 1);
-				setOption(key, value);
+				try {
+					setOption(key, URLDecoder.decode(value, "UTF-8"));
+				} catch (UnsupportedEncodingException e) {
+					throw new RuntimeException(e);
+				}
 			}
 
 			validateAll();
@@ -646,7 +653,12 @@ public final class AgentOptions {
 				if (sb.length() > 0) {
 					sb.append(',');
 				}
-				sb.append(key).append('=').append(value);
+				try {
+					sb.append(key).append('=')
+							.append(URLEncoder.encode(value, "UTF-8"));
+				} catch (UnsupportedEncodingException e) {
+					throw new RuntimeException(e);
+				}
 			}
 		}
 		return sb.toString();

@@ -123,7 +123,7 @@ public class AgentOptionsTest {
 		AgentOptions options = new AgentOptions();
 		options.setDestfile("/var/test.exec");
 		assertEquals("/var/test.exec", options.getDestfile());
-		assertEquals("destfile=/var/test.exec", options.toString());
+		assertEquals("destfile=%2Fvar%2Ftest.exec", options.toString());
 	}
 
 	@Test
@@ -385,7 +385,7 @@ public class AgentOptionsTest {
 		AgentOptions options = new AgentOptions();
 		options.setClassDumpDir("target/dump");
 		assertEquals("target/dump", options.getClassDumpDir());
-		assertEquals("classdumpdir=target/dump", options.toString());
+		assertEquals("classdumpdir=target%2Fdump", options.toString());
 	}
 
 	@Test
@@ -430,7 +430,7 @@ public class AgentOptionsTest {
 		String vmArgument = options.getVMArgument(defaultAgentJarFile);
 
 		assertEquals(String.format(
-				"-javaagent:%s=destfile=some test.exec,append=true",
+				"-javaagent:%s=destfile=some+test.exec,append=true",
 				defaultAgentJarFile.toString()), vmArgument);
 	}
 
@@ -441,7 +441,7 @@ public class AgentOptionsTest {
 
 		String vmArgument = options.getQuotedVMArgument(defaultAgentJarFile);
 
-		assertEquals(String.format("\"-javaagent:%s=sessionid=my session\"",
+		assertEquals(String.format("-javaagent:%s=sessionid=my+session",
 				defaultAgentJarFile.toString()), vmArgument);
 	}
 
