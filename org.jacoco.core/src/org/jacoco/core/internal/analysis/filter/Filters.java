@@ -51,7 +51,7 @@ public final class Filters implements IFilter {
 				new KotlinInlineClassFilter(),
 				new KotlinDefaultArgumentsFilter(), new KotlinInlineFilter(),
 				new KotlinCoroutineFilter(), new KotlinDefaultMethodsFilter(),
-				new KotlinComposeFilter());
+				new KotlinComposeFilter(), new ManuallyIgnoredFilter());
 	}
 
 	private Filters(final IFilter... filters) {
