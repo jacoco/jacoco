@@ -74,6 +74,11 @@ object KotlinWhenExpressionTarget {
         else -> 6 // assertFullyCovered()
     } // assertFullyCovered()
 
+    private fun whenBoolean(p: Boolean) = when (p) { // assertFullyCovered()
+        true -> 1 // assertFullyCovered(0, 2)
+        false -> 2 // assertFullyCovered()
+    } // assertFullyCovered()
+
     @JvmStatic
     fun main(args: Array<String>) {
         whenSealed(Sealed.Sealed1)
@@ -102,6 +107,9 @@ object KotlinWhenExpressionTarget {
         whenStringBiggestHashCodeFirst("c")
         whenStringBiggestHashCodeFirst("\u0000a")
         whenStringBiggestHashCodeFirst("\u0000b")
+
+        whenBoolean(true)
+        whenBoolean(false)
     }
 
 }

@@ -55,7 +55,7 @@ public final class KotlinWhenFilter implements IFilter {
 			nextIs(Opcodes.ATHROW);
 
 			for (AbstractInsnNode i = cursor; i != null; i = i.getPrevious()) {
-				if (i.getOpcode() == Opcodes.IFEQ
+				if ((i.getOpcode() == Opcodes.IFEQ || i.getOpcode() == Opcodes.IFNE)
 						&& ((JumpInsnNode) i).label == start) {
 					output.ignore(i, i);
 					output.ignore(start, cursor);
