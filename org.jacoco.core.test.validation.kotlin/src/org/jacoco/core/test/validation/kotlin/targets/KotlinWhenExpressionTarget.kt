@@ -50,6 +50,22 @@ object KotlinWhenExpressionTarget {
         else -> throw NoWhenBranchMatchedException() // assertEmpty()
     } // assertFullyCovered()
 
+    private fun whenBoolean(p: Boolean): String = when (p) { // assertFullyCovered()
+        true -> "t" // assertFullyCovered(0, 2)
+        false -> "f" // assertFullyCovered()
+    } // assertFullyCovered()
+
+    private fun whenBooleanFalseTrue(p: Boolean): String = when (p) { // assertFullyCovered()
+        false -> "f" // assertFullyCovered(0, 2)
+        true -> "t" // assertFullyCovered()
+    } // assertFullyCovered()
+
+    private fun whenBooleanNullable(p: Boolean?): String = when (p) { // assertFullyCovered()
+        true -> "t" // assertFullyCovered(0, 2)
+        false -> "f" // assertFullyCovered(0, 2)
+        null -> "n" // assertFullyCovered()
+    } // assertFullyCovered()
+
     private fun whenString(p: String): Int = when (p) { // assertFullyCovered(0, 7)
         "a" -> 1 // assertFullyCovered()
         "b" -> 2 // assertFullyCovered()
@@ -87,6 +103,16 @@ object KotlinWhenExpressionTarget {
 
         whenEnumRedundantElse(Enum.A)
         whenEnumRedundantElse(Enum.B)
+
+        whenBoolean(true)
+        whenBoolean(false)
+
+        whenBooleanFalseTrue(true)
+        whenBooleanFalseTrue(false)
+
+        whenBooleanNullable(true)
+        whenBooleanNullable(false)
+        whenBooleanNullable(null)
 
         whenString("")
         whenString("a")
