@@ -13,7 +13,7 @@
 package org.jacoco.core.internal.analysis;
 
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -70,7 +70,7 @@ class InstructionsBuilder {
 		this.probes = probes;
 		this.currentLine = ISourceNode.UNKNOWN_LINE;
 		this.currentInsn = null;
-		this.instructions = new HashMap<AbstractInsnNode, Instruction>();
+		this.instructions = new LinkedHashMap<AbstractInsnNode, Instruction>();
 		this.currentLabel = new ArrayList<Label>(2);
 		this.jumps = new ArrayList<Jump>();
 	}
