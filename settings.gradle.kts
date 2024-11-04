@@ -1,0 +1,33 @@
+pluginManagement {
+    // Include 'plugins build' to define convention plugins.
+    includeBuild("build-logic")
+}
+
+rootProject.name = "root"
+include(":org.jacoco.core.test.validation")
+include(":org.jacoco.core.test.validation.java5")
+include(":org.jacoco.core.test.validation.scala")
+include(":org.jacoco.core.test.validation.java7")
+include(":org.jacoco.cli")
+include(":org.jacoco.agent.test")
+include(":org.jacoco.tests")
+include(":org.jacoco.core.test.validation.kotlin")
+include(":org.jacoco.examples.test")
+include(":org.jacoco.agent.rt")
+include(":jacoco-maven-plugin")
+include(":org.jacoco.agent")
+include(":org.jacoco.core")
+include(":jacoco-maven-plugin.test")
+include(":org.jacoco.report.test")
+include(":org.jacoco.build")
+include(":org.jacoco.ant")
+include(":org.jacoco.agent.rt.test")
+include(":org.jacoco.core.test.validation.java8")
+include(":jacoco")
+include(":org.jacoco.cli.test")
+include(":org.jacoco.examples")
+include(":org.jacoco.doc")
+include(":org.jacoco.ant.test")
+include(":org.jacoco.core.test")
+include(":org.jacoco.report")
+include(":org.jacoco.core.test.validation.groovy")

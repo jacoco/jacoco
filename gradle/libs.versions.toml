@@ -1,0 +1,49 @@
+# https://docs.gradle.org/current/userguide/platforms.html#sub::toml-dependencies-format
+
+[versions]
+args4j-args4j = "2.0.28"
+junit-junit = "4.13.2"
+org-apache-ant-ant = "1.9.16"
+org-apache-ant-ant-antunit = "1.4.1"
+org-apache-ant-ant-junit = "1.9.16"
+org-apache-ant-ant-junit4 = "1.9.16"
+org-apache-ant-ant-launcher = "1.9.16"
+org-apache-maven-maven-core = "3.0"
+org-apache-maven-maven-plugin-api = "3.0"
+org-apache-maven-plugin-tools-maven-plugin-annotations = "3.4"
+org-apache-maven-reporting-maven-reporting-api = "3.0"
+org-apache-maven-shared-file-management = "3.1.0"
+org-codehaus-groovy-groovy = "3.0.22"
+org-codehaus-plexus-plexus-utils = "3.0.24"
+org-jetbrains-kotlin-kotlin-stdlib = "2.0.21"
+org-jetbrains-kotlinx-kotlinx-coroutines-core = "1.8.0"
+org-ow2-asm-asm = "9.7.1"
+org-ow2-asm-asm-analysis = "9.7.1"
+org-ow2-asm-asm-commons = "9.7.1"
+org-ow2-asm-asm-tree = "9.7.1"
+org-ow2-asm-asm-util = "9.7.1"
+org-scala-lang-scala-library = "2.13.12"
+
+[libraries]
+args4j-args4j = { module = "args4j:args4j", version.ref = "args4j-args4j" }
+junit-junit = { module = "junit:junit", version.ref = "junit-junit" }
+org-apache-ant-ant = { module = "org.apache.ant:ant", version.ref = "org-apache-ant-ant" }
+org-apache-ant-ant-antunit = { module = "org.apache.ant:ant-antunit", version.ref = "org-apache-ant-ant-antunit" }
+org-apache-ant-ant-junit = { module = "org.apache.ant:ant-junit", version.ref = "org-apache-ant-ant-junit" }
+org-apache-ant-ant-junit4 = { module = "org.apache.ant:ant-junit4", version.ref = "org-apache-ant-ant-junit4" }
+org-apache-ant-ant-launcher = { module = "org.apache.ant:ant-launcher", version.ref = "org-apache-ant-ant-launcher" }
+org-apache-maven-maven-core = { module = "org.apache.maven:maven-core", version.ref = "org-apache-maven-maven-core" }
+org-apache-maven-maven-plugin-api = { module = "org.apache.maven:maven-plugin-api", version.ref = "org-apache-maven-maven-plugin-api" }
+org-apache-maven-plugin-tools-maven-plugin-annotations = { module = "org.apache.maven.plugin-tools:maven-plugin-annotations", version.ref = "org-apache-maven-plugin-tools-maven-plugin-annotations" }
+org-apache-maven-reporting-maven-reporting-api = { module = "org.apache.maven.reporting:maven-reporting-api", version.ref = "org-apache-maven-reporting-maven-reporting-api" }
+org-apache-maven-shared-file-management = { module = "org.apache.maven.shared:file-management", version.ref = "org-apache-maven-shared-file-management" }
+org-codehaus-groovy-groovy = { module = "org.codehaus.groovy:groovy", version.ref = "org-codehaus-groovy-groovy" }
+org-codehaus-plexus-plexus-utils = { module = "org.codehaus.plexus:plexus-utils", version.ref = "org-codehaus-plexus-plexus-utils" }
+org-jetbrains-kotlin-kotlin-stdlib = { module = "org.jetbrains.kotlin:kotlin-stdlib", version.ref = "org-jetbrains-kotlin-kotlin-stdlib" }
+org-jetbrains-kotlinx-kotlinx-coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "org-jetbrains-kotlinx-kotlinx-coroutines-core" }
+org-ow2-asm-asm = { module = "org.ow2.asm:asm", version.ref = "org-ow2-asm-asm" }
+org-ow2-asm-asm-analysis = { module = "org.ow2.asm:asm-analysis", version.ref = "org-ow2-asm-asm-analysis" }
+org-ow2-asm-asm-commons = { module = "org.ow2.asm:asm-commons", version.ref = "org-ow2-asm-asm-commons" }
+org-ow2-asm-asm-tree = { module = "org.ow2.asm:asm-tree", version.ref = "org-ow2-asm-asm-tree" }
+org-ow2-asm-asm-util = { module = "org.ow2.asm:asm-util", version.ref = "org-ow2-asm-asm-util" }
+org-scala-lang-scala-library = { module = "org.scala-lang:scala-library", version.ref = "org-scala-lang-scala-library" }
