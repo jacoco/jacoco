@@ -12,6 +12,10 @@
  *******************************************************************************/
 package org.jacoco.core.internal.analysis.filter;
 
+import org.objectweb.asm.Opcodes;
+import org.objectweb.asm.tree.AbstractInsnNode;
+import org.objectweb.asm.tree.LineNumberNode;
+import org.objectweb.asm.tree.MethodInsnNode;
 import org.objectweb.asm.tree.MethodNode;
 
 /**
@@ -27,7 +31,46 @@ final class KotlinJvmOverloadsFilter implements IFilter {
 
 	public void filter(final MethodNode methodNode,
 			final IFilterContext context, final IFilterOutput output) {
-		// TODO
+		if (methodNode.instructions.size() < 5) {
+			return;
+		}
+		AbstractInsnNode i = methodNode.instructions.getLast();
+		if (i.getType() == AbstractInsnNode.LABEL) {
+			// lvt label
+			i = i.getPrevious();
+		}
+		if (i.getOpcode() != Opcodes.RETURN) {
+			return;
+		}
+		i = i.getPrevious();
+		if (i.getType() != AbstractInsnNode.LINE) {
+			return;
+		}
+		i = i.getPrevious();
+		if (i != ((LineNumberNode) i.getNext()).start) {
+			return;
+		}
+		i = i.getPrevious();
+		if (!invokeDefault(i)) {
+			return;
+		}
+		for (; i != null; i = i.getPrevious()) {
+			if (i.getType() == AbstractInsnNode.LINE) {
+				return;
+			}
+		}
+		output.ignore(methodNode.instructions.getFirst(),
+				methodNode.instructions.getLast());
+	}
+
+	private static boolean invokeDefault(final AbstractInsnNode i) {
+		if (i.getOpcode() == Opcodes.INVOKESTATIC) {
+			return ((MethodInsnNode) i).name.endsWith("$default");
+		} else if (i.getOpcode() == Opcodes.INVOKESPECIAL) {
+			return ((MethodInsnNode) i).desc.endsWith(
+					"Lkotlin/jvm/internal/DefaultConstructorMarker;)V");
+		}
+		return false;
 	}
 
 }

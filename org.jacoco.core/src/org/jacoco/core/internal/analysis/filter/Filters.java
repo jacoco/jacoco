@@ -80,6 +80,7 @@ public final class Filters {
 				new KotlinGeneratedFilter(), //
 				new KotlinSyntheticAccessorsFilter(), //
 				new KotlinEnumFilter(), //
+				new KotlinJvmOverloadsFilter(), //
 				new KotlinSafeCallOperatorFilter(), //
 				new KotlinLateinitFilter(), //
 				new KotlinWhenFilter(), //
