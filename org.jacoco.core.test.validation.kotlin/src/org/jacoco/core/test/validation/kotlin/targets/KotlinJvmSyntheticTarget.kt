@@ -15,25 +15,18 @@ package org.jacoco.core.test.validation.kotlin.targets
 import org.jacoco.core.test.validation.targets.Stubs.nop
 
 /**
- * Test target for `crossinline`.
+ * Test target containing [JvmSynthetic] function.
  */
-object KotlinCrossinlineTarget {
+object KotlinJvmSyntheticTarget {
 
-    inline fun example(crossinline lambda: () -> Unit): () -> Unit { // assertEmpty()
-        return { // assertFullyCovered()
-            requireCrossinline { lambda() } // assertFullyCovered()
-        } // assertFullyCovered()
-    } // assertEmpty()
-
-    fun requireCrossinline(lambda: () -> Unit) = lambda()
+    @JvmSynthetic
+    private fun example() { // assertEmpty()
+        nop() // assertFullyCovered()
+    } // assertFullyCovered()
 
     @JvmStatic
     fun main(args: Array<String>) {
-
-        example { // assertFullyCovered()
-            nop() // assertFullyCovered()
-        }() // assertFullyCovered()
-
+        example()
     }
 
 }

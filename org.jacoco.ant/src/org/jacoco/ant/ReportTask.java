@@ -152,7 +152,7 @@ public class ReportTask extends Task {
 	/**
 	 * Interface for child elements that define formatters.
 	 */
-	private abstract class FormatterElement {
+	private abstract static class FormatterElement {
 
 		abstract IReportVisitor createVisitor() throws IOException;
 

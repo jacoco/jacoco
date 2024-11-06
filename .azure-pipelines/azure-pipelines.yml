@@ -78,29 +78,23 @@ jobs:
       " > toolchains.xml
     displayName: Setup JDK
   - bash: |
-      set -e
-      mkdir .maven
-      curl -L "https://archive.apache.org/dist/maven/maven-3/3.8.3/binaries/apache-maven-3.8.3-bin.tar.gz" -o .maven/maven.tar.gz
-      tar -xzf .maven/maven.tar.gz -C .maven --strip-components 1
-    displayName: Setup Maven
-  - bash: |
       if [[ "$JDK_VERSION" -ge "17" ]]; then
         export JAVA_HOME=$PWD/.jdk
       else
         export JAVA_HOME=$JAVA_HOME_17_X64
       fi
       if [[ "$BUILD_SOURCEBRANCH" == "refs/heads/master" && "$JDK_VERSION" == "5" ]]; then
-        .maven/bin/mvn -V -B -e --no-transfer-progress -f org.jacoco.build \
+        ./mvnw -V -B -e --no-transfer-progress -f org.jacoco.build \
           verify -Djdk.version=$JDK_VERSION -Dbytecode.version=$JDK_VERSION \
           deploy:deploy -DdeployAtEnd \
           --toolchains=toolchains.xml --settings=.azure-pipelines/maven-settings.xml
       elif [[ "$BUILD_SOURCEBRANCH" == "refs/heads/master" && "$JDK_VERSION" == "11" ]]; then
-        .maven/bin/mvn -V -B -e --no-transfer-progress -f org.jacoco.build \
+        ./mvnw -V -B -e --no-transfer-progress -f org.jacoco.build \
           verify -Djdk.version=$JDK_VERSION -Dbytecode.version=$JDK_VERSION \
           sonar:sonar \
           --toolchains=toolchains.xml --settings=.azure-pipelines/maven-settings.xml
       else
-        .maven/bin/mvn -V -B -e --no-transfer-progress \
+        ./mvnw -V -B -e --no-transfer-progress \
           verify -Djdk.version=$JDK_VERSION -Dbytecode.version=$JDK_VERSION -Decj=${ECJ:-} \
           --toolchains=toolchains.xml
       fi

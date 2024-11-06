@@ -16,7 +16,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.objectweb.asm.Opcodes;
-import org.objectweb.asm.Type;
 import org.objectweb.asm.tree.AbstractInsnNode;
 import org.objectweb.asm.tree.JumpInsnNode;
 import org.objectweb.asm.tree.LdcInsnNode;
@@ -28,17 +27,6 @@ import org.objectweb.asm.tree.TableSwitchInsnNode;
  * Filters branches that Kotlin compiler generates for coroutines.
  */
 public final class KotlinCoroutineFilter implements IFilter {
-
-	static boolean isImplementationOfSuspendFunction(
-			final MethodNode methodNode) {
-		if (methodNode.name.startsWith("access$")) {
-			return false;
-		}
-		final Type methodType = Type.getMethodType(methodNode.desc);
-		final int lastArgument = methodType.getArgumentTypes().length - 1;
-		return lastArgument >= 0 && "kotlin.coroutines.Continuation".equals(
-				methodType.getArgumentTypes()[lastArgument].getClassName());
-	}
 
 	public void filter(final MethodNode methodNode,
 			final IFilterContext context, final IFilterOutput output) {

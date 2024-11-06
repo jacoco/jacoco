@@ -52,11 +52,13 @@ import org.objectweb.asm.tree.VarInsnNode;
  */
 public final class KotlinDefaultArgumentsFilter implements IFilter {
 
-	static boolean isDefaultArgumentsMethod(final MethodNode methodNode) {
+	private static boolean isDefaultArgumentsMethod(
+			final MethodNode methodNode) {
 		return methodNode.name.endsWith("$default");
 	}
 
-	static boolean isDefaultArgumentsConstructor(final MethodNode methodNode) {
+	private static boolean isDefaultArgumentsConstructor(
+			final MethodNode methodNode) {
 		if (!"<init>".equals(methodNode.name)) {
 			return false;
 		}
