@@ -24,7 +24,18 @@ object KotlinJvmOverloadsTarget {
         nop(p1 + p2) // assertFullyCovered()
     } // assertFullyCovered()
 
-    class Example @JvmOverloads constructor(p1: String = "p1", p2: String = "p2") // assertFullyCovered()
+    /** Bytecode is very similar to the filtered one */
+    private fun use() { // assertEmpty()
+        example() // assertFullyCovered()
+    } // assertFullyCovered()
+
+    /** Bytecode is very similar to the filtered one */
+    private fun useOneliner() = example() // assertFullyCovered()
+
+    class Example @JvmOverloads constructor(p1: String = "p1", p2: String = "p2") { // assertFullyCovered()
+        /** Bytecode is very similar to the filtered one */
+        constructor(p: Any) : this() // assertFullyCovered()
+    }
 
     @JvmStatic
     fun main(args: Array<String>) {
@@ -32,9 +43,14 @@ object KotlinJvmOverloadsTarget {
         example("")
         example("", "")
 
+        use()
+        useOneliner()
+
         Example()
         Example("")
         Example("", "")
+
+        Example(Any())
     }
 
 }
