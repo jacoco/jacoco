@@ -171,6 +171,12 @@ public class KotlinWhenFilterTest extends FilterTestBase {
 	 *   true -> "t"
 	 * }
 	 * </pre>
+	 *
+	 * <pre>
+	 * fun example(e: EnumWithSingleValue) = when (e) {
+	 *   EnumWithSingleValue.A -> "a"
+	 * }
+	 * </pre>
 	 */
 	@Test
 	public void should_filter_instruction_ificmpne() {
