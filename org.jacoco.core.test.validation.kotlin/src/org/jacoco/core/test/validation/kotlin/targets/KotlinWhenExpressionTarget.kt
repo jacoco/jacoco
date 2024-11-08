@@ -50,6 +50,27 @@ object KotlinWhenExpressionTarget {
         else -> throw NoWhenBranchMatchedException() // assertEmpty()
     } // assertFullyCovered()
 
+    private fun whenByNullableEnumWithNullCaseAndWithoutElse(e: Enum?): String =
+        when (e) { // assertFullyCovered(0, 3)
+            Enum.A -> "a" // assertFullyCovered()
+            Enum.B -> "b" // assertFullyCovered()
+            null -> "null" // assertFullyCovered()
+        } // assertFullyCovered()
+
+    private fun whenByNullableEnumWithoutNullCaseAndWithElse(e: Enum?): String =
+        when (e) { // assertFullyCovered(0, 3)
+            Enum.A -> "a" // assertFullyCovered()
+            Enum.B -> "b" // assertFullyCovered()
+            else -> "else" // assertFullyCovered()
+        } // assertFullyCovered()
+
+    private fun whenByNullableEnumWithNullAndElseCases(e: Enum?): String =
+        when (e) { // assertFullyCovered(0, 3)
+            Enum.A -> "a" // assertFullyCovered()
+            null -> "null" // assertFullyCovered()
+            else -> "else" // assertFullyCovered()
+        } // assertFullyCovered()
+
     private fun whenString(p: String): Int = when (p) { // assertFullyCovered(0, 7)
         "a" -> 1 // assertFullyCovered()
         "b" -> 2 // assertFullyCovered()
@@ -87,6 +108,18 @@ object KotlinWhenExpressionTarget {
 
         whenEnumRedundantElse(Enum.A)
         whenEnumRedundantElse(Enum.B)
+
+        whenByNullableEnumWithNullCaseAndWithoutElse(Enum.A)
+        whenByNullableEnumWithNullCaseAndWithoutElse(Enum.B)
+        whenByNullableEnumWithNullCaseAndWithoutElse(null)
+
+        whenByNullableEnumWithoutNullCaseAndWithElse(Enum.A)
+        whenByNullableEnumWithoutNullCaseAndWithElse(Enum.B)
+        whenByNullableEnumWithoutNullCaseAndWithElse(null)
+
+        whenByNullableEnumWithNullAndElseCases(Enum.A)
+        whenByNullableEnumWithNullAndElseCases(Enum.B)
+        whenByNullableEnumWithNullAndElseCases(null)
 
         whenString("")
         whenString("a")
