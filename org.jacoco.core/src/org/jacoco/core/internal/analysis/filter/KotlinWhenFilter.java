@@ -27,9 +27,8 @@ import org.objectweb.asm.tree.TableSwitchInsnNode;
 
 /**
  * Filters bytecode that Kotlin compiler generates for <code>when</code>
- * expressions which list all cases of <code>enum</code> or
- * <code>sealed class</code>, i.e. which don't require explicit
- * <code>else</code>.
+ * expressions and statements with subject of type <code>enum class</code> or
+ * <code>sealed class</code>.
  */
 public final class KotlinWhenFilter implements IFilter {
 
