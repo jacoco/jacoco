@@ -20,7 +20,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 /**
- * Unit tests for {@link LineImplTest}.
+ * Unit tests for {@link LineImpl}.
  */
 public class LineImplTest {
 
