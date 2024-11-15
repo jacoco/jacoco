@@ -198,7 +198,6 @@
               <goal>jar</goal>
             </goals>
             <configuration>
-              <reportOutputDirectory>${project.build.directory}/apidocs</reportOutputDirectory>
               <includeDependencySources>true</includeDependencySources>
               <excludePackageNames>*.internal.*,*.internal,org.jacoco.ant,org.jacoco.maven,org.jacoco.examples</excludePackageNames>
               <dependencySourceIncludes>
