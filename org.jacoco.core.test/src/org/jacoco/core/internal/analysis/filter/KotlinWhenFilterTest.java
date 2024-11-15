@@ -121,4 +121,157 @@ public class KotlinWhenFilterTest extends FilterTestBase {
 		assertReplacedBranches(switchNode, newTargets);
 	}
 
+	/**
+	 * <pre>
+	 * fun example(b: Boolean) = when (b) {
+	 *   true -> "t"
+	 *   false -> "f"
+	 * }
+	 * </pre>
+	 */
+	@Test
+	public void should_filter_instruction_ifne() {
+		final Range range1 = new Range();
+		final Range range2 = new Range();
+		final Label falseCase = new Label();
+		final Label after = new Label();
+		final Label exception = new Label();
+		m.visitVarInsn(Opcodes.ILOAD, 1);
+		m.visitInsn(Opcodes.ICONST_1);
+		m.visitJumpInsn(Opcodes.IF_ICMPNE, falseCase);
+		m.visitLdcInsn("t");
+		m.visitJumpInsn(Opcodes.GOTO, after);
+		m.visitLabel(falseCase);
+		m.visitVarInsn(Opcodes.ILOAD, 1);
+		m.visitJumpInsn(Opcodes.IFNE, exception);
+		range1.fromInclusive = m.instructions.getLast();
+		range1.toInclusive = m.instructions.getLast();
+		m.visitLdcInsn("f");
+		m.visitJumpInsn(Opcodes.GOTO, after);
+		m.visitLabel(exception);
+		range2.fromInclusive = m.instructions.getLast();
+		m.visitTypeInsn(Opcodes.NEW, "kotlin/NoWhenBranchMatchedException");
+		m.visitInsn(Opcodes.DUP);
+		m.visitMethodInsn(Opcodes.INVOKESPECIAL,
+				"kotlin/NoWhenBranchMatchedException", "<init>", "()V", false);
+		m.visitInsn(Opcodes.ATHROW);
+		range2.toInclusive = m.instructions.getLast();
+		m.visitLabel(after);
+
+		filter.filter(m, context, output);
+
+		assertIgnored(range1, range2);
+		assertNoReplacedBranches();
+	}
+
+	/**
+	 * <pre>
+	 * fun example(b: Boolean) = when(b) {
+	 *   false -> "f"
+	 *   true -> "t"
+	 * }
+	 * </pre>
+	 *
+	 * <pre>
+	 * fun example(e: EnumWithSingleValue) = when (e) {
+	 *   EnumWithSingleValue.A -> "a"
+	 * }
+	 * </pre>
+	 */
+	@Test
+	public void should_filter_instruction_ificmpne() {
+		final Range range1 = new Range();
+		final Range range2 = new Range();
+		final Label trueCase = new Label();
+		final Label after = new Label();
+		final Label exception = new Label();
+		m.visitVarInsn(Opcodes.ILOAD, 1);
+		m.visitJumpInsn(Opcodes.IFNE, trueCase);
+		m.visitLdcInsn("f");
+		m.visitJumpInsn(Opcodes.GOTO, after);
+		m.visitLabel(trueCase);
+		m.visitVarInsn(Opcodes.ILOAD, 1);
+		m.visitInsn(Opcodes.ICONST_1);
+		m.visitJumpInsn(Opcodes.IF_ICMPNE, exception);
+		range1.fromInclusive = m.instructions.getLast();
+		range1.toInclusive = m.instructions.getLast();
+		m.visitLdcInsn("t");
+		m.visitJumpInsn(Opcodes.GOTO, after);
+		m.visitLabel(exception);
+		range2.fromInclusive = m.instructions.getLast();
+		m.visitTypeInsn(Opcodes.NEW, "kotlin/NoWhenBranchMatchedException");
+		m.visitInsn(Opcodes.DUP);
+		m.visitMethodInsn(Opcodes.INVOKESPECIAL,
+				"kotlin/NoWhenBranchMatchedException", "<init>", "()V", false);
+		m.visitInsn(Opcodes.ATHROW);
+		range2.toInclusive = m.instructions.getLast();
+		m.visitLabel(after);
+
+		filter.filter(m, context, output);
+
+		assertIgnored(range1, range2);
+		assertNoReplacedBranches();
+	}
+
+	/**
+	 * <pre>
+	 * fun example(b: Boolean?) = when(b) {
+	 *   true -> "t"
+	 *   false -> "f"
+	 *   null -> "n"
+	 * }
+	 * </pre>
+	 */
+	@Test
+	public void should_filter_instruction_ifnonnull() {
+		final Range range1 = new Range();
+		final Range range2 = new Range();
+		final Label falseCase = new Label();
+		final Label nullCase = new Label();
+		final Label after = new Label();
+		final Label exception = new Label();
+		m.visitVarInsn(Opcodes.ALOAD, 1);
+		m.visitInsn(Opcodes.ICONST_1);
+		m.visitMethodInsn(Opcodes.INVOKESTATIC, "java/lang/Boolean", "valueOf",
+				"(Z)Ljava/lang/Boolean;", false);
+		m.visitMethodInsn(Opcodes.INVOKESTATIC,
+				"kotlin/jvm/internal/Intrinsics", "areEqual",
+				"(Ljava/lang/Object;Ljava/lang/Object;)Z", false);
+		m.visitJumpInsn(Opcodes.IFEQ, falseCase);
+		m.visitLdcInsn("t");
+		m.visitJumpInsn(Opcodes.GOTO, after);
+		m.visitLabel(falseCase);
+		m.visitVarInsn(Opcodes.ALOAD, 1);
+		m.visitInsn(Opcodes.ICONST_0);
+		m.visitMethodInsn(Opcodes.INVOKESTATIC, "java/lang/Boolean", "valueOf",
+				"(Z)Ljava/lang/Boolean;", false);
+		m.visitMethodInsn(Opcodes.INVOKESTATIC,
+				"kotlin/jvm/internal/Intrinsics", "areEqual",
+				"(Ljava/lang/Object;Ljava/lang/Object;)Z", false);
+		m.visitJumpInsn(Opcodes.IFEQ, nullCase);
+		m.visitLdcInsn("f");
+		m.visitJumpInsn(Opcodes.GOTO, after);
+		m.visitLabel(nullCase);
+		m.visitVarInsn(Opcodes.ALOAD, 1);
+		m.visitJumpInsn(Opcodes.IFNONNULL, exception);
+		range1.fromInclusive = m.instructions.getLast();
+		range1.toInclusive = m.instructions.getLast();
+		m.visitLdcInsn("n");
+		m.visitJumpInsn(Opcodes.GOTO, after);
+		m.visitLabel(exception);
+		range2.fromInclusive = m.instructions.getLast();
+		m.visitTypeInsn(Opcodes.NEW, "kotlin/NoWhenBranchMatchedException");
+		m.visitInsn(Opcodes.DUP);
+		m.visitMethodInsn(Opcodes.INVOKESPECIAL,
+				"kotlin/NoWhenBranchMatchedException", "<init>", "()V", false);
+		m.visitInsn(Opcodes.ATHROW);
+		range2.toInclusive = m.instructions.getLast();
+		m.visitLabel(after);
+
+		filter.filter(m, context, output);
+
+		assertIgnored(range1, range2);
+		assertNoReplacedBranches();
+	}
+
 }

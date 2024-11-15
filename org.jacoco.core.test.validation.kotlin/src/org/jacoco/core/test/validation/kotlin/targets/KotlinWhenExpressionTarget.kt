@@ -34,6 +34,12 @@ object KotlinWhenExpressionTarget {
         else -> throw NoWhenBranchMatchedException() // assertEmpty()
     } // assertFullyCovered()
 
+    private fun whenSealedNullable(p: Sealed?): Int = when (p) { // assertFullyCovered()
+        is Sealed.Sealed1 -> 1 // assertFullyCovered(0, 2)
+        is Sealed.Sealed2 -> 2 // assertFullyCovered(0, 2)
+        null -> 0 // assertFullyCovered()
+    } // assertFullyCovered()
+
     private enum class Enum {
         A, B
     }
@@ -48,6 +54,30 @@ object KotlinWhenExpressionTarget {
         Enum.A -> 1 // assertFullyCovered()
         Enum.B -> 2 // assertFullyCovered()
         else -> throw NoWhenBranchMatchedException() // assertEmpty()
+    } // assertFullyCovered()
+
+    private enum class EnumWithSingleValue {
+        A
+    }
+
+    private fun whenEnumWithSingleValue(p: EnumWithSingleValue) = when (p) { // assertFullyCovered()
+        EnumWithSingleValue.A -> 1 // assertFullyCovered()
+    } // assertFullyCovered()
+
+    private fun whenBoolean(p: Boolean): String = when (p) { // assertFullyCovered()
+        true -> "t" // assertFullyCovered(0, 2)
+        false -> "f" // assertFullyCovered()
+    } // assertFullyCovered()
+
+    private fun whenBooleanFalseTrue(p: Boolean): String = when (p) { // assertFullyCovered()
+        false -> "f" // assertFullyCovered(0, 2)
+        true -> "t" // assertFullyCovered()
+    } // assertFullyCovered()
+
+    private fun whenBooleanNullable(p: Boolean?): String = when (p) { // assertFullyCovered()
+        true -> "t" // assertFullyCovered(0, 2)
+        false -> "f" // assertFullyCovered(0, 2)
+        null -> "n" // assertFullyCovered()
     } // assertFullyCovered()
 
     private fun whenString(p: String): Int = when (p) { // assertFullyCovered(0, 7)
@@ -82,11 +112,27 @@ object KotlinWhenExpressionTarget {
         whenSealedRedundantElse(Sealed.Sealed1)
         whenSealedRedundantElse(Sealed.Sealed2)
 
+        whenSealedNullable(Sealed.Sealed1)
+        whenSealedNullable(Sealed.Sealed2)
+        whenSealedNullable(null)
+
         whenEnum(Enum.A)
         whenEnum(Enum.B)
 
         whenEnumRedundantElse(Enum.A)
         whenEnumRedundantElse(Enum.B)
+
+        whenEnumWithSingleValue(EnumWithSingleValue.A)
+
+        whenBoolean(true)
+        whenBoolean(false)
+
+        whenBooleanFalseTrue(true)
+        whenBooleanFalseTrue(false)
+
+        whenBooleanNullable(true)
+        whenBooleanNullable(false)
+        whenBooleanNullable(null)
 
         whenString("")
         whenString("a")
