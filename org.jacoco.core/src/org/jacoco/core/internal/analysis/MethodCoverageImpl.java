@@ -12,6 +12,8 @@
  *******************************************************************************/
 package org.jacoco.core.internal.analysis;
 
+import java.util.BitSet;
+
 import org.jacoco.core.analysis.ICounter;
 import org.jacoco.core.analysis.IMethodCoverage;
 
@@ -40,6 +42,22 @@ public class MethodCoverageImpl extends SourceNodeImpl
 		super(ElementType.METHOD, name);
 		this.desc = desc;
 		this.signature = signature;
+	}
+
+	public void increment(final ICounter instructions, final ICounter branches,
+			final int line, final BitSet coveredBranches) {
+		final int oldBranchesTotalCount = getLine(line).branches
+				.getTotalCount();
+
+		increment(instructions, branches, line);
+
+		final LineImpl newLine = getLine(line);
+		final int newBranchesTotalCount = newLine.getBranchCounter()
+				.getTotalCount();
+		if (newBranchesTotalCount > 0) {
+			newLine.appendCoveredBranches(oldBranchesTotalCount,
+					newBranchesTotalCount, coveredBranches);
+		}
 	}
 
 	@Override
