@@ -279,11 +279,11 @@ public abstract class ValidationTestBase {
 					actual = String
 							.valueOf(((LineImpl) aMethod.getLine(lineNumber))
 									.getCoveredBranches());
-					assertEquals(String.format("CoveredBranches (%s)", line),
-							expected, actual);
 				}
 			}
 		}
+		assertEquals(String.format("CoveredBranches (%s)", line), expected,
+				actual);
 	}
 
 }
