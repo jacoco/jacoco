@@ -13,15 +13,15 @@
 package org.jacoco.core.test.validation.kotlin;
 
 import org.jacoco.core.test.validation.ValidationTestBase;
-import org.jacoco.core.test.validation.kotlin.targets.KotlinWhenExpressionTarget;
+import org.jacoco.core.test.validation.kotlin.targets.KotlinWhenSealedTarget;
 
 /**
- * Test of <code>when</code> expressions.
+ * Test of code coverage in {@link KotlinWhenSealedTarget}.
  */
-public class KotlinWhenExpressionTest extends ValidationTestBase {
+public class KotlinWhenSealedTest extends ValidationTestBase {
 
-	public KotlinWhenExpressionTest() {
-		super(KotlinWhenExpressionTarget.class);
+	public KotlinWhenSealedTest() {
+		super(KotlinWhenSealedTarget.class);
 	}
 
 }
