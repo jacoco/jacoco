@@ -26,7 +26,7 @@ public abstract class LineImpl implements ILine {
 	private static final int SINGLETON_INS_LIMIT = 8;
 
 	/** Max branch counter value for which singletons are created */
-	private static final int SINGLETON_BRA_LIMIT = 0;
+	private static final int SINGLETON_BRA_LIMIT = 4;
 
 	private static final LineImpl[][][][] SINGLETONS = new LineImpl[SINGLETON_INS_LIMIT
 			+ 1][][][];
@@ -74,9 +74,20 @@ public abstract class LineImpl implements ILine {
 
 		@Override
 		public LineImpl increment(final ICounter instructions,
-				final ICounter branches) {
+				final ICounter branches, final BitSet coveredBranches) {
+			final int currentBranchesTotalCount = this.branches.getTotalCount();
 			this.instructions = this.instructions.increment(instructions);
 			this.branches = this.branches.increment(branches);
+			if (coveredBranches == null) {
+				// is not line of MethodCoverageImpl
+				return this;
+			}
+			for (int i = 0; i < branches.getTotalCount(); i++) {
+				if (coveredBranches.get(i)) {
+					this.coveredBranches = set(this.coveredBranches,
+							currentBranchesTotalCount + i);
+				}
+			}
 			return this;
 		}
 	}
@@ -91,16 +102,20 @@ public abstract class LineImpl implements ILine {
 		}
 
 		@Override
-		public LineImpl increment(final ICounter instructions,
-				final ICounter branches) {
-			return getInstance(this.instructions.increment(instructions),
-					this.branches.increment(branches));
-		}
-
-		@Override
-		public void appendCoveredBranches(int oldBranchesTotalCount,
-				int newBranchesTotalCount, BitSet coveredBranches) {
-			throw new IllegalStateException();
+		public LineImpl increment(ICounter instructions, ICounter branches,
+				BitSet coveredBranches) {
+			final CounterImpl incrementedInstructions = this.instructions
+					.increment(instructions);
+			final CounterImpl incrementedBranches = this.branches
+					.increment(branches);
+			if (coveredBranches == null) {
+				// is not line of MethodCoverageImpl
+				return getInstance(incrementedInstructions,
+						incrementedBranches);
+			}
+			return new Var(CounterImpl.COUNTER_0_0, CounterImpl.COUNTER_0_0)
+					.increment(incrementedInstructions, incrementedBranches,
+							coveredBranches);
 		}
 	}
 
@@ -110,6 +125,7 @@ public abstract class LineImpl implements ILine {
 	/** branch counter */
 	protected CounterImpl branches;
 
+	/** bitmask of covered branches */
 	protected int coveredBranches;
 
 	private LineImpl(final CounterImpl instructions,
@@ -119,16 +135,28 @@ public abstract class LineImpl implements ILine {
 	}
 
 	/**
+	 * @deprecated used only in tests, use
+	 *             {@link #increment(ICounter, ICounter, BitSet)} instead
+	 */
+	@Deprecated
+	public final LineImpl increment(final ICounter instructions,
+			final ICounter branches) {
+		return increment(instructions, branches, null);
+	}
+
+	/**
 	 * Adds the given counters to this line.
 	 *
 	 * @param instructions
 	 *            instructions to add
 	 * @param branches
 	 *            branches to add
+	 * @param coveredBranches
+	 *            covered branches to add or {@code null}
 	 * @return instance with new counter values
 	 */
 	public abstract LineImpl increment(final ICounter instructions,
-			final ICounter branches);
+			final ICounter branches, final BitSet coveredBranches);
 
 	// === ILine implementation ===
 
@@ -154,29 +182,6 @@ public abstract class LineImpl implements ILine {
 			result.set(i, get(coveredBranches, i));
 		}
 		return result;
-	}
-
-	/**
-	 * This method must be called after {@link #increment(ICounter, ICounter)}.
-	 *
-	 * @param oldBranchesTotalCount
-	 *            total count of branches before
-	 *            {@link #increment(ICounter, ICounter)}
-	 * @param newBranchesTotalCount
-	 *            total count of branches after
-	 *            {@link #increment(ICounter, ICounter)}
-	 * @param coveredBranches
-	 *            to append
-	 */
-	public void appendCoveredBranches(final int oldBranchesTotalCount,
-			final int newBranchesTotalCount, final BitSet coveredBranches) {
-		final int size = newBranchesTotalCount - oldBranchesTotalCount;
-		for (int i = 0; i < size; i++) {
-			if (coveredBranches.get(i)) {
-				this.coveredBranches = set(this.coveredBranches,
-						i + oldBranchesTotalCount);
-			}
-		}
 	}
 
 	private static int set(final int bitSet, final int index) {

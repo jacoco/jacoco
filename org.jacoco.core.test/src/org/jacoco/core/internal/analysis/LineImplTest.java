@@ -15,6 +15,8 @@ package org.jacoco.core.internal.analysis;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 
+import java.util.BitSet;
+
 import org.jacoco.core.analysis.ICounter;
 import org.junit.Before;
 import org.junit.Test;
@@ -36,6 +38,23 @@ public class LineImplTest {
 		assertEquals(CounterImpl.COUNTER_0_0, line.getInstructionCounter());
 		assertEquals(CounterImpl.COUNTER_0_0, line.getBranchCounter());
 		assertEquals(ICounter.EMPTY, line.getStatus());
+		assertEquals("{}", line.getCoveredBranches().toString());
+	}
+
+	@Test
+	public void increment_should_append_coveredBranches() {
+		final BitSet coveredBranches = new BitSet();
+		coveredBranches.set(0, true);
+		coveredBranches.set(1, false);
+		line = line.increment(CounterImpl.getInstance(0, 1),
+				CounterImpl.getInstance(1, 1), coveredBranches);
+		assertEquals("{0}", line.getCoveredBranches().toString());
+
+		coveredBranches.set(0, false);
+		coveredBranches.set(1, true);
+		line = line.increment(CounterImpl.getInstance(0, 1),
+				CounterImpl.getInstance(1, 1), coveredBranches);
+		assertEquals("{0, 3}", line.getCoveredBranches().toString());
 	}
 
 	@Test

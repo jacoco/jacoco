@@ -44,26 +44,10 @@ public class MethodCoverageImpl extends SourceNodeImpl
 		this.signature = signature;
 	}
 
-	public void increment(final ICounter instructions, final ICounter branches,
-			final int line, final BitSet coveredBranches) {
-		final int oldBranchesTotalCount = getLine(line).branches
-				.getTotalCount();
-
-		increment(instructions, branches, line);
-
-		final LineImpl newLine = getLine(line);
-		final int newBranchesTotalCount = newLine.getBranchCounter()
-				.getTotalCount();
-		if (newBranchesTotalCount > 0) {
-			newLine.appendCoveredBranches(oldBranchesTotalCount,
-					newBranchesTotalCount, coveredBranches);
-		}
-	}
-
 	@Override
 	public void increment(final ICounter instructions, final ICounter branches,
-			final int line) {
-		super.increment(instructions, branches, line);
+			final int line, final BitSet coveredBranches) {
+		super.increment(instructions, branches, line, coveredBranches);
 		// Additionally increment complexity counter:
 		if (branches.getTotalCount() > 1) {
 			final int c = Math.max(0, branches.getCoveredCount() - 1);

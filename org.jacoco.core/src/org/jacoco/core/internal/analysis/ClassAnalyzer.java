@@ -171,7 +171,7 @@ public class ClassAnalyzer extends ClassProbesVisitor
 					final int originalLine = mapping.inputStartLine()
 							+ instruction.getLine() - mapping.outputStartLine();
 					fragment.increment(instruction.getInstructionCounter(),
-							CounterImpl.COUNTER_0_0, originalLine);
+							CounterImpl.COUNTER_0_0, originalLine, null);
 				}
 			}
 		}
