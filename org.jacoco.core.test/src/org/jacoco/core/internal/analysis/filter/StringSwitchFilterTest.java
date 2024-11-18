@@ -269,6 +269,198 @@ public class StringSwitchFilterTest extends FilterTestBase {
 				expectedNewTargets);
 	}
 
+	/**
+	 * <pre>
+	 * fun example(s: String?) = when (s) {
+	 *     "a" -> "case a"
+	 *     "b" -> "case b"
+	 *     "c" -> "case c"
+	 *     else -> "else"
+	 * }
+	 * </pre>
+	 */
+	@Test
+	public void should_filter_Kotlin_nullable_else() {
+		final Range range = new Range();
+		final Set<AbstractInsnNode> expectedNewTargets = new HashSet<AbstractInsnNode>();
+
+		final MethodNode m = new MethodNode(InstrSupport.ASM_API_VERSION, 0,
+				"example", "(Ljava/lang/String;)Ljava/lang/String;", null,
+				null);
+		final Label hashA = new Label();
+		final Label hashB = new Label();
+		final Label hashC = new Label();
+		final Label caseA = new Label();
+		final Label caseB = new Label();
+		final Label caseC = new Label();
+		final Label caseElse = new Label();
+		final Label end = new Label();
+
+		m.visitVarInsn(Opcodes.ALOAD, 1);
+		m.visitVarInsn(Opcodes.ASTORE, 2);
+		m.visitVarInsn(Opcodes.ALOAD, 2);
+		range.fromInclusive = m.instructions.getLast();
+		m.visitJumpInsn(Opcodes.IFNULL, caseElse);
+		m.visitVarInsn(Opcodes.ALOAD, 2);
+		m.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "java/lang/String", "hashCode",
+				"()I", false);
+		m.visitTableSwitchInsn(97, 99, caseElse,
+				new Label[] { hashA, hashB, hashC });
+
+		m.visitLabel(hashA);
+		m.visitVarInsn(Opcodes.ALOAD, 2);
+		m.visitLdcInsn("a");
+		m.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "java/lang/String", "equals",
+				"(Ljava/lang/Object;)Z", false);
+		m.visitJumpInsn(Opcodes.IFNE, caseA);
+		m.visitJumpInsn(Opcodes.GOTO, caseElse);
+
+		m.visitLabel(hashB);
+		m.visitVarInsn(Opcodes.ALOAD, 2);
+		m.visitLdcInsn("b");
+		m.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "java/lang/String", "equals",
+				"(Ljava/lang/Object;)Z", false);
+		m.visitJumpInsn(Opcodes.IFNE, caseB);
+		m.visitJumpInsn(Opcodes.GOTO, caseElse);
+
+		m.visitLabel(hashC);
+		m.visitVarInsn(Opcodes.ALOAD, 2);
+		m.visitLdcInsn("c");
+		m.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "java/lang/String", "equals",
+				"(Ljava/lang/Object;)Z", false);
+		m.visitJumpInsn(Opcodes.IFNE, caseC);
+		m.visitJumpInsn(Opcodes.GOTO, caseElse);
+		range.toInclusive = m.instructions.getLast();
+
+		m.visitLabel(caseA);
+		m.visitLdcInsn("case a");
+		expectedNewTargets.add(m.instructions.getLast());
+		m.visitJumpInsn(Opcodes.GOTO, end);
+
+		m.visitLabel(caseB);
+		m.visitLdcInsn("case b");
+		expectedNewTargets.add(m.instructions.getLast());
+		m.visitJumpInsn(Opcodes.GOTO, end);
+
+		m.visitLabel(caseC);
+		m.visitLdcInsn("case c");
+		expectedNewTargets.add(m.instructions.getLast());
+		m.visitJumpInsn(Opcodes.GOTO, end);
+
+		m.visitLabel(caseElse);
+		m.visitLdcInsn("else");
+		expectedNewTargets.add(m.instructions.getLast());
+
+		m.visitLabel(end);
+		m.visitInsn(Opcodes.ARETURN);
+
+		filter.filter(m, context, output);
+
+		assertIgnored(range);
+		assertReplacedBranches(range.fromInclusive.getPrevious(),
+				expectedNewTargets);
+	}
+
+	/**
+	 * <pre>
+	 * fun example(s: String?) = when (s) {
+	 *     "a" -> "case a"
+	 *     "b" -> "case b"
+	 *     "c" -> "case c"
+	 *     null -> "null"
+	 *     else -> "else"
+	 * }
+	 * </pre>
+	 */
+	@Test
+	public void should_filter_Kotlin_nullable_case() {
+		final Range range = new Range();
+		final Set<AbstractInsnNode> expectedNewTargets = new HashSet<AbstractInsnNode>();
+
+		final MethodNode m = new MethodNode(InstrSupport.ASM_API_VERSION, 0,
+				"example", "(Ljava/lang/String;)Ljava/lang/String;", null,
+				null);
+		final Label hashA = new Label();
+		final Label hashB = new Label();
+		final Label hashC = new Label();
+		final Label caseA = new Label();
+		final Label caseB = new Label();
+		final Label caseC = new Label();
+		final Label caseNull = new Label();
+		final Label caseElse = new Label();
+		final Label end = new Label();
+
+		m.visitVarInsn(Opcodes.ALOAD, 1);
+		m.visitVarInsn(Opcodes.ASTORE, 2);
+		m.visitVarInsn(Opcodes.ALOAD, 2);
+		range.fromInclusive = m.instructions.getLast();
+		m.visitInsn(Opcodes.DUP);
+		m.visitJumpInsn(Opcodes.IFNULL, caseNull);
+		m.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "java/lang/String", "hashCode",
+				"()I", false);
+		m.visitTableSwitchInsn(97, 99, caseElse,
+				new Label[] { hashA, hashB, hashC });
+
+		m.visitLabel(hashA);
+		m.visitVarInsn(Opcodes.ALOAD, 2);
+		m.visitLdcInsn("a");
+		m.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "java/lang/String", "equals",
+				"(Ljava/lang/Object;)Z", false);
+		m.visitJumpInsn(Opcodes.IFNE, caseA);
+		m.visitJumpInsn(Opcodes.GOTO, caseElse);
+
+		m.visitLabel(hashB);
+		m.visitVarInsn(Opcodes.ALOAD, 2);
+		m.visitLdcInsn("b");
+		m.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "java/lang/String", "equals",
+				"(Ljava/lang/Object;)Z", false);
+		m.visitJumpInsn(Opcodes.IFNE, caseB);
+		m.visitJumpInsn(Opcodes.GOTO, caseElse);
+
+		m.visitLabel(hashC);
+		m.visitVarInsn(Opcodes.ALOAD, 2);
+		m.visitLdcInsn("c");
+		m.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "java/lang/String", "equals",
+				"(Ljava/lang/Object;)Z", false);
+		m.visitJumpInsn(Opcodes.IFNE, caseC);
+		m.visitJumpInsn(Opcodes.GOTO, caseElse);
+		range.toInclusive = m.instructions.getLast();
+
+		m.visitLabel(caseA);
+		m.visitLdcInsn("case a");
+		expectedNewTargets.add(m.instructions.getLast());
+		m.visitJumpInsn(Opcodes.GOTO, end);
+
+		m.visitLabel(caseB);
+		m.visitLdcInsn("case b");
+		expectedNewTargets.add(m.instructions.getLast());
+		m.visitJumpInsn(Opcodes.GOTO, end);
+
+		m.visitLabel(caseC);
+		m.visitLdcInsn("case c");
+		expectedNewTargets.add(m.instructions.getLast());
+		m.visitJumpInsn(Opcodes.GOTO, end);
+
+		m.visitLabel(caseNull);
+		m.visitInsn(Opcodes.POP);
+		expectedNewTargets.add(m.instructions.getLast());
+		m.visitLdcInsn("null");
+		m.visitJumpInsn(Opcodes.GOTO, end);
+
+		m.visitLabel(caseElse);
+		m.visitLdcInsn("else");
+		expectedNewTargets.add(m.instructions.getLast());
+
+		m.visitLabel(end);
+		m.visitInsn(Opcodes.ARETURN);
+
+		filter.filter(m, context, output);
+
+		assertIgnored(range);
+		assertReplacedBranches(range.fromInclusive.getPrevious(),
+				expectedNewTargets);
+	}
+
 	@Test
 	public void should_not_filter_empty_lookup_switch() {
 		final MethodNode m = new MethodNode(InstrSupport.ASM_API_VERSION, 0,
