@@ -157,7 +157,7 @@ public class XMLElement {
 	}
 
 	/**
-	 * Adds an attribute to this element. May only be called before an child
+	 * Adds an attribute to this element. May only be called before a child
 	 * element is added or this element has been closed. The attribute value
 	 * will be quoted. If the value is <code>null</code> the attribute will not
 	 * be added.
@@ -188,7 +188,7 @@ public class XMLElement {
 	}
 
 	/**
-	 * Adds an attribute to this element. May only be called before an child
+	 * Adds an attribute to this element. May only be called before a child
 	 * element is added or this element has been closed. The attribute value is
 	 * the decimal representation of the given int value.
 	 *
@@ -206,7 +206,7 @@ public class XMLElement {
 	}
 
 	/**
-	 * Adds an attribute to this element. May only be called before an child
+	 * Adds an attribute to this element. May only be called before a child
 	 * element is added or this element has been closed. The attribute value is
 	 * the decimal representation of the given long value.
 	 *
