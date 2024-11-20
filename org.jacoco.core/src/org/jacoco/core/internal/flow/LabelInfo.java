@@ -119,7 +119,7 @@ public final class LabelInfo {
 	}
 
 	/**
-	 * Checks whether the a given label has been marked as a line with method
+	 * Checks whether the given label has been marked as a line with method
 	 * invocations.
 	 *
 	 * @param label
