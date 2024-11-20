@@ -28,7 +28,7 @@ public class ClassInstrumenter extends ClassProbesVisitor {
 	private String className;
 
 	/**
-	 * Emits a instrumented version of this class to the given class visitor.
+	 * Emits an instrumented version of this class to the given class visitor.
 	 *
 	 * @param probeArrayStrategy
 	 *            this strategy will be used to access the probe array
