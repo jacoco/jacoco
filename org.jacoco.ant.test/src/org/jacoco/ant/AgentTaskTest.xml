@@ -13,6 +13,7 @@
 -->
 
 <project name="JaCoCo Agent Task Tests" xmlns:au="antlib:org.apache.ant.antunit" xmlns:jacoco="antlib:org.jacoco.ant">
+	<taskdef name="urlencode" classname="org.jacoco.ant.task.URLEncodeTask"/>
 
 	<target name="testCoverageAgent">
 		<jacoco:agent property="jacocoagent" append="false" destfile="test.exec"
@@ -24,7 +25,7 @@
 		<au:assertPropertySet name="jacocoagent"/>
 		<au:assertPropertyContains name="jacocoagent" value="-javaagent:"/>
 		<au:assertPropertyContains name="jacocoagent" value="append=false"/>
-		<property name="exec.file" location="test.exec"/>
+		<urlencode name="exec.file" location="test.exec" encoding="UTF-8"/>
 		<au:assertPropertyContains name="jacocoagent" value="destfile=${exec.file}"/>
 		<au:assertPropertyContains name="jacocoagent" value="exclclassloader=EvilClassLoader"/>
 		<au:assertPropertyContains name="jacocoagent" value="includes=org.example.*"/>
@@ -37,7 +38,34 @@
 		<au:assertPropertyContains name="jacocoagent" value="address=remotehost"/>
 		<au:assertPropertyContains name="jacocoagent" value="port=1234"/>
 		<au:assertPropertyContains name="jacocoagent" value="jmx=true"/>
-		<property name="dump.dir" location="target/dump"/>
+		<urlencode name="dump.dir" location="target/dump" encoding="UTF-8"/>
+		<au:assertPropertyContains name="jacocoagent" value="classdumpdir=${dump.dir}"/>
+	</target>
+
+	<target name="testCoverageAgentDiacritics">
+		<jacoco:agent property="jacocoagent" append="false" destfile="test-šmíd.exec"
+			exclClassLoader="EvilClassLoader" includes="org.example.*" excludes="*Test"
+			inclbootstrapclasses="true" inclnolocationclasses="true"
+		    sessionid="testid" dumponexit="false"
+			output="file" address="remotehost" port="1234" jmx="true"
+			classdumpdir="target/dump-šmíd"/>
+		<au:assertPropertySet name="jacocoagent"/>
+		<au:assertPropertyContains name="jacocoagent" value="-javaagent:"/>
+		<au:assertPropertyContains name="jacocoagent" value="append=false"/>
+		<urlencode name="exec.file" location="test-šmíd.exec" encoding="UTF-8"/>
+		<au:assertPropertyContains name="jacocoagent" value="destfile=${exec.file}"/>
+		<au:assertPropertyContains name="jacocoagent" value="exclclassloader=EvilClassLoader"/>
+		<au:assertPropertyContains name="jacocoagent" value="includes=org.example.*"/>
+		<au:assertPropertyContains name="jacocoagent" value="excludes=*Test"/>
+		<au:assertPropertyContains name="jacocoagent" value="inclbootstrapclasses=true"/>
+		<au:assertPropertyContains name="jacocoagent" value="inclnolocationclasses=true"/>
+		<au:assertPropertyContains name="jacocoagent" value="sessionid=testid"/>
+		<au:assertPropertyContains name="jacocoagent" value="dumponexit=false"/>
+		<au:assertPropertyContains name="jacocoagent" value="output=file"/>
+		<au:assertPropertyContains name="jacocoagent" value="address=remotehost"/>
+		<au:assertPropertyContains name="jacocoagent" value="port=1234"/>
+		<au:assertPropertyContains name="jacocoagent" value="jmx=true"/>
+		<urlencode name="dump.dir" location="target/dump-šmíd" encoding="UTF-8"/>
 		<au:assertPropertyContains name="jacocoagent" value="classdumpdir=${dump.dir}"/>
 	</target>
 
