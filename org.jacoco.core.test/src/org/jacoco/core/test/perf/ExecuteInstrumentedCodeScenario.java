@@ -22,7 +22,7 @@ import org.jacoco.core.test.TargetLoader;
 
 /**
  * This scenario runs a given scenario twice and reports the execution time:
- * Once on its original version, once in a instrumented version.
+ * Once on its original version, once in an instrumented version.
  */
 public class ExecuteInstrumentedCodeScenario extends TimedScenario {
 

@@ -54,7 +54,7 @@ public class SessionsPage extends ReportPage {
 	private final ElementIndex index;
 
 	/**
-	 * Creates a new page page to display session information.
+	 * Creates a new page to display session information.
 	 *
 	 * @param sessionInfos
 	 *            session info objects
