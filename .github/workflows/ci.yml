@@ -52,7 +52,6 @@ jobs:
       - name: 'Build'
         run: |
           ./mvnw -V -B -e --no-transfer-progress \
-            -Dsurefire.runOrder=reversealphabetical \
             verify -Djdk.version=${{ matrix.jdk }} -Dbytecode.version=${{ matrix.jdk }} \
             ${{ matrix.ecj && '-Decj' || ''}} \
             --toolchains=toolchains.xml
