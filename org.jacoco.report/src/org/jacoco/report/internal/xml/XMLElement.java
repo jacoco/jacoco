@@ -246,7 +246,7 @@ public class XMLElement {
 
 	/**
 	 * Creates a new child element for this element. Might be overridden in
-	 * subclasses to return a instance of the subclass.
+	 * subclasses to return an instance of the subclass.
 	 *
 	 * @param name
 	 *            name of the child element
