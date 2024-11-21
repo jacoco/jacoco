@@ -32,7 +32,8 @@ public class SecurityManagerTest {
 					"src/org/jacoco/ant/SecurityManagerTest.xml");
 			return new AntUnitSuite(file, SecurityManagerTest.class);
 		}
-		// No SecurityManager any more in Java 24
+		// Ability to enable Security Manager was removed in Java 24
+		// https://openjdk.org/jeps/486
 		final File file = new File("src/org/jacoco/ant/empty.xml");
 		return new AntUnitSuite(file, SecurityManagerTest.class);
 	}
