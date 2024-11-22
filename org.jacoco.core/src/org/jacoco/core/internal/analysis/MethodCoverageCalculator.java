@@ -25,9 +25,9 @@ import org.jacoco.core.internal.analysis.filter.IFilterOutput;
 import org.objectweb.asm.tree.AbstractInsnNode;
 
 /**
- * Calculates the filtered coverage of a single method. A instance of this class
- * can be first used as {@link IFilterOutput} before the coverage result is
- * calculated.
+ * Calculates the filtered coverage of a single method. An instance of this
+ * class can be first used as {@link IFilterOutput} before the coverage result
+ * is calculated.
  */
 class MethodCoverageCalculator implements IFilterOutput {
 
