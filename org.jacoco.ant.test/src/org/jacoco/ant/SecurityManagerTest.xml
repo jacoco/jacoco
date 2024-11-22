@@ -27,7 +27,7 @@
 	<target name="testJaCoCoWithSecurityManager">
 		<jacoco:coverage destfile="${exec.file}">
 			<java classname="org.jacoco.ant.TestTarget" fork="true" failonerror="true">
-				<classpath path="${org.jacoco.ant.coverageTaskTest.classes.dir}"/>
+				<classpath path="${org.jacoco.ant.securityManagerTest.classes.dir}"/>
 				<jvmarg value="-Djacoco.agent=${_jacoco.agentFile}"/>
 				<jvmarg value="-Djacoco.exec=${exec.file}"/>
 				<jvmarg value="-Djava.security.manager"/>
