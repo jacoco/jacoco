@@ -20,8 +20,8 @@ import java.io.OutputStreamWriter;
 import java.io.Writer;
 
 /**
- * Simple API to create well formed XML streams with minimal memory overhead. A
- * {@link XMLElement} instance represents a single element in a XML document.
+ * Simple API to create well formed XML streams with minimal memory overhead. An
+ * {@link XMLElement} instance represents a single element in an XML document.
  * {@link XMLElement} can be used directly or might be subclassed for schema
  * specific convenience methods.
  */
@@ -60,7 +60,7 @@ public class XMLElement {
 	}
 
 	/**
-	 * Creates a root element of a XML document.
+	 * Creates a root element of an XML document.
 	 *
 	 * @param name
 	 *            element name
@@ -95,7 +95,7 @@ public class XMLElement {
 	}
 
 	/**
-	 * Creates a new child element within a XML document. May only be called
+	 * Creates a new child element within an XML document. May only be called
 	 * before the parent element has been closed.
 	 *
 	 * @param name
