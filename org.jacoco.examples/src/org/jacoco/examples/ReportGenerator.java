@@ -25,7 +25,7 @@ import org.jacoco.report.IReportVisitor;
 import org.jacoco.report.html.HTMLFormatter;
 
 /**
- * This example creates a HTML report for eclipse like projects based on a
+ * This example creates an HTML report for eclipse like projects based on a
  * single execution data store called jacoco.exec. The report contains no
  * grouping information.
  *
