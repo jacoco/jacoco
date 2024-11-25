@@ -26,6 +26,10 @@ import java.util.regex.Pattern;
  */
 public final class KotlinSMAP {
 
+	/**
+	 * Parsed representation of a single LineSection from SourceDebugExtension
+	 * attribute.
+	 */
 	public static final class Mapping {
 		private final String inputClassName;
 		private final int inputStartLine;
