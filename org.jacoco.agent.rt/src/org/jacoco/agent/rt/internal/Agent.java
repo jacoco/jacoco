@@ -64,7 +64,7 @@ public class Agent implements IAgent {
 	}
 
 	/**
-	 * Returns a global instance which is already started. If a agent has not
+	 * Returns a global instance which is already started. If an agent has not
 	 * been initialized before this method will fail.
 	 *
 	 * @return global instance

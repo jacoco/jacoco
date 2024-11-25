@@ -610,7 +610,7 @@ public final class AgentOptions {
 
 	/**
 	 * Generate required quotes JVM argument based on current configuration and
-	 * prepends it to the given argument command line. If a agent with the same
+	 * prepends it to the given argument command line. If an agent with the same
 	 * JAR file is already specified this parameter is removed from the existing
 	 * command line.
 	 *
