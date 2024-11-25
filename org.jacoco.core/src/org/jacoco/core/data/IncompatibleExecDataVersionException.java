@@ -21,6 +21,9 @@ public class IncompatibleExecDataVersionException extends IOException {
 
 	private static final long serialVersionUID = 1L;
 
+	/**
+	 * Actual version found in the execution data.
+	 */
 	private final int actualVersion;
 
 	/**

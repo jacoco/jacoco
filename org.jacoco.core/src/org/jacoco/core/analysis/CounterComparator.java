@@ -56,7 +56,14 @@ public class CounterComparator implements Comparator<ICounter>, Serializable {
 	public static final CounterComparator MISSEDRATIO = new CounterComparator(
 			CounterValue.MISSEDRATIO);
 
+	/**
+	 * Counter value to sort on.
+	 */
 	private final CounterValue value;
+
+	/**
+	 * Specifies whether values are sorted in reverse order or not.
+	 */
 	private final boolean reverse;
 
 	private CounterComparator(final CounterValue value) {

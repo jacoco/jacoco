@@ -24,6 +24,15 @@ public class KotlinGeneratedFilter implements IFilter {
 
 	static final String KOTLIN_METADATA_DESC = "Lkotlin/Metadata;";
 
+	/**
+	 * Checks whether the class corresponding to the given context has
+	 * <code>kotlin/Metadata</code> annotation.
+	 *
+	 * @param context
+	 *            context information
+	 * @return <code>true</code> if the class corresponding to the given context
+	 *         has <code>kotlin/Metadata</code> annotation
+	 */
 	public static boolean isKotlinClass(final IFilterContext context) {
 		return context.getClassAnnotations().contains(KOTLIN_METADATA_DESC);
 	}
