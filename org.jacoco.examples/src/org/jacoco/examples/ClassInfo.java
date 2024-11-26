@@ -47,7 +47,7 @@ public final class ClassInfo implements ICoverageVisitor {
 	 * @param args
 	 *            command line parameters
 	 * @throws IOException
-	 *             in case of error reading a input file
+	 *             in case of error reading an input file
 	 */
 	public void execute(final String[] args) throws IOException {
 		for (final String file : args) {

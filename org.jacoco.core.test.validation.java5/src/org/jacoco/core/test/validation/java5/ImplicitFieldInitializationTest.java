@@ -16,7 +16,7 @@ import org.jacoco.core.test.validation.ValidationTestBase;
 import org.jacoco.core.test.validation.java5.targets.ImplicitFieldInitializationTarget;
 
 /**
- * Test of a implicit field initialization.
+ * Test of an implicit field initialization.
  */
 public class ImplicitFieldInitializationTest extends ValidationTestBase {
 

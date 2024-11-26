@@ -63,7 +63,7 @@ public final class CoreTutorial {
 		private final Map<String, byte[]> definitions = new HashMap<String, byte[]>();
 
 		/**
-		 * Add a in-memory representation of a class.
+		 * Add an in-memory representation of a class.
 		 *
 		 * @param name
 		 *            name of the class

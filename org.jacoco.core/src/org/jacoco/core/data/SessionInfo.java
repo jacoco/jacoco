@@ -26,7 +26,7 @@ public class SessionInfo implements Comparable<SessionInfo> {
 	private final long dump;
 
 	/**
-	 * Create a immutable session info with the given data.
+	 * Create an immutable session info with the given data.
 	 *
 	 * @param id
 	 *            arbitrary session identifier, must not be <code>null</code>

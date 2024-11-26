@@ -18,7 +18,7 @@ import java.util.Comparator;
 import java.util.List;
 
 /**
- * A index on a list of items sorted with a given {@link Comparator}. The index
+ * An index on a list of items sorted with a given {@link Comparator}. The index
  * does not change the list itself.
  *
  * @param <T>
@@ -87,7 +87,7 @@ final class SortIndex<T> {
 	 * items list provided to the init() method.
 	 *
 	 * @param idx
-	 *            index of a element of the list
+	 *            index of an element of the list
 	 * @return its position in a sorted list
 	 */
 	public int getPosition(final int idx) {

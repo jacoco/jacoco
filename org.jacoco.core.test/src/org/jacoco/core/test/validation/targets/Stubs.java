@@ -151,7 +151,7 @@ public class Stubs {
 	private static List<String> events = new ArrayList<String>();
 
 	/**
-	 * Records a event with the given id for later verification.
+	 * Records an event with the given id for later verification.
 	 */
 	public static void logEvent(String id) {
 		events.add(id);
