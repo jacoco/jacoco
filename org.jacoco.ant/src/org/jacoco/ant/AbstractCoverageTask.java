@@ -43,6 +43,8 @@ public class AbstractCoverageTask extends Task {
 	}
 
 	/**
+	 * Returns whether or not the current task is enabled.
+	 *
 	 * @return Whether or not the current task is enabled
 	 */
 	public boolean isEnabled() {

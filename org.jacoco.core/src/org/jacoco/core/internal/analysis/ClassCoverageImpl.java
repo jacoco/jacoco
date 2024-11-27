@@ -113,6 +113,8 @@ public class ClassCoverageImpl extends SourceNodeImpl
 	}
 
 	/**
+	 * Returns fragments stored in this class.
+	 *
 	 * @return fragments stored in this class
 	 */
 	public Collection<SourceNodeImpl> getFragments() {
