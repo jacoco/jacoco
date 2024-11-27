@@ -31,8 +31,14 @@ public class NodeComparator implements Comparator<ICoverageNode>, Serializable {
 
 	private static final long serialVersionUID = 8550521643608826519L;
 
+	/**
+	 * Comparator to compare {@link ICounter} objects.
+	 */
 	private final Comparator<ICounter> counterComparator;
 
+	/**
+	 * Counter entity to sort on.
+	 */
 	private final CounterEntity entity;
 
 	NodeComparator(final Comparator<ICounter> counterComparator,

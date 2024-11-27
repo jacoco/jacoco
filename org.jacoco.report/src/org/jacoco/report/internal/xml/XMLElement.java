@@ -20,8 +20,8 @@ import java.io.OutputStreamWriter;
 import java.io.Writer;
 
 /**
- * Simple API to create well formed XML streams with minimal memory overhead. A
- * {@link XMLElement} instance represents a single element in a XML document.
+ * Simple API to create well formed XML streams with minimal memory overhead. An
+ * {@link XMLElement} instance represents a single element in an XML document.
  * {@link XMLElement} can be used directly or might be subclassed for schema
  * specific convenience methods.
  */
@@ -60,7 +60,7 @@ public class XMLElement {
 	}
 
 	/**
-	 * Creates a root element of a XML document.
+	 * Creates a root element of an XML document.
 	 *
 	 * @param name
 	 *            element name
@@ -95,7 +95,7 @@ public class XMLElement {
 	}
 
 	/**
-	 * Creates a new child element within a XML document. May only be called
+	 * Creates a new child element within an XML document. May only be called
 	 * before the parent element has been closed.
 	 *
 	 * @param name
@@ -157,7 +157,7 @@ public class XMLElement {
 	}
 
 	/**
-	 * Adds an attribute to this element. May only be called before an child
+	 * Adds an attribute to this element. May only be called before a child
 	 * element is added or this element has been closed. The attribute value
 	 * will be quoted. If the value is <code>null</code> the attribute will not
 	 * be added.
@@ -188,7 +188,7 @@ public class XMLElement {
 	}
 
 	/**
-	 * Adds an attribute to this element. May only be called before an child
+	 * Adds an attribute to this element. May only be called before a child
 	 * element is added or this element has been closed. The attribute value is
 	 * the decimal representation of the given int value.
 	 *
@@ -206,7 +206,7 @@ public class XMLElement {
 	}
 
 	/**
-	 * Adds an attribute to this element. May only be called before an child
+	 * Adds an attribute to this element. May only be called before a child
 	 * element is added or this element has been closed. The attribute value is
 	 * the decimal representation of the given long value.
 	 *
@@ -246,7 +246,7 @@ public class XMLElement {
 
 	/**
 	 * Creates a new child element for this element. Might be overridden in
-	 * subclasses to return a instance of the subclass.
+	 * subclasses to return an instance of the subclass.
 	 *
 	 * @param name
 	 *            name of the child element

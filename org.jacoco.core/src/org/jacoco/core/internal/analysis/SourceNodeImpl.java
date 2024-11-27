@@ -42,6 +42,8 @@ public class SourceNodeImpl extends CoverageNodeImpl implements ISourceNode {
 	}
 
 	/**
+	 * @param fragment
+	 *            fragment to apply
 	 * @return <code>true</code> if fragment contains lines of this node
 	 */
 	public boolean applyFragment(final SourceNodeImpl fragment) {

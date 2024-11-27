@@ -17,6 +17,7 @@ import static org.junit.Assert.assertTrue;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -43,6 +44,10 @@ import org.jacoco.report.html.HTMLFormatter;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runners.model.MultipleFailureException;
+import org.objectweb.asm.ClassReader;
+import org.objectweb.asm.util.ASMifier;
+import org.objectweb.asm.util.Textifier;
+import org.objectweb.asm.util.TraceClassVisitor;
 
 /**
  * Base class for validation tests. It executes the given class under code
@@ -107,6 +112,23 @@ public abstract class ValidationTestBase {
 		final byte[] bytes = TargetLoader
 				.getClassDataAsBytes(target.getClassLoader(), data.getName());
 		analyzer.analyzeClass(bytes, data.getName());
+		saveBytecodeRepresentations(bytes, data.getName());
+	}
+
+	private void saveBytecodeRepresentations(final byte[] classBytes,
+			final String className) throws IOException {
+		final File outputDir = new File("target/asm/" + target.getSimpleName());
+		outputDir.mkdirs();
+		final String fileName = className.replace('/', '.');
+		final PrintWriter textWriter = new PrintWriter(
+				new File(outputDir, fileName + ".txt"));
+		final PrintWriter asmWriter = new PrintWriter(
+				new File(outputDir, fileName + ".java"));
+		new ClassReader(classBytes).accept(new TraceClassVisitor(
+				new TraceClassVisitor(null, new Textifier(), textWriter),
+				new ASMifier(), asmWriter), 0);
+		textWriter.close();
+		asmWriter.close();
 	}
 
 	/**

@@ -32,7 +32,7 @@ public class ReportElement extends XMLElement {
 	private static final String SYSTEM = "report.dtd";
 
 	/**
-	 * Creates a <code>report</code> root element for a XML report.
+	 * Creates a <code>report</code> root element for an XML report.
 	 *
 	 * @param name
 	 *            value for the name attribute
