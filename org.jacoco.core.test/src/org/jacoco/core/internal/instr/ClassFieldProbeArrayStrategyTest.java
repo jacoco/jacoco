@@ -87,9 +87,9 @@ public class ClassFieldProbeArrayStrategyTest {
 			}
 			expected.visitLabel(label);
 			expected.visitInsn(Opcodes.ARETURN);
-			final MethodRecorder actualMethod = new MethodRecorder();
-			m.instructions.accept(actualMethod.getVisitor());
-			assertEquals(expectedMethod, actualMethod);
+			expected.visitMaxs(2, 0);
+
+			assertEquals(expectedMethod, MethodRecorder.from(m));
 		}
 	}
 
