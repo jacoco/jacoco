@@ -12,6 +12,8 @@
  *******************************************************************************/
 package org.jacoco.core.internal.analysis;
 
+import java.util.BitSet;
+
 import org.jacoco.core.analysis.ICounter;
 import org.jacoco.core.analysis.ILine;
 
@@ -72,9 +74,20 @@ public abstract class LineImpl implements ILine {
 
 		@Override
 		public LineImpl increment(final ICounter instructions,
-				final ICounter branches) {
+				final ICounter branches, final BitSet coveredBranches) {
+			final int currentBranchesTotalCount = this.branches.getTotalCount();
 			this.instructions = this.instructions.increment(instructions);
 			this.branches = this.branches.increment(branches);
+			if (coveredBranches == null) {
+				// is not line of MethodCoverageImpl
+				return this;
+			}
+			for (int i = 0; i < branches.getTotalCount(); i++) {
+				if (coveredBranches.get(i)) {
+					this.coveredBranches = set(this.coveredBranches,
+							currentBranchesTotalCount + i);
+				}
+			}
 			return this;
 		}
 	}
@@ -89,10 +102,20 @@ public abstract class LineImpl implements ILine {
 		}
 
 		@Override
-		public LineImpl increment(final ICounter instructions,
-				final ICounter branches) {
-			return getInstance(this.instructions.increment(instructions),
-					this.branches.increment(branches));
+		public LineImpl increment(ICounter instructions, ICounter branches,
+				BitSet coveredBranches) {
+			final CounterImpl incrementedInstructions = this.instructions
+					.increment(instructions);
+			final CounterImpl incrementedBranches = this.branches
+					.increment(branches);
+			if (coveredBranches == null) {
+				// is not line of MethodCoverageImpl
+				return getInstance(incrementedInstructions,
+						incrementedBranches);
+			}
+			return new Var(CounterImpl.COUNTER_0_0, CounterImpl.COUNTER_0_0)
+					.increment(incrementedInstructions, incrementedBranches,
+							coveredBranches);
 		}
 	}
 
@@ -102,10 +125,23 @@ public abstract class LineImpl implements ILine {
 	/** branch counter */
 	protected CounterImpl branches;
 
+	/** bitmask of covered branches */
+	protected int coveredBranches;
+
 	private LineImpl(final CounterImpl instructions,
 			final CounterImpl branches) {
 		this.instructions = instructions;
 		this.branches = branches;
+	}
+
+	/**
+	 * @deprecated used only in tests, use
+	 *             {@link #increment(ICounter, ICounter, BitSet)} instead
+	 */
+	@Deprecated
+	public final LineImpl increment(final ICounter instructions,
+			final ICounter branches) {
+		return increment(instructions, branches, null);
 	}
 
 	/**
@@ -115,10 +151,12 @@ public abstract class LineImpl implements ILine {
 	 *            instructions to add
 	 * @param branches
 	 *            branches to add
+	 * @param coveredBranches
+	 *            covered branches to add or {@code null}
 	 * @return instance with new counter values
 	 */
 	public abstract LineImpl increment(final ICounter instructions,
-			final ICounter branches);
+			final ICounter branches, final BitSet coveredBranches);
 
 	// === ILine implementation ===
 
@@ -132,6 +170,32 @@ public abstract class LineImpl implements ILine {
 
 	public ICounter getBranchCounter() {
 		return branches;
+	}
+
+	/**
+	 * @return covered branches in the order of bytecode traversal
+	 */
+	public final BitSet getCoveredBranches() {
+		final int size = Math.min(branches.getTotalCount(), 31);
+		final BitSet result = new BitSet(size);
+		for (int i = 0; i < size; i++) {
+			result.set(i, get(coveredBranches, i));
+		}
+		return result;
+	}
+
+	private static int set(final int bitSet, final int index) {
+		if (index > 31) {
+			return bitSet;
+		}
+		return bitSet | (1 << index);
+	}
+
+	private static boolean get(final int bitSet, final int index) {
+		if (index > 31) {
+			return false;
+		}
+		return (bitSet & (1 << index)) != 0;
 	}
 
 	@Override
