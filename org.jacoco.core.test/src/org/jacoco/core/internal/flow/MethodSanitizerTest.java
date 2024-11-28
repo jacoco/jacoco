@@ -140,12 +140,8 @@ public class MethodSanitizerTest {
 	}
 
 	private void assertOutput() {
-		assertEquals(dump(expected), dump(actual));
+		assertEquals(MethodRecorder.from(expected),
+				MethodRecorder.from(actual));
 	}
 
-	private MethodRecorder dump(MethodNode node) {
-		MethodRecorder rec = new MethodRecorder();
-		node.accept(rec.getVisitor());
-		return rec;
-	}
 }
