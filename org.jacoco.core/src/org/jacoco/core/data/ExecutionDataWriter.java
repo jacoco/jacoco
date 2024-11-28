@@ -117,7 +117,7 @@ public class ExecutionDataWriter
 	 *
 	 * @return first bytes of an execution data file
 	 */
-	public static final byte[] getFileHeader() {
+	public static byte[] getFileHeader() {
 		final ByteArrayOutputStream buffer = new ByteArrayOutputStream();
 		try {
 			new ExecutionDataWriter(buffer);
