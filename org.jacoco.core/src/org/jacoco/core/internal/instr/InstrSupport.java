@@ -220,7 +220,7 @@ public final class InstrSupport {
 	}
 
 	/**
-	 * Ensures that the given member does not correspond to a internal member
+	 * Ensures that the given member does not correspond to an internal member
 	 * created by the instrumentation process. This would mean that the class is
 	 * already instrumented.
 	 *

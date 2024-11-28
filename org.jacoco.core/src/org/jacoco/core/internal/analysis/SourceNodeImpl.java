@@ -138,7 +138,7 @@ public class SourceNodeImpl extends CoverageNodeImpl implements ISourceNode {
 	}
 
 	/**
-	 * Increments instructions and branches by the given counter values. If a
+	 * Increments instructions and branches by the given counter values. If an
 	 * optional line number is specified the instructions and branches are added
 	 * to the given line. The line counter is incremented accordingly.
 	 *

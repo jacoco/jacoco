@@ -15,7 +15,7 @@ package org.jacoco.core.test.validation.java5.targets;
 import static org.jacoco.core.test.validation.targets.Stubs.nop;
 
 /**
- * This test target is a switch statement with a enum.
+ * This test target is a switch statement with an enum.
  */
 public class EnumSwitchTarget {
 
