@@ -12,25 +12,46 @@
  *******************************************************************************/
 package org.jacoco.core.test.validation.kotlin.targets
 
+import org.jacoco.core.test.validation.targets.Stubs.nop
+
 /**
  * This test target contains class implementing interface with default methods.
  */
 object KotlinDefaultMethodsTarget {
 
     interface I {
-        fun m1() = Unit // assertNotCovered()
-        fun m2() = Unit // assertFullyCovered()
-        fun m3() = Unit // assertNotCovered()
+        fun overriddenWithoutSuperCall() = Unit // assertNotCovered()
+        fun overridden() = Unit // assertFullyCovered()
+        fun overriddenRedundantly() = Unit // assertFullyCovered()
+        fun overriddenBySuperCallOfAnotherMethod() = Unit // assertNotCovered()
+        fun notOverridden() = Unit // assertFullyCovered()
+        fun notOverriddenNotCalled() = Unit // assertNotCovered()
     }
 
     class C : I { // assertFullyCovered()
-        override fun m1() = Unit // assertFullyCovered()
+        override fun overriddenWithoutSuperCall() = Unit // assertFullyCovered()
+
+        override fun overridden() {
+            super.overridden() // assertFullyCovered()
+            nop() // assertFullyCovered()
+        }
+
+        override fun overriddenRedundantly() {
+            super.overriddenRedundantly() // assertEmpty()
+        }
+
+        override fun overriddenBySuperCallOfAnotherMethod() {
+            super.overridden() // assertFullyCovered()
+        }
     }
 
     @JvmStatic
     fun main(args: Array<String>) {
-        C().m1()
-        C().m2()
+        C().overriddenWithoutSuperCall()
+        C().overridden()
+        C().overriddenRedundantly()
+        C().overriddenBySuperCallOfAnotherMethod()
+        C().notOverridden()
     }
 
 }
