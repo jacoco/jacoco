@@ -45,7 +45,7 @@ public final class Filters implements IFilter {
 				new AnnotationGeneratedFilter(), new KotlinGeneratedFilter(),
 				new KotlinEnumFilter(), //
 				new KotlinLateinitFilter(), new KotlinWhenFilter(),
-				new KotlinWhenStringFilter(),
+				new KotlinWhenStringFilter(), new KotlinForLoopFilter(),
 				new KotlinUnsafeCastOperatorFilter(),
 				new KotlinNotNullOperatorFilter(),
 				new KotlinInlineClassFilter(),
