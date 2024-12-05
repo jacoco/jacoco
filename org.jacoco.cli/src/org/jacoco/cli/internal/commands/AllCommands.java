@@ -26,6 +26,8 @@ public final class AllCommands {
 	}
 
 	/**
+	 * Returns list of new instances of all available commands.
+	 *
 	 * @return list of new instances of all available commands
 	 */
 	public static List<Command> get() {
@@ -34,6 +36,8 @@ public final class AllCommands {
 	}
 
 	/**
+	 * Returns String containing all available command names.
+	 *
 	 * @return String containing all available command names
 	 */
 	public static String names() {

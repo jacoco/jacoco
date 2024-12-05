@@ -40,11 +40,15 @@ public abstract class Command {
 	public boolean quiet = false;
 
 	/**
+	 * Returns short description of the command.
+	 *
 	 * @return Short description of the command.
 	 */
 	public abstract String description();
 
 	/**
+	 * Returns name of the command.
+	 *
 	 * @return name of the command
 	 */
 	public String name() {
@@ -52,6 +56,8 @@ public abstract class Command {
 	}
 
 	/**
+	 * Returns usage string displayed for help.
+	 *
 	 * @param parser
 	 *            parser for this command
 	 * @return usage string displayed for help
