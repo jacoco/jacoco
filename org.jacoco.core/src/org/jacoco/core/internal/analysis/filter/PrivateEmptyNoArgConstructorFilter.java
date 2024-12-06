@@ -18,7 +18,7 @@ import org.objectweb.asm.tree.MethodNode;
 /**
  * Filters private empty constructors that do not have arguments.
  */
-public final class PrivateEmptyNoArgConstructorFilter implements IFilter {
+final class PrivateEmptyNoArgConstructorFilter implements IFilter {
 
 	private static final String CONSTRUCTOR_NAME = "<init>";
 	private static final String CONSTRUCTOR_DESC = "()V";

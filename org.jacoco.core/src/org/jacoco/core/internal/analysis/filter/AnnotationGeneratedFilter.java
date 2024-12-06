@@ -23,7 +23,7 @@ import org.objectweb.asm.tree.MethodNode;
  * {@link java.lang.annotation.RetentionPolicy#CLASS invisible} annotation whose
  * simple name contains <code>Generated</code>.
  */
-public final class AnnotationGeneratedFilter implements IFilter {
+final class AnnotationGeneratedFilter implements IFilter {
 
 	public void filter(final MethodNode methodNode,
 			final IFilterContext context, final IFilterOutput output) {

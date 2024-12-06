@@ -18,7 +18,7 @@ import org.objectweb.asm.tree.MethodNode;
 /**
  * Filters synthetic methods unless they represent bodies of lambda expressions.
  */
-public final class SyntheticFilter implements IFilter {
+final class SyntheticFilter implements IFilter {
 
 	private static boolean isScalaClass(final IFilterContext context) {
 		return context.getClassAttributes().contains("ScalaSig")
@@ -41,7 +41,7 @@ public final class SyntheticFilter implements IFilter {
 			}
 		}
 
-		if (KotlinGeneratedFilter.isKotlinClass(context)) {
+		if (Filters.isKotlinClass(context)) {
 			if (!methodNode.name.startsWith("access$")) {
 				return;
 			}

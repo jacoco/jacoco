@@ -29,7 +29,7 @@ import org.objectweb.asm.tree.VarInsnNode;
  * with a <code>String</code> and by Kotlin compiler 1.5 and above for a
  * <code>when</code> expression with a <code>String</code>.
  */
-public final class StringSwitchFilter implements IFilter {
+final class StringSwitchFilter implements IFilter {
 
 	public void filter(final MethodNode methodNode,
 			final IFilterContext context, final IFilterOutput output) {

@@ -20,7 +20,7 @@ import org.objectweb.asm.tree.TryCatchBlockNode;
 /**
  * Filters code that is generated for synchronized statement.
  */
-public final class SynchronizedFilter implements IFilter {
+final class SynchronizedFilter implements IFilter {
 
 	public void filter(final MethodNode methodNode,
 			final IFilterContext context, final IFilterOutput output) {

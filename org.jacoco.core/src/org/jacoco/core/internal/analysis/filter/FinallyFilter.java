@@ -66,7 +66,7 @@ import org.objectweb.asm.tree.VarInsnNode;
  * at once, because execution can branch from one region to another (like it is
  * in given example due to "if" statement).
  */
-public final class FinallyFilter implements IFilter {
+final class FinallyFilter implements IFilter {
 
 	public void filter(final MethodNode methodNode,
 			final IFilterContext context, final IFilterOutput output) {

@@ -18,7 +18,7 @@ import org.objectweb.asm.tree.MethodNode;
  * Filters methods <code>values</code> and <code>valueOf</code> that compiler
  * creates for enums.
  */
-public final class EnumFilter implements IFilter {
+final class EnumFilter implements IFilter {
 
 	public void filter(final MethodNode methodNode,
 			final IFilterContext context, final IFilterOutput output) {

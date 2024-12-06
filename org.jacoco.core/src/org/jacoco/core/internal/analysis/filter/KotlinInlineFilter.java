@@ -19,7 +19,7 @@ import org.objectweb.asm.tree.MethodNode;
 /**
  * Filters out instructions that were inlined by Kotlin compiler.
  */
-public final class KotlinInlineFilter implements IFilter {
+final class KotlinInlineFilter implements IFilter {
 
 	private int firstGeneratedLineNumber = -1;
 
@@ -29,7 +29,7 @@ public final class KotlinInlineFilter implements IFilter {
 			return;
 		}
 
-		if (!KotlinGeneratedFilter.isKotlinClass(context)) {
+		if (!Filters.isKotlinClass(context)) {
 			return;
 		}
 

@@ -22,11 +22,11 @@ import org.objectweb.asm.tree.MethodNode;
  * Filters branch in bytecode that Kotlin compiler generates for "unsafe" cast
  * operator.
  */
-public final class KotlinUnsafeCastOperatorFilter implements IFilter {
+final class KotlinUnsafeCastOperatorFilter implements IFilter {
 
 	public void filter(final MethodNode methodNode,
 			final IFilterContext context, final IFilterOutput output) {
-		if (!KotlinGeneratedFilter.isKotlinClass(context)) {
+		if (!Filters.isKotlinClass(context)) {
 			return;
 		}
 		final Matcher matcher = new Matcher();

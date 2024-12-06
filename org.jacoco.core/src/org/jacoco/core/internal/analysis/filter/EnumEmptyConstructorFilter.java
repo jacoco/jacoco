@@ -29,7 +29,7 @@ import org.objectweb.asm.tree.MethodNode;
  * constructors} - empty constructor in enums without additional parameters
  * should be filtered out even if it is not implicit.
  */
-public final class EnumEmptyConstructorFilter implements IFilter {
+final class EnumEmptyConstructorFilter implements IFilter {
 
 	private static final String CONSTRUCTOR_NAME = "<init>";
 	private static final String CONSTRUCTOR_DESC = "(Ljava/lang/String;I)V";
