@@ -29,7 +29,7 @@ public final class KotlinInlineFilter implements IFilter {
 			return;
 		}
 
-		if (!KotlinGeneratedFilter.isKotlinClass(context)) {
+		if (!Filters.isKotlinClass(context)) {
 			return;
 		}
 

@@ -25,7 +25,7 @@ final class KotlinEnumFilter implements IFilter {
 		if (!"java/lang/Enum".equals(context.getSuperClassName())) {
 			return;
 		}
-		if (!KotlinGeneratedFilter.isKotlinClass(context)) {
+		if (!Filters.isKotlinClass(context)) {
 			return;
 		}
 		if (!"getEntries".equals(methodNode.name)) {

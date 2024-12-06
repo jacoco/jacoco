@@ -31,7 +31,7 @@ public final class KotlinCoroutineFilter implements IFilter {
 	public void filter(final MethodNode methodNode,
 			final IFilterContext context, final IFilterOutput output) {
 
-		if (!KotlinGeneratedFilter.isKotlinClass(context)) {
+		if (!Filters.isKotlinClass(context)) {
 			return;
 		}
 
