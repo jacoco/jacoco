@@ -50,7 +50,7 @@ import org.objectweb.asm.tree.VarInsnNode;
  *
  * This filter marks <code>IFEQ</code> instructions as ignored.
  */
-public final class KotlinDefaultArgumentsFilter implements IFilter {
+final class KotlinDefaultArgumentsFilter implements IFilter {
 
 	private static boolean isDefaultArgumentsMethod(
 			final MethodNode methodNode) {

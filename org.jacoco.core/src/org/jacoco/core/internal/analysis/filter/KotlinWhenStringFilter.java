@@ -28,7 +28,7 @@ import org.objectweb.asm.tree.VarInsnNode;
  * Filters bytecode that Kotlin compiler generates for <code>when</code>
  * expressions with a <code>String</code>.
  */
-public final class KotlinWhenStringFilter implements IFilter {
+final class KotlinWhenStringFilter implements IFilter {
 
 	public void filter(final MethodNode methodNode,
 			final IFilterContext context, final IFilterOutput output) {

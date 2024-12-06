@@ -26,7 +26,7 @@ import org.objectweb.asm.tree.TryCatchBlockNode;
 /**
  * Filters code that ECJ generates for try-with-resources statement.
  */
-public final class TryWithResourcesEcjFilter implements IFilter {
+final class TryWithResourcesEcjFilter implements IFilter {
 
 	public void filter(final MethodNode methodNode,
 			final IFilterContext context, final IFilterOutput output) {

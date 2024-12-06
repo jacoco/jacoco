@@ -26,7 +26,7 @@ import org.objectweb.asm.tree.TableSwitchInsnNode;
 /**
  * Filters branches that Kotlin compiler generates for coroutines.
  */
-public final class KotlinCoroutineFilter implements IFilter {
+final class KotlinCoroutineFilter implements IFilter {
 
 	public void filter(final MethodNode methodNode,
 			final IFilterContext context, final IFilterOutput output) {
