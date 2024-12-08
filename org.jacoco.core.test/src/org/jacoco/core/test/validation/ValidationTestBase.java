@@ -32,6 +32,7 @@ import org.jacoco.core.data.ExecutionData;
 import org.jacoco.core.data.ExecutionDataStore;
 import org.jacoco.core.data.SessionInfo;
 import org.jacoco.core.internal.analysis.CounterImpl;
+import org.jacoco.core.internal.instr.InstrSupport;
 import org.jacoco.core.test.InstrumentingLoader;
 import org.jacoco.core.test.TargetLoader;
 import org.jacoco.core.test.validation.Source.Line;
@@ -44,7 +45,6 @@ import org.jacoco.report.html.HTMLFormatter;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runners.model.MultipleFailureException;
-import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.util.ASMifier;
 import org.objectweb.asm.util.Textifier;
 import org.objectweb.asm.util.TraceClassVisitor;
@@ -124,9 +124,10 @@ public abstract class ValidationTestBase {
 				new File(outputDir, fileName + ".txt"));
 		final PrintWriter asmWriter = new PrintWriter(
 				new File(outputDir, fileName + ".java"));
-		new ClassReader(classBytes).accept(new TraceClassVisitor(
-				new TraceClassVisitor(null, new Textifier(), textWriter),
-				new ASMifier(), asmWriter), 0);
+		InstrSupport.classReaderFor(classBytes)
+				.accept(new TraceClassVisitor(new TraceClassVisitor(null,
+						new Textifier(), textWriter), new ASMifier(),
+						asmWriter), 0);
 		textWriter.close();
 		asmWriter.close();
 	}
