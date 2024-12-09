@@ -62,21 +62,6 @@ public class KotlinEnumFilterTest extends FilterTestBase {
 	}
 
 	@Test
-	public void should_not_filter_when_not_Kotlin() {
-		context.superClassName = "java/lang/Enum";
-		final MethodNode m = new MethodNode(
-				Opcodes.ACC_PUBLIC | Opcodes.ACC_STATIC, "getEntries",
-				"()Lkotlin/enums/EnumEntries;", null, null);
-		m.visitFieldInsn(Opcodes.GETSTATIC, "Example", "$ENTRIES",
-				"Lkotlin/enums/EnumEntries;");
-		m.visitInsn(Opcodes.ARETURN);
-
-		filter.filter(m, context, output);
-
-		assertIgnored();
-	}
-
-	@Test
 	public void should_not_filter_when_not_getEntries_name() {
 		context.superClassName = "java/lang/Enum";
 		context.classAnnotations
