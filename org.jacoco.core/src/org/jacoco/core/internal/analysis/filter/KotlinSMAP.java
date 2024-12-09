@@ -27,20 +27,6 @@ import java.util.regex.Pattern;
 public final class KotlinSMAP {
 
 	/**
-	 * Checks whether the class corresponding to the given context has
-	 * <code>kotlin/Metadata</code> annotation.
-	 *
-	 * @param context
-	 *            context information
-	 * @return <code>true</code> if the class corresponding to the given context
-	 *         has <code>kotlin/Metadata</code> annotation
-	 */
-	public static boolean isKotlinClass(final IFilterContext context) {
-		return context.getClassAnnotations()
-				.contains(KotlinGeneratedFilter.KOTLIN_METADATA_DESC);
-	}
-
-	/**
 	 * Parsed representation of a single LineSection from SourceDebugExtension
 	 * attribute.
 	 */

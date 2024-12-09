@@ -76,7 +76,7 @@ final class KotlinDefaultArgumentsFilter implements IFilter {
 		if ((methodNode.access & Opcodes.ACC_SYNTHETIC) == 0) {
 			return;
 		}
-		if (!KotlinSMAP.isKotlinClass(context)) {
+		if (!Filters.isKotlinClass(context)) {
 			return;
 		}
 

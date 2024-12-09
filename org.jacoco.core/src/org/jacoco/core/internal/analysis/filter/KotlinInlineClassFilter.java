@@ -73,7 +73,7 @@ final class KotlinInlineClassFilter implements IFilter {
 
 	public void filter(final MethodNode methodNode,
 			final IFilterContext context, final IFilterOutput output) {
-		if (!KotlinSMAP.isKotlinClass(context)) {
+		if (!Filters.isKotlinClass(context)) {
 			return;
 		}
 		if (!context.getClassAnnotations().contains("Lkotlin/jvm/JvmInline;")) {

@@ -31,7 +31,7 @@ final class KotlinCoroutineFilter implements IFilter {
 	public void filter(final MethodNode methodNode,
 			final IFilterContext context, final IFilterOutput output) {
 
-		if (!KotlinSMAP.isKotlinClass(context)) {
+		if (!Filters.isKotlinClass(context)) {
 			return;
 		}
 

@@ -33,7 +33,7 @@ final class KotlinGeneratedFilter implements IFilter {
 			return;
 		}
 
-		if (!KotlinSMAP.isKotlinClass(context)) {
+		if (!Filters.isKotlinClass(context)) {
 			return;
 		}
 
