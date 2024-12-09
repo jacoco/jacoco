@@ -143,7 +143,7 @@ public class ClassAnalyzer extends ClassProbesVisitor
 
 	private void calculateFragments(
 			final Map<AbstractInsnNode, Instruction> instructions) {
-		if (sourceDebugExtension == null || !Filters.isKotlinClass(this)) {
+		if (sourceDebugExtension == null || !KotlinSMAP.isKotlinClass(this)) {
 			return;
 		}
 		if (smap == null) {

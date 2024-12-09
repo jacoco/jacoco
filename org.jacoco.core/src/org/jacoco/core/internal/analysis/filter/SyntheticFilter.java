@@ -41,7 +41,7 @@ final class SyntheticFilter implements IFilter {
 			}
 		}
 
-		if (Filters.isKotlinClass(context)) {
+		if (KotlinSMAP.isKotlinClass(context)) {
 			if (!methodNode.name.startsWith("access$")) {
 				return;
 			}

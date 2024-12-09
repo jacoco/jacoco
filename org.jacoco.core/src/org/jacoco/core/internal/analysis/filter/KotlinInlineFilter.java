@@ -29,7 +29,7 @@ final class KotlinInlineFilter implements IFilter {
 			return;
 		}
 
-		if (!Filters.isKotlinClass(context)) {
+		if (!KotlinSMAP.isKotlinClass(context)) {
 			return;
 		}
 
