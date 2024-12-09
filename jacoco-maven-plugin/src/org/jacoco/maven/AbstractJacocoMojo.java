@@ -67,6 +67,8 @@ public abstract class AbstractJacocoMojo extends AbstractMojo {
 	}
 
 	/**
+	 * Returns Maven project.
+	 *
 	 * @return Maven project
 	 */
 	protected final MavenProject getProject() {
