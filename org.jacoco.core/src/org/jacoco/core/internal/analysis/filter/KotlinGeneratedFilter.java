@@ -20,13 +20,9 @@ import org.objectweb.asm.tree.MethodNode;
  * identified by the <code>@kotlin.Metadata</code> annotations. In such classes
  * generated methods do not have line numbers.
  */
-public class KotlinGeneratedFilter implements IFilter {
+final class KotlinGeneratedFilter implements IFilter {
 
 	static final String KOTLIN_METADATA_DESC = "Lkotlin/Metadata;";
-
-	public static boolean isKotlinClass(final IFilterContext context) {
-		return context.getClassAnnotations().contains(KOTLIN_METADATA_DESC);
-	}
 
 	public void filter(final MethodNode methodNode,
 			final IFilterContext context, final IFilterOutput output) {
@@ -37,7 +33,7 @@ public class KotlinGeneratedFilter implements IFilter {
 			return;
 		}
 
-		if (!isKotlinClass(context)) {
+		if (!Filters.isKotlinClass(context)) {
 			return;
 		}
 

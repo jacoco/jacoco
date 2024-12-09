@@ -119,6 +119,13 @@ public class ClassCoverageImpl extends SourceNodeImpl
 		return fragments;
 	}
 
+	/**
+	 * Stores fragments that contain coverage information about other nodes
+	 * collected during the creation of this node.
+	 *
+	 * @param fragments
+	 *            fragments to store
+	 */
 	public void setFragments(final Collection<SourceNodeImpl> fragments) {
 		this.fragments = fragments;
 	}

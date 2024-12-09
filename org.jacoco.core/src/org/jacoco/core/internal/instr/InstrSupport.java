@@ -220,7 +220,7 @@ public final class InstrSupport {
 	}
 
 	/**
-	 * Ensures that the given member does not correspond to a internal member
+	 * Ensures that the given member does not correspond to an internal member
 	 * created by the instrumentation process. This would mean that the class is
 	 * already instrumented.
 	 *
@@ -273,9 +273,9 @@ public final class InstrSupport {
 	 */
 	public static ClassReader classReaderFor(final byte[] b) {
 		final int originalVersion = getMajorVersion(b);
-		if (originalVersion == Opcodes.V23 + 1) {
+		if (originalVersion == Opcodes.V24 + 1) {
 			// temporarily downgrade version to bypass check in ASM
-			setMajorVersion(Opcodes.V23, b);
+			setMajorVersion(Opcodes.V24, b);
 		}
 		final ClassReader classReader = new ClassReader(b);
 		setMajorVersion(originalVersion, b);

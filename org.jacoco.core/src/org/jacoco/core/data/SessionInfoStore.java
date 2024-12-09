@@ -20,7 +20,7 @@ import java.util.Collections;
 import java.util.List;
 
 /**
- * Container to collect and merge session {@link SessionInfo} objects. A
+ * Container to collect and merge session {@link SessionInfo} objects. An
  * instance of this class is not thread safe.
  */
 public class SessionInfoStore implements ISessionInfoVisitor {

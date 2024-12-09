@@ -58,7 +58,7 @@ public class SignatureRemover {
 	}
 
 	/**
-	 * Checks whether a entry with the provided name should be ignored at all.
+	 * Checks whether an entry with the provided name should be ignored at all.
 	 *
 	 * @param name
 	 *            path name of the entry in question

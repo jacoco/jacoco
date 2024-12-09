@@ -95,7 +95,7 @@ public final class LabelInfo {
 
 	/**
 	 * Checks whether this label is the possible successor of the previous
-	 * instruction in the method. This is the case if the predecessor isn't a
+	 * instruction in the method. This is the case if the predecessor isn't an
 	 * unconditional jump or method exit instruction.
 	 *
 	 * @param label

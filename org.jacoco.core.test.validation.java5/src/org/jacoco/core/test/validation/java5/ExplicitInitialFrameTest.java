@@ -16,7 +16,7 @@ import org.jacoco.core.test.validation.ValidationTestBase;
 import org.jacoco.core.test.validation.java5.targets.ExplicitInitialFrameTarget;
 
 /**
- * Test for a methods having a explicit initial frame.
+ * Test for a methods having an explicit initial frame.
  */
 public class ExplicitInitialFrameTest extends ValidationTestBase {
 
