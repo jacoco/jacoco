@@ -32,11 +32,6 @@ final class KotlinGeneratedFilter implements IFilter {
 			// disabled filtering as all methods might be erroneously skipped
 			return;
 		}
-
-		if (!Filters.isKotlinClass(context)) {
-			return;
-		}
-
 		if (hasLineNumber(methodNode)) {
 			for (final AbstractInsnNode i : methodNode.instructions) {
 				if (AbstractInsnNode.LINE == i.getType()) {

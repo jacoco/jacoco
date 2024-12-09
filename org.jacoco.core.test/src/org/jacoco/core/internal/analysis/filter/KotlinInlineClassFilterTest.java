@@ -83,16 +83,4 @@ public class KotlinInlineClassFilterTest extends FilterTestBase {
 		assertIgnored();
 	}
 
-	@Test
-	public void should_not_filter_when_not_kotlin() {
-		context.classAnnotations.add("Lkotlin/jvm/JvmInline;");
-		final MethodNode m = new MethodNode(0, "getValue",
-				"()Ljava/lang/String;", null, null);
-		m.visitInsn(Opcodes.NOP);
-
-		filter.filter(m, context, output);
-
-		assertIgnored();
-	}
-
 }
