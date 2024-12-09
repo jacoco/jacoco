@@ -30,7 +30,7 @@ import org.objectweb.asm.tree.TableSwitchInsnNode;
  * expressions and statements with subject of type <code>enum class</code> or
  * <code>sealed class</code>.
  */
-public final class KotlinWhenFilter implements IFilter {
+final class KotlinWhenFilter implements IFilter {
 
 	private static final String EXCEPTION = "kotlin/NoWhenBranchMatchedException";
 

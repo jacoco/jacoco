@@ -20,7 +20,7 @@ import org.objectweb.asm.tree.MethodNode;
  * Filters branch in bytecode that Kotlin compiler generates for not-null
  * assertion operator.
  */
-public final class KotlinNotNullOperatorFilter implements IFilter {
+final class KotlinNotNullOperatorFilter implements IFilter {
 
 	public void filter(final MethodNode methodNode,
 			final IFilterContext context, final IFilterOutput output) {
