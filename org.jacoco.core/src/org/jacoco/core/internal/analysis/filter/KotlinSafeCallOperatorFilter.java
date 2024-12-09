@@ -31,14 +31,11 @@ final class KotlinSafeCallOperatorFilter implements IFilter {
 
 	public void filter(final MethodNode methodNode,
 			final IFilterContext context, final IFilterOutput output) {
-		if (!Filters.isKotlinClass(context)) {
-			return;
-		}
 		for (final ArrayList<JumpInsnNode> chain : findChains(methodNode)) {
 			if (chain.size() == 1) {
 				continue;
 			}
-			JumpInsnNode lastJump = chain.get(chain.size() - 1);
+			final JumpInsnNode lastJump = chain.get(chain.size() - 1);
 			final HashSet<AbstractInsnNode> newTargets = new HashSet<AbstractInsnNode>();
 			newTargets.add(AbstractMatcher.skipNonOpcodes(lastJump.getNext()));
 			newTargets.add(AbstractMatcher.skipNonOpcodes(lastJump.label));

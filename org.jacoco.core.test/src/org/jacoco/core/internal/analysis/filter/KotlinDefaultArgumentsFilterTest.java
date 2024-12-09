@@ -64,17 +64,6 @@ public class KotlinDefaultArgumentsFilterTest extends FilterTestBase {
 	}
 
 	@Test
-	public void should_not_filter_when_not_kotlin() {
-		final MethodNode m = createMethod(Opcodes.ACC_SYNTHETIC,
-				"not_kotlin_synthetic$default",
-				"(LTarget;IILjava/lang/Object;)V");
-
-		filter.filter(m, context, output);
-
-		assertIgnored();
-	}
-
-	@Test
 	public void should_not_filter_when_suffix_absent() {
 		final MethodNode m = createMethod(Opcodes.ACC_SYNTHETIC,
 				"synthetic_without_suffix", "(LTarget;IILjava/lang/Object;)V");

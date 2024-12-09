@@ -12,8 +12,10 @@
  *******************************************************************************/
 package org.jacoco.core.internal.analysis.filter;
 
+import org.objectweb.asm.tree.MethodNode;
+
 /**
- * Filter that combines other filters.
+ * Factory for all JaCoCo filters.
  */
 public final class Filters {
 
@@ -23,11 +25,17 @@ public final class Filters {
 	public static final IFilter NONE = new FilterSet();
 
 	/**
-	 * Creates filter that combines all other filters.
+	 * Creates a filter that combines all filters.
 	 *
-	 * @return filter that combines all other filters
+	 * @return filter that combines all filters
 	 */
 	public static IFilter all() {
+		return new FilterSet( //
+				allCommonFilters(), //
+				allKotlinFilters());
+	}
+
+	private static IFilter allCommonFilters() {
 		return new FilterSet( //
 				new EnumFilter(), //
 				new SyntheticFilter(), //
@@ -45,12 +53,34 @@ public final class Filters {
 				new RecordsFilter(), //
 				new ExhaustiveSwitchFilter(), //
 				new RecordPatternFilter(), //
-				new AnnotationGeneratedFilter(), //
+				new AnnotationGeneratedFilter());
+	}
+
+	private static IFilter allKotlinFilters() {
+		return new FilterSet( //
 				new KotlinGeneratedFilter(), //
 				new KotlinSyntheticAccessorsFilter(), //
 				new KotlinEnumFilter(), //
 				new KotlinSafeCallOperatorFilter(), //
-				new KotlinComposeFilter());
+				new KotlinLateinitFilter(), //
+				new KotlinWhenFilter(), //
+				new KotlinWhenStringFilter(), //
+				new KotlinUnsafeCastOperatorFilter(), //
+				new KotlinNotNullOperatorFilter(), //
+				new KotlinInlineClassFilter(), //
+				new KotlinDefaultArgumentsFilter(), //
+				new KotlinInlineFilter(), //
+				new KotlinCoroutineFilter(), //
+				new KotlinDefaultMethodsFilter(), //
+				new KotlinComposeFilter()) {
+			@Override
+			public void filter(final MethodNode methodNode,
+					final IFilterContext context, final IFilterOutput output) {
+				if (isKotlinClass(context)) {
+					super.filter(methodNode, context, output);
+				}
+			}
+		};
 	}
 
 	/**
