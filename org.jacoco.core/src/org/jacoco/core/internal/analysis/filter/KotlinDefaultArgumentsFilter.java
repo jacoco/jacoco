@@ -76,10 +76,6 @@ final class KotlinDefaultArgumentsFilter implements IFilter {
 		if ((methodNode.access & Opcodes.ACC_SYNTHETIC) == 0) {
 			return;
 		}
-		if (!Filters.isKotlinClass(context)) {
-			return;
-		}
-
 		if (isDefaultArgumentsMethod(methodNode)) {
 			new Matcher().match(methodNode, output, false);
 		} else if (isDefaultArgumentsConstructor(methodNode)) {
@@ -133,7 +129,7 @@ final class KotlinDefaultArgumentsFilter implements IFilter {
 				skipNonOpcodes();
 			}
 
-			for (AbstractInsnNode i : ignore) {
+			for (final AbstractInsnNode i : ignore) {
 				output.ignore(i, i);
 			}
 		}
