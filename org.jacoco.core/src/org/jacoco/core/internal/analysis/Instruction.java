@@ -160,24 +160,65 @@ public class Instruction {
 
 	/**
 	 * Creates a copy of this instruction where all outgoing branches are
+	 * replaced. The coverage statuses of the branches of the new instruction
+	 * are derived from the statuses of the given branches of the given
+	 * instructions.
+	 *
+	 * @param branches
+	 *            indexes of new branches whose execution status should be
+	 *            computed
+	 * @param fromInstructions
+	 *            instructions whose branch execution statuses should be used
+	 * @param fromBranches
+	 *            indexes of branches of the given instructions whose execution
+	 *            status should be used
+	 * @return new instance with replaced branches
+	 */
+	public Instruction replaceBranches(final int[] branches,
+			final Instruction[] fromInstructions, final int[] fromBranches) {
+		final Instruction result = new Instruction(this.line);
+		for (int i = 0; i < branches.length; i++) {
+			if (fromInstructions[i].coveredBranches.get(fromBranches[i])) {
+				result.coveredBranches.set(branches[i]);
+			}
+			result.branches = Math.max(result.branches, branches[i] + 1);
+		}
+		return result;
+	}
+
+	/**
+	 * Creates a copy of this instruction where all outgoing branches are
 	 * replaced with the given instructions. The coverage status of the new
 	 * instruction is derived from the status of the given instructions.
 	 *
 	 * @param newBranches
 	 *            new branches to consider
 	 * @return new instance with replaced branches
+	 * @deprecated use {@link #replaceBranches(int[], Instruction[], int[])}
+	 *             instead
 	 */
+	@Deprecated
 	public Instruction replaceBranches(
 			final Collection<Instruction> newBranches) {
-		final Instruction result = new Instruction(this.line);
-		result.branches = newBranches.size();
-		int idx = 0;
-		for (final Instruction b : newBranches) {
-			if (!b.coveredBranches.isEmpty()) {
-				result.coveredBranches.set(idx++);
-			}
+		int i = 0;
+		for (final Instruction instruction : newBranches) {
+			i += Math.max(instruction.branches, 1);
 		}
-		return result;
+		final int[] branches = new int[i];
+		final Instruction[] fromInstructions = new Instruction[i];
+		final int[] fromBranches = new int[i];
+		int branch = 0;
+		i = 0;
+		for (final Instruction instruction : newBranches) {
+			for (int b = 0; b < Math.max(instruction.branches, 1); b++) {
+				branches[i] = branch;
+				fromInstructions[i] = instruction;
+				fromBranches[i] = b;
+				i++;
+			}
+			branch++;
+		}
+		return replaceBranches(branches, fromInstructions, fromBranches);
 	}
 
 	/**
