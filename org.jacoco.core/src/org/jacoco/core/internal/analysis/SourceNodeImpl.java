@@ -42,6 +42,9 @@ public class SourceNodeImpl extends CoverageNodeImpl implements ISourceNode {
 	}
 
 	/**
+	 * Modifies counters of this node in accordance with coverage information
+	 * from the given fragment.
+	 *
 	 * @param fragment
 	 *            fragment to apply
 	 * @return <code>true</code> if fragment contains lines of this node
