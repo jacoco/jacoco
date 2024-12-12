@@ -21,10 +21,27 @@ object KotlinSafeCallOperatorTarget {
         return x?.length // assertFullyCovered(0, 2)
     }
 
+    private fun safeCallFollowedByElvis() {
+        fun nullOnly(b: B?): String =
+            b?.c ?: "" // assertPartlyCovered(2, 2)
+
+        fun nonNullOnly(b: B?): String =
+            b?.c ?: "" // assertPartlyCovered(1, 3)
+
+        fun both(b: B?): String =
+            b?.c ?: "" // assertFullyCovered(0, 4)
+
+        nullOnly(null)
+        nonNullOnly(B(""))
+        both(null)
+        both(B(""))
+    }
+
     @JvmStatic
     fun main(args: Array<String>) {
         example("")
         example(null)
+        safeCallFollowedByElvis()
     }
 
 }
