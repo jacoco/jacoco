@@ -13,7 +13,6 @@
 package org.jacoco.core.internal.analysis;
 
 import java.util.BitSet;
-import java.util.Collection;
 
 import org.jacoco.core.analysis.ICounter;
 
@@ -50,7 +49,7 @@ import org.jacoco.core.analysis.ICounter;
  *
  * <ul>
  * <li>{@link #merge(Instruction)}</li>
- * <li>{@link #replaceBranches(Collection)}</li>
+ * <li>{@link #replaceBranches(int[], Instruction[], int[])}</li>
  * </ul>
  */
 public class Instruction {
@@ -184,41 +183,6 @@ public class Instruction {
 			result.branches = Math.max(result.branches, branches[i] + 1);
 		}
 		return result;
-	}
-
-	/**
-	 * Creates a copy of this instruction where all outgoing branches are
-	 * replaced with the given instructions. The coverage status of the new
-	 * instruction is derived from the status of the given instructions.
-	 *
-	 * @param newBranches
-	 *            new branches to consider
-	 * @return new instance with replaced branches
-	 * @deprecated use {@link #replaceBranches(int[], Instruction[], int[])}
-	 *             instead
-	 */
-	@Deprecated
-	public Instruction replaceBranches(
-			final Collection<Instruction> newBranches) {
-		int i = 0;
-		for (final Instruction instruction : newBranches) {
-			i += Math.max(instruction.branches, 1);
-		}
-		final int[] branches = new int[i];
-		final Instruction[] fromInstructions = new Instruction[i];
-		final int[] fromBranches = new int[i];
-		int branch = 0;
-		i = 0;
-		for (final Instruction instruction : newBranches) {
-			for (int b = 0; b < Math.max(instruction.branches, 1); b++) {
-				branches[i] = branch;
-				fromInstructions[i] = instruction;
-				fromBranches[i] = b;
-				i++;
-			}
-			branch++;
-		}
-		return replaceBranches(branches, fromInstructions, fromBranches);
 	}
 
 	/**
