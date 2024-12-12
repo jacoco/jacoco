@@ -14,8 +14,6 @@ package org.jacoco.core.internal.analysis;
 
 import static org.junit.Assert.assertEquals;
 
-import java.util.Arrays;
-
 import org.junit.Before;
 import org.junit.Test;
 
@@ -156,24 +154,6 @@ public class InstructionTest {
 		instruction = i1.merge(i2);
 
 		assertEquals(CounterImpl.getInstance(1, 3),
-				instruction.getBranchCounter());
-	}
-
-	/**
-	 * @deprecated test of deprecated
-	 *             {@link Instruction#replaceBranches(int[], Instruction[], int[])}
-	 */
-	@Deprecated
-	@Test
-	public void deprecated_replaceBranches_should_calculate_coverage_on_new_branches() {
-		Instruction i1 = new Instruction(1);
-		Instruction i2 = new Instruction(2);
-		Instruction i3 = new Instruction(3);
-		i3.addBranch(true, 0);
-
-		instruction = instruction.replaceBranches(Arrays.asList(i1, i2, i3));
-
-		assertEquals(CounterImpl.getInstance(2, 1),
 				instruction.getBranchCounter());
 	}
 
