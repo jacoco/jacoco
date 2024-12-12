@@ -15,24 +15,21 @@ package org.jacoco.core.internal.analysis.filter;
 import org.objectweb.asm.tree.MethodNode;
 
 /**
- * Filters method <code>getEntries</code> that Kotlin compiler creates for
- * enums.
+ * Filter that combines other filters.
  */
-final class KotlinEnumFilter implements IFilter {
+class FilterSet implements IFilter {
+
+	private final IFilter[] filters;
+
+	FilterSet(final IFilter... filters) {
+		this.filters = filters;
+	}
 
 	public void filter(final MethodNode methodNode,
 			final IFilterContext context, final IFilterOutput output) {
-		if (!"java/lang/Enum".equals(context.getSuperClassName())) {
-			return;
+		for (final IFilter filter : filters) {
+			filter.filter(methodNode, context, output);
 		}
-		if (!"getEntries".equals(methodNode.name)) {
-			return;
-		}
-		if (!"()Lkotlin/enums/EnumEntries;".equals(methodNode.desc)) {
-			return;
-		}
-		output.ignore(methodNode.instructions.getFirst(),
-				methodNode.instructions.getLast());
 	}
 
 }
