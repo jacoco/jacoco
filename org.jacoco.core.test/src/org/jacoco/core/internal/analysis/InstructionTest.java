@@ -14,8 +14,6 @@ package org.jacoco.core.internal.analysis;
 
 import static org.junit.Assert.assertEquals;
 
-import java.util.Arrays;
-
 import org.junit.Before;
 import org.junit.Test;
 
@@ -164,11 +162,29 @@ public class InstructionTest {
 		Instruction i1 = new Instruction(1);
 		Instruction i2 = new Instruction(2);
 		Instruction i3 = new Instruction(3);
-		i3.addBranch(true, 0);
+		i3.addBranch(false, 0);
+		i3.addBranch(true, 1);
 
-		instruction = instruction.replaceBranches(Arrays.asList(i1, i2, i3));
+		instruction = instruction.replaceBranches( //
+				new int[] { 0, 1, 2 }, //
+				new Instruction[] { i1, i2, i3 }, //
+				new int[] { 0, 0, 0 });
+		assertEquals(CounterImpl.getInstance(3, 0),
+				instruction.getBranchCounter());
 
+		instruction = instruction.replaceBranches( //
+				new int[] { 0, 1, 2 }, //
+				new Instruction[] { i1, i2, i3 }, //
+				new int[] { 0, 0, 1 });
+		assertEquals(CounterImpl.getInstance(2, 1),
+				instruction.getBranchCounter());
+
+		instruction = instruction.replaceBranches( //
+				new int[] { 0, 1, 2, 2 }, //
+				new Instruction[] { i1, i2, i3, i3 }, //
+				new int[] { 0, 0, 1, 0 });
 		assertEquals(CounterImpl.getInstance(2, 1),
 				instruction.getBranchCounter());
 	}
+
 }

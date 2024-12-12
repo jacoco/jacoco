@@ -13,7 +13,6 @@
 package org.jacoco.core.internal.analysis;
 
 import java.util.BitSet;
-import java.util.Collection;
 
 import org.jacoco.core.analysis.ICounter;
 
@@ -50,7 +49,7 @@ import org.jacoco.core.analysis.ICounter;
  *
  * <ul>
  * <li>{@link #merge(Instruction)}</li>
- * <li>{@link #replaceBranches(Collection)}</li>
+ * <li>{@link #replaceBranches(int[], Instruction[], int[])}</li>
  * </ul>
  */
 public class Instruction {
@@ -160,22 +159,27 @@ public class Instruction {
 
 	/**
 	 * Creates a copy of this instruction where all outgoing branches are
-	 * replaced with the given instructions. The coverage status of the new
-	 * instruction is derived from the status of the given instructions.
+	 * replaced. The coverage status of the branches of the new instruction is
+	 * derived from the status of the given branches of the given instructions.
 	 *
-	 * @param newBranches
-	 *            new branches to consider
+	 * @param branches
+	 *            indexes of new branches whose execution status should be
+	 *            computed
+	 * @param fromInstructions
+	 *            instructions whose branch execution statuses should be used
+	 * @param fromBranches
+	 *            indexes of branches of the given instructions whose execution
+	 *            status should be used
 	 * @return new instance with replaced branches
 	 */
-	public Instruction replaceBranches(
-			final Collection<Instruction> newBranches) {
+	public Instruction replaceBranches(final int[] branches,
+			final Instruction[] fromInstructions, final int[] fromBranches) {
 		final Instruction result = new Instruction(this.line);
-		result.branches = newBranches.size();
-		int idx = 0;
-		for (final Instruction b : newBranches) {
-			if (!b.coveredBranches.isEmpty()) {
-				result.coveredBranches.set(idx++);
+		for (int i = 0; i < branches.length; i++) {
+			if (fromInstructions[i].coveredBranches.get(fromBranches[i])) {
+				result.coveredBranches.set(branches[i]);
 			}
+			result.branches = Math.max(result.branches, branches[i] + 1);
 		}
 		return result;
 	}
