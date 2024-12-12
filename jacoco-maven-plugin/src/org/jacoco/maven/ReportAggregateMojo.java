@@ -27,6 +27,7 @@ import org.apache.maven.model.Dependency;
 import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
 import org.apache.maven.project.MavenProject;
+import org.codehaus.plexus.util.StringUtils;
 import org.jacoco.report.IReportGroupVisitor;
 
 /**
@@ -90,6 +91,14 @@ public class ReportAggregateMojo extends AbstractReportMojo {
 	 */
 	@Parameter(defaultValue = "false")
 	private boolean includeCurrentProject;
+
+	/**
+	 * Include all projects from the reactor.
+	 *
+	 * @since 0.8.13
+	 */
+	@Parameter(defaultValue = "false", property = "jacoco.onlyReactorProjects")
+	private boolean onlyReactorProjects;
 
 	/**
 	 * The projects in the reactor.
@@ -180,7 +189,23 @@ public class ReportAggregateMojo extends AbstractReportMojo {
 	}
 
 	private List<MavenProject> findDependencies(final String... scopes) {
-		final List<MavenProject> result = new ArrayList<MavenProject>();
+		if (onlyReactorProjects) {
+			List<MavenProject> result = reactorProjects;
+			if (!includeCurrentProject) {
+				result.remove(project);
+			}
+
+			// need to exclude pom projects
+			List<MavenProject> nonPomProjects = new ArrayList<>();
+			for (MavenProject mavenProject : result) {
+				if (!StringUtils.equals("pom", mavenProject.getPackaging())) {
+					nonPomProjects.add(mavenProject);
+				}
+			}
+			return nonPomProjects;
+		}
+
+		final List<MavenProject> result = new ArrayList<>();
 		final List<String> scopeList = Arrays.asList(scopes);
 		for (final Object dependencyObject : project.getDependencies()) {
 			final Dependency dependency = (Dependency) dependencyObject;
