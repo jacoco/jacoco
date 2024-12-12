@@ -15,9 +15,12 @@ package org.jacoco.core.internal.analysis;
 import static org.junit.Assert.assertEquals;
 
 import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 import org.jacoco.core.analysis.ISourceNode;
 import org.junit.Before;
@@ -170,8 +173,13 @@ public class MethodCoverageCalculatorTest {
 		assertLine(3, 0, 1, 0, 0);
 	}
 
+	/**
+	 * @deprecated test of deprecated
+	 *             {@link MethodCoverageCalculator#replaceBranches(AbstractInsnNode, Set)}
+	 */
+	@Deprecated
 	@Test
-	public void should_replace_branches() {
+	public void deprecated_should_replace_branches() {
 		InsnNode i1 = addInsn(1);
 		InsnNode i2 = addInsn(2, true);
 		InsnNode i3 = addInsn(2, true);
@@ -186,8 +194,13 @@ public class MethodCoverageCalculatorTest {
 		assertLine(2, 1, 2, 0, 0); // still in place
 	}
 
+	/**
+	 * @deprecated test of deprecated
+	 *             {@link MethodCoverageCalculator#replaceBranches(AbstractInsnNode, Set)}
+	 */
+	@Deprecated
 	@Test
-	public void should_replace_branches_with_merged_instructions() {
+	public void deprecated_should_replace_branches_with_merged_instructions() {
 		InsnNode i1 = addInsn(1, false, false, false);
 		InsnNode i2 = addInsn(2, true);
 		InsnNode i3 = addInsn(2, false);
@@ -198,6 +211,51 @@ public class MethodCoverageCalculatorTest {
 		c.merge(i3, i2);
 		c.replaceBranches(i1,
 				new HashSet<AbstractInsnNode>(Arrays.asList(i2, i3, i4)));
+		c.calculate(coverage);
+
+		assertLine(1, 0, 1, 0, 3);
+	}
+
+	@Test
+	public void should_replace_branches() {
+		InsnNode i1 = addInsn(1);
+		InsnNode i2 = addInsn(2, false, true);
+		InsnNode i3 = addInsn(2, true);
+		InsnNode i4 = addInsn(2, false);
+
+		MethodCoverageCalculator c = new MethodCoverageCalculator(instructions);
+		HashMap<AbstractInsnNode, Collection<MethodCoverageCalculator.InstructionBranch>> replacements = new HashMap<AbstractInsnNode, Collection<MethodCoverageCalculator.InstructionBranch>>();
+		replacements.put(i2, Collections.singleton(
+				new MethodCoverageCalculator.InstructionBranch(i2, 1)));
+		replacements.put(i3, Collections.singleton(
+				new MethodCoverageCalculator.InstructionBranch(i3, 0)));
+		replacements.put(i4, Collections.singleton(
+				new MethodCoverageCalculator.InstructionBranch(i4, 0)));
+		c.replaceBranches(i1, replacements);
+		c.calculate(coverage);
+
+		assertLine(1, 0, 1, 1, 2); // branches coverage status replaced
+		assertLine(2, 1, 2, 1, 1); // still in place
+	}
+
+	@Test
+	public void should_replace_branches_with_merged_instructions() {
+		InsnNode i1 = addInsn(1, false, false, false);
+		InsnNode i2 = addInsn(2, true);
+		InsnNode i3 = addInsn(2, false);
+		InsnNode i4 = addInsn(2, false);
+
+		MethodCoverageCalculator c = new MethodCoverageCalculator(instructions);
+		c.merge(i4, i3);
+		c.merge(i3, i2);
+		HashMap<AbstractInsnNode, Collection<MethodCoverageCalculator.InstructionBranch>> replacements = new HashMap<AbstractInsnNode, Collection<MethodCoverageCalculator.InstructionBranch>>();
+		replacements.put(i2, Collections.singleton(
+				new MethodCoverageCalculator.InstructionBranch(i2, 0)));
+		replacements.put(i3, Collections.singleton(
+				new MethodCoverageCalculator.InstructionBranch(i3, 0)));
+		replacements.put(i4, Collections.singleton(
+				new MethodCoverageCalculator.InstructionBranch(i4, 0)));
+		c.replaceBranches(i1, replacements);
 		c.calculate(coverage);
 
 		assertLine(1, 0, 1, 0, 3);
