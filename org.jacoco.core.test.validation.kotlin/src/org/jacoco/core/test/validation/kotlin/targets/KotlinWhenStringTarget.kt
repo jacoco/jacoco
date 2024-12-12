@@ -27,6 +27,23 @@ object KotlinWhenStringTarget {
         else -> 7 // assertFullyCovered()
     } // assertFullyCovered()
 
+    private fun whenStringNullableDefault(p: String?): String =
+        when (p) { // assertFullyCovered(0, 4)
+            "a" -> "case a" // assertFullyCovered()
+            "b" -> "case b" // assertFullyCovered()
+            "c" -> "case c" // assertFullyCovered()
+            else -> "else" // assertFullyCovered()
+        } // assertFullyCovered()
+
+    private fun whenStringNullableCase(p: String?): String =
+        when (p) { // assertFullyCovered(0, 5)
+            "a" -> "case a" // assertFullyCovered()
+            "b" -> "case b" // assertFullyCovered()
+            "c" -> "case c" // assertFullyCovered()
+            null -> "null" // assertFullyCovered()
+            else -> "else" // assertFullyCovered()
+        } // assertFullyCovered()
+
     /**
      * Unlike [whenString]
      * in this example first case is the only case with biggest hashCode value.
@@ -50,6 +67,17 @@ object KotlinWhenStringTarget {
         whenString("\u0000a")
         whenString("\u0000b")
         whenString("\u0000c")
+
+        whenStringNullableDefault("a")
+        whenStringNullableDefault("b")
+        whenStringNullableDefault("c")
+        whenStringNullableDefault("")
+
+        whenStringNullableCase("a")
+        whenStringNullableCase("b")
+        whenStringNullableCase("c")
+        whenStringNullableCase(null)
+        whenStringNullableCase("")
 
         whenStringBiggestHashCodeFirst("")
         whenStringBiggestHashCodeFirst("a")
