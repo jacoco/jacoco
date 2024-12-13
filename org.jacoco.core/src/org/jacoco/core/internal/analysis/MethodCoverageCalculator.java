@@ -13,9 +13,9 @@
 package org.jacoco.core.internal.analysis;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
@@ -48,14 +48,14 @@ class MethodCoverageCalculator implements IFilterOutput {
 	 */
 	private final Map<AbstractInsnNode, AbstractInsnNode> merged;
 
-	private final Map<AbstractInsnNode, Set<AbstractInsnNode>> replacements;
+	private final Map<AbstractInsnNode, Iterable<Collection<InstructionBranch>>> replacements;
 
 	MethodCoverageCalculator(
 			final Map<AbstractInsnNode, Instruction> instructions) {
 		this.instructions = instructions;
 		this.ignored = new HashSet<AbstractInsnNode>();
 		this.merged = new HashMap<AbstractInsnNode, AbstractInsnNode>();
-		this.replacements = new HashMap<AbstractInsnNode, Set<AbstractInsnNode>>();
+		this.replacements = new HashMap<AbstractInsnNode, Iterable<Collection<InstructionBranch>>>();
 	}
 
 	/**
@@ -105,17 +105,33 @@ class MethodCoverageCalculator implements IFilterOutput {
 	}
 
 	private void applyReplacements() {
-		for (final Entry<AbstractInsnNode, Set<AbstractInsnNode>> entry : replacements
+		for (final Entry<AbstractInsnNode, Iterable<Collection<InstructionBranch>>> entry : replacements
 				.entrySet()) {
-			final Set<AbstractInsnNode> replacements = entry.getValue();
-			final List<Instruction> newBranches = new ArrayList<Instruction>(
-					replacements.size());
-			for (final AbstractInsnNode b : replacements) {
-				newBranches.add(instructions.get(b));
+			final Iterable<Collection<InstructionBranch>> targets = entry
+					.getValue();
+			int i = 0;
+			for (final Collection<InstructionBranch> list : targets) {
+				i += list.size();
 			}
+			final int[] branches = new int[i];
+			final Instruction[] fromInstructions = new Instruction[i];
+			final int[] fromBranches = new int[i];
+
+			i = 0;
+			int b = 0;
+			for (final Collection<InstructionBranch> list : targets) {
+				for (final InstructionBranch ib : list) {
+					branches[i] = b;
+					fromInstructions[i] = instructions.get(ib.instruction);
+					fromBranches[i] = ib.branch;
+					i++;
+				}
+				b++;
+			}
+
 			final AbstractInsnNode node = entry.getKey();
-			instructions.put(node,
-					instructions.get(node).replaceBranches(newBranches));
+			instructions.put(node, instructions.get(node)
+					.replaceBranches(branches, fromInstructions, fromBranches));
 		}
 	}
 
@@ -170,9 +186,54 @@ class MethodCoverageCalculator implements IFilterOutput {
 		}
 	}
 
+	/**
+	 * @deprecated use {@link #replaceBranches(AbstractInsnNode, Iterable)}
+	 *             instead
+	 */
+	@Deprecated
 	public void replaceBranches(final AbstractInsnNode source,
 			final Set<AbstractInsnNode> newTargets) {
-		replacements.put(source, newTargets);
+		final HashMap<AbstractInsnNode, Collection<InstructionBranch>> newBranches = new HashMap<AbstractInsnNode, Collection<InstructionBranch>>();
+		for (final AbstractInsnNode target : newTargets) {
+			final ArrayList<InstructionBranch> list = new ArrayList<InstructionBranch>();
+			final int branches = Math.max(
+					instructions.get(target).getBranchCounter().getTotalCount(),
+					1);
+			for (int branch = 0; branch < branches; branch++) {
+				list.add(new InstructionBranch(target, branch));
+			}
+			newBranches.put(target, list);
+		}
+		replaceBranches(source, newBranches.values());
+	}
+
+	public void replaceBranches(final AbstractInsnNode source,
+			final Iterable<Collection<InstructionBranch>> newBranches) {
+		replacements.put(source, newBranches);
+	}
+
+	/**
+	 * {@link #instruction} and index of its {@link #branch}.
+	 */
+	static class InstructionBranch {
+		/** Instruction. */
+		public final AbstractInsnNode instruction;
+		/** Branch index. */
+		public final int branch;
+
+		/**
+		 * Creates a new {@link InstructionBranch}.
+		 *
+		 * @param instruction
+		 *            instruction
+		 * @param branch
+		 *            branch index
+		 */
+		public InstructionBranch(final AbstractInsnNode instruction,
+				final int branch) {
+			this.instruction = instruction;
+			this.branch = branch;
+		}
 	}
 
 }
