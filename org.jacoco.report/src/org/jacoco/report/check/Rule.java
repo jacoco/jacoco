@@ -43,6 +43,8 @@ public final class Rule {
 	}
 
 	/**
+	 * Returns element type this rule applies to.
+	 *
 	 * @return element type this rule applies to
 	 */
 	public ElementType getElement() {
@@ -50,6 +52,8 @@ public final class Rule {
 	}
 
 	/**
+	 * Sets element type this rule applies to.
+	 *
 	 * @param elementType
 	 *            element type this rule applies to
 	 */
@@ -58,6 +62,8 @@ public final class Rule {
 	}
 
 	/**
+	 * Returns includes pattern.
+	 *
 	 * @return includes pattern
 	 */
 	public String getIncludes() {
@@ -65,6 +71,8 @@ public final class Rule {
 	}
 
 	/**
+	 * Sets includes pattern.
+	 *
 	 * @param includes
 	 *            includes pattern
 	 */
@@ -74,6 +82,8 @@ public final class Rule {
 	}
 
 	/**
+	 * Returns excludes pattern.
+	 *
 	 * @return excludes pattern
 	 */
 	public String getExcludes() {
@@ -81,6 +91,7 @@ public final class Rule {
 	}
 
 	/**
+	 * Sets excludes pattern.
 	 *
 	 * @param excludes
 	 *            excludes patterns
@@ -91,6 +102,8 @@ public final class Rule {
 	}
 
 	/**
+	 * Returns list of {@link Limit}s configured for this rule.
+	 *
 	 * @return list of {@link Limit}s configured for this rule
 	 */
 	public List<Limit> getLimits() {
@@ -98,6 +111,8 @@ public final class Rule {
 	}
 
 	/**
+	 * Sets list of {@link Limit}s configured for this rule.
+	 *
 	 * @param limits
 	 *            list of {@link Limit}s configured for this rule
 	 */
