@@ -20,6 +20,7 @@ import static org.junit.Assert.fail;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -39,6 +40,8 @@ public abstract class FilterTestBase {
 
 	private final Map<AbstractInsnNode, Set<AbstractInsnNode>> replacedBranches = new HashMap<AbstractInsnNode, Set<AbstractInsnNode>>();
 
+	private final HashMap<AbstractInsnNode, Iterable<Collection<IFilterOutput.InstructionBranch>>> actualReplacements = new HashMap<AbstractInsnNode, Iterable<Collection<IFilterOutput.InstructionBranch>>>();
+
 	protected final IFilterOutput output = new IFilterOutput() {
 		public void ignore(final AbstractInsnNode fromInclusive,
 				final AbstractInsnNode toInclusive) {
@@ -55,7 +58,7 @@ public abstract class FilterTestBase {
 
 		public void replaceBranches(final AbstractInsnNode source,
 				final Iterable<Collection<InstructionBranch>> newBranches) {
-			fail();
+			actualReplacements.put(source, newBranches);
 		}
 
 		/**
@@ -79,12 +82,69 @@ public abstract class FilterTestBase {
 
 	final void assertNoReplacedBranches() {
 		assertTrue(replacedBranches.isEmpty());
+		assertTrue(actualReplacements.isEmpty());
 	}
 
+	/**
+	 * @deprecated use
+	 *             {@link #assertReplacedBranches(MethodNode, AbstractInsnNode, List)}
+	 *             instead
+	 */
+	@Deprecated
 	final void assertReplacedBranches(final AbstractInsnNode source,
 			final Set<AbstractInsnNode> newTargets) {
 		assertEquals(Collections.singletonMap(source, newTargets),
 				replacedBranches);
+	}
+
+	final void assertReplacedBranches(final MethodNode methodNode,
+			final AbstractInsnNode source,
+			final List<Replacement> expectedReplacements) {
+		assertEquals(1, actualReplacements.size());
+
+		Collections.sort(expectedReplacements, new Comparator<Replacement>() {
+			public int compare(final Replacement r1, final Replacement r2) {
+				return r1.newBranch - r2.newBranch;
+			}
+		});
+
+		final StringBuilder expectedStringBuilder = new StringBuilder();
+		for (final Replacement replacement : expectedReplacements) {
+			expectedStringBuilder.append(replacement.newBranch)
+					.append(" if branch ").append(replacement.branch)
+					.append(" of instruction ").append(methodNode.instructions
+							.indexOf(replacement.instruction))
+					.append("\n");
+		}
+
+		final StringBuilder actualStringBuilder = new StringBuilder();
+		int newBranch = 0;
+		for (final Collection<IFilterOutput.InstructionBranch> pairs : actualReplacements
+				.get(source)) {
+			for (IFilterOutput.InstructionBranch pair : pairs) {
+				actualStringBuilder.append(newBranch).append(" if branch ")
+						.append(pair.branch).append(" of instruction ")
+						.append(methodNode.instructions
+								.indexOf(pair.instruction))
+						.append("\n");
+			}
+			newBranch++;
+		}
+
+		assertEquals(expectedStringBuilder.toString(),
+				actualStringBuilder.toString());
+	}
+
+	static class Replacement {
+		final int newBranch;
+		final AbstractInsnNode instruction;
+		final int branch;
+
+		Replacement(int newBranch, AbstractInsnNode instruction, int branch) {
+			this.newBranch = newBranch;
+			this.instruction = instruction;
+			this.branch = branch;
+		}
 	}
 
 	static class Range {
