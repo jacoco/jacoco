@@ -212,28 +212,4 @@ class MethodCoverageCalculator implements IFilterOutput {
 		replacements.put(source, newBranches);
 	}
 
-	/**
-	 * {@link #instruction} and index of its {@link #branch}.
-	 */
-	static class InstructionBranch {
-		/** Instruction. */
-		public final AbstractInsnNode instruction;
-		/** Branch index. */
-		public final int branch;
-
-		/**
-		 * Creates a new {@link InstructionBranch}.
-		 *
-		 * @param instruction
-		 *            instruction
-		 * @param branch
-		 *            branch index
-		 */
-		public InstructionBranch(final AbstractInsnNode instruction,
-				final int branch) {
-			this.instruction = instruction;
-			this.branch = branch;
-		}
-	}
-
 }
