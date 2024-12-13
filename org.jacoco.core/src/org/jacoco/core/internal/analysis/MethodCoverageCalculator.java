@@ -105,33 +105,18 @@ class MethodCoverageCalculator implements IFilterOutput {
 	}
 
 	private void applyReplacements() {
+		final Instruction.Mapper mapper = new Instruction.Mapper() {
+			public Instruction apply(final AbstractInsnNode node) {
+				return instructions.get(node);
+			}
+		};
 		for (final Entry<AbstractInsnNode, Iterable<Collection<InstructionBranch>>> entry : replacements
 				.entrySet()) {
-			final Iterable<Collection<InstructionBranch>> targets = entry
-					.getValue();
-			int i = 0;
-			for (final Collection<InstructionBranch> list : targets) {
-				i += list.size();
-			}
-			final int[] branches = new int[i];
-			final Instruction[] fromInstructions = new Instruction[i];
-			final int[] fromBranches = new int[i];
-
-			i = 0;
-			int b = 0;
-			for (final Collection<InstructionBranch> list : targets) {
-				for (final InstructionBranch ib : list) {
-					branches[i] = b;
-					fromInstructions[i] = instructions.get(ib.instruction);
-					fromBranches[i] = ib.branch;
-					i++;
-				}
-				b++;
-			}
-
 			final AbstractInsnNode node = entry.getKey();
+			final Iterable<Collection<InstructionBranch>> newBranches = entry
+					.getValue();
 			instructions.put(node, instructions.get(node)
-					.replaceBranches(branches, fromInstructions, fromBranches));
+					.replaceBranches(newBranches, mapper));
 		}
 	}
 

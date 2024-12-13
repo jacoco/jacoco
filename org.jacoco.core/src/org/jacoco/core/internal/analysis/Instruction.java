@@ -13,8 +13,11 @@
 package org.jacoco.core.internal.analysis;
 
 import java.util.BitSet;
+import java.util.Collection;
 
 import org.jacoco.core.analysis.ICounter;
+import org.jacoco.core.internal.analysis.filter.IFilterOutput;
+import org.objectweb.asm.tree.AbstractInsnNode;
 
 /**
  * Execution status of a single bytecode instruction internally used for
@@ -49,7 +52,7 @@ import org.jacoco.core.analysis.ICounter;
  *
  * <ul>
  * <li>{@link #merge(Instruction)}</li>
- * <li>{@link #replaceBranches(int[], Instruction[], int[])}</li>
+ * <li>{@link #replaceBranches(Iterable, Mapper)}</li>
  * </ul>
  */
 public class Instruction {
@@ -163,26 +166,36 @@ public class Instruction {
 	 * are derived from the statuses of the given branches of the given
 	 * instructions.
 	 *
-	 * @param branches
-	 *            indexes of new branches whose execution status should be
-	 *            computed
-	 * @param fromInstructions
-	 *            instructions whose branch execution statuses should be used
-	 * @param fromBranches
-	 *            indexes of branches of the given instructions whose execution
-	 *            status should be used
+	 * @param newBranches
+	 *            new branches
+	 * @param mapper
+	 *            provides {@link Instruction} corresponding to
+	 *            {@link IFilterOutput.InstructionBranch#instruction}
 	 * @return new instance with replaced branches
 	 */
-	public Instruction replaceBranches(final int[] branches,
-			final Instruction[] fromInstructions, final int[] fromBranches) {
+	public Instruction replaceBranches(
+			final Iterable<Collection<IFilterOutput.InstructionBranch>> newBranches,
+			final Mapper mapper) {
 		final Instruction result = new Instruction(this.line);
-		for (int i = 0; i < branches.length; i++) {
-			if (fromInstructions[i].coveredBranches.get(fromBranches[i])) {
-				result.coveredBranches.set(branches[i]);
+		int branchIndex = 0;
+		for (final Collection<IFilterOutput.InstructionBranch> newBranch : newBranches) {
+			for (final IFilterOutput.InstructionBranch from : newBranch) {
+				if (mapper.apply(from.instruction).coveredBranches
+						.get(from.branch)) {
+					result.coveredBranches.set(branchIndex);
+				}
 			}
-			result.branches = Math.max(result.branches, branches[i] + 1);
+			branchIndex++;
 		}
+		result.branches = branchIndex;
 		return result;
+	}
+
+	/**
+	 * {@code java.util.function.Function<AbstractInsnNode, Instruction>}
+	 */
+	interface Mapper {
+		Instruction apply(AbstractInsnNode node);
 	}
 
 	/**
