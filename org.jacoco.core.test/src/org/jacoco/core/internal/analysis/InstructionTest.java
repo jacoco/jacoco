@@ -14,8 +14,17 @@ package org.jacoco.core.internal.analysis;
 
 import static org.junit.Assert.assertEquals;
 
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
+
+import org.jacoco.core.internal.analysis.filter.IFilterOutput;
 import org.junit.Before;
 import org.junit.Test;
+import org.objectweb.asm.Opcodes;
+import org.objectweb.asm.tree.AbstractInsnNode;
+import org.objectweb.asm.tree.InsnNode;
 
 /**
  * Unit tests for {@link Instruction}.
@@ -159,30 +168,59 @@ public class InstructionTest {
 
 	@Test
 	public void replaceBranches_should_calculate_coverage_on_new_branches() {
+		final InsnNode n1 = new InsnNode(Opcodes.NOP);
+		final InsnNode n2 = new InsnNode(Opcodes.NOP);
+		final InsnNode n3 = new InsnNode(Opcodes.NOP);
+		final HashMap<AbstractInsnNode, Instruction> map = new HashMap<AbstractInsnNode, Instruction>();
+		final Instruction.Mapper mapper = new Instruction.Mapper() {
+			public Instruction apply(final AbstractInsnNode node) {
+				return map.get(node);
+			}
+		};
+
 		Instruction i1 = new Instruction(1);
+		map.put(n1, i1);
 		Instruction i2 = new Instruction(2);
+		map.put(n2, i2);
 		Instruction i3 = new Instruction(3);
+		map.put(n3, i3);
 		i3.addBranch(false, 0);
 		i3.addBranch(true, 1);
 
-		instruction = instruction.replaceBranches( //
-				new int[] { 0, 1, 2 }, //
-				new Instruction[] { i1, i2, i3 }, //
-				new int[] { 0, 0, 0 });
+		instruction = instruction.replaceBranches(
+				Arrays.<Collection<IFilterOutput.InstructionBranch>> asList(
+						Collections.singleton(
+								new IFilterOutput.InstructionBranch(n1, 0)),
+						Collections.singleton(
+								new IFilterOutput.InstructionBranch(n2, 0)),
+						Collections.singleton(
+								new IFilterOutput.InstructionBranch(n3, 0))),
+				mapper);
 		assertEquals(CounterImpl.getInstance(3, 0),
 				instruction.getBranchCounter());
 
-		instruction = instruction.replaceBranches( //
-				new int[] { 0, 1, 2 }, //
-				new Instruction[] { i1, i2, i3 }, //
-				new int[] { 0, 0, 1 });
+		instruction = instruction.replaceBranches(
+				Arrays.<Collection<IFilterOutput.InstructionBranch>> asList(
+						Collections.singleton(
+								new IFilterOutput.InstructionBranch(n1, 0)),
+						Collections.singleton(
+								new IFilterOutput.InstructionBranch(n2, 0)),
+						Collections.singleton(
+								new IFilterOutput.InstructionBranch(n3, 1))),
+				mapper);
 		assertEquals(CounterImpl.getInstance(2, 1),
 				instruction.getBranchCounter());
 
-		instruction = instruction.replaceBranches( //
-				new int[] { 0, 1, 2, 2 }, //
-				new Instruction[] { i1, i2, i3, i3 }, //
-				new int[] { 0, 0, 1, 0 });
+		instruction = instruction.replaceBranches(
+				Arrays.asList(
+						Collections.singleton(
+								new IFilterOutput.InstructionBranch(n1, 0)),
+						Collections.singleton(
+								new IFilterOutput.InstructionBranch(n2, 0)),
+						Arrays.asList( //
+								new IFilterOutput.InstructionBranch(n3, 1),
+								new IFilterOutput.InstructionBranch(n3, 0))),
+				mapper);
 		assertEquals(CounterImpl.getInstance(2, 1),
 				instruction.getBranchCounter());
 	}
