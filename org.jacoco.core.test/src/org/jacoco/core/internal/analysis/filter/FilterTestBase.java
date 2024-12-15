@@ -93,8 +93,12 @@ public abstract class FilterTestBase {
 	@Deprecated
 	final void assertReplacedBranches(final AbstractInsnNode source,
 			final Set<AbstractInsnNode> newTargets) {
-		assertEquals(Collections.singletonMap(source, newTargets),
-				replacedBranches);
+		assertReplacedBranches(Collections.singletonMap(source, newTargets));
+	}
+
+	final void assertReplacedBranches(
+			final Map<AbstractInsnNode, Set<AbstractInsnNode>> expected) {
+		assertEquals(expected, replacedBranches);
 	}
 
 	final void assertReplacedBranches(final MethodNode methodNode,
