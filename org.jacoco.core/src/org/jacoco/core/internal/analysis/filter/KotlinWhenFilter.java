@@ -12,6 +12,9 @@
  *******************************************************************************/
 package org.jacoco.core.internal.analysis.filter;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -126,12 +129,18 @@ final class KotlinWhenFilter implements IFilter {
 		}
 		final LabelNode defaultLabel = getDefaultLabel(switchNode);
 		final Set<AbstractInsnNode> newTargets = new HashSet<AbstractInsnNode>();
+		final ArrayList<Collection<IFilterOutput.InstructionBranch>> replacements = new ArrayList<Collection<IFilterOutput.InstructionBranch>>();
+		int branchIndex = 0;
 		for (final LabelNode label : labels) {
-			if (label != defaultLabel) {
-				newTargets.add(AbstractMatcher.skipNonOpcodes(label));
+			if (label != defaultLabel && !newTargets.contains(label)) {
+				newTargets.add(label);
+				branchIndex++;
+				replacements.add(Collections.singleton(
+						new IFilterOutput.InstructionBranch(switchNode,
+								branchIndex)));
 			}
 		}
-		output.replaceBranches(switchNode, newTargets);
+		output.replaceBranches(switchNode, replacements);
 	}
 
 }
