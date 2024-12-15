@@ -119,7 +119,7 @@ final class KotlinWhenFilter implements IFilter {
 		}
 	}
 
-	private static void ignoreDefaultBranch(final AbstractInsnNode switchNode,
+	static void ignoreDefaultBranch(final AbstractInsnNode switchNode,
 			final IFilterOutput output) {
 		final List<LabelNode> labels;
 		if (switchNode.getOpcode() == Opcodes.LOOKUPSWITCH) {
