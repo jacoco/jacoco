@@ -93,7 +93,7 @@ jobs:
       elif [[ "$BUILD_SOURCEBRANCH" == "refs/heads/master" && "$JDK_VERSION" == "11" ]]; then
         ./mvnw -V -B -e --no-transfer-progress -f org.jacoco.build \
           verify -Djdk.version=$JDK_VERSION -Dbytecode.version=$JDK_VERSION \
-          sonar:sonar \
+          sonar:sonar -Dsonar.scanner.skipJreProvisioning \
           --toolchains=toolchains.xml --settings=.azure-pipelines/maven-settings.xml
       else
         ./mvnw -V -B -e --no-transfer-progress \

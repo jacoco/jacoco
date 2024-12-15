@@ -16,7 +16,7 @@ import org.jacoco.core.test.validation.ValidationTestBase;
 import org.jacoco.core.test.validation.kotlin.targets.KotlinSafeCallOperatorTarget;
 
 /**
- * Test of safe call operator.
+ * Test of code coverage in {@link KotlinSafeCallOperatorTarget}.
  */
 public class KotlinSafeCallOperatorTest extends ValidationTestBase {
 
