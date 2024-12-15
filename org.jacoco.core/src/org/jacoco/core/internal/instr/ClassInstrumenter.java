@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2023 Mountainminds GmbH & Co. KG and Contributors
+ * Copyright (c) 2009, 2024 Mountainminds GmbH & Co. KG and Contributors
  * This program and the accompanying materials are made available under
  * the terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0
@@ -28,7 +28,7 @@ public class ClassInstrumenter extends ClassProbesVisitor {
 	private String className;
 
 	/**
-	 * Emits a instrumented version of this class to the given class visitor.
+	 * Emits an instrumented version of this class to the given class visitor.
 	 *
 	 * @param probeArrayStrategy
 	 *            this strategy will be used to access the probe array

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2023 Mountainminds GmbH & Co. KG and Contributors
+ * Copyright (c) 2009, 2024 Mountainminds GmbH & Co. KG and Contributors
  * This program and the accompanying materials are made available under
  * the terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0
@@ -25,9 +25,9 @@ import org.jacoco.core.internal.analysis.filter.IFilterOutput;
 import org.objectweb.asm.tree.AbstractInsnNode;
 
 /**
- * Calculates the filtered coverage of a single method. A instance of this class
- * can be first used as {@link IFilterOutput} before the coverage result is
- * calculated.
+ * Calculates the filtered coverage of a single method. An instance of this
+ * class can be first used as {@link IFilterOutput} before the coverage result
+ * is calculated.
  */
 class MethodCoverageCalculator implements IFilterOutput {
 

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2023 Mountainminds GmbH & Co. KG and Contributors
+ * Copyright (c) 2009, 2024 Mountainminds GmbH & Co. KG and Contributors
  * This program and the accompanying materials are made available under
  * the terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0
@@ -446,6 +446,69 @@ public class KotlinCoroutineFilterTest extends FilterTestBase {
 		filter.filter(m, context, output);
 
 		assertIgnored(range1, range2);
+	}
+
+	/**
+	 * <pre>
+	 *     runBlocking {
+	 *         // suspending lambda without suspension points,
+	 *         // i.e. without invocations of suspending functions/lambdas
+	 *     }
+	 * </pre>
+	 *
+	 * https://github.com/JetBrains/kotlin/commit/f4a1e27124f77b2ffca576f7393218373c6ae085
+	 *
+	 * @see #should_filter_suspending_lambdas()
+	 */
+	@Test
+	public void should_filter_Kotlin_1_6_suspending_lambda_without_suspension_points() {
+		final MethodNode m = new MethodNode(InstrSupport.ASM_API_VERSION,
+				Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "invokeSuspend",
+				"(Ljava/lang/Object;)Ljava/lang/Object;", null, null);
+		context.classAnnotations
+				.add(KotlinGeneratedFilter.KOTLIN_METADATA_DESC);
+
+		m.visitMethodInsn(Opcodes.INVOKESTATIC,
+				"kotlin/coroutines/intrinsics/IntrinsicsKt",
+				"getCOROUTINE_SUSPENDED", "()Ljava/lang/Object;", false);
+		final Range range1 = new Range();
+		range1.fromInclusive = m.instructions.getLast();
+		m.visitInsn(Opcodes.POP);
+
+		m.visitVarInsn(Opcodes.ALOAD, 0);
+		m.visitFieldInsn(Opcodes.GETFIELD, "ExampleKt$example$1", "label", "I");
+
+		final Label dflt = new Label();
+		final Label state0 = new Label();
+		m.visitTableSwitchInsn(0, 0, dflt, state0);
+
+		m.visitLabel(state0);
+		{
+			m.visitVarInsn(Opcodes.ALOAD, 1);
+			m.visitMethodInsn(Opcodes.INVOKESTATIC, "kotlin/ResultKt",
+					"throwOnFailure", "(Ljava/lang/Object;)V", false);
+		}
+		range1.toInclusive = m.instructions.getLast();
+
+		m.visitFieldInsn(Opcodes.GETSTATIC, "kotlin/Unit", "INSTANCE",
+				"Lkotlin/Unit;");
+		m.visitInsn(Opcodes.ARETURN);
+
+		m.visitLabel(dflt);
+		final Range range0 = new Range();
+		range0.fromInclusive = m.instructions.getLast();
+		m.visitTypeInsn(Opcodes.NEW, "java/lang/IllegalStateException");
+		m.visitInsn(Opcodes.DUP);
+		m.visitLdcInsn("call to 'resume' before 'invoke' with coroutine");
+		m.visitMethodInsn(Opcodes.INVOKESPECIAL,
+				"java/lang/IllegalStateException", "<init>",
+				"(Ljava/lang/String;)V", false);
+		m.visitInsn(Opcodes.ATHROW);
+		range0.toInclusive = m.instructions.getLast();
+
+		filter.filter(m, context, output);
+
+		assertIgnored(range0, range1);
 	}
 
 }

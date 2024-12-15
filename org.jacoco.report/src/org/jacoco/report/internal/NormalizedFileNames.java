@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2023 Mountainminds GmbH & Co. KG and Contributors
+ * Copyright (c) 2009, 2024 Mountainminds GmbH & Co. KG and Contributors
  * This program and the accompanying materials are made available under
  * the terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0
@@ -31,7 +31,7 @@ import java.util.Set;
  * <li>File names are case aware, i.e. the same file name but with different
  * upper/lower case characters is not possible.</li>
  * <li>If unique filenames can't directly created from the ids, additional
- * suffixes are appended.</li>
+ * prefixes are prepended.</li>
  * </ul>
  */
 class NormalizedFileNames {
@@ -81,7 +81,7 @@ class NormalizedFileNames {
 		String lower = unique.toLowerCase(Locale.ENGLISH);
 		int idx = 1;
 		while (usedNames.contains(lower)) {
-			unique = s + '~' + idx++;
+			unique = (idx++) + "~" + s;
 			lower = unique.toLowerCase(Locale.ENGLISH);
 		}
 		usedNames.add(lower);

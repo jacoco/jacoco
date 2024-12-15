@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2023 Mountainminds GmbH & Co. KG and Contributors
+ * Copyright (c) 2009, 2024 Mountainminds GmbH & Co. KG and Contributors
  * This program and the accompanying materials are made available under
  * the terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0
@@ -31,6 +31,9 @@ import static org.objectweb.asm.Opcodes.V13;
 import static org.objectweb.asm.Opcodes.V14;
 import static org.objectweb.asm.Opcodes.V15;
 import static org.objectweb.asm.Opcodes.V16;
+import static org.objectweb.asm.Opcodes.V17;
+import static org.objectweb.asm.Opcodes.V18;
+import static org.objectweb.asm.Opcodes.V19;
 import static org.objectweb.asm.Opcodes.V1_1;
 import static org.objectweb.asm.Opcodes.V1_2;
 import static org.objectweb.asm.Opcodes.V1_3;
@@ -39,6 +42,11 @@ import static org.objectweb.asm.Opcodes.V1_5;
 import static org.objectweb.asm.Opcodes.V1_6;
 import static org.objectweb.asm.Opcodes.V1_7;
 import static org.objectweb.asm.Opcodes.V1_8;
+import static org.objectweb.asm.Opcodes.V20;
+import static org.objectweb.asm.Opcodes.V21;
+import static org.objectweb.asm.Opcodes.V22;
+import static org.objectweb.asm.Opcodes.V23;
+import static org.objectweb.asm.Opcodes.V24;
 import static org.objectweb.asm.Opcodes.V9;
 
 import java.io.IOException;
@@ -137,6 +145,51 @@ public class ClassFileVersionsTest {
 	@Test
 	public void test_16() throws IOException {
 		testVersion(V16, true);
+	}
+
+	@Test
+	public void test_17() throws IOException {
+		testVersion(V17, true);
+	}
+
+	@Test
+	public void test_18() throws IOException {
+		testVersion(V18, true);
+	}
+
+	@Test
+	public void test_19() throws IOException {
+		testVersion(V19, true);
+	}
+
+	@Test
+	public void test_20() throws IOException {
+		testVersion(V20, true);
+	}
+
+	@Test
+	public void test_21() throws IOException {
+		testVersion(V21, true);
+	}
+
+	@Test
+	public void test_22() throws IOException {
+		testVersion(V22, true);
+	}
+
+	@Test
+	public void test_23() throws IOException {
+		testVersion(V23, true);
+	}
+
+	@Test
+	public void test_24() throws IOException {
+		testVersion(V24, true);
+	}
+
+	@Test
+	public void test_25() throws IOException {
+		testVersion(V24 + 1, true);
 	}
 
 	private void testVersion(int version, boolean frames) throws IOException {

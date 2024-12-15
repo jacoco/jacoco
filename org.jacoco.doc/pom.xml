@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-   Copyright (c) 2009, 2023 Mountainminds GmbH & Co. KG and Contributors
+   Copyright (c) 2009, 2024 Mountainminds GmbH & Co. KG and Contributors
    This program and the accompanying materials are made available under
    the terms of the Eclipse Public License 2.0 which is available at
    http://www.eclipse.org/legal/epl-2.0
@@ -16,7 +16,7 @@
   <parent>
     <groupId>org.jacoco</groupId>
     <artifactId>org.jacoco.build</artifactId>
-    <version>0.8.11-SNAPSHOT</version>
+    <version>0.8.13-SNAPSHOT</version>
     <relativePath>../org.jacoco.build</relativePath>
   </parent>
 
@@ -157,7 +157,6 @@
             </goals>
             <configuration>
               <target>
-                <echo message="JUnit report"/>
                 <mkdir dir="${project.build.directory}/junit"/>
                 <junitreport todir="${project.build.directory}/junit">
                   <fileset dir="../org.jacoco.agent.test/target" includes="surefire-reports/**/*.xml"/>
@@ -198,9 +197,8 @@
               <goal>jar</goal>
             </goals>
             <configuration>
-              <reportOutputDirectory>${project.build.directory}/apidocs</reportOutputDirectory>
               <includeDependencySources>true</includeDependencySources>
-              <excludePackageNames>*.internal,org.jacoco.ant,org.jacoco.maven,org.jacoco.examples</excludePackageNames>
+              <excludePackageNames>*.internal.*,*.internal,org.jacoco.ant,org.jacoco.maven,org.jacoco.examples</excludePackageNames>
               <dependencySourceIncludes>
                 <dependencySourceInclude>org.jacoco:*</dependencySourceInclude>
               </dependencySourceIncludes>

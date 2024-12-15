@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2023 Mountainminds GmbH & Co. KG and Contributors
+ * Copyright (c) 2009, 2024 Mountainminds GmbH & Co. KG and Contributors
  * This program and the accompanying materials are made available under
  * the terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0
@@ -16,7 +16,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.objectweb.asm.Opcodes;
-import org.objectweb.asm.Type;
 import org.objectweb.asm.tree.AbstractInsnNode;
 import org.objectweb.asm.tree.JumpInsnNode;
 import org.objectweb.asm.tree.LdcInsnNode;
@@ -27,23 +26,12 @@ import org.objectweb.asm.tree.TableSwitchInsnNode;
 /**
  * Filters branches that Kotlin compiler generates for coroutines.
  */
-public final class KotlinCoroutineFilter implements IFilter {
-
-	static boolean isImplementationOfSuspendFunction(
-			final MethodNode methodNode) {
-		if (methodNode.name.startsWith("access$")) {
-			return false;
-		}
-		final Type methodType = Type.getMethodType(methodNode.desc);
-		final int lastArgument = methodType.getArgumentTypes().length - 1;
-		return lastArgument >= 0 && "kotlin.coroutines.Continuation".equals(
-				methodType.getArgumentTypes()[lastArgument].getClassName());
-	}
+final class KotlinCoroutineFilter implements IFilter {
 
 	public void filter(final MethodNode methodNode,
 			final IFilterContext context, final IFilterOutput output) {
 
-		if (!KotlinGeneratedFilter.isKotlinClass(context)) {
+		if (!Filters.isKotlinClass(context)) {
 			return;
 		}
 
@@ -94,14 +82,23 @@ public final class KotlinCoroutineFilter implements IFilter {
 						"getCOROUTINE_SUSPENDED", "()Ljava/lang/Object;");
 			}
 
-			nextIsVar(Opcodes.ASTORE, "COROUTINE_SUSPENDED");
-			nextIsVar(Opcodes.ALOAD, "this");
-			nextIs(Opcodes.GETFIELD);
-			nextIs(Opcodes.TABLESWITCH);
-			if (cursor == null) {
-				return;
+			final TableSwitchInsnNode s;
+			if (cursor != null
+					&& Opcodes.POP == skipNonOpcodes(cursor.getNext())
+							.getOpcode()) {
+				// suspending lambda without suspension points
+				nextIs(Opcodes.POP);
+				s = nextIsStateSwitch();
+				if (s == null || s.labels.size() != 1) {
+					return;
+				}
+			} else {
+				nextIsVar(Opcodes.ASTORE, "COROUTINE_SUSPENDED");
+				s = nextIsStateSwitch();
+				if (s == null) {
+					return;
+				}
 			}
-			final TableSwitchInsnNode s = (TableSwitchInsnNode) cursor;
 			final List<AbstractInsnNode> ignore = new ArrayList<AbstractInsnNode>(
 					s.labels.size() * 2);
 
@@ -172,6 +169,16 @@ public final class KotlinCoroutineFilter implements IFilter {
 			for (int i = 0; i < ignore.size(); i += 2) {
 				output.ignore(ignore.get(i), ignore.get(i + 1));
 			}
+		}
+
+		private TableSwitchInsnNode nextIsStateSwitch() {
+			nextIsVar(Opcodes.ALOAD, "this");
+			nextIs(Opcodes.GETFIELD);
+			nextIs(Opcodes.TABLESWITCH);
+			if (cursor == null) {
+				return null;
+			}
+			return (TableSwitchInsnNode) cursor;
 		}
 
 		private void nextIsThrowOnFailure() {

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2023 Mountainminds GmbH & Co. KG and Contributors
+ * Copyright (c) 2009, 2024 Mountainminds GmbH & Co. KG and Contributors
  * This program and the accompanying materials are made available under
  * the terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0
@@ -70,8 +70,7 @@ public class PackageSourcePage extends TablePage<IPackageCoverage> {
 
 	/**
 	 * Returns the link to the source file page of the source file with the
-	 * given name. If no source file was located, <code>null</code> is
-	 * returned..
+	 * given name. If no source file was located, <code>null</code> is returned.
 	 */
 	ILinkable getSourceFilePage(final String name) {
 		return sourceFilePages.get(name);

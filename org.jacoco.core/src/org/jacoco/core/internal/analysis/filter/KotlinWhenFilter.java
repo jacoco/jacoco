@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2023 Mountainminds GmbH & Co. KG and Contributors
+ * Copyright (c) 2009, 2024 Mountainminds GmbH & Co. KG and Contributors
  * This program and the accompanying materials are made available under
  * the terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0
@@ -18,6 +18,7 @@ import java.util.Set;
 
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.tree.AbstractInsnNode;
+import org.objectweb.asm.tree.FieldInsnNode;
 import org.objectweb.asm.tree.JumpInsnNode;
 import org.objectweb.asm.tree.LabelNode;
 import org.objectweb.asm.tree.LookupSwitchInsnNode;
@@ -26,11 +27,10 @@ import org.objectweb.asm.tree.TableSwitchInsnNode;
 
 /**
  * Filters bytecode that Kotlin compiler generates for <code>when</code>
- * expressions which list all cases of <code>enum</code> or
- * <code>sealed class</code>, i.e. which don't require explicit
- * <code>else</code>.
+ * expressions and statements with subject of type <code>enum class</code> or
+ * <code>sealed class</code>.
  */
-public final class KotlinWhenFilter implements IFilter {
+final class KotlinWhenFilter implements IFilter {
 
 	private static final String EXCEPTION = "kotlin/NoWhenBranchMatchedException";
 
@@ -39,6 +39,7 @@ public final class KotlinWhenFilter implements IFilter {
 		final Matcher matcher = new Matcher();
 		for (final AbstractInsnNode i : methodNode.instructions) {
 			matcher.match(i, output);
+			matcher.matchNullableEnum(i, output);
 		}
 	}
 
@@ -69,6 +70,39 @@ public final class KotlinWhenFilter implements IFilter {
 				}
 			}
 		}
+
+		void matchNullableEnum(final AbstractInsnNode start,
+				final IFilterOutput output) {
+			if (start.getOpcode() != Opcodes.DUP) {
+				return;
+			}
+			cursor = start;
+			// https://github.com/JetBrains/kotlin/blob/v2.0.0/compiler/backend/src/org/jetbrains/kotlin/codegen/when/EnumSwitchCodegen.java#L46
+			nextIs(Opcodes.IFNONNULL);
+			final JumpInsnNode jump1 = (JumpInsnNode) cursor;
+			nextIs(Opcodes.POP);
+			nextIs(Opcodes.ICONST_M1);
+			nextIs(Opcodes.GOTO);
+			final JumpInsnNode jump2 = (JumpInsnNode) cursor;
+			nextIs(Opcodes.GETSTATIC);
+			final FieldInsnNode fieldInsnNode = (FieldInsnNode) cursor;
+			// https://github.com/JetBrains/kotlin/blob/v2.0.0/compiler/backend/src/org/jetbrains/kotlin/codegen/when/WhenByEnumsMapping.java#L27-L28
+			if (fieldInsnNode == null
+					|| !fieldInsnNode.owner.endsWith("$WhenMappings")
+					|| !fieldInsnNode.name.startsWith("$EnumSwitchMapping$")) {
+				return;
+			}
+			nextIs(Opcodes.SWAP);
+			nextIs(Opcodes.INVOKEVIRTUAL); // ordinal()I
+			nextIs(Opcodes.IALOAD);
+			nextIsSwitch();
+			if (cursor != null
+					&& skipNonOpcodes(jump1.label) == skipNonOpcodes(
+							jump2.getNext())
+					&& skipNonOpcodes(jump2.label) == cursor) {
+				output.ignore(start, cursor.getPrevious());
+			}
+		}
 	}
 
 	private static LabelNode getDefaultLabel(final AbstractInsnNode i) {
@@ -90,9 +124,12 @@ public final class KotlinWhenFilter implements IFilter {
 		} else {
 			labels = ((TableSwitchInsnNode) switchNode).labels;
 		}
+		final LabelNode defaultLabel = getDefaultLabel(switchNode);
 		final Set<AbstractInsnNode> newTargets = new HashSet<AbstractInsnNode>();
 		for (final LabelNode label : labels) {
-			newTargets.add(AbstractMatcher.skipNonOpcodes(label));
+			if (label != defaultLabel) {
+				newTargets.add(AbstractMatcher.skipNonOpcodes(label));
+			}
 		}
 		output.replaceBranches(switchNode, newTargets);
 	}

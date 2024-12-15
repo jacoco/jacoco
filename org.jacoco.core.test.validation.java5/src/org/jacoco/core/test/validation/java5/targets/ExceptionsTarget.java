@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2023 Mountainminds GmbH & Co. KG and Contributors
+ * Copyright (c) 2009, 2024 Mountainminds GmbH & Co. KG and Contributors
  * This program and the accompanying materials are made available under
  * the terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0
@@ -63,7 +63,7 @@ public class ExceptionsTarget {
 	}
 
 	/**
-	 * For each line with method invocations a extra probe is inserted.
+	 * For each line with method invocations an extra probe is inserted.
 	 * Therefore the lines before the exception are marked as covered.
 	 */
 	private static void implicitException() {

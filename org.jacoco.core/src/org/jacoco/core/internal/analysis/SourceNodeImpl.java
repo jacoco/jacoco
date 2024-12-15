@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2023 Mountainminds GmbH & Co. KG and Contributors
+ * Copyright (c) 2009, 2024 Mountainminds GmbH & Co. KG and Contributors
  * This program and the accompanying materials are made available under
  * the terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0
@@ -39,6 +39,43 @@ public class SourceNodeImpl extends CoverageNodeImpl implements ISourceNode {
 		super(elementType, name);
 		lines = null;
 		offset = UNKNOWN_LINE;
+	}
+
+	/**
+	 * @param fragment
+	 *            fragment to apply
+	 * @return <code>true</code> if fragment contains lines of this node
+	 */
+	public boolean applyFragment(final SourceNodeImpl fragment) {
+		boolean applied = false;
+		for (int line = getFirstLine(); line <= getLastLine(); line++) {
+			final ILine fragmentLine = fragment.getLine(line);
+			if (fragmentLine.equals(LineImpl.EMPTY)) {
+				continue;
+			}
+			final LineImpl l = getLine(line);
+			final CounterImpl counter;
+			if (l.getInstructionCounter().getCoveredCount() > 0 || fragmentLine
+					.getInstructionCounter().getCoveredCount() > 0) {
+				counter = CounterImpl.COUNTER_0_1;
+			} else {
+				counter = CounterImpl.COUNTER_1_0;
+			}
+			lines[line - offset] = LineImpl.EMPTY;
+			if (l.instructions.covered > 0) {
+				lineCounter = lineCounter.increment(0, -1);
+			} else if (l.instructions.missed > 0) {
+				lineCounter = lineCounter.increment(-1, 0);
+			}
+			incrementLine(counter, CounterImpl.COUNTER_0_0, line);
+			instructionCounter = instructionCounter.increment(
+					counter.missed - l.instructions.missed,
+					counter.covered - l.instructions.covered);
+			branchCounter = branchCounter.increment(-l.branches.missed,
+					-l.branches.covered);
+			applied = true;
+		}
+		return applied;
 	}
 
 	/**
@@ -101,7 +138,7 @@ public class SourceNodeImpl extends CoverageNodeImpl implements ISourceNode {
 	}
 
 	/**
-	 * Increments instructions and branches by the given counter values. If a
+	 * Increments instructions and branches by the given counter values. If an
 	 * optional line number is specified the instructions and branches are added
 	 * to the given line. The line counter is incremented accordingly.
 	 *

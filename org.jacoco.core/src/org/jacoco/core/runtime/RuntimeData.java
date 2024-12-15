@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2023 Mountainminds GmbH & Co. KG and Contributors
+ * Copyright (c) 2009, 2024 Mountainminds GmbH & Co. KG and Contributors
  * This program and the accompanying materials are made available under
  * the terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0
@@ -45,7 +45,7 @@ public class RuntimeData {
 
 	/**
 	 * Sets a session identifier for this runtime. The identifier is used when
-	 * execution data is collected. If no identifier is explicitly set a
+	 * execution data is collected. If no identifier is explicitly set an
 	 * identifier is generated from the host name and a random number. This
 	 * method can be called at any time.
 	 *

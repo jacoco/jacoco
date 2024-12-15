@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2023 Mountainminds GmbH & Co. KG and Contributors
+ * Copyright (c) 2009, 2024 Mountainminds GmbH & Co. KG and Contributors
  * This program and the accompanying materials are made available under
  * the terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0
@@ -18,7 +18,7 @@ import org.objectweb.asm.tree.MethodNode;
  * Filters methods <code>values</code> and <code>valueOf</code> that compiler
  * creates for enums.
  */
-public final class EnumFilter implements IFilter {
+final class EnumFilter implements IFilter {
 
 	public void filter(final MethodNode methodNode,
 			final IFilterContext context, final IFilterOutput output) {

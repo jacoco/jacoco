@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2023 Mountainminds GmbH & Co. KG and Contributors
+ * Copyright (c) 2009, 2024 Mountainminds GmbH & Co. KG and Contributors
  * This program and the accompanying materials are made available under
  * the terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0
@@ -96,6 +96,33 @@ public class KotlinGeneratedFilterTest extends FilterTestBase {
 		filter.filter(m, context, output);
 
 		assertIgnored();
+	}
+
+	/**
+	 * <pre>
+	 * inline fun f() {
+	 * }
+	 * </pre>
+	 */
+	@Test
+	public void should_filter_instructions_without_line_numbers() {
+		context.sourceFileName = "Example.kt";
+		context.classAnnotations
+				.add(KotlinGeneratedFilter.KOTLIN_METADATA_DESC);
+		final MethodNode m = new MethodNode(InstrSupport.ASM_API_VERSION, 0,
+				"f", "()V", null, null);
+		m.visitInsn(Opcodes.ICONST_0);
+		final Range range1 = new Range(m.instructions.getLast(),
+				m.instructions.getLast());
+		m.visitVarInsn(Opcodes.ISTORE, 1);
+		final Range range2 = new Range(m.instructions.getLast(),
+				m.instructions.getLast());
+		m.visitLineNumber(1, new Label());
+		m.visitInsn(Opcodes.RETURN);
+
+		filter.filter(m, context, output);
+
+		assertIgnored(range1, range2);
 	}
 
 }

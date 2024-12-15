@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2023 Mountainminds GmbH & Co. KG and Contributors
+ * Copyright (c) 2009, 2024 Mountainminds GmbH & Co. KG and Contributors
  * This program and the accompanying materials are made available under
  * the terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0
@@ -195,7 +195,7 @@ final class ReportSupport {
 		}
 	}
 
-	private class NoSourceLocator implements ISourceFileLocator {
+	private static class NoSourceLocator implements ISourceFileLocator {
 
 		public Reader getSourceFile(final String packageName,
 				final String fileName) {
@@ -207,7 +207,7 @@ final class ReportSupport {
 		}
 	}
 
-	private class SourceFileCollection implements ISourceFileLocator {
+	private static class SourceFileCollection implements ISourceFileLocator {
 
 		private final List<File> sourceRoots;
 		private final String encoding;

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2023 Mountainminds GmbH & Co. KG and Contributors
+ * Copyright (c) 2009, 2024 Mountainminds GmbH & Co. KG and Contributors
  * This program and the accompanying materials are made available under
  * the terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0
@@ -22,15 +22,15 @@ fun main(args: Array<String>) {
     KotlinInlineTarget.main(args)
 }
 
-inline fun inlined_top_level() {
-    nop() // assertNotCovered()
-}
+inline fun inlined_top_level() { // assertEmpty()
+    nop() // assertFullyCovered()
+} // assertFullyCovered()
 
 object KotlinInlineTarget {
 
-    inline fun inlined() {
-        nop() // assertNotCovered()
-    }
+    inline fun inlined() { // assertEmpty()
+        nop() // assertFullyCovered()
+    } // assertFullyCovered()
 
     @JvmStatic
     fun main(args: Array<String>) {

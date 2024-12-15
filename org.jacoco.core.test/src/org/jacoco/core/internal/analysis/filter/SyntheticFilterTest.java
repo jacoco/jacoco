@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2023 Mountainminds GmbH & Co. KG and Contributors
+ * Copyright (c) 2009, 2024 Mountainminds GmbH & Co. KG and Contributors
  * This program and the accompanying materials are made available under
  * the terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0
@@ -55,6 +55,59 @@ public class SyntheticFilterTest extends FilterTestBase {
 		filter.filter(m, context, output);
 
 		assertIgnored();
+	}
+
+	/**
+	 * <pre>
+	 * &#064;JvmSynthetic
+	 * fun example() {
+	 * }
+	 * </pre>
+	 *
+	 * @see #should_filter_synthetic_accessor_methods_in_Kotlin_classes()
+	 */
+	@Test
+	public void should_not_filter_synthetic_non_accessor_methods_in_Kotlin_classes() {
+		context.classAnnotations
+				.add(KotlinGeneratedFilter.KOTLIN_METADATA_DESC);
+		final MethodNode m = new MethodNode(InstrSupport.ASM_API_VERSION,
+				Opcodes.ACC_SYNTHETIC, "example", "()V", null, null);
+		m.visitInsn(Opcodes.RETURN);
+
+		filter.filter(m, context, output);
+
+		assertIgnored();
+	}
+
+	/**
+	 * <pre>
+	 * class Outer {
+	 *   private var x = 42
+	 *
+	 *   inner class Inner {
+	 *     fun example() {
+	 *       x += 1
+	 *     }
+	 *   }
+	 * }
+	 * </pre>
+	 *
+	 * @see #should_not_filter_synthetic_non_accessor_methods_in_Kotlin_classes()
+	 */
+	@Test
+	public void should_filter_synthetic_accessor_methods_in_Kotlin_classes() {
+		context.classAnnotations
+				.add(KotlinGeneratedFilter.KOTLIN_METADATA_DESC);
+		final MethodNode m = new MethodNode(InstrSupport.ASM_API_VERSION,
+				Opcodes.ACC_SYNTHETIC, "access$getX$p", "(Outer;)I", null,
+				null);
+		m.visitVarInsn(Opcodes.ALOAD, 0);
+		m.visitFieldInsn(Opcodes.GETFIELD, "Outer", "x", "I");
+		m.visitInsn(Opcodes.IRETURN);
+
+		filter.filter(m, context, output);
+
+		assertMethodIgnored(m);
 	}
 
 	@Test

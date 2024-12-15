@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2023 Mountainminds GmbH & Co. KG and Contributors
+ * Copyright (c) 2009, 2024 Mountainminds GmbH & Co. KG and Contributors
  * This program and the accompanying materials are made available under
  * the terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0
@@ -47,7 +47,7 @@ public final class ExecDump {
 	 * @param args
 	 *            command line parameters
 	 * @throws IOException
-	 *             in case of error reading a input file
+	 *             in case of error reading an input file
 	 */
 	public void execute(final String[] args) throws IOException {
 		for (final String file : args) {

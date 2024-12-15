@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2023 Mountainminds GmbH & Co. KG and Contributors
+ * Copyright (c) 2009, 2024 Mountainminds GmbH & Co. KG and Contributors
  * This program and the accompanying materials are made available under
  * the terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0
@@ -13,6 +13,7 @@
 package org.jacoco.core.internal.analysis;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 import org.jacoco.core.analysis.ICoverageNode.ElementType;
 import org.jacoco.core.analysis.ISourceNode;
@@ -221,6 +222,31 @@ public class SourceNodeImplTest {
 				node.getInstructionCounter());
 		assertEquals(CounterImpl.getInstance(6, 66), node.getBranchCounter());
 		assertEquals(CounterImpl.getInstance(0, 1), node.getLineCounter());
+	}
+
+	/**
+	 * {@link SourceNodeImpl#applyFragment(SourceNodeImpl)}
+	 */
+	@Test
+	public void testApplyFragment() {
+		// uncovered
+		final SourceNodeImpl node = new SourceNodeImpl(ElementType.CLASS,
+				"Foo");
+		node.increment(CounterImpl.COUNTER_1_0, CounterImpl.COUNTER_1_0, 42);
+		// covered
+		final SourceNodeImpl fragment = new SourceNodeImpl(null, "fragment");
+		fragment.increment(CounterImpl.COUNTER_0_1, CounterImpl.COUNTER_0_0,
+				42);
+
+		assertTrue(node.applyFragment(fragment));
+
+		assertEquals(CounterImpl.COUNTER_0_1, node.getInstructionCounter());
+		assertEquals(CounterImpl.COUNTER_0_1, node.getLineCounter());
+		assertEquals(CounterImpl.COUNTER_0_0, node.getBranchCounter());
+		assertEquals(CounterImpl.COUNTER_0_0, node.getComplexityCounter());
+		final LineImpl line = node.getLine(42);
+		assertEquals(CounterImpl.COUNTER_0_1, line.getInstructionCounter());
+		assertEquals(CounterImpl.COUNTER_0_0, line.getBranchCounter());
 	}
 
 }

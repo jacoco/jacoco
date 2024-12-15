@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2023 Mountainminds GmbH & Co. KG and Contributors
+ * Copyright (c) 2009, 2024 Mountainminds GmbH & Co. KG and Contributors
  * This program and the accompanying materials are made available under
  * the terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0
@@ -22,11 +22,11 @@ import org.objectweb.asm.tree.MethodNode;
  * Filters branch in bytecode that Kotlin compiler generates for "unsafe" cast
  * operator.
  */
-public final class KotlinUnsafeCastOperatorFilter implements IFilter {
+final class KotlinUnsafeCastOperatorFilter implements IFilter {
 
 	public void filter(final MethodNode methodNode,
 			final IFilterContext context, final IFilterOutput output) {
-		if (!KotlinGeneratedFilter.isKotlinClass(context)) {
+		if (!Filters.isKotlinClass(context)) {
 			return;
 		}
 		final Matcher matcher = new Matcher();

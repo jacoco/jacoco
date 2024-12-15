@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2023 Mountainminds GmbH & Co. KG and Contributors
+ * Copyright (c) 2009, 2024 Mountainminds GmbH & Co. KG and Contributors
  * This program and the accompanying materials are made available under
  * the terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0
@@ -12,11 +12,12 @@
  *******************************************************************************/
 package org.jacoco.core.test;
 
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
+
+import org.jacoco.core.internal.InputStreams;
 
 /**
  * Loads given classes from a byte arrays.
@@ -68,14 +69,9 @@ public class TargetLoader extends ClassLoader {
 	}
 
 	private static byte[] readBytes(InputStream in) throws IOException {
-		ByteArrayOutputStream out = new ByteArrayOutputStream();
-		byte[] buffer = new byte[0x100];
-		int len;
-		while ((len = in.read(buffer)) != -1) {
-			out.write(buffer, 0, len);
-		}
+		final byte[] bytes = InputStreams.readFully(in);
 		in.close();
-		return out.toByteArray();
+		return bytes;
 	}
 
 	@Override

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2023 Mountainminds GmbH & Co. KG and Contributors
+ * Copyright (c) 2009, 2024 Mountainminds GmbH & Co. KG and Contributors
  * This program and the accompanying materials are made available under
  * the terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0
@@ -83,8 +83,8 @@ public class ReportOutputFolder {
 	 * Creates a new file in this folder with the given local name.
 	 *
 	 * @param name
-	 *            name of the sub-folder
-	 * @return handle for output into the sub-folder
+	 *            name of the file
+	 * @return stream for output into the file
 	 * @throws IOException
 	 *             if the file creation fails
 	 */

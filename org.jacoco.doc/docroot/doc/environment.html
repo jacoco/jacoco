@@ -69,14 +69,14 @@
   The minimum supported JRE version for JaCoCo is Java 5. To guarantee
   compatibility JaCoCo release builds should always be executed using JDK 5.
   In addition we run builds with 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17
-  18, 19 and 20 JDKs.
+  18, 19, 20, 21, 22 and 23 JDKs.
 </p>
 
 <h3>Build</h3>
 
 <p>
   The JaCoCo build is based on <a href="http://maven.apache.org/">Maven</a>
-  and requires at least Maven 3.5.4 and JDK 17.
+  and requires at least Maven 3.9.9 and JDK 17.
   See the <a href="build.html">build description</a> for details.
 </p>
 
@@ -87,8 +87,8 @@
 </p>
 
 <ul>
+  <li><a href="https://github.com/jacoco/jacoco/actions">GitHub Actions</a></li>
   <li><a href="https://dev.azure.com/JaCoCo-org/JaCoCo/_build">Azure Pipelines</a></li>
-  <li><a href="https://ci.appveyor.com/project/JaCoCo/jacoco">AppVeyor</a></li>
 </ul>
 
 <p>
@@ -107,10 +107,10 @@
   <li><b>Master:</b> The current master is available through the Maven
     <a href="repo.html">snapshot repository</a>.</li>
   <li><b>Pull Requests:</b> For every pull request the
-    <a href="https://ci.appveyor.com/project/JaCoCo/jacoco">AppVeyor builds</a>
+    <a href="https://github.com/jacoco/jacoco/actions">GitHub Actions builds</a>
     provide the corresponding all-in-one zip for download. To access the
-    artifacts follow the check <code>continuous-integration/appveyor/branch</code>
-    on the corresponding GitHub pull request page.</li>
+    artifacts go to a summary page of a workflow run corresponding to the pull
+    request.</li>
 </ul>
 
 <h3>Continuous Inspection</h3>

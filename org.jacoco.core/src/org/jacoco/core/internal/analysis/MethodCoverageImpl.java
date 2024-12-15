@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2023 Mountainminds GmbH & Co. KG and Contributors
+ * Copyright (c) 2009, 2024 Mountainminds GmbH & Co. KG and Contributors
  * This program and the accompanying materials are made available under
  * the terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0
@@ -64,6 +64,18 @@ public class MethodCoverageImpl extends SourceNodeImpl
 				: CounterImpl.COUNTER_0_1;
 		this.methodCounter = this.methodCounter.increment(base);
 		this.complexityCounter = this.complexityCounter.increment(base);
+	}
+
+	@Override
+	public boolean applyFragment(final SourceNodeImpl fragment) {
+		final boolean applied = super.applyFragment(fragment);
+		if (applied) {
+			methodCounter = instructionCounter.getCoveredCount() == 0
+					? CounterImpl.COUNTER_1_0
+					: CounterImpl.COUNTER_0_1;
+			complexityCounter = methodCounter;
+		}
+		return applied;
 	}
 
 	// === IMethodCoverage implementation ===

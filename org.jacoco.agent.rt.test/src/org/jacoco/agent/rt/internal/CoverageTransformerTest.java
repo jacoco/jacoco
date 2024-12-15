@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2023 Mountainminds GmbH & Co. KG and Contributors
+ * Copyright (c) 2009, 2024 Mountainminds GmbH & Co. KG and Contributors
  * This program and the accompanying materials are made available under
  * the terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0
@@ -18,7 +18,6 @@ import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.instrument.IllegalClassFormatException;
@@ -27,6 +26,7 @@ import java.security.ProtectionDomain;
 import java.security.cert.Certificate;
 
 import org.jacoco.core.JaCoCo;
+import org.jacoco.core.internal.InputStreams;
 import org.jacoco.core.runtime.AbstractRuntime;
 import org.jacoco.core.runtime.AgentOptions;
 import org.junit.After;
@@ -245,14 +245,9 @@ public class CoverageTransformerTest {
 		final String resource = "/" + clazz.getName().replace('.', '/')
 				+ ".class";
 		final InputStream in = clazz.getResourceAsStream(resource);
-		final ByteArrayOutputStream out = new ByteArrayOutputStream();
-		byte[] buffer = new byte[0x100];
-		int len;
-		while ((len = in.read(buffer)) != -1) {
-			out.write(buffer, 0, len);
-		}
+		final byte[] bytes = InputStreams.readFully(in);
 		in.close();
-		return out.toByteArray();
+		return bytes;
 	}
 
 	private static class StubRuntime extends AbstractRuntime {

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2023 Mountainminds GmbH & Co. KG and Contributors
+ * Copyright (c) 2009, 2024 Mountainminds GmbH & Co. KG and Contributors
  * This program and the accompanying materials are made available under
  * the terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0
@@ -15,23 +15,39 @@ package org.jacoco.core.test.validation;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
+import java.io.File;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.lang.reflect.Method;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 
 import org.jacoco.core.analysis.Analyzer;
 import org.jacoco.core.analysis.CoverageBuilder;
+import org.jacoco.core.analysis.IBundleCoverage;
 import org.jacoco.core.analysis.ICounter;
 import org.jacoco.core.analysis.ILine;
 import org.jacoco.core.data.ExecutionData;
 import org.jacoco.core.data.ExecutionDataStore;
+import org.jacoco.core.data.SessionInfo;
 import org.jacoco.core.internal.analysis.CounterImpl;
+import org.jacoco.core.internal.instr.InstrSupport;
 import org.jacoco.core.test.InstrumentingLoader;
 import org.jacoco.core.test.TargetLoader;
 import org.jacoco.core.test.validation.Source.Line;
 import org.jacoco.core.test.validation.targets.Stubs;
+import org.jacoco.report.DirectorySourceFileLocator;
+import org.jacoco.report.FileMultiReportOutput;
+import org.jacoco.report.IReportVisitor;
+import org.jacoco.report.ISourceFileLocator;
+import org.jacoco.report.html.HTMLFormatter;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runners.model.MultipleFailureException;
+import org.objectweb.asm.util.ASMifier;
+import org.objectweb.asm.util.Textifier;
+import org.objectweb.asm.util.TraceClassVisitor;
 
 /**
  * Base class for validation tests. It executes the given class under code
@@ -53,6 +69,8 @@ public abstract class ValidationTestBase {
 	private final Class<?> target;
 
 	private Source source;
+
+	private IBundleCoverage bundle;
 
 	private InstrumentingLoader loader;
 
@@ -84,7 +102,9 @@ public abstract class ValidationTestBase {
 		for (ExecutionData data : store.getContents()) {
 			analyze(analyzer, data);
 		}
-		source = Source.load(target, builder.getBundle("Test"));
+		final String testClassSimpleName = getClass().getSimpleName();
+		bundle = builder.getBundle(testClassSimpleName);
+		source = Source.load(target, bundle);
 	}
 
 	private void analyze(final Analyzer analyzer, final ExecutionData data)
@@ -92,6 +112,40 @@ public abstract class ValidationTestBase {
 		final byte[] bytes = TargetLoader
 				.getClassDataAsBytes(target.getClassLoader(), data.getName());
 		analyzer.analyzeClass(bytes, data.getName());
+		saveBytecodeRepresentations(bytes, data.getName());
+	}
+
+	private void saveBytecodeRepresentations(final byte[] classBytes,
+			final String className) throws IOException {
+		final File outputDir = new File("target/asm/" + target.getSimpleName());
+		outputDir.mkdirs();
+		final String fileName = className.replace('/', '.');
+		final PrintWriter textWriter = new PrintWriter(
+				new File(outputDir, fileName + ".txt"));
+		final PrintWriter asmWriter = new PrintWriter(
+				new File(outputDir, fileName + ".java"));
+		InstrSupport.classReaderFor(classBytes)
+				.accept(new TraceClassVisitor(new TraceClassVisitor(null,
+						new Textifier(), textWriter), new ASMifier(),
+						asmWriter), 0);
+		textWriter.close();
+		asmWriter.close();
+	}
+
+	/**
+	 * Generates HTML report.
+	 */
+	@Test
+	public final void generate_html_report() throws IOException {
+		final File destination = new File("target/reports/" + bundle.getName());
+		final IReportVisitor visitor = new HTMLFormatter()
+				.createVisitor(new FileMultiReportOutput(destination));
+		visitor.visitInfo(Collections.<SessionInfo> emptyList(),
+				Collections.<ExecutionData> emptyList());
+		final ISourceFileLocator sourceFileLocator = new DirectorySourceFileLocator(
+				new File("src"), "UTF-8", 4);
+		visitor.visitBundle(bundle, sourceFileLocator);
+		visitor.visitEnd();
 	}
 
 	/**
@@ -103,14 +157,20 @@ public abstract class ValidationTestBase {
 	 * </pre>
 	 */
 	@Test
-	public void execute_assertions_in_comments() throws IOException {
+	public void execute_assertions_in_comments() throws Exception {
+		final ArrayList<Throwable> failedAssertions = new ArrayList<Throwable>();
 		for (Line line : source.getLines()) {
 			String exec = line.getComment();
 			if (exec != null) {
-				StatementParser.parse(exec, new StatementExecutor(this, line),
-						line.toString());
+				try {
+					StatementParser.parse(exec,
+							new StatementExecutor(this, line), line.toString());
+				} catch (final AssertionError e) {
+					failedAssertions.add(e);
+				}
 			}
 		}
+		MultipleFailureException.assertEmpty(failedAssertions);
 	}
 
 	/**
@@ -134,7 +194,7 @@ public abstract class ValidationTestBase {
 	}
 
 	@Test
-	public void all_missed_instructions_should_have_line_number() {
+	public final void all_missed_instructions_should_have_line_number() {
 		CounterImpl c = CounterImpl.COUNTER_0_0;
 		for (Line line : source.getLines()) {
 			c = c.increment(line.getCoverage().getInstructionCounter());
@@ -146,7 +206,7 @@ public abstract class ValidationTestBase {
 	}
 
 	@Test
-	public void all_branches_should_have_line_number() {
+	public final void all_branches_should_have_line_number() {
 		CounterImpl c = CounterImpl.COUNTER_0_0;
 		for (Line line : source.getLines()) {
 			c = c.increment(line.getCoverage().getBranchCounter());

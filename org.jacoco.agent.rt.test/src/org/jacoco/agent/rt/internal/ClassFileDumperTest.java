@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2023 Mountainminds GmbH & Co. KG and Contributors
+ * Copyright (c) 2009, 2024 Mountainminds GmbH & Co. KG and Contributors
  * This program and the accompanying materials are made available under
  * the terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0
@@ -14,12 +14,12 @@ package org.jacoco.agent.rt.internal;
 
 import static org.junit.Assert.assertArrayEquals;
 
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
+import org.jacoco.core.internal.InputStreams;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -66,13 +66,9 @@ public class ClassFileDumperTest {
 	private void assertContents(File location, String filename)
 			throws IOException {
 		InputStream in = new FileInputStream(new File(location, filename));
-		ByteArrayOutputStream buffer = new ByteArrayOutputStream();
-		int b;
-		while ((b = in.read()) != -1) {
-			buffer.write(b);
-		}
+		final byte[] bytes = InputStreams.readFully(in);
 		in.close();
-		assertArrayEquals(contents, buffer.toByteArray());
+		assertArrayEquals(contents, bytes);
 	}
 
 }
