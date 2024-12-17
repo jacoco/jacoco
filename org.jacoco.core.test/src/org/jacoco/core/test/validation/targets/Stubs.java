@@ -12,6 +12,7 @@
  *******************************************************************************/
 package org.jacoco.core.test.validation.targets;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -37,6 +38,12 @@ public class Stubs {
 		public SuperClass(boolean arg) {
 		}
 
+	}
+
+	/**
+	 * Serializable functional interface stub.
+	 */
+	public interface SerializableRunnable extends Serializable, Runnable {
 	}
 
 	/**
@@ -142,6 +149,13 @@ public class Stubs {
 	 * Never executes the given runnable.
 	 */
 	public static void noexec(Runnable task) {
+	}
+
+	/**
+	 * Directly executes the given {@link SerializableRunnable}.
+	 */
+	public static void execSerializable(SerializableRunnable task) {
+		task.run();
 	}
 
 	/**
