@@ -69,18 +69,4 @@ public class KotlinDefaultMethodsFilterTest extends FilterTestBase {
 		assertIgnored();
 	}
 
-	@Test
-	public void should_not_filter_when_not_kotlin() {
-		final MethodNode m = new MethodNode(InstrSupport.ASM_API_VERSION, 0,
-				"m", "()V", null, null);
-		m.visitVarInsn(Opcodes.ALOAD, 0);
-		m.visitMethodInsn(Opcodes.INVOKESTATIC, "Target$DefaultImpls", "m",
-				"(LTarget;)V", false);
-		m.visitInsn(Opcodes.RETURN);
-
-		filter.filter(m, context, output);
-
-		assertIgnored();
-	}
-
 }

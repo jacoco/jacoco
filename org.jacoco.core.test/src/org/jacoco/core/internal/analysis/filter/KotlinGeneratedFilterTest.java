@@ -56,18 +56,6 @@ public class KotlinGeneratedFilterTest extends FilterTestBase {
 	}
 
 	@Test
-	public void testNoLinesNonKotlinWithDebug() {
-		final MethodNode m = new MethodNode(InstrSupport.ASM_API_VERSION, 0,
-				"hashCode", "()I", null, null);
-		m.visitInsn(Opcodes.ICONST_0);
-		m.visitInsn(Opcodes.IRETURN);
-
-		filter.filter(m, context, output);
-
-		assertIgnored();
-	}
-
-	@Test
 	public void testNoLinesForKotlinNoDebug() {
 		final MethodNode m = new MethodNode(InstrSupport.ASM_API_VERSION, 0,
 				"hashCode", "()I", null, null);

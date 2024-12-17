@@ -26,9 +26,6 @@ final class KotlinUnsafeCastOperatorFilter implements IFilter {
 
 	public void filter(final MethodNode methodNode,
 			final IFilterContext context, final IFilterOutput output) {
-		if (!Filters.isKotlinClass(context)) {
-			return;
-		}
 		final Matcher matcher = new Matcher();
 		for (final AbstractInsnNode i : methodNode.instructions) {
 			matcher.match("kotlin/TypeCastException", i, output);
