@@ -12,9 +12,9 @@
  *******************************************************************************/
 package org.jacoco.core.internal.analysis.filter;
 
+import java.util.Arrays;
 import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.List;
 
 import org.jacoco.core.internal.instr.InstrSupport;
 import org.junit.Test;
@@ -60,24 +60,26 @@ public class KotlinSafeCallOperatorFilterTest extends FilterTestBase {
 		final AbstractInsnNode i2 = m.instructions.getLast();
 		m.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "B", "getC",
 				"()Ljava/lang/String;", false);
-		final HashSet<AbstractInsnNode> r = new HashSet<AbstractInsnNode>();
-		r.add(m.instructions.getLast());
 
 		m.visitJumpInsn(Opcodes.GOTO, label2);
 
 		m.visitLabel(label1);
 		m.visitInsn(Opcodes.POP);
-		r.add(m.instructions.getLast());
+		final AbstractInsnNode popInstruction = m.instructions.getLast();
 		m.visitInsn(Opcodes.ACONST_NULL);
 		m.visitLabel(label2);
 
 		filter.filter(m, context, output);
 
 		assertIgnored();
-		final HashMap<AbstractInsnNode, Set<AbstractInsnNode>> expected = new HashMap<AbstractInsnNode, Set<AbstractInsnNode>>();
-		expected.put(i1, r);
-		expected.put(i2, r);
-		assertReplacedBranches(expected);
+		final HashMap<AbstractInsnNode, List<Replacement>> replacements = new HashMap<AbstractInsnNode, List<Replacement>>();
+		replacements.put(i1, Arrays.asList( //
+				new Replacement(0, i2, 0), //
+				new Replacement(1, popInstruction, 0)));
+		replacements.put(i2, Arrays.asList( //
+				new Replacement(0, i2, 0), //
+				new Replacement(1, popInstruction, 0)));
+		assertReplacedBranches(m, replacements);
 	}
 
 }
