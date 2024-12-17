@@ -19,6 +19,10 @@ import org.objectweb.asm.tree.MethodNode;
  */
 public final class Filters {
 
+	private Filters() {
+		// no instances
+	}
+
 	/**
 	 * Filter that does nothing.
 	 */
