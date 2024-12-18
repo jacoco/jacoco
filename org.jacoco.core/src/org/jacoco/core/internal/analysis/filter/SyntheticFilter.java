@@ -31,9 +31,6 @@ final class SyntheticFilter implements IFilter {
 		if ((methodNode.access & Opcodes.ACC_SYNTHETIC) == 0) {
 			return;
 		}
-		if (Filters.isKotlinClass(context)) {
-			return;
-		}
 
 		if (methodNode.name.startsWith("lambda$")) {
 			return;
