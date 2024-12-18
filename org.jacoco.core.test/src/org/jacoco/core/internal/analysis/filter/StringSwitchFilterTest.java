@@ -31,6 +31,7 @@ public class StringSwitchFilterTest extends FilterTestBase {
 
 	@Test
 	public void should_filter() {
+		final Range range = new Range();
 		final Set<AbstractInsnNode> expectedNewTargets = new HashSet<AbstractInsnNode>();
 
 		final MethodNode m = new MethodNode(InstrSupport.ASM_API_VERSION, 0,
@@ -53,8 +54,8 @@ public class StringSwitchFilterTest extends FilterTestBase {
 		m.visitVarInsn(Opcodes.ASTORE, 2);
 		m.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "java/lang/String", "hashCode",
 				"()I", false);
+		range.fromInclusive = m.instructions.getLast();
 		m.visitTableSwitchInsn(97, 98, caseDefault, h1, h2);
-		final AbstractInsnNode switchNode = m.instructions.getLast();
 
 		m.visitLabel(h1);
 
@@ -86,7 +87,7 @@ public class StringSwitchFilterTest extends FilterTestBase {
 
 		// goto default case
 		m.visitJumpInsn(Opcodes.GOTO, caseDefault);
-		final AbstractInsnNode expectedToInclusive = m.instructions.getLast();
+		range.toInclusive = m.instructions.getLast();
 
 		m.visitLabel(case1);
 		m.visitInsn(Opcodes.RETURN);
@@ -103,12 +104,14 @@ public class StringSwitchFilterTest extends FilterTestBase {
 
 		filter.filter(m, context, output);
 
-		assertReplacedBranches(switchNode, expectedNewTargets);
-		assertIgnored(new Range(switchNode.getNext(), expectedToInclusive));
+		assertIgnored(range);
+		assertReplacedBranches(range.fromInclusive.getPrevious(),
+				expectedNewTargets);
 	}
 
 	@Test
 	public void should_filter_when_default_is_first() {
+		final Range range = new Range();
 		final Set<AbstractInsnNode> expectedNewTargets = new HashSet<AbstractInsnNode>();
 
 		final MethodNode m = new MethodNode(InstrSupport.ASM_API_VERSION, 0,
@@ -128,20 +131,18 @@ public class StringSwitchFilterTest extends FilterTestBase {
 		m.visitVarInsn(Opcodes.ASTORE, 2);
 		m.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "java/lang/String", "hashCode",
 				"()I", false);
+		range.fromInclusive = m.instructions.getLast();
 		m.visitLookupSwitchInsn(caseDefault, new int[] { 97 },
 				new Label[] { h1 });
-		final AbstractInsnNode switchNode = m.instructions.getLast();
 
 		m.visitLabel(h1);
-
 		m.visitVarInsn(Opcodes.ALOAD, 2);
 		m.visitLdcInsn("a");
 		m.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "java/lang/String", "equals",
 				"(Ljava/lang/Object;)Z", false);
 		// if equal "a", then goto its case
 		m.visitJumpInsn(Opcodes.IFNE, case1);
-
-		final AbstractInsnNode expectedToInclusive = m.instructions.getLast();
+		range.toInclusive = m.instructions.getLast();
 
 		m.visitLabel(caseDefault);
 		m.visitInsn(Opcodes.RETURN);
@@ -152,8 +153,9 @@ public class StringSwitchFilterTest extends FilterTestBase {
 
 		filter.filter(m, context, output);
 
-		assertReplacedBranches(switchNode, expectedNewTargets);
-		assertIgnored(new Range(switchNode.getNext(), expectedToInclusive));
+		assertIgnored(range);
+		assertReplacedBranches(range.fromInclusive.getPrevious(),
+				expectedNewTargets);
 	}
 
 	/**
@@ -172,6 +174,7 @@ public class StringSwitchFilterTest extends FilterTestBase {
 	 */
 	@Test
 	public void should_filter_Kotlin_1_5() {
+		final Range range = new Range();
 		final Set<AbstractInsnNode> expectedNewTargets = new HashSet<AbstractInsnNode>();
 
 		final MethodNode m = new MethodNode(InstrSupport.ASM_API_VERSION, 0,
@@ -188,13 +191,14 @@ public class StringSwitchFilterTest extends FilterTestBase {
 		final Label case5 = new Label();
 		final Label case6 = new Label();
 
+		m.visitVarInsn(Opcodes.ASTORE, 1);
 		m.visitVarInsn(Opcodes.ALOAD, 1);
+		range.fromInclusive = m.instructions.getLast();
 		m.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "java/lang/String", "hashCode",
 				"()I", false);
 		m.visitTableSwitchInsn(97, 99, defaultCase, h1, h2, h3);
 
 		m.visitLabel(h1);
-		final AbstractInsnNode expectedFromInclusive = m.instructions.getLast();
 		m.visitVarInsn(Opcodes.ALOAD, 1);
 		m.visitLdcInsn("a");
 		m.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "java/lang/String", "equals",
@@ -238,7 +242,7 @@ public class StringSwitchFilterTest extends FilterTestBase {
 		m.visitJumpInsn(Opcodes.IFNE, case6);
 
 		m.visitJumpInsn(Opcodes.GOTO, defaultCase);
-		final AbstractInsnNode expectedToInclusive = m.instructions.getLast();
+		range.toInclusive = m.instructions.getLast();
 
 		m.visitLabel(case1);
 		m.visitInsn(Opcodes.RETURN);
@@ -264,8 +268,8 @@ public class StringSwitchFilterTest extends FilterTestBase {
 
 		filter.filter(m, context, output);
 
-		assertIgnored(new Range(expectedFromInclusive, expectedToInclusive));
-		assertReplacedBranches(expectedFromInclusive.getPrevious(),
+		assertIgnored(range);
+		assertReplacedBranches(range.fromInclusive.getPrevious(),
 				expectedNewTargets);
 	}
 
