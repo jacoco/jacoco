@@ -17,7 +17,7 @@ import org.objectweb.asm.tree.MethodNode;
 /**
  * Filter that combines other filters.
  */
-class FilterSet implements IFilter {
+final class FilterSet implements IFilter {
 
 	private final IFilter[] filters;
 

@@ -34,15 +34,25 @@ public final class Filters {
 	 * @return filter that combines all filters
 	 */
 	public static IFilter all() {
-		return new FilterSet( //
-				allCommonFilters(), //
-				allKotlinFilters());
+		final IFilter allCommonFilters = allCommonFilters();
+		final IFilter allKotlinFilters = allKotlinFilters();
+		final IFilter allNonKotlinFilters = allNonKotlinFilters();
+		return new IFilter() {
+			public void filter(final MethodNode methodNode,
+					final IFilterContext context, final IFilterOutput output) {
+				allCommonFilters.filter(methodNode, context, output);
+				if (isKotlinClass(context)) {
+					allKotlinFilters.filter(methodNode, context, output);
+				} else {
+					allNonKotlinFilters.filter(methodNode, context, output);
+				}
+			}
+		};
 	}
 
 	private static IFilter allCommonFilters() {
 		return new FilterSet( //
 				new EnumFilter(), //
-				new SyntheticFilter(), //
 				new BridgeFilter(), //
 				new SynchronizedFilter(), //
 				new TryWithResourcesJavac11Filter(), //
@@ -58,6 +68,11 @@ public final class Filters {
 				new ExhaustiveSwitchFilter(), //
 				new RecordPatternFilter(), //
 				new AnnotationGeneratedFilter());
+	}
+
+	private static IFilter allNonKotlinFilters() {
+		return new FilterSet( //
+				new SyntheticFilter());
 	}
 
 	private static IFilter allKotlinFilters() {
@@ -76,15 +91,7 @@ public final class Filters {
 				new KotlinInlineFilter(), //
 				new KotlinCoroutineFilter(), //
 				new KotlinDefaultMethodsFilter(), //
-				new KotlinComposeFilter()) {
-			@Override
-			public void filter(final MethodNode methodNode,
-					final IFilterContext context, final IFilterOutput output) {
-				if (isKotlinClass(context)) {
-					super.filter(methodNode, context, output);
-				}
-			}
-		};
+				new KotlinComposeFilter());
 	}
 
 	/**
