@@ -22,7 +22,7 @@ import org.objectweb.asm.tree.MethodNode;
  * Filters branch in bytecode that Kotlin compiler generates for reading from
  * <code>lateinit</code> properties.
  */
-public class KotlinLateinitFilter implements IFilter {
+final class KotlinLateinitFilter implements IFilter {
 
 	public void filter(final MethodNode methodNode,
 			final IFilterContext context, final IFilterOutput output) {

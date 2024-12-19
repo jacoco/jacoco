@@ -16,7 +16,7 @@ import org.jacoco.core.test.validation.ValidationTestBase;
 import org.jacoco.core.test.validation.kotlin.targets.KotlinElvisOperatorTarget;
 
 /**
- * Test of elvis operator.
+ * Test of code coverage in {@link KotlinElvisOperatorTarget}.
  */
 public class KotlinElvisOperatorTest extends ValidationTestBase {
 

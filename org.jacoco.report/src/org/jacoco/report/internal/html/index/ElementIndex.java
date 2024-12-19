@@ -29,7 +29,7 @@ public class ElementIndex implements IIndexUpdate {
 	private final Map<Long, String> allClasses = new HashMap<Long, String>();
 
 	/**
-	 * Creates a new empty index for a HTML report.
+	 * Creates a new empty index for an HTML report.
 	 *
 	 * @param baseFolder
 	 *            base folder where all links are calculated relative to

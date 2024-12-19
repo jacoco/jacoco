@@ -157,7 +157,6 @@
             </goals>
             <configuration>
               <target>
-                <echo message="JUnit report"/>
                 <mkdir dir="${project.build.directory}/junit"/>
                 <junitreport todir="${project.build.directory}/junit">
                   <fileset dir="../org.jacoco.agent.test/target" includes="surefire-reports/**/*.xml"/>

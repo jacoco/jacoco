@@ -63,7 +63,7 @@ public class ExceptionsTarget {
 	}
 
 	/**
-	 * For each line with method invocations a extra probe is inserted.
+	 * For each line with method invocations an extra probe is inserted.
 	 * Therefore the lines before the exception are marked as covered.
 	 */
 	private static void implicitException() {

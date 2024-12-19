@@ -16,6 +16,7 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 
 import org.objectweb.asm.MethodVisitor;
+import org.objectweb.asm.tree.MethodNode;
 import org.objectweb.asm.util.Printer;
 import org.objectweb.asm.util.Textifier;
 import org.objectweb.asm.util.TraceMethodVisitor;
@@ -31,6 +32,12 @@ public class MethodRecorder {
 	public MethodRecorder() {
 		printer = new Textifier();
 		visitor = new TraceMethodVisitor(printer);
+	}
+
+	public static MethodRecorder from(final MethodNode method) {
+		final MethodRecorder r = new MethodRecorder();
+		method.accept(r.visitor);
+		return r;
 	}
 
 	public Printer getPrinter() {

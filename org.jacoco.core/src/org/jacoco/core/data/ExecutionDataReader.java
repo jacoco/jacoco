@@ -46,7 +46,7 @@ public class ExecutionDataReader {
 	}
 
 	/**
-	 * Sets an listener for session information.
+	 * Sets a listener for session information.
 	 *
 	 * @param visitor
 	 *            visitor to retrieve session info events
@@ -56,7 +56,7 @@ public class ExecutionDataReader {
 	}
 
 	/**
-	 * Sets an listener for execution data.
+	 * Sets a listener for execution data.
 	 *
 	 * @param visitor
 	 *            visitor to retrieve execution data events

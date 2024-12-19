@@ -20,7 +20,7 @@ import org.jacoco.report.internal.html.resources.Resources;
 import org.jacoco.report.internal.html.table.Table;
 
 /**
- * Context and configuration information during creation of a HTML report.
+ * Context and configuration information during creation of an HTML report.
  */
 public interface IHTMLReportContext {
 

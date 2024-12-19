@@ -132,13 +132,13 @@ public class AnalyzerTest {
 	 */
 	@Test
 	public void analyzeClass_should_throw_exception_for_unsupported_class_file_version() {
-		final byte[] bytes = createClass(Opcodes.V23 + 2);
+		final byte[] bytes = createClass(Opcodes.V24 + 2);
 		try {
 			analyzer.analyzeClass(bytes, "UnsupportedVersion");
 			fail("exception expected");
 		} catch (IOException e) {
 			assertExceptionMessage("UnsupportedVersion", e);
-			assertEquals("Unsupported class file major version 69",
+			assertEquals("Unsupported class file major version 70",
 					e.getCause().getMessage());
 		}
 	}
@@ -218,14 +218,14 @@ public class AnalyzerTest {
 	 */
 	@Test
 	public void analyzeAll_should_throw_exception_for_unsupported_class_file_version() {
-		final byte[] bytes = createClass(Opcodes.V23 + 2);
+		final byte[] bytes = createClass(Opcodes.V24 + 2);
 		try {
 			analyzer.analyzeAll(new ByteArrayInputStream(bytes),
 					"UnsupportedVersion");
 			fail("exception expected");
 		} catch (IOException e) {
 			assertExceptionMessage("UnsupportedVersion", e);
-			assertEquals("Unsupported class file major version 69",
+			assertEquals("Unsupported class file major version 70",
 					e.getCause().getMessage());
 		}
 	}

@@ -73,8 +73,12 @@ public abstract class FilterTestBase {
 
 	final void assertReplacedBranches(final AbstractInsnNode source,
 			final Set<AbstractInsnNode> newTargets) {
-		assertEquals(Collections.singletonMap(source, newTargets),
-				replacedBranches);
+		assertReplacedBranches(Collections.singletonMap(source, newTargets));
+	}
+
+	final void assertReplacedBranches(
+			final Map<AbstractInsnNode, Set<AbstractInsnNode>> expected) {
+		assertEquals(expected, replacedBranches);
 	}
 
 	static class Range {

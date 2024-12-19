@@ -93,7 +93,7 @@ public class Instrumenter {
 	}
 
 	/**
-	 * Creates a instrumented version of the given class if possible.
+	 * Creates an instrumented version of the given class if possible.
 	 *
 	 * @param buffer
 	 *            definition of the class
@@ -113,7 +113,7 @@ public class Instrumenter {
 	}
 
 	/**
-	 * Creates a instrumented version of the given class if possible. The
+	 * Creates an instrumented version of the given class if possible. The
 	 * provided {@link InputStream} is not closed by this method.
 	 *
 	 * @param input
@@ -137,7 +137,7 @@ public class Instrumenter {
 	}
 
 	/**
-	 * Creates a instrumented version of the given class file. The provided
+	 * Creates an instrumented version of the given class file. The provided
 	 * {@link InputStream} and {@link OutputStream} instances are not closed by
 	 * this method.
 	 *
@@ -166,7 +166,7 @@ public class Instrumenter {
 	}
 
 	/**
-	 * Creates a instrumented version of the given resource depending on its
+	 * Creates an instrumented version of the given resource depending on its
 	 * type. Class files and the content of archive files are instrumented. All
 	 * other files are copied without modification. The provided
 	 * {@link InputStream} and {@link OutputStream} instances are not closed by

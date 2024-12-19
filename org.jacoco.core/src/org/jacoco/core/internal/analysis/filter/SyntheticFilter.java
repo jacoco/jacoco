@@ -16,9 +16,10 @@ import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.tree.MethodNode;
 
 /**
- * Filters synthetic methods unless they represent bodies of lambda expressions.
+ * Filters synthetic methods in non-Kotlin classes unless they represent bodies
+ * of lambda expressions.
  */
-public final class SyntheticFilter implements IFilter {
+final class SyntheticFilter implements IFilter {
 
 	private static boolean isScalaClass(final IFilterContext context) {
 		return context.getClassAttributes().contains("ScalaSig")
@@ -30,6 +31,9 @@ public final class SyntheticFilter implements IFilter {
 		if ((methodNode.access & Opcodes.ACC_SYNTHETIC) == 0) {
 			return;
 		}
+		if (Filters.isKotlinClass(context)) {
+			return;
+		}
 
 		if (methodNode.name.startsWith("lambda$")) {
 			return;
@@ -37,12 +41,6 @@ public final class SyntheticFilter implements IFilter {
 
 		if (isScalaClass(context)) {
 			if (methodNode.name.startsWith("$anonfun$")) {
-				return;
-			}
-		}
-
-		if (KotlinGeneratedFilter.isKotlinClass(context)) {
-			if (!methodNode.name.startsWith("access$")) {
 				return;
 			}
 		}

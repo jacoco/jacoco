@@ -22,7 +22,7 @@ import org.objectweb.asm.tree.MethodNode;
  * Filters methods <code>toString</code>, <code>hashCode</code> and
  * <code>equals</code> that compiler generates for records.
  */
-public final class RecordsFilter implements IFilter {
+final class RecordsFilter implements IFilter {
 
 	public void filter(final MethodNode methodNode,
 			final IFilterContext context, final IFilterOutput output) {

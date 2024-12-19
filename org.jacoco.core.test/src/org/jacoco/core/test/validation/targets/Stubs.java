@@ -12,6 +12,7 @@
  *******************************************************************************/
 package org.jacoco.core.test.validation.targets;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -37,6 +38,12 @@ public class Stubs {
 		public SuperClass(boolean arg) {
 		}
 
+	}
+
+	/**
+	 * Serializable functional interface stub.
+	 */
+	public interface SerializableRunnable extends Serializable, Runnable {
 	}
 
 	/**
@@ -145,13 +152,20 @@ public class Stubs {
 	}
 
 	/**
+	 * Directly executes the given {@link SerializableRunnable}.
+	 */
+	public static void execSerializable(SerializableRunnable task) {
+		task.run();
+	}
+
+	/**
 	 * List of logged events. Using a static member here works as this class is
 	 * loaded in a new class loader for every test case.
 	 */
 	private static List<String> events = new ArrayList<String>();
 
 	/**
-	 * Records a event with the given id for later verification.
+	 * Records an event with the given id for later verification.
 	 */
 	public static void logEvent(String id) {
 		events.add(id);

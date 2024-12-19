@@ -20,7 +20,7 @@ import java.io.IOException;
 public interface IRemoteCommandVisitor {
 
 	/**
-	 * Requests a execution data dump with an optional reset.
+	 * Requests an execution data dump with an optional reset.
 	 *
 	 * @param dump
 	 *            <code>true</code> if the dump should be executed

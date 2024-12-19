@@ -32,6 +32,15 @@
     <jacoco.includes>org.jacoco.maven.*</jacoco.includes>
   </properties>
 
+  <dependencies>
+    <dependency>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>jacoco-maven-plugin</artifactId>
+      <version>${project.version}</version>
+      <type>maven-plugin</type>
+    </dependency>
+  </dependencies>
+
   <build>
     <plugins>
       <plugin>
@@ -52,9 +61,6 @@
             <goal>install</goal>
           </goals>
           <settingsFile>it/settings.xml</settingsFile>
-          <extraArtifacts>
-            <extraArtifact>org.jacoco:org.jacoco.agent:${project.version}:jar:runtime</extraArtifact>
-          </extraArtifacts>
           <properties>
             <!--
             maven-invoker-plugin for forked Maven invocations uses the same JDK that is used for Maven,

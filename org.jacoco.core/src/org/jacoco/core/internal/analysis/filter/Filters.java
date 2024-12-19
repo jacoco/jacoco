@@ -15,54 +15,90 @@ package org.jacoco.core.internal.analysis.filter;
 import org.objectweb.asm.tree.MethodNode;
 
 /**
- * Filter that combines other filters.
+ * Factory for all JaCoCo filters.
  */
-public final class Filters implements IFilter {
+public final class Filters {
+
+	private Filters() {
+		// no instances
+	}
 
 	/**
 	 * Filter that does nothing.
 	 */
-	public static final IFilter NONE = new Filters();
-
-	private final IFilter[] filters;
+	public static final IFilter NONE = new FilterSet();
 
 	/**
-	 * Creates filter that combines all other filters.
+	 * Creates a filter that combines all filters.
 	 *
-	 * @return filter that combines all other filters
+	 * @return filter that combines all filters
 	 */
 	public static IFilter all() {
-		return new Filters(new EnumFilter(), new SyntheticFilter(),
-				new BridgeFilter(), new SynchronizedFilter(),
-				new TryWithResourcesJavac11Filter(),
-				new TryWithResourcesJavacFilter(),
-				new TryWithResourcesEcjFilter(), new FinallyFilter(),
-				new PrivateEmptyNoArgConstructorFilter(), new AssertFilter(),
-				new StringSwitchJavacFilter(), new StringSwitchFilter(),
-				new EnumEmptyConstructorFilter(), new RecordsFilter(),
+		return new FilterSet( //
+				allCommonFilters(), //
+				allKotlinFilters());
+	}
+
+	private static IFilter allCommonFilters() {
+		return new FilterSet( //
+				new EnumFilter(), //
+				new SyntheticFilter(), //
+				new BridgeFilter(), //
+				new SynchronizedFilter(), //
+				new TryWithResourcesJavac11Filter(), //
+				new TryWithResourcesJavacFilter(), //
+				new TryWithResourcesEcjFilter(), //
+				new FinallyFilter(), //
+				new PrivateEmptyNoArgConstructorFilter(), //
+				new AssertFilter(), //
+				new StringSwitchJavacFilter(), //
+				new StringSwitchFilter(), //
+				new EnumEmptyConstructorFilter(), //
+				new RecordsFilter(), //
 				new ExhaustiveSwitchFilter(), //
 				new RecordPatternFilter(), //
-				new AnnotationGeneratedFilter(), new KotlinGeneratedFilter(),
+				new AnnotationGeneratedFilter());
+	}
+
+	private static IFilter allKotlinFilters() {
+		return new FilterSet( //
+				new KotlinGeneratedFilter(), //
+				new KotlinSyntheticAccessorsFilter(), //
 				new KotlinEnumFilter(), //
-				new KotlinLateinitFilter(), new KotlinWhenFilter(),
-				new KotlinWhenStringFilter(),
-				new KotlinUnsafeCastOperatorFilter(),
-				new KotlinNotNullOperatorFilter(),
-				new KotlinInlineClassFilter(),
-				new KotlinDefaultArgumentsFilter(), new KotlinInlineFilter(),
-				new KotlinCoroutineFilter(), new KotlinDefaultMethodsFilter(),
-				new KotlinComposeFilter());
+				new KotlinSafeCallOperatorFilter(), //
+				new KotlinLateinitFilter(), //
+				new KotlinWhenFilter(), //
+				new KotlinWhenStringFilter(), //
+				new KotlinUnsafeCastOperatorFilter(), //
+				new KotlinNotNullOperatorFilter(), //
+				new KotlinInlineClassFilter(), //
+				new KotlinDefaultArgumentsFilter(), //
+				new KotlinInlineFilter(), //
+				new KotlinCoroutineFilter(), //
+				new KotlinDefaultMethodsFilter(), //
+				new KotlinComposeFilter()) {
+			@Override
+			public void filter(final MethodNode methodNode,
+					final IFilterContext context, final IFilterOutput output) {
+				if (isKotlinClass(context)) {
+					super.filter(methodNode, context, output);
+				}
+			}
+		};
 	}
 
-	private Filters(final IFilter... filters) {
-		this.filters = filters;
-	}
-
-	public void filter(final MethodNode methodNode,
-			final IFilterContext context, final IFilterOutput output) {
-		for (final IFilter filter : filters) {
-			filter.filter(methodNode, context, output);
-		}
+	/**
+	 * Checks whether the class corresponding to the given context has
+	 * <code>kotlin/Metadata</code> annotation.
+	 *
+	 * @param context
+	 *            context information
+	 * @return <code>true</code> if the class corresponding to the given context
+	 *         has <code>kotlin/Metadata</code> annotation
+	 */
+	public static boolean isKotlinClass(final IFilterContext context) {
+		return context.getClassAnnotations()
+				.contains(KotlinGeneratedFilter.KOTLIN_METADATA_DESC);
 	}
 
 }

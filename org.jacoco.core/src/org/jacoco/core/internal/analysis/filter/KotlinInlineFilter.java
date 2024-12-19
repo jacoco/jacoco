@@ -19,17 +19,13 @@ import org.objectweb.asm.tree.MethodNode;
 /**
  * Filters out instructions that were inlined by Kotlin compiler.
  */
-public final class KotlinInlineFilter implements IFilter {
+final class KotlinInlineFilter implements IFilter {
 
 	private int firstGeneratedLineNumber = -1;
 
 	public void filter(final MethodNode methodNode,
 			final IFilterContext context, final IFilterOutput output) {
 		if (context.getSourceDebugExtension() == null) {
-			return;
-		}
-
-		if (!KotlinGeneratedFilter.isKotlinClass(context)) {
 			return;
 		}
 
@@ -53,8 +49,8 @@ public final class KotlinInlineFilter implements IFilter {
 	private static int getFirstGeneratedLineNumber(final String className,
 			final String sourceFileName, final String smap) {
 		int min = Integer.MAX_VALUE;
-		for (KotlinSMAP.Mapping mapping : new KotlinSMAP(sourceFileName, smap)
-				.mappings()) {
+		for (final KotlinSMAP.Mapping mapping : new KotlinSMAP(sourceFileName,
+				smap).mappings()) {
 			if (className.equals(mapping.inputClassName())
 					&& mapping.inputStartLine() == mapping.outputStartLine()) {
 				continue;
