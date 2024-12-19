@@ -285,18 +285,6 @@ public class KotlinInlineFilterTest extends FilterTestBase {
 	}
 
 	@Test
-	public void should_not_parse_SourceDebugExtension_attribute_when_no_kotlin_metadata_annotation() {
-		context.sourceDebugExtension = "SMAP";
-
-		m.visitLineNumber(1, new Label());
-		m.visitInsn(Opcodes.RETURN);
-
-		filter.filter(m, context, output);
-
-		assertIgnored();
-	}
-
-	@Test
 	public void should_not_filter_when_no_SourceDebugExtension_attribute() {
 		context.classAnnotations
 				.add(KotlinGeneratedFilter.KOTLIN_METADATA_DESC);
