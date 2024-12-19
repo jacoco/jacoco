@@ -22,6 +22,7 @@ import org.objectweb.asm.tree.AbstractInsnNode;
 import org.objectweb.asm.tree.JumpInsnNode;
 import org.objectweb.asm.tree.LabelNode;
 import org.objectweb.asm.tree.MethodNode;
+import org.objectweb.asm.tree.VarInsnNode;
 
 /**
  * Filters bytecode that Kotlin compiler generates for chains of safe call
@@ -46,6 +47,8 @@ final class KotlinSafeCallOperatorFilter implements IFilter {
 	}
 
 	/**
+	 * "optimized" chain:
+	 *
 	 * <pre>
 	 * DUP
 	 * IFNULL label
@@ -60,26 +63,61 @@ final class KotlinSafeCallOperatorFilter implements IFilter {
 	 * label:
 	 * POP
 	 * </pre>
+	 *
+	 * "unoptimized" chain:
+	 *
+	 * <pre>
+	 * ALOAD v0
+	 * IFNULL label
+	 * ... // call 0
+	 *
+	 * ...
+	 *
+	 * ASTORE v1
+	 * ALOAD v1
+	 * IFNULL label
+	 * ... // call N
+	 *
+	 * label:
+	 * ACONST_NULL
+	 * </pre>
 	 */
 	private static Collection<ArrayList<JumpInsnNode>> findChains(
 			final MethodNode methodNode) {
 		final HashMap<AbstractInsnNode, ArrayList<JumpInsnNode>> chains = new HashMap<AbstractInsnNode, ArrayList<JumpInsnNode>>();
 		for (final AbstractInsnNode i : methodNode.instructions) {
-			if (i.getOpcode() == Opcodes.IFNULL
-					&& i.getPrevious().getOpcode() == Opcodes.DUP) {
-				final JumpInsnNode jump = (JumpInsnNode) i;
-				final LabelNode label = jump.label;
-				if (AbstractMatcher.skipNonOpcodes(label.getNext())
-						.getOpcode() != Opcodes.POP) {
+			if (i.getOpcode() != Opcodes.IFNULL) {
+				continue;
+			}
+			final JumpInsnNode jump = (JumpInsnNode) i;
+			final LabelNode label = jump.label;
+			final AbstractInsnNode target = AbstractMatcher
+					.skipNonOpcodes(label);
+			ArrayList<JumpInsnNode> chain = chains.get(label);
+			if (target.getOpcode() == Opcodes.POP) {
+				if (i.getPrevious().getOpcode() != Opcodes.DUP) {
 					continue;
 				}
-				ArrayList<JumpInsnNode> chain = chains.get(label);
-				if (chain == null) {
-					chain = new ArrayList<JumpInsnNode>();
-					chains.put(label, chain);
+			} else if (target.getOpcode() == Opcodes.ACONST_NULL) {
+				if (i.getPrevious().getOpcode() != Opcodes.ALOAD) {
+					continue;
 				}
-				chain.add(jump);
+				if (chain != null) {
+					final AbstractInsnNode p1 = i.getPrevious();
+					final AbstractInsnNode p2 = p1.getPrevious();
+					if (p2 == null || p2.getOpcode() != Opcodes.ASTORE
+							|| ((VarInsnNode) p1).var != ((VarInsnNode) p2).var) {
+						continue;
+					}
+				}
+			} else {
+				continue;
 			}
+			if (chain == null) {
+				chain = new ArrayList<JumpInsnNode>();
+				chains.put(label, chain);
+			}
+			chain.add(jump);
 		}
 		return chains.values();
 	}
