@@ -18,6 +18,7 @@ updates:
       - dependency-name: "org.apache.maven.plugins:*"
       - dependency-name: "org.codehaus.mojo:*"
       - dependency-name: "com.diffplug.spotless:*"
+      - dependency-name: "org.apache.felix:*"
       - dependency-name: "org.sonarsource.scanner.maven:*"
     ignore:
       # It is known that upgrade from current version requires additional changes:
