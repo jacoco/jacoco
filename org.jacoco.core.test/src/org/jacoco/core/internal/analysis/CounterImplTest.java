@@ -180,7 +180,7 @@ public class CounterImplTest {
 	@Test
 	public void testEquals4() {
 		ICounter c = CounterImpl.getInstance(300, 123);
-		assertFalse(c.equals(new Integer(123)));
+		assertFalse(c.equals(Integer.valueOf(123)));
 	}
 
 	@Test
