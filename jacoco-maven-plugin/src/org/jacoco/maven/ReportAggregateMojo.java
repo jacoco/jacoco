@@ -27,6 +27,7 @@ import org.apache.maven.model.Dependency;
 import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
 import org.apache.maven.project.MavenProject;
+import org.jacoco.report.FileFilter;
 import org.jacoco.report.IReportGroupVisitor;
 
 /**

@@ -11,14 +11,14 @@
  *    Kyle Lieber - implementation of CheckMojo
  *
  *******************************************************************************/
-package org.jacoco.maven;
+package org.jacoco.report;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Collections;
 import java.util.List;
 
-import org.codehaus.plexus.util.FileUtils;
-import org.codehaus.plexus.util.StringUtils;
+import org.jacoco.core.utils.FileUtils;
 
 /**
  * A file filter using includes/excludes patterns.
@@ -77,7 +77,7 @@ public class FileFilter {
 	 *
 	 * @return the pattern
 	 */
-	public String getIncludes() {
+	public List<String> getIncludes() {
 		return this.buildPattern(this.includes, DEFAULT_INCLUDES);
 	}
 
@@ -86,16 +86,15 @@ public class FileFilter {
 	 *
 	 * @return the pattern
 	 */
-	public String getExcludes() {
+	public List<String> getExcludes() {
 		return this.buildPattern(this.excludes, DEFAULT_EXCLUDES);
 	}
 
-	private String buildPattern(final List<String> patterns,
+	private List<String> buildPattern(final List<String> patterns,
 			final String defaultPattern) {
-		String pattern = defaultPattern;
-		if (patterns != null && !patterns.isEmpty()) {
-			pattern = StringUtils.join(patterns.iterator(), ",");
+		if (patterns == null || patterns.isEmpty()) {
+			return Collections.singletonList(defaultPattern);
 		}
-		return pattern;
+		return patterns;
 	}
 }
