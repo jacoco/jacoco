@@ -18,6 +18,7 @@ import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -52,6 +53,15 @@ public abstract class FilterTestBase {
 			fail();
 		}
 
+		public void replaceBranches(final AbstractInsnNode source,
+				final Iterable<Collection<InstructionBranch>> newBranches) {
+			fail();
+		}
+
+		/**
+		 * @deprecated scheduled for removal
+		 */
+		@Deprecated
 		public void replaceBranches(final AbstractInsnNode source,
 				final Set<AbstractInsnNode> newTargets) {
 			replacedBranches.put(source, newTargets);

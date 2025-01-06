@@ -15,6 +15,9 @@ package org.jacoco.core.internal.analysis;
 import static org.junit.Assert.assertEquals;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -512,6 +515,125 @@ public class MethodAnalyzerTest implements IProbeIdGenerator {
 
 		assertLine(1001, 0, 3, 0, 2);
 		assertLine(1002, 0, 1, 0, 0);
+	}
+
+	// === Scenario: replace filtering of Kotlin safe call followed by elvis ===
+
+	/**
+	 * <pre>
+	 * data class B(val c: String)
+	 * fun safeCallElvis(b: B?): String =
+	 *     b?.c ?: ""
+	 * </pre>
+	 */
+	private void createKotlinSafeCallElvis() {
+		final Label l0 = new Label();
+		method.visitLabel(l0);
+		method.visitLineNumber(1001, l0);
+		final Label l1 = new Label();
+		final Label l2 = new Label();
+		method.visitVarInsn(Opcodes.ALOAD, 0);
+		method.visitInsn(Opcodes.DUP);
+		// probe[0] when jump to l1
+		method.visitJumpInsn(Opcodes.IFNULL, l1);
+		method.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "B", "getC",
+				"()Ljava/lang/String;", false);
+		method.visitInsn(Opcodes.DUP);
+		// probe[1] when jump to l2
+		method.visitJumpInsn(Opcodes.IFNONNULL, l2);
+		// probe[2] is unreachable because `b.c` can not be null
+		method.visitLabel(l1);
+		method.visitInsn(Opcodes.POP);
+		method.visitLdcInsn("");
+		// probe[3]
+		method.visitLabel(l2);
+		// probe[4]
+		method.visitInsn(Opcodes.ARETURN);
+	}
+
+	@Test
+	public void kotlin_safe_call_elvis_should_create_4_probes() {
+		createKotlinSafeCallElvis();
+		runMethodAnalzer();
+		assertEquals(5, nextProbeId);
+	}
+
+	private static final IFilter KOTLIN_SAFE_CALL_ELVIS_FILTER = new IFilter() {
+		public void filter(final MethodNode methodNode,
+				final IFilterContext context, final IFilterOutput output) {
+			final AbstractInsnNode ifNullInstruction = methodNode.instructions
+					.get(4);
+			assertEquals(Opcodes.IFNULL, ifNullInstruction.getOpcode());
+			final AbstractInsnNode ifNonNullInstruction = methodNode.instructions
+					.get(7);
+			assertEquals(Opcodes.IFNONNULL, ifNonNullInstruction.getOpcode());
+			output.replaceBranches(ifNonNullInstruction,
+					Arrays.<Collection<IFilterOutput.InstructionBranch>> asList(
+							Arrays.asList( // null branch
+									new IFilterOutput.InstructionBranch(
+											ifNonNullInstruction, 0),
+									new IFilterOutput.InstructionBranch(
+											ifNullInstruction, 1)),
+							Collections.singletonList( // non null branch
+									new IFilterOutput.InstructionBranch(
+											ifNonNullInstruction, 1))));
+		}
+	};
+
+	/**
+	 * Execution of
+	 *
+	 * <pre>
+	 * safeCallElvis(B(""))
+	 * </pre>
+	 */
+	@Test
+	public void kotlin_safe_call_elvis_with_filter_should_show_partial_branch_coverage_when_only_non_null_case_covered() {
+		createKotlinSafeCallElvis();
+		probes[1] = true;
+		probes[4] = true;
+		runMethodAnalzer(KOTLIN_SAFE_CALL_ELVIS_FILTER);
+
+		assertLine(1001, 2, 7, 2, 2);
+	}
+
+	/**
+	 * Execution of
+	 *
+	 * <pre>
+	 * safeCallElvis(null)
+	 * </pre>
+	 */
+	@Test
+	public void kotlin_safe_call_elvis_with_filter_should_show_partial_branch_coverage_when_only_null_case_covered() {
+		createKotlinSafeCallElvis();
+		probes[0] = true;
+		probes[3] = true;
+		runMethodAnalzer(KOTLIN_SAFE_CALL_ELVIS_FILTER);
+
+		assertLine(1001, 3, 6, 2, 2);
+	}
+
+	/**
+	 * Execution of
+	 *
+	 * <pre>
+	 * safeCallElvis(null)
+	 * safeCallElvis(B(""))
+	 * </pre>
+	 */
+	@Test
+	public void kotlin_safe_call_elvis_with_filter_should_show_full_branch_coverage_when_both_cases_covered() {
+		createKotlinSafeCallElvis();
+		// non-null case
+		probes[1] = true;
+		probes[4] = true;
+		// null case
+		probes[0] = true;
+		probes[3] = true;
+		runMethodAnalzer(KOTLIN_SAFE_CALL_ELVIS_FILTER);
+
+		assertLine(1001, 0, 9, 0, 4);
 	}
 
 	// === Scenario: table switch with and without replace filtering ===
