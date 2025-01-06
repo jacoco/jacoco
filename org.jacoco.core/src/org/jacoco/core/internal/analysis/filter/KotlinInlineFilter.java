@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2024 Mountainminds GmbH & Co. KG and Contributors
+ * Copyright (c) 2009, 2025 Mountainminds GmbH & Co. KG and Contributors
  * This program and the accompanying materials are made available under
  * the terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0
@@ -29,10 +29,6 @@ final class KotlinInlineFilter implements IFilter {
 			return;
 		}
 
-		if (!Filters.isKotlinClass(context)) {
-			return;
-		}
-
 		if (firstGeneratedLineNumber == -1) {
 			firstGeneratedLineNumber = getFirstGeneratedLineNumber(
 					context.getClassName(), context.getSourceFileName(),
@@ -53,8 +49,8 @@ final class KotlinInlineFilter implements IFilter {
 	private static int getFirstGeneratedLineNumber(final String className,
 			final String sourceFileName, final String smap) {
 		int min = Integer.MAX_VALUE;
-		for (KotlinSMAP.Mapping mapping : new KotlinSMAP(sourceFileName, smap)
-				.mappings()) {
+		for (final KotlinSMAP.Mapping mapping : new KotlinSMAP(sourceFileName,
+				smap).mappings()) {
 			if (className.equals(mapping.inputClassName())
 					&& mapping.inputStartLine() == mapping.outputStartLine()) {
 				continue;
