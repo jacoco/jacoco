@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2024 Mountainminds GmbH & Co. KG and Contributors
+ * Copyright (c) 2009, 2025 Mountainminds GmbH & Co. KG and Contributors
  * This program and the accompanying materials are made available under
  * the terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0
@@ -180,7 +180,7 @@ public class CounterImplTest {
 	@Test
 	public void testEquals4() {
 		ICounter c = CounterImpl.getInstance(300, 123);
-		assertFalse(c.equals(new Integer(123)));
+		assertFalse(c.equals(Integer.valueOf(123)));
 	}
 
 	@Test

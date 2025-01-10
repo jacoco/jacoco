@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2024 Mountainminds GmbH & Co. KG and Contributors
+ * Copyright (c) 2009, 2025 Mountainminds GmbH & Co. KG and Contributors
  * This program and the accompanying materials are made available under
  * the terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0
@@ -76,10 +76,6 @@ final class KotlinDefaultArgumentsFilter implements IFilter {
 		if ((methodNode.access & Opcodes.ACC_SYNTHETIC) == 0) {
 			return;
 		}
-		if (!Filters.isKotlinClass(context)) {
-			return;
-		}
-
 		if (isDefaultArgumentsMethod(methodNode)) {
 			new Matcher().match(methodNode, output, false);
 		} else if (isDefaultArgumentsConstructor(methodNode)) {
@@ -133,7 +129,7 @@ final class KotlinDefaultArgumentsFilter implements IFilter {
 				skipNonOpcodes();
 			}
 
-			for (AbstractInsnNode i : ignore) {
+			for (final AbstractInsnNode i : ignore) {
 				output.ignore(i, i);
 			}
 		}

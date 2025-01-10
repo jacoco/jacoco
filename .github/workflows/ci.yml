@@ -24,7 +24,7 @@ jobs:
     runs-on: ubuntu-20.04
     steps:
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
-      - uses: actions/setup-java@8df1039502a15bceb9433410b1a100fbe190c53b # v4.5.0
+      - uses: actions/setup-java@7a6d8a8234af8eb26422e24e3006232cccaa061b # v4.6.0
         with:
           distribution: 'zulu'
           java-version: |
@@ -59,7 +59,7 @@ jobs:
     runs-on: windows-2022
     steps:
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
-      - uses: actions/setup-java@8df1039502a15bceb9433410b1a100fbe190c53b # v4.5.0
+      - uses: actions/setup-java@7a6d8a8234af8eb26422e24e3006232cccaa061b # v4.6.0
         with:
           distribution: 'zulu'
           java-version: |
@@ -91,7 +91,7 @@ jobs:
           ./mvnw -V -B -e --no-transfer-progress \
             verify -Djdk.version=6 -Dbytecode.version=5 \
             --toolchains=toolchains.xml
-      - uses: actions/upload-artifact@b4b15b8c7c6ac21ea08fcf65892d2ee8f75cf882 # v4.4.3
+      - uses: actions/upload-artifact@6f51ac03b9356f520e9adb1b1b7802705f340c2b # v4.5.0
         id: artifact-upload-step
         with:
           name: jacoco

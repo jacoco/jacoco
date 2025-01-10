@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2024 Mountainminds GmbH & Co. KG and Contributors
+ * Copyright (c) 2009, 2025 Mountainminds GmbH & Co. KG and Contributors
  * This program and the accompanying materials are made available under
  * the terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0
@@ -42,19 +42,35 @@ final class StringSwitchFilter implements IFilter {
 	private static class Matcher extends AbstractMatcher {
 		public void match(final AbstractInsnNode start,
 				final IFilterOutput output) {
-
-			if (start.getOpcode() != /* ECJ */ Opcodes.ASTORE
-					&& start.getOpcode() != /* Kotlin */ Opcodes.ALOAD) {
+			if (start.getOpcode() != Opcodes.ASTORE) {
 				return;
 			}
+			vars.put("s", (VarInsnNode) start);
 			cursor = start;
+			JumpInsnNode ifNullInstruction = null;
+			if (start.getNext().getOpcode() == Opcodes.ALOAD) {
+				// Kotlin
+				nextIsVar(Opcodes.ALOAD, "s");
+				if (cursor == null) {
+					return;
+				} else if (cursor.getNext().getOpcode() == Opcodes.DUP) {
+					// nullable case
+					nextIs(Opcodes.DUP);
+					nextIs(Opcodes.IFNULL);
+					ifNullInstruction = (JumpInsnNode) cursor;
+				} else if (cursor.getNext().getOpcode() == Opcodes.IFNULL) {
+					// nullable else
+					nextIs(Opcodes.IFNULL);
+					ifNullInstruction = (JumpInsnNode) cursor;
+					nextIsVar(Opcodes.ALOAD, "s");
+				}
+			}
 			nextIsInvoke(Opcodes.INVOKEVIRTUAL, "java/lang/String", "hashCode",
 					"()I");
 			nextIsSwitch();
 			if (cursor == null) {
 				return;
 			}
-			vars.put("s", (VarInsnNode) start);
 
 			final AbstractInsnNode s = cursor;
 			final int hashCodes;
@@ -102,8 +118,12 @@ final class StringSwitchFilter implements IFilter {
 				}
 			}
 
-			output.ignore(s.getNext(), cursor);
-			output.replaceBranches(s, replacements);
+			if (ifNullInstruction != null) {
+				replacements.add(skipNonOpcodes(ifNullInstruction.label));
+			}
+
+			output.ignore(start.getNext(), cursor);
+			output.replaceBranches(start, replacements);
 		}
 	}
 
