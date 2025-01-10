@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+   Copyright (c) 2009, 2024 Mountainminds GmbH & Co. KG and Contributors
+   This program and the accompanying materials are made available under
+   the terms of the Eclipse Public License 2.0 which is available at
+   http://www.eclipse.org/legal/epl-2.0
+
+   SPDX-License-Identifier: EPL-2.0
+
+   Contributors:
+      Evgeny Mandrikov - initial API and implementation
+-->
+
+<project name="JaCoCo Agent Task Tests" xmlns:au="antlib:org.apache.ant.antunit" xmlns:jacoco="antlib:org.jacoco.ant">
+
+	<target name="setUp">
+		<tempfile property="temp.dir" prefix="jacocoTest" destdir="${java.io.tmpdir}" />
+		<mkdir dir="${temp.dir}"/>
+	</target>
+
+	<target name="testAgentClassLoader">
+		<jar destfile="${temp.dir}/agent-loader.jar">
+			<fileset dir="${org.jacoco.ant.agentClassLoaderTest.classes.dir}" includes="**/AgentLoader.class"/>
+			<manifest>
+				<attribute name="Main-Class" value="org.jacoco.ant.AgentLoader"/>
+				<attribute name="Premain-Class" value="org.jacoco.ant.AgentLoader"/>
+			</manifest>
+		</jar>
+		<java fork="true" failonerror="true" jar="${temp.dir}/agent-loader.jar" logError="true" dir="${temp.dir}">
+			<jvmarg value="-javaagent:${temp.dir}/agent-loader.jar"/>
+			<arg value="${org.jacoco.ant.agentClassLoaderTest.agent.jar}"/>
+		</java>
+		<au:assertFileExists file="${temp.dir}/jacoco.exec"/>
+	</target>
+
+	<target name="tearDown">
+		<delete dir="${temp.dir}" quiet="false" failonerror="true"/>
+	</target>
+
+</project>
