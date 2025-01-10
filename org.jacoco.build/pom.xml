@@ -129,7 +129,7 @@
 
     <maven.build.timestamp.format>yyyyMMddhhmm</maven.build.timestamp.format>
     <jacoco.home.url>http://www.jacoco.org/jacoco</jacoco.home.url>
-    <copyright.years>${project.inceptionYear}, 2024</copyright.years>
+    <copyright.years>${project.inceptionYear}, 2025</copyright.years>
 
     <bytecode.version>1.5</bytecode.version>
     <maven.compiler.source>${bytecode.version}</maven.compiler.source>
@@ -605,7 +605,7 @@
                   <include name="**/*.scala"/>
                   <not>
                     <and>
-                      <contains text="Copyright (c) 2009, 2025 Mountainminds GmbH &amp; Co. KG and Contributors"/>
+                      <contains text="Copyright (c) ${copyright.years} Mountainminds GmbH &amp; Co. KG and Contributors"/>
                       <contains text="This program and the accompanying materials are made available under"/>
                       <contains text="the terms of the Eclipse Public License 2.0 which is available at"/>
                       <contains text="http://www.eclipse.org/legal/epl-2.0"/>
