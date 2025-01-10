@@ -33,6 +33,7 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.zip.GZIPOutputStream;
 import java.util.zip.ZipEntry;
+import java.util.zip.ZipException;
 import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
 
@@ -41,6 +42,7 @@ import org.jacoco.core.data.ExecutionDataStore;
 import org.jacoco.core.internal.Pack200Streams;
 import org.jacoco.core.internal.data.CRC64;
 import org.jacoco.core.test.TargetLoader;
+import org.jacoco.core.test.validation.JavaVersion;
 import org.junit.AssumptionViolatedException;
 import org.junit.Before;
 import org.junit.Rule;
@@ -406,6 +408,42 @@ public class AnalyzerTest {
 		} catch (IOException e) {
 			assertTrue(e.getMessage().startsWith("Error while analyzing"));
 			assertTrue(e.getMessage().contains("broken.zip"));
+		}
+	}
+
+	/**
+	 * Triggers {@link IllegalArgumentException} (JDK < 23) or
+	 * {@link ZipException} (JDK >= 23) in
+	 * {@link Analyzer#nextEntry(ZipInputStream, String)}.
+	 */
+	@Test
+	public void testAnalyzeAll_analyzeZip_nextEntry_IllegalArgumentException()
+			throws Exception {
+		final ByteArrayOutputStream buffer = new ByteArrayOutputStream();
+		final ZipOutputStream zip = new ZipOutputStream(buffer);
+		zip.putNextEntry(new ZipEntry("entry"));
+		zip.closeEntry();
+		zip.close();
+		final byte[] zipBytes = buffer.toByteArray();
+		zipBytes[31] = (byte) 0xFF;
+
+		try {
+			new ZipInputStream(new ByteArrayInputStream(zipBytes))
+					.getNextEntry();
+			fail("expected exception");
+		} catch (final IOException e) {
+			// expected with JDK versions starting from 23 - see
+			// https://bugs.openjdk.org/browse/JDK-8321156
+			// https://github.com/openjdk/jdk/commit/20c71ceacdcb791f5b70cda456bdc47bdd9acf6c
+		} catch (final IllegalArgumentException e) {
+			assertTrue(JavaVersion.current().isBefore("23"));
+		}
+
+		try {
+			analyzer.analyzeAll(new ByteArrayInputStream(zipBytes), "test.zip");
+			fail("expected exception");
+		} catch (final IOException e) {
+			assertExceptionMessage("test.zip", e);
 		}
 	}
 
