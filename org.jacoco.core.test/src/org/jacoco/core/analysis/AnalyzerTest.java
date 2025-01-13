@@ -435,6 +435,7 @@ public class AnalyzerTest {
 			// expected with JDK versions starting from 23 - see
 			// https://bugs.openjdk.org/browse/JDK-8321156
 			// https://github.com/openjdk/jdk/commit/20c71ceacdcb791f5b70cda456bdc47bdd9acf6c
+			assertFalse(JavaVersion.current().isBefore("23"));
 		} catch (final IllegalArgumentException e) {
 			assertTrue(JavaVersion.current().isBefore("23"));
 		}
