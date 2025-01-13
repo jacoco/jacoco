@@ -104,7 +104,24 @@ public abstract class FilterTestBase {
 	final void assertReplacedBranches(final MethodNode methodNode,
 			final AbstractInsnNode source,
 			final List<Replacement> expectedReplacements) {
-		assertEquals(1, actualReplacements.size());
+		assertReplacedBranches(methodNode,
+				Collections.singletonMap(source, expectedReplacements));
+	}
+
+	final void assertReplacedBranches(final MethodNode methodNode,
+			final Map<AbstractInsnNode, List<Replacement>> expectedReplacements) {
+		assertEquals(expectedReplacements.size(), actualReplacements.size());
+		for (final Map.Entry<AbstractInsnNode, List<Replacement>> entry : expectedReplacements
+				.entrySet()) {
+			final AbstractInsnNode node = entry.getKey();
+			final List<Replacement> replacements = entry.getValue();
+			assertReplacements(methodNode, node, replacements);
+		}
+	}
+
+	private void assertReplacements(final MethodNode methodNode,
+			final AbstractInsnNode source,
+			final List<Replacement> expectedReplacements) {
 
 		Collections.sort(expectedReplacements, new Comparator<Replacement>() {
 			public int compare(final Replacement r1, final Replacement r2) {
