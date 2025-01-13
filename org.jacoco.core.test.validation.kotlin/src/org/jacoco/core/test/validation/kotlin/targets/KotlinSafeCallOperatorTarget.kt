@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2024 Mountainminds GmbH & Co. KG and Contributors
+ * Copyright (c) 2009, 2025 Mountainminds GmbH & Co. KG and Contributors
  * This program and the accompanying materials are made available under
  * the terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0
@@ -11,6 +11,8 @@
  *
  *******************************************************************************/
 package org.jacoco.core.test.validation.kotlin.targets
+
+import org.jacoco.core.test.validation.targets.Stubs.nop
 
 /**
  * Test target for [safe call operator (`?.`)](https://kotlinlang.org/docs/null-safety.html#safe-call-operator).
@@ -52,10 +54,33 @@ object KotlinSafeCallOperatorTarget {
         fullCoverage(A(B("")))
     }
 
+    private fun safeCallChainMultiline() {
+        fun nullOnly(a: A?): String? =
+            a?.also { // assertPartlyCovered(1, 1)
+                nop(it) // assertNotCovered()
+            }?.b?.c // assertPartlyCovered(1, 1)
+
+        fun nonNullOnly(a: A?): String? =
+            a?.also { // assertPartlyCovered(1, 1)
+                nop(it) // assertFullyCovered()
+            }?.b?.c // assertFullyCovered(1, 1)
+
+        fun fullCoverage(a: A?): String? =
+            a?.also { // assertFullyCovered(0, 2)
+                nop(it) // assertFullyCovered()
+            }?.b?.c // assertFullyCovered(0, 2)
+
+        nullOnly(null)
+        nonNullOnly(A(B("")))
+        fullCoverage(null)
+        fullCoverage(A(B("")))
+    }
+
     @JvmStatic
     fun main(args: Array<String>) {
         safeCall()
         safeCallChain()
+        safeCallChainMultiline()
     }
 
 }

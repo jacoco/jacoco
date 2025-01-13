@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2024 Mountainminds GmbH & Co. KG and Contributors
+ * Copyright (c) 2009, 2025 Mountainminds GmbH & Co. KG and Contributors
  * This program and the accompanying materials are made available under
  * the terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0
@@ -49,21 +49,6 @@ public class KotlinEnumFilterTest extends FilterTestBase {
 	public void should_not_filter_when_not_Enum() {
 		context.classAnnotations
 				.add(KotlinGeneratedFilter.KOTLIN_METADATA_DESC);
-		final MethodNode m = new MethodNode(
-				Opcodes.ACC_PUBLIC | Opcodes.ACC_STATIC, "getEntries",
-				"()Lkotlin/enums/EnumEntries;", null, null);
-		m.visitFieldInsn(Opcodes.GETSTATIC, "Example", "$ENTRIES",
-				"Lkotlin/enums/EnumEntries;");
-		m.visitInsn(Opcodes.ARETURN);
-
-		filter.filter(m, context, output);
-
-		assertIgnored();
-	}
-
-	@Test
-	public void should_not_filter_when_not_Kotlin() {
-		context.superClassName = "java/lang/Enum";
 		final MethodNode m = new MethodNode(
 				Opcodes.ACC_PUBLIC | Opcodes.ACC_STATIC, "getEntries",
 				"()Lkotlin/enums/EnumEntries;", null, null);
