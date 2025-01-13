@@ -415,6 +415,8 @@ public class AnalyzerTest {
 	 * Triggers {@link IllegalArgumentException} (JDK < 23) or
 	 * {@link ZipException} (JDK >= 23) in
 	 * {@link Analyzer#nextEntry(ZipInputStream, String)}.
+	 *
+	 * @see org.jacoco.core.instr.InstrumenterTest#testInstrumentAll_instrumentZip_nextEntry_IllegalArgumentException()
 	 */
 	@Test
 	public void testAnalyzeAll_analyzeZip_nextEntry_IllegalArgumentException()
