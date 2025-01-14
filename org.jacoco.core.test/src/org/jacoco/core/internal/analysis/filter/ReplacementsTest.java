@@ -21,6 +21,9 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.tree.InsnNode;
+import org.objectweb.asm.tree.LabelNode;
+import org.objectweb.asm.tree.LookupSwitchInsnNode;
+import org.objectweb.asm.tree.TableSwitchInsnNode;
 
 /**
  * Unit test for {@link Replacements}.
@@ -58,6 +61,53 @@ public class ReplacementsTest {
 								new IFilterOutput.InstructionBranch(
 										fromInstruction, 1))),
 				replacements.values());
+	}
+
+	@Test
+	public void should_ignore_default_branch_of_LookupSwitch_instruction() {
+		final LabelNode defaultLabel = new LabelNode();
+		final LabelNode caseA = new LabelNode();
+		final LabelNode caseB = new LabelNode();
+		final LookupSwitchInsnNode switchNode = new LookupSwitchInsnNode(
+				defaultLabel, // branch 0
+				new int[] { 0, 1, 2, 3 }, new LabelNode[] { //
+						caseA, // branch 1
+						defaultLabel, // branch 0
+						caseA, // branch 1
+						caseB // branch 2
+				});
+		assertEquals(
+				Arrays.<Collection<IFilterOutput.InstructionBranch>> asList(
+						Collections.singletonList(
+								new IFilterOutput.InstructionBranch(switchNode,
+										1)),
+						Collections.singletonList(
+								new IFilterOutput.InstructionBranch(switchNode,
+										2))),
+				Replacements.ignoreDefaultBranch(switchNode));
+	}
+
+	@Test
+	public void should_ignore_default_branch_of_TableSwitch_instruction() {
+		final LabelNode defaultLabel = new LabelNode();
+		final LabelNode caseA = new LabelNode();
+		final LabelNode caseB = new LabelNode();
+		final TableSwitchInsnNode switchNode = new TableSwitchInsnNode(0, 3,
+				defaultLabel, // branch 0
+				caseA, // branch 1
+				defaultLabel, // branch 0
+				caseA, // branch 1
+				caseB // branch 2
+		);
+		assertEquals(
+				Arrays.<Collection<IFilterOutput.InstructionBranch>> asList(
+						Collections.singletonList(
+								new IFilterOutput.InstructionBranch(switchNode,
+										1)),
+						Collections.singletonList(
+								new IFilterOutput.InstructionBranch(switchNode,
+										2))),
+				Replacements.ignoreDefaultBranch(switchNode));
 	}
 
 	private static <T> void assertEquals(final Iterable<T> expected,

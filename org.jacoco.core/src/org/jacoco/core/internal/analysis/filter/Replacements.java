@@ -15,8 +15,13 @@ package org.jacoco.core.internal.analysis.filter;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.LinkedHashMap;
+import java.util.List;
 
+import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.tree.AbstractInsnNode;
+import org.objectweb.asm.tree.LabelNode;
+import org.objectweb.asm.tree.LookupSwitchInsnNode;
+import org.objectweb.asm.tree.TableSwitchInsnNode;
 
 /**
  * Utility for creating an argument for
@@ -100,6 +105,37 @@ final class Replacements {
 	 */
 	Iterable<Collection<IFilterOutput.InstructionBranch>> values() {
 		return newBranches.values();
+	}
+
+	/**
+	 * @return information about how to compute coverage status of branches of a
+	 *         given {@link TableSwitchInsnNode} or {@link LookupSwitchInsnNode}
+	 *         in order to ignore its {@link TableSwitchInsnNode#dflt} or
+	 *         {@link LookupSwitchInsnNode#dflt}
+	 */
+	static Iterable<Collection<IFilterOutput.InstructionBranch>> ignoreDefaultBranch(
+			final AbstractInsnNode switchNode) {
+		final List<LabelNode> labels;
+		final LabelNode defaultLabel;
+		if (switchNode.getOpcode() == Opcodes.LOOKUPSWITCH) {
+			final LookupSwitchInsnNode s = (LookupSwitchInsnNode) switchNode;
+			labels = s.labels;
+			defaultLabel = s.dflt;
+		} else {
+			final TableSwitchInsnNode s = (TableSwitchInsnNode) switchNode;
+			labels = s.labels;
+			defaultLabel = s.dflt;
+		}
+		final Replacements replacements = new Replacements();
+		int branchIndex = 0;
+		for (final LabelNode label : labels) {
+			if (label != defaultLabel
+					&& replacements.newBranches.get(label) == null) {
+				branchIndex++;
+				replacements.add(label, switchNode, branchIndex);
+			}
+		}
+		return replacements.values();
 	}
 
 }

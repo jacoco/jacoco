@@ -12,8 +12,6 @@
  *******************************************************************************/
 package org.jacoco.core.internal.analysis.filter;
 
-import java.util.List;
-
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.tree.AbstractInsnNode;
 import org.objectweb.asm.tree.LabelNode;
@@ -89,7 +87,8 @@ final class ExhaustiveSwitchFilter implements IFilter {
 				return;
 			}
 			output.ignore(dflt, cursor);
-			KotlinWhenFilter.ignoreDefaultBranch(start, output);
+			output.replaceBranches(start,
+					Replacements.ignoreDefaultBranch(start));
 		}
 
 		private static AbstractInsnNode skipToLineNumberOrInstruction(
