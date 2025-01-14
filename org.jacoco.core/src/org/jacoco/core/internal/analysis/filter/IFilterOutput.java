@@ -72,7 +72,7 @@ public interface IFilterOutput {
 	/**
 	 * {@link #instruction} and index of its {@link #branch}.
 	 */
-	class InstructionBranch {
+	final class InstructionBranch {
 		/** Instruction. */
 		public final AbstractInsnNode instruction;
 		/** Branch index. */
@@ -90,6 +90,21 @@ public interface IFilterOutput {
 				final int branch) {
 			this.instruction = instruction;
 			this.branch = branch;
+		}
+
+		@Override
+		public boolean equals(Object o) {
+			if (o == null || getClass() != o.getClass()) {
+				return false;
+			}
+			final InstructionBranch other = (InstructionBranch) o;
+			return this.instruction.equals(other.instruction)
+					&& this.branch == other.branch;
+		}
+
+		@Override
+		public int hashCode() {
+			return instruction.hashCode() * 31 + branch;
 		}
 	}
 

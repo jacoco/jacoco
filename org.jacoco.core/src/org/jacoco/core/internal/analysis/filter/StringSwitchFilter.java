@@ -12,9 +12,6 @@
  *******************************************************************************/
 package org.jacoco.core.internal.analysis.filter;
 
-import java.util.HashSet;
-import java.util.Set;
-
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.tree.AbstractInsnNode;
 import org.objectweb.asm.tree.JumpInsnNode;
@@ -89,8 +86,8 @@ final class StringSwitchFilter implements IFilter {
 				return;
 			}
 
-			final Set<AbstractInsnNode> replacements = new HashSet<AbstractInsnNode>();
-			replacements.add(skipNonOpcodes(defaultLabel));
+			final Replacements replacements = new Replacements();
+			replacements.add(defaultLabel, s, 0);
 
 			for (int i = 0; i < hashCodes; i++) {
 				while (true) {
@@ -104,26 +101,27 @@ final class StringSwitchFilter implements IFilter {
 						return;
 					}
 
-					replacements
-							.add(skipNonOpcodes(((JumpInsnNode) cursor).label));
+					replacements.add(((JumpInsnNode) cursor).label, cursor, 1);
 
 					if (cursor.getNext().getOpcode() == Opcodes.GOTO) {
 						// end of comparisons for same hashCode
 						// jump to default
 						nextIs(Opcodes.GOTO);
+						replacements.add(defaultLabel, cursor, 0);
 						break;
 					} else if (cursor.getNext() == defaultLabel) {
+						replacements.add(defaultLabel, cursor, 0);
 						break;
 					}
 				}
 			}
 
 			if (ifNullInstruction != null) {
-				replacements.add(skipNonOpcodes(ifNullInstruction.label));
+				replacements.add(ifNullInstruction.label, ifNullInstruction, 1);
 			}
 
 			output.ignore(start.getNext(), cursor);
-			output.replaceBranches(start, replacements);
+			output.replaceBranches(start, replacements.values());
 		}
 	}
 

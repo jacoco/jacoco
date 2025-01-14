@@ -1,0 +1,48 @@
+/*******************************************************************************
+ * Copyright (c) 2009, 2025 Mountainminds GmbH & Co. KG and Contributors
+ * This program and the accompanying materials are made available under
+ * the terms of the Eclipse Public License 2.0 which is available at
+ * http://www.eclipse.org/legal/epl-2.0
+ *
+ * SPDX-License-Identifier: EPL-2.0
+ *
+ * Contributors:
+ *    Evgeny Mandrikov - initial API and implementation
+ *
+ *******************************************************************************/
+package org.jacoco.core.internal.analysis.filter;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.LinkedHashMap;
+
+import org.objectweb.asm.tree.AbstractInsnNode;
+
+final class Replacements {
+
+	private final LinkedHashMap<AbstractInsnNode, Collection<IFilterOutput.InstructionBranch>> newBranches = new LinkedHashMap<AbstractInsnNode, Collection<IFilterOutput.InstructionBranch>>();
+
+	/**
+	 * @param target
+	 *            instruction uniquely identifying new branch, e.g. its target
+	 * @param instruction
+	 *            instruction whose branch execution status should be used
+	 * @param branchIndex
+	 *            index of branch whose execution status should be used
+	 */
+	void add(final AbstractInsnNode target, final AbstractInsnNode instruction,
+			final int branchIndex) {
+		Collection<IFilterOutput.InstructionBranch> from = newBranches
+				.get(target);
+		if (from == null) {
+			from = new ArrayList<IFilterOutput.InstructionBranch>();
+			newBranches.put(target, from);
+		}
+		from.add(new IFilterOutput.InstructionBranch(instruction, branchIndex));
+	}
+
+	Iterable<Collection<IFilterOutput.InstructionBranch>> values() {
+		return newBranches.values();
+	}
+
+}

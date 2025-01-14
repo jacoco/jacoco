@@ -125,6 +125,9 @@ public abstract class FilterTestBase {
 
 		Collections.sort(expectedReplacements, new Comparator<Replacement>() {
 			public int compare(final Replacement r1, final Replacement r2) {
+				if (r1.newBranch == r2.newBranch) {
+					return r1.branch - r2.branch;
+				}
 				return r1.newBranch - r2.newBranch;
 			}
 		});
