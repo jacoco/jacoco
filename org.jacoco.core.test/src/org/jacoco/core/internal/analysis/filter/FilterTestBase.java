@@ -24,7 +24,6 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import org.objectweb.asm.tree.AbstractInsnNode;
 import org.objectweb.asm.tree.MethodNode;
@@ -37,8 +36,6 @@ public abstract class FilterTestBase {
 	protected final FilterContextMock context = new FilterContextMock();
 
 	private final List<Range> ignoredRanges = new ArrayList<Range>();
-
-	private final Map<AbstractInsnNode, Set<AbstractInsnNode>> replacedBranches = new HashMap<AbstractInsnNode, Set<AbstractInsnNode>>();
 
 	private final HashMap<AbstractInsnNode, Iterable<Collection<IFilterOutput.InstructionBranch>>> actualReplacements = new HashMap<AbstractInsnNode, Iterable<Collection<IFilterOutput.InstructionBranch>>>();
 
@@ -60,15 +57,6 @@ public abstract class FilterTestBase {
 				final Iterable<Collection<InstructionBranch>> newBranches) {
 			actualReplacements.put(source, newBranches);
 		}
-
-		/**
-		 * @deprecated scheduled for removal
-		 */
-		@Deprecated
-		public void replaceBranches(final AbstractInsnNode source,
-				final Set<AbstractInsnNode> newTargets) {
-			replacedBranches.put(source, newTargets);
-		}
 	};
 
 	final void assertIgnored(Range... ranges) {
@@ -81,24 +69,7 @@ public abstract class FilterTestBase {
 	}
 
 	final void assertNoReplacedBranches() {
-		assertTrue(replacedBranches.isEmpty());
 		assertTrue(actualReplacements.isEmpty());
-	}
-
-	/**
-	 * @deprecated use
-	 *             {@link #assertReplacedBranches(MethodNode, AbstractInsnNode, List)}
-	 *             instead
-	 */
-	@Deprecated
-	final void assertReplacedBranches(final AbstractInsnNode source,
-			final Set<AbstractInsnNode> newTargets) {
-		assertReplacedBranches(Collections.singletonMap(source, newTargets));
-	}
-
-	final void assertReplacedBranches(
-			final Map<AbstractInsnNode, Set<AbstractInsnNode>> expected) {
-		assertEquals(expected, replacedBranches);
 	}
 
 	final void assertReplacedBranches(final MethodNode methodNode,

@@ -58,18 +58,6 @@ public interface IFilterOutput {
 			Iterable<Collection<InstructionBranch>> newBranches);
 
 	/**
-	 * @param source
-	 *            instruction which branches should be replaced
-	 * @param newTargets
-	 *            new targets of branches
-	 * @deprecated use {@link #replaceBranches(AbstractInsnNode, Iterable)}
-	 *             instead
-	 */
-	@Deprecated
-	void replaceBranches(AbstractInsnNode source,
-			Set<AbstractInsnNode> newTargets);
-
-	/**
 	 * {@link #instruction} and index of its {@link #branch}.
 	 */
 	final class InstructionBranch {

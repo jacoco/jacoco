@@ -428,13 +428,4 @@ public class FinallyFilterTest implements IFilterOutput {
 		fail();
 	}
 
-	/**
-	 * @deprecated scheduled for removal
-	 */
-	@Deprecated
-	public void replaceBranches(final AbstractInsnNode source,
-			final Set<AbstractInsnNode> newTargets) {
-		fail();
-	}
-
 }

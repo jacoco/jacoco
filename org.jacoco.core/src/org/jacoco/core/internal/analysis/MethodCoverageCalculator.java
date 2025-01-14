@@ -12,7 +12,6 @@
  *******************************************************************************/
 package org.jacoco.core.internal.analysis;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -169,27 +168,6 @@ class MethodCoverageCalculator implements IFilterOutput {
 		if (i1 != i2) {
 			merged.put(i2, i1);
 		}
-	}
-
-	/**
-	 * @deprecated use {@link #replaceBranches(AbstractInsnNode, Iterable)}
-	 *             instead
-	 */
-	@Deprecated
-	public void replaceBranches(final AbstractInsnNode source,
-			final Set<AbstractInsnNode> newTargets) {
-		final HashMap<AbstractInsnNode, Collection<InstructionBranch>> newBranches = new HashMap<AbstractInsnNode, Collection<InstructionBranch>>();
-		for (final AbstractInsnNode target : newTargets) {
-			final ArrayList<InstructionBranch> list = new ArrayList<InstructionBranch>();
-			final int branches = Math.max(
-					instructions.get(target).getBranchCounter().getTotalCount(),
-					1);
-			for (int branch = 0; branch < branches; branch++) {
-				list.add(new InstructionBranch(target, branch));
-			}
-			newBranches.put(target, list);
-		}
-		replaceBranches(source, newBranches.values());
 	}
 
 	public void replaceBranches(final AbstractInsnNode source,
