@@ -53,6 +53,7 @@ public interface IFilterOutput {
 	 *            instruction which branches should be replaced
 	 * @param newBranches
 	 *            new branches
+	 * @see Replacements
 	 */
 	void replaceBranches(AbstractInsnNode source,
 			Iterable<Collection<InstructionBranch>> newBranches);

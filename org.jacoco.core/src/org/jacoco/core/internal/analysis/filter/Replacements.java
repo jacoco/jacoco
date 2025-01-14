@@ -18,11 +18,64 @@ import java.util.LinkedHashMap;
 
 import org.objectweb.asm.tree.AbstractInsnNode;
 
+/**
+ * Utility for creating an argument for
+ * {@link IFilterOutput#replaceBranches(AbstractInsnNode, Iterable)} with
+ * information about how to compute the coverage status of branches of
+ * instruction from the coverage status of branches of other instructions.
+ */
 final class Replacements {
 
 	private final LinkedHashMap<AbstractInsnNode, Collection<IFilterOutput.InstructionBranch>> newBranches = new LinkedHashMap<AbstractInsnNode, Collection<IFilterOutput.InstructionBranch>>();
 
 	/**
+	 * Adds branch which has a given target and which should be considered as
+	 * covered when a branch with a given index of a given instruction is
+	 * covered.
+	 * <p>
+	 * The branch index should be specified in accordance with the ones assigned
+	 * by {@link org.jacoco.core.internal.analysis.MethodAnalyzer} to a given
+	 * instruction:
+	 *
+	 * <ul>
+	 * <li>for {@link org.objectweb.asm.tree.TableSwitchInsnNode} (and similarly
+	 * for {@link org.objectweb.asm.tree.LookupSwitchInsnNode})
+	 * <ul>
+	 * <li>the branch index corresponds to the indexes in the list of unique
+	 * labels among {@link org.objectweb.asm.tree.TableSwitchInsnNode#dflt} and
+	 * {@link org.objectweb.asm.tree.TableSwitchInsnNode#labels}</li>
+	 * <li>there are as many branches as unique labels</li>
+	 * <li>branch 0 corresponds to continuation of execution at
+	 * {@link org.objectweb.asm.tree.TableSwitchInsnNode#dflt}</li>
+	 * </ul>
+	 * </li>
+	 *
+	 * <li>for {@link org.objectweb.asm.tree.JumpInsnNode} with
+	 * {@link org.objectweb.asm.Opcodes#GOTO} there is only branch 0 that
+	 * corresponds to continuation of execution at
+	 * {@link org.objectweb.asm.tree.JumpInsnNode#label}</li>
+	 *
+	 * <li>for other {@link org.objectweb.asm.tree.JumpInsnNode} there are two
+	 * branches
+	 * <ul>
+	 * <li>branch 1 corresponds to continuation of execution at
+	 * {@link org.objectweb.asm.tree.JumpInsnNode#label}</li>
+	 * <li>branch 0 corresponds to continuation of execution at
+	 * {@link AbstractInsnNode#getNext()}</li>
+	 * </ul>
+	 * </li>
+	 *
+	 * <li>for instructions with {@link org.objectweb.asm.Opcodes#RETURN} and
+	 * {@link org.objectweb.asm.Opcodes#ATHROW} there is only branch 0 that
+	 * corresponds to exit from the method</li>
+	 *
+	 * <li>there are no branches for instructions whose
+	 * {@link AbstractInsnNode#opcode} is -1</li>
+	 *
+	 * <li>for other instructions there is only branch 0 that corresponds to
+	 * continuation of execution at {@link AbstractInsnNode#getNext()}</li>
+	 * </ul>
+	 *
 	 * @param target
 	 *            instruction uniquely identifying new branch, e.g. its target
 	 * @param instruction
@@ -41,6 +94,10 @@ final class Replacements {
 		from.add(new IFilterOutput.InstructionBranch(instruction, branchIndex));
 	}
 
+	/**
+	 * @return the accumulated information in the order of
+	 *         {@link #add(AbstractInsnNode, AbstractInsnNode, int) additions}
+	 */
 	Iterable<Collection<IFilterOutput.InstructionBranch>> values() {
 		return newBranches.values();
 	}
