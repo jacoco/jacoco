@@ -427,6 +427,7 @@ public class AnalyzerTest {
 		zip.closeEntry();
 		zip.close();
 		final byte[] zipBytes = buffer.toByteArray();
+		// non-UTF-8 character in entry name:
 		zipBytes[31] = (byte) 0xFF;
 
 		try {

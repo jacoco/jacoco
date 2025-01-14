@@ -383,9 +383,10 @@ public class InstrumenterTest {
 		zip.closeEntry();
 		zip.close();
 		final byte[] zipBytes = buffer.toByteArray();
+		// non-UTF-8 character in entry name:
 		zipBytes[31] = (byte) 0xFF;
-		final ByteArrayOutputStream out = new ByteArrayOutputStream();
 
+		final ByteArrayOutputStream out = new ByteArrayOutputStream();
 		try {
 			instrumenter.instrumentAll(new ByteArrayInputStream(zipBytes), out,
 					"test.zip");
