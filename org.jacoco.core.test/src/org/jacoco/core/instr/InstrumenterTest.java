@@ -371,6 +371,31 @@ public class InstrumenterTest {
 		}
 	}
 
+	/**
+	 * @see org.jacoco.core.analysis.AnalyzerTest#testAnalyzeAll_analyzeZip_nextEntry_IllegalArgumentException()
+	 */
+	@Test
+	public void testInstrumentAll_instrumentZip_nextEntry_IllegalArgumentException()
+			throws IOException {
+		final ByteArrayOutputStream buffer = new ByteArrayOutputStream();
+		final ZipOutputStream zip = new ZipOutputStream(buffer);
+		zip.putNextEntry(new ZipEntry("entry"));
+		zip.closeEntry();
+		zip.close();
+		final byte[] zipBytes = buffer.toByteArray();
+		// non-UTF-8 character in entry name:
+		zipBytes[31] = (byte) 0xFF;
+
+		final ByteArrayOutputStream out = new ByteArrayOutputStream();
+		try {
+			instrumenter.instrumentAll(new ByteArrayInputStream(zipBytes), out,
+					"test.zip");
+			fail("expected exception");
+		} catch (final IOException e) {
+			assertExceptionMessage("test.zip", e);
+		}
+	}
+
 	@Test
 	public void testInstrumentAll_BrokenClassFileInZip() throws IOException {
 		ByteArrayOutputStream buffer = new ByteArrayOutputStream();

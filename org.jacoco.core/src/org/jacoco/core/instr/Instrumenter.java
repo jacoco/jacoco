@@ -268,6 +268,11 @@ public class Instrumenter {
 			return input.getNextEntry();
 		} catch (final IOException e) {
 			throw instrumentError(location, e);
+		} catch (final IllegalArgumentException e) {
+			// might be thrown in JDK versions below 23 - see
+			// https://bugs.openjdk.org/browse/JDK-8321156
+			// https://github.com/openjdk/jdk/commit/20c71ceacdcb791f5b70cda456bdc47bdd9acf6c
+			throw instrumentError(location, e);
 		}
 	}
 
