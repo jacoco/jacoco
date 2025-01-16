@@ -16,7 +16,10 @@ import org.objectweb.asm.tree.MethodNode;
 
 /**
  * Filters method <code>getEntries</code> that Kotlin compiler creates for
- * enums.
+ * enums. They are not filtered by {@link KotlinGeneratedFilter} due to
+ * <a href= "https://youtrack.jetbrains.com/issue/KT-74091">regression in Kotlin
+ * compiler version 2.0</a>, which at best might be fixed in version <a href=
+ * "https://github.com/jacoco/jacoco/issues/1752#issuecomment-2560095584">2.2.0</a>
  */
 final class KotlinEnumFilter implements IFilter {
 
