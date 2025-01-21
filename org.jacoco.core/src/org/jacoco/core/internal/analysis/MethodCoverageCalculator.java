@@ -12,10 +12,9 @@
  *******************************************************************************/
 package org.jacoco.core.internal.analysis;
 
-import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
@@ -48,14 +47,14 @@ class MethodCoverageCalculator implements IFilterOutput {
 	 */
 	private final Map<AbstractInsnNode, AbstractInsnNode> merged;
 
-	private final Map<AbstractInsnNode, Set<AbstractInsnNode>> replacements;
+	private final Map<AbstractInsnNode, Iterable<Collection<InstructionBranch>>> replacements;
 
 	MethodCoverageCalculator(
 			final Map<AbstractInsnNode, Instruction> instructions) {
 		this.instructions = instructions;
 		this.ignored = new HashSet<AbstractInsnNode>();
 		this.merged = new HashMap<AbstractInsnNode, AbstractInsnNode>();
-		this.replacements = new HashMap<AbstractInsnNode, Set<AbstractInsnNode>>();
+		this.replacements = new HashMap<AbstractInsnNode, Iterable<Collection<InstructionBranch>>>();
 	}
 
 	/**
@@ -105,17 +104,18 @@ class MethodCoverageCalculator implements IFilterOutput {
 	}
 
 	private void applyReplacements() {
-		for (final Entry<AbstractInsnNode, Set<AbstractInsnNode>> entry : replacements
-				.entrySet()) {
-			final Set<AbstractInsnNode> replacements = entry.getValue();
-			final List<Instruction> newBranches = new ArrayList<Instruction>(
-					replacements.size());
-			for (final AbstractInsnNode b : replacements) {
-				newBranches.add(instructions.get(b));
+		final Instruction.Mapper mapper = new Instruction.Mapper() {
+			public Instruction apply(final AbstractInsnNode node) {
+				return instructions.get(node);
 			}
+		};
+		for (final Entry<AbstractInsnNode, Iterable<Collection<InstructionBranch>>> entry : replacements
+				.entrySet()) {
 			final AbstractInsnNode node = entry.getKey();
-			instructions.put(node,
-					instructions.get(node).replaceBranches(newBranches));
+			final Iterable<Collection<InstructionBranch>> newBranches = entry
+					.getValue();
+			instructions.put(node, instructions.get(node)
+					.replaceBranches(newBranches, mapper));
 		}
 	}
 
@@ -171,8 +171,8 @@ class MethodCoverageCalculator implements IFilterOutput {
 	}
 
 	public void replaceBranches(final AbstractInsnNode source,
-			final Set<AbstractInsnNode> newTargets) {
-		replacements.put(source, newTargets);
+			final Iterable<Collection<InstructionBranch>> newBranches) {
+		replacements.put(source, newBranches);
 	}
 
 }

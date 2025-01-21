@@ -12,9 +12,6 @@
  *******************************************************************************/
 package org.jacoco.core.internal.analysis.filter;
 
-import java.util.HashSet;
-import java.util.Set;
-
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.tree.AbstractInsnNode;
 import org.objectweb.asm.tree.JumpInsnNode;
@@ -71,8 +68,8 @@ final class KotlinWhenStringFilter implements IFilter {
 				return;
 			}
 
-			final Set<AbstractInsnNode> replacements = new HashSet<AbstractInsnNode>();
-			replacements.add(skipNonOpcodes(defaultLabel));
+			final Replacements replacements = new Replacements();
+			replacements.add(defaultLabel, s, 0);
 
 			for (int i = 1; i <= hashCodes; i++) {
 				while (true) {
@@ -88,15 +85,17 @@ final class KotlinWhenStringFilter implements IFilter {
 						return;
 					} else if (cursor.getOpcode() == Opcodes.GOTO) {
 						// jump to case body
-						replacements.add(
-								skipNonOpcodes(((JumpInsnNode) cursor).label));
+						replacements.add(((JumpInsnNode) cursor).label, cursor,
+								0);
 						if (jump.label == defaultLabel) {
 							// end of comparisons for same hashCode
+							replacements.add(defaultLabel, jump, 1);
 							break;
 						}
 					} else if (i == hashCodes && jump.label == defaultLabel) {
 						// case body
-						replacements.add(cursor);
+						replacements.add(defaultLabel, jump, 1);
+						replacements.add(cursor, jump, 0);
 						cursor = jump;
 						break;
 					} else {
@@ -106,7 +105,7 @@ final class KotlinWhenStringFilter implements IFilter {
 			}
 
 			output.ignore(s.getNext(), cursor);
-			output.replaceBranches(s, replacements);
+			output.replaceBranches(s, replacements.values());
 		}
 	}
 

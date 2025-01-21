@@ -112,6 +112,16 @@ object KotlinControlStructuresTarget {
 
     }
 
+    private fun whenImplicitElseNotExecuted(i: Int) {
+
+        when (i) { // assertFullyCovered(1, 3)
+            0 -> nop() // assertFullyCovered()
+            1 -> nop() // assertFullyCovered()
+            2 -> nop() // assertFullyCovered()
+        }
+
+    }
+
     private fun breakStatement() {
 
         while (true) {
@@ -156,6 +166,9 @@ object KotlinControlStructuresTarget {
         missedForEachBlock()
         executedForEachBlock()
         whenExpression()
+        whenImplicitElseNotExecuted(0)
+        whenImplicitElseNotExecuted(1)
+        whenImplicitElseNotExecuted(2)
         breakStatement()
         continueStatement()
         implicitReturn()
