@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2024 Mountainminds GmbH & Co. KG and Contributors
+ * Copyright (c) 2009, 2025 Mountainminds GmbH & Co. KG and Contributors
  * This program and the accompanying materials are made available under
  * the terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0
@@ -16,9 +16,10 @@ import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.tree.MethodNode;
 
 /**
- * Filters synthetic methods unless they represent bodies of lambda expressions.
+ * Filters synthetic methods in non-Kotlin classes unless they represent bodies
+ * of lambda expressions.
  */
-public final class SyntheticFilter implements IFilter {
+final class SyntheticFilter implements IFilter {
 
 	private static boolean isScalaClass(final IFilterContext context) {
 		return context.getClassAttributes().contains("ScalaSig")
@@ -37,12 +38,6 @@ public final class SyntheticFilter implements IFilter {
 
 		if (isScalaClass(context)) {
 			if (methodNode.name.startsWith("$anonfun$")) {
-				return;
-			}
-		}
-
-		if (KotlinGeneratedFilter.isKotlinClass(context)) {
-			if (!methodNode.name.startsWith("access$")) {
 				return;
 			}
 		}

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2024 Mountainminds GmbH & Co. KG and Contributors
+ * Copyright (c) 2009, 2025 Mountainminds GmbH & Co. KG and Contributors
  * This program and the accompanying materials are made available under
  * the terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0
@@ -33,6 +33,7 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.zip.GZIPOutputStream;
 import java.util.zip.ZipEntry;
+import java.util.zip.ZipException;
 import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
 
@@ -41,6 +42,7 @@ import org.jacoco.core.data.ExecutionDataStore;
 import org.jacoco.core.internal.Pack200Streams;
 import org.jacoco.core.internal.data.CRC64;
 import org.jacoco.core.test.TargetLoader;
+import org.jacoco.core.test.validation.JavaVersion;
 import org.junit.AssumptionViolatedException;
 import org.junit.Before;
 import org.junit.Rule;
@@ -132,13 +134,13 @@ public class AnalyzerTest {
 	 */
 	@Test
 	public void analyzeClass_should_throw_exception_for_unsupported_class_file_version() {
-		final byte[] bytes = createClass(Opcodes.V23 + 2);
+		final byte[] bytes = createClass(Opcodes.V24 + 2);
 		try {
 			analyzer.analyzeClass(bytes, "UnsupportedVersion");
 			fail("exception expected");
 		} catch (IOException e) {
 			assertExceptionMessage("UnsupportedVersion", e);
-			assertEquals("Unsupported class file major version 69",
+			assertEquals("Unsupported class file major version 70",
 					e.getCause().getMessage());
 		}
 	}
@@ -218,14 +220,14 @@ public class AnalyzerTest {
 	 */
 	@Test
 	public void analyzeAll_should_throw_exception_for_unsupported_class_file_version() {
-		final byte[] bytes = createClass(Opcodes.V23 + 2);
+		final byte[] bytes = createClass(Opcodes.V24 + 2);
 		try {
 			analyzer.analyzeAll(new ByteArrayInputStream(bytes),
 					"UnsupportedVersion");
 			fail("exception expected");
 		} catch (IOException e) {
 			assertExceptionMessage("UnsupportedVersion", e);
-			assertEquals("Unsupported class file major version 69",
+			assertEquals("Unsupported class file major version 70",
 					e.getCause().getMessage());
 		}
 	}
@@ -406,6 +408,46 @@ public class AnalyzerTest {
 		} catch (IOException e) {
 			assertTrue(e.getMessage().startsWith("Error while analyzing"));
 			assertTrue(e.getMessage().contains("broken.zip"));
+		}
+	}
+
+	/**
+	 * Triggers {@link IllegalArgumentException} (JDK < 23) or
+	 * {@link ZipException} (JDK >= 23) in
+	 * {@link Analyzer#nextEntry(ZipInputStream, String)}.
+	 *
+	 * @see org.jacoco.core.instr.InstrumenterTest#testInstrumentAll_instrumentZip_nextEntry_IllegalArgumentException()
+	 */
+	@Test
+	public void testAnalyzeAll_analyzeZip_nextEntry_IllegalArgumentException()
+			throws Exception {
+		final ByteArrayOutputStream buffer = new ByteArrayOutputStream();
+		final ZipOutputStream zip = new ZipOutputStream(buffer);
+		zip.putNextEntry(new ZipEntry("entry"));
+		zip.closeEntry();
+		zip.close();
+		final byte[] zipBytes = buffer.toByteArray();
+		// non-UTF-8 character in entry name:
+		zipBytes[31] = (byte) 0xFF;
+
+		try {
+			new ZipInputStream(new ByteArrayInputStream(zipBytes))
+					.getNextEntry();
+			fail("expected exception");
+		} catch (final IOException e) {
+			// expected with JDK versions starting from 23 - see
+			// https://bugs.openjdk.org/browse/JDK-8321156
+			// https://github.com/openjdk/jdk/commit/20c71ceacdcb791f5b70cda456bdc47bdd9acf6c
+			assertFalse(JavaVersion.current().isBefore("23"));
+		} catch (final IllegalArgumentException e) {
+			assertTrue(JavaVersion.current().isBefore("23"));
+		}
+
+		try {
+			analyzer.analyzeAll(new ByteArrayInputStream(zipBytes), "test.zip");
+			fail("expected exception");
+		} catch (final IOException e) {
+			assertExceptionMessage("test.zip", e);
 		}
 	}
 

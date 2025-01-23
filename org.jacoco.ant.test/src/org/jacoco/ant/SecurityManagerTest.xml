@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+   Copyright (c) 2009, 2025 Mountainminds GmbH & Co. KG and Contributors
+   This program and the accompanying materials are made available under
+   the terms of the Eclipse Public License 2.0 which is available at
+   http://www.eclipse.org/legal/epl-2.0
+
+   SPDX-License-Identifier: EPL-2.0
+
+   Contributors:
+      Evgeny Mandrikov - initial API and implementation
+-->
+
+<project name="JaCoCo with Java SecurityManager Test" xmlns:au="antlib:org.apache.ant.antunit" xmlns:jacoco="antlib:org.jacoco.ant">
+
+	<target name="setUp">
+		<tempfile property="temp.dir" prefix="jacocoTest" destdir="${java.io.tmpdir}" />
+		<mkdir dir="${temp.dir}"/>
+		<property name="exec.file" location="${temp.dir}/jacoco.exec" />
+	</target>
+
+	<target name="tearDown">
+		<delete dir="${temp.dir}" quiet="false" failonerror="true"/>
+	</target>
+
+	<target name="testJaCoCoWithSecurityManager">
+		<jacoco:coverage destfile="${exec.file}">
+			<java classname="org.jacoco.ant.TestTarget" fork="true" failonerror="true">
+				<classpath path="${org.jacoco.ant.securityManagerTest.classes.dir}"/>
+				<jvmarg value="-Djacoco.agent=${_jacoco.agentFile}"/>
+				<jvmarg value="-Djacoco.exec=${exec.file}"/>
+				<jvmarg value="-Djava.security.manager"/>
+				<!-- Note that the use of two equal signs (==) below is not a typo -->
+				<jvmarg value="-Djava.security.policy==${basedir}/data/policy.txt"/>
+			</java>
+		</jacoco:coverage>
+
+		<au:assertFileExists file="${exec.file}"/>
+		<au:assertLogContains text="Target executed"/>
+	</target>
+
+</project>

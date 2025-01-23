@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2024 Mountainminds GmbH & Co. KG and Contributors
+ * Copyright (c) 2009, 2025 Mountainminds GmbH & Co. KG and Contributors
  * This program and the accompanying materials are made available under
  * the terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0
@@ -16,6 +16,7 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 
 import org.objectweb.asm.MethodVisitor;
+import org.objectweb.asm.tree.MethodNode;
 import org.objectweb.asm.util.Printer;
 import org.objectweb.asm.util.Textifier;
 import org.objectweb.asm.util.TraceMethodVisitor;
@@ -31,6 +32,12 @@ public class MethodRecorder {
 	public MethodRecorder() {
 		printer = new Textifier();
 		visitor = new TraceMethodVisitor(printer);
+	}
+
+	public static MethodRecorder from(final MethodNode method) {
+		final MethodRecorder r = new MethodRecorder();
+		method.accept(r.visitor);
+		return r;
 	}
 
 	public Printer getPrinter() {

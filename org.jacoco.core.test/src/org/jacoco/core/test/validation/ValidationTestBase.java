@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2024 Mountainminds GmbH & Co. KG and Contributors
+ * Copyright (c) 2009, 2025 Mountainminds GmbH & Co. KG and Contributors
  * This program and the accompanying materials are made available under
  * the terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0
@@ -17,6 +17,7 @@ import static org.junit.Assert.assertTrue;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -35,6 +36,7 @@ import org.jacoco.core.data.ExecutionDataStore;
 import org.jacoco.core.data.SessionInfo;
 import org.jacoco.core.internal.analysis.CounterImpl;
 import org.jacoco.core.internal.analysis.LineImpl;
+import org.jacoco.core.internal.instr.InstrSupport;
 import org.jacoco.core.test.InstrumentingLoader;
 import org.jacoco.core.test.TargetLoader;
 import org.jacoco.core.test.validation.Source.Line;
@@ -47,6 +49,9 @@ import org.jacoco.report.html.HTMLFormatter;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runners.model.MultipleFailureException;
+import org.objectweb.asm.util.ASMifier;
+import org.objectweb.asm.util.Textifier;
+import org.objectweb.asm.util.TraceClassVisitor;
 
 /**
  * Base class for validation tests. It executes the given class under code
@@ -114,6 +119,24 @@ public abstract class ValidationTestBase {
 		final byte[] bytes = TargetLoader
 				.getClassDataAsBytes(target.getClassLoader(), data.getName());
 		analyzer.analyzeClass(bytes, data.getName());
+		saveBytecodeRepresentations(bytes, data.getName());
+	}
+
+	private void saveBytecodeRepresentations(final byte[] classBytes,
+			final String className) throws IOException {
+		final File outputDir = new File("target/asm/" + target.getSimpleName());
+		outputDir.mkdirs();
+		final String fileName = className.replace('/', '.');
+		final PrintWriter textWriter = new PrintWriter(
+				new File(outputDir, fileName + ".txt"));
+		final PrintWriter asmWriter = new PrintWriter(
+				new File(outputDir, fileName + ".java"));
+		InstrSupport.classReaderFor(classBytes)
+				.accept(new TraceClassVisitor(new TraceClassVisitor(null,
+						new Textifier(), textWriter), new ASMifier(),
+						asmWriter), 0);
+		textWriter.close();
+		asmWriter.close();
 	}
 
 	/**

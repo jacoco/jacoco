@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2024 Mountainminds GmbH & Co. KG and Contributors
+ * Copyright (c) 2009, 2025 Mountainminds GmbH & Co. KG and Contributors
  * This program and the accompanying materials are made available under
  * the terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0
@@ -31,8 +31,14 @@ public class NodeComparator implements Comparator<ICoverageNode>, Serializable {
 
 	private static final long serialVersionUID = 8550521643608826519L;
 
+	/**
+	 * Comparator to compare {@link ICounter} objects.
+	 */
 	private final Comparator<ICounter> counterComparator;
 
+	/**
+	 * Counter entity to sort on.
+	 */
 	private final CounterEntity entity;
 
 	NodeComparator(final Comparator<ICounter> counterComparator,
