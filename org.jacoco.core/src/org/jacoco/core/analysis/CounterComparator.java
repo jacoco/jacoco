@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2024 Mountainminds GmbH & Co. KG and Contributors
+ * Copyright (c) 2009, 2025 Mountainminds GmbH & Co. KG and Contributors
  * This program and the accompanying materials are made available under
  * the terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0
@@ -56,7 +56,14 @@ public class CounterComparator implements Comparator<ICounter>, Serializable {
 	public static final CounterComparator MISSEDRATIO = new CounterComparator(
 			CounterValue.MISSEDRATIO);
 
+	/**
+	 * Counter value to sort on.
+	 */
 	private final CounterValue value;
+
+	/**
+	 * Specifies whether values are sorted in reverse order or not.
+	 */
 	private final boolean reverse;
 
 	private CounterComparator(final CounterValue value) {

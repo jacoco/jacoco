@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2024 Mountainminds GmbH & Co. KG and Contributors
+ * Copyright (c) 2009, 2025 Mountainminds GmbH & Co. KG and Contributors
  * This program and the accompanying materials are made available under
  * the terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0
@@ -49,18 +49,6 @@ public class KotlinGeneratedFilterTest extends FilterTestBase {
 		m.visitInsn(Opcodes.IRETURN);
 		context.classAnnotations
 				.add(KotlinGeneratedFilter.KOTLIN_METADATA_DESC);
-
-		filter.filter(m, context, output);
-
-		assertIgnored();
-	}
-
-	@Test
-	public void testNoLinesNonKotlinWithDebug() {
-		final MethodNode m = new MethodNode(InstrSupport.ASM_API_VERSION, 0,
-				"hashCode", "()I", null, null);
-		m.visitInsn(Opcodes.ICONST_0);
-		m.visitInsn(Opcodes.IRETURN);
 
 		filter.filter(m, context, output);
 

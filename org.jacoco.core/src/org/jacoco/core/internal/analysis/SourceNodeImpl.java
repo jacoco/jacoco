@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2024 Mountainminds GmbH & Co. KG and Contributors
+ * Copyright (c) 2009, 2025 Mountainminds GmbH & Co. KG and Contributors
  * This program and the accompanying materials are made available under
  * the terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0
@@ -42,6 +42,8 @@ public class SourceNodeImpl extends CoverageNodeImpl implements ISourceNode {
 	}
 
 	/**
+	 * @param fragment
+	 *            fragment to apply
 	 * @return <code>true</code> if fragment contains lines of this node
 	 */
 	public boolean applyFragment(final SourceNodeImpl fragment) {
@@ -136,7 +138,7 @@ public class SourceNodeImpl extends CoverageNodeImpl implements ISourceNode {
 	}
 
 	/**
-	 * Increments instructions and branches by the given counter values. If a
+	 * Increments instructions and branches by the given counter values. If an
 	 * optional line number is specified the instructions and branches are added
 	 * to the given line. The line counter is incremented accordingly.
 	 *

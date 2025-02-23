@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2024 Mountainminds GmbH & Co. KG and Contributors
+ * Copyright (c) 2009, 2025 Mountainminds GmbH & Co. KG and Contributors
  * This program and the accompanying materials are made available under
  * the terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0
@@ -30,7 +30,7 @@ import org.objectweb.asm.tree.TableSwitchInsnNode;
  * expressions and statements with subject of type <code>enum class</code> or
  * <code>sealed class</code>.
  */
-public final class KotlinWhenFilter implements IFilter {
+final class KotlinWhenFilter implements IFilter {
 
 	private static final String EXCEPTION = "kotlin/NoWhenBranchMatchedException";
 

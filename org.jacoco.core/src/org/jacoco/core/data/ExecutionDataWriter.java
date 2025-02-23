@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2024 Mountainminds GmbH & Co. KG and Contributors
+ * Copyright (c) 2009, 2025 Mountainminds GmbH & Co. KG and Contributors
  * This program and the accompanying materials are made available under
  * the terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0
@@ -115,9 +115,9 @@ public class ExecutionDataWriter
 	 * file. In any case every execution data file starts with the three bytes
 	 * <code>0x01 0xC0 0xC0</code>.
 	 *
-	 * @return first bytes of a execution data file
+	 * @return first bytes of an execution data file
 	 */
-	public static final byte[] getFileHeader() {
+	public static byte[] getFileHeader() {
 		final ByteArrayOutputStream buffer = new ByteArrayOutputStream();
 		try {
 			new ExecutionDataWriter(buffer);

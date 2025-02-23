@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2024 Mountainminds GmbH & Co. KG and Contributors
+ * Copyright (c) 2009, 2025 Mountainminds GmbH & Co. KG and Contributors
  * This program and the accompanying materials are made available under
  * the terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0
@@ -267,6 +267,11 @@ public class Instrumenter {
 		try {
 			return input.getNextEntry();
 		} catch (final IOException e) {
+			throw instrumentError(location, e);
+		} catch (final IllegalArgumentException e) {
+			// might be thrown in JDK versions below 23 - see
+			// https://bugs.openjdk.org/browse/JDK-8321156
+			// https://github.com/openjdk/jdk/commit/20c71ceacdcb791f5b70cda456bdc47bdd9acf6c
 			throw instrumentError(location, e);
 		}
 	}

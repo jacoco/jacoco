@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2024 Mountainminds GmbH & Co. KG and Contributors
+ * Copyright (c) 2009, 2025 Mountainminds GmbH & Co. KG and Contributors
  * This program and the accompanying materials are made available under
  * the terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0
@@ -22,7 +22,7 @@ import org.objectweb.asm.tree.TryCatchBlockNode;
  * Filters code which is generated for try-with-resources statement by javac
  * starting from version 11.
  */
-public final class TryWithResourcesJavac11Filter implements IFilter {
+final class TryWithResourcesJavac11Filter implements IFilter {
 
 	public void filter(final MethodNode methodNode,
 			final IFilterContext context, final IFilterOutput output) {

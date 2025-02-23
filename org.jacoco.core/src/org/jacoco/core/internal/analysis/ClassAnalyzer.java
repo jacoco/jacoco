@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2024 Mountainminds GmbH & Co. KG and Contributors
+ * Copyright (c) 2009, 2025 Mountainminds GmbH & Co. KG and Contributors
  * This program and the accompanying materials are made available under
  * the terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0
@@ -21,7 +21,6 @@ import java.util.Set;
 import org.jacoco.core.internal.analysis.filter.Filters;
 import org.jacoco.core.internal.analysis.filter.IFilter;
 import org.jacoco.core.internal.analysis.filter.IFilterContext;
-import org.jacoco.core.internal.analysis.filter.KotlinGeneratedFilter;
 import org.jacoco.core.internal.analysis.filter.KotlinSMAP;
 import org.jacoco.core.internal.flow.ClassProbesVisitor;
 import org.jacoco.core.internal.flow.MethodProbesVisitor;
@@ -144,8 +143,7 @@ public class ClassAnalyzer extends ClassProbesVisitor
 
 	private void calculateFragments(
 			final Map<AbstractInsnNode, Instruction> instructions) {
-		if (sourceDebugExtension == null
-				|| !KotlinGeneratedFilter.isKotlinClass(this)) {
+		if (sourceDebugExtension == null || !Filters.isKotlinClass(this)) {
 			return;
 		}
 		if (smap == null) {

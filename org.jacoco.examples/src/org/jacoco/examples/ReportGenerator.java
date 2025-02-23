@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2024 Mountainminds GmbH & Co. KG and Contributors
+ * Copyright (c) 2009, 2025 Mountainminds GmbH & Co. KG and Contributors
  * This program and the accompanying materials are made available under
  * the terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0
@@ -25,7 +25,7 @@ import org.jacoco.report.IReportVisitor;
 import org.jacoco.report.html.HTMLFormatter;
 
 /**
- * This example creates a HTML report for eclipse like projects based on a
+ * This example creates an HTML report for eclipse like projects based on a
  * single execution data store called jacoco.exec. The report contains no
  * grouping information.
  *

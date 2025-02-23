@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2024 Mountainminds GmbH & Co. KG and Contributors
+ * Copyright (c) 2009, 2025 Mountainminds GmbH & Co. KG and Contributors
  * This program and the accompanying materials are made available under
  * the terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0
@@ -220,7 +220,7 @@ public final class InstrSupport {
 	}
 
 	/**
-	 * Ensures that the given member does not correspond to a internal member
+	 * Ensures that the given member does not correspond to an internal member
 	 * created by the instrumentation process. This would mean that the class is
 	 * already instrumented.
 	 *
@@ -273,9 +273,9 @@ public final class InstrSupport {
 	 */
 	public static ClassReader classReaderFor(final byte[] b) {
 		final int originalVersion = getMajorVersion(b);
-		if (originalVersion == Opcodes.V23 + 1) {
+		if (originalVersion == Opcodes.V24 + 1) {
 			// temporarily downgrade version to bypass check in ASM
-			setMajorVersion(Opcodes.V23, b);
+			setMajorVersion(Opcodes.V24, b);
 		}
 		final ClassReader classReader = new ClassReader(b);
 		setMajorVersion(originalVersion, b);
