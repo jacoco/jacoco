@@ -12,19 +12,12 @@
  *******************************************************************************/
 package org.jacoco.maven;
 
-import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
-import java.util.Locale;
 
-import org.apache.maven.artifact.Artifact;
 import org.apache.maven.plugins.annotations.Mojo;
-import org.apache.maven.plugins.annotations.Parameter;
 import org.apache.maven.project.MavenProject;
 import org.codehaus.plexus.util.StringUtils;
-import org.jacoco.report.IReportGroupVisitor;
 
 /**
  * <p>
