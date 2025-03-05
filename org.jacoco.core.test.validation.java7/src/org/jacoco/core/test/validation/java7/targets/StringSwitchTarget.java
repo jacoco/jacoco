@@ -53,6 +53,20 @@ public class StringSwitchTarget {
 		}
 	}
 
+	private static void implicitDefaultNotExecuted(Object s) {
+		switch (String.valueOf(s)) { // assertFullyCovered(1, 3)
+		case "a":
+			nop("case a"); // assertFullyCovered()
+			break;
+		case "b":
+			nop("case b"); // assertFullyCovered()
+			break;
+		case "c":
+			nop("case c"); // assertFullyCovered()
+			break;
+		}
+	}
+
 	private static void handwritten(String s) {
 		int c = -1;
 		switch (s.hashCode()) { // assertFullyCovered(2, 1)
@@ -118,6 +132,10 @@ public class StringSwitchTarget {
 		covered("a");
 		covered("b");
 		covered("\0a");
+
+		implicitDefaultNotExecuted("a");
+		implicitDefaultNotExecuted("b");
+		implicitDefaultNotExecuted("c");
 
 		handwritten("a");
 

@@ -12,6 +12,7 @@
  *******************************************************************************/
 package org.jacoco.core.internal.analysis.filter;
 
+import java.util.Collection;
 import java.util.Set;
 
 import org.objectweb.asm.tree.AbstractInsnNode;
@@ -50,10 +51,50 @@ public interface IFilterOutput {
 	 *
 	 * @param source
 	 *            instruction which branches should be replaced
-	 * @param newTargets
-	 *            new targets of branches
+	 * @param newBranches
+	 *            new branches
+	 * @see Replacements
 	 */
 	void replaceBranches(AbstractInsnNode source,
-			Set<AbstractInsnNode> newTargets);
+			Iterable<Collection<InstructionBranch>> newBranches);
+
+	/**
+	 * {@link #instruction} and index of its {@link #branch}.
+	 */
+	final class InstructionBranch {
+		/** Instruction. */
+		public final AbstractInsnNode instruction;
+		/** Branch index. */
+		public final int branch;
+
+		/**
+		 * Creates a new {@link InstructionBranch}.
+		 *
+		 * @param instruction
+		 *            instruction
+		 * @param branch
+		 *            branch index
+		 */
+		public InstructionBranch(final AbstractInsnNode instruction,
+				final int branch) {
+			this.instruction = instruction;
+			this.branch = branch;
+		}
+
+		@Override
+		public boolean equals(Object o) {
+			if (o == null || getClass() != o.getClass()) {
+				return false;
+			}
+			final InstructionBranch other = (InstructionBranch) o;
+			return this.instruction.equals(other.instruction)
+					&& this.branch == other.branch;
+		}
+
+		@Override
+		public int hashCode() {
+			return instruction.hashCode() * 31 + branch;
+		}
+	}
 
 }
