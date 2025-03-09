@@ -12,8 +12,7 @@
  *******************************************************************************/
 package org.jacoco.core.internal.analysis.filter;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
 
 import org.jacoco.core.internal.instr.InstrSupport;
 import org.junit.Test;
@@ -29,10 +28,10 @@ public class KotlinWhenStringFilterTest extends FilterTestBase {
 
 	private final IFilter filter = new KotlinWhenStringFilter();
 
+	private final ArrayList<Replacement> replacements = new ArrayList<Replacement>();
+
 	@Test
 	public void should_filter() {
-		final Set<AbstractInsnNode> expectedNewTargets = new HashSet<AbstractInsnNode>();
-
 		final MethodNode m = new MethodNode(InstrSupport.ASM_API_VERSION, 0,
 				"name", "()V", null, null);
 
@@ -55,6 +54,7 @@ public class KotlinWhenStringFilterTest extends FilterTestBase {
 		m.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "java/lang/String", "hashCode",
 				"()I", false);
 		m.visitTableSwitchInsn(97, 98, defaultCase, h1, h2);
+		replacements.add(new Replacement(0, m.instructions.getLast(), 0));
 
 		// case "a"
 		m.visitLabel(h1);
@@ -66,6 +66,7 @@ public class KotlinWhenStringFilterTest extends FilterTestBase {
 				"(Ljava/lang/Object;)Z", false);
 		m.visitJumpInsn(Opcodes.IFEQ, sameHash);
 		m.visitJumpInsn(Opcodes.GOTO, case1);
+		replacements.add(new Replacement(1, m.instructions.getLast(), 0));
 
 		// case "\u0000a"
 		m.visitLabel(sameHash);
@@ -74,7 +75,9 @@ public class KotlinWhenStringFilterTest extends FilterTestBase {
 		m.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "java/lang/String", "equals",
 				"(Ljava/lang/Object;)Z", false);
 		m.visitJumpInsn(Opcodes.IFEQ, defaultCase);
+		replacements.add(new Replacement(0, m.instructions.getLast(), 1));
 		m.visitJumpInsn(Opcodes.GOTO, case2);
+		replacements.add(new Replacement(2, m.instructions.getLast(), 0));
 
 		// case "b"
 		m.visitLabel(h2);
@@ -83,26 +86,24 @@ public class KotlinWhenStringFilterTest extends FilterTestBase {
 		m.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "java/lang/String", "equals",
 				"(Ljava/lang/Object;)Z", false);
 		m.visitJumpInsn(Opcodes.IFEQ, defaultCase);
+		replacements.add(new Replacement(0, m.instructions.getLast(), 1));
 		m.visitJumpInsn(Opcodes.GOTO, case3);
 		final AbstractInsnNode expectedToInclusive = m.instructions.getLast();
+		replacements.add(new Replacement(3, m.instructions.getLast(), 0));
 
 		m.visitLabel(case1);
 		m.visitInsn(Opcodes.RETURN);
-		expectedNewTargets.add(m.instructions.getLast());
 		m.visitLabel(case2);
 		m.visitInsn(Opcodes.RETURN);
-		expectedNewTargets.add(m.instructions.getLast());
 		m.visitLabel(case3);
 		m.visitInsn(Opcodes.RETURN);
-		expectedNewTargets.add(m.instructions.getLast());
 		m.visitLabel(defaultCase);
 		m.visitInsn(Opcodes.RETURN);
-		expectedNewTargets.add(m.instructions.getLast());
 
 		filter.filter(m, context, output);
 
-		assertReplacedBranches(expectedFromInclusive.getPrevious(),
-				expectedNewTargets);
+		assertReplacedBranches(m, expectedFromInclusive.getPrevious(),
+				replacements);
 		assertIgnored(new Range(expectedFromInclusive, expectedToInclusive));
 	}
 
@@ -119,8 +120,6 @@ public class KotlinWhenStringFilterTest extends FilterTestBase {
 	 */
 	@Test
 	public void should_filter_when_biggest_hashCode_first() {
-		final Set<AbstractInsnNode> expectedNewTargets = new HashSet<AbstractInsnNode>();
-
 		final MethodNode m = new MethodNode(InstrSupport.ASM_API_VERSION, 0,
 				"example", "(Ljava/lang/String;)V", null, null);
 
@@ -136,6 +135,7 @@ public class KotlinWhenStringFilterTest extends FilterTestBase {
 		m.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "java/lang/String", "hashCode",
 				"()I", false);
 		m.visitTableSwitchInsn(97, 98, defaultCase, h1, h2);
+		replacements.add(new Replacement(0, m.instructions.getLast(), 0));
 
 		m.visitLabel(h1);
 		final AbstractInsnNode expectedFromInclusive = m.instructions.getLast();
@@ -145,6 +145,7 @@ public class KotlinWhenStringFilterTest extends FilterTestBase {
 				"(Ljava/lang/Object;)Z", false);
 		m.visitJumpInsn(Opcodes.IFEQ, sameHash);
 		m.visitJumpInsn(Opcodes.GOTO, case2);
+		replacements.add(new Replacement(1, m.instructions.getLast(), 0));
 
 		m.visitLabel(sameHash);
 		m.visitVarInsn(Opcodes.ALOAD, 2);
@@ -152,7 +153,9 @@ public class KotlinWhenStringFilterTest extends FilterTestBase {
 		m.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "java/lang/String", "equals",
 				"(Ljava/lang/Object;)Z", false);
 		m.visitJumpInsn(Opcodes.IFEQ, defaultCase);
+		replacements.add(new Replacement(0, m.instructions.getLast(), 1));
 		m.visitJumpInsn(Opcodes.GOTO, case3);
+		replacements.add(new Replacement(2, m.instructions.getLast(), 0));
 
 		m.visitLabel(h2);
 		m.visitVarInsn(Opcodes.ALOAD, 2);
@@ -161,25 +164,23 @@ public class KotlinWhenStringFilterTest extends FilterTestBase {
 				"(Ljava/lang/Object;)Z", false);
 		m.visitJumpInsn(Opcodes.IFEQ, defaultCase);
 		final AbstractInsnNode expectedToInclusive = m.instructions.getLast();
+		replacements.add(new Replacement(0, m.instructions.getLast(), 1));
+		replacements.add(new Replacement(3, m.instructions.getLast(), 0));
 
 		m.visitLabel(case1);
 		m.visitInsn(Opcodes.RETURN);
-		expectedNewTargets.add(m.instructions.getLast());
 		m.visitLabel(case2);
 		m.visitInsn(Opcodes.RETURN);
-		expectedNewTargets.add(m.instructions.getLast());
 		m.visitLabel(case3);
 		m.visitInsn(Opcodes.RETURN);
-		expectedNewTargets.add(m.instructions.getLast());
 		m.visitLabel(defaultCase);
 		m.visitInsn(Opcodes.RETURN);
-		expectedNewTargets.add(m.instructions.getLast());
 
 		filter.filter(m, context, output);
 
 		assertIgnored(new Range(expectedFromInclusive, expectedToInclusive));
-		assertReplacedBranches(expectedFromInclusive.getPrevious(),
-				expectedNewTargets);
+		assertReplacedBranches(m, expectedFromInclusive.getPrevious(),
+				replacements);
 	}
 
 	@Test

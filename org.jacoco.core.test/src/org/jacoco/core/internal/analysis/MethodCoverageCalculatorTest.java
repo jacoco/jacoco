@@ -15,9 +15,12 @@ package org.jacoco.core.internal.analysis;
 import static org.junit.Assert.assertEquals;
 
 import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 import org.jacoco.core.analysis.ISourceNode;
 import org.junit.Before;
@@ -173,17 +176,26 @@ public class MethodCoverageCalculatorTest {
 	@Test
 	public void should_replace_branches() {
 		InsnNode i1 = addInsn(1);
-		InsnNode i2 = addInsn(2, true);
+		InsnNode i2 = addInsn(2, false, true);
 		InsnNode i3 = addInsn(2, true);
 		InsnNode i4 = addInsn(2, false);
 
 		MethodCoverageCalculator c = new MethodCoverageCalculator(instructions);
 		c.replaceBranches(i1,
-				new HashSet<AbstractInsnNode>(Arrays.asList(i2, i3, i4)));
+				Arrays.<Collection<MethodCoverageCalculator.InstructionBranch>> asList(
+						Collections.singleton(
+								new MethodCoverageCalculator.InstructionBranch(
+										i2, 1)),
+						Collections.singleton(
+								new MethodCoverageCalculator.InstructionBranch(
+										i3, 0)),
+						Collections.singleton(
+								new MethodCoverageCalculator.InstructionBranch(
+										i4, 0))));
 		c.calculate(coverage);
 
 		assertLine(1, 0, 1, 1, 2); // branches coverage status replaced
-		assertLine(2, 1, 2, 0, 0); // still in place
+		assertLine(2, 1, 2, 1, 1); // still in place
 	}
 
 	@Test
@@ -197,7 +209,16 @@ public class MethodCoverageCalculatorTest {
 		c.merge(i4, i3);
 		c.merge(i3, i2);
 		c.replaceBranches(i1,
-				new HashSet<AbstractInsnNode>(Arrays.asList(i2, i3, i4)));
+				Arrays.<Collection<MethodCoverageCalculator.InstructionBranch>> asList(
+						Collections.singleton(
+								new MethodCoverageCalculator.InstructionBranch(
+										i2, 0)),
+						Collections.singleton(
+								new MethodCoverageCalculator.InstructionBranch(
+										i3, 0)),
+						Collections.singleton(
+								new MethodCoverageCalculator.InstructionBranch(
+										i4, 0))));
 		c.calculate(coverage);
 
 		assertLine(1, 0, 1, 0, 3);
