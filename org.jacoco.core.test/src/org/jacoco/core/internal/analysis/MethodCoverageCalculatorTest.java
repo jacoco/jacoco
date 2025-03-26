@@ -15,8 +15,8 @@ package org.jacoco.core.internal.analysis;
 import static org.junit.Assert.assertEquals;
 
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 import org.jacoco.core.analysis.ISourceNode;
@@ -41,7 +41,7 @@ public class MethodCoverageCalculatorTest {
 
 	@Before
 	public void setup() {
-		instructions = new HashMap<AbstractInsnNode, Instruction>();
+		instructions = new LinkedHashMap<AbstractInsnNode, Instruction>();
 		coverage = new MethodCoverageImpl("run", "()V", null);
 		list = new InsnList();
 	}
