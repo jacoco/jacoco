@@ -12,6 +12,8 @@
  *******************************************************************************/
 package org.jacoco.core.internal.analysis;
 
+import java.util.BitSet;
+
 import org.jacoco.core.analysis.ICounter;
 import org.jacoco.core.analysis.IMethodCoverage;
 
@@ -44,8 +46,8 @@ public class MethodCoverageImpl extends SourceNodeImpl
 
 	@Override
 	public void increment(final ICounter instructions, final ICounter branches,
-			final int line) {
-		super.increment(instructions, branches, line);
+			final int line, final BitSet coveredBranches) {
+		super.increment(instructions, branches, line, coveredBranches);
 		// Additionally increment complexity counter:
 		if (branches.getTotalCount() > 1) {
 			final int c = Math.max(0, branches.getCoveredCount() - 1);
