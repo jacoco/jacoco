@@ -42,7 +42,8 @@ final class ConfigLoader {
 
 	private static void loadResource(final String resource,
 			final Properties result) {
-		final InputStream file = Offline.class.getResourceAsStream(resource);
+		final InputStream file = ConfigLoader.class
+				.getResourceAsStream(resource);
 		if (file != null) {
 			try {
 				result.load(file);

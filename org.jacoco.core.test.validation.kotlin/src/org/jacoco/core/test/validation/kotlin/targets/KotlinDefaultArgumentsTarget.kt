@@ -68,7 +68,7 @@ object KotlinDefaultArgumentsTarget {
         p30: String, // assertEmpty()
         p31: String, // assertEmpty()
         p32: String = "", // assertFullyCovered()
-        p33: String, // assertEmpty()
+        p33: String = "", // assertFullyCovered()
     ) // assertFullyCovered()
 
     @JvmStatic
@@ -93,7 +93,7 @@ object KotlinDefaultArgumentsTarget {
             "1", "2", "3", "4", "5", "6", "7", "8", "9", "10",
             "11", "12", "13", "14", "15", "16", "17", "18", "19", "20",
             "21", "22", "23", "24", "25", "26", "27", "28", "29", "30",
-            "31", p33 = ""
+            "31",
         )
     }
 
