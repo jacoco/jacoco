@@ -217,7 +217,7 @@ public class KotlinDefaultArgumentsFilterTest extends FilterTestBase {
 	 *   ...
 	 *   p31: Int,
 	 *   p32: Int = 42,
-	 *   p33: Int,
+	 *   p33: Int = 42,
 	 * )
 	 * </pre>
 	 *
@@ -242,10 +242,24 @@ public class KotlinDefaultArgumentsFilterTest extends FilterTestBase {
 		m.visitInsn(Opcodes.IAND);
 		final Label label = new Label();
 		m.visitJumpInsn(Opcodes.IFEQ, label);
+		final Range range1 = new Range(m.instructions.getLast(),
+				m.instructions.getLast());
 		// default argument
 		m.visitLdcInsn(Integer.valueOf(42));
 		m.visitVarInsn(Opcodes.ISTORE, 32);
 		m.visitLabel(label);
+
+		m.visitVarInsn(Opcodes.ILOAD, 35);
+		m.visitInsn(Opcodes.ICONST_1);
+		m.visitInsn(Opcodes.IAND);
+		final Label label2 = new Label();
+		m.visitJumpInsn(Opcodes.IFEQ, label2);
+		final Range range2 = new Range(m.instructions.getLast(),
+				m.instructions.getLast());
+		// default argument
+		m.visitLdcInsn(Integer.valueOf(42));
+		m.visitVarInsn(Opcodes.ISTORE, 33);
+		m.visitLabel(label2);
 
 		m.visitVarInsn(Opcodes.ALOAD, 0);
 		for (int i = 1; i <= 33; i++) {
@@ -257,15 +271,17 @@ public class KotlinDefaultArgumentsFilterTest extends FilterTestBase {
 
 		filter.filter(m, context, output);
 
-		assertIgnored(new Range(m.instructions.get(3), m.instructions.get(3)));
+		assertIgnored(range1, range2);
 	}
 
 	/**
 	 * <pre>
 	 * class C(
 	 *   p1: Int = 42,
+	 *   p2: Int,
 	 *   ...
-	 *   p225: Int,
+	 *   p224: Int,
+	 *   p225: Int = 42,
 	 * )
 	 * </pre>
 	 *
@@ -301,10 +317,24 @@ public class KotlinDefaultArgumentsFilterTest extends FilterTestBase {
 		m.visitInsn(Opcodes.IAND);
 		final Label label = new Label();
 		m.visitJumpInsn(Opcodes.IFEQ, label);
+		final Range range1 = new Range(m.instructions.getLast(),
+				m.instructions.getLast());
 		// default argument
 		m.visitLdcInsn(Integer.valueOf(42));
 		m.visitVarInsn(Opcodes.ISTORE, 1);
 		m.visitLabel(label);
+
+		m.visitVarInsn(Opcodes.ILOAD, 233);
+		m.visitInsn(Opcodes.ICONST_1);
+		m.visitInsn(Opcodes.IAND);
+		final Label label2 = new Label();
+		m.visitJumpInsn(Opcodes.IFEQ, label2);
+		final Range range2 = new Range(m.instructions.getLast(),
+				m.instructions.getLast());
+		// default argument
+		m.visitLdcInsn(Integer.valueOf(42));
+		m.visitVarInsn(Opcodes.ISTORE, 225);
+		m.visitLabel(label2);
 
 		m.visitVarInsn(Opcodes.ALOAD, 0);
 		for (int i = 1; i <= 225; i++) {
@@ -316,7 +346,7 @@ public class KotlinDefaultArgumentsFilterTest extends FilterTestBase {
 
 		filter.filter(m, context, output);
 
-		assertIgnored(new Range(m.instructions.get(3), m.instructions.get(3)));
+		assertIgnored(range1, range2);
 	}
 
 	@Test
