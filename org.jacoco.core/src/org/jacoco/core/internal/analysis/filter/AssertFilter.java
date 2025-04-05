@@ -14,6 +14,7 @@ package org.jacoco.core.internal.analysis.filter;
 
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.tree.AbstractInsnNode;
+import org.objectweb.asm.tree.JumpInsnNode;
 import org.objectweb.asm.tree.MethodNode;
 
 /**
@@ -58,7 +59,7 @@ final class AssertFilter implements IFilter {
 					"Z");
 			nextIs(Opcodes.IFNE);
 			if (cursor != null) {
-				output.ignore(cursor, cursor);
+				output.ignore(cursor, ((JumpInsnNode) cursor).label);
 			}
 		}
 	}
