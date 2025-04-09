@@ -27,7 +27,7 @@ public class RecordPatternsTest extends ValidationTestBase {
 	}
 
 	public void assertInstanceof(final Line line) {
-		if (JavaVersion.current().isBefore("23")) {
+		if (JavaVersion.current().isBefore("23") || !isJDKCompiler) {
 			assertFullyCovered(line, 0, 2);
 		} else {
 			// TODO https://bugs.openjdk.org/browse/JDK-8303374
@@ -37,7 +37,9 @@ public class RecordPatternsTest extends ValidationTestBase {
 
 	public void assertSwitchStatementLastCase(final Line line) {
 		if (!isJDKCompiler) {
+			// TODO unfortunately
 			// https://github.com/eclipse-jdt/eclipse.jdt.core/issues/773
+			// did not fixed this issue
 			assertPartlyCovered(line);
 		} else if (JavaVersion.current().isBefore("23")) {
 			assertFullyCovered(line);
