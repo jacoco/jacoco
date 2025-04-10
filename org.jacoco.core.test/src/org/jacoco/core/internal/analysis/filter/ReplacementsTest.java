@@ -12,6 +12,9 @@
  *******************************************************************************/
 package org.jacoco.core.internal.analysis.filter;
 
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -108,6 +111,21 @@ public class ReplacementsTest {
 			Assert.assertEquals(e.next(), a.next());
 		}
 		Assert.assertEquals(e.hasNext(), a.hasNext());
+	}
+
+	@Test
+	public void test_InstructionBranch_equals_and_hashCode() {
+		final InsnNode i1 = new InsnNode(Opcodes.NOP);
+		final InsnNode i2 = new InsnNode(Opcodes.NOP);
+		final Replacements.InstructionBranch ib = new Replacements.InstructionBranch(
+				i1, 0);
+		assertFalse(ib.equals(null));
+		assertFalse(ib.equals(new Object()));
+		assertFalse(ib.equals(new Replacements.InstructionBranch(i1, 1)));
+		assertFalse(ib.equals(new Replacements.InstructionBranch(i2, 0)));
+		assertTrue(ib.equals(new Replacements.InstructionBranch(i1, 0)));
+		Assert.assertEquals(ib.hashCode(),
+				new Replacements.InstructionBranch(i1, 0).hashCode());
 	}
 
 }
