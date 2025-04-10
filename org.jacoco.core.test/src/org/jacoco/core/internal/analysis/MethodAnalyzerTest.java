@@ -630,6 +630,20 @@ public class MethodAnalyzerTest implements IProbeIdGenerator {
 		assertLine(1001, 0, 9, 0, 4);
 	}
 
+	@Test
+	public void kotlin_safe_call_elvis_without_filter() {
+		createKotlinSafeCallElvis();
+		// non-null case
+		probes[1] = true;
+		probes[4] = true;
+		// null case
+		probes[0] = true;
+		probes[3] = true;
+		runMethodAnalzer();
+
+		assertLine(1001, 0, 9, 1, 3);
+	}
+
 	// === Scenario: table switch ===
 
 	private void createTableSwitch() {
