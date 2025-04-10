@@ -49,12 +49,15 @@ jobs:
         JDK_VERSION: 22
       JDK 23:
         JDK_VERSION: 23
+      JDK 23 with ECJ:
+        JDK_VERSION: 23
+        ECJ: true
       JDK 24:
         JDK_VERSION: 24
       JDK 25:
         JDK_VERSION: 25
   pool:
-    vmImage: 'ubuntu-20.04'
+    vmImage: 'ubuntu-24.04'
   steps:
   - bash: |
       set -e
