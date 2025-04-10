@@ -16,7 +16,7 @@ import java.util.BitSet;
 import java.util.Collection;
 
 import org.jacoco.core.analysis.ICounter;
-import org.jacoco.core.internal.analysis.filter.IFilterOutput;
+import org.jacoco.core.internal.analysis.filter.Replacements;
 import org.objectweb.asm.tree.AbstractInsnNode;
 
 /**
@@ -52,7 +52,7 @@ import org.objectweb.asm.tree.AbstractInsnNode;
  *
  * <ul>
  * <li>{@link #merge(Instruction)}</li>
- * <li>{@link #replaceBranches(Iterable, Mapper)}</li>
+ * <li>{@link #replaceBranches(Replacements, Mapper)}</li>
  * </ul>
  */
 public class Instruction {
@@ -166,20 +166,20 @@ public class Instruction {
 	 * are derived from the statuses of the given branches of the given
 	 * instructions.
 	 *
-	 * @param newBranches
+	 * @param replacements
 	 *            new branches
 	 * @param mapper
 	 *            provides {@link Instruction} corresponding to
-	 *            {@link IFilterOutput.InstructionBranch#instruction}
+	 *            {@link Replacements.InstructionBranch#instruction}
 	 * @return new instance with replaced branches
 	 */
-	public Instruction replaceBranches(
-			final Iterable<Collection<IFilterOutput.InstructionBranch>> newBranches,
+	public Instruction replaceBranches(final Replacements replacements,
 			final Mapper mapper) {
 		final Instruction result = new Instruction(this.line);
 		int branchIndex = 0;
-		for (final Collection<IFilterOutput.InstructionBranch> newBranch : newBranches) {
-			for (final IFilterOutput.InstructionBranch from : newBranch) {
+		for (final Collection<Replacements.InstructionBranch> newBranch : replacements
+				.values()) {
+			for (final Replacements.InstructionBranch from : newBranch) {
 				if (mapper.apply(from.instruction).coveredBranches
 						.get(from.branch)) {
 					result.coveredBranches.set(branchIndex);

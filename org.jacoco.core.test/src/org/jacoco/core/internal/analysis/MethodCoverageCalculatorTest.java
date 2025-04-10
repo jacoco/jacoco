@@ -14,15 +14,11 @@ package org.jacoco.core.internal.analysis;
 
 import static org.junit.Assert.assertEquals;
 
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
-import java.util.Set;
 
 import org.jacoco.core.analysis.ISourceNode;
+import org.jacoco.core.internal.analysis.filter.Replacements;
 import org.junit.Before;
 import org.junit.Test;
 import org.objectweb.asm.Opcodes;
@@ -181,17 +177,11 @@ public class MethodCoverageCalculatorTest {
 		InsnNode i4 = addInsn(2, false);
 
 		MethodCoverageCalculator c = new MethodCoverageCalculator(instructions);
-		c.replaceBranches(i1,
-				Arrays.<Collection<MethodCoverageCalculator.InstructionBranch>> asList(
-						Collections.singleton(
-								new MethodCoverageCalculator.InstructionBranch(
-										i2, 1)),
-						Collections.singleton(
-								new MethodCoverageCalculator.InstructionBranch(
-										i3, 0)),
-						Collections.singleton(
-								new MethodCoverageCalculator.InstructionBranch(
-										i4, 0))));
+		Replacements replacements = new Replacements();
+		replacements.add(i2, i2, 1);
+		replacements.add(i3, i3, 0);
+		replacements.add(i4, i4, 0);
+		c.replaceBranches(i1, replacements);
 		c.calculate(coverage);
 
 		assertLine(1, 0, 1, 1, 2); // branches coverage status replaced
@@ -208,17 +198,11 @@ public class MethodCoverageCalculatorTest {
 		MethodCoverageCalculator c = new MethodCoverageCalculator(instructions);
 		c.merge(i4, i3);
 		c.merge(i3, i2);
-		c.replaceBranches(i1,
-				Arrays.<Collection<MethodCoverageCalculator.InstructionBranch>> asList(
-						Collections.singleton(
-								new MethodCoverageCalculator.InstructionBranch(
-										i2, 0)),
-						Collections.singleton(
-								new MethodCoverageCalculator.InstructionBranch(
-										i3, 0)),
-						Collections.singleton(
-								new MethodCoverageCalculator.InstructionBranch(
-										i4, 0))));
+		Replacements replacements = new Replacements();
+		replacements.add(i2, i2, 0);
+		replacements.add(i3, i3, 0);
+		replacements.add(i4, i4, 0);
+		c.replaceBranches(i1, replacements);
 		c.calculate(coverage);
 
 		assertLine(1, 0, 1, 0, 3);

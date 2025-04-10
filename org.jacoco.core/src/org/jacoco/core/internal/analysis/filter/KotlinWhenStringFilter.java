@@ -105,7 +105,7 @@ final class KotlinWhenStringFilter implements IFilter {
 			}
 
 			output.ignore(s.getNext(), cursor);
-			output.replaceBranches(s, replacements.values());
+			output.replaceBranches(s, replacements);
 		}
 	}
 

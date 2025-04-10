@@ -25,13 +25,13 @@ import org.objectweb.asm.tree.TableSwitchInsnNode;
 
 /**
  * Utility for creating an argument for
- * {@link IFilterOutput#replaceBranches(AbstractInsnNode, Iterable)} with
+ * {@link IFilterOutput#replaceBranches(AbstractInsnNode, Replacements)} with
  * information about how to compute the coverage status of branches of
  * instruction from the coverage status of branches of other instructions.
  */
-final class Replacements {
+public final class Replacements {
 
-	private final LinkedHashMap<AbstractInsnNode, Collection<IFilterOutput.InstructionBranch>> newBranches = new LinkedHashMap<AbstractInsnNode, Collection<IFilterOutput.InstructionBranch>>();
+	private final LinkedHashMap<AbstractInsnNode, Collection<InstructionBranch>> newBranches = new LinkedHashMap<AbstractInsnNode, Collection<InstructionBranch>>();
 
 	/**
 	 * Adds branch which has a given target and which should be considered as
@@ -75,7 +75,7 @@ final class Replacements {
 	 * corresponds to exit from the method</li>
 	 *
 	 * <li>there are no branches for instructions whose
-	 * {@link AbstractInsnNode#opcode} is -1</li>
+	 * {@link AbstractInsnNode#getOpcode()} is -1</li>
 	 *
 	 * <li>for other instructions there is only branch 0 that corresponds to
 	 * continuation of execution at {@link AbstractInsnNode#getNext()}</li>
@@ -88,22 +88,21 @@ final class Replacements {
 	 * @param branchIndex
 	 *            index of branch whose execution status should be used
 	 */
-	void add(final AbstractInsnNode target, final AbstractInsnNode instruction,
-			final int branchIndex) {
-		Collection<IFilterOutput.InstructionBranch> from = newBranches
-				.get(target);
+	public void add(final AbstractInsnNode target,
+			final AbstractInsnNode instruction, final int branchIndex) {
+		Collection<InstructionBranch> from = newBranches.get(target);
 		if (from == null) {
-			from = new ArrayList<IFilterOutput.InstructionBranch>();
+			from = new ArrayList<InstructionBranch>();
 			newBranches.put(target, from);
 		}
-		from.add(new IFilterOutput.InstructionBranch(instruction, branchIndex));
+		from.add(new InstructionBranch(instruction, branchIndex));
 	}
 
 	/**
 	 * @return the accumulated information in the order of
 	 *         {@link #add(AbstractInsnNode, AbstractInsnNode, int) additions}
 	 */
-	Iterable<Collection<IFilterOutput.InstructionBranch>> values() {
+	public Iterable<Collection<InstructionBranch>> values() {
 		return newBranches.values();
 	}
 
@@ -113,8 +112,7 @@ final class Replacements {
 	 *         in order to ignore its {@link TableSwitchInsnNode#dflt} or
 	 *         {@link LookupSwitchInsnNode#dflt}
 	 */
-	static Iterable<Collection<IFilterOutput.InstructionBranch>> ignoreDefaultBranch(
-			final AbstractInsnNode switchNode) {
+	static Replacements ignoreDefaultBranch(final AbstractInsnNode switchNode) {
 		final List<LabelNode> labels;
 		final LabelNode defaultLabel;
 		if (switchNode.getOpcode() == Opcodes.LOOKUPSWITCH) {
@@ -135,7 +133,46 @@ final class Replacements {
 				replacements.add(label, switchNode, branchIndex);
 			}
 		}
-		return replacements.values();
+		return replacements;
+	}
+
+	/**
+	 * {@link #instruction} and index of its {@link #branch}.
+	 */
+	public static final class InstructionBranch {
+		/** Instruction. */
+		public final AbstractInsnNode instruction;
+		/** Branch index. */
+		public final int branch;
+
+		/**
+		 * Creates a new {@link InstructionBranch}.
+		 *
+		 * @param instruction
+		 *            instruction
+		 * @param branch
+		 *            branch index
+		 */
+		public InstructionBranch(final AbstractInsnNode instruction,
+				final int branch) {
+			this.instruction = instruction;
+			this.branch = branch;
+		}
+
+		@Override
+		public boolean equals(Object o) {
+			if (o == null || getClass() != o.getClass()) {
+				return false;
+			}
+			final InstructionBranch other = (InstructionBranch) o;
+			return this.instruction.equals(other.instruction)
+					&& this.branch == other.branch;
+		}
+
+		@Override
+		public int hashCode() {
+			return instruction.hashCode() * 31 + branch;
+		}
 	}
 
 }

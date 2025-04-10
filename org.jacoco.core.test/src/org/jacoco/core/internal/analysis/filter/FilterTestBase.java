@@ -37,7 +37,7 @@ public abstract class FilterTestBase {
 
 	private final List<Range> ignoredRanges = new ArrayList<Range>();
 
-	private final HashMap<AbstractInsnNode, Iterable<Collection<IFilterOutput.InstructionBranch>>> actualReplacements = new HashMap<AbstractInsnNode, Iterable<Collection<IFilterOutput.InstructionBranch>>>();
+	private final HashMap<AbstractInsnNode, Iterable<Collection<Replacements.InstructionBranch>>> actualReplacements = new HashMap<AbstractInsnNode, Iterable<Collection<Replacements.InstructionBranch>>>();
 
 	protected final IFilterOutput output = new IFilterOutput() {
 		public void ignore(final AbstractInsnNode fromInclusive,
@@ -53,9 +53,9 @@ public abstract class FilterTestBase {
 			fail();
 		}
 
-		public void replaceBranches(final AbstractInsnNode source,
-				final Iterable<Collection<InstructionBranch>> newBranches) {
-			actualReplacements.put(source, newBranches);
+		public void replaceBranches(AbstractInsnNode source,
+				Replacements replacements) {
+			actualReplacements.put(source, replacements.values());
 		}
 	};
 
@@ -114,9 +114,9 @@ public abstract class FilterTestBase {
 
 		final StringBuilder actualStringBuilder = new StringBuilder();
 		int newBranch = 0;
-		for (final Collection<IFilterOutput.InstructionBranch> pairs : actualReplacements
+		for (final Collection<Replacements.InstructionBranch> pairs : actualReplacements
 				.get(source)) {
-			for (IFilterOutput.InstructionBranch pair : pairs) {
+			for (Replacements.InstructionBranch pair : pairs) {
 				actualStringBuilder.append(newBranch).append(" if branch ")
 						.append(pair.branch).append(" of instruction ")
 						.append(methodNode.instructions
@@ -135,7 +135,8 @@ public abstract class FilterTestBase {
 		final AbstractInsnNode instruction;
 		final int branch;
 
-		Replacement(int newBranch, AbstractInsnNode instruction, int branch) {
+		Replacement(final int newBranch, final AbstractInsnNode instruction,
+				final int branch) {
 			this.newBranch = newBranch;
 			this.instruction = instruction;
 			this.branch = branch;

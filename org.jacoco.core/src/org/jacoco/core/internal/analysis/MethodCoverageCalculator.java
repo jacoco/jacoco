@@ -12,7 +12,6 @@
  *******************************************************************************/
 package org.jacoco.core.internal.analysis;
 
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -21,6 +20,7 @@ import java.util.Set;
 
 import org.jacoco.core.analysis.ISourceNode;
 import org.jacoco.core.internal.analysis.filter.IFilterOutput;
+import org.jacoco.core.internal.analysis.filter.Replacements;
 import org.objectweb.asm.tree.AbstractInsnNode;
 
 /**
@@ -47,14 +47,14 @@ class MethodCoverageCalculator implements IFilterOutput {
 	 */
 	private final Map<AbstractInsnNode, AbstractInsnNode> merged;
 
-	private final Map<AbstractInsnNode, Iterable<Collection<InstructionBranch>>> replacements;
+	private final Map<AbstractInsnNode, Replacements> replacements;
 
 	MethodCoverageCalculator(
 			final Map<AbstractInsnNode, Instruction> instructions) {
 		this.instructions = instructions;
 		this.ignored = new HashSet<AbstractInsnNode>();
 		this.merged = new HashMap<AbstractInsnNode, AbstractInsnNode>();
-		this.replacements = new HashMap<AbstractInsnNode, Iterable<Collection<InstructionBranch>>>();
+		this.replacements = new HashMap<AbstractInsnNode, Replacements>();
 	}
 
 	/**
@@ -109,13 +109,11 @@ class MethodCoverageCalculator implements IFilterOutput {
 				return instructions.get(node);
 			}
 		};
-		for (final Entry<AbstractInsnNode, Iterable<Collection<InstructionBranch>>> entry : replacements
+		for (final Entry<AbstractInsnNode, Replacements> entry : replacements
 				.entrySet()) {
 			final AbstractInsnNode node = entry.getKey();
-			final Iterable<Collection<InstructionBranch>> newBranches = entry
-					.getValue();
 			instructions.put(node, instructions.get(node)
-					.replaceBranches(newBranches, mapper));
+					.replaceBranches(entry.getValue(), mapper));
 		}
 	}
 
@@ -171,8 +169,8 @@ class MethodCoverageCalculator implements IFilterOutput {
 	}
 
 	public void replaceBranches(final AbstractInsnNode source,
-			final Iterable<Collection<InstructionBranch>> newBranches) {
-		replacements.put(source, newBranches);
+			final Replacements replacements) {
+		this.replacements.put(source, replacements);
 	}
 
 }

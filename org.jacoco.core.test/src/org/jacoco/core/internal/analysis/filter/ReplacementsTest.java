@@ -12,6 +12,7 @@
  *******************************************************************************/
 package org.jacoco.core.internal.analysis.filter;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
@@ -39,28 +40,21 @@ public class ReplacementsTest {
 
 		replacements.add(target1, fromInstruction, 0);
 		replacements.add(target2, fromInstruction, 1);
-		assertEquals(
-				Arrays.<Collection<IFilterOutput.InstructionBranch>> asList(
-						Collections.singletonList(
-								new IFilterOutput.InstructionBranch(
-										fromInstruction, 0)),
-						Collections.singletonList(
-								new IFilterOutput.InstructionBranch(
-										fromInstruction, 1))),
-				replacements.values());
+		ArrayList<Collection<Replacements.InstructionBranch>> expected = new ArrayList<Collection<Replacements.InstructionBranch>>();
+		expected.add(Collections.singletonList(
+				new Replacements.InstructionBranch(fromInstruction, 0)));
+		expected.add(Collections.singletonList(
+				new Replacements.InstructionBranch(fromInstruction, 1)));
+		assertEquals(expected, replacements.values());
 
+		expected = new ArrayList<Collection<Replacements.InstructionBranch>>();
+		expected.add(Arrays.asList(
+				new Replacements.InstructionBranch(fromInstruction, 0),
+				new Replacements.InstructionBranch(fromInstruction, 2)));
+		expected.add(Collections.singletonList(
+				new Replacements.InstructionBranch(fromInstruction, 1)));
 		replacements.add(target1, fromInstruction, 2);
-		assertEquals(
-				Arrays.<Collection<IFilterOutput.InstructionBranch>> asList(
-						Arrays.asList(
-								new IFilterOutput.InstructionBranch(
-										fromInstruction, 0),
-								new IFilterOutput.InstructionBranch(
-										fromInstruction, 2)),
-						Collections.singletonList(
-								new IFilterOutput.InstructionBranch(
-										fromInstruction, 1))),
-				replacements.values());
+		assertEquals(expected, replacements.values());
 	}
 
 	@Test
@@ -76,15 +70,13 @@ public class ReplacementsTest {
 						caseA, // branch 1
 						caseB // branch 2
 				});
-		assertEquals(
-				Arrays.<Collection<IFilterOutput.InstructionBranch>> asList(
-						Collections.singletonList(
-								new IFilterOutput.InstructionBranch(switchNode,
-										1)),
-						Collections.singletonList(
-								new IFilterOutput.InstructionBranch(switchNode,
-										2))),
-				Replacements.ignoreDefaultBranch(switchNode));
+		final ArrayList<Collection<Replacements.InstructionBranch>> expected = new ArrayList<Collection<Replacements.InstructionBranch>>();
+		expected.add(Collections.singletonList(
+				new Replacements.InstructionBranch(switchNode, 1)));
+		expected.add(Collections.singletonList(
+				new Replacements.InstructionBranch(switchNode, 2)));
+		assertEquals(expected,
+				Replacements.ignoreDefaultBranch(switchNode).values());
 	}
 
 	@Test
@@ -99,15 +91,13 @@ public class ReplacementsTest {
 				caseA, // branch 1
 				caseB // branch 2
 		);
-		assertEquals(
-				Arrays.<Collection<IFilterOutput.InstructionBranch>> asList(
-						Collections.singletonList(
-								new IFilterOutput.InstructionBranch(switchNode,
-										1)),
-						Collections.singletonList(
-								new IFilterOutput.InstructionBranch(switchNode,
-										2))),
-				Replacements.ignoreDefaultBranch(switchNode));
+		final ArrayList<Collection<Replacements.InstructionBranch>> expected = new ArrayList<Collection<Replacements.InstructionBranch>>();
+		expected.add(Collections.singletonList(
+				new Replacements.InstructionBranch(switchNode, 1)));
+		expected.add(Collections.singletonList(
+				new Replacements.InstructionBranch(switchNode, 2)));
+		assertEquals(expected,
+				Replacements.ignoreDefaultBranch(switchNode).values());
 	}
 
 	private static <T> void assertEquals(final Iterable<T> expected,

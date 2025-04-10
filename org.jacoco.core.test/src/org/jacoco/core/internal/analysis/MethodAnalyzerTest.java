@@ -15,9 +15,6 @@ package org.jacoco.core.internal.analysis;
 import static org.junit.Assert.assertEquals;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
 
 import org.jacoco.core.analysis.ILine;
 import org.jacoco.core.analysis.IMethodCoverage;
@@ -27,6 +24,7 @@ import org.jacoco.core.internal.analysis.filter.Filters;
 import org.jacoco.core.internal.analysis.filter.IFilter;
 import org.jacoco.core.internal.analysis.filter.IFilterContext;
 import org.jacoco.core.internal.analysis.filter.IFilterOutput;
+import org.jacoco.core.internal.analysis.filter.Replacements;
 import org.jacoco.core.internal.flow.IProbeIdGenerator;
 import org.jacoco.core.internal.flow.LabelFlowAnalyzer;
 import org.jacoco.core.internal.flow.MethodProbesAdapter;
@@ -35,6 +33,7 @@ import org.junit.Test;
 import org.objectweb.asm.Label;
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.tree.AbstractInsnNode;
+import org.objectweb.asm.tree.JumpInsnNode;
 import org.objectweb.asm.tree.MethodNode;
 import org.objectweb.asm.tree.TryCatchBlockNode;
 import org.objectweb.asm.util.CheckMethodAdapter;
@@ -565,16 +564,13 @@ public class MethodAnalyzerTest implements IProbeIdGenerator {
 			final AbstractInsnNode ifNonNullInstruction = methodNode.instructions
 					.get(7);
 			assertEquals(Opcodes.IFNONNULL, ifNonNullInstruction.getOpcode());
-			output.replaceBranches(ifNonNullInstruction,
-					Arrays.<Collection<IFilterOutput.InstructionBranch>> asList(
-							Arrays.asList( // null branch
-									new IFilterOutput.InstructionBranch(
-											ifNonNullInstruction, 0),
-									new IFilterOutput.InstructionBranch(
-											ifNullInstruction, 1)),
-							Collections.singletonList( // non null branch
-									new IFilterOutput.InstructionBranch(
-											ifNonNullInstruction, 1))));
+			final AbstractInsnNode nullTarget = ((JumpInsnNode) ifNullInstruction).label;
+			final AbstractInsnNode nonNullTarget = ((JumpInsnNode) ifNonNullInstruction).label;
+			final Replacements replacements = new Replacements();
+			replacements.add(nullTarget, ifNonNullInstruction, 0);
+			replacements.add(nullTarget, ifNullInstruction, 1);
+			replacements.add(nonNullTarget, ifNonNullInstruction, 1);
+			output.replaceBranches(ifNonNullInstruction, replacements);
 		}
 	};
 

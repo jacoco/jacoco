@@ -121,7 +121,7 @@ final class StringSwitchFilter implements IFilter {
 			}
 
 			output.ignore(start.getNext(), cursor);
-			output.replaceBranches(start, replacements.values());
+			output.replaceBranches(start, replacements);
 		}
 	}
 

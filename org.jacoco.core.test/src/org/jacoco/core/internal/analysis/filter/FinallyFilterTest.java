@@ -15,7 +15,6 @@ package org.jacoco.core.internal.analysis.filter;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 
-import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -423,8 +422,8 @@ public class FinallyFilterTest implements IFilterOutput {
 		}
 	}
 
-	public void replaceBranches(final AbstractInsnNode source,
-			final Iterable<Collection<InstructionBranch>> newBranches) {
+	public void replaceBranches(AbstractInsnNode source,
+			Replacements replacements) {
 		fail();
 	}
 
