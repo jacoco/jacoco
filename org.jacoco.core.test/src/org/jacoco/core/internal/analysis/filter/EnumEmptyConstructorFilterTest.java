@@ -39,7 +39,7 @@ public class EnumEmptyConstructorFilterTest extends FilterTestBase {
 
 		filter.filter(m, context, output);
 
-		assertIgnored(
+		assertIgnored(m,
 				new Range(m.instructions.getFirst(), m.instructions.getLast()));
 	}
 
@@ -69,7 +69,7 @@ public class EnumEmptyConstructorFilterTest extends FilterTestBase {
 
 		filter.filter(m, context, output);
 
-		assertIgnored();
+		assertIgnored(m);
 	}
 
 	/**
@@ -96,7 +96,7 @@ public class EnumEmptyConstructorFilterTest extends FilterTestBase {
 
 		filter.filter(m, context, output);
 
-		assertIgnored();
+		assertIgnored(m);
 	}
 
 	/**
@@ -118,7 +118,7 @@ public class EnumEmptyConstructorFilterTest extends FilterTestBase {
 
 		filter.filter(m, context, output);
 
-		assertIgnored();
+		assertIgnored(m);
 	}
 
 	@Test
@@ -130,7 +130,7 @@ public class EnumEmptyConstructorFilterTest extends FilterTestBase {
 
 		filter.filter(m, context, output);
 
-		assertIgnored();
+		assertIgnored(m);
 	}
 
 }

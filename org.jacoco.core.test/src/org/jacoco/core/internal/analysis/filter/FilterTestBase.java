@@ -12,12 +12,12 @@
  *******************************************************************************/
 package org.jacoco.core.internal.analysis.filter;
 
-import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
@@ -59,12 +59,30 @@ public abstract class FilterTestBase {
 		}
 	};
 
-	final void assertIgnored(Range... ranges) {
-		assertArrayEquals(ranges, ignoredRanges.toArray(new Range[0]));
+	final void assertIgnored(final MethodNode methodNode,
+			final Range... expected) {
+		assertEquals("ignored ranges",
+				rangesToString(methodNode, Arrays.asList(expected)),
+				rangesToString(methodNode, ignoredRanges));
+	}
+
+	private static String rangesToString(final MethodNode m,
+			final List<Range> ranges) {
+		final StringBuilder stringBuilder = new StringBuilder();
+		for (int i = 0; i < ranges.size(); i++) {
+			final Range range = ranges.get(i);
+			stringBuilder.append("range ").append(i)
+					.append(" from instruction ")
+					.append(m.instructions.indexOf(range.fromInclusive))
+					.append(" to ")
+					.append(m.instructions.indexOf(range.toInclusive))
+					.append("\n");
+		}
+		return stringBuilder.toString();
 	}
 
 	final void assertMethodIgnored(final MethodNode m) {
-		assertIgnored(
+		assertIgnored(m,
 				new Range(m.instructions.getFirst(), m.instructions.getLast()));
 	}
 

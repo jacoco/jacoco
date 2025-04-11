@@ -43,7 +43,7 @@ public class KotlinLateinitFilterTest extends FilterTestBase {
 
 		filter.filter(m, context, output);
 
-		assertIgnored(new Range(expectedFrom, expectedTo));
+		assertIgnored(m, new Range(expectedFrom, expectedTo));
 	}
 
 	/**
@@ -76,7 +76,7 @@ public class KotlinLateinitFilterTest extends FilterTestBase {
 
 		filter.filter(m, context, output);
 
-		assertIgnored(new Range(branch, branch),
+		assertIgnored(m, new Range(branch, branch),
 				new Range(expectedFrom, expectedTo));
 	}
 
@@ -109,7 +109,7 @@ public class KotlinLateinitFilterTest extends FilterTestBase {
 
 		filter.filter(m, context, output);
 
-		assertIgnored(new Range(expectedFrom, expectedTo));
+		assertIgnored(m, new Range(expectedFrom, expectedTo));
 	}
 
 	/**
@@ -142,7 +142,7 @@ public class KotlinLateinitFilterTest extends FilterTestBase {
 
 		filter.filter(m, context, output);
 
-		assertIgnored(new Range(branch, branch),
+		assertIgnored(m, new Range(branch, branch),
 				new Range(expectedFrom, expectedTo));
 	}
 
@@ -177,7 +177,7 @@ public class KotlinLateinitFilterTest extends FilterTestBase {
 
 		filter.filter(m, context, output);
 
-		assertIgnored(new Range(branch, branch),
+		assertIgnored(m, new Range(branch, branch),
 				new Range(expectedFrom, expectedTo));
 	}
 
@@ -212,7 +212,7 @@ public class KotlinLateinitFilterTest extends FilterTestBase {
 
 		filter.filter(m, context, output);
 
-		assertIgnored(new Range(expectedFrom, expectedTo));
+		assertIgnored(m, new Range(expectedFrom, expectedTo));
 	}
 
 	/**
@@ -247,7 +247,7 @@ public class KotlinLateinitFilterTest extends FilterTestBase {
 
 		filter.filter(m, context, output);
 
-		assertIgnored(new Range(expectedFrom, expectedTo));
+		assertIgnored(m, new Range(expectedFrom, expectedTo));
 	}
 
 	/**
@@ -277,7 +277,7 @@ public class KotlinLateinitFilterTest extends FilterTestBase {
 
 		filter.filter(m, context, output);
 
-		assertIgnored(new Range(expectedFrom, expectedTo));
+		assertIgnored(m, new Range(expectedFrom, expectedTo));
 	}
 
 	/**
@@ -308,7 +308,7 @@ public class KotlinLateinitFilterTest extends FilterTestBase {
 
 		filter.filter(m, context, output);
 
-		assertIgnored(new Range(expectedFrom, expectedTo));
+		assertIgnored(m, new Range(expectedFrom, expectedTo));
 	}
 
 	/**
@@ -340,7 +340,7 @@ public class KotlinLateinitFilterTest extends FilterTestBase {
 
 		filter.filter(m, context, output);
 
-		assertIgnored(new Range(branch, branch),
+		assertIgnored(m, new Range(branch, branch),
 				new Range(expectedFrom, expectedTo));
 	}
 
@@ -374,7 +374,7 @@ public class KotlinLateinitFilterTest extends FilterTestBase {
 
 		filter.filter(m, context, output);
 
-		assertIgnored(new Range(branch, branch),
+		assertIgnored(m, new Range(branch, branch),
 				new Range(expectedFrom, expectedTo));
 	}
 

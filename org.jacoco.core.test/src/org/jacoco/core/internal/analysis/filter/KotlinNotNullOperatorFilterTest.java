@@ -54,7 +54,7 @@ public class KotlinNotNullOperatorFilterTest extends FilterTestBase {
 
 		filter.filter(m, context, output);
 
-		assertIgnored(range);
+		assertIgnored(m, range);
 	}
 
 }
