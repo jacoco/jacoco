@@ -32,18 +32,25 @@ final class KotlinSafeCallOperatorFilter implements IFilter {
 	public void filter(final MethodNode methodNode,
 			final IFilterContext context, final IFilterOutput output) {
 		for (final ArrayList<JumpInsnNode> chain : findChains(methodNode)) {
-			if (chain.size() == 1) {
+			final AbstractInsnNode ifNonNullInstruction = chain.get(0).label
+					.getPrevious();
+			if (chain.size() == 1
+					&& ifNonNullInstruction.getOpcode() != Opcodes.IFNONNULL) {
 				continue;
 			}
-			final JumpInsnNode lastIfNullInstruction = chain
-					.get(chain.size() - 1);
 			final AbstractInsnNode nullTarget = AbstractMatcher
-					.skipNonOpcodes(lastIfNullInstruction.label);
+					.skipNonOpcodes(chain.get(0).label);
 			for (final AbstractInsnNode ifNullInstruction : chain) {
 				final Replacements replacements = new Replacements();
 				replacements.add(ifNullInstruction, ifNullInstruction, 0);
 				replacements.add(nullTarget, nullTarget, 0);
 				output.replaceBranches(ifNullInstruction, replacements);
+			}
+			if (ifNonNullInstruction.getOpcode() == Opcodes.IFNONNULL) {
+				final Replacements replacements = new Replacements();
+				replacements.add(nullTarget, nullTarget, 0);
+				replacements.add(ifNonNullInstruction, ifNonNullInstruction, 1);
+				output.replaceBranches(ifNonNullInstruction, replacements);
 			}
 		}
 	}
