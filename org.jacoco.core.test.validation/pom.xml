@@ -585,6 +585,37 @@
       </modules>
     </profile>
 
+    <profile>
+      <id>java26-bytecode</id>
+      <activation>
+        <property>
+          <name>bytecode.version</name>
+          <value>26</value>
+        </property>
+      </activation>
+      <properties>
+        <!-- Kotlin 2.1.0 doesn't support compilation into 26 -->
+        <kotlin.compiler.jvmTarget>23</kotlin.compiler.jvmTarget>
+        <!-- Groovy 3.0.22 does not support compilation into 26 -->
+        <groovy.targetBytecode>16</groovy.targetBytecode>
+        <!-- see respective profile in org.jacoco.build about this override -->
+        <maven.compiler.source>26</maven.compiler.source>
+        <maven.compiler.target>26</maven.compiler.target>
+      </properties>
+      <modules>
+        <module>../org.jacoco.core.test.validation.kotlin</module>
+        <module>../org.jacoco.core.test.validation.java7</module>
+        <module>../org.jacoco.core.test.validation.java8</module>
+        <module>../org.jacoco.core.test.validation.java14</module>
+        <module>../org.jacoco.core.test.validation.java16</module>
+        <module>../org.jacoco.core.test.validation.java21</module>
+        <!-- Groovy 3.0.22 does not support Java 26
+        <module>../org.jacoco.core.test.validation.groovy</module>
+        -->
+        <module>../org.jacoco.core.test.validation.scala</module>
+      </modules>
+    </profile>
+
   </profiles>
 
 </project>
