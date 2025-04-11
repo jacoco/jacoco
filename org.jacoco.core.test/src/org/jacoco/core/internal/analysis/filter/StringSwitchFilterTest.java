@@ -104,7 +104,7 @@ public class StringSwitchFilterTest extends FilterTestBase {
 
 		filter.filter(m, context, output);
 
-		assertIgnored(range);
+		assertIgnored(m, range);
 		assertReplacedBranches(m, range.fromInclusive.getPrevious(),
 				replacements);
 	}
@@ -152,7 +152,7 @@ public class StringSwitchFilterTest extends FilterTestBase {
 
 		filter.filter(m, context, output);
 
-		assertIgnored(range);
+		assertIgnored(m, range);
 		assertReplacedBranches(m, range.fromInclusive.getPrevious(),
 				replacements);
 	}
@@ -268,7 +268,7 @@ public class StringSwitchFilterTest extends FilterTestBase {
 
 		filter.filter(m, context, output);
 
-		assertIgnored(range);
+		assertIgnored(m, range);
 		assertReplacedBranches(m, range.fromInclusive.getPrevious(),
 				replacements);
 	}
@@ -362,7 +362,7 @@ public class StringSwitchFilterTest extends FilterTestBase {
 
 		filter.filter(m, context, output);
 
-		assertIgnored(range);
+		assertIgnored(m, range);
 		assertReplacedBranches(m, range.fromInclusive.getPrevious(),
 				replacements);
 	}
@@ -463,7 +463,7 @@ public class StringSwitchFilterTest extends FilterTestBase {
 
 		filter.filter(m, context, output);
 
-		assertIgnored(range);
+		assertIgnored(m, range);
 		assertReplacedBranches(m, range.fromInclusive.getPrevious(),
 				replacements);
 	}
@@ -483,7 +483,7 @@ public class StringSwitchFilterTest extends FilterTestBase {
 
 		filter.filter(m, context, output);
 
-		assertIgnored();
+		assertIgnored(m);
 		assertNoReplacedBranches();
 	}
 

@@ -49,7 +49,7 @@ public class KotlinUnsafeCastOperatorFilterTest extends FilterTestBase {
 
 		filter.filter(m, context, output);
 
-		assertIgnored(new Range(expectedFrom, expectedTo));
+		assertIgnored(m, new Range(expectedFrom, expectedTo));
 	}
 
 	@Test
@@ -73,7 +73,7 @@ public class KotlinUnsafeCastOperatorFilterTest extends FilterTestBase {
 
 		filter.filter(m, context, output);
 
-		assertIgnored(new Range(expectedFrom, expectedTo));
+		assertIgnored(m, new Range(expectedFrom, expectedTo));
 	}
 
 	/**
@@ -118,7 +118,7 @@ public class KotlinUnsafeCastOperatorFilterTest extends FilterTestBase {
 
 		filter.filter(m, context, output);
 
-		assertIgnored(new Range(expectedFrom, expectedTo));
+		assertIgnored(m, new Range(expectedFrom, expectedTo));
 	}
 
 	@Test
@@ -143,7 +143,7 @@ public class KotlinUnsafeCastOperatorFilterTest extends FilterTestBase {
 
 		filter.filter(m, context, output);
 
-		assertIgnored(new Range(expectedFrom, expectedTo));
+		assertIgnored(m, new Range(expectedFrom, expectedTo));
 	}
 
 }

@@ -107,7 +107,7 @@ public class AnnotationGeneratedFilterTest extends FilterTestBase {
 
 		filter.filter(m, context, output);
 
-		assertIgnored();
+		assertIgnored(m);
 	}
 
 	@Test
@@ -123,7 +123,7 @@ public class AnnotationGeneratedFilterTest extends FilterTestBase {
 
 		filter.filter(m, context, output);
 
-		assertIgnored();
+		assertIgnored(m);
 	}
 
 }

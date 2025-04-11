@@ -32,7 +32,7 @@ public class SyntheticFilterTest extends FilterTestBase {
 
 		filter.filter(m, context, output);
 
-		assertIgnored();
+		assertIgnored(m);
 	}
 
 	@Test
@@ -54,7 +54,7 @@ public class SyntheticFilterTest extends FilterTestBase {
 
 		filter.filter(m, context, output);
 
-		assertIgnored();
+		assertIgnored(m);
 	}
 
 	@Test
@@ -75,7 +75,7 @@ public class SyntheticFilterTest extends FilterTestBase {
 
 		context.classAttributes.add("ScalaSig");
 		filter.filter(m, context, output);
-		assertIgnored();
+		assertIgnored(m);
 	}
 
 	@Test
@@ -86,7 +86,7 @@ public class SyntheticFilterTest extends FilterTestBase {
 
 		context.classAttributes.add("Scala");
 		filter.filter(m, context, output);
-		assertIgnored();
+		assertIgnored(m);
 	}
 
 	@Test

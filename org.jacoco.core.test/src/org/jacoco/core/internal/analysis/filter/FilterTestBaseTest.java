@@ -12,38 +12,38 @@
  *******************************************************************************/
 package org.jacoco.core.internal.analysis.filter;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
+
 import org.jacoco.core.internal.instr.InstrSupport;
+import org.junit.ComparisonFailure;
 import org.junit.Test;
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.tree.MethodNode;
 
 /**
- * Unit tests for {@link BridgeFilter}.
+ * Unit tests for {@link FilterTestBase}.
  */
-public class BridgeFilterTest extends FilterTestBase {
-
-	private final BridgeFilter filter = new BridgeFilter();
+public class FilterTestBaseTest extends FilterTestBase {
 
 	@Test
-	public void should_filter_bridge_methods() {
-		final MethodNode m = new MethodNode(InstrSupport.ASM_API_VERSION,
-				Opcodes.ACC_BRIDGE, "m", "()Ljava/lang/Object;", null, null);
-		m.visitInsn(Opcodes.NOP);
-
-		filter.filter(m, context, output);
-
-		assertMethodIgnored(m);
-	}
-
-	@Test
-	public void should_not_filter_non_bridge_methods() {
+	public void assertIgnored_should_throw_ComparisonFailure() {
 		final MethodNode m = new MethodNode(InstrSupport.ASM_API_VERSION, 0,
-				"m", "()Ljava/lang/Object;", null, null);
+				"example", "()V", null, null);
+		final Range range = new Range();
 		m.visitInsn(Opcodes.NOP);
+		range.fromInclusive = m.instructions.getFirst();
+		range.toInclusive = m.instructions.getLast();
 
-		filter.filter(m, context, output);
-
-		assertIgnored(m);
+		try {
+			assertIgnored(m, range);
+			fail("exception expected");
+		} catch (final ComparisonFailure e) {
+			assertEquals("", e.getActual());
+			assertEquals("range 0 from instruction 0 to 0\n", e.getExpected());
+			assertTrue(e.getMessage().startsWith("ignored ranges expected:"));
+		}
 	}
 
 }

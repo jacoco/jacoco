@@ -104,7 +104,7 @@ public class KotlinWhenStringFilterTest extends FilterTestBase {
 
 		assertReplacedBranches(m, expectedFromInclusive.getPrevious(),
 				replacements);
-		assertIgnored(new Range(expectedFromInclusive, expectedToInclusive));
+		assertIgnored(m, new Range(expectedFromInclusive, expectedToInclusive));
 	}
 
 	/**
@@ -178,7 +178,7 @@ public class KotlinWhenStringFilterTest extends FilterTestBase {
 
 		filter.filter(m, context, output);
 
-		assertIgnored(new Range(expectedFromInclusive, expectedToInclusive));
+		assertIgnored(m, new Range(expectedFromInclusive, expectedToInclusive));
 		assertReplacedBranches(m, expectedFromInclusive.getPrevious(),
 				replacements);
 	}
@@ -197,7 +197,7 @@ public class KotlinWhenStringFilterTest extends FilterTestBase {
 
 		filter.filter(m, context, output);
 
-		assertIgnored();
+		assertIgnored(m);
 	}
 
 }

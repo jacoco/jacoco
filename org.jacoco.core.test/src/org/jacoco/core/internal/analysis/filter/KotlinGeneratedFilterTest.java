@@ -52,7 +52,7 @@ public class KotlinGeneratedFilterTest extends FilterTestBase {
 
 		filter.filter(m, context, output);
 
-		assertIgnored();
+		assertIgnored(m);
 	}
 
 	@Test
@@ -67,7 +67,7 @@ public class KotlinGeneratedFilterTest extends FilterTestBase {
 
 		filter.filter(m, context, output);
 
-		assertIgnored();
+		assertIgnored(m);
 	}
 
 	@Test
@@ -83,7 +83,7 @@ public class KotlinGeneratedFilterTest extends FilterTestBase {
 
 		filter.filter(m, context, output);
 
-		assertIgnored();
+		assertIgnored(m);
 	}
 
 	/**
@@ -110,7 +110,7 @@ public class KotlinGeneratedFilterTest extends FilterTestBase {
 
 		filter.filter(m, context, output);
 
-		assertIgnored(range1, range2);
+		assertIgnored(m, range1, range2);
 	}
 
 }

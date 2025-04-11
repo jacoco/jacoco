@@ -249,7 +249,8 @@ public class KotlinComposeFilterTest extends FilterTestBase {
 
 		filter.filter(m, context, output);
 
-		assertIgnored(range1, range2, range3, range4, range5, range6, range7);
+		assertIgnored(m, range1, range2, range3, range4, range5, range6,
+				range7);
 	}
 
 }

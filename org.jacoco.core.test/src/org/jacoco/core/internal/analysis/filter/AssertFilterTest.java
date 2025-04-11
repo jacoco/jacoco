@@ -63,7 +63,7 @@ public class AssertFilterTest extends FilterTestBase {
 
 		filter.filter(m, context, output);
 
-		assertIgnored(range);
+		assertIgnored(m, range);
 	}
 
 	/**
@@ -99,7 +99,7 @@ public class AssertFilterTest extends FilterTestBase {
 
 		filter.filter(m, context, output);
 
-		assertIgnored();
+		assertIgnored(m);
 	}
 
 	/**
@@ -139,7 +139,7 @@ public class AssertFilterTest extends FilterTestBase {
 
 		filter.filter(m, context, output);
 
-		assertIgnored(range);
+		assertIgnored(m, range);
 	}
 
 }

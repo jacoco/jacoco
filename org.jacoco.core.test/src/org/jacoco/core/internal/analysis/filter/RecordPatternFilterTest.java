@@ -107,7 +107,7 @@ public class RecordPatternFilterTest extends FilterTestBase {
 
 		filter.filter(m, context, output);
 
-		assertIgnored(range, range);
+		assertIgnored(m, range, range);
 	}
 
 	/**
@@ -214,7 +214,7 @@ public class RecordPatternFilterTest extends FilterTestBase {
 
 		filter.filter(m, context, output);
 
-		assertIgnored(range, range);
+		assertIgnored(m, range, range);
 	}
 
 }

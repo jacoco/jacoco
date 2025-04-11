@@ -77,7 +77,7 @@ public class TryWithResourcesJavac11FilterTest extends FilterTestBase {
 
 		filter.filter(m, context, output);
 
-		assertIgnored(range1, range2);
+		assertIgnored(m, range1, range2);
 	}
 
 	/**
@@ -133,7 +133,7 @@ public class TryWithResourcesJavac11FilterTest extends FilterTestBase {
 
 		filter.filter(m, context, output);
 
-		assertIgnored(range1, range2);
+		assertIgnored(m, range1, range2);
 	}
 
 }

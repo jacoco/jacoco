@@ -218,7 +218,7 @@ public class TryWithResourcesJavacFilterTest extends FilterTestBase {
 
 		filter.filter(m, context, output);
 
-		assertIgnored(range0, range1, range2, range3);
+		assertIgnored(m, range0, range1, range2, range3);
 	}
 
 	/**
@@ -535,7 +535,7 @@ public class TryWithResourcesJavacFilterTest extends FilterTestBase {
 
 		filter.filter(m, context, output);
 
-		assertIgnored(range0, range1, range2, range3);
+		assertIgnored(m, range0, range1, range2, range3);
 	}
 
 	/**
@@ -701,7 +701,7 @@ public class TryWithResourcesJavacFilterTest extends FilterTestBase {
 
 		filter.filter(m, context, output);
 
-		assertIgnored(range0, range1);
+		assertIgnored(m, range0, range1);
 	}
 
 	/**
@@ -763,7 +763,7 @@ public class TryWithResourcesJavacFilterTest extends FilterTestBase {
 
 		filter.filter(m, context, output);
 
-		assertIgnored();
+		assertIgnored(m);
 	}
 
 }

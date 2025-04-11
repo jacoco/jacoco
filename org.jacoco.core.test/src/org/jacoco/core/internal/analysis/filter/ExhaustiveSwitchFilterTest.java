@@ -99,7 +99,7 @@ public class ExhaustiveSwitchFilterTest extends FilterTestBase {
 
 		filter.filter(m, context, output);
 
-		assertIgnored(range);
+		assertIgnored(m, range);
 		assertReplacedBranches(m, switchNode, replacements);
 	}
 
@@ -171,7 +171,7 @@ public class ExhaustiveSwitchFilterTest extends FilterTestBase {
 
 		filter.filter(m, context, output);
 
-		assertIgnored(range);
+		assertIgnored(m, range);
 		assertReplacedBranches(m, switchNode, replacements);
 	}
 
@@ -244,7 +244,7 @@ public class ExhaustiveSwitchFilterTest extends FilterTestBase {
 
 		filter.filter(m, context, output);
 
-		assertIgnored(range);
+		assertIgnored(m, range);
 		assertReplacedBranches(m, switchNode, replacements);
 	}
 
@@ -306,7 +306,7 @@ public class ExhaustiveSwitchFilterTest extends FilterTestBase {
 
 		filter.filter(m, context, output);
 
-		assertIgnored();
+		assertIgnored(m);
 	}
 
 }

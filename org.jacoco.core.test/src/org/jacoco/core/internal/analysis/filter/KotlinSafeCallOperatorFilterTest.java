@@ -71,7 +71,7 @@ public class KotlinSafeCallOperatorFilterTest extends FilterTestBase {
 
 		filter.filter(m, context, output);
 
-		assertIgnored();
+		assertIgnored(m);
 		final HashMap<AbstractInsnNode, List<Replacement>> replacements = new HashMap<AbstractInsnNode, List<Replacement>>();
 		replacements.put(ifNullInstruction1, Arrays.asList( //
 				new Replacement(0, ifNullInstruction2, 0),
@@ -124,7 +124,7 @@ public class KotlinSafeCallOperatorFilterTest extends FilterTestBase {
 
 		filter.filter(m, context, output);
 
-		assertIgnored();
+		assertIgnored(m);
 		final HashMap<AbstractInsnNode, List<Replacement>> replacements = new HashMap<AbstractInsnNode, List<Replacement>>();
 		replacements.put(ifNullInstruction1, Arrays.asList( //
 				new Replacement(0, ifNullInstruction2, 0),

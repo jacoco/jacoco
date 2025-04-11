@@ -59,7 +59,7 @@ public class KotlinWhenFilterTest extends FilterTestBase {
 
 		filter.filter(m, context, output);
 
-		assertIgnored(range1, range2);
+		assertIgnored(m, range1, range2);
 		assertNoReplacedBranches();
 	}
 
@@ -83,7 +83,7 @@ public class KotlinWhenFilterTest extends FilterTestBase {
 
 		filter.filter(m, context, output);
 
-		assertIgnored();
+		assertIgnored(m);
 		assertNoReplacedBranches();
 	}
 
@@ -117,7 +117,7 @@ public class KotlinWhenFilterTest extends FilterTestBase {
 
 		filter.filter(m, context, output);
 
-		assertIgnored(range1);
+		assertIgnored(m, range1);
 		assertReplacedBranches(m, switchNode, replacements);
 	}
 
@@ -198,7 +198,7 @@ public class KotlinWhenFilterTest extends FilterTestBase {
 
 		filter.filter(m, context, output);
 
-		assertIgnored(range1, range2);
+		assertIgnored(m, range1, range2);
 		assertReplacedBranches(m, switchNode, replacements);
 	}
 
@@ -258,7 +258,7 @@ public class KotlinWhenFilterTest extends FilterTestBase {
 
 		filter.filter(m, context, output);
 
-		assertIgnored(range1);
+		assertIgnored(m, range1);
 		assertNoReplacedBranches();
 	}
 
@@ -318,7 +318,7 @@ public class KotlinWhenFilterTest extends FilterTestBase {
 
 		filter.filter(m, context, output);
 
-		assertIgnored(range1);
+		assertIgnored(m, range1);
 		assertNoReplacedBranches();
 	}
 

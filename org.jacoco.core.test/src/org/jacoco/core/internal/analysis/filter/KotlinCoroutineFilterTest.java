@@ -107,7 +107,7 @@ public class KotlinCoroutineFilterTest extends FilterTestBase {
 
 		filter.filter(m, context, output);
 
-		assertIgnored(range0, range1, range2);
+		assertIgnored(m, range0, range1, range2);
 	}
 
 	/**
@@ -218,7 +218,7 @@ public class KotlinCoroutineFilterTest extends FilterTestBase {
 
 		filter.filter(m, context, output);
 
-		assertIgnored(range0, range1, range2);
+		assertIgnored(m, range0, range1, range2);
 	}
 
 	/**
@@ -369,7 +369,7 @@ public class KotlinCoroutineFilterTest extends FilterTestBase {
 
 		filter.filter(m, context, output);
 
-		assertIgnored(range0, range1, range2);
+		assertIgnored(m, range0, range1, range2);
 	}
 
 	/**
@@ -445,7 +445,7 @@ public class KotlinCoroutineFilterTest extends FilterTestBase {
 
 		filter.filter(m, context, output);
 
-		assertIgnored(range1, range2);
+		assertIgnored(m, range1, range2);
 	}
 
 	/**
@@ -508,7 +508,7 @@ public class KotlinCoroutineFilterTest extends FilterTestBase {
 
 		filter.filter(m, context, output);
 
-		assertIgnored(range0, range1);
+		assertIgnored(m, range0, range1);
 	}
 
 }
