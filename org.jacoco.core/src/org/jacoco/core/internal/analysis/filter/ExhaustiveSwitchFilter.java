@@ -12,9 +12,6 @@
  *******************************************************************************/
 package org.jacoco.core.internal.analysis.filter;
 
-import java.util.HashSet;
-import java.util.List;
-
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.tree.AbstractInsnNode;
 import org.objectweb.asm.tree.LabelNode;
@@ -46,13 +43,10 @@ final class ExhaustiveSwitchFilter implements IFilter {
 		public void match(final AbstractInsnNode start, final int line,
 				final IFilterOutput output) {
 			final LabelNode dflt;
-			final List<LabelNode> labels;
 			if (start.getOpcode() == Opcodes.LOOKUPSWITCH) {
 				dflt = ((LookupSwitchInsnNode) start).dflt;
-				labels = ((LookupSwitchInsnNode) start).labels;
 			} else if (start.getOpcode() == Opcodes.TABLESWITCH) {
 				dflt = ((TableSwitchInsnNode) start).dflt;
-				labels = ((TableSwitchInsnNode) start).labels;
 			} else {
 				return;
 			}
@@ -93,11 +87,8 @@ final class ExhaustiveSwitchFilter implements IFilter {
 				return;
 			}
 			output.ignore(dflt, cursor);
-			final HashSet<AbstractInsnNode> replacements = new HashSet<AbstractInsnNode>();
-			for (final AbstractInsnNode label : labels) {
-				replacements.add(skipNonOpcodes(label));
-			}
-			output.replaceBranches(start, replacements);
+			output.replaceBranches(start,
+					Replacements.ignoreDefaultBranch(start));
 		}
 
 		private static AbstractInsnNode skipToLineNumberOrInstruction(

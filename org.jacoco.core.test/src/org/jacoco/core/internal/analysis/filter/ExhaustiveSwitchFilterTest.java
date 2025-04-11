@@ -12,8 +12,7 @@
  *******************************************************************************/
 package org.jacoco.core.internal.analysis.filter;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
 
 import org.jacoco.core.internal.instr.InstrSupport;
 import org.junit.Test;
@@ -29,15 +28,17 @@ public class ExhaustiveSwitchFilterTest extends FilterTestBase {
 
 	private final IFilter filter = new ExhaustiveSwitchFilter();
 
+	private final ArrayList<Replacement> replacements = new ArrayList<Replacement>();
+
 	/**
 	 * <pre>
 	 *   enum E {
-	 *     A, B, C
+	 *     A, B, C, D
 	 *   }
 	 *
 	 *   int example(E e) {
 	 *     return switch (e) {
-	 *       case A -> 1;
+	 *       case A, D -> 1;
 	 *       case B -> 2;
 	 *       case C -> 3;
 	 *     };
@@ -64,10 +65,12 @@ public class ExhaustiveSwitchFilterTest extends FilterTestBase {
 		final Label case1 = new Label();
 		final Label case2 = new Label();
 		final Label case3 = new Label();
-		m.visitLookupSwitchInsn(dflt, new int[] { 1, 2, 3 },
-				new Label[] { case1, case2, case3 });
+		m.visitLookupSwitchInsn(dflt, new int[] { 1, 2, 3, 4 },
+				new Label[] { case1, case2, case3, case1 });
 		final AbstractInsnNode switchNode = m.instructions.getLast();
-		final Set<AbstractInsnNode> newTargets = new HashSet<AbstractInsnNode>();
+		replacements.add(new Replacement(0, switchNode, 1));
+		replacements.add(new Replacement(1, switchNode, 2));
+		replacements.add(new Replacement(2, switchNode, 3));
 
 		m.visitLabel(dflt);
 		final Range range = new Range();
@@ -83,16 +86,13 @@ public class ExhaustiveSwitchFilterTest extends FilterTestBase {
 
 		m.visitLabel(case1);
 		m.visitInsn(Opcodes.ICONST_1);
-		newTargets.add(m.instructions.getLast());
 		m.visitJumpInsn(Opcodes.GOTO, end);
 
 		m.visitLabel(case2);
 		m.visitInsn(Opcodes.ICONST_2);
-		newTargets.add(m.instructions.getLast());
 
 		m.visitLabel(case3);
 		m.visitInsn(Opcodes.ICONST_3);
-		newTargets.add(m.instructions.getLast());
 
 		m.visitLabel(end);
 		m.visitInsn(Opcodes.IRETURN);
@@ -100,18 +100,18 @@ public class ExhaustiveSwitchFilterTest extends FilterTestBase {
 		filter.filter(m, context, output);
 
 		assertIgnored(range);
-		assertReplacedBranches(switchNode, newTargets);
+		assertReplacedBranches(m, switchNode, replacements);
 	}
 
 	/**
 	 * <pre>
 	 *   enum E {
-	 *     A, B, C
+	 *     A, B, C, D
 	 *   }
 	 *
 	 *   int example(E e) {
 	 *     return switch (e) {
-	 *       case A -> 1;
+	 *       case A, D -> 1;
 	 *       case B -> 2;
 	 *       case C -> 3;
 	 *     };
@@ -138,10 +138,12 @@ public class ExhaustiveSwitchFilterTest extends FilterTestBase {
 		final Label case1 = new Label();
 		final Label case2 = new Label();
 		final Label case3 = new Label();
-		m.visitLookupSwitchInsn(dflt, new int[] { 1, 2, 3 },
-				new Label[] { case1, case2, case3 });
+		m.visitLookupSwitchInsn(dflt, new int[] { 1, 2, 3, 4 },
+				new Label[] { case1, case2, case3, case1 });
 		final AbstractInsnNode switchNode = m.instructions.getLast();
-		final Set<AbstractInsnNode> newTargets = new HashSet<AbstractInsnNode>();
+		replacements.add(new Replacement(0, switchNode, 1));
+		replacements.add(new Replacement(1, switchNode, 2));
+		replacements.add(new Replacement(2, switchNode, 3));
 
 		m.visitLabel(dflt);
 		final Range range = new Range();
@@ -156,16 +158,13 @@ public class ExhaustiveSwitchFilterTest extends FilterTestBase {
 
 		m.visitLabel(case1);
 		m.visitInsn(Opcodes.ICONST_1);
-		newTargets.add(m.instructions.getLast());
 		m.visitJumpInsn(Opcodes.GOTO, end);
 
 		m.visitLabel(case2);
 		m.visitInsn(Opcodes.ICONST_2);
-		newTargets.add(m.instructions.getLast());
 
 		m.visitLabel(case3);
 		m.visitInsn(Opcodes.ICONST_3);
-		newTargets.add(m.instructions.getLast());
 
 		m.visitLabel(end);
 		m.visitInsn(Opcodes.IRETURN);
@@ -173,18 +172,18 @@ public class ExhaustiveSwitchFilterTest extends FilterTestBase {
 		filter.filter(m, context, output);
 
 		assertIgnored(range);
-		assertReplacedBranches(switchNode, newTargets);
+		assertReplacedBranches(m, switchNode, replacements);
 	}
 
 	/**
 	 * <pre>
 	 *   enum E {
-	 *     A, B, C
+	 *     A, B, C, D
 	 *   }
 	 *
 	 *   int example(E e) {
 	 *     return switch (e) {
-	 *       case A -> 1;
+	 *       case A, D -> 1;
 	 *       case B -> 2;
 	 *       case C -> 3;
 	 *     };
@@ -211,10 +210,12 @@ public class ExhaustiveSwitchFilterTest extends FilterTestBase {
 		final Label case1 = new Label();
 		final Label case2 = new Label();
 		final Label case3 = new Label();
-		m.visitLookupSwitchInsn(dflt, new int[] { 1, 2, 3 },
-				new Label[] { case1, case2, case3 });
+		m.visitLookupSwitchInsn(dflt, new int[] { 1, 2, 3, 4 },
+				new Label[] { case1, case2, case3, case1 });
 		final AbstractInsnNode switchNode = m.instructions.getLast();
-		final Set<AbstractInsnNode> newTargets = new HashSet<AbstractInsnNode>();
+		replacements.add(new Replacement(0, switchNode, 1));
+		replacements.add(new Replacement(1, switchNode, 2));
+		replacements.add(new Replacement(2, switchNode, 3));
 
 		m.visitLabel(dflt);
 		final Range range = new Range();
@@ -230,16 +231,13 @@ public class ExhaustiveSwitchFilterTest extends FilterTestBase {
 
 		m.visitLabel(case1);
 		m.visitInsn(Opcodes.ICONST_1);
-		newTargets.add(m.instructions.getLast());
 		m.visitJumpInsn(Opcodes.GOTO, end);
 
 		m.visitLabel(case2);
 		m.visitInsn(Opcodes.ICONST_2);
-		newTargets.add(m.instructions.getLast());
 
 		m.visitLabel(case3);
 		m.visitInsn(Opcodes.ICONST_3);
-		newTargets.add(m.instructions.getLast());
 
 		m.visitLabel(end);
 		m.visitInsn(Opcodes.IRETURN);
@@ -247,7 +245,7 @@ public class ExhaustiveSwitchFilterTest extends FilterTestBase {
 		filter.filter(m, context, output);
 
 		assertIgnored(range);
-		assertReplacedBranches(switchNode, newTargets);
+		assertReplacedBranches(m, switchNode, replacements);
 	}
 
 	/**

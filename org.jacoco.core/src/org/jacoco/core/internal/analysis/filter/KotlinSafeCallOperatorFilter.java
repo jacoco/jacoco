@@ -15,7 +15,6 @@ package org.jacoco.core.internal.analysis.filter;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.HashSet;
 
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.tree.AbstractInsnNode;
@@ -36,12 +35,15 @@ final class KotlinSafeCallOperatorFilter implements IFilter {
 			if (chain.size() == 1) {
 				continue;
 			}
-			final JumpInsnNode lastJump = chain.get(chain.size() - 1);
-			final HashSet<AbstractInsnNode> newTargets = new HashSet<AbstractInsnNode>();
-			newTargets.add(AbstractMatcher.skipNonOpcodes(lastJump.getNext()));
-			newTargets.add(AbstractMatcher.skipNonOpcodes(lastJump.label));
-			for (final AbstractInsnNode i : chain) {
-				output.replaceBranches(i, newTargets);
+			final JumpInsnNode lastIfNullInstruction = chain
+					.get(chain.size() - 1);
+			final AbstractInsnNode nullTarget = AbstractMatcher
+					.skipNonOpcodes(lastIfNullInstruction.label);
+			final Replacements replacements = new Replacements();
+			replacements.add(lastIfNullInstruction, lastIfNullInstruction, 0);
+			replacements.add(nullTarget, nullTarget, 0);
+			for (final AbstractInsnNode ifNullInstruction : chain) {
+				output.replaceBranches(ifNullInstruction, replacements);
 			}
 		}
 	}

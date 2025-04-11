@@ -14,12 +14,11 @@ package org.jacoco.core.internal.analysis;
 
 import static org.junit.Assert.assertEquals;
 
-import java.util.Arrays;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
 
 import org.jacoco.core.analysis.ISourceNode;
+import org.jacoco.core.internal.analysis.filter.Replacements;
 import org.junit.Before;
 import org.junit.Test;
 import org.objectweb.asm.Opcodes;
@@ -173,17 +172,20 @@ public class MethodCoverageCalculatorTest {
 	@Test
 	public void should_replace_branches() {
 		InsnNode i1 = addInsn(1);
-		InsnNode i2 = addInsn(2, true);
+		InsnNode i2 = addInsn(2, false, true);
 		InsnNode i3 = addInsn(2, true);
 		InsnNode i4 = addInsn(2, false);
 
 		MethodCoverageCalculator c = new MethodCoverageCalculator(instructions);
-		c.replaceBranches(i1,
-				new HashSet<AbstractInsnNode>(Arrays.asList(i2, i3, i4)));
+		Replacements replacements = new Replacements();
+		replacements.add(i2, i2, 1);
+		replacements.add(i3, i3, 0);
+		replacements.add(i4, i4, 0);
+		c.replaceBranches(i1, replacements);
 		c.calculate(coverage);
 
 		assertLine(1, 0, 1, 1, 2); // branches coverage status replaced
-		assertLine(2, 1, 2, 0, 0); // still in place
+		assertLine(2, 1, 2, 1, 1); // still in place
 	}
 
 	@Test
@@ -196,8 +198,11 @@ public class MethodCoverageCalculatorTest {
 		MethodCoverageCalculator c = new MethodCoverageCalculator(instructions);
 		c.merge(i4, i3);
 		c.merge(i3, i2);
-		c.replaceBranches(i1,
-				new HashSet<AbstractInsnNode>(Arrays.asList(i2, i3, i4)));
+		Replacements replacements = new Replacements();
+		replacements.add(i2, i2, 0);
+		replacements.add(i3, i3, 0);
+		replacements.add(i4, i4, 0);
+		c.replaceBranches(i1, replacements);
 		c.calculate(coverage);
 
 		assertLine(1, 0, 1, 0, 3);
