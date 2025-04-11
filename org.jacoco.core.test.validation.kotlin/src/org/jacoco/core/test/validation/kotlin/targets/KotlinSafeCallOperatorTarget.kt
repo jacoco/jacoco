@@ -13,6 +13,8 @@
 package org.jacoco.core.test.validation.kotlin.targets
 
 import org.jacoco.core.test.validation.targets.Stubs.nop
+import org.jacoco.core.test.validation.targets.Stubs.StubException
+import org.jacoco.core.test.validation.targets.Stubs.ex
 
 /**
  * Test target for [safe call operator (`?.`)](https://kotlinlang.org/docs/null-safety.html#safe-call-operator).
@@ -76,11 +78,22 @@ object KotlinSafeCallOperatorTarget {
         fullCoverage(A(B("")))
     }
 
+    private fun safeCallChainException() {
+        fun example(a: A?): String? =
+            a?.also { ex() }?.b?.c // assertPartlyCovered(3, 1)
+
+        try {
+            example(A(B("")))
+        } catch (_: StubException) {
+        }
+    }
+
     @JvmStatic
     fun main(args: Array<String>) {
         safeCall()
         safeCallChain()
         safeCallChainMultiline()
+        safeCallChainException()
     }
 
 }
