@@ -176,7 +176,7 @@ public class KotlinJvmOverloadsFilterTest extends FilterTestBase {
 
 		filter.filter(m, context, output);
 
-		assertIgnored();
+		assertIgnored(m);
 	}
 
 	/**
@@ -217,7 +217,7 @@ public class KotlinJvmOverloadsFilterTest extends FilterTestBase {
 
 		filter.filter(m, context, output);
 
-		assertIgnored();
+		assertIgnored(m);
 	}
 
 }

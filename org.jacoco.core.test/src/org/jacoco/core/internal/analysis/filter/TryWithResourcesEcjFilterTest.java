@@ -309,7 +309,7 @@ public class TryWithResourcesEcjFilterTest extends FilterTestBase {
 
 		filter.filter(m, context, output);
 
-		assertIgnored(range0, range1);
+		assertIgnored(m, range0, range1);
 	}
 
 	/**
@@ -591,7 +591,7 @@ public class TryWithResourcesEcjFilterTest extends FilterTestBase {
 
 		filter.filter(m, context, output);
 
-		assertIgnored(range0, range1);
+		assertIgnored(m, range0, range1);
 	}
 
 }

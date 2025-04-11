@@ -85,7 +85,7 @@ public class KotlinInlineFilterTest extends FilterTestBase {
 
 		filter.filter(m, context, output);
 
-		assertIgnored(expectedRanges.toArray(new Range[0]));
+		assertIgnored(m, expectedRanges.toArray(new Range[0]));
 
 		// should not reparse:
 		context.sourceDebugExtension = "";
@@ -160,7 +160,7 @@ public class KotlinInlineFilterTest extends FilterTestBase {
 
 		filter.filter(m, context, output);
 
-		assertIgnored(expectedRanges.toArray(new Range[0]));
+		assertIgnored(m, expectedRanges.toArray(new Range[0]));
 	}
 
 	/**
@@ -218,7 +218,7 @@ public class KotlinInlineFilterTest extends FilterTestBase {
 
 		filter.filter(m, context, output);
 
-		assertIgnored(expectedRanges.toArray(new Range[0]));
+		assertIgnored(m, expectedRanges.toArray(new Range[0]));
 	}
 
 	/**
@@ -281,7 +281,7 @@ public class KotlinInlineFilterTest extends FilterTestBase {
 
 		filter.filter(m, context, output);
 
-		assertIgnored(expectedRanges.toArray(new Range[0]));
+		assertIgnored(m, expectedRanges.toArray(new Range[0]));
 	}
 
 	@Test
@@ -294,7 +294,7 @@ public class KotlinInlineFilterTest extends FilterTestBase {
 
 		filter.filter(m, context, output);
 
-		assertIgnored();
+		assertIgnored(m);
 	}
 
 	private final List<Range> expectedRanges = new ArrayList<Range>();

@@ -60,7 +60,8 @@ public class KotlinDefaultArgumentsFilterTest extends FilterTestBase {
 
 		filter.filter(m, context, output);
 
-		assertIgnored(new Range(m.instructions.get(3), m.instructions.get(3)));
+		assertIgnored(m,
+				new Range(m.instructions.get(3), m.instructions.get(3)));
 	}
 
 	@Test
@@ -72,7 +73,7 @@ public class KotlinDefaultArgumentsFilterTest extends FilterTestBase {
 
 		filter.filter(m, context, output);
 
-		assertIgnored();
+		assertIgnored(m);
 	}
 
 	@Test
@@ -84,7 +85,7 @@ public class KotlinDefaultArgumentsFilterTest extends FilterTestBase {
 
 		filter.filter(m, context, output);
 
-		assertIgnored();
+		assertIgnored(m);
 	}
 
 	/**
@@ -137,7 +138,7 @@ public class KotlinDefaultArgumentsFilterTest extends FilterTestBase {
 
 		filter.filter(m, context, output);
 
-		assertIgnored(
+		assertIgnored(m,
 				new Range(m.instructions.getFirst(), m.instructions.get(6)),
 				new Range(m.instructions.get(11), m.instructions.get(11)));
 	}
@@ -173,7 +174,8 @@ public class KotlinDefaultArgumentsFilterTest extends FilterTestBase {
 
 		filter.filter(m, context, output);
 
-		assertIgnored(new Range(m.instructions.get(3), m.instructions.get(3)));
+		assertIgnored(m,
+				new Range(m.instructions.get(3), m.instructions.get(3)));
 	}
 
 	/**
@@ -207,7 +209,8 @@ public class KotlinDefaultArgumentsFilterTest extends FilterTestBase {
 
 		filter.filter(m, context, output);
 
-		assertIgnored(new Range(m.instructions.get(3), m.instructions.get(3)));
+		assertIgnored(m,
+				new Range(m.instructions.get(3), m.instructions.get(3)));
 	}
 
 	/**
@@ -271,7 +274,7 @@ public class KotlinDefaultArgumentsFilterTest extends FilterTestBase {
 
 		filter.filter(m, context, output);
 
-		assertIgnored(range1, range2);
+		assertIgnored(m, range1, range2);
 	}
 
 	/**
@@ -346,7 +349,7 @@ public class KotlinDefaultArgumentsFilterTest extends FilterTestBase {
 
 		filter.filter(m, context, output);
 
-		assertIgnored(range1, range2);
+		assertIgnored(m, range1, range2);
 	}
 
 	@Test
