@@ -46,9 +46,23 @@ final class KotlinCoroutineFilter implements IFilter {
 						"getCOROUTINE_SUSPENDED", "()Ljava/lang/Object;");
 				nextIs(Opcodes.IF_ACMPNE);
 				nextIs(Opcodes.ARETURN);
+				// target of IF_ACMPNE
 				nextIs(Opcodes.POP);
+				AbstractInsnNode part1end = cursor;
+				nextIs(Opcodes.GOTO);
 				if (cursor != null) {
-					output.ignore(i.getNext(), cursor);
+					part1end = cursor;
+					cursor = ((JumpInsnNode) cursor).label;
+				} else {
+					cursor = part1end;
+				}
+				nextIsField(Opcodes.GETSTATIC, "kotlin/Unit", "INSTANCE",
+						"Lkotlin/Unit;");
+				final AbstractInsnNode part2start = cursor;
+				nextIs(Opcodes.ARETURN);
+				if (cursor != null) {
+					output.ignore(i.getNext(), part1end);
+					output.ignore(part2start, cursor);
 				}
 			}
 		}
