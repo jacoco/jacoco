@@ -25,7 +25,7 @@
   <name>JaCoCo :: Test :: Core :: Validation Kotlin</name>
 
   <properties>
-    <kotlin.version>2.1.20</kotlin.version>
+    <kotlin.version>2.1.21</kotlin.version>
   </properties>
 
   <dependencies>
