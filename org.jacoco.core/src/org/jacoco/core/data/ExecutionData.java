@@ -44,6 +44,7 @@ public final class ExecutionData {
 		this.id = id;
 		this.name = name;
 		this.probes = probes;
+		ProbeArrRefToExecutionDataMap.set(probes, this);
 	}
 
 	/**
@@ -62,6 +63,7 @@ public final class ExecutionData {
 		this.id = id;
 		this.name = name;
 		this.probes = new boolean[probeCount];
+		ProbeArrRefToExecutionDataMap.set(probes, this);
 	}
 
 	/**
