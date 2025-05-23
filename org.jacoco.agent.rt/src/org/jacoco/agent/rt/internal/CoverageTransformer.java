@@ -14,6 +14,7 @@ package org.jacoco.agent.rt.internal;
 
 import java.lang.instrument.ClassFileTransformer;
 import java.lang.instrument.IllegalClassFormatException;
+import java.lang.reflect.Method;
 import java.security.CodeSource;
 import java.security.ProtectionDomain;
 
@@ -77,6 +78,27 @@ public class CoverageTransformer implements ClassFileTransformer {
 			final Class<?> classBeingRedefined,
 			final ProtectionDomain protectionDomain,
 			final byte[] classfileBuffer) throws IllegalClassFormatException {
+
+		ClassLoader platformClassLoader = null;
+		try {
+			Class<?> classLoaderClass = Class.forName("java.lang.ClassLoader");
+			Method getPlatformClassLoaderMethod = classLoaderClass
+					.getMethod("getPlatformClassLoader");
+
+			// Invoke the static method (pass null for the object instance)
+			platformClassLoader = (ClassLoader) getPlatformClassLoaderMethod
+					.invoke(null);
+		} catch (Throwable t) {
+		}
+
+		if (loader == platformClassLoader) {
+			return null;
+		}
+
+		if (classname.contains("HypertestAgent")
+				|| classname.contains("hypertest/javaagent")) {
+			return null;
+		}
 
 		// We do not support class retransformation:
 		if (classBeingRedefined != null) {
