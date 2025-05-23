@@ -112,7 +112,8 @@ class ProbeInserter extends MethodVisitor implements IProbeInserter {
 		mv.visitMethodInsn(Opcodes.INVOKESTATIC,
 				"org/jacoco/core/data/ProbeUpdationEventEmitter", // Class name
 				"updateProbe", // Method name
-				"([ZI)V", // New method descriptor (I = int, [Z = boolean array, // V = void)
+				"([ZI)V", // New method descriptor (I = int, [Z = boolean array,
+							// // V = void)
 				false // isInterface = false for static methods
 		);
 	}

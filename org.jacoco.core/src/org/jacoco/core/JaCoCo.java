@@ -13,6 +13,7 @@
 package org.jacoco.core;
 
 import java.util.ResourceBundle;
+
 import org.jacoco.core.data.ProbeUpdationEventEmitter;
 
 /**
@@ -45,7 +46,8 @@ public final class JaCoCo {
 		COMMITID_SHORT = COMMITID.substring(0, 7);
 		HOMEURL = bundle.getString("HOMEURL");
 		RUNTIMEPACKAGE = bundle.getString("RUNTIMEPACKAGE");
-		// Added to make sure ProbeUpdationEventEmitter is included in the final jar
+		// Added to make sure ProbeUpdationEventEmitter is included in the final
+		// jar
 		ProbeUpdationEventEmitter.noopFn();
 	}
 
