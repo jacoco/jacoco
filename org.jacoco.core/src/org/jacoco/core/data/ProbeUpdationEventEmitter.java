@@ -36,7 +36,8 @@ public class ProbeUpdationEventEmitter {
 		System.out.println("Successfully added probe updation listener!");
 	}
 
-	public static void noopFn() {}
+	public static void noopFn() {
+	}
 
 	// A private constructor to prevent instantiation
 	private ProbeUpdationEventEmitter() {
