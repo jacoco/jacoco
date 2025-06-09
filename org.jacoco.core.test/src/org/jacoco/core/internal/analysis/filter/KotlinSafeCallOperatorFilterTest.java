@@ -12,9 +12,9 @@
  *******************************************************************************/
 package org.jacoco.core.internal.analysis.filter;
 
+import java.util.Arrays;
 import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.List;
 
 import org.jacoco.core.internal.instr.InstrSupport;
 import org.junit.Test;
@@ -52,32 +52,34 @@ public class KotlinSafeCallOperatorFilterTest extends FilterTestBase {
 
 		m.visitInsn(Opcodes.DUP);
 		m.visitJumpInsn(Opcodes.IFNULL, label1);
-		final AbstractInsnNode i1 = m.instructions.getLast();
+		final AbstractInsnNode ifNullInstruction1 = m.instructions.getLast();
 		m.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "A", "getB", "()LB;", false);
 
 		m.visitInsn(Opcodes.DUP);
 		m.visitJumpInsn(Opcodes.IFNULL, label1);
-		final AbstractInsnNode i2 = m.instructions.getLast();
+		final AbstractInsnNode ifNullInstruction2 = m.instructions.getLast();
 		m.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "B", "getC",
 				"()Ljava/lang/String;", false);
-		final HashSet<AbstractInsnNode> r = new HashSet<AbstractInsnNode>();
-		r.add(m.instructions.getLast());
 
 		m.visitJumpInsn(Opcodes.GOTO, label2);
 
 		m.visitLabel(label1);
 		m.visitInsn(Opcodes.POP);
-		r.add(m.instructions.getLast());
+		final AbstractInsnNode popInstruction = m.instructions.getLast();
 		m.visitInsn(Opcodes.ACONST_NULL);
 		m.visitLabel(label2);
 
 		filter.filter(m, context, output);
 
-		assertIgnored();
-		final HashMap<AbstractInsnNode, Set<AbstractInsnNode>> expected = new HashMap<AbstractInsnNode, Set<AbstractInsnNode>>();
-		expected.put(i1, r);
-		expected.put(i2, r);
-		assertReplacedBranches(expected);
+		assertIgnored(m);
+		final HashMap<AbstractInsnNode, List<Replacement>> replacements = new HashMap<AbstractInsnNode, List<Replacement>>();
+		replacements.put(ifNullInstruction1, Arrays.asList( //
+				new Replacement(0, ifNullInstruction1, 0),
+				new Replacement(1, popInstruction, 0)));
+		replacements.put(ifNullInstruction2, Arrays.asList( //
+				new Replacement(0, ifNullInstruction2, 0),
+				new Replacement(1, popInstruction, 0)));
+		assertReplacedBranches(m, replacements);
 	}
 
 	/**
@@ -101,17 +103,15 @@ public class KotlinSafeCallOperatorFilterTest extends FilterTestBase {
 		final Label label2 = new Label();
 
 		m.visitJumpInsn(Opcodes.IFNULL, label1);
-		final AbstractInsnNode i1 = m.instructions.getLast();
+		final AbstractInsnNode ifNullInstruction1 = m.instructions.getLast();
 		m.visitVarInsn(Opcodes.ALOAD, 0);
 		m.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "A", "getB", "()LB;", false);
 
 		m.visitVarInsn(Opcodes.ASTORE, 1);
 		m.visitVarInsn(Opcodes.ALOAD, 1);
 		m.visitJumpInsn(Opcodes.IFNULL, label1);
-		final AbstractInsnNode i2 = m.instructions.getLast();
+		final AbstractInsnNode ifNullInstruction2 = m.instructions.getLast();
 		m.visitVarInsn(Opcodes.ALOAD, 1);
-		final HashSet<AbstractInsnNode> r = new HashSet<AbstractInsnNode>();
-		r.add(m.instructions.getLast());
 		m.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "B", "getC",
 				"()Ljava/lang/String;", false);
 
@@ -119,16 +119,115 @@ public class KotlinSafeCallOperatorFilterTest extends FilterTestBase {
 
 		m.visitLabel(label1);
 		m.visitInsn(Opcodes.ACONST_NULL);
-		r.add(m.instructions.getLast());
+		final AbstractInsnNode aconstNullInstruction = m.instructions.getLast();
 		m.visitLabel(label2);
 
 		filter.filter(m, context, output);
 
-		assertIgnored();
-		final HashMap<AbstractInsnNode, Set<AbstractInsnNode>> expected = new HashMap<AbstractInsnNode, Set<AbstractInsnNode>>();
-		expected.put(i1, r);
-		expected.put(i2, r);
-		assertReplacedBranches(expected);
+		assertIgnored(m);
+		final HashMap<AbstractInsnNode, List<Replacement>> replacements = new HashMap<AbstractInsnNode, List<Replacement>>();
+		replacements.put(ifNullInstruction1, Arrays.asList( //
+				new Replacement(0, ifNullInstruction1, 0),
+				new Replacement(1, aconstNullInstruction, 0)));
+		replacements.put(ifNullInstruction2, Arrays.asList( //
+				new Replacement(0, ifNullInstruction2, 0),
+				new Replacement(1, aconstNullInstruction, 0)));
+		assertReplacedBranches(m, replacements);
+	}
+
+	/**
+	 * <pre>
+	 * data class B(val c: String)
+	 * fun example(b: B?): String =
+	 *     b?.c ?: ""
+	 * </pre>
+	 */
+	@Test
+	public void should_filter_safe_call_followed_by_elvis() {
+		final MethodNode m = new MethodNode(InstrSupport.ASM_API_VERSION, 0,
+				"example", "(LB;)Ljava/lang/String;", null, null);
+		m.visitVarInsn(Opcodes.ALOAD, 0);
+		final Label label1 = new Label();
+		final Label label2 = new Label();
+
+		m.visitInsn(Opcodes.DUP);
+		m.visitJumpInsn(Opcodes.IFNULL, label1);
+		final AbstractInsnNode ifNullInstruction = m.instructions.getLast();
+		m.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "B", "getC",
+				"()Ljava/lang/String;", false);
+
+		m.visitInsn(Opcodes.DUP);
+		m.visitJumpInsn(Opcodes.IFNONNULL, label2);
+		final AbstractInsnNode ifNonNullInstruction = m.instructions.getLast();
+		m.visitLabel(label1);
+		m.visitInsn(Opcodes.POP);
+		final AbstractInsnNode popInstruction = m.instructions.getLast();
+		m.visitLdcInsn("");
+		m.visitLabel(label2);
+
+		filter.filter(m, context, output);
+
+		assertIgnored(m);
+		final HashMap<AbstractInsnNode, List<Replacement>> replacements = new HashMap<AbstractInsnNode, List<Replacement>>();
+		replacements.put(ifNullInstruction, Arrays.asList( //
+				new Replacement(0, ifNullInstruction, 0),
+				new Replacement(1, popInstruction, 0)));
+		replacements.put(ifNonNullInstruction, Arrays.asList( //
+				new Replacement(0, popInstruction, 0),
+				new Replacement(1, ifNonNullInstruction, 1)));
+		assertReplacedBranches(m, replacements);
+	}
+
+	/**
+	 * <pre>
+	 * data class A(val b: B)
+	 * data class B(val c: String)
+	 * fun example(a: A?): String =
+	 *     a?.b?.c ?: ""
+	 * </pre>
+	 */
+	@Test
+	public void should_filter_safe_call_chain_followed_by_elvis() {
+		final MethodNode m = new MethodNode(InstrSupport.ASM_API_VERSION, 0,
+				"example", "(LA;)Ljava/lang/String;", null, null);
+		m.visitVarInsn(Opcodes.ALOAD, 1);
+		final Label label1 = new Label();
+		final Label label2 = new Label();
+
+		m.visitInsn(Opcodes.DUP);
+		m.visitJumpInsn(Opcodes.IFNULL, label1);
+		final AbstractInsnNode ifNullInstruction1 = m.instructions.getLast();
+		m.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "A", "getB", "()LB;", false);
+
+		m.visitInsn(Opcodes.DUP);
+		m.visitJumpInsn(Opcodes.IFNULL, label1);
+		final AbstractInsnNode ifNullInstruction2 = m.instructions.getLast();
+		m.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "B", "getC",
+				"()Ljava/lang/String;", false);
+
+		m.visitInsn(Opcodes.DUP);
+		m.visitJumpInsn(Opcodes.IFNONNULL, label2);
+		final AbstractInsnNode ifNonNullInstruction = m.instructions.getLast();
+		m.visitLabel(label1);
+		m.visitInsn(Opcodes.POP);
+		final AbstractInsnNode popInstruction = m.instructions.getLast();
+		m.visitLdcInsn("");
+		m.visitLabel(label2);
+
+		filter.filter(m, context, output);
+
+		assertIgnored(m);
+		final HashMap<AbstractInsnNode, List<Replacement>> replacements = new HashMap<AbstractInsnNode, List<Replacement>>();
+		replacements.put(ifNullInstruction1, Arrays.asList( //
+				new Replacement(0, ifNullInstruction1, 0),
+				new Replacement(1, popInstruction, 0)));
+		replacements.put(ifNullInstruction2, Arrays.asList( //
+				new Replacement(0, ifNullInstruction2, 0),
+				new Replacement(1, popInstruction, 0)));
+		replacements.put(ifNonNullInstruction, Arrays.asList( //
+				new Replacement(0, popInstruction, 0),
+				new Replacement(1, ifNonNullInstruction, 1)));
+		assertReplacedBranches(m, replacements);
 	}
 
 }

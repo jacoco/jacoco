@@ -62,7 +62,7 @@ public class SynchronizedFilterTest extends FilterTestBase {
 
 		filter.filter(m, context, output);
 
-		assertIgnored(new Range((LabelNode) handler.info,
+		assertIgnored(m, new Range((LabelNode) handler.info,
 				((LabelNode) exit.info).getPrevious()));
 	}
 
@@ -116,7 +116,7 @@ public class SynchronizedFilterTest extends FilterTestBase {
 
 		filter.filter(m, context, output);
 
-		assertIgnored();
+		assertIgnored(m);
 	}
 
 	@Test
@@ -152,7 +152,7 @@ public class SynchronizedFilterTest extends FilterTestBase {
 
 		filter.filter(m, context, output);
 
-		assertIgnored(new Range((LabelNode) handler.info,
+		assertIgnored(m, new Range((LabelNode) handler.info,
 				((LabelNode) exit.info).getPrevious()));
 	}
 

@@ -99,7 +99,7 @@ public class StringSwitchJavacFilterTest extends FilterTestBase {
 
 		filter.filter(m, context, output);
 
-		assertIgnored(new Range(expectedFromInclusive, expectedToInclusive));
+		assertIgnored(m, new Range(expectedFromInclusive, expectedToInclusive));
 	}
 
 	@Test
@@ -112,7 +112,7 @@ public class StringSwitchJavacFilterTest extends FilterTestBase {
 
 		filter.filter(m, context, output);
 
-		assertIgnored(new Range(expectedFromInclusive, expectedToInclusive));
+		assertIgnored(m, new Range(expectedFromInclusive, expectedToInclusive));
 	}
 
 	/**
@@ -163,7 +163,7 @@ public class StringSwitchJavacFilterTest extends FilterTestBase {
 
 		filter.filter(m, context, output);
 
-		assertIgnored();
+		assertIgnored(m);
 	}
 
 	@Test
@@ -210,7 +210,7 @@ public class StringSwitchJavacFilterTest extends FilterTestBase {
 
 		filter.filter(m, context, output);
 
-		assertIgnored();
+		assertIgnored(m);
 	}
 
 }

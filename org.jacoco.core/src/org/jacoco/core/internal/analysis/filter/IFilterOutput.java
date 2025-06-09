@@ -12,8 +12,6 @@
  *******************************************************************************/
 package org.jacoco.core.internal.analysis.filter;
 
-import java.util.Set;
-
 import org.objectweb.asm.tree.AbstractInsnNode;
 
 /**
@@ -50,10 +48,9 @@ public interface IFilterOutput {
 	 *
 	 * @param source
 	 *            instruction which branches should be replaced
-	 * @param newTargets
-	 *            new targets of branches
+	 * @param replacements
+	 *            new branches
 	 */
-	void replaceBranches(AbstractInsnNode source,
-			Set<AbstractInsnNode> newTargets);
+	void replaceBranches(AbstractInsnNode source, Replacements replacements);
 
 }
