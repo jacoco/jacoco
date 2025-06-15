@@ -25,6 +25,8 @@ public class ClassInstrumenter extends ClassProbesVisitor {
 
 	private final IProbeArrayStrategy probeArrayStrategy;
 
+	private final boolean methodCoverageOnly;
+
 	private String className;
 
 	/**
@@ -38,8 +40,25 @@ public class ClassInstrumenter extends ClassProbesVisitor {
 	 */
 	public ClassInstrumenter(final IProbeArrayStrategy probeArrayStrategy,
 			final ClassVisitor cv) {
+		this(probeArrayStrategy, cv, false);
+	}
+
+	/**
+	 * Emits an instrumented version of this class to the given class visitor.
+	 *
+	 * @param probeArrayStrategy
+	 *            this strategy will be used to access the probe array
+	 * @param cv
+	 *            next delegate in the visitor chain will receive the
+	 *            instrumented class
+	 * @param methodCoverageOnly
+	 *            if <code>true</code>, only method-level coverage is tracked
+	 */
+	public ClassInstrumenter(final IProbeArrayStrategy probeArrayStrategy,
+			final ClassVisitor cv, final boolean methodCoverageOnly) {
 		super(cv);
 		this.probeArrayStrategy = probeArrayStrategy;
+		this.methodCoverageOnly = methodCoverageOnly;
 	}
 
 	@Override
@@ -48,6 +67,13 @@ public class ClassInstrumenter extends ClassProbesVisitor {
 			final String[] interfaces) {
 		this.className = name;
 		super.visit(version, access, name, signature, superName, interfaces);
+		
+		// Add marker annotation for method-only instrumentation
+		if (methodCoverageOnly) {
+			super.visitAnnotation(
+					"Lorg/jacoco/core/internal/instr/JaCoCoMethodOnlyInstrumented;",
+					false);
+		}
 	}
 
 	@Override
@@ -73,8 +99,16 @@ public class ClassInstrumenter extends ClassProbesVisitor {
 		final MethodVisitor frameEliminator = new DuplicateFrameEliminator(mv);
 		final ProbeInserter probeVariableInserter = new ProbeInserter(access,
 				name, desc, frameEliminator, probeArrayStrategy);
-		return new MethodInstrumenter(probeVariableInserter,
-				probeVariableInserter);
+		
+		if (methodCoverageOnly) {
+			// In method-only mode, use the simplified adapter
+			return new MethodOnlyProbesAdapter(probeVariableInserter,
+					probeVariableInserter);
+		} else {
+			// In full mode, use the standard instrumenter
+			return new MethodInstrumenter(probeVariableInserter,
+					probeVariableInserter);
+		}
 	}
 
 	@Override

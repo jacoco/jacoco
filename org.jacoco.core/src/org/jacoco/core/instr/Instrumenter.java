@@ -48,6 +48,8 @@ public class Instrumenter {
 
 	private final SignatureRemover signatureRemover;
 
+	private final boolean methodCoverageOnly;
+
 	/**
 	 * Creates a new instance based on the given runtime.
 	 *
@@ -55,8 +57,22 @@ public class Instrumenter {
 	 *            runtime used by the instrumented classes
 	 */
 	public Instrumenter(final IExecutionDataAccessorGenerator runtime) {
+		this(runtime, false);
+	}
+
+	/**
+	 * Creates a new instance based on the given runtime and coverage level.
+	 *
+	 * @param runtime
+	 *            runtime used by the instrumented classes
+	 * @param methodCoverageOnly
+	 *            if <code>true</code>, only method-level coverage is tracked
+	 */
+	public Instrumenter(final IExecutionDataAccessorGenerator runtime,
+			final boolean methodCoverageOnly) {
 		this.accessorGenerator = runtime;
 		this.signatureRemover = new SignatureRemover();
+		this.methodCoverageOnly = methodCoverageOnly;
 	}
 
 	/**
@@ -86,7 +102,7 @@ public class Instrumenter {
 				.createFor(classId, reader, accessorGenerator);
 		final int version = InstrSupport.getMajorVersion(reader);
 		final ClassVisitor visitor = new ClassProbesAdapter(
-				new ClassInstrumenter(strategy, writer),
+				new ClassInstrumenter(strategy, writer, methodCoverageOnly),
 				InstrSupport.needsFrames(version));
 		reader.accept(visitor, ClassReader.EXPAND_FRAMES);
 		return writer.toByteArray();

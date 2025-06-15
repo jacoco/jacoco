@@ -189,10 +189,23 @@ public final class AgentOptions {
 	 */
 	public static final String JMX = "jmx";
 
+	/**
+	 * Specifies the coverage granularity level. Valid values are "full" (default)
+	 * for line and branch coverage, or "method" for method-level coverage only.
+	 * Method-level coverage has minimal runtime overhead but only tracks whether
+	 * methods were executed.
+	 */
+	public static final String COVERAGELEVEL = "coveragelevel";
+
+	/**
+	 * Default value for the "coveragelevel" agent option.
+	 */
+	public static final String DEFAULT_COVERAGELEVEL = "full";
+
 	private static final Collection<String> VALID_OPTIONS = Arrays.asList(
 			DESTFILE, APPEND, INCLUDES, EXCLUDES, EXCLCLASSLOADER,
 			INCLBOOTSTRAPCLASSES, INCLNOLOCATIONCLASSES, SESSIONID, DUMPONEXIT,
-			OUTPUT, ADDRESS, PORT, CLASSDUMPDIR, JMX);
+			OUTPUT, ADDRESS, PORT, CLASSDUMPDIR, JMX, COVERAGELEVEL);
 
 	private final Map<String, String> options;
 
@@ -555,6 +568,29 @@ public final class AgentOptions {
 	 */
 	public void setJmx(final boolean jmx) {
 		setOption(JMX, jmx);
+	}
+
+	/**
+	 * Returns the coverage level.
+	 *
+	 * @return coverage level
+	 */
+	public String getCoverageLevel() {
+		return getOption(COVERAGELEVEL, DEFAULT_COVERAGELEVEL);
+	}
+
+	/**
+	 * Sets the coverage level.
+	 *
+	 * @param coverageLevel
+	 *            coverage level ("full" or "method")
+	 */
+	public void setCoverageLevel(final String coverageLevel) {
+		if (!"full".equals(coverageLevel) && !"method".equals(coverageLevel)) {
+			throw new IllegalArgumentException(
+					"Invalid coverage level. Valid values are 'full' or 'method'.");
+		}
+		setOption(COVERAGELEVEL, coverageLevel);
 	}
 
 	private void setOption(final String key, final int value) {

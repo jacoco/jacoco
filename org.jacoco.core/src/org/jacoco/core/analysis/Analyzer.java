@@ -29,10 +29,12 @@ import org.jacoco.core.internal.InputStreams;
 import org.jacoco.core.internal.Pack200Streams;
 import org.jacoco.core.internal.analysis.ClassAnalyzer;
 import org.jacoco.core.internal.analysis.ClassCoverageImpl;
+import org.jacoco.core.internal.analysis.MethodOnlyClassAnalyzer;
 import org.jacoco.core.internal.analysis.StringPool;
 import org.jacoco.core.internal.data.CRC64;
 import org.jacoco.core.internal.flow.ClassProbesAdapter;
 import org.jacoco.core.internal.instr.InstrSupport;
+import org.objectweb.asm.AnnotationVisitor;
 import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.ClassVisitor;
 import org.objectweb.asm.Opcodes;
@@ -76,10 +78,12 @@ public class Analyzer {
 	 *            id of the class calculated with {@link CRC64}
 	 * @param className
 	 *            VM name of the class
+	 * @param methodCoverageOnly
+	 *            if <code>true</code>, use simplified method-only analysis
 	 * @return ASM visitor to write class definition to
 	 */
 	private ClassVisitor createAnalyzingVisitor(final long classid,
-			final String className) {
+			final String className, final boolean methodCoverageOnly) {
 		final ExecutionData data = executionData.get(classid);
 		final boolean[] probes;
 		final boolean noMatch;
@@ -92,15 +96,28 @@ public class Analyzer {
 		}
 		final ClassCoverageImpl coverage = new ClassCoverageImpl(className,
 				classid, noMatch);
-		final ClassAnalyzer analyzer = new ClassAnalyzer(coverage, probes,
-				stringPool) {
-			@Override
-			public void visitEnd() {
-				super.visitEnd();
-				coverageVisitor.visitCoverage(coverage);
-			}
-		};
-		return new ClassProbesAdapter(analyzer, false);
+		
+		if (methodCoverageOnly) {
+			// Use simplified analyzer for method-only coverage
+			return new MethodOnlyClassAnalyzer(coverage, probes, stringPool) {
+				@Override
+				public void visitEnd() {
+					super.visitEnd();
+					coverageVisitor.visitCoverage(coverage);
+				}
+			};
+		} else {
+			// Use standard analyzer for full coverage
+			final ClassAnalyzer analyzer = new ClassAnalyzer(coverage, probes,
+					stringPool) {
+				@Override
+				public void visitEnd() {
+					super.visitEnd();
+					coverageVisitor.visitCoverage(coverage);
+				}
+			};
+			return new ClassProbesAdapter(analyzer, false);
+		}
 	}
 
 	private void analyzeClass(final byte[] source) {
@@ -112,8 +129,24 @@ public class Analyzer {
 		if ((reader.getAccess() & Opcodes.ACC_SYNTHETIC) != 0) {
 			return;
 		}
+		
+		// Check for method-only instrumentation marker
+		final boolean[] methodCoverageOnly = new boolean[1];
+		reader.accept(new ClassVisitor(InstrSupport.ASM_API_VERSION) {
+			@Override
+			public AnnotationVisitor visitAnnotation(final String desc,
+					final boolean visible) {
+				if ("Lorg/jacoco/core/internal/instr/JaCoCoMethodOnlyInstrumented;"
+						.equals(desc)) {
+					methodCoverageOnly[0] = true;
+				}
+				return null;
+			}
+		}, ClassReader.SKIP_CODE | ClassReader.SKIP_DEBUG
+				| ClassReader.SKIP_FRAMES);
+		
 		final ClassVisitor visitor = createAnalyzingVisitor(classId,
-				reader.getClassName());
+				reader.getClassName(), methodCoverageOnly[0]);
 		reader.accept(visitor, 0);
 	}
 

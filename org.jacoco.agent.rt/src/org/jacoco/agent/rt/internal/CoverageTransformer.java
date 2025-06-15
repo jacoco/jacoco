@@ -62,7 +62,9 @@ public class CoverageTransformer implements ClassFileTransformer {
 	 */
 	public CoverageTransformer(final IRuntime runtime,
 			final AgentOptions options, final IExceptionLogger logger) {
-		this.instrumenter = new Instrumenter(runtime);
+		final boolean methodCoverageOnly = "method"
+				.equals(options.getCoverageLevel());
+		this.instrumenter = new Instrumenter(runtime, methodCoverageOnly);
 		this.logger = logger;
 		// Class names will be reported in VM notation:
 		includes = new WildcardMatcher(toVMName(options.getIncludes()));
