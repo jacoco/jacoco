@@ -51,14 +51,89 @@ public @interface JaCoCoMethodOnlyInstrumented {
 
 ### 7. Analysis Layer
 **File**: `org.jacoco.core/src/org/jacoco/core/analysis/Analyzer.java`
-- Modified `analyzeClass()` to detect `@JaCoCoMethodOnlyInstrumented`
-- Routes to appropriate analyzer based on annotation presence
+- Added constructor with `methodCoverageOnly` parameter for explicit mode selection
+- Modified `analyzeClass()` to detect `@JaCoCoMethodOnlyInstrumented` (fallback)
+- Routes to appropriate analyzer based on mode
 
 ### 8. Method-Only Analyzer
 **File**: `org.jacoco.core/src/org/jacoco/core/internal/analysis/MethodOnlyClassAnalyzer.java`
 - Simplified analyzer that only tracks method execution
-- Sets method counter to FULLY_COVERED or NOT_COVERED
+- **CRITICAL**: Uses line number `-1` to avoid creating line coverage data
 - Sets line/branch counters to EMPTY (0/0)
+
+## Critical Mistakes and Lessons Learned
+
+### 1. ❌ Line Number Zero Bug
+**Problem**: Initially used line number `0` when marking methods as covered
+```java
+// WRONG - Creates line coverage entry for line 0
+methodCoverage.increment(CounterImpl.COUNTER_0_1, CounterImpl.COUNTER_0_0, 0);
+```
+
+**Impact**: Tests failed with "Class should have no lines expected:<0> but was:<1>"
+
+**Solution**: Use line number `-1` to avoid creating line coverage data
+```java
+// CORRECT - No line coverage data created
+methodCoverage.increment(CounterImpl.COUNTER_0_1, CounterImpl.COUNTER_0_0, -1);
+```
+
+### 2. ❌ Probe Index Mismatch
+**Initial Attempt**: Tried to skip initializers (`<init>`, `<clinit>`) in analyzer but not instrumenter
+
+**Problem**: Probe indices became misaligned, causing wrong methods to be marked as covered
+
+**Solution**: Keep instrumentation and analysis synchronized - instrument ALL methods including initializers
+
+### 3. ❌ Auto-Detection Design Flaw
+**Problem**: Analyzer checks for `@JaCoCoMethodOnlyInstrumented` on the ORIGINAL class bytecode, but the annotation only exists on INSTRUMENTED bytecode
+
+**Failed Approach**:
+```java
+// This will never find the annotation!
+final boolean[] methodCoverageOnly = new boolean[1];
+reader.accept(new ClassVisitor(InstrSupport.ASM_API_VERSION) {
+    @Override
+    public AnnotationVisitor visitAnnotation(final String desc, final boolean visible) {
+        if ("Lorg/jacoco/core/internal/instr/JaCoCoMethodOnlyInstrumented;".equals(desc)) {
+            methodCoverageOnly[0] = true; // Never reached!
+        }
+        return null;
+    }
+}, ClassReader.SKIP_CODE | ClassReader.SKIP_DEBUG | ClassReader.SKIP_FRAMES);
+```
+
+**Solution**: Use explicit constructor parameter for method-only mode
+```java
+public Analyzer(final ExecutionDataStore executionData,
+        final ICoverageVisitor coverageVisitor,
+        final boolean methodCoverageOnly) {
+    // Explicit mode selection
+}
+```
+
+### 4. ❌ Wrong Runtime for Testing
+**Problem**: `LoggerRuntime` doesn't properly inject probe arrays, causing all probes to be false
+
+**Failed Test Output**:
+```
+Execution data found for class, probes: [false, false, false, false, false, false, false, false, false, false, false, false, false, false]
+```
+
+**Solution**: Use `SystemPropertiesRuntime` for end-to-end tests
+
+### 5. ✅ Correct Counter Handling
+**Key Insight**: Use existing counter infrastructure but ensure EMPTY for lines/branches
+
+```java
+// Method is covered - set instruction counter to indicate execution
+if (covered) {
+    methodCoverage.increment(CounterImpl.COUNTER_0_1, 
+            CounterImpl.COUNTER_0_0, -1);
+}
+// Always increment method counter to get correct status
+methodCoverage.incrementMethodCounter();
+```
 
 ## Architecture Flow
 
@@ -73,10 +148,10 @@ ClassInstrumenter
     ├→ Adds @JaCoCoMethodOnlyInstrumented annotation
     └→ Uses MethodOnlyProbesAdapter
          ↓
-    Single probe per method
+    Single probe per method (including initializers)
 
 Analysis Phase:
-Analyzer detects @JaCoCoMethodOnlyInstrumented
+Analyzer (explicit methodCoverageOnly=true)
     ↓
 MethodOnlyClassAnalyzer
     ↓
@@ -84,28 +159,36 @@ Method coverage: COVERED/NOT_COVERED
 Line/Branch coverage: EMPTY (0/0)
 ```
 
-## Usage
+## Usage Examples
 
 ### Command Line
 ```bash
 java -javaagent:jacocoagent.jar=coveragelevel=method,destfile=coverage.exec MyApp
 ```
 
-### Maven Configuration
-```xml
-<configuration>
-    <propertyName>jacocoArgLine</propertyName>
-    <append>true</append>
-    <coveragelevel>method</coveragelevel>
-</configuration>
+### Programmatic Instrumentation
+```java
+// For instrumentation
+IRuntime runtime = new SystemPropertiesRuntime();
+Instrumenter instrumenter = new Instrumenter(runtime, true); // method-only mode
+byte[] instrumented = instrumenter.instrument(originalBytes, className);
+
+// For analysis
+ExecutionDataStore executionData = new ExecutionDataStore();
+CoverageBuilder coverageBuilder = new CoverageBuilder();
+Analyzer analyzer = new Analyzer(executionData, coverageBuilder, true); // method-only mode
+analyzer.analyzeClass(originalBytes, className);
 ```
 
-### Programmatic
-```java
-AgentOptions options = new AgentOptions();
-options.setCoverageLevel("method");
-options.setDestfile("coverage.exec");
-```
+## Testing Strategy
+
+### Working Tests
+1. **MethodOnlyInstrumenterTest**: Verifies valid bytecode generation
+2. **MethodOnlyCoverageSimpleTest**: Tests analysis with simulated execution data
+3. **AgentOptionsCoverageLevelTest**: Configuration validation
+
+### Partially Working Tests
+1. **MethodOnlyModeEndToEndTest**: Runtime execution data collection issues
 
 ## Performance Characteristics
 
@@ -123,47 +206,19 @@ options.setDestfile("coverage.exec");
 - ❌ No branch coverage information
 - ❌ No code complexity metrics
 
-## Testing Strategy
+## Key Implementation Tips
 
-### Unit Tests
-1. `AgentOptionsCoverageLevelTest` - Configuration validation
-2. `InstrumenterTest` - Proper mode propagation
-3. `MethodOnlyProbesAdapterTest` - Single probe behavior
-4. `MethodOnlyClassAnalyzerTest` - Simplified analysis
+1. **Always use line number -1** when incrementing counters in method-only mode
+2. **Keep probe indices synchronized** between instrumentation and analysis
+3. **Use explicit mode selection** rather than auto-detection
+4. **Test with correct runtime** (SystemPropertiesRuntime for integration tests)
+5. **Apply Spotless formatting** before committing
 
-### Integration Tests
-1. Instrument sample classes with both modes
-2. Execute and compare coverage data
-3. Verify report generation with EMPTY counters
-4. Performance benchmarks comparing modes
+## Future Improvements
+1. **Fix Auto-Detection**: Store instrumentation mode in ExecutionData
+2. **Complete End-to-End Tests**: Fix runtime probe collection issues
+3. **Maven/Ant Integration**: Add support in build plugins
+4. **Optimized Reports**: Special visualization for method-only coverage
 
-## Validation Approach
-
-### Correctness
-1. Verify only one probe per method in bytecode
-2. Confirm marker annotation presence
-3. Validate coverage data accuracy
-4. Test with various Java versions
-
-### Performance
-1. Measure instrumentation time difference
-2. Compare runtime overhead (memory, CPU)
-3. Benchmark with large applications
-4. Profile probe array access patterns
-
-## Future Enhancements
-1. **Selective Method Coverage**: Allow include/exclude patterns at method level
-2. **Hybrid Mode**: Full coverage for specific packages, method-only for others
-3. **Optimized Storage**: Bit-packed probe arrays for further memory reduction
-4. **Report Enhancements**: Special visualization for method-only coverage
-
-## Implementation Status
-- ✅ Core implementation complete
-- ✅ Agent option added and validated
-- ✅ Instrumentation pipeline modified
-- ✅ Analysis pipeline modified
-- ✅ Unit tests created and passing
-- ✅ Integration with existing test suite verified
-- ✅ CLAUDE.md documentation updated
-- ⏳ User documentation updates needed
-- ⏳ Performance benchmarks needed
+## Conclusion
+The method-level-only coverage implementation successfully reduces instrumentation overhead while maintaining compatibility with JaCoCo's existing architecture. The key insight is to maintain the same data structures but ensure line and branch counters remain EMPTY, allowing existing report generators to work without modification. The implementation required careful attention to probe indexing and counter handling, with several non-obvious pitfalls that were discovered through testing.
