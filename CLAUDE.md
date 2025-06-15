@@ -47,13 +47,15 @@ JaCoCo is a Java code coverage library with a two-phase architecture that minimi
 
 ### Phase 1: Runtime Data Collection
 - The JaCoCo agent (`org.jacoco.agent.rt`) instruments bytecode as classes are loaded
-- Coverage probes track execution using boolean arrays with minimal performance impact
+- Coverage probes use **lock-free** boolean arrays: `probes[id] = true` is idempotent and thread-safe
+- No synchronization needed during normal execution - benign data races are acceptable
 - Execution data is written to `.exec` files at JVM shutdown or on demand
 
 ### Phase 2: Analysis and Reporting
 - The analyzer (`org.jacoco.core`) processes execution data offline
 - Original class files are analyzed to rebuild control flow graphs
-- Coverage is computed by correlating execution data with class structure
+- Coverage is computed by correlating execution data with class structure using CRC64 checksums
+- CRC64 ignores debug info (line numbers, comments) but detects structural changes
 - Reports are generated in HTML, XML, or CSV formats
 
 ### Core Modules
@@ -101,3 +103,37 @@ JaCoCo uses the ASM bytecode manipulation framework. When modifying instrumentat
 - Check the current ASM version in the parent POM
 - Use the visitor pattern for bytecode transformations
 - Ensure compatibility with the target bytecode version range (Java 5+)
+
+## Performance Characteristics & Design Trade-offs
+
+### Runtime Performance (Excellent)
+- **Lock-free probe updates**: Simple `probes[id] = true` with no synchronization
+- **Idempotent operations**: Multiple threads can safely write to the same probe
+- **Minimal overhead**: Near-zero impact on application performance
+
+### Dump/Reset Operations (Potential Bottleneck)
+- Uses **coarse-grained synchronization**: `synchronized (store)` blocks all probe updates
+- Reset iterates through all classes calling `Arrays.fill(probes, false)`
+- Can cause pauses in applications with thousands of instrumented classes
+- TCP server is single-threaded and can be blocked during large dumps
+
+### Memory Considerations
+- Each instrumented class maintains a `boolean[]` array for its entire lifetime
+- No memory is released until JVM shutdown
+- Applications with many classes can have significant memory overhead
+
+### Virtual Thread Compatibility
+- **Mostly compatible**: Lock-free probe updates work perfectly with virtual threads
+- **Concern**: The `synchronized (store)` block during dumps can pin carrier threads
+- **Recommendation**: Minimize dump frequency when using virtual threads
+
+### Potential Performance Issues at Scale
+- **False sharing**: Adjacent probes in the `boolean[]` array may cause cache line contention
+- With millions of threads hitting adjacent probes, CPU cache coherency overhead can degrade performance
+- This is a hardware-level effect that's difficult to diagnose
+
+### Key Implementation Details
+- **RuntimeData**: Located in `org.jacoco.core.runtime.RuntimeData`
+- **ExecutionDataStore**: Thread-safe operations use synchronized blocks
+- **ExecutionData**: Contains the actual `boolean[] probes` array
+- **Dump mechanism**: See `RuntimeData.collect()` method for implementation
