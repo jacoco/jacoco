@@ -98,18 +98,20 @@ public class MethodOnlyClassAnalyzer extends ClassVisitor {
 		final boolean covered = probes != null
 				&& methodProbeIndex < probes.length && probes[methodProbeIndex];
 
-		// Set instruction counter based on whether the method was covered.
-		// The method counter is automatically derived from instruction counter.
-		// Branch counter remains EMPTY (0/0).
+		// For method-only mode, we don't track individual instructions or
+		// lines.
+		// We directly set the instruction counter to indicate if ANY part of
+		// the
+		// method was executed, then derive the method counter from it.
 		if (covered) {
+			// Mark as having one covered instruction to indicate method was
+			// executed. Use line -1 to avoid creating line coverage data.
 			methodCoverage.increment(CounterImpl.COUNTER_0_1,
-					CounterImpl.COUNTER_0_0, 0);
-		} else {
-			methodCoverage.increment(CounterImpl.COUNTER_1_0,
-					CounterImpl.COUNTER_0_0, 0);
+					CounterImpl.COUNTER_0_0, -1);
 		}
+		// Note: if not covered, all counters remain EMPTY (0/0)
 
-		// Call incrementMethodCounter to set the method counter based on
+		// Set the method counter based on whether we have any covered
 		// instructions
 		methodCoverage.incrementMethodCounter();
 

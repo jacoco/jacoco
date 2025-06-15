@@ -55,6 +55,8 @@ public class Analyzer {
 
 	private final StringPool stringPool;
 
+	private final boolean methodCoverageOnly;
+
 	/**
 	 * Creates a new analyzer reporting to the given output.
 	 *
@@ -66,9 +68,27 @@ public class Analyzer {
 	 */
 	public Analyzer(final ExecutionDataStore executionData,
 			final ICoverageVisitor coverageVisitor) {
+		this(executionData, coverageVisitor, false);
+	}
+
+	/**
+	 * Creates a new analyzer reporting to the given output.
+	 *
+	 * @param executionData
+	 *            execution data
+	 * @param coverageVisitor
+	 *            the output instance that will coverage data for every analyzed
+	 *            class
+	 * @param methodCoverageOnly
+	 *            if <code>true</code>, forces method-only analysis mode
+	 */
+	public Analyzer(final ExecutionDataStore executionData,
+			final ICoverageVisitor coverageVisitor,
+			final boolean methodCoverageOnly) {
 		this.executionData = executionData;
 		this.coverageVisitor = coverageVisitor;
 		this.stringPool = new StringPool();
+		this.methodCoverageOnly = methodCoverageOnly;
 	}
 
 	/**
@@ -130,23 +150,32 @@ public class Analyzer {
 			return;
 		}
 
-		// Check for method-only instrumentation marker
-		final boolean[] methodCoverageOnly = new boolean[1];
-		reader.accept(new ClassVisitor(InstrSupport.ASM_API_VERSION) {
-			@Override
-			public AnnotationVisitor visitAnnotation(final String desc,
-					final boolean visible) {
-				if ("Lorg/jacoco/core/internal/instr/JaCoCoMethodOnlyInstrumented;"
-						.equals(desc)) {
-					methodCoverageOnly[0] = true;
+		// Use the explicit method-only mode if set, otherwise check for
+		// annotation
+		final boolean analysisMode;
+		if (this.methodCoverageOnly) {
+			// Explicit mode takes precedence
+			analysisMode = true;
+		} else {
+			// Fallback to annotation detection for backward compatibility
+			final boolean[] methodCoverageOnly = new boolean[1];
+			reader.accept(new ClassVisitor(InstrSupport.ASM_API_VERSION) {
+				@Override
+				public AnnotationVisitor visitAnnotation(final String desc,
+						final boolean visible) {
+					if ("Lorg/jacoco/core/internal/instr/JaCoCoMethodOnlyInstrumented;"
+							.equals(desc)) {
+						methodCoverageOnly[0] = true;
+					}
+					return null;
 				}
-				return null;
-			}
-		}, ClassReader.SKIP_CODE | ClassReader.SKIP_DEBUG
-				| ClassReader.SKIP_FRAMES);
+			}, ClassReader.SKIP_CODE | ClassReader.SKIP_DEBUG
+					| ClassReader.SKIP_FRAMES);
+			analysisMode = methodCoverageOnly[0];
+		}
 
 		final ClassVisitor visitor = createAnalyzingVisitor(classId,
-				reader.getClassName(), methodCoverageOnly[0]);
+				reader.getClassName(), analysisMode);
 		reader.accept(visitor, 0);
 	}
 
