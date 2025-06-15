@@ -96,7 +96,7 @@ public class Analyzer {
 		}
 		final ClassCoverageImpl coverage = new ClassCoverageImpl(className,
 				classid, noMatch);
-		
+
 		if (methodCoverageOnly) {
 			// Use simplified analyzer for method-only coverage
 			return new MethodOnlyClassAnalyzer(coverage, probes, stringPool) {
@@ -129,7 +129,7 @@ public class Analyzer {
 		if ((reader.getAccess() & Opcodes.ACC_SYNTHETIC) != 0) {
 			return;
 		}
-		
+
 		// Check for method-only instrumentation marker
 		final boolean[] methodCoverageOnly = new boolean[1];
 		reader.accept(new ClassVisitor(InstrSupport.ASM_API_VERSION) {
@@ -144,7 +144,7 @@ public class Analyzer {
 			}
 		}, ClassReader.SKIP_CODE | ClassReader.SKIP_DEBUG
 				| ClassReader.SKIP_FRAMES);
-		
+
 		final ClassVisitor visitor = createAnalyzingVisitor(classId,
 				reader.getClassName(), methodCoverageOnly[0]);
 		reader.accept(visitor, 0);

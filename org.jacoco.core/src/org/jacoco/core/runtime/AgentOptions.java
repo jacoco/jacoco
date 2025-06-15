@@ -190,10 +190,10 @@ public final class AgentOptions {
 	public static final String JMX = "jmx";
 
 	/**
-	 * Specifies the coverage granularity level. Valid values are "full" (default)
-	 * for line and branch coverage, or "method" for method-level coverage only.
-	 * Method-level coverage has minimal runtime overhead but only tracks whether
-	 * methods were executed.
+	 * Specifies the coverage granularity level. Valid values are "full"
+	 * (default) for line and branch coverage, or "method" for method-level
+	 * coverage only. Method-level coverage has minimal runtime overhead but
+	 * only tracks whether methods were executed.
 	 */
 	public static final String COVERAGELEVEL = "coveragelevel";
 

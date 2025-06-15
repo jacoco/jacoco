@@ -67,7 +67,7 @@ public class ClassInstrumenter extends ClassProbesVisitor {
 			final String[] interfaces) {
 		this.className = name;
 		super.visit(version, access, name, signature, superName, interfaces);
-		
+
 		// Add marker annotation for method-only instrumentation
 		if (methodCoverageOnly) {
 			super.visitAnnotation(
@@ -99,7 +99,7 @@ public class ClassInstrumenter extends ClassProbesVisitor {
 		final MethodVisitor frameEliminator = new DuplicateFrameEliminator(mv);
 		final ProbeInserter probeVariableInserter = new ProbeInserter(access,
 				name, desc, frameEliminator, probeArrayStrategy);
-		
+
 		if (methodCoverageOnly) {
 			// In method-only mode, use the simplified adapter
 			return new MethodOnlyProbesAdapter(probeVariableInserter,

@@ -18,9 +18,9 @@ import org.objectweb.asm.Label;
 import org.objectweb.asm.MethodVisitor;
 
 /**
- * A simplified MethodProbesVisitor for method-only coverage mode.
- * This adapter only inserts a single probe at the beginning of each method
- * and ignores all other probe insertion points.
+ * A simplified MethodProbesVisitor for method-only coverage mode. This adapter
+ * only inserts a single probe at the beginning of each method and ignores all
+ * other probe insertion points.
  */
 class MethodOnlyProbesAdapter extends MethodProbesVisitor {
 
@@ -29,7 +29,7 @@ class MethodOnlyProbesAdapter extends MethodProbesVisitor {
 
 	/**
 	 * Create a new adapter for method-only coverage.
-	 * 
+	 *
 	 * @param mv
 	 *            next method visitor in the chain
 	 * @param probeInserter

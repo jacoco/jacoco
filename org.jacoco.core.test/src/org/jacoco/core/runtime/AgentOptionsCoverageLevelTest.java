@@ -49,8 +49,7 @@ public class AgentOptionsCoverageLevelTest {
 
 	@Test
 	public void testParseCoverageLevelFromString() {
-		final AgentOptions options = new AgentOptions(
-				"coveragelevel=method");
+		final AgentOptions options = new AgentOptions("coveragelevel=method");
 		assertEquals("method", options.getCoverageLevel());
 	}
 

@@ -137,3 +137,24 @@ JaCoCo uses the ASM bytecode manipulation framework. When modifying instrumentat
 - **ExecutionDataStore**: Thread-safe operations use synchronized blocks
 - **ExecutionData**: Contains the actual `boolean[] probes` array
 - **Dump mechanism**: See `RuntimeData.collect()` method for implementation
+
+## Method-Only Coverage Mode
+
+A special mode for production dead code detection with minimal overhead:
+
+### Configuration
+```bash
+java -javaagent:jacocoagent.jar=coveragelevel=method,destfile=coverage.exec MyApp
+```
+
+### Implementation Details
+- **Marker Annotation**: `@JaCoCoMethodOnlyInstrumented` marks classes instrumented in method-only mode
+- **MethodOnlyProbesAdapter**: Inserts only one probe per method (at entry)
+- **MethodOnlyClassAnalyzer**: Sets line/branch counters to EMPTY
+- **Performance**: Significantly reduced probe count and memory usage
+
+### Trade-offs
+- ✅ Minimal runtime overhead suitable for production
+- ✅ Accurate method-level coverage
+- ❌ No line or branch coverage information
+- ❌ No code complexity metrics

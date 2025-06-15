@@ -21,9 +21,9 @@ import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
 
 /**
- * Simplified analyzer for method-only coverage mode. This analyzer only
- * tracks whether methods were executed, without analyzing control flow,
- * lines, or branches.
+ * Simplified analyzer for method-only coverage mode. This analyzer only tracks
+ * whether methods were executed, without analyzing control flow, lines, or
+ * branches.
  */
 public class MethodOnlyClassAnalyzer extends ClassVisitor {
 
@@ -95,20 +95,23 @@ public class MethodOnlyClassAnalyzer extends ClassVisitor {
 				stringPool.get(signature));
 
 		// Determine if method was executed based on probe
-		final boolean covered = probes != null && methodProbeIndex < probes.length
-				&& probes[methodProbeIndex];
+		final boolean covered = probes != null
+				&& methodProbeIndex < probes.length && probes[methodProbeIndex];
 
-		// Set method counter
+		// Set instruction counter based on whether the method was covered.
+		// The method counter is automatically derived from instruction counter.
+		// Branch counter remains EMPTY (0/0).
 		if (covered) {
-			methodCoverage.increment(ICounter.FULLY_COVERED, ICounter.EMPTY, 0);
+			methodCoverage.increment(CounterImpl.COUNTER_0_1,
+					CounterImpl.COUNTER_0_0, 0);
 		} else {
-			methodCoverage.increment(ICounter.NOT_COVERED, ICounter.EMPTY, 0);
+			methodCoverage.increment(CounterImpl.COUNTER_1_0,
+					CounterImpl.COUNTER_0_0, 0);
 		}
 
-		// Increment line and branch counters with EMPTY status
-		// This ensures they report 0/0 instead of causing issues
-		methodCoverage.incrementLine(ICounter.EMPTY, ICounter.EMPTY, 0);
-		methodCoverage.increment(ICounter.EMPTY, ICounter.EMPTY, 1); // branches
+		// Call incrementMethodCounter to set the method counter based on
+		// instructions
+		methodCoverage.incrementMethodCounter();
 
 		coverage.addMethod(methodCoverage);
 		methodProbeIndex++;

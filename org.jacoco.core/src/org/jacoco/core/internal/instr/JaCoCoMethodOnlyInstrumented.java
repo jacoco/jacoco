@@ -19,8 +19,8 @@ import java.lang.annotation.Target;
 
 /**
  * Marker annotation added to classes that have been instrumented with
- * method-level coverage only. This annotation is used by the analyzer
- * to determine which analysis path to use.
+ * method-level coverage only. This annotation is used by the analyzer to
+ * determine which analysis path to use.
  */
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.CLASS)
