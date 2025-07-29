@@ -511,4 +511,113 @@ public class KotlinCoroutineFilterTest extends FilterTestBase {
 		assertIgnored(m, range0, range1);
 	}
 
+	/**
+	 * <pre>
+	 *     fun example() =
+	 *         runBlocking {
+	 *             afterSuspensionPoint(
+	 *                 beforeSuspensionPoint(),
+	 *                 suspendingFunctionReturningInlineValueClass()
+	 *             )
+	 *         }
+	 *
+	 *     suspend fun suspendingFunctionReturningInlineValueClass() = InlineValueClass("")
+	 * </pre>
+	 */
+	@Test
+	public void should_filter_suspending_lambdas_when_suspension_point_returns_inline_value_class() {
+		final MethodNode m = new MethodNode(InstrSupport.ASM_API_VERSION,
+				Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "invokeSuspend",
+				"(Ljava/lang/Object;)Ljava/lang/Object;", null, null);
+
+		m.visitMethodInsn(Opcodes.INVOKESTATIC,
+				"kotlin/coroutines/intrinsics/IntrinsicsKt",
+				"getCOROUTINE_SUSPENDED", "()Ljava/lang/Object;", false);
+		final Range range1 = new Range();
+		range1.fromInclusive = m.instructions.getLast();
+		m.visitVarInsn(Opcodes.ASTORE, 3);
+		m.visitVarInsn(Opcodes.ALOAD, 0);
+		m.visitFieldInsn(Opcodes.GETFIELD, "ExampleKt$example$1", "label", "I");
+		final Label state0 = new Label();
+		final Label state1 = new Label();
+		final Label dflt = new Label();
+		m.visitTableSwitchInsn(0, 1, dflt, state0, state1);
+		m.visitLabel(state0);
+		m.visitVarInsn(Opcodes.ALOAD, 1);
+		m.visitMethodInsn(Opcodes.INVOKESTATIC, "kotlin/ResultKt",
+				"throwOnFailure", "(Ljava/lang/Object;)V", false);
+		range1.toInclusive = m.instructions.getLast();
+
+		m.visitMethodInsn(Opcodes.INVOKESTATIC, "ExampleKt",
+				"beforeSuspensionPoint", "()Ljava/lang/Object;", false);
+
+		m.visitVarInsn(Opcodes.ASTORE, 2);
+		m.visitVarInsn(Opcodes.ALOAD, 0);
+		m.visitTypeInsn(Opcodes.CHECKCAST, "kotlin/coroutines/Continuation");
+		m.visitVarInsn(Opcodes.ALOAD, 0);
+		m.visitVarInsn(Opcodes.ALOAD, 2);
+		m.visitFieldInsn(Opcodes.PUTFIELD, "ExampleKt$example$1", "L$0",
+				"Ljava/lang/Object;");
+		m.visitVarInsn(Opcodes.ALOAD, 0);
+		m.visitInsn(Opcodes.ICONST_1);
+		m.visitFieldInsn(Opcodes.PUTFIELD, "ExampleKt$example$1", "label", "I");
+		m.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "ExampleKt",
+				"suspendingFunctionReturningInlineValueClass--KaAbg4",
+				"(Lkotlin/coroutines/Continuation;)Ljava/lang/Object;", false);
+		m.visitInsn(Opcodes.DUP);
+		final Range range2 = new Range();
+		range2.fromInclusive = m.instructions.getLast();
+
+		m.visitVarInsn(Opcodes.ALOAD, 3);
+		final Label continuationLabelAfterLoadedResult = new Label();
+		m.visitJumpInsn(Opcodes.IF_ACMPNE, continuationLabelAfterLoadedResult);
+		m.visitVarInsn(Opcodes.ALOAD, 3);
+		m.visitInsn(Opcodes.ARETURN);
+
+		m.visitLabel(state1);
+		m.visitVarInsn(Opcodes.ALOAD, 0);
+		m.visitFieldInsn(Opcodes.GETFIELD, "ExampleKt$example$1", "L$0",
+				"Ljava/lang/Object;");
+		m.visitVarInsn(Opcodes.ASTORE, 2);
+		m.visitVarInsn(Opcodes.ALOAD, 1);
+		m.visitMethodInsn(Opcodes.INVOKESTATIC, "kotlin/ResultKt",
+				"throwOnFailure", "(Ljava/lang/Object;)V", false);
+		m.visitVarInsn(Opcodes.ALOAD, 1);
+		m.visitTypeInsn(Opcodes.CHECKCAST, "InlineValueClass");
+		m.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "InlineValueClass",
+				"unbox-impl", "()Ljava/lang/String;", false);
+		range2.toInclusive = m.instructions.getLast();
+
+		m.visitLabel(continuationLabelAfterLoadedResult);
+		m.visitVarInsn(Opcodes.ALOAD, 2);
+		m.visitInsn(Opcodes.SWAP);
+		m.visitTypeInsn(Opcodes.CHECKCAST, "java/lang/String");
+		m.visitMethodInsn(Opcodes.INVOKESTATIC, "InlineValueClass", "box-impl",
+				"(Ljava/lang/String;)LInlineValueClass;", false);
+
+		m.visitMethodInsn(Opcodes.INVOKESTATIC, "ExampleKt",
+				"afterSuspensionPoint",
+				"(Ljava/lang/Object;Ljava/lang/Object;)V", false);
+
+		m.visitFieldInsn(Opcodes.GETSTATIC, "kotlin/Unit", "INSTANCE",
+				"Lkotlin/Unit;");
+		m.visitInsn(Opcodes.ARETURN);
+
+		m.visitLabel(dflt);
+		final Range range0 = new Range();
+		range0.fromInclusive = m.instructions.getLast();
+		m.visitTypeInsn(Opcodes.NEW, "java/lang/IllegalStateException");
+		m.visitInsn(Opcodes.DUP);
+		m.visitLdcInsn("call to 'resume' before 'invoke' with coroutine");
+		m.visitMethodInsn(Opcodes.INVOKESPECIAL,
+				"java/lang/IllegalStateException", "<init>",
+				"(Ljava/lang/String;)V", false);
+		m.visitInsn(Opcodes.ATHROW);
+		range0.toInclusive = m.instructions.getLast();
+
+		filter.filter(m, context, output);
+
+		assertIgnored(range0, range1, range2);
+	}
+
 }
