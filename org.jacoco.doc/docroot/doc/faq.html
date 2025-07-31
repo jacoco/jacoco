@@ -60,6 +60,20 @@
   duplicate classes or create separate reports or report groups for each version.
 </p>
 
+<h3>How to remove, when using the cli, duplicate class files to avoid the "Can't add different class with same name"?
+  The files are still needed for program execution.</h3>
+<p>
+    In the <code>--classfiles</code> option, specify only selected classes so that the duplicate error is avoided.
+    A simple way to do this, (among others) is to copy only the desired files to a different folder and provide that
+    folder name in the <code>--classfiles</code> option.
+</p>
+<code>
+     java -jar /path/to/org.jacoco.cli-0.8.7-nodeps.jar --classfiles /path/to/subset/of/classfiles
+</code>
+<p>
+    Replace <code>0.8.7</code> with your JaCoCo version
+</p>
+
 <h3>Source code lines with exceptions show no coverage. Why?</h3>
 <p>
   JaCoCo determines code execution with so called probes. Probes are inserted
@@ -204,6 +218,17 @@
 <p>
   If you want to exclude classes from the report please configure the
   respective report generation tool accordingly.
+</p>
+
+  <h3>I am using the javaagent jar, <code>jacoco.agent</code> in my Java startup options but getting errors during startup. Why?</h3>
+<p>
+  For javaagent, the correct jar to use is the one with the <code>runtime</code> classifier, like so
+</p>
+<code>
+      java -javaagent:/path/to/org.jacoco.agent-0.8.7-runtime.jar
+</code>
+<p>
+  Replace <code>0.8.7</code>code> with the version of JaCoCo you wish to use.
 </p>
 
 </div>
