@@ -32,9 +32,44 @@ final class KotlinCoroutineFilter implements IFilter {
 			final IFilterContext context, final IFilterOutput output) {
 		new Matcher().match(methodNode, output);
 		new Matcher().matchOptimizedTailCall(methodNode, output);
+		new Matcher().matchSuspendCoroutineUninterceptedOrReturn(methodNode,
+				output);
 	}
 
 	private static class Matcher extends AbstractMatcher {
+		/**
+		 * Filters <a href=
+		 * "https://github.com/JetBrains/kotlin/blob/v2.1.20/compiler/backend/src/org/jetbrains/kotlin/codegen/coroutines/coroutineCodegenUtil.kt#L89-L132">
+		 * bytecode generated</a> for <a href=
+		 * "https://kotlinlang.org/api/core/kotlin-stdlib/kotlin.coroutines.intrinsics/suspend-coroutine-unintercepted-or-return.html">
+		 * kotlin.coroutines.intrinsics/suspendCoroutineUninterceptedOrReturn</a>
+		 */
+		private void matchSuspendCoroutineUninterceptedOrReturn(
+				final MethodNode methodNode, final IFilterOutput output) {
+			for (final AbstractInsnNode i : methodNode.instructions) {
+				cursor = i;
+				nextIs(Opcodes.DUP);
+				nextIsInvoke(Opcodes.INVOKESTATIC,
+						"kotlin/coroutines/intrinsics/IntrinsicsKt",
+						"getCOROUTINE_SUSPENDED", "()Ljava/lang/Object;");
+				nextIs(Opcodes.IF_ACMPNE);
+				final JumpInsnNode jumpInstruction = (JumpInsnNode) cursor;
+				nextIs(Opcodes.ALOAD);
+				if (cursor != null
+						&& cursor.getNext().getOpcode() == Opcodes.CHECKCAST) {
+					nextIsType(Opcodes.CHECKCAST,
+							"kotlin/coroutines/Continuation");
+				}
+				nextIsInvoke(Opcodes.INVOKESTATIC,
+						"kotlin/coroutines/jvm/internal/DebugProbesKt",
+						"probeCoroutineSuspended",
+						"(Lkotlin/coroutines/Continuation;)V");
+				if (cursor != null
+						&& jumpInstruction.label == cursor.getNext()) {
+					output.ignore(jumpInstruction, cursor);
+				}
+			}
+		}
 
 		private void matchOptimizedTailCall(final MethodNode methodNode,
 				final IFilterOutput output) {
