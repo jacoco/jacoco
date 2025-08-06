@@ -40,7 +40,7 @@ final class KotlinCoroutineFilter implements IFilter {
 		/**
 		 * Filters <a href=
 		 * "https://github.com/JetBrains/kotlin/blob/v2.1.20/compiler/backend/src/org/jetbrains/kotlin/codegen/coroutines/coroutineCodegenUtil.kt#L89-L132">
-		 * bytecode generated</a> for <a href=
+		 * bytecode generated</a> for inlined invocations of <a href=
 		 * "https://kotlinlang.org/api/core/kotlin-stdlib/kotlin.coroutines.intrinsics/suspend-coroutine-unintercepted-or-return.html">
 		 * kotlin.coroutines.intrinsics/suspendCoroutineUninterceptedOrReturn</a>
 		 */
