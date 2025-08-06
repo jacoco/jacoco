@@ -511,4 +511,87 @@ public class KotlinCoroutineFilterTest extends FilterTestBase {
 		assertIgnored(m, range0, range1);
 	}
 
+	/**
+	 * <pre>
+	 *     suspend fun example() =
+	 *         suspendCoroutine { continuation ->
+	 *             ...
+	 *         }
+	 * </pre>
+	 *
+	 * @see #should_filter_suspendCoroutineUninterceptedOrReturn_when_no_tail_call_optimization()
+	 */
+	@Test
+	public void should_filter_suspendCoroutineUninterceptedOrReturn() {
+		final MethodNode m = new MethodNode(InstrSupport.ASM_API_VERSION,
+				Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "example",
+				"(Lkotlin/coroutines/Continuation;)Ljava/lang/Object;", null,
+				null);
+
+		m.visitInsn(Opcodes.NOP);
+
+		m.visitInsn(Opcodes.DUP);
+		final Range range0 = new Range();
+		m.visitMethodInsn(Opcodes.INVOKESTATIC,
+				"kotlin/coroutines/intrinsics/IntrinsicsKt",
+				"getCOROUTINE_SUSPENDED", "()Ljava/lang/Object;", false);
+		final Label label = new Label();
+		m.visitJumpInsn(Opcodes.IF_ACMPNE, label);
+		range0.fromInclusive = m.instructions.getLast();
+		m.visitInsn(Opcodes.ALOAD);
+		m.visitMethodInsn(Opcodes.INVOKESTATIC,
+				"kotlin/coroutines/jvm/internal/DebugProbesKt",
+				"probeCoroutineSuspended",
+				"(Lkotlin/coroutines/Continuation;)V", false);
+		range0.toInclusive = m.instructions.getLast();
+		m.visitLabel(label);
+
+		filter.filter(m, context, output);
+
+		assertIgnored(m, range0);
+	}
+
+	/**
+	 * <pre>
+	 *     suspend fun example() {
+	 *         suspendCoroutine { continuation ->
+	 *             ...
+	 *         }
+	 *         ...
+	 *     }
+	 * </pre>
+	 *
+	 * @see #should_filter_suspendCoroutineUninterceptedOrReturn()
+	 */
+	@Test
+	public void should_filter_suspendCoroutineUninterceptedOrReturn_when_no_tail_call_optimization() {
+		final MethodNode m = new MethodNode(InstrSupport.ASM_API_VERSION,
+				Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "example",
+				"(Lkotlin/coroutines/Continuation;)Ljava/lang/Object;", null,
+				null);
+
+		m.visitInsn(Opcodes.NOP);
+
+		m.visitInsn(Opcodes.DUP);
+		final Range range0 = new Range();
+		m.visitMethodInsn(Opcodes.INVOKESTATIC,
+				"kotlin/coroutines/intrinsics/IntrinsicsKt",
+				"getCOROUTINE_SUSPENDED", "()Ljava/lang/Object;", false);
+		final Label label = new Label();
+		m.visitJumpInsn(Opcodes.IF_ACMPNE, label);
+		range0.fromInclusive = m.instructions.getLast();
+		m.visitInsn(Opcodes.ALOAD);
+		m.visitTypeInsn(Opcodes.CHECKCAST, "kotlin/coroutines/Continuation");
+		m.visitMethodInsn(Opcodes.INVOKESTATIC,
+				"kotlin/coroutines/jvm/internal/DebugProbesKt",
+				"probeCoroutineSuspended",
+				"(Lkotlin/coroutines/Continuation;)V", false);
+		range0.toInclusive = m.instructions.getLast();
+		m.visitLabel(label);
+
+		filter.filter(m, context, output);
+
+		assertIgnored(m, range0);
+	}
+
 }
