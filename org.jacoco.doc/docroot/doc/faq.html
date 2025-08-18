@@ -45,11 +45,21 @@
 
 <h3>What Java versions are supported by JaCoCo?</h3>
 <p>
-  JaCoCo officially supports Java class files from version 1.0 to 24. Also
-  experimental support for class files of version 25 and 26 is provided.
-  However the minimum JRE version required by the JaCoCo runtime
-  (e.g. the agent) and the JaCoCo tools is 1.5. Also note that class files under
-  test from version 1.6 and above have to contain valid stackmap frames.
+  JaCoCo officially supports Java class files from version 1.0 to 24. For the
+  latest Java versions, this means JaCoCo has been tested on released JDK
+  versions. We cannot provide <i>official</i> support for unreleased versions,
+  as the JDK project may introduce changes <i>before</i> the final release.
+</p>
+<p>
+  Experimental support for compilation and execution with Java 25 and 26
+  is also provided. This means JaCoCo has been successfully tested on the latest
+  early access (EA) builds. We follow JDK development closely and strive to
+  always provide experimental support for the latest OpenJDK development streams.
+</p>
+<p>
+  However, the minimum JRE version required by the JaCoCo runtime
+  (e.g., the agent) and the JaCoCo tools is 1.5. Also note that class files under
+  test from version 1.6 and above must contain valid stackmap frames.
 </p>
 
 <h3>Why do I get the error "Can't add different class with same name"?</h3>
