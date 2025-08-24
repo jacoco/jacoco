@@ -56,7 +56,7 @@ public final class Replacements {
 	 * </li>
 	 *
 	 * <li>for {@link org.objectweb.asm.tree.JumpInsnNode} with
-	 * {@link org.objectweb.asm.Opcodes#GOTO} there is only branch 0 that
+	 * {@link org.objectweb.asm.Opcodes#GOTO} there is only branch 1 that
 	 * corresponds to continuation of execution at
 	 * {@link org.objectweb.asm.tree.JumpInsnNode#label}</li>
 	 *

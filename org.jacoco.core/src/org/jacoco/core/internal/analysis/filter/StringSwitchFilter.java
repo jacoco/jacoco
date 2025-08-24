@@ -107,7 +107,7 @@ final class StringSwitchFilter implements IFilter {
 						// end of comparisons for same hashCode
 						// jump to default
 						nextIs(Opcodes.GOTO);
-						replacements.add(defaultLabel, cursor, 0);
+						replacements.add(defaultLabel, cursor, 1);
 						break;
 					} else if (cursor.getNext() == defaultLabel) {
 						replacements.add(defaultLabel, cursor, 0);
