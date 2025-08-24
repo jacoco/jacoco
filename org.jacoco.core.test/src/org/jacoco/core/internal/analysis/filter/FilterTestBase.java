@@ -111,41 +111,28 @@ public abstract class FilterTestBase {
 	private void assertReplacements(final MethodNode methodNode,
 			final AbstractInsnNode source,
 			final List<Replacement> expectedReplacements) {
-
-		Collections.sort(expectedReplacements, new Comparator<Replacement>() {
-			public int compare(final Replacement r1, final Replacement r2) {
-				if (r1.newBranch == r2.newBranch) {
-					return r1.branch - r2.branch;
-				}
-				return r1.newBranch - r2.newBranch;
-			}
-		});
-
-		final StringBuilder expectedStringBuilder = new StringBuilder();
+		final ArrayList<String> expectedStrings = new ArrayList<String>();
 		for (final Replacement replacement : expectedReplacements) {
-			expectedStringBuilder.append(replacement.newBranch)
-					.append(" if branch ").append(replacement.branch)
-					.append(" of instruction ").append(methodNode.instructions
-							.indexOf(replacement.instruction))
-					.append("\n");
+			expectedStrings.add("\n" + replacement.newBranch + " if branch "
+					+ replacement.branch + " of instruction "
+					+ methodNode.instructions.indexOf(replacement.instruction));
 		}
+		Collections.sort(expectedStrings);
 
-		final StringBuilder actualStringBuilder = new StringBuilder();
+		final ArrayList<String> actualStrings = new ArrayList<String>();
 		int newBranch = 0;
 		for (final Collection<Replacements.InstructionBranch> pairs : actualReplacements
 				.get(source)) {
 			for (Replacements.InstructionBranch pair : pairs) {
-				actualStringBuilder.append(newBranch).append(" if branch ")
-						.append(pair.branch).append(" of instruction ")
-						.append(methodNode.instructions
-								.indexOf(pair.instruction))
-						.append("\n");
+				actualStrings.add("\n" + newBranch + " if branch " + pair.branch
+						+ " of instruction "
+						+ methodNode.instructions.indexOf(pair.instruction));
 			}
 			newBranch++;
 		}
+		Collections.sort(actualStrings);
 
-		assertEquals(expectedStringBuilder.toString(),
-				actualStringBuilder.toString());
+		assertEquals(expectedStrings.toString(), actualStrings.toString());
 	}
 
 	static class Replacement {

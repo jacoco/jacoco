@@ -76,7 +76,7 @@ public class StringSwitchFilterTest extends FilterTestBase {
 
 		// goto default case
 		m.visitJumpInsn(Opcodes.GOTO, caseDefault);
-		replacements.add(new Replacement(0, m.instructions.getLast(), 0));
+		replacements.add(new Replacement(0, m.instructions.getLast(), 1));
 
 		m.visitLabel(h2);
 
@@ -91,7 +91,7 @@ public class StringSwitchFilterTest extends FilterTestBase {
 		// goto default case
 		m.visitJumpInsn(Opcodes.GOTO, caseDefault);
 		range.toInclusive = m.instructions.getLast();
-		replacements.add(new Replacement(0, m.instructions.getLast(), 0));
+		replacements.add(new Replacement(0, m.instructions.getLast(), 1));
 
 		m.visitLabel(case1);
 		m.visitInsn(Opcodes.RETURN);
@@ -212,7 +212,7 @@ public class StringSwitchFilterTest extends FilterTestBase {
 		replacements.add(new Replacement(2, m.instructions.getLast(), 1));
 
 		m.visitJumpInsn(Opcodes.GOTO, defaultCase);
-		replacements.add(new Replacement(0, m.instructions.getLast(), 0));
+		replacements.add(new Replacement(0, m.instructions.getLast(), 1));
 
 		m.visitLabel(h2);
 		m.visitVarInsn(Opcodes.ALOAD, 1);
@@ -230,7 +230,7 @@ public class StringSwitchFilterTest extends FilterTestBase {
 		replacements.add(new Replacement(4, m.instructions.getLast(), 1));
 
 		m.visitJumpInsn(Opcodes.GOTO, defaultCase);
-		replacements.add(new Replacement(0, m.instructions.getLast(), 0));
+		replacements.add(new Replacement(0, m.instructions.getLast(), 1));
 
 		m.visitLabel(h3);
 		m.visitVarInsn(Opcodes.ALOAD, 1);
@@ -249,7 +249,7 @@ public class StringSwitchFilterTest extends FilterTestBase {
 
 		m.visitJumpInsn(Opcodes.GOTO, defaultCase);
 		range.toInclusive = m.instructions.getLast();
-		replacements.add(new Replacement(0, m.instructions.getLast(), 0));
+		replacements.add(new Replacement(0, m.instructions.getLast(), 1));
 
 		m.visitLabel(case1);
 		m.visitInsn(Opcodes.RETURN);
@@ -319,7 +319,7 @@ public class StringSwitchFilterTest extends FilterTestBase {
 		m.visitJumpInsn(Opcodes.IFNE, caseA);
 		replacements.add(new Replacement(1, m.instructions.getLast(), 1));
 		m.visitJumpInsn(Opcodes.GOTO, caseElse);
-		replacements.add(new Replacement(0, m.instructions.getLast(), 0));
+		replacements.add(new Replacement(0, m.instructions.getLast(), 1));
 
 		m.visitLabel(hashB);
 		m.visitVarInsn(Opcodes.ALOAD, 2);
@@ -329,7 +329,7 @@ public class StringSwitchFilterTest extends FilterTestBase {
 		m.visitJumpInsn(Opcodes.IFNE, caseB);
 		replacements.add(new Replacement(2, m.instructions.getLast(), 1));
 		m.visitJumpInsn(Opcodes.GOTO, caseElse);
-		replacements.add(new Replacement(0, m.instructions.getLast(), 0));
+		replacements.add(new Replacement(0, m.instructions.getLast(), 1));
 
 		m.visitLabel(hashC);
 		m.visitVarInsn(Opcodes.ALOAD, 2);
@@ -340,7 +340,7 @@ public class StringSwitchFilterTest extends FilterTestBase {
 		replacements.add(new Replacement(3, m.instructions.getLast(), 1));
 		m.visitJumpInsn(Opcodes.GOTO, caseElse);
 		range.toInclusive = m.instructions.getLast();
-		replacements.add(new Replacement(0, m.instructions.getLast(), 0));
+		replacements.add(new Replacement(0, m.instructions.getLast(), 1));
 
 		m.visitLabel(caseA);
 		m.visitLdcInsn("case a");
@@ -415,7 +415,7 @@ public class StringSwitchFilterTest extends FilterTestBase {
 		m.visitJumpInsn(Opcodes.IFNE, caseA);
 		replacements.add(new Replacement(1, m.instructions.getLast(), 1));
 		m.visitJumpInsn(Opcodes.GOTO, caseElse);
-		replacements.add(new Replacement(0, m.instructions.getLast(), 0));
+		replacements.add(new Replacement(0, m.instructions.getLast(), 1));
 
 		m.visitLabel(hashB);
 		m.visitVarInsn(Opcodes.ALOAD, 2);
@@ -425,7 +425,7 @@ public class StringSwitchFilterTest extends FilterTestBase {
 		m.visitJumpInsn(Opcodes.IFNE, caseB);
 		replacements.add(new Replacement(2, m.instructions.getLast(), 1));
 		m.visitJumpInsn(Opcodes.GOTO, caseElse);
-		replacements.add(new Replacement(0, m.instructions.getLast(), 0));
+		replacements.add(new Replacement(0, m.instructions.getLast(), 1));
 
 		m.visitLabel(hashC);
 		m.visitVarInsn(Opcodes.ALOAD, 2);
@@ -436,7 +436,7 @@ public class StringSwitchFilterTest extends FilterTestBase {
 		replacements.add(new Replacement(3, m.instructions.getLast(), 1));
 		m.visitJumpInsn(Opcodes.GOTO, caseElse);
 		range.toInclusive = m.instructions.getLast();
-		replacements.add(new Replacement(0, m.instructions.getLast(), 0));
+		replacements.add(new Replacement(0, m.instructions.getLast(), 1));
 
 		m.visitLabel(caseA);
 		m.visitLdcInsn("case a");

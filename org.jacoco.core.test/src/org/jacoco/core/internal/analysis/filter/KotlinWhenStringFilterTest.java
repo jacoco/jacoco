@@ -66,7 +66,7 @@ public class KotlinWhenStringFilterTest extends FilterTestBase {
 				"(Ljava/lang/Object;)Z", false);
 		m.visitJumpInsn(Opcodes.IFEQ, sameHash);
 		m.visitJumpInsn(Opcodes.GOTO, case1);
-		replacements.add(new Replacement(1, m.instructions.getLast(), 0));
+		replacements.add(new Replacement(1, m.instructions.getLast(), 1));
 
 		// case "\u0000a"
 		m.visitLabel(sameHash);
@@ -77,7 +77,7 @@ public class KotlinWhenStringFilterTest extends FilterTestBase {
 		m.visitJumpInsn(Opcodes.IFEQ, defaultCase);
 		replacements.add(new Replacement(0, m.instructions.getLast(), 1));
 		m.visitJumpInsn(Opcodes.GOTO, case2);
-		replacements.add(new Replacement(2, m.instructions.getLast(), 0));
+		replacements.add(new Replacement(2, m.instructions.getLast(), 1));
 
 		// case "b"
 		m.visitLabel(h2);
@@ -89,7 +89,7 @@ public class KotlinWhenStringFilterTest extends FilterTestBase {
 		replacements.add(new Replacement(0, m.instructions.getLast(), 1));
 		m.visitJumpInsn(Opcodes.GOTO, case3);
 		final AbstractInsnNode expectedToInclusive = m.instructions.getLast();
-		replacements.add(new Replacement(3, m.instructions.getLast(), 0));
+		replacements.add(new Replacement(3, m.instructions.getLast(), 1));
 
 		m.visitLabel(case1);
 		m.visitInsn(Opcodes.RETURN);
@@ -145,7 +145,7 @@ public class KotlinWhenStringFilterTest extends FilterTestBase {
 				"(Ljava/lang/Object;)Z", false);
 		m.visitJumpInsn(Opcodes.IFEQ, sameHash);
 		m.visitJumpInsn(Opcodes.GOTO, case2);
-		replacements.add(new Replacement(1, m.instructions.getLast(), 0));
+		replacements.add(new Replacement(1, m.instructions.getLast(), 1));
 
 		m.visitLabel(sameHash);
 		m.visitVarInsn(Opcodes.ALOAD, 2);
@@ -155,7 +155,7 @@ public class KotlinWhenStringFilterTest extends FilterTestBase {
 		m.visitJumpInsn(Opcodes.IFEQ, defaultCase);
 		replacements.add(new Replacement(0, m.instructions.getLast(), 1));
 		m.visitJumpInsn(Opcodes.GOTO, case3);
-		replacements.add(new Replacement(2, m.instructions.getLast(), 0));
+		replacements.add(new Replacement(2, m.instructions.getLast(), 1));
 
 		m.visitLabel(h2);
 		m.visitVarInsn(Opcodes.ALOAD, 2);
