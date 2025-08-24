@@ -36,6 +36,20 @@ public class StringSwitchTarget {
 		}
 	}
 
+	private static void executedWithSameHashCodeAsFirstCase(Object s) {
+		switch (String.valueOf(s)) { // assertFullyCovered(2, 1)
+		case "a":
+			nop("case a"); // assertNotCovered()
+			break;
+		case "b":
+			nop("case b"); // assertNotCovered()
+			break;
+		default:
+			nop("default"); // assertFullyCovered()
+			break;
+		}
+	}
+
 	private static void notCovered(Object s) {
 		switch (String.valueOf(s)) { // assertNotCovered(4, 0)
 		case "a":
@@ -132,6 +146,8 @@ public class StringSwitchTarget {
 		covered("a");
 		covered("b");
 		covered("\0a");
+
+		executedWithSameHashCodeAsFirstCase("\0a");
 
 		implicitDefaultNotExecuted("a");
 		implicitDefaultNotExecuted("b");
