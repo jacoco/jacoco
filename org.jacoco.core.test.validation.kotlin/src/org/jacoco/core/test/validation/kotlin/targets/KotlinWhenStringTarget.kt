@@ -57,6 +57,15 @@ object KotlinWhenStringTarget {
         } // assertEmpty()
     } // assertFullyCovered()
 
+    private fun executedWithSameHashCodeAsFirstCase(s: String) {
+        when (s) { // assertFullyCovered(3, 1)
+            "a" -> nop("case a") // assertNotCovered()
+            "b" -> nop("case b") // assertNotCovered()
+            "c" -> nop("case c") // assertNotCovered()
+            else -> nop("else") // assertFullyCovered()
+        } // assertEmpty()
+    } // assertFullyCovered()
+
     /**
      * Unlike [whenString]
      * in this example first case is the only case with biggest hashCode value.
@@ -95,6 +104,8 @@ object KotlinWhenStringTarget {
         implicitElseNotExecuted("a")
         implicitElseNotExecuted("b")
         implicitElseNotExecuted("c")
+
+        executedWithSameHashCodeAsFirstCase("\u0000a")
 
         whenStringBiggestHashCodeFirst("")
         whenStringBiggestHashCodeFirst("a")
