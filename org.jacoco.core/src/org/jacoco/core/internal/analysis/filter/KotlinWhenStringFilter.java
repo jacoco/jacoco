@@ -86,7 +86,7 @@ final class KotlinWhenStringFilter implements IFilter {
 					} else if (cursor.getOpcode() == Opcodes.GOTO) {
 						// jump to case body
 						replacements.add(((JumpInsnNode) cursor).label, cursor,
-								0);
+								1);
 						if (jump.label == defaultLabel) {
 							// end of comparisons for same hashCode
 							replacements.add(defaultLabel, jump, 1);
