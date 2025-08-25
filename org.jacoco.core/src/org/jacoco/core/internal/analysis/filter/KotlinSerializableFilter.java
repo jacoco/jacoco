@@ -12,6 +12,11 @@
  *******************************************************************************/
 package org.jacoco.core.internal.analysis.filter;
 
+import org.objectweb.asm.Opcodes;
+import org.objectweb.asm.Type;
+import org.objectweb.asm.tree.AbstractInsnNode;
+import org.objectweb.asm.tree.FieldInsnNode;
+import org.objectweb.asm.tree.LineNumberNode;
 import org.objectweb.asm.tree.MethodNode;
 
 /**
@@ -21,9 +26,65 @@ import org.objectweb.asm.tree.MethodNode;
  */
 final class KotlinSerializableFilter implements IFilter {
 
+	private int lineNumber = -2;
+
 	public void filter(final MethodNode methodNode,
 			final IFilterContext context, final IFilterOutput output) {
-		// TODO
+		if (context.getClassName().endsWith("$Companion")) {
+			if (methodNode.name.equals("<init>")
+					&& methodNode.desc.equals("()V")) {
+				lineNumber = -1;
+				for (final AbstractInsnNode i : methodNode.instructions) {
+					if (i.getType() == AbstractInsnNode.LINE) {
+						lineNumber = ((LineNumberNode) i).line;
+						return;
+					}
+				}
+			}
+			if (methodNode.name.equals("serializer")
+					&& methodNode.desc
+							.equals("()Lkotlinx/serialization/KSerializer;")
+					&& new Matcher().match(methodNode, lineNumber)) {
+				output.ignore(methodNode.instructions.getFirst(),
+						methodNode.instructions.getLast());
+			}
+			return;
+		}
+
+		if ((methodNode.access & Opcodes.ACC_SYNTHETIC) == 0) {
+			return;
+		}
+
+		if (methodNode.name.startsWith("write$Self$")) {
+			output.ignore(methodNode.instructions.getFirst(),
+					methodNode.instructions.getLast());
+			return;
+		}
+
+		final Type[] argumentTypes = Type.getArgumentTypes(methodNode.desc);
+		if (argumentTypes.length > 1 && argumentTypes[argumentTypes.length - 1]
+				.getClassName()
+				.equals("kotlinx.serialization.internal.SerializationConstructorMarker")) {
+			output.ignore(methodNode.instructions.getFirst(),
+					methodNode.instructions.getLast());
+		}
+	}
+
+	private static class Matcher extends AbstractMatcher {
+		public boolean match(final MethodNode methodNode,
+				final int lineNumber) {
+			cursor = methodNode.instructions.getFirst();
+			nextIs(Opcodes.GETSTATIC);
+			final FieldInsnNode getStaticInstruction = (FieldInsnNode) cursor;
+			final AbstractInsnNode lineNumberInstruction = cursor.getPrevious();
+			nextIsType(Opcodes.CHECKCAST, "kotlinx/serialization/KSerializer");
+			nextIs(Opcodes.ARETURN);
+			return cursor != null
+					&& getStaticInstruction.name.equals("INSTANCE")
+					&& (lineNumberInstruction instanceof LineNumberNode)
+					&& (lineNumber == -1
+							|| lineNumber == ((LineNumberNode) lineNumberInstruction).line);
+		}
 	}
 
 }
