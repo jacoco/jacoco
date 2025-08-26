@@ -13,6 +13,7 @@
 package org.jacoco.core.test.validation.kotlin.targets
 
 import org.jacoco.core.test.validation.targets.Stubs.nop
+import org.jacoco.core.test.validation.targets.Stubs.string
 
 /**
  * Test target with `when` expressions and statements with subject of type `String`.
@@ -57,8 +58,8 @@ object KotlinWhenStringTarget {
         } // assertEmpty()
     } // assertFullyCovered()
 
-    private fun executedWithSameHashCodeAsFirstCase(s: String) {
-        when (s) { // assertFullyCovered(3, 1)
+    private fun executedWithSameHashCodeAsFirstCase() {
+        when (string("\u0000a")) { // assertFullyCovered(3, 1)
             "a" -> nop("case a") // assertNotCovered()
             "b" -> nop("case b") // assertNotCovered()
             "c" -> nop("case c") // assertNotCovered()
@@ -105,7 +106,7 @@ object KotlinWhenStringTarget {
         implicitElseNotExecuted("b")
         implicitElseNotExecuted("c")
 
-        executedWithSameHashCodeAsFirstCase("\u0000a")
+        executedWithSameHashCodeAsFirstCase()
 
         whenStringBiggestHashCodeFirst("")
         whenStringBiggestHashCodeFirst("a")

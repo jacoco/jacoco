@@ -120,6 +120,13 @@ public class Stubs {
 	}
 
 	/**
+	 * @return given argument
+	 */
+	public static String string(final String value) {
+		return value;
+	}
+
+	/**
 	 * Always throws a {@link RuntimeException}.
 	 *
 	 * @throws StubException
