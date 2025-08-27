@@ -35,6 +35,13 @@ final class KotlinComposeFilter implements IFilter {
 			}
 			final MethodInsnNode mi = (MethodInsnNode) i;
 			if ("androidx/compose/runtime/Composer".equals(mi.owner)
+					&& "shouldExecute".equals(mi.name)
+					&& "(ZI)Z".equals(mi.desc)
+					&& mi.getNext().getOpcode() == Opcodes.IFEQ) {
+				// https://github.com/JetBrains/kotlin/commit/ee9217f8f0f37967684fbfe4a568c2b3c8707507
+				final JumpInsnNode ji = (JumpInsnNode) mi.getNext();
+				output.ignore(methodNode.instructions.getFirst(), ji);
+			} else if ("androidx/compose/runtime/Composer".equals(mi.owner)
 					&& "getSkipping".equals(mi.name) && "()Z".equals(mi.desc)
 					&& mi.getNext().getOpcode() == Opcodes.IFNE) {
 				// https://github.com/JetBrains/kotlin/blob/v2.0.0-RC2/plugins/compose/compiler-hosted/src/main/java/androidx/compose/compiler/plugins/kotlin/lower/ComposableFunctionBodyTransformer.kt#L361-L384
