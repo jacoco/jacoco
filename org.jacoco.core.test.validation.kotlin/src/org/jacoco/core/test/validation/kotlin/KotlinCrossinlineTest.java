@@ -24,4 +24,13 @@ public class KotlinCrossinlineTest extends ValidationTestBase {
 		super(KotlinCrossinlineTarget.class);
 	}
 
+	@Override
+	protected void run(final Class<?> targetClass) throws Exception {
+		super.run(targetClass);
+		// Trigger the analysis of SMAPs in non executed classes:
+		targetClass.getClassLoader().loadClass(
+				"org.jacoco.core.test.validation.kotlin.targets.KotlinCrossinlineTarget$example$1");
+		targetClass.getClassLoader().loadClass(
+				"org.jacoco.core.test.validation.kotlin.targets.KotlinCrossinlineTarget$example$1$1");
+	}
 }

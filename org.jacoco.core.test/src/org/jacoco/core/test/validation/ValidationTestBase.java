@@ -99,20 +99,20 @@ public abstract class ValidationTestBase {
 	private void analyze(final ExecutionDataStore store) throws IOException {
 		final CoverageBuilder builder = new CoverageBuilder();
 		final Analyzer analyzer = new Analyzer(store, builder);
-		for (ExecutionData data : store.getContents()) {
-			analyze(analyzer, data);
+		for (String className : loader.getInstrumentedClasses()) {
+			analyze(analyzer, className);
 		}
 		final String testClassSimpleName = getClass().getSimpleName();
 		bundle = builder.getBundle(testClassSimpleName);
 		source = Source.load(target, bundle);
 	}
 
-	private void analyze(final Analyzer analyzer, final ExecutionData data)
+	private void analyze(final Analyzer analyzer, final String className)
 			throws IOException {
 		final byte[] bytes = TargetLoader
-				.getClassDataAsBytes(target.getClassLoader(), data.getName());
-		analyzer.analyzeClass(bytes, data.getName());
-		saveBytecodeRepresentations(bytes, data.getName());
+				.getClassDataAsBytes(target.getClassLoader(), className);
+		analyzer.analyzeClass(bytes, className);
+		saveBytecodeRepresentations(bytes, className);
 	}
 
 	private void saveBytecodeRepresentations(final byte[] classBytes,
