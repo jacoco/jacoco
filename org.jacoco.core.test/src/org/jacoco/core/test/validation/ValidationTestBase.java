@@ -21,6 +21,7 @@ import java.io.PrintWriter;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Collections;
 
 import org.jacoco.core.analysis.Analyzer;
@@ -96,10 +97,17 @@ public abstract class ValidationTestBase {
 				(Object) new String[0]);
 	}
 
+	protected Collection<String> additionalClassesForAnalysis() {
+		return Collections.emptyList();
+	}
+
 	private void analyze(final ExecutionDataStore store) throws IOException {
 		final CoverageBuilder builder = new CoverageBuilder();
 		final Analyzer analyzer = new Analyzer(store, builder);
-		for (String className : loader.getInstrumentedClasses()) {
+		for (ExecutionData data : store.getContents()) {
+			analyze(analyzer, data.getName());
+		}
+		for (String className : additionalClassesForAnalysis()) {
 			analyze(analyzer, className);
 		}
 		final String testClassSimpleName = getClass().getSimpleName();

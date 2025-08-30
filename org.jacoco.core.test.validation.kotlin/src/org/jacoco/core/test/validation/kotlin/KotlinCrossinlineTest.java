@@ -12,6 +12,9 @@
  *******************************************************************************/
 package org.jacoco.core.test.validation.kotlin;
 
+import java.util.Arrays;
+import java.util.Collection;
+
 import org.jacoco.core.test.validation.ValidationTestBase;
 import org.jacoco.core.test.validation.kotlin.targets.KotlinCrossinlineTarget;
 
@@ -25,12 +28,11 @@ public class KotlinCrossinlineTest extends ValidationTestBase {
 	}
 
 	@Override
-	protected void run(final Class<?> targetClass) throws Exception {
-		super.run(targetClass);
-		// Trigger the analysis of SMAPs in non executed classes:
-		targetClass.getClassLoader().loadClass(
-				"org.jacoco.core.test.validation.kotlin.targets.KotlinCrossinlineTarget$example$1");
-		targetClass.getClassLoader().loadClass(
+	protected Collection<String> additionalClassesForAnalysis() {
+		// Analyze SMAPs in non executed classes:
+		return Arrays.asList(
+				"org.jacoco.core.test.validation.kotlin.targets.KotlinCrossinlineTarget$example$1",
 				"org.jacoco.core.test.validation.kotlin.targets.KotlinCrossinlineTarget$example$1$1");
 	}
+
 }
