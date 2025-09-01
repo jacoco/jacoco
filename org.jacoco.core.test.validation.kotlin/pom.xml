@@ -25,7 +25,7 @@
   <name>JaCoCo :: Test :: Core :: Validation Kotlin</name>
 
   <properties>
-    <kotlin.version>2.1.21</kotlin.version>
+    <kotlin.version>2.2.10</kotlin.version>
   </properties>
 
   <dependencies>
@@ -58,6 +58,13 @@
             <goals>
               <goal>compile</goal>
             </goals>
+            <configuration>
+              <args>
+                <!-- TODO `-jvm-default disable` or `-jvm-default no-compatibility` are workarounds for https://github.com/jacoco/jacoco/issues/1905 -->
+                <arg>-jvm-default</arg>
+                <arg>disable</arg>
+              </args>
+            </configuration>
           </execution>
         </executions>
       </plugin>

@@ -13,6 +13,7 @@
 package org.jacoco.core.test.validation.kotlin.targets
 
 import org.jacoco.core.test.validation.targets.Stubs.nop
+import org.jacoco.core.test.validation.targets.Stubs.string
 
 /**
  * Test target with `when` expressions and statements with subject of type `String`.
@@ -57,6 +58,15 @@ object KotlinWhenStringTarget {
         } // assertEmpty()
     } // assertFullyCovered()
 
+    private fun executedWithSameHashCodeAsFirstCase() {
+        when (string("\u0000a")) { // assertFullyCovered(3, 1)
+            "a" -> nop("case a") // assertNotCovered()
+            "b" -> nop("case b") // assertNotCovered()
+            "c" -> nop("case c") // assertNotCovered()
+            else -> nop("else") // assertFullyCovered()
+        } // assertEmpty()
+    } // assertFullyCovered()
+
     /**
      * Unlike [whenString]
      * in this example first case is the only case with biggest hashCode value.
@@ -95,6 +105,8 @@ object KotlinWhenStringTarget {
         implicitElseNotExecuted("a")
         implicitElseNotExecuted("b")
         implicitElseNotExecuted("c")
+
+        executedWithSameHashCodeAsFirstCase()
 
         whenStringBiggestHashCodeFirst("")
         whenStringBiggestHashCodeFirst("a")

@@ -14,6 +14,8 @@ package org.jacoco.core.test.validation.java7.targets;
 
 import static org.jacoco.core.test.validation.targets.Stubs.nop;
 
+import org.jacoco.core.test.validation.targets.Stubs;
+
 /**
  * This test target is a switch statement with a String.
  */
@@ -32,6 +34,20 @@ public class StringSwitchTarget {
 			break;
 		default:
 			nop("case default"); // assertFullyCovered()
+			break;
+		}
+	}
+
+	private static void executedWithSameHashCodeAsFirstCase() {
+		switch (Stubs.string("\0a")) { // assertFullyCovered(2, 1)
+		case "a":
+			nop("case a"); // assertNotCovered()
+			break;
+		case "b":
+			nop("case b"); // assertNotCovered()
+			break;
+		default:
+			nop("default"); // assertFullyCovered()
 			break;
 		}
 	}
@@ -132,6 +148,8 @@ public class StringSwitchTarget {
 		covered("a");
 		covered("b");
 		covered("\0a");
+
+		executedWithSameHashCodeAsFirstCase();
 
 		implicitDefaultNotExecuted("a");
 		implicitDefaultNotExecuted("b");
