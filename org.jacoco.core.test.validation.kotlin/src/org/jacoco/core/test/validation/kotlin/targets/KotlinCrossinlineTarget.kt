@@ -21,12 +21,8 @@ object KotlinCrossinlineTarget {
 
     inline fun example(crossinline lambda: () -> Unit): () -> Unit { // assertEmpty()
         return { // assertFullyCovered()
-            /* TODO next two lines are partly covered due to regression in Kotlin compiler version 2.0
-            https://github.com/jacoco/jacoco/issues/1840
-            https://youtrack.jetbrains.com/issue/KT-74617/Trivial-SMAP-optimization-leads-to-missing-debug-info-after-inline
-            */
-            requireCrossinline { lambda() } // assertPartlyCovered()
-        } // assertPartlyCovered()
+            requireCrossinline { lambda() } // assertFullyCovered()
+        } // assertFullyCovered()
     } // assertEmpty()
 
     fun requireCrossinline(lambda: () -> Unit) = lambda()
