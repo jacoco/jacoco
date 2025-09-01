@@ -253,4 +253,107 @@ public class KotlinComposeFilterTest extends FilterTestBase {
 				range7);
 	}
 
+	/**
+	 * <pre>
+	 * &#064;androidx.compose.runtime.Composable
+	 * fun example() {
+	 *   ... // body
+	 * }
+	 * </pre>
+	 *
+	 * after <a href=
+	 * "https://github.com/JetBrains/kotlin/commit/ee9217f8f0f37967684fbfe4a568c2b3c8707507">
+	 * change in Compose Kotlin compiler plugin version 2.1.0</a> transformed
+	 * into
+	 *
+	 * <pre>
+	 * fun example($composer: Composer?, $changed: Int) {
+	 *   $composer = $composer.startRestartGroup(...)
+	 *   sourceInformation($composer, ...)
+	 *   if ($composer.shouldExecute(...)) {
+	 *     ... // body
+	 *   } else {
+	 *     $composer.skipToGroupEnd()
+	 *   }
+	 *   $composer.endRestartGroup()?.updateScope { ... }
+	 * }
+	 * </pre>
+	 *
+	 * This <a href=
+	 * "https://github.com/JetBrains/kotlin/commit/5f7e5d1518e839c1f8514a5c145aad52b1ce1739">became
+	 * the default in Compose Kotlin compiler plugin version 2.2.0</a>
+	 */
+	@Test
+	public void should_filter_pausable_composition() {
+		final MethodNode m = new MethodNode(InstrSupport.ASM_API_VERSION, 0,
+				"example", "(Landroidx/compose/runtime/Composer;I)V", null,
+				null);
+		m.visitAnnotation("Landroidx/compose/runtime/Composable;", false);
+
+		final Range range1 = new Range();
+		final Range range2 = new Range();
+
+		m.visitVarInsn(ALOAD, 0);
+		range1.fromInclusive = m.instructions.getLast();
+		m.visitLdcInsn(Integer.valueOf(-933543558));
+		m.visitMethodInsn(INVOKEINTERFACE, "androidx/compose/runtime/Composer",
+				"startRestartGroup", "(I)Landroidx/compose/runtime/Composer;",
+				true);
+		m.visitVarInsn(ASTORE, 0);
+		m.visitVarInsn(ALOAD, 0);
+		m.visitVarInsn(ILOAD, 1);
+		final Label label1 = new Label();
+		m.visitJumpInsn(IFEQ, label1);
+		m.visitInsn(ICONST_1);
+		final Label label2 = new Label();
+		m.visitJumpInsn(GOTO, label2);
+		m.visitLabel(label1);
+		m.visitInsn(ICONST_0);
+		m.visitLabel(label2);
+		m.visitVarInsn(ILOAD, 1);
+		m.visitInsn(ICONST_1);
+		m.visitInsn(IAND);
+		m.visitMethodInsn(INVOKEINTERFACE, "androidx/compose/runtime/Composer",
+				"shouldExecute", "(ZI)Z", true);
+		final Label label3 = new Label();
+		m.visitJumpInsn(IFEQ, label3);
+		range1.toInclusive = m.instructions.getLast();
+
+		// body
+		final Label label5 = new Label();
+		m.visitJumpInsn(GOTO, label5);
+
+		m.visitLabel(label3);
+		m.visitVarInsn(ALOAD, 0);
+		m.visitMethodInsn(INVOKEINTERFACE, "androidx/compose/runtime/Composer",
+				"skipToGroupEnd", "()V", true);
+		m.visitLabel(label5);
+		m.visitVarInsn(ALOAD, 0);
+		m.visitMethodInsn(INVOKEINTERFACE, "androidx/compose/runtime/Composer",
+				"endRestartGroup",
+				"()Landroidx/compose/runtime/ScopeUpdateScope;", true);
+		m.visitInsn(DUP);
+		final Label label6 = new Label();
+		m.visitJumpInsn(IFNULL, label6);
+		range2.fromInclusive = m.instructions.getLast();
+		m.visitVarInsn(ILOAD, 1);
+		m.visitInvokeDynamicInsn("invoke",
+				"(I)Lkotlin/jvm/functions/Function2;", null);
+		m.visitMethodInsn(INVOKEINTERFACE,
+				"androidx/compose/runtime/ScopeUpdateScope", "updateScope",
+				"(Lkotlin/jvm/functions/Function2;)V", true);
+		final Label label7 = new Label();
+		m.visitJumpInsn(GOTO, label7);
+		m.visitLabel(label6);
+		m.visitInsn(POP);
+		range2.toInclusive = m.instructions.getLast();
+
+		m.visitLabel(label7);
+		m.visitInsn(RETURN);
+
+		filter.filter(m, context, output);
+
+		assertIgnored(m, range1, range2);
+	}
+
 }
