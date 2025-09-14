@@ -19,7 +19,7 @@ import org.jacoco.core.test.validation.targets.Stubs.nop
  */
 object KotlinJvmOverloadsTarget {
 
-    @JvmOverloads // assertFullyCovered()
+    @JvmOverloads // assertEmpty()
     fun example(p1: String = "p1", p2: String = "p2") { // assertFullyCovered()
         nop(p1 + p2) // assertFullyCovered()
     } // assertFullyCovered()
