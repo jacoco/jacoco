@@ -104,6 +104,28 @@ object KotlinSafeCallOperatorTarget {
         fullCoverage(B(""))
     }
 
+    private fun safeCallFollowedByElvisMultiline() {
+        fun nullOnly(b: B?): String =
+            b?.also { // assertPartlyCovered(2, 2)
+                nop(it) // assertNotCovered()
+            }?.c ?: "" // assertPartlyCovered()
+
+        fun nonNullOnly(b: B?): String =
+            b?.also { // assertPartlyCovered(2, 2)
+                nop(it) // assertFullyCovered()
+            }?.c ?: "" // assertPartlyCovered()
+
+        fun fullCoverage(b: B?): String =
+            b?.also { // assertFullyCovered(0, 4)
+                nop(it) // assertFullyCovered()
+            }?.c ?: "" // assertFullyCovered()
+
+        nullOnly(null)
+        nonNullOnly(B(""))
+        fullCoverage(null)
+        fullCoverage(B(""))
+    }
+
     private fun safeCallChainFollowedByElvis() {
         fun nullOnly(a: A?): String =
             a?.b?.c ?: "" // assertPartlyCovered(3, 3)
@@ -120,6 +142,28 @@ object KotlinSafeCallOperatorTarget {
         fullCoverage(A(B("")))
     }
 
+    private fun safeCallChainFollowedByElvisMultiline() {
+        fun nullOnly(a: A?): String =
+            a?.also { // assertPartlyCovered(2, 2)
+                nop() // assertNotCovered()
+            }?.b?.c ?: "" // assertPartlyCovered(1, 1)
+
+        fun nonNullOnly(a: A?): String =
+            a?.also { // assertFullyCovered(2, 2)
+                nop() // assertFullyCovered()
+            }?.b?.c ?: "" // assertPartlyCovered(1, 1)
+
+        fun fullCoverage(a: A?): String =
+            a?.also { // assertFullyCovered(0, 4)
+                nop() // assertFullyCovered()
+            }?.b?.c ?: "" // assertFullyCovered(0, 2)
+
+        nullOnly(null)
+        nonNullOnly(A(B("")))
+        fullCoverage(null)
+        fullCoverage(A(B("")))
+    }
+
     @JvmStatic
     fun main(args: Array<String>) {
         safeCall()
@@ -127,7 +171,9 @@ object KotlinSafeCallOperatorTarget {
         safeCallChainMultiline()
         safeCallChainException()
         safeCallFollowedByElvis()
+        safeCallFollowedByElvisMultiline()
         safeCallChainFollowedByElvis()
+        safeCallChainFollowedByElvisMultiline()
     }
 
 }
