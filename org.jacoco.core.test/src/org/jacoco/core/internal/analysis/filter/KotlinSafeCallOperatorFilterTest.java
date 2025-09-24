@@ -89,7 +89,7 @@ public class KotlinSafeCallOperatorFilterTest extends FilterTestBase {
 	 * fun example(a: A?): String? =
 	 *     a
 	 *         ?.b
-	 *         ?.c
+	 *         ?.c // line 6
 	 * </pre>
 	 */
 	@Test
@@ -108,6 +108,9 @@ public class KotlinSafeCallOperatorFilterTest extends FilterTestBase {
 		m.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "A", "getB", "()LB;", false);
 
 		m.visitVarInsn(Opcodes.ASTORE, 1);
+		final Label lineNumberLabel = new Label();
+		m.visitLabel(lineNumberLabel);
+		m.visitLineNumber(6, lineNumberLabel);
 		m.visitVarInsn(Opcodes.ALOAD, 1);
 		m.visitJumpInsn(Opcodes.IFNULL, label1);
 		final AbstractInsnNode ifNullInstruction2 = m.instructions.getLast();
