@@ -108,12 +108,12 @@ final class KotlinSafeCallOperatorFilter implements IFilter {
 					continue;
 				}
 			} else if (target.getOpcode() == Opcodes.ACONST_NULL) {
-				if (i.getPrevious().getOpcode() != Opcodes.ALOAD) {
+				final AbstractInsnNode p1 = preceding(i);
+				if (p1.getOpcode() != Opcodes.ALOAD) {
 					continue;
 				}
 				if (chain != null) {
-					final AbstractInsnNode p1 = i.getPrevious();
-					final AbstractInsnNode p2 = p1.getPrevious();
+					final AbstractInsnNode p2 = preceding(p1);
 					if (p2 == null || p2.getOpcode() != Opcodes.ASTORE
 							|| ((VarInsnNode) p1).var != ((VarInsnNode) p2).var) {
 						continue;
@@ -129,6 +129,21 @@ final class KotlinSafeCallOperatorFilter implements IFilter {
 			chain.add(jump);
 		}
 		return chains.values();
+	}
+
+	/**
+	 * @return non pseudo-instruction preceding given
+	 */
+	private static AbstractInsnNode preceding(AbstractInsnNode i) {
+		if (i == null) {
+			return null;
+		}
+		do {
+			i = i.getPrevious();
+		} while (i != null && (i.getType() == AbstractInsnNode.LABEL
+				|| i.getType() == AbstractInsnNode.LINE
+				|| i.getType() == AbstractInsnNode.FRAME));
+		return i;
 	}
 
 }
