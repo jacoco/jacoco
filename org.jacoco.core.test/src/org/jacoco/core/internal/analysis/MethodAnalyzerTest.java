@@ -15,8 +15,6 @@ package org.jacoco.core.internal.analysis;
 import static org.junit.Assert.assertEquals;
 
 import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Set;
 
 import org.jacoco.core.analysis.ILine;
 import org.jacoco.core.analysis.IMethodCoverage;
@@ -26,6 +24,7 @@ import org.jacoco.core.internal.analysis.filter.Filters;
 import org.jacoco.core.internal.analysis.filter.IFilter;
 import org.jacoco.core.internal.analysis.filter.IFilterContext;
 import org.jacoco.core.internal.analysis.filter.IFilterOutput;
+import org.jacoco.core.internal.analysis.filter.Replacements;
 import org.jacoco.core.internal.flow.IProbeIdGenerator;
 import org.jacoco.core.internal.flow.LabelFlowAnalyzer;
 import org.jacoco.core.internal.flow.MethodProbesAdapter;
@@ -34,6 +33,7 @@ import org.junit.Test;
 import org.objectweb.asm.Label;
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.tree.AbstractInsnNode;
+import org.objectweb.asm.tree.JumpInsnNode;
 import org.objectweb.asm.tree.MethodNode;
 import org.objectweb.asm.tree.TryCatchBlockNode;
 import org.objectweb.asm.util.CheckMethodAdapter;
@@ -514,7 +514,137 @@ public class MethodAnalyzerTest implements IProbeIdGenerator {
 		assertLine(1002, 0, 1, 0, 0);
 	}
 
-	// === Scenario: table switch with and without replace filtering ===
+	// === Scenario: replace filtering of Kotlin safe call followed by elvis ===
+
+	/**
+	 * <pre>
+	 * data class B(val c: String)
+	 * fun safeCallElvis(b: B?): String =
+	 *     b?.c ?: ""
+	 * </pre>
+	 */
+	private void createKotlinSafeCallElvis() {
+		final Label l0 = new Label();
+		method.visitLabel(l0);
+		method.visitLineNumber(1001, l0);
+		final Label l1 = new Label();
+		final Label l2 = new Label();
+		method.visitVarInsn(Opcodes.ALOAD, 0);
+		method.visitInsn(Opcodes.DUP);
+		// probe[0] when jump to l1
+		method.visitJumpInsn(Opcodes.IFNULL, l1);
+		method.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "B", "getC",
+				"()Ljava/lang/String;", false);
+		method.visitInsn(Opcodes.DUP);
+		// probe[1] when jump to l2
+		method.visitJumpInsn(Opcodes.IFNONNULL, l2);
+		// probe[2] is unreachable because `b.c` can not be null
+		method.visitLabel(l1);
+		method.visitInsn(Opcodes.POP);
+		method.visitLdcInsn("");
+		// probe[3]
+		method.visitLabel(l2);
+		// probe[4]
+		method.visitInsn(Opcodes.ARETURN);
+	}
+
+	@Test
+	public void kotlin_safe_call_elvis_should_create_4_probes() {
+		createKotlinSafeCallElvis();
+		runMethodAnalzer();
+		assertEquals(5, nextProbeId);
+	}
+
+	private static final IFilter KOTLIN_SAFE_CALL_ELVIS_FILTER = new IFilter() {
+		public void filter(final MethodNode methodNode,
+				final IFilterContext context, final IFilterOutput output) {
+			final AbstractInsnNode ifNullInstruction = methodNode.instructions
+					.get(4);
+			assertEquals(Opcodes.IFNULL, ifNullInstruction.getOpcode());
+			final AbstractInsnNode ifNonNullInstruction = methodNode.instructions
+					.get(7);
+			assertEquals(Opcodes.IFNONNULL, ifNonNullInstruction.getOpcode());
+			final AbstractInsnNode nullTarget = ((JumpInsnNode) ifNullInstruction).label;
+			final AbstractInsnNode nonNullTarget = ((JumpInsnNode) ifNonNullInstruction).label;
+			final Replacements replacements = new Replacements();
+			replacements.add(nullTarget, ifNonNullInstruction, 0);
+			replacements.add(nullTarget, ifNullInstruction, 1);
+			replacements.add(nonNullTarget, ifNonNullInstruction, 1);
+			output.replaceBranches(ifNonNullInstruction, replacements);
+		}
+	};
+
+	/**
+	 * Execution of
+	 *
+	 * <pre>
+	 * safeCallElvis(B(""))
+	 * </pre>
+	 */
+	@Test
+	public void kotlin_safe_call_elvis_with_filter_should_show_partial_branch_coverage_when_only_non_null_case_covered() {
+		createKotlinSafeCallElvis();
+		probes[1] = true;
+		probes[4] = true;
+		runMethodAnalzer(KOTLIN_SAFE_CALL_ELVIS_FILTER);
+
+		assertLine(1001, 2, 7, 2, 2);
+	}
+
+	/**
+	 * Execution of
+	 *
+	 * <pre>
+	 * safeCallElvis(null)
+	 * </pre>
+	 */
+	@Test
+	public void kotlin_safe_call_elvis_with_filter_should_show_partial_branch_coverage_when_only_null_case_covered() {
+		createKotlinSafeCallElvis();
+		probes[0] = true;
+		probes[3] = true;
+		runMethodAnalzer(KOTLIN_SAFE_CALL_ELVIS_FILTER);
+
+		assertLine(1001, 3, 6, 2, 2);
+	}
+
+	/**
+	 * Execution of
+	 *
+	 * <pre>
+	 * safeCallElvis(null)
+	 * safeCallElvis(B(""))
+	 * </pre>
+	 */
+	@Test
+	public void kotlin_safe_call_elvis_with_filter_should_show_full_branch_coverage_when_both_cases_covered() {
+		createKotlinSafeCallElvis();
+		// non-null case
+		probes[1] = true;
+		probes[4] = true;
+		// null case
+		probes[0] = true;
+		probes[3] = true;
+		runMethodAnalzer(KOTLIN_SAFE_CALL_ELVIS_FILTER);
+
+		assertLine(1001, 0, 9, 0, 4);
+	}
+
+	@Test
+	public void kotlin_safe_call_elvis_without_filter() {
+		createKotlinSafeCallElvis();
+		// non-null case
+		probes[1] = true;
+		probes[4] = true;
+		// null case
+		probes[0] = true;
+		probes[3] = true;
+		runMethodAnalzer();
+
+		assertLine(1001, 0, 9, 1, 3);
+	}
+
+	// === Scenario: table switch ===
 
 	private void createTableSwitch() {
 		final Label l0 = new Label();
@@ -557,41 +687,6 @@ public class MethodAnalyzerTest implements IProbeIdGenerator {
 		createTableSwitch();
 		runMethodAnalzer();
 		assertEquals(4, nextProbeId);
-	}
-
-	private static final IFilter SWITCH_FILTER = new IFilter() {
-		public void filter(final MethodNode methodNode,
-				final IFilterContext context, final IFilterOutput output) {
-			final AbstractInsnNode i = methodNode.instructions.get(3);
-			assertEquals(Opcodes.TABLESWITCH, i.getOpcode());
-			final AbstractInsnNode t1 = methodNode.instructions.get(6);
-			assertEquals(Opcodes.BIPUSH, t1.getOpcode());
-			final AbstractInsnNode t2 = methodNode.instructions.get(13);
-			assertEquals(Opcodes.BIPUSH, t2.getOpcode());
-
-			final Set<AbstractInsnNode> newTargets = new HashSet<AbstractInsnNode>();
-			newTargets.add(t1);
-			newTargets.add(t2);
-			output.replaceBranches(i, newTargets);
-		}
-	};
-
-	@Test
-	public void table_switch_with_filter_should_show_2_branches_when_original_replaced() {
-		createTableSwitch();
-		runMethodAnalzer(SWITCH_FILTER);
-
-		assertLine(1001, 2, 0, 2, 0);
-	}
-
-	@Test
-	public void table_switch_with_filter_should_show_full_branch_coverage_when_new_targets_covered() {
-		createTableSwitch();
-		probes[0] = true;
-		probes[1] = true;
-		runMethodAnalzer(SWITCH_FILTER);
-
-		assertLine(1001, 0, 2, 0, 2);
 	}
 
 	@Test

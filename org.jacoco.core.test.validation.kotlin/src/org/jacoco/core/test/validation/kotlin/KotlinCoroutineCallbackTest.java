@@ -12,27 +12,16 @@
  *******************************************************************************/
 package org.jacoco.core.test.validation.kotlin;
 
-import java.util.Arrays;
-import java.util.Collection;
-
 import org.jacoco.core.test.validation.ValidationTestBase;
-import org.jacoco.core.test.validation.kotlin.targets.KotlinCrossinlineTarget;
+import org.jacoco.core.test.validation.kotlin.targets.KotlinCoroutineCallbackTarget;
 
 /**
- * Test of code coverage in {@link KotlinCrossinlineTarget}.
+ * Test of code coverage in {@link KotlinCoroutineCallbackTarget}.
  */
-public class KotlinCrossinlineTest extends ValidationTestBase {
+public class KotlinCoroutineCallbackTest extends ValidationTestBase {
 
-	public KotlinCrossinlineTest() {
-		super(KotlinCrossinlineTarget.class);
-	}
-
-	@Override
-	protected Collection<String> additionalClassesForAnalysis() {
-		// Analyze SMAPs in non executed classes:
-		return Arrays.asList(
-				"org.jacoco.core.test.validation.kotlin.targets.KotlinCrossinlineTarget$example$1",
-				"org.jacoco.core.test.validation.kotlin.targets.KotlinCrossinlineTarget$example$1$1");
+	public KotlinCoroutineCallbackTest() {
+		super(KotlinCoroutineCallbackTarget.class);
 	}
 
 }

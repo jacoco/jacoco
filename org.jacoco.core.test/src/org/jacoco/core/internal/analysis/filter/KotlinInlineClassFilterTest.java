@@ -62,7 +62,7 @@ public class KotlinInlineClassFilterTest extends FilterTestBase {
 
 		filter.filter(m, context, output);
 
-		assertIgnored();
+		assertIgnored(m);
 	}
 
 	/**
@@ -80,7 +80,7 @@ public class KotlinInlineClassFilterTest extends FilterTestBase {
 
 		filter.filter(m, context, output);
 
-		assertIgnored();
+		assertIgnored(m);
 	}
 
 }

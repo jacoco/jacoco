@@ -32,9 +32,44 @@ final class KotlinCoroutineFilter implements IFilter {
 			final IFilterContext context, final IFilterOutput output) {
 		new Matcher().match(methodNode, output);
 		new Matcher().matchOptimizedTailCall(methodNode, output);
+		new Matcher().matchSuspendCoroutineUninterceptedOrReturn(methodNode,
+				output);
 	}
 
 	private static class Matcher extends AbstractMatcher {
+		/**
+		 * Filters <a href=
+		 * "https://github.com/JetBrains/kotlin/blob/v2.1.20/compiler/backend/src/org/jetbrains/kotlin/codegen/coroutines/coroutineCodegenUtil.kt#L89-L132">
+		 * bytecode generated</a> for inlined invocations of <a href=
+		 * "https://kotlinlang.org/api/core/kotlin-stdlib/kotlin.coroutines.intrinsics/suspend-coroutine-unintercepted-or-return.html">
+		 * kotlin.coroutines.intrinsics/suspendCoroutineUninterceptedOrReturn</a>
+		 */
+		private void matchSuspendCoroutineUninterceptedOrReturn(
+				final MethodNode methodNode, final IFilterOutput output) {
+			for (final AbstractInsnNode i : methodNode.instructions) {
+				cursor = i;
+				nextIs(Opcodes.DUP);
+				nextIsInvoke(Opcodes.INVOKESTATIC,
+						"kotlin/coroutines/intrinsics/IntrinsicsKt",
+						"getCOROUTINE_SUSPENDED", "()Ljava/lang/Object;");
+				nextIs(Opcodes.IF_ACMPNE);
+				final JumpInsnNode jumpInstruction = (JumpInsnNode) cursor;
+				nextIs(Opcodes.ALOAD);
+				if (cursor != null
+						&& cursor.getNext().getOpcode() == Opcodes.CHECKCAST) {
+					nextIsType(Opcodes.CHECKCAST,
+							"kotlin/coroutines/Continuation");
+				}
+				nextIsInvoke(Opcodes.INVOKESTATIC,
+						"kotlin/coroutines/jvm/internal/DebugProbesKt",
+						"probeCoroutineSuspended",
+						"(Lkotlin/coroutines/Continuation;)V");
+				if (cursor != null
+						&& jumpInstruction.label == cursor.getNext()) {
+					output.ignore(jumpInstruction, cursor);
+				}
+			}
+		}
 
 		private void matchOptimizedTailCall(final MethodNode methodNode,
 				final IFilterOutput output) {
@@ -55,32 +90,23 @@ final class KotlinCoroutineFilter implements IFilter {
 
 		private void match(final MethodNode methodNode,
 				final IFilterOutput output) {
-			cursor = skipNonOpcodes(methodNode.instructions.getFirst());
-			if (cursor == null || cursor.getOpcode() != Opcodes.INVOKESTATIC) {
-				cursor = null;
-			} else {
-				final MethodInsnNode m = (MethodInsnNode) cursor;
-				if (!"kotlin/coroutines/intrinsics/IntrinsicsKt".equals(m.owner)
-						|| !"getCOROUTINE_SUSPENDED".equals(m.name)
-						|| !"()Ljava/lang/Object;".equals(m.desc)) {
-					cursor = null;
+			for (cursor = methodNode.instructions
+					.getFirst(); cursor != null; cursor = cursor.getNext()) {
+				if (cursor.getOpcode() == Opcodes.INVOKESTATIC) {
+					final MethodInsnNode m = (MethodInsnNode) cursor;
+					if ("kotlin/coroutines/intrinsics/IntrinsicsKt".equals(
+							m.owner) && "getCOROUTINE_SUSPENDED".equals(m.name)
+							&& "()Ljava/lang/Object;".equals(m.desc)) {
+						break;
+					}
 				}
 			}
-
 			if (cursor == null) {
-				cursor = skipNonOpcodes(methodNode.instructions.getFirst());
-
-				nextIsCreateStateInstance();
-
-				nextIsInvoke(Opcodes.INVOKESTATIC,
-						"kotlin/coroutines/intrinsics/IntrinsicsKt",
-						"getCOROUTINE_SUSPENDED", "()Ljava/lang/Object;");
+				return;
 			}
 
 			final TableSwitchInsnNode s;
-			if (cursor != null
-					&& Opcodes.POP == skipNonOpcodes(cursor.getNext())
-							.getOpcode()) {
+			if (Opcodes.POP == skipNonOpcodes(cursor.getNext()).getOpcode()) {
 				// suspending lambda without suspension points
 				nextIs(Opcodes.POP);
 				s = nextIsStateSwitch();
@@ -112,11 +138,7 @@ final class KotlinCoroutineFilter implements IFilter {
 				cursor = i;
 				nextIsVar(Opcodes.ALOAD, "COROUTINE_SUSPENDED");
 				nextIs(Opcodes.IF_ACMPNE);
-				if (cursor == null) {
-					continue;
-				}
-				final AbstractInsnNode continuationAfterLoadedResult = skipNonOpcodes(
-						((JumpInsnNode) cursor).label);
+				final JumpInsnNode jumpToContinuationAfterLoadedResult = (JumpInsnNode) cursor;
 				nextIsVar(Opcodes.ALOAD, "COROUTINE_SUSPENDED");
 				nextIs(Opcodes.ARETURN);
 				if (cursor == null
@@ -124,21 +146,10 @@ final class KotlinCoroutineFilter implements IFilter {
 								s.labels.get(suspensionPoint))) {
 					continue;
 				}
-
-				for (AbstractInsnNode j = i; j != null; j = j.getNext()) {
-					cursor = j;
-					nextIs(Opcodes.ALOAD);
-					nextIsThrowOnFailure();
-
-					nextIs(Opcodes.ALOAD);
-					if (cursor != null && skipNonOpcodes(cursor
-							.getNext()) == continuationAfterLoadedResult) {
-						ignore.add(i);
-						ignore.add(cursor);
-						suspensionPoint++;
-						break;
-					}
-				}
+				ignore.add(i);
+				ignore.add(jumpToContinuationAfterLoadedResult.label
+						.getPrevious());
+				suspensionPoint++;
 			}
 
 			cursor = s.dflt;
@@ -193,55 +204,6 @@ final class KotlinCoroutineFilter implements IFilter {
 				nextIs(Opcodes.ATHROW);
 				nextIs(Opcodes.POP);
 			}
-		}
-
-		private void nextIsCreateStateInstance() {
-			nextIs(Opcodes.INSTANCEOF);
-
-			nextIs(Opcodes.IFEQ);
-			if (cursor == null) {
-				return;
-			}
-			final AbstractInsnNode createStateInstance = skipNonOpcodes(
-					((JumpInsnNode) cursor).label);
-
-			nextIs(Opcodes.ALOAD);
-			nextIs(Opcodes.CHECKCAST);
-			nextIs(Opcodes.ASTORE);
-
-			nextIs(Opcodes.ALOAD);
-			nextIs(Opcodes.GETFIELD);
-
-			nextIs(Opcodes.LDC);
-			nextIs(Opcodes.IAND);
-			nextIs(Opcodes.IFEQ);
-			if (cursor == null || skipNonOpcodes(
-					((JumpInsnNode) cursor).label) != createStateInstance) {
-				return;
-			}
-
-			nextIs(Opcodes.ALOAD);
-			nextIs(Opcodes.DUP);
-			nextIs(Opcodes.GETFIELD);
-
-			nextIs(Opcodes.LDC);
-			nextIs(Opcodes.ISUB);
-			nextIs(Opcodes.PUTFIELD);
-
-			nextIs(Opcodes.GOTO);
-			if (cursor == null) {
-				return;
-			}
-			final AbstractInsnNode afterCoroutineStateCreated = skipNonOpcodes(
-					((JumpInsnNode) cursor).label);
-
-			if (skipNonOpcodes(cursor.getNext()) != createStateInstance) {
-				return;
-			}
-
-			cursor = afterCoroutineStateCreated;
-			nextIs(Opcodes.GETFIELD);
-			nextIs(Opcodes.ASTORE);
 		}
 	}
 

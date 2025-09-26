@@ -12,8 +12,11 @@
  *******************************************************************************/
 package org.jacoco.core.test.validation.kotlin.targets
 
+import org.jacoco.core.test.validation.targets.Stubs.nop
+import org.jacoco.core.test.validation.targets.Stubs.string
+
 /**
- * Test target with `when` expressions with subject of type `String`.
+ * Test target with `when` expressions and statements with subject of type `String`.
  */
 object KotlinWhenStringTarget {
 
@@ -43,6 +46,26 @@ object KotlinWhenStringTarget {
             null -> "null" // assertFullyCovered()
             else -> "else" // assertFullyCovered()
         } // assertFullyCovered()
+
+    /**
+     * @see KotlinControlStructuresTarget.whenImplicitElseNotExecuted
+     */
+    private fun implicitElseNotExecuted(s: String) {
+        when (s) { // assertFullyCovered(1, 3)
+            "a" -> nop("case a") // assertFullyCovered()
+            "b" -> nop("case b") // assertFullyCovered()
+            "c" -> nop("case c") // assertFullyCovered()
+        } // assertEmpty()
+    } // assertFullyCovered()
+
+    private fun executedWithSameHashCodeAsFirstCase() {
+        when (string("\u0000a")) { // assertFullyCovered(3, 1)
+            "a" -> nop("case a") // assertNotCovered()
+            "b" -> nop("case b") // assertNotCovered()
+            "c" -> nop("case c") // assertNotCovered()
+            else -> nop("else") // assertFullyCovered()
+        } // assertEmpty()
+    } // assertFullyCovered()
 
     /**
      * Unlike [whenString]
@@ -78,6 +101,12 @@ object KotlinWhenStringTarget {
         whenStringNullableCase("c")
         whenStringNullableCase(null)
         whenStringNullableCase("")
+
+        implicitElseNotExecuted("a")
+        implicitElseNotExecuted("b")
+        implicitElseNotExecuted("c")
+
+        executedWithSameHashCodeAsFirstCase()
 
         whenStringBiggestHashCodeFirst("")
         whenStringBiggestHashCodeFirst("a")
