@@ -594,7 +594,7 @@
       </activation>
       <properties>
         <!-- Kotlin 2.2.20 doesn't support compilation into 26 -->
-        <kotlin.compiler.jvmTarget>23</kotlin.compiler.jvmTarget>
+        <kotlin.compiler.jvmTarget>24</kotlin.compiler.jvmTarget>
         <!-- Groovy 3.0.22 does not support compilation into 26 -->
         <groovy.targetBytecode>16</groovy.targetBytecode>
         <!-- see respective profile in org.jacoco.build about this override -->
