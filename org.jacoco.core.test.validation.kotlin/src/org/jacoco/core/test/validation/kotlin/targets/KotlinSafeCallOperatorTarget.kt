@@ -126,6 +126,28 @@ object KotlinSafeCallOperatorTarget {
         fullCoverage(B(""))
     }
 
+    private fun safeCallFollowedByElvisMultiline() {
+        fun nullOnly(b: B?): String =
+            b // assertPartlyCovered(1, 1)
+                ?.c // assertPartlyCovered(1, 1)
+                ?: "" // assertFullyCovered()
+
+        fun nonNullOnly(b: B?): String =
+            b // assertFullyCovered(1, 1)
+                ?.c // assertFullyCovered(1, 1)
+                ?: "" // assertPartlyCovered()
+
+        fun fullCoverage(b: B?): String =
+            b // assertFullyCovered(0, 2)
+                ?.c // assertFullyCovered(0, 2)
+                ?: "" // assertFullyCovered()
+
+        nullOnly(null)
+        nonNullOnly(B(""))
+        fullCoverage(null)
+        fullCoverage(B(""))
+    }
+
     private fun safeCallChainFollowedByElvis() {
         fun nullOnly(a: A?): String =
             a?.b?.c ?: "" // assertPartlyCovered(3, 3)
@@ -142,6 +164,31 @@ object KotlinSafeCallOperatorTarget {
         fullCoverage(A(B("")))
     }
 
+    private fun safeCallChainFollowedByElvisMultiline() {
+        fun nullOnly(a: A?): String =
+            a // assertPartlyCovered(1, 1)
+                ?.b // assertPartlyCovered(1, 1)
+                ?.c // assertPartlyCovered(1, 1)
+                ?: "" // assertFullyCovered()
+
+        fun nonNullOnly(a: A?): String =
+            a // assertFullyCovered(1, 1)
+                ?.b // assertFullyCovered(1, 1)
+                ?.c // assertFullyCovered(1, 1)
+                ?: "" // assertPartlyCovered()
+
+        fun fullCoverage(a: A?): String =
+            a // assertFullyCovered(0, 2)
+                ?.b // assertFullyCovered(0, 2)
+                ?.c // assertFullyCovered(0, 2)
+                ?: "" // assertFullyCovered()
+
+        nullOnly(null)
+        nonNullOnly(A(B("")))
+        fullCoverage(null)
+        fullCoverage(A(B("")))
+    }
+
     @JvmStatic
     fun main(args: Array<String>) {
         safeCall()
@@ -150,7 +197,9 @@ object KotlinSafeCallOperatorTarget {
         safeCallChainMultiline2()
         safeCallChainException()
         safeCallFollowedByElvis()
+        safeCallFollowedByElvisMultiline()
         safeCallChainFollowedByElvis()
+        safeCallChainFollowedByElvisMultiline()
     }
 
 }
