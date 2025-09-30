@@ -25,6 +25,7 @@
   <name>JaCoCo :: Test :: Core :: Validation Kotlin</name>
 
   <properties>
+    <!-- When upgrading Kotlin do not forget to update JVM targets in org.jacoco.core.test.validation/pom.xml -->
     <kotlin.version>2.2.20</kotlin.version>
   </properties>
 
