@@ -144,37 +144,8 @@ final class KotlinSafeCallOperatorFilter implements IFilter {
 						continue;
 					}
 				}
-			} else if (target.getType() != AbstractInsnNode.JUMP_INSN
-					&& target.getType() != AbstractInsnNode.TABLESWITCH_INSN
-					&& target.getType() != AbstractInsnNode.LOOKUPSWITCH_INSN) {
-				final AbstractInsnNode p1 = preceding(i, Opcodes.ALOAD);
-				if (p1 == null) {
-					continue;
-				} else if (chain == null) {
-					final AbstractInsnNode gotoInstruction = preceding(label,
-							Opcodes.GOTO);
-					final AbstractInsnNode loadInstruction1 = preceding(
-							gotoInstruction, Opcodes.ALOAD);
-					final AbstractInsnNode ifNullInstruction = preceding(
-							loadInstruction1, Opcodes.IFNULL);
-					final AbstractInsnNode loadInstruction2 = preceding(
-							ifNullInstruction, Opcodes.ALOAD);
-					final AbstractInsnNode storeInstruction = preceding(
-							loadInstruction2, Opcodes.ASTORE);
-					if (storeInstruction == null
-							|| ((JumpInsnNode) ifNullInstruction).label != label
-							|| ((VarInsnNode) loadInstruction1).var != ((VarInsnNode) loadInstruction2).var
-							|| ((VarInsnNode) loadInstruction1).var != ((VarInsnNode) storeInstruction).var) {
-						continue;
-					}
-				} else {
-					final AbstractInsnNode p2 = preceding(p1, Opcodes.ASTORE);
-					if (p2 == null
-							|| ((VarInsnNode) p1).var != ((VarInsnNode) p2).var) {
-						continue;
-					}
-				}
-			} else {
+			} else if (!isUnoptimizedSafeCallFollowedByElvis(jump, target,
+					chain)) {
 				continue;
 			}
 			if (chain == null) {
@@ -186,8 +157,41 @@ final class KotlinSafeCallOperatorFilter implements IFilter {
 		return chains.values();
 	}
 
+	private static boolean isUnoptimizedSafeCallFollowedByElvis(
+			final JumpInsnNode jump, final AbstractInsnNode target,
+			final ArrayList<JumpInsnNode> chain) {
+		if (target.getType() == AbstractInsnNode.JUMP_INSN
+				|| target.getType() == AbstractInsnNode.TABLESWITCH_INSN
+				|| target.getType() == AbstractInsnNode.LOOKUPSWITCH_INSN) {
+			return false;
+		}
+		final AbstractInsnNode p1 = preceding(jump, Opcodes.ALOAD);
+		if (p1 == null) {
+			return false;
+		} else if (chain == null) {
+			final AbstractInsnNode gotoInstruction = preceding(jump.label,
+					Opcodes.GOTO);
+			final AbstractInsnNode loadInstruction1 = preceding(gotoInstruction,
+					Opcodes.ALOAD);
+			final AbstractInsnNode ifNullInstruction = preceding(
+					loadInstruction1, Opcodes.IFNULL);
+			final AbstractInsnNode loadInstruction2 = preceding(
+					ifNullInstruction, Opcodes.ALOAD);
+			final AbstractInsnNode storeInstruction = preceding(
+					loadInstruction2, Opcodes.ASTORE);
+			return storeInstruction != null
+					&& ((JumpInsnNode) ifNullInstruction).label == jump.label
+					&& ((VarInsnNode) loadInstruction1).var == ((VarInsnNode) loadInstruction2).var
+					&& ((VarInsnNode) loadInstruction1).var == ((VarInsnNode) storeInstruction).var;
+		} else {
+			final AbstractInsnNode p2 = preceding(p1, Opcodes.ASTORE);
+			return p2 != null
+					&& ((VarInsnNode) p1).var == ((VarInsnNode) p2).var;
+		}
+	}
+
 	/**
-	 * @return non pseudo-instruction preceding given iff it has given opcode,
+	 * @return non pseudo-instruction preceding given if it has given opcode,
 	 *         {@code null} otherwise
 	 */
 	private static AbstractInsnNode preceding(AbstractInsnNode i,
