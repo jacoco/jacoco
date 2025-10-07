@@ -25,7 +25,8 @@
   <name>JaCoCo :: Test :: Core :: Validation Kotlin</name>
 
   <properties>
-    <kotlin.version>2.1.21</kotlin.version>
+    <!-- When upgrading Kotlin do not forget to update JVM targets in org.jacoco.core.test.validation/pom.xml -->
+    <kotlin.version>2.2.20</kotlin.version>
   </properties>
 
   <dependencies>
@@ -63,6 +64,13 @@
             <goals>
               <goal>compile</goal>
             </goals>
+            <configuration>
+              <args>
+                <!-- TODO `-jvm-default disable` or `-jvm-default no-compatibility` are workarounds for https://github.com/jacoco/jacoco/issues/1905 -->
+                <arg>-jvm-default</arg>
+                <arg>disable</arg>
+              </args>
+            </configuration>
           </execution>
         </executions>
         <configuration>

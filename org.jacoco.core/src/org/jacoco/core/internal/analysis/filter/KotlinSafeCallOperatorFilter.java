@@ -90,6 +90,31 @@ final class KotlinSafeCallOperatorFilter implements IFilter {
 	 * label:
 	 * ACONST_NULL
 	 * </pre>
+	 *
+	 * "unoptimized" safe call operator(s) followed by elvis operator:
+	 *
+	 * <pre>
+	 * ALOAD v0
+	 * IFNULL nullCase
+	 * ... // call 0
+	 *
+	 * ASTORE v1
+	 * ALOAD v1
+	 * IFNULL nullCase
+	 * ... // call 1
+	 *
+	 * ...
+	 *
+	 * ASTORE vN
+	 * ALOAD vN
+	 * IFNULL nullCase
+	 * ALOAD vN
+	 * GOTO nonNullCase
+	 * nullCase:
+	 * ... // right hand side of elvis operator
+	 * nonNullCase:
+	 * ...
+	 * </pre>
 	 */
 	private static Collection<ArrayList<JumpInsnNode>> findChains(
 			final MethodNode methodNode) {
@@ -108,18 +133,19 @@ final class KotlinSafeCallOperatorFilter implements IFilter {
 					continue;
 				}
 			} else if (target.getOpcode() == Opcodes.ACONST_NULL) {
-				if (i.getPrevious().getOpcode() != Opcodes.ALOAD) {
+				final AbstractInsnNode p1 = preceding(i, Opcodes.ALOAD);
+				if (p1 == null) {
 					continue;
 				}
 				if (chain != null) {
-					final AbstractInsnNode p1 = i.getPrevious();
-					final AbstractInsnNode p2 = p1.getPrevious();
-					if (p2 == null || p2.getOpcode() != Opcodes.ASTORE
+					final AbstractInsnNode p2 = preceding(p1, Opcodes.ASTORE);
+					if (p2 == null
 							|| ((VarInsnNode) p1).var != ((VarInsnNode) p2).var) {
 						continue;
 					}
 				}
-			} else {
+			} else if (!isUnoptimizedSafeCallFollowedByElvis(jump, target,
+					chain)) {
 				continue;
 			}
 			if (chain == null) {
@@ -129,6 +155,59 @@ final class KotlinSafeCallOperatorFilter implements IFilter {
 			chain.add(jump);
 		}
 		return chains.values();
+	}
+
+	private static boolean isUnoptimizedSafeCallFollowedByElvis(
+			final JumpInsnNode jump, final AbstractInsnNode target,
+			final ArrayList<JumpInsnNode> chain) {
+		if (target.getType() == AbstractInsnNode.JUMP_INSN
+				|| target.getType() == AbstractInsnNode.TABLESWITCH_INSN
+				|| target.getType() == AbstractInsnNode.LOOKUPSWITCH_INSN) {
+			return false;
+		}
+		final AbstractInsnNode p1 = preceding(jump, Opcodes.ALOAD);
+		if (p1 == null) {
+			return false;
+		} else if (chain == null) {
+			final AbstractInsnNode gotoInstruction = preceding(jump.label,
+					Opcodes.GOTO);
+			final AbstractInsnNode loadInstruction1 = preceding(gotoInstruction,
+					Opcodes.ALOAD);
+			final AbstractInsnNode ifNullInstruction = preceding(
+					loadInstruction1, Opcodes.IFNULL);
+			final AbstractInsnNode loadInstruction2 = preceding(
+					ifNullInstruction, Opcodes.ALOAD);
+			final AbstractInsnNode storeInstruction = preceding(
+					loadInstruction2, Opcodes.ASTORE);
+			return storeInstruction != null
+					&& ((JumpInsnNode) ifNullInstruction).label == jump.label
+					&& ((VarInsnNode) loadInstruction1).var == ((VarInsnNode) loadInstruction2).var
+					&& ((VarInsnNode) loadInstruction1).var == ((VarInsnNode) storeInstruction).var;
+		} else {
+			final AbstractInsnNode p2 = preceding(p1, Opcodes.ASTORE);
+			return p2 != null
+					&& ((VarInsnNode) p1).var == ((VarInsnNode) p2).var;
+		}
+	}
+
+	/**
+	 * @return non pseudo-instruction preceding given if it has given opcode,
+	 *         {@code null} otherwise
+	 */
+	private static AbstractInsnNode preceding(AbstractInsnNode i,
+			final int opcode) {
+		if (i == null) {
+			return null;
+		}
+		do {
+			i = i.getPrevious();
+			if (i == null) {
+				return null;
+			}
+		} while (i.getType() == AbstractInsnNode.LABEL
+				|| i.getType() == AbstractInsnNode.LINE
+				|| i.getType() == AbstractInsnNode.FRAME);
+		return i.getOpcode() == opcode ? i : null;
 	}
 
 }

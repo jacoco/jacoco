@@ -27,7 +27,8 @@
 
   <properties>
     <gmaven.version>3.0.0</gmaven.version>
-    <groovy.version>3.0.22</groovy.version>
+    <!-- When upgrading Groovy do not forget to update JVM targets in org.jacoco.core.test.validation/pom.xml -->
+    <groovy.version>3.0.25</groovy.version>
   </properties>
 
   <dependencies>
