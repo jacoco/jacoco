@@ -26,12 +26,12 @@ import kotlinx.serialization.encoding.Encoder
  */
 object KotlinSerializableTarget {
 
-    @Serializable // assertEmpty()
+    @Serializable // assertFullyCovered()
     data class Example( // assertFullyCovered()
         @SerialName("d") val data: String // assertFullyCovered()
     ) // assertEmpty()
 
-    @Serializable(with = CustomSerializer::class) // assertEmpty()
+    @Serializable(with = CustomSerializer::class) // assertFullyCovered()
     data class ExampleWithCustomSerializer( // assertFullyCovered()
         val data: String // assertFullyCovered()
     ) // assertEmpty()

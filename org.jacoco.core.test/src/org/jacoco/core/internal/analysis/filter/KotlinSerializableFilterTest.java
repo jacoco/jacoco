@@ -65,6 +65,8 @@ public class KotlinSerializableFilterTest extends FilterTestBase {
 	}
 
 	/**
+	 * Kotlin 2.1.21 for
+	 *
 	 * <pre>
 	 * &#064;kotlinx.serialization.Serializable // line 1
 	 * data class Example(val data: String)
