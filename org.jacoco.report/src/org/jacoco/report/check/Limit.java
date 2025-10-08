@@ -72,6 +72,8 @@ public class Limit {
 	}
 
 	/**
+	 * Returns the configured counter entity to check.
+	 *
 	 * @return the configured counter entity to check
 	 */
 	public CounterEntity getEntity() {
@@ -90,6 +92,8 @@ public class Limit {
 	}
 
 	/**
+	 * Returns the configured value to check.
+	 *
 	 * @return the configured value to check
 	 */
 	public CounterValue getValue() {
@@ -108,6 +112,9 @@ public class Limit {
 	}
 
 	/**
+	 * Returns configured minimum value, or <code>null</code> if no minimum is
+	 * given.
+	 *
 	 * @return configured minimum value, or <code>null</code> if no minimum is
 	 *         given
 	 */
@@ -131,6 +138,9 @@ public class Limit {
 	}
 
 	/**
+	 * Returns configured maximum value, or <code>null</code> if no maximum is
+	 * given.
+	 *
 	 * @return configured maximum value, or <code>null</code> if no maximum is
 	 *         given
 	 */
