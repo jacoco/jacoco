@@ -211,7 +211,7 @@ public class KotlinSerializableFilterTest extends FilterTestBase {
 
 		filter.filter(m, context, output);
 
-		// FIXME
+		// FIXME https://github.com/jacoco/jacoco/issues/1971
 		assertIgnored(m);
 	}
 
