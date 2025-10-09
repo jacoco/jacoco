@@ -76,6 +76,9 @@ final class KotlinSerializableFilter implements IFilter {
 			cursor = methodNode.instructions.getFirst();
 			nextIs(Opcodes.GETSTATIC);
 			final FieldInsnNode getStaticInstruction = (FieldInsnNode) cursor;
+			if (cursor == null) {
+				return false;
+			}
 			final AbstractInsnNode lineNumberInstruction = cursor.getPrevious();
 			nextIsType(Opcodes.CHECKCAST, "kotlinx/serialization/KSerializer");
 			nextIs(Opcodes.ARETURN);

@@ -171,4 +171,48 @@ public class KotlinSerializableFilterTest extends FilterTestBase {
 		assertIgnored(m);
 	}
 
+	/**
+	 * <pre>
+	 * &#064;kotlinx.serialization.Serializable // line 1
+	 * enum class Example {
+	 *     V
+	 * }
+	 * </pre>
+	 *
+	 * <pre>
+	 * &#064;kotlinx.serialization.Serializable // line 1
+	 * sealed class Example {
+	 * }
+	 * </pre>
+	 */
+	@Test
+	public void should_filter_generated_serializer_method_in_companions_of_enum_and_sealed_class() {
+		context.className = "Example$Companion";
+
+		final MethodNode initMethod = new MethodNode(Opcodes.ACC_PRIVATE,
+				"<init>", "()V", null, null);
+		final Label initMethodLineNumberLabel = new Label();
+		initMethod.visitLabel(initMethodLineNumberLabel);
+		initMethod.visitLineNumber(1, initMethodLineNumberLabel);
+		filter.filter(initMethod, context, output);
+
+		final MethodNode m = new MethodNode(
+				Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "serializer",
+				"()Lkotlinx/serialization/KSerializer;",
+				"()Lkotlinx/serialization/KSerializer<LExample;>;", null);
+		final Label label0 = new Label();
+		m.visitLabel(label0);
+		m.visitLineNumber(1, label0);
+		m.visitVarInsn(Opcodes.ALOAD, 0);
+		m.visitMethodInsn(Opcodes.INVOKESPECIAL, "Example$Companion",
+				"get$cachedSerializer", "()Lkotlinx/serialization/KSerializer;",
+				false);
+		m.visitInsn(Opcodes.ARETURN);
+
+		filter.filter(m, context, output);
+
+		// FIXME https://github.com/jacoco/jacoco/issues/1971
+		assertIgnored(m);
+	}
+
 }
