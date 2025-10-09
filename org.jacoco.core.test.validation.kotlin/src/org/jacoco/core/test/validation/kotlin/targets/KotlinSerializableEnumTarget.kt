@@ -19,10 +19,10 @@ import kotlinx.serialization.Serializable
  */
 object KotlinSerializableEnumTarget {
 
-    @Serializable
-    enum class E {
-        V
-    }
+    @Serializable // assertFullyCovered()
+    enum class E { // assertEmpty()
+        V // assertFullyCovered()
+    } // assertFullyCovered()
 
     @JvmStatic
     fun main(args: Array<String>) {
