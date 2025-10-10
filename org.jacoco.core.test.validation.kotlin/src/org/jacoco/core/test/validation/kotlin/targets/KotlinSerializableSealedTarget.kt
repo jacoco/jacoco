@@ -19,11 +19,13 @@ import kotlinx.serialization.Serializable
  */
 object KotlinSerializableSealedTarget {
 
-    @Serializable
-    private sealed class Sealed {
-        @Serializable
-        data class A(val data: String): Sealed()
-    }
+    @Serializable // assertFullyCovered()
+    private sealed class Sealed { // assertEmpty()
+        @Serializable // assertFullyCovered()
+        data class A( // assertFullyCovered()
+            val data: String // assertFullyCovered()
+        ): Sealed() // assertEmpty()
+    } // assertFullyCovered()
 
     @JvmStatic
     fun main(args: Array<String>) {

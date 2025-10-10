@@ -30,21 +30,25 @@ final class KotlinSerializableFilter implements IFilter {
 
 	public void filter(final MethodNode methodNode,
 			final IFilterContext context, final IFilterOutput output) {
-		if (context.getClassName().endsWith("$Companion")) {
-			if (methodNode.name.equals("<init>")
-					&& methodNode.desc.equals("()V")) {
-				lineNumber = -1;
-				for (final AbstractInsnNode i : methodNode.instructions) {
-					if (i.getType() == AbstractInsnNode.LINE) {
-						lineNumber = ((LineNumberNode) i).line;
-						return;
-					}
+		if (context.getClassName().endsWith("$Companion")
+				&& methodNode.name.equals("<init>")
+				&& methodNode.desc.equals("()V")) {
+			lineNumber = -1;
+			for (final AbstractInsnNode i : methodNode.instructions) {
+				if (i.getType() == AbstractInsnNode.LINE) {
+					lineNumber = ((LineNumberNode) i).line;
+					return;
 				}
 			}
-			if (methodNode.name.equals("serializer")
-					&& methodNode.desc
-							.equals("()Lkotlinx/serialization/KSerializer;")
-					&& new Matcher().match(methodNode, lineNumber)) {
+			return;
+		}
+
+		if (methodNode.name.equals("serializer") && methodNode.desc
+				.equals("()Lkotlinx/serialization/KSerializer;")) {
+			final Matcher matcher = new Matcher();
+			if (matcher.matchSerializer(methodNode, lineNumber)
+					|| matcher.matchCachedSerializer(methodNode,
+							context.getClassName())) {
 				output.ignore(methodNode.instructions.getFirst(),
 						methodNode.instructions.getLast());
 			}
@@ -61,6 +65,17 @@ final class KotlinSerializableFilter implements IFilter {
 			return;
 		}
 
+		if ((methodNode.name.equals("get$cachedSerializer")
+				// https://github.com/JetBrains/kotlin/blob/v2.2.20/plugins/kotlinx-serialization/kotlinx-serialization.backend/src/org/jetbrains/kotlinx/serialization/compiler/backend/ir/IrBuilderWithPluginContext.kt#L61
+				|| methodNode.name.startsWith("_init_$_anonymous_")
+				|| methodNode.name.startsWith("_childSerializers$_anonymous_"))
+				&& methodNode.desc
+						.equals("()Lkotlinx/serialization/KSerializer;")) {
+			output.ignore(methodNode.instructions.getFirst(),
+					methodNode.instructions.getLast());
+			return;
+		}
+
 		final Type[] argumentTypes = Type.getArgumentTypes(methodNode.desc);
 		if (argumentTypes.length > 1 && argumentTypes[argumentTypes.length - 1]
 				.getClassName()
@@ -71,7 +86,7 @@ final class KotlinSerializableFilter implements IFilter {
 	}
 
 	private static class Matcher extends AbstractMatcher {
-		public boolean match(final MethodNode methodNode,
+		public boolean matchSerializer(final MethodNode methodNode,
 				final int lineNumber) {
 			cursor = methodNode.instructions.getFirst();
 			nextIs(Opcodes.GETSTATIC);
@@ -87,6 +102,16 @@ final class KotlinSerializableFilter implements IFilter {
 					&& (lineNumberInstruction instanceof LineNumberNode)
 					&& (lineNumber == -1
 							|| lineNumber == ((LineNumberNode) lineNumberInstruction).line);
+		}
+
+		private boolean matchCachedSerializer(final MethodNode methodNode,
+				final String className) {
+			firstIsALoad0(methodNode);
+			nextIsInvoke(Opcodes.INVOKESPECIAL, className,
+					"get$cachedSerializer",
+					"()Lkotlinx/serialization/KSerializer;");
+			nextIs(Opcodes.ARETURN);
+			return cursor != null;
 		}
 	}
 

@@ -12,6 +12,9 @@
  *******************************************************************************/
 package org.jacoco.core.test.validation.kotlin;
 
+import java.util.Collection;
+import java.util.Collections;
+
 import org.jacoco.core.test.validation.ValidationTestBase;
 import org.jacoco.core.test.validation.kotlin.targets.KotlinSerializableTarget;
 import org.junit.Test;
@@ -23,6 +26,12 @@ public class KotlinSerializableTest extends ValidationTestBase {
 
 	public KotlinSerializableTest() {
 		super(KotlinSerializableTarget.class);
+	}
+
+	@Override
+	protected Collection<String> additionalClassesForAnalysis() {
+		return Collections.singletonList(
+				"org.jacoco.core.test.validation.kotlin.targets.KotlinSerializableTarget$Example$$serializer");
 	}
 
 	@Test

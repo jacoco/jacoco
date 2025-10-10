@@ -13,16 +13,16 @@
 package org.jacoco.core.test.validation.kotlin;
 
 import org.jacoco.core.test.validation.ValidationTestBase;
-import org.jacoco.core.test.validation.kotlin.targets.KotlinSerializableEnumTarget;
+import org.jacoco.core.test.validation.kotlin.targets.KotlinSerializableObjectTarget;
 import org.junit.Test;
 
 /**
- * Test of code coverage in {@link KotlinSerializableEnumTarget}.
+ * Test of code coverage in {@link KotlinSerializableObjectTarget}.
  */
-public class KotlinSerializableEnumTest extends ValidationTestBase {
+public class KotlinSerializableObjectTest extends ValidationTestBase {
 
-	public KotlinSerializableEnumTest() {
-		super(KotlinSerializableEnumTarget.class);
+	public KotlinSerializableObjectTest() {
+		super(KotlinSerializableObjectTarget.class);
 	}
 
 	@Test

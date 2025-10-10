@@ -10,24 +10,22 @@
  *    Evgeny Mandrikov - initial API and implementation
  *
  *******************************************************************************/
-package org.jacoco.core.test.validation.kotlin;
+package org.jacoco.core.test.validation.kotlin.targets
 
-import org.jacoco.core.test.validation.ValidationTestBase;
-import org.jacoco.core.test.validation.kotlin.targets.KotlinSerializableEnumTarget;
-import org.junit.Test;
+import kotlinx.serialization.Serializable
 
 /**
- * Test of code coverage in {@link KotlinSerializableEnumTarget}.
+ * Test target with [Serializable] `object`.
  */
-public class KotlinSerializableEnumTest extends ValidationTestBase {
+object KotlinSerializableObjectTarget {
 
-	public KotlinSerializableEnumTest() {
-		super(KotlinSerializableEnumTarget.class);
-	}
+    @Serializable // assertFullyCovered()
+    private object Example { // assertEmpty()
+    } // assertFullyCovered()
 
-	@Test
-	public void test_method_count() {
-		assertMethodCount(/* main + static initializer */2);
-	}
+    @JvmStatic
+    fun main(args: Array<String>) {
+        Example.toString()
+    }
 
 }
