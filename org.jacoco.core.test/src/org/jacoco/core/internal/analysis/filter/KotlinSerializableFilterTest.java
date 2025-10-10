@@ -172,6 +172,15 @@ public class KotlinSerializableFilterTest extends FilterTestBase {
 	}
 
 	/**
+	 * <code>Example.serializer</code> in case of
+	 *
+	 * <pre>
+	 * &#064;kotlinx.serialization.Serializable // line 1
+	 * object Example
+	 * </pre>
+	 *
+	 * <code>Example$Companion.serializer</code> in case of
+	 *
 	 * <pre>
 	 * &#064;kotlinx.serialization.Serializable // line 1
 	 * enum class Example {
@@ -181,20 +190,12 @@ public class KotlinSerializableFilterTest extends FilterTestBase {
 	 *
 	 * <pre>
 	 * &#064;kotlinx.serialization.Serializable // line 1
-	 * sealed class Example {
-	 * }
+	 * sealed class Example
 	 * </pre>
 	 */
 	@Test
-	public void should_filter_generated_serializer_method_in_companions_of_enum_and_sealed_class() {
-		context.className = "Example$Companion";
-
-		final MethodNode initMethod = new MethodNode(Opcodes.ACC_PRIVATE,
-				"<init>", "()V", null, null);
-		final Label initMethodLineNumberLabel = new Label();
-		initMethod.visitLabel(initMethodLineNumberLabel);
-		initMethod.visitLineNumber(1, initMethodLineNumberLabel);
-		filter.filter(initMethod, context, output);
+	public void should_filter_generated_serializer_method_in_objects_and_companions_of_enum_and_sealed_class() {
+		context.className = "Example";
 
 		final MethodNode m = new MethodNode(
 				Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "serializer",
@@ -204,15 +205,129 @@ public class KotlinSerializableFilterTest extends FilterTestBase {
 		m.visitLabel(label0);
 		m.visitLineNumber(1, label0);
 		m.visitVarInsn(Opcodes.ALOAD, 0);
-		m.visitMethodInsn(Opcodes.INVOKESPECIAL, "Example$Companion",
+		m.visitMethodInsn(Opcodes.INVOKESPECIAL, "Example",
 				"get$cachedSerializer", "()Lkotlinx/serialization/KSerializer;",
 				false);
 		m.visitInsn(Opcodes.ARETURN);
 
 		filter.filter(m, context, output);
 
-		// FIXME https://github.com/jacoco/jacoco/issues/1971
-		assertIgnored(m);
+		assertMethodIgnored(m);
+	}
+
+	/**
+	 * <code>Example.get$cachedSerializer</code> in case of
+	 *
+	 * <pre>
+	 * &#064;kotlinx.serialization.Serializable
+	 * object Example
+	 * </pre>
+	 *
+	 * <code>Example$Companion.get$cachedSerializer</code> in case of
+	 *
+	 * <pre>
+	 * &#064;kotlinx.serialization.Serializable
+	 * enum class Example {
+	 *     V
+	 * }
+	 * </pre>
+	 *
+	 * <pre>
+	 * &#064;kotlinx.serialization.Serializable
+	 * sealed class Example
+	 * </pre>
+	 */
+	@Test
+	public void should_filter_synthetic_get_cachedSerializer_method() {
+		context.className = "Example";
+
+		MethodNode m = new MethodNode(
+				Opcodes.ACC_PRIVATE | Opcodes.ACC_FINAL | Opcodes.ACC_SYNTHETIC,
+				"get$cachedSerializer", "()Lkotlinx/serialization/KSerializer;",
+				null, null);
+		m.visitInsn(Opcodes.NOP);
+
+		filter.filter(m, context, output);
+
+		assertMethodIgnored(m);
+	}
+
+	/**
+	 * <pre>
+	 * &#064;kotlinx.serialization.Serializable
+	 * object Example
+	 * </pre>
+	 *
+	 * <pre>
+	 * &#064;kotlinx.serialization.Serializable
+	 * enum class Example
+	 * </pre>
+	 *
+	 * <pre>
+	 * &#064;kotlinx.serialization.Serializable
+	 * sealed class Example
+	 * </pre>
+	 *
+	 * lazy initializer
+	 *
+	 * <pre>
+	 * $cachedSerializer$delegate = lazy { ... }
+	 * </pre>
+	 *
+	 * not executed when serializer is not used
+	 *
+	 * https://github.com/JetBrains/kotlin/commit/3f034e8b6735a50ed5733e82811fc2bdb73f5632
+	 */
+	@Test
+	public void should_filter_synthetic_lazy_cachedSerializer() {
+		context.className = "Example";
+
+		final MethodNode m = new MethodNode(
+				Opcodes.ACC_PRIVATE | Opcodes.ACC_FINAL | Opcodes.ACC_STATIC
+						| Opcodes.ACC_SYNTHETIC,
+				"_init_$_anonymous_", "()Lkotlinx/serialization/KSerializer;",
+				null, null);
+		m.visitInsn(Opcodes.NOP);
+
+		filter.filter(m, context, output);
+
+		assertMethodIgnored(m);
+	}
+
+	/**
+	 * <pre>
+	 * &#064;kotlinx.serialization.Serializable
+	 * data class Example(
+	 *     val data1: List&lt;String&gt;,
+	 *     val data2: List&lt;String&gt;,
+	 * )
+	 * </pre>
+	 *
+	 * lazy initializer
+	 *
+	 * <pre>
+	 * $childSerializers = arrayOf(lazy { ... }, lazy { ... })
+	 * </pre>
+	 *
+	 * not executed when serializer is not used
+	 *
+	 * https://github.com/JetBrains/kotlin/commit/b35161e241df6a7b245b5a5d81232b0ea5a3129a
+	 * https://github.com/JetBrains/kotlin/commit/3f034e8b6735a50ed5733e82811fc2bdb73f5632
+	 */
+	@Test
+	public void should_filter_synthetic_lazy_childSerializers() {
+		context.className = "Example";
+
+		final MethodNode m = new MethodNode(
+				Opcodes.ACC_PRIVATE | Opcodes.ACC_FINAL | Opcodes.ACC_STATIC
+						| Opcodes.ACC_SYNTHETIC,
+				"_childSerializers$_anonymous_$0",
+				"()Lkotlinx/serialization/KSerializer;", null, null);
+		m.visitInsn(Opcodes.NOP);
+
+		filter.filter(m, context, output);
+
+		assertMethodIgnored(m);
 	}
 
 }
