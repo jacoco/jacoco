@@ -127,6 +127,13 @@ public abstract class ValidationTestBase {
 			final String className) throws IOException {
 		final File outputDir = new File("target/asm/" + target.getSimpleName());
 		outputDir.mkdirs();
+		// Without cleanup bytecode representation might be in
+		// a weird misleading mixed state after multiple runs
+		// during construction/modification of validation test in IDE:
+		for (File f : outputDir.listFiles()) {
+			f.delete();
+		}
+
 		final String fileName = className.replace('/', '.');
 		final PrintWriter textWriter = new PrintWriter(
 				new File(outputDir, fileName + ".txt"));
