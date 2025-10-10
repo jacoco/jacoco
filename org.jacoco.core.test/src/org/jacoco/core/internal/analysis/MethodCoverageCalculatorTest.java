@@ -108,6 +108,19 @@ public class MethodCoverageCalculatorTest {
 	}
 
 	@Test
+	public void should_accept_null_range_of_ignored_instructions() {
+		MethodCoverageCalculator c = new MethodCoverageCalculator(instructions);
+		c.ignore(null, null);
+
+		c.calculate(coverage);
+
+		assertEquals(ISourceNode.UNKNOWN_LINE, coverage.getFirstLine());
+		assertEquals(ISourceNode.UNKNOWN_LINE, coverage.getLastLine());
+		assertEquals(CounterImpl.getInstance(0, 0),
+				coverage.getInstructionCounter());
+	}
+
+	@Test
 	public void should_exclude_ignored_instructions_from_computation_of_first_and_last_lines() {
 		InsnNode i1 = addInsn(1, false);
 		addInsn(2, false);
