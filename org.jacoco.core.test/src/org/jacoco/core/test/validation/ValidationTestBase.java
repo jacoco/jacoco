@@ -69,6 +69,8 @@ public abstract class ValidationTestBase {
 
 	private final Class<?> target;
 
+	private final File asmDir;
+
 	private Source source;
 
 	private IBundleCoverage bundle;
@@ -77,10 +79,19 @@ public abstract class ValidationTestBase {
 
 	protected ValidationTestBase(final Class<?> target) {
 		this.target = target;
+		this.asmDir = new File("target/asm/" + target.getSimpleName());
 	}
 
 	@Before
 	public void setup() throws Exception {
+		asmDir.mkdirs();
+		// Without cleanup bytecode representation might be in
+		// a weird misleading mixed state after multiple runs
+		// during construction/modification of validation test in IDE:
+		for (File f : asmDir.listFiles()) {
+			f.delete();
+		}
+
 		final ExecutionDataStore store = execute();
 		analyze(store);
 	}
@@ -125,13 +136,11 @@ public abstract class ValidationTestBase {
 
 	private void saveBytecodeRepresentations(final byte[] classBytes,
 			final String className) throws IOException {
-		final File outputDir = new File("target/asm/" + target.getSimpleName());
-		outputDir.mkdirs();
 		final String fileName = className.replace('/', '.');
 		final PrintWriter textWriter = new PrintWriter(
-				new File(outputDir, fileName + ".txt"));
+				new File(asmDir, fileName + ".txt"));
 		final PrintWriter asmWriter = new PrintWriter(
-				new File(outputDir, fileName + ".java"));
+				new File(asmDir, fileName + ".java"));
 		InstrSupport.classReaderFor(classBytes)
 				.accept(new TraceClassVisitor(new TraceClassVisitor(null,
 						new Textifier(), textWriter), new ASMifier(),
