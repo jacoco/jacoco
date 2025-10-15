@@ -13,6 +13,8 @@
 package org.jacoco.core.internal.analysis.filter;
 
 import org.objectweb.asm.tree.AbstractInsnNode;
+import org.objectweb.asm.tree.InsnList;
+import org.objectweb.asm.tree.MethodNode;
 
 /**
  * Interface used by filters to mark filtered items.
@@ -22,6 +24,11 @@ public interface IFilterOutput {
 	/**
 	 * Marks sequence of instructions that should be ignored during computation
 	 * of coverage.
+	 * <p>
+	 * It is safe to pass {@link InsnList#getFirst() first} and
+	 * {@link InsnList#getLast() last} {@link MethodNode#instructions} of empty
+	 * methods, ie when both parameters are {@code null}.
+	 * </p>
 	 *
 	 * @param fromInclusive
 	 *            first instruction that should be ignored, inclusive
