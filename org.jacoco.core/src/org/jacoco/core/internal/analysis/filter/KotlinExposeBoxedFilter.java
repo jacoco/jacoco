@@ -12,6 +12,10 @@
  *******************************************************************************/
 package org.jacoco.core.internal.analysis.filter;
 
+import org.objectweb.asm.Opcodes;
+import org.objectweb.asm.tree.AbstractInsnNode;
+import org.objectweb.asm.tree.AnnotationNode;
+import org.objectweb.asm.tree.MethodInsnNode;
 import org.objectweb.asm.tree.MethodNode;
 
 /**
@@ -22,7 +26,40 @@ final class KotlinExposeBoxedFilter implements IFilter {
 
 	public void filter(final MethodNode methodNode,
 			final IFilterContext context, final IFilterOutput output) {
-		// TODO
+		if (shouldFilter(methodNode)) {
+			output.ignore(methodNode.instructions.getFirst(),
+					methodNode.instructions.getLast());
+		}
+	}
+
+	private static boolean shouldFilter(final MethodNode methodNode) {
+		if (!hasAnnotation(methodNode)) {
+			return false;
+		}
+		for (final AbstractInsnNode i : methodNode.instructions) {
+			if (i.getType() == AbstractInsnNode.METHOD_INSN) {
+				final MethodInsnNode mi = (MethodInsnNode) i;
+				if (Opcodes.INVOKEVIRTUAL == i.getOpcode()
+						&& "unbox-impl".equals(mi.name)) {
+					return mi.getPrevious().getOpcode() == Opcodes.ALOAD;
+				} else if (Opcodes.INVOKESTATIC == i.getOpcode()
+						&& "box-impl".equals(mi.name)) {
+					return mi.getNext().getOpcode() == Opcodes.ARETURN;
+				}
+			}
+		}
+		return false;
+	}
+
+	private static boolean hasAnnotation(final MethodNode methodNode) {
+		if (methodNode.invisibleAnnotations != null) {
+			for (final AnnotationNode annotationNode : methodNode.invisibleAnnotations) {
+				if ("Lkotlin/jvm/JvmExposeBoxed;".equals(annotationNode.desc)) {
+					return true;
+				}
+			}
+		}
+		return false;
 	}
 
 }
