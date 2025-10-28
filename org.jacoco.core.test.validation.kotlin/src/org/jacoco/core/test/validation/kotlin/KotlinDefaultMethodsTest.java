@@ -12,6 +12,9 @@
  *******************************************************************************/
 package org.jacoco.core.test.validation.kotlin;
 
+import java.util.Collection;
+import java.util.Collections;
+
 import org.jacoco.core.test.validation.ValidationTestBase;
 import org.jacoco.core.test.validation.kotlin.targets.KotlinDefaultMethodsTarget;
 
@@ -24,4 +27,9 @@ public class KotlinDefaultMethodsTest extends ValidationTestBase {
 		super(KotlinDefaultMethodsTarget.class);
 	}
 
+	@Override
+	protected Collection<String> additionalClassesForAnalysis() {
+		return Collections.singletonList(
+				"org.jacoco.core.test.validation.kotlin.targets.KotlinDefaultMethodsTarget$I$DefaultImpls");
+	}
 }
