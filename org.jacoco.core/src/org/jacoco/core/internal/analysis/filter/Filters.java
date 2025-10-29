@@ -89,6 +89,7 @@ public final class Filters {
 				new KotlinUnsafeCastOperatorFilter(), //
 				new KotlinNotNullOperatorFilter(), //
 				new KotlinInlineClassFilter(), //
+				new KotlinExposeBoxedFilter(), //
 				new KotlinDefaultArgumentsFilter(), //
 				new KotlinInlineFilter(), //
 				new KotlinCoroutineFilter(), //
