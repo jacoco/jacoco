@@ -96,7 +96,7 @@ public class AnalyzerTest {
 	}
 
 	@Test
-	public void should_ignore_synthetic_classes() throws Exception {
+	public void should_not_ignore_synthetic_classes() throws Exception {
 		final ClassWriter cw = new ClassWriter(0);
 		cw.visit(Opcodes.V1_5, Opcodes.ACC_SYNTHETIC, "Foo", null,
 				"java/lang/Object", null);
@@ -105,7 +105,7 @@ public class AnalyzerTest {
 
 		analyzer.analyzeClass(bytes, "");
 
-		assertTrue(classes.isEmpty());
+		assertClasses("Foo");
 	}
 
 	@Test

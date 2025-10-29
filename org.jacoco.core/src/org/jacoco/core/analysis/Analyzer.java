@@ -109,9 +109,6 @@ public class Analyzer {
 		if ((reader.getAccess() & Opcodes.ACC_MODULE) != 0) {
 			return;
 		}
-		if ((reader.getAccess() & Opcodes.ACC_SYNTHETIC) != 0) {
-			return;
-		}
 		final ClassVisitor visitor = createAnalyzingVisitor(classId,
 				reader.getClassName());
 		reader.accept(visitor, 0);
