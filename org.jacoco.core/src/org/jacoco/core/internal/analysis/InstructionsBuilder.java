@@ -16,6 +16,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.jacoco.core.analysis.ISourceNode;
 import org.jacoco.core.internal.flow.LabelInfo;
@@ -29,6 +30,10 @@ import org.objectweb.asm.tree.AbstractInsnNode;
  * with the <code>getInstructions()</code> method.
  */
 class InstructionsBuilder {
+	/** ProbeId to lineNumbers map */
+	public final HashMap<Integer, Set<Integer>> probesToLineNumbers;
+
+	private final boolean shouldConstructProbesToLineNumbersMap;
 
 	/** Probe array of the class the analyzed method belongs to. */
 	private final boolean[] probes;
@@ -73,6 +78,31 @@ class InstructionsBuilder {
 		this.instructions = new HashMap<AbstractInsnNode, Instruction>();
 		this.currentLabel = new ArrayList<Label>(2);
 		this.jumps = new ArrayList<Jump>();
+		this.probesToLineNumbers = new HashMap<Integer, Set<Integer>>();
+		this.shouldConstructProbesToLineNumbersMap = false;
+	}
+
+	/**
+	 * Creates a new builder instance which can be used to analyze a single
+	 * method.
+	 *
+	 * @param probes
+	 *            probe array of the corresponding class used to determine the
+	 *            coverage status of every instruction.
+	 * @param shouldConstructProbesToLineNumbersMap
+	 *            boolean to keep track of whether the probes map should be
+	 *            constructed or not.
+	 */
+	InstructionsBuilder(final boolean[] probes,
+			final boolean shouldConstructProbesToLineNumbersMap) {
+		this.probes = probes;
+		this.currentLine = ISourceNode.UNKNOWN_LINE;
+		this.currentInsn = null;
+		this.instructions = new HashMap<AbstractInsnNode, Instruction>();
+		this.currentLabel = new ArrayList<Label>(2);
+		this.jumps = new ArrayList<Jump>();
+		this.probesToLineNumbers = new HashMap<Integer, Set<Integer>>();
+		this.shouldConstructProbesToLineNumbersMap = shouldConstructProbesToLineNumbersMap;
 	}
 
 	/**
@@ -134,7 +164,8 @@ class InstructionsBuilder {
 	 *            unique branch number
 	 */
 	void addJump(final Label target, final int branch) {
-		jumps.add(new Jump(currentInsn, target, branch));
+		jumps.add(new Jump(currentInsn, target, branch,
+				this.shouldConstructProbesToLineNumbersMap));
 	}
 
 	/**
@@ -147,7 +178,12 @@ class InstructionsBuilder {
 	 */
 	void addProbe(final int probeId, final int branch) {
 		final boolean executed = probes != null && probes[probeId];
-		currentInsn.addBranch(executed, branch);
+		if (this.shouldConstructProbesToLineNumbersMap) {
+			currentInsn.addBranch(executed, branch, probeId,
+					this.probesToLineNumbers);
+		} else {
+			currentInsn.addBranch(executed, branch);
+		}
 	}
 
 	/**
@@ -160,7 +196,7 @@ class InstructionsBuilder {
 	Map<AbstractInsnNode, Instruction> getInstructions() {
 		// Wire jumps:
 		for (final Jump j : jumps) {
-			j.wire();
+			j.wire(this.probesToLineNumbers);
 		}
 
 		return instructions;
@@ -171,15 +207,24 @@ class InstructionsBuilder {
 		private final Instruction source;
 		private final Label target;
 		private final int branch;
+		private final boolean shouldConstructProbesToLineNumbersMap;
 
-		Jump(final Instruction source, final Label target, final int branch) {
+		Jump(final Instruction source, final Label target, final int branch,
+				final boolean shouldConstructProbesToLineNumbersMap) {
 			this.source = source;
 			this.target = target;
 			this.branch = branch;
+			this.shouldConstructProbesToLineNumbersMap = shouldConstructProbesToLineNumbersMap;
 		}
 
-		void wire() {
-			source.addBranch(LabelInfo.getInstruction(target), branch);
+		void wire(HashMap<Integer, Set<Integer>> probesToLineNumbers) {
+			Instruction targetInsn = LabelInfo.getInstruction(target);
+			if (shouldConstructProbesToLineNumbersMap) {
+				source.addBranch(targetInsn, branch, targetInsn.getProbeId(),
+						probesToLineNumbers);
+			} else {
+				source.addBranch(targetInsn, branch);
+			}
 		}
 
 	}

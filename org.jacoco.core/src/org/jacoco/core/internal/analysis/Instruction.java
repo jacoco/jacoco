@@ -14,6 +14,9 @@ package org.jacoco.core.internal.analysis;
 
 import java.util.BitSet;
 import java.util.Collection;
+import java.util.HashMap;
+import java.util.Set;
+import java.util.TreeSet;
 
 import org.jacoco.core.analysis.ICounter;
 import org.jacoco.core.internal.analysis.filter.Replacements;
@@ -67,6 +70,8 @@ public class Instruction {
 
 	private int predecessorBranch;
 
+	private int probeId;
+
 	/**
 	 * New instruction at the given line.
 	 *
@@ -102,6 +107,17 @@ public class Instruction {
 		}
 	}
 
+	public void addBranch(final Instruction target, final int branch,
+			int probeId, HashMap<Integer, Set<Integer>> probesToLineNumbers) {
+		branches++;
+		target.predecessor = this;
+		target.predecessorBranch = branch;
+		propagateProbeId(this, probeId, probesToLineNumbers);
+		if (!target.coveredBranches.isEmpty()) {
+			propagateExecutedBranch(this, branch);
+		}
+	}
+
 	/**
 	 * Adds a branch to this instruction which execution status is directly
 	 * derived from a probe. In case the branch is covered the status is
@@ -119,6 +135,35 @@ public class Instruction {
 		branches++;
 		if (executed) {
 			propagateExecutedBranch(this, branch);
+		}
+	}
+
+	public void addBranch(final boolean executed, final int branch, int probeId,
+			HashMap<Integer, Set<Integer>> probesToLineNumbers) {
+		branches++;
+		propagateProbeId(this, probeId, probesToLineNumbers);
+		if (executed) {
+			propagateExecutedBranch(this, branch);
+		}
+	}
+
+	private static void propagateProbeId(Instruction insn, int probeId,
+			HashMap<Integer, Set<Integer>> probesToLineNumbers) {
+		// No recursion here, as there can be very long chains of instructions
+		Set<Integer> lineNumbers = probesToLineNumbers.get(probeId);
+		if (lineNumbers == null) {
+			lineNumbers = new TreeSet<Integer>();
+			probesToLineNumbers.put(probeId, lineNumbers);
+		}
+
+		while (insn != null) {
+			if (!insn.coveredBranches.isEmpty()) {
+				break;
+			}
+
+			lineNumbers.add(insn.getLine());
+			insn.setProbeId(probeId);
+			insn = insn.predecessor;
 		}
 	}
 
@@ -189,6 +234,14 @@ public class Instruction {
 		}
 		result.branches = branchIndex;
 		return result;
+	}
+
+	public int getProbeId() {
+		return probeId;
+	}
+
+	public void setProbeId(int probeId) {
+		this.probeId = probeId;
 	}
 
 	/**
