@@ -5,3 +5,4 @@ target/
 org.jacoco.agent/src/jacocoagent.jar
 .idea
 *.iml
+**/report/**

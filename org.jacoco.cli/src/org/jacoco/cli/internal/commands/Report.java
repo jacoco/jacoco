@@ -16,17 +16,23 @@ package org.jacoco.cli.internal.commands;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.jacoco.cli.internal.Command;
 import org.jacoco.core.analysis.Analyzer;
 import org.jacoco.core.analysis.CoverageBuilder;
 import org.jacoco.core.analysis.IBundleCoverage;
 import org.jacoco.core.analysis.IClassCoverage;
+import org.jacoco.core.analysis.IPackageCoverage;
 import org.jacoco.core.data.ExecutionDataStore;
+import org.jacoco.core.internal.analysis.ClassCoverageImpl;
 import org.jacoco.core.tools.ExecFileLoader;
 import org.jacoco.report.DirectorySourceFileLocator;
 import org.jacoco.report.FileMultiReportOutput;
@@ -100,6 +106,68 @@ public class Report extends Command {
 			}
 		}
 		return loader;
+	}
+
+	public void setClassfiles(final List<File> newClassfiles) {
+		classfiles.addAll(newClassfiles);
+	}
+
+	public HashMap<String, HashMap<Integer, Set<Integer>>> getProbesToLineNumbersMap()
+			throws IOException {
+		final CoverageBuilder builder = new CoverageBuilder();
+		boolean shouldConstructProbesToLineNumbersMap = true;
+		final Analyzer analyzer = new Analyzer(new ExecutionDataStore(),
+				builder, shouldConstructProbesToLineNumbersMap);
+		for (final File f : classfiles) {
+			analyzer.analyzeAll(f);
+		}
+
+		HashMap<String, HashMap<Integer, Set<Integer>>> probesToLineNumbersMap = new HashMap<String, HashMap<Integer, Set<Integer>>>();
+
+		IBundleCoverage bundle = builder.getBundle(name);
+		System.out.println(bundle);
+
+		for (IClassCoverage classCoverage : builder.getClasses()) {
+			probesToLineNumbersMap.put(classCoverage.getName(),
+					classCoverage.getProbesToLineNumbers());
+		}
+
+		return probesToLineNumbersMap;
+	}
+
+	public static class PackageAndFileName {
+		public final String packageName;
+		public final String fileName;
+
+		PackageAndFileName(final String packageName, final String fileName) {
+			this.packageName = packageName;
+			this.fileName = fileName;
+		}
+	}
+
+	public HashMap<String, PackageAndFileName> getClassMetadata()
+			throws IOException {
+		HashMap<String, PackageAndFileName> metadata = new HashMap<String, PackageAndFileName>();
+
+		final CoverageBuilder builder = new CoverageBuilder();
+		final Analyzer analyzer = new Analyzer(new ExecutionDataStore(),
+				builder);
+		for (final File f : classfiles) {
+			analyzer.analyzeAll(f);
+		}
+
+		IBundleCoverage bundle = builder.getBundle(name);
+		for (IPackageCoverage packageCoverage : bundle.getPackages()) {
+			for (IClassCoverage classCoverage : packageCoverage.getClasses()) {
+				String className = classCoverage.getName();
+				String packageName = packageCoverage.getName();
+				String sourceFileName = classCoverage.getSourceFileName();
+				metadata.put(className,
+						new PackageAndFileName(packageName, sourceFileName));
+			}
+		}
+
+		return metadata;
 	}
 
 	private IBundleCoverage analyze(final ExecutionDataStore data,

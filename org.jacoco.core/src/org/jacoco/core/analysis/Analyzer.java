@@ -47,6 +47,8 @@ import org.objectweb.asm.Opcodes;
  */
 public class Analyzer {
 
+	private final boolean shouldConstructProbesToLineNumbersMap;
+
 	private final ExecutionDataStore executionData;
 
 	private final ICoverageVisitor coverageVisitor;
@@ -67,6 +69,28 @@ public class Analyzer {
 		this.executionData = executionData;
 		this.coverageVisitor = coverageVisitor;
 		this.stringPool = new StringPool();
+		this.shouldConstructProbesToLineNumbersMap = false;
+	}
+
+	/**
+	 * Creates a new analyzer reporting to the given output.
+	 *
+	 * @param executionData
+	 *            execution data
+	 * @param coverageVisitor
+	 *            the output instance that will coverage data for every analyzed
+	 *            class
+	 * @param shouldConstructProbesToLineNumbersMap
+	 *            the output instance that will coverage data for every analyzed
+	 *            class
+	 */
+	public Analyzer(final ExecutionDataStore executionData,
+			final ICoverageVisitor coverageVisitor,
+			final boolean shouldConstructProbesToLineNumbersMap) {
+		this.executionData = executionData;
+		this.coverageVisitor = coverageVisitor;
+		this.stringPool = new StringPool();
+		this.shouldConstructProbesToLineNumbersMap = shouldConstructProbesToLineNumbersMap;
 	}
 
 	/**
@@ -93,7 +117,7 @@ public class Analyzer {
 		final ClassCoverageImpl coverage = new ClassCoverageImpl(className,
 				classid, noMatch);
 		final ClassAnalyzer analyzer = new ClassAnalyzer(coverage, probes,
-				stringPool) {
+				stringPool, shouldConstructProbesToLineNumbersMap) {
 			@Override
 			public void visitEnd() {
 				super.visitEnd();

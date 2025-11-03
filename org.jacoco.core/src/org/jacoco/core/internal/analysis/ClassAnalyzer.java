@@ -52,6 +52,8 @@ public class ClassAnalyzer extends ClassProbesVisitor
 
 	private final IFilter filter;
 
+	private final boolean shouldConstructProbesToLineNumbersMap;
+
 	/**
 	 * Creates a new analyzer that builds coverage data for a class.
 	 *
@@ -68,6 +70,29 @@ public class ClassAnalyzer extends ClassProbesVisitor
 		this.probes = probes;
 		this.stringPool = stringPool;
 		this.filter = Filters.all();
+		this.shouldConstructProbesToLineNumbersMap = false;
+	}
+
+	/**
+	 * Creates a new analyzer that builds coverage data for a class.
+	 *
+	 * @param coverage
+	 *            coverage node for the analyzed class data
+	 * @param probes
+	 *            execution data for this class or <code>null</code>
+	 * @param stringPool
+	 *            shared pool to minimize the number of {@link String} instances
+	 * @param shouldConstructProbesToLineNumbersMap
+	 *            boolean flag
+	 */
+	public ClassAnalyzer(final ClassCoverageImpl coverage,
+			final boolean[] probes, final StringPool stringPool,
+			final boolean shouldConstructProbesToLineNumbersMap) {
+		this.coverage = coverage;
+		this.probes = probes;
+		this.stringPool = stringPool;
+		this.filter = Filters.all();
+		this.shouldConstructProbesToLineNumbersMap = shouldConstructProbesToLineNumbersMap;
 	}
 
 	@Override
@@ -104,7 +129,8 @@ public class ClassAnalyzer extends ClassProbesVisitor
 
 		InstrSupport.assertNotInstrumented(name, coverage.getName());
 
-		final InstructionsBuilder builder = new InstructionsBuilder(probes);
+		final InstructionsBuilder builder = new InstructionsBuilder(probes,
+				shouldConstructProbesToLineNumbersMap);
 
 		return new MethodAnalyzer(builder) {
 
@@ -139,6 +165,7 @@ public class ClassAnalyzer extends ClassProbesVisitor
 			coverage.addMethod(mc);
 		}
 
+		coverage.addMethodProbeMapping(icc.probesToLineNumbers);
 	}
 
 	private void calculateFragments(

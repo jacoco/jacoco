@@ -15,6 +15,8 @@ package org.jacoco.core.internal.analysis;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
+import java.util.Set;
 
 import org.jacoco.core.analysis.IClassCoverage;
 import org.jacoco.core.analysis.IMethodCoverage;
@@ -32,6 +34,11 @@ public class ClassCoverageImpl extends SourceNodeImpl
 	private String superName;
 	private String[] interfaces;
 	private String sourceFileName;
+	private HashMap<Integer, Set<Integer>> probesToLineNumbers;
+
+	public HashMap<Integer, Set<Integer>> getProbesToLineNumbers() {
+		return probesToLineNumbers;
+	};
 
 	private Collection<SourceNodeImpl> fragments = Collections.emptyList();
 
@@ -52,6 +59,14 @@ public class ClassCoverageImpl extends SourceNodeImpl
 		this.id = id;
 		this.noMatch = noMatch;
 		this.methods = new ArrayList<IMethodCoverage>();
+		this.probesToLineNumbers = new HashMap<Integer, Set<Integer>>();
+	}
+
+	public void addMethodProbeMapping(
+			HashMap<Integer, Set<Integer>> probesToLineNumbers) {
+		for (Integer line : probesToLineNumbers.keySet()) {
+			this.probesToLineNumbers.put(line, probesToLineNumbers.get(line));
+		}
 	}
 
 	/**

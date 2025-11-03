@@ -13,6 +13,8 @@
 package org.jacoco.core.analysis;
 
 import java.util.Collection;
+import java.util.HashMap;
+import java.util.Set;
 
 /**
  * Coverage data of a single class containing methods. The name of this node is
@@ -21,6 +23,8 @@ import java.util.Collection;
  * @see IMethodCoverage
  */
 public interface IClassCoverage extends ISourceNode {
+
+	HashMap<Integer, Set<Integer>> getProbesToLineNumbers();
 
 	/**
 	 * Returns the identifier for this class which is the CRC64 signature of the
