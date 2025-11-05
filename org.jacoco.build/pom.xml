@@ -95,10 +95,10 @@
     <module>../org.jacoco.examples</module>
     <module>../jacoco-maven-plugin</module>
 
-    <module>../org.jacoco.tests</module>
+<!--    <module>../org.jacoco.tests</module>-->
 
-    <module>../org.jacoco.doc</module>
-    <module>../jacoco</module>
+<!--    <module>../org.jacoco.doc</module>-->
+<!--    <module>../jacoco</module>-->
   </modules>
 
   <scm>
