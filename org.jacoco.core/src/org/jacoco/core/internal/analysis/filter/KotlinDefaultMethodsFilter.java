@@ -13,6 +13,7 @@
 package org.jacoco.core.internal.analysis.filter;
 
 import org.objectweb.asm.Opcodes;
+import org.objectweb.asm.tree.AbstractInsnNode;
 import org.objectweb.asm.tree.MethodInsnNode;
 import org.objectweb.asm.tree.MethodNode;
 
@@ -25,6 +26,20 @@ final class KotlinDefaultMethodsFilter implements IFilter {
 	public void filter(final MethodNode methodNode,
 			final IFilterContext context, final IFilterOutput output) {
 		new Matcher().match(methodNode, output);
+
+		if (context.getClassName().endsWith("$DefaultImpls")) {
+			for (final AbstractInsnNode i : methodNode.instructions) {
+				if (i instanceof MethodInsnNode) {
+					final MethodInsnNode m = (MethodInsnNode) i;
+					if (m.name.startsWith("access$")
+							&& m.name.endsWith("$jd")) {
+						output.ignore(methodNode.instructions.getFirst(),
+								methodNode.instructions.getLast());
+						return;
+					}
+				}
+			}
+		}
 	}
 
 	private static class Matcher extends AbstractMatcher {

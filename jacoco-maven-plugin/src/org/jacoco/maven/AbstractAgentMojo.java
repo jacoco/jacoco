@@ -46,7 +46,7 @@ public abstract class AbstractAgentMojo extends AbstractJacocoMojo {
 	@Parameter(property = "plugin.artifactMap", required = true, readonly = true)
 	Map<String, Artifact> pluginArtifactMap;
 	/**
-	 * Allows to specify property which will contains settings for JaCoCo Agent.
+	 * Allows to specify property which will contain settings for JaCoCo Agent.
 	 * If not specified, then "argLine" would be used for "jar" packaging and
 	 * "tycho.testArgLine" for "eclipse-test-plugin".
 	 */

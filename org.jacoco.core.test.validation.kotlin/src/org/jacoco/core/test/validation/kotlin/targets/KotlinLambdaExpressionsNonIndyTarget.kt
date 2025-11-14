@@ -12,25 +12,26 @@
  *******************************************************************************/
 package org.jacoco.core.test.validation.kotlin.targets
 
+import org.jacoco.core.test.validation.targets.Stubs.*
+
 /**
- * This test target contains class implementing interface with default methods.
+ * Test target with [JvmSerializableLambda].
  */
-object KotlinDefaultMethodsTarget {
-
-    interface I { // assertEmpty()
-        fun m1() = Unit // assertNotCovered()
-        fun m2() = Unit // assertFullyCovered()
-        fun m3() = Unit // assertNotCovered()
-    } // assertEmpty()
-
-    class C : I { // assertFullyCovered()
-        override fun m1() = Unit // assertFullyCovered()
-    } // assertEmpty()
+object KotlinLambdaExpressionsNonIndyTarget {
 
     @JvmStatic
     fun main(args: Array<String>) {
-        C().m1()
-        C().m2()
+
+        exec @JvmSerializableLambda { // assertFullyCovered()
+            nop() // assertFullyCovered()
+        } // assertFullyCovered()
+
+        noexec @JvmSerializableLambda { // assertFullyCovered()
+            nop() // assertNotCovered()
+        } // assertNotCovered()
+
+        noexec @JvmSerializableLambda { nop() } // assertPartlyCovered()
+
     }
 
 }

@@ -12,24 +12,16 @@
  *******************************************************************************/
 package org.jacoco.core.test.validation.kotlin;
 
-import java.util.Collection;
-import java.util.Collections;
-
 import org.jacoco.core.test.validation.ValidationTestBase;
-import org.jacoco.core.test.validation.kotlin.targets.KotlinDefaultMethodsTarget;
+import org.jacoco.core.test.validation.kotlin.targets.KotlinWhenGuardTarget;
 
 /**
- * Test of code coverage in {@link KotlinDefaultMethodsTarget}.
+ * Test of code coverage in {@link KotlinWhenGuardTarget}.
  */
-public class KotlinDefaultMethodsTest extends ValidationTestBase {
+public class KotlinWhenGuardTest extends ValidationTestBase {
 
-	public KotlinDefaultMethodsTest() {
-		super(KotlinDefaultMethodsTarget.class);
+	public KotlinWhenGuardTest() {
+		super(KotlinWhenGuardTarget.class);
 	}
 
-	@Override
-	protected Collection<String> additionalClassesForAnalysis() {
-		return Collections.singletonList(
-				"org.jacoco.core.test.validation.kotlin.targets.KotlinDefaultMethodsTarget$I$DefaultImpls");
-	}
 }
