@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2024 Mountainminds GmbH & Co. KG and Contributors
+ * Copyright (c) 2009, 2025 Mountainminds GmbH & Co. KG and Contributors
  * This program and the accompanying materials are made available under
  * the terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0
@@ -11,9 +11,6 @@
  *
  *******************************************************************************/
 package org.jacoco.core.internal.analysis.filter;
-
-import java.util.HashSet;
-import java.util.List;
 
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.tree.AbstractInsnNode;
@@ -46,13 +43,10 @@ final class ExhaustiveSwitchFilter implements IFilter {
 		public void match(final AbstractInsnNode start, final int line,
 				final IFilterOutput output) {
 			final LabelNode dflt;
-			final List<LabelNode> labels;
 			if (start.getOpcode() == Opcodes.LOOKUPSWITCH) {
 				dflt = ((LookupSwitchInsnNode) start).dflt;
-				labels = ((LookupSwitchInsnNode) start).labels;
 			} else if (start.getOpcode() == Opcodes.TABLESWITCH) {
 				dflt = ((TableSwitchInsnNode) start).dflt;
-				labels = ((TableSwitchInsnNode) start).labels;
 			} else {
 				return;
 			}
@@ -93,11 +87,8 @@ final class ExhaustiveSwitchFilter implements IFilter {
 				return;
 			}
 			output.ignore(dflt, cursor);
-			final HashSet<AbstractInsnNode> replacements = new HashSet<AbstractInsnNode>();
-			for (final AbstractInsnNode label : labels) {
-				replacements.add(skipNonOpcodes(label));
-			}
-			output.replaceBranches(start, replacements);
+			output.replaceBranches(start,
+					Replacements.ignoreDefaultBranch(start));
 		}
 
 		private static AbstractInsnNode skipToLineNumberOrInstruction(

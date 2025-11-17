@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2024 Mountainminds GmbH & Co. KG and Contributors
+ * Copyright (c) 2009, 2025 Mountainminds GmbH & Co. KG and Contributors
  * This program and the accompanying materials are made available under
  * the terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0
@@ -14,10 +14,14 @@ package org.jacoco.core.internal.analysis;
 
 import static org.junit.Assert.assertEquals;
 
-import java.util.Arrays;
+import java.util.HashMap;
 
+import org.jacoco.core.internal.analysis.filter.Replacements;
 import org.junit.Before;
 import org.junit.Test;
+import org.objectweb.asm.Opcodes;
+import org.objectweb.asm.tree.AbstractInsnNode;
+import org.objectweb.asm.tree.InsnNode;
 
 /**
  * Unit tests for {@link Instruction}.
@@ -161,14 +165,59 @@ public class InstructionTest {
 
 	@Test
 	public void replaceBranches_should_calculate_coverage_on_new_branches() {
+		final InsnNode n1 = new InsnNode(Opcodes.NOP);
+		final InsnNode n2 = new InsnNode(Opcodes.NOP);
+		final InsnNode n3 = new InsnNode(Opcodes.NOP);
+		final HashMap<AbstractInsnNode, Instruction> map = new HashMap<AbstractInsnNode, Instruction>();
+		final Instruction.Mapper mapper = new Instruction.Mapper() {
+			public Instruction apply(final AbstractInsnNode node) {
+				return map.get(node);
+			}
+		};
+
 		Instruction i1 = new Instruction(1);
+		map.put(n1, i1);
 		Instruction i2 = new Instruction(2);
+		map.put(n2, i2);
 		Instruction i3 = new Instruction(3);
-		i3.addBranch(true, 0);
+		map.put(n3, i3);
+		i3.addBranch(false, 0);
+		i3.addBranch(true, 1);
 
-		instruction = instruction.replaceBranches(Arrays.asList(i1, i2, i3));
+		Replacements replacements = new Replacements();
+		replacements.add(n1, n1, 0);
+		replacements.add(n2, n2, 0);
+		replacements.add(n3, n3, 0);
+		instruction = instruction.replaceBranches(replacements, mapper);
+		assertEquals(CounterImpl.getInstance(3, 0),
+				instruction.getBranchCounter());
 
+		replacements = new Replacements();
+		replacements.add(n1, n1, 0);
+		replacements.add(n2, n2, 0);
+		replacements.add(n3, n3, 1);
+		instruction = instruction.replaceBranches(replacements, mapper);
+		assertEquals(CounterImpl.getInstance(2, 1),
+				instruction.getBranchCounter());
+
+		replacements = new Replacements();
+		replacements.add(n3, n3, 1);
+		replacements.add(n2, n3, 1);
+		replacements.add(n1, n1, 0);
+		instruction = instruction.replaceBranches(replacements, mapper);
+		assertEquals(CounterImpl.getInstance(1, 2),
+				instruction.getBranchCounter());
+
+		replacements = new Replacements();
+		replacements.add(n1, n1, 0);
+		replacements.add(n2, n2, 0);
+		// branch should be considered executed
+		// when at least one of replacements branches was executed
+		replacements.add(n3, n3, 1);
+		replacements.add(n3, n3, 0);
+		instruction = instruction.replaceBranches(replacements, mapper);
 		assertEquals(CounterImpl.getInstance(2, 1),
 				instruction.getBranchCounter());
 	}
+
 }

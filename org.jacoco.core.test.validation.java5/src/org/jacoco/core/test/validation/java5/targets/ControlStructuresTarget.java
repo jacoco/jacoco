@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2024 Mountainminds GmbH & Co. KG and Contributors
+ * Copyright (c) 2009, 2025 Mountainminds GmbH & Co. KG and Contributors
  * This program and the accompanying materials are made available under
  * the terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0
@@ -43,6 +43,9 @@ public class ControlStructuresTarget {
 		lookupSwitchWithHit();
 		continuedLookupSwitchWithHit();
 		lookupSwitchWithoutHit();
+		switchImplicitDefaultNotExecuted(0);
+		switchImplicitDefaultNotExecuted(1);
+		switchImplicitDefaultNotExecuted(2);
 		breakStatement();
 		continueStatement();
 		conditionalReturn();
@@ -244,6 +247,22 @@ public class ControlStructuresTarget {
 			nop(); // assertNotCovered()
 			break;
 		default:
+			nop(); // assertFullyCovered()
+			break;
+		}
+
+	}
+
+	private static void switchImplicitDefaultNotExecuted(final int i) {
+
+		switch (i) { // assertFullyCovered(1, 3)
+		case 0:
+			nop(); // assertFullyCovered()
+			break;
+		case 1:
+			nop(); // assertFullyCovered()
+			break;
+		case 2:
 			nop(); // assertFullyCovered()
 			break;
 		}

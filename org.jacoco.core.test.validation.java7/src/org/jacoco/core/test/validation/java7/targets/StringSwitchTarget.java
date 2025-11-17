@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2024 Mountainminds GmbH & Co. KG and Contributors
+ * Copyright (c) 2009, 2025 Mountainminds GmbH & Co. KG and Contributors
  * This program and the accompanying materials are made available under
  * the terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0
@@ -13,6 +13,8 @@
 package org.jacoco.core.test.validation.java7.targets;
 
 import static org.jacoco.core.test.validation.targets.Stubs.nop;
+
+import org.jacoco.core.test.validation.targets.Stubs;
 
 /**
  * This test target is a switch statement with a String.
@@ -36,6 +38,20 @@ public class StringSwitchTarget {
 		}
 	}
 
+	private static void executedWithSameHashCodeAsFirstCase() {
+		switch (Stubs.string("\0a")) { // assertFullyCovered(2, 1)
+		case "a":
+			nop("case a"); // assertNotCovered()
+			break;
+		case "b":
+			nop("case b"); // assertNotCovered()
+			break;
+		default:
+			nop("default"); // assertFullyCovered()
+			break;
+		}
+	}
+
 	private static void notCovered(Object s) {
 		switch (String.valueOf(s)) { // assertNotCovered(4, 0)
 		case "a":
@@ -49,6 +65,20 @@ public class StringSwitchTarget {
 			break;
 		default:
 			nop("default");
+			break;
+		}
+	}
+
+	private static void implicitDefaultNotExecuted(Object s) {
+		switch (String.valueOf(s)) { // assertFullyCovered(1, 3)
+		case "a":
+			nop("case a"); // assertFullyCovered()
+			break;
+		case "b":
+			nop("case b"); // assertFullyCovered()
+			break;
+		case "c":
+			nop("case c"); // assertFullyCovered()
 			break;
 		}
 	}
@@ -118,6 +148,12 @@ public class StringSwitchTarget {
 		covered("a");
 		covered("b");
 		covered("\0a");
+
+		executedWithSameHashCodeAsFirstCase();
+
+		implicitDefaultNotExecuted("a");
+		implicitDefaultNotExecuted("b");
+		implicitDefaultNotExecuted("c");
 
 		handwritten("a");
 

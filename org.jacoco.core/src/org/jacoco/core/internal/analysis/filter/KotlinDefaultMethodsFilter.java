@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2024 Mountainminds GmbH & Co. KG and Contributors
+ * Copyright (c) 2009, 2025 Mountainminds GmbH & Co. KG and Contributors
  * This program and the accompanying materials are made available under
  * the terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0
@@ -13,6 +13,7 @@
 package org.jacoco.core.internal.analysis.filter;
 
 import org.objectweb.asm.Opcodes;
+import org.objectweb.asm.tree.AbstractInsnNode;
 import org.objectweb.asm.tree.MethodInsnNode;
 import org.objectweb.asm.tree.MethodNode;
 
@@ -24,10 +25,21 @@ final class KotlinDefaultMethodsFilter implements IFilter {
 
 	public void filter(final MethodNode methodNode,
 			final IFilterContext context, final IFilterOutput output) {
-		if (!Filters.isKotlinClass(context)) {
-			return;
-		}
 		new Matcher().match(methodNode, output);
+
+		if (context.getClassName().endsWith("$DefaultImpls")) {
+			for (final AbstractInsnNode i : methodNode.instructions) {
+				if (i instanceof MethodInsnNode) {
+					final MethodInsnNode m = (MethodInsnNode) i;
+					if (m.name.startsWith("access$")
+							&& m.name.endsWith("$jd")) {
+						output.ignore(methodNode.instructions.getFirst(),
+								methodNode.instructions.getLast());
+						return;
+					}
+				}
+			}
+		}
 	}
 
 	private static class Matcher extends AbstractMatcher {

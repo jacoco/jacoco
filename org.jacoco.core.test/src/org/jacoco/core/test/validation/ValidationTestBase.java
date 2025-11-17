@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2024 Mountainminds GmbH & Co. KG and Contributors
+ * Copyright (c) 2009, 2025 Mountainminds GmbH & Co. KG and Contributors
  * This program and the accompanying materials are made available under
  * the terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0
@@ -21,6 +21,7 @@ import java.io.PrintWriter;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Collections;
 
 import org.jacoco.core.analysis.Analyzer;
@@ -68,6 +69,8 @@ public abstract class ValidationTestBase {
 
 	private final Class<?> target;
 
+	private final File asmDir;
+
 	private Source source;
 
 	private IBundleCoverage bundle;
@@ -76,10 +79,19 @@ public abstract class ValidationTestBase {
 
 	protected ValidationTestBase(final Class<?> target) {
 		this.target = target;
+		this.asmDir = new File("target/asm/" + target.getSimpleName());
 	}
 
 	@Before
 	public void setup() throws Exception {
+		asmDir.mkdirs();
+		// Without cleanup bytecode representation might be in
+		// a weird misleading mixed state after multiple runs
+		// during construction/modification of validation test in IDE:
+		for (File f : asmDir.listFiles()) {
+			f.delete();
+		}
+
 		final ExecutionDataStore store = execute();
 		analyze(store);
 	}
@@ -96,34 +108,39 @@ public abstract class ValidationTestBase {
 				(Object) new String[0]);
 	}
 
+	protected Collection<String> additionalClassesForAnalysis() {
+		return Collections.emptyList();
+	}
+
 	private void analyze(final ExecutionDataStore store) throws IOException {
 		final CoverageBuilder builder = new CoverageBuilder();
 		final Analyzer analyzer = new Analyzer(store, builder);
 		for (ExecutionData data : store.getContents()) {
-			analyze(analyzer, data);
+			analyze(analyzer, data.getName());
+		}
+		for (String className : additionalClassesForAnalysis()) {
+			analyze(analyzer, className);
 		}
 		final String testClassSimpleName = getClass().getSimpleName();
 		bundle = builder.getBundle(testClassSimpleName);
 		source = Source.load(target, bundle);
 	}
 
-	private void analyze(final Analyzer analyzer, final ExecutionData data)
+	private void analyze(final Analyzer analyzer, final String className)
 			throws IOException {
 		final byte[] bytes = TargetLoader
-				.getClassDataAsBytes(target.getClassLoader(), data.getName());
-		analyzer.analyzeClass(bytes, data.getName());
-		saveBytecodeRepresentations(bytes, data.getName());
+				.getClassDataAsBytes(target.getClassLoader(), className);
+		analyzer.analyzeClass(bytes, className);
+		saveBytecodeRepresentations(bytes, className);
 	}
 
 	private void saveBytecodeRepresentations(final byte[] classBytes,
 			final String className) throws IOException {
-		final File outputDir = new File("target/asm/" + target.getSimpleName());
-		outputDir.mkdirs();
 		final String fileName = className.replace('/', '.');
 		final PrintWriter textWriter = new PrintWriter(
-				new File(outputDir, fileName + ".txt"));
+				new File(asmDir, fileName + ".txt"));
 		final PrintWriter asmWriter = new PrintWriter(
-				new File(outputDir, fileName + ".java"));
+				new File(asmDir, fileName + ".java"));
 		InstrSupport.classReaderFor(classBytes)
 				.accept(new TraceClassVisitor(new TraceClassVisitor(null,
 						new Textifier(), textWriter), new ASMifier(),

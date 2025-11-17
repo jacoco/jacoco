@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2024 Mountainminds GmbH & Co. KG and Contributors
+ * Copyright (c) 2009, 2025 Mountainminds GmbH & Co. KG and Contributors
  * This program and the accompanying materials are made available under
  * the terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0
@@ -11,10 +11,6 @@
  *
  *******************************************************************************/
 package org.jacoco.core.internal.analysis.filter;
-
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
 
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.tree.AbstractInsnNode;
@@ -63,7 +59,8 @@ final class KotlinWhenFilter implements IFilter {
 					return;
 
 				} else if (getDefaultLabel(i) == start) {
-					ignoreDefaultBranch(i, output);
+					output.replaceBranches(i,
+							Replacements.ignoreDefaultBranch(i));
 					output.ignore(start, cursor);
 					return;
 
@@ -114,24 +111,6 @@ final class KotlinWhenFilter implements IFilter {
 		default:
 			return null;
 		}
-	}
-
-	private static void ignoreDefaultBranch(final AbstractInsnNode switchNode,
-			final IFilterOutput output) {
-		final List<LabelNode> labels;
-		if (switchNode.getOpcode() == Opcodes.LOOKUPSWITCH) {
-			labels = ((LookupSwitchInsnNode) switchNode).labels;
-		} else {
-			labels = ((TableSwitchInsnNode) switchNode).labels;
-		}
-		final LabelNode defaultLabel = getDefaultLabel(switchNode);
-		final Set<AbstractInsnNode> newTargets = new HashSet<AbstractInsnNode>();
-		for (final LabelNode label : labels) {
-			if (label != defaultLabel) {
-				newTargets.add(AbstractMatcher.skipNonOpcodes(label));
-			}
-		}
-		output.replaceBranches(switchNode, newTargets);
 	}
 
 }

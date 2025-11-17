@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2024 Mountainminds GmbH & Co. KG and Contributors
+ * Copyright (c) 2009, 2025 Mountainminds GmbH & Co. KG and Contributors
  * This program and the accompanying materials are made available under
  * the terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0
@@ -12,8 +12,11 @@
  *******************************************************************************/
 package org.jacoco.core.test.validation.kotlin.targets
 
+import org.jacoco.core.test.validation.targets.Stubs.nop
+import org.jacoco.core.test.validation.targets.Stubs.string
+
 /**
- * Test target with `when` expressions with subject of type `String`.
+ * Test target with `when` expressions and statements with subject of type `String`.
  */
 object KotlinWhenStringTarget {
 
@@ -25,6 +28,43 @@ object KotlinWhenStringTarget {
         "\u0000b" -> 5 // assertFullyCovered()
         "\u0000c" -> 6 // assertFullyCovered()
         else -> 7 // assertFullyCovered()
+    } // assertFullyCovered()
+
+    private fun whenStringNullableDefault(p: String?): String =
+        when (p) { // assertFullyCovered(0, 4)
+            "a" -> "case a" // assertFullyCovered()
+            "b" -> "case b" // assertFullyCovered()
+            "c" -> "case c" // assertFullyCovered()
+            else -> "else" // assertFullyCovered()
+        } // assertFullyCovered()
+
+    private fun whenStringNullableCase(p: String?): String =
+        when (p) { // assertFullyCovered(0, 5)
+            "a" -> "case a" // assertFullyCovered()
+            "b" -> "case b" // assertFullyCovered()
+            "c" -> "case c" // assertFullyCovered()
+            null -> "null" // assertFullyCovered()
+            else -> "else" // assertFullyCovered()
+        } // assertFullyCovered()
+
+    /**
+     * @see KotlinControlStructuresTarget.whenImplicitElseNotExecuted
+     */
+    private fun implicitElseNotExecuted(s: String) {
+        when (s) { // assertFullyCovered(1, 3)
+            "a" -> nop("case a") // assertFullyCovered()
+            "b" -> nop("case b") // assertFullyCovered()
+            "c" -> nop("case c") // assertFullyCovered()
+        } // assertEmpty()
+    } // assertFullyCovered()
+
+    private fun executedWithSameHashCodeAsFirstCase() {
+        when (string("\u0000a")) { // assertFullyCovered(3, 1)
+            "a" -> nop("case a") // assertNotCovered()
+            "b" -> nop("case b") // assertNotCovered()
+            "c" -> nop("case c") // assertNotCovered()
+            else -> nop("else") // assertFullyCovered()
+        } // assertEmpty()
     } // assertFullyCovered()
 
     /**
@@ -50,6 +90,23 @@ object KotlinWhenStringTarget {
         whenString("\u0000a")
         whenString("\u0000b")
         whenString("\u0000c")
+
+        whenStringNullableDefault("a")
+        whenStringNullableDefault("b")
+        whenStringNullableDefault("c")
+        whenStringNullableDefault("")
+
+        whenStringNullableCase("a")
+        whenStringNullableCase("b")
+        whenStringNullableCase("c")
+        whenStringNullableCase(null)
+        whenStringNullableCase("")
+
+        implicitElseNotExecuted("a")
+        implicitElseNotExecuted("b")
+        implicitElseNotExecuted("c")
+
+        executedWithSameHashCodeAsFirstCase()
 
         whenStringBiggestHashCodeFirst("")
         whenStringBiggestHashCodeFirst("a")

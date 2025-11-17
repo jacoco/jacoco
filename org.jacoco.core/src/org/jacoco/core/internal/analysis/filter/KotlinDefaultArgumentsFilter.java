@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2024 Mountainminds GmbH & Co. KG and Contributors
+ * Copyright (c) 2009, 2025 Mountainminds GmbH & Co. KG and Contributors
  * This program and the accompanying materials are made available under
  * the terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0
@@ -12,8 +12,7 @@
  *******************************************************************************/
 package org.jacoco.core.internal.analysis.filter;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
 
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.Type;
@@ -76,10 +75,6 @@ final class KotlinDefaultArgumentsFilter implements IFilter {
 		if ((methodNode.access & Opcodes.ACC_SYNTHETIC) == 0) {
 			return;
 		}
-		if (!Filters.isKotlinClass(context)) {
-			return;
-		}
-
 		if (isDefaultArgumentsMethod(methodNode)) {
 			new Matcher().match(methodNode, output, false);
 		} else if (isDefaultArgumentsConstructor(methodNode)) {
@@ -113,13 +108,13 @@ final class KotlinDefaultArgumentsFilter implements IFilter {
 				cursor = skipNonOpcodes(methodNode.instructions.getFirst());
 			}
 
-			final Set<AbstractInsnNode> ignore = new HashSet<AbstractInsnNode>();
+			final ArrayList<AbstractInsnNode> ignore = new ArrayList<AbstractInsnNode>();
 			final int maskVar = maskVar(methodNode.desc, constructor);
 			while (true) {
 				if (cursor.getOpcode() != Opcodes.ILOAD) {
 					break;
 				}
-				if (((VarInsnNode) cursor).var != maskVar) {
+				if (((VarInsnNode) cursor).var < maskVar) {
 					break;
 				}
 				next();
@@ -133,7 +128,7 @@ final class KotlinDefaultArgumentsFilter implements IFilter {
 				skipNonOpcodes();
 			}
 
-			for (AbstractInsnNode i : ignore) {
+			for (final AbstractInsnNode i : ignore) {
 				output.ignore(i, i);
 			}
 		}

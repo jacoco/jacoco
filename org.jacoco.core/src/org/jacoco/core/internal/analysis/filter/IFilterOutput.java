@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2024 Mountainminds GmbH & Co. KG and Contributors
+ * Copyright (c) 2009, 2025 Mountainminds GmbH & Co. KG and Contributors
  * This program and the accompanying materials are made available under
  * the terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0
@@ -12,9 +12,9 @@
  *******************************************************************************/
 package org.jacoco.core.internal.analysis.filter;
 
-import java.util.Set;
-
 import org.objectweb.asm.tree.AbstractInsnNode;
+import org.objectweb.asm.tree.InsnList;
+import org.objectweb.asm.tree.MethodNode;
 
 /**
  * Interface used by filters to mark filtered items.
@@ -24,6 +24,11 @@ public interface IFilterOutput {
 	/**
 	 * Marks sequence of instructions that should be ignored during computation
 	 * of coverage.
+	 * <p>
+	 * It is safe to pass {@link InsnList#getFirst() first} and
+	 * {@link InsnList#getLast() last} {@link MethodNode#instructions} of empty
+	 * methods, ie when both parameters are {@code null}.
+	 * </p>
 	 *
 	 * @param fromInclusive
 	 *            first instruction that should be ignored, inclusive
@@ -50,10 +55,9 @@ public interface IFilterOutput {
 	 *
 	 * @param source
 	 *            instruction which branches should be replaced
-	 * @param newTargets
-	 *            new targets of branches
+	 * @param replacements
+	 *            new branches
 	 */
-	void replaceBranches(AbstractInsnNode source,
-			Set<AbstractInsnNode> newTargets);
+	void replaceBranches(AbstractInsnNode source, Replacements replacements);
 
 }

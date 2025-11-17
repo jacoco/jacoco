@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2024 Mountainminds GmbH & Co. KG and Contributors
+ * Copyright (c) 2009, 2025 Mountainminds GmbH & Co. KG and Contributors
  * This program and the accompanying materials are made available under
  * the terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0
@@ -62,7 +62,7 @@ public class KotlinInlineClassFilterTest extends FilterTestBase {
 
 		filter.filter(m, context, output);
 
-		assertIgnored();
+		assertIgnored(m);
 	}
 
 	/**
@@ -80,19 +80,7 @@ public class KotlinInlineClassFilterTest extends FilterTestBase {
 
 		filter.filter(m, context, output);
 
-		assertIgnored();
-	}
-
-	@Test
-	public void should_not_filter_when_not_kotlin() {
-		context.classAnnotations.add("Lkotlin/jvm/JvmInline;");
-		final MethodNode m = new MethodNode(0, "getValue",
-				"()Ljava/lang/String;", null, null);
-		m.visitInsn(Opcodes.NOP);
-
-		filter.filter(m, context, output);
-
-		assertIgnored();
+		assertIgnored(m);
 	}
 
 }

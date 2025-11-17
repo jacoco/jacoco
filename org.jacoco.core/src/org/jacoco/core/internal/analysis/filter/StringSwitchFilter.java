@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2024 Mountainminds GmbH & Co. KG and Contributors
+ * Copyright (c) 2009, 2025 Mountainminds GmbH & Co. KG and Contributors
  * This program and the accompanying materials are made available under
  * the terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0
@@ -11,9 +11,6 @@
  *
  *******************************************************************************/
 package org.jacoco.core.internal.analysis.filter;
-
-import java.util.HashSet;
-import java.util.Set;
 
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.tree.AbstractInsnNode;
@@ -42,19 +39,35 @@ final class StringSwitchFilter implements IFilter {
 	private static class Matcher extends AbstractMatcher {
 		public void match(final AbstractInsnNode start,
 				final IFilterOutput output) {
-
-			if (start.getOpcode() != /* ECJ */ Opcodes.ASTORE
-					&& start.getOpcode() != /* Kotlin */ Opcodes.ALOAD) {
+			if (start.getOpcode() != Opcodes.ASTORE) {
 				return;
 			}
+			vars.put("s", (VarInsnNode) start);
 			cursor = start;
+			JumpInsnNode ifNullInstruction = null;
+			if (start.getNext().getOpcode() == Opcodes.ALOAD) {
+				// Kotlin
+				nextIsVar(Opcodes.ALOAD, "s");
+				if (cursor == null) {
+					return;
+				} else if (cursor.getNext().getOpcode() == Opcodes.DUP) {
+					// nullable case
+					nextIs(Opcodes.DUP);
+					nextIs(Opcodes.IFNULL);
+					ifNullInstruction = (JumpInsnNode) cursor;
+				} else if (cursor.getNext().getOpcode() == Opcodes.IFNULL) {
+					// nullable else
+					nextIs(Opcodes.IFNULL);
+					ifNullInstruction = (JumpInsnNode) cursor;
+					nextIsVar(Opcodes.ALOAD, "s");
+				}
+			}
 			nextIsInvoke(Opcodes.INVOKEVIRTUAL, "java/lang/String", "hashCode",
 					"()I");
 			nextIsSwitch();
 			if (cursor == null) {
 				return;
 			}
-			vars.put("s", (VarInsnNode) start);
 
 			final AbstractInsnNode s = cursor;
 			final int hashCodes;
@@ -73,8 +86,8 @@ final class StringSwitchFilter implements IFilter {
 				return;
 			}
 
-			final Set<AbstractInsnNode> replacements = new HashSet<AbstractInsnNode>();
-			replacements.add(skipNonOpcodes(defaultLabel));
+			final Replacements replacements = new Replacements();
+			replacements.add(defaultLabel, s, 0);
 
 			for (int i = 0; i < hashCodes; i++) {
 				while (true) {
@@ -88,22 +101,27 @@ final class StringSwitchFilter implements IFilter {
 						return;
 					}
 
-					replacements
-							.add(skipNonOpcodes(((JumpInsnNode) cursor).label));
+					replacements.add(((JumpInsnNode) cursor).label, cursor, 1);
 
 					if (cursor.getNext().getOpcode() == Opcodes.GOTO) {
 						// end of comparisons for same hashCode
 						// jump to default
 						nextIs(Opcodes.GOTO);
+						replacements.add(defaultLabel, cursor, 1);
 						break;
 					} else if (cursor.getNext() == defaultLabel) {
+						replacements.add(defaultLabel, cursor, 0);
 						break;
 					}
 				}
 			}
 
-			output.ignore(s.getNext(), cursor);
-			output.replaceBranches(s, replacements);
+			if (ifNullInstruction != null) {
+				replacements.add(ifNullInstruction.label, ifNullInstruction, 1);
+			}
+
+			output.ignore(start.getNext(), cursor);
+			output.replaceBranches(start, replacements);
 		}
 	}
 

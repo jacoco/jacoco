@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2024 Mountainminds GmbH & Co. KG and Contributors
+ * Copyright (c) 2009, 2025 Mountainminds GmbH & Co. KG and Contributors
  * This program and the accompanying materials are made available under
  * the terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0
@@ -46,7 +46,7 @@ public abstract class AbstractAgentMojo extends AbstractJacocoMojo {
 	@Parameter(property = "plugin.artifactMap", required = true, readonly = true)
 	Map<String, Artifact> pluginArtifactMap;
 	/**
-	 * Allows to specify property which will contains settings for JaCoCo Agent.
+	 * Allows to specify property which will contain settings for JaCoCo Agent.
 	 * If not specified, then "argLine" would be used for "jar" packaging and
 	 * "tycho.testArgLine" for "eclipse-test-plugin".
 	 */

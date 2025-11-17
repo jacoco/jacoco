@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2024 Mountainminds GmbH & Co. KG and Contributors
+ * Copyright (c) 2009, 2025 Mountainminds GmbH & Co. KG and Contributors
  * This program and the accompanying materials are made available under
  * the terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0
@@ -85,7 +85,7 @@ public class KotlinInlineFilterTest extends FilterTestBase {
 
 		filter.filter(m, context, output);
 
-		assertIgnored(expectedRanges.toArray(new Range[0]));
+		assertIgnored(m, expectedRanges.toArray(new Range[0]));
 
 		// should not reparse:
 		context.sourceDebugExtension = "";
@@ -160,7 +160,7 @@ public class KotlinInlineFilterTest extends FilterTestBase {
 
 		filter.filter(m, context, output);
 
-		assertIgnored(expectedRanges.toArray(new Range[0]));
+		assertIgnored(m, expectedRanges.toArray(new Range[0]));
 	}
 
 	/**
@@ -218,7 +218,7 @@ public class KotlinInlineFilterTest extends FilterTestBase {
 
 		filter.filter(m, context, output);
 
-		assertIgnored(expectedRanges.toArray(new Range[0]));
+		assertIgnored(m, expectedRanges.toArray(new Range[0]));
 	}
 
 	/**
@@ -281,19 +281,7 @@ public class KotlinInlineFilterTest extends FilterTestBase {
 
 		filter.filter(m, context, output);
 
-		assertIgnored(expectedRanges.toArray(new Range[0]));
-	}
-
-	@Test
-	public void should_not_parse_SourceDebugExtension_attribute_when_no_kotlin_metadata_annotation() {
-		context.sourceDebugExtension = "SMAP";
-
-		m.visitLineNumber(1, new Label());
-		m.visitInsn(Opcodes.RETURN);
-
-		filter.filter(m, context, output);
-
-		assertIgnored();
+		assertIgnored(m, expectedRanges.toArray(new Range[0]));
 	}
 
 	@Test
@@ -306,7 +294,7 @@ public class KotlinInlineFilterTest extends FilterTestBase {
 
 		filter.filter(m, context, output);
 
-		assertIgnored();
+		assertIgnored(m);
 	}
 
 	private final List<Range> expectedRanges = new ArrayList<Range>();

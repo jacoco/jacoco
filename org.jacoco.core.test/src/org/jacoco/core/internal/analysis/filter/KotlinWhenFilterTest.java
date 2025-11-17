@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2024 Mountainminds GmbH & Co. KG and Contributors
+ * Copyright (c) 2009, 2025 Mountainminds GmbH & Co. KG and Contributors
  * This program and the accompanying materials are made available under
  * the terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0
@@ -12,8 +12,7 @@
  *******************************************************************************/
 package org.jacoco.core.internal.analysis.filter;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
 
 import org.jacoco.core.internal.instr.InstrSupport;
 import org.junit.Test;
@@ -31,6 +30,8 @@ public class KotlinWhenFilterTest extends FilterTestBase {
 
 	private final MethodNode m = new MethodNode(InstrSupport.ASM_API_VERSION, 0,
 			"name", "()V", null, null);
+
+	private final ArrayList<Replacement> replacements = new ArrayList<Replacement>();
 
 	@Test
 	public void should_filter_implicit_else() {
@@ -58,7 +59,7 @@ public class KotlinWhenFilterTest extends FilterTestBase {
 
 		filter.filter(m, context, output);
 
-		assertIgnored(range1, range2);
+		assertIgnored(m, range1, range2);
 		assertNoReplacedBranches();
 	}
 
@@ -82,7 +83,7 @@ public class KotlinWhenFilterTest extends FilterTestBase {
 
 		filter.filter(m, context, output);
 
-		assertIgnored();
+		assertIgnored(m);
 		assertNoReplacedBranches();
 	}
 
@@ -96,11 +97,10 @@ public class KotlinWhenFilterTest extends FilterTestBase {
 
 		m.visitTableSwitchInsn(0, 0, caseDefault, case1);
 		final AbstractInsnNode switchNode = m.instructions.getLast();
-		final Set<AbstractInsnNode> newTargets = new HashSet<AbstractInsnNode>();
+		replacements.add(new Replacement(0, switchNode, 1));
 
 		m.visitLabel(case1);
 		m.visitInsn(Opcodes.ICONST_1);
-		newTargets.add(m.instructions.getLast());
 		m.visitJumpInsn(Opcodes.GOTO, after);
 
 		final Range range1 = new Range();
@@ -117,8 +117,8 @@ public class KotlinWhenFilterTest extends FilterTestBase {
 
 		filter.filter(m, context, output);
 
-		assertIgnored(range1);
-		assertReplacedBranches(switchNode, newTargets);
+		assertIgnored(m, range1);
+		assertReplacedBranches(m, switchNode, replacements);
 	}
 
 	/**
@@ -135,7 +135,6 @@ public class KotlinWhenFilterTest extends FilterTestBase {
 	public void should_filter_when_by_nullable_enum_with_null_case_and_without_else() {
 		final Range range1 = new Range();
 		final Range range2 = new Range();
-		final HashSet<AbstractInsnNode> newTargets = new HashSet<AbstractInsnNode>();
 		final MethodNode m = new MethodNode(InstrSupport.ASM_API_VERSION, 0,
 				"example", "(LE;)Ljava/lang/String;", null, null);
 		final Label l1 = new Label();
@@ -162,23 +161,27 @@ public class KotlinWhenFilterTest extends FilterTestBase {
 		m.visitInsn(Opcodes.IALOAD);
 		m.visitLabel(l2);
 		range1.toInclusive = m.instructions.getLast();
-		m.visitTableSwitchInsn(-1, 2, caseElse, caseNull, caseElse, caseA,
-				caseB);
+		m.visitTableSwitchInsn(-1, 2, //
+				caseElse, // branch 0
+				caseNull, // branch 1
+				caseElse, // branch 0
+				caseA, // branch 2
+				caseB); // branch 3
 		final AbstractInsnNode switchNode = m.instructions.getLast();
+		replacements.add(new Replacement(0, switchNode, 1));
+		replacements.add(new Replacement(1, switchNode, 2));
+		replacements.add(new Replacement(2, switchNode, 3));
 
 		m.visitLabel(caseA);
 		m.visitLdcInsn("a");
-		newTargets.add(m.instructions.getLast());
 		m.visitJumpInsn(Opcodes.GOTO, after);
 
 		m.visitLabel(caseB);
 		m.visitLdcInsn("b");
-		newTargets.add(m.instructions.getLast());
 		m.visitJumpInsn(Opcodes.GOTO, after);
 
 		m.visitLabel(caseNull);
 		m.visitLdcInsn("null");
-		newTargets.add(m.instructions.getLast());
 		m.visitJumpInsn(Opcodes.GOTO, after);
 
 		m.visitLabel(caseElse);
@@ -195,8 +198,8 @@ public class KotlinWhenFilterTest extends FilterTestBase {
 
 		filter.filter(m, context, output);
 
-		assertIgnored(range1, range2);
-		assertReplacedBranches(switchNode, newTargets);
+		assertIgnored(m, range1, range2);
+		assertReplacedBranches(m, switchNode, replacements);
 	}
 
 	/**
@@ -255,7 +258,7 @@ public class KotlinWhenFilterTest extends FilterTestBase {
 
 		filter.filter(m, context, output);
 
-		assertIgnored(range1);
+		assertIgnored(m, range1);
 		assertNoReplacedBranches();
 	}
 
@@ -315,7 +318,7 @@ public class KotlinWhenFilterTest extends FilterTestBase {
 
 		filter.filter(m, context, output);
 
-		assertIgnored(range1);
+		assertIgnored(m, range1);
 		assertNoReplacedBranches();
 	}
 
