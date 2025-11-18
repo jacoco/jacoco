@@ -53,7 +53,7 @@ class TcpConnection implements IRemoteCommandVisitor {
 	 * Processes all requests for this session until the socket is closed.
 	 *
 	 * @throws IOException
-	 *             in case of problems whith the connection
+	 *             in case of problems with the connection
 	 */
 	public void run() throws IOException {
 		try {
