@@ -70,7 +70,7 @@ public class ReportMojo extends AbstractReportMojo {
 	void createReport(final IReportGroupVisitor visitor,
 			final ReportSupport support) throws IOException {
 		support.processProject(visitor, title, project, getIncludes(),
-				getExcludes(), sourceEncoding);
+				getExcludes(), sourceEncoding, includeTestSources);
 	}
 
 	public File getReportOutputDirectory() {
