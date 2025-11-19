@@ -1,0 +1,68 @@
+/*******************************************************************************
+ * Copyright (c) 2009, 2025 Mountainminds GmbH & Co. KG and Contributors
+ * This program and the accompanying materials are made available under
+ * the terms of the Eclipse Public License 2.0 which is available at
+ * http://www.eclipse.org/legal/epl-2.0
+ *
+ * SPDX-License-Identifier: EPL-2.0
+ *
+ * Contributors:
+ *    Marc R. Hoffmann - initial API and implementation
+ *
+ *******************************************************************************/
+import java.io.*;
+import org.codehaus.plexus.util.*;
+
+// Check that HTML report was created in jacoco-it directory
+File htmlReportIndex = new File( basedir, "target/site/jacoco-it/org.project/index.html" );
+if ( !htmlReportIndex.isFile() ) {
+    throw new RuntimeException( "Integration test HTML report index was not created" );
+}
+
+// Check that main source file has a report page
+File exampleReportFile = new File( basedir, "target/site/jacoco-it/org.project/IntegrationExample.html" );
+if ( !exampleReportFile.isFile() ) {
+    throw new RuntimeException( "IntegrationExample.html (main source) was not created" );
+}
+
+// Check that test source file has a report page
+File exampleItReportFile = new File( basedir, "target/site/jacoco-it/org.project/IntegrationExampleIT.html" );
+if ( !exampleItReportFile.isFile() ) {
+    throw new RuntimeException( "IntegrationExampleIT.html (test source) was not created" );
+}
+
+// Check that test helper file has a report page
+File testHelperReportFile = new File( basedir, "target/site/jacoco-it/org.project/IntegrationTestHelper.html" );
+if ( !testHelperReportFile.isFile() ) {
+    throw new RuntimeException( "IntegrationTestHelper.html (test source) was not created - includeTestSources may not be working" );
+}
+
+// Check that the index page contains references to all classes
+String indexContent = FileUtils.fileRead( htmlReportIndex );
+if ( indexContent.indexOf( "IntegrationExample.html" ) < 0 ) {
+    throw new RuntimeException( "Index does not contain reference to IntegrationExample class" );
+}
+if ( indexContent.indexOf( "IntegrationExampleIT.html" ) < 0 ) {
+    throw new RuntimeException( "Index does not contain reference to IntegrationExampleIT class" );
+}
+if ( indexContent.indexOf( "IntegrationTestHelper.html" ) < 0 ) {
+    throw new RuntimeException( "Index does not contain reference to IntegrationTestHelper class - includeTestSources may not be working" );
+}
+
+// Verify that XML report was also created
+File xmlReportFile = new File( basedir, "target/site/jacoco-it/jacoco.xml" );
+if ( !xmlReportFile.isFile() ) {
+    throw new RuntimeException( "Integration test XML report was not created" );
+}
+
+// Check XML content contains all classes
+String xmlContent = FileUtils.fileRead( xmlReportFile );
+if ( xmlContent.indexOf( "\"org/project/IntegrationExample\"" ) < 0 ) {
+    throw new RuntimeException( "XML report does not contain IntegrationExample class" );
+}
+if ( xmlContent.indexOf( "\"org/project/IntegrationExampleIT\"" ) < 0 ) {
+    throw new RuntimeException( "XML report does not contain IntegrationExampleIT class" );
+}
+if ( xmlContent.indexOf( "\"org/project/IntegrationTestHelper\"" ) < 0 ) {
+    throw new RuntimeException( "XML report does not contain IntegrationTestHelper class - includeTestSources may not be working" );
+}
