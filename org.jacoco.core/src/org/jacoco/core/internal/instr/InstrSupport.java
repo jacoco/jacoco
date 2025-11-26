@@ -273,9 +273,9 @@ public final class InstrSupport {
 	 */
 	public static ClassReader classReaderFor(final byte[] b) {
 		final int originalVersion = getMajorVersion(b);
-		if (originalVersion == Opcodes.V25 + 1) {
+		if (originalVersion == Opcodes.V26 + 1) {
 			// temporarily downgrade version to bypass check in ASM
-			setMajorVersion(Opcodes.V25, b);
+			setMajorVersion(Opcodes.V26, b);
 		}
 		final ClassReader classReader = new ClassReader(b);
 		setMajorVersion(originalVersion, b);
