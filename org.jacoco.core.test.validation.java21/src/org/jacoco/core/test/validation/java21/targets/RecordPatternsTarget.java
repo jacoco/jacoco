@@ -24,9 +24,11 @@ public class RecordPatternsTarget {
 	}
 
 	private static void instanceofOperator(Object o) {
-		if (o instanceof Point(int x, int y)) { // assertInstanceof()
+		if (o instanceof Point(int x, int y)) { // assertFullyCovered(0, 2)
 			nop(x + y); // assertFullyCovered()
+			return; // assertFullyCovered()
 		} // assertEmpty()
+		nop(); // assertFullyCovered()
 	}
 
 	private static void switchStatement(Object p) {
