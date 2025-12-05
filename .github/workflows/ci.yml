@@ -97,3 +97,22 @@ jobs:
           name: jacoco
           path: jacoco/target/*.zip
           if-no-files-found: error
+  CI:
+    needs:
+      - Linux
+      - Windows
+    # without following condition this job can have result "skipped" if needed job was "skipped"
+    # auto-merge ignores skipped jobs even if they are required by branch protection rules
+    if: ${{ always() }}
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Check results of all needed jobs
+        run: |
+          R=$(echo "$NEEDS" | jq --compact-output '[.[].result] | unique')
+          if [ "$R" = '["success"]' ]; then
+            exit 0
+          else
+            exit 1
+          fi
+        env:
+          NEEDS: ${{ toJSON(needs) }}
