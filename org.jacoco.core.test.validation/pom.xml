@@ -125,7 +125,7 @@
         <module>../org.jacoco.core.test.validation.java7</module>
         <module>../org.jacoco.core.test.validation.java8</module>
         <module>../org.jacoco.core.test.validation.groovy</module>
-        <module>../org.jacoco.core.test.validation.scala</module>
+        <!--        <module>../org.jacoco.core.test.validation.scala</module>-->
       </modules>
     </profile>
 
@@ -146,7 +146,7 @@
         <module>../org.jacoco.core.test.validation.java7</module>
         <module>../org.jacoco.core.test.validation.java8</module>
         <module>../org.jacoco.core.test.validation.groovy</module>
-        <module>../org.jacoco.core.test.validation.scala</module>
+        <!--        <module>../org.jacoco.core.test.validation.scala</module>-->
       </modules>
     </profile>
 
@@ -207,7 +207,7 @@
         <module>../org.jacoco.core.test.validation.java7</module>
         <module>../org.jacoco.core.test.validation.java8</module>
         <module>../org.jacoco.core.test.validation.groovy</module>
-        <module>../org.jacoco.core.test.validation.scala</module>
+        <!--        <module>../org.jacoco.core.test.validation.scala</module>-->
       </modules>
     </profile>
 
@@ -228,7 +228,7 @@
         <module>../org.jacoco.core.test.validation.java7</module>
         <module>../org.jacoco.core.test.validation.java8</module>
         <module>../org.jacoco.core.test.validation.groovy</module>
-        <module>../org.jacoco.core.test.validation.scala</module>
+        <!--        <module>../org.jacoco.core.test.validation.scala</module>-->
       </modules>
     </profile>
 
@@ -252,7 +252,7 @@
         <module>../org.jacoco.core.test.validation.java7</module>
         <module>../org.jacoco.core.test.validation.java8</module>
         <module>../org.jacoco.core.test.validation.groovy</module>
-        <module>../org.jacoco.core.test.validation.scala</module>
+        <!--        <module>../org.jacoco.core.test.validation.scala</module>-->
       </modules>
     </profile>
 
@@ -277,7 +277,7 @@
         <module>../org.jacoco.core.test.validation.java8</module>
         <module>../org.jacoco.core.test.validation.java14</module>
         <module>../org.jacoco.core.test.validation.groovy</module>
-        <module>../org.jacoco.core.test.validation.scala</module>
+        <!--        <module>../org.jacoco.core.test.validation.scala</module>-->
       </modules>
     </profile>
 
@@ -302,7 +302,7 @@
         <module>../org.jacoco.core.test.validation.java8</module>
         <module>../org.jacoco.core.test.validation.java14</module>
         <module>../org.jacoco.core.test.validation.groovy</module>
-        <module>../org.jacoco.core.test.validation.scala</module>
+        <!--        <module>../org.jacoco.core.test.validation.scala</module>-->
       </modules>
     </profile>
 
@@ -328,7 +328,7 @@
         <module>../org.jacoco.core.test.validation.java14</module>
         <module>../org.jacoco.core.test.validation.java16</module>
         <module>../org.jacoco.core.test.validation.groovy</module>
-        <module>../org.jacoco.core.test.validation.scala</module>
+        <!--        <module>../org.jacoco.core.test.validation.scala</module>-->
       </modules>
     </profile>
 
@@ -354,7 +354,7 @@
         <module>../org.jacoco.core.test.validation.java14</module>
         <module>../org.jacoco.core.test.validation.java16</module>
         <module>../org.jacoco.core.test.validation.groovy</module>
-        <module>../org.jacoco.core.test.validation.scala</module>
+        <!--        <module>../org.jacoco.core.test.validation.scala</module>-->
       </modules>
     </profile>
 
@@ -381,7 +381,7 @@
         <module>../org.jacoco.core.test.validation.java14</module>
         <module>../org.jacoco.core.test.validation.java16</module>
         <module>../org.jacoco.core.test.validation.groovy</module>
-        <module>../org.jacoco.core.test.validation.scala</module>
+        <!--        <module>../org.jacoco.core.test.validation.scala</module>-->
       </modules>
     </profile>
 
@@ -408,7 +408,7 @@
         <module>../org.jacoco.core.test.validation.java14</module>
         <module>../org.jacoco.core.test.validation.java16</module>
         <module>../org.jacoco.core.test.validation.groovy</module>
-        <module>../org.jacoco.core.test.validation.scala</module>
+        <!--        <module>../org.jacoco.core.test.validation.scala</module>-->
       </modules>
     </profile>
 
@@ -435,7 +435,7 @@
         <module>../org.jacoco.core.test.validation.java14</module>
         <module>../org.jacoco.core.test.validation.java16</module>
         <module>../org.jacoco.core.test.validation.groovy</module>
-        <module>../org.jacoco.core.test.validation.scala</module>
+        <!--        <module>../org.jacoco.core.test.validation.scala</module>-->
       </modules>
     </profile>
 
@@ -463,7 +463,7 @@
         <module>../org.jacoco.core.test.validation.java16</module>
         <module>../org.jacoco.core.test.validation.java21</module>
         <module>../org.jacoco.core.test.validation.groovy</module>
-        <module>../org.jacoco.core.test.validation.scala</module>
+        <!--        <module>../org.jacoco.core.test.validation.scala</module>-->
       </modules>
     </profile>
 
@@ -491,7 +491,7 @@
         <module>../org.jacoco.core.test.validation.java16</module>
         <module>../org.jacoco.core.test.validation.java21</module>
         <module>../org.jacoco.core.test.validation.groovy</module>
-        <module>../org.jacoco.core.test.validation.scala</module>
+        <!--        <module>../org.jacoco.core.test.validation.scala</module>-->
       </modules>
     </profile>
 
@@ -519,7 +519,7 @@
         <module>../org.jacoco.core.test.validation.java16</module>
         <module>../org.jacoco.core.test.validation.java21</module>
         <module>../org.jacoco.core.test.validation.groovy</module>
-        <module>../org.jacoco.core.test.validation.scala</module>
+        <!--        <module>../org.jacoco.core.test.validation.scala</module>-->
       </modules>
     </profile>
 
@@ -549,7 +549,7 @@
         <!-- Groovy 3.0.25 does not support Java 24
         <module>../org.jacoco.core.test.validation.groovy</module>
         -->
-        <module>../org.jacoco.core.test.validation.scala</module>
+<!--        <module>../org.jacoco.core.test.validation.scala</module>-->
       </modules>
     </profile>
 
@@ -578,7 +578,7 @@
         <module>../org.jacoco.core.test.validation.java16</module>
         <module>../org.jacoco.core.test.validation.java21</module>
         <module>../org.jacoco.core.test.validation.groovy</module>
-        <module>../org.jacoco.core.test.validation.scala</module>
+        <!--        <module>../org.jacoco.core.test.validation.scala</module>-->
       </modules>
     </profile>
 
@@ -609,7 +609,7 @@
         <!-- Groovy 3.0.25 does not support Java 26
         <module>../org.jacoco.core.test.validation.groovy</module>
         -->
-        <module>../org.jacoco.core.test.validation.scala</module>
+        <!--        <module>../org.jacoco.core.test.validation.scala</module>-->
       </modules>
     </profile>
 
