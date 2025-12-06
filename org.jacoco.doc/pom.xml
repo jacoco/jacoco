@@ -73,16 +73,6 @@
     </dependency>
     <dependency>
       <groupId>${project.groupId}</groupId>
-      <artifactId>org.jacoco.ant</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>${project.groupId}</groupId>
-      <artifactId>org.jacoco.ant.test</artifactId>
-      <version>${project.version}</version>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>${project.groupId}</groupId>
       <artifactId>org.jacoco.cli</artifactId>
     </dependency>
     <dependency>
@@ -161,7 +151,6 @@
                 <junitreport todir="${project.build.directory}/junit">
                   <fileset dir="../org.jacoco.agent.test/target" includes="surefire-reports/**/*.xml"/>
                   <fileset dir="../org.jacoco.agent.rt.test/target" includes="surefire-reports/**/*.xml"/>
-                  <fileset dir="../org.jacoco.ant.test/target" includes="surefire-reports/**/*.xml"/>
                   <fileset dir="../org.jacoco.cli.test/target" includes="surefire-reports/**/*.xml"/>
                   <fileset dir="../org.jacoco.core.test/target" includes="surefire-reports/**/*.xml"/>
                   <fileset dir="../org.jacoco.report.test/target" includes="surefire-reports/**/*.xml"/>
@@ -198,7 +187,7 @@
             </goals>
             <configuration>
               <includeDependencySources>true</includeDependencySources>
-              <excludePackageNames>*.internal.*,*.internal,org.jacoco.ant,org.jacoco.maven,org.jacoco.examples</excludePackageNames>
+              <excludePackageNames>*.internal.*,*.internal,org.jacoco.maven,org.jacoco.examples</excludePackageNames>
               <dependencySourceIncludes>
                 <dependencySourceInclude>org.jacoco:*</dependencySourceInclude>
               </dependencySourceIncludes>
