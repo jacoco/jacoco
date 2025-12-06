@@ -157,6 +157,7 @@ public final class ExecutionData {
 	 *            merge mode
 	 */
 	public void merge(final ExecutionData other, final boolean flag) {
+		// id相同的类进行merge操作，首先校验id,类名以及探针长度是否相同，不相同直接会抛出异常
 		assertCompatibility(other.getId(), other.getName(),
 				other.getProbes().length);
 		final boolean[] otherData = other.getProbes();

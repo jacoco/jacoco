@@ -24,6 +24,7 @@ import org.apache.maven.plugins.annotations.LifecyclePhase;
 import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
 import org.jacoco.core.analysis.ICoverageNode;
+import org.jacoco.core.internal.diff.JsonReadUtil;
 import org.jacoco.report.IReportVisitor;
 import org.jacoco.report.check.IViolationsOutput;
 import org.jacoco.report.check.Limit;
@@ -143,6 +144,9 @@ public class CheckMojo extends AbstractJacocoMojo implements IViolationsOutput {
 	@Parameter
 	private List<String> excludes;
 
+	@Parameter(property = "jacoco.diffCodeFile", defaultValue = "${project.basedir}/diffCodeFile.json")
+	String diffCodeFile;
+
 	private boolean violations;
 
 	private boolean canCheckCoverage() {
@@ -172,7 +176,7 @@ public class CheckMojo extends AbstractJacocoMojo implements IViolationsOutput {
 	private void executeCheck() throws MojoExecutionException {
 		violations = false;
 
-		final ReportSupport support = new ReportSupport(getLog());
+		final ReportSupport support = new ReportSupport(getLog(), JsonReadUtil.readJsonToString(this.diffCodeFile));
 
 		final List<Rule> checkerrules = new ArrayList<Rule>();
 		for (final RuleConfiguration r : rules) {

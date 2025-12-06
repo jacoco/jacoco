@@ -16,12 +16,16 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import org.jacoco.core.internal.analysis.BundleCoverageImpl;
 import org.jacoco.core.internal.analysis.ClassCoverageImpl;
 import org.jacoco.core.internal.analysis.SourceFileCoverageImpl;
 import org.jacoco.core.internal.analysis.SourceNodeImpl;
+import org.jacoco.core.internal.diff.ClassInfoDto;
 
 /**
  * Builder for hierarchical {@link ICoverageNode} structures from single
@@ -44,12 +48,36 @@ public class CoverageBuilder implements ICoverageVisitor {
 	private Map<String, ISourceFileCoverage> sourcefiles;
 
 	/**
+	 * 新增代码类
+	 */
+	public List<ClassInfoDto> classInfos;
+
+	/**
 	 * Create a new builder.
 	 *
 	 */
 	public CoverageBuilder() {
 		this.classes = new HashMap<String, IClassCoverage>();
 		this.sourcefiles = new HashMap<String, ISourceFileCoverage>();
+	}
+
+	public CoverageBuilder(String classList) {
+		this.classes = new HashMap<String, IClassCoverage>();
+		this.sourcefiles = new HashMap<String, ISourceFileCoverage>();
+		if (null != classList && !"".equals(classList)) {
+			Gson gson = new Gson();
+			classInfos = gson.fromJson(classList,
+					new TypeToken<List<ClassInfoDto>>() {
+					}.getType());
+		}
+	}
+
+	public List<ClassInfoDto> getClassInfos() {
+		return classInfos;
+	}
+
+	public void setClassInfos(List<ClassInfoDto> classInfos) {
+		this.classInfos = classInfos;
 	}
 
 	/**

@@ -58,6 +58,8 @@ final class ReportSupport {
 	private final ExecFileLoader loader;
 	private final List<IReportVisitor> formatters;
 
+	private String diffMethods;
+
 	/**
 	 * Construct a new instance with the given log output.
 	 *
@@ -68,6 +70,13 @@ final class ReportSupport {
 		this.log = log;
 		this.loader = new ExecFileLoader();
 		this.formatters = new ArrayList<IReportVisitor>();
+	}
+
+	public ReportSupport(final Log log,final String diffMethods) {
+		this.log = log;
+		this.loader = new ExecFileLoader();
+		this.formatters = new ArrayList<IReportVisitor>();
+		this.diffMethods = diffMethods;
 	}
 
 	/**
@@ -154,7 +163,12 @@ final class ReportSupport {
 			final String bundleName, final MavenProject project,
 			final List<String> includes, final List<String> excludes,
 			final ISourceFileLocator locator) throws IOException {
-		final CoverageBuilder builder = new CoverageBuilder();
+		CoverageBuilder builder = new CoverageBuilder();
+		if (null != diffMethods && diffMethods.length() > 0) {
+			builder = new CoverageBuilder(diffMethods);
+		} else {
+			builder = new CoverageBuilder();
+		}
 		final File classesDir = new File(
 				project.getBuild().getOutputDirectory());
 

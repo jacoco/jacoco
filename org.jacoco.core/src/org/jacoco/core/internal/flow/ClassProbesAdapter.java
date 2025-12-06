@@ -12,10 +12,15 @@
  *******************************************************************************/
 package org.jacoco.core.internal.flow;
 
+import org.jacoco.core.internal.analysis.ClassAnalyzer;
+import org.jacoco.core.internal.diff.ClassInfoDto;
+import org.jacoco.core.internal.diff.CodeDiffUtil;
 import org.jacoco.core.internal.instr.InstrSupport;
 import org.objectweb.asm.ClassVisitor;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.commons.AnalyzerAdapter;
+
+import java.util.List;
 
 /**
  * A {@link org.objectweb.asm.ClassVisitor} that calculates probes for every
@@ -60,18 +65,31 @@ public class ClassProbesAdapter extends ClassVisitor
 
 	@Override
 	public final MethodVisitor visitMethod(final int access, final String name,
-			final String desc, final String signature,
-			final String[] exceptions) {
+										   final String desc, final String signature,
+										   final String[] exceptions) {
 		final MethodProbesVisitor methodProbes;
 		final MethodProbesVisitor mv = cv.visitMethod(access, name, desc,
 				signature, exceptions);
-		if (mv == null) {
-			// We need to visit the method in any case, otherwise probe ids
-			// are not reproducible
-			methodProbes = EMPTY_METHOD_PROBES_VISITOR;
+		if (null != mv) {
+			List<ClassInfoDto> classInfos = null;
+			if(cv instanceof ClassAnalyzer){
+				classInfos = ((ClassAnalyzer) cv).getClassInfos();
+			}
+			// 增量代码，有点绕，由于参数定义成final,无法第二次指定,代码无法简化
+			if (null != classInfos
+					&& !classInfos.isEmpty()) {
+				if (CodeDiffUtil.checkMethodIn(this.name, name, desc,classInfos)) {
+					methodProbes = mv;
+				} else {
+					methodProbes = EMPTY_METHOD_PROBES_VISITOR;
+				}
+			} else {
+				methodProbes = mv;
+			}
 		} else {
-			methodProbes = mv;
+			methodProbes = EMPTY_METHOD_PROBES_VISITOR;
 		}
+
 		return new MethodSanitizer(null, access, name, desc, signature,
 				exceptions) {
 
@@ -88,9 +106,11 @@ public class ClassProbesAdapter extends ClassVisitor
 					probesAdapter.setAnalyzer(analyzer);
 					methodProbes.accept(this, analyzer);
 				} else {
+					// 这里调用的就是mv的钩子方法
 					methodProbes.accept(this, probesAdapter);
 				}
 			}
+
 		};
 	}
 

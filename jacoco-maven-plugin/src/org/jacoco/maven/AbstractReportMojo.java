@@ -25,6 +25,7 @@ import org.apache.maven.plugins.annotations.Parameter;
 import org.apache.maven.project.MavenProject;
 import org.apache.maven.reporting.MavenMultiPageReport;
 import org.apache.maven.reporting.MavenReportException;
+import org.jacoco.core.internal.diff.JsonReadUtil;
 import org.jacoco.report.IReportGroupVisitor;
 import org.jacoco.report.IReportVisitor;
 
@@ -97,6 +98,9 @@ public abstract class AbstractReportMojo extends AbstractMojo
 	 */
 	@Parameter(property = "project", readonly = true)
 	MavenProject project;
+
+	@Parameter(property = "jacoco.diffCodeFile", defaultValue = "${project.basedir}/diffCodeFile.json")
+	String diffCodeFile;
 
 	public String getDescription(final Locale locale) {
 		return getName(locale) + " Coverage Report.";
@@ -187,7 +191,7 @@ public abstract class AbstractReportMojo extends AbstractMojo
 	private void executeReport(final Locale locale)
 			throws MavenReportException {
 		try {
-			final ReportSupport support = new ReportSupport(getLog());
+			final ReportSupport support = new ReportSupport(getLog(), JsonReadUtil.readJsonToString(this.diffCodeFile));
 			loadExecutionData(support);
 			addFormatters(support, locale);
 			final IReportVisitor visitor = support.initRootVisitor();

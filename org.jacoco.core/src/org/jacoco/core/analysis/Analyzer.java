@@ -16,6 +16,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.List;
 import java.util.StringTokenizer;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.ZipEntry;
@@ -31,6 +32,8 @@ import org.jacoco.core.internal.analysis.ClassAnalyzer;
 import org.jacoco.core.internal.analysis.ClassCoverageImpl;
 import org.jacoco.core.internal.analysis.StringPool;
 import org.jacoco.core.internal.data.CRC64;
+import org.jacoco.core.internal.diff.ClassInfoDto;
+import org.jacoco.core.internal.diff.CodeDiffUtil;
 import org.jacoco.core.internal.flow.ClassProbesAdapter;
 import org.jacoco.core.internal.instr.InstrSupport;
 import org.objectweb.asm.ClassReader;
@@ -52,6 +55,8 @@ public class Analyzer {
 	private final ICoverageVisitor coverageVisitor;
 
 	private final StringPool stringPool;
+
+	private List<ClassInfoDto> classInfos;
 
 	/**
 	 * Creates a new analyzer reporting to the given output.
@@ -83,6 +88,7 @@ public class Analyzer {
 		final ExecutionData data = executionData.get(classid);
 		final boolean[] probes;
 		final boolean noMatch;
+		// data为空说明exec文件没有探针信息，说明执行测试的类和进行report的类不一致
 		if (data == null) {
 			probes = null;
 			noMatch = executionData.contains(className);
@@ -93,10 +99,11 @@ public class Analyzer {
 		final ClassCoverageImpl coverage = new ClassCoverageImpl(className,
 				classid, noMatch);
 		final ClassAnalyzer analyzer = new ClassAnalyzer(coverage, probes,
-				stringPool) {
+				stringPool, this.classInfos) {
 			@Override
 			public void visitEnd() {
 				super.visitEnd();
+				// 这里有个模板方法模式的钩子方法，这里先定义，等后面类的方法解析完再调用此方法
 				coverageVisitor.visitCoverage(coverage);
 			}
 		};
@@ -112,9 +119,22 @@ public class Analyzer {
 		if ((reader.getAccess() & Opcodes.ACC_SYNTHETIC) != 0) {
 			return;
 		}
+		if (this.coverageVisitor instanceof CoverageBuilder) {
+			this.classInfos = ((CoverageBuilder) this.coverageVisitor).getClassInfos();
+		}
+		// 字段不为空说明是增量覆盖
+		if (null != this.classInfos
+				&& !this.classInfos.isEmpty()) {
+			// 如果没有匹配到增量代码就无需解析类
+			if (!CodeDiffUtil.checkClassIn(reader.getClassName(), this.classInfos)) {
+				return;
+			}
+		}
 		final ClassVisitor visitor = createAnalyzingVisitor(classId,
 				reader.getClassName());
+		// 重点，开始解析类里面的方法，逐个方法遍历
 		reader.accept(visitor, 0);
+
 	}
 
 	/**
@@ -191,6 +211,7 @@ public class Analyzer {
 			throw analyzerError(location, e);
 		}
 		switch (detector.getType()) {
+			// 编译后的类
 		case ContentTypeDetector.CLASSFILE:
 			analyzeClass(detector.getInputStream(), location);
 			return 1;
@@ -218,6 +239,7 @@ public class Analyzer {
 	 */
 	public int analyzeAll(final File file) throws IOException {
 		int count = 0;
+		// 如果是文件夹递归找到文件再进行解析
 		if (file.isDirectory()) {
 			for (final File f : file.listFiles()) {
 				count += analyzeAll(f);
@@ -225,6 +247,7 @@ public class Analyzer {
 		} else {
 			final InputStream in = new FileInputStream(file);
 			try {
+				// 对编译后的class类进行分析即
 				count += analyzeAll(in, file.getPath());
 			} finally {
 				in.close();
