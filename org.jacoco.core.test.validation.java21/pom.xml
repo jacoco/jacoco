@@ -38,24 +38,6 @@
 
   <build>
     <plugins>
-      <plugin>
-        <groupId>com.diffplug.spotless</groupId>
-        <artifactId>spotless-maven-plugin</artifactId>
-        <configuration>
-          <java>
-            <eclipse>
-              <!--
-              Temporary workaround until there is an Eclipse release with Java 21 support:
-              Configuration file referenced below
-              is a copy of ../org.jacoco.core/.settings/org.eclipse.jdt.core.prefs
-              with the following line added
-              org.eclipse.jdt.core.compiler.problem.enablePreviewFeatures=enabled
-              -->
-              <file>../org.jacoco.core.test.validation.java21/.settings/org.eclipse.jdt.core.prefs</file>
-            </eclipse>
-          </java>
-        </configuration>
-      </plugin>
     </plugins>
   </build>
 

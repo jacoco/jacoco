@@ -455,4 +455,8 @@ public class MethodProbesAdapterTest implements IProbeIdGenerator {
 		return id++;
 	}
 
+	public int getId() {
+		return 0;
+	}
+
 }

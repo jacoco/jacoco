@@ -96,7 +96,6 @@
 
     <module>../org.jacoco.tests</module>
 
-    <module>../org.jacoco.doc</module>
     <module>../jacoco</module>
   </modules>
 
@@ -292,11 +291,6 @@
         <!-- Apache plugins -->
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
-          <artifactId>maven-antrun-plugin</artifactId>
-          <version>3.1.0</version>
-        </plugin>
-        <plugin>
-          <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-assembly-plugin</artifactId>
           <version>3.7.1</version>
         </plugin>
@@ -346,15 +340,15 @@
           <artifactId>maven-jar-plugin</artifactId>
           <version>3.4.2</version>
         </plugin>
-        <plugin>
-          <groupId>org.apache.maven.plugins</groupId>
-          <artifactId>maven-javadoc-plugin</artifactId>
-          <version>3.11.2</version>
-          <configuration>
-            <quiet>true</quiet>
-            <detectOfflineLinks>false</detectOfflineLinks>
-          </configuration>
-        </plugin>
+<!--        <plugin>-->
+<!--          <groupId>org.apache.maven.plugins</groupId>-->
+<!--          <artifactId>maven-javadoc-plugin</artifactId>-->
+<!--          <version>3.11.2</version>-->
+<!--          <configuration>-->
+<!--            <quiet>true</quiet>-->
+<!--            <detectOfflineLinks>false</detectOfflineLinks>-->
+<!--          </configuration>-->
+<!--        </plugin>-->
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-plugin-plugin</artifactId>
@@ -443,11 +437,6 @@
           <artifactId>maven-bundle-plugin</artifactId>
           <version>6.0.0</version>
         </plugin>
-        <plugin>
-          <groupId>com.diffplug.spotless</groupId>
-          <artifactId>spotless-maven-plugin</artifactId>
-          <version>3.0.0</version>
-       </plugin>
        <plugin>
          <groupId>org.sonarsource.scanner.maven</groupId>
          <artifactId>sonar-maven-plugin</artifactId>
@@ -528,96 +517,6 @@
                   <onlyWhenRelease>true</onlyWhenRelease>
                 </requireReleaseDeps>
               </rules>
-            </configuration>
-          </execution>
-        </executions>
-      </plugin>
-
-      <plugin>
-        <groupId>com.diffplug.spotless</groupId>
-        <artifactId>spotless-maven-plugin</artifactId>
-        <configuration>
-          <java>
-            <lineEndings>UNIX</lineEndings>
-            <includes>
-              <include>src/**/*.java</include>
-            </includes>
-            <eclipse>
-              <version>4.30</version>
-              <file>../org.jacoco.core/.settings/org.eclipse.jdt.core.prefs</file>
-            </eclipse>
-            <importOrder>
-              <order>java,javax,org,com,</order>
-              <semanticSort>true</semanticSort>
-            </importOrder>
-            <trimTrailingWhitespace/>
-            <endWithNewline/>
-          </java>
-          <formats>
-            <format>
-              <includes>
-                <include>**/*.properties</include>
-                <include>**/*.html</include>
-                <include>**/*.css</include>
-                <include>**/*.js</include>
-                <include>**/*.xml</include>
-                <include>**/*.xsl</include>
-                <include>**/*.dtd</include>
-              </includes>
-              <excludes>
-                <exclude>target/**</exclude>
-              </excludes>
-              <lineEndings>UNIX</lineEndings>
-              <trimTrailingWhitespace/>
-              <endWithNewline/>
-            </format>
-          </formats>
-        </configuration>
-        <executions>
-          <execution>
-            <phase>prepare-package</phase>
-            <goals>
-              <goal>check</goal>
-            </goals>
-          </execution>
-        </executions>
-      </plugin>
-
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-antrun-plugin</artifactId>
-        <executions>
-          <execution>
-            <id>check-license-header</id>
-            <phase>validate</phase>
-            <goals>
-              <goal>run</goal>
-            </goals>
-            <configuration>
-              <target>
-                <fileset dir="${basedir}" includes="**/*.java,**/*.xml,**/*.bsh" excludes="target/**,.idea/**,nb-configuration.xml" id="missinglicense.fileset">
-                  <include name="**/*.kt"/>
-                  <include name="**/*.groovy"/>
-                  <include name="**/*.scala"/>
-                  <not>
-                    <and>
-                      <contains text="Copyright (c) ${copyright.years} Mountainminds GmbH &amp; Co. KG and Contributors"/>
-                      <contains text="This program and the accompanying materials are made available under"/>
-                      <contains text="the terms of the Eclipse Public License 2.0 which is available at"/>
-                      <contains text="http://www.eclipse.org/legal/epl-2.0"/>
-                      <contains text="SPDX-License-Identifier: EPL-2.0"/>
-                    </and>
-                  </not>
-                </fileset>
-                <pathconvert property="missing" refid="missinglicense.fileset"/>
-                <fail message="Invalid license info in: ${missing}">
-                  <condition>
-                    <not>
-                      <equals arg1="${missing}" arg2=""/>
-                    </not>
-                  </condition>
-                </fail>
-              </target>
             </configuration>
           </execution>
         </executions>
@@ -770,16 +669,16 @@
       </activation>
       <build>
         <plugins>
-          <plugin>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-javadoc-plugin</artifactId>
-            <configuration>
-              <additionalOptions>
-                <!-- https://bugs.openjdk.org/browse/JDK-8324774 -->
-                <option>--no-fonts</option>
-              </additionalOptions>
-            </configuration>
-          </plugin>
+<!--          <plugin>-->
+<!--            <groupId>org.apache.maven.plugins</groupId>-->
+<!--            <artifactId>maven-javadoc-plugin</artifactId>-->
+<!--            <configuration>-->
+<!--              <additionalOptions>-->
+<!--                &lt;!&ndash; https://bugs.openjdk.org/browse/JDK-8324774 &ndash;&gt;-->
+<!--                <option>&#45;&#45;no-fonts</option>-->
+<!--              </additionalOptions>-->
+<!--            </configuration>-->
+<!--          </plugin>-->
         </plugins>
       </build>
     </profile>
@@ -1110,16 +1009,16 @@
       </activation>
       <build>
         <plugins>
-          <plugin>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-javadoc-plugin</artifactId>
-            <configuration>
-              <additionalOptions>
-                <!-- https://bugs.openjdk.org/browse/JDK-8324774 -->
-                <option>--no-fonts</option>
-              </additionalOptions>
-            </configuration>
-          </plugin>
+<!--          <plugin>-->
+<!--            <groupId>org.apache.maven.plugins</groupId>-->
+<!--            <artifactId>maven-javadoc-plugin</artifactId>-->
+<!--            <configuration>-->
+<!--              <additionalOptions>-->
+<!--                &lt;!&ndash; https://bugs.openjdk.org/browse/JDK-8324774 &ndash;&gt;-->
+<!--                <option>&#45;&#45;no-fonts</option>-->
+<!--              </additionalOptions>-->
+<!--            </configuration>-->
+<!--          </plugin>-->
         </plugins>
       </build>
     </profile>
@@ -1149,18 +1048,18 @@
             </executions>
           </plugin>
           <!-- Generates Javadoc -->
-          <plugin>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-javadoc-plugin</artifactId>
-            <executions>
-              <execution>
-                <id>attach-javadocs</id>
-                <goals>
-                  <goal>jar</goal>
-                </goals>
-              </execution>
-            </executions>
-          </plugin>
+<!--          <plugin>-->
+<!--            <groupId>org.apache.maven.plugins</groupId>-->
+<!--            <artifactId>maven-javadoc-plugin</artifactId>-->
+<!--            <executions>-->
+<!--              <execution>-->
+<!--                <id>attach-javadocs</id>-->
+<!--                <goals>-->
+<!--                  <goal>jar</goal>-->
+<!--                </goals>-->
+<!--              </execution>-->
+<!--            </executions>-->
+<!--          </plugin>-->
         </plugins>
       </build>
     </profile>
