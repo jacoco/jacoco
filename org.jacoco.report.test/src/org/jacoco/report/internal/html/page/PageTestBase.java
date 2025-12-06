@@ -63,6 +63,11 @@ public abstract class PageTestBase {
 				return table;
 			}
 
+			@Override
+			public Table getTable(boolean flag) {
+				return table;
+			}
+
 			public String getFooterText() {
 				return "CustomFooter";
 			}

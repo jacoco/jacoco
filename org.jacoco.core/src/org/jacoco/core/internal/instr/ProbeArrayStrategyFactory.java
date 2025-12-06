@@ -77,7 +77,7 @@ public final class ProbeArrayStrategyFactory {
 				& (Opcodes.ACC_INTERFACE | Opcodes.ACC_MODULE)) != 0;
 	}
 
-	private static ProbeCounter getProbeCounter(final ClassReader reader) {
+	public static ProbeCounter getProbeCounter(final ClassReader reader) {
 		final ProbeCounter counter = new ProbeCounter();
 		reader.accept(new ClassProbesAdapter(counter, false), 0);
 		return counter;

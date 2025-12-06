@@ -14,6 +14,7 @@ package org.jacoco.core.internal.analysis;
 
 import org.jacoco.core.internal.flow.IFrame;
 import org.jacoco.core.internal.flow.LabelInfo;
+import org.jacoco.core.internal.flow.MethodProbesAdapter;
 import org.jacoco.core.internal.flow.MethodProbesVisitor;
 import org.objectweb.asm.Handle;
 import org.objectweb.asm.Label;
@@ -33,6 +34,12 @@ public class MethodAnalyzer extends MethodProbesVisitor {
 	/** Current node of the ASM tree API */
 	private AbstractInsnNode currentNode;
 
+	private int currentNo = 0;
+
+	private static final String separator = "#";
+
+	private int currentProbeId = 0;
+
 	/**
 	 * New instance that uses the given builder.
 	 */
@@ -45,10 +52,17 @@ public class MethodAnalyzer extends MethodProbesVisitor {
 			final MethodVisitor methodVisitor) {
 		methodVisitor.visitCode();
 		for (final TryCatchBlockNode n : methodNode.tryCatchBlocks) {
+			currentNo++;
+			currentProbeId = ((MethodProbesAdapter) methodVisitor)
+					.getIdGenerator().getId();
 			n.accept(methodVisitor);
 		}
+		// 依次遍历的method的instructions，type一样且顺序一样，则判断为同一个
 		for (final AbstractInsnNode i : methodNode.instructions) {
 			currentNode = i;
+			currentNo++;
+			currentProbeId = ((MethodProbesAdapter) methodVisitor)
+					.getIdGenerator().getId();
 			i.accept(methodVisitor);
 		}
 		methodVisitor.visitEnd();
@@ -61,61 +75,94 @@ public class MethodAnalyzer extends MethodProbesVisitor {
 
 	@Override
 	public void visitLineNumber(final int line, final Label start) {
+		// 指令Instruction的line的属性来源，ASM的行数
 		builder.setCurrentLine(line);
 	}
 
 	@Override
 	public void visitInsn(final int opcode) {
-		builder.addInstruction(currentNode);
+		String sign = opcode + separator + currentNo;
+		builder.addInstruction(currentNode, sign, currentProbeId);
 	}
 
 	@Override
 	public void visitIntInsn(final int opcode, final int operand) {
-		builder.addInstruction(currentNode);
+		String sign = opcode + separator + operand + separator + currentNo;
+		builder.addInstruction(currentNode, sign, currentProbeId);
 	}
 
 	@Override
 	public void visitVarInsn(final int opcode, final int var) {
-		builder.addInstruction(currentNode);
+		String sign = opcode + separator + var + separator + currentNo;
+		builder.addInstruction(currentNode, sign, currentProbeId);
 	}
 
 	@Override
 	public void visitTypeInsn(final int opcode, final String type) {
-		builder.addInstruction(currentNode);
+		String sign = opcode + separator + type + separator + currentNo;
+		builder.addInstruction(currentNode, sign, currentProbeId);
 	}
 
 	@Override
 	public void visitFieldInsn(final int opcode, final String owner,
-			final String name, final String desc) {
-		builder.addInstruction(currentNode);
+							   final String name, final String desc) {
+		String sign = opcode + separator + owner + separator + name + separator
+				+ desc + separator + currentNo;
+		builder.addInstruction(currentNode, sign, currentProbeId);
 	}
 
 	@Override
 	public void visitMethodInsn(final int opcode, final String owner,
-			final String name, final String desc, final boolean itf) {
-		builder.addInstruction(currentNode);
+								final String name, final String desc, final boolean itf) {
+		String sign = opcode + separator + owner + separator + name + separator
+				+ desc + separator + itf + separator + currentNo;
+		builder.addInstruction(currentNode, sign, currentProbeId);
 	}
 
 	@Override
 	public void visitInvokeDynamicInsn(final String name, final String desc,
 			final Handle bsm, final Object... bsmArgs) {
-		builder.addInstruction(currentNode);
+		StringBuilder signBuilder = new StringBuilder();
+		if (bsmArgs != null) {
+			for (int i = 0; i < bsmArgs.length; i++) {
+				signBuilder.append(separator)
+						.append(bsmArgs[i].getClass().getName());
+			}
+		}
+		String sign = name + separator + desc + separator + bsm.toString()
+				+ separator + signBuilder.toString() + currentNo;
+		builder.addInstruction(currentNode, sign, currentProbeId);
 	}
 
 	@Override
 	public void visitJumpInsn(final int opcode, final Label label) {
-		builder.addInstruction(currentNode);
+		String sign = opcode + separator + getLableString(label) + separator
+				+ currentNo;
+		builder.addInstruction(currentNode, sign, LabelInfo.getProbeId(label));
 		builder.addJump(label, 1);
+	}
+
+	public String getLableString(Label label) {
+		boolean multiTarget = LabelInfo.isMultiTarget(label);
+		boolean isSuccessor = LabelInfo.isSuccessor(label);
+		boolean isDone = LabelInfo.isDone(label);
+		boolean isMethodInvocationLile = LabelInfo
+				.isMethodInvocationLine(label);
+		return multiTarget + separator + isSuccessor + separator + isDone
+				+ separator + isMethodInvocationLile;
 	}
 
 	@Override
 	public void visitLdcInsn(final Object cst) {
-		builder.addInstruction(currentNode);
+		// cst是一个常量类型
+		String sign = cst.toString() + separator + currentNo;
+		builder.addInstruction(currentNode, sign, currentProbeId);
 	}
 
 	@Override
 	public void visitIincInsn(final int var, final int increment) {
-		builder.addInstruction(currentNode);
+		String sign = var + separator + increment + separator + currentNo;
+		builder.addInstruction(currentNode, sign, currentProbeId);
 	}
 
 	@Override
@@ -131,7 +178,12 @@ public class MethodAnalyzer extends MethodProbesVisitor {
 	}
 
 	private void visitSwitchInsn(final Label dflt, final Label[] labels) {
-		builder.addInstruction(currentNode);
+		String label1 = getLableString(dflt);
+		for (final Label l : labels) {
+			label1 += separator + getLableString(l);
+		}
+		String sign = label1 + separator + currentNo;
+		builder.addInstruction(currentNode, sign, currentProbeId);
 		LabelInfo.resetDone(labels);
 		int branch = 0;
 		builder.addJump(dflt, branch);
@@ -147,7 +199,8 @@ public class MethodAnalyzer extends MethodProbesVisitor {
 
 	@Override
 	public void visitMultiANewArrayInsn(final String desc, final int dims) {
-		builder.addInstruction(currentNode);
+		String sign = desc + separator + dims + separator + currentNo;
+		builder.addInstruction(currentNode, sign, currentProbeId);
 	}
 
 	@Override
@@ -159,13 +212,16 @@ public class MethodAnalyzer extends MethodProbesVisitor {
 	@Override
 	public void visitJumpInsnWithProbe(final int opcode, final Label label,
 			final int probeId, final IFrame frame) {
-		builder.addInstruction(currentNode);
+		String sign = opcode + separator + getLableString(label) + separator
+				+ frame.getClass().getName() + currentNo;
+		builder.addInstruction(currentNode, sign, probeId);
 		builder.addProbe(probeId, 1);
 	}
 
 	@Override
 	public void visitInsnWithProbe(final int opcode, final int probeId) {
-		builder.addInstruction(currentNode);
+		String sign = opcode + separator + currentNo;
+		builder.addInstruction(currentNode, sign, probeId);
 		builder.addProbe(probeId, 0);
 	}
 
@@ -183,7 +239,12 @@ public class MethodAnalyzer extends MethodProbesVisitor {
 
 	private void visitSwitchInsnWithProbes(final Label dflt,
 			final Label[] labels) {
-		builder.addInstruction(currentNode);
+		String label1 = getLableString(dflt);
+		for (final Label l : labels) {
+			label1 += separator + getLableString(l);
+		}
+		String sign = label1 + separator + currentNo;
+		builder.addInstruction(currentNode, sign, currentProbeId);
 		LabelInfo.resetDone(dflt);
 		LabelInfo.resetDone(labels);
 		int branch = 0;

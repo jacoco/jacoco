@@ -28,7 +28,7 @@ import org.objectweb.asm.tree.AbstractInsnNode;
  * information like line numbers. Afterwards the instructions can be obtained
  * with the <code>getInstructions()</code> method.
  */
-class InstructionsBuilder {
+public class InstructionsBuilder {
 
 	/** Probe array of the class the analyzed method belongs to. */
 	private final boolean[] probes;
@@ -45,6 +45,18 @@ class InstructionsBuilder {
 	 */
 	private final Map<AbstractInsnNode, Instruction> instructions;
 
+	// 需要合并的指令代码集合 key为方法签名Instruction中也带有签名信息，如果签名一直则合并
+	private Map<String, Instruction> mergeInstructions;
+
+	public List<Jump> getJumps() {
+		return jumps;
+	}
+
+
+	public void setJumps(List<Jump> jumps) {
+		this.jumps = jumps;
+	}
+
 	/**
 	 * The labels which mark the subsequent instructions.
 	 *
@@ -56,7 +68,7 @@ class InstructionsBuilder {
 	 * List of all jumps within the control flow. We need to store jumps
 	 * temporarily as the target {@link Instruction} may not been known yet.
 	 */
-	private final List<Jump> jumps;
+	private List<Jump> jumps;
 
 	/**
 	 * Creates a new builder instance which can be used to analyze a single
@@ -73,6 +85,26 @@ class InstructionsBuilder {
 		this.instructions = new HashMap<AbstractInsnNode, Instruction>();
 		this.currentLabel = new ArrayList<Label>(2);
 		this.jumps = new ArrayList<Jump>();
+	}
+
+	InstructionsBuilder(final boolean[] probes,
+						Map<String, Instruction> mergeInstructions) {
+		this.probes = probes;
+		this.currentLine = ISourceNode.UNKNOWN_LINE;
+		this.currentInsn = null;
+		this.instructions = new HashMap<AbstractInsnNode, Instruction>();
+		this.currentLabel = new ArrayList<Label>(2);
+		this.jumps = new ArrayList<Jump>();
+		this.mergeInstructions = mergeInstructions;
+	}
+
+	void setMergeInstructions(Map<String, Instruction> mergeInstructions) {
+		this.mergeInstructions = mergeInstructions;
+	}
+
+	Map<String, Instruction> getMergeInstruction(
+			Map<String, Instruction> mergeInstructions) {
+		return this.mergeInstructions;
 	}
 
 	/**
@@ -116,6 +148,40 @@ class InstructionsBuilder {
 		instructions.put(node, insn);
 	}
 
+	void addInstruction(final AbstractInsnNode node, String sign) {
+		final Instruction insn = new Instruction(currentLine, sign);
+		final int labelCount = currentLabel.size();
+		if (labelCount > 0) {
+			for (int i = labelCount; --i >= 0; ) {
+				LabelInfo.setInstruction(currentLabel.get(i), insn);
+			}
+			currentLabel.clear();
+		}
+		if (currentInsn != null) {
+			currentInsn.addBranch(insn, 0);
+		}
+		currentInsn = insn;
+		instructions.put(node, insn);
+	}
+
+	void addInstruction(final AbstractInsnNode node, String sign, int probeId) {
+		final Instruction insn = new Instruction(currentLine, sign);
+		insn.setProbeIndex(probeId);
+		final int labelCount = currentLabel.size();
+		if (labelCount > 0) {
+			for (int i = labelCount; --i >= 0; ) {
+				LabelInfo.setInstruction(currentLabel.get(i), insn);
+			}
+			currentLabel.clear();
+		}
+		if (currentInsn != null) {
+			currentInsn.addBranch(insn, 0);
+			currentInsn.setProbeIndex(probeId);
+		}
+		currentInsn = insn;
+		instructions.put(node, insn);
+	}
+
 	/**
 	 * Declares that the next instruction will not be a successor of the current
 	 * instruction. This is the case with an unconditional jump or technically
@@ -147,6 +213,10 @@ class InstructionsBuilder {
 	 */
 	void addProbe(final int probeId, final int branch) {
 		final boolean executed = probes != null && probes[probeId];
+		// 记录指令probeId
+		if (probes != null) {
+			currentInsn.setProbeIndex(probeId);
+		}
 		currentInsn.addBranch(executed, branch);
 	}
 
@@ -166,11 +236,27 @@ class InstructionsBuilder {
 		return instructions;
 	}
 
-	private static class Jump {
+	Map<AbstractInsnNode, Instruction> getInstructionsNotWireJumps() {
+		return instructions;
+	}
+
+	public static class Jump {
 
 		private final Instruction source;
 		private final Label target;
 		private final int branch;
+
+		public Instruction getSource() {
+			return source;
+		}
+
+		public Label getTarget() {
+			return target;
+		}
+
+		public int getBranch() {
+			return branch;
+		}
 
 		Jump(final Instruction source, final Label target, final int branch) {
 			this.source = source;

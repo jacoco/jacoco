@@ -99,9 +99,6 @@ public abstract class AbstractReportMojo extends AbstractMojo
 	@Parameter(property = "project", readonly = true)
 	MavenProject project;
 
-	@Parameter(property = "jacoco.diffCodeFile", defaultValue = "${project.basedir}/diffCodeFile.json")
-	String diffCodeFile;
-
 	public String getDescription(final Locale locale) {
 		return getName(locale) + " Coverage Report.";
 	}
@@ -191,7 +188,7 @@ public abstract class AbstractReportMojo extends AbstractMojo
 	private void executeReport(final Locale locale)
 			throws MavenReportException {
 		try {
-			final ReportSupport support = new ReportSupport(getLog(), JsonReadUtil.readJsonToString(this.diffCodeFile));
+			final ReportSupport support = new ReportSupport(getLog());
 			loadExecutionData(support);
 			addFormatters(support, locale);
 			final IReportVisitor visitor = support.initRootVisitor();

@@ -71,8 +71,14 @@ public abstract class TablePage<NodeType extends ICoverageNode>
 
 	@Override
 	protected void content(final HTMLElement body) throws IOException {
-		context.getTable().render(body, items, getNode(),
-				context.getResources(), folder);
+		// 修改点--
+		if (this instanceof ClassPage) {
+			context.getTable(true).render(body, items, getNode(),
+					context.getResources(), folder);
+		} else {
+			context.getTable().render(body, items, getNode(),
+					context.getResources(), folder);
+		}
 		// free memory, otherwise we will keep the complete page tree:
 		items.clear();
 	}

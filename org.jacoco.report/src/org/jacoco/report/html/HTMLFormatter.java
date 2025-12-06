@@ -65,6 +65,8 @@ public class HTMLFormatter implements IHTMLReportContext {
 
 	private Table table;
 
+	private Table table_;
+
 	/**
 	 * New instance with default settings.
 	 */
@@ -130,6 +132,14 @@ public class HTMLFormatter implements IHTMLReportContext {
 		return table;
 	}
 
+	@Override
+	public Table getTable(boolean flag) {
+		if (table_ == null) {
+			table_ = createTable(flag);
+		}
+		return table_;
+	}
+
 	private Table createTable() {
 		final Table t = new Table();
 		t.add("Element", null, new LabelColumn(), false);
@@ -145,6 +155,30 @@ public class HTMLFormatter implements IHTMLReportContext {
 		addMissedTotalColumns(t, "Lines", CounterEntity.LINE);
 		addMissedTotalColumns(t, "Methods", CounterEntity.METHOD);
 		addMissedTotalColumns(t, "Classes", CounterEntity.CLASS);
+		return t;
+	}
+
+	private Table createTable(boolean addSvnMessage) {
+		final Table t = new Table();
+		t.add("Element", null, new LabelColumn(), false);
+		t.add("Missed Instructions", Styles.BAR,
+				new BarColumn(CounterEntity.INSTRUCTION, locale), true);
+		t.add("Cov.", Styles.CTR2,
+				new PercentageColumn(CounterEntity.INSTRUCTION, locale), false);
+		t.add("Missed Branches", Styles.BAR,
+				new BarColumn(CounterEntity.BRANCH, locale), false);
+		t.add("Cov.", Styles.CTR2,
+				new PercentageColumn(CounterEntity.BRANCH, locale), false);
+		addMissedTotalColumns(t, "Cxty", CounterEntity.COMPLEXITY);
+		addMissedTotalColumns(t, "Lines", CounterEntity.LINE);
+		addMissedTotalColumns(t, "Methods", CounterEntity.METHOD);
+		addMissedTotalColumns(t, "Classes", CounterEntity.CLASS);
+		if (addSvnMessage) {
+			t.add("修改人", Styles.CTR2,
+					new PercentageColumn(CounterEntity.BRANCH, locale), false);
+			t.add("提交信息", Styles.CTR2,
+					new PercentageColumn(CounterEntity.BRANCH, locale), false);
+		}
 		return t;
 	}
 

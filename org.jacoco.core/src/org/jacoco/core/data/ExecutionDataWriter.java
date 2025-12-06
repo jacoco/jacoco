@@ -46,6 +46,8 @@ public class ExecutionDataWriter
 	/** Block identifier for execution data of a single class. */
 	public static final byte BLOCK_EXECUTIONDATA = 0x11;
 
+	public static final byte BLOCK_DOWNJAR = 0x12;
+
 	/** Underlying data output */
 	protected final CompactDataOutput out;
 

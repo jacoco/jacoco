@@ -82,7 +82,9 @@ public class SourceNodeImpl extends CoverageNodeImpl implements ISourceNode {
 	 * Make sure that the internal buffer can keep lines from first to last.
 	 * While the buffer is also incremented automatically, this method allows
 	 * optimization in case the total range is known in advance.
-	 *
+	 *由于通过ASM的访问者模式访问的方法，所以在进行方法级别覆盖率计算时候需要每次都更新 MethodCoverageImpl coverage offset和last line，
+	 * 对应源码的行数，offset是第一行代码行数，因为是根据方法级别的计算，所以可以推断出offset是类的第一个方法第一行代码的行数，这里的test方法第一行是14，
+	 * 所以offset=14。coverage lines属性是所有行覆盖率的数组，coverage lines属性是源码染色的依据。
 	 * @param first
 	 *            first line number or {@link ISourceNode#UNKNOWN_LINE}
 	 * @param last
@@ -158,8 +160,10 @@ public class SourceNodeImpl extends CoverageNodeImpl implements ISourceNode {
 		branchCounter = branchCounter.increment(branches);
 	}
 
+	// 计算行覆盖率的核心方法
 	private void incrementLine(final ICounter instructions,
 			final ICounter branches, final int line) {
+
 		ensureCapacity(line, line);
 		final LineImpl l = getLine(line);
 		final int oldTotal = l.getInstructionCounter().getTotalCount();

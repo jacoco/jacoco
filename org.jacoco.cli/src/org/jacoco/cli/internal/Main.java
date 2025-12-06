@@ -42,7 +42,7 @@ public class Main extends Command {
 
 	private final String[] args;
 
-	Main(final String... args) {
+	public Main(final String... args) {
 		this.args = args;
 	}
 

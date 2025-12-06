@@ -142,6 +142,7 @@ public class Agent implements IAgent {
 	public void shutdown() {
 		try {
 			if (options.getDumpOnExit()) {
+				// 把exec文件上传到服务器
 				output.writeExecutionData(false);
 			}
 			output.shutdown();

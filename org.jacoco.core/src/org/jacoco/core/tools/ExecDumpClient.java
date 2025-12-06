@@ -12,11 +12,14 @@
  *******************************************************************************/
 package org.jacoco.core.tools;
 
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InterruptedIOException;
+import java.io.OutputStream;
 import java.net.InetAddress;
 import java.net.Socket;
 
+import org.jacoco.core.internal.data.CompactDataInput;
 import org.jacoco.core.runtime.RemoteControlReader;
 import org.jacoco.core.runtime.RemoteControlWriter;
 
@@ -129,6 +132,34 @@ public class ExecDumpClient {
 				throw new IOException("Socket closed unexpectedly.");
 			}
 
+		} finally {
+			socket.close();
+		}
+		return loader;
+	}
+
+	public ExecFileLoader downloadJar(final InetAddress address, final int port,
+									  byte type, String fileName) throws IOException {
+		final ExecFileLoader loader = new ExecFileLoader();
+		final Socket socket = tryConnect(address, port);
+		try {
+			CompactDataInput input = new CompactDataInput(
+					socket.getInputStream());
+			final RemoteControlReader remoteReader = new RemoteControlReader(
+					socket.getInputStream());
+			socket.getOutputStream().write(type);
+			// 下载jar包文件
+			OutputStream output = new FileOutputStream(fileName);
+			byte[] buffer = new byte[1024];
+			int bytesRead;
+			// 循环读取数据，直到没有数据可读
+			while ((bytesRead = input.read(buffer)) != -1) {
+				output.write(buffer, 0, bytesRead);
+			}
+			// 关闭资源
+			output.flush();
+			output.close();
+			input.close();
 		} finally {
 			socket.close();
 		}

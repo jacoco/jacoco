@@ -14,6 +14,8 @@ package org.jacoco.core.runtime;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
+
 
 import org.jacoco.core.data.ExecutionDataReader;
 
@@ -35,6 +37,12 @@ public class RemoteControlReader extends ExecutionDataReader {
 	public RemoteControlReader(final InputStream input) throws IOException {
 		super(input);
 	}
+
+	public RemoteControlReader(final InputStream input,
+							   final OutputStream outputStream) throws IOException {
+		super(input, outputStream);
+	}
+
 
 	@Override
 	protected boolean readBlock(final byte blockid) throws IOException {

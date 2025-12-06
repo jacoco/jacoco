@@ -32,6 +32,9 @@ import org.jacoco.report.internal.html.resources.Styles;
  */
 public class PackageSourcePage extends TablePage<IPackageCoverage> {
 
+	// 增量行级覆盖率，Integer[0] 表示覆盖了的行数，Integer[1] 表示变动的行数
+	public static Map<String, Integer[]> incrementalRowLevelCoverageMap = new HashMap<String, Integer[]>();
+
 	private final ISourceFileLocator locator;
 	private final Map<String, ILinkable> sourceFilePages;
 	private final ILinkable packagePage;
@@ -77,8 +80,11 @@ public class PackageSourcePage extends TablePage<IPackageCoverage> {
 	}
 
 	private final void renderSourceFilePages() throws IOException {
+		// 包
 		final String packagename = getNode().getName();
+		// 获取包中所有的 java 文件
 		for (final ISourceFileCoverage s : getNode().getSourceFiles()) {
+			// s 表示具体的某个 java 文件
 			if (!s.containsCode()) {
 				continue;
 			}

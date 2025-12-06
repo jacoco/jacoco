@@ -20,11 +20,17 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import org.jacoco.core.data.ExecutionDataReader;
 import org.jacoco.core.data.ExecutionDataStore;
 import org.jacoco.core.data.ExecutionDataWriter;
 import org.jacoco.core.data.SessionInfoStore;
+import org.jacoco.core.internal.analysis.Instruction;
+import org.jacoco.core.internal.diff.ClassInfoDto;
+import org.jacoco.core.internal.diff.MethodInfoDto;
 
 /**
  * Convenience utility for loading *.exec files into a
@@ -34,6 +40,16 @@ public class ExecFileLoader {
 
 	private final SessionInfoStore sessionInfos;
 	private final ExecutionDataStore executionData;
+
+	// 从exce文件解析的method指令数据，合并此exec的数据
+	// 类的方法级指令信息，key为类全称，value为方法签名
+	public static ThreadLocal<Map<String, Map<String, Map<String, Instruction>>>> instrunctionsThreadLocal = new ThreadLocal<>();
+	// diff的代码差异类
+	public static ThreadLocal<Map<String, Map<String, List<MethodInfoDto>>>> classInfo = new ThreadLocal<>();
+
+	public static ThreadLocal<List<ClassInfoDto>> classInfoDto = new ThreadLocal<>();
+
+	public static ThreadLocal<Map<String, boolean[]>> probesMap = new ThreadLocal<>();
 
 	/**
 	 * New instance to combine session infos and execution data from multiple

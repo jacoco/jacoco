@@ -82,12 +82,17 @@ public class Instrumenter {
 				throw new IllegalStateException();
 			}
 		};
+		// 根据jdk版本创建插桩策略类，非模块和接口类使用ClassFieldProbeArrayStrategy，这个类插入jacocoData和方法jacocoinit()方法
 		final IProbeArrayStrategy strategy = ProbeArrayStrategyFactory
 				.createFor(classId, reader, accessorGenerator);
 		final int version = InstrSupport.getMajorVersion(reader);
+		// 插桩的核心适配类ClassProbesAdapter，整个插桩的入口类，继承asm的ClassVisitor，成员变量cv赋值为ClassInstrumenter，这也是一个ClassVisitor
 		final ClassVisitor visitor = new ClassProbesAdapter(
 				new ClassInstrumenter(strategy, writer),
 				InstrSupport.needsFrames(version));
+		// 开始遍历类文件，通过访问者策略模式依次访问visit，visitSource，visitModule等等，我们主要关注的是this.readMethod(classVisitor,
+		// context, currentOffset)方法
+		// 此方法会调用classVisitor.visitMethod,因为传入的是ClassProbesAdapter，所以ClassProbesAdapter的visitMethod会被调用，接着看ClassProbesAdapter的visitMethod
 		reader.accept(visitor, ClassReader.EXPAND_FRAMES);
 		return writer.toByteArray();
 	}

@@ -29,6 +29,14 @@ public class RemoteControlWriter extends ExecutionDataWriter
 	/** Block identifier for dump command */
 	public static final byte BLOCK_CMDDUMP = 0x40;
 
+	// bbzx-jar包
+	public static final byte BLOCK_DOWNBBZX = 0x50;
+	// reportview-jar包
+	public static final byte BLOCK_DOWNREPORTVIEW = 0x60;
+
+	// website-jar包
+	public static final byte BLOCK_DOWNWEBSITE = 0x70;
+
 	/**
 	 * Creates a new writer based on the given output stream.
 	 *

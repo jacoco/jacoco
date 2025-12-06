@@ -43,6 +43,29 @@ public class Dump extends Command {
 	@Option(name = "--retry", usage = "number of retries (default 10)", metaVar = "<count>")
 	int retrycount = 10;
 
+	@Option(name = "--downbbzx", usage = "下载bbzx.jar包", metaVar = "<path>")
+	String downbbzx = null;
+
+	@Option(name = "--downreportview", usage = "下载reportview.jar包", metaVar = "<path>")
+	String downreportview = null;
+
+	@Option(name = "--downwebsite", usage = "下载website.jar包", metaVar = "<path>")
+	String downwebsite = null;
+
+	@Option(name = "--downcommon", usage = "下载common.jar包", metaVar = "<path>")
+	String downcommon = null;
+
+	@Option(name = "--downreportsupport", usage = "下载reportsupport.jar包", metaVar = "<path>")
+	String downreportsupport = null;
+
+	// bbzx-jar包
+	public static final byte BLOCK_DOWNBBZX = 0x50;
+	// reportview-jar包
+	public static final byte BLOCK_DOWNREPORTVIEW = 0x60;
+
+	// website-jar包
+	public static final byte BLOCK_DOWNWEBSITE = 0x70;
+
 	@Override
 	public String description() {
 		return "Request execution data from a JaCoCo agent running in 'tcpserver' output mode.";
@@ -66,7 +89,21 @@ public class Dump extends Command {
 		};
 		client.setReset(reset);
 		client.setRetryCount(retrycount);
-
+		if (downbbzx != null) {
+			client.downloadJar(InetAddress.getByName(address), port,
+					BLOCK_DOWNBBZX, downbbzx);
+			return 0;
+		}
+		if (downreportview != null) {
+			client.downloadJar(InetAddress.getByName(address), port,
+					BLOCK_DOWNREPORTVIEW, downreportview);
+			return 0;
+		}
+		if (downwebsite != null) {
+			client.downloadJar(InetAddress.getByName(address), port,
+					BLOCK_DOWNWEBSITE, downwebsite);
+			return 0;
+		}
 		final ExecFileLoader loader = client.dump(address, port);
 		out.printf("[INFO] Writing execution data to %s.%n",
 				destfile.getAbsolutePath());

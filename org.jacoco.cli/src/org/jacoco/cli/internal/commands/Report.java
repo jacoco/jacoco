@@ -20,8 +20,10 @@ import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 
 import org.jacoco.cli.internal.Command;
+import org.jacoco.cli.internal.Main;
 import org.jacoco.core.analysis.Analyzer;
 import org.jacoco.core.analysis.CoverageBuilder;
 import org.jacoco.core.analysis.IBundleCoverage;
@@ -37,6 +39,7 @@ import org.jacoco.report.MultiReportVisitor;
 import org.jacoco.report.MultiSourceFileLocator;
 import org.jacoco.report.csv.CSVFormatter;
 import org.jacoco.report.html.HTMLFormatter;
+import org.jacoco.report.internal.html.page.PackageSourcePage;
 import org.jacoco.report.xml.XMLFormatter;
 import org.kohsuke.args4j.Argument;
 import org.kohsuke.args4j.Option;
@@ -54,6 +57,20 @@ public class Report extends Command {
 
 	@Option(name = "--sourcefiles", usage = "location of the source files", metaVar = "<path>")
 	List<File> sourcefiles = new ArrayList<File>();
+
+	// 多版本覆盖率合并用，需要合并版本的exec文件
+	@Option(name = "--mergeExecfilepath", usage = "need to merge execfile", metaVar = "<path>")
+	List<File> mergeExecfiles = new ArrayList<File>();;
+
+	// 需要合并版本的class文件，插桩必须要用到老的class文件
+	@Option(name = "--mergeClassfilepath", usage = "location of Java class files need to merge", metaVar = "<path>")
+	List<File> mergeClassfiles = new ArrayList<File>();;
+
+	@Option(name = "--onlyMergeExec", usage = "only merger exec,not create report", metaVar = "<charset>")
+	String onlyMergeExec;
+
+	@Option(name = "--mergeExec", usage = "output file for the finished merge exec file ", metaVar = "<charset>")
+	String mergeExec;
 
 	@Option(name = "--diffCode", usage = "input String for diff", metaVar = "<file>")
 	String diffCode;
@@ -85,13 +102,36 @@ public class Report extends Command {
 	}
 
 	@Override
-	public int execute(final PrintWriter out, final PrintWriter err)
-			throws IOException {
-		// 解析exec文件，将解析后得到的探针信息存储到ExecutionDataStore
-		final ExecFileLoader loader = loadExecutionData(out);
-		final IBundleCoverage bundle = analyze(loader.getExecutionDataStore(),
-				out);
-		writeReports(bundle, loader, out);
+	public int execute(final PrintWriter out, final PrintWriter err) throws IOException {
+		// 需要合并exec文件，同个方法就合并方法的指令的覆盖率
+		if (!this.mergeExecfiles.isEmpty() && !this.mergeClassfiles.isEmpty()) {
+			// 先读取历史的 exec 文件，和历史的 class 文件，将插桩结果输出到 out 中
+			// ExecFileLoader 里面会存放进行初步的 merge，根据 classId 和 类名判断是否是同一个方法
+			final ExecFileLoader loader = loadExecutionData(out, mergeExecfiles);
+			analyze(loader.getExecutionDataStore(), out, mergeClassfiles, true);
+		}
+		try {
+			final ExecFileLoader loader = loadExecutionData(out, this.execfiles);
+			final IBundleCoverage bundle = analyze(loader.getExecutionDataStore(), out, classfiles, false);
+			// 只合并exec文件，不生成报告
+			if (onlyMergeExec != null && onlyMergeExec.equals("true")) {
+				loader.save(new File(mergeExec), false);
+			} else {
+				// 生成报告
+				writeReports(bundle, loader, out);
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		} finally {
+			// 打印输出 incrementalRowLevelCoverageMap
+			for (Map.Entry<String, Integer[]> entry : PackageSourcePage.incrementalRowLevelCoverageMap.entrySet()) {
+				System.out.println(entry.getKey() + ": " + entry.getValue()[0] + " " + entry.getValue()[1]);
+			}
+			ExecFileLoader.instrunctionsThreadLocal.remove();
+			ExecFileLoader.classInfo.remove();
+			ExecFileLoader.classInfoDto.remove();
+			ExecFileLoader.probesMap.remove();
+		}
 		return 0;
 	}
 
@@ -102,7 +142,7 @@ public class Report extends Command {
 	 * @return
 	 * @throws IOException
 	 */
-	private ExecFileLoader loadExecutionData(final PrintWriter out)
+	private ExecFileLoader loadExecutionData(final PrintWriter out, List<File> execfiles)
 			throws IOException {
 		final ExecFileLoader loader = new ExecFileLoader();
 		if (execfiles.isEmpty()) {
@@ -118,17 +158,18 @@ public class Report extends Command {
 	}
 
 	private IBundleCoverage analyze(final ExecutionDataStore data,
-			final PrintWriter out) throws IOException {
+									final PrintWriter out, List<File> classfiles, boolean isOnlyAnaly)
+			throws IOException {
 		CoverageBuilder builder;
 		// 如果有增量参数将其设置进去
 		if (null != this.diffCodeFiles) {
-			builder = new CoverageBuilder(
-					JsonReadUtil.readJsonToString(this.diffCodeFiles));
+			builder = new CoverageBuilder(JsonReadUtil.readJsonToString(this.diffCodeFiles));
 		} else if (null != this.diffCode) {
 			builder = new CoverageBuilder(this.diffCode);
 		} else {
 			builder = new CoverageBuilder();
 		}
+		builder.setOnlyAnaly(isOnlyAnaly);
 		final Analyzer analyzer = new Analyzer(data, builder);
 		// class类用于类方法的比较，源码只用于最后的着色
 		for (final File f : classfiles) {
@@ -194,6 +235,22 @@ public class Report extends Command {
 			multi.add(new DirectorySourceFileLocator(f, encoding, tabwidth));
 		}
 		return multi;
+	}
+
+	public static void main(String[] args) throws Exception {
+		final PrintWriter out = new PrintWriter(System.out, true);
+		final PrintWriter err = new PrintWriter(System.err, true);
+		File htmlReportDir = new File("D:\\coverage-report");
+		Main main = new Main("report",
+				"D:\\document\\work\\鹰眼（测试覆盖率）\\data\\target-v2\\jacoco-demo-v2.exec",  // 基础exec文件
+				"--classfiles", "D:\\document\\work\\鹰眼（测试覆盖率）\\data\\target-v2\\classes",  // 目标class文件
+				"--mergeExecfilepath", "D:\\document\\work\\鹰眼（测试覆盖率）\\data\\target-v1\\jacoco-demo-v1.exec",    // 需合并的历史exec
+				"--mergeClassfilepath", "D:\\document\\work\\鹰眼（测试覆盖率）\\data\\target-v1\\classes",  // 历史class路径
+				"--sourcefiles", "D:\\document\\work\\鹰眼（测试覆盖率）\\jacoco_test_demo\\src\\main\\java",    // 源代码路径
+				"--diffCodeFiles", "D:\\Users\\rayduan\\jacoco\\root\\diff\\a.json",  // 增量代码差异文件
+				"--html", htmlReportDir.getAbsolutePath()); // HTML报告输出路径
+
+		final int returncode = main.execute(out, err);
 	}
 
 }

@@ -66,6 +66,8 @@ public class CoverageTransformer implements ClassFileTransformer {
 		this.logger = logger;
 		// Class names will be reported in VM notation:
 		includes = new WildcardMatcher(toVMName(options.getIncludes()));
+		//增加一个默认的过滤规则，对org.jacoco.*不进行插桩
+		String expr=options.getExcludes()+"|org.jacoco.*";
 		excludes = new WildcardMatcher(toVMName(options.getExcludes()));
 		exclClassloader = new WildcardMatcher(options.getExclClassloader());
 		classFileDumper = new ClassFileDumper(options.getClassDumpDir());

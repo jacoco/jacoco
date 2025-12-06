@@ -144,8 +144,6 @@ public class CheckMojo extends AbstractJacocoMojo implements IViolationsOutput {
 	@Parameter
 	private List<String> excludes;
 
-	@Parameter(property = "jacoco.diffCodeFile", defaultValue = "${project.basedir}/diffCodeFile.json")
-	String diffCodeFile;
 
 	private boolean violations;
 
@@ -176,7 +174,7 @@ public class CheckMojo extends AbstractJacocoMojo implements IViolationsOutput {
 	private void executeCheck() throws MojoExecutionException {
 		violations = false;
 
-		final ReportSupport support = new ReportSupport(getLog(), JsonReadUtil.readJsonToString(this.diffCodeFile));
+		final ReportSupport support = new ReportSupport(getLog());
 
 		final List<Rule> checkerrules = new ArrayList<Rule>();
 		for (final RuleConfiguration r : rules) {

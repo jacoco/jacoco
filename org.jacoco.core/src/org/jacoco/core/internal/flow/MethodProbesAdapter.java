@@ -14,6 +14,8 @@ package org.jacoco.core.internal.flow;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.lang.reflect.Field;
+import java.util.Arrays;
 
 import org.jacoco.core.internal.instr.InstrSupport;
 import org.objectweb.asm.Label;
@@ -28,6 +30,10 @@ import org.objectweb.asm.commons.AnalyzerAdapter;
 public final class MethodProbesAdapter extends MethodVisitor {
 
 	private final MethodProbesVisitor probesVisitor;
+
+	public IProbeIdGenerator getIdGenerator() {
+		return idGenerator;
+	}
 
 	private final IProbeIdGenerator idGenerator;
 
@@ -83,8 +89,14 @@ public final class MethodProbesAdapter extends MethodVisitor {
 		return label;
 	}
 
+	/**
+	 * 插桩的逻辑，先遍历的label 访问标签，Label是字节码中的位置指示，它可以作为跳转指令的目标位置，也可以用于标记异常处理区块的开始和结束等。
+	 *
+	 * @param label
+	 */
 	@Override
 	public void visitLabel(final Label label) {
+		// 判断是否需要插桩
 		if (LabelInfo.needsProbe(label)) {
 			if (tryCatchProbeLabels.containsKey(label)) {
 				probesVisitor.visitLabel(tryCatchProbeLabels.get(label));
@@ -104,6 +116,7 @@ public final class MethodProbesAdapter extends MethodVisitor {
 		case Opcodes.ARETURN:
 		case Opcodes.RETURN:
 		case Opcodes.ATHROW:
+			// 返回语句之前插入探针
 			probesVisitor.visitInsnWithProbe(opcode, idGenerator.nextId());
 			break;
 		default:
@@ -184,4 +197,25 @@ public final class MethodProbesAdapter extends MethodVisitor {
 		return FrameSnapshot.create(analyzer, popCount);
 	}
 
+	@Override
+	public void visitMethodInsn(int opcode, String owner, String methodName,
+								String methodDescriptor, boolean isInterface) {
+		if (owner.equals("java/lang/Class") && methodName.equals("getDeclaredFields")
+				&& methodDescriptor.equals("()[Ljava/lang/reflect/Field;")) {
+			super.visitMethodInsn(Opcodes.INVOKESTATIC,
+					"org/jacoco/core/internal/flow/MethodProbesAdapter",
+					"getDeclaredFields",
+					"(Ljava/lang/Class;)[Ljava/lang/reflect/Field;",
+					false);
+		} else {
+			super.visitMethodInsn(opcode, owner, methodName, methodDescriptor, isInterface);
+		}
+	}
+
+	public static Field[] getDeclaredFields(Class<?> clazz) {
+		Field[] fields = clazz.getDeclaredFields();
+		return Arrays.stream(fields)
+				.filter(f -> !f.isSynthetic())
+				.toArray(Field[]::new);
+	}
 }

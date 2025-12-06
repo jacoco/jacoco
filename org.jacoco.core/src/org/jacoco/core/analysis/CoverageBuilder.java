@@ -18,6 +18,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -26,6 +27,8 @@ import org.jacoco.core.internal.analysis.ClassCoverageImpl;
 import org.jacoco.core.internal.analysis.SourceFileCoverageImpl;
 import org.jacoco.core.internal.analysis.SourceNodeImpl;
 import org.jacoco.core.internal.diff.ClassInfoDto;
+import org.jacoco.core.internal.diff.MethodInfoDto;
+import org.jacoco.core.tools.ExecFileLoader;
 
 /**
  * Builder for hierarchical {@link ICoverageNode} structures from single
@@ -52,6 +55,16 @@ public class CoverageBuilder implements ICoverageVisitor {
 	 */
 	public List<ClassInfoDto> classInfos;
 
+	public boolean isOnlyAnaly() {
+		return onlyAnaly;
+	}
+
+	public void setOnlyAnaly(boolean onlyAnaly) {
+		this.onlyAnaly = onlyAnaly;
+	}
+
+	public boolean onlyAnaly = false;
+
 	/**
 	 * Create a new builder.
 	 *
@@ -69,6 +82,16 @@ public class CoverageBuilder implements ICoverageVisitor {
 			classInfos = gson.fromJson(classList,
 					new TypeToken<List<ClassInfoDto>>() {
 					}.getType());
+			Map<String, Map<String, List<MethodInfoDto>>> map = new HashMap<>();
+			classInfos=classInfos.stream().filter(i->i.getMethodInfos()!=null).collect(Collectors.toList());
+			for (ClassInfoDto dto : classInfos) {
+				Map<String, List<MethodInfoDto>> methodInfoMap = dto
+						.getMethodInfos().stream().collect(Collectors
+								.groupingBy(MethodInfoDto::getMethodName));
+				map.put(dto.getClassFile(), methodInfoMap);
+			}
+			ExecFileLoader.classInfoDto.set(classInfos);
+			ExecFileLoader.classInfo.set(map);
 		}
 	}
 

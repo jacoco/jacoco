@@ -36,6 +36,7 @@ import org.jacoco.core.internal.diff.ClassInfoDto;
 import org.jacoco.core.internal.diff.CodeDiffUtil;
 import org.jacoco.core.internal.flow.ClassProbesAdapter;
 import org.jacoco.core.internal.instr.InstrSupport;
+import org.jacoco.core.internal.instr.ProbeArrayStrategyFactory;
 import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.ClassVisitor;
 import org.objectweb.asm.Opcodes;
@@ -49,6 +50,10 @@ import org.objectweb.asm.Opcodes;
  * several methods to analyze classes from a variety of sources.
  */
 public class Analyzer {
+
+	public ExecutionDataStore getExecutionData() {
+		return executionData;
+	}
 
 	private final ExecutionDataStore executionData;
 
@@ -84,14 +89,17 @@ public class Analyzer {
 	 * @return ASM visitor to write class definition to
 	 */
 	private ClassVisitor createAnalyzingVisitor(final long classid,
-			final String className) {
+			final String className, boolean onlyAnaly,ClassReader reader) {
 		final ExecutionData data = executionData.get(classid);
 		final boolean[] probes;
 		final boolean noMatch;
-		// data为空说明exec文件没有探针信息，说明执行测试的类和进行report的类不一致
+		// 没有在 exec 报告中匹配到，就表示当前覆盖率为空
 		if (data == null) {
-			probes = null;
-			noMatch = executionData.contains(className);
+			int probeCount = ProbeArrayStrategyFactory.getProbeCounter(reader).getCount();
+			probes = new boolean[probeCount];
+			ExecutionData addEmptyExecutionData=new ExecutionData(classid,className,probes);
+			executionData.put(addEmptyExecutionData);
+			noMatch = false;
 		} else {
 			probes = data.getProbes();
 			noMatch = false;
@@ -99,10 +107,12 @@ public class Analyzer {
 		final ClassCoverageImpl coverage = new ClassCoverageImpl(className,
 				classid, noMatch);
 		final ClassAnalyzer analyzer = new ClassAnalyzer(coverage, probes,
-				stringPool, this.classInfos) {
+				stringPool, this.classInfos, onlyAnaly) {
 			@Override
 			public void visitEnd() {
 				super.visitEnd();
+				// class级别的覆盖率，把instructions的覆盖率写入行SourceNodeImpl的行覆盖率，
+				// 在生成报告时候通过指令行的覆盖率来染色
 				// 这里有个模板方法模式的钩子方法，这里先定义，等后面类的方法解析完再调用此方法
 				coverageVisitor.visitCoverage(coverage);
 			}
@@ -111,6 +121,7 @@ public class Analyzer {
 	}
 
 	private void analyzeClass(final byte[] source) {
+		// source 即为 class 字节码
 		final long classId = CRC64.classId(source);
 		final ClassReader reader = InstrSupport.classReaderFor(source);
 		if ((reader.getAccess() & Opcodes.ACC_MODULE) != 0) {
@@ -119,8 +130,10 @@ public class Analyzer {
 		if ((reader.getAccess() & Opcodes.ACC_SYNTHETIC) != 0) {
 			return;
 		}
+		boolean isOnlyAnaly = false;
 		if (this.coverageVisitor instanceof CoverageBuilder) {
 			this.classInfos = ((CoverageBuilder) this.coverageVisitor).getClassInfos();
+			isOnlyAnaly = ((CoverageBuilder) this.coverageVisitor).onlyAnaly;
 		}
 		// 字段不为空说明是增量覆盖
 		if (null != this.classInfos
@@ -130,8 +143,12 @@ public class Analyzer {
 				return;
 			}
 		}
+		// visitor为ClassProbesAdapter，它的vistor是ClassAnalyzer，同时注册了个visitEnd的钩子
+		// visitEnd钩子方法里面实现的是coverageVisitor.visitCoverage(coverage);
+		// 所以先走的ClassAnalyzer的方法，在ClassAnalyzer调用visitEnd的时候调用coverageVisitor.visitCoverage(coverage);
+		// ClassAnalyzer的CoverageBuilder builder最终分析指令覆盖级别信息，再推理方法更大的级别
 		final ClassVisitor visitor = createAnalyzingVisitor(classId,
-				reader.getClassName());
+				reader.getClassName(), isOnlyAnaly, reader);
 		// 重点，开始解析类里面的方法，逐个方法遍历
 		reader.accept(visitor, 0);
 

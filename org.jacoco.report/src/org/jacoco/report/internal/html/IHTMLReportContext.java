@@ -45,6 +45,8 @@ public interface IHTMLReportContext {
 	 */
 	Table getTable();
 
+	Table getTable(boolean flag);
+
 	/**
 	 * Returns a string of textual information to include in every page footer.
 	 *

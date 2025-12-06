@@ -101,6 +101,16 @@ pre.source span.nc {
   background-color:#ffaaaa;
 }
 
+pre.source span.REPLACE::before{
+  content: 'M';
+  background-color:yellow;
+}
+
+pre.source span.INSERT::before{
+  content: '+';
+  background-color:green
+}
+
 pre.source span.pc {
   background-color:#ffffcc;
 }
@@ -108,7 +118,7 @@ pre.source span.pc {
 pre.source span.bfc {
   background-image: url(branchfc.gif);
   background-repeat: no-repeat;
-  background-position: 2px center;
+  background-position: 8px center;
 }
 
 pre.source span.bfc:hover {
@@ -118,7 +128,7 @@ pre.source span.bfc:hover {
 pre.source span.bnc {
   background-image: url(branchnc.gif);
   background-repeat: no-repeat;
-  background-position: 2px center;
+  background-position: 8px center;
 }
 
 pre.source span.bnc:hover {
@@ -128,7 +138,7 @@ pre.source span.bnc:hover {
 pre.source span.bpc {
   background-image: url(branchpc.gif);
   background-repeat: no-repeat;
-  background-position: 2px center;
+  background-position: 8px center;
 }
 
 pre.source span.bpc:hover {

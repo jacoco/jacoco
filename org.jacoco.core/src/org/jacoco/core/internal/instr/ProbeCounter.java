@@ -19,7 +19,7 @@ import org.objectweb.asm.Opcodes;
 /**
  * Internal class to remember the total number of probes required for a class.
  */
-class ProbeCounter extends ClassProbesVisitor {
+public class ProbeCounter extends ClassProbesVisitor {
 
 	private int count;
 	private boolean methods;
@@ -45,7 +45,7 @@ class ProbeCounter extends ClassProbesVisitor {
 		this.count = count;
 	}
 
-	int getCount() {
+	public int getCount() {
 		return count;
 	}
 

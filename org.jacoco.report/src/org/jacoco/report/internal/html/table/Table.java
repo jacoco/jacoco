@@ -13,12 +13,12 @@
 package org.jacoco.report.internal.html.table;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
+import java.util.*;
 
 import org.jacoco.core.analysis.ICoverageNode;
+import org.jacoco.core.internal.diff.ClassInfoDto;
+import org.jacoco.core.internal.diff.MethodInfoDto;
+import org.jacoco.core.tools.ExecFileLoader;
 import org.jacoco.report.internal.ReportOutputFolder;
 import org.jacoco.report.internal.html.HTMLElement;
 import org.jacoco.report.internal.html.resources.Resources;
@@ -94,7 +94,7 @@ public class Table {
 		table.attr("id", "coveragetable");
 		header(table, sortedItems, total);
 		footer(table, total, resources, base);
-		body(table, sortedItems, resources, base);
+		body(table, sortedItems, resources, base, total);
 	}
 
 	private void header(final HTMLElement table,
@@ -117,13 +117,13 @@ public class Table {
 
 	private void body(final HTMLElement table,
 			final List<? extends ITableItem> items, final Resources resources,
-			final ReportOutputFolder base) throws IOException {
+			final ReportOutputFolder base, final ICoverageNode total) throws IOException {
 		final HTMLElement tbody = table.tbody();
 		int idx = 0;
 		for (final ITableItem item : items) {
 			final HTMLElement tr = tbody.tr();
 			for (final Column c : columns) {
-				c.body(tr, idx, item, resources, base);
+				c.body(tr, idx, item, resources, base, total);
 			}
 			idx++;
 		}
@@ -182,13 +182,28 @@ public class Table {
 		}
 
 		void body(final HTMLElement tr, final int idx, final ITableItem item,
-				final Resources resources, final ReportOutputFolder base)
-				throws IOException {
+				  final Resources resources, final ReportOutputFolder base,
+				  final ICoverageNode total) throws IOException {
 			if (visible) {
 				final HTMLElement td = tr.td(style);
-				td.attr("id",
-						idprefix + String.valueOf(index.getPosition(idx)));
-				renderer.item(td, item, resources, base);
+				td.attr("id", idprefix + String.valueOf(index.getPosition(idx)));
+				if (this.header.equals("修改人") || this.header.equals("提交信息")) {
+					if (ExecFileLoader.classInfo.get() != null) {
+						Map<String, Map<String, List<MethodInfoDto>>> classInfoDtos = ExecFileLoader.classInfo.get();
+						if (classInfoDtos.containsKey(total.getName())) {
+							Map<String, List<MethodInfoDto>> method = classInfoDtos.get(total.getName());
+							if (method.containsKey(item.getNode().getName())) {
+								String text = this.header.equals("修改人") ? method.get(item.getNode().getName()).get(0).getAuthor() : method.get(item.getNode().getName()).get(0).getCommitMessage();
+								text = text == null ? "未知，请联系平台管理员！" : text;
+								td.text(text);
+							}
+						}
+					} else {
+						td.text("未知，请联系平台管理员！");
+					}
+				} else {
+					renderer.item(td, item, resources, base);
+				}
 			}
 		}
 

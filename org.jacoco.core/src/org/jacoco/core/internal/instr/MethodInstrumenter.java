@@ -45,11 +45,13 @@ class MethodInstrumenter extends MethodProbesVisitor {
 
 	@Override
 	public void visitProbe(final int probeId) {
+		// 无条件插入探针
 		probeInserter.insertProbe(probeId);
 	}
 
 	@Override
 	public void visitInsnWithProbe(final int opcode, final int probeId) {
+		// 在返回指令前插入探针
 		probeInserter.insertProbe(probeId);
 		mv.visitInsn(opcode);
 	}
@@ -57,6 +59,7 @@ class MethodInstrumenter extends MethodProbesVisitor {
 	@Override
 	public void visitJumpInsnWithProbe(final int opcode, final Label label,
 			final int probeId, final IFrame frame) {
+		// 在跳转指令（比如if语句）前插入探针
 		if (opcode == Opcodes.GOTO) {
 			probeInserter.insertProbe(probeId);
 			mv.visitJumpInsn(Opcodes.GOTO, label);

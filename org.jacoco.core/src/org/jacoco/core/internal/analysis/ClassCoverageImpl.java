@@ -21,6 +21,7 @@ import org.jacoco.core.analysis.IMethodCoverage;
 
 /**
  * Implementation of {@link IClassCoverage}.
+ * 每个被分析的 Class 都有一个 ClassCoverageImpl 实例
  */
 public class ClassCoverageImpl extends SourceNodeImpl
 		implements IClassCoverage {
@@ -63,7 +64,7 @@ public class ClassCoverageImpl extends SourceNodeImpl
 	public void addMethod(final IMethodCoverage method) {
 		this.methods.add(method);
 		increment(method);
-		// Class is considered as covered when at least one method is covered:
+		// Class is considered as covered when at least one method is covered:计算方法覆盖率
 		if (methodCounter.getCoveredCount() > 0) {
 			this.classCounter = CounterImpl.COUNTER_0_1;
 		} else {

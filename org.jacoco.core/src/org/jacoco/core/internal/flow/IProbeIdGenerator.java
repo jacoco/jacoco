@@ -24,4 +24,6 @@ public interface IProbeIdGenerator {
 	 */
 	int nextId();
 
+	int getId();
+
 }

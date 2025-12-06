@@ -33,6 +33,20 @@ public class ClassInfoDto {
      */
     private String type;
 
+
+    /**
+     * 变更行
+     */
+    private List<ChangeLine> lines;
+
+    public List<ChangeLine> getLines() {
+        return lines;
+    }
+
+    public void setLines(List<ChangeLine> lines) {
+        this.lines = lines;
+    }
+
     public String getClassFile() {
         return classFile;
     }

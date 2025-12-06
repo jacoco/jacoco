@@ -14,6 +14,7 @@ package org.jacoco.core.internal.analysis;
 
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
@@ -31,6 +32,9 @@ import org.objectweb.asm.tree.AbstractInsnNode;
 class MethodCoverageCalculator implements IFilterOutput {
 
 	private final Map<AbstractInsnNode, Instruction> instructions;
+
+	// 方法内部顺序的
+	private List<Instruction> orderInstructions;
 
 	private final Set<AbstractInsnNode> ignored;
 

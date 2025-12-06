@@ -14,10 +14,15 @@ package org.jacoco.core.data;
 
 import static java.lang.String.format;
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 
 import org.jacoco.core.internal.data.CompactDataInput;
+import org.jacoco.core.internal.data.CompactDataOutput;
+import org.jacoco.core.runtime.RemoteControlWriter;
 
 /**
  * Deserialization of execution data from binary streams.
@@ -33,6 +38,8 @@ public class ExecutionDataReader {
 
 	private boolean firstBlock = true;
 
+	private CompactDataOutput out;
+
 	/**
 	 * Creates a new reader based on the given input stream input. Depending on
 	 * the nature of the underlying stream input should be buffered as most data
@@ -43,6 +50,12 @@ public class ExecutionDataReader {
 	 */
 	public ExecutionDataReader(final InputStream input) {
 		this.in = new CompactDataInput(input);
+	}
+
+	public ExecutionDataReader(final InputStream input,
+							   final OutputStream outputStream) {
+		this.in = new CompactDataInput(input);
+		this.out = new CompactDataOutput(outputStream);
 	}
 
 	/**
@@ -86,6 +99,19 @@ public class ExecutionDataReader {
 				return false; // EOF
 			}
 			type = (byte) i;
+			// 增加下载报表系统的bbzxjar reportviewjar websitejar
+			if (type == RemoteControlWriter.BLOCK_DOWNBBZX
+					|| type == RemoteControlWriter.BLOCK_DOWNREPORTVIEW
+					|| type == RemoteControlWriter.BLOCK_DOWNWEBSITE) {
+				try {
+					downJar(type);
+				} catch (IOException e) {
+					System.out
+							.println(type + "jar包下载失败，失败原因:" + e.getMessage());
+				} finally {
+					return false;
+				}
+			}
 			if (firstBlock && type != ExecutionDataWriter.BLOCK_HEADER) {
 				throw new IOException("Invalid execution data file.");
 			}
@@ -93,6 +119,58 @@ public class ExecutionDataReader {
 			// 藏得很深，具体解析在 readBlock 这个方法
 		} while (readBlock(type));
 		return true;
+	}
+
+
+	public boolean downJar(byte type) throws IOException {
+		String jarFile;
+		switch (type) {
+			case RemoteControlWriter.BLOCK_DOWNBBZX:
+				jarFile = getJarFilepath("com.yss.ams.bbzx");
+				downLoadJar(jarFile);
+				return true;
+			case RemoteControlWriter.BLOCK_DOWNREPORTVIEW:
+				jarFile = getJarFilepath("com.yss.ams.ReportViewer");
+				downLoadJar(jarFile);
+				return true;
+			case RemoteControlWriter.BLOCK_DOWNWEBSITE:
+				jarFile = getJarFilepath("com.yss.ams.website");
+				downLoadJar(jarFile);
+				return true;
+			default:
+				return false;
+		}
+	}
+
+	private void downLoadJar(String filename) throws IOException {
+		if (filename != null) {
+			FileInputStream fis = new FileInputStream(filename);
+			byte[] buffer = new byte[1024];
+			int bytesRead;
+			while ((bytesRead = fis.read(buffer)) != -1) {
+				out.write(buffer, 0, bytesRead);
+			}
+		}
+	}
+
+	public String getJarFilepath(String jarName) {
+		String sofaHome = System.getenv("SOFA_HOME");
+		System.out.println("从环境变量读取到的sofa_home=" + sofaHome);
+		String dir = sofaHome + File.separator + "soft" + File.separator
+				+ "tomcat" + File.separator + "webapps" + File.separator
+				+ "sofa" + File.separator + "WEB-INF" + File.separator
+				+ "sofa-container" + File.separator + "repository"
+				+ File.separator + "sofa";
+		File f = new File(dir);
+		if (!f.exists() || !f.isDirectory()) {
+			return null;
+		}
+		for (File file : new File(dir).listFiles()) {
+			if (file.getName().startsWith(jarName)) {
+				return file.getAbsolutePath();
+			}
+		}
+		return null;
 	}
 
 	/**
@@ -108,9 +186,11 @@ public class ExecutionDataReader {
 	protected boolean readBlock(final byte blocktype) throws IOException {
 		switch (blocktype) {
 		case ExecutionDataWriter.BLOCK_HEADER:
+			// exec 文件开头会有个头字节码校验，文件头部信息，标识文件格式、版本等
 			readHeader();
 			return true;
 		case ExecutionDataWriter.BLOCK_SESSIONINFO:
+			// 会话信息块：记录本次测试运行的会话信息，比如运行时间、JVM 信息等
 			readSessionInfo();
 			return true;
 		case ExecutionDataWriter.BLOCK_EXECUTIONDATA:
@@ -137,8 +217,11 @@ public class ExecutionDataReader {
 		if (sessionInfoVisitor == null) {
 			throw new IOException("No session info visitor.");
 		}
+		// 当前会话id，机器名+随机字符串
 		final String id = in.readUTF();
+		// 测试时间
 		final long start = in.readLong();
+		// dump 时间
 		final long dump = in.readLong();
 		sessionInfoVisitor.visitSessionInfo(new SessionInfo(id, start, dump));
 	}

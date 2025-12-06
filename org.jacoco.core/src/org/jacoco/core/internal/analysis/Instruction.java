@@ -59,13 +59,27 @@ public class Instruction {
 
 	private final int line;
 
-	private int branches;
+	public int branches;
 
-	private final BitSet coveredBranches;
+	public final BitSet coveredBranches;
 
 	private Instruction predecessor;
 
 	private int predecessorBranch;
+
+	// 指令签名，判断method内的指令是否同一个指令，line不考虑，只考虑指令操作码，值和顺序是否一样
+	private String sign;
+
+	public int getProbeIndex() {
+		return probeIndex;
+	}
+
+	public void setProbeIndex(int probeIndex) {
+		this.probeIndex = probeIndex;
+	}
+
+	// 记录探针的probeId，合并的时候可以做到合并到exec文件，在每次计算合并计算完成时候保留exec文件即可，用来一下次合并
+	private int probeIndex;
 
 	/**
 	 * New instruction at the given line.
@@ -77,6 +91,14 @@ public class Instruction {
 		this.line = line;
 		this.branches = 0;
 		this.coveredBranches = new BitSet();
+	}
+
+	public Instruction(final int line, String sign) {
+		this.line = line;
+		this.branches = 0;
+		this.coveredBranches = new BitSet();
+		this.sign = sign;
+
 	}
 
 	/**
@@ -144,6 +166,10 @@ public class Instruction {
 		return line;
 	}
 
+	public String getSign() {
+		return sign;
+	}
+
 	/**
 	 * Merges information about covered branches of this instruction with
 	 * another instruction.
@@ -154,11 +180,29 @@ public class Instruction {
 	 */
 	public Instruction merge(final Instruction other) {
 		final Instruction result = new Instruction(this.line);
-		result.branches = this.branches;
+		result.branches = other.branches;
 		result.coveredBranches.or(this.coveredBranches);
 		result.coveredBranches.or(other.coveredBranches);
 		return result;
 	}
+
+	public Instruction mergeNew(final Instruction other) {
+		this.coveredBranches.or(other.coveredBranches);
+		return this;
+	}
+
+	public Instruction mergeBranches(
+			final Collection<Instruction> newBranches) {
+		final Instruction result = new Instruction(this.line);
+		result.branches = newBranches.size();
+		for (final Instruction b : newBranches) {
+			if (!b.coveredBranches.isEmpty()) {
+				result.branches++;
+			}
+		}
+		return result;
+	}
+
 
 	/**
 	 * Creates a copy of this instruction where all outgoing branches are

@@ -45,7 +45,7 @@ public class Merge extends Command {
 		final ExecFileLoader loader = loadExecutionData(out);
 		out.printf("[INFO] Writing execution data to %s.%n",
 				destfile.getAbsolutePath());
-		loader.save(destfile, true);
+		loader.save(destfile, false);
 		return 0;
 	}
 

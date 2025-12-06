@@ -28,6 +28,26 @@ public class MethodInfoDto {
      */
     public List<String> parameters;
 
+    public String author;
+
+    public String commitMessage;
+
+    public String getAuthor() {
+        return author;
+    }
+
+    public void setAuthor(String author) {
+        this.author = author;
+    }
+
+    public String getCommitMessage() {
+        return commitMessage;
+    }
+
+    public void setCommitMessage(String commitMessage) {
+        this.commitMessage = commitMessage;
+    }
+
     public String getMethodName() {
         return methodName;
     }

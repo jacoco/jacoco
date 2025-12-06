@@ -16,6 +16,8 @@ import java.io.IOException;
 import java.net.Socket;
 import java.net.SocketException;
 
+import org.jacoco.core.internal.data.CompactDataInput;
+import org.jacoco.core.internal.data.CompactDataOutput;
 import org.jacoco.core.runtime.IRemoteCommandVisitor;
 import org.jacoco.core.runtime.RemoteControlReader;
 import org.jacoco.core.runtime.RemoteControlWriter;
@@ -34,6 +36,10 @@ class TcpConnection implements IRemoteCommandVisitor {
 
 	private RemoteControlReader reader;
 
+	public CompactDataInput in;
+
+	public CompactDataOutput out;
+
 	private boolean initialized;
 
 	public TcpConnection(final Socket socket, final RuntimeData data) {
@@ -44,7 +50,10 @@ class TcpConnection implements IRemoteCommandVisitor {
 
 	public void init() throws IOException {
 		this.writer = new RemoteControlWriter(socket.getOutputStream());
-		this.reader = new RemoteControlReader(socket.getInputStream());
+		this.reader = new RemoteControlReader(socket.getInputStream(),
+				socket.getOutputStream());
+		in = new CompactDataInput(socket.getInputStream());
+		out = new CompactDataOutput(socket.getOutputStream());
 		this.reader.setRemoteCommandVisitor(this);
 		this.initialized = true;
 	}
