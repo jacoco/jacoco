@@ -13,39 +13,21 @@
 package org.jacoco.core.test.validation.kotlin.targets
 
 import org.jacoco.core.test.validation.targets.Stubs.nop
-import org.jacoco.core.test.validation.targets.Stubs.t
 
 /**
- * Test target for `inline` functions.
+ * Test target with `inline` function invoked via reflection.
  */
-fun main(args: Array<String>) {
-    KotlinInlineTarget.main(args)
-}
+object KotlinInlineReflectionTarget {
 
-inline fun inlined_top_level() { // assertEmpty()
-    nop() // assertFullyCovered()
-} // assertFullyCovered()
-
-object KotlinInlineTarget {
-
-    inline fun inlined() { // assertEmpty()
+    private inline fun example() { // assertEmpty()
         nop() // assertFullyCovered()
     } // assertFullyCovered()
 
     @JvmStatic
     fun main(args: Array<String>) {
-
-        val method = KotlinInlineTarget.javaClass.methods
-            .single { it.name.equals("inlined") }
-        method.invoke(this)
-
-        inlined_top_level() // assertFullyCovered()
-
-        inlined() // assertFullyCovered()
-
-        /* Following inlined method for some reasons doesn't appear in SMAP: */
-        assert(t()) // assertPartlyCovered(2, 2)
-
+        this.javaClass.declaredMethods
+            .single { it.name.equals("example") }
+            .invoke(this)
     }
 
 }
