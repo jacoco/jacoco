@@ -57,6 +57,7 @@ jobs:
             --toolchains=toolchains.xml
   Windows:
     runs-on: windows-2022
+    environment: ${{ (github.repository == 'jacoco/jacoco' && github.ref == 'refs/heads/master') && 'snapshot' || null }}
     steps:
       - uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6.0.1
       - uses: actions/setup-java@f2beeb24e141e01a676f977032f5a29d81c9e27e # v5.1.0
@@ -90,7 +91,14 @@ jobs:
         run: |
           ./mvnw -V -B -e --no-transfer-progress \
             verify -Djdk.version=6 -Dbytecode.version=5 \
+            -f org.jacoco.build \
+            ${{ secrets.SONARQUBE_TOKEN && 'sonar:sonar' || '' }} \
+            -Dsonar.scanner.skipJreProvisioning \
+            -Dsonar.organization=default \
+            -Dsonar.host.url=https://sonarcloud.io \
             --toolchains=toolchains.xml
+        env:
+          SONAR_TOKEN: ${{ secrets.SONARQUBE_TOKEN }}
       - uses: actions/upload-artifact@330a01c490aca151604b8cf639adc76d48f6c5d4 # v5.0.0
         id: artifact-upload-step
         with:

@@ -7,17 +7,4 @@
       <password>${env.SONATYPE_PASSWORD}</password>
     </server>
   </servers>
-  <profiles>
-    <profile>
-      <id>SonarCloud</id>
-      <properties>
-        <sonar.host.url>https://sonarcloud.io/</sonar.host.url>
-        <sonar.organization>default</sonar.organization>
-        <sonar.token>${env.SONARQUBE_TOKEN}</sonar.token>
-      </properties>
-    </profile>
-  </profiles>
-  <activeProfiles>
-    <activeProfile>SonarCloud</activeProfile>
-  </activeProfiles>
 </settings>
