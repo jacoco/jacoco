@@ -133,6 +133,44 @@
           </execution>
         </executions>
       </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-javadoc-plugin</artifactId>
+        <configuration>
+          <!--
+          Parent pom configures maven-javadoc-plugin in accordance with JDK selected by maven-toolchains-plugin,
+          however this module does not use maven-toolchains-plugin, so should reconfigure maven-javadoc-plugin:
+          -->
+          <additionalOptions combine.self="override">
+            <!-- no-fonts option should be configured by profile below instead of inheritance from parent -->
+          </additionalOptions>
+        </configuration>
+      </plugin>
     </plugins>
   </build>
+
+  <profiles>
+    <profile>
+      <id>maven-jdk23</id>
+      <activation>
+        <jdk>[23,)</jdk>
+        <!-- does not depend on "jdk.version" property unlike respective profile in parent pom -->
+      </activation>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-javadoc-plugin</artifactId>
+            <configuration>
+              <additionalOptions>
+                <!-- https://bugs.openjdk.org/browse/JDK-8324774 -->
+                <option>--no-fonts</option>
+              </additionalOptions>
+            </configuration>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+  </profiles>
+
 </project>
