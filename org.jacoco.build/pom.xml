@@ -771,6 +771,9 @@
       <id>maven-jdk23</id>
       <activation>
         <jdk>[23,)</jdk>
+        <property>
+          <name>!jdk.version</name>
+        </property>
       </activation>
       <build>
         <plugins>
@@ -1110,6 +1113,78 @@
         <property>
           <name>jdk.version</name>
           <value>23</value>
+        </property>
+      </activation>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-javadoc-plugin</artifactId>
+            <configuration>
+              <additionalOptions>
+                <!-- https://bugs.openjdk.org/browse/JDK-8324774 -->
+                <option>--no-fonts</option>
+              </additionalOptions>
+            </configuration>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+
+    <profile>
+      <id>jdk24</id>
+      <activation>
+        <property>
+          <name>jdk.version</name>
+          <value>24</value>
+        </property>
+      </activation>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-javadoc-plugin</artifactId>
+            <configuration>
+              <additionalOptions>
+                <!-- https://bugs.openjdk.org/browse/JDK-8324774 -->
+                <option>--no-fonts</option>
+              </additionalOptions>
+            </configuration>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+
+    <profile>
+      <id>jdk25</id>
+      <activation>
+        <property>
+          <name>jdk.version</name>
+          <value>25</value>
+        </property>
+      </activation>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-javadoc-plugin</artifactId>
+            <configuration>
+              <additionalOptions>
+                <!-- https://bugs.openjdk.org/browse/JDK-8324774 -->
+                <option>--no-fonts</option>
+              </additionalOptions>
+            </configuration>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+
+    <profile>
+      <id>jdk26</id>
+      <activation>
+        <property>
+          <name>jdk.version</name>
+          <value>26</value>
         </property>
       </activation>
       <build>
