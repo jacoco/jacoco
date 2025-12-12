@@ -36,6 +36,11 @@
     <maven.compiler.release>8</maven.compiler.release>
     <maven.compiler.source>8</maven.compiler.source>
     <maven.compiler.target>8</maven.compiler.target>
+    <!--
+    Parent pom configures maven-javadoc-plugin in accordance with JDK selected by maven-toolchains-plugin,
+    however this module does not use maven-toolchains-plugin, so should reconfigure maven-javadoc-plugin:
+    -->
+    <javadoc.JDK-8324774>-quiet</javadoc.JDK-8324774>
   </properties>
 
   <dependencies>
@@ -135,4 +140,18 @@
       </plugin>
     </plugins>
   </build>
+
+  <profiles>
+    <profile>
+      <id>maven-jdk23</id>
+      <activation>
+        <jdk>[23,)</jdk>
+        <!-- does not depend on "jdk.version" property unlike respective profile in parent pom -->
+      </activation>
+      <properties>
+        <javadoc.JDK-8324774>--no-fonts</javadoc.JDK-8324774>
+      </properties>
+    </profile>
+  </profiles>
+
 </project>
