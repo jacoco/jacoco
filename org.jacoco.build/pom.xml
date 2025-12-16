@@ -138,6 +138,9 @@
     <jvm.args></jvm.args>
     <argLine>${jvm.args}</argLine>
 
+    <javadoc.bootclasspath1>-quiet</javadoc.bootclasspath1>
+    <javadoc.bootclasspath2>-quiet</javadoc.bootclasspath2>
+
     <!-- Dependencies versions -->
     <asm.version>9.9.1</asm.version>
     <ant.version>1.9.16</ant.version>
@@ -357,6 +360,10 @@
           <configuration>
             <quiet>true</quiet>
             <detectOfflineLinks>false</detectOfflineLinks>
+            <additionalOptions>
+              <option>${javadoc.bootclasspath1}</option>
+              <option>${javadoc.bootclasspath2}</option>
+            </additionalOptions>
           </configuration>
         </plugin>
         <plugin>
@@ -599,7 +606,7 @@
             </goals>
             <configuration>
               <target>
-                <fileset dir="${basedir}" includes="**/*.java,**/*.xml,**/*.bsh" excludes="target/**,.idea/**,nb-configuration.xml" id="missinglicense.fileset">
+                <fileset dir="${basedir}" includes="src/**/*.java,**/*.xml,**/*.bsh" excludes="target/**,.idea/**,nb-configuration.xml" id="missinglicense.fileset">
                   <include name="**/*.kt"/>
                   <include name="**/*.groovy"/>
                   <include name="**/*.scala"/>
@@ -1012,6 +1019,33 @@
     <!--
     Profiles for different JDK versions:
     -->
+
+    <profile>
+      <id>jdk5</id>
+      <activation>
+        <property>
+          <name>jdk.version</name>
+          <value>5</value>
+        </property>
+      </activation>
+      <properties>
+        <javadoc.bootclasspath1>-bootclasspath</javadoc.bootclasspath1>
+        <javadoc.bootclasspath2>${project.basedir}/../org.jacoco.build/jdk5:${project.basedir}/../.jdk/jre/lib/rt.jar</javadoc.bootclasspath2>
+      </properties>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-compiler-plugin</artifactId>
+            <configuration>
+              <compilerArgs>
+                <arg>-Xbootclasspath/p:${project.basedir}/../org.jacoco.build/jdk5</arg>
+              </compilerArgs>
+            </configuration>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
 
     <profile>
       <id>jdk6</id>
