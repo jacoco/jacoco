@@ -36,6 +36,12 @@
     <maven.compiler.release>8</maven.compiler.release>
     <maven.compiler.source>8</maven.compiler.source>
     <maven.compiler.target>8</maven.compiler.target>
+    <!--
+    Parent pom configures maven-javadoc-plugin in accordance with JDK selected by maven-toolchains-plugin,
+    however this module does not use maven-toolchains-plugin, so should reconfigure maven-javadoc-plugin:
+    -->
+    <javadoc.bootclasspath.arg1>-quiet</javadoc.bootclasspath.arg1>
+    <javadoc.bootclasspath.arg2>-quiet</javadoc.bootclasspath.arg2>
   </properties>
 
   <dependencies>
