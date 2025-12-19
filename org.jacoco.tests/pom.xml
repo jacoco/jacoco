@@ -56,30 +56,47 @@
 
   <build>
     <sourceDirectory>src</sourceDirectory>
-
-    <plugins>
-      <plugin>
-        <groupId>org.jacoco</groupId>
-        <artifactId>jacoco-maven-plugin</artifactId>
-        <version>${project.version}</version>
-        <configuration>
-          <exclClassLoaders>sun.reflect.DelegatingClassLoader:org.jacoco.core.test.TargetLoader:org.jacoco.core.test.InstrumentingLoader</exclClassLoaders>
-          <sessionId>${project.artifactId}</sessionId>
-          <includes>
-            <include>${jacoco.includes}</include>
-          </includes>
-          <excludes>
-            <exclude>${jacoco.excludes}</exclude>
-          </excludes>
-        </configuration>
-        <executions>
-          <execution>
-            <goals>
-              <goal>prepare-agent</goal>
-            </goals>
-          </execution>
-        </executions>
-      </plugin>
-    </plugins>
   </build>
+
+  <profiles>
+    <!--
+    The following profile is to work around IntelliJ IDEA inability
+    during project import to resolve plugin snapshot without it being installed.
+    See https://youtrack.jetbrains.com/issue/IDEA-238307
+    -->
+    <profile>
+      <id>not-intellij-sync</id>
+      <activation>
+        <property>
+          <name>!idea.maven.embedder.version</name>
+        </property>
+      </activation>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.jacoco</groupId>
+            <artifactId>jacoco-maven-plugin</artifactId>
+            <version>${project.version}</version>
+            <configuration>
+              <exclClassLoaders>sun.reflect.DelegatingClassLoader:org.jacoco.core.test.TargetLoader:org.jacoco.core.test.InstrumentingLoader</exclClassLoaders>
+              <sessionId>${project.artifactId}</sessionId>
+              <includes>
+                <include>${jacoco.includes}</include>
+              </includes>
+              <excludes>
+                <exclude>${jacoco.excludes}</exclude>
+            </excludes>
+            </configuration>
+            <executions>
+              <execution>
+                <goals>
+                  <goal>prepare-agent</goal>
+                </goals>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+  </profiles>
 </project>
