@@ -114,7 +114,12 @@ final class SourceHighlighter {
 	HTMLElement highlight(final HTMLElement pre, final ILine line,
 						  final int lineNr, List<ChangeLine> changeLineList, String key) throws IOException {
 		String style;
-		switch (line.getStatus()) {
+		// 此处大于等于修改为大于
+		if (!changeLineList.stream().anyMatch(i -> i.getStartLineNum() < lineNr && i.getEndLineNum() >= lineNr)) {
+			return pre;
+		}
+
+			switch (line.getStatus()) {
 			case ICounter.NOT_COVERED:
 				style = Styles.NOT_COVERED;
 				break;
@@ -131,7 +136,7 @@ final class SourceHighlighter {
 		final String lineId = "L" + Integer.toString(lineNr);
 		final ICounter branches = line.getBranchCounter();
 		if (changeLineList != null && !changeLineList.isEmpty()) {
-			Optional<ChangeLine> chageLine = changeLineList.stream().filter(i -> i.getStartLineNum() <= lineNr && i.getEndLineNum() >= lineNr).findAny();
+			Optional<ChangeLine> chageLine = changeLineList.stream().filter(i -> i.getStartLineNum() < lineNr && i.getEndLineNum() >= lineNr).findAny();
 			if (chageLine.isPresent()) {
 				// 如果是增量版本变动行，就进行添加处理
 				if (key != null && !key.isEmpty()) {

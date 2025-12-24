@@ -143,14 +143,20 @@ public class HTMLFormatter implements IHTMLReportContext {
 	private Table createTable() {
 		final Table t = new Table();
 		t.add("Element", null, new LabelColumn(), false);
+		t.add("Missed CHANGE_LINE", Styles.BAR,
+				new BarColumn(CounterEntity.CHANGE_LINE, locale), true);
+		t.add("Cov.", Styles.CTR2,
+				new PercentageColumn(CounterEntity.CHANGE_LINE, locale), false);
 		t.add("Missed Instructions", Styles.BAR,
-				new BarColumn(CounterEntity.INSTRUCTION, locale), true);
+				new BarColumn(CounterEntity.INSTRUCTION, locale), false);
 		t.add("Cov.", Styles.CTR2,
 				new PercentageColumn(CounterEntity.INSTRUCTION, locale), false);
 		t.add("Missed Branches", Styles.BAR,
 				new BarColumn(CounterEntity.BRANCH, locale), false);
 		t.add("Cov.", Styles.CTR2,
 				new PercentageColumn(CounterEntity.BRANCH, locale), false);
+		addMissedTotalColumns(t, "Cxty", CounterEntity.COMPLEXITY);
+		addMissedTotalColumns(t, "ChangeLines", CounterEntity.CHANGE_LINE);
 		addMissedTotalColumns(t, "Cxty", CounterEntity.COMPLEXITY);
 		addMissedTotalColumns(t, "Lines", CounterEntity.LINE);
 		addMissedTotalColumns(t, "Methods", CounterEntity.METHOD);
@@ -161,14 +167,20 @@ public class HTMLFormatter implements IHTMLReportContext {
 	private Table createTable(boolean addSvnMessage) {
 		final Table t = new Table();
 		t.add("Element", null, new LabelColumn(), false);
+		t.add("Missed CHANGE_LINE", Styles.BAR,
+				new BarColumn(CounterEntity.CHANGE_LINE, locale), true);
+		t.add("Cov.", Styles.CTR2,
+				new PercentageColumn(CounterEntity.CHANGE_LINE, locale), false);
 		t.add("Missed Instructions", Styles.BAR,
-				new BarColumn(CounterEntity.INSTRUCTION, locale), true);
+				new BarColumn(CounterEntity.INSTRUCTION, locale), false);
 		t.add("Cov.", Styles.CTR2,
 				new PercentageColumn(CounterEntity.INSTRUCTION, locale), false);
 		t.add("Missed Branches", Styles.BAR,
 				new BarColumn(CounterEntity.BRANCH, locale), false);
 		t.add("Cov.", Styles.CTR2,
 				new PercentageColumn(CounterEntity.BRANCH, locale), false);
+		addMissedTotalColumns(t, "Cxty", CounterEntity.COMPLEXITY);
+		addMissedTotalColumns(t, "ChangeLines", CounterEntity.CHANGE_LINE);
 		addMissedTotalColumns(t, "Cxty", CounterEntity.COMPLEXITY);
 		addMissedTotalColumns(t, "Lines", CounterEntity.LINE);
 		addMissedTotalColumns(t, "Methods", CounterEntity.METHOD);
@@ -241,6 +253,7 @@ public class HTMLFormatter implements IHTMLReportContext {
 
 			public void visitBundle(final IBundleCoverage bundle,
 					final ISourceFileLocator locator) throws IOException {
+				// 完成覆盖率数值的复制
 				final BundlePage page = new BundlePage(bundle, null, locator,
 						root, HTMLFormatter.this);
 				createSessionsPage(page);

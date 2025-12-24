@@ -22,6 +22,9 @@ import java.util.Set;
 import org.jacoco.core.analysis.ISourceNode;
 import org.jacoco.core.internal.analysis.filter.IFilterOutput;
 import org.jacoco.core.internal.analysis.filter.Replacements;
+import org.jacoco.core.internal.diff.ChangeLine;
+import org.jacoco.core.internal.diff.ClassInfoDto;
+import org.jacoco.core.tools.ExecFileLoader;
 import org.objectweb.asm.tree.AbstractInsnNode;
 
 /**
@@ -79,9 +82,27 @@ class MethodCoverageCalculator implements IFilterOutput {
 				final Instruction instruction = entry.getValue();
 				coverage.increment(instruction.getInstructionCounter(),
 						instruction.getBranchCounter(), instruction.getLine());
-			}
+			} // coverageBranches为空即未覆盖
 		}
 
+		coverage.incrementMethodCounter();
+	}
+	void calculate(final MethodCoverageImpl coverage, List<ChangeLine> changeLineList) {
+		applyMerges();
+		applyReplacements();
+		ensureCapacity(coverage);
+		Set<String> lines = new HashSet<>();
+		for (final Entry<AbstractInsnNode, Instruction> entry : instructions
+				.entrySet()) {
+			if (!ignored.contains(entry.getKey())) {
+				final Instruction instruction = entry.getValue();
+				coverage.increment(instruction.getInstructionCounter(),
+						instruction.getBranchCounter(), instruction.getLine());
+				lines.add(String.valueOf(instruction.getLine()));
+			} // coverageBranches为空即未覆盖
+		}
+		//从coverage中提取所有lines,再进行changeLine判断
+		coverage.incrementChangeLineCounter(lines,changeLineList);
 		coverage.incrementMethodCounter();
 	}
 

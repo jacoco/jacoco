@@ -57,6 +57,9 @@ public interface ICoverageNode {
 		/** Counter for source lines */
 		LINE,
 
+		/** Counter for source changeLines */
+		CHANGE_LINE,
+
 		/** Counter for cyclomatic complexity */
 		COMPLEXITY,
 
@@ -101,6 +104,13 @@ public interface ICoverageNode {
 	 * @return counter for lines
 	 */
 	ICounter getLineCounter();
+
+	/**
+	 * Returns the counter for changeLines.
+	 *
+	 * @return counter for changeLines
+	 */
+	ICounter getChangeLineCounter();
 
 	/**
 	 * Returns the counter for cyclomatic complexity.

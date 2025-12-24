@@ -240,14 +240,14 @@ public class Report extends Command {
 	public static void main(String[] args) throws Exception {
 		final PrintWriter out = new PrintWriter(System.out, true);
 		final PrintWriter err = new PrintWriter(System.err, true);
-		File htmlReportDir = new File("D:\\coverage-report");
+		File htmlReportDir = new File("F:\\Users\\xky13\\Desktop\\JacocoJar\\report\\");
 		Main main = new Main("report",
-				"D:\\document\\work\\鹰眼（测试覆盖率）\\data\\target-v2\\jacoco-demo-v2.exec",  // 基础exec文件
-				"--classfiles", "D:\\document\\work\\鹰眼（测试覆盖率）\\data\\target-v2\\classes",  // 目标class文件
-				"--mergeExecfilepath", "D:\\document\\work\\鹰眼（测试覆盖率）\\data\\target-v1\\jacoco-demo-v1.exec",    // 需合并的历史exec
-				"--mergeClassfilepath", "D:\\document\\work\\鹰眼（测试覆盖率）\\data\\target-v1\\classes",  // 历史class路径
-				"--sourcefiles", "D:\\document\\work\\鹰眼（测试覆盖率）\\jacoco_test_demo\\src\\main\\java",    // 源代码路径
-				"--diffCodeFiles", "D:\\Users\\rayduan\\jacoco\\root\\diff\\a.json",  // 增量代码差异文件
+				"F:\\Users\\xky13\\Desktop\\JacocoJar\\Exec\\Test3.exec",  // 基础exec文件
+				"--classfiles", "F:\\Users\\xky13\\Desktop\\JacocoJar\\jacocotest\\class\\Test3\\BOOT-INF\\classes",  // 目标class文件
+				"--mergeExecfilepath", "F:\\Users\\xky13\\Desktop\\JacocoJar\\Exec\\Test2.exec",    // 需合并的历史exec
+				"--mergeClassfilepath", "F:\\Users\\xky13\\Desktop\\JacocoJar\\jacocotest\\class\\Test2\\BOOT-INF\\classes",  // 历史class路径
+				"--sourcefiles", "F:\\Users\\xky13\\Desktop\\JacocoJar\\sourceCode\\jacoco-test\\b9d4d141177376027c276b5f278a148000c6719a\\src\\main\\java",    // 源代码路径
+				"--diffCodeFiles", "F:\\Users\\xky13\\Desktop\\JacocoJar\\diff\\2.json",  // 增量代码差异文件
 				"--html", htmlReportDir.getAbsolutePath()); // HTML报告输出路径
 
 		final int returncode = main.execute(out, err);

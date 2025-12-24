@@ -16,6 +16,9 @@ import org.jacoco.core.analysis.CoverageNodeImpl;
 import org.jacoco.core.analysis.ICounter;
 import org.jacoco.core.analysis.ILine;
 import org.jacoco.core.analysis.ISourceNode;
+import org.jacoco.core.internal.diff.ChangeLine;
+
+import java.util.List;
 
 /**
  * Implementation of {@link ISourceNode}.
@@ -127,6 +130,7 @@ public class SourceNodeImpl extends CoverageNodeImpl implements ISourceNode {
 				.increment(child.getComplexityCounter());
 		methodCounter = methodCounter.increment(child.getMethodCounter());
 		classCounter = classCounter.increment(child.getClassCounter());
+		changeLineCounter = changeLineCounter.increment(child.getChangeLineCounter());
 		final int firstLine = child.getFirstLine();
 		if (firstLine != UNKNOWN_LINE) {
 			final int lastLine = child.getLastLine();
@@ -155,6 +159,14 @@ public class SourceNodeImpl extends CoverageNodeImpl implements ISourceNode {
 			final int line) {
 		if (line != UNKNOWN_LINE) {
 			incrementLine(instructions, branches, line);
+		}
+		instructionCounter = instructionCounter.increment(instructions);
+		branchCounter = branchCounter.increment(branches);
+	}
+	public void increment(final ICounter instructions, final ICounter branches,
+						  final int line, List<ChangeLine> changeLineList) {
+		if (line != UNKNOWN_LINE) {
+			incrementLine(instructions, branches, line,changeLineList);
 		}
 		instructionCounter = instructionCounter.increment(instructions);
 		branchCounter = branchCounter.increment(branches);
@@ -190,6 +202,56 @@ public class SourceNodeImpl extends CoverageNodeImpl implements ISourceNode {
 		}
 	}
 
+	private void incrementLine(final ICounter instructions,
+							   final ICounter branches, final int line, List<ChangeLine> changeLineList) {
+
+		ensureCapacity(line, line);
+		final LineImpl l = getLine(line);
+		final int oldTotal = l.getInstructionCounter().getTotalCount();
+		final int oldCovered = l.getInstructionCounter().getCoveredCount();
+		lines[line - offset] = l.increment(instructions, branches);
+		int flag = 0;
+		int style = l.getStatus();
+		if (changeLineList != null){
+			if (line >= changeLineList.get(0).getStartLineNum() && line <= changeLineList.get(0).getEndLineNum()){
+				flag = 1;
+			}
+		}
+		// Increment line counter:
+		if (instructions.getTotalCount() > 0) {
+			if (instructions.getCoveredCount() == 0) {
+				if (oldTotal == 0) {
+					lineCounter = lineCounter
+							.increment(CounterImpl.COUNTER_1_0);
+					if (flag == 1){
+						changeLineCounter = changeLineCounter
+								.increment(CounterImpl.COUNTER_1_0);
+					}
+				}
+				// changeLine不同，当前未覆盖过去统计为已覆盖需要cover-1,miss+1
+				else{
+					if (oldCovered != 0 && flag == 1 ) {
+						changeLineCounter = changeLineCounter.increment(+1, -1);
+					}
+				}
+			} else {
+				if (oldTotal == 0) {
+					lineCounter = lineCounter
+							.increment(CounterImpl.COUNTER_0_1);
+					if (flag == 1){
+						changeLineCounter = changeLineCounter
+								.increment(CounterImpl.COUNTER_0_1);
+					}
+				} else {
+					// 部分指令覆盖，不能算覆盖了
+					if (oldCovered == 0) {
+						lineCounter = lineCounter.increment(-1, +1);
+					}
+				}
+			}
+		}
+		// changeLine还需要进行一次分支校验
+	}
 	// === ISourceNode implementation ===
 
 	public int getFirstLine() {

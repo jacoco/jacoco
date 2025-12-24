@@ -12,6 +12,8 @@
  *******************************************************************************/
 package org.jacoco.core.internal.analysis;
 
+import java.lang.reflect.Field;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -25,8 +27,12 @@ import org.jacoco.core.internal.analysis.filter.Filters;
 import org.jacoco.core.internal.analysis.filter.IFilter;
 import org.jacoco.core.internal.analysis.filter.IFilterContext;
 import org.jacoco.core.internal.analysis.filter.KotlinSMAP;
+import org.jacoco.core.internal.diff.ChangeLine;
 import org.jacoco.core.internal.diff.ClassInfoDto;
+import org.jacoco.core.internal.flow.ClassProbesAdapter;
 import org.jacoco.core.internal.flow.ClassProbesVisitor;
+import org.jacoco.core.internal.flow.IProbeIdGenerator;
+import org.jacoco.core.internal.flow.MethodProbesAdapter;
 import org.jacoco.core.internal.flow.MethodProbesVisitor;
 import org.jacoco.core.internal.instr.InstrSupport;
 import org.jacoco.core.tools.ExecFileLoader;
@@ -234,14 +240,49 @@ public class ClassAnalyzer extends ClassProbesVisitor
 						}
 					}
 				}
-				addMethodCoverage(stringPool.get(name), stringPool.get(desc), stringPool.get(signature), builder, methodNode);
+				List<ChangeLine> changeLineList = new ArrayList<>();
+				if (methodVisitor instanceof MethodProbesAdapter) {
+					MethodProbesAdapter methodProbesAdapter = (MethodProbesAdapter) methodVisitor;
+					// 使用转换后的对象
+					IProbeIdGenerator idGenerator = methodProbesAdapter.getIdGenerator();
+					ClassProbesAdapter classProbesAdapter =(ClassProbesAdapter)idGenerator;
+					String classNameInner = extractClassProbesAdapterName(classProbesAdapter);
+					changeLineList = getChangeList(classNameInner);
+				}
+				addMethodCoverage(stringPool.get(name), stringPool.get(desc), stringPool.get(signature), builder, methodNode, changeLineList);
 			}
 		};
 	}
 
+	public String extractClassProbesAdapterName(ClassProbesAdapter adapter) {
+		try {
+			Field nameField = ClassProbesAdapter.class.getDeclaredField("name");
+			nameField.setAccessible(true);
+			return (String) nameField.get(adapter);
+		} catch (Exception e) {
+			throw new RuntimeException("Failed to extract ClassProbesAdapter name", e);
+		}
+	}
+	/**
+	 * 尝试获取changeList
+	 */
+	private List<ChangeLine> getChangeList(String classNameInner) {
+		// 在此处提取一次changelist,用来判断，最好还是找到上一层的类级来计算changelist
+		List<ChangeLine> changeLineList = null;
+		if (ExecFileLoader.classInfoDto.get() != null) {
+			List<ClassInfoDto> dtoList = ExecFileLoader.classInfoDto.get();
+//            final String classNameInner = location.replace(".class", "");
+			Optional<ClassInfoDto> classInfoDto = dtoList.stream().filter(i -> i.getClassFile().equals(classNameInner)).findAny();
+			if (classInfoDto.isPresent()) {
+				changeLineList = classInfoDto.get().getLines();
+			}
+		}
+		return changeLineList;
+	}
+
 	private void addMethodCoverage(final String name, final String desc,
 			final String signature, final InstructionsBuilder icc,
-			final MethodNode methodNode) {
+			final MethodNode methodNode, List<ChangeLine> changeLineList) {
 
 		final Map<AbstractInsnNode, Instruction> instructions = icc
 				.getInstructions();
@@ -254,7 +295,7 @@ public class ClassAnalyzer extends ClassProbesVisitor
 		final MethodCoverageImpl mc = new MethodCoverageImpl(name, desc,
 				signature);
 		// method的级别级别的计算，指令级别是最小的行覆盖率，这是整个覆盖率计算的基础
-		mcc.calculate(mc);
+		mcc.calculate(mc, changeLineList);
 
 		if (mc.containsCode()) {
 			// class级别的覆盖率统计
