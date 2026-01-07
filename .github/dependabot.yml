@@ -23,9 +23,6 @@ updates:
     ignore:
       # It is known that upgrade from current version requires additional changes:
       - dependency-name: "org.apache.maven.plugins:maven-plugin-plugin"
-      # Requires tests to be executed with Java 6:
-      - dependency-name: "org.apache.maven.plugins:maven-surefire-plugin"
-        versions: ">=2.20.0"
   - package-ecosystem: "maven"
     directory: "/org.jacoco.core"
     schedule:
