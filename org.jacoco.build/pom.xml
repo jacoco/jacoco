@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-   Copyright (c) 2009, 2025 Mountainminds GmbH & Co. KG and Contributors
+   Copyright (c) 2009, 2026 Mountainminds GmbH & Co. KG and Contributors
    This program and the accompanying materials are made available under
    the terms of the Eclipse Public License 2.0 which is available at
    https://www.eclipse.org/legal/epl-2.0
@@ -129,7 +129,7 @@
 
     <maven.build.timestamp.format>yyyyMMddhhmm</maven.build.timestamp.format>
     <jacoco.home.url>http://www.jacoco.org/jacoco</jacoco.home.url>
-    <copyright.years>${project.inceptionYear}, 2025</copyright.years>
+    <copyright.years>${project.inceptionYear}, 2026</copyright.years>
 
     <bytecode.version>1.5</bytecode.version>
     <maven.compiler.source>${bytecode.version}</maven.compiler.source>
@@ -434,7 +434,7 @@
         <plugin>
           <groupId>org.codehaus.mojo</groupId>
           <artifactId>exec-maven-plugin</artifactId>
-          <version>3.6.2</version>
+          <version>3.6.3</version>
         </plugin>
         <!-- Third-party plugins -->
         <plugin>
