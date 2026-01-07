@@ -3,7 +3,7 @@
    Copyright (c) 2009, 2026 Mountainminds GmbH & Co. KG and Contributors
    This program and the accompanying materials are made available under
    the terms of the Eclipse Public License 2.0 which is available at
-   http://www.eclipse.org/legal/epl-2.0
+   https://www.eclipse.org/legal/epl-2.0
 
    SPDX-License-Identifier: EPL-2.0
 
@@ -608,7 +608,7 @@
                       <contains text="Copyright (c) ${copyright.years} Mountainminds GmbH &amp; Co. KG and Contributors"/>
                       <contains text="This program and the accompanying materials are made available under"/>
                       <contains text="the terms of the Eclipse Public License 2.0 which is available at"/>
-                      <contains text="http://www.eclipse.org/legal/epl-2.0"/>
+                      <contains text="https://www.eclipse.org/legal/epl-2.0"/>
                       <contains text="SPDX-License-Identifier: EPL-2.0"/>
                     </and>
                   </not>
