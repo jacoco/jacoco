@@ -23,12 +23,6 @@ updates:
     ignore:
       # It is known that upgrade from current version requires additional changes:
       - dependency-name: "org.apache.maven.plugins:maven-plugin-plugin"
-      # Because of
-      # https://github.com/apache/maven-compiler-plugin/blob/maven-compiler-plugin-3.13.0/pom.xml#L71
-      # https://github.com/codehaus-plexus/plexus-compiler/blob/plexus-compiler-2.15.0/plexus-compilers/plexus-compiler-javac/src/main/java/org/codehaus/plexus/compiler/javac/JavacCompiler.java#L149-L163
-      # requires javac version to be at least 6:
-      - dependency-name: "org.apache.maven.plugins:maven-compiler-plugin"
-        versions: ">=3.13.0"
       # Requires tests to be executed with Java 6:
       - dependency-name: "org.apache.maven.plugins:maven-surefire-plugin"
         versions: ">=2.20.0"

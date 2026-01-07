@@ -153,6 +153,8 @@
     <junit.version>4.13.2</junit.version>
     <googlecodeprettify.version>20100721</googlecodeprettify.version>
 
+    <maven-compiler-plugin.version>3.13.0</maven-compiler-plugin.version>
+
     <!-- ================== -->
     <!-- For SonarQube analysis -->
     <!-- ================== -->
@@ -320,8 +322,7 @@
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-compiler-plugin</artifactId>
-          <!-- latest version which works with JDK 5 -->
-          <version>3.12.1</version>
+          <version>${maven-compiler-plugin.version}</version>
         </plugin>
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
@@ -1037,6 +1038,25 @@
     <!--
     Profiles for different JDK versions:
     -->
+
+    <profile>
+      <id>jdk5</id>
+      <activation>
+        <property>
+          <name>jdk.version</name>
+          <value>5</value>
+        </property>
+      </activation>
+      <properties>
+        <!--
+        Because of
+        https://github.com/apache/maven-compiler-plugin/blob/maven-compiler-plugin-3.13.0/pom.xml#L71
+        https://github.com/codehaus-plexus/plexus-compiler/blob/plexus-compiler-2.15.0/plexus-compilers/plexus-compiler-javac/src/main/java/org/codehaus/plexus/compiler/javac/JavacCompiler.java#L149-L163
+        newer versions require javac version to be at least 6
+        -->
+        <maven-compiler-plugin.version>3.12.1</maven-compiler-plugin.version>
+      </properties>
+    </profile>
 
     <profile>
       <id>jdk6</id>
