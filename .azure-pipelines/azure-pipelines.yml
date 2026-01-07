@@ -58,6 +58,8 @@ jobs:
         JDK_VERSION: 25
       JDK 26:
         JDK_VERSION: 26
+      JDK 27:
+        JDK_VERSION: 27
   pool:
     vmImage: 'ubuntu-24.04'
   steps:
