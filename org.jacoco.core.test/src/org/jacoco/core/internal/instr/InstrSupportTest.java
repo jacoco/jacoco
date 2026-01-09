@@ -137,7 +137,8 @@ public class InstrSupportTest {
 		assertTrue(InstrSupport.needsFrames(Opcodes.V23));
 		assertTrue(InstrSupport.needsFrames(Opcodes.V24));
 		assertTrue(InstrSupport.needsFrames(Opcodes.V25));
-		assertTrue(InstrSupport.needsFrames(Opcodes.V25 + 1));
+		assertTrue(InstrSupport.needsFrames(Opcodes.V26));
+		assertTrue(InstrSupport.needsFrames(Opcodes.V26 + 1));
 
 		assertTrue(InstrSupport.needsFrames(0x0100));
 	}
