@@ -26,11 +26,19 @@
   <description>JaCoCo Agent</description>
 
   <dependencies>
+    <!--
+    Maven is unable to determine build-time dependency from below configuration of maven-dependency-plugin,
+    so it needs to be declared explicitly, otherwise parallel build might fail and execution of
+    mvn clean package -pl org.jacoco.agent -am
+    fails guaranteedly
+    -->
     <dependency>
       <groupId>${project.groupId}</groupId>
       <artifactId>org.jacoco.agent.rt</artifactId>
       <version>${project.version}</version>
+      <!-- pom type and exclusions make it invisible for compilation -->
       <type>pom</type>
+      <!-- test scope makes it invisible for consumers -->
       <scope>test</scope>
       <exclusions>
         <exclusion>
