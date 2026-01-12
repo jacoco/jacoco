@@ -581,6 +581,7 @@
               </includes>
               <excludes>
                 <exclude>target/**</exclude>
+                <exclude>.idea/**</exclude>
               </excludes>
               <lineEndings>UNIX</lineEndings>
               <trimTrailingWhitespace/>
