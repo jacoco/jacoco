@@ -365,6 +365,14 @@
           <configuration>
             <quiet>true</quiet>
             <detectOfflineLinks>false</detectOfflineLinks>
+            <!--
+            use of "no-fonts" option is controlled by profiles,
+            because maven-javadoc-plugin version 3.12.0
+            wrongly determines whether it should be used or not
+            based on the version of JDK that is used for Maven
+            instead of the JDK selected by maven-toolchain-plugin
+            -->
+            <disableNoFonts>true</disableNoFonts>
             <additionalOptions>
               <option>${javadoc.JDK-8324774}</option>
             </additionalOptions>
