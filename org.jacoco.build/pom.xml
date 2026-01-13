@@ -986,6 +986,20 @@
       </properties>
     </profile>
 
+    <profile>
+      <id>java27-bytecode</id>
+      <activation>
+        <property>
+          <name>bytecode.version</name>
+          <value>27</value>
+        </property>
+      </activation>
+      <properties>
+        <maven.compiler.source>17</maven.compiler.source>
+        <maven.compiler.target>17</maven.compiler.target>
+      </properties>
+    </profile>
+
     <!-- This profile enables use of ECJ -->
     <profile>
       <id>ecj</id>
@@ -1160,6 +1174,19 @@
         <property>
           <name>jdk.version</name>
           <value>26</value>
+        </property>
+      </activation>
+      <properties>
+        <javadoc.JDK-8324774>--no-fonts</javadoc.JDK-8324774>
+      </properties>
+    </profile>
+
+    <profile>
+      <id>jdk27</id>
+      <activation>
+        <property>
+          <name>jdk.version</name>
+          <value>27</value>
         </property>
       </activation>
       <properties>
