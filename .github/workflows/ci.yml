@@ -8,18 +8,36 @@ jobs:
       fail-fast: false
       matrix:
         include:
+          - jdk: 6
+          - jdk: 7
           - jdk: 8
           - jdk: 8
             ecj: true
+          - jdk: 9
+          - jdk: 10
           - jdk: 11
           - jdk: 11
             ecj: true
+          - jdk: 12
+          - jdk: 13
+          - jdk: 14
+          - jdk: 15
+          - jdk: 16
           - jdk: 17
           - jdk: 17
             ecj: true
+          - jdk: 18
+          - jdk: 19
+          - jdk: 20
           - jdk: 21
           - jdk: 21
             ecj: true
+          - jdk: 22
+          - jdk: 23
+          - jdk: 23
+            ecj: true
+          - jdk: 24
+          - jdk: 25
     name: JDK ${{ matrix.jdk }}${{ matrix.ecj && ' with ECJ' || ''}}
     runs-on: ubuntu-24.04
     steps:
