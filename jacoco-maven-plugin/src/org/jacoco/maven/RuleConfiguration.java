@@ -37,6 +37,8 @@ public class RuleConfiguration {
 	}
 
 	/**
+	 * Returns element type this rule applies to.
+	 *
 	 * @param element
 	 *            element type this rule applies to TODO: use ElementType
 	 *            directly once Maven 3 is required.
@@ -46,6 +48,8 @@ public class RuleConfiguration {
 	}
 
 	/**
+	 * Returns includes patterns.
+	 *
 	 * @param includes
 	 *            includes patterns
 	 */
@@ -54,6 +58,7 @@ public class RuleConfiguration {
 	}
 
 	/**
+	 * Returns excludes patterns.
 	 *
 	 * @param excludes
 	 *            excludes patterns
@@ -63,6 +68,8 @@ public class RuleConfiguration {
 	}
 
 	/**
+	 * Returns list of {@link Limit}s configured for this rule.
+	 *
 	 * @param limits
 	 *            list of {@link Limit}s configured for this rule
 	 */
