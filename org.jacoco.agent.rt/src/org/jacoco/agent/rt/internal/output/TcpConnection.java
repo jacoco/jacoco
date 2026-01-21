@@ -91,7 +91,9 @@ class TcpConnection implements IRemoteCommandVisitor {
 	 */
 	public void close() throws IOException {
 		if (!socket.isClosed()) {
-			socket.close();
+			synchronized (this) {
+				socket.close();
+			}
 		}
 	}
 
@@ -99,14 +101,15 @@ class TcpConnection implements IRemoteCommandVisitor {
 
 	public void visitDumpCommand(final boolean dump, final boolean reset)
 			throws IOException {
-		if (dump) {
-			data.collect(writer, writer, reset);
-		} else {
-			if (reset) {
-				data.reset();
+		synchronized (this) {
+			if (dump) {
+				data.collect(writer, writer, reset);
+			} else {
+				if (reset) {
+					data.reset();
+				}
 			}
+			writer.sendCmdOk();
 		}
-		writer.sendCmdOk();
 	}
-
 }
