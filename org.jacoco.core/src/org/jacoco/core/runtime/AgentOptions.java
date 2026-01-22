@@ -15,10 +15,10 @@ package org.jacoco.core.runtime;
 import static java.lang.String.format;
 
 import java.io.File;
-import java.util.Arrays;
-import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
@@ -52,6 +52,16 @@ public final class AgentOptions {
 	public static final String APPEND = "append";
 
 	/**
+	 * Default value for the "append" agent option.
+	 */
+	public static final boolean DEFAULT_APPEND = true;
+
+	/**
+	 * Default value for the "append" agent option as string.
+	 */
+	public static final String DEFAULT_APPEND_STR = "true";
+
+	/**
 	 * Wildcard expression for class names that should be included for code
 	 * coverage. Default is <code>*</code> (all classes included).
 	 *
@@ -60,12 +70,22 @@ public final class AgentOptions {
 	public static final String INCLUDES = "includes";
 
 	/**
+	 * Default value for the "includes" agent option.
+	 */
+	public static final String DEFAULT_INCLUDES = "*";
+
+	/**
 	 * Wildcard expression for class names that should be excluded from code
 	 * coverage. Default is the empty string (no exclusions).
 	 *
 	 * @see WildcardMatcher
 	 */
 	public static final String EXCLUDES = "excludes";
+
+	/**
+	 * Default value for the "excludes" agent option.
+	 */
+	public static final String DEFAULT_EXCLUDES = "";
 
 	/**
 	 * Wildcard expression for class loaders names for classes that should be
@@ -79,11 +99,26 @@ public final class AgentOptions {
 	public static final String EXCLCLASSLOADER = "exclclassloader";
 
 	/**
+	 * Default value for the "exclclassloader" agent option.
+	 */
+	public static final String DEFAULT_EXCLCLASSLOADER = "sun.reflect.DelegatingClassLoader";
+
+	/**
 	 * Specifies whether also classes from the bootstrap classloader should be
 	 * instrumented. Use this feature with caution, it needs heavy
 	 * includes/excludes tuning. Default is <code>false</code>.
 	 */
 	public static final String INCLBOOTSTRAPCLASSES = "inclbootstrapclasses";
+
+	/**
+	 * Default value for the "inclbootstrapclasses" agent option.
+	 */
+	public static final boolean DEFAULT_INCLBOOTSTRAPCLASSES = false;
+
+	/**
+	 * Default value for the "inclbootstrapclasses" agent option as String.
+	 */
+	public static final String DEFAULT_INCLBOOTSTRAPCLASSES_STR = "false";
 
 	/**
 	 * Specifies whether also classes without a source location should be
@@ -92,6 +127,11 @@ public final class AgentOptions {
 	 * <code>false</code>.
 	 */
 	public static final String INCLNOLOCATIONCLASSES = "inclnolocationclasses";
+
+	/**
+	 * Default value for the "inclnolocationclasses" agent option.
+	 */
+	public static final String DEFAULT_INCLNOLOCATIONCLASSES = "false";
 
 	/**
 	 * Specifies a session identifier that is written with the execution data.
@@ -106,6 +146,16 @@ public final class AgentOptions {
 	public static final String DUMPONEXIT = "dumponexit";
 
 	/**
+	 * Default value for the "dumponexit" agent option.
+	 */
+	public static final boolean DEFAULT_DUMPONEXIT = true;
+
+	/**
+	 * Default value for the "dumponexit" agent option as String.
+	 */
+	public static final String DEFAULT_DUMPONEXIT_STR = "true";
+
+	/**
 	 * Specifies the output mode. Default is {@link OutputMode#file}.
 	 *
 	 * @see OutputMode#file
@@ -114,6 +164,16 @@ public final class AgentOptions {
 	 * @see OutputMode#none
 	 */
 	public static final String OUTPUT = "output";
+
+	/**
+	 * Default value for the "output" agent option.
+	 */
+	public static final OutputMode DEFAULT_OUTPUT = OutputMode.file;
+
+	/**
+	 * Default value for the "output" agent option.
+	 */
+	public static final String DEFAULT_OUTPUT_STR = "file";
 
 	private static final Pattern OPTION_SPLIT = Pattern
 			.compile(",(?=[a-zA-Z0-9_\\-]+=)");
@@ -177,6 +237,11 @@ public final class AgentOptions {
 	public static final int DEFAULT_PORT = 6300;
 
 	/**
+	 * Default value for the "port" agent option as String.
+	 */
+	public static final String DEFAULT_PORT_STR = "6300";
+
+	/**
 	 * Specifies where the agent dumps all class files it encounters. The
 	 * location is specified as a relative path to the working directory.
 	 * Default is <code>null</code> (no dumps).
@@ -189,10 +254,35 @@ public final class AgentOptions {
 	 */
 	public static final String JMX = "jmx";
 
-	private static final Collection<String> VALID_OPTIONS = Arrays.asList(
-			DESTFILE, APPEND, INCLUDES, EXCLUDES, EXCLCLASSLOADER,
-			INCLBOOTSTRAPCLASSES, INCLNOLOCATIONCLASSES, SESSIONID, DUMPONEXIT,
-			OUTPUT, ADDRESS, PORT, CLASSDUMPDIR, JMX);
+	/**
+	 * Default value for the "jmx" agent option.
+	 */
+	public static final boolean DEFAULT_JMX = false;
+
+	/**
+	 * Default value for the "jmx" agent option as String.
+	 */
+	public static final String DEFAULT_JMX_STR = "false";
+
+	private static final Map<String, String> DEFAULTS;
+	static {
+		final Map<String, String> d = new LinkedHashMap<String, String>();
+		d.put(DESTFILE, DEFAULT_DESTFILE);
+		d.put(APPEND, DEFAULT_APPEND_STR);
+		d.put(INCLUDES, DEFAULT_INCLUDES);
+		d.put(EXCLUDES, DEFAULT_EXCLUDES);
+		d.put(EXCLCLASSLOADER, DEFAULT_EXCLCLASSLOADER);
+		d.put(INCLBOOTSTRAPCLASSES, DEFAULT_INCLBOOTSTRAPCLASSES_STR);
+		d.put(INCLNOLOCATIONCLASSES, DEFAULT_INCLNOLOCATIONCLASSES);
+		d.put(SESSIONID, null);
+		d.put(DUMPONEXIT, DEFAULT_DUMPONEXIT_STR);
+		d.put(OUTPUT, DEFAULT_OUTPUT_STR);
+		d.put(ADDRESS, DEFAULT_ADDRESS);
+		d.put(PORT, DEFAULT_PORT_STR);
+		d.put(CLASSDUMPDIR, null);
+		d.put(JMX, DEFAULT_JMX_STR);
+		DEFAULTS = Collections.unmodifiableMap(d);
+	}
 
 	private final Map<String, String> options;
 
@@ -201,6 +291,7 @@ public final class AgentOptions {
 	 */
 	public AgentOptions() {
 		this.options = new HashMap<String, String>();
+		this.options.putAll(DEFAULTS);
 	}
 
 	/**
@@ -219,7 +310,7 @@ public final class AgentOptions {
 							"Invalid agent option syntax \"%s\".", optionstr));
 				}
 				final String key = entry.substring(0, pos);
-				if (!VALID_OPTIONS.contains(key)) {
+				if (!DEFAULTS.containsKey(key)) {
 					throw new IllegalArgumentException(
 							format("Unknown agent option \"%s\".", key));
 				}
@@ -240,7 +331,7 @@ public final class AgentOptions {
 	 */
 	public AgentOptions(final Properties properties) {
 		this();
-		for (final String key : VALID_OPTIONS) {
+		for (final String key : DEFAULTS.keySet()) {
 			final String value = properties.getProperty(key);
 			if (value != null) {
 				setOption(key, value);
@@ -265,7 +356,7 @@ public final class AgentOptions {
 	 * @return output file location
 	 */
 	public String getDestfile() {
-		return getOption(DESTFILE, DEFAULT_DESTFILE);
+		return getOption(DESTFILE);
 	}
 
 	/**
@@ -284,7 +375,7 @@ public final class AgentOptions {
 	 * @return <code>true</code>, when the output should be appended
 	 */
 	public boolean getAppend() {
-		return getOption(APPEND, true);
+		return getBooleanOption(APPEND);
 	}
 
 	/**
@@ -304,7 +395,7 @@ public final class AgentOptions {
 	 * @see WildcardMatcher
 	 */
 	public String getIncludes() {
-		return getOption(INCLUDES, "*");
+		return getOption(INCLUDES);
 	}
 
 	/**
@@ -325,7 +416,7 @@ public final class AgentOptions {
 	 * @see WildcardMatcher
 	 */
 	public String getExcludes() {
-		return getOption(EXCLUDES, "");
+		return getOption(EXCLUDES);
 	}
 
 	/**
@@ -346,7 +437,7 @@ public final class AgentOptions {
 	 * @see WildcardMatcher
 	 */
 	public String getExclClassloader() {
-		return getOption(EXCLCLASSLOADER, "sun.reflect.DelegatingClassLoader");
+		return getOption(EXCLCLASSLOADER);
 	}
 
 	/**
@@ -368,7 +459,7 @@ public final class AgentOptions {
 	 *         should be instrumented
 	 */
 	public boolean getInclBootstrapClasses() {
-		return getOption(INCLBOOTSTRAPCLASSES, false);
+		return getBooleanOption(INCLBOOTSTRAPCLASSES);
 	}
 
 	/**
@@ -389,7 +480,7 @@ public final class AgentOptions {
 	 *         instrumented
 	 */
 	public boolean getInclNoLocationClasses() {
-		return getOption(INCLNOLOCATIONCLASSES, false);
+		return getBooleanOption(INCLNOLOCATIONCLASSES);
 	}
 
 	/**
@@ -409,7 +500,7 @@ public final class AgentOptions {
 	 * @return session identifier
 	 */
 	public String getSessionId() {
-		return getOption(SESSIONID, null);
+		return getOption(SESSIONID);
 	}
 
 	/**
@@ -428,7 +519,7 @@ public final class AgentOptions {
 	 * @return <code>true</code> if coverage data will be written on VM exit
 	 */
 	public boolean getDumpOnExit() {
-		return getOption(DUMPONEXIT, true);
+		return getBooleanOption(DUMPONEXIT);
 	}
 
 	/**
@@ -450,7 +541,7 @@ public final class AgentOptions {
 	 * @return port to listen on or connect to
 	 */
 	public int getPort() {
-		return getOption(PORT, DEFAULT_PORT);
+		return getIntOption(PORT);
 	}
 
 	/**
@@ -473,7 +564,7 @@ public final class AgentOptions {
 	 * @return Hostname or IP address
 	 */
 	public String getAddress() {
-		return getOption(ADDRESS, DEFAULT_ADDRESS);
+		return getOption(ADDRESS);
 	}
 
 	/**
@@ -494,8 +585,7 @@ public final class AgentOptions {
 	 * @return current output mode
 	 */
 	public OutputMode getOutput() {
-		final String value = options.get(OUTPUT);
-		return value == null ? OutputMode.file : OutputMode.valueOf(value);
+		return OutputMode.valueOf(options.get(OUTPUT));
 	}
 
 	/**
@@ -525,7 +615,7 @@ public final class AgentOptions {
 	 * @return dump location or <code>null</code> (no dumps)
 	 */
 	public String getClassDumpDir() {
-		return getOption(CLASSDUMPDIR, null);
+		return getOption(CLASSDUMPDIR);
 	}
 
 	/**
@@ -544,7 +634,7 @@ public final class AgentOptions {
 	 * @return <code>true</code>, when JMX is enabled
 	 */
 	public boolean getJmx() {
-		return getOption(JMX, false);
+		return getBooleanOption(JMX);
 	}
 
 	/**
@@ -569,19 +659,16 @@ public final class AgentOptions {
 		options.put(key, value);
 	}
 
-	private String getOption(final String key, final String defaultValue) {
-		final String value = options.get(key);
-		return value == null ? defaultValue : value;
+	private String getOption(final String key) {
+		return options.get(key);
 	}
 
-	private boolean getOption(final String key, final boolean defaultValue) {
-		final String value = options.get(key);
-		return value == null ? defaultValue : Boolean.parseBoolean(value);
+	private boolean getBooleanOption(final String key) {
+		return Boolean.parseBoolean(options.get(key));
 	}
 
-	private int getOption(final String key, final int defaultValue) {
-		final String value = options.get(key);
-		return value == null ? defaultValue : Integer.parseInt(value);
+	private int getIntOption(final String key) {
+		return Integer.parseInt(options.get(key));
 	}
 
 	/**
@@ -640,9 +727,12 @@ public final class AgentOptions {
 	@Override
 	public String toString() {
 		final StringBuilder sb = new StringBuilder();
-		for (final String key : VALID_OPTIONS) {
+		for (final Map.Entry<String, String> entry : DEFAULTS.entrySet()) {
+			final String key = entry.getKey();
+			final String defaultValue = entry.getValue();
 			final String value = options.get(key);
-			if (value != null) {
+			if ((defaultValue == null && value != null)
+					|| (defaultValue != null && !defaultValue.equals(value))) {
 				if (sb.length() > 0) {
 					sb.append(',');
 				}
