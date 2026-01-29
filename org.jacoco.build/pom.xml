@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-   Copyright (c) 2009, 2025 Mountainminds GmbH & Co. KG and Contributors
+   Copyright (c) 2009, 2026 Mountainminds GmbH & Co. KG and Contributors
    This program and the accompanying materials are made available under
    the terms of the Eclipse Public License 2.0 which is available at
-   http://www.eclipse.org/legal/epl-2.0
+   https://www.eclipse.org/legal/epl-2.0
 
    SPDX-License-Identifier: EPL-2.0
 
@@ -129,7 +129,7 @@
 
     <maven.build.timestamp.format>yyyyMMddhhmm</maven.build.timestamp.format>
     <jacoco.home.url>http://www.jacoco.org/jacoco</jacoco.home.url>
-    <copyright.years>${project.inceptionYear}, 2025</copyright.years>
+    <copyright.years>${project.inceptionYear}, 2026</copyright.years>
 
     <bytecode.version>1.5</bytecode.version>
     <maven.compiler.source>${bytecode.version}</maven.compiler.source>
@@ -137,6 +137,14 @@
 
     <jvm.args></jvm.args>
     <argLine>${jvm.args}</argLine>
+
+    <!--
+    The value of the property below is controlled by profiles:
+    "no-fonts" option is used if and only if javadoc tool from JDK >= 23 is used
+    (see https://bugs.openjdk.org/browse/JDK-8324774)
+    "quiet" option is used as a default to work around conversion of empty property to "null"
+    -->
+    <javadoc.JDK-8324774>-quiet</javadoc.JDK-8324774>
 
     <!-- Dependencies versions -->
     <asm.version>9.9</asm.version>
@@ -302,7 +310,7 @@
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-assembly-plugin</artifactId>
-          <version>3.7.1</version>
+          <version>3.8.0</version>
         </plugin>
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
@@ -348,15 +356,26 @@
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-jar-plugin</artifactId>
-          <version>3.4.2</version>
+          <version>3.5.0</version>
         </plugin>
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-javadoc-plugin</artifactId>
-          <version>3.11.2</version>
+          <version>3.12.0</version>
           <configuration>
             <quiet>true</quiet>
             <detectOfflineLinks>false</detectOfflineLinks>
+            <!--
+            use of "no-fonts" option is controlled by profiles,
+            because maven-javadoc-plugin version 3.12.0
+            wrongly determines whether it should be used or not
+            based on the version of JDK that is used for Maven
+            instead of the JDK selected by maven-toolchain-plugin
+            -->
+            <disableNoFonts>true</disableNoFonts>
+            <additionalOptions>
+              <option>${javadoc.JDK-8324774}</option>
+            </additionalOptions>
           </configuration>
         </plugin>
         <plugin>
@@ -367,7 +386,7 @@
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-release-plugin</artifactId>
-          <version>3.2.0</version>
+          <version>3.3.1</version>
           <configuration>
             <autoVersionSubmodules>true</autoVersionSubmodules>
             <mavenExecutorId>forked-path</mavenExecutorId>
@@ -382,7 +401,7 @@
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-resources-plugin</artifactId>
-          <version>3.3.1</version>
+          <version>3.4.0</version>
         </plugin>
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
@@ -392,7 +411,7 @@
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-source-plugin</artifactId>
-          <version>3.3.1</version>
+          <version>3.4.0</version>
         </plugin>
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
@@ -414,7 +433,7 @@
         <plugin>
           <groupId>org.codehaus.mojo</groupId>
           <artifactId>animal-sniffer-maven-plugin</artifactId>
-          <version>1.26</version>
+          <version>1.27</version>
         </plugin>
         <plugin>
           <groupId>org.codehaus.mojo</groupId>
@@ -424,17 +443,17 @@
         <plugin>
           <groupId>org.codehaus.mojo</groupId>
           <artifactId>buildnumber-maven-plugin</artifactId>
-          <version>3.2.1</version>
+          <version>3.3.0</version>
         </plugin>
         <plugin>
           <groupId>org.codehaus.mojo</groupId>
           <artifactId>xml-maven-plugin</artifactId>
-          <version>1.2.0</version>
+          <version>1.2.1</version>
         </plugin>
         <plugin>
           <groupId>org.codehaus.mojo</groupId>
           <artifactId>exec-maven-plugin</artifactId>
-          <version>3.6.2</version>
+          <version>3.6.3</version>
         </plugin>
         <!-- Third-party plugins -->
         <plugin>
@@ -450,12 +469,12 @@
         <plugin>
           <groupId>com.diffplug.spotless</groupId>
           <artifactId>spotless-maven-plugin</artifactId>
-          <version>3.0.0</version>
+          <version>3.2.0</version>
        </plugin>
        <plugin>
          <groupId>org.sonarsource.scanner.maven</groupId>
          <artifactId>sonar-maven-plugin</artifactId>
-         <version>5.2.0.4988</version>
+         <version>5.5.0.6356</version>
        </plugin>
       </plugins>
     </pluginManagement>
@@ -608,7 +627,7 @@
                       <contains text="Copyright (c) ${copyright.years} Mountainminds GmbH &amp; Co. KG and Contributors"/>
                       <contains text="This program and the accompanying materials are made available under"/>
                       <contains text="the terms of the Eclipse Public License 2.0 which is available at"/>
-                      <contains text="http://www.eclipse.org/legal/epl-2.0"/>
+                      <contains text="https://www.eclipse.org/legal/epl-2.0"/>
                       <contains text="SPDX-License-Identifier: EPL-2.0"/>
                     </and>
                   </not>
@@ -771,21 +790,13 @@
       <id>maven-jdk23</id>
       <activation>
         <jdk>[23,)</jdk>
+        <property>
+          <name>!jdk.version</name>
+        </property>
       </activation>
-      <build>
-        <plugins>
-          <plugin>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-javadoc-plugin</artifactId>
-            <configuration>
-              <additionalOptions>
-                <!-- https://bugs.openjdk.org/browse/JDK-8324774 -->
-                <option>--no-fonts</option>
-              </additionalOptions>
-            </configuration>
-          </plugin>
-        </plugins>
-      </build>
+      <properties>
+        <javadoc.JDK-8324774>--no-fonts</javadoc.JDK-8324774>
+      </properties>
     </profile>
 
     <!--
@@ -975,6 +986,20 @@
       </properties>
     </profile>
 
+    <profile>
+      <id>java27-bytecode</id>
+      <activation>
+        <property>
+          <name>bytecode.version</name>
+          <value>27</value>
+        </property>
+      </activation>
+      <properties>
+        <maven.compiler.source>17</maven.compiler.source>
+        <maven.compiler.target>17</maven.compiler.target>
+      </properties>
+    </profile>
+
     <!-- This profile enables use of ECJ -->
     <profile>
       <id>ecj</id>
@@ -1112,20 +1137,61 @@
           <value>23</value>
         </property>
       </activation>
-      <build>
-        <plugins>
-          <plugin>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-javadoc-plugin</artifactId>
-            <configuration>
-              <additionalOptions>
-                <!-- https://bugs.openjdk.org/browse/JDK-8324774 -->
-                <option>--no-fonts</option>
-              </additionalOptions>
-            </configuration>
-          </plugin>
-        </plugins>
-      </build>
+      <properties>
+        <javadoc.JDK-8324774>--no-fonts</javadoc.JDK-8324774>
+      </properties>
+    </profile>
+
+    <profile>
+      <id>jdk24</id>
+      <activation>
+        <property>
+          <name>jdk.version</name>
+          <value>24</value>
+        </property>
+      </activation>
+      <properties>
+        <javadoc.JDK-8324774>--no-fonts</javadoc.JDK-8324774>
+      </properties>
+    </profile>
+
+    <profile>
+      <id>jdk25</id>
+      <activation>
+        <property>
+          <name>jdk.version</name>
+          <value>25</value>
+        </property>
+      </activation>
+      <properties>
+        <javadoc.JDK-8324774>--no-fonts</javadoc.JDK-8324774>
+      </properties>
+    </profile>
+
+    <profile>
+      <id>jdk26</id>
+      <activation>
+        <property>
+          <name>jdk.version</name>
+          <value>26</value>
+        </property>
+      </activation>
+      <properties>
+        <javadoc.JDK-8324774>--no-fonts</javadoc.JDK-8324774>
+      </properties>
+    </profile>
+
+    <profile>
+      <id>jdk27</id>
+      <activation>
+        <property>
+          <name>jdk.version</name>
+          <value>27</value>
+        </property>
+      </activation>
+      <properties>
+        <javadoc.JDK-8324774>--no-fonts</javadoc.JDK-8324774>
+      </properties>
     </profile>
 
     <!-- This profile enables generation of JARs with sources and javadocs -->

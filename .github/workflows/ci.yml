@@ -8,23 +8,41 @@ jobs:
       fail-fast: false
       matrix:
         include:
+          - jdk: 6
+          - jdk: 7
           - jdk: 8
           - jdk: 8
             ecj: true
+          - jdk: 9
+          - jdk: 10
           - jdk: 11
           - jdk: 11
             ecj: true
+          - jdk: 12
+          - jdk: 13
+          - jdk: 14
+          - jdk: 15
+          - jdk: 16
           - jdk: 17
           - jdk: 17
             ecj: true
+          - jdk: 18
+          - jdk: 19
+          - jdk: 20
           - jdk: 21
           - jdk: 21
             ecj: true
+          - jdk: 22
+          - jdk: 23
+          - jdk: 23
+            ecj: true
+          - jdk: 24
+          - jdk: 25
     name: JDK ${{ matrix.jdk }}${{ matrix.ecj && ' with ECJ' || ''}}
     runs-on: ubuntu-24.04
     steps:
-      - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
-      - uses: actions/setup-java@dded0888837ed1f317902acf8a20df0ad188d165 # v5.0.0
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+      - uses: actions/setup-java@be666c2fcd27ec809703dec50e508c2fdc7f6654 # v5.2.0
         with:
           distribution: 'zulu'
           java-version: |
@@ -57,9 +75,10 @@ jobs:
             --toolchains=toolchains.xml
   Windows:
     runs-on: windows-2022
+    environment: ${{ (github.repository == 'jacoco/jacoco' && github.ref == 'refs/heads/master') && 'snapshot' || null }}
     steps:
-      - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
-      - uses: actions/setup-java@dded0888837ed1f317902acf8a20df0ad188d165 # v5.0.0
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+      - uses: actions/setup-java@be666c2fcd27ec809703dec50e508c2fdc7f6654 # v5.2.0
         with:
           distribution: 'zulu'
           java-version: |
@@ -90,10 +109,36 @@ jobs:
         run: |
           ./mvnw -V -B -e --no-transfer-progress \
             verify -Djdk.version=6 -Dbytecode.version=5 \
+            -f org.jacoco.build \
+            ${{ secrets.SONARQUBE_TOKEN && 'sonar:sonar' || '' }} \
+            -Dsonar.scanner.skipJreProvisioning \
+            -Dsonar.organization=default \
+            -Dsonar.host.url=https://sonarcloud.io \
             --toolchains=toolchains.xml
-      - uses: actions/upload-artifact@330a01c490aca151604b8cf639adc76d48f6c5d4 # v5.0.0
+        env:
+          SONAR_TOKEN: ${{ secrets.SONARQUBE_TOKEN }}
+      - uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6.0.0
         id: artifact-upload-step
         with:
           name: jacoco
           path: jacoco/target/*.zip
           if-no-files-found: error
+  CI:
+    needs:
+      - Linux
+      - Windows
+    # without following condition this job can have result "skipped" if needed job was "skipped"
+    # auto-merge ignores skipped jobs even if they are required by branch protection rules
+    if: ${{ always() }}
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Check results of all needed jobs
+        run: |
+          R=$(echo "$NEEDS" | jq --compact-output '[.[].result] | unique')
+          if [ "$R" = '["success"]' ]; then
+            exit 0
+          else
+            exit 1
+          fi
+        env:
+          NEEDS: ${{ toJSON(needs) }}
