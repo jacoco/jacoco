@@ -19,7 +19,7 @@
 			exclClassLoader="EvilClassLoader" includes="org.example.*" excludes="*Test"
 			inclbootstrapclasses="true" inclnolocationclasses="true"
 		    sessionid="testid" dumponexit="false"
-			output="file" address="remotehost" port="1234" jmx="true"
+			address="remotehost" port="1234" jmx="true"
 			classdumpdir="target/dump"/>
 		<au:assertPropertySet name="jacocoagent"/>
 		<au:assertPropertyContains name="jacocoagent" value="-javaagent:"/>
@@ -33,7 +33,6 @@
 		<au:assertPropertyContains name="jacocoagent" value="inclnolocationclasses=true"/>
 		<au:assertPropertyContains name="jacocoagent" value="sessionid=testid"/>
 		<au:assertPropertyContains name="jacocoagent" value="dumponexit=false"/>
-		<au:assertPropertyContains name="jacocoagent" value="output=file"/>
 		<au:assertPropertyContains name="jacocoagent" value="address=remotehost"/>
 		<au:assertPropertyContains name="jacocoagent" value="port=1234"/>
 		<au:assertPropertyContains name="jacocoagent" value="jmx=true"/>
