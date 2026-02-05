@@ -539,7 +539,7 @@
                   <version>17</version>
                 </requireJavaVersion>
                 <requireMavenVersion>
-                  <version>3.9.11</version>
+                  <version>3.9.12</version>
                 </requireMavenVersion>
                 <requireNoRepositories>
                   <message>The rules for repo1.maven.org are that pom.xml files should not include repository definitions.</message>
