@@ -109,6 +109,9 @@ public class Analyzer {
 		if ((reader.getAccess() & Opcodes.ACC_MODULE) != 0) {
 			return;
 		}
+		if (reader.getClassName().endsWith("/package-info")) {
+			return;
+		}
 		final ClassVisitor visitor = createAnalyzingVisitor(classId,
 				reader.getClassName());
 		reader.accept(visitor, 0);
