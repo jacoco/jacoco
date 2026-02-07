@@ -47,6 +47,13 @@ public class Stubs {
 	}
 
 	/**
+	 * Functional interface stub.
+	 */
+	public interface IntFunction<R> {
+		R apply(int value);
+	}
+
+	/**
 	 * Enum stub.
 	 */
 	public static enum Enum {
@@ -163,6 +170,20 @@ public class Stubs {
 	 */
 	public static void execSerializable(SerializableRunnable task) {
 		task.run();
+	}
+
+	/**
+	 * Directly executes the given {@link IntFunction} with argument
+	 * <code>0</code>.
+	 */
+	public static <R> void exec(IntFunction<R> function) {
+		function.apply(0);
+	}
+
+	/**
+	 * Never executes the given {@link IntFunction}.
+	 */
+	public static <R> void noexec(IntFunction<R> function) {
 	}
 
 	/**
