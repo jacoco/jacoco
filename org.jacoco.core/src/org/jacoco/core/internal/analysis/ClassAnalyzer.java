@@ -46,6 +46,7 @@ public class ClassAnalyzer extends ClassProbesVisitor
 
 	private final Set<String> classAttributes = new HashSet<String>();
 
+	private int classAccess;
 	private String sourceDebugExtension;
 	private KotlinSMAP smap;
 	private final HashMap<String, SourceNodeImpl> fragments = new HashMap<String, SourceNodeImpl>();
@@ -74,6 +75,7 @@ public class ClassAnalyzer extends ClassProbesVisitor
 	public void visit(final int version, final int access, final String name,
 			final String signature, final String superName,
 			final String[] interfaces) {
+		this.classAccess = access;
 		coverage.setSignature(stringPool.get(signature));
 		coverage.setSuperName(stringPool.get(superName));
 		coverage.setInterfaces(stringPool.get(interfaces));
@@ -211,6 +213,10 @@ public class ClassAnalyzer extends ClassProbesVisitor
 
 	public Set<String> getClassAttributes() {
 		return classAttributes;
+	}
+
+	public int getClassAccess() {
+		return classAccess;
 	}
 
 	public String getSourceFileName() {
