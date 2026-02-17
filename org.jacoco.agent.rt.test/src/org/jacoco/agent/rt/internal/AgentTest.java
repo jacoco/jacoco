@@ -37,6 +37,7 @@ import org.jacoco.core.runtime.AgentOptions.OutputMode;
 import org.jacoco.core.runtime.RuntimeData;
 import org.jacoco.core.tools.ExecFileLoader;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 /**
@@ -49,6 +50,21 @@ public class AgentTest implements IExceptionLogger, IAgentOutput {
 	private Boolean writeExecutionDataReset;
 
 	private Exception loggedException;
+
+	/**
+	 * Avoids https://bugs.openjdk.org/browse/JDK-8287073 that was fixed in
+	 * OpenJDK version 19, but backported only to OpenJDK versions 8u392,
+	 * 11.0.17, 17.0.5.
+	 */
+	@BeforeClass
+	public static void beforeClass() {
+		try {
+			ManagementFactory.getPlatformMBeanServer();
+		} catch (final NullPointerException ignore) {
+			// in jdk.internal.platform.cgroupv2.CgroupV2Subsystem.getInstance
+		}
+		ManagementFactory.getPlatformMBeanServer();
+	}
 
 	@Before
 	public void setup() {
@@ -162,8 +178,6 @@ public class AgentTest implements IExceptionLogger, IAgentOutput {
 		ObjectName objectName = new ObjectName("org.jacoco:type=Runtime");
 
 		try {
-			// FIXME NPE at
-			// java.base/jdk.internal.platform.cgroupv2.CgroupV2Subsystem.getInstance
 			ManagementFactory.getPlatformMBeanServer().getMBeanInfo(objectName);
 			fail("InstanceNotFoundException expected");
 		} catch (InstanceNotFoundException e) {
