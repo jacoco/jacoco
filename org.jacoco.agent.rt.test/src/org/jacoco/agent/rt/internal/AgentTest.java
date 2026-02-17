@@ -162,6 +162,8 @@ public class AgentTest implements IExceptionLogger, IAgentOutput {
 		ObjectName objectName = new ObjectName("org.jacoco:type=Runtime");
 
 		try {
+			// FIXME NPE at
+			// java.base/jdk.internal.platform.cgroupv2.CgroupV2Subsystem.getInstance
 			ManagementFactory.getPlatformMBeanServer().getMBeanInfo(objectName);
 			fail("InstanceNotFoundException expected");
 		} catch (InstanceNotFoundException e) {
