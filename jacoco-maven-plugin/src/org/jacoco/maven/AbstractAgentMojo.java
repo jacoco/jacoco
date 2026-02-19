@@ -12,6 +12,15 @@
  *******************************************************************************/
 package org.jacoco.maven;
 
+import static org.jacoco.core.runtime.AgentOptions.DEFAULT_APPEND_STR;
+import static org.jacoco.core.runtime.AgentOptions.DEFAULT_DUMPONEXIT_STR;
+import static org.jacoco.core.runtime.AgentOptions.DEFAULT_EXCLCLASSLOADER;
+import static org.jacoco.core.runtime.AgentOptions.DEFAULT_INCLBOOTSTRAPCLASSES_STR;
+import static org.jacoco.core.runtime.AgentOptions.DEFAULT_INCLNOLOCATIONCLASSES;
+import static org.jacoco.core.runtime.AgentOptions.DEFAULT_JMX_STR;
+import static org.jacoco.core.runtime.AgentOptions.DEFAULT_OUTPUT_STR;
+import static org.jacoco.core.runtime.AgentOptions.DEFAULT_PORT_STR;
+
 import java.io.File;
 import java.util.List;
 import java.util.Map;
@@ -32,19 +41,23 @@ public abstract class AbstractAgentMojo extends AbstractJacocoMojo {
 	 * Name of the JaCoCo Agent artifact.
 	 */
 	static final String AGENT_ARTIFACT_NAME = "org.jacoco:org.jacoco.agent";
+
 	/**
 	 * Name of the property used in maven-osgi-test-plugin.
 	 */
 	static final String TYCHO_ARG_LINE = "tycho.testArgLine";
+
 	/**
 	 * Name of the property used in maven-surefire-plugin.
 	 */
 	static final String SUREFIRE_ARG_LINE = "argLine";
+
 	/**
 	 * Map of plugin artifacts.
 	 */
 	@Parameter(property = "plugin.artifactMap", required = true, readonly = true)
 	Map<String, Artifact> pluginArtifactMap;
+
 	/**
 	 * Allows to specify property which will contain settings for JaCoCo Agent.
 	 * If not specified, then "argLine" would be used for "jar" packaging and
@@ -52,12 +65,13 @@ public abstract class AbstractAgentMojo extends AbstractJacocoMojo {
 	 */
 	@Parameter(property = "jacoco.propertyName")
 	String propertyName;
+
 	/**
 	 * If set to true and the execution data file already exists, coverage data
 	 * is appended to the existing file. If set to false, an existing execution
 	 * data file will be replaced.
 	 */
-	@Parameter(property = "jacoco.append")
+	@Parameter(property = "jacoco.append", defaultValue = DEFAULT_APPEND_STR)
 	Boolean append;
 
 	/**
@@ -85,31 +99,36 @@ public abstract class AbstractAgentMojo extends AbstractJacocoMojo {
 	 * particular class loaders that do not have access to the Java runtime
 	 * classes.
 	 */
-	@Parameter(property = "jacoco.exclClassLoaders")
+	@Parameter(property = "jacoco.exclClassLoaders", defaultValue = DEFAULT_EXCLCLASSLOADER)
 	String exclClassLoaders;
+
 	/**
 	 * Specifies whether also classes from the bootstrap classloader should be
 	 * instrumented. Use this feature with caution, it needs heavy
 	 * includes/excludes tuning.
 	 */
-	@Parameter(property = "jacoco.inclBootstrapClasses")
+	@Parameter(property = "jacoco.inclBootstrapClasses", defaultValue = DEFAULT_INCLBOOTSTRAPCLASSES_STR)
 	Boolean inclBootstrapClasses;
+
 	/**
 	 * Specifies whether classes without source location should be instrumented.
 	 */
-	@Parameter(property = "jacoco.inclNoLocationClasses")
+	@Parameter(property = "jacoco.inclNoLocationClasses", defaultValue = DEFAULT_INCLNOLOCATIONCLASSES)
 	Boolean inclNoLocationClasses;
+
 	/**
 	 * A session identifier that is written with the execution data. Without
 	 * this parameter a random identifier is created by the agent.
 	 */
 	@Parameter(property = "jacoco.sessionId")
 	String sessionId;
+
 	/**
 	 * If set to true coverage data will be written on VM shutdown.
 	 */
-	@Parameter(property = "jacoco.dumpOnExit")
+	@Parameter(property = "jacoco.dumpOnExit", defaultValue = DEFAULT_DUMPONEXIT_STR)
 	Boolean dumpOnExit;
+
 	/**
 	 * Output method to use for writing coverage data. Valid options are:
 	 * <ul>
@@ -123,23 +142,27 @@ public abstract class AbstractAgentMojo extends AbstractJacocoMojo {
 	 * <li>none: Do not produce any output.</li>
 	 * </ul>
 	 */
-	@Parameter(property = "jacoco.output")
+	@Parameter(property = "jacoco.output", defaultValue = DEFAULT_OUTPUT_STR)
 	String output;
+
 	/**
 	 * IP address or hostname to bind to when the output method is tcpserver or
 	 * connect to when the output method is tcpclient. In tcpserver mode the
 	 * value "*" causes the agent to accept connections on any local address.
 	 */
+	// TODO Default is actually "null" which cannot be assigned here
 	@Parameter(property = "jacoco.address")
 	String address;
+
 	/**
 	 * Port to bind to when the output method is tcpserver or connect to when
 	 * the output method is tcpclient. In tcpserver mode the port must be
 	 * available, which means that if multiple JaCoCo agents should run on the
 	 * same machine, different ports have to be specified.
 	 */
-	@Parameter(property = "jacoco.port")
+	@Parameter(property = "jacoco.port", defaultValue = DEFAULT_PORT_STR)
 	Integer port;
+
 	/**
 	 * If a directory is specified for this parameter the JaCoCo agent dumps all
 	 * class files it processes to the given location. This can be useful for
@@ -148,10 +171,11 @@ public abstract class AbstractAgentMojo extends AbstractJacocoMojo {
 	 */
 	@Parameter(property = "jacoco.classDumpDir")
 	File classDumpDir;
+
 	/**
 	 * If set to true the agent exposes functionality via JMX.
 	 */
-	@Parameter(property = "jacoco.jmx")
+	@Parameter(property = "jacoco.jmx", defaultValue = DEFAULT_JMX_STR)
 	Boolean jmx;
 
 	@Override

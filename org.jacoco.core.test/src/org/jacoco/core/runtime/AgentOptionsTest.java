@@ -143,7 +143,7 @@ public class AgentOptionsTest {
 		AgentOptions options = new AgentOptions();
 		options.setAppend(true);
 		assertTrue(options.getAppend());
-		assertEquals("append=true", options.toString());
+		assertEquals("", options.toString());
 	}
 
 	@Test
@@ -225,7 +225,7 @@ public class AgentOptionsTest {
 		AgentOptions options = new AgentOptions();
 		options.setInclBootstrapClasses(false);
 		assertFalse(options.getInclBootstrapClasses());
-		assertEquals("inclbootstrapclasses=false", options.toString());
+		assertEquals("", options.toString());
 	}
 
 	@Test
@@ -253,7 +253,7 @@ public class AgentOptionsTest {
 		AgentOptions options = new AgentOptions();
 		options.setInclNoLocationClasses(false);
 		assertFalse(options.getInclNoLocationClasses());
-		assertEquals("inclnolocationclasses=false", options.toString());
+		assertEquals("", options.toString());
 	}
 
 	@Test
@@ -414,23 +414,23 @@ public class AgentOptionsTest {
 	@Test
 	public void testGetVMArgumentWithOneOption() {
 		AgentOptions options = new AgentOptions();
-		options.setAppend(true);
+		options.setAppend(false);
 
 		String vmArgument = options.getVMArgument(defaultAgentJarFile);
 
-		assertEquals(String.format("-javaagent:%s=append=true",
+		assertEquals(String.format("-javaagent:%s=append=false",
 				defaultAgentJarFile.toString()), vmArgument);
 	}
 
 	@Test
 	public void testGetVMArgumentWithOptions() {
 		AgentOptions options = new AgentOptions();
-		options.setAppend(true);
+		options.setAppend(false);
 		options.setDestfile("some test.exec");
 		String vmArgument = options.getVMArgument(defaultAgentJarFile);
 
 		assertEquals(String.format(
-				"-javaagent:%s=destfile=some test.exec,append=true",
+				"-javaagent:%s=destfile=some test.exec,append=false",
 				defaultAgentJarFile.toString()), vmArgument);
 	}
 
