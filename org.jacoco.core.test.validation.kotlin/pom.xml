@@ -26,7 +26,7 @@
 
   <properties>
     <!-- When upgrading Kotlin do not forget to update JVM targets in org.jacoco.core.test.validation/pom.xml -->
-    <kotlin.version>2.3.0</kotlin.version>
+    <kotlin.version>2.3.10</kotlin.version>
   </properties>
 
   <dependencies>
