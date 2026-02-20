@@ -93,6 +93,14 @@ public abstract class AbstractReportMojo extends AbstractMojo
 	boolean skip;
 
 	/**
+	 * Flag used to additionally include test source files in the report.
+	 *
+	 * @since 0.8.15
+	 */
+	@Parameter(defaultValue = "false")
+	boolean includeTestSources;
+
+	/**
 	 * Maven project.
 	 */
 	@Parameter(property = "project", readonly = true)

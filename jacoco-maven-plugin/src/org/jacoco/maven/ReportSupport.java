@@ -139,31 +139,56 @@ final class ReportSupport {
 	 *            list of excludes patterns
 	 * @param srcEncoding
 	 *            encoding of the source files within this project
+	 * @param includeTestSources
+	 *            flag used to additionally include test source files in the
+	 *            report
 	 * @throws IOException
 	 *             if class files can't be read
 	 */
 	public void processProject(final IReportGroupVisitor visitor,
 			final String bundleName, final MavenProject project,
 			final List<String> includes, final List<String> excludes,
-			final String srcEncoding) throws IOException {
+			final String srcEncoding, final boolean includeTestSources)
+			throws IOException {
 		processProject(visitor, bundleName, project, includes, excludes,
-				new SourceFileCollection(project, srcEncoding));
+				new SourceFileCollection(project, srcEncoding,
+						includeTestSources),
+				includeTestSources);
 	}
 
 	private void processProject(final IReportGroupVisitor visitor,
 			final String bundleName, final MavenProject project,
 			final List<String> includes, final List<String> excludes,
 			final ISourceFileLocator locator) throws IOException {
+		processProject(visitor, bundleName, project, includes, excludes,
+				locator, false);
+	}
+
+	private void processProject(final IReportGroupVisitor visitor,
+			final String bundleName, final MavenProject project,
+			final List<String> includes, final List<String> excludes,
+			final ISourceFileLocator locator, final boolean includeTestClasses)
+			throws IOException {
 		final CoverageBuilder builder = new CoverageBuilder();
+		final Analyzer analyzer = new Analyzer(loader.getExecutionDataStore(),
+				builder);
+		final FileFilter filter = new FileFilter(includes, excludes);
+
 		final File classesDir = new File(
 				project.getBuild().getOutputDirectory());
-
 		if (classesDir.isDirectory()) {
-			final Analyzer analyzer = new Analyzer(
-					loader.getExecutionDataStore(), builder);
-			final FileFilter filter = new FileFilter(includes, excludes);
 			for (final File file : filter.getFiles(classesDir)) {
 				analyzer.analyzeAll(file);
+			}
+		}
+
+		if (includeTestClasses) {
+			final File testClassesDir = new File(
+					project.getBuild().getTestOutputDirectory());
+			if (testClassesDir.isDirectory()) {
+				for (final File file : filter.getFiles(testClassesDir)) {
+					analyzer.analyzeAll(file);
+				}
 			}
 		}
 
@@ -213,8 +238,8 @@ final class ReportSupport {
 		private final String encoding;
 
 		public SourceFileCollection(final MavenProject project,
-				final String encoding) {
-			this.sourceRoots = getCompileSourceRoots(project);
+				final String encoding, final boolean includeTestSources) {
+			this.sourceRoots = getSourceRoots(project, includeTestSources);
 			this.encoding = encoding;
 		}
 
@@ -241,11 +266,16 @@ final class ReportSupport {
 		}
 	}
 
-	private static List<File> getCompileSourceRoots(
-			final MavenProject project) {
-		final List<File> result = new ArrayList<File>();
-		for (final Object path : project.getCompileSourceRoots()) {
-			result.add(resolvePath(project, (String) path));
+	private static List<File> getSourceRoots(final MavenProject project,
+			final boolean includeTestSources) {
+		final List<File> result = new ArrayList<>();
+		for (final String path : project.getCompileSourceRoots()) {
+			result.add(resolvePath(project, path));
+		}
+		if (includeTestSources) {
+			for (final String path : project.getTestCompileSourceRoots()) {
+				result.add(resolvePath(project, path));
+			}
 		}
 		return result;
 	}
