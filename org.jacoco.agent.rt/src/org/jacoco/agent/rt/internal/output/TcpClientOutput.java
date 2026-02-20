@@ -55,7 +55,7 @@ public class TcpClientOutput implements IAgentOutput {
 				try {
 					connection.run();
 				} catch (final IOException e) {
-					logger.logExeption(e);
+					logger.logException(e);
 				}
 			}
 		});
