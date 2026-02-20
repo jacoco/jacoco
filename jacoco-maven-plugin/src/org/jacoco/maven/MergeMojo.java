@@ -26,7 +26,8 @@ import org.apache.maven.shared.model.fileset.util.FileSetManager;
 import org.jacoco.core.tools.ExecFileLoader;
 
 /**
- * Mojo for merging a set of execution data files (*.exec) into a single file
+ * Mojo for consolidating the session information and probe execution data of
+ * one or multiple execution data files (<code>*.exec</code>) into a new file.
  *
  * @since 0.6.4
  */

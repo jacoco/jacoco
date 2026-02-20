@@ -36,7 +36,8 @@ public class Merge extends Command {
 
 	@Override
 	public String description() {
-		return "Merges multiple exec files into a new one.";
+		return "Consolidates the session information and probe execution data of"
+				+ " one or multiple execution data files (*.exec) into a new file.";
 	}
 
 	@Override
