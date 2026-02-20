@@ -95,7 +95,7 @@ public class CoverageTransformer implements ClassFileTransformer {
 					ex.getMessage());
 			wrapper.initCause(ex);
 			// Report this, as the exception is ignored by the JVM:
-			logger.logExeption(wrapper);
+			logger.logException(wrapper);
 			throw wrapper;
 		}
 	}

@@ -24,7 +24,7 @@ public class ExceptionRecorder implements IExceptionLogger {
 	private String message;
 	private Class<?> causeType;
 
-	public void logExeption(Exception ex) {
+	public void logException(Exception ex) {
 		assertNull("multiple exeptions", exceptionType);
 		exceptionType = ex.getClass();
 		message = ex.getMessage();

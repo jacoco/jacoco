@@ -359,7 +359,7 @@ public class AgentTest implements IExceptionLogger, IAgentOutput {
 
 	// === IExceptionLogger ===
 
-	public void logExeption(Exception ex) {
+	public void logException(Exception ex) {
 		loggedException = ex;
 	}
 
