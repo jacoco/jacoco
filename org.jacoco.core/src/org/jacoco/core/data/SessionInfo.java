@@ -46,6 +46,8 @@ public class SessionInfo implements Comparable<SessionInfo> {
 	}
 
 	/**
+	 * Returns identifier for this session.
+	 *
 	 * @return identifier for this session
 	 */
 	public String getId() {
@@ -53,6 +55,9 @@ public class SessionInfo implements Comparable<SessionInfo> {
 	}
 
 	/**
+	 * Returns the epoc based time stamp when execution data recording has been
+	 * started.
+	 *
 	 * @return the epoc based time stamp when execution data recording has been
 	 *         started
 	 */
@@ -61,6 +66,8 @@ public class SessionInfo implements Comparable<SessionInfo> {
 	}
 
 	/**
+	 * Returns the epoc based time stamp when execution data was collected.
+	 *
 	 * @return the epoc based time stamp when execution data was collected
 	 */
 	public long getDumpTimeStamp() {

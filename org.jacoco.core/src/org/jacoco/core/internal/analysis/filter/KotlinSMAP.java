@@ -57,6 +57,8 @@ public final class KotlinSMAP {
 		}
 
 		/**
+		 * Returns name of input class.
+		 *
 		 * @return name of input class
 		 */
 		public String inputClassName() {
@@ -64,6 +66,8 @@ public final class KotlinSMAP {
 		}
 
 		/**
+		 * Returns starting line in input.
+		 *
 		 * @return starting line in input
 		 */
 		public int inputStartLine() {
@@ -71,6 +75,8 @@ public final class KotlinSMAP {
 		}
 
 		/**
+		 * Returns number of mapped lines.
+		 *
 		 * @return number of mapped lines
 		 */
 		public int repeatCount() {
@@ -78,6 +84,8 @@ public final class KotlinSMAP {
 		}
 
 		/**
+		 * Returns starting line in output.
+		 *
 		 * @return starting line in output
 		 */
 		public int outputStartLine() {
