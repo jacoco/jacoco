@@ -12,9 +12,13 @@
  *******************************************************************************/
 package org.jacoco.core.runtime;
 
+import org.jacoco.core.tools.StringFileReader;
+
 import static java.lang.String.format;
 
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
@@ -66,6 +70,14 @@ public final class AgentOptions {
 	 * @see WildcardMatcher
 	 */
 	public static final String EXCLUDES = "excludes";
+
+	/**
+	 * File path location to get Wildcard expression for class names that should
+	 * be excluded from code coverage.
+	 *
+	 * @see WildcardMatcher
+	 */
+	public static final String EXCLUDESFILE = "excludesfile";
 
 	/**
 	 * Wildcard expression for class loaders names for classes that should be
@@ -190,7 +202,7 @@ public final class AgentOptions {
 	public static final String JMX = "jmx";
 
 	private static final Collection<String> VALID_OPTIONS = Arrays.asList(
-			DESTFILE, APPEND, INCLUDES, EXCLUDES, EXCLCLASSLOADER,
+			DESTFILE, APPEND, INCLUDES, EXCLUDES, EXCLUDESFILE, EXCLCLASSLOADER,
 			INCLBOOTSTRAPCLASSES, INCLNOLOCATIONCLASSES, SESSIONID, DUMPONEXIT,
 			OUTPUT, ADDRESS, PORT, CLASSDUMPDIR, JMX);
 
@@ -225,7 +237,11 @@ public final class AgentOptions {
 				}
 
 				final String value = entry.substring(pos + 1);
-				setOption(key, value);
+				if (isExcludeRelatedOption(key)) {
+					setExcludeOption(key, value);
+				} else {
+					setOption(key, value);
+				}
 			}
 
 			validateAll();
@@ -336,7 +352,7 @@ public final class AgentOptions {
 	 * @see WildcardMatcher
 	 */
 	public void setExcludes(final String excludes) {
-		setOption(EXCLUDES, excludes);
+		setExcludeOption(EXCLUDES, excludes);
 	}
 
 	/**
@@ -569,6 +585,29 @@ public final class AgentOptions {
 		options.put(key, value);
 	}
 
+	private void setExcludeOption(final String key, final String value) {
+		String currentExcludes = options.get(EXCLUDES);
+		String overriddenExcludes = value;
+		if (EXCLUDESFILE.equals(key)) {
+			StringFileReader stringFileReader = new StringFileReader(value);
+			try {
+				overriddenExcludes = stringFileReader.readString();
+			} catch (FileNotFoundException e) {
+				throw new IllegalArgumentException(format(
+						"couldn't find exclude file %s for agent option %s",
+						value, key), e);
+			} catch (IOException e) {
+				throw new IllegalArgumentException(format(
+						"Error while reading exclude file %s for agent option %s",
+						value, key), e);
+			}
+		}
+		options.put(EXCLUDES,
+				currentExcludes != null && !currentExcludes.equals("")
+						? currentExcludes + ":" + overriddenExcludes
+						: overriddenExcludes);
+	}
+
 	private String getOption(final String key, final String defaultValue) {
 		final String value = options.get(key);
 		return value == null ? defaultValue : value;
@@ -582,6 +621,10 @@ public final class AgentOptions {
 	private int getOption(final String key, final int defaultValue) {
 		final String value = options.get(key);
 		return value == null ? defaultValue : Integer.parseInt(value);
+	}
+
+	private boolean isExcludeRelatedOption(final String key) {
+		return EXCLUDESFILE.equals(key) || EXCLUDES.equals(key);
 	}
 
 	/**
