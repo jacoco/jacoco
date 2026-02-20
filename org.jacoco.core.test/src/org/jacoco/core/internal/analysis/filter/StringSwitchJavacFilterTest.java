@@ -41,6 +41,13 @@ public class StringSwitchJavacFilterTest extends FilterTestBase {
 		m.visitInsn(Opcodes.ICONST_M1);
 		m.visitVarInsn(Opcodes.ISTORE, 2);
 
+		// Label for
+		// LOCALVARIABLE tmp1$ I Label 2
+		// with name for the above slot 2
+		// generated for switch inside lambda
+		// by javac versions starting from 24
+		m.visitLabel(new Label());
+
 		m.visitVarInsn(Opcodes.ALOAD, 1);
 		m.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "java/lang/String", "hashCode",
 				"()I", false);
