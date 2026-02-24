@@ -154,6 +154,7 @@
     <googlecodeprettify.version>20100721</googlecodeprettify.version>
 
     <maven-compiler-plugin.version>3.13.0</maven-compiler-plugin.version>
+    <maven-surefire-plugin.version>3.0.0</maven-surefire-plugin.version>
 
     <!-- ================== -->
     <!-- For SonarQube analysis -->
@@ -417,8 +418,7 @@
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-surefire-plugin</artifactId>
-          <!--  latest version which runs with Java 5 -->
-          <version>2.19.1</version>
+          <version>${maven-surefire-plugin.version}</version>
         </plugin>
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
@@ -1055,6 +1055,10 @@
         newer versions require javac version to be at least 6
         -->
         <maven-compiler-plugin.version>3.12.1</maven-compiler-plugin.version>
+        <!--
+        Latest version which runs with Java 5
+        -->
+        <maven-surefire-plugin.version>2.19.1</maven-surefire-plugin.version>
       </properties>
     </profile>
 
@@ -1068,6 +1072,8 @@
       </activation>
       <properties>
         <jvm.args>-XX:-FailOverToOldVerifier -Xverify:all</jvm.args>
+        <!-- Latest version which runs with Java 6 -->
+        <maven-surefire-plugin.version>2.22.2</maven-surefire-plugin.version>
       </properties>
     </profile>
 
@@ -1081,6 +1087,8 @@
       </activation>
       <properties>
         <jvm.args>-XX:-FailOverToOldVerifier -Xverify:all</jvm.args>
+        <!-- Latest version which runs with Java 7 -->
+        <maven-surefire-plugin.version>2.22.2</maven-surefire-plugin.version>
       </properties>
     </profile>
 
