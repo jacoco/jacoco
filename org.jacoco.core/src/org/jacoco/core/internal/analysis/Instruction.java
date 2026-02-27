@@ -56,6 +56,7 @@ import org.jacoco.core.analysis.ICounter;
 public class Instruction {
 
 	private final int line;
+	private final String instructionSign;
 
 	private int branches;
 
@@ -72,7 +73,20 @@ public class Instruction {
 	 *            source line this instruction belongs to
 	 */
 	public Instruction(final int line) {
+		this(line, null);
+	}
+
+	/**
+	 * New instruction at the given line with signature.
+	 *
+	 * @param line
+	 *            source line this instruction belongs to
+	 * @param instructionSign
+	 *            unique signature of instruction within a method
+	 */
+	public Instruction(final int line, final String instructionSign) {
 		this.line = line;
+		this.instructionSign = instructionSign;
 		this.branches = 0;
 		this.coveredBranches = new BitSet();
 	}
@@ -143,6 +157,26 @@ public class Instruction {
 	}
 
 	/**
+	 * Returns instruction signature within a method.
+	 *
+	 * @return instruction signature or <code>null</code>
+	 */
+	public String getInstructionSign() {
+		return instructionSign;
+	}
+
+	/**
+	 * Marks this instruction as covered by setting at least one branch.
+	 */
+	public void markCovered() {
+		if (branches == 0) {
+			coveredBranches.set(0);
+			return;
+		}
+		coveredBranches.set(0);
+	}
+
+	/**
 	 * Merges information about covered branches of this instruction with
 	 * another instruction.
 	 *
@@ -151,7 +185,8 @@ public class Instruction {
 	 * @return new instance with merged branches
 	 */
 	public Instruction merge(final Instruction other) {
-		final Instruction result = new Instruction(this.line);
+		final Instruction result = new Instruction(this.line,
+				this.instructionSign);
 		result.branches = this.branches;
 		result.coveredBranches.or(this.coveredBranches);
 		result.coveredBranches.or(other.coveredBranches);
@@ -169,7 +204,8 @@ public class Instruction {
 	 */
 	public Instruction replaceBranches(
 			final Collection<Instruction> newBranches) {
-		final Instruction result = new Instruction(this.line);
+		final Instruction result = new Instruction(this.line,
+				this.instructionSign);
 		result.branches = newBranches.size();
 		int idx = 0;
 		for (final Instruction b : newBranches) {
