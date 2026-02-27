@@ -26,6 +26,9 @@ import org.jacoco.core.analysis.Analyzer;
 import org.jacoco.core.analysis.CoverageBuilder;
 import org.jacoco.core.analysis.IBundleCoverage;
 import org.jacoco.core.analysis.IClassCoverage;
+import org.jacoco.core.analysis.ICoverageVisitor;
+import org.jacoco.core.analysis.InstructionCoverageMode;
+import org.jacoco.core.analysis.InstructionCoverageStore;
 import org.jacoco.core.data.ExecutionDataStore;
 import org.jacoco.core.tools.ExecFileLoader;
 import org.jacoco.report.DirectorySourceFileLocator;
@@ -45,6 +48,13 @@ import org.kohsuke.args4j.Option;
  */
 public class Report extends Command {
 
+	private static final ICoverageVisitor NOOP_COVERAGE_VISITOR = new ICoverageVisitor() {
+		public void visitCoverage(final IClassCoverage coverage) {
+			// no-op for historical analysis to avoid duplicate class name
+			// errors
+		}
+	};
+
 	@Argument(usage = "list of JaCoCo *.exec files to read", metaVar = "<execfiles>")
 	List<File> execfiles = new ArrayList<File>();
 
@@ -53,6 +63,12 @@ public class Report extends Command {
 
 	@Option(name = "--sourcefiles", usage = "location of the source files", metaVar = "<path>")
 	List<File> sourcefiles = new ArrayList<File>();
+
+	@Option(name = "--oldexec", usage = "list of historical JaCoCo *.exec files to read", metaVar = "<execfiles>")
+	List<File> oldexecfiles = new ArrayList<File>();
+
+	@Option(name = "--oldclassfiles", usage = "location of historical Java class files", metaVar = "<path>")
+	List<File> oldclassfiles = new ArrayList<File>();
 
 	@Option(name = "--tabwith", usage = "tab stop width for the source pages (default 4)", metaVar = "<n>")
 	int tabwidth = 4;
@@ -80,9 +96,17 @@ public class Report extends Command {
 	@Override
 	public int execute(final PrintWriter out, final PrintWriter err)
 			throws IOException {
+		if ((oldexecfiles.isEmpty() && !oldclassfiles.isEmpty())
+				|| (!oldexecfiles.isEmpty() && oldclassfiles.isEmpty())) {
+			err.println(
+					"[ERROR] --oldexec and --oldclassfiles must be provided together.");
+			return 1;
+		}
 		final ExecFileLoader loader = loadExecutionData(out);
+		final InstructionCoverageStore store = buildInstructionCoverageStore(
+				out, err);
 		final IBundleCoverage bundle = analyze(loader.getExecutionDataStore(),
-				out);
+				out, store);
 		writeReports(bundle, loader, out);
 		return 0;
 	}
@@ -103,14 +127,41 @@ public class Report extends Command {
 	}
 
 	private IBundleCoverage analyze(final ExecutionDataStore data,
-			final PrintWriter out) throws IOException {
+			final PrintWriter out, final InstructionCoverageStore store)
+			throws IOException {
 		final CoverageBuilder builder = new CoverageBuilder();
-		final Analyzer analyzer = new Analyzer(data, builder);
+		final Analyzer analyzer = store == null ? new Analyzer(data, builder)
+				: new Analyzer(data, builder, store,
+						InstructionCoverageMode.APPLY);
 		for (final File f : classfiles) {
 			analyzer.analyzeAll(f);
 		}
 		printNoMatchWarning(builder.getNoMatchClasses(), out);
 		return builder.getBundle(name);
+	}
+
+	private InstructionCoverageStore buildInstructionCoverageStore(
+			final PrintWriter out, final PrintWriter err) throws IOException {
+		if (oldexecfiles.isEmpty() && oldclassfiles.isEmpty()) {
+			return null;
+		}
+
+		final ExecFileLoader loader = new ExecFileLoader();
+		for (final File file : oldexecfiles) {
+			out.printf("[INFO] Loading historical execution data file %s.%n",
+					file.getAbsolutePath());
+			loader.load(file);
+		}
+
+		final InstructionCoverageStore store = new InstructionCoverageStore();
+		final Analyzer analyzer = new Analyzer(loader.getExecutionDataStore(),
+				NOOP_COVERAGE_VISITOR, store, InstructionCoverageMode.COLLECT);
+		for (final File f : oldclassfiles) {
+			analyzer.analyzeAll(f);
+		}
+		out.printf("[INFO] Historical instruction coverage collected: %d.%n",
+				Integer.valueOf(store.size()));
+		return store;
 	}
 
 	private void printNoMatchWarning(final Collection<IClassCoverage> nomatch,

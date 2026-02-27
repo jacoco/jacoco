@@ -19,8 +19,21 @@ import java.util.Map;
 
 import org.jacoco.core.analysis.ISourceNode;
 import org.jacoco.core.internal.flow.LabelInfo;
+import org.objectweb.asm.Handle;
 import org.objectweb.asm.Label;
+import org.objectweb.asm.Type;
 import org.objectweb.asm.tree.AbstractInsnNode;
+import org.objectweb.asm.tree.FieldInsnNode;
+import org.objectweb.asm.tree.IincInsnNode;
+import org.objectweb.asm.tree.IntInsnNode;
+import org.objectweb.asm.tree.InvokeDynamicInsnNode;
+import org.objectweb.asm.tree.LdcInsnNode;
+import org.objectweb.asm.tree.LookupSwitchInsnNode;
+import org.objectweb.asm.tree.MethodInsnNode;
+import org.objectweb.asm.tree.MultiANewArrayInsnNode;
+import org.objectweb.asm.tree.TableSwitchInsnNode;
+import org.objectweb.asm.tree.TypeInsnNode;
+import org.objectweb.asm.tree.VarInsnNode;
 
 /**
  * Stateful builder for the {@link Instruction}s of a method. All instructions
@@ -58,6 +71,9 @@ class InstructionsBuilder {
 	 */
 	private final List<Jump> jumps;
 
+	/** Instruction index within a method to avoid ambiguity. */
+	private int instructionIndex;
+
 	/**
 	 * Creates a new builder instance which can be used to analyze a single
 	 * method.
@@ -73,6 +89,7 @@ class InstructionsBuilder {
 		this.instructions = new HashMap<AbstractInsnNode, Instruction>();
 		this.currentLabel = new ArrayList<Label>(2);
 		this.jumps = new ArrayList<Jump>();
+		this.instructionIndex = 0;
 	}
 
 	/**
@@ -101,7 +118,8 @@ class InstructionsBuilder {
 	 * previous instruction unless specified otherwise.
 	 */
 	void addInstruction(final AbstractInsnNode node) {
-		final Instruction insn = new Instruction(currentLine);
+		final String sign = buildInstructionSign(node, instructionIndex++);
+		final Instruction insn = new Instruction(currentLine, sign);
 		final int labelCount = currentLabel.size();
 		if (labelCount > 0) {
 			for (int i = labelCount; --i >= 0;) {
@@ -114,6 +132,105 @@ class InstructionsBuilder {
 		}
 		currentInsn = insn;
 		instructions.put(node, insn);
+	}
+
+	private static String buildInstructionSign(final AbstractInsnNode node,
+			final int index) {
+		final StringBuilder sb = new StringBuilder(64);
+		sb.append(node.getType()).append('#').append(node.getOpcode());
+		switch (node.getType()) {
+		case AbstractInsnNode.INT_INSN: {
+			final IntInsnNode n = (IntInsnNode) node;
+			sb.append('#').append(n.operand);
+			break;
+		}
+		case AbstractInsnNode.VAR_INSN: {
+			final VarInsnNode n = (VarInsnNode) node;
+			sb.append('#').append(n.var);
+			break;
+		}
+		case AbstractInsnNode.TYPE_INSN: {
+			final TypeInsnNode n = (TypeInsnNode) node;
+			sb.append('#').append(n.desc);
+			break;
+		}
+		case AbstractInsnNode.FIELD_INSN: {
+			final FieldInsnNode n = (FieldInsnNode) node;
+			sb.append('#').append(n.owner).append('#').append(n.name)
+					.append('#').append(n.desc);
+			break;
+		}
+		case AbstractInsnNode.METHOD_INSN: {
+			final MethodInsnNode n = (MethodInsnNode) node;
+			sb.append('#').append(n.owner).append('#').append(n.name)
+					.append('#').append(n.desc).append('#').append(n.itf);
+			break;
+		}
+		case AbstractInsnNode.INVOKE_DYNAMIC_INSN: {
+			final InvokeDynamicInsnNode n = (InvokeDynamicInsnNode) node;
+			sb.append('#').append(n.name).append('#').append(n.desc);
+			if (n.bsm != null) {
+				final Handle h = n.bsm;
+				sb.append('#').append(h.getTag()).append('#')
+						.append(h.getOwner()).append('#').append(h.getName())
+						.append('#').append(h.getDesc()).append('#')
+						.append(h.isInterface());
+			}
+			if (n.bsmArgs != null) {
+				for (final Object arg : n.bsmArgs) {
+					sb.append('#').append(formatArg(arg));
+				}
+			}
+			break;
+		}
+		case AbstractInsnNode.JUMP_INSN: {
+			// opcode already included; label is unstable across versions
+			break;
+		}
+		case AbstractInsnNode.LDC_INSN: {
+			final LdcInsnNode n = (LdcInsnNode) node;
+			sb.append('#').append(formatArg(n.cst));
+			break;
+		}
+		case AbstractInsnNode.IINC_INSN: {
+			final IincInsnNode n = (IincInsnNode) node;
+			sb.append('#').append(n.var).append('#').append(n.incr);
+			break;
+		}
+		case AbstractInsnNode.TABLESWITCH_INSN: {
+			final TableSwitchInsnNode n = (TableSwitchInsnNode) node;
+			sb.append('#').append(n.min).append('#').append(n.max);
+			break;
+		}
+		case AbstractInsnNode.LOOKUPSWITCH_INSN: {
+			final LookupSwitchInsnNode n = (LookupSwitchInsnNode) node;
+			if (n.keys != null) {
+				for (final Object k : n.keys) {
+					sb.append('#').append(k);
+				}
+			}
+			break;
+		}
+		case AbstractInsnNode.MULTIANEWARRAY_INSN: {
+			final MultiANewArrayInsnNode n = (MultiANewArrayInsnNode) node;
+			sb.append('#').append(n.desc).append('#').append(n.dims);
+			break;
+		}
+		default:
+			break;
+		}
+		sb.append('#').append(index);
+		return sb.toString();
+	}
+
+	private static String formatArg(final Object arg) {
+		if (arg == null) {
+			return "null";
+		}
+		if (arg instanceof Type) {
+			return ((Type) arg).getDescriptor();
+		}
+		return String.valueOf(arg);
 	}
 
 	/**

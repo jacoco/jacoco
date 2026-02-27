@@ -21,6 +21,8 @@ import java.util.Map.Entry;
 import java.util.Set;
 
 import org.jacoco.core.analysis.ISourceNode;
+import org.jacoco.core.analysis.InstructionCoverageMode;
+import org.jacoco.core.analysis.InstructionCoverageStore;
 import org.jacoco.core.internal.analysis.filter.IFilterOutput;
 import org.objectweb.asm.tree.AbstractInsnNode;
 
@@ -50,12 +52,33 @@ class MethodCoverageCalculator implements IFilterOutput {
 
 	private final Map<AbstractInsnNode, Set<AbstractInsnNode>> replacements;
 
+	private final InstructionCoverageStore instructionCoverageStore;
+	private final InstructionCoverageMode instructionCoverageMode;
+	private final String className;
+	private final String methodName;
+	private final String methodDesc;
+
 	MethodCoverageCalculator(
 			final Map<AbstractInsnNode, Instruction> instructions) {
+		this(instructions, null, InstructionCoverageMode.NONE, null, null,
+				null);
+	}
+
+	MethodCoverageCalculator(
+			final Map<AbstractInsnNode, Instruction> instructions,
+			final InstructionCoverageStore instructionCoverageStore,
+			final InstructionCoverageMode instructionCoverageMode,
+			final String className, final String methodName,
+			final String methodDesc) {
 		this.instructions = instructions;
 		this.ignored = new HashSet<AbstractInsnNode>();
 		this.merged = new HashMap<AbstractInsnNode, AbstractInsnNode>();
 		this.replacements = new HashMap<AbstractInsnNode, Set<AbstractInsnNode>>();
+		this.instructionCoverageStore = instructionCoverageStore;
+		this.instructionCoverageMode = instructionCoverageMode;
+		this.className = className;
+		this.methodName = methodName;
+		this.methodDesc = methodDesc;
 	}
 
 	/**
@@ -68,12 +91,14 @@ class MethodCoverageCalculator implements IFilterOutput {
 	void calculate(final MethodCoverageImpl coverage) {
 		applyMerges();
 		applyReplacements();
+		applyHistoricalCoverage();
 		ensureCapacity(coverage);
 
 		for (final Entry<AbstractInsnNode, Instruction> entry : instructions
 				.entrySet()) {
 			if (!ignored.contains(entry.getKey())) {
 				final Instruction instruction = entry.getValue();
+				recordHistoricalCoverage(instruction);
 				coverage.increment(instruction.getInstructionCounter(),
 						instruction.getBranchCounter(), instruction.getLine());
 			}
@@ -116,6 +141,36 @@ class MethodCoverageCalculator implements IFilterOutput {
 			final AbstractInsnNode node = entry.getKey();
 			instructions.put(node,
 					instructions.get(node).replaceBranches(newBranches));
+		}
+	}
+
+	private void applyHistoricalCoverage() {
+		if (instructionCoverageStore == null
+				|| instructionCoverageMode != InstructionCoverageMode.APPLY) {
+			return;
+		}
+		for (final Entry<AbstractInsnNode, Instruction> entry : instructions
+				.entrySet()) {
+			if (ignored.contains(entry.getKey())) {
+				continue;
+			}
+			final Instruction instruction = entry.getValue();
+			final String sign = instruction.getInstructionSign();
+			if (instructionCoverageStore.isInstructionCovered(className,
+					methodName, methodDesc, sign)) {
+				instruction.markCovered();
+			}
+		}
+	}
+
+	private void recordHistoricalCoverage(final Instruction instruction) {
+		if (instructionCoverageStore == null
+				|| instructionCoverageMode != InstructionCoverageMode.COLLECT) {
+			return;
+		}
+		if (instruction.getInstructionCounter().getCoveredCount() > 0) {
+			instructionCoverageStore.recordCoveredInstruction(className,
+					methodName, methodDesc, instruction.getInstructionSign());
 		}
 	}
 

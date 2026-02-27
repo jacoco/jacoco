@@ -15,6 +15,8 @@ package org.jacoco.core.internal.analysis;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.jacoco.core.analysis.InstructionCoverageMode;
+import org.jacoco.core.analysis.InstructionCoverageStore;
 import org.jacoco.core.internal.analysis.filter.Filters;
 import org.jacoco.core.internal.analysis.filter.IFilter;
 import org.jacoco.core.internal.analysis.filter.IFilterContext;
@@ -44,6 +46,8 @@ public class ClassAnalyzer extends ClassProbesVisitor
 	private String sourceDebugExtension;
 
 	private final IFilter filter;
+	private final InstructionCoverageStore instructionCoverageStore;
+	private final InstructionCoverageMode instructionCoverageMode;
 
 	/**
 	 * Creates a new analyzer that builds coverage data for a class.
@@ -57,10 +61,19 @@ public class ClassAnalyzer extends ClassProbesVisitor
 	 */
 	public ClassAnalyzer(final ClassCoverageImpl coverage,
 			final boolean[] probes, final StringPool stringPool) {
+		this(coverage, probes, stringPool, null, InstructionCoverageMode.NONE);
+	}
+
+	public ClassAnalyzer(final ClassCoverageImpl coverage,
+			final boolean[] probes, final StringPool stringPool,
+			final InstructionCoverageStore instructionCoverageStore,
+			final InstructionCoverageMode instructionCoverageMode) {
 		this.coverage = coverage;
 		this.probes = probes;
 		this.stringPool = stringPool;
 		this.filter = Filters.all();
+		this.instructionCoverageStore = instructionCoverageStore;
+		this.instructionCoverageMode = instructionCoverageMode;
 	}
 
 	@Override
@@ -115,7 +128,8 @@ public class ClassAnalyzer extends ClassProbesVisitor
 			final String signature, final InstructionsBuilder icc,
 			final MethodNode methodNode) {
 		final MethodCoverageCalculator mcc = new MethodCoverageCalculator(
-				icc.getInstructions());
+				icc.getInstructions(), instructionCoverageStore,
+				instructionCoverageMode, coverage.getName(), name, desc);
 		filter.filter(methodNode, this, mcc);
 
 		final MethodCoverageImpl mc = new MethodCoverageImpl(name, desc,

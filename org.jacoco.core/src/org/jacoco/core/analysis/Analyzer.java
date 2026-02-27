@@ -52,6 +52,8 @@ public class Analyzer {
 	private final ICoverageVisitor coverageVisitor;
 
 	private final StringPool stringPool;
+	private final InstructionCoverageStore instructionCoverageStore;
+	private final InstructionCoverageMode instructionCoverageMode;
 
 	/**
 	 * Creates a new analyzer reporting to the given output.
@@ -64,9 +66,19 @@ public class Analyzer {
 	 */
 	public Analyzer(final ExecutionDataStore executionData,
 			final ICoverageVisitor coverageVisitor) {
+		this(executionData, coverageVisitor, null,
+				InstructionCoverageMode.NONE);
+	}
+
+	public Analyzer(final ExecutionDataStore executionData,
+			final ICoverageVisitor coverageVisitor,
+			final InstructionCoverageStore instructionCoverageStore,
+			final InstructionCoverageMode instructionCoverageMode) {
 		this.executionData = executionData;
 		this.coverageVisitor = coverageVisitor;
 		this.stringPool = new StringPool();
+		this.instructionCoverageStore = instructionCoverageStore;
+		this.instructionCoverageMode = instructionCoverageMode;
 	}
 
 	/**
@@ -93,7 +105,7 @@ public class Analyzer {
 		final ClassCoverageImpl coverage = new ClassCoverageImpl(className,
 				classid, noMatch);
 		final ClassAnalyzer analyzer = new ClassAnalyzer(coverage, probes,
-				stringPool) {
+				stringPool, instructionCoverageStore, instructionCoverageMode) {
 			@Override
 			public void visitEnd() {
 				super.visitEnd();
