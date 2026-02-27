@@ -1,8 +1,8 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2024 Mountainminds GmbH & Co. KG and Contributors
+ * Copyright (c) 2009, 2026 Mountainminds GmbH & Co. KG and Contributors
  * This program and the accompanying materials are made available under
  * the terms of the Eclipse Public License 2.0 which is available at
- * http://www.eclipse.org/legal/epl-2.0
+ * https://www.eclipse.org/legal/epl-2.0
  *
  * SPDX-License-Identifier: EPL-2.0
  *
@@ -12,7 +12,10 @@
  *******************************************************************************/
 package org.jacoco.core.internal.analysis;
 
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 import org.jacoco.core.analysis.InstructionCoverageMode;
@@ -20,6 +23,7 @@ import org.jacoco.core.analysis.InstructionCoverageStore;
 import org.jacoco.core.internal.analysis.filter.Filters;
 import org.jacoco.core.internal.analysis.filter.IFilter;
 import org.jacoco.core.internal.analysis.filter.IFilterContext;
+import org.jacoco.core.internal.analysis.filter.KotlinSMAP;
 import org.jacoco.core.internal.flow.ClassProbesVisitor;
 import org.jacoco.core.internal.flow.MethodProbesVisitor;
 import org.jacoco.core.internal.instr.InstrSupport;
@@ -27,6 +31,7 @@ import org.objectweb.asm.AnnotationVisitor;
 import org.objectweb.asm.Attribute;
 import org.objectweb.asm.FieldVisitor;
 import org.objectweb.asm.MethodVisitor;
+import org.objectweb.asm.tree.AbstractInsnNode;
 import org.objectweb.asm.tree.MethodNode;
 
 /**
@@ -44,6 +49,8 @@ public class ClassAnalyzer extends ClassProbesVisitor
 	private final Set<String> classAttributes = new HashSet<String>();
 
 	private String sourceDebugExtension;
+	private KotlinSMAP smap;
+	private final HashMap<String, SourceNodeImpl> fragments = new HashMap<String, SourceNodeImpl>();
 
 	private final IFilter filter;
 	private final InstructionCoverageStore instructionCoverageStore;
@@ -127,6 +134,11 @@ public class ClassAnalyzer extends ClassProbesVisitor
 	private void addMethodCoverage(final String name, final String desc,
 			final String signature, final InstructionsBuilder icc,
 			final MethodNode methodNode) {
+
+		final Map<AbstractInsnNode, Instruction> instructions = icc
+				.getInstructions();
+		calculateFragments(instructions);
+
 		final MethodCoverageCalculator mcc = new MethodCoverageCalculator(
 				icc.getInstructions(), instructionCoverageStore,
 				instructionCoverageMode, coverage.getName(), name, desc);
@@ -143,6 +155,40 @@ public class ClassAnalyzer extends ClassProbesVisitor
 
 	}
 
+	private void calculateFragments(
+			final Map<AbstractInsnNode, Instruction> instructions) {
+		if (sourceDebugExtension == null || !Filters.isKotlinClass(this)) {
+			return;
+		}
+		if (smap == null) {
+			// Note that visitSource is invoked before visitAnnotation,
+			// that's why parsing is done here
+			smap = new KotlinSMAP(getSourceFileName(), sourceDebugExtension);
+		}
+		for (final KotlinSMAP.Mapping mapping : smap.mappings()) {
+			if (coverage.getName().equals(mapping.inputClassName())
+					&& mapping.inputStartLine() == mapping.outputStartLine()) {
+				continue;
+			}
+			SourceNodeImpl fragment = fragments.get(mapping.inputClassName());
+			if (fragment == null) {
+				fragment = new SourceNodeImpl(null, mapping.inputClassName());
+				fragments.put(mapping.inputClassName(), fragment);
+			}
+			final int mappingOutputEndLine = mapping.outputStartLine()
+					+ mapping.repeatCount() - 1;
+			for (Instruction instruction : instructions.values()) {
+				if (mapping.outputStartLine() <= instruction.getLine()
+						&& instruction.getLine() <= mappingOutputEndLine) {
+					final int originalLine = mapping.inputStartLine()
+							+ instruction.getLine() - mapping.outputStartLine();
+					fragment.increment(instruction.getInstructionCounter(),
+							CounterImpl.COUNTER_0_0, originalLine);
+				}
+			}
+		}
+	}
+
 	@Override
 	public FieldVisitor visitField(final int access, final String name,
 			final String desc, final String signature, final Object value) {
@@ -153,6 +199,14 @@ public class ClassAnalyzer extends ClassProbesVisitor
 	@Override
 	public void visitTotalProbeCount(final int count) {
 		// nothing to do
+	}
+
+	@Override
+	public void visitEnd() {
+		if (!fragments.isEmpty()) {
+			coverage.setFragments(Arrays
+					.asList(fragments.values().toArray(new SourceNodeImpl[0])));
+		}
 	}
 
 	// IFilterContext implementation

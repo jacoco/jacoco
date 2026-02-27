@@ -2,7 +2,7 @@ JaCoCo Java Code Coverage Library
 =================================
 
 [![Build Status](https://dev.azure.com/jacoco-org/JaCoCo/_apis/build/status/JaCoCo?branchName=master)](https://dev.azure.com/jacoco-org/JaCoCo/_build/latest?definitionId=1&branchName=master)
-[![Maven Central](https://img.shields.io/maven-central/v/org.jacoco/jacoco.svg)](http://search.maven.org/#search|ga|1|g%3Aorg.jacoco)
+[![Maven Central](https://img.shields.io/maven-central/v/org.jacoco/jacoco.svg)](https://central.sonatype.com/namespace/org.jacoco)
 
 JaCoCo is a free Java code coverage library distributed under the Eclipse Public
 License.

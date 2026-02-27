@@ -1,8 +1,8 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2024 Mountainminds GmbH & Co. KG and Contributors
+ * Copyright (c) 2009, 2026 Mountainminds GmbH & Co. KG and Contributors
  * This program and the accompanying materials are made available under
  * the terms of the Eclipse Public License 2.0 which is available at
- * http://www.eclipse.org/legal/epl-2.0
+ * https://www.eclipse.org/legal/epl-2.0
  *
  * SPDX-License-Identifier: EPL-2.0
  *
@@ -11,9 +11,6 @@
  *
  *******************************************************************************/
 package org.jacoco.core.internal.analysis.filter;
-
-import java.util.HashSet;
-import java.util.Set;
 
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.tree.AbstractInsnNode;
@@ -28,7 +25,7 @@ import org.objectweb.asm.tree.VarInsnNode;
  * Filters bytecode that Kotlin compiler generates for <code>when</code>
  * expressions with a <code>String</code>.
  */
-public final class KotlinWhenStringFilter implements IFilter {
+final class KotlinWhenStringFilter implements IFilter {
 
 	public void filter(final MethodNode methodNode,
 			final IFilterContext context, final IFilterOutput output) {
@@ -71,8 +68,8 @@ public final class KotlinWhenStringFilter implements IFilter {
 				return;
 			}
 
-			final Set<AbstractInsnNode> replacements = new HashSet<AbstractInsnNode>();
-			replacements.add(skipNonOpcodes(defaultLabel));
+			final Replacements replacements = new Replacements();
+			replacements.add(defaultLabel, s, 0);
 
 			for (int i = 1; i <= hashCodes; i++) {
 				while (true) {
@@ -88,15 +85,17 @@ public final class KotlinWhenStringFilter implements IFilter {
 						return;
 					} else if (cursor.getOpcode() == Opcodes.GOTO) {
 						// jump to case body
-						replacements.add(
-								skipNonOpcodes(((JumpInsnNode) cursor).label));
+						replacements.add(((JumpInsnNode) cursor).label, cursor,
+								1);
 						if (jump.label == defaultLabel) {
 							// end of comparisons for same hashCode
+							replacements.add(defaultLabel, jump, 1);
 							break;
 						}
 					} else if (i == hashCodes && jump.label == defaultLabel) {
 						// case body
-						replacements.add(cursor);
+						replacements.add(defaultLabel, jump, 1);
+						replacements.add(cursor, jump, 0);
 						cursor = jump;
 						break;
 					} else {

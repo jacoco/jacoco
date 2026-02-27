@@ -1,8 +1,8 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2024 Mountainminds GmbH & Co. KG and Contributors
+ * Copyright (c) 2009, 2026 Mountainminds GmbH & Co. KG and Contributors
  * This program and the accompanying materials are made available under
  * the terms of the Eclipse Public License 2.0 which is available at
- * http://www.eclipse.org/legal/epl-2.0
+ * https://www.eclipse.org/legal/epl-2.0
  *
  * SPDX-License-Identifier: EPL-2.0
  *
@@ -24,7 +24,7 @@ public class ExceptionRecorder implements IExceptionLogger {
 	private String message;
 	private Class<?> causeType;
 
-	public void logExeption(Exception ex) {
+	public void logException(Exception ex) {
 		assertNull("multiple exeptions", exceptionType);
 		exceptionType = ex.getClass();
 		message = ex.getMessage();

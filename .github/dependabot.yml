@@ -8,7 +8,24 @@ updates:
       - "dependencies"
       - "component: build"
   - package-ecosystem: "maven"
-    directory: "/"
+    directory: "/org.jacoco.build"
+    schedule:
+      interval: "weekly"
+    labels:
+      - "dependencies"
+      - "component: build"
+    allow:
+      - dependency-name: "org.apache.maven.plugins:*"
+      - dependency-name: "org.codehaus.plexus:plexus-compiler-eclipse"
+      - dependency-name: "org.codehaus.mojo:*"
+      - dependency-name: "com.diffplug.spotless:*"
+      - dependency-name: "org.apache.felix:*"
+      - dependency-name: "org.sonarsource.scanner.maven:*"
+    ignore:
+      # It is known that upgrade from current version requires additional changes:
+      - dependency-name: "org.apache.maven.plugins:maven-plugin-plugin"
+  - package-ecosystem: "maven"
+    directory: "/org.jacoco.core"
     schedule:
       interval: "daily"
     labels:
@@ -16,3 +33,26 @@ updates:
       - "component: core"
     allow:
       - dependency-name: "org.ow2.asm:*"
+  - package-ecosystem: "maven"
+    directory: "/org.jacoco.core.test.validation.kotlin"
+    schedule:
+      interval: "weekly"
+    labels:
+      - "dependencies"
+      - "component: test"
+      - "language: Kotlin"
+    allow:
+      - dependency-name: "org.jetbrains.kotlin:*"
+  - package-ecosystem: "maven"
+    directory: "/org.jacoco.core.test.validation.groovy"
+    schedule:
+      interval: "weekly"
+    labels:
+      - "dependencies"
+      - "component: test"
+      - "language: Groovy"
+    allow:
+      - dependency-name: "org.codehaus.groovy:*"
+    ignore:
+      - dependency-name: "org.codehaus.groovy:*"
+        versions: ">=4.0.0"

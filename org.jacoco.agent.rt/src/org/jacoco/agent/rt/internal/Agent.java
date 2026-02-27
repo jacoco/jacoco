@@ -1,8 +1,8 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2024 Mountainminds GmbH & Co. KG and Contributors
+ * Copyright (c) 2009, 2026 Mountainminds GmbH & Co. KG and Contributors
  * This program and the accompanying materials are made available under
  * the terms of the Eclipse Public License 2.0 which is available at
- * http://www.eclipse.org/legal/epl-2.0
+ * https://www.eclipse.org/legal/epl-2.0
  *
  * SPDX-License-Identifier: EPL-2.0
  *
@@ -64,7 +64,7 @@ public class Agent implements IAgent {
 	}
 
 	/**
-	 * Returns a global instance which is already started. If a agent has not
+	 * Returns a global instance which is already started. If an agent has not
 	 * been initialized before this method will fail.
 	 *
 	 * @return global instance
@@ -131,7 +131,7 @@ public class Agent implements IAgent {
 				jmxRegistration = new JmxRegistration(this);
 			}
 		} catch (final Exception e) {
-			logger.logExeption(e);
+			logger.logException(e);
 			throw e;
 		}
 	}
@@ -149,7 +149,7 @@ public class Agent implements IAgent {
 				jmxRegistration.call();
 			}
 		} catch (final Exception e) {
-			logger.logExeption(e);
+			logger.logException(e);
 		}
 	}
 

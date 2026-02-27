@@ -1,8 +1,8 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2024 Mountainminds GmbH & Co. KG and Contributors
+ * Copyright (c) 2009, 2026 Mountainminds GmbH & Co. KG and Contributors
  * This program and the accompanying materials are made available under
  * the terms of the Eclipse Public License 2.0 which is available at
- * http://www.eclipse.org/legal/epl-2.0
+ * https://www.eclipse.org/legal/epl-2.0
  *
  * SPDX-License-Identifier: EPL-2.0
  *
@@ -100,7 +100,7 @@ public class InstrumenterTest {
 	@Test
 	public void should_not_modify_class_bytes_to_support_next_version()
 			throws Exception {
-		final byte[] originalBytes = createClass(Opcodes.V22 + 1);
+		final byte[] originalBytes = createClass(Opcodes.V23 + 1);
 		final byte[] bytes = new byte[originalBytes.length];
 		System.arraycopy(originalBytes, 0, bytes, 0, originalBytes.length);
 		final long expectedClassId = CRC64.classId(bytes);
@@ -123,13 +123,13 @@ public class InstrumenterTest {
 	 */
 	@Test
 	public void instrument_should_throw_exception_for_unsupported_class_file_version() {
-		final byte[] bytes = createClass(Opcodes.V22 + 2);
+		final byte[] bytes = createClass(Opcodes.V26 + 2);
 		try {
 			instrumenter.instrument(bytes, "UnsupportedVersion");
 			fail("exception expected");
 		} catch (final IOException e) {
 			assertExceptionMessage("UnsupportedVersion", e);
-			assertEquals("Unsupported class file major version 68",
+			assertEquals("Unsupported class file major version 72",
 					e.getCause().getMessage());
 		}
 	}
@@ -221,14 +221,14 @@ public class InstrumenterTest {
 	 */
 	@Test
 	public void instrumentAll_should_throw_exception_for_unsupported_class_file_version() {
-		final byte[] bytes = createClass(Opcodes.V22 + 2);
+		final byte[] bytes = createClass(Opcodes.V26 + 2);
 		try {
 			instrumenter.instrumentAll(new ByteArrayInputStream(bytes),
 					new ByteArrayOutputStream(), "UnsupportedVersion");
 			fail("exception expected");
 		} catch (final IOException e) {
 			assertExceptionMessage("UnsupportedVersion", e);
-			assertEquals("Unsupported class file major version 68",
+			assertEquals("Unsupported class file major version 72",
 					e.getCause().getMessage());
 		}
 	}
@@ -368,6 +368,31 @@ public class InstrumenterTest {
 			fail("exception expected");
 		} catch (IOException e) {
 			assertExceptionMessage("broken.zip@brokenentry.txt", e);
+		}
+	}
+
+	/**
+	 * @see org.jacoco.core.analysis.AnalyzerTest#testAnalyzeAll_analyzeZip_nextEntry_IllegalArgumentException()
+	 */
+	@Test
+	public void testInstrumentAll_instrumentZip_nextEntry_IllegalArgumentException()
+			throws IOException {
+		final ByteArrayOutputStream buffer = new ByteArrayOutputStream();
+		final ZipOutputStream zip = new ZipOutputStream(buffer);
+		zip.putNextEntry(new ZipEntry("entry"));
+		zip.closeEntry();
+		zip.close();
+		final byte[] zipBytes = buffer.toByteArray();
+		// non-UTF-8 character in entry name:
+		zipBytes[31] = (byte) 0xFF;
+
+		final ByteArrayOutputStream out = new ByteArrayOutputStream();
+		try {
+			instrumenter.instrumentAll(new ByteArrayInputStream(zipBytes), out,
+					"test.zip");
+			fail("expected exception");
+		} catch (final IOException e) {
+			assertExceptionMessage("test.zip", e);
 		}
 	}
 

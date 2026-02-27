@@ -1,8 +1,8 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2024 Mountainminds GmbH & Co. KG and Contributors
+ * Copyright (c) 2009, 2026 Mountainminds GmbH & Co. KG and Contributors
  * This program and the accompanying materials are made available under
  * the terms of the Eclipse Public License 2.0 which is available at
- * http://www.eclipse.org/legal/epl-2.0
+ * https://www.eclipse.org/legal/epl-2.0
  *
  * SPDX-License-Identifier: EPL-2.0
  *
@@ -11,6 +11,9 @@
  *
  *******************************************************************************/
 package org.jacoco.core.test.validation.kotlin;
+
+import java.util.Collection;
+import java.util.Collections;
 
 import org.jacoco.core.test.validation.ValidationTestBase;
 import org.jacoco.core.test.validation.kotlin.targets.KotlinDefaultMethodsTarget;
@@ -25,9 +28,8 @@ public class KotlinDefaultMethodsTest extends ValidationTestBase {
 	}
 
 	@Override
-	public void all_missed_instructions_should_have_line_number() {
-		// instructions without line numbers
-		// corresponding to non-executed default implementations
+	protected Collection<String> additionalClassesForAnalysis() {
+		return Collections.singletonList(
+				"org.jacoco.core.test.validation.kotlin.targets.KotlinDefaultMethodsTarget$I$DefaultImpls");
 	}
-
 }

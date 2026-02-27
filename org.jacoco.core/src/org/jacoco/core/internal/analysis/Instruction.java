@@ -1,8 +1,8 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2024 Mountainminds GmbH & Co. KG and Contributors
+ * Copyright (c) 2009, 2026 Mountainminds GmbH & Co. KG and Contributors
  * This program and the accompanying materials are made available under
  * the terms of the Eclipse Public License 2.0 which is available at
- * http://www.eclipse.org/legal/epl-2.0
+ * https://www.eclipse.org/legal/epl-2.0
  *
  * SPDX-License-Identifier: EPL-2.0
  *
@@ -16,6 +16,8 @@ import java.util.BitSet;
 import java.util.Collection;
 
 import org.jacoco.core.analysis.ICounter;
+import org.jacoco.core.internal.analysis.filter.Replacements;
+import org.objectweb.asm.tree.AbstractInsnNode;
 
 /**
  * Execution status of a single bytecode instruction internally used for
@@ -50,7 +52,7 @@ import org.jacoco.core.analysis.ICounter;
  *
  * <ul>
  * <li>{@link #merge(Instruction)}</li>
- * <li>{@link #replaceBranches(Collection)}</li>
+ * <li>{@link #replaceBranches(Replacements, Mapper)}</li>
  * </ul>
  */
 public class Instruction {
@@ -195,11 +197,15 @@ public class Instruction {
 
 	/**
 	 * Creates a copy of this instruction where all outgoing branches are
-	 * replaced with the given instructions. The coverage status of the new
-	 * instruction is derived from the status of the given instructions.
+	 * replaced. The coverage statuses of the branches of the new instruction
+	 * are derived from the statuses of the given branches of the given
+	 * instructions.
 	 *
-	 * @param newBranches
-	 *            new branches to consider
+	 * @param replacements
+	 *            new branches
+	 * @param mapper
+	 *            provides {@link Instruction} corresponding to
+	 *            {@link Replacements.InstructionBranch#instruction}
 	 * @return new instance with replaced branches
 	 */
 	public Instruction replaceBranches(
@@ -212,8 +218,17 @@ public class Instruction {
 			if (!b.coveredBranches.isEmpty()) {
 				result.coveredBranches.set(idx++);
 			}
+			branchIndex++;
 		}
+		result.branches = branchIndex;
 		return result;
+	}
+
+	/**
+	 * {@code java.util.function.Function<AbstractInsnNode, Instruction>}
+	 */
+	interface Mapper {
+		Instruction apply(AbstractInsnNode node);
 	}
 
 	/**

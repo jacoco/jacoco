@@ -1,8 +1,8 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2024 Mountainminds GmbH & Co. KG and Contributors
+ * Copyright (c) 2009, 2026 Mountainminds GmbH & Co. KG and Contributors
  * This program and the accompanying materials are made available under
  * the terms of the Eclipse Public License 2.0 which is available at
- * http://www.eclipse.org/legal/epl-2.0
+ * https://www.eclipse.org/legal/epl-2.0
  *
  * SPDX-License-Identifier: EPL-2.0
  *
@@ -22,7 +22,7 @@ public interface IExceptionLogger {
 	 * Default implementation which dumps the stack trace to System.err.
 	 */
 	IExceptionLogger SYSTEM_ERR = new IExceptionLogger() {
-		public void logExeption(final Exception ex) {
+		public void logException(final Exception ex) {
 			ex.printStackTrace();
 		}
 	};
@@ -33,6 +33,6 @@ public interface IExceptionLogger {
 	 * @param ex
 	 *            exception to log
 	 */
-	void logExeption(Exception ex);
+	void logException(Exception ex);
 
 }
