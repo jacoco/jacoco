@@ -37,6 +37,7 @@ import org.jacoco.core.runtime.AgentOptions.OutputMode;
 import org.jacoco.core.runtime.RuntimeData;
 import org.jacoco.core.tools.ExecFileLoader;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 /**
@@ -49,6 +50,49 @@ public class AgentTest implements IExceptionLogger, IAgentOutput {
 	private Boolean writeExecutionDataReset;
 
 	private Exception loggedException;
+
+	/**
+	 * Allows to avoid part of https://bugs.openjdk.org/browse/JDK-8287073,
+	 * which was fixed in OpenJDK version 19, but backported only to OpenJDK
+	 * versions 8u392, 11.0.17, 17.0.5.
+	 */
+	@BeforeClass
+	public static void beforeClass() {
+		try {
+			ManagementFactory.getPlatformMBeanServer();
+		} catch (final NullPointerException ignore) {
+			// Cannot invoke "jdk.internal.platform.CgroupInfo.getMountPoint()"
+			// because "anyController" is null
+			// at
+			// jdk.internal.platform.cgroupv2.CgroupV2Subsystem.getInstance
+			// ...
+			// com.sun.management.internal.OperatingSystemImpl.<init>
+			// com.sun.management.internal.PlatformMBeanProviderImpl.getOperatingSystemMXBean
+			// ...
+			// java.lang.management.ManagementFactory.getPlatformMBeanServer
+
+			// Even if invocation above failed, tests and code under tests
+			// still able to do required operations with
+			ManagementFactory.getPlatformMBeanServer();
+			// but not operations that involve
+			try {
+				ManagementFactory.getOperatingSystemMXBean();
+				fail("Exception expected");
+			} catch (final NullPointerException expected) {
+				// Cannot invoke
+				// "jdk.internal.platform.CgroupInfo.getMountPoint()"
+				// because "anyController" is null
+				// at
+				// jdk.internal.platform.cgroupv2.CgroupV2Subsystem.getInstance
+				// ...
+				// com.sun.management.internal.OperatingSystemImpl.<init>
+				// com.sun.management.internal.PlatformMBeanProviderImpl.getOperatingSystemMXBean
+				// ...
+				// java.lang.management.ManagementFactory.getPlatformMXBean
+				// java.lang.management.ManagementFactory.getOperatingSystemMXBean
+			}
+		}
+	}
 
 	@Before
 	public void setup() {
