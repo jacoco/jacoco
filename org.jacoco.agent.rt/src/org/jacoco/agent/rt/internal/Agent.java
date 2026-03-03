@@ -131,7 +131,7 @@ public class Agent implements IAgent {
 				jmxRegistration = new JmxRegistration(this);
 			}
 		} catch (final Exception e) {
-			logger.logExeption(e);
+			logger.logException(e);
 			throw e;
 		}
 	}
@@ -149,7 +149,7 @@ public class Agent implements IAgent {
 				jmxRegistration.call();
 			}
 		} catch (final Exception e) {
-			logger.logExeption(e);
+			logger.logException(e);
 		}
 	}
 
