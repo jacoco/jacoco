@@ -58,7 +58,14 @@ final class StringSwitchJavacFilter implements IFilter {
 				final AbstractInsnNode secondSwitchLabel) {
 			cursor = start;
 			for (int i = 0; cursor != null && i < 4; i++) {
-				cursor = cursor.getPrevious();
+				do {
+					cursor = cursor.getPrevious();
+					// skip label
+					// generated for switch inside lambda
+					// by javac versions from 24 to 26
+					// for compiler-generated temporary variables
+				} while (cursor != null
+						&& cursor.getType() == AbstractInsnNode.LABEL);
 			}
 			if (cursor == null || cursor.getOpcode() != Opcodes.ICONST_M1) {
 				return false;

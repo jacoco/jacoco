@@ -153,6 +153,9 @@
     <junit.version>4.13.2</junit.version>
     <googlecodeprettify.version>20100721</googlecodeprettify.version>
 
+    <maven-compiler-plugin.version>3.15.0</maven-compiler-plugin.version>
+    <maven-surefire-plugin.version>3.5.5</maven-surefire-plugin.version>
+
     <!-- ================== -->
     <!-- For SonarQube analysis -->
     <!-- ================== -->
@@ -320,13 +323,12 @@
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-compiler-plugin</artifactId>
-          <!-- latest version which works with JDK 5 -->
-          <version>3.12.1</version>
+          <version>${maven-compiler-plugin.version}</version>
         </plugin>
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-dependency-plugin</artifactId>
-          <version>3.9.0</version>
+          <version>3.10.0</version>
         </plugin>
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
@@ -416,8 +418,7 @@
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-surefire-plugin</artifactId>
-          <!--  latest version which runs with Java 5 -->
-          <version>2.19.1</version>
+          <version>${maven-surefire-plugin.version}</version>
         </plugin>
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
@@ -464,7 +465,7 @@
         <plugin>
           <groupId>org.apache.felix</groupId>
           <artifactId>maven-bundle-plugin</artifactId>
-          <version>6.0.0</version>
+          <version>6.0.2</version>
         </plugin>
         <plugin>
           <groupId>com.diffplug.spotless</groupId>
@@ -539,7 +540,7 @@
                   <version>17</version>
                 </requireJavaVersion>
                 <requireMavenVersion>
-                  <version>3.9.11</version>
+                  <version>3.9.12</version>
                 </requireMavenVersion>
                 <requireNoRepositories>
                   <message>The rules for repo1.maven.org are that pom.xml files should not include repository definitions.</message>
@@ -1026,7 +1027,7 @@
               <dependency>
                 <groupId>org.codehaus.plexus</groupId>
                 <artifactId>plexus-compiler-eclipse</artifactId>
-                <version>2.8.5</version>
+                <version>2.16.2</version>
               </dependency>
             </dependencies>
           </plugin>
@@ -1039,6 +1040,29 @@
     -->
 
     <profile>
+      <id>jdk5</id>
+      <activation>
+        <property>
+          <name>jdk.version</name>
+          <value>5</value>
+        </property>
+      </activation>
+      <properties>
+        <!--
+        Because of
+        https://github.com/apache/maven-compiler-plugin/blob/maven-compiler-plugin-3.13.0/pom.xml#L71
+        https://github.com/codehaus-plexus/plexus-compiler/blob/plexus-compiler-2.15.0/plexus-compilers/plexus-compiler-javac/src/main/java/org/codehaus/plexus/compiler/javac/JavacCompiler.java#L149-L163
+        newer versions require javac version to be at least 6
+        -->
+        <maven-compiler-plugin.version>3.12.1</maven-compiler-plugin.version>
+        <!--
+        Latest version which runs with Java 5
+        -->
+        <maven-surefire-plugin.version>2.19.1</maven-surefire-plugin.version>
+      </properties>
+    </profile>
+
+    <profile>
       <id>jdk6</id>
       <activation>
         <property>
@@ -1048,6 +1072,8 @@
       </activation>
       <properties>
         <jvm.args>-XX:-FailOverToOldVerifier -Xverify:all</jvm.args>
+        <!-- Latest version which runs with Java 6 -->
+        <maven-surefire-plugin.version>2.22.2</maven-surefire-plugin.version>
       </properties>
     </profile>
 
@@ -1061,6 +1087,8 @@
       </activation>
       <properties>
         <jvm.args>-XX:-FailOverToOldVerifier -Xverify:all</jvm.args>
+        <!-- Latest version which runs with Java 7 -->
+        <maven-surefire-plugin.version>2.22.2</maven-surefire-plugin.version>
       </properties>
     </profile>
 
