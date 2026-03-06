@@ -18,6 +18,7 @@ import java.io.IOException;
 import java.io.InterruptedIOException;
 import java.io.OutputStream;
 import java.nio.channels.FileChannel;
+import java.nio.channels.FileLock;
 import java.nio.channels.OverlappingFileLockException;
 
 import org.jacoco.core.data.ExecutionDataWriter;
@@ -80,8 +81,24 @@ public class FileOutput implements IAgentOutput {
 			try {
 				// An agent from another JVM might have a lock. In this case
 				// this method blocks until the lock is freed.
-				fc.lock();
-				return file;
+				final FileLock lock = fc.lock();
+				// Note that due to https://bugs.openjdk.org/browse/JDK-8166253
+				// (fixed in JDK version 11)
+				// reference to lock object must be maintained
+				// till the end of writing
+				// to guarantee that observation of OverlappingFileLockException
+				// does not depend on GC in JDK versions from 6 to 10
+				return new OutputStream() {
+					@Override
+					public void write(final int b) throws IOException {
+						file.write(b);
+					}
+
+					@Override
+					public void close() throws IOException {
+						lock.channel().close();
+					}
+				};
 			} catch (final OverlappingFileLockException e) {
 				// In the case of multiple class loaders there can be multiple
 				// JaCoCo runtimes even in the same VM. In this case we get an

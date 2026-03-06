@@ -20,6 +20,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InterruptedIOException;
+import java.nio.channels.FileLock;
 import java.nio.channels.OverlappingFileLockException;
 
 import org.jacoco.core.runtime.AgentOptions;
@@ -94,8 +95,13 @@ public class FileOutputTest {
 		File destFile = folder.newFile("jacoco.exec");
 		AgentOptions options = new AgentOptions();
 		options.setDestfile(destFile.getAbsolutePath());
-		FileOutputStream out = new FileOutputStream(destFile);
-		out.getChannel().lock();
+		// Note that due to https://bugs.openjdk.org/browse/JDK-8166253
+		// (fixed in JDK version 11)
+		// reference to lock object must be maintained
+		// till the end of this test
+		// to guarantee that observation of OverlappingFileLockException
+		// does not depend on GC in JDK versions from 6 to 10
+		FileLock lock = new FileOutputStream(destFile).getChannel().lock();
 		FileOutput controller = new FileOutput();
 
 		try {
@@ -104,7 +110,7 @@ public class FileOutputTest {
 		} catch (OverlappingFileLockException e) {
 			// expected
 		} finally {
-			out.close();
+			lock.channel().close();
 		}
 	}
 
@@ -119,8 +125,13 @@ public class FileOutputTest {
 		File destFile = folder.newFile("jacoco.exec");
 		AgentOptions options = new AgentOptions();
 		options.setDestfile(destFile.getAbsolutePath());
-		FileOutputStream out = new FileOutputStream(destFile);
-		out.getChannel().lock();
+		// Note that due to https://bugs.openjdk.org/browse/JDK-8166253
+		// (fixed in JDK version 11)
+		// reference to lock object must be maintained
+		// till the end of this test
+		// to guarantee that observation of OverlappingFileLockException
+		// does not depend on GC in JDK versions from 6 to 10
+		FileLock lock = new FileOutputStream(destFile).getChannel().lock();
 		FileOutput controller = new FileOutput();
 		Thread.currentThread().interrupt();
 
@@ -130,7 +141,7 @@ public class FileOutputTest {
 		} catch (InterruptedIOException e) {
 			// expected
 		} finally {
-			out.close();
+			lock.channel().close();
 		}
 	}
 
