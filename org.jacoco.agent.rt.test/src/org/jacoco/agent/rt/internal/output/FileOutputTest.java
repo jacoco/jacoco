@@ -100,6 +100,7 @@ public class FileOutputTest {
 
 		try {
 			controller.startup(options, new RuntimeData());
+			// FIXME Sometimes reached in AzurePipelines on JDK 6:
 			fail("OverlappingFileLockException expected");
 		} catch (OverlappingFileLockException e) {
 			// expected
