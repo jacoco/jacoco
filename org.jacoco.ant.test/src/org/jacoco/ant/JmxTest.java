@@ -25,6 +25,13 @@ import junit.framework.TestSuite;
 public class JmxTest {
 
 	public static TestSuite suite() {
+		if (JavaVersion.current().isBefore("19")
+				&& !JavaVersion.current().isBefore("18")) {
+			// Frequently fails on JDK 18 in CI due to
+			// https://bugs.openjdk.java.net/browse/JDK-8287073
+			final File file = new File("src/org/jacoco/ant/empty.xml");
+			return new AntUnitSuite(file, SecurityManagerTest.class);
+		}
 		System.setProperty("org.jacoco.ant.jmxTest.classes.dir",
 				TestTarget.getClassPath());
 		final File file = new File("src/org/jacoco/ant/JmxTest.xml");
