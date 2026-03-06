@@ -96,6 +96,12 @@ public class FileOutputTest {
 		options.setDestfile(destFile.getAbsolutePath());
 		FileOutputStream out = new FileOutputStream(destFile);
 		out.getChannel().lock();
+
+		System.runFinalization();
+		System.gc();
+		System.runFinalization();
+		System.gc();
+
 		FileOutput controller = new FileOutput();
 
 		try {
@@ -122,6 +128,12 @@ public class FileOutputTest {
 		options.setDestfile(destFile.getAbsolutePath());
 		FileOutputStream out = new FileOutputStream(destFile);
 		out.getChannel().lock();
+
+		System.runFinalization();
+		System.gc();
+		System.runFinalization();
+		System.gc();
+
 		FileOutput controller = new FileOutput();
 		Thread.currentThread().interrupt();
 
