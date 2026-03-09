@@ -37,7 +37,7 @@ public class Instrument extends Command {
 	@Option(name = "--dest", usage = "path to write instrumented Java classes to", metaVar = "<dir>", required = true)
 	File dest;
 
-	@Argument(usage = "list of folder or files to instrument recusively", metaVar = "<sourcefiles>")
+	@Argument(usage = "list of folder or files to instrument recursively", metaVar = "<sourcefiles>")
 	List<File> source = new ArrayList<File>();
 
 	private Instrumenter instrumenter;
