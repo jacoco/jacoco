@@ -95,12 +95,11 @@ public class FileOutputTest {
 		File destFile = folder.newFile("jacoco.exec");
 		AgentOptions options = new AgentOptions();
 		options.setDestfile(destFile.getAbsolutePath());
-		// Note that due to https://bugs.openjdk.org/browse/JDK-8166253
-		// (fixed in JDK version 11)
-		// reference to lock object must be maintained
+		// Note that reference to lock object must be maintained
 		// till the end of this test
 		// to guarantee that observation of OverlappingFileLockException
 		// does not depend on GC in JDK versions from 6 to 10
+		// affected by https://bugs.openjdk.org/browse/JDK-8166253
 		FileLock lock = new FileOutputStream(destFile).getChannel().lock();
 		FileOutput controller = new FileOutput();
 
@@ -125,12 +124,11 @@ public class FileOutputTest {
 		File destFile = folder.newFile("jacoco.exec");
 		AgentOptions options = new AgentOptions();
 		options.setDestfile(destFile.getAbsolutePath());
-		// Note that due to https://bugs.openjdk.org/browse/JDK-8166253
-		// (fixed in JDK version 11)
-		// reference to lock object must be maintained
+		// Note that reference to lock object must be maintained
 		// till the end of this test
 		// to guarantee that observation of OverlappingFileLockException
 		// does not depend on GC in JDK versions from 6 to 10
+		// affected by https://bugs.openjdk.org/browse/JDK-8166253
 		FileLock lock = new FileOutputStream(destFile).getChannel().lock();
 		FileOutput controller = new FileOutput();
 		Thread.currentThread().interrupt();

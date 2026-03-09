@@ -82,12 +82,11 @@ public class FileOutput implements IAgentOutput {
 				// An agent from another JVM might have a lock. In this case
 				// this method blocks until the lock is freed.
 				final FileLock lock = fc.lock();
-				// Note that due to https://bugs.openjdk.org/browse/JDK-8166253
-				// (fixed in JDK version 11)
-				// reference to lock object must be maintained
+				// Note that reference to lock object must be maintained
 				// till the end of writing
 				// to guarantee that observation of OverlappingFileLockException
 				// does not depend on GC in JDK versions from 6 to 10
+				// affected by https://bugs.openjdk.org/browse/JDK-8166253
 				return new OutputStream() {
 					@Override
 					public void write(final int b) throws IOException {
