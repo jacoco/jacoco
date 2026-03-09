@@ -52,6 +52,7 @@ public final class Filters {
 
 	private static IFilter allCommonFilters() {
 		return new FilterSet( //
+				new SyntheticClassFilter(), //
 				new EnumFilter(), //
 				new BridgeFilter(), //
 				new SynchronizedFilter(), //
