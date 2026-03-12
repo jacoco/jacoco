@@ -25,16 +25,16 @@ import junit.framework.TestSuite;
 public class SecurityManagerTest {
 
 	public static TestSuite suite() {
-		if (JavaVersion.current().isBefore("24")) {
-			System.setProperty("org.jacoco.ant.securityManagerTest.classes.dir",
-					TestTarget.getClassPath());
-			final File file = new File(
-					"src/org/jacoco/ant/SecurityManagerTest.xml");
+		if (!JavaVersion.current().isBefore("24")) {
+			// Ability to enable Security Manager was removed in Java 24
+			// https://openjdk.org/jeps/486
+			final File file = new File("src/org/jacoco/ant/empty.xml");
 			return new AntUnitSuite(file, SecurityManagerTest.class);
 		}
-		// Ability to enable Security Manager was removed in Java 24
-		// https://openjdk.org/jeps/486
-		final File file = new File("src/org/jacoco/ant/empty.xml");
+		System.setProperty("org.jacoco.ant.securityManagerTest.classes.dir",
+				TestTarget.getClassPath());
+		final File file = new File(
+				"src/org/jacoco/ant/SecurityManagerTest.xml");
 		return new AntUnitSuite(file, SecurityManagerTest.class);
 	}
 
