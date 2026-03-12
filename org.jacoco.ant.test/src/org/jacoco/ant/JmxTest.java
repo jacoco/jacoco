@@ -30,7 +30,7 @@ public class JmxTest {
 			// Frequently fails on JDK 18 in CI due to
 			// https://bugs.openjdk.java.net/browse/JDK-8287073
 			final File file = new File("src/org/jacoco/ant/empty.xml");
-			return new AntUnitSuite(file, SecurityManagerTest.class);
+			return new AntUnitSuite(file, JmxTest.class);
 		}
 		System.setProperty("org.jacoco.ant.jmxTest.classes.dir",
 				TestTarget.getClassPath());
