@@ -18,6 +18,7 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+import org.jacoco.core.internal.analysis.filter.FilterSet;
 import org.jacoco.core.internal.analysis.filter.Filters;
 import org.jacoco.core.internal.analysis.filter.IFilter;
 import org.jacoco.core.internal.analysis.filter.IFilterContext;
@@ -64,11 +65,27 @@ public class ClassAnalyzer extends ClassProbesVisitor
 	 *            shared pool to minimize the number of {@link String} instances
 	 */
 	public ClassAnalyzer(final ClassCoverageImpl coverage,
-			final boolean[] probes, final StringPool stringPool) {
+			final boolean[] probes, final StringPool stringPool,
+			final IFilter filter) {
 		this.coverage = coverage;
 		this.probes = probes;
 		this.stringPool = stringPool;
-		this.filter = Filters.all();
+		this.filter = new FilterSet(Filters.all(), filter);
+	}
+
+	/**
+	 * Creates a new analyzer that builds coverage data for a class.
+	 *
+	 * @param coverage
+	 *            coverage node for the analyzed class data
+	 * @param probes
+	 *            execution data for this class or <code>null</code>
+	 * @param stringPool
+	 *            shared pool to minimize the number of {@link String} instances
+	 */
+	public ClassAnalyzer(final ClassCoverageImpl coverage,
+			final boolean[] probes, final StringPool stringPool) {
+		this(coverage, probes, stringPool, Filters.NONE);
 	}
 
 	@Override
