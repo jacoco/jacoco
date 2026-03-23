@@ -72,7 +72,7 @@ public class EnumSwitchFilterTest extends FilterTestBase {
 		final Label case1 = new Label();
 		final Label case2 = new Label();
 
-		m.visitTableSwitchInsn(0, 1, dflt, new Label[] { case1, case2 });
+		m.visitTableSwitchInsn(0, 1, dflt, case1, case2);
 
 		final AbstractInsnNode switchNode = m.instructions.getLast();
 
@@ -130,7 +130,7 @@ public class EnumSwitchFilterTest extends FilterTestBase {
 		final Label case1 = new Label();
 		final Label case2 = new Label();
 
-		m.visitTableSwitchInsn(1, 2, dflt, new Label[] { case1, case2 });
+		m.visitTableSwitchInsn(1, 2, dflt, case1, case2);
 
 		final AbstractInsnNode switchNode = m.instructions.getLast();
 
@@ -166,7 +166,7 @@ public class EnumSwitchFilterTest extends FilterTestBase {
 		final Label dflt = new Label();
 		final Label case1 = new Label();
 
-		m.visitTableSwitchInsn(0, 0, dflt, new Label[] { case1 });
+		m.visitTableSwitchInsn(0, 0, dflt, case1);
 
 		m.visitLabel(case1);
 		m.visitInsn(Opcodes.ICONST_1);
@@ -192,7 +192,7 @@ public class EnumSwitchFilterTest extends FilterTestBase {
 		final Label dflt = new Label(); // Target for default
 		final Label case1 = dflt; // Case 1 shares target with default
 
-		m.visitTableSwitchInsn(0, 0, dflt, new Label[] { case1 });
+		m.visitTableSwitchInsn(0, 0, dflt, case1);
 
 		m.visitLabel(dflt);
 		m.visitInsn(Opcodes.ICONST_0);
@@ -221,7 +221,7 @@ public class EnumSwitchFilterTest extends FilterTestBase {
 		final Label case1 = new Label();
 		final Label case2 = new Label();
 
-		m.visitTableSwitchInsn(0, 1, dflt, new Label[] { case1, case2 });
+		m.visitTableSwitchInsn(0, 1, dflt, case1, case2);
 
 		final AbstractInsnNode switchNode = m.instructions.getLast();
 
@@ -267,7 +267,7 @@ public class EnumSwitchFilterTest extends FilterTestBase {
 		final Label case2 = new Label();
 		final Label case3 = new Label();
 
-		m.visitTableSwitchInsn(1, 3, dflt, new Label[] { case1, case2, case3 });
+		m.visitTableSwitchInsn(1, 3, dflt, case1, case2, case3);
 
 		final AbstractInsnNode switchNode = m.instructions.getLast();
 
@@ -314,7 +314,7 @@ public class EnumSwitchFilterTest extends FilterTestBase {
 		final Label case2 = new Label();
 		final Label end = new Label();
 
-		m.visitTableSwitchInsn(0, 1, dflt, new Label[] { case1, case2 });
+		m.visitTableSwitchInsn(0, 1, dflt, case1, case2);
 
 		final AbstractInsnNode switchNode = m.instructions.getLast();
 
@@ -361,7 +361,7 @@ public class EnumSwitchFilterTest extends FilterTestBase {
 		final Label case2 = new Label();
 		final Label end = new Label();
 
-		m.visitTableSwitchInsn(0, 1, dflt, new Label[] { case1, case2 });
+		m.visitTableSwitchInsn(0, 1, dflt, case1, case2);
 
 		final AbstractInsnNode switchNode = m.instructions.getLast();
 
