@@ -393,8 +393,8 @@ public class EnumSwitchFilterTest extends FilterTestBase {
 	}
 
 	/**
-	 * Test to reproduce the issue where implicit default case in fully covered enum
-	 * switch is counted as missed branch.
+	 * Test to reproduce the issue where implicit default case in fully covered
+	 * enum switch is counted as missed branch.
 	 */
 	@Test
 	public void testEnumSwitchCoverage() throws Exception {

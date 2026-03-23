@@ -164,7 +164,8 @@ public abstract class FilterTestBase {
 		AbstractInsnNode fromInclusive;
 		AbstractInsnNode toInclusive;
 
-		Range() {}
+		Range() {
+		}
 
 		Range(AbstractInsnNode fromInclusive, AbstractInsnNode toInclusive) {
 			this.fromInclusive = fromInclusive;
