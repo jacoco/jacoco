@@ -12,6 +12,7 @@
  *******************************************************************************/
 package org.jacoco.agent.rt.internal.output;
 
+import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -87,15 +88,14 @@ public class FileOutput implements IAgentOutput {
 				// to guarantee that observation of OverlappingFileLockException
 				// does not depend on GC in JDK versions from 6 to 10
 				// affected by https://bugs.openjdk.org/browse/JDK-8166253
-				return new OutputStream() {
-					@Override
-					public void write(final int b) throws IOException {
-						file.write(b);
-					}
-
+				return new BufferedOutputStream(file) {
 					@Override
 					public void close() throws IOException {
-						lock.channel().close();
+						try {
+							flush();
+						} finally {
+							lock.channel().close();
+						}
 					}
 				};
 			} catch (final OverlappingFileLockException e) {
