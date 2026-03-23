@@ -29,7 +29,6 @@ final class AnnotationGeneratedFilter implements IFilter {
 
 	private final Set<String> ignoredMethods = new HashSet<String>();
 
-	@Override
 	public void filter(final MethodNode methodNode,
 			final IFilterContext context, final IFilterOutput output) {
 
