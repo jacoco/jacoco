@@ -12,18 +12,6 @@
  *******************************************************************************/
 package org.jacoco.core.internal.analysis.filter;
 
-import static org.junit.Assert.assertEquals;
-
-import java.io.File;
-import java.io.FileOutputStream;
-
-import javax.tools.JavaCompiler;
-import javax.tools.ToolProvider;
-
-import org.jacoco.core.analysis.Analyzer;
-import org.jacoco.core.analysis.CoverageBuilder;
-import org.jacoco.core.analysis.IClassCoverage;
-import org.jacoco.core.data.ExecutionDataStore;
 import org.jacoco.core.internal.instr.InstrSupport;
 import org.junit.Rule;
 import org.junit.Test;
