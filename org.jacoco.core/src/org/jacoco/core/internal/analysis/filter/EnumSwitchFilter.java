@@ -27,7 +27,6 @@ import org.objectweb.asm.tree.TableSwitchInsnNode;
  */
 public final class EnumSwitchFilter implements IFilter {
 
-	@Override
 	public void filter(final MethodNode methodNode,
 			final IFilterContext context, final IFilterOutput output) {
 		final Matcher matcher = new Matcher();
