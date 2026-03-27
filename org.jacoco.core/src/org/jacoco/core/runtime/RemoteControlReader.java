@@ -25,7 +25,7 @@ public class RemoteControlReader extends ExecutionDataReader {
 	private IRemoteCommandVisitor remoteCommandVisitor;
 
 	/**
-	 * Create a new read based on the given input stream.
+	 * Creates a new reader based on the given input stream.
 	 *
 	 * @param input
 	 *            input stream to read commands from
