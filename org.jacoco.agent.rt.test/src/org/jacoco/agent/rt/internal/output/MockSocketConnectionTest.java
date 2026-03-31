@@ -12,6 +12,7 @@
  *******************************************************************************/
 package org.jacoco.agent.rt.internal.output;
 
+import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -122,6 +123,24 @@ public class MockSocketConnectionTest extends ExecutorTestBase {
 		final OutputStream out = a.getOutputStream();
 		a.close();
 		out.write(123);
+	}
+
+	@Test
+	public void read_into_array_should_not_wait_until_entire_requested_length_is_read()
+			throws Exception {
+		final InputStream in = a.getInputStream();
+		final OutputStream out = b.getOutputStream();
+
+		out.write(new byte[] { 42, 13 });
+
+		final byte[] bytes = new byte[3];
+		if (REAL_SOCKETS) {
+			assertEquals(2, in.read(bytes, 0, 3));
+		} else {
+			assertEquals(1, in.read(bytes, 0, 3));
+			assertEquals(1, in.read(bytes, 1, 2));
+		}
+		assertArrayEquals(new byte[] { 42, 13, 0 }, bytes);
 	}
 
 	@Test
