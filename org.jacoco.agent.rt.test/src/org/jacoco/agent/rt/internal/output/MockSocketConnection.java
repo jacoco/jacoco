@@ -73,9 +73,26 @@ public class MockSocketConnection {
 		};
 
 		private final InputStream in = new InputStream() {
+			private final byte[] b = new byte[1];
 
 			@Override
 			public int read() throws IOException {
+				if (read(b, 0, 1) == -1) {
+					return -1;
+				}
+				return b[0] & 0xFF;
+			}
+
+			/**
+			 * Unlike default implementation
+			 * {@link InputStream#read(byte[], int, int)} this method reads at
+			 * most 1 byte instead of requested <code>len</code> bytes,
+			 * otherwise {@link java.io.BufferedInputStream#read()} wrapping
+			 * this stream will block waiting to fill entire buffer.
+			 */
+			@Override
+			public int read(final byte[] b, final int off, final int len)
+					throws IOException {
 				synchronized (buffer) {
 					try {
 						while (true) {
@@ -85,10 +102,11 @@ public class MockSocketConnection {
 							if (other.closed) {
 								return -1;
 							}
-							final Byte b = buffer.poll();
+							final Byte r = buffer.poll();
 							buffer.notifyAll();
-							if (b != null) {
-								return 0xff & b.intValue();
+							if (r != null) {
+								b[off] = r;
+								return 1;
 							}
 							buffer.wait();
 						}
