@@ -16,6 +16,7 @@ import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -27,6 +28,7 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 
+import org.jacoco.core.test.validation.JavaVersion;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -141,6 +143,96 @@ public class MockSocketConnectionTest extends ExecutorTestBase {
 			assertEquals(1, in.read(bytes, 1, 2));
 		}
 		assertArrayEquals(new byte[] { 42, 13, 0 }, bytes);
+	}
+
+	/**
+	 * @see #read_into_array_should_not_block_when_requested_length_is_zero()
+	 *      explanation of non-zero requested length
+	 */
+	@Test
+	public void read_into_array_should_not_block_when_provided_array_is_null()
+			throws Exception {
+		final InputStream in = a.getInputStream();
+		try {
+			in.read(null, 0, 1);
+			fail("NullPointerException expected");
+		} catch (final NullPointerException e) {
+			// expected
+		}
+	}
+
+	@Test
+	public void read_into_array_should_not_block_when_requested_offset_is_negative()
+			throws Exception {
+		final InputStream in = a.getInputStream();
+		final byte[] bytes = new byte[0];
+		try {
+			in.read(bytes, -1, 1);
+			fail("IndexOutOfBoundsException expected");
+		} catch (final IndexOutOfBoundsException e) {
+			// expected
+			assertEquals(!REAL_SOCKETS ? null
+					: (JavaVersion.current().isBefore("13")
+							? "length == 1 off == -1 buffer length == 0"
+							: "Range [-1, -1 + 1) out of bounds for length 0"),
+					e.getMessage());
+		}
+	}
+
+	@Test
+	public void read_into_array_should_not_block_when_requested_length_is_zero()
+			throws Exception {
+		final InputStream in = a.getInputStream();
+
+		if (REAL_SOCKETS && JavaVersion.current().isBefore("13")) {
+			assertEquals(0, in.read(new byte[0], 1, 0));
+			return;
+		}
+		try {
+			in.read(new byte[0], 1, 0);
+			fail("IndexOutOfBoundsException expected");
+		} catch (final IndexOutOfBoundsException e) {
+			// expected
+			assertEquals(!REAL_SOCKETS ? null
+					: (JavaVersion.current().isBefore("13")
+							? "length == 1 off == -1 buffer length == 0"
+							: "Range [1, 1 + 0) out of bounds for length 0"),
+					e.getMessage());
+		}
+	}
+
+	@Test
+	public void read_into_array_should_not_block_when_requested_length_is_negative()
+			throws Exception {
+		final InputStream in = a.getInputStream();
+		try {
+			in.read(new byte[1], 0, -1);
+			fail("IndexOutOfBoundsException expected");
+		} catch (final IndexOutOfBoundsException e) {
+			// expected
+			assertEquals(!REAL_SOCKETS ? null
+					: (JavaVersion.current().isBefore("13")
+							? "length == -1 off == 0 buffer length == 1"
+							: "Range [0, 0 + -1) out of bounds for length 1"),
+					e.getMessage());
+		}
+	}
+
+	@Test
+	public void read_into_array_should_not_block_when_provided_array_is_too_small()
+			throws Exception {
+		final InputStream in = a.getInputStream();
+		try {
+			in.read(new byte[1], 1, 1);
+			fail("IndexOutOfBoundsException expected");
+		} catch (final IndexOutOfBoundsException e) {
+			// expected
+			assertEquals(!REAL_SOCKETS ? null
+					: (JavaVersion.current().isBefore("13")
+							? "length == 1 off == 1 buffer length == 1"
+							: "Range [1, 1 + 1) out of bounds for length 1"),
+					e.getMessage());
+		}
 	}
 
 	@Test
