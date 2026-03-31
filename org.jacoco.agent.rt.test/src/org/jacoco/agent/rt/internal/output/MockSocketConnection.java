@@ -93,6 +93,9 @@ public class MockSocketConnection {
 			@Override
 			public int read(final byte[] b, final int off, final int len)
 					throws IOException {
+				if (len <= 0 || off < 0 || len > b.length - off) {
+					throw new IndexOutOfBoundsException();
+				}
 				synchronized (buffer) {
 					try {
 						while (true) {
