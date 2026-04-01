@@ -12,6 +12,7 @@
  *******************************************************************************/
 package org.jacoco.core.data;
 
+import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
@@ -23,7 +24,6 @@ import java.io.ByteArrayOutputStream;
 import java.io.EOFException;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.util.Arrays;
 import java.util.Random;
 
 import org.junit.Before;
@@ -316,11 +316,6 @@ public class ExecutionDataReaderWriterTest {
 			data[j] = random.nextBoolean();
 		}
 		return data;
-	}
-
-	private void assertArrayEquals(final boolean[] expected,
-			final boolean[] actual) {
-		assertTrue(Arrays.equals(expected, actual));
 	}
 
 	protected ExecutionDataWriter createWriter(OutputStream out)
