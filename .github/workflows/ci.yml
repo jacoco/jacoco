@@ -38,6 +38,7 @@ jobs:
             ecj: true
           - jdk: 24
           - jdk: 25
+          - jdk: 26
     name: JDK ${{ matrix.jdk }}${{ matrix.ecj && ' with ECJ' || ''}}
     runs-on: ubuntu-24.04
     steps:
@@ -117,7 +118,7 @@ jobs:
             --toolchains=toolchains.xml
         env:
           SONAR_TOKEN: ${{ secrets.SONARQUBE_TOKEN }}
-      - uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6.0.0
+      - uses: actions/upload-artifact@bbbca2ddaa5d8feaa63e36b76fdaad77386f024f # v7.0.0
         id: artifact-upload-step
         with:
           name: jacoco

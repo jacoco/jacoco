@@ -66,7 +66,7 @@ public class TcpServerOutput implements IAgentOutput {
 						// If the serverSocket is closed while accepting
 						// connections a SocketException is expected.
 						if (!serverSocket.isClosed()) {
-							logger.logExeption(e);
+							logger.logException(e);
 						}
 					}
 				}

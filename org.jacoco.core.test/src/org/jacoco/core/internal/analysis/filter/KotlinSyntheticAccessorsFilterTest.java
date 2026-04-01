@@ -20,7 +20,7 @@ import org.objectweb.asm.tree.MethodNode;
 /**
  * Unit tests for {@link KotlinSyntheticAccessorsFilter}.
  */
-public class KotlinSyntheticFilterTest extends FilterTestBase {
+public class KotlinSyntheticAccessorsFilterTest extends FilterTestBase {
 
 	private final IFilter filter = new KotlinSyntheticAccessorsFilter();
 
