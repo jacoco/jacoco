@@ -34,6 +34,12 @@
       type <code>java.lang.String</code> inside lambdas is filtered out during
       generation of report
       (GitHub <a href="https://github.com/jacoco/jacoco/issues/2023">#2023</a>).</li>
+  <li>For better performance Agent output methods <code>tcpclient</code> and
+      <code>tcpserver</code> use <code>BufferedOutputStream</code> to write data.
+      Maven plugin goal, Ant task, CLI command and <code>ExecDumpClient</code> API
+      method <code>dump</code> use <code>BufferedInputStream</code> to read data.
+      Third-party integrations should do the same to benefit from this change in Agent
+      (GitHub <a href="https://github.com/jacoco/jacoco/issues/2089">#2089</a>).</li>
 </ul>
 
 <h3>Fixed bugs</h3>
