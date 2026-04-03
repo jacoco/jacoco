@@ -12,6 +12,10 @@
  *******************************************************************************/
 package org.jacoco.core.internal.analysis.filter;
 
+import org.objectweb.asm.Opcodes;
+import org.objectweb.asm.tree.AbstractInsnNode;
+import org.objectweb.asm.tree.AnnotationNode;
+import org.objectweb.asm.tree.FieldInsnNode;
 import org.objectweb.asm.tree.MethodNode;
 
 /**
@@ -24,7 +28,38 @@ final class KotlinJvmStaticFilter implements IFilter {
 
 	public void filter(final MethodNode methodNode,
 			final IFilterContext context, final IFilterOutput output) {
-		// TODO
+		if ((methodNode.access & Opcodes.ACC_STATIC) == 0) {
+			return;
+		}
+		if (!isJvmStatic(methodNode)) {
+			return;
+		}
+		if (!isGetStaticCompanion(methodNode.instructions.getFirst(),
+				context.getClassName())) {
+			return;
+		}
+		output.ignore(methodNode.instructions.getFirst(),
+				methodNode.instructions.getLast());
+	}
+
+	private static boolean isGetStaticCompanion(final AbstractInsnNode i,
+			final String owner) {
+		if (i == null || i.getOpcode() != Opcodes.GETSTATIC) {
+			return false;
+		}
+		final FieldInsnNode f = (FieldInsnNode) i;
+		return f.owner.equals(owner) && f.name.equals("Companion");
+	}
+
+	private boolean isJvmStatic(final MethodNode methodNode) {
+		if (methodNode.visibleAnnotations != null) {
+			for (AnnotationNode annotation : methodNode.visibleAnnotations) {
+				if ("Lkotlin/jvm/JvmStatic;".equals(annotation.desc)) {
+					return true;
+				}
+			}
+		}
+		return false;
 	}
 
 }
