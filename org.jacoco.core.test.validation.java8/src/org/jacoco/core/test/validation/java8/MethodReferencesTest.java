@@ -98,8 +98,11 @@ public class MethodReferencesTest extends ValidationTestBase {
 			assertTrue(names.contains("lambda$8"));
 			assertEquals(3, names.size());
 		}
-		assertMethodCount(/* constructors */ 4 + /* methods */ 3
-				+ /* lambdas */ names.size());
+		assertMethodCount( //
+				names.size() // lambdas
+						+ 4 // constructors
+						+ 3 // methods
+		);
 	}
 
 }
