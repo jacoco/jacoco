@@ -96,25 +96,22 @@ final class StringSwitchFilter implements IFilter {
 					nextIsInvoke(Opcodes.INVOKEVIRTUAL, "java/lang/String",
 							"equals", "(Ljava/lang/Object;)Z");
 
-					if (cursor != null
-							&& cursor.getNext().getOpcode() == Opcodes.IFEQ
-							&& ((JumpInsnNode) cursor
-									.getNext()).label == defaultLabel
-							&& i + 1 == hashCodes) {
+					JumpInsnNode j;
+					if ((j = isJumpAfter(cursor, Opcodes.IFNE)) != null) {
+						// jump to case
+						cursor = j;
+					} else if ((j = isJumpAfter(cursor, Opcodes.IFEQ)) != null
+							&& j.label == defaultLabel && i + 1 == hashCodes) {
 						// jump to default
-						nextIs(Opcodes.IFEQ);
+						cursor = j;
 						replacements.add(defaultLabel, cursor, 1);
 						replacements.add(cursor.getNext(), cursor, 0);
 						break;
-					}
-
-					// jump to case
-					nextIs(Opcodes.IFNE);
-					if (cursor == null) {
+					} else {
 						return;
 					}
 
-					replacements.add(((JumpInsnNode) cursor).label, cursor, 1);
+					replacements.add(j.label, cursor, 1);
 
 					if (cursor.getNext().getOpcode() == Opcodes.GOTO) {
 						// end of comparisons for same hashCode
@@ -135,6 +132,21 @@ final class StringSwitchFilter implements IFilter {
 
 			output.ignore(start.getNext(), cursor);
 			output.replaceBranches(start, replacements);
+		}
+
+		/**
+		 * @return next instruction after given as {@link JumpInsnNode} if it
+		 *         has given {@code opcode}, {@code null} otherwise
+		 */
+		private static JumpInsnNode isJumpAfter(AbstractInsnNode instruction,
+				final int opcode) {
+			if (instruction == null) {
+				return null;
+			}
+			instruction = instruction.getNext();
+			return instruction != null && instruction.getOpcode() == opcode
+					? (JumpInsnNode) instruction
+					: null;
 		}
 	}
 
