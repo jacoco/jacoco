@@ -13,6 +13,7 @@
 package org.jacoco.core.internal.instr;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -30,9 +31,14 @@ public class NoneProbeArrayStrategyTest {
 		strategy = new NoneProbeArrayStrategy();
 	}
 
-	@Test(expected = UnsupportedOperationException.class)
+	@Test
 	public void storeInstance_should_throw_UnsupportedOperationException() {
-		strategy.storeInstance(null, false, 0);
+		try {
+			strategy.storeInstance(null, false, 0);
+			fail("UnsupportedOperationException expected");
+		} catch (final UnsupportedOperationException e) {
+			// expected
+		}
 	}
 
 	@Test

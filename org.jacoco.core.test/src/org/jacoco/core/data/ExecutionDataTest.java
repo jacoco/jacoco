@@ -16,6 +16,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 import org.junit.Test;
 
@@ -119,25 +120,40 @@ public class ExecutionDataTest {
 		a.assertCompatibility(5, "Example", 1);
 	}
 
-	@Test(expected = IllegalStateException.class)
+	@Test
 	public void testAssertCompatibilityNegative1() {
 		final ExecutionData a = new ExecutionData(5, "Example",
 				new boolean[] { true });
-		a.assertCompatibility(55, "Example", 1);
+		try {
+			a.assertCompatibility(55, "Example", 1);
+			fail("IllegalStateException expected");
+		} catch (final IllegalStateException e) {
+			// expected
+		}
 	}
 
-	@Test(expected = IllegalStateException.class)
+	@Test
 	public void testAssertCompatibilityNegative2() {
 		final ExecutionData a = new ExecutionData(5, "Example",
 				new boolean[] { true });
-		a.assertCompatibility(5, "Exxxample", 1);
+		try {
+			a.assertCompatibility(5, "Exxxample", 1);
+			fail("IllegalStateException expected");
+		} catch (final IllegalStateException e) {
+			// expected
+		}
 	}
 
-	@Test(expected = IllegalStateException.class)
+	@Test
 	public void testAssertCompatibilityNegative3() {
 		final ExecutionData a = new ExecutionData(5, "Example",
 				new boolean[] { true });
-		a.assertCompatibility(5, "Example", 3);
+		try {
+			a.assertCompatibility(5, "Example", 3);
+			fail("IllegalStateException expected");
+		} catch (final IllegalStateException e) {
+			// expected
+		}
 	}
 
 	@Test

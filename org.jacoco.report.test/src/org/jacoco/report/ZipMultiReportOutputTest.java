@@ -15,6 +15,7 @@ package org.jacoco.report;
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
+import static org.junit.Assert.fail;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -139,39 +140,64 @@ public class ZipMultiReportOutputTest {
 		assertArrayEquals(content2, entries.get("readme.txt"));
 	}
 
-	@Test(expected = IOException.class)
+	@Test
 	public void testWriteToClosedStream1() throws IOException {
 		OutputStream out = zipOutput.createFile("index.html");
 		out.close();
-		out.write("HelloZip".getBytes());
+		try {
+			out.write("HelloZip".getBytes());
+			fail("IOException expected");
+		} catch (final IOException e) {
+			// expected
+		}
 	}
 
-	@Test(expected = IOException.class)
+	@Test
 	public void testWriteToClosedStream2() throws IOException {
 		OutputStream out = zipOutput.createFile("index.html");
 		out.close();
-		out.write("HelloZip".getBytes(), 2, 3);
+		try {
+			out.write("HelloZip".getBytes(), 2, 3);
+			fail("IOException expected");
+		} catch (final IOException e) {
+			// expected
+		}
 	}
 
-	@Test(expected = IOException.class)
+	@Test
 	public void testWriteToClosedStream3() throws IOException {
 		OutputStream out = zipOutput.createFile("index.html");
 		out.close();
-		out.write(32);
+		try {
+			out.write(32);
+			fail("IOException expected");
+		} catch (final IOException e) {
+			// expected
+		}
 	}
 
-	@Test(expected = IOException.class)
+	@Test
 	public void testFlushToClosedStream3() throws IOException {
 		OutputStream out = zipOutput.createFile("index.html");
 		out.close();
-		out.flush();
+		try {
+			out.flush();
+			fail("IOException expected");
+		} catch (final IOException e) {
+			// expected
+		}
 	}
 
-	@Test(expected = IOException.class)
+	@Test
 	public void testWriteToObsoleteStream() throws IOException {
 		final OutputStream out1 = zipOutput.createFile("a.txt");
 		zipOutput.createFile("b.txt");
-		out1.write(32);
+		try {
+			out1.write(32);
+			fail("IOException expected");
+		} catch (final IOException e) {
+			// expected
+		}
 	}
 
 	private Map<String, byte[]> readEntries() throws IOException {

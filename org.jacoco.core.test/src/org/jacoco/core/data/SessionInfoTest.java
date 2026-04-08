@@ -13,6 +13,7 @@
 package org.jacoco.core.data;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 
 import org.junit.Test;
 
@@ -21,9 +22,14 @@ import org.junit.Test;
  */
 public class SessionInfoTest {
 
-	@Test(expected = IllegalArgumentException.class)
+	@Test
 	public void testNullId() {
-		new SessionInfo(null, 1, 2);
+		try {
+			new SessionInfo(null, 1, 2);
+			fail("IllegalArgumentException expected");
+		} catch (final IllegalArgumentException e) {
+			// expected
+		}
 	}
 
 	@Test
