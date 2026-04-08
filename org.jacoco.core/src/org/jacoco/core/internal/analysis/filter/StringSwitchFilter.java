@@ -95,6 +95,19 @@ final class StringSwitchFilter implements IFilter {
 					nextIs(Opcodes.LDC);
 					nextIsInvoke(Opcodes.INVOKEVIRTUAL, "java/lang/String",
 							"equals", "(Ljava/lang/Object;)Z");
+
+					if (cursor != null
+							&& cursor.getNext().getOpcode() == Opcodes.IFEQ
+							&& ((JumpInsnNode) cursor
+									.getNext()).label == defaultLabel
+							&& i + 1 == hashCodes) {
+						// jump to default
+						nextIs(Opcodes.IFEQ);
+						replacements.add(defaultLabel, cursor, 1);
+						replacements.add(cursor.getNext(), cursor, 0);
+						break;
+					}
+
 					// jump to case
 					nextIs(Opcodes.IFNE);
 					if (cursor == null) {
