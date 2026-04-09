@@ -12,9 +12,8 @@
  *******************************************************************************/
 package org.jacoco.ant;
 
-import java.io.File;
+import static org.jacoco.ant.AntUnitSuiteFactory.suiteFor;
 
-import org.apache.ant.antunit.junit3.AntUnitSuite;
 import org.apache.ant.antunit.junit4.AntUnitSuiteRunner;
 import org.junit.runner.RunWith;
 
@@ -24,8 +23,7 @@ import junit.framework.TestSuite;
 public class AgentTaskTest {
 
 	public static TestSuite suite() {
-		final File file = new File("src/org/jacoco/ant/AgentTaskTest.xml");
-		return new AntUnitSuite(file, AgentTaskTest.class);
+		return suiteFor(AgentTaskTest.class);
 	}
 
 }
