@@ -81,27 +81,36 @@ public class MethodReferencesTest extends ValidationTestBase {
 		}
 
 		if (isJDKCompiler) {
+			// array constructor method references
 			assertTrue(names.contains("lambda$main$0"));
 			assertTrue(names.contains("lambda$main$1"));
 			if (bytecodeVersion() < Opcodes.V15) {
+				// constructor, static, bound and unbound
+				// private method references
 				assertTrue(names.contains("lambda$main$2"));
 				assertTrue(names.contains("lambda$main$3"));
 				assertTrue(names.contains("lambda$main$4"));
 				assertTrue(names.contains("lambda$main$5"));
-				assertEquals(6, names.size());
+				assertTrue(names.contains("lambda$main$6"));
+				assertTrue(names.contains("lambda$main$7"));
+				assertTrue(names.contains("lambda$main$8"));
+				assertTrue(names.contains("lambda$main$9"));
+				assertEquals(10, names.size());
 			} else {
 				assertEquals(2, names.size());
 			}
 		} else {
+			// array constructor method reference
+			// private constructor method references
 			assertTrue(names.contains("lambda$2"));
 			assertTrue(names.contains("lambda$3"));
-			assertTrue(names.contains("lambda$8"));
+			assertTrue(names.contains("lambda$4"));
 			assertEquals(3, names.size());
 		}
 		assertMethodCount( //
 				names.size() // lambdas
 						+ 4 // constructors
-						+ 3 // methods
+						+ 5 // methods
 		);
 	}
 

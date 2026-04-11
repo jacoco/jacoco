@@ -49,8 +49,8 @@ public class Stubs {
 	/**
 	 * Functional interface stub.
 	 */
-	public interface IntFunction<R> {
-		R apply(int value);
+	public interface Consumer<V> {
+		void apply(V value);
 	}
 
 	/**
@@ -173,17 +173,17 @@ public class Stubs {
 	}
 
 	/**
-	 * Directly executes the given {@link IntFunction} with argument
-	 * <code>0</code>.
+	 * Directly executes the given {@link Consumer consumer} with given
+	 * {@code value}.
 	 */
-	public static <R> void exec(IntFunction<R> function) {
-		function.apply(0);
+	public static <V> void exec(Consumer<V> consumer, V value) {
+		consumer.apply(value);
 	}
 
 	/**
-	 * Never executes the given {@link IntFunction}.
+	 * Never executes the given {@link Consumer consumer}.
 	 */
-	public static <R> void noexec(IntFunction<R> function) {
+	public static <V> void noexec(Consumer<V> consumer) {
 	}
 
 	/**

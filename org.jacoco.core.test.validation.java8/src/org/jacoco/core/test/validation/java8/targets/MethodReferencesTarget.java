@@ -27,30 +27,56 @@ public class MethodReferencesTarget {
 	}
 
 	static class PublicMethod {
-		public static void m() {
+		public static void s() {
+		}
+
+		public void i() {
 		}
 	}
 
 	static class PrivateMethod {
-		private static void m() {
+		private static void s() {
+		}
+
+		private void i() {
 		}
 	}
 
 	public static void main(String[] args) {
+		/* constructor method references */
+
 		exec(PublicConstructor::new); // assertFullyCovered()
 		noexec(PublicConstructor::new); // assertFullyCovered()
 
 		exec(PrivateConstructor::new); // assertFullyCovered()
 		noexec(PrivateConstructor::new); // assertMethodReferenceToPrivate()
 
-		exec(PublicMethod::m); // assertFullyCovered()
-		noexec(PublicMethod::m); // assertFullyCovered()
-
-		exec(PrivateMethod::m); // assertFullyCovered()
-		noexec(PrivateMethod::m); // assertMethodReferenceToPrivate()
-
-		exec(String[]::new); // assertFullyCovered()
+		exec(String[]::new, 0); // assertFullyCovered()
 		noexec(String[]::new); // assertMethodReferenceToArrayConstructor()
+
+		/* static method references */
+
+		exec(PublicMethod::s); // assertFullyCovered()
+		noexec(PublicMethod::s); // assertFullyCovered()
+
+		exec(PrivateMethod::s); // assertFullyCovered()
+		noexec(PrivateMethod::s); // assertMethodReferenceToPrivate()
+
+		/* unbound method references */
+
+		exec(PublicMethod::i, new PublicMethod()); // assertFullyCovered()
+		noexec(PublicMethod::i); // assertFullyCovered()
+
+		exec(PrivateMethod::i, new PrivateMethod()); // assertFullyCovered()
+		noexec(PrivateMethod::i); // assertMethodReferenceToPrivate()
+
+		/* bound method references */
+
+		exec(new PublicMethod()::i); // assertFullyCovered()
+		noexec(new PublicMethod()::i); // assertFullyCovered()
+
+		exec(new PrivateMethod()::i); // assertFullyCovered()
+		noexec(new PrivateMethod()::i); // assertMethodReferenceToPrivate()
 	}
 
 }
