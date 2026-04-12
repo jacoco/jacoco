@@ -274,6 +274,127 @@ public class StringSwitchFilterTest extends FilterTestBase {
 	}
 
 	/**
+	 * Compared to {@link #should_filter_Kotlin_1_5()} in this example first
+	 * case is the only case with biggest hashCode value:
+	 *
+	 * <pre>
+	 * fun example(s: String? = when (s) {
+	 *     "c" -> "case c"
+	 *     "b" -> "case b"
+	 *     "\u0000b" -> "case \0000b"
+	 *     "a" -> "case a"
+	 *     "\u0000a" -> "case \0000a"
+	 *     else -> "else"
+	 * }
+	 * </pre>
+	 */
+	@Test
+	public void should_filter_Kotlin_biggest_hashCode_first() {
+		final Range range = new Range();
+		final MethodNode m = new MethodNode(InstrSupport.ASM_API_VERSION, 0,
+				"example", "(Ljava/lang/String;)Ljava/lang/String;", null,
+				null);
+		final Label hashA = new Label();
+		final Label hashB = new Label();
+		final Label hashC = new Label();
+		final Label caseA = new Label();
+		final Label case0A = new Label();
+		final Label caseB = new Label();
+		final Label case0B = new Label();
+		final Label caseC = new Label();
+		final Label caseElse = new Label();
+		final Label end = new Label();
+
+		m.visitVarInsn(Opcodes.ALOAD, 1);
+		m.visitVarInsn(Opcodes.ASTORE, 2);
+		m.visitVarInsn(Opcodes.ALOAD, 2);
+		range.fromInclusive = m.instructions.getLast();
+		m.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "java/lang/String", "hashCode",
+				"()I", false);
+		m.visitTableSwitchInsn(97, 99, caseElse, hashA, hashB, hashC);
+		replacements.add(new Replacement(0, m.instructions.getLast(), 0));
+
+		m.visitLabel(hashA);
+
+		m.visitVarInsn(Opcodes.ALOAD, 2);
+		m.visitLdcInsn("a");
+		m.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "java/lang/String", "equals",
+				"(Ljava/lang/Object;)Z", false);
+		m.visitJumpInsn(Opcodes.IFNE, caseA);
+		replacements.add(new Replacement(1, m.instructions.getLast(), 1));
+
+		m.visitVarInsn(Opcodes.ALOAD, 2);
+		m.visitLdcInsn("\u0000a");
+		m.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "java/lang/String", "equals",
+				"(Ljava/lang/Object;)Z", false);
+		m.visitJumpInsn(Opcodes.IFNE, case0A);
+		replacements.add(new Replacement(2, m.instructions.getLast(), 1));
+		m.visitJumpInsn(Opcodes.GOTO, caseElse);
+		replacements.add(new Replacement(0, m.instructions.getLast(), 1));
+
+		m.visitLabel(hashB);
+
+		m.visitVarInsn(Opcodes.ALOAD, 2);
+		m.visitLdcInsn("b");
+		m.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "java/lang/String", "equals",
+				"(Ljava/lang/Object;)Z", false);
+		m.visitJumpInsn(Opcodes.IFNE, caseB);
+		replacements.add(new Replacement(3, m.instructions.getLast(), 1));
+
+		m.visitVarInsn(Opcodes.ALOAD, 2);
+		m.visitLdcInsn("\u0000b");
+		m.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "java/lang/String", "equals",
+				"(Ljava/lang/Object;)Z", false);
+		m.visitJumpInsn(Opcodes.IFNE, case0B);
+		replacements.add(new Replacement(4, m.instructions.getLast(), 1));
+		m.visitJumpInsn(Opcodes.GOTO, caseElse);
+		replacements.add(new Replacement(0, m.instructions.getLast(), 1));
+
+		m.visitLabel(hashC);
+
+		m.visitVarInsn(Opcodes.ALOAD, 2);
+		m.visitLdcInsn("c");
+		m.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "java/lang/String", "equals",
+				"(Ljava/lang/Object;)Z", false);
+		m.visitJumpInsn(Opcodes.IFEQ, caseElse);
+		replacements.add(new Replacement(5, m.instructions.getLast(), 0));
+		replacements.add(new Replacement(0, m.instructions.getLast(), 1));
+		range.toInclusive = m.instructions.getLast();
+
+		m.visitLabel(caseC);
+		m.visitLdcInsn("case c");
+		m.visitJumpInsn(Opcodes.GOTO, end);
+
+		m.visitLabel(caseB);
+		m.visitLdcInsn("case b");
+		m.visitJumpInsn(Opcodes.GOTO, end);
+
+		m.visitLabel(case0B);
+		m.visitLdcInsn("case \u0000b");
+		m.visitJumpInsn(Opcodes.GOTO, end);
+
+		m.visitLabel(caseA);
+		m.visitLdcInsn("case a");
+		m.visitJumpInsn(Opcodes.GOTO, end);
+
+		m.visitLabel(case0A);
+		m.visitLdcInsn("case \u0000a");
+		m.visitJumpInsn(Opcodes.GOTO, end);
+
+		m.visitLabel(caseElse);
+		m.visitLdcInsn("else");
+
+		m.visitLabel(end);
+		m.visitInsn(Opcodes.ARETURN);
+
+		filter.filter(m, context, output);
+
+		assertIgnored(m, range);
+		assertReplacedBranches(m, range.fromInclusive.getPrevious(),
+				replacements);
+	}
+
+	/**
 	 * <pre>
 	 * fun example(s: String?) = when (s) {
 	 *     "a" -> "case a"
