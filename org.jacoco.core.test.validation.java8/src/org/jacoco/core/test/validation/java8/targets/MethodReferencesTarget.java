@@ -34,7 +34,7 @@ public class MethodReferencesTarget {
 		}
 	}
 
-	static class PrivateMethod {
+	public static class PrivateMethod {
 		private static void s() {
 		}
 

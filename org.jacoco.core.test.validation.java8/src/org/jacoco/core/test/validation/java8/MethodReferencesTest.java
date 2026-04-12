@@ -80,6 +80,14 @@ public class MethodReferencesTest extends ValidationTestBase {
 			}
 		}
 
+		final HashSet<String> accessors = new HashSet<>();
+		for (final Method method : MethodReferencesTarget.PrivateMethod.class
+				.getDeclaredMethods()) {
+			if (method.isSynthetic()) {
+				accessors.add(method.getName());
+			}
+		}
+
 		if (isJDKCompiler) {
 			// array constructor method references
 			assertTrue(names.contains("lambda$main$0"));
@@ -96,8 +104,18 @@ public class MethodReferencesTest extends ValidationTestBase {
 				assertTrue(names.contains("lambda$main$8"));
 				assertTrue(names.contains("lambda$main$9"));
 				assertEquals(10, names.size());
+				if (bytecodeVersion() < Opcodes.V11) {
+					// accessor methods used by above lambda methods
+					assertTrue(accessors.contains("access$000"));
+					assertTrue(accessors.contains("access$100"));
+					assertEquals(2, accessors.size());
+				} else {
+					// JEP 181: Nest-Based Access Control
+					assertEquals(0, accessors.size());
+				}
 			} else {
 				assertEquals(2, names.size());
+				assertEquals(0, accessors.size());
 			}
 		} else {
 			// array constructor method reference
@@ -106,6 +124,12 @@ public class MethodReferencesTest extends ValidationTestBase {
 			assertTrue(names.contains("lambda$3"));
 			assertTrue(names.contains("lambda$4"));
 			assertEquals(3, names.size());
+			// indy instructions for other method references use generated
+			// accessor methods directly without intermediate lambda methods
+			// unlike it is with javac
+			assertTrue(accessors.contains("access$0"));
+			assertTrue(accessors.contains("access$1"));
+			assertEquals(2, accessors.size());
 		}
 		assertMethodCount( //
 				names.size() // lambdas
