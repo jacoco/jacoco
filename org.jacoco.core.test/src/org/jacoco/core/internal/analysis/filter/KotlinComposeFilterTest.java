@@ -356,4 +356,187 @@ public class KotlinComposeFilterTest extends FilterTestBase {
 		assertIgnored(m, range1, range2);
 	}
 
+	/**
+	 * <pre>
+	 * &#064;androidx.compose.runtime.Composable
+	 * fun example(p: String = "default") {
+	 *     val i = i()
+	 *     if (i and 0b1 != 0) {
+	 *         val p = ""
+	 *     }
+	 *     println(p)
+	 * }
+	 *
+	 * fun i(): Int = 42
+	 * </pre>
+	 *
+	 * @see #should_filter_default_parameters_non_static_expression()
+	 */
+	@Test
+	public void should_filter_default_parameters_static_expression() {
+		final MethodNode m = new MethodNode(InstrSupport.ASM_API_VERSION,
+				Opcodes.ACC_STATIC, "example",
+				"(Ljava/lang/String;Landroidx/compose/runtime/Composer;II)V",
+				null, null);
+		m.visitAnnotation("Landroidx/compose/runtime/Composable;", false);
+
+		m.visitVarInsn(ILOAD, 3);
+		m.visitInsn(ICONST_1);
+		m.visitInsn(IAND);
+		final Label label = new Label();
+		m.visitJumpInsn(IFEQ, label);
+		final Range range = new Range(m.instructions.getLast(),
+				m.instructions.getLast());
+		m.visitLdcInsn("default");
+		m.visitVarInsn(ASTORE, 0);
+		m.visitLabel(label);
+
+		m.visitVarInsn(ILOAD, 4);
+		m.visitInsn(ICONST_1);
+		m.visitInsn(IAND);
+		final Label label2 = new Label();
+		m.visitJumpInsn(IFEQ, label2);
+		m.visitLdcInsn("");
+		m.visitVarInsn(ASTORE, 4);
+		m.visitLabel(label2);
+
+		filter.filter(m, context, output);
+
+		assertIgnored(m, range);
+	}
+
+	/**
+	 * <pre>
+	 * class Example {
+	 *     &#064;androidx.compose.runtime.Composable
+	 *     fun example(p: String = "default") {
+	 *         val i = i()
+	 *         if (i and 0b1 != 0) {
+	 *             val p = ""
+	 *         }
+	 *         println(p)
+	 *     }
+	 * }
+	 *
+	 * fun i(): Int = 42
+	 * </pre>
+	 */
+	@Test
+	public void should_filter_default_parameters_in_instance_method() {
+		final MethodNode m = new MethodNode(InstrSupport.ASM_API_VERSION, 0,
+				"example",
+				"(Ljava/lang/String;Landroidx/compose/runtime/Composer;II)V",
+				null, null);
+		m.visitAnnotation("Landroidx/compose/runtime/Composable;", false);
+
+		m.visitVarInsn(ILOAD, 4);
+		m.visitInsn(ICONST_1);
+		m.visitInsn(IAND);
+		final Label label = new Label();
+		m.visitJumpInsn(IFEQ, label);
+		final Range range = new Range(m.instructions.getLast(),
+				m.instructions.getLast());
+		m.visitLdcInsn("default");
+		m.visitVarInsn(ASTORE, 0);
+		m.visitLabel(label);
+
+		m.visitVarInsn(ILOAD, 5);
+		m.visitInsn(ICONST_1);
+		m.visitInsn(IAND);
+		final Label label2 = new Label();
+		m.visitJumpInsn(IFEQ, label2);
+		m.visitLdcInsn("");
+		m.visitVarInsn(ASTORE, 0);
+		m.visitLabel(label2);
+
+		filter.filter(m, context, output);
+
+		assertIgnored(m, range);
+	}
+
+	/**
+	 * <pre>
+	 * &#064;androidx.compose.runtime.Composable
+	 * fun example(p: String = default()) {
+	 *     println(p)
+	 * }
+	 *
+	 * fun default(): String = "default"
+	 * </pre>
+	 *
+	 * @see #should_filter_default_parameters_static_expression()
+	 */
+	@Test
+	public void should_filter_default_parameters_non_static_expression() {
+		final MethodNode m = new MethodNode(InstrSupport.ASM_API_VERSION,
+				Opcodes.ACC_STATIC, "example",
+				"(Ljava/lang/String;Landroidx/compose/runtime/Composer;II)V",
+				null, null);
+		m.visitAnnotation("Landroidx/compose/runtime/Composable;", false);
+
+		final Range range1 = new Range();
+		m.visitMethodInsn(INVOKEINTERFACE, "androidx/compose/runtime/Composer",
+				"startDefaults", "()V", true);
+		range1.fromInclusive = m.instructions.getLast();
+		m.visitVarInsn(ILOAD, 2);
+		m.visitInsn(ICONST_1);
+		m.visitInsn(IAND);
+		Label label8 = new Label();
+		m.visitJumpInsn(IFEQ, label8);
+		final Range range0 = new Range(m.instructions.getLast(),
+				m.instructions.getLast());
+		m.visitVarInsn(ALOAD, 1);
+		m.visitMethodInsn(INVOKEINTERFACE, "androidx/compose/runtime/Composer",
+				"getDefaultsInvalid", "()Z", true);
+		Label label9 = new Label();
+		m.visitJumpInsn(IFEQ, label9);
+		range1.toInclusive = m.instructions.getLast();
+		m.visitLabel(label8);
+		m.visitVarInsn(ILOAD, 3);
+		m.visitInsn(ICONST_1);
+		m.visitInsn(IAND);
+		Label label10 = new Label();
+		m.visitJumpInsn(IFEQ, label10);
+		final Range range3 = new Range(m.instructions.getLast(),
+				m.instructions.getLast());
+		Label label11 = new Label();
+		m.visitLabel(label11);
+		m.visitLineNumber(8, label11);
+		m.visitMethodInsn(INVOKESTATIC,
+				"org/example/defaultParam/nonStaticExpression/DefaultParamNonStaticKt",
+				"default", "()Ljava/lang/String;", false);
+		m.visitVarInsn(ASTORE, 0);
+		m.visitVarInsn(ILOAD, 4);
+		m.visitIntInsn(BIPUSH, -15);
+		m.visitInsn(IAND);
+		m.visitVarInsn(ISTORE, 4);
+		m.visitJumpInsn(GOTO, label10);
+		m.visitLabel(label9);
+		final Range range2 = new Range();
+		range2.fromInclusive = m.instructions.getLast();
+		m.visitLineNumber(7, label9);
+		m.visitVarInsn(ALOAD, 1);
+		m.visitMethodInsn(INVOKEINTERFACE, "androidx/compose/runtime/Composer",
+				"skipToGroupEnd", "()V", true);
+		m.visitVarInsn(ILOAD, 3);
+		m.visitInsn(ICONST_1);
+		m.visitInsn(IAND);
+		m.visitJumpInsn(IFEQ, label10);
+		final Range range4 = new Range(m.instructions.getLast(),
+				m.instructions.getLast());
+		m.visitVarInsn(ILOAD, 4);
+		m.visitIntInsn(BIPUSH, -15);
+		m.visitInsn(IAND);
+		m.visitVarInsn(ISTORE, 4);
+		m.visitLabel(label10);
+		m.visitVarInsn(ALOAD, 1);
+		m.visitMethodInsn(INVOKEINTERFACE, "androidx/compose/runtime/Composer",
+				"endDefaults", "()V", true);
+		range2.toInclusive = m.instructions.getLast();
+
+		filter.filter(m, context, output);
+
+		assertIgnored(m, range0, range1, range2, range3, range4);
+	}
+
 }
