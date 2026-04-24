@@ -89,12 +89,13 @@ public class MethodReferencesTest extends ValidationTestBase {
 		}
 
 		if (isJDKCompiler) {
-			// array constructor method references
+			// references to array constructor
 			assertTrue(names.contains("lambda$main$0"));
 			assertTrue(names.contains("lambda$main$1"));
 			if (bytecodeVersion() < Opcodes.V15) {
-				// constructor, static, bound and unbound
-				// private method references
+				// references to private constructor,
+				// private static, private bound and
+				// private unbound methods
 				assertTrue(names.contains("lambda$main$2"));
 				assertTrue(names.contains("lambda$main$3"));
 				assertTrue(names.contains("lambda$main$4"));
@@ -118,11 +119,13 @@ public class MethodReferencesTest extends ValidationTestBase {
 				assertEquals(0, accessors.size());
 			}
 		} else {
-			// array constructor method reference
-			// private constructor method references
+			// references to array constructor,
+			// and private constructor
 			assertTrue(names.contains("lambda$2"));
 			assertTrue(names.contains("lambda$3"));
 			assertTrue(names.contains("lambda$4"));
+			// note that ECJ unlike javac performs
+			// deduplication of references to array constructor
 			assertEquals(3, names.size());
 			// indy instructions for other method references use generated
 			// accessor methods directly without intermediate lambda methods
