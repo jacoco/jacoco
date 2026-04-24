@@ -13,6 +13,7 @@
 package org.jacoco.core.internal.instr;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 
 import org.jacoco.core.instr.MethodRecorder;
 import org.jacoco.core.internal.flow.IFrame;
@@ -166,9 +167,14 @@ public class MethodInstrumenterTest {
 		testVisitJumpInsnWithProbe(Opcodes.IFNONNULL, Opcodes.IFNULL);
 	}
 
-	@Test(expected = IllegalArgumentException.class)
+	@Test
 	public void testVisitJumpInsnWithProbe_InvalidOpcode() {
-		testVisitJumpInsnWithProbe(Opcodes.NOP, Opcodes.NOP);
+		try {
+			testVisitJumpInsnWithProbe(Opcodes.NOP, Opcodes.NOP);
+			fail("IllegalArgumentException expected");
+		} catch (final IllegalArgumentException e) {
+			// expected
+		}
 	}
 
 	private void testVisitJumpInsnWithProbe(int opcodeOrig, int opcodeInstr) {

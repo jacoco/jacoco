@@ -16,6 +16,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 import java.net.InetAddress;
 import java.net.ServerSocket;
@@ -80,7 +81,7 @@ public class MockServerSocketTest extends ExecutorTestBase {
 		assertTrue(serverSocket.isClosed());
 	}
 
-	@Test(expected = SocketException.class)
+	@Test
 	public void testCloseWhileAccept() throws Throwable {
 		final Future<Socket> f = executor.submit(new Callable<Socket>() {
 			public Socket call() throws Exception {
@@ -90,9 +91,14 @@ public class MockServerSocketTest extends ExecutorTestBase {
 		assertBlocks(f);
 		serverSocket.close();
 		try {
-			f.get();
-		} catch (ExecutionException e) {
-			throw e.getCause();
+			try {
+				f.get();
+			} catch (final ExecutionException e) {
+				throw e.getCause();
+			}
+			fail("SocketException expected");
+		} catch (final SocketException e) {
+			// expected
 		}
 	}
 
@@ -110,10 +116,15 @@ public class MockServerSocketTest extends ExecutorTestBase {
 		assertEquals(123, socket.getInputStream().read());
 	}
 
-	@Test(expected = SocketException.class)
+	@Test
 	public void testAcceptOnClosedServerSocket() throws Exception {
 		serverSocket.close();
-		serverSocket.accept();
+		try {
+			serverSocket.accept();
+			fail("SocketException expected");
+		} catch (final SocketException e) {
+			// expected
+		}
 	}
 
 	@Test

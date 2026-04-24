@@ -81,20 +81,30 @@ public class MockSocketConnectionTest extends ExecutorTestBase {
 		assertTrue(a.isClosed());
 	}
 
-	@Test(expected = SocketException.class)
+	@Test
 	public void testGetInputStreamOnClosedSocket() throws Exception {
 		a.close();
-		a.getInputStream();
+		try {
+			a.getInputStream();
+			fail("SocketException expected");
+		} catch (final SocketException e) {
+			// expected
+		}
 	}
 
-	@Test(expected = SocketException.class)
+	@Test
 	public void testReadOnClosedSocket() throws Exception {
 		final InputStream in = a.getInputStream();
 		a.close();
-		in.read();
+		try {
+			in.read();
+			fail("SocketException expected");
+		} catch (final SocketException e) {
+			// expected
+		}
 	}
 
-	@Test(expected = SocketException.class)
+	@Test
 	public void testReadOnClosedSocketAsync() throws Throwable {
 		final InputStream in = a.getInputStream();
 		final Future<Void> f = executor.submit(new Callable<Void>() {
@@ -108,23 +118,38 @@ public class MockSocketConnectionTest extends ExecutorTestBase {
 
 		a.close();
 		try {
-			f.get();
-		} catch (ExecutionException e) {
-			throw e.getCause();
+			try {
+				f.get();
+			} catch (final ExecutionException e) {
+				throw e.getCause();
+			}
+			fail("SocketException expected");
+		} catch (final SocketException e) {
+			// expected
 		}
 	}
 
-	@Test(expected = SocketException.class)
+	@Test
 	public void testGetOutputStreamOnClosedSocket() throws Exception {
 		a.close();
-		a.getOutputStream();
+		try {
+			a.getOutputStream();
+			fail("SocketException expected");
+		} catch (final SocketException e) {
+			// expected
+		}
 	}
 
-	@Test(expected = SocketException.class)
+	@Test
 	public void testWriteOnClosedSocket() throws Exception {
 		final OutputStream out = a.getOutputStream();
 		a.close();
-		out.write(123);
+		try {
+			out.write(123);
+			fail("SocketException expected");
+		} catch (final SocketException e) {
+			// expected
+		}
 	}
 
 	@Test
