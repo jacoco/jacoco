@@ -17,11 +17,11 @@ import org.objectweb.asm.tree.MethodNode;
 /**
  * Filter that combines other filters.
  */
-final class FilterSet implements IFilter {
+public final class FilterSet implements IFilter {
 
 	private final IFilter[] filters;
 
-	FilterSet(final IFilter... filters) {
+	public FilterSet(final IFilter... filters) {
 		this.filters = filters;
 	}
 
