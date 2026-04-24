@@ -18,7 +18,6 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.InetAddress;
@@ -135,8 +134,8 @@ public class MockSocketConnectionTest extends ExecutorTestBase {
 		a.close();
 		try {
 			a.getOutputStream();
-			fail("IOException expected");
-		} catch (final IOException e) {
+			fail("SocketException expected");
+		} catch (final SocketException e) {
 			// expected
 		}
 	}
@@ -147,8 +146,8 @@ public class MockSocketConnectionTest extends ExecutorTestBase {
 		a.close();
 		try {
 			out.write(123);
-			fail("IOException expected");
-		} catch (final IOException e) {
+			fail("SocketException expected");
+		} catch (final SocketException e) {
 			// expected
 		}
 	}

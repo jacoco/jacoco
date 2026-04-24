@@ -158,6 +158,9 @@ public class ExecutionDataReaderWriterTest {
 			fail("IncompatibleExecDataVersionException expected");
 		} catch (final IncompatibleExecDataVersionException e) {
 			// expected
+			assertEquals(version, e.getActualVersion());
+			assertEquals(ExecutionDataWriter.FORMAT_VERSION,
+					e.getExpectedVersion());
 		}
 	}
 
