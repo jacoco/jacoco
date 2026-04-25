@@ -89,30 +89,40 @@ final class StringSwitchFilter implements IFilter {
 			final Replacements replacements = new Replacements();
 			replacements.add(defaultLabel, s, 0);
 
-			for (int i = 0; i < hashCodes; i++) {
-				while (true) {
-					nextIsVar(Opcodes.ALOAD, "s");
-					nextIs(Opcodes.LDC);
-					nextIsInvoke(Opcodes.INVOKEVIRTUAL, "java/lang/String",
-							"equals", "(Ljava/lang/Object;)Z");
+			int hashCodeIndex = 1;
+			while (hashCodeIndex <= hashCodes) {
+				nextIsVar(Opcodes.ALOAD, "s");
+				nextIs(Opcodes.LDC);
+				nextIsInvoke(Opcodes.INVOKEVIRTUAL, "java/lang/String",
+						"equals", "(Ljava/lang/Object;)Z");
+
+				JumpInsnNode j;
+				if ((j = isJumpAfter(cursor, Opcodes.IFNE)) != null) {
 					// jump to case
-					nextIs(Opcodes.IFNE);
-					if (cursor == null) {
-						return;
-					}
+					cursor = j;
+				} else if ((j = isJumpAfter(cursor, Opcodes.IFEQ)) != null
+						&& j.label == defaultLabel
+						&& hashCodeIndex == hashCodes) {
+					// jump to default
+					cursor = j;
+					replacements.add(defaultLabel, cursor, 1);
+					replacements.add(cursor.getNext(), cursor, 0);
+					break;
+				} else {
+					return;
+				}
 
-					replacements.add(((JumpInsnNode) cursor).label, cursor, 1);
+				replacements.add(j.label, cursor, 1);
 
-					if (cursor.getNext().getOpcode() == Opcodes.GOTO) {
-						// end of comparisons for same hashCode
-						// jump to default
-						nextIs(Opcodes.GOTO);
-						replacements.add(defaultLabel, cursor, 1);
-						break;
-					} else if (cursor.getNext() == defaultLabel) {
-						replacements.add(defaultLabel, cursor, 0);
-						break;
-					}
+				if (cursor.getNext().getOpcode() == Opcodes.GOTO) {
+					// end of comparisons for same hashCode
+					// jump to default
+					nextIs(Opcodes.GOTO);
+					replacements.add(defaultLabel, cursor, 1);
+					hashCodeIndex++;
+				} else if (cursor.getNext() == defaultLabel) {
+					replacements.add(defaultLabel, cursor, 0);
+					hashCodeIndex++;
 				}
 			}
 
@@ -122,6 +132,21 @@ final class StringSwitchFilter implements IFilter {
 
 			output.ignore(start.getNext(), cursor);
 			output.replaceBranches(start, replacements);
+		}
+
+		/**
+		 * @return next instruction after given as {@link JumpInsnNode} if it
+		 *         has given {@code opcode}, {@code null} otherwise
+		 */
+		private static JumpInsnNode isJumpAfter(AbstractInsnNode instruction,
+				final int opcode) {
+			if (instruction == null) {
+				return null;
+			}
+			instruction = instruction.getNext();
+			return instruction != null && instruction.getOpcode() == opcode
+					? (JumpInsnNode) instruction
+					: null;
 		}
 	}
 

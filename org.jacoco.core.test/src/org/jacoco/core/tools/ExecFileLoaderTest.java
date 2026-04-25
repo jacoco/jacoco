@@ -13,6 +13,7 @@
 package org.jacoco.core.tools;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -69,14 +70,19 @@ public class ExecFileLoaderTest {
 		assertLoaderContents("a", "bb");
 	}
 
-	@Test(expected = IOException.class)
+	@Test
 	public void testLoadBrokenContent() throws IOException {
 		final File file = new File(sourceFolder.getRoot(), "broken.exec");
 		final FileWriter writer = new FileWriter(file);
 		writer.write("Invalid Content");
 		writer.close();
 
-		loader.load(file);
+		try {
+			loader.load(file);
+			fail("IOException expected");
+		} catch (final IOException e) {
+			// expected
+		}
 	}
 
 	@Test

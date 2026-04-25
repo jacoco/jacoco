@@ -40,10 +40,15 @@ public class ModifiedSystemClassRuntimeTest extends RuntimeTestBase {
 				ModifiedSystemClassRuntimeTest.class, "accessField");
 	}
 
-	@Test(expected = RuntimeException.class)
+	@Test
 	public void testCreateForNegative() throws Exception {
 		Instrumentation inst = newInstrumentationMock();
-		ModifiedSystemClassRuntime.createFor(inst, TARGET_CLASS_NAME);
+		try {
+			ModifiedSystemClassRuntime.createFor(inst, TARGET_CLASS_NAME);
+			fail("RuntimeException expected");
+		} catch (final RuntimeException e) {
+			// expected
+		}
 	}
 
 	/** This static member emulate the instrumented system class. */
