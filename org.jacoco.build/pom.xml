@@ -475,7 +475,7 @@
        <plugin>
          <groupId>org.sonarsource.scanner.maven</groupId>
          <artifactId>sonar-maven-plugin</artifactId>
-         <version>5.5.0.6356</version>
+         <version>5.6.0.6792</version>
        </plugin>
       </plugins>
     </pluginManagement>
@@ -540,7 +540,7 @@
                   <version>17</version>
                 </requireJavaVersion>
                 <requireMavenVersion>
-                  <version>3.9.12</version>
+                  <version>3.9.15</version>
                 </requireMavenVersion>
                 <requireNoRepositories>
                   <message>The rules for repo1.maven.org are that pom.xml files should not include repository definitions.</message>

@@ -13,6 +13,7 @@
 package org.jacoco.core.internal.instr;
 
 import static org.junit.Assert.assertNull;
+import static org.junit.Assert.fail;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -33,18 +34,28 @@ public class ClassInstrumenterTest implements IProbeArrayStrategy {
 				});
 	}
 
-	@Test(expected = IllegalStateException.class)
+	@Test
 	public void testInstrumentInstrumentedClass1() {
-		instrumenter.visitField(InstrSupport.DATAFIELD_ACC,
-				InstrSupport.DATAFIELD_NAME, InstrSupport.DATAFIELD_DESC, null,
-				null);
+		try {
+			instrumenter.visitField(InstrSupport.DATAFIELD_ACC,
+					InstrSupport.DATAFIELD_NAME, InstrSupport.DATAFIELD_DESC,
+					null, null);
+			fail("IllegalStateException expected");
+		} catch (final IllegalStateException e) {
+			// expected
+		}
 	}
 
-	@Test(expected = IllegalStateException.class)
+	@Test
 	public void testInstrumentInstrumentedClass2() {
-		instrumenter.visitMethod(InstrSupport.INITMETHOD_ACC,
-				InstrSupport.INITMETHOD_NAME, InstrSupport.INITMETHOD_DESC,
-				null, null);
+		try {
+			instrumenter.visitMethod(InstrSupport.INITMETHOD_ACC,
+					InstrSupport.INITMETHOD_NAME, InstrSupport.INITMETHOD_DESC,
+					null, null);
+			fail("IllegalStateException expected");
+		} catch (final IllegalStateException e) {
+			// expected
+		}
 	}
 
 	@Test

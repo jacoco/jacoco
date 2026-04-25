@@ -14,6 +14,7 @@ package org.jacoco.report.internal;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertSame;
+import static org.junit.Assert.fail;
 
 import java.io.IOException;
 
@@ -98,11 +99,16 @@ public class ReportOutputFolderTest {
 		assertEquals("../f2/test.html", folder.getLink(base, "test.html"));
 	}
 
-	@Test(expected = IllegalArgumentException.class)
+	@Test
 	public void testInvalidRelativeLink() throws IOException {
 		final ReportOutputFolder folder = root.subFolder("f1").subFolder("f2");
 		final ReportOutputFolder base = new ReportOutputFolder(
 				new MemoryMultiReportOutput()).subFolder("g1");
-		folder.getLink(base, "test.html");
+		try {
+			folder.getLink(base, "test.html");
+			fail("IllegalArgumentException expected");
+		} catch (final IllegalArgumentException e) {
+			// expected
+		}
 	}
 }

@@ -15,6 +15,7 @@ package org.jacoco.core.runtime;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -43,11 +44,16 @@ public class RemoteControlReaderWriterTest
 		writer = createWriter(buffer);
 	}
 
-	@Test(expected = IOException.class)
+	@Test
 	public void testNoRemoteCommandVisitor() throws IOException {
 		writer.visitDumpCommand(false, false);
 		final RemoteControlReader reader = createReader();
-		reader.read();
+		try {
+			reader.read();
+			fail("IOException expected");
+		} catch (final IOException e) {
+			// expected
+		}
 	}
 
 	@Test
