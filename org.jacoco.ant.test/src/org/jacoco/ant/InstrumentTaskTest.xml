@@ -63,7 +63,7 @@
 		<jacoco:instrument destdir="${instr.dir}">
 			<fileset dir="${lib.dir}" includes="*.jar"/>
 		</jacoco:instrument>
-		<au:assertLogContains text="Instrumented 17 classes to ${temp.dir}"/>
+		<au:assertLogContains text="Instrumented 20 classes to ${temp.dir}"/>
 
 		<unzip src="${instr.dir}/test.jar" dest="${instr.dir}"/>
 		<au:assertFileDoesntExist file="${instr.dir}/META-INF/TEST.RSA" />
@@ -84,7 +84,7 @@
 		<jacoco:instrument destdir="${instr.dir}" removesignatures="false">
 			<fileset dir="${lib.dir}" includes="*.jar"/>
 		</jacoco:instrument>
-		<au:assertLogContains text="Instrumented 17 classes to ${temp.dir}"/>
+		<au:assertLogContains text="Instrumented 20 classes to ${temp.dir}"/>
 
 		<unzip src="${instr.dir}/test.jar" dest="${instr.dir}"/>
 		<au:assertFileExists file="${instr.dir}/META-INF/TEST.RSA" />
@@ -95,7 +95,7 @@
 		<jacoco:instrument destdir="${temp.dir}">
 			<fileset dir="${org.jacoco.ant.instrumentTaskTest.classes.dir}" includes="**/*.class"/>
 		</jacoco:instrument>
-		<au:assertLogContains text="Instrumented 17 classes to ${temp.dir}"/>
+		<au:assertLogContains text="Instrumented 20 classes to ${temp.dir}"/>
 		<au:assertFileExists file="${temp.dir}/org/jacoco/ant/InstrumentTaskTest.class" />
 
 		<echo file="${temp.dir}/jacoco-agent.properties">destfile=test.exec</echo>
@@ -112,7 +112,7 @@
 		<jacoco:instrument destdir="${temp.dir}">
 			<fileset dir="${org.jacoco.ant.instrumentTaskTest.classes.dir}" includes="**/*.class"/>
 		</jacoco:instrument>
-		<au:assertLogContains text="Instrumented 17 classes to ${temp.dir}"/>
+		<au:assertLogContains text="Instrumented 20 classes to ${temp.dir}"/>
 		<au:assertFileExists file="${temp.dir}/org/jacoco/ant/InstrumentTaskTest.class" />
 
 		<java classname="org.jacoco.ant.TestTarget" failonerror="true" fork="true">
@@ -129,7 +129,7 @@
 		<jacoco:instrument destdir="${temp.dir}">
 			<fileset dir="${org.jacoco.ant.instrumentTaskTest.classes.dir}" includes="**/*.class"/>
 		</jacoco:instrument>
-		<au:assertLogContains text="Instrumented 17 classes to ${temp.dir}"/>
+		<au:assertLogContains text="Instrumented 20 classes to ${temp.dir}"/>
 		<au:assertFileExists file="${temp.dir}/org/jacoco/ant/InstrumentTaskTest.class" />
 
 		<java classname="org.jacoco.ant.TestTarget" failonerror="false" fork="true">
