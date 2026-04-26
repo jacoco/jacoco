@@ -12,6 +12,8 @@
  *******************************************************************************/
 package org.jacoco.ant;
 
+import static org.jacoco.ant.AntUnitSuiteFactory.suiteFor;
+
 import org.apache.ant.antunit.junit4.AntUnitSuiteRunner;
 import org.junit.runner.RunWith;
 
@@ -21,7 +23,7 @@ import junit.framework.TestSuite;
 public class MergeTaskTest {
 
 	public static TestSuite suite() {
-		return AntUnitSuiteFactory.suiteFor(MergeTaskTest.class);
+		return suiteFor(MergeTaskTest.class);
 	}
 
 }

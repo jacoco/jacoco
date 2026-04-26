@@ -22,7 +22,7 @@ final class AntUnitSuiteFactory {
 	}
 
 	/**
-	 * @return suite for given class
+	 * @return suite for given {@code testClass}
 	 */
 	static AntUnitSuite suiteFor(final Class<?> testClass) {
 		final File file = new File(
@@ -31,7 +31,7 @@ final class AntUnitSuiteFactory {
 	}
 
 	/**
-	 * @return empty suite for given class
+	 * @return empty suite for given {@code testClass}
 	 */
 	static AntUnitSuite skip(final Class<?> testClass) {
 		final File file = new File("src/org/jacoco/ant/empty.xml");
