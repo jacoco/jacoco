@@ -1,8 +1,8 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2024 Mountainminds GmbH & Co. KG and Contributors
+ * Copyright (c) 2009, 2026 Mountainminds GmbH & Co. KG and Contributors
  * This program and the accompanying materials are made available under
  * the terms of the Eclipse Public License 2.0 which is available at
- * http://www.eclipse.org/legal/epl-2.0
+ * https://www.eclipse.org/legal/epl-2.0
  *
  * SPDX-License-Identifier: EPL-2.0
  *
@@ -17,6 +17,7 @@ import static org.junit.Assert.assertTrue;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -35,6 +36,7 @@ import org.jacoco.core.data.ExecutionDataStore;
 import org.jacoco.core.data.SessionInfo;
 import org.jacoco.core.internal.analysis.CounterImpl;
 import org.jacoco.core.internal.analysis.LineImpl;
+import org.jacoco.core.internal.instr.InstrSupport;
 import org.jacoco.core.test.InstrumentingLoader;
 import org.jacoco.core.test.TargetLoader;
 import org.jacoco.core.test.validation.Source.Line;
@@ -47,6 +49,9 @@ import org.jacoco.report.html.HTMLFormatter;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runners.model.MultipleFailureException;
+import org.objectweb.asm.util.ASMifier;
+import org.objectweb.asm.util.Textifier;
+import org.objectweb.asm.util.TraceClassVisitor;
 
 /**
  * Base class for validation tests. It executes the given class under code
@@ -67,6 +72,8 @@ public abstract class ValidationTestBase {
 
 	private final Class<?> target;
 
+	private final File asmDir;
+
 	private Source source;
 
 	private IBundleCoverage bundle;
@@ -75,10 +82,19 @@ public abstract class ValidationTestBase {
 
 	protected ValidationTestBase(final Class<?> target) {
 		this.target = target;
+		this.asmDir = new File("target/asm/" + target.getSimpleName());
 	}
 
 	@Before
 	public void setup() throws Exception {
+		asmDir.mkdirs();
+		// Without cleanup bytecode representation might be in
+		// a weird misleading mixed state after multiple runs
+		// during construction/modification of validation test in IDE:
+		for (File f : asmDir.listFiles()) {
+			f.delete();
+		}
+
 		final ExecutionDataStore store = execute();
 		analyze(store);
 	}
@@ -97,11 +113,18 @@ public abstract class ValidationTestBase {
 
 	protected Collection<IClassCoverage> classes;
 
+	protected Collection<String> additionalClassesForAnalysis() {
+		return Collections.emptyList();
+	}
+
 	private void analyze(final ExecutionDataStore store) throws IOException {
 		final CoverageBuilder builder = new CoverageBuilder();
 		final Analyzer analyzer = new Analyzer(store, builder);
 		for (ExecutionData data : store.getContents()) {
-			analyze(analyzer, data);
+			analyze(analyzer, data.getName());
+		}
+		for (String className : additionalClassesForAnalysis()) {
+			analyze(analyzer, className);
 		}
 		final String testClassSimpleName = getClass().getSimpleName();
 		bundle = builder.getBundle(testClassSimpleName);
@@ -109,11 +132,27 @@ public abstract class ValidationTestBase {
 		classes = builder.getClasses();
 	}
 
-	private void analyze(final Analyzer analyzer, final ExecutionData data)
+	private void analyze(final Analyzer analyzer, final String className)
 			throws IOException {
 		final byte[] bytes = TargetLoader
-				.getClassDataAsBytes(target.getClassLoader(), data.getName());
-		analyzer.analyzeClass(bytes, data.getName());
+				.getClassDataAsBytes(target.getClassLoader(), className);
+		analyzer.analyzeClass(bytes, className);
+		saveBytecodeRepresentations(bytes, className);
+	}
+
+	private void saveBytecodeRepresentations(final byte[] classBytes,
+			final String className) throws IOException {
+		final String fileName = className.replace('/', '.');
+		final PrintWriter textWriter = new PrintWriter(
+				new File(asmDir, fileName + ".txt"));
+		final PrintWriter asmWriter = new PrintWriter(
+				new File(asmDir, fileName + ".java"));
+		InstrSupport.classReaderFor(classBytes)
+				.accept(new TraceClassVisitor(new TraceClassVisitor(null,
+						new Textifier(), textWriter), new ASMifier(),
+						asmWriter), 0);
+		textWriter.close();
+		asmWriter.close();
 	}
 
 	/**

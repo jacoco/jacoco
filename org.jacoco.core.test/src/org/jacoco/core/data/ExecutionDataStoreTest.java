@@ -1,8 +1,8 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2024 Mountainminds GmbH & Co. KG and Contributors
+ * Copyright (c) 2009, 2026 Mountainminds GmbH & Co. KG and Contributors
  * This program and the accompanying materials are made available under
  * the terms of the Eclipse Public License 2.0 which is available at
- * http://www.eclipse.org/legal/epl-2.0
+ * https://www.eclipse.org/legal/epl-2.0
  *
  * SPDX-License-Identifier: EPL-2.0
  *
@@ -18,6 +18,7 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -116,25 +117,44 @@ public class ExecutionDataStoreTest implements IExecutionDataVisitor {
 		assertTrue(store.contains("Sample"));
 	}
 
-	@Test(expected = IllegalStateException.class)
+	@Test
 	public void testGetNegative1() {
 		final boolean[] data = new boolean[] { false, false, true };
 		store.put(new ExecutionData(1000, "Sample", data));
-		store.get(Long.valueOf(1000), "Other", 3);
+		try {
+			store.get(Long.valueOf(1000), "Other", 3);
+			fail("IllegalStateException expected");
+		} catch (final IllegalStateException e) {
+			// expected
+		}
 	}
 
-	@Test(expected = IllegalStateException.class)
+	@Test
 	public void testGetNegative2() {
 		final boolean[] data = new boolean[] { false, false, true };
 		store.put(new ExecutionData(1000, "Sample", data));
-		store.get(Long.valueOf(1000), "Sample", 4);
+		try {
+			store.get(Long.valueOf(1000), "Sample", 4);
+			fail("IllegalStateException expected");
+		} catch (final IllegalStateException e) {
+			// expected
+		}
 	}
 
-	@Test(expected = IllegalStateException.class)
+	@Test
 	public void testPutNegative() {
 		final boolean[] data = new boolean[0];
-		store.put(new ExecutionData(1000, "Sample1", data));
-		store.put(new ExecutionData(1000, "Sample2", data));
+		final ExecutionData executionData1 = new ExecutionData(1000, "Sample1",
+				data);
+		store.put(executionData1);
+		final ExecutionData executionData2 = new ExecutionData(1000, "Sample2",
+				data);
+		try {
+			store.put(executionData2);
+			fail("IllegalStateException expected");
+		} catch (final IllegalStateException e) {
+			// expected
+		}
 	}
 
 	@Test
@@ -151,12 +171,21 @@ public class ExecutionDataStoreTest implements IExecutionDataVisitor {
 		assertTrue(result[3]);
 	}
 
-	@Test(expected = IllegalStateException.class)
+	@Test
 	public void testMergeNegative() {
 		final boolean[] data1 = new boolean[] { false, false };
-		store.visitClassExecution(new ExecutionData(1000, "Sample", data1));
+		final ExecutionData executionData1 = new ExecutionData(1000, "Sample",
+				data1);
+		store.visitClassExecution(executionData1);
 		final boolean[] data2 = new boolean[] { false, false, false };
-		store.visitClassExecution(new ExecutionData(1000, "Sample", data2));
+		final ExecutionData executionData2 = new ExecutionData(1000, "Sample",
+				data2);
+		try {
+			store.visitClassExecution(executionData2);
+			fail("IllegalStateException expected");
+		} catch (final IllegalStateException e) {
+			// expected
+		}
 	}
 
 	@Test

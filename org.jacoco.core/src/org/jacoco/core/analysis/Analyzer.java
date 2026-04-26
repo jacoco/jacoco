@@ -1,8 +1,8 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2024 Mountainminds GmbH & Co. KG and Contributors
+ * Copyright (c) 2009, 2026 Mountainminds GmbH & Co. KG and Contributors
  * This program and the accompanying materials are made available under
  * the terms of the Eclipse Public License 2.0 which is available at
- * http://www.eclipse.org/legal/epl-2.0
+ * https://www.eclipse.org/legal/epl-2.0
  *
  * SPDX-License-Identifier: EPL-2.0
  *
@@ -109,7 +109,7 @@ public class Analyzer {
 		if ((reader.getAccess() & Opcodes.ACC_MODULE) != 0) {
 			return;
 		}
-		if ((reader.getAccess() & Opcodes.ACC_SYNTHETIC) != 0) {
+		if (reader.getClassName().endsWith("/package-info")) {
 			return;
 		}
 		final ClassVisitor visitor = createAnalyzingVisitor(classId,
@@ -274,6 +274,11 @@ public class Analyzer {
 		try {
 			return input.getNextEntry();
 		} catch (final IOException e) {
+			throw analyzerError(location, e);
+		} catch (final IllegalArgumentException e) {
+			// might be thrown in JDK versions below 23 - see
+			// https://bugs.openjdk.org/browse/JDK-8321156
+			// https://github.com/openjdk/jdk/commit/20c71ceacdcb791f5b70cda456bdc47bdd9acf6c
 			throw analyzerError(location, e);
 		}
 	}

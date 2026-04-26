@@ -1,8 +1,8 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2024 Mountainminds GmbH & Co. KG and Contributors
+ * Copyright (c) 2009, 2026 Mountainminds GmbH & Co. KG and Contributors
  * This program and the accompanying materials are made available under
  * the terms of the Eclipse Public License 2.0 which is available at
- * http://www.eclipse.org/legal/epl-2.0
+ * https://www.eclipse.org/legal/epl-2.0
  *
  * SPDX-License-Identifier: EPL-2.0
  *
@@ -37,7 +37,7 @@ public class Instrument extends Command {
 	@Option(name = "--dest", usage = "path to write instrumented Java classes to", metaVar = "<dir>", required = true)
 	File dest;
 
-	@Argument(usage = "list of folder or files to instrument recusively", metaVar = "<sourcefiles>")
+	@Argument(usage = "list of folder or files to instrument recursively", metaVar = "<sourcefiles>")
 	List<File> source = new ArrayList<File>();
 
 	private Instrumenter instrumenter;

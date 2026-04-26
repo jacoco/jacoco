@@ -1,8 +1,8 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2024 Mountainminds GmbH & Co. KG and Contributors
+ * Copyright (c) 2009, 2026 Mountainminds GmbH & Co. KG and Contributors
  * This program and the accompanying materials are made available under
  * the terms of the Eclipse Public License 2.0 which is available at
- * http://www.eclipse.org/legal/epl-2.0
+ * https://www.eclipse.org/legal/epl-2.0
  *
  * SPDX-License-Identifier: EPL-2.0
  *
@@ -16,6 +16,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 import java.io.File;
 import java.util.Properties;
@@ -303,15 +304,25 @@ public class AgentOptionsTest {
 		assertEquals(AgentOptions.OutputMode.tcpclient, options.getOutput());
 	}
 
-	@Test(expected = IllegalArgumentException.class)
+	@Test
 	public void testInvalidOutput1() {
-		new AgentOptions("output=foo");
+		try {
+			new AgentOptions("output=foo");
+			fail("IllegalArgumentException expected");
+		} catch (final IllegalArgumentException e) {
+			// expected
+		}
 	}
 
-	@Test(expected = IllegalArgumentException.class)
+	@Test
 	public void testInvalidOutput2() {
 		AgentOptions options = new AgentOptions();
-		options.setOutput("foo");
+		try {
+			options.setOutput("foo");
+			fail("IllegalArgumentException expected");
+		} catch (final IllegalArgumentException e) {
+			// expected
+		}
 	}
 
 	@Test
@@ -327,15 +338,25 @@ public class AgentOptionsTest {
 		assertEquals(1234, options.getPort());
 	}
 
-	@Test(expected = IllegalArgumentException.class)
+	@Test
 	public void testParseInvalidPort() {
-		new AgentOptions("port=xxx");
+		try {
+			new AgentOptions("port=xxx");
+			fail("IllegalArgumentException expected");
+		} catch (final IllegalArgumentException e) {
+			// expected
+		}
 	}
 
-	@Test(expected = IllegalArgumentException.class)
+	@Test
 	public void testSetNegativePort() {
 		AgentOptions options = new AgentOptions();
-		options.setPort(-1234);
+		try {
+			options.setPort(-1234);
+			fail("IllegalArgumentException expected");
+		} catch (final IllegalArgumentException e) {
+			// expected
+		}
 	}
 
 	@Test
@@ -359,19 +380,34 @@ public class AgentOptionsTest {
 		assertEquals("destfile=test.exec,append=false", options.toString());
 	}
 
-	@Test(expected = IllegalArgumentException.class)
+	@Test
 	public void testInvalidOptionFormat() {
-		new AgentOptions("destfile");
+		try {
+			new AgentOptions("destfile");
+			fail("IllegalArgumentException expected");
+		} catch (final IllegalArgumentException e) {
+			// expected
+		}
 	}
 
-	@Test(expected = IllegalArgumentException.class)
+	@Test
 	public void testInvalidOptionKey() {
-		new AgentOptions("destfile=test.exec,Some-thing_1=true");
+		try {
+			new AgentOptions("destfile=test.exec,Some-thing_1=true");
+			fail("IllegalArgumentException expected");
+		} catch (final IllegalArgumentException e) {
+			// expected
+		}
 	}
 
-	@Test(expected = IllegalArgumentException.class)
+	@Test
 	public void testInvalidPortOptionValue() {
-		new AgentOptions("port=-1234");
+		try {
+			new AgentOptions("port=-1234");
+			fail("IllegalArgumentException expected");
+		} catch (final IllegalArgumentException e) {
+			// expected
+		}
 	}
 
 	@Test

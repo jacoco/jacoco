@@ -1,8 +1,8 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2024 Mountainminds GmbH & Co. KG and Contributors
+ * Copyright (c) 2009, 2026 Mountainminds GmbH & Co. KG and Contributors
  * This program and the accompanying materials are made available under
  * the terms of the Eclipse Public License 2.0 which is available at
- * http://www.eclipse.org/legal/epl-2.0
+ * https://www.eclipse.org/legal/epl-2.0
  *
  * SPDX-License-Identifier: EPL-2.0
  *
@@ -12,12 +12,14 @@
  *******************************************************************************/
 package org.jacoco.agent.rt.internal.output;
 
+import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InterruptedIOException;
 import java.io.OutputStream;
 import java.nio.channels.FileChannel;
+import java.nio.channels.FileLock;
 import java.nio.channels.OverlappingFileLockException;
 
 import org.jacoco.core.data.ExecutionDataWriter;
@@ -80,8 +82,22 @@ public class FileOutput implements IAgentOutput {
 			try {
 				// An agent from another JVM might have a lock. In this case
 				// this method blocks until the lock is freed.
-				fc.lock();
-				return file;
+				final FileLock lock = fc.lock();
+				// Note that reference to lock object must be maintained
+				// till the end of writing
+				// to guarantee that observation of OverlappingFileLockException
+				// does not depend on GC in JDK versions from 6 to 10
+				// affected by https://bugs.openjdk.org/browse/JDK-8166253
+				return new BufferedOutputStream(file) {
+					@Override
+					public void close() throws IOException {
+						try {
+							flush();
+						} finally {
+							lock.channel().close();
+						}
+					}
+				};
 			} catch (final OverlappingFileLockException e) {
 				// In the case of multiple class loaders there can be multiple
 				// JaCoCo runtimes even in the same VM. In this case we get an

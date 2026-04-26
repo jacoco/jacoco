@@ -1,8 +1,8 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2024 Mountainminds GmbH & Co. KG and Contributors
+ * Copyright (c) 2009, 2026 Mountainminds GmbH & Co. KG and Contributors
  * This program and the accompanying materials are made available under
  * the terms of the Eclipse Public License 2.0 which is available at
- * http://www.eclipse.org/legal/epl-2.0
+ * https://www.eclipse.org/legal/epl-2.0
  *
  * SPDX-License-Identifier: EPL-2.0
  *
@@ -15,6 +15,7 @@ package org.jacoco.agent.rt.internal.output;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -49,7 +50,7 @@ public class TcpConnectionTest extends ExecutorTestBase {
 		data = new RuntimeData();
 	}
 
-	@Test(expected = IOException.class)
+	@Test
 	public void testInvalidHeader() throws Exception {
 		final OutputStream remoteOut = mockConnection.getSocketB()
 				.getOutputStream();
@@ -59,10 +60,15 @@ public class TcpConnectionTest extends ExecutorTestBase {
 		final TcpConnection connection = new TcpConnection(
 				mockConnection.getSocketA(), data);
 		connection.init();
-		connection.run();
+		try {
+			connection.run();
+			fail("IOException expected");
+		} catch (final IOException e) {
+			// expected
+		}
 	}
 
-	@Test(expected = IOException.class)
+	@Test
 	public void testInvalidContent() throws Exception {
 		final OutputStream remoteOut = mockConnection.getSocketB()
 				.getOutputStream();
@@ -71,7 +77,12 @@ public class TcpConnectionTest extends ExecutorTestBase {
 				data);
 		con.init();
 		remoteOut.write(123);
-		con.run();
+		try {
+			con.run();
+			fail("IOException expected");
+		} catch (final IOException e) {
+			// expected
+		}
 	}
 
 	/**

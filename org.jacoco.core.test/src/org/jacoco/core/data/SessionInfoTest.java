@@ -1,8 +1,8 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2024 Mountainminds GmbH & Co. KG and Contributors
+ * Copyright (c) 2009, 2026 Mountainminds GmbH & Co. KG and Contributors
  * This program and the accompanying materials are made available under
  * the terms of the Eclipse Public License 2.0 which is available at
- * http://www.eclipse.org/legal/epl-2.0
+ * https://www.eclipse.org/legal/epl-2.0
  *
  * SPDX-License-Identifier: EPL-2.0
  *
@@ -13,6 +13,7 @@
 package org.jacoco.core.data;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 
 import org.junit.Test;
 
@@ -21,9 +22,14 @@ import org.junit.Test;
  */
 public class SessionInfoTest {
 
-	@Test(expected = IllegalArgumentException.class)
+	@Test
 	public void testNullId() {
-		new SessionInfo(null, 1, 2);
+		try {
+			new SessionInfo(null, 1, 2);
+			fail("IllegalArgumentException expected");
+		} catch (final IllegalArgumentException e) {
+			// expected
+		}
 	}
 
 	@Test

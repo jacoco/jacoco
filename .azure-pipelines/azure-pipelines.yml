@@ -49,10 +49,19 @@ jobs:
         JDK_VERSION: 22
       JDK 23:
         JDK_VERSION: 23
+      JDK 23 with ECJ:
+        JDK_VERSION: 23
+        ECJ: true
       JDK 24:
         JDK_VERSION: 24
+      JDK 25:
+        JDK_VERSION: 25
+      JDK 26:
+        JDK_VERSION: 26
+      JDK 27:
+        JDK_VERSION: 27
   pool:
-    vmImage: 'ubuntu-20.04'
+    vmImage: 'ubuntu-24.04'
   steps:
   - bash: |
       set -e
@@ -88,11 +97,6 @@ jobs:
           verify -Djdk.version=$JDK_VERSION -Dbytecode.version=$JDK_VERSION \
           deploy:deploy -DdeployAtEnd \
           --toolchains=toolchains.xml --settings=.azure-pipelines/maven-settings.xml
-      elif [[ "$BUILD_SOURCEBRANCH" == "refs/heads/master" && "$JDK_VERSION" == "11" ]]; then
-        ./mvnw -V -B -e --no-transfer-progress -f org.jacoco.build \
-          verify -Djdk.version=$JDK_VERSION -Dbytecode.version=$JDK_VERSION \
-          sonar:sonar \
-          --toolchains=toolchains.xml --settings=.azure-pipelines/maven-settings.xml
       else
         ./mvnw -V -B -e --no-transfer-progress \
           verify -Djdk.version=$JDK_VERSION -Dbytecode.version=$JDK_VERSION -Decj=${ECJ:-} \
@@ -100,6 +104,5 @@ jobs:
       fi
     displayName: Build
     env:
-      SONARQUBE_TOKEN: $(SONARQUBE_TOKEN)
       SONATYPE_USERNAME: $(SONATYPE_USERNAME)
       SONATYPE_PASSWORD: $(SONATYPE_PASSWORD)

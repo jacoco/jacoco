@@ -1,8 +1,8 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2024 Mountainminds GmbH & Co. KG and Contributors
+ * Copyright (c) 2009, 2026 Mountainminds GmbH & Co. KG and Contributors
  * This program and the accompanying materials are made available under
  * the terms of the Eclipse Public License 2.0 which is available at
- * http://www.eclipse.org/legal/epl-2.0
+ * https://www.eclipse.org/legal/epl-2.0
  *
  * SPDX-License-Identifier: EPL-2.0
  *
@@ -13,6 +13,7 @@
 package org.jacoco.core.internal.instr;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 
 import org.jacoco.core.instr.MethodRecorder;
 import org.jacoco.core.internal.flow.IFrame;
@@ -166,9 +167,14 @@ public class MethodInstrumenterTest {
 		testVisitJumpInsnWithProbe(Opcodes.IFNONNULL, Opcodes.IFNULL);
 	}
 
-	@Test(expected = IllegalArgumentException.class)
+	@Test
 	public void testVisitJumpInsnWithProbe_InvalidOpcode() {
-		testVisitJumpInsnWithProbe(Opcodes.NOP, Opcodes.NOP);
+		try {
+			testVisitJumpInsnWithProbe(Opcodes.NOP, Opcodes.NOP);
+			fail("IllegalArgumentException expected");
+		} catch (final IllegalArgumentException e) {
+			// expected
+		}
 	}
 
 	private void testVisitJumpInsnWithProbe(int opcodeOrig, int opcodeInstr) {

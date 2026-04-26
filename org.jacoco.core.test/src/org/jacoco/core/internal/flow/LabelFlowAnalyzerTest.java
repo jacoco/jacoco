@@ -1,8 +1,8 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2024 Mountainminds GmbH & Co. KG and Contributors
+ * Copyright (c) 2009, 2026 Mountainminds GmbH & Co. KG and Contributors
  * This program and the accompanying materials are made available under
  * the terms of the Eclipse Public License 2.0 which is available at
- * http://www.eclipse.org/legal/epl-2.0
+ * https://www.eclipse.org/legal/epl-2.0
  *
  * SPDX-License-Identifier: EPL-2.0
  *
@@ -17,6 +17,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 import static org.objectweb.asm.Opcodes.*;
 
 import org.jacoco.core.data.ExecutionDataWriter;
@@ -280,9 +281,15 @@ public class LabelFlowAnalyzerTest {
 		assertFalse(analyzer.first);
 	}
 
-	@Test(expected = AssertionError.class)
+	@Test
 	public void testVisitVarInsnNegative() {
-		analyzer.visitVarInsn(RET, 0);
+		try {
+			analyzer.visitVarInsn(RET, 0);
+			fail("AssertionError expected");
+		} catch (final AssertionError e) {
+			// expected
+			assertEquals("Subroutines not supported.", e.getMessage());
+		}
 	}
 
 	@Test
@@ -368,9 +375,15 @@ public class LabelFlowAnalyzerTest {
 		assertFalse(analyzer.first);
 	}
 
-	@Test(expected = AssertionError.class)
+	@Test
 	public void testVisitJumpInsnNegative() {
-		analyzer.visitJumpInsn(JSR, label);
+		try {
+			analyzer.visitJumpInsn(JSR, label);
+			fail("AssertionError expected");
+		} catch (final AssertionError e) {
+			// expected
+			assertEquals("Subroutines not supported.", e.getMessage());
+		}
 	}
 
 	@Test

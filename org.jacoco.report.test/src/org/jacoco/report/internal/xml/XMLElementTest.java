@@ -1,8 +1,8 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2024 Mountainminds GmbH & Co. KG and Contributors
+ * Copyright (c) 2009, 2026 Mountainminds GmbH & Co. KG and Contributors
  * This program and the accompanying materials are made available under
  * the terms of the Eclipse Public License 2.0 which is available at
- * http://www.eclipse.org/legal/epl-2.0
+ * https://www.eclipse.org/legal/epl-2.0
  *
  * SPDX-License-Identifier: EPL-2.0
  *
@@ -13,6 +13,7 @@
 package org.jacoco.report.internal.xml;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -67,23 +68,38 @@ public class XMLElementTest {
 		assertContent("<root/>");
 	}
 
-	@Test(expected = IOException.class)
+	@Test
 	public void attr_should_throw_exception_when_closed() throws IOException {
 		root.close();
-		root.attr("attr", "value");
+		try {
+			root.attr("attr", "value");
+			fail("IOException expected");
+		} catch (final IOException e) {
+			// expected
+		}
 	}
 
-	@Test(expected = IOException.class)
+	@Test
 	public void element_should_throw_exception_when_closed()
 			throws IOException {
 		root.close();
-		root.element("child");
+		try {
+			root.element("child");
+			fail("IOException expected");
+		} catch (final IOException e) {
+			// expected
+		}
 	}
 
-	@Test(expected = IOException.class)
+	@Test
 	public void text_should_throw_exception_when_closed() throws IOException {
 		root.close();
-		root.text("text");
+		try {
+			root.text("text");
+			fail("IOException expected");
+		} catch (final IOException e) {
+			// expected
+		}
 	}
 
 	@Test
@@ -154,18 +170,28 @@ public class XMLElementTest {
 				"<root min=\"-9223372036854775808\" max=\"9223372036854775807\"/>");
 	}
 
-	@Test(expected = IOException.class)
+	@Test
 	public void attr_should_throw_exception_when_text_was_added()
 			throws IOException {
 		root.text("text");
-		root.attr("id", "12345");
+		try {
+			root.attr("id", "12345");
+			fail("IOException expected");
+		} catch (final IOException e) {
+			// expected
+		}
 	}
 
-	@Test(expected = IOException.class)
+	@Test
 	public void attr_should_throw_exception_when_child_was_added()
 			throws IOException {
 		root.element("child");
-		root.attr("id", "12345");
+		try {
+			root.attr("id", "12345");
+			fail("IOException expected");
+		} catch (final IOException e) {
+			// expected
+		}
 	}
 
 	private void assertContent(String expected) throws IOException {

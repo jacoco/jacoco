@@ -1,8 +1,8 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2024 Mountainminds GmbH & Co. KG and Contributors
+ * Copyright (c) 2009, 2026 Mountainminds GmbH & Co. KG and Contributors
  * This program and the accompanying materials are made available under
  * the terms of the Eclipse Public License 2.0 which is available at
- * http://www.eclipse.org/legal/epl-2.0
+ * https://www.eclipse.org/legal/epl-2.0
  *
  * SPDX-License-Identifier: EPL-2.0
  *
@@ -13,6 +13,7 @@
 package org.jacoco.core.internal.instr;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 
 import org.jacoco.core.instr.MethodRecorder;
 import org.junit.After;
@@ -366,11 +367,16 @@ public class ProbeInserterTest {
 		}, 0, new Object[] {});
 	}
 
-	@Test(expected = IllegalArgumentException.class)
+	@Test
 	public void visitFrame_must_only_support_resolved_frames() {
 		ProbeInserter pi = new ProbeInserter(0, "m", "()V", actualVisitor,
 				arrayStrategy);
-		pi.visitFrame(Opcodes.F_SAME, 0, null, 0, null);
+		try {
+			pi.visitFrame(Opcodes.F_SAME, 0, null, 0, null);
+			fail("IllegalArgumentException expected");
+		} catch (final IllegalArgumentException e) {
+			// expected
+		}
 	}
 
 }

@@ -1,8 +1,8 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2024 Mountainminds GmbH & Co. KG and Contributors
+ * Copyright (c) 2009, 2026 Mountainminds GmbH & Co. KG and Contributors
  * This program and the accompanying materials are made available under
  * the terms of the Eclipse Public License 2.0 which is available at
- * http://www.eclipse.org/legal/epl-2.0
+ * https://www.eclipse.org/legal/epl-2.0
  *
  * SPDX-License-Identifier: EPL-2.0
  *
@@ -14,6 +14,7 @@ package org.jacoco.report.internal;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertSame;
+import static org.junit.Assert.fail;
 
 import java.io.IOException;
 
@@ -98,11 +99,16 @@ public class ReportOutputFolderTest {
 		assertEquals("../f2/test.html", folder.getLink(base, "test.html"));
 	}
 
-	@Test(expected = IllegalArgumentException.class)
+	@Test
 	public void testInvalidRelativeLink() throws IOException {
 		final ReportOutputFolder folder = root.subFolder("f1").subFolder("f2");
 		final ReportOutputFolder base = new ReportOutputFolder(
 				new MemoryMultiReportOutput()).subFolder("g1");
-		folder.getLink(base, "test.html");
+		try {
+			folder.getLink(base, "test.html");
+			fail("IllegalArgumentException expected");
+		} catch (final IllegalArgumentException e) {
+			// expected
+		}
 	}
 }

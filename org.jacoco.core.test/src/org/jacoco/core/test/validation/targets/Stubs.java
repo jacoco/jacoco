@@ -1,8 +1,8 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2024 Mountainminds GmbH & Co. KG and Contributors
+ * Copyright (c) 2009, 2026 Mountainminds GmbH & Co. KG and Contributors
  * This program and the accompanying materials are made available under
  * the terms of the Eclipse Public License 2.0 which is available at
- * http://www.eclipse.org/legal/epl-2.0
+ * https://www.eclipse.org/legal/epl-2.0
  *
  * SPDX-License-Identifier: EPL-2.0
  *
@@ -12,6 +12,7 @@
  *******************************************************************************/
 package org.jacoco.core.test.validation.targets;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -37,6 +38,19 @@ public class Stubs {
 		public SuperClass(boolean arg) {
 		}
 
+	}
+
+	/**
+	 * Serializable functional interface stub.
+	 */
+	public interface SerializableRunnable extends Serializable, Runnable {
+	}
+
+	/**
+	 * Functional interface stub.
+	 */
+	public interface Consumer<V> {
+		void apply(V value);
 	}
 
 	/**
@@ -113,6 +127,13 @@ public class Stubs {
 	}
 
 	/**
+	 * @return given argument
+	 */
+	public static String string(final String value) {
+		return value;
+	}
+
+	/**
 	 * Always throws a {@link RuntimeException}.
 	 *
 	 * @throws StubException
@@ -145,13 +166,34 @@ public class Stubs {
 	}
 
 	/**
+	 * Directly executes the given {@link SerializableRunnable}.
+	 */
+	public static void execSerializable(SerializableRunnable task) {
+		task.run();
+	}
+
+	/**
+	 * Directly executes the given {@link Consumer consumer} with given
+	 * {@code value}.
+	 */
+	public static <V> void exec(Consumer<V> consumer, V value) {
+		consumer.apply(value);
+	}
+
+	/**
+	 * Never executes the given {@link Consumer consumer}.
+	 */
+	public static <V> void noexec(Consumer<V> consumer) {
+	}
+
+	/**
 	 * List of logged events. Using a static member here works as this class is
 	 * loaded in a new class loader for every test case.
 	 */
 	private static List<String> events = new ArrayList<String>();
 
 	/**
-	 * Records a event with the given id for later verification.
+	 * Records an event with the given id for later verification.
 	 */
 	public static void logEvent(String id) {
 		events.add(id);

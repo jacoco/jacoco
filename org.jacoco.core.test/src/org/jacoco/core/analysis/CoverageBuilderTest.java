@@ -1,8 +1,8 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2024 Mountainminds GmbH & Co. KG and Contributors
+ * Copyright (c) 2009, 2026 Mountainminds GmbH & Co. KG and Contributors
  * This program and the accompanying materials are made available under
  * the terms of the Eclipse Public License 2.0 which is available at
- * http://www.eclipse.org/legal/epl-2.0
+ * https://www.eclipse.org/legal/epl-2.0
  *
  * SPDX-License-Identifier: EPL-2.0
  *
@@ -14,6 +14,7 @@ package org.jacoco.core.analysis;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.fail;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -113,7 +114,7 @@ public class CoverageBuilderTest {
 		assertEquals(1, coverageBuilder.getClasses().size());
 	}
 
-	@Test(expected = IllegalStateException.class)
+	@Test
 	public void testDuplicateClassNameDifferent() {
 		MethodCoverageImpl method = new MethodCoverageImpl("doit", "()V", null);
 		method.increment(CounterImpl.COUNTER_1_0, CounterImpl.COUNTER_0_0, 3);
@@ -122,7 +123,12 @@ public class CoverageBuilderTest {
 		// Add class with different id must fail:
 		method = new MethodCoverageImpl("doit", "()V", null);
 		method.increment(CounterImpl.COUNTER_1_0, CounterImpl.COUNTER_0_0, 3);
-		addClass(345L, false, "Sample", null, method);
+		try {
+			addClass(345L, false, "Sample", null, method);
+			fail("IllegalStateException expected");
+		} catch (final IllegalStateException e) {
+			// expected
+		}
 	}
 
 	@Test

@@ -1,8 +1,8 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2024 Mountainminds GmbH & Co. KG and Contributors
+ * Copyright (c) 2009, 2026 Mountainminds GmbH & Co. KG and Contributors
  * This program and the accompanying materials are made available under
  * the terms of the Eclipse Public License 2.0 which is available at
- * http://www.eclipse.org/legal/epl-2.0
+ * https://www.eclipse.org/legal/epl-2.0
  *
  * SPDX-License-Identifier: EPL-2.0
  *
@@ -41,18 +41,28 @@ public class ClassAnalyzerTest {
 				"java/lang/Object", null);
 	}
 
-	@Test(expected = IllegalStateException.class)
+	@Test
 	public void should_throw_IllegalStateException_when_class_is_instrumented_with_data_field() {
-		analyzer.visitField(InstrSupport.DATAFIELD_ACC,
-				InstrSupport.DATAFIELD_NAME, InstrSupport.DATAFIELD_DESC, null,
-				null);
+		try {
+			analyzer.visitField(InstrSupport.DATAFIELD_ACC,
+					InstrSupport.DATAFIELD_NAME, InstrSupport.DATAFIELD_DESC,
+					null, null);
+			fail("IllegalStateException expected");
+		} catch (final IllegalStateException e) {
+			// expected
+		}
 	}
 
-	@Test(expected = IllegalStateException.class)
+	@Test
 	public void should_throw_IllegalStateException_when_class_is_instrumented_with_init_method() {
-		analyzer.visitMethod(InstrSupport.INITMETHOD_ACC,
-				InstrSupport.INITMETHOD_NAME, InstrSupport.INITMETHOD_DESC,
-				null, null);
+		try {
+			analyzer.visitMethod(InstrSupport.INITMETHOD_ACC,
+					InstrSupport.INITMETHOD_NAME, InstrSupport.INITMETHOD_DESC,
+					null, null);
+			fail("IllegalStateException expected");
+		} catch (final IllegalStateException e) {
+			// expected
+		}
 	}
 
 	/**

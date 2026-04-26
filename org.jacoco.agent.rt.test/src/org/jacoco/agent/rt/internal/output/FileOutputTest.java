@@ -1,8 +1,8 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2024 Mountainminds GmbH & Co. KG and Contributors
+ * Copyright (c) 2009, 2026 Mountainminds GmbH & Co. KG and Contributors
  * This program and the accompanying materials are made available under
  * the terms of the Eclipse Public License 2.0 which is available at
- * http://www.eclipse.org/legal/epl-2.0
+ * https://www.eclipse.org/legal/epl-2.0
  *
  * SPDX-License-Identifier: EPL-2.0
  *
@@ -20,6 +20,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InterruptedIOException;
+import java.nio.channels.FileLock;
 import java.nio.channels.OverlappingFileLockException;
 
 import org.jacoco.core.runtime.AgentOptions;
@@ -94,8 +95,12 @@ public class FileOutputTest {
 		File destFile = folder.newFile("jacoco.exec");
 		AgentOptions options = new AgentOptions();
 		options.setDestfile(destFile.getAbsolutePath());
-		FileOutputStream out = new FileOutputStream(destFile);
-		out.getChannel().lock();
+		// Note that reference to lock object must be maintained
+		// till the end of this test
+		// to guarantee that observation of OverlappingFileLockException
+		// does not depend on GC in JDK versions from 6 to 10
+		// affected by https://bugs.openjdk.org/browse/JDK-8166253
+		FileLock lock = new FileOutputStream(destFile).getChannel().lock();
 		FileOutput controller = new FileOutput();
 
 		try {
@@ -104,7 +109,7 @@ public class FileOutputTest {
 		} catch (OverlappingFileLockException e) {
 			// expected
 		} finally {
-			out.close();
+			lock.channel().close();
 		}
 	}
 
@@ -119,8 +124,12 @@ public class FileOutputTest {
 		File destFile = folder.newFile("jacoco.exec");
 		AgentOptions options = new AgentOptions();
 		options.setDestfile(destFile.getAbsolutePath());
-		FileOutputStream out = new FileOutputStream(destFile);
-		out.getChannel().lock();
+		// Note that reference to lock object must be maintained
+		// till the end of this test
+		// to guarantee that observation of OverlappingFileLockException
+		// does not depend on GC in JDK versions from 6 to 10
+		// affected by https://bugs.openjdk.org/browse/JDK-8166253
+		FileLock lock = new FileOutputStream(destFile).getChannel().lock();
 		FileOutput controller = new FileOutput();
 		Thread.currentThread().interrupt();
 
@@ -130,7 +139,7 @@ public class FileOutputTest {
 		} catch (InterruptedIOException e) {
 			// expected
 		} finally {
-			out.close();
+			lock.channel().close();
 		}
 	}
 

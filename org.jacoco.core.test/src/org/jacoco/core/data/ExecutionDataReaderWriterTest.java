@@ -1,8 +1,8 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2024 Mountainminds GmbH & Co. KG and Contributors
+ * Copyright (c) 2009, 2026 Mountainminds GmbH & Co. KG and Contributors
  * This program and the accompanying materials are made available under
  * the terms of the Eclipse Public License 2.0 which is available at
- * http://www.eclipse.org/legal/epl-2.0
+ * https://www.eclipse.org/legal/epl-2.0
  *
  * SPDX-License-Identifier: EPL-2.0
  *
@@ -12,6 +12,7 @@
  *******************************************************************************/
 package org.jacoco.core.data;
 
+import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
@@ -23,7 +24,6 @@ import java.io.ByteArrayOutputStream;
 import java.io.EOFException;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.util.Arrays;
 import java.util.Random;
 
 import org.junit.Before;
@@ -128,16 +128,22 @@ public class ExecutionDataReaderWriterTest {
 		assertFalse(createReader().read());
 	}
 
-	@Test(expected = IOException.class)
+	@Test
 	public void testInvalidMagicNumber() throws IOException {
 		buffer = new ByteArrayOutputStream();
 		buffer.write(ExecutionDataWriter.BLOCK_HEADER);
 		buffer.write(0x12);
 		buffer.write(0x34);
-		createReader().read();
+		final ExecutionDataReader reader = createReader();
+		try {
+			reader.read();
+			fail("IOException expected");
+		} catch (final IOException e) {
+			// expected
+		}
 	}
 
-	@Test(expected = IncompatibleExecDataVersionException.class)
+	@Test
 	public void testInvalidVersion() throws IOException {
 		buffer = new ByteArrayOutputStream();
 		buffer.write(ExecutionDataWriter.BLOCK_HEADER);
@@ -146,31 +152,58 @@ public class ExecutionDataReaderWriterTest {
 		final char version = (char) (ExecutionDataWriter.FORMAT_VERSION - 1);
 		buffer.write(version >> 8);
 		buffer.write(version & 0xFF);
-		createReader().read();
+		final ExecutionDataReader reader = createReader();
+		try {
+			reader.read();
+			fail("IncompatibleExecDataVersionException expected");
+		} catch (final IncompatibleExecDataVersionException e) {
+			// expected
+			assertEquals(version, e.getActualVersion());
+			assertEquals(ExecutionDataWriter.FORMAT_VERSION,
+					e.getExpectedVersion());
+		}
 	}
 
-	@Test(expected = IOException.class)
+	@Test
 	public void testMissingHeader() throws IOException {
 		buffer.reset();
 		writer.visitClassExecution(
 				new ExecutionData(Long.MIN_VALUE, "Sample", createData(8)));
-		createReaderWithVisitors().read();
+		final ExecutionDataReader readerWithVisitors = createReaderWithVisitors();
+		try {
+			readerWithVisitors.read();
+			fail("IOException expected");
+		} catch (final IOException e) {
+			// expected
+		}
 	}
 
-	@Test(expected = IOException.class)
+	@Test
 	public void testUnknownBlock() throws IOException {
 		buffer.write(0xff);
-		createReader().read();
+		final ExecutionDataReader reader = createReader();
+		try {
+			reader.read();
+			fail("IOException expected");
+		} catch (final IOException e) {
+			// expected
+		}
 	}
 
-	@Test(expected = EOFException.class)
+	@Test
 	public void testTruncatedFile() throws IOException {
 		writer.visitClassExecution(
 				new ExecutionData(Long.MIN_VALUE, "Sample", createData(8)));
 		final byte[] content = buffer.toByteArray();
 		buffer.reset();
 		buffer.write(content, 0, content.length - 1);
-		createReaderWithVisitors().read();
+		final ExecutionDataReader readerWithVisitors = createReaderWithVisitors();
+		try {
+			readerWithVisitors.read();
+			fail("EOFException expected");
+		} catch (final EOFException e) {
+			// expected
+		}
 	}
 
 	@Test
@@ -181,10 +214,16 @@ public class ExecutionDataReaderWriterTest {
 
 	// === Session Info ===
 
-	@Test(expected = IOException.class)
+	@Test
 	public void testNoSessionInfoVisitor() throws IOException {
 		writer.visitSessionInfo(new SessionInfo("x", 0, 1));
-		createReader().read();
+		final ExecutionDataReader reader = createReader();
+		try {
+			reader.read();
+			fail("IOException expected");
+		} catch (final IOException e) {
+			// expected
+		}
 	}
 
 	@Test
@@ -198,7 +237,7 @@ public class ExecutionDataReaderWriterTest {
 		assertEquals(3444234223498879234L, sessionInfo.getDumpTimeStamp());
 	}
 
-	@Test(expected = RuntimeException.class)
+	@Test
 	public void testSessionInfoIOException() throws IOException {
 		final boolean[] broken = new boolean[1];
 		final ExecutionDataWriter writer = createWriter(new OutputStream() {
@@ -210,16 +249,28 @@ public class ExecutionDataReaderWriterTest {
 			}
 		});
 		broken[0] = true;
-		writer.visitSessionInfo(new SessionInfo("X", 0, 0));
+		final SessionInfo sessionInfo = new SessionInfo("X", 0, 0);
+		try {
+			writer.visitSessionInfo(sessionInfo);
+			fail("RuntimeException expected");
+		} catch (final RuntimeException e) {
+			// expected
+		}
 	}
 
 	// === Execution Data ===
 
-	@Test(expected = IOException.class)
+	@Test
 	public void testNoExecutionDataVisitor() throws IOException {
 		writer.visitClassExecution(
 				new ExecutionData(Long.MIN_VALUE, "Sample", createData(8)));
-		createReader().read();
+		final ExecutionDataReader reader = createReader();
+		try {
+			reader.read();
+			fail("IOException expected");
+		} catch (final IOException e) {
+			// expected
+		}
 	}
 
 	@Test
@@ -283,7 +334,7 @@ public class ExecutionDataReaderWriterTest {
 		assertArrayEquals(data, store.get(123).getProbes());
 	}
 
-	@Test(expected = RuntimeException.class)
+	@Test
 	public void testExecutionDataIOException() throws IOException {
 		final boolean[] broken = new boolean[1];
 		final ExecutionDataWriter writer = createWriter(new OutputStream() {
@@ -295,8 +346,14 @@ public class ExecutionDataReaderWriterTest {
 			}
 		});
 		broken[0] = true;
-		writer.visitClassExecution(
-				new ExecutionData(3, "Sample", createData(1)));
+		final ExecutionData executionData = new ExecutionData(3, "Sample",
+				createData(1));
+		try {
+			writer.visitClassExecution(executionData);
+			fail("RuntimeException expected");
+		} catch (final RuntimeException e) {
+			// expected
+		}
 	}
 
 	private ExecutionDataReader createReaderWithVisitors() throws IOException {
@@ -316,11 +373,6 @@ public class ExecutionDataReaderWriterTest {
 			data[j] = random.nextBoolean();
 		}
 		return data;
-	}
-
-	private void assertArrayEquals(final boolean[] expected,
-			final boolean[] actual) {
-		assertTrue(Arrays.equals(expected, actual));
 	}
 
 	protected ExecutionDataWriter createWriter(OutputStream out)

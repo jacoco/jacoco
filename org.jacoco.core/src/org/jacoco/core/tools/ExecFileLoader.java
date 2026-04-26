@@ -1,8 +1,8 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2024 Mountainminds GmbH & Co. KG and Contributors
+ * Copyright (c) 2009, 2026 Mountainminds GmbH & Co. KG and Contributors
  * This program and the accompanying materials are made available under
  * the terms of the Eclipse Public License 2.0 which is available at
- * http://www.eclipse.org/legal/epl-2.0
+ * https://www.eclipse.org/legal/epl-2.0
  *
  * SPDX-License-Identifier: EPL-2.0
  *
@@ -20,6 +20,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.nio.channels.FileLock;
 
 import org.jacoco.core.data.ExecutionDataReader;
 import org.jacoco.core.data.ExecutionDataStore;
@@ -110,14 +111,20 @@ public class ExecFileLoader {
 			folder.mkdirs();
 		}
 		final FileOutputStream fileStream = new FileOutputStream(file, append);
-		// Avoid concurrent writes from other processes:
-		fileStream.getChannel().lock();
+		// Avoid concurrent writes from other processes.
+		// Note that reference to lock object must be maintained
+		// till the end of writing
+		// to guarantee that observation of OverlappingFileLockException
+		// does not depend on GC in JDK versions from 6 to 10
+		// affected by https://bugs.openjdk.org/browse/JDK-8166253
+		final FileLock lock = fileStream.getChannel().lock();
 		final OutputStream bufferedStream = new BufferedOutputStream(
 				fileStream);
 		try {
 			save(bufferedStream);
+			bufferedStream.flush();
 		} finally {
-			bufferedStream.close();
+			lock.channel().close();
 		}
 	}
 

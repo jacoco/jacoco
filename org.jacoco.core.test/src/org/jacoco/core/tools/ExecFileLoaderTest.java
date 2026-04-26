@@ -1,8 +1,8 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2024 Mountainminds GmbH & Co. KG and Contributors
+ * Copyright (c) 2009, 2026 Mountainminds GmbH & Co. KG and Contributors
  * This program and the accompanying materials are made available under
  * the terms of the Eclipse Public License 2.0 which is available at
- * http://www.eclipse.org/legal/epl-2.0
+ * https://www.eclipse.org/legal/epl-2.0
  *
  * SPDX-License-Identifier: EPL-2.0
  *
@@ -13,6 +13,7 @@
 package org.jacoco.core.tools;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -69,14 +70,19 @@ public class ExecFileLoaderTest {
 		assertLoaderContents("a", "bb");
 	}
 
-	@Test(expected = IOException.class)
+	@Test
 	public void testLoadBrokenContent() throws IOException {
 		final File file = new File(sourceFolder.getRoot(), "broken.exec");
 		final FileWriter writer = new FileWriter(file);
 		writer.write("Invalid Content");
 		writer.close();
 
-		loader.load(file);
+		try {
+			loader.load(file);
+			fail("IOException expected");
+		} catch (final IOException e) {
+			// expected
+		}
 	}
 
 	@Test
