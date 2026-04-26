@@ -12,6 +12,8 @@
  *******************************************************************************/
 package org.jacoco.ant;
 
+import static org.jacoco.ant.AntUnitSuiteFactory.suiteFor;
+
 import java.io.File;
 
 import org.apache.ant.antunit.junit3.AntUnitSuite;
@@ -28,8 +30,7 @@ public class ReportTaskTest {
 				TestTarget.getClassPath());
 		System.setProperty("org.jacoco.ant.reportTaskTest.sources.dir",
 				new File("./src").getAbsolutePath());
-		final File file = new File("src/org/jacoco/ant/ReportTaskTest.xml");
-		return new AntUnitSuite(file, ReportTaskTest.class);
+		return suiteFor(ReportTaskTest.class);
 	}
 
 }
