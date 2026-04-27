@@ -14,6 +14,8 @@ package org.jacoco.core.internal.analysis;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotSame;
+import static org.junit.Assert.assertSame;
 
 import java.util.BitSet;
 
@@ -38,23 +40,164 @@ public class LineImplTest {
 		assertEquals(CounterImpl.COUNTER_0_0, line.getInstructionCounter());
 		assertEquals(CounterImpl.COUNTER_0_0, line.getBranchCounter());
 		assertEquals(ICounter.EMPTY, line.getStatus());
-		assertEquals("{}", line.getCoveredBranches().toString());
+		assertEquals(0, line.coveredBranches);
 	}
 
 	@Test
-	public void increment_should_append_coveredBranches() {
-		final BitSet coveredBranches = new BitSet();
-		coveredBranches.set(0, true);
-		coveredBranches.set(1, false);
-		line = line.increment(CounterImpl.getInstance(0, 1),
-				CounterImpl.getInstance(1, 1), coveredBranches);
-		assertEquals("{0}", line.getCoveredBranches().toString());
+	public void increment_with_detailed_information_about_covered_branches() {
+		final BitSet bs = new BitSet();
+		// From empty to fix
+		line = LineImpl.EMPTY;
+		bs.set(0, true);
+		bs.set(1, false);
+		LineImpl firstIncrement = line.increment( //
+				CounterImpl.getInstance(0, 1), // instructions
+				CounterImpl.getInstance(1, 1), // branches
+				bs);
+		LineImpl secondIncrement = line.increment( // same as above
+				CounterImpl.getInstance(0, 1), // instructions
+				CounterImpl.getInstance(1, 1), // branches
+				bs);
+		// singleton
+		assertSame(firstIncrement, secondIncrement);
+		assertNotSame(line, secondIncrement);
+		line = firstIncrement;
+		assertEquals(CounterImpl.getInstance(0, 1), //
+				line.getInstructionCounter());
+		assertEquals(CounterImpl.getInstance(1, 1), //
+				line.getBranchCounter());
+		assertEquals(/* 0b01 */ 1, line.coveredBranches);
 
-		coveredBranches.set(0, false);
-		coveredBranches.set(1, true);
-		line = line.increment(CounterImpl.getInstance(0, 1),
-				CounterImpl.getInstance(1, 1), coveredBranches);
-		assertEquals("{0, 3}", line.getCoveredBranches().toString());
+		// From fix to fix
+		bs.set(0, false);
+		bs.set(1, true);
+		firstIncrement = line.increment( //
+				CounterImpl.getInstance(0, 1), // instructions
+				CounterImpl.getInstance(1, 1), // branches
+				bs);
+		secondIncrement = line.increment( // same as above
+				CounterImpl.getInstance(0, 1), // instructions
+				CounterImpl.getInstance(1, 1), // branches
+				bs);
+		// singleton
+		assertSame(firstIncrement, secondIncrement);
+		assertNotSame(line, secondIncrement);
+		line = firstIncrement;
+		assertEquals(CounterImpl.getInstance(0, 1 + 1), //
+				line.getInstructionCounter());
+		assertEquals(CounterImpl.getInstance(1 + 1, 1 + 1), //
+				line.getBranchCounter());
+		assertEquals(/* 0b1001 */ 9, line.coveredBranches);
+
+		// From fix to var
+		bs.set(0, true);
+		bs.set(1, true);
+		bs.set(2, false);
+		firstIncrement = line.increment( //
+				CounterImpl.getInstance(0, 17), // instructions
+				CounterImpl.getInstance(1, 2), // branches
+				bs);
+		secondIncrement = line.increment( // same as above
+				CounterImpl.getInstance(0, 17), // instructions
+				CounterImpl.getInstance(1, 2), // branches
+				bs);
+		// not singleton
+		assertNotSame(firstIncrement, secondIncrement);
+		line = firstIncrement;
+		assertEquals(CounterImpl.getInstance(0, 1 + 1 + 17),
+				line.getInstructionCounter());
+		assertEquals(CounterImpl.getInstance(1 + 1 + 1, 1 + 1 + 2),
+				line.getBranchCounter());
+		assertEquals(/* 0b0111001 */ 57, line.coveredBranches);
+
+		// From var to var
+		bs.set(0, false);
+		bs.set(1, true);
+		bs.set(2, true);
+		secondIncrement = line.increment( //
+				CounterImpl.getInstance(0, 1), // instructions
+				CounterImpl.getInstance(1, 2), // branches
+				bs);
+		// mutable
+		assertSame(firstIncrement, secondIncrement);
+		assertEquals(CounterImpl.getInstance(0, 1 + 1 + 17 + 1),
+				line.getInstructionCounter());
+		assertEquals(CounterImpl.getInstance(1 + 1 + 1 + 1, 1 + 1 + 2 + 2),
+				line.getBranchCounter());
+		assertEquals(/* 0b1100111001 */ 825, line.coveredBranches);
+	}
+
+	@Test
+	public void increment_without_detailed_information_about_covered_branches() {
+		// From empty to fix
+		line = LineImpl.EMPTY;
+		LineImpl firstIncrement = line.increment( //
+				CounterImpl.getInstance(0, 1), // instructions
+				CounterImpl.getInstance(1, 1), // branches
+				null);
+		LineImpl secondIncrement = line.increment( // same as above
+				CounterImpl.getInstance(0, 1), // instructions
+				CounterImpl.getInstance(1, 1), // branches
+				null);
+		// singleton
+		assertSame(firstIncrement, secondIncrement);
+		assertNotSame(line, secondIncrement);
+		line = secondIncrement;
+		assertEquals(CounterImpl.getInstance(0, 1), //
+				line.getInstructionCounter());
+		assertEquals(CounterImpl.getInstance(1, 1), //
+				line.getBranchCounter());
+		assertEquals(/* 0b01 */ 1, line.coveredBranches);
+
+		// From fix to fix
+		firstIncrement = line.increment( //
+				CounterImpl.getInstance(0, 1), // instructions
+				CounterImpl.getInstance(1, 1), // branches
+				null);
+		secondIncrement = line.increment( // same as above
+				CounterImpl.getInstance(0, 1), // instructions
+				CounterImpl.getInstance(1, 1), // branches
+				null);
+		// singleton
+		assertSame(firstIncrement, secondIncrement);
+		assertNotSame(line, secondIncrement);
+		line = secondIncrement;
+		assertEquals(CounterImpl.getInstance(0, 1 + 1), //
+				line.getInstructionCounter());
+		assertEquals(CounterImpl.getInstance(1 + 1, 1 + 1), //
+				line.getBranchCounter());
+		assertEquals(/* 0b0011 */ 3, line.coveredBranches);
+
+		// From fix to var
+		firstIncrement = line.increment( //
+				CounterImpl.getInstance(0, 17), // instructions
+				CounterImpl.getInstance(1, 2), // branches
+				null);
+		secondIncrement = line.increment( // same as above
+				CounterImpl.getInstance(0, 17), // instructions
+				CounterImpl.getInstance(1, 2), // branches
+				null);
+		// not singleton
+		assertNotSame(firstIncrement, secondIncrement);
+		line = firstIncrement;
+		assertEquals(CounterImpl.getInstance(0, 1 + 1 + 17),
+				line.getInstructionCounter());
+		assertEquals(CounterImpl.getInstance(1 + 1 + 1, 1 + 1 + 2),
+				line.getBranchCounter());
+		assertEquals(/* 0b1111 */ 15, line.coveredBranches);
+
+		// From var to var
+		secondIncrement = line.increment( //
+				CounterImpl.getInstance(0, 1), // instructions
+				CounterImpl.getInstance(1, 2), // branches
+				null);
+		// mutable
+		assertSame(firstIncrement, secondIncrement);
+		assertEquals(CounterImpl.getInstance(0, 1 + 1 + 17 + 1),
+				line.getInstructionCounter());
+		assertEquals(CounterImpl.getInstance(1 + 1 + 1 + 1, 1 + 1 + 2 + 2),
+				line.getBranchCounter());
+		assertEquals(/* 0b111111 */ 63, line.coveredBranches);
 	}
 
 	@Test
