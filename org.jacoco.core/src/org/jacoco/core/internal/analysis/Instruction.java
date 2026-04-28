@@ -223,4 +223,8 @@ public class Instruction {
 		return CounterImpl.getInstance(branches - covered, covered);
 	}
 
+	public BitSet getCoveredBranches() {
+		return coveredBranches;
+	}
+
 }
