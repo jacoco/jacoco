@@ -12,6 +12,7 @@
  *******************************************************************************/
 package org.jacoco.agent.rt.internal.output;
 
+import java.io.BufferedOutputStream;
 import java.io.IOException;
 import java.net.Socket;
 import java.net.SocketException;
@@ -43,7 +44,8 @@ class TcpConnection implements IRemoteCommandVisitor {
 	}
 
 	public void init() throws IOException {
-		this.writer = new RemoteControlWriter(socket.getOutputStream());
+		this.writer = new RemoteControlWriter(
+				new BufferedOutputStream(socket.getOutputStream()));
 		this.reader = new RemoteControlReader(socket.getInputStream());
 		this.reader.setRemoteCommandVisitor(this);
 		this.initialized = true;
@@ -107,6 +109,7 @@ class TcpConnection implements IRemoteCommandVisitor {
 			}
 		}
 		writer.sendCmdOk();
+		writer.flush();
 	}
 
 }
