@@ -14,8 +14,11 @@ package org.jacoco.core.internal.analysis;
 
 import static org.junit.Assert.assertEquals;
 
+import java.lang.management.ManagementFactory;
 import java.lang.reflect.Field;
 
+import org.jacoco.core.test.validation.JavaVersion;
+import org.junit.AssumptionViolatedException;
 import org.junit.Test;
 import org.openjdk.jol.datamodel.Model64;
 import org.openjdk.jol.datamodel.Model64_Lilliput;
@@ -35,6 +38,22 @@ public class LineImplMemoryTest {
 	 */
 	@Test
 	public void currentVM() throws Exception {
+		try {
+			ManagementFactory.getPlatformMBeanServer();
+		} catch (final NullPointerException e) {
+			// Frequently happens in CI with JDK version 18 due to
+			// https://bugs.openjdk.java.net/browse/JDK-8287073
+			// preventing use of
+			// "com.sun.management:type=HotSpotDiagnostic" MXBean
+			// in org.openjdk.jol.vm.VMOptions
+			// to obtain "ObjectAlignmentInBytes"
+			if (JavaVersion.current().isBefore("19")
+					&& !JavaVersion.current().isBefore("18")) {
+				throw new AssumptionViolatedException(
+						"this test requires HotSpotDiagnosticMXBean");
+			}
+			throw e;
+		}
 		final Layouter layouter = new CurrentLayouter();
 		assertEquals(text( //
 				"Current VM Layout",
