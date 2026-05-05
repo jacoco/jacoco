@@ -13,6 +13,7 @@
 package org.jacoco.core.internal.analysis;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
@@ -32,11 +33,13 @@ public class ClassAnalyzerTest {
 
 	private ClassAnalyzer analyzer;
 	private ClassCoverageImpl coverage;
+	private StringPool stringPool;
 
 	@Before
 	public void setup() {
+		stringPool = new StringPool();
 		coverage = new ClassCoverageImpl("Foo", 0x0000, false);
-		analyzer = new ClassAnalyzer(coverage, null, new StringPool());
+		analyzer = new ClassAnalyzer(coverage, null, stringPool);
 		analyzer.visit(Opcodes.V1_5, Opcodes.ACC_PUBLIC, "Foo", null,
 				"java/lang/Object", null);
 	}
@@ -159,7 +162,7 @@ public class ClassAnalyzerTest {
 
 		final SourceNodeImpl fragment = coverage.getFragments().iterator()
 				.next();
-		assertEquals(fragment.getName(), "Foo");
+		assertSame(stringPool.get("Foo"), fragment.getName());
 		assertEquals(CounterImpl.COUNTER_1_0,
 				fragment.getLine(2).getInstructionCounter());
 	}
