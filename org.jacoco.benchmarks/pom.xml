@@ -61,6 +61,16 @@
 
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <configuration>
+          <annotationProcessors>
+            <annotationProcessor>org.openjdk.jmh.generators.BenchmarkProcessor</annotationProcessor>
+          </annotationProcessors>
+        </configuration>
+      </plugin>
+
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-shade-plugin</artifactId>
         <executions>
           <execution>
