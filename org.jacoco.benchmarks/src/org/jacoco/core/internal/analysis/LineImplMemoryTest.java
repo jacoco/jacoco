@@ -29,6 +29,18 @@ import org.openjdk.jol.layouters.Layouter;
 
 /**
  * Test of memory required for {@link LineImpl} instance and its singletons.
+ *
+ * Goal of simulations with {@link HotSpotLayouter} such as
+ * {@link #compact_object_headers()} is to catch changes in JaCoCo for already
+ * explored VM changes in known configurations.
+ *
+ * These simulations might miss changes in VM unknown to JOL version in use, but
+ * hopefully such will be caught by {@link #currentVM() test} with
+ * {@link CurrentLayouter} - see {@link #clusterOops()} for examples of such
+ * changes.
+ *
+ * @see <a href="https://shipilev.net/jvm/objects-inside-out/">Java Objects
+ *      Inside Out</a>
  */
 public class LineImplMemoryTest {
 
@@ -38,23 +50,7 @@ public class LineImplMemoryTest {
 	 */
 	@Test
 	public void currentVM() throws Exception {
-		try {
-			ManagementFactory.getPlatformMBeanServer();
-		} catch (final NullPointerException e) {
-			// Frequently happens in CI with JDK version 18 due to
-			// https://bugs.openjdk.java.net/browse/JDK-8287073
-			// preventing use of
-			// "com.sun.management:type=HotSpotDiagnostic" MXBean
-			// in org.openjdk.jol.vm.VMOptions
-			// to obtain "ObjectAlignmentInBytes"
-			if (JavaVersion.current().isBefore("19")
-					&& !JavaVersion.current().isBefore("18")) {
-				throw new AssumptionViolatedException(
-						"this test requires HotSpotDiagnosticMXBean");
-			}
-			throw e;
-		}
-		final Layouter layouter = new CurrentLayouter();
+		final Layouter layouter = currentLayouter();
 		assertEquals(text( //
 				"Current VM Layout",
 				"org.jacoco.core.internal.analysis.LineImpl object internals:",
@@ -131,7 +127,8 @@ public class LineImplMemoryTest {
 	 *      Make compressed oops and compressed class pointers independent</a>
 	 */
 	@Test
-	public void compressed_class_pointers() throws Exception {
+	public void compressed_class_pointers_without_compressed_references()
+			throws Exception {
 		final Layouter layouter = new HotSpotLayouter(new Model64(false, true),
 				15);
 		assertEquals(text(
@@ -204,6 +201,84 @@ public class LineImplMemoryTest {
 	private static long sizeOf(final Object instance, final Layouter layouter) {
 		return layouter.layout(ClassData.parseInstance(instance))
 				.instanceSize();
+	}
+
+	private static CurrentLayouter currentLayouter() {
+		try {
+			ManagementFactory.getOperatingSystemMXBean();
+		} catch (final NullPointerException e) {
+			// Frequently happens in CI with JDK version 18 due to
+			// https://bugs.openjdk.java.net/browse/JDK-8287073
+			// preventing use of
+			// "com.sun.management:type=HotSpotDiagnostic" MXBean
+			// in org.openjdk.jol.vm.VMOptions
+			// to obtain "ObjectAlignmentInBytes"
+			if (JavaVersion.current().isBefore("19")
+					&& !JavaVersion.current().isBefore("18")) {
+				throw new AssumptionViolatedException(
+						"this test requires HotSpotDiagnosticMXBean");
+			}
+			throw e;
+		}
+		return new CurrentLayouter();
+	}
+
+	/**
+	 * @see <a href="https://bugs.openjdk.org/browse/JDK-8353273">JDK-8353273:
+	 *      Reduce number of oop map entries in instances</a> in JDK 25 and
+	 *      <a href=
+	 *      "https://github.com/openjdk/jol/commit/acb7bf9480bfd0588e93b353aa7217d3fe3efabe">corresponding
+	 *      change in JOL</a>
+	 * @see <a href="https://bugs.openjdk.org/browse/JDK-8139457">JDK-8139457:
+	 *      Relax alignment of array elements</a> in JDK 23 and <a href=
+	 *      "https://github.com/openjdk/jol/commit/8c4d7be996489676b9ff9caef83610b15c726019">corresponding
+	 *      change in JOL</a> as another example of change in VM unknown to JOL
+	 *      {@link HotSpotLayouter} in version 0.17
+	 */
+	@Test
+	public void clusterOops() {
+		final Layouter layouter = currentLayouter();
+		if (JavaVersion.current().isBefore("25")) {
+			assertEquals(text(
+					"org.jacoco.core.internal.analysis.LineImplMemoryTest$Derived object internals:",
+					"OFF  SZ               TYPE DESCRIPTION               VALUE",
+					"  0   8                    (object header: mark)     N/A",
+					"  8   4                    (object header: class)    N/A",
+					" 12   4                int Base.nonOop               N/A",
+					" 16   4   java.lang.Object Base.oop                  N/A",
+					" 20   4                int Derived.nonOop            N/A",
+					" 24   4   java.lang.Object Derived.oop               N/A",
+					" 28   4                    (object alignment gap)    ",
+					"Instance size: 32 bytes",
+					"Space losses: 0 bytes internal + 4 bytes external = 4 bytes total"),
+					layouter.layout(ClassData.parseClass(Derived.class))
+							.toPrintable());
+		} else {
+			assertEquals(text(
+					"org.jacoco.core.internal.analysis.LineImplMemoryTest$Derived object internals:",
+					"OFF  SZ               TYPE DESCRIPTION               VALUE",
+					"  0   8                    (object header: mark)     N/A",
+					"  8   4                    (object header: class)    N/A",
+					" 12   4                int Base.nonOop               N/A",
+					" 16   4   java.lang.Object Base.oop                  N/A",
+					" 20   4   java.lang.Object Derived.oop               N/A",
+					" 24   4                int Derived.nonOop            N/A",
+					" 28   4                    (object alignment gap)    ",
+					"Instance size: 32 bytes",
+					"Space losses: 0 bytes internal + 4 bytes external = 4 bytes total"),
+					layouter.layout(ClassData.parseClass(Derived.class))
+							.toPrintable());
+		}
+	}
+
+	private static class Base {
+		private Object oop;
+		private int nonOop;
+	}
+
+	private static class Derived extends Base {
+		private Object oop;
+		private int nonOop;
 	}
 
 	/**
