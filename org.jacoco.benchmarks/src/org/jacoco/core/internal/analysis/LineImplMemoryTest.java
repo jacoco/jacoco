@@ -54,16 +54,16 @@ public class LineImplMemoryTest {
 		assertEquals(text( //
 				"Current VM Layout",
 				"org.jacoco.core.internal.analysis.LineImpl object internals:",
-				"OFF  SZ                                            TYPE DESCRIPTION               VALUE",
-				"  0   8                                                 (object header: mark)     N/A",
-				"  8   4                                                 (object header: class)    N/A",
-				" 12   4   org.jacoco.core.internal.analysis.CounterImpl LineImpl.instructions     N/A",
-				" 16   4   org.jacoco.core.internal.analysis.CounterImpl LineImpl.branches         N/A",
-				" 20   4                                                 (object alignment gap)    ",
+				"OFF  SZ                                            TYPE DESCRIPTION                VALUE",
+				"  0   8                                                 (object header: mark)      N/A",
+				"  8   4                                                 (object header: class)     N/A",
+				" 12   4                                             int LineImpl.coveredBranches   N/A",
+				" 16   4   org.jacoco.core.internal.analysis.CounterImpl LineImpl.instructions      N/A",
+				" 20   4   org.jacoco.core.internal.analysis.CounterImpl LineImpl.branches          N/A",
 				"Instance size: 24 bytes",
-				"Space losses: 0 bytes internal + 4 bytes external = 4 bytes total"),
+				"Space losses: 0 bytes internal + 0 bytes external = 0 bytes total"),
 				layout(layouter));
-		assertEquals(68600, sizeOfSingletons(layouter));
+		assertEquals(376032, sizeOfSingletons(layouter));
 	}
 
 	/**
@@ -89,14 +89,16 @@ public class LineImplMemoryTest {
 		assertEquals(text(
 				"Hotspot Layout Simulation (JDK 24, 64-bit model, Lilliput (current experiment), compressed references, compressed classes, 8-byte aligned)",
 				"org.jacoco.core.internal.analysis.LineImpl object internals:",
-				"OFF  SZ                                            TYPE DESCRIPTION               VALUE",
-				"  0   8                                                 (object header: mark)     N/A",
-				"  8   4   org.jacoco.core.internal.analysis.CounterImpl LineImpl.instructions     N/A",
-				" 12   4   org.jacoco.core.internal.analysis.CounterImpl LineImpl.branches         N/A",
-				"Instance size: 16 bytes",
-				"Space losses: 0 bytes internal + 0 bytes external = 0 bytes total"),
+				"OFF  SZ                                            TYPE DESCRIPTION                VALUE",
+				"  0   8                                                 (object header: mark)      N/A",
+				"  8   4                                             int LineImpl.coveredBranches   N/A",
+				" 12   4   org.jacoco.core.internal.analysis.CounterImpl LineImpl.instructions      N/A",
+				" 16   4   org.jacoco.core.internal.analysis.CounterImpl LineImpl.branches          N/A",
+				" 20   4                                                 (object alignment gap)     ",
+				"Instance size: 24 bytes",
+				"Space losses: 0 bytes internal + 4 bytes external = 4 bytes total"),
 				layout(layouter));
-		assertEquals(48432, sizeOfSingletons(layouter));
+		assertEquals(374560, sizeOfSingletons(layouter));
 	}
 
 	/**
@@ -110,14 +112,16 @@ public class LineImplMemoryTest {
 		assertEquals(text(
 				"Hotspot Layout Simulation (JDK 24, 64-bit model, Lilliput (current experiment), NO compressed references, compressed classes, 8-byte aligned)",
 				"org.jacoco.core.internal.analysis.LineImpl object internals:",
-				"OFF  SZ                                            TYPE DESCRIPTION               VALUE",
-				"  0   8                                                 (object header: mark)     N/A",
-				"  8   8   org.jacoco.core.internal.analysis.CounterImpl LineImpl.instructions     N/A",
-				" 16   8   org.jacoco.core.internal.analysis.CounterImpl LineImpl.branches         N/A",
-				"Instance size: 24 bytes",
-				"Space losses: 0 bytes internal + 0 bytes external = 0 bytes total"),
+				"OFF  SZ                                            TYPE DESCRIPTION                VALUE",
+				"  0   8                                                 (object header: mark)      N/A",
+				"  8   4                                             int LineImpl.coveredBranches   N/A",
+				" 12   4                                                 (alignment/padding gap)    ",
+				" 16   8   org.jacoco.core.internal.analysis.CounterImpl LineImpl.instructions      N/A",
+				" 24   8   org.jacoco.core.internal.analysis.CounterImpl LineImpl.branches          N/A",
+				"Instance size: 32 bytes",
+				"Space losses: 4 bytes internal + 0 bytes external = 4 bytes total"),
 				layout(layouter));
-		assertEquals(76696, sizeOfSingletons(layouter));
+		assertEquals(533040, sizeOfSingletons(layouter));
 	}
 
 	/**
@@ -134,16 +138,16 @@ public class LineImplMemoryTest {
 		assertEquals(text(
 				"Hotspot Layout Simulation (JDK 15, 64-bit model, NO compressed references, compressed classes, 8-byte aligned)",
 				"org.jacoco.core.internal.analysis.LineImpl object internals:",
-				"OFF  SZ                                            TYPE DESCRIPTION               VALUE",
-				"  0   8                                                 (object header: mark)     N/A",
-				"  8   4                                                 (object header: class)    N/A",
-				" 12   4                                                 (alignment/padding gap)   ",
-				" 16   8   org.jacoco.core.internal.analysis.CounterImpl LineImpl.instructions     N/A",
-				" 24   8   org.jacoco.core.internal.analysis.CounterImpl LineImpl.branches         N/A",
+				"OFF  SZ                                            TYPE DESCRIPTION                VALUE",
+				"  0   8                                                 (object header: mark)      N/A",
+				"  8   4                                                 (object header: class)     N/A",
+				" 12   4                                             int LineImpl.coveredBranches   N/A",
+				" 16   8   org.jacoco.core.internal.analysis.CounterImpl LineImpl.instructions      N/A",
+				" 24   8   org.jacoco.core.internal.analysis.CounterImpl LineImpl.branches          N/A",
 				"Instance size: 32 bytes",
-				"Space losses: 4 bytes internal + 0 bytes external = 4 bytes total"),
+				"Space losses: 0 bytes internal + 0 bytes external = 0 bytes total"),
 				layout(layouter));
-		assertEquals(92896, sizeOfSingletons(layouter));
+		assertEquals(533040, sizeOfSingletons(layouter));
 	}
 
 	/**
@@ -157,15 +161,17 @@ public class LineImplMemoryTest {
 		assertEquals(text(
 				"Hotspot Layout Simulation (JDK 8, 64-bit model, NO compressed references, NO compressed classes, 8-byte aligned)",
 				"org.jacoco.core.internal.analysis.LineImpl object internals:",
-				"OFF  SZ                                            TYPE DESCRIPTION               VALUE",
-				"  0   8                                                 (object header: mark)     N/A",
-				"  8   8                                                 (object header: class)    N/A",
-				" 16   8   org.jacoco.core.internal.analysis.CounterImpl LineImpl.instructions     N/A",
-				" 24   8   org.jacoco.core.internal.analysis.CounterImpl LineImpl.branches         N/A",
-				"Instance size: 32 bytes",
-				"Space losses: 0 bytes internal + 0 bytes external = 0 bytes total"),
+				"OFF  SZ                                            TYPE DESCRIPTION                VALUE",
+				"  0   8                                                 (object header: mark)      N/A",
+				"  8   8                                                 (object header: class)     N/A",
+				" 16   4                                             int LineImpl.coveredBranches   N/A",
+				" 20   4                                                 (alignment/padding gap)    ",
+				" 24   8   org.jacoco.core.internal.analysis.CounterImpl LineImpl.instructions      N/A",
+				" 32   8   org.jacoco.core.internal.analysis.CounterImpl LineImpl.branches          N/A",
+				"Instance size: 40 bytes",
+				"Space losses: 4 bytes internal + 0 bytes external = 4 bytes total"),
 				layout(layouter));
-		assertEquals(96864, sizeOfSingletons(layouter));
+		assertEquals(641816, sizeOfSingletons(layouter));
 	}
 
 	private static String layout(final Layouter layouter) {
@@ -194,7 +200,7 @@ public class LineImplMemoryTest {
 				}
 			}
 		}
-		assertEquals("instances", 2025, instances);
+		assertEquals("instances", 12920, instances);
 		return size;
 	}
 
