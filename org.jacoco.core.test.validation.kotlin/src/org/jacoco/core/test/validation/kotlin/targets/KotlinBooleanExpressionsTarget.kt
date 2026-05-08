@@ -103,6 +103,10 @@ object KotlinBooleanExpressionsTarget {
         }
         nop(f() xor f()) // assertFullyCovered()
 
+        /* `if` as expression */
+        nop(if (t()) i1() else i2()) // assertPartlyCovered(1, 1)
+        nop(if (f()) i1() else i2()) // assertPartlyCovered(1, 1)
+
         /* Not (one case) */
         nop(!t()) // assertPartlyCovered(1, 1)
         nop(!f()) // assertPartlyCovered(1, 1)
