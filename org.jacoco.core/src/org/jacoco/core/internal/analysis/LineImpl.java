@@ -52,7 +52,7 @@ public abstract class LineImpl implements ILine {
 	}
 
 	/**
-	 * Empty line without instructions or branches.
+	 * Empty line without instructions and branches.
 	 */
 	public static final LineImpl EMPTY = new Fix(0, 0, 0, 0, 0);
 
