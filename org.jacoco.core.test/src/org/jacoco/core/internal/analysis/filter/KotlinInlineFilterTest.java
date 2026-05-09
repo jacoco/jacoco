@@ -35,9 +35,7 @@ public class KotlinInlineFilterTest extends FilterTestBase {
 	@Test
 	public void should_filter() {
 		context.className = "CallsiteKt";
-		context.sourceFileName = "callsite.kt";
-		context.sourceDebugExtension = "" //
-				+ "SMAP\n" //
+		context.kotlinSMAP = new KotlinSMAP("callsite.kt", "SMAP\n" //
 				+ "callsite.kt\n" // OutputFileName=callsite.kt
 				+ "Kotlin\n" // DefaultStratumId=Kotlin
 				+ "*S Kotlin\n" // StratumID=Kotlin
@@ -52,7 +50,7 @@ public class KotlinInlineFilterTest extends FilterTestBase {
 				+ "1#1,8:1\n" // InputStartLine=1,LineFileID=1,RepeatCount=8,OutputStartLine=1
 				+ "2#2,2:9\n" // InputStartLine=2,LineFileID=2,RepeatCount=2,OutputStartLine=9
 				+ "2#3,2:11\n" // InputStartLine=2,LineFileID=3,RepeatCount=2,OutputStartLine=11
-				+ "*E\n"; // EndSection
+				+ "*E\n"); // EndSection
 		context.classAnnotations
 				.add(KotlinGeneratedFilter.KOTLIN_METADATA_DESC);
 
@@ -113,9 +111,7 @@ public class KotlinInlineFilterTest extends FilterTestBase {
 	@Test
 	public void should_filter_when_in_same_file() {
 		context.className = "Callsite";
-		context.sourceFileName = "example.kt";
-		context.sourceDebugExtension = "" //
-				+ "SMAP\n" //
+		context.kotlinSMAP = new KotlinSMAP("example.kt", "SMAP\n" //
 				+ "example.kt\n" // OutputFileName=example.kt
 				+ "Kotlin\n" // DefaultStratumId=Kotlin
 				+ "*S Kotlin\n" // StratumID=Kotlin
@@ -128,7 +124,7 @@ public class KotlinInlineFilterTest extends FilterTestBase {
 				+ "1#1,15:1\n" // InputStartLine=1,LineFileID=1,RepeatCount=10,OutputStartLine=1
 				+ "7#1,2:18\n" // InputStartLine=7,LineFileID=1,RepeatCount=2,OutputStartLine=18
 				+ "2#2,2:16\n" // InputStartLine=2,LineFileID=2,RepeatCount=2,OutputStartLine=16
-				+ "*E\n"; // EndSection
+				+ "*E\n"); // EndSection
 		context.classAnnotations
 				.add(KotlinGeneratedFilter.KOTLIN_METADATA_DESC);
 
@@ -181,9 +177,7 @@ public class KotlinInlineFilterTest extends FilterTestBase {
 	@Test
 	public void should_filter_when_inlined_with_same_file_name_and_line_number() {
 		context.className = "ExampleKt";
-		context.sourceFileName = "Example.kt";
-		context.sourceDebugExtension = "" //
-				+ "SMAP\n" //
+		context.kotlinSMAP = new KotlinSMAP("Example.kt", "SMAP\n" //
 				+ "Example.kt\n" // OutputFileName=Example.kt
 				+ "Kotlin\n" // DefaultStratumId=Kotlin
 				+ "*S Kotlin\n" // StratumID=Kotlin
@@ -195,7 +189,7 @@ public class KotlinInlineFilterTest extends FilterTestBase {
 				+ "*L\n" // LineSection
 				+ "1#1,6:1\n" // InputStartLine=1,LineFileID=1,RepeatCount=6,OutputStartLine=1
 				+ "7#2:7\n" // InputStartLine=7,LineFileID=2,OutputStartLine=7
-				+ "*S KotlinDebug"; // StratumID=KotlinDebug
+				+ "*S KotlinDebug"); // StratumID=KotlinDebug
 		context.classAnnotations
 				.add(KotlinGeneratedFilter.KOTLIN_METADATA_DESC);
 
@@ -238,9 +232,7 @@ public class KotlinInlineFilterTest extends FilterTestBase {
 	@Test
 	public void should_filter_all_lines() {
 		context.className = "ExampleKt$callsite$$inlined$example$1";
-		context.sourceFileName = "Example.kt";
-		context.sourceDebugExtension = "" //
-				+ "SMAP\n" //
+		context.kotlinSMAP = new KotlinSMAP("Example.kt", "SMAP\n" //
 				+ "Example.kt\n" // OutputFileName=Example.kt
 				+ "Kotlin\n" // DefaultStratumId=Kotlin
 				+ "*S Kotlin\n" // StratumID=Kotlin
@@ -252,7 +244,7 @@ public class KotlinInlineFilterTest extends FilterTestBase {
 				+ "*L\n" // LineSection
 				+ "1#1,11:1\n" // InputStartLine=1,LineFileID=1,RepeatCount=11,OutputStartLine=1
 				+ "9#2:12\n" // InputStartLine=9,LineFileID=2,OutputStartLine=12
-				+ "*E\n"; // EndSection
+				+ "*E\n"); // EndSection
 		context.classAnnotations
 				.add(KotlinGeneratedFilter.KOTLIN_METADATA_DESC);
 

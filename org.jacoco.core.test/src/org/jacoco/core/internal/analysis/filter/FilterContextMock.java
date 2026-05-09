@@ -27,6 +27,7 @@ public class FilterContextMock implements IFilterContext {
 	public Set<String> classAttributes = new HashSet<String>();
 	public String sourceFileName = "Foo.java";
 	public String sourceDebugExtension;
+	public KotlinSMAP kotlinSMAP;
 
 	public String getClassName() {
 		return className;
@@ -52,8 +53,8 @@ public class FilterContextMock implements IFilterContext {
 		return sourceFileName;
 	}
 
-	public String getSourceDebugExtension() {
-		return sourceDebugExtension;
+	public KotlinSMAP getKotlinSMAP() {
+		return kotlinSMAP;
 	}
 
 }

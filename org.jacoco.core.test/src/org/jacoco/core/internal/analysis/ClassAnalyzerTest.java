@@ -13,6 +13,7 @@
 package org.jacoco.core.internal.analysis;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
@@ -171,10 +172,8 @@ public class ClassAnalyzerTest {
 	@Test
 	public void should_not_parse_SourceDebugExtension_attribute_when_not_Kotlin() {
 		analyzer.visitSource("Foo.kt", "SMAP\n");
-		final MethodNode mn = new MethodNode(0, "foo", "()V", null, null);
-		final MethodProbesVisitor mv = analyzer.visitMethod(mn.access, mn.name,
-				mn.desc, mn.signature, mn.exceptions.toArray(new String[0]));
-		mv.accept(mn, mv);
+		analyzer.visitMethod(0, "foo", "()V", null, null);
+		assertNull(analyzer.getKotlinSMAP());
 	}
 
 	/**
@@ -185,10 +184,8 @@ public class ClassAnalyzerTest {
 	public void should_not_parse_absent_SourceDebugExtension_attribute_when_kotlin() {
 		analyzer.visitSource("Foo.kt", null);
 		analyzer.visitAnnotation("Lkotlin/Metadata;", false);
-		final MethodNode mn = new MethodNode(0, "foo", "()V", null, null);
-		final MethodProbesVisitor mv = analyzer.visitMethod(mn.access, mn.name,
-				mn.desc, mn.signature, mn.exceptions.toArray(new String[0]));
-		mv.accept(mn, mv);
+		analyzer.visitMethod(0, "foo", "()V", null, null);
+		assertNull(analyzer.getKotlinSMAP());
 	}
 
 	/**
@@ -199,14 +196,12 @@ public class ClassAnalyzerTest {
 	public void should_parse_SourceDebugExtension_attribute_when_Kotlin() {
 		analyzer.visitSource("Foo.kt", "SMAP\n");
 		analyzer.visitAnnotation("Lkotlin/Metadata;", false);
-		final MethodNode mn = new MethodNode(0, "foo", "()V", null, null);
-		final MethodProbesVisitor mv = analyzer.visitMethod(mn.access, mn.name,
-				mn.desc, mn.signature, mn.exceptions.toArray(new String[0]));
 		try {
-			mv.accept(mn, mv);
+			analyzer.visitMethod(0, "foo", "()V", null, null);
 			fail("exception expected");
 		} catch (Exception e) {
 			// expected
+			assertEquals("Unexpected SMAP line: null", e.getMessage());
 		}
 	}
 

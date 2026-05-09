@@ -104,6 +104,13 @@ public class ClassAnalyzer extends ClassProbesVisitor
 			final String desc, final String signature,
 			final String[] exceptions) {
 
+		if (sourceDebugExtension != null && Filters.isKotlinClass(this)) {
+			// Note that visitSource is invoked before visitAnnotation,
+			// that's why parsing is done here
+			smap = new KotlinSMAP(getSourceFileName(), sourceDebugExtension);
+			sourceDebugExtension = null;
+		}
+
 		InstrSupport.assertNotInstrumented(name, coverage.getName());
 
 		final InstructionsBuilder builder = new InstructionsBuilder(probes);
@@ -145,13 +152,8 @@ public class ClassAnalyzer extends ClassProbesVisitor
 
 	private void calculateFragments(
 			final Map<AbstractInsnNode, Instruction> instructions) {
-		if (sourceDebugExtension == null || !Filters.isKotlinClass(this)) {
-			return;
-		}
 		if (smap == null) {
-			// Note that visitSource is invoked before visitAnnotation,
-			// that's why parsing is done here
-			smap = new KotlinSMAP(getSourceFileName(), sourceDebugExtension);
+			return;
 		}
 		for (final KotlinSMAP.Mapping mapping : smap.mappings()) {
 			if (coverage.getName().equals(mapping.inputClassName())
@@ -223,8 +225,8 @@ public class ClassAnalyzer extends ClassProbesVisitor
 		return coverage.getSourceFileName();
 	}
 
-	public String getSourceDebugExtension() {
-		return sourceDebugExtension;
+	public KotlinSMAP getKotlinSMAP() {
+		return smap;
 	}
 
 }
