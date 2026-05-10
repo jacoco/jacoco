@@ -84,6 +84,12 @@ public class ClassAnalyzer extends ClassProbesVisitor
 	@Override
 	public AnnotationVisitor visitAnnotation(final String desc,
 			final boolean visible) {
+		if (desc.equals("Lkotlin/Metadata;") && sourceDebugExtension != null) {
+			// Note that visitSource is invoked before visitAnnotation,
+			// that's why parsing is done here
+			smap = new KotlinSMAP(getSourceFileName(), sourceDebugExtension);
+			sourceDebugExtension = null;
+		}
 		classAnnotations.add(desc);
 		return super.visitAnnotation(desc, visible);
 	}
@@ -103,13 +109,6 @@ public class ClassAnalyzer extends ClassProbesVisitor
 	public MethodProbesVisitor visitMethod(final int access, final String name,
 			final String desc, final String signature,
 			final String[] exceptions) {
-
-		if (sourceDebugExtension != null && Filters.isKotlinClass(this)) {
-			// Note that visitSource is invoked before visitAnnotation,
-			// that's why parsing is done here
-			smap = new KotlinSMAP(getSourceFileName(), sourceDebugExtension);
-			sourceDebugExtension = null;
-		}
 
 		InstrSupport.assertNotInstrumented(name, coverage.getName());
 

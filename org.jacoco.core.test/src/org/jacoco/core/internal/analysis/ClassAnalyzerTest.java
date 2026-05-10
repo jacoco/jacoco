@@ -172,7 +172,7 @@ public class ClassAnalyzerTest {
 	@Test
 	public void should_not_parse_SourceDebugExtension_attribute_when_not_Kotlin() {
 		analyzer.visitSource("Foo.kt", "SMAP\n");
-		analyzer.visitMethod(0, "foo", "()V", null, null);
+		analyzer.visitAnnotation("LAnnotation;", false);
 		assertNull(analyzer.getKotlinSMAP());
 	}
 
@@ -184,7 +184,6 @@ public class ClassAnalyzerTest {
 	public void should_not_parse_absent_SourceDebugExtension_attribute_when_kotlin() {
 		analyzer.visitSource("Foo.kt", null);
 		analyzer.visitAnnotation("Lkotlin/Metadata;", false);
-		analyzer.visitMethod(0, "foo", "()V", null, null);
 		assertNull(analyzer.getKotlinSMAP());
 	}
 
@@ -195,9 +194,8 @@ public class ClassAnalyzerTest {
 	@Test
 	public void should_parse_SourceDebugExtension_attribute_when_Kotlin() {
 		analyzer.visitSource("Foo.kt", "SMAP\n");
-		analyzer.visitAnnotation("Lkotlin/Metadata;", false);
 		try {
-			analyzer.visitMethod(0, "foo", "()V", null, null);
+			analyzer.visitAnnotation("Lkotlin/Metadata;", false);
 			fail("exception expected");
 		} catch (Exception e) {
 			// expected
