@@ -51,8 +51,6 @@ public class KotlinInlineFilterTest extends FilterTestBase {
 				+ "2#2,2:9\n" // InputStartLine=2,LineFileID=2,RepeatCount=2,OutputStartLine=9
 				+ "2#3,2:11\n" // InputStartLine=2,LineFileID=3,RepeatCount=2,OutputStartLine=11
 				+ "*E\n"); // EndSection
-		context.classAnnotations
-				.add(KotlinGeneratedFilter.KOTLIN_METADATA_DESC);
 
 		m.visitLineNumber(2, new Label());
 		m.visitInsn(Opcodes.NOP);
@@ -125,8 +123,6 @@ public class KotlinInlineFilterTest extends FilterTestBase {
 				+ "7#1,2:18\n" // InputStartLine=7,LineFileID=1,RepeatCount=2,OutputStartLine=18
 				+ "2#2,2:16\n" // InputStartLine=2,LineFileID=2,RepeatCount=2,OutputStartLine=16
 				+ "*E\n"); // EndSection
-		context.classAnnotations
-				.add(KotlinGeneratedFilter.KOTLIN_METADATA_DESC);
 
 		m.visitLineNumber(11, new Label());
 		m.visitInsn(Opcodes.NOP);
@@ -190,8 +186,6 @@ public class KotlinInlineFilterTest extends FilterTestBase {
 				+ "1#1,6:1\n" // InputStartLine=1,LineFileID=1,RepeatCount=6,OutputStartLine=1
 				+ "7#2:7\n" // InputStartLine=7,LineFileID=2,OutputStartLine=7
 				+ "*S KotlinDebug"); // StratumID=KotlinDebug
-		context.classAnnotations
-				.add(KotlinGeneratedFilter.KOTLIN_METADATA_DESC);
 
 		Label label0 = new Label();
 		m.visitLabel(label0);
@@ -245,8 +239,6 @@ public class KotlinInlineFilterTest extends FilterTestBase {
 				+ "1#1,11:1\n" // InputStartLine=1,LineFileID=1,RepeatCount=11,OutputStartLine=1
 				+ "9#2:12\n" // InputStartLine=9,LineFileID=2,OutputStartLine=12
 				+ "*E\n"); // EndSection
-		context.classAnnotations
-				.add(KotlinGeneratedFilter.KOTLIN_METADATA_DESC);
 
 		Label label0 = new Label();
 		m.visitLabel(label0);
@@ -278,9 +270,6 @@ public class KotlinInlineFilterTest extends FilterTestBase {
 
 	@Test
 	public void should_not_filter_when_no_SourceDebugExtension_attribute() {
-		context.classAnnotations
-				.add(KotlinGeneratedFilter.KOTLIN_METADATA_DESC);
-
 		m.visitLineNumber(1, new Label());
 		m.visitInsn(Opcodes.RETURN);
 

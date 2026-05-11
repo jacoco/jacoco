@@ -26,8 +26,6 @@ public class KotlinDefaultMethodsFilterTest extends FilterTestBase {
 
 	@Test
 	public void should_filter() {
-		context.classAnnotations
-				.add(KotlinGeneratedFilter.KOTLIN_METADATA_DESC);
 		final MethodNode m = new MethodNode(InstrSupport.ASM_API_VERSION, 0,
 				"m", "()V", null, null);
 		m.visitVarInsn(Opcodes.ALOAD, 0);
@@ -42,8 +40,6 @@ public class KotlinDefaultMethodsFilterTest extends FilterTestBase {
 
 	@Test
 	public void should_not_filter_when_invokestatic_owner_does_not_match() {
-		context.classAnnotations
-				.add(KotlinGeneratedFilter.KOTLIN_METADATA_DESC);
 		final MethodNode m = new MethodNode(InstrSupport.ASM_API_VERSION, 0,
 				"m", "()V", null, null);
 		m.visitVarInsn(Opcodes.ALOAD, 0);
@@ -58,8 +54,6 @@ public class KotlinDefaultMethodsFilterTest extends FilterTestBase {
 
 	@Test
 	public void should_not_filter_when_instructions_do_not_match() {
-		context.classAnnotations
-				.add(KotlinGeneratedFilter.KOTLIN_METADATA_DESC);
 		final MethodNode m = new MethodNode(InstrSupport.ASM_API_VERSION, 0,
 				"m", "()V", null, null);
 		m.visitInsn(Opcodes.RETURN);
