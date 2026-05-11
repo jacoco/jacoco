@@ -222,7 +222,7 @@ public class LineImplMemoryTest {
 		}
 		if ("32".equals(System.getProperty("sun.arch.data.model"))) {
 			throw new AssumptionViolatedException(
-					"this test requires 64-bit architecture");
+					"this test does not support 32-bit architecture");
 		}
 		return new CurrentLayouter();
 	}
