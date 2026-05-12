@@ -84,7 +84,8 @@ public class ClassAnalyzer extends ClassProbesVisitor
 	@Override
 	public AnnotationVisitor visitAnnotation(final String desc,
 			final boolean visible) {
-		if (desc.equals("Lkotlin/Metadata;") && sourceDebugExtension != null) {
+		if (sourceDebugExtension != null
+				&& Filters.KOTLIN_METADATA_DESC.equals(desc)) {
 			// Note that visitSource is invoked before visitAnnotation,
 			// that's why parsing is done here
 			smap = new KotlinSMAP(getSourceFileName(), sourceDebugExtension);

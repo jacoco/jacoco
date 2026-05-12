@@ -83,8 +83,8 @@ public class KotlinInlineFilterTest extends FilterTestBase {
 
 		assertIgnored(m, expectedRanges.toArray(new Range[0]));
 
-		// should not reparse:
-		context.sourceDebugExtension = "";
+		// should not re-process SMAP:
+		context.kotlinSMAP = null;
 		filter.filter(m, context, output);
 	}
 

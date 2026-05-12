@@ -13,6 +13,7 @@
 package org.jacoco.core.internal.analysis;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
@@ -166,6 +167,8 @@ public class ClassAnalyzerTest {
 	}
 
 	/**
+	 * When non-Kotlin SMAP.
+	 *
 	 * @see #should_not_parse_absent_SourceDebugExtension_attribute_when_kotlin()
 	 * @see #should_parse_SourceDebugExtension_attribute_when_Kotlin()
 	 */
@@ -177,6 +180,8 @@ public class ClassAnalyzerTest {
 	}
 
 	/**
+	 * When {@code inline} methods are not used in Kotlin class.
+	 *
 	 * @see #should_not_parse_SourceDebugExtension_attribute_when_not_Kotlin()
 	 * @see #should_parse_SourceDebugExtension_attribute_when_Kotlin()
 	 */
@@ -193,14 +198,18 @@ public class ClassAnalyzerTest {
 	 */
 	@Test
 	public void should_parse_SourceDebugExtension_attribute_when_Kotlin() {
-		analyzer.visitSource("Foo.kt", "SMAP\n");
-		try {
-			analyzer.visitAnnotation("Lkotlin/Metadata;", false);
-			fail("exception expected");
-		} catch (Exception e) {
-			// expected
-			assertEquals("Unexpected SMAP line: null", e.getMessage());
-		}
+		analyzer.visitSource("Example.kt", "SMAP\n" //
+				+ "Example.kt\n" // OutputFileName=Example.kt
+				+ "Kotlin\n" // DefaultStratumId=Kotlin
+				+ "*S Kotlin\n" // StratumID=Kotlin
+				+ "*F\n" // FileSection
+				+ "+ 1 Example.kt\n" // FileID=1,FileName=Example.kt
+				+ "ExampleKt\n" //
+				+ "*L\n" // LineSection
+				+ "1#1,3:1\n" // InputStartLine=1,LineFileID=1,RepeatCount=3,OutputStartLine=1
+				+ "*E\n"); // EndSection
+		analyzer.visitAnnotation("Lkotlin/Metadata;", false);
+		assertNotNull(analyzer.getKotlinSMAP());
 	}
 
 }
