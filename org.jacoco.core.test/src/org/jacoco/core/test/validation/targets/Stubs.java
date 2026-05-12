@@ -47,6 +47,13 @@ public class Stubs {
 	}
 
 	/**
+	 * Functional interface stub.
+	 */
+	public interface Consumer<V> {
+		void apply(V value);
+	}
+
+	/**
 	 * Enum stub.
 	 */
 	public static enum Enum {
@@ -163,6 +170,20 @@ public class Stubs {
 	 */
 	public static void execSerializable(SerializableRunnable task) {
 		task.run();
+	}
+
+	/**
+	 * Directly executes the given {@link Consumer consumer} with given
+	 * {@code value}.
+	 */
+	public static <V> void exec(Consumer<V> consumer, V value) {
+		consumer.apply(value);
+	}
+
+	/**
+	 * Never executes the given {@link Consumer consumer}.
+	 */
+	public static <V> void noexec(Consumer<V> consumer) {
 	}
 
 	/**

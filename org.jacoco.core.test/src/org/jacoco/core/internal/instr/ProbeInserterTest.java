@@ -13,6 +13,7 @@
 package org.jacoco.core.internal.instr;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 
 import org.jacoco.core.instr.MethodRecorder;
 import org.junit.After;
@@ -366,11 +367,16 @@ public class ProbeInserterTest {
 		}, 0, new Object[] {});
 	}
 
-	@Test(expected = IllegalArgumentException.class)
+	@Test
 	public void visitFrame_must_only_support_resolved_frames() {
 		ProbeInserter pi = new ProbeInserter(0, "m", "()V", actualVisitor,
 				arrayStrategy);
-		pi.visitFrame(Opcodes.F_SAME, 0, null, 0, null);
+		try {
+			pi.visitFrame(Opcodes.F_SAME, 0, null, 0, null);
+			fail("IllegalArgumentException expected");
+		} catch (final IllegalArgumentException e) {
+			// expected
+		}
 	}
 
 }

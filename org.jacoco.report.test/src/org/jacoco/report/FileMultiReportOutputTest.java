@@ -13,6 +13,7 @@
 package org.jacoco.report;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -52,12 +53,17 @@ public class FileMultiReportOutputTest {
 		actual.close();
 	}
 
-	@Test(expected = IOException.class)
+	@Test
 	public void testCreateFileNegative() throws IOException {
 		folder.newFile("a");
 		final IMultiReportOutput output = new FileMultiReportOutput(
 				folder.getRoot());
-		output.createFile("a/b/c/test");
+		try {
+			output.createFile("a/b/c/test");
+			fail("IOException expected");
+		} catch (final IOException e) {
+			// expected
+		}
 	}
 
 }

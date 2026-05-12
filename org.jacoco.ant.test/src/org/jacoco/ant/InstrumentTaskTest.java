@@ -12,10 +12,10 @@
  *******************************************************************************/
 package org.jacoco.ant;
 
-import java.io.File;
+import static org.jacoco.ant.AntUnitSuiteFactory.suiteFor;
+
 import java.io.IOException;
 
-import org.apache.ant.antunit.junit3.AntUnitSuite;
 import org.apache.ant.antunit.junit4.AntUnitSuiteRunner;
 import org.jacoco.agent.AgentJar;
 import org.junit.runner.RunWith;
@@ -30,8 +30,7 @@ public class InstrumentTaskTest {
 				TestTarget.getClassPath());
 		System.setProperty("org.jacoco.ant.instrumentTaskTest.agent.file",
 				AgentJar.extractToTempLocation().getAbsolutePath());
-		final File file = new File("src/org/jacoco/ant/InstrumentTaskTest.xml");
-		return new AntUnitSuite(file, InstrumentTaskTest.class);
+		return suiteFor(InstrumentTaskTest.class);
 	}
 
 }

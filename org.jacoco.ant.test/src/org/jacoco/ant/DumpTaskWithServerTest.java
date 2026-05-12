@@ -12,9 +12,8 @@
  *******************************************************************************/
 package org.jacoco.ant;
 
-import java.io.File;
+import static org.jacoco.ant.AntUnitSuiteFactory.suiteFor;
 
-import org.apache.ant.antunit.junit3.AntUnitSuite;
 import org.apache.ant.antunit.junit4.AntUnitSuiteRunner;
 import org.junit.runner.RunWith;
 
@@ -26,8 +25,6 @@ public class DumpTaskWithServerTest {
 	public static TestSuite suite() {
 		System.setProperty("org.jacoco.ant.dumpTaskWithServerTest.classes.dir",
 				TestTarget.getClassPath());
-		final File file = new File(
-				"src/org/jacoco/ant/DumpTaskWithServerTest.xml");
-		return new AntUnitSuite(file, DumpTaskWithServerTest.class);
+		return suiteFor(DumpTaskWithServerTest.class);
 	}
 }

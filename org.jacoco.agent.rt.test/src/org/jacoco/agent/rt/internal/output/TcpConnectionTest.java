@@ -15,6 +15,7 @@ package org.jacoco.agent.rt.internal.output;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -49,7 +50,7 @@ public class TcpConnectionTest extends ExecutorTestBase {
 		data = new RuntimeData();
 	}
 
-	@Test(expected = IOException.class)
+	@Test
 	public void testInvalidHeader() throws Exception {
 		final OutputStream remoteOut = mockConnection.getSocketB()
 				.getOutputStream();
@@ -59,10 +60,15 @@ public class TcpConnectionTest extends ExecutorTestBase {
 		final TcpConnection connection = new TcpConnection(
 				mockConnection.getSocketA(), data);
 		connection.init();
-		connection.run();
+		try {
+			connection.run();
+			fail("IOException expected");
+		} catch (final IOException e) {
+			// expected
+		}
 	}
 
-	@Test(expected = IOException.class)
+	@Test
 	public void testInvalidContent() throws Exception {
 		final OutputStream remoteOut = mockConnection.getSocketB()
 				.getOutputStream();
@@ -71,7 +77,12 @@ public class TcpConnectionTest extends ExecutorTestBase {
 				data);
 		con.init();
 		remoteOut.write(123);
-		con.run();
+		try {
+			con.run();
+			fail("IOException expected");
+		} catch (final IOException e) {
+			// expected
+		}
 	}
 
 	/**

@@ -139,17 +139,18 @@ public class TableTest {
 		html.close();
 	}
 
-	@Test(expected = IllegalStateException.class)
+	@Test
 	public void testTwoDefaultSorts() throws IOException {
 		html.close();
-		table.add("Header1", null,
-				new StubRenderer(
-						CounterComparator.TOTALITEMS.on(CounterEntity.CLASS)),
-				true);
-		table.add("Header2", null,
-				new StubRenderer(
-						CounterComparator.TOTALITEMS.on(CounterEntity.CLASS)),
-				true);
+		final StubRenderer renderer = new StubRenderer(
+				CounterComparator.TOTALITEMS.on(CounterEntity.CLASS));
+		table.add("Header1", null, renderer, true);
+		try {
+			table.add("Header2", null, renderer, true);
+			fail("IllegalStateException expected");
+		} catch (final IllegalStateException e) {
+			// expected
+		}
 	}
 
 	@Test

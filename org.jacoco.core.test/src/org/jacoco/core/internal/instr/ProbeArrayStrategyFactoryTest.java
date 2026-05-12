@@ -140,11 +140,16 @@ public class ProbeArrayStrategyFactoryTest {
 		assertNoInitMethod();
 	}
 
-	@Test(expected = UnsupportedOperationException.class)
+	@Test
 	public void testEmptyInterface7StoreInstance() {
 		IProbeArrayStrategy strategy = test(Opcodes.V1_7, Opcodes.ACC_INTERFACE,
 				false, false, false);
-		strategy.storeInstance(null, false, 0);
+		try {
+			strategy.storeInstance(null, false, 0);
+			fail("UnsupportedOperationException expected");
+		} catch (final UnsupportedOperationException e) {
+			// expected
+		}
 	}
 
 	@Test
@@ -170,11 +175,16 @@ public class ProbeArrayStrategyFactoryTest {
 		assertNoInitMethod();
 	}
 
-	@Test(expected = UnsupportedOperationException.class)
+	@Test
 	public void testEmptyInterface8StoreInstance() {
 		final IProbeArrayStrategy strategy = test(Opcodes.V1_8,
 				Opcodes.ACC_INTERFACE, false, false, false);
-		strategy.storeInstance(null, false, 0);
+		try {
+			strategy.storeInstance(null, false, 0);
+			fail("UnsupportedOperationException expected");
+		} catch (final UnsupportedOperationException e) {
+			// expected
+		}
 	}
 
 	@Test

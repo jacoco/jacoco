@@ -12,9 +12,9 @@
  *******************************************************************************/
 package org.jacoco.ant;
 
-import java.io.File;
+import static org.jacoco.ant.AntUnitSuiteFactory.skip;
+import static org.jacoco.ant.AntUnitSuiteFactory.suiteFor;
 
-import org.apache.ant.antunit.junit3.AntUnitSuite;
 import org.apache.ant.antunit.junit4.AntUnitSuiteRunner;
 import org.jacoco.core.test.validation.JavaVersion;
 import org.junit.runner.RunWith;
@@ -25,17 +25,14 @@ import junit.framework.TestSuite;
 public class SecurityManagerTest {
 
 	public static TestSuite suite() {
-		if (JavaVersion.current().isBefore("24")) {
-			System.setProperty("org.jacoco.ant.securityManagerTest.classes.dir",
-					TestTarget.getClassPath());
-			final File file = new File(
-					"src/org/jacoco/ant/SecurityManagerTest.xml");
-			return new AntUnitSuite(file, SecurityManagerTest.class);
+		if (!JavaVersion.current().isBefore("24")) {
+			// Ability to enable Security Manager was removed in Java 24
+			// https://openjdk.org/jeps/486
+			return skip(SecurityManagerTest.class);
 		}
-		// Ability to enable Security Manager was removed in Java 24
-		// https://openjdk.org/jeps/486
-		final File file = new File("src/org/jacoco/ant/empty.xml");
-		return new AntUnitSuite(file, SecurityManagerTest.class);
+		System.setProperty("org.jacoco.ant.securityManagerTest.classes.dir",
+				TestTarget.getClassPath());
+		return suiteFor(SecurityManagerTest.class);
 	}
 
 }

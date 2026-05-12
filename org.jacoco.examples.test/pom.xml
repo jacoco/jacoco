@@ -81,9 +81,14 @@
         <artifactId>maven-invoker-plugin</artifactId>
         <executions>
           <execution>
-            <id>test-pom</id>
+            <id>install</id>
             <goals>
               <goal>install</goal>
+            </goals>
+          </execution>
+          <execution>
+            <id>test-pom</id>
+            <goals>
               <goal>run</goal>
             </goals>
             <configuration>
@@ -97,7 +102,6 @@
           <execution>
             <id>test-pom-it</id>
             <goals>
-              <goal>install</goal>
               <goal>run</goal>
             </goals>
             <configuration>
@@ -113,7 +117,6 @@
           <execution>
             <id>test-pom-offline</id>
             <goals>
-              <goal>install</goal>
               <goal>run</goal>
             </goals>
             <configuration>
@@ -129,6 +132,8 @@
         </executions>
         <configuration>
           <projectsDirectory>${project.build.directory}/build/examples</projectsDirectory>
+          <localRepositoryPath>${project.build.directory}/local-repo</localRepositoryPath>
+          <settingsFile>src/test/resources/settings.xml</settingsFile>
           <properties>
             <!--
             maven-invoker-plugin for forked Maven invocations uses the same JDK that is used for Maven,

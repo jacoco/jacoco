@@ -65,7 +65,7 @@ public class ExecutionDataWriter
 	}
 
 	/**
-	 * Writes an file header to identify the stream and its protocol version.
+	 * Writes a file header to identify the stream and its protocol version.
 	 *
 	 * @throws IOException
 	 *             if the header can't be written

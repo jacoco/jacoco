@@ -52,6 +52,7 @@ public final class Filters {
 
 	private static IFilter allCommonFilters() {
 		return new FilterSet( //
+				new SyntheticClassFilter(), //
 				new EnumFilter(), //
 				new BridgeFilter(), //
 				new SynchronizedFilter(), //
@@ -82,6 +83,7 @@ public final class Filters {
 				new KotlinSerializableFilter(), //
 				new KotlinEnumFilter(), //
 				new KotlinJvmOverloadsFilter(), //
+				new KotlinJvmStaticFilter(), //
 				new KotlinSafeCallOperatorFilter(), //
 				new KotlinLateinitFilter(), //
 				new KotlinWhenFilter(), //

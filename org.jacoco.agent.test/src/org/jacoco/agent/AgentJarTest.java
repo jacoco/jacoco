@@ -14,6 +14,7 @@ package org.jacoco.agent;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.fail;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -59,12 +60,17 @@ public class AgentJarTest {
 		assertAgentContents(new FileInputStream(file));
 	}
 
-	@Test(expected = IOException.class)
+	@Test
 	public void testExtractToNegative() throws IOException {
 		file = File.createTempFile("folder", null);
 		file.delete();
 		file.mkdirs();
-		AgentJar.extractTo(file);
+		try {
+			AgentJar.extractTo(file);
+			fail("IOException expected");
+		} catch (final IOException e) {
+			// expected
+		}
 	}
 
 	@Test

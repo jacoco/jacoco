@@ -95,8 +95,29 @@ public class AnalyzerTest {
 		assertTrue(classes.isEmpty());
 	}
 
+	/**
+	 * Should skip `package-info.class` files, so that analysis of two with the
+	 * same package name but different {@link CRC64#classId(byte[]) classId}s
+	 * does not cause "Cannot add another class with the same name" in
+	 * {@link CoverageBuilder}.
+	 */
 	@Test
-	public void should_ignore_synthetic_classes() throws Exception {
+	public void should_ignore_package_info() throws Exception {
+		final ClassWriter cw = new ClassWriter(0);
+		cw.visit(Opcodes.V1_5,
+				Opcodes.ACC_INTERFACE | Opcodes.ACC_ABSTRACT
+						| Opcodes.ACC_SYNTHETIC,
+				"org/example/package-info", null, null, null);
+		cw.visitEnd();
+		final byte[] bytes = cw.toByteArray();
+
+		analyzer.analyzeClass(bytes, "");
+
+		assertTrue(classes.isEmpty());
+	}
+
+	@Test
+	public void should_not_ignore_synthetic_classes() throws Exception {
 		final ClassWriter cw = new ClassWriter(0);
 		cw.visit(Opcodes.V1_5, Opcodes.ACC_SYNTHETIC, "Foo", null,
 				"java/lang/Object", null);
@@ -105,7 +126,7 @@ public class AnalyzerTest {
 
 		analyzer.analyzeClass(bytes, "");
 
-		assertTrue(classes.isEmpty());
+		assertClasses("Foo");
 	}
 
 	@Test

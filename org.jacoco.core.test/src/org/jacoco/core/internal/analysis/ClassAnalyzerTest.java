@@ -41,18 +41,28 @@ public class ClassAnalyzerTest {
 				"java/lang/Object", null);
 	}
 
-	@Test(expected = IllegalStateException.class)
+	@Test
 	public void should_throw_IllegalStateException_when_class_is_instrumented_with_data_field() {
-		analyzer.visitField(InstrSupport.DATAFIELD_ACC,
-				InstrSupport.DATAFIELD_NAME, InstrSupport.DATAFIELD_DESC, null,
-				null);
+		try {
+			analyzer.visitField(InstrSupport.DATAFIELD_ACC,
+					InstrSupport.DATAFIELD_NAME, InstrSupport.DATAFIELD_DESC,
+					null, null);
+			fail("IllegalStateException expected");
+		} catch (final IllegalStateException e) {
+			// expected
+		}
 	}
 
-	@Test(expected = IllegalStateException.class)
+	@Test
 	public void should_throw_IllegalStateException_when_class_is_instrumented_with_init_method() {
-		analyzer.visitMethod(InstrSupport.INITMETHOD_ACC,
-				InstrSupport.INITMETHOD_NAME, InstrSupport.INITMETHOD_DESC,
-				null, null);
+		try {
+			analyzer.visitMethod(InstrSupport.INITMETHOD_ACC,
+					InstrSupport.INITMETHOD_NAME, InstrSupport.INITMETHOD_DESC,
+					null, null);
+			fail("IllegalStateException expected");
+		} catch (final IllegalStateException e) {
+			// expected
+		}
 	}
 
 	/**
