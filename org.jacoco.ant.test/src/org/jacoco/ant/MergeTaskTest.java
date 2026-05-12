@@ -19,6 +19,9 @@ import org.junit.runner.RunWith;
 
 import junit.framework.TestSuite;
 
+/**
+ * Tests for {@link MergeTask}.
+ */
 @RunWith(AntUnitSuiteRunner.class)
 public class MergeTaskTest {
 
