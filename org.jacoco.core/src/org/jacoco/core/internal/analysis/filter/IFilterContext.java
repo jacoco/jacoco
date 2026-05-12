@@ -51,9 +51,9 @@ public interface IFilterContext {
 	String getSourceFileName();
 
 	/**
-	 * @return value of SourceDebugExtension attribute or <code>null</code> if
-	 *         not available
+	 * @return parsed representation of Kotlin SourceDebugExtension attribute or
+	 *         {@code null} if not available
 	 */
-	String getSourceDebugExtension();
+	KotlinSMAP getKotlinSMAP();
 
 }

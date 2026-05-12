@@ -22,8 +22,6 @@ import org.objectweb.asm.tree.MethodNode;
  */
 final class KotlinGeneratedFilter implements IFilter {
 
-	static final String KOTLIN_METADATA_DESC = "Lkotlin/Metadata;";
-
 	public void filter(final MethodNode methodNode,
 			final IFilterContext context, final IFilterOutput output) {
 
