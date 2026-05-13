@@ -76,8 +76,6 @@ public class KotlinComposeFilterTest extends FilterTestBase {
 	 */
 	@Test
 	public void should_filter() {
-		context.classAnnotations
-				.add(KotlinGeneratedFilter.KOTLIN_METADATA_DESC);
 		final MethodNode m = new MethodNode(InstrSupport.ASM_API_VERSION, 0,
 				"f", "(Landroidx/compose/runtime/Composer;I)V", null, null);
 		m.visitAnnotation("Landroidx/compose/runtime/Composable;", false);
