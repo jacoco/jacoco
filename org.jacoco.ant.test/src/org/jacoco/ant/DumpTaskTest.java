@@ -19,6 +19,9 @@ import org.junit.runner.RunWith;
 
 import junit.framework.TestSuite;
 
+/**
+ * Tests for {@link DumpTask}.
+ */
 @RunWith(AntUnitSuiteRunner.class)
 public class DumpTaskTest {
 
