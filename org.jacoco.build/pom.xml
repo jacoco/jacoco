@@ -147,7 +147,7 @@
     <javadoc.JDK-8324774>-quiet</javadoc.JDK-8324774>
 
     <!-- Dependencies versions -->
-    <asm.version>9.9</asm.version>
+    <asm.version>9.11-SNAPSHOT</asm.version>
     <ant.version>1.9.16</ant.version>
     <args4j.version>2.0.28</args4j.version>
     <junit.version>4.13.2</junit.version>
@@ -744,7 +744,7 @@
             </Export-Package>
             <Import-Package>
               org.jacoco.*;version="${range;[===,==+);${Bundle-Version}}",
-              org.objectweb.asm.*;version="${range;[===,=+);${asm.version}}"
+              org.objectweb.asm.*;version="${range;[===,=+);9.11}"
             </Import-Package>
             <Bundle-RequiredExecutionEnvironment>J2SE-1.5</Bundle-RequiredExecutionEnvironment>
             <Eclipse-SourceReferences>scm:git:git://github.com/jacoco/jacoco.git;path="${project.artifactId}";commitId=${build.commitId}</Eclipse-SourceReferences>
