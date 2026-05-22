@@ -14,8 +14,8 @@
       "enabled": false
     },
     {
-      "description": "Enable updates of GitHub Actions Runner Images",
-      "matchDatasources": ["github-runners"],
+      "description": "Enable updates of GitHub Actions",
+      "matchManagers": ["github-actions"],
       "enabled": true,
       "addLabels": ["component: build"]
     },
