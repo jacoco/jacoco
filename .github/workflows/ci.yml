@@ -48,7 +48,7 @@ jobs:
           distribution: 'zulu'
           java-version: |
             ${{ matrix.jdk }}
-            17
+            21
       - name: 'Generate toolchains.xml'
         env:
           JDK_VERSION: ${{ matrix.jdk }}
@@ -84,7 +84,7 @@ jobs:
           distribution: 'zulu'
           java-version: |
             6
-            17
+            21
       - name: 'Generate toolchains.xml'
         env:
           JDK_VERSION: 6
