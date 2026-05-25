@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+   Copyright (c) 2009, 2024 Mountainminds GmbH & Co. KG and Contributors
+   This program and the accompanying materials are made available under
+   the terms of the Eclipse Public License 2.0 which is available at
+   http://www.eclipse.org/legal/epl-2.0
+
+   SPDX-License-Identifier: EPL-2.0
+
+   Contributors:
+      Evgeny Mandrikov - initial API and implementation
+-->
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <parent>
+    <groupId>jacoco</groupId>
+    <artifactId>setup-parent</artifactId>
+    <version>1.0-SNAPSHOT</version>
+  </parent>
+
+  <artifactId>it-customize-agent</artifactId>
+
+  <properties>
+    <jacoco.propertyName>coverageAgent</jacoco.propertyName>
+    <jacoco.destFile>${project.build.directory}/coverage.exec</jacoco.destFile>
+    <jacoco.append>false</jacoco.append>
+    <jacoco.exclClassLoaders>sun.reflect.DelegatingClassLoader:MyClassLoader</jacoco.exclClassLoaders>
+    <jacoco.inclBootstrapClasses>true</jacoco.inclBootstrapClasses>
+    <jacoco.inclNoLocationClasses>true</jacoco.inclNoLocationClasses>
+    <jacoco.sessionId>session</jacoco.sessionId>
+    <jacoco.dumpOnExit>true</jacoco.dumpOnExit>
+    <jacoco.output>file</jacoco.output>
+    <jacoco.address>localhost</jacoco.address>
+    <jacoco.port>9999</jacoco.port>
+    <jacoco.classDumpDir>${project.build.directory}/classdumps</jacoco.classDumpDir>
+    <jacoco.jmx>true</jacoco.jmx>
+
+    <jacoco.dataFile>${jacoco.destFile}</jacoco.dataFile>
+  </properties>
+
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>@project.groupId@</groupId>
+        <artifactId>jacoco-maven-plugin</artifactId>
+        <executions>
+          <execution>
+            <goals>
+              <goal>prepare-agent</goal>
+              <goal>report</goal>
+            </goals>
+            <configuration>
+              <includes>
+                <include>*</include>
+              </includes>
+              <excludes>
+                <exclude>java.*</exclude>
+                <exclude>sun.*</exclude>
+              </excludes>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-surefire-plugin</artifactId>
+        <configuration>
+          <argLine>${coverageAgent}</argLine>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
+</project>
