@@ -30,7 +30,7 @@
     <jacoco.inclBootstrapClasses>true</jacoco.inclBootstrapClasses>
     <jacoco.inclNoLocationClasses>true</jacoco.inclNoLocationClasses>
     <jacoco.sessionId>session</jacoco.sessionId>
-    <jacoco.dumpOnExit>true</jacoco.dumpOnExit>
+    <jacoco.dumpOnExit>false</jacoco.dumpOnExit>
     <jacoco.output>file</jacoco.output>
     <jacoco.address>localhost</jacoco.address>
     <jacoco.port>9999</jacoco.port>
@@ -53,7 +53,7 @@
             </goals>
             <configuration>
               <includes>
-                <include>*</include>
+                <include>com.myapp.*</include>
               </includes>
               <excludes>
                 <exclude>java.*</exclude>
