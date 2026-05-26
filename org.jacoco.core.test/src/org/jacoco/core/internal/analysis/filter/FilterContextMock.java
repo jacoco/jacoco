@@ -1,8 +1,8 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2025 Mountainminds GmbH & Co. KG and Contributors
+ * Copyright (c) 2009, 2026 Mountainminds GmbH & Co. KG and Contributors
  * This program and the accompanying materials are made available under
  * the terms of the Eclipse Public License 2.0 which is available at
- * http://www.eclipse.org/legal/epl-2.0
+ * https://www.eclipse.org/legal/epl-2.0
  *
  * SPDX-License-Identifier: EPL-2.0
  *
@@ -22,10 +22,11 @@ public class FilterContextMock implements IFilterContext {
 
 	public String className = "Foo";
 	public String superClassName = "java/lang/Object";
+	public int classAccess;
 	public Set<String> classAnnotations = new HashSet<String>();
 	public Set<String> classAttributes = new HashSet<String>();
 	public String sourceFileName = "Foo.java";
-	public String sourceDebugExtension;
+	public KotlinSMAP kotlinSMAP;
 
 	public String getClassName() {
 		return className;
@@ -43,12 +44,16 @@ public class FilterContextMock implements IFilterContext {
 		return classAttributes;
 	}
 
+	public int getClassAccess() {
+		return classAccess;
+	}
+
 	public String getSourceFileName() {
 		return sourceFileName;
 	}
 
-	public String getSourceDebugExtension() {
-		return sourceDebugExtension;
+	public KotlinSMAP getKotlinSMAP() {
+		return kotlinSMAP;
 	}
 
 }

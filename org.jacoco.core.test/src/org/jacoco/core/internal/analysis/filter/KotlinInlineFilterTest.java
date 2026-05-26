@@ -1,8 +1,8 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2025 Mountainminds GmbH & Co. KG and Contributors
+ * Copyright (c) 2009, 2026 Mountainminds GmbH & Co. KG and Contributors
  * This program and the accompanying materials are made available under
  * the terms of the Eclipse Public License 2.0 which is available at
- * http://www.eclipse.org/legal/epl-2.0
+ * https://www.eclipse.org/legal/epl-2.0
  *
  * SPDX-License-Identifier: EPL-2.0
  *
@@ -35,9 +35,7 @@ public class KotlinInlineFilterTest extends FilterTestBase {
 	@Test
 	public void should_filter() {
 		context.className = "CallsiteKt";
-		context.sourceFileName = "callsite.kt";
-		context.sourceDebugExtension = "" //
-				+ "SMAP\n" //
+		context.kotlinSMAP = new KotlinSMAP("callsite.kt", "SMAP\n" //
 				+ "callsite.kt\n" // OutputFileName=callsite.kt
 				+ "Kotlin\n" // DefaultStratumId=Kotlin
 				+ "*S Kotlin\n" // StratumID=Kotlin
@@ -52,9 +50,7 @@ public class KotlinInlineFilterTest extends FilterTestBase {
 				+ "1#1,8:1\n" // InputStartLine=1,LineFileID=1,RepeatCount=8,OutputStartLine=1
 				+ "2#2,2:9\n" // InputStartLine=2,LineFileID=2,RepeatCount=2,OutputStartLine=9
 				+ "2#3,2:11\n" // InputStartLine=2,LineFileID=3,RepeatCount=2,OutputStartLine=11
-				+ "*E\n"; // EndSection
-		context.classAnnotations
-				.add(KotlinGeneratedFilter.KOTLIN_METADATA_DESC);
+				+ "*E\n"); // EndSection
 
 		m.visitLineNumber(2, new Label());
 		m.visitInsn(Opcodes.NOP);
@@ -87,8 +83,8 @@ public class KotlinInlineFilterTest extends FilterTestBase {
 
 		assertIgnored(m, expectedRanges.toArray(new Range[0]));
 
-		// should not reparse:
-		context.sourceDebugExtension = "";
+		// should not re-process SMAP:
+		context.kotlinSMAP = null;
 		filter.filter(m, context, output);
 	}
 
@@ -113,9 +109,7 @@ public class KotlinInlineFilterTest extends FilterTestBase {
 	@Test
 	public void should_filter_when_in_same_file() {
 		context.className = "Callsite";
-		context.sourceFileName = "example.kt";
-		context.sourceDebugExtension = "" //
-				+ "SMAP\n" //
+		context.kotlinSMAP = new KotlinSMAP("example.kt", "SMAP\n" //
 				+ "example.kt\n" // OutputFileName=example.kt
 				+ "Kotlin\n" // DefaultStratumId=Kotlin
 				+ "*S Kotlin\n" // StratumID=Kotlin
@@ -128,9 +122,7 @@ public class KotlinInlineFilterTest extends FilterTestBase {
 				+ "1#1,15:1\n" // InputStartLine=1,LineFileID=1,RepeatCount=10,OutputStartLine=1
 				+ "7#1,2:18\n" // InputStartLine=7,LineFileID=1,RepeatCount=2,OutputStartLine=18
 				+ "2#2,2:16\n" // InputStartLine=2,LineFileID=2,RepeatCount=2,OutputStartLine=16
-				+ "*E\n"; // EndSection
-		context.classAnnotations
-				.add(KotlinGeneratedFilter.KOTLIN_METADATA_DESC);
+				+ "*E\n"); // EndSection
 
 		m.visitLineNumber(11, new Label());
 		m.visitInsn(Opcodes.NOP);
@@ -181,9 +173,7 @@ public class KotlinInlineFilterTest extends FilterTestBase {
 	@Test
 	public void should_filter_when_inlined_with_same_file_name_and_line_number() {
 		context.className = "ExampleKt";
-		context.sourceFileName = "Example.kt";
-		context.sourceDebugExtension = "" //
-				+ "SMAP\n" //
+		context.kotlinSMAP = new KotlinSMAP("Example.kt", "SMAP\n" //
 				+ "Example.kt\n" // OutputFileName=Example.kt
 				+ "Kotlin\n" // DefaultStratumId=Kotlin
 				+ "*S Kotlin\n" // StratumID=Kotlin
@@ -195,9 +185,7 @@ public class KotlinInlineFilterTest extends FilterTestBase {
 				+ "*L\n" // LineSection
 				+ "1#1,6:1\n" // InputStartLine=1,LineFileID=1,RepeatCount=6,OutputStartLine=1
 				+ "7#2:7\n" // InputStartLine=7,LineFileID=2,OutputStartLine=7
-				+ "*S KotlinDebug"; // StratumID=KotlinDebug
-		context.classAnnotations
-				.add(KotlinGeneratedFilter.KOTLIN_METADATA_DESC);
+				+ "*S KotlinDebug"); // StratumID=KotlinDebug
 
 		Label label0 = new Label();
 		m.visitLabel(label0);
@@ -238,9 +226,7 @@ public class KotlinInlineFilterTest extends FilterTestBase {
 	@Test
 	public void should_filter_all_lines() {
 		context.className = "ExampleKt$callsite$$inlined$example$1";
-		context.sourceFileName = "Example.kt";
-		context.sourceDebugExtension = "" //
-				+ "SMAP\n" //
+		context.kotlinSMAP = new KotlinSMAP("Example.kt", "SMAP\n" //
 				+ "Example.kt\n" // OutputFileName=Example.kt
 				+ "Kotlin\n" // DefaultStratumId=Kotlin
 				+ "*S Kotlin\n" // StratumID=Kotlin
@@ -252,9 +238,7 @@ public class KotlinInlineFilterTest extends FilterTestBase {
 				+ "*L\n" // LineSection
 				+ "1#1,11:1\n" // InputStartLine=1,LineFileID=1,RepeatCount=11,OutputStartLine=1
 				+ "9#2:12\n" // InputStartLine=9,LineFileID=2,OutputStartLine=12
-				+ "*E\n"; // EndSection
-		context.classAnnotations
-				.add(KotlinGeneratedFilter.KOTLIN_METADATA_DESC);
+				+ "*E\n"); // EndSection
 
 		Label label0 = new Label();
 		m.visitLabel(label0);
@@ -286,9 +270,6 @@ public class KotlinInlineFilterTest extends FilterTestBase {
 
 	@Test
 	public void should_not_filter_when_no_SourceDebugExtension_attribute() {
-		context.classAnnotations
-				.add(KotlinGeneratedFilter.KOTLIN_METADATA_DESC);
-
 		m.visitLineNumber(1, new Label());
 		m.visitInsn(Opcodes.RETURN);
 

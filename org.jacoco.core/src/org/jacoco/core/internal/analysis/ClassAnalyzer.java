@@ -1,8 +1,8 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2025 Mountainminds GmbH & Co. KG and Contributors
+ * Copyright (c) 2009, 2026 Mountainminds GmbH & Co. KG and Contributors
  * This program and the accompanying materials are made available under
  * the terms of the Eclipse Public License 2.0 which is available at
- * http://www.eclipse.org/legal/epl-2.0
+ * https://www.eclipse.org/legal/epl-2.0
  *
  * SPDX-License-Identifier: EPL-2.0
  *
@@ -46,6 +46,7 @@ public class ClassAnalyzer extends ClassProbesVisitor
 
 	private final Set<String> classAttributes = new HashSet<String>();
 
+	private int classAccess;
 	private String sourceDebugExtension;
 	private KotlinSMAP smap;
 	private final HashMap<String, SourceNodeImpl> fragments = new HashMap<String, SourceNodeImpl>();
@@ -74,6 +75,7 @@ public class ClassAnalyzer extends ClassProbesVisitor
 	public void visit(final int version, final int access, final String name,
 			final String signature, final String superName,
 			final String[] interfaces) {
+		this.classAccess = access;
 		coverage.setSignature(stringPool.get(signature));
 		coverage.setSuperName(stringPool.get(superName));
 		coverage.setInterfaces(stringPool.get(interfaces));
@@ -82,6 +84,13 @@ public class ClassAnalyzer extends ClassProbesVisitor
 	@Override
 	public AnnotationVisitor visitAnnotation(final String desc,
 			final boolean visible) {
+		if (sourceDebugExtension != null
+				&& Filters.KOTLIN_METADATA_DESC.equals(desc)) {
+			// Note that visitSource is invoked before visitAnnotation,
+			// that's why parsing is done here
+			smap = new KotlinSMAP(getSourceFileName(), sourceDebugExtension);
+			sourceDebugExtension = null;
+		}
 		classAnnotations.add(desc);
 		return super.visitAnnotation(desc, visible);
 	}
@@ -143,13 +152,8 @@ public class ClassAnalyzer extends ClassProbesVisitor
 
 	private void calculateFragments(
 			final Map<AbstractInsnNode, Instruction> instructions) {
-		if (sourceDebugExtension == null || !Filters.isKotlinClass(this)) {
-			return;
-		}
 		if (smap == null) {
-			// Note that visitSource is invoked before visitAnnotation,
-			// that's why parsing is done here
-			smap = new KotlinSMAP(getSourceFileName(), sourceDebugExtension);
+			return;
 		}
 		for (final KotlinSMAP.Mapping mapping : smap.mappings()) {
 			if (coverage.getName().equals(mapping.inputClassName())
@@ -213,12 +217,16 @@ public class ClassAnalyzer extends ClassProbesVisitor
 		return classAttributes;
 	}
 
+	public int getClassAccess() {
+		return classAccess;
+	}
+
 	public String getSourceFileName() {
 		return coverage.getSourceFileName();
 	}
 
-	public String getSourceDebugExtension() {
-		return sourceDebugExtension;
+	public KotlinSMAP getKotlinSMAP() {
+		return smap;
 	}
 
 }

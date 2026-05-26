@@ -1,8 +1,8 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2025 Mountainminds GmbH & Co. KG and Contributors
+ * Copyright (c) 2009, 2026 Mountainminds GmbH & Co. KG and Contributors
  * This program and the accompanying materials are made available under
  * the terms of the Eclipse Public License 2.0 which is available at
- * http://www.eclipse.org/legal/epl-2.0
+ * https://www.eclipse.org/legal/epl-2.0
  *
  * SPDX-License-Identifier: EPL-2.0
  *
@@ -95,11 +95,19 @@ public class AnalyzerTest {
 		assertTrue(classes.isEmpty());
 	}
 
+	/**
+	 * Should skip `package-info.class` files, so that analysis of two with the
+	 * same package name but different {@link CRC64#classId(byte[]) classId}s
+	 * does not cause "Cannot add another class with the same name" in
+	 * {@link CoverageBuilder}.
+	 */
 	@Test
-	public void should_ignore_synthetic_classes() throws Exception {
+	public void should_ignore_package_info() throws Exception {
 		final ClassWriter cw = new ClassWriter(0);
-		cw.visit(Opcodes.V1_5, Opcodes.ACC_SYNTHETIC, "Foo", null,
-				"java/lang/Object", null);
+		cw.visit(Opcodes.V1_5,
+				Opcodes.ACC_INTERFACE | Opcodes.ACC_ABSTRACT
+						| Opcodes.ACC_SYNTHETIC,
+				"org/example/package-info", null, null, null);
 		cw.visitEnd();
 		final byte[] bytes = cw.toByteArray();
 
@@ -109,9 +117,22 @@ public class AnalyzerTest {
 	}
 
 	@Test
+	public void should_not_ignore_synthetic_classes() throws Exception {
+		final ClassWriter cw = new ClassWriter(0);
+		cw.visit(Opcodes.V1_5, Opcodes.ACC_SYNTHETIC, "Foo", null,
+				"java/lang/Object", null);
+		cw.visitEnd();
+		final byte[] bytes = cw.toByteArray();
+
+		analyzer.analyzeClass(bytes, "");
+
+		assertClasses("Foo");
+	}
+
+	@Test
 	public void should_not_modify_class_bytes_to_support_next_version()
 			throws Exception {
-		final byte[] originalBytes = createClass(Opcodes.V25 + 1);
+		final byte[] originalBytes = createClass(Opcodes.V26 + 1);
 		final byte[] bytes = new byte[originalBytes.length];
 		System.arraycopy(originalBytes, 0, bytes, 0, originalBytes.length);
 		final long expectedClassId = CRC64.classId(bytes);
@@ -134,13 +155,13 @@ public class AnalyzerTest {
 	 */
 	@Test
 	public void analyzeClass_should_throw_exception_for_unsupported_class_file_version() {
-		final byte[] bytes = createClass(Opcodes.V25 + 2);
+		final byte[] bytes = createClass(Opcodes.V26 + 2);
 		try {
 			analyzer.analyzeClass(bytes, "UnsupportedVersion");
 			fail("exception expected");
 		} catch (IOException e) {
 			assertExceptionMessage("UnsupportedVersion", e);
-			assertEquals("Unsupported class file major version 71",
+			assertEquals("Unsupported class file major version 72",
 					e.getCause().getMessage());
 		}
 	}
@@ -220,14 +241,14 @@ public class AnalyzerTest {
 	 */
 	@Test
 	public void analyzeAll_should_throw_exception_for_unsupported_class_file_version() {
-		final byte[] bytes = createClass(Opcodes.V25 + 2);
+		final byte[] bytes = createClass(Opcodes.V26 + 2);
 		try {
 			analyzer.analyzeAll(new ByteArrayInputStream(bytes),
 					"UnsupportedVersion");
 			fail("exception expected");
 		} catch (IOException e) {
 			assertExceptionMessage("UnsupportedVersion", e);
-			assertEquals("Unsupported class file major version 71",
+			assertEquals("Unsupported class file major version 72",
 					e.getCause().getMessage());
 		}
 	}

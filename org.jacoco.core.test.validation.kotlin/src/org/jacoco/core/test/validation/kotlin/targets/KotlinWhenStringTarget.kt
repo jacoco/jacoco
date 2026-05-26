@@ -1,8 +1,8 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2025 Mountainminds GmbH & Co. KG and Contributors
+ * Copyright (c) 2009, 2026 Mountainminds GmbH & Co. KG and Contributors
  * This program and the accompanying materials are made available under
  * the terms of the Eclipse Public License 2.0 which is available at
- * http://www.eclipse.org/legal/epl-2.0
+ * https://www.eclipse.org/legal/epl-2.0
  *
  * SPDX-License-Identifier: EPL-2.0
  *
@@ -70,9 +70,8 @@ object KotlinWhenStringTarget {
     /**
      * Unlike [whenString]
      * in this example first case is the only case with biggest hashCode value.
-     * FIXME https://github.com/jacoco/jacoco/issues/1295
      */
-    private fun whenStringBiggestHashCodeFirst(p: String): Int = when (p) { // assertPartlyCovered(3, 11)
+    private fun whenStringBiggestHashCodeFirst(p: String): Int = when (p) { // assertFullyCovered(0, 6)
         "c" -> 1 // assertFullyCovered()
         "b" -> 2 // assertFullyCovered()
         "\u0000b" -> 3 // assertFullyCovered()

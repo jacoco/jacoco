@@ -1,8 +1,8 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2025 Mountainminds GmbH & Co. KG and Contributors
+ * Copyright (c) 2009, 2026 Mountainminds GmbH & Co. KG and Contributors
  * This program and the accompanying materials are made available under
  * the terms of the Eclipse Public License 2.0 which is available at
- * http://www.eclipse.org/legal/epl-2.0
+ * https://www.eclipse.org/legal/epl-2.0
  *
  * SPDX-License-Identifier: EPL-2.0
  *
@@ -30,8 +30,6 @@ public class KotlinCoroutineFilterTest extends FilterTestBase {
 		final MethodNode m = new MethodNode(InstrSupport.ASM_API_VERSION, 0,
 				"invokeSuspend", "(Ljava/lang/Object;)Ljava/lang/Object;", null,
 				null);
-		context.classAnnotations
-				.add(KotlinGeneratedFilter.KOTLIN_METADATA_DESC);
 
 		m.visitMethodInsn(Opcodes.INVOKESTATIC,
 				"kotlin/coroutines/intrinsics/IntrinsicsKt",
@@ -125,8 +123,6 @@ public class KotlinCoroutineFilterTest extends FilterTestBase {
 		final MethodNode m = new MethodNode(InstrSupport.ASM_API_VERSION, 0,
 				"invokeSuspend", "(Ljava/lang/Object;)Ljava/lang/Object;", null,
 				null);
-		context.classAnnotations
-				.add(KotlinGeneratedFilter.KOTLIN_METADATA_DESC);
 
 		m.visitMethodInsn(Opcodes.INVOKESTATIC,
 				"kotlin/coroutines/intrinsics/IntrinsicsKt",
@@ -334,8 +330,6 @@ public class KotlinCoroutineFilterTest extends FilterTestBase {
 				Opcodes.ACC_STATIC, "example",
 				"(Lkotlin/coroutines/Continuation;)Ljava/lang/Object;", null,
 				null);
-		context.classAnnotations
-				.add(KotlinGeneratedFilter.KOTLIN_METADATA_DESC);
 
 		final int continuationArgumentIndex = 0;
 		final int continuationIndex = 2;
@@ -487,8 +481,6 @@ public class KotlinCoroutineFilterTest extends FilterTestBase {
 				"example",
 				"(ZLkotlin/coroutines/Continuation;)Ljava/lang/Object;", null,
 				null);
-		context.classAnnotations
-				.add(KotlinGeneratedFilter.KOTLIN_METADATA_DESC);
 
 		final Label exit = new Label();
 
@@ -564,8 +556,6 @@ public class KotlinCoroutineFilterTest extends FilterTestBase {
 		final MethodNode m = new MethodNode(InstrSupport.ASM_API_VERSION,
 				Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "invokeSuspend",
 				"(Ljava/lang/Object;)Ljava/lang/Object;", null, null);
-		context.classAnnotations
-				.add(KotlinGeneratedFilter.KOTLIN_METADATA_DESC);
 
 		m.visitMethodInsn(Opcodes.INVOKESTATIC,
 				"kotlin/coroutines/intrinsics/IntrinsicsKt",

@@ -1,8 +1,8 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2025 Mountainminds GmbH & Co. KG and Contributors
+ * Copyright (c) 2009, 2026 Mountainminds GmbH & Co. KG and Contributors
  * This program and the accompanying materials are made available under
  * the terms of the Eclipse Public License 2.0 which is available at
- * http://www.eclipse.org/legal/epl-2.0
+ * https://www.eclipse.org/legal/epl-2.0
  *
  * SPDX-License-Identifier: EPL-2.0
  *
@@ -31,8 +31,6 @@ public class KotlinJvmOverloadsFilterTest extends FilterTestBase {
 	 */
 	@Test
 	public void should_filter_generated_constructors() {
-		context.classAnnotations
-				.add(KotlinGeneratedFilter.KOTLIN_METADATA_DESC);
 		final MethodNode m = new MethodNode(Opcodes.ACC_PUBLIC, "<init>", "()V",
 				null, null);
 		m.visitAnnotation("Lkotlin/jvm/JvmOverloads;", false);
@@ -74,8 +72,6 @@ public class KotlinJvmOverloadsFilterTest extends FilterTestBase {
 	 */
 	@Test
 	public void should_filter_generated_functions() {
-		context.classAnnotations
-				.add(KotlinGeneratedFilter.KOTLIN_METADATA_DESC);
 		final MethodNode m = new MethodNode(Opcodes.ACC_PUBLIC, "example",
 				"()V", null, null);
 		m.visitAnnotation("Lkotlin/jvm/JvmOverloads;", false);
@@ -112,8 +108,6 @@ public class KotlinJvmOverloadsFilterTest extends FilterTestBase {
 	 */
 	@Test
 	public void should_filter_generated_freestanding_functions() {
-		context.classAnnotations
-				.add(KotlinGeneratedFilter.KOTLIN_METADATA_DESC);
 		final MethodNode m = new MethodNode(
 				Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL | Opcodes.ACC_STATIC,
 				"example", "()V", null, null);
@@ -152,8 +146,6 @@ public class KotlinJvmOverloadsFilterTest extends FilterTestBase {
 	 */
 	@Test
 	public void should_not_filter_non_generated_functions() {
-		context.classAnnotations
-				.add(KotlinGeneratedFilter.KOTLIN_METADATA_DESC);
 		final MethodNode m = new MethodNode(Opcodes.ACC_PUBLIC, "call", "()V",
 				null, null);
 		m.visitAnnotation("Lkotlin/jvm/JvmOverloads;", false);
@@ -195,8 +187,6 @@ public class KotlinJvmOverloadsFilterTest extends FilterTestBase {
 	 */
 	@Test
 	public void should_not_filter_non_generated_freestanding_functions() {
-		context.classAnnotations
-				.add(KotlinGeneratedFilter.KOTLIN_METADATA_DESC);
 		final MethodNode m = new MethodNode(
 				Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL | Opcodes.ACC_STATIC,
 				"call", "()V", null, null);

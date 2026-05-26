@@ -1,8 +1,8 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2025 Mountainminds GmbH & Co. KG and Contributors
+ * Copyright (c) 2009, 2026 Mountainminds GmbH & Co. KG and Contributors
  * This program and the accompanying materials are made available under
  * the terms of the Eclipse Public License 2.0 which is available at
- * http://www.eclipse.org/legal/epl-2.0
+ * https://www.eclipse.org/legal/epl-2.0
  *
  * SPDX-License-Identifier: EPL-2.0
  *
@@ -55,8 +55,6 @@ public class KotlinDefaultArgumentsFilterTest extends FilterTestBase {
 	public void should_filter() {
 		final MethodNode m = createMethod(Opcodes.ACC_SYNTHETIC,
 				"origin$default", "(LTarget;IILjava/lang/Object;)V");
-		context.classAnnotations
-				.add(KotlinGeneratedFilter.KOTLIN_METADATA_DESC);
 
 		filter.filter(m, context, output);
 
@@ -68,8 +66,6 @@ public class KotlinDefaultArgumentsFilterTest extends FilterTestBase {
 	public void should_not_filter_when_suffix_absent() {
 		final MethodNode m = createMethod(Opcodes.ACC_SYNTHETIC,
 				"synthetic_without_suffix", "(LTarget;IILjava/lang/Object;)V");
-		context.classAnnotations
-				.add(KotlinGeneratedFilter.KOTLIN_METADATA_DESC);
 
 		filter.filter(m, context, output);
 
@@ -80,8 +76,6 @@ public class KotlinDefaultArgumentsFilterTest extends FilterTestBase {
 	public void should_not_filter_when_not_synthetic() {
 		final MethodNode m = createMethod(0, "not_synthetic$default",
 				"(LTarget;IILjava/lang/Object;)V");
-		context.classAnnotations
-				.add(KotlinGeneratedFilter.KOTLIN_METADATA_DESC);
 
 		filter.filter(m, context, output);
 
@@ -101,8 +95,6 @@ public class KotlinDefaultArgumentsFilterTest extends FilterTestBase {
 		final MethodNode m = new MethodNode(InstrSupport.ASM_API_VERSION,
 				Opcodes.ACC_SYNTHETIC, "foo$default",
 				"(LOpen;IILjava/lang/Object;)V", null, null);
-		context.classAnnotations
-				.add(KotlinGeneratedFilter.KOTLIN_METADATA_DESC);
 		{
 			m.visitVarInsn(Opcodes.ALOAD, 3);
 			final Label label = new Label();
@@ -154,8 +146,6 @@ public class KotlinDefaultArgumentsFilterTest extends FilterTestBase {
 				Opcodes.ACC_SYNTHETIC, "<init>",
 				"(IILkotlin/jvm/internal/DefaultConstructorMarker;)V", null,
 				null);
-		context.classAnnotations
-				.add(KotlinGeneratedFilter.KOTLIN_METADATA_DESC);
 
 		m.visitVarInsn(Opcodes.ILOAD, 2);
 		m.visitInsn(Opcodes.ICONST_1);
@@ -189,8 +179,6 @@ public class KotlinDefaultArgumentsFilterTest extends FilterTestBase {
 				Opcodes.ACC_SYNTHETIC, "<init>",
 				"(JILkotlin/jvm/internal/DefaultConstructorMarker;)V", null,
 				null);
-		context.classAnnotations
-				.add(KotlinGeneratedFilter.KOTLIN_METADATA_DESC);
 
 		m.visitVarInsn(Opcodes.ILOAD, 3);
 		m.visitInsn(Opcodes.ICONST_1);
@@ -237,8 +225,6 @@ public class KotlinDefaultArgumentsFilterTest extends FilterTestBase {
 				"(" + paramTypes
 						+ "IILkotlin/jvm/internal/DefaultConstructorMarker;)V",
 				null, null);
-		context.classAnnotations
-				.add(KotlinGeneratedFilter.KOTLIN_METADATA_DESC);
 
 		m.visitVarInsn(Opcodes.ILOAD, 34);
 		m.visitLdcInsn(Integer.valueOf(1 << 31));
@@ -312,8 +298,6 @@ public class KotlinDefaultArgumentsFilterTest extends FilterTestBase {
 				"(" + paramTypes
 						+ "IIIIIIIILkotlin/jvm/internal/DefaultConstructorMarker;)V",
 				null, null);
-		context.classAnnotations
-				.add(KotlinGeneratedFilter.KOTLIN_METADATA_DESC);
 
 		m.visitVarInsn(Opcodes.ILOAD, 226);
 		m.visitInsn(Opcodes.ICONST_1);

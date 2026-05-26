@@ -1,0 +1,30 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": [
+    "config:recommended",
+    ":disableDependencyDashboard",
+    ":semanticCommitsDisabled"
+  ],
+  "ignorePaths": ["jacoco-maven-plugin.test/it/**"],
+  "labels": ["dependencies"],
+  "packageRules": [
+    {
+      "description": "Disable all updates unless re-enabled below",
+      "matchPackageNames": ["*"],
+      "enabled": false
+    },
+    {
+      "description": "Enable updates of GitHub Actions",
+      "matchManagers": ["github-actions"],
+      "pinDigests": true,
+      "enabled": true,
+      "addLabels": ["component: build"]
+    },
+    {
+      "description": "Enable updates of Maven and Maven Wrapper",
+      "matchManagers": ["maven-wrapper"],
+      "enabled": true,
+      "addLabels": ["component: build"]
+    }
+  ]
+}

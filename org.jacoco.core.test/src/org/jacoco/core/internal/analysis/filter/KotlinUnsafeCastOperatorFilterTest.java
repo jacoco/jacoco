@@ -1,8 +1,8 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2025 Mountainminds GmbH & Co. KG and Contributors
+ * Copyright (c) 2009, 2026 Mountainminds GmbH & Co. KG and Contributors
  * This program and the accompanying materials are made available under
  * the terms of the Eclipse Public License 2.0 which is available at
- * http://www.eclipse.org/legal/epl-2.0
+ * https://www.eclipse.org/legal/epl-2.0
  *
  * SPDX-License-Identifier: EPL-2.0
  *
@@ -31,8 +31,6 @@ public class KotlinUnsafeCastOperatorFilterTest extends FilterTestBase {
 
 	@Test
 	public void should_filter() {
-		context.classAnnotations
-				.add(KotlinGeneratedFilter.KOTLIN_METADATA_DESC);
 		final Label label = new Label();
 
 		m.visitInsn(Opcodes.DUP);
@@ -54,8 +52,6 @@ public class KotlinUnsafeCastOperatorFilterTest extends FilterTestBase {
 
 	@Test
 	public void should_filter_Kotlin_1_4() {
-		context.classAnnotations
-				.add(KotlinGeneratedFilter.KOTLIN_METADATA_DESC);
 		final Label label = new Label();
 
 		m.visitInsn(Opcodes.DUP);
@@ -99,9 +95,6 @@ public class KotlinUnsafeCastOperatorFilterTest extends FilterTestBase {
 	 */
 	@Test
 	public void should_filter_Kotlin_1_5() {
-		context.classAnnotations
-				.add(KotlinGeneratedFilter.KOTLIN_METADATA_DESC);
-
 		final Label label = new Label();
 		m.visitJumpInsn(Opcodes.IFNONNULL, label);
 		final AbstractInsnNode expectedFrom = m.instructions.getLast();
@@ -123,9 +116,6 @@ public class KotlinUnsafeCastOperatorFilterTest extends FilterTestBase {
 
 	@Test
 	public void should_filter_Kotlin_1_6() {
-		context.classAnnotations
-				.add(KotlinGeneratedFilter.KOTLIN_METADATA_DESC);
-
 		final Label label = new Label();
 		m.visitInsn(Opcodes.DUP);
 		m.visitJumpInsn(Opcodes.IFNONNULL, label);

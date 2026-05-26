@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-   Copyright (c) 2009, 2025 Mountainminds GmbH & Co. KG and Contributors
+   Copyright (c) 2009, 2026 Mountainminds GmbH & Co. KG and Contributors
    This program and the accompanying materials are made available under
    the terms of the Eclipse Public License 2.0 which is available at
-   http://www.eclipse.org/legal/epl-2.0
+   https://www.eclipse.org/legal/epl-2.0
 
    SPDX-License-Identifier: EPL-2.0
 
@@ -121,6 +121,7 @@
         <kotlin.compiler.jvmTarget>1.8</kotlin.compiler.jvmTarget>
       </properties>
       <modules>
+        <module>../org.jacoco.benchmarks</module>
         <module>../org.jacoco.core.test.validation.kotlin</module>
         <module>../org.jacoco.core.test.validation.java7</module>
         <module>../org.jacoco.core.test.validation.java8</module>
@@ -142,6 +143,7 @@
         <groovy.targetBytecode>1.8</groovy.targetBytecode>
       </properties>
       <modules>
+        <module>../org.jacoco.benchmarks</module>
         <module>../org.jacoco.core.test.validation.kotlin</module>
         <module>../org.jacoco.core.test.validation.java7</module>
         <module>../org.jacoco.core.test.validation.java8</module>
@@ -163,6 +165,7 @@
         <groovy.targetBytecode>9</groovy.targetBytecode>
       </properties>
       <modules>
+        <module>../org.jacoco.benchmarks</module>
         <module>../org.jacoco.core.test.validation.kotlin</module>
         <module>../org.jacoco.core.test.validation.java7</module>
         <module>../org.jacoco.core.test.validation.java8</module>
@@ -183,6 +186,7 @@
         <groovy.targetBytecode>10</groovy.targetBytecode>
       </properties>
       <modules>
+        <module>../org.jacoco.benchmarks</module>
         <module>../org.jacoco.core.test.validation.kotlin</module>
         <module>../org.jacoco.core.test.validation.java7</module>
         <module>../org.jacoco.core.test.validation.java8</module>
@@ -203,6 +207,7 @@
         <groovy.targetBytecode>11</groovy.targetBytecode>
       </properties>
       <modules>
+        <module>../org.jacoco.benchmarks</module>
         <module>../org.jacoco.core.test.validation.kotlin</module>
         <module>../org.jacoco.core.test.validation.java7</module>
         <module>../org.jacoco.core.test.validation.java8</module>
@@ -224,6 +229,7 @@
         <groovy.targetBytecode>12</groovy.targetBytecode>
       </properties>
       <modules>
+        <module>../org.jacoco.benchmarks</module>
         <module>../org.jacoco.core.test.validation.kotlin</module>
         <module>../org.jacoco.core.test.validation.java7</module>
         <module>../org.jacoco.core.test.validation.java8</module>
@@ -248,6 +254,7 @@
         <maven.compiler.target>13</maven.compiler.target>
       </properties>
       <modules>
+        <module>../org.jacoco.benchmarks</module>
         <module>../org.jacoco.core.test.validation.kotlin</module>
         <module>../org.jacoco.core.test.validation.java7</module>
         <module>../org.jacoco.core.test.validation.java8</module>
@@ -272,6 +279,7 @@
         <maven.compiler.target>14</maven.compiler.target>
       </properties>
       <modules>
+        <module>../org.jacoco.benchmarks</module>
         <module>../org.jacoco.core.test.validation.kotlin</module>
         <module>../org.jacoco.core.test.validation.java7</module>
         <module>../org.jacoco.core.test.validation.java8</module>
@@ -297,6 +305,7 @@
         <maven.compiler.target>15</maven.compiler.target>
       </properties>
       <modules>
+        <module>../org.jacoco.benchmarks</module>
         <module>../org.jacoco.core.test.validation.kotlin</module>
         <module>../org.jacoco.core.test.validation.java7</module>
         <module>../org.jacoco.core.test.validation.java8</module>
@@ -322,6 +331,7 @@
         <maven.compiler.target>16</maven.compiler.target>
       </properties>
       <modules>
+        <module>../org.jacoco.benchmarks</module>
         <module>../org.jacoco.core.test.validation.kotlin</module>
         <module>../org.jacoco.core.test.validation.java7</module>
         <module>../org.jacoco.core.test.validation.java8</module>
@@ -348,6 +358,7 @@
         <maven.compiler.target>17</maven.compiler.target>
       </properties>
       <modules>
+        <module>../org.jacoco.benchmarks</module>
         <module>../org.jacoco.core.test.validation.kotlin</module>
         <module>../org.jacoco.core.test.validation.java7</module>
         <module>../org.jacoco.core.test.validation.java8</module>
@@ -375,6 +386,7 @@
         <maven.compiler.target>18</maven.compiler.target>
       </properties>
       <modules>
+        <module>../org.jacoco.benchmarks</module>
         <module>../org.jacoco.core.test.validation.kotlin</module>
         <module>../org.jacoco.core.test.validation.java7</module>
         <module>../org.jacoco.core.test.validation.java8</module>
@@ -402,6 +414,7 @@
         <maven.compiler.target>19</maven.compiler.target>
       </properties>
       <modules>
+        <module>../org.jacoco.benchmarks</module>
         <module>../org.jacoco.core.test.validation.kotlin</module>
         <module>../org.jacoco.core.test.validation.java7</module>
         <module>../org.jacoco.core.test.validation.java8</module>
@@ -429,6 +442,7 @@
         <maven.compiler.target>20</maven.compiler.target>
       </properties>
       <modules>
+        <module>../org.jacoco.benchmarks</module>
         <module>../org.jacoco.core.test.validation.kotlin</module>
         <module>../org.jacoco.core.test.validation.java7</module>
         <module>../org.jacoco.core.test.validation.java8</module>
@@ -456,6 +470,7 @@
         <maven.compiler.target>21</maven.compiler.target>
       </properties>
       <modules>
+        <module>../org.jacoco.benchmarks</module>
         <module>../org.jacoco.core.test.validation.kotlin</module>
         <module>../org.jacoco.core.test.validation.java7</module>
         <module>../org.jacoco.core.test.validation.java8</module>
@@ -484,6 +499,7 @@
         <maven.compiler.target>22</maven.compiler.target>
       </properties>
       <modules>
+        <module>../org.jacoco.benchmarks</module>
         <module>../org.jacoco.core.test.validation.kotlin</module>
         <module>../org.jacoco.core.test.validation.java7</module>
         <module>../org.jacoco.core.test.validation.java8</module>
@@ -512,6 +528,7 @@
         <maven.compiler.target>23</maven.compiler.target>
       </properties>
       <modules>
+        <module>../org.jacoco.benchmarks</module>
         <module>../org.jacoco.core.test.validation.kotlin</module>
         <module>../org.jacoco.core.test.validation.java7</module>
         <module>../org.jacoco.core.test.validation.java8</module>
@@ -540,6 +557,7 @@
         <maven.compiler.target>24</maven.compiler.target>
       </properties>
       <modules>
+        <module>../org.jacoco.benchmarks</module>
         <module>../org.jacoco.core.test.validation.kotlin</module>
         <module>../org.jacoco.core.test.validation.java7</module>
         <module>../org.jacoco.core.test.validation.java8</module>
@@ -562,8 +580,7 @@
         </property>
       </activation>
       <properties>
-        <!-- Kotlin 2.2.21 doesn't support compilation into 25 -->
-        <kotlin.compiler.jvmTarget>24</kotlin.compiler.jvmTarget>
+        <kotlin.compiler.jvmTarget>25</kotlin.compiler.jvmTarget>
         <!-- Groovy 3.0.25 does not support compilation into 25 -->
         <groovy.targetBytecode>16</groovy.targetBytecode>
         <!-- see respective profile in org.jacoco.build about this override -->
@@ -571,6 +588,7 @@
         <maven.compiler.target>25</maven.compiler.target>
       </properties>
       <modules>
+        <module>../org.jacoco.benchmarks</module>
         <module>../org.jacoco.core.test.validation.kotlin</module>
         <module>../org.jacoco.core.test.validation.java7</module>
         <module>../org.jacoco.core.test.validation.java8</module>
@@ -591,8 +609,8 @@
         </property>
       </activation>
       <properties>
-        <!-- Kotlin 2.2.21 doesn't support compilation into 26 -->
-        <kotlin.compiler.jvmTarget>24</kotlin.compiler.jvmTarget>
+        <!-- Kotlin 2.3.21 doesn't support compilation into 26 -->
+        <kotlin.compiler.jvmTarget>25</kotlin.compiler.jvmTarget>
         <!-- Groovy 3.0.25 does not support compilation into 26 -->
         <groovy.targetBytecode>16</groovy.targetBytecode>
         <!-- see respective profile in org.jacoco.build about this override -->
@@ -600,6 +618,7 @@
         <maven.compiler.target>26</maven.compiler.target>
       </properties>
       <modules>
+        <module>../org.jacoco.benchmarks</module>
         <module>../org.jacoco.core.test.validation.kotlin</module>
         <module>../org.jacoco.core.test.validation.java7</module>
         <module>../org.jacoco.core.test.validation.java8</module>
@@ -607,6 +626,38 @@
         <module>../org.jacoco.core.test.validation.java16</module>
         <module>../org.jacoco.core.test.validation.java21</module>
         <!-- Groovy 3.0.25 does not support Java 26
+        <module>../org.jacoco.core.test.validation.groovy</module>
+        -->
+        <module>../org.jacoco.core.test.validation.scala</module>
+      </modules>
+    </profile>
+
+    <profile>
+      <id>java27-bytecode</id>
+      <activation>
+        <property>
+          <name>bytecode.version</name>
+          <value>27</value>
+        </property>
+      </activation>
+      <properties>
+        <!-- Kotlin 2.3.21 doesn't support compilation into 27 -->
+        <kotlin.compiler.jvmTarget>25</kotlin.compiler.jvmTarget>
+        <!-- Groovy 3.0.25 does not support compilation into 27 -->
+        <groovy.targetBytecode>16</groovy.targetBytecode>
+        <!-- see respective profile in org.jacoco.build about this override -->
+        <maven.compiler.source>27</maven.compiler.source>
+        <maven.compiler.target>27</maven.compiler.target>
+      </properties>
+      <modules>
+        <module>../org.jacoco.benchmarks</module>
+        <module>../org.jacoco.core.test.validation.kotlin</module>
+        <module>../org.jacoco.core.test.validation.java7</module>
+        <module>../org.jacoco.core.test.validation.java8</module>
+        <module>../org.jacoco.core.test.validation.java14</module>
+        <module>../org.jacoco.core.test.validation.java16</module>
+        <module>../org.jacoco.core.test.validation.java21</module>
+        <!-- Groovy 3.0.25 does not support Java 27
         <module>../org.jacoco.core.test.validation.groovy</module>
         -->
         <module>../org.jacoco.core.test.validation.scala</module>

@@ -1,8 +1,8 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2025 Mountainminds GmbH & Co. KG and Contributors
+ * Copyright (c) 2009, 2026 Mountainminds GmbH & Co. KG and Contributors
  * This program and the accompanying materials are made available under
  * the terms of the Eclipse Public License 2.0 which is available at
- * http://www.eclipse.org/legal/epl-2.0
+ * https://www.eclipse.org/legal/epl-2.0
  *
  * SPDX-License-Identifier: EPL-2.0
  *
@@ -18,6 +18,16 @@ import org.objectweb.asm.tree.MethodNode;
  * Factory for all JaCoCo filters.
  */
 public final class Filters {
+
+	/**
+	 * Descriptor of annotation present in all class files produced by the
+	 * Kotlin compiler.
+	 *
+	 * @see <a href=
+	 *      "https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-metadata/">documentation
+	 *      of kotlin.Metadata annotation</a>
+	 */
+	public static final String KOTLIN_METADATA_DESC = "Lkotlin/Metadata;";
 
 	private Filters() {
 		// no instances
@@ -52,6 +62,7 @@ public final class Filters {
 
 	private static IFilter allCommonFilters() {
 		return new FilterSet( //
+				new SyntheticClassFilter(), //
 				new EnumFilter(), //
 				new BridgeFilter(), //
 				new SynchronizedFilter(), //
@@ -82,6 +93,7 @@ public final class Filters {
 				new KotlinSerializableFilter(), //
 				new KotlinEnumFilter(), //
 				new KotlinJvmOverloadsFilter(), //
+				new KotlinJvmStaticFilter(), //
 				new KotlinSafeCallOperatorFilter(), //
 				new KotlinLateinitFilter(), //
 				new KotlinWhenFilter(), //
@@ -98,17 +110,16 @@ public final class Filters {
 	}
 
 	/**
-	 * Checks whether the class corresponding to the given context has
-	 * <code>kotlin/Metadata</code> annotation.
+	 * Returns {@code true} if the class corresponding to this context has
+	 * {@link #KOTLIN_METADATA_DESC kotlin.Metadata} annotation.
 	 *
 	 * @param context
 	 *            context information
-	 * @return <code>true</code> if the class corresponding to the given context
-	 *         has <code>kotlin/Metadata</code> annotation
+	 * @return {@code true} if the class corresponding to this context has
+	 *         {@link #KOTLIN_METADATA_DESC kotlin.Metadata} annotation
 	 */
-	public static boolean isKotlinClass(final IFilterContext context) {
-		return context.getClassAnnotations()
-				.contains(KotlinGeneratedFilter.KOTLIN_METADATA_DESC);
+	private static boolean isKotlinClass(final IFilterContext context) {
+		return context.getClassAnnotations().contains(KOTLIN_METADATA_DESC);
 	}
 
 }

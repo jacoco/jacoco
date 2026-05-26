@@ -1,8 +1,8 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2025 Mountainminds GmbH & Co. KG and Contributors
+ * Copyright (c) 2009, 2026 Mountainminds GmbH & Co. KG and Contributors
  * This program and the accompanying materials are made available under
  * the terms of the Eclipse Public License 2.0 which is available at
- * http://www.eclipse.org/legal/epl-2.0
+ * https://www.eclipse.org/legal/epl-2.0
  *
  * SPDX-License-Identifier: EPL-2.0
  *
@@ -40,6 +40,13 @@ public class StringSwitchJavacFilterTest extends FilterTestBase {
 
 		m.visitInsn(Opcodes.ICONST_M1);
 		m.visitVarInsn(Opcodes.ISTORE, 2);
+
+		// Label for
+		// LOCALVARIABLE tmp1$ I Label 2
+		// with name for the above slot 2
+		// generated for switch inside lambda
+		// by javac versions starting from 24
+		m.visitLabel(new Label());
 
 		m.visitVarInsn(Opcodes.ALOAD, 1);
 		m.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "java/lang/String", "hashCode",

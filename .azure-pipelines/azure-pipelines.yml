@@ -58,6 +58,8 @@ jobs:
         JDK_VERSION: 25
       JDK 26:
         JDK_VERSION: 26
+      JDK 27:
+        JDK_VERSION: 27
   pool:
     vmImage: 'ubuntu-24.04'
   steps:
@@ -85,20 +87,15 @@ jobs:
       " > toolchains.xml
     displayName: Setup JDK
   - bash: |
-      if [[ "$JDK_VERSION" -ge "17" ]]; then
+      if [[ "$JDK_VERSION" -ge "21" ]]; then
         export JAVA_HOME=$PWD/.jdk
       else
-        export JAVA_HOME=$JAVA_HOME_17_X64
+        export JAVA_HOME=$JAVA_HOME_21_X64
       fi
       if [[ "$BUILD_SOURCEBRANCH" == "refs/heads/master" && "$JDK_VERSION" == "5" ]]; then
         ./mvnw -V -B -e --no-transfer-progress -f org.jacoco.build \
           verify -Djdk.version=$JDK_VERSION -Dbytecode.version=$JDK_VERSION \
           deploy:deploy -DdeployAtEnd \
-          --toolchains=toolchains.xml --settings=.azure-pipelines/maven-settings.xml
-      elif [[ "$BUILD_SOURCEBRANCH" == "refs/heads/master" && "$JDK_VERSION" == "11" ]]; then
-        ./mvnw -V -B -e --no-transfer-progress -f org.jacoco.build \
-          verify -Djdk.version=$JDK_VERSION -Dbytecode.version=$JDK_VERSION \
-          sonar:sonar -Dsonar.scanner.skipJreProvisioning \
           --toolchains=toolchains.xml --settings=.azure-pipelines/maven-settings.xml
       else
         ./mvnw -V -B -e --no-transfer-progress \
@@ -107,6 +104,5 @@ jobs:
       fi
     displayName: Build
     env:
-      SONARQUBE_TOKEN: $(SONARQUBE_TOKEN)
       SONATYPE_USERNAME: $(SONATYPE_USERNAME)
       SONATYPE_PASSWORD: $(SONATYPE_PASSWORD)
