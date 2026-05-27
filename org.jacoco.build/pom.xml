@@ -338,7 +338,7 @@
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-enforcer-plugin</artifactId>
-          <version>3.6.2</version>
+          <version>3.6.3</version>
         </plugin>
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
@@ -537,10 +537,10 @@
             <configuration>
               <rules>
                 <requireJavaVersion>
-                  <version>17</version>
+                  <version>21</version>
                 </requireJavaVersion>
                 <requireMavenVersion>
-                  <version>3.9.15</version>
+                  <version>3.9.16</version>
                 </requireMavenVersion>
                 <requireNoRepositories>
                   <message>The rules for repo1.maven.org are that pom.xml files should not include repository definitions.</message>
@@ -1025,6 +1025,14 @@
                 <version>3.41.0</version>
               </dependency>
               <dependency>
+                <!--
+                Unfortunately plexus-compiler-eclipse version 2.16.2
+                does not pass path to JDK selected by maven-toolchain-plugin
+                to ECJ using argument `system`.
+                As a result, ECJ uses the same JDK as Maven,
+                so validation tests that use classes from a particular JDK version
+                require Maven to be executed with at least that version.
+                -->
                 <groupId>org.codehaus.plexus</groupId>
                 <artifactId>plexus-compiler-eclipse</artifactId>
                 <version>2.16.2</version>

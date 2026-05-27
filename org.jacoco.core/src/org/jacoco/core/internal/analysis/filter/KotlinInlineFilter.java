@@ -25,14 +25,13 @@ final class KotlinInlineFilter implements IFilter {
 
 	public void filter(final MethodNode methodNode,
 			final IFilterContext context, final IFilterOutput output) {
-		if (context.getSourceDebugExtension() == null) {
+		if (context.getKotlinSMAP() == null) {
 			return;
 		}
 
 		if (firstGeneratedLineNumber == -1) {
 			firstGeneratedLineNumber = getFirstGeneratedLineNumber(
-					context.getClassName(), context.getSourceFileName(),
-					context.getSourceDebugExtension());
+					context.getClassName(), context.getKotlinSMAP());
 		}
 
 		int line = 0;
@@ -47,10 +46,9 @@ final class KotlinInlineFilter implements IFilter {
 	}
 
 	private static int getFirstGeneratedLineNumber(final String className,
-			final String sourceFileName, final String smap) {
+			final KotlinSMAP smap) {
 		int min = Integer.MAX_VALUE;
-		for (final KotlinSMAP.Mapping mapping : new KotlinSMAP(sourceFileName,
-				smap).mappings()) {
+		for (final KotlinSMAP.Mapping mapping : smap.mappings()) {
 			if (className.equals(mapping.inputClassName())
 					&& mapping.inputStartLine() == mapping.outputStartLine()) {
 				continue;
