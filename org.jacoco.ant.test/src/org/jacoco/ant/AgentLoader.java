@@ -25,16 +25,27 @@ import java.util.jar.Manifest;
  * Modules</a> that in contrast to {@link java.lang.instrument normal agent
  * execution} loads and executes agents using non
  * {@link ClassLoader#getSystemClassLoader() system class loader}.
+ * <p>
+ * This class must be declared and executed as both
+ * {@link #premain(String, Instrumentation) Premain-Class} and
+ * {@link #main(String[]) Main-Class}, so that first execution can capture
+ * instance of {@link Instrumentation} used by second.
+ * </p>
  */
 public final class AgentLoader {
 
 	private static Instrumentation instrumentation;
 
+	/** Captures instance of {@link Instrumentation}. */
 	public static void premain(final String agentArgs,
 			final Instrumentation instrumentation) {
 		AgentLoader.instrumentation = instrumentation;
 	}
 
+	/**
+	 * Loads and executes {@code Premain-Class} from JAR file passed as first
+	 * argument using new (<strong>non system</strong>) class loader.
+	 */
 	public static void main(final String[] args) throws Exception {
 		final URLClassLoader classLoader = new URLClassLoader(
 				new URL[] { new File(args[0]).toURI().toURL() });
