@@ -1,12 +1,5 @@
 version: 2
 updates:
-  - package-ecosystem: "github-actions"
-    directory: "/"
-    schedule:
-      interval: "weekly"
-    labels:
-      - "dependencies"
-      - "component: build"
   - package-ecosystem: "maven"
     directory: "/org.jacoco.build"
     schedule:
