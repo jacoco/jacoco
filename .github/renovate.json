@@ -25,6 +25,12 @@
       "matchManagers": ["maven-wrapper"],
       "enabled": true,
       "addLabels": ["component: build"]
+    },
+    {
+      "description": "Enable updates of ASM",
+      "matchPackageNames": ["org.ow2.asm:*"],
+      "enabled": true,
+      "addLabels": ["component: core"]
     }
   ]
 }

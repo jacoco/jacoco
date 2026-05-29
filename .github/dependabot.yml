@@ -18,15 +18,6 @@ updates:
       # It is known that upgrade from current version requires additional changes:
       - dependency-name: "org.apache.maven.plugins:maven-plugin-plugin"
   - package-ecosystem: "maven"
-    directory: "/org.jacoco.core"
-    schedule:
-      interval: "daily"
-    labels:
-      - "dependencies"
-      - "component: core"
-    allow:
-      - dependency-name: "org.ow2.asm:*"
-  - package-ecosystem: "maven"
     directory: "/org.jacoco.core.test.validation.kotlin"
     schedule:
       interval: "weekly"
