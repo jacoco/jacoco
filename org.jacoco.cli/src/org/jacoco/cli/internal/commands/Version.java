@@ -18,15 +18,13 @@ import java.io.PrintWriter;
 import org.jacoco.cli.internal.Command;
 import org.jacoco.core.JaCoCo;
 
+import picocli.CommandLine;
+
 /**
  * The <code>version</code> command.
  */
+@CommandLine.Command(name = "version", description = "Print JaCoCo version information.")
 public class Version extends Command {
-
-	@Override
-	public String description() {
-		return "Print JaCoCo version information.";
-	}
 
 	@Override
 	public int execute(final PrintWriter out, final PrintWriter err)

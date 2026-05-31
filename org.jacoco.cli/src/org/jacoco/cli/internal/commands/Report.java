@@ -37,45 +37,41 @@ import org.jacoco.report.MultiSourceFileLocator;
 import org.jacoco.report.csv.CSVFormatter;
 import org.jacoco.report.html.HTMLFormatter;
 import org.jacoco.report.xml.XMLFormatter;
-import org.kohsuke.args4j.Argument;
-import org.kohsuke.args4j.Option;
+
+import picocli.CommandLine;
 
 /**
  * The <code>report</code> command.
  */
+@CommandLine.Command(name = "report", description = "Generate reports in different formats by reading exec and Java class files.")
 public class Report extends Command {
 
-	@Argument(usage = "list of JaCoCo *.exec files to read", metaVar = "<execfiles>")
+	@CommandLine.Parameters(description = "list of JaCoCo *.exec files to read", paramLabel = "<execfiles>")
 	List<File> execfiles = new ArrayList<File>();
 
-	@Option(name = "--classfiles", usage = "location of Java class files", metaVar = "<path>", required = true)
+	@CommandLine.Option(names = "--classfiles", description = "location of Java class files", paramLabel = "<path>", required = true)
 	List<File> classfiles = new ArrayList<File>();
 
-	@Option(name = "--sourcefiles", usage = "location of the source files", metaVar = "<path>")
+	@CommandLine.Option(names = "--sourcefiles", description = "location of the source files", paramLabel = "<path>")
 	List<File> sourcefiles = new ArrayList<File>();
 
-	@Option(name = "--tabwith", usage = "tab stop width for the source pages (default 4)", metaVar = "<n>")
+	@CommandLine.Option(names = "--tabwith", description = "tab stop width for the source pages (default 4)", paramLabel = "<n>")
 	int tabwidth = 4;
 
-	@Option(name = "--name", usage = "name used for this report", metaVar = "<name>")
+	@CommandLine.Option(names = "--name", description = "name used for this report", paramLabel = "<name>")
 	String name = "JaCoCo Coverage Report";
 
-	@Option(name = "--encoding", usage = "source file encoding (by default platform encoding is used)", metaVar = "<charset>")
+	@CommandLine.Option(names = "--encoding", description = "source file encoding (by default platform encoding is used)", paramLabel = "<charset>")
 	String encoding;
 
-	@Option(name = "--xml", usage = "output file for the XML report", metaVar = "<file>")
+	@CommandLine.Option(names = "--xml", description = "output file for the XML report", paramLabel = "<file>")
 	File xml;
 
-	@Option(name = "--csv", usage = "output file for the CSV report", metaVar = "<file>")
+	@CommandLine.Option(names = "--csv", description = "output file for the CSV report", paramLabel = "<file>")
 	File csv;
 
-	@Option(name = "--html", usage = "output directory for the HTML report", metaVar = "<dir>")
+	@CommandLine.Option(names = "--html", description = "output directory for the HTML report", paramLabel = "<dir>")
 	File html;
-
-	@Override
-	public String description() {
-		return "Generate reports in different formats by reading exec and Java class files.";
-	}
 
 	@Override
 	public int execute(final PrintWriter out, final PrintWriter err)
