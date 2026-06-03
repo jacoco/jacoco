@@ -117,6 +117,8 @@ public class ExecDumpClient {
 		final Socket socket = tryConnect(address, port);
 		try {
 			final RemoteControlWriter remoteWriter = new RemoteControlWriter(
+					// BufferedOutputStream will not improve performance here
+					// while will add memory overhead because commands are short
 					socket.getOutputStream());
 			final RemoteControlReader remoteReader = new RemoteControlReader(
 					new BufferedInputStream(socket.getInputStream()));
