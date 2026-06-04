@@ -12,6 +12,8 @@
  *******************************************************************************/
 package org.jacoco.examples;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.InetAddress;
@@ -47,7 +49,7 @@ public final class ExecutionDataServer {
 	 */
 	public static void main(final String[] args) throws IOException {
 		final ExecutionDataWriter fileWriter = new ExecutionDataWriter(
-				new FileOutputStream(DESTFILE));
+				new BufferedOutputStream(new FileOutputStream(DESTFILE)));
 		final ServerSocket server = new ServerSocket(PORT, 0,
 				InetAddress.getByName(ADDRESS));
 		while (true) {
@@ -71,9 +73,13 @@ public final class ExecutionDataServer {
 			this.fileWriter = fileWriter;
 
 			// Just send a valid header:
-			new RemoteControlWriter(socket.getOutputStream());
+			new RemoteControlWriter(
+					// BufferedOutputStream will not improve performance here
+					// while will add memory overhead because header is short
+					socket.getOutputStream());
 
-			reader = new RemoteControlReader(socket.getInputStream());
+			reader = new RemoteControlReader(
+					new BufferedInputStream(socket.getInputStream()));
 			reader.setSessionInfoVisitor(this);
 			reader.setExecutionDataVisitor(this);
 		}

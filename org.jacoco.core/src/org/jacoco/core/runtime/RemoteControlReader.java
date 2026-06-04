@@ -27,6 +27,15 @@ public class RemoteControlReader extends ExecutionDataReader {
 	/**
 	 * Creates a new reader based on the given input stream.
 	 *
+	 * Depending on the nature of the underlying stream input should be buffered
+	 * as most data is read in single bytes.
+	 *
+	 * Should be buffered when used to read execution data from
+	 * {@link java.net.Socket#getInputStream()}.
+	 *
+	 * Should not be buffered when used only for commands because they are short
+	 * and this will merely add memory overhead.
+	 *
 	 * @param input
 	 *            input stream to read commands from
 	 * @throws IOException

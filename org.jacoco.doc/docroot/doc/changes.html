@@ -48,6 +48,13 @@
   <li>Improved performance of Kotlin files analysis by parsing SMAPs only once
       per class
       (GitHub <a href="https://github.com/jacoco/jacoco/issues/2114">#2114</a>).</li>
+  <li>For better performance agent output methods <code>tcpclient</code> and
+      <code>tcpserver</code> use <code>BufferedOutputStream</code> to write
+      execution data to socket. Maven plugin, Ant tasks, CLI, API usage examples,
+      and <code>ExecDumpClient</code> API use <code>BufferedInputStream</code>
+      to read execution data from socket. Third-party integrations should do
+      the same to benefit from this change in agent
+      (GitHub <a href="https://github.com/jacoco/jacoco/issues/2089">#2089</a>).</li>
 </ul>
 
 <h3>Fixed bugs</h3>
