@@ -13,6 +13,7 @@
 package org.jacoco.examples;
 
 import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.InetAddress;
@@ -44,7 +45,7 @@ public final class ExecutionDataClient {
 	public static void main(final String[] args) throws IOException {
 		final FileOutputStream localFile = new FileOutputStream(DESTFILE);
 		final ExecutionDataWriter localWriter = new ExecutionDataWriter(
-				localFile);
+				new BufferedOutputStream(localFile));
 
 		// Open a socket to the coverage agent:
 		final Socket socket = new Socket(InetAddress.getByName(ADDRESS), PORT);
@@ -64,6 +65,7 @@ public final class ExecutionDataClient {
 		}
 
 		socket.close();
+		localWriter.flush();
 		localFile.close();
 	}
 

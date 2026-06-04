@@ -13,6 +13,7 @@
 package org.jacoco.examples;
 
 import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.InetAddress;
@@ -48,7 +49,7 @@ public final class ExecutionDataServer {
 	 */
 	public static void main(final String[] args) throws IOException {
 		final ExecutionDataWriter fileWriter = new ExecutionDataWriter(
-				new FileOutputStream(DESTFILE));
+				new BufferedOutputStream(new FileOutputStream(DESTFILE)));
 		final ServerSocket server = new ServerSocket(PORT, 0,
 				InetAddress.getByName(ADDRESS));
 		while (true) {
