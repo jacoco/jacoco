@@ -119,7 +119,7 @@ public class CoverageTransformer implements ClassFileTransformer {
 	 */
 	boolean filter(final ClassLoader loader, final String classname,
 			final ProtectionDomain protectionDomain) {
-		if (loader == null) {
+		if (loader == null || loader == PLATFORM_LOADER) {
 			if (!inclBootstrapClasses) {
 				return false;
 			}
