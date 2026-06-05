@@ -158,6 +158,23 @@
 		<au:assertLogContains text="java/sql/Timestamp"/>
 	</target>
 
+	<target name="testExclBootstrapClasses">
+		<jacoco:coverage destfile="${exec.file}">
+			<java classname="org.jacoco.ant.TestTarget" fork="true" failonerror="true">
+				<classpath path="${org.jacoco.ant.coverageTaskTest.classes.dir}"/>
+			</java>
+		</jacoco:coverage>
+
+		<au:assertLogContains text="Enhancing java with coverage"/>
+		<au:assertFileExists file="${exec.file}"/>
+		<au:assertLogContains text="Target executed"/>
+
+		<java classname="org.jacoco.ant.DumpExecClassNames" fork="true" classpath="${java.class.path}" failonerror="true">
+			<arg value="${exec.file}" />
+		</java>
+		<au:assertLogDoesntContain text="java/sql/Timestamp"/>
+	</target>
+
 	<target name="testIllegalReflectiveAccess">
 		<jacoco:coverage destfile="${exec.file}">
 			<java classname="org.jacoco.ant.IllegalReflectiveAccessTarget" fork="true" failonerror="true">
