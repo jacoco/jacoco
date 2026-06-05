@@ -14,6 +14,7 @@ package org.jacoco.agent.rt.internal;
 
 import java.lang.instrument.ClassFileTransformer;
 import java.lang.instrument.IllegalClassFormatException;
+import java.lang.reflect.InvocationTargetException;
 import java.security.CodeSource;
 import java.security.ProtectionDomain;
 
@@ -26,6 +27,11 @@ import org.jacoco.core.runtime.WildcardMatcher;
  * Class file transformer to instrument classes for code coverage analysis.
  */
 public class CoverageTransformer implements ClassFileTransformer {
+
+	/**
+	 * Cached result of {@link #getPlatformClassLoader()}.
+	 */
+	static final ClassLoader PLATFORM_LOADER = getPlatformClassLoader();
 
 	private static final String AGENT_PREFIX;
 
@@ -132,6 +138,31 @@ public class CoverageTransformer implements ClassFileTransformer {
 				includes.matches(classname) &&
 
 				!excludes.matches(classname);
+	}
+
+	/**
+	 * Invokes <a href=
+	 * "https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/ClassLoader.html#getPlatformClassLoader()">
+	 * {@code java.lang.ClassLoader::getPlatformClassLoader}</a> introduced in
+	 * JDK 9 by <a href="https://openjdk.org/jeps/261">JEP 261</a>.
+	 *
+	 * @return platform class loader, or {@code null} if method for retrieving
+	 *         it is unavailable
+	 * @throws IllegalStateException
+	 *             if exception occurs while retrieving platform class loader
+	 */
+	private static ClassLoader getPlatformClassLoader() {
+		try {
+			return (ClassLoader) ClassLoader.class
+					.getMethod("getPlatformClassLoader").invoke(null);
+		} catch (final NoSuchMethodException e) {
+			// prior to JDK 9
+			return null;
+		} catch (final IllegalAccessException e) {
+			throw new IllegalStateException(e);
+		} catch (final InvocationTargetException e) {
+			throw new IllegalStateException(e);
+		}
 	}
 
 	/**
