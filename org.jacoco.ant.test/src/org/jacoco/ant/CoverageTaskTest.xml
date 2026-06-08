@@ -159,7 +159,7 @@
 	</target>
 
 	<target name="testExclBootstrapClasses">
-		<jacoco:coverage destfile="${exec.file}">
+		<jacoco:coverage destfile="${exec.file}" inclbootstrapclasses="false" includes="java/sql/*">
 			<java classname="org.jacoco.ant.TestTarget" fork="true" failonerror="true">
 				<classpath path="${org.jacoco.ant.coverageTaskTest.classes.dir}"/>
 			</java>
