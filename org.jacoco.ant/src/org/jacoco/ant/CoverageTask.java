@@ -57,7 +57,7 @@ public class CoverageTask extends AbstractCoverageTask
 	public void addTask(final Task task) {
 		if (childTask != null) {
 			throw new BuildException(
-					"Only one child task can be supplied to the coverge task",
+					"Only one child task can be supplied to the coverage task",
 					getLocation());
 		}
 

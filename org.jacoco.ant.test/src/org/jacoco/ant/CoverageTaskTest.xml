@@ -31,7 +31,7 @@
 	</target>
 
 	<target name="testMultipleSubTasks">
-		<au:expectfailure expectedMessage="Only one child task can be supplied to the coverge task">
+		<au:expectfailure expectedMessage="Only one child task can be supplied to the coverage task">
 			<jacoco:coverage>
 				<java classname="org.jacoco.ant.TestTarget" fork="true" failonerror="true">
 					<classpath path="${org.jacoco.ant.coverageTaskTest.classes.dir}"/>
