@@ -138,7 +138,7 @@ public class AbstractCoverageTask extends Task {
 	}
 
 	/**
-	 * Sets the session identifier. Default is a auto-generated id
+	 * Sets the session identifier. Default is an auto-generated id
 	 *
 	 * @param id
 	 *            session identifier
