@@ -483,7 +483,7 @@ window['_pr_isIE6'] = function () {
               + '|\\\\x[A-Fa-f0-9]{2}'  // a hex escape
               + '|\\\\[0-9]+'  // a back-reference or octal escape
               + '|\\\\[^ux0-9]'  // other escape sequence
-              + '|\\(\\?[:!=]'  // start of a non-capturing group
+              + '|\\(\\?[:!==]'  // start of a non-capturing group
               + '|[\\(\\)\\^]'  // start/emd of a group, or line start
               + '|[^\\x5B\\x5C\\(\\)\\^]+'  // run of other characters
               + ')',
