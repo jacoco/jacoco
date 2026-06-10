@@ -31,6 +31,12 @@
       "matchPackageNames": ["org.ow2.asm:*"],
       "enabled": true,
       "addLabels": ["component: core"]
+    },
+    {
+      "description": "Enable updates of Kotlin",
+      "matchPackageNames": ["org.jetbrains.kotlin:*"],
+      "enabled": true,
+      "addLabels": ["component: test", "language: Kotlin"]
     }
   ]
 }
