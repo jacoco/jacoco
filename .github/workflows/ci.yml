@@ -39,15 +39,32 @@ jobs:
           - jdk: 24
           - jdk: 25
           - jdk: 26
+          - jdk: 27
+            ea: true
     name: JDK ${{ matrix.jdk }}${{ matrix.ecj && ' with ECJ' || ''}}
     runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+      - uses: oracle-actions/setup-java@fff43251af9936a0e6a4d5d0946e14f1680e9b6b # v1.5.0
+        if: ${{ matrix.ea }}
+        with:
+          website: 'jdk.java.net'
+          release: ${{ matrix.jdk }}
+          install-as-version: ${{ matrix.jdk }}
+          # If build starts to fail due to changes in JDK Early Access version
+          # 1. pin version
+          #    by defining variable in repository settings
+          #    (https://github.com/jacoco/jacoco/settings/variables/actions)
+          #    with URL of previous non-failing version
+          #    (eg https://download.java.net/java/early_access/jdk27/22/GPL/openjdk-27-ea+22_linux-aarch64_bin.tar.gz)
+          # 2. create issue
+          #    to investigate failure and to not forget to unpin version
+          uri: ${{ vars[format('JDK{0}_URL', matrix.jdk)] }}
       - uses: actions/setup-java@be666c2fcd27ec809703dec50e508c2fdc7f6654 # v5.2.0
         with:
           distribution: 'zulu'
           java-version: |
-            ${{ matrix.jdk }}
+            ${{ matrix.ea && ' ' || matrix.jdk }}
             21
       - &cache
         uses: actions/cache@27d5ce7f107fe9357f9df03efb73ab90386fccae # v5.0.5
