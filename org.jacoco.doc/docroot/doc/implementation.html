@@ -159,7 +159,7 @@
   Making a runtime library available to all instrumented classes can be a
   painful or impossible task in frameworks that use their own class loading
   mechanisms. Since Java 1.6 <code>java.lang.instrument.Instrumentation</code>
-  has an API to extends the bootsstrap loader. As our minimum target is Java 1.5
+  has an API to extends the bootstrap loader. As our minimum target is Java 1.5
   JaCoCo decouples the instrumented classes and the coverage runtime through
   official JRE API types only. The instrumented classes communicate through the
   <code>Object.equals(Object)</code> method with the runtime. A instrumented
