@@ -146,10 +146,11 @@ public class CoverageTransformer implements ClassFileTransformer {
 	 * {@code java.lang.ClassLoader::getPlatformClassLoader}</a> introduced in
 	 * JDK 9 by <a href="https://openjdk.org/jeps/261">JEP 261</a>.
 	 *
-	 * @return platform class loader, or {@code null} if method for retrieving
-	 *         it is unavailable
+	 * @return platform class loader, or {@code null} if no such method
 	 * @throws IllegalStateException
-	 *             if exception occurs while retrieving platform class loader
+	 *             if {@link IllegalAccessException} or
+	 *             {@link InvocationTargetException} occurs during invocation
+	 * @see #PLATFORM_LOADER
 	 */
 	private static ClassLoader getPlatformClassLoader() {
 		try {
