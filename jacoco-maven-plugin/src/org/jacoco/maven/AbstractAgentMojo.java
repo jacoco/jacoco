@@ -88,9 +88,9 @@ public abstract class AbstractAgentMojo extends AbstractJacocoMojo {
 	@Parameter(property = "jacoco.exclClassLoaders")
 	String exclClassLoaders;
 	/**
-	 * Specifies whether also classes from the bootstrap classloader should be
-	 * instrumented. Use this feature with caution, it needs heavy
-	 * includes/excludes tuning.
+	 * Specifies whether also classes from the bootstrap and platform
+	 * classloaders should be instrumented. Use this feature with caution, it
+	 * needs heavy includes/excludes tuning.
 	 */
 	@Parameter(property = "jacoco.inclBootstrapClasses")
 	Boolean inclBootstrapClasses;
