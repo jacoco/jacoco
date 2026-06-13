@@ -142,7 +142,7 @@
 	</target>
 
 	<target name="testInclBootstrapClasses">
-		<jacoco:coverage destfile="${exec.file}" inclbootstrapclasses="true" includes="java/sql/*">
+		<jacoco:coverage destfile="${exec.file}" inclbootstrapclasses="true" includes="java/util/*:java/sql/*">
 			<java classname="org.jacoco.ant.TestTarget" fork="true" failonerror="true">
 				<classpath path="${org.jacoco.ant.coverageTaskTest.classes.dir}"/>
 			</java>
@@ -155,7 +155,30 @@
 		<java classname="org.jacoco.ant.DumpExecClassNames" fork="true" classpath="${java.class.path}" failonerror="true">
 			<arg value="${exec.file}" />
 		</java>
+		<!-- class from bootstrap classloader -->
+		<au:assertLogContains text="java/util/UUID"/>
+		<!-- class from platform classloader introduced by JEP 261 in JDK 9, formerly from bootstrap classloader -->
 		<au:assertLogContains text="java/sql/Timestamp"/>
+	</target>
+
+	<target name="testExclBootstrapClasses">
+		<jacoco:coverage destfile="${exec.file}" inclbootstrapclasses="false" includes="java/util/*:java/sql/*">
+			<java classname="org.jacoco.ant.TestTarget" fork="true" failonerror="true">
+				<classpath path="${org.jacoco.ant.coverageTaskTest.classes.dir}"/>
+			</java>
+		</jacoco:coverage>
+
+		<au:assertLogContains text="Enhancing java with coverage"/>
+		<au:assertFileExists file="${exec.file}"/>
+		<au:assertLogContains text="Target executed"/>
+
+		<java classname="org.jacoco.ant.DumpExecClassNames" fork="true" classpath="${java.class.path}" failonerror="true">
+			<arg value="${exec.file}" />
+		</java>
+		<!-- class from bootstrap classloader -->
+		<au:assertLogDoesntContain text="java/util/UUID"/>
+		<!-- class from platform classloader introduced by JEP 261 in JDK 9, formerly from bootstrap classloader -->
+		<au:assertLogDoesntContain text="java/sql/Timestamp"/>
 	</target>
 
 	<target name="testIllegalReflectiveAccess">

@@ -14,6 +14,7 @@ package org.jacoco.agent.rt.internal;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
@@ -29,6 +30,7 @@ import org.jacoco.core.JaCoCo;
 import org.jacoco.core.internal.InputStreams;
 import org.jacoco.core.runtime.AbstractRuntime;
 import org.jacoco.core.runtime.AgentOptions;
+import org.jacoco.core.test.validation.JavaVersion;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -83,6 +85,42 @@ public class CoverageTransformerTest {
 		options.setInclBootstrapClasses(false);
 		CoverageTransformer t = createTransformer();
 		assertFalse(t.filter(null, "java/util/TreeSet", protectionDomain));
+	}
+
+	/**
+	 * Prior to introduction of platform class loader by JEP 261 in JDK 9
+	 * {@code java/sql/Timestamp} was loaded by bootstrap class loader - see
+	 * {@link #testFilterInclBootstrapClassesNegative()} and
+	 * {@link #platform_class_loader_should_be_available_starting_from_Java_9()}.
+	 *
+	 * @see #should_include_classes_loaded_by_platform_class_loader_when_inclbootstrap_classes_is_true()
+	 */
+	@Test
+	public void should_exclude_classes_loaded_by_platform_class_loader_when_inclbootstrap_classes_is_false() {
+		options.setInclBootstrapClasses(false);
+		CoverageTransformer t = createTransformer();
+		assertFalse(t.filter(CoverageTransformer.PLATFORM_LOADER,
+				"java/sql/Timestamp", protectionDomain));
+	}
+
+	/**
+	 * @see #should_exclude_classes_loaded_by_platform_class_loader_when_inclbootstrap_classes_is_false()
+	 */
+	@Test
+	public void should_include_classes_loaded_by_platform_class_loader_when_inclbootstrap_classes_is_true() {
+		options.setInclBootstrapClasses(true);
+		CoverageTransformer t = createTransformer();
+		assertTrue(t.filter(CoverageTransformer.PLATFORM_LOADER,
+				"java/sql/Timestamp", protectionDomain));
+	}
+
+	@Test
+	public void platform_class_loader_should_be_available_starting_from_Java_9() {
+		if (JavaVersion.current().isBefore("9")) {
+			assertNull(CoverageTransformer.PLATFORM_LOADER);
+		} else {
+			assertNotNull(CoverageTransformer.PLATFORM_LOADER);
+		}
 	}
 
 	@Test

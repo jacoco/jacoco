@@ -79,9 +79,9 @@ public final class AgentOptions {
 	public static final String EXCLCLASSLOADER = "exclclassloader";
 
 	/**
-	 * Specifies whether also classes from the bootstrap classloader should be
-	 * instrumented. Use this feature with caution, it needs heavy
-	 * includes/excludes tuning. Default is <code>false</code>.
+	 * Specifies whether also classes from the bootstrap and platform
+	 * classloaders should be instrumented. Use this feature with caution, it
+	 * needs heavy includes/excludes tuning. Default is <code>false</code>.
 	 */
 	public static final String INCLBOOTSTRAPCLASSES = "inclbootstrapclasses";
 
@@ -361,22 +361,23 @@ public final class AgentOptions {
 	}
 
 	/**
-	 * Returns whether classes from the bootstrap classloader should be
-	 * instrumented.
+	 * Returns whether classes from the bootstrap and platform classloaders
+	 * should be instrumented.
 	 *
-	 * @return <code>true</code> if classes from the bootstrap classloader
-	 *         should be instrumented
+	 * @return <code>true</code> if classes from the bootstrap and platform
+	 *         classloaders should be instrumented
 	 */
 	public boolean getInclBootstrapClasses() {
 		return getOption(INCLBOOTSTRAPCLASSES, false);
 	}
 
 	/**
-	 * Sets whether classes from the bootstrap classloader should be
-	 * instrumented.
+	 * Sets whether classes from the bootstrap and platform classloaders should
+	 * be instrumented.
 	 *
 	 * @param include
-	 *            <code>true</code> if bootstrap classes should be instrumented
+	 *            <code>true</code> if classes from the bootstrap and platform
+	 *            classloaders should be instrumented
 	 */
 	public void setInclBootstrapClasses(final boolean include) {
 		setOption(INCLBOOTSTRAPCLASSES, include);
