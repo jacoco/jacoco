@@ -15,6 +15,7 @@ package org.jacoco.core.internal.instr;
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
@@ -152,11 +153,12 @@ public class InstrSupportTest {
 	public void assertNotIntrumented_should_throw_exception_when_jacoco_data_field_is_present() {
 		try {
 			InstrSupport.assertNotInstrumented("$jacocoData", "Foo");
-			fail("exception expected");
+			fail("IllegalStateException expected");
 		} catch (IllegalStateException e) {
 			assertEquals(
 					"Cannot process instrumented class Foo. Please supply original non-instrumented classes.",
 					e.getMessage());
+			assertNull(e.getCause());
 		}
 	}
 
@@ -164,11 +166,12 @@ public class InstrSupportTest {
 	public void assertNotIntrumented_should_throw_exception_when_jacoco_init_method_is_present() {
 		try {
 			InstrSupport.assertNotInstrumented("$jacocoInit", "Foo");
-			fail("exception expected");
+			fail("IllegalStateException expected");
 		} catch (IllegalStateException e) {
 			assertEquals(
 					"Cannot process instrumented class Foo. Please supply original non-instrumented classes.",
 					e.getMessage());
+			assertNull(e.getCause());
 		}
 	}
 

@@ -12,6 +12,7 @@
  *******************************************************************************/
 package org.jacoco.cli.internal.commands;
 
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
@@ -84,7 +85,9 @@ public class DumpTest extends CommandTestBase {
 			execute("dump", "--destfile", execfile.getAbsolutePath(), "--port",
 					String.valueOf(port), "--retry", "1");
 			fail("IOException expected");
-		} catch (IOException ignore) {
+		} catch (IOException e) {
+			assertTrue(e.getMessage().startsWith("Connection refused"));
+			assertNull(e.getCause());
 		}
 
 		// Locale independent parts of error message:

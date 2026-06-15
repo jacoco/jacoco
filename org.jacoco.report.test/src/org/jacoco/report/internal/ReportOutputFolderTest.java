@@ -13,6 +13,7 @@
 package org.jacoco.report.internal;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertSame;
 import static org.junit.Assert.fail;
 
@@ -109,6 +110,8 @@ public class ReportOutputFolderTest {
 			fail("IllegalArgumentException expected");
 		} catch (final IllegalArgumentException e) {
 			// expected
+			assertEquals("Folders with different roots.", e.getMessage());
+			assertNull(e.getCause());
 		}
 	}
 }

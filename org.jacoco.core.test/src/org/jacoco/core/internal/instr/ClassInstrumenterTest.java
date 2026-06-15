@@ -12,6 +12,7 @@
  *******************************************************************************/
 package org.jacoco.core.internal.instr;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.fail;
 
@@ -43,6 +44,10 @@ public class ClassInstrumenterTest implements IProbeArrayStrategy {
 			fail("IllegalStateException expected");
 		} catch (final IllegalStateException e) {
 			// expected
+			assertEquals(
+					"Cannot process instrumented class null. Please supply original non-instrumented classes.",
+					e.getMessage());
+			assertNull(e.getCause());
 		}
 	}
 
@@ -55,6 +60,10 @@ public class ClassInstrumenterTest implements IProbeArrayStrategy {
 			fail("IllegalStateException expected");
 		} catch (final IllegalStateException e) {
 			// expected
+			assertEquals(
+					"Cannot process instrumented class null. Please supply original non-instrumented classes.",
+					e.getMessage());
+			assertNull(e.getCause());
 		}
 	}
 
