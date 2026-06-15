@@ -36,8 +36,7 @@ final class AntUnitSuiteFactory {
 	 * @return empty suite for given {@code testClass}
 	 */
 	static AntUnitSuite skip(final Class<?> testClass) {
-		return new AntUnitSuite(getResource(testClass, "empty.xml"),
-				testClass);
+		return new AntUnitSuite(getResource(testClass, "empty.xml"), testClass);
 	}
 
 	/** @return file for classpath resource next to {@code testClass} */
@@ -51,8 +50,8 @@ final class AntUnitSuiteFactory {
 		try {
 			return new File(url.toURI());
 		} catch (final URISyntaxException e) {
-			throw new IllegalArgumentException(
-					"Invalid resource URL: " + url, e);
+			throw new IllegalArgumentException("Invalid resource URL: " + url,
+					e);
 		}
 	}
 
