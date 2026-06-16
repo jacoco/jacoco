@@ -40,7 +40,8 @@ jobs:
           - jdk: 25
           - jdk: 26
     name: JDK ${{ matrix.jdk }}${{ matrix.ecj && ' with ECJ' || ''}}
-    runs-on: ubuntu-24.04
+    #runs-on: ubuntu-24.04
+    runs-on: windows-2025
     steps:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
       - uses: actions/setup-java@be666c2fcd27ec809703dec50e508c2fdc7f6654 # v5.2.0
@@ -68,6 +69,7 @@ jobs:
         env:
           JDK_VERSION: ${{ matrix.jdk }}
           JDK_HOME_VARIABLE_NAME: JAVA_HOME_${{ matrix.jdk }}_X64
+        shell: bash
         run: |
           echo "
           <toolchains>
@@ -84,11 +86,13 @@ jobs:
           </toolchains>
           " > toolchains.xml
       - name: 'Build'
+        shell: bash
         run: |
           ./mvnw -V -B -e \
             verify -Djdk.version=${{ matrix.jdk }} -Dbytecode.version=${{ matrix.jdk }} \
             ${{ matrix.ecj && '-Decj' || ''}} \
             --toolchains=toolchains.xml
+
   Windows:
     runs-on: windows-2025
     environment: ${{ (github.repository == 'jacoco/jacoco' && github.ref == 'refs/heads/master') && 'snapshot' || null }}
