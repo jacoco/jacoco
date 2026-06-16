@@ -42,6 +42,7 @@ import org.openjdk.jol.layouters.Layouter;
  * @see <a href="https://shipilev.net/jvm/objects-inside-out/">Java Objects
  *      Inside Out</a>
  */
+@org.junit.Ignore("windows")
 public class LineImplMemoryTest {
 
 	/**

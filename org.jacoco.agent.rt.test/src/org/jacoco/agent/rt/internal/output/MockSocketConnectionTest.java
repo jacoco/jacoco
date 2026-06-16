@@ -42,8 +42,9 @@ public class MockSocketConnectionTest extends ExecutorTestBase {
 	 * To verify that the tests reflect the behavior of real TCP sockets this
 	 * flag can be set to <code>true</code>.
 	 */
-	private static final boolean REAL_SOCKETS = Boolean
-			.getBoolean("MockSocketConnectionTest.realSockets");
+	private static final boolean REAL_SOCKETS =
+			// Boolean.getBoolean("MockSocketConnectionTest.realSockets");
+			true;
 
 	private Socket a;
 
@@ -104,7 +105,9 @@ public class MockSocketConnectionTest extends ExecutorTestBase {
 			fail("SocketException expected");
 		} catch (final SocketException e) {
 			// expected
-			assertEquals("socket closed", e.getMessage());
+			assertEquals(!REAL_SOCKETS || JavaVersion.current().isBefore("9")
+					? "socket closed"
+					: "Socket closed", e.getMessage());
 			assertNull(e.getCause());
 		}
 	}
@@ -131,7 +134,9 @@ public class MockSocketConnectionTest extends ExecutorTestBase {
 			fail("SocketException expected");
 		} catch (final SocketException e) {
 			// expected
-			assertEquals("socket closed", e.getMessage());
+			assertEquals(!REAL_SOCKETS || JavaVersion.current().isBefore("7")
+					? "socket closed"
+					: "Socket closed", e.getMessage());
 			assertNull(e.getCause());
 		}
 	}

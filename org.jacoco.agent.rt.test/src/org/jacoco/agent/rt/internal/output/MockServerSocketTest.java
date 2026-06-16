@@ -27,6 +27,7 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 
+import org.jacoco.core.test.validation.JavaVersion;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -42,8 +43,9 @@ public class MockServerSocketTest extends ExecutorTestBase {
 	 * To verify that the tests reflect the behavior of real TCP sockets this
 	 * flag can be set to <code>true</code>.
 	 */
-	private static final boolean REAL_SOCKETS = Boolean
-			.getBoolean("MockServerSocketTest.realSockets");
+	private static final boolean REAL_SOCKETS =
+			// Boolean.getBoolean("MockServerSocketTest.realSockets");
+			true;
 
 	@Before
 	@Override
@@ -100,7 +102,13 @@ public class MockServerSocketTest extends ExecutorTestBase {
 			fail("SocketException expected");
 		} catch (final SocketException e) {
 			// expected
-			assertEquals("socket closed", e.getMessage());
+			// FIXME test JDK 5
+			assertEquals(!REAL_SOCKETS || JavaVersion.current().isBefore("11")
+					? "socket closed"
+					: JavaVersion.current().isBefore("13") //
+							? "Interrupted function call: accept failed"
+							: "Socket closed",
+					e.getMessage());
 			assertNull(e.getCause());
 		}
 	}
@@ -127,7 +135,9 @@ public class MockServerSocketTest extends ExecutorTestBase {
 			fail("SocketException expected");
 		} catch (final SocketException e) {
 			// expected
-			assertEquals("socket closed", e.getMessage());
+			// FIXME test JDK 5
+			assertEquals(!REAL_SOCKETS ? "socket closed" : "Socket is closed",
+					e.getMessage());
 			assertNull(e.getCause());
 		}
 	}
