@@ -82,6 +82,52 @@ public class LineImplMemoryTest {
 	}
 
 	/**
+	 * Potentially experimental in JDK 30 and default in JDK 33
+	 * https://bugs.openjdk.org/browse/JDK-8360700?focusedId=14862778&page=com.atlassian.jira.plugin.system.issuetabpanels:comment-tabpanel#comment-14862778
+	 */
+	@Test
+	public void lilliput2() throws Exception {
+		final Layouter layouter = new HotSpotLayouter(
+				new Model64_Lilliput(/* compressed references */ true, 8,
+						/* Lilliput 2 */ true),
+				30);
+		assertEquals(text(
+				"Hotspot Layout Simulation (JDK 30, 64-bit model, Lilliput (ultimate target), compressed references, compressed classes, 8-byte aligned)",
+				"org.jacoco.core.internal.analysis.LineImpl object internals:",
+				"OFF  SZ                                            TYPE DESCRIPTION               VALUE",
+				"  0   1                                                 (object header: mark)     N/A",
+				"  1   3                                                 (object header: class)    N/A",
+				"  4   4   org.jacoco.core.internal.analysis.CounterImpl LineImpl.instructions     N/A",
+				"  8   4   org.jacoco.core.internal.analysis.CounterImpl LineImpl.branches         N/A",
+				" 12   4                                                 (object alignment gap)    ",
+				"Instance size: 16 bytes",
+				"Space losses: 0 bytes internal + 4 bytes external = 4 bytes total"),
+				layout(layouter));
+		assertEquals(48432, sizeOfSingletons(layouter));
+	}
+
+	@Test
+	public void lilliput2_without_compressed_references() throws Exception {
+		final Layouter layouter = new HotSpotLayouter(
+				new Model64_Lilliput(/* compressed references */ false, 8,
+						/* Lilliput 2 */ true),
+				30);
+		assertEquals(text(
+				"Hotspot Layout Simulation (JDK 30, 64-bit model, Lilliput (ultimate target), NO compressed references, compressed classes, 8-byte aligned)",
+				"org.jacoco.core.internal.analysis.LineImpl object internals:",
+				"OFF  SZ                                            TYPE DESCRIPTION               VALUE",
+				"  0   1                                                 (object header: mark)     N/A",
+				"  1   3                                                 (object header: class)    N/A",
+				"  4   4                                                 (alignment/padding gap)   ",
+				"  8   8   org.jacoco.core.internal.analysis.CounterImpl LineImpl.instructions     N/A",
+				" 16   8   org.jacoco.core.internal.analysis.CounterImpl LineImpl.branches         N/A",
+				"Instance size: 24 bytes",
+				"Space losses: 4 bytes internal + 0 bytes external = 4 bytes total"),
+				layout(layouter));
+		assertEquals(72728, sizeOfSingletons(layouter));
+	}
+
+	/**
 	 * <ul>
 	 * <li>JDK 24, 25 and 26 with {@code -XX:+UseCompactObjectHeaders}</li>
 	 * <li>JDK 27 and above</li>
