@@ -83,8 +83,8 @@ public class LineImplMemoryTest {
 
 	/**
 	 * <ul>
-	 * <li>JDK 27 and above</li>
 	 * <li>JDK 24, 25 and 26 with {@code -XX:+UseCompactObjectHeaders}</li>
+	 * <li>JDK 27 and above</li>
 	 * </ul>
 	 *
 	 * @see <a href="https://openjdk.org/jeps/450">JEP 450: Compact Object
@@ -92,7 +92,7 @@ public class LineImplMemoryTest {
 	 * @see <a href="https://openjdk.org/jeps/519">JEP 519: Compact Object
 	 *      Headers</a> delivered in JDK 25
 	 * @see <a href="https://openjdk.org/jeps/534">JEP 534: Compact Object
-	 *      Headers by Default</a>
+	 *      Headers by Default</a> delivered in JDK 27
 	 */
 	@Test
 	public void compact_object_headers() throws Exception {
@@ -119,9 +119,9 @@ public class LineImplMemoryTest {
 
 	/**
 	 * <ul>
-	 * <li>JDK 27 and above with {@code -Xmx32g}</li>
 	 * <li>JDK 24, 25 and 26 with
 	 * {@code -XX:+UseCompactObjectHeaders -Xmx32g}</li>
+	 * <li>JDK 27 and above with {@code -Xmx32g}</li>
 	 * </ul>
 	 */
 	@Test
@@ -259,7 +259,7 @@ public class LineImplMemoryTest {
 	 *      Relax alignment of array elements</a> in JDK 23 and <a href=
 	 *      "https://github.com/openjdk/jol/commit/8c4d7be996489676b9ff9caef83610b15c726019">corresponding
 	 *      change in JOL</a> as another example of change in VM unknown to JOL
-	 *      {@link HotSpotLayouter} in version 0.17
+	 *      {@link HotSpotLayouter} simulation in version 0.17
 	 */
 	@Test
 	public void clusterOops() {
