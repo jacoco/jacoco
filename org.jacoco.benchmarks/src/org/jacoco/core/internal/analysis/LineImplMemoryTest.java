@@ -191,9 +191,13 @@ public class LineImplMemoryTest {
 	}
 
 	private static String layout(final Layouter layouter) {
+		return layout(layouter, LineImpl.class);
+	}
+
+	private static String layout(final Layouter layouter, final Class<?> c) {
 		return layouter + "\n" //
-				+ layouter.layout(ClassData.parseClass(LineImpl.class))
-						.toPrintable();
+				+ layouter.layout(ClassData.parseClass(c)).toPrintable()
+						.replace("\r\n", "\n");
 	}
 
 	private static long sizeOfSingletons(final Layouter layouter)
@@ -265,7 +269,8 @@ public class LineImplMemoryTest {
 	public void clusterOops() {
 		final Layouter layouter = currentLayouter();
 		if (JavaVersion.current().isBefore("25")) {
-			assertEquals(text(
+			assertEquals(text( //
+					"Current VM Layout",
 					"org.jacoco.core.internal.analysis.LineImplMemoryTest$Derived object internals:",
 					"OFF  SZ               TYPE DESCRIPTION               VALUE",
 					"  0   8                    (object header: mark)     N/A",
@@ -277,10 +282,10 @@ public class LineImplMemoryTest {
 					" 28   4                    (object alignment gap)    ",
 					"Instance size: 32 bytes",
 					"Space losses: 0 bytes internal + 4 bytes external = 4 bytes total"),
-					layouter.layout(ClassData.parseClass(Derived.class))
-							.toPrintable());
+					layout(layouter, Derived.class));
 		} else if (JavaVersion.current().isBefore("27")) {
-			assertEquals(text(
+			assertEquals(text( //
+					"Current VM Layout",
 					"org.jacoco.core.internal.analysis.LineImplMemoryTest$Derived object internals:",
 					"OFF  SZ               TYPE DESCRIPTION               VALUE",
 					"  0   8                    (object header: mark)     N/A",
@@ -292,11 +297,11 @@ public class LineImplMemoryTest {
 					" 28   4                    (object alignment gap)    ",
 					"Instance size: 32 bytes",
 					"Space losses: 0 bytes internal + 4 bytes external = 4 bytes total"),
-					layouter.layout(ClassData.parseClass(Derived.class))
-							.toPrintable());
+					layout(layouter, Derived.class));
 		} else {
 			// https://openjdk.org/jeps/534
-			assertEquals(text(
+			assertEquals(text( //
+					"Current VM Layout",
 					"org.jacoco.core.internal.analysis.LineImplMemoryTest$Derived object internals:",
 					"OFF  SZ               TYPE DESCRIPTION               VALUE",
 					"  0   8                    (object header: mark)     N/A",
@@ -306,8 +311,7 @@ public class LineImplMemoryTest {
 					" 20   4                int Derived.nonOop            N/A",
 					"Instance size: 24 bytes",
 					"Space losses: 0 bytes internal + 0 bytes external = 0 bytes total"),
-					layouter.layout(ClassData.parseClass(Derived.class))
-							.toPrintable());
+					layout(layouter, Derived.class));
 		}
 	}
 
@@ -323,7 +327,8 @@ public class LineImplMemoryTest {
 
 	/**
 	 * Poor man's replacement for <a href="https://openjdk.org/jeps/378">Java 15
-	 * Text Blocks</a>.
+	 * Text Blocks</a>. As with Text Blocks, the LF character is used as the
+	 * line terminator in the resulting string.
 	 */
 	private static String text(String... text) {
 		final StringBuilder sb = new StringBuilder();
