@@ -55,7 +55,9 @@ public abstract class AbstractAgentMojo extends AbstractJacocoMojo {
 	/**
 	 * If set to true and the execution data file already exists, coverage data
 	 * is appended to the existing file. If set to false, an existing execution
-	 * data file will be replaced.
+	 * data file will be replaced. The default behaviour is that execution data
+	 * files are never cleared but coverage is always appended to an existing
+	 * file.
 	 */
 	@Parameter(property = "jacoco.append")
 	Boolean append;
