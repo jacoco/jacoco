@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+   Copyright (c) 2009, 2022 Mountainminds GmbH & Co. KG and Contributors
+   This program and the accompanying materials are made available under
+   the terms of the Eclipse Public License 2.0 which is available at
+   http://www.eclipse.org/legal/epl-2.0
+
+   SPDX-License-Identifier: EPL-2.0
+
+   Contributors:
+      Mads Mohr Christensen - implementation of MergeMojo
+-->
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <parent>
+    <groupId>jacoco</groupId>
+    <artifactId>setup-parent</artifactId>
+    <version>1.0-SNAPSHOT</version>
+  </parent>
+
+  <artifactId>it-merge-append</artifactId>
+  <packaging>pom</packaging>
+
+  <modules>
+    <module>it-merge-append-project1</module>
+    <module>it-merge-append-project2</module>
+  </modules>
+
+  <dependencyManagement>
+    <dependencies>
+      <dependency>
+        <groupId>jacoco</groupId>
+        <artifactId>it-merge-append-project1</artifactId>
+        <version>1.0-SNAPSHOT</version>
+      </dependency>
+    </dependencies>
+  </dependencyManagement>
+
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>@project.groupId@</groupId>
+        <artifactId>jacoco-maven-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>prepare-agent</id>
+            <goals>
+              <goal>prepare-agent</goal>
+            </goals>
+            <configuration>
+              <destFile>${project.build.directory}/jacoco.exec</destFile>
+            </configuration>
+          </execution>
+          <execution>
+            <id>merge</id>
+            <phase>post-integration-test</phase>
+            <goals>
+              <goal>merge</goal>
+            </goals>
+            <configuration>
+              <fileSets>
+                <fileSet>
+                  <directory>${project.build.directory}</directory>
+                  <includes>
+                    <include>*.exec</include>
+                  </includes>
+                </fileSet>
+              </fileSets>
+              <destFile>${project.parent.build.directory}/merged.exec</destFile>
+              <append>false</append>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-surefire-plugin</artifactId>
+        <configuration>
+          <argLine>${argLine}</argLine>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
+
+  <profiles>
+    <profile>
+      <id>check-using-merge-append-file</id>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>@project.groupId@</groupId>
+            <artifactId>jacoco-maven-plugin</artifactId>
+            <executions>
+              <execution>
+                <id>default-cli</id>
+                <goals>
+                  <goal>check</goal>
+                </goals>
+                <configuration>
+                  <dataFile>${project.parent.build.directory}/merged.exec</dataFile>
+                  <rules>
+                    <rule>
+                      <element>CLASS</element>
+                      <limits>
+                        <limit>
+                          <counter>LINE</counter>
+                          <value>COVEREDRATIO</value>
+                          <minimum>1</minimum>
+                        </limit>
+                      </limits>
+                    </rule>
+                  </rules>
+                </configuration>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+  </profiles>
+
+</project>
