@@ -40,6 +40,12 @@ final class KotlinWhenFilter implements IFilter {
 	}
 
 	private static class Matcher extends AbstractMatcher {
+		/**
+		 * Even {@code LINENUMBER}s do not help to disambiguate {@code when}
+		 * from some variants of {@code if} with handwritten
+		 * {@code throw NoWhenBranchMatchedException}, so this filter assumes
+		 * absence of the later ones.
+		 */
 		void match(final AbstractInsnNode start, final IFilterOutput output) {
 			if (start.getType() != AbstractInsnNode.LABEL) {
 				return;
