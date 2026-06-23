@@ -120,32 +120,6 @@
 
     <plugins>
       <plugin>
-        <groupId>org.jacoco</groupId>
-        <artifactId>jacoco-maven-plugin</artifactId>
-        <version>${project.version}</version>
-        <executions>
-          <execution>
-            <id>report-aggregate</id>
-            <phase>prepare-package</phase>
-            <goals>
-              <goal>report-aggregate</goal>
-            </goals>
-            <configuration>
-              <title>JaCoCo</title>
-              <footer>Code Coverage Report for JaCoCo ${project.version}</footer>
-              <includes>
-                <!-- Analyze class files only to exclude shaded agent JAR from report -->
-                <include>**/*.class</include>
-              </includes>
-              <excludes>
-                <exclude>**/HelpMojo.class</exclude>
-              </excludes>
-            </configuration>
-          </execution>
-        </executions>
-      </plugin>
-
-      <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-antrun-plugin</artifactId>
         <executions>
@@ -322,4 +296,49 @@
       </plugin>
     </plugins>
   </build>
+
+  <profiles>
+    <!--
+    The following profile is to work around IntelliJ IDEA inability
+    during project import to resolve plugin snapshot without it being installed.
+    See https://youtrack.jetbrains.com/issue/IDEA-238307
+    -->
+    <profile>
+      <id>not-intellij-sync</id>
+      <activation>
+        <property>
+          <name>!idea.maven.embedder.version</name>
+        </property>
+      </activation>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.jacoco</groupId>
+            <artifactId>jacoco-maven-plugin</artifactId>
+            <version>${project.version}</version>
+            <executions>
+              <execution>
+                <id>report-aggregate</id>
+                <phase>prepare-package</phase>
+                <goals>
+                  <goal>report-aggregate</goal>
+                </goals>
+                <configuration>
+                  <title>JaCoCo</title>
+                  <footer>Code Coverage Report for JaCoCo ${project.version}</footer>
+                  <includes>
+                    <!-- Analyze class files only to exclude shaded agent JAR from report -->
+                    <include>**/*.class</include>
+                  </includes>
+                  <excludes>
+                    <exclude>**/HelpMojo.class</exclude>
+                  </excludes>
+                </configuration>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+  </profiles>
 </project>
