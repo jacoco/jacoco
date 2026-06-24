@@ -10,10 +10,10 @@
  *    Evgeny Mandrikov - initial API and implementation
  *
  *******************************************************************************/
-package org.jacoco.core.test.validation.java21;
+package org.jacoco.core.test.validation.java25;
 
 import org.jacoco.core.test.validation.ValidationTestBase;
-import org.jacoco.core.test.validation.java21.targets.FlexibleConstructorBodiesTarget;
+import org.jacoco.core.test.validation.java25.targets.FlexibleConstructorBodiesTarget;
 
 /**
  * Test of code coverage in {@link FlexibleConstructorBodiesTarget}.
