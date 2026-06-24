@@ -149,7 +149,7 @@
     <!-- Dependencies versions -->
     <asm.version>9.10.1</asm.version>
     <ant.version>1.9.16</ant.version>
-    <args4j.version>2.0.28</args4j.version>
+    <picocli.version>4.7.7</picocli.version>
     <junit.version>4.13.2</junit.version>
     <googlecodeprettify.version>20100721</googlecodeprettify.version>
 
@@ -251,9 +251,9 @@
         <version>1.4.1</version>
       </dependency>
       <dependency>
-        <groupId>args4j</groupId>
-        <artifactId>args4j</artifactId>
-        <version>${args4j.version}</version>
+        <groupId>info.picocli</groupId>
+        <artifactId>picocli</artifactId>
+        <version>${picocli.version}</version>
       </dependency>
       <dependency>
         <groupId>junit</groupId>
@@ -719,9 +719,9 @@
                     license = new String(java.nio.file.Files.readAllBytes(path), "UTF-8");
                     project.getProperties().setProperty(libraryId + ".license", license);
                 }
-                loadLicense("args4j");
                 loadLicense("asm");
                 loadLicense("googlecodeprettify");
+                loadLicense("picocli");
               ]]>
               </script>
             </configuration>

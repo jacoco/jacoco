@@ -25,9 +25,8 @@ public class MainTest extends CommandTestBase {
 
 		assertFailure();
 		assertNoOutput(out);
-		assertContains("\"<command>\"", err);
-		assertContains("Usage: java -jar jacococli.jar --help | <command>",
-				err);
+		assertContains("Missing required subcommand", err);
+		assertContains("Usage: java -jar jacococli.jar [COMMAND]", err);
 		assertContains("Command line interface for JaCoCo.", err);
 	}
 
@@ -38,9 +37,19 @@ public class MainTest extends CommandTestBase {
 
 		assertFailure();
 		assertNoOutput(out);
-		assertContains("\"foo\" is not a valid value for \"<command>\"", err);
-		assertContains("Usage: java -jar jacococli.jar --help | <command>",
-				err);
+		assertContains("Unmatched argument at index 0: 'foo'", err);
+		assertContains("Usage: java -jar jacococli.jar [COMMAND]", err);
+	}
+
+	@Test
+	public void should_print_error_message_when_invalid_option_is_given()
+			throws Exception {
+		execute("--invalid");
+
+		assertFailure();
+		assertNoOutput(out);
+		assertContains("Unknown option: '--invalid'", err);
+		assertContains("Usage: java -jar jacococli.jar [COMMAND]", err);
 	}
 
 	@Test
@@ -50,9 +59,9 @@ public class MainTest extends CommandTestBase {
 
 		assertOk();
 		assertNoOutput(err);
-		assertContains("Usage: java -jar jacococli.jar --help | <command>",
-				out);
-		assertContains("<command> : dump|instrument|merge|report", out);
+		assertContains("Usage: java -jar jacococli.jar [COMMAND]", out);
+		assertContains("Commands:", out);
+		assertContains(" instrument ", out);
 	}
 
 	@Test
@@ -72,6 +81,36 @@ public class MainTest extends CommandTestBase {
 	public void should_not_print_any_output_when_quiet_option_is_given()
 			throws Exception {
 		execute("version", "--quiet");
+
+		assertOk();
+		assertNoOutput(out);
+		assertNoOutput(err);
+	}
+
+	@Test
+	public void wip() throws Exception {
+		// TODO actually behavior is unchanged
+		execute("--quiet", "version");
+
+		assertOk();
+		assertNoOutput(out);
+		assertNoOutput(err);
+	}
+
+	@Test
+	public void wip2() throws Exception {
+		// TODO actually behavior is unchanged
+		execute("--help", "version");
+
+		assertOk();
+		assertNoOutput(out);
+		assertNoOutput(err);
+	}
+
+	@Test
+	public void wip3() throws Exception {
+		// TODO setOverwrittenOptionsAllowed ?
+		execute("version", "--quiet", "--quiet");
 
 		assertOk();
 		assertNoOutput(out);
