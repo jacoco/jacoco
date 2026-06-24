@@ -48,6 +48,10 @@ public class ModifiedSystemClassRuntimeTest extends RuntimeTestBase {
 			fail("RuntimeException expected");
 		} catch (final RuntimeException e) {
 			// expected
+			assertEquals(String.format("Class %s could not be instrumented.",
+					TARGET_CLASS_NAME), e.getMessage());
+			assertEquals(NoSuchFieldException.class, e.getCause().getClass());
+			assertEquals("$jacocoAccess", e.getCause().getMessage());
 		}
 	}
 

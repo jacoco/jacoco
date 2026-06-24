@@ -14,6 +14,7 @@ package org.jacoco.core.data;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
@@ -129,6 +130,10 @@ public class ExecutionDataTest {
 			fail("IllegalStateException expected");
 		} catch (final IllegalStateException e) {
 			// expected
+			assertEquals(
+					"Different ids (0000000000000005 and 0000000000000037).",
+					e.getMessage());
+			assertNull(e.getCause());
 		}
 	}
 
@@ -141,6 +146,10 @@ public class ExecutionDataTest {
 			fail("IllegalStateException expected");
 		} catch (final IllegalStateException e) {
 			// expected
+			assertEquals(
+					"Different class names Example and Exxxample for id 0000000000000005.",
+					e.getMessage());
+			assertNull(e.getCause());
 		}
 	}
 
@@ -153,6 +162,10 @@ public class ExecutionDataTest {
 			fail("IllegalStateException expected");
 		} catch (final IllegalStateException e) {
 			// expected
+			assertEquals(
+					"Incompatible execution data for class Example with id 0000000000000005.",
+					e.getMessage());
+			assertNull(e.getCause());
 		}
 	}
 
