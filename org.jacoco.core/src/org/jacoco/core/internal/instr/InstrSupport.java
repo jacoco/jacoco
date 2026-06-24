@@ -29,6 +29,23 @@ public final class InstrSupport {
 	/** ASM API version */
 	public static final int ASM_API_VERSION = Opcodes.ASM9;
 
+	/**
+	 * Maximum bytecode version accepted by ASM.
+	 *
+	 * @see #BYTECODE_VERSION_MAX
+	 */
+	private static final int ASM_BYTECODE_VERSION_MAX = Opcodes.V27;
+
+	/**
+	 * Maximum bytecode version accepted by
+	 * {@link InstrSupport#classReaderFor(byte[])}.
+	 *
+	 * Implementation note: update of {@link #ASM_BYTECODE_VERSION_MAX} does not
+	 * necessarily mean update of this constant, so this constant not computed
+	 * from {@link #ASM_BYTECODE_VERSION_MAX}.
+	 */
+	public static final int BYTECODE_VERSION_MAX = Opcodes.V27 + 1;
+
 	// === Data Field ===
 
 	/**
@@ -273,9 +290,10 @@ public final class InstrSupport {
 	 */
 	public static ClassReader classReaderFor(final byte[] b) {
 		final int originalVersion = getMajorVersion(b);
-		if (originalVersion == Opcodes.V27 + 1) {
+		if (ASM_BYTECODE_VERSION_MAX < originalVersion
+				&& originalVersion <= BYTECODE_VERSION_MAX) {
 			// temporarily downgrade version to bypass check in ASM
-			setMajorVersion(Opcodes.V27, b);
+			setMajorVersion(ASM_BYTECODE_VERSION_MAX, b);
 		}
 		final ClassReader classReader = new ClassReader(b);
 		setMajorVersion(originalVersion, b);
