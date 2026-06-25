@@ -695,6 +695,7 @@
         <module>../org.jacoco.core.test.validation.java16</module>
         <module>../org.jacoco.core.test.validation.java21</module>
         <module>../org.jacoco.core.test.validation.java22</module>
+        <module>../org.jacoco.core.test.validation.java28</module>
         <!-- Groovy 3.0.25 does not support Java 28
         <module>../org.jacoco.core.test.validation.groovy</module>
         -->
