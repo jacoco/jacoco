@@ -56,6 +56,27 @@ public class InstrumentTest extends CommandTestBase {
 	}
 
 	@Test
+	public void equal_sign_can_be_used_to_separate_option_name_from_value()
+			throws Exception {
+		execute("instrument", "--dest=" + tmp.getRoot().getAbsolutePath());
+
+		assertOk();
+	}
+
+	@Test
+	public void later_option_value_overrides_earlier() throws Exception {
+		String dir1 = new File(tmp.getRoot(), "dir1").getAbsolutePath();
+		String dir2 = new File(tmp.getRoot(), "dir2").getAbsolutePath();
+		execute("instrument", //
+				"--dest", dir1, //
+				"--dest", dir2);
+
+		assertOk();
+		assertContainsNot("[INFO] 0 classes instrumented to " + dir1, out);
+		assertContains("[INFO] 0 classes instrumented to " + dir2, out);
+	}
+
+	@Test
 	public void should_instrument_class_files_and_copy_resources_when_folder_is_given()
 			throws Exception {
 		File destdir = tmp.getRoot();

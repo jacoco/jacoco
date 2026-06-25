@@ -12,6 +12,7 @@
  *******************************************************************************/
 package org.jacoco.cli.internal;
 
+import org.jacoco.core.JaCoCo;
 import org.junit.Test;
 
 /**
@@ -55,6 +56,9 @@ public class MainTest extends CommandTestBase {
 		assertContains("<command> : dump|instrument|merge|report", out);
 	}
 
+	/**
+	 * @see #should_ignore_help_option_before_command()
+	 */
 	@Test
 	public void should_print_command_usage_when_command_and_help_option_is_given()
 			throws Exception {
@@ -68,6 +72,21 @@ public class MainTest extends CommandTestBase {
 				out);
 	}
 
+	/**
+	 * @see #should_print_command_usage_when_command_and_help_option_is_given()
+	 */
+	@Test
+	public void should_ignore_help_option_before_command() throws Exception {
+		execute("--help", "dump");
+
+		assertFailure();
+		assertContains("Usage: java -jar jacococli.jar dump", err);
+		assertContains("Option \"--destfile\" is required", err);
+	}
+
+	/**
+	 * @see #should_ignore_quiet_option_before_command()
+	 */
 	@Test
 	public void should_not_print_any_output_when_quiet_option_is_given()
 			throws Exception {
@@ -75,6 +94,18 @@ public class MainTest extends CommandTestBase {
 
 		assertOk();
 		assertNoOutput(out);
+		assertNoOutput(err);
+	}
+
+	/**
+	 * @see #should_not_print_any_output_when_quiet_option_is_given()
+	 */
+	@Test
+	public void should_ignore_quiet_option_before_command() throws Exception {
+		execute("--quiet", "version");
+
+		assertOk();
+		assertContains(JaCoCo.VERSION, out);
 		assertNoOutput(err);
 	}
 
