@@ -15,6 +15,7 @@ package org.jacoco.core.internal.analysis.filter;
 import org.jacoco.core.internal.instr.InstrSupport;
 import org.junit.Test;
 import org.objectweb.asm.Opcodes;
+import org.objectweb.asm.tree.AbstractInsnNode;
 import org.objectweb.asm.tree.MethodNode;
 
 /**
@@ -124,6 +125,52 @@ public class AnnotationGeneratedFilterTest extends FilterTestBase {
 		filter.filter(m, context, output);
 
 		assertIgnored(m);
+	}
+
+	@Test
+	public void should_filter_synthetic_lambdas_in_annotated_methods() {
+		// 1. Visit the enclosing method and annotate it with a Generated
+		// annotation
+		final MethodNode enclosing = new MethodNode(
+				InstrSupport.ASM_API_VERSION, 0, "main",
+				"([Ljava/lang/String;)V", null, null);
+		enclosing.visitAnnotation("Lgroovy/transform/Generated;", true);
+
+		// Add an invokedynamic matching the lambda handle
+		org.objectweb.asm.Handle bsm = new org.objectweb.asm.Handle(
+				Opcodes.H_INVOKESTATIC, "java/lang/invoke/LambdaMetafactory",
+				"metafactory", "...", false);
+		org.objectweb.asm.Handle lambdaHandle = new org.objectweb.asm.Handle(
+				Opcodes.H_INVOKESTATIC, "Test", "lambda$main$0", "()V", false);
+		enclosing.visitInvokeDynamicInsn("run", "()Ljava/lang/Runnable;", bsm,
+				new Object[] { org.objectweb.asm.Type.getType("()V"),
+						lambdaHandle, org.objectweb.asm.Type.getType("()V") });
+
+		enclosing.visitInsn(Opcodes.RETURN);
+
+		// 2. Visit the synthetic lambda method
+		final MethodNode lambda = new MethodNode(InstrSupport.ASM_API_VERSION,
+				Opcodes.ACC_SYNTHETIC | Opcodes.ACC_PRIVATE
+						| Opcodes.ACC_STATIC,
+				"lambda$main$0", "()V", null, null);
+		lambda.visitInsn(Opcodes.RETURN);
+
+		// Simulate sequential filtering where enclosing method is processed
+		// before the lambda
+		filter.filter(enclosing, context, new IFilterOutput() {
+			public void ignore(AbstractInsnNode f, AbstractInsnNode t) {
+			}
+
+			public void merge(AbstractInsnNode i1, AbstractInsnNode i2) {
+			}
+
+			public void replaceBranches(AbstractInsnNode s, Replacements r) {
+			}
+		});
+
+		filter.filter(lambda, context, output);
+
+		assertMethodIgnored(lambda);
 	}
 
 }

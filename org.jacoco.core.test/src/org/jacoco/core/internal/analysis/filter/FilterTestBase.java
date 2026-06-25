@@ -108,6 +108,19 @@ public abstract class FilterTestBase {
 		}
 	}
 
+	final void assertReplacedBranches(final MethodNode methodNode,
+			final AbstractInsnNode source, final Replacements replacements) {
+		final List<Replacement> list = new ArrayList<Replacement>();
+		for (final Collection<Replacements.InstructionBranch> branches : replacements
+				.values()) {
+			for (final Replacements.InstructionBranch branch : branches) {
+				list.add(new Replacement(list.size(), branch.instruction,
+						branch.branch));
+			}
+		}
+		assertReplacedBranches(methodNode, source, list);
+	}
+
 	private void assertReplacements(final MethodNode methodNode,
 			final AbstractInsnNode source,
 			final List<Replacement> expectedReplacements) {
