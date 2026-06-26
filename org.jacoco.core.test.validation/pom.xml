@@ -506,6 +506,7 @@
         <module>../org.jacoco.core.test.validation.java14</module>
         <module>../org.jacoco.core.test.validation.java16</module>
         <module>../org.jacoco.core.test.validation.java21</module>
+        <module>../org.jacoco.core.test.validation.java22</module>
         <module>../org.jacoco.core.test.validation.groovy</module>
         <module>../org.jacoco.core.test.validation.scala</module>
       </modules>
@@ -535,6 +536,7 @@
         <module>../org.jacoco.core.test.validation.java14</module>
         <module>../org.jacoco.core.test.validation.java16</module>
         <module>../org.jacoco.core.test.validation.java21</module>
+        <module>../org.jacoco.core.test.validation.java22</module>
         <module>../org.jacoco.core.test.validation.groovy</module>
         <module>../org.jacoco.core.test.validation.scala</module>
       </modules>
@@ -564,6 +566,7 @@
         <module>../org.jacoco.core.test.validation.java14</module>
         <module>../org.jacoco.core.test.validation.java16</module>
         <module>../org.jacoco.core.test.validation.java21</module>
+        <module>../org.jacoco.core.test.validation.java22</module>
         <!-- Groovy 3.0.25 does not support Java 24
         <module>../org.jacoco.core.test.validation.groovy</module>
         -->
@@ -595,6 +598,7 @@
         <module>../org.jacoco.core.test.validation.java14</module>
         <module>../org.jacoco.core.test.validation.java16</module>
         <module>../org.jacoco.core.test.validation.java21</module>
+        <module>../org.jacoco.core.test.validation.java22</module>
         <module>../org.jacoco.core.test.validation.groovy</module>
         <module>../org.jacoco.core.test.validation.scala</module>
       </modules>
@@ -624,6 +628,7 @@
         <module>../org.jacoco.core.test.validation.java14</module>
         <module>../org.jacoco.core.test.validation.java16</module>
         <module>../org.jacoco.core.test.validation.java21</module>
+        <module>../org.jacoco.core.test.validation.java22</module>
         <!-- Groovy 3.0.25 does not support Java 26
         <module>../org.jacoco.core.test.validation.groovy</module>
         -->
@@ -656,6 +661,8 @@
         <module>../org.jacoco.core.test.validation.java14</module>
         <module>../org.jacoco.core.test.validation.java16</module>
         <module>../org.jacoco.core.test.validation.java21</module>
+        <module>../org.jacoco.core.test.validation.java22</module>
+        <module>../org.jacoco.core.test.validation.java27</module>
         <!-- Groovy 3.0.25 does not support Java 27
         <module>../org.jacoco.core.test.validation.groovy</module>
         -->
@@ -663,6 +670,39 @@
       </modules>
     </profile>
 
+    <profile>
+      <id>java28-bytecode</id>
+      <activation>
+        <property>
+          <name>bytecode.version</name>
+          <value>28</value>
+        </property>
+      </activation>
+      <properties>
+        <!-- Kotlin 2.4.0 doesn't support compilation into 28 -->
+        <kotlin.compiler.jvmTarget>25</kotlin.compiler.jvmTarget>
+        <!-- Groovy 3.0.25 does not support compilation into 28 -->
+        <groovy.targetBytecode>16</groovy.targetBytecode>
+        <!-- see respective profile in org.jacoco.build about this override -->
+        <maven.compiler.source>28</maven.compiler.source>
+        <maven.compiler.target>28</maven.compiler.target>
+      </properties>
+      <modules>
+        <module>../org.jacoco.benchmarks</module>
+        <module>../org.jacoco.core.test.validation.kotlin</module>
+        <module>../org.jacoco.core.test.validation.java7</module>
+        <module>../org.jacoco.core.test.validation.java8</module>
+        <module>../org.jacoco.core.test.validation.java14</module>
+        <module>../org.jacoco.core.test.validation.java16</module>
+        <module>../org.jacoco.core.test.validation.java21</module>
+        <module>../org.jacoco.core.test.validation.java22</module>
+        <module>../org.jacoco.core.test.validation.java27</module>
+        <!-- Groovy 3.0.25 does not support Java 28
+        <module>../org.jacoco.core.test.validation.groovy</module>
+        -->
+        <module>../org.jacoco.core.test.validation.scala</module>
+      </modules>
+    </profile>
   </profiles>
 
 </project>

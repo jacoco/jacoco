@@ -328,7 +328,7 @@
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-dependency-plugin</artifactId>
-          <version>3.10.0</version>
+          <version>3.11.0</version>
         </plugin>
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
@@ -475,7 +475,7 @@
        <plugin>
          <groupId>org.sonarsource.scanner.maven</groupId>
          <artifactId>sonar-maven-plugin</artifactId>
-         <version>5.6.0.6792</version>
+         <version>5.7.0.6970</version>
        </plugin>
       </plugins>
     </pluginManagement>
@@ -1001,6 +1001,20 @@
       </properties>
     </profile>
 
+    <profile>
+      <id>java28-bytecode</id>
+      <activation>
+        <property>
+          <name>bytecode.version</name>
+          <value>28</value>
+        </property>
+      </activation>
+      <properties>
+        <maven.compiler.source>17</maven.compiler.source>
+        <maven.compiler.target>17</maven.compiler.target>
+      </properties>
+    </profile>
+
     <!-- This profile enables use of ECJ -->
     <profile>
       <id>ecj</id>
@@ -1223,6 +1237,19 @@
         <property>
           <name>jdk.version</name>
           <value>27</value>
+        </property>
+      </activation>
+      <properties>
+        <javadoc.JDK-8324774>--no-fonts</javadoc.JDK-8324774>
+      </properties>
+    </profile>
+
+    <profile>
+      <id>jdk28</id>
+      <activation>
+        <property>
+          <name>jdk.version</name>
+          <value>28</value>
         </property>
       </activation>
       <properties>
