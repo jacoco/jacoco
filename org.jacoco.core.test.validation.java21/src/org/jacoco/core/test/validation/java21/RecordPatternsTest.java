@@ -12,10 +12,13 @@
  *******************************************************************************/
 package org.jacoco.core.test.validation.java21;
 
+import org.jacoco.core.test.TargetLoader;
+import org.jacoco.core.test.snapshot.MethodSnapshot;
 import org.jacoco.core.test.validation.JavaVersion;
 import org.jacoco.core.test.validation.Source.Line;
 import org.jacoco.core.test.validation.ValidationTestBase;
 import org.jacoco.core.test.validation.java21.targets.RecordPatternsTarget;
+import org.junit.Test;
 
 /**
  * Test of code coverage in {@link RecordPatternsTarget}.
@@ -24,6 +27,19 @@ public class RecordPatternsTest extends ValidationTestBase {
 
 	public RecordPatternsTest() {
 		super(RecordPatternsTarget.class);
+	}
+
+	@Test
+	public void bytecodeSnapshot() throws Exception {
+		if (!isJDKCompiler) {
+			return;
+		}
+		snapshot(RecordPatternsTarget.class, "instanceofOperator",
+				JavaVersion.current().isBefore("23") //
+						? "example.javac_21_22"
+						: JavaVersion.current().isBefore("26") //
+								? "example.javac_23_24_25"
+								: "example");
 	}
 
 	public void assertInstanceof(final Line line) {

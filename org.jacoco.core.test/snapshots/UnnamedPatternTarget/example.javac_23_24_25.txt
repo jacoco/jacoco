@@ -1,0 +1,52 @@
+    TRYCATCHBLOCK L_component_start_x L_component_end_x L_handler java/lang/Throwable
+    TRYCATCHBLOCK L_component_start_y L_component_end_y L_handler java/lang/Throwable
+   L_method_start
+    ALOAD 0
+    INSTANCEOF org/jacoco/core/test/validation/java22/targets/UnnamedPatternTarget$Point
+    IFEQ L6
+    ALOAD 0
+    CHECKCAST org/jacoco/core/test/validation/java22/targets/UnnamedPatternTarget$Point
+    ASTORE 1
+    ALOAD 1
+   L_component_start_x
+    INVOKEVIRTUAL org/jacoco/core/test/validation/java22/targets/UnnamedPatternTarget$Point.x ()I
+   L_component_end_x
+    ISTORE 2
+    ILOAD 2
+    ISTORE 3
+    ICONST_1
+    IFEQ L6
+    ALOAD 1
+   L_component_start_y
+    INVOKEVIRTUAL org/jacoco/core/test/validation/java22/targets/UnnamedPatternTarget$Point.y ()I
+   L_component_end_y
+    ISTORE 2
+    ILOAD 2
+    ISTORE 3
+    ICONST_1
+    IFEQ L6
+   L_body
+    INVOKESTATIC org/jacoco/core/test/validation/targets/Stubs.nop ()V
+   L6
+    GOTO L_after
+   L_handler
+// previous instruction starts ignore range 0
+    ASTORE 1
+    NEW java/lang/MatchException
+    DUP
+    ALOAD 1
+    INVOKEVIRTUAL java/lang/Throwable.toString ()Ljava/lang/String;
+    ALOAD 1
+    INVOKESPECIAL java/lang/MatchException.<init> (Ljava/lang/String;Ljava/lang/Throwable;)V
+    ATHROW
+// previous instruction ends ignore range 0
+   L_after
+    RETURN
+   L_method_end
+    LOCALVARIABLE o Ljava/lang/Object; L_method_start L_method_end 0
+    LINENUMBER 5 L_method_start
+    LINENUMBER 6 L_body
+    LINENUMBER 5 L_handler
+    LINENUMBER 8 L_after
+    MAXSTACK = 4
+    MAXLOCALS = 4

@@ -36,6 +36,7 @@ import org.jacoco.core.internal.analysis.CounterImpl;
 import org.jacoco.core.internal.instr.InstrSupport;
 import org.jacoco.core.test.InstrumentingLoader;
 import org.jacoco.core.test.TargetLoader;
+import org.jacoco.core.test.snapshot.MethodSnapshot;
 import org.jacoco.core.test.validation.Source.Line;
 import org.jacoco.core.test.validation.targets.Stubs;
 import org.jacoco.report.DirectorySourceFileLocator;
@@ -147,6 +148,19 @@ public abstract class ValidationTestBase {
 						asmWriter), 0);
 		textWriter.close();
 		asmWriter.close();
+	}
+
+	/**
+	 * {@link MethodSnapshot#compare(Class, String, File, File)} with predefined
+	 * file paths.
+	 */
+	protected final void snapshot(final Class<?> targetClass,
+			final String targetMethod, String name) throws Exception {
+		name = targetClass.getSimpleName() + "/" + name + ".txt";
+		final String expected = "../org.jacoco.core.test/snapshots/" + name;
+		final String actual = "target/snapshots/" + name;
+		MethodSnapshot.compare(targetClass, targetMethod, new File(expected),
+				new File(actual));
 	}
 
 	/**
