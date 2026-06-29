@@ -25,14 +25,18 @@ import java.util.Collection;
 import java.util.Collections;
 
 import org.jacoco.core.analysis.Analyzer;
+import org.jacoco.core.analysis.AnalyzerTest;
 import org.jacoco.core.analysis.CoverageBuilder;
 import org.jacoco.core.analysis.IBundleCoverage;
+import org.jacoco.core.analysis.IClassCoverage;
 import org.jacoco.core.analysis.ICounter;
 import org.jacoco.core.analysis.ILine;
 import org.jacoco.core.data.ExecutionData;
 import org.jacoco.core.data.ExecutionDataStore;
 import org.jacoco.core.data.SessionInfo;
+import org.jacoco.core.instr.InstrumenterTest;
 import org.jacoco.core.internal.analysis.CounterImpl;
+import org.jacoco.core.internal.data.CRC64;
 import org.jacoco.core.internal.instr.InstrSupport;
 import org.jacoco.core.test.InstrumentingLoader;
 import org.jacoco.core.test.TargetLoader;
@@ -112,11 +116,24 @@ public abstract class ValidationTestBase {
 		return Collections.emptyList();
 	}
 
+	/**
+	 * @see InstrumenterTest#should_not_modify_class_bytes_to_support_next_version()
+	 * @see AnalyzerTest#should_not_modify_class_bytes_to_support_next_version()
+	 */
+	private long nextExpectedClassId;
+
 	private void analyze(final ExecutionDataStore store) throws IOException {
-		final CoverageBuilder builder = new CoverageBuilder();
+		final CoverageBuilder builder = new CoverageBuilder() {
+			@Override
+			public void visitCoverage(IClassCoverage coverage) {
+				assertEquals(nextExpectedClassId, coverage.getId());
+				super.visitCoverage(coverage);
+			}
+		};
 		final Analyzer analyzer = new Analyzer(store, builder);
 		for (ExecutionData data : store.getContents()) {
 			analyze(analyzer, data.getName());
+			assertEquals(nextExpectedClassId, data.getId());
 		}
 		for (String className : additionalClassesForAnalysis()) {
 			analyze(analyzer, className);
@@ -130,6 +147,7 @@ public abstract class ValidationTestBase {
 			throws IOException {
 		final byte[] bytes = TargetLoader
 				.getClassDataAsBytes(target.getClassLoader(), className);
+		nextExpectedClassId = CRC64.classId(bytes);
 		analyzer.analyzeClass(bytes, className);
 		saveBytecodeRepresentations(bytes, className);
 	}

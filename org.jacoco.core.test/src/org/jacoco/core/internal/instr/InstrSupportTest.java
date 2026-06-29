@@ -43,8 +43,19 @@ public class InstrSupportTest {
 	}
 
 	@Test
-	public void classReaderFor_should_read_java_28_class() {
-		final byte[] bytes = createJava28Class();
+	public void classReaderFor_should_bypass_bytecode_version_check_in_ASM() {
+		final byte[] bytes = createClassWithExperimentallySupportedBytecodeVersion();
+
+		try {
+			new ClassReader(bytes);
+			fail("IllegalArgumentException expected");
+		} catch (final IllegalArgumentException e) {
+			// expected
+			assertEquals(
+					"Unsupported class file major version "
+							+ InstrSupport.BYTECODE_VERSION_MAX,
+					e.getMessage());
+		}
 
 		final ClassReader classReader = InstrSupport.classReaderFor(bytes);
 
@@ -53,16 +64,18 @@ public class InstrSupportTest {
 			public void visit(final int version, final int access,
 					final String name, final String signature,
 					final String superName, final String[] interfaces) {
-				assertEquals(Opcodes.V27 + 1, version);
+				assertEquals(InstrSupport.BYTECODE_VERSION_MAX, version);
 			}
 		}, 0);
 
-		assertArrayEquals(createJava28Class(), bytes);
+		final byte[] originalBytes = createClassWithExperimentallySupportedBytecodeVersion();
+		assertArrayEquals(originalBytes, bytes);
 	}
 
-	private static byte[] createJava28Class() {
+	private static byte[] createClassWithExperimentallySupportedBytecodeVersion() {
 		final ClassWriter cw = new ClassWriter(0);
-		cw.visit(Opcodes.V27 + 1, 0, "Foo", null, "java/lang/Object", null);
+		cw.visit(InstrSupport.BYTECODE_VERSION_MAX, 0, "Foo", null,
+				"java/lang/Object", null);
 		cw.visitEnd();
 		return cw.toByteArray();
 	}
@@ -139,7 +152,7 @@ public class InstrSupportTest {
 		assertTrue(InstrSupport.needsFrames(Opcodes.V25));
 		assertTrue(InstrSupport.needsFrames(Opcodes.V26));
 		assertTrue(InstrSupport.needsFrames(Opcodes.V27));
-		assertTrue(InstrSupport.needsFrames(Opcodes.V27 + 1));
+		assertTrue(InstrSupport.needsFrames(InstrSupport.BYTECODE_VERSION_MAX));
 
 		assertTrue(InstrSupport.needsFrames(0x0100));
 	}
