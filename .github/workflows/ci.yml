@@ -1,7 +1,9 @@
 name: CI
 on:
-  - push
-  - pull_request
+  push:
+    branches-ignore:
+      - 'renovate/**'
+  pull_request:
 jobs:
   Linux:
     strategy:
