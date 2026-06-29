@@ -5,6 +5,7 @@
     ":disableDependencyDashboard",
     ":semanticCommitsDisabled"
   ],
+  "rebaseWhen": "conflicted",
   "ignorePaths": ["jacoco-maven-plugin.test/it/**"],
   "labels": ["dependencies"],
   "packageRules": [
