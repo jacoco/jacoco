@@ -22,6 +22,15 @@ public class UnnamedPatternTarget {
 	record R(Object c) {
 	}
 
+	record Point(int x, int y) {
+	}
+
+	private static void instanceofPattern(Object o) {
+		if (o instanceof Point(int _, int _)) {
+			nop();
+		}
+	}
+
 	private static String multiplePatternsInCase(Object o) {
 		return switch (o) { // assertFullyCovered(0,2)
 		case R(Float _), R(Double _) -> // assertJavacPartly(3,1) assertEcjPartly(6,2)
