@@ -72,6 +72,35 @@ object KotlinWhenSealedTarget {
         /* missing is NonSealed.NonSealed3 */
     } // assertFullyCovered()
 
+    /** Indistinguishable from [indistinguishableIf]. */
+    private fun indistinguishable(p: S1) =
+        /* @formatter:off */
+        when (p) { is S1.A -> "S1.A" } // assertFullyCovered()
+        /* @formatter:on */
+
+    private fun indistinguishableFormatted(p: S1) =
+        when (p) { // assertFullyCovered()
+            is S1.A -> "S1.A" // assertFullyCovered()
+        } // assertFullyCovered()
+
+    private fun indistinguishable(p: S2) =
+        when (p) { // assertFullyCovered()
+            is S2.A -> "S2.A" // assertFullyCovered(0,2)
+            is S2.B -> "S2.B" // assertFullyCovered()
+        } // assertFullyCovered()
+
+    private fun indistinguishableIf(p: Any) =
+        if (p is String) "if" else throw NoWhenBranchMatchedException() // assertFullyCovered()
+
+    private sealed class S1 {
+        object A : S1()
+    }
+
+    private sealed class S2 {
+        object A : S2()
+        object B : S2()
+    }
+
     @JvmStatic
     fun main(args: Array<String>) {
         expression(Sealed.Sealed1)
@@ -88,6 +117,12 @@ object KotlinWhenSealedTarget {
 
         nonSealedIf(NonSealed.NonSealed1())
         nonSealedIf(NonSealed.NonSealed2())
+
+        indistinguishable(S1.A)
+        indistinguishableFormatted(S1.A)
+        indistinguishable(S2.A)
+        indistinguishable(S2.B)
+        indistinguishableIf("")
     }
 
 }
