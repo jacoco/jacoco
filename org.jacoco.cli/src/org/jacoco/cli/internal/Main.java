@@ -12,82 +12,57 @@
  *******************************************************************************/
 package org.jacoco.cli.internal;
 
-import java.io.IOException;
 import java.io.PrintWriter;
-import java.io.Writer;
 
-import org.kohsuke.args4j.Argument;
-import org.kohsuke.args4j.CmdLineException;
+import org.jacoco.cli.internal.commands.ClassInfo;
+import org.jacoco.cli.internal.commands.Dump;
+import org.jacoco.cli.internal.commands.ExecInfo;
+import org.jacoco.cli.internal.commands.Instrument;
+import org.jacoco.cli.internal.commands.Merge;
+import org.jacoco.cli.internal.commands.Report;
+import org.jacoco.cli.internal.commands.Version;
+
+import picocli.CommandLine;
 
 /**
  * Entry point for all command line operations.
  */
-public class Main extends Command {
+@CommandLine.Command( //
+		name = "java -jar jacococli.jar", //
+		description = "Command line interface for JaCoCo.", //
+		subcommands = { //
+				Dump.class, //
+				Instrument.class, //
+				Merge.class, //
+				Report.class, //
+				ClassInfo.class, //
+				ExecInfo.class, //
+				Version.class //
+		})
+public class Main {
 
-	private static final PrintWriter NUL = new PrintWriter(new Writer() {
-
-		@Override
-		public void write(final char[] arg0, final int arg1, final int arg2)
-				throws IOException {
-		}
-
-		@Override
-		public void flush() throws IOException {
-		}
-
-		@Override
-		public void close() throws IOException {
-		}
-	});
-
-	private final String[] args;
-
-	Main(final String... args) {
-		this.args = args;
-	}
-
-	@Argument(handler = CommandHandler.class, required = true)
-	Command command;
-
-	@Override
-	public String description() {
-		return "Command line interface for JaCoCo.";
-	}
-
-	@Override
-	public String usage(final CommandParser parser) {
-		return JAVACMD + "--help | <command>";
-	}
-
-	@Override
-	public int execute(PrintWriter out, final PrintWriter err)
-			throws Exception {
-
-		final CommandParser mainParser = new CommandParser(this);
-		try {
-			mainParser.parseArgument(args);
-		} catch (final CmdLineException e) {
-			((CommandParser) e.getParser()).getCommand().printHelp(err);
-			err.println();
-			err.println(e.getMessage());
-			return -1;
-		}
-
-		if (help) {
-			printHelp(out);
-			return 0;
-		}
-
-		if (command.help) {
-			command.printHelp(out);
-			return 0;
-		}
-
-		if (command.quiet) {
-			out = NUL;
-		}
-
-		return command.execute(out, err);
+	static CommandLine commandLine(final CommandLine.Help.Ansi ansi,
+			final PrintWriter out, final PrintWriter err) {
+		return new CommandLine(Main.class) //
+				.addSubcommand("help", CommandLine.HelpCommand.class, "--help")
+				.setColorScheme(CommandLine.Help.defaultColorScheme(ansi))
+				.setOut(out) //
+				.setErr(err) //
+				.setSeparator(" ") //
+				.setUsageHelpAutoWidth(true) //
+				.setParameterExceptionHandler( //
+						new CommandLine.IParameterExceptionHandler() {
+							public int handleParseException(
+									final CommandLine.ParameterException ex,
+									final String[] args) {
+								final CommandLine cmd = ex.getCommandLine();
+								cmd.usage(cmd.getErr());
+								cmd.getErr().println();
+								cmd.getErr().println(cmd.getColorScheme()
+										.errorText(ex.getMessage()));
+								return 2;
+							}
+						});
 	}
 
 	/**
@@ -102,7 +77,9 @@ public class Main extends Command {
 	public static void main(final String... args) throws Exception {
 		final PrintWriter out = new PrintWriter(System.out, true);
 		final PrintWriter err = new PrintWriter(System.err, true);
-		final int returncode = new Main(args).execute(out, err);
+		final CommandLine commandLine = commandLine(CommandLine.Help.Ansi.AUTO,
+				out, err);
+		int returncode = commandLine.execute(args);
 		System.exit(returncode);
 	}
 

@@ -26,6 +26,7 @@ import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
 
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -86,26 +87,33 @@ public class XmlDocumentationTest {
 				"/documentation/command[@name='report']/description/text()",
 				doc);
 
-		assertContains("<execfiles>",
+		assertEquals("<execfiles>",
 				"/documentation/command[@name='report']/option[1]/usage/text()",
 				doc);
 
-		assertContains("false",
+		assertEquals("false",
 				"/documentation/command[@name='report']/option[1]/@required",
 				doc);
 
-		assertContains("true",
+		assertEquals("true",
 				"/documentation/command[@name='report']/option[1]/@multiple",
 				doc);
 
-		assertContains("-classfiles <path>",
+		assertEquals("--help",
 				"/documentation/command[@name='report']/option[2]/usage/text()",
 				doc);
 
-		assertContains("true",
-				"/documentation/command[@name='report']/option[2]/@multiple",
+		assertEquals("show help",
+				"/documentation/command[@name='report']/option[2]/description/text()",
 				doc);
 
+		assertEquals("--classfiles <path>",
+				"/documentation/command[@name='report']/option[4]/usage/text()",
+				doc);
+
+		assertEquals("true",
+				"/documentation/command[@name='report']/option[4]/@multiple",
+				doc);
 	}
 
 	private Document parse(File file) throws Exception {
@@ -115,6 +123,12 @@ public class XmlDocumentationTest {
 		} finally {
 			in.close();
 		}
+	}
+
+	private void assertEquals(final String expected, final String query,
+			final Document doc) throws XPathExpressionException {
+		final String actual = eval(query, doc);
+		Assert.assertEquals(expected, actual);
 	}
 
 	private void assertContains(String expected, String query, Document doc)
